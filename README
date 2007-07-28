@@ -1,0 +1,14 @@
+Hi!
+
+Those looking for Dbus-based plugins for their favourite application, please
+go to the awn-plugins folder. 
+
+Applets are under awn-applets. awn-core-applets are those that ship alongside
+awn, such as the trash, separator etc. Each applet has its own folder, and you
+just need to enter it and do the usual:
+
+./autogen.sh && make && sudo make install
+
+unless otherwise stated :-)!
+
+--Neil

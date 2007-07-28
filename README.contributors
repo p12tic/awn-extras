@@ -1,0 +1,10 @@
+Hi there!
+
+If you are developing a dbus-plugin for your favourite application, then
+please see the README file in the awn-plugins folder.
+
+Awn-based applet authors should read the README in awn-applets/.
+
+Thanks.
+
+--Neil

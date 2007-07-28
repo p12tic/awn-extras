@@ -1,0 +1,18 @@
+All applets for awn go here.
+
+For a new applet, please create an directory here, with its own build system.
+
+The hello-world applet is an *example* applet, please do not modify it. You can
+use this as a basis to create your own applet, as it includes the autotools-foo
+that is needed to link to libawn, plus a simple .desktop file and applet.c which
+you can edit to your tastes!
+
+awn-core-applets are those that will ship alongside Awn, these will have to 
+comply with release schedules etc. When your applet becomes stable, it may be 
+moved into awn-core-applets, so default awn ships with lots and lots of cool 
+applets :-).
+
+Please try and be considerate of other contributors, and try and commit from 
+within your applet folder.
+
+--Neil

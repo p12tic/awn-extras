@@ -78,7 +78,7 @@ class AwnManager:
         self.make_menu_model()
 
         #theme
-        self.themeManager = AwnThemeManager(self.wTree)
+        self.themeManager = AwnThemeManager(self.wTree, self.AWN_CONFIG_DIR)
 
         #applet
         self.appletManager = awnApplet(self.wTree)

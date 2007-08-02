@@ -357,7 +357,8 @@ class AwnThemeManager:
 
         self.list(self.theme_model)
 
-    def __init__(self, glade):
+    def __init__(self, glade, config_dir):
+        self.AWN_CONFIG_DIR = config_dir
         self.wTree = glade
         self.theme_treeview = self.wTree.get_widget('theme_treeview')
         self.theme_add = self.wTree.get_widget('theme_add')
@@ -371,7 +372,7 @@ class AwnThemeManager:
 
         self.AWN = 'avant-window-navigator'
         self.AWN_GCONF = '/apps/'+self.AWN
-        self.AWN_THEME_DIR = os.path.join(os.path.expanduser("~"), ".config/awn_theme_manager/")
+        self.AWN_THEME_DIR = os.path.join(self.AWN_CONFIG_DIR, "themes/")
         self.AWN_CONFIG = 'theme.awn'
         self.AWN_THUMB = 'thumb.png'
         self.AWN_CURRENT = os.path.join(self.AWN_THEME_DIR, 'current.awn')

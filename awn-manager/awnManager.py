@@ -59,8 +59,7 @@ class AwnManager:
         self.AWN_CONFIG_DIR = os.path.join(os.path.expanduser('~'),'.config/awn')
         if not os.path.exists(self.AWN_CONFIG_DIR):
             os.makedirs(self.AWN_CONFIG_DIR)
-
-        self.GLADE_PATH = os.path.join(sys.path[0], "window.glade")
+        self.GLADE_PATH = os.path.join(os.path.dirname(sys.argv[0]), "window.glade")
         gtk.glade.bindtextdomain(APP, DIR)
         gtk.glade.textdomain(APP)
 

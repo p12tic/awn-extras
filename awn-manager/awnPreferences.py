@@ -117,7 +117,6 @@ TITLE_ITALIC		= "/apps/avant-window-navigator/title/italic" 			#bool
 TITLE_BOLD		    = "/apps/avant-window-navigator/title/bold" 			#bool
 TITLE_FONT_SIZE		= "/apps/avant-window-navigator/title/font_size" 		#float
 
-DATA_DIR = "/usr/share/avant-window-navigator"
 EMPTY = "none";
 
 #layout = { "Flat bar": {"barangle": [self.wTree.get_widget("barangle"), "hidden", 0], "roundedcornerscheck": [self.wTree.get_widget("roundedcornerscheck"),"visible"]},

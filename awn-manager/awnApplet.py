@@ -57,7 +57,6 @@ class awnApplet:
         # GCONF KEYS
         self.APPLETS_DIR = "/apps/avant-window-navigator"
         self.APPLETS_PATH = "/apps/avant-window-navigator/applets_list"
-        self.DATA_DIR = "@PKGDATADIR@"
 
         self.client = gconf.client_get_default()
         self.client.add_dir(self.APPLETS_DIR, gconf.CLIENT_PRELOAD_NONE)

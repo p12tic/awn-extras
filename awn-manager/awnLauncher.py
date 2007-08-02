@@ -58,8 +58,6 @@ class awnLauncher:
         self.LAUNCHER_DIR = "/apps/avant-window-navigator/window_manager"
         self.LAUNCHER_PATH = "/apps/avant-window-navigator/window_manager/launchers"
 
-        self.DATA_DIR = "@PKGDATADIR@"
-
         self.client = gconf.client_get_default()
         self.client.add_dir(self.LAUNCHER_DIR, gconf.CLIENT_PRELOAD_NONE)
 

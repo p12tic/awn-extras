@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=C
+Encoding=UTF-8
+Name=Clock
+Comment=A simple clock.
+Exec=/usr/local/lib/awn/applets/clock/clock.so
+Icon=

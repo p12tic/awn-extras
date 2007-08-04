@@ -286,10 +286,10 @@ class awnPreferences:
                 self.wTree.get_widget("roundedcornerscheck_holder").hide_all()
                 self.wTree.get_widget("barangle_holder").show_all()
         elif dropdown.get_active() == 0:
-            self.client.set_int(BAR_ANGLE, 0)
-            self.wTree.get_widget("roundedcornerscheck_holder").show_all()
+            self.wTree.get_widget("barangle").set_value(0)
+            self.wTree.get_widget ("roundedcornerscheck_holder").show_all()
             self.wTree.get_widget("barangle_holder").hide_all()
         else:
-            self.client.set_int(BAR_ANGLE, 45)
+            self.wTree.get_widget("barangle").set_value(45)
             self.wTree.get_widget("roundedcornerscheck_holder").hide_all()
             self.wTree.get_widget("barangle_holder").show_all()

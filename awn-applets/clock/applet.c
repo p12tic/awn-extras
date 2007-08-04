@@ -31,7 +31,7 @@
 #include "clock-applet.h"
 
 AwnApplet*
-awn_applet_factory_init ( gchar* uid, gint orient, gint height )
+awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
 {
 	AwnApplet *applet;
 	Clock *clock;

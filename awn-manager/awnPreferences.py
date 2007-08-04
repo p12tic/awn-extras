@@ -106,22 +106,16 @@ WINMAN_SHOW_ALL_WINS	= "/apps/avant-window-navigator/window_manager/show_all_win
 APP_PATH		    = "/apps/avant-window-navigator/app"
 APP_ACTIVE_PNG		= "/apps/avant-window-navigator/app/active_png" 		#string
 APP_ARROW_COLOR		= "/apps/avant-window-navigator/app/arrow_color" 		#color
-APP_TASKS_H_ARROWS	= "/apps/avant-window-navigator/app/tasks_have_arrows" 		#bool
+APP_TASKS_H_ARROWS	= "/apps/avant-window-navigator/app/tasks_have_arrows" 	#bool
 APP_FADE_EFFECT		= "/apps/avant-window-navigator/app/fade_effect" 		#bool
 
 TITLE_PATH		    = "/apps/avant-window-navigator/title"
 TITLE_TEXT_COLOR	= "/apps/avant-window-navigator/title/text_color" 		#color
-TITLE_SHADOW_COLOR	= "/apps/avant-window-navigator/title/shadow_color" 		#color
+TITLE_SHADOW_COLOR	= "/apps/avant-window-navigator/title/shadow_color" 	#color
 TITLE_BACKGROUND	= "/apps/avant-window-navigator/title/background" 		#color
-TITLE_ITALIC		= "/apps/avant-window-navigator/title/italic" 			#bool
-TITLE_BOLD		    = "/apps/avant-window-navigator/title/bold" 			#bool
-TITLE_FONT_SIZE		= "/apps/avant-window-navigator/title/font_size" 		#float
+TITLE_FONT_FACE     = "/apps/avant-window-navigator/title/font_face" 		#string
 
 EMPTY = "none";
-
-#layout = { "Flat bar": {"barangle": [self.wTree.get_widget("barangle"), "hidden", 0], "roundedcornerscheck": [self.wTree.get_widget("roundedcornerscheck"),"visible"]},
-#                   "3D look" : {"barangle": [self.wTree.get_widget("barangle"), "visible", 45], "roundedcornerscheck": [self.wTree.get_widget("roundedcornerscheck"),"hidden"]}}
-#self.prefManager.setup_dropdown(self.wTree.get_widget("bartype"), layout)
 
 class awnPreferences:
     """This is the main class, duh"""
@@ -140,8 +134,7 @@ class awnPreferences:
         self.setup_bool (BAR_RENDER_PATTERN, self.wTree.get_widget("patterncheck"))
         self.setup_bool (BAR_ROUNDED_CORNERS, self.wTree.get_widget("roundedcornerscheck"))
         self.setup_bool (WINMAN_SHOW_ALL_WINS, self.wTree.get_widget("allwindowscheck"))
-        #self.setup_bool (TITLE_ITALIC, self.wTree.get_widget ("italiccheck"))
-        #self.setup_bool (TITLE_BOLD, self.wTree.get_widget("boldcheck"))
+
         self.setup_bool (BAR_SHOW_SEPARATOR, self.wTree.get_widget("separatorcheck"))
         self.setup_bool (APP_TASKS_H_ARROWS, self.wTree.get_widget("arrowcheck"))
         self.setup_bool (APP_FADE_EFFECT, self.wTree.get_widget("fadeeffect"))
@@ -149,11 +142,8 @@ class awnPreferences:
         self.setup_chooser(APP_ACTIVE_PNG, self.wTree.get_widget("activefilechooser"))
         self.setup_chooser(BAR_PATTERN_URI, self.wTree.get_widget("patternchooserbutton"))
 
-        #self.setup_spin(TITLE_FONT_SIZE, self.wTree.get_widget("fontsizespin"))
-        #self.setup_font(TITLE_FONT_FACE, self.wTree.get_widget("selectfontface"))
-        ##self.setup_scale (BAR_ICON_OFFSET, self.wTree.get_widget("bariconoffset"))
-        ##self.setup_scale (BAR_HEIGHT, self.wTree.get_widget("barheight"))
-        ##self.setup_scale (BAR_ANGLE, self.wTree.get_widget("barangle"))
+        self.setup_font(TITLE_FONT_FACE, self.wTree.get_widget("selectfontface"))
+
         self.setup_spin(BAR_ICON_OFFSET, self.wTree.get_widget("bariconoffset"))
         self.setup_spin(BAR_HEIGHT, self.wTree.get_widget("barheight"))
         self.setup_spin(BAR_ANGLE, self.wTree.get_widget("barangle"))

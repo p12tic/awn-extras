@@ -71,6 +71,9 @@ class AwnManager:
         refresh = self.wTree.get_widget("refreshbutton")
         refresh.connect("clicked", self.refresh)
 
+        about = self.wTree.get_widget("aboutbutton")
+        about.connect("clicked", self.about)
+
         close = self.wTree.get_widget("closebutton")
         close.connect("clicked", gtk.main_quit)
 
@@ -156,6 +159,28 @@ class AwnManager:
         w.add(v)
         w.resize(200, 100)
         w.show_all()
+
+    def about(self, button):
+        self.about = gtk.AboutDialog()
+        self.about.set_name("Avant Window Navigator")
+        #self.about.set_version("bzr17")
+        self.about.set_copyright("Copyright (C) 2007 Neil Jagdish Patel <njpatel@gmail.com>")
+        self.about.set_authors(["Neil Patel", "More to come..."])
+        self.about.set_comments("Fully customisable dock-like window navigator for GNOME.")
+        self.about.set_license('''
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA.''')
+        self.about.set_wrap_license(True)
+        self.about.set_website("http://www.planetblur.org/hosted/awnforum/")
+        #self.about.set_logo_icon_name(gtk.STOCK_ABOUT)
+        self.about.set_documenters(["More to come..."])
+        self.about.set_artists(["More to come..."])
+        #self.about.set_translator_credits()
+        self.about.run()
+        self.about.destroy()
 
     def win_destroy(self, button, w):
         w.destroy()

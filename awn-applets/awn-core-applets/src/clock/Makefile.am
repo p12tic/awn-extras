@@ -1,14 +1,12 @@
 INCLUDES =							\
 	-I$(srcdir)						\
-	-I/usr/include/librsvg-2				\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"		\
 	$(DISABLE_DEPRECATED_CFLAGS)				\
-	$(AWN_CFLAGS)					\
+	$(DEPS_CFLAGS)					\
 	-DPREFIX=\"$(prefix)\"					\
 	-DSYSCONFDIR=\"$(sysconfdir)\"				\
 	-DDATADIR=\"$(datadir)\"				\
-	-DLIBDIR=\"$(libdir)\"                                  \
-	-I$(top_builddir)/libawn
+	-DLIBDIR=\"$(libdir)\"                                 
 
 CLOCK_SOURCES =                              \
 	applet.c				\
@@ -18,9 +16,7 @@ CLOCK_SOURCES =                              \
 	utils.h
 
 CLOCK_LDADD =                        \
-        $(DEPS_LIBS)			        \
-        $(AWN_LIBS)                             \
-        $(top_builddir)/libawn/libawn.la
+        $(DEPS_LIBS)
         
 
 clocklibdir = $(libdir)/awn/applets/clock

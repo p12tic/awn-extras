@@ -319,6 +319,9 @@ class awnApplet:
         for d in dirs:
                 if not os.path.exists (d):
                         continue
+                if not os.path.realpath(d) == d and os.path.realpath(d) in dirs:
+                        continue
+
                 apps = os.listdir (d)
                 for a in apps:
                         if ".desktop" in a:

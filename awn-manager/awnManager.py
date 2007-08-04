@@ -68,6 +68,9 @@ class AwnManager:
         self.window = self.wTree.get_widget("main_window")
         self.window.connect("delete-event", gtk.main_quit)
 
+        refresh = self.wTree.get_widget("refreshbutton")
+        refresh.connect("clicked", self.refresh)
+
         close = self.wTree.get_widget("closebutton")
         close.connect("clicked", gtk.main_quit)
 
@@ -139,6 +142,23 @@ class AwnManager:
 
         path = self.model.get_path(self.model.get_iter_first())
         self.treeview.set_cursor(path, focus_column=None, start_editing=False)
+
+    def refresh(self, button):
+        w = gtk.Window()
+        i = gtk.IconTheme()
+        w.set_icon(i.load_icon("gtk-refresh", 48, gtk.ICON_LOOKUP_FORCE_SVG))
+        v = gtk.VBox()
+        l = gtk.Label("Refreshed")
+        b = gtk.Button(stock="gtk-close")
+        b.connect("clicked", self.win_destroy, w)
+        v.pack_start(l, True, True, 2)
+        v.pack_start(b)
+        w.add(v)
+        w.resize(200, 100)
+        w.show_all()
+
+    def win_destroy(self, button, w):
+        w.destroy()
 
     def main(self):
         gtk.main()

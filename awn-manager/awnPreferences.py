@@ -151,9 +151,13 @@ class awnPreferences:
 
         #self.setup_spin(TITLE_FONT_SIZE, self.wTree.get_widget("fontsizespin"))
         #self.setup_font(TITLE_FONT_FACE, self.wTree.get_widget("selectfontface"))
-        self.setup_scale (BAR_ICON_OFFSET, self.wTree.get_widget("bariconoffset"))
-        self.setup_scale (BAR_HEIGHT, self.wTree.get_widget("barheight"))
-        self.setup_scale (BAR_ANGLE, self.wTree.get_widget("barangle"))
+        ##self.setup_scale (BAR_ICON_OFFSET, self.wTree.get_widget("bariconoffset"))
+        ##self.setup_scale (BAR_HEIGHT, self.wTree.get_widget("barheight"))
+        ##self.setup_scale (BAR_ANGLE, self.wTree.get_widget("barangle"))
+        self.setup_spin(BAR_ICON_OFFSET, self.wTree.get_widget("bariconoffset"))
+        self.setup_spin(BAR_HEIGHT, self.wTree.get_widget("barheight"))
+        self.setup_spin(BAR_ANGLE, self.wTree.get_widget("barangle"))
+        self.setup_look(self.wTree.get_widget("look"))
 
         self.setup_scale(BAR_PATTERN_ALPHA, self.wTree.get_widget("patternscale"))
 
@@ -173,22 +177,11 @@ class awnPreferences:
         self.setup_color(BAR_SEP_COLOR, self.wTree.get_widget("sepcolor"))
         self.setup_color(APP_ARROW_COLOR, self.wTree.get_widget("arrowcolor"))
 
-    def refresh(self, button):
-        w = gtk.Window()
-        i = gtk.IconTheme()
-        w.set_icon(i.load_icon("gtk-refresh", 48, gtk.ICON_LOOKUP_FORCE_SVG))
-        v = gtk.VBox()
-        l = gtk.Label("Refreshed")
-        b = gtk.Button(stock="gtk-close")
-        b.connect("clicked", self.win_destroy, w)
-        v.pack_start(l, True, True, 2)
-        v.pack_start(b)
-        w.add(v)
-        w.resize(200, 100)
-        w.show_all()
-
     def setup_color(self, key, colorbut):
-        color, alpha = make_color(self.client.get_string(key))
+        try:
+            color, alpha = make_color(self.client.get_string(key))
+        except TypeError:
+            raise "\nKey: "+key+" isn't set.\nRestarting AWN usually solves this issue\n"
         colorbut.set_color(color)
         colorbut.set_alpha(alpha)
         colorbut.connect("color-set", self.color_changed, key)
@@ -197,68 +190,35 @@ class awnPreferences:
         string =  make_color_string(colorbut.get_color(), colorbut.get_alpha())
         self.client.set_string(key, string)
 
-    def setup_dropdown(self, combox, layout):
-        liststore = gtk.ListStore(str)
-        combox.set_model(liststore)
-        cell = gtk.CellRendererText()
-        combox.pack_start(cell, True)
-        combox.add_attribute(cell, 'text', 0)
-        combox.connect("changed", self.dropdown_changed, combox, layout)
-        self.loading_done = False
-        for item in layout:
-            combox.append_text(item)
-        if self.client.get_bool(self.BAR_ROUNDED_CORNERS):
-            combox.set_active(1)
-        self.loading_done = True
-
-    def dropdown_changed(self, something, combox, layout):
-        #pass
-        '''
-        if self.loading_done:
-            active = combox.get_active_text()
-            for item in layout:
-                if active == item:
-                    self.client.set_int(self.BAR_ANGLE, int(layout[item]["barangle"][2]))
-                    self.scale_changed(layout[item]["barangle"][0],self.BAR_ANGLE)
-                    if layout[item]["barangle"][1] == "hidden":
-                        layout[item]["barangle"][0].hide()
-                    else:
-                        layout[item]["barangle"][0].show()
-                    if layout[item]["roundedcornerscheck"][1] == "hidden":
-                        print layout[item]["roundedcornerscheck"][0]
-                        layout[item]["roundedcornerscheck"][0].hide()
-                    else:
-                        layout[item]["roundedcornerscheck"][0].show()
-        '''
-
     def setup_scale(self, key, scale):
-        type = self.client.get(key).type
-        if type == gconf.VALUE_INT:
-            val = self.client.get_int(key)
-        elif type == gconf.VALUE_FLOAT:
+        try:
             val = self.client.get_float(key)
-            val = 100 - (val * 100)
+        except TypeError:
+            raise "\nKey: "+key+" isn't set.\nRestarting AWN usually solves this issue\n"
+        val = 100 - (val * 100)
         scale.set_value(val)
         scale.connect("value-changed", self.scale_changed, key)
 
     def scale_changed(self, scale, key):
-        print scale
-        print key
-        type = self.client.get(key).type
-        if type == gconf.VALUE_INT:
-            self.client.set_int(key, int(scale.get_value()))
-        elif type == gconf.VALUE_FLOAT:
-            val = scale.get_value()
-            val = 100 - val
-            if (val):
-                val = val/100
-            self.client.set_float(key, val)
+        val = scale.get_value()
+        val = 100 - val
+        if (val):
+            val = val/100
+        self.client.set_float(key, val)
 
     def setup_spin(self, key, spin):
-        spin.set_value(	self.client.get_float(key))
+        try:
+            spin.set_value(	float(self.client.get_value(key)))
+        except TypeError:
+            raise "\nKey: "+key+" isn't set.\nRestarting AWN usually solves this issue\n"
+        spin.connect("value-changed", self.spin_changed, key)
 
     def spin_changed(self, spin, key):
-        self.client.set_float(key, spin.get_value())
+        type = self.client.get(key).type
+        if type == gconf.VALUE_INT:
+            self.client.set_int(key, int(spin.get_value()))
+        elif type == gconf.VALUE_FLOAT:
+            self.client.set_float(key, spin.get_value())
 
     def setup_chooser(self, key, chooser):
         """sets up png choosers"""
@@ -270,7 +230,10 @@ class awnPreferences:
         preview = gtk.Image()
         chooser.set_preview_widget(preview)
         chooser.connect("update-preview", self.update_preview, preview)
-        chooser.set_filename(self.client.get_string(key))
+        try:
+            chooser.set_filename(self.client.get_string(key))
+        except TypeError:
+            raise "\nKey: "+key+" isn't set.\nRestarting AWN usually solves this issue\n"
         chooser.connect("selection-changed", self.chooser_changed, key)
 
     def chooser_changed(self, chooser, key):
@@ -305,3 +268,28 @@ class awnPreferences:
 
     def font_changed(self, font_btn, key):
         self.client.set_string(key, font_btn.get_font_name())
+
+    def setup_look(self, dropdown):
+        dropdown.append_text("Flat bar")
+        dropdown.append_text("3D look")
+        self.look_changed(dropdown)
+        dropdown.connect("changed", self.look_changed)
+
+    def look_changed(self, dropdown):
+        if dropdown.get_active() == -1: #init
+            if self.client.get_int(BAR_ANGLE) == 0:
+                dropdown.set_active(0)
+                self.wTree.get_widget("roundedcornerscheck_holder").show_all()
+                self.wTree.get_widget("barangle_holder").hide_all()
+            else:
+                dropdown.set_active(1)
+                self.wTree.get_widget("roundedcornerscheck_holder").hide_all()
+                self.wTree.get_widget("barangle_holder").show_all()
+        elif dropdown.get_active() == 0:
+            self.client.set_int(BAR_ANGLE, 0)
+            self.wTree.get_widget("roundedcornerscheck_holder").show_all()
+            self.wTree.get_widget("barangle_holder").hide_all()
+        else:
+            self.client.set_int(BAR_ANGLE, 45)
+            self.wTree.get_widget("roundedcornerscheck_holder").hide_all()
+            self.wTree.get_widget("barangle_holder").show_all()

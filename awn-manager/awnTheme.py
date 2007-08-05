@@ -123,6 +123,15 @@ class AwnThemeManager:
             tar.extractall(self.AWN_THEME_DIR)
             tar.close()
             self.add_row(path[0])
+            message = "Theme Successfully Added"
+            message2 = ""
+            success = gtk.MessageDialog(parent=None, flags=0, type=gtk.MESSAGE_WARNING, buttons=gtk.BUTTONS_OK, message_format=message)
+            icon_path = os.path.join(self.AWN_THEME_DIR, path[0], self.AWN_CUSTOM_ICONS)
+            if os.path.exists(icon_path):
+                message2 = "Custom icons included can be found at:\n "+str(os.path.join(self.AWN_THEME_DIR, path[0], self.AWN_CUSTOM_ICONS))
+            success.format_secondary_text(message2)
+            success.run()
+            success.destroy()
             return True
         else:
             return False
@@ -154,6 +163,17 @@ class AwnThemeManager:
         hbox.pack_start(gtk.Label("Version:"), expand=True, fill=False)
         entries["version"] = gtk.Entry(max=0)
         hbox.pack_start(entries["version"], expand=False, fill=False)
+
+        custom_icons_found = False
+        icon_path = self.AWN_THEME_DIR = os.path.join(self.AWN_CONFIG_DIR, self.AWN_CUSTOM_ICONS)
+        if os.path.exists(icon_path):
+            if len(os.listdir(icon_path)) > 0:
+                hbox = gtk.HBox(homogeneous=False, spacing=5)
+                detailsWindow.vbox.pack_start(hbox)
+                entries["save_icons"] = gtk.CheckButton("Save Custom Icons")
+                hbox.pack_start(entries["save_icons"], expand=False, fill=False)
+                custom_icons_found = True
+
         detailsWindow.show_all()
 
         response = detailsWindow.run()
@@ -170,6 +190,7 @@ class AwnThemeManager:
 
             foldername = entries["name"].get_text().replace(" ", "_")
             if(foldername == ''): foldername = "awn_theme"
+
             os.makedirs(self.BUILD_DIR+"/"+foldername)
 
             self.write(self.BUILD_DIR+'/'+foldername+"/"+self.AWN_CONFIG, gconfKeys)
@@ -177,6 +198,10 @@ class AwnThemeManager:
             img = self.get_img()
             if (img != None):
                 img.save(self.BUILD_DIR+'/'+foldername+"/"+self.AWN_THUMB,"png")
+
+            if custom_icons_found:
+                if entries["save_icons"].get_active():
+                    self.save_custom_icons(foldername)
 
             os.chdir(self.BUILD_DIR)
             tar = tarfile.open('./'+foldername+".tgz", "w:gz")
@@ -191,6 +216,11 @@ class AwnThemeManager:
             detailsWindow.destroy()
         else:
             detailsWindow.destroy()
+
+    def save_custom_icons(self, foldername):
+        build_icon_path = os.path.join(self.BUILD_DIR, foldername, self.AWN_CUSTOM_ICONS)
+        icon_path = self.AWN_THEME_DIR = os.path.join(self.AWN_CONFIG_DIR, self.AWN_CUSTOM_ICONS)
+        shutil.copytree (icon_path, build_icon_path)
 
     def delete(self, widget, data=None):
         if(self.currItr != None):
@@ -375,6 +405,7 @@ class AwnThemeManager:
         self.AWN_THEME_DIR = os.path.join(self.AWN_CONFIG_DIR, "themes/")
         self.AWN_CONFIG = 'theme.awn'
         self.AWN_THUMB = 'thumb.png'
+        self.AWN_CUSTOM_ICONS = 'custom-icons'
         self.AWN_CURRENT = os.path.join(self.AWN_THEME_DIR, 'current.awn')
         self.GCONF = gconf.client_get_default()
         self.BUILD_DIR = "/tmp/awn_theme_build"

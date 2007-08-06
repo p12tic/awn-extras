@@ -112,7 +112,7 @@ class AwnThemeManager:
         dialog.destroy()
 
     def extract_file(self, file):
-        tar = tarfile.open(file)
+        tar = tarfile.open(file, "r:gz")
         filelist = tar.getmembers()
         theme_found = False
         thumb_found = False
@@ -123,7 +123,9 @@ class AwnThemeManager:
             if(path[1] == self.AWN_THUMB):
                 thumb_found = True
         if(theme_found and thumb_found):
-            tar.extractall(self.AWN_THEME_DIR)
+            for file in tar.getnames():
+                tar.extract(file, self.AWN_THEME_DIR)
+            #tar.extractall(self.AWN_THEME_DIR) #new in python 2.5
             tar.close()
             self.add_row(path[0])
             message = "Theme Successfully Added"
@@ -168,7 +170,7 @@ class AwnThemeManager:
         hbox.pack_start(entries["version"], expand=False, fill=False)
 
         custom_icons_found = False
-        icon_path = self.AWN_THEME_DIR = os.path.join(self.AWN_CONFIG_DIR, self.AWN_CUSTOM_ICONS)
+        icon_path = os.path.join(self.AWN_CONFIG_DIR, self.AWN_CUSTOM_ICONS)
         if os.path.exists(icon_path):
             if len(os.listdir(icon_path)) > 0:
                 hbox = gtk.HBox(homogeneous=False, spacing=5)
@@ -227,8 +229,8 @@ class AwnThemeManager:
 
     def save_custom_icons(self, foldername):
         build_icon_path = os.path.join(self.BUILD_DIR, foldername, self.AWN_CUSTOM_ICONS)
-        icon_path = self.AWN_THEME_DIR = os.path.join(self.AWN_CONFIG_DIR, self.AWN_CUSTOM_ICONS)
-        shutil.copytree (icon_path, build_icon_path)
+        icon_path = os.path.join(self.AWN_CONFIG_DIR, self.AWN_CUSTOM_ICONS)
+        shutil.copytree(icon_path, build_icon_path)
 
     def delete(self, widget, data=None):
         if(self.currItr != None):

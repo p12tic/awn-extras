@@ -221,7 +221,10 @@ class awnPreferences:
         chooser.set_preview_widget(preview)
         chooser.connect("update-preview", self.update_preview, preview)
         try:
-            chooser.set_filename(self.client.get_string(key))
+            if os.path.exists(key):
+                chooser.set_filename(self.client.get_string(key))
+            else:
+                self.client.set_string(BAR_PATTERN_URI, "~")
         except TypeError:
             raise "\nKey: "+key+" isn't set.\nRestarting AWN usually solves this issue\n"
         chooser.connect("selection-changed", self.chooser_changed, key)

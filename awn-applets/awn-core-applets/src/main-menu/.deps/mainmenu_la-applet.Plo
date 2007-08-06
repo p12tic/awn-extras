@@ -348,19 +348,18 @@ mainmenu_la-applet.lo mainmenu_la-applet.o: applet.c ../../config.h \
   /usr/include/gtk-2.0/gtk/gtkvruler.h \
   /usr/include/gtk-2.0/gtk/gtkvscale.h \
   /usr/include/gtk-2.0/gtk/gtkvseparator.h \
-  /usr/local/include/libawn/awn-applet.h \
-  /usr/local/include/libawn/awn-defines.h \
-  /usr/local/include/libawn/awn-applet-gconf.h \
+  /usr/include/libawn/awn-applet.h /usr/include/libawn/awn-defines.h \
+  /usr/include/libawn/awn-applet-gconf.h \
   /usr/include/gconf/2/gconf/gconf-value.h \
   /usr/include/gconf/2/gconf/gconf-error.h \
-  /usr/local/include/libawn/awn-applet.h \
-  /usr/local/include/libawn/awn-applet-dialog.h /usr/include/stdlib.h \
+  /usr/include/libawn/awn-applet.h \
+  /usr/include/libawn/awn-applet-dialog.h /usr/include/stdlib.h \
   /usr/include/sys/types.h /usr/include/endian.h \
   /usr/include/bits/endian.h /usr/include/sys/select.h \
   /usr/include/bits/select.h /usr/include/bits/sigset.h \
   /usr/include/sys/sysmacros.h /usr/include/bits/pthreadtypes.h \
-  /usr/include/alloca.h /usr/local/include/libawn/awn-applet.h \
-  /usr/local/include/libawn/awn-applet-gconf.h
+  /usr/include/alloca.h /usr/include/libawn/awn-applet.h \
+  /usr/include/libawn/awn-applet-gconf.h
 
 ../../config.h:
 
@@ -1150,19 +1149,19 @@ mainmenu_la-applet.lo mainmenu_la-applet.o: applet.c ../../config.h \
 
 /usr/include/gtk-2.0/gtk/gtkvseparator.h:
 
-/usr/local/include/libawn/awn-applet.h:
+/usr/include/libawn/awn-applet.h:
 
-/usr/local/include/libawn/awn-defines.h:
+/usr/include/libawn/awn-defines.h:
 
-/usr/local/include/libawn/awn-applet-gconf.h:
+/usr/include/libawn/awn-applet-gconf.h:
 
 /usr/include/gconf/2/gconf/gconf-value.h:
 
 /usr/include/gconf/2/gconf/gconf-error.h:
 
-/usr/local/include/libawn/awn-applet.h:
+/usr/include/libawn/awn-applet.h:
 
-/usr/local/include/libawn/awn-applet-dialog.h:
+/usr/include/libawn/awn-applet-dialog.h:
 
 /usr/include/stdlib.h:
 
@@ -1184,6 +1183,6 @@ mainmenu_la-applet.lo mainmenu_la-applet.o: applet.c ../../config.h \
 
 /usr/include/alloca.h:
 
-/usr/local/include/libawn/awn-applet.h:
+/usr/include/libawn/awn-applet.h:
 
-/usr/local/include/libawn/awn-applet-gconf.h:
+/usr/include/libawn/awn-applet-gconf.h:

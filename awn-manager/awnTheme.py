@@ -87,6 +87,9 @@ class AwnThemeManager:
                             elif type == gconf.VALUE_BOOL:
                                 self.gconf_client.set_bool(full_key_path, self.str_to_bool(style[key]))
 
+            if self.gconf_client.get_bool(self.AWN_GCONF+"/bar/render_pattern"):
+                self.gconf_client.set_string(self.AWN_GCONF+"/bar/pattern_uri", os.path.join(self.AWN_THEME_DIR, dir, "pattern.png"))
+
     def add(self, widget, data=None):
         dialog = gtk.FileChooserDialog(title=None,action=gtk.FILE_CHOOSER_ACTION_OPEN,
                                   buttons=(gtk.STOCK_CANCEL,gtk.RESPONSE_CANCEL,gtk.STOCK_OPEN,gtk.RESPONSE_OK))
@@ -194,6 +197,11 @@ class AwnThemeManager:
             os.makedirs(self.BUILD_DIR+"/"+foldername)
 
             self.write(self.BUILD_DIR+'/'+foldername+"/"+self.AWN_CONFIG, gconfKeys)
+
+            if bool(self.GCONF.get_bool(self.AWN_GCONF+"/bar/render_pattern")):
+                pattern_path = str(self.GCONF.get_string(self.AWN_GCONF+"/bar/pattern_uri"))
+                if os.path.isfile(pattern_path):
+                    shutil.copy(pattern_path,self.BUILD_DIR+'/'+foldername+"/pattern.png")
 
             img = self.get_img()
             if (img != None):

@@ -349,19 +349,17 @@ clock_la-utils.lo clock_la-utils.o: utils.c clock-applet.h \
   /usr/include/gtk-2.0/gtk/gtkvruler.h \
   /usr/include/gtk-2.0/gtk/gtkvscale.h \
   /usr/include/gtk-2.0/gtk/gtkvseparator.h \
-  /usr/local/include/libawn/awn-applet.h \
-  /usr/local/include/libawn/awn-defines.h \
-  /usr/local/include/libawn/awn-cairo-utils.h \
-  /usr/local/include/libawn/awn-applet-gconf.h \
+  /usr/include/libawn/awn-applet.h /usr/include/libawn/awn-defines.h \
+  /usr/include/libawn/awn-cairo-utils.h \
+  /usr/include/libawn/awn-applet-gconf.h \
   /usr/include/gconf/2/gconf/gconf-value.h \
   /usr/include/gconf/2/gconf/gconf-error.h \
-  /usr/local/include/libawn/awn-applet.h \
-  /usr/local/include/libawn/awn-applet-dialog.h /usr/include/stdlib.h \
+  /usr/include/libawn/awn-applet.h \
+  /usr/include/libawn/awn-applet-dialog.h /usr/include/stdlib.h \
   /usr/include/sys/types.h /usr/include/endian.h \
   /usr/include/bits/endian.h /usr/include/sys/sysmacros.h \
   /usr/include/bits/pthreadtypes.h /usr/include/alloca.h \
-  /usr/local/include/libawn/awn-applet.h \
-  /usr/local/include/libawn/awn-applet-gconf.h \
+  /usr/include/libawn/awn-applet.h /usr/include/libawn/awn-applet-gconf.h \
   /usr/include/librsvg-2/librsvg/rsvg.h \
   /usr/include/librsvg-2/librsvg/rsvg-cairo.h utils.h
 
@@ -1165,21 +1163,21 @@ clock-applet.h:
 
 /usr/include/gtk-2.0/gtk/gtkvseparator.h:
 
-/usr/local/include/libawn/awn-applet.h:
+/usr/include/libawn/awn-applet.h:
 
-/usr/local/include/libawn/awn-defines.h:
+/usr/include/libawn/awn-defines.h:
 
-/usr/local/include/libawn/awn-cairo-utils.h:
+/usr/include/libawn/awn-cairo-utils.h:
 
-/usr/local/include/libawn/awn-applet-gconf.h:
+/usr/include/libawn/awn-applet-gconf.h:
 
 /usr/include/gconf/2/gconf/gconf-value.h:
 
 /usr/include/gconf/2/gconf/gconf-error.h:
 
-/usr/local/include/libawn/awn-applet.h:
+/usr/include/libawn/awn-applet.h:
 
-/usr/local/include/libawn/awn-applet-dialog.h:
+/usr/include/libawn/awn-applet-dialog.h:
 
 /usr/include/stdlib.h:
 
@@ -1195,9 +1193,9 @@ clock-applet.h:
 
 /usr/include/alloca.h:
 
-/usr/local/include/libawn/awn-applet.h:
+/usr/include/libawn/awn-applet.h:
 
-/usr/local/include/libawn/awn-applet-gconf.h:
+/usr/include/libawn/awn-applet-gconf.h:
 
 /usr/include/librsvg-2/librsvg/rsvg.h:
 

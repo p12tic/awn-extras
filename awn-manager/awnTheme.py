@@ -238,9 +238,12 @@ class AwnThemeManager:
             name = self.theme_list[index]['name']
             version = self.theme_list[index]['version']
             dir = self.theme_list[index]['dir']
-            os.remove(self.AWN_THEME_DIR+'/'+dir+"/"+self.AWN_THUMB)
-            os.remove(self.AWN_THEME_DIR+'/'+dir+"/"+self.AWN_CONFIG)
-            os.rmdir(self.AWN_THEME_DIR+'/'+dir)
+
+            self.clean_tmp(os.path.join(self.AWN_THEME_DIR, dir))
+
+            #os.remove(self.AWN_THEME_DIR+'/'+dir+"/"+self.AWN_THUMB)
+            #os.remove(self.AWN_THEME_DIR+'/'+dir+"/"+self.AWN_CONFIG)
+            #os.rmdir(self.AWN_THEME_DIR+'/'+dir)
 
             if(os.path.exists(self.AWN_CURRENT)):
                 curr = open(self.AWN_CURRENT, "rb")

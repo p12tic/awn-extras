@@ -169,7 +169,11 @@ populate (Menu *app)
   if (app->root == gmenu_tree_get_root_directory (app->tree))
   {
     name = gmenu_tree_directory_get_name (app->root);
-    label = gtk_label_new (name);
+    gchar *markup = g_strdup_printf ("<span size='x-large' weight='bold'>%s</span>",
+         gmenu_tree_directory_get_name (app->root));
+    label = gtk_label_new ("");
+    gtk_label_set_markup (GTK_LABEL (label), markup);
+    g_free (markup);
     gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
   }
   else
@@ -179,7 +183,12 @@ populate (Menu *app)
     g_signal_connect (G_OBJECT (image), "clicked",
                       G_CALLBACK (on_back_clicked), NULL);
     gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
-    label = gtk_label_new (gmenu_tree_directory_get_name (app->root));
+    
+    gchar *markup = g_strdup_printf ("<span size='x-large' weight='bold'>%s</span>",
+         gmenu_tree_directory_get_name (app->root));
+    label = gtk_label_new ("");
+    gtk_label_set_markup (GTK_LABEL (label), markup);
+    g_free (markup);
     gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
     gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
   }
@@ -203,25 +212,9 @@ on_icon_clicked (GtkWidget *eb,
 }
 
 static gboolean
-on_focus_out (GtkWidget *window, GdkEventCrossing *event, gpointer null)
+on_focus_out (GtkWidget *window, GdkEventFocus *event, gpointer null)
 {
-  gint x, y, w, h;
-  gint rootx, rooty;
-  gint realx, realy;
   
-  gtk_window_get_position (GTK_WINDOW (window), &x, &y);
-  gtk_window_get_size (GTK_WINDOW (window), &w, &h);
-
-  gtk_widget_get_pointer (window, &rootx, &rooty);
-
-  realx = rootx + x;
-  realy = rooty + y;
-
-  if ((realx > x) && (realx < (x+w)))
-  {
-    if ((realy > y)&& (realy < (y+h)))
-        return;
-  }
     gtk_widget_hide (window);
 }
 
@@ -242,10 +235,11 @@ awn_applet_factory_init (AwnApplet *applet)
   app->box = gtk_alignment_new (0.5, 0.5, 1, 1);
 
   gtk_container_add (GTK_CONTAINER (app->window), app->box);
-  g_signal_connect (G_OBJECT (app->window), "leave-notify-event",
+  g_signal_connect (G_OBJECT (app->window), "focus-out-event",
                     G_CALLBACK (on_focus_out), NULL);
 
-  gtk_window_set_policy (GTK_WINDOW (app->window), FALSE, FALSE, TRUE);
+  //gtk_window_set_policy (GTK_WINDOW (app->window), FALSE, FALSE, TRUE);
+  //gtk_window_set_title (GTK_WINDOW (app->window), "Hello there stranger");
   gtk_widget_show_all (app->window);
   app->root = gmenu_tree_get_root_directory (app->tree);
  

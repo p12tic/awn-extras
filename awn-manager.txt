@@ -1,0 +1,1 @@
+awn-manager is now part of the main Awn package, please just update your bzr checkout of awn.

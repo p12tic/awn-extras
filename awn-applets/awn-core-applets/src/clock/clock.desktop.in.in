@@ -2,6 +2,6 @@
 Type=C
 Encoding=UTF-8
 Name=Clock
-Comment=A simple clock.
+Comment=A clock.
 Exec=@LIBDIR@/awn/applets/clock/clock.so
 Icon=

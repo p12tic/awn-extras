@@ -1,0 +1,29 @@
+This a clock applet from Avant-window-navigator.
+
+Overview
+========
+
+To displays are possible:
+ - digital : only digit and letter. It can show the time and the date. The format are configurable.
+ - analogic : the time are display with cairo-clock themes. The date can also be displayed and the format is configurable too.
+	
+	
+
+Installation
+============
+
+Use the autogen.sh && make && sudo make install
+/!\ copy the themes directory to /usr/local/share/avant-window-navigator/applet/clock/
+If this folder doesn't exist, create it.
+If it's impossible (due to the system, or other things), the path is hard coded in clock-applet.c on line 150
+
+For the moment, the theme name is in the source code too, so if you want to change it, it's on the line 151.
+Themes supported are all the cairo-clock themes.
+
+
+
+
+Enjoy, and don't hesitate to submit patch or/and ideas to improve it : 
+ - web.nicolas2b@gmail.com
+ - http://www.planetblur.org/hosted/awnforum/index.php
+ - https://launchpad.net/awn-extras

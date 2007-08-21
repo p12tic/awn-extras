@@ -37,6 +37,7 @@
 #include <libawn/awn-cairo-utils.h>
 #include <libawn/awn-applet-gconf.h>
 #include <libawn/awn-applet-dialog.h>
+#include <libawn/awn-title.h>
 
 
 #ifdef HAVE_SVG
@@ -56,7 +57,7 @@ typedef struct
 	
 	gint timeout_id;
 	GtkOrientation orient;
-	GtkTooltips *tooltips;
+	AwnTitle *title;
 	
 	//Les image pour l'heure
 	//Version png
@@ -77,6 +78,11 @@ typedef struct
 		RsvgHandle	*hour_hand_svg_handle;
 		RsvgHandle	*minute_hand_svg_handle;
 		RsvgHandle	*second_hand_svg_handle;
+		RsvgHandle	*hour_hand_shadow_svg_handle;
+		RsvgHandle	*minute_hand_shadow_svg_handle;
+		RsvgHandle	*second_hand_shadow_svg_handle;
+		RsvgHandle	*drop_shadow_svg_handle;
+		RsvgHandle	*face_svg_handle;
 	#endif
 
 	//Les informations sur la date et l'heure

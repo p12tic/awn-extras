@@ -26,16 +26,99 @@
 #include "clock-applet.h"
 #include "utils.h"
 
-//From kiba-dock
-void
-convert_color (const char *html_color, double *r, double *g, double *b)
+
+//-----------------------------------------------------
+//Adapted from the stack applet taken from awn core => I think it need to be move to libawn so everybody can use it
+
+
+/**
+ * Get the decimal value of a hex value
+ */
+int 
+getdec(char hexchar)
 {
-	int red,green,blue;
-	sscanf (html_color, "#%02X%02X%02X", &red, &green, &blue);
-	*r = (double) red   / 256;
-	*g = (double) green / 256;
-	*b = (double) blue  / 256;
+	if ((hexchar >= '0') && (hexchar <= '9'))
+		return hexchar - '0';
+		
+	if ((hexchar >= 'A') && (hexchar <= 'F'))
+		return hexchar - 'A' + 10;
+	
+	if ((hexchar >= 'a') && (hexchar <= 'f'))
+		return hexchar - 'a' + 10;
+
+	g_warning("probleme couleur");
+	return -1; // Wrong character
 }
+
+/**
+ * Convert a HexColor (including alpha) to a FloatColor
+ */
+void 
+hex2float(char* HexColor, float* FloatColor)
+{
+	gchar	*HexColorPtr = HexColor;
+	gint	i;
+
+	for (i = 0; i < 4; i++)
+	{
+		gint IntColor = (getdec(HexColorPtr[0]) * 16) + getdec(HexColorPtr[1]);
+		FloatColor[i] = (gfloat) IntColor / 255.0;
+		HexColorPtr += 2;
+	}
+}
+
+/**
+ * Get a color from a GConf key
+ */
+void
+convert_color (AwnColor *color, const gchar *str_color)
+{
+	gfloat	colors[4];
+	
+	hex2float (str_color, colors);
+		
+	color->red = colors[0];
+	color->green = colors[1];
+	color->blue = colors[2];
+	color->alpha = colors[3];
+}
+//----------------------------------------
+
+
+#ifdef HAVE_SVG
+	// Adapted from kiba-dock
+	gboolean
+	awn_load_svg (RsvgHandle **handle, char* path, char* theme, char* file_name, GError **error)
+	{
+		gchar* path_file = g_strdup_printf ( "%s%s/%s", path, theme, file_name);
+		
+		if ((char*)path_file == NULL || strstr ((char*)path_file, ".svg") == NULL)
+			return FALSE;
+		
+		if (*handle != NULL)
+			rsvg_handle_free (*handle);
+			
+		if (*error != NULL)
+			*error = NULL;
+
+		*handle = rsvg_handle_new_from_file (path_file, NULL);
+		if (*error != NULL)
+		{
+			fprintf (stderr, "Failed to load Svg Icon for applet clock\nError");	// : %s\n", (*error)->message);
+			g_clear_error (error);
+			return FALSE;
+		}
+		if (handle != NULL)
+		{
+			//rsvg_handle_set_size_callback (*handle, rsvg_resize_func, object, NULL);
+			return TRUE;
+		}
+
+		*handle = NULL;
+		g_warning("Erreur chargement fichier svg : %s\n", path_file);
+		return FALSE;
+	}
+#endif
 
 /*gboolean
 awn_load_png (gchar *icon, GdkPixbuf **pixbuf, GError **error)
@@ -146,38 +229,3 @@ awn_load_png (gchar *icon, GdkPixbuf **pixbuf, GError **error)
   return FALSE;
 }*/
 
-
-#ifdef HAVE_SVG
-	//From kiba-dock
-	gboolean
-	awn_load_svg (char* path, RsvgHandle **handle, GError **error)
-	{
-		if (path == NULL || strstr (path, ".svg") == NULL)
-			return FALSE;
-
-		if (*handle != NULL)
-			rsvg_handle_free (*handle);
-
-		/*if (!object->size)
-			object->size = object->normal_size;
-
-		object->buffer_size = object->normal_size;*/
-
-		*handle = rsvg_handle_new_from_file (path, NULL);
-		if (*error != NULL)
-		{
-			fprintf (stderr, "Failed to load Svg Icon for launcher %s\n" "notifications: %s\n", "", (*error)->message);
-			g_clear_error (error);
-			return FALSE;
-		}
-		if (handle != NULL)
-		{
-			//rsvg_handle_set_size_callback (*handle, rsvg_resize_func, object, NULL);
-			return TRUE;
-		}
-
-		*handle = NULL;
-
-		return FALSE;
-	}
-#endif

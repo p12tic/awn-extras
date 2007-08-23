@@ -1,0 +1,5 @@
+This is the plugin provided in the source of awn sources.
+To install it, do make install with root or sudo.
+
+WARNING
+The artdisplay-awn is incompatible with the artdisplay plugin. You must disable the original artdisplay to use the version for awn. 

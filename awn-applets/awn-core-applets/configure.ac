@@ -11,6 +11,14 @@ AC_STDC_HEADERS
 AC_PROG_LIBTOOL
 
 dnl ==============================================
+dnl gconf stuff
+dnl ==============================================
+AC_PATH_PROG(GCONFTOOL, gconftool-2, no)
+if test x"$GCONFTOOL" = xno; then
+  AC_MSG_ERROR([gconftool-2 executable not found in your path - should be installed with GConf])
+fi
+
+dnl ==============================================
 dnl translation support
 dnl ==============================================
 
@@ -41,11 +49,18 @@ fi
 AC_SUBST(GCC_FLAGS)
 
 dnl Please keep in alpha order
+
+dnl ==============================================
+dnl GConf
+dnl ==============================================
+AM_GCONF_SOURCE_2
+
 AC_OUTPUT([
 Makefile
 po/Makefile.in
 src/Makefile
 src/clock/Makefile
 src/main-menu/Makefile
+src/stack/Makefile
 src/wobblyzini/Makefile
 ])

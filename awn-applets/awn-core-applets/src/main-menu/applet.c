@@ -29,6 +29,7 @@
 #include <libawn/awn-applet.h>
 #include <libawn/awn-applet-gconf.h>
 #include <libawn/awn-applet-dialog.h>
+#include <libawn/awn-applet-simple.h>
 
 #define PAGER_ROWS 2
 #define BAR_HEIGHT 100
@@ -218,6 +219,8 @@ on_focus_out (GtkWidget *window, GdkEventFocus *event, gpointer null)
     gtk_widget_hide (window);
 }
 
+
+#if 0
 gboolean 
 awn_applet_factory_init (AwnApplet *applet)
 {
@@ -250,4 +253,45 @@ awn_applet_factory_init (AwnApplet *applet)
   gtk_widget_show_all (GTK_WIDGET (applet));
   return TRUE;
 }
+#endif
 
+AwnApplet *
+awn_applet_factory_initp (const gchar * uid, gint orient, gint height ) 
+{
+  AwnApplet *applet = AWN_APPLET (awn_applet_simple_new (uid, orient, height));
+  Menu      *app = menu =  g_new0 (Menu, 1);
+ 
+  app->tree = gmenu_tree_lookup ("applications.menu", GMENU_TREE_FLAGS_NONE);
+  if (!app->tree)
+  {
+    g_warning ("Unable to find applications.menu");
+    return FALSE;
+  }
+  app->window = awn_applet_dialog_new (applet);
+  gtk_window_set_focus_on_map (GTK_WINDOW (app->window), TRUE);
+
+  app->box = gtk_alignment_new (0.5, 0.5, 1, 1);
+
+  gtk_container_add (GTK_CONTAINER (app->window), app->box);
+  g_signal_connect (G_OBJECT (app->window), "focus-out-event",
+                    G_CALLBACK (on_focus_out), NULL);
+
+  gtk_widget_show_all (app->window);
+  gtk_widget_hide (app->window);
+  app->root = gmenu_tree_get_root_directory (app->tree);
+ 
+  gtk_widget_set_size_request (GTK_WIDGET (applet), 60, -1);
+ 
+  g_signal_connect (G_OBJECT (applet), "button-press-event",
+                    G_CALLBACK (on_icon_clicked), (gpointer)app);
+
+  GdkPixbuf *icon;
+  icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (),
+                                   "gnome-main-menu",
+                                   height-2,
+                                   0, NULL);
+  awn_applet_simple_set_icon (AWN_APPLET_SIMPLE (applet), icon);
+
+  gtk_widget_show_all (GTK_WIDGET (applet));
+  return applet;
+}

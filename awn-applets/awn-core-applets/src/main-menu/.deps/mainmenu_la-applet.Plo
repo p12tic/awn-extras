@@ -359,8 +359,8 @@ mainmenu_la-applet.lo mainmenu_la-applet.o: applet.c ../../config.h \
   /usr/include/bits/endian.h /usr/include/sys/select.h \
   /usr/include/bits/select.h /usr/include/bits/sigset.h \
   /usr/include/sys/sysmacros.h /usr/include/bits/pthreadtypes.h \
-  /usr/include/alloca.h /usr/local/include/libawn/awn-applet.h \
-  /usr/local/include/libawn/awn-applet-gconf.h
+  /usr/include/alloca.h /usr/local/include/libawn/awn-applet-gconf.h \
+  /usr/local/include/libawn/awn-applet-simple.h
 
 ../../config.h:
 
@@ -1184,6 +1184,6 @@ mainmenu_la-applet.lo mainmenu_la-applet.o: applet.c ../../config.h \
 
 /usr/include/alloca.h:
 
-/usr/local/include/libawn/awn-applet.h:
-
 /usr/local/include/libawn/awn-applet-gconf.h:
+
+/usr/local/include/libawn/awn-applet-simple.h:

@@ -160,7 +160,7 @@
         <key>/schemas/apps/awn-stack/prefs/icontext_color</key>
         <owner>awn-stack</owner>
         <type>string</type>
-        <default>FFFFFFCC</default>
+        <default>FFFFFFFF</default>
         <locale name="C">
           <short>RGBA color of the icon text</short>
           <long></long>

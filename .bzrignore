@@ -1,7 +1,7 @@
-aclocal.m4
-intltool-extract
-intltool-extract.in
-intltool-merge
-intltool-merge.in
-intltool-update
-intltool-update.in
+awn-applets/awn-core-applets/aclocal.m4
+awn-applets/awn-core-applets/intltool-extract
+awn-applets/awn-core-applets/intltool-extract.in
+awn-applets/awn-core-applets/intltool-merge
+awn-applets/awn-core-applets/intltool-merge.in
+awn-applets/awn-core-applets/intltool-update
+awn-applets/awn-core-applets/intltool-update.in

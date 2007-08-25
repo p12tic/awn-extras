@@ -726,20 +726,26 @@ gboolean move_right(
 void stack_folder_do_next_page(
     StackFolder * folder ){
 
-	g_return_if_fail( stack_folder_has_next_page( folder ) );
+	g_return_if_fail( stack_folder_has_next_page( folder ));
+	if( anim_time != 0.0 ){
+		return;
+	}
 	folder->page = folder->page + 1;    
     gtk_widget_show_all( GTK_WIDGET( folder ) );    
-    g_timeout_add( 25, ( GSourceFunc ) move_right, ( gpointer ) folder );
+    g_timeout_add( 20, ( GSourceFunc ) move_right, ( gpointer ) folder );
 
 }
     
 void stack_folder_do_prev_page(
     StackFolder * folder ){
 
-	g_return_if_fail( stack_folder_has_prev_page( folder ) );
+	g_return_if_fail( stack_folder_has_prev_page( folder ));
+	if( anim_time != 0.0 ){
+		return;
+	}
 	folder->page = folder->page - 1;    
     gtk_widget_show_all( GTK_WIDGET( folder ) );    
-    g_timeout_add( 25, ( GSourceFunc ) move_left, ( gpointer ) folder );
+    g_timeout_add( 20, ( GSourceFunc ) move_left, ( gpointer ) folder );
 }
 
 /**

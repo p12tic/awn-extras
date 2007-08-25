@@ -673,6 +673,7 @@ void stack_dialog_toggle_visiblity(
     // toggle visibility
     dialog->active = !dialog->active;
     if ( dialog->active ) {
+        awn_title_hide (dialog->applet->title, GTK_WIDGET(dialog->applet->awn_applet));
         stack_dialog_relayout( dialog );
         gtk_widget_show_all( GTK_WIDGET( dialog->awn_dialog ) );
         gtk_window_present( GTK_WINDOW( dialog->awn_dialog ) );
@@ -680,5 +681,7 @@ void stack_dialog_toggle_visiblity(
     } else {
         gtk_widget_hide( dialog->awn_dialog );
     }
+    
+    gtk_widget_queue_draw( GTK_WIDGET( dialog->applet ) );
 }
 

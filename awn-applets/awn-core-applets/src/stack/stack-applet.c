@@ -95,6 +95,9 @@ static void stack_applet_activate_dialog(
     GtkEntry * entry,
     gpointer data );
 
+static gboolean stack_applet_enter_notify_event (GtkWidget *window, GdkEventButton *event, gpointer *data);
+static gboolean stack_applet_leave_notify_event (GtkWidget *window, GdkEventButton *event, gpointer *data);
+
 static AwnAppletClass *parent_class = NULL;
 
 static const GtkTargetEntry drop_types[] = { {"text/uri-list", 0, 0} };
@@ -117,6 +120,17 @@ GtkWidget *stack_applet_new(
     update_icons( applet );
     
     applet->stack = stack_dialog_new( applet );
+
+   	applet->title = AWN_TITLE(awn_title_get_default ());
+	applet->title_text = g_strdup (stack_gconf_get_backend_folder());
+	
+	/* connect to mouse enter/leave events */
+	g_signal_connect (G_OBJECT (applet->awn_applet), "enter-notify-event",
+			  G_CALLBACK (stack_applet_enter_notify_event),
+			  (gpointer*)applet);
+	g_signal_connect (G_OBJECT (applet->awn_applet), "leave-notify-event",
+			  G_CALLBACK (stack_applet_leave_notify_event),
+			  (gpointer*)applet);
 
     gtk_widget_show( GTK_WIDGET( applet ) );
 
@@ -170,12 +184,12 @@ static void stack_applet_init(
     applet->reflect_icon = NULL;
 
     // connect to external events
-//    g_signal_connect( AWN_APPLET( applet->awn_applet ), "height-changed",
-//                      G_CALLBACK( stack_applet_height_changed ), applet );
-//      g_signal_connect( AWN_APPLET( applet->awn_applet ), "orient-changed",
-//        G_CALLBACK( stack_applet_orient_changed ), applet );
-//    g_signal_connect( gtk_icon_theme_get_default(  ), "changed",
-//                      G_CALLBACK( stack_applet_theme_changed ), applet );
+	g_signal_connect( AWN_APPLET( applet->awn_applet ), "height-changed",
+                      G_CALLBACK( stack_applet_height_changed ), applet );
+    g_signal_connect( AWN_APPLET( applet->awn_applet ), "orient-changed",
+        G_CALLBACK( stack_applet_orient_changed ), applet );
+    g_signal_connect( gtk_icon_theme_get_default(  ), "changed",
+                      G_CALLBACK( stack_applet_theme_changed ), applet );
 
     // set up DnD target
     gtk_drag_dest_set( GTK_WIDGET( applet ), GTK_DEST_DEFAULT_ALL, drop_types,
@@ -195,6 +209,11 @@ static void stack_applet_destroy(
     GtkObject * object ) {
 
     StackApplet *applet = STACK_APPLET( object );
+
+	if (applet->title){
+		g_object_unref (applet->title);
+	}
+	applet->title = NULL;
 
     if ( applet->context_menu ) {
         gtk_widget_destroy( applet->context_menu );
@@ -246,11 +265,12 @@ static gboolean stack_applet_expose_event(
 
     GdkPixbuf *old = applet->reflect_icon;
 
-	if ( stack_gconf_is_composite_applet_icon() && applet->composite_icon ){
+	if ( stack_gconf_is_composite_applet_icon() && applet->composite_icon && !STACK_DIALOG(applet->stack)->active){
 	    paint_icon( cr, applet->composite_icon, PADDING, y, 1.0f );
         applet->reflect_icon = gdk_pixbuf_flip( applet->composite_icon, FALSE );
     }else{
         paint_icon( cr, applet->icon, PADDING, y, 1.0f );
+        applet->reflect_icon = gdk_pixbuf_flip( applet->icon, FALSE );
     }
 
     if ( old ) {
@@ -517,6 +537,24 @@ static gboolean stack_applet_button_release_event(
     return FALSE;
 }
 
+static gboolean stack_applet_enter_notify_event (GtkWidget *window, GdkEventButton *event, gpointer *data)
+{
+	StackApplet *applet = (StackApplet *)data;
+	if( !STACK_DIALOG(applet->stack )->active ){
+		awn_title_show (applet->title, GTK_WIDGET(applet->awn_applet), applet->title_text);
+	}
+	
+	return TRUE;
+}
+
+static gboolean stack_applet_leave_notify_event (GtkWidget *window, GdkEventButton *event, gpointer *data)
+{
+	StackApplet *applet = (StackApplet *)data;
+	awn_title_hide (applet->title, GTK_WIDGET(applet->awn_applet));
+	
+	return TRUE;
+}
+
 /**
  * Height (of Awn bar) change event
  * -update icons
@@ -599,13 +637,6 @@ static void update_icons(
 	gtk_window_set_default_icon( applet->icon );
         
 	g_free( applet_icon );
-	
-	// if we do not have to create a composite icon
-	if( !stack_gconf_is_composite_applet_icon() ){
-		applet->reflect_icon = gdk_pixbuf_flip( applet->icon, FALSE );
-	}else{
-		applet->composite_icon = applet->icon;
-	}
 
 	// if the applet is visible, redraw the applet icon
     if ( GTK_WIDGET_VISIBLE( applet ) ) {
@@ -695,6 +726,8 @@ static void stack_applet_activate_dialog(
 
         filename = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dialog ) );
         stack_gconf_set_backend_folder( filename );
+
+		//applet->title_text = g_strdup (_("No Items in Trash"));
 
         GtkWidget *old = applet->stack;
 

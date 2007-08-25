@@ -21,7 +21,7 @@ STACK_SOURCES =                              \
 
 STACK_LDADD =                        \
         $(DEPS_LIBS)			        \
-        $(AWN_LIBS)                              
+        $(AWN_LIBS)
 
 stacklibdir = $(libdir)/awn/applets/stack/
 stacklib_LTLIBRARIES = stack.la
@@ -48,9 +48,9 @@ desktop_DATA = \
 	stack.desktop
 @INTLTOOL_DESKTOP_RULE@
 
-$(desktop_DATA).in: $(desktop_DATA).in.in
+$(desktop_DATA): $(desktop_DATA).in
 	sed -e "s|\@LIBDIR\@|$(libdir)|g" $< > $@
 
 EXTRA_DIST = \
-	stack.desktop.in.in \
+	stack.desktop.in \
 	$(schemas_in_files)

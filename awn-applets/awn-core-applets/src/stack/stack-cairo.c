@@ -24,7 +24,7 @@
 #include "stack-cairo.h"
 #include "stack-applet.h"
 #include "stack-gconf.h"
-//#include "stack-defines.h"
+#include "stack-defines.h"
 
 /**
  * Paint the icon name
@@ -41,7 +41,7 @@ void paint_icon_name(
 
     AwnColor                              color;
     cairo_text_extents_t extents;
-    guint           icon_size = stack_gconf_get_icon_size(  ) + MARGIN_X/2;
+    guint           icon_size = stack_gconf_get_icon_size(  ) + ICON_MARGIN_X*2/3;
     guint           num = 0;
     gchar          *name = g_strdup( icon_name );
 
@@ -104,7 +104,7 @@ void paint_icon_name(
         }
 
         cairo_text_extents( cr, subname, &extents );
-        tx = x + ( icon_size / 2 ) - ( ( extents.width / 2 ) + extents.x_bearing ) - MARGIN_X/4;
+        tx = x + ( icon_size / 2 ) - ( ( extents.width / 2 ) + extents.x_bearing ) - ICON_MARGIN_X/3;
         ty = y + ( 3 * STACK_ICON_TEXT_INNERLINE_PADDING ) +
              ( num * ( extents.height + STACK_ICON_TEXT_INNERLINE_PADDING ) );
 

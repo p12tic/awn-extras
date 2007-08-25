@@ -39,7 +39,7 @@ typedef struct _StackDialogPrivate StackDialogPrivate;
 struct _StackDialog {
 	GtkFixed parent;
 
-    GtkWidget *awn_dialog;
+    GtkWidget		*awn_dialog;
     StackApplet    *applet;
     GtkWidget      *fixed;
 

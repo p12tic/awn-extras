@@ -25,6 +25,7 @@
  */
 #include <gtk/gtk.h>
 #include <libawn/awn-applet.h>
+#include <libawn/awn-title.h>
 
 #define STACK_TYPE_APPLET (stack_applet_get_type ())
 #define STACK_APPLET(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), STACK_TYPE_APPLET, StackApplet))
@@ -40,13 +41,16 @@ typedef struct _StackAppletPrivate StackAppletPrivate;
 struct _StackApplet {
 	GtkDrawingArea	parent;
 
-    AwnApplet      *awn_applet;
-    GtkWidget      *context_menu;
-    GtkWidget      *stack;
+    AwnApplet     	*awn_applet;
+    GtkWidget     	*context_menu;
+    GtkWidget     	*stack;
+    
+	AwnTitle		*title;
+	gchar			*title_text;
 
-    GdkPixbuf      *icon;
-    GdkPixbuf      *composite_icon;
-    GdkPixbuf      *reflect_icon;
+    GdkPixbuf     	*icon;
+    GdkPixbuf     	*composite_icon;
+    GdkPixbuf     	*reflect_icon;
 
     gboolean        drag_hover;
 

@@ -1,0 +1,15 @@
+Source: awn-core-applets
+Section: gnome
+Priority: optional
+Maintainer: Julien Lavergne <julien.lavergne@gmail.com>
+Build-Depends: debhelper (>= 5), cdbs, intltool, gnome-pkg-tools, autotools-dev, libgnome-menu-dev, libgconf2-dev, libgnome-desktop-dev, gnome-common, librsvg2-dev, libawn-dev
+Standards-Version: 3.7.2
+
+Package: awn-core-applets
+Section: gnome
+Architecture: any
+Depends: ${shlibs:Depends}
+Recommands: avant-window-navigator
+Description: A collection of applets for avant-windows-navigator
+ A collection of applets for avant-windows-navigator. This is a clock, an example of animation and a main menu of GNOME
+

@@ -115,23 +115,18 @@ AwnApplet *awn_applet_factory_initp(
     gint height ) {
 
 	GtkWidget *awn_applet = awn_applet_new( uid, orient, height );
-
+	
     StackApplet *applet = g_object_new( STACK_TYPE_APPLET, NULL );
+	applet->awn_applet = awn_applet;
 
-    applet->awn_applet = awn_applet;
-    // connect to external events
-	  g_signal_connect( AWN_APPLET( applet->awn_applet ), "height-changed",
-                      G_CALLBACK( stack_applet_height_changed ), applet );
-    g_signal_connect( AWN_APPLET( applet->awn_applet ), "orient-changed",
-        G_CALLBACK( stack_applet_orient_changed ), applet );
+    stack_gconf_init( AWN_APPLET( awn_applet ) );
 
-   stack_gconf_init( awn_applet );
     update_icons( applet );
-
+    
     applet->stack = stack_dialog_new( applet );
 
    	applet->title = AWN_TITLE(awn_title_get_default ());
-	  applet->title_text = g_strdup (stack_gconf_get_backend_folder());
+	applet->title_text = g_strdup (stack_gconf_get_backend_folder());
 	
 	/* connect to mouse enter/leave events */
 	g_signal_connect (G_OBJECT (applet->awn_applet), "enter-notify-event",
@@ -141,18 +136,17 @@ AwnApplet *awn_applet_factory_initp(
 			  G_CALLBACK (stack_applet_leave_notify_event),
 			  (gpointer*)applet);
 
-    gtk_widget_show_all( GTK_WIDGET( applet ) );
+    gtk_widget_show( GTK_WIDGET( applet ) );
 
 
-    gtk_container_add( GTK_CONTAINER( awn_applet ), applet );
-    gtk_widget_set_size_request( awn_applet, awn_applet_get_height (awn_applet), 
-                               awn_applet_get_height (awn_applet) * 2 );
+    gtk_container_add( GTK_CONTAINER( awn_applet ), GTK_WIDGET(applet) );
+    gtk_widget_set_size_request( awn_applet, awn_applet_get_height ( AWN_APPLET(awn_applet)), 
+                               awn_applet_get_height (AWN_APPLET(awn_applet)) * 2 );
 
-    gtk_widget_show_all( awn_applet );
+    gtk_widget_show( awn_applet );
 
     return AWN_APPLET( awn_applet );
 }
-
 
 /**
  * Initialize applet class
@@ -200,7 +194,12 @@ static void stack_applet_init(
     applet->composite_icon = NULL;
     applet->reflect_icon = NULL;
 
-   g_signal_connect( gtk_icon_theme_get_default(  ), "changed",
+    // connect to external events
+	g_signal_connect( AWN_APPLET( applet->awn_applet ), "height-changed",
+                      G_CALLBACK( stack_applet_height_changed ), applet );
+    g_signal_connect( AWN_APPLET( applet->awn_applet ), "orient-changed",
+        G_CALLBACK( stack_applet_orient_changed ), applet );
+    g_signal_connect( gtk_icon_theme_get_default(  ), "changed",
                       G_CALLBACK( stack_applet_theme_changed ), applet );
 
     // set up DnD target
@@ -630,19 +629,14 @@ static void update_icons(
     StackApplet * applet ) {
 
 	GtkIconTheme   *theme = gtk_icon_theme_get_default(  );
-  gchar *applet_icon =  NULL;
-  
-  applet_icon = stack_gconf_get_applet_icon(  );
-
-  if (!applet_icon)
-    applet_icon = g_strdup ("gnome-fs-directory");
+    gchar *applet_icon = stack_gconf_get_applet_icon(  );
     
 	applet->icon = gtk_icon_theme_load_icon( theme, applet_icon,
                        awn_applet_get_height
                        ( AWN_APPLET( applet->awn_applet ) ) - PADDING, 0, NULL );
 
 	if( !applet->icon ){
-		applet_icon = g_strdup (STACK_DEFAULT_APPLET_ICON);
+		applet_icon = STACK_DEFAULT_APPLET_ICON;
 		applet->icon = gtk_icon_theme_load_icon( theme, applet_icon,
                        awn_applet_get_height
                        ( AWN_APPLET( applet->awn_applet ) ) - PADDING, 0, NULL );
@@ -652,6 +646,8 @@ static void update_icons(
 
 	// set the window icon
 	gtk_window_set_default_icon( applet->icon );
+        
+	g_free( applet_icon );
 
 	// if the applet is visible, redraw the applet icon
     if ( GTK_WIDGET_VISIBLE( applet ) ) {

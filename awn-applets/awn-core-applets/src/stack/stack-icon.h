@@ -37,7 +37,7 @@ typedef struct _StackIcon StackIcon;
 typedef struct _StackIconClass StackIconClass;
 typedef struct _StackIconPrivate StackIconPrivate;
 struct _StackIcon {
-    GtkDrawingArea     parent;
+    GtkDrawingArea parent;
     
     GtkWidget      *folder;
     GdkPixbuf      *icon;
@@ -46,10 +46,7 @@ struct _StackIcon {
     gchar          *name;
 
     gboolean        hovering;
-    //gboolean        animating;
 
-    guint           x;
-    guint           y;
     guint           icon_x;
     guint           icon_y;
     guint           name_x;

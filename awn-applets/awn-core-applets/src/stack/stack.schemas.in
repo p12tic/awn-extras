@@ -138,7 +138,7 @@
         <key>/schemas/apps/awn-stack/prefs/border_color</key>
         <owner>awn-stack</owner>
         <type>string</type>
-        <default>FFFFFFFF</default>
+        <default>FFFFFFCC</default>
         <locale name="C">
           <short>RGBA color of the border</short>
           <long></long>
@@ -160,7 +160,7 @@
         <key>/schemas/apps/awn-stack/prefs/icontext_color</key>
         <owner>awn-stack</owner>
         <type>string</type>
-        <default>FFFFFFFF</default>
+        <default>FFFFFFCC</default>
         <locale name="C">
           <short>RGBA color of the icon text</short>
           <long></long>

@@ -41,7 +41,7 @@ typedef struct _StackAppletPrivate StackAppletPrivate;
 struct _StackApplet {
 	GtkDrawingArea	parent;
 
-    AwnApplet     	*awn_applet;
+    GtkWidget     	*awn_applet;
     GtkWidget     	*context_menu;
     GtkWidget     	*stack;
     

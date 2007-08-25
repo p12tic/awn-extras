@@ -75,13 +75,9 @@ GnomeVFSURI *stack_dialog_get_backend_folder(
 void stack_dialog_toggle_visiblity(
     GtkWidget * widget );
 
-void stack_dialog_open_uri(
-    StackDialog * dialog,
-    GnomeVFSURI * uri );
-
 void stack_dialog_set_folder(
     StackDialog * dialog,
-    GtkWidget * folder,
+    GnomeVFSURI * uri,
     gint page );
 
 #endif /* __STACK_DIALOG_H__ */

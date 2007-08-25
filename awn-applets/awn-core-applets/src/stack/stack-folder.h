@@ -37,23 +37,25 @@ typedef struct _StackFolder StackFolder;
 typedef struct _StackFolderClass StackFolderClass;
 
 struct _StackFolder {
-    GtkFixed        parent;
+    GtkViewport        parent;
 
     StackDialog    *dialog;
+    GtkWidget		*table;
 
     const gchar    *name;
     GnomeVFSURI    *uri;
     GnomeVFSMonitorHandle *monitor;
 
     GList          *icon_list;
+    gint            page;
+    gint			pages;
+    
     GList          *composite_icon_list;
     GdkPixbuf      *applet_icon;
-
-    gint            page;
 };
 
 struct _StackFolderClass {
-    GtkFixedClass   parent_class;
+    GtkViewportClass   parent_class;
 };
 
 GType stack_folder_get_type(
@@ -71,13 +73,15 @@ gboolean stack_folder_has_next_page(
     
 gboolean stack_folder_has_prev_page(
     StackFolder * folder );
+
+void stack_folder_do_next_page(
+    StackFolder * folder );
+    
+void stack_folder_do_prev_page(
+    StackFolder * folder );
     
 gboolean stack_folder_has_parent_folder(
     StackFolder * folder );
-    
-void stack_folder_show_page(
-    StackFolder * folder,
-    gint page );
 
 #endif /* __STACK_FOLDER_H__ */
 

@@ -28,8 +28,9 @@
 #include "stack-defines.h"
 #include "stack-gconf.h"
 #include "stack-pixbuf-utils.h"
+#include "stack-cairo.h"
 
-G_DEFINE_TYPE( StackFolder, stack_folder, GTK_TYPE_FIXED )
+G_DEFINE_TYPE( StackFolder, stack_folder, GTK_TYPE_VIEWPORT )
 
 static void stack_folder_destroy( GtkObject * object );
 
@@ -38,8 +39,7 @@ static gint stack_folder_sort_list(
     gconstpointer b );
     
 static void stack_folder_relayout(
-    StackFolder * folder,
-    gint page );
+    StackFolder * folder);
     
 static void static_folder_monitor_callback(
     GnomeVFSMonitorHandle * handle,
@@ -60,7 +60,8 @@ static GList *stack_folder_list_get_page(
     GList * list,
     gint icon_page );
 
-static GtkFixedClass *parent_class = NULL;
+static GtkViewportClass *parent_class = NULL;
+static gdouble anim_time = 0.0;
 
 /**
  * Create a new stack folder
@@ -72,7 +73,7 @@ static GtkFixedClass *parent_class = NULL;
  */
 GtkWidget *stack_folder_new(
     StackDialog * dialog,
-    GnomeVFSURI * uri ) {
+    GnomeVFSURI * uri) {
 
 	g_return_val_if_fail( dialog && uri, NULL );
 
@@ -81,7 +82,6 @@ GtkWidget *stack_folder_new(
     stack_folder->dialog = dialog;
     stack_folder->uri = uri;
     stack_folder->name = gnome_vfs_uri_extract_short_name( stack_folder->uri );
-    stack_folder->page = 0;
 
     GnomeVFSDirectoryHandle *handle;
     GnomeVFSResult  result;
@@ -130,11 +130,49 @@ GtkWidget *stack_folder_new(
         }
     }
 
-    stack_folder_relayout( stack_folder, stack_folder->page );
-    gtk_widget_show( GTK_WIDGET( stack_folder ) );
+	stack_folder->table = gtk_table_new(1,1, TRUE);
+	gtk_table_set_row_spacings( GTK_TABLE(stack_folder->table), 0);
+	gtk_table_set_col_spacings( GTK_TABLE(stack_folder->table), 0);
+	gtk_widget_show( stack_folder->table );
+	gtk_container_add( GTK_CONTAINER( stack_folder), stack_folder->table );
+
+	gtk_viewport_set_shadow_type( GTK_VIEWPORT( stack_folder ), GTK_SHADOW_NONE );
+
+    stack_folder_relayout( stack_folder );
+
+	gtk_widget_show( GTK_WIDGET( stack_folder ) );
 
     return GTK_WIDGET( stack_folder );
 
+}
+
+/**
+ * If the table is not completely filled, it shows the ugly widget background
+ * Repaint that!
+ */
+static gboolean stack_folder_expose_event(
+    GtkWidget * widget,
+    GdkEventExpose * expose ) {
+
+    StackFolder *folder = STACK_FOLDER( widget );
+
+    GdkWindow *window = GDK_WINDOW( folder->table->window );
+    cairo_t *cr = NULL;
+
+    g_return_val_if_fail( GDK_IS_DRAWABLE( window ), FALSE );
+    cr = gdk_cairo_create( window );
+    g_return_val_if_fail( cr, FALSE );
+
+    // paint background same as dialog
+    cairo_set_operator( cr, CAIRO_OPERATOR_CLEAR );
+    cairo_set_source_rgba( cr, 0.0, 0.0, 0.0, 0.0 );
+    cairo_paint( cr );    
+    cairo_set_operator( cr, CAIRO_OPERATOR_OVER );
+   	cairo_set_source_rgba( cr, 0.0, 0.0, 0.0, 0.85 );
+    cairo_paint( cr );  
+    
+    cairo_destroy( cr );
+    return FALSE;
 }
 
 /**
@@ -149,9 +187,11 @@ static void stack_folder_class_init(
     object_class = ( GtkObjectClass * ) klass;
     widget_class = ( GtkWidgetClass * ) klass;
 
-	parent_class = gtk_type_class (GTK_TYPE_FIXED);
+	parent_class = gtk_type_class (GTK_TYPE_VIEWPORT);
 
     object_class->destroy = stack_folder_destroy;
+    
+    widget_class->expose_event = stack_folder_expose_event;
 }
 
 /**
@@ -234,7 +274,7 @@ static void static_folder_monitor_callback(
 
 	if( something_changed ){
     
-	    stack_dialog_set_folder(folder->dialog, GTK_WIDGET(folder), folder->page );
+	    stack_dialog_set_folder(folder->dialog, folder->uri, folder->page );
 	    
         // TODO: if current displayed folder
         g_timeout_add( 25, ( GSourceFunc ) _bounce_baby,
@@ -449,6 +489,7 @@ static gboolean stack_folder_add(
     }
 
     GtkWidget *stack_icon = stack_icon_new( folder, file );
+    gtk_widget_show( stack_icon );
     
     g_return_val_if_fail( stack_icon, FALSE );
 
@@ -483,6 +524,8 @@ static gboolean stack_folder_add(
     folder->icon_list = g_list_insert_sorted( folder->icon_list, stack_icon,
                         stack_folder_sort_list );
 
+	g_object_ref_sink( STACK_ICON( stack_icon ) );
+
     return TRUE;
 }
 
@@ -516,17 +559,13 @@ void stack_folder_remove(
  * -iterate through the list of icons and position each one
  */
 static void stack_folder_relayout(
-    StackFolder * folder,
-    gint page ) {
-    
-    folder->page = page;
-    gtk_widget_hide_all( GTK_WIDGET( folder ) );
+    StackFolder * folder) {  
 
-    gint width = 0, height = 0;
-
-    GList *tmplist = stack_folder_list_get_page( folder->icon_list, page );
-
-    if ( tmplist != NULL ) {
+    gint width = 0, height = 0, page = 0;
+	
+    //GList *tmplist = stack_folder_list_get_page( folder->icon_list, page );
+	GList *tmplist = folder->icon_list;        
+    if ( tmplist != NULL) {
         GtkWidget *icon = GTK_WIDGET( tmplist->data );
 
         gint iw = 0, ih = 0;
@@ -553,22 +592,24 @@ static void stack_folder_relayout(
         }
 
         gint item = 0;
-
+        GtkWidget *vbox = NULL;
+		GtkWidget *hbox = NULL;
         while ( tmplist ) {
+
+			if( item % (cols * rows ) == 0 ){
+	        		vbox = gtk_vbox_new(FALSE, 0);
+        			gtk_widget_show( vbox );
+					gtk_table_attach_defaults( GTK_TABLE(folder->table), vbox, page, page + 1, 0, 1);
+					page++;
+        	}
+        	if( item % cols == 0 ){
+        		hbox = gtk_hbox_new(FALSE, 0);
+        		gtk_widget_show( hbox );
+        		gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+        	}
+        
             GtkWidget *icon = GTK_WIDGET( tmplist->data );
-
-            gint x = ( item % cols ) * iw;
-            gint y = ( ceil( item / cols ) ) * ih;
-
-            if ( gtk_widget_get_parent( icon ) == GTK_WIDGET( folder ) ) {
-                gtk_fixed_move( GTK_FIXED( folder ), icon, x, y );
-            } else {
-                gtk_fixed_put( GTK_FIXED( folder ), icon, x, y );
-            }
-            STACK_ICON(icon)->x = x;
-            STACK_ICON(icon)->y = y;
-
-            gtk_widget_show( icon );
+            gtk_box_pack_start (GTK_BOX (hbox), icon, FALSE, FALSE, 0);
 
             tmplist = g_list_next( tmplist );
 
@@ -582,11 +623,17 @@ static void stack_folder_relayout(
     	width = MIN_WIDTH;
     	height = MIN_HEIGHT;
     }
+    folder->pages = page;
 
     gtk_widget_set_size_request( GTK_WIDGET( folder ), width, height );
 
-    gtk_widget_queue_resize_no_redraw( GTK_WIDGET( folder ) );
-    //gtk_widget_queue_draw( GTK_WIDGET( folder ) );
+    GtkObject *v_adjust = gtk_adjustment_new(0.0, 0.0, height, height, height, height);
+    gtk_viewport_set_vadjustment( GTK_VIEWPORT( folder ), GTK_ADJUSTMENT( v_adjust ) );
+
+    GtkObject *h_adjust = gtk_adjustment_new(0.0, 0.0, folder->pages * width, width, width, width);
+    gtk_viewport_set_hadjustment( GTK_VIEWPORT( folder ), GTK_ADJUSTMENT( h_adjust ) );
+
+    //gtk_widget_queue_resize( GTK_WIDGET( folder ) );
 }
 
 /**
@@ -618,6 +665,83 @@ gboolean stack_folder_has_prev_page(
     return ( folder->page > 0 );
 }
 
+gboolean move_left(
+    StackFolder * folder ){
+
+	if(anim_time == 0.0){
+		anim_time = 2.0;
+	}
+    anim_time -= 0.2;    
+    
+    gint width = 0, height = 0;  
+    gtk_widget_get_size_request( GTK_WIDGET( folder ), &width, &height );   
+
+    gdouble replacement = 0.5 * ( 1 + cbrt( anim_time - 1.0 ) );
+    if(replacement < 0.0){
+    	replacement = 0.0;
+    }
+
+	gint value = (gint)(folder->page * width + replacement * width);
+
+    GtkObject *h_adjust = gtk_adjustment_new(value, 0.0, folder->pages * width, width, width, width);
+    gtk_viewport_set_hadjustment( GTK_VIEWPORT( folder ), GTK_ADJUSTMENT( h_adjust ) );
+
+    gtk_widget_queue_draw( GTK_WIDGET( folder ) );
+    
+    if(anim_time < 0.0 ){
+    	anim_time = 0.0;
+	    gtk_widget_queue_draw( GTK_WIDGET( folder->dialog ) );
+    	return FALSE;
+    }
+   	return TRUE;
+}
+
+gboolean move_right(
+    StackFolder * folder ){
+
+    anim_time += 0.2;    
+    gint width = 0, height = 0;  
+    gtk_widget_get_size_request( GTK_WIDGET( folder ), &width, &height );   
+
+    gdouble replacement = 0.5 * ( 1 + cbrt( anim_time - 1.0 ) );
+    if(replacement > 1.0){
+    	replacement = 1.0;
+    }    
+    
+    gint value = (gint)((folder->page - 1) * width + replacement * width);
+    
+    GtkObject *h_adjust = gtk_adjustment_new(value, 0.0, folder->pages * width, width, width, width);
+    gtk_viewport_set_hadjustment( GTK_VIEWPORT( folder ), GTK_ADJUSTMENT( h_adjust ) );
+    
+    gtk_widget_queue_draw( GTK_WIDGET( folder ) );
+    
+    if(anim_time > 2.0 ){
+    	anim_time = 0.0;
+	    gtk_widget_queue_draw( GTK_WIDGET( folder->dialog ) );
+    	return FALSE;
+    }
+   	return TRUE;
+}
+
+void stack_folder_do_next_page(
+    StackFolder * folder ){
+
+	g_return_if_fail( stack_folder_has_next_page( folder ) );
+	folder->page = folder->page + 1;    
+    gtk_widget_show_all( GTK_WIDGET( folder ) );    
+    g_timeout_add( 25, ( GSourceFunc ) move_right, ( gpointer ) folder );
+
+}
+    
+void stack_folder_do_prev_page(
+    StackFolder * folder ){
+
+	g_return_if_fail( stack_folder_has_prev_page( folder ) );
+	folder->page = folder->page - 1;    
+    gtk_widget_show_all( GTK_WIDGET( folder ) );    
+    g_timeout_add( 25, ( GSourceFunc ) move_left, ( gpointer ) folder );
+}
+
 /**
  * Checks if the folder has a parent folder
  */
@@ -629,14 +753,5 @@ gboolean stack_folder_has_parent_folder(
 	}
 	
     return ( gnome_vfs_uri_get_parent( folder->uri ) != NULL );
-}
-
-/**
- * Show a certain page on a folder
- */
-void stack_folder_show_page(
-    StackFolder * folder,
-    gint page ) {
-    stack_folder_relayout( folder, page );
 }
 

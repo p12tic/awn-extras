@@ -126,7 +126,7 @@ GtkWidget *stack_dialog_new(
     // Create the folder right link
     dialog->frt_box = stack_dialog_evbox_init( dialog, FOLDER_RIGHT );
 
-    stack_dialog_open_uri( dialog, gnome_vfs_uri_new( stack_gconf_get_backend_folder(  ) ) );
+    stack_dialog_set_folder( dialog, gnome_vfs_uri_new( stack_gconf_get_backend_folder(  ) ), 0 );
 	
 	gtk_widget_show( GTK_WIDGET( dialog ) );
 
@@ -274,7 +274,8 @@ static void stack_dialog_do_folder_left(
 		return;
 	}
 
-    stack_dialog_set_folder( STACK_DIALOG( dialog ), GTK_WIDGET(current_folder), current_folder->page - 1 );
+    //stack_dialog_set_folder( STACK_DIALOG( dialog ), current_folder->uri, current_folder->page - 1 );
+    stack_folder_do_prev_page( current_folder);
     //sliding_direction = DIR_RIGHT;
     //g_timeout_add( 25, (GSourceFunc)stack_dialog_slide_in, dialog);
 }
@@ -286,7 +287,8 @@ static void stack_dialog_do_folder_right(
     	return;
     }
 
-    stack_dialog_set_folder( STACK_DIALOG( dialog ), GTK_WIDGET(current_folder), current_folder->page + 1 );
+    //stack_dialog_set_folder( STACK_DIALOG( dialog ), current_folder->uri, current_folder->page + 1 );
+    stack_folder_do_next_page( current_folder);
     //sliding_direction = DIR_LEFT;
     //g_timeout_add( 25, (GSourceFunc)stack_dialog_slide_in, dialog);
 }
@@ -299,7 +301,7 @@ static void stack_dialog_do_folder_up(
         return;
     }
 
-    stack_dialog_open_uri( STACK_DIALOG( dialog ), parent );
+    stack_dialog_set_folder( STACK_DIALOG( dialog ), parent, 0 );
 }
 
 static void stack_dialog_do_folder_back(
@@ -502,35 +504,25 @@ static gboolean stack_dialog_focus_out_event(
     return FALSE;
 }
 
-void stack_dialog_open_uri(
+void stack_dialog_set_folder(
     StackDialog * dialog,
-    GnomeVFSURI * uri ) {
+    GnomeVFSURI * uri,
+    gint page ) {
+       
+    //g_return_if_fail( STACK_IS_DIALOG( dialog ) && GTK_IS_WIDGET( folder ) );
+    
     GtkWidget *folder = stack_folder_new( STACK_DIALOG( dialog ), uri );
 
     g_return_if_fail( GTK_IS_WIDGET( folder ) );
-
-    stack_dialog_set_folder( dialog, folder, 0 );
-}
-
-void stack_dialog_set_folder(
-    StackDialog * dialog,
-    GtkWidget * folder,
-    gint page ) {
-    
-    g_return_if_fail( STACK_IS_DIALOG( dialog ) && GTK_IS_WIDGET( folder ) );
     
     gtk_window_set_title( GTK_WINDOW( dialog->awn_dialog ), STACK_FOLDER(folder)->name );
 
-    stack_folder_show_page( STACK_FOLDER(folder), page );
-
     if ( !current_folder ) {
         backend_folder = STACK_FOLDER(folder);
-        gtk_container_add( GTK_CONTAINER( dialog ), folder );
-    } else if ( current_folder == STACK_FOLDER(folder) ) {
-        gtk_widget_hide( GTK_WIDGET( current_folder ) );
+        gtk_fixed_put( GTK_FIXED( dialog ), folder, 0, 0 );
     } else { 
         gtk_widget_destroy( GTK_WIDGET( current_folder ) );
-        gtk_container_add( GTK_CONTAINER( dialog ), folder );
+        gtk_fixed_put( GTK_CONTAINER( dialog ), folder, 0, 0 );
     }
 	
     current_folder = STACK_FOLDER(folder);

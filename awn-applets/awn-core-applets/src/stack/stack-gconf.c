@@ -265,7 +265,7 @@ static void stack_gconf_get_color(
 
     if ( !value ) {
         awn_applet_gconf_set_string( applet, key, def, NULL );
-        value = def;
+        value = g_strdup( def );
     }
 
 	awn_cairo_string_to_color( value, color );

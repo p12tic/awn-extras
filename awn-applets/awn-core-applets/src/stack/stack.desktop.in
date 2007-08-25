@@ -4,6 +4,6 @@ Encoding=UTF-8
 Name=Stack
 Type=C
 Comment=Stack items on eachother
-Exec=@LIBDIR@/awn/applets/stack/stack.so
+Exec=/usr/local/lib/awn/applets/stack/stack.so
 Icon=folder-drag-accept
 Name[en_US]=Stack

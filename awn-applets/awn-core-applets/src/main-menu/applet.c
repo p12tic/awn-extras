@@ -170,11 +170,9 @@ populate (Menu *app)
   if (app->root == gmenu_tree_get_root_directory (app->tree))
   {
     name = gmenu_tree_directory_get_name (app->root);
-    gchar *markup = g_strdup_printf ("<span size='x-large' weight='bold'>%s</span>",
-         gmenu_tree_directory_get_name (app->root));
+    gtk_window_set_title (GTK_WINDOW (app->window),  
+                          gmenu_tree_directory_get_name (app->root));
     label = gtk_label_new ("");
-    gtk_label_set_markup (GTK_LABEL (label), markup);
-    g_free (markup);
     gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
   }
   else
@@ -185,11 +183,9 @@ populate (Menu *app)
                       G_CALLBACK (on_back_clicked), NULL);
     gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
     
-    gchar *markup = g_strdup_printf ("<span size='x-large' weight='bold'>%s</span>",
-         gmenu_tree_directory_get_name (app->root));
+    gtk_window_set_title (GTK_WINDOW (app->window),  
+                          gmenu_tree_directory_get_name (app->root));
     label = gtk_label_new ("");
-    gtk_label_set_markup (GTK_LABEL (label), markup);
-    g_free (markup);
     gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
     gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
   }

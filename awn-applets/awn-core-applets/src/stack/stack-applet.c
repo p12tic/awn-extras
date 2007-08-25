@@ -109,9 +109,13 @@ static const GtkTargetEntry drop_types[] = { {"text/uri-list", 0, 0} };
  * -create stack for default backend folder
  * -update icons
  */
-GtkWidget *stack_applet_new(
-    AwnApplet *awn_applet ) {
+AwnApplet *awn_applet_factory_initp(
+    gchar * uid,
+    gint orient,
+    gint height ) {
 
+	GtkWidget *awn_applet = awn_applet_new( uid, orient, height );
+	
     StackApplet *applet = g_object_new( STACK_TYPE_APPLET, NULL );
 	applet->awn_applet = awn_applet;
 
@@ -134,7 +138,14 @@ GtkWidget *stack_applet_new(
 
     gtk_widget_show( GTK_WIDGET( applet ) );
 
-    return GTK_WIDGET(applet);
+
+    gtk_container_add( GTK_CONTAINER( awn_applet ), applet );
+    gtk_widget_set_size_request( awn_applet, awn_applet_get_height (awn_applet), 
+                               awn_applet_get_height (awn_applet) * 2 );
+
+    gtk_widget_show( awn_applet );
+
+    return AWN_APPLET( awn_applet );
 }
 
 /**

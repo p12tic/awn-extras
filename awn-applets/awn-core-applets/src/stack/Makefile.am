@@ -10,7 +10,6 @@ INCLUDES =							\
 	-I$(top_builddir)/libawn
 
 STACK_SOURCES =                              \
-	applet.c     \
 	stack-applet.c                           \
 	stack-cairo.c \
 	stack-dialog.c \

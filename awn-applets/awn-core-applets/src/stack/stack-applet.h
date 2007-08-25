@@ -68,9 +68,6 @@ GType stack_applet_get_type(
     void
 );
 
-GtkWidget *stack_applet_new(
-    AwnApplet *applet );
-
 gboolean _bounce_baby(
     StackApplet * applet );
 

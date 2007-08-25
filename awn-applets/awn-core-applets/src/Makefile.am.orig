@@ -1,4 +1,0 @@
-SUBDIRS =	clock main-menu wobblyzini stack
-#        main-menu			#\
-#	clock				\
-#	wobblyzini		

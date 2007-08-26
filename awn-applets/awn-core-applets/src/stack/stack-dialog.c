@@ -113,7 +113,7 @@ GtkWidget *stack_dialog_new(
 
     gtk_container_add( GTK_CONTAINER(dialog->awn_dialog), GTK_WIDGET( dialog ) );
 
-	gtk_window_set_focus_on_map (GTK_WINDOW (dialog), TRUE);
+	gtk_window_set_focus_on_map (GTK_WINDOW (dialog->awn_dialog), TRUE);
 
     // Create the filemanager link
     dialog->fm_box = stack_dialog_evbox_init( dialog, FILEMANAGER );
@@ -126,7 +126,10 @@ GtkWidget *stack_dialog_new(
     // Create the folder right link
     dialog->frt_box = stack_dialog_evbox_init( dialog, FOLDER_RIGHT );
 
+	// Create a folder of the backend folder
     stack_dialog_set_folder( dialog, gnome_vfs_uri_new( stack_gconf_get_backend_folder(  ) ), 0 );
+    // Set the applet-icon
+    stack_applet_set_icon( dialog->applet, current_folder->applet_icon );
 	
 	gtk_widget_show( GTK_WIDGET( dialog ) );
 
@@ -621,13 +624,20 @@ void stack_dialog_toggle_visiblity(
     dialog->active = !dialog->active;
     if ( dialog->active ) {
         awn_title_hide (dialog->applet->title, GTK_WIDGET(dialog->applet->awn_applet));
-        stack_applet_set_icon( dialog->applet, NULL );
+        stack_applet_set_icon( dialog->applet, NULL );        
         stack_dialog_relayout( dialog );
         gtk_widget_show_all( GTK_WIDGET( dialog->awn_dialog ) );
         gtk_window_present( GTK_WINDOW( dialog->awn_dialog ) );
         gtk_widget_grab_focus( widget );
     } else {
         gtk_widget_hide( dialog->awn_dialog );
+		
+		// reset to backend folder
+		if(!gnome_vfs_uri_equal(current_folder->uri, gnome_vfs_uri_new( stack_gconf_get_backend_folder(  ) )) ){
+			stack_dialog_set_folder( dialog, gnome_vfs_uri_new( stack_gconf_get_backend_folder(  ) ), 0 );
+		}
+		
+		// set applet icon
 		stack_applet_set_icon( dialog->applet, current_folder->applet_icon );
     }
     

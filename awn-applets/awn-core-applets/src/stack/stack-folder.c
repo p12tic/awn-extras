@@ -510,8 +510,6 @@ static gboolean stack_folder_add(
     	if( old ){
 	    	g_object_unref( G_OBJECT( old ) );
 	    }
-    	
-    	stack_applet_set_icon( folder->dialog->applet, folder->applet_icon );
     }
 
     folder->icon_list = g_list_insert_sorted( folder->icon_list, stack_icon,

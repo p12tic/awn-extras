@@ -24,7 +24,7 @@
  * INCLUDES
  */
 #include <gtk/gtk.h>
-#include <libawn/awn-applet.h>
+#include <libawn/awn-applet-simple.h>
 #include <libawn/awn-title.h>
 
 #define STACK_TYPE_APPLET (stack_applet_get_type ())
@@ -47,17 +47,6 @@ struct _StackApplet {
     
 	AwnTitle		*title;
 	gchar			*title_text;
-
-    GdkPixbuf     	*icon;
-    GdkPixbuf     	*composite_icon;
-    GdkPixbuf     	*reflect_icon;
-
-    gboolean        drag_hover;
-
-    guint           size;
-    guint           new_size;
-    gint            y_offset;
-    gint            dir;
 };
 
 struct _StackAppletClass {
@@ -67,9 +56,6 @@ struct _StackAppletClass {
 GType stack_applet_get_type(
     void
 );
-
-gboolean _bounce_baby(
-    StackApplet * applet );
 
 void stack_applet_set_icon(
     StackApplet * applet,

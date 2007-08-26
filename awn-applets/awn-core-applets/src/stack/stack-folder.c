@@ -224,11 +224,6 @@ static void stack_folder_destroy( GtkObject * object ) {
     }
     folder->icon_list = NULL;
     
-    if ( folder->composite_icon_list ) {
-        g_list_free( folder->composite_icon_list );
-    }
-    folder->composite_icon_list = NULL;
-    
     if ( folder->applet_icon ) {
         g_object_unref( G_OBJECT( folder->applet_icon ) );
     }
@@ -276,9 +271,7 @@ static void static_folder_monitor_callback(
     
 	    stack_dialog_set_folder(folder->dialog, folder->uri, folder->page );
 	    
-        // TODO: if current displayed folder
-        g_timeout_add( 25, ( GSourceFunc ) _bounce_baby,
-                 ( gpointer ) STACK_DIALOG( folder->dialog )->applet );
+        // TODO: get attention
     }
 
     return;

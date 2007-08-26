@@ -18,7 +18,7 @@
  */
 
 #include <string.h>
-#include <libawn/awn-applet.h>
+#include <libawn/awn-applet-simple.h>
 #include <libgnomevfs/gnome-vfs.h>
 
 #include "stack-applet.h"
@@ -38,25 +38,19 @@ static void stack_applet_init(
 static void stack_applet_destroy(
     GtkObject * object );
 
-static void stack_applet_size_allocate(
-    GtkWidget * widget,
-    GdkRectangle * allocation );
-
-static gboolean stack_applet_expose_event(
-    GtkWidget * widget,
-    GdkEventExpose * expose );
-
 static void stack_applet_drag_leave(
     GtkWidget * widget,
     GdkDragContext * context,
-    guint time_ );
+    guint time_, 
+    StackApplet *applet );
 
 static gboolean stack_applet_drag_motion(
     GtkWidget * widget,
     GdkDragContext * context,
     gint x,
     gint y,
-    guint time_ );
+    guint time_, 
+    StackApplet *applet );
 
 static void stack_applet_drag_data_received(
     GtkWidget * widget,
@@ -65,28 +59,13 @@ static void stack_applet_drag_data_received(
     gint y,
     GtkSelectionData * selectiondata,
     guint info,
-    guint time_ );
+    guint time_, 
+    StackApplet *applet );
 
 static gboolean stack_applet_button_release_event(
     GtkWidget * widget,
-    GdkEventButton * event );
-
-static void stack_applet_height_changed(
-    AwnApplet * app,
-    guint height,
-    StackApplet * applet );
-
-static void stack_applet_orient_changed(
-    AwnApplet * app,
-    AwnOrientation orient,
-    StackApplet * applet );
-
-static void stack_applet_theme_changed(
-    GtkIconTheme * icon_theme,
-    gpointer data );
-
-static void update_icons(
-    StackApplet * applet );
+    GdkEventButton * event,
+    StackApplet *applet );
 
 static GtkWidget *stack_applet_new_dialog(
     StackApplet * applet );
@@ -95,8 +74,8 @@ static void stack_applet_activate_dialog(
     GtkEntry * entry,
     gpointer data );
 
-static gboolean stack_applet_enter_notify_event (GtkWidget *window, GdkEventButton *event, gpointer *data);
-static gboolean stack_applet_leave_notify_event (GtkWidget *window, GdkEventButton *event, gpointer *data);
+static gboolean stack_applet_enter_notify_event (GtkWidget *window, GdkEventButton *event, StackApplet *applet);
+static gboolean stack_applet_leave_notify_event (GtkWidget *window, GdkEventButton *event, StackApplet *applet);
 
 static AwnAppletClass *parent_class = NULL;
 
@@ -114,36 +93,52 @@ AwnApplet *awn_applet_factory_initp(
     gint orient,
     gint height ) {
 
-	GtkWidget *awn_applet = awn_applet_new( uid, orient, height );
+	GtkWidget *awn_applet = awn_applet_simple_new( uid, orient, height );
 	
     StackApplet *applet = g_object_new( STACK_TYPE_APPLET, NULL );
 	applet->awn_applet = awn_applet;
 
     stack_gconf_init( AWN_APPLET( awn_applet ) );
 
-    update_icons( applet );
+    stack_applet_set_icon( applet, NULL );
     
     applet->stack = stack_dialog_new( applet );
 
    	applet->title = AWN_TITLE(awn_title_get_default ());
 	applet->title_text = g_strdup (stack_gconf_get_backend_folder());
+
+	gtk_widget_add_events( GTK_WIDGET( applet->awn_applet ), GDK_ALL_EVENTS_MASK );
 	
 	/* connect to mouse enter/leave events */
 	g_signal_connect (G_OBJECT (applet->awn_applet), "enter-notify-event",
 			  G_CALLBACK (stack_applet_enter_notify_event),
-			  (gpointer*)applet);
+			  applet);
 	g_signal_connect (G_OBJECT (applet->awn_applet), "leave-notify-event",
 			  G_CALLBACK (stack_applet_leave_notify_event),
-			  (gpointer*)applet);
-
-    gtk_widget_show( GTK_WIDGET( applet ) );
-
-
-    gtk_container_add( GTK_CONTAINER( awn_applet ), GTK_WIDGET(applet) );
+			  applet);
+	g_signal_connect (G_OBJECT (applet->awn_applet), "button-release-event",
+              G_CALLBACK (stack_applet_button_release_event), 
+              applet);
+              
+    // set up DnD target
+    gtk_drag_dest_set( GTK_WIDGET( applet->awn_applet ), GTK_DEST_DEFAULT_ALL, drop_types,
+                       G_N_ELEMENTS( drop_types ),
+                       GDK_ACTION_LINK | GDK_ACTION_COPY | GDK_ACTION_MOVE );           
+	g_signal_connect (G_OBJECT (applet->awn_applet), "drag-leave",
+              G_CALLBACK (stack_applet_drag_leave), 
+              applet);
+	g_signal_connect (G_OBJECT (applet->awn_applet), "drag-motion",
+              G_CALLBACK (stack_applet_drag_motion), 
+              applet);
+	g_signal_connect (G_OBJECT (applet->awn_applet), "drag-data-received",
+              G_CALLBACK (stack_applet_drag_data_received), 
+              applet);                   
+                                           
     gtk_widget_set_size_request( awn_applet, awn_applet_get_height ( AWN_APPLET(awn_applet)), 
                                awn_applet_get_height (AWN_APPLET(awn_applet)) * 2 );
 
-    gtk_widget_show( awn_applet );
+
+    gtk_widget_show_all( awn_applet );
 
     return AWN_APPLET( awn_applet );
 }
@@ -165,14 +160,6 @@ static void stack_applet_class_init(
 	parent_class = gtk_type_class (GTK_TYPE_DRAWING_AREA);
 
     object_class->destroy = stack_applet_destroy;
-
-    widget_class->expose_event = stack_applet_expose_event;
-    widget_class->size_allocate = stack_applet_size_allocate;
-    widget_class->drag_leave = stack_applet_drag_leave;
-    widget_class->drag_motion = stack_applet_drag_motion;
-    widget_class->drag_data_received = stack_applet_drag_data_received;
-    widget_class->button_release_event = stack_applet_button_release_event;
-
 }
 
 /**
@@ -184,30 +171,6 @@ static void stack_applet_class_init(
  */
 static void stack_applet_init(
     StackApplet * applet ) {
-
-    applet->size = 0;
-    applet->new_size = 0;
-    applet->y_offset = 0;
-    applet->drag_hover = FALSE;
-    applet->dir = DIR_UP;
-    applet->icon = NULL;
-    applet->composite_icon = NULL;
-    applet->reflect_icon = NULL;
-
-    // connect to external events
-	g_signal_connect( AWN_APPLET( applet->awn_applet ), "height-changed",
-                      G_CALLBACK( stack_applet_height_changed ), applet );
-    g_signal_connect( AWN_APPLET( applet->awn_applet ), "orient-changed",
-        G_CALLBACK( stack_applet_orient_changed ), applet );
-    g_signal_connect( gtk_icon_theme_get_default(  ), "changed",
-                      G_CALLBACK( stack_applet_theme_changed ), applet );
-
-    // set up DnD target
-    gtk_drag_dest_set( GTK_WIDGET( applet ), GTK_DEST_DEFAULT_ALL, drop_types,
-                       G_N_ELEMENTS( drop_types ),
-                       GDK_ACTION_LINK | GDK_ACTION_COPY | GDK_ACTION_MOVE );
-
-    gtk_widget_add_events( GTK_WIDGET( applet ), GDK_ALL_EVENTS_MASK );
 
     return;
 }
@@ -229,109 +192,14 @@ static void stack_applet_destroy(
     if ( applet->context_menu ) {
         gtk_widget_destroy( applet->context_menu );
     }
+    applet->context_menu = NULL;
 
     if ( applet->stack ) {
         gtk_widget_destroy( applet->stack );
     }
-
-    if ( applet->icon ) {
-        g_object_unref( applet->icon );
-    }
-
-    if ( applet->composite_icon ) {
-        g_object_unref( applet->composite_icon );
-    }
-
-    if ( applet->reflect_icon ) {
-        g_object_unref( applet->reflect_icon );
-    }
+    applet->stack = NULL;
 
     ( *GTK_OBJECT_CLASS( stack_applet_parent_class )->destroy ) ( object );
-}
-
-/**
- * Expose Event 
- * -clear background
- * -paint icon
- * -create reflection icon
- * -paint reflection
- */
-static gboolean stack_applet_expose_event(
-    GtkWidget * widget,
-    GdkEventExpose * expose ) {
-
-    g_return_val_if_fail( STACK_IS_APPLET( widget ), FALSE );
-    StackApplet *applet = STACK_APPLET( widget );
-
-    cairo_t *cr = NULL;
-
-    g_return_val_if_fail( GDK_IS_DRAWABLE( widget->window ), FALSE );
-    cr = gdk_cairo_create( widget->window );
-    g_return_val_if_fail( cr, FALSE );
-
-    clear_background( cr );
-
-    guint height = awn_applet_get_height( AWN_APPLET( applet->awn_applet ) );
-    guint y = ( height + PADDING ) - applet->y_offset;
-
-    GdkPixbuf *old = applet->reflect_icon;
-
-	if ( stack_gconf_is_composite_applet_icon() && applet->composite_icon && !STACK_DIALOG(applet->stack)->active){
-	    paint_icon( cr, applet->composite_icon, PADDING, y, 1.0f );
-        applet->reflect_icon = gdk_pixbuf_flip( applet->composite_icon, FALSE );
-    }else{
-        paint_icon( cr, applet->icon, PADDING, y, 1.0f );
-        applet->reflect_icon = gdk_pixbuf_flip( applet->icon, FALSE );
-    }
-
-    if ( old ) {
-        g_object_unref( G_OBJECT( old ) );
-    }
-
-    if ( applet->y_offset >= 0 ) {
-        y += height;
-        paint_icon( cr, applet->reflect_icon, PADDING, y, 0.33f );
-    }
-
-    cairo_destroy( cr );
-
-    return FALSE;
-}
-
-/**
- * Allocate size
- * ?
- */
-static void stack_applet_size_allocate(
-    GtkWidget * widget,
-    GdkRectangle * allocation ) {
-    /*
-    	g_return_if_fail( widget != NULL );
-    	g_return_if_fail( STACK_IS_APPLET( widget ) );
-    	g_return_if_fail( allocation != NULL );
-
-    	widget->allocation = *allocation;
-    	if( GTK_WIDGET_REALIZED( widget ) ){
-
-    		priv = STACK_APPLET_GET_PRIVATE( STACK_APPLET( widget ) );
-    		gint		new_size;
-
-    		if( awn_applet_get_orientation( AWN_APPLET( widget ) ) == GTK_ORIENTATION_HORIZONTAL ){
-    			new_size = allocation->height;
-    		}else{
-    			new_size = allocation->width;
-    		}
-
-    		if( new_size != priv->size ){
-    			applet->new_size = new_size;
-    			gtk_widget_queue_draw( widget );
-    		}
-
-    		gdk_window_move_resize( widget->window, allocation->x, allocation->y, allocation->width, allocation->height );
-    	}
-    */
-    ( *GTK_WIDGET_CLASS( stack_applet_parent_class )->size_allocate )
-    ( widget, allocation );
 }
 
 /**
@@ -341,16 +209,10 @@ static void stack_applet_size_allocate(
 static void stack_applet_drag_leave(
     GtkWidget * widget,
     GdkDragContext * context,
-    guint time_ ) {
-
-    g_return_if_fail( STACK_IS_APPLET( widget ) );
-
-    StackApplet    *applet = STACK_APPLET( widget );
-
-    if ( applet->drag_hover ) {
-        applet->drag_hover = FALSE;
-        gtk_widget_queue_draw( GTK_WIDGET( applet ) );
-    }
+    guint time_, 
+    StackApplet *applet ) {
+   
+	return;
 }
 
 /**
@@ -362,20 +224,10 @@ static gboolean stack_applet_drag_motion(
     GdkDragContext * context,
     gint x,
     gint y,
-    guint time_ ) {
+    guint time_, 
+    StackApplet *applet ) {
 
-    g_return_val_if_fail( STACK_IS_APPLET( widget ), FALSE );
-
-    StackApplet *applet = STACK_APPLET( widget );
-
-    if ( !applet->drag_hover ) {
-        applet->drag_hover = TRUE;
-        if ( applet->y_offset == 0 ) {
-            g_timeout_add( 25, ( GSourceFunc ) _bounce_baby, ( gpointer ) applet );
-        }
-        //stack_dialog_toggle_visiblity( applet->stack );
-    }
-    
+       
     return FALSE;
 }
 
@@ -450,7 +302,8 @@ static void stack_applet_drag_data_received(
     gint y,
     GtkSelectionData * selectiondata,
     guint info,
-    guint time_ ) {
+    guint time_, 
+    StackApplet *applet ) {
 
     GList *source, *target = NULL, *scan;
     GnomeVFSAsyncHandle *hnd;
@@ -518,11 +371,8 @@ static void stack_applet_drag_data_received(
  */
 static gboolean stack_applet_button_release_event(
     GtkWidget * widget,
-    GdkEventButton * event ) {
-
-    g_return_val_if_fail( STACK_IS_APPLET( widget ), FALSE );
-
-    StackApplet *applet = STACK_APPLET( widget );
+    GdkEventButton * event,
+    StackApplet *applet ) {
 
     // toggle visibility
     if ( event->button == 1 ) {
@@ -548,9 +398,8 @@ static gboolean stack_applet_button_release_event(
     return FALSE;
 }
 
-static gboolean stack_applet_enter_notify_event (GtkWidget *window, GdkEventButton *event, gpointer *data)
-{
-	StackApplet *applet = (StackApplet *)data;
+static gboolean stack_applet_enter_notify_event (GtkWidget *window, GdkEventButton *event, StackApplet *applet){
+
 	if( !STACK_DIALOG(applet->stack )->active ){
 		awn_title_show (applet->title, GTK_WIDGET(applet->awn_applet), applet->title_text);
 	}
@@ -558,54 +407,11 @@ static gboolean stack_applet_enter_notify_event (GtkWidget *window, GdkEventButt
 	return TRUE;
 }
 
-static gboolean stack_applet_leave_notify_event (GtkWidget *window, GdkEventButton *event, gpointer *data)
-{
-	StackApplet *applet = (StackApplet *)data;
+static gboolean stack_applet_leave_notify_event (GtkWidget *window, GdkEventButton *event, StackApplet *applet){
+
 	awn_title_hide (applet->title, GTK_WIDGET(applet->awn_applet));
 	
 	return TRUE;
-}
-
-/**
- * Height (of Awn bar) change event
- * -update icons
- */
-static void stack_applet_height_changed(
-    AwnApplet * app,
-    guint height,
-    StackApplet * applet ) {
-
-    //applet->height = height;
-    update_icons( applet );
-    gtk_widget_queue_draw( GTK_WIDGET( applet ) );
-}
-
-/**
- * Orientation (of Awn bar) change event
- * -update icons
- */
-static void stack_applet_orient_changed(
-    AwnApplet * app,
-    AwnOrientation orient,
-    StackApplet * applet ) {
-
-    //applet->orient = orient;
-    // update_icons( applet, FALSE );
-    gtk_widget_queue_draw( GTK_WIDGET( applet ) );
-}
-
-/**
- * Theme change event
- * -update icons
- */
-static void stack_applet_theme_changed(
-    GtkIconTheme * icon_theme,
-    gpointer data ) {
-
-    StackApplet *applet = STACK_APPLET( data );
-
-    update_icons( applet );
-    gtk_widget_queue_draw( GTK_WIDGET( applet ) );
 }
 
 /**
@@ -614,73 +420,15 @@ static void stack_applet_theme_changed(
 void stack_applet_set_icon(
     StackApplet * applet,
     GdkPixbuf * icon ) {
-    applet->composite_icon = icon;
-
-    // if the applet is visible, redraw the applet icon
-    if ( GTK_WIDGET_VISIBLE( applet ) ) {
-        gtk_widget_queue_draw( GTK_WIDGET( applet ) );
-    }
-}
-
-/**
- * Update the icon
- */
-static void update_icons(
-    StackApplet * applet ) {
-
-	GtkIconTheme   *theme = gtk_icon_theme_get_default(  );
-    gchar *applet_icon = stack_gconf_get_applet_icon(  );
     
-	applet->icon = gtk_icon_theme_load_icon( theme, applet_icon,
+    if(!icon){
+    	GtkIconTheme *theme = gtk_icon_theme_get_default(  );
+	    gchar *applet_icon = stack_gconf_get_applet_icon(  );
+    	icon = gtk_icon_theme_load_icon( theme, applet_icon,
                        awn_applet_get_height
                        ( AWN_APPLET( applet->awn_applet ) ) - PADDING, 0, NULL );
-
-	if( !applet->icon ){
-		applet_icon = STACK_DEFAULT_APPLET_ICON;
-		applet->icon = gtk_icon_theme_load_icon( theme, applet_icon,
-                       awn_applet_get_height
-                       ( AWN_APPLET( applet->awn_applet ) ) - PADDING, 0, NULL );
-	}
-
-	g_return_if_fail( applet->icon );
-
-	// set the window icon
-	gtk_window_set_default_icon( applet->icon );
-        
-	g_free( applet_icon );
-
-	// if the applet is visible, redraw the applet icon
-    if ( GTK_WIDGET_VISIBLE( applet ) ) {
-        gtk_widget_queue_draw( GTK_WIDGET( applet ) );
     }
-}
-
-/**
- * Applet icon bounce
- */
-gboolean _bounce_baby(
-    StackApplet * applet ) {
-
-#define MAX_OFFSET 14
-
-    if ( applet->y_offset == 0 && applet->dir == DIR_DOWN && !applet->drag_hover ) {
-        applet->dir = DIR_UP;
-        gtk_widget_queue_draw( GTK_WIDGET( applet ) );
-        return FALSE;
-    }
-
-    if ( applet->dir == DIR_UP ) {
-        applet->y_offset += 1;
-
-        if ( applet->y_offset == MAX_OFFSET ) {
-            applet->dir = DIR_DOWN;
-        }
-    } else if ( !applet->drag_hover ) {
-        applet->y_offset -= 1;
-    }
-
-    gtk_widget_queue_draw( GTK_WIDGET( applet ) );
-    return TRUE;
+    awn_applet_simple_set_icon (AWN_APPLET_SIMPLE(applet->awn_applet), icon);
 }
 
 /**

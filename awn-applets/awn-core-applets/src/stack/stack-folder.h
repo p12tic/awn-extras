@@ -50,7 +50,6 @@ struct _StackFolder {
     gint            page;
     gint			pages;
     
-    GList          *composite_icon_list;
     GdkPixbuf      *applet_icon;
 };
 

@@ -92,9 +92,7 @@ static gboolean stack_dialog_slide_in(
 
 static AwnAppletDialogClass *parent_class = NULL;
 
-static StackFolder *backend_folder;
 static StackFolder *current_folder;
-static StackFolder *upcoming_folder;
 
 static gint eventbox_hovering = NONE;
 static gint sliding_direction = NONE;
@@ -517,60 +515,15 @@ void stack_dialog_set_folder(
     
     gtk_window_set_title( GTK_WINDOW( dialog->awn_dialog ), STACK_FOLDER(folder)->name );
 
-    if ( !current_folder ) {
-        backend_folder = STACK_FOLDER(folder);
-        gtk_fixed_put( GTK_FIXED( dialog ), folder, 0, 0 );
-    } else { 
+    if ( current_folder ) {
         gtk_widget_destroy( GTK_WIDGET( current_folder ) );
-        gtk_fixed_put( GTK_CONTAINER( dialog ), folder, 0, 0 );
     }
+    gtk_fixed_put( GTK_FIXED( dialog ), folder, 0, 0 );
 	
     current_folder = STACK_FOLDER(folder);
     gtk_widget_show( GTK_WIDGET( current_folder ) );
     stack_dialog_relayout( dialog );
 }
-
-/*
-static gboolean stack_dialog_slide_in(
-    gpointer data ) {
-    StackDialog *dialog = STACK_DIALOG( data );
-
-    gint width = 0, height = 0;
-
-    gtk_widget_get_size_request( GTK_WIDGET( current_folder ), &width, &height );
-
-    gdouble replacement = 0.5 * ( 1.0 + pow( dialog->anim_time - 1.0, 3.0 ) );
-
-    if ( sliding_direction == DIR_LEFT ) {
-        replacement *= -width;
-        //replacement += width;
-    } else if ( sliding_direction == DIR_RIGHT ) {
-        replacement *= width;
-        //replacement -= width;
-    } else if ( sliding_direction == DIR_UP ) {
-        replacement *= -height;
-    } else if ( sliding_direction == DIR_DOWN ) {
-        replacement *= height;
-    }
-       
-    // move icons
-    gtk_fixed_move( GTK_FIXED( dialog ), GTK_WIDGET( current_folder ),
-                    ( gint ) replacement, 0 );
-
-    stack_dialog_relayout( dialog );
-
-    if ( dialog->anim_time > 2.0 ) {
-        dialog->anim_time = 0.0;
-        //gtk_widget_destroy( current_folder );
-        //current_folder = upcoming_folder;
-        //upcoming_folder = NULL;
-        return FALSE;
-    }
-    dialog->anim_time += 0.1;
-
-    return TRUE;
-}
-*/
 
 /**
  * Recalculate the stack layout
@@ -648,7 +601,7 @@ static void stack_dialog_relayout(
 
 GnomeVFSURI *stack_dialog_get_backend_folder(
 ) {
-    return backend_folder->uri;
+    return current_folder->uri;
 }
 
 /**
@@ -666,12 +619,14 @@ void stack_dialog_toggle_visiblity(
     dialog->active = !dialog->active;
     if ( dialog->active ) {
         awn_title_hide (dialog->applet->title, GTK_WIDGET(dialog->applet->awn_applet));
+        stack_applet_set_icon( dialog->applet, NULL );
         stack_dialog_relayout( dialog );
         gtk_widget_show_all( GTK_WIDGET( dialog->awn_dialog ) );
         gtk_window_present( GTK_WINDOW( dialog->awn_dialog ) );
         gtk_widget_grab_focus( widget );
     } else {
         gtk_widget_hide( dialog->awn_dialog );
+		stack_applet_set_icon( dialog->applet, current_folder->applet_icon );
     }
     
     gtk_widget_queue_draw( GTK_WIDGET( dialog->applet ) );

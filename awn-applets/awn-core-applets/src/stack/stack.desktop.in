@@ -5,5 +5,5 @@ Name=Stack
 Type=C
 Comment=Stack items on eachother
 Exec=@LIBDIR@/awn/applets/stack/stack.so
-Icon=folder-drag-accept
+Icon=@ICONDIR@/stack.svg
 Name[en_US]=Stack

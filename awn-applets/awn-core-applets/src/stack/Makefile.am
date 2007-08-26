@@ -30,16 +30,21 @@ stack_la_LDFLAGS = -module -avoid-version
 stack_la_CFLAGS =
 
 schemasdir   = @GCONF_SCHEMA_FILE_DIR@
-schemas_in_files = stack.schemas.in
+schemas_FILE = stack.schemas
+schemas_in_files = $(schemas_FILE).in
 schemas_DATA = $(schemas_in_files:.schemas.in=.schemas)
-
+	
 @INTLTOOL_SCHEMAS_RULE@
-
+	
 if GCONF_SCHEMAS_INSTALL
 install-data-local: $(schemas_DATA)
 	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(schemas_DATA)
 endif
 
+icondir = $(pkgdatadir)
+
+icon_DATA =  \
+	stack.svg
 
 desktopdir = $(libdir)/awn/applets
 
@@ -48,8 +53,11 @@ desktop_DATA = \
 @INTLTOOL_DESKTOP_RULE@
 
 $(desktop_DATA): $(desktop_DATA).in
-	sed -e "s|\@LIBDIR\@|$(libdir)|g" $< > $@
+	sed -e "s|\@LIBDIR\@|$(libdir)|g;s|\@ICONDIR\@|$(icondir)|g" $< > $@
 
 EXTRA_DIST = \
-	stack.desktop.in \
+	$(icon_DATA) \
+	$(desktop_DATA).in \
 	$(schemas_in_files)
+	
+CLEANFILES = $(desktop_DATA) stack.schemas	

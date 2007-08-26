@@ -113,6 +113,8 @@ GtkWidget *stack_dialog_new(
 
     gtk_container_add( GTK_CONTAINER(dialog->awn_dialog), GTK_WIDGET( dialog ) );
 
+	gtk_window_set_focus_on_map (GTK_WINDOW (dialog), TRUE);
+
     // Create the filemanager link
     dialog->fm_box = stack_dialog_evbox_init( dialog, FILEMANAGER );
     if( stack_gconf_is_browsing() ){

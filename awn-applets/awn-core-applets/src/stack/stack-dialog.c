@@ -92,6 +92,7 @@ static gboolean stack_dialog_slide_in(
 
 static AwnAppletDialogClass *parent_class = NULL;
 
+static StackFolder *backend_folder;
 static StackFolder *current_folder;
 
 static gint eventbox_hovering = NONE;
@@ -130,6 +131,8 @@ GtkWidget *stack_dialog_new(
     stack_dialog_set_folder( dialog, gnome_vfs_uri_new( stack_gconf_get_backend_folder(  ) ), 0 );
     // Set the applet-icon
     stack_applet_set_icon( dialog->applet, current_folder->applet_icon );
+    // Reference as backend folder
+    backend_folder = current_folder;
 	
 	gtk_widget_show( GTK_WIDGET( dialog ) );
 
@@ -520,7 +523,7 @@ void stack_dialog_set_folder(
     
     gtk_window_set_title( GTK_WINDOW( dialog->awn_dialog ), STACK_FOLDER(folder)->name );
 
-    if ( current_folder ) {
+    if ( current_folder && current_folder != backend_folder) {
         gtk_widget_destroy( GTK_WIDGET( current_folder ) );
     }
     gtk_fixed_put( GTK_FIXED( dialog ), folder, 0, 0 );
@@ -633,8 +636,9 @@ void stack_dialog_toggle_visiblity(
         gtk_widget_hide( dialog->awn_dialog );
 		
 		// reset to backend folder
-		if(!gnome_vfs_uri_equal(current_folder->uri, gnome_vfs_uri_new( stack_gconf_get_backend_folder(  ) )) ){
-			stack_dialog_set_folder( dialog, gnome_vfs_uri_new( stack_gconf_get_backend_folder(  ) ), 0 );
+		if(current_folder != backend_folder ){
+			gtk_widget_destroy( GTK_WIDGET( current_folder ) );
+			current_folder = backend_folder;
 		}
 		
 		// set applet icon

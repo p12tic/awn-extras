@@ -523,8 +523,12 @@ void stack_dialog_set_folder(
     
     gtk_window_set_title( GTK_WINDOW( dialog->awn_dialog ), STACK_FOLDER(folder)->name );
 
-    if ( current_folder && current_folder != backend_folder) {
-        gtk_widget_destroy( GTK_WIDGET( current_folder ) );
+    if ( current_folder ){
+    	if( current_folder == backend_folder) {
+    		gtk_widget_hide( GTK_WIDGET( backend_folder ) );
+    	}else{
+	        gtk_widget_destroy( GTK_WIDGET( current_folder ) );
+	    }
     }
     gtk_fixed_put( GTK_FIXED( dialog ), folder, 0, 0 );
 	
@@ -627,11 +631,11 @@ void stack_dialog_toggle_visiblity(
     dialog->active = !dialog->active;
     if ( dialog->active ) {
         awn_title_hide (dialog->applet->title, GTK_WIDGET(dialog->applet->awn_applet));
+
         stack_applet_set_icon( dialog->applet, NULL );        
         stack_dialog_relayout( dialog );
+
         gtk_widget_show_all( GTK_WIDGET( dialog->awn_dialog ) );
-        gtk_window_present( GTK_WINDOW( dialog->awn_dialog ) );
-        gtk_widget_grab_focus( widget );
     } else {
         gtk_widget_hide( dialog->awn_dialog );
 		
@@ -644,7 +648,5 @@ void stack_dialog_toggle_visiblity(
 		// set applet icon
 		stack_applet_set_icon( dialog->applet, current_folder->applet_icon );
     }
-    
-    gtk_widget_queue_draw( GTK_WIDGET( dialog->applet ) );
 }
 

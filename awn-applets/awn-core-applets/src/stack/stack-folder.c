@@ -137,6 +137,7 @@ GtkWidget *stack_folder_new(
 	gtk_container_add( GTK_CONTAINER( stack_folder), stack_folder->table );
 
 	gtk_viewport_set_shadow_type( GTK_VIEWPORT( stack_folder ), GTK_SHADOW_NONE );
+	gtk_widget_set_no_show_all( GTK_WIDGET( stack_folder ), FALSE );
 
     stack_folder_relayout( stack_folder );
 

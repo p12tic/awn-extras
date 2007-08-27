@@ -23,6 +23,8 @@
 #include <libawn/awn-cairo-utils.h>
 #include <libgnomevfs/gnome-vfs.h>
 #include <libgnome/gnome-desktop-item.h>
+#include <libgnomevfs/gnome-vfs-mime-utils.h>
+#include <libgnomevfs/gnome-vfs-mime.h>
 
 #include "stack-icon.h"
 #include "stack-applet.h"
@@ -109,14 +111,31 @@ GtkWidget *stack_icon_new(
     const gchar    *file_path = gnome_vfs_uri_get_path( uri );
     guint           icon_size = stack_gconf_get_icon_size(  );
 
-    // is .desktop?
-    if ( g_str_has_suffix( name, ".desktop" ) ) {
 
-        icon->desktop_item =
-            gnome_desktop_item_new_from_uri( file_path, GNOME_DESKTOP_ITEM_LOAD_ONLY_IF_EXISTS,
-                                             NULL );
-    }
+    g_return_val_if_fail (uri != NULL, NULL);
+
+    // is .desktop?
     
+	gchar *desktop_mime_type = "application/x-desktop";
+	const char *mime_type = gnome_vfs_get_mime_type_common( uri );
+
+	if(g_str_equal(mime_type, desktop_mime_type)){
+		GError *error = NULL;
+		icon->desktop_item =
+    		        gnome_desktop_item_new_from_uri( file_path, 0, &error );
+		if( error ){
+    				g_error_free( error );
+    				error = NULL;
+    				icon->desktop_item = NULL;
+    	}
+    	if( !gnome_desktop_item_exists( icon->desktop_item ) ){
+    		gnome_desktop_item_unref( icon->desktop_item );
+			icon->desktop_item = NULL;
+    	}
+    }else{
+    	icon->desktop_item = NULL;
+    }
+
     // Possibly could not get a desktop_item from the file
     if ( icon->desktop_item ) {
         icon->name =

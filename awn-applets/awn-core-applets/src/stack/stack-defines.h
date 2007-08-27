@@ -36,6 +36,7 @@
 #define DRAG_ACTION_LINK "link"
 #define DRAG_ACTION_COPY "copy"
 #define DRAG_ACTION_MOVE "move"
+#define DRAG_ACTION_SYSTEM "system"
 
 #define STACK_DEFAULT_MAX_ROWS 4
 #define STACK_DEFAULT_MAX_COLS 5

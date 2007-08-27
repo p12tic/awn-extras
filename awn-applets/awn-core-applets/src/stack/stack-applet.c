@@ -121,9 +121,22 @@ AwnApplet *awn_applet_factory_initp(
               applet);
               
     // set up DnD target
+    GdkDragAction actions;
+    gchar *default_action = stack_gconf_get_default_drag_action();
+    if( g_str_equal(default_action, DRAG_ACTION_LINK ) ){
+	    actions = GDK_ACTION_LINK;
+	}else if(g_str_equal(default_action, DRAG_ACTION_MOVE ) ){
+		actions = GDK_ACTION_MOVE;
+	}else if(g_str_equal(default_action, DRAG_ACTION_COPY ) ){	
+		actions = GDK_ACTION_COPY;
+	}else{
+		actions = GDK_ACTION_LINK | GDK_ACTION_COPY | GDK_ACTION_MOVE;
+	}
+
     gtk_drag_dest_set( GTK_WIDGET( applet->awn_applet ), GTK_DEST_DEFAULT_ALL, drop_types,
                        G_N_ELEMENTS( drop_types ),
-                       GDK_ACTION_LINK | GDK_ACTION_COPY | GDK_ACTION_MOVE );           
+                       actions );           
+                       
 	g_signal_connect (G_OBJECT (applet->awn_applet), "drag-leave",
               G_CALLBACK (stack_applet_drag_leave), 
               applet);
@@ -315,22 +328,28 @@ static void stack_applet_drag_data_received(
     options |= GNOME_VFS_XFER_TARGET_DEFAULT_PERMS;
     //options |= GNOME_VFS_XFER_SAMEFS;
 
-    // TODO: lookup default action set by user
-    switch ( context->suggested_action ) {
+    gchar *default_action = stack_gconf_get_default_drag_action();
+    if( g_str_equal(default_action, DRAG_ACTION_LINK ) ){
+	    options |= GNOME_VFS_XFER_LINK_ITEMS;
+	}else if(g_str_equal(default_action, DRAG_ACTION_MOVE ) ){
+		options |= GNOME_VFS_XFER_REMOVESOURCE;
+	}else if(g_str_equal(default_action, DRAG_ACTION_COPY ) ){	
+		//options |= GNOME_VFS_XFER_DEFAULT;
+   	}else{ // if not specified or DRAG_ACTION_SYSTEM
+	    switch ( context->suggested_action ) {
 
-	    case GDK_ACTION_LINK:
-	        options |= GNOME_VFS_XFER_LINK_ITEMS;
-	        break;
-	    case GDK_ACTION_MOVE:
-	        options |= GNOME_VFS_XFER_REMOVESOURCE;
-	        break;
-	    case GDK_ACTION_COPY:
-	        //options |= GNOME_VFS_XFER_DEFAULT;
-	        break;    	
-	    default:
-			options |= GNOME_VFS_XFER_LINK_ITEMS;
-	        break;
-    }
+		    case GDK_ACTION_LINK:
+		        options |= GNOME_VFS_XFER_LINK_ITEMS;
+		        break;
+		    case GDK_ACTION_MOVE:
+		        options |= GNOME_VFS_XFER_REMOVESOURCE;
+		        break;
+		    case GDK_ACTION_COPY:
+		    default:
+		        //options |= GNOME_VFS_XFER_DEFAULT;
+		        break;
+	    }
+	}
 
     source = gnome_vfs_uri_list_parse( ( gchar * ) selectiondata->data );
 

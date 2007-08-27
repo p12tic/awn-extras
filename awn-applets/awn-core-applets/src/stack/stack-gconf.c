@@ -177,8 +177,25 @@ gchar *stack_gconf_get_backend_folder(
         stack_gconf_set_backend_folder( folder );
     }
 
-    g_print( "Using folder: %s\n", folder );
     return folder;
+}
+
+/**
+ * What is the default drag action?
+ */
+gchar *stack_gconf_get_default_drag_action() {
+
+    gchar *action = awn_applet_gconf_get_string( applet,
+                             STACK_GCONFKEY_DEFAULT_DRAG_ACTION,
+                             NULL );
+
+    if ( strlen( action ) < 1 ) {
+		awn_applet_gconf_set_string( applet,
+                                     STACK_GCONFKEY_DEFAULT_DRAG_ACTION, STACK_DEFAULT_DEFAULT_DRAG_ACTION, NULL );
+        action = STACK_DEFAULT_DEFAULT_DRAG_ACTION;
+    }
+
+    return action;
 }
 
 /**

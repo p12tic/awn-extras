@@ -34,6 +34,7 @@ gchar *stack_gconf_get_drag_action();
 void stack_gconf_set_backend_folder( gchar * folder );
 
 gchar *stack_gconf_get_applet_icon();
+gchar *stack_gconf_get_default_drag_action();
 
 guint stack_gconf_get_icon_size();
 guint stack_gconf_get_max_rows();

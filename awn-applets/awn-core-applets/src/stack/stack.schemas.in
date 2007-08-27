@@ -8,7 +8,7 @@
         <type>string</type>
         <default>link</default>
         <locale name="C">
-          <short>The default action when files are dropped on the applet: copy, move or link. </short>
+          <short>The default action when files are dropped on the applet: "copy", "move" or "link". If it is set to "system", you can modify the behavior with SHIFT, CTRL and ALT (keys depend on you system).</short>
           <long></long>
         </locale>
       </schema>

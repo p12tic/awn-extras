@@ -147,7 +147,7 @@ init_pref(Clock *clock)
 
 	#ifdef HAVE_SVG
 		// TODO : better support for the location and the theme's name
-		char 	*path = "/usr/local/share/avant-window-navigator/applets/clock/themes/",
+		char 	*path = "/usr/share/cairo-clock/themes/",
 			*theme = "tango";
 		GError* error;
 		awn_load_svg (&clock->bg_svg_handle, path, theme, "clock-frame.svg", &error);

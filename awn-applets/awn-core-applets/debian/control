@@ -8,7 +8,7 @@ Standards-Version: 3.7.2
 Package: awn-core-applets
 Section: gnome
 Architecture: any
-Depends: ${shlibs:Depends}
+Depends: ${shlibs:Depends}, cairo-clock
 Recommands: avant-window-navigator
 Description: A collection of applets for avant-windows-navigator
  A collection of applets for avant-windows-navigator. This is a clock, an example of animation and a main menu of GNOME

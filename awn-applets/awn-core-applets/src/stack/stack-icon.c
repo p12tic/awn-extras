@@ -243,14 +243,19 @@ static gchar *desktop_file_get_link_icon_from_desktop(
     const gchar    *icon;
     GnomeDesktopItemType desktop_type;
 
-    icon_uri = g_strdup( gnome_desktop_item_get_string( desktop_file, "X-Nautilus-Icon" ) );
-    if ( icon_uri != NULL ) {
-        return icon_uri;
-    }
+	icon_uri = g_strdup(gnome_desktop_item_get_icon( desktop_file, gtk_icon_theme_get_default() ) );
+	if( icon_uri != NULL ){
+		return icon_uri;
+	}
 
     icon = gnome_desktop_item_get_string( desktop_file, GNOME_DESKTOP_ITEM_ICON );
     if ( icon != NULL ) {
         return g_strdup( icon );
+    }
+
+    icon_uri = g_strdup( gnome_desktop_item_get_string( desktop_file, "X-Nautilus-Icon" ) );
+    if ( icon_uri != NULL ) {
+        return icon_uri;
     }
 
     desktop_type = gnome_desktop_item_get_entry_type( desktop_file );

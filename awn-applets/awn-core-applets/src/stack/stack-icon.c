@@ -28,183 +28,16 @@
 
 #include "stack-icon.h"
 #include "stack-applet.h"
-#include "stack-cairo.h"
+#include "stack-utils.h"
 #include "stack-gconf.h"
 #include "stack-defines.h"
-#include "stack-pixbuf-utils.h"
 #include "stack-folder.h"
 
 G_DEFINE_TYPE( StackIcon, stack_icon, GTK_TYPE_DRAWING_AREA )
 
-static void stack_icon_class_init(
-    StackIconClass * klass );
-    
-static void stack_icon_init(
-    StackIcon * icon );
-
-// Events
-static void stack_icon_destroy(
-    GtkObject * object );
-    
-static gboolean stack_icon_expose_event(
-    GtkWidget * widget,
-    GdkEventExpose * expose );
-
-static gboolean stack_icon_enter_notify_event(
-    GtkWidget * widget,
-    GdkEventCrossing * event );
-    
-static gboolean stack_icon_leave_notify_event(
-    GtkWidget * widget,
-    GdkEventCrossing * event );
-    
-static gboolean stack_icon_button_release_event(
-    GtkWidget * widget,
-    GdkEventButton * event );
-
-// Drag events
-static void stack_icon_drag_begin(
-    GtkWidget * widget,
-    GdkDragContext * drag_context );
-    
-static void stack_icon_drag_data_delete(
-    GtkWidget * widget,
-    GdkDragContext * drag_context );
-    
-static void stack_icon_drag_data_get(
-    GtkWidget * widget,
-    GdkDragContext * context,
-    GtkSelectionData * selection_data,
-    guint info,
-    guint time );
-    
-static void stack_icon_drag_end(
-    GtkWidget * widget,
-    GdkDragContext * drag_context );
-
-static gchar   *desktop_file_get_link_icon_from_desktop(
-    GnomeDesktopItem * desktop_file );
-
-static void stack_icon_calculate_size_and_position(
-    GtkWidget * widget );
-
-enum { TARGET_URILIST, };
-static GtkTargetEntry target_table[] = { {"text/uri-list", 0, TARGET_URILIST}, };
-static guint    n_targets = sizeof( target_table ) / sizeof( target_table[0] );
-
 static gboolean just_dragged = FALSE;
 
 static GtkDrawingAreaClass *parent_class = NULL;
-
-/**
- * Create a new stack icon
- */
-GtkWidget *stack_icon_new(
-    StackFolder * folder,
-    GnomeVFSURI * uri ) {
-
-	g_return_val_if_fail( folder && uri, NULL );
-
-    StackIcon      *icon = g_object_new( STACK_TYPE_ICON, NULL );
-
-    const gchar    *name = gnome_vfs_uri_extract_short_name( uri );
-    const gchar    *file_path = gnome_vfs_uri_get_path( uri );
-    guint           icon_size = stack_gconf_get_icon_size(  );
-
-
-    g_return_val_if_fail (uri != NULL, NULL);
-
-    // is .desktop?
-    
-	gchar *desktop_mime_type = "application/x-desktop";
-	const char *mime_type = gnome_vfs_get_mime_type_common( uri );
-
-	if(g_str_equal(mime_type, desktop_mime_type)){
-		GError *error = NULL;
-		icon->desktop_item =
-    		        gnome_desktop_item_new_from_uri( file_path, 0, &error );
-		if( error ){
-    				g_error_free( error );
-    				error = NULL;
-    				icon->desktop_item = NULL;
-    	}
-    	if( !gnome_desktop_item_exists( icon->desktop_item ) ){
-    		gnome_desktop_item_unref( icon->desktop_item );
-			icon->desktop_item = NULL;
-    	}
-    }else{
-    	icon->desktop_item = NULL;
-    }
-
-    // Possibly could not get a desktop_item from the file
-    if ( icon->desktop_item ) {
-        icon->name =
-            g_strdup( gnome_desktop_item_get_localestring( icon->desktop_item, GNOME_DESKTOP_ITEM_NAME ) );
-        icon->icon = get_icon( desktop_file_get_link_icon_from_desktop( icon->desktop_item ), icon_size );        
-    } else {
-        icon->uri = gnome_vfs_uri_dup( uri );
-    }
-
-	// If we do not assigned an icon yet
-    if ( !icon->icon ) {
-        icon->icon = get_icon( file_path, icon_size );
-    }
-    
-    // If the name is still blank
-    if ( !icon->name ) {
-        icon->name = g_strdup( name );
-    }
-
-    icon->folder = GTK_WIDGET( folder );
-
-    gtk_drag_source_set( GTK_WIDGET( icon ), GDK_BUTTON1_MASK, target_table,
-                         n_targets, GDK_ACTION_COPY | GDK_ACTION_MOVE );
-
-	// TODO: also setup as destination
-
-    stack_icon_calculate_size_and_position( GTK_WIDGET( icon ) );
-
-    return GTK_WIDGET( icon );
-}
-
-/**
- * Initialize applet class
- * Set class functions
- */
-static void stack_icon_class_init(
-    StackIconClass * klass ) {
-
-    GtkObjectClass *object_class;
-    GtkWidgetClass *widget_class;
-
-    object_class = ( GtkObjectClass * ) klass;
-    widget_class = ( GtkWidgetClass * ) klass;
-
-	parent_class = gtk_type_class (GTK_TYPE_DRAWING_AREA);
-
-    object_class->destroy = stack_icon_destroy;
-
-    widget_class->expose_event = stack_icon_expose_event;
-    widget_class->enter_notify_event = stack_icon_enter_notify_event;
-    widget_class->leave_notify_event = stack_icon_leave_notify_event;
-    widget_class->button_release_event = stack_icon_button_release_event;
-
-    widget_class->drag_begin = stack_icon_drag_begin;
-    //widget_class->drag_data_delete = stack_icon_drag_data_delete;
-    widget_class->drag_data_get = stack_icon_drag_data_get;
-    //widget_class->drag_end = stack_icon_drag_end;
-}
-
-/**
- * Initialize the new applet
- */
-static void stack_icon_init(
-    StackIcon * icon ) {
-
-    icon->hovering = FALSE;
-
-    gtk_widget_add_events( GTK_WIDGET( icon ), GDK_ALL_EVENTS_MASK );
-}
 
 /**
  * Destroy events of the applet
@@ -454,6 +287,21 @@ static void stack_icon_drag_begin(
     StackIcon *icon = STACK_ICON( widget );
 
     gtk_drag_source_set_icon_pixbuf( widget, icon->icon );
+    
+    // set up DnD target
+    gchar *default_action = stack_gconf_get_default_drag_action();
+    if( g_str_equal(default_action, DRAG_ACTION_LINK ) ){
+	    drag_context->actions = GDK_ACTION_LINK;
+	}else if(g_str_equal(default_action, DRAG_ACTION_MOVE ) ){
+		drag_context->actions = GDK_ACTION_MOVE;
+	}else if(g_str_equal(default_action, DRAG_ACTION_COPY ) ){	
+		drag_context->actions = GDK_ACTION_COPY;
+	}else{
+		drag_context->actions = GDK_ACTION_LINK | GDK_ACTION_COPY | GDK_ACTION_MOVE;
+	}
+	
+	drag_context->suggested_action = GDK_ACTION_ASK;
+	   
     just_dragged = TRUE;
 }
 
@@ -497,5 +345,129 @@ static void stack_icon_drag_end(
 
     g_print( "drag_end\n" );
     just_dragged = FALSE;
+}
+
+/**
+ * Initialize applet class
+ * Set class functions
+ */
+static void stack_icon_class_init(
+    StackIconClass * klass ) {
+
+    GtkObjectClass *object_class;
+    GtkWidgetClass *widget_class;
+
+    object_class = ( GtkObjectClass * ) klass;
+    widget_class = ( GtkWidgetClass * ) klass;
+
+	parent_class = gtk_type_class (GTK_TYPE_DRAWING_AREA);
+
+    object_class->destroy = stack_icon_destroy;
+
+    widget_class->expose_event = stack_icon_expose_event;
+    widget_class->enter_notify_event = stack_icon_enter_notify_event;
+    widget_class->leave_notify_event = stack_icon_leave_notify_event;
+    widget_class->button_release_event = stack_icon_button_release_event;
+
+   	/* Messages for outgoing drag. */
+    widget_class->drag_begin = stack_icon_drag_begin;
+    widget_class->drag_data_get = stack_icon_drag_data_get;
+    //widget_class->drag_end = stack_icon_drag_end;  
+    //widget_class->drag_data_delete = stack_icon_drag_data_delete;
+
+	/* Messages for incoming drag. */	
+	//widget_class->drag_data_delete = stack_icon_drag_data_received;
+	//widget_class->drag_data_delete = stack_icon_drag_data_motion;
+	//widget_class->drag_data_delete = stack_icon_drag_data_drop;
+	//widget_class->drag_data_delete = stack_icon_drag_data_leave;
+
+}
+
+/**
+ * Initialize the new applet
+ */
+static void stack_icon_init(
+    StackIcon * icon ) {
+
+    icon->hovering = FALSE;
+
+    gtk_widget_add_events( GTK_WIDGET( icon ), GDK_ALL_EVENTS_MASK );
+}
+
+/**
+ * Create a new stack icon
+ */
+GtkWidget *stack_icon_new(
+    StackFolder * folder,
+    GnomeVFSURI * uri ) {
+
+	g_return_val_if_fail( folder && uri, NULL );
+
+    StackIcon      *icon = g_object_new( STACK_TYPE_ICON, NULL );
+
+    const gchar    *name = gnome_vfs_uri_extract_short_name( uri );
+    const gchar    *file_path = gnome_vfs_uri_get_path( uri );
+    guint           icon_size = stack_gconf_get_icon_size(  );
+
+
+    g_return_val_if_fail (uri != NULL, NULL);
+
+    // is .desktop?
+    
+	gchar *desktop_mime_type = "application/x-desktop";
+	const char *mime_type = gnome_vfs_get_mime_type_common( uri );
+
+	if(g_str_equal(mime_type, desktop_mime_type)){
+		GError *error = NULL;
+		icon->desktop_item =
+    		        gnome_desktop_item_new_from_uri( file_path, 0, &error );
+		if( error ){
+    				g_error_free( error );
+    				error = NULL;
+    				icon->desktop_item = NULL;
+    	}
+    	if( !gnome_desktop_item_exists( icon->desktop_item ) ){
+    		gnome_desktop_item_unref( icon->desktop_item );
+			icon->desktop_item = NULL;
+    	}
+    }else{
+    	icon->desktop_item = NULL;
+    }
+
+    // Possibly could not get a desktop_item from the file
+    if ( icon->desktop_item ) {
+        icon->name =
+            g_strdup( gnome_desktop_item_get_localestring( icon->desktop_item, GNOME_DESKTOP_ITEM_NAME ) );
+        icon->icon = get_icon( desktop_file_get_link_icon_from_desktop( icon->desktop_item ), icon_size );        
+    } else {
+        icon->uri = gnome_vfs_uri_dup( uri );
+    }
+
+	// If we do not assigned an icon yet
+    if ( !icon->icon ) {
+        icon->icon = get_icon( file_path, icon_size );
+    }
+    
+    // If the name is still blank
+    if ( !icon->name ) {
+        icon->name = g_strdup( name );
+    }
+
+    icon->folder = GTK_WIDGET( folder );
+
+
+	/* Setup Drag & Drop */
+	enum { TARGET_URILIST, };
+	GtkTargetEntry target_table[] = { {"text/uri-list", 0, TARGET_URILIST}, };
+	guint n_targets = sizeof( target_table ) / sizeof( target_table[0] );
+
+    gtk_drag_source_set( GTK_WIDGET( icon ), GDK_BUTTON1_MASK, target_table,
+                         n_targets, GDK_ACTION_COPY | GDK_ACTION_MOVE );
+
+	// TODO: also setup as destination
+
+    stack_icon_calculate_size_and_position( GTK_WIDGET( icon ) );
+
+    return GTK_WIDGET( icon );
 }
 

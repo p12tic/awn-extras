@@ -23,169 +23,79 @@
 
 #include "stack-applet.h"
 #include "stack-gconf.h"
-#include "stack-cairo.h"
+#include "stack-utils.h"
 #include "stack-defines.h"
 #include "stack-dialog.h"
 
 G_DEFINE_TYPE( StackApplet, stack_applet, GTK_TYPE_DRAWING_AREA )
-
-static void stack_applet_class_init(
-    StackAppletClass * klass );
-
-static void stack_applet_init(
-    StackApplet * applet );
-
-static void stack_applet_destroy(
-    GtkObject * object );
-
-static void stack_applet_drag_leave(
-    GtkWidget * widget,
-    GdkDragContext * context,
-    guint time_, 
-    StackApplet *applet );
-
-static gboolean stack_applet_drag_motion(
-    GtkWidget * widget,
-    GdkDragContext * context,
-    gint x,
-    gint y,
-    guint time_, 
-    StackApplet *applet );
-
-static void stack_applet_drag_data_received(
-    GtkWidget * widget,
-    GdkDragContext * context,
-    gint x,
-    gint y,
-    GtkSelectionData * selectiondata,
-    guint info,
-    guint time_, 
-    StackApplet *applet );
-
-static gboolean stack_applet_button_release_event(
-    GtkWidget * widget,
-    GdkEventButton * event,
-    StackApplet *applet );
-
-static GtkWidget *stack_applet_new_dialog(
-    StackApplet * applet );
-
-static void stack_applet_activate_dialog(
-    GtkEntry * entry,
-    gpointer data );
-
-static gboolean stack_applet_enter_notify_event (GtkWidget *window, GdkEventButton *event, StackApplet *applet);
-static gboolean stack_applet_leave_notify_event (GtkWidget *window, GdkEventButton *event, StackApplet *applet);
 
 static AwnAppletClass *parent_class = NULL;
 
 static const GtkTargetEntry drop_types[] = { {"text/uri-list", 0, 0} };
 
 /**
- * Create the new applet
- * -set AwnApplet properties
- * -initialize gconf
- * -create stack for default backend folder
- * -update icons
+ * Activate the file (folder) chooser.
+ * -limit to create/select folders
+ * -run dialog and retrieve a folder path
  */
-AwnApplet *awn_applet_factory_initp(
-    gchar * uid,
-    gint orient,
-    gint height ) {
+static void stack_applet_activate_dialog(
+    GtkEntry * entry,
+    gpointer data ) {
 
-	GtkWidget *awn_applet = awn_applet_simple_new( uid, orient, height );
-	
-    StackApplet *applet = g_object_new( STACK_TYPE_APPLET, NULL );
-	applet->awn_applet = awn_applet;
+    StackApplet *applet = STACK_APPLET( data );
+    GnomeVFSURI *uri = stack_dialog_get_backend_folder(  );
+    GtkWidget *dialog;
 
-    stack_gconf_init( AWN_APPLET( awn_applet ) );
+    dialog = gtk_file_chooser_dialog_new( STACK_TEXT_SELECT_FOLDER, NULL,
+                                          GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER,
+                                          GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                                          GTK_STOCK_APPLY, GTK_RESPONSE_ACCEPT, NULL );
 
-    stack_applet_set_icon( applet, NULL );
-    
-    applet->stack = stack_dialog_new( applet );
+    gtk_window_set_skip_taskbar_hint( GTK_WINDOW( dialog ), TRUE );
+    gtk_window_set_skip_pager_hint( GTK_WINDOW( dialog ), TRUE );
 
-   	applet->title = AWN_TITLE(awn_title_get_default ());
-	applet->title_text = g_strdup (stack_gconf_get_backend_folder());
+    if ( uri ) {
+        gtk_file_chooser_set_current_folder( GTK_FILE_CHOOSER( dialog ),
+                                             gnome_vfs_uri_get_path( uri ) );
+    }
 
-	gtk_widget_add_events( GTK_WIDGET( applet->awn_applet ), GDK_ALL_EVENTS_MASK );
-	
-	/* connect to mouse enter/leave events */
-	g_signal_connect (G_OBJECT (applet->awn_applet), "enter-notify-event",
-			  G_CALLBACK (stack_applet_enter_notify_event),
-			  applet);
-	g_signal_connect (G_OBJECT (applet->awn_applet), "leave-notify-event",
-			  G_CALLBACK (stack_applet_leave_notify_event),
-			  applet);
-	g_signal_connect (G_OBJECT (applet->awn_applet), "button-release-event",
-              G_CALLBACK (stack_applet_button_release_event), 
-              applet);
-              
-    // set up DnD target
-    GdkDragAction actions;
-    gchar *default_action = stack_gconf_get_default_drag_action();
-    if( g_str_equal(default_action, DRAG_ACTION_LINK ) ){
-	    actions = GDK_ACTION_LINK;
-	}else if(g_str_equal(default_action, DRAG_ACTION_MOVE ) ){
-		actions = GDK_ACTION_MOVE;
-	}else if(g_str_equal(default_action, DRAG_ACTION_COPY ) ){	
-		actions = GDK_ACTION_COPY;
-	}else{
-		actions = GDK_ACTION_LINK | GDK_ACTION_COPY | GDK_ACTION_MOVE;
-	}
+    if ( gtk_dialog_run( GTK_DIALOG( dialog ) ) == GTK_RESPONSE_ACCEPT ) {
 
-    gtk_drag_dest_set( GTK_WIDGET( applet->awn_applet ), GTK_DEST_DEFAULT_ALL, drop_types,
-                       G_N_ELEMENTS( drop_types ),
-                       actions );           
-                       
-	g_signal_connect (G_OBJECT (applet->awn_applet), "drag-leave",
-              G_CALLBACK (stack_applet_drag_leave), 
-              applet);
-	g_signal_connect (G_OBJECT (applet->awn_applet), "drag-motion",
-              G_CALLBACK (stack_applet_drag_motion), 
-              applet);
-	g_signal_connect (G_OBJECT (applet->awn_applet), "drag-data-received",
-              G_CALLBACK (stack_applet_drag_data_received), 
-              applet);                   
-                                           
-//    gtk_widget_set_size_request( awn_applet, awn_applet_get_height ( AWN_APPLET(awn_applet)), 
-//                               ( awn_applet_get_height (AWN_APPLET(awn_applet)) + 2 ) * 2 );
+        gchar *filename = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dialog ) );
+        stack_gconf_set_backend_folder( filename );
 
+        GtkWidget *old = applet->stack;
+        applet->stack = stack_dialog_new( applet );
+        if ( old ) {
+            gtk_widget_destroy( old );
+        }
+        g_free( filename );
+    }
 
-    gtk_widget_show_all( awn_applet );
-
-    return AWN_APPLET( awn_applet );
+    gtk_widget_destroy( dialog );
 }
 
 /**
- * Initialize applet class
- * -set class functions
- * -connect to some applet-signals
+ * Create the context menu
+ * -get default menu
+ * -add properties item
  */
-static void stack_applet_class_init(
-    StackAppletClass * klass ) {
-
-    GtkObjectClass *object_class;
-    GtkWidgetClass *widget_class;
-
-    object_class = ( GtkObjectClass * ) klass;
-    widget_class = ( GtkWidgetClass * ) klass;
-
-	parent_class = gtk_type_class (GTK_TYPE_DRAWING_AREA);
-
-    object_class->destroy = stack_applet_destroy;
-}
-
-/**
- * Initialize the new applet
- * -set default values
- * -connect to external events
- * -set dnd area
- * -TODO: let user decide what the default action is on dnd (copy/move/symlink)
- */
-static void stack_applet_init(
+static GtkWidget *stack_applet_new_dialog(
     StackApplet * applet ) {
 
-    return;
+    GtkWidget *item;
+    GtkWidget *menu;
+
+    menu = awn_applet_create_default_menu( AWN_APPLET( applet->awn_applet ) );
+    item = gtk_image_menu_item_new_from_stock( GTK_STOCK_PROPERTIES, NULL );
+    gtk_menu_shell_prepend( GTK_MENU_SHELL( menu ), item );
+
+    g_signal_connect( G_OBJECT( item ), "activate",
+                      G_CALLBACK( stack_applet_activate_dialog ), applet );
+
+    gtk_widget_show_all( GTK_WIDGET( menu ) );
+
+    return menu;
 }
 
 /**
@@ -321,6 +231,7 @@ static void stack_applet_drag_data_received(
     GList *source, *target = NULL, *scan;
     GnomeVFSAsyncHandle *hnd;
     GnomeVFSXferOptions options = GNOME_VFS_XFER_DEFAULT;
+    gboolean delete_original = FALSE;
 
     options |= GNOME_VFS_XFER_FOLLOW_LINKS;
     options |= GNOME_VFS_XFER_RECURSIVE;
@@ -333,6 +244,7 @@ static void stack_applet_drag_data_received(
 	    options |= GNOME_VFS_XFER_LINK_ITEMS;
 	}else if(g_str_equal(default_action, DRAG_ACTION_MOVE ) ){
 		options |= GNOME_VFS_XFER_REMOVESOURCE;
+		delete_original = TRUE;
 	}else if(g_str_equal(default_action, DRAG_ACTION_COPY ) ){	
 		//options |= GNOME_VFS_XFER_DEFAULT;
    	}else{ // if not specified or DRAG_ACTION_SYSTEM
@@ -374,13 +286,14 @@ static void stack_applet_drag_data_received(
 
     if ( res != GNOME_VFS_OK ) {
         g_print( "Could not perform action due: %s\n", gnome_vfs_result_to_string( res ) );
+        gtk_drag_finish( context, FALSE, FALSE, time_ );
         return;
     }
 
     gnome_vfs_uri_list_free( source );
     gnome_vfs_uri_list_free( target );
 
-    gtk_drag_finish( context, TRUE, FALSE, time_ );
+    gtk_drag_finish( context, TRUE, delete_original, time_ );
 }
 
 /**
@@ -409,14 +322,12 @@ static gboolean stack_applet_button_release_event(
 
     }
 
-    if ( GTK_WIDGET_CLASS( stack_applet_parent_class )->button_release_event ) {
-        return ( *GTK_WIDGET_CLASS( stack_applet_parent_class )->
-                 button_release_event ) ( widget, event );
-    }
-
     return FALSE;
 }
 
+/**
+ * Only show the Awn title when the dialog is not visible
+ */
 static gboolean stack_applet_enter_notify_event (GtkWidget *window, GdkEventButton *event, StackApplet *applet){
 
 	if( !STACK_DIALOG(applet->stack )->active ){
@@ -426,6 +337,9 @@ static gboolean stack_applet_enter_notify_event (GtkWidget *window, GdkEventButt
 	return TRUE;
 }
 
+/**
+ * Hide the awn title
+ */
 static gboolean stack_applet_leave_notify_event (GtkWidget *window, GdkEventButton *event, StackApplet *applet){
 
 	awn_title_hide (applet->title, GTK_WIDGET(applet->awn_applet));
@@ -451,70 +365,110 @@ void stack_applet_set_icon(
 }
 
 /**
- * Create the context menu
- * -get default menu
- * -add properties item
+ * Initialize applet class
+ * -set class functions
+ * -connect to some applet-signals
  */
-static GtkWidget *stack_applet_new_dialog(
-    StackApplet * applet ) {
+static void stack_applet_class_init(
+    StackAppletClass * klass ) {
 
-    GtkWidget *item;
-    GtkWidget *menu;
+    GtkObjectClass *object_class;
+    GtkWidgetClass *widget_class;
 
-    menu = awn_applet_create_default_menu( AWN_APPLET( applet->awn_applet ) );
-    item = gtk_image_menu_item_new_from_stock( GTK_STOCK_PROPERTIES, NULL );
-    gtk_menu_shell_prepend( GTK_MENU_SHELL( menu ), item );
+    object_class = ( GtkObjectClass * ) klass;
+    widget_class = ( GtkWidgetClass * ) klass;
 
-    g_signal_connect( G_OBJECT( item ), "activate",
-                      G_CALLBACK( stack_applet_activate_dialog ), applet );
+	parent_class = gtk_type_class (GTK_TYPE_DRAWING_AREA);
 
-    gtk_widget_show_all( GTK_WIDGET( menu ) );
-
-    return menu;
+    object_class->destroy = stack_applet_destroy;
 }
 
 /**
- * Activate the file (folder) chooser.
- * -limit to create/select folders
- * -run dialog and retrieve a folder path
+ * Initialize the new applet
+ * -set default values
+ * -connect to external events
+ * -set dnd area
+ * -TODO: let user decide what the default action is on dnd (copy/move/symlink)
  */
-static void stack_applet_activate_dialog(
-    GtkEntry * entry,
-    gpointer data ) {
+static void stack_applet_init(
+    StackApplet * applet ) {
 
-    StackApplet *applet = STACK_APPLET( data );
-    GnomeVFSURI *uri = stack_dialog_get_backend_folder(  );
-    GtkWidget *dialog;
+    return;
+}
 
-    dialog = gtk_file_chooser_dialog_new( STACK_TEXT_SELECT_FOLDER, NULL,
-                                          GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER,
-                                          GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                                          GTK_STOCK_APPLY, GTK_RESPONSE_ACCEPT, NULL );
+/**
+ * Create the new applet
+ * -set AwnApplet properties
+ * -initialize gconf
+ * -create stack for default backend folder
+ * -update icons
+ */
+AwnApplet *awn_applet_factory_initp(
+    gchar * uid,
+    gint orient,
+    gint height ) {
 
-    gtk_window_set_skip_taskbar_hint( GTK_WINDOW( dialog ), TRUE );
-    gtk_window_set_skip_pager_hint( GTK_WINDOW( dialog ), TRUE );
+	GtkWidget *awn_applet = awn_applet_simple_new( uid, orient, height );
+	
+    StackApplet *applet = g_object_new( STACK_TYPE_APPLET, NULL );
+	applet->awn_applet = awn_applet;
 
-    if ( uri ) {
-        gtk_file_chooser_set_current_folder( GTK_FILE_CHOOSER( dialog ),
-                                             gnome_vfs_uri_get_path( uri ) );
-    }
+    stack_gconf_init( AWN_APPLET( awn_applet ) );
 
-    if ( gtk_dialog_run( GTK_DIALOG( dialog ) ) == GTK_RESPONSE_ACCEPT ) {
-        gchar *filename;
+    stack_applet_set_icon( applet, NULL );
+    
+    applet->stack = stack_dialog_new( applet );
 
-        filename = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dialog ) );
-        stack_gconf_set_backend_folder( filename );
+   	applet->title = AWN_TITLE(awn_title_get_default ());
+	applet->title_text = g_strdup (stack_gconf_get_backend_folder());
 
-		//applet->title_text = g_strdup (_("No Items in Trash"));
+	gtk_widget_add_events( GTK_WIDGET( applet->awn_applet ), GDK_ALL_EVENTS_MASK );
+	
+	/* connect to mouse enter/leave events */
+	g_signal_connect (G_OBJECT (applet->awn_applet), "enter-notify-event",
+			  G_CALLBACK (stack_applet_enter_notify_event),
+			  applet);
+	g_signal_connect (G_OBJECT (applet->awn_applet), "leave-notify-event",
+			  G_CALLBACK (stack_applet_leave_notify_event),
+			  applet);
+	g_signal_connect (G_OBJECT (applet->awn_applet), "button-release-event",
+              G_CALLBACK (stack_applet_button_release_event), 
+              applet);
+              
+    // set up DnD target
+    GdkDragAction actions;
+    gchar *default_action = stack_gconf_get_default_drag_action();
+    if( g_str_equal(default_action, DRAG_ACTION_LINK ) ){
+	    actions = GDK_ACTION_LINK;
+	}else if(g_str_equal(default_action, DRAG_ACTION_MOVE ) ){
+		actions = GDK_ACTION_MOVE;
+	}else if(g_str_equal(default_action, DRAG_ACTION_COPY ) ){	
+		actions = GDK_ACTION_COPY;
+	}else{
+		actions = GDK_ACTION_LINK | GDK_ACTION_COPY | GDK_ACTION_MOVE;
+	}
 
-        GtkWidget *old = applet->stack;
+    gtk_drag_dest_set( GTK_WIDGET( applet->awn_applet ), GTK_DEST_DEFAULT_ALL, drop_types,
+                       G_N_ELEMENTS( drop_types ),
+                       actions );           
+                       
+	g_signal_connect (G_OBJECT (applet->awn_applet), "drag-leave",
+              G_CALLBACK (stack_applet_drag_leave), 
+              applet);
+	g_signal_connect (G_OBJECT (applet->awn_applet), "drag-motion",
+              G_CALLBACK (stack_applet_drag_motion), 
+              applet);
+	g_signal_connect (G_OBJECT (applet->awn_applet), "drag-data-received",
+              G_CALLBACK (stack_applet_drag_data_received), 
+              applet);                   
+                                       
+	/* Sise request and show */    
+    gtk_widget_set_size_request( awn_applet, awn_applet_get_height ( AWN_APPLET(awn_applet)), 
+                               ( awn_applet_get_height (AWN_APPLET(awn_applet)) + 2 ) * 2 );
 
-        applet->stack = stack_dialog_new( applet );
-        if ( old ) {
-            gtk_widget_destroy( old );
-        }
-    }
 
-    gtk_widget_destroy( dialog );
+    gtk_widget_show_all( awn_applet );
+
+    return AWN_APPLET( awn_applet );
 }
 

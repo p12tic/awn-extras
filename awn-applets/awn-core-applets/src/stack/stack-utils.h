@@ -17,10 +17,11 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef __STACK_CAIRO_H__
-#define __STACK_CAIRO_H__
+#ifndef __STACK_UTILS_H__
+#define __STACK_UTILS_H__
 
 #include <gtk/gtk.h>
+#include <libgnomevfs/gnome-vfs.h>
 
 #define STACK_ICON_TEXT_SIZE 24
 #define STACK_ICON_TEXT_CUTOFF 5
@@ -29,6 +30,29 @@
 #define MARGIN_Y 24
 #define PADDING_X 6
 #define PADDING_Y 6
+
+gboolean is_directory(
+    GnomeVFSURI * uri );
+
+gboolean scale_keepping_ratio(
+    guint * width,
+    guint * height,
+    guint max_width,
+    guint max_height );
+
+void resize_icon(
+    GdkPixbuf ** pixbuf,
+    gint icon_size );
+
+GdkPixbuf *get_icon(
+    const gchar * filename,
+    gint size );
+
+GdkPixbuf *compose_applet_icon(
+    const GdkPixbuf * icon1, 
+    const GdkPixbuf * icon2, 
+    const GdkPixbuf * icon3, 
+    gint size );
 
 void paint_icon_name(
     cairo_t * cr,
@@ -46,4 +70,4 @@ void paint_icon(
     int y,
     double a );
 
-#endif /* __STACK_CAIRO_H__ */
+#endif /* __STACK_UTILS_H__ */

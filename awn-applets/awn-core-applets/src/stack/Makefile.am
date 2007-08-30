@@ -11,12 +11,11 @@ INCLUDES =							\
 
 STACK_SOURCES =                              \
 	stack-applet.c                           \
-	stack-cairo.c \
 	stack-dialog.c \
+	stack-folder.c \	
 	stack-gconf.c \
 	stack-icon.c \
-	stack-pixbuf-utils.c \
-	stack-folder.c
+	stack-utils.c
 
 STACK_LDADD =                        \
         $(DEPS_LIBS)			        \

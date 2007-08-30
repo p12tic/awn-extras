@@ -202,7 +202,7 @@ gchar *stack_gconf_get_default_drag_action() {
  * Set the backend folder of this applet
  */
 void stack_gconf_set_backend_folder(
-    gchar * folder ) {
+    const gchar * folder ) {
 
     awn_applet_gconf_set_string( applet, STACK_GCONFKEY_BACKEND_FOLDER, folder, NULL );
 }

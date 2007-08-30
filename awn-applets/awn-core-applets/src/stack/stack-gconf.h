@@ -23,15 +23,14 @@
 #include <libawn/awn-applet.h>
 #include <libawn/awn-cairo-utils.h>
 
-void stack_gconf_init(
-    AwnApplet * applet );
+void stack_gconf_init( AwnApplet * applet );
     
 gboolean stack_gconf_is_composite_applet_icon();
 gboolean stack_gconf_is_browsing();
 gchar *stack_gconf_get_backend_folder();
 gchar *stack_gconf_get_drag_action();
 
-void stack_gconf_set_backend_folder( gchar * folder );
+void stack_gconf_set_backend_folder( const gchar * folder );
 
 gchar *stack_gconf_get_applet_icon();
 gchar *stack_gconf_get_default_drag_action();

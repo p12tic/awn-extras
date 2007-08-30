@@ -20,11 +20,7 @@
 #ifndef __STACK_APPLET_H__
 #define __STACK_APPLET_H__
 
-/*
- * INCLUDES
- */
 #include <gtk/gtk.h>
-#include <libawn/awn-applet-simple.h>
 #include <libawn/awn-title.h>
 
 #define STACK_TYPE_APPLET (stack_applet_get_type ())

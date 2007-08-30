@@ -37,25 +37,24 @@ typedef struct _StackDialogClass StackDialogClass;
 typedef struct _StackDialogPrivate StackDialogPrivate;
 
 struct _StackDialog {
-	GtkFixed parent;
+	GtkFixed		parent;
 
     GtkWidget		*awn_dialog;
-    StackApplet    *applet;
-    GtkWidget      *fixed;
+    StackApplet		*applet;
 
     gboolean        active;
     gdouble         anim_time;
 
-    GtkWidget      *fm_box;
+    GtkWidget		*fm_box;
     GtkAllocation   fm_alloc;
 
-    GtkWidget      *fup_box;
+    GtkWidget		*fup_box;
     GtkAllocation   fup_alloc;
 
-    GtkWidget      *flt_box;
+    GtkWidget		*flt_box;
     GtkAllocation   flt_alloc;
 
-    GtkWidget      *frt_box;
+    GtkWidget		*frt_box;
     GtkAllocation   frt_alloc;
 };
 

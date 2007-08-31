@@ -476,6 +476,7 @@ void stack_dialog_toggle_visiblity(
 		if(current_folder != backend_folder ){
 			gtk_widget_destroy( GTK_WIDGET( current_folder ) );
 			current_folder = backend_folder;
+			gtk_window_set_title( GTK_WINDOW( dialog->awn_dialog ), STACK_FOLDER(current_folder)->name );
 		}
 		
 		// set applet icon

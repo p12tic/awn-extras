@@ -61,6 +61,11 @@ po/Makefile.in
 src/Makefile
 src/clock/Makefile
 src/main-menu/Makefile
+src/notification-area/Makefile
+src/python-test/Makefile
+src/separator/Makefile
 src/stack/Makefile
+src/switcher/Makefile
+src/trash/Makefile
 src/wobblyzini/Makefile
 ])

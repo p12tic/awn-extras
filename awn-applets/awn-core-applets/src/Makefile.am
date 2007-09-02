@@ -1,1 +1,1 @@
-SUBDIRS =	clock main-menu stack wobblyzini
+SUBDIRS =	clock main-menu notification-area python-test separator stack switcher trash wobblyzini

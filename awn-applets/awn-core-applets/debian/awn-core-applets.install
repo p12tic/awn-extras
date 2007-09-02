@@ -1,0 +1,10 @@
+debian/tmp/usr/lib/awn/applets/clock/clock.so
+debian/tmp/usr/lib/awn/applets/main-menu/main-menu.so
+debian/tmp/usr/lib/awn/applets/notification-area/notification-area.so
+debian/tmp/usr/lib/awn/applets/python-test/python-test.so
+debian/tmp/usr/lib/awn/applets/separator/separator.so
+debian/tmp/usr/lib/awn/applets/stack/stack.so
+debian/tmp/usr/lib/awn/applets/switcher/switcher.so
+debian/tmp/usr/lib/awn/applets/trash/trash.so
+debian/tmp/usr/lib/awn/applets/wobblyzini/wobblyzini.so
+debian/tmp/etc/gconf/schemas/

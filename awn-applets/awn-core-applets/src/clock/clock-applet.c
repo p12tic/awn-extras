@@ -37,6 +37,11 @@
 static void init (Clock *clock);
 static void init_pref(Clock *applet);
 
+#ifdef HAVE_SVG
+static void load_svg(Clock *clock);
+static void unload_svg(Clock *clock);
+#endif
+
 static gboolean time_handler (Clock *clock);
 static void update_time (Clock *applet);
 
@@ -63,7 +68,7 @@ clock_applet_new (AwnApplet *applet)
 	clock->applet = applet;
 	
 	clock->height = awn_applet_get_height(applet) * 2;
-        awn_applet_add_preferences (applet,  "/schemas/apps/awn-clock/prefs", NULL);
+        awn_applet_add_preferences (clock->applet,  "/schemas/apps/awn-clock/prefs", NULL);
 
 	init(clock);
 
@@ -103,14 +108,15 @@ init (Clock *clock)
 
 /*
  * Initialize the preferences
- * TODO : move to GConf
  */
 static void 
 init_pref(Clock *clock)
 {
 	clock->y_offset = 0;
 
-	clock->type = CLOCK_ANALOGIC;
+	/*clock->type = CLOCK_ANALOGIC;
+	clock->theme_path = "/usr/local/share/awn-core-applets/applets/clock/themes/";
+	clock->theme_name = "tango";
 	
 	clock->show_second = TRUE;
 	clock->show_date = TRUE;
@@ -124,11 +130,13 @@ init_pref(Clock *clock)
 
 	clock->format_date = g_strdup("%d/%m/%Y");
 	clock->format_time = g_strdup("%H:%M:%S");
-	clock->utc = FALSE;
+	clock->utc = FALSE;*/
 	
-/*
 	gboolean type = awn_applet_gconf_get_bool (clock->applet, "clock_digital", NULL);
 	clock->type = ( type ) ? CLOCK_DIGITAL : CLOCK_ANALOGIC;
+
+	clock->theme_path = awn_applet_gconf_get_string (clock->applet, "clock_theme_path", NULL);;
+	clock->theme_name = awn_applet_gconf_get_string (clock->applet, "clock_theme_name", NULL);;
 	
     	clock->show_second = awn_applet_gconf_get_bool (clock->applet, "clock_show_second", NULL);
     	clock->show_date = awn_applet_gconf_get_bool (clock->applet, "clock_show_date", NULL);
@@ -143,29 +151,8 @@ init_pref(Clock *clock)
 	clock->format_date = awn_applet_gconf_get_string (clock->applet, "clock_format_date", NULL);
 	clock->format_time = awn_applet_gconf_get_string (clock->applet, "clock_format_time", NULL);
 	clock->utc = awn_applet_gconf_get_bool (clock->applet, "clock_utc", NULL);
-	*/
-
-	#ifdef HAVE_SVG
-		// TODO : better support for the location and the theme's name
-		char 	*path = "/usr/share/cairo-clock/themes/",
-			*theme = "tango";
-		GError* error;
-		awn_load_svg (&clock->bg_svg_handle, path, theme, "clock-frame.svg", &error);
-		awn_load_svg (&clock->mark_svg_handle, path, theme, "clock-marks.svg", &error);
-		awn_load_svg (&clock->shadow_svg_handle, path, theme, "clock-face-shadow.svg", &error);
-		awn_load_svg (&clock->glass_svg_handle, path, theme, "clock-glass.svg", &error);
-		awn_load_svg (&clock->drop_shadow_svg_handle, path, theme, "clock-drop-shadow.svg", &error);
-		awn_load_svg (&clock->face_svg_handle, path, theme, "clock-face.svg", &error);
-		
-		awn_load_svg (&clock->hour_hand_svg_handle, path, theme, "clock-hour-hand.svg", &error);
-		awn_load_svg (&clock->hour_hand_shadow_svg_handle, path, theme, "clock-hour-hand-shadow.svg", &error);
-		
-		awn_load_svg (&clock->minute_hand_svg_handle, path, theme, "clock-minute-hand.svg", &error);
-		awn_load_svg (&clock->minute_hand_shadow_svg_handle, path, theme, "clock-minute-hand-shadow.svg", &error);
-		
-		awn_load_svg (&clock->second_hand_svg_handle, path, theme, "clock-second-hand.svg", &error);
-		awn_load_svg (&clock->second_hand_shadow_svg_handle, path, theme, "clock-second-hand-shadow.svg", &error);
-	#endif
+	
+	load_svg(clock);
 	
 	/* // load svgs and pngs - png support not yet implemented - Is it really necessary ?
 	#ifdef HAVE_SVG
@@ -205,6 +192,47 @@ init_pref(Clock *clock)
 	*/
 }
 
+#ifdef HAVE_SVG
+static void 
+load_svg(Clock *clock)
+{
+	// TODO : better support for the location and the theme's name
+	GError* error;
+	awn_load_svg (&clock->bg_svg_handle, clock->theme_path, clock->theme_name, "clock-frame.svg", &error);
+	awn_load_svg (&clock->mark_svg_handle, clock->theme_path, clock->theme_name, "clock-marks.svg", &error);
+	awn_load_svg (&clock->shadow_svg_handle, clock->theme_path, clock->theme_name, "clock-face-shadow.svg", &error);
+	awn_load_svg (&clock->glass_svg_handle, clock->theme_path, clock->theme_name, "clock-glass.svg", &error);
+	awn_load_svg (&clock->drop_shadow_svg_handle, clock->theme_path, clock->theme_name, "clock-drop-shadow.svg", &error);
+	awn_load_svg (&clock->face_svg_handle, clock->theme_path, clock->theme_name, "clock-face.svg", &error);
+	
+	awn_load_svg (&clock->hour_hand_svg_handle, clock->theme_path, clock->theme_name, "clock-hour-hand.svg", &error);
+	awn_load_svg (&clock->hour_hand_shadow_svg_handle, clock->theme_path, clock->theme_name, "clock-hour-hand-shadow.svg", &error);
+	
+	awn_load_svg (&clock->minute_hand_svg_handle, clock->theme_path, clock->theme_name, "clock-minute-hand.svg", &error);
+	awn_load_svg (&clock->minute_hand_shadow_svg_handle, clock->theme_path, clock->theme_name, "clock-minute-hand-shadow.svg", &error);
+	
+	awn_load_svg (&clock->second_hand_svg_handle, clock->theme_path, clock->theme_name, "clock-second-hand.svg", &error);
+	awn_load_svg (&clock->second_hand_shadow_svg_handle, clock->theme_path, clock->theme_name, "clock-second-hand-shadow.svg", &error);
+}
+
+static void
+unload_svg(Clock *clock)
+{
+	rsvg_handle_free (clock->bg_svg_handle);
+	rsvg_handle_free (clock->mark_svg_handle);
+	rsvg_handle_free (clock->shadow_svg_handle);
+	rsvg_handle_free (clock->glass_svg_handle);
+	rsvg_handle_free (clock->drop_shadow_svg_handle);
+	rsvg_handle_free (clock->face_svg_handle);
+	rsvg_handle_free (clock->hour_hand_svg_handle);
+	rsvg_handle_free (clock->hour_hand_shadow_svg_handle);
+	rsvg_handle_free (clock->minute_hand_svg_handle);
+	rsvg_handle_free (clock->minute_hand_shadow_svg_handle);
+	rsvg_handle_free (clock->second_hand_svg_handle);
+	rsvg_handle_free (clock->second_hand_shadow_svg_handle);
+}
+#endif
+
 static void
 update_time(Clock *clock)
 {
@@ -237,7 +265,7 @@ update_time(Clock *clock)
 
 	if (strftime(clock->txt_date, sizeof(clock->txt_date), clock->format_date, g_pTime) == 0)
 		g_critical("Error: strftime returned 0 for date");
-
+	
 }
 
 static void
@@ -292,7 +320,7 @@ draw_digital_clock(Clock *clock, cairo_t *cr, int width, int height)
 	 	x_rect = 6,
 		y_rect = 68;
 		
-	// Si on affiche la date, alors les coordonnée sont modofié en fonction de la taille
+	// Si on affiche la date, alors les coordonnée sont modifié en fonction de la taille
 	// A noter, tout depend de Pango, si on modifie la police ou autre, alors tout est automatiquement ajusté
 	if ( clock->show_date )
 	{
@@ -339,6 +367,8 @@ draw_digital_clock(Clock *clock, cairo_t *cr, int width, int height)
 	
 	g_object_unref(pLayout_time);
 	g_object_unref(pLayout_date);
+	g_object_unref(pDesc);
+
 	
 	// Code to display moon or sun picture relative to the current time
 	// FIXME : the width of the applet need to be increase to 200px
@@ -370,15 +400,12 @@ draw_analogic_clock(Clock *clock, cairo_t *cr, int width, int height)
 	PangoRectangle extents;
 	PangoRectangle extents_logical;
 
-
 	update_time(clock);
 
 	//Transparence
 	cairo_set_source_rgba (cr, 1.0f, 1.0f, 1.0f, 0.0f);
 	cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
 	cairo_paint (cr);
-
-	cairo_translate (cr, 0, 18);
 
 	if ( clock->show_date )
 	{
@@ -400,7 +427,7 @@ draw_analogic_clock(Clock *clock, cairo_t *cr, int width, int height)
 		pango_layout_get_pixel_extents(pLayout, &extents_logical, &extents);
 	}
 	
-	gboolean full_draw_clock = FALSE;
+	int full_draw_clock = 0;
 	// It's a full drawing clock : no svg, no bitmap
 	// Use only this one for the moment, the other one has problems yet
 	if ( full_draw_clock )
@@ -495,7 +522,7 @@ draw_analogic_clock(Clock *clock, cairo_t *cr, int width, int height)
 		// This clock uses bitmap or SVG, 
 		cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
 		
-		cairo_save (cr);
+		//cairo_save (cr);
 
 		#ifndef HAVE_SVG
 		awn_cairo_rounded_rect(cr, 
@@ -513,25 +540,30 @@ draw_analogic_clock(Clock *clock, cairo_t *cr, int width, int height)
 		#endif
 		
 
-		// TODO : improve it, relative to the width and height of the applet
+		// the width and height are dependant of the theme => 100px always
 		int width_c = 100;
 		int height_c = 100;
-		double scale = 0.70;
-
-		// get dimensions
-		double x = (width_c / 2.0) * scale;
-		double y = (height_c / 2.0) * scale;
-		//radius = min(self.theme.width / 2.0, self.theme.height / 2.0) - 5
+		//FIXME : the scale is dependant to the height of the applet, but must be improved
+		double scale = (height+5.0)/100.0;
 		
 		// calc. scale relative to theme proportions
+		// It's the same proportions because the theme are 100x100
+		// Not a bug, a feature ;)
 		double ctx_w = scale;
 		double ctx_h = scale;
+
+		// Locate the center of the clock
+		double x_center = (width_c / 2.0) * scale;
+		double y_center = (height_c / 2.0) * scale;
 		
 		// TODO: use better shadow-placing
 		int shadow_offset_x = 1;
 		int shadow_offset_y = 1;
 
-		cairo_translate(cr, 15, 20);
+		// The X and Y for the drawing of the clock
+		int 	x_location = width/2 - (width_c*scale)/2,
+			y_location = height + clock->y_offset;
+		cairo_translate(cr, x_location, y_location);
 		
 		#ifdef HAVE_SVG
 		// Affiche le theme de l'horloge
@@ -546,13 +578,11 @@ draw_analogic_clock(Clock *clock, cairo_t *cr, int width, int height)
 		cairo_restore(cr);
 		#endif
 
-		//cairo_translate (cr, dim_carre / 2.0, dim_carre / 2.0);
-		//cairo_rotate (cr, -M_PI/2.0f);
 
 		#ifdef HAVE_SVG
 		// hour hand shadow
 		cairo_save (cr);
-			cairo_translate (cr, x+shadow_offset_x, y+shadow_offset_y);
+			cairo_translate (cr, x_center+shadow_offset_x, y_center+shadow_offset_y);
 			cairo_rotate(cr, -M_PI/2.0);
 			cairo_scale(cr, ctx_w, ctx_h);
 			
@@ -563,7 +593,7 @@ draw_analogic_clock(Clock *clock, cairo_t *cr, int width, int height)
 
 		// hour hand
 		cairo_save (cr);
-			cairo_translate (cr, x, y);
+			cairo_translate (cr, x_center, y_center);
 			cairo_rotate(cr, -M_PI/2.0);
 			cairo_scale(cr, ctx_w, ctx_h);
 			
@@ -592,7 +622,7 @@ draw_analogic_clock(Clock *clock, cairo_t *cr, int width, int height)
 		#ifdef HAVE_SVG
 		// minute hand shadow
 		cairo_save (cr);
-			cairo_translate (cr, x+shadow_offset_x, y+shadow_offset_y);
+			cairo_translate (cr, x_center+shadow_offset_x, y_center+shadow_offset_y);
 			cairo_rotate(cr, -M_PI/2.0);
 			cairo_scale(cr, ctx_w, ctx_h);
 
@@ -603,7 +633,7 @@ draw_analogic_clock(Clock *clock, cairo_t *cr, int width, int height)
 
 		// minute hand
 		cairo_save (cr);
-			cairo_translate (cr, x+shadow_offset_x, y+shadow_offset_y);
+			cairo_translate (cr, x_center+shadow_offset_x, y_center+shadow_offset_y);
 			cairo_rotate(cr, -M_PI/2.0);
 			cairo_scale(cr, ctx_w, ctx_h);
 
@@ -634,7 +664,7 @@ draw_analogic_clock(Clock *clock, cairo_t *cr, int width, int height)
 			// second hand shadow
 			#ifdef HAVE_SVG
 			cairo_save (cr);
-				cairo_translate (cr, x+shadow_offset_x, y+shadow_offset_y);
+				cairo_translate (cr, x_center+shadow_offset_x, y_center+shadow_offset_y);
 				cairo_rotate(cr, -M_PI/2.0);
 				cairo_scale(cr, ctx_w, ctx_h);
 
@@ -645,7 +675,7 @@ draw_analogic_clock(Clock *clock, cairo_t *cr, int width, int height)
 
 			// second hand
 			cairo_save (cr);
-				cairo_translate (cr, x+shadow_offset_x, y+shadow_offset_y);
+				cairo_translate (cr, x_center+shadow_offset_x, y_center+shadow_offset_y);
 				cairo_rotate(cr, -M_PI/2.0);
 				cairo_scale(cr, ctx_w, ctx_h);
 			
@@ -687,14 +717,17 @@ draw_analogic_clock(Clock *clock, cairo_t *cr, int width, int height)
 
 		if ( clock->show_date )
 		{
-			// TODO : improve the location calcul
-			cairo_move_to (cr, ((width_c/2) - (extents.width/2)) - 15, 48);
+			// location for the date
+			int 	x_date = ( (width/2 - (width_c*scale)/2) - (extents.width/2)),
+				y_date = (height_c*scale)*.70 + clock->y_offset;
+			cairo_move_to (cr, x_date, y_date );
 			convert_color (&color, clock->font_color);
 			cairo_set_source_rgba (cr, color.red, color.green, color.blue, color.alpha);
 			//alpha = 1.0
 			pango_cairo_show_layout(cr, pLayout);
 		}
-	}
+		
+	}	
 }
 
 static gboolean
@@ -716,55 +749,32 @@ _expose_event (GtkWidget *widget, GdkEventExpose *expose, gpointer data)
 
 	gtk_widget_get_size_request (widget, &width, &height);
 
-	// All the commenting code is to do the reflection, but I don't succed to do it,
-	// if someone can send me a patch, I will be happy :) 
+	cairo_surface_t *surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32,  height*2, height*2);
+	cairo_t *crr = cairo_create(surface);
+		
+	if( clock->type == CLOCK_ANALOGIC )
+		draw_analogic_clock(clock, crr, width, height);
+	else if( clock->type == CLOCK_DIGITAL )
+		draw_digital_clock(clock, crr, width, height);
 	
-	/*cairo_surface_t *surface;
-	cairo_t *crr = NULL;
-	int yy = awn_applet_get_height(clock->applet);
-	gint x = 0;
-	gint y = yy + (yy - awn_applet_get_height(clock->applet)) / 2;
-	gint y_offset = 16;
-	// Clearing 
 	cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 0.0);
 	cairo_set_operator(cr, CAIRO_OPERATOR_CLEAR);
 	cairo_paint(cr);
 	cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
-	surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32,  awn_applet_get_height(clock->applet)*2, awn_applet_get_height(clock->applet)*2);
-	crr = cairo_create(surface);*/
-	
-	if( clock->type == CLOCK_ANALOGIC )
-		draw_analogic_clock(clock, cr, width, height);
-	else if( clock->type == CLOCK_DIGITAL )
-		draw_digital_clock(clock, cr, width, height);
-	
-	/*cairo_destroy(crr);
-	// Setting coordinates
-	cairo_translate(cr, x, y);
+
 	cairo_set_source_surface(cr, surface, 0, 0);
 	cairo_paint(cr);
-	// Clipping bottom
-	// TODO fix
-	cairo_rectangle(cr, 0, awn_applet_get_height(clock->applet), awn_applet_get_height(clock->applet)*2, y_offset - 7);
-	cairo_clip(cr);
-	
-	// Mirroring
-	cairo_translate(cr,
-			awn_applet_get_height(clock->applet),
-			awn_applet_get_height(clock->applet) *2 * 2 - 24 +
-			(awn_applet_get_height(clock->applet) - awn_applet_get_height(clock->applet)*2) / 2);
-	cairo_scale(cr, 1, -1);
-	cairo_translate(cr,
-			-awn_applet_get_height(clock->applet),
-			-awn_applet_get_height(clock->applet) - (awn_applet_get_height(clock->applet)*2 - awn_applet_get_height(clock->applet)));	
-	// Reflection
-	cairo_set_source_surface(cr, surface, 0, 0);	
-	cairo_paint_with_alpha(cr, 0.33);
-	cairo_surface_destroy(surface);
-	cairo_destroy(cr);
-	// Clean up
-	cairo_destroy (cr);*/
 
+	// FIXME : the bottom has a problem, maybe need to move a few pixel the clock
+	
+	/*cairo_scale(cr, 1, -1);
+	cairo_translate(cr,0, -4.1*height);	
+	cairo_set_source_surface(cr, surface, 0, 0);
+	cairo_paint_with_alpha(cr, .33);*/
+	
+	cairo_destroy(crr);
+	cairo_surface_destroy(surface);
+	
 	return TRUE;
 }
 

@@ -23,8 +23,8 @@
  *
  */
 
-#ifndef UTILS_H_
-#define UTILS_H_
+#ifndef CLOCK_UTILS_H_
+#define CLOCK_UTILS_H_
 
 //-----------------------------------------------------
 //Adapted from the stack applet taken from awn core => I think it need to be move to libawn so everybody can use it
@@ -59,4 +59,4 @@ awn_load_png (gchar *icon, GdkPixbuf **pixbuf, GError **error);
 	awn_load_svg (RsvgHandle **handle, char* path, char* theme, char* file_name, GError **error);
 #endif
 
-#endif /*UTILS_H_*/
+#endif /*CLOCK_UTILS_H_*/

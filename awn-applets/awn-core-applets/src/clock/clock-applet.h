@@ -36,7 +36,6 @@
 #include <libawn/awn-applet.h>
 #include <libawn/awn-cairo-utils.h>
 #include <libawn/awn-applet-gconf.h>
-#include <libawn/awn-applet-dialog.h>
 #include <libawn/awn-title.h>
 
 
@@ -92,6 +91,8 @@ typedef struct
 
 	// Les options
 	gint type;
+	gchar *theme_path;
+	gchar *theme_name;
 	
 	gboolean show_second;
 	gboolean show_date;
@@ -106,7 +107,6 @@ typedef struct
 	gchar *font_color;
 	gchar *rectangle_color;
 
-	// Effect stuff -- I don't think I'm use it, but ...
 	guint height;
 	gint y_offset;
 

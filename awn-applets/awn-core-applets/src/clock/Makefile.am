@@ -26,6 +26,19 @@ clock_la_LIBADD = $(CLOCK_LDADD)
 clock_la_LDFLAGS = -module -avoid-version 
 clock_la_CFLAGS =
 
+
+schemasdir   = @GCONF_SCHEMA_FILE_DIR@
+schemas_in_files = clock.schemas.in
+schemas_DATA = $(schemas_in_files:.schemas.in=.schemas)
+
+@INTLTOOL_SCHEMAS_RULE@
+
+if GCONF_SCHEMAS_INSTALL
+install-data-local: $(schemas_DATA)
+	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(schemas_DATA)
+endif
+
+
 desktopdir = $(libdir)/awn/applets
 
 desktop_DATA = \
@@ -37,4 +50,5 @@ $(desktop_DATA).in: $(desktop_DATA).in.in
 
 
 EXTRA_DIST = \
-	clock.desktop.in.in
+	clock.desktop.in.in 			\
+	clock.schemas.in

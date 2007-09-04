@@ -48,6 +48,11 @@ fi
 
 AC_SUBST(GCC_FLAGS)
 
+dnl ==============================================
+dnl GConf
+dnl ==============================================
+AM_GCONF_SOURCE_2
+
 dnl Please keep in alpha order
 
 dnl ==============================================

@@ -127,7 +127,7 @@
         <key>/schemas/apps/awn-clock/prefs/clock_theme_path</key>
         <owner>awn-clock</owner>
         <type>string</type>
-        <default>/usr/local/share/awn-core-applets/applets/clock/themes/</default>
+        <default>/usr/share/cairo-clock/themes/</default>
         <locale name="C">
           <short>Path of the clock theme</short>
           <long>It's the full path of the folder with ALL the theme, not the theme ITSELF</long>

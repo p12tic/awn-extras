@@ -19,7 +19,7 @@ TRASH_SOURCES =                              \
 	xstuff.h
 
 TRASH_LDADD =                        \
-        $(DEPS_LIBS)			        \
+        $(DEPS_LIBS)			        
         
 
 trashlibdir = $(libdir)/awn/applets/trash

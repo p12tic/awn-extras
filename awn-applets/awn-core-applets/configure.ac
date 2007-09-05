@@ -34,7 +34,8 @@ slicelocaledir='${prefix}/${DATADIRNAME}/locale'
 AC_SUBST(slicelocaledir)
 
 PKG_CHECK_MODULES(DEPS, 
-                  gtk+-2.0 
+                  gtk+-2.0
+                  libwnck-1.0 
                   awn
                   libgnome-menu 
                   gnome-desktop-2.0

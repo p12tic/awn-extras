@@ -2,12 +2,11 @@ INCLUDES =							\
 	-I$(srcdir)						\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"		\
 	$(DISABLE_DEPRECATED_CFLAGS)				\
-	$(AWN_CFLAGS)					\
+	$(DEPS_CFLAGS)					\
 	-DPREFIX=\"$(prefix)\"					\
 	-DSYSCONFDIR=\"$(sysconfdir)\"				\
 	-DDATADIR=\"$(datadir)\"				\
-	-DLIBDIR=\"$(libdir)\"                                  \
-	-I$(top_builddir)/libawn
+	-DLIBDIR=\"$(libdir)\"                                  
 
 NAREA_SOURCES =					\
 	applet.c				\
@@ -17,9 +16,7 @@ NAREA_SOURCES =					\
 	eggmarshalers.h
 
 NAREA_LDADD =                        \
-        $(DEPS_LIBS)			        \
-        $(AWN_LIBS)                             \
-        $(top_builddir)/libawn/libawn.la
+        $(DEPS_LIBS)
         
 
 notification_arealibdir = $(libdir)/awn/applets/notification-area/

@@ -2,12 +2,11 @@ INCLUDES =							\
 	-I$(srcdir)						\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"		\
 	$(DISABLE_DEPRECATED_CFLAGS)				\
-	$(AWN_CFLAGS)					\
+	$(DEPS_CFLAGS)					\
 	-DPREFIX=\"$(prefix)\"					\
 	-DSYSCONFDIR=\"$(sysconfdir)\"				\
 	-DDATADIR=\"$(datadir)\"				\
-	-DLIBDIR=\"$(libdir)\"                                  \
-	-I$(top_builddir)/libawn				\
+	-DLIBDIR=\"$(libdir)\"         				\
 	-DGLADEDIR=\"$(libdir)/awn/applets/trash\"
 
 TRASH_SOURCES =                              \
@@ -21,8 +20,6 @@ TRASH_SOURCES =                              \
 
 TRASH_LDADD =                        \
         $(DEPS_LIBS)			        \
-        $(AWN_LIBS)                             \
-        $(top_builddir)/libawn/libawn.la
         
 
 trashlibdir = $(libdir)/awn/applets/trash

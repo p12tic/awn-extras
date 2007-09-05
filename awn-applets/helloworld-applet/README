@@ -1,0 +1,11 @@
+
+This is the "Hello World" AWN Applet.  To install it:
+
+1.) ./autogen.sh
+2.) make
+3.) sudo make install
+
+Enjoy!
+
+- Mike "mosburger" Desjardins <desjardinsmike@gmail.com>
+

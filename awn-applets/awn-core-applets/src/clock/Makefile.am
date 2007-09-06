@@ -51,4 +51,4 @@ $(desktop_DATA).in: $(desktop_DATA).in.in
 
 EXTRA_DIST = \
 	clock.desktop.in.in 			\
-	awn.clock.schemas.in
+	awn-clock.schemas.in

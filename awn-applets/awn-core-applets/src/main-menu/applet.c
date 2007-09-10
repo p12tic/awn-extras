@@ -25,6 +25,8 @@
 #include <gmenu-tree.h>
 #include <libgnome/gnome-desktop-item.h>
 
+#include <string.h>
+
 #include <gtk/gtk.h>
 #include <libawn/awn-applet.h>
 #include <libawn/awn-applet-gconf.h>
@@ -51,6 +53,91 @@ static Menu *menu;
 static GQuark item_quark = 0;
 
 static void populate (Menu *app);
+
+/* From matchbox-desktop */
+static char *
+strip_extension (const char *file)
+{
+        char *stripped, *p;
+
+        stripped = g_strdup (file);
+
+        p = strrchr (stripped, '.');
+        if (p &&
+            (!strcmp (p, ".png") ||
+             !strcmp (p, ".svg") ||
+             !strcmp (p, ".xpm")))
+	        *p = 0;
+
+        return stripped;
+}
+
+/* Gets the pixbuf from a desktop file's icon name. Based on the same function
+ * from matchbox-desktop
+ */
+static GdkPixbuf *
+get_icon (const gchar *name, gint size)
+{
+  static GtkIconTheme *theme = NULL;
+  GdkPixbuf *pixbuf = NULL;
+  GError *error = NULL;
+  gchar *stripped = NULL;
+  gint width, height;
+
+  if (theme == NULL)
+    theme = gtk_icon_theme_get_default ();
+
+  if (name == NULL)
+  {
+    g_warning ("No icon name found");
+    return NULL;
+  }
+
+  if (g_path_is_absolute (name))
+  {
+    if (g_file_test (name, G_FILE_TEST_EXISTS))
+    {
+      pixbuf = gdk_pixbuf_new_from_file_at_scale (name, size, size, 
+                                                  TRUE, &error);
+      if (error)
+      {
+        g_warning ("Error loading icon: %s\n", error->message);
+        g_error_free (error);
+        error = NULL;
+      }
+      return pixbuf;
+    } 
+  }
+
+  stripped = strip_extension (name);
+  
+  pixbuf = gtk_icon_theme_load_icon (theme,
+                                     stripped,
+                                     size,
+                                     0, &error);
+  if (error)
+  {   
+    g_warning ("Error loading icon: %s\n", error->message);
+    g_error_free (error);
+    error = NULL;
+  }
+
+  width = gdk_pixbuf_get_width (pixbuf);
+  height = gdk_pixbuf_get_height (pixbuf);
+
+  if (width != size || height != size)
+  {
+    GdkPixbuf *temp = pixbuf;
+    pixbuf = gdk_pixbuf_scale_simple (temp, 
+                                      size,
+                                      size,
+                                      GDK_INTERP_HYPER);
+    g_object_unref (temp);
+  }
+
+  g_free (stripped);
+  return pixbuf;
+}
 
 static void
 launch (GMenuTreeEntry *entry)
@@ -119,7 +206,7 @@ make_item (GMenuTreeItem *item)
   vbox = gtk_vbox_new (FALSE, 2);
   gtk_container_add (GTK_CONTAINER (button), vbox);
   
-  image = gtk_image_new_from_icon_name (icon, GTK_ICON_SIZE_DND);
+  image = gtk_image_new_from_pixbuf (get_icon (icon, 48));
   label = gtk_label_new (name);
   gtk_widget_set_size_request (label, 130, 24);
 
@@ -205,6 +292,7 @@ on_icon_clicked (GtkWidget *eb,
                  GdkEventButton *event,
                  Menu *app)
 {
+  app->root = gmenu_tree_get_root_directory (app->tree);
   populate (app);
 }
 

@@ -28,7 +28,7 @@ clock_la_CFLAGS =
 
 
 schemasdir   = @GCONF_SCHEMA_FILE_DIR@
-schemas_in_files = clock.schemas.in
+schemas_in_files = awn-clock.schemas.in
 schemas_DATA = $(schemas_in_files:.schemas.in=.schemas)
 
 @INTLTOOL_SCHEMAS_RULE@
@@ -51,4 +51,4 @@ $(desktop_DATA).in: $(desktop_DATA).in.in
 
 EXTRA_DIST = \
 	clock.desktop.in.in 			\
-	clock.schemas.in
+	awn-clock.schemas.in

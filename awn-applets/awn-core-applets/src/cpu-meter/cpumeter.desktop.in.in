@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=C
+Encoding=UTF-8
+Name=CPU Meter
+Comment=Measures CPU Load
+Exec=@LIBDIR@/awn/applets/cpumeter/cpumeter.so
+Icon=

@@ -38,7 +38,8 @@ PKG_CHECK_MODULES(DEPS,
                   awn
                   libgnome-menu 
                   gnome-desktop-2.0
-                  librsvg-2.0)
+                  librsvg-2.0
+                  libgtop-2.0)
 AC_SUBST(DEPS_CFLAGS)
 AC_SUBST(DEPS_LIBS)
 
@@ -65,6 +66,7 @@ Makefile
 po/Makefile.in
 src/Makefile
 src/clock/Makefile
+src/cpu-meter/Makefile
 src/main-menu/Makefile
 src/stack/Makefile
 src/wobblyzini/Makefile

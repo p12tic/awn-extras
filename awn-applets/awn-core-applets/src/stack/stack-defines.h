@@ -28,7 +28,7 @@
 #define ICON_MARGIN_Y ICON_MARGIN_X
 #define ICON_NAME_MARGIN 6
 #define ICON_NAME_HEIGHT 24
-#define STACK_ICON_RECT_RADIUS 10
+#define STACK_ICON_RECT_RADIUS 20
 #define MIN_WIDTH 200
 #define MIN_HEIGHT 200
 #define PADDING 1
@@ -49,9 +49,6 @@
 #define STACK_DEFAULT_COMPOSITE_APPLET_ICON TRUE
 #define STACK_DEFAULT_APPLET_ICON "folder-drag-accept"
 #define STACK_DEFAULT_ICON_SIZE 64
-#define STACK_DEFAULT_BORDER_COLOR "FFFFFFCC"
-#define STACK_DEFAULT_BACKGROUND_COLOR "000000AA"
-#define STACK_DEFAULT_ICONTEXT_COLOR "FFFFFFFF"
 
 #define STACK_GCONFKEY_MAX_ROWS "maximum_rows"
 #define STACK_GCONFKEY_MAX_COLS "maximum_cols"
@@ -65,15 +62,6 @@
 #define STACK_GCONFKEY_BACKEND_FOLDER "backend_folder"
 #define STACK_GCONFKEY_APPLET_ICON "applet_icon"
 #define STACK_GCONFKEY_ICON_SIZE "icon_size"
-#define STACK_GCONFKEY_BORDER_COLOR "border_color"
-#define STACK_GCONFKEY_BACKGROUND_COLOR "background_color"
-#define STACK_GCONFKEY_ICONTEXT_COLOR "icontext_color"
-
-enum {
-    DIR_DOWN = 0,
-    DIR_UP = 1,
-    DIR_LEFT = 2,
-    DIR_RIGHT = 3
-};
 
 #endif /* __STACK_DEFINES_H__ */
+

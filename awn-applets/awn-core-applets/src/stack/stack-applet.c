@@ -269,7 +269,7 @@ static void stack_applet_drag_data_received(
         GnomeVFSURI *uri = scan->data;
         gchar *name = gnome_vfs_uri_extract_short_name( uri );
 
-        GnomeVFSURI *link = gnome_vfs_uri_append_file_name( stack_dialog_get_backend_folder(  ),
+        GnomeVFSURI *link = gnome_vfs_uri_append_file_name( stack_gconf_get_backend_folder(  ),
                             name );
 
         target = g_list_append( target, link );
@@ -464,7 +464,7 @@ AwnApplet *awn_applet_factory_initp(
                                        
 	/* Sise request and show */    
     gtk_widget_set_size_request( awn_applet, awn_applet_get_height ( AWN_APPLET(awn_applet)), 
-                               ( awn_applet_get_height (AWN_APPLET(awn_applet)) + 2 ) * 2 );
+                                awn_applet_get_height (AWN_APPLET(awn_applet)) * 2);
 
 
     gtk_widget_show_all( awn_applet );

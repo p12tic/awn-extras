@@ -282,6 +282,9 @@ static gboolean stack_folder_expose_event(
     GdkEventExpose * expose ) {
 
     StackFolder *folder = STACK_FOLDER( widget );
+    GtkStyle *style;
+    GdkColor bg;
+    gfloat alpha;
 
     GdkWindow *window = GDK_WINDOW( folder->table->window );
     cairo_t *cr = NULL;
@@ -290,12 +293,22 @@ static gboolean stack_folder_expose_event(
     cr = gdk_cairo_create( window );
     g_return_val_if_fail( cr, FALSE );
 
+    /* Get the correct colours from the theme */
+    gtk_widget_style_get (GTK_WIDGET (folder->dialog->awn_dialog),
+                          "bg_alpha",
+                          &alpha, NULL);
+    style = gtk_widget_get_style (widget);
+    bg = style->base[GTK_STATE_NORMAL];
+
     // paint background same as dialog
     cairo_set_operator( cr, CAIRO_OPERATOR_CLEAR );
-    cairo_set_source_rgba( cr, 0.0, 0.0, 0.0, 0.0 );
+    cairo_set_source_rgba( cr, 0, 0, 0, 0.0 );
     cairo_paint( cr );    
     cairo_set_operator( cr, CAIRO_OPERATOR_OVER );
-   	cairo_set_source_rgba( cr, 0.0, 0.0, 0.0, 0.85 );
+   	cairo_set_source_rgba( cr, bg.red/65335.0, 
+                               bg.green/65335.0, 
+                               bg.blue/65335.0, 
+                               alpha );
     cairo_paint( cr );  
     
     cairo_destroy( cr );
@@ -342,7 +355,7 @@ static void stack_folder_destroy( GtkObject * object ) {
  * -add/remove file from list
  * -bounce applet-icon to get attention
  */
-static void static_folder_monitor_callback(
+static void stack_folder_monitor_callback(
     GnomeVFSMonitorHandle * handle,
     const gchar * monitor_uri,
     const gchar * info_uri,
@@ -551,8 +564,7 @@ gboolean move_right(
 void stack_folder_do_next_page(
     StackFolder * folder ){
 
-	g_return_if_fail( stack_folder_has_next_page( folder ));
-	if( anim_time != 0.0 ){
+	if( !stack_folder_has_next_page( folder ) || anim_time != 0.0 ){
 		return;
 	}
 	folder->page = folder->page + 1;    
@@ -564,8 +576,7 @@ void stack_folder_do_next_page(
 void stack_folder_do_prev_page(
     StackFolder * folder ){
 
-	g_return_if_fail( stack_folder_has_prev_page( folder ));
-	if( anim_time != 0.0 ){
+	if( !stack_folder_has_prev_page( folder ) || anim_time != 0.0 ){
 		return;
 	}
 	folder->page = folder->page - 1;    
@@ -671,7 +682,7 @@ GtkWidget *stack_folder_new(
                                 gnome_vfs_uri_to_string( stack_folder->uri,
 								GNOME_VFS_URI_HIDE_NONE ),
                                 GNOME_VFS_MONITOR_DIRECTORY,
-                                static_folder_monitor_callback,
+                                stack_folder_monitor_callback,
                                 stack_folder );
 
         if ( result != GNOME_VFS_OK ) {

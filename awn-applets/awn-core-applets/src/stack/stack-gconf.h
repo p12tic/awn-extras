@@ -44,8 +44,4 @@ gboolean stack_gconf_show_hidden_files();
 gboolean stack_gconf_show_folders();
 gboolean stack_gconf_show_desktop_items();
 
-void stack_gconf_get_border_color (AwnColor *color);
-void stack_gconf_get_background_color (AwnColor *color);
-void stack_gconf_get_icontext_color (AwnColor *color);
-
 #endif /* __STACK_GCONF_H__ */

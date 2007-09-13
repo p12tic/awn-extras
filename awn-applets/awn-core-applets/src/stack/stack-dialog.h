@@ -68,9 +68,6 @@ GType stack_dialog_get_type(
 GtkWidget *stack_dialog_new(
     StackApplet * applet );
 
-GnomeVFSURI *stack_dialog_get_backend_folder(
-);
-
 void stack_dialog_toggle_visiblity(
     GtkWidget * widget );
 

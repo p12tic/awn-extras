@@ -178,9 +178,9 @@ static gboolean stack_dialog_key_press_event(
 
     g_return_val_if_fail( STACK_IS_DIALOG( widget ), FALSE );
 
-    if ( event->keyval == GDK_Left && stack_folder_has_prev_page( current_folder )) {
+    if ( event->keyval == GDK_Left) {
 	    stack_folder_do_prev_page( current_folder);
-    } else if ( event->keyval == GDK_Right && stack_folder_has_next_page( current_folder )) {
+    } else if ( event->keyval == GDK_Right) {
         stack_folder_do_next_page( current_folder );
     } else if ( event->keyval == GDK_Up && stack_gconf_is_browsing()) {
         stack_dialog_do_folder_up( widget );
@@ -233,6 +233,9 @@ static gboolean stack_dialog_expose_event(
     GdkEventExpose * expose ) {
 
     StackDialog *dialog = STACK_DIALOG( widget );
+    GtkStyle *style;
+    GdkColor text;
+    gfloat alpha;
 
     GdkWindow *window = GDK_WINDOW( dialog->awn_dialog->window );
     cairo_t *cr = NULL;
@@ -241,12 +244,20 @@ static gboolean stack_dialog_expose_event(
     cr = gdk_cairo_create( window );
     g_return_val_if_fail( cr, FALSE );
 
+    /* Get the correct theme colours */
+    style = gtk_widget_get_style (widget);
+    text = style->bg[GTK_STATE_SELECTED];
+    gtk_widget_style_get (GTK_WIDGET (dialog->awn_dialog),
+                          "bg_alpha", &alpha, NULL);
+                          
     cairo_set_operator( cr, CAIRO_OPERATOR_OVER );
+
 
     /*
        Paint "Open Filemanager" link
      */
-    cairo_select_font_face( cr, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD );
+    cairo_select_font_face( cr, "Sans", 
+                            CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD );
     cairo_set_font_size( cr, 14.0 );
     
     cairo_text_extents_t extents;
@@ -258,9 +269,15 @@ static gboolean stack_dialog_expose_event(
     cairo_move_to( cr, x, y);
     cairo_text_path( cr, STACK_TEXT_OPEN_FILEMANAGER );
     if ( eventbox_hovering == FILEMANAGER ) {
-        cairo_set_source_rgba( cr, 1.0, 1.0, 1.0, 0.6 );
+        cairo_set_source_rgba( cr, text.red/65535.0, 
+                                   text.green/65535.0, 
+                                   text.blue/65535.0, 
+                                   0.6 );
     } else {
-        cairo_set_source_rgba( cr, 1.0, 1.0, 1.0, 1.0 );
+        cairo_set_source_rgba( cr, text.red/65535.0, 
+                                   text.green/65535.0, 
+                                   text.blue/65535.0, 
+                                   1.0 );
     }
     cairo_fill( cr );
 
@@ -278,9 +295,15 @@ static gboolean stack_dialog_expose_event(
     	cairo_move_to( cr, x, y);
 	    cairo_text_path( cr, "⇨" );
     	if ( eventbox_hovering == FOLDER_RIGHT ) {
-    	    cairo_set_source_rgba( cr, 1.0, 1.0, 1.0, 0.6 );
+    	    cairo_set_source_rgba( cr, text.red/65535.0, 
+                                   text.green/65535.0, 
+                                   text.blue/65535.0, 
+                                   0.6 );
     	} else {
-    	    cairo_set_source_rgba( cr, 1.0, 1.0, 1.0, 1.0 );
+    	    cairo_set_source_rgba( cr,  text.red/65535.0, 
+                                   text.green/65535.0, 
+                                   text.blue/65535.0, 
+                                   1.0 );
     	}
     	cairo_stroke( cr );
     }
@@ -298,9 +321,15 @@ static gboolean stack_dialog_expose_event(
     	cairo_move_to( cr, x, y);
 	    cairo_text_path( cr, "⇦" );
     	if ( eventbox_hovering == FOLDER_LEFT ) {
-    	    cairo_set_source_rgba( cr, 1.0, 1.0, 1.0, 0.6 );
+    	    cairo_set_source_rgba( cr, text.red/65535.0, 
+                                     text.green/65535.0, 
+                                     text.blue/65535.0, 
+                                     0.6 );
     	} else {
-    	    cairo_set_source_rgba( cr, 1.0, 1.0, 1.0, 1.0 );
+    	    cairo_set_source_rgba( cr, text.red/65535.0, 
+                                     text.green/65535.0, 
+                                     text.blue/65535.0, 
+                                     1.0 );
     	}
 	    cairo_stroke( cr );
 	}
@@ -317,9 +346,15 @@ static gboolean stack_dialog_expose_event(
 		cairo_move_to( cr, x, y);
 	    cairo_text_path( cr, "⇧" );
 	    if ( eventbox_hovering == FOLDER_UP ) {
-	        cairo_set_source_rgba( cr, 1.0, 1.0, 1.0, 0.6 );
+	        cairo_set_source_rgba( cr, text.red/65535.0, 
+                                     text.green/65535.0, 
+                                     text.blue/65535.0, 
+                                     0.6 );
 	    } else {
-	        cairo_set_source_rgba( cr, 1.0, 1.0, 1.0, 1.0 );
+	        cairo_set_source_rgba( cr, text.red/65535.0, 
+                                     text.green/65535.0, 
+                                     text.blue/65535.0, 
+                                     1.0 );
 	    }
 	    cairo_stroke( cr );
 	}
@@ -444,11 +479,6 @@ void stack_dialog_set_folder(
     stack_dialog_relayout( dialog );
 }
 
-GnomeVFSURI *stack_dialog_get_backend_folder(
-) {
-    return current_folder->uri;
-}
-
 /**
  * Toggle the visibility of the container
  */
@@ -463,19 +493,25 @@ void stack_dialog_toggle_visiblity(
     // toggle visibility
     dialog->active = !dialog->active;
     if ( dialog->active ) {
+    	// hide title
         awn_title_hide (dialog->applet->title, GTK_WIDGET(dialog->applet->awn_applet));
-
+		// set icon
         stack_applet_set_icon( dialog->applet, NULL );        
-        stack_dialog_relayout( dialog );
-
+        // recalculate layout
+		stack_dialog_relayout( dialog );
+		// show the dialog
         gtk_widget_show_all( GTK_WIDGET( dialog->awn_dialog ) );
     } else {
+    	// hide dialog
         gtk_widget_hide( dialog->awn_dialog );
 		
 		// reset to backend folder
 		if(current_folder != backend_folder ){
+			// destroy current_folder
 			gtk_widget_destroy( GTK_WIDGET( current_folder ) );
+			// refer to backend folder
 			current_folder = backend_folder;
+			// reset title
 			gtk_window_set_title( GTK_WINDOW( dialog->awn_dialog ), STACK_FOLDER(current_folder)->name );
 		}
 		

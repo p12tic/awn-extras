@@ -208,9 +208,9 @@ void paint_icon_name(
     cairo_t * cr,
     const gchar * icon_name,
     int x,
-    int y ) {
-
-    AwnColor                              color;
+    int y,
+    GdkColor tc ) {
+   
     cairo_text_extents_t extents;
     guint           icon_size = stack_gconf_get_icon_size(  ) + ICON_MARGIN_X*2/3;
     guint           num = 0;
@@ -288,16 +288,27 @@ void paint_icon_name(
         num++;
     } while ( g_utf8_strlen( name, -1 ) > 0 && num < 2 );
 
-    stack_gconf_get_icontext_color (&color);
-    cairo_set_source_rgba (cr, color.red, color.green, color.blue, color.alpha);
+//    stack_gconf_get_icontext_color (&color);
+//    cairo_set_source_rgba (cr, color.red, color.green, color.blue, color.alpha);
+
     //cairo_set_source_rgba( cr, 1.0, 1.0, 1.0, 1.0 );
-    cairo_fill_preserve( cr );
+//    cairo_fill_preserve( cr );
 
     //stack_gconf_get_border_color (&color);
     //cairo_set_source_rgba (cr, color.red, color.green, color.blue, color.alpha);
     //cairo_set_source_rgba( cr, 0.0, 0.0, 0.0, 0.6 );
     //cairo_set_line_width( cr, 0.05 );
     //cairo_stroke( cr );
+    
+    cairo_set_source_rgba( cr, tc.red/65335.0,
+                               tc.green/65335.0,
+                               tc.blue/65335.0,
+                               1.0 );
+    cairo_fill( cr );   
+    cairo_destroy( cr );
+
+    return TRUE;
+
 }
 
 /**

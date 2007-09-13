@@ -58,7 +58,8 @@ void paint_icon_name(
     cairo_t * cr,
     const gchar * name,
     int x,
-    int y );
+    int y,
+    GdkColor tc );
     
 void clear_background(
     cairo_t * cr );

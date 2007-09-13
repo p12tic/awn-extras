@@ -157,6 +157,11 @@ static gboolean stack_icon_expose_event(
     StackIcon *icon = STACK_ICON( widget );
     cairo_t *cr = NULL;
     AwnColor color;
+    GtkStyle *style;
+    GdkColor bg;
+    GdkColor border;
+    GdkColor hover;
+    gfloat alpha = 0.9;
 
 	GdkWindow *window = widget->window; 
 
@@ -164,12 +169,23 @@ static gboolean stack_icon_expose_event(
     cr = gdk_cairo_create( window );
     g_return_val_if_fail( cr, FALSE );
 
+    /* Get the colours from the theme */
+    gtk_widget_style_get (GTK_WIDGET (STACK_FOLDER (icon->folder)->dialog->awn_dialog),
+                          "bg_alpha", &alpha, NULL);
+    style = gtk_widget_get_style (widget);
+    bg = style->base[GTK_STATE_NORMAL];
+    border = style->fg[GTK_STATE_NORMAL];
+    hover = style->base[GTK_STATE_SELECTED];
+
 	// paint background same as dialog
     cairo_set_operator( cr, CAIRO_OPERATOR_CLEAR );
     cairo_set_source_rgba( cr, 0.0, 0.0, 0.0, 0.0 );
     cairo_paint( cr );    
     cairo_set_operator( cr, CAIRO_OPERATOR_OVER );
-   	cairo_set_source_rgba( cr, 0.0, 0.0, 0.0, 0.85 );
+   	cairo_set_source_rgba( cr, bg.red/65335.0,
+                               bg.green/65335.0,
+                               bg.blue/65335.0,
+                               alpha );
     cairo_paint( cr );   
 
     if ( icon->hovering ) {
@@ -178,34 +194,30 @@ static gboolean stack_icon_expose_event(
                                 icon->rect_w - 2, icon->rect_h - 2,
                                 STACK_ICON_RECT_RADIUS, ROUND_ALL );     
 
+		// clear the area inside the hover rectangle
     	cairo_set_operator( cr, CAIRO_OPERATOR_CLEAR );    
         cairo_set_source_rgba( cr, 0.0, 0.0, 0.0, 0.0 );
 	    cairo_fill_preserve( cr );    
 
 	    cairo_set_operator( cr, CAIRO_OPERATOR_OVER );  	                                   
-        stack_gconf_get_background_color (&color);         	   
-	    cairo_pattern_t *pat = cairo_pattern_create_linear (0.0, 0.0, icon->rect_w - 2.0, icon->rect_h - 2.0);
-        cairo_pattern_add_color_stop_rgba (pat, 0.0, 0, 0, 0, 0);
-        cairo_pattern_add_color_stop_rgba (pat, 0.2, color.red, color.green, color.blue, color.alpha);
-        cairo_pattern_add_color_stop_rgba (pat, 0.8, color.red, color.green, color.blue, color.alpha);
-        cairo_pattern_add_color_stop_rgba (pat, 1.0, 0, 0, 0, 0.85);
-        cairo_set_source (cr, pat);       
+		cairo_set_source_rgba( cr, hover.red/65335.0,
+                               hover.green/65335.0,
+                               hover.blue/65335.0,
+                               alpha );		
         cairo_fill_preserve( cr );
-        cairo_pattern_destroy (pat);
 
-        stack_gconf_get_border_color (&color);         
-        cairo_set_source_rgba (cr, color.red, color.green, color.blue, color.alpha);           
-        cairo_set_line_width( cr, 2.0 );
+		cairo_set_source_rgba( cr, border.red/65335.0,
+                               border.green/65335.0,
+                               border.blue/65335.0,
+                               alpha );       
+        cairo_set_line_width( cr, 2.5f );
         cairo_stroke( cr );
     }                              
 
     paint_icon( cr, icon->icon, icon->icon_x, icon->icon_y, 1.0f );
 
-    paint_icon_name( cr, icon->name, icon->name_x, icon->name_y );
+    paint_icon_name( cr, icon->name, icon->name_x, icon->name_y, style->text[GTK_STATE_NORMAL] );
 
-    cairo_destroy( cr );
-
-    return TRUE;
 }
 
 /**

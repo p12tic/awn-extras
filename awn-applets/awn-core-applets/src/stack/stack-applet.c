@@ -363,8 +363,12 @@ void stack_applet_set_icon(
     	icon = gtk_icon_theme_load_icon( theme, applet_icon,
                        awn_applet_get_height
                        ( AWN_APPLET( applet->awn_applet ) ) - PADDING, 0, NULL );
+    }else{
+	icon = gdk_pixbuf_copy( icon );
     }
+
     awn_applet_simple_set_icon (AWN_APPLET_SIMPLE(applet->awn_applet), icon);
+    gtk_widget_queue_draw( GTK_WIDGET(applet->awn_applet));
 }
 
 /**

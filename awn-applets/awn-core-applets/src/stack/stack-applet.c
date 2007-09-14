@@ -43,7 +43,7 @@ static void stack_applet_activate_dialog(
     gpointer data ) {
 
     StackApplet *applet = STACK_APPLET( data );
-    GnomeVFSURI *uri = stack_dialog_get_backend_folder(  );
+    GnomeVFSURI *uri = stack_gconf_get_backend_folder(  );
     GtkWidget *dialog;
 
     dialog = gtk_file_chooser_dialog_new( STACK_TEXT_SELECT_FOLDER, NULL,
@@ -70,6 +70,9 @@ static void stack_applet_activate_dialog(
             gtk_widget_destroy( old );
         }
         g_free( filename );
+
+	applet->title = AWN_TITLE(awn_title_get_default ());
+        applet->title_text = g_strdup (stack_gconf_get_backend_folder());
     }
 
     gtk_widget_destroy( dialog );

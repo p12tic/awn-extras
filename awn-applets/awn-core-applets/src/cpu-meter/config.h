@@ -1,16 +1,8 @@
 /*
  * Copyright (c) 2007 Mike (mosburger) Desjardins <desjardinsmike@gmail.com>
  *
- * This is a CPU Load Applet for the Avant Window Navigator.  It
- * borrows heavily from the Gnome system monitor, so kudos go to
- * the authors of that program:
- *
- * Kevin Vandersloot <kfv101@psu.edu>
- * Erik Johnsson <zaphod@linux.nu> - icon support
- * Jorgen Scheibengruber
- * Benoît Dejean <benoit@placenet.org> - maintainer
- * Paolo Borelli <pborelli@katamail.com>
- * Baptiste Mille-Mathias - artwork
+ * This is a CPU Load Applet for the Avant Window Navigator.  This module contains
+ * #define's for the GConf keys.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,32 +20,33 @@
  * Boston, MA 02111-1307, USA.
  */
 
-// This is all stuff that needs to move to gconf to be user-configurable.  Someday.  *sigh*
+/* The GConf path */
+#define GCONF_PATH "/apps/avant-window-navigator/applets/cpumeter"
 
-/* The red component of the color of the graph */
-#define GRAPH_COLOR_R 0.7
+/* The color of the graph */
+#define GCONF_GRAPH_COLOR GCONF_PATH "/graph_color"
+#define GCONF_DEFAULT_GRAPH_COLOR "B39AE6FF"
 
-/* The green component of the color of the graph */
-#define GRAPH_COLOR_G 0.6
+/* the color of the border */
+#define GCONF_BORDER_COLOR GCONF_PATH "/border_color"
+#define GCONF_DEFAULT_BORDER_COLOR "FFFFFFFF"
 
-/* The blue component of the color of the graph */
-#define GRAPH_COLOR_B 0.9
-
-/* The red component of the border of the graph */
-#define BORDER_COLOR_R 1.0
-
-/* The green component of the color of the graph */
-#define BORDER_COLOR_G 1.0
-
-/* The blue component of the color of the graph */
-#define BORDER_COLOR_B 1.0
+/* the color of the background */
+#define GCONF_BG_COLOR GCONF_PATH "/bg_color"
+#define GCONF_DEFAULT_BG_COLOR "FFFFFF10"
 
 /* Width of the border */
-#define BORDER_WIDTH 2.0
+#define GCONF_BORDER_WIDTH GCONF_PATH "/border_width"
+#define GCONF_DEFAULT_BORDER_WIDTH 2.0
 
 /* Set to nonzero if you want the gradient overlay */
-#define DO_GRADIENT 1
+#define GCONF_DO_GRADIENT GCONF_PATH "/do_gradient"
+#define GCONF_DEFAULT_DO_GRADIENT 1
+
+/* Set to nonzero if you want the text "CPU - nn%" below the graph */
+#define GCONF_DO_SUBTITLE GCONF_PATH "/do_subtitle"
+#define GCONF_DEFAULT_DO_SUBTITLE 1
 
 /* Update frequency in milliseconds */
-#define UPDATE_FREQ 1000
-
+#define GCONF_UPDATE_FREQ GCONF_PATH "/update_frequency"
+#define GCONF_DEFAULT_UPDATE_FREQ 1000

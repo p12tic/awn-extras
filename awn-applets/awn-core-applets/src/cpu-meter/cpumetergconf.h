@@ -1,5 +1,8 @@
 /*
- * Copyright (c) 2007 Mike Desjardins
+ * Copyright (c) 2007 Mike (mosburger) Desjardins <desjardinsmike@gmail.com>
+ *
+ * This is a CPU Load Applet for the Avant Window Navigator.  This module is
+ * for managing the gconf settings.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -17,21 +20,18 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#ifndef __CPUMETER_GCONF_H__
+#define __CPUMETER_GCONF_H__
+
+
 #include <libawn/awn-applet.h>
-#include "config.h"
+#include <libawn/awn-cairo-utils.h>
 
-#include "cpumeterapplet.h"
+void cpumeter_gconf_init(CpuMeter* cpumeter);
+void cpumeter_gconf_get_color( AwnApplet* applet, AwnColor* color, gchar* key, gchar* def );
+gfloat cpumeter_gconf_get_border_width( AwnApplet* applet );
+gboolean cpumeter_gconf_use_gradient (AwnApplet* applet);
+gboolean cpumeter_gconf_do_subtitle(CpuMeter* cpumeter);
+guint cpumeter_gconf_get_update_frequency (AwnApplet* applet);
 
-AwnApplet*
-awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
-{
-  AwnApplet *applet;
-  CpuMeter *cpumeter;
-	
-  applet = awn_applet_new( uid, orient, height );
-  gtk_widget_set_size_request (GTK_WIDGET (applet), awn_applet_get_height (applet), awn_applet_get_height (applet) );
-  cpumeter = cpumeter_applet_new(applet);
-  
-  return applet;
-}
-
+#endif  /* __CPUMETER_GCONF_H__ */

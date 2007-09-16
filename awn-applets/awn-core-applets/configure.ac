@@ -68,6 +68,7 @@ src/Makefile
 src/clock/Makefile
 src/cpu-meter/Makefile
 src/main-menu/Makefile
+src/showdesktop/Makefile
 src/stack/Makefile
 src/wobblyzini/Makefile
 ])

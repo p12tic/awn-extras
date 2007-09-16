@@ -362,7 +362,7 @@ void stack_applet_set_icon(
 	    gchar *applet_icon = stack_gconf_get_applet_icon(  );
     	icon = gtk_icon_theme_load_icon( theme, applet_icon,
                        awn_applet_get_height
-                       ( AWN_APPLET( applet->awn_applet ) ) - PADDING, 0, NULL );
+                       ( AWN_APPLET( applet->awn_applet ) ), 0, NULL );
     }else{
 	icon = gdk_pixbuf_copy( icon );
     }

@@ -28,6 +28,8 @@
 #include <glibtop/cpu.h>
 #include <gconf/gconf-client.h>
 
+#include "awntop.h"
+
 /* Stuff to store the CPU measurements */
 #define NUM_POINTS 200
 
@@ -60,6 +62,7 @@ typedef struct
   AwnApplet *applet;
   LoadGraph *loadgraph;
 
+  Awntop	awntop;
   guint size;
   guint new_size;
   GtkOrientation orient;

@@ -49,6 +49,7 @@ static void _height_changed (AwnApplet *app, guint height, gpointer *data);
 static void _orient_changed (AwnApplet *appt, guint orient, gpointer *data);
 static gboolean _enter_notify_event (GtkWidget *window, GdkEventButton *event, gpointer *data);
 static gboolean _leave_notify_event (GtkWidget *window, GdkEvent *event, gpointer *data);
+static gboolean _button_clicked_event (GtkWidget *widget, GdkEventButton *event, CpuMeter * applet);
 
 /**
  * Create new applet
@@ -63,7 +64,9 @@ cpumeter_applet_new (AwnApplet *applet)
   cpumeter->timer_id = -1;
 	cpumeter->show_title = FALSE;
   cpumeter->title = AWN_TITLE(awn_title_get_default());
-
+  
+  register_awntop(&cpumeter->awntop,cpumeter->applet);
+  
   init_load_graph(cpumeter->loadgraph);
   
   // set the icon
@@ -84,6 +87,8 @@ cpumeter_applet_new (AwnApplet *applet)
   // connect to button events
   g_signal_connect (G_OBJECT (cpumeter->applet), "button-release-event", G_CALLBACK (_button_release_event), (gpointer)cpumeter );
   g_signal_connect (G_OBJECT (cpumeter->applet), "expose-event", G_CALLBACK (_expose_event), cpumeter);
+ 
+ g_signal_connect (G_OBJECT (cpumeter->applet), "button-press-event",G_CALLBACK (_button_clicked_event), (gpointer)cpumeter);
   
   // connect to height and orientation changes
   g_signal_connect (G_OBJECT (cpumeter->applet), "height-changed", G_CALLBACK (_height_changed), (gpointer)cpumeter);
@@ -124,13 +129,13 @@ gboolean cpu_meter_render (gpointer data)
   AwnApplet* applet = cpumeter->applet;
 
   if (!GDK_IS_DRAWABLE (widget->window)) {
-    g_fatal("Unexpected Error: Window is not drawable.\n");
+    printf("Unexpected Error: Window is not drawable.\n");
     return FALSE;
   }
 
   cr = gdk_cairo_create (widget->window);
   if (!cr) {
-    g_fatal( "Unexpected Error: Failed to create a Cairo Drawing Context.\n");
+    printf( "Unexpected Error: Failed to create a Cairo Drawing Context.\n");
     return FALSE;
   }
   
@@ -211,7 +216,9 @@ gboolean cpu_meter_render (gpointer data)
 	} else {
 		awn_title_hide(cpumeter->title, GTK_WIDGET(cpumeter->applet));
 	}
-	
+  
+//  embed_cairo(&cpumeter->awntop,cr,2,3,2,3);
+  
   /* Clean up */
   cairo_destroy (cr);
   
@@ -354,4 +361,11 @@ _leave_notify_event (GtkWidget *window, GdkEvent *event, gpointer *data)
 	CpuMeter *cpumeter = (CpuMeter *)data;
 	cpumeter->show_title = FALSE;
 	//awn_title_hide (clock->title, GTK_WIDGET(clock->applet));
+}
+
+static gboolean
+_button_clicked_event (GtkWidget *widget, GdkEventButton *event, CpuMeter * applet)
+{
+  toggle_awntop_window(&applet->awntop);
+  return TRUE;
 }

@@ -10,6 +10,8 @@ INCLUDES =							\
 
 CPUMETER_SOURCES =                              \
 	applet.c									\
+	awntop.c		\
+	awntop.h		\
 	cpumeterapplet.c						\
 	cpumeterapplet.h          \
 	cpumetergconf.c           \

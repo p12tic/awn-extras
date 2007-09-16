@@ -70,5 +70,6 @@ src/cpu-meter/Makefile
 src/main-menu/Makefile
 src/showdesktop/Makefile
 src/stack/Makefile
+src/volume-control/Makefile
 src/wobblyzini/Makefile
 ])

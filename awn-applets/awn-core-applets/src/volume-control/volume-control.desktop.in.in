@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=0.1
+Type=Python
+Encoding=UTF-8
+Name=Volume-Control-Applet
+Comment=PythonApp to control the volume and audio player
+Exec=@LIBDIR@/awn/applets/volume-control/volume-control.py
+Icon=gnome-reclevel

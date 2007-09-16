@@ -1,1 +1,1 @@
-SUBDIRS =	clock cpu-meter main-menu stack showdesktop wobblyzini
+SUBDIRS =	clock cpu-meter main-menu stack showdesktop volume-control wobblyzini

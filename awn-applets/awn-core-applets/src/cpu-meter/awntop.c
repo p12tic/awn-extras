@@ -34,21 +34,7 @@ typedef struct
 }Proctimeinfo;
 
 
-typedef struct
-{
-    long     pid;
-    int     uid;
-    int     pri;
-    int     nice;
-    long    virt;
-    long    res;
-    long    shr;
-    long     cpu;
-    long     mem;
-    long    time;
-    char    cmd[40];  //From _glibtop_proc_state structure.
-        
-}Topentry;
+
 
 typedef struct
 {
@@ -64,12 +50,12 @@ static GtkWidget * get_icon_button(char *name,const gchar *stock_id, GtkIconSize
 static GtkWidget * get_icon_event_box(char *name,const gchar *stock_id, GtkIconSize size);
 
 
-static void build_top_table(Awntop *awntop,Topentry **topentries, int num_top_entries);
+static void build_top_table(Awntop *awntop,GtkWidget *);
 static GtkWidget * get_button_sz(const char * t);
 
 static Topentry ** fill_topentries(Awntop *awntop,int *numel);
 static void free_topentries(Topentry **topentries, int num_top_entries);
-static void build_top_table_headings(Awntop *awntop,int numcols);
+static void build_top_table_headings(Awntop *awntop,GtkWidget *);
 static void draw_main_window(Awntop *awntop);
 
 
@@ -102,6 +88,10 @@ static void proctimes_remove_inactive(gpointer data,gpointer user_data);
 static gboolean proctime_reset_active(gpointer key,gpointer value,gpointer data);
 
 static gint icons_key_compare_func(gconstpointer a,gconstpointer b,   gpointer user_data);
+static void awntop_plugs_construct(gpointer data,gpointer user_data);
+static void awntop_plugs_destruct(gpointer data,gpointer user_data);
+
+static gboolean _show_pause_button(GtkWidget ** pwidget,gint interval,void * data);
 
 static void parse_desktop_entries(Awntop * awntop);
 GtkWidget * lookup_icon(Awntop * awntop,Topentry **topentries,int i);
@@ -109,6 +99,8 @@ GtkWidget * lookup_icon(Awntop * awntop,Topentry **topentries,int i);
 /*FIXME  --- */
 static void show_main_window(Awntop *awntop);
 static void hide_main_window(Awntop *awntop);
+
+
 
 
 Tableheader Global_tableheadings[]=
@@ -130,6 +122,53 @@ static int     gcomparedir;
 static gboolean     top_state;
 
 
+static gboolean _show_top(GtkWidget ** pwidget,gint interval,void * data)
+{
+
+    Awntop * awntop=data;
+    GtkWidget *toptable;    
+    
+    toptable = gtk_table_new (8, 5, FALSE);    
+    gtk_table_set_col_spacings (GTK_TABLE(toptable),15);        
+    build_top_table_headings(awntop,toptable);
+    build_top_table(awntop,toptable);          
+    *pwidget=toptable;
+//    *pwidget=get_icon_button("Test",GTK_STOCK_MEDIA_PLAY,GTK_ICON_SIZE_SMALL_TOOLBAR);   
+    return TRUE;
+}
+
+static gboolean _show_pause_button(GtkWidget ** pwidget,gint interval,void * data)
+{
+    Awntop * awntop=data;
+        
+    GtkWidget *tempwidg= get_icon_button("pause",top_state?GTK_STOCK_MEDIA_PAUSE:GTK_STOCK_MEDIA_PLAY,GTK_ICON_SIZE_SMALL_TOOLBAR);   
+    *pwidget=tempwidg;    
+    
+    g_signal_connect(       G_OBJECT (tempwidg), 
+                            "button-press-event",
+                            G_CALLBACK (_toggle_display_freeze), 
+                            (gpointer)awntop
+                            );
+    return TRUE;                         
+}                       
+
+void register_awntop_plug(      Awntop * awntop,    
+                                gboolean (*construct_fn)(GtkWidget ** w,gint call_interval,void *data),
+                                gboolean (*destruct_fn)(GtkWidget ** w,void *data),
+                                int x1, int x2, int y1, int y2,void * arb_data)
+{
+    Awntop_plugs_callbacks * node=g_malloc(sizeof(Awntop_plugs_callbacks));
+    node->construct_fn=construct_fn;
+    node->destruct_fn=destruct_fn;    
+    node->data=arb_data;
+    node->x1=x1;
+    node->x2=x2;
+    node->y1=y1;
+    node->y2=y2;            
+    node->widget=NULL;
+    awntop->awntop_plugs=g_slist_prepend(awntop->awntop_plugs,node);    
+}                                
+
 
 void register_awntop( Awntop * awntop,AwnApplet *applet)
 {
@@ -137,13 +176,16 @@ void register_awntop( Awntop * awntop,AwnApplet *applet)
     awntop->updateinterval=2;		/*fequency in updates in seconds.  pull all this crap from gconf eventually...*/	
     awntop->maxtopentries=30;
     awntop->compar=cmpcpu;
-    awntop->displayed_pid_list=NULL;
     awntop->proctime_tree_reaping=5;
     
     awntop->applet=applet;
     top_state=TRUE;    
     gcomparedir=-1;    
     compmethod=1;       /*sort by CPU*/
+    
+    
+    awntop->displayed_pid_list=NULL;
+    awntop->awntop_plugs=NULL;
     
     awntop->proctimes=g_tree_new_full(proctime_key_compare_func,NULL,g_free,g_free);	
     
@@ -164,6 +206,11 @@ void register_awntop( Awntop * awntop,AwnApplet *applet)
     
     parse_desktop_entries(awntop);
     
+    register_awntop_plug(awntop,_show_pause_button,NULL,8,9,1,2,awntop);    
+    register_awntop_plug(awntop,_show_top,NULL,0,8,4,5,awntop);    
+    
+    //gtk_table_attach_defaults (GTK_TABLE (awntop->table), tempwidg,
+     //                    numcols-1, numcols, 1, 2);     
 	/*FIXME  - wrap in #ifdef so g_timeout_add_seconds_full is used if gtk version > 2.14.  and do a #define for the intervals*/
 	#if GLIB_MAJOR_VERSION == 2 && GLIB_MINOR_VERSION >= 14
 /*	awntop->timeout_id=g_timeout_add_seconds_full(G_PRIORITY_DEFAULT, 1 ,(GSourceFunc)time_handler,(gpointer)awntop,NULL);	*/
@@ -172,26 +219,6 @@ void register_awntop( Awntop * awntop,AwnApplet *applet)
 	g_timeout_add_full(G_PRIORITY_DEFAULT, 1000 ,(GSourceFunc)_awntop_time_handler,(gpointer)awntop,NULL);
 	#endif	
     
-
-}
-
-void embed_cairo(Awntop *awntop,cairo_t *cr, gint x1,gint x2,gint y1, gint y2)
-{
-
-    if (awntop->mainwindowvisible)
-    {
-        GtkWidget* widget= gtk_label_new (NULL);  
-        if (!GDK_IS_DRAWABLE (widget->window)) {
-            g_fatal("Unexpected Error: Window is not drawable.\n");
-            return;
-        }
-
-        cr = gdk_cairo_create (widget->window);
-        if (!cr) {
-            g_fatal( "Unexpected Error: Failed to create a Cairo Drawing Context.\n");
-            return;
-        } 
-    }
 
 }
 
@@ -221,6 +248,33 @@ void destroy_awntop_window(Awntop *awntop)
     awntop->mainwindowvisible = FALSE;
     gtk_widget_hide (awntop->mainwindow);
     gtk_widget_destroy(awntop->vbox);
+}
+/*used for plugs linked list */
+
+static void awntop_plugs_construct(gpointer data,gpointer user_data)
+{
+    
+    Awntop_plugs_callbacks * node=data;
+    Awntop *awntop=user_data;
+    if(node->construct_fn)
+    {
+        node->construct_fn(&node->widget,awntop->updateinterval,node->data );
+
+        gtk_table_attach_defaults (GTK_TABLE (awntop->maintable), node->widget,
+                                 node->x1, node->x2, node->y1, node->y2);  
+    }  
+    
+}
+
+static void awntop_plugs_destruct(gpointer data,gpointer user_data)
+{
+    
+    Awntop_plugs_callbacks * node=data;
+    Awntop *awntop=user_data;
+    if(node->destruct_fn)
+    {
+        node->destruct_fn(&node->widget,node->data );
+    }      
 }
 
 
@@ -291,12 +345,19 @@ static gboolean _awntop_time_handler (Awntop * awntop)
 	awntop->accum_sys=cpu.sys;
     awntop->idle=cpu.idle - awntop->accum_idle ;	
     awntop->accum_idle=cpu.idle;
+	awntop->uptimedata.seconds=awntop->uptimedata.seconds++;
+	if (awntop->uptimedata.seconds >59)
+	{
+			_awntop_syncuptime(&awntop->uptimedata);	/*resync to system uptime every minute.  FIXME*/
+
+	}
+    
 
     if (awntop->uptimedata.seconds % awntop->updateinterval == 0)
     {
         if (awntop->mainwindowvisible)
         {
-            if (top_state)              /*FIXME I think it is wise to move this logic somewhere else..*/
+//            if (top_state)              /*FIXME I think it is wise to move this logic somewhere else..*/
             {
                 gtk_widget_destroy(awntop->vbox);      
                 draw_main_window(awntop);                
@@ -464,6 +525,8 @@ static gboolean _time_to_kill(GtkWidget *widget, GdkEventButton *event, long * p
 static gboolean _toggle_display_freeze(GtkWidget *widget, GdkEventButton *event,Awntop *awntop)
 {
     top_state=!top_state;
+    gtk_widget_destroy(awntop->vbox);      
+    draw_main_window(awntop);         
     return TRUE;
 }
 
@@ -541,53 +604,44 @@ static void draw_main_window(Awntop *awntop)
 	GtkWidget *label;
 	GtkWidget *button;	
     GtkWidget *tempwidg;	
-    Topentry **topentries;    
+//    static   
     int i;
 
 
     int numcols;
-    int num_top_entries;
+//    static int num_top_entries;
 
     awntop->vbox = gtk_vbox_new (FALSE, 8);
-    awntop->table = gtk_table_new (5, 10, FALSE);
+    awntop->maintable = gtk_table_new (15, 15, FALSE);
 
-    gtk_table_set_col_spacings (GTK_TABLE(awntop->table),15);
-    
-    gtk_box_pack_end (GTK_BOX (awntop->vbox), awntop->table, TRUE, TRUE, 0);
-    
-    
-   
-//  PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND       Make these items visibility selectable **********
-
+    gtk_table_set_col_spacings (GTK_TABLE(awntop->maintable),15);    
+    gtk_box_pack_end (GTK_BOX (awntop->vbox), awntop->maintable, TRUE, TRUE, 0);
     numcols=sizeof(Global_tableheadings)/sizeof(Tableheader);
-    
-    
-/*    label = gtk_label_new(freeze_botton_text[1&&top_state] );*/
 
-
-    topentries=fill_topentries(awntop,&num_top_entries);         /*call free_topentries when done*/
-    qsort(topentries, (size_t) num_top_entries ,sizeof(Topentry *),awntop->compar);
+    if (top_state)
+    {
+        if (awntop->topentries)
+        {
+                free_topentries(awntop->topentries,awntop->num_top_entries);    
+        }
+        awntop->topentries=fill_topentries(awntop,&awntop->num_top_entries);         /*call free_topentries when done*/
+        qsort(awntop->topentries, (size_t) awntop->num_top_entries ,sizeof(Topentry *),awntop->compar);
+    }
     
-    if (!top_state || !awntop->displayed_pid_list )   /*top_state - updating or not.  
+//    if (!top_state || !awntop->displayed_pid_list )   
+                                                            /*top_state - updating or not.  
                                                             displayed_pid_list is NULL first time fn call*/
+    if (!awntop->displayed_pid_list )                                                            
     {
         awntop->displayed_pid_list=g_malloc(sizeof(long)*awntop->maxtopentries);
     }
-    else
-    {
-        gtk_table_attach_defaults (GTK_TABLE (awntop->table), gtk_label_new("AwnTop"),
-                                 0, numcols, 0, 1);
+    gtk_table_attach_defaults (GTK_TABLE (awntop->maintable), gtk_label_new("AwnTop"),
+                             0, numcols, 0, 1);
 
-        build_top_table_headings(awntop,numcols);
-        build_top_table(awntop,topentries,num_top_entries);
-        
-        tempwidg=get_button_sz("Freeze/Unfreeze");
-        g_signal_connect (G_OBJECT (tempwidg), "button-press-event",G_CALLBACK (_toggle_display_freeze), (gpointer)awntop);
-        gtk_table_attach_defaults (GTK_TABLE (awntop->table), tempwidg,
-                             numcols-1, numcols, 1, 2);     
-    }
-    
-    free_topentries(topentries,num_top_entries);    
+
+
+    g_slist_foreach(awntop->awntop_plugs,awntop_plugs_construct,awntop);
+       
     /*we're done laying out the damn thing - let's show it*/
     gtk_container_add (GTK_CONTAINER (awntop->box), awntop->vbox);            
     awn_applet_dialog_position_reset (AWN_APPLET_DIALOG (awntop->mainwindow));
@@ -662,7 +716,7 @@ static Topentry ** fill_topentries(Awntop *awntop,int *numel)
             percent=0;
         }
         value->accessed=TRUE;   
-        topentries[i]->cpu=percent;///awntop->updateinterval ;     
+        topentries[i]->cpu=percent/awntop->updateinterval ;     
         glibtop_get_proc_uid( &proc_uid,p[i]);
         topentries[i]->uid=proc_uid.uid ;    
         topentries[i]->nice=proc_uid.nice ;                     
@@ -688,13 +742,13 @@ static void free_topentries(Topentry **topentries, int num_top_entries)
 }
 
 
-static void build_top_table_headings(Awntop *awntop,int numcols)
+static void build_top_table_headings(Awntop *awntop,GtkWidget * table)
 {
     GtkWidget * label;
     GtkWidget * button;
     int i;
     char *markup;        
-    for(i=0;i<numcols;i++)
+    for(i=0;i<8;i++)       /*FIXME*/
     {
         label = gtk_label_new (NULL);
         markup = g_markup_printf_escaped ("<span style=\"italic\">%s</span>", Global_tableheadings[i].name);
@@ -706,12 +760,12 @@ static void build_top_table_headings(Awntop *awntop,int numcols)
             g_signal_connect (G_OBJECT (button), "button-press-event",G_CALLBACK (Global_tableheadings[i].fn), (gpointer)awntop);
             gtk_button_set_relief (GTK_BUTTON (button), GTK_RELIEF_NONE);                        
             gtk_container_add (GTK_CONTAINER (button),label);        
-            gtk_table_attach_defaults (GTK_TABLE (awntop->table), button,
+            gtk_table_attach_defaults (GTK_TABLE (table), button,
                                  i, i+1, TOP_TABLE_VOFFSET, TOP_TABLE_VOFFSET+1);
         }
         else
         {
-            gtk_table_attach_defaults (GTK_TABLE (awntop->table), label,
+            gtk_table_attach_defaults (GTK_TABLE (table), label,
                                  i, i+1, TOP_TABLE_VOFFSET, TOP_TABLE_VOFFSET+1);        
         }
     }
@@ -721,76 +775,65 @@ static void build_top_table_headings(Awntop *awntop,int numcols)
 
 GtkWidget * lookup_icon(Awntop * awntop,Topentry **topentries,int i)
 {
-
     GtkIconTheme*  g;      
     GtkIconInfo*  iconinfo;
-    char *icon;
-    GdkPixbuf* pbuf;
+    GdkPixbuf* pbuf=NULL;
     char* parg;  
     glibtop_proc_args     procargs;
     char *ptmp;
     GtkWidget *image;        
-
-    pbuf=NULL;   
+    char *pvalue=NULL;
+    char *p;
+    
     parg=glibtop_get_proc_args(&procargs,topentries[i]->pid,256);        
     ptmp=strchr(parg,' ');
     if (ptmp)
         *ptmp='\0';
- //   printf("arg = %s\n",parg);            
-    if (!parg || !(*parg) )
+    if (!parg && !(*parg) )
     {
-        icon=g_tree_lookup(awntop->icons,topentries[i]->cmd);
-        if (!icon)
+        pvalue=g_tree_lookup(awntop->icons,topentries[i]->cmd);
+        if (!pvalue)
         {
-            icon=g_tree_lookup(awntop->icons,basename(topentries[i]->cmd));
+            pvalue=g_tree_lookup(awntop->icons,basename(topentries[i]->cmd));
         }
     }
     else
     {
 
-        icon=g_tree_lookup(awntop->icons,parg);  
-        if (!icon)
+        pvalue=g_tree_lookup(awntop->icons,parg);  
+        if (!pvalue)
         {
-            icon=g_tree_lookup(awntop->icons,basename(parg));
+            pvalue=g_tree_lookup(awntop->icons,basename(parg));
         }
         
     }
 
-    if (icon)
+    if (pvalue)     
     {
         g=gtk_icon_theme_get_default();
-        pbuf=gtk_icon_theme_load_icon(g,icon,16,0,NULL);     
+        pbuf=gtk_icon_theme_load_icon(g,pvalue,16,0,NULL);     
         if (!pbuf)
-        {                                                     
-            pbuf=gdk_pixbuf_new_from_file_at_scale(icon,16,16,FALSE,NULL);
+        {
+
+            p=malloc(strlen("/usr/share/pixmaps/")+strlen(basename(pvalue))+1);
+            strcpy(p,"/usr/share/pixmaps/");
+            strcat(p,basename(pvalue));
+            pbuf=gdk_pixbuf_new_from_file_at_scale(p,16,16,FALSE,NULL);               
+            free(p); 
             if (!pbuf)
             {
-                char *p;
-                p=malloc(strlen("/usr/share/pixmaps/")+strlen(basename(icon))+1);
-                strcpy(p,"/usr/share/pixmaps/");
-                strcat(p,icon);
+                p=malloc(strlen("/usr/local/share/pixmaps/")+strlen(basename(pvalue))+1);
+                strcpy(p,"/usr/local/share/pixmaps/");
+                strcat(p,basename(pvalue));
                 pbuf=gdk_pixbuf_new_from_file_at_scale(p,16,16,FALSE,NULL);               
-                free(p); 
-                if (!pbuf)
-                {
-                    p=malloc(strlen("/usr/local/share/pixmaps/")+strlen(basename(icon))+1);
-                    strcpy(p,"/usr/local/share/pixmaps/");
-                    strcat(p,icon);
-                    pbuf=gdk_pixbuf_new_from_file_at_scale(p,16,16,FALSE,NULL);               
-                    free(p);                                     
-                    if (!pbuf)
-                    {
-                        image = gtk_image_new_from_file (icon);                
-                    }
-                }
+                free(p);                                     
             }
         }
-
-    }
-    else
-    {
-//        printf("FAiled to find icon name\n");
-        char *p;
+        
+    
+     }
+     else
+     {
         p=malloc(strlen("/usr/share/pixmaps/")+strlen(basename(parg))+1+strlen(".png"));
         strcpy(p,"/usr/share/pixmaps/");
         strcat(p,basename(parg));
@@ -821,19 +864,13 @@ GtkWidget * lookup_icon(Awntop * awntop,Topentry **topentries,int i)
                     strcat(p,".xpm");
                     pbuf=gdk_pixbuf_new_from_file_at_scale(p,16,16,FALSE,NULL);               
                     free(p); 
-                    if (!pbuf)
-                    {
-
-                    }
                 }
-            }
-        }
-    }        
-    if (!pbuf)   /*FIXME - I don't think this can happen currently... but I might change some stuff so it can*/
+            }        
+        }        
+    }
+    if (!pbuf)   
     {
-//        image = gtk_image_new_from_file (parg);  /*eventually may move this back into the main condition... leave here for now*/
-//        image=NULL;
-        image=gtk_image_new_from_stock(GTK_STOCK_EXECUTE,GTK_ICON_SIZE_MENU);        
+        image=gtk_image_new_from_stock(GTK_STOCK_EXECUTE,GTK_ICON_SIZE_MENU);
     }
     else
     {
@@ -842,13 +879,17 @@ GtkWidget * lookup_icon(Awntop * awntop,Topentry **topentries,int i)
     }
     g_free(parg);       
     return image;
+
 }
 
-static void build_top_table(Awntop *awntop,Topentry **topentries, int num_top_entries)
+static void build_top_table(Awntop *awntop,GtkWidget * table )
 {
     GtkWidget *tempwidg;	
     int i;
     GtkWidget *image;        
+    Topentry **topentries=awntop->topentries;
+    int num_top_entries=awntop->num_top_entries;
+    
     
     g_free(awntop->displayed_pid_list);
     awntop->displayed_pid_list=g_malloc(sizeof(long)*awntop->maxtopentries);        
@@ -861,12 +902,12 @@ static void build_top_table(Awntop *awntop,Topentry **topentries, int num_top_en
         awntop->displayed_pid_list[i]=topentries[i]->pid; /*array of pids that show in top.  Used for kill events*/
         
                     
-        gtk_table_attach_defaults (GTK_TABLE (awntop->table),get_label_ld(topentries[i]->pid),
+        gtk_table_attach_defaults (GTK_TABLE (table),get_label_ld(topentries[i]->pid),
                                  0, 1, TOP_TABLE_VOFFSET+i+1, TOP_TABLE_VOFFSET+i+2);
             
         userinfo=getpwuid(topentries[i]->uid);
         tempwidg= (userinfo) ? get_label_sz(userinfo->pw_name,1): get_label_ld(topentries[i]->uid);
-        gtk_table_attach_defaults (GTK_TABLE (awntop->table), tempwidg,
+        gtk_table_attach_defaults (GTK_TABLE (table), tempwidg,
                                  1, 2, TOP_TABLE_VOFFSET+i+1, TOP_TABLE_VOFFSET+i+2);
                                                         
         tmp=topentries[i]->virt/1024;               /*FIXME?? consider as a fn*/
@@ -879,7 +920,7 @@ static void build_top_table(Awntop *awntop,Topentry **topentries, int num_top_en
         {
             snprintf(buf,sizeof(buf),"%d",tmp);              
         }
-        gtk_table_attach_defaults (GTK_TABLE (awntop->table), get_label_sz(buf,1),
+        gtk_table_attach_defaults (GTK_TABLE (table), get_label_sz(buf,1),
                                  2, 3, TOP_TABLE_VOFFSET+i+1, TOP_TABLE_VOFFSET+i+2);
          
         tmp=topentries[i]->res/1024;                    /*FIXME?? consider as a fn*/
@@ -892,19 +933,19 @@ static void build_top_table(Awntop *awntop,Topentry **topentries, int num_top_en
         {
             snprintf(buf,sizeof(buf),"%d",tmp);              
         }                                 
-        gtk_table_attach_defaults (GTK_TABLE (awntop->table), get_label_sz(buf,1),
+        gtk_table_attach_defaults (GTK_TABLE (table), get_label_sz(buf,1),
                                  3, 4, TOP_TABLE_VOFFSET+i+1, TOP_TABLE_VOFFSET+i+2);
 
-        gtk_table_attach_defaults (GTK_TABLE (awntop->table), get_label_ld(topentries[i]->cpu),
+        gtk_table_attach_defaults (GTK_TABLE (table), get_label_ld(topentries[i]->cpu),
                                  4, 5, TOP_TABLE_VOFFSET+i+1, TOP_TABLE_VOFFSET+i+2);        
 
-        gtk_table_attach_defaults (GTK_TABLE (awntop->table), get_label_ld(topentries[i]->mem),
+        gtk_table_attach_defaults (GTK_TABLE (table), get_label_ld(topentries[i]->mem),
                                  5, 6, TOP_TABLE_VOFFSET+i+1, TOP_TABLE_VOFFSET+i+2);
            
         
-        gtk_table_attach_defaults (GTK_TABLE (awntop->table), lookup_icon(awntop,topentries,i),
+        gtk_table_attach_defaults (GTK_TABLE (table), lookup_icon(awntop,topentries,i),
                          6, 7, TOP_TABLE_VOFFSET+i+1, TOP_TABLE_VOFFSET+i+2);  
-        gtk_table_attach_defaults (GTK_TABLE (awntop->table), get_label_sz(topentries[i]->cmd,0),
+        gtk_table_attach_defaults (GTK_TABLE (table), get_label_sz(topentries[i]->cmd,0),
                                  7, 8, TOP_TABLE_VOFFSET+i+1, TOP_TABLE_VOFFSET+i+2);
                                  
                                  
@@ -912,14 +953,14 @@ static void build_top_table(Awntop *awntop,Topentry **topentries, int num_top_en
         g_signal_connect (G_OBJECT (tempwidg), "button-press-event",
                                     G_CALLBACK (_time_to_kill), 
                                     (gpointer)&awntop->displayed_pid_list[i]);                              
-        gtk_table_attach_defaults (GTK_TABLE (awntop->table),tempwidg,
+        gtk_table_attach_defaults (GTK_TABLE (table),tempwidg,
                                  8, 9, TOP_TABLE_VOFFSET+i+1, TOP_TABLE_VOFFSET+i+2);
 
         tempwidg= get_event_box_label("-9");
         g_signal_connect (G_OBJECT (tempwidg), "button-press-event",
                                     G_CALLBACK (_time_to_kill_I_mean_it), 
                                     (gpointer)&awntop->displayed_pid_list[i]);
-        gtk_table_attach_defaults (GTK_TABLE (awntop->table), tempwidg,
+        gtk_table_attach_defaults (GTK_TABLE (table), tempwidg,
                                  9, 10, TOP_TABLE_VOFFSET+i+1, TOP_TABLE_VOFFSET+i+2);
     }    
 }
@@ -1043,6 +1084,7 @@ static void parse_desktop_entries(Awntop * awntop)
     char * ptmp;
     char * tok;
     GKeyFile*   keyfile;
+    char *pvalue;
 
     pXDG_desktop_dir=strdup( ptmp=getenv("XDG_DATA_DIRS")?ptmp:"/usr/share");   /*FIXME if strdup return NULL...  I guess it could happen*/
 
@@ -1088,14 +1130,14 @@ static void parse_desktop_entries(Awntop * awntop)
                                 char * execname;
                                 if (execname=g_key_file_get_string(keyfile,"Desktop Entry","Exec",NULL) )
                                 {
-                                    char *value;
                                     ptmp=strchr(execname,' ');
                                     if (ptmp)
                                         *ptmp='\0';
-                                    value=g_tree_lookup(awntop->icons,execname);     
-                                    if (!value)
+                                    pvalue=g_tree_lookup(awntop->icons,execname);     
+                                    if (!pvalue)
                                     {
-                                        g_tree_insert(awntop->icons,execname,strdup(iconname));  /*FIXME*/
+                                        pvalue=strdup(iconname);
+                                        g_tree_insert(awntop->icons,execname,pvalue);  /*FIXME*/
                                     }
                                     else
                                     {
@@ -1125,33 +1167,39 @@ static void parse_desktop_entries(Awntop * awntop)
         }   
     }    
     free(pXDG_alldirs);     
-
+    
+    /*FIXME --- below - obviously*/
     if (!g_tree_lookup(awntop->icons,"firefox-bin"))
-    {
-        g_tree_insert(awntop->icons,"firefox-bin",strdup("firefox-icon.png"));  /*FIXME*/    
+    {          
+        g_tree_insert(awntop->icons,"firefox-bin",strdup("firefox-icon.png"));  
     }
     if (!g_tree_lookup(awntop->icons,"bash"))
     {
-        g_tree_insert(awntop->icons,"bash",strdup("terminal"));  /*FIXME*/    
+        g_tree_insert(awntop->icons,"bash",strdup("terminal")); 
     }
     if (!g_tree_lookup(awntop->icons,"sh"))
     {
-        g_tree_insert(awntop->icons,"sh",strdup("terminal"));  /*FIXME*/    
+        g_tree_insert(awntop->icons,"sh",strdup("terminal"));  
     }
     if (!g_tree_lookup(awntop->icons,"dash"))
     {
-        g_tree_insert(awntop->icons,"dash",strdup("terminal"));  /*FIXME*/    
+        g_tree_insert(awntop->icons,"dash",strdup("terminal"));
     }    
     if (!g_tree_lookup(awntop->icons,"ash"))
     {
-        g_tree_insert(awntop->icons,"ash",strdup("terminal"));  /*FIXME*/       
+        g_tree_insert(awntop->icons,"ash",strdup("terminal")); 
     }   
     if (!g_tree_lookup(awntop->icons,"csh"))
     {
-        g_tree_insert(awntop->icons,"csh",strdup("terminal"));  /*FIXME*/    
+        g_tree_insert(awntop->icons,"csh",strdup("terminal")); 
     }     
+
 //    free(ptmp);            
 }
+
+
+/*
+    */
 
 /* Gets the pixbuf from a desktop file's icon name. Based on the same function
  * from matchbox-desktop

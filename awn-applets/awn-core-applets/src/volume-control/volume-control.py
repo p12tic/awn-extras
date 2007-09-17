@@ -24,10 +24,23 @@ try:
 except:
     print "you need to install the alsaaudio-python module !"
     sys.exit(1)    
-    
-
+try:
+    import gconf
+except:
+    print "you need to install the python-gconf module !"
+    sys.exit(1)
 
 class VolumeApp (awn.AppletSimple):
+
+  #Get the gconf-key for the main audio device.
+  try:
+    key = '/desktop/gnome/sound/default_mixer_tracks'
+    client = gconf.client_get_default ()
+    values = client.get_list(key, gconf.VALUE_STRING)
+    ctrl_chan = values[0]
+  except:
+    ctrl_chan = 'PCM'
+
   def __init__ (self, uid, orient, height):
     awn.AppletSimple.__init__ (self, uid, orient, height)
     self.height = height
@@ -103,7 +116,7 @@ class VolumeApp (awn.AppletSimple):
 
   #Set the applet-icon based on the actual volume.
   def set_applet_icon (self):
-    currentvolume = alsa.Mixer('PCM').getvolume()[0]
+    currentvolume = alsa.Mixer(self.ctrl_chan).getvolume()[0]
     if currentvolume > 60 :
       icon = gdk.pixbuf_new_from_file ("/usr/share/icons/Tango/scalable/status/audio-volume-high.svg")
     elif currentvolume > 25 :
@@ -143,13 +156,13 @@ class VolumeApp (awn.AppletSimple):
     elif event.direction == gtk.gdk.SCROLL_DOWN:
       #print "wheel down" 
       self.volume_down()
-    volumestring = "Volume: " + str(alsa.Mixer('PCM').getvolume()[0]) + "%"
+    volumestring = "Volume: " + str(alsa.Mixer(self.ctrl_chan).getvolume()[0]) + "%"
     self.title.show (self, volumestring)
 
 
   #When "mouse over applet" the current volume should appear.
   def enter_notify (self, widget, event):
-    volumestring = "Volume: " + str(alsa.Mixer('PCM').getvolume()[0]) + "%"
+    volumestring = "Volume: " + str(alsa.Mixer(self.ctrl_chan).getvolume()[0]) + "%"
     self.title.show (self, volumestring)
     #self.set_temp_icon (icon)
 
@@ -183,23 +196,23 @@ class VolumeApp (awn.AppletSimple):
 
   #The methods to increase/decrease the volume.
   def volume_up(self):
-    volume = alsa.Mixer('PCM').getvolume()[0]
+    volume = alsa.Mixer(self.ctrl_chan).getvolume()[0]
     # if the volume is under 97, increase the volume for one step.
     if volume < 97:
-      alsa.Mixer('PCM').setvolume(volume+4)
+      alsa.Mixer(self.ctrl_chan).setvolume(volume+4)
     # if the volume is over 97, set it to 100.
     else:
-      alsa.Mixer('PCM').setvolume(100)
+      alsa.Mixer(self.ctrl_chan).setvolume(100)
     self.set_applet_icon ()  
 
   def volume_down(self):
-    volume = alsa.Mixer('PCM').getvolume()[0]
+    volume = alsa.Mixer(self.ctrl_chan).getvolume()[0]
     # if the volume is over 3, decrease it's value for one step.
     if volume > 3:
-      alsa.Mixer('PCM').setvolume(volume-4)
+      alsa.Mixer(self.ctrl_chan).setvolume(volume-4)
     # if the volume is under 3, set it to 0 and mute it.
     elif volume > 0:
-      alsa.Mixer('PCM').setvolume(0)
+      alsa.Mixer(self.ctrl_chan).setvolume(0)
     self.set_applet_icon ()  
 
 

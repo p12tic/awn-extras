@@ -2,20 +2,14 @@ Source: awn-core-applets
 Section: universe/gnome
 Priority: optional
 Maintainer: Julien Lavergne <julien.lavergne@gmail.com>
-
 Build-Depends: debhelper (>= 5), cdbs, intltool, gnome-pkg-tools, autotools-dev, libgnome-menu-dev, libgconf2-dev, libgnome-desktop-dev, gnome-common, librsvg2-dev, libgtop2-dev, libawn-dev, libwnck-dev, python-libawn0, python-central (>= 0.5.6), python
-
 Standards-Version: 3.7.2
 XS-Python-Version: current
 
 Package: awn-core-applets
 Section: universe/gnome
 Architecture: any
-<<<<<<< TREE
-Depends: ${shlibs:Depends}, ${python:Depends}
-=======
 Depends: ${shlibs:Depends}, ${python:Depends}, cairo-clock
->>>>>>> MERGE-SOURCE
 Recommands: avant-window-navigator
 XB-Python-Version: ${python:Versions}
 Description: A collection of applets for avant-windows-navigator

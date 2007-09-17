@@ -44,6 +44,33 @@ typedef struct
 	long 	seconds;
 } Uptimedata;
 
+typedef struct
+{
+    gboolean (*construct_fn)(GtkWidget ** w,gint call_interval,void *data);
+    gboolean (*destruct_fn)(GtkWidget ** w,void *data);
+    void * data;
+    int x1;
+    int x2;
+    int y1;
+    int y2;
+    GtkWidget * widget;     /*not sure if it is necessary to preserve this.  but keep it for now */
+} Awntop_plugs_callbacks;
+
+typedef struct
+{
+    long     pid;
+    int     uid;
+    int     pri;
+    int     nice;
+    long    virt;
+    long    res;
+    long    shr;
+    long     cpu;
+    long     mem;
+    long    time;
+    char    cmd[40];  //From _glibtop_proc_state structure.
+        
+}Topentry;
 
 typedef struct
 {
@@ -61,15 +88,21 @@ typedef struct
     long    *   displayed_pid_list;
     GTree*  proctimes;
     GTree*  icons;    
+    GSList *    awntop_plugs;
     long proctime_tree_reaping;
     
 
 	GtkWidget *mainwindow;
-	GtkWidget *table;
+    
+    GtkWidget *maintable;	
+	
 	GtkWidget *vbox;
 	gboolean  mainwindowvisible;
 	GtkWidget *box;	
 	AwnApplet *applet ;	
+    
+    Topentry **topentries;  	
+    int num_top_entries;    
 	
 	glibtop_mem libtop_mem;
 } Awntop;
@@ -80,7 +113,17 @@ void create_awntop_window(Awntop *awntop);
 void destroy_awntop_window(Awntop *awntop);
 void register_awntop( Awntop * awntop,AwnApplet *applet);
 
-void embed_cairo(Awntop *awntop,cairo_t *cr, gint x1,gint x2,gint y1, gint y2);
+void register_awntop_plug(      Awntop * awntop,
+                                gboolean (*construct_fn)(GtkWidget ** ,gint ,void *),
+                                gboolean (*destruct_fn)(GtkWidget ** ,void *),
+                                int x1, 
+                                int x2, 
+                                int y1, 
+                                int y2,
+                                void * arb_data
+                          );                          
+/*need an unregister*/                          
+
 #define TOP_TABLE_VOFFSET 4
 
 #endif

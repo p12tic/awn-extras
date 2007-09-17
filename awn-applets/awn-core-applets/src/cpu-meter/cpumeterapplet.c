@@ -28,9 +28,12 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <math.h>
 #include "cpumeterapplet.h"
 #include "cpumetergconf.h"
 #include "config.h"
+
+#include <assert.h>
 
 /*
  * FUNCTION DEFINITIONS
@@ -97,8 +100,7 @@ cpumeter_applet_new (AwnApplet *applet)
 	// connect to enter/leave
 	g_signal_connect (G_OBJECT(cpumeter->applet), "enter-notify-event", G_CALLBACK (_enter_notify_event), (gpointer)cpumeter);
 	g_signal_connect(G_OBJECT(cpumeter->applet), "leave-notify-event", G_CALLBACK (_leave_notify_event), (gpointer)cpumeter);
-
-	
+  	
   return cpumeter;
 }
 
@@ -127,6 +129,7 @@ gboolean cpu_meter_render (gpointer data)
   gint i, j;
   gfloat percent;
   AwnApplet* applet = cpumeter->applet;
+  
 
   if (!GDK_IS_DRAWABLE (widget->window)) {
     printf("Unexpected Error: Window is not drawable.\n");
@@ -158,8 +161,17 @@ gboolean cpu_meter_render (gpointer data)
   
   /* Get the load and paint it */
   get_load(g);
-  guint percent_now = round(g->data[(g->index)-1]*100); 
-
+  assert((g->index) <= NUM_POINTS);
+  assert((g->index) >= 0);
+  guint percent_now;
+  if (g->index>0)
+  {
+      percent_now = round(g->data[(g->index)-1]*100.0); 
+  }
+  else
+  {
+        percent_now=0;
+  }
   i = width - 2;
   j = g->index-1;
   if (j < 0) {
@@ -171,6 +183,8 @@ gboolean cpu_meter_render (gpointer data)
   guint tallest = bottom - top;
   cairo_set_line_width (cr, 1.0);
   while (i > PAD) {
+    assert(j< NUM_POINTS);
+    assert(j>=0);
     percent = g->data[j];
     if (percent > 0 && percent <= 1.0) {
       cairo_set_source_rgba( cr, cpumeter->graph.red, cpumeter->graph.green, cpumeter->graph.blue, cpumeter->graph.alpha );

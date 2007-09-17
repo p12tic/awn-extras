@@ -246,7 +246,7 @@ static gboolean stack_dialog_expose_event(
 
     /* Get the correct theme colours */
     style = gtk_widget_get_style (widget);
-    text = style->bg[GTK_STATE_SELECTED];
+    text = style->text[GTK_STATE_NORMAL];
     gtk_widget_style_get (GTK_WIDGET (dialog->awn_dialog),
                           "bg_alpha", &alpha, NULL);
                           

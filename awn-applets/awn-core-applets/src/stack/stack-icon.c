@@ -170,19 +170,20 @@ static gboolean stack_icon_expose_event(
     g_return_val_if_fail( cr, FALSE );
 
     /* Get the colours from the theme */
-    gtk_widget_style_get (GTK_WIDGET (STACK_FOLDER (icon->folder)->dialog->awn_dialog),
-                          "bg_alpha", &alpha, NULL);
-    style = gtk_widget_get_style (widget);
+    gtk_widget_style_get (STACK_FOLDER (icon->folder)->dialog->awn_dialog, "bg_alpha", &alpha, NULL);
+    
+    style = gtk_widget_get_style (STACK_FOLDER(icon->folder)->dialog->awn_dialog);
     bg = style->base[GTK_STATE_NORMAL];
-    border = style->fg[GTK_STATE_NORMAL];
+    border = style->bg[GTK_STATE_SELECTED];
     hover = style->base[GTK_STATE_SELECTED];
 
-	// paint background same as dialog
+    // paint background same as dialog
     cairo_set_operator( cr, CAIRO_OPERATOR_CLEAR );
     cairo_set_source_rgba( cr, 0.0, 0.0, 0.0, 0.0 );
     cairo_paint( cr );    
+
     cairo_set_operator( cr, CAIRO_OPERATOR_OVER );
-   	cairo_set_source_rgba( cr, bg.red/65335.0,
+    cairo_set_source_rgba( cr, bg.red/65335.0,
                                bg.green/65335.0,
                                bg.blue/65335.0,
                                alpha );
@@ -372,7 +373,7 @@ static void stack_icon_class_init(
     object_class = ( GtkObjectClass * ) klass;
     widget_class = ( GtkWidgetClass * ) klass;
 
-	parent_class = gtk_type_class (GTK_TYPE_DRAWING_AREA);
+    parent_class = gtk_type_class (GTK_TYPE_DRAWING_AREA);
 
     object_class->destroy = stack_icon_destroy;
 

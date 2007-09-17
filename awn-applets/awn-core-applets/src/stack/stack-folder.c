@@ -297,7 +297,8 @@ static gboolean stack_folder_expose_event(
     gtk_widget_style_get (GTK_WIDGET (folder->dialog->awn_dialog),
                           "bg_alpha",
                           &alpha, NULL);
-    style = gtk_widget_get_style (widget);
+    style = gtk_widget_get_style (folder->dialog->awn_dialog);
+ 
     bg = style->base[GTK_STATE_NORMAL];
 
     // paint background same as dialog
@@ -609,7 +610,7 @@ static void stack_folder_class_init(
     object_class = ( GtkObjectClass * ) klass;
     widget_class = ( GtkWidgetClass * ) klass;
 
-	parent_class = gtk_type_class (GTK_TYPE_VIEWPORT);
+    parent_class = gtk_type_class (GTK_TYPE_VIEWPORT);
 
     object_class->destroy = stack_folder_destroy;
     

@@ -6,8 +6,7 @@ INCLUDES =							\
 	-DPREFIX=\"$(prefix)\"					\
 	-DSYSCONFDIR=\"$(sysconfdir)\"				\
 	-DDATADIR=\"$(datadir)\"				\
-	-DLIBDIR=\"$(libdir)\"                                  \
-	-I$(top_builddir)/libawn
+	-DLIBDIR=\"$(libdir)\"                                  
 
 STACK_SOURCES =                              \
 	stack-applet.c                           \

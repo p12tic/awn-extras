@@ -1,1 +1,1 @@
-SUBDIRS =	clock cpu-meter main-menu stack showdesktop volume-control wobblyzini
+SUBDIRS =	clock cpu-meter main-menu notification-area python-test separator stack switcher showdesktop trash volume-control wobblyzini

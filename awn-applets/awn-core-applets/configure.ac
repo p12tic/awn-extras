@@ -36,6 +36,8 @@ AC_SUBST(slicelocaledir)
 PKG_CHECK_MODULES(DEPS, 
                   gtk+-2.0 
                   awn
+                  libwnck-1.0 
+                  libglade-2.0
                   libgnome-menu 
                   gnome-desktop-2.0
                   librsvg-2.0
@@ -69,7 +71,12 @@ src/clock/Makefile
 src/cpu-meter/Makefile
 src/main-menu/Makefile
 src/showdesktop/Makefile
+src/notification-area/Makefile
+src/python-test/Makefile
+src/separator/Makefile
 src/stack/Makefile
 src/volume-control/Makefile
+src/switcher/Makefile
+src/trash/Makefile
 src/wobblyzini/Makefile
 ])

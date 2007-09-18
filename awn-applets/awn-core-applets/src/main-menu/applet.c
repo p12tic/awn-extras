@@ -372,7 +372,7 @@ awn_applet_factory_initp (const gchar * uid, gint orient, gint height )
   GdkPixbuf *icon;
   icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (),
                                    "gnome-main-menu",
-                                   height,
+                                   height-2,
                                    0, NULL);
   awn_applet_simple_set_icon (AWN_APPLET_SIMPLE (applet), icon);
 

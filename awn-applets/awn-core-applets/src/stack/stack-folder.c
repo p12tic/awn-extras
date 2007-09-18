@@ -232,7 +232,7 @@ static gboolean stack_folder_add(
 			}
 	  	
     		folder->applet_icon = compose_applet_icon(STACK_ICON( stack_icon )->icon, 
-    			icon2, icon3, awn_applet_get_height( AWN_APPLET( folder->dialog->applet->awn_applet ) ) );
+    			icon2, icon3, awn_applet_get_height( AWN_APPLET( folder->dialog->applet->awn_applet ) ) - PADDING);
     	}
 
     	if( old ){

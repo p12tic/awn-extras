@@ -43,6 +43,8 @@ class ShowDesktopButton (awn.AppletSimple):
         self.height = height
         self.theme = gtk.icon_theme_get_default()
         icon = self.theme.load_icon ("desktop", height, 0)
+        if self.get_height() != icon.get_height():
+            icon = icon.scale_simple(self.get_height(),self.get_height(),gtk.gdk.INTERP_BILINEAR)
         self.set_icon(icon)
         self.connect ("button-press-event", self.__on_button_press)
     

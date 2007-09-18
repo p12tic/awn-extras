@@ -12,6 +12,8 @@ class App (awn.AppletSimple):
     self.height = height
     self.theme = gtk.IconTheme ()
     icon = self.theme.load_icon ("gtk-apply", height, 0)
+    if height != icon.get_height():
+      icon = icon.scale_simple(height,height,gtk.gdk.INTERP_BILINEAR)
     #icon = gdk.pixbuf_new_from_file ("/home/njp/Projects/test.png")
     self.set_temp_icon (icon)
     self.title = awn.awn_title_get_default ()
@@ -36,12 +38,16 @@ class App (awn.AppletSimple):
   def enter_notify (self, widget, event):
     self.title.show (self, "Test python applet")
     icon = self.theme.load_icon ("gtk-apply", self.height, 0)
+    if self.height != icon.get_height():
+      icon = icon.scale_simple(self.height,self.height,gtk.gdk.INTERP_BILINEAR)
     self.set_temp_icon (icon)
     print "show title"
 
   def leave_notify (self, widget, event):
     self.title.hide (self)
     icon = self.theme.load_icon ("gtk-cancel", self.height, 0)
+    if self.height != icon.get_height():
+      icon = icon.scale_simple(self.height,self.height,gtk.gdk.INTERP_BILINEAR)
     self.set_temp_icon (icon)
     print "hide title"
 

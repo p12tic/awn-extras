@@ -88,12 +88,13 @@ typedef struct
     long    *   displayed_pid_list;
     GTree*  proctimes;
     GTree*  icons;    
+    GTree*  pixbufs;
+    
     GSList *    awntop_plugs;
     long proctime_tree_reaping;
     
 
-	GtkWidget *mainwindow;
-    
+	GtkWidget *mainwindow;    
     GtkWidget *maintable;	
 	
 	GtkWidget *vbox;
@@ -105,6 +106,7 @@ typedef struct
     int num_top_entries;    
 	
 	glibtop_mem libtop_mem;
+	cairo_t *   demo_plug_cr;
 } Awntop;
 
 

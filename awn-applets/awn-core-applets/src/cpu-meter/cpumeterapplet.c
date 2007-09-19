@@ -33,6 +33,7 @@
 #include "cpumetergconf.h"
 #include "config.h"
 
+#define NDEBUG
 #include <assert.h>
 
 /*
@@ -167,6 +168,7 @@ gboolean cpu_meter_render (gpointer data)
   if (g->index>0)
   {
       percent_now = round(g->data[(g->index)-1]*100.0); 
+      percent_now = percent_now>100?100:percent_now;
   }
   else
   {

@@ -26,15 +26,13 @@
 
 #include "awntop.h"
 
+#include <assert.h>
 
 typedef struct
 {
     guint64     proctime;
     gboolean    accessed;
 }Proctimeinfo;
-
-
-
 
 typedef struct
 {
@@ -46,8 +44,8 @@ typedef struct
 static GtkWidget * get_event_box_label(const char * t);
 static GtkWidget * get_label_ld(const long t);
 static GtkWidget * get_label_sz(const char * t, gfloat halign);
-static GtkWidget * get_icon_button(char *name,const gchar *stock_id, GtkIconSize size);
-static GtkWidget * get_icon_event_box(char *name,const gchar *stock_id, GtkIconSize size);
+static GtkWidget * get_icon_button(Awntop * awntop,char *name,const gchar *stock_id, GtkIconSize size);
+static GtkWidget * get_icon_event_box(Awntop * awntop,char *name,const gchar *stock_id, GtkIconSize size);
 
 
 static void build_top_table(Awntop *awntop,GtkWidget *);
@@ -115,12 +113,77 @@ Tableheader Global_tableheadings[]=
     {   "COMMAND",  _click_command}
 };
 
+static int _Dummy_DUMMY=0;
+
+static GdkPixbuf* Stock_Image_Used=(GdkPixbuf* ) (&_Dummy_DUMMY);
+
 
 static int compmethod=1;
 static const char * freeze_botton_text[2]={"Pause","Update"};
 static int     gcomparedir;
 static gboolean     top_state;
 
+
+static gboolean _cairo_demo_plug(GtkWidget ** pwidget,gint interval,void * data)
+{
+    char buf[256];
+    Awntop *awntop=data;
+    GtkRequisition    maintable_size;
+    
+//    gtk_widget_get_size_request (awntop->maintable, &width, &height);    
+    gtk_widget_size_request (awntop->maintable,&maintable_size);
+    printf("width=%d\n",maintable_size.width);
+    GdkPixmap*  pixmap=gdk_pixmap_new(NULL,400,65,32);    
+    GdkColormap* cmap=gdk_colormap_new(gdk_visual_get_best (),TRUE);    
+    gdk_drawable_set_colormap(pixmap,cmap);          
+    cairo_t*    cr=gdk_cairo_create(pixmap);
+    
+	/* Clear the background to transparent */
+    
+    cairo_set_source_rgba (cr, 1, 0.1, 0.1,0.8);
+	cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
+	cairo_paint (cr);
+
+
+    cairo_set_source_rgba (cr, 0.1, 0.1, 0.1,0.6);
+	cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
+    cairo_rectangle(cr,2,2,394,62);
+    cairo_stroke (cr);    
+
+	/* Set back to opaque */
+	cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
+	cairo_set_source_rgb(cr, 1.0, 1.0, 1.0);
+
+	cairo_select_font_face (cr, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+	cairo_set_font_size (cr, 10.0);
+	
+    cairo_move_to(cr, 10.0, 15.0);
+	snprintf(buf,sizeof(buf),"Up Time:%ld:%ld:%ld:%ld",awntop->uptimedata.days,
+	                        awntop->uptimedata.hours,awntop->uptimedata.minutes,
+	                        awntop->uptimedata.seconds);
+    cairo_show_text(cr, buf);
+    
+	cairo_set_font_size (cr, 10.0);    	
+    cairo_move_to(cr, 10.0, 30.0);
+    snprintf(buf,sizeof(buf),"User:%ld",awntop->user);
+    cairo_show_text(cr, buf);
+    
+    cairo_move_to(cr, 10.0, 45.0);
+    snprintf(buf,sizeof(buf),"Sys:%ld",awntop->sys);
+    cairo_show_text(cr, buf);
+
+    cairo_move_to(cr, 10.0, 60.0);
+    snprintf(buf,sizeof(buf),"Idle:%ld",awntop->idle);
+    cairo_show_text(cr, buf);
+    
+    *pwidget=gtk_image_new_from_pixmap(pixmap,NULL);
+    
+    g_object_unref (pixmap);
+    awntop->demo_plug_cr=cr;
+	cairo_destroy (cr);
+    
+    return TRUE;
+}
 
 static gboolean _show_top(GtkWidget ** pwidget,gint interval,void * data)
 {
@@ -129,6 +192,7 @@ static gboolean _show_top(GtkWidget ** pwidget,gint interval,void * data)
     GtkWidget *toptable;    
     
     toptable = gtk_table_new (8, 5, FALSE);    
+    gtk_table_set_col_spacing(GTK_TABLE(awntop->maintable),6,1);        
     gtk_table_set_col_spacings (GTK_TABLE(toptable),15);        
     build_top_table_headings(awntop,toptable);
     build_top_table(awntop,toptable);          
@@ -141,7 +205,8 @@ static gboolean _show_pause_button(GtkWidget ** pwidget,gint interval,void * dat
 {
     Awntop * awntop=data;
         
-    GtkWidget *tempwidg= get_icon_button("pause",top_state?GTK_STOCK_MEDIA_PAUSE:GTK_STOCK_MEDIA_PLAY,GTK_ICON_SIZE_SMALL_TOOLBAR);   
+    GtkWidget *tempwidg= get_icon_button(awntop,"pause",
+                        top_state?GTK_STOCK_MEDIA_PAUSE:GTK_STOCK_MEDIA_PLAY,GTK_ICON_SIZE_SMALL_TOOLBAR);   
     *pwidget=tempwidg;    
     
     g_signal_connect(       G_OBJECT (tempwidg), 
@@ -174,7 +239,7 @@ void register_awntop( Awntop * awntop,AwnApplet *applet)
 {
     awntop->mainwindowvisible=FALSE;
     awntop->updateinterval=2;		/*fequency in updates in seconds.  pull all this crap from gconf eventually...*/	
-    awntop->maxtopentries=30;
+    awntop->maxtopentries=15;
     awntop->compar=cmpcpu;
     awntop->proctime_tree_reaping=5;
     
@@ -190,6 +255,10 @@ void register_awntop( Awntop * awntop,AwnApplet *applet)
     awntop->proctimes=g_tree_new_full(proctime_key_compare_func,NULL,g_free,g_free);	
     
     awntop->icons=g_tree_new_full(icons_key_compare_func,NULL,free,free);	
+    
+    awntop->pixbufs=g_tree_new_full(icons_key_compare_func,NULL,free,free);	    
+    
+    
     awntop->box = gtk_alignment_new (0.5, 0.5, 1, 1);
 
     awntop->mainwindow = awn_applet_dialog_new (applet);
@@ -208,7 +277,7 @@ void register_awntop( Awntop * awntop,AwnApplet *applet)
     
     register_awntop_plug(awntop,_show_pause_button,NULL,8,9,1,2,awntop);    
     register_awntop_plug(awntop,_show_top,NULL,0,8,4,5,awntop);    
-    
+    //register_awntop_plug(awntop,_cairo_demo_plug,NULL,0,9,2,3,awntop);        
     //gtk_table_attach_defaults (GTK_TABLE (awntop->table), tempwidg,
      //                    numcols-1, numcols, 1, 2);     
 	/*FIXME  - wrap in #ifdef so g_timeout_add_seconds_full is used if gtk version > 2.14.  and do a #define for the intervals*/
@@ -278,7 +347,7 @@ static void awntop_plugs_destruct(gpointer data,gpointer user_data)
 }
 
 
-/*used for binary tree of icons*/
+/*used for binary tree of icons and binary tree of pixbufs*/
 static gint icons_key_compare_func(gconstpointer a,gconstpointer b,   gpointer user_data)
 {
 /*Returns : 	negative value if a < b; zero if a = b; positive value if a > b.*/
@@ -612,8 +681,8 @@ static void draw_main_window(Awntop *awntop)
 //    static int num_top_entries;
 
     awntop->vbox = gtk_vbox_new (FALSE, 8);
-    awntop->maintable = gtk_table_new (15, 15, FALSE);
-
+    awntop->maintable = gtk_table_new (35, 10, FALSE);
+//    gtk_table_set_homogeneous(awntop->maintable,TRUE);
     gtk_table_set_col_spacings (GTK_TABLE(awntop->maintable),15);    
     gtk_box_pack_end (GTK_BOX (awntop->vbox), awntop->maintable, TRUE, TRUE, 0);
     numcols=sizeof(Global_tableheadings)/sizeof(Tableheader);
@@ -772,7 +841,7 @@ static void build_top_table_headings(Awntop *awntop,GtkWidget * table)
 }   
 
 
-
+/*FIXME  - clean this function up*/
 GtkWidget * lookup_icon(Awntop * awntop,Topentry **topentries,int i)
 {
     GtkIconTheme*  g;      
@@ -789,6 +858,24 @@ GtkWidget * lookup_icon(Awntop * awntop,Topentry **topentries,int i)
     ptmp=strchr(parg,' ');
     if (ptmp)
         *ptmp='\0';
+        
+    pbuf=g_tree_lookup(awntop->pixbufs,parg);
+
+    if (pbuf)
+    {
+        if (pbuf==Stock_Image_Used)
+        {
+            image=gtk_image_new_from_stock(GTK_STOCK_EXECUTE,GTK_ICON_SIZE_MENU);        
+        }
+        else
+        {
+            image=gtk_image_new_from_pixbuf(pbuf);
+        }
+        g_free(parg);       
+        return image;        
+    }
+    
+            
     if (!parg && !(*parg) )
     {
         pvalue=g_tree_lookup(awntop->icons,topentries[i]->cmd);
@@ -875,7 +962,8 @@ GtkWidget * lookup_icon(Awntop * awntop,Topentry **topentries,int i)
     else
     {
         image=gtk_image_new_from_pixbuf(pbuf);
-        g_object_unref (pbuf);
+        g_tree_insert(awntop->pixbufs,strdup(parg),pbuf);                                     
+//        g_object_unref (pbuf);
     }
     g_free(parg);       
     return image;
@@ -949,7 +1037,7 @@ static void build_top_table(Awntop *awntop,GtkWidget * table )
                                  7, 8, TOP_TABLE_VOFFSET+i+1, TOP_TABLE_VOFFSET+i+2);
                                  
                                  
-        tempwidg= get_icon_event_box("xkill",GTK_STOCK_CLOSE,GTK_ICON_SIZE_MENU);
+        tempwidg= get_icon_event_box(awntop,"xkill",GTK_STOCK_CLOSE,GTK_ICON_SIZE_MENU);
         g_signal_connect (G_OBJECT (tempwidg), "button-press-event",
                                     G_CALLBACK (_time_to_kill), 
                                     (gpointer)&awntop->displayed_pid_list[i]);                              
@@ -976,23 +1064,49 @@ static void hide_main_window(Awntop *awntop)
     gtk_widget_hide (awntop->mainwindow);
 //    gtk_widget_destroy(awntop->vbox);
 }
-static GtkWidget * get_icon_button(char *name,const gchar *stock_id, GtkIconSize size)
+static GtkWidget * get_icon_button(Awntop * awntop,char *name,const gchar *stock_id, GtkIconSize size)
 {
     GtkIconTheme*  g;      
     GdkPixbuf* pbuf;
-    GtkWidget *image;  
+    GtkWidget *image=NULL;  
     GtkWidget *button;  
-    g=gtk_icon_theme_get_default();
-    pbuf=gtk_icon_theme_load_icon(g,name,16,0,NULL);     
+    
+    pbuf=g_tree_lookup(awntop->pixbufs,name);
     if (!pbuf)
-    {         
-        image=gtk_image_new_from_stock(stock_id,size);        
+    {    
+        g=gtk_icon_theme_get_default();
+        pbuf=gtk_icon_theme_load_icon(g,name,16,0,NULL);     
+        if (!pbuf)
+        {         
+            image=gtk_image_new_from_stock(stock_id,size);     /* pbuf could be NULL after this*/
+            g_tree_insert(awntop->pixbufs,strdup(name),Stock_Image_Used);             
+                                                       
+        }
+/*        if (image)
+        {
+
+            pbuf=gtk_image_get_pixbuf(image);           //doesn't work if it's  GTK_IMAGE_STOCK
+
+        }*/
+        if (pbuf)
+        {
+            g_object_ref(pbuf);            
+            g_tree_insert(awntop->pixbufs,strdup(name),pbuf); 
+        }
+        
     }
-    else
+//    assert(pbuf);
+    if (!image)
     {
-        image=gtk_image_new_from_pixbuf(pbuf);
-        g_object_unref (pbuf);    
-    }
+        if (pbuf==Stock_Image_Used)
+        {
+            image=gtk_image_new_from_stock(stock_id,size);
+        }
+        else
+        {
+            image=gtk_image_new_from_pixbuf(pbuf);
+        }
+    }    
     
     button=gtk_button_new();
     gtk_button_set_image(button,image);
@@ -1000,33 +1114,55 @@ static GtkWidget * get_icon_button(char *name,const gchar *stock_id, GtkIconSize
 }
 
 
-static GtkWidget * get_icon_event_box(char *name,const gchar *stock_id, GtkIconSize size)
+static GtkWidget * get_icon_event_box(Awntop * awntop,char *name,const gchar *stock_id, GtkIconSize size)
 {
     GtkIconTheme*  g;      
     GdkPixbuf* pbuf;
-    GtkWidget *image;  
+    GtkWidget *image=NULL;  
     GtkWidget *eventbox;  
     char *p;
-    g=gtk_icon_theme_get_default();
-    pbuf=gtk_icon_theme_load_icon(g,name,16,0,NULL);     
+    
+    pbuf=g_tree_lookup(awntop->pixbufs,name);
     if (!pbuf)
-    {         
-        p=malloc(strlen("/usr/share/pixmaps/")+strlen(name)+1+strlen(".png"));
-        strcpy(p,"/usr/share/pixmaps/");
-        strcat(p,name);
-        strcat(p,".png");
-        pbuf=gdk_pixbuf_new_from_file_at_scale(p,16,16,FALSE,NULL);               
-        free(p); 
-        if (!pbuf)
-        {
-            image=gtk_image_new_from_stock(stock_id,size);        
-        }
-    }
-    else
     {
-        image=gtk_image_new_from_pixbuf(pbuf);
-        g_object_unref (pbuf);    
-    }
+        g=gtk_icon_theme_get_default();
+        pbuf=gtk_icon_theme_load_icon(g,name,16,0,NULL);     
+        if (!pbuf)
+        {         
+            p=malloc(strlen("/usr/share/pixmaps/")+strlen(name)+1+strlen(".png"));
+            strcpy(p,"/usr/share/pixmaps/");
+            strcat(p,name);
+            strcat(p,".png");
+            pbuf=gdk_pixbuf_new_from_file_at_scale(p,16,16,FALSE,NULL);               
+            free(p); 
+            if (!pbuf)
+            {
+                image=gtk_image_new_from_stock(stock_id,size);  
+                assert(image);
+                g_tree_insert(awntop->pixbufs,strdup(name),Stock_Image_Used);                             
+                
+                 //doesn't work if it's  GTK_IMAGE_STOCK
+/*                pbuf=gtk_image_get_pixbuf(image);       
+                g_object_ref(pbuf);    */
+            }
+        }
+        if (pbuf)
+        {
+            g_tree_insert(awntop->pixbufs,strdup(name),pbuf); 
+        }
+    } 
+    
+    if (!image)
+    {
+        if (pbuf==Stock_Image_Used)
+        {
+            image=gtk_image_new_from_stock(stock_id,size);
+        }
+        else
+        {
+            image=gtk_image_new_from_pixbuf(pbuf);
+        }    
+    }    
     eventbox = gtk_event_box_new (); 
     gtk_event_box_set_visible_window( GTK_EVENT_BOX(eventbox),FALSE);
     gtk_container_add (GTK_CONTAINER (eventbox),image);        
@@ -1135,9 +1271,8 @@ static void parse_desktop_entries(Awntop * awntop)
                                         *ptmp='\0';
                                     pvalue=g_tree_lookup(awntop->icons,execname);     
                                     if (!pvalue)
-                                    {
-                                        pvalue=strdup(iconname);
-                                        g_tree_insert(awntop->icons,execname,pvalue);  /*FIXME*/
+                                    {                                        
+                                        g_tree_insert(awntop->icons,execname,strdup(iconname) );  /*FIXME*/
                                     }
                                     else
                                     {

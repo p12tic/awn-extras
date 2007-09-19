@@ -67,6 +67,7 @@ AC_OUTPUT([
 Makefile
 po/Makefile.in
 src/Makefile
+src/BlingSwitcher/Makefile
 src/clock/Makefile
 src/cpu-meter/Makefile
 src/main-menu/Makefile

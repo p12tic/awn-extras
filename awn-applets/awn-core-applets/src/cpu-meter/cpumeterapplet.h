@@ -28,6 +28,7 @@
 #include <glibtop/cpu.h>
 #include <gconf/gconf-client.h>
 
+#include "dashboard.h"
 #include "awntop.h"
 
 /* Stuff to store the CPU measurements */
@@ -62,7 +63,8 @@ typedef struct
   AwnApplet *applet;
   LoadGraph *loadgraph;
 
-  Awntop	awntop;
+  Dashboard	dashboard;
+  Awntop    awntop;
   guint size;
   guint new_size;
   GtkOrientation orient;

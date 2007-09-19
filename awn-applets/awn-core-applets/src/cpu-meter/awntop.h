@@ -1,5 +1,5 @@
-#ifndef AWNTOP_H_
-#define AWNTOP_H_
+#ifndef Awntop_H_
+#define Awntop_H_
 
 /*
  * Copyright (c) 2007 Rodney Cryderman <rcryderman@gmail.com>
@@ -19,43 +19,15 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
-
-
-
-#include <libawn/awn-applet.h>
-#include <libawn/awn-applet-gconf.h>
-#include <libawn/awn-applet-dialog.h>
-#include <libawn/awn-applet-simple.h>
-#include <glib.h>
-#include <gtk/gtk.h>
-
-#include <glibtop/mem.h>
-
+ 
+ 
 #include <libawn/awn-applet.h>
 #include <libawn/awn-cairo-utils.h>
 #include <libawn/awn-title.h>
-
-
-typedef struct
-{
-	long 	days;
-	long 	hours;
-	long	minutes;
-	long 	seconds;
-} Uptimedata;
-
-typedef struct
-{
-    gboolean (*construct_fn)(GtkWidget ** w,gint call_interval,void *data);
-    gboolean (*destruct_fn)(GtkWidget ** w,void *data);
-    void * data;
-    int x1;
-    int x2;
-    int y1;
-    int y2;
-    GtkWidget * widget;     /*not sure if it is necessary to preserve this.  but keep it for now */
-} Awntop_plugs_callbacks;
-
+ 
+#include <glib.h>
+#include <gtk/gtk.h>
+ 
 typedef struct
 {
     long     pid;
@@ -75,57 +47,24 @@ typedef struct
 typedef struct
 {
 	guint	updateinterval;
-	Uptimedata uptimedata;	
+	guint   accum_interval;
 	int maxtopentries;
-	long    user;
-	long    idle;
-	long    sys;
-    long        accum_user;
-    long        accum_idle;
-    long        accum_sys;
-    int(*compar)(const void *, const void *);
-    
+    int     (*compar)(const void *, const void *);
     long    *   displayed_pid_list;
     GTree*  proctimes;
     GTree*  icons;    
     GTree*  pixbufs;
-    
-    GSList *    awntop_plugs;
     long proctime_tree_reaping;
-    
-
-	GtkWidget *mainwindow;    
-    GtkWidget *maintable;	
-	
-	GtkWidget *vbox;
-	gboolean  mainwindowvisible;
-	GtkWidget *box;	
-	AwnApplet *applet ;	
-    
     Topentry **topentries;  	
     int num_top_entries;    
+	int filterlevel;  
+	glibtop_mem libtop_mem;	
 	
-	glibtop_mem libtop_mem;
-	cairo_t *   demo_plug_cr;
-} Awntop;
+	void (*redraw_window_fn) (void *);
+	void * redraw_window_data;
+}Awntop;
 
-
-void toggle_awntop_window(Awntop *awntop);
-void create_awntop_window(Awntop *awntop);
-void destroy_awntop_window(Awntop *awntop);
-void register_awntop( Awntop * awntop,AwnApplet *applet);
-
-void register_awntop_plug(      Awntop * awntop,
-                                gboolean (*construct_fn)(GtkWidget ** ,gint ,void *),
-                                gboolean (*destruct_fn)(GtkWidget ** ,void *),
-                                int x1, 
-                                int x2, 
-                                int y1, 
-                                int y2,
-                                void * arb_data
-                          );                          
-/*need an unregister*/                          
-
-#define TOP_TABLE_VOFFSET 4
-
+void init_Awntop( Awntop * awntop,void (*redraw_window_fn) (void *),void * redraw_window_data);
+gboolean draw_top(GtkWidget ** pwidget,gint interval,void * data);
+ 
 #endif

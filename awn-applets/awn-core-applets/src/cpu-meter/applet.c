@@ -29,6 +29,7 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
   CpuMeter *cpumeter;
 	
   applet = awn_applet_new( uid, orient, height );
+//  applet = AWN_APPLET (awn_applet_simple_new (uid, orient, height));     
   gtk_widget_set_size_request (GTK_WIDGET (applet), awn_applet_get_height (applet), awn_applet_get_height (applet) );
   cpumeter = cpumeter_applet_new(applet);
   

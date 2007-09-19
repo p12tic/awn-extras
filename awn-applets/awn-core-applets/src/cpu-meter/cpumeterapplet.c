@@ -69,8 +69,11 @@ cpumeter_applet_new (AwnApplet *applet)
 	cpumeter->show_title = FALSE;
   cpumeter->title = AWN_TITLE(awn_title_get_default());
   
-  register_awntop(&cpumeter->awntop,cpumeter->applet);
+  register_Dashboard(&cpumeter->dashboard,cpumeter->applet);
+
+  Dashboard_plugs_callbacks* ptmp=register_Dashboard_plug(&cpumeter->dashboard,draw_top,NULL,0,8,4,5,&cpumeter->awntop);  
   
+  init_Awntop(&cpumeter->awntop, dashboard_redraw_signal,&cpumeter->dashboard );  
   init_load_graph(cpumeter->loadgraph);
   
   // set the icon
@@ -92,7 +95,7 @@ cpumeter_applet_new (AwnApplet *applet)
   g_signal_connect (G_OBJECT (cpumeter->applet), "button-release-event", G_CALLBACK (_button_release_event), (gpointer)cpumeter );
   g_signal_connect (G_OBJECT (cpumeter->applet), "expose-event", G_CALLBACK (_expose_event), cpumeter);
  
- g_signal_connect (G_OBJECT (cpumeter->applet), "button-press-event",G_CALLBACK (_button_clicked_event), (gpointer)cpumeter);
+    g_signal_connect (G_OBJECT (cpumeter->applet), "button-press-event",G_CALLBACK (_button_clicked_event), (gpointer)cpumeter);
   
   // connect to height and orientation changes
   g_signal_connect (G_OBJECT (cpumeter->applet), "height-changed", G_CALLBACK (_height_changed), (gpointer)cpumeter);
@@ -101,6 +104,8 @@ cpumeter_applet_new (AwnApplet *applet)
 	// connect to enter/leave
 	g_signal_connect (G_OBJECT(cpumeter->applet), "enter-notify-event", G_CALLBACK (_enter_notify_event), (gpointer)cpumeter);
 	g_signal_connect(G_OBJECT(cpumeter->applet), "leave-notify-event", G_CALLBACK (_leave_notify_event), (gpointer)cpumeter);
+	
+
   	
   return cpumeter;
 }
@@ -233,7 +238,7 @@ gboolean cpu_meter_render (gpointer data)
 		awn_title_hide(cpumeter->title, GTK_WIDGET(cpumeter->applet));
 	}
   
-//  embed_cairo(&cpumeter->awntop,cr,2,3,2,3);
+//  embed_cairo(&cpumeter->dashboard,cr,2,3,2,3);
   
   /* Clean up */
   cairo_destroy (cr);
@@ -382,6 +387,6 @@ _leave_notify_event (GtkWidget *window, GdkEvent *event, gpointer *data)
 static gboolean
 _button_clicked_event (GtkWidget *widget, GdkEventButton *event, CpuMeter * applet)
 {
-  toggle_awntop_window(&applet->awntop);
+  toggle_Dashboard_window(&applet->dashboard);
   return TRUE;
 }

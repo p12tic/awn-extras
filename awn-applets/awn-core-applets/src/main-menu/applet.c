@@ -43,7 +43,6 @@ typedef struct {
   GtkWidget *window;
   GtkWidget *box;
   GtkWidget *icons;
-
   GMenuTree *tree;
   GMenuTreeDirectory *root;
 
@@ -292,14 +291,17 @@ on_icon_clicked (GtkWidget *eb,
                  GdkEventButton *event,
                  Menu *app)
 {
+  if(!GTK_WIDGET_VISIBLE(app->window)) {
   app->root = gmenu_tree_get_root_directory (app->tree);
   populate (app);
+  } else {
+  	gtk_widget_hide(app->window);
+  }
 }
 
 static gboolean
 on_focus_out (GtkWidget *window, GdkEventFocus *event, gpointer null)
 {
-  
     gtk_widget_hide (window);
 }
 

@@ -77,6 +77,9 @@ src/python-test/Makefile
 src/separator/Makefile
 src/stack/Makefile
 src/volume-control/Makefile
+src/volume-control/Themes/Makefile
+src/volume-control/Themes/Black/Makefile
+src/volume-control/Themes/Tango/Makefile
 src/switcher/Makefile
 src/trash/Makefile
 src/wobblyzini/Makefile

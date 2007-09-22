@@ -31,9 +31,17 @@ class App (awn.AppletSimple):
     self.ObjSwitcher.CreateDialog(self.dialog)
     self.ObjSwitcher.DrawSwitcher(self)
     self.connect ("button-press-event", self.button_press)
+    self.connect("scroll_event", self.scroll, self.ObjSwitcher)
     #self.connect ("enter-notify-event", self.enter_notify)
     #self.connect ("leave-notify-event", self.leave_notify)
     self.dialog.connect ("focus-out-event", self.dialog_focus_out)
+
+  def scroll (self, widget, event, ObjSwitcher):
+    if event.direction == gtk.gdk.SCROLL_UP:
+        ObjSwitcher.move_viewport('next')
+    if event.direction == gtk.gdk.SCROLL_DOWN:
+        ObjSwitcher.move_viewport('prev')
+
 
   def button_press (self, widget, event):
     self.dialog.show_all ()
@@ -75,10 +83,13 @@ class Switcher:
   def DrawSwitcher(self, applet):
 
     if (self.activeworkspace != self.GetActiveWorkspaceNumber()):
-    	icon = self.GenerateBackgroundThumbPixbuf(self.GetActiveWorkspaceNumber(),50)
+    	icon = self.GenerateBackgroundThumbPixbuf(self.GetActiveWorkspaceNumber(),applet.get_height())
     	applet.set_temp_icon(icon)
 
     return True
+
+  def move_viewport(self, direction):
+    self.switcher.move_viewport(direction)
 
   def GenerateBackgroundThumbPixbuf(self,n,h):
     cs = cairo.ImageSurface(0,h,h)
@@ -103,7 +114,8 @@ class Switcher:
     loader = gtk.gdk.PixbufLoader()
     loader.write(sio.getvalue())
     loader.close()
-    return loader.get_pixbuf()
+    if (loader.get_pixbuf()):
+        return loader.get_pixbuf()
 
 
 

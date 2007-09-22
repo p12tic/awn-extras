@@ -4,8 +4,6 @@ import wnck
 class BlingSwitcher(gtk.DrawingArea):
 
 	import gconf
-	from Numeric import *
-
 
 	client = gconf.client_get_default()
 
@@ -22,7 +20,6 @@ class BlingSwitcher(gtk.DrawingArea):
 		self.connect("expose_event", self.expose)
 		self.set_events(gtk.gdk.POINTER_MOTION_MASK | gtk.gdk.BUTTON_PRESS_MASK)
 		self.connect("motion-notify-event", self.motion_notify)
-		#self.connect("enter-notify-event", self.motion_notifyy)
 		self.connect('button-press-event', self.button_press)
 		self.set_size_request(self.draw_for_all_viewports_width(self.width),self.height)
 
@@ -100,8 +97,11 @@ class BlingSwitcher(gtk.DrawingArea):
 		self.DrawRoundedRectangle(context,0,0,w,h,11)
 		context.clip()
 		context.new_path()
-		pixbuf = self.get_pixbuf_background(w, h, squared)
-		context.set_source_pixbuf(pixbuf,0,0)
+		if (self.check_for_background() == True):
+			pixbuf = self.get_pixbuf_background(w, h,squared)
+			context.set_source_pixbuf(pixbuf,0,0)
+		if (self.check_for_background() == False):
+			context.set_source_rgba(self.get_background_color('r'), self.get_background_color('g'), self.get_background_color('b')) 
 		self.DrawRoundedRectangle(context,1,1,w-1,h-1,11)
 		context.fill()
 		self.draw_windows(context,w,h,n)
@@ -118,8 +118,11 @@ class BlingSwitcher(gtk.DrawingArea):
 		self.DrawRoundedRectangle(context,0,0,w,h,11)
 		context.clip()
 		context.new_path()
-		pixbuf = self.get_pixbuf_background(w, h,squared)
-		context.set_source_pixbuf(pixbuf,0,0)
+		if (self.check_for_background() == True):
+			pixbuf = self.get_pixbuf_background(w, h,squared)
+			context.set_source_pixbuf(pixbuf,0,0)
+		if (self.check_for_background() == False):
+			context.set_source_rgba(self.get_background_color('r'), self.get_background_color('g'), self.get_background_color('b')) 
 		self.DrawRoundedRectangle(context,1,1,w-1,h-1,11)
 		context.fill()
 		self.draw_windows(context,w,h,n)
@@ -137,7 +140,7 @@ class BlingSwitcher(gtk.DrawingArea):
 		context.curve_to(0,0,0,0,11,0)
 		context.line_to(w-11,0)
 		context.curve_to(w,0,w,0,w,11)
-		context.curve_to(w/3,h/2, w/3, h/2, 0, 20)
+		context.curve_to(w/4,6, w/4, 11, 0, 20)
 		context.line_to(0,11)
 		context.close_path()
 		context.fill()
@@ -220,7 +223,21 @@ class BlingSwitcher(gtk.DrawingArea):
 				self.bgpixbuf_for_squared = self.bgpixbuf_for_squared.scale_simple(w,h, gtk.gdk.INTERP_TILES)
 			return self.bgpixbuf_for_squared
 
-
+	def get_background_color(self, c):
+		color = self.client.get_string('/desktop/gnome/background/primary_color')
+		if (c == 'r'):
+			return int(color[1:5], 16)/65335.0
+		if (c == 'g'):
+			return int(color[5:9], 16)/65335.0
+		if (c == 'b'):
+			return int(color[9:13], 16)/65335.0
+		
+	def check_for_background(self):
+		url = self.client.get_string('/desktop/gnome/background/picture_filename')
+		if (url == ""):
+			return False
+		else:
+			return True
 
 	def DrawRoundedRectangle(self,ct,x0,y0,x1,y1,radius):
 		ct.move_to(x0, y0+radius)
@@ -251,4 +268,12 @@ class BlingSwitcher(gtk.DrawingArea):
 		wrkspace = scr.get_active_workspace()
 		nviewp = wrkspace.get_width()/scr.get_width()
 		return (wrkspace.get_viewport_x() + scr.get_width())/scr.get_width()
+
+	def move_viewport(self, direction):
+		if direction == 'next':
+			scr = wnck.screen_get_default()
+			scr.move_viewport((scr.get_width()*(self.get_active_viewport_number()+1))-scr.get_width(), 1)
+		if direction == 'prev':
+			scr = wnck.screen_get_default()
+			scr.move_viewport((scr.get_width()*(self.get_active_viewport_number()-1))-scr.get_width(), 1)
 			

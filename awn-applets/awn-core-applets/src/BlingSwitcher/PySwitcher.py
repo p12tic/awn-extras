@@ -8,7 +8,6 @@ from gtk import gdk
 import awn
 from StringIO import StringIO
 import wnck
-import gconf
 import CairoWidgets_BlingSwitcher
 
 ##############################################################################
@@ -29,6 +28,7 @@ class App (awn.AppletSimple):
     self.title = awn.awn_title_get_default ()
     self.dialog = awn.AppletDialog (self)
     self.ObjSwitcher.CreateDialog(self.dialog)
+    self.ObjSwitcher.SetRgba(self.dialog)
     self.ObjSwitcher.DrawSwitcher(self)
     self.connect ("button-press-event", self.button_press)
     self.connect("scroll_event", self.scroll, self.ObjSwitcher)
@@ -63,14 +63,15 @@ class App (awn.AppletSimple):
 
 class Switcher:
 
-  bgurl = ""
-  bgpixbuf = ""
-  client = gconf.client_get_default()
   switcher = ""
   activeworkspace = ""
 
   def __init__(self):
     self.activeworkspace = 0
+
+  def SetRgba(self, dialog):
+    color = dialog.get_style().base[gtk.STATE_NORMAL]
+    self.switcher.set_bg_rgba(color.red/65335.0, color.green/65335.0, color.blue/65335.0, 0.85)
 
   def CreateDialog(self, dialog):
     box1 = gtk.HBox(False, 0)
@@ -84,7 +85,8 @@ class Switcher:
 
     if (self.activeworkspace != self.GetActiveWorkspaceNumber()):
     	icon = self.GenerateBackgroundThumbPixbuf(self.GetActiveWorkspaceNumber(),applet.get_height())
-    	applet.set_temp_icon(icon)
+	if icon != False:
+    	    applet.set_temp_icon(icon)
 
     return True
 
@@ -114,8 +116,10 @@ class Switcher:
     loader = gtk.gdk.PixbufLoader()
     loader.write(sio.getvalue())
     loader.close()
-    if (loader.get_pixbuf()):
+    if (str(loader.get_format()['extensions'])[2:5] == 'png'):
         return loader.get_pixbuf()
+    else:
+        return False
 
 
 

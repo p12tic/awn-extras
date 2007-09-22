@@ -11,9 +11,13 @@ class BlingSwitcher(gtk.DrawingArea):
 	bgpixbuf_for_squared = ""
 	bgurl = ""
 	bgurl2 = ""
-	height = 45
-	width = 60
+	height = 60
+	width = 80
 	selected = 0
+	bg_r = ""
+	bg_g = ""
+	bg_b = ""
+	bg_a = ""
 
 	def __init__(self):
 		gtk.DrawingArea.__init__(self)
@@ -29,7 +33,13 @@ class BlingSwitcher(gtk.DrawingArea):
 		self.width = w
 		self.height = h
 
-	#def set_bg_rgba(self #<+++++++++++++
+	def set_bg_rgba(self,r,g,b,a):
+		self.bg_r = r
+		self.bg_g = g
+		self.bg_b = b
+		self.bg_a = a
+
+
 	############################################################# Event Functions
 
 	def expose(self, widget, event):
@@ -59,7 +69,7 @@ class BlingSwitcher(gtk.DrawingArea):
 	def new_transparent_cairo_window(self,widget):
 		cr = widget.window.cairo_create()
 		cr.save()
-		cr.set_source_rgba(1, 1, 1, 0.85)
+		cr.set_source_rgba(self.bg_r, self.bg_g, self.bg_b, 0.85)
 		cr.set_operator(cairo.OPERATOR_SOURCE)
 		cr.paint()
 		#cr.set_operator(cairo.OPERATOR_OVER)
@@ -270,10 +280,10 @@ class BlingSwitcher(gtk.DrawingArea):
 		return (wrkspace.get_viewport_x() + scr.get_width())/scr.get_width()
 
 	def move_viewport(self, direction):
-		if direction == 'next':
+		if direction == 'prev':
 			scr = wnck.screen_get_default()
 			scr.move_viewport((scr.get_width()*(self.get_active_viewport_number()+1))-scr.get_width(), 1)
-		if direction == 'prev':
+		if direction == 'next':
 			scr = wnck.screen_get_default()
 			scr.move_viewport((scr.get_width()*(self.get_active_viewport_number()-1))-scr.get_width(), 1)
 			

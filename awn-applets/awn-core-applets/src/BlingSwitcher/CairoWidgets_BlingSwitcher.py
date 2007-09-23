@@ -42,6 +42,7 @@ class BlingSwitcher(gtk.DrawingArea):
 
 	############################################################# Event Functions
 
+
 	def expose(self, widget, event):
 		self.context = self.new_transparent_cairo_window(self)
 		self.draw_for_all_viewports(self.context,self.width,self.height,self.selected)
@@ -72,7 +73,6 @@ class BlingSwitcher(gtk.DrawingArea):
 		cr.set_source_rgba(self.bg_r, self.bg_g, self.bg_b, 0.85)
 		cr.set_operator(cairo.OPERATOR_SOURCE)
 		cr.paint()
-		#cr.set_operator(cairo.OPERATOR_OVER)
 		cr.restore()
 		return cr
 
@@ -146,12 +146,12 @@ class BlingSwitcher(gtk.DrawingArea):
 	def draw_reflection(self, context, w, h):
 		context.save()
 		context.set_source_rgba(1,1,1,0.4)
-		context.move_to(0, 11)
-		context.curve_to(0,0,0,0,11,0)
-		context.line_to(w-11,0)
-		context.curve_to(w,0,w,0,w,11)
-		context.curve_to(w/4,6, w/4, 11, 0, 20)
-		context.line_to(0,11)
+		context.move_to(0, 12)
+		context.curve_to(0,0,0,0,12,0)
+		context.line_to(w-12,0)
+		context.curve_to(w,0,w,0,w,12)
+		context.curve_to(w/4,6, w/4, 12, 0, 20)
+		context.line_to(0,12)
 		context.close_path()
 		context.fill()
 		context.stroke()
@@ -192,10 +192,10 @@ class BlingSwitcher(gtk.DrawingArea):
 						if (winy+winh > h-1):
 							winh = (h-winy)-2
 						context.save()
-						context.set_source_rgba(1,1,1,0.4)
+						context.set_source_rgba(0.85,0.85,0.85,0.8)
 						context.rectangle(winx,winy,winw,winh)
 						context.fill()
-						context.set_source_rgba(0.1,0.1,0.1,0.9)
+						context.set_source_rgba(0.1,0.1,0.1,1)
 						context.set_line_width(1)
 						context.rectangle(winx,winy,winw,winh)
 						context.stroke()

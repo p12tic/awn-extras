@@ -24,17 +24,21 @@ class App (awn.AppletSimple):
     awn.AppletSimple.__init__ (self, uid, orient, height)
 
     self.ObjSwitcher = Switcher()
-    self.timer = gobject.timeout_add (1000, timer1, self, self.ObjSwitcher)
+    self.timer = gobject.timeout_add (2500, timer1, self, self.ObjSwitcher)
     self.title = awn.awn_title_get_default ()
     self.dialog = awn.AppletDialog (self)
     self.ObjSwitcher.CreateDialog(self.dialog)
     self.ObjSwitcher.SetRgba(self.dialog)
     self.ObjSwitcher.DrawSwitcher(self)
+    self.scr = wnck.screen_get_default()
+    self.scr.connect("window-stacking-changed", self.windowchanged)
+    self.scr.connect("viewports-changed", self.viewportchanged)
     self.connect ("button-press-event", self.button_press)
     self.connect("scroll_event", self.scroll, self.ObjSwitcher)
-    #self.connect ("enter-notify-event", self.enter_notify)
-    #self.connect ("leave-notify-event", self.leave_notify)
     self.dialog.connect ("focus-out-event", self.dialog_focus_out)
+
+
+  ###################################################### Event Functions
 
   def scroll (self, widget, event, ObjSwitcher):
     if event.direction == gtk.gdk.SCROLL_UP:
@@ -42,32 +46,27 @@ class App (awn.AppletSimple):
     if event.direction == gtk.gdk.SCROLL_DOWN:
         ObjSwitcher.move_viewport('prev')
 
-
   def button_press (self, widget, event):
     self.dialog.show_all ()
     self.title.hide (self)
-    #print "show dialog"
 
   def dialog_focus_out (self, widget, event):
     self.dialog.hide ()
-    #print "hide dialog"
 
-  #def enter_notify (self, widget, event):
-    #self.ObjClock.SetHover(self, True)
-    #print "show title"
+  def viewportchanged (self, screen):
+    self.ObjSwitcher.DrawSwitcher(applet)
 
-  #def leave_notify (self, widget, event):
-    #self.ObjClock.SetHover(self, False)
-    #print "hide title"
+  def windowchanged (self, screen):
+    self.ObjSwitcher.DrawSwitcher(applet)
 
 
 class Switcher:
 
   switcher = ""
   activeworkspace = ""
+  activeworkspace = 0
 
-  def __init__(self):
-    self.activeworkspace = 0
+  ################################################## Initial Functions
 
   def SetRgba(self, dialog):
     color = dialog.get_style().base[gtk.STATE_NORMAL]
@@ -81,17 +80,11 @@ class Switcher:
     self.switcher.show()
     box1.show()
 
+  ################################################## Icon Drawing Related Functions
+
   def DrawSwitcher(self, applet):
-
-    if (self.activeworkspace != self.GetActiveWorkspaceNumber()):
-    	icon = self.GenerateBackgroundThumbPixbuf(self.GetActiveWorkspaceNumber(),applet.get_height())
-	if icon != False:
-    	    applet.set_temp_icon(icon)
-
-    return True
-
-  def move_viewport(self, direction):
-    self.switcher.move_viewport(direction)
+    icon = self.GenerateBackgroundThumbPixbuf(self.GetActiveWorkspaceNumber(),applet.get_height())
+    applet.set_temp_icon(icon)
 
   def GenerateBackgroundThumbPixbuf(self,n,h):
     cs = cairo.ImageSurface(0,h,h)
@@ -115,11 +108,18 @@ class Switcher:
     sio.seek(0)
     loader = gtk.gdk.PixbufLoader()
     loader.write(sio.getvalue())
+    sio.close()
     loader.close()
-    if (str(loader.get_format()['extensions'])[2:5] == 'png'):
-        return loader.get_pixbuf()
-    else:
-        return False
+    pixbuf = loader.get_pixbuf()
+    print pixbuf
+    return pixbuf
+
+  ################################################### Redirection Functions
+
+  def move_viewport(self, direction):
+    self.switcher.move_viewport(direction)
+
+
 
 
 

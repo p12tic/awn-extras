@@ -2,6 +2,7 @@ SUBDIRS =			\
 	BlingSwitcher 		\
 	clock 			\
 	cpu-meter 		\
+	gmail			\
 	main-menu 		\
 	notification-area	\
 	python-test 		\

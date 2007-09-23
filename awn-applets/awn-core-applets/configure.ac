@@ -70,6 +70,9 @@ src/Makefile
 src/BlingSwitcher/Makefile
 src/clock/Makefile
 src/cpu-meter/Makefile
+src/gmail/Makefile
+src/gmail/Themes/Makefile
+src/gmail/Themes/Default/Makefile
 src/main-menu/Makefile
 src/showdesktop/Makefile
 src/notification-area/Makefile

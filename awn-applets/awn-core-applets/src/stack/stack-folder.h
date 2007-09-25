@@ -37,10 +37,9 @@ typedef struct _StackFolder StackFolder;
 typedef struct _StackFolderClass StackFolderClass;
 
 struct _StackFolder {
-    GtkViewport			parent;
+    GtkTable			parent;
 
     StackDialog			*dialog;
-    GtkWidget			*table;
 
     const gchar			*name;
     GnomeVFSURI			*uri;
@@ -54,7 +53,7 @@ struct _StackFolder {
 };
 
 struct _StackFolderClass {
-    GtkViewportClass   parent_class;
+    GtkTableClass   parent_class;
 };
 
 GType stack_folder_get_type(

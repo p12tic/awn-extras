@@ -33,7 +33,7 @@
 #include "stack-utils.h"
 #include "stack-folder.h"
 
-G_DEFINE_TYPE( StackDialog, stack_dialog, GTK_TYPE_FIXED )
+G_DEFINE_TYPE( StackDialog, stack_dialog, GTK_TYPE_VBOX )
 
 enum {
     NONE = 0,
@@ -47,80 +47,6 @@ static AwnAppletDialogClass *parent_class = NULL;
 
 static StackFolder *backend_folder;
 static StackFolder *current_folder;
-
-static gint eventbox_hovering = NONE;
-
-
-/**
- * Called on eventbox hover (general signal catcher)
- * -find out the source
- * -check if action is valid
- * -set cursor
- * -enable hover
- */ 
-static gboolean stack_dialog_evbox_hover(
-    GtkWidget * widget,
-    GdkEventCrossing * event,
-    gpointer user_data ) {
-
-    GdkCursorType cursor;
-
-    switch ( GPOINTER_TO_INT( user_data ) ) {
-    case FILEMANAGER:
-
-        cursor = GDK_HAND2;
-
-        break;
-    case FOLDER_LEFT:
-
-        if ( !stack_folder_has_prev_page( current_folder ) ) {
-            return TRUE;
-        }
-        cursor = GDK_SB_LEFT_ARROW;
-
-        break;
-    case FOLDER_RIGHT:
-
-        if ( !stack_folder_has_next_page( current_folder ) ) {
-            return TRUE;
-        }
-        cursor = GDK_SB_RIGHT_ARROW;
-
-        break;
-    case FOLDER_UP:
-
-        if ( !stack_folder_has_parent_folder( current_folder ) ) {
-            return TRUE;
-        }
-        cursor = GDK_SB_UP_ARROW;
-
-        break;
-    default:
-        cursor = GDK_LEFT_PTR;
-    }
-    
-    gdk_window_set_cursor( widget->window, gdk_cursor_new( cursor ) );
-    eventbox_hovering = GPOINTER_TO_INT( user_data );
-    gtk_widget_queue_draw( widget );
-
-    return FALSE;
-}
-
-/**
- * Leave event
- * -disable hover effect
- */
-static gboolean stack_dialog_evbox_leave(
-    GtkWidget * widget,
-    GdkEventCrossing * event,
-    gpointer user_data ) {
-
-    gdk_window_set_cursor( widget->window, gdk_cursor_new( GDK_LEFT_PTR ) );
-    eventbox_hovering = NONE;
-    gtk_widget_queue_draw( widget );
-
-    return FALSE;
-}
 
 static void stack_dialog_do_folder_up(
     GtkWidget * dialog ) {
@@ -138,12 +64,11 @@ static void stack_dialog_do_folder_up(
  * -find out source
  * -perform corresponding action
  */
-static void stack_dialog_evbox_clicked(
+static void stack_dialog_button_clicked(
     GtkWidget * widget,
     GdkEventButton * event,
     gpointer user_data ) {
 
-    StackDialog *dialog = STACK_DIALOG( widget->parent );
     GnomeVFSResult res;
 
     switch ( GPOINTER_TO_INT( user_data ) ) {
@@ -165,7 +90,7 @@ static void stack_dialog_evbox_clicked(
         stack_folder_do_next_page( current_folder );
         return;
     case FOLDER_UP:
-        stack_dialog_do_folder_up( GTK_WIDGET( dialog ) );
+        stack_dialog_do_folder_up( GTK_WIDGET( current_folder->dialog ) );
         return;
     default:
         return;
@@ -197,171 +122,7 @@ static void stack_dialog_destroy(
 
     StackDialog *dialog = STACK_DIALOG( object );
 
-	if( dialog->frt_box ){
-		gtk_widget_destroy( dialog->frt_box );
-	}
-	dialog->frt_box = NULL;
-
-	if( dialog->flt_box ){
-		gtk_widget_destroy( dialog->flt_box );
-	}
-	dialog->flt_box = NULL;
-
-	if( dialog->fup_box ){
-		gtk_widget_destroy( dialog->fup_box );
-	}
-	dialog->fup_box = NULL;
-
-	if( dialog->fm_box ){
-		gtk_widget_destroy( dialog->fm_box );
-	}
-	dialog->fm_box = NULL;
-
-	if( dialog->awn_dialog ){
-		gtk_widget_destroy( dialog->fup_box );
-	}
-	dialog->awn_dialog = NULL;
-
     ( *GTK_OBJECT_CLASS( stack_dialog_parent_class )->destroy ) ( object );
-}
-
-/**
- * Expose event
- */
-static gboolean stack_dialog_expose_event(
-    GtkWidget * widget,
-    GdkEventExpose * expose ) {
-
-    StackDialog *dialog = STACK_DIALOG( widget );
-    GtkStyle *style;
-    GdkColor text;
-    gfloat alpha;
-
-    GdkWindow *window = GDK_WINDOW( dialog->awn_dialog->window );
-    cairo_t *cr = NULL;
-
-    g_return_val_if_fail( GDK_IS_DRAWABLE( window ), FALSE );
-    cr = gdk_cairo_create( window );
-    g_return_val_if_fail( cr, FALSE );
-
-    /* Get the correct theme colours */
-    style = gtk_widget_get_style (widget);
-    text = style->text[GTK_STATE_NORMAL];
-    gtk_widget_style_get (GTK_WIDGET (dialog->awn_dialog),
-                          "bg_alpha", &alpha, NULL);
-                          
-    cairo_set_operator( cr, CAIRO_OPERATOR_OVER );
-
-
-    /*
-       Paint "Open Filemanager" link
-     */
-    cairo_select_font_face( cr, "Sans", 
-                            CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD );
-    cairo_set_font_size( cr, 14.0 );
-    
-    cairo_text_extents_t extents;
-    cairo_text_extents (cr, STACK_TEXT_OPEN_FILEMANAGER, &extents);
-    
-    gint x = dialog->fm_box->allocation.x + ((dialog->fm_box->allocation.width - extents.width) / 2);
-    gint y = dialog->fm_box->allocation.y + dialog->fm_box->allocation.height - ((dialog->fm_box->allocation.height - extents.height) / 2);
-        
-    cairo_move_to( cr, x, y);
-    cairo_text_path( cr, STACK_TEXT_OPEN_FILEMANAGER );
-    if ( eventbox_hovering == FILEMANAGER ) {
-        cairo_set_source_rgba( cr, text.red/65535.0, 
-                                   text.green/65535.0, 
-                                   text.blue/65535.0, 
-                                   0.6 );
-    } else {
-        cairo_set_source_rgba( cr, text.red/65535.0, 
-                                   text.green/65535.0, 
-                                   text.blue/65535.0, 
-                                   1.0 );
-    }
-    cairo_fill( cr );
-
-    /*
-       Paint folder right link
-     */
-
-	if(current_folder && stack_folder_has_next_page( current_folder ) ){
-    
-	    cairo_text_extents (cr, "⇨", &extents);
-    
-    	x = dialog->frt_box->allocation.x + ((dialog->frt_box->allocation.width - extents.width) / 2);
-	    y = dialog->frt_box->allocation.y + dialog->frt_box->allocation.height - (extents.height/2 );
-        
-    	cairo_move_to( cr, x, y);
-	    cairo_text_path( cr, "⇨" );
-    	if ( eventbox_hovering == FOLDER_RIGHT ) {
-    	    cairo_set_source_rgba( cr, text.red/65535.0, 
-                                   text.green/65535.0, 
-                                   text.blue/65535.0, 
-                                   0.6 );
-    	} else {
-    	    cairo_set_source_rgba( cr,  text.red/65535.0, 
-                                   text.green/65535.0, 
-                                   text.blue/65535.0, 
-                                   1.0 );
-    	}
-    	cairo_stroke( cr );
-    }
-
-    /*
-       Paint folder left link
-     */
-
-	if(current_folder && stack_folder_has_prev_page( current_folder ) ){
-	    cairo_text_extents (cr, "⇦", &extents);
-    
-    	x = dialog->flt_box->allocation.x + ((dialog->flt_box->allocation.width - extents.width) / 2);
-	    y = dialog->flt_box->allocation.y + dialog->flt_box->allocation.height - (extents.height / 2);
-        
-    	cairo_move_to( cr, x, y);
-	    cairo_text_path( cr, "⇦" );
-    	if ( eventbox_hovering == FOLDER_LEFT ) {
-    	    cairo_set_source_rgba( cr, text.red/65535.0, 
-                                     text.green/65535.0, 
-                                     text.blue/65535.0, 
-                                     0.6 );
-    	} else {
-    	    cairo_set_source_rgba( cr, text.red/65535.0, 
-                                     text.green/65535.0, 
-                                     text.blue/65535.0, 
-                                     1.0 );
-    	}
-	    cairo_stroke( cr );
-	}
-
-    /*
-       Paint folder up link
-	*/
-    if(current_folder && dialog->fup_box && gnome_vfs_uri_get_parent( current_folder->uri ) ){
-	    cairo_text_extents (cr, "⇧", &extents);
-    
-    	x = dialog->fup_box->allocation.x + (extents.width / 2);
-	    y = dialog->fup_box->allocation.y + dialog->fup_box->allocation.height - (extents.height / 2);
-        
-		cairo_move_to( cr, x, y);
-	    cairo_text_path( cr, "⇧" );
-	    if ( eventbox_hovering == FOLDER_UP ) {
-	        cairo_set_source_rgba( cr, text.red/65535.0, 
-                                     text.green/65535.0, 
-                                     text.blue/65535.0, 
-                                     0.6 );
-	    } else {
-	        cairo_set_source_rgba( cr, text.red/65535.0, 
-                                     text.green/65535.0, 
-                                     text.blue/65535.0, 
-                                     1.0 );
-	    }
-	    cairo_stroke( cr );
-	}
-
-    cairo_destroy( cr );
-
-    return FALSE;
 }
 
 /**
@@ -369,89 +130,16 @@ static gboolean stack_dialog_expose_event(
  */
 static gboolean stack_dialog_focus_out_event(
     GtkWidget * widget,
-    GdkEventFocus * event ) {
+    GdkEventFocus * event,
+    gpointer user_data ) {
 
-    StackDialog *dialog = STACK_DIALOG( widget );
+    StackDialog *dialog = STACK_DIALOG( user_data );
 
     if ( dialog->active ) {
-        stack_dialog_toggle_visiblity( widget );
+        stack_dialog_toggle_visiblity( GTK_WIDGET( dialog ) );
     }
 
     return FALSE;
-}
-
-/**
- * Recalculate the stack layout
- * -iterate through the list of icons and position each one
- */
-static void stack_dialog_relayout(
-    StackDialog * dialog ) {
-    gint width = 0, height = 0;
-
-	if ( current_folder ){
-	    gtk_widget_get_size_request( GTK_WIDGET( current_folder ), &width, &height );
-	}
-
-    if ( width < MIN_WIDTH ) {
-        width = MIN_WIDTH;
-    }
-
-    if ( height < MIN_HEIGHT ) {
-        height = MIN_HEIGHT;
-    }
-
-	/* Relayout filemanager: */
-
-    dialog->fm_alloc.width = 150;
-    dialog->fm_alloc.height = 20;
-    dialog->fm_alloc.x = (width - dialog->fm_alloc.width ) / 2;
-    dialog->fm_alloc.y = height + 10;
-
-    gtk_widget_set_size_request( dialog->fm_box, dialog->fm_alloc.width, dialog->fm_alloc.height );
-    gtk_fixed_move( GTK_FIXED( dialog ), dialog->fm_box,
-                    dialog->fm_alloc.x, dialog->fm_alloc.y );
-                    
-	/* Relayout folder-left */                    
-
-    dialog->flt_alloc.width = 20;
-    dialog->flt_alloc.height = 20;
-    dialog->flt_alloc.x = -5;
-    dialog->flt_alloc.y = height + 10;
-
-    gtk_widget_set_size_request( dialog->flt_box, dialog->flt_alloc.width,
-                                 dialog->flt_alloc.height );
-    gtk_fixed_move( GTK_FIXED( dialog ), dialog->flt_box,
-                    dialog->flt_alloc.x, dialog->flt_alloc.y );
-                    
-	/* Relayout folder-right */                    
-
-    dialog->frt_alloc.width = 20;
-    dialog->frt_alloc.height = 20;
-    dialog->frt_alloc.x = width - dialog->frt_alloc.width + 5;
-    dialog->frt_alloc.y = height + 10;
-
-    gtk_widget_set_size_request( dialog->frt_box, dialog->frt_alloc.width,
-                                 dialog->frt_alloc.height );
-    gtk_fixed_move( GTK_FIXED( dialog ), dialog->frt_box,
-                    dialog->frt_alloc.x, dialog->frt_alloc.y );
-                    
-	/* Relayout folder up */
-	if( dialog->fup_box ){                    
-
-	    dialog->fup_alloc.width = 20;
-    	dialog->fup_alloc.height = 20;
-    	dialog->fup_alloc.x = width - dialog->fup_alloc.width + 5;
-	    dialog->fup_alloc.y = -25;
-
-    	gtk_widget_set_size_request( dialog->fup_box, dialog->fup_alloc.width,
-                                 dialog->fup_alloc.height );
-    	gtk_fixed_move( GTK_FIXED( dialog ), dialog->fup_box,
-                    dialog->fup_alloc.x, dialog->fup_alloc.y );
-	}
-
-    gtk_widget_set_size_request( GTK_WIDGET( dialog ), width, height + DIALOG_CONTROLS_HEIGHT);
-    gtk_widget_queue_resize( GTK_WIDGET( dialog ) );
-    
 }
 
 void stack_dialog_set_folder(
@@ -459,7 +147,13 @@ void stack_dialog_set_folder(
     GnomeVFSURI * uri,
     gint page ) {
     
-    GtkWidget *folder = stack_folder_new( STACK_DIALOG( dialog ), uri );
+    GtkWidget *folder;
+    
+    if(backend_folder && gnome_vfs_uri_equal(backend_folder->uri, uri)){
+    	folder = backend_folder;
+    }else{
+		folder = stack_folder_new( STACK_DIALOG( dialog ), uri );
+	}
 
     g_return_if_fail( GTK_IS_WIDGET( folder ) );
     
@@ -467,16 +161,16 @@ void stack_dialog_set_folder(
 
     if ( current_folder ){
     	if( current_folder == backend_folder) {
-    		gtk_widget_hide( GTK_WIDGET( backend_folder ) );
+    		gtk_container_remove( GTK_CONTAINER(dialog->viewport), GTK_WIDGET( backend_folder ) );
     	}else{
 	        gtk_widget_destroy( GTK_WIDGET( current_folder ) );
 	    }
     }
-    gtk_fixed_put( GTK_FIXED( dialog ), folder, 0, 0 );
+
+    gtk_container_add( GTK_CONTAINER( dialog->viewport), folder);
 	
     current_folder = STACK_FOLDER(folder);
-    gtk_widget_show( GTK_WIDGET( current_folder ) );
-    stack_dialog_relayout( dialog );
+    gtk_widget_show_all( GTK_WIDGET( current_folder ) );
 }
 
 /**
@@ -497,8 +191,6 @@ void stack_dialog_toggle_visiblity(
         awn_title_hide (dialog->applet->title, GTK_WIDGET(dialog->applet->awn_applet));
 		// set icon
         stack_applet_set_icon( dialog->applet, NULL );        
-        // recalculate layout
-		stack_dialog_relayout( dialog );
 		// show the dialog
         gtk_widget_show_all( GTK_WIDGET( dialog->awn_dialog ) );
     } else {
@@ -511,6 +203,8 @@ void stack_dialog_toggle_visiblity(
 			gtk_widget_destroy( GTK_WIDGET( current_folder ) );
 			// refer to backend folder
 			current_folder = backend_folder;
+			// add to container
+			gtk_container_add( GTK_CONTAINER( dialog->viewport ), GTK_WIDGET(current_folder));
 			// reset title
 			gtk_window_set_title( GTK_WINDOW( dialog->awn_dialog ), STACK_FOLDER(current_folder)->name );
 		}
@@ -518,34 +212,6 @@ void stack_dialog_toggle_visiblity(
 		// set applet icon
 		stack_applet_set_icon( dialog->applet, current_folder->applet_icon );
     }
-}
-
-/**
- * Initialize an eventbox
- * -create a new one
- * -put it into the GtkFixed
- * -show the box
- * -set event handlers
- */
-static GtkWidget *stack_dialog_evbox_init(
-    StackDialog * dialog,
-    gint target ) {
-
-    GtkWidget *box = gtk_event_box_new(  );
-
-    gtk_fixed_put( GTK_FIXED( dialog ), box, 0, 0 );
-    gtk_event_box_set_visible_window( GTK_EVENT_BOX( box ), FALSE );
-    gtk_widget_set_events( box, GDK_BUTTON_RELEASE_MASK );
-    gtk_widget_show( box );
-
-    g_signal_connect( box, "button-release-event",
-                      GTK_SIGNAL_FUNC( stack_dialog_evbox_clicked ), GINT_TO_POINTER( target ) );
-    g_signal_connect( box, "enter-notify-event",
-                      GTK_SIGNAL_FUNC( stack_dialog_evbox_hover ), GINT_TO_POINTER( target ) );
-    g_signal_connect( box, "leave-notify-event",
-                      GTK_SIGNAL_FUNC( stack_dialog_evbox_leave ), GINT_TO_POINTER( target ) );
-
-    return box;
 }
 
 /**
@@ -561,13 +227,11 @@ static void stack_dialog_class_init(
     object_class = ( GtkObjectClass * ) klass;
     widget_class = ( GtkWidgetClass * ) klass;
 
-	parent_class = gtk_type_class (GTK_TYPE_FIXED);
+	parent_class = gtk_type_class (GTK_TYPE_VBOX);
 
     object_class->destroy = stack_dialog_destroy;
 
     widget_class->key_press_event = stack_dialog_key_press_event;
-    widget_class->expose_event = stack_dialog_expose_event;
-    widget_class->focus_out_event = stack_dialog_focus_out_event;
 }
 
 /**
@@ -577,7 +241,6 @@ static void stack_dialog_init(
     StackDialog * dialog ) {
 
     dialog->active = FALSE;
-    dialog->anim_time = 0.0;
 
     gtk_widget_add_events( GTK_WIDGET( dialog ), GDK_ALL_EVENTS_MASK );
     GTK_WIDGET_SET_FLAGS ( GTK_WIDGET( dialog ), GTK_CAN_DEFAULT | GTK_CAN_FOCUS );
@@ -600,26 +263,55 @@ GtkWidget *stack_dialog_new(
     gtk_container_add( GTK_CONTAINER(dialog->awn_dialog), GTK_WIDGET( dialog ) );
 
 	gtk_window_set_focus_on_map (GTK_WINDOW (dialog->awn_dialog), TRUE);
-
-    // Create the filemanager link
-    dialog->fm_box = stack_dialog_evbox_init( dialog, FILEMANAGER );
-    if( stack_gconf_is_browsing() ){
-	    // Create the folder up link
-    	dialog->fup_box = stack_dialog_evbox_init( dialog, FOLDER_UP );
-    }
-    // Create the folder left link
-    dialog->flt_box = stack_dialog_evbox_init( dialog, FOLDER_LEFT );
-    // Create the folder right link
-    dialog->frt_box = stack_dialog_evbox_init( dialog, FOLDER_RIGHT );
-
+	g_signal_connect (G_OBJECT (dialog->awn_dialog), "focus-out-event",
+                    G_CALLBACK (stack_dialog_focus_out_event), dialog);
+	
+	if( stack_gconf_is_browsing() ){
+		GtkWidget *hbox1 = gtk_hbox_new(FALSE, 0);
+		gtk_container_add(GTK_CONTAINER(dialog), hbox1);
+		GtkWidget *folder_up = gtk_button_new_from_stock(GTK_STOCK_GO_UP);
+		gtk_button_set_relief(GTK_BUTTON(folder_up), GTK_RELIEF_NONE);
+		g_signal_connect( folder_up, "button-release-event",
+                      GTK_SIGNAL_FUNC( stack_dialog_button_clicked ), GINT_TO_POINTER( FOLDER_UP ) );
+		gtk_container_add(GTK_CONTAINER(hbox1), folder_up);
+	}
+	
+	//dialog->viewport = gtk_viewport_new(NULL, NULL);
+	//gtk_viewport_set_shadow_type( GTK_VIEWPORT( dialog->viewport ), GTK_SHADOW_ETCHED_IN );
+	//gtk_widget_set_no_show_all( GTK_WIDGET( dialog->viewport ), FALSE );	
+	dialog->viewport = gtk_alignment_new(0,0,1,1);
+	gtk_container_add(GTK_CONTAINER(dialog), dialog->viewport);
+	
+	GtkWidget *hbox2 = gtk_hbox_new(TRUE, 0);
+	gtk_container_add(GTK_CONTAINER(dialog), hbox2);
+	
+	GtkWidget *folder_left = gtk_button_new_from_stock(GTK_STOCK_GO_BACK);
+	gtk_button_set_relief(GTK_BUTTON(folder_left), GTK_RELIEF_NONE);
+	g_signal_connect( folder_left, "button-release-event",
+                      GTK_SIGNAL_FUNC( stack_dialog_button_clicked ), GINT_TO_POINTER( FOLDER_LEFT ) );
+	gtk_container_add(GTK_CONTAINER(hbox2), folder_left);
+	
+	GtkWidget *filemanager = gtk_button_new_with_label("Open filemanager");
+	gtk_button_set_relief(GTK_BUTTON(filemanager), GTK_RELIEF_NONE);
+	g_signal_connect( filemanager, "button-release-event",
+                      GTK_SIGNAL_FUNC( stack_dialog_button_clicked ), GINT_TO_POINTER( FILEMANAGER ) );
+	gtk_container_add(GTK_CONTAINER(hbox2), filemanager);
+	
+	GtkWidget *folder_right = gtk_button_new_from_stock(GTK_STOCK_GO_FORWARD);
+	gtk_button_set_relief(GTK_BUTTON(folder_right), GTK_RELIEF_NONE);
+	g_signal_connect( folder_right, "button-release-event",
+                      GTK_SIGNAL_FUNC( stack_dialog_button_clicked ), GINT_TO_POINTER( FOLDER_RIGHT ) );
+	gtk_container_add(GTK_CONTAINER(hbox2), folder_right);
+		
 	// Create a folder of the backend folder
-    stack_dialog_set_folder( dialog, gnome_vfs_uri_new( stack_gconf_get_backend_folder(  ) ), 0 );
+    stack_dialog_set_folder( dialog, gnome_vfs_uri_new( stack_gconf_get_backend_folder() ), 0 );
     // Set the applet-icon
     stack_applet_set_icon( dialog->applet, current_folder->applet_icon );
     // Reference as backend folder
     backend_folder = current_folder;
+    g_object_ref_sink( backend_folder );
 	
-	gtk_widget_show( GTK_WIDGET( dialog ) );
+	gtk_widget_show_all( GTK_WIDGET( dialog ) );
 
     return GTK_WIDGET( dialog );
 }

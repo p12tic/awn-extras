@@ -43,7 +43,7 @@ static void stack_applet_activate_dialog(
     gpointer data ) {
 
     StackApplet *applet = STACK_APPLET( data );
-    GnomeVFSURI *uri = stack_gconf_get_backend_folder(  );
+    GnomeVFSURI *uri = gnome_vfs_uri_new(stack_gconf_get_backend_folder());
     GtkWidget *dialog;
 
     dialog = gtk_file_chooser_dialog_new( STACK_TEXT_SELECT_FOLDER, NULL,
@@ -272,7 +272,7 @@ static void stack_applet_drag_data_received(
         GnomeVFSURI *uri = scan->data;
         gchar *name = gnome_vfs_uri_extract_short_name( uri );
 
-        GnomeVFSURI *link = gnome_vfs_uri_append_file_name( stack_gconf_get_backend_folder(  ),
+        GnomeVFSURI *link = gnome_vfs_uri_append_file_name( gnome_vfs_uri_new(stack_gconf_get_backend_folder()),
                             name );
 
         target = g_list_append( target, link );
@@ -364,7 +364,7 @@ void stack_applet_set_icon(
                        awn_applet_get_height
                        ( AWN_APPLET( applet->awn_applet ) ) - PADDING, 0, NULL );
     }else{
-	icon = gdk_pixbuf_copy( icon );
+		icon = gdk_pixbuf_copy( icon );
     }
 
     awn_applet_simple_set_icon (AWN_APPLET_SIMPLE(applet->awn_applet), icon);

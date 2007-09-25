@@ -37,28 +37,17 @@ typedef struct _StackIcon StackIcon;
 typedef struct _StackIconClass StackIconClass;
 typedef struct _StackIconPrivate StackIconPrivate;
 struct _StackIcon {
-    GtkDrawingArea parent;
+    GtkButton		parent;
     
     GtkWidget      *folder;
     GdkPixbuf      *icon;
     GnomeVFSURI    *uri;
     GnomeDesktopItem *desktop_item;
     gchar          *name;
-
-    gboolean        hovering;
-
-    guint           icon_x;
-    guint           icon_y;
-    guint           name_x;
-    guint           name_y;
-    guint           rect_x;
-    guint           rect_y;
-    guint           rect_w;
-    guint           rect_h;
 };
 
 struct _StackIconClass {
-    GtkDrawingAreaClass parent_class;
+    GtkButtonClass parent_class;
 };
 
 GType stack_icon_get_type(

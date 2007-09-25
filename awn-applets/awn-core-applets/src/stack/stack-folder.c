@@ -29,9 +29,9 @@
 #include "stack-gconf.h"
 #include "stack-utils.h"
 
-G_DEFINE_TYPE( StackFolder, stack_folder, GTK_TYPE_VIEWPORT )
+G_DEFINE_TYPE( StackFolder, stack_folder, GTK_TYPE_TABLE )
 
-static GtkViewportClass *parent_class = NULL;
+static GtkTableClass *parent_class = NULL;
 static gdouble anim_time = 0.0;
 
 /**
@@ -274,49 +274,6 @@ void stack_folder_remove(
 }
 
 /**
- * If the table is not completely filled, it shows the ugly widget background
- * Repaint that!
- */
-static gboolean stack_folder_expose_event(
-    GtkWidget * widget,
-    GdkEventExpose * expose ) {
-
-    StackFolder *folder = STACK_FOLDER( widget );
-    GtkStyle *style;
-    GdkColor bg;
-    gfloat alpha;
-
-    GdkWindow *window = GDK_WINDOW( folder->table->window );
-    cairo_t *cr = NULL;
-
-    g_return_val_if_fail( GDK_IS_DRAWABLE( window ), FALSE );
-    cr = gdk_cairo_create( window );
-    g_return_val_if_fail( cr, FALSE );
-
-    /* Get the correct colours from the theme */
-    gtk_widget_style_get (GTK_WIDGET (folder->dialog->awn_dialog),
-                          "bg_alpha",
-                          &alpha, NULL);
-    style = gtk_widget_get_style (folder->dialog->awn_dialog);
- 
-    bg = style->base[GTK_STATE_NORMAL];
-
-    // paint background same as dialog
-    cairo_set_operator( cr, CAIRO_OPERATOR_CLEAR );
-    cairo_set_source_rgba( cr, 0, 0, 0, 0.0 );
-    cairo_paint( cr );    
-    cairo_set_operator( cr, CAIRO_OPERATOR_OVER );
-   	cairo_set_source_rgba( cr, bg.red/65335.0, 
-                               bg.green/65335.0, 
-                               bg.blue/65335.0, 
-                               alpha );
-    cairo_paint( cr );  
-    
-    cairo_destroy( cr );
-    return FALSE;
-}
-
-/**
  * Destroy event
  */
 static void stack_folder_destroy( GtkObject * object ) {
@@ -337,11 +294,6 @@ static void stack_folder_destroy( GtkObject * object ) {
         g_list_free( folder->icon_list );
     }
     folder->icon_list = NULL;
-
-    if ( folder->table ) {
-        gtk_widget_destroy( folder->table );
-    }
-    folder->table = NULL;
     
     if ( folder->applet_icon ) {
         g_object_unref( G_OBJECT( folder->applet_icon ) );
@@ -403,76 +355,33 @@ static void stack_folder_monitor_callback(
 static void stack_folder_relayout(
     StackFolder * folder) {  
 
-    gint width = 0, height = 0, page = 0;
+    gint r = stack_gconf_get_max_rows();
+    gint c = stack_gconf_get_max_cols();
+    gint height = 0, page = 0;
 	
-	GList *tmplist = folder->icon_list;        
-    if ( tmplist != NULL) {
-        GtkWidget *icon = GTK_WIDGET( tmplist->data );
+	GList *list = folder->icon_list;    
+	GList *l;
+	gint x=0, y=0;
+	
+	for (l = list; l != NULL; l = l->next){ 		
+	    gtk_table_attach_defaults (GTK_TABLE (folder), GTK_WIDGET(l->data),
+                                 x, x+1, y, y+1);
+	    x++;
+	    if (x == c){
+		    x = 0;
+		    y++;
+	    }
+	    if(y > (r-1)){
+	    	break;
+		}
+	}    
 
-        gint iw = 0, ih = 0;
-
-        gtk_widget_get_size_request( icon, &iw, &ih );
-
-        gint n = g_list_length( tmplist );
-        gint cols = stack_gconf_get_max_cols();
-        gint rows = stack_gconf_get_max_rows();
-
-        while ( ( cols * rows ) > n ) {
-            if ( cols > rows ) {
-                if ( ( ( cols - 1 ) * rows ) < n ) {
-                    break;
-                }
-                cols--;
-
-            } else {
-                if ( ( cols * ( rows - 1 ) ) < n ) {
-                    break;
-                }
-                rows--;
-            }
-        }
-
-        gint item = 0;
-        GtkWidget *vbox = NULL;
-		GtkWidget *hbox = NULL;
-        while ( tmplist ) {
-
-			if( item % (cols * rows ) == 0 ){
-	        		vbox = gtk_vbox_new(FALSE, 0);
-        			gtk_widget_show( vbox );
-					gtk_table_attach_defaults( GTK_TABLE(folder->table), vbox, page, page + 1, 0, 1);
-					page++;
-        	}
-        	if( item % cols == 0 ){
-        		hbox = gtk_hbox_new(FALSE, 0);
-        		gtk_widget_show( hbox );
-        		gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
-        	}
-        
-            GtkWidget *icon = GTK_WIDGET( tmplist->data );
-            gtk_box_pack_start (GTK_BOX (hbox), icon, FALSE, FALSE, 0);
-
-            tmplist = g_list_next( tmplist );
-
-            item++;
-        }
-
-        width = ( cols * iw );
-        height = ( rows * ih );
-    }else{
-    	g_print("folder empty\n");
-    	width = MIN_WIDTH;
-    	height = MIN_HEIGHT;
-    }
-    folder->pages = page;
-
-    gtk_widget_set_size_request( GTK_WIDGET( folder ), width, height );
-
-    GtkObject *v_adjust = gtk_adjustment_new(0.0, 0.0, height, height, height, height);
-    gtk_viewport_set_vadjustment( GTK_VIEWPORT( folder ), GTK_ADJUSTMENT( v_adjust ) );
-
-    GtkObject *h_adjust = gtk_adjustment_new(0.0, 0.0, folder->pages * width, width, width, width);
-    gtk_viewport_set_hadjustment( GTK_VIEWPORT( folder ), GTK_ADJUSTMENT( h_adjust ) );
+	if(x > 0){
+	  	y++;
+	}
+	
+	gtk_widget_set_size_request( GTK_WIDGET( folder ), 5*72, y*96 );
+	gtk_widget_set_size_request( GTK_WIDGET( folder->dialog->viewport ), 5*72, y*96 );
 }
 
 /**
@@ -504,64 +413,6 @@ gboolean stack_folder_has_prev_page(
     return ( folder->page > 0 );
 }
 
-gboolean move_left(
-    StackFolder * folder ){
-
-	if(anim_time == 0.0){
-		anim_time = 2.0;
-	}
-    anim_time -= 0.2;    
-    
-    gint width = 0, height = 0;  
-    gtk_widget_get_size_request( GTK_WIDGET( folder ), &width, &height );   
-
-    gdouble replacement = 0.5 * ( 1 + cbrt( anim_time - 1.0 ) );
-    if(replacement < 0.0){
-    	replacement = 0.0;
-    }
-
-	gint value = (gint)(folder->page * width + replacement * width);
-
-    GtkObject *h_adjust = gtk_adjustment_new(value, 0.0, folder->pages * width, width, width, width);
-    gtk_viewport_set_hadjustment( GTK_VIEWPORT( folder ), GTK_ADJUSTMENT( h_adjust ) );
-
-    gtk_widget_queue_draw( GTK_WIDGET( folder ) );
-    
-    if(anim_time < 0.0 ){
-    	anim_time = 0.0;
-	    gtk_widget_queue_draw( GTK_WIDGET( folder->dialog ) );
-    	return FALSE;
-    }
-   	return TRUE;
-}
-
-gboolean move_right(
-    StackFolder * folder ){
-
-    anim_time += 0.2;    
-    gint width = 0, height = 0;  
-    gtk_widget_get_size_request( GTK_WIDGET( folder ), &width, &height );   
-
-    gdouble replacement = 0.5 * ( 1 + cbrt( anim_time - 1.0 ) );
-    if(replacement > 1.0){
-    	replacement = 1.0;
-    }    
-    
-    gint value = (gint)((folder->page - 1) * width + replacement * width);
-    
-    GtkObject *h_adjust = gtk_adjustment_new(value, 0.0, folder->pages * width, width, width, width);
-    gtk_viewport_set_hadjustment( GTK_VIEWPORT( folder ), GTK_ADJUSTMENT( h_adjust ) );
-    
-    gtk_widget_queue_draw( GTK_WIDGET( folder ) );
-    
-    if(anim_time > 2.0 ){
-    	anim_time = 0.0;
-	    gtk_widget_queue_draw( GTK_WIDGET( folder->dialog ) );
-    	return FALSE;
-    }
-   	return TRUE;
-}
-
 void stack_folder_do_next_page(
     StackFolder * folder ){
 
@@ -570,7 +421,6 @@ void stack_folder_do_next_page(
 	}
 	folder->page = folder->page + 1;    
     gtk_widget_show_all( GTK_WIDGET( folder ) );    
-    g_timeout_add( 20, ( GSourceFunc ) move_right, ( gpointer ) folder );
 
 }
     
@@ -581,8 +431,8 @@ void stack_folder_do_prev_page(
 		return;
 	}
 	folder->page = folder->page - 1;    
+	
     gtk_widget_show_all( GTK_WIDGET( folder ) );    
-    g_timeout_add( 20, ( GSourceFunc ) move_left, ( gpointer ) folder );
 }
 
 /**
@@ -610,11 +460,9 @@ static void stack_folder_class_init(
     object_class = ( GtkObjectClass * ) klass;
     widget_class = ( GtkWidgetClass * ) klass;
 
-    parent_class = gtk_type_class (GTK_TYPE_VIEWPORT);
+    parent_class = gtk_type_class (GTK_TYPE_TABLE);
 
     object_class->destroy = stack_folder_destroy;
-    
-    widget_class->expose_event = stack_folder_expose_event;
 }
 
 /**
@@ -692,15 +540,9 @@ GtkWidget *stack_folder_new(
         }
     }
 
-	stack_folder->table = gtk_table_new(1,1, TRUE);
-	gtk_table_set_row_spacings( GTK_TABLE(stack_folder->table), 0);
-	gtk_table_set_col_spacings( GTK_TABLE(stack_folder->table), 0);
-	gtk_widget_show( stack_folder->table );
-	gtk_container_add( GTK_CONTAINER( stack_folder), stack_folder->table );
-
-	gtk_viewport_set_shadow_type( GTK_VIEWPORT( stack_folder ), GTK_SHADOW_NONE );
-	gtk_widget_set_no_show_all( GTK_WIDGET( stack_folder ), FALSE );
-
+	gtk_table_set_row_spacings( GTK_TABLE(stack_folder), 0);
+	gtk_table_set_col_spacings( GTK_TABLE(stack_folder), 0);
+	
     stack_folder_relayout( stack_folder );
 
 	gtk_widget_show( GTK_WIDGET( stack_folder ) );

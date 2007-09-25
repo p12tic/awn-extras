@@ -33,11 +33,11 @@
 #include "stack-defines.h"
 #include "stack-folder.h"
 
-G_DEFINE_TYPE( StackIcon, stack_icon, GTK_TYPE_DRAWING_AREA )
+G_DEFINE_TYPE( StackIcon, stack_icon, GTK_TYPE_BUTTON )
 
 static gboolean just_dragged = FALSE;
 
-static GtkDrawingAreaClass *parent_class = NULL;
+static GtkButtonClass *parent_class = NULL;
 
 /**
  * Destroy events of the applet
@@ -115,140 +115,6 @@ static gchar *desktop_file_get_link_icon_from_desktop(
 
     g_assert_not_reached(  );
     return NULL;
-}
-
-static void stack_icon_calculate_size_and_position(
-    GtkWidget * widget ) {
-
-    StackIcon      *icon = STACK_ICON( widget );
-
-    guint           icon_size = stack_gconf_get_icon_size(  );
-    guint           icon_width = gdk_pixbuf_get_width( icon->icon );
-    guint           icon_height = gdk_pixbuf_get_height( icon->icon );
-
-    icon->icon_x = ICON_MARGIN_X;
-    if ( icon_width < icon_size ) {
-        icon->icon_x += ( icon_size - icon_width ) / 2;
-    }
-
-    icon->icon_y = ICON_MARGIN_Y;
-    if ( icon_height < icon_size ) {
-        icon->icon_y += ( icon_size - icon_height ) / 2;
-    }
-
-    icon->name_x = ICON_MARGIN_X;
-    icon->name_y = ICON_MARGIN_Y + icon_size + ICON_NAME_MARGIN;
-
-    icon->rect_x = 0;
-    icon->rect_y = 0;
-    icon->rect_w = icon_size + 2 * ICON_MARGIN_X;
-    icon->rect_h = icon_size + 2 * ICON_MARGIN_Y + ICON_NAME_MARGIN + ICON_NAME_HEIGHT;
-
-    gtk_widget_set_size_request( GTK_WIDGET( icon ), ( gint ) icon->rect_w, ( gint ) icon->rect_h );
-}
-
-/**
- * Expose event of the applet
- */
-static gboolean stack_icon_expose_event(
-    GtkWidget * widget,
-    GdkEventExpose * expose ) {
-
-    StackIcon *icon = STACK_ICON( widget );
-    cairo_t *cr = NULL;
-    AwnColor color;
-    GtkStyle *style;
-    GdkColor bg;
-    GdkColor border;
-    GdkColor hover;
-    gfloat alpha = 0.9;
-
-	GdkWindow *window = widget->window; 
-
-    g_return_val_if_fail( GDK_IS_DRAWABLE( window ), FALSE );
-    cr = gdk_cairo_create( window );
-    g_return_val_if_fail( cr, FALSE );
-
-    /* Get the colours from the theme */
-    gtk_widget_style_get (STACK_FOLDER (icon->folder)->dialog->awn_dialog, "bg_alpha", &alpha, NULL);
-    
-    style = gtk_widget_get_style (STACK_FOLDER(icon->folder)->dialog->awn_dialog);
-    bg = style->base[GTK_STATE_NORMAL];
-    border = style->bg[GTK_STATE_SELECTED];
-    hover = style->base[GTK_STATE_SELECTED];
-
-    // paint background same as dialog
-    cairo_set_operator( cr, CAIRO_OPERATOR_CLEAR );
-    cairo_set_source_rgba( cr, 0.0, 0.0, 0.0, 0.0 );
-    cairo_paint( cr );    
-
-    cairo_set_operator( cr, CAIRO_OPERATOR_OVER );
-    cairo_set_source_rgba( cr, bg.red/65335.0,
-                               bg.green/65335.0,
-                               bg.blue/65335.0,
-                               alpha );
-    cairo_paint( cr );   
-
-    if ( icon->hovering ) {
-       
-        awn_cairo_rounded_rect( cr, icon->rect_x + 1, icon->rect_y + 1,
-                                icon->rect_w - 2, icon->rect_h - 2,
-                                STACK_ICON_RECT_RADIUS, ROUND_ALL );     
-
-		// clear the area inside the hover rectangle
-    	cairo_set_operator( cr, CAIRO_OPERATOR_CLEAR );    
-        cairo_set_source_rgba( cr, 0.0, 0.0, 0.0, 0.0 );
-	    cairo_fill_preserve( cr );    
-
-	    cairo_set_operator( cr, CAIRO_OPERATOR_OVER );  	                                   
-		cairo_set_source_rgba( cr, hover.red/65335.0,
-                               hover.green/65335.0,
-                               hover.blue/65335.0,
-                               alpha );		
-        cairo_fill_preserve( cr );
-
-		cairo_set_source_rgba( cr, border.red/65335.0,
-                               border.green/65335.0,
-                               border.blue/65335.0,
-                               alpha );       
-        cairo_set_line_width( cr, 2.5f );
-        cairo_stroke( cr );
-    }                              
-
-    paint_icon( cr, icon->icon, icon->icon_x, icon->icon_y, 1.0f );
-
-    paint_icon_name( cr, icon->name, icon->name_x, icon->name_y, style->text[GTK_STATE_NORMAL] );
-
-}
-
-/**
- * Enter notify (hover) event
- */
-static gboolean stack_icon_enter_notify_event(
-    GtkWidget * widget,
-    GdkEventCrossing * event ) {
-
-    StackIcon *icon = STACK_ICON( widget );
-
-    icon->hovering = TRUE;
-    gtk_widget_queue_draw( widget );
-
-    return TRUE;
-}
-
-/**
- * Leave notify (hover) event
- */
-static gboolean stack_icon_leave_notify_event(
-    GtkWidget * widget,
-    GdkEventCrossing * event ) {
-
-    StackIcon *icon = STACK_ICON( widget );
-
-    icon->hovering = FALSE;
-    gtk_widget_queue_draw( widget );
-
-    return TRUE;
 }
 
 /**
@@ -373,14 +239,9 @@ static void stack_icon_class_init(
     object_class = ( GtkObjectClass * ) klass;
     widget_class = ( GtkWidgetClass * ) klass;
 
-    parent_class = gtk_type_class (GTK_TYPE_DRAWING_AREA);
+    parent_class = gtk_type_class (GTK_TYPE_BUTTON);
 
     object_class->destroy = stack_icon_destroy;
-
-    widget_class->expose_event = stack_icon_expose_event;
-    widget_class->enter_notify_event = stack_icon_enter_notify_event;
-    widget_class->leave_notify_event = stack_icon_leave_notify_event;
-    widget_class->button_release_event = stack_icon_button_release_event;
 
    	/* Messages for outgoing drag. */
     widget_class->drag_begin = stack_icon_drag_begin;
@@ -401,8 +262,6 @@ static void stack_icon_class_init(
  */
 static void stack_icon_init(
     StackIcon * icon ) {
-
-    icon->hovering = FALSE;
 
     gtk_widget_add_events( GTK_WIDGET( icon ), GDK_ALL_EVENTS_MASK );
 }
@@ -479,8 +338,26 @@ GtkWidget *stack_icon_new(
 
 	// TODO: also setup as destination
 
-    stack_icon_calculate_size_and_position( GTK_WIDGET( icon ) );
 
-    return GTK_WIDGET( icon );
+  GtkWidget *vbox;
+  GtkWidget *image;
+  GdkPixbuf *pixbuf;
+  GtkWidget *label;
+
+  gtk_button_set_relief (GTK_BUTTON (icon), GTK_RELIEF_NONE);
+  g_signal_connect (G_OBJECT (icon), "button-release-event",
+                    G_CALLBACK (stack_icon_button_release_event), (gpointer)icon);
+
+  vbox = gtk_vbox_new (FALSE, 2);
+  gtk_container_add (GTK_CONTAINER (icon), vbox);
+  
+  image = gtk_image_new_from_pixbuf (icon->icon);
+  label = gtk_label_new (icon->name);
+  gtk_widget_set_size_request (label, 48, 24);
+
+  gtk_box_pack_start (GTK_BOX (vbox), image, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
+  
+  return GTK_WIDGET( icon );
 }
 

@@ -37,7 +37,7 @@ typedef struct _StackFolder StackFolder;
 typedef struct _StackFolderClass StackFolderClass;
 
 struct _StackFolder {
-    GtkTable			parent;
+    GtkEventBox			parent;
 
     StackDialog			*dialog;
 
@@ -45,15 +45,14 @@ struct _StackFolder {
     GnomeVFSURI			*uri;
     GnomeVFSMonitorHandle *monitor;
 
-    GList          		*icon_list;
-    gint            	page;
-    gint				pages;
-    
+    GtkListStore        *store;    
     GdkPixbuf      		*applet_icon;
+    gint                offset;
+    gint                total;
 };
 
 struct _StackFolderClass {
-    GtkTableClass   parent_class;
+    GtkEventBoxClass   parent_class;
 };
 
 GType stack_folder_get_type(
@@ -77,6 +76,8 @@ void stack_folder_do_prev_page(
     
 gboolean stack_folder_has_parent_folder(
     StackFolder * folder );
+
+void stack_folder_layout(StackFolder *folder, gint offset);
 
 #endif /* __STACK_FOLDER_H__ */
 

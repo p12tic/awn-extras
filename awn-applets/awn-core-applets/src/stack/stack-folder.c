@@ -29,10 +29,9 @@
 #include "stack-gconf.h"
 #include "stack-utils.h"
 
-G_DEFINE_TYPE( StackFolder, stack_folder, GTK_TYPE_TABLE )
+G_DEFINE_TYPE( StackFolder, stack_folder, GTK_TYPE_EVENT_BOX )
 
-static GtkTableClass *parent_class = NULL;
-static gdouble anim_time = 0.0;
+static GtkEventBoxClass *parent_class = NULL;
 
 /**
  * Compare function for sorting the strings of the stack icons
@@ -64,7 +63,6 @@ static gint stack_folder_sort_list(
 
     gchar *name_a = STACK_ICON( a )->name;
     gchar *name_b = STACK_ICON( b )->name;
-
     gint retval = 0;
 
     if ( g_ascii_strcasecmp( name_a, name_b ) == 0 ) {
@@ -89,40 +87,6 @@ static gint stack_folder_sort_list(
     }
 
     return retval;
-}
-
-/**
- * Get a page of icons from the directory list
- */
-static GList *stack_folder_list_get_page(
-    GList * list,
-    gint icon_page ) {
-
-    if( !list ){
-    	return NULL;
-    }
-
-    gint n_per_page = stack_gconf_get_max_rows() * stack_gconf_get_max_cols();
-
-    GList *page = g_list_copy( list );
-
-    g_return_val_if_fail( page, NULL );
-
-    gint i;
-
-    for ( i = 0; i < ( icon_page * n_per_page ); i++ ) {
-        page = g_list_remove_link( page, g_list_first( page ) );
-    }
-
-    if ( g_list_length( page ) < n_per_page ) {
-        return page;
-    }
-
-    for ( i = n_per_page; n_per_page < g_list_length( page ); i++ ) {
-        page = g_list_remove_link( page, g_list_last( page ) );
-    }
-
-    return page;
 }
 
 /**
@@ -198,27 +162,40 @@ static gboolean stack_folder_add(
         return FALSE;
     }
 
-    GList *item = g_list_first( folder->icon_list );
+    GtkWidget *stack_icon = stack_icon_new( folder, file );
+    g_return_val_if_fail( stack_icon, FALSE );
+ 
+    GtkTreeIter iter;
+    gboolean valid;
 
-    while ( item ) {
-        StackIcon      *icon = STACK_ICON( item->data );
+    valid = gtk_tree_model_get_iter_first(GTK_TREE_MODEL(folder->store), &iter);
+    while(valid){
+        gpointer icon;
 
-        if ( icon->uri && gnome_vfs_uri_equal( icon->uri, file ) ) {
-            return FALSE;
+        gtk_tree_model_get(GTK_TREE_MODEL(folder->store), &iter, 2, &icon, -1);
+
+        gint sorted = stack_folder_sort_list(stack_icon, icon);
+        if(sorted < 0){
+            break;
         }
-        item = g_list_next( item );
+        valid = gtk_tree_model_iter_next(GTK_TREE_MODEL(folder->store), &iter );
     }
 
-    GtkWidget *stack_icon = stack_icon_new( folder, file );
-    gtk_widget_show( stack_icon );
-    
-    g_return_val_if_fail( stack_icon, FALSE );
+    GtkTreeIter insert_iter;
+    if(!valid){
+        gtk_list_store_append(folder->store, &insert_iter);
+    }else{
+        gtk_list_store_insert_before(folder->store, &insert_iter, &iter);
+    }
 
-    // create a 3-icon applet icon
+    stack_icon = g_object_ref_sink( G_OBJECT(stack_icon));
+    gtk_list_store_set(folder->store, &insert_iter, 0, STACK_ICON(stack_icon)->icon, 1, 
+            STACK_ICON(stack_icon)->name, 2, stack_icon, -1);
+
+    /* create a 3-icon applet icon
     if ( stack_gconf_is_composite_applet_icon() ) {  	
-    	gint n = g_list_length( folder->icon_list );
        	GdkPixbuf *old = folder->applet_icon;
-        	    	
+
     	if( n == 0 ){
 	    	folder->applet_icon = gdk_pixbuf_copy(STACK_ICON( stack_icon )->icon);
 	    }else{
@@ -232,19 +209,16 @@ static gboolean stack_folder_add(
 			}
 	  	
     		folder->applet_icon = compose_applet_icon(STACK_ICON( stack_icon )->icon, 
-    			icon2, icon3, awn_applet_get_height( AWN_APPLET( folder->dialog->applet->awn_applet ) ) - PADDING);
+    			icon2, icon3, awn_applet_get_height( AWN_APPLET( folder->dialog->applet->awn_applet ) ));
     	}
 
     	if( old ){
 	    	g_object_unref( G_OBJECT( old ) );
 	    }
     }
-
-    folder->icon_list = g_list_insert_sorted( folder->icon_list, stack_icon,
-                        stack_folder_sort_list );
-
-	g_object_ref_sink( STACK_ICON( stack_icon ) );
-
+    */
+    
+    folder->total = folder->total + 1;
     return TRUE;
 }
 
@@ -256,20 +230,31 @@ void stack_folder_remove(
     StackFolder * folder,
     GnomeVFSURI * file ) {
 
-	g_return_if_fail( folder && folder->icon_list );
+	g_return_if_fail( folder && file );
 
-    GList *item = g_list_first( folder->icon_list );
+    GtkTreeIter iter;
+    gboolean valid;
 
-    while ( item ) {
-        StackIcon  *icon = STACK_ICON( item->data );
+    valid = gtk_tree_model_get_iter_first(GTK_TREE_MODEL(folder->store), &iter);
+    while(valid){
+        //find item
+        gpointer icon;
+        
+        gtk_tree_model_get(GTK_TREE_MODEL(folder->store), &iter, 2, &icon, -1);
 
-        if ( gnome_vfs_uri_equal( icon->uri, file ) ) {
-            folder->icon_list = g_list_remove_link( folder->icon_list, item );
-            gtk_widget_destroy( GTK_WIDGET( item->data ) );
-            g_list_free_1( item );
+        if ( gnome_vfs_uri_equal( STACK_ICON(icon)->uri, file ) ) {
+            gtk_list_store_remove(GTK_LIST_STORE(folder->store), &iter);
+            //gtk_widget_destroy( GTK_WIDGET( icon ) );
             break;
         }
-        item = g_list_next( item );
+        
+        valid = gtk_tree_model_iter_next(GTK_TREE_MODEL(folder->store), &iter);
+    }
+    gtk_tree_iter_free(&iter);
+
+    if(valid){
+        folder->total = folder->total - 1;
+        stack_folder_layout(folder, folder->offset);
     }
 }
 
@@ -290,11 +275,6 @@ static void stack_folder_destroy( GtkObject * object ) {
     }
     folder->uri = NULL;
 
-    if ( folder->icon_list ) {
-        g_list_free( folder->icon_list );
-    }
-    folder->icon_list = NULL;
-    
     if ( folder->applet_icon ) {
         g_object_unref( G_OBJECT( folder->applet_icon ) );
     }
@@ -314,6 +294,8 @@ static void stack_folder_monitor_callback(
     const gchar * info_uri,
     GnomeVFSMonitorEventType event_type,
     gpointer user_data ) {
+
+    g_print("monitor callback\n");
 
     StackFolder *folder = ( StackFolder * ) user_data;
     g_return_if_fail( STACK_IS_FOLDER( folder ) );
@@ -340,48 +322,10 @@ static void stack_folder_monitor_callback(
 
 	if( something_changed ){
     
-	    stack_dialog_set_folder(folder->dialog, folder->uri, folder->page );
-	    
         // TODO: get attention
     }
 
     return;
-}
-
-/**
- * Recalculate the stack layout
- * -iterate through the list of icons and position each one
- */
-static void stack_folder_relayout(
-    StackFolder * folder) {  
-
-    gint r = stack_gconf_get_max_rows();
-    gint c = stack_gconf_get_max_cols();
-    gint height = 0, page = 0;
-	
-	GList *list = folder->icon_list;    
-	GList *l;
-	gint x=0, y=0;
-	
-	for (l = list; l != NULL; l = l->next){ 		
-	    gtk_table_attach_defaults (GTK_TABLE (folder), GTK_WIDGET(l->data),
-                                 x, x+1, y, y+1);
-	    x++;
-	    if (x == c){
-		    x = 0;
-		    y++;
-	    }
-	    if(y > (r-1)){
-	    	break;
-		}
-	}    
-
-	if(x > 0){
-	  	y++;
-	}
-	
-	gtk_widget_set_size_request( GTK_WIDGET( folder ), 5*72, y*96 );
-	gtk_widget_set_size_request( GTK_WIDGET( folder->dialog->viewport ), 5*72, y*96 );
 }
 
 /**
@@ -390,14 +334,13 @@ static void stack_folder_relayout(
 gboolean stack_folder_has_next_page(
     StackFolder * folder ) {
 
-	if( !folder || !folder->icon_list ){
+	if( !folder ){
 		return FALSE;
 	}
 
     gint total = stack_gconf_get_max_rows() * stack_gconf_get_max_cols();
     
-    return ( g_list_length( folder->icon_list ) >
-             ( ( folder->page + 1 ) * total ) );
+    return (folder->offset + total < folder->total);
 }
 
 /**
@@ -410,29 +353,27 @@ gboolean stack_folder_has_prev_page(
 		return FALSE;
 	}
 
-    return ( folder->page > 0 );
+    return ( folder->offset > 0 );
 }
 
 void stack_folder_do_next_page(
     StackFolder * folder ){
 
-	if( !stack_folder_has_next_page( folder ) || anim_time != 0.0 ){
-		return;
-	}
-	folder->page = folder->page + 1;    
-    gtk_widget_show_all( GTK_WIDGET( folder ) );    
-
+    if(stack_folder_has_next_page(folder)){
+        gint n_offset = folder->offset + (stack_gconf_get_max_cols() * stack_gconf_get_max_rows());
+        stack_folder_layout(folder, n_offset);
+        gtk_widget_show_all( GTK_WIDGET( folder ) );    
+    }
 }
     
 void stack_folder_do_prev_page(
     StackFolder * folder ){
 
-	if( !stack_folder_has_prev_page( folder ) || anim_time != 0.0 ){
-		return;
-	}
-	folder->page = folder->page - 1;    
-	
-    gtk_widget_show_all( GTK_WIDGET( folder ) );    
+    gint n_offset = folder->offset - (stack_gconf_get_max_cols() * stack_gconf_get_max_rows());
+    if(n_offset >= 0){
+        stack_folder_layout(folder, n_offset);
+        gtk_widget_show_all( GTK_WIDGET( folder ) );    
+    }
 }
 
 /**
@@ -448,6 +389,61 @@ gboolean stack_folder_has_parent_folder(
     return ( gnome_vfs_uri_get_parent( folder->uri ) != NULL );
 }
 
+static void keep_icons(gpointer data, gpointer user_data){
+    g_object_ref(data);
+    gtk_container_remove(GTK_CONTAINER(user_data), GTK_WIDGET(data));
+}
+
+void stack_folder_layout(StackFolder *folder, gint offset){
+
+    GList *children = gtk_container_get_children(GTK_CONTAINER(folder));
+    gpointer old = g_list_nth_data(children, 0);
+    if(old != NULL){
+        GList *icons = gtk_container_get_children(GTK_CONTAINER(old));
+        g_list_foreach(icons, keep_icons, old);
+        gtk_widget_destroy(GTK_WIDGET(old));
+        g_list_free(icons);
+    }
+
+    folder->offset = offset;
+
+    gint o = offset;
+    gint c = stack_gconf_get_max_cols();
+    gint r = stack_gconf_get_max_rows();
+
+    GtkWidget *table = gtk_table_new(1,1, TRUE);
+    GtkTreeIter iter;
+    gboolean valid;
+     
+    valid = gtk_tree_model_get_iter_first(GTK_TREE_MODEL(folder->store), &iter);
+    gint x=0, y=0;
+    while(valid){
+
+        if(o == 0){
+            GdkPixbuf *icon;
+            gchar *name;
+            StackIcon *sic;
+            gtk_tree_model_get(GTK_TREE_MODEL(folder->store), &iter, 0, &icon, 1, &name, 2, &sic, -1);
+            gtk_table_attach_defaults(GTK_TABLE(table), GTK_WIDGET(sic), x,x+1,y,y+1);
+            if((x+1) == c){
+                y++;
+                x = 0;
+            }else{
+                x++;
+            }
+
+            if(y == r)
+                break;
+        }else{
+            o--;
+        }
+
+        valid = gtk_tree_model_iter_next(GTK_TREE_MODEL(folder->store), &iter);
+    }
+    gtk_widget_show_all(GTK_WIDGET(folder));
+    gtk_container_add(GTK_CONTAINER(folder), GTK_WIDGET(table));
+}
+
 /**
  * Class init function
  * -connect to events
@@ -460,7 +456,7 @@ static void stack_folder_class_init(
     object_class = ( GtkObjectClass * ) klass;
     widget_class = ( GtkWidgetClass * ) klass;
 
-    parent_class = gtk_type_class (GTK_TYPE_TABLE);
+    parent_class = gtk_type_class (GTK_TYPE_EVENT_BOX);
 
     object_class->destroy = stack_folder_destroy;
 }
@@ -470,7 +466,8 @@ static void stack_folder_class_init(
  */
 static void stack_folder_init(
     StackFolder * stack_folder ) {
-	return;
+    stack_folder->offset = 0;
+    stack_folder->total = 0;
 }
 
 /**
@@ -492,7 +489,10 @@ GtkWidget *stack_folder_new(
     stack_folder->dialog = dialog;
     stack_folder->uri = uri;
     stack_folder->name = gnome_vfs_uri_extract_short_name( stack_folder->uri );
+    gtk_event_box_set_visible_window(GTK_EVENT_BOX(stack_folder), FALSE);
 
+    stack_folder->store = gtk_list_store_new(3, GDK_TYPE_PIXBUF, G_TYPE_STRING, G_TYPE_POINTER);
+    
     GnomeVFSDirectoryHandle *handle;
     GnomeVFSResult  result;
     GnomeVFSFileInfo *info = gnome_vfs_file_info_new(  );
@@ -540,11 +540,7 @@ GtkWidget *stack_folder_new(
         }
     }
 
-	gtk_table_set_row_spacings( GTK_TABLE(stack_folder), 0);
-	gtk_table_set_col_spacings( GTK_TABLE(stack_folder), 0);
-	
-    stack_folder_relayout( stack_folder );
-
+    stack_folder_layout(stack_folder, 0);
 	gtk_widget_show( GTK_WIDGET( stack_folder ) );
 
     return GTK_WIDGET( stack_folder );

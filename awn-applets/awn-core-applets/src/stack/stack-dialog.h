@@ -43,7 +43,6 @@ struct _StackDialog {
     StackApplet		*applet;
 
     gboolean        active;
-//    gdouble         anim_time;
 
 	GtkWidget		*viewport;
 };

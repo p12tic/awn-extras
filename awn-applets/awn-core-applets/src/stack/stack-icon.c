@@ -127,7 +127,7 @@ static gboolean stack_icon_button_release_event(
 
     StackIcon *icon = STACK_ICON( widget );
 
-    if ( just_dragged ) {
+    if(just_dragged){
         just_dragged = FALSE;
         return FALSE;
     }
@@ -339,25 +339,38 @@ GtkWidget *stack_icon_new(
 	// TODO: also setup as destination
 
 
-  GtkWidget *vbox;
-  GtkWidget *image;
-  GdkPixbuf *pixbuf;
-  GtkWidget *label;
+    GtkWidget *vbox;
+    GtkWidget *image;
+    GdkPixbuf *pixbuf;
+    GtkWidget *label;
 
-  gtk_button_set_relief (GTK_BUTTON (icon), GTK_RELIEF_NONE);
-  g_signal_connect (G_OBJECT (icon), "button-release-event",
+    gtk_button_set_relief (GTK_BUTTON (icon), GTK_RELIEF_NONE);
+    g_signal_connect (G_OBJECT (icon), "button-release-event",
                     G_CALLBACK (stack_icon_button_release_event), (gpointer)icon);
 
-  vbox = gtk_vbox_new (FALSE, 2);
-  gtk_container_add (GTK_CONTAINER (icon), vbox);
+    vbox = gtk_vbox_new (FALSE, 4);
+    gtk_container_add (GTK_CONTAINER (icon), vbox);
   
-  image = gtk_image_new_from_pixbuf (icon->icon);
-  label = gtk_label_new (icon->name);
-  gtk_widget_set_size_request (label, 48, 24);
+    image = gtk_image_new_from_pixbuf (icon->icon);
+    gtk_widget_set_size_request(image, 48, 48);
 
-  gtk_box_pack_start (GTK_BOX (vbox), image, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
-  
-  return GTK_WIDGET( icon );
+    gchar *markup;
+    sprintf(markup, "<b>%s</b>", icon->name);
+    label = gtk_label_new(markup);
+    gtk_widget_set_size_request (label, 48, 28);
+
+    g_object_set(label,
+            "justify", GTK_JUSTIFY_CENTER,
+            "use-markup", TRUE,
+            "wrap", TRUE,
+            "wrap-mode", PANGO_WRAP_WORD_CHAR,
+            NULL);
+
+    gtk_box_pack_start (GTK_BOX (vbox), image, FALSE, FALSE, 0);
+    gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
+
+    gtk_widget_set_size_request(vbox, 60, 84);
+
+    return GTK_WIDGET( icon );
 }
 

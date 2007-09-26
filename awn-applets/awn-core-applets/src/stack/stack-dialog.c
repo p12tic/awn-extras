@@ -150,7 +150,7 @@ void stack_dialog_set_folder(
     GtkWidget *folder;
     
     if(backend_folder && gnome_vfs_uri_equal(backend_folder->uri, uri)){
-    	folder = backend_folder;
+    	folder = GTK_WIDGET(backend_folder);
     }else{
 		folder = stack_folder_new( STACK_DIALOG( dialog ), uri );
 	}
@@ -276,10 +276,8 @@ GtkWidget *stack_dialog_new(
 		gtk_container_add(GTK_CONTAINER(hbox1), folder_up);
 	}
 	
-	//dialog->viewport = gtk_viewport_new(NULL, NULL);
-	//gtk_viewport_set_shadow_type( GTK_VIEWPORT( dialog->viewport ), GTK_SHADOW_ETCHED_IN );
-	//gtk_widget_set_no_show_all( GTK_WIDGET( dialog->viewport ), FALSE );	
-	dialog->viewport = gtk_alignment_new(0,0,1,1);
+	dialog->viewport = gtk_event_box_new();
+    gtk_event_box_set_visible_window(GTK_EVENT_BOX(dialog->viewport), FALSE);
 	gtk_container_add(GTK_CONTAINER(dialog), dialog->viewport);
 	
 	GtkWidget *hbox2 = gtk_hbox_new(TRUE, 0);

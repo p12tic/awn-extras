@@ -33,9 +33,6 @@
 #include <libawn/awn-applet-dialog.h>
 #include <libawn/awn-applet-simple.h>
 
-#define PAGER_ROWS 2
-#define BAR_HEIGHT 100
-#define PADDING 4
 
 typedef struct {
 
@@ -45,6 +42,8 @@ typedef struct {
   GtkWidget *icons;
   GMenuTree *tree;
   GMenuTreeDirectory *root;
+  GMenuTreeDirectory *apps;
+  GMenuTreeDirectory *settings;
 
 } Menu;
 
@@ -205,7 +204,7 @@ make_item (GMenuTreeItem *item)
   vbox = gtk_vbox_new (FALSE, 2);
   gtk_container_add (GTK_CONTAINER (button), vbox);
   
-  image = gtk_image_new_from_pixbuf (get_icon (icon, 48));
+  image = gtk_image_new_from_pixbuf (get_icon (icon, 36));
   label = gtk_label_new (name);
   gtk_widget_set_size_request (label, 130, 24);
 
@@ -219,7 +218,40 @@ on_back_clicked (GtkButton *button, gpointer null)
 {
   GMenuTreeDirectory *temp= menu->root;
   menu->root = gmenu_tree_item_get_parent (GMENU_TREE_ITEM (temp));
+  if (menu->root == menu->settings)
+    menu->root = gmenu_tree_get_root_directory (menu->tree); 
   populate (menu);
+}
+
+static gint
+_compare (GMenuTreeItem *item1, GMenuTreeItem *item2)
+{
+  const gchar *name1;
+  const gchar *name2;
+
+  switch (gmenu_tree_item_get_type (item1))
+  {
+    case GMENU_TREE_ITEM_DIRECTORY:
+      name1 = gmenu_tree_directory_get_name (GMENU_TREE_DIRECTORY (item1));
+      break;
+    case GMENU_TREE_ITEM_ENTRY:
+      name1 = gmenu_tree_entry_get_name (GMENU_TREE_ENTRY (item1));
+      break;    
+    default:
+      ;
+  }
+  switch (gmenu_tree_item_get_type (item2))
+  {
+    case GMENU_TREE_ITEM_DIRECTORY:
+      name2 = gmenu_tree_directory_get_name (GMENU_TREE_DIRECTORY (item2));
+      break;
+    case GMENU_TREE_ITEM_ENTRY:
+      name2 = gmenu_tree_entry_get_name (GMENU_TREE_ENTRY (item2));
+      break;    
+    default:
+      ;
+  }
+  return strcmp (name1, name2);
 }
 
 static void
@@ -228,15 +260,26 @@ populate (Menu *app)
   GtkSizeGroup *group;
   GtkWidget *vbox, *hbox, *label, *table;
   const gchar *name;
-  GSList *list, *l;
+  GSList *list, *apps, *sets, *l;
   gint x = 0;
   gint y = 0;
+  gint cols = 4;
 
   vbox = gtk_vbox_new (FALSE, 8);
   table = gtk_table_new (1, 1, TRUE);
   gtk_box_pack_start (GTK_BOX (vbox), table, TRUE, TRUE, 0);
 
-  list = gmenu_tree_directory_get_contents (app->root);
+  apps = gmenu_tree_directory_get_contents (app->root);
+  if (app->root == gmenu_tree_get_root_directory (app->apps))
+  {
+    list = g_slist_copy (apps);
+    sets = g_slist_copy (gmenu_tree_directory_get_contents (app->settings));
+    list = g_slist_concat (list, sets);
+    list = g_slist_sort (list, (GCompareFunc)_compare);
+  }
+  else
+    list = g_slist_copy (apps);
+  
   for (l = list; l != NULL; l = l->next)
   {
     label = make_item (l->data);
@@ -246,13 +289,14 @@ populate (Menu *app)
     gtk_table_attach_defaults (GTK_TABLE (table), label,
                                  x, x+1, y, y+1);
     x++;
-    if (x == 4)
+    if (x == cols)
     {
       x = 0;
       y++;
     }
   }
-  
+  g_slist_free (list);
+ 
   if (app->root == gmenu_tree_get_root_directory (app->tree))
   {
     name = gmenu_tree_directory_get_name (app->root);
@@ -347,12 +391,21 @@ awn_applet_factory_initp (const gchar * uid, gint orient, gint height )
   AwnApplet *applet = AWN_APPLET (awn_applet_simple_new (uid, orient, height));
   Menu      *app = menu =  g_new0 (Menu, 1);
  
-  app->tree = gmenu_tree_lookup ("applications.menu", GMENU_TREE_FLAGS_NONE);
-  if (!app->tree)
+  app->apps = gmenu_tree_lookup ("applications.menu", GMENU_TREE_FLAGS_NONE);
+  if (!app->apps)
   {
     g_warning ("Unable to find applications.menu");
     return FALSE;
   }
+  app->settings = gmenu_tree_get_root_directory (
+                  gmenu_tree_lookup ("settings.menu", GMENU_TREE_FLAGS_NONE));
+  if (!app->settings)
+  {
+    g_warning ("Unable to find settings.menu");
+    return FALSE;
+  }
+  app->tree = app->apps;
+
   app->window = awn_applet_dialog_new (applet);
   gtk_window_set_focus_on_map (GTK_WINDOW (app->window), TRUE);
 

@@ -235,6 +235,7 @@ _compare (GMenuTreeItem *item1, GMenuTreeItem *item2)
       name1 = gmenu_tree_directory_get_name (GMENU_TREE_DIRECTORY (item1));
       break;
     case GMENU_TREE_ITEM_ENTRY:
+      return 1;
       name1 = gmenu_tree_entry_get_name (GMENU_TREE_ENTRY (item1));
       break;    
     default:
@@ -246,6 +247,7 @@ _compare (GMenuTreeItem *item1, GMenuTreeItem *item2)
       name2 = gmenu_tree_directory_get_name (GMENU_TREE_DIRECTORY (item2));
       break;
     case GMENU_TREE_ITEM_ENTRY:
+      return -1;
       name2 = gmenu_tree_entry_get_name (GMENU_TREE_ENTRY (item2));
       break;    
     default:

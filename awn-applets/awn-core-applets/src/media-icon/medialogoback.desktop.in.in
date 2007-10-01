@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=Media Icons Back
+Type=Python
+Comment=A media-control applet (Go Back)
+Exec=@LIBDIR@/awn/applets/media-icon/medialogoback.py
+Icon=@LIBDIR@/awn/applets/media-icon/icons/backward.svg
+Name[en_US]=Media Icons Back

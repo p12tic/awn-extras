@@ -67,6 +67,8 @@ AC_OUTPUT([
 Makefile
 po/Makefile.in
 src/Makefile
+src/battery-applet/Makefile
+src/battery-applet/icons/Makefile
 src/BlingSwitcher/Makefile
 src/clock/Makefile
 src/cpu-meter/Makefile
@@ -74,9 +76,15 @@ src/gmail/Makefile
 src/gmail/Themes/Makefile
 src/gmail/Themes/Default/Makefile
 src/main-menu/Makefile
+src/media-control/Makefile
+src/media-control/icons/Makefile
+src/media-icon/Makefile
+src/media-icon/icons/Makefile
 src/showdesktop/Makefile
 src/notification-area/Makefile
 src/python-test/Makefile
+src/quit-applet/Makefile
+src/quit-applet/icons/Makefile
 src/separator/Makefile
 src/stack/Makefile
 src/volume-control/Makefile

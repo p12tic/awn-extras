@@ -78,8 +78,12 @@ src/gmail/Themes/Default/Makefile
 src/main-menu/Makefile
 src/media-control/Makefile
 src/media-control/icons/Makefile
-src/media-icon/Makefile
-src/media-icon/icons/Makefile
+src/media-icon-back/Makefile
+src/media-icon-back/icons/Makefile
+src/media-icon-next/Makefile
+src/media-icon-next/icons/Makefile
+src/media-icon-play/Makefile
+src/media-icon-play/icons/Makefile
 src/showdesktop/Makefile
 src/notification-area/Makefile
 src/python-test/Makefile

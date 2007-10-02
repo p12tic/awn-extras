@@ -6,7 +6,9 @@ SUBDIRS =			\
 	gmail			\
 	main-menu 		\
 	media-control		\
-	media-icon		\
+	media-icon-back		\
+	media-icon-next		\
+	media-icon-play		\
 	notification-area	\
 	python-test 		\
 	quit-applet		\

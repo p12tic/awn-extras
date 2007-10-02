@@ -1,14 +1,16 @@
 SUBDIRS = icons
 
-batteryapplet_DATA = \
-		battery-applet.py \
-		COPYING
+mediaiconback_DATA = \
+		COPYING	\
+		medialogoback.py	\
+		mediaplayers.py
 
-batteryappletdir = $(libdir)/awn/applets/battery-applet
+mediaiconbackdir = $(libdir)/awn/applets/media-icon-back
 
 desktopdir = $(libdir)/awn/applets
 desktop_DATA = \
-	battery-applet.desktop
+	medialogoback.desktop
+
 @INTLTOOL_DESKTOP_RULE@
 
 $(desktop_DATA).in: $(desktop_DATA).in.in
@@ -16,5 +18,5 @@ $(desktop_DATA).in: $(desktop_DATA).in.in
 
 
 EXTRA_DIST = \
-	battery-applet.desktop.in.in
+	medialogoback.desktop.in.in
 

@@ -33,7 +33,7 @@ class App (awn.AppletSimple):
         Creating the applets core
         """
         
-        self.resultToolTip                  = "Rhythmbox Control Applet"
+        self.resultToolTip                  = "Media Control Applet"
         self.keylocation                    = "/apps/avant-window-navigator/applets/MediaControl/"
         location                            =  __file__
         self.location                       = location.replace('mediacontrol.py','')
@@ -53,7 +53,7 @@ class App (awn.AppletSimple):
         # Defining Widgets
         vbox                                = gtk.VBox()
         hbox                                = gtk.HBox()
-        self.label                          = gtk.Label("test")
+        self.label                          = gtk.Label("Media Control Applet")
         button_previous                     = gtk.ToolButton ("gtk-media-previous")
         button_play                         = gtk.ToolButton ("gtk-media-play")
         button_pause                        = gtk.ToolButton ("gtk-media-pause")

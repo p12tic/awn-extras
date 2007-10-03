@@ -18,4 +18,5 @@ SUBDIRS =			\
 	showdesktop 		\
 	trash 			\
 	volume-control 		\
+	weather			\
 	wobblyzini

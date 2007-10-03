@@ -1,0 +1,111 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-10-01 21:02-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: weatherconfig.py:44
+msgid "Search for Location Code"
+msgstr ""
+
+#: weatherconfig.py:49
+msgid "Location Name"
+msgstr ""
+
+#: weatherconfig.py:55
+msgid "Search"
+msgstr ""
+
+#: weatherconfig.py:62
+msgid ""
+"Enter the location you want to search for above.  For example: <i>Boston</"
+"i>; <i>Portland, ME</i>; <i>Paris</i>; or <i>Osaka, Japan</i>."
+msgstr ""
+
+#: weatherconfig.py:72 weatherconfig.py:139
+msgid "No records found."
+msgstr ""
+
+#: weatherconfig.py:113 weatherconfig.py:196
+msgid "Current Location:"
+msgstr ""
+
+#: weatherconfig.py:122
+msgid "Searching..."
+msgstr ""
+
+#: weatherconfig.py:148
+msgid "Preferences"
+msgstr ""
+
+#: weatherconfig.py:151
+msgid "Metric Units"
+msgstr ""
+
+#: weatherconfig.py:161
+msgid "Keep Forecast window opened until clicked"
+msgstr ""
+
+#: weatherconfig.py:171
+msgid "Lower Center"
+msgstr ""
+
+#: weatherconfig.py:172
+msgid "Lower Left"
+msgstr ""
+
+#: weatherconfig.py:173
+msgid "Lower Right"
+msgstr ""
+
+#: weatherconfig.py:174
+msgid "Upper Center"
+msgstr ""
+
+#: weatherconfig.py:175
+msgid "Upper Left"
+msgstr ""
+
+#: weatherconfig.py:176
+msgid "Upper Right"
+msgstr ""
+
+#: weatherconfig.py:177
+msgid "Never"
+msgstr ""
+
+#: weatherconfig.py:180
+msgid "Show Temperature"
+msgstr ""
+
+#: weatherconfig.py:186
+msgid "Poll Frequency (Mins)"
+msgstr ""
+
+#: weatherconfig.py:202
+msgid "Change Location"
+msgstr ""
+
+#: weatherdialog.py:82
+msgid "Weather data provided by weather.com"
+msgstr ""
+
+#: weather.py:65
+msgid "Fetching weather data."
+msgstr ""
+
+#: weather.py:119
+msgid "Forecast"
+msgstr ""

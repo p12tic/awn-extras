@@ -1,8 +1,8 @@
 [Desktop Entry]
-Version=0.3
+Version=0.5
 Type=Python
 Encoding=UTF-8
-Name=Volume-Control-Applet
-Comment=Python applet to control the volume (v0.3).
+Name=volume-control
+Comment=Python applet to control the volume (v0.5).
 Exec=@LIBDIR@/awn/applets/volume-control/volume-control.py
 Icon=gnome-reclevel

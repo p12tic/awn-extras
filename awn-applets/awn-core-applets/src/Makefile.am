@@ -1,8 +1,8 @@
 SUBDIRS =			\ 
+	awnsystemmonitor	\
 	battery-applet		\
 	BlingSwitcher 		\
 	clock 			\
-	cpu-meter 		\
 	gmail			\
 	main-menu 		\
 	media-control		\

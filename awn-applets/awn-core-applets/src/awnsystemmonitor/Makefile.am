@@ -8,30 +8,38 @@ INCLUDES =							\
 	-DDATADIR=\"$(datadir)\"				\
 	-DLIBDIR=\"$(libdir)\"    
 
-CPUMETER_SOURCES =                              \
+AWNSYSTEMMONITOR_SOURCES =                              \
 	applet.c									\
 	dashboard.c		\
 	dashboard.h		\
 	awntop.c    \
 	awntop.h    \
-	cpumeterapplet.c						\
-	cpumeterapplet.h          \
+	awnsystemmonitor.c						\
+	awnsystemmonitor.h          \
 	cpumetergconf.c           \
 	cpumetergconf.h           \
+	uptime_component.c      \
+	uptime_component.h      \
+	dashboard_util.c    \
+	dashboard_util.h    \
+	cpu_component.c    \
+    cpu_component.h    \
+    date_time_component.c   \
+    date_time_component.h   \
 	config.h
 
-CPUMETER_LDADD =                        \
+AWNSYSTEMMONITOR_LDADD =                        \
         $(DEPS_LIBS)
 
-cpumeterlibdir = $(libdir)/awn/applets/cpumeter
-cpumeterlib_LTLIBRARIES = cpumeter.la
-cpumeter_la_SOURCES = $(CPUMETER_SOURCES)
-cpumeter_la_LIBADD = $(CPUMETER_LDADD)
-cpumeter_la_LDFLAGS = -module -avoid-version
-cpumeter_la_CFLAGS =
+awnsystemmonitorlibdir = $(libdir)/awn/applets/awnsystemmonitor
+awnsystemmonitorlib_LTLIBRARIES = awnsystemmonitor.la
+awnsystemmonitor_la_SOURCES = $(AWNSYSTEMMONITOR_SOURCES)
+awnsystemmonitor_la_LIBADD = $(AWNSYSTEMMONITOR_LDADD)
+awnsystemmonitor_la_LDFLAGS = -module -avoid-version
+awnsystemmonitor_la_CFLAGS =
 
 schemasdir   = @GCONF_SCHEMA_FILE_DIR@
-schemas_FILE = cpumeter.schemas
+schemas_FILE = awnsystemmonitor.schemas
 schemas_in_files = $(schemas_FILE).in
 schemas_DATA = $(schemas_in_files:.schemas.in=.schemas)
 
@@ -45,14 +53,14 @@ endif
 desktopdir = $(libdir)/awn/applets
 
 desktop_DATA = \
-	cpumeter.desktop
+	awn-system-monitor.desktop
 @INTLTOOL_DESKTOP_RULE@
 
 $(desktop_DATA).in: $(desktop_DATA).in.in
 	sed -e "s|\@LIBDIR\@|$(libdir)|g" $< > $@
 
 EXTRA_DIST = \
-	cpumeter.desktop.in.in  \
-	cpumeter.schema.in.in
+	awn-system-monitor.desktop.in.in  \
+	awn-system-monitor.schema.in.in
 
 CLEANFILES = $(desktop_DATA) stack.schemas

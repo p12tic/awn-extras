@@ -30,6 +30,7 @@
 
 #include "dashboard.h"
 #include "awntop.h"
+#include "uptime_component.h"
 
 /* Stuff to store the CPU measurements */
 #define NUM_POINTS 200
@@ -65,6 +66,9 @@ typedef struct
 
   Dashboard	dashboard;
   Awntop    awntop;
+  void *   cpu_plug;
+  void *    uptime_plug;
+  
   guint size;
   guint new_size;
   GtkOrientation orient;
@@ -90,6 +94,7 @@ typedef struct
   gboolean do_subtitle;
   guint update_freq;
 
+    GtkWidget*  right_click_menu;
 }CpuMeter;
 
 // Applet

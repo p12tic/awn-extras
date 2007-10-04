@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=C
+Encoding=UTF-8
+Name=Awn System Monitor
+Comment=System Monitor
+Exec=@LIBDIR@/awn/applets/awnsystemmonitor/awnsystemmonitor.so
+Icon=utilities-system-monitor

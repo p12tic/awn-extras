@@ -25,7 +25,7 @@
 #include <libawn/awn-applet-gconf.h>
 #include <libawn/awn-cairo-utils.h>
 
-#include "cpumeterapplet.h"
+#include "awnsystemmonitor.h"
 #include "config.h"
 
 void cpumeter_gconf_event(GConfClient* client, guint cxnid, GConfEntry* entry, gpointer user_data);

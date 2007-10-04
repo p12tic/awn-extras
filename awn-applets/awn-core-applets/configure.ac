@@ -67,11 +67,11 @@ AC_OUTPUT([
 Makefile
 po/Makefile.in
 src/Makefile
+src/awnsystemmonitor/Makefile
 src/battery-applet/Makefile
 src/battery-applet/icons/Makefile
 src/BlingSwitcher/Makefile
 src/clock/Makefile
-src/cpu-meter/Makefile
 src/gmail/Makefile
 src/gmail/Themes/Makefile
 src/gmail/Themes/Default/Makefile

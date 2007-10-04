@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2007 Mike (mosburger) Desjardins <desjardinsmike@gmail.com>
+ * Copyright (c) 2007   Mike (mosburger) Desjardins <desjardinsmike@gmail.com>
+ *                      Rodney (moonbeam) Cryderman <rcryderman@gmail.com>
  *
  * This is a CPU Load Applet for the Avant Window Navigator.  It
  * borrows heavily from the Gnome system monitor, so kudos go to
@@ -27,14 +28,21 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 #include <math.h>
-#include "cpumeterapplet.h"
+#include "awnsystemmonitor.h"
 #include "cpumetergconf.h"
+#include "uptime_component.h"
+#include "cpu_component.h"
 #include "config.h"
 
-#define NDEBUG
+
+#undef NDEBUG
 #include <assert.h>
+
 
 /*
  * FUNCTION DEFINITIONS
@@ -54,6 +62,18 @@ static void _orient_changed (AwnApplet *appt, guint orient, gpointer *data);
 static gboolean _enter_notify_event (GtkWidget *window, GdkEventButton *event, gpointer *data);
 static gboolean _leave_notify_event (GtkWidget *window, GdkEvent *event, gpointer *data);
 static gboolean _button_clicked_event (GtkWidget *widget, GdkEventButton *event, CpuMeter * applet);
+static gboolean _die_die_exclamation(GtkWidget *window, GdkEvent *event, gpointer *data);
+
+
+static void set_colour(CpuMeter *p,AwnColor* colour,const char * mess,const char * gconf_key);
+
+static gboolean _set_icon_graph_fg(GtkWidget *widget, GdkEventButton *event, CpuMeter *p);
+static gboolean _set_icon_graph_bg(GtkWidget *widget, GdkEventButton *event, CpuMeter *p);
+static gboolean _set_icon_text(GtkWidget *widget, GdkEventButton *event, CpuMeter *p);
+
+#define GCONF_FG  GCONF_PATH "/graph_color"
+#define GCONF_BG  GCONF_PATH "/bg_color"
+#define GCONF_TEXT  GCONF_PATH "/border_color"
 
 /**
  * Create new applet
@@ -61,65 +81,108 @@ static gboolean _button_clicked_event (GtkWidget *widget, GdkEventButton *event,
 CpuMeter*
 cpumeter_applet_new (AwnApplet *applet)
 {
-  CpuMeter *cpumeter = g_new0 (CpuMeter, 1);
-  cpumeter->loadgraph = g_new0 (LoadGraph, 1);
-  cpumeter->applet = applet;
-  cpumeter->height = awn_applet_get_height(applet) * 2;
-  cpumeter->timer_id = -1;
-	cpumeter->show_title = FALSE;
-  cpumeter->title = AWN_TITLE(awn_title_get_default());
-  
-  register_Dashboard(&cpumeter->dashboard,cpumeter->applet);
+    CpuMeter *cpumeter = g_new0 (CpuMeter, 1);
+    cpumeter->loadgraph = g_new0 (LoadGraph, 1);
+    cpumeter->applet = applet;
+    cpumeter->height = awn_applet_get_height(applet) * 2;
+    cpumeter->timer_id = -1;
+    cpumeter->show_title = FALSE;
+    cpumeter->title = AWN_TITLE(awn_title_get_default());
 
-  Dashboard_plugs_callbacks* ptmp=register_Dashboard_plug(&cpumeter->dashboard,draw_top,NULL,0,8,4,5,&cpumeter->awntop);  
-  
-  init_Awntop(&cpumeter->awntop, dashboard_redraw_signal,&cpumeter->dashboard );  
-  init_load_graph(cpumeter->loadgraph);
-  
-  // set the icon
-  gtk_window_set_default_icon_name ("CPU Meter");
-  
-  cpumeter->size = 0;
-  cpumeter->new_size = 0;
-  cpumeter->y_offset = 0;
-  cpumeter->orient = GTK_ORIENTATION_HORIZONTAL;
-  
-  cpumeter->tooltips = gtk_tooltips_new ();
-  g_object_ref (cpumeter->tooltips);
-  gtk_object_sink (GTK_OBJECT (cpumeter->tooltips));
-  
-  cpumeter_gconf_init(cpumeter);
-  cpumeter_gconf_event(cpumeter->client, 0, NULL, cpumeter);
 
-  // connect to button events
-  g_signal_connect (G_OBJECT (cpumeter->applet), "button-release-event", G_CALLBACK (_button_release_event), (gpointer)cpumeter );
-  g_signal_connect (G_OBJECT (cpumeter->applet), "expose-event", G_CALLBACK (_expose_event), cpumeter);
+    init_load_graph(cpumeter->loadgraph);
+
+    // set the icon
+    gtk_window_set_default_icon_name ("CPU Meter");
+
+    cpumeter->size = 0;
+    cpumeter->new_size = 0;
+    cpumeter->y_offset = 0;
+    cpumeter->orient = GTK_ORIENTATION_HORIZONTAL;
+
+    cpumeter->tooltips = gtk_tooltips_new ();
+    g_object_ref (cpumeter->tooltips);
+    gtk_object_sink (GTK_OBJECT (cpumeter->tooltips));
+
+    cpumeter_gconf_init(cpumeter);
+    cpumeter_gconf_event(cpumeter->client, 0, NULL, cpumeter);
+    set_dashboard_gconf(cpumeter->client);
+    register_Dashboard(&cpumeter->dashboard,cpumeter->applet);
+    register_Dashboard_plug(&cpumeter->dashboard,cpu_plug_lookup,0,2,1,4,&cpumeter->cpu_plug);
+    register_Dashboard_plug(&cpumeter->dashboard,uptime_plug_lookup,13,15,1,3,&cpumeter->uptime_plug);          
+    register_Dashboard_plug(&cpumeter->dashboard,awntop_plug_lookup,0,40,10,40,&cpumeter->awntop);  
+
+    
+    // connect to button events
+    g_signal_connect (G_OBJECT (cpumeter->applet), "button-release-event", G_CALLBACK (_button_release_event), (gpointer)cpumeter );
+//    g_signal_connect (G_OBJECT (cpumeter->applet), "expose-event", G_CALLBACK (_expose_event), cpumeter);
  
     g_signal_connect (G_OBJECT (cpumeter->applet), "button-press-event",G_CALLBACK (_button_clicked_event), (gpointer)cpumeter);
   
-  // connect to height and orientation changes
-  g_signal_connect (G_OBJECT (cpumeter->applet), "height-changed", G_CALLBACK (_height_changed), (gpointer)cpumeter);
-  g_signal_connect (G_OBJECT (cpumeter->applet), "orientation-changed", G_CALLBACK (_orient_changed), (gpointer)cpumeter);
-  
+    // connect to height and orientation changes
+    g_signal_connect (G_OBJECT (cpumeter->applet), "height-changed", G_CALLBACK (_height_changed), (gpointer)cpumeter);
+    g_signal_connect (G_OBJECT (cpumeter->applet), "orientation-changed", G_CALLBACK (_orient_changed), (gpointer)cpumeter);
+        
+     /*FIXME why doesn't this work????*/   
+     g_signal_connect (G_OBJECT (cpumeter->applet), "applet-deleted",G_CALLBACK (_die_die_exclamation),(gpointer)cpumeter);
 	// connect to enter/leave
-	g_signal_connect (G_OBJECT(cpumeter->applet), "enter-notify-event", G_CALLBACK (_enter_notify_event), (gpointer)cpumeter);
-	g_signal_connect(G_OBJECT(cpumeter->applet), "leave-notify-event", G_CALLBACK (_leave_notify_event), (gpointer)cpumeter);
-	
+    g_signal_connect (G_OBJECT(cpumeter->applet), "enter-notify-event", G_CALLBACK (_enter_notify_event), (gpointer)cpumeter);
+    g_signal_connect(G_OBJECT(cpumeter->applet), "leave-notify-event", G_CALLBACK (_leave_notify_event), (gpointer)cpumeter);
 
-  	
+     
+    cpumeter->right_click_menu = gtk_menu_new ();
+    dashboard_build_clickable_menu_item(cpumeter->right_click_menu,
+                        G_CALLBACK(_set_icon_graph_fg),"Icon Foreground", (gpointer)cpumeter
+                                        );    
+    dashboard_build_clickable_menu_item(cpumeter->right_click_menu,
+                        G_CALLBACK(_set_icon_graph_bg),"Icon Background", (gpointer)cpumeter
+                                        );    
+    dashboard_build_clickable_menu_item(cpumeter->right_click_menu,
+                        G_CALLBACK(_set_icon_text),"Icon Text", (gpointer)cpumeter
+                                        );                                           
   return cpumeter;
 }
+
+static void set_colour(CpuMeter *p,AwnColor* colour,const char * mess,const char * gconf_key)
+{
+    char *svalue;
+    pick_awn_color(colour,mess, p,NULL);
+    svalue=dashboard_cairo_colour_to_string(colour);
+    gconf_client_set_string( get_dashboard_gconf(), gconf_key,svalue , NULL );    
+    free(svalue);
+}
+
+static gboolean _set_icon_graph_fg(GtkWidget *widget, GdkEventButton *event, CpuMeter*p)
+{  
+    set_colour(p,&p->graph,"Icon Graph Colour",GCONF_FG);
+    return TRUE;
+}
+
+static gboolean _set_icon_graph_bg(GtkWidget *widget, GdkEventButton *event, CpuMeter *p)
+{  
+    set_colour(p,&p->bg,"Icon Background Colour",GCONF_BG);
+    return TRUE;
+}
+
+static gboolean _set_icon_text(GtkWidget *widget, GdkEventButton *event,CpuMeter *p)
+{  
+    set_colour(p,&p->border,"Icon Text Colour",GCONF_TEXT);
+    return TRUE;
+}
+
 
 /**
  * Actually draw the applet via cairo
  * -uses draw()
  */
+ #if 0
 static gboolean _expose_event (GtkWidget *widget, GdkEventExpose *expose, gpointer data)
 {
   CpuMeter *cpumeter = (CpuMeter *)data;
   cpu_meter_render (cpumeter);
   return TRUE;
 }
+#endif 
 
 /**
  * Draws everything.  Should be refactored so that we don't draw the
@@ -127,29 +190,39 @@ static gboolean _expose_event (GtkWidget *widget, GdkEventExpose *expose, gpoint
  */
 gboolean cpu_meter_render (gpointer data)
 {
-  CpuMeter* cpumeter = (CpuMeter *)data;
-  cairo_t *cr = NULL;
-  gint width, height;
-  GtkWidget* widget = GTK_WIDGET(cpumeter->applet);
-  cairo_pattern_t *pattern;
-  gint i, j;
-  gfloat percent;
-  AwnApplet* applet = cpumeter->applet;
-  
+    static cairo_surface_t *surface;
+    static GdkPixbuf * apixbuf;    
+    CpuMeter* cpumeter = (CpuMeter *)data;
+    static cairo_t *cr = NULL;
+    static gint width, height;
+    GtkWidget* widget = GTK_WIDGET(cpumeter->applet);
+    cairo_pattern_t *pattern=NULL;
+    gint i, j;
+    gfloat percent;
+    AwnApplet* applet = cpumeter->applet;
+    static gboolean doneonce=FALSE;
 
-  if (!GDK_IS_DRAWABLE (widget->window)) {
-    printf("Unexpected Error: Window is not drawable.\n");
-    return FALSE;
-  }
 
-  cr = gdk_cairo_create (widget->window);
-  if (!cr) {
-    printf( "Unexpected Error: Failed to create a Cairo Drawing Context.\n");
-    return FALSE;
-  }
-  
-  gtk_widget_get_size_request (widget, &width, &height);
-  
+    if (!doneonce)
+    {
+        gtk_widget_get_size_request (widget, &width, &height);  
+        width=width-2;
+        height=height/2;
+        if (!GDK_IS_DRAWABLE (widget->window)) {
+            printf("Unexpected Error: Window is not drawable.\n");
+            return FALSE;
+        }
+        surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, width, height*2);
+        cr = cairo_create (surface);
+        assert(cr);
+        doneonce=TRUE;                        
+    }
+    /*recreating this on every render as if I reuse it some 
+    bug(s) seem to get triggered in awn-applet-simple or awn-effects*/
+    
+    apixbuf=gdk_pixbuf_new(GDK_COLORSPACE_RGB,TRUE,8,width,height*2);
+    assert(apixbuf);
+    
   LoadGraph* g = cpumeter->loadgraph;
   
   /* Clear the background to transparent */
@@ -161,7 +234,7 @@ gboolean cpu_meter_render (gpointer data)
   cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
 
   /* Set the background color */
-  awn_cairo_rounded_rect(cr, PAD-1, height+1, width-PAD, height-PAD-1, ARC, ROUND_ALL);
+  awn_cairo_rounded_rect(cr, PAD-1, height+1, width-PAD-4, height-PAD-1, ARC, ROUND_ALL);
   cairo_set_source_rgba( cr, cpumeter->bg.red, cpumeter->bg.green, cpumeter->bg.blue, cpumeter->bg.alpha );
   cairo_fill(cr);
   
@@ -179,7 +252,7 @@ gboolean cpu_meter_render (gpointer data)
   {
         percent_now=0;
   }
-  i = width - 2;
+  i = width - 6;
   j = g->index-1;
   if (j < 0) {
     j = NUM_POINTS-1;
@@ -209,42 +282,42 @@ gboolean cpu_meter_render (gpointer data)
 
   cairo_set_line_width (cr, cpumeter->border_width);
   cairo_set_source_rgba (cr, cpumeter->border.red, cpumeter->border.green, cpumeter->border.blue, cpumeter->border.alpha);
-  awn_cairo_rounded_rect(cr, PAD-1, height+1, width-PAD, height-PAD-1, ARC, ROUND_ALL);
+  awn_cairo_rounded_rect(cr, PAD-1, height+1, width-PAD-4, height-PAD-1, ARC, ROUND_ALL);
   cairo_stroke (cr);
 
   if (cpumeter->do_gradient) {
-    awn_cairo_rounded_rect(cr, PAD-1, height+1, width-PAD, height-PAD-1, ARC, ROUND_ALL);
+    awn_cairo_rounded_rect(cr, PAD-1, height+1, width-PAD-4, height-PAD-1, ARC, ROUND_ALL);
     pattern = cairo_pattern_create_linear (28, 68, 28, 48);
-    cairo_pattern_add_color_stop_rgba (pattern, 0.00,  .1, .1, .1, .5);
-    cairo_pattern_add_color_stop_rgba (pattern, 1.00,  .6, .6, .6, .5);
+    cairo_pattern_add_color_stop_rgba (pattern, 0.00,  .1, .1, .1, .1);
+    cairo_pattern_add_color_stop_rgba (pattern, 1.00,  .99, .99, .99, .1);
     cairo_set_source(cr, pattern);
     cairo_fill(cr);
   }
 
   char text[20];
   bzero(text,sizeof(text));
-  snprintf(text, sizeof(text), "CPU: %d%%", percent_now);
+  snprintf(text, sizeof(text), "CPU %d%%", percent_now);
   if (cpumeter->do_subtitle) {
     cairo_set_source_rgba (cr, cpumeter->border.red, cpumeter->border.green, cpumeter->border.blue, cpumeter->border.alpha);
     cairo_select_font_face (cr, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
-    cairo_set_font_size (cr, 7.0);
-    cairo_move_to(cr, PAD+2, bottom+8);
+    cairo_set_font_size (cr, 8.0);
+    cairo_move_to(cr, PAD-2, bottom+7);
     cairo_show_text(cr, text);
   }
 
+    surface_2_pixbuf(apixbuf,surface);
+    awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (cpumeter->applet), 
+                    apixbuf);
 	if(cpumeter->show_title) {
 		awn_title_show(cpumeter->title,GTK_WIDGET(cpumeter->applet), text);
 	} else {
 		awn_title_hide(cpumeter->title, GTK_WIDGET(cpumeter->applet));
 	}
-  
-//  embed_cairo(&cpumeter->dashboard,cr,2,3,2,3);
-  
-  /* Clean up */
-  cairo_destroy (cr);
-  
-  return TRUE;
+	if (pattern)
+    	cairo_pattern_destroy(pattern);  
+    return TRUE;
 }
+
 
 /** 
  * Almost a one-for-one ripoff from Gnome Process Monitor's
@@ -325,11 +398,13 @@ static void init_load_graph (LoadGraph *g) {
 /**
  * This is our periodic quasi-interrupt thing.
  */
+ #if 0
 static gboolean time_handler (gpointer data) {
   CpuMeter* cpumeter = (CpuMeter *)data;
   gtk_widget_queue_draw (GTK_WIDGET(cpumeter->applet));
   return TRUE;
 }
+#endif 
 
 /*
  * Events
@@ -344,6 +419,17 @@ _button_release_event (GtkWidget *widget, GdkEventButton *event, gpointer *data)
 {
   return TRUE;
 }
+
+
+static gboolean _die_die_exclamation(GtkWidget *window, GdkEvent *event, gpointer *data)
+{
+    printf("Awn System Manger Removed\n");
+  /*applet->height = height;
+    gtk_widget_queue_draw (GTK_WIDGET (applet));
+    update_icons (applet);*/
+    return TRUE;
+}
+
 
 /**
  * Called on applet height changes
@@ -385,8 +471,23 @@ _leave_notify_event (GtkWidget *window, GdkEvent *event, gpointer *data)
 }
 
 static gboolean
-_button_clicked_event (GtkWidget *widget, GdkEventButton *event, CpuMeter * applet)
+_button_clicked_event (GtkWidget *widget, GdkEventButton *event, CpuMeter * cpumeter)
 {
-  toggle_Dashboard_window(&applet->dashboard);
-  return TRUE;
+    GdkEventButton *event_button;
+    event_button = (GdkEventButton *) event; 
+    if (event->button == 1)
+    {
+      toggle_Dashboard_window(&cpumeter->dashboard);
+    }
+    else if (event->button == 3)
+    {
+        enable_suppress_hide_main();
+        gtk_menu_popup (cpumeter->right_click_menu, NULL, NULL, NULL, NULL, 
+			  event_button->button, event_button->time);
+    }
+    return TRUE;
 }
+
+
+
+

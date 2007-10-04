@@ -1,3 +1,23 @@
+/*
+ * Copyright (c) 2007 Rodney Cryderman <rcryderman@gmail.com>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+
 #include <glibtop/uptime.h>
 #include <glibtop/proclist.h>
 #include <glibtop/procstate.h>
@@ -24,7 +44,9 @@
 
 #include "awntop.h"
 #include "dashboard.h"
+#include "config.h"
 
+#undef NDEBUG
 #include <assert.h>
 
 
@@ -35,9 +57,6 @@ typedef struct
 }Proctimeinfo;
 
 
-
-
-
 typedef struct
 {
     char    *   name;
@@ -46,7 +65,7 @@ typedef struct
 }Tableheader;
 
 
-static GtkWidget * get_event_box_label(const char * t);
+static GtkWidget * get_event_box_label(const char * t, gfloat halign);
 static GtkWidget * get_label_ld(const long t);
 static GtkWidget * get_label_sz(const char * t, gfloat halign);
 static GtkWidget * get_icon_button(Awntop * Awntop,char *name,const gchar *stock_id, GtkIconSize size);
@@ -76,7 +95,7 @@ static int cmpcpu(const void *, const void *);
 static int cmpmem(const void *, const void *);
 static int cmpcommand(const void *, const void *);
 
-
+static gboolean _toggle_user_filter (GtkWidget *widget, GdkEventButton *event, Awntop *awntop);
 static gboolean _click_pid (GtkWidget *widget, GdkEventButton *event, Awntop *);
 static gboolean _click_user (GtkWidget *widget, GdkEventButton *event, Awntop *);
 static gboolean _click_virt (GtkWidget *widget, GdkEventButton *event, Awntop *);
@@ -88,7 +107,11 @@ static gboolean _time_to_kill(GtkWidget *widget, GdkEventButton *event, long *);
 static gboolean _time_to_kill_I_mean_it(GtkWidget *widget, GdkEventButton *event, long * pid);
 static gboolean _toggle_display_freeze(GtkWidget *widget, GdkEventButton *event,Awntop *awntop);
 static gboolean _change_Awntop_filter_state(GtkWidget *widget, GdkEventButton *event,Awntop *awntop);
-
+static gboolean _increase_awntop_rows (GtkWidget *widget, GdkEventButton *event, Awntop *);
+static gboolean _decrease_awntop_rows (GtkWidget *widget, GdkEventButton *event, Awntop *);
+static gboolean _click_set_term (GtkWidget *widget, GdkEventButton *event, Awntop *awntop);
+static gboolean _click_set_kill (GtkWidget *widget, GdkEventButton *event, Awntop *awntop);
+static gboolean _click_set_term_kill (GtkWidget *widget, GdkEventButton *event, Awntop *awntop);
 
 static void parse_desktop_entries(Awntop * Awntop);
 GtkWidget * lookup_icon(Awntop * Awntop,Topentry **topentries,int i);
@@ -97,17 +120,18 @@ GtkWidget * lookup_icon(Awntop * Awntop,Topentry **topentries,int i);
 
 Tableheader Global_tableheadings[]=
 {
-    {   "PID",  _click_pid},
-    {   "USER",  _click_user},
-    {   "VIRT",  _click_virt},
-    {   "RES",   _click_res},
+    {   "Process",  _click_pid},
+    {   "Username",  _click_user},
+    {   "Virtual",  _click_virt},
+    {   "Resident",   _click_res},
     {   "%CPU",  _click_cpu},
     {   "%MEM",  _click_mem},
     {   " ",     NULL},
-    {   "COMMAND",  _click_command}
+    {   "Command Line",  _click_command}
 };
 
 static int _Dummy_DUMMY=0;
+static int  G_kill_signal_method=1;
 
 static GdkPixbuf* Stock_Image_Used=(GdkPixbuf* ) (&_Dummy_DUMMY);
 
@@ -117,19 +141,127 @@ static int compmethod=1;
 static int     gcomparedir;
 static gboolean     top_state;
 
-void init_Awntop( Awntop * awntop,void (*redraw_window_fn) (void *),void * redraw_window_data)
+static void init_Awntop( Awntop * awntop);
+
+static gboolean draw_top(GtkWidget ** pwidget,gint interval,void * data);
+static gboolean query_support_multiple(void);
+
+static GtkWidget* attach_right_click_menu(void * data);
+static const char* get_component_name(void *);
+static const char* get_component_friendly_name(void *d);
+
+static void * plug_fns[MAX_CALLBACK_FN]={
+                                        init_Awntop,
+                                        NULL,
+                                        draw_top,
+                                        query_support_multiple,
+                                        NULL,
+                                        NULL,
+                                        NULL,
+                                        attach_right_click_menu,
+                                        get_component_name,
+                                        get_component_friendly_name                                        
+                                        };
+
+#define GCONF_AWNTOP_NUM_PROCS GCONF_PATH  "/component_awntop_num_procs"
+#define GCONF_AWNTOP_KILL_SIG_METH GCONF_PATH  "/component_awntop_kill_sig_meth"
+#define GCONF_AWNTOP_USER_FILTER GCONF_PATH  "/component_awntop_user_filter"
+
+void * awntop_plug_lookup(int fn_id)
 {
-    awntop->maxtopentries=15;
+    assert(fn_id<MAX_CALLBACK_FN);
+    return plug_fns[fn_id];
+}
+
+static const char* get_component_name(void *d)
+{
+    const char * name="component_awntop";
+    return name;
+}    
+
+static const char* get_component_friendly_name(void *d)
+{
+    const char * name="AWN Top";
+    return name;
+}    
+
+
+
+static GtkWidget* attach_right_click_menu(void * data)
+{
+    Awntop * awntop=data;
+    GtkWidget * menu_items;
+    GtkWidget *kill_menu = gtk_menu_new ();    
+    
+    GtkWidget *menu = gtk_menu_new ();
+    
+    menu_items = gtk_menu_item_new_with_label ("Increase Entries");
+    gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_items);        
+    g_signal_connect(       G_OBJECT (menu_items), 
+                            "button-press-event",
+                            G_CALLBACK (_increase_awntop_rows), 
+                            (gpointer)awntop
+                            );
+    gtk_widget_show (menu_items);    
+
+    menu_items = gtk_menu_item_new_with_label ("Decrease Entries");
+    gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_items);        
+    g_signal_connect(       G_OBJECT (menu_items), 
+                            "button-press-event",
+                            G_CALLBACK (_decrease_awntop_rows), 
+                            (gpointer)awntop
+                            );
+    gtk_widget_show (menu_items);    
+    
+    menu_items = gtk_menu_item_new_with_label ("Pause");
+    gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_items);        
+    g_signal_connect(       G_OBJECT (menu_items), 
+                            "button-press-event",
+                            G_CALLBACK (_toggle_display_freeze), 
+                            (gpointer)awntop
+                            );    
+    gtk_widget_show (menu_items);    
+
+
+    
+    dashboard_build_clickable_menu_item(kill_menu, G_CALLBACK(_click_set_term),"SIGTERM",data);
+    dashboard_build_clickable_menu_item(kill_menu, G_CALLBACK(_click_set_kill),"SIGKILL",data);
+    dashboard_build_clickable_menu_item(kill_menu, G_CALLBACK(_click_set_term_kill),"SIGTERM Followed by SIGKILL",data);        
+    menu_items = gtk_menu_item_new_with_label ("Kill Signal");
+    gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_items);        
+    gtk_menu_item_set_submenu(menu_items,kill_menu);      
+    gtk_widget_show (menu_items); 
+    gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_items);        
+   
+    dashboard_build_clickable_menu_item(menu, G_CALLBACK(_toggle_user_filter),"Toggle User filter",data);   
+   
+    gtk_widget_show (menu_items);   
+    
+    return menu; 
+    
+}
+
+static gboolean query_support_multiple(void)
+{
+    return FALSE;
+}
+
+
+
+static void init_Awntop( Awntop * awntop)
+{
+    GConfValue *value;   
     awntop->compar=cmpcpu;
-    awntop->proctime_tree_reaping=5;
-    awntop->filterlevel=0;    
+
     top_state=TRUE;    
     gcomparedir=-1;    
     compmethod=1;       /*sort by CPU*/
     awntop->updateinterval    =2000; /*FIXME*/
     awntop->accum_interval=0;
-    awntop->redraw_window_fn=redraw_window_fn;
-    awntop->redraw_window_data=redraw_window_data;    
+
+    
+ //   awntop->redraw_window_fn=redraw_window_fn;
+  //  awntop->redraw_window_data=redraw_window_data;    
     
     awntop->displayed_pid_list=NULL;
     awntop->proctimes=g_tree_new_full(proctime_key_compare_func,NULL,g_free,g_free);	
@@ -137,12 +269,46 @@ void init_Awntop( Awntop * awntop,void (*redraw_window_fn) (void *),void * redra
     awntop->icons=g_tree_new_full(icons_key_compare_func,NULL,free,free);	
     
     awntop->pixbufs=g_tree_new_full(icons_key_compare_func,NULL,free,free);	    
+    awntop->forceupdatefixup=FALSE;
     parse_desktop_entries(awntop);    
+
+
+    value = gconf_client_get( get_dashboard_gconf(),GCONF_AWNTOP_USER_FILTER, NULL );
+    if ( value ) 
+    {
+        awntop->filterlevel= gconf_client_get_int(get_dashboard_gconf(),GCONF_AWNTOP_USER_FILTER, NULL );
+    } 
+    else 
+    {
+        awntop->filterlevel=1;    
+    }    
+
+
+
+    value = gconf_client_get( get_dashboard_gconf(),GCONF_AWNTOP_KILL_SIG_METH, NULL );
+    if ( value ) 
+    {
+        G_kill_signal_method = gconf_client_get_int(get_dashboard_gconf(),GCONF_AWNTOP_KILL_SIG_METH, NULL );
+    } 
+    else 
+    {
+        G_kill_signal_method=2;    
+    }    
+
+    value = gconf_client_get( get_dashboard_gconf(), GCONF_AWNTOP_NUM_PROCS, NULL );
+    if ( value ) 
+    {
+        awntop->maxtopentries = gconf_client_get_int(get_dashboard_gconf(),GCONF_AWNTOP_NUM_PROCS, NULL );
+    } 
+    else 
+    {
+        awntop->maxtopentries=17;    
+    }    
     
     
 }    
 /*FIXME - changes in other placess have made some of the logic unecessary*/
-gboolean draw_top(GtkWidget ** pwidget,gint interval,void * data)
+static gboolean draw_top(GtkWidget ** pwidget,gint interval,void * data)
 {
 
     Awntop * awntop=data;
@@ -160,11 +326,10 @@ gboolean draw_top(GtkWidget ** pwidget,gint interval,void * data)
     else
     {
         awntop->accum_interval=awntop->accum_interval+interval;
-        if (awntop->accum_interval < awntop->updateinterval)
+        if ( (awntop->accum_interval < awntop->updateinterval) && (!awntop->forceupdatefixup) )
         {
             return FALSE;
         }
-        awntop->accum_interval=0;    
     }
 
     if (top_state)
@@ -187,10 +352,13 @@ gboolean draw_top(GtkWidget ** pwidget,gint interval,void * data)
         awntop->displayed_pid_list=g_malloc(sizeof(long)*awntop->maxtopentries);
     }
     
-    toptable = gtk_table_new (8, 5, FALSE);    
-    gtk_table_set_col_spacings (GTK_TABLE(toptable),15);        
+    toptable = gtk_table_new (11, 5, FALSE);    
+    gtk_table_set_col_spacings (GTK_TABLE(toptable),5);
+    gtk_table_set_row_spacings (GTK_TABLE(toptable),0);                    
     build_top_table_headings(awntop,toptable);
     build_top_table(awntop,toptable);          
+    
+#if 0
     tempwidg= get_event_box_label(states[awntop->filterlevel]);
     g_signal_connect(       G_OBJECT (tempwidg), 
                             "button-press-event",
@@ -199,7 +367,9 @@ gboolean draw_top(GtkWidget ** pwidget,gint interval,void * data)
                             );
     gtk_table_attach_defaults (GTK_TABLE (toptable), tempwidg,
                                  1, 2, 1, 2);
-    tempwidg= get_icon_button(awntop,"pause",
+#endif
+                                 
+/*    tempwidg= get_icon_button(awntop,"pause",
                         top_state?GTK_STOCK_MEDIA_PAUSE:GTK_STOCK_MEDIA_PLAY,GTK_ICON_SIZE_MENU);   
     g_signal_connect(       G_OBJECT (tempwidg), 
                             "button-press-event",
@@ -208,10 +378,34 @@ gboolean draw_top(GtkWidget ** pwidget,gint interval,void * data)
                             );
     gtk_table_attach_defaults (GTK_TABLE (toptable), tempwidg,
                                  9, 10, 0, 1);
+
+    tempwidg= get_icon_button(awntop,"addition",
+                        GTK_STOCK_ADD,
+                        GTK_ICON_SIZE_MENU);   
+    g_signal_connect(       G_OBJECT (tempwidg), 
+                            "button-press-event",
+                            G_CALLBACK (_increase_awntop_rows), 
+                            (gpointer)awntop
+                            );
+    gtk_table_attach_defaults (GTK_TABLE (toptable), tempwidg,
+                                 10, 11, 0, 1);
+
+    tempwidg= get_icon_button(awntop,"subtract",
+                        GTK_STOCK_REMOVE,
+                        GTK_ICON_SIZE_MENU);   
+    g_signal_connect(       G_OBJECT (tempwidg), 
+                            "button-press-event",
+                            G_CALLBACK (_decrease_awntop_rows), 
+                            (gpointer)awntop
+                            );
+    gtk_table_attach_defaults (GTK_TABLE (toptable), tempwidg,
+                                 10, 11,1, 2);
+*/                                
+                                 
     *pwidget=toptable;
-    /*get rid of process data if the process wasn't there last time to be updated..*/                
     
-//    *pwidget=get_icon_button("Test",GTK_STOCK_MEDIA_PLAY,GTK_ICON_SIZE_SMALL_TOOLBAR);   
+    awntop->forceupdatefixup=FALSE;
+    awntop->accum_interval=0;        
     return TRUE;
 }
 
@@ -262,9 +456,29 @@ static void proctimes_remove_inactive(gpointer data,gpointer user_data)
 {
     int *p=data;
     GTree *tree=user_data;
-//    printf("%d\n",*p);
     g_tree_remove(tree,p);
 
+}
+
+static gboolean _click_set_term (GtkWidget *widget, GdkEventButton *event, Awntop *awntop)
+{
+    G_kill_signal_method=1;    
+    gconf_client_set_int(get_dashboard_gconf(),GCONF_AWNTOP_KILL_SIG_METH,G_kill_signal_method, NULL );                            
+    return TRUE;
+}
+
+static gboolean _click_set_kill (GtkWidget *widget, GdkEventButton *event, Awntop *awntop)
+{
+    G_kill_signal_method=2;    
+    gconf_client_set_int(get_dashboard_gconf(),GCONF_AWNTOP_KILL_SIG_METH,G_kill_signal_method, NULL );                                
+    return TRUE;
+}
+
+static gboolean _click_set_term_kill (GtkWidget *widget, GdkEventButton *event, Awntop *awntop)
+{
+    G_kill_signal_method=3;    
+    gconf_client_set_int(get_dashboard_gconf(),GCONF_AWNTOP_KILL_SIG_METH,G_kill_signal_method, NULL );                                
+    return TRUE;
 }
 
 static gboolean _click_pid (GtkWidget *widget, GdkEventButton *event, Awntop *awntop)
@@ -279,7 +493,7 @@ static gboolean _click_pid (GtkWidget *widget, GdkEventButton *event, Awntop *aw
         awntop->compar = cmppid;
         gcomparedir=1;
     }    
-    awntop->redraw_window_fn(awntop->redraw_window_data);
+    awntop->forceupdatefixup=TRUE;    
     return TRUE;
 }
 static gboolean _click_user (GtkWidget *widget, GdkEventButton *event, Awntop *awntop)
@@ -294,7 +508,7 @@ static gboolean _click_user (GtkWidget *widget, GdkEventButton *event, Awntop *a
         awntop->compar = cmpuser;
         gcomparedir=1;
     }    
-    awntop->redraw_window_fn(awntop->redraw_window_data);    
+    awntop->forceupdatefixup=TRUE;    
     return TRUE;
 }
 static gboolean _click_virt (GtkWidget *widget, GdkEventButton *event, Awntop *awntop)
@@ -309,7 +523,7 @@ static gboolean _click_virt (GtkWidget *widget, GdkEventButton *event, Awntop *a
         awntop->compar = cmpvirt;
         gcomparedir=-1;
     }    
-    awntop->redraw_window_fn(awntop->redraw_window_data);    
+    awntop->forceupdatefixup=TRUE;    
     return TRUE;
 }
 static gboolean _click_res (GtkWidget *widget, GdkEventButton *event, Awntop *awntop)
@@ -324,7 +538,7 @@ static gboolean _click_res (GtkWidget *widget, GdkEventButton *event, Awntop *aw
         awntop->compar = cmpres;
         gcomparedir=-1;
     }    
-    awntop->redraw_window_fn(awntop->redraw_window_data);    
+    awntop->forceupdatefixup=TRUE;    
     return TRUE;
 }
 static gboolean _click_cpu (GtkWidget *widget, GdkEventButton *event, Awntop *awntop)
@@ -339,7 +553,7 @@ static gboolean _click_cpu (GtkWidget *widget, GdkEventButton *event, Awntop *aw
         awntop->compar = cmpcpu;
         gcomparedir=-1;
     }    
-    awntop->redraw_window_fn(awntop->redraw_window_data);    
+    awntop->forceupdatefixup=TRUE;    
     return TRUE;
 }
 static gboolean _click_mem (GtkWidget *widget, GdkEventButton *event, Awntop *awntop)
@@ -354,7 +568,7 @@ static gboolean _click_mem (GtkWidget *widget, GdkEventButton *event, Awntop *aw
         awntop->compar = cmpmem;
         gcomparedir=-1;
     }    
-    awntop->redraw_window_fn(awntop->redraw_window_data);
+    awntop->forceupdatefixup=TRUE;    
     return TRUE;
 }
 static gboolean _click_command (GtkWidget *widget, GdkEventButton *event, Awntop *awntop)
@@ -369,42 +583,82 @@ static gboolean _click_command (GtkWidget *widget, GdkEventButton *event, Awntop
         awntop->compar = cmpcommand;
         gcomparedir=1;
     }    
-    awntop->redraw_window_fn(awntop->redraw_window_data);    
+    awntop->forceupdatefixup=TRUE;    
     return TRUE;
 }
-
+#if 0
 static gboolean _time_to_kill_I_mean_it(GtkWidget *widget, GdkEventButton *event, long * pid)
 {
-    top_state=1;
+
     kill(*pid,SIGKILL);    /*I'd don't really care about detecting the result at the moment...  FIXME??*/
     return TRUE;
 }
-
+#endif
 
 static gboolean _time_to_kill(GtkWidget *widget, GdkEventButton *event, long * pid)
 {
-    top_state=1;
-    kill(*pid,SIGTERM);    /*I'd don't really care about detecting the result at the moment...  FIXME??*/    
+    assert( (G_kill_signal_method >0 ) && (G_kill_signal_method<4) );
+    
+    if (G_kill_signal_method & 1)
+    {
+        kill(*pid,SIGTERM);    /*I'd don't really care about detecting the result at the moment...  FIXME??*/        
+        if (G_kill_signal_method & 2)
+        {
+            kill(*pid,SIGKILL);    /*I'd don't really care about detecting the result at the moment...  FIXME??*/        
+        }
+    }
+    else if (G_kill_signal_method & 2)
+    {
+
+    }
     return TRUE;
 }
 
 static gboolean _toggle_display_freeze(GtkWidget *widget, GdkEventButton *event,Awntop *awntop)
 {
     top_state=!top_state;
+    awntop->forceupdatefixup=TRUE;    
 //    gtk_widget_destroy(awntop->vbox);      
 //    draw_main_window(Awntop);         
     /*FIXME write up some callback code in dashboard to trigger an immediate redraw*/
     return TRUE;
 }
 
+static gboolean _toggle_user_filter (GtkWidget *widget, GdkEventButton *event, Awntop *awntop)
+{
+    awntop->filterlevel= !awntop->filterlevel;
+    gconf_client_set_int(get_dashboard_gconf(),GCONF_AWNTOP_USER_FILTER,awntop->filterlevel, NULL );                                        
+    return TRUE;
+}
+
+#if 0
 static gboolean _change_Awntop_filter_state(GtkWidget *widget, GdkEventButton *event,Awntop *awntop)
 {
-    awntop->filterlevel++;
+
+    
     if (awntop->filterlevel==3)         /*FIXME*/
     {
         awntop->filterlevel=0;
     }
-    awntop->redraw_window_fn(awntop->redraw_window_data);
+    awntop->forceupdatefixup=TRUE;       
+    return TRUE;
+
+}
+#endif
+
+static gboolean _increase_awntop_rows (GtkWidget *widget, GdkEventButton *event, Awntop *awntop)
+{
+    awntop->forceupdatefixup=TRUE;
+    awntop->maxtopentries++;  /*possible FIXME - race? */
+    gconf_client_set_int(get_dashboard_gconf(),GCONF_AWNTOP_NUM_PROCS,awntop->maxtopentries, NULL );                        
+    return TRUE;    
+}
+static gboolean _decrease_awntop_rows (GtkWidget *widget, GdkEventButton *event, Awntop *awntop)
+{
+    awntop->forceupdatefixup=TRUE;
+    awntop->maxtopentries--;
+    gconf_client_set_int(get_dashboard_gconf(),GCONF_AWNTOP_NUM_PROCS,awntop->maxtopentries, NULL );                            
+    return TRUE;    
 }
 
 
@@ -491,17 +745,13 @@ static Topentry ** fill_topentries(Awntop *awntop,int *numel)
     int *ptmp;
         
     glibtop_get_mem(&awntop->libtop_mem);
-    assert( (awntop->filterlevel >=0) && (awntop->filterlevel<3) );
     switch (awntop->filterlevel)
     {
         case 0:
                 p=glibtop_get_proclist(&proclist,GLIBTOP_KERN_PROC_RUID, getuid());
                 break;
         case 1:
-                p=glibtop_get_proclist(&proclist,GLIBTOP_EXCLUDE_SYSTEM, -1);        
-                break;
-        case 2:                
-                p=glibtop_get_proclist(&proclist,GLIBTOP_KERN_PROC_ALL, -1);  /*FIXME - this should be a toggle*/
+                p=glibtop_get_proclist(&proclist,GLIBTOP_KERN_PROC_ALL, -1);        
                 break;
     }
                     
@@ -527,9 +777,17 @@ static Topentry ** fill_topentries(Awntop *awntop,int *numel)
 }*/
         glibtop_get_proc_time (&proc_time, p[i]);        
         value=g_tree_lookup(awntop->proctimes,&p[i]);     
+        assert(awntop->accum_interval);        
         if (value)
         {
-            topentries[i]->cpu=percent/(awntop->updateinterval/1000.0) ;
+            if (awntop->forceupdatefixup)
+            {
+                topentries[i]->cpu=percent/(awntop->accum_interval/1000.0) ;            
+            }
+            else
+            {
+                topentries[i]->cpu=percent/(awntop->updateinterval/1000.0) ;
+            }
             percent =  (proc_time.utime+proc_time.stime) - value->proctime;    
             value->proctime=proc_time.utime+proc_time.stime;                            
             if (percent>100)    /*FIXME this really should not happen...  */
@@ -548,7 +806,14 @@ static Topentry ** fill_topentries(Awntop *awntop,int *numel)
             percent=0;
         }
         value->accessed=TRUE;   
-        topentries[i]->cpu=percent/(awntop->updateinterval/1000.0) ;     
+        if (awntop->forceupdatefixup)
+        {
+            topentries[i]->cpu=percent/(awntop->accum_interval/1000.0) ;                    
+        }
+        else
+        {
+            topentries[i]->cpu=percent/(awntop->updateinterval/1000.0) ;     
+        }
         glibtop_get_proc_uid( &proc_uid,p[i]);
         topentries[i]->uid=proc_uid.uid ;    
         topentries[i]->nice=proc_uid.nice ;                     
@@ -796,10 +1061,12 @@ static void build_top_table(Awntop *awntop,GtkWidget * table )
         
         gtk_table_attach_defaults (GTK_TABLE (table), lookup_icon(awntop,topentries,i),
                          6, 7, i+2, i+3);  
-        gtk_table_attach_defaults (GTK_TABLE (table), get_label_sz(topentries[i]->cmd,0),
+        char trunc[32];
+        snprintf(trunc,12,"%s",topentries[i]->cmd);
+        tempwidg=get_event_box_label(trunc,0); 
+        gtk_table_attach_defaults (GTK_TABLE (table),tempwidg ,
                                  7, 8, i+2, i+3);
-                                 
-                                 
+        
         tempwidg= get_icon_event_box(awntop,"xkill",GTK_STOCK_CLOSE,GTK_ICON_SIZE_MENU);
         g_signal_connect (G_OBJECT (tempwidg), "button-press-event",
                                     G_CALLBACK (_time_to_kill), 
@@ -807,12 +1074,14 @@ static void build_top_table(Awntop *awntop,GtkWidget * table )
         gtk_table_attach_defaults (GTK_TABLE (table),tempwidg,
                                  8, 9, i+2, i+3);
 
-        tempwidg= get_event_box_label("-9");
+#if 0
+        tempwidg= get_event_box_label("-9",0);
         g_signal_connect (G_OBJECT (tempwidg), "button-press-event",
                                     G_CALLBACK (_time_to_kill_I_mean_it), 
                                     (gpointer)&awntop->displayed_pid_list[i]);
         gtk_table_attach_defaults (GTK_TABLE (table), tempwidg,
-                                 9, 10, i+2, i+3);
+                                 9, 10, i+2, i+3);                 
+#endif                                 
     }    
 }
 
@@ -923,12 +1192,13 @@ static GtkWidget * get_icon_event_box(Awntop * awntop,char *name,const gchar *st
 }
 
  
-static GtkWidget * get_event_box_label(const char * t)
+static GtkWidget * get_event_box_label(const char * t, gfloat halign)
 {
 	GtkWidget *label;
 	GtkWidget *eventbox;	
      
     label = gtk_label_new (t);
+    gtk_misc_set_alignment((GtkMisc *)label,halign,0.5);    
     eventbox = gtk_event_box_new (); 
     gtk_event_box_set_visible_window( GTK_EVENT_BOX(eventbox),FALSE);
     gtk_container_add (GTK_CONTAINER (eventbox),label);        

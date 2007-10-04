@@ -21,7 +21,7 @@
  */
 
 /* The GConf path */
-#define GCONF_PATH "/apps/avant-window-navigator/applets/cpumeter"
+#define GCONF_PATH "/apps/avant-window-navigator/applets/awn-system-monitor"
 
 /* The color of the graph */
 #define GCONF_GRAPH_COLOR GCONF_PATH "/graph_color"

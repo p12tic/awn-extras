@@ -1,6 +1,3 @@
-#ifndef Awntop_H_
-#define Awntop_H_
-
 /*
  * Copyright (c) 2007 Rodney Cryderman <rcryderman@gmail.com>
  *
@@ -19,7 +16,9 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
- 
+
+#ifndef Awntop_H_
+#define Awntop_H_
  
 #include <libawn/awn-applet.h>
 #include <libawn/awn-cairo-utils.h>
@@ -28,6 +27,7 @@
 #include <glib.h>
 #include <gtk/gtk.h>
  
+
 typedef struct
 {
     long     pid;
@@ -40,21 +40,22 @@ typedef struct
     long     cpu;
     long     mem;
     long    time;
-    char    cmd[40];  //From _glibtop_proc_state structure.
-        
+    char    cmd[40];  
 }Topentry;
+
+
 
 typedef struct
 {
 	guint	updateinterval;
-	guint   accum_interval;
+	gboolean   forceupdatefixup;
+	guint    accum_interval;
 	int maxtopentries;
     int     (*compar)(const void *, const void *);
     long    *   displayed_pid_list;
     GTree*  proctimes;
     GTree*  icons;    
     GTree*  pixbufs;
-    long proctime_tree_reaping;
     Topentry **topentries;  	
     int num_top_entries;    
 	int filterlevel;  
@@ -64,7 +65,6 @@ typedef struct
 	void * redraw_window_data;
 }Awntop;
 
-void init_Awntop( Awntop * awntop,void (*redraw_window_fn) (void *),void * redraw_window_data);
-gboolean draw_top(GtkWidget ** pwidget,gint interval,void * data);
+void * awntop_plug_lookup(int fn_id);
  
 #endif

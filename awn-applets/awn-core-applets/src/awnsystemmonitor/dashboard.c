@@ -43,6 +43,7 @@
 #include "dashboard_util.h"
 #include "config.h"
 
+
 #undef NDEBUG
 #include <assert.h>
 
@@ -87,7 +88,7 @@ static void hide_main_window(Dashboard *Dashboard);
 
 static    int tiles_x;
 static    int tiles_y;
-	
+static int numticks=0;	
 
 Dashboard_plugs_callbacks* register_Dashboard_plug(      Dashboard * Dashboard,
                                 void * (*lookup_fn)(int),
@@ -280,7 +281,8 @@ void register_Dashboard( Dashboard * dashboard,AwnApplet *applet)
     gtk_box_pack_end (GTK_BOX (dashboard->vbox), dashboard->maintable, TRUE, 
                         TRUE, 0);  
     pScreen = gtk_widget_get_screen (dashboard->mainwindow);
-    width=gdk_screen_get_width(pScreen)/2/tiles_x;
+    width=gdk_screen_get_width(pScreen)/2/tiles_x
+                                    /gdk_screen_get_n_monitors (pScreen);
     height=gdk_screen_get_height(pScreen)/2/tiles_y;    
 
     for(i=0;i<tiles_x-1;i++)
@@ -661,7 +663,8 @@ static gboolean _Dashboard_time_handler (Dashboard * Dashboard)
     }
     in_handler=TRUE;                
    
-    if (GTK_WIDGET_VISIBLE(Dashboard->mainwindow))
+    if ((GTK_WIDGET_VISIBLE(Dashboard->mainwindow))  ||    (numticks<15)  )
+//    if ((GTK_WIDGET_VISIBLE(Dashboard->mainwindow)) )
     {
         draw_main_window(Dashboard);                
     }	
@@ -706,24 +709,26 @@ static gboolean _focus_out_event(GtkWidget *widget, GdkEventButton *event,
 */
 static void draw_main_window(Dashboard *dashboard)
 {
+
+    
     /*have dashboard plugs that have registered draw their widgets*/
     dashboard->need_win_update=FALSE;    
     g_slist_foreach(dashboard->Dashboard_plugs,Dashboard_plugs_construct,dashboard);    
        
     /*we're done laying out the damn thing - let's show it*/
-
-    awn_applet_dialog_position_reset (AWN_APPLET_DIALOG (dashboard->mainwindow));        
-    if (!dashboard->need_win_update )
+#if 1
+    if (numticks <15)
     {
-//        dashboard->force_update=FALSE;
-
-    }
-    gtk_widget_show_all (dashboard->mainwindow);                
+        gtk_widget_show_all (dashboard->mainwindow);                
+        gtk_widget_hide(dashboard->mainwindow);       
+        numticks++;
+        return;
+    } 
+#endif                        
+    gtk_widget_show_all (dashboard->mainwindow);                    
     set_bg_rbg(&dashboard->mainwindow->style->base[0]);
     set_fg_rbg(&dashboard->mainwindow->style->fg[0]);    
     
-    GtkRequisition dims;
-    gtk_widget_size_request(dashboard->maintable,&dims);            
 }
 
 

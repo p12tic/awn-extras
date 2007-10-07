@@ -202,6 +202,15 @@ gboolean cpu_meter_render (gpointer data)
     AwnApplet* applet = cpumeter->applet;
     static gboolean doneonce=FALSE;
 
+#if 0  
+/*me trying to trigger something in awn  Please ignore :-) */
+    static GdkPixbuf * icon;
+    gtk_widget_get_size_request (widget, &width, &height);    
+    icon=gdk_pixbuf_new(GDK_COLORSPACE_RGB,TRUE,8,44,44);
+    gdk_pixbuf_fill(icon,0xff4444ee);  
+    awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (applet),icon);  
+    return;  
+#endif 
 
     if (!doneonce)
     {

@@ -46,6 +46,7 @@
 #include "dashboard.h"
 #include "config.h"
 
+
 #undef NDEBUG
 #include <assert.h>
 
@@ -226,12 +227,13 @@ static GtkWidget* attach_right_click_menu(void * data)
     
     dashboard_build_clickable_menu_item(kill_menu, G_CALLBACK(_click_set_term),"SIGTERM",data);
     dashboard_build_clickable_menu_item(kill_menu, G_CALLBACK(_click_set_kill),"SIGKILL",data);
+#if 0
     dashboard_build_clickable_menu_item(kill_menu, G_CALLBACK(_click_set_term_kill),"SIGTERM Followed by SIGKILL",data);        
+#endif    
     menu_items = gtk_menu_item_new_with_label ("Kill Signal");
     gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_items);        
     gtk_menu_item_set_submenu(menu_items,kill_menu);      
-    gtk_widget_show (menu_items); 
-    gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_items);        
+    gtk_widget_show (menu_items);      
    
     dashboard_build_clickable_menu_item(menu, G_CALLBACK(_toggle_user_filter),"Toggle User filter",data);   
    
@@ -331,9 +333,13 @@ static gboolean draw_top(GtkWidget ** pwidget,gint interval,void * data)
             return FALSE;
         }
     }
-
-    if (top_state)
+    if (!top_state)
     {
+        return FALSE;
+    }
+
+//    if (top_state)
+//    {
         if (awntop->topentries)
         {
                 free_topentries(awntop->topentries,awntop->num_top_entries);    
@@ -344,63 +350,20 @@ static gboolean draw_top(GtkWidget ** pwidget,gint interval,void * data)
         g_tree_foreach(awntop->proctimes,proctime_find_inactive,&removelist);
         g_slist_foreach(removelist,proctimes_remove_inactive,awntop->proctimes);
         g_slist_free(removelist);
-        
-    }
+        if (!awntop->displayed_pid_list )                                                            
+        {
+            awntop->displayed_pid_list=g_malloc(sizeof(long)*awntop->maxtopentries);
+        }        
+//    }
 
-    if (!awntop->displayed_pid_list )                                                            
-    {
-        awntop->displayed_pid_list=g_malloc(sizeof(long)*awntop->maxtopentries);
-    }
+
     
     toptable = gtk_table_new (11, 5, FALSE);    
     gtk_table_set_col_spacings (GTK_TABLE(toptable),5);
     gtk_table_set_row_spacings (GTK_TABLE(toptable),0);                    
     build_top_table_headings(awntop,toptable);
     build_top_table(awntop,toptable);          
-    
-#if 0
-    tempwidg= get_event_box_label(states[awntop->filterlevel]);
-    g_signal_connect(       G_OBJECT (tempwidg), 
-                            "button-press-event",
-                            G_CALLBACK (_change_Awntop_filter_state), 
-                            (gpointer)awntop
-                            );
-    gtk_table_attach_defaults (GTK_TABLE (toptable), tempwidg,
-                                 1, 2, 1, 2);
-#endif
-                                 
-/*    tempwidg= get_icon_button(awntop,"pause",
-                        top_state?GTK_STOCK_MEDIA_PAUSE:GTK_STOCK_MEDIA_PLAY,GTK_ICON_SIZE_MENU);   
-    g_signal_connect(       G_OBJECT (tempwidg), 
-                            "button-press-event",
-                            G_CALLBACK (_toggle_display_freeze), 
-                            (gpointer)awntop
-                            );
-    gtk_table_attach_defaults (GTK_TABLE (toptable), tempwidg,
-                                 9, 10, 0, 1);
-
-    tempwidg= get_icon_button(awntop,"addition",
-                        GTK_STOCK_ADD,
-                        GTK_ICON_SIZE_MENU);   
-    g_signal_connect(       G_OBJECT (tempwidg), 
-                            "button-press-event",
-                            G_CALLBACK (_increase_awntop_rows), 
-                            (gpointer)awntop
-                            );
-    gtk_table_attach_defaults (GTK_TABLE (toptable), tempwidg,
-                                 10, 11, 0, 1);
-
-    tempwidg= get_icon_button(awntop,"subtract",
-                        GTK_STOCK_REMOVE,
-                        GTK_ICON_SIZE_MENU);   
-    g_signal_connect(       G_OBJECT (tempwidg), 
-                            "button-press-event",
-                            G_CALLBACK (_decrease_awntop_rows), 
-                            (gpointer)awntop
-                            );
-    gtk_table_attach_defaults (GTK_TABLE (toptable), tempwidg,
-                                 10, 11,1, 2);
-*/                                
+                              
                                  
     *pwidget=toptable;
     
@@ -599,18 +562,23 @@ static gboolean _time_to_kill(GtkWidget *widget, GdkEventButton *event, long * p
 {
     assert( (G_kill_signal_method >0 ) && (G_kill_signal_method<4) );
     
-    if (G_kill_signal_method & 1)
+    if (G_kill_signal_method==1 )
     {
         kill(*pid,SIGTERM);    /*I'd don't really care about detecting the result at the moment...  FIXME??*/        
+
+#if 0
         if (G_kill_signal_method & 2)
         {
             kill(*pid,SIGKILL);    /*I'd don't really care about detecting the result at the moment...  FIXME??*/        
         }
+#endif        
     }
-    else if (G_kill_signal_method & 2)
+    else if (G_kill_signal_method ==2 )
     {
-
+        printf("kill %d \n",(int) *pid);
+            kill(*pid,SIGKILL);    /*I'd don't really care about detecting the result at the moment...  FIXME??*/        
     }
+    top_state=1;
     return TRUE;
 }
 
@@ -1015,6 +983,7 @@ static void build_top_table(Awntop *awntop,GtkWidget * table )
         char buf[100];
         struct passwd * userinfo;
         long tmp;
+        assert(i <= awntop->maxtopentries);        
         awntop->displayed_pid_list[i]=topentries[i]->pid; /*array of pids that show in top.  Used for kill events*/
         
                     

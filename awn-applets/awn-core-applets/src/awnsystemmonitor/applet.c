@@ -27,8 +27,7 @@ AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
 {
   AwnApplet *applet = AWN_APPLET (awn_applet_simple_new (uid, orient, height));
   CpuMeter *cpumeter;
-
-   
+  
   gtk_widget_set_size_request (GTK_WIDGET (applet), 60, -1);
 
 
@@ -46,10 +45,9 @@ AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
 #if 1
   icon=gdk_pixbuf_new(GDK_COLORSPACE_RGB,TRUE,8,height,height);
   gdk_pixbuf_fill(icon,0x00000000);  
-  awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (applet),icon);
-  
+  awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (applet),icon);  
 #endif   
-  cpumeter = cpumeter_applet_new(applet);
+  cpumeter = cpumeter_applet_new(applet);  
   gtk_widget_show_all (GTK_WIDGET (applet));
   return applet;
 }

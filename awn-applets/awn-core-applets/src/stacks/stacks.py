@@ -67,7 +67,7 @@ class App (awn.AppletSimple):
     """
     Main Applet class
     """
-    gconf_path = "/apps/avant-window-navigator/applets/stacks"
+    gconf_path = "/apps/avant-window-navigator/applets/"
     dnd_targets = [("text/uri-list", 0, 0)]
     launch_manager = stackslauncher.LaunchManager()
     dialog_visible = False
@@ -83,6 +83,7 @@ class App (awn.AppletSimple):
         self.height = height
         self.title = awn.awn_title_get_default()
         self.effects = self.get_effects()
+        self.gconf_path += str(uid)
  
         self.connect("button-press-event", self.button_press)
         self.connect("enter-notify-event", self.enter_notify)
@@ -365,6 +366,8 @@ class App (awn.AppletSimple):
         # TODO: clear existing file monitors?
         self.store.clear()
         self.config_backend = self.gconf_client.get_string(self.gconf_path + "/backend")
+        if self.config_backend == None or len(self.config_backend) == 0:
+            self.config_backend = "/tmp"
 
         _config_cols = self.gconf_client.get_int(self.gconf_path + "/cols")
         _config_rows = self.gconf_client.get_int(self.gconf_path + "/rows")

@@ -367,7 +367,7 @@ class App (awn.AppletSimple):
         self.store.clear()
         self.config_backend = self.gconf_client.get_string(self.gconf_path + "/backend")
         if self.config_backend == None or len(self.config_backend) == 0:
-            self.config_backend = "/tmp"
+            self.config_backend = os.path.expanduser("~")
 
         _config_cols = self.gconf_client.get_int(self.gconf_path + "/cols")
         _config_rows = self.gconf_client.get_int(self.gconf_path + "/rows")
@@ -413,7 +413,8 @@ class App (awn.AppletSimple):
 
     def _read_folder_backend(self, uri):
         for name in os.listdir(uri):
-            self.stack_add("file://" + os.path.join(uri, name))
+            if name[0] != ".":
+                self.stack_add("file://" + os.path.join(uri, name))
         # add monitor for folder
         print "add monitor for folder: ", uri
         filemon = stacksmonitor.FileMonitor(uri)

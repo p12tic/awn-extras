@@ -160,7 +160,7 @@ class StacksConfig:
                                         None)
         filesel.set_default_response(gtk.RESPONSE_OK)
         gconf_backend = self.applet.gconf_client.get_string(self.applet.gconf_path + "/backend")
-        if not filesel.set_filename(gconf_backend):
+        if gconf_backend != None and not filesel.set_filename(gconf_backend):
             filesel.set_current_folder(gconf_backend)
 
         selected = None

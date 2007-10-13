@@ -2,6 +2,7 @@ import os
 import gnome.ui
 import gnomevfs
 import gtk
+import urllib
 
 # Borrowed Thumbnailer from "gimmie"
 class Thumbnailer:
@@ -29,7 +30,8 @@ class Thumbnailer:
                     thumb_factory.has_valid_failed_thumbnail(self.uri, timestamp):
                 # Use existing thumbnail
                 thumb = icon_factory.load_icon(icon_name, icon_size)
-            elif self._is_local_uri(self.uri):
+            #elif self._is_local_uri(self.uri):
+            else:
                 # Generate a thumbnail for local files only
                 print " *** Calling generate_thumbnail for", self.uri
                 thumb = thumb_factory.generate_thumbnail(self.uri, self.mimetype)

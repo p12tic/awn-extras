@@ -14,6 +14,7 @@ SUBDIRS =			\
 	quit-applet		\
 	separator 		\
 	stack 			\
+	stacks          \
 	switcher 		\
 	showdesktop 		\
 	trash 			\

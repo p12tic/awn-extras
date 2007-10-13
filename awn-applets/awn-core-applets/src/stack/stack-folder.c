@@ -31,6 +31,8 @@
 
 G_DEFINE_TYPE( StackFolder, stack_folder, GTK_TYPE_EVENT_BOX )
 
+#define COL_STACKICON 0
+
 static GtkEventBoxClass *parent_class = NULL;
 
 /**
@@ -164,6 +166,8 @@ static gboolean stack_folder_add(
 
     GtkWidget *stack_icon = stack_icon_new( folder, file );
     g_return_val_if_fail( stack_icon, FALSE );
+    g_object_ref(stack_icon);
+    g_object_ref_sink(GTK_OBJECT(stack_icon));
  
     GtkTreeIter iter;
     gboolean valid;
@@ -172,7 +176,7 @@ static gboolean stack_folder_add(
     while(valid){
         gpointer icon;
 
-        gtk_tree_model_get(GTK_TREE_MODEL(folder->store), &iter, 2, &icon, -1);
+        gtk_tree_model_get(GTK_TREE_MODEL(folder->store), &iter, COL_STACKICON, &icon, -1);
 
         gint sorted = stack_folder_sort_list(stack_icon, icon);
         if(sorted < 0){
@@ -189,8 +193,9 @@ static gboolean stack_folder_add(
     }
 
     stack_icon = g_object_ref_sink( G_OBJECT(stack_icon));
-    gtk_list_store_set(folder->store, &insert_iter, 0, STACK_ICON(stack_icon)->icon, 1, 
-            STACK_ICON(stack_icon)->name, 2, stack_icon, -1);
+//    gtk_list_store_set(folder->store, &insert_iter, 0, STACK_ICON(stack_icon)->icon, 1, 
+//            STACK_ICON(stack_icon)->name, 2, stack_icon, -1);
+    gtk_list_store_set(folder->store, &insert_iter, COL_STACKICON, stack_icon, -1);
 
     /* create a 3-icon applet icon
     if ( stack_gconf_is_composite_applet_icon() ) {  	
@@ -240,10 +245,10 @@ void stack_folder_remove(
         //find item
         gpointer icon;
         
-        gtk_tree_model_get(GTK_TREE_MODEL(folder->store), &iter, 2, &icon, -1);
-
+        gtk_tree_model_get(GTK_TREE_MODEL(folder->store), &iter, COL_STACKICON, &icon, -1);
         if ( gnome_vfs_uri_equal( STACK_ICON(icon)->uri, file ) ) {
             gtk_list_store_remove(GTK_LIST_STORE(folder->store), &iter);
+            g_object_unref(icon);
             //gtk_widget_destroy( GTK_WIDGET( icon ) );
             break;
         }
@@ -295,8 +300,6 @@ static void stack_folder_monitor_callback(
     GnomeVFSMonitorEventType event_type,
     gpointer user_data ) {
 
-    g_print("monitor callback\n");
-
     StackFolder *folder = ( StackFolder * ) user_data;
     g_return_if_fail( STACK_IS_FOLDER( folder ) );
     
@@ -304,10 +307,12 @@ static void stack_folder_monitor_callback(
 
     switch ( event_type ) {
     case GNOME_VFS_MONITOR_EVENT_CREATED:
+        g_print("monitor_callback: EVENT_CREATED\n");
         something_changed = stack_folder_add( folder, gnome_vfs_uri_new( info_uri ) );
         break;
 
     case GNOME_VFS_MONITOR_EVENT_DELETED:
+        g_print("monitor callback: EVENT_DELETED\n");
         stack_folder_remove( folder, gnome_vfs_uri_new( info_uri ) );
         something_changed = TRUE;
         break;
@@ -390,23 +395,26 @@ gboolean stack_folder_has_parent_folder(
 }
 
 static void keep_icons(gpointer data, gpointer user_data){
-    g_object_ref(data);
-    gtk_container_remove(GTK_CONTAINER(user_data), GTK_WIDGET(data));
+    if(GTK_IS_CONTAINER(user_data) && GTK_IS_WIDGET(data)){
+        gtk_container_remove(GTK_CONTAINER(user_data), GTK_WIDGET(data));
+    }
 }
 
 void stack_folder_layout(StackFolder *folder, gint offset){
 
     GList *children = gtk_container_get_children(GTK_CONTAINER(folder));
+    
     gpointer old = g_list_nth_data(children, 0);
     if(old != NULL){
+        g_print("old != NULL\n");
         GList *icons = gtk_container_get_children(GTK_CONTAINER(old));
         g_list_foreach(icons, keep_icons, old);
         gtk_widget_destroy(GTK_WIDGET(old));
         g_list_free(icons);
     }
+    
 
     folder->offset = offset;
-
     gint o = offset;
     gint c = stack_gconf_get_max_cols();
     gint r = stack_gconf_get_max_rows();
@@ -414,16 +422,12 @@ void stack_folder_layout(StackFolder *folder, gint offset){
     GtkWidget *table = gtk_table_new(1,1, TRUE);
     GtkTreeIter iter;
     gboolean valid;
-     
     valid = gtk_tree_model_get_iter_first(GTK_TREE_MODEL(folder->store), &iter);
     gint x=0, y=0;
     while(valid){
-
         if(o == 0){
-            GdkPixbuf *icon;
-            gchar *name;
             StackIcon *sic;
-            gtk_tree_model_get(GTK_TREE_MODEL(folder->store), &iter, 0, &icon, 1, &name, 2, &sic, -1);
+            gtk_tree_model_get(GTK_TREE_MODEL(folder->store), &iter, COL_STACKICON, &sic, -1);
             gtk_table_attach_defaults(GTK_TABLE(table), GTK_WIDGET(sic), x,x+1,y,y+1);
             if((x+1) == c){
                 y++;
@@ -491,7 +495,8 @@ GtkWidget *stack_folder_new(
     stack_folder->name = gnome_vfs_uri_extract_short_name( stack_folder->uri );
     gtk_event_box_set_visible_window(GTK_EVENT_BOX(stack_folder), FALSE);
 
-    stack_folder->store = gtk_list_store_new(3, GDK_TYPE_PIXBUF, G_TYPE_STRING, G_TYPE_POINTER);
+//    stack_folder->store = gtk_list_store_new(3, GDK_TYPE_PIXBUF, G_TYPE_STRING, G_TYPE_POINTER);
+    stack_folder->store = gtk_list_store_new(1, G_TYPE_POINTER);
     
     GnomeVFSDirectoryHandle *handle;
     GnomeVFSResult  result;

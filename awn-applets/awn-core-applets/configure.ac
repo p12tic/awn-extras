@@ -91,6 +91,8 @@ src/quit-applet/Makefile
 src/quit-applet/icons/Makefile
 src/separator/Makefile
 src/stack/Makefile
+src/stacks/Makefile
+src/stacks/icons/Makefile
 src/volume-control/Makefile
 src/volume-control/Themes/Makefile
 src/volume-control/Themes/Black/Makefile

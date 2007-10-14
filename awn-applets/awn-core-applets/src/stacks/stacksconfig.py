@@ -121,7 +121,7 @@ class StacksConfig:
         hbox21 = gtk.HBox(False, 0)
         vbox2.pack_start(hbox21, True, True, 0)
         #               <label>
-        label_dim = gtk.Label(_("Maximum dimension (cols X rows):"))
+        label_dim = gtk.Label(_("Maximum dimension (cols x rows):"))
         hbox21.pack_start(label_dim, True, True, 0)
         #               </label>
         #               <entry>
@@ -136,7 +136,7 @@ class StacksConfig:
         #               </entry>
         #               <label>
         label_times = gtk.Label("X")
-        hbox21.pack_start(label_times, True, True, 2)
+        hbox21.pack_start(label_times, True, True, 1)
         #               </label>
         #               <entry>
         self.rows = gtk.Entry()
@@ -146,7 +146,7 @@ class StacksConfig:
         if not gconf_rows > 0:
             gconf_rows = 4
         self.rows.set_text(str(gconf_rows))
-        hbox21.pack_start(self.rows, True, True, 2)
+        hbox21.pack_start(self.rows, True, True, 1)
         #               <entry />
         #           </hbox>
         #           <hbox>
@@ -319,6 +319,15 @@ class StacksConfig:
                                         gtk.STOCK_APPLY, gtk.RESPONSE_OK), 
                                         None)
         filesel.set_default_response(gtk.RESPONSE_OK)
+        img_filter = gtk.FileFilter()
+        img_filter.set_name(_("Supported image types"))
+        # PyGTK 2.6 and above:
+        img_filter.add_pixbuf_formats()
+        # else:
+        #for format in gtk.gdk.pixbuf_get_formats():
+        #    for m in format['mime_types']:
+        #        img_filter.add_mime_type(m)
+        filesel.add_filter(img_filter)
         if user_data == "empty":
             filesel.set_filename(self.applet_icon_empty)
         else:

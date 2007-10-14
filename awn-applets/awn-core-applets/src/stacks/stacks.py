@@ -77,8 +77,8 @@ class App (awn.AppletSimple):
     config_fileops = gtk.gdk.ACTION_COPY | gtk.gdk.ACTION_MOVE | gtk.gdk.ACTION_LINK
     config_icon_size = 48
     config_composite_icon = True
-    config_icon_empty = _to_full_path("icons/stacks_drop.svg")
-    config_icon_full = _to_full_path("icons/stacks_full.svg")
+    config_icon_empty = _to_full_path("icons/stacks-drop.svg")
+    config_icon_full = _to_full_path("icons/stacks-full.svg")
 
     def __init__ (self, uid, orient, height):
         awn.AppletSimple.__init__(self, uid, orient, height)

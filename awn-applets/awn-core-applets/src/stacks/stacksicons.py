@@ -106,6 +106,10 @@ class IconFactory:
                 return icon.scale_simple(size * icon.get_width() / icon.get_height(),
                                          size,
                                          gtk.gdk.INTERP_BILINEAR)
+            elif icon.get_width() > size:
+                return icon.scale_simple(size,
+                                         size * icon.get_height() / icon.get_width(),
+                                         gtk.gdk.INTERP_BILINEAR)
             else:
                 return icon
         else:

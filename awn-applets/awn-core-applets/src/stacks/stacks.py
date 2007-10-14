@@ -416,14 +416,7 @@ class App (awn.AppletSimple):
         icon = gdk.pixbuf_new_from_file(self.config_icon_full)
         if self.config_composite_icon and pixbuf:
             # scale with aspect ratio:
-            if pixbuf.get_width() > height:
-                new_w = height
-                new_h = int(height * pixbuf.get_height() / pixbuf.get_width())
-            else:
-                new_w = int(height * pixbuf.get_width() / pixbuf.get_height())
-                new_h = height
-
-            pixbuf = pixbuf.scale_simple(new_w, new_h, gtk.gdk.INTERP_BILINEAR)
+            pixbuf =  stacksicons.IconFactory().scale_to_bounded(pixbuf, height)
 
             # determine center of composite
             cx = (height - pixbuf.get_width())/2
@@ -452,6 +445,8 @@ class App (awn.AppletSimple):
                     pixels[row+cy][pix+cx][2] = bufs[row][pix][2]
                     if pixbuf.get_has_alpha():
                         pixels[row+cy][pix+cx][3] = bufs[row][pix][3]
+                    else:
+                        pixels[row+cy][pix+cx][3] = 255
 
             # composite result over "full" icon
             mythumb.composite(   
@@ -461,7 +456,6 @@ class App (awn.AppletSimple):
                     gtk.gdk.INTERP_BILINEAR,
                     255)
         self.set_temp_icon(icon)
-
 
     def config_event(self, gconf_client, *args, **kwargs):
         self.dialog_hide()

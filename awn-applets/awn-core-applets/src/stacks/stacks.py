@@ -44,7 +44,7 @@ import stacksconfig
 import stackslauncher
 import stacksmonitor
 import stacksicons
-import inspect
+
 # Columns in the ListStore
 COL_URI = 0
 COL_LABEL = 1
@@ -61,10 +61,11 @@ def _to_full_path(path):
     head, tail = os.path.split(__file__)
     return os.path.join(head, path)
 
+"""
+Main Applet class
+"""
 class App (awn.AppletSimple):
-    """
-    Main Applet class
-    """
+	# Some initialization values
     gconf_path = "/apps/avant-window-navigator/applets/"
     dnd_targets = [("text/uri-list", 0, 0)]
     launch_manager = stackslauncher.LaunchManager()
@@ -72,7 +73,8 @@ class App (awn.AppletSimple):
     just_dragged = False
     backend_type = None
 
-    config_backend = os.path.expanduser("~")
+	# Default configuration values, are overruled while reading config
+    config_backend = os.path.join(os.path.expanduser("~"), ".awn", "stacks")
     config_cols = 5
     config_rows = 4
     config_fileops = gtk.gdk.ACTION_COPY | gtk.gdk.ACTION_MOVE | gtk.gdk.ACTION_LINK
@@ -83,13 +85,22 @@ class App (awn.AppletSimple):
 
     def __init__ (self, uid, orient, height):
         awn.AppletSimple.__init__(self, uid, orient, height)
-        print inspect.getsource(gnomedesktop) 
+
+		# initalize variables
         self.height = height
         self.title = awn.awn_title_get_default()
         self.effects = self.get_effects()
         self.gconf_path += str(uid)
+    
+        # setup backend
+        if not os.path.isdir(self.config_backend):
+            os.mkdir(self.config_backend)
+        self.config_backend = os.path.join(self.config_backend, uid)
+        if not os.path.isfile(self.config_backend):
+            os.mknod(self.config_backend)
  
-        self.connect("button-press-event", self.button_press)
+ 		# connect to events
+        self.connect("button-press-event", self.button_callback)
         self.connect("enter-notify-event", self.enter_notify)
         self.connect("leave-notify-event", self.leave_notify)
         self.connect("drag-data-received", self.received_callback)
@@ -110,7 +121,7 @@ class App (awn.AppletSimple):
         about_item.connect_object("activate",self.about_callback,self)
         self.popup_menu.show_all()
 
-        # Setup file tracker
+        # Setup store to hold the stack items
         self.store = gtk.ListStore( gobject.TYPE_STRING, 
                                     gobject.TYPE_STRING, 
                                     gobject.TYPE_STRING,
@@ -119,25 +130,17 @@ class App (awn.AppletSimple):
         self.store.set_sort_column_id(COL_URI, gtk.SORT_ASCENDING)
         self.store.set_sort_func(COL_URI, self.file_sort)
 
+		# get GConf client and read configuration
         self.gconf_client = gconf.client_get_default()
         self.gconf_client.notify_add(self.gconf_path, self.config_event)
         self.get_config()
 
-    # if backend is folder: use specified file operations
-    # else: only enable link action
-    def setup_drag_drop(self):
-        # Setup drag area
-        if self.backend_type != None and self.backend_type == gnomevfs.FILE_TYPE_DIRECTORY:
-            actions = self.config_fileops
-        else:
-            actions = gtk.gdk.ACTION_LINK
 
-        self.drag_dest_set( gtk.DEST_DEFAULT_MOTION |
-                            gtk.DEST_DEFAULT_HIGHLIGHT | 
-                            gtk.DEST_DEFAULT_DROP,
-                            self.dnd_targets, 
-                            actions)
-
+	# we use a sorted liststore.
+	# this sort function sorts:
+	# -directories first
+	# -case insensitive
+	# -first basename, then extension
     def file_sort(self, model, iter1, iter2):
         f1 = model.get_value(iter1, 0)
         f2 = model.get_value(iter2, 0)
@@ -157,12 +160,16 @@ class App (awn.AppletSimple):
         else:
             return cmp(r1, r2)
 
+
+	# hide the dialog
     def dialog_hide(self):
         if self.dialog_visible != False:
             self.title.hide(self)
             self.dialog.hide()
             self.dialog_visible = False
 
+
+	# show the dialog
     def dialog_show(self):
         if self.dialog_visible != True:
             self.dialog_visible = True
@@ -170,12 +177,14 @@ class App (awn.AppletSimple):
             self.build_stack_dialog()
             self.dialog.show_all()
 
+
     # add item to the stack
     # -ignores hidden files
     # -checks for duplicates
     # -check for desktop item
     # -add file monitor
     def stack_add(self, uri):
+        print "uri: ", uri
         # check for hidden files
         name = os.path.basename(uri)
         if name[0] == ".":
@@ -206,11 +215,15 @@ class App (awn.AppletSimple):
             mime_type = "application/x-desktop"
             thumbnailer = stacksicons.Thumbnailer(icon_uri, mime_type)
             pixbuf = thumbnailer.get_icon(self.config_icon_size)
-        else:          
-            mime_type = gnomevfs.get_mime_type(uri)
-            thumbnailer = stacksicons.Thumbnailer(uri, mime_type)
-            pixbuf = thumbnailer.get_icon(self.config_icon_size)
+        else:         
+            try: 
+                mime_type = gnomevfs.get_mime_type(uri)
+                thumbnailer = stacksicons.Thumbnailer(uri, mime_type)
+                pixbuf = thumbnailer.get_icon(self.config_icon_size)
+            except:
+                return None
 
+		# add to store and add file monitor
         if not name:
             name = os.path.basename(uri)
         filemon = stacksmonitor.FileMonitor(uri)
@@ -219,20 +232,50 @@ class App (awn.AppletSimple):
                             name, 
                             mime_type,
                             pixbuf,
-                            filemon ])       
+                            filemon ])
         filemon.open()
         return pixbuf
 
-    # TODO: remove does not work correctly yet
+
+	# remove file from store
     def stack_remove(self, uri):
+        if not self.backend_type == gnomevfs.FILE_TYPE_DIRECTORY:
+            uri = uri.replace("file://", "")
+            f = open(self.config_backend, "r")
+            if f:
+                try:
+                    lines = f.readlines()
+                    f.close()
+                    f = open(self.config_backend, "w")
+                    for furi in lines:
+                        if not furi.strip() == uri.strip():
+                            f.write(furi)
+                finally:
+                    f.close()
+            self.get_attention_effect() 
         iter = self.store.get_iter_first()
         while iter:
             store_uri = self.store.get_value(iter, COL_URI)
-            if(store_uri == uri):
+            if(store_uri == ("file://" + uri)):
                 self.store.remove(iter)
                 return True
             iter = self.store.iter_next(iter)     
         return False
+
+
+    def dialog_monitor_created(self, something, uri):
+        print "created: ", uri
+        pixbuf = self.stack_add(uri)
+        # if we do not have that file already:
+        if pixbuf != None:
+            self.get_attention_effect()
+
+
+    def dialog_monitor_deleted(self, something, uri):
+        print "deleted: ", uri
+        if self.stack_remove(uri):
+            self.get_attention_effect()
+
 
     # For direct feedback "feeling"
     # add drop source to stack immediately,
@@ -242,6 +285,7 @@ class App (awn.AppletSimple):
         for uri in (selection.data).split("\r\n"):
             if uri:
                 uri = uri.replace("file://", "")
+                # for folder backend:
                 if self.backend_type == gnomevfs.FILE_TYPE_DIRECTORY:
                     dest = os.path.join(self.config_backend, os.path.basename(uri))
                     if context.suggested_action == gtk.gdk.ACTION_LINK:
@@ -252,8 +296,17 @@ class App (awn.AppletSimple):
                         shutil.move(uri, dest)
                     else:
                         print "Suggested drop action not specified for: ", uri
-                    
-                    pixbuf = self.stack_add("file://" + dest)
+                # for file backend:
+                else:
+                    dest = uri
+                    f = open(self.config_backend, "a")
+                    if f:
+                        try:
+                            f.write(uri + os.linesep)
+                        finally:
+                            f.close()
+                   
+                pixbuf = self.stack_add("file://" + dest)
         context.finish(True, False, time)
         if pixbuf != None:
             self.set_full_icon(pixbuf)
@@ -263,23 +316,28 @@ class App (awn.AppletSimple):
 
         return True
 
+
     def open_callback(self, widget):
         if self.config_backend:
             self.launch_manager.launch_uri(self.config_backend, None)
+
 
     def clear_callback(self, widget):
         if self.store:
             self.store.clear()
         self.set_empty_icon()
+
  
     def pref_callback(self, widget):
         cfg = stacksconfig.StacksConfig(self)
+
 
     def about_callback(self, widget):
         cfg = stacksconfig.StacksConfig(self)
         cfg.notebook.set_current_page(-1)
 
-    def button_press(self, widget, event):
+
+    def button_callback(self, widget, event):
         if event.button == 3:
             # right click
             self.dialog_hide()
@@ -294,22 +352,12 @@ class App (awn.AppletSimple):
             else:
                 self.dialog_hide()
 
-    def dialog_monitor_created(self, something, uri):
-        print "created: ", uri
-        pixbuf = self.stack_add(uri)
-        # if we do not have that file already:
-        if pixbuf != None:
-            self.get_attention_effect()
-
-    def dialog_monitor_deleted(self, something, uri):
-        print "deleted: ", uri
-        if self.stack_remove(uri):
-            self.get_attention_effect()
        
     def get_attention_effect(self):
         awn.awn_effect_start(self.effects, "attention")
         time.sleep(1.0)
         awn.awn_effect_stop(self.effects, "attention")
+
 
     # launches the command for a stack icon
     # -distinguishes desktop items
@@ -327,26 +375,33 @@ class App (awn.AppletSimple):
             else:
                 self.launch_manager.launch_uri(uri, mimetype) 
 
+
     def dialog_focus_out(self, widget, event):
         self.dialog_hide()
+
 
     def dialog_drag_data_delete(self, widget, context):
         return
 
+
     def dialog_drag_data_get(self, widget, context, selection, info, time, user_data):
         selection.set_uris([user_data])
+
 
     def dialog_drag_begin(self, widget, context):
         self.just_dragged = True
 
+
     def enter_notify (self, widget, event):
-        if self.config_backend != None:
+        if self.config_backend != None and self.backend_type == gnomevfs.FILE_TYPE_DIRECTORY:
             self.title.show(self, os.path.basename(self.config_backend))
         else:
             self.title.show(self, _("Stacks"))
 
+
     def leave_notify (self, widget, event):
         self.title.hide(self)
+
 
     def set_empty_icon(self):
         height = self.height
@@ -354,6 +409,7 @@ class App (awn.AppletSimple):
         if height != icon.get_height():
             icon = icon.scale_simple(height,height,gtk.gdk.INTERP_BILINEAR)
         self.set_temp_icon(icon)
+
 
     def set_full_icon(self, pixbuf):
         height = self.height
@@ -394,7 +450,8 @@ class App (awn.AppletSimple):
                     pixels[row+cy][pix+cx][0] = bufs[row][pix][0]
                     pixels[row+cy][pix+cx][1] = bufs[row][pix][1]
                     pixels[row+cy][pix+cx][2] = bufs[row][pix][2]
-                    pixels[row+cy][pix+cx][3] = bufs[row][pix][3]
+                    if pixbuf.get_has_alpha():
+                        pixels[row+cy][pix+cx][3] = bufs[row][pix][3]
 
             # composite result over "full" icon
             mythumb.composite(   
@@ -405,9 +462,11 @@ class App (awn.AppletSimple):
                     255)
         self.set_temp_icon(icon)
 
+
     def config_event(self, gconf_client, *args, **kwargs):
         self.dialog_hide()
         self.get_config()
+
      
     def get_config(self):
         # TODO: clear existing file monitors?
@@ -454,7 +513,7 @@ class App (awn.AppletSimple):
         else:
             self._read_file_backend(self.config_backend)   
 
-        self.setup_drag_drop()
+        self._setup_drag_drop()
 
         # get random pixbuf
         iter = self.store.get_iter_first()
@@ -474,9 +533,33 @@ class App (awn.AppletSimple):
         else:
             self.set_empty_icon()
 
+
+    # if backend is folder: use specified file operations
+    # else: only enable link action
+    def _setup_drag_drop(self):
+        if self.backend_type != None and self.backend_type == gnomevfs.FILE_TYPE_DIRECTORY:
+            actions = self.config_fileops
+        else:
+            actions = gtk.gdk.ACTION_LINK
+
+        self.drag_dest_set( gtk.DEST_DEFAULT_MOTION |
+                            gtk.DEST_DEFAULT_HIGHLIGHT | 
+                            gtk.DEST_DEFAULT_DROP,
+                            self.dnd_targets, 
+                            actions)
+
+
     def _read_file_backend(self, uri):
-        # TODO: parse file
-        return
+        f = open(self.config_backend, "r")
+        if f:
+            try:
+                lines = f.readlines()
+                for uri in lines:
+                    if len(uri) > 0:
+                        self.stack_add("file://" + uri.rstrip())
+            finally:
+                f.close()
+
 
     def _read_folder_backend(self, uri):
         for name in os.listdir(uri):
@@ -488,6 +571,7 @@ class App (awn.AppletSimple):
         filemon.connect("created", self.dialog_monitor_created)
         filemon.connect("deleted", self.dialog_monitor_deleted)
 
+
     def build_stack_dialog(self):
         if not self.store:
             return
@@ -496,10 +580,8 @@ class App (awn.AppletSimple):
         self.dialog.set_focus_on_map(True)
         self.dialog.connect("focus-out-event", self.dialog_focus_out)
 
-        if self.config_backend != None:
+        if self.config_backend != None and self.backend_type == gnomevfs.FILE_TYPE_DIRECTORY:
             self.dialog.set_title(os.path.basename(self.config_backend))
-        else:
-            self.dialog.set_title(_("Stacks"))
 
         table = gtk.Table(1,1,True)
         table.set_row_spacings(ROW_SPACING)

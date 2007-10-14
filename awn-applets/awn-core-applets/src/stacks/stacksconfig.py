@@ -87,7 +87,7 @@ class StacksConfig:
         vbox1 = gtk.VBox(False, 4)
         page1.add(vbox1)
         #           <label>
-        info_label = gtk.Label(_("If you select a <b>file</b> as backend, the stack will just contain a group of links to files (symlinks).\n\nIf you select a <b>folder</b> as backend, the stack will support real file operations, so that you can copy, move and link files to that folder."))
+        info_label = gtk.Label(_("As default a <b>file</b> is used as backend, and the stack will just contain a group of links to files (symlinks).\n\nIf you select a <b>folder</b> as backend, the stack will support real file operations, so that you can copy, move and link files to that folder."))
         info_label.set_use_markup(True)
         info_label.set_line_wrap(True)
         vbox1.pack_start(info_label, True, True, 0)
@@ -96,7 +96,8 @@ class StacksConfig:
         type_hbox = gtk.HBox(False, 0)
         vbox1.pack_start(type_hbox, True, True, 0)
         #               <label>
-        select_label = gtk.Label(_("Select backend for this stack:"))
+        select_label = gtk.Label(_("Select <b>folder backend</b> for this stack:"))
+        select_label.set_use_markup(True)
         type_hbox.pack_start(select_label, True, True, 0)
         #               </label>
         #               <button>
@@ -232,7 +233,7 @@ class StacksConfig:
         vbox3 = gtk.VBox(False, 4)
         page3.add(vbox3)
         #           <label>
-        label31 = gtk.Label(_("In most OS configurations, the <b>CTRL</b>, <b>ALT</b> and <b>SHIFT</b> are the modifiers that determine what drag operation is used on the <b>folder</b> backend.\nChoosing a <b>file</b> backend allows only for symlinks."))
+        label31 = gtk.Label(_("In most OS configurations, the <b>CTRL</b>, <b>ALT</b> and <b>SHIFT</b> are the modifiers that determine what drag operation is used on the <b>folder</b> backend.\nUsing a <b>file backend</b> (default) allows only for symlinks."))
         label31.set_use_markup(True)
         label31.set_line_wrap(True)
         vbox3.pack_start(label31, True, False, 0)
@@ -295,14 +296,17 @@ class StacksConfig:
     def activate_filechooser(self, widget, event):
         filesel = gtk.FileChooserDialog("Select backend destination:", 
                                         None, 
-                                        gtk.FILE_CHOOSER_ACTION_CREATE_FOLDER, 
+                                        gtk.FILE_CHOOSER_ACTION_CREATE_FOLDER |
+                                        gtk.FILE_CHOOSER_ACTION_SAVE, 
                                         (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
                                         gtk.STOCK_APPLY, gtk.RESPONSE_OK), 
                                         None)
         filesel.set_default_response(gtk.RESPONSE_OK)
         gconf_backend = self.applet.gconf_client.get_string(self.applet.gconf_path + "/backend")
-        if gconf_backend != None and not filesel.set_filename(gconf_backend):
+        if gconf_backend != None:
             filesel.set_current_folder(gconf_backend)
+        else:
+            filesel.set_current_folder(os.path.expanduser("~"))
 
         selected = None
         if filesel.run() == gtk.RESPONSE_OK:

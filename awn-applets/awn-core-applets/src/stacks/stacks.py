@@ -28,6 +28,7 @@ import time
 import random
 import gnome.ui
 import gnomevfs
+import gnomedesktop
 import shutil
 APP="Stacks"
 DIR="locale"
@@ -43,7 +44,7 @@ import stacksconfig
 import stackslauncher
 import stacksmonitor
 import stacksicons
-
+import inspect
 # Columns in the ListStore
 COL_URI = 0
 COL_LABEL = 1
@@ -82,7 +83,7 @@ class App (awn.AppletSimple):
 
     def __init__ (self, uid, orient, height):
         awn.AppletSimple.__init__(self, uid, orient, height)
-        
+        print inspect.getsource(gnomedesktop) 
         self.height = height
         self.title = awn.awn_title_get_default()
         self.effects = self.get_effects()
@@ -169,24 +170,53 @@ class App (awn.AppletSimple):
             self.build_stack_dialog()
             self.dialog.show_all()
 
+    # add item to the stack
+    # -ignores hidden files
+    # -checks for duplicates
+    # -check for desktop item
+    # -add file monitor
     def stack_add(self, uri):
+        # check for hidden files
         name = os.path.basename(uri)
         if name[0] == ".":
             return None
+        # check for duplicates
         iter = self.store.get_iter_first()
         while iter:
             store_uri = self.store.get_value(iter, COL_URI)
-            # check for duplicates
             if(store_uri == uri):
                 return None
-            iter = self.store.iter_next(iter)     
-        mime_type = gnomevfs.get_mime_type(uri)
-        thumbnailer = stacksicons.Thumbnailer(uri, mime_type)
-        pixbuf = thumbnailer.get_icon(self.config_icon_size)
+            iter = self.store.iter_next(iter)    
+        # check for desktop item
+        root, ext = os.path.splitext(uri)
+        if ext == ".desktop":
+            item = gnomedesktop.item_new_from_uri(uri, gnomedesktop.LOAD_ONLY_IF_EXISTS)
+            if not item:
+                return None
+            command = item.get_string(gnomedesktop.KEY_EXEC)
+            name = item.get_localestring(gnomedesktop.KEY_NAME)
+            icon_name = item.get_localestring(gnomedesktop.KEY_ICON)
+            if icon_name:
+                icon_uri = gnomedesktop.find_icon(  gtk.icon_theme_get_default(), 
+                                                    icon_name,
+                                                    self.config_icon_size,
+                                                    0)
+            else:
+                icon_uri = uri
+            mime_type = "application/x-desktop"
+            thumbnailer = stacksicons.Thumbnailer(icon_uri, mime_type)
+            pixbuf = thumbnailer.get_icon(self.config_icon_size)
+        else:          
+            mime_type = gnomevfs.get_mime_type(uri)
+            thumbnailer = stacksicons.Thumbnailer(uri, mime_type)
+            pixbuf = thumbnailer.get_icon(self.config_icon_size)
+
+        if not name:
+            name = os.path.basename(uri)
         filemon = stacksmonitor.FileMonitor(uri)
         filemon.connect("deleted", self.dialog_monitor_deleted)
         self.store.append([ uri, 
-                            os.path.basename(uri), 
+                            name, 
                             mime_type,
                             pixbuf,
                             filemon ])       
@@ -255,8 +285,10 @@ class App (awn.AppletSimple):
             self.dialog_hide()
             self.popup_menu.popup(None, None, None, event.button, event.time)
         elif event.button == 2 and self.config_backend:
+            # middle click
             self.launch_manager.launch_uri(self.config_backend, None)
         else:
+            # left click
             if self.dialog_visible != True and self.store.get_iter_first() != None:
                 self.dialog_show()
             else:
@@ -279,12 +311,21 @@ class App (awn.AppletSimple):
         time.sleep(1.0)
         awn.awn_effect_stop(self.effects, "attention")
 
+    # launches the command for a stack icon
+    # -distinguishes desktop items
     def dialog_button_released(self, widget, event, user_data):
         if self.just_dragged == True:
             self.just_dragged = False
         else:
             uri, mimetype = user_data
-            self.launch_manager.launch_uri(uri, mimetype) 
+            root, ext = os.path.splitext(uri)
+            if ext == ".desktop":
+                item = gnomedesktop.item_new_from_uri(uri, gnomedesktop.LOAD_ONLY_IF_EXISTS)
+                if item:
+                    command = item.get_string(gnomedesktop.KEY_EXEC)
+                    self.launch_manager.launch_command(command, uri)    
+            else:
+                self.launch_manager.launch_uri(uri, mimetype) 
 
     def dialog_focus_out(self, widget, event):
         self.dialog_hide()
@@ -490,7 +531,7 @@ class App (awn.AppletSimple):
                 button.drag_source_set_icon_pixbuf(icon)
                 image = gtk.Image()
                 image.set_from_pixbuf(icon)
-                #image.set_size_request(self.config_icon_size, self.config_icon_size)
+                image.set_size_request(self.config_icon_size, self.config_icon_size)
                 vbox.pack_start(image, False, False, 0)
             label = gtk.Label(self.store.get_value(iter, COL_LABEL))
             if label:

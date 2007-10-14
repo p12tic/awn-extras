@@ -39,8 +39,8 @@ class Thumbnailer:
     
             if thumb:
                 # Fixup the thumbnail a bit
-                thumb = self._nicer_dimensions(thumb)
-                thumb = icon_factory.make_icon_frame(thumb, icon_size)
+                #thumb = self._nicer_dimensions(thumb)
+                #thumb = icon_factory.make_icon_frame(thumb, icon_size)
                 return thumb
         except:
             pass

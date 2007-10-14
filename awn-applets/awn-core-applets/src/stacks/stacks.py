@@ -70,10 +70,15 @@ class App (awn.AppletSimple):
     dialog_visible = False
     just_dragged = False
     backend_type = None
+
+    config_backend = os.path.expanduser("~")
     config_cols = 5
     config_rows = 4
     config_fileops = gtk.gdk.ACTION_COPY | gtk.gdk.ACTION_MOVE | gtk.gdk.ACTION_LINK
     config_icon_size = 48
+    config_composite_icon = True
+    config_icon_empty = _to_full_path("icons/stacks_drop.svg")
+    config_icon_full = _to_full_path("icons/stacks_full.svg")
 
     def __init__ (self, uid, orient, height):
         awn.AppletSimple.__init__(self, uid, orient, height)
@@ -304,17 +309,15 @@ class App (awn.AppletSimple):
 
     def set_empty_icon(self):
         height = self.height
-        drop_icon = _to_full_path("icons/stacks-drop.svg")
-        icon = gdk.pixbuf_new_from_file (drop_icon)
+        icon = gdk.pixbuf_new_from_file (self.config_icon_empty)
         if height != icon.get_height():
             icon = icon.scale_simple(height,height,gtk.gdk.INTERP_BILINEAR)
         self.set_temp_icon(icon)
 
     def set_full_icon(self, pixbuf):
         height = self.height
-        full_icon = _to_full_path("icons/stacks-full.svg") 
-        icon = gdk.pixbuf_new_from_file(full_icon)
-        if pixbuf:
+        icon = gdk.pixbuf_new_from_file(self.config_icon_full)
+        if self.config_composite_icon and pixbuf:
             # scale with aspect ratio:
             if pixbuf.get_width() > height:
                 new_w = height
@@ -368,14 +371,16 @@ class App (awn.AppletSimple):
     def get_config(self):
         # TODO: clear existing file monitors?
         self.store.clear()
-        self.config_backend = self.gconf_client.get_string(self.gconf_path + "/backend")
-        if self.config_backend == None or len(self.config_backend) == 0:
-            self.config_backend = os.path.expanduser("~")
-
+        
+        _config_backend = self.gconf_client.get_string(self.gconf_path + "/backend")
+        if _config_backend:
+            self.config_backend = _config_backend
+           
         _config_cols = self.gconf_client.get_int(self.gconf_path + "/cols")
-        _config_rows = self.gconf_client.get_int(self.gconf_path + "/rows")
         if _config_cols > 0:
             self.config_cols = _config_cols
+
+        _config_rows = self.gconf_client.get_int(self.gconf_path + "/rows")
         if _config_rows > 0:
             self.config_rows = _config_rows
 
@@ -386,6 +391,20 @@ class App (awn.AppletSimple):
         _config_fileops = self.gconf_client.get_int(self.gconf_path + "/file_operations")
         if _config_fileops > 0:
             self.config_fileops = _config_fileops
+
+        _config_composite_icon = self.gconf_client.get_bool(self.gconf_path + "/composite_icon")
+        if _config_composite_icon:
+            self.config_composite_icon = True
+        else:
+            self.config_composite_icon = False
+
+        _config_icon_empty = self.gconf_client.get_string(self.gconf_path + "/applet_icon_empty")
+        if _config_icon_empty:
+            self.config_icon_empty = _config_icon_empty
+
+        _config_icon_full = self.gconf_client.get_string(self.gconf_path + "/applet_icon_full")
+        if _config_icon_full:
+            self.config_icon_full = _config_icon_full      
 
         self.backend_type = gnomevfs.get_file_info(self.config_backend).type
         # read items from backend

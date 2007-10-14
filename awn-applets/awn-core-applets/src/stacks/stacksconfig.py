@@ -50,6 +50,13 @@ class StacksConfig:
         # possible options
         self.backend = None
 
+        self.applet_icon_empty = self.applet.gconf_client.get_string(self.applet.gconf_path + "/applet_icon_empty")
+        if self.applet_icon_empty == None:
+            self.applet_icon_empty = _to_full_path("icons/stacks-drop.svg")
+        self.applet_icon_full = self.applet.gconf_client.get_string(self.applet.gconf_path + "/applet_icon_full")
+        if self.applet_icon_full == None:
+            self.applet_icon_full = _to_full_path("icons/stacks-full.svg")      
+
         drop_icon = _to_full_path("icons/stacks-drop.svg")
         icon = gdk.pixbuf_new_from_file (drop_icon)
         self.window.set_icon(icon)
@@ -77,7 +84,7 @@ class StacksConfig:
         page1.set_padding(10,10,20,20)
         self.notebook.append_page(page1, label)
         #       <vbox>
-        vbox1 = gtk.VBox(False, 2)
+        vbox1 = gtk.VBox(False, 4)
         page1.add(vbox1)
         #           <label>
         info_label = gtk.Label(_("If you select a <b>file</b> as backend, the stack will just contain a group of links to files (symlinks).\n\nIf you select a <b>folder</b> as backend, the stack will support real file operations, so that you can copy, move and link files to that folder."))
@@ -96,7 +103,7 @@ class StacksConfig:
         fbutton = gtk.Button(gtk.STOCK_OPEN)
         fbutton.set_use_stock(True)
         fbutton.connect("button-release-event", self.activate_filechooser)
-        type_hbox.pack_end(fbutton, True, True, 0)
+        type_hbox.pack_end(fbutton, True, True, 2)
         #           </hbox>
         #       </vbox>
         #   </alignment>
@@ -108,10 +115,10 @@ class StacksConfig:
         page2.set_padding(10,10,20,20)
         self.notebook.append_page(page2, label2)
         #       <vbox>
-        vbox2 = gtk.VBox(False, 2)
+        vbox2 = gtk.VBox(False, 4)
         page2.add(vbox2)
         #           <hbox>
-        hbox21 = gtk.HBox(False, 2)
+        hbox21 = gtk.HBox(False, 0)
         vbox2.pack_start(hbox21, True, True, 0)
         #               <label>
         label_dim = gtk.Label(_("Maximum dimension (cols X rows):"))
@@ -125,11 +132,11 @@ class StacksConfig:
         if not gconf_cols > 0:
             gconf_cols = 5
         self.cols.set_text(str(gconf_cols))       
-        hbox21.pack_start(self.cols, True, True, 0)
+        hbox21.pack_start(self.cols, True, True, 2)
         #               </entry>
         #               <label>
         label_times = gtk.Label("X")
-        hbox21.pack_start(label_times, True, True, 0)
+        hbox21.pack_start(label_times, True, True, 2)
         #               </label>
         #               <entry>
         self.rows = gtk.Entry()
@@ -139,11 +146,11 @@ class StacksConfig:
         if not gconf_rows > 0:
             gconf_rows = 4
         self.rows.set_text(str(gconf_rows))
-        hbox21.pack_start(self.rows, True, True, 0)
+        hbox21.pack_start(self.rows, True, True, 2)
         #               <entry />
         #           </hbox>
         #           <hbox>
-        hbox22 = gtk.HBox(False, 2)
+        hbox22 = gtk.HBox(False, 0)
         vbox2.pack_start(hbox22, True, True, 0)
         #               <label>
         label22 = gtk.Label(_("Icon size (inside stacks):"))
@@ -155,8 +162,62 @@ class StacksConfig:
             gconf_icon_size = 48
         spin21_adj = gtk.Adjustment(gconf_icon_size, 24, 96, 2, 2, 0)
         self.spin21 = gtk.SpinButton(spin21_adj, 0.5, 0)
-        hbox22.pack_start(self.spin21, True, True, 0)
+        self.spin21.set_numeric(True)
+        self.spin21.set_snap_to_ticks(True)
+        self.spin21.set_width_chars(3)
+        self.spin21.set_alignment(0.5)
+        hbox22.pack_start(self.spin21, True, True, 2)
         #               </spinbutton>
+        #           </hbox>
+        #           <separator>
+        hseparator21 = gtk.HSeparator()
+        vbox2.pack_start(hseparator21, True, True, 0)
+        #           <hbox>
+        hbox23 = gtk.HBox(False, 0)
+        vbox2.pack_start(hbox23, True, True, 0)
+        #               <label>
+        label23 = gtk.Label(_("Applet icon:"))
+        hbox23.pack_start(label23, True, True, 0)
+        #               </label>
+        #               <button>
+        self.button21 = gtk.Button(_("Empty"))
+        e_icon = gdk.pixbuf_new_from_file (self.applet_icon_empty)
+        if e_icon:
+            image21 = gtk.Image()
+            image21.set_from_pixbuf(e_icon)
+            self.button21.set_image(image21)
+        self.button21.connect("button-release-event", self.icon_button, "empty")
+        hbox23.pack_start(self.button21, True, True, 2)
+        #               </button>
+        #               <button>
+        self.button22 = gtk.Button(_("Full"))
+        f_icon = gdk.pixbuf_new_from_file (self.applet_icon_full)
+        if f_icon:
+            image22 = gtk.Image()
+            image22.set_from_pixbuf(f_icon)
+            self.button22.set_image(image22)
+        self.button22.connect("button-release-event", self.icon_button, "full")
+        hbox23.pack_start(self.button22, True, True, 2)
+        #               </button>
+        #           </hbox>
+        #           <hbox>
+        hbox24 = gtk.HBox(False, 2)
+        vbox2.pack_start(hbox24, True, True, 0)
+        #               <label>
+        label24 = gtk.Label(_("Composite last stack icon onto \"full\" applet icon:"))
+        label24.set_use_markup(True)
+        hbox24.pack_start(label24, True, True, 0)
+        #               </label>
+        #               <checkbutton>
+        self.checkbutton21 = gtk.CheckButton(_("Enable"))
+        composite = self.applet.gconf_client.get_bool(self.applet.gconf_path + "/composite_icon")
+        # TODO: howto "detect" True by default
+        if composite:
+            self.checkbutton21.set_active(True)
+        else:
+            self.checkbutton21.set_active(False)
+        hbox24.pack_start(self.checkbutton21, True, True, 2)
+        #               </checkbutton>
         #           </hbox>
         #       </vbox>
         #   </alignment>
@@ -168,35 +229,35 @@ class StacksConfig:
         page3.set_padding(10, 10, 20, 20)
         self.notebook.append_page(page3, label3)
         #       <vbox>
-        vbox3 = gtk.VBox(False, 2)
+        vbox3 = gtk.VBox(False, 4)
         page3.add(vbox3)
         #           <label>
-        lbl_actions = gtk.Label(_("In most OS configurations, the <b>CTRL</b>, <b>ALT</b> and <b>SHIFT</b> are the modifiers that determine what drag operation is used."))
-        lbl_actions.set_use_markup(True)
-        lbl_actions.set_line_wrap(True)
-        vbox3.pack_start(lbl_actions, True, False, 0)
+        label31 = gtk.Label(_("In most OS configurations, the <b>CTRL</b>, <b>ALT</b> and <b>SHIFT</b> are the modifiers that determine what drag operation is used on the <b>folder</b> backend.\nChoosing a <b>file</b> backend allows only for symlinks."))
+        label31.set_use_markup(True)
+        label31.set_line_wrap(True)
+        vbox3.pack_start(label31, True, False, 0)
         #           </label>
         #           <hbox>
-        hbox_ops = gtk.HBox(False, 0)
-        vbox3.pack_start(hbox_ops, False, False, 0)
+        hbox31 = gtk.HBox(False, 0)
+        vbox3.pack_start(hbox31, False, False, 0)
         #               <label>
-        lbl_fileops = gtk.Label(_("Enable file-operations:"))
-        hbox_ops.pack_start(lbl_fileops, False, False, 0)
+        label32 = gtk.Label(_("Restrict folder-operations to:"))
+        hbox31.pack_start(label32, False, False, 0)
         #               </label>
         #               <checkbutton>
         self.chk_copy = gtk.CheckButton(_("Copy")) 
         self.chk_copy.set_active(True)
-        hbox_ops.pack_start(self.chk_copy, False, False, 2)
+        hbox31.pack_start(self.chk_copy, False, False, 2)
         #               </checkbutton>
         #               <checkbutton>
         self.chk_move = gtk.CheckButton(_("Move"))
         self.chk_move.set_active(True)
-        hbox_ops.pack_start(self.chk_move, False, False, 2)
+        hbox31.pack_start(self.chk_move, False, False, 2)
         #               </checkbutton>
         #               <checkbutton>
         self.chk_link = gtk.CheckButton(_("Link"))
         self.chk_link.set_active(True)
-        hbox_ops.pack_start(self.chk_link, False, False, 2)
+        hbox31.pack_start(self.chk_link, False, False, 2)
         #               </checkbutton>
         actions = self.applet.gconf_client.get_int(self.applet.gconf_path + "/file_operations")
         if actions > 0:
@@ -217,13 +278,13 @@ class StacksConfig:
         page4.set_padding(10, 10, 20, 20)
         self.notebook.append_page(page4, label4)
         #       <vbox> 
-        vbox4 = gtk.VBox(False, 2)
+        vbox4 = gtk.VBox(False, 4)
         page4.add(vbox4)
         #           <label>
-        about_label = gtk.Label(_("<big><b>Stacks: applet for Avant Window Navigator</b></big>\n\nTODO: description\n\nauthor: Timon ter Braak"))
-        about_label.set_line_wrap(True)                                 
-        about_label.set_use_markup(True)
-        vbox4.pack_start(about_label, True, True, 0)
+        label41 = gtk.Label(_("<big><b>Stacks: applet for Avant Window Navigator</b></big>\n\nTODO: description\n\nauthor: Timon ter Braak"))
+        label41.set_line_wrap(True)                                 
+        label41.set_use_markup(True)
+        vbox4.pack_start(label41, True, True, 0)
         #           </label>
         #       </vbox>
         #   </alignment>
@@ -247,6 +308,35 @@ class StacksConfig:
         if filesel.run() == gtk.RESPONSE_OK:
             self.backend = filesel.get_filename()
         filesel.destroy()
+        
+
+    def icon_button(self, widget, event, user_data):
+        print "icon button pushed: ", user_data
+        filesel = gtk.FileChooserDialog("Select applet icon:", 
+                                        None, 
+                                        gtk.FILE_CHOOSER_ACTION_OPEN, 
+                                        (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
+                                        gtk.STOCK_APPLY, gtk.RESPONSE_OK), 
+                                        None)
+        filesel.set_default_response(gtk.RESPONSE_OK)
+        if user_data == "empty":
+            filesel.set_filename(self.applet_icon_empty)
+        else:
+            filesel.set_filename(self.applet_icon_full)
+
+        selected = None
+        if filesel.run() == gtk.RESPONSE_OK:
+            icon = gdk.pixbuf_new_from_file(filesel.get_filename())
+            if icon != None:
+                image = gtk.Image()
+                image.set_from_pixbuf(icon)
+                if user_data == "empty":
+                    self.applet_icon_empty = filesel.get_filename()
+                    self.button21.set_image(image)
+                else:
+                    self.applet_icon_full = filesel.get_filename()
+                    self.button22.set_image(image)
+        filesel.destroy()
 
     def ok_button(self, widget, event):
         if self.backend != None:
@@ -261,6 +351,17 @@ class StacksConfig:
         if int(self.spin21.get_value()) > 0:
             self.applet.gconf_client.set_int(self.applet.gconf_path + "/icon_size",
                                                 int(self.spin21.get_value()) )
+        if self.checkbutton21.get_active():
+            self.applet.gconf_client.set_bool(self.applet.gconf_path + "/composite_icon",
+                                                True)
+        else:
+            self.applet.gconf_client.set_bool(self.applet.gconf_path + "/composite_icon",
+                                                False)
+
+        self.applet.gconf_client.set_string(self.applet.gconf_path + "/applet_icon_empty",
+                                                self.applet_icon_empty)
+        self.applet.gconf_client.set_string(self.applet.gconf_path + "/applet_icon_full",
+                                                self.applet_icon_full)
 
         actions = 0
         if self.chk_copy.get_active():

@@ -71,29 +71,53 @@ class StacksConfig:
         vbox.pack_end(hbox,False,False,2)
 
         # page 1: the backend
-        label = gtk.Label("Backend")
-        page1 = gtk.VBox(False, 0)
-        info_label = gtk.Label("If you select a <b>file</b> as backend, the stack will just contain a group of links to files (symlinks).\n\nIf you select a <b>folder</b> as backend, the stack will support real file operations, so that you can copy, move and link files to that folder.")
+        #   <alignment>
+        label = gtk.Label(_("Backend"))
+        page1 = gtk.Alignment(0, 0, 0, 0)
+        page1.set_padding(10,10,20,20)
+        self.notebook.append_page(page1, label)
+        #       <vbox>
+        vbox1 = gtk.VBox(False, 2)
+        page1.add(vbox1)
+        #           <label>
+        info_label = gtk.Label(_("If you select a <b>file</b> as backend, the stack will just contain a group of links to files (symlinks).\n\nIf you select a <b>folder</b> as backend, the stack will support real file operations, so that you can copy, move and link files to that folder."))
         info_label.set_use_markup(True)
         info_label.set_line_wrap(True)
-        page1.pack_start(info_label, True, False, 0)
+        vbox1.pack_start(info_label, True, True, 0)
+        #           </label>
+        #           <hbox>
         type_hbox = gtk.HBox(False, 0)
-        page1.pack_start(type_hbox, False, False, 10)
-        select_label = gtk.Label("Select backend for this stack:")
-        type_hbox.pack_start(select_label, False, False, 30)
+        vbox1.pack_start(type_hbox, True, True, 0)
+        #               <label>
+        select_label = gtk.Label(_("Select backend for this stack:"))
+        type_hbox.pack_start(select_label, True, True, 0)
+        #               </label>
+        #               <button>
         fbutton = gtk.Button(gtk.STOCK_OPEN)
         fbutton.set_use_stock(True)
         fbutton.connect("button-release-event", self.activate_filechooser)
-        type_hbox.pack_end(fbutton, True, True, 30)
-        self.notebook.append_page(page1, label)
+        type_hbox.pack_end(fbutton, True, True, 0)
+        #           </hbox>
+        #       </vbox>
+        #   </alignment>
 
         # page 2: the layout
-        label2 = gtk.Label("Layout")
-        page2 = gtk.VBox(False, 0)
-        hbox_dim = gtk.HBox(False, 0)
-        page2.pack_start(hbox_dim, True, False, 10)
-        label_dim = gtk.Label("Maximum dimension (cols X rows):")
-        hbox_dim.pack_start(label_dim, False, False, 30)
+        #   <alignment>
+        label2 = gtk.Label(_("Layout"))
+        page2 = gtk.Alignment(0, 0, 0, 0)
+        page2.set_padding(10,10,20,20)
+        self.notebook.append_page(page2, label2)
+        #       <vbox>
+        vbox2 = gtk.VBox(False, 2)
+        page2.add(vbox2)
+        #           <hbox>
+        hbox21 = gtk.HBox(False, 2)
+        vbox2.pack_start(hbox21, True, True, 0)
+        #               <label>
+        label_dim = gtk.Label(_("Maximum dimension (cols X rows):"))
+        hbox21.pack_start(label_dim, True, True, 0)
+        #               </label>
+        #               <entry>
         self.cols = gtk.Entry()
         self.cols.set_width_chars(3)
         self.cols.set_alignment(0.5)
@@ -101,9 +125,13 @@ class StacksConfig:
         if not gconf_cols > 0:
             gconf_cols = 5
         self.cols.set_text(str(gconf_cols))       
-        hbox_dim.pack_start(self.cols, False, False, 0)
+        hbox21.pack_start(self.cols, True, True, 0)
+        #               </entry>
+        #               <label>
         label_times = gtk.Label("X")
-        hbox_dim.pack_start(label_times, False, False, 2)
+        hbox21.pack_start(label_times, True, True, 0)
+        #               </label>
+        #               <entry>
         self.rows = gtk.Entry()
         self.rows.set_width_chars(3)
         self.rows.set_alignment(0.5)
@@ -111,45 +139,95 @@ class StacksConfig:
         if not gconf_rows > 0:
             gconf_rows = 4
         self.rows.set_text(str(gconf_rows))
-        hbox_dim.pack_start(self.rows, False, False, 2)
-        self.notebook.append_page(page2, label2)
+        hbox21.pack_start(self.rows, True, True, 0)
+        #               <entry />
+        #           </hbox>
+        #           <hbox>
+        hbox22 = gtk.HBox(False, 2)
+        vbox2.pack_start(hbox22, True, True, 0)
+        #               <label>
+        label22 = gtk.Label(_("Icon size (inside stacks):"))
+        hbox22.pack_start(label22, True, True, 0)
+        #               </label>
+        #               <spinbutton>
+        gconf_icon_size = self.applet.gconf_client.get_int(self.applet.gconf_path + "/icon_size")
+        if not gconf_icon_size > 0:
+            gconf_icon_size = 48
+        spin21_adj = gtk.Adjustment(gconf_icon_size, 24, 96, 2, 2, 0)
+        self.spin21 = gtk.SpinButton(spin21_adj, 0.5, 0)
+        hbox22.pack_start(self.spin21, True, True, 0)
+        #               </spinbutton>
+        #           </hbox>
+        #       </vbox>
+        #   </alignment>
 
         # page 3: the behavior
-        label3 = gtk.Label("Behavior")
-        page3 = gtk.VBox(False, 0)
-        hbox_ops = gtk.HBox(False, 0)
+        #   <alignment>
+        label3 = gtk.Label(_("Behavior"))
+        page3 = gtk.Alignment(0, 0, 0, 0)
+        page3.set_padding(10, 10, 20, 20)
+        self.notebook.append_page(page3, label3)
+        #       <vbox>
+        vbox3 = gtk.VBox(False, 2)
+        page3.add(vbox3)
+        #           <label>
         lbl_actions = gtk.Label(_("In most OS configurations, the <b>CTRL</b>, <b>ALT</b> and <b>SHIFT</b> are the modifiers that determine what drag operation is used."))
         lbl_actions.set_use_markup(True)
         lbl_actions.set_line_wrap(True)
-        page3.pack_start(lbl_actions, True, False, 0)
+        vbox3.pack_start(lbl_actions, True, False, 0)
+        #           </label>
+        #           <hbox>
+        hbox_ops = gtk.HBox(False, 0)
+        vbox3.pack_start(hbox_ops, False, False, 0)
+        #               <label>
         lbl_fileops = gtk.Label(_("Enable file-operations:"))
-        actions = self.applet.gconf_client.get_int(self.applet.gconf_path + "/file_operations")
+        hbox_ops.pack_start(lbl_fileops, False, False, 0)
+        #               </label>
+        #               <checkbutton>
         self.chk_copy = gtk.CheckButton(_("Copy")) 
-        self.chk_move = gtk.CheckButton(_("Move"))
-        self.chk_link = gtk.CheckButton(_("Link"))
-        if actions > 0:
-            if (actions & gtk.gdk.ACTION_COPY) > 0:
-                self.chk_copy.set_active(True)
-            if (actions & gtk.gdk.ACTION_MOVE) > 0:
-                self.chk_move.set_active(True)
-            if (actions & gtk.gdk.ACTION_LINK) > 0:
-                self.chk_link.set_active(True)
-        hbox_ops.pack_start(lbl_fileops, False, False, 30)
+        self.chk_copy.set_active(True)
         hbox_ops.pack_start(self.chk_copy, False, False, 2)
+        #               </checkbutton>
+        #               <checkbutton>
+        self.chk_move = gtk.CheckButton(_("Move"))
+        self.chk_move.set_active(True)
         hbox_ops.pack_start(self.chk_move, False, False, 2)
+        #               </checkbutton>
+        #               <checkbutton>
+        self.chk_link = gtk.CheckButton(_("Link"))
+        self.chk_link.set_active(True)
         hbox_ops.pack_start(self.chk_link, False, False, 2)
-        page3.pack_start(hbox_ops, False, False, 10)
-        self.notebook.append_page(page3, label3)
+        #               </checkbutton>
+        actions = self.applet.gconf_client.get_int(self.applet.gconf_path + "/file_operations")
+        if actions > 0:
+            if (actions & gtk.gdk.ACTION_COPY) == 0:
+                self.chk_copy.set_active(False)
+            if (actions & gtk.gdk.ACTION_MOVE) == 0:
+                self.chk_move.set_active(False)
+            if (actions & gtk.gdk.ACTION_LINK) == 0:
+                self.chk_link.set_active(False)
+        #           </hbox>
+        #       </vbox>
+        #   </alignment>
 
         # page 4: about
-        label4 = gtk.Label("About")
-        page4 = gtk.VBox(False, 0)
+        #   <alignment>
+        label4 = gtk.Label(_("About"))
+        page4 = gtk.Alignment(0, 0, 0, 0)
+        page4.set_padding(10, 10, 20, 20)
+        self.notebook.append_page(page4, label4)
+        #       <vbox> 
+        vbox4 = gtk.VBox(False, 2)
+        page4.add(vbox4)
+        #           <label>
         about_label = gtk.Label(_("<big><b>Stacks: applet for Avant Window Navigator</b></big>\n\nTODO: description\n\nauthor: Timon ter Braak"))
         about_label.set_line_wrap(True)                                 
         about_label.set_use_markup(True)
-        page4.pack_start(about_label, True, False, 2)
-        self.notebook.append_page(page4, label4)
-
+        vbox4.pack_start(about_label, True, True, 0)
+        #           </label>
+        #       </vbox>
+        #   </alignment>
+       
         self.window.show_all()
 
 
@@ -180,6 +258,10 @@ class StacksConfig:
         if int(self.rows.get_text()) > 0:
             self.applet.gconf_client.set_int(self.applet.gconf_path + "/rows",
                                                 int(self.rows.get_text()) )
+        if int(self.spin21.get_value()) > 0:
+            self.applet.gconf_client.set_int(self.applet.gconf_path + "/icon_size",
+                                                int(self.spin21.get_value()) )
+
         actions = 0
         if self.chk_copy.get_active():
             actions |= gtk.gdk.ACTION_COPY

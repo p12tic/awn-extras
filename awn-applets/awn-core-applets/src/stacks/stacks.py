@@ -53,9 +53,6 @@ COL_FILEMON = 4
 
 # Visual layout parameters
 ICON_VBOX_SPACE = 4
-ICON_TEXT_HEIGHT = 28
-ICON_ICON_SIZE = 48
-ICON_TEXT_WIDTH = 60
 ROW_SPACING = 8
 COL_SPACING = 8
 
@@ -76,6 +73,7 @@ class App (awn.AppletSimple):
     config_cols = 5
     config_rows = 4
     config_fileops = gtk.gdk.ACTION_COPY | gtk.gdk.ACTION_MOVE | gtk.gdk.ACTION_LINK
+    config_icon_size = 48
 
     def __init__ (self, uid, orient, height):
         awn.AppletSimple.__init__(self, uid, orient, height)
@@ -167,6 +165,9 @@ class App (awn.AppletSimple):
             self.dialog.show_all()
 
     def stack_add(self, uri):
+        name = os.path.basename(uri)
+        if name[0] == ".":
+            return None
         iter = self.store.get_iter_first()
         while iter:
             store_uri = self.store.get_value(iter, COL_URI)
@@ -176,7 +177,7 @@ class App (awn.AppletSimple):
             iter = self.store.iter_next(iter)     
         mime_type = gnomevfs.get_mime_type(uri)
         thumbnailer = stacksicons.Thumbnailer(uri, mime_type)
-        pixbuf = thumbnailer.get_icon(ICON_ICON_SIZE)
+        pixbuf = thumbnailer.get_icon(self.config_icon_size)
         filemon = stacksmonitor.FileMonitor(uri)
         filemon.connect("deleted", self.dialog_monitor_deleted)
         self.store.append([ uri, 
@@ -248,6 +249,8 @@ class App (awn.AppletSimple):
             # right click
             self.dialog_hide()
             self.popup_menu.popup(None, None, None, event.button, event.time)
+        elif event.button == 2 and self.config_backend:
+            self.launch_manager.launch_uri(self.config_backend, None)
         else:
             if self.dialog_visible != True and self.store.get_iter_first() != None:
                 self.dialog_show()
@@ -376,6 +379,10 @@ class App (awn.AppletSimple):
         if _config_rows > 0:
             self.config_rows = _config_rows
 
+        _config_icon_size = self.gconf_client.get_int(self.gconf_path + "/icon_size")
+        if _config_icon_size > 0:
+            self.config_icon_size = _config_icon_size
+
         _config_fileops = self.gconf_client.get_int(self.gconf_path + "/file_operations")
         if _config_fileops > 0:
             self.config_fileops = _config_fileops
@@ -413,8 +420,7 @@ class App (awn.AppletSimple):
 
     def _read_folder_backend(self, uri):
         for name in os.listdir(uri):
-            if name[0] != ".":
-                self.stack_add("file://" + os.path.join(uri, name))
+            self.stack_add("file://" + os.path.join(uri, name))
         # add monitor for folder
         print "add monitor for folder: ", uri
         filemon = stacksmonitor.FileMonitor(uri)
@@ -458,23 +464,28 @@ class App (awn.AppletSimple):
                                     self.config_fileops )
 
             vbox = gtk.VBox(False, ICON_VBOX_SPACE)
+            vbox.set_size_request(int(1.2 * self.config_icon_size), -1)
             icon = self.store.get_value(iter, COL_ICON)
 
             if icon:
                 button.drag_source_set_icon_pixbuf(icon)
                 image = gtk.Image()
                 image.set_from_pixbuf(icon)
-                image.set_size_request(ICON_ICON_SIZE, ICON_ICON_SIZE)
+                #image.set_size_request(self.config_icon_size, self.config_icon_size)
                 vbox.pack_start(image, False, False, 0)
             label = gtk.Label(self.store.get_value(iter, COL_LABEL))
             if label:
                 label.set_justify(gtk.JUSTIFY_CENTER)
                 label.set_line_wrap(True)
-                label.set_size_request(ICON_TEXT_WIDTH, ICON_TEXT_HEIGHT)
-                label.set_ellipsize(pango.ELLIPSIZE_END)
-                vbox.pack_start(label, True, False, 0)
+                #layout = label.get_layout()
+                #lw, lh = layout.get_size()
+                #layout.set_alignment(pango.ALIGN_CENTER)
+                #layout.set_width(self.config_icon_size * pango.SCALE)
+                #layout.set_wrap(pango.WRAP_CHAR)
+                #label.set_size_request(self.config_icon_size, lh*2/pango.SCALE)
+                #label.set_ellipsize(pango.ELLIPSIZE_END)
+                vbox.pack_start(label, False, False, 0)
       
-            vbox.set_size_request(ICON_TEXT_WIDTH, ICON_ICON_SIZE + ICON_VBOX_SPACE + ICON_TEXT_HEIGHT)
             button.add(vbox)
             table.attach(button, x, x+1, y, y+1)
             x += 1

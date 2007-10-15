@@ -74,7 +74,7 @@ class App (awn.AppletSimple):
     backend_type = None
 
 	# Default configuration values, are overruled while reading config
-    config_backend = os.path.join(os.path.expanduser("~"), ".awn", "stacks")
+    config_backend = os.path.join(os.path.expanduser("~"), ".config", "awn", "stacks")
     config_cols = 5
     config_rows = 4
     config_fileops = gtk.gdk.ACTION_COPY | gtk.gdk.ACTION_MOVE | gtk.gdk.ACTION_LINK
@@ -323,8 +323,41 @@ class App (awn.AppletSimple):
 
 
     def clear_callback(self, widget):
-        if self.store:
-            self.store.clear()
+        if self.backend_type == gnomevfs.FILE_TYPE_DIRECTORY:
+            align = gtk.Alignment(0.5,0.5,0,0)
+            align.set_padding(10,10,20,20)
+            label = gtk.Label(_("This stack has a <b>folder backend</b>. Do you really want to <b>delete</b> the files from that folder?"))
+            label.set_use_markup(True)
+            label.set_line_wrap(True)
+            align.add(label)
+            align.show_all()
+            dialog = gtk.Dialog(_("Confirm removal"),
+                                None,
+                                gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT | gtk.DIALOG_NO_SEPARATOR,
+                                (gtk.STOCK_NO, gtk.RESPONSE_REJECT,
+                                gtk.STOCK_YES, gtk.RESPONSE_ACCEPT))
+            dialog.set_default_response(gtk.RESPONSE_REJECT)
+            dialog.vbox.pack_start(align, True, True, 0)
+            if dialog.run() == gtk.RESPONSE_REJECT:
+                dialog.destroy()
+                return
+
+            # remove files
+            iter = self.store.get_iter_first()
+            while iter:
+                store_uri = self.store.get_value(iter, COL_URI)
+                os.remove(store_uri.replace("file://", ""))
+                iter = self.store.iter_next(iter)
+
+            dialog.destroy()
+        else:
+            f = open(self.config_backend, "w")
+            if f:
+                try:
+                    f.truncate(0)
+                finally:
+                    f.close()
+        self.store.clear()
         self.set_empty_icon()
 
  

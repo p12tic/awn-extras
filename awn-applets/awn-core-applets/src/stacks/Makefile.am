@@ -5,7 +5,8 @@ stacksapplet_DATA = \
 		stackslauncher.py \
 		stacksmonitor.py \
 		stacksconfig.py \
-		stacksicons.py
+		stacksicons.py \
+		stacksvfs.py
 
 stacksappletdir = $(libdir)/awn/applets/stacks
 

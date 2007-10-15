@@ -39,6 +39,7 @@ class Thumbnailer:
     
             if thumb:
                 # Fixup the thumbnail a bit
+                thumb = icon_factory.scale_to_bounded(thumb, icon_size)
                 #thumb = self._nicer_dimensions(thumb)
                 #thumb = icon_factory.make_icon_frame(thumb, icon_size)
                 return thumb
@@ -103,17 +104,14 @@ class IconFactory:
     def scale_to_bounded(self, icon, size):
         if icon:
             if icon.get_height() > size:
-                return icon.scale_simple(size * icon.get_width() / icon.get_height(),
+                icon = icon.scale_simple(size * icon.get_width() / icon.get_height(),
                                          size,
                                          gtk.gdk.INTERP_BILINEAR)
-            elif icon.get_width() > size:
-                return icon.scale_simple(size,
+            if icon.get_width() > size:
+                icon = icon.scale_simple(size,
                                          size * icon.get_height() / icon.get_width(),
                                          gtk.gdk.INTERP_BILINEAR)
-            else:
-                return icon
-        else:
-            return None
+        return icon
 
     def load_icon(self, icon_value, icon_size, force_size = True):
         assert icon_value, "No icon to load!"

@@ -779,7 +779,8 @@ class FolderBackend(Backend):
             if finfo.type == gnomevfs.FILE_TYPE_REGULAR or \
                     finfo.type == gnomevfs.FILE_TYPE_SYMBOLIC_LINK or \
                     finfo.type == gnomevfs.FILE_TYPE_DIRECTORY:
-                self.add(self.backend_uri.append_path(finfo.name))
+                if not finfo.name in (".", ".."):
+                    self.add(self.backend_uri.append_path(finfo.name))
         self._set_monitor()
         
     def clear(self):
@@ -821,7 +822,7 @@ class FolderBackend(Backend):
         
     def destroy(self):
         self.folder_monitor.close()
-        Backend.destroy()
+        Backend.destroy(self)
 
 launch_manager = stackslauncher.LaunchManager()
 gnome.ui.authentication_manager_init()

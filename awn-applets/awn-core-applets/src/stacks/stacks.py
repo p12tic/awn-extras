@@ -75,6 +75,7 @@ class Stacks (awn.AppletSimple):
     gconf_path = "/apps/avant-window-navigator/applets/"
     dnd_targets = [("text/uri-list", 0, 0)]
     dialog_visible = False
+    context_menu_visible = False
     just_dragged = False
     backend = None
 
@@ -177,8 +178,7 @@ class Stacks (awn.AppletSimple):
         cfg.notebook.set_current_page(-1)
 
     def remove_callback(self, widget, user_data):
-        print "clear item: ", user_data
-        return
+        self.backend.remove(user_data)
 
     def applet_callback(self, widget, event):
         if event.button == 3:
@@ -210,8 +210,7 @@ class Stacks (awn.AppletSimple):
     def button_callback(self, widget, event, user_data):
         uri, mimetype = user_data
         if event.button == 3:
-            return
-            #self._build_context_menu(user_data).popup(None, None, None, event.button, event.time)
+            self._build_context_menu(uri).popup(None, None, None, event.button, event.time)
         elif event.button == 1:
             if self.just_dragged == True:
                 self.just_dragged = False
@@ -227,7 +226,11 @@ class Stacks (awn.AppletSimple):
                     launch_manager.launch_uri(uri, mimetype) 
 
     def dialog_focus_out(self, widget, event):
-        self.dialog_hide()
+        if not self.context_menu_visible:
+            self.dialog_hide()
+
+    def context_hide_callback(self, widget):
+        self.context_menu_visible = False
 
     def dialog_drag_data_delete(self, widget, context):
         return
@@ -381,10 +384,12 @@ class Stacks (awn.AppletSimple):
                             actions)
 
     def _build_context_menu(self, uri):
+        self.context_menu_visible = True
         context_menu = gtk.Menu()
         del_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_CLEAR)
         context_menu.append(del_item)
         del_item.connect_object("activate", self.remove_callback, self, uri)     
+        context_menu.connect("hide", self.context_hide_callback)
         context_menu.show_all()
         return context_menu
 
@@ -434,14 +439,19 @@ class Stacks (awn.AppletSimple):
             if label:
                 label.set_justify(gtk.JUSTIFY_CENTER)
                 label.set_line_wrap(True)
-                #layout = label.get_layout()
-                #lw, lh = layout.get_size()
-                #layout.set_alignment(pango.ALIGN_CENTER)
-                #layout.set_width(self.config_icon_size * pango.SCALE)
-                #layout.set_wrap(pango.WRAP_CHAR)
-                #label.set_size_request(self.config_icon_size, lh*2/pango.SCALE)
-                #label.set_ellipsize(pango.ELLIPSIZE_END)
-                vbox.pack_start(label, False, False, 0)
+                layout = label.get_layout()
+                lw, lh = layout.get_size()
+                layout.set_width(self.config_icon_size * pango.SCALE)
+                layout.set_wrap(pango.WRAP_WORD_CHAR)
+                _lbltext = label.get_text()
+                lbltext = ""
+                for i in range(layout.get_line_count()):
+                    length = layout.get_line(i).length
+                    lbltext += str(_lbltext[0:length]) + '\n'
+                    _lbltext = _lbltext[length:]
+                label.set_text(lbltext)
+                label.set_size_request(-1, lh*2/pango.SCALE)
+                vbox.pack_start(label, True, True, 0)
       
             button.add(vbox)
             table.attach(button, x, x+1, y, y+1)
@@ -490,6 +500,15 @@ class Backend(gobject.GObject):
     def _file_sort(self, model, iter1, iter2):
         f1 = gnomevfs.URI(model.get_value(iter1, 0))
         f2 = gnomevfs.URI(model.get_value(iter2, 0))
+        try:
+            val = 1
+            if not gnomevfs.exists(f1):
+                return 1
+            val = -1
+            if not gnomevfs.exists(f2):
+                return -1
+        except gnomevfs.NotFoundError:
+            return val
         t1 = gnomevfs.get_file_info(f1).type
         t2 = gnomevfs.get_file_info(f2).type
         if t1 == gnomevfs.FILE_TYPE_DIRECTORY and not \
@@ -500,6 +519,19 @@ class Backend(gobject.GObject):
             return 1
         else:
             return cmp(f1.short_name, f2.short_name)
+
+    def _file_filter(self, uri):
+        if not uri:
+            return None
+        try:
+            uri = gnomevfs.URI(uri)
+        except TypeError:
+            pass
+        name = uri.short_name
+        # check for hidden or temp files
+        if name[0] == "." or name.endswith("~"):
+            return None
+        return uri
 
     def _get_attention(self):
         self.emit("attention", self.get_type())
@@ -519,17 +551,9 @@ class Backend(gobject.GObject):
     # -check for desktop item
     # -add file monitor       
     def add(self, uri, action=None):
-        if not uri:
-            return
-
-        # check for hidden files
         name = uri.short_name
         mime_type = ""
         pixbuf = None
-
-        # check for hidden or temp files
-        if name[0] == "." or name.endswith("~"):
-            return None
 
         # check for duplicates
         iter = self.store.get_iter_first()
@@ -564,10 +588,10 @@ class Backend(gobject.GObject):
         else:         
             try:
                 mime_type = gnomevfs.get_file_info(uri, gnomevfs.FILE_INFO_GET_MIME_TYPE)
-                thumbnailer = stacksicons.Thumbnailer(uri.path, mime_type)
+                thumbnailer = stacksicons.Thumbnailer(uri, mime_type)
                 pixbuf = thumbnailer.get_icon(self.icon_size)
             except:
-                thumbnailer = stacksicons.Thumbnailer(uri.path, "text/plain")
+                thumbnailer = stacksicons.Thumbnailer(uri, "text/plain")
                 pixbuf = thumbnailer.get_icon(self.icon_size)
 
         # add to store and add file monitor
@@ -637,11 +661,15 @@ class FileBackend(Backend):
             gnomevfs.make_directory(bdir, 
                     gnomevfs.PERM_USER_READ | gnomevfs.PERM_USER_WRITE)
         if not gnomevfs.exists(self.backend_uri):
-            gnomevfs.create(self.backend_uri, 
-                    gnomevfs.OPEN_MODE_NONE, False, 
-                    gnomevfs.PERM_USER_READ | gnomevfs.PERM_USER_WRITE)
+            # TODO: gnomevfs.InvalidOpenModeError: Open mode not valid
+            #gnomevfs.create(self.backend_uri)
+            os.mknod(self.backend_uri.path)
 
     def remove(self, uri): 
+        uri = self._file_filter(uri)
+        if not uri:
+            return
+
         f = open(self.backend_uri, "r") 
         if f: 
             try: 
@@ -656,14 +684,13 @@ class FileBackend(Backend):
         return Backend.remove(self, uri) 
   
     def add(self, uri, action=None):
-        try:
-            uri = gnomevfs.URI(uri) 
-        except TypeError:
-            pass
+        uri = self._file_filter(uri)
+        if not uri:
+            return
         f = open(self.backend_uri.path, "a") 
         if f: 
             try: 
-                f.write(uri.path + os.linesep) 
+                f.write(uri.scheme + "://" + uri.path + os.linesep) 
             finally: 
                 f.close() 
         return Backend.add(self, uri)
@@ -701,18 +728,28 @@ class FolderBackend(Backend):
         self.folder_monitor.connect("deleted", self._deleted)
 
     def remove(self, uri):
+        uri = self._file_filter(uri)
+        if not uri:
+            return
         iter = self.store.get_iter_first()
         while iter:
             store_uri = self.store.get_value(iter, COL_URI)
-            if(store_uri == ("file://" + uri)):
+            if(store_uri == uri):
                 self.store.remove(iter)
                 return True
             iter = self.store.iter_next(iter)     
         return Backend.remove(self, uri)
      
     def add(self, uri, action=None):
+        uri = self._file_filter(uri)
+        if not uri:
+            return
         if action != None:
-            dst = self.backend_uri.append_path(uri.short_name) 
+            try:
+                dst = self.backend_uri.append_path(uri.short_name) 
+            except AttributeError:
+                uri = gnomevfs.URI(uri)
+                dst = self.backend_uri.append_path(uri.short_name)
             if action == gtk.gdk.ACTION_LINK:
                 options = gnomevfs.XFER_LINK_ITEMS
             elif action == gtk.gdk.ACTION_COPY:

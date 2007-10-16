@@ -1,10 +1,7 @@
 #! /usr/bin/env python
 import gnomevfs
 import gtk
-import termios
-import sys
-from optparse import OptionParser
-from xml.sax.saxutils import escape
+import pango
 import gobject
 
 class GUITransfer(object):
@@ -12,21 +9,38 @@ class GUITransfer(object):
         self.__progress = None
         self.__progress_timeout = None
         self.cancel = False
-        self.dialog = gtk.Dialog(title="Copying...",
+        self.dialog = gtk.Dialog(title="Copying files",
                                  buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT))
         self.dialog.set_border_width(12)
         self.dialog.set_has_separator(False)
-        self.dialog.vbox.set_spacing(8)
-        label = gtk.Label("")
-        label.set_markup("<big><b>Copying file</b></big>\n"
-                         "<tt>%s -> %s</tt>" %
-                         (escape(str(src)), escape(str(dst))))
-        self.dialog.vbox.add(label)
+        self.dialog.vbox.set_spacing(2)
+        hbox_copy = gtk.HBox(False, 0)
+        label_copy = gtk.Label("")
+        label_copy.set_markup("<big><b>Copying files</b></big>\n")
+        hbox_copy.pack_start(label_copy, False, False, 0)
+        self.dialog.vbox.add(hbox_copy)
+        hbox_info = gtk.HBox(False, 0)
+        label_fromto = gtk.Label("")
+        label_fromto.set_markup("<b>From:</b>\n<b>To:</b>")
+        label_fromto.set_justify(gtk.JUSTIFY_RIGHT)
+        hbox_info.pack_start(label_fromto, False, False, 0)
+        label_srcdst = gtk.Label("")
+        label_srcdst.set_markup("%s\n%s" %
+                (str(src.dirname), str(dst.dirname)))
+        label_srcdst.set_ellipsize(pango.ELLIPSIZE_START)
+        hbox_info.pack_start(label_srcdst, True, True, 4)
+        self.dialog.vbox.add(hbox_info)
         self.progress_bar = gtk.ProgressBar()
         self.dialog.vbox.add(self.progress_bar)
+        hbox_under = gtk.HBox(False, 0)
+        self.label_under = gtk.Label("")
+        self.label_under.set_ellipsize(pango.ELLIPSIZE_MIDDLE)
+        hbox_under.pack_start(self.label_under, False, False, 0)
+        self.dialog.vbox.add(hbox_under)
 
         self.status_label = gtk.Label()
         self.dialog.vbox.add(self.status_label)        
+        self.dialog.set_size_request(400,180)
         self.dialog.show_all()
 
         self.handle = gnomevfs.async.xfer(
@@ -51,6 +65,10 @@ class GUITransfer(object):
         if info.phase == gnomevfs.XFER_PHASE_COMPLETED:
             self.dialog.destroy()
             gtk.main_quit()
+        if info.status == gnomevfs.XFER_PROGRESS_STATUS_OK:
+            self.label_under.set_markup("<i>Copying %s</i>" % (str(info.source_name)))
+            self.progress_bar.set_text("Copying file: " + 
+                    str(info.file_index) + " of " + str(info.files_total))
         if self.cancel:
             return 0
         return 1
@@ -68,7 +86,6 @@ class GUITransfer(object):
 
     def progress_info_cb(self, info, data):
         assert data == 0x1234
-        #print "progress_info_cb", info.status
         try:
             progress = float(info.bytes_copied)/float(info.bytes_total)
             self.set_progress(progress)

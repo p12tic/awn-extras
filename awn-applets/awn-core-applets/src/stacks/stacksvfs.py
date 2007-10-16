@@ -2,13 +2,12 @@
 import gnomevfs
 import gtk
 import pango
-import gobject
 
 class GUITransfer(object):
     def __init__(self, src, dst, options):
         self.__progress = None
         self.cancel = False
-        if not options in (gnomevfs.XFER_LINK_ITEMS):
+        if options != gnomevfs.XFER_LINK_ITEMS:
             self.dialog = gtk.Dialog(title="Copying files",
                                      buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT))
             self.dialog.set_border_width(12)

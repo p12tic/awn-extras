@@ -60,8 +60,8 @@ COL_FILEMON = 4
 
 # Visual layout parameters
 ICON_VBOX_SPACE = 4
-ROW_SPACING = 8
-COL_SPACING = 8
+ROW_SPACING = 0
+COL_SPACING = 0
 
 def _to_full_path(path):
     head, tail = os.path.split(__file__)
@@ -106,10 +106,10 @@ class Stacks (awn.AppletSimple):
         self.config_backend = self.config_backend.append_path(uid)     
  
         # connect to events
-        self.connect("button-press-event", self.applet_callback)
-        self.connect("enter-notify-event", self.enter_notify)
-        self.connect("leave-notify-event", self.leave_notify)
-        self.connect("drag-data-received", self.drop_callback)
+        self.connect("button-press-event", self.applet_button_cb)
+        self.connect("enter-notify-event", self.applet_enter_cb)
+        self.connect("leave-notify-event", self.applet_leave_cb)
+        self.connect("drag-data-received", self.applet_drop_cb)
         
         # Setup popup menu
         self.popup_menu = gtk.Menu()
@@ -150,7 +150,7 @@ class Stacks (awn.AppletSimple):
     # For direct feedback "feeling"
     # add drop source to stack immediately,
     # and prevent duplicates @ monitor callback
-    def drop_callback(self, widget, context, x, y, 
+    def applet_drop_cb(self, widget, context, x, y, 
                             selection, targetType, time):
         for uri in (selection.data).split("\r\n"):
             if uri:
@@ -177,10 +177,10 @@ class Stacks (awn.AppletSimple):
         cfg = stacksconfig.StacksConfig(self)
         cfg.notebook.set_current_page(-1)
 
-    def remove_callback(self, widget, user_data):
+    def item_clear_callback(self, widget, user_data):
         self.backend.remove(user_data)
 
-    def applet_callback(self, widget, event):
+    def applet_button_cb(self, widget, event):
         if event.button == 3:
             # right click
             self.dialog_hide()
@@ -200,14 +200,17 @@ class Stacks (awn.AppletSimple):
         self.dialog_hide()
         self.get_config()
                
-    def attention_callback(self, widget, backend_type):
+    def backend_attention_cb(self, widget, backend_type):
         awn.awn_effect_start(self.effects, "attention")
         time.sleep(1.0)
         awn.awn_effect_stop(self.effects, "attention")
 
+    def backend_restructure_cb(self, widget, type):
+        print "some item is removed from stack"
+
     # launches the command for a stack icon
     # -distinguishes desktop items
-    def button_callback(self, widget, event, user_data):
+    def item_button_callback(self, widget, event, user_data):
         uri, mimetype = user_data
         if event.button == 3:
             self._build_context_menu(uri).popup(None, None, None, event.button, event.time)
@@ -235,17 +238,17 @@ class Stacks (awn.AppletSimple):
     def dialog_drag_data_delete(self, widget, context):
         return
 
-    def dialog_drag_data_get(
+    def item_drag_data_get(
             self, widget, context, selection, info, time, user_data):
         selection.set_uris([user_data])
 
-    def dialog_drag_begin(self, widget, context):
+    def item_drag_begin(self, widget, context):
         self.just_dragged = True
 
-    def enter_notify (self, widget, event):
+    def applet_enter_cb (self, widget, event):
         self.title.show(self, self.backend.get_title())
 
-    def leave_notify (self, widget, event):
+    def applet_leave_cb (self, widget, event):
         self.title.hide(self)
 
     def set_empty_icon(self):
@@ -359,7 +362,8 @@ class Stacks (awn.AppletSimple):
             self.backend = FileBackend(self.config_backend,
                     self.config_icon_size)
         self.backend.read()
-        self.backend.connect("attention", self.attention_callback)
+        self.backend.connect("attention", self.backend_attention_cb)
+        self.backend.connect("restructure", self.backend_restructure_cb)
         self._setup_drag_drop()
         
         if self.backend.is_empty():
@@ -388,7 +392,7 @@ class Stacks (awn.AppletSimple):
         context_menu = gtk.Menu()
         del_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_CLEAR)
         context_menu.append(del_item)
-        del_item.connect_object("activate", self.remove_callback, self, uri)     
+        del_item.connect_object("activate", self.item_clear_callback, self, uri)     
         context_menu.connect("hide", self.context_hide_callback)
         context_menu.show_all()
         return context_menu
@@ -411,15 +415,16 @@ class Stacks (awn.AppletSimple):
         while iter:
             button = gtk.Button()
             button.set_relief(gtk.RELIEF_NONE)
+
             button.connect( "button-release-event", 
-                            self.button_callback,
+                            self.item_button_callback,
                             store.get(iter, COL_URI, COL_MIMETYPE))
-            # TODO connect on enter key
+            # TODO: connect on enter key
             button.connect( "drag-data-get",
-                            self.dialog_drag_data_get,
+                            self.item_drag_data_get,
                             store.get_value(iter, COL_URI))
             button.connect( "drag-begin",
-                            self.dialog_drag_begin)
+                            self.item_drag_begin)
             button.drag_source_set( gtk.gdk.BUTTON1_MASK,
                                     self.dnd_targets,
                                     self.config_fileops )
@@ -476,6 +481,8 @@ class Backend(gobject.GObject):
 
     __gsignals__ = {
         'attention' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, 
+                        (gobject.TYPE_INT,)),
+        'restructure' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
                         (gobject.TYPE_INT,))
     }
 
@@ -609,6 +616,7 @@ class Backend(gobject.GObject):
 
     # remove file from store
     def remove(self, uri):
+        self.emit("restructure", self.get_type())
         return False
         
     def read(self):
@@ -618,7 +626,9 @@ class Backend(gobject.GObject):
         self.store.clear()
 
     def open(self):
-        launch_manager.launch_uri(self.backend_uri, None)
+        launch_manager.launch_uri(
+                self.backend_uri.scheme + "://" + self.backend_uri.path, 
+                None)
         
     def is_empty(self):
         iter = self.store.get_iter_first()
@@ -661,7 +671,7 @@ class FileBackend(Backend):
         bdir = self.backend_uri.dirname
         if not gnomevfs.exists(bdir):
             gnomevfs.make_directory(bdir, 
-                    gnomevfs.PERM_USER_READ | gnomevfs.PERM_USER_WRITE)
+                    gnomevfs.PERM_USER_ALL)
         if not gnomevfs.exists(self.backend_uri):
             # TODO: gnomevfs.InvalidOpenModeError: Open mode not valid
             #gnomevfs.create(self.backend_uri)
@@ -680,7 +690,7 @@ class FileBackend(Backend):
                 f.close() 
                 f = open(self.backend_uri.path, "w") 
                 for furi in lines: 
-                    if not furi.strip() == uripath: 
+                    if not gnomevfs.uris_match(furi.strip(), uripath): 
                         f.write(furi + os.linesep) 
             finally: 
                 f.close()                 
@@ -741,7 +751,7 @@ class FolderBackend(Backend):
         iter = self.store.get_iter_first()
         while iter:
             store_uri = self.store.get_value(iter, COL_URI)
-            if(store_uri == uri):
+            if gnomevfs.uris_match(store_uri, uri):
                 self.store.remove(iter)
                 return True
             iter = self.store.iter_next(iter)     

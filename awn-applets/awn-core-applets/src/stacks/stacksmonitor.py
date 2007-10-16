@@ -19,7 +19,7 @@ class FileMonitor(gobject.GObject):
 
     def __init__(self, path):
         gobject.GObject.__init__(self)
-        self.path = path.path
+        self.path = path.scheme + "://" + path.path
         try:
             self.type = gnomevfs.get_file_info(path).type
         except gnomevfs.Error:

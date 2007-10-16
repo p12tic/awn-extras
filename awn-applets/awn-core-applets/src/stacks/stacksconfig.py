@@ -33,6 +33,8 @@ gettext.bindtextdomain(APP, DIR)
 gettext.textdomain(APP)
 _ = gettext.gettext
 
+BACKEND_TYPE_FOLDER = 1
+
 def _to_full_path(path):
     head, tail = os.path.split(__file__)
     return os.path.join(head, path)
@@ -353,6 +355,8 @@ class StacksConfig:
 
     def ok_button(self, widget, event):
         if self.backend != None:
+            self.applet.gconf_client.set_int(self.applet.gconf_path + "/backend_type",
+                                                BACKEND_TYPE_FOLDER)
             self.applet.gconf_client.set_string(self.applet.gconf_path + "/backend", 
                                                 self.backend )
         if int(self.cols.get_text()) > 0:

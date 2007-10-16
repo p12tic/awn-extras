@@ -26,14 +26,14 @@
 #include <libgnomevfs/gnome-vfs-mime-utils.h>
 #include <libgnomevfs/gnome-vfs-mime.h>
 
-#include "stack-icon.h"
-#include "stack-applet.h"
-#include "stack-utils.h"
-#include "stack-gconf.h"
-#include "stack-defines.h"
-#include "stack-folder.h"
+#include "filebrowser-icon.h"
+#include "filebrowser-applet.h"
+#include "filebrowser-utils.h"
+#include "filebrowser-gconf.h"
+#include "filebrowser-defines.h"
+#include "filebrowser-folder.h"
 
-G_DEFINE_TYPE( StackIcon, stack_icon, GTK_TYPE_BUTTON )
+G_DEFINE_TYPE( FileBrowserIcon, filebrowser_icon, GTK_TYPE_BUTTON )
 
 static gboolean just_dragged = FALSE;
 
@@ -42,10 +42,10 @@ static GtkButtonClass *parent_class = NULL;
 /**
  * Destroy events of the applet
  */
-static void stack_icon_destroy(
+static void filebrowser_icon_destroy(
     GtkObject * object ) {
 
-    StackIcon      *icon = STACK_ICON( object );
+    FileBrowserIcon      *icon = FILEBROWSER_ICON( object );
 
     if ( icon->uri ) {
         gnome_vfs_uri_unref( icon->uri );
@@ -67,7 +67,7 @@ static void stack_icon_destroy(
     }
     icon->name = NULL;
 
-    ( *GTK_OBJECT_CLASS( stack_icon_parent_class )->destroy ) ( object );
+    ( *GTK_OBJECT_CLASS( filebrowser_icon_parent_class )->destroy ) ( object );
 }
 
 static gchar *desktop_file_get_link_icon_from_desktop(
@@ -121,11 +121,11 @@ static gchar *desktop_file_get_link_icon_from_desktop(
  * Button released event
  * -shows/launched the file associated with this icon
  */
-static gboolean stack_icon_button_release_event(
+static gboolean filebrowser_icon_button_release_event(
     GtkWidget * widget,
     GdkEventButton * event ) {
 
-    StackIcon *icon = STACK_ICON( widget );
+    FileBrowserIcon *icon = FILEBROWSER_ICON( widget );
 
     if(just_dragged){
         just_dragged = FALSE;
@@ -137,8 +137,8 @@ static gboolean stack_icon_button_release_event(
         gnome_desktop_item_launch_with_env( icon->desktop_item, NULL,
                                             GNOME_DESKTOP_ITEM_LAUNCH_ONLY_ONE, NULL, NULL );
     } else if ( icon->uri ) {
-        if ( stack_gconf_is_browsing() && is_directory( icon->uri ) ) {
-            stack_dialog_set_folder( STACK_DIALOG( STACK_FOLDER( icon->folder )->dialog ),
+        if ( filebrowser_gconf_is_browsing() && is_directory( icon->uri ) ) {
+            filebrowser_dialog_set_folder( FILEBROWSER_DIALOG( FILEBROWSER_FOLDER( icon->folder )->dialog ),
                                    icon->uri, 0 );
         } else {
             GnomeVFSResult  res =
@@ -159,16 +159,16 @@ static gboolean stack_icon_button_release_event(
 /**
  * Drag begin event
  */
-static void stack_icon_drag_begin(
+static void filebrowser_icon_drag_begin(
     GtkWidget * widget,
     GdkDragContext * drag_context ) {
 
-    StackIcon *icon = STACK_ICON( widget );
+    FileBrowserIcon *icon = FILEBROWSER_ICON( widget );
 
     gtk_drag_source_set_icon_pixbuf( widget, icon->icon );
     
     // set up DnD target
-    gchar *default_action = stack_gconf_get_default_drag_action();
+    gchar *default_action = filebrowser_gconf_get_default_drag_action();
     if( g_str_equal(default_action, DRAG_ACTION_LINK ) ){
 	    drag_context->actions = GDK_ACTION_LINK;
 	}else if(g_str_equal(default_action, DRAG_ACTION_MOVE ) ){
@@ -187,7 +187,7 @@ static void stack_icon_drag_begin(
 /**
  * Drag delete data event
  */
-static void stack_icon_drag_data_delete(
+static void filebrowser_icon_drag_data_delete(
     GtkWidget * widget,
     GdkDragContext * drag_context ) {
 
@@ -198,14 +198,14 @@ static void stack_icon_drag_data_delete(
 /**
  * Drag data get event
  */
-static void stack_icon_drag_data_get(
+static void filebrowser_icon_drag_data_get(
     GtkWidget * widget,
     GdkDragContext * context,
     GtkSelectionData * selection_data,
     guint info,
     guint time ) {
 
-    StackIcon *icon = STACK_ICON( widget );
+    FileBrowserIcon *icon = FILEBROWSER_ICON( widget );
 
     gchar *uri = gnome_vfs_uri_to_string( icon->uri, GNOME_VFS_URI_HIDE_NONE );
 
@@ -218,7 +218,7 @@ static void stack_icon_drag_data_get(
 /**
  * Drag end event
  */
-static void stack_icon_drag_end(
+static void filebrowser_icon_drag_end(
     GtkWidget * widget,
     GdkDragContext * drag_context ) {
 
@@ -230,8 +230,8 @@ static void stack_icon_drag_end(
  * Initialize applet class
  * Set class functions
  */
-static void stack_icon_class_init(
-    StackIconClass * klass ) {
+static void filebrowser_icon_class_init(
+    FileBrowserIconClass * klass ) {
 
     GtkObjectClass *object_class;
     GtkWidgetClass *widget_class;
@@ -241,45 +241,45 @@ static void stack_icon_class_init(
 
     parent_class = gtk_type_class (GTK_TYPE_BUTTON);
 
-    object_class->destroy = stack_icon_destroy;
+    object_class->destroy = filebrowser_icon_destroy;
 
    	/* Messages for outgoing drag. */
-    widget_class->drag_begin = stack_icon_drag_begin;
-    widget_class->drag_data_get = stack_icon_drag_data_get;
-    //widget_class->drag_end = stack_icon_drag_end;  
-    //widget_class->drag_data_delete = stack_icon_drag_data_delete;
+    widget_class->drag_begin = filebrowser_icon_drag_begin;
+    widget_class->drag_data_get = filebrowser_icon_drag_data_get;
+    //widget_class->drag_end = filebrowser_icon_drag_end;  
+    //widget_class->drag_data_delete = filebrowser_icon_drag_data_delete;
 
 	/* Messages for incoming drag. */	
-	//widget_class->drag_data_delete = stack_icon_drag_data_received;
-	//widget_class->drag_data_delete = stack_icon_drag_data_motion;
-	//widget_class->drag_data_delete = stack_icon_drag_data_drop;
-	//widget_class->drag_data_delete = stack_icon_drag_data_leave;
+	//widget_class->drag_data_delete = filebrowser_icon_drag_data_received;
+	//widget_class->drag_data_delete = filebrowser_icon_drag_data_motion;
+	//widget_class->drag_data_delete = filebrowser_icon_drag_data_drop;
+	//widget_class->drag_data_delete = filebrowser_icon_drag_data_leave;
 
 }
 
 /**
  * Initialize the new applet
  */
-static void stack_icon_init(
-    StackIcon * icon ) {
+static void filebrowser_icon_init(
+    FileBrowserIcon * icon ) {
 
     gtk_widget_add_events( GTK_WIDGET( icon ), GDK_ALL_EVENTS_MASK );
 }
 
 /**
- * Create a new stack icon
+ * Create a new filebrowser icon
  */
-GtkWidget *stack_icon_new(
-    StackFolder * folder,
+GtkWidget *filebrowser_icon_new(
+    FileBrowserFolder * folder,
     GnomeVFSURI * uri ) {
 
 	g_return_val_if_fail( folder && uri, NULL );
 
-    StackIcon      *icon = g_object_new( STACK_TYPE_ICON, NULL );
+    FileBrowserIcon      *icon = g_object_new( FILEBROWSER_TYPE_ICON, NULL );
 
     const gchar    *name = gnome_vfs_uri_extract_short_name( uri );
     const gchar    *file_path = gnome_vfs_uri_get_path( uri );
-    guint           icon_size = stack_gconf_get_icon_size(  );
+    guint           icon_size = filebrowser_gconf_get_icon_size(  );
 
 
     g_return_val_if_fail (uri != NULL, NULL);
@@ -346,7 +346,7 @@ GtkWidget *stack_icon_new(
 
     gtk_button_set_relief (GTK_BUTTON (icon), GTK_RELIEF_NONE);
     g_signal_connect (G_OBJECT (icon), "button-release-event",
-                    G_CALLBACK (stack_icon_button_release_event), (gpointer)icon);
+                    G_CALLBACK (filebrowser_icon_button_release_event), (gpointer)icon);
 
     vbox = gtk_vbox_new (FALSE, 4);
     gtk_container_add (GTK_CONTAINER (icon), vbox);

@@ -72,6 +72,7 @@ src/battery-applet/Makefile
 src/battery-applet/icons/Makefile
 src/BlingSwitcher/Makefile
 src/clock/Makefile
+src/filebrowser/Makefile
 src/gmail/Makefile
 src/gmail/Themes/Makefile
 src/gmail/Themes/Default/Makefile
@@ -90,7 +91,6 @@ src/python-test/Makefile
 src/quit-applet/Makefile
 src/quit-applet/icons/Makefile
 src/separator/Makefile
-src/stack/Makefile
 src/stacks/Makefile
 src/stacks/icons/Makefile
 src/volume-control/Makefile

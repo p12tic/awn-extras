@@ -7,15 +7,20 @@ class GUITransfer(object):
     def __init__(self, src, dst, options):
         self.__progress = None
         self.cancel = False
-        if options != gnomevfs.XFER_LINK_ITEMS:
-            self.dialog = gtk.Dialog(title="Copying files",
+        self.txt_operation = ""
+        if not (options & gnomevfs.XFER_LINK_ITEMS):
+            if (options & gnomevfs.XFER_REMOVESOURCE):
+                self.txt_operation = "Moving"
+            else:
+                self.txt_operation = "Copying"
+            self.dialog = gtk.Dialog(title=self.txt_operation + " files",
                                      buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT))
             self.dialog.set_border_width(12)
             self.dialog.set_has_separator(False)
             self.dialog.vbox.set_spacing(2)
             hbox_copy = gtk.HBox(False, 0)
             label_copy = gtk.Label("")
-            label_copy.set_markup("<big><b>Copying files</b></big>\n")
+            label_copy.set_markup("<big><b>" + self.txt_operation + " files</b></big>\n")
             hbox_copy.pack_start(label_copy, False, False, 0)
             self.dialog.vbox.add(hbox_copy)
             hbox_info = gtk.HBox(False, 0)
@@ -65,7 +70,8 @@ class GUITransfer(object):
         if info.phase == gnomevfs.XFER_PHASE_COMPLETED:
             self.dialog.destroy()
         if info.status == gnomevfs.XFER_PROGRESS_STATUS_OK:
-            self.label_under.set_markup("<i>Copying %s</i>" % (str(info.source_name)))
+            self.label_under.set_markup(
+                    "<i>%s %s</i>" % (self.txt_operation, str(info.source_name)))
             self.progress_bar.set_text("Copying file: " + 
                     str(info.file_index) + " of " + str(info.files_total))
             if info.bytes_copied > 0 and info.bytes_total > 0:

@@ -1,9 +1,0 @@
-[Desktop Entry]
-Version=1.0
-Encoding=UTF-8
-Name=Stack
-Type=C
-Comment=Stack items on eachother
-Exec=@LIBDIR@/awn/applets/stack/stack.so
-Icon=@ICONDIR@/stack.svg
-Name[en_US]=Stack

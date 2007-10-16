@@ -17,31 +17,31 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef __STACK_GCONF_H__
-#define __STACK_GCONF_H__
+#ifndef __FILEBROWSER_GCONF_H__
+#define __FILEBROWSER_GCONF_H__
 
 #include <libawn/awn-applet.h>
 #include <libawn/awn-cairo-utils.h>
 
-void stack_gconf_init( AwnApplet * applet );
+void filebrowser_gconf_init( AwnApplet * applet );
     
-gboolean stack_gconf_is_composite_applet_icon();
-gboolean stack_gconf_is_browsing();
-gchar *stack_gconf_get_backend_folder();
-gchar *stack_gconf_get_drag_action();
+gboolean filebrowser_gconf_is_composite_applet_icon();
+gboolean filebrowser_gconf_is_browsing();
+gchar *filebrowser_gconf_get_backend_folder();
+gchar *filebrowser_gconf_get_drag_action();
 
-void stack_gconf_set_backend_folder( const gchar * folder );
+void filebrowser_gconf_set_backend_folder( const gchar * folder );
 
-gchar *stack_gconf_get_applet_icon();
-gchar *stack_gconf_get_default_drag_action();
+gchar *filebrowser_gconf_get_applet_icon();
+gchar *filebrowser_gconf_get_default_drag_action();
 
-guint stack_gconf_get_icon_size();
-guint stack_gconf_get_max_rows();
-guint stack_gconf_get_max_cols();
+guint filebrowser_gconf_get_icon_size();
+guint filebrowser_gconf_get_max_rows();
+guint filebrowser_gconf_get_max_cols();
 
-gboolean stack_gconf_show_files();
-gboolean stack_gconf_show_hidden_files();
-gboolean stack_gconf_show_folders();
-gboolean stack_gconf_show_desktop_items();
+gboolean filebrowser_gconf_show_files();
+gboolean filebrowser_gconf_show_hidden_files();
+gboolean filebrowser_gconf_show_folders();
+gboolean filebrowser_gconf_show_desktop_items();
 
-#endif /* __STACK_GCONF_H__ */
+#endif /* __FILEBROWSER_GCONF_H__ */

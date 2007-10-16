@@ -1,8 +1,9 @@
-SUBDIRS =			\ 
+SUBDIRS =			\
 	awnsystemmonitor	\
 	battery-applet		\
 	BlingSwitcher 		\
 	clock 			\
+	filebrowser     \
 	gmail			\
 	main-menu 		\
 	media-control		\
@@ -13,7 +14,6 @@ SUBDIRS =			\
 	python-test 		\
 	quit-applet		\
 	separator 		\
-	stack 			\
 	stacks          \
 	switcher 		\
 	showdesktop 		\

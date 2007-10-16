@@ -17,15 +17,15 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef __STACK_UTILS_H__
-#define __STACK_UTILS_H__
+#ifndef __FILEBROWSER_UTILS_H__
+#define __FILEBROWSER_UTILS_H__
 
 #include <gtk/gtk.h>
 #include <libgnomevfs/gnome-vfs.h>
 
-#define STACK_ICON_TEXT_SIZE 24
-#define STACK_ICON_TEXT_CUTOFF 5
-#define STACK_ICON_TEXT_INNERLINE_PADDING 4
+#define FILEBROWSER_ICON_TEXT_SIZE 24
+#define FILEBROWSER_ICON_TEXT_CUTOFF 5
+#define FILEBROWSER_ICON_TEXT_INNERLINE_PADDING 4
 #define MARGIN_X 24
 #define MARGIN_Y 24
 #define PADDING_X 6
@@ -71,4 +71,4 @@ void paint_icon(
     int y,
     double a );
 
-#endif /* __STACK_UTILS_H__ */
+#endif /* __FILEBROWSER_UTILS_H__ */

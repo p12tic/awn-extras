@@ -24,10 +24,10 @@
 #include <libgnomeui/libgnomeui.h>
 #include <libgnomevfs/gnome-vfs-mime-utils.h>
 
-#include "stack-utils.h"
-#include "stack-applet.h"
-#include "stack-gconf.h"
-#include "stack-defines.h"
+#include "filebrowser-utils.h"
+#include "filebrowser-applet.h"
+#include "filebrowser-gconf.h"
+#include "filebrowser-defines.h"
 
 /**
  * Checks if uri is a directory
@@ -212,7 +212,7 @@ void paint_icon_name(
     GdkColor tc ) {
    
     cairo_text_extents_t extents;
-    guint           icon_size = stack_gconf_get_icon_size(  ) + ICON_MARGIN_X*2/3;
+    guint           icon_size = filebrowser_gconf_get_icon_size(  ) + ICON_MARGIN_X*2/3;
     guint           num = 0;
     gchar          *name = g_strdup( icon_name );
 
@@ -257,8 +257,8 @@ void paint_icon_name(
             }
 
             if ( !fixed ) {
-                len -= ( STACK_ICON_TEXT_CUTOFF - remains );
-                remains = STACK_ICON_TEXT_CUTOFF;
+                len -= ( FILEBROWSER_ICON_TEXT_CUTOFF - remains );
+                remains = FILEBROWSER_ICON_TEXT_CUTOFF;
             }
         }
 
@@ -276,8 +276,8 @@ void paint_icon_name(
 
         cairo_text_extents( cr, subname, &extents );
         tx = x + ( icon_size / 2 ) - ( ( extents.width / 2 ) + extents.x_bearing ) - ICON_MARGIN_X/3;
-        ty = y + ( 3 * STACK_ICON_TEXT_INNERLINE_PADDING ) +
-             ( num * ( extents.height + STACK_ICON_TEXT_INNERLINE_PADDING ) );
+        ty = y + ( 3 * FILEBROWSER_ICON_TEXT_INNERLINE_PADDING ) +
+             ( num * ( extents.height + FILEBROWSER_ICON_TEXT_INNERLINE_PADDING ) );
 
         cairo_move_to( cr, tx, ty );
         cairo_text_path( cr, subname );
@@ -288,13 +288,13 @@ void paint_icon_name(
         num++;
     } while ( g_utf8_strlen( name, -1 ) > 0 && num < 2 );
 
-//    stack_gconf_get_icontext_color (&color);
+//    filebrowser_gconf_get_icontext_color (&color);
 //    cairo_set_source_rgba (cr, color.red, color.green, color.blue, color.alpha);
 
     //cairo_set_source_rgba( cr, 1.0, 1.0, 1.0, 1.0 );
 //    cairo_fill_preserve( cr );
 
-    //stack_gconf_get_border_color (&color);
+    //filebrowser_gconf_get_border_color (&color);
     //cairo_set_source_rgba (cr, color.red, color.green, color.blue, color.alpha);
     //cairo_set_source_rgba( cr, 0.0, 0.0, 0.0, 0.6 );
     //cairo_set_line_width( cr, 0.05 );

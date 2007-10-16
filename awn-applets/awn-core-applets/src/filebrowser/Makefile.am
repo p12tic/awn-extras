@@ -8,27 +8,27 @@ INCLUDES =							\
 	-DDATADIR=\"$(datadir)\"				\
 	-DLIBDIR=\"$(libdir)\"                                  
 
-STACK_SOURCES =                              \
-	stack-applet.c                           \
-	stack-dialog.c \
-	stack-folder.c \	
-	stack-gconf.c \
-	stack-icon.c \
-	stack-utils.c
+FILEBROWSER_SOURCES =                              \
+	filebrowser-applet.c                           \
+	filebrowser-dialog.c \
+	filebrowser-folder.c \
+	filebrowser-gconf.c \
+	filebrowser-icon.c \
+	filebrowser-utils.c
 
-STACK_LDADD =                        \
+FILEBROWSER_LDADD =                        \
         $(DEPS_LIBS)			        \
         $(AWN_LIBS)
 
-stacklibdir = $(libdir)/awn/applets/stack/
-stacklib_LTLIBRARIES = stack.la
-stack_la_SOURCES = $(STACK_SOURCES)
-stack_la_LIBADD = $(STACK_LDADD)
-stack_la_LDFLAGS = -module -avoid-version
-stack_la_CFLAGS =
+filebrowserlibdir = $(libdir)/awn/applets/filebrowser/
+filebrowserlib_LTLIBRARIES = filebrowser.la
+filebrowser_la_SOURCES = $(FILEBROWSER_SOURCES)
+filebrowser_la_LIBADD = $(FILEBROWSER_LDADD)
+filebrowser_la_LDFLAGS = -module -avoid-version
+filebrowser_la_CFLAGS =
 
 schemasdir   = @GCONF_SCHEMA_FILE_DIR@
-schemas_FILE = stack.schemas
+schemas_FILE = filebrowser.schemas
 schemas_in_files = $(schemas_FILE).in
 schemas_DATA = $(schemas_in_files:.schemas.in=.schemas)
 	
@@ -42,12 +42,12 @@ endif
 icondir = $(pkgdatadir)
 
 icon_DATA =  \
-	stack.svg
+	filebrowser.svg
 
 desktopdir = $(libdir)/awn/applets
 
 desktop_DATA = \
-	stack.desktop
+	filebrowser.desktop
 @INTLTOOL_DESKTOP_RULE@
 
 $(desktop_DATA): $(desktop_DATA).in
@@ -58,4 +58,4 @@ EXTRA_DIST = \
 	$(desktop_DATA).in \
 	$(schemas_in_files)
 	
-CLEANFILES = $(desktop_DATA) stack.schemas	
+CLEANFILES = $(desktop_DATA) filebrowser.schemas	

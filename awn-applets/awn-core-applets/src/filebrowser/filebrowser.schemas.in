@@ -3,8 +3,8 @@
     <schemalist>
     
       <schema>
-        <key>/schemas/apps/awn-stack/prefs/default_drag_action</key>
-        <owner>awn-stack</owner>
+        <key>/schemas/apps/awn-file-browser/prefs/default_drag_action</key>
+        <owner>awn-file-browser</owner>
         <type>string</type>
         <default>link</default>
         <locale name="C">
@@ -14,19 +14,19 @@
       </schema>
       
       <schema>
-        <key>/schemas/apps/awn-stack/prefs/applet_icon</key>
-        <owner>awn-stack</owner>
+        <key>/schemas/apps/awn-file-browser/prefs/applet_icon</key>
+        <owner>awn-file-browser</owner>
         <type>string</type>
         <default>folder-drag-accept</default>
         <locale name="C">
-          <short>Specify an icon to use for the stack applet (button).</short>
+          <short>Specify an icon to use for the file browser applet (button).</short>
           <long></long>
         </locale>
       </schema>       
       
 	  <schema>
-        <key>/schemas/apps/awn-stack/prefs/enable_browsing</key>
-        <owner>awn-stack</owner>
+        <key>/schemas/apps/awn-file-browser/prefs/enable_browsing</key>
+        <owner>awn-file-browser</owner>
         <type>bool</type>
         <default>TRUE</default>
         <locale name="C">
@@ -36,52 +36,52 @@
       </schema>
       
       <schema>
-        <key>/schemas/apps/awn-stack/prefs/show_files</key>
-        <owner>awn-stack</owner>
+        <key>/schemas/apps/awn-file-browser/prefs/show_files</key>
+        <owner>awn-file-browser</owner>
         <type>bool</type>
         <default>TRUE</default>
         <locale name="C">
-          <short>Show files in the stack</short>
+          <short>Show files in the file browser</short>
           <long></long>
         </locale>
       </schema>
 
       <schema>
-        <key>/schemas/apps/awn-stack/prefs/show_hidden_files</key>
-        <owner>awn-stack</owner>
+        <key>/schemas/apps/awn-file-browser/prefs/show_hidden_files</key>
+        <owner>awn-file-browser</owner>
         <type>bool</type>
         <default>FALSE</default>
         <locale name="C">
-          <short>Show hideen files in the stack</short>
+          <short>Show hideen files in the file browser</short>
           <long></long>
         </locale>
       </schema>
 
       <schema>
-        <key>/schemas/apps/awn-stack/prefs/show_folders</key>
-        <owner>awn-stack</owner>
+        <key>/schemas/apps/awn-file-browser/prefs/show_folders</key>
+        <owner>awn-file-browser</owner>
         <type>bool</type>
         <default>TRUE</default>
         <locale name="C">
-          <short>Show folders in the stack</short>
+          <short>Show folders in the file browser</short>
           <long></long>
         </locale>
       </schema>
       
       <schema>
-        <key>/schemas/apps/awn-stack/prefs/show_desktop_items</key>
-        <owner>awn-stack</owner>
+        <key>/schemas/apps/awn-file-browser/prefs/show_desktop_items</key>
+        <owner>awn-file-browser</owner>
         <type>bool</type>
         <default>TRUE</default>
         <locale name="C">
-          <short>Show desktop items (applications) in the stack</short>
+          <short>Show desktop items (applications) in the file browser</short>
           <long></long>
         </locale>
       </schema>
       
       <schema>
-        <key>/schemas/apps/awn-stack/prefs/enable_composite_applet_icon</key>
-        <owner>awn-stack</owner>
+        <key>/schemas/apps/awn-file-browser/prefs/enable_composite_applet_icon</key>
+        <owner>awn-file-browser</owner>
         <type>bool</type>
         <default>TRUE</default>
         <locale name="C">
@@ -91,8 +91,8 @@
       </schema>
 
       <schema>
-        <key>/schemas/apps/awn-stack/prefs/backend_folder</key>
-        <owner>awn-stack</owner>
+        <key>/schemas/apps/awn-file-browser/prefs/backend_folder</key>
+        <owner>awn-file-browser</owner>
         <type>string</type>
         <default></default>
         <locale name="C">
@@ -102,34 +102,34 @@
       </schema>      
 
       <schema>
-        <key>/schemas/apps/awn-stack/prefs/icon_size</key>
-        <owner>awn-stack</owner>
+        <key>/schemas/apps/awn-file-browser/prefs/icon_size</key>
+        <owner>awn-file-browser</owner>
         <type>int</type>
         <default>48</default>
         <locale name="C">
-          <short>The size of the stack icons</short>
+          <short>The size of the file browser icons</short>
           <long></long>
         </locale>
       </schema> 
       
 	  <schema>
-        <key>/schemas/apps/awn-stack/prefs/maximum_rows</key>
-        <owner>awn-stack</owner>
+        <key>/schemas/apps/awn-file-browser/prefs/maximum_rows</key>
+        <owner>awn-file-browser</owner>
         <type>int</type>
         <default>4</default>
         <locale name="C">
-          <short>The maximum rows a stack page should display</short>
+          <short>The maximum rows a file browser page should display</short>
           <long></long>
         </locale>
       </schema> 
       
       <schema>
-        <key>/schemas/apps/awn-stack/prefs/maximum_cols</key>
-        <owner>awn-stack</owner>
+        <key>/schemas/apps/awn-file-browser/prefs/maximum_cols</key>
+        <owner>awn-file-browser</owner>
         <type>int</type>
         <default>5</default>
         <locale name="C">
-          <short>The maximum columns a stack page should display</short>
+          <short>The maximum columns a file browser page should display</short>
           <long></long>
         </locale>
       </schema> 

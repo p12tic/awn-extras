@@ -21,13 +21,13 @@
 #include <libawn/awn-applet-simple.h>
 #include <libgnomevfs/gnome-vfs.h>
 
-#include "stack-applet.h"
-#include "stack-gconf.h"
-#include "stack-utils.h"
-#include "stack-defines.h"
-#include "stack-dialog.h"
+#include "filebrowser-applet.h"
+#include "filebrowser-gconf.h"
+#include "filebrowser-utils.h"
+#include "filebrowser-defines.h"
+#include "filebrowser-dialog.h"
 
-G_DEFINE_TYPE( StackApplet, stack_applet, GTK_TYPE_DRAWING_AREA )
+G_DEFINE_TYPE( FileBrowserApplet, filebrowser_applet, GTK_TYPE_DRAWING_AREA )
 
 static AwnAppletClass *parent_class = NULL;
 
@@ -38,15 +38,15 @@ static const GtkTargetEntry drop_types[] = { {"text/uri-list", 0, 0} };
  * -limit to create/select folders
  * -run dialog and retrieve a folder path
  */
-static void stack_applet_activate_dialog(
+static void filebrowser_applet_activate_dialog(
     GtkEntry * entry,
     gpointer data ) {
 
-    StackApplet *applet = STACK_APPLET( data );
-    GnomeVFSURI *uri = gnome_vfs_uri_new(stack_gconf_get_backend_folder());
+    FileBrowserApplet *applet = FILEBROWSER_APPLET( data );
+    GnomeVFSURI *uri = gnome_vfs_uri_new(filebrowser_gconf_get_backend_folder());
     GtkWidget *dialog;
 
-    dialog = gtk_file_chooser_dialog_new( STACK_TEXT_SELECT_FOLDER, NULL,
+    dialog = gtk_file_chooser_dialog_new( FILEBROWSER_TEXT_SELECT_FOLDER, NULL,
                                           GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER,
                                           GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                                           GTK_STOCK_APPLY, GTK_RESPONSE_ACCEPT, NULL );
@@ -55,24 +55,24 @@ static void stack_applet_activate_dialog(
     gtk_window_set_skip_pager_hint( GTK_WINDOW( dialog ), TRUE );
 
     if ( uri ) {
-        gtk_file_chooser_set_current_folder( GTK_FILE_CHOOSER( dialog ),
+       gtk_file_chooser_set_current_folder( GTK_FILE_CHOOSER( dialog ),
                                              gnome_vfs_uri_get_path( uri ) );
     }
 
     if ( gtk_dialog_run( GTK_DIALOG( dialog ) ) == GTK_RESPONSE_ACCEPT ) {
 
         gchar *filename = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dialog ) );
-        stack_gconf_set_backend_folder( filename );
+        filebrowser_gconf_set_backend_folder( filename );
 
-        GtkWidget *old = applet->stack;
-        applet->stack = stack_dialog_new( applet );
+        GtkWidget *old = applet->filebrowser;
+        applet->filebrowser = filebrowser_dialog_new( applet );
         if ( old ) {
             gtk_widget_destroy( old );
         }
         g_free( filename );
 
 	applet->title = AWN_TITLE(awn_title_get_default ());
-        applet->title_text = g_strdup (stack_gconf_get_backend_folder());
+        applet->title_text = g_strdup (filebrowser_gconf_get_backend_folder());
     }
 
     gtk_widget_destroy( dialog );
@@ -83,8 +83,8 @@ static void stack_applet_activate_dialog(
  * -get default menu
  * -add properties item
  */
-static GtkWidget *stack_applet_new_dialog(
-    StackApplet * applet ) {
+static GtkWidget *filebrowser_applet_new_dialog(
+    FileBrowserApplet * applet ) {
 
     GtkWidget *item;
     GtkWidget *menu;
@@ -94,7 +94,7 @@ static GtkWidget *stack_applet_new_dialog(
     gtk_menu_shell_prepend( GTK_MENU_SHELL( menu ), item );
 
     g_signal_connect( G_OBJECT( item ), "activate",
-                      G_CALLBACK( stack_applet_activate_dialog ), applet );
+                      G_CALLBACK( filebrowser_applet_activate_dialog ), applet );
 
     gtk_widget_show_all( GTK_WIDGET( menu ) );
 
@@ -105,10 +105,10 @@ static GtkWidget *stack_applet_new_dialog(
  * Destroy applet
  * -unref applet data
  */
-static void stack_applet_destroy(
+static void filebrowser_applet_destroy(
     GtkObject * object ) {
 
-    StackApplet *applet = STACK_APPLET( object );
+    FileBrowserApplet *applet = FILEBROWSER_APPLET( object );
 
 	if (applet->title){
 		g_object_unref (applet->title);
@@ -120,23 +120,23 @@ static void stack_applet_destroy(
     }
     applet->context_menu = NULL;
 
-    if ( applet->stack ) {
-        gtk_widget_destroy( applet->stack );
+    if ( applet->filebrowser ) {
+        gtk_widget_destroy( applet->filebrowser );
     }
-    applet->stack = NULL;
+    applet->filebrowser = NULL;
 
-    ( *GTK_OBJECT_CLASS( stack_applet_parent_class )->destroy ) ( object );
+    ( *GTK_OBJECT_CLASS( filebrowser_applet_parent_class )->destroy ) ( object );
 }
 
 /**
  * Drag leave event
  * -disable hover -> no bounce
  */
-static void stack_applet_drag_leave(
+static void filebrowser_applet_drag_leave(
     GtkWidget * widget,
     GdkDragContext * context,
     guint time_, 
-    StackApplet *applet ) {
+    FileBrowserApplet *applet ) {
    
 	return;
 }
@@ -145,13 +145,13 @@ static void stack_applet_drag_leave(
  * Drag motion event
  * -bounce applet icon
  */
-static gboolean stack_applet_drag_motion(
+static gboolean filebrowser_applet_drag_motion(
     GtkWidget * widget,
     GdkDragContext * context,
     gint x,
     gint y,
     guint time_, 
-    StackApplet *applet ) {
+    FileBrowserApplet *applet ) {
 
        
     return FALSE;
@@ -163,7 +163,7 @@ static gboolean stack_applet_drag_motion(
  * -display errors
  * -TODO: display progressbar
  */
-static gint stack_applet_xfer_callback(
+static gint filebrowser_applet_xfer_callback(
     GnomeVFSAsyncHandle * handle,
     GnomeVFSXferProgressInfo * info,
     gpointer user_data ) {
@@ -221,7 +221,7 @@ static gint stack_applet_xfer_callback(
  * -transfer files
  * -finish dnd
  */
-static void stack_applet_drag_data_received(
+static void filebrowser_applet_drag_data_received(
     GtkWidget * widget,
     GdkDragContext * context,
     gint x,
@@ -229,7 +229,7 @@ static void stack_applet_drag_data_received(
     GtkSelectionData * selectiondata,
     guint info,
     guint time_, 
-    StackApplet *applet ) {
+    FileBrowserApplet *applet ) {
 
     GList *source, *target = NULL, *scan;
     GnomeVFSAsyncHandle *hnd;
@@ -242,7 +242,7 @@ static void stack_applet_drag_data_received(
     options |= GNOME_VFS_XFER_TARGET_DEFAULT_PERMS;
     //options |= GNOME_VFS_XFER_SAMEFS;
 
-    gchar *default_action = stack_gconf_get_default_drag_action();
+    gchar *default_action = filebrowser_gconf_get_default_drag_action();
     if( g_str_equal(default_action, DRAG_ACTION_LINK ) ){
 	    options |= GNOME_VFS_XFER_LINK_ITEMS;
 	}else if(g_str_equal(default_action, DRAG_ACTION_MOVE ) ){
@@ -272,7 +272,7 @@ static void stack_applet_drag_data_received(
         GnomeVFSURI *uri = scan->data;
         gchar *name = gnome_vfs_uri_extract_short_name( uri );
 
-        GnomeVFSURI *link = gnome_vfs_uri_append_file_name( gnome_vfs_uri_new(stack_gconf_get_backend_folder()),
+        GnomeVFSURI *link = gnome_vfs_uri_append_file_name( gnome_vfs_uri_new(filebrowser_gconf_get_backend_folder()),
                             name );
 
         target = g_list_append( target, link );
@@ -284,7 +284,7 @@ static void stack_applet_drag_data_received(
                          GNOME_VFS_XFER_ERROR_MODE_QUERY,
                          GNOME_VFS_XFER_OVERWRITE_MODE_QUERY,
                          GNOME_VFS_PRIORITY_DEFAULT,
-                         stack_applet_xfer_callback, NULL,
+                         filebrowser_applet_xfer_callback, NULL,
                          NULL, NULL );
 
     if ( res != GNOME_VFS_OK ) {
@@ -304,21 +304,21 @@ static void stack_applet_drag_data_received(
  * -on (button 1) toggle container visibility
  * -on rightclick (button 3) show context menu
  */
-static gboolean stack_applet_button_release_event(
+static gboolean filebrowser_applet_button_release_event(
     GtkWidget * widget,
     GdkEventButton * event,
-    StackApplet *applet ) {
+    FileBrowserApplet *applet ) {
 
     // toggle visibility
     if ( event->button == 1 ) {
-        stack_dialog_toggle_visiblity( applet->stack );
+        filebrowser_dialog_toggle_visiblity( applet->filebrowser );
         return FALSE;
     
     // create and popup context menu
     } else if ( event->button == 3 ) {
 
         if ( !applet->context_menu ) {
-            applet->context_menu = stack_applet_new_dialog( applet );
+            applet->context_menu = filebrowser_applet_new_dialog( applet );
         }
         gtk_menu_popup( GTK_MENU( applet->context_menu ), NULL, NULL, NULL, NULL,
                         event->button, event->time );
@@ -331,9 +331,9 @@ static gboolean stack_applet_button_release_event(
 /**
  * Only show the Awn title when the dialog is not visible
  */
-static gboolean stack_applet_enter_notify_event (GtkWidget *window, GdkEventButton *event, StackApplet *applet){
+static gboolean filebrowser_applet_enter_notify_event (GtkWidget *window, GdkEventButton *event, FileBrowserApplet *applet){
 
-	if( !STACK_DIALOG(applet->stack )->active ){
+	if( !FILEBROWSER_DIALOG(applet->filebrowser )->active ){
 		awn_title_show (applet->title, GTK_WIDGET(applet->awn_applet), applet->title_text);
 	}
 	
@@ -343,7 +343,7 @@ static gboolean stack_applet_enter_notify_event (GtkWidget *window, GdkEventButt
 /**
  * Hide the awn title
  */
-static gboolean stack_applet_leave_notify_event (GtkWidget *window, GdkEventButton *event, StackApplet *applet){
+static gboolean filebrowser_applet_leave_notify_event (GtkWidget *window, GdkEventButton *event, FileBrowserApplet *applet){
 
 	awn_title_hide (applet->title, GTK_WIDGET(applet->awn_applet));
 	
@@ -353,16 +353,16 @@ static gboolean stack_applet_leave_notify_event (GtkWidget *window, GdkEventButt
 /**
  * Set the applet-icon
  */
-void stack_applet_set_icon(
-    StackApplet * applet,
+void filebrowser_applet_set_icon(
+    FileBrowserApplet * applet,
     GdkPixbuf * icon ) {
     
     if(!icon){
     	GtkIconTheme *theme = gtk_icon_theme_get_default(  );
-	    gchar *applet_icon = stack_gconf_get_applet_icon(  );
+	    gchar *applet_icon = filebrowser_gconf_get_applet_icon(  );
     	icon = gtk_icon_theme_load_icon( theme, applet_icon,
                        awn_applet_get_height
-                       ( AWN_APPLET( applet->awn_applet ) ) - PADDING, 0, NULL );
+                       ( AWN_APPLET( applet->awn_applet ) ), 0, NULL );
     }else{
 		icon = gdk_pixbuf_copy( icon );
     }
@@ -376,8 +376,8 @@ void stack_applet_set_icon(
  * -set class functions
  * -connect to some applet-signals
  */
-static void stack_applet_class_init(
-    StackAppletClass * klass ) {
+static void filebrowser_applet_class_init(
+    FileBrowserAppletClass * klass ) {
 
     GtkObjectClass *object_class;
     GtkWidgetClass *widget_class;
@@ -387,7 +387,7 @@ static void stack_applet_class_init(
 
 	parent_class = gtk_type_class (GTK_TYPE_DRAWING_AREA);
 
-    object_class->destroy = stack_applet_destroy;
+    object_class->destroy = filebrowser_applet_destroy;
 }
 
 /**
@@ -397,8 +397,8 @@ static void stack_applet_class_init(
  * -set dnd area
  * -TODO: let user decide what the default action is on dnd (copy/move/symlink)
  */
-static void stack_applet_init(
-    StackApplet * applet ) {
+static void filebrowser_applet_init(
+    FileBrowserApplet * applet ) {
 
     return;
 }
@@ -407,7 +407,7 @@ static void stack_applet_init(
  * Create the new applet
  * -set AwnApplet properties
  * -initialize gconf
- * -create stack for default backend folder
+ * -create filebrowser for default backend folder
  * -update icons
  */
 AwnApplet *awn_applet_factory_initp(
@@ -416,35 +416,32 @@ AwnApplet *awn_applet_factory_initp(
     gint height ) {
 
 	GtkWidget *awn_applet = awn_applet_simple_new( uid, orient, height );
-	
-    StackApplet *applet = g_object_new( STACK_TYPE_APPLET, NULL );
+    FileBrowserApplet *applet = g_object_new( FILEBROWSER_TYPE_APPLET, NULL );
 	applet->awn_applet = awn_applet;
 
-    stack_gconf_init( AWN_APPLET( awn_applet ) );
+    filebrowser_gconf_init( AWN_APPLET( awn_applet ) );
+    filebrowser_applet_set_icon( applet, NULL );
 
-    stack_applet_set_icon( applet, NULL );
-    
-    applet->stack = stack_dialog_new( applet );
-
+    applet->filebrowser = filebrowser_dialog_new( applet );
    	applet->title = AWN_TITLE(awn_title_get_default ());
-	applet->title_text = g_strdup (stack_gconf_get_backend_folder());
+	applet->title_text = g_strdup (filebrowser_gconf_get_backend_folder());
 
 	gtk_widget_add_events( GTK_WIDGET( applet->awn_applet ), GDK_ALL_EVENTS_MASK );
 	
 	/* connect to mouse enter/leave events */
 	g_signal_connect (G_OBJECT (applet->awn_applet), "enter-notify-event",
-			  G_CALLBACK (stack_applet_enter_notify_event),
+			  G_CALLBACK (filebrowser_applet_enter_notify_event),
 			  applet);
 	g_signal_connect (G_OBJECT (applet->awn_applet), "leave-notify-event",
-			  G_CALLBACK (stack_applet_leave_notify_event),
+			  G_CALLBACK (filebrowser_applet_leave_notify_event),
 			  applet);
 	g_signal_connect (G_OBJECT (applet->awn_applet), "button-release-event",
-              G_CALLBACK (stack_applet_button_release_event), 
+              G_CALLBACK (filebrowser_applet_button_release_event), 
               applet);
-              
+
     // set up DnD target
     GdkDragAction actions;
-    gchar *default_action = stack_gconf_get_default_drag_action();
+    gchar *default_action = filebrowser_gconf_get_default_drag_action();
     if( g_str_equal(default_action, DRAG_ACTION_LINK ) ){
 	    actions = GDK_ACTION_LINK;
 	}else if(g_str_equal(default_action, DRAG_ACTION_MOVE ) ){
@@ -458,24 +455,23 @@ AwnApplet *awn_applet_factory_initp(
     gtk_drag_dest_set( GTK_WIDGET( applet->awn_applet ), GTK_DEST_DEFAULT_ALL, drop_types,
                        G_N_ELEMENTS( drop_types ),
                        actions );           
-                       
+
 	g_signal_connect (G_OBJECT (applet->awn_applet), "drag-leave",
-              G_CALLBACK (stack_applet_drag_leave), 
+              G_CALLBACK (filebrowser_applet_drag_leave), 
               applet);
 	g_signal_connect (G_OBJECT (applet->awn_applet), "drag-motion",
-              G_CALLBACK (stack_applet_drag_motion), 
+              G_CALLBACK (filebrowser_applet_drag_motion), 
               applet);
 	g_signal_connect (G_OBJECT (applet->awn_applet), "drag-data-received",
-              G_CALLBACK (stack_applet_drag_data_received), 
+              G_CALLBACK (filebrowser_applet_drag_data_received), 
               applet);                   
                                        
-	/* Sise request and show */    
+	/* Size request and show */    
     gtk_widget_set_size_request( awn_applet, awn_applet_get_height ( AWN_APPLET(awn_applet)), 
                                 awn_applet_get_height (AWN_APPLET(awn_applet)) * 2);
 
-
     gtk_widget_show_all( awn_applet );
-
+    g_print("return\n");
     return AWN_APPLET( awn_applet );
 }
 

@@ -7,7 +7,6 @@ import gobject
 class GUITransfer(object):
     def __init__(self, src, dst, options):
         self.__progress = None
-        self.__progress_timeout = None
         self.cancel = False
         self.dialog = gtk.Dialog(title="Copying files",
                                  buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT))
@@ -25,6 +24,7 @@ class GUITransfer(object):
         label_fromto.set_justify(gtk.JUSTIFY_RIGHT)
         hbox_info.pack_start(label_fromto, False, False, 0)
         label_srcdst = gtk.Label("")
+        label_srcdst.set_justify(gtk.JUSTIFY_LEFT)
         label_srcdst.set_markup("%s\n%s" %
                 (str(src.dirname), str(dst.dirname)))
         label_srcdst.set_ellipsize(pango.ELLIPSIZE_START)
@@ -35,7 +35,7 @@ class GUITransfer(object):
         hbox_under = gtk.HBox(False, 0)
         self.label_under = gtk.Label("")
         self.label_under.set_ellipsize(pango.ELLIPSIZE_MIDDLE)
-        hbox_under.pack_start(self.label_under, False, False, 0)
+        hbox_under.pack_start(self.label_under, True, True, 0)
         self.dialog.vbox.add(hbox_under)
 
         self.status_label = gtk.Label()
@@ -49,9 +49,10 @@ class GUITransfer(object):
             error_mode=gnomevfs.XFER_ERROR_MODE_ABORT,
             overwrite_mode=gnomevfs.XFER_OVERWRITE_MODE_ABORT,
             progress_update_callback=self.update_info_cb,
-            update_callback_data=0x4321,
-            progress_sync_callback=self.progress_info_cb,
-            sync_callback_data=0x1234)
+            update_callback_data=None,
+            progress_sync_callback=None,
+            sync_callback_data=None
+            )
         
         self.dialog.connect("response", self.__dialog_response)
     
@@ -61,7 +62,6 @@ class GUITransfer(object):
             self.cancel = True
 
     def update_info_cb(self, _reserved, info, data):
-        assert data == 0x4321
         if info.phase == gnomevfs.XFER_PHASE_COMPLETED:
             self.dialog.destroy()
             gtk.main_quit()
@@ -69,28 +69,8 @@ class GUITransfer(object):
             self.label_under.set_markup("<i>Copying %s</i>" % (str(info.source_name)))
             self.progress_bar.set_text("Copying file: " + 
                     str(info.file_index) + " of " + str(info.files_total))
-        if self.cancel:
-            return 0
-        return 1
-
-    def _do_set_progress(self):
-        self.progress_bar.set_fraction(self.__progress)
-        self.__progress_timeout = None
-        return False
-        
-    def set_progress(self, progress):
-        assert isinstance(progress, (float, int, long))
-        self.__progress = progress
-        if self.__progress_timeout is None:
-            self.__progress_timeout = gobject.timeout_add(100, self._do_set_progress)
-
-    def progress_info_cb(self, info, data):
-        assert data == 0x1234
-        try:
-            progress = float(info.bytes_copied)/float(info.bytes_total)
-            self.set_progress(progress)
-        except Exception, ex:
-            pass
+            if info.bytes_copied > 0 and info.bytes_total > 0:
+                self.progress_bar.set_fraction(float(info.bytes_copied)/float(info.bytes_total))
         if self.cancel:
             return 0
         return 1

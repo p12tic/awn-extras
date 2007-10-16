@@ -23,8 +23,9 @@ class Thumbnailer:
         return self.cached_icon
 
     def _lookup_or_make_thumb(self, icon_size, timestamp):
+        path = self.uri.scheme + "://" + self.uri.path
         icon_name, icon_type = \
-                gnome.ui.icon_lookup(icon_theme, thumb_factory, self.uri.path, self.mimetype, 0)
+                gnome.ui.icon_lookup(icon_theme, thumb_factory, path, self.mimetype, 0)
         try:
             if icon_type == gnome.ui.ICON_LOOKUP_RESULT_FLAGS_THUMBNAIL or \
                     thumb_factory.has_valid_failed_thumbnail(self.uri.path, timestamp):
@@ -32,15 +33,13 @@ class Thumbnailer:
                 thumb = icon_factory.load_icon(icon_name, icon_size)
             elif self._is_local_uri(self.uri):
                 # Generate a thumbnail for local files only
-                print " *** Calling generate_thumbnail for", self.uri.path
-                thumb = thumb_factory.generate_thumbnail(self.uri.path, self.mimetype)
-                thumb_factory.save_thumbnail(thumb, self.uri.path, timestamp)
+                print " *** Calling generate_thumbnail for", path
+                thumb = thumb_factory.generate_thumbnail(path, self.mimetype)
+                thumb_factory.save_thumbnail(thumb, path, timestamp)
     
             if thumb:
                 # Fixup the thumbnail a bit
-                thumb = icon_factory.scale_to_bounded(thumb, icon_size)
-                #thumb = self._nicer_dimensions(thumb)
-                #thumb = icon_factory.make_icon_frame(thumb, icon_size)
+                thumb = self._nicer_dimensions(thumb)
                 return thumb
         except:
             pass

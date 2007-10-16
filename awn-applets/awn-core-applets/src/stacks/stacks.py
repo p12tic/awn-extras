@@ -527,6 +527,8 @@ class Backend(gobject.GObject):
             uri = gnomevfs.URI(uri)
         except TypeError:
             pass
+        if not gnomevfs.exists(uri):
+            return None
         name = uri.short_name
         # check for hidden or temp files
         if name[0] == "." or name.endswith("~"):
@@ -665,36 +667,41 @@ class FileBackend(Backend):
             #gnomevfs.create(self.backend_uri)
             os.mknod(self.backend_uri.path)
 
+    # TODO: replace with gnomevfs version
     def remove(self, uri): 
         uri = self._file_filter(uri)
         if not uri:
             return
-
-        f = open(self.backend_uri, "r") 
+        uripath = uri.scheme + "://" + uri.path
+        f = open(self.backend_uri.path, "r") 
         if f: 
             try: 
                 lines = f.readlines() 
                 f.close() 
-                f = open(self.backend_uri, "w") 
+                f = open(self.backend_uri.path, "w") 
                 for furi in lines: 
-                    if not furi.strip() == uri.path.strip(): 
-                        f.write(furi) 
+                    if not furi.strip() == uripath: 
+                        f.write(furi + os.linesep) 
             finally: 
                 f.close()                 
         return Backend.remove(self, uri) 
-  
+
+    # TODO: replace with gnomevfs version
     def add(self, uri, action=None):
         uri = self._file_filter(uri)
         if not uri:
             return
-        f = open(self.backend_uri.path, "a") 
-        if f: 
-            try: 
-                f.write(uri.scheme + "://" + uri.path + os.linesep) 
-            finally: 
-                f.close() 
+        if action != None:
+           uripath = uri.scheme + "://" + uri.path
+           f = open(self.backend_uri.path, "a") 
+           if f: 
+               try: 
+                   f.write(uripath + os.linesep) 
+               finally: 
+                   f.close() 
         return Backend.add(self, uri)
-                     
+
+    # TODO: replace with gnomevfs version                   
     def read(self): 
         f = open(self.backend_uri.path, "r") 
         if f: 
@@ -702,7 +709,7 @@ class FileBackend(Backend):
                 lines = f.readlines() 
                 for uri in lines: 
                     if len(uri) > 0: 
-                        self.add(uri.strip())
+                        self.add(uri.strip(), 1)
             finally: 
                 f.close() 
 
@@ -724,7 +731,7 @@ class FolderBackend(Backend):
     def _set_monitor(self):
         self.folder_monitor = stacksmonitor.FileMonitor(self.backend_uri)
         self.folder_monitor.open()
-        self.folder_monitor.connect("created", self._created)
+        self.folder_monitor.connect("changed", self._created)
         self.folder_monitor.connect("deleted", self._deleted)
 
     def remove(self, uri):

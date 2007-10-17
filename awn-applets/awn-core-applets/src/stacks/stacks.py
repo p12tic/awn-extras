@@ -430,7 +430,7 @@ class Stacks (awn.AppletSimple):
                                     self.config_fileops )
 
             vbox = gtk.VBox(False, ICON_VBOX_SPACE)
-            vbox.set_size_request(int(1.2 * self.config_icon_size), -1)
+            vbox.set_size_request(int(1.5 * self.config_icon_size), -1)
             icon = store.get_value(iter, COL_ICON)
 
             if icon:
@@ -446,7 +446,7 @@ class Stacks (awn.AppletSimple):
                 label.set_line_wrap(True)
                 layout = label.get_layout()
                 lw, lh = layout.get_size()
-                layout.set_width(self.config_icon_size * pango.SCALE)
+                layout.set_width(int(1.2 * self.config_icon_size) * pango.SCALE)
                 layout.set_wrap(pango.WRAP_WORD_CHAR)
                 _lbltext = label.get_text()
                 lbltext = ""

@@ -36,7 +36,7 @@ class Thumbnailer:
                 print " *** Calling generate_thumbnail for", path
                 thumb = thumb_factory.generate_thumbnail(path, self.mimetype)
                 thumb_factory.save_thumbnail(thumb, path, timestamp)
-    
+                thumb = icon_factory.scale_to_bounded(thumb, icon_size)    
             if thumb:
                 # Fixup the thumbnail a bit
                 thumb = self._nicer_dimensions(thumb)

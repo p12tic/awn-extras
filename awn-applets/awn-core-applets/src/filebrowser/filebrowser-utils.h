@@ -46,6 +46,7 @@ void resize_icon(
 
 GdkPixbuf *get_icon(
     const gchar * filename,
+    GnomeVFSURI * uri,
     gint size );
 
 GdkPixbuf *compose_applet_icon(

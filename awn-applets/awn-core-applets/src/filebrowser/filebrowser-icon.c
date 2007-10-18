@@ -310,14 +310,14 @@ GtkWidget *filebrowser_icon_new(
     if ( icon->desktop_item ) {
         icon->name =
             g_strdup( gnome_desktop_item_get_localestring( icon->desktop_item, GNOME_DESKTOP_ITEM_NAME ) );
-        icon->icon = get_icon( desktop_file_get_link_icon_from_desktop( icon->desktop_item ), icon_size );        
+        icon->icon = get_icon( desktop_file_get_link_icon_from_desktop( icon->desktop_item ), uri, icon_size ); 
     } else {
         icon->uri = gnome_vfs_uri_dup( uri );
     }
 
 	// If we do not assigned an icon yet
     if ( !icon->icon ) {
-        icon->icon = get_icon( file_path, icon_size );
+        icon->icon = get_icon( file_path, uri, icon_size );
     }
     
     // If the name is still blank

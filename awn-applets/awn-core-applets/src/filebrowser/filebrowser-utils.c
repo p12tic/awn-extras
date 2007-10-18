@@ -22,12 +22,14 @@
 #include <libawn/awn-cairo-utils.h>
 #include <libgnomeui/gnome-thumbnail.h>
 #include <libgnomeui/libgnomeui.h>
-#include <libgnomevfs/gnome-vfs-mime-utils.h>
+#include <libgnomevfs/gnome-vfs-ops.h>
 
 #include "filebrowser-utils.h"
 #include "filebrowser-applet.h"
 #include "filebrowser-gconf.h"
 #include "filebrowser-defines.h"
+
+static GnomeThumbnailFactory* THUMBNAIL_FACTORY = NULL;
 
 /**
  * Checks if uri is a directory
@@ -99,7 +101,8 @@ void resize_icon(
 
     if ( scale_keepping_ratio( &width, &height, icon_size, icon_size ) ) {
 	GdkPixbuf *old = *pixbuf;
-        *pixbuf = gdk_pixbuf_scale_simple( *pixbuf, width, height, GDK_INTERP_BILINEAR );
+	*pixbuf = gnome_thumbnail_scale_down_pixbuf(*pixbuf, width, height);
+        //*pixbuf = gdk_pixbuf_scale_simple( *pixbuf, width, height, GDK_INTERP_BILINEAR );
 	g_object_unref( G_OBJECT( old ) );
     }
 }
@@ -111,27 +114,46 @@ void resize_icon(
  */
 GdkPixbuf *get_icon(
     const gchar * filename,
+    GnomeVFSURI * uri,
     gint icon_size ) {
 
-    GdkPixbuf      *pixbuf = NULL;
-    gchar          *mime_type = gnome_vfs_get_mime_type( filename );
+    GdkPixbuf *pixbuf = NULL;
 
-    if ( mime_type ) {
-        GnomeThumbnailFactory *thumbnail_factory = gnome_thumbnail_factory_new( icon_size );
-        pixbuf = gnome_thumbnail_factory_generate_thumbnail( thumbnail_factory, filename, mime_type );
-	g_free( mime_type );
+    if (!THUMBNAIL_FACTORY)
+        THUMBNAIL_FACTORY = gnome_thumbnail_factory_new( GNOME_THUMBNAIL_SIZE_NORMAL );
+    GnomeThumbnailFactory *thumbnail_factory = THUMBNAIL_FACTORY;
 
-        if ( pixbuf ) {
-            resize_icon( &pixbuf, icon_size );
+    GnomeVFSFileInfo *info = gnome_vfs_file_info_new();
+    gnome_vfs_get_file_info_uri(uri, info, GNOME_VFS_FILE_INFO_DEFAULT | GNOME_VFS_FILE_INFO_GET_MIME_TYPE);
+    gchar *uri_path = gnome_vfs_uri_to_string(uri, GNOME_VFS_URI_HIDE_NONE);
+
+    char* thumbnail_file = gnome_thumbnail_factory_lookup(thumbnail_factory, uri_path, info->mtime);
+
+    if (thumbnail_file) {
+        // thumbnail was already created, just load it
+        GError *error = NULL;
+        pixbuf = gdk_pixbuf_new_from_file(thumbnail_file, &error);
+    } else {
+        // should we create thumbnail?
+        if (gnome_thumbnail_factory_can_thumbnail(thumbnail_factory, uri_path, info->mime_type, info->mtime)) {
+            pixbuf = gnome_thumbnail_factory_generate_thumbnail(thumbnail_factory, uri_path, info->mime_type);
+            // save new thumbnail?
+            if (pixbuf && gnome_thumbnail_has_uri (pixbuf, uri_path))
+                gnome_thumbnail_factory_save_thumbnail(thumbnail_factory, pixbuf, uri, info->mtime);
         }
     }
 
-    if ( !pixbuf ) {
+    gnome_vfs_file_info_unref(info);
+    //g_object_unref(uri_path);
+
+    if ( pixbuf ) {
+        resize_icon( &pixbuf, icon_size );
+    } else {
         GtkIconTheme *theme = gtk_icon_theme_get_default(  );
         pixbuf = gtk_icon_theme_load_icon( theme, filename, icon_size, 0, NULL );
 
         if ( !pixbuf ) {
-            gchar          *icon_path = gnome_icon_lookup_sync( theme, NULL, filename, NULL,
+            gchar          *icon_path = gnome_icon_lookup_sync( theme, NULL, uri_path, NULL,
                                         GNOME_ICON_LOOKUP_FLAGS_NONE,
                                         GNOME_ICON_LOOKUP_RESULT_FLAGS_NONE );
 
@@ -140,6 +162,7 @@ GdkPixbuf *get_icon(
         }
     }
 
+    g_free(uri_path);
     return pixbuf;
 }
 
@@ -307,8 +330,7 @@ void paint_icon_name(
     cairo_fill( cr );   
     cairo_destroy( cr );
 
-    return TRUE;
-
+    return;
 }
 
 /**

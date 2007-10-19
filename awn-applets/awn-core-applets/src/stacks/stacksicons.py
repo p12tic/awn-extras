@@ -23,7 +23,7 @@ class Thumbnailer:
         return self.cached_icon
 
     def _lookup_or_make_thumb(self, icon_size, timestamp):
-        path = self.uri.scheme + "://" + self.uri.path
+        path = self.uri #self.uri.scheme + "://" + self.uri.path
         icon_name, icon_type = \
                 gnome.ui.icon_lookup(icon_theme, thumb_factory, path, self.mimetype, 0)
         try:

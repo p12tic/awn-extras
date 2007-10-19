@@ -162,7 +162,7 @@ class Stacks (awn.AppletSimple):
                             selection, targetType, time):
         for uri in (selection.data).split("\r\n"):
             if uri:
-                pixbuf = self.backend.add(uri, context.suggested_action)
+                pixbuf = self.backend.add(uri, context.action)
         context.finish(True, False, time)
         if pixbuf:
             self.applet_set_full_icon(pixbuf)

@@ -2,8 +2,8 @@ SUBDIRS = icons
 
 stacksapplet_DATA = \
 		stacks.py \
+		stacksbackend.py \
 		stackslauncher.py \
-		stacksmonitor.py \
 		stacksconfig.py \
 		stacksicons.py \
 		stacksvfs.py

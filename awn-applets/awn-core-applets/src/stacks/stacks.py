@@ -318,14 +318,22 @@ class Stacks (awn.AppletSimple):
         self.dialog.connect("focus-out-event", self.dialog_focus_out)
         if self.backend.get_type() == stacksbackend.BACKEND_TYPE_FOLDER:
             self.dialog.set_title(self.backend.get_title())
-        table = gtk.Table(1,1,True)
-        table.set_row_spacings(ROW_SPACING)
-        table.set_col_spacings(COL_SPACING)
+
         store = self.backend.get_store()
         iter = store.get_iter_first()
-        x=0
-        y=0
+        new_table=True
+        pages = 0
         while iter:
+            if new_table:
+                x=0
+                y=0
+                table = gtk.Table(1,1,True)
+                table.set_row_spacings(ROW_SPACING)
+                table.set_col_spacings(COL_SPACING)
+                new_table = False
+                pages += 1
+                self.dialog.add(table)
+
             button = gtk.Button()
             button.set_relief(gtk.RELIEF_NONE)
 
@@ -378,10 +386,9 @@ class Stacks (awn.AppletSimple):
                 y += 1
                 x=0
             if y == self.config_rows:
-                break
+                new_table = True
             iter = store.iter_next(iter)
 
-        self.dialog.add(table)
         self.dialog.show_all()
 
     """

@@ -65,7 +65,7 @@ class Stacks (awn.AppletSimple):
     # Default configuration values, are overruled while reading config
     config_backend = "file://" +    os.path.join(
                                     os.path.expanduser("~"), 
-                                    ".config", "awn", "stacks")
+                                    ".config", "awn", "applets", "stacks")
                                     
     config_cols = 5
     config_rows = 4

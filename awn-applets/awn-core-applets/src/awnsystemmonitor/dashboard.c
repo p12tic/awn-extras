@@ -303,7 +303,7 @@ void register_Dashboard( Dashboard * dashboard,AwnApplet *applet)
         }
         if (ver !=1)
         {
-            quick_message ("It appears that this may be an upgrade from an older version.\n  If there are any display issues please run\n 'gconftool-2 --recursive-unset /apps/avant-window-navigator/applets/awn-system-monitor'\n  and then restart the applet.",applet);
+            quick_message ("This message will only appear once.\nIt appears that this may be an upgrade from an older version.\n  If there are any display issues please run\n 'gconftool-2 --recursive-unset /apps/avant-window-navigator/applets/awn-system-monitor'\n  and then restart the applet.",applet);
         
         }        
     }   

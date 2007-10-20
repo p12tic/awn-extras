@@ -26,6 +26,7 @@ import gconf
 import awn
 import gnome.ui
 import gnomedesktop
+import time
 import locale
 import gettext
 import stacksconfig

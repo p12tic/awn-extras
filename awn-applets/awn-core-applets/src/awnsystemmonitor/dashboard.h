@@ -34,9 +34,10 @@
 #include <libawn/awn-applet.h>
 #include <libawn/awn-cairo-utils.h>
 #include <libawn/awn-title.h>
+#include "dashboard_util.h"
 
 
-#define MAX_CALLBACK_FN 10
+#define MAX_CALLBACK_FN 12
 
 enum {  DASHBOARD_CALLBACK_CONSTRUCT, 
         DASHBOARD_CALLBACK_DESTRUCT, 
@@ -47,29 +48,31 @@ enum {  DASHBOARD_CALLBACK_CONSTRUCT,
         DASHBOARD_CALLBACK_DECREASE_STEP_FN,
         DASHBOARD_CALLBACK_ATTACH_RIGHT_CLICK_MENU_FN,
         DASHBOARD_CALLBACK_GET_COMPONENT_NAME_FN,
-        DASHBOARD_CALLBACK_GET_COMPONENT_FRIENDLY_NAME_FN                      
+        DASHBOARD_CALLBACK_GET_COMPONENT_FRIENDLY_NAME_FN,
+        DASHBOARD_CALLBACK_SET_BG, 
+        DASHBOARD_CALLBACK_SET_FG                      
         };
         
 #define DASHBOARD_DEFAULT_X_TILES 41
-#define DASHBOARD_DEFAULT_Y_TILES 41
+#define DASHBOARD_DEFAULT_Y_TILES 70
 #define DASHBOARD_TIMER_FREQ 100     
 
-typedef gboolean (*Construct_head_foot)(GtkWidget ** );
 
+/*FIXME this has expanded  and become a bit crufty since it was originally created*/
 typedef struct
 {
     void * (*lookup_fn)(int);
     void * data;
     int x1;
-    int x2;
     int y1;
-    int y2;
-    Construct_head_foot * headers_footers;
     GtkWidget * widge_wrap;
     GtkWidget * widget;     
     GtkWidget*  right_click_menu;
     gboolean dead_but_does_not_know_it;
     gboolean enabled;
+    GtkWidget *container;
+    gboolean updatepos;
+    void * dashboard;
 } Dashboard_plugs_callbacks;
 
 
@@ -83,25 +86,23 @@ typedef struct
 	long    sys;
     long        accum_user;
     long        accum_idle;
-    long        accum_sys;
-    
+    long        accum_sys;    
     GSList *    Dashboard_plugs;
     
 	gboolean    need_win_update;
 	gboolean    force_update;
 		
 	GtkWidget *mainwindow;    
-    GtkWidget *maintable;	
-    GtkWidget *vbox;
+    GtkWidget *mainfixed;	
 
-	GtkWidget *box;	
 	AwnApplet *applet ;	
-
-	cairo_t *   demo_plug_cr;
 	
-    GtkWidget * toptile;	
     GtkWidget *right_click_menu;
-
+    
+    gboolean ignore_gtk;
+    AwnColor    bg;             /*colours if gtk colours are overridden */
+    AwnColor    fg; 
+    Dashboard_plugs_callbacks *move_widget; 
 } Dashboard;
 
 typedef const char* (*get_component_name_fn)(void *);
@@ -113,7 +114,10 @@ typedef gboolean (*render_fn)(GtkWidget ** ,gint ,void *);
 typedef gboolean (*query_support_multiple_fn)(void);
 typedef gboolean (*increase_step_fn)(void*);
 typedef gboolean (*decrease_step_fn)(void*);
-gboolean _cairo_demo_plug(GtkWidget ** pwidget,gint interval,void * data);
+typedef void (* set_bg_fn)(AwnColor*,void*);
+typedef void (* set_fg_fn)(AwnColor*,void*);
+
+
 void toggle_Dashboard_window(Dashboard *Dashboard);
 void create_Dashboard_window(Dashboard *Dashboard);
 void destroy_Dashboard_window(Dashboard *Dashboard);
@@ -122,13 +126,12 @@ void register_Dashboard( Dashboard * Dashboard,AwnApplet *applet);
 Dashboard_plugs_callbacks * register_Dashboard_plug(      Dashboard * Dashboard,
                                 void * (*lookup_fn)(int),
                                 int x1, 
-                                int x2, 
-                                int y1, 
-                                int y2,
+                                int y1,
+                                long flags,
                                 void * arb_data
                           );            
                           
-void dashboard_redraw_signal(Dashboard * );
+//void dashboard_redraw_signal(Dashboard * );
 
 
                                         

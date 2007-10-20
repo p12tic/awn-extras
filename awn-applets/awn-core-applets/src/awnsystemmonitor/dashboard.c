@@ -33,6 +33,7 @@
 #include <pwd.h>
 #include <signal.h>
 #include <sys/types.h>
+#include <glib.h>
 
 #include <dirent.h>
 #include <libgen.h>
@@ -48,6 +49,12 @@
 #include <assert.h>
 
 #define GCONF_DASHBOARD_PREFIX GCONF_PATH "/dashboard_component_mgmt_"
+#define GCONF_DASHBOARD_IGNORE_GTK  GCONF_PATH "/dashboard_ignore_gtk_bg_fg"
+#define GCONF_DASHBOARD_NO_GTK_FG  GCONF_PATH "/dashboard_no_gtk_fg"
+#define GCONF_DASHBOARD_NO_GTK_BG  GCONF_PATH "/dashboard_no_gtk_bg"
+#define GCONF_DASHBOARD_WIDTH  GCONF_PATH "/dashboard_width"
+#define GCONF_DASHBOARD_HEIGHT  GCONF_PATH "/dashboard_height"
+#define GCONF_DASHBOARD_RUN_ONCE GCONF_PATH "/runonce"
 
 static void draw_main_window(Dashboard *Dashboard);
 
@@ -74,28 +81,47 @@ static gboolean _move_up (GtkWidget *widget, GdkEventButton *event,
                                 Dashboard_plugs_callbacks * node );
 static gboolean _move_down (GtkWidget *widget, GdkEventButton *event,    
                                 Dashboard_plugs_callbacks * node );
+                                
+static gboolean _move_(GtkWidget *widget, GdkEventButton *event,    
+                                Dashboard_plugs_callbacks * node );
+                                
 static void _check_enabled  (gpointer data,gpointer user_data);
 static gboolean _dashboard_button_clicked_event (GtkWidget *widget, 
                                 GdkEventButton *event,Dashboard  * dashboard );
+static gboolean _button_released_event (GtkWidget *widget, GdkEventButton *event,
+                                            Dashboard_plugs_callbacks * node );
+                                
 static void update_pos(Dashboard_plugs_callbacks * node);
 static void build_dashboard_right_click(Dashboard  * dashboard);
 static gboolean _toggle_component(Dashboard_plugs_callbacks *p);
+
+
+static void set_colour(Dashboard *p,AwnColor* colour,const char * mess,const char * gconf_key);
+static gboolean _set_fg(GtkWidget *widget, GdkEventButton *event, Dashboard *p);
+static gboolean _set_bg(GtkWidget *widget, GdkEventButton *event, Dashboard *p);
+void _all_fixed_children(GtkFixedChild *node,Dashboard *p);
+static gboolean _toggle_gtk(GtkWidget *widget, GdkEventButton *event, Dashboard *p);
+static gboolean _apply_dash_colours(GtkWidget *widget, GdkEventButton *event, Dashboard *p);
 
 /*FIXME  --- */
 static void show_main_window(Dashboard *Dashboard);
 static void hide_main_window(Dashboard *Dashboard);
 
+static void set_background(Dashboard * data );
+static void _notify_color_change_bg(Dashboard *p);
+static gboolean _expose_event (GtkWidget *widget, GdkEventExpose *expose, gpointer data);
 
-static    int tiles_x;
-static    int tiles_y;
+
+gboolean  _moving(GtkWidget *widget,GdkEventMotion *event,Dashboard_plugs_callbacks * node);
+static void _apply_c_(gpointer data,gpointer user_data);
+
 static int numticks=0;	
 
 Dashboard_plugs_callbacks* register_Dashboard_plug(      Dashboard * Dashboard,
                                 void * (*lookup_fn)(int),
                                 int x1, 
-                                int x2, 
                                 int y1, 
-                                int y2,
+                                long flags, 
                                 void * arb_data
                           )
 {
@@ -103,7 +129,6 @@ Dashboard_plugs_callbacks* register_Dashboard_plug(      Dashboard * Dashboard,
     construct_fn construct;
     GtkWidget *menu_items;
     GtkWidget *component_menu_items;   
-    GtkWidget *movemenu;
     attach_right_click_menu_fn attach_right_fn;
     get_component_name_fn   get_component_name;
     get_component_friendly_name_fn   get_component_friendly_name;    
@@ -112,8 +137,10 @@ Dashboard_plugs_callbacks* register_Dashboard_plug(      Dashboard * Dashboard,
     GConfValue *value;
     char * keyname;
     int tmp;
-                
-                    
+        
+    node->dashboard=Dashboard;        
+    node->updatepos=FALSE;        
+    node->container=Dashboard->mainfixed;                        
     node->lookup_fn=lookup_fn;
     construct=node->lookup_fn(DASHBOARD_CALLBACK_CONSTRUCT);
     if(construct)
@@ -129,7 +156,7 @@ Dashboard_plugs_callbacks* register_Dashboard_plug(      Dashboard * Dashboard,
     assert(get_component_name);
     if (get_component_name)
     {
-        comp_name=(char *) get_component_name(node->data);
+        comp_name= g_strdup( (char *) get_component_name(node->data));
     }        
 
     get_component_friendly_name=node->lookup_fn(
@@ -138,11 +165,10 @@ Dashboard_plugs_callbacks* register_Dashboard_plug(      Dashboard * Dashboard,
     assert(get_component_friendly_name);
     if (get_component_friendly_name)
     {
-        comp_friendly_name=(char *) get_component_friendly_name(node->data);
+        comp_friendly_name=g_strdup((char *) get_component_friendly_name(node->data));
     }        
 
-
-    node->enabled=TRUE;
+    node->enabled=(flags&0x01?TRUE:FALSE);
         
     node->dead_but_does_not_know_it=FALSE;
 
@@ -158,21 +184,25 @@ Dashboard_plugs_callbacks* register_Dashboard_plug(      Dashboard * Dashboard,
         if ( value ) 
         {
             node->enabled = gconf_client_get_bool(get_dashboard_gconf(),
-                                                keyname, NULL 
-                                                );
+                                                keyname, NULL );
         }         
+        else
+        {
+            gconf_client_set_bool(get_dashboard_gconf(),keyname,
+                    node->enabled,NULL ); 
+        }
+        
     }
     g_free(keyname);        
 
     node->x1=x1;
-    node->x2=x2;    
-    tmp = strlen(GCONF_DASHBOARD_PREFIX) + strlen(comp_name)+strlen("_posx1")+1;
+    tmp = strlen(GCONF_DASHBOARD_PREFIX) + strlen(comp_name)+strlen("_posx1-v2")+1;
     keyname=g_malloc(tmp);
     if (keyname)
     {
         strcpy(keyname,GCONF_DASHBOARD_PREFIX);
         strcat(keyname,comp_name);
-        strcat(keyname,"_posx1");
+        strcat(keyname,"_posx1-v2");
         value = gconf_client_get( get_dashboard_gconf(),keyname,NULL );
         if ( value ) 
         {
@@ -180,15 +210,14 @@ Dashboard_plugs_callbacks* register_Dashboard_plug(      Dashboard * Dashboard,
         }         
     }
     g_free(keyname);        
-    node->y1=y1;
-    node->y2=y2;            
-    tmp = strlen(GCONF_DASHBOARD_PREFIX) + strlen(comp_name)+strlen("_posy1")+1;
+    node->y1=y1;            
+    tmp = strlen(GCONF_DASHBOARD_PREFIX) + strlen(comp_name)+strlen("_posy1-v2")+1;
     keyname=g_malloc(tmp);
     if (keyname)
     {
         strcpy(keyname,GCONF_DASHBOARD_PREFIX);
         strcat(keyname,comp_name);
-        strcat(keyname,"_posy1");
+        strcat(keyname,"_posy1-v2");
         value = gconf_client_get( get_dashboard_gconf(),keyname,NULL );
         if ( value ) 
         {
@@ -196,8 +225,9 @@ Dashboard_plugs_callbacks* register_Dashboard_plug(      Dashboard * Dashboard,
         }         
     }
     g_free(keyname);    
+    g_free(comp_name);
+    g_free(comp_friendly_name);    
     node->widget=NULL;
-    node->headers_footers=NULL;
     node->widge_wrap=NULL;    
     
     node->right_click_menu=gtk_menu_new ();
@@ -212,25 +242,10 @@ Dashboard_plugs_callbacks* register_Dashboard_plug(      Dashboard * Dashboard,
         dashboard_build_clickable_menu_item(    node->right_click_menu, 
                                     G_CALLBACK(_decrease_step),"Smaller",node
                                     );    
-    movemenu = gtk_menu_new ();
 
-    dashboard_build_clickable_menu_item(movemenu,G_CALLBACK(_move_left),
-                                        "Left",node
+    dashboard_build_clickable_menu_item( node->right_click_menu,G_CALLBACK(_move_),
+                                        "Move",node
                                         );    
-    dashboard_build_clickable_menu_item(movemenu,G_CALLBACK(_move_right),
-                                        "Right",node
-                                        );    
-    dashboard_build_clickable_menu_item(movemenu,G_CALLBACK(_move_up),
-                                        "Up",node
-                                        );    
-    dashboard_build_clickable_menu_item(movemenu,G_CALLBACK(_move_down),
-                                        "Down",node
-                                        );    
-
-    menu_items = gtk_menu_item_new_with_label ("Move");
-    gtk_menu_shell_append (GTK_MENU_SHELL (node->right_click_menu), menu_items);
-    gtk_menu_item_set_submenu(menu_items,movemenu);        
-    gtk_widget_show (menu_items);    
 
     dashboard_build_clickable_menu_item(    node->right_click_menu, 
                                 G_CALLBACK(_remove),"Remove",node
@@ -250,6 +265,7 @@ Dashboard_plugs_callbacks* register_Dashboard_plug(      Dashboard * Dashboard,
     }
     Dashboard->Dashboard_plugs=g_slist_prepend(Dashboard->Dashboard_plugs,node);
     build_dashboard_right_click(Dashboard);
+    
     return node;
 }                                
 
@@ -259,58 +275,72 @@ void register_Dashboard( Dashboard * dashboard,AwnApplet *applet)
     int i;
     GdkColor color;
     GdkScreen* pScreen;  
-    int width,height;
-               
+//    int width,height;
+    cairo_t * cr;  
+    gchar *svalue;
+    GConfValue *value;    
+    
+    dashboard->move_widget=NULL;
+    
+    value=gconf_client_get(get_dashboard_gconf(),GCONF_DASHBOARD_IGNORE_GTK , NULL );  
+    if (value)
+    {
+        dashboard->ignore_gtk=gconf_client_get_bool(get_dashboard_gconf(),GCONF_DASHBOARD_IGNORE_GTK , NULL );  
+    }
+    else
+    {
+        dashboard->ignore_gtk=FALSE;
+        gconf_client_set_bool(get_dashboard_gconf(),GCONF_DASHBOARD_IGNORE_GTK,dashboard->ignore_gtk , NULL );  
+    }    
+    
+    if (value)
+    {
+        int ver;
+        value=gconf_client_get(get_dashboard_gconf(),GCONF_DASHBOARD_RUN_ONCE , NULL );  
+        if (value)
+        {
+            ver=gconf_client_get_int(get_dashboard_gconf(),GCONF_DASHBOARD_RUN_ONCE , NULL );  
+        }
+        if (ver !=1)
+        {
+            quick_message ("It appears that this may be an upgrade from an older version.\n  If there are any display issues please run\n 'gconftool-2 --recursive-unset /apps/avant-window-navigator/applets/awn-system-monitor'\n  and then restart the applet.",applet);
+        
+        }        
+    }   
+    gconf_client_set_int(get_dashboard_gconf(),GCONF_DASHBOARD_RUN_ONCE ,1, NULL );    
+        
+    svalue = gconf_client_get_string(get_dashboard_gconf(), GCONF_DASHBOARD_NO_GTK_BG, NULL );
+    if ( !svalue ) 
+    {
+        gconf_client_set_string( get_dashboard_gconf(), GCONF_DASHBOARD_NO_GTK_BG, svalue=g_strdup("999999d4"), NULL );
+    }
+    awn_cairo_string_to_color( svalue,&dashboard->bg );    
+    g_free(svalue);
+    
+    svalue = gconf_client_get_string(get_dashboard_gconf(), GCONF_DASHBOARD_NO_GTK_FG, NULL );
+    if ( !svalue ) 
+    {
+        gconf_client_set_string( get_dashboard_gconf(), GCONF_DASHBOARD_NO_GTK_FG, svalue=g_strdup("FFFFFFBB"), NULL );
+    }    
+    awn_cairo_string_to_color( svalue,&dashboard->fg );    
+    g_free(svalue);
+    
+    
+        
     dashboard->updateinterval=DASHBOARD_TIMER_FREQ;		
     dashboard->force_update=FALSE;
     dashboard->applet=applet;
     dashboard->Dashboard_plugs=NULL;     /*there are no plugs registered yet*/
-    dashboard->box = gtk_alignment_new (0.5, 0.5, 1, 1);
+
     dashboard->mainwindow = awn_applet_dialog_new (applet);
+
     dashboard->right_click_menu=NULL;
-    tiles_x=DASHBOARD_DEFAULT_X_TILES;
-    tiles_y=DASHBOARD_DEFAULT_Y_TILES;    
 
-    
     gtk_window_set_focus_on_map (GTK_WINDOW (dashboard->mainwindow), TRUE);
-    gtk_container_add (GTK_CONTAINER (dashboard->mainwindow), dashboard->box);
-    dashboard->vbox = gtk_vbox_new (FALSE, 8);   
-    dashboard->maintable = gtk_table_new (tiles_x, tiles_y, FALSE);        
-    gtk_container_add (GTK_CONTAINER (dashboard->box), dashboard->vbox);        
-    gtk_table_set_col_spacings (GTK_TABLE(dashboard->maintable),0);    
-    gtk_box_pack_end (GTK_BOX (dashboard->vbox), dashboard->maintable, TRUE, 
-                        TRUE, 0);  
+    dashboard->mainfixed =  gtk_fixed_new(); 
+    gtk_container_add (GTK_CONTAINER (dashboard->mainwindow), dashboard->mainfixed);    
+    gtk_fixed_set_has_window(dashboard->mainfixed,FALSE);
     pScreen = gtk_widget_get_screen (dashboard->mainwindow);
-    width=gdk_screen_get_width(pScreen)/2/tiles_x
-                                    /gdk_screen_get_n_monitors (pScreen);
-    height=gdk_screen_get_height(pScreen)/2/tiles_y;    
-
-    for(i=0;i<tiles_x-1;i++)
-    {
-        dashboard_cairo_widget c_widget;
-        GtkWidget * widget=get_cairo_widget(&c_widget,width,height/6);
-        rgba_colour fg;
-//        get_bg_rgba_colour(&fg);
-        cairo_set_source_rgba (c_widget.cr,0,0,0,0.2);
-        cairo_set_operator (c_widget.cr, CAIRO_OPERATOR_SOURCE);
-        cairo_paint (c_widget.cr);
-        gtk_table_attach_defaults (GTK_TABLE (dashboard->maintable), widget,
-                                 i, i+1, 0, 1);        
-        del_cairo_widget(&c_widget);                
-    }   
-    for(i=1;i<tiles_y-1;i++)
-    {
-        dashboard_cairo_widget c_widget;
-        GtkWidget * widget=get_cairo_widget(&c_widget,width/6,height);
-        //cairo_set_source_rgba (c_widget.cr,0.3, 0.3,0.8,0.5);
-        cairo_set_source_rgba (c_widget.cr,0,0,0,0.2);                
-//        use_bg_rgba_colour(c_widget.cr) ;       
-        cairo_set_operator (c_widget.cr, CAIRO_OPERATOR_SOURCE);
-        cairo_paint (c_widget.cr);
-        gtk_table_attach_defaults (GTK_TABLE (dashboard->maintable), widget,
-                                 tiles_x, tiles_x+1, i, i+1);                
-        del_cairo_widget(&c_widget);
-    }                    
     g_signal_connect(G_OBJECT(dashboard->mainwindow),"focus-out-event",
                     G_CALLBACK (_focus_out_event),(gpointer)dashboard);    
 	g_timeout_add_full(G_PRIORITY_DEFAULT,dashboard->updateinterval,
@@ -322,11 +352,38 @@ void register_Dashboard( Dashboard * dashboard,AwnApplet *applet)
                     G_CALLBACK (_dashboard_button_clicked_event),
                     (gpointer)dashboard
                     );    
-    gtk_widget_show_all(dashboard->vbox);
-    gtk_widget_hide(dashboard->vbox);        
-                    
+//    g_signal_connect (G_OBJECT (dashboard->mainwindow), "expose-event", G_CALLBACK (_expose_event), dashboard);    
+    g_signal_connect (G_OBJECT (dashboard->mainfixed), "expose-event", G_CALLBACK (_expose_event), dashboard);    
+    
+    gtk_widget_show_all(dashboard->mainwindow);
+    gtk_widget_hide(dashboard->mainwindow);            
 }    
 
+
+static gboolean _expose_event (GtkWidget *widget, GdkEventExpose *expose, gpointer data)
+{
+    cairo_t *cr;
+    Dashboard *dashboard=data;
+    cr=gdk_cairo_create(widget->window);
+    if (widget == dashboard->mainwindow)
+    {
+
+        cairo_set_source_rgba(cr,0,0,0,0);     
+        cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
+        awn_cairo_rounded_rect (cr,5,5,widget->allocation.width-10, widget->allocation.height-10,20,ROUND_ALL);          
+        cairo_paint(cr);                  
+
+    }        
+    else
+    {
+        cairo_set_source_rgba(cr,dashboard->bg.red,dashboard->bg.green,dashboard->bg.blue,dashboard->bg.alpha);     
+        cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
+        awn_cairo_rounded_rect (cr,5,5,widget->allocation.width+10, widget->allocation.height+10,10,ROUND_ALL);          
+        cairo_fill(cr);                  
+    }        
+    cairo_destroy(cr);    
+    return FALSE;
+}
 
 void toggle_Dashboard_window(Dashboard *dashboard)
 {
@@ -336,20 +393,10 @@ void toggle_Dashboard_window(Dashboard *dashboard)
     }
     else
     {
-        gtk_widget_show_all (dashboard->mainwindow);                
+        if (dashboard->mainwindow)
+            gtk_widget_show_all (dashboard->mainwindow);                
     }
 }
-
-void create_Dashboard_window(Dashboard *Dashboard)
-{
-    draw_main_window(Dashboard);
-}
-
-void destroy_Dashboard_window(Dashboard *Dashboard)
-{
-    gtk_widget_hide (Dashboard->mainwindow);
-}
-
 
 static gboolean _toggle_component(Dashboard_plugs_callbacks *p)
 {
@@ -360,11 +407,15 @@ static gboolean _toggle_component(Dashboard_plugs_callbacks *p)
     int tmp;
 
     p->enabled=!p->enabled;
-                    
+    if (p->enabled)
+    {
+        if (p->widge_wrap);
+            gtk_widget_show_all(p->widge_wrap);
+    }
     get_component_name=p->lookup_fn(DASHBOARD_CALLBACK_GET_COMPONENT_NAME_FN);
     if (get_component_name)
     {
-        comp_name=(char *) get_component_name(p->data);
+        comp_name=g_strdup((char *) get_component_name(p->data));
     }            
     tmp=strlen(GCONF_DASHBOARD_PREFIX)+ strlen(comp_name)+strlen("_enabled")+1;
     keyname=g_malloc(tmp);
@@ -376,8 +427,105 @@ static gboolean _toggle_component(Dashboard_plugs_callbacks *p)
         gconf_client_set_bool(get_dashboard_gconf(),keyname,p->enabled, NULL );  
     }
     g_free(keyname);
+    g_free(comp_name);
 
 }
+
+static void _notify_color_change_fg(Dashboard *p)
+{
+                /*FIXME */
+
+}
+
+
+static void set_colour(Dashboard *p,AwnColor* colour,const char * mess,const char * gconf_key)
+{
+    char *svalue;
+    pick_awn_color(colour,mess, p,NULL);
+    svalue=dashboard_cairo_colour_to_string(colour);
+    gconf_client_set_string( get_dashboard_gconf(), gconf_key,svalue , NULL );    
+    free(svalue);
+}
+
+
+static void _apply_c_(gpointer data,gpointer user_data)
+{
+    Dashboard_plugs_callbacks * node=data;
+    Dashboard *dashboard=user_data;
+
+    set_bg_fn bg_fn=node->lookup_fn(DASHBOARD_CALLBACK_SET_BG);
+    bg_fn(&dashboard->bg, node->data);
+    set_fg_fn fg_fn=node->lookup_fn(DASHBOARD_CALLBACK_SET_FG);
+    fg_fn(&dashboard->fg, node->data);    
+}
+
+static gboolean _apply_dash_colours(GtkWidget *widget, GdkEventButton *event, Dashboard *p)
+{
+    g_slist_foreach(p->Dashboard_plugs,_apply_c_ ,p);    
+    return TRUE;
+}
+
+static gboolean _set_fg(GtkWidget *widget, GdkEventButton *event, Dashboard *p)
+{  
+
+    char *svalue;
+    if (p->ignore_gtk)
+    {
+        pick_awn_color(&p->fg,"Foreground Colour" , p,_notify_color_change_fg);
+        svalue=dashboard_cairo_colour_to_string(&p->fg);
+        gconf_client_set_string( get_dashboard_gconf(),GCONF_DASHBOARD_NO_GTK_FG,svalue , NULL );   
+        
+    //    gtk_widget_modify_base(windata->win,GTK_STATE_SELECTED,&bg);
+    //        gtk_widget_modify_base(windata->win,GTK_STATE_NORMAL,&bg);     
+        free(svalue);       
+    }        
+    return TRUE;
+}
+
+static void _notify_color_change_bg(Dashboard *p)
+{
+
+
+}
+
+
+static gboolean _set_bg(GtkWidget *widget, GdkEventButton *event, Dashboard *p)
+{  
+    char *svalue;
+    if (p->ignore_gtk)
+    {    
+        pick_awn_color(&p->bg,"Background Colour" , p,_notify_color_change_bg);
+        svalue=dashboard_cairo_colour_to_string(&p->bg);
+        gconf_client_set_string( get_dashboard_gconf(),GCONF_DASHBOARD_NO_GTK_BG,svalue , NULL );    
+        free(svalue);   
+    }        
+    return TRUE;
+}
+
+static gboolean _toggle_gtk(GtkWidget *widget, GdkEventButton *event, Dashboard *p)
+{  
+    char *svalue;
+    
+    p->ignore_gtk=!p->ignore_gtk;
+    if (!p->ignore_gtk)
+    {
+        get_fg_rgba_colour(&p->fg);
+        get_bg_rgba_colour(&p->bg);        
+    }
+    gconf_client_set_bool(get_dashboard_gconf(),GCONF_DASHBOARD_IGNORE_GTK ,p->ignore_gtk, NULL );  
+    
+    svalue=dashboard_cairo_colour_to_string(&p->bg);
+    gconf_client_set_string( get_dashboard_gconf(),GCONF_DASHBOARD_NO_GTK_BG,svalue , NULL );    
+    free(svalue);   
+
+    svalue=dashboard_cairo_colour_to_string(&p->fg);
+    gconf_client_set_string( get_dashboard_gconf(),GCONF_DASHBOARD_NO_GTK_FG,svalue , NULL );    
+    free(svalue);   
+        
+    _expose_event (p->mainfixed, NULL, p);
+    return TRUE;
+}
+
 
 static gboolean _enable_component(GtkWidget *widget, GdkEventButton *event, 
                                     Dashboard_plugs_callbacks *p)
@@ -398,10 +546,12 @@ static void _check_enabled  (gpointer data,gpointer user_data)
         get_component_friendly_name=node->lookup_fn(
                             DASHBOARD_CALLBACK_GET_COMPONENT_FRIENDLY_NAME_FN
                             );
-        sname=get_component_friendly_name(node->data);
+        assert(get_component_friendly_name);        
+        sname=g_strdup(get_component_friendly_name(node->data));
         dashboard_build_clickable_menu_item(dashboard->right_click_menu, 
                             G_CALLBACK(_enable_component),sname,node
                             );                        
+        g_free(sname);                            
     }
     
 }
@@ -410,17 +560,21 @@ static void build_dashboard_right_click(Dashboard  * dashboard)
 {
     GtkWidget * menu_items;
     gboolean found=FALSE;
-    
+    GtkWidget* tmp;
 
     if (dashboard->right_click_menu)
         gtk_widget_destroy(dashboard->right_click_menu);
-  
+
     dashboard->right_click_menu=gtk_menu_new ();
-    menu_items = gtk_menu_item_new_with_label ("Add Component");
-    gtk_menu_shell_append (GTK_MENU_SHELL (dashboard->right_click_menu), 
-                                            menu_items
-                                            );     
-    gtk_widget_show (menu_items);        
+            
+    dashboard_build_clickable_check_menu_item(dashboard->right_click_menu, 
+            G_CALLBACK(_toggle_gtk),"Gtk Colours",dashboard,!dashboard->ignore_gtk);        
+    
+    
+    dashboard_build_clickable_menu_item(dashboard->right_click_menu, G_CALLBACK(_set_fg),"Foreground",dashboard);        
+    dashboard_build_clickable_menu_item(dashboard->right_click_menu, G_CALLBACK(_set_bg),"Background",dashboard);    
+    dashboard_build_clickable_menu_item(dashboard->right_click_menu, G_CALLBACK(_apply_dash_colours),"Propagate",dashboard);        
+    
     g_slist_foreach(dashboard->Dashboard_plugs,_check_enabled,dashboard);    
 
 }
@@ -435,12 +589,23 @@ static gboolean _dashboard_button_clicked_event (GtkWidget *widget,
     {
         gtk_menu_popup (dashboard->right_click_menu, NULL, NULL, NULL, NULL, 
 			  event_button->button, event_button->time);
+        return TRUE;			  
     }
+    else if (event->button == 1)
+    {
+        if (dashboard->move_widget)
+        {
+        
+            dashboard->move_widget->x1=event->x-10;
+            dashboard->move_widget->y1=event->y-10;            
+            update_pos(dashboard->move_widget);    
+            dashboard->move_widget->updatepos=TRUE;   
+            dashboard->move_widget=NULL;
+        }
+        return TRUE;
+    }    
     return FALSE;
 }
-
-/*used for plugs linked list */
-
 
 static gboolean _button_clicked_event (GtkWidget *widget, GdkEventButton *event,
                                             Dashboard_plugs_callbacks * node )
@@ -452,9 +617,12 @@ static gboolean _button_clicked_event (GtkWidget *widget, GdkEventButton *event,
     {
         gtk_menu_popup (node->right_click_menu, NULL, NULL, NULL, NULL, 
 			  event_button->button, event_button->time);
+        return TRUE;			  
     }
-    return TRUE;
+
+    return FALSE;
 }
+
 
 static gboolean _increase_step (GtkWidget *widget, GdkEventButton *event,    
                                 Dashboard_plugs_callbacks * node )
@@ -462,6 +630,7 @@ static gboolean _increase_step (GtkWidget *widget, GdkEventButton *event,
     increase_step_fn increase=node->lookup_fn(
                                         DASHBOARD_CALLBACK_INCREASE_STEP_FN);
     assert(increase);
+     
     increase(node->data);
     return TRUE;
 }
@@ -496,23 +665,23 @@ static void update_pos(Dashboard_plugs_callbacks * node)
     {
         comp_name=(char *) get_component_name(node->data);
     }            
-    tmp = strlen(GCONF_DASHBOARD_PREFIX) + strlen(comp_name)+strlen("_posx1")+1;
+    tmp = strlen(GCONF_DASHBOARD_PREFIX) + strlen(comp_name)+strlen("_posx1-v2")+1;
     keyname=g_malloc(tmp);
     if (keyname)
     {
         strcpy(keyname,GCONF_DASHBOARD_PREFIX);
         strcat(keyname,comp_name);
-        strcat(keyname,"_posx1");
+        strcat(keyname,"_posx1-v2");
         gconf_client_set_int(get_dashboard_gconf(),keyname,node->x1, NULL );  
     }
     g_free(keyname);
-    tmp = strlen(GCONF_DASHBOARD_PREFIX) + strlen(comp_name)+strlen("_posy1")+1;
+    tmp = strlen(GCONF_DASHBOARD_PREFIX) + strlen(comp_name)+strlen("_posy1-v2")+1;
     keyname=g_malloc(tmp);
     if (keyname)
     {
         strcpy(keyname,GCONF_DASHBOARD_PREFIX);
         strcat(keyname,comp_name);
-        strcat(keyname,"_posy1");
+        strcat(keyname,"_posy1-v2");
         gconf_client_set_int(get_dashboard_gconf(),keyname,node->y1, NULL );  
     }
     g_free(keyname);
@@ -520,53 +689,15 @@ static void update_pos(Dashboard_plugs_callbacks * node)
     
 }
 
-static gboolean _move_left(GtkWidget *widget, GdkEventButton *event,    
+
+static gboolean _move_(GtkWidget *widget, GdkEventButton *event,    
                             Dashboard_plugs_callbacks * node )
 {
-    if (node->x1>0)
-    {
-        node->x1--;
-        node->x2--;
-    }
-    update_pos(node);
+    Dashboard * dashboard = node->dashboard;
+    dashboard->move_widget=node;    
     return TRUE;    
 }
 
-static gboolean _move_right(GtkWidget *widget, GdkEventButton *event,    
-                            Dashboard_plugs_callbacks * node )
-{
-    if (node->x2< tiles_x)
-    {
-        node->x1++;
-        node->x2++;
-    }
-    update_pos(node);    
-    return TRUE;
-}
-
-static gboolean _move_up(GtkWidget *widget, GdkEventButton *event,    
-                            Dashboard_plugs_callbacks * node )
-{
-    if (node->y1>1)
-    {
-        node->y1--;
-        node->y2--;
-    }
-    update_pos(node);    
-    return TRUE;
-}
-
-static gboolean _move_down(GtkWidget *widget, GdkEventButton *event,    
-                            Dashboard_plugs_callbacks * node )
-{
-    if (node->y2<tiles_y)
-    {
-        node->y1++;
-        node->y2++;
-    }
-    update_pos(node);    
-    return TRUE;
-}
 
 
 static void Dashboard_plugs_construct(gpointer data,gpointer user_data)
@@ -575,18 +706,16 @@ static void Dashboard_plugs_construct(gpointer data,gpointer user_data)
     Dashboard_plugs_callbacks * node=data;
     Dashboard *dashboard=user_data;
     int i,j;
-    float col_width=dashboard->maintable->allocation.width/tiles_x;    
-    float col_height=dashboard->maintable->allocation.height/tiles_y;    
-    int xcols,yrows,over;
-    GtkRequisition dims;
     GtkWidget *old_widget=NULL;
     if (!node->enabled)
+    {
+        if (node->widge_wrap)
+            gtk_widget_hide_all(node->widge_wrap);
         return;
-
+    }
     if (node->dead_but_does_not_know_it)
-    {        
-        gtk_widget_destroy(node->widge_wrap);
-        gtk_widget_destroy(node->widget);
+    {               
+        gtk_widget_hide_all(node->widge_wrap);
         _toggle_component(node);
         node->dead_but_does_not_know_it=FALSE;        
         build_dashboard_right_click(dashboard);
@@ -608,34 +737,25 @@ static void Dashboard_plugs_construct(gpointer data,gpointer user_data)
             {
                 build_dashboard_right_click(dashboard);
             }
-            node->widge_wrap = gtk_event_box_new();
+            node->widge_wrap = gtk_event_box_new();                           
             gtk_event_box_set_visible_window(node->widge_wrap,FALSE);            
             gtk_container_add (GTK_CONTAINER (node->widge_wrap), node->widget);                                   
             g_signal_connect (G_OBJECT (node->widge_wrap), "button-press-event",
                             G_CALLBACK (_button_clicked_event), (gpointer)node
                             );
+
+            gtk_fixed_put( dashboard->mainfixed,node->widge_wrap,node->x1,node->y1);  
             
-            gtk_table_attach_defaults (GTK_TABLE (dashboard->maintable), 
-                                    node->widge_wrap,node->x1, node->x2,
-                                    node->y1, node->y2
-                                    );  
             if (old_widget)
             {
                 gtk_widget_hide(old_widget);                            
                 gtk_widget_destroy(old_widget);
-            }               
-            gtk_widget_show_all(node->widge_wrap);                                           
-
-            gtk_widget_size_request(node->widget,&dims);            
-            if (  ( dims.width!=0) && (dims.height!=0)  ) 
-            {                                
-                xcols=dims.width/col_width + 1;
-                yrows=dims.height/col_height+1;            
-                node->x2=node->x1+xcols;
-                node->y2=node->y1+yrows;
-            }
-                        
+            }  
+            assert(node->widge_wrap);                                     
+            gtk_widget_show_all(node->widge_wrap);                       
         }      
+        if (node->updatepos)
+            gtk_fixed_move(dashboard->mainfixed,node->widge_wrap,node->x1,node->y1);        
     }
 }
 
@@ -663,8 +783,7 @@ static gboolean _Dashboard_time_handler (Dashboard * Dashboard)
     }
     in_handler=TRUE;                
    
-    if ((GTK_WIDGET_VISIBLE(Dashboard->mainwindow))  ||    (numticks<15)  )
-//    if ((GTK_WIDGET_VISIBLE(Dashboard->mainwindow)) )
+    if ((GTK_WIDGET_VISIBLE(Dashboard->mainwindow)) )
     {
         draw_main_window(Dashboard);                
     }	
@@ -709,25 +828,20 @@ static gboolean _focus_out_event(GtkWidget *widget, GdkEventButton *event,
 */
 static void draw_main_window(Dashboard *dashboard)
 {
-
+    if (!dashboard->ignore_gtk)
+    {
+        set_bg_rbg(&dashboard->mainwindow->style->base[0]);
+        set_fg_rbg(&dashboard->mainwindow->style->fg[0]);        
+    }
     
     /*have dashboard plugs that have registered draw their widgets*/
     dashboard->need_win_update=FALSE;    
     g_slist_foreach(dashboard->Dashboard_plugs,Dashboard_plugs_construct,dashboard);    
        
-    /*we're done laying out the damn thing - let's show it*/
-#if 1
-    if (numticks <15)
-    {
-        gtk_widget_show_all (dashboard->mainwindow);                
-        gtk_widget_hide(dashboard->mainwindow);       
-        numticks++;
-        return;
-    } 
-#endif                        
-    gtk_widget_show_all (dashboard->mainwindow);                    
-    set_bg_rbg(&dashboard->mainwindow->style->base[0]);
-    set_fg_rbg(&dashboard->mainwindow->style->fg[0]);    
+    /*we're done laying out the damn thing - let's show it*/                       
+
+    gtk_widget_show(dashboard->mainwindow);                    
+
     
 }
 

@@ -37,10 +37,13 @@
 #include "cpumetergconf.h"
 #include "uptime_component.h"
 #include "cpu_component.h"
+#include "awntop_cairo_component.h"
+#include "date_time_component.h"
+#include "loadavg_component.h"
 #include "config.h"
 
 
-#undef NDEBUG
+//#undef NDEBUG
 #include <assert.h>
 
 
@@ -63,7 +66,7 @@ static gboolean _enter_notify_event (GtkWidget *window, GdkEventButton *event, g
 static gboolean _leave_notify_event (GtkWidget *window, GdkEvent *event, gpointer *data);
 static gboolean _button_clicked_event (GtkWidget *widget, GdkEventButton *event, CpuMeter * applet);
 static gboolean _die_die_exclamation(GtkWidget *window, GdkEvent *event, gpointer *data);
-
+void render_graph(cairo_t * cr,LoadGraph * g,char *,int width,int height,CpuMeter* cpumeter );
 
 static void set_colour(CpuMeter *p,AwnColor* colour,const char * mess,const char * gconf_key);
 
@@ -81,6 +84,7 @@ static gboolean _set_icon_text(GtkWidget *widget, GdkEventButton *event, CpuMete
 CpuMeter*
 cpumeter_applet_new (AwnApplet *applet)
 {
+    int width,height;
     CpuMeter *cpumeter = g_new0 (CpuMeter, 1);
     cpumeter->loadgraph = g_new0 (LoadGraph, 1);
     cpumeter->applet = applet;
@@ -88,7 +92,8 @@ cpumeter_applet_new (AwnApplet *applet)
     cpumeter->timer_id = -1;
     cpumeter->show_title = FALSE;
     cpumeter->title = AWN_TITLE(awn_title_get_default());
-
+    GdkScreen* pScreen;
+   
 
     init_load_graph(cpumeter->loadgraph);
 
@@ -108,10 +113,21 @@ cpumeter_applet_new (AwnApplet *applet)
     cpumeter_gconf_event(cpumeter->client, 0, NULL, cpumeter);
     set_dashboard_gconf(cpumeter->client);
     register_Dashboard(&cpumeter->dashboard,cpumeter->applet);
-    register_Dashboard_plug(&cpumeter->dashboard,cpu_plug_lookup,0,2,1,4,&cpumeter->cpu_plug);
-    register_Dashboard_plug(&cpumeter->dashboard,uptime_plug_lookup,13,15,1,3,&cpumeter->uptime_plug);          
-    register_Dashboard_plug(&cpumeter->dashboard,awntop_plug_lookup,0,40,10,40,&cpumeter->awntop);  
+    
+    
+    pScreen = gtk_widget_get_screen (cpumeter->applet);       
+    height=gdk_screen_get_height(pScreen)/2;            /*FIXME*/
+    width=height*5/3;
 
+
+    register_Dashboard_plug(&cpumeter->dashboard,date_time_plug_lookup,width/2,21*2,0x01,&cpumeter->date_time_plug);      
+    register_Dashboard_plug(&cpumeter->dashboard,cpu_plug_lookup,0,2,0x01,&cpumeter->cpu_plug);
+    register_Dashboard_plug(&cpumeter->dashboard,uptime_plug_lookup,width/2,21,0x01,&cpumeter->uptime_plug);
+    register_Dashboard_plug(&cpumeter->dashboard,loadavg_plug_lookup,width/2,21*2.5,0x01,&cpumeter->loadavg_plug);                        
+//    register_Dashboard_plug(&cpumeter->dashboard,awntop_plug_lookup,0,height/5,0x00,&cpumeter->awntop);  
+    register_Dashboard_plug(&cpumeter->dashboard,awntop_cairo_plug_lookup,40,height/4.4,0x01,&cpumeter->awntop_cairo_plug);  
+
+    
     
     // connect to button events
     g_signal_connect (G_OBJECT (cpumeter->applet), "button-release-event", G_CALLBACK (_button_release_event), (gpointer)cpumeter );
@@ -139,7 +155,8 @@ cpumeter_applet_new (AwnApplet *applet)
                                         );    
     dashboard_build_clickable_menu_item(cpumeter->right_click_menu,
                         G_CALLBACK(_set_icon_text),"Icon Text", (gpointer)cpumeter
-                                        );                                           
+                                        );          
+    cpumeter->timer_id = g_timeout_add(cpumeter->update_freq, (GSourceFunc*)cpu_meter_render, cpumeter);                                                                                
   return cpumeter;
 }
 
@@ -190,18 +207,19 @@ static gboolean _expose_event (GtkWidget *widget, GdkEventExpose *expose, gpoint
  */
 gboolean cpu_meter_render (gpointer data)
 {
+    char text[20];
+
     static cairo_surface_t *surface;
     static GdkPixbuf * apixbuf;    
     CpuMeter* cpumeter = (CpuMeter *)data;
     static cairo_t *cr = NULL;
     static gint width, height;
     GtkWidget* widget = GTK_WIDGET(cpumeter->applet);
-    cairo_pattern_t *pattern=NULL;
-    gint i, j;
-    gfloat percent;
+
+
     AwnApplet* applet = cpumeter->applet;
     static gboolean doneonce=FALSE;
-
+    
 #if 0  
 /*me trying to trigger something in awn  Please ignore :-) */
     static GdkPixbuf * icon;
@@ -211,108 +229,25 @@ gboolean cpu_meter_render (gpointer data)
     awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (applet),icon);  
     return;  
 #endif 
-
     if (!doneonce)
     {
         gtk_widget_get_size_request (widget, &width, &height);  
         width=width-2;
         height=height/2;
-        if (!GDK_IS_DRAWABLE (widget->window)) {
-            printf("Unexpected Error: Window is not drawable.\n");
-            return FALSE;
-        }
         surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, width, height*2);
         cr = cairo_create (surface);
         assert(cr);
-        doneonce=TRUE;                        
+        doneonce=TRUE;  
+                       
+   
     }
     /*recreating this on every render as if I reuse it some 
     bug(s) seem to get triggered in awn-applet-simple or awn-effects*/
-    
     apixbuf=gdk_pixbuf_new(GDK_COLORSPACE_RGB,TRUE,8,width,height*2);
-    assert(apixbuf);
-    
-  LoadGraph* g = cpumeter->loadgraph;
+    assert(apixbuf);         
+    LoadGraph* g = cpumeter->loadgraph;
   
-  /* Clear the background to transparent */
-  cairo_set_source_rgba (cr, 1.0, 1.0, 1.0, 0.0);
-  cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
-  cairo_paint (cr);
-
-  /* Set back to opaque */
-  cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
-
-  /* Set the background color */
-  awn_cairo_rounded_rect(cr, PAD-1, height+1, width-PAD-4, height-PAD-1, ARC, ROUND_ALL);
-  cairo_set_source_rgba( cr, cpumeter->bg.red, cpumeter->bg.green, cpumeter->bg.blue, cpumeter->bg.alpha );
-  cairo_fill(cr);
-  
-  /* Get the load and paint it */
-  get_load(g);
-  assert((g->index) <= NUM_POINTS);
-  assert((g->index) >= 0);
-  guint percent_now;
-  if (g->index>0)
-  {
-      percent_now = round(g->data[(g->index)-1]*100.0); 
-      percent_now = percent_now>100?100:percent_now;
-  }
-  else
-  {
-        percent_now=0;
-  }
-  i = width - 6;
-  j = g->index-1;
-  if (j < 0) {
-    j = NUM_POINTS-1;
-  }
-
-  guint top = height + PAD;
-  guint bottom = height*2 - PAD;
-  guint tallest = bottom - top;
-  cairo_set_line_width (cr, 1.0);
-  while (i > PAD) {
-    assert(j< NUM_POINTS);
-    assert(j>=0);
-    percent = g->data[j];
-    if (percent > 0 && percent <= 1.0) {
-      cairo_set_source_rgba( cr, cpumeter->graph.red, cpumeter->graph.green, cpumeter->graph.blue, cpumeter->graph.alpha );
-      cairo_move_to(cr, i, bottom - round((float)tallest * percent));
-      cairo_line_to(cr, i, bottom);
-      cairo_stroke(cr);
-    }
-    if (j == 0) {
-      j = NUM_POINTS-1;
-    } else {
-      j--;
-    }
-    i--;
-  }
-
-  cairo_set_line_width (cr, cpumeter->border_width);
-  cairo_set_source_rgba (cr, cpumeter->border.red, cpumeter->border.green, cpumeter->border.blue, cpumeter->border.alpha);
-  awn_cairo_rounded_rect(cr, PAD-1, height+1, width-PAD-4, height-PAD-1, ARC, ROUND_ALL);
-  cairo_stroke (cr);
-
-  if (cpumeter->do_gradient) {
-    awn_cairo_rounded_rect(cr, PAD-1, height+1, width-PAD-4, height-PAD-1, ARC, ROUND_ALL);
-    pattern = cairo_pattern_create_linear (28, 68, 28, 48);
-    cairo_pattern_add_color_stop_rgba (pattern, 0.00,  .1, .1, .1, .1);
-    cairo_pattern_add_color_stop_rgba (pattern, 1.00,  .99, .99, .99, .1);
-    cairo_set_source(cr, pattern);
-    cairo_fill(cr);
-  }
-
-  char text[20];
-  bzero(text,sizeof(text));
-  snprintf(text, sizeof(text), "CPU %d%%", percent_now);
-  if (cpumeter->do_subtitle) {
-    cairo_set_source_rgba (cr, cpumeter->border.red, cpumeter->border.green, cpumeter->border.blue, cpumeter->border.alpha);
-    cairo_select_font_face (cr, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
-    cairo_set_font_size (cr, 8.0);
-    cairo_move_to(cr, PAD-2, bottom+7);
-    cairo_show_text(cr, text);
-  }
+    render_graph(cr,g,text,width,height,cpumeter);
 
     surface_2_pixbuf(apixbuf,surface);
     awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (cpumeter->applet), 
@@ -322,9 +257,97 @@ gboolean cpu_meter_render (gpointer data)
 	} else {
 		awn_title_hide(cpumeter->title, GTK_WIDGET(cpumeter->applet));
 	}
-	if (pattern)
-    	cairo_pattern_destroy(pattern);  
     return TRUE;
+}
+
+void render_graph(cairo_t * cr,LoadGraph * g,char* text,int width,int height,CpuMeter* cpumeter )
+{
+    gint i, j;
+    gfloat percent;
+    cairo_pattern_t *pattern=NULL;
+        
+    /* Clear the background to transparent */
+    cairo_set_source_rgba (cr, 1.0, 1.0, 1.0, 0.0);
+    cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
+    cairo_paint (cr);
+
+    /* Set back to opaque */
+    cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
+
+    /* Set the background color */
+    awn_cairo_rounded_rect(cr, PAD-1, height+1, width-PAD-4, height-PAD-1, ARC, ROUND_ALL);
+    cairo_set_source_rgba( cr, cpumeter->bg.red, cpumeter->bg.green, cpumeter->bg.blue, cpumeter->bg.alpha );
+    cairo_fill(cr);
+  
+    /* Get the load and paint it */
+    get_load(g);
+    assert((g->index) <= NUM_POINTS);
+    assert((g->index) >= 0);
+    guint percent_now;
+    if (g->index>0)
+    {
+        percent_now = round(g->data[(g->index)-1]*100.0); 
+        percent_now = percent_now>100?100:percent_now;
+    }
+    else
+    {
+        percent_now=0;
+    }
+    i = width - 6;
+    j = g->index-1;
+    if (j < 0) {
+        j = NUM_POINTS-1;
+    }
+
+    guint top = height + PAD;
+    guint bottom = height*2 - PAD;
+    guint tallest = bottom - top;
+    cairo_set_line_width (cr, 1.0);
+    while (i > PAD) {
+        assert(j< NUM_POINTS);
+        assert(j>=0);
+        percent = g->data[j];
+        if (percent > 0 && percent <= 1.0) {
+            cairo_set_source_rgba( cr, cpumeter->graph.red, cpumeter->graph.green, cpumeter->graph.blue, cpumeter->graph.alpha );
+            cairo_move_to(cr, i, bottom - round((float)tallest * percent));
+            cairo_line_to(cr, i, bottom);
+            cairo_stroke(cr);
+        }
+        if (j == 0) {
+            j = NUM_POINTS-1;
+        }   
+        else {
+            j--;
+        }
+        i--;
+    }
+
+    cairo_set_line_width (cr, cpumeter->border_width);
+    cairo_set_source_rgba (cr, cpumeter->border.red, cpumeter->border.green, cpumeter->border.blue, cpumeter->border.alpha);
+    awn_cairo_rounded_rect(cr, PAD-1, height+1, width-PAD-4, height-PAD-1, ARC, ROUND_ALL);
+    cairo_stroke (cr);
+
+    if (cpumeter->do_gradient) {
+        awn_cairo_rounded_rect(cr, PAD-1, height+1, width-PAD-4, height-PAD-1, ARC, ROUND_ALL);
+        pattern = cairo_pattern_create_linear (28, 68, 28, 48);
+        cairo_pattern_add_color_stop_rgba (pattern, 0.00,  .1, .1, .1, .1);
+        cairo_pattern_add_color_stop_rgba (pattern, 1.00,  .99, .99, .99, .1);
+        cairo_set_source(cr, pattern);
+        cairo_fill(cr);
+    }
+
+    bzero(text,sizeof(text));
+    snprintf(text, 20, "CPU %d%%", percent_now);
+    if (cpumeter->do_subtitle) {
+        cairo_set_source_rgba (cr, cpumeter->border.red, cpumeter->border.green, cpumeter->border.blue, cpumeter->border.alpha);
+        cairo_select_font_face (cr, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+        cairo_set_font_size (cr, 8.0);
+        cairo_move_to(cr, PAD-2, bottom+7);
+        cairo_show_text(cr, text);
+    }
+    if (pattern)
+        cairo_pattern_destroy(pattern);  
+
 }
 
 

@@ -17,7 +17,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-
+#include <glibtop/loadavg.h>
 #include <libawn/awn-applet.h>
 #include <libawn/awn-applet-gconf.h>
 #include <libawn/awn-applet-dialog.h>
@@ -28,7 +28,7 @@
 #include <string.h>
 #include <time.h>
 
-#include "date_time_component.h"
+#include "loadavg_component.h"
 #include "dashboard_util.h"
 #include "dashboard.h"
 #include "config.h"
@@ -36,44 +36,43 @@
 //#undef NDEBUG
 #include <assert.h>
 
-#define GCONF_DATE_TIME_SIZE_MULT GCONF_PATH  "/component_date_time_scale"
-#define GCONF_DATE_TIME_NO_GTK_FG  GCONF_PATH "/component_date_time_fg"
-#define GCONF_DATE_TIME_NO_GTK_BG  GCONF_PATH "/component_date_time_bg"
-#define GCONF_DATE_TIME_STRFTIME_FORMAT GCONF_PATH "/component_date_time_strftime"
+#define GCONF_LOADAVG_SIZE_MULT GCONF_PATH  "/component_loadavg_scale"
+#define GCONF_LOADAVG_FG  GCONF_PATH "/component_loadavg_fg"
+#define GCONF_LOADAVG_BG  GCONF_PATH "/component_loadavg_bg"
 
 typedef struct
 {
     double width;
     double height;
 	int timer;
+	int frequency;
 	int refresh;
-	char * time_format;
     AwnColor    bg;             /*colours if gtk colours are overridden */
     AwnColor    fg;            
     float size_mult;               
-}Time_Date_plug_data;
+}Loadavg_plug_data;
 
 
-static void _fn_set_bg(AwnColor * new_bg, Time_Date_plug_data **p);
-static void _fn_set_fg(AwnColor * new_fg, Time_Date_plug_data **p);
+static void _fn_set_bg(AwnColor * new_bg, Loadavg_plug_data **p);
+static void _fn_set_fg(AwnColor * new_fg, Loadavg_plug_data **p);
 static gboolean render(GtkWidget **pwidget,gint interval,
-                                                    Time_Date_plug_data **p);
+                                                    Loadavg_plug_data **p);
 static gboolean query_support_multiple(void);
-static void destruct(Time_Date_plug_data **p);
-static void construct(Time_Date_plug_data **p);
-static gboolean decrease_step(Time_Date_plug_data **p);
-static gboolean increase_step(Time_Date_plug_data **p);
-static GtkWidget* attach_right_click_menu(Time_Date_plug_data **p);
+static void destruct(Loadavg_plug_data **p);
+static void construct(Loadavg_plug_data **p);
+static gboolean decrease_step(Loadavg_plug_data **p);
+static gboolean increase_step(Loadavg_plug_data **p);
+static GtkWidget* attach_right_click_menu(Loadavg_plug_data **p);
 
-static void set_colour(Time_Date_plug_data *p,AwnColor* colour,const char *mess,
+static void set_colour(Loadavg_plug_data *p,AwnColor* colour,const char *mess,
                                                         const char * gconf_key);
 static gboolean _set_bg(GtkWidget *widget, GdkEventButton *event, 
-                                                        Time_Date_plug_data *p);
+                                                        Loadavg_plug_data *p);
 static gboolean _set_fg(GtkWidget *widget, GdkEventButton *event, 
-                                                        Time_Date_plug_data *p);
+                                                        Loadavg_plug_data *p);
 
-static const char* get_component_name(Time_Date_plug_data **p);
-static const char* get_component_friendly_name(Time_Date_plug_data **p);
+static const char* get_component_name(Loadavg_plug_data **p);
+static const char* get_component_friendly_name(Loadavg_plug_data **p);
 
 
 static void * plug_fns[MAX_CALLBACK_FN]={
@@ -94,42 +93,42 @@ static void * plug_fns[MAX_CALLBACK_FN]={
 static void * check_ptr;
 
 
-void * date_time_plug_lookup(int fn_id)
+void * loadavg_plug_lookup(int fn_id)
 {
     assert(fn_id<MAX_CALLBACK_FN);
     return plug_fns[fn_id];
 }
 
-static void _fn_set_bg(AwnColor * new_bg, Time_Date_plug_data **p)
+static void _fn_set_bg(AwnColor * new_bg, Loadavg_plug_data **p)
 {
     char *svalue;
     assert(check_ptr==*p);    
-    Time_Date_plug_data * plug_data=*p;
+    Loadavg_plug_data * plug_data=*p;
     plug_data->bg=*new_bg;
     svalue=dashboard_cairo_colour_to_string(new_bg);
-    gconf_client_set_string( get_dashboard_gconf(), GCONF_DATE_TIME_NO_GTK_BG,
+    gconf_client_set_string( get_dashboard_gconf(), GCONF_LOADAVG_BG,
                                                                 svalue , NULL );             
     free(svalue);
 }
 
 
-static void _fn_set_fg(AwnColor * new_fg, Time_Date_plug_data **p)
+static void _fn_set_fg(AwnColor * new_fg, Loadavg_plug_data **p)
 {
     char *svalue;
     assert(check_ptr==*p);    
-    Time_Date_plug_data * plug_data=*p;
+    Loadavg_plug_data * plug_data=*p;
     plug_data->fg=*new_fg;    
     svalue=dashboard_cairo_colour_to_string(new_fg);
-    gconf_client_set_string( get_dashboard_gconf(), GCONF_DATE_TIME_NO_GTK_FG,
+    gconf_client_set_string( get_dashboard_gconf(), GCONF_LOADAVG_FG,
                                                                 svalue , NULL );             
     free(svalue);    
 }
 
 
-static GtkWidget* attach_right_click_menu(Time_Date_plug_data **p)
+static GtkWidget* attach_right_click_menu(Loadavg_plug_data **p)
 {
     assert(check_ptr==*p);
-    Time_Date_plug_data * plug_data=*p;
+    Loadavg_plug_data * plug_data=*p;
     GtkWidget * menu_items;
     GtkWidget *menu = gtk_menu_new ();
         
@@ -140,7 +139,7 @@ static GtkWidget* attach_right_click_menu(Time_Date_plug_data **p)
     return menu;     
 }
 
-static void set_colour(Time_Date_plug_data *p,AwnColor* colour,const char *mess,
+static void set_colour(Loadavg_plug_data *p,AwnColor* colour,const char *mess,
                                                         const char * gconf_key)
 {
     assert(check_ptr==p);
@@ -152,18 +151,18 @@ static void set_colour(Time_Date_plug_data *p,AwnColor* colour,const char *mess,
 }
 
 static gboolean _set_fg(GtkWidget *widget, GdkEventButton *event, 
-                                                        Time_Date_plug_data *p)
+                                                        Loadavg_plug_data *p)
 {  
     assert(check_ptr==p);
-    set_colour(p,&p->fg,"Foreground Colour",GCONF_DATE_TIME_NO_GTK_FG);
+    set_colour(p,&p->fg,"Foreground Colour",GCONF_LOADAVG_FG);
     return TRUE;
 }
 
 static gboolean _set_bg(GtkWidget *widget, GdkEventButton *event, 
-                                                        Time_Date_plug_data *p)
+                                                        Loadavg_plug_data *p)
 {  
     assert(check_ptr==p);
-    set_colour(p,&p->bg,"Foreground Colour",GCONF_DATE_TIME_NO_GTK_BG);
+    set_colour(p,&p->bg,"Background Colour",GCONF_LOADAVG_BG);
     return TRUE;
 }
 
@@ -172,57 +171,46 @@ static gboolean query_support_multiple(void)
     return FALSE;
 }
 
-static void destruct(Time_Date_plug_data **p)
+static void destruct(Loadavg_plug_data **p)
 {
     assert(check_ptr==*p);
     g_free(*p);
     return;
 }
-static void construct(Time_Date_plug_data **p)
+static void construct(Loadavg_plug_data **p)
 {
-    *p=g_malloc(sizeof(Time_Date_plug_data ));
-    Time_Date_plug_data * data=*p;
+    *p=g_malloc(sizeof(Loadavg_plug_data ));
+    Loadavg_plug_data * data=*p;
     GConfValue *value;  
     gchar * svalue;  
     check_ptr=data;  
-     
-    data->timer=1000;    
-
-    svalue = gconf_client_get_string(get_dashboard_gconf(), 
-                                        GCONF_DATE_TIME_STRFTIME_FORMAT, NULL );
-    if ( !svalue ) 
-    {
-        gconf_client_set_string( get_dashboard_gconf(),
-                                        GCONF_DATE_TIME_STRFTIME_FORMAT,
-                                        svalue=g_strdup("%r"), NULL );
-    }
-    data->time_format=strdup(svalue);
-    g_free(svalue);
+    data->frequency=1000; 
+    data->timer=100;    
 
     svalue = gconf_client_get_string(get_dashboard_gconf(),
-                                            GCONF_DATE_TIME_NO_GTK_BG, NULL );
+                                            GCONF_LOADAVG_BG, NULL );
     if ( !svalue ) 
     {
-        gconf_client_set_string(get_dashboard_gconf(),GCONF_DATE_TIME_NO_GTK_BG, 
+        gconf_client_set_string(get_dashboard_gconf(),GCONF_LOADAVG_BG, 
                                             svalue=g_strdup("222299EE"), NULL );
     }
     awn_cairo_string_to_color( svalue,&data->bg );    
     g_free(svalue);
 
     svalue = gconf_client_get_string(get_dashboard_gconf(), 
-                                                GCONF_DATE_TIME_NO_GTK_FG,NULL);
+                                                GCONF_LOADAVG_FG,NULL);
     if ( !svalue ) 
     {
-        gconf_client_set_string(get_dashboard_gconf(),GCONF_DATE_TIME_NO_GTK_FG, 
+        gconf_client_set_string(get_dashboard_gconf(),GCONF_LOADAVG_FG, 
                                             svalue=g_strdup("00000000"), NULL );
     }
     awn_cairo_string_to_color( svalue,&data->fg );    
     g_free(svalue);
     
-    value = gconf_client_get( get_dashboard_gconf(), GCONF_DATE_TIME_SIZE_MULT, NULL );
+    value = gconf_client_get( get_dashboard_gconf(), GCONF_LOADAVG_SIZE_MULT, NULL );
     if ( value ) 
     {
-        data->size_mult = gconf_client_get_float(get_dashboard_gconf(), GCONF_DATE_TIME_SIZE_MULT, NULL );
+        data->size_mult = gconf_client_get_float(get_dashboard_gconf(), GCONF_LOADAVG_SIZE_MULT, NULL );
     } 
     else 
     {
@@ -230,74 +218,66 @@ static void construct(Time_Date_plug_data **p)
     }    
 }
 
-static gboolean decrease_step(Time_Date_plug_data **p)
+static gboolean decrease_step(Loadavg_plug_data **p)
 {
     assert(check_ptr==*p);
-    Time_Date_plug_data *data=*p;
+    Loadavg_plug_data *data=*p;
     data->size_mult=data->size_mult * 5.0 /6.0;
     
-    gconf_client_set_float(get_dashboard_gconf(),GCONF_DATE_TIME_SIZE_MULT,data->size_mult, NULL );        
+    gconf_client_set_float(get_dashboard_gconf(),GCONF_LOADAVG_SIZE_MULT,data->size_mult, NULL );        
 }
-static gboolean increase_step(Time_Date_plug_data **p)
+static gboolean increase_step(Loadavg_plug_data **p)
 {
     assert(check_ptr==*p);
-    Time_Date_plug_data *data=*p;
+    Loadavg_plug_data *data=*p;
     data->size_mult=data->size_mult * 1.2;
-    gconf_client_set_float(get_dashboard_gconf(),GCONF_DATE_TIME_SIZE_MULT,data->size_mult, NULL );       
+    gconf_client_set_float(get_dashboard_gconf(),GCONF_LOADAVG_SIZE_MULT,data->size_mult, NULL );       
 }
 
-static const char* get_component_name(Time_Date_plug_data **p)
+static const char* get_component_name(Loadavg_plug_data **p)
 {
     assert(check_ptr==*p);
-    const char * name="component_date_time";
+    const char * name="component_loadavg";
     return name;
 }
-static const char* get_component_friendly_name(Time_Date_plug_data **p)
+static const char* get_component_friendly_name(Loadavg_plug_data **p)
 {
     assert(check_ptr==*p);
-    const char * name="Date / Time";
+    const char * name="Load Average";
     return name;
 }
 
-static gboolean render(GtkWidget ** pwidget,gint interval,Time_Date_plug_data **p)
+static gboolean render(GtkWidget ** pwidget,gint interval,Loadavg_plug_data **p)
 {
     char buf[200];
     time_t t;
     struct tm *tmp;
     static int width=-1;
     static int height=-1;
-    Time_Date_plug_data * data=*p;
+    Loadavg_plug_data * data=*p;
     dashboard_cairo_widget c_widge; 
     float mult;
     cairo_text_extents_t    extents;            
+    glibtop_loadavg load;
 
     assert(check_ptr==*p);
     data->timer=data->timer-interval;
 	if (data->timer<=0)
 	{
-        data->timer=1000;       /*FIXME... you might not want this refresh rate
+        data->timer=data->frequency;       /*FIXME... you might not want this refresh rate
                                 if you're not displaying seconds...*/
-        t = time(NULL);
-        tmp = localtime(&t);
-        if (tmp == NULL) 
-        {
-            printf("Failure calling localtime()\n");
-            return FALSE;
-        }
-
-        if (strftime(buf, sizeof(buf),data->time_format, tmp) == 0) 
-        {
-            printf("strftime result undefined: format=%s\n",data->time_format);
-            return FALSE;
-        }
-
+        glibtop_get_loadavg(&load);
+        snprintf(buf,sizeof(buf),"Load Average: %0.2f, %0.2f, %0.2f",load.loadavg[0],
+                                            load.loadavg[1],load.loadavg[2]);
+        
         if( width<0)
         {
             *pwidget=get_cairo_widget(&c_widge,200,30);            
             mult=1;
             use_bg_rgba_colour(c_widge.cr);        
             cairo_set_operator (c_widge.cr, CAIRO_OPERATOR_SOURCE);
-            cairo_paint(c_widge.cr);                    
+            cairo_paint(c_widge.cr);   
+            data->timer=interval;
         }
         else
         {

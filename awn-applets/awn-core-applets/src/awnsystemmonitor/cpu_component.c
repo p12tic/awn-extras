@@ -49,11 +49,10 @@
 #define GCONF_CPU_METER_MIDDLE_COLOUR GCONF_PATH  "/component_cpu_meter_middle_c"
 #define GCONF_CPU_METER_USE_2_COLOUR_GRADIENT GCONF_PATH "/component_cpu_use_2_colour_gradient"
 
-#define GCONF_CPU_METER_IGNORE_GTK  GCONF_PATH "/component_cpu_ignore_gtk_bg_fg"
-#define GCONF_CPU_METER_NO_GTK_FG  GCONF_PATH "/component_cpu_no_gtk_fg"
-#define GCONF_CPU_METER_NO_GTK_BG  GCONF_PATH "/component_cpu_no_gtk_bg"
+#define GCONF_CPU_METER_NO_GTK_FG  GCONF_PATH "/component_cpu_fg"
+#define GCONF_CPU_METER_NO_GTK_BG  GCONF_PATH "/component_cpu_bg"
 
-#undef NDEBUG
+//#undef NDEBUG
 #include <assert.h>
 
 typedef struct
@@ -77,7 +76,6 @@ typedef struct
     AwnColor colour_meter_end;    
     AwnColor colour_meter_middle;    
     gboolean two_colour_gradient;
-    gboolean ignore_gtk;
     AwnColor    bg;             /*colours if gtk colours are overridden */
     AwnColor    fg;            
 }CPU_plug_data;
@@ -94,7 +92,6 @@ static const char* get_component_friendly_name(void *);
 
 static gboolean _toggle_2_gradient(GtkWidget *widget, GdkEventButton *event, CPU_plug_data *p);
 static gboolean _toggle_shiny(GtkWidget *widget, GdkEventButton *event, CPU_plug_data *p);
-static gboolean _toggle_gtk(GtkWidget *widget, GdkEventButton *event, CPU_plug_data *p);
 
 static gboolean _set_100(GtkWidget *widget, GdkEventButton *event, CPU_plug_data *p);
 static gboolean _set_200(GtkWidget *widget, GdkEventButton *event, CPU_plug_data *p);
@@ -111,6 +108,10 @@ static gboolean _set_bg(GtkWidget *widget, GdkEventButton *event, CPU_plug_data 
 static void set_colour_gradient(CPU_plug_data *p,AwnColor* colour,const char * mess,const char * gconf_key);
 
 static void _notify_color_change(void *);
+                                        
+static void _fn_set_bg(AwnColor * new_bg, CPU_plug_data **p);
+static void _fn_set_fg(AwnColor * new_fg, CPU_plug_data **p);
+
 
 static void * plug_fns[MAX_CALLBACK_FN]={
                         construct,
@@ -122,14 +123,39 @@ static void * plug_fns[MAX_CALLBACK_FN]={
                         decrease_step,
                         attach_right_click_menu,
                         get_component_name,
-                        get_component_friendly_name                        
+                        get_component_friendly_name,
+                        _fn_set_bg,
+                        _fn_set_fg                    
                         };
+
 
 void * cpu_plug_lookup(int fn_id)
 {
     assert(fn_id<MAX_CALLBACK_FN);
     return plug_fns[fn_id];
 }
+
+static void _fn_set_bg(AwnColor * new_bg, CPU_plug_data **p)
+{
+    char *svalue;
+    CPU_plug_data  * plug_data=*p;
+    plug_data->bg=*new_bg;
+    svalue=dashboard_cairo_colour_to_string(new_bg);
+    gconf_client_set_string( get_dashboard_gconf(), GCONF_CPU_METER_NO_GTK_BG,svalue , NULL );            
+    free(svalue);
+}
+
+
+static void _fn_set_fg(AwnColor * new_fg, CPU_plug_data **p)
+{
+    char *svalue;
+    CPU_plug_data  * plug_data=*p;
+    plug_data->fg=*new_fg;
+    svalue=dashboard_cairo_colour_to_string(new_fg);
+    gconf_client_set_string( get_dashboard_gconf(), GCONF_CPU_METER_NO_GTK_FG,svalue , NULL );                
+    free(svalue);    
+}
+
 
 static const char* get_component_name(void *d)
 {
@@ -154,10 +180,9 @@ static GtkWidget* attach_right_click_menu(CPU_plug_data **p)
     GtkWidget *graphs_refresh_menu = gtk_menu_new ();            
     GtkWidget *graphs_colour_menu = gtk_menu_new ();           
     
-    dashboard_build_clickable_menu_item(menu, G_CALLBACK(_toggle_shiny),"Shiny On/Off",plug_data);
-    dashboard_build_clickable_menu_item(menu, G_CALLBACK(_toggle_gtk),"Ignore gtk bg/fg",plug_data);        
-    dashboard_build_clickable_menu_item(menu, G_CALLBACK(_set_fg),"Non GTK Foreground",plug_data);        
-    dashboard_build_clickable_menu_item(menu, G_CALLBACK(_set_bg),"Non GTK Background",plug_data);                
+    dashboard_build_clickable_menu_item(menu, G_CALLBACK(_toggle_shiny),"Shiny On/Off",plug_data); 
+    dashboard_build_clickable_menu_item(menu, G_CALLBACK(_set_fg),"Foreground",plug_data);        
+    dashboard_build_clickable_menu_item(menu, G_CALLBACK(_set_bg),"Background",plug_data);                
     dashboard_build_clickable_menu_item(menu, G_CALLBACK(_toggle_2_gradient),"2 Colour Gradient",plug_data);            
     dashboard_build_clickable_menu_item(graphs_refresh_menu, G_CALLBACK(_set_100),"100ms",plug_data);
     dashboard_build_clickable_menu_item(graphs_refresh_menu, G_CALLBACK(_set_200),"200ms",plug_data);
@@ -178,13 +203,6 @@ static GtkWidget* attach_right_click_menu(CPU_plug_data **p)
     gtk_widget_show (menu_items);   
     return menu; 
     
-}
-
-static gboolean _toggle_gtk(GtkWidget *widget, GdkEventButton *event, CPU_plug_data *p)
-{  
-    p->ignore_gtk=!p->ignore_gtk;
-    gconf_client_set_bool(get_dashboard_gconf(),GCONF_CPU_METER_IGNORE_GTK ,p->ignore_gtk, NULL );        
-    return TRUE;
 }
 
 static gboolean _toggle_shiny(GtkWidget *widget, GdkEventButton *event, CPU_plug_data *p)
@@ -324,23 +342,12 @@ static void construct(CPU_plug_data **p)
 	data->sys=0;
 	data->idle=100;
 	data->iowait=0;		
-    
-    value = gconf_client_get( get_dashboard_gconf(),GCONF_CPU_METER_IGNORE_GTK, NULL );
-    if ( value ) 
-    {
-        data->ignore_gtk = gconf_client_get_bool(get_dashboard_gconf(),GCONF_CPU_METER_IGNORE_GTK, NULL );
-    } 
-    else 
-    {
-        data->ignore_gtk=FALSE;    
-        gconf_client_set_bool(get_dashboard_gconf(),GCONF_CPU_METER_IGNORE_GTK,
-                    data->ignore_gtk,NULL );                        
-    }
+   
 
     svalue = gconf_client_get_string(get_dashboard_gconf(), GCONF_CPU_METER_NO_GTK_BG, NULL );
     if ( !svalue ) 
     {
-        gconf_client_set_string( get_dashboard_gconf(), GCONF_CPU_METER_NO_GTK_BG, svalue=g_strdup("222299EE"), NULL );
+        gconf_client_set_string( get_dashboard_gconf(), GCONF_CPU_METER_NO_GTK_BG, svalue=g_strdup("999999ee"), NULL );
     }
     awn_cairo_string_to_color( svalue,&data->bg );    
     g_free(svalue);
@@ -348,7 +355,7 @@ static void construct(CPU_plug_data **p)
     svalue = gconf_client_get_string(get_dashboard_gconf(), GCONF_CPU_METER_NO_GTK_FG, NULL );
     if ( !svalue ) 
     {
-        gconf_client_set_string( get_dashboard_gconf(), GCONF_CPU_METER_NO_GTK_FG, svalue=g_strdup("00000000"), NULL );
+        gconf_client_set_string( get_dashboard_gconf(), GCONF_CPU_METER_NO_GTK_FG, svalue=g_strdup("000000ff"), NULL );
     }
     awn_cairo_string_to_color( svalue,&data->fg );    
     g_free(svalue);
@@ -360,7 +367,7 @@ static void construct(CPU_plug_data **p)
     } 
     else 
     {
-        data->size_mult=1.0;
+        data->size_mult=1.72;
         gconf_client_set_float(get_dashboard_gconf(),GCONF_CPU_SIZE_MULT,data->size_mult, NULL );                        
     }
     value = gconf_client_get( get_dashboard_gconf(), GCONF_CPU_REFRESH, NULL );
@@ -398,7 +405,7 @@ static void construct(CPU_plug_data **p)
     svalue = gconf_client_get_string(get_dashboard_gconf(), GCONF_CPU_METER_START_COLOUR, NULL );
     if ( !svalue ) 
     {
-        gconf_client_set_string( get_dashboard_gconf(), GCONF_CPU_METER_START_COLOUR, svalue=g_strdup("00FF10FF"), NULL );
+        gconf_client_set_string( get_dashboard_gconf(), GCONF_CPU_METER_START_COLOUR, svalue=g_strdup("00FF10bb"), NULL );
     }
 
     awn_cairo_string_to_color( svalue,&data->colour_meter_start );    
@@ -407,7 +414,7 @@ static void construct(CPU_plug_data **p)
     svalue = gconf_client_get_string(get_dashboard_gconf(), GCONF_CPU_METER_MIDDLE_COLOUR, NULL );
     if ( !svalue ) 
     {
-        gconf_client_set_string( get_dashboard_gconf(), GCONF_CPU_METER_MIDDLE_COLOUR, svalue=g_strdup("22223FFF"), NULL );
+        gconf_client_set_string( get_dashboard_gconf(), GCONF_CPU_METER_MIDDLE_COLOUR, svalue=g_strdup("EEC83177"), NULL );
     }
 
     awn_cairo_string_to_color( svalue,&data->colour_meter_middle );    
@@ -416,7 +423,7 @@ static void construct(CPU_plug_data **p)
     svalue = gconf_client_get_string(get_dashboard_gconf(), GCONF_CPU_METER_STOP_COLOUR, NULL );
     if ( !svalue ) 
     {
-        gconf_client_set_string( get_dashboard_gconf(), GCONF_CPU_METER_STOP_COLOUR, svalue=g_strdup("FF0010FF"), NULL );
+        gconf_client_set_string( get_dashboard_gconf(), GCONF_CPU_METER_STOP_COLOUR, svalue=g_strdup("FF0010ee"), NULL );
     }
 
     awn_cairo_string_to_color( svalue,&data->colour_meter_end );    
@@ -514,25 +521,18 @@ goto_bad_heheh:
         else
         {
             *pwidget=get_cairo_widget(&c_widge,data->width,data->height);
-            awn_cairo_rounded_rect (c_widge.cr,0,0,data->width,data->height,data->height*0.1,ROUND_ALL);                    
-            if (data->ignore_gtk)
-            {
-                cairo_set_source_rgba (c_widge.cr,data->bg.red,data->bg.green,data->bg.blue,data->bg.alpha);
-            }
-            else
-                use_bg_rgba_colour(c_widge.cr);        
+            cairo_rectangle(c_widge.cr,0,0,data->width,data->height);                    
+
+            cairo_set_source_rgba (c_widge.cr,data->bg.red,data->bg.green,data->bg.blue,data->bg.alpha); 
                 
             cairo_fill(c_widge.cr);
         }
 	    cairo_select_font_face (c_widge.cr, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
 	    cairo_set_font_size (c_widge.cr, dashboard_get_font_size( DASHBOARD_FONT_SMALL)*data->size_mult );
 
-        if (data->ignore_gtk)
-        {
-            cairo_set_source_rgba (c_widge.cr,data->fg.red,data->fg.green,data->fg.blue,data->fg.alpha);
-        }
-        else
-            use_fg_rgb_colour(c_widge.cr);
+
+        cairo_set_source_rgba (c_widge.cr,data->fg.red,data->fg.green,data->fg.blue,data->fg.alpha);
+
         cairo_move_to(c_widge.cr, 10.0*data->size_mult, 15.0*data->size_mult);        
 
         if ( data->max_width_left<0)
@@ -693,13 +693,8 @@ goto_bad_heheh:
                     break;
             }
 
-            if (data->ignore_gtk)
-            {
-                cairo_set_source_rgba (c_widge.cr,data->fg.red,data->fg.green,data->fg.blue,data->fg.alpha);
-            }
-            else
-                use_fg_rgb_colour(c_widge.cr);
-            
+            cairo_set_source_rgba (c_widge.cr,data->fg.red,data->fg.green,data->fg.blue,data->fg.alpha);
+
             x=dashboard_get_font_size( DASHBOARD_FONT_SMALL)*data->size_mult;
             y=y+data->move_down;
             cairo_move_to(c_widge.cr, x,y);

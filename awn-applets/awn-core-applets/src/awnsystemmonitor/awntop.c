@@ -115,11 +115,11 @@ static gboolean _click_set_kill (GtkWidget *widget, GdkEventButton *event, Awnto
 static gboolean _click_set_term_kill (GtkWidget *widget, GdkEventButton *event, Awntop *awntop);
 
 static void parse_desktop_entries(Awntop * Awntop);
-GtkWidget * lookup_icon(Awntop * Awntop,Topentry **topentries,int i);
+static GtkWidget * lookup_icon(Awntop * Awntop,Topentry **topentries,int i);
 
 
 
-Tableheader Global_tableheadings[]=
+static Tableheader Global_tableheadings[]=
 {
     {   "Process",  _click_pid},
     {   "Username",  _click_user},
@@ -151,6 +151,9 @@ static GtkWidget* attach_right_click_menu(void * data);
 static const char* get_component_name(void *);
 static const char* get_component_friendly_name(void *d);
 
+static void _fn_set_bg(AwnColor * new_bg, void **p);
+static void _fn_set_fg(AwnColor * new_fg,  void * **p);
+
 static void * plug_fns[MAX_CALLBACK_FN]={
                                         init_Awntop,
                                         NULL,
@@ -161,12 +164,17 @@ static void * plug_fns[MAX_CALLBACK_FN]={
                                         NULL,
                                         attach_right_click_menu,
                                         get_component_name,
-                                        get_component_friendly_name                                        
+                                        get_component_friendly_name,
+                                        _fn_set_bg,
+                                        _fn_set_fg                                                                                
                                         };
 
 #define GCONF_AWNTOP_NUM_PROCS GCONF_PATH  "/component_awntop_num_procs"
 #define GCONF_AWNTOP_KILL_SIG_METH GCONF_PATH  "/component_awntop_kill_sig_meth"
 #define GCONF_AWNTOP_USER_FILTER GCONF_PATH  "/component_awntop_user_filter"
+
+
+
 
 void * awntop_plug_lookup(int fn_id)
 {
@@ -174,15 +182,26 @@ void * awntop_plug_lookup(int fn_id)
     return plug_fns[fn_id];
 }
 
+static void _fn_set_bg(AwnColor * new_bg, void **p)
+{
+}
+
+
+static void _fn_set_fg(AwnColor * new_fg,  void * **p)
+{
+    
+}
+
+
 static const char* get_component_name(void *d)
 {
-    const char * name="component_awntop";
+    const char * name="component__Awntop";
     return name;
 }    
 
 static const char* get_component_friendly_name(void *d)
 {
-    const char * name="AWN Top";
+    const char * name="AwnTop";
     return name;
 }    
 
@@ -838,7 +857,7 @@ static void build_top_table_headings(Awntop *awntop,GtkWidget * table)
 
 
 /*FIXME  - clean this function up*/
-GtkWidget * lookup_icon(Awntop * awntop,Topentry **topentries,int i)
+static GtkWidget * lookup_icon(Awntop * awntop,Topentry **topentries,int i)
 {
     GtkIconTheme*  g;      
     GtkIconInfo*  iconinfo;

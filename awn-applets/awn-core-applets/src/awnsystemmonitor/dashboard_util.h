@@ -27,7 +27,7 @@
 #include <stdlib.h>
 
 #include <gconf/gconf-client.h>
-
+#define NDEBUG
 enum { DASHBOARD_FONT_TINY, DASHBOARD_FONT_SMALL, DASHBOARD_FONT_MEDIUM, DASHBOARD_FONT_LARGE };
 
 
@@ -81,12 +81,17 @@ float dashboard_get_font_size(int size);
 char * dashboard_cairo_colour_to_string(AwnColor * colour);
 
 GtkWidget * dashboard_build_clickable_menu_item(GtkWidget * menu, GCallback fn,char * mess,void *data);
+GtkWidget * dashboard_build_clickable_check_menu_item(GtkWidget * menu,GCallback fn,char * mess,void *data,gboolean state);
 
 void enable_suppress_hide_main(void);
 void disable_suppress_hide_main(void);
 gboolean get_hide_main(void);
 
 void surface_2_pixbuf( GdkPixbuf * pixbuf, cairo_surface_t * surface);
+
+gboolean toggle_boolean_menu(GtkWidget *widget, GdkEventButton *event, gboolean *p);
+
+void quick_message (gchar *message,GtkWidget * mainwin);
 
 /*void set_tiles_x(int x);
 void set_tiles_y(int y);

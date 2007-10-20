@@ -14,6 +14,8 @@ AWNSYSTEMMONITOR_SOURCES =                              \
 	dashboard.h		\
 	awntop.c    \
 	awntop.h    \
+	awntop_cairo_component.c    \
+	awntop_cairo_component.h    \
 	awnsystemmonitor.c						\
 	awnsystemmonitor.h          \
 	cpumetergconf.c           \
@@ -26,6 +28,8 @@ AWNSYSTEMMONITOR_SOURCES =                              \
     cpu_component.h    \
     date_time_component.c   \
     date_time_component.h   \
+    loadavg_component.c \
+    loadavg_component.h \
 	config.h
 
 AWNSYSTEMMONITOR_LDADD =                        \

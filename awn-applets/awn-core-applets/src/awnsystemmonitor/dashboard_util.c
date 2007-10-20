@@ -26,7 +26,7 @@
 #include <glib.h>
 #include <stdlib.h>
 
-#undef NDEBUG
+//#undef NDEBUG
 #include <assert.h>
 
 #include "dashboard_util.h"
@@ -48,6 +48,42 @@ static gboolean suppress_hide=FALSE;
 static void  _colour_change(GtkColorSelection *colorselection,gpointer p);
 static gboolean _cancel_colour_change(GtkWidget *widget, GdkEventButton *event, gpointer *p);
 
+
+/* Function to open a dialog box displaying the message provided. 
+straight from http://library.gnome.org/devel/gtk/2.11/GtkDialog.html
+*/
+void quick_message (gchar *message,GtkWidget * mainwin) {
+
+   GtkWidget *dialog, *label;
+   
+   /* Create the widgets */
+   
+   dialog = gtk_dialog_new_with_buttons ("Awn System Monitor Message",
+                                         mainwin,
+                                         GTK_DIALOG_DESTROY_WITH_PARENT,
+                                         GTK_STOCK_OK,
+                                         GTK_RESPONSE_NONE,
+                                         NULL);
+   label = gtk_label_new (message);
+   
+   /* Ensure that the dialog box is destroyed when the user responds. */
+   
+   g_signal_connect_swapped (dialog,
+                             "response", 
+                             G_CALLBACK (gtk_widget_destroy),
+                             dialog);
+
+   /* Add the label, and show everything we've added to the dialog. */
+
+   gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox),
+                      label);
+   gtk_widget_show_all (dialog);
+}
+
+gboolean toggle_boolean_menu(GtkWidget *widget, GdkEventButton *event, gboolean *val)
+{
+    *val=!(*val);
+}
 
 void enable_suppress_hide_main(void)
 {
@@ -80,18 +116,33 @@ GtkWidget * dashboard_build_clickable_menu_item(GtkWidget * menu,GCallback fn,ch
     return menu_items;
 }
 
+GtkWidget * dashboard_build_clickable_check_menu_item(GtkWidget * menu,GCallback fn,char * mess,void *data,gboolean state)
+{
+    GtkWidget * menu_items;
+    menu_items = gtk_check_menu_item_new_with_label (mess);
+    gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_items);        
+    g_signal_connect(       G_OBJECT (menu_items), 
+                            "button-press-event",
+                            G_CALLBACK (fn), 
+                            data
+                            );
+    gtk_check_menu_item_set_active(menu_items,state);
+    gtk_widget_show (menu_items);                            
+    return menu_items;
+}
+
 char * dashboard_cairo_colour_to_string(AwnColor * colour)
 {
     char * str=malloc(128);
     char * tmp=malloc(32);
     
-    snprintf(tmp,32,"%04x",(unsigned int) (colour->red*255));
+    snprintf(tmp,32,"%04x",(unsigned int) round((colour->red*255)));
     strcpy(str,tmp+2);
-    snprintf(tmp,32,"%04x",(unsigned int) (colour->green*255));    
+    snprintf(tmp,32,"%04x",(unsigned int) round((colour->green*255)));    
     strcat(str,tmp+2);
-    snprintf(tmp,32,"%04x",(unsigned int) (colour->blue*255));    
+    snprintf(tmp,32,"%04x",(unsigned int) round((colour->blue*255)));    
     strcat(str,tmp+2);
-    snprintf(tmp,32,"%04x",(unsigned int) (colour->alpha*255));    
+    snprintf(tmp,32,"%04x",(unsigned int) round((colour->alpha*255)));    
     strcat(str,tmp+2);
     free(tmp);
     return str;
@@ -193,7 +244,7 @@ void set_bg_rbg(GdkColor *d)
 {
     g_bg.red=((float)(d->red)) /65535.0 ;
     g_bg.blue=((float)(d->blue))/65535.0;
-    g_bg.green=((float)(d->green))/65535.0;     
+    g_bg.green=((float)(d->green))/65535.0;    
 }
 
 void get_fg_rgb_colour(rgb_colour *d)
@@ -210,7 +261,7 @@ void get_fg_rgba_colour(rgba_colour *d)
     d->red=g_fg.red;
     d->green=g_fg.green;
     d->blue=g_fg.blue;
-    d->alpha=1.0;
+    d->alpha=0.9;
 }
 
 void get_bg_rgb_colour(rgb_colour *d)

@@ -31,6 +31,8 @@
 #include "dashboard.h"
 #include "awntop.h"
 #include "uptime_component.h"
+#include "loadavg_component.h"
+
 
 /* Stuff to store the CPU measurements */
 #define NUM_POINTS 200
@@ -68,6 +70,9 @@ typedef struct
   Awntop    awntop;
   void *   cpu_plug;
   void *    uptime_plug;
+  void *    awntop_cairo_plug;
+  void *    date_time_plug;
+  void *    loadavg_plug;
   
   guint size;
   guint new_size;

@@ -60,11 +60,14 @@ void cpumeter_gconf_event(GConfClient* client, guint cxnid, GConfEntry* entry, g
   cpumeter->do_subtitle = cpumeter_gconf_do_subtitle(client);
   cpumeter->update_freq = cpumeter_gconf_get_update_frequency (client);
 
+#if 0
+/*this is causing strange issues with the render function - removing */
   if (cpumeter->timer_id != -1) {
     g_source_remove(cpumeter->timer_id);
   }
 
   cpumeter->timer_id = g_timeout_add(cpumeter->update_freq, (GSourceFunc*)cpu_meter_render, cpumeter);
+#endif   
 }
 
 /**

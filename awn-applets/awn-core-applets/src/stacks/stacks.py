@@ -17,31 +17,29 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
-import sys, os
-import gobject
+import sys
+import os
 import gtk
 from gtk import gdk
 import pango
 import gconf
 import awn
-import time
 import gnome.ui
 import gnomedesktop
-APP="Stacks"
-DIR="locale"
 import locale
 import gettext
-locale.setlocale(locale.LC_ALL, '')
-gettext.bindtextdomain(APP, DIR)
-gettext.textdomain(APP)
-_ = gettext.gettext
-
-# Import our own stuff
 import stacksconfig
 import stackslauncher
 import stacksbackend
 import stacksicons
 import stacksvfs
+
+APP="Stacks"
+DIR="locale"
+locale.setlocale(locale.LC_ALL, '')
+gettext.bindtextdomain(APP, DIR)
+gettext.textdomain(APP)
+_ = gettext.gettext
 
 # Visual layout parameters
 ICON_VBOX_SPACE = 4
@@ -87,6 +85,11 @@ class Stacks (awn.AppletSimple):
         self.title = awn.awn_title_get_default()
         self.effects = self.get_effects()
         self.gconf_path += str(uid)
+        # ensure config path (dir) exists
+        try:
+            os.mkdir(self.config_backend[7:])
+        except OSError: # if file exists
+            pass
         self.config_backend = os.path.join(self.config_backend, uid)
  
         # connect to events
@@ -310,7 +313,7 @@ class Stacks (awn.AppletSimple):
     def dialog_drag_data_delete(self, widget, context):
         return
 
-    def dialog_show_new(self):
+    def dialog_show_new(self, page=1):
         if self.backend.is_empty():
             return
         self.dialog = awn.AppletDialog (self)
@@ -332,7 +335,10 @@ class Stacks (awn.AppletSimple):
                 table.set_col_spacings(COL_SPACING)
                 new_table = False
                 pages += 1
-                self.dialog.add(table)
+                if pages == page:
+                    self.dialog.add(table)
+                if pages > page:
+                    break
 
             button = gtk.Button()
             button.set_relief(gtk.RELIEF_NONE)
@@ -475,8 +481,7 @@ launch_manager = stackslauncher.LaunchManager()
 gnome.ui.authentication_manager_init()
            
 if __name__ == "__main__":
-    awn.init (sys.argv[1:])
-    
+    awn.init (sys.argv[1:]) 
     applet = Stacks (awn.uid, awn.orient, awn.height)
     awn.init_applet (applet)
     applet.show_all ()

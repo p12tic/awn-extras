@@ -17,29 +17,28 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
-import sys, os
+import sys
+import os
 import gobject
 import gtk
 from gtk import gdk
-import time
+#import time
 import random
 import gnome.ui
 import gnomevfs
 import gnomedesktop
-import shutil
-APP="Stacks"
-DIR="locale"
 import locale
 import gettext
+import stacks
+import stacksvfs
+import stacksicons
+
+APP="Stacks"
+DIR="locale"
 locale.setlocale(locale.LC_ALL, '')
 gettext.bindtextdomain(APP, DIR)
 gettext.textdomain(APP)
 _ = gettext.gettext
-
-# Import our own stuff
-import stacks
-import stacksvfs
-import stacksicons
 
 # Backend types
 BACKEND_TYPE_INVALID = -1

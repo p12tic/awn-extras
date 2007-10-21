@@ -178,13 +178,13 @@ class Stacks (awn.AppletSimple):
     def applet_set_empty_icon(self):
         height = self.height
         icon = gdk.pixbuf_new_from_file (self.config_icon_empty)
-        if height != icon.get_height():
-            icon = icon.scale_simple(height,height,gtk.gdk.INTERP_BILINEAR)
+        icon = stacksicons.IconFactory().scale_to_bounded(icon, height)
         self.set_temp_icon(icon)
 
     def applet_set_full_icon(self, pixbuf):
         height = self.height
         icon = gdk.pixbuf_new_from_file(self.config_icon_full)
+        icon = stacksicons.IconFactory().scale_to_bounded(icon, height)
         if self.config_composite_icon and pixbuf:
             try:
                 # scale with aspect ratio:

@@ -86,8 +86,8 @@ class Backend(gobject.GObject):
     # -case insensitive
     # -first basename, then extension
     def _file_sort(self, model, iter1, iter2):
-        f1 = model.get_value(iter1, 0)
-        f2 = model.get_value(iter2, 0)
+        f1 = model.get_value(iter1, COL_URI)
+        f2 = model.get_value(iter2, COL_URI)
         if f1.get_type() == gnomevfs.FILE_TYPE_DIRECTORY and not \
                 f2.get_type() == gnomevfs.FILE_TYPE_DIRECTORY:
             return -1
@@ -95,7 +95,9 @@ class Backend(gobject.GObject):
                 f1.get_type() == gnomevfs.FILE_TYPE_DIRECTORY:
             return 1
         else:
-            return cmp(f1.short_name, f2.short_name)
+            n1 = model.get_value(iter1, COL_LABEL)
+            n2 = model.get_value(iter2, COL_LABEL)
+            return cmp(n1, n2)
 
     def _get_attention(self):
         self.emit("attention", self.get_type())

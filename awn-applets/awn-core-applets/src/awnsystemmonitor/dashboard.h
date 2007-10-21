@@ -103,6 +103,9 @@ typedef struct
     AwnColor    bg;             /*colours if gtk colours are overridden */
     AwnColor    fg; 
     Dashboard_plugs_callbacks *move_widget; 
+    gboolean    rounded;
+    gboolean    show_awn_dialog;
+    gulong      expose_handler_id;
 } Dashboard;
 
 typedef const char* (*get_component_name_fn)(void *);

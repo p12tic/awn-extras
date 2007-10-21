@@ -78,6 +78,7 @@ typedef struct
     gboolean two_colour_gradient;
     AwnColor    bg;             /*colours if gtk colours are overridden */
     AwnColor    fg;            
+    gboolean    emotive_text;
 }CPU_plug_data;
 
 static gboolean render(GtkWidget ** pwidget,gint interval,CPU_plug_data **p);
@@ -343,7 +344,8 @@ static void construct(CPU_plug_data **p)
 	data->idle=100;
 	data->iowait=0;		
    
-
+    data->emotive_text=FALSE;
+    
     svalue = gconf_client_get_string(get_dashboard_gconf(), GCONF_CPU_METER_NO_GTK_BG, NULL );
     if ( !svalue ) 
     {
@@ -626,23 +628,30 @@ goto_bad_heheh:
             cairo_show_text(c_widge.cr, content[0][i]);
             x=x+data->max_width_left*1.1;
             cairo_text_extents(c_widge.cr,content[1][i],&extents);      
-
-            switch (i)     
+            
+            if (data->emotive_text)
             {
-                case 0:
-                    cairo_set_source_rgb(c_widge.cr,data->user/100.0,1.0 - data->user/100.0,0.4);
-                    
-                    break;
-                case 1:
-                    cairo_set_source_rgb(c_widge.cr,(data->sys)/100.0,1.0 - (data->sys)/100.0,0.4);
-                    break;
-                case 2:
-                    cairo_set_source_rgb(c_widge.cr,(data->iowait)/100.0,1.0 - (data->iowait)/100.0,0.4);
-                    break;                    
-                case 3:
-                    cairo_set_source_rgb(c_widge.cr,1.0 - data->idle/100.0,data->idle/100.0,0.4);
-                    break;
+                switch (i)     
+                {
+                    case 0:
+                        cairo_set_source_rgb(c_widge.cr,data->user/100.0,1.0 - data->user/100.0,0.4);
+                        
+                        break;
+                    case 1:
+                        cairo_set_source_rgb(c_widge.cr,(data->sys)/100.0,1.0 - (data->sys)/100.0,0.4);
+                        break;
+                    case 2:
+                        cairo_set_source_rgb(c_widge.cr,(data->iowait)/100.0,1.0 - (data->iowait)/100.0,0.4);
+                        break;                    
+                    case 3:
+                        cairo_set_source_rgb(c_widge.cr,1.0 - data->idle/100.0,data->idle/100.0,0.4);
+                        break;
+                }
             }
+            else
+            {
+                cairo_set_source_rgba (c_widge.cr,data->fg.red,data->fg.green,data->fg.blue,data->fg.alpha);                
+            }                
             cairo_move_to(c_widge.cr, 
                             x+(data->max_width_right-extents.width) 
                             ,y); 

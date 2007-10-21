@@ -55,6 +55,7 @@
 #define GCONF_DASHBOARD_WIDTH  GCONF_PATH "/dashboard_width"
 #define GCONF_DASHBOARD_HEIGHT  GCONF_PATH "/dashboard_height"
 #define GCONF_DASHBOARD_RUN_ONCE GCONF_PATH "/runonce"
+#define GCONF_DASHBOARD_SHOW_AWNDIAG GCONF_PATH "/dashboard_show_awn_diag"
 
 static void draw_main_window(Dashboard *Dashboard);
 
@@ -280,7 +281,21 @@ void register_Dashboard( Dashboard * dashboard,AwnApplet *applet)
     gchar *svalue;
     GConfValue *value;    
     
+    dashboard->rounded=TRUE;            /*FIXME make configurable*/
     dashboard->move_widget=NULL;
+
+
+    value=gconf_client_get(get_dashboard_gconf(),GCONF_DASHBOARD_SHOW_AWNDIAG , NULL );  
+    if (value)
+    {
+        dashboard->show_awn_dialog=gconf_client_get_bool(get_dashboard_gconf(),GCONF_DASHBOARD_SHOW_AWNDIAG , NULL );  
+    }
+    else
+    {
+        dashboard->show_awn_dialog=TRUE;
+        gconf_client_set_bool(get_dashboard_gconf(),GCONF_DASHBOARD_SHOW_AWNDIAG,dashboard->show_awn_dialog , NULL );  
+    }    
+
     
     value=gconf_client_get(get_dashboard_gconf(),GCONF_DASHBOARD_IGNORE_GTK , NULL );  
     if (value)
@@ -352,8 +367,16 @@ void register_Dashboard( Dashboard * dashboard,AwnApplet *applet)
                     G_CALLBACK (_dashboard_button_clicked_event),
                     (gpointer)dashboard
                     );    
-//    g_signal_connect (G_OBJECT (dashboard->mainwindow), "expose-event", G_CALLBACK (_expose_event), dashboard);    
-    g_signal_connect (G_OBJECT (dashboard->mainfixed), "expose-event", G_CALLBACK (_expose_event), dashboard);    
+    if ( !dashboard->show_awn_dialog)
+    {
+        dashboard->expose_handler_id=g_signal_connect (G_OBJECT (dashboard->mainwindow), 
+                                "expose-event", G_CALLBACK (_expose_event), dashboard);    
+    }
+    else        
+    {
+        dashboard->expose_handler_id=g_signal_connect (G_OBJECT (dashboard->mainfixed), 
+                                "expose-event", G_CALLBACK (_expose_event), dashboard);    
+    }
     
     gtk_widget_show_all(dashboard->mainwindow);
     gtk_widget_hide(dashboard->mainwindow);            
@@ -364,25 +387,38 @@ static gboolean _expose_event (GtkWidget *widget, GdkEventExpose *expose, gpoint
 {
     cairo_t *cr;
     Dashboard *dashboard=data;
-    cr=gdk_cairo_create(widget->window);
-    if (widget == dashboard->mainwindow)
+
+//        gtk_container_propagate_expose(dashboard->mainwindow,dashboard->mainfixed,expose);
+    if ( !dashboard->show_awn_dialog)
     {
-
-        cairo_set_source_rgba(cr,0,0,0,0);     
+        cr=gdk_cairo_create(dashboard->mainwindow->window);
+        
+        cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
+        cairo_paint(cr);
+        cairo_set_source_rgba(cr,dashboard->bg.red,dashboard->bg.green,dashboard->bg.blue,dashboard->bg.alpha);             
         cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
-        awn_cairo_rounded_rect (cr,5,5,widget->allocation.width-10, widget->allocation.height-10,20,ROUND_ALL);          
-        cairo_paint(cr);                  
 
-    }        
+        if (dashboard->rounded)
+        {
+            awn_cairo_rounded_rect (cr,5,5,widget->allocation.width-10, widget->allocation.height-10,20,ROUND_ALL);          
+            cairo_fill(cr);                  
+        }        
+        cairo_destroy(cr);
+        gtk_widget_send_expose(dashboard->mainfixed,expose);
+        return TRUE;        
+    }
     else
     {
+        cr=gdk_cairo_create(dashboard->mainfixed->window);    
         cairo_set_source_rgba(cr,dashboard->bg.red,dashboard->bg.green,dashboard->bg.blue,dashboard->bg.alpha);     
         cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
         awn_cairo_rounded_rect (cr,5,5,widget->allocation.width+10, widget->allocation.height+10,10,ROUND_ALL);          
         cairo_fill(cr);                  
-    }        
-    cairo_destroy(cr);    
+        cairo_destroy(cr);                        
+    }            
     return FALSE;
+
+
 }
 
 void toggle_Dashboard_window(Dashboard *dashboard)
@@ -556,6 +592,33 @@ static void _check_enabled  (gpointer data,gpointer user_data)
     
 }
 
+static gboolean _toggle_awn_diag(GtkWidget *widget, GdkEventButton *event, Dashboard *p)
+{  
+    char *svalue;
+    
+//    p->show_awn_dialog=!p->show_awn_dialog;
+    gtk_widget_hide(p->mainwindow);
+#if 0
+    if (p->show_awn_dialog)
+    {
+        g_signal_handler_disconnect(G_OBJECT (p->mainfixed),p->expose_handler_id);    
+        p->expose_handler_id=g_signal_connect (G_OBJECT (p->mainwindow), 
+                                "expose-event", G_CALLBACK (_expose_event), p);                                 
+    }
+    else
+    {
+        g_signal_handler_disconnect(G_OBJECT (p->mainwindow),p->expose_handler_id);        
+        p->expose_handler_id=g_signal_connect (G_OBJECT (p->mainfixed), 
+                                "expose-event", G_CALLBACK (_expose_event),p);        
+    }
+#else
+    quick_message ("This change will not be reflected until the applet is restarted.",p->mainwindow);
+#endif    
+    gconf_client_set_bool(get_dashboard_gconf(),GCONF_DASHBOARD_SHOW_AWNDIAG,!p->show_awn_dialog , NULL ); 
+    return TRUE;
+}
+
+
 static void build_dashboard_right_click(Dashboard  * dashboard)
 {
     GtkWidget * menu_items;
@@ -567,6 +630,8 @@ static void build_dashboard_right_click(Dashboard  * dashboard)
 
     dashboard->right_click_menu=gtk_menu_new ();
             
+    dashboard_build_clickable_check_menu_item(dashboard->right_click_menu, 
+            G_CALLBACK(_toggle_awn_diag),"Display Awn Dialog",dashboard,dashboard->show_awn_dialog);
     dashboard_build_clickable_check_menu_item(dashboard->right_click_menu, 
             G_CALLBACK(_toggle_gtk),"Gtk Colours",dashboard,!dashboard->ignore_gtk);        
     

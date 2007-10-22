@@ -86,8 +86,8 @@ class Backend(gobject.GObject):
     # -case insensitive
     # -first basename, then extension
     def _file_sort(self, model, iter1, iter2):
-        f1 = model.get_value(iter1, 0)
-        f2 = model.get_value(iter2, 0)
+        f1 = model.get_value(iter1, COL_URI)
+        f2 = model.get_value(iter2, COL_URI)
         if f1.get_type() == gnomevfs.FILE_TYPE_DIRECTORY and not \
                 f2.get_type() == gnomevfs.FILE_TYPE_DIRECTORY:
             return -1
@@ -95,7 +95,9 @@ class Backend(gobject.GObject):
                 f1.get_type() == gnomevfs.FILE_TYPE_DIRECTORY:
             return 1
         else:
-            return cmp(f1.short_name, f2.short_name)
+            n1 = model.get_value(iter1, COL_LABEL)
+            n2 = model.get_value(iter2, COL_LABEL)
+            return cmp(n1, n2)
 
     def _get_attention(self):
         self.emit("attention", self.get_type())
@@ -155,21 +157,35 @@ class Backend(gobject.GObject):
                 pixbuf = icon_factory.scale_to_bounded(pixbuf, self.icon_size)
 
         if pixbuf is None:
-            mime_type = gnomevfs.get_file_info(uri.vfs_uri, 
+            try:
+                mime_type = gnomevfs.get_file_info(uri.vfs_uri, 
                                 gnomevfs.FILE_INFO_GET_MIME_TYPE).mime_type
+            except gnomevfs.NotFoundError:
+                return None
             thumbnailer = stacksicons.Thumbnailer(uri.to_string(), mime_type)
             pixbuf = thumbnailer.get_icon(self.icon_size)
 
+        print "Backend::add: ", uri.vfs_uri
         self.store.append([ uri, 
                             name, 
                             mime_type,
                             pixbuf ])
+        self.emit("restructure", self.get_type())
         return pixbuf
 
     # remove file from store
     def remove(self, uri):
+        retval = False
+        iter = self.store.get_iter_first()
+        while iter:
+            store_uri = self.store.get_value(iter, COL_URI)
+            if store_uri.equals(uri):
+                self.store.remove(iter)
+                retval = True
+                break
+            iter = self.store.iter_next(iter)     
         self.emit("restructure", self.get_type())
-        return True
+        return retval
         
     def read(self):
         return
@@ -277,18 +293,13 @@ class FolderBackend(Backend):
     def remove(self, uri):
         if not isinstance(uri, stacksvfs.VfsUri):
             uri = stacksvfs.get_vfsuri(uri)
-        iter = self.store.get_iter_first()
-        while iter:
-            store_uri = self.store.get_value(iter, COL_URI)
-            if store_uri.equals(uri):
-                self.store.remove(iter)
-                return Backend.remove(self, uri)
-            iter = self.store.iter_next(iter)     
-        return False   
+        return Backend.remove(self, uri)
   
     def add(self, uri, action=None):
         if not isinstance(uri, stacksvfs.VfsUri):
             uri = stacksvfs.get_vfsuri(uri)
+            if uri is None:
+                return None
         if action != None:
             try:
                 dst = self.backend_uri.vfs_uri.append_path(uri.short_name)
@@ -310,6 +321,7 @@ class FolderBackend(Backend):
             options |= gnomevfs.XFER_RECURSIVE
             options |= gnomevfs.XFER_FOLLOW_LINKS_RECURSIVE
             stacksvfs.GUITransfer(uri.vfs_uri, dst, options)
+            uri = stacksvfs.get_vfsuri(dst)
         return Backend.add(self, uri)
 
     def read(self):

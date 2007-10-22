@@ -21,9 +21,11 @@ import sys
 import os
 import gtk
 from gtk import gdk
+import gobject
 import pango
 import gconf
 import awn
+import cairo
 import gnome.ui
 import gnomedesktop
 import time
@@ -58,10 +60,18 @@ class Stacks (awn.AppletSimple):
     # Some initialization values
     gconf_path = "/apps/avant-window-navigator/applets/"
     dnd_targets = [("text/uri-list", 0, 0), ("text/plain", 0, 1)]
+
     dialog_visible = False
     context_menu_visible = False
     just_dragged = False
+    current_page = -1
+
     backend = None
+
+    dialog = None
+    tables = None
+    hbox = None
+    navbuttons = None
 
     # Default configuration values, are overruled while reading config
     config_backend = "file://" +    os.path.join(
@@ -75,6 +85,7 @@ class Stacks (awn.AppletSimple):
     config_fileops |= gtk.gdk.ACTION_LINK
     config_icon_size = 48
     config_composite_icon = True
+    config_browsing = True
     config_icon_empty = _to_full_path("icons/stacks-drop.svg")
     config_icon_full = _to_full_path("icons/stacks-full.svg")
 
@@ -166,25 +177,23 @@ class Stacks (awn.AppletSimple):
                             selection, targetType, time):
         for uri in (selection.data).split("\r\n"):
             if uri:
+                print "applet_drop_cb: ", uri
                 pixbuf = self.backend.add(uri, context.action)
         context.finish(True, False, time)
         if pixbuf:
             self.applet_set_full_icon(pixbuf)
-        if self.dialog_visible == True:
-            self.dialog_hide()
-            self.dialog_show()
         return True
 
     def applet_set_empty_icon(self):
         height = self.height
         icon = gdk.pixbuf_new_from_file (self.config_icon_empty)
-        if height != icon.get_height():
-            icon = icon.scale_simple(height,height,gtk.gdk.INTERP_BILINEAR)
+        icon = stacksicons.IconFactory().scale_to_bounded(icon, height)
         self.set_temp_icon(icon)
 
     def applet_set_full_icon(self, pixbuf):
         height = self.height
         icon = gdk.pixbuf_new_from_file(self.config_icon_full)
+        icon = stacksicons.IconFactory().scale_to_bounded(icon, height)
         if self.config_composite_icon and pixbuf:
             try:
                 # scale with aspect ratio:
@@ -305,7 +314,10 @@ class Stacks (awn.AppletSimple):
         if self.dialog_visible is False:
             self.dialog_visible = True
             self.title.hide(self)
-            self.dialog_show_new()
+            if self.current_page >= 0:
+               self.dialog_show_new(self.current_page)
+            else:
+               self.dialog_show_new(0)
 
     def dialog_focus_out(self, widget, event):
         if self.context_menu_visible is False:
@@ -314,88 +326,138 @@ class Stacks (awn.AppletSimple):
     def dialog_drag_data_delete(self, widget, context):
         return
 
-    def dialog_show_new(self, page=1):
-        if self.backend.is_empty():
-            return
-        self.dialog = awn.AppletDialog (self)
-        self.dialog.set_focus_on_map(True)
-        self.dialog.connect("focus-out-event", self.dialog_focus_out)
-        if self.backend.get_type() == stacksbackend.BACKEND_TYPE_FOLDER:
-            self.dialog.set_title(self.backend.get_title())
+    def _dialog_item_new(self, store, iter):
+        button = gtk.Button()
+        button.set_relief(gtk.RELIEF_NONE)
+        button.connect( "button-release-event", 
+                        self.item_button_cb,
+                        store.get(iter, stacksbackend.COL_URI, 
+                            stacksbackend.COL_MIMETYPE))
+        # TODO: connect on enter key
+        button.connect( "drag-data-get",
+                        self.item_drag_data_get,
+                        store.get_value(iter, stacksbackend.COL_URI).to_string())
+        button.connect( "drag-begin",
+                        self.item_drag_begin)
+        button.drag_source_set( gtk.gdk.BUTTON1_MASK,
+                                self.dnd_targets,
+                                self.config_fileops )
+        vbox = gtk.VBox(False, ICON_VBOX_SPACE)
+        vbox.set_size_request(int(1.5 * self.config_icon_size), -1)
+        button.add(vbox)
+        # icon -> button.image
+        icon = store.get_value(iter, stacksbackend.COL_ICON)
+        button.drag_source_set_icon_pixbuf(icon)
+        image = gtk.Image()
+        image.set_from_pixbuf(icon)
+        image.set_size_request(self.config_icon_size, 
+                self.config_icon_size)
+        vbox.pack_start(image, False, False, 0)
+        # label
+        label = gtk.Label(store.get_value(iter, stacksbackend.COL_LABEL))
+        label.set_justify(gtk.JUSTIFY_CENTER)
+        label.set_line_wrap(True)
+        layout = label.get_layout()
+        lw, lh = layout.get_size()
+        layout.set_width(int(1.2 * self.config_icon_size) * pango.SCALE)
+        layout.set_wrap(pango.WRAP_WORD_CHAR)
+        _lbltext = label.get_text()
+        lbltext = ""
+        for i in range(layout.get_line_count()):
+            length = layout.get_line(i).length
+            lbltext += str(_lbltext[0:length]) + '\n'
+            _lbltext = _lbltext[length:]
+        label.set_text(lbltext)
+        label.set_size_request(-1, lh*2/pango.SCALE)
+        vbox.pack_start(label, True, True, 0)
+        return button 
 
+    def _dialog_tables_new(self):        
         store = self.backend.get_store()
         iter = store.get_iter_first()
-        new_table=True
-        pages = 0
+        tables = []
+        x=y=0
         while iter:
-            if new_table:
+            if (x == 0 and y == 0) or y == self.config_rows:
                 x=0
                 y=0
                 table = gtk.Table(1,1,True)
                 table.set_row_spacings(ROW_SPACING)
                 table.set_col_spacings(COL_SPACING)
-                new_table = False
-                pages += 1
-                if pages == page:
-                    self.dialog.add(table)
-                if pages > page:
-                    break
+                tables.append(table)
 
-            button = gtk.Button()
-            button.set_relief(gtk.RELIEF_NONE)
-
-            button.connect( "button-release-event", 
-                            self.item_button_cb,
-                            store.get(iter, stacksbackend.COL_URI, stacksbackend.COL_MIMETYPE))
-            # TODO: connect on enter key
-            button.connect( "drag-data-get",
-                            self.item_drag_data_get,
-                            store.get_value(iter, stacksbackend.COL_URI).to_string())
-            button.connect( "drag-begin",
-                            self.item_drag_begin)
-            button.drag_source_set( gtk.gdk.BUTTON1_MASK,
-                                    self.dnd_targets,
-                                    self.config_fileops )
-
-            vbox = gtk.VBox(False, ICON_VBOX_SPACE)
-            vbox.set_size_request(int(1.5 * self.config_icon_size), -1)
-            icon = store.get_value(iter, stacksbackend.COL_ICON)
-
-            if icon:
-                button.drag_source_set_icon_pixbuf(icon)
-                image = gtk.Image()
-                image.set_from_pixbuf(icon)
-                image.set_size_request(self.config_icon_size, 
-                        self.config_icon_size)
-                vbox.pack_start(image, False, False, 0)
-            label = gtk.Label(store.get_value(iter, stacksbackend.COL_LABEL))
-            if label:
-                label.set_justify(gtk.JUSTIFY_CENTER)
-                label.set_line_wrap(True)
-                layout = label.get_layout()
-                lw, lh = layout.get_size()
-                layout.set_width(int(1.2 * self.config_icon_size) * pango.SCALE)
-                layout.set_wrap(pango.WRAP_WORD_CHAR)
-                _lbltext = label.get_text()
-                lbltext = ""
-                for i in range(layout.get_line_count()):
-                    length = layout.get_line(i).length
-                    lbltext += str(_lbltext[0:length]) + '\n'
-                    _lbltext = _lbltext[length:]
-                label.set_text(lbltext)
-                label.set_size_request(-1, lh*2/pango.SCALE)
-                vbox.pack_start(label, True, True, 0)
-      
-            button.add(vbox)
+            button = self._dialog_item_new(store, iter)
             table.attach(button, x, x+1, y, y+1)
+
             x += 1
             if x == self.config_cols:
                 y += 1
                 x=0
-            if y == self.config_rows:
-                new_table = True
             iter = store.iter_next(iter)
+        self.current_page = -1
+        self.tables = tables
+        return False
 
+    def dialog_show_prev_page(self, widget, event):
+        self.dialog_show_new(self.current_page-1)
+
+    def dialog_show_next_page(self, widget, event):
+        self.dialog_show_new(self.current_page+1)
+
+    def dialog_show_new(self, page=0):
+        # if nothing to show, then return
+        if self.backend.is_empty():
+            return
+
+        # create new dialog
+        if not self.dialog:
+            self.dialog = awn.AppletDialog (self)
+            self.dialog.set_focus_on_map(True)
+            self.dialog.connect("focus-out-event", self.dialog_focus_out)
+            if self.backend.get_type() == stacksbackend.BACKEND_TYPE_FOLDER:
+                self.dialog.set_title(self.backend.get_title())
+            self.hbox = gtk.HBox(False, 0)
+            self.dialog.add(self.hbox)
+
+        # add requested table to dialog
+        if self.tables is None:
+            self._dialog_tables_new()
+
+        if self.current_page != page:
+            for t in self.tables:
+                if t.get_parent():
+                    self.hbox.remove(t)
+            self.hbox.add(self.tables[page])
+            self.current_page = page 
+
+        if len(self.tables) > 1 and self.config_browsing:
+            if self.navbuttons is None:
+                buttonbox = gtk.HButtonBox()
+                buttonbox.set_layout(gtk.BUTTONBOX_EDGE)
+                self.dialog.add(buttonbox)
+                bt_left = gtk.Button(stock=gtk.STOCK_GO_BACK)
+                bt_left.set_use_stock(True)
+                bt_left.set_relief(gtk.RELIEF_NONE)
+                bt_left.connect("button-release-event", self.dialog_show_prev_page)
+                buttonbox.add(bt_left)                
+                bt_right = gtk.Button(stock=gtk.STOCK_GO_FORWARD)
+                bt_right.set_use_stock(True)
+                bt_right.set_relief(gtk.RELIEF_NONE)
+                bt_right.connect("button-release-event", self.dialog_show_next_page)
+                buttonbox.add(bt_right)
+                self.navbuttons = (bt_left, bt_right)
+   
+            # alter navigation buttons
+            if self.current_page == 0:
+                self.navbuttons[0].set_sensitive(False)
+            else:
+                self.navbuttons[0].set_sensitive(True)
+            if self.current_page == len(self.tables)-1:
+                self.navbuttons[1].set_sensitive(False)
+            else:
+                self.navbuttons[1].set_sensitive(True)
+        
+        # TODO: remove navbuttons on !browsing
         self.dialog.show_all()
 
     """
@@ -411,7 +473,12 @@ class Stacks (awn.AppletSimple):
         awn.awn_effect_stop(self.effects, "attention")
 
     def backend_restructure_cb(self, widget, type):
-        print "some item is removed from stack"
+        print "structure of stack changed"
+        if self.dialog is not None:
+            self.dialog.destroy()
+            self.dialog = None
+        self.tables = None
+        self.navbuttons = None
 
     def backend_get_config(self):
         if self.backend:
@@ -440,12 +507,15 @@ class Stacks (awn.AppletSimple):
         if _config_fileops > 0:
             self.config_fileops = _config_fileops
 
-        _config_composite_icon = self.gconf_client.get_bool(
-                self.gconf_path + "/composite_icon")
-        if _config_composite_icon:
+        if self.gconf_client.get_bool(self.gconf_path + "/composite_icon"):
             self.config_composite_icon = True
         else:
             self.config_composite_icon = False
+
+        if self.gconf_client.get_bool(self.gconf_path + "/browsing"):
+            self.config_browsing = True
+        else:
+            self.config_browsing = False
 
         _config_icon_empty = self.gconf_client.get_string(
                 self.gconf_path + "/applet_icon_empty")
@@ -476,7 +546,10 @@ class Stacks (awn.AppletSimple):
         else:
             pixbuf = self.backend.get_random_pixbuf()
             self.applet_set_full_icon(pixbuf)
-
+        # reload tables
+        self.tables = None
+        self.current_page = -1
+        gobject.idle_add(self._dialog_tables_new)
 
 launch_manager = stackslauncher.LaunchManager()
 gnome.ui.authentication_manager_init()

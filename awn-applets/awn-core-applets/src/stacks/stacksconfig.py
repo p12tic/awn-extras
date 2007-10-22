@@ -271,6 +271,23 @@ class StacksConfig:
             if (actions & gtk.gdk.ACTION_LINK) == 0:
                 self.chk_link.set_active(False)
         #           </hbox>
+        #           <hseparator>
+        hseparator31 = gtk.HSeparator()
+        vbox3.pack_start(hseparator31, True, True, 0)
+        #           </hseparator>
+        #           <hbox>
+        hbox32 = gtk.HBox(False, 0)
+        vbox3.pack_start(hbox32, False, False, 0)
+        #           <label>
+        label33 = gtk.Label(_("Browse many items using stack \"pages\":"))
+        hbox32.pack_start(label33, False, False, 0)     
+        #           </label>
+        #           <checkbutton>
+        self.chk_browse = gtk.CheckButton(_("Enable"))
+        self.chk_browse.set_active(True)
+        hbox32.pack_start(self.chk_browse, False, False, 2)
+        #           </checkbutton>
+        #           </hbox>
         #       </vbox>
         #   </alignment>
 
@@ -368,12 +385,12 @@ class StacksConfig:
         if int(self.spin21.get_value()) > 0:
             self.applet.gconf_client.set_int(self.applet.gconf_path + "/icon_size",
                                                 int(self.spin21.get_value()) )
-        if self.checkbutton21.get_active():
-            self.applet.gconf_client.set_bool(self.applet.gconf_path + "/composite_icon",
-                                                True)
-        else:
-            self.applet.gconf_client.set_bool(self.applet.gconf_path + "/composite_icon",
-                                                False)
+        
+        self.applet.gconf_client.set_bool(self.applet.gconf_path + "/composite_icon",
+                                                self.checkbutton21.get_active())
+       
+        self.applet.gconf_client.set_bool(self.applet.gconf_path + "/browsing",
+                                                self.chk_browse.get_active())
 
         self.applet.gconf_client.set_string(self.applet.gconf_path + "/applet_icon_empty",
                                                 self.applet_icon_empty)

@@ -140,7 +140,10 @@ class VfsUri(gobject.GObject):
 
     def __init__(self, uri, create):
         gobject.GObject.__init__(self)
-        self.vfs_uri = gnomevfs.URI(self._vfs_clean_uri(uri))
+        if isinstance(uri, gnomevfs.URI):
+            self.vfs_uri = uri
+        else:
+            self.vfs_uri = gnomevfs.URI(self._vfs_clean_uri(uri))
         self.short_name = self.vfs_uri.short_name
 
         if isinstance(self, VfsDir):

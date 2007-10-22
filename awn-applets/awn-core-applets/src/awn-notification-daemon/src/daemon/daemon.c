@@ -1191,13 +1191,13 @@ AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
     {																		
         if (gconf_client_get_bool(gconf_client,GCONF_KEY_AWN_KILL_ND ,NULL) )
         {
-            if ( system("killall notification-daemon") == -1)
+            if ( system("pgrep notification-daemon && killall notification-daemon") == -1)
             {            
                 printf("Failed to execute killall command: disable kill notication daemon and configure to kill daemon before loading applet\n");                
             }
             else
             {
-                system("killall -9 notification-daemon");
+                system("pgrep notification-daemon &&  killall -9 notification-daemon");
             }
         }        										
        // g_free(value)  ;      										
@@ -1205,13 +1205,13 @@ AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
     else
     {
         gconf_client_set_bool (gconf_client,GCONF_KEY_AWN_KILL_ND,TRUE ,NULL);
-        if ( system("killall notification-daemon") == -1)
+        if ( system("pgrep notification-daemon && killall notification-daemon") == -1)
         {
             printf("Failed to execute killall command: disable kill notication daemon and configure to kill daemon before loading applet\n");                
         }        
         else
         {
-            system("killall -9 notification-daemon");
+            system("pgrep notification-daemon && killall -9 notification-daemon");
         }
         
     }		

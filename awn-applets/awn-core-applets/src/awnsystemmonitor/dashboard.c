@@ -545,6 +545,8 @@ static gboolean _toggle_gtk(GtkWidget *widget, GdkEventButton *event, Dashboard 
     p->ignore_gtk=!p->ignore_gtk;
     if (!p->ignore_gtk)
     {
+        set_bg_rbg(&p->mainwindow->style->base[0]);
+        set_fg_rbg(&p->mainwindow->style->fg[0]);        
         get_fg_rgba_colour(&p->fg);
         get_bg_rgba_colour(&p->bg);        
     }
@@ -837,6 +839,22 @@ static void Dashboard_plugs_destruct(gpointer data,gpointer user_data)
 }
 
 
+static void dashboard_ticks(gpointer data,gpointer user_data)
+{
+    Dashboard_plugs_callbacks * node=data;
+    Dashboard *dashboard=user_data;
+    tick_fn tick;
+    if (!node->enabled)
+    {
+        return;
+    }
+    tick=node->lookup_fn(DASHBOARD_CALLBACK_TICK);
+    if (tick)
+    {
+        tick(node->data ,dashboard->updateinterval);
+    }            
+}
+
 static gboolean _Dashboard_time_handler (Dashboard * Dashboard)
 {
 
@@ -896,13 +914,18 @@ static void draw_main_window(Dashboard *dashboard)
     if (!dashboard->ignore_gtk)
     {
         set_bg_rbg(&dashboard->mainwindow->style->base[0]);
-        set_fg_rbg(&dashboard->mainwindow->style->fg[0]);        
+        set_fg_rbg(&dashboard->mainwindow->style->fg[0]);  
+        
+        /*FIXME - decide if forcing propagation of gtk colours is good. 
+        right no choosing no */
+//        g_slist_foreach(dashboard->Dashboard_plugs,_apply_c_ ,dashboard);    
     }
     
     /*have dashboard plugs that have registered draw their widgets*/
     dashboard->need_win_update=FALSE;    
     g_slist_foreach(dashboard->Dashboard_plugs,Dashboard_plugs_construct,dashboard);    
-       
+
+    g_slist_foreach(dashboard->Dashboard_plugs,dashboard_ticks,dashboard);       
     /*we're done laying out the damn thing - let's show it*/                       
 
     gtk_widget_show(dashboard->mainwindow);                    

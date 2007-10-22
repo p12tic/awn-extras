@@ -30,6 +30,7 @@ typedef struct
 	int timer;
 	int seconds,minutes,hours,days;
     gboolean show_seconds;
+    gboolean forceupdate;
     float size_mult;
     AwnColor    bg;             /*colours if gtk colours are overridden */
     AwnColor    fg;      
@@ -46,6 +47,7 @@ static const char* get_component_friendly_name(void *d);
 static GtkWidget* attach_right_click_menu(Uptime_plug_data **p);
 static gboolean _set_fg(GtkWidget *widget, GdkEventButton *event, Uptime_plug_data *p);
 static gboolean _set_bg(GtkWidget *widget, GdkEventButton *event, Uptime_plug_data *p);
+static void _notify_color_change(Uptime_plug_data *p);
 
 static void set_colour(Uptime_plug_data *p,AwnColor* colour,const char * mess,const char * gconf_key);
 
@@ -65,7 +67,8 @@ static void * plug_fns[MAX_CALLBACK_FN]={
                             get_component_name,
                             get_component_friendly_name,
                             _fn_set_bg,
-                            _fn_set_fg
+                            _fn_set_fg,
+                            NULL
                             };
 
 
@@ -84,7 +87,7 @@ static void _fn_set_bg(AwnColor * new_bg,  Uptime_plug_data**p)
     svalue=dashboard_cairo_colour_to_string(new_bg);
     gconf_client_set_string( get_dashboard_gconf(), GCONF_UPTIME_NO_GTK_BG,svalue , NULL );            
     free(svalue);    
-    plug_data->timer=100;    
+    plug_data->forceupdate=TRUE;
 }
 
 
@@ -96,7 +99,7 @@ static void _fn_set_fg(AwnColor * new_fg,  Uptime_plug_data **p)
     svalue=dashboard_cairo_colour_to_string(new_fg);
     gconf_client_set_string( get_dashboard_gconf(), GCONF_UPTIME_NO_GTK_FG,svalue , NULL );            
     free(svalue);        
-    plug_data->timer=100;    
+    plug_data->forceupdate=TRUE;    
 }
 
 static GtkWidget* attach_right_click_menu(Uptime_plug_data **p)
@@ -118,24 +121,27 @@ static GtkWidget* attach_right_click_menu(Uptime_plug_data **p)
 static gboolean _toggle_show_seconds(GtkWidget *widget, GdkEventButton *event,Uptime_plug_data * plug_data)
 {
     toggle_boolean_menu(widget,event,&plug_data->show_seconds);
-    gconf_client_set_bool(get_dashboard_gconf(),GCONF_UPTIME_SHOW_SECONDS ,plug_data->show_seconds, NULL ); 
-    plug_data->timer=100;
+    gconf_client_set_bool(get_dashboard_gconf(),GCONF_UPTIME_SHOW_SECONDS ,plug_data->show_seconds,NULL ); 
+    plug_data->forceupdate=TRUE;
     return TRUE;
 }
 
-static void _notify_color_change(void *p)
+static void _notify_color_change(Uptime_plug_data *p)
 {
-    Uptime_plug_data *data=p;
-    assert(p);
+    p->forceupdate=TRUE;
+    printf("uptime: _notify_color_change\n");
 }
+
+
 
 static void set_colour(Uptime_plug_data *p,AwnColor* colour,const char * mess,const char * gconf_key)
 {
     char *svalue;
-    pick_awn_color(colour,mess, p,NULL);
+    pick_awn_color(colour,mess, p,_notify_color_change);
     svalue=dashboard_cairo_colour_to_string(colour);
-    gconf_client_set_string( get_dashboard_gconf(), gconf_key,svalue , NULL );    
+    gconf_client_set_string( get_dashboard_gconf(), gconf_key,svalue ,NULL );    
     free(svalue);
+    p->forceupdate=TRUE;    
 }
 
 static gboolean _set_fg(GtkWidget *widget, GdkEventButton *event, Uptime_plug_data *p)
@@ -170,12 +176,14 @@ static gboolean decrease_step(Uptime_plug_data **p)
     Uptime_plug_data *data=*p;
     data->size_mult=data->size_mult * 5.0 /6.0;
     gconf_client_set_float(get_dashboard_gconf(),GCONF_UPTIME_SIZE_MULT,data->size_mult, NULL );                    
+    data->forceupdate=TRUE;    
 }
 static gboolean increase_step(Uptime_plug_data **p)
 {
     Uptime_plug_data *data=*p;
     data->size_mult=data->size_mult * 1.2;
     gconf_client_set_float(get_dashboard_gconf(),GCONF_UPTIME_SIZE_MULT,data->size_mult, NULL );                    
+    data->forceupdate=TRUE;    
 }
 static gboolean query_support_multiple(void)
 {
@@ -191,7 +199,7 @@ static void construct(Uptime_plug_data **p)
     gchar * svalue;  
     
     data->timer=1000;
-    
+    data->forceupdate=FALSE;    
 
     svalue = gconf_client_get_string(get_dashboard_gconf(), GCONF_UPTIME_NO_GTK_BG, NULL );
     if ( !svalue ) 
@@ -252,8 +260,9 @@ static gboolean render(GtkWidget ** pwidget,gint interval,Uptime_plug_data **p)
     float mult;
         
     data->timer=data->timer-interval;
-	if (data->timer<=0)
+	if ( (data->timer<=0) ||     (data->forceupdate) )
 	{
+	    data->forceupdate=FALSE;
 	    glibtop_get_uptime(&uptime);	
 	    tmp=uptime.uptime;
 	    data->seconds=tmp % 60;
@@ -280,7 +289,7 @@ static gboolean render(GtkWidget ** pwidget,gint interval,Uptime_plug_data **p)
         }
         else
         {
-            data->timer=1000*5;
+            data->timer=1000*55;
         }
         /*there is an issue if this widget starts out overly large... the maintable sizes itself too 
         and doesn't properly resize itself downwards...  So we start small for the first second

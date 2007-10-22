@@ -37,7 +37,7 @@
 #include "dashboard_util.h"
 
 
-#define MAX_CALLBACK_FN 12
+#define MAX_CALLBACK_FN 13
 
 enum {  DASHBOARD_CALLBACK_CONSTRUCT, 
         DASHBOARD_CALLBACK_DESTRUCT, 
@@ -50,7 +50,8 @@ enum {  DASHBOARD_CALLBACK_CONSTRUCT,
         DASHBOARD_CALLBACK_GET_COMPONENT_NAME_FN,
         DASHBOARD_CALLBACK_GET_COMPONENT_FRIENDLY_NAME_FN,
         DASHBOARD_CALLBACK_SET_BG, 
-        DASHBOARD_CALLBACK_SET_FG                      
+        DASHBOARD_CALLBACK_SET_FG,
+        DASHBOARD_CALLBACK_TICK
         };
         
 #define DASHBOARD_DEFAULT_X_TILES 41
@@ -119,6 +120,7 @@ typedef gboolean (*increase_step_fn)(void*);
 typedef gboolean (*decrease_step_fn)(void*);
 typedef void (* set_bg_fn)(AwnColor*,void*);
 typedef void (* set_fg_fn)(AwnColor*,void*);
+typedef void (* tick_fn)(void*,gint);
 
 
 void toggle_Dashboard_window(Dashboard *Dashboard);

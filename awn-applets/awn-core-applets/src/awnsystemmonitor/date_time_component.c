@@ -88,7 +88,8 @@ static void * plug_fns[MAX_CALLBACK_FN]={
                         get_component_name,
                         get_component_friendly_name,
                         _fn_set_bg,
-                        _fn_set_fg                                                                                          
+                        _fn_set_fg,
+                        NULL                                                                                          
                         };
 
 static void * check_ptr;

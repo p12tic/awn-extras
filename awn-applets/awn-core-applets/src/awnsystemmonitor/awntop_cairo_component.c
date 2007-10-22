@@ -260,20 +260,21 @@ static void * plug_fns[MAX_CALLBACK_FN]={
                             get_component_name,
                             get_component_friendly_name,
                             _fn_set_bg,
-                            _fn_set_fg                                                        
+                            _fn_set_fg,
+                            NULL                                                        
                             };
 
 static Tableheader Global_tableheadings[]=
 {
     {   "Process", _click_pid,70},
     {   "Username", _click_user,100},
-    {   "Virtual", _click_virt,50},
+    {   "Virtual", _click_virt,55},
     {   "Resident",   _click_res,55},
     {   "%CPU",  _click_cpu,50},
     {   "%MEM", _click_mem,50},
     {   " ",NULL,16},
-    {   "Command Line",  _click_command,120}
-
+    {   "Command Line",  _click_command,120},
+    {   " ",  NULL,16}
     
 };
 
@@ -296,6 +297,7 @@ static void _fn_set_bg(AwnColor * new_bg, Awntop_cairo_plug_data **p)
     Awntop_cairo_plug_data * plug_data=*p;
     plug_data->bg=*new_bg;
     plug_data->invalidate_pixmaps=TRUE;  
+//    build_top_table_headings(plug_data);    
     svalue=dashboard_cairo_colour_to_string(new_bg);
     gconf_client_set_string( get_dashboard_gconf(), GCONF_AWNTOP_CAIRO_NO_GTK_BG,svalue , NULL );             
     free(svalue);
@@ -310,6 +312,7 @@ static void _fn_set_fg(AwnColor * new_fg, Awntop_cairo_plug_data **p)
     plug_data->fg=*new_fg;
     plug_data->invalidate_pixmaps=TRUE;       
     svalue=dashboard_cairo_colour_to_string(new_fg);
+//    build_top_table_headings(plug_data);        
     gconf_client_set_string( get_dashboard_gconf(), GCONF_AWNTOP_CAIRO_NO_GTK_FG,svalue , NULL );             
     free(svalue);    
 }
@@ -701,6 +704,7 @@ static void build_top_table(Awntop_cairo_plug_data * data )
     if (force)
     {
         invalidate_all_pixmap_caches(data);
+        build_top_table_headings(data);  
         data->invalidate_pixmaps=FALSE;
     }
     for(i=0;(i<num_top_entries) && (i<data->maxtopentries);i++)
@@ -1090,36 +1094,32 @@ static void build_top_table_headings(Awntop_cairo_plug_data * data)
     GtkWidget * eb;
     GtkWidget * widget;    
     dashboard_cairo_widget c_widge;     
-    static GtkWidget * widgets[8]={NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
-    for(i=0;i<8;i++)       /*FIXME*/
+    static GtkWidget * widgets[9]={NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL}; /*FIXME*/
+    for(i=0;i<9;i++)       /*FIXME*/
     {        
         widget=get_cairo_widget(&c_widge,Global_tableheadings[i].unscaled_width*data->size_mult,20*data->size_mult);                       
         use_bg_rgba_colour(c_widge.cr);        
-cairo_set_source_rgba (c_widge.cr,((i*10))/80.0,((i*10))/80.0,(80-(i*10))/80.0,1);        
+        cairo_set_source_rgba (c_widge.cr,data->fg.red,data->fg.green,data->fg.blue,data->fg.alpha);                        
         cairo_set_operator (c_widge.cr, CAIRO_OPERATOR_SOURCE);
         cairo_paint(c_widge.cr);      
-        use_fg_rgba_colour(c_widge.cr);                
-	    cairo_select_font_face (c_widge.cr, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+        cairo_set_source_rgba (c_widge.cr,data->bg.red,data->bg.green,data->bg.blue,data->bg.alpha);                        
+	    cairo_select_font_face (c_widge.cr, "Sans", CAIRO_FONT_SLANT_ITALIC, CAIRO_FONT_WEIGHT_NORMAL);
 	    cairo_set_font_size (c_widge.cr, 10.0*data->size_mult);
         cairo_move_to(c_widge.cr, 10*data->size_mult, 15*data->size_mult);     
         cairo_show_text(c_widge.cr,Global_tableheadings[i].name );                                          
         if (Global_tableheadings[i].fn)
         {
-//            eb = gtk_button_new ();
+            eb = gtk_button_new ();
             eb=gtk_event_box_new();
             g_signal_connect (G_OBJECT (eb), "button-press-event",G_CALLBACK (Global_tableheadings[i].fn), (gpointer)data);
 //            gtk_button_set_relief (GTK_BUTTON (eb), GTK_RELIEF_NONE);                        
             gtk_container_add (GTK_CONTAINER (eb),widget);        
-//            gtk_table_attach_defaults (GTK_TABLE (table), button,
-//                                 i, i+1, 0, 1);
         }
         else
         {
             eb=gtk_event_box_new();
             gtk_event_box_set_visible_window((GtkEventBox *)eb,FALSE);                
             gtk_container_add (GTK_CONTAINER (eb), widget);                        
-//            gtk_table_attach_defaults (GTK_TABLE (table), label,
-//                                 i, i+1, 0, 1);        
         }        
         
 
@@ -1254,7 +1254,6 @@ static Topentry ** fill_topentries(Awntop_cairo_plug_data *awntop,int *numel)
         }
         else
         {
-//            printf("Not found %ld \n",topentries[i]->pid);
             ptmp=g_malloc(sizeof(guint64));
             *ptmp=p[i];
             value=g_malloc(sizeof(Proctimeinfo) );

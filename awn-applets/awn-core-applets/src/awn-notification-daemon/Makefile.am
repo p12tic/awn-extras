@@ -1,0 +1,8 @@
+SUBDIRS = data src
+
+NULL = 
+
+EXTRA_DIST = \
+	AUTHORS NEWS INSTALL COPYING README \
+	ChangeLog \
+	$(NULL)

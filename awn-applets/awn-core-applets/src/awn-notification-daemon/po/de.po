@@ -1,0 +1,46 @@
+# Dutch translation for notification-daemon
+# Copyright (C) 2006 Christian Hammond
+# This file is distributed under the same license as the notification-daemon package.
+# 
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: notification-daemon trunk\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-02-15 03:02-0800\n"
+"PO-Revision-Date: 2007-01-04 12:51+0100\n"
+"Last-Translator: Florian Steinel <steinel@pootle.wordforge.org.flonet.net>\n"
+"Language-Team: German <gnome-de@gnome.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../data/notification-daemon.schemas.in.h:1
+msgid "Current theme"
+msgstr "Aktuelles Thema"
+
+#: ../data/notification-daemon.schemas.in.h:2
+#, fuzzy
+msgid ""
+"Default popup location on the workspace for stack notifications. Allowed "
+"values: \"top_left\",\"top_right\",\"bottom_left\" and \"bottom_right\""
+msgstr ""
+"Standard Popup Position auf der Arbeitsfläche für gestapelte "
+"Benachrichtigungen. Mögliche Werte: &quot;top_left&quot;,&quot;"
+"top_right&quot;,&quot;bottom_left&quot;·und·&quot;bottom_right&quot;"
+
+#: ../data/notification-daemon.schemas.in.h:3
+msgid "Popup location"
+msgstr "Popup Position"
+
+#: ../data/notification-daemon.schemas.in.h:4
+msgid "The theme used when displaying notifications."
+msgstr "Das Thema um Benachrichtigungen anzuzeigen."
+
+#: ../src/capplet/notification-properties.desktop.in.h:1
+msgid "Pop-Up Notifications"
+msgstr "Popup Benachrichtigungen"
+
+#: ../src/capplet/notification-properties.desktop.in.h:2
+msgid "Set your pop-up notification preferences"
+msgstr "Legen Sie Ihre Popup Benachrichtigungs Einstellungen fest"

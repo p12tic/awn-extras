@@ -1,0 +1,1026 @@
+Oct 2007
+
+Started adaption to avant-window-navigator applet <rcryderman@gmail.com>
+https://launchpad.net/awn-sys-utils
+
+==================== 0.3.7 ====================
+
+Tue Feb 27 23:19:00 PST 2007  Christian Hammond <chipx86@chipx86.com>
+
+	* configure.ac:
+	* NEWS:
+	  - Bump to version 0.3.7.
+
+Tue Feb 27 23:15:53 PST 2007  Christian Hammond <chipx86@chipx86.com>
+
+	* po/POTFILES.in:
+	  - We don't actually bundle the capplet yet, so don't include it in
+	    POTFILES.in. This fixes make distcheck.
+
+Thu Feb 15 03:05:49 PST 2007  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon/stack.c:
+	* NEWS:
+	  - Fix a memory leak when removing a notification from the stack.
+	    Patch by Sven Wegener. This closes bug #105.
+
+Thu Feb 15 02:52:02 PST 2007  Christian Hammond <chipx86@chipx86.com>
+
+	* po/ChangeLog:
+	A po/sv.po:
+	* AUTHORS:
+	* configure.ac:
+	  - Added a Swedish translation from Daniel Nylander. Closes ticket #99.
+
+Sat Jan 13 01:20:23 PST 2007  Christian Hammond <chipx86@chipx86.com>
+
+	* src/themes/standard/theme.c:
+	  - Added a work in progress gradient-happy mode that must be enabled by
+	    defining ENABLE_GRADIENT_LOOK in theme.c.
+
+Sat Jan 13 00:18:40 PST 2007  Christian Hammond <chipx86@chipx86.com>
+
+	* src/themes/standard/theme.c:
+	  - Adjust the opacity of the notification just ever so slightly. I think
+	    this makes the notification more readable (less content behind it
+	    leaking through) while still looking nice and transparent. I might be
+	    full of it.
+
+Fri Jan 12 23:57:15 PST 2007  Christian Hammond <chipx86@chipx86.com>
+
+	* src/themes/standard/theme.c:
+	  - Added support for a semi-transparent background in the notification
+	    window on the standard theme on GTK+ 2.10 when a compositing manager
+	    is active. Patch by Matt Walton. Closes ticket #110.
+
+Fri Jan 12 23:06:15 PST 2007  Christian Hammond <chipx86@chipx86.com>
+
+	* src/themes/standard/theme.c:
+	  - Don't return when painting the window if we don't have a width set,
+	    waiting for configure. This sometimes ends up with the
+	    context-sensitive notifications appearing in 0, 0. Instead, just grab
+	    the allocation width and height. It all feels hacky, but this seems to
+	    at least work.
+
+Wed Jan 10 15:43:12 PST 2007  Christian Hammond <chipx86@chipx86.com>
+
+	* src/themes/standard/theme.c:
+	  - We were trying to compute a border in expose_event, which sometimes
+	    was called before configure_event. configure_event sets stuff that
+	    our border computerator needed, so it blew up or screwed up. We now
+	    wait for the configure_event before even trying it, and
+	    the configure_event handler now ensures that we get an expose_event.
+
+Wed Jan 10 15:05:28 PST 2007  Christian Hammond <chipx86@chipx86.com>
+
+	* src/themes/standard/theme.c:
+	  - Fix a crash when displaying notifications with arrows. I can't believe
+	    I didn't catch this before. There's still a bug though where you can't
+	    display a notification with arrows while a normal notification is on
+	    the screen, but I have no clue why.
+
+Fri Jan 05 15:06:51 PST 2007  Christian Hammond <chipx86@chipx86.com>
+
+	* po/ChangeLog:
+	A po/de.po:
+	* AUTHORS:
+	* configure.ac:
+	  - Added the German translation from Florian Steinel. This closes
+	    ticket #106.
+
+Tue Nov 14 00:09:41 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/themes/standard/theme.c:
+	  - Fix some odd little graphics drawing bugs by drawing onto the main
+	    vbox and sticking an eventbox between the window and that. This fixes
+	    the weird problems that shouldn't exist in the first place by using,
+	    I don't know, magic or something.
+
+Mon Nov 13 23:31:07 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon/stack.c:
+	  - Fix a bug I introduced where we were getting the size request of the
+	    window being added/removed, instead of the current one being iterated
+	    over. This was causing massive ugliness of the fourth kind.
+
+Mon Nov 13 22:47:42 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/themes/standard/theme.c:
+	  - Make sure the default width is actually set on the notification.
+	  - Increase the default width to 400px.
+
+Mon Nov 13 21:48:11 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon/stack.c:
+	  - Condense a lot of duplicate logic from notify_stack_add_window() and
+	    notify_stack_remove_window() into notify_stack_shift_notifications().
+
+Mon Nov 13 00:49:42 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/themes/standard/theme.c:
+	  - Fix fill_background() to use the allocated width and height, rather
+	    than the stored width and height. This fixes a problem where the
+	    widget was being painted grey.
+	  - Use fill_background() for both the window and the pie progress thing.
+
+Thu Nov 09 18:03:31 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/themes/standard/theme.c:
+	  - Update the top and bottom spacers outside of the window painting code,
+	    as that ended up unsurprisingly causing graphical glitches. We now
+	    update it when moving/resizing the window or setting the arrow info.
+
+Thu Nov 09 17:45:01 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/themes/standard/theme.c:
+	  - Instead of checking if the shape points array is NULL, just assert
+	    that it isn't. It should never be.
+
+Thu Nov 09 16:49:39 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/themes/standard/theme.c:
+	  - Split the background filling and stripe painting out of draw_border().
+	    Put the calls into paint_window() and connect that to the expose
+	    event.
+
+Thu Nov 09 16:42:58 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/themes/standard/theme.c:
+	  - Fix a crash caused by destroying an already freed array of points
+	    during the destruction of windows with arrows.
+
+Thu Nov 09 16:35:34 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/themes/standard/theme.c:
+	* NEWS:
+	  - Clicking anywhere in a notification should now close the notification.
+	    This was happening only on the body text sometimes.
+
+Thu Nov 09 16:34:03 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/themes/standard/theme.c:
+	  - Clean up a little bit more code. Free the array of shape points
+	    earlier.
+
+Sun Nov 05 23:56:43 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/themes/standard/theme.c:
+	  - Fix several rendering glitches with the borders in the standard theme.
+	    There's a couple bugs left, but they're less glaring. Also, cleaned up
+	    some of the code a bit.
+
+Sun Nov 05 16:33:36 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/themes/standard/theme.c:
+	  - Make the standard notification theme (mostly) accessible to screen
+	    readers. This could stand some improvement.
+
+Sun Nov 05 12:18:00 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* configure.ac:
+	  - Patch by compnerd to drop the check for popt during configure, as we
+	    no longer use it. This closes bug #88.
+
+Sun Nov 05 12:17:07 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	A src/capplet/Makefile.am:
+	A src/capplet/notification-properties.c:
+	A src/capplet/notification-properties.desktop.in:
+	  - Add the very beginnings of the control panel applet.
+
+Sun Nov 05 12:12:35 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon/Makefile.am:
+	* src/daemon/daemon.c:
+	  - Patch by Pawel Worach to fix the dbus-binding-tool usage to be
+	    compatible with dbus-glib 0.72. This closes bug #95.
+
+Sun Oct 08 17:10:57 EDT 2006  Christian Hammond <chipx86@chipx86.com>
+
+	A src/daemon:
+	A src/daemon/daemon.c:
+	A src/daemon/daemon.h:
+	A src/daemon/engines.c:
+	A src/daemon/engines.h:
+	A src/daemon/Makefile.am:
+	A src/daemon/notificationdaemon.xml:
+	A src/daemon/stack.c:
+	A src/daemon/stack.h:
+	A src/themes:
+	D src/daemon.c:
+	D src/daemon.h:
+	D src/engines.c:
+	D src/engines.h:
+	D src/notificationdaemon.xml:
+	D src/stack.c:
+	D src/stack.h:
+	D themes:
+	* src/Makefile.am:
+	* configure.ac:
+	* Makefile.am:
+	  - Move the src/ directory's contents into src/daemon/.
+	  - Moved themes/ into src/.
+	  - Bump the version to 0.3.6.90.
+
+==================== 0.3.6 ====================
+
+Thu Sep 07 10:28:50 PDT 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* themes/standard/theme.c:
+	  - Patch by Nick Schermer to fix a memory leak. We lost 4 bytes for
+	    every notification displayed with the standard theme.
+
+Sun Jul 30 15:32:10 PDT 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	  - Fix a crash. We were making bad assumptions about the ordering of
+	    enum values for stack locations.
+
+Sun Jul 30 14:22:47 PDT 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/Makefile.am:
+	* src/daemon.c:
+	* src/daemon.h:
+	A src/stack.c:
+	A src/stack.h:
+	  - Add the beginning of what should be working multi-monitor support.
+	    Popups should now appear on the monitor that the mouse cursor is on.
+
+Sat Jul 29 21:00:45 PDT 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	  - Condense a bunch of code. This saves 42 lines.
+
+Sat Jul 29 20:30:42 PDT 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	  - Move POPUP_STACK_LOCATION_DEFAULT into PopupStackLocationType.
+	  - Remove _notify_daemon_stack_location_type_from_string.
+	  - Moved some duplicate logic into update_stack_location_from_string.
+
+Sat Jul 29 19:19:34 PDT 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	  - Typedef the popup location type enum so that we can refer to it as a
+	    name, rather than assigning the values to a gchar.
+	  - Fix a memory leak when retrieving the stack location pref string.
+
+Sat Jul 29 15:35:44 PDT 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* data/notification-daemon.schemas.in:
+	  - Fix a typo for the default value for stack location. It should have
+	    been "bottom_right," not "right_bottom." Closes ticket #57.
+
+Sat Jul 29 03:46:43 PDT 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* data/notification-daemon.schemas.in:
+	* src/daemon.c:
+	* src/daemon.h:
+	* src/engines.c:
+	  - Patch by M.S. to support custom corner stacking positions through a
+	    gconf key. Now users can specify that their notifications should
+	    originate from any corner they choose. This closes ticket #57.
+
+Sat Jul 29 03:11:15 PDT 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	  - Patch by Ed Catmur to handle the case where a replaces_id of a
+	    non-existant notification was set. Under this case, we now generate a
+	    new ID and send it back in the notification, rather than creating a
+	    broken notification. This closes ticket #76.
+
+Sat Jul 29 02:43:25 PDT 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	  - Patch by Ed Catmur to fix type validation for the icon data on
+	    D-BUS v0.61. This closes tickets #75 and #67.
+
+Wed Jul 26 23:44:24 PDT 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* NEWS:
+	* src/daemon.c:
+	  - Patch by Ed Catmur to fix an assertion failure when destroying a
+	    notification caused by gtk_widget_realize() being called somewhere
+	    in the destructor chain. This closes ticket #77.
+
+Thu Jul 13 00:50:05 PDT 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	* AUTHORS:
+	* NEWS:
+	  - Patch by felix-at-hsgheli.de that fixes a crash when
+	    gtk_icon_info_get_base_size() returns 0, which happens on some icon
+	    themes. This closes ticket #61.
+
+Wed Jul 12 03:27:39 PDT 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	* NEWS:
+	  - A notification's timeout will now pause while the mouse is hovering
+	    over the notification. This allows users to respond to notifications
+	    without it suddenly disappearing before the user clicks.
+	    This closes ticket #73.
+
+
+Thu Apr 27 22:26:10 PDT 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* po/nl.po:
+	* AUTHORS:
+	* NEWS:
+	* configure.ac:
+	  - Bump to version 0.3.5.90.
+	  - Added a Dutch translation from Wouter Bolsterlee. This closes
+	    ticket #55.
+
+==================== 0.3.5 ====================
+
+Wed Apr 26 01:44:17 PDT 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* data/Makefile.am:
+	A data/org.freedesktop.Notifications.service.in:
+	D data/notification-daemon.service.in:
+	* configure.ac:
+	  - Rename notification-daemon.service to
+	    org.freedesktop.Notifications.service.
+
+Wed Apr 26 01:32:17 PDT 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* NEWS:
+	* configure.ac:
+	  - Bump the version to 0.3.5.
+
+Sun Apr 23 16:30:28 PDT 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	* src/engines.c:
+	* src/engines.h:
+	* themes/standard/theme.c:
+	* NEWS:
+	  - Fixed a bug where a notification would duplicate its actions when
+	    updated. This closes bug #30.
+
+Sun Apr 23 15:48:14 PDT 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* themes/standard/theme.c:
+	  - Use cairo to render the countdown timer if using gtk 2.8.0+. This
+	    makes the countdown timer all antialiased and pretty.
+
+Fri Apr 21 17:17:40 PDT 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	  - Fix the scaling of different icon sizes. I was using a MAX when
+	    I should have used a MIN. Now small icons display as small, and
+	    larger icons are scaled down to 48x48.
+
+Fri Apr 21 16:42:46 PDT 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	  - Patch by M.S. to fix the problem where icons were being clipped in
+	    notifications if the text didn't wrap enough lines. This fixes
+	    bug #21.
+
+Fri Apr 21 16:33:56 PDT 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	  - Fix notifications no longer expiring due to the fix for bug #22.
+	    The logic is now a bit smarter and more hacky. But it works. And
+	    really, if it didn't, would I be committing this? Yes, probably.
+
+Fri Apr 21 15:54:01 PDT 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	* NEWS:
+	  - Fix notifications with a timeout >= 2147484ms expiring in less
+	    than a second. This fixes bug #22.
+
+Fri Apr 21 15:21:45 PDT 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/engines.c:
+	* themes/Makefile.am:
+	* themes/standard/theme.c:
+	* NEWS:
+	* configure.ac:
+	  - Add two new required theme functions, theme_check_init (which
+	    determines if the theme is compatible with the version of
+	    notification-daemon) and get_theme_info (which returns info on the
+	    theme).
+	  - Disabled the Bubble theme for this release. It's the source of too
+	    many bugs.
+
+Tue Apr 11 22:54:13 PDT 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* themes/bubble/eggnotificationbubblewidget.c:
+	  - Patch by Rodney Dawes to fix closing of notifications using the
+	    bubble theme when clicked. This closes bug #39.
+
+Tue Apr 11 22:50:22 PDT 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	  - Patch by Rodney Dawes to fix usage of GtkIconTheme. This closes
+	    bug #38.
+
+==================== 0.3.4 ====================
+
+Sat Feb 04 20:18:54 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* configure.ac:
+	* NEWS:
+	  - Add info to the NEWS.
+	  - Bump the version to 0.3.4.
+
+Sat Feb 04 20:01:09 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* configure.ac:
+	  - Fix make distcheck.
+
+Sat Feb 04 19:48:49 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	D themes/standard/bgbox.c:
+	D themes/standard/bgbox.h:
+	* themes/standard/Makefile.am:
+	* themes/standard/theme.c:
+	  - Get rid of bgbox.[ch]. We don't use it anymore.
+
+Sat Feb 04 16:39:00 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	* themes/bubble/eggnotificationbubblewidget.c:
+	  - Attempt to fix button ordering in the Bubble widget. The structure
+	    of the widget is a bit jumbled, so there may be side-effects with
+	    the alignment.
+
+Sat Feb 04 16:23:30 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* themes/bubble/theme.c:
+	  - Fixed a crash when clicking an action in the bubble theme.
+
+Sat Feb 04 15:56:28 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	* themes/bubble/theme.c:
+	  - Ensure that the notification window is always realized before we
+	    start operating on its GdkWindow. This fixes bug #10.
+
+Sat Feb 04 13:15:29 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* themes/standard/theme.c:
+	  - Ensure that the labels in the action buttons are aligned correctly.
+
+Sat Feb 04 13:11:25 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/engines.c:
+	* themes/standard/theme.c:
+	  - Make more theme functions optional. Fall back to defaults in cases
+	    like destroying, showing, or hiding notifications.
+
+Sat Feb 04 13:08:02 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	* src/engines.c:
+	* src/engines.h:
+	* themes/standard/theme.c:
+	  - Make the timer ticks passed to the theme engine more precise.
+
+Sat Feb 04 12:44:32 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* themes/standard/theme.c:
+	  - Change the stripe width to 30. Images align a lot nicer now.
+
+Sat Feb 04 12:38:22 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* themes/standard/theme.c:
+	  - Use the theme colors to draw the low and normal urgency stripes.
+	    Low is the style's nomral BG state. Normal is the selected state.
+	    Critical is custom. We hard-code it red. Eventually, I'd like all
+	    this to change when the themeable gtk colors are supported.
+
+Sat Feb 04 12:28:24 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* themes/standard/theme.c:
+	  - Improve the alignment and the color of the countdown.
+
+Sat Feb 04 12:24:32 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	* src/engines.c:
+	* src/engines.h:
+	* themes/standard/theme.c:
+	  - Add a pie-based countdown timer to notifications containing actions,
+	    so that the user knows how long they have until the notification
+	    simply expires.
+
+Sat Feb 04 02:04:35 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* themes/standard/theme.c:
+	  - Color the stripe based on the urgency level.
+
+Sat Feb 04 01:48:50 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	  - Check notification expiration every 100ms instead of every 500ms.
+
+Sat Feb 04 01:26:41 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* themes/standard/theme.c:
+	  - Use the action key to look up an icon theme stock icon. If one
+	    exists, display it next to the name.
+
+Sat Feb 04 01:07:02 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* themes/standard/theme.c:
+	  - Change the actions to use right-aligned small text buttons. This
+	    makes it a bit more clear as to what these really are.
+
+Sat Feb 04 00:54:34 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* themes/standard/theme.c:
+	  - Hide the content box containing the body, actions and icon when
+	    all of those are invisible (unset). This allows the whole
+	    notification to be very short when there's just a summary, instead
+	    of having useless, ugly extra vertical whitespace.
+
+Sat Feb 04 00:37:55 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* themes/standard/bgbox.c:
+	* themes/standard/bgbox.h:
+	* themes/standard/theme.c:
+	  - Make some changes to the Standard theme in order to bring it a
+	    bit closer to the style used in the December GNOME mockups. The
+	    mockups had some nice stylistic and usability ideas that were
+	    worth looking into.
+
+Wed Feb 01 19:17:09 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* themes/bubble/Makefile.am:
+	* themes/standard/Makefile.am:
+	  - Patch by Rodney Dawes to install the theme engines as unversioned
+	    libraries instead of versioned libraries.
+
+Sun Jan 29 13:03:09 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	* src/engines.c:
+	* themes/standard/theme.c:
+	  - Patch by Michael Vogt and modified a bit by me to add a close
+	    button to notifications. This is similar to the one used in Ubuntu
+	    Dapper, with a small placement change and functionality change: the
+	    notification no longer emits the ActionInvoked for the default action
+	    when closed. This closes ticket #8.
+	  - Moved data freeing for the standard theme and for theme engine
+	    unreffing out of the close functions and into a callback specified
+	    through g_object_set_data_full().
+	  - The daemon now listens for when notification windows are destroyed,
+	    and reacts appropriately, instead of crashing.
+
+Sun Jan 29 12:12:43 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* configure.ac:
+	  - Fix a couple missing commas in the list of package modules. Also
+	    take the time to clean this up a bit and put each module on its own
+	    line, and put the required versions into their own variables.
+	  - Bump the version to 0.3.3.90.
+
+==================== 0.3.3 ====================
+
+Wed Jan 25 00:29:59 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* ChangeLog:
+	* NEWS:
+	* configure.ac:
+	  - Bump the version to 0.3.3. Prepare for release.
+
+Wed Jan 25 00:21:49 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	  - When using icontheme icons, use the size closest to 48x48. However,
+	    if the closest image is smaller, use the small image instead of
+	    scaling up. If it's bigger, scale down to 48x48.
+
+Wed Jan 25 00:01:56 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	* configure.ac:
+	  - Don't pop up a notification if a window is full screen or if the
+	    screensaver is active. This closes bug #4.
+
+Tue Jan 24 00:18:18 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/Makefile.am:
+	* themes/bubble/Makefile.am:
+	* themes/standard/Makefile.am:
+	* NEWS:
+	* configure.ac:
+	  - Install and check for engines in
+	    $(libdir)/notification-daemon-1.0/engines, as opposed to
+	    $(libdir)/notification-daemon/engines. This fixes bug #3.
+
+==================== 0.3.2 ====================
+
+Mon Jan 23 00:39:34 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	  - We support v0.9 of the Desktop Notifications spec. Make sure we
+	    return that in GetServerInformation.
+
+Mon Jan 23 00:38:18 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* configure.ac:
+	* NEWS:
+	  - Add release news and bump the version up to 0.3.2.
+
+Mon Jan 23 00:33:31 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/notificationdaemon.xml:
+	  - Get rid of the GetServerInfo function. I thought I added this for
+	    backward-compatibility, but I was wrong -- everyone was really using
+	    the correct function.
+
+Mon Jan 23 00:27:53 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* data/Makefile.am:
+	A po/ChangeLog:
+	* src/Makefile.am:
+	D src/notifydaemon-dbus-glue.h:
+	* Makefile.am:
+	* configure.ac:
+	  - make distcheck is now happy.
+
+Sun Jan 22 23:54:53 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	  - Add back working support for default actions. These were being
+	    displayed as standard actions. Now they're once again emitted when
+	    the notification is clicked.
+
+Sun Jan 22 23:51:17 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* data/Makefile.am:
+	A data/notification-daemon.service.in:
+	D notification-daemon.service.in:
+	* INSTALL:
+	* Makefile.am:
+	* configure.ac:
+	  - Move notification-daemon.service.in to data/.
+
+Sun Jan 22 23:38:31 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	  - Fix several bugs (placement and possible crashers) in notification
+	    replacement.
+
+Sun Jan 22 23:31:36 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* themes/standard/theme.c:
+	  - Hook the actions back up again. Switching to the BgBox widget broke
+	    this.
+
+Sun Jan 22 23:02:37 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* themes/standard/theme.c:
+	  - Remove now dead code.
+
+Sun Jan 22 22:28:39 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* themes/standard/theme.c:
+	  - Draw the border of the notification window correctly under all tested
+	    cases.
+
+Sun Jan 22 20:02:58 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* themes/standard/theme.c:
+	  - The arrow will now point down if there's not enough room for it
+	    to point up (such as if an icon on the bottom panel is the source for
+	    the arrow).
+
+Sun Jan 22 18:59:57 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	* themes/standard/theme.c:
+	  - Be super cool when it comes to arrow placement near the left and right
+	    of the screen. The next couple of changes will add to the super
+	    coolness of all of this.
+
+Sun Jan 22 15:13:08 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* themes/standard/Makefile.am:
+	A themes/standard/bgbox.c:
+	A themes/standard/bgbox.h:
+	* themes/standard/theme.c:
+	  - Added a BgBox widget to the standard theme. This is based off of
+	    libview's BaseBGBox widget. It's being used for the themeing of the
+	    standard theme, instead of hard-coding white.
+
+Sun Jan 22 13:27:29 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	* themes/bubble/eggnotificationbubblewidget.c:
+	* themes/bubble/eggnotificationbubblewidget.h:
+	* themes/standard/theme.c:
+	* autogen.sh:
+	  - Patch by Rodney Dawes to fix a problem with keeping a pointer to
+	    the hints table in the themes. We no longer store the whole table,
+	    but rather only the parts of it we care about. This fixes a crash.
+	  - This patch also updates the required automake version to 1.9, to
+	    be compatible with the new intltool and to use a more recent
+	    gnome-common.
+
+Sun Jan 22 13:23:51 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	* src/daemon.h:
+	* src/notificationdaemon.xml:
+	  - Rearrange some parameters to match the spec.
+
+Fri Jan 20 00:22:38 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	  - Respect the user's work area (the area inside the panels and stuff)
+	    when displaying notifications.
+
+Fri Jan 20 00:15:04 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	  - Small code cleanups.
+
+Fri Jan 20 00:09:12 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	  - Add a little hack to prevent the notification from closing when a
+	    link is clicked.
+
+Fri Jan 20 00:01:04 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	  - Remove the debug messages. We shouldn't need these anymore, as the
+	    base stuff is working.
+
+Thu Jan 19 23:59:42 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	* src/engines.c:
+	* src/engines.h:
+	* themes/standard/theme.c:
+	  - Add proper support for actions.
+	  - Remove the action_invoked parameter to create_notification(), since
+	    we're already passing it to add_notification_action.
+
+Thu Jan 19 23:44:31 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	* src/engines.c:
+	* src/engines.h:
+	* themes/standard/theme.c:
+	  - Pass a couple of callbacks to the theme engine's
+	    create_notification() function: action_invoked and url_clicked.
+	  - Move the URL clicking callback to daemon.c from the standard engine.
+	    The standard engine now calls the passed url_clicked function.
+
+Thu Jan 19 23:33:46 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* themes/standard/theme.c:
+	  - Sexy new separator. Well, it's better than "|" anyway.
+
+Thu Jan 19 23:23:55 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	* themes/standard/theme.c:
+	  - Add the beginnings of action support.
+
+Thu Jan 19 22:34:16 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* data/Makefile.am:
+	  - NO! Install the schema always!
+
+Thu Jan 19 10:18:09 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	  - Simplify a small piece of logic.
+
+Thu Jan 19 02:37:31 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	* src/daemon.h:
+	* src/engines.c:
+	  - Reorganize the code styles to match the style of the rest of Galago
+	    and of the previous libnotify.
+
+Thu Jan 19 01:36:16 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* themes/standard/theme.c:
+	  - Add back support for hyperlinks in the standard engine.
+
+Sun Jan 15 17:51:27 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	* src/daemon.h:
+	* src/notificationdaemon.xml:
+	  - Add back GetCapabilities and GetServerInformation.
+
+Sun Jan 15 16:07:00 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	A data/Makefile.am:
+	A data/notification-daemon.schemas.in:
+	A po/POTFILES.in:
+	* src/daemon.c:
+	* src/daemon.h:
+	* src/engines.c:
+	* src/Makefile.am:
+	* Makefile.am:
+	* autogen.sh:
+	* configure.ac:
+	  - Added GConf support. The theme can now be set through gconf-editor.
+
+Sun Jan 15 14:49:49 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/engines.c:
+	* src/engines.h:
+	  - Save the engine used in the resulting notification window's
+	    object data. Use that engine for all future operations on that
+	    notification.
+	  - Handle ref counting on notification engines so that they'll be
+	    properly when the time comes. As of right now, this won't happen.
+
+Fri Jan 13 11:44:00 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/engines.c:
+	* src/engines.h:
+	* themes/bubble/eggnotificationbubblewidget.c:
+	* themes/bubble/eggnotificationbubblewidget.h:
+	* themes/bubble/theme.c:
+	* themes/standard/theme.c:
+	  - Patch by Rodney Dawes to add support for passing hints to the
+	    notification engines. This will allow engines to theme based on
+	    urgency levels and other such data.
+
+Thu Jan 12 11:06:27 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/daemon.c:
+	  - Listen to the button-release-event signal instead of "clicked" for
+	    notifications.
+
+	* themes/standard/theme.c:
+	  - Another shot at setting the window shape every time. I've read that
+	    there's some gtk 2.8 bug regarding this. Anyhow, in order to
+	    guarantee it, I'm always setting the shape in the expose handler.
+	    Even doing it only once or twice in the expose handler causes issues,
+	    but setting it every time works. We need a better way...
+
+Thu Jan 12 00:57:22 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* themes/standard/theme.c:
+	  - Make sure we shape the window correctly every time we generate the
+	    arrow so that we don't leave artifacts.
+
+Thu Jan 12 00:10:18 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/engines.c:
+	A themes/standard/Makefile.am:
+	A themes/standard/theme.c:
+	* themes/Makefile.am:
+	* configure.ac:
+	  - Add the beginnings of the "standard" theme. This is now the default.
+	    It's not complete. Many things are still missing. Theme selection
+	    will be added later.
+
+Wed Jan 11 01:51:12 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/Makefile.am:
+	* src/daemon.c:
+	D src/eggnotificationbubblewidget.c:
+	D src/eggnotificationbubblewidget.h:
+	A src/engines.c:
+	A src/engines.h:
+	A themes/bubble/Makefile.am:
+	A themes/bubble/eggnotificationbubblewidget.c:
+	A themes/bubble/eggnotificationbubblewidget.h:
+	A themes/bubble/theme.c:
+	A themes/Makefile.am:
+	* Makefile.am:
+	* configure.ac:
+	  - Big change. We're moving to a theme engine model for displaying
+	    notifications. This is something I've wanted for a long time. For now,
+	    the "bubble" theme, as I call it (which we can definitely change) is
+	    the default. We'll make modules configurable by the theme and/or by
+	    the user later. Make sure you do a make install in themes!
+
+Tue Jan 10 23:56:01 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/Makefile.am:
+	A src/daemon.c:
+	A src/daemon.h:
+	A src/notificationdaemon.xml:
+	D src/notifydaemon.c:
+	D src/notifydaemon.h:
+	D src/notifydaemon.xml:
+	* Makefile.am:
+	* autogen.sh:
+	* configure.ac:
+	A notification-daemon.service.in:
+	D notify-daemon.service.in:
+	  - Rename from notify-daemon to notification-daemon. I've received a
+	    number of questions and some complaints about the name change,
+	    some of which are packaging concerns, some upgrade concerns, and
+	    just general confusion and "Why?" As this is the "Desktop
+	    Notifications" project, and due to reasons expressed to me from
+	    others, I feel it's best to revert the name.
+
+Tue Jan 10 23:32:55 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/eggnotificationbubblewidget.c:
+	* src/notifydaemon.c:
+	* configure.ac:
+	  - Although it's a small hack, add support back for D-BUS 0.36+.
+
+Tue Jan 10 22:57:51 PST 2006  Christian Hammond <chipx86@chipx86.com>
+
+	* src/eggnotificationbubblewidget.c:
+	  - Fix another case of C99 usage.
+
+2006-01-03  John (J5) Palmieri  <johnp@redhat.com>
+
+	* src/eggnotificationbubblewidget.h (struct _DrawingPipeline):
+	Added intermediate pipeline for graphics rendering
+
+	* src/eggnotificationbubblewidget.c 
+	(_stencil_bubble*): These methods now take care of prerendering
+	the graphics to the pipeline and calculating the x, y offset of
+	the arrow
+	(struct DrawingInstruction): intermediate drawing primitive
+	(_drawing_instruction_*): New internal methods for manipulating
+	drawing instructions
+	(_edge_line_to, _close_path): internal convinience methods for
+	drawing skewed lines attached by rounded corners (i.e. you can
+	draw a box and specify the radius of each corner)
+	(egg_notification_bubble_widget_set_pos): prerender the bubble here
+	to get arrow offsets
+	(draw_bubble_widget): Take out all calculations from this expose
+	handler and simply render the precalculated pipeline
+
+==================== 0.3.1 ====================
+
+2005-12-14  John (J5) Palmieri  <johnp@redhat.com>
+
+	* Release 0.3.1
+
+	* src/Makefile.am: fix for building in a seperate build directory
+
+	* configure.ac: Require D-Bus >= 0.60
+
+2005-12-12  John (J5) Palmieri  <johnp@redhat.com>
+
+	* src/eggnotificationbubblewidget.c (size_request_handler): removed
+	(egg_notification_bubble_widget_init): initialize draw_arrow to FALSE
+	(_populate_window): Move adding widgets to the table to the 
+	_layout_window method
+	(draw_bubble_widget): now can draw bubble without the arrow
+	(egg_notification_bubble_widget_set_draw_arrow): New method for setting
+	whether or not we should draw the arrow
+
+	* src/notifydaemon.c (_notify_daemon_add_bubble_to_poptart_stack): new
+	method which is used for adding bubbles without x, y coordinates to the
+	"poptart" stack
+	(_remove_bubble_from_poptart_stack): removes a bubble from the stack
+	and repositions the rest of the stack
+	(notify_daemon_notify_handler): add bubble to poptart stack if no
+	no x, y location given
+
+2005-12-09  John (J5) Palmieri  <johnp@redhat.com>
+
+	* src/eggnotificationbubblewidget.c (_layout_window): Add buttons for
+	actions
+	(draw_bubble_widget): close the cairo path so courner caps work
+	(egg_notification_bubble_widget_create_button): new method to create
+	a button and add it to the bubble
+	(egg_notification_bubble_widget_clear_buttons): new method for clearing
+	up all the buttons in the bubble
+	
+	* src/notifydaemon.xml: make the Notify method async so we can get the
+	sender
+
+	* src/notifydaemon.c (_emit_action_invoked_signal):  Emits the dbus 
+	signal when one of the action buttons is clicked
+	(_emit_closed_signal): emits a Closed signal over the bus when the
+	bubble is closed
+	(_close_notification): call _emit_closed_signal
+	(_notification_daemon_handle_bubble_widget_action): new method - iternal
+	callback we hook up to the buttons' "clicked" signal
+	(notify_daemon_notify_handler): change to an async method
+	store the unique name of the sender that called us
+	setup buttons if actions have been added 
+	
+2005-11-22  John (J5) Palmieri  <johnp@redhat.com>
+
+	* src/eggnotificationbubblewidget.c: Add a more stylized bubble
+	and render in both composite and shaped window mode
+
+2005-11-15  John (J5) Palmieri  <johnp@redhat.com>
+	
+	* Change refrences from notification to notify
+
+2005-11-10  John (J5) Palmieri  <johnp@redhat.com>
+
+	* Makefile.am: remove Doxyfile.in ref 
+
+2005-11-10  John (J5) Palmieri  <johnp@redhat.com>
+
+	* Initial checkin of the next generation notification daemon

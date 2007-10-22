@@ -1,5 +1,6 @@
 SUBDIRS =			\
 	awnsystemmonitor	\
+	awn-notification-daemon \
 	battery-applet		\
 	BlingSwitcher 		\
 	clock 			\

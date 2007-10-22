@@ -34,16 +34,68 @@ slicelocaledir='${prefix}/${DATADIRNAME}/locale'
 AC_SUBST(slicelocaledir)
 
 PKG_CHECK_MODULES(DEPS, 
-                  gtk+-2.0 
+                  gtk+-2.0
                   awn
                   libwnck-1.0 
                   libglade-2.0
                   libgnome-menu 
                   gnome-desktop-2.0
                   librsvg-2.0
-                  libgtop-2.0)
+                  libgtop-2.0
+                  glib-2.0
+	              dbus-1
+	              dbus-glib-1
+                  libsexy
+	              gconf-2.0
+	              gdk-2.0
+	              gdk-pixbuf-2.0
+                  )
 AC_SUBST(DEPS_CFLAGS)
 AC_SUBST(DEPS_LIBS)
+AC_SUBST(GDK_CFLAGS)
+AC_SUBST(GDK_LIBS)
+
+dnl
+dnl Check the D-BUS version.
+dnl
+
+AC_MSG_CHECKING([dbus version])
+DBUS_VERSION=`$PKG_CONFIG --modversion dbus-1`
+DBUS_MAJOR_VER=`echo $DBUS_VERSION | cut -d. -f 1`
+DBUS_MINOR_VER=`echo $DBUS_VERSION | cut -d. -f 2`
+DBUS_MICRO_VER=`echo $DBUS_VERSION | cut -d. -f 3`
+
+AC_MSG_RESULT($DBUS_VERSION)
+AC_DEFINE_UNQUOTED(DBUS_MAJOR_VER, $DBUS_MAJOR_VER, [D-BUS major version.])
+AC_DEFINE_UNQUOTED(DBUS_MINOR_VER, $DBUS_MINOR_VER, [D-BUS minor version.])
+AC_DEFINE_UNQUOTED(DBUS_MICRO_VER, $DBUS_MICRO_VER, [D-BUS micro version.])
+
+AC_DEFINE_UNQUOTED(DBUS_API_SUBJECT_TO_CHANGE, ,DBUS API is subject to change)
+
+AS_AC_EXPAND(SYSCONFDIR, $sysconfdir)
+AS_AC_EXPAND(LIBDIR, $libdir)
+AS_AC_EXPAND(DATADIR, $datadir)
+AS_AC_EXPAND(LIBEXECDIR, $libexecdir)
+
+AC_ARG_WITH(dbus-sys, [  --with-dbus-sys=<dir>   where D-BUS system.d directory is])
+AC_ARG_WITH(dbus-services, [  --with-dbus-services=<dir>   where D-BUS services directory is])
+
+if ! test -z "$with_dbus_sys" ; then
+	DBUS_SYS_DIR="$with_dbus_sys"
+else
+	DBUS_SYS_DIR="$SYSCONFDIR/dbus-1/system.d"
+fi
+
+if ! test -z "$with_dbus_services" ; then
+	DBUS_SERVICES_DIR="$with_dbus_services"
+else
+	DBUS_SERVICES_DIR="$DATADIR/dbus-1/services"
+fi
+
+AC_SUBST(DBUS_SYS_DIR)
+AC_SUBST(DBUS_SERVICES_DIR)
+AC_DEFINE_UNQUOTED(DBUS_SYSTEMD_DIR, "$DBUS_SYS_DIR", [Where system.d dir for DBUS is])
+AC_DEFINE_UNQUOTED(DBUS_SERVICES_DIR, "$DBUS_SERVICES_DIR", [Where services dir for DBUS is])
 
 if test "x$GCC" = "xyes"; then
         GCC_FLAGS="-g -Wall"
@@ -68,6 +120,12 @@ Makefile
 po/Makefile.in
 src/Makefile
 src/awnsystemmonitor/Makefile
+src/awn-notification-daemon/Makefile
+src/awn-notification-daemon/data/Makefile
+src/awn-notification-daemon/data/org.freedesktop.Notifications.service
+src/awn-notification-daemon/po/Makefile.in
+src/awn-notification-daemon/src/Makefile
+src/awn-notification-daemon/src/daemon/Makefile
 src/battery-applet/Makefile
 src/battery-applet/icons/Makefile
 src/BlingSwitcher/Makefile

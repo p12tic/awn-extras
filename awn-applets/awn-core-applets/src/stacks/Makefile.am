@@ -1,11 +1,13 @@
 SUBDIRS = icons
 
 stacksapplet_DATA = \
+		stacks_preferences.glade \ 
 		stacks.py \
 		stacksbackend.py \
-		stackslauncher.py \
-		stacksconfig.py \
+	    stacksconfig.py \
+		stacksglade.py \
 		stacksicons.py \
+	    stackslauncher.py \
 		stacksvfs.py
 
 stacksappletdir = $(libdir)/awn/applets/stacks
@@ -17,7 +19,6 @@ desktop_DATA = \
 
 $(desktop_DATA).in: $(desktop_DATA).in.in
 	sed -e "s|\@LIBDIR\@|$(libdir)|g" $< > $@
-
 
 EXTRA_DIST = \
 	stacks.desktop.in.in

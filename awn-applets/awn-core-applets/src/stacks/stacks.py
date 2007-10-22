@@ -473,7 +473,6 @@ class Stacks (awn.AppletSimple):
         awn.awn_effect_stop(self.effects, "attention")
 
     def backend_restructure_cb(self, widget, type):
-        print "structure of stack changed"
         if self.dialog is not None:
             self.dialog.destroy()
             self.dialog = None
@@ -481,9 +480,6 @@ class Stacks (awn.AppletSimple):
         self.navbuttons = None
 
     def backend_get_config(self):
-        if self.backend:
-            self.backend.destroy()
-        
         _config_backend = self.gconf_client.get_string(
                 self.gconf_path + "/backend")
         if _config_backend:
@@ -529,7 +525,10 @@ class Stacks (awn.AppletSimple):
 
         _config_backend_type = self.gconf_client.get_int(
                 self.gconf_path + "/backend_type")
-        
+
+        # reload (new) backend
+        if self.backend:
+            self.backend.destroy()           
         if _config_backend_type == stacksbackend.BACKEND_TYPE_FOLDER:
             self.backend = stacksbackend.FolderBackend(self.config_backend, 
                     self.config_icon_size)
@@ -540,15 +539,14 @@ class Stacks (awn.AppletSimple):
         self.backend.connect("attention", self.backend_attention_cb)
         self.backend.connect("restructure", self.backend_restructure_cb)
         self.applet_setup_drag_drop()
-        
+        # setting applet icon
         if self.backend.is_empty():
             self.applet_set_empty_icon()
         else:
             pixbuf = self.backend.get_random_pixbuf()
             self.applet_set_full_icon(pixbuf)
-        # reload tables
-        self.tables = None
-        self.current_page = -1
+        # reload contents
+        self.backend_restructure_cb(None, None)
         gobject.idle_add(self._dialog_tables_new)
 
 launch_manager = stackslauncher.LaunchManager()

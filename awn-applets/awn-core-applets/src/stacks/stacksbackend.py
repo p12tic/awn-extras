@@ -22,7 +22,6 @@ import os
 import gobject
 import gtk
 from gtk import gdk
-#import time
 import random
 import gnome.ui
 import gnomevfs
@@ -165,7 +164,6 @@ class Backend(gobject.GObject):
             thumbnailer = stacksicons.Thumbnailer(uri.to_string(), mime_type)
             pixbuf = thumbnailer.get_icon(self.icon_size)
 
-        print "Backend::add: ", uri.vfs_uri
         self.store.append([ uri, 
                             name, 
                             mime_type,
@@ -306,13 +304,10 @@ class FolderBackend(Backend):
             except AttributeError:
                 return None
             if action == gtk.gdk.ACTION_LINK:
-                print "link"
                 options = gnomevfs.XFER_LINK_ITEMS
             elif action == gtk.gdk.ACTION_COPY:
-                print "copy"
                 options = gnomevfs.XFER_DEFAULT
             elif action == gtk.gdk.ACTION_MOVE:
-                print "move"
                 options = gnomevfs.XFER_REMOVESOURCE
             else:
                 return None

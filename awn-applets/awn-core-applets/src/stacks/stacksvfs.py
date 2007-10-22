@@ -31,7 +31,7 @@ class GUITransfer(object):
             label_fromto.set_justify(gtk.JUSTIFY_RIGHT)
             hbox_info.pack_start(label_fromto, False, False, 0)
             label_srcdst = gtk.Label("")
-            label_srcdst.set_justify(gtk.JUSTIFY_LEFT)
+            label_srcdst.set_alignment(0.0, 0.5)
             label_srcdst.set_markup("%s\n%s" %
                     (str(src.dirname), str(dst.dirname)))
             label_srcdst.set_ellipsize(pango.ELLIPSIZE_START)

@@ -273,7 +273,13 @@ GtkWidget *filebrowser_dialog_new(
 		gtk_button_set_relief(GTK_BUTTON(folder_up), GTK_RELIEF_NONE);
 		g_signal_connect( folder_up, "button-release-event",
                       GTK_SIGNAL_FUNC( filebrowser_dialog_button_clicked ), GINT_TO_POINTER( FOLDER_UP ) );
-		gtk_container_add(GTK_CONTAINER(hbox1), folder_up);
+		gtk_box_pack_start(GTK_BOX(hbox1), folder_up, TRUE, TRUE, 0);
+
+		GtkWidget *filemanager = gtk_button_new_with_label("Open filemanager");
+		gtk_button_set_relief(GTK_BUTTON(filemanager), GTK_RELIEF_NONE);
+		g_signal_connect( filemanager, "button-release-event",
+			GTK_SIGNAL_FUNC( filebrowser_dialog_button_clicked ), GINT_TO_POINTER( FILEMANAGER ) );
+		gtk_box_pack_start(GTK_BOX(hbox1), filemanager, FALSE, FALSE, 0);
 	}
 	
 	dialog->viewport = gtk_event_box_new();
@@ -287,19 +293,18 @@ GtkWidget *filebrowser_dialog_new(
 	gtk_button_set_relief(GTK_BUTTON(folder_left), GTK_RELIEF_NONE);
 	g_signal_connect( folder_left, "button-release-event",
                       GTK_SIGNAL_FUNC( filebrowser_dialog_button_clicked ), GINT_TO_POINTER( FOLDER_LEFT ) );
-	gtk_container_add(GTK_CONTAINER(hbox2), folder_left);
+        GtkWidget *left_bin = gtk_alignment_new(0, 0.5, 0, 0);
+        gtk_container_add(GTK_CONTAINER(left_bin), folder_left);
+	gtk_box_pack_start(GTK_BOX(hbox2), left_bin, TRUE, TRUE, 0);
 	
-	GtkWidget *filemanager = gtk_button_new_with_label("Open filemanager");
-	gtk_button_set_relief(GTK_BUTTON(filemanager), GTK_RELIEF_NONE);
-	g_signal_connect( filemanager, "button-release-event",
-                      GTK_SIGNAL_FUNC( filebrowser_dialog_button_clicked ), GINT_TO_POINTER( FILEMANAGER ) );
-	gtk_container_add(GTK_CONTAINER(hbox2), filemanager);
 	
 	GtkWidget *folder_right = gtk_button_new_from_stock(GTK_STOCK_GO_FORWARD);
 	gtk_button_set_relief(GTK_BUTTON(folder_right), GTK_RELIEF_NONE);
 	g_signal_connect( folder_right, "button-release-event",
                       GTK_SIGNAL_FUNC( filebrowser_dialog_button_clicked ), GINT_TO_POINTER( FOLDER_RIGHT ) );
-	gtk_container_add(GTK_CONTAINER(hbox2), folder_right);
+        GtkWidget *right_bin = gtk_alignment_new(1, 0.5, 0, 0);
+        gtk_container_add(GTK_CONTAINER(right_bin), folder_right);
+	gtk_box_pack_start(GTK_BOX(hbox2), right_bin, TRUE, TRUE, 0);
 		
 	// Create a folder of the backend folder
     filebrowser_dialog_set_folder( dialog, gnome_vfs_uri_new( filebrowser_gconf_get_backend_folder() ), 0 );

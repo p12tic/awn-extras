@@ -348,28 +348,32 @@ GtkWidget *filebrowser_icon_new(
     g_signal_connect (G_OBJECT (icon), "button-release-event",
                     G_CALLBACK (filebrowser_icon_button_release_event), (gpointer)icon);
 
-    vbox = gtk_vbox_new (FALSE, 4);
+    vbox = gtk_vbox_new (FALSE, 2);
     gtk_container_add (GTK_CONTAINER (icon), vbox);
   
     image = gtk_image_new_from_pixbuf (icon->icon);
-    gtk_widget_set_size_request(image, 48, 48);
+    //gint w = gdk_pixbuf_get_width(icon->icon);
+    //gint h = gdk_pixbuf_get_height(icon->icon);
+    //gtk_widget_set_size_request(image, w > h ? 48 : -1, w > h ? -1 : 48);
 
     gchar *markup;
-    sprintf(markup, "<b>%s</b>", icon->name);
+    sprintf(markup, "%s", icon->name);
     label = gtk_label_new(markup);
-    gtk_widget_set_size_request (label, 48, 28);
+    gtk_widget_set_size_request (label, icon_size*5/4, icon_size/2);
 
     g_object_set(label,
             "justify", GTK_JUSTIFY_CENTER,
             "use-markup", TRUE,
             "wrap", TRUE,
-            "wrap-mode", PANGO_WRAP_WORD_CHAR,
+            "wrap-mode", PANGO_WRAP_WORD,
             NULL);
 
-    gtk_box_pack_start (GTK_BOX (vbox), image, FALSE, FALSE, 0);
-    gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
+    // TODO: truncate lines in label's PangoLayout
 
-    gtk_widget_set_size_request(vbox, 60, 84);
+    gtk_box_pack_start (GTK_BOX (vbox), image, FALSE, FALSE, 0);
+    gtk_box_pack_start (GTK_BOX (vbox), label, TRUE, TRUE, 0);
+
+    gtk_widget_set_size_request(vbox, icon_size*5/4, icon_size*7/4);
 
     return GTK_WIDGET( icon );
 }

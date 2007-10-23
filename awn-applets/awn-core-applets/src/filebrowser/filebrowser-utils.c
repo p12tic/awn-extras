@@ -127,42 +127,36 @@ GdkPixbuf *get_icon(
     gnome_vfs_get_file_info_uri(uri, info, GNOME_VFS_FILE_INFO_DEFAULT | GNOME_VFS_FILE_INFO_GET_MIME_TYPE);
     gchar *uri_path = gnome_vfs_uri_to_string(uri, GNOME_VFS_URI_HIDE_NONE);
 
-    char* thumbnail_file = gnome_thumbnail_factory_lookup(thumbnail_factory, uri_path, info->mtime);
+    GtkIconTheme *theme = gtk_icon_theme_get_default();
+    GnomeIconLookupResultFlags result;
+    char* thumbnail_file = NULL;
+    thumbnail_file = gnome_icon_lookup_sync(theme, thumbnail_factory, uri_path, NULL, GNOME_ICON_LOOKUP_FLAGS_SHOW_SMALL_IMAGES_AS_THEMSELVES, &result);
 
     if (thumbnail_file) {
         // thumbnail was already created, just load it
         GError *error = NULL;
-        pixbuf = gdk_pixbuf_new_from_file(thumbnail_file, &error);
+        if (thumbnail_file[0] == '/')
+          pixbuf = gdk_pixbuf_new_from_file(thumbnail_file, &error);
+        else
+          pixbuf = gtk_icon_theme_load_icon(theme, thumbnail_file, icon_size, 0, &error);
     } else {
         // should we create thumbnail?
         if (gnome_thumbnail_factory_can_thumbnail(thumbnail_factory, uri_path, info->mime_type, info->mtime)) {
             pixbuf = gnome_thumbnail_factory_generate_thumbnail(thumbnail_factory, uri_path, info->mime_type);
             // save new thumbnail?
-            if (pixbuf && gnome_thumbnail_has_uri (pixbuf, uri_path))
-                gnome_thumbnail_factory_save_thumbnail(thumbnail_factory, pixbuf, uri, info->mtime);
+            if (pixbuf) {
+                g_warning("Saving thumbnail for %s\n", uri_path);
+                gnome_thumbnail_factory_save_thumbnail(thumbnail_factory, pixbuf, uri_path, info->mtime);
+            } else g_warning("Cannot save thumbnail for %s\n", uri_path);
         }
     }
 
     gnome_vfs_file_info_unref(info);
-    //g_object_unref(uri_path);
 
-    if ( pixbuf ) {
-        resize_icon( &pixbuf, icon_size );
-    } else {
-        GtkIconTheme *theme = gtk_icon_theme_get_default(  );
-        pixbuf = gtk_icon_theme_load_icon( theme, filename, icon_size, 0, NULL );
-
-        if ( !pixbuf ) {
-            gchar          *icon_path = gnome_icon_lookup_sync( theme, NULL, uri_path, NULL,
-                                        GNOME_ICON_LOOKUP_FLAGS_NONE,
-                                        GNOME_ICON_LOOKUP_RESULT_FLAGS_NONE );
-
-            pixbuf = gtk_icon_theme_load_icon( theme, icon_path, icon_size, 0, NULL );
-            g_free( icon_path );
-        }
-    }
+    if (pixbuf) resize_icon( &pixbuf, icon_size );
 
     g_free(uri_path);
+    g_free(thumbnail_file);
     return pixbuf;
 }
 

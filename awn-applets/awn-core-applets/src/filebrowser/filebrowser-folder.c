@@ -531,7 +531,7 @@ GtkWidget *filebrowser_folder_new(
         filebrowser_folder_add( filebrowser_folder, file_uri );
     }
 
-    if ( !filebrowser_folder->monitor ) {
+    if ( !filebrowser_folder->monitor ) {/*
         GnomeVFSResult result = gnome_vfs_monitor_add( &filebrowser_folder->monitor,
                                 gnome_vfs_uri_to_string( filebrowser_folder->uri,
 								GNOME_VFS_URI_HIDE_NONE ),
@@ -543,7 +543,7 @@ GtkWidget *filebrowser_folder_new(
             g_print( "Could not set a monitor on the backend folder due: %s\n",
                      gnome_vfs_result_to_string( result ) );
         }
-    }
+    */}
 
     filebrowser_folder_layout(filebrowser_folder, 0);
 	gtk_widget_show( GTK_WIDGET( filebrowser_folder ) );

@@ -46,9 +46,11 @@ BACKEND_TYPE_FOLDER = 1
 
 # Columns in the ListStore
 COL_URI = 0
-COL_LABEL = 1
-COL_MIMETYPE = 2
-COL_ICON = 3
+COL_MONITOR = 1
+COL_TYPE = 2
+COL_LABEL = 3
+COL_MIMETYPE = 4
+COL_ICON = 5
 
 # Visual layout parameters
 ICON_VBOX_SPACE = 4
@@ -70,9 +72,16 @@ class Backend(gobject.GObject):
 
     def __init__(self, uri, icon_size):
         gobject.GObject.__init__(self)
+        if isinstance(uri, stacksvfs.VfsUri):
+            self.backend_uri = uri
+        else:
+            self.backend_uri = stacksvfs.VfsUri(uri)
+        self._create_or_open()
         self.icon_size = icon_size
         # Setup store to hold the stack items
         self.store = gtk.ListStore( gobject.TYPE_OBJECT,
+                                    gobject.TYPE_OBJECT,
+                                    gobject.TYPE_INT,
                                     gobject.TYPE_STRING, 
                                     gobject.TYPE_STRING,
                                     gtk.gdk.Pixbuf )
@@ -85,13 +94,13 @@ class Backend(gobject.GObject):
     # -case insensitive
     # -first basename, then extension
     def _file_sort(self, model, iter1, iter2):
-        f1 = model.get_value(iter1, COL_URI)
-        f2 = model.get_value(iter2, COL_URI)
-        if f1.get_type() == gnomevfs.FILE_TYPE_DIRECTORY and not \
-                f2.get_type() == gnomevfs.FILE_TYPE_DIRECTORY:
+        t1 = model.get_value(iter1, COL_TYPE)
+        t2 = model.get_value(iter2, COL_TYPE)
+        if t1 == gnomevfs.FILE_TYPE_DIRECTORY and not \
+                t2 == gnomevfs.FILE_TYPE_DIRECTORY:
             return -1
-        elif f2.get_type() == gnomevfs.FILE_TYPE_DIRECTORY and not \
-                f1.get_type() == gnomevfs.FILE_TYPE_DIRECTORY:
+        elif t2 == gnomevfs.FILE_TYPE_DIRECTORY and not \
+                t1 == gnomevfs.FILE_TYPE_DIRECTORY:
             return 1
         else:
             n1 = model.get_value(iter1, COL_LABEL)
@@ -116,23 +125,24 @@ class Backend(gobject.GObject):
     # -check for desktop item
     # -add file monitor       
     def add(self, uri, action=None):
-        name = uri.short_name
+        name = uri.as_uri().short_name
         mime_type = ""
         pixbuf = None
-
+        # check for existence:
+        if uri.as_uri().scheme == "file" and not gnomevfs.exists(uri.as_uri()):
+            return None
         # check for duplicates
         iter = self.store.get_iter_first()
         while iter:
             store_uri = self.store.get_value(iter, COL_URI)            
-            if store_uri.equals(uri):
+            if uri.equals(store_uri):
                 return None
             iter = self.store.iter_next(iter)
-
         # check for desktop item
-        if uri.short_name.endswith(".desktop"):
+        if uri.as_uri().short_name.endswith(".desktop"):
             # TODO: uri
             item = gnomedesktop.item_new_from_uri(
-                    uri.to_string(), 
+                    uri.as_string(), 
                     gnomedesktop.LOAD_ONLY_IF_EXISTS)
             if not item:
                 return None
@@ -147,27 +157,34 @@ class Backend(gobject.GObject):
                                         self.icon_size,
                                         0)
             if not icon_uri:
-                icon_uri = uri.to_string()
+                icon_uri = uri.as_string()
             elif icon_uri.startswith("file://"):
                 icon_uri = icon_uri[7:]
             icon_factory = stacksicons.IconFactory()
             pixbuf = icon_factory.load_icon_from_path(icon_uri, self.icon_size)
             if pixbuf is not None:
                 pixbuf = icon_factory.scale_to_bounded(pixbuf, self.icon_size)
-
+        # get file info
+        try:
+            fileinfo = gnomevfs.get_file_info(
+                    uri.as_string(),
+                    gnomevfs.FILE_INFO_DEFAULT | 
+                    gnomevfs.FILE_INFO_GET_MIME_TYPE |
+                    gnomevfs.FILE_INFO_FORCE_SLOW_MIME_TYPE)
+            type = fileinfo.type
+            mime_type = fileinfo.mime_type
+        except gnomevfs.NotFoundError:
+            return None
+        # get pixbuf for icon
         if pixbuf is None:
-            try:
-                mime_type = gnomevfs.get_file_info(uri.vfs_uri, 
-                                gnomevfs.FILE_INFO_GET_MIME_TYPE).mime_type
-            except gnomevfs.NotFoundError:
-                return None
-            thumbnailer = stacksicons.Thumbnailer(uri.to_string(), mime_type)
+            thumbnailer = stacksicons.Thumbnailer(uri.as_string(), mime_type)
             pixbuf = thumbnailer.get_icon(self.icon_size)
-
-        self.store.append([ uri, 
-                            name, 
-                            mime_type,
-                            pixbuf ])
+        # create monitor
+        monitor = Monitor(uri)
+        monitor.connect("deleted", self._deleted)
+        # add to store
+        self.store.append([uri, monitor, type, name, mime_type, pixbuf])
+        # restructure of dialog needed
         self.emit("restructure", self.get_type())
         return pixbuf
 
@@ -177,7 +194,7 @@ class Backend(gobject.GObject):
         iter = self.store.get_iter_first()
         while iter:
             store_uri = self.store.get_value(iter, COL_URI)
-            if store_uri.equals(uri):
+            if uri.equals(store_uri):
                 self.store.remove(iter)
                 retval = True
                 break
@@ -192,7 +209,8 @@ class Backend(gobject.GObject):
         self.store.clear()
 
     def open(self):
-        stacks.launch_manager.launch_uri(self.backend_uri.to_string(), None)
+        stacks.launch_manager.launch_uri(
+                self.backend_uri.as_string(), None)
         
     def is_empty(self):
         iter = self.store.get_iter_first()
@@ -228,46 +246,62 @@ class Backend(gobject.GObject):
     def destroy(self):
         return
 
+
 class FileBackend(Backend):
+
+    handle = None
 
     def __init__(self, uri, icon_size):
         Backend.__init__(self, uri, icon_size)
-        self.backend_uri = stacksvfs.VfsFile(uri, create=True)
 
-    # TODO: replace with gnomevfs version
+    def _create_or_open(self):
+        mode = gnomevfs.OPEN_WRITE | gnomevfs.OPEN_READ | gnomevfs.OPEN_RANDOM
+        if not gnomevfs.exists(self.backend_uri.as_uri()):
+            self.handle = gnomevfs.create(self.backend_uri.as_uri(), mode)
+        else:
+            self.handle = gnomevfs.Handle(self.backend_uri.as_uri(), mode)
+
     def remove(self, uri): 
         if not isinstance(uri, stacksvfs.VfsUri):
-            uri = stacksvfs.get_vfsuri(uri)
-        f = open(self.backend_uri.to_string(), "r") 
-        if f: 
-            try: 
-                lines = f.readlines() 
-                f.close() 
-                f = open(self.backend_uri.to_string(), "w") 
-                for furi in lines: 
-                    furi = stacksvfs.get_vfsuri(furi)
-                    if not uri.equals(furi): 
-                        f.write(furi + os.linesep) 
-            finally: 
-                f.close()                 
+            try:
+                uri = stacksvfs.VfsUri(uri)
+            except TypeError:
+                return None
+        uristr = uri.as_string()
+        buffer = ""
+        content = gnomevfs.read_entire_file(self.backend_uri.as_string())
+        lines = content.splitlines()
+        for line in lines:
+            if cmp(uristr, line):
+                buffer += line + os.linesep
+        if buffer is not None:
+            self.handle.truncate(0)
+            self.handle.seek(0)
+            self.handle.write(buffer)
         return Backend.remove(self, uri) 
 
     def add(self, uri, action=None):
         if not isinstance(uri, stacksvfs.VfsUri):
-           uri = stacksvfs.get_vfsuri(uri)
-        if action != None:
-            self.backend_uri.append(uri.to_string() + os.linesep)
-        uri.monitor()
-        uri.connect("deleted", self._deleted)
-        return Backend.add(self, uri)
+            try:
+                uri = stacksvfs.VfsUri(uri)
+            except TypeError:
+                return None
+        pixbuf = Backend.add(self, uri)
+        if action != None and pixbuf is not None:
+            self.handle.seek(0, gnomevfs.SEEK_END)
+            self.handle.write(uri.as_string() + os.linesep)
+        return pixbuf
 
     def read(self):
-        for line in self.backend_uri.read().split(os.linesep):
-            if len(line.strip()) > 0:
-                self.add(line.strip())
+        uris = []
+        content = gnomevfs.read_entire_file(
+                self.backend_uri.as_string())
+        lines = content.splitlines()
+        for line in lines:
+            self.add(line.strip())
 
     def clear(self):
-        self.backend_uri.write(None)
+        self.handle.truncate(0)
         Backend.clear(self)
 
     # Do nothing on "open"; not really useful
@@ -279,28 +313,44 @@ class FileBackend(Backend):
         
 class FolderBackend(Backend):
 
+    monitor = None
+
     def __init__(self, uri, icon_size):
+        if str(uri)[-1] != '/':
+            uri += '/'
         Backend.__init__(self, uri, icon_size)
-        self.backend_uri = stacksvfs.VfsDir(uri, create=True)
-           
-    def _set_monitor(self):
-        self.backend_uri.monitor()
-        self.backend_uri.connect("created", self._created)
-        self.backend_uri.connect("deleted", self._deleted)
+
+        self.monitor = Monitor(self.backend_uri)
+        self.monitor.connect("created", self._created)
+        self.monitor.connect("deleted", self._deleted)
+
+    def _create_or_open(self):
+        path = self.backend_uri.as_uri().path
+        uri = self.backend_uri.as_uri().resolve_relative("/")
+        for folder in path.split("/"):
+            if not folder:
+                continue
+            uri = uri.append_string(folder)
+            try:
+                gnomevfs.make_directory(uri, 0777)
+            except gnomevfs.FileExistsError:
+                pass
 
     def remove(self, uri):
         if not isinstance(uri, stacksvfs.VfsUri):
-            uri = stacksvfs.get_vfsuri(uri)
+            uri = stacksvfs.VfsUri(uri)
         return Backend.remove(self, uri)
   
     def add(self, uri, action=None):
         if not isinstance(uri, stacksvfs.VfsUri):
-            uri = stacksvfs.get_vfsuri(uri)
-            if uri is None:
-                return None
-        if action != None:
             try:
-                dst = self.backend_uri.vfs_uri.append_path(uri.short_name)
+                uri = stacksvfs.VfsUri(uri)
+            except TypeError:
+                return None
+        pixbuf = Backend.add(self, uri)
+        if action != None and pixbuf is not None:
+            try:
+                dst = self.backend_uri.as_uri().append_path(uri.as_uri().short_name)
             except AttributeError:
                 return None
             if action == gtk.gdk.ACTION_LINK:
@@ -315,14 +365,28 @@ class FolderBackend(Backend):
             options |= gnomevfs.XFER_FOLLOW_LINKS
             options |= gnomevfs.XFER_RECURSIVE
             options |= gnomevfs.XFER_FOLLOW_LINKS_RECURSIVE
-            stacksvfs.GUITransfer(uri.vfs_uri, dst, options)
-            uri = stacksvfs.get_vfsuri(dst)
-        return Backend.add(self, uri)
+            stacksvfs.GUITransfer(uri.as_uri(), dst, options)
+            uri = dst
+        return pixbuf
 
     def read(self):
-        for finfo in self.backend_uri.read():
-            self.add(finfo)
-        self._set_monitor()
+        uris = []
+        try:
+            handle = gnomevfs.DirectoryHandle(self.backend_uri.as_uri())
+        except:
+            print "Stacks Error: ", self.backend_uri.as_string(), " not found"
+            return []
+        try:
+            fileinfo = handle.next()
+        except StopIteration:
+            return []
+        while fileinfo:
+            if fileinfo.name[0] != "." and not fileinfo.name.endswith("~"):
+                self.add(self.backend_uri.as_uri().append_path(fileinfo.name))
+            try:
+                fileinfo = handle.next()
+            except StopIteration:
+                break
         
     def clear(self):
         dialog = gtk.Dialog(_("Confirm removal"),
@@ -349,19 +413,71 @@ class FolderBackend(Backend):
         iter = self.store.get_iter_first()
         while iter:
             store_uri = self.store.get_value(iter, COL_URI)
-            gnomevfs.unlink(store_uri)
+            gnomevfs.unlink(store_uri.as_uri())
             iter = self.store.iter_next(iter)
         # destroy dialog
         dialog.destroy()
         Backend.clear()
 
     def get_title(self):
-        return self.backend_uri.short_name
+        return self.backend_uri.as_uri().short_name
 
     def get_type(self):
         return BACKEND_TYPE_FOLDER
         
     def destroy(self):
-        self.backend_uri.close()
+        if self.monitor is not None:
+            self.monitor.close()
         Backend.destroy(self)
+
+
+class Monitor(gobject.GObject):
+
+    __gsignals__ = {
+        "event" :   (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+                    (gobject.TYPE_STRING, gobject.TYPE_INT)),
+        "created" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_STRING,)),
+        "deleted" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_STRING,)),
+        "changed" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_STRING,))
+    }
+
+    event_mapping = {
+        gnomevfs.MONITOR_EVENT_CREATED : "created",
+        gnomevfs.MONITOR_EVENT_DELETED : "deleted",
+        gnomevfs.MONITOR_EVENT_CHANGED : "changed",
+        gnomevfs.MONITOR_EVENT_METADATA_CHANGED : "changed"
+    }
+
+    monitor = None 
+
+    def __init__(self, uri):
+        gobject.GObject.__init__(self)
+        type = gnomevfs.get_file_info(uri.as_uri(),
+                gnomevfs.FILE_INFO_DEFAULT |gnomevfs.FILE_INFO_FOLLOW_LINKS).type
+        if type == gnomevfs.FILE_TYPE_DIRECTORY:
+            monitor_type = gnomevfs.MONITOR_DIRECTORY
+        elif type == gnomevfs.FILE_TYPE_REGULAR:
+            monitor_type = gnomevfs.MONITOR_FILE
+        else:
+            raise gnomevfs.NotSupportedError
+        try:
+            self.monitor = gnomevfs.monitor_add(
+                    uri.as_string(),
+                    monitor_type,
+                    self._monitor_cb)
+        except gnomevfs.NotSupportedError:
+            return None
+
+    def _monitor_cb(self, monitor_uri, info_uri, event):
+        signal = self.event_mapping[event]
+        if signal:
+            self.emit(signal, info_uri)
+
+    def close(self):
+        try: 
+            gnomevfs.monitor_cancel(self.monitor) 
+            self.monitor = None 
+        except:
+            return
+
 

@@ -23,19 +23,17 @@ class Thumbnailer:
         return self.cached_icon
 
     def _lookup_or_make_thumb(self, icon_size, timestamp):
-        path = self.uri #self.uri.scheme + "://" + self.uri.path
         icon_name, icon_type = \
-                gnome.ui.icon_lookup(icon_theme, thumb_factory, path, self.mimetype, 0)
+                gnome.ui.icon_lookup(icon_theme, thumb_factory, self.uri, self.mimetype, 0)
         try:
             if icon_type == gnome.ui.ICON_LOOKUP_RESULT_FLAGS_THUMBNAIL or \
-                    thumb_factory.has_valid_failed_thumbnail(self.uri.path, timestamp):
+                    thumb_factory.has_valid_failed_thumbnail(self.uri, timestamp):
                 # Use existing thumbnail
                 thumb = icon_factory.load_icon(icon_name, icon_size)
             elif self._is_local_uri(self.uri):
                 # Generate a thumbnail for local files only
-                print " *** Calling generate_thumbnail for", path
-                thumb = thumb_factory.generate_thumbnail(path, self.mimetype)
-                thumb_factory.save_thumbnail(thumb, path, timestamp)
+                thumb = thumb_factory.generate_thumbnail(self.uri, self.mimetype)
+                thumb_factory.save_thumbnail(thumb, self.uri, timestamp)
                 thumb = icon_factory.scale_to_bounded(thumb, icon_size)    
             if thumb:
                 # Fixup the thumbnail a bit
@@ -51,8 +49,12 @@ class Thumbnailer:
         # NOTE: gnomevfs.URI.is_local seems to hang for some URIs (e.g. ssh
         #       or http).  So look in a list of local schemes which comes
         #       directly from gnome_vfs_uri_is_local_scheme.
-        return not uri.scheme or uri.scheme in ("file", "help", "ghelp", "gnome-help", 
-            "trash", "man", "info", "hardware", "search", "pipe","gnome-trash")
+        try:
+            scheme = uri.split("://")[0]
+            return not scheme or scheme in ("file", "help", "ghelp", "gnome-help", 
+                "trash", "man", "info", "hardware", "search", "pipe","gnome-trash")
+        except:
+            return False
     
     def _nicer_dimensions(self, icon):
         ### Constrain thumb dimensions to 1:1.2
@@ -99,15 +101,21 @@ class IconFactory:
         return None
 
     def scale_to_bounded(self, icon, size):
-        if icon:
+        if icon:           
             if icon.get_height() > size:
-                icon = icon.scale_simple(size * icon.get_width() / icon.get_height(),
-                                         size,
-                                         gtk.gdk.INTERP_BILINEAR)
+                _icon = icon.scale_simple(
+                        size * icon.get_width() / icon.get_height(),
+                        size,
+                        gtk.gdk.INTERP_BILINEAR)
+                if _icon is not None:
+                    icon = _icon
             if icon.get_width() > size:
-                icon = icon.scale_simple(size,
-                                         size * icon.get_height() / icon.get_width(),
-                                         gtk.gdk.INTERP_BILINEAR)
+                _icon = icon.scale_simple(
+                        size,
+                        size * icon.get_height() / icon.get_width(),
+                        gtk.gdk.INTERP_BILINEAR)
+                if _icon is not None:
+                    icon = _icon
         return icon
 
     def load_icon(self, icon_value, icon_size, force_size = True):

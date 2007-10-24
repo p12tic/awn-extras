@@ -36,7 +36,10 @@ class StacksConfig(stacksglade.GladeWindow):
                 self.applet.gconf_path + "/applet_icon_empty")
         if self.applet_icon_empty is None:
             self.applet_icon_empty = _to_full_path("icons/stacks-drop.svg")
-        empty_icon = gdk.pixbuf_new_from_file(self.applet_icon_empty)
+        try:
+            empty_icon = gdk.pixbuf_new_from_file(self.applet_icon_empty)
+        except:
+            pass
         if empty_icon:
             empty_image = gtk.Image()
             empty_image.set_from_pixbuf(empty_icon)
@@ -46,7 +49,10 @@ class StacksConfig(stacksglade.GladeWindow):
             self.applet.gconf_path + "/applet_icon_full")
         if self.applet_icon_full is None:
             self.applet_icon_full = _to_full_path("icons/stacks-full.svg")      
-        full_icon = gdk.pixbuf_new_from_file(self.applet_icon_full)
+        try:
+            full_icon = gdk.pixbuf_new_from_file(self.applet_icon_full)
+        except:
+            pass
         if full_icon:
             full_image = gtk.Image()
             full_image.set_from_pixbuf(full_icon)

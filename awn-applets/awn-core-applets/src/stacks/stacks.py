@@ -105,7 +105,7 @@ class Stacks (awn.AppletSimple):
         self.config_backend = os.path.join(self.config_backend, uid)
  
         # connect to events
-        self.connect("button-press-event", self.applet_button_cb)
+        self.connect("button-release-event", self.applet_button_cb)
         self.connect("enter-notify-event", self.applet_enter_cb)
         self.connect("leave-notify-event", self.applet_leave_cb)
         self.connect("drag-data-received", self.applet_drop_cb)
@@ -134,26 +134,36 @@ class Stacks (awn.AppletSimple):
     """
     Functions concerning the Applet
     """
+    # Open the backend -> show/launch the underlying layer
     def applet_menu_open_cb(self, widget):
         self.backend.open()
 
+    # Clear the stack -> remove its contents
     def applet_menu_clear_cb(self, widget):
         self.backend.clear()
         self.applet_set_empty_icon()
  
+    # Launch the preferences dialog
     def applet_menu_pref_cb(self, widget):
         cfg = stacksconfig.StacksConfig(self)
 
+    # Launch the about dialog
     def applet_menu_about_cb(self, widget):
         cfg = stacksconfig.StacksConfig(self)
         cfg.notebook.set_current_page(-1)
 
+    # On enter -> show the title of the stack
     def applet_enter_cb (self, widget, event):
         self.title.show(self, self.backend.get_title())
 
+    # On leave -> hide the title of the stack
     def applet_leave_cb (self, widget, event):
         self.title.hide(self)
  
+    # On mouseclick on applet ->
+    # * hide the dialog and show the context menu on button 3
+    # * open the backend on button 2
+    # * show/hide the dialog on button 1 (if backend not empty) 
     def applet_button_cb(self, widget, event):
         if event.button == 3:
             # right click
@@ -170,75 +180,63 @@ class Stacks (awn.AppletSimple):
                if not self.backend.is_empty():
                     self.dialog_show()
 
+    # On drag-drop on applet icon ->
+    # * add each uri in the list to the backend
+    # * set "full" icon as applet icon
+    # --
     # For direct feedback "feeling"
     # add drop source to stack immediately,
     # and prevent duplicates @ monitor callback
     def applet_drop_cb(self, widget, context, x, y, 
                             selection, targetType, time):
-        for uri in (selection.data).split("\r\n"):
+        pixbuf = None
+        for uri in (selection.data).split(os.linesep):
             if uri:
-                print "applet_drop_cb: ", uri
-                pixbuf = self.backend.add(uri, context.action)
+                _pixbuf = self.backend.add(uri, context.action)
+                if _pixbuf is not None:
+                    pixbuf = _pixbuf
         context.finish(True, False, time)
-        if pixbuf:
+        if pixbuf is not None:
             self.applet_set_full_icon(pixbuf)
         return True
 
+    # Set the empty icon as applet icon
     def applet_set_empty_icon(self):
         height = self.height
         icon = gdk.pixbuf_new_from_file (self.config_icon_empty)
         icon = stacksicons.IconFactory().scale_to_bounded(icon, height)
         self.set_temp_icon(icon)
 
+    # Set the full icon as applet icon
     def applet_set_full_icon(self, pixbuf):
         height = self.height
-        icon = gdk.pixbuf_new_from_file(self.config_icon_full)
-        icon = stacksicons.IconFactory().scale_to_bounded(icon, height)
+        icon = gdk.pixbuf_new_from_file_at_scale(
+                self.config_icon_full,
+                height, height, True)
         if self.config_composite_icon and pixbuf:
-            try:
-                # scale with aspect ratio:
-                pixbuf = stacksicons.IconFactory().scale_to_bounded(pixbuf, height)
-                # determine center of composite
-                cx = (height - pixbuf.get_width())/2
-                if not cx >= 0:
-                    cx = 0
-                cy = (height - pixbuf.get_height())/2
-                if not cy >= 0:
-                    cy = 0
-
-                # video previews (for example) have artifacts, so copy manually
-                # create transparent pixbuf of correct size
-                mythumb = gtk.gdk.Pixbuf(pixbuf.get_colorspace(),
-                                         True,
-                                         pixbuf.get_bits_per_sample(),
-                                         height,
-                                         height)
-                mythumb.fill(0x00000000)
-                # copy pixbuf into transparent to center
-                pixels = mythumb.get_pixels_array()
-                bufs = pixbuf.get_pixels_array()
-                for row in range(pixbuf.get_height()):
-                    for pix in range(pixbuf.get_width()):
-                        try:
-                            pixels[row+cy][pix+cx][0] = bufs[row][pix][0]
-                            pixels[row+cy][pix+cx][1] = bufs[row][pix][1]
-                            pixels[row+cy][pix+cx][2] = bufs[row][pix][2]
-                            if pixbuf.get_has_alpha():
-                                pixels[row+cy][pix+cx][3] = bufs[row][pix][3]
-                            else:
-                                pixels[row+cy][pix+cx][3] = 255
-                        except:
-                            pass
-                
-                # composite result over "full" icon
-                mythumb.composite(   
-                        icon, 0, 0,
-                        height, height,
-                        0, 0, 1, 1,
-                        gtk.gdk.INTERP_BILINEAR,
-                        255)
-            except:
-                pass
+            pixbuf = stacksicons.IconFactory().scale_to_bounded(pixbuf, height)
+            cx = (height-pixbuf.get_width())/2
+            cy = (height-pixbuf.get_height())
+            trans = gdk.Pixbuf(
+                    pixbuf.get_colorspace(),
+                    True,
+                    pixbuf.get_bits_per_sample(),
+                    height,
+                    height)
+            trans.fill(0x00000000)
+            pixbuf.composite(
+                    trans,
+                    cx, cy,
+                    pixbuf.get_width(),
+                    pixbuf.get_height(),
+                    cx, cy, 1, 1, 
+                    gtk.gdk.INTERP_BILINEAR, 255)
+            icon.composite(
+                    trans, 0,0, 
+                    height, height, 
+                    0, 0, 1, 1, 
+                    gtk.gdk.INTERP_BILINEAR, 255)
+            icon = trans
         self.set_temp_icon(icon)
 
     # if backend is folder: use specified file operations
@@ -273,14 +271,14 @@ class Stacks (awn.AppletSimple):
             if self.just_dragged:
                 self.just_dragged = False
             else:
-                if uri.to_string().endswith(".desktop"):
+                if uri.as_string().endswith(".desktop"):
                     item = gnomedesktop.item_new_from_uri(
-                            uri.to_string(), gnomedesktop.LOAD_ONLY_IF_EXISTS)
+                            uri.as_string(), gnomedesktop.LOAD_ONLY_IF_EXISTS)
                     if item:
                         command = item.get_string(gnomedesktop.KEY_EXEC)
-                        launch_manager.launch_command(command, uri.to_string())    
+                        launch_manager.launch_command(command, uri.as_string())    
                 else:
-                    launch_manager.launch_uri(uri.to_string(), mimetype) 
+                    launch_manager.launch_uri(uri.as_string(), mimetype) 
 
     def item_drag_data_get(
             self, widget, context, selection, info, time, user_data):
@@ -306,7 +304,8 @@ class Stacks (awn.AppletSimple):
     def dialog_hide(self):
         if self.dialog_visible is True:
             self.title.hide(self)
-            self.dialog.hide()
+            if self.dialog:
+                self.dialog.hide()
             self.dialog_visible = False
 
     # show the dialog
@@ -336,7 +335,7 @@ class Stacks (awn.AppletSimple):
         # TODO: connect on enter key
         button.connect( "drag-data-get",
                         self.item_drag_data_get,
-                        store.get_value(iter, stacksbackend.COL_URI).to_string())
+                        store.get_value(iter, stacksbackend.COL_URI).as_string())
         button.connect( "drag-begin",
                         self.item_drag_begin)
         button.drag_source_set( gtk.gdk.BUTTON1_MASK,
@@ -398,10 +397,10 @@ class Stacks (awn.AppletSimple):
         self.tables = tables
         return False
 
-    def dialog_show_prev_page(self, widget, event):
+    def dialog_show_prev_page(self, user_data):
         self.dialog_show_new(self.current_page-1)
 
-    def dialog_show_next_page(self, widget, event):
+    def dialog_show_next_page(self, user_data):
         self.dialog_show_new(self.current_page+1)
 
     def dialog_show_new(self, page=0):
@@ -438,12 +437,12 @@ class Stacks (awn.AppletSimple):
                 bt_left = gtk.Button(stock=gtk.STOCK_GO_BACK)
                 bt_left.set_use_stock(True)
                 bt_left.set_relief(gtk.RELIEF_NONE)
-                bt_left.connect("button-release-event", self.dialog_show_prev_page)
+                bt_left.connect("clicked", self.dialog_show_prev_page)
                 buttonbox.add(bt_left)                
                 bt_right = gtk.Button(stock=gtk.STOCK_GO_FORWARD)
                 bt_right.set_use_stock(True)
                 bt_right.set_relief(gtk.RELIEF_NONE)
-                bt_right.connect("button-release-event", self.dialog_show_next_page)
+                bt_right.connect("clicked", self.dialog_show_next_page)
                 buttonbox.add(bt_right)
                 self.navbuttons = (bt_left, bt_right)
    
@@ -473,6 +472,7 @@ class Stacks (awn.AppletSimple):
         awn.awn_effect_stop(self.effects, "attention")
 
     def backend_restructure_cb(self, widget, type):
+        self.dialog_visible = False
         if self.dialog is not None:
             self.dialog.destroy()
             self.dialog = None

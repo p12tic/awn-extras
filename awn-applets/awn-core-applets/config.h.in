@@ -1,5 +1,23 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
+/* DBUS API is subject to change */
+#undef DBUS_API_SUBJECT_TO_CHANGE
+
+/* D-BUS major version. */
+#undef DBUS_MAJOR_VER
+
+/* D-BUS micro version. */
+#undef DBUS_MICRO_VER
+
+/* D-BUS minor version. */
+#undef DBUS_MINOR_VER
+
+/* Where services dir for DBUS is */
+#undef DBUS_SERVICES_DIR
+
+/* Where system.d dir for DBUS is */
+#undef DBUS_SYSTEMD_DIR
+
 /* always defined to indicate that i18n is enabled */
 #undef ENABLE_NLS
 

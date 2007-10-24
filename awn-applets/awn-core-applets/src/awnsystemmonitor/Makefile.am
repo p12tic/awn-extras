@@ -65,6 +65,6 @@ $(desktop_DATA).in: $(desktop_DATA).in.in
 
 EXTRA_DIST = \
 	awn-system-monitor.desktop.in.in  \
-	awn-system-monitor.schema.in.in
+	$(schemas_in_files)
 
-CLEANFILES = $(desktop_DATA) stack.schemas
+CLEANFILES = $(desktop_DATA) 

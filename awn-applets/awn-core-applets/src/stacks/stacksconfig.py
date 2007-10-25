@@ -199,3 +199,6 @@ class StacksConfig(stacksglade.GladeWindow):
                 self.applet.gconf_path + "/file_operations", actions)
         # destroy window
         self.window.destroy()
+
+    def set_current_page(self, page):
+        self.widgets['main_notebook'].set_current_page(page)

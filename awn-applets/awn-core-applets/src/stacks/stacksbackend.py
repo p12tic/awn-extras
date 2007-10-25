@@ -190,7 +190,7 @@ class Backend(gobject.GObject):
 
     # remove file from store
     def remove(self, uri):
-        retval = False
+        retval = False        
         iter = self.store.get_iter_first()
         while iter:
             store_uri = self.store.get_value(iter, COL_URI)

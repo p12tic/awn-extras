@@ -8,6 +8,7 @@ import os
 class GUITransfer(object):
     def __init__(self, src, dst, options):
         self.__progress = None
+        self.dialog_visible = False
         self.cancel = False
         self.txt_operation = ""
         if not (options & gnomevfs.XFER_LINK_ITEMS):
@@ -79,7 +80,11 @@ class GUITransfer(object):
             self.progress_bar.set_text("Copying file: " + 
                     str(info.file_index) + " of " + str(info.files_total))
             if info.bytes_copied > 0 and info.bytes_total > 0:
-                self.progress_bar.set_fraction(float(info.bytes_copied)/float(info.bytes_total))
+                fraction = float(info.bytes_copied)/float(info.bytes_total)
+                if not self.dialog_visible: # and enough time..
+                    self.dialog_visible = True
+                    self.dialog.show_all()
+                self.progress_bar.set_fraction(fraction)
         if self.cancel:
             return 0
         return 1

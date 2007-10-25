@@ -190,7 +190,7 @@ class Backend(gobject.GObject):
 
     # remove file from store
     def remove(self, uri):
-        retval = False
+        retval = False        
         iter = self.store.get_iter_first()
         while iter:
             store_uri = self.store.get_value(iter, COL_URI)
@@ -417,7 +417,7 @@ class FolderBackend(Backend):
             iter = self.store.iter_next(iter)
         # destroy dialog
         dialog.destroy()
-        Backend.clear()
+        Backend.clear(self)
 
     def get_title(self):
         return self.backend_uri.as_uri().short_name

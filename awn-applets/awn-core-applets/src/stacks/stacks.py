@@ -46,8 +46,6 @@ _ = gettext.gettext
 
 # Visual layout parameters
 ICON_VBOX_SPACE = 4
-ROW_SPACING = 0
-COL_SPACING = 0
 
 def _to_full_path(path):
     head, tail = os.path.split(__file__)
@@ -150,7 +148,7 @@ class Stacks (awn.AppletSimple):
     # Launch the about dialog
     def applet_menu_about_cb(self, widget):
         cfg = stacksconfig.StacksConfig(self)
-        cfg.notebook.set_current_page(-1)
+        cfg.set_current_page(-1)
 
     # On enter -> show the title of the stack
     def applet_enter_cb (self, widget, event):
@@ -342,7 +340,7 @@ class Stacks (awn.AppletSimple):
                                 self.dnd_targets,
                                 self.config_fileops )
         vbox = gtk.VBox(False, ICON_VBOX_SPACE)
-        vbox.set_size_request(int(1.5 * self.config_icon_size), -1)
+        vbox.set_size_request(self.config_icon_size, -1)
         button.add(vbox)
         # icon -> button.image
         icon = store.get_value(iter, stacksbackend.COL_ICON)
@@ -358,8 +356,8 @@ class Stacks (awn.AppletSimple):
         label.set_line_wrap(True)
         layout = label.get_layout()
         lw, lh = layout.get_size()
-        layout.set_width(int(1.2 * self.config_icon_size) * pango.SCALE)
-        layout.set_wrap(pango.WRAP_WORD_CHAR)
+        layout.set_width(self.config_icon_size * pango.SCALE)
+        layout.set_wrap(pango.WRAP_CHAR)
         _lbltext = label.get_text()
         lbltext = ""
         for i in range(layout.get_line_count()):
@@ -381,8 +379,8 @@ class Stacks (awn.AppletSimple):
                 x=0
                 y=0
                 table = gtk.Table(1,1,True)
-                table.set_row_spacings(ROW_SPACING)
-                table.set_col_spacings(COL_SPACING)
+                table.set_row_spacings(0)
+                table.set_col_spacings(0)
                 tables.append(table)
 
             button = self._dialog_item_new(store, iter)
@@ -473,7 +471,7 @@ class Stacks (awn.AppletSimple):
 
     def backend_restructure_cb(self, widget, type):
         self.dialog_visible = False
-        if self.dialog is not None:
+        if self.dialog:
             self.dialog.destroy()
             self.dialog = None
         self.tables = None

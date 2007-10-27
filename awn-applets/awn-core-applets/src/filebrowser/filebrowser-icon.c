@@ -153,7 +153,7 @@ static gboolean filebrowser_icon_button_release_event(
         g_print( "Could not launch url: url not set?" );
     }
 
-    return TRUE;
+    return FALSE;
 }
 
 /**
@@ -356,9 +356,7 @@ GtkWidget *filebrowser_icon_new(
     //gint h = gdk_pixbuf_get_height(icon->icon);
     //gtk_widget_set_size_request(image, w > h ? 48 : -1, w > h ? -1 : 48);
 
-    gchar *markup;
-    sprintf(markup, "%s", icon->name);
-    label = gtk_label_new(markup);
+    label = gtk_label_new(icon->name);
     gtk_widget_set_size_request (label, icon_size*5/4, icon_size/2);
 
     g_object_set(label,
@@ -368,7 +366,25 @@ GtkWidget *filebrowser_icon_new(
             "wrap-mode", PANGO_WRAP_WORD,
             NULL);
 
-    // TODO: truncate lines in label's PangoLayout
+    PangoLayout *layout = gtk_label_get_layout(GTK_LABEL(label));
+
+    char *newText = g_strdup_printf("");
+    int i, k=0;
+    int lines = pango_layout_get_line_count(layout);
+    for (i=0; i<lines; i++) {
+        int len = pango_layout_get_line(layout, i)->length;
+        int startIndex = pango_layout_get_line(layout, i)->start_index;
+        char *trimmedText = g_strdup(gtk_label_get_text(GTK_LABEL(label))+startIndex);
+        trimmedText[len] = '\0';
+        char *lastText = newText;
+        newText = g_strdup_printf(i != lines-1 ? "%s%s\n" : "%s%s", lastText, trimmedText);
+        k = len;
+        g_free(trimmedText);
+        g_free(lastText);
+    }
+    gtk_label_set_text(GTK_LABEL(label), newText);
+    gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
+    g_free(newText);
 
     gtk_box_pack_start (GTK_BOX (vbox), image, FALSE, FALSE, 0);
     gtk_box_pack_start (GTK_BOX (vbox), label, TRUE, TRUE, 0);

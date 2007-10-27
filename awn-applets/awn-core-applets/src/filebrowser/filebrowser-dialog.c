@@ -64,7 +64,7 @@ static void filebrowser_dialog_do_folder_up(
  * -find out source
  * -perform corresponding action
  */
-static void filebrowser_dialog_button_clicked(
+static gboolean filebrowser_dialog_button_clicked(
     GtkWidget * widget,
     GdkEventButton * event,
     gpointer user_data ) {
@@ -82,19 +82,20 @@ static void filebrowser_dialog_button_clicked(
                      gnome_vfs_uri_get_path( current_folder->uri ),
                      gnome_vfs_result_to_string( res ) );
         }
-        return;
+        break;
     case FOLDER_LEFT:
         filebrowser_folder_do_prev_page( current_folder);
-        return;
+        break;
     case FOLDER_RIGHT:
         filebrowser_folder_do_next_page( current_folder );
-        return;
+        break;
     case FOLDER_UP:
         filebrowser_dialog_do_folder_up( GTK_WIDGET( current_folder->dialog ) );
-        return;
+        break;
     default:
-        return;
+        break;
     }
+    return FALSE;
 }
 
 static gboolean filebrowser_dialog_key_press_event(

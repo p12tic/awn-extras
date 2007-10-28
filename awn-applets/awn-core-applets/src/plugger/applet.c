@@ -31,7 +31,8 @@
 #define GKEY_ICON_EMPTY "applet_icon_empty"
 #define GKEY_ICON_FULL "applet_icon_full"
 
-#define STACKS_APPLET "stacks.desktop"
+#define STACKS_APPLET "/usr/lib/awn/applets/stacks.desktop"
+#define STACKS_APPLET_LOCAL "/usr/local/lib/awn/applets/stacks.desktop"
 
 typedef struct {
 
@@ -82,9 +83,16 @@ volume_add(Plugger *app, GnomeVFSVolume *volume)
   gtk_container_add(GTK_CONTAINER(app->hbox), socket);
   gtk_widget_realize(socket);
 
+  gchar *desktop_path;
+  if(gnome_vfs_uri_exists(gnome_vfs_uri_new(STACKS_APPLET))){
+    desktop_path = STACKS_APPLET;
+  }else{
+    desktop_path = STACKS_APPLET_LOCAL;
+  }
+
   gchar *exec = g_strdup_printf(
        "awn-applet-activation -p %s -u %s -w %lld -o %d -h %d",
-       STACKS_APPLET,
+       desktop_path,
        hudi,
        (long long)gtk_socket_get_id(GTK_SOCKET(socket)),
        AWN_ORIENTATION_BOTTOM,

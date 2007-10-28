@@ -93,7 +93,7 @@ volume_add(Plugger *app, GnomeVFSVolume *volume)
 
   gtk_tree_model_get_iter_first(app->store, &iter);
   gtk_list_store_append(GTK_LIST_STORE(app->store), &iter);
-  gtk_list_store_set(GTK_LIST_STORE(app->store), &iter, SOCKET_COLUMN, socket, VOLUME_COLUMN, volume);
+  gtk_list_store_set(GTK_LIST_STORE(app->store), &iter, SOCKET_COLUMN, socket, VOLUME_COLUMN, volume, -1);
 
   //gnome_vfs_volume_unref(volume);
 }

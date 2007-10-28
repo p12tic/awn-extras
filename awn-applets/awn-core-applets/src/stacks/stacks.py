@@ -560,7 +560,6 @@ if __name__ == "__main__":
     # TODO: create parameter parser to support creating of new 
     # stacks with content (ie. create stack on drop)
     awn.init (sys.argv[1:])
-    print "stacks-uid: ", awn.uid
     applet = Stacks (awn.uid, awn.orient, awn.height)
     awn.init_applet (applet)
     applet.show_all ()

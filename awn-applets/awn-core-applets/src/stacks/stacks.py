@@ -50,7 +50,7 @@ ICON_VBOX_SPACE = 4
 def _to_full_path(path):
     head, tail = os.path.split(__file__)
     return os.path.join(head, path)
-           
+
 """
 Main Applet class
 """
@@ -75,7 +75,7 @@ class Stacks (awn.AppletSimple):
     config_backend = "file://" +    os.path.join(
                                     os.path.expanduser("~"), 
                                     ".config", "awn", "applets", "stacks")
-                                    
+
     config_cols = 5
     config_rows = 4
     config_fileops = gtk.gdk.ACTION_COPY
@@ -101,13 +101,13 @@ class Stacks (awn.AppletSimple):
         except OSError: # if file exists
             pass
         self.config_backend = os.path.join(self.config_backend, uid)
- 
+
         # connect to events
         self.connect("button-release-event", self.applet_button_cb)
         self.connect("enter-notify-event", self.applet_enter_cb)
         self.connect("leave-notify-event", self.applet_leave_cb)
         self.connect("drag-data-received", self.applet_drop_cb)
-        
+
         # Setup popup menu
         self.popup_menu = gtk.Menu()
         open_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_OPEN)
@@ -140,7 +140,7 @@ class Stacks (awn.AppletSimple):
     def applet_menu_clear_cb(self, widget):
         self.backend.clear()
         self.applet_set_empty_icon()
- 
+
     # Launch the preferences dialog
     def applet_menu_pref_cb(self, widget):
         cfg = stacksconfig.StacksConfig(self)
@@ -201,16 +201,18 @@ class Stacks (awn.AppletSimple):
     # Set the empty icon as applet icon
     def applet_set_empty_icon(self):
         height = self.height
-        icon = gdk.pixbuf_new_from_file (self.config_icon_empty)
+#        icon = gdk.pixbuf_new_from_file (self.config_icon_empty)
+        icon = stacksicons.IconFactory().load_icon(self.config_icon_empty, height)
         icon = stacksicons.IconFactory().scale_to_bounded(icon, height)
         self.set_temp_icon(icon)
 
     # Set the full icon as applet icon
     def applet_set_full_icon(self, pixbuf):
         height = self.height
-        icon = gdk.pixbuf_new_from_file_at_scale(
-                self.config_icon_full,
-                height, height, True)
+        icon = stacksicons.IconFactory().load_icon(self.config_icon_full, height)
+#        icon = gdk.pixbuf_new_from_file_at_scale(
+#                self.config_icon_full,
+#                height, height, True)
         if self.config_composite_icon and pixbuf:
             pixbuf = stacksicons.IconFactory().scale_to_bounded(pixbuf, height)
             cx = (height-pixbuf.get_width())/2
@@ -227,12 +229,12 @@ class Stacks (awn.AppletSimple):
                     cx, cy,
                     pixbuf.get_width(),
                     pixbuf.get_height(),
-                    cx, cy, 1, 1, 
+                    cx, cy, 1, 1,
                     gtk.gdk.INTERP_BILINEAR, 255)
             icon.composite(
-                    trans, 0,0, 
-                    height, height, 
-                    0, 0, 1, 1, 
+                    trans, 0,0,
+                    height, height,
+                    0, 0, 1, 1,
                     gtk.gdk.INTERP_BILINEAR, 255)
             icon = trans
         self.set_temp_icon(icon)
@@ -247,7 +249,7 @@ class Stacks (awn.AppletSimple):
         else:
             return
         self.drag_dest_set( gtk.DEST_DEFAULT_ALL,
-                            self.dnd_targets, 
+                            self.dnd_targets,
                             actions)
 
     """
@@ -274,9 +276,9 @@ class Stacks (awn.AppletSimple):
                             uri.as_string(), gnomedesktop.LOAD_ONLY_IF_EXISTS)
                     if item:
                         command = item.get_string(gnomedesktop.KEY_EXEC)
-                        launch_manager.launch_command(command, uri.as_string())    
+                        launch_manager.launch_command(command, uri.as_string())
                 else:
-                    launch_manager.launch_uri(uri.as_string(), mimetype) 
+                    launch_manager.launch_uri(uri.as_string(), mimetype)
 
     def item_drag_data_get(
             self, widget, context, selection, info, time, user_data):
@@ -290,7 +292,7 @@ class Stacks (awn.AppletSimple):
         context_menu = gtk.Menu()
         del_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_CLEAR)
         context_menu.append(del_item)
-        del_item.connect_object("activate", self.item_clear_cb, self, uri)     
+        del_item.connect_object("activate", self.item_clear_cb, self, uri)
         context_menu.connect("hide", self.item_menu_hide_cb)
         context_menu.show_all()
         return context_menu
@@ -340,7 +342,6 @@ class Stacks (awn.AppletSimple):
                                 self.dnd_targets,
                                 self.config_fileops )
         vbox = gtk.VBox(False, ICON_VBOX_SPACE)
-        vbox.set_size_request(self.config_icon_size, -1)
         button.add(vbox)
         # icon -> button.image
         icon = store.get_value(iter, stacksbackend.COL_ICON)
@@ -365,11 +366,16 @@ class Stacks (awn.AppletSimple):
             lbltext += str(_lbltext[0:length]) + '\n'
             _lbltext = _lbltext[length:]
         label.set_text(lbltext)
-        label.set_size_request(-1, lh*2/pango.SCALE)
+        lbl_height = lh*2/pango.SCALE
+        label.set_size_request(-1, lbl_height)
         vbox.pack_start(label, True, True, 0)
-        return button 
+        vbox.set_size_request(
+                self.config_icon_size,
+                -1)
 
-    def _dialog_tables_new(self):        
+        return button
+
+    def _dialog_tables_new(self):
         store = self.backend.get_store()
         iter = store.get_iter_first()
         tables = []
@@ -379,8 +385,8 @@ class Stacks (awn.AppletSimple):
                 x=0
                 y=0
                 table = gtk.Table(1,1,True)
-                table.set_row_spacings(0)
-                table.set_col_spacings(0)
+                table.set_row_spacings(10)
+                table.set_col_spacings(10)
                 tables.append(table)
 
             button = self._dialog_item_new(store, iter)
@@ -425,7 +431,7 @@ class Stacks (awn.AppletSimple):
                 if t.get_parent():
                     self.hbox.remove(t)
             self.hbox.add(self.tables[page])
-            self.current_page = page 
+            self.current_page = page
 
         if len(self.tables) > 1 and self.config_browsing:
             if self.navbuttons is None:
@@ -436,14 +442,14 @@ class Stacks (awn.AppletSimple):
                 bt_left.set_use_stock(True)
                 bt_left.set_relief(gtk.RELIEF_NONE)
                 bt_left.connect("clicked", self.dialog_show_prev_page)
-                buttonbox.add(bt_left)                
+                buttonbox.add(bt_left)
                 bt_right = gtk.Button(stock=gtk.STOCK_GO_FORWARD)
                 bt_right.set_use_stock(True)
                 bt_right.set_relief(gtk.RELIEF_NONE)
                 bt_right.connect("clicked", self.dialog_show_next_page)
                 buttonbox.add(bt_right)
                 self.navbuttons = (bt_left, bt_right)
-   
+
             # alter navigation buttons
             if self.current_page == 0:
                 self.navbuttons[0].set_sensitive(False)
@@ -453,7 +459,7 @@ class Stacks (awn.AppletSimple):
                 self.navbuttons[1].set_sensitive(False)
             else:
                 self.navbuttons[1].set_sensitive(True)
-        
+
         # TODO: remove navbuttons on !browsing
         self.dialog.show_all()
 
@@ -463,7 +469,7 @@ class Stacks (awn.AppletSimple):
     def backend_gconf_cb(self, gconf_client, *args, **kwargs):
         self.dialog_hide()
         self.backend_get_config()
-               
+
     def backend_attention_cb(self, widget, backend_type):
         awn.awn_effect_start(self.effects, "attention")
         time.sleep(1.0)
@@ -482,7 +488,7 @@ class Stacks (awn.AppletSimple):
                 self.gconf_path + "/backend")
         if _config_backend:
             self.config_backend = _config_backend
-           
+
         _config_cols = self.gconf_client.get_int(self.gconf_path + "/cols")
         if _config_cols > 0:
             self.config_cols = _config_cols
@@ -519,14 +525,14 @@ class Stacks (awn.AppletSimple):
         _config_icon_full = self.gconf_client.get_string(
                 self.gconf_path + "/applet_icon_full")
         if _config_icon_full:
-            self.config_icon_full = _config_icon_full      
+            self.config_icon_full = _config_icon_full
 
         _config_backend_type = self.gconf_client.get_int(
                 self.gconf_path + "/backend_type")
 
         # reload (new) backend
         if self.backend:
-            self.backend.destroy()           
+            self.backend.destroy()
         if _config_backend_type == stacksbackend.BACKEND_TYPE_FOLDER:
             self.backend = stacksbackend.FolderBackend(self.config_backend, 
                     self.config_icon_size)
@@ -549,9 +555,12 @@ class Stacks (awn.AppletSimple):
 
 launch_manager = stackslauncher.LaunchManager()
 gnome.ui.authentication_manager_init()
-           
+
 if __name__ == "__main__":
-    awn.init (sys.argv[1:]) 
+    # TODO: create parameter parser to support creating of new 
+    # stacks with content (ie. create stack on drop)
+    awn.init (sys.argv[1:])
+    print "stacks-uid: ", awn.uid
     applet = Stacks (awn.uid, awn.orient, awn.height)
     awn.init_applet (applet)
     applet.show_all ()

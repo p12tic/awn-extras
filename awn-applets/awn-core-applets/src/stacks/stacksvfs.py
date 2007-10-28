@@ -48,7 +48,7 @@ class GUITransfer(object):
             self.dialog.vbox.add(hbox_under)
 
             self.status_label = gtk.Label()
-            self.dialog.vbox.add(self.status_label)        
+            self.dialog.vbox.add(self.status_label)
             self.dialog.set_size_request(400,180)
             self.dialog.connect("response", self.__dialog_response)
             self.dialog.show_all()
@@ -62,8 +62,8 @@ class GUITransfer(object):
             update_callback_data=options,
             progress_sync_callback=None,
             sync_callback_data=None
-            )       
-            
+            )
+
     def __dialog_response(self, dialog, response):
         if response == gtk.RESPONSE_REJECT or \
            response == gtk.RESPONSE_DELETE_EVENT:
@@ -99,9 +99,9 @@ class VfsUri(gobject.GObject):
             self.uri = uri
         else:
             self.uri = gnomevfs.URI(uri.strip())
-    
+
     def equals(self, uri2):
-        return gnomevfs.uris_match(self.as_string(), uri2.as_string())        
+        return gnomevfs.uris_match(self.as_string(), uri2.as_string())
 
     def as_uri(self):
         return self.uri

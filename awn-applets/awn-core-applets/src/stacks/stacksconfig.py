@@ -23,7 +23,7 @@ def _to_full_path(path):
 
 class StacksConfig(stacksglade.GladeWindow):
     glade_file = _to_full_path('stacks_preferences.glade')
-   
+
     def __init__(self, applet):
         stacksglade.GladeWindow.__init__(self)
 
@@ -48,7 +48,7 @@ class StacksConfig(stacksglade.GladeWindow):
         self.applet_icon_full = self.applet.gconf_client.get_string(
             self.applet.gconf_path + "/applet_icon_full")
         if self.applet_icon_full is None:
-            self.applet_icon_full = _to_full_path("icons/stacks-full.svg")      
+            self.applet_icon_full = _to_full_path("icons/stacks-full.svg")
         try:
             full_icon = gdk.pixbuf_new_from_file(self.applet_icon_full)
         except:
@@ -61,7 +61,7 @@ class StacksConfig(stacksglade.GladeWindow):
         gconf_cols = self.applet.gconf_client.get_int(
                 self.applet.gconf_path + "/cols")
         if gconf_cols > 0:
-            self.widgets['cols_entry'].set_text(str(gconf_cols))       
+            self.widgets['cols_entry'].set_text(str(gconf_cols))
         gconf_rows = self.applet.gconf_client.get_int(
                 self.applet.gconf_path + "/rows")
         if gconf_rows > 0:
@@ -86,20 +86,20 @@ class StacksConfig(stacksglade.GladeWindow):
                 self.widgets['move_check'].set_active(False)
             if (actions & gtk.gdk.ACTION_LINK) == 0:
                 self.widgets['link_check'].set_active(False)
-        # get browsing  
+        # get browsing
         browsing = self.applet.gconf_client.get_bool(
                 self.applet.gconf_path + "/browsing")
         if browsing is False:
             self.widgets['nobrowse_radio'].set_active(True)
-           
+
     def on_backendselect_button_clicked(self, *args):
         filesel = gtk.FileChooserDialog(
-                _("Select backend destination:"), 
-                None, 
+                _("Select backend destination:"),
+                None,
                 gtk.FILE_CHOOSER_ACTION_CREATE_FOLDER |
-                gtk.FILE_CHOOSER_ACTION_SAVE, 
+                gtk.FILE_CHOOSER_ACTION_SAVE,
                 (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
-                gtk.STOCK_APPLY, gtk.RESPONSE_OK), 
+                gtk.STOCK_APPLY, gtk.RESPONSE_OK),
                 None)
         filesel.set_default_response(gtk.RESPONSE_OK)
         gconf_backend = self.applet.gconf_client.get_string(
@@ -114,11 +114,11 @@ class StacksConfig(stacksglade.GladeWindow):
 
     def _select_icon(self, type):
         filesel = gtk.FileChooserDialog(
-                "Select applet icon:", 
-                None, 
-                gtk.FILE_CHOOSER_ACTION_OPEN, 
+                "Select applet icon:",
+                None,
+                gtk.FILE_CHOOSER_ACTION_OPEN,
                 (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
-                gtk.STOCK_APPLY, gtk.RESPONSE_OK), 
+                gtk.STOCK_APPLY, gtk.RESPONSE_OK),
                 None)
         filesel.set_default_response(gtk.RESPONSE_OK)
         img_filter = gtk.FileFilter()
@@ -154,10 +154,12 @@ class StacksConfig(stacksglade.GladeWindow):
     def on_ok_button_clicked(self, *args):
         # set backend (and type)
         if self.backend is not None:
-            self.applet.gconf_client.set_int(self.applet.gconf_path + "/backend_type",
-                                                BACKEND_TYPE_FOLDER)
-            self.applet.gconf_client.set_string(self.applet.gconf_path + "/backend", 
-                                                self.backend )
+            self.applet.gconf_client.set_int(
+                    self.applet.gconf_path + "/backend_type",
+                    BACKEND_TYPE_FOLDER)
+            self.applet.gconf_client.set_string(
+                    self.applet.gconf_path + "/backend",
+                    self.backend )
         # set dimension
         cols = self.widgets['cols_entry'].get_text()
         if int(cols) > 0:

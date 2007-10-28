@@ -7,20 +7,20 @@ class LaunchManager:
     A program lauching utility which handles opening a URI or executing a
     program or .desktop launcher, handling variable expansion in the Exec
     string.
- 
+
     Adds the launched URI or launcher to the ~/.recently-used log.  Sets a
     DESKTOP_STARTUP_ID environment variable containing useful information such
     as the URI which caused the program execution and a timestamp.
- 
+
     See the startup notification spec for more information on
     DESKTOP_STARTUP_IDs.
     '''
     def __init__(self):
         return
- 
+
     def launch_uri(self, uri, mimetype = None):
         assert uri, "Must specify URI to launch"
- 
+
         child = os.fork()
         if not child:
             # Inside forked child
@@ -88,7 +88,7 @@ class LaunchManager:
             return "GIMMIE_TIME%d" % ev_time
         else:
             return "GIMMIE:%s_TIME%d" % (key, ev_time)
- 
+
     def parse_startup_id(self, id):
         if id and id.startswith("GIMMIE:"):
             try:
@@ -98,7 +98,7 @@ class LaunchManager:
             except IndexError:
                 pass
         return (None, None)
- 
+
     def launch_command(self, command, launcher_uri = None):
         startup_id = self.make_startup_id(launcher_uri)
         child = os.fork()

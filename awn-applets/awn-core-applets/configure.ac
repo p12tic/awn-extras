@@ -145,6 +145,7 @@ src/media-icon-play/Makefile
 src/media-icon-play/icons/Makefile
 src/showdesktop/Makefile
 src/notification-area/Makefile
+src/plugger/Makefile
 src/python-test/Makefile
 src/quit-applet/Makefile
 src/quit-applet/icons/Makefile

@@ -5,7 +5,7 @@ import gtk.glade
 class GladeWindow(gobject.GObject):
     """
     Base class for dialogs or windows backed by glade interface definitions.
- 
+
     Example:
     class MyWindow(GladeWindow):
         glade_file = 'my_glade_file.glade'
@@ -30,17 +30,17 @@ class GladeWindow(gobject.GObject):
                     assert self.window == None
                     self.window = widget
                     continue
-               
+
             if wname in self.widgets:
                 raise AssertionError("Two objects with same name (%s): %r %r"
                                      % (wname, self.widgets[wname], widget))
             self.widgets[wname] = widget
-   
-        if parent is not None: 
+
+        if parent is not None:
             self.window.set_transient_for(parent)
-  
+
         wtree.signal_autoconnect(self)
-   
+
         self.destroy = self.window.destroy
         self.show = self.window.show
         self.hide = self.window.hide

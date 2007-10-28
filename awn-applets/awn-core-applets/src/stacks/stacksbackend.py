@@ -118,12 +118,12 @@ class Backend(gobject.GObject):
     def _deleted(self, widget, uri):
         if self.remove(uri):
             self._get_attention()
-            
+
     # add item to the stack
     # -ignores hidden files
     # -checks for duplicates
     # -check for desktop item
-    # -add file monitor       
+    # -add file monitor
     def add(self, uri, action=None):
         name = uri.as_uri().short_name
         mime_type = ""
@@ -134,7 +134,7 @@ class Backend(gobject.GObject):
         # check for duplicates
         iter = self.store.get_iter_first()
         while iter:
-            store_uri = self.store.get_value(iter, COL_URI)            
+            store_uri = self.store.get_value(iter, COL_URI)
             if uri.equals(store_uri):
                 return None
             iter = self.store.iter_next(iter)
@@ -151,8 +151,8 @@ class Backend(gobject.GObject):
             icon_name = item.get_localestring(gnomedesktop.KEY_ICON)
             icon_uri = None
             if icon_name:
-                icon_uri = gnomedesktop.find_icon(    
-                                        gtk.icon_theme_get_default(), 
+                icon_uri = gnomedesktop.find_icon(
+                                        gtk.icon_theme_get_default(),
                                         icon_name,
                                         self.icon_size,
                                         0)
@@ -168,7 +168,7 @@ class Backend(gobject.GObject):
         try:
             fileinfo = gnomevfs.get_file_info(
                     uri.as_string(),
-                    gnomevfs.FILE_INFO_DEFAULT | 
+                    gnomevfs.FILE_INFO_DEFAULT |
                     gnomevfs.FILE_INFO_GET_MIME_TYPE |
                     gnomevfs.FILE_INFO_FORCE_SLOW_MIME_TYPE)
             type = fileinfo.type
@@ -180,8 +180,11 @@ class Backend(gobject.GObject):
             thumbnailer = stacksicons.Thumbnailer(uri.as_string(), mime_type)
             pixbuf = thumbnailer.get_icon(self.icon_size)
         # create monitor
-        monitor = Monitor(uri)
-        monitor.connect("deleted", self._deleted)
+        try:
+            monitor = Monitor(uri)
+            monitor.connect("deleted", self._deleted)
+        except gnomevfs.NotSupportedError:
+            monitor = None
         # add to store
         self.store.append([uri, monitor, type, name, mime_type, pixbuf])
         # restructure of dialog needed
@@ -190,7 +193,7 @@ class Backend(gobject.GObject):
 
     # remove file from store
     def remove(self, uri):
-        retval = False        
+        retval = False
         iter = self.store.get_iter_first()
         while iter:
             store_uri = self.store.get_value(iter, COL_URI)
@@ -198,10 +201,10 @@ class Backend(gobject.GObject):
                 self.store.remove(iter)
                 retval = True
                 break
-            iter = self.store.iter_next(iter)     
+            iter = self.store.iter_next(iter)
         self.emit("restructure", self.get_type())
         return retval
-        
+
     def read(self):
         return
 
@@ -211,14 +214,14 @@ class Backend(gobject.GObject):
     def open(self):
         stacks.launch_manager.launch_uri(
                 self.backend_uri.as_string(), None)
-        
+
     def is_empty(self):
         iter = self.store.get_iter_first()
         if iter and self.store.iter_is_valid(iter):
             return False
         else:
             return True
-        
+
     def get_title(self):
         return _("Stacks")
 
@@ -242,7 +245,7 @@ class Backend(gobject.GObject):
 
     def get_store(self):
         return self.store
-        
+
     def destroy(self):
         return
 
@@ -261,7 +264,7 @@ class FileBackend(Backend):
         else:
             self.handle = gnomevfs.Handle(self.backend_uri.as_uri(), mode)
 
-    def remove(self, uri): 
+    def remove(self, uri):
         if not isinstance(uri, stacksvfs.VfsUri):
             try:
                 uri = stacksvfs.VfsUri(uri)
@@ -278,7 +281,7 @@ class FileBackend(Backend):
             self.handle.truncate(0)
             self.handle.seek(0)
             self.handle.write(buffer)
-        return Backend.remove(self, uri) 
+        return Backend.remove(self, uri)
 
     def add(self, uri, action=None):
         if not isinstance(uri, stacksvfs.VfsUri):
@@ -310,7 +313,7 @@ class FileBackend(Backend):
 
     def get_type(self):
         return BACKEND_TYPE_FILE
-        
+
 class FolderBackend(Backend):
 
     monitor = None
@@ -321,8 +324,9 @@ class FolderBackend(Backend):
         Backend.__init__(self, uri, icon_size)
 
         self.monitor = Monitor(self.backend_uri)
-        self.monitor.connect("created", self._created)
-        self.monitor.connect("deleted", self._deleted)
+        if self.monitor:
+            self.monitor.connect("created", self._created)
+            self.monitor.connect("deleted", self._deleted)
 
     def _create_or_open(self):
         path = self.backend_uri.as_uri().path
@@ -340,7 +344,7 @@ class FolderBackend(Backend):
         if not isinstance(uri, stacksvfs.VfsUri):
             uri = stacksvfs.VfsUri(uri)
         return Backend.remove(self, uri)
-  
+
     def add(self, uri, action=None):
         if not isinstance(uri, stacksvfs.VfsUri):
             try:
@@ -387,7 +391,7 @@ class FolderBackend(Backend):
                 fileinfo = handle.next()
             except StopIteration:
                 break
-        
+
     def clear(self):
         dialog = gtk.Dialog(_("Confirm removal"),
                             None,
@@ -424,9 +428,9 @@ class FolderBackend(Backend):
 
     def get_type(self):
         return BACKEND_TYPE_FOLDER
-        
+
     def destroy(self):
-        if self.monitor is not None:
+        if self.monitor:
             self.monitor.close()
         Backend.destroy(self)
 
@@ -475,8 +479,8 @@ class Monitor(gobject.GObject):
 
     def close(self):
         try: 
-            gnomevfs.monitor_cancel(self.monitor) 
-            self.monitor = None 
+            gnomevfs.monitor_cancel(self.monitor)
+            self.monitor = None
         except:
             return
 

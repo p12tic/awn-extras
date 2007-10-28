@@ -1,7 +1,7 @@
 SUBDIRS = icons
 
 stacksapplet_DATA = \
-		stacks_preferences.glade \ 
+		stacks_preferences.glade \
 		stacks.py \
 		stacksbackend.py \
 	    stacksconfig.py \

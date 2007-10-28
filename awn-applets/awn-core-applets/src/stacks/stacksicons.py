@@ -34,14 +34,14 @@ class Thumbnailer:
                 # Generate a thumbnail for local files only
                 thumb = thumb_factory.generate_thumbnail(self.uri, self.mimetype)
                 thumb_factory.save_thumbnail(thumb, self.uri, timestamp)
-                thumb = icon_factory.scale_to_bounded(thumb, icon_size)    
+                thumb = icon_factory.scale_to_bounded(thumb, icon_size)
             if thumb:
                 # Fixup the thumbnail a bit
                 thumb = self._nicer_dimensions(thumb)
                 return thumb
         except:
             pass
-    
+
         # Fallback to mime-type icon on failure
         return icon_factory.load_icon(icon_name, icon_size)
 
@@ -55,7 +55,7 @@ class Thumbnailer:
                 "trash", "man", "info", "hardware", "search", "pipe","gnome-trash")
         except:
             return False
-    
+
     def _nicer_dimensions(self, icon):
         ### Constrain thumb dimensions to 1:1.2
         if float(icon.get_height()) / float(icon.get_width()) > 1.2:
@@ -92,7 +92,7 @@ class IconFactory:
                                               icon_size)
             if retval:
                 return retval
-            
+
             retval = self.load_icon_from_path(os.path.join(data_dir, "icons", icon_value),
                                               icon_size)
             if retval:
@@ -101,7 +101,7 @@ class IconFactory:
         return None
 
     def scale_to_bounded(self, icon, size):
-        if icon:           
+        if icon:
             if icon.get_height() > size:
                 _icon = icon.scale_simple(
                         size * icon.get_width() / icon.get_height(),
@@ -139,14 +139,14 @@ class IconFactory:
             icon_name = os.path.basename(icon_value)
         else:
             icon_name = icon_value
-    
+
         if icon_name.endswith(".png"):
             icon_name = icon_name[:-len(".png")]
         elif icon_name.endswith(".xpm"):
             icon_name = icon_name[:-len(".xpm")]
         elif icon_name.endswith(".svg"):
             icon_name = icon_name[:-len(".svg")]
-    
+
         icon = None
         info = icon_theme.lookup_icon(icon_name, icon_size, gtk.ICON_LOOKUP_USE_BUILTIN)
         if info:

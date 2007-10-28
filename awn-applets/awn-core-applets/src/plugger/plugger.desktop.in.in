@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=C
+Encoding=UTF-8
+Name=Plugger
+Comment=Awn applet that handles connected devices
+Exec=@LIBDIR@/awn/applets/plugger/plugger.so
+Icon=multimedia-player

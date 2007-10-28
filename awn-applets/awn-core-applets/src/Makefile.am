@@ -12,6 +12,7 @@ SUBDIRS =			\
 	media-icon-next		\
 	media-icon-play		\
 	notification-area	\
+	plugger 	\
 	python-test 		\
 	quit-applet		\
 	separator 		\

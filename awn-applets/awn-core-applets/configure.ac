@@ -43,13 +43,13 @@ PKG_CHECK_MODULES(DEPS,
                   librsvg-2.0
                   libgtop-2.0
                   glib-2.0
-	              dbus-1
-	              dbus-glib-1
+	          dbus-1
+	          dbus-glib-1
                   libsexy
-	              gconf-2.0
-	              gdk-2.0
-	              gdk-pixbuf-2.0
-                  )
+	          gconf-2.0
+	          gdk-2.0
+	          gdk-pixbuf-2.0
+		  libnotify)
 AC_SUBST(DEPS_CFLAGS)
 AC_SUBST(DEPS_LIBS)
 AC_SUBST(GDK_CFLAGS)

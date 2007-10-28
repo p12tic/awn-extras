@@ -24,6 +24,7 @@
 #include <errno.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include <dbus/dbus.h>
 #include <dbus/dbus-glib.h>
@@ -31,6 +32,11 @@
 #include <glib.h>
 #include <glib-object.h>
 #include <gtk/gtk.h>
+#include <glib/gprintf.h>
+
+#include <libnotify/notify.h>
+
+#include <glib/gprintf.h>
 
 #include <X11/Xproto.h>
 
@@ -1101,6 +1107,34 @@ _height_changed (AwnApplet *app, guint height, gpointer *data)
     update_icons (applet);*/
 }
 
+gboolean send_startup_message(gpointer data)
+{
+	NotifyNotification *notify;	
+	gchar *summary = "Awn Notification Daemon Message";
+	gchar *body = "Awn Notification Daemon has loaded Successfully.\nClick <a href=\"http://tinyurl.com/2nkdtz\">Here</a> for online documentation.";
+	gchar *type = NULL;
+	gchar *icon_str = NULL;
+	glong expire_timeout = NOTIFY_EXPIRES_DEFAULT;
+    NotifyUrgency urgency = NOTIFY_URGENCY_NORMAL;
+    GError *error = NULL;    
+	
+	if ( fork()==0 )
+	{
+	    sleep(3);
+        notify_init("notify-send");
+    	notify = notify_notification_new(summary, body, icon_str, NULL);
+    	notify_notification_set_category(notify, type);
+    	notify_notification_set_urgency(notify, urgency);
+    	notify_notification_set_timeout(notify, expire_timeout);    
+        notify_notification_show(notify, NULL);
+
+    	g_object_unref(G_OBJECT(notify));
+    	notify_uninit();
+    	exit(0);
+    }    	
+    return FALSE;
+}
+
 AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
 {
 	NotifyDaemon *daemon;
@@ -1294,7 +1328,9 @@ AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
 	dbus_g_connection_register_g_object(connection,
 										"/org/freedesktop/Notifications",
 										G_OBJECT(daemon));
-
+    
+    g_timeout_add(10, (GSourceFunc*)send_startup_message,NULL); 
+    
   //  system("notify-send --expire-time=10000 \"Awn Notification Daemon\" \"Options configurable through gconf-editor: including gtk colours\" &");
     return applet;
 

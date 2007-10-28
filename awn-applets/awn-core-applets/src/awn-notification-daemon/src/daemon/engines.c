@@ -810,7 +810,9 @@ set_notification_text(GtkWindow *nw, const char *summary, const char *body)
     {
     	str = g_strdup_printf("<b><small><span foreground=\"#%s\">%s</span></small></b>",G_awn_text_str, body);
     }    	
-	gtk_label_set_markup(GTK_LABEL(windata->body_label), str);
+//	gtk_label_set_markup(GTK_LABEL(windata->body_label), str);
+    sexy_url_label_set_markup(SEXY_URL_LABEL(windata->body_label), body);
+    
 	g_free(str);
 
 	if (body == NULL || *body == '\0')

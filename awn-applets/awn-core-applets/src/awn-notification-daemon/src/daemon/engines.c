@@ -1,3 +1,32 @@
+/* daemon.c - Implementation of the destop notification spec
+ *
+ * Awn related modifications by Rodney Cryderman <rcryderman@gmail.com>
+ *
+ * Base gnome-notification-daemon by
+ * Copyright (C) 2006 Christian Hammond <chipx86@chipx86.com>
+ * Copyright (C) 2005 John (J5) Palmieri <johnp@redhat.com>
+ *
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+ * 02111-1307, USA.
+ */
+
+
+ /*tabsize =4*/
+ 
+ 
 #include "config.h"
 
 #define ENABLE_GRADIENT_LOOK 1
@@ -6,6 +35,7 @@
 #include <gconf/gconf-client.h>
 #include "daemon.h"
 #include "engines.h"
+
 
 
 #include <libawn/awn-applet.h>
@@ -25,6 +55,7 @@
 #include <libawn/awn-applet-simple.h>
 #include <libawn/awn-applet-dialog.h>
 
+#undef NDEBUG
 #include <assert.h>
 
 typedef void (*ActionInvokedCb)(GtkWindow *nw, const char *key);
@@ -811,7 +842,7 @@ set_notification_text(GtkWindow *nw, const char *summary, const char *body)
     	str = g_strdup_printf("<b><small><span foreground=\"#%s\">%s</span></small></b>",G_awn_text_str, body);
     }    	
 //	gtk_label_set_markup(GTK_LABEL(windata->body_label), str);
-    sexy_url_label_set_markup(SEXY_URL_LABEL(windata->body_label), body);
+    sexy_url_label_set_markup(SEXY_URL_LABEL(windata->body_label), str);
     
 	g_free(str);
 

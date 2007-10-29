@@ -1,7 +1,10 @@
-/*
- * stack.c - Notification stack groups.
+/* daemon.c - Implementation of the destop notification spec
  *
+ * Awn related modifications by Rodney Cryderman <rcryderman@gmail.com>
+ *
+ * Base gnome-notification-daemon by
  * Copyright (C) 2006 Christian Hammond <chipx86@chipx86.com>
+ *
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +21,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
  * 02111-1307, USA.
  */
+
 #include "config.h"
 #include "engines.h"
 #include "stack.h"
@@ -42,6 +46,8 @@ struct _NotifyStack
 
 extern AwnApplet *G_awn_app;
 extern int G_awn_app_height;
+extern int G_awn_override_y;
+extern int G_awn_override_x;
 
 static gboolean
 get_work_area(GtkWidget *nw, GdkRectangle *rect)
@@ -100,26 +106,24 @@ static void get_origin_awn(gint *x, gint *y,gint width, gint height)
         gint w, h;
         w=width;
         h=height;
-        
-//        gtk_widget_show(win);
-
         gdk_window_get_origin (GTK_WIDGET (G_awn_app)->window, 
                          &ax, &ay);
 
+	ax=G_awn_override_x>=0?G_awn_override_x:ax;
+
+	
         gtk_widget_get_size_request (GTK_WIDGET (G_awn_app), 
                                      &aw, &ah);
-
-//        gtk_window_get_size (GTK_WIDGET (G_awn_app), &w, &h);
-
         *x = ax - w/2 + aw/2;
         *y = gdk_screen_get_height (gdk_screen_get_default()) - height - G_awn_app_height*1.5;// + dialog->priv->offset;
-  
+
+	if ( G_awn_override_y>=0)
+		*y=G_awn_override_y;
+        
         if (*x < 0)
                 *x = 2;
-
         if ((*x+w) > gdk_screen_get_width (gdk_screen_get_default()))
-                *x = gdk_screen_get_width (gdk_screen_get_default ()) - w -20;
-        
+                *x = gdk_screen_get_width (gdk_screen_get_default ()) - w -20;       
 }            
 
 
@@ -136,13 +140,9 @@ get_origin_coordinates(NotifyStackLocation stack_location,
 		case NOTIFY_STACK_LOCATION_TOP_RIGHT:
 		case NOTIFY_STACK_LOCATION_BOTTOM_LEFT:
 		case NOTIFY_STACK_LOCATION_BOTTOM_RIGHT:
-        case NOTIFY_STACK_LOCATION_AWN:
- //           printf(">  get_orig:workarea->y=%d  workarea->height= %d height=%d \n",workarea->y,workarea->height,height) ;
-            get_origin_awn(x,y,width,height);
-//            *y = workarea->y + workarea->height - height;            
-//            printf(">>>get_orig:workarea->y=%d  workarea->height= %d height=%d \n",workarea->y,workarea->height,height) ;
-//            *y = *y - workarea->height;
-            break;
+        	case NOTIFY_STACK_LOCATION_AWN:
+            		get_origin_awn(x,y,width,height);
+            		break;
 		default:
 			g_assert_not_reached();
 	}
@@ -154,19 +154,18 @@ translate_coordinates(NotifyStackLocation stack_location,
 					  gint *x, gint *y, gint *shiftx, gint *shifty,
 					  gint width, gint height, gint index)
 {
-    gint tmp;
+    	gint tmp;
 	switch (stack_location)
 	{
 		case NOTIFY_STACK_LOCATION_TOP_LEFT:
 		case NOTIFY_STACK_LOCATION_TOP_RIGHT:
 		case NOTIFY_STACK_LOCATION_BOTTOM_LEFT:
 		case NOTIFY_STACK_LOCATION_BOTTOM_RIGHT:
-        case NOTIFY_STACK_LOCATION_AWN:
-            tmp=*y;
-            get_origin_awn(x,y,width,height);
-            *y=tmp-height*0.95;
-//             printf("translate:  workarea->height= %d height=%d \n",workarea->height,height) ;                
-            break;
+        	case NOTIFY_STACK_LOCATION_AWN:
+			tmp=*y;
+			get_origin_awn(x,y,width,height);
+			*y=tmp-height*0.95;               
+            	break;
 		default:
 			g_assert_not_reached();
 	}

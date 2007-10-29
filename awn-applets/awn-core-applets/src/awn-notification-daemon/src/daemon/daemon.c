@@ -1,7 +1,11 @@
 /* daemon.c - Implementation of the destop notification spec
  *
+ * Awn related modifications by Rodney Cryderman <rcryderman@gmail.com>
+ *
+ * Base gnome-notification-daemon by
  * Copyright (C) 2006 Christian Hammond <chipx86@chipx86.com>
  * Copyright (C) 2005 John (J5) Palmieri <johnp@redhat.com>
+ *
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +22,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
  * 02111-1307, USA.
  */
+
+ 
+ /*tabsize =4*/
+ 
 #include "config.h"
 
 #include <stdlib.h>
@@ -44,7 +52,8 @@
 #include <X11/Xutil.h>
 #include <X11/Xatom.h>
 #include <gdk/gdkx.h>
-//#define NDEBUG
+
+#undef NDEBUG
 #include <assert.h>
 
 #define WNCK_I_KNOW_THIS_IS_UNSTABLE
@@ -94,6 +103,8 @@ AwnColor G_awn_text;
 gchar * G_awn_text_str;
 gboolean G_awn_client_pos;
 gboolean G_awn_honour_gtk;
+int G_awn_override_y;
+int G_awn_override_x;
 
 int G_awn_border_width;
 float G_awn_gradient_factor;
@@ -1323,11 +1334,33 @@ AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
         G_awn_gradient_factor=0.75;
         gconf_client_set_float (gconf_client,GCONF_KEY_AWN_GRADIENT_FACTOR,G_awn_gradient_factor ,NULL);        
     }
+ 
+    value=gconf_client_get(gconf_client,GCONF_KEY_AWN_OVERRIDE_X,NULL);		
+    if (value)
+    {
+        G_awn_override_x=gconf_client_get_int(gconf_client,GCONF_KEY_AWN_OVERRIDE_X,NULL) ;
+    }
+    else             							
+    {
+        G_awn_override_x=-1;
+        gconf_client_set_int (gconf_client,GCONF_KEY_AWN_OVERRIDE_X,G_awn_override_x ,NULL);        
+    }
+    
+    value=gconf_client_get(gconf_client,GCONF_KEY_AWN_OVERRIDE_Y,NULL);		
+    if (value)
+    {																		
+        G_awn_override_y=gconf_client_get_int(gconf_client,GCONF_KEY_AWN_OVERRIDE_Y,NULL) ;
+    }
+    else             							
+    {
+        G_awn_override_y=-1;
+        gconf_client_set_int (gconf_client,GCONF_KEY_AWN_OVERRIDE_Y,G_awn_override_y ,NULL);        
+    }
+       
     
     
-	dbus_g_connection_register_g_object(connection,
-										"/org/freedesktop/Notifications",
-										G_OBJECT(daemon));
+    
+	dbus_g_connection_register_g_object(connection,"/org/freedesktop/Notifications",G_OBJECT(daemon));
     
     g_timeout_add(10, (GSourceFunc*)send_startup_message,NULL); 
     

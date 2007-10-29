@@ -602,10 +602,7 @@ sub isGNUGettextTool
 
 sub GenerateHeaders
 {
-    my $EXTRACT = "/usr/bin/intltool-extract";
-    chomp $EXTRACT;
-
-    $EXTRACT = $ENV{"INTLTOOL_EXTRACT"} if $ENV{"INTLTOOL_EXTRACT"};
+    my $EXTRACT = $ENV{"INTLTOOL_EXTRACT"} || "intltool-extract";
 
     ## Generate the .h header files, so we can allow glade and
     ## xml translation support

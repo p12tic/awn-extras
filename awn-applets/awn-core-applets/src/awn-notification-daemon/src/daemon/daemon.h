@@ -42,6 +42,9 @@
 #define GCONF_KEY_AWN_TEXT_COLOUR  GCONF_AWN "/text_colour"
 #define GCONF_KEY_AWN_CLIENT_POS  GCONF_AWN "/honour_client_posxy"
 #define GCONF_KEY_AWN_HONOUR_GTK  GCONF_AWN "/honour_gtk"
+#define GCONF_KEY_AWN_OVERRIDE_X  GCONF_AWN "/override_x"
+#define GCONF_KEY_AWN_OVERRIDE_Y  GCONF_AWN "/override_y"
+
 #define NOTIFY_TYPE_DAEMON (notify_daemon_get_type())
 #define NOTIFY_DAEMON(obj) \
 	(G_TYPE_CHECK_INSTANCE_CAST ((obj), NOTIFY_TYPE_DAEMON, NotifyDaemon))

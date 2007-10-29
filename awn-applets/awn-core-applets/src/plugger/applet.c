@@ -38,7 +38,7 @@ typedef struct {
 
   AwnApplet *applet;
   GtkWidget *hbox;
-  GtkTreeModel *store;
+  GtkListStore *store;
 } Plugger;
 
 enum
@@ -95,15 +95,13 @@ volume_add(Plugger *app, GnomeVFSVolume *volume)
        desktop_path,
        hudi,
        (long long)gtk_socket_get_id(GTK_SOCKET(socket)),
-       AWN_ORIENTATION_BOTTOM,
-       48);
+       awn_applet_get_orientation(app->applet),
+       awn_applet_get_height(app->applet));
   g_spawn_command_line_async (exec, NULL);
 
-  gtk_tree_model_get_iter_first(app->store, &iter);
-  gtk_list_store_append(GTK_LIST_STORE(app->store), &iter);
-  gtk_list_store_set(GTK_LIST_STORE(app->store), &iter, SOCKET_COLUMN, socket, VOLUME_COLUMN, volume, -1);
-
-  //gnome_vfs_volume_unref(volume);
+  gtk_tree_model_get_iter_first(GTK_TREE_MODEL(app->store), &iter);
+  gtk_list_store_append(app->store, &iter);
+  gtk_list_store_set(app->store, &iter, SOCKET_COLUMN, socket, VOLUME_COLUMN, volume, -1);
 }
 
 static void
@@ -132,8 +130,8 @@ volumes_initialization(GtkWidget *widget, gpointer user_data)
 
 static void
 volume_mounted_cb(  GnomeVFSVolumeMonitor *volume_monitor,
-                        GnomeVFSVolume        *volume,
-                        gpointer               user_data)
+                    GnomeVFSVolume        *volume,
+                    gpointer               user_data)
 {
   Plugger *app = user_data;
   if(!gnome_vfs_volume_is_user_visible(volume))
@@ -143,25 +141,35 @@ volume_mounted_cb(  GnomeVFSVolumeMonitor *volume_monitor,
 }
 
 static void
-volume_pre_unmount_cb(  GnomeVFSVolumeMonitor *volume_monitor,
+volume_unmounted_cb(    GnomeVFSVolumeMonitor *volume_monitor,
                         GnomeVFSVolume        *volume,
                         gpointer               user_data)
 {
   Plugger *app = user_data;
   GtkTreeIter iter;
-  gboolean valid = gtk_tree_model_get_iter_first(app->store, &iter);
+  gboolean valid = gtk_tree_model_get_iter_first(GTK_TREE_MODEL(app->store), &iter);
   while(valid)
   {
     GtkWidget *socket = NULL;
     GnomeVFSVolume *vol = NULL;
-    gtk_tree_model_get(app->store, &iter, SOCKET_COLUMN, &socket, VOLUME_COLUMN, &vol, -1);
-    //if(gnome_vfs_volume_compare(volume, vol)){
+    gtk_tree_model_get(GTK_TREE_MODEL(app->store), &iter,
+            SOCKET_COLUMN, &socket, VOLUME_COLUMN, &vol, -1);
     if(g_str_equal(gnome_vfs_volume_get_hal_udi(volume), gnome_vfs_volume_get_hal_udi(vol))){
+        gtk_list_store_remove(app->store, &iter);
         gtk_widget_destroy(socket);
+        gnome_vfs_volume_unref(vol);
         return;
     }
-    valid = gtk_tree_model_iter_next(app->store, &iter);
+    valid = gtk_tree_model_iter_next(GTK_TREE_MODEL(app->store), &iter);
   }
+}
+
+static void
+drive_disconnected_cb(  GnomeVFSVolumeMonitor *volume_monitor,
+                        GnomeVFSDrive *drive,
+                        gpointer user_data)
+{
+  g_print("Drive disconnected\n");
 }
 
 AwnApplet*
@@ -173,8 +181,9 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
 
   if(!monitor)
     monitor = gnome_vfs_get_volume_monitor();
-    g_signal_connect(monitor, "volume-unmounted", G_CALLBACK(volume_pre_unmount_cb), app);
+    g_signal_connect(monitor, "volume-unmounted", G_CALLBACK(volume_unmounted_cb), app);
     g_signal_connect(monitor, "volume-mounted", G_CALLBACK(volume_mounted_cb), app);
+    g_signal_connect(monitor, "drive-disconnected", G_CALLBACK(drive_disconnected_cb), app);
 
   if(!client)
     client = gconf_client_get_default();

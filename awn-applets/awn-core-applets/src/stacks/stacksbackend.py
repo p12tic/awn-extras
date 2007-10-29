@@ -31,6 +31,7 @@ import gettext
 import stacks
 import stacksvfs
 import stacksicons
+import stackslauncher
 
 APP="Stacks"
 DIR="locale"
@@ -214,7 +215,7 @@ class Backend(gobject.GObject):
         self.store.clear()
 
     def open(self):
-        stackslauncher.LaunchManager.launch_uri(
+        stackslauncher.LaunchManager().launch_uri(
                 self.backend_uri.as_string(), None)
 
     def is_empty(self):
@@ -487,12 +488,21 @@ class PluggerBackend(FolderBackend):
 
 class TrashBackend(FolderBackend):
 
+    def _empty_cb(self, widget):
+        return
+
     def get_title(self):
         return _("Trash")
 
     def get_type(self):
         return BACKEND_TYPE_TRASH
 
+    def get_menu_items(self):
+        items = []
+        empty_item = gtk.MenuItem(label=_("Empty Trash"))
+        empty_item.connect_object("activate", self._empty_cb, self)
+        items.append(empty_item)
+        return items
 
 class Monitor(gobject.GObject):
 

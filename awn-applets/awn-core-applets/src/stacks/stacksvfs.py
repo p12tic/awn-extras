@@ -70,6 +70,43 @@ class GUITransfer(object):
             self.cancel = True
 
     def update_info_cb(self, _reserved, info, data):
+        if info.status == gnomevfs.XFER_PROGRESS_STATUS_VFSERROR:
+            uri = gnomevfs.URI(info.source_name)
+
+            if xfer_opts & gnomevfs.XFER_REMOVESOURCE:
+                msg = _("Error while moving.")
+                msg2 = _('Cannot move "%s" to the trash because you do not have permissions to change it or its parent folder.' % uri.short_name)
+            elif xfer_opts & gnomevfs.XFER_DELETE_ITEMS:
+                msg = _("Error while deleting.")
+                msg2 = _('"%s" cannot be deleted because you do not have permissions to modify its parent folder.') % uri.short_name
+            else:
+                msg = _("Error while performing file operation.")
+                msg2 = _('Cannot perform file operation %d on "%s".')  % (xfer_opts, uri.short_name)
+            dialog = gtk.MessageDialog(type = gtk.MESSAGE_ERROR,
+                    message_format = msg)
+            dialog.format_secondary_text(msg2)
+            if info.files_total > 1:
+                button = gtk.Button(label=_("_Skip"))
+                button.show()
+                dialog.add_action_widget(button, gtk.RESPONSE_REJECT)
+
+            dialog.add_button(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL)
+            button = gtk.Button(label=_("_Retry"))
+            button.set_property("can-default", True)
+            button.show()
+            dialog.add_action_widget(button, gtk.RESPONSE_ACCEPT)
+            dialog.set_default_response(gtk.RESPONSE_ACCEPT)
+
+            response = dialog.run()
+            dialog.destroy()
+
+            if response == gtk.RESPONSE_ACCEPT:
+                return gnomevfs.XFER_ERROR_ACTION_RETRY
+            elif response == gtk.RESPONSE_REJECT:
+                return gnomevfs.XFER_ERROR_ACTION_SKIP
+
+            return gnomevfs.XFER_ERROR_ACTION_ABORT
+
         if (data & gnomevfs.XFER_LINK_ITEMS):
             return 1
         if info.phase == gnomevfs.XFER_PHASE_COMPLETED:

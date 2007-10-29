@@ -43,6 +43,8 @@ _ = gettext.gettext
 BACKEND_TYPE_INVALID = -1
 BACKEND_TYPE_FILE = 0
 BACKEND_TYPE_FOLDER = 1
+BACKEND_TYPE_PLUGGER = 2
+BACKEND_TYPE_TRASH = 3
 
 # Columns in the ListStore
 COL_URI = 0
@@ -212,7 +214,7 @@ class Backend(gobject.GObject):
         self.store.clear()
 
     def open(self):
-        stacks.launch_manager.launch_uri(
+        stackslauncher.LaunchManager.launch_uri(
                 self.backend_uri.as_string(), None)
 
     def is_empty(self):
@@ -224,6 +226,9 @@ class Backend(gobject.GObject):
 
     def get_title(self):
         return _("Stacks")
+
+    def get_menu_items(self):
+        return None
 
     def get_type(self):
         return stacksbackend.BACKEND_TYPE_INVALID
@@ -433,6 +438,60 @@ class FolderBackend(Backend):
         if self.monitor:
             self.monitor.close()
         Backend.destroy(self)
+
+
+class PluggerBackend(FolderBackend):
+
+    applet = None
+
+    def __init__(self, applet, uri, icon_size):
+        FolderBackend.__init__(self, uri, icon_size)
+        self.applet = applet
+
+    def _eject_cb(self, *args, **kargs):
+        return
+
+    def _unmount_cb(self, widget):
+        for volume in gnomevfs.VolumeMonitor().get_mounted_volumes():
+             hudi = volume.get_hal_udi()
+             if hudi is not None:
+                hal,sep,vid = hudi.rpartition(os.sep)
+                print vid
+                if not cmp(vid, self.applet.uid):
+                    volume.unmount(self._eject_cb)
+
+    def _hide_cb(self, widget):
+        self.applet.gconf_client.set_bool(self.applet.gconf_path + "/hide_volume", True)
+        self.applet.destroy()
+
+    def get_title(self):
+        # TODO: get gconf entry "title"
+        title = self.applet.gconf_client.get_string(self.applet.gconf_path + "/title")
+        if title:
+            if len(title) > 5:
+                return title;
+            else:
+                return _("Mounted volume") + ": " + title
+        return _("Removable device")
+
+    def get_menu_items(self):
+        items = []
+        unmount_item = gtk.MenuItem(label=_("Unmount Volume"))
+        unmount_item.connect_object("activate", self._unmount_cb, self)
+        items.append(unmount_item)
+        hide_item = gtk.MenuItem(label=_("Hide Volume"))
+        hide_item.connect_object("activate", self._hide_cb, self)
+        items.append(hide_item)
+        return items
+
+
+class TrashBackend(FolderBackend):
+
+    def get_title(self):
+        return _("Trash")
+
+    def get_type(self):
+        return BACKEND_TYPE_TRASH
 
 
 class Monitor(gobject.GObject):

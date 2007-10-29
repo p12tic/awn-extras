@@ -8,6 +8,7 @@ import os
 import locale
 import gettext
 import stacksglade
+import stacksicons
 APP="Stacks"
 DIR="locale"
 locale.setlocale(locale.LC_ALL, '')
@@ -37,26 +38,24 @@ class StacksConfig(stacksglade.GladeWindow):
         if self.applet_icon_empty is None:
             self.applet_icon_empty = _to_full_path("icons/stacks-drop.svg")
         try:
-            empty_icon = gdk.pixbuf_new_from_file(self.applet_icon_empty)
-        except:
-            pass
-        if empty_icon:
+            empty_icon = stacksicons.IconFactory().load_icon(self.applet_icon_empty, 48)
             empty_image = gtk.Image()
             empty_image.set_from_pixbuf(empty_icon)
             self.widgets['empty_button'].set_image(empty_image)
+        except:
+            pass
         # get full icon
         self.applet_icon_full = self.applet.gconf_client.get_string(
             self.applet.gconf_path + "/applet_icon_full")
         if self.applet_icon_full is None:
             self.applet_icon_full = _to_full_path("icons/stacks-full.svg")
         try:
-            full_icon = gdk.pixbuf_new_from_file(self.applet_icon_full)
-        except:
-            pass
-        if full_icon:
+            full_icon = stacksicons.IconFactory().load_icon(self.applet_icon_full, 48)
             full_image = gtk.Image()
             full_image.set_from_pixbuf(full_icon)
             self.widgets['full_button'].set_image(full_image)
+        except:
+            pass
         # get dimension
         gconf_cols = self.applet.gconf_client.get_int(
                 self.applet.gconf_path + "/cols")

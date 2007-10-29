@@ -1163,7 +1163,7 @@ AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
     
     g_signal_connect (G_OBJECT (applet), "height-changed", G_CALLBACK (_height_changed), (gpointer)applet);    
     AwnNotificationDaemon *awn_n_d;
-    gtk_widget_set_size_request (GTK_WIDGET (applet), 1, 60);
+    gtk_widget_set_size_request (GTK_WIDGET (applet), 1, 1);
     GdkPixbuf *icon;
     icon=gdk_pixbuf_new(GDK_COLORSPACE_RGB,TRUE,8,1,height);
     gdk_pixbuf_fill(icon,0x00000000);  

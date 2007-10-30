@@ -1,6 +1,6 @@
 plugin_name = _("Awn Deluge")
 plugin_author = "Alberto Munnoz"
-plugin_version = "0.1"
+plugin_version = "0.5"
 plugin_description = _("This plugin prints the download rate and the upload rate on AWN dock")
 
 

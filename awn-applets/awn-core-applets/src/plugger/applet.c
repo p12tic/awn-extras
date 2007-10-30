@@ -172,8 +172,6 @@ static void
 volumes_initialization(GtkWidget *widget, gpointer user_data)
 {
   Plugger *app = user_data;
-
-  GtkIconTheme *theme = gtk_icon_theme_get_default();
   GList *drives = gnome_vfs_volume_monitor_get_connected_drives(monitor);
   GList *dlist = NULL;
   for(dlist = drives; dlist != NULL; dlist = g_list_next(dlist)){

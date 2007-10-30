@@ -11,11 +11,14 @@ class GUITransfer(object):
         self.dialog_visible = False
         self.cancel = False
         self.txt_operation = ""
+        self.label_under = None
         if not (options & gnomevfs.XFER_LINK_ITEMS):
             if (options & gnomevfs.XFER_REMOVESOURCE):
-                self.txt_operation = "Moving"
+                self.txt_operation = "Moving files"
+            elif (options & gnomevfs.XFER_EMPTY_DIRECTORIES):
+                self.txt_operation = "Deleting files"
             else:
-                self.txt_operation = "Copying"
+                self.txt_operation = "Copying files"
             self.dialog = gtk.Dialog(title=self.txt_operation + " files",
                                      buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT))
             self.dialog.set_border_width(12)
@@ -23,7 +26,7 @@ class GUITransfer(object):
             self.dialog.vbox.set_spacing(2)
             hbox_copy = gtk.HBox(False, 0)
             label_copy = gtk.Label("")
-            label_copy.set_markup("<big><b>" + self.txt_operation + " files</b></big>\n")
+            label_copy.set_markup("<big><b>" + self.txt_operation + "</b></big>\n")
             hbox_copy.pack_start(label_copy, False, False, 0)
             self.dialog.vbox.add(hbox_copy)
             hbox_info = gtk.HBox(False, 0)
@@ -31,12 +34,16 @@ class GUITransfer(object):
             label_fromto.set_markup("<b>From:</b>\n<b>To:</b>")
             label_fromto.set_justify(gtk.JUSTIFY_RIGHT)
             hbox_info.pack_start(label_fromto, False, False, 0)
-            label_srcdst = gtk.Label("")
-            label_srcdst.set_alignment(0.0, 0.5)
-            label_srcdst.set_markup("%s\n%s" %
-                    (str(src.dirname), str(dst.dirname)))
-            label_srcdst.set_ellipsize(pango.ELLIPSIZE_START)
-            hbox_info.pack_start(label_srcdst, True, True, 4)
+            try:
+                srcdir = gnomevfs.get_parent(src[0]).path
+                dstdir = gnomevfs.get_parent(dst[0]).path
+                label_srcdst = gtk.Label("")
+                label_srcdst.set_alignment(0.0, 0.5)
+                label_srcdst.set_ellipsize(pango.ELLIPSIZE_START)
+                label_srcdst.set_markup("%s\n%s" % (srcdir, dstdir))
+                hbox_info.pack_start(label_srcdst, True, True, 4)
+            except:
+                pass
             self.dialog.vbox.add(hbox_info)
             self.progress_bar = gtk.ProgressBar()
             self.dialog.vbox.add(self.progress_bar)
@@ -54,7 +61,7 @@ class GUITransfer(object):
             self.dialog.show_all()
 
         self.handle = gnomevfs.async.xfer(
-            source_uri_list=[src], target_uri_list=[dst],
+            source_uri_list=src, target_uri_list=dst,
             xfer_options=options,
             error_mode=gnomevfs.XFER_ERROR_MODE_ABORT,
             overwrite_mode=gnomevfs.XFER_OVERWRITE_MODE_ABORT,
@@ -118,7 +125,7 @@ class GUITransfer(object):
                     str(info.file_index) + " of " + str(info.files_total))
             if info.bytes_copied > 0 and info.bytes_total > 0:
                 fraction = float(info.bytes_copied)/float(info.bytes_total)
-                if not self.dialog_visible: # and enough time..
+                if not self.dialog_visible: # TODO: and enough time..
                     self.dialog_visible = True
                     self.dialog.show_all()
                 self.progress_bar.set_fraction(fraction)

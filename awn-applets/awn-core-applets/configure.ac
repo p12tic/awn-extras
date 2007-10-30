@@ -158,6 +158,7 @@ src/volume-control/Themes/Black/Makefile
 src/volume-control/Themes/Tango/Makefile
 src/switcher/Makefile
 src/trash/Makefile
+src/trasher/Makefile
 src/weather/Makefile
 src/weather/images/Makefile
 src/wobblyzini/Makefile

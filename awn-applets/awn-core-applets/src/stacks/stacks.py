@@ -112,23 +112,25 @@ class Stacks (awn.AppletSimple):
         self.connect("enter-notify-event", self.applet_enter_cb)
         self.connect("leave-notify-event", self.applet_leave_cb)
         self.connect("drag-data-received", self.applet_drop_cb)
+        self.connect("drag-motion", self.applet_drag_motion_cb)
+        self.connect("drag-leave", self.applet_drag_leave_cb)
 
         # get GConf client and read configuration
         self.gconf_client = gconf.client_get_default()
-        self.cnxn = self.gconf_client.notify_add(self.gconf_path, self.backend_gconf_cb)
+        self.gconf_client.notify_add(self.gconf_path, self.backend_gconf_cb)
         self.backend_get_config()
 
     """
     Functions concerning the Applet
     """
     # Open the backend -> show/launch the underlying layer
-    def applet_menu_open_cb(self, widget):
-        self.backend.open()
+#    def applet_menu_open_cb(self, widget):
+#        self.backend.open()
 
     # Clear the stack -> remove its contents
-    def applet_menu_clear_cb(self, widget):
-        self.backend.clear()
-        self.applet_set_empty_icon()
+#    def applet_menu_clear_cb(self, widget):
+#        self.backend.clear()
+#        self.applet_set_empty_icon()
 
     # Launch the preferences dialog
     def applet_menu_pref_cb(self, widget):
@@ -141,7 +143,11 @@ class Stacks (awn.AppletSimple):
 
     # On enter -> show the title of the stack
     def applet_enter_cb (self, widget, event):
-        self.title.show(self, self.backend.get_title())
+        n_items = self.backend.get_number_items()
+        title = self.backend.get_title()
+        if n_items > 0:
+            title += " (" + str(n_items) + " )"
+        self.title.show(self, title)
 
     # On leave -> hide the title of the stack
     def applet_leave_cb (self, widget, event):
@@ -157,22 +163,22 @@ class Stacks (awn.AppletSimple):
             self.dialog_hide()
             # create popup menu
             popup_menu = gtk.Menu()
-            open_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_OPEN)
-            clear_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_CLEAR)
-            pref_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
-            about_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_ABOUT)
-            popup_menu.append(open_item)
-            popup_menu.append(clear_item)
+#            open_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_OPEN)
+#            clear_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_CLEAR)
+#            popup_menu.append(open_item)
+#            popup_menu.append(clear_item)
             # get list of backend specified menu items
             items = self.backend.get_menu_items()
             if items:
                 for i in items:
                   popup_menu.append(i)
             popup_menu.append(gtk.SeparatorMenuItem())
+            pref_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
             popup_menu.append(pref_item)
+            about_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_ABOUT)
             popup_menu.append(about_item)
-            open_item.connect_object("activate", self.applet_menu_open_cb, self)
-            clear_item.connect_object("activate",self.applet_menu_clear_cb,self)
+#            open_item.connect_object("activate", self.applet_menu_open_cb, self)
+#            clear_item.connect_object("activate",self.applet_menu_clear_cb,self)
             pref_item.connect_object("activate",self.applet_menu_pref_cb,self)
             about_item.connect_object("activate",self.applet_menu_about_cb,self)
             popup_menu.show_all()
@@ -188,6 +194,13 @@ class Stacks (awn.AppletSimple):
                if not self.backend.is_empty():
                     self.dialog_show()
 
+    def applet_drag_leave_cb(self, widget, context, time):
+        awn.awn_effect_stop(self.effects, "hover")
+
+    def applet_drag_motion_cb(self, widget, context, x, y, time):
+        awn.awn_effect_start(self.effects, "hover")
+        return True
+
     # On drag-drop on applet icon ->
     # * add each uri in the list to the backend
     # * set "full" icon as applet icon
@@ -198,6 +211,7 @@ class Stacks (awn.AppletSimple):
     def applet_drop_cb(self, widget, context, x, y, 
                             selection, targetType, time):
         pixbuf = None
+        # TODO: add multiple uris at once
         for uri in (selection.data).split(os.linesep):
             if uri:
                 _pixbuf = self.backend.add(uri, context.action)
@@ -484,6 +498,13 @@ class Stacks (awn.AppletSimple):
             self.dialog = None
         self.tables = None
         self.navbuttons = None
+        # setting applet icon
+        if self.backend.is_empty():
+            self.applet_set_empty_icon()
+        else:
+            pixbuf = self.backend.get_random_pixbuf()
+            if isinstance(pixbuf, gtk.gdk.Pixbuf):
+                self.applet_set_full_icon(pixbuf)
 
     def backend_get_config(self):
         _config_backend = self.gconf_client.get_string(
@@ -543,7 +564,7 @@ class Stacks (awn.AppletSimple):
             self.backend = stacksbackend.PluggerBackend(self,
                     self.config_backend, self.config_icon_size)
         elif _config_backend_type == stacksbackend.BACKEND_TYPE_TRASH:
-            self.backend = stacksbackend.TrashBackend(
+            self.backend = stacksbackend.TrashBackend(self,
                     self.config_backend, self.config_icon_size)
         else: # _config_backend_type == stacksbackend.BACKEND_TYPE_FILE:
             self.backend = stacksbackend.FileBackend(
@@ -554,12 +575,6 @@ class Stacks (awn.AppletSimple):
         self.backend.connect("restructure", self.backend_restructure_cb)
         # setup dnd area
         self.applet_setup_drag_drop()
-        # setting applet icon
-        if self.backend.is_empty():
-            self.applet_set_empty_icon()
-        else:
-            pixbuf = self.backend.get_random_pixbuf()
-            self.applet_set_full_icon(pixbuf)
         # issue reload
         self.backend_restructure_cb(None, None)
         gobject.idle_add(self._dialog_tables_new)

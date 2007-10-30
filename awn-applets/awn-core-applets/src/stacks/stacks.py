@@ -88,6 +88,7 @@ class Stacks (awn.AppletSimple):
     config_browsing = True
     config_icon_empty = _to_full_path("icons/stacks-drop.svg")
     config_icon_full = _to_full_path("icons/stacks-full.svg")
+    config_item_count = True
 
     def __init__ (self, uid, orient, height):
         awn.AppletSimple.__init__(self, uid, orient, height)
@@ -132,10 +133,11 @@ class Stacks (awn.AppletSimple):
 
     # On enter -> show the title of the stack
     def applet_enter_cb (self, widget, event):
-        n_items = self.backend.get_number_items()
         title = self.backend.get_title()
-        if n_items > 0:
-            title += " (" + str(n_items) + ")"
+        if self.config_item_count:
+            n_items = self.backend.get_number_items()
+            if n_items > 0:
+                title += " (" + str(n_items) + ")"
         self.title.show(self, title)
 
     # On leave -> hide the title of the stack
@@ -530,6 +532,11 @@ class Stacks (awn.AppletSimple):
         if _config_icon_full:
             self.config_icon_full = _config_icon_full
 
+        if self.gconf_client.get_bool(self.gconf_path + "/item_count"):
+            self.config_item_count = True
+        else:
+            self.config_item_count = False
+
         _config_backend_type = self.gconf_client.get_int(
                 self.gconf_path + "/backend_type")
 
@@ -542,16 +549,16 @@ class Stacks (awn.AppletSimple):
 
         # create new backend of specified type
         if _config_backend_type == stacksbackend.BACKEND_TYPE_FOLDER:
-            self.backend = stacksbackend.FolderBackend(
+            self.backend = stacksbackend.FolderBackend(self,
                     self.config_backend, self.config_icon_size)
         elif _config_backend_type == stacksbackend.BACKEND_TYPE_PLUGGER:
             self.backend = stacksbackend.PluggerBackend(self,
                     self.config_backend, self.config_icon_size)
-        elif _config_backend_type == stacksbackend.BACKEND_TYPE_TRASH:
+        elif _config_backend_type == stacksbackend.BACKEND_TYPE_TRASHER:
             self.backend = stacksbackend.TrashBackend(self,
                     self.config_backend, self.config_icon_size)
         else: # _config_backend_type == stacksbackend.BACKEND_TYPE_FILE:
-            self.backend = stacksbackend.FileBackend(
+            self.backend = stacksbackend.FileBackend(self,
                     self.config_backend, self.config_icon_size)
 
         # read the backends contents and connect to its signals

@@ -9,8 +9,6 @@
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_CENTER</property>
   <property name="modal">False</property>
-  <property name="default_width">400</property>
-  <property name="default_height">400</property>
   <property name="resizable">False</property>
   <property name="destroy_with_parent">True</property>
   <property name="decorated">True</property>
@@ -82,17 +80,6 @@ If you select a &lt;b&gt;folder&lt;/b&gt; as backend, the stack will support rea
 		  </child>
 
 		  <child>
-		    <widget class="GtkHSeparator" id="backendselect_hsep">
-		      <property name="visible">True</property>
-		    </widget>
-		    <packing>
-		      <property name="padding">4</property>
-		      <property name="expand">True</property>
-		      <property name="fill">True</property>
-		    </packing>
-		  </child>
-
-		  <child>
 		    <widget class="GtkHBox" id="backendselect_hbox">
 		      <property name="visible">True</property>
 		      <property name="homogeneous">False</property>
@@ -141,8 +128,8 @@ If you select a &lt;b&gt;folder&lt;/b&gt; as backend, the stack will support rea
 		      </child>
 		    </widget>
 		    <packing>
-		      <property name="padding">0</property>
-		      <property name="expand">True</property>
+		      <property name="padding">4</property>
+		      <property name="expand">False</property>
 		      <property name="fill">False</property>
 		    </packing>
 		  </child>
@@ -193,16 +180,16 @@ If you select a &lt;b&gt;folder&lt;/b&gt; as backend, the stack will support rea
 	      <child>
 		<widget class="GtkTable" id="layout_table">
 		  <property name="visible">True</property>
-		  <property name="n_rows">4</property>
+		  <property name="n_rows">8</property>
 		  <property name="n_columns">2</property>
 		  <property name="homogeneous">False</property>
 		  <property name="row_spacing">2</property>
-		  <property name="column_spacing">5</property>
+		  <property name="column_spacing">10</property>
 
 		  <child>
-		    <widget class="GtkLabel" id="icons_label">
+		    <widget class="GtkLabel" id="title_label">
 		      <property name="visible">True</property>
-		      <property name="label" translatable="yes">Applet icon:</property>
+		      <property name="label" translatable="yes">Applet title:</property>
 		      <property name="use_underline">False</property>
 		      <property name="use_markup">False</property>
 		      <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -222,6 +209,83 @@ If you select a &lt;b&gt;folder&lt;/b&gt; as backend, the stack will support rea
 		      <property name="right_attach">1</property>
 		      <property name="top_attach">0</property>
 		      <property name="bottom_attach">1</property>
+		      <property name="x_options">fill</property>
+		      <property name="y_options"></property>
+		    </packing>
+		  </child>
+
+		  <child>
+		    <widget class="GtkEntry" id="title_entry">
+		      <property name="visible">True</property>
+		      <property name="can_focus">True</property>
+		      <property name="editable">True</property>
+		      <property name="visibility">True</property>
+		      <property name="max_length">0</property>
+		      <property name="text" translatable="yes"></property>
+		      <property name="has_frame">True</property>
+		      <property name="invisible_char">●</property>
+		      <property name="activates_default">False</property>
+		    </widget>
+		    <packing>
+		      <property name="left_attach">1</property>
+		      <property name="right_attach">2</property>
+		      <property name="top_attach">0</property>
+		      <property name="bottom_attach">1</property>
+		      <property name="y_options"></property>
+		    </packing>
+		  </child>
+
+		  <child>
+		    <widget class="GtkLabel" id="iconsize_label">
+		      <property name="visible">True</property>
+		      <property name="label" translatable="yes">Size of stacks icons:</property>
+		      <property name="use_underline">False</property>
+		      <property name="use_markup">False</property>
+		      <property name="justify">GTK_JUSTIFY_LEFT</property>
+		      <property name="wrap">False</property>
+		      <property name="selectable">False</property>
+		      <property name="xalign">0</property>
+		      <property name="yalign">0.5</property>
+		      <property name="xpad">0</property>
+		      <property name="ypad">0</property>
+		      <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
+		      <property name="width_chars">-1</property>
+		      <property name="single_line_mode">False</property>
+		      <property name="angle">0</property>
+		    </widget>
+		    <packing>
+		      <property name="left_attach">0</property>
+		      <property name="right_attach">1</property>
+		      <property name="top_attach">5</property>
+		      <property name="bottom_attach">6</property>
+		      <property name="x_options">fill</property>
+		      <property name="y_options"></property>
+		    </packing>
+		  </child>
+
+		  <child>
+		    <widget class="GtkLabel" id="count_label">
+		      <property name="visible">True</property>
+		      <property name="label" translatable="yes">Show item count in title:</property>
+		      <property name="use_underline">False</property>
+		      <property name="use_markup">False</property>
+		      <property name="justify">GTK_JUSTIFY_LEFT</property>
+		      <property name="wrap">False</property>
+		      <property name="selectable">False</property>
+		      <property name="xalign">0</property>
+		      <property name="yalign">0.5</property>
+		      <property name="xpad">0</property>
+		      <property name="ypad">0</property>
+		      <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
+		      <property name="width_chars">-1</property>
+		      <property name="single_line_mode">False</property>
+		      <property name="angle">0</property>
+		    </widget>
+		    <packing>
+		      <property name="left_attach">0</property>
+		      <property name="right_attach">1</property>
+		      <property name="top_attach">1</property>
+		      <property name="bottom_attach">2</property>
 		      <property name="x_options">fill</property>
 		      <property name="y_options"></property>
 		    </packing>
@@ -248,45 +312,17 @@ If you select a &lt;b&gt;folder&lt;/b&gt; as backend, the stack will support rea
 		    <packing>
 		      <property name="left_attach">0</property>
 		      <property name="right_attach">1</property>
-		      <property name="top_attach">1</property>
-		      <property name="bottom_attach">2</property>
+		      <property name="top_attach">4</property>
+		      <property name="bottom_attach">5</property>
 		      <property name="x_options">fill</property>
 		      <property name="y_options"></property>
 		    </packing>
 		  </child>
 
 		  <child>
-		    <widget class="GtkLabel" id="iconsize_label">
+		    <widget class="GtkLabel" id="icons_label">
 		      <property name="visible">True</property>
-		      <property name="label" translatable="yes">Size of stacks icons:</property>
-		      <property name="use_underline">False</property>
-		      <property name="use_markup">False</property>
-		      <property name="justify">GTK_JUSTIFY_LEFT</property>
-		      <property name="wrap">False</property>
-		      <property name="selectable">False</property>
-		      <property name="xalign">0</property>
-		      <property name="yalign">0.5</property>
-		      <property name="xpad">0</property>
-		      <property name="ypad">0</property>
-		      <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
-		      <property name="width_chars">-1</property>
-		      <property name="single_line_mode">False</property>
-		      <property name="angle">0</property>
-		    </widget>
-		    <packing>
-		      <property name="left_attach">0</property>
-		      <property name="right_attach">1</property>
-		      <property name="top_attach">2</property>
-		      <property name="bottom_attach">3</property>
-		      <property name="x_options">fill</property>
-		      <property name="y_options"></property>
-		    </packing>
-		  </child>
-
-		  <child>
-		    <widget class="GtkLabel" id="dimension_label">
-		      <property name="visible">True</property>
-		      <property name="label" translatable="yes">Dimension (cols x rows):</property>
+		      <property name="label" translatable="yes">Applet icons:</property>
 		      <property name="use_underline">False</property>
 		      <property name="use_markup">False</property>
 		      <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -307,6 +343,125 @@ If you select a &lt;b&gt;folder&lt;/b&gt; as backend, the stack will support rea
 		      <property name="top_attach">3</property>
 		      <property name="bottom_attach">4</property>
 		      <property name="x_options">fill</property>
+		      <property name="y_options"></property>
+		    </packing>
+		  </child>
+
+		  <child>
+		    <widget class="GtkHButtonBox" id="icons_hbbox">
+		      <property name="visible">True</property>
+		      <property name="layout_style">GTK_BUTTONBOX_SPREAD</property>
+		      <property name="spacing">0</property>
+
+		      <child>
+			<widget class="GtkButton" id="empty_button">
+			  <property name="visible">True</property>
+			  <property name="can_default">True</property>
+			  <property name="can_focus">True</property>
+			  <property name="label" translatable="yes">Empty</property>
+			  <property name="use_underline">True</property>
+			  <property name="relief">GTK_RELIEF_NORMAL</property>
+			  <property name="focus_on_click">True</property>
+			  <signal name="clicked" handler="on_empty_button_clicked" last_modification_time="Mon, 22 Oct 2007 12:46:05 GMT"/>
+			</widget>
+		      </child>
+
+		      <child>
+			<widget class="GtkButton" id="full_button">
+			  <property name="visible">True</property>
+			  <property name="can_default">True</property>
+			  <property name="can_focus">True</property>
+			  <property name="label" translatable="yes">Full</property>
+			  <property name="use_underline">True</property>
+			  <property name="relief">GTK_RELIEF_NORMAL</property>
+			  <property name="focus_on_click">True</property>
+			  <signal name="clicked" handler="on_full_button_clicked" last_modification_time="Mon, 22 Oct 2007 12:46:14 GMT"/>
+			</widget>
+		      </child>
+		    </widget>
+		    <packing>
+		      <property name="left_attach">1</property>
+		      <property name="right_attach">2</property>
+		      <property name="top_attach">3</property>
+		      <property name="bottom_attach">4</property>
+		      <property name="x_options">fill</property>
+		      <property name="y_options">fill</property>
+		    </packing>
+		  </child>
+
+		  <child>
+		    <widget class="GtkHBox" id="count_hbox">
+		      <property name="visible">True</property>
+		      <property name="homogeneous">False</property>
+		      <property name="spacing">0</property>
+
+		      <child>
+			<widget class="GtkRadioButton" id="count_radio">
+			  <property name="visible">True</property>
+			  <property name="can_focus">True</property>
+			  <property name="label" translatable="yes">yes</property>
+			  <property name="use_underline">True</property>
+			  <property name="relief">GTK_RELIEF_NORMAL</property>
+			  <property name="focus_on_click">True</property>
+			  <property name="active">True</property>
+			  <property name="inconsistent">False</property>
+			  <property name="draw_indicator">True</property>
+			</widget>
+			<packing>
+			  <property name="padding">0</property>
+			  <property name="expand">False</property>
+			  <property name="fill">False</property>
+			</packing>
+		      </child>
+
+		      <child>
+			<widget class="GtkRadioButton" id="nocount_radio">
+			  <property name="visible">True</property>
+			  <property name="can_focus">True</property>
+			  <property name="label" translatable="yes">no</property>
+			  <property name="use_underline">True</property>
+			  <property name="relief">GTK_RELIEF_NORMAL</property>
+			  <property name="focus_on_click">True</property>
+			  <property name="active">True</property>
+			  <property name="inconsistent">False</property>
+			  <property name="draw_indicator">True</property>
+			  <property name="group">count_radio</property>
+			</widget>
+			<packing>
+			  <property name="padding">1</property>
+			  <property name="expand">False</property>
+			  <property name="fill">False</property>
+			</packing>
+		      </child>
+		    </widget>
+		    <packing>
+		      <property name="left_attach">1</property>
+		      <property name="right_attach">2</property>
+		      <property name="top_attach">1</property>
+		      <property name="bottom_attach">2</property>
+		      <property name="x_options"></property>
+		      <property name="y_options"></property>
+		    </packing>
+		  </child>
+
+		  <child>
+		    <widget class="GtkSpinButton" id="iconsize_spin">
+		      <property name="visible">True</property>
+		      <property name="can_focus">True</property>
+		      <property name="climb_rate">1</property>
+		      <property name="digits">0</property>
+		      <property name="numeric">True</property>
+		      <property name="update_policy">GTK_UPDATE_IF_VALID</property>
+		      <property name="snap_to_ticks">True</property>
+		      <property name="wrap">False</property>
+		      <property name="adjustment">48 24 128 2 2 2</property>
+		    </widget>
+		    <packing>
+		      <property name="left_attach">1</property>
+		      <property name="right_attach">2</property>
+		      <property name="top_attach">5</property>
+		      <property name="bottom_attach">6</property>
+		      <property name="x_options"></property>
 		      <property name="y_options"></property>
 		    </packing>
 		  </child>
@@ -359,51 +514,66 @@ If you select a &lt;b&gt;folder&lt;/b&gt; as backend, the stack will support rea
 		    <packing>
 		      <property name="left_attach">1</property>
 		      <property name="right_attach">2</property>
-		      <property name="top_attach">1</property>
-		      <property name="bottom_attach">2</property>
+		      <property name="top_attach">4</property>
+		      <property name="bottom_attach">5</property>
 		      <property name="x_options"></property>
 		      <property name="y_options"></property>
 		    </packing>
 		  </child>
 
 		  <child>
-		    <widget class="GtkHButtonBox" id="icons_hbbox">
+		    <widget class="GtkHSeparator" id="title_sep">
 		      <property name="visible">True</property>
-		      <property name="layout_style">GTK_BUTTONBOX_END</property>
-		      <property name="spacing">0</property>
-
-		      <child>
-			<widget class="GtkButton" id="empty_button">
-			  <property name="visible">True</property>
-			  <property name="can_default">True</property>
-			  <property name="can_focus">True</property>
-			  <property name="label" translatable="yes">Empty</property>
-			  <property name="use_underline">True</property>
-			  <property name="relief">GTK_RELIEF_NORMAL</property>
-			  <property name="focus_on_click">True</property>
-			  <signal name="clicked" handler="on_empty_button_clicked" last_modification_time="Mon, 22 Oct 2007 12:46:05 GMT"/>
-			</widget>
-		      </child>
-
-		      <child>
-			<widget class="GtkButton" id="full_button">
-			  <property name="visible">True</property>
-			  <property name="can_default">True</property>
-			  <property name="can_focus">True</property>
-			  <property name="label" translatable="yes">Full</property>
-			  <property name="use_underline">True</property>
-			  <property name="relief">GTK_RELIEF_NORMAL</property>
-			  <property name="focus_on_click">True</property>
-			  <signal name="clicked" handler="on_full_button_clicked" last_modification_time="Mon, 22 Oct 2007 12:46:14 GMT"/>
-			</widget>
-		      </child>
 		    </widget>
 		    <packing>
-		      <property name="left_attach">1</property>
+		      <property name="left_attach">0</property>
 		      <property name="right_attach">2</property>
-		      <property name="top_attach">0</property>
-		      <property name="bottom_attach">1</property>
-		      <property name="x_options"></property>
+		      <property name="top_attach">2</property>
+		      <property name="bottom_attach">3</property>
+		      <property name="y_padding">8</property>
+		      <property name="x_options">fill</property>
+		      <property name="y_options">fill</property>
+		    </packing>
+		  </child>
+
+		  <child>
+		    <widget class="GtkHSeparator" id="hseparator2">
+		      <property name="visible">True</property>
+		    </widget>
+		    <packing>
+		      <property name="left_attach">0</property>
+		      <property name="right_attach">2</property>
+		      <property name="top_attach">6</property>
+		      <property name="bottom_attach">7</property>
+		      <property name="y_padding">8</property>
+		      <property name="x_options">fill</property>
+		    </packing>
+		  </child>
+
+		  <child>
+		    <widget class="GtkLabel" id="dimension_label">
+		      <property name="visible">True</property>
+		      <property name="label" translatable="yes">Maximum dimension:</property>
+		      <property name="use_underline">False</property>
+		      <property name="use_markup">False</property>
+		      <property name="justify">GTK_JUSTIFY_LEFT</property>
+		      <property name="wrap">False</property>
+		      <property name="selectable">False</property>
+		      <property name="xalign">0</property>
+		      <property name="yalign">0.5</property>
+		      <property name="xpad">0</property>
+		      <property name="ypad">0</property>
+		      <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
+		      <property name="width_chars">-1</property>
+		      <property name="single_line_mode">False</property>
+		      <property name="angle">0</property>
+		    </widget>
+		    <packing>
+		      <property name="left_attach">0</property>
+		      <property name="right_attach">1</property>
+		      <property name="top_attach">7</property>
+		      <property name="bottom_attach">8</property>
+		      <property name="x_options">fill</property>
 		      <property name="y_options"></property>
 		    </packing>
 		  </child>
@@ -417,6 +587,7 @@ If you select a &lt;b&gt;folder&lt;/b&gt; as backend, the stack will support rea
 		      <child>
 			<widget class="GtkEntry" id="cols_entry">
 			  <property name="visible">True</property>
+			  <property name="tooltip" translatable="yes">Columns</property>
 			  <property name="can_focus">True</property>
 			  <property name="editable">True</property>
 			  <property name="visibility">True</property>
@@ -453,7 +624,7 @@ If you select a &lt;b&gt;folder&lt;/b&gt; as backend, the stack will support rea
 			  <property name="angle">0</property>
 			</widget>
 			<packing>
-			  <property name="padding">1</property>
+			  <property name="padding">8</property>
 			  <property name="expand">False</property>
 			  <property name="fill">False</property>
 			</packing>
@@ -462,6 +633,7 @@ If you select a &lt;b&gt;folder&lt;/b&gt; as backend, the stack will support rea
 		      <child>
 			<widget class="GtkEntry" id="rows_entry">
 			  <property name="visible">True</property>
+			  <property name="tooltip" translatable="yes">Rows</property>
 			  <property name="can_focus">True</property>
 			  <property name="editable">True</property>
 			  <property name="visibility">True</property>
@@ -482,32 +654,10 @@ If you select a &lt;b&gt;folder&lt;/b&gt; as backend, the stack will support rea
 		    <packing>
 		      <property name="left_attach">1</property>
 		      <property name="right_attach">2</property>
-		      <property name="top_attach">3</property>
-		      <property name="bottom_attach">4</property>
-		      <property name="x_options"></property>
-		      <property name="y_options"></property>
-		    </packing>
-		  </child>
-
-		  <child>
-		    <widget class="GtkSpinButton" id="iconsize_spin">
-		      <property name="visible">True</property>
-		      <property name="can_focus">True</property>
-		      <property name="climb_rate">1</property>
-		      <property name="digits">0</property>
-		      <property name="numeric">True</property>
-		      <property name="update_policy">GTK_UPDATE_IF_VALID</property>
-		      <property name="snap_to_ticks">True</property>
-		      <property name="wrap">False</property>
-		      <property name="adjustment">48 24 96 2 4 4</property>
-		    </widget>
-		    <packing>
-		      <property name="left_attach">1</property>
-		      <property name="right_attach">2</property>
-		      <property name="top_attach">2</property>
-		      <property name="bottom_attach">3</property>
-		      <property name="x_options">expand</property>
-		      <property name="y_options"></property>
+		      <property name="top_attach">7</property>
+		      <property name="bottom_attach">8</property>
+		      <property name="x_options">fill</property>
+		      <property name="y_options">fill</property>
 		    </packing>
 		  </child>
 		</widget>
@@ -563,7 +713,7 @@ If you select a &lt;b&gt;folder&lt;/b&gt; as backend, the stack will support rea
 		  <child>
 		    <widget class="GtkLabel" id="operations_label">
 		      <property name="visible">True</property>
-		      <property name="label" translatable="yes">In most OS configurations, the &lt;b&gt;CTRL&lt;/b&gt;, &lt;b&gt;ALT&lt;/b&gt; and &lt;b&gt;SHIFT&lt;/b&gt; are the modifiers that determine what drag operation is used on the &lt;b&gt;folder&lt;/b&gt; backend.
+		      <property name="label" translatable="yes">In most OS configurations, &lt;b&gt;CTRL&lt;/b&gt;, &lt;b&gt;ALT&lt;/b&gt; and &lt;b&gt;SHIFT&lt;/b&gt; are the modifiers that determine what drag operation is used on the &lt;b&gt;folder&lt;/b&gt; backend.
 Using a &lt;b&gt;file backend&lt;/b&gt; (default) allows only for symlinks.</property>
 		      <property name="use_underline">False</property>
 		      <property name="use_markup">True</property>
@@ -583,17 +733,6 @@ Using a &lt;b&gt;file backend&lt;/b&gt; (default) allows only for symlinks.</pro
 		      <property name="padding">0</property>
 		      <property name="expand">False</property>
 		      <property name="fill">False</property>
-		    </packing>
-		  </child>
-
-		  <child>
-		    <widget class="GtkHSeparator" id="operations_hsep">
-		      <property name="visible">True</property>
-		    </widget>
-		    <packing>
-		      <property name="padding">4</property>
-		      <property name="expand">True</property>
-		      <property name="fill">True</property>
 		    </packing>
 		  </child>
 
@@ -686,9 +825,20 @@ Using a &lt;b&gt;file backend&lt;/b&gt; (default) allows only for symlinks.</pro
 		      </child>
 		    </widget>
 		    <packing>
-		      <property name="padding">0</property>
-		      <property name="expand">True</property>
-		      <property name="fill">True</property>
+		      <property name="padding">4</property>
+		      <property name="expand">False</property>
+		      <property name="fill">False</property>
+		    </packing>
+		  </child>
+
+		  <child>
+		    <widget class="GtkHSeparator" id="operations_hsep">
+		      <property name="visible">True</property>
+		    </widget>
+		    <packing>
+		      <property name="padding">8</property>
+		      <property name="expand">False</property>
+		      <property name="fill">False</property>
 		    </packing>
 		  </child>
 
@@ -701,9 +851,9 @@ Using a &lt;b&gt;file backend&lt;/b&gt; (default) allows only for symlinks.</pro
 		      <child>
 			<widget class="GtkLabel" id="browse_label">
 			  <property name="visible">True</property>
-			  <property name="label" translatable="yes">&lt;b&gt;Browse&lt;/b&gt; many items using pages:</property>
+			  <property name="label" translatable="yes">Browse many items using pages:</property>
 			  <property name="use_underline">False</property>
-			  <property name="use_markup">True</property>
+			  <property name="use_markup">False</property>
 			  <property name="justify">GTK_JUSTIFY_LEFT</property>
 			  <property name="wrap">False</property>
 			  <property name="selectable">False</property>
@@ -764,8 +914,8 @@ Using a &lt;b&gt;file backend&lt;/b&gt; (default) allows only for symlinks.</pro
 		    </widget>
 		    <packing>
 		      <property name="padding">0</property>
-		      <property name="expand">True</property>
-		      <property name="fill">True</property>
+		      <property name="expand">False</property>
+		      <property name="fill">False</property>
 		    </packing>
 		  </child>
 		</widget>
@@ -846,8 +996,11 @@ Using a &lt;b&gt;file backend&lt;/b&gt; (default) allows only for symlinks.</pro
 		  <child>
 		    <widget class="GtkLabel" id="description_label">
 		      <property name="visible">True</property>
-		      <property name="label" translatable="yes">Inspired by Mac OS Leopard's &quot;Stack&quot;, this applet is created. It combines functionality of Apple's Stack with it's own ideas. In one sentence:
-&lt;u&gt;&lt;i&gt;it provides quick and easy access to your files&lt;/i&gt;&lt;/u&gt;.</property>
+		      <property name="label" translatable="yes">Inspired by Mac OS Leopard's &quot;Stack&quot;, this applet is created. It combines functionality of Apple's Stack with it's own ideas. The &lt;b&gt;Stacks&lt;/b&gt; applet also functions as a framework for the &lt;b&gt;Plugger&lt;/b&gt; and &lt;b&gt;Trasher&lt;/b&gt; applet.
+
+
+In one sentence:
+&lt;u&gt;&lt;i&gt;Stacks provides quick and easy access to your files&lt;/i&gt;&lt;/u&gt;.</property>
 		      <property name="use_underline">False</property>
 		      <property name="use_markup">True</property>
 		      <property name="justify">GTK_JUSTIFY_CENTER</property>

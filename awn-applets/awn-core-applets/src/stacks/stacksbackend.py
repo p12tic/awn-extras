@@ -45,7 +45,7 @@ BACKEND_TYPE_INVALID = -1
 BACKEND_TYPE_FILE = 0
 BACKEND_TYPE_FOLDER = 1
 BACKEND_TYPE_PLUGGER = 2
-BACKEND_TYPE_TRASH = 3
+BACKEND_TYPE_TRASHER = 3
 
 # Columns in the ListStore
 COL_URI = 0
@@ -62,6 +62,7 @@ COL_SPACING = 0
 
 class Backend(gobject.GObject):
 
+    applet = None
     backend_uri = None
     store = None
     icon_size = 0
@@ -73,8 +74,9 @@ class Backend(gobject.GObject):
                         (gobject.TYPE_INT,))
     }
 
-    def __init__(self, uri, icon_size):
+    def __init__(self, applet, uri, icon_size):
         gobject.GObject.__init__(self)
+        self.applet = applet
         if isinstance(uri, stacksvfs.VfsUri):
             self.backend_uri = uri
         else:
@@ -238,7 +240,11 @@ class Backend(gobject.GObject):
             return True
 
     def get_title(self):
-        return _("Stacks")
+        title = self.applet.gconf_client.get_string(self.applet.gconf_path + "/title")
+        if title:
+            return title;
+        else:
+            return _("Stacks")
 
     def get_number_items(self):
         return self.store.iter_n_children(None)
@@ -275,8 +281,8 @@ class FileBackend(Backend):
 
     handle = None
 
-    def __init__(self, uri, icon_size):
-        Backend.__init__(self, uri, icon_size)
+    def __init__(self, applet, uri, icon_size):
+        Backend.__init__(self, applet, uri, icon_size)
 
     def _create_or_open(self):
         mode = gnomevfs.OPEN_WRITE | gnomevfs.OPEN_READ | gnomevfs.OPEN_RANDOM
@@ -349,11 +355,10 @@ class FolderBackend(Backend):
 
     monitor = None
 
-    def __init__(self, uri, icon_size):
+    def __init__(self, applet, uri, icon_size):
         if str(uri)[-1] != '/':
             uri += '/'
-        Backend.__init__(self, uri, icon_size)
-
+        Backend.__init__(self, applet, uri, icon_size)
         self.monitor = Monitor(self.backend_uri)
         if self.monitor:
             self.monitor.connect("created", self._created)
@@ -449,7 +454,11 @@ class FolderBackend(Backend):
         Backend.clear(self)
 
     def get_title(self):
-        return self.backend_uri.as_uri().short_name
+        title = self.applet.gconf_client.get_string(self.applet.gconf_path + "/title")
+        if title:
+            return title;
+        else:
+            return self.backend_uri.as_uri().short_name
 
     def get_type(self):
         return BACKEND_TYPE_FOLDER
@@ -476,11 +485,8 @@ class FolderBackend(Backend):
 
 class PluggerBackend(FolderBackend):
 
-    applet = None
-
     def __init__(self, applet, uri, icon_size):
-        FolderBackend.__init__(self, uri, icon_size)
-        self.applet = applet
+        FolderBackend.__init__(self, applet, uri, icon_size)
 
     def _eject_cb(self, *args, **kargs):
         return
@@ -498,15 +504,15 @@ class PluggerBackend(FolderBackend):
         self.applet.gconf_client.set_bool(self.applet.gconf_path + "/hide_volume", True)
         self.applet.destroy()
 
+    def get_type(self):
+        return BACKEND_TYPE_PLUGGER
+
     def get_title(self):
-        # TODO: get gconf entry "title"
         title = self.applet.gconf_client.get_string(self.applet.gconf_path + "/title")
         if title:
-            if len(title) > 5:
-                return title;
-            else:
-                return _("Mounted volume") + ": " + title
-        return _("Removable device")
+            return title;
+        else:
+            return _("Mounted Volume")
 
     def get_menu_items(self):
         items = FolderBackend.get_menu_items(self)
@@ -521,15 +527,13 @@ class PluggerBackend(FolderBackend):
 
 class TrashBackend(Backend):
 # TODO: monitor gconf for volume changes
-    applet = None
 
     def __init__(self, applet, uri, icon_size):
-        self.applet = applet
         # For now: quick'n'dirty hack:
-        for dir in self.applet.gconf_client.get_list(
-            self.applet.gconf_path + "/trash_dirs", "string"):
+        for dir in applet.gconf_client.get_list(
+            applet.gconf_path + "/trash_dirs", "string"):
             if dir.find("home"):    # probably the "home" trash of user
-                return Backend.__init__(self, dir, icon_size)
+                return Backend.__init__(self, applet, dir, icon_size)
 
     def _empty_cb(self, widget):
         self.clear()
@@ -549,10 +553,14 @@ class TrashBackend(Backend):
         stacksvfs.GUITransfer(uris, [], options)
 
     def get_title(self):
-        return _("Trash")
+        title = self.applet.gconf_client.get_string(self.applet.gconf_path + "/title")
+        if title:
+            return title;
+        else:
+            return _("Trash")
 
     def get_type(self):
-        return BACKEND_TYPE_TRASH
+        return BACKEND_TYPE_TRASHER
 
     def get_menu_items(self):
         items = []

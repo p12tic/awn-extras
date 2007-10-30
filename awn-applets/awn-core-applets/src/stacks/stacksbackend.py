@@ -107,7 +107,9 @@ class Backend(gobject.GObject):
             return 1
         else:
             n1 = model.get_value(iter1, COL_LABEL)
+            if n1 is not None: n1 = n1.lower()
             n2 = model.get_value(iter2, COL_LABEL)
+            if n2 is not None: n2 = n2.lower()
             return cmp(n1, n2)
 
     def _get_attention(self):
@@ -121,6 +123,9 @@ class Backend(gobject.GObject):
     def _deleted(self, widget, uri):
         if self.remove(uri):
             self._get_attention()
+
+    def _create_or_open(self):
+        return
 
     # add item to the stack
     # -ignores hidden files
@@ -196,6 +201,11 @@ class Backend(gobject.GObject):
 
     # remove file from store
     def remove(self, uri):
+        if not isinstance(uri, stacksvfs.VfsUri):
+            try:
+                uri = stacksvfs.VfsUri(uri)
+            except TypeErro:
+                return False
         retval = False
         iter = self.store.get_iter_first()
         while iter:
@@ -213,6 +223,8 @@ class Backend(gobject.GObject):
 
     def clear(self):
         self.store.clear()
+        # restructure of dialog needed
+        self.emit("restructure", self.get_type())
 
     def open(self):
         stackslauncher.LaunchManager().launch_uri(
@@ -228,8 +240,11 @@ class Backend(gobject.GObject):
     def get_title(self):
         return _("Stacks")
 
+    def get_number_items(self):
+        return self.store.iter_n_children(None)
+
     def get_menu_items(self):
-        return None
+        return []
 
     def get_type(self):
         return stacksbackend.BACKEND_TYPE_INVALID
@@ -320,6 +335,16 @@ class FileBackend(Backend):
     def get_type(self):
         return BACKEND_TYPE_FILE
 
+    def _clear_cb(self, widget):
+        self.clear()
+
+    def get_menu_items(self):
+        items = []
+        clear_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_CLEAR)
+        clear_item.connect_object("activate",self.clear,self)
+        items.append(clear_item)
+        return items
+
 class FolderBackend(Backend):
 
     monitor = None
@@ -346,11 +371,6 @@ class FolderBackend(Backend):
             except gnomevfs.FileExistsError:
                 pass
 
-    def remove(self, uri):
-        if not isinstance(uri, stacksvfs.VfsUri):
-            uri = stacksvfs.VfsUri(uri)
-        return Backend.remove(self, uri)
-
     def add(self, uri, action=None):
         if not isinstance(uri, stacksvfs.VfsUri):
             try:
@@ -375,21 +395,19 @@ class FolderBackend(Backend):
             options |= gnomevfs.XFER_FOLLOW_LINKS
             options |= gnomevfs.XFER_RECURSIVE
             options |= gnomevfs.XFER_FOLLOW_LINKS_RECURSIVE
-            stacksvfs.GUITransfer(uri.as_uri(), dst, options)
-            uri = dst
+            stacksvfs.GUITransfer([uri.as_uri()], [dst], options)
         return pixbuf
 
     def read(self):
-        uris = []
         try:
             handle = gnomevfs.DirectoryHandle(self.backend_uri.as_uri())
         except:
             print "Stacks Error: ", self.backend_uri.as_string(), " not found"
-            return []
+            return
         try:
             fileinfo = handle.next()
         except StopIteration:
-            return []
+            return
         while fileinfo:
             if fileinfo.name[0] != "." and not fileinfo.name.endswith("~"):
                 self.add(self.backend_uri.as_uri().append_path(fileinfo.name))
@@ -420,11 +438,12 @@ class FolderBackend(Backend):
             dialog.destroy()
             return
         # remove files
-        iter = self.store.get_iter_first()
-        while iter:
-            store_uri = self.store.get_value(iter, COL_URI)
-            gnomevfs.unlink(store_uri.as_uri())
-            iter = self.store.iter_next(iter)
+        options = gnomevfs.XFER_EMPTY_DIRECTORIES
+        options |= gnomevfs.XFER_FOLLOW_LINKS
+        options |= gnomevfs.XFER_RECURSIVE
+        options |= gnomevfs.XFER_FOLLOW_LINKS_RECURSIVE
+        stacksvfs.GUITransfer([self.backend_uri.as_uri()], [], options)
+
         # destroy dialog
         dialog.destroy()
         Backend.clear(self)
@@ -439,6 +458,20 @@ class FolderBackend(Backend):
         if self.monitor:
             self.monitor.close()
         Backend.destroy(self)
+
+    def _open_cb(self, widget):
+        Backend.open(self)
+
+    def get_menu_items(self):
+        items = []
+        open_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_OPEN)
+        open_item.connect_object("activate", self._open_cb, self)
+        items.append(open_item)
+        # Do we really want/use this?
+        #clear_item = gtk.MenuItem(label=_("Delete contents"))
+        #clear_item.connect_object("activate",self._clear_cb,self)
+        #items.append(clear_item)
+        return items
 
 
 class PluggerBackend(FolderBackend):
@@ -476,7 +509,7 @@ class PluggerBackend(FolderBackend):
         return _("Removable device")
 
     def get_menu_items(self):
-        items = []
+        items = FolderBackend.get_menu_items(self)
         unmount_item = gtk.MenuItem(label=_("Unmount Volume"))
         unmount_item.connect_object("activate", self._unmount_cb, self)
         items.append(unmount_item)
@@ -486,10 +519,34 @@ class PluggerBackend(FolderBackend):
         return items
 
 
-class TrashBackend(FolderBackend):
+class TrashBackend(Backend):
+# TODO: monitor gconf for volume changes
+    applet = None
+
+    def __init__(self, applet, uri, icon_size):
+        self.applet = applet
+        # For now: quick'n'dirty hack:
+        for dir in self.applet.gconf_client.get_list(
+            self.applet.gconf_path + "/trash_dirs", "string"):
+            if dir.find("home"):    # probably the "home" trash of user
+                return Backend.__init__(self, dir, icon_size)
 
     def _empty_cb(self, widget):
-        return
+        self.clear()
+        # do not warn user again. He already moved the files to trash,
+        # so probably not a mistake
+        options = gnomevfs.XFER_EMPTY_DIRECTORIES
+        options |= gnomevfs.XFER_FOLLOW_LINKS
+        options |= gnomevfs.XFER_RECURSIVE
+        options |= gnomevfs.XFER_FOLLOW_LINKS_RECURSIVE
+
+        uris = []
+        for dir in self.applet.gconf_client.get_list(
+            self.applet.gconf_path + "/trash_dirs", "string"):
+            uri = stacksvfs.VfsUri(dir)
+            uris.append(uri.as_uri())
+        print uris
+        stacksvfs.GUITransfer(uris, [], options)
 
     def get_title(self):
         return _("Trash")
@@ -499,10 +556,65 @@ class TrashBackend(FolderBackend):
 
     def get_menu_items(self):
         items = []
+        open_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_OPEN)
+        open_item.connect_object("activate", self._open_cb, self)
+        items.append(open_item)
         empty_item = gtk.MenuItem(label=_("Empty Trash"))
         empty_item.connect_object("activate", self._empty_cb, self)
         items.append(empty_item)
         return items
+
+    def _open_cb(self, widget):
+        self.open()
+
+    def open(self):
+        stackslauncher.LaunchManager().launch_uri(
+                "trash:", None)
+
+    def add(self, uri, action=None):
+        if not isinstance(uri, stacksvfs.VfsUri):
+            try:
+                uri = stacksvfs.VfsUri(uri)
+            except TypeError:
+                return None
+        pixbuf = Backend.add(self, uri)
+        if action != None and pixbuf is not None:
+            try:
+                dst = self.backend_uri.as_uri().append_path(uri.as_uri().short_name)
+            except AttributeError:
+                return None
+            options = gnomevfs.XFER_REMOVESOURCE
+            options |= gnomevfs.XFER_FOLLOW_LINKS
+            options |= gnomevfs.XFER_RECURSIVE
+            options |= gnomevfs.XFER_FOLLOW_LINKS_RECURSIVE
+            stacksvfs.GUITransfer([uri.as_uri()], [dst], options)
+        return pixbuf
+
+    def read(self):
+        for dir in self.applet.gconf_client.get_list(
+                    self.applet.gconf_path + "/trash_dirs", "string"):
+            trash_uri = stacksvfs.VfsUri(dir)
+            try:
+                handle = gnomevfs.DirectoryHandle(trash_uri.as_uri())
+                monitor = Monitor(trash_uri)
+                if monitor:
+                    monitor.connect("created", self._created)
+                    monitor.connect("deleted", self._deleted)
+            except:
+                print "Stacks Error: ", trash_uri.as_string(), " not found"
+                continue
+            try:
+                fileinfo = handle.next()
+            except StopIteration:
+                continue
+            while fileinfo:
+                if fileinfo.name[0] != "." and not fileinfo.name.endswith("~"):
+                    self.add(trash_uri.as_uri().append_path(fileinfo.name))
+                try:
+                    fileinfo = handle.next()
+                except StopIteration:
+                    break
+
 
 class Monitor(gobject.GObject):
 

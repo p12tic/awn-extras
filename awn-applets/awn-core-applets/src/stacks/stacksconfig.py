@@ -38,9 +38,7 @@ class StacksConfig(stacksglade.GladeWindow):
         if self.applet_icon_empty is None:
             self.applet_icon_empty = _to_full_path("icons/stacks-drop.svg")
         try:
-            empty_icon = stacksicons.IconFactory().load_icon(self.applet_icon_empty, 48)
-            empty_image = gtk.Image()
-            empty_image.set_from_pixbuf(empty_icon)
+            empty_image = stacksicons.IconFactory().load_image(self.applet_icon_empty, 48)
             self.widgets['empty_button'].set_image(empty_image)
         except:
             pass
@@ -50,9 +48,7 @@ class StacksConfig(stacksglade.GladeWindow):
         if self.applet_icon_full is None:
             self.applet_icon_full = _to_full_path("icons/stacks-full.svg")
         try:
-            full_icon = stacksicons.IconFactory().load_icon(self.applet_icon_full, 48)
-            full_image = gtk.Image()
-            full_image.set_from_pixbuf(full_icon)
+            full_image = stacksicons.IconFactory().load_image(self.applet_icon_full, 48)
             self.widgets['full_button'].set_image(full_image)
         except:
             pass

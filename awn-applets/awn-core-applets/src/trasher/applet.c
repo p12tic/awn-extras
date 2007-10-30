@@ -26,12 +26,12 @@
 
 #define GKEY_BACKEND "backend"
 #define GKEY_BACKEND_TYPE "backend_type"
-#define GKEY_TITLE "title"
+#define GKEY_FILE_OPERATIONS "file_operations"
+#define GKEY_TRASH_DIRS "trash_dirs"
 #define GKEY_BROWSING "browsing"
 #define GKEY_COMPOSITE "composite_icon"
 #define GKEY_ICON_EMPTY "applet_icon_empty"
 #define GKEY_ICON_FULL "applet_icon_full"
-#define GKEY_HIDE_VOLUME "hide_volume"
 
 #define STACKS_APPLET "/usr/lib/awn/applets/stacks.desktop"
 #define STACKS_APPLET_LOCAL "/usr/local/lib/awn/applets/stacks.desktop"
@@ -39,83 +39,113 @@
 typedef struct {
   AwnApplet *applet;
   GtkWidget *hbox;
-  GtkListStore *store;
-} Plugger;
+} Trasher;
 
 enum
 {
-  SOCKET_COLUMN,
-  VOLUME_COLUMN
+  VOLUME_COLUMN,
+  TRASH_COLUMN
 };
 
 static GConfClient *client = NULL;
 static GnomeVFSVolumeMonitor *monitor = NULL;
 static gchar *desktop_path = NULL;
+static gchar *key_prefix = "/apps/avant-window-navigator/applets/trasher";
 
 static void
-volume_remove(Plugger *app, GnomeVFSVolume *volume)
-{
-  GtkTreeIter iter;
-  gboolean valid = gtk_tree_model_get_iter_first(GTK_TREE_MODEL(app->store), &iter);
-  while(valid)
-  {
-    GtkWidget *socket = NULL;
-    GnomeVFSVolume *vol = NULL;
-    gtk_tree_model_get(GTK_TREE_MODEL(app->store), &iter,
-            SOCKET_COLUMN, &socket, VOLUME_COLUMN, &vol, -1);
-    if(g_str_equal(gnome_vfs_volume_get_hal_udi(volume), gnome_vfs_volume_get_hal_udi(vol))){
-      gtk_list_store_remove(app->store, &iter);
-      if(socket)
-        gtk_widget_destroy(socket);
-      if(vol)
-        gnome_vfs_volume_unref(vol);
+volume_add_to_gconf(Trasher *app, GnomeVFSURI *uri){
+  gchar *key = g_strdup_printf("%s/%s",
+                    key_prefix,
+                    GKEY_TRASH_DIRS);
+  GSList *list = gconf_client_get_list(client, key, GCONF_VALUE_STRING, NULL);
+  GSList *el = list;
+  while(el){
+    GnomeVFSURI *data_uri = gnome_vfs_uri_new((gchar *)el->data);
+    if(gnome_vfs_uri_equal(data_uri, uri)){
+      g_slist_free(list);
       return;
     }
-    valid = gtk_tree_model_iter_next(GTK_TREE_MODEL(app->store), &iter);
+    el = g_slist_next(el);
   }
+  list = g_slist_prepend(list, gnome_vfs_uri_to_string(uri, GNOME_VFS_URI_HIDE_PASSWORD));
+  gconf_client_set_list(client, key, GCONF_VALUE_STRING, list, NULL);
+  g_slist_free(list);
 }
 
 static void
-volume_add(Plugger *app, GnomeVFSVolume *volume)
+volume_remove_from_gconf(Trasher *app, GnomeVFSURI *uri){
+  gchar *key = g_strdup_printf("%s/%s",
+                    key_prefix,
+                    GKEY_TRASH_DIRS);
+  gchar *needle = gnome_vfs_uri_to_string(uri, GNOME_VFS_URI_HIDE_PASSWORD);
+  GSList *list = gconf_client_get_list(client, key, GCONF_VALUE_STRING, NULL);
+  GSList *el = list;
+  while(el){
+    GnomeVFSURI *data_uri = gnome_vfs_uri_new((gchar *)el->data);
+    if(gnome_vfs_uri_equal(data_uri, uri)){
+      list = g_slist_delete_link(list, el);
+    }
+    el = g_slist_next(el);
+  }
+  gconf_client_set_list(client, key, GCONF_VALUE_STRING, list, NULL);
+  g_slist_free(list);
+}
+
+static GnomeVFSURI* 
+get_trash_uri(GnomeVFSVolume *volume)
 {
-  // Get display name based on device type
-  GnomeVFSDeviceType type = gnome_vfs_volume_get_device_type(volume);
-  GnomeVFSDrive *drive = gnome_vfs_volume_get_drive(volume);
-  gchar *name = gnome_vfs_drive_get_display_name(drive);
+  if (!gnome_vfs_volume_handles_trash(volume))
+    return NULL;
 
-  // Get mount point or path from device
-  gchar *path = gnome_vfs_volume_get_activation_uri(volume);
-  if(path == NULL)
-        path = gnome_vfs_volume_get_device_path(volume);
+  /* get the mount point for this volume */
+  gchar *uri_str = gnome_vfs_volume_get_activation_uri (volume);
+  GnomeVFSURI *mount_uri = gnome_vfs_uri_new (uri_str);
+  GnomeVFSURI *trash_uri = NULL;
+  g_free (uri_str);
 
-  // Get identifier for this device from HAL; use to store gconf settings
-  gchar *hudi = g_strrstr(gnome_vfs_volume_get_hal_udi(volume), "/");
-  hudi += sizeof(gchar);
+  if(mount_uri != NULL){
+    /* Look for the trash directory.  Since we tell it not to create or
+     * look for the dir, it doesn't block. */
+    gnome_vfs_find_directory (mount_uri,
+        GNOME_VFS_DIRECTORY_KIND_TRASH, &trash_uri,
+        FALSE, TRUE, 0777);
+    gnome_vfs_uri_unref (mount_uri);
+  }
+  return trash_uri;
+}
 
-  // Get the appropriate icon for the device type
-  gchar *icon = gnome_vfs_volume_get_icon(volume);
+static void
+volumes_initialization(GtkWidget *widget, gpointer user_data)
+{
+  Trasher *app = user_data;
 
-  // Store settings in gconf before loading stack applet
-  gchar *key;
-  gchar *key_prefix = g_strdup_printf("/apps/avant-window-navigator/applets/%s", hudi);
+  gchar *key = g_strdup_printf("%s/%s", key_prefix, GKEY_TRASH_DIRS);
+  gconf_client_unset(client, key, NULL);
 
-  // Check if this is a "hidden" (by applet) volume
-  key = g_strdup_printf("%s/%s", key_prefix, GKEY_HIDE_VOLUME);
-  if(gconf_client_get(client, key, NULL))
-    return;
+  GList *volumes = gnome_vfs_volume_monitor_get_mounted_volumes(monitor);
+  GList *vlist = NULL;
+  for(vlist = volumes; vlist != NULL; vlist = g_list_next(vlist)){
+    GnomeVFSVolume *volume = vlist->data;
+    GnomeVFSURI *trash_uri = get_trash_uri(volume);
+    if(trash_uri != NULL){
+      volume_add_to_gconf(app, trash_uri);
+      gnome_vfs_uri_unref(trash_uri);
+    }
+  }
+  g_list_free(volumes);
 
   // Set "required" gconf keys
   gconf_client_set_string(client,
-          g_strdup_printf("%s/%s", key_prefix, GKEY_BACKEND), path, NULL);
+          g_strdup_printf("%s/%s", key_prefix, GKEY_BACKEND), "trash:", NULL);
 
   gconf_client_set_int(client,
-          g_strdup_printf("%s/%s", key_prefix, GKEY_BACKEND_TYPE), 2, NULL);
+          g_strdup_printf("%s/%s", key_prefix, GKEY_BACKEND_TYPE), 3, NULL);
+
+  // Only "allow" file operation "Move"
+  gconf_client_set_int(client,
+          g_strdup_printf("%s/%s", key_prefix, GKEY_FILE_OPERATIONS), 4, NULL);
 
   // Set "user customizable" gconf keys (if not already set)
-  key = g_strdup_printf("%s/%s", key_prefix, GKEY_TITLE);
-  if(!gconf_client_get(client, key, NULL))
-    gconf_client_set_string(client, key, name, NULL);
-
   key = g_strdup_printf("%s/%s", key_prefix, GKEY_BROWSING);
   if(!gconf_client_get(client, key, NULL))
     gconf_client_set_bool(client, key, TRUE, NULL);
@@ -126,11 +156,11 @@ volume_add(Plugger *app, GnomeVFSVolume *volume)
 
   key = g_strdup_printf("%s/%s", key_prefix, GKEY_ICON_EMPTY);
   if(!gconf_client_get(client, key, NULL))
-    gconf_client_set_string(client, key, icon, NULL);
+    gconf_client_set_string(client, key, "gnome-stock-trash", NULL);
 
   key = g_strdup_printf("%s/%s", key_prefix, GKEY_ICON_FULL);
   if(!gconf_client_get(client, key, NULL))
-    gconf_client_set_string(client, key, icon, NULL);
+    gconf_client_set_string(client, key, "gnome-stock-trash-full", NULL);
 
   gconf_client_suggest_sync(client, NULL);
 
@@ -144,41 +174,11 @@ volume_add(Plugger *app, GnomeVFSVolume *volume)
   gchar *exec = g_strdup_printf(
        "awn-applet-activation -p %s -u %s -w %lld -o %d -h %d",
        desktop_path,
-       hudi,
+       "trasher",
        (long long)gtk_socket_get_id(GTK_SOCKET(socket)),
        awn_applet_get_orientation(app->applet),
        awn_applet_get_height(app->applet));
   g_spawn_command_line_async (exec, NULL);
-
-  // Store the socket and volume in a liststore for later use
-  GtkTreeIter iter;
-  gtk_tree_model_get_iter_first(GTK_TREE_MODEL(app->store), &iter);
-  gtk_list_store_append(app->store, &iter);
-  gtk_list_store_set(app->store, &iter, SOCKET_COLUMN, socket, VOLUME_COLUMN, volume, -1);
-}
-
-static void
-volumes_initialization(GtkWidget *widget, gpointer user_data)
-{
-  Plugger *app = user_data;
-
-  GtkIconTheme *theme = gtk_icon_theme_get_default();
-  GList *drives = gnome_vfs_volume_monitor_get_connected_drives(monitor);
-  GList *dlist = NULL;
-  for(dlist = drives; dlist != NULL; dlist = g_list_next(dlist)){
-    GnomeVFSDrive *drive = dlist->data;
-    GList *volumes = gnome_vfs_drive_get_mounted_volumes(drive);
-    GList *vlist = NULL;
-    for(vlist = volumes; vlist != NULL; vlist = g_list_next(vlist)){
-      GnomeVFSVolume *volume = vlist->data;
-      if (!gnome_vfs_volume_is_user_visible(volume))
-        continue;
-      volume_add(app, volume);
-    }
-    gnome_vfs_drive_volume_list_free(volumes);
-    gnome_vfs_drive_unref(drive);
-  }
-  g_list_free(drives);
 }
 
 static void
@@ -186,38 +186,44 @@ volume_mounted_cb(  GnomeVFSVolumeMonitor *volume_monitor,
                     GnomeVFSVolume        *volume,
                     gpointer               user_data)
 {
-  Plugger *app = user_data;
-  if(!gnome_vfs_volume_is_user_visible(volume))
-    return;
-  volume_add(app, volume);
+  Trasher *app = user_data;
+  GnomeVFSURI *trash_uri = get_trash_uri(volume);
+  if(trash_uri != NULL){
+    volume_add_to_gconf(app, trash_uri);
+    gnome_vfs_uri_unref(trash_uri);
+  }
+  gconf_client_suggest_sync(client, NULL);
 }
 
 static void
-volume_unmounted_cb(    GnomeVFSVolumeMonitor *volume_monitor,
+volume_pre_unmount_cb(  GnomeVFSVolumeMonitor *volume_monitor,
                         GnomeVFSVolume        *volume,
                         gpointer               user_data)
 {
-  volume_remove(user_data, volume);
+  Trasher *app = user_data;
+  GnomeVFSURI *trash_uri = get_trash_uri(volume);
+  if(trash_uri != NULL){
+    volume_remove_from_gconf(app, trash_uri);
+    gnome_vfs_uri_unref(trash_uri);
+  }
+  gconf_client_suggest_sync(client, NULL);
 }
 
 AwnApplet*
 awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
 {
-  // Create a new applet and set a reference to the new Plugger
+  // Create a new applet and set a reference to the new Trasher
   AwnApplet *applet = awn_applet_new( uid, orient, height );
-  Plugger *app = g_new0 (Plugger, 1);
+  Trasher *app = g_new0(Trasher, 1);
   app->applet = applet;
 
   // Monitor the vfs volumes and connect to its signals
   monitor = gnome_vfs_get_volume_monitor();
-  g_signal_connect(monitor, "volume-unmounted", G_CALLBACK(volume_unmounted_cb), app);
+  g_signal_connect(monitor, "volume-pre-unmount", G_CALLBACK(volume_pre_unmount_cb), app);
   g_signal_connect(monitor, "volume-mounted", G_CALLBACK(volume_mounted_cb), app);
 
   // Get a reference to the gconf client
   client = gconf_client_get_default();
-
-  // Create a new store which holds < GtkWidget, GnomeVFSVolume >
-  app->store = gtk_list_store_new(2, G_TYPE_OBJECT, G_TYPE_OBJECT);
 
   // Set the path to the stacks applet
   if(gnome_vfs_uri_exists(gnome_vfs_uri_new(STACKS_APPLET))){
@@ -225,7 +231,7 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
   }else if(gnome_vfs_uri_exists(gnome_vfs_uri_new(STACKS_APPLET_LOCAL))){
     desktop_path = STACKS_APPLET_LOCAL;
   }else{
-    g_print("!! Stacks Plugger Error: dependency on Stacks Applet not met:\n \
+    g_print("!! Stacks Trasher Error: dependency on Stacks Applet not met:\n \
              !! Could not find stacks.desktop file at:\n \
              !! %s or %s\n", STACKS_APPLET, STACKS_APPLET_LOCAL);
   }
@@ -237,7 +243,6 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
 
   // We first have to create (return) this applet, before we can add sockets
   g_signal_connect_after(applet, "realize", G_CALLBACK(volumes_initialization), (gpointer)app);
-
   return applet;
 }
 

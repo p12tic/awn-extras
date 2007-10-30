@@ -20,6 +20,7 @@ SUBDIRS =			\
 	switcher 		\
 	showdesktop 		\
 	trash 			\
+	trasher			\
 	volume-control 		\
 	weather			\
 	wobblyzini

@@ -23,18 +23,20 @@ class Thumbnailer:
         return self.cached_icon
 
     def _lookup_or_make_thumb(self, icon_size, timestamp):
+        icon_theme = gtk.icon_theme_get_default()
+        thumb_factory = gnome.ui.ThumbnailFactory("normal")
         icon_name, icon_type = \
                 gnome.ui.icon_lookup(icon_theme, thumb_factory, self.uri, self.mimetype, 0)
         try:
             if icon_type == gnome.ui.ICON_LOOKUP_RESULT_FLAGS_THUMBNAIL or \
                     thumb_factory.has_valid_failed_thumbnail(self.uri, timestamp):
                 # Use existing thumbnail
-                thumb = icon_factory.load_icon(icon_name, icon_size)
+                thumb = IconFactory().load_icon(icon_name, icon_size)
             elif self._is_local_uri(self.uri):
                 # Generate a thumbnail for local files only
                 thumb = thumb_factory.generate_thumbnail(self.uri, self.mimetype)
                 thumb_factory.save_thumbnail(thumb, self.uri, timestamp)
-                thumb = icon_factory.scale_to_bounded(thumb, icon_size)
+                thumb = IconFactory().scale_to_bounded(thumb, icon_size)
             if thumb:
                 # Fixup the thumbnail a bit
                 thumb = self._nicer_dimensions(thumb)
@@ -43,7 +45,7 @@ class Thumbnailer:
             pass
 
         # Fallback to mime-type icon on failure
-        return icon_factory.load_icon(icon_name, icon_size)
+        return IconFactory().load_icon(icon_name, icon_size)
 
     def _is_local_uri(self, uri):
         # NOTE: gnomevfs.URI.is_local seems to hang for some URIs (e.g. ssh
@@ -148,6 +150,7 @@ class IconFactory:
             icon_name = icon_name[:-len(".svg")]
 
         icon = None
+        icon_theme = gtk.icon_theme_get_default()
         info = icon_theme.lookup_icon(icon_name, icon_size, gtk.ICON_LOOKUP_USE_BUILTIN)
         if info:
             if icon_name.startswith("gtk-"):
@@ -172,51 +175,47 @@ class IconFactory:
         img.show()
         return img
 
-    def make_icon_frame(self, thumb, icon_size = None, blend = False):
-        border = 1
-
-        mythumb = gtk.gdk.Pixbuf(thumb.get_colorspace(),
-                                 True,
-                                 thumb.get_bits_per_sample(),
-                                 thumb.get_width(),
-                                 thumb.get_height())
-        mythumb.fill(0x00000080) # black, 50% transparent
-        if blend:
-            thumb.composite(mythumb, 0, 0,
-                            thumb.get_width(), thumb.get_height(),
-                            0, 0,
-                            1.0, 1.0,
-                            gtk.gdk.INTERP_NEAREST,
-                            128)
-        thumb.copy_area(border, border,
-                        thumb.get_width() - (border * 2), thumb.get_height() - (border * 2),
-                        mythumb,
-                        border, border)
-        return mythumb
-
-    def transparentize(self, pixbuf, percent):
-        pixbuf = pixbuf.add_alpha(False, '0', '0', '0')
-        for row in pixbuf.get_pixels_array():
-            for pix in row:
-                pix[3] = min(int(pix[3]), 255 - (percent * 0.01 * 255))
-        return pixbuf
-
-    def colorshift(self, pixbuf, shift):
-        pixbuf = pixbuf.copy()
-        for row in pixbuf.get_pixels_array():
-            for pix in row:
-                pix[0] = min(255, int(pix[0]) + shift)
-                pix[1] = min(255, int(pix[1]) + shift)
-                pix[2] = min(255, int(pix[2]) + shift)
-        return pixbuf
-
-    def greyscale(self, pixbuf):
-        pixbuf = pixbuf.copy()
-        for row in pixbuf.get_pixels_array():
-            for pix in row:
-                pix[0] = pix[1] = pix[2] = (int(pix[0]) + int(pix[1]) + int(pix[2])) / 3
-        return pixbuf
-
-icon_theme = gtk.icon_theme_get_default()
-thumb_factory = gnome.ui.ThumbnailFactory("normal")
-icon_factory = IconFactory()
+#    def make_icon_frame(self, thumb, icon_size = None, blend = False):
+#        border = 1
+#
+#        mythumb = gtk.gdk.Pixbuf(thumb.get_colorspace(),
+#                                 True,
+#                                 thumb.get_bits_per_sample(),
+#                                 thumb.get_width(),
+#                                 thumb.get_height())
+#        mythumb.fill(0x00000080) # black, 50% transparent
+#        if blend:
+#            thumb.composite(mythumb, 0, 0,
+#                            thumb.get_width(), thumb.get_height(),
+#                            0, 0,
+#                            1.0, 1.0,
+#                            gtk.gdk.INTERP_NEAREST,
+#                            128)
+#        thumb.copy_area(border, border,
+#                        thumb.get_width() - (border * 2), thumb.get_height() - (border * 2),
+#                        mythumb,
+#                        border, border)
+#        return mythumb
+#
+#    def transparentize(self, pixbuf, percent):
+#        pixbuf = pixbuf.add_alpha(False, '0', '0', '0')
+#        for row in pixbuf.get_pixels_array():
+#            for pix in row:
+#                pix[3] = min(int(pix[3]), 255 - (percent * 0.01 * 255))
+#        return pixbuf
+#
+#    def colorshift(self, pixbuf, shift):
+#        pixbuf = pixbuf.copy()
+#        for row in pixbuf.get_pixels_array():
+#            for pix in row:
+#                pix[0] = min(255, int(pix[0]) + shift)
+#                pix[1] = min(255, int(pix[1]) + shift)
+#                pix[2] = min(255, int(pix[2]) + shift)
+#        return pixbuf
+#
+#    def greyscale(self, pixbuf):
+#        pixbuf = pixbuf.copy()
+#        for row in pixbuf.get_pixels_array():
+#            for pix in row:
+#                pix[0] = pix[1] = pix[2] = (int(pix[0]) + int(pix[1]) + int(pix[2])) / 3
+#        return pixbuf

@@ -303,7 +303,6 @@ draw_digital_clock(Clock *clock, cairo_t *cr, int width, int height)
 	pango_font_description_set_style(pDesc, PANGO_STYLE_NORMAL);
 	pango_layout_set_font_description(pLayout_time, pDesc);
 	pango_layout_set_font_description(pLayout_date, pDesc);
-	pango_font_description_free(pDesc);
 	// Pour l'heure
 	pango_layout_set_text(pLayout_time, clock->txt_time, -1);
 	pango_layout_get_pixel_extents(pLayout_time, &extents_logical_time, &extents_time);
@@ -367,7 +366,11 @@ draw_digital_clock(Clock *clock, cairo_t *cr, int width, int height)
 	
 	g_object_unref(pLayout_time);
 	g_object_unref(pLayout_date);
-	g_object_unref(pDesc);
+	
+	if (pDesc )
+	{
+	pango_font_description_free (pDesc);
+	}
 
 	
 	// Code to display moon or sun picture relative to the current time

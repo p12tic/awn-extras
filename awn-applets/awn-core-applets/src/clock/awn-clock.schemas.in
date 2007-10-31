@@ -17,7 +17,7 @@
         <key>/schemas/apps/awn-clock/prefs/clock_digital</key>
         <owner>awn-clock</owner>
         <type>bool</type>
-        <default>True</default>
+        <default>False</default>
         <locale name="C">
           <short>Use analogic or digital display</short>
           <long></long>

@@ -40,6 +40,7 @@
 #include "awntop_cairo_component.h"
 #include "date_time_component.h"
 #include "loadavg_component.h"
+#include "sysmem_component.h"
 #include "config.h"
 
 
@@ -78,6 +79,9 @@ static gboolean _set_icon_text(GtkWidget *widget, GdkEventButton *event, CpuMete
 #define GCONF_BG  GCONF_PATH "/bg_color"
 #define GCONF_TEXT  GCONF_PATH "/border_color"
 
+
+//static gint width, height;
+
 /**
  * Create new applet
  */
@@ -104,7 +108,7 @@ cpumeter_applet_new (AwnApplet *applet)
     cpumeter->new_size = 0;
     cpumeter->y_offset = 0;
     cpumeter->orient = GTK_ORIENTATION_HORIZONTAL;
-
+	cpumeter->doneonce=FALSE;
     cpumeter->tooltips = gtk_tooltips_new ();
     g_object_ref (cpumeter->tooltips);
     gtk_object_sink (GTK_OBJECT (cpumeter->tooltips));
@@ -123,7 +127,8 @@ cpumeter_applet_new (AwnApplet *applet)
     register_Dashboard_plug(&cpumeter->dashboard,date_time_plug_lookup,width/2,21*2,0x01,&cpumeter->date_time_plug);      
     register_Dashboard_plug(&cpumeter->dashboard,cpu_plug_lookup,0,2,0x01,&cpumeter->cpu_plug);
     register_Dashboard_plug(&cpumeter->dashboard,uptime_plug_lookup,width/2,21,0x01,&cpumeter->uptime_plug);
-    register_Dashboard_plug(&cpumeter->dashboard,loadavg_plug_lookup,width/2,21*2.5,0x01,&cpumeter->loadavg_plug);                        
+    register_Dashboard_plug(&cpumeter->dashboard,loadavg_plug_lookup,width/2,21*2.5,0x01,&cpumeter->loadavg_plug);
+    register_Dashboard_plug(&cpumeter->dashboard,sysmem_plug_lookup,width/2,21*3.5,0x01,&cpumeter->sysmem_plug);
 //    register_Dashboard_plug(&cpumeter->dashboard,awntop_plug_lookup,0,height/5,0x00,&cpumeter->awntop);  
     register_Dashboard_plug(&cpumeter->dashboard,awntop_cairo_plug_lookup,40,height/4.4,0x01,&cpumeter->awntop_cairo_plug);  
 
@@ -213,12 +218,12 @@ gboolean cpu_meter_render (gpointer data)
     static GdkPixbuf * apixbuf;    
     CpuMeter* cpumeter = (CpuMeter *)data;
     static cairo_t *cr = NULL;
-    static gint width, height;
+    
     GtkWidget* widget = GTK_WIDGET(cpumeter->applet);
 
 
     AwnApplet* applet = cpumeter->applet;
-    static gboolean doneonce=FALSE;
+    
     
 #if 0  
 /*me trying to trigger something in awn  Please ignore :-) */
@@ -229,25 +234,34 @@ gboolean cpu_meter_render (gpointer data)
     awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (applet),icon);  
     return;  
 #endif 
-    if (!doneonce)
+    if (!cpumeter->doneonce)
     {
-        gtk_widget_get_size_request (widget, &width, &height);  
-        width=width-2;
-        height=height/2;
-        surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, width, height*2);
+    	if (cr)
+    	{
+    		cairo_destroy(cr);
+    		cr=NULL;
+    	}
+    	if (surface)
+    	{
+    		cairo_surface_destroy(surface);
+    		surface=NULL;
+		}    		    	
+        gtk_widget_get_size_request (widget, &cpumeter->width, &cpumeter->height);  
+        cpumeter->width=cpumeter->width-2;
+        cpumeter->height=cpumeter->height/2;
+        surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, cpumeter->width, cpumeter->height*2);
         cr = cairo_create (surface);
         assert(cr);
-        doneonce=TRUE;  
+        cpumeter->doneonce=TRUE;  
                        
    
     }
     /*recreating this on every render as if I reuse it some 
     bug(s) seem to get triggered in awn-applet-simple or awn-effects*/
-    apixbuf=gdk_pixbuf_new(GDK_COLORSPACE_RGB,TRUE,8,width,height*2);
-    assert(apixbuf);         
+    apixbuf=gdk_pixbuf_new(GDK_COLORSPACE_RGB,TRUE,8,cpumeter->width,cpumeter->height*2);       
     LoadGraph* g = cpumeter->loadgraph;
   
-    render_graph(cr,g,text,width,height,cpumeter);
+    render_graph(cr,g,text,cpumeter->width,cpumeter->height,cpumeter);
 
     surface_2_pixbuf(apixbuf,surface);
     awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (cpumeter->applet), 
@@ -470,9 +484,13 @@ static gboolean _die_die_exclamation(GtkWidget *window, GdkEvent *event, gpointe
 static void
 _height_changed (AwnApplet *app, guint height, gpointer *data)
 {
+	
   /*applet->height = height;
     gtk_widget_queue_draw (GTK_WIDGET (applet));
     update_icons (applet);*/
+	CpuMeter* cpumeter=data;
+    gtk_widget_set_size_request(GTK_WIDGET(cpumeter->applet),height*1.25,height*2);
+	cpumeter->doneonce=FALSE;    
 }
 
 /**

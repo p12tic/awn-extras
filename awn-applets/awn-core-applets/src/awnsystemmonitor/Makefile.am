@@ -10,26 +10,28 @@ INCLUDES =							\
 
 AWNSYSTEMMONITOR_SOURCES =                              \
 	applet.c									\
-	dashboard.c		\
-	dashboard.h		\
+	awnsystemmonitor.c						\
+	awnsystemmonitor.h          \
 	awntop.c    \
 	awntop.h    \
 	awntop_cairo_component.c    \
 	awntop_cairo_component.h    \
-	awnsystemmonitor.c						\
-	awnsystemmonitor.h          \
 	cpumetergconf.c           \
 	cpumetergconf.h           \
-	uptime_component.c      \
-	uptime_component.h      \
-	dashboard_util.c    \
-	dashboard_util.h    \
 	cpu_component.c    \
     cpu_component.h    \
+	dashboard.c		\
+	dashboard.h		\
+	dashboard_util.c    \
+	dashboard_util.h    \
     date_time_component.c   \
     date_time_component.h   \
     loadavg_component.c \
     loadavg_component.h \
+    sysmem_component.c  \
+    sysmem_component.h  \
+	uptime_component.c      \
+	uptime_component.h      \
 	config.h
 
 AWNSYSTEMMONITOR_LDADD =                        \

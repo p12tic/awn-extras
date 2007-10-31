@@ -68,11 +68,12 @@ typedef struct
 
   Dashboard	dashboard;
   Awntop    awntop;
-  void *   cpu_plug;
+  void *    cpu_plug;
   void *    uptime_plug;
   void *    awntop_cairo_plug;
   void *    date_time_plug;
   void *    loadavg_plug;
+  void *    sysmem_plug;
   
   guint size;
   guint new_size;
@@ -86,6 +87,8 @@ typedef struct
 
   /* Effect stuff */
   guint height;
+  guint width;
+  
   gint y_offset;
 	gboolean show_title;
 
@@ -98,7 +101,7 @@ typedef struct
   gboolean do_gradient;
   gboolean do_subtitle;
   guint update_freq;
-
+	gboolean doneonce;
     GtkWidget*  right_click_menu;
 }CpuMeter;
 

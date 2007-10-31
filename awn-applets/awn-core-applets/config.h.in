@@ -12,12 +12,6 @@
 /* D-BUS minor version. */
 #undef DBUS_MINOR_VER
 
-/* Where services dir for DBUS is */
-#undef DBUS_SERVICES_DIR
-
-/* Where system.d dir for DBUS is */
-#undef DBUS_SYSTEMD_DIR
-
 /* always defined to indicate that i18n is enabled */
 #undef ENABLE_NLS
 

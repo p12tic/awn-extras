@@ -43,8 +43,8 @@ typedef struct {
 
 enum
 {
-  VOLUME_COLUMN,
-  TRASH_COLUMN
+  ADD_VOLUME,
+  DEL_VOLUME
 };
 
 static GConfClient *client = NULL;
@@ -53,49 +53,38 @@ static gchar *desktop_path = NULL;
 static gchar *key_prefix = "/apps/avant-window-navigator/applets/trasher";
 
 static void
-volume_add_to_gconf(Trasher *app, GnomeVFSURI *uri){
-  gchar *key = g_strdup_printf("%s/%s",
-                    key_prefix,
-                    GKEY_TRASH_DIRS);
+volume_sync_with_gconf(GnomeVFSAsyncHandle *handle, GList *results, gpointer data){
+
+  gchar *key = g_strdup_printf("%s/%s", key_prefix, GKEY_TRASH_DIRS);
   GSList *list = gconf_client_get_list(client, key, GCONF_VALUE_STRING, NULL);
-  GSList *el = list;
-  while(el){
-    GnomeVFSURI *data_uri = gnome_vfs_uri_new((gchar *)el->data);
-    if(gnome_vfs_uri_equal(data_uri, uri)){
-      g_slist_free(list);
-      return;
+  GSList *entry;
+  GList *element;
+
+  for (element = results; element != NULL; element = element->next) {
+    GnomeVFSFindDirectoryResult *result_item = (GnomeVFSFindDirectoryResult *)element->data;
+
+    if (result_item->result == GNOME_VFS_OK) {
+      for(entry = list; entry != NULL; entry = entry->next){
+        GnomeVFSURI *data_uri = gnome_vfs_uri_new((gchar *)entry->data);
+        if (gnome_vfs_uri_equal(data_uri, result_item->uri)){
+          list = g_slist_delete_link(list, entry);
+        }
+      }
+      if(GPOINTER_TO_INT(data) == ADD_VOLUME){
+        list = g_slist_prepend(list,
+            gnome_vfs_uri_to_string(result_item->uri, GNOME_VFS_URI_HIDE_PASSWORD));
+      }
     }
-    el = g_slist_next(el);
   }
-  list = g_slist_prepend(list, gnome_vfs_uri_to_string(uri, GNOME_VFS_URI_HIDE_PASSWORD));
   gconf_client_set_list(client, key, GCONF_VALUE_STRING, list, NULL);
   g_slist_free(list);
 }
 
 static void
-volume_remove_from_gconf(Trasher *app, GnomeVFSURI *uri){
-  gchar *key = g_strdup_printf("%s/%s",
-                    key_prefix,
-                    GKEY_TRASH_DIRS);
-  gchar *needle = gnome_vfs_uri_to_string(uri, GNOME_VFS_URI_HIDE_PASSWORD);
-  GSList *list = gconf_client_get_list(client, key, GCONF_VALUE_STRING, NULL);
-  GSList *el = list;
-  while(el){
-    GnomeVFSURI *data_uri = gnome_vfs_uri_new((gchar *)el->data);
-    if(gnome_vfs_uri_equal(data_uri, uri)){
-      list = g_slist_delete_link(list, el);
-    }
-    el = g_slist_next(el);
-  }
-  gconf_client_set_list(client, key, GCONF_VALUE_STRING, list, NULL);
-  g_slist_free(list);
-}
-
-static GnomeVFSURI* 
-get_trash_uri(GnomeVFSVolume *volume)
+volume_find_trash(GnomeVFSVolume *volume, gint operation)
 {
   if (!gnome_vfs_volume_handles_trash(volume))
-    return NULL;
+    return;
 
   /* get the mount point for this volume */
   gchar *uri_str = gnome_vfs_volume_get_activation_uri (volume);
@@ -104,14 +93,20 @@ get_trash_uri(GnomeVFSVolume *volume)
   g_free (uri_str);
 
   if(mount_uri != NULL){
-    /* Look for the trash directory.  Since we tell it not to create or
-     * look for the dir, it doesn't block. */
-    gnome_vfs_find_directory (mount_uri,
-        GNOME_VFS_DIRECTORY_KIND_TRASH, &trash_uri,
-        FALSE, TRUE, 0777);
+    GnomeVFSAsyncHandle *handle;
+    GList *near_uri_list = NULL;
+    near_uri_list = g_list_append(near_uri_list, mount_uri);
+    gnome_vfs_async_find_directory(
+        &handle,
+        near_uri_list,
+        GNOME_VFS_DIRECTORY_KIND_TRASH,
+        FALSE, TRUE, 0777,
+        GNOME_VFS_PRIORITY_DEFAULT,
+        volume_sync_with_gconf,
+        GINT_TO_POINTER(operation));
     gnome_vfs_uri_unref (mount_uri);
   }
-  return trash_uri;
+ 
 }
 
 static void
@@ -126,11 +121,7 @@ volumes_initialization(GtkWidget *widget, gpointer user_data)
   GList *vlist = NULL;
   for(vlist = volumes; vlist != NULL; vlist = g_list_next(vlist)){
     GnomeVFSVolume *volume = vlist->data;
-    GnomeVFSURI *trash_uri = get_trash_uri(volume);
-    if(trash_uri != NULL){
-      volume_add_to_gconf(app, trash_uri);
-      gnome_vfs_uri_unref(trash_uri);
-    }
+    volume_find_trash(volume, ADD_VOLUME);
   }
   g_list_free(volumes);
 
@@ -186,13 +177,7 @@ volume_mounted_cb(  GnomeVFSVolumeMonitor *volume_monitor,
                     GnomeVFSVolume        *volume,
                     gpointer               user_data)
 {
-  Trasher *app = user_data;
-  GnomeVFSURI *trash_uri = get_trash_uri(volume);
-  if(trash_uri != NULL){
-    volume_add_to_gconf(app, trash_uri);
-    gnome_vfs_uri_unref(trash_uri);
-  }
-  gconf_client_suggest_sync(client, NULL);
+  volume_find_trash(volume, ADD_VOLUME);
 }
 
 static void
@@ -200,13 +185,7 @@ volume_pre_unmount_cb(  GnomeVFSVolumeMonitor *volume_monitor,
                         GnomeVFSVolume        *volume,
                         gpointer               user_data)
 {
-  Trasher *app = user_data;
-  GnomeVFSURI *trash_uri = get_trash_uri(volume);
-  if(trash_uri != NULL){
-    volume_remove_from_gconf(app, trash_uri);
-    gnome_vfs_uri_unref(trash_uri);
-  }
-  gconf_client_suggest_sync(client, NULL);
+  volume_find_trash(volume, DEL_VOLUME);
 }
 
 AwnApplet*

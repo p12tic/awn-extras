@@ -32,6 +32,7 @@
 #define GKEY_ICON_EMPTY "applet_icon_empty"
 #define GKEY_ICON_FULL "applet_icon_full"
 #define GKEY_HIDE_VOLUME "hide_volume"
+#define GKEY_FILE_OPERATIONS "file_operations"
 
 #define STACKS_APPLET "/usr/lib/awn/applets/stacks.desktop"
 #define STACKS_APPLET_LOCAL "/usr/local/lib/awn/applets/stacks.desktop"
@@ -131,6 +132,10 @@ volume_add(Plugger *app, GnomeVFSVolume *volume)
   key = g_strdup_printf("%s/%s", key_prefix, GKEY_ICON_FULL);
   if(!gconf_client_get(client, key, NULL))
     gconf_client_set_string(client, key, icon, NULL);
+
+  key = g_strdup_printf("%s/%s", key_prefix, GKEY_FILE_OPERATIONS);
+  if(!gconf_client_get(client, key, NULL))
+    gconf_client_set_int(client, key, 14, NULL);
 
   gconf_client_suggest_sync(client, NULL);
 

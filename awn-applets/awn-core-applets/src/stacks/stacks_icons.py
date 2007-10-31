@@ -1,3 +1,22 @@
+#!/usr/bin/env python
+
+# Copyright (c) 2007 Timon ter Braak
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+
 import os
 import gnome.ui
 import gnomevfs
@@ -6,12 +25,14 @@ import urllib
 
 # Borrowed Thumbnailer from "gimmie"
 class Thumbnailer:
+	
     def __init__(self, uri, mimetype):
         self.uri = uri or ""
         self.mimetype = mimetype or ""
         self.cached_icon = None
         self.cached_timestamp = None
         self.cached_size = None
+
 
     def get_icon(self, icon_size, timestamp = 0):
         if not self.cached_icon or \
@@ -21,6 +42,7 @@ class Thumbnailer:
             self.cached_size = icon_size
             self.cached_timestamp = timestamp
         return self.cached_icon
+
 
     def _lookup_or_make_thumb(self, icon_size, timestamp):
         icon_theme = gtk.icon_theme_get_default()
@@ -47,6 +69,7 @@ class Thumbnailer:
         # Fallback to mime-type icon on failure
         return IconFactory().load_icon(icon_name, icon_size)
 
+
     def _is_local_uri(self, uri):
         # NOTE: gnomevfs.URI.is_local seems to hang for some URIs (e.g. ssh
         #       or http).  So look in a list of local schemes which comes
@@ -58,17 +81,16 @@ class Thumbnailer:
         except:
             return False
 
+
     def _nicer_dimensions(self, icon):
         ### Constrain thumb dimensions to 1:1.2
         if float(icon.get_height()) / float(icon.get_width()) > 1.2:
             return icon.subpixbuf(0, 0, icon.get_width(), int(icon.get_width() * 1.2))
         return icon
 
+
 # Borrowed IconFactory from "gimmie"
 class IconFactory:
-    '''
-    Icon lookup swiss-army knife (from menutreemodel.py)
-    '''
 
     def load_icon_from_path(self, icon_path, icon_size = None):
         if os.path.isfile(icon_path):
@@ -81,6 +103,7 @@ class IconFactory:
             except:
                 pass
         return None
+
 
     def load_icon_from_data_dirs(self, icon_value, icon_size = None):
         data_dirs = None
@@ -102,6 +125,7 @@ class IconFactory:
 
         return None
 
+
     def scale_to_bounded(self, icon, size):
         if icon:
             if icon.get_height() > size:
@@ -119,6 +143,7 @@ class IconFactory:
                 if _icon is not None:
                     icon = _icon
         return icon
+
 
     def load_icon(self, icon_value, icon_size, force_size = True):
         assert icon_value, "No icon to load!"
@@ -167,6 +192,7 @@ class IconFactory:
         if icon and force_size:
             return self.scale_to_bounded(icon, icon_size)
         return icon
+
 
     def load_image(self, icon_value, icon_size, force_size = True):
         pixbuf = self.load_icon(icon_value, icon_size, force_size)

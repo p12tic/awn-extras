@@ -7,9 +7,11 @@ from gtk import gdk
 import os
 import locale
 import gettext
-import stacksglade
-import stacksicons
-import stacksbackend
+
+#from stacks_applet import StacksApplet
+from stacks_backend import *
+from stacks_glade import GladeWindow
+from stacks_icons import IconFactory
 
 APP="Stacks"
 DIR="locale"
@@ -43,9 +45,9 @@ def _to_full_path(path):
     head, tail = os.path.split(__file__)
     return os.path.join(head, path)
 
-class StacksConfig(stacksglade.GladeWindow):
+class StacksConfig(GladeWindow):
     glade_file = _to_full_path('stacks_preferences.glade')
-    backend_type = stacksbackend.BACKEND_TYPE_INVALID
+    backend_type = BACKEND_TYPE_INVALID
     applet = None
 
     backend = None
@@ -53,18 +55,18 @@ class StacksConfig(stacksglade.GladeWindow):
     applet_icon_full = None
 
     def __init__(self, applet):
-        stacksglade.GladeWindow.__init__(self)
+        GladeWindow.__init__(self)
         self.applet = applet
         self.backend_type = applet.backend.get_type()
         preferences = ALL_PREFS
 
-        if self.backend_type == stacksbackend.BACKEND_TYPE_FILE:
+        if self.backend_type == BACKEND_TYPE_FILE:
             pass
-        elif self.backend_type == stacksbackend.BACKEND_TYPE_FOLDER:
+        elif self.backend_type == BACKEND_TYPE_FOLDER:
             pass
-        elif self.backend_type == stacksbackend.BACKEND_TYPE_PLUGGER:
+        elif self.backend_type == BACKEND_TYPE_PLUGGER:
             preferences -= PREF_BACKEND_FOLDER
-        elif self.backend_type == stacksbackend.BACKEND_TYPE_TRASHER:
+        elif self.backend_type == BACKEND_TYPE_TRASHER:
             preferences -= PREF_BACKEND_FOLDER
             preferences -= PREF_FILE_OPERATIONS
         else:
@@ -93,7 +95,7 @@ class StacksConfig(stacksglade.GladeWindow):
             if self.applet_icon_empty is None:
                 self.applet_icon_empty = _to_full_path("icons/stacks-drop.svg")
             try:
-                empty_image = stacksicons.IconFactory().load_image(self.applet_icon_empty, 24)
+                empty_image = IconFactory().load_image(self.applet_icon_empty, 24)
                 self.widgets['empty_button'].set_image(empty_image)
             except:
                 pass
@@ -103,7 +105,7 @@ class StacksConfig(stacksglade.GladeWindow):
             if self.applet_icon_full is None:
                 self.applet_icon_full = _to_full_path("icons/stacks-full.svg")
             try:
-                full_image = stacksicons.IconFactory().load_image(self.applet_icon_full, 24)
+                full_image = IconFactory().load_image(self.applet_icon_full, 24)
                 self.widgets['full_button'].set_image(full_image)
             except:
                 pass
@@ -225,7 +227,7 @@ class StacksConfig(stacksglade.GladeWindow):
         else:
             filesel.set_filename(self.applet_icon_full)
         if filesel.run() == gtk.RESPONSE_OK and filesel.get_filename():
-            image = stacksicons.IconFactory().load_image(filesel.get_filename(), 24)
+            image = IconFactory().load_image(filesel.get_filename(), 24)
             if image != None:
                 if type == "empty":
                     self.applet_icon_empty = filesel.get_filename()

@@ -115,7 +115,7 @@ class StacksConfig(stacksglade.GladeWindow):
             # get composite
             composite = self.applet.gconf_client.get_bool(
                     self.applet.gconf_path + "/composite_icon")
-            self.widgets['composite_radio'].set_active(composite)
+            self.widgets['nocomposite_radio'].set_active(not composite)
 
         if (preferences & PREF_ICON_SIZE) == 0:
             self.widgets['iconsize_label'].set_sensitive(False)
@@ -155,7 +155,7 @@ class StacksConfig(stacksglade.GladeWindow):
         else:
             gconf_count = self.applet.gconf_client.get_bool(
                     self.applet.gconf_path + "/item_count")
-            self.widgets['count_radio'].set_active(gconf_count)
+            self.widgets['nocount_radio'].set_active(not gconf_count)
 
         # PAGE 3
 
@@ -185,7 +185,7 @@ class StacksConfig(stacksglade.GladeWindow):
             # get browsing
             browsing = self.applet.gconf_client.get_bool(
                     self.applet.gconf_path + "/browsing")
-            self.widgets['browse_radio'].set_active(browsing)
+            self.widgets['nobrowse_radio'].set_active(not browsing)
 
     def on_backendselect_button_clicked(self, *args):
         filesel = gtk.FileChooserDialog(
@@ -272,7 +272,7 @@ class StacksConfig(stacksglade.GladeWindow):
                 self.applet.gconf_path + "/composite_icon",
                 self.widgets['composite_radio'].get_active())
         # set title
-        self.applet.gconf_client.set_stringl(
+        self.applet.gconf_client.set_string(
                 self.applet.gconf_path + "/title",
                 self.widgets['title_entry'].get_text())
         # set item count

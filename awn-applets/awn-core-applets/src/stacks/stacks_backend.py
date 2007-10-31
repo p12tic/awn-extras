@@ -165,6 +165,7 @@ class Backend(gobject.GObject):
                 command = item.get_string(gnomedesktop.KEY_EXEC)
                 name = item.get_localestring(gnomedesktop.KEY_NAME)
                 mime_type = item.get_localestring(gnomedesktop.KEY_MIME_TYPE)
+                type = gnomevfs.FILE_TYPE_REGULAR
                 icon_name = item.get_localestring(gnomedesktop.KEY_ICON)
                 icon_uri = None
                 if icon_name:

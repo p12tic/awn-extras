@@ -21,6 +21,7 @@ import gtk
 import gnomevfs
 import gettext
 from stacks_backend_folder import *
+from stacks_launcher import LaunchManager
 from stacks_vfs import *
 
 APP="Stacks"
@@ -39,7 +40,7 @@ class TrashBackend(FolderBackend):
             applet.gconf_path + "/trash_dirs", "string"):
             if dir.find("home"):    # probably the "home" trash of user
                 return Backend.__init__(self, applet, dir, icon_size)
-        return Backend.__init__(self, applet, "~/.Trash", icon_size)
+        return Backend.__init__(self, applet, VfsUri("~/.Trash"), icon_size)
 
     def _empty_cb(self, widget):
         if self.applet.gconf_client.get_bool("/apps/nautilus/preferences/confirm_trash"):
@@ -99,8 +100,7 @@ class TrashBackend(FolderBackend):
         self.open()
 
     def open(self):
-        stackslauncher.LaunchManager().launch_uri(
-                "trash:", None)
+        LaunchManager().launch_uri("trash:", None)
 
     def add(self, uris, action=None):
         # note: assume all files "in one drag" originate from same device

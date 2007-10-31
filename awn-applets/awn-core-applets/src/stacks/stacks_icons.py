@@ -25,7 +25,7 @@ import urllib
 
 # Borrowed Thumbnailer from "gimmie"
 class Thumbnailer:
-	
+
     def __init__(self, uri, mimetype):
         self.uri = uri or ""
         self.mimetype = mimetype or ""

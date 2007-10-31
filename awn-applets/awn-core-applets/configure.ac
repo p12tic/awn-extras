@@ -48,7 +48,7 @@ PKG_CHECK_MODULES(DEPS,
                   libsexy
 	          gconf-2.0
 	          gdk-2.0
-	          gdk-pixbuf-2.0
+		  gdk-pixbuf-2.0
 		  libnotify)
 AC_SUBST(DEPS_CFLAGS)
 AC_SUBST(DEPS_LIBS)
@@ -77,26 +77,6 @@ AS_AC_EXPAND(LIBDIR, $libdir)
 AS_AC_EXPAND(DATADIR, $datadir)
 AS_AC_EXPAND(LIBEXECDIR, $libexecdir)
 
-AC_ARG_WITH(dbus-sys, [  --with-dbus-sys=<dir>   where D-BUS system.d directory is])
-AC_ARG_WITH(dbus-services, [  --with-dbus-services=<dir>   where D-BUS services directory is])
-
-if ! test -z "$with_dbus_sys" ; then
-	DBUS_SYS_DIR="$with_dbus_sys"
-else
-	DBUS_SYS_DIR="$SYSCONFDIR/dbus-1/system.d"
-fi
-
-if ! test -z "$with_dbus_services" ; then
-	DBUS_SERVICES_DIR="$with_dbus_services"
-else
-	DBUS_SERVICES_DIR="$DATADIR/dbus-1/services"
-fi
-
-AC_SUBST(DBUS_SYS_DIR)
-AC_SUBST(DBUS_SERVICES_DIR)
-AC_DEFINE_UNQUOTED(DBUS_SYSTEMD_DIR, "$DBUS_SYS_DIR", [Where system.d dir for DBUS is])
-AC_DEFINE_UNQUOTED(DBUS_SERVICES_DIR, "$DBUS_SERVICES_DIR", [Where services dir for DBUS is])
-
 if test "x$GCC" = "xyes"; then
         GCC_FLAGS="-g -Wall"
 fi
@@ -114,7 +94,6 @@ dnl ==============================================
 dnl GConf
 dnl ==============================================
 AM_GCONF_SOURCE_2
-
 AC_OUTPUT([
 Makefile
 po/Makefile.in
@@ -122,7 +101,6 @@ src/Makefile
 src/awnsystemmonitor/Makefile
 src/awn-notification-daemon/Makefile
 src/awn-notification-daemon/data/Makefile
-src/awn-notification-daemon/data/org.freedesktop.Notifications.service
 src/awn-notification-daemon/po/Makefile.in
 src/awn-notification-daemon/src/Makefile
 src/awn-notification-daemon/src/daemon/Makefile

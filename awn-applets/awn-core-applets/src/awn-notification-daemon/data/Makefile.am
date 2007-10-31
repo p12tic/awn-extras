@@ -1,6 +1,3 @@
-servicedir   = $(DBUS_SERVICES_DIR)
-service_DATA = org.freedesktop.Notifications.service
-
 schemasdir       = $(GCONF_SCHEMA_FILE_DIR)
 schemas_in_files = notification-daemon.schemas.in
 schemas_DATA     = $(schemas_in_files:.schemas.in=.schemas)
@@ -15,7 +12,6 @@ install-data-local:
 endif
 
 EXTRA_DIST = \
-	$(schemas_in_files) \
-	$(service_DATA)
+	$(schemas_in_files) 
 
 CLEANFILES = $(schemas_DATA)

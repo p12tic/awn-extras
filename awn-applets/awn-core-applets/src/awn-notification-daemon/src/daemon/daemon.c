@@ -105,9 +105,9 @@ gboolean G_awn_client_pos;
 gboolean G_awn_honour_gtk;
 int G_awn_override_y;
 int G_awn_override_x;
-
 int G_awn_border_width;
 float G_awn_gradient_factor;
+GdkPixbuf *G_awn_icon;
 
 const PopupNotifyStackLocation popup_stack_locations[] =
 {
@@ -1131,7 +1131,6 @@ gboolean send_startup_message(gpointer data)
 	
 	if ( fork()==0 )
 	{
-	    sleep(3);
         notify_init("notify-send");
     	notify = notify_notification_new(summary, body, icon_str, NULL);
     	notify_notification_set_category(notify, type);
@@ -1144,6 +1143,17 @@ gboolean send_startup_message(gpointer data)
     	exit(0);
     }    	
     return FALSE;
+}
+
+gboolean hide_icon(gpointer data)
+{
+    gtk_widget_set_size_request (GTK_WIDGET (G_awn_app), 1, 1);
+
+    G_awn_icon=gdk_pixbuf_new(GDK_COLORSPACE_RGB,TRUE,8,1,1);
+    gdk_pixbuf_fill(G_awn_icon,0x00000000);  
+    awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (G_awn_app),G_awn_icon);  
+	G_awn_icon=NULL;
+	return FALSE;
 }
 
 AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
@@ -1162,21 +1172,17 @@ AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
     G_awn_app = applet = AWN_APPLET (awn_applet_simple_new (uid, orient, height));
     
     g_signal_connect (G_OBJECT (applet), "height-changed", G_CALLBACK (_height_changed), (gpointer)applet);    
-    AwnNotificationDaemon *awn_n_d;
-    gtk_widget_set_size_request (GTK_WIDGET (applet), 1, 1);
-    GdkPixbuf *icon;
-    icon=gdk_pixbuf_new(GDK_COLORSPACE_RGB,TRUE,8,1,height);
-    gdk_pixbuf_fill(icon,0x00000000);  
-    awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (applet),icon);  
+    gtk_widget_set_size_request (GTK_WIDGET (applet), height, height);
 
-  //  awn_n_d = cpumeter_applet_new(applet);  
+    G_awn_icon=gdk_pixbuf_new(GDK_COLORSPACE_RGB,TRUE,8,height,height);
+    gdk_pixbuf_fill(G_awn_icon,0x00000033);  
+    awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (applet),G_awn_icon);  
+	G_awn_icon=NULL;
+
     gtk_widget_show_all (GTK_WIDGET (applet));
 
 
 	g_log_set_always_fatal(G_LOG_LEVEL_ERROR | G_LOG_LEVEL_CRITICAL);
-
-//	gtk_init(&argc, &argv);
-//	gconf_init(argc, argv, NULL);
 
 	gconf_client = gconf_client_get_default();
 	gconf_client_add_dir(gconf_client, GCONF_KEY_DAEMON,
@@ -1244,8 +1250,7 @@ AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
             {
                 system("pgrep notification-daemon &&  killall -9 notification-daemon");
             }
-        }        										
-       // g_free(value)  ;      										
+        }        										     										
     }	
     else
     {
@@ -1260,8 +1265,6 @@ AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
         }
         
     }		
-    
-
     value=gconf_client_get(gconf_client, GCONF_KEY_AWN_CLIENT_POS,
 										NULL);		
     if (value)
@@ -1356,15 +1359,11 @@ AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
         G_awn_override_y=-1;
         gconf_client_set_int (gconf_client,GCONF_KEY_AWN_OVERRIDE_Y,G_awn_override_y ,NULL);        
     }
-       
-    
-    
-    
+  
 	dbus_g_connection_register_g_object(connection,"/org/freedesktop/Notifications",G_OBJECT(daemon));
     
-    g_timeout_add(10, (GSourceFunc*)send_startup_message,NULL); 
-    
-  //  system("notify-send --expire-time=10000 \"Awn Notification Daemon\" \"Options configurable through gconf-editor: including gtk colours\" &");
+    g_timeout_add(5000, (GSourceFunc*)send_startup_message,NULL); 
+    g_timeout_add(3000, (GSourceFunc*)hide_icon,NULL); 
     return applet;
 
 }

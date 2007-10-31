@@ -31,19 +31,27 @@
 #define _PIDGIN_AWN_H_
 
 /* Hardcoded icon paths */
-#define PATH_IMG_AWAY			"/usr/share/pixmaps/pidgin/status/48/away.png"
-#define PATH_IMG_CONNECTING		"/usr/share/pixmaps/pidgin/status/48/log-in.png"
-#define PATH_IMG_OFFLINE		"/usr/share/pixmaps/pidgin/status/48/offline.png"
-#define PATH_IMG_ONLINE			"/usr/share/pixmaps/pidgin/status/48/available.png"
+#define PATH_IMG_AWAY			"/usr/share/pixmaps/pidgin/tray/48/tray-away.png"
+#define PATH_IMG_EXTENDED_AWAY	"/usr/share/pixmaps/pidgin/tray/48/tray-extended-away.png"
+#define PATH_IMG_BUSY			"/usr/share/pixmaps/pidgin/tray/48/tray-busy.png"
+#define PATH_IMG_CONNECTING		"/usr/share/pixmaps/pidgin/tray/48/tray-connecting.png"
+#define PATH_IMG_OFFLINE		"/usr/share/pixmaps/pidgin/tray/48/tray-offline.png"
+#define PATH_IMG_ONLINE			"/usr/share/pixmaps/pidgin/tray/48/tray-online.png"
+#define PATH_IMG_INVISIBLE		"/usr/share/pixmaps/pidgin/tray/48/tray-invisible.png"
+#define PATH_IMG_NEW_IM			"/usr/share/pixmaps/pidgin/tray/48/tray-new-im.png"
+
+
 
 /* Enum(s) */
 typedef enum
 {
 	AWN_STATUS_OFFLINE,
 	AWN_STATUS_ONLINE,
-	AWN_STATUS_ONLINE_PENDING,
+	AWN_STATUS_BUSY,
 	AWN_STATUS_AWAY,
-	AWN_STATUS_AWAY_PENDING,
+	AWN_STATUS_EXTENDED_AWAY,
+	AWN_STATUS_INVISIBLE,
+	AWN_STATUS_NEW_IM,
 	AWN_STATUS_CONNECTING
 } AwnStatus;
 

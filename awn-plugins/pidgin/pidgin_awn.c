@@ -40,6 +40,7 @@
 #include "signals.h"
 #include "sound.h"
 #include "version.h"
+#include "status.h"
 
 #include "gtkaccount.h"
 #include "gtkblist.h"
@@ -216,12 +217,22 @@ static void update_icon(AwnStatus newStatus) {
 			setAwnIcon(PATH_IMG_OFFLINE);
 			break;
 		case AWN_STATUS_ONLINE:
-		case AWN_STATUS_ONLINE_PENDING:
 			setAwnIcon(PATH_IMG_ONLINE);
 			break;
+		case AWN_STATUS_BUSY:
+			setAwnIcon(PATH_IMG_BUSY);
+			break;
+		case AWN_STATUS_EXTENDED_AWAY:
+			setAwnIcon(PATH_IMG_EXTENDED_AWAY);
+			break;
 		case AWN_STATUS_AWAY:
-		case AWN_STATUS_AWAY_PENDING:
 			setAwnIcon(PATH_IMG_AWAY);
+			break;
+		case AWN_STATUS_INVISIBLE:
+			setAwnIcon(PATH_IMG_INVISIBLE);
+			break;
+		case AWN_STATUS_NEW_IM:
+			setAwnIcon(PATH_IMG_NEW_IM);
 			break;
 		default:
 			setAwnIcon(PATH_IMG_CONNECTING);
@@ -255,7 +266,7 @@ static gboolean awn_update_status()
 {
 	GList *convs, *l;
 	int count;
-	AwnStatus newstatus = AWN_STATUS_OFFLINE;
+	AwnStatus newstatus = AWN_STATUS_CONNECTING;
 	gboolean pending = FALSE;
 	char awn_info[5];
 	
@@ -277,6 +288,7 @@ static gboolean awn_update_status()
 					
 					sprintf(awn_info, "%u", (gint)gtkconv->unseen_count);
 					setAwnInfo(awn_info);
+					newstatus = AWN_STATUS_NEW_IM;
 				}
 			}
 		}
@@ -287,11 +299,12 @@ static gboolean awn_update_status()
 	}
 	
 	for (l = purple_accounts_get_all(); l != NULL; l = l->next) {
-		AwnStatus tmpstatus = AWN_STATUS_OFFLINE;
+		AwnStatus tmpstatus = AWN_STATUS_CONNECTING;
 		
 		PurpleAccount *account = (PurpleAccount *)l->data;
 		PurpleStatus *account_status;
 		
+
 		if (!purple_account_get_enabled(account, PIDGIN_UI))
 			continue;
 		
@@ -303,17 +316,31 @@ static gboolean awn_update_status()
 		if (purple_account_is_connecting(account)) {
 			tmpstatus = AWN_STATUS_CONNECTING;
 		} else if (purple_status_is_online(account_status)) {
-			if (!purple_status_is_available(account_status)) {
-				if (pending)
-					tmpstatus = AWN_STATUS_AWAY_PENDING;
-				else
+			switch (purple_status_type_get_primitive(purple_status_get_type(account_status))) {
+				case PURPLE_STATUS_AWAY:
 					tmpstatus = AWN_STATUS_AWAY;
-			}
-			else {
-				if (pending)
-					tmpstatus = AWN_STATUS_ONLINE_PENDING;
-				else
+					break;
+
+				case PURPLE_STATUS_EXTENDED_AWAY:
+					tmpstatus = AWN_STATUS_EXTENDED_AWAY;
+					break;
+
+				case PURPLE_STATUS_UNAVAILABLE:
+					tmpstatus = AWN_STATUS_BUSY;
+					break;
+
+				case PURPLE_STATUS_OFFLINE:
 					tmpstatus = AWN_STATUS_ONLINE;
+					break;
+
+				case PURPLE_STATUS_INVISIBLE:
+					tmpstatus = AWN_STATUS_INVISIBLE;
+					break;
+
+				default:
+					tmpstatus = AWN_STATUS_ONLINE;
+					break;
+
 			}
 		}
 		

@@ -152,6 +152,7 @@ class GUITransfer(object):
                     self.dialog.show_all()
                 self.progress_bar.set_fraction(fraction)
         if self.cancel:
+            # TODO: remove partial target?
             return 0
         return 1
 

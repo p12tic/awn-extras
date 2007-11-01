@@ -59,7 +59,6 @@ class FolderBackend(Backend):
 
     def add(self, vfs_uris, action=None):
         if not action:
-            print "no action specified for: ", vfs_uris[0].as_string()
             return Backend.add(self, vfs_uris)
         else:
             src_lst = []
@@ -85,7 +84,6 @@ class FolderBackend(Backend):
             options |= gnomevfs.XFER_FOLLOW_LINKS_RECURSIVE
             GUITransfer(src_lst, dst_lst, options)
 
-            print "adding: ", vfs_uri_lst[0].as_string()
             return Backend.add(self, vfs_uri_lst)
 
 

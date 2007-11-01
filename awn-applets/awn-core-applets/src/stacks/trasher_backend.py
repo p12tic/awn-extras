@@ -39,7 +39,7 @@ class TrashBackend(FolderBackend):
         for dir in applet.gconf_client.get_list(
             applet.gconf_path + "/trash_dirs", "string"):
             if dir.find("home"):    # probably the "home" trash of user
-                return Backend.__init__(self, applet, dir, icon_size)
+                return Backend.__init__(self, applet, VfsUri(dir), icon_size)
         return Backend.__init__(self, applet, VfsUri("~/.Trash"), icon_size)
 
     def _empty_cb(self, widget):
@@ -105,36 +105,22 @@ class TrashBackend(FolderBackend):
     def add(self, uris, action=None):
         # note: assume all files "in one drag" originate from same device
         # (meaning -> have to be moved to same trash)
-        pixbuf = Backend.add(self, uris)
-        if action != None and pixbuf is not None:
-            # TODO: still have to find the right trash
-            trash_uri = self.backend_uri.as_uri()
-            src_lst = []
-            dst_lst = []
-            for uri in uris:
-                src_lst.append(uri.as_uri())
-                dst_lst.append(trash_uri.append_path(uri.as_uri().short_name))
-            options = gnomevfs.XFER_REMOVESOURCE
-            options |= gnomevfs.XFER_FOLLOW_LINKS
-            options |= gnomevfs.XFER_RECURSIVE
-            options |= gnomevfs.XFER_FOLLOW_LINKS_RECURSIVE
-            GUITransfer(src_lst, dst_lst, options)
-        return pixbuf
+        # TODO: move to correct trash
+        return FolderBackend.add(self, uris, gtk.gdk.ACTION_MOVE)
 
     def read(self):
         for dir in self.applet.gconf_client.get_list(
                     self.applet.gconf_path + "/trash_dirs", "string"):
             trash_uri = VfsUri(dir)
-#            try:
-            if True:
+            try:
                 handle = gnomevfs.DirectoryHandle(trash_uri.as_uri())
                 monitor = Monitor(trash_uri)
                 if monitor:
                     monitor.connect("created", self._created_cb)
                     monitor.connect("deleted", self._deleted_cb)
-#            except:
-#                print "Stacks Error: ", trash_uri.as_string(), " not found"
-#                continue
+            except:
+                print "Stacks Error: ", trash_uri.as_string(), " not found"
+                continue
             try:
                 fileinfo = handle.next()
             except StopIteration:

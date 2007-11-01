@@ -232,12 +232,13 @@ class StacksApplet (awn.AppletSimple):
                             selection, targetType, time):
         pixbuf = None
         vfs_uris = []
-        for uri in selection.get_uris():
+        for uri in selection.data.split():
             try:
                 vfs_uris.append(VfsUri(uri))
             except TypeError:
                 pass
-        self.backend.add(vfs_uris, context.action)
+        if vfs_uris:
+            self.backend.add(vfs_uris, context.action)
         context.finish(True, False, time)
         return True
 

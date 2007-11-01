@@ -211,25 +211,25 @@ class Monitor(gobject.GObject):
 
     monitor = None
     vfs_uri = None
+    monitor_type = None
 
     def __init__(self, vfs_uri):
         assert isinstance(vfs_uri, VfsUri)
         gobject.GObject.__init__(self)
         self.vfs_uri = vfs_uri
-
         type = gnomevfs.get_file_info(vfs_uri.as_uri(),
                 gnomevfs.FILE_INFO_DEFAULT | 
                 gnomevfs.FILE_INFO_FOLLOW_LINKS).type
         if type == gnomevfs.FILE_TYPE_DIRECTORY:
-            monitor_type = gnomevfs.MONITOR_DIRECTORY
+            self.monitor_type = gnomevfs.MONITOR_DIRECTORY
         elif type == gnomevfs.FILE_TYPE_REGULAR:
-            monitor_type = gnomevfs.MONITOR_FILE
+            self.monitor_type = gnomevfs.MONITOR_FILE
         else:
             raise gnomevfs.NotSupportedError
         try:
             self.monitor = gnomevfs.monitor_add(
                     vfs_uri.as_string(),
-                    monitor_type,
+                    self.monitor_type,
                     self._monitor_cb)
         except gnomevfs.NotSupportedError:
             return None
@@ -238,7 +238,10 @@ class Monitor(gobject.GObject):
     def _monitor_cb(self, monitor_uri, info_uri, event):
         signal = self.event_mapping[event]
         if signal:
-            self.emit(signal, self.vfs_uri)
+            if self.monitor_type == gnomevfs.MONITOR_FILE:
+                self.emit(signal, self.vfs_uri)
+            else:
+                self.emit(signal, VfsUri(info_uri))
 
 
     def close(self):

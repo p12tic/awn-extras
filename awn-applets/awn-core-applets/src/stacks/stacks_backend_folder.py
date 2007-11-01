@@ -21,7 +21,7 @@ import gtk
 import gnomevfs
 import gettext
 from stacks_backend import *
-from stacks_vfs import VfsUri, Monitor
+from stacks_vfs import *
 
 APP="Stacks"
 DIR="locale"
@@ -58,14 +58,20 @@ class FolderBackend(Backend):
 
 
     def add(self, vfs_uris, action=None):
-        pixbuf = Backend.add(self, vfs_uris)
-        if action is not None and pixbuf is not None:
-            src_lst = [], dst_lst = []
+        if not action:
+            print "no action specified for: ", vfs_uris[0].as_string()
+            return Backend.add(self, vfs_uris)
+        else:
+            src_lst = []
+            dst_lst = []
+            vfs_uri_lst = []
             for vfs_uri in vfs_uris:
+                dst_uri = self.backend_uri.as_uri().append_path(
+                                vfs_uri.as_uri().short_name)
                 src_lst.append(vfs_uri.as_uri())
-                dst_lst.append(
-                        self.backend_uri.as_uri().append_path(
-                                vfs_uri.as_uri().short_name))
+                dst_lst.append(dst_uri)
+                vfs_uri_lst.append(VfsUri(dst_uri))
+
             if action == gtk.gdk.ACTION_LINK:
                 options = gnomevfs.XFER_LINK_ITEMS
             elif action == gtk.gdk.ACTION_COPY:
@@ -78,7 +84,9 @@ class FolderBackend(Backend):
             options |= gnomevfs.XFER_RECURSIVE
             options |= gnomevfs.XFER_FOLLOW_LINKS_RECURSIVE
             GUITransfer(src_lst, dst_lst, options)
-        return pixbuf
+
+            print "adding: ", vfs_uri_lst[0].as_string()
+            return Backend.add(self, vfs_uri_lst)
 
 
     def read(self):

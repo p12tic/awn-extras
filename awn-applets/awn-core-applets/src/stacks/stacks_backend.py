@@ -63,10 +63,10 @@ class Backend(gobject.GObject):
     icon_size = 0
 
     __gsignals__ = {
-        'attention' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, 
+        'attention' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
                         (gobject.TYPE_INT,)),
         'restructure' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
-                        (gobject.TYPE_INT,))
+                        (gobject.TYPE_OBJECT,))
     }
 
 
@@ -165,6 +165,7 @@ class Backend(gobject.GObject):
                 command = item.get_string(gnomedesktop.KEY_EXEC)
                 name = item.get_localestring(gnomedesktop.KEY_NAME)
                 mime_type = item.get_localestring(gnomedesktop.KEY_MIME_TYPE)
+                type = gnomevfs.FILE_TYPE_REGULAR
                 icon_name = item.get_localestring(gnomedesktop.KEY_ICON)
                 icon_uri = None
                 if icon_name:
@@ -206,8 +207,10 @@ class Backend(gobject.GObject):
                 retval = pixbuf
 
         # restructure of dialog needed
-        self.emit("restructure", self.get_type())
-        return retval
+        if retval:
+            self.emit("restructure", retval)
+            return True
+        return False
 
 
     # remove file from store
@@ -223,7 +226,7 @@ class Backend(gobject.GObject):
                     break
             iter = self.store.iter_next(iter)
         if changed:
-            self.emit("restructure", self.get_type())
+            self.emit("restructure", None)
         return changed
 
 
@@ -234,7 +237,7 @@ class Backend(gobject.GObject):
     def clear(self):
         self.store.clear()
         # restructure of dialog needed
-        self.emit("restructure", self.get_type())
+        self.emit("restructure", None)
 
 
     def open(self):

@@ -237,10 +237,7 @@ class StacksApplet (awn.AppletSimple):
                 vfs_uris.append(VfsUri(uri))
             except TypeError:
                 pass
-        if vfs_uris:
-            pixbuf = self.backend.add(vfs_uris, context.action)
-            if pixbuf is not None:
-                self.applet_set_full_icon(pixbuf)
+        self.backend.add(vfs_uris, context.action)
         context.finish(True, False, time)
         return True
 
@@ -547,7 +544,7 @@ class StacksApplet (awn.AppletSimple):
         awn.awn_effect_stop(self.effects, "attention")
 
 
-    def backend_restructure_cb(self, widget, type):
+    def backend_restructure_cb(self, widget, pixbuf):
         # destroy current dialog
         if self.dialog:
             self.dialog_visible = False
@@ -560,11 +557,13 @@ class StacksApplet (awn.AppletSimple):
         if self.backend.is_empty():
             self.applet_set_empty_icon()
         else:
-            pixbuf = self.backend.get_random_pixbuf()
+            if pixbuf is None:
+                pixbuf = self.backend.get_random_pixbuf()
             self.applet_set_full_icon(pixbuf)
 
         # precache dialog tables
         # gobject.idle_add(self._dialog_tables_new)
+        self._dialog_tables_new
 
 
     def backend_get_config(self):

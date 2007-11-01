@@ -46,6 +46,8 @@ enum {
 static AwnAppletDialogClass *parent_class = NULL;
 
 static FileBrowserFolder *current_folder = NULL;
+static GtkWidget *prev_page = NULL;
+static GtkWidget *next_page = NULL;
 
 static void filebrowser_dialog_do_folder_up(
     GtkWidget * dialog ) {
@@ -83,10 +85,18 @@ static gboolean filebrowser_dialog_button_clicked(
         }
         break;
     case FOLDER_LEFT:
-        filebrowser_folder_do_prev_page( current_folder);
+        if (filebrowser_folder_has_prev_page(current_folder)) {
+            filebrowser_folder_do_prev_page(current_folder);
+            gtk_widget_set_sensitive(prev_page, filebrowser_folder_has_prev_page(current_folder));
+            gtk_widget_set_sensitive(next_page, TRUE);
+        }
         break;
     case FOLDER_RIGHT:
-        filebrowser_folder_do_next_page( current_folder );
+        if (filebrowser_folder_has_next_page(current_folder)) {
+            filebrowser_folder_do_next_page(current_folder);
+            gtk_widget_set_sensitive(next_page, filebrowser_folder_has_next_page(current_folder));
+            gtk_widget_set_sensitive(prev_page, TRUE);
+        }
         break;
     case FOLDER_UP:
         filebrowser_dialog_do_folder_up( GTK_WIDGET( current_folder->dialog ) );
@@ -163,6 +173,12 @@ void filebrowser_dialog_set_folder(
     gtk_container_add( GTK_CONTAINER( dialog->viewport), folder);
 	
     current_folder = FILEBROWSER_FOLDER(folder);
+
+    // refresh prev/next button
+    gtk_widget_set_sensitive(prev_page, filebrowser_folder_has_prev_page(current_folder));
+    gtk_widget_set_sensitive(next_page, filebrowser_folder_has_next_page(current_folder));
+
+
     gtk_widget_show_all( GTK_WIDGET( current_folder ) );
 }
 
@@ -260,7 +276,9 @@ GtkWidget *filebrowser_dialog_new(
 		gtk_button_set_relief(GTK_BUTTON(folder_up), GTK_RELIEF_NONE);
 		g_signal_connect( folder_up, "button-release-event",
                       GTK_SIGNAL_FUNC( filebrowser_dialog_button_clicked ), GINT_TO_POINTER( FOLDER_UP ) );
-		gtk_box_pack_start(GTK_BOX(hbox1), folder_up, TRUE, TRUE, 0);
+		GtkWidget *upper_bin = gtk_alignment_new(0, 0.5, 0, 0);
+		gtk_container_add(GTK_CONTAINER(upper_bin), folder_up);
+		gtk_box_pack_start(GTK_BOX(hbox1), upper_bin, TRUE, TRUE, 0);
 
 		GtkWidget *filemanager = gtk_button_new_with_label("Open filemanager");
 		gtk_button_set_relief(GTK_BUTTON(filemanager), GTK_RELIEF_NONE);
@@ -277,6 +295,7 @@ GtkWidget *filebrowser_dialog_new(
 	gtk_container_add(GTK_CONTAINER(dialog), hbox2);
 	
 	GtkWidget *folder_left = gtk_button_new_from_stock(GTK_STOCK_GO_BACK);
+	prev_page = folder_left;
 	gtk_button_set_relief(GTK_BUTTON(folder_left), GTK_RELIEF_NONE);
 	g_signal_connect( folder_left, "button-release-event",
                       GTK_SIGNAL_FUNC( filebrowser_dialog_button_clicked ), GINT_TO_POINTER( FOLDER_LEFT ) );
@@ -286,6 +305,7 @@ GtkWidget *filebrowser_dialog_new(
 	
 	
 	GtkWidget *folder_right = gtk_button_new_from_stock(GTK_STOCK_GO_FORWARD);
+	next_page = folder_right;
 	gtk_button_set_relief(GTK_BUTTON(folder_right), GTK_RELIEF_NONE);
 	g_signal_connect( folder_right, "button-release-event",
                       GTK_SIGNAL_FUNC( filebrowser_dialog_button_clicked ), GINT_TO_POINTER( FOLDER_RIGHT ) );

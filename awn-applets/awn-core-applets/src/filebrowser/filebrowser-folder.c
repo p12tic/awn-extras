@@ -406,7 +406,6 @@ void filebrowser_folder_layout(FileBrowserFolder *folder, gint offset){
     
     gpointer old = g_list_nth_data(children, 0);
     if(old != NULL){
-        g_print("old != NULL\n");
         GList *icons = gtk_container_get_children(GTK_CONTAINER(old));
         g_list_foreach(icons, keep_icons, old);
         gtk_widget_destroy(GTK_WIDGET(old));

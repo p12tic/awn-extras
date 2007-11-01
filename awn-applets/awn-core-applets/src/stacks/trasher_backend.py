@@ -102,12 +102,6 @@ class TrashBackend(FolderBackend):
     def open(self):
         LaunchManager().launch_uri("trash:", None)
 
-    def add(self, uris, action=None):
-        # note: assume all files "in one drag" originate from same device
-        # (meaning -> have to be moved to same trash)
-        # TODO: move to correct trash
-        return FolderBackend.add(self, uris, gtk.gdk.ACTION_MOVE)
-
     def read(self):
         for dir in self.applet.gconf_client.get_list(
                     self.applet.gconf_path + "/trash_dirs", "string"):

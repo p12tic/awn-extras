@@ -45,8 +45,7 @@ enum {
 
 static AwnAppletDialogClass *parent_class = NULL;
 
-static FileBrowserFolder *backend_folder;
-static FileBrowserFolder *current_folder;
+static FileBrowserFolder *current_folder = NULL;
 
 static void filebrowser_dialog_do_folder_up(
     GtkWidget * dialog ) {
@@ -149,23 +148,16 @@ void filebrowser_dialog_set_folder(
     gint page ) {
     
     GtkWidget *folder;
-    
-    if(backend_folder && gnome_vfs_uri_equal(backend_folder->uri, uri)){
-    	folder = GTK_WIDGET(backend_folder);
-    }else{
-		folder = filebrowser_folder_new( FILEBROWSER_DIALOG( dialog ), uri );
-	}
+
+    if (!uri) uri = gnome_vfs_uri_new( filebrowser_gconf_get_backend_folder() );
+    folder = filebrowser_folder_new( FILEBROWSER_DIALOG( dialog ), uri );
 
     g_return_if_fail( GTK_IS_WIDGET( folder ) );
     
     gtk_window_set_title( GTK_WINDOW( dialog->awn_dialog ), FILEBROWSER_FOLDER(folder)->name );
 
     if ( current_folder ){
-    	if( current_folder == backend_folder) {
-    		gtk_container_remove( GTK_CONTAINER(dialog->viewport), GTK_WIDGET( backend_folder ) );
-    	}else{
-	        gtk_widget_destroy( GTK_WIDGET( current_folder ) );
-	    }
+        gtk_widget_destroy( GTK_WIDGET( current_folder ) );
     }
 
     gtk_container_add( GTK_CONTAINER( dialog->viewport), folder);
@@ -190,28 +182,22 @@ void filebrowser_dialog_toggle_visiblity(
     if ( dialog->active ) {
     	// hide title
         awn_title_hide (dialog->applet->title, GTK_WIDGET(dialog->applet->awn_applet));
-		// set icon
-        filebrowser_applet_set_icon( dialog->applet, NULL );        
-		// show the dialog
+	// set icon
+        filebrowser_applet_set_icon( dialog->applet, NULL ); 
+	// show the dialog
         gtk_widget_show_all( GTK_WIDGET( dialog->awn_dialog ) );
     } else {
-    	// hide dialog
-        gtk_widget_hide( dialog->awn_dialog );
-		
-		// reset to backend folder
-		if(current_folder != backend_folder ){
-			// destroy current_folder
-			gtk_widget_destroy( GTK_WIDGET( current_folder ) );
-			// refer to backend folder
-			current_folder = backend_folder;
-			// add to container
-			gtk_container_add( GTK_CONTAINER( dialog->viewport ), GTK_WIDGET(current_folder));
-			// reset title
-			gtk_window_set_title( GTK_WINDOW( dialog->awn_dialog ), FILEBROWSER_FOLDER(current_folder)->name );
-		}
-		
-		// set applet icon
-		filebrowser_applet_set_icon( dialog->applet, current_folder->applet_icon );
+	// hide dialog
+	gtk_widget_hide( dialog->awn_dialog );
+
+	// reset to backend folder
+	//filebrowser_dialog_set_folder( dialog, gnome_vfs_uri_new( filebrowser_gconf_get_backend_folder() ), 0 );
+	// reset title
+	//gtk_window_set_title( GTK_WINDOW( dialog->awn_dialog ), FILEBROWSER_FOLDER(current_folder)->name );
+	gtk_window_set_title( GTK_WINDOW( dialog->awn_dialog ), filebrowser_gconf_get_backend_folder() );
+
+	// set applet icon
+	//filebrowser_applet_set_icon( dialog->applet, current_folder->applet_icon );
     }
 }
 
@@ -254,18 +240,18 @@ static void filebrowser_dialog_init(
  * -open the backend folder specified in the config
  */
 GtkWidget *filebrowser_dialog_new(
-    FileBrowserApplet * applet ) {
+	FileBrowserApplet * applet ) {
     
-    FileBrowserDialog *dialog = g_object_new( FILEBROWSER_TYPE_DIALOG, NULL );
-    
-	dialog->awn_dialog = awn_applet_dialog_new (AWN_APPLET(applet->awn_applet));
-    dialog->applet = applet;
+	FileBrowserDialog *dialog = g_object_new( FILEBROWSER_TYPE_DIALOG, NULL );
 
-    gtk_container_add( GTK_CONTAINER(dialog->awn_dialog), GTK_WIDGET( dialog ) );
+	dialog->awn_dialog = awn_applet_dialog_new (AWN_APPLET(applet->awn_applet));
+	dialog->applet = applet;
+
+	gtk_container_add( GTK_CONTAINER(dialog->awn_dialog), GTK_WIDGET( dialog ) );
 
 	gtk_window_set_focus_on_map (GTK_WINDOW (dialog->awn_dialog), TRUE);
 	g_signal_connect (G_OBJECT (dialog->awn_dialog), "focus-out-event",
-                    G_CALLBACK (filebrowser_dialog_focus_out_event), dialog);
+			G_CALLBACK (filebrowser_dialog_focus_out_event), dialog);
 	
 	if( filebrowser_gconf_is_browsing() ){
 		GtkWidget *hbox1 = gtk_hbox_new(FALSE, 0);
@@ -284,7 +270,7 @@ GtkWidget *filebrowser_dialog_new(
 	}
 	
 	dialog->viewport = gtk_event_box_new();
-    gtk_event_box_set_visible_window(GTK_EVENT_BOX(dialog->viewport), FALSE);
+	gtk_event_box_set_visible_window(GTK_EVENT_BOX(dialog->viewport), FALSE);
 	gtk_container_add(GTK_CONTAINER(dialog), dialog->viewport);
 	
 	GtkWidget *hbox2 = gtk_hbox_new(TRUE, 0);
@@ -306,14 +292,11 @@ GtkWidget *filebrowser_dialog_new(
         GtkWidget *right_bin = gtk_alignment_new(1, 0.5, 0, 0);
         gtk_container_add(GTK_CONTAINER(right_bin), folder_right);
 	gtk_box_pack_start(GTK_BOX(hbox2), right_bin, TRUE, TRUE, 0);
-		
+
 	// Create a folder of the backend folder
-    filebrowser_dialog_set_folder( dialog, gnome_vfs_uri_new( filebrowser_gconf_get_backend_folder() ), 0 );
-    // Set the applet-icon
-    filebrowser_applet_set_icon( dialog->applet, current_folder->applet_icon );
-    // Reference as backend folder
-    backend_folder = current_folder;
-    g_object_ref_sink( backend_folder );
+	filebrowser_dialog_set_folder( dialog, gnome_vfs_uri_new( filebrowser_gconf_get_backend_folder() ), 0 );
+	// Set the applet-icon
+	filebrowser_applet_set_icon( dialog->applet, current_folder->applet_icon );
 	
 	gtk_widget_show_all( GTK_WIDGET( dialog ) );
 

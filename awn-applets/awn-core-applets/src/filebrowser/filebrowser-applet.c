@@ -311,6 +311,7 @@ static gboolean filebrowser_applet_button_release_event(
 
     // toggle visibility
     if ( event->button == 1 ) {
+	filebrowser_dialog_set_folder( applet->filebrowser, NULL, 0 );
         filebrowser_dialog_toggle_visiblity( applet->filebrowser );
         return FALSE;
     

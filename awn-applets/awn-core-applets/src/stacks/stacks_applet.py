@@ -442,8 +442,8 @@ class StacksApplet (awn.AppletSimple):
                 x=0
                 y=0
                 table = gtk.Table(1,1,True)
-                table.set_row_spacings(10)
-                table.set_col_spacings(10)
+                table.set_row_spacings(0)
+                table.set_col_spacings(0)
                 tables.append(table)
             button = self._dialog_item_new(store, iter)
             table.attach(button, x, x+1, y, y+1)
@@ -558,7 +558,7 @@ class StacksApplet (awn.AppletSimple):
         if self.backend.is_empty():
             self.applet_set_empty_icon()
         else:
-            if pixbuf is None:
+            if not pixbuf:
                 pixbuf = self.backend.get_random_pixbuf()
             self.applet_set_full_icon(pixbuf)
 

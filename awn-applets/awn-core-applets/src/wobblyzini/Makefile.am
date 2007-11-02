@@ -1,3 +1,5 @@
+SUBDIRS = icons
+
 INCLUDES =							\
 	-I$(srcdir)						\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"		\

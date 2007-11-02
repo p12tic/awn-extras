@@ -1,9 +1,9 @@
 [Desktop Entry]
 Version=1.0
 Encoding=UTF-8
-Name= Quit-Logoff applet
+Name=Quit-Logoff applet
 Type=Python
 Comment=A applet to exit GNOME
 Exec=@LIBDIR@/awn/applets/quit-applet/quit-applet.py
 Icon=@LIBDIR@/awn/applets/quit-applet/icons/application-exit.svg
-Name[en_US]= Quit-Logoff applet
+Name[en_US]=Quit-Logoff applet

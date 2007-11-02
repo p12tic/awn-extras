@@ -140,4 +140,5 @@ src/trasher/Makefile
 src/weather/Makefile
 src/weather/images/Makefile
 src/wobblyzini/Makefile
+src/wobblyzini/icons/Makefile
 ])

@@ -135,7 +135,7 @@ class StacksApplet (awn.AppletSimple):
         self.connect("drag-leave", self.applet_drag_leave_cb)
         self.connect("orientation-changed", self.applet_orient_changed_cb)
         self.connect("height-changed", self.applet_height_changed_cb)
-        self.applet_set_empty_icon()
+
 
     """
     Functions concerning the Applet
@@ -309,17 +309,10 @@ class StacksApplet (awn.AppletSimple):
             if self.just_dragged:
                 self.just_dragged = False
             else:
-                if uri.as_string().endswith(".desktop"):
-                    item = gnomedesktop.item_new_from_uri(
-                            uri.as_string(), gnomedesktop.LOAD_ONLY_IF_EXISTS)
-                    if item:
-                        command = item.get_string(gnomedesktop.KEY_EXEC)
-                        LaunchManager().launch_command(command, uri.as_string())
-                else:
-                    LaunchManager().launch_uri(uri.as_string(), mimetype)
+                self.item_activated_cb(None, user_data)
 
 
-    def item_activate_cb(self, widget, user_data):
+    def item_activated_cb(self, widget, user_data):
         uri, mimetype = user_data
         if uri.as_string().endswith(".desktop"):
             item = gnomedesktop.item_new_from_uri(
@@ -396,7 +389,7 @@ class StacksApplet (awn.AppletSimple):
                         self.item_button_cb,
                         (vfs_uri, mime_type))
         button.connect( "activate",
-                        self.item_activate_cb,
+                        self.item_activated_cb,
                         (vfs_uri, mime_type))
         button.connect( "drag-data-get",
                         self.item_drag_data_get,
@@ -444,7 +437,12 @@ class StacksApplet (awn.AppletSimple):
             for item in self.table.get_children():
                 self.table.remove(item)
             self.table.destroy()
-        self.table = gtk.Table(1, 1, True)
+
+        if page > 0:
+            self.table = gtk.Table(self.config_rows, self.config_cols, True)
+        else:
+            self.table = gtk.Table(1, 1, True)
+        self.table.set_resize_mode(gtk.RESIZE_PARENT)
         self.table.set_row_spacings(0)
         self.table.set_col_spacings(0)
 
@@ -491,7 +489,7 @@ class StacksApplet (awn.AppletSimple):
             self.dialog = awn.AppletDialog (self)
             self.dialog.set_focus_on_map(True)
             self.dialog.connect("focus-out-event", self.dialog_focus_out)
-            # TODO set title?
+            # TODO: preference -> set title?
             self.dialog.set_title(self.backend.get_title())
             self.hbox = gtk.HBox(False, 0)
             self.dialog.add(self.hbox)
@@ -638,6 +636,7 @@ class StacksApplet (awn.AppletSimple):
         # read the backends contents and connect to its signals
         self.backend.connect("item_created", self._item_created_cb)
         self.backend.read()
+        self.backend_restructure_cb(None, None)
         self.backend.connect("attention", self.backend_attention_cb)
         self.backend.connect("restructure", self.backend_restructure_cb)
 

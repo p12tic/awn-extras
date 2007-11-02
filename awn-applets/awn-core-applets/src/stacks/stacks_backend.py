@@ -114,10 +114,6 @@ class Backend(gobject.GObject):
             return cmp(n1, n2)
 
 
-    def _create_or_open(self):
-        return
-
-
     def _get_attention(self):
         self.emit("attention", self.get_type())
 
@@ -188,7 +184,8 @@ class Backend(gobject.GObject):
                             path,
                             gnomevfs.FILE_INFO_DEFAULT |
                             gnomevfs.FILE_INFO_GET_MIME_TYPE |
-                            gnomevfs.FILE_INFO_FORCE_SLOW_MIME_TYPE)
+                            gnomevfs.FILE_INFO_FORCE_SLOW_MIME_TYPE |
+                            gnomevfs.FILE_INFO_FOLLOW_LINKS )
                     type = fileinfo.type
                     mime_type = fileinfo.mime_type
                 except gnomevfs.NotFoundError:
@@ -227,8 +224,7 @@ class Backend(gobject.GObject):
                     changed = True
                     break
             iter = self.store.iter_next(iter)
-        if changed:
-            self.emit("restructure", None)
+        if changed: self.emit("restructure", None)
         return changed
 
 
@@ -238,7 +234,6 @@ class Backend(gobject.GObject):
 
     def clear(self):
         self.store.clear()
-        # restructure of dialog needed
         self.emit("restructure", None)
 
 
@@ -270,19 +265,11 @@ class Backend(gobject.GObject):
 
 
     def get_random_pixbuf(self):
-        pixbuf = None
-        iter = self.store.get_iter_first()
-        if iter:
-            rand = random.Random()
-            pick = rand.randint(0, 10)
-            start = 0
-            while iter:
-                pixbuf = self.store.get_value(iter, COL_ICON)
-                if pick == start:
-                    break
-                iter = self.store.iter_next(iter)
-                start += 1
-        return pixbuf
+        max = self.get_number_items()
+        rand = random.Random()
+        pick = rand.randint(0, max)
+        iter = self.store.iter_nth_child(None, pick)
+        return self.store.get_value(iter, COL_ICON)
 
 
     def get_store(self):

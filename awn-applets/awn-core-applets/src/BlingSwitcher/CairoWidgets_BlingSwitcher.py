@@ -285,5 +285,5 @@ class BlingSwitcher(gtk.DrawingArea):
 			scr.move_viewport((scr.get_width()*(self.get_active_viewport_number()+1))-scr.get_width(), 1)
 		if direction == 'next':
 			scr = wnck.screen_get_default()
-			scr.move_viewport((scr.get_width()*(self.get_active_viewport_number()-1))-scr.get_width(), 1)
+			scr.move_viewport(scr.get_width()*((self.get_active_viewport_number()-2)%self.get_viewport_number()), 1)
 			

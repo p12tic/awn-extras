@@ -75,8 +75,8 @@ class StacksApplet (awn.AppletSimple):
     # Structures
     backend = None
     dialog = None
-    tables = None
     hbox = None
+    table = None
     navbuttons = None
 
     # Status values
@@ -135,6 +135,7 @@ class StacksApplet (awn.AppletSimple):
         self.connect("drag-leave", self.applet_drag_leave_cb)
         self.connect("orientation-changed", self.applet_orient_changed_cb)
         self.connect("height-changed", self.applet_height_changed_cb)
+        self.applet_set_empty_icon()
 
     """
     Functions concerning the Applet
@@ -331,8 +332,8 @@ class StacksApplet (awn.AppletSimple):
 
 
     def item_drag_data_get(
-            self, widget, context, selection, info, time, user_data):
-        selection.set_uris([user_data])
+            self, widget, context, selection, info, time, vfs_uri):
+        selection.set_uris([vfs_uri.as_string()])
 
 
     def item_drag_begin(self, widget, context):
@@ -377,37 +378,42 @@ class StacksApplet (awn.AppletSimple):
         if self.context_menu_visible is False:
             self.dialog_hide()
 
-
-    def _dialog_item_new(self, store, iter):
+    def _item_created_cb(self, widget, iter):
+        # get values from store
+        store = self.backend.get_store()
+        vfs_uri, lbl_text, mime_type, icon, button = store.get(
+                iter, COL_URI, COL_LABEL, COL_MIMETYPE, COL_ICON, COL_BUTTON)
+        if button:
+            return button
         # create new button
         button = gtk.Button()
         button.set_relief(gtk.RELIEF_NONE)
-        button.connect( "button-release-event",
-                        self.item_button_cb,
-                        store.get(iter, COL_URI, COL_MIMETYPE))
-        button.connect( "activate",
-                        self.item_activate_cb,
-                        store.get(iter, COL_URI, COL_MIMETYPE))
-        button.connect( "drag-data-get",
-                        self.item_drag_data_get,
-                        store.get_value(iter, COL_URI).as_string())
-        button.connect( "drag-begin",
-                        self.item_drag_begin)
         button.drag_source_set( gtk.gdk.BUTTON1_MASK,
                                 self.dnd_targets,
-                                self.config_fileops )
+                                self.config_fileops)
+        button.drag_source_set_icon_pixbuf(icon)
+        button.connect( "button-release-event",
+                        self.item_button_cb,
+                        (vfs_uri, mime_type))
+        button.connect( "activate",
+                        self.item_activate_cb,
+                        (vfs_uri, mime_type))
+        button.connect( "drag-data-get",
+                        self.item_drag_data_get,
+                        vfs_uri)
+        button.connect( "drag-begin",
+                        self.item_drag_begin)
+        # add to vbox
         vbox = gtk.VBox(False, 4)
         button.add(vbox)
         # icon -> button.image
-        icon = store.get_value(iter, COL_ICON)
-        button.drag_source_set_icon_pixbuf(icon)
         image = gtk.Image()
         image.set_from_pixbuf(icon)
         image.set_size_request(self.config_icon_size,
                 self.config_icon_size)
         vbox.pack_start(image, False, False, 0)
         # label
-        label = gtk.Label(store.get_value(iter, COL_LABEL))
+        label = gtk.Label(lbl_text)
         label.set_justify(gtk.JUSTIFY_CENTER)
         label.set_line_wrap(True)
         # pango layout
@@ -416,63 +422,66 @@ class StacksApplet (awn.AppletSimple):
         layout.set_width(int(1.5 * self.config_icon_size) * pango.SCALE)
         layout.set_wrap(pango.WRAP_WORD_CHAR)
         layout.set_alignment(pango.ALIGN_CENTER)
-        _lbltext = label.get_text()
-        lbltext = ""
+        _lbltxt = label.get_text()
+        lbltxt = ""
         for i in range(layout.get_line_count()):
             length = layout.get_line(i).length
-            lbltext += str(_lbltext[0:length]) + '\n'
-            _lbltext = _lbltext[length:]
-        label.set_text(lbltext)
+            lbltxt += str(_lbltxt[0:length]) + '\n'
+            _lbltxt = _lbltxt[length:]
+        label.set_text(lbltxt)
         label.set_size_request(-1, lh*2/pango.SCALE)
         # add to vbox
         vbox.pack_start(label, True, True, 0)
         vbox.set_size_request(int(1.5 * self.config_icon_size), -1)
+        store.set_value(iter, COL_BUTTON, button)
         return button
 
-
-    def _dialog_tables_new(self):
-        # initialize values
+    def _dialog_restructure_cb(self, widget, page=0):
         store = self.backend.get_store()
-        iter = store.get_iter_first()
-        tables = []
-        x=y=0
+        iter = store.iter_nth_child(None, page * self.config_rows * self.config_cols)
 
+        if self.table:
+            for item in self.table.get_children():
+                self.table.remove(item)
+            self.table.destroy()
+        self.table = gtk.Table(1, 1, True)
+        self.table.set_row_spacings(0)
+        self.table.set_col_spacings(0)
+
+        x=y=0
+        theres_more = False
         while iter:
-            if (x == 0 and y == 0) or y == self.config_rows:
-                x=0
-                y=0
-                table = gtk.Table(1,1,True)
-                table.set_row_spacings(0)
-                table.set_col_spacings(0)
-                tables.append(table)
-            button = self._dialog_item_new(store, iter)
-            table.attach(button, x, x+1, y, y+1)
+            button = store.get_value(iter, COL_BUTTON)
+            t = button.get_parent()
+            if t:
+                t.remove(button)
+            self.table.attach(button, x, x+1, y, y+1)
 
             x += 1
             if x == self.config_cols:
+                x = 0
                 y += 1
-                x=0
+            if y == self.config_rows:
+                theres_more = True
+                break
             iter = store.iter_next(iter)
-        if tables is []:
-            table = gtk.Table(1,1,True)
-            table.set_row_spacings(10)
-            table.set_col_spacings(10)
-            tables.append(table)
-        self.current_page = -1
-        self.tables = tables
-        # return False, so we can idle call this method via gobject
-        return False
+
+        self.hbox.add(self.table)
+        return theres_more
 
 
-    def dialog_show_prev_page(self, user_data):
+    def dialog_show_prev_page(self, widget):
         self.dialog_show_new(self.current_page-1)
 
 
-    def dialog_show_next_page(self, user_data):
+    def dialog_show_next_page(self, widget):
         self.dialog_show_new(self.current_page+1)
 
 
     def dialog_show_new(self, page=0):
+        assert page >= 0
+        self.current_page = page
+
         # if nothing to show, then return
         if self.backend.is_empty():
             return
@@ -487,20 +496,9 @@ class StacksApplet (awn.AppletSimple):
             self.hbox = gtk.HBox(False, 0)
             self.dialog.add(self.hbox)
 
-        # create new tables if not precached
-        if not self.tables:
-            self._dialog_tables_new()
-
-        # add requested page to the dialog
-        if self.current_page != page:
-            for t in self.tables:
-                if t.get_parent():
-                    self.hbox.remove(t)
-            self.hbox.add(self.tables[page])
-            self.current_page = page
-
+        theres_more = self._dialog_restructure_cb(None, page)
         # if we have more than 1 page and browsing is enabled
-        if len(self.tables) > 1 and self.config_browsing:
+        if self.config_browsing and (theres_more or page > 0):
             if self.navbuttons is None:
                 buttonbox = gtk.HButtonBox()
                 buttonbox.set_layout(gtk.BUTTONBOX_EDGE)
@@ -518,14 +516,14 @@ class StacksApplet (awn.AppletSimple):
                 self.navbuttons = (bt_left, bt_right)
 
             # enable appropriate navigation buttons
-            if self.current_page == 0:
-                self.navbuttons[0].set_sensitive(False)
-            else:
+            if page > 0:
                 self.navbuttons[0].set_sensitive(True)
-            if self.current_page == len(self.tables)-1:
-                self.navbuttons[1].set_sensitive(False)
             else:
+                self.navbuttons[0].set_sensitive(False)
+            if theres_more:
                 self.navbuttons[1].set_sensitive(True)
+            else:
+                self.navbuttons[1].set_sensitive(False)
 
         # show everything on the dialog
         self.dialog.show_all()
@@ -546,14 +544,6 @@ class StacksApplet (awn.AppletSimple):
 
 
     def backend_restructure_cb(self, widget, pixbuf):
-        # destroy current dialog
-        if self.dialog:
-            self.dialog_visible = False
-            self.dialog.destroy()
-            self.dialog = None
-            self.tables = None
-            self.navbuttons = None
-
         # setting applet icon
         if self.backend.is_empty():
             self.applet_set_empty_icon()
@@ -561,11 +551,6 @@ class StacksApplet (awn.AppletSimple):
             if not pixbuf:
                 pixbuf = self.backend.get_random_pixbuf()
             self.applet_set_full_icon(pixbuf)
-
-        # precache dialog tables
-        # gobject.idle_add(self._dialog_tables_new)
-        self._dialog_tables_new
-
 
     def backend_get_config(self):
         # try to get backend from gconf
@@ -651,10 +636,10 @@ class StacksApplet (awn.AppletSimple):
                     self.config_backend, self.config_icon_size)
 
         # read the backends contents and connect to its signals
+        self.backend.connect("item_created", self._item_created_cb)
         self.backend.read()
         self.backend.connect("attention", self.backend_attention_cb)
         self.backend.connect("restructure", self.backend_restructure_cb)
-        self.backend_restructure_cb(None, None)
 
 
 if __name__ == "__main__":

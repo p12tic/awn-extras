@@ -54,6 +54,7 @@ COL_TYPE = 2
 COL_LABEL = 3
 COL_MIMETYPE = 4
 COL_ICON = 5
+COL_BUTTON = 6
 
 class Backend(gobject.GObject):
 
@@ -65,6 +66,8 @@ class Backend(gobject.GObject):
     __gsignals__ = {
         'attention' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
                         (gobject.TYPE_INT,)),
+        'item_created' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+                        (gtk.TreeIter,)),
         'restructure' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
                         (gobject.TYPE_OBJECT,))
     }
@@ -83,7 +86,8 @@ class Backend(gobject.GObject):
                                     gobject.TYPE_INT,
                                     gobject.TYPE_STRING,
                                     gobject.TYPE_STRING,
-                                    gtk.gdk.Pixbuf )
+                                    gtk.gdk.Pixbuf,
+                                    gobject.TYPE_OBJECT)
         self.store.set_sort_column_id(COL_URI, gtk.SORT_ASCENDING)
         self.store.set_sort_func(COL_URI, self._file_sort)
 
@@ -200,16 +204,14 @@ class Backend(gobject.GObject):
                 monitor = None
 
             # add to store
-            self.store.append([vfs_uri, monitor, type, name, mime_type, pixbuf])
+            iter = self.store.append([vfs_uri, monitor, type, name, mime_type, pixbuf, None])
+            self.emit("item_created", iter)
 
             # return pixbuf later?
-            if pixbuf:
-                retval = pixbuf
+            if pixbuf: retval = pixbuf
 
         # restructure of dialog needed
-        if retval:
-            self.emit("restructure", retval)
-            return True
+        if retval: return self.emit("restructure", retval)
         return False
 
 

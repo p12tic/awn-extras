@@ -1,6 +1,6 @@
 SUBDIRS = icons
 
-mediaiconback_DATA = \
+dist_mediaiconback_DATA = \
 		COPYING	\
 		medialogoback.py	\
 		mediaplayers.py

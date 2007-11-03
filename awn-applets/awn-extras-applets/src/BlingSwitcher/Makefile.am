@@ -1,4 +1,4 @@
-blingswitcher_DATA = 				\
+dist_blingswitcher_DATA = 				\
 		PySwitcher.py 			\
 		CairoWidgets_BlingSwitcher.py	\
 		BlingSwitcher.png

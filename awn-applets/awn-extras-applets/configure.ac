@@ -96,7 +96,6 @@ dnl ==============================================
 AM_GCONF_SOURCE_2
 AC_OUTPUT([
 Makefile
-po/Makefile.in
 src/Makefile
 src/awnsystemmonitor/Makefile
 src/awn-notification-daemon/Makefile
@@ -107,7 +106,6 @@ src/awn-notification-daemon/src/daemon/Makefile
 src/battery-applet/Makefile
 src/battery-applet/icons/Makefile
 src/BlingSwitcher/Makefile
-src/clock/Makefile
 src/filebrowser/Makefile
 src/gmail/Makefile
 src/gmail/Themes/Makefile
@@ -128,12 +126,12 @@ src/python-test/Makefile
 src/quit-applet/Makefile
 src/quit-applet/icons/Makefile
 src/separator/Makefile
-src/stacks/Makefile
-src/stacks/icons/Makefile
 src/volume-control/Makefile
 src/volume-control/Themes/Makefile
 src/volume-control/Themes/Black/Makefile
 src/volume-control/Themes/Tango/Makefile
+src/stacks/Makefile
+src/stacks/icons/Makefile
 src/switcher/Makefile
 src/trash/Makefile
 src/trasher/Makefile
@@ -141,4 +139,5 @@ src/weather/Makefile
 src/weather/images/Makefile
 src/wobblyzini/Makefile
 src/wobblyzini/icons/Makefile
+po/Makefile.in
 ])

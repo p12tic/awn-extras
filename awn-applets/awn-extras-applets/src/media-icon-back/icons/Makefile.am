@@ -1,4 +1,4 @@
-mediaiconback_DATA = 				\
+dist_mediaiconback_DATA = 				\
 		backward.svg		\
 		COPYING	
 

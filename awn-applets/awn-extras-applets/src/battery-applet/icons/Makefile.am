@@ -1,4 +1,4 @@
-batteryapplet_DATA = 				\
+dist_batteryapplet_DATA = 				\
 		battery-charging-000.svg 	\
 		battery-charging-020.svg		\
 		battery-charging-040.svg 		\

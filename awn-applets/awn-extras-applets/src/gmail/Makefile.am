@@ -1,6 +1,6 @@
 SUBDIRS = Themes
 
-gmail_DATA = 				\
+dist_gmail_DATA = 				\
 		gmail.py 			\
 		libgmail.py
 

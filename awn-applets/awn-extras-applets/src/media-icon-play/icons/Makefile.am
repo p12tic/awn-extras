@@ -1,4 +1,4 @@
-mediaiconplay_DATA = 				\
+dist_mediaiconplay_DATA = 				\
 		COPYING		\
 		play.svg
 

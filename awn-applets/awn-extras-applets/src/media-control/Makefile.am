@@ -1,6 +1,6 @@
 SUBDIRS = icons
 
-mediacontrol_DATA = \
+dist_mediacontrol_DATA = \
 		mediacontrol.py	\
 		mediaplayers.py	\
 		noArtIcon.png	\

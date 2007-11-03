@@ -27,6 +27,7 @@ class GUITransfer(object):
 
     def __init__(self, src, dst, options):
         self.__progress = None
+        self.dialog_visible = False
         self.cancel = False
         self.txt_operation = ""
         self.label_under = None
@@ -76,7 +77,8 @@ class GUITransfer(object):
             self.status_label = gtk.Label()
             self.dialog.vbox.add(self.status_label)
             self.dialog.set_size_request(400,180)
-            self.dialog.connect("response", self._dialog_response)
+            self.dialog.connect("response", self.__dialog_response)
+            self.dialog.show_all()
 
         self.handle = gnomevfs.async.xfer(
             source_uri_list=src, target_uri_list=dst,
@@ -89,14 +91,8 @@ class GUITransfer(object):
             sync_callback_data=None
             )
 
-        # show dialog after 1 sec
-        gobject.timeout_add(1000, self._dialog_show)
 
-    def _dialog_show(self):
-        if self.dialog: # and enough data still to be copie?
-            self.dialog.show_all()
-
-    def _dialog_response(self, dialog, response):
+    def __dialog_response(self, dialog, response):
         if response == gtk.RESPONSE_REJECT or \
            response == gtk.RESPONSE_DELETE_EVENT:
             self.cancel = True
@@ -151,6 +147,9 @@ class GUITransfer(object):
                     str(info.file_index) + " of " + str(info.files_total))
             if info.bytes_copied > 0 and info.bytes_total > 0:
                 fraction = float(info.bytes_copied)/float(info.bytes_total)
+                if not self.dialog_visible: # TODO: and enough time..
+                    self.dialog_visible = True
+                    self.dialog.show_all()
                 self.progress_bar.set_fraction(fraction)
         if self.cancel:
             # TODO: remove partial target?

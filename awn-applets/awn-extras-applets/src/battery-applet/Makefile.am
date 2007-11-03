@@ -1,6 +1,6 @@
 SUBDIRS = icons
 
-batteryapplet_DATA = \
+dist_batteryapplet_DATA = \
 		battery-applet.py \
 		COPYING
 

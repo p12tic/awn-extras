@@ -32,6 +32,9 @@ _ = gettext.gettext
 
 class PluggerBackend(FolderBackend):
 
+    def __init__(self, applet, uri, icon_size):
+        FolderBackend.__init__(self, applet, uri, icon_size)
+
     def _eject_cb(self, *args, **kargs):
         return
 

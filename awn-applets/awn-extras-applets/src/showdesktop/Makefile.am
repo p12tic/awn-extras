@@ -1,4 +1,4 @@
-test_DATA = showdesktop.py
+dist_test_DATA = showdesktop.py
 testdir = $(libdir)/awn/applets/showdesktop
 
 desktopdir = $(libdir)/awn/applets

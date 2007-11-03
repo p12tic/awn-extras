@@ -1,4 +1,4 @@
-gmail_DATA = 				\
+dist_gmail_DATA = 				\
 		gmailread.svg	 	\
 		gmailunread.svg		
 

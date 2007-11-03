@@ -1,6 +1,6 @@
 SUBDIRS = images
 
-weather_DATA = 				\
+dist_weather_DATA = 				\
 		weather.py		\
 		messages.pot		\
 		weatherconfig.py	\

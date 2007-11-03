@@ -1,6 +1,6 @@
 SUBDIRS = icons
 
-quitapplet_DATA = \
+dist_quitapplet_DATA = \
 		COPYING	\
 		quit-applet.py
 

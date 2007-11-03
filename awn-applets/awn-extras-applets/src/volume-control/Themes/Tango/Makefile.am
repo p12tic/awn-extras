@@ -1,4 +1,4 @@
-volumecontrol_DATA = 				\
+dist_volumecontrol_DATA = 				\
 		audio-volume-high.svg 	\
 		audio-volume-low.svg		\
 		audio-volume-medium.svg 		\

@@ -9,12 +9,19 @@ INCLUDES =							\
 	-DLIBDIR=\"$(libdir)\"                                  
 
 FILEBROWSER_SOURCES =                              \
-	filebrowser-applet.c                           \
+	filebrowser-applet.c \
+	filebrowser-applet.h \
+	filebrowser-defines.h \
 	filebrowser-dialog.c \
+	filebrowser-dialog.h \
 	filebrowser-folder.c \
+	filebrowser-folder.h \
 	filebrowser-gconf.c \
+	filebrowser-gconf.h \
 	filebrowser-icon.c \
-	filebrowser-utils.c
+	filebrowser-icon.h \
+	filebrowser-utils.c \
+	filebrowser-utils.h
 
 FILEBROWSER_LDADD =                        \
         $(DEPS_LIBS)			        \

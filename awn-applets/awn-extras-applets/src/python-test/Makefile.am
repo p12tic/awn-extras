@@ -1,4 +1,4 @@
-test_DATA = python-test.py
+dist_test_DATA = python-test.py
 testdir = $(libdir)/awn/applets/python_test
 
 desktopdir = $(libdir)/awn/applets

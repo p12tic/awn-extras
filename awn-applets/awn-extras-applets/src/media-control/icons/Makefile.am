@@ -1,4 +1,4 @@
-mediacontrol_DATA = 				\
+dist_mediacontrol_DATA = 				\
 		COPYING 	\
 		README		\
 		rhythmbox.svg 

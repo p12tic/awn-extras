@@ -1,6 +1,6 @@
 SUBDIRS = icons
 
-stacksapplet_DATA = \
+dist_stacksapplet_DATA = \
 		stacks_preferences.glade \
 		stacks_applet.py \
 		stacks_backend.py \

@@ -1,6 +1,6 @@
 SUBDIRS = Themes
 
-volumecontrol_DATA = volume-control.py
+dist_volumecontrol_DATA = volume-control.py
 volumecontroldir = $(libdir)/awn/applets/volume-control
 
 desktopdir = $(libdir)/awn/applets

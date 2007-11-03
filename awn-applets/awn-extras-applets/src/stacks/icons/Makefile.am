@@ -1,4 +1,4 @@
-stacks_DATA = 				\
+dist_stacks_DATA = 				\
 		stacks-drop.svg     \
 		stacks-full.svg     
 

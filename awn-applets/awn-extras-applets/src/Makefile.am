@@ -15,6 +15,7 @@ SUBDIRS =			\
 	python-test 		\
 	quit-applet		\
 	separator 		\
+	stacks \
 	switcher 		\
 	showdesktop 		\
 	trash 			\

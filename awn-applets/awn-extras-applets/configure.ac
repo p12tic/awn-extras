@@ -1,5 +1,5 @@
 AC_PREREQ(2.53)
-AC_INIT(awn-core-applets, 0.1, [])
+AC_INIT(awn-extras-applets, 0.2.1, [])
 AM_INIT_AUTOMAKE()
 AC_CONFIG_SRCDIR(src)
 AM_CONFIG_HEADER(config.h)
@@ -22,7 +22,7 @@ dnl ==============================================
 dnl translation support
 dnl ==============================================
 
-GETTEXT_PACKAGE=awn-core-applets
+GETTEXT_PACKAGE=awn-extras-applets
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [Gettext package])
 ALL_LINGUAS=""

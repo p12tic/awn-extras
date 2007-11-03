@@ -3,7 +3,6 @@ SUBDIRS =			\
 	awn-notification-daemon \
 	battery-applet		\
 	BlingSwitcher 		\
-	clock 			\
 	filebrowser     \
 	gmail			\
 	main-menu 		\
@@ -16,7 +15,6 @@ SUBDIRS =			\
 	python-test 		\
 	quit-applet		\
 	separator 		\
-	stacks          \
 	switcher 		\
 	showdesktop 		\
 	trash 			\

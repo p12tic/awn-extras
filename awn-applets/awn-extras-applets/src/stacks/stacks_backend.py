@@ -54,6 +54,7 @@ COL_TYPE = 2
 COL_LABEL = 3
 COL_MIMETYPE = 4
 COL_ICON = 5
+COL_BUTTON = 6
 
 class Backend(gobject.GObject):
 
@@ -65,6 +66,8 @@ class Backend(gobject.GObject):
     __gsignals__ = {
         'attention' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
                         (gobject.TYPE_INT,)),
+        'item_created' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+                        (gtk.TreeIter,)),
         'restructure' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
                         (gobject.TYPE_OBJECT,))
     }
@@ -83,7 +86,8 @@ class Backend(gobject.GObject):
                                     gobject.TYPE_INT,
                                     gobject.TYPE_STRING,
                                     gobject.TYPE_STRING,
-                                    gtk.gdk.Pixbuf )
+                                    gtk.gdk.Pixbuf,
+                                    gobject.TYPE_OBJECT)
         self.store.set_sort_column_id(COL_URI, gtk.SORT_ASCENDING)
         self.store.set_sort_func(COL_URI, self._file_sort)
 
@@ -108,10 +112,6 @@ class Backend(gobject.GObject):
             n2 = model.get_value(iter2, COL_LABEL)
             if n2 is not None: n2 = n2.lower()
             return cmp(n1, n2)
-
-
-    def _create_or_open(self):
-        return
 
 
     def _get_attention(self):
@@ -184,7 +184,8 @@ class Backend(gobject.GObject):
                             path,
                             gnomevfs.FILE_INFO_DEFAULT |
                             gnomevfs.FILE_INFO_GET_MIME_TYPE |
-                            gnomevfs.FILE_INFO_FORCE_SLOW_MIME_TYPE)
+                            gnomevfs.FILE_INFO_FORCE_SLOW_MIME_TYPE |
+                            gnomevfs.FILE_INFO_FOLLOW_LINKS )
                     type = fileinfo.type
                     mime_type = fileinfo.mime_type
                 except gnomevfs.NotFoundError:
@@ -200,16 +201,14 @@ class Backend(gobject.GObject):
                 monitor = None
 
             # add to store
-            self.store.append([vfs_uri, monitor, type, name, mime_type, pixbuf])
+            iter = self.store.append([vfs_uri, monitor, type, name, mime_type, pixbuf, None])
+            self.emit("item_created", iter)
 
             # return pixbuf later?
-            if pixbuf:
-                retval = pixbuf
+            if pixbuf: retval = pixbuf
 
         # restructure of dialog needed
-        if retval:
-            self.emit("restructure", retval)
-            return True
+        if retval: return self.emit("restructure", retval)
         return False
 
 
@@ -225,8 +224,7 @@ class Backend(gobject.GObject):
                     changed = True
                     break
             iter = self.store.iter_next(iter)
-        if changed:
-            self.emit("restructure", None)
+        if changed: self.emit("restructure", None)
         return changed
 
 
@@ -236,7 +234,6 @@ class Backend(gobject.GObject):
 
     def clear(self):
         self.store.clear()
-        # restructure of dialog needed
         self.emit("restructure", None)
 
 
@@ -268,19 +265,11 @@ class Backend(gobject.GObject):
 
 
     def get_random_pixbuf(self):
-        pixbuf = None
-        iter = self.store.get_iter_first()
-        if iter:
-            rand = random.Random()
-            pick = rand.randint(0, 10)
-            start = 0
-            while iter:
-                pixbuf = self.store.get_value(iter, COL_ICON)
-                if pick == start:
-                    break
-                iter = self.store.iter_next(iter)
-                start += 1
-        return pixbuf
+        max = self.get_number_items()
+        rand = random.Random()
+        pick = rand.randint(0, max)
+        iter = self.store.iter_nth_child(None, pick)
+        return self.store.get_value(iter, COL_ICON)
 
 
     def get_store(self):

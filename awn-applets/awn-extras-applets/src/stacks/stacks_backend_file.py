@@ -37,6 +37,18 @@ class FileBackend(Backend):
         Backend.__init__(self, applet, vfs_uri, icon_size)
         mode = gnomevfs.OPEN_WRITE | gnomevfs.OPEN_READ | gnomevfs.OPEN_RANDOM
         if not gnomevfs.exists(self.backend_uri.as_uri()):
+            # create folder
+            path = self.backend_uri.as_uri().parent.path
+            uri = self.backend_uri.as_uri().resolve_relative("/")
+            for folder in path.split("/"):
+                if not folder:
+                    continue
+                uri = uri.append_string(folder)
+                try:
+                    gnomevfs.make_directory(uri, 0777)
+                except gnomevfs.FileExistsError:
+                    pass
+            # create file
             self.handle = gnomevfs.create(self.backend_uri.as_uri(), mode)
         else:
             self.handle = gnomevfs.Handle(self.backend_uri.as_uri(), mode)

@@ -116,6 +116,7 @@ src/calendar/google/gdata/calendar/Makefile
 src/calendar/google/gdata/docs/Makefile
 src/calendar/google/gdata/spreadsheet/Makefile
 src/calendar/images/Makefile
+src/digitalClock/Makefile
 src/filebrowser/Makefile
 src/gmail/Makefile
 src/gmail/Themes/Makefile

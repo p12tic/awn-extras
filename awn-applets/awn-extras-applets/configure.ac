@@ -139,6 +139,11 @@ src/MiMenu/icons/Makefile
 src/showdesktop/Makefile
 src/notification-area/Makefile
 src/plugger/Makefile
+src/PyClock/Makefile
+src/PyClock/Themes/Makefile
+src/PyClock/Themes/Plain-Clock/Makefile
+src/PyClock/Themes/SBB/Makefile
+src/PyClock/Themes/Tango/Makefile
 src/python-test/Makefile
 src/quit-applet/Makefile
 src/quit-applet/icons/Makefile

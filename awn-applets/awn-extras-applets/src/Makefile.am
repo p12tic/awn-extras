@@ -17,6 +17,7 @@ SUBDIRS =			\
 	MiMenu			\
 	notification-area	\
 	plugger 		\
+	PyClock			\
 	python-test 		\
 	quit-applet		\
 	separator 		\

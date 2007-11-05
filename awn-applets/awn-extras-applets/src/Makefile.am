@@ -25,6 +25,7 @@ SUBDIRS =			\
 	showdesktop 		\
 	trash 			\
 	trasher			\
+	tsclient-applet		\
 	volume-control 		\
 	weather			\
 	wobblyzini

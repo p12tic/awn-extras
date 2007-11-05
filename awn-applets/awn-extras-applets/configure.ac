@@ -152,6 +152,8 @@ src/stacks/icons/Makefile
 src/switcher/Makefile
 src/trash/Makefile
 src/trasher/Makefile
+src/tsclient-applet/Makefile
+src/tsclient-applet/icons/Makefile
 src/weather/Makefile
 src/weather/images/Makefile
 src/wobblyzini/Makefile

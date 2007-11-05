@@ -9,8 +9,8 @@ XS-Python-Version: current
 Package: awn-core-applets
 Section: universe/gnome
 Architecture: any
-Depends: ${shlibs:Depends}, ${python:Depends}, cairo-clock, python-alsaaudio, python-libgmail, python-imaging, jackd, python-gst0.10, imagemagick
-Recommands: avant-window-navigator
+Depends: ${shlibs:Depends}, ${python:Depends}
+Recommands: avant-window-navigator, cairo-clock, python-alsaaudio, python-libgmail, python-imaging, jackd, python-gst0.10, imagemagick, tsclient
 XB-Python-Version: ${python:Versions}
 Description: A collection of applets for avant-windows-navigator
  A collection of applets for avant-windows-navigator.

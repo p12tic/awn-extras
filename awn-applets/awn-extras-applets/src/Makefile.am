@@ -4,6 +4,7 @@ SUBDIRS =			\
 	battery-applet		\
 	BlingSwitcher 		\
 	calendar		\
+	comic			\
 	digitalClock		\
 	filebrowser     	\
 	gmail			\

@@ -106,6 +106,16 @@ src/awn-notification-daemon/src/daemon/Makefile
 src/battery-applet/Makefile
 src/battery-applet/icons/Makefile
 src/BlingSwitcher/Makefile
+src/calendar/Makefile
+src/calendar/google/Makefile
+src/calendar/google/atom/Makefile
+src/calendar/google/gdata/Makefile
+src/calendar/google/gdata/apps/Makefile
+src/calendar/google/gdata/base/Makefile
+src/calendar/google/gdata/calendar/Makefile
+src/calendar/google/gdata/docs/Makefile
+src/calendar/google/gdata/spreadsheet/Makefile
+src/calendar/images/Makefile
 src/filebrowser/Makefile
 src/gmail/Makefile
 src/gmail/Themes/Makefile
@@ -119,6 +129,8 @@ src/media-icon-next/Makefile
 src/media-icon-next/icons/Makefile
 src/media-icon-play/Makefile
 src/media-icon-play/icons/Makefile
+src/MiMenu/Makefile
+src/MiMenu/icons/Makefile
 src/showdesktop/Makefile
 src/notification-area/Makefile
 src/plugger/Makefile

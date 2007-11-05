@@ -3,19 +3,21 @@ SUBDIRS =			\
 	awn-notification-daemon \
 	battery-applet		\
 	BlingSwitcher 		\
-	filebrowser     \
+	calendar		\
+	filebrowser     	\
 	gmail			\
 	main-menu 		\
 	media-control		\
 	media-icon-back		\
 	media-icon-next		\
 	media-icon-play		\
+	MiMenu			\
 	notification-area	\
-	plugger 	\
+	plugger 		\
 	python-test 		\
 	quit-applet		\
 	separator 		\
-	stacks \
+	stacks 			\
 	switcher 		\
 	showdesktop 		\
 	trash 			\

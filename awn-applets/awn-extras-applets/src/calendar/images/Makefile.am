@@ -1,0 +1,11 @@
+dist_calendar_DATA = 				\
+		calendar.png 	\
+		calendar-black.png	\
+		calendar-blue.png	\
+		calendar-gray.png	\
+		calendar-green.png	\
+		calendar-red.png	\
+		icon.png	\
+		x.x		
+
+calendardir = $(libdir)/awn/applets/calendar/images

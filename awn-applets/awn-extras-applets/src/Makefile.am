@@ -8,6 +8,7 @@ SUBDIRS =			\
 	digitalClock		\
 	filebrowser     	\
 	gmail			\
+	lastfm			\
 	main-menu 		\
 	media-control		\
 	media-icon-back		\

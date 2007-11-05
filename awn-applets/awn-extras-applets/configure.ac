@@ -123,6 +123,8 @@ src/filebrowser/Makefile
 src/gmail/Makefile
 src/gmail/Themes/Makefile
 src/gmail/Themes/Default/Makefile
+src/lastfm/Makefile
+src/lastfm/icons/Makefile
 src/main-menu/Makefile
 src/media-control/Makefile
 src/media-control/icons/Makefile

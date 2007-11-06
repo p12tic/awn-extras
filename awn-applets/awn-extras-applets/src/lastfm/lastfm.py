@@ -70,7 +70,7 @@ class lastfm:
 
         if 0:
             # Dump metadata to files. For debugging.
-            f = open("tmp/metadata-" + str(time.time()) + ".txt", "w")
+            f = open("/tmp/metadata-" + str(time.time()) + ".txt", "w")
             f.write(repr(tmp))
             f.close()
 

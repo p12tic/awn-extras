@@ -3,7 +3,7 @@
 # Lastfm Applet Configuration for the Avant Window Navigator
 # 2007 Tomas Kramar <kramar.tomas@gmail.com>
 # This code is free.
-# some code was borrowed from weather applet
+# inspired by weather applet preferences window
 
 
 import gtk
@@ -43,16 +43,17 @@ class LastFmConfiguration(gtk.Window):
       hbox2.pack_start(self.password)
       self.vbox.pack_start(hbox2,False,False,5)
 
-		# row3
-      hboxw= gtk.HBox(True,0)
-      labelw= gtk.Label("Notice, that this window won't go away until you specify the correct login and username. Type in your Last.Fm username and password and press 'Save'. If you still can see this window you have provided wrong username or password.")
-      labelw.set_line_wrap(True)
-      hboxw.pack_start(labelw)
+      # row3
+      hboxw = gtk.HBox(True,0)
+      self.labelw = gtk.Label("")
+      self.labelw.set_line_wrap(True)
+      hboxw.pack_start(self.labelw)
       self.vbox.pack_start(hboxw,False,False,5)
 
       # Button
       hbox3 = gtk.HBox(True,0)
-      self.go = gtk.Button("Save")
+      self.go = gtk.Button(label="Save", stock="gtk-save")
+      #self.go.set_size_request(50, 40)
       self.go.connect("clicked", self.go_clicked, "go")
       #self.go.set_sensitive(False)
       hbox3.pack_start(self.go)
@@ -66,5 +67,7 @@ class LastFmConfiguration(gtk.Window):
       retval = self.applet.lastfm.connect(self.username.get_text(), self.md5_password)
 
       if retval == 0:
-			# login succesfull
+         # login succesfull
          self.destroy()
+      else:
+         self.labelw.set_text("Invalid username/password. Try again.")

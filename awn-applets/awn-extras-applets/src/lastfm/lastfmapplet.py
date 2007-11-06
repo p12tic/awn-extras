@@ -2,9 +2,24 @@
 
 # Lastfm Applet for the Avant Window Navigator
 # 2007 Jonathan Rauprich <joni@noplu.de>
-# 2007 Tomas Kramar <kramar.tomas@gmail.com> - preferences dialog (gconf backend), stop/play toogle button, login verification
+# 2007 Tomas Kramar <kramar.tomas@gmail.com>
 # This code is free.
 # some code is from LastFMProxy, some from gstreamer tutorial and some from avatar-factory - rock on dudes
+
+
+# 0.3 changes
+# * connects as needed, not at atartup
+# * fixed bug for covert art not showing up, although available
+# * added new stop button
+# * resized icons and coverarts
+# * added icon for preferences dialog
+# * preferences dialog now shows warning when you type wrong username/password instead of just staying there
+# * removed imagemagick dependecy
+# * you can start playing by hiting enter, no need to click play button
+
+## We depend on
+# gstreamer obviously
+# jackd
 
 
 import sys, os
@@ -20,6 +35,7 @@ from lastfm import lastfm
 from gtk import gdk
 import lastfmconfig
 import gconf
+import imageproducer
 
 class App (awn.AppletSimple):
     
@@ -31,7 +47,7 @@ class App (awn.AppletSimple):
         self.gconf_path = "/apps/avant-window-navigator/applets/lastfm"
         self.gconf_client = gconf.client_get_default()
        
-        self.inactive_icon = gdk.pixbuf_new_from_file (self.path + "/icons/lastfm_icon.png")
+        self.inactive_icon = gdk.pixbuf_new_from_file (self.path + "/icons/lastfm_icon_small.png")
         self.set_temp_icon (self.inactive_icon)
         self.title = awn.awn_title_get_default ()
         
@@ -82,7 +98,8 @@ class App (awn.AppletSimple):
         self.station_type.set_active(0)
         self.station_type.set_property('has-frame', False)
         
-        self.station_name = gtk.Entry()      
+        self.station_name = gtk.Entry()
+        self.station_name.connect('key-release-event', self.station_name_key_event)
         #station_name.set_property('has-frame', False)
         
         station_play = self.create_button("play")
@@ -107,10 +124,10 @@ class App (awn.AppletSimple):
         #lastfm stuff
         self.get_config()
         self.lastfm = lastfm()
-        self.retval = self.lastfm.connect(self.username, self.password)
-        if self.retval == 1:
-           window = self.get_preferences_window()
-           window.show_all()
+        #self.retval = self.lastfm.connect(self.username, self.password)
+        #if self.retval == 1:
+        #   window = self.get_preferences_window()
+        #   window.show_all()
         
         #gstreamer stuff
         self.gst_player = gst.element_factory_make("playbin", "player")
@@ -133,6 +150,19 @@ class App (awn.AppletSimple):
         self.stop_button_image = gtk.Image()
         self.stop_button_image.set_from_file(self.path + "/icons/stop.png")
 
+        #connect as needed
+        self.connected = False;
+
+        self.imageproducer = imageproducer.ImageProducer()
+
+  def connect_to_lastfm(self):
+        retval = self.lastfm.connect(self.username, self.password)
+        if retval == 1:
+           window = self.get_preferences_window()
+           window.show_all()
+        else:
+           self.connected = True
+
   def get_config(self):
       self.username = self.gconf_client.get_string(self.gconf_path + "/username")
       if self.username == None:
@@ -150,12 +180,11 @@ class App (awn.AppletSimple):
 
   def get_preferences_window(self):
       window = lastfmconfig.LastFmConfiguration(self)
-      window.set_size_request(350, 200)
+      window.set_size_request(250, 130)
       window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
       window.set_destroy_with_parent(True)
-      # icon_name = self.icons.day_icons["0"]
-      # icon = gdk.pixbuf_new_from_file(icon_name)
-      # window.set_icon(icon)
+      icon = gdk.pixbuf_new_from_file(self.path + "/icons/lastfm_icon_small.png")
+      window.set_icon(icon)
 
       return window
 
@@ -174,7 +203,7 @@ class App (awn.AppletSimple):
               imageurl = self.lastfm.metadata['albumcover_big']
           
           if imageurl:
-              image = urllib.urlopen(self.lastfm.metadata['albumcover_small'])
+              image = urllib.urlopen(imageurl) # fixed bug for cover not showing up
               temp = image.read()
               image.close()
               f = open('/tmp/lfmapt',"wb")
@@ -184,12 +213,13 @@ class App (awn.AppletSimple):
               shutil.copy(self.path + "/icons/cd.png", '/tmp/lfmapt')
         
           #resize it and make it eye candy
-          os.system("convert /tmp/lfmapt  -thumbnail 98x98 /tmp/lfmapt")
-          os.system("convert "+ self.path +"/icons/base.png -geometry  +0+0  -composite /tmp/lfmapt  -geometry  +19+5  -composite "+ self.path +"/icons/top.png  -geometry +0+0  -composite /tmp/lfmapt")
-          os.system("convert /tmp/lfmapt -thumbnail x48 /tmp/lfmapt")
+          #os.system("convert /tmp/lfmapt  -thumbnail 98x98 /tmp/lfmapt2")
+          #os.system("convert "+ self.path +"/icons/base.png -geometry  +0+0  -composite /tmp/lfmapt2  -geometry  +19+5  -composite "+ self.path +"/icons/top.png  -geometry +0+0  -composite /tmp/lfmapt2")
+          #os.system("convert /tmp/lfmapt2 -thumbnail x38 /tmp/lfmapt2")
           
+          path_to_cover = self.imageproducer.generate_cover("/tmp/lfmapt")
           
-          self.set_temp_icon (gdk.pixbuf_new_from_file('/tmp/lfmapt'))
+          self.set_temp_icon (gdk.pixbuf_new_from_file(path_to_cover))
       elif t == gst.MESSAGE_EOS:
           self.set_temp_icon (self.inactive_icon)
       elif t == gst.MESSAGE_ERROR:
@@ -227,7 +257,7 @@ class App (awn.AppletSimple):
          self.playing = False
          #self.set_temp_icon(self.inactive_icon)
          # Don't know why this code doesn't work..
-         self.set_temp_icon(gdk.pixbuf_new_from_file (self.path + "/icons/lastfm_icon.png"))
+         self.set_temp_icon(gdk.pixbuf_new_from_file (self.path + "/icons/lastfm_icon_small.png"))
          self.play_button.set_image(self.play_button_image)
       
   def player_dialog_skip_button (self, widget):
@@ -247,6 +277,16 @@ class App (awn.AppletSimple):
       self.gst_player.set_state(gst.STATE_PLAYING)     
 
   def station_dialog_play_button (self, widget):
+      self.do_play()
+
+  def station_name_key_event(self, widget, event):
+      if event.keyval == gtk.keysyms.Return:
+         self.do_play()
+
+  def do_play(self):
+      if self.connected == False:
+         self.connect_to_lastfm()
+
       self.station_dialog.hide()
       self.gst_player.set_state(gst.STATE_NULL)
       act = self.station_type.get_active()
@@ -265,7 +305,7 @@ class App (awn.AppletSimple):
       
   def enter_notify (self, widget, event):     
       if self.lastfm.metadata.has_key('station') and self.playing == True:
-          self.title.show (self, self.lastfm.metadata['station'] + ": " + self.lastfm.metadata['artist'] + " - " + self.lastfm.metadata['track'])
+          self.title.show (self, self.lastfm.metadata['station'] + ": " + self.lastfm.metadata['artist'] + " - " + self.lastfm.metadata['track']) ## BUG reported - this is not showing up all the time!
       else:
           self.title.show (self, "LastFM Applet - Click to start listening!")
 

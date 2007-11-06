@@ -290,8 +290,15 @@ class App(awn.AppletSimple):
 			minute = now.strftime("%M")
 			shorten = False			
 			if hour[0] == "0":
-				shorten = True
-				hour = hour[1]
+				if hour[1] == "0": #is this 12AM?
+					hour = "12"
+				else:
+					shorten = True
+					hour = hour[1]
+			elif self.twelve_hour_clock and int(hour) > 12:
+				if int(hour) < 22:
+					shorten = True
+				hour = str(int(hour)-12)
 			ct.move_to(37,240)
 			ct.select_font_face("Deja Vu",cairo.FONT_SLANT_NORMAL,cairo.FONT_WEIGHT_BOLD)
 			ct.set_font_size(60.0)

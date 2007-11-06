@@ -86,6 +86,7 @@ class App(awn.AppletSimple):
 		awn.AppletSimple.__init__ (self, uid, orient, height)
 		self.height = height
 		icon = gdk.pixbuf_new_from_file(os.path.dirname (__file__) + '/images/twc-logo.png')
+		icon = icon.scale_simple(height, height, gtk.gdk.INTERP_HYPER)
 		self.set_temp_icon (icon)
 		self.title = awn.awn_title_get_default()
 		self.dialog = awn.AppletDialog (self)

@@ -48,12 +48,14 @@ static AwnAppletDialogClass *parent_class = NULL;
 static FileBrowserFolder *current_folder = NULL;
 static GtkWidget *prev_page = NULL;
 static GtkWidget *next_page = NULL;
+static GtkWidget *folder_up = NULL;
+static GtkWidget *no_items_label = NULL;
 
 static void filebrowser_dialog_do_folder_up(
     GtkWidget * dialog ) {
     GnomeVFSURI *parent = gnome_vfs_uri_get_parent( current_folder->uri );
 
-    if ( parent == NULL ) {
+    if (parent == NULL) {
         return;
     }
 
@@ -177,6 +179,16 @@ void filebrowser_dialog_set_folder(
     // refresh prev/next button
     gtk_widget_set_sensitive(prev_page, filebrowser_folder_has_prev_page(current_folder));
     gtk_widget_set_sensitive(next_page, filebrowser_folder_has_next_page(current_folder));
+    gtk_widget_set_sensitive(folder_up, filebrowser_folder_has_parent_folder(current_folder));
+
+    // no items label
+    if (current_folder->total > 0) {
+        gtk_label_set_text(GTK_LABEL(no_items_label), "");
+	gtk_widget_set_size_request(no_items_label, 1, 1);
+    } else {
+        gtk_label_set_text(GTK_LABEL(no_items_label), "There are no items to display.");
+	gtk_widget_set_size_request(no_items_label, 192, 192);
+    }
 
 
     gtk_widget_show_all( GTK_WIDGET( current_folder ) );
@@ -189,7 +201,7 @@ void filebrowser_dialog_toggle_visiblity(
     GtkWidget * widget ) {
 
     g_return_if_fail( current_folder );
-	g_return_if_fail( FILEBROWSER_IS_DIALOG( widget ) );
+    g_return_if_fail( FILEBROWSER_IS_DIALOG( widget ) );
 
     FileBrowserDialog *dialog = FILEBROWSER_DIALOG( widget );
 
@@ -272,7 +284,7 @@ GtkWidget *filebrowser_dialog_new(
 	if( filebrowser_gconf_is_browsing() ){
 		GtkWidget *hbox1 = gtk_hbox_new(FALSE, 0);
 		gtk_container_add(GTK_CONTAINER(dialog), hbox1);
-		GtkWidget *folder_up = gtk_button_new_from_stock(GTK_STOCK_GO_UP);
+		folder_up = gtk_button_new_from_stock(GTK_STOCK_GO_UP);
 		gtk_button_set_relief(GTK_BUTTON(folder_up), GTK_RELIEF_NONE);
 		g_signal_connect( folder_up, "button-release-event",
                       GTK_SIGNAL_FUNC( filebrowser_dialog_button_clicked ), GINT_TO_POINTER( FOLDER_UP ) );
@@ -286,7 +298,13 @@ GtkWidget *filebrowser_dialog_new(
 			GTK_SIGNAL_FUNC( filebrowser_dialog_button_clicked ), GINT_TO_POINTER( FILEMANAGER ) );
 		gtk_box_pack_start(GTK_BOX(hbox1), filemanager, FALSE, FALSE, 0);
 	}
-	
+
+	no_items_label = gtk_label_new("");
+	gtk_widget_set_size_request(no_items_label, 1, 1);
+	gtk_label_set_line_wrap(GTK_LABEL(no_items_label), TRUE);
+	gtk_label_set_justify(GTK_LABEL(no_items_label), GTK_JUSTIFY_CENTER);
+	gtk_container_add(GTK_CONTAINER(dialog), no_items_label);
+
 	dialog->viewport = gtk_event_box_new();
 	gtk_event_box_set_visible_window(GTK_EVENT_BOX(dialog->viewport), FALSE);
 	gtk_container_add(GTK_CONTAINER(dialog), dialog->viewport);
@@ -317,7 +335,7 @@ GtkWidget *filebrowser_dialog_new(
 	filebrowser_dialog_set_folder( dialog, gnome_vfs_uri_new( filebrowser_gconf_get_backend_folder() ), 0 );
 	// Set the applet-icon
 	filebrowser_applet_set_icon( dialog->applet, current_folder->applet_icon );
-	
+
 	gtk_widget_show_all( GTK_WIDGET( dialog ) );
 
     return GTK_WIDGET( dialog );

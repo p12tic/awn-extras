@@ -193,8 +193,6 @@ static gboolean filebrowser_folder_add(
     }
 
     filebrowser_icon = g_object_ref_sink( G_OBJECT(filebrowser_icon));
-//    gtk_list_store_set(folder->store, &insert_iter, 0, FILEBROWSER_ICON(filebrowser_icon)->icon, 1, 
-//            FILEBROWSER_ICON(filebrowser_icon)->name, 2, filebrowser_icon, -1);
     gtk_list_store_set(folder->store, &insert_iter, COL_FILEBROWSERICON, filebrowser_icon, -1);
 
     /* create a 3-icon applet icon
@@ -223,7 +221,7 @@ static gboolean filebrowser_folder_add(
     }
     */
     
-    folder->total = folder->total + 1;
+    folder->total++;
     return TRUE;
 }
 
@@ -387,11 +385,10 @@ void filebrowser_folder_do_prev_page(
 gboolean filebrowser_folder_has_parent_folder(
     FileBrowserFolder * folder ) {
 
-	if( !folder ){
-		return FALSE;
-	}
-	
-    return ( gnome_vfs_uri_get_parent( folder->uri ) != NULL );
+    if( !folder )
+        return FALSE;
+
+    return gnome_vfs_uri_has_parent( folder->uri );
 }
 
 static void keep_icons(gpointer data, gpointer user_data){
@@ -471,6 +468,10 @@ static void filebrowser_folder_init(
     FileBrowserFolder * filebrowser_folder ) {
     filebrowser_folder->offset = 0;
     filebrowser_folder->total = 0;
+    filebrowser_folder->uri = NULL;
+    filebrowser_folder->name = NULL;
+    filebrowser_folder->monitor = NULL;
+    filebrowser_folder->applet_icon = NULL;
 }
 
 /**
@@ -485,7 +486,7 @@ GtkWidget *filebrowser_folder_new(
     FileBrowserDialog * dialog,
     GnomeVFSURI * uri) {
 
-	g_return_val_if_fail( dialog && uri, NULL );
+    g_return_val_if_fail( dialog && uri, NULL );
 
     FileBrowserFolder *filebrowser_folder = g_object_new( FILEBROWSER_TYPE_FOLDER, NULL );
 
@@ -517,17 +518,21 @@ GtkWidget *filebrowser_folder_new(
         }
     }
 
-    gnome_vfs_directory_open_from_uri( &handle, filebrowser_folder->uri, options );
-    while ( gnome_vfs_directory_read_next( handle, info ) == GNOME_VFS_OK ) {
-        if ( info->type != GNOME_VFS_FILE_TYPE_REGULAR &&
-                info->type != GNOME_VFS_FILE_TYPE_SYMBOLIC_LINK &&
-                info->type != GNOME_VFS_FILE_TYPE_DIRECTORY ) {
-            continue;
+    gnome_vfs_uri_ref(filebrowser_folder->uri);
+    result = gnome_vfs_directory_open_from_uri( &handle, filebrowser_folder->uri, options );
+    if (result == GNOME_VFS_OK) {
+        while ( gnome_vfs_directory_read_next( handle, info ) == GNOME_VFS_OK ) {
+            if ( info->type != GNOME_VFS_FILE_TYPE_REGULAR &&
+                    info->type != GNOME_VFS_FILE_TYPE_SYMBOLIC_LINK &&
+                    info->type != GNOME_VFS_FILE_TYPE_DIRECTORY ) {
+                continue;
+            }
+
+            GnomeVFSURI *file_uri = gnome_vfs_uri_append_file_name( filebrowser_folder->uri, info->name );
+
+            filebrowser_folder_add( filebrowser_folder, file_uri );
         }
-
-        GnomeVFSURI *file_uri = gnome_vfs_uri_append_file_name( filebrowser_folder->uri, info->name );
-
-        filebrowser_folder_add( filebrowser_folder, file_uri );
+        gnome_vfs_directory_close(handle);
     }
 
     if ( !filebrowser_folder->monitor ) {/*
@@ -545,7 +550,7 @@ GtkWidget *filebrowser_folder_new(
     */}
 
     filebrowser_folder_layout(filebrowser_folder, 0);
-	gtk_widget_show( GTK_WIDGET( filebrowser_folder ) );
+    gtk_widget_show( GTK_WIDGET( filebrowser_folder ) );
 
     return GTK_WIDGET( filebrowser_folder );
 

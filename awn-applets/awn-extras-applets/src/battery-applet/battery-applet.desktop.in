@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Python
+Encoding=UTF-8
+Name=Battery Applet
+Comment=An applet displaying battery state
+Exec=/usr/local/lib/awn/applets/battery-applet/battery-applet.py
+Icon=gnome-power-manager

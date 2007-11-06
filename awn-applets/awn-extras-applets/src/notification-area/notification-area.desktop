@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=C
+Encoding=UTF-8
+Name=Notification Area
+Comment=A Notification Area (systray)
+Exec=/usr/local/lib/awn/applets/notification-area/notification-area.so
+Icon=/usr/local/share/awn-extras-applets/notification.svg

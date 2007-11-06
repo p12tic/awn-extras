@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Python
+Encoding=UTF-8
+Name=Stacks Applet
+Comment=An applet that supports file stacks
+Exec=/usr/local/lib/awn/applets/stacks/stacks_applet.py
+Icon=/usr/local/lib/awn/applets/stacks/icons/stacks-drop.svg

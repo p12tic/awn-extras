@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=Media Icons Next
+Type=Python
+Comment=A media-control applet (Go Next)
+Exec=/usr/local/lib/awn/applets/media-icon-next/medialogonext.py
+Icon=/usr/local/lib/awn/applets/media-icon-next/icons/forward.svg
+Name[en_US]=Media Icons Next

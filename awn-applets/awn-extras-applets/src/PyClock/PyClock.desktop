@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=PyClock
+Type=Python
+Comment=A Simple Python Clock
+Exec=/usr/local/lib/awn/applets/PyClock/PyClock.py
+Icon=/usr/local/lib/awn/applets/PyClock/PyClock.png
+Name[pt_BR]=PyClock

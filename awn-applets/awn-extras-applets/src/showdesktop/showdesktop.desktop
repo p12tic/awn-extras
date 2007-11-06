@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Python
+Encoding=UTF-8
+Name=Showdesktop Applet
+Comment=Showdesktop Applet
+Exec=/usr/local/lib/awn/applets/showdesktop/showdesktop.py
+Icon=desktop

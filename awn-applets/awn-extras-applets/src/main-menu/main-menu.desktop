@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=C
+Encoding=UTF-8
+Name=Awn Main Menu
+Comment=A main menu for Awn
+Exec=/usr/local/lib/awn/applets/mainmenu/mainmenu.so
+Icon=gnome-main-menu

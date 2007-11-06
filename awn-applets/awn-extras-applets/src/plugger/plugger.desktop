@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=C
+Encoding=UTF-8
+Name=Stacks Plugger
+Comment=Monitors removable media devices
+Exec=/usr/local/lib/awn/applets/plugger/plugger.so
+Icon=drive-removable-media

@@ -61,10 +61,8 @@
 
 #include <libawn/awn-applet.h>
 #include <libawn/awn-applet-simple.h>
-#include <libawn/awn-applet.h>
 #include <libawn/awn-applet-gconf.h>
 #include <libawn/awn-applet-dialog.h>
-#include <libawn/awn-applet-simple.h>
 
 
 #include "daemon.h"
@@ -750,7 +748,7 @@ url_clicked_cb(GtkWindow *nw, const char *url)
 	daemon->priv->url_clicked_lock = TRUE;
 
 	escaped_url = g_shell_quote(url);
-
+	printf("%s\n",escaped_url);
 	/*
 	 * We can't actually check for GNOME_DESKTOP_SESSION_ID, because it's
 	 * not in the environment for this program :(
@@ -1122,7 +1120,8 @@ gboolean send_startup_message(gpointer data)
 {
 	NotifyNotification *notify;	
 	gchar *summary = "Awn Notification Daemon Message";
-	gchar *body = "Awn Notification Daemon has loaded Successfully.\nClick <a href=\"http://tinyurl.com/2nkdtz\">Here</a> for online documentation.";
+//	gchar *body = "Awn Notification Daemon has loaded Successfully.\nClick <a href=\"http://tinyurl.com/2nkdtz\">Here</a> for online documentation.";
+	gchar *body = "Awn Notification Daemon has loaded Successfully.\nClick <a href=\"http://wiki.awn-project.org/index.php?title=Awn_Notification-Daemon\">Here</a> for online documentation.";
 	gchar *type = NULL;
 	gchar *icon_str = NULL;
 	glong expire_timeout = NOTIFY_EXPIRES_DEFAULT;

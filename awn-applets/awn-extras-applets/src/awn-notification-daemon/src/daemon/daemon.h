@@ -113,6 +113,8 @@ gboolean notify_daemon_get_server_information(NotifyDaemon *daemon,
 
 GConfClient *get_gconf_client(void);
 
+
+
 G_END_DECLS
 
 #endif /* NOTIFY_DAEMON_H */

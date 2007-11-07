@@ -97,12 +97,14 @@ AM_GCONF_SOURCE_2
 AC_OUTPUT([
 Makefile
 src/Makefile
-src/awnsystemmonitor/Makefile
+src/awn-meebo/Makefile
+src/awn-meebo/profile/Makefile
 src/awn-notification-daemon/Makefile
 src/awn-notification-daemon/data/Makefile
 src/awn-notification-daemon/po/Makefile.in
 src/awn-notification-daemon/src/Makefile
 src/awn-notification-daemon/src/daemon/Makefile
+src/awnsystemmonitor/Makefile
 src/battery-applet/Makefile
 src/battery-applet/icons/Makefile
 src/BlingSwitcher/Makefile
@@ -119,6 +121,9 @@ src/calendar/google/gdata/spreadsheet/Makefile
 src/calendar/images/Makefile
 src/comic/Makefile
 src/comic/images/Makefile
+src/digg/Makefile
+src/digg/profile/Makefile
+src/digg/profile/Cache/Makefile
 src/digitalClock/Makefile
 src/filebrowser/Makefile
 src/gmail/Makefile

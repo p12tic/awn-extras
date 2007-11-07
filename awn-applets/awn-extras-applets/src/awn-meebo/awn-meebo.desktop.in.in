@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Python
+Encoding=UTF-8
+Name=Mobile Meebo
+Comment=Access to the Meebo Instant Messenger
+Exec=@LIBDIR@/awn/applets/awn-meebo/awn-meebo.py
+Icon=@LIBDIR@/awn/applets/awn-meebo/meebo.png

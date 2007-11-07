@@ -1,4 +1,4 @@
-p/* daemon.c - Implementation of the destop notification spec
+/* daemon.c - Implementation of the destop notification spec
  *
  * Awn related modifications by Rodney Cryderman <rcryderman@gmail.com>
  *

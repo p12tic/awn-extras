@@ -99,6 +99,17 @@ void read_config(void)
         gconf_client_set_int (gconf_client,GCONF_TEXT_SIZE,G_cairo_menu_conf.text_size ,NULL);        
     }
 
+    value=gconf_client_get(gconf_client,GCONF_SHOW_SEARCH,NULL);		
+    if (value)
+    {																		
+        G_cairo_menu_conf.show_search=gconf_client_get_bool(gconf_client,GCONF_SHOW_SEARCH,NULL) ;
+    }
+    else             							
+    {
+		G_cairo_menu_conf.show_search=TRUE;
+        gconf_client_set_bool(gconf_client,GCONF_SHOW_SEARCH,G_cairo_menu_conf.show_search,NULL);        
+    }    
+
     svalue = gconf_client_get_string(gconf_client,GCONF_SEARCH_CMD, NULL );
     if ( !svalue ) 
     {
@@ -110,22 +121,16 @@ void read_config(void)
 		{
 			svalue==g_strdup("beagle-search");
 		}    
+		else
+		{
+			svalue==g_strdup("");
+	        gconf_client_set_bool(gconf_client,GCONF_SHOW_SEARCH,FALSE,NULL);        			
+		}
 		
         gconf_client_set_string(gconf_client , GCONF_SEARCH_CMD, svalue, NULL );
     }
     G_cairo_menu_conf.search_cmd=g_strdup(svalue);
     g_free(svalue);     
-
-    value=gconf_client_get(gconf_client,GCONF_SHOW_SEARCH,NULL);		
-    if (value)
-    {																		
-        G_cairo_menu_conf.show_search=gconf_client_get_bool(gconf_client,GCONF_SHOW_SEARCH,NULL) ;
-    }
-    else             							
-    {
-		G_cairo_menu_conf.show_search=TRUE;
-        gconf_client_set_bool(gconf_client,GCONF_SHOW_SEARCH,G_cairo_menu_conf.show_search,NULL);        
-    }
 
 
     value=gconf_client_get(gconf_client,GCONF_MENU_GRADIENT,NULL);		

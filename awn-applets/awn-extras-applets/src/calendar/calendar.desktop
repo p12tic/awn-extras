@@ -1,7 +1,0 @@
-[Desktop Entry]
-Type=Python
-Encoding=UTF-8
-Name=Clock/Calendar Applet
-Comment=A Clock/Calendar Applet for AWN, inspired by NeXTstep's Dock Clock.
-Exec=/usr/local/lib/awn/applets/calendar/clockcal.py
-Icon=/usr/local/lib/awn/applets/calendar/images/icon.png

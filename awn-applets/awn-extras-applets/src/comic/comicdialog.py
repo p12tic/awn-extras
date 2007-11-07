@@ -25,6 +25,7 @@ import gtk
 from gtk import gdk
 import cairo
 import wnck
+import Image
 
 class ComicDialog(gtk.DrawingArea):
 	def __init__(self):
@@ -32,13 +33,16 @@ class ComicDialog(gtk.DrawingArea):
 		self.connect("expose_event", self.expose)
 		
 	def expose(self,widget,event):
-		icon_name = './dilbert.gif'
-		icon = gdk.pixbuf_new_from_file(icon_name)
-		dim = [icon.get_width(),icon.get_height()]
+		comic = Image.open("./dilbert.gif")
+		dim = comic.size
+		comic.save("./dilbert.gif")
+		
 		self.set_size_request(dim[0], dim[1])
 		
 		context = widget.window.cairo_create()
 		context.set_source_rgb(0,0,0)
+		icon_name = './dilbert.gif'
+		icon = gdk.pixbuf_new_from_file(icon_name)
 		
 		context.set_source_pixbuf(icon,1,1)
 		context.fill()

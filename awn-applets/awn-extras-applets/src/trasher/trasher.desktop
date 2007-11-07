@@ -1,7 +1,0 @@
-[Desktop Entry]
-Type=C
-Encoding=UTF-8
-Name=Stacks Trasher
-Comment=Trash applet in Stacks style
-Exec=/usr/local/lib/awn/applets/trasher/trasher.so
-Icon=gnome-stock-trash

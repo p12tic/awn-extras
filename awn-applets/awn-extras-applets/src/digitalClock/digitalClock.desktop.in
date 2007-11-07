@@ -1,7 +1,0 @@
-[Desktop Entry]
-Type=Python
-Encoding=UTF-8
-Name=Digital Clock Applet
-Comment=A Digital Clock with Date and Calendar
-Exec=/usr/local/lib/awn/applets/digitalClock/digitalClock.py
-Icon=gnome-panel-clock

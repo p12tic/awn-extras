@@ -31,13 +31,13 @@ def what_app():
     player_name = None
     bus_obj = dbus.SessionBus().get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
     if bus_obj.NameHasOwner('org.gnome.Rhythmbox') == True:
-        player_name = "Rhythmbox"
+        player_name                    = "Rhythmbox"
     if bus_obj.NameHasOwner('org.exaile.DBusInterface') == True:
-        player_name = "Exaile"
+        player_name                    = "Exaile"
     if bus_obj.NameHasOwner('org.gnome.Banshee') == True:
-        player_name = "Banshee"
+        player_name                    = "Banshee"
     if bus_obj.NameHasOwner('org.gnome.Listen') == True:
-        player_name = "Listen"
+        player_name                    = "Listen"
     try:
         if pydcop.anyAppCalled("amarok") == None:pass
         else:player_name = "Amarok"
@@ -55,49 +55,49 @@ class Rhythmbox:
         """
         bus_obj = dbus.SessionBus().get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
         if bus_obj.NameHasOwner('org.gnome.Rhythmbox') == True:
-            self.session_bus = dbus.SessionBus()
-            self.proxy_obj = self.session_bus.get_object('org.gnome.Rhythmbox', '/org/gnome/Rhythmbox/Player')
-            self.player = dbus.Interface(self.proxy_obj, 'org.gnome.Rhythmbox.Player')
-            self.player1 = self.session_bus.get_object('org.gnome.Rhythmbox', '/org/gnome/Rhythmbox/Shell')
+            self.session_bus                    = dbus.SessionBus()
+            self.proxy_obj                      = self.session_bus.get_object('org.gnome.Rhythmbox', '/org/gnome/Rhythmbox/Player')
+            self.player                         = dbus.Interface(self.proxy_obj, 'org.gnome.Rhythmbox.Player')
+            self.player1                        = self.session_bus.get_object('org.gnome.Rhythmbox', '/org/gnome/Rhythmbox/Shell')
     def labeler(self,artOnOff,titleOrder,titleLen,titleBoldFont):
         """
         This method changes the application titles and album art
         """
-        self.artOnOff = artOnOff
-        self.titleOrder = titleOrder
-        self.titleLen = titleLen
-        self.titleBoldFont = titleBoldFont
-        self.albumart_general = ".gnome2/rhythmbox/covers/"
+        self.artOnOff            = artOnOff
+        self.titleOrder          = titleOrder
+        self.titleLen            = titleLen
+        self.titleBoldFont       = titleBoldFont
+        self.albumart_general               = ".gnome2/rhythmbox/covers/"
         self.dbus_driver()
-        result = self.player.getPlayingUri()
-        result = self.player1.getSongProperties(result)
+        result                              = self.player.getPlayingUri()
+        result                              = self.player1.getSongProperties(result)
         
-        if self.artOnOff == 'on':
-            albumart_exact = self.albumart_general + result['artist'] + ' - ' + result['album'] + ".jpg"
+        if self.artOnOff               == 'on':
+            albumart_exact         = self.albumart_general + result['artist'] + ' - ' + result['album'] + ".jpg"
 
         # Currently Playing Title
-        if self.titleOrder == 'artist - title':
-            try:result = result['artist'] + ' - ' + result['title']
+        if self.titleOrder                 == 'artist - title':
+            try:result                      = result['artist'] + ' - ' + result['title']
             except:SyntaxError
-        elif self.titleOrder == 'title - artist':
-            try:result = result['title'] + ' - ' + result['artist']
+        elif self.titleOrder               == 'title - artist':
+            try:result                      = result['title'] + ' - ' + result['artist']
             except:SyntaxError
         if result.__len__() > self.titleLen:
-            result = result[:self.titleLen]
-            result = result + '..'
-        if self.titleBoldFont == 'on':
-            result = """<span weight="bold">""" + result + """</span>"""
-        result_tooltip = result.replace("""</span>""",'')
-        result_tooltip = result_tooltip.replace("""<span weight="bold">""",'')
+            result                          = result[:self.titleLen]
+            result                          = result + '..'
+        if self.titleBoldFont              == 'on':
+            result                          = """<span weight="bold">""" + result + """</span>"""
+        result_tooltip                      = result.replace("""</span>""",'')
+        result_tooltip                      = result_tooltip.replace("""<span weight="bold">""",'')
         
         return albumart_exact,result,result_tooltip
 
-    def button_previous_press (self):
-        self.player.previous ()
-    def button_pp_press (self):
-        self.player.playPause (1)
-    def button_next_press (self):
-        self.player.next ()
+    def button_previous_press                 (self):
+        self.player.previous                  ()
+    def button_pp_press                       (self):
+        self.player.playPause                 (1)
+    def button_next_press                     (self):
+        self.player.next                      ()
 class Exaile:
     """
     Full Support for the Exaile media player
@@ -112,44 +112,45 @@ class Exaile:
         """
         bus_obj = dbus.SessionBus().get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
         if bus_obj.NameHasOwner('org.exaile.DBusInterface') == True:
-            self.session_bus = dbus.SessionBus()
-            self.proxy_obj = self.session_bus.get_object('org.exaile.DBusInterface', '/DBusInterfaceObject')
-            self.player = dbus.Interface(self.proxy_obj, "org.exaile.DBusInterface")
+            self.session_bus                    = dbus.SessionBus()
+            self.proxy_obj                      = self.session_bus.get_object('org.exaile.DBusInterface', '/DBusInterfaceObject')
+            self.player                         = dbus.Interface(self.proxy_obj, "org.exaile.DBusInterface")
     def labeler(self,artOnOff,titleOrder,titleLen,titleBoldFont):
         """
         This method changes the application titles and album art
         """
-        self.artOnOff = artOnOff
-        self.titleOrder = titleOrder
-        self.titleLen = titleLen
-        self.titleBoldFont = titleBoldFont
+        self.artOnOff            = artOnOff
+        self.titleOrder          = titleOrder
+        self.titleLen            = titleLen
+        self.titleBoldFont       = titleBoldFont
+        self.albumart_general               = ".gnome2/rhythmbox/covers/"
         self.dbus_driver()
 
         # Currently Playing Title
         result = {}
         result['title'] = self.player.get_title()
         result['artist'] = self.player.get_artist()
-        if self.titleOrder == 'artist - title':
-            try:result = result['artist'] + ' - ' + result['title']
+        if self.titleOrder                 == 'artist - title':
+            try:result                      = result['artist'] + ' - ' + result['title']
             except:SyntaxError
-        elif self.titleOrder == 'title - artist':
-            try:result = result['title'] + ' - ' + result['artist']
+        elif self.titleOrder               == 'title - artist':
+            try:result                      = result['title'] + ' - ' + result['artist']
             except:SyntaxError
         if result.__len__() > self.titleLen:
-            result = result[:self.titleLen]
-            result = result + '..'
-        if self.titleBoldFont == 'on':
-            result = """<span weight="bold">""" + result + """</span>"""
-        result_tooltip = result.replace("""</span>""",'')
-        result_tooltip = result_tooltip.replace("""<span weight="bold">""",'')
+            result                          = result[:self.titleLen]
+            result                          = result + '..'
+        if self.titleBoldFont              == 'on':
+            result                          = """<span weight="bold">""" + result + """</span>"""
+        result_tooltip                      = result.replace("""</span>""",'')
+        result_tooltip                      = result_tooltip.replace("""<span weight="bold">""",'')
         
         return self.player.get_cover_path(),result,result_tooltip
 
-    def button_previous_press (self):
+    def button_previous_press                 (self):
         self.player.prev_track()
-    def button_pp_press (self):
-        self.player.play ()
-    def button_next_press (self):
+    def button_pp_press                       (self):
+        self.player.play                      ()
+    def button_next_press                     (self):
         self.player.next_track()
 class Banshee:
     """
@@ -163,44 +164,45 @@ class Banshee:
         """
         bus_obj = dbus.SessionBus().get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
         if bus_obj.NameHasOwner('org.gnome.Banshee') == True:
-            self.session_bus = dbus.SessionBus()
-            self.proxy_obj = self.session_bus.get_object('org.gnome.Banshee',"/org/gnome/Banshee/Player")
-            self.player = dbus.Interface(self.proxy_obj, "org.gnome.Banshee.Core")
+            self.session_bus                    = dbus.SessionBus()
+            self.proxy_obj                      = self.session_bus.get_object('org.gnome.Banshee',"/org/gnome/Banshee/Player")
+            self.player                         = dbus.Interface(self.proxy_obj, "org.gnome.Banshee.Core")
     def labeler(self,artOnOff,titleOrder,titleLen,titleBoldFont):
         """
         This method changes the application titles and album art
         """
-        self.artOnOff = artOnOff
-        self.titleOrder = titleOrder
-        self.titleLen = titleLen
-        self.titleBoldFont = titleBoldFont
+        self.artOnOff            = artOnOff
+        self.titleOrder          = titleOrder
+        self.titleLen            = titleLen
+        self.titleBoldFont       = titleBoldFont
+        self.albumart_general               = ".gnome2/rhythmbox/covers/"
         self.dbus_driver()
 
         # Currently Playing Title
         result = {}
         result['title'] = self.player.GetPlayingTitle()
         result['artist'] = self.player.GetPlayingArtist()
-        if self.titleOrder == 'artist - title':
-            try:result = result['artist'] + ' - ' + result['title']
+        if self.titleOrder                 == 'artist - title':
+            try:result                      = result['artist'] + ' - ' + result['title']
             except:SyntaxError
-        elif self.titleOrder == 'title - artist':
-            try:result = result['title'] + ' - ' + result['artist']
+        elif self.titleOrder               == 'title - artist':
+            try:result                      = result['title'] + ' - ' + result['artist']
             except:SyntaxError
         if result.__len__() > self.titleLen:
-            result = result[:self.titleLen]
-            result = result + '..'
-        if self.titleBoldFont == 'on':
-            result = """<span weight="bold">""" + result + """</span>"""
-        result_tooltip = result.replace("""</span>""",'')
-        result_tooltip = result_tooltip.replace("""<span weight="bold">""",'')
+            result                          = result[:self.titleLen]
+            result                          = result + '..'
+        if self.titleBoldFont              == 'on':
+            result                          = """<span weight="bold">""" + result + """</span>"""
+        result_tooltip                      = result.replace("""</span>""",'')
+        result_tooltip                      = result_tooltip.replace("""<span weight="bold">""",'')
         
         return self.player.GetPlayingCoverUri(),result,result_tooltip
 
-    def button_previous_press (self):
+    def button_previous_press                 (self):
         self.player.Previous()
-    def button_pp_press (self):
-        self.player.TogglePlaying ()
-    def button_next_press (self):
+    def button_pp_press                       (self):
+        self.player.TogglePlaying             ()
+    def button_next_press                     (self):
         self.player.Next()
 class Listen:
     """
@@ -214,44 +216,45 @@ class Listen:
         """
         bus_obj = dbus.SessionBus().get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
         if bus_obj.NameHasOwner('org.gnome.Listen') == True:
-            self.session_bus = dbus.SessionBus()
-            self.proxy_obj = self.session_bus.get_object('org.gnome.Listen',"/org/gnome/listen")
-            self.player = dbus.Interface(self.proxy_obj, "org.gnome.Listen")
+            self.session_bus                    = dbus.SessionBus()
+            self.proxy_obj                      = self.session_bus.get_object('org.gnome.Listen',"/org/gnome/listen")
+            self.player                         = dbus.Interface(self.proxy_obj, "org.gnome.Listen")
     def labeler(self,artOnOff,titleOrder,titleLen,titleBoldFont):
         """
         This method changes the application titles and album art
         """
-        self.artOnOff = artOnOff
-        self.titleOrder = titleOrder
-        self.titleLen = titleLen
-        self.titleBoldFont = titleBoldFont
+        self.artOnOff            = artOnOff
+        self.titleOrder          = titleOrder
+        self.titleLen            = titleLen
+        self.titleBoldFont       = titleBoldFont
+        self.albumart_general               = ".gnome2/rhythmbox/covers/"
         self.dbus_driver()
 
         # Currently Playing Title
         result = {}
-        result['title'] = self.player.current_playing().split(" - ",3)[0]
-        result['artist'] = self.player.current_playing().split(" - ",3)[2]
-        result['album'] = self.player.current_playing().split(" - ",3)[1][1:]
+        result['title']    = self.player.current_playing().split(" - ",3)[0]
+        result['artist']   = self.player.current_playing().split(" - ",3)[2]
+        result['album']    = self.player.current_playing().split(" - ",3)[1][1:]
         albumart = os.environ['HOME'] + "/.listen/cover/" + result['artist'].lower() + "+" + result['album'].lower() + ".jpg"
-        if self.titleOrder == 'artist - title':
-            try:result = result['artist'] + ' - ' + result['title']
+        if self.titleOrder                 == 'artist - title':
+            try:result                      = result['artist'] + ' - ' + result['title']
             except:SyntaxError
-        elif self.titleOrder == 'title - artist':
-            try:result = result['title'] + ' - ' + result['artist']
+        elif self.titleOrder               == 'title - artist':
+            try:result                      = result['title'] + ' - ' + result['artist']
             except:SyntaxError
         if result.__len__() > self.titleLen:
-            result = result[:self.titleLen]
-            result = result + '..'
-        if self.titleBoldFont == 'on':
-            result = """<span weight="bold">""" + result + """</span>"""
-        result_tooltip = result.replace("""</span>""",'')
-        result_tooltip = result_tooltip.replace("""<span weight="bold">""",'')    
+            result                          = result[:self.titleLen]
+            result                          = result + '..'
+        if self.titleBoldFont              == 'on':
+            result                          = """<span weight="bold">""" + result + """</span>"""
+        result_tooltip                      = result.replace("""</span>""",'')
+        result_tooltip                      = result_tooltip.replace("""<span weight="bold">""",'')    
         return albumart,result,result_tooltip
-    def button_previous_press (self):
+    def button_previous_press                 (self):
         self.player.previous()
-    def button_pp_press (self):
-        self.player.play_pause ()
-    def button_next_press (self):
+    def button_pp_press                       (self):
+        self.player.play_pause                ()
+    def button_next_press                     (self):
         self.player.next()
 class Amarok:
     """
@@ -264,41 +267,43 @@ class Amarok:
         Defining the dbus location for Amarok
         """
         if pydcop.anyAppCalled("amarok") == None:pass
-        else:self.player = pydcop.anyAppCalled("amarok").player
+        else:self.player                         = pydcop.anyAppCalled("amarok").player
         
     def labeler(self,artOnOff,titleOrder,titleLen,titleBoldFont):
         """
         This method changes the application titles and album art
         """
-        self.artOnOff = artOnOff
-        self.titleOrder = titleOrder
-        self.titleLen = titleLen
-        self.titleBoldFont = titleBoldFont
+        self.artOnOff            = artOnOff
+        self.titleOrder          = titleOrder
+        self.titleLen            = titleLen
+        self.titleBoldFont       = titleBoldFont
+        self.albumart_general               = ".gnome2/rhythmbox/covers/"
         self.dbus_driver()
 
         # Currently Playing Title
         result = {}
-        result['title'] = self.player.title ()
-        result['artist'] = self.player.artist ()
-        result['album'] = self.player.album ()
+        result['title']    = self.player.title  ()
+        result['artist']   = self.player.artist ()
+        result['album']    = self.player.album  ()
         albumart = self.player.coverImage()
-        if self.titleOrder == 'artist - title':
-            try:result = result['artist'] + ' - ' + result['title']
+        if self.titleOrder                 == 'artist - title':
+            try:result                      = result['artist'] + ' - ' + result['title']
             except:SyntaxError
-        elif self.titleOrder == 'title - artist':
-            try:result = result['title'] + ' - ' + result['artist']
+        elif self.titleOrder               == 'title - artist':
+            try:result                      = result['title'] + ' - ' + result['artist']
             except:SyntaxError
         if result.__len__() > self.titleLen:
-            result = result[:self.titleLen]
-            result = result + '..'
-        if self.titleBoldFont == 'on':
-            result = """<span weight="bold">""" + result + """</span>"""
-        result_tooltip = result.replace("""</span>""",'')
-        result_tooltip = result_tooltip.replace("""<span weight="bold">""",'')    
+            result                          = result[:self.titleLen]
+            result                          = result + '..'
+        if self.titleBoldFont              == 'on':
+            result                          = """<span weight="bold">""" + result + """</span>"""
+        result_tooltip                      = result.replace("""</span>""",'')
+        result_tooltip                      = result_tooltip.replace("""<span weight="bold">""",'')    
         return albumart,result,result_tooltip
-    def button_previous_press (self):
+    def button_previous_press                 (self):
         self.player.prev()
-    def button_pp_press (self):
+    def button_pp_press                       (self):
         self.player.playPause()
-    def button_next_press (self):
+    def button_next_press                     (self):
         self.player.next()
+

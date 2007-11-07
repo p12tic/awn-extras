@@ -1,7 +1,0 @@
-[Desktop Entry]
-Type=Python
-Encoding=UTF-8
-Name=Weather Applet
-Comment=Fetches the local weather.
-Exec=/usr/local/lib/awn/applets/weather/weather.py
-Icon=weather-clear

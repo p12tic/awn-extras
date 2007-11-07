@@ -1,7 +1,0 @@
-[Desktop Entry]
-Type=Python
-Encoding=UTF-8
-Name=GMail Applet
-Comment=Check GMail from AWN
-Exec=/usr/local/lib/awn/applets/gmail/gmail.py
-Icon=internet-mail

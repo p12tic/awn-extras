@@ -1,7 +1,0 @@
-[Desktop Entry]
-Type=C
-Encoding=UTF-8
-Name=Separator
-Comment=A simple separator.
-Exec=/usr/local/lib/awn/applets/separator/separator.so
-Icon=/usr/local/share/awn-extras-applets/separator.svg

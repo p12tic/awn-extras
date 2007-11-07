@@ -1,4 +1,4 @@
-/* daemon.c - Implementation of the destop notification spec
+p/* daemon.c - Implementation of the destop notification spec
  *
  * Awn related modifications by Rodney Cryderman <rcryderman@gmail.com>
  *
@@ -748,7 +748,6 @@ url_clicked_cb(GtkWindow *nw, const char *url)
 	daemon->priv->url_clicked_lock = TRUE;
 
 	escaped_url = g_shell_quote(url);
-	printf("%s\n",escaped_url);
 	/*
 	 * We can't actually check for GNOME_DESKTOP_SESSION_ID, because it's
 	 * not in the environment for this program :(
@@ -1015,7 +1014,6 @@ notify_daemon_notify_handler(NotifyDaemon *daemon,
 		 * that position.
 		 */
 		set_notification_arrow(nw, TRUE, x, y);
-	//	printf("daemon.c1002: %d, %d\n", (int)x, (int)y);
 		move_notification(nw, x, y);
 	}
 	else
@@ -1110,17 +1108,13 @@ get_gconf_client(void)
 static void
 _height_changed (AwnApplet *app, guint height, gpointer *data)
 {
-  //  printf("height changed\n");
-  /*applet->height = height;
-    gtk_widget_queue_draw (GTK_WIDGET (applet));
-    update_icons (applet);*/
+
 }
 
 gboolean send_startup_message(gpointer data)
 {
 	NotifyNotification *notify;	
 	gchar *summary = "Awn Notification Daemon Message";
-//	gchar *body = "Awn Notification Daemon has loaded Successfully.\nClick <a href=\"http://tinyurl.com/2nkdtz\">Here</a> for online documentation.";
 	gchar *body = "Awn Notification Daemon has loaded Successfully.\nClick <a href=\"http://wiki.awn-project.org/index.php?title=Awn_Notification-Daemon\">Here</a> for online documentation.";
 	gchar *type = NULL;
 	gchar *icon_str = NULL;

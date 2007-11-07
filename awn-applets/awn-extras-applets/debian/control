@@ -1,16 +1,18 @@
-Source: awn-core-applets
-Section: universe/gnome
+Source: awn-extras-applets
+Section: gnome
 Priority: optional
 Maintainer: Julien Lavergne <julien.lavergne@gmail.com>
-Build-Depends: debhelper (>= 5), cdbs, intltool, gnome-pkg-tools, autotools-dev, libgnome-menu-dev, libgconf2-dev, libgnome-desktop-dev, gnome-common, librsvg2-dev, libgtop2-dev, libawn-dev, libwnck-dev, python-libawn0, python-central (>= 0.5.6), python
+Build-Depends: debhelper (>= 5), cdbs, intltool, gnome-pkg-tools, autotools-dev, libgnome-menu-dev, libgconf2-dev, libgnome-desktop-dev, gnome-common, librsvg2-dev, libgtop2-dev, libawn-dev, libwnck-dev, python-central (>= 0.5.6), python
 Standards-Version: 3.7.2
 XS-Python-Version: current
 
-Package: awn-core-applets
-Section: universe/gnome
+Package: awn-extras-applets
+Section: gnome
 Architecture: any
 Depends: ${shlibs:Depends}, ${python:Depends}
-Recommands: avant-window-navigator, cairo-clock, python-alsaaudio, python-libgmail, python-imaging, jackd, python-gst0.10, imagemagick, tsclient
+Recommands: avant-window-navigator, python-libawn0, cairo-clock, python-alsaaudio, python-libgmail, python-imaging, python-gst0.10, tsclient
+Conflict: awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr
+Replaces: awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr
 XB-Python-Version: ${python:Versions}
 Description: A collection of applets for avant-windows-navigator
  A collection of applets for avant-windows-navigator.

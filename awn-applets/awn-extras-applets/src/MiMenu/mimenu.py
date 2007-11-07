@@ -48,9 +48,12 @@ class App (awn.AppletSimple):
         self.location = location.replace('mimenu.py','')
         self.location_icon = self.location + '/icons/icon.svg'    
         awn.AppletSimple.__init__ (self, uid, orient, height)
-        self.height = height        
-        try:icon = theme.load_icon ("gnome-main-menu", height, 0)
-        except:icon = gdk.pixbuf_new_from_file (self.location_icon)
+        self.height = height
+        self.theme = gtk.icon_theme_get_default()
+        try:icon = self.theme.load_icon ("gnome-main-menu", height, 0)
+        except:
+            icon = gdk.pixbuf_new_from_file (self.location_icon)
+            print 'noicon'
         if height != icon.get_height():
             icon = icon.scale_simple(height,height,gtk.gdk.INTERP_BILINEAR)
         self.set_icon (icon)

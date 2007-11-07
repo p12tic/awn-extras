@@ -4,6 +4,7 @@ SUBDIRS =			\
 	battery-applet		\
 	BlingSwitcher 		\
 	calendar		\
+	cairo-menu		\
 	comic			\
 	digitalClock		\
 	filebrowser     	\

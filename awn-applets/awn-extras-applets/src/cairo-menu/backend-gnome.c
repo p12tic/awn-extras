@@ -277,7 +277,7 @@ fill_er_up(GMenuTreeDirectory *directory,GSList**p)
 }
 
 
-GSList* get_menu_data(gboolean show_search)
+GSList* get_menu_data(gboolean show_search,gboolean show_run)
 {
 /*FIXME... I'm leaking a bit of memory her */
 
@@ -332,14 +332,18 @@ GSList* get_menu_data(gboolean show_search)
 		dir_item->sublist=NULL;
 		dir_item->search_entry=NULL;	
 		data=g_slist_append(data,dir_item);
-
+	}
+	
+	if (show_run)
+	{
 		dir_item=g_malloc(sizeof(Menu_list_item));
-		dir_item->item_type=MENU_ITEM_BLANK;
-		dir_item->name=g_strdup("");
-		dir_item->icon=g_strdup("");
+		dir_item->item_type=MENU_ITEM_RUN;
+		dir_item->name=g_strdup("Run:");
+		dir_item->icon=g_strdup("stock_run");
 		dir_item->sublist=NULL;
 		dir_item->search_entry=NULL;	
 		data=g_slist_append(data,dir_item);
-	}
+
+	}	
 	return data;
 }	

@@ -29,6 +29,5 @@ void render_directory(Menu_list_item *directory);
 void _fixup_menus(GtkFixedChild * child,GtkWidget * subwidget);
 
 void render_menu_widgets(Menu_list_item * menu_item,GtkWidget * mainbox);
-void hide_search(void);
 
 #endif

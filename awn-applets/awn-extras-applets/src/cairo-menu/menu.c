@@ -72,7 +72,6 @@ void pos_dialog(GtkWidget * mainwindow)
 	{	
 		ysize=550;	
 	}		
-	printf("PRE - y=%d ysize = %d\n",y,ysize);	
 	if (x>scrwidth)
 		x=0;
 	if (y>scrheight)
@@ -132,7 +131,6 @@ static gboolean _button_clicked_mainwindow(GtkWidget *widget, GdkEventButton *ev
 
 static gboolean _focus_out_mainwindow(GtkWidget *widget, GdkEventButton *event, Cairo_main_menu * menu)
 {
-	printf("_focus_out_mainwindow\n");
 	g_list_foreach(GTK_FIXED(G_Fixed)->children,_fixup_menus,NULL); 	
     gtk_widget_hide(menu->mainwindow);    
     return FALSE;
@@ -145,7 +143,7 @@ Cairo_main_menu * dialog_new(AwnApplet *applet)
   	G_cairo_menu_conf.submenu_deps=g_tree_new(_cmp_pointer);
   	
 	Cairo_main_menu * menu=g_malloc(sizeof(Cairo_main_menu) );	
-	menu->menu_data=get_menu_data(G_cairo_menu_conf.show_search);
+	menu->menu_data=get_menu_data(G_cairo_menu_conf.show_search,G_cairo_menu_conf.show_run);
 	menu->applet=applet;
     G_mainwindow = menu->mainwindow = build_dialog_window(); 
 

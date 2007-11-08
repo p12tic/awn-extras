@@ -170,6 +170,8 @@ void read_config(void)
 		G_cairo_menu_conf.honour_gtk=TRUE;
         gconf_client_set_bool(gconf_client,GCONF_HONOUR_GTK,G_cairo_menu_conf.honour_gtk,NULL);        
     } 
+    
+	G_cairo_menu_conf.show_run=TRUE;
        
    	if (G_cairo_menu_conf.honour_gtk)
    	{  	  

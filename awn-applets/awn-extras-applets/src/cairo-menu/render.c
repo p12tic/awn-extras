@@ -45,6 +45,7 @@ typedef struct
 	GtkWidget * aux;	
 }Mouseover_data;
 Mouseover_data	* G_Search=NULL;
+Mouseover_data	* G_Run=NULL;
 
 /*
 At some point in time it might be good to cache cr and gradient.  
@@ -119,7 +120,7 @@ GtkWidget * build_menu_widget(Menu_item_color * mic, char * text,GdkPixbuf *pbuf
 	return widget;
 }
 
-void render_search(Menu_list_item *entry)
+void render_textentry(Menu_list_item *entry)
 {
 	GdkPixmap *pixmap;
 	GtkIconTheme*  g;  	
@@ -150,7 +151,7 @@ void render_search(Menu_list_item *entry)
 	gtk_event_box_set_above_child (entry->widget,TRUE);	
 	entry->normal=build_menu_widget(&G_cairo_menu_conf.normal,entry->name,pbuf);
 	entry->hover=build_menu_widget(&G_cairo_menu_conf.hover,entry->name,pbuf);	
-	entry->search_entry=sexy_icon_entry_new();
+	entry->text_entry=sexy_icon_entry_new();
 	sexy_icon_entry_set_icon( (SexyIconEntry *)entry->search_entry,SEXY_ICON_ENTRY_PRIMARY,
 							  gtk_image_new_from_pixbuf(pbuf) );
 	sexy_icon_entry_add_clear_button((SexyIconEntry *)entry->search_entry);
@@ -423,7 +424,7 @@ static gboolean _button_clicked_event(GtkWidget *widget,GdkEventButton *event,Me
 	return TRUE;
 }          
 
-static gboolean _button_clicked_event_search(GtkWidget *widget,GdkEventButton *event,Mouseover_data *data) 
+static gboolean _button_clicked_event_textentry(GtkWidget *widget,GdkEventButton *event,Mouseover_data *data) 
 {
 	g_list_foreach(GTK_FIXED(G_Fixed)->children,_fixup_menus,NULL); 
 	gtk_widget_show(data->misc);
@@ -436,7 +437,7 @@ static gboolean _button_clicked_event_search(GtkWidget *widget,GdkEventButton *e
 	return TRUE;
 }    
 
-void hide_search(void)
+static void hide_textentries(void)
 {
 	if (G_Search)
 	{
@@ -448,13 +449,22 @@ void hide_search(void)
 			gtk_widget_show_all(G_Search->normal);			
 		}			
 	}
+	if (G_Run)
+	{
+		if (gtk_bin_get_child(G_Run->aux) == G_Run->misc)
+		{
+			g_object_ref(gtk_bin_get_child(G_Run->aux));
+			gtk_container_remove(G_Run->aux,gtk_bin_get_child(G_Run->aux));
+			gtk_container_add(G_Run->aux,G_Run->normal);		
+			gtk_widget_show_all(G_Run->normal);			
+		}			
+	}	
 }
  
 
-static gboolean _focus_out_search(GtkWidget *widget, GdkEventButton *event, Mouseover_data *data)
+static gboolean _focus_out_textentry(GtkWidget *widget, GdkEventButton *event, Mouseover_data *data)
 {
-	printf("_focus_out_search\n");
-	hide_search();
+	hide_textentries();
 	G_repression=FALSE;
     return FALSE;
 }
@@ -467,16 +477,31 @@ int activate_search(GtkWidget *w,Menu_list_item * menu_item)
 	char  *cmd;
 
 	G_repression=FALSE;
+	
 	cmd=g_malloc(strlen(G_cairo_menu_conf.search_cmd) + strlen(gtk_entry_get_text (w)) +4 );
 	strcpy(cmd,G_cairo_menu_conf.search_cmd);
 	strcat(cmd," '");	
 	strcat(cmd,gtk_entry_get_text (w) );
+
 	strcat(cmd,"'");		
 	gtk_widget_hide(G_Fixed->parent);
 	g_spawn_command_line_async(cmd,&err);    
+
+	gtk_entry_set_text(w,"")	;		
 	g_free(cmd);	
 	return FALSE;
 }
+
+int activate_run(GtkWidget *w,Menu_list_item * menu_item)
+{
+	GError *err=NULL;
+	G_repression=FALSE;
+	gtk_widget_hide(G_Fixed->parent);
+	g_spawn_command_line_async(gtk_entry_get_text (w),&err);    
+	gtk_entry_set_text (w,"")	;
+	return FALSE;
+}
+
 static gboolean _button_clicked_ignore(GtkWidget *widget,GdkEventButton *event,Menu_list_item * menu_item) 
 {
 	G_repression=FALSE;
@@ -560,7 +585,7 @@ void render_menu_widgets(Menu_list_item * menu_item,GtkWidget * box)
 			break;			
 		case MENU_ITEM_SEARCH:
 			{
-				render_search(menu_item);
+				render_textentry(menu_item);
 				Mouseover_data	*data;				
 				data=g_malloc(sizeof(Mouseover_data));
 				data->subwidget=box;
@@ -571,12 +596,32 @@ void render_menu_widgets(Menu_list_item * menu_item,GtkWidget * box)
 				G_Search=data;
 				g_signal_connect(menu_item->widget, "enter-notify-event", G_CALLBACK (_enter_notify_event_entry), data);
 				g_signal_connect(menu_item->widget, "leave-notify-event", G_CALLBACK (_leave_notify_event_entry), data);
-				g_signal_connect (G_OBJECT(menu_item->widget), "button-press-event",G_CALLBACK (_button_clicked_event_search),data);
-				g_signal_connect (G_OBJECT(data->misc), "focus-out-event",G_CALLBACK (_focus_out_search),data);
+				g_signal_connect (G_OBJECT(menu_item->widget), "button-press-event",G_CALLBACK ( _button_clicked_event_textentry),data);
+				g_signal_connect (G_OBJECT(data->misc), "focus-out-event",G_CALLBACK (_focus_out_textentry),data);
  				g_signal_connect (G_OBJECT(data->misc), "activate",G_CALLBACK (activate_search), menu_item);				
  				
 			}	
 			break;				
+		case MENU_ITEM_RUN:
+			{
+				render_textentry(menu_item);
+				Mouseover_data	*data;				
+				data=g_malloc(sizeof(Mouseover_data));
+				data->subwidget=box;
+				data->normal=menu_item->normal;
+				data->hover=menu_item->hover;
+				data->misc=menu_item->run_entry;
+				data->aux=menu_item->widget;				
+				G_Run=data;
+				g_signal_connect(menu_item->widget, "enter-notify-event", G_CALLBACK (_enter_notify_event_entry), data);
+				g_signal_connect(menu_item->widget, "leave-notify-event", G_CALLBACK (_leave_notify_event_entry), data);
+				g_signal_connect (G_OBJECT(menu_item->widget), "button-press-event",G_CALLBACK ( _button_clicked_event_textentry),data);
+				g_signal_connect (G_OBJECT(data->misc), "focus-out-event",G_CALLBACK (_focus_out_textentry),data);
+ 				g_signal_connect (G_OBJECT(data->misc), "activate",G_CALLBACK (activate_run), menu_item);				
+ 				
+			}	
+			break;	
+
 		case MENU_ITEM_BLANK:
 			{
 			

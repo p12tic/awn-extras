@@ -34,6 +34,7 @@ enum
   MENU_ITEM_ALIAS,
   
   MENU_ITEM_SEARCH,
+  MENU_ITEM_RUN,
   MENU_ITEM_BLANK    
 };
 
@@ -54,7 +55,10 @@ typedef struct
 	GSList		*sublist;	
 	union
 	{
+		GtkWidget	*text_entry;			
 		GtkWidget	*search_entry;		
+		GtkWidget	*run_entry;		
+				
 	}	;	
 }Menu_list_item;
 

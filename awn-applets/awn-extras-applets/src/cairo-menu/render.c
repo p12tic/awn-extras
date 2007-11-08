@@ -475,15 +475,8 @@ int activate_search(GtkWidget *w,Menu_list_item * menu_item)
 {
 	GError *err=NULL;
 	char  *cmd;
-
 	G_repression=FALSE;
-	
-	cmd=g_malloc(strlen(G_cairo_menu_conf.search_cmd) + strlen(gtk_entry_get_text (w)) +4 );
-	strcpy(cmd,G_cairo_menu_conf.search_cmd);
-	strcat(cmd," '");	
-	strcat(cmd,gtk_entry_get_text (w) );
-
-	strcat(cmd,"'");		
+	cmd=g_strdup_printf("%s '%s'",G_cairo_menu_conf.search_cmd,gtk_entry_get_text (w) );
 	gtk_widget_hide(G_Fixed->parent);
 	g_spawn_command_line_async(cmd,&err);    
 

@@ -124,7 +124,7 @@ void read_config(void)
 		}    
 		else
 		{
-			svalue==g_strdup("");
+			svalue=g_strdup("");
 	        gconf_client_set_bool(gconf_client,GCONF_SHOW_SEARCH,FALSE,NULL);        			
 		}
 		

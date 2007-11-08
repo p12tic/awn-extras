@@ -46,51 +46,6 @@ typedef struct
 }Mouseover_data;
 Mouseover_data	* G_Search=NULL;
 
-GtkWidget * build_menu_widget_layer_pixbufs(Menu_item_color * mic, char * text,GdkPixbuf *pbuf_lower,GdkPixbuf *pbuf_upper)
-{
-    static cairo_t *cr = NULL;   
-    GtkWidget * widget;
-    GdkScreen* pScreen;        
-	GdkPixmap * pixmap; 
-	GdkColormap*	cmap;
-
-    pixmap=gdk_pixmap_new(NULL,G_cairo_menu_conf.text_size*G_cairo_menu_conf.menu_item_text_len, G_cairo_menu_conf.text_size*1.4,32);   //FIXME
-    widget=gtk_image_new_from_pixmap(pixmap,NULL);        
-    pScreen = gtk_widget_get_screen (G_Fixed);
-    cmap = gdk_screen_get_rgba_colormap (pScreen);
-    if (!cmap)
-            cmap = gdk_screen_get_rgb_colormap (pScreen); 
-    gdk_drawable_set_colormap(pixmap,cmap);       
-    cr=gdk_cairo_create(pixmap);
-    cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
-    cairo_paint(cr);
-    cairo_set_source_rgba (cr, mic->bg.red,mic->bg.green,mic->bg.blue, mic->bg.alpha);
-    cairo_set_operator (cr, CAIRO_OPERATOR_OVER);	
-   	cairo_paint(cr);
-   	if (pbuf_lower)
-   	{
-		gdk_cairo_set_source_pixbuf(cr,pbuf_lower,0,0);   	
-		cairo_move_to(cr,1,1);
-		cairo_paint(cr);
-		if (pbuf_upper)
-		{
-			gdk_cairo_set_source_pixbuf(cr,pbuf_upper,0,0);   	
-			cairo_move_to(cr,1,1);
-			cairo_paint(cr);
-		}					
-	}		
-    cairo_set_source_rgba (cr, mic->fg.red,mic->fg.green,mic->fg.blue, mic->fg.alpha);
-    cairo_set_operator (cr, CAIRO_OPERATOR_OVER);	   	
-   	cairo_move_to(cr,G_cairo_menu_conf.text_size*1.3 , G_cairo_menu_conf.text_size);
-    cairo_select_font_face (cr, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
-    cairo_set_font_size (cr,G_cairo_menu_conf.text_size  );          	
-   	cairo_show_text(cr,text);    	
-	cairo_destroy(cr);
-	g_object_unref (pixmap);
-	return widget;
-}
-
-
 /*
 At some point in time it might be good to cache cr and gradient.  
 At this point it's a bit inefficient on initial startup... but that's the only
@@ -107,7 +62,7 @@ GtkWidget * build_menu_widget(Menu_item_color * mic, char * text,GdkPixbuf *pbuf
     cairo_text_extents_t    extents;      
     
     pixmap=gdk_pixmap_new(NULL,G_cairo_menu_conf.text_size*G_cairo_menu_conf.menu_item_text_len, 
-    					G_cairo_menu_conf.text_size*1.4,32);   //FIXME
+    					G_cairo_menu_conf.text_size*1.6,32);   //FIXME
     widget=gtk_image_new_from_pixmap(pixmap,NULL);        
     pScreen = gtk_widget_get_screen (G_Fixed);
     cmap = gdk_screen_get_rgba_colormap (pScreen);
@@ -117,11 +72,9 @@ GtkWidget * build_menu_widget(Menu_item_color * mic, char * text,GdkPixbuf *pbuf
     cr=gdk_cairo_create(pixmap);
     cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
     cairo_paint(cr);
-//    cairo_set_source_rgba (cr, mic->bg.red,mic->bg.green,mic->bg.blue, mic->bg.alpha);
     cairo_set_operator (cr, CAIRO_OPERATOR_OVER);	
-
     gradient = cairo_pattern_create_linear(0, 0, 0,
-            G_cairo_menu_conf.text_size*1.4);
+            G_cairo_menu_conf.text_size*1.6);
     cairo_pattern_add_color_stop_rgba(gradient, 0,  mic->bg.red,mic->bg.green,mic->bg.blue, 
     						mic->bg.alpha*G_cairo_menu_conf.menu_item_gradient_factor);
     cairo_pattern_add_color_stop_rgba(gradient, 0.5, mic->bg.red,mic->bg.green,mic->bg.blue, 
@@ -140,7 +93,7 @@ GtkWidget * build_menu_widget(Menu_item_color * mic, char * text,GdkPixbuf *pbuf
 	}		
     cairo_set_source_rgba (cr, mic->fg.red,mic->fg.green,mic->fg.blue, mic->fg.alpha);
     cairo_set_operator (cr, CAIRO_OPERATOR_OVER);	   	
-   	cairo_move_to(cr,G_cairo_menu_conf.text_size*1.3 , G_cairo_menu_conf.text_size);
+   	cairo_move_to(cr,G_cairo_menu_conf.text_size*1.4 , G_cairo_menu_conf.text_size);
     cairo_select_font_face (cr, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
     cairo_set_font_size (cr,G_cairo_menu_conf.text_size  );  
     
@@ -271,11 +224,19 @@ void render_directory(Menu_list_item *directory)
 		}			
 	}			
 
-    tmp=gtk_icon_theme_load_icon(g,"folder_open",G_cairo_menu_conf.text_size,0,NULL);    
+    tmp=gtk_icon_theme_load_icon(g,"stock_open",G_cairo_menu_conf.text_size,0,NULL);    
     if (tmp)
     {
 		pbuf2=gdk_pixbuf_scale_simple(tmp,G_cairo_menu_conf.text_size,G_cairo_menu_conf.text_size,GDK_INTERP_HYPER);    
 		g_object_unref(tmp);
+	}		
+	if (!pbuf2)
+	{
+		pbuf2=gdk_pixbuf_new_from_file_at_size("folder_open",-1,G_cairo_menu_conf.text_size,NULL);
+		if (!pbuf1)
+		{		
+			pbuf2=gdk_pixbuf_new_from_file_at_size("folder-open",-1,G_cairo_menu_conf.text_size,NULL);		
+		}			
 	}		
 	if (!pbuf1)
 		pbuf1=pbuf2;

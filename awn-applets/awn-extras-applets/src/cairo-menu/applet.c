@@ -37,6 +37,23 @@ extern GtkWidget * G_Fixed;
 
 static gboolean _button_clicked_event (GtkWidget *widget, GdkEventButton *event, Cairo_main_menu * menu);
 
+
+gboolean _fade_in(GtkWidget * window)
+{
+	static	float	opacity=0.2;
+	
+	opacity=opacity+0.1;
+	
+	if (opacity>=0.95)
+	{
+		gtk_window_set_opacity(GTK_WINDOW(window),1.0);	
+		opacity=0.2;
+		return FALSE;
+	}
+	gtk_window_set_opacity(GTK_WINDOW(window),opacity);				
+	return TRUE;
+}			
+
 static gboolean _button_clicked_event (GtkWidget *widget, GdkEventButton *event, Cairo_main_menu * menu)
 {
     GdkEventButton *event_button;
@@ -53,13 +70,11 @@ static gboolean _button_clicked_event (GtkWidget *widget, GdkEventButton *event,
 		}
 		else
 		{
-		//	g_list_foreach(GTK_FIXED(G_Fixed)->children,_fixup_menus,NULL);				
-						    
-    
+
 			gtk_widget_show(menu->mainwindow);  
 			gtk_fixed_move(menu->mainfixed,menu->mainbox,0,menu->mainwindow->allocation.height-menu->mainbox->allocation.height);								
 			pos_dialog(menu->mainwindow);		
-			gtk_window_set_opacity(GTK_WINDOW(menu->mainwindow),1.0)	;				  		    
+			g_timeout_add (120,_fade_in,menu->mainwindow);
 		}    
     }
  	return TRUE;

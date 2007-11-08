@@ -164,7 +164,7 @@ Cairo_main_menu * dialog_new(AwnApplet *applet)
 	g_slist_foreach(menu->menu_data,render_menu_widgets,menu->mainbox);
 	gtk_widget_show_all(menu->mainbox);  	
 
-    g_signal_connect (G_OBJECT (menu->mainwindow),"expose-event", G_CALLBACK (_expose_event), menu);
+    g_signal_connect (G_OBJECT (menu->mainfixed),"expose-event", G_CALLBACK (_expose_event), menu);
 	     		
 	g_signal_connect (G_OBJECT (menu->mainwindow), "button-press-event",G_CALLBACK (_button_clicked_mainwindow), menu);
 	g_signal_connect (G_OBJECT (menu->mainwindow), "focus-out-event",G_CALLBACK (_focus_out_mainwindow), menu);
@@ -178,7 +178,6 @@ static gboolean _expose_event (GtkWidget *widget, GdkEventExpose *expose, Cairo_
     cr=gdk_cairo_create(widget->window);   
     cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
     cairo_paint(cr);
-
     return FALSE;        
 }
 

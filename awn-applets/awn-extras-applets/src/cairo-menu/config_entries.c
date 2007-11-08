@@ -125,7 +125,7 @@ void read_config(void)
 		else
 		{
 			svalue=g_strdup("terminal -x locate");
-	        gconf_client_set_bool(gconf_client,GCONF_SHOW_SEARCH,FALSE,NULL);        			
+	        //gconf_client_set_bool(gconf_client,GCONF_SHOW_SEARCH,FALSE,NULL);        			
 		}
 		
         gconf_client_set_string(gconf_client , GCONF_SEARCH_CMD, svalue, NULL );

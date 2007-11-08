@@ -124,7 +124,7 @@ void read_config(void)
 		}    
 		else
 		{
-			svalue=g_strdup("");
+			svalue=g_strdup("terminal -x locate");
 	        gconf_client_set_bool(gconf_client,GCONF_SHOW_SEARCH,FALSE,NULL);        			
 		}
 		
@@ -133,7 +133,7 @@ void read_config(void)
     G_cairo_menu_conf.search_cmd=g_strdup(svalue);
     if (strlen(svalue)==0)
     {        
-		G_cairo_menu_conf.show_search=FALSE;             			
+		G_cairo_menu_conf.search_cmd=g_strdup("terminal -x locate");    			
     }
     g_free(svalue);     
 

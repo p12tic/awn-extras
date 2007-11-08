@@ -132,8 +132,8 @@ void read_config(void)
     }
     G_cairo_menu_conf.search_cmd=g_strdup(svalue);
     if (strlen(svalue)==0)
-    {
-        gconf_client_set_string(gconf_client , GCONF_SEARCH_CMD, svalue, NULL );
+    {        
+		G_cairo_menu_conf.show_search=FALSE;             			
     }
     g_free(svalue);     
 

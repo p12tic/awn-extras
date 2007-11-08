@@ -38,7 +38,7 @@
 
 #define GCONF_SEARCH_CMD GCONF_MENU "/search_cmd"
 #define GCONF_SHOW_SEARCH GCONF_MENU "/search_show"
-#define GCONF_SHOW_RUN GCONF_MENU "/show_run"
+#define GCONF_SHOW_RUN GCONF_MENU "/run_show"
 
 #define GCONF_MENU_GRADIENT GCONF_MENU "/menu_item_gradient_factor"
 #define GCONF_MENU_ITEM_TEXT_LEN GCONF_MENU "/menu_item_text_len"
@@ -114,27 +114,24 @@ void read_config(void)
     svalue = gconf_client_get_string(gconf_client,GCONF_SEARCH_CMD, NULL );
     if ( !svalue ) 
     {
-		if (g_find_program_in_path("tracker-search-tool") )
+
+		svalue=g_find_program_in_path("tracker-search-tool");
+		if (!svalue)
 		{
-			svalue==g_strdup("tracker-search-tool");
+			svalue=g_find_program_in_path("beagle-search");
 		}    
-		else if (g_find_program_in_path( "beagle-search") )
-		{
-			svalue==g_strdup("beagle-search");
-		}    
-		else
+		if (!svalue)
 		{
 			svalue=g_strdup("terminal -x locate");
 	        //gconf_client_set_bool(gconf_client,GCONF_SHOW_SEARCH,FALSE,NULL);        			
-		}
-		
+		}    		
         gconf_client_set_string(gconf_client , GCONF_SEARCH_CMD, svalue, NULL );
+
+//    svalue==g_strdup("tracker-search-tool");
     }
+
     G_cairo_menu_conf.search_cmd=g_strdup(svalue);
-    if (strlen(svalue)==0)
-    {        
-		G_cairo_menu_conf.search_cmd=g_strdup("terminal -x locate");    			
-    }
+
     g_free(svalue);     
 
 

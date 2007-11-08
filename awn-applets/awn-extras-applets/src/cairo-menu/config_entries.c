@@ -38,7 +38,7 @@
 
 #define GCONF_SEARCH_CMD GCONF_MENU "/search_cmd"
 #define GCONF_SHOW_SEARCH GCONF_MENU "/search_show"
-#define GCONF_SHOW_RUN GCONF_MENU "/search_run"
+#define GCONF_SHOW_RUN GCONF_MENU "/show_run"
 
 #define GCONF_MENU_GRADIENT GCONF_MENU "/menu_item_gradient_factor"
 #define GCONF_MENU_ITEM_TEXT_LEN GCONF_MENU "/menu_item_text_len"

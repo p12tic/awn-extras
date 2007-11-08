@@ -38,6 +38,7 @@
 
 #define GCONF_SEARCH_CMD GCONF_MENU "/search_cmd"
 #define GCONF_SHOW_SEARCH GCONF_MENU "/search_show"
+#define GCONF_SHOW_RUN GCONF_MENU "/search_run"
 
 #define GCONF_MENU_GRADIENT GCONF_MENU "/menu_item_gradient_factor"
 #define GCONF_MENU_ITEM_TEXT_LEN GCONF_MENU "/menu_item_text_len"
@@ -158,7 +159,22 @@ void read_config(void)
     {
 		G_cairo_menu_conf.menu_item_text_len=12;
         gconf_client_set_int(gconf_client,GCONF_MENU_ITEM_TEXT_LEN,G_cairo_menu_conf.menu_item_text_len,NULL);        
-    }	
+    }
+    
+
+    value=gconf_client_get(gconf_client,GCONF_SHOW_RUN,NULL);		
+    if (value)
+    {																		
+        G_cairo_menu_conf.show_run=gconf_client_get_bool(gconf_client,GCONF_SHOW_RUN,NULL) ;
+    }
+    else             							
+    {
+		G_cairo_menu_conf.show_run=TRUE;    
+        gconf_client_set_bool(gconf_client,GCONF_SHOW_RUN,G_cairo_menu_conf.show_run,NULL);        
+    }    
+    
+
+    	
     
     value=gconf_client_get(gconf_client,GCONF_HONOUR_GTK,NULL);		
     if (value)
@@ -170,8 +186,6 @@ void read_config(void)
 		G_cairo_menu_conf.honour_gtk=TRUE;
         gconf_client_set_bool(gconf_client,GCONF_HONOUR_GTK,G_cairo_menu_conf.honour_gtk,NULL);        
     } 
-    
-	G_cairo_menu_conf.show_run=TRUE;
        
    	if (G_cairo_menu_conf.honour_gtk)
    	{  	  

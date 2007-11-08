@@ -80,23 +80,28 @@ static gboolean _button_clicked_event (GtkWidget *widget, GdkEventButton *event,
  	return TRUE;
 }
 
+static _build_away(gpointer null)
+{
+	Cairo_main_menu * menu;
+	menu=dialog_new(G_applet);
+	gtk_widget_show_all(menu->mainwindow);	
+
+	gtk_widget_show(menu->mainwindow);	
+	pos_dialog(menu->mainwindow);	
+	g_list_foreach(GTK_FIXED(G_Fixed)->children,_fixup_menus,NULL); 		
+	gtk_widget_hide(menu->mainwindow);	
+    g_signal_connect (G_OBJECT (menu->applet), "button-press-event",G_CALLBACK (_button_clicked_event), menu);		
+	return FALSE;
+}
+
 static gboolean _expose_event (GtkWidget *widget, GdkEventExpose *expose, gpointer null)
 {
 	static gboolean done_once=FALSE;
 	
 	if (!done_once)
 	{
-		Cairo_main_menu * menu;
-		menu=dialog_new(G_applet);
-		gtk_widget_show_all(menu->mainwindow);	
-
-		gtk_widget_show(menu->mainwindow);	
-		pos_dialog(menu->mainwindow);	
-		g_list_foreach(GTK_FIXED(G_Fixed)->children,_fixup_menus,NULL); 		
-		gtk_widget_hide(menu->mainwindow);	
-	    g_signal_connect (G_OBJECT (menu->applet), "button-press-event",G_CALLBACK (_button_clicked_event), menu);		
+		g_timeout_add(300,_build_away,null);
 	}		
-	
 	done_once=TRUE;
 	return FALSE;
 }	

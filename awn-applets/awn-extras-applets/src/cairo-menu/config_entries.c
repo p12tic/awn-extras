@@ -199,7 +199,7 @@ void read_config(void)
     svalue = gconf_client_get_string(gconf_client,GCONF_FILEMANAGER, NULL );
     if ( !svalue ) 
     {
-        gconf_client_set_string(gconf_client , GCONF_FILEMANAGER, svalue=g_strdup("nautilus"), NULL );
+        gconf_client_set_string(gconf_client , GCONF_FILEMANAGER, svalue=g_strdup("xdg-open"), NULL );
     }
 	G_cairo_menu_conf.filemanager=strdup(svalue);
     g_free(svalue);     

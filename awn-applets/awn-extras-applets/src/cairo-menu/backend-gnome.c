@@ -29,6 +29,7 @@
 #include <glib.h>
 #include <assert.h>
 #include <libgen.h>
+#include <ctype.h>
 
 #include "menu_list_item.h"
 
@@ -356,7 +357,47 @@ GSList* get_menu_data(gboolean show_search,gboolean show_run,gboolean show_place
 		item->comment=g_strdup("Root File System");
 		item->desktop=g_strdup("");			
 		dir_item->sublist=g_slist_append(dir_item->sublist,item);
-		
+		#if 1
+		FILE*	handle;
+		char *  filename=g_strdup_printf("%s/.gtk-bookmarks",homedir);
+		handle=g_fopen(filename,"r");
+		if (handle)
+		{
+			char *	line=NULL;
+			char *  len=0;
+			while ( getline(&line,&len,handle) != -1)	
+			{
+					char *p;
+					p=line+strlen(line);
+					if (p!=line)
+					{
+						while ( !isalpha(*p) && (p!=line))
+						{
+							*p='\0';
+							p--;
+						}							
+						while( (*p!='/') && (p!=line) )
+							p--;
+						if (p!=line)
+						{
+							p++;
+							item=g_malloc(sizeof(Menu_list_item));	
+							item->item_type=MENU_ITEM_ENTRY;
+							item->name=g_strdup(p);
+							item->icon=g_strdup(p);
+							item->exec=g_strdup_printf("%s %s",file_manager,line);			
+							item->comment=g_strdup(line);
+							item->desktop=g_strdup("");			
+							dir_item->sublist=g_slist_append(dir_item->sublist,item);								
+						}												
+					}
+					free(line);
+					line=NULL;
+			}
+			fclose(handle);
+			g_free(filename);
+		}			
+		#endif		
 	}
 
 	if (show_search)

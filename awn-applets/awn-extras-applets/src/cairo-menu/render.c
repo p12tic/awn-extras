@@ -262,7 +262,7 @@ void render_directory(Menu_list_item *directory)
 	gtk_event_box_set_visible_window(directory->widget,FALSE);
 	gtk_event_box_set_above_child (directory->widget,TRUE);	
 	directory->normal=build_menu_widget(&G_cairo_menu_conf.normal,directory->name,pbuf1);
-	directory->hover=build_menu_widget(&G_cairo_menu_conf.hover,directory->name,pbuf2);	
+	directory->hover=build_menu_widget(&G_cairo_menu_conf.hover,directory->name,pbuf1);	
 	g_object_ref(directory->normal);
 	gtk_container_add(directory->widget,directory->normal);		
 	if (pbuf1)

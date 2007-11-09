@@ -40,6 +40,8 @@
 #define GCONF_SHOW_SEARCH GCONF_MENU "/search_show"
 #define GCONF_SHOW_RUN GCONF_MENU "/run_show"
 
+#define GCONF_DO_FADE GCONF_MENU "/fade_in"
+
 #define GCONF_MENU_GRADIENT GCONF_MENU "/menu_item_gradient_factor"
 #define GCONF_MENU_ITEM_TEXT_LEN GCONF_MENU "/menu_item_text_len"
 
@@ -96,7 +98,7 @@ void read_config(void)
     }
     else             							
     {
-        G_cairo_menu_conf.text_size=12;
+        G_cairo_menu_conf.text_size=14;
         gconf_client_set_int (gconf_client,GCONF_TEXT_SIZE,G_cairo_menu_conf.text_size ,NULL);        
     }
 
@@ -114,7 +116,6 @@ void read_config(void)
     svalue = gconf_client_get_string(gconf_client,GCONF_SEARCH_CMD, NULL );
     if ( !svalue ) 
     {
-
 		svalue=g_find_program_in_path("tracker-search-tool");
 		if (!svalue)
 		{
@@ -171,6 +172,16 @@ void read_config(void)
     }    
     
 
+    value=gconf_client_get(gconf_client,GCONF_DO_FADE,NULL);		
+    if (value)
+    {																		
+        G_cairo_menu_conf.do_fade=gconf_client_get_bool(gconf_client,GCONF_DO_FADE,NULL) ;
+    }
+    else             							
+    {
+		G_cairo_menu_conf.do_fade=FALSE;
+        gconf_client_set_bool(gconf_client,GCONF_DO_FADE,G_cairo_menu_conf.do_fade,NULL);        
+    } 
     	
     
     value=gconf_client_get(gconf_client,GCONF_HONOUR_GTK,NULL);		
@@ -183,6 +194,8 @@ void read_config(void)
 		G_cairo_menu_conf.honour_gtk=TRUE;
         gconf_client_set_bool(gconf_client,GCONF_HONOUR_GTK,G_cairo_menu_conf.honour_gtk,NULL);        
     } 
+    
+        
        
    	if (G_cairo_menu_conf.honour_gtk)
    	{  	  

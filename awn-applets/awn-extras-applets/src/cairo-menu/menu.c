@@ -110,7 +110,8 @@ GtkWidget * build_dialog_window( void)
 	}	    
 	gtk_widget_add_events(win, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK|GDK_FOCUS_CHANGE_MASK);
 	gtk_widget_set_app_paintable(win,TRUE);	
-	gtk_window_set_opacity(GTK_WINDOW(win),0.0)	;
+	if (G_cairo_menu_conf.do_fade)
+		gtk_window_set_opacity(GTK_WINDOW(win),0.0)	;
 	gtk_widget_set_redraw_on_allocate(GTK_WINDOW(win),FALSE);
     return win;
 }

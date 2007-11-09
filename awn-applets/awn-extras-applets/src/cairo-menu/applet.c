@@ -34,6 +34,7 @@
 
 AwnApplet *G_applet;
 extern GtkWidget * G_Fixed;
+extern Cairo_menu_config G_cairo_menu_conf;
 
 static gboolean _button_clicked_event (GtkWidget *widget, GdkEventButton *event, Cairo_main_menu * menu);
 
@@ -64,7 +65,8 @@ static gboolean _button_clicked_event (GtkWidget *widget, GdkEventButton *event,
     	  	visibly, briefly on the screen sometimes without it*/
 		if (GTK_WIDGET_VISIBLE(menu->mainwindow) )
 		{
-			gtk_window_set_opacity(GTK_WINDOW(menu->mainwindow),0.0)	;	
+			if (G_cairo_menu_conf.do_fade)
+				gtk_window_set_opacity(GTK_WINDOW(menu->mainwindow),0.0)	;	
 			g_list_foreach(GTK_FIXED(G_Fixed)->children,_fixup_menus,NULL);      
 		    gtk_widget_hide (menu->mainwindow);    
 		}
@@ -74,7 +76,8 @@ static gboolean _button_clicked_event (GtkWidget *widget, GdkEventButton *event,
 			gtk_widget_show(menu->mainwindow);  
 			gtk_fixed_move(menu->mainfixed,menu->mainbox,0,menu->mainwindow->allocation.height-menu->mainbox->allocation.height);								
 			pos_dialog(menu->mainwindow);		
-			g_timeout_add (120,_fade_in,menu->mainwindow);
+			if (G_cairo_menu_conf.do_fade)
+				g_timeout_add (120,_fade_in,menu->mainwindow);
 		}    
     }
  	return TRUE;

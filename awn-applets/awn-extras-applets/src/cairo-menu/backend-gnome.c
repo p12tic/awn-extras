@@ -19,6 +19,9 @@
 
 
 #define GMENU_I_KNOW_THIS_IS_UNSTABLE
+
+#include <libgnomevfs/gnome-vfs.h>
+#include <libgnomevfs/gnome-vfs-utils.h>
 #include <gnome-menus/gmenu-tree.h>
 
 #include <libawn/awn-applet.h>
@@ -32,6 +35,8 @@
 #include <ctype.h>
 
 #include "menu_list_item.h"
+
+
 
 
 static void print_directory (GMenuTreeDirectory *directory);
@@ -229,6 +234,7 @@ fill_er_up(GMenuTreeDirectory *directory,GSList**p)
 					dir_item->item_type=MENU_ITEM_DIRECTORY;
 					dir_item->name=gmenu_tree_directory_get_name(item);
 					dir_item->desktop=gmenu_tree_directory_get_desktop_file_path(item);
+					dir_item->comment=NULL;
 //					dir_item->comment=gmenu_tree_directory_get_comment(item);
 //it seems gmenu_tree_directory_get_icon is broken in some way. or mabye it's my code
 #if 1

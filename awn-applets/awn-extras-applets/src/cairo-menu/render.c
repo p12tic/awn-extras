@@ -552,6 +552,11 @@ void render_menu_widgets(Menu_list_item * menu_item,GtkWidget * box)
 			{
 				GtkWidget *newbox;
 				render_directory(menu_item);
+				#if GTK_CHECK_VERSION(2,12,0)
+				if (menu_item->comment)
+					gtk_widget_set_tooltip_markup(menu_item->widget,menu_item->comment);
+				#endif
+				
 //				gtk_widget_set_tooltip_markup(menu_item->widget,menu_item->comment);				
 				newbox=gtk_vbox_new(FALSE,0);
 				gtk_widget_set_app_paintable(newbox ,TRUE);
@@ -577,7 +582,10 @@ void render_menu_widgets(Menu_list_item * menu_item,GtkWidget * box)
 		case MENU_ITEM_ENTRY:
 			{
 				render_entry(menu_item);
-				gtk_widget_set_tooltip_markup(menu_item->widget,menu_item->comment);
+				#if GTK_CHECK_VERSION(2,12,0)
+				if (menu_item->comment)
+					gtk_widget_set_tooltip_markup(menu_item->widget,menu_item->comment);
+				#endif
 				Mouseover_data	*data;				
 				data=g_malloc(sizeof(Mouseover_data));
 				data->subwidget=box;
@@ -593,6 +601,10 @@ void render_menu_widgets(Menu_list_item * menu_item,GtkWidget * box)
 		case MENU_ITEM_SEARCH:
 			{
 				render_textentry(menu_item);
+				#if GTK_CHECK_VERSION(2,12,0)
+				if (menu_item->comment)
+					gtk_widget_set_tooltip_markup(menu_item->widget,menu_item->comment);
+				#endif
 				Mouseover_data	*data;				
 				data=g_malloc(sizeof(Mouseover_data));
 				data->subwidget=box;
@@ -612,6 +624,10 @@ void render_menu_widgets(Menu_list_item * menu_item,GtkWidget * box)
 		case MENU_ITEM_RUN:
 			{
 				render_textentry(menu_item);
+				#if GTK_CHECK_VERSION(2,12,0)
+				if (menu_item->comment)
+					gtk_widget_set_tooltip_markup(menu_item->widget,menu_item->comment);
+				#endif
 				Mouseover_data	*data;				
 				data=g_malloc(sizeof(Mouseover_data));
 				data->subwidget=box;

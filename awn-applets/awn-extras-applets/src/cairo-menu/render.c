@@ -544,8 +544,6 @@ static gboolean _scroll_event(GtkWidget *widget,GdkEventMotion *event,GtkWidget 
 
 void rerender(Menu_list_item ** menu_items,GtkWidget *box)
 {
-	printf("rerender\n");
-	printf("rerend p = %p\n",*menu_items);
 	gtk_container_foreach(box,gtk_widget_destroy,NULL);	
 	g_slist_foreach(*menu_items,render_menu_widgets,box);	
 	gtk_widget_show_all(box);
@@ -576,7 +574,6 @@ void render_menu_widgets(Menu_list_item * menu_item,GtkWidget * box)
 				g_slist_foreach(menu_item->sublist,render_menu_widgets,newbox);				
 				if (menu_item->monitor)
 				{				
-					printf("connect p = %p\n",menu_item->sublist);
 					menu_item->monitor(rerender,&menu_item->sublist,newbox);
 				}
 								

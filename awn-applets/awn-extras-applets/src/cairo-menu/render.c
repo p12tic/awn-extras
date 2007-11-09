@@ -541,6 +541,19 @@ static gboolean _scroll_event(GtkWidget *widget,GdkEventMotion *event,GtkWidget 
 	return TRUE;
 }     
 
+
+void rerender(Menu_list_item ** menu_items,GtkWidget *box)
+{
+	printf("rerender\n");
+	printf("rerend p = %p\n",*menu_items);
+	gtk_container_foreach(box,gtk_widget_destroy,NULL);	
+	g_slist_foreach(*menu_items,render_menu_widgets,box);	
+	gtk_widget_show_all(box);
+	if (box->allocation.y + box->allocation.height > G_Fixed->allocation.height)
+	{
+		gtk_fixed_move(G_Fixed,box,box->allocation.x,0);
+	}
+}
                                               
 void render_menu_widgets(Menu_list_item * menu_item,GtkWidget * box)
 {
@@ -555,18 +568,20 @@ void render_menu_widgets(Menu_list_item * menu_item,GtkWidget * box)
 				#if GTK_CHECK_VERSION(2,12,0)
 				if (menu_item->comment)
 					gtk_widget_set_tooltip_markup(menu_item->widget,menu_item->comment);
-				#endif
-				
-//				gtk_widget_set_tooltip_markup(menu_item->widget,menu_item->comment);				
+				#endif		
 				newbox=gtk_vbox_new(FALSE,0);
 				gtk_widget_set_app_paintable(newbox ,TRUE);
 				Xpos=Xpos+G_cairo_menu_conf.text_size*G_cairo_menu_conf.menu_item_text_len*4/5;//FIXME
-				gtk_fixed_put(G_Fixed,newbox,Xpos,0);
-//				gtk_widget_show_all(newbox);   						
+				gtk_fixed_put(G_Fixed,newbox,Xpos,0);					
 				g_slist_foreach(menu_item->sublist,render_menu_widgets,newbox);				
-
+				if (menu_item->monitor)
+				{				
+					printf("connect p = %p\n",menu_item->sublist);
+					menu_item->monitor(rerender,&menu_item->sublist,newbox);
+				}
+								
 				Mouseover_data	*data;				
-				data=g_malloc(sizeof(Mouseover_data));
+				data=g_malloc(sizeof(Mouseover_data));				
 				data->subwidget=newbox;
 				data->normal=menu_item->normal;
 				data->hover=menu_item->hover;
@@ -574,7 +589,7 @@ void render_menu_widgets(Menu_list_item * menu_item,GtkWidget * box)
 				g_signal_connect(menu_item->widget, "enter-notify-event", G_CALLBACK (_enter_notify_event), data);
 				g_signal_connect(menu_item->widget, "leave-notify-event", G_CALLBACK (_leave_notify_event), data);
 				g_signal_connect(newbox, "scroll-event" , G_CALLBACK (_scroll_event),newbox);
-				g_signal_connect(menu_item->widget, "button-press-event",G_CALLBACK (_button_clicked_ignore),data);				
+				g_signal_connect(menu_item->widget, "button-press-event",G_CALLBACK (_button_clicked_ignore),data);	
 				g_tree_insert(G_cairo_menu_conf.submenu_deps,newbox,box);				
 				Xpos=Xpos-G_cairo_menu_conf.text_size*G_cairo_menu_conf.menu_item_text_len*4/5;//FIXME
 			}				

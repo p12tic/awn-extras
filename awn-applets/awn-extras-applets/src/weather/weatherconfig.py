@@ -31,7 +31,7 @@ APP="awn-weather-applet"
 DIR="locale"
 import locale
 import gettext
-locale.setlocale(locale.LC_ALL, '')
+#locale.setlocale(locale.LC_ALL, '')
 gettext.bindtextdomain(APP, DIR)
 gettext.textdomain(APP)
 _ = gettext.gettext
@@ -39,7 +39,7 @@ _ = gettext.gettext
 class WeatherCodeSearch(gtk.Window):
 	def __init__(self,config_win):
 		gtk.Window.__init__(self)
-		super(WeatherCodeSearch, self).__init__(gtk.WINDOW_TOPLEVEL)
+		#super(WeatherCodeSearch, self).__init__(gtk.WINDOW_TOPLEVEL)
 		self.config_win = config_win
 		self.set_title(_("Search for Location Code"))        # needs i18n
 		vbox = gtk.VBox(False, 0)
@@ -141,7 +141,7 @@ class WeatherCodeSearch(gtk.Window):
 class WeatherConfig(gtk.Window):
 	def __init__(self,applet):
 		gtk.Window.__init__(self)
-		super(WeatherConfig, self).__init__(gtk.WINDOW_TOPLEVEL)
+		#super(WeatherConfig, self).__init__(gtk.WINDOW_TOPLEVEL)
 		self.applet = applet
 		self.location=applet.location
 		self.location_code=applet.location_code
@@ -165,8 +165,17 @@ class WeatherConfig(gtk.Window):
 			self.click_checkbox.set_active(False)
 		hbox025.pack_start(self.click_checkbox,True,False,0)
 		vbox.pack_start(hbox025,False,False,0)
-		
+
 		hbox05 = gtk.HBox(True, 0)
+		self.click_checkbox2 = gtk.CheckButton(_("Use Curved Dialog look"))  # needs i18n
+		if applet.curved_dialog == True:
+			self.click_checkbox2.set_active(True)
+		else: 
+			self.click_checkbox2.set_active(False)
+		hbox05.pack_start(self.click_checkbox2,True,False,0)
+		vbox.pack_start(hbox05,False,False,0)
+		
+		hbox075 = gtk.HBox(True, 0)
 		self.temp_pos = gtk.combo_box_new_text()							# needs i18n
 		self.temp_pos.append_text(_("Lower Center"))
 		self.temp_pos.append_text(_("Lower Left"))
@@ -178,9 +187,9 @@ class WeatherConfig(gtk.Window):
 
 		self.temp_pos.set_active(applet.temp_position)
 		pos_label = gtk.Label(_("Show Temperature"))
-		hbox05.pack_start(pos_label,True,False,0)
-		hbox05.pack_start(self.temp_pos,True,False,0)		
-		vbox.pack_start(hbox05,False,False,0)
+		hbox075.pack_start(pos_label,True,False,0)
+		hbox075.pack_start(self.temp_pos,True,False,0)		
+		vbox.pack_start(hbox075,False,False,0)
 
 		hbox1 = gtk.HBox(True, 0)
 		label1 = gtk.Label(_("Poll Frequency (Mins)"))  			# needs i18n
@@ -196,21 +205,21 @@ class WeatherConfig(gtk.Window):
 		self.loc_label = gtk.Label(_("Current Location:") + " <b>" + self.location + "</b>")          # needs i18n
 		self.loc_label.set_use_markup(True)
 		hbox2.add(self.loc_label)
-		vbox.pack_start(hbox2,True,False,2)		
+		#vbox.pack_start(hbox2,True,False,2)		
 		
-		hbox3 = gtk.HBox(True,0)
+		#hbox3 = gtk.HBox(True,0)
 		search = gtk.Button(_("Change Location"))
-		hbox3.add(search)
+		hbox2.add(search)
 		search.connect("clicked", self.search_button, "search")
-		vbox.pack_start(hbox3,True,False,2)
+		vbox.pack_start(hbox2,True,False,2)
 
 		hbox4 = gtk.HBox(True, 0)
 		ok = gtk.Button(stock=gtk.STOCK_OK)
 		ok.connect("clicked", self.ok_button, "ok")
-		hbox4.add(ok)
+		hbox4.pack_start(ok,True,True,75)
 		cancel = gtk.Button(stock=gtk.STOCK_CANCEL)
 		cancel.connect("clicked", self.cancel_button, "cancel")
-		hbox4.add(cancel)
+		hbox4.pack_start(cancel,True,True,75)
 		vbox.pack_end(hbox4,True,False,2)
 
 		self.icons = weathericons.WeatherIcons()
@@ -233,6 +242,7 @@ class WeatherConfig(gtk.Window):
 		self.applet.gconf_client.set_int(self.applet.gconf_path + "/frequency", self.spin.get_value_as_int())
 		self.applet.gconf_client.set_int(self.applet.gconf_path + "/temp_position", self.temp_pos.get_active())
 		self.applet.gconf_client.set_bool(self.applet.gconf_path + "/open_til_clicked", self.click_checkbox.get_active())
+		self.applet.gconf_client.set_bool(self.applet.gconf_path + "/curved_dialog", self.click_checkbox2.get_active())
 		self.destroy()
 
 	def cancel_button(self, widget, event):		

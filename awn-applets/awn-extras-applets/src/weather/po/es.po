@@ -1,0 +1,313 @@
+# Spanish translations for awn-core-applets package.
+# Copyright (C) 2007 ORGANIZATION
+# Mike Desjardins <desjardinsmike@gmail.com>, 2007.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: awn-core-applets 0.1\n"
+"POT-Creation-Date: 2007-10-07 22:22+EDT\n"
+"PO-Revision-Date: 2007-10-07 22:29-0400\n"
+"Last-Translator: Mike Desjardins <desjardinsmike@gmail.com>\n"
+"Language-Team: Spanish\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: weather.py:68
+# fuzzy
+msgid "Fetching weather data."
+msgstr ""
+
+#: weather.py:124
+msgid "Forecast"
+msgstr "Pronóstico"
+
+#: weatherconfig.py:44
+msgid "Search for Location Code"
+msgstr "Buscar para codigo del topónimo"
+
+#: weatherconfig.py:49
+msgid "Location Name"
+msgstr "Topónimo"
+
+#: weatherconfig.py:55
+msgid "Search"
+msgstr "Buscar para codigo"
+
+#: weatherconfig.py:62
+msgid ""
+"Enter the location you want to search for above.  For example: <i>Boston</"
+"i>; <i>Portland, ME</i>; <i>Paris</i>; or <i>Osaka, Japan</i>."
+msgstr "Formular tu topónimo.  Por ejemplo, <i>Boston</"
+"i>; <i>Portland, ME</i>; <i>Madrid</i>; or <i>Buenos Aires, La Argentina</i>"
+
+#: weatherconfig.py:72 weatherconfig.py:139
+msgid "No records found."
+msgstr "No produjo ningún topónimo."
+
+#: weatherconfig.py:113 weatherconfig.py:196
+msgid "Current Location:"
+msgstr "Topónimo ahora:"
+
+#: weatherconfig.py:122
+msgid "Searching..."
+msgstr "El buscar..."
+
+#: weatherconfig.py:148
+msgid "Preferences"
+msgstr "Preferencias"
+
+#: weatherconfig.py:151
+msgid "Metric Units"
+msgstr "Unidades Métricas"
+
+#: weatherconfig.py:161
+# fuzzy
+msgid "Keep Forecast window opened until clicked"
+msgstr ""
+
+#: weatherconfig.py:170
+# fuzzy
+msgid "Use Curved Dialog look"
+msgstr "Curvas de estilo"
+
+#: weatherconfig.py:171
+msgid "Lower Center"
+msgstr "En el medio, debajo del icono"
+
+#: weatherconfig.py:172
+msgid "Lower Left"
+msgstr "A la izquierda, debajo del icono"
+
+#: weatherconfig.py:173
+msgid "Lower Right"
+msgstr "A la derecha, debajo del icono"
+
+#: weatherconfig.py:174
+msgid "Upper Center"
+msgstr "En el medio, sobre del icono"
+
+#: weatherconfig.py:175
+msgid "Upper Left"
+msgstr "A la izquierda, sobre del icono"
+
+#: weatherconfig.py:176
+msgid "Upper Right"
+msgstr "A la derecha, sobre del icono"
+
+#: weatherconfig.py:177
+msgid "Never"
+msgstr "Nunca"
+
+#: weatherconfig.py:180
+msgid "Show Temperature"
+msgstr "Exhibir la temperatura"
+
+#: weatherconfig.py:186
+# fuzzy
+msgid "Poll Frequency (Mins)"
+msgstr "La frecuencia refrescar (minutos)"
+
+#: weatherconfig.py:202
+msgid "Change Location"
+msgstr "Cambiar el topónimo"
+
+#: weatherdialog.py:82
+msgid "Weather data provided by weather.com"
+msgstr "Los datos tiempo proporcionaron cerca weather.com"
+
+#: weathermap.py:50
+msgid "Weather Map"
+msgstr "Mapa del tiempo"
+
+#: weathertext.py:42
+msgid "Tornado"
+msgstr "Tornado"
+
+#: weathertext.py:43
+msgid "Tropical Storm"
+msgstr "Huracán"
+
+#: weathertext.py:44
+msgid "Hurricane"
+msgstr "Huracán"
+
+#: weathertext.py:45
+msgid "Severe Thunderstorms"
+msgstr "Tronazón severo"
+
+#: weathertext.py:46
+msgid "Thunderstorms"
+msgstr "Tronazón"
+
+#: weathertext.py:47
+msgid "Mixed Rain and Snow"
+msgstr "Lluvia y Nieve"
+
+#: weathertext.py:48
+msgid "Mixed Rain and Sleet"
+msgstr "Lluvia y Granizo"
+
+#: weathertext.py:49
+# fuzzy
+msgid "Mixed Precipitation"
+msgstr "Precipitación mezclado"
+
+#: weathertext.py:50
+msgid "Freezing Drizzle"
+msgstr "Granizo"
+
+#: weathertext.py:51
+msgid "Drizzle"
+msgstr "Lluvia leve"
+
+#: weathertext.py:52
+msgid "Freezing Rain"
+msgstr "Granizo"
+
+#: weathertext.py:53 weathertext.py:54
+msgid "Showers"
+msgstr "Lluvia disperso"
+
+#: weathertext.py:55
+msgid "Snow Flurries"
+msgstr "Nieve leve"
+
+#: weathertext.py:56
+msgid "Light Snow Showers"
+msgstr "Nieve disperso"
+
+#: weathertext.py:57
+msgid "Blowing Snow"
+msgstr "Ventisca"
+
+#: weathertext.py:58
+msgid "Snow"
+msgstr "Nieve"
+
+#: weathertext.py:59
+msgid "Hail"
+msgstr "Granizada"
+
+#: weathertext.py:60
+msgid "Sleet"
+msgstr "Granizo"
+
+#: weathertext.py:61
+msgid "Dust"
+msgstr "Polvo"
+
+#: weathertext.py:62
+msgid "Fog"
+msgstr "Niebla"
+
+#: weathertext.py:63
+msgid "Haze"
+msgstr "Bruma"
+
+#: weathertext.py:64
+msgid "Smoke"
+msgstr "Grisáceo"
+
+#: weathertext.py:65
+msgid "Blustery"
+msgstr "Viento mucho"
+
+#: weathertext.py:66
+msgid "Windy"
+msgstr "Viento"
+
+#: weathertext.py:67
+msgid "Cold"
+msgstr "Frio"
+
+#: weathertext.py:68
+msgid "Cloudy"
+msgstr "Nublado"
+
+#: weathertext.py:69 weathertext.py:70
+msgid "Mostly Cloudy"
+msgstr "Nublado mayormente"
+
+#: weathertext.py:71 weathertext.py:72 weathertext.py:86
+msgid "Partly Cloudy"
+msgstr "Nublado parcialmente"
+
+#: weathertext.py:73 weathertext.py:74
+msgid "Clear"
+msgstr "Despejado"
+
+#: weathertext.py:75 weathertext.py:76
+# fuzzy
+msgid "Fair"
+msgstr "Nublado parcialmente"
+
+#: weathertext.py:77
+msgid "Mixed Rain and Hail"
+msgstr "Granizo"
+
+#: weathertext.py:78
+msgid "Hot"
+msgstr "Hace calor"
+
+#: weathertext.py:79 weathertext.py:89
+msgid "Isolated Thunderstorms"
+msgstr "Tronazón disperso"
+
+#: weathertext.py:80 weathertext.py:81
+msgid "Scattered Thunderstorms"
+msgstr "Tronazón disperso"
+
+#: weathertext.py:82
+msgid "Scattered Showers"
+msgstr "Lluvia disperso"
+
+#: weathertext.py:83 weathertext.py:85
+msgid "Heavy Snow"
+msgstr "Ventisca"
+
+#: weathertext.py:84
+msgid "Scattered Snow Showers"
+msgstr "Nieve disperso"
+
+#: weathertext.py:87
+msgid "Thunder Showers"
+msgstr "Tronazón disperso"
+
+#: weathertext.py:88
+msgid "Snow Showers"
+msgstr "Nieve disperso"
+
+#: weathertext.py:90
+msgid "N/A"
+msgstr "Desconocido"
+
+#: weathertext.py:88
+msgid "Monday"
+msgstr "lunes"
+
+#: weathertext.py:89
+msgid "Tuesday"
+msgstr "martes"
+
+#: weathertext.py:90
+msgid "Wednesday"
+msgstr "miércoles"
+
+#: weathertext.py:91
+msgid "Thursday"
+msgstr "jueves"
+
+#: weathertext.py:92
+msgid "Friday"
+msgstr "viernes"
+
+#: weathertext.py:93
+msgid "Saturday"
+msgstr "sábado"
+
+#: weathertext.py:94
+msgid "Sunday"
+msgstr "domingo"

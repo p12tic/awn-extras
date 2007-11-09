@@ -32,17 +32,27 @@ import urllib
 from xml.dom import minidom
 import cairo
 from StringIO import StringIO
+import re
 import weatherdialog
+import weathercurved
 import weathericons
 import weatherconfig
+import weathertext
+import weathermap
+import override
+import socket
+
+# locale stu
 APP="awn-weather-applet"
 DIR="locale"
 import locale
 import gettext
-locale.setlocale(locale.LC_ALL, '')
+#locale.setlocale(locale.LC_ALL, '')
 gettext.bindtextdomain(APP, DIR)
 gettext.textdomain(APP)
 _ = gettext.gettext
+
+socket.setdefaulttimeout(15)
 
 class Forecast:
 	def __init__(self, day_of_week, day_of_year, low, high, condition_code, condition_text, precip, humidity, wind_dir, wind_speed, wind_gusts, city):
@@ -58,6 +68,7 @@ class Forecast:
 		self.wind_speed = wind_speed
 		self.wind_gusts = wind_gusts
 		self.city = city
+
   
 class App(awn.AppletSimple):
 
@@ -72,6 +83,9 @@ class App(awn.AppletSimple):
 	forecast = []
 	gconf_path = "/apps/avant-window-navigator/applets/weather"
 	open_til_clicked = False
+	curved_dialog = False
+	locale_lang = "en"
+	img_file = ""
 
 	# Default only - we fetch the "real" answer from GConf
 	location = "Portland ME"
@@ -80,50 +94,76 @@ class App(awn.AppletSimple):
 	units = "Imperial"
 
 	# Default only - we fetch the "real" answer from GConf
-	polling_frequency = 1000 * 60 * 30
-
+	polling_frequency = 30 * 2
+	
+	# Counts the number of minutes until the next attempted fetch.
+	countdown = 0
+	
 	def __init__(self, uid, orient, height):
 		awn.AppletSimple.__init__ (self, uid, orient, height)
 		self.height = height
+		# Implementation of awn-effects
+		self.effects = self.get_effects()
 		icon = gdk.pixbuf_new_from_file(os.path.dirname (__file__) + '/images/twc-logo.png')
-		icon = icon.scale_simple(height, height, gtk.gdk.INTERP_HYPER)
 		self.set_temp_icon (icon)
 		self.title = awn.awn_title_get_default()
 		self.dialog = awn.AppletDialog (self)
+		#self.dialog = override.Dialog(self)
 		self.connect ("button-press-event", self.button_press)
 		self.connect ("enter-notify-event", self.enter_notify)
 		self.connect ("leave-notify-event", self.leave_notify)
 		self.dialog.connect ("focus-out-event", self.dialog_focus_out)
-		self.timer = gobject.timeout_add(self.polling_frequency,self.update_weather)
-		self.forecast_timer = gobject.timeout_add(7200000,self.update_forecast)
+		gobject.timeout_add(1,self.download_first_map)
 		self.gconf_client = gconf.client_get_default()
 		self.gconf_client.notify_add(self.gconf_path, self.config_event)
 		self.get_config()
+		self.timer = gobject.timeout_add(30000,self.twice_per_minute)		
+		self.forecast_timer = gobject.timeout_add(7200000,self.update_forecast)
 		self.icons = weathericons.WeatherIcons()
 		# Setup popup menu
 		self.popup_menu = gtk.Menu()
 		refresh_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_REFRESH)
+		map_item = gtk.MenuItem("View Weather Map")
 		pref_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
 		about_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_ABOUT)
 		self.popup_menu.append(refresh_item)
+		self.popup_menu.append(map_item)
 		self.popup_menu.append(pref_item)
 		self.popup_menu.append(about_item)
 		refresh_item.connect_object("activate",self.refresh_callback,self)
 		pref_item.connect_object("activate",self.pref_callback,self)
 		about_item.connect_object("activate",self.about_callback,self)
+		map_item.connect_object("activate",self.map_callback,self)
 		refresh_item.show()
+		map_item.show()
 		pref_item.show()
 		about_item.show()
+		try:
+			self.locale_lang = locale.getdefaultlocale()[0][0:2]
+		except:
+			print "locale not set"
+
 
 	def build_forecast_dialog(self):
-		self.dialog = awn.AppletDialog (self)
-		self.dialog.set_title(_("Forecast"))
-		box = gtk.VBox()
-		self.forecast_area = weatherdialog.WeatherDialog(self.forecast)
-		self.forecast_area.set_size_request(400,140)
-		box.pack_start(self.forecast_area,False,False,0)
-		box.show_all()
-		self.dialog.add(box)
+		if self.curved_dialog == True:
+			self.dialog = override.Dialog (self)
+			#dialog = awn.AppletDialog (self)
+			self.forecast_area = weathercurved.WeatherDialog(self.forecast)
+			box = gtk.VBox()
+			self.forecast_area.set_size_request(450,160)
+			box.pack_start(self.forecast_area,False,False,0)
+			box.show_all()
+			self.dialog.add(box)
+		else:
+			self.dialog = awn.AppletDialog (self)
+			self.dialog.set_title(_("Forecast"))
+			box = gtk.VBox()
+			self.forecast_area = weatherdialog.WeatherDialog(self.forecast)
+			self.forecast_area.set_size_request(450,160)
+			box.pack_start(self.forecast_area,False,False,0)
+			box.show_all()
+			self.dialog.add(box)
+
 
 	def config_event(self, gconf_client, *args, **kwargs):
 		self.forecast_visible = False
@@ -132,6 +172,7 @@ class App(awn.AppletSimple):
 		self.get_config()
 		self.update_weather()
 		self.update_forecast()
+
 
 	def get_config(self):
 		# Location
@@ -154,28 +195,40 @@ class App(awn.AppletSimple):
 		else:
 			self.units = "Stupid"  # I can say this... I'm American. 
 		# Polling Frequency
-		self.polling_frequency = self.gconf_client.get_int(self.gconf_path + "/frequency") * 1000 * 60
+		self.polling_frequency = self.gconf_client.get_int(self.gconf_path + "/frequency") * 2
 		if self.polling_frequency == 0:
 			self.gconf_client.set_int(self.gconf_path + "/frequency", 30)
-			self.polling_frequency = 30 * 1000 * 60
+			self.polling_frequency = 30 * 2
 		# Temperature Position, default is 0
 		self.temp_position = self.gconf_client.get_int(self.gconf_path + "/temp_position")
 		self.gconf_client.set_int(self.gconf_path + "/temp_position", self.temp_position)
 		self.open_til_clicked = self.gconf_client.get_bool(self.gconf_path + "/open_til_clicked")
 		self.gconf_client.set_bool(self.gconf_path + "/open_til_clicked", self.open_til_clicked)
+		# Curved Look
+		self.curved_dialog = self.gconf_client.get_bool(self.gconf_path + "/curved_dialog")
+		self.gconf_client.set_bool(self.gconf_path + "/curved_dialog", self.curved_dialog)
 		return True
 
+
 	def button_press(self, widget, event):
+		try:
+			self.map_dialog.hide()
+		except AttributeError:
+			pass
 		if event.button == 3:
 			# right click
 			self.title.hide(self)
 			self.forecast_visible = False
 			self.dialog.hide()
 			self.popup_menu.popup(None, None, None, event.button, event.time)
+		elif event.button == 2:
+			self.map_callback(widget)		
 		else:
 			if self.forecast_visible != True:
 				self.forecast_visible = True
 				self.title.hide(self)
+				# When the dialog is visible the icon will drain color				
+				awn.awn_effect_start(self.effects,"desaturate")
 				self.build_forecast_dialog()
 				self.dialog.show_all()
 			else:
@@ -183,14 +236,24 @@ class App(awn.AppletSimple):
 				self.dialog.hide()     
 				self.title.hide(self)
 
+	def twice_per_minute(self):
+		if self.countdown == 0:
+			self.countdown = self.polling_frequency
+			self.update_weather()
+		else:
+			self.countdown = self.countdown - 1
+		return True
+			
+
 	def refresh_callback(self, widget):
 		self.get_conditions()
 		self.draw_current_conditions()
 		return True
 
+
 	def pref_callback(self, widget):
 		window = weatherconfig.WeatherConfig(self)
-		window.set_size_request(400, 225)
+		window.set_size_request(500, 250)
 		window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
 		window.set_destroy_with_parent(True)
 		icon_name = self.icons.day_icons["0"]
@@ -198,36 +261,58 @@ class App(awn.AppletSimple):
 		window.set_icon(icon)
 		window.show_all()
 
+
 	def about_callback(self, widget):
 		about_dialog = gtk.AboutDialog()
 		about_dialog.set_name("Avant Weather Applet")
 		about_dialog.set_copyright("Copyright 2007 Mike Desjardins")
-		about_dialog.set_comments("A Weather Applet for the Avant Window Navigator.  Weather data provided by weather.com.  Images by Wojciech Grzanka. Additional help from Isaac J.")
-		about_dialog.set_authors(["Mike Desjardins", "Isaac J."])		
+		about_dialog.set_comments("A Weather Applet for the Avant Window Navigator.  Weather data provided by weather.com.  Images by Wojciech Grzanka.")
+		about_dialog.set_authors(["Mike Desjardins","Chaz (c.atterly)"])		
 		about_dialog.set_artists(["Wojciech Grzanka", "Mike Desjardins"])		
 		about_dialog.connect("response", lambda d, r: d.destroy())
 		about_dialog.show()
 
+
+	def map_callback(self, widget):
+		# When the map dialog is visible the icon will drain color				
+		awn.awn_effect_start(self.effects,"desaturate")
+		self.map_dialog = weathermap.WeatherMap(self)
+		self.map_dialog.show_all()
+
+		
 	def dialog_focus_out(self, widget, event):
 		self.title.hide(self)    
+
 
 	def enter_notify(self, widget, event):
 		self.title.show(self, self.titleText)
 
+
 	def leave_notify(self, widget, event):
+		# When the dialog closed, the icon color returns		
+		awn.awn_effect_stop(self.effects,"desaturate")
 		if self.open_til_clicked == False:
 			self.forecast_visible = False
 			self.dialog.hide()     
 		self.title.hide(self)    
 
+
 	def update_weather(self):
+		self.get_map()
 		self.get_conditions()
 		self.draw_current_conditions()
 		return True
 
+
 	def update_forecast(self):
 		self.get_forecast()
 		return True
+
+
+	def download_first_map(self):
+		self.get_map()
+		return False;
+
 
 	def get_conditions(self):
 		url = 'http://xoap.weather.com/weather/local/' + self.location_code + '?cc=*&prod=xoap&par=1048871467&key=12daac2f3a67cb39'
@@ -276,12 +361,14 @@ class App(awn.AppletSimple):
 			print "Unable to contact weather source"
 		return True
 
+
 	def getText(self,nodelist):
 		rc = ""
 		for node in nodelist:
 			if node.nodeType == node.TEXT_NODE:
 				rc = rc + node.data
 		return rc	
+
 
 	def get_forecast(self):
 		url = 'http://xoap.weather.com/weather/local/' + self.location_code + '?dayf=5&prod=xoap&par=1048871467&key=12daac2f3a67cb39'
@@ -325,24 +412,45 @@ class App(awn.AppletSimple):
 		except:
 			print "Unexpected error: ", sys.exc_info()[0]
 			print "Unable to contact weather source"
+			self.countdown = 0
 		return True
 
-	def draw_rounded_rect(self,ct,x,y,w,h,r = 10):
-		#   A****BQ
-		#  H      C
-		#  *      *
-		#  G      D
-		#   F****E
-		ct.move_to(x+r,y)                      # Move to A
-		ct.line_to(x+w-r,y)                    # Straight line to B
-		ct.curve_to(x+w,y,x+w,y,x+w,y+r)       # Curve to C, Control points are both at Q
-		ct.line_to(x+w,y+h-r)                  # Move to D
-		ct.curve_to(x+w,y+h,x+w,y+h,x+w-r,y+h) # Curve to E
-		ct.line_to(x+r,y+h)                    # Line to F
-		ct.curve_to(x,y+h,x,y+h,x,y+h-r)       # Curve to G
-		ct.line_to(x,y+r)                      # Line to H
-		ct.curve_to(x,y,x,y,x+r,y)             # Curve to A
-		return
+
+	def get_map(self):
+		old_map = ""
+		if self.map != "":
+			old_map = self.map
+		try:
+			usock = urllib.urlopen('http://www.weather.com/outlook/travel/businesstraveler/map/' + self.location_code)
+			lines = usock.readlines()
+			iframe_re = re.compile(".*[iI][fF][rR][aA][mM][eE].*")
+			for line in lines:
+				if iframe_re.match(line):
+					frame_src_start = line.find("src")
+					frame_src_end = line.find("?")
+					if frame_src_start > -1 and frame_src_end > -1:
+						frame_src = line[frame_src_start+5 : frame_src_end]
+						usock2 =  urllib.urlopen('http://www.weather.com' + frame_src)
+						frame_lines = usock2.readlines()
+						img_re = re.compile(".*[iI][mM][gG] [nN][aA][mM][eE]=\"mapImg\".*")
+						for frame_line in frame_lines:
+							if img_re.match(frame_line):
+								img_src_start = frame_line.find("SRC")
+								img_src_end = frame_line.find("jpg")
+								img_src = frame_line[img_src_start+5 : img_src_end+3]
+								self.img_file = urllib.urlretrieve(img_src)[0]
+						usock2.close()
+			usock.close()
+			# practice good hygeine.
+			try:
+				if old_map != "" and old_map != None:
+					os.remove(old_map)
+			except:
+				pass
+		except:
+			print "Unable to download weather map. ", sys.exc_info()[0], sys.exc_info()[1]
+			self.countdown = 0
+
 
 	def draw_current_conditions(self):
 		try:
@@ -352,36 +460,58 @@ class App(awn.AppletSimple):
 			ct = cairo.Context(cs)
 			ct.set_source_surface(cs)
 			ct.paint()
+			degrees = self.current_temp + u"\u00B0"
+			text, width = self.get_text_width(ct,self.current_temp,128)
 			if self.temp_position != 7:
 				if self.temp_position in (0,1,2):
-					temp_y = 47
+					temp_y = 115
 				else:
-					temp_y = 8
+					temp_y = 30
 				if self.temp_position == 0 or self.temp_position == 3:
-					temp_x = 18
+					temp_x = 64 - (width * 2)
 				if self.temp_position == 1 or self.temp_position == 4:
-					temp_x = 4
+					temp_x = 11
 				if self.temp_position == 2 or self.temp_position == 5:
-					temp_x = 30
+					temp_x = 100 - (width * 4)
 				# Text Shadow
 				ct.set_line_width(1)
 				ct.stroke()
-				ct.move_to(temp_x+1,temp_y+1)
-				ct.set_source_rgba(0.1,0.1,0.1,.8)
+				ct.move_to(temp_x+2,temp_y+2)
+				ct.set_source_rgba(0.2,0.2,0.2,.8)
+				ct.select_font_face("Deja Vu",cairo.FONT_SLANT_NORMAL,cairo.FONT_WEIGHT_BOLD)				
+				ct.set_font_size(32.0)
 				ct.show_text(self.current_temp + u"\u00B0")
 				# White Text
 				ct.move_to(temp_x,temp_y)
 				ct.set_source_rgb(1,1,1)
+				ct.select_font_face("Deja Vu",cairo.FONT_SLANT_NORMAL,cairo.FONT_WEIGHT_NORMAL)				
 				ct.show_text(self.current_temp + u"\u00B0")
 			ns = ct.get_target()
 			new_icon = self.get_pixbuf_from_surface(ns)
-			scaled_icon = new_icon.scale_simple(self.height, self.height, gtk.gdk.INTERP_HYPER) 
+			scaled_icon = new_icon.scale_simple(self.height, self.height, gtk.gdk.INTERP_HYPER)
 			self.set_icon(scaled_icon)
-			self.titleText = self.city + ": " + self.current_desc + ", " + self.current_temp + u"\u00B0"
+			# Weather.com's TOS state that I'm not supposed to change their text.  However, I asked them, and they do not
+			# supply non-English weather descriptions.  So, if the current locale uses an English language, use weather.com's
+			# description... otherwise, use our own.
+			if self.locale_lang == "en":
+				self.titleText = self.city + ": " + self.current_desc + ", " + self.current_temp + u"\u00B0"
+			else:
+				self.titleText = self.city + ": " + weathertext.WeatherText.conditions_text[self.current_code] + ", " + self.current_temp + u"\u00B0"			
 			del new_icon
 		except:
 			print "Unexpected error: ", sys.exc_info()[0]
 			print "Unable to update current conditions."
+			self.countdown = 0
+
+	def get_text_width(self, context, text, maxwidth):
+		potential_text = text
+		text_width = context.text_extents(potential_text)[2]
+		end = -1
+		while text_width > maxwidth:
+			end -= 1
+			potential_text = text[:end] + '...'
+			text_width = context.text_extents(potential_text)[2]
+		return potential_text, text_width
 
 	# Stolen from "BlingSwitcher"
 	def get_pixbuf_from_surface(self, surface):

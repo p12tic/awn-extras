@@ -5,7 +5,11 @@ weather_DATA = 				\
 		messages.pot		\
 		weatherconfig.py	\
 		weatherdialog.py	\
-		weathericons.py
+		weathericons.py		\
+		weathercurved.py	\
+		weathertext.py		\
+		weathermap.py		\
+		override.py
 		
 weatherdir = $(libdir)/awn/applets/weather
 

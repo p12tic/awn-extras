@@ -20,7 +20,7 @@
 #ifndef _BACKEND_GNOME_
 #define _BACKEND_GNOME_
 
-GSList* get_menu_data(gboolean show_search,gboolean show_run);
+GSList* get_menu_data(gboolean show_search,gboolean show_run,gboolean show_places,char* file_manager);
 
 #endif
 

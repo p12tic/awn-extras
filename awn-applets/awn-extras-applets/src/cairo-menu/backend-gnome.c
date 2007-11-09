@@ -230,14 +230,10 @@ fill_er_up(GMenuTreeDirectory *directory,GSList**p)
 					dir_item->desktop=gmenu_tree_directory_get_desktop_file_path(item);
 //					dir_item->comment=gmenu_tree_directory_get_comment(item);
 //it seems gmenu_tree_directory_get_icon is broken in some way. or mabye it's my code
-#if 0
+#if 1
 					dir_item->icon=gmenu_tree_directory_get_icon(item);
-					if (!dir_item->icon)
-					{
-						dir_item->icon=g_strdup("stock_folder");
-					}						
 #else
-					dir_item->icon=g_strdup("stock_folder");
+					dir_item->icon=g_strdup(dir_item->name);
 #endif					
 					dir_item->sublist=NULL;
 					data=g_slist_append(data,dir_item);
@@ -277,7 +273,7 @@ fill_er_up(GMenuTreeDirectory *directory,GSList**p)
 }
 
 
-GSList* get_menu_data(gboolean show_search,gboolean show_run)
+GSList* get_menu_data(gboolean show_search,gboolean show_run,gboolean show_places,char* file_manager)
 {
 /*FIXME... I'm leaking a bit of memory her */
 
@@ -302,7 +298,9 @@ GSList* get_menu_data(gboolean show_search,gboolean show_run)
 		dir_item=g_malloc(sizeof(Menu_list_item));
 		dir_item->item_type=MENU_ITEM_DIRECTORY;
 		dir_item->name=g_strdup("Control Centre");
+		dir_item->comment=g_strdup("Gnome Control Centre");				
 		dir_item->sublist=NULL;
+		dir_item->icon=g_strdup("gnome-control-center");
 		data=g_slist_append(data,dir_item);
 
 		root = gmenu_tree_get_root_directory (menu_tree);	
@@ -316,11 +314,49 @@ GSList* get_menu_data(gboolean show_search,gboolean show_run)
 		dir_item=g_malloc(sizeof(Menu_list_item));
 		dir_item->item_type=MENU_ITEM_DIRECTORY;
 		dir_item->name=g_strdup("Settings");
+		dir_item->comment=g_strdup("System Settings");		
 		dir_item->sublist=NULL;
+		dir_item->icon=g_strdup("gnome-settings");
 		data=g_slist_append(data,dir_item);
 		root = gmenu_tree_get_root_directory (menu_tree);	
 		fill_er_up(root,&dir_item->sublist);
 		gmenu_tree_item_unref (root);		
+	}
+
+
+	if (show_places)
+	{
+		dir_item=g_malloc(sizeof(Menu_list_item));
+		dir_item->item_type=MENU_ITEM_DIRECTORY;
+		dir_item->name=g_strdup("Places");
+		dir_item->icon=g_strdup("bookmark");
+		dir_item->comment=g_strdup("Your special places :-)");
+		dir_item->sublist=NULL;
+		dir_item->search_entry=NULL;	
+		data=g_slist_append(data,dir_item);
+			
+		Menu_list_item * item;	
+		item=g_malloc(sizeof(Menu_list_item));	
+		item->item_type=MENU_ITEM_ENTRY;
+		item->name=g_strdup("Home");
+		item->icon=g_strdup("stock_home");
+		const char *homedir = g_getenv ("HOME");
+		if (!homedir)
+     		homedir = g_get_homedir ();
+		item->exec=g_strdup_printf("%s %s",file_manager,homedir);			
+		item->comment=g_strdup("Your Home Directory");
+		item->desktop=g_strdup("");			
+		dir_item->sublist=g_slist_append(dir_item->sublist,item);
+		
+		item=g_malloc(sizeof(Menu_list_item));	
+		item->item_type=MENU_ITEM_ENTRY;
+		item->name=g_strdup("File System");
+		item->icon=g_strdup("stock_folder");
+		item->exec=g_strdup_printf("%s /",file_manager);			
+		item->comment=g_strdup("Root File System");
+		item->desktop=g_strdup("");			
+		dir_item->sublist=g_slist_append(dir_item->sublist,item);
+		
 	}
 
 	if (show_search)
@@ -329,6 +365,7 @@ GSList* get_menu_data(gboolean show_search,gboolean show_run)
 		dir_item->item_type=MENU_ITEM_SEARCH;
 		dir_item->name=g_strdup("Find:");
 		dir_item->icon=g_strdup("stock_search");
+		dir_item->comment=g_strdup("Search");		
 		dir_item->sublist=NULL;
 		dir_item->search_entry=NULL;	
 		data=g_slist_append(data,dir_item);
@@ -340,6 +377,7 @@ GSList* get_menu_data(gboolean show_search,gboolean show_run)
 		dir_item->item_type=MENU_ITEM_RUN;
 		dir_item->name=g_strdup("Run:");
 		dir_item->icon=g_strdup("stock_run");
+		dir_item->comment=g_strdup("Run a program");		
 		dir_item->sublist=NULL;
 		dir_item->search_entry=NULL;	
 		data=g_slist_append(data,dir_item);

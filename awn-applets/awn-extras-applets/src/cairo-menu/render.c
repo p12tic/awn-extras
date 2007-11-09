@@ -209,12 +209,26 @@ void render_directory(Menu_list_item *directory)
 	GdkPixbuf *pbuf2=NULL;
 	GdkPixbuf *tmp=NULL;
     g=gtk_icon_theme_get_default();
-
-    tmp=gtk_icon_theme_load_icon(g,"stock_folder",G_cairo_menu_conf.text_size,0,NULL);    
-    if (tmp)
+    
+    if (directory->icon)
     {
-		pbuf1=gdk_pixbuf_scale_simple(tmp,G_cairo_menu_conf.text_size,G_cairo_menu_conf.text_size,GDK_INTERP_HYPER);    
-		g_object_unref(tmp);
+		tmp=gtk_icon_theme_load_icon(g,directory->icon,G_cairo_menu_conf.text_size,0,NULL);
+		if (tmp)
+		{
+			pbuf1=gdk_pixbuf_scale_simple(tmp,G_cairo_menu_conf.text_size,G_cairo_menu_conf.text_size,GDK_INTERP_HYPER);    
+			g_object_unref(tmp);
+		}	
+    
+    }
+    
+	if (!pbuf1)
+	{
+		tmp=gtk_icon_theme_load_icon(g,"stock_folder",G_cairo_menu_conf.text_size,0,NULL);    
+		if (tmp)
+		{
+			pbuf1=gdk_pixbuf_scale_simple(tmp,G_cairo_menu_conf.text_size,G_cairo_menu_conf.text_size,GDK_INTERP_HYPER);    
+			g_object_unref(tmp);
+		}		
 	}		
 	if (!pbuf1)
 	{

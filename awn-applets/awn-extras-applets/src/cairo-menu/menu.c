@@ -144,7 +144,11 @@ Cairo_main_menu * dialog_new(AwnApplet *applet)
   	G_cairo_menu_conf.submenu_deps=g_tree_new(_cmp_pointer);
   	
 	Cairo_main_menu * menu=g_malloc(sizeof(Cairo_main_menu) );	
-	menu->menu_data=get_menu_data(G_cairo_menu_conf.show_search,G_cairo_menu_conf.show_run);
+	menu->menu_data=get_menu_data(G_cairo_menu_conf.show_search,
+									G_cairo_menu_conf.show_run,
+									G_cairo_menu_conf.show_places,
+									G_cairo_menu_conf.filemanager
+									);
 	menu->applet=applet;
     G_mainwindow = menu->mainwindow = build_dialog_window(); 
 

@@ -45,6 +45,10 @@
 #define GCONF_MENU_GRADIENT GCONF_MENU "/menu_item_gradient_factor"
 #define GCONF_MENU_ITEM_TEXT_LEN GCONF_MENU "/menu_item_text_len"
 
+#define GCONF_SHOW_PLACES GCONF_MENU "/places_show"
+
+#define GCONF_FILEMANAGER GCONF_MENU "/filemanager"
+
 #define GCONF_HONOUR_GTK GCONF_MENU "/honour_gtk"
 
 Cairo_menu_config G_cairo_menu_conf;
@@ -130,9 +134,7 @@ void read_config(void)
 
 //    svalue==g_strdup("tracker-search-tool");
     }
-
     G_cairo_menu_conf.search_cmd=g_strdup(svalue);
-
     g_free(svalue);     
 
 
@@ -182,7 +184,25 @@ void read_config(void)
 		G_cairo_menu_conf.do_fade=FALSE;
         gconf_client_set_bool(gconf_client,GCONF_DO_FADE,G_cairo_menu_conf.do_fade,NULL);        
     } 
-    	
+
+    value=gconf_client_get(gconf_client,GCONF_SHOW_PLACES,NULL);		
+    if (value)
+    {																		
+        G_cairo_menu_conf.show_places=gconf_client_get_bool(gconf_client,GCONF_SHOW_PLACES,NULL) ;
+    }
+    else             							
+    {
+		G_cairo_menu_conf.show_places=TRUE;
+        gconf_client_set_bool(gconf_client,GCONF_SHOW_PLACES,G_cairo_menu_conf.show_places,NULL);        
+    } 
+
+    svalue = gconf_client_get_string(gconf_client,GCONF_FILEMANAGER, NULL );
+    if ( !svalue ) 
+    {
+        gconf_client_set_string(gconf_client , GCONF_FILEMANAGER, svalue=g_strdup("nautilus"), NULL );
+    }
+	G_cairo_menu_conf.filemanager=strdup(svalue);
+    g_free(svalue);     
     
     value=gconf_client_get(gconf_client,GCONF_HONOUR_GTK,NULL);		
     if (value)

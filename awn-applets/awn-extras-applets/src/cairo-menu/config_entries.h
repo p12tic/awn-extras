@@ -42,9 +42,11 @@ typedef struct
 	GTree *		submenu_deps;
 	
 	gboolean	show_search;
-	char		*	search_cmd;
+	gchar		*search_cmd;
 	gboolean	show_run;	
-	gboolean	do_fade;		
+	gboolean	do_fade;	
+	gboolean	show_places;		
+	gchar 		*filemanager;
 	int			menu_item_text_len;
 	float 		menu_item_gradient_factor;
 	gboolean	honour_gtk;

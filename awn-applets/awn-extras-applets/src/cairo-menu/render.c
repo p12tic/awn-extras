@@ -133,9 +133,69 @@ GtkWidget * build_menu_widget(Menu_item_color * mic, char * text,GdkPixbuf *pbuf
 	return widget;
 }
 
+
+void render_blank(Menu_list_item *entry)
+{
+	GtkIconTheme*  g;  	
+    static cairo_t *cr = NULL;   
+
+    GdkScreen* pScreen;        
+	GdkPixmap * pixmap; 
+	GdkColormap*	cmap;
+
+    pixmap=gdk_pixmap_new(NULL,G_cairo_menu_conf.text_size*G_cairo_menu_conf.menu_item_text_len, 
+    					G_cairo_menu_conf.text_size*0.3,32);   //FIXME
+    entry->widget=gtk_image_new_from_pixmap(pixmap,NULL);        
+    pScreen = gtk_widget_get_screen (G_Fixed);
+    cmap = gdk_screen_get_rgba_colormap (pScreen);
+    if (!cmap)
+            cmap = gdk_screen_get_rgb_colormap (pScreen); 
+    gdk_drawable_set_colormap(pixmap,cmap);       
+    cr=gdk_cairo_create(pixmap);
+    
+    cairo_set_source_rgba (cr, G_cairo_menu_conf.normal.bg.red,
+    						G_cairo_menu_conf.normal.bg.green,
+    						G_cairo_menu_conf.normal.bg.blue,
+    						G_cairo_menu_conf.normal.bg.alpha);
+    cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
+    cairo_paint(cr);
+    cairo_destroy(cr);
+    g_object_unref(pixmap);
+    
+}
+
+void render_separator(Menu_list_item *entry)
+{
+	GtkIconTheme*  g;  	
+    static cairo_t *cr = NULL;   
+
+    GdkScreen* pScreen;        
+	GdkPixmap * pixmap; 
+	GdkColormap*	cmap;
+
+    pixmap=gdk_pixmap_new(NULL,G_cairo_menu_conf.text_size*G_cairo_menu_conf.menu_item_text_len, 
+    					G_cairo_menu_conf.text_size*0.1,32);   //FIXME
+    entry->widget=gtk_image_new_from_pixmap(pixmap,NULL);        
+    pScreen = gtk_widget_get_screen (G_Fixed);
+    cmap = gdk_screen_get_rgba_colormap (pScreen);
+    if (!cmap)
+            cmap = gdk_screen_get_rgb_colormap (pScreen); 
+    gdk_drawable_set_colormap(pixmap,cmap);       
+    cr=gdk_cairo_create(pixmap);
+    
+    cairo_set_source_rgba (cr, G_cairo_menu_conf.normal.bg.red/2,
+    						G_cairo_menu_conf.normal.bg.green/2,
+    						G_cairo_menu_conf.normal.bg.blue/2,
+    						G_cairo_menu_conf.normal.bg.alpha);
+    cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
+    cairo_paint(cr);
+    cairo_destroy(cr);
+//    g_object_unref(pixmap);
+    
+}
+
 void render_textentry(Menu_list_item *entry)
 {
-	GdkPixmap *pixmap;
 	GtkIconTheme*  g;  	
 	GdkPixbuf *pbuf=NULL;
 	GdkPixbuf *tmp;	
@@ -177,7 +237,6 @@ void render_textentry(Menu_list_item *entry)
 
 void render_entry(Menu_list_item *entry)
 {
-	GdkPixmap *pixmap;
 	GtkIconTheme*  g;  	
 	GdkPixbuf *pbuf=NULL;
 	GdkPixbuf *tmp;	
@@ -299,7 +358,6 @@ void render_entry(Menu_list_item *entry)
 
 void render_directory(Menu_list_item *directory)
 {
-	GdkPixmap *pixmap;
 	GtkIconTheme*  g;  	
 	GdkPixbuf *pbuf1=NULL;
 	GdkPixbuf *pbuf2=NULL;
@@ -342,8 +400,7 @@ void render_directory(Menu_list_item *directory)
 	if (!pbuf1)
 		pbuf1=pbuf2;
 	if (!pbuf2)
-		pbuf2=pbuf1;		
-//	pbuf_over=gtk_icon_theme_load_icon(g,directory->icon,G_cairo_menu_conf.text_size,0,NULL);    	
+		pbuf2=pbuf1;			
     if (directory->icon)
     {
 		tmp=gtk_icon_theme_load_icon(g,directory->icon,G_cairo_menu_conf.text_size,0,NULL);
@@ -612,6 +669,7 @@ int activate_run(GtkWidget *w,Menu_list_item * menu_item)
 static gboolean _button_clicked_ignore(GtkWidget *widget,GdkEventButton *event,Menu_list_item * menu_item) 
 {
 	G_repression=FALSE;
+	hide_textentries();
 	return TRUE;
 }          
 
@@ -757,10 +815,16 @@ void render_menu_widgets(Menu_list_item * menu_item,GtkWidget * box)
 			}	
 			break;	
 
+		case MENU_ITEM_SEPARATOR:
+			{
+				render_separator(menu_item);
+				break;
+			}
 		case MENU_ITEM_BLANK:
 			{
-			
-			}
+				render_blank(menu_item);
+				break;
+			}			
 		default:
 			menu_item->widget=NULL;							
 	}	

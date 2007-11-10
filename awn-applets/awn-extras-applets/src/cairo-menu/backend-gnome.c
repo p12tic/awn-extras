@@ -260,10 +260,13 @@ fill_er_up(GMenuTreeDirectory *directory,GSList**p)
 				break;
 
 			case GMENU_TREE_ITEM_HEADER:
+//				printf("GMENU_TREE_ITEM_HEADER\n");
+				break;
 			case GMENU_TREE_ITEM_SEPARATOR:
+//				printf("GMENU_TREE_ITEM_HEADER\n");			
 			  	break;
-
 			case GMENU_TREE_ITEM_ALIAS:
+//				printf("GMENU_TREE_ITEM_ALIAS\n");		
 /*			  	{
 					GMenuTreeItem *aliased_item;
 
@@ -435,6 +438,28 @@ GSList* get_menu_data(gboolean show_search,gboolean show_run,gboolean show_place
 		gmenu_tree_item_unref (root);		
 	}
 	
+	{
+		dir_item=g_malloc(sizeof(Menu_list_item));
+		dir_item->item_type=MENU_ITEM_BLANK;
+		dir_item->name=NULL;
+		dir_item->icon=NULL;
+		dir_item->comment=NULL;		
+		dir_item->sublist=NULL;
+		dir_item->null=NULL;	
+		data=g_slist_prepend(data,dir_item);
+	}
+//	if (show_separator)
+	{
+		dir_item=g_malloc(sizeof(Menu_list_item));
+		dir_item->item_type=GMENU_TREE_ITEM_SEPARATOR;
+		dir_item->name=NULL;
+		dir_item->icon=NULL;
+		dir_item->comment=NULL;		
+		dir_item->sublist=NULL;
+		dir_item->null=NULL;	
+		data=g_slist_append(data,dir_item);
+	}
+	
 	menu_tree=gmenu_tree_lookup ("gnomecc.menu",GMENU_TREE_FLAGS_NONE);	
 	if (menu_tree)
 	{
@@ -467,7 +492,19 @@ GSList* get_menu_data(gboolean show_search,gboolean show_run,gboolean show_place
 		fill_er_up(root,&dir_item->sublist);
 		gmenu_tree_item_unref (root);		
 	}
-
+	
+//	if (show_separator)	
+	{
+		dir_item=g_malloc(sizeof(Menu_list_item));
+		dir_item->item_type=MENU_ITEM_SEPARATOR;
+		dir_item->name=NULL;
+		dir_item->icon=NULL;
+		dir_item->comment=NULL;		
+		dir_item->sublist=NULL;
+		dir_item->null=NULL;	
+		data=g_slist_append(data,dir_item);
+	}
+	
 
 	if (show_places)
 	{
@@ -505,6 +542,16 @@ GSList* get_menu_data(gboolean show_search,gboolean show_run,gboolean show_place
 		dir_item->search_entry=NULL;	
 		data=g_slist_append(data,dir_item);
 
+	}	
+	{
+		dir_item=g_malloc(sizeof(Menu_list_item));
+		dir_item->item_type=MENU_ITEM_BLANK;
+		dir_item->name=NULL;
+		dir_item->icon=NULL;
+		dir_item->comment=NULL;		
+		dir_item->sublist=NULL;
+		dir_item->null=NULL;	
+		data=g_slist_append(data,dir_item);
 	}	
 	return data;
 }	

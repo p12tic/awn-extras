@@ -230,7 +230,61 @@ void render_entry(Menu_list_item *entry)
 		}	
 		g_free(filename);
 	}		
-
+	if (!pbuf)
+	{
+		gchar * filename;
+		filename=g_strdup_printf("/usr/share/pixmaps/%s.svg",entry->icon);
+		tmp=gdk_pixbuf_new_from_file_at_size(filename,-1,G_cairo_menu_conf.text_size,NULL);		
+		if (tmp)
+		{
+			pbuf=gdk_pixbuf_scale_simple(tmp,G_cairo_menu_conf.text_size,G_cairo_menu_conf.text_size,GDK_INTERP_HYPER);    
+			g_object_unref(tmp);
+		}	
+		g_free(filename);
+	}	
+	if (!pbuf)
+	{
+		gchar * filename;
+		filename=g_strdup_printf("/usr/share/pixmaps/%s.png",entry->icon);
+		tmp=gdk_pixbuf_new_from_file_at_size(filename,-1,G_cairo_menu_conf.text_size,NULL);		
+		if (tmp)
+		{
+			pbuf=gdk_pixbuf_scale_simple(tmp,G_cairo_menu_conf.text_size,G_cairo_menu_conf.text_size,GDK_INTERP_HYPER);    
+			g_object_unref(tmp);
+		}	
+		g_free(filename);
+	}	
+	if (!pbuf)
+	{
+		gchar * filename;
+		filename=g_strdup_printf("/usr/share/pixmaps/%s.xpm",entry->icon);
+		tmp=gdk_pixbuf_new_from_file_at_size(filename,-1,G_cairo_menu_conf.text_size,NULL);		
+		if (tmp)
+		{
+			pbuf=gdk_pixbuf_scale_simple(tmp,G_cairo_menu_conf.text_size,G_cairo_menu_conf.text_size,GDK_INTERP_HYPER);    
+			g_object_unref(tmp);
+		}	
+		g_free(filename);
+	}		
+	if (!pbuf)
+	{
+		tmp=gtk_icon_theme_load_icon(g,"applications-other",G_cairo_menu_conf.text_size,0,NULL);		
+		if (tmp)
+		{
+			pbuf=gdk_pixbuf_scale_simple(tmp,G_cairo_menu_conf.text_size,G_cairo_menu_conf.text_size,GDK_INTERP_HYPER);    
+			g_object_unref(tmp);
+		}	
+	}	
+	if (!pbuf)
+	{
+		tmp=gtk_icon_theme_load_icon(g,"application-x-executable",G_cairo_menu_conf.text_size,0,NULL);		
+		if (tmp)
+		{
+			pbuf=gdk_pixbuf_scale_simple(tmp,G_cairo_menu_conf.text_size,G_cairo_menu_conf.text_size,GDK_INTERP_HYPER);    
+			g_object_unref(tmp);
+		}	
+	}	
+		
 	entry->widget=gtk_event_box_new();
 	gtk_event_box_set_visible_window(entry->widget,FALSE);
 	gtk_event_box_set_above_child (entry->widget,TRUE);	

@@ -64,10 +64,23 @@ GtkWidget * build_menu_widget(Menu_item_color * mic, char * text,GdkPixbuf *pbuf
     
     if (pbuf)
     	if(gdk_pixbuf_get_height(pbuf) !=G_cairo_menu_conf.text_size)
+    	{
 	    	pbuf=gdk_pixbuf_scale_simple(pbuf,G_cairo_menu_conf.text_size,G_cairo_menu_conf.text_size,GDK_INTERP_HYPER);  
+		}	    	
+		else
+		{	
+			gdk_pixbuf_ref(pbuf);
+		}
 	if (pover)	    
     	if(gdk_pixbuf_get_height(pover) !=G_cairo_menu_conf.text_size*0.7)
+    	{
 		    pover=gdk_pixbuf_scale_simple(pover,G_cairo_menu_conf.text_size*0.7,G_cairo_menu_conf.text_size*0.7,GDK_INTERP_HYPER);  
+		}
+		else
+		{
+			gdk_pixbuf_ref(pover);		
+		}
+				    
     
     pixmap=gdk_pixmap_new(NULL,G_cairo_menu_conf.text_size*G_cairo_menu_conf.menu_item_text_len, 
     					G_cairo_menu_conf.text_size*1.6,32);   //FIXME

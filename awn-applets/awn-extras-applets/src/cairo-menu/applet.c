@@ -83,8 +83,11 @@ static gboolean _button_clicked_event (GtkWidget *widget, GdkEventButton *event,
  	return TRUE;
 }
 
+
+int G_Height=40;
 static _build_away(gpointer null)
 {
+	GdkPixbuf *icon;
 	Cairo_main_menu * menu;
 	menu=dialog_new(G_applet);
 	gtk_widget_show_all(menu->mainwindow);	
@@ -94,33 +97,51 @@ static _build_away(gpointer null)
 	g_list_foreach(GTK_FIXED(G_Fixed)->children,_fixup_menus,NULL); 		
 	gtk_widget_hide(menu->mainwindow);	
     g_signal_connect (G_OBJECT (menu->applet), "button-press-event",G_CALLBACK (_button_clicked_event), menu);		
+	icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (),
+			                       G_cairo_menu_conf.applet_icon,
+			                       G_Height-2,
+			                       G_Height-2, NULL);
+	if (!icon)
+		icon=gdk_pixbuf_new_from_file_at_size(G_cairo_menu_conf.applet_icon,-G_Height-2,
+			                       G_Height-2,NULL);
+	if (!icon)
+	{
+		printf("failed to load icon: %s\n",G_cairo_menu_conf.applet_icon);
+		icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (),"stock_missing-image",
+			                       G_Height-2,
+			                       G_Height-2, NULL);		
+	}		     
+	if (!icon)
+	{
+
+		icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (),"gnome-main-menu",
+			                       G_Height-2,
+			                       G_Height-2, NULL);					                       
+	}	
+	if (icon)                      
+	{
+		awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (G_applet),icon);				
+	}		
+	else
+	{
+	    icon=gdk_pixbuf_new(GDK_COLORSPACE_RGB,TRUE,8,G_Height-2,G_Height-2);
+		gdk_pixbuf_fill(icon,0x00000000);  
+		awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (G_applet),icon);                                   	
+	}
 	return FALSE;
 }
 
-int G_Height=40;
 
 static gboolean _expose_event (GtkWidget *widget, GdkEventExpose *expose, gpointer null)
 {
 	static gboolean done_once=FALSE;
-	GdkPixbuf *icon;
 		
 	if (!done_once)
 	{
-		g_timeout_add(300,_build_away,null);
+		g_timeout_add(500,_build_away,null);
+                              	
 	}		
 	done_once=TRUE;
-	icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (),
-		                           G_cairo_menu_conf.applet_icon,
-		                           G_Height-2,
-		                           0, NULL);
-	if (!icon)
-	{
-		icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (),"stock_missing-image",
-		                           G_Height-2,
-		                           0, NULL);		
-	}		     
-	if (icon)                      
-		awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (G_applet),icon);                                   	
 	return FALSE;
 }	
 
@@ -133,8 +154,8 @@ AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
 	gtk_widget_set_size_request (GTK_WIDGET (applet), height, -1);
 	GdkPixbuf *icon;
 	G_Height=height;
-
-    icon=gdk_pixbuf_new(GDK_COLORSPACE_RGB,TRUE,8,4,height);
+	printf("height = %d\n");
+    icon=gdk_pixbuf_new(GDK_COLORSPACE_RGB,TRUE,8,1,height);
     gdk_pixbuf_fill(icon,0x00000000);  
 	awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (applet),icon);                                   
 	gtk_widget_show_all (GTK_WIDGET (applet));

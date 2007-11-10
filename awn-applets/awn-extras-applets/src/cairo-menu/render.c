@@ -52,7 +52,7 @@ At some point in time it might be good to cache cr and gradient.
 At this point it's a bit inefficient on initial startup... but that's the only
 time the code is run.
 */
-GtkWidget * build_menu_widget(Menu_item_color * mic, char * text,GdkPixbuf *pbuf)
+GtkWidget * build_menu_widget(Menu_item_color * mic, char * text,GdkPixbuf *pbuf,GdkPixbuf *pover)
 {
     static cairo_t *cr = NULL;   
     GtkWidget * widget;
@@ -86,11 +86,24 @@ GtkWidget * build_menu_widget(Menu_item_color * mic, char * text,GdkPixbuf *pbuf
    	cairo_paint(cr);
    	if (pbuf)
    	{
-		gdk_cairo_set_source_pixbuf(cr,pbuf,G_cairo_menu_conf.text_size*0.3,G_cairo_menu_conf.text_size*0.2);   	
-	
+		gdk_cairo_set_source_pixbuf(cr,pbuf,G_cairo_menu_conf.text_size*0.3,G_cairo_menu_conf.text_size*0.2);   		
 	    cairo_rectangle(cr,0,0,G_cairo_menu_conf.text_size*1.3,
-	    						G_cairo_menu_conf.text_size*1.2);
+	    						G_cairo_menu_conf.text_size*1.2);	    						
 		cairo_fill(cr);
+		if (pover)
+		{
+			gdk_cairo_set_source_pixbuf(cr,pover,G_cairo_menu_conf.text_size*0.5,G_cairo_menu_conf.text_size*0.4);   		
+			cairo_rectangle(cr,0,0,G_cairo_menu_conf.text_size*1.3,
+									G_cairo_menu_conf.text_size*1.2);	    						
+			cairo_fill(cr);		
+		}
+	}	
+	else if (pover)
+	{
+		gdk_cairo_set_source_pixbuf(cr,pover,G_cairo_menu_conf.text_size*0.3,G_cairo_menu_conf.text_size*0.2);   		
+		cairo_rectangle(cr,0,0,G_cairo_menu_conf.text_size*1.3,
+								G_cairo_menu_conf.text_size*1.2);	    						
+		cairo_fill(cr);		
 	}		
     cairo_set_source_rgba (cr, mic->fg.red,mic->fg.green,mic->fg.blue, mic->fg.alpha);
     cairo_set_operator (cr, CAIRO_OPERATOR_OVER);	   	
@@ -149,8 +162,8 @@ void render_textentry(Menu_list_item *entry)
 	entry->widget=gtk_event_box_new();
 	gtk_event_box_set_visible_window(entry->widget,FALSE);
 	gtk_event_box_set_above_child (entry->widget,TRUE);	
-	entry->normal=build_menu_widget(&G_cairo_menu_conf.normal,entry->name,pbuf);
-	entry->hover=build_menu_widget(&G_cairo_menu_conf.hover,entry->name,pbuf);	
+	entry->normal=build_menu_widget(&G_cairo_menu_conf.normal,entry->name,pbuf,NULL);
+	entry->hover=build_menu_widget(&G_cairo_menu_conf.hover,entry->name,pbuf,NULL);	
 	entry->text_entry=sexy_icon_entry_new();
 	sexy_icon_entry_set_icon( (SexyIconEntry *)entry->search_entry,SEXY_ICON_ENTRY_PRIMARY,
 							  gtk_image_new_from_pixbuf(pbuf) );
@@ -176,8 +189,7 @@ void render_entry(Menu_list_item *entry)
     {
 		pbuf=gdk_pixbuf_scale_simple(tmp,G_cairo_menu_conf.text_size,G_cairo_menu_conf.text_size,GDK_INTERP_HYPER);    
 		g_object_unref(tmp);
-	}	
-	    
+	}		    
 	if (!pbuf)
 	{
 		tmp=gdk_pixbuf_new_from_file_at_size(entry->icon,-1,G_cairo_menu_conf.text_size,NULL);		
@@ -187,13 +199,43 @@ void render_entry(Menu_list_item *entry)
 			g_object_unref(tmp);
 		}	
 	}		
-	
-	
+	if (!pbuf)
+	{
+		tmp=gtk_icon_theme_load_icon(g,entry->name,G_cairo_menu_conf.text_size,0,NULL);	
+		if (tmp)
+		{
+			pbuf=gdk_pixbuf_scale_simple(tmp,G_cairo_menu_conf.text_size,G_cairo_menu_conf.text_size,GDK_INTERP_HYPER);    
+			g_object_unref(tmp);
+		}	
+	}		
+	if (!pbuf)
+	{
+		tmp=gtk_icon_theme_load_icon(g,entry->exec,G_cairo_menu_conf.text_size,0,NULL);		
+		if (tmp)
+		{
+			pbuf=gdk_pixbuf_scale_simple(tmp,G_cairo_menu_conf.text_size,G_cairo_menu_conf.text_size,GDK_INTERP_HYPER);    
+			g_object_unref(tmp);
+		}	
+	}			
+
+	if (!pbuf)
+	{
+		gchar * filename;
+		filename=g_strdup_printf("/usr/share/pixmaps/%s",entry->icon);
+		tmp=gdk_pixbuf_new_from_file_at_size(filename,-1,G_cairo_menu_conf.text_size,NULL);		
+		if (tmp)
+		{
+			pbuf=gdk_pixbuf_scale_simple(tmp,G_cairo_menu_conf.text_size,G_cairo_menu_conf.text_size,GDK_INTERP_HYPER);    
+			g_object_unref(tmp);
+		}	
+		g_free(filename);
+	}		
+
 	entry->widget=gtk_event_box_new();
 	gtk_event_box_set_visible_window(entry->widget,FALSE);
 	gtk_event_box_set_above_child (entry->widget,TRUE);	
-	entry->normal=build_menu_widget(&G_cairo_menu_conf.normal,entry->name,pbuf);
-	entry->hover=build_menu_widget(&G_cairo_menu_conf.hover,entry->name,pbuf);	
+	entry->normal=build_menu_widget(&G_cairo_menu_conf.normal,entry->name,pbuf,NULL);
+	entry->hover=build_menu_widget(&G_cairo_menu_conf.hover,entry->name,pbuf,NULL);	
 	g_object_ref(entry->normal);
 	gtk_container_add(entry->widget,entry->normal);			
 	if (pbuf)
@@ -207,20 +249,10 @@ void render_directory(Menu_list_item *directory)
 	GtkIconTheme*  g;  	
 	GdkPixbuf *pbuf1=NULL;
 	GdkPixbuf *pbuf2=NULL;
+	GdkPixbuf *pbuf_over=NULL;
 	GdkPixbuf *tmp=NULL;
     g=gtk_icon_theme_get_default();
-    
-    if (directory->icon)
-    {
-		tmp=gtk_icon_theme_load_icon(g,directory->icon,G_cairo_menu_conf.text_size,0,NULL);
-		if (tmp)
-		{
-			pbuf1=gdk_pixbuf_scale_simple(tmp,G_cairo_menu_conf.text_size,G_cairo_menu_conf.text_size,GDK_INTERP_HYPER);    
-			g_object_unref(tmp);
-		}	
-    
-    }
-    
+        
 	if (!pbuf1)
 	{
 		tmp=gtk_icon_theme_load_icon(g,"stock_folder",G_cairo_menu_conf.text_size,0,NULL);    
@@ -258,17 +290,31 @@ void render_directory(Menu_list_item *directory)
 	if (!pbuf2)
 		pbuf2=pbuf1;		
 //	pbuf_over=gtk_icon_theme_load_icon(g,directory->icon,G_cairo_menu_conf.text_size,0,NULL);    	
+    if (directory->icon)
+    {
+		tmp=gtk_icon_theme_load_icon(g,directory->icon,G_cairo_menu_conf.text_size,0,NULL);
+		if (tmp)
+		{
+			pbuf_over=gdk_pixbuf_scale_simple(tmp,G_cairo_menu_conf.text_size*0.7,G_cairo_menu_conf.text_size*0.7,GDK_INTERP_HYPER);    
+			g_object_unref(tmp);
+		}	
+    
+    }
+
 	directory->widget=gtk_event_box_new();
 	gtk_event_box_set_visible_window(directory->widget,FALSE);
 	gtk_event_box_set_above_child (directory->widget,TRUE);	
-	directory->normal=build_menu_widget(&G_cairo_menu_conf.normal,directory->name,pbuf1);
-	directory->hover=build_menu_widget(&G_cairo_menu_conf.hover,directory->name,pbuf1);	
+	directory->normal=build_menu_widget(&G_cairo_menu_conf.normal,directory->name,pbuf1,pbuf_over);
+	directory->hover=build_menu_widget(&G_cairo_menu_conf.hover,directory->name,pbuf2,pbuf_over);	
 	g_object_ref(directory->normal);
 	gtk_container_add(directory->widget,directory->normal);		
 	if (pbuf1)
 		g_object_unref(pbuf1);
 	if (pbuf2)
 		g_object_unref(pbuf2);	
+	if (pbuf_over)
+		g_object_unref(pbuf2);	
+		
 }
 
 void _fixup_menus(GtkFixedChild * child,GtkWidget * subwidget)

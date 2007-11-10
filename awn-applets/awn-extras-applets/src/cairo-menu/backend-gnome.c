@@ -326,7 +326,7 @@ void update_places(Menu_list_item **p,char* file_manager)
 						item=g_malloc(sizeof(Menu_list_item));	
 						item->item_type=MENU_ITEM_ENTRY;
 						item->name=g_strdup(p);
-						item->icon=g_strdup(p);
+						item->icon=g_strdup("stock_folder");
 						item->exec=g_strdup_printf("%s %s",file_manager,line);			
 						item->comment=g_strdup(line);
 						item->desktop=g_strdup("");			

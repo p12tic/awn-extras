@@ -48,6 +48,7 @@
 #define GCONF_SHOW_PLACES GCONF_MENU "/places_show"
 
 #define GCONF_FILEMANAGER GCONF_MENU "/filemanager"
+#define GCONF_APPLET_ICON GCONF_MENU "/applet_icon"
 
 #define GCONF_HONOUR_GTK GCONF_MENU "/honour_gtk"
 
@@ -203,6 +204,16 @@ void read_config(void)
     }
 	G_cairo_menu_conf.filemanager=strdup(svalue);
     g_free(svalue);     
+    
+    
+    svalue = gconf_client_get_string(gconf_client,GCONF_APPLET_ICON, NULL );
+    if ( !svalue ) 
+    {
+        gconf_client_set_string(gconf_client , GCONF_APPLET_ICON, svalue=g_strdup("gnome-main-menu"), NULL );
+    }
+	G_cairo_menu_conf.applet_icon=strdup(svalue);
+    g_free(svalue);   
+        
     
     value=gconf_client_get(gconf_client,GCONF_HONOUR_GTK,NULL);		
     if (value)

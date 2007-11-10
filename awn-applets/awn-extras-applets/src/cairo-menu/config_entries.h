@@ -47,6 +47,7 @@ typedef struct
 	gboolean	do_fade;	
 	gboolean	show_places;		
 	gchar 		*filemanager;
+	gchar		*applet_icon;
 	int			menu_item_text_len;
 	float 		menu_item_gradient_factor;
 	gboolean	honour_gtk;

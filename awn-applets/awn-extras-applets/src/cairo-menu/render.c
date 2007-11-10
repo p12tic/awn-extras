@@ -62,6 +62,13 @@ GtkWidget * build_menu_widget(Menu_item_color * mic, char * text,GdkPixbuf *pbuf
     cairo_pattern_t *gradient=NULL;
     cairo_text_extents_t    extents;      
     
+    if (pbuf)
+    	if(gdk_pixbuf_get_height(pbuf) !=G_cairo_menu_conf.text_size)
+	    	pbuf=gdk_pixbuf_scale_simple(pbuf,G_cairo_menu_conf.text_size,G_cairo_menu_conf.text_size,GDK_INTERP_HYPER);  
+	if (pover)	    
+    	if(gdk_pixbuf_get_height(pover) !=G_cairo_menu_conf.text_size*0.7)
+		    pover=gdk_pixbuf_scale_simple(pover,G_cairo_menu_conf.text_size*0.7,G_cairo_menu_conf.text_size*0.7,GDK_INTERP_HYPER);  
+    
     pixmap=gdk_pixmap_new(NULL,G_cairo_menu_conf.text_size*G_cairo_menu_conf.menu_item_text_len, 
     					G_cairo_menu_conf.text_size*1.6,32);   //FIXME
     widget=gtk_image_new_from_pixmap(pixmap,NULL);        
@@ -107,7 +114,7 @@ GtkWidget * build_menu_widget(Menu_item_color * mic, char * text,GdkPixbuf *pbuf
 	}		
     cairo_set_source_rgba (cr, mic->fg.red,mic->fg.green,mic->fg.blue, mic->fg.alpha);
     cairo_set_operator (cr, CAIRO_OPERATOR_OVER);	   	
-   	cairo_move_to(cr,G_cairo_menu_conf.text_size*1.4 , G_cairo_menu_conf.text_size);
+   	cairo_move_to(cr,G_cairo_menu_conf.text_size*1.4 , G_cairo_menu_conf.text_size*1.1);
     cairo_select_font_face (cr, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
     cairo_set_font_size (cr,G_cairo_menu_conf.text_size  );  
     
@@ -130,6 +137,10 @@ GtkWidget * build_menu_widget(Menu_item_color * mic, char * text,GdkPixbuf *pbuf
    	g_free(buf);
 	cairo_destroy(cr);
 	cairo_pattern_destroy(gradient);
+	if (pbuf)
+		g_object_unref(pbuf);	
+	if (pover)
+		g_object_unref(pover);
 	return widget;
 }
 
@@ -198,25 +209,14 @@ void render_textentry(Menu_list_item *entry)
 {
 	GtkIconTheme*  g;  	
 	GdkPixbuf *pbuf=NULL;
-	GdkPixbuf *tmp;	
+
 //	gtk_image_new_from_stock(GTK_STOCK_EXECUTE,GTK_ICON_SIZE_MENU);  
     g=gtk_icon_theme_get_default();
     
-    tmp=gtk_icon_theme_load_icon(g,entry->icon,G_cairo_menu_conf.text_size,0,NULL);
-    if (tmp)
-    {
-		pbuf=gdk_pixbuf_scale_simple(tmp,G_cairo_menu_conf.text_size,G_cairo_menu_conf.text_size,GDK_INTERP_HYPER);    
-		g_object_unref(tmp);
-	}	
-	    
+    pbuf=gtk_icon_theme_load_icon(g,entry->icon,G_cairo_menu_conf.text_size,0,NULL);
 	if (!pbuf)
 	{
-		tmp=gdk_pixbuf_new_from_file_at_size(entry->icon,-1,G_cairo_menu_conf.text_size,NULL);		
-		if (tmp)
-		{
-			pbuf=gdk_pixbuf_scale_simple(tmp,G_cairo_menu_conf.text_size,G_cairo_menu_conf.text_size,GDK_INTERP_HYPER);    
-			g_object_unref(tmp);
-		}	
+		pbuf=gdk_pixbuf_new_from_file_at_size(entry->icon,-1,G_cairo_menu_conf.text_size,NULL);		
 	}		
 		
 	entry->widget=gtk_event_box_new();
@@ -239,111 +239,58 @@ void render_entry(Menu_list_item *entry)
 {
 	GtkIconTheme*  g;  	
 	GdkPixbuf *pbuf=NULL;
-	GdkPixbuf *tmp;	
-//	gtk_image_new_from_stock(GTK_STOCK_EXECUTE,GTK_ICON_SIZE_MENU);  
     g=gtk_icon_theme_get_default();
     
-    tmp=gtk_icon_theme_load_icon(g,entry->icon,G_cairo_menu_conf.text_size,0,NULL);
-    if (tmp)
-    {
-		pbuf=gdk_pixbuf_scale_simple(tmp,G_cairo_menu_conf.text_size,G_cairo_menu_conf.text_size,GDK_INTERP_HYPER);    
-		g_object_unref(tmp);
-	}		    
+    pbuf=gtk_icon_theme_load_icon(g,entry->icon,G_cairo_menu_conf.text_size,0,NULL);
 	if (!pbuf)
 	{
-		tmp=gdk_pixbuf_new_from_file_at_size(entry->icon,-1,G_cairo_menu_conf.text_size,NULL);		
-		if (tmp)
-		{
-			pbuf=gdk_pixbuf_scale_simple(tmp,G_cairo_menu_conf.text_size,G_cairo_menu_conf.text_size,GDK_INTERP_HYPER);    
-			g_object_unref(tmp);
-		}	
+		pbuf=gdk_pixbuf_new_from_file_at_size(entry->icon,-1,G_cairo_menu_conf.text_size,NULL);		
 	}		
 	if (!pbuf)
 	{
-		tmp=gtk_icon_theme_load_icon(g,entry->name,G_cairo_menu_conf.text_size,0,NULL);	
-		if (tmp)
-		{
-			pbuf=gdk_pixbuf_scale_simple(tmp,G_cairo_menu_conf.text_size,G_cairo_menu_conf.text_size,GDK_INTERP_HYPER);    
-			g_object_unref(tmp);
-		}	
+		pbuf=gtk_icon_theme_load_icon(g,entry->name,G_cairo_menu_conf.text_size,0,NULL);	
 	}		
 	if (!pbuf)
 	{
-		tmp=gtk_icon_theme_load_icon(g,entry->exec,G_cairo_menu_conf.text_size,0,NULL);		
-		if (tmp)
-		{
-			pbuf=gdk_pixbuf_scale_simple(tmp,G_cairo_menu_conf.text_size,G_cairo_menu_conf.text_size,GDK_INTERP_HYPER);    
-			g_object_unref(tmp);
-		}	
+		pbuf=gtk_icon_theme_load_icon(g,entry->exec,G_cairo_menu_conf.text_size,0,NULL);		
 	}			
 
 	if (!pbuf)
 	{
 		gchar * filename;
 		filename=g_strdup_printf("/usr/share/pixmaps/%s",entry->icon);
-		tmp=gdk_pixbuf_new_from_file_at_size(filename,-1,G_cairo_menu_conf.text_size,NULL);		
-		if (tmp)
-		{
-			pbuf=gdk_pixbuf_scale_simple(tmp,G_cairo_menu_conf.text_size,G_cairo_menu_conf.text_size,GDK_INTERP_HYPER);    
-			g_object_unref(tmp);
-		}	
+		pbuf=gdk_pixbuf_new_from_file_at_size(filename,-1,G_cairo_menu_conf.text_size,NULL);		
 		g_free(filename);
 	}		
 	if (!pbuf)
 	{
 		gchar * filename;
 		filename=g_strdup_printf("/usr/share/pixmaps/%s.svg",entry->icon);
-		tmp=gdk_pixbuf_new_from_file_at_size(filename,-1,G_cairo_menu_conf.text_size,NULL);		
-		if (tmp)
-		{
-			pbuf=gdk_pixbuf_scale_simple(tmp,G_cairo_menu_conf.text_size,G_cairo_menu_conf.text_size,GDK_INTERP_HYPER);    
-			g_object_unref(tmp);
-		}	
+		pbuf=gdk_pixbuf_new_from_file_at_size(filename,-1,G_cairo_menu_conf.text_size,NULL);		
 		g_free(filename);
 	}	
 	if (!pbuf)
 	{
 		gchar * filename;
 		filename=g_strdup_printf("/usr/share/pixmaps/%s.png",entry->icon);
-		tmp=gdk_pixbuf_new_from_file_at_size(filename,-1,G_cairo_menu_conf.text_size,NULL);		
-		if (tmp)
-		{
-			pbuf=gdk_pixbuf_scale_simple(tmp,G_cairo_menu_conf.text_size,G_cairo_menu_conf.text_size,GDK_INTERP_HYPER);    
-			g_object_unref(tmp);
-		}	
+		pbuf=gdk_pixbuf_new_from_file_at_size(filename,-1,G_cairo_menu_conf.text_size,NULL);		
 		g_free(filename);
 	}	
 	if (!pbuf)
 	{
 		gchar * filename;
 		filename=g_strdup_printf("/usr/share/pixmaps/%s.xpm",entry->icon);
-		tmp=gdk_pixbuf_new_from_file_at_size(filename,-1,G_cairo_menu_conf.text_size,NULL);		
-		if (tmp)
-		{
-			pbuf=gdk_pixbuf_scale_simple(tmp,G_cairo_menu_conf.text_size,G_cairo_menu_conf.text_size,GDK_INTERP_HYPER);    
-			g_object_unref(tmp);
-		}	
+		pbuf=gdk_pixbuf_new_from_file_at_size(filename,-1,G_cairo_menu_conf.text_size,NULL);		
 		g_free(filename);
 	}		
 	if (!pbuf)
 	{
-		tmp=gtk_icon_theme_load_icon(g,"applications-other",G_cairo_menu_conf.text_size,0,NULL);		
-		if (tmp)
-		{
-			pbuf=gdk_pixbuf_scale_simple(tmp,G_cairo_menu_conf.text_size,G_cairo_menu_conf.text_size,GDK_INTERP_HYPER);    
-			g_object_unref(tmp);
-		}	
+		pbuf=gtk_icon_theme_load_icon(g,"applications-other",G_cairo_menu_conf.text_size,0,NULL);		
 	}	
 	if (!pbuf)
 	{
-		tmp=gtk_icon_theme_load_icon(g,"application-x-executable",G_cairo_menu_conf.text_size,0,NULL);		
-		if (tmp)
-		{
-			pbuf=gdk_pixbuf_scale_simple(tmp,G_cairo_menu_conf.text_size,G_cairo_menu_conf.text_size,GDK_INTERP_HYPER);    
-			g_object_unref(tmp);
-		}	
-	}	
-		
+		pbuf=gtk_icon_theme_load_icon(g,"application-x-executable",G_cairo_menu_conf.text_size,0,NULL);		
+	}			
 	entry->widget=gtk_event_box_new();
 	gtk_event_box_set_visible_window(entry->widget,FALSE);
 	gtk_event_box_set_above_child (entry->widget,TRUE);	
@@ -362,54 +309,34 @@ void render_directory(Menu_list_item *directory)
 	GdkPixbuf *pbuf1=NULL;
 	GdkPixbuf *pbuf2=NULL;
 	GdkPixbuf *pbuf_over=NULL;
-	GdkPixbuf *tmp=NULL;
     g=gtk_icon_theme_get_default();
         
 	if (!pbuf1)
 	{
-		tmp=gtk_icon_theme_load_icon(g,"stock_folder",G_cairo_menu_conf.text_size,0,NULL);    
-		if (tmp)
-		{
-			pbuf1=gdk_pixbuf_scale_simple(tmp,G_cairo_menu_conf.text_size,G_cairo_menu_conf.text_size,GDK_INTERP_HYPER);    
-			g_object_unref(tmp);
-		}		
+		pbuf1=gtk_icon_theme_load_icon(g,"stock_folder",G_cairo_menu_conf.text_size,0,NULL);    
 	}		
 	if (!pbuf1)
 	{
 		pbuf1=gdk_pixbuf_new_from_file_at_size("folder",-1,G_cairo_menu_conf.text_size,NULL);
-		if (!pbuf1)
-		{		
-			pbuf1=gdk_pixbuf_new_from_file_at_size("folder_new",-1,G_cairo_menu_conf.text_size,NULL);		
-		}			
 	}			
 
-    tmp=gtk_icon_theme_load_icon(g,"stock_open",G_cairo_menu_conf.text_size,0,NULL);    
-    if (tmp)
-    {
-		pbuf2=gdk_pixbuf_scale_simple(tmp,G_cairo_menu_conf.text_size,G_cairo_menu_conf.text_size,GDK_INTERP_HYPER);    
-		g_object_unref(tmp);
-	}		
+    pbuf2=gtk_icon_theme_load_icon(g,"stock_open",G_cairo_menu_conf.text_size,0,NULL);    
 	if (!pbuf2)
 	{
 		pbuf2=gdk_pixbuf_new_from_file_at_size("folder_open",-1,G_cairo_menu_conf.text_size,NULL);
-		if (!pbuf1)
-		{		
-			pbuf2=gdk_pixbuf_new_from_file_at_size("folder-open",-1,G_cairo_menu_conf.text_size,NULL);		
-		}			
 	}		
+	if (!pbuf2)
+	{		
+		pbuf2=gdk_pixbuf_new_from_file_at_size("folder-open",-1,G_cairo_menu_conf.text_size,NULL);		
+	}			
+	
 	if (!pbuf1)
 		pbuf1=pbuf2;
 	if (!pbuf2)
 		pbuf2=pbuf1;			
     if (directory->icon)
     {
-		tmp=gtk_icon_theme_load_icon(g,directory->icon,G_cairo_menu_conf.text_size,0,NULL);
-		if (tmp)
-		{
-			pbuf_over=gdk_pixbuf_scale_simple(tmp,G_cairo_menu_conf.text_size*0.7,G_cairo_menu_conf.text_size*0.7,GDK_INTERP_HYPER);    
-			g_object_unref(tmp);
-		}	
-    
+		pbuf_over=gtk_icon_theme_load_icon(g,directory->icon,G_cairo_menu_conf.text_size,0,NULL);
     }
 
 	directory->widget=gtk_event_box_new();
@@ -421,7 +348,7 @@ void render_directory(Menu_list_item *directory)
 	gtk_container_add(directory->widget,directory->normal);		
 	if (pbuf1)
 		g_object_unref(pbuf1);
-	if (pbuf2)
+	if  ((pbuf2) && (pbuf1!=pbuf2) )
 		g_object_unref(pbuf2);	
 	if (pbuf_over)
 		g_object_unref(pbuf_over);	
@@ -808,7 +735,18 @@ void render_menu_widgets(Menu_list_item * menu_item,GtkWidget * box)
 				G_Run=data;
 				g_signal_connect(menu_item->widget, "enter-notify-event", G_CALLBACK (_enter_notify_event_entry), data);
 				g_signal_connect(menu_item->widget, "leave-notify-event", G_CALLBACK (_leave_notify_event_entry), data);
-				g_signal_connect (G_OBJECT(menu_item->widget), "button-press-event",G_CALLBACK ( _button_clicked_event_textentry),data);
+				if (G_cairo_menu_conf.on_button_release)
+				{
+					g_signal_connect (G_OBJECT(menu_item->widget), "button-press-event",G_CALLBACK ( _button_clicked_ignore),data);
+					g_signal_connect (G_OBJECT(menu_item->widget), "button-release-event",G_CALLBACK ( _button_clicked_event_textentry),
+																	data);
+				}
+				else
+				{
+					g_signal_connect (G_OBJECT(menu_item->widget), "button-press-event",
+													G_CALLBACK (  _button_clicked_event_textentry),
+													data);
+				}																	
 				g_signal_connect (G_OBJECT(data->misc), "focus-out-event",G_CALLBACK (_focus_out_textentry),data);
  				g_signal_connect (G_OBJECT(data->misc), "activate",G_CALLBACK (activate_run), menu_item);				
  				

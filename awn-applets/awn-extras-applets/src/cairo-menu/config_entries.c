@@ -214,6 +214,7 @@ void read_config(void)
 	G_cairo_menu_conf.applet_icon=strdup(svalue);
     g_free(svalue);   
         
+	G_cairo_menu_conf.on_button_release=FALSE;        
     
     value=gconf_client_get(gconf_client,GCONF_HONOUR_GTK,NULL);		
     if (value)

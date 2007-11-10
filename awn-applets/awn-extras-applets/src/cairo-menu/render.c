@@ -367,7 +367,7 @@ void render_directory(Menu_list_item *directory)
 	if (pbuf2)
 		g_object_unref(pbuf2);	
 	if (pbuf_over)
-		g_object_unref(pbuf2);	
+		g_object_unref(pbuf_over);	
 		
 }
 

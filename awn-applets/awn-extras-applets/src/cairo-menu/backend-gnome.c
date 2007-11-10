@@ -186,7 +186,21 @@ add_entry (GMenuTreeEntry *entry,
 	item->item_type=MENU_ITEM_ENTRY;
 	item->name=gmenu_tree_entry_get_name(entry);
 	item->icon=gmenu_tree_entry_get_icon(entry);	
-	item->exec=gmenu_tree_entry_get_exec(entry);	
+	item->exec=gmenu_tree_entry_get_exec(entry);
+	char *str=item->exec;
+	while(*str)
+	{
+		if (*str=='%')
+		{
+			*str=' ';
+			if (*(str+1) )
+			{
+				str++;
+				*str=' ';
+			}
+		}
+		str++;
+	}									
 	item->comment=gmenu_tree_entry_get_comment(entry);	
 	item->launch_in_terminal=gmenu_tree_entry_get_launch_in_terminal(entry);
 	item->desktop=g_strdup(file_name);

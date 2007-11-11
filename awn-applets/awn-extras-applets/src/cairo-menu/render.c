@@ -651,6 +651,7 @@ int activate_run(GtkWidget *w,Menu_list_item * menu_item)
 	GError *err=NULL;
 	G_repression=FALSE;
 	gtk_widget_hide(G_Fixed->parent);
+	printf("activate_run: %s\n",gtk_entry_get_text (w));
 	g_spawn_command_line_async(gtk_entry_get_text (w),&err);    
 	gtk_entry_set_text (w,"")	;
 	return FALSE;
@@ -680,7 +681,7 @@ static gboolean _button_clicked_ignore(GtkWidget *widget,GdkEventButton *event,M
 {
 	G_repression=FALSE;
 	hide_textentries();
-	return FALSE;
+	return TRUE;
 }          
 
 

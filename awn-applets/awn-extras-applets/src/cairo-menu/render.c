@@ -41,18 +41,26 @@ typedef struct
 	GtkWidget *	subwidget;
 	GtkWidget * normal;
 	GtkWidget * hover;
+	GtkWidget * click;	
 	GtkWidget * misc;
 	GtkWidget * aux;	
 }Mouseover_data;
 Mouseover_data	* G_Search=NULL;
 Mouseover_data	* G_Run=NULL;
 
+enum
+{
+	MENU_WIDGET_NORMAL,
+	MENU_WIDGET_INSET,
+	MENU_WIDGET_OUTSET
+};
+
 /*
 At some point in time it might be good to cache cr and gradient.  
 At this point it's a bit inefficient on initial startup... but that's the only
 time the code is run.
 */
-GtkWidget * build_menu_widget(Menu_item_color * mic, char * text,GdkPixbuf *pbuf,GdkPixbuf *pover)
+GtkWidget * build_menu_widget(Menu_item_color * mic, char * text,GdkPixbuf *pbuf,GdkPixbuf *pover,int flags)
 {
     static cairo_t *cr = NULL;   
     GtkWidget * widget;
@@ -61,6 +69,8 @@ GtkWidget * build_menu_widget(Menu_item_color * mic, char * text,GdkPixbuf *pbuf
 	GdkColormap*	cmap;
     cairo_pattern_t *gradient=NULL;
     cairo_text_extents_t    extents;      
+    gint pixmap_width=G_cairo_menu_conf.text_size*G_cairo_menu_conf.menu_item_text_len;
+    gint pixmap_height=G_cairo_menu_conf.text_size*1.6;
     
     if (pbuf)
     	if(gdk_pixbuf_get_height(pbuf) !=G_cairo_menu_conf.text_size)
@@ -93,17 +103,47 @@ GtkWidget * build_menu_widget(Menu_item_color * mic, char * text,GdkPixbuf *pbuf
     cr=gdk_cairo_create(pixmap);
     cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
     cairo_paint(cr);
-    cairo_set_operator (cr, CAIRO_OPERATOR_OVER);	
-    gradient = cairo_pattern_create_linear(0, 0, 0,
-            G_cairo_menu_conf.text_size*1.6);
-    cairo_pattern_add_color_stop_rgba(gradient, 0,  mic->bg.red,mic->bg.green,mic->bg.blue, 
-    						mic->bg.alpha*G_cairo_menu_conf.menu_item_gradient_factor);
-    cairo_pattern_add_color_stop_rgba(gradient, 0.5, mic->bg.red,mic->bg.green,mic->bg.blue, 
-    									mic->bg.alpha);
-    cairo_pattern_add_color_stop_rgba(gradient, 1,mic->bg.red,mic->bg.green,mic->bg.blue, 
-    							mic->bg.alpha*G_cairo_menu_conf.menu_item_gradient_factor);
-    cairo_set_source(cr, gradient);    
-   	cairo_paint(cr);
+   	if (flags==MENU_WIDGET_NORMAL)
+   	{
+		cairo_set_operator (cr, CAIRO_OPERATOR_OVER);	
+		gradient = cairo_pattern_create_linear(0, 0, 0,
+		        G_cairo_menu_conf.text_size*1.6);            
+		cairo_pattern_add_color_stop_rgba(gradient, 0,  mic->bg.red,mic->bg.green,mic->bg.blue, 
+								mic->bg.alpha*G_cairo_menu_conf.menu_item_gradient_factor);
+		cairo_pattern_add_color_stop_rgba(gradient, 0.5, mic->bg.red,mic->bg.green,mic->bg.blue, 
+											mic->bg.alpha);
+		cairo_pattern_add_color_stop_rgba(gradient, 1,mic->bg.red,mic->bg.green,mic->bg.blue, 
+									mic->bg.alpha*G_cairo_menu_conf.menu_item_gradient_factor);
+		cairo_set_source(cr, gradient);    
+	   	cairo_paint(cr);
+	}	   	
+   	if (flags==MENU_WIDGET_INSET)
+   	{
+		cairo_set_operator (cr, CAIRO_OPERATOR_OVER);	
+		gradient = cairo_pattern_create_linear(0, 0, 0,
+		        G_cairo_menu_conf.text_size*1.6);            
+		cairo_pattern_add_color_stop_rgba(gradient, 0,  mic->bg.red*0.8,mic->bg.green*0.8,mic->bg.blue*0.8, 
+								mic->bg.alpha*G_cairo_menu_conf.menu_item_gradient_factor);
+		cairo_pattern_add_color_stop_rgba(gradient, 0.5, mic->bg.red*0.8,mic->bg.green*0.8,mic->bg.blue*0.8, 
+											mic->bg.alpha);
+		cairo_pattern_add_color_stop_rgba(gradient, 1,mic->bg.red*0.8,mic->bg.green*0.8,mic->bg.blue*0.8, 
+									mic->bg.alpha*G_cairo_menu_conf.menu_item_gradient_factor);
+		cairo_set_source(cr, gradient);    
+	   	cairo_paint(cr);
+
+   		/*FIXME do this nicer*/
+		cairo_set_source_rgba (cr,mic->bg.red*0.2,mic->bg.green*0.2,mic->bg.blue*0.2, 0.7);   		
+   		cairo_set_line_width(cr,G_cairo_menu_conf.text_size*0.15);   		
+   		cairo_move_to(cr,0,G_cairo_menu_conf.text_size*0.15);   		
+   		cairo_line_to(cr,pixmap_width,G_cairo_menu_conf.text_size*0.15);
+   		cairo_stroke(cr);
+
+   		cairo_move_to(cr,pixmap_width,pixmap_height-pixmap_height*0.15);
+   		cairo_line_to(cr,0,pixmap_height-pixmap_height*0.15);   		
+   		cairo_stroke(cr);
+
+		cairo_set_operator (cr, CAIRO_OPERATOR_OVER);			   		
+   	}
    	if (pbuf)
    	{
 		gdk_cairo_set_source_pixbuf(cr,pbuf,G_cairo_menu_conf.text_size*0.3,G_cairo_menu_conf.text_size*0.2);   		
@@ -149,7 +189,8 @@ GtkWidget * build_menu_widget(Menu_item_color * mic, char * text,GdkPixbuf *pbuf
    	cairo_show_text(cr,buf);    	
    	g_free(buf);
 	cairo_destroy(cr);
-	cairo_pattern_destroy(gradient);
+	if (gradient)
+		cairo_pattern_destroy(gradient);
 	if (pbuf)
 		g_object_unref(pbuf);	
 	if (pover)
@@ -235,8 +276,8 @@ void render_textentry(Menu_list_item *entry)
 	entry->widget=gtk_event_box_new();
 	gtk_event_box_set_visible_window(entry->widget,FALSE);
 	gtk_event_box_set_above_child (entry->widget,TRUE);	
-	entry->normal=build_menu_widget(&G_cairo_menu_conf.normal,entry->name,pbuf,NULL);
-	entry->hover=build_menu_widget(&G_cairo_menu_conf.hover,entry->name,pbuf,NULL);	
+	entry->normal=build_menu_widget(&G_cairo_menu_conf.normal,entry->name,pbuf,NULL,MENU_WIDGET_NORMAL);
+	entry->hover=build_menu_widget(&G_cairo_menu_conf.hover,entry->name,pbuf,NULL,MENU_WIDGET_NORMAL);	
 	entry->text_entry=sexy_icon_entry_new();
 	sexy_icon_entry_set_icon( (SexyIconEntry *)entry->search_entry,SEXY_ICON_ENTRY_PRIMARY,
 							  gtk_image_new_from_pixbuf(pbuf) );
@@ -307,8 +348,12 @@ void render_entry(Menu_list_item *entry)
 	entry->widget=gtk_event_box_new();
 	gtk_event_box_set_visible_window(entry->widget,FALSE);
 	gtk_event_box_set_above_child (entry->widget,TRUE);	
-	entry->normal=build_menu_widget(&G_cairo_menu_conf.normal,entry->name,pbuf,NULL);
-	entry->hover=build_menu_widget(&G_cairo_menu_conf.hover,entry->name,pbuf,NULL);	
+	entry->normal=build_menu_widget(&G_cairo_menu_conf.normal,entry->name,pbuf,NULL,MENU_WIDGET_NORMAL);
+	entry->hover=build_menu_widget(&G_cairo_menu_conf.hover,entry->name,pbuf,NULL,MENU_WIDGET_NORMAL);	
+	if (G_cairo_menu_conf.on_button_release)
+	{	
+		entry->click=build_menu_widget(&G_cairo_menu_conf.hover,entry->name,pbuf,NULL,MENU_WIDGET_INSET);
+	}		
 	g_object_ref(entry->normal);
 	gtk_container_add(entry->widget,entry->normal);			
 	if (pbuf)
@@ -355,8 +400,8 @@ void render_directory(Menu_list_item *directory)
 	directory->widget=gtk_event_box_new();
 	gtk_event_box_set_visible_window(directory->widget,FALSE);
 	gtk_event_box_set_above_child (directory->widget,TRUE);	
-	directory->normal=build_menu_widget(&G_cairo_menu_conf.normal,directory->name,pbuf1,pbuf_over);
-	directory->hover=build_menu_widget(&G_cairo_menu_conf.hover,directory->name,pbuf2,pbuf_over);	
+	directory->normal=build_menu_widget(&G_cairo_menu_conf.normal,directory->name,pbuf1,pbuf_over,MENU_WIDGET_NORMAL);
+	directory->hover=build_menu_widget(&G_cairo_menu_conf.hover,directory->name,pbuf2,pbuf_over,MENU_WIDGET_NORMAL);	
 	g_object_ref(directory->normal);
 	gtk_container_add(directory->widget,directory->normal);		
 	if (pbuf1)
@@ -527,7 +572,7 @@ static gboolean _leave_notify_event_entry(GtkWidget *widget,GdkEventCrossing *ev
 	return FALSE;
 }
  
-static gboolean _button_clicked_event(GtkWidget *widget,GdkEventButton *event,Menu_list_item * menu_item) 
+static gboolean _button_do_event(GtkWidget *widget,GdkEventButton *event,Menu_list_item * menu_item) 
 {
 	GError *err=NULL;
 	g_spawn_command_line_async(menu_item->exec,&err);
@@ -535,11 +580,11 @@ static gboolean _button_clicked_event(GtkWidget *widget,GdkEventButton *event,Me
 	return TRUE;
 }          
 
-static gboolean _button_clicked_event_textentry(GtkWidget *widget,GdkEventButton *event,Mouseover_data *data) 
+static gboolean _button_do_event_textentry(GtkWidget *widget,GdkEventButton *event,Mouseover_data *data) 
 {
 	g_list_foreach(GTK_FIXED(G_Fixed)->children,_fixup_menus,NULL); 
 	gtk_widget_show(data->misc);
-	g_object_ref(gtk_bin_get_child(widget));
+	g_object_ref(data->misc);
 	gtk_container_remove(widget,gtk_bin_get_child(widget));
 	gtk_container_add(widget,data->misc);		
 	gtk_widget_show_all(data->misc);
@@ -550,11 +595,15 @@ static gboolean _button_clicked_event_textentry(GtkWidget *widget,GdkEventButton
 
 static void hide_textentries(void)
 {
+	static gboolean block_reenter=FALSE;
+	if (block_reenter)
+		return;
+	block_reenter=TRUE;
 	if (G_Search)
 	{
 		if (gtk_bin_get_child(G_Search->aux) == G_Search->misc)
 		{
-			g_object_ref(gtk_bin_get_child(G_Search->aux));
+			g_object_ref(G_Search->normal);
 			gtk_container_remove(G_Search->aux,gtk_bin_get_child(G_Search->aux));
 			gtk_container_add(G_Search->aux,G_Search->normal);		
 			gtk_widget_show_all(G_Search->normal);			
@@ -564,12 +613,13 @@ static void hide_textentries(void)
 	{
 		if (gtk_bin_get_child(G_Run->aux) == G_Run->misc)
 		{
-			g_object_ref(gtk_bin_get_child(G_Run->aux));
+			g_object_ref(G_Run->normal);
 			gtk_container_remove(G_Run->aux,gtk_bin_get_child(G_Run->aux));
 			gtk_container_add(G_Run->aux,G_Run->normal);		
 			gtk_widget_show_all(G_Run->normal);			
 		}			
 	}	
+	block_reenter=FALSE;	
 }
  
 
@@ -606,11 +656,31 @@ int activate_run(GtkWidget *w,Menu_list_item * menu_item)
 	return FALSE;
 }
 
+static gboolean _button_clicked(GtkWidget *widget,GdkEventButton *event,Mouseover_data * data) 
+{
+	if ( ! G_repression)
+	{
+	#if 1
+		if (data->click)
+		{
+			gtk_widget_show(data->subwidget);	
+			assert(GTK_IS_WIDGET(data->click));	
+			g_object_ref(data->click);
+			gtk_container_remove(widget,gtk_bin_get_child(widget));
+			gtk_container_add(widget,data->click);		
+			gtk_widget_show_all(data->click);
+		}
+	#endif					
+		return TRUE;		
+	}
+	return FALSE;
+}
+
 static gboolean _button_clicked_ignore(GtkWidget *widget,GdkEventButton *event,Menu_list_item * menu_item) 
 {
 	G_repression=FALSE;
 	hide_textentries();
-	return TRUE;
+	return FALSE;
 }          
 
 
@@ -663,7 +733,7 @@ void render_menu_widgets(Menu_list_item * menu_item,GtkWidget * box)
 				render_directory(menu_item);
 				#if GTK_CHECK_VERSION(2,12,0)
 				if (menu_item->comment)
-					gtk_widget_set_tooltip_markup(menu_item->widget,menu_item->comment);
+					gtk_widget_set_tooltip_text(menu_item->widget,menu_item->comment);
 				#endif		
 				newbox=gtk_vbox_new(FALSE,0);
 				gtk_widget_set_app_paintable(newbox ,TRUE);
@@ -694,18 +764,26 @@ void render_menu_widgets(Menu_list_item * menu_item,GtkWidget * box)
 				render_entry(menu_item);
 				#if GTK_CHECK_VERSION(2,12,0)
 				if (menu_item->comment)
-					gtk_widget_set_tooltip_markup(menu_item->widget,menu_item->comment);
+					gtk_widget_set_tooltip_text(menu_item->widget,menu_item->comment);
 				#endif
 				Mouseover_data	*data;				
 				data=g_malloc(sizeof(Mouseover_data));
 				data->subwidget=box;
 				data->normal=menu_item->normal;
 				data->hover=menu_item->hover;
+				data->click=menu_item->click;				
 				data->misc=NULL;
 				g_signal_connect(menu_item->widget, "enter-notify-event", G_CALLBACK (_enter_notify_event_entry), data);
 				g_signal_connect(menu_item->widget, "leave-notify-event", G_CALLBACK (_leave_notify_event_entry), data);
-			
-				g_signal_connect (G_OBJECT (menu_item->widget), "button-press-event",G_CALLBACK (_button_clicked_event), menu_item);
+				if (G_cairo_menu_conf.on_button_release)				
+				{
+					g_signal_connect (G_OBJECT(menu_item->widget), "button-press-event",G_CALLBACK ( _button_clicked_ignore),data);
+					g_signal_connect (G_OBJECT (menu_item->widget), "button-release-event",G_CALLBACK (_button_do_event), menu_item);
+				}
+				else
+				{			
+					g_signal_connect (G_OBJECT (menu_item->widget), "button-press-event",G_CALLBACK (_button_do_event), menu_item);
+				}					
 			}				
 			break;			
 		case MENU_ITEM_SEARCH:
@@ -713,7 +791,7 @@ void render_menu_widgets(Menu_list_item * menu_item,GtkWidget * box)
 				render_textentry(menu_item);
 				#if GTK_CHECK_VERSION(2,12,0)
 				if (menu_item->comment)
-					gtk_widget_set_tooltip_markup(menu_item->widget,menu_item->comment);
+					gtk_widget_set_tooltip_text(menu_item->widget,menu_item->comment);
 				#endif
 				Mouseover_data	*data;				
 				data=g_malloc(sizeof(Mouseover_data));
@@ -725,7 +803,15 @@ void render_menu_widgets(Menu_list_item * menu_item,GtkWidget * box)
 				G_Search=data;
 				g_signal_connect(menu_item->widget, "enter-notify-event", G_CALLBACK (_enter_notify_event_entry), data);
 				g_signal_connect(menu_item->widget, "leave-notify-event", G_CALLBACK (_leave_notify_event_entry), data);
-				g_signal_connect (G_OBJECT(menu_item->widget), "button-press-event",G_CALLBACK ( _button_clicked_event_textentry),data);
+				if (G_cairo_menu_conf.on_button_release)
+				{
+					g_signal_connect (G_OBJECT(menu_item->widget), "button-press-event",G_CALLBACK ( _button_clicked_ignore),data);	
+					g_signal_connect (G_OBJECT(menu_item->widget), "button-release-event",G_CALLBACK ( _button_do_event_textentry),data);
+				}
+				else
+				{
+					g_signal_connect (G_OBJECT(menu_item->widget), "button-press-event",G_CALLBACK ( _button_do_event_textentry),data);
+				}					
 				g_signal_connect (G_OBJECT(data->misc), "focus-out-event",G_CALLBACK (_focus_out_textentry),data);
  				g_signal_connect (G_OBJECT(data->misc), "activate",G_CALLBACK (activate_search), menu_item);				
  				
@@ -736,7 +822,7 @@ void render_menu_widgets(Menu_list_item * menu_item,GtkWidget * box)
 				render_textentry(menu_item);
 				#if GTK_CHECK_VERSION(2,12,0)
 				if (menu_item->comment)
-					gtk_widget_set_tooltip_markup(menu_item->widget,menu_item->comment);
+					gtk_widget_set_tooltip_text(menu_item->widget,menu_item->comment);
 				#endif
 				Mouseover_data	*data;				
 				data=g_malloc(sizeof(Mouseover_data));
@@ -751,13 +837,13 @@ void render_menu_widgets(Menu_list_item * menu_item,GtkWidget * box)
 				if (G_cairo_menu_conf.on_button_release)
 				{
 					g_signal_connect (G_OBJECT(menu_item->widget), "button-press-event",G_CALLBACK ( _button_clicked_ignore),data);
-					g_signal_connect (G_OBJECT(menu_item->widget), "button-release-event",G_CALLBACK ( _button_clicked_event_textentry),
+					g_signal_connect (G_OBJECT(menu_item->widget), "button-release-event",G_CALLBACK ( _button_do_event_textentry),
 																	data);
 				}
 				else
 				{
 					g_signal_connect (G_OBJECT(menu_item->widget), "button-press-event",
-													G_CALLBACK (  _button_clicked_event_textentry),
+													G_CALLBACK (  _button_do_event_textentry),
 													data);
 				}																	
 				g_signal_connect (G_OBJECT(data->misc), "focus-out-event",G_CALLBACK (_focus_out_textentry),data);

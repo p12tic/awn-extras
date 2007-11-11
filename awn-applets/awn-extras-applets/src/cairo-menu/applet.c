@@ -154,7 +154,6 @@ AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
 	gtk_widget_set_size_request (GTK_WIDGET (applet), height, -1);
 	GdkPixbuf *icon;
 	G_Height=height;
-	printf("height = %d\n");
     icon=gdk_pixbuf_new(GDK_COLORSPACE_RGB,TRUE,8,1,height);
     gdk_pixbuf_fill(icon,0x00000000);  
 	awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (applet),icon);                                   

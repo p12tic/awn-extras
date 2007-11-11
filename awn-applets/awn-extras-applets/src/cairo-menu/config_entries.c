@@ -50,6 +50,8 @@
 #define GCONF_FILEMANAGER GCONF_MENU "/filemanager"
 #define GCONF_APPLET_ICON GCONF_MENU "/applet_icon"
 
+#define GCONF_ON_BUTTON_RELEASE GCONF_MENU "/activate_on_release"
+
 #define GCONF_HONOUR_GTK GCONF_MENU "/honour_gtk"
 
 Cairo_menu_config G_cairo_menu_conf;
@@ -214,7 +216,19 @@ void read_config(void)
 	G_cairo_menu_conf.applet_icon=strdup(svalue);
     g_free(svalue);   
         
-	G_cairo_menu_conf.on_button_release=FALSE;        
+	
+    value=gconf_client_get(gconf_client,GCONF_ON_BUTTON_RELEASE,NULL);		
+    if (value)
+    {																		
+        G_cairo_menu_conf.on_button_release=gconf_client_get_bool(gconf_client,GCONF_ON_BUTTON_RELEASE,NULL) ;
+    }
+    else             							
+    {
+		G_cairo_menu_conf.on_button_release=TRUE;        
+        gconf_client_set_bool(gconf_client,GCONF_ON_BUTTON_RELEASE,G_cairo_menu_conf.on_button_release,NULL);        
+    } 
+
+
     
     value=gconf_client_get(gconf_client,GCONF_HONOUR_GTK,NULL);		
     if (value)

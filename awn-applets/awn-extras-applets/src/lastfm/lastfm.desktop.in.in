@@ -2,6 +2,6 @@
 Type=Python
 Encoding=UTF-8
 Name=Last.fm Player Applet
-Comment=Last.fm Player for the Avant Window Navigator (v0.3 beta)
+Comment=Last.fm Player for the Avant Window Navigator (v0.4beta)
 Exec=@LIBDIR@/awn/applets/lastfm/lastfmapplet.py
 Icon=@LIBDIR@/awn/applets/lastfm/icons/lastfm_icon.png

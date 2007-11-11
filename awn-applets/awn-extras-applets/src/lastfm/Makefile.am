@@ -4,7 +4,9 @@ dist_volumecontrol_DATA = \
 		httpclient.py	\
 		lastfm.py	\
 		lastfmapplet.py	\
+		lastfmpreferences.py \
 		lastfmconfig.py \
+		lastfmexception.py \
 		imageproducer.py
 
 volumecontroldir = $(libdir)/awn/applets/lastfm

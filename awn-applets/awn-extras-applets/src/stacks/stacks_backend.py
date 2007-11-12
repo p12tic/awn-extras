@@ -267,7 +267,7 @@ class Backend(gobject.GObject):
     def get_random_pixbuf(self):
         max = self.get_number_items()
         rand = random.Random()
-        pick = rand.randint(0, max)
+        pick = rand.randint(0, max-1)
         iter = self.store.iter_nth_child(None, pick)
         return self.store.get_value(iter, COL_ICON)
 

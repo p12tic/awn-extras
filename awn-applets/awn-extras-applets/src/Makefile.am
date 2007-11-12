@@ -6,6 +6,7 @@ SUBDIRS =			\
 	calendar		\
 	cairo-menu		\
 	comic			\
+	digg			\
 	digitalClock		\
 	filebrowser     	\
 	gmail			\

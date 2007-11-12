@@ -49,19 +49,20 @@ class GUITransfer(object):
             self.dialog.vbox.add(hbox_copy)
             hbox_info = gtk.HBox(False, 0)
             label_fromto = gtk.Label("")
-            label_fromto.set_markup("<b>From:</b>\n<b>To:</b>")
             label_fromto.set_justify(gtk.JUSTIFY_RIGHT)
             hbox_info.pack_start(label_fromto, False, False, 0)
-            try:
-                srcdir = src[0].parent.path
+            srcdir = src[0].parent.path
+            if dst is not []:
+                label_fromto.set_markup("<b>From:</b>\n<b>To:</b>")
                 dstdir = dst[0].parent.path
-                label_srcdst = gtk.Label("")
-                label_srcdst.set_alignment(0.0, 0.5)
-                label_srcdst.set_ellipsize(pango.ELLIPSIZE_START)
-                label_srcdst.set_markup("%s\n%s" % (srcdir, dstdir))
-                hbox_info.pack_start(label_srcdst, True, True, 4)
-            except:
-                label_fromto.hide()
+            else:
+                dstdir = ""
+                label_fromto.set_markup("<b>From:</b>\n")
+            label_srcdst = gtk.Label("")
+            label_srcdst.set_alignment(0.0, 0.5)
+            label_srcdst.set_ellipsize(pango.ELLIPSIZE_START)
+            label_srcdst.set_markup("%s\n%s" % (srcdir, dstdir))
+            hbox_info.pack_start(label_srcdst, True, True, 4)
             self.dialog.vbox.add(hbox_info)
             self.progress_bar = gtk.ProgressBar()
             self.dialog.vbox.add(self.progress_bar)
@@ -93,7 +94,7 @@ class GUITransfer(object):
         gobject.timeout_add(1000, self._dialog_show)
 
     def _dialog_show(self):
-        if self.dialog: # and enough data still to be copie?
+        if self.dialog: # and enough data still to be copied?
             self.dialog.show_all()
 
     def _dialog_response(self, dialog, response):

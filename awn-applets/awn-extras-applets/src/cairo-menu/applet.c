@@ -55,6 +55,13 @@ gboolean _fade_in(GtkWidget * window)
 	return TRUE;
 }			
 
+static gboolean _show_prefs (GtkWidget *widget, GdkEventButton *event, Cairo_main_menu * menu)
+{
+
+	show_prefs();
+	return TRUE;
+}
+
 static gboolean _button_clicked_event (GtkWidget *widget, GdkEventButton *event, Cairo_main_menu * menu)
 {
     GdkEventButton *event_button;
@@ -80,6 +87,24 @@ static gboolean _button_clicked_event (GtkWidget *widget, GdkEventButton *event,
 				g_timeout_add (120,_fade_in,menu->mainwindow);
 		}    
     }
+    else if (event->button == 3)    
+    {
+    	static gboolean done_once=FALSE;
+    	static GtkWidget * menu;
+    	static GtkWidget * item;
+    	if (!done_once)
+    	{
+			menu=gtk_menu_new ();
+			item=gtk_menu_item_new_with_label("Preferences");
+			gtk_widget_show(item);
+			gtk_menu_set_screen(menu,NULL);    	
+			gtk_menu_shell_append(menu,item);
+			g_signal_connect (G_OBJECT (item), "button-press-event",G_CALLBACK (_show_prefs), NULL);
+    		done_once=TRUE;
+    	}
+    	gtk_menu_popup (menu, NULL, NULL, NULL, NULL, 
+			  event_button->button, event_button->time);
+    }
  	return TRUE;
 }
 
@@ -96,7 +121,7 @@ static _build_away(gpointer null)
 	pos_dialog(menu->mainwindow);	
 	g_list_foreach(GTK_FIXED(G_Fixed)->children,_fixup_menus,NULL); 		
 	gtk_widget_hide(menu->mainwindow);	
-    g_signal_connect (G_OBJECT (menu->applet), "button-press-event",G_CALLBACK (_button_clicked_event), menu);		
+    	
 	icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (),
 			                       G_cairo_menu_conf.applet_icon,
 			                       G_Height-2,
@@ -128,6 +153,7 @@ static _build_away(gpointer null)
 		gdk_pixbuf_fill(icon,0x00000000);  
 		awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (G_applet),icon);                                   	
 	}
+	g_signal_connect (G_OBJECT (menu->applet), "button-press-event",G_CALLBACK (_button_clicked_event), menu);		
 	return FALSE;
 }
 

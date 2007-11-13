@@ -48,12 +48,7 @@ typedef struct
 Mouseover_data	* G_Search=NULL;
 Mouseover_data	* G_Run=NULL;
 
-enum
-{
-	MENU_WIDGET_NORMAL,
-	MENU_WIDGET_INSET,
-	MENU_WIDGET_OUTSET
-};
+
 
 /*
 At some point in time it might be good to cache cr and gradient.  
@@ -579,20 +574,6 @@ static gboolean _button_do_event(GtkWidget *widget,GdkEventButton *event,Menu_li
 	gtk_widget_hide(G_Fixed->parent);
 	return TRUE;
 }          
-
-static gboolean _button_do_event_textentry(GtkWidget *widget,GdkEventButton *event,Mouseover_data *data) 
-{
-	g_list_foreach(GTK_FIXED(G_Fixed)->children,_fixup_menus,NULL); 
-	gtk_widget_show(data->misc);
-	g_object_ref(data->misc);
-	gtk_container_remove(widget,gtk_bin_get_child(widget));
-	gtk_container_add(widget,data->misc);		
-	gtk_widget_show_all(data->misc);
-	G_repression=TRUE;
-	gtk_widget_grab_focus(data->misc);
-	return TRUE;
-}    
-
 static void hide_textentries(void)
 {
 	static gboolean block_reenter=FALSE;
@@ -622,6 +603,21 @@ static void hide_textentries(void)
 	block_reenter=FALSE;	
 }
  
+static gboolean _button_do_event_textentry(GtkWidget *widget,GdkEventButton *event,Mouseover_data *data) 
+{
+	//hide_text_entries();
+	g_list_foreach(GTK_FIXED(G_Fixed)->children,_fixup_menus,NULL); 
+	gtk_widget_show(data->misc);
+	g_object_ref(data->misc);
+	gtk_container_remove(widget,gtk_bin_get_child(widget));
+	gtk_container_add(widget,data->misc);		
+	gtk_widget_show_all(data->misc);
+	G_repression=TRUE;
+	gtk_widget_grab_focus(data->misc);
+	return TRUE;
+}    
+
+
 
 static gboolean _focus_out_textentry(GtkWidget *widget, GdkEventButton *event, Mouseover_data *data)
 {
@@ -852,7 +848,6 @@ void render_menu_widgets(Menu_list_item * menu_item,GtkWidget * box)
  				
 			}	
 			break;	
-
 		case MENU_ITEM_SEPARATOR:
 			{
 				render_separator(menu_item);

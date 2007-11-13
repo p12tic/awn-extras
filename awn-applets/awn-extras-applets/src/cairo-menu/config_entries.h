@@ -25,6 +25,32 @@
 #ifndef __CAIRO_MENU_CONFIG_
 #define __CAIRO_MENU_CONFIG_
 
+#define GCONF_MENU "/apps/avant-window-navigator/applets/cairo-menu"
+
+#define GCONF_NORMAL_BG GCONF_MENU "/bg_normal_colour"
+#define GCONF_NORMAL_FG GCONF_MENU "/text_normal_colour"
+#define GCONF_HOVER_BG GCONF_MENU "/bg_hover_colour"
+#define GCONF_HOVER_FG GCONF_MENU "/text_hover_colour"
+
+#define GCONF_TEXT_SIZE GCONF_MENU "/text_size"
+
+#define GCONF_SEARCH_CMD GCONF_MENU "/search_cmd"
+#define GCONF_SHOW_SEARCH GCONF_MENU "/search_show"
+#define GCONF_SHOW_RUN GCONF_MENU "/run_show"
+
+#define GCONF_DO_FADE GCONF_MENU "/fade_in"
+
+#define GCONF_MENU_GRADIENT GCONF_MENU "/menu_item_gradient_factor"
+#define GCONF_MENU_ITEM_TEXT_LEN GCONF_MENU "/menu_item_text_len"
+
+#define GCONF_SHOW_PLACES GCONF_MENU "/places_show"
+
+#define GCONF_FILEMANAGER GCONF_MENU "/filemanager"
+#define GCONF_APPLET_ICON GCONF_MENU "/applet_icon"
+
+#define GCONF_ON_BUTTON_RELEASE GCONF_MENU "/activate_on_release"
+
+#define GCONF_HONOUR_GTK GCONF_MENU "/honour_gtk"
 
 typedef struct
 {
@@ -55,6 +81,7 @@ typedef struct
 }Cairo_menu_config;
 
 void read_config(void);
+void show_prefs(void);
 
 #endif
 

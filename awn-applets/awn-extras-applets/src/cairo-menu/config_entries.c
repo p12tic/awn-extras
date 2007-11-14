@@ -276,10 +276,6 @@ void read_config(void)
 
 /*
 
-#define GCONF_TEXT_SIZE GCONF_MENU "/text_size"
-
-
-#define GCONF_MENU_ITEM_TEXT_LEN GCONF_MENU "/menu_item_text_len"
 
 
 #define GCONF_APPLET_ICON GCONF_MENU "/applet_icon"
@@ -468,6 +464,7 @@ void show_prefs(void)
 	GtkWidget * search=gtk_check_button_new_with_label("Show Search");
 	GtkWidget * run=gtk_check_button_new_with_label("Show Run");
 	GtkWidget * fade_in=gtk_check_button_new_with_label("Fade in menu");	
+	GtkWidget * release=gtk_check_button_new_with_label("Activate On Release");
 	
 	GtkWidget* gtk_off_section=gtk_vbox_new(FALSE,0);	
 	gtk_off_table=gtk_table_new(2,4,FALSE);
@@ -558,6 +555,8 @@ void show_prefs(void)
 	g_signal_connect (G_OBJECT (search), "toggled",G_CALLBACK (_toggle_),&G_cairo_menu_conf.show_search);		
 	gtk_toggle_button_set_active(places,G_cairo_menu_conf.show_places);
 	g_signal_connect (G_OBJECT (places), "toggled",G_CALLBACK (_toggle_),&G_cairo_menu_conf.show_places);		
+	gtk_toggle_button_set_active(release,G_cairo_menu_conf.on_button_release);		
+	g_signal_connect (G_OBJECT (release), "toggled",G_CALLBACK (_toggle_),&G_cairo_menu_conf.on_button_release);			
 	gtk_toggle_button_set_active(run,G_cairo_menu_conf.show_run);		
 	g_signal_connect (G_OBJECT (run), "toggled",G_CALLBACK (_toggle_),&G_cairo_menu_conf.show_run);		
 	gtk_toggle_button_set_active(fade_in,G_cairo_menu_conf.do_fade);	
@@ -576,7 +575,7 @@ void show_prefs(void)
 	gtk_box_pack_start(GTK_CONTAINER (vbox),places,FALSE,FALSE,0);	
 	gtk_box_pack_start(GTK_CONTAINER (vbox),run,FALSE,FALSE,0);		
 	gtk_box_pack_start(GTK_CONTAINER (vbox),fade_in,FALSE,FALSE,0);	
-	
+	gtk_box_pack_start(GTK_CONTAINER (vbox),release,FALSE,FALSE,0);			
 
 	gtk_box_pack_start(GTK_CONTAINER (vbox),text_table,FALSE,FALSE,0);		
 	gtk_table_attach_defaults(text_table,gtk_label_new("Search command"),0,1,0,1);	

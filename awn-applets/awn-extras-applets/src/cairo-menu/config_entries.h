@@ -75,7 +75,7 @@ typedef struct
 	gchar 		*filemanager;
 	gchar		*applet_icon;
 	int			menu_item_text_len;
-	float 		menu_item_gradient_factor;
+	double 		menu_item_gradient_factor;
 	gboolean	honour_gtk;
 	gboolean 	on_button_release;
 }Cairo_menu_config;

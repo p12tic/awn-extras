@@ -279,7 +279,6 @@ void read_config(void)
 #define GCONF_TEXT_SIZE GCONF_MENU "/text_size"
 
 
-#define GCONF_MENU_GRADIENT GCONF_MENU "/menu_item_gradient_factor"
 #define GCONF_MENU_ITEM_TEXT_LEN GCONF_MENU "/menu_item_text_len"
 
 
@@ -438,6 +437,16 @@ void _mod_colour(GtkColorButton *widget,AwnColor * user_data)
 	gtk_widget_show(normal_ex);
 }
 
+void spin_change(GtkSpinButton *spinbutton,double * val)
+{
+	*val=gtk_spin_button_get_value(spinbutton);
+}
+
+void spin_int_change(GtkSpinButton *spinbutton,int * val)
+{
+	*val=gtk_spin_button_get_value(spinbutton);
+}
+
 void show_prefs(void)
 {
 	G_cairo_menu_conf_copy=G_cairo_menu_conf;
@@ -452,7 +461,7 @@ void show_prefs(void)
 	{
 		gtk_widget_set_colormap(prefs_win, colormap);
 	}	    	
-	
+	gtk_window_set_title (prefs_win,"Cairo Menu Preferences");
 	GtkWidget* vbox=gtk_vbox_new(FALSE,0);
 	GtkWidget * gtk=gtk_check_button_new_with_label("Use Gtk");
 	GtkWidget * places=gtk_check_button_new_with_label("Show Places");
@@ -508,6 +517,9 @@ void show_prefs(void)
 	GtkWidget * search_cmd=gtk_entry_new();
 	GtkWidget * filemanager=gtk_entry_new();
 	GtkWidget * adjust_gradient=gtk_spin_button_new_with_range(0.0,1.0,0.01);
+
+	GtkWidget * adjust_textlen=gtk_spin_button_new_with_range(5,30,1);
+	GtkWidget * adjust_textsize=gtk_spin_button_new_with_range(4,40,1);	
 	
 	GtkWidget* buttons=gtk_hbox_new(FALSE,0);	
 	GtkWidget* ok=gtk_button_new_with_label("Ok");
@@ -527,6 +539,15 @@ void show_prefs(void)
 	gtk_window_set_focus_on_map (GTK_WINDOW (prefs_win),TRUE);	
 
 	gtk_spin_button_set_value(adjust_gradient,G_cairo_menu_conf.menu_item_gradient_factor);
+	gtk_spin_button_set_value(adjust_textlen,G_cairo_menu_conf.menu_item_text_len);
+	gtk_spin_button_set_value(adjust_textsize,G_cairo_menu_conf.text_size);			
+	g_signal_connect (G_OBJECT (adjust_gradient), "value-changed",G_CALLBACK (spin_change),
+									&G_cairo_menu_conf.menu_item_gradient_factor);	
+	g_signal_connect (G_OBJECT (adjust_textlen), "value-changed",G_CALLBACK (spin_int_change),
+									&G_cairo_menu_conf.menu_item_text_len);	
+	g_signal_connect (G_OBJECT (adjust_textsize), "value-changed",G_CALLBACK (spin_int_change),
+									&G_cairo_menu_conf.text_size);	
+	
 	gtk_entry_set_text(search_cmd,G_cairo_menu_conf.search_cmd);
 	g_signal_connect (G_OBJECT(search_cmd), "activate",G_CALLBACK (activate), &G_cairo_menu_conf.search_cmd);	
 	gtk_entry_set_text(filemanager,G_cairo_menu_conf.filemanager);	
@@ -562,6 +583,9 @@ void show_prefs(void)
 	gtk_table_attach_defaults(text_table,search_cmd,1,2,0,1);		
 	gtk_table_attach_defaults(text_table,gtk_label_new("Filemanager"),0,1,1,2);	
 	gtk_table_attach_defaults(text_table,filemanager,1,2,1,2);		
+	
+	gtk_box_pack_start(GTK_CONTAINER (vbox),adjust_textlen,FALSE,FALSE,0);			
+	gtk_box_pack_start(GTK_CONTAINER (vbox),adjust_textsize,FALSE,FALSE,0);		
 	#endif 
 	gtk_box_pack_start(GTK_CONTAINER (vbox),gtk,FALSE,FALSE,0);
 	
@@ -579,6 +603,8 @@ void show_prefs(void)
 	gtk_table_attach_defaults(gtk_off_table,hover_ex,3,4,1,2);		
 	gtk_table_attach_defaults(gtk_off_table,gtk_label_new("Gradient Factor"),0,1,2,3);	
 	gtk_table_attach_defaults(gtk_off_table,adjust_gradient,1,3,2,3);
+
+
 	
 	gtk_box_pack_start(GTK_CONTAINER (vbox),buttons,FALSE,FALSE,0);
 	gtk_box_pack_start(GTK_CONTAINER (buttons),ok,FALSE,FALSE,0);							

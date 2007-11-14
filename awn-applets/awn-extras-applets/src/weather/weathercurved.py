@@ -148,7 +148,12 @@ class WeatherDialog(gtk.DrawingArea):
 		context.set_font_size(12.0)
 		context.set_line_width(1)
 
-		day_name = "Today" if f == self.forecast[0] else f.day_of_week
+		if f == self.forecast[0]:
+			day_name = _("Today")
+		elif f == self.forecast[1]:
+			day_name = _("Tomorrow")
+		else:
+			f.day_of_week
 		day_name, day_width = self.get_text_width(context, day_name, 999)
 		text_x = rect_x + (rect_width - day_width)/2
 		

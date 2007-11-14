@@ -1088,38 +1088,13 @@ move_notification(GtkWidget *nw, int x, int y)
 		gtk_window_move(GTK_WINDOW(nw), x, y);
 	}
 }
-#if 0
-void
-get_theme_info(char **theme_name,
-			   char **theme_ver,
-			   char **author,
-			   char **homepage)
-{
-	*theme_name = g_strdup("Standard");
-	*theme_ver  = g_strdup_printf("%d.%d.%d",
-								  NOTIFICATION_DAEMON_MAJOR_VERSION,
-								  NOTIFICATION_DAEMON_MINOR_VERSION,
-								  NOTIFICATION_DAEMON_MICRO_VERSION);
-	*author = g_strdup("");
-	*homepage = g_strdup("");
-}
-#endif
 
 void
 hide_notification(GtkWindow *nw)
 {
     gtk_widget_hide(GTK_WIDGET(nw));
 }
-#if 0
-gboolean
-check_init(unsigned int major_ver, unsigned int minor_ver,
-				 unsigned int micro_ver)
-{
-	return major_ver == NOTIFICATION_DAEMON_MAJOR_VERSION &&
-	       minor_ver == NOTIFICATION_DAEMON_MINOR_VERSION &&
-	       micro_ver == NOTIFICATION_DAEMON_MICRO_VERSION;
-}
-#endif
+
 
 
 void

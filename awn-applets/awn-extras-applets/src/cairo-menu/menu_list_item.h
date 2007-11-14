@@ -57,7 +57,9 @@ typedef struct
 	{
 		GtkWidget	*text_entry;			
 		GtkWidget	*search_entry;		
-		GtkWidget	*run_entry;		
+		GtkWidget	*run_entry;
+		void (*monitor)(gpointer callback, gpointer data,gpointer box);
+		gpointer null;
 				
 	}	;	
 }Menu_list_item;

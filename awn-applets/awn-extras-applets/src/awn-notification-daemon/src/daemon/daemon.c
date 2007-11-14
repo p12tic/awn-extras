@@ -106,6 +106,7 @@ int G_awn_override_x;
 int G_awn_border_width;
 float G_awn_gradient_factor;
 GdkPixbuf *G_awn_icon;
+int 	G_timeout=0;
 
 const PopupNotifyStackLocation popup_stack_locations[] =
 {
@@ -446,7 +447,8 @@ _calculate_timeout(NotifyDaemon *daemon, NotifyTimeout *nt, int timeout)
 	else
 	{
 		glong usec;
-
+		if (G_timeout>0)
+			timeout=G_timeout;
 		nt->has_timeout = TRUE;
 
 		if (timeout == -1)
@@ -752,7 +754,7 @@ url_clicked_cb(GtkWindow *nw, const char *url)
 	 * We can't actually check for GNOME_DESKTOP_SESSION_ID, because it's
 	 * not in the environment for this program :(
 	 */
-	if (/*g_getenv("GNOME_DESKTOP_SESSION_ID") != NULL &&*/
+	if (
 		g_find_program_in_path("gnome-open") != NULL)
 	{
 		cmd = g_strdup_printf("gnome-open %s", escaped_url);
@@ -1108,7 +1110,6 @@ get_gconf_client(void)
 static void
 _height_changed (AwnApplet *app, guint height, gpointer *data)
 {
-
 }
 
 gboolean send_startup_message(gpointer data)
@@ -1351,6 +1352,18 @@ AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
     {
         G_awn_override_y=-1;
         gconf_client_set_int (gconf_client,GCONF_KEY_AWN_OVERRIDE_Y,G_awn_override_y ,NULL);        
+    }
+
+
+    value=gconf_client_get(gconf_client,GCONF_KEY_AWN_TIMEOUT,NULL);		
+    if (value)
+    {																		
+        G_timeout=gconf_client_get_int(gconf_client,GCONF_KEY_AWN_TIMEOUT,NULL) ;
+    }
+    else             							
+    {
+        G_timeout=-1;
+        gconf_client_set_int (gconf_client,GCONF_KEY_AWN_TIMEOUT,G_timeout ,NULL);        
     }
   
 	dbus_g_connection_register_g_object(connection,"/org/freedesktop/Notifications",G_OBJECT(daemon));

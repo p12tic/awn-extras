@@ -24,10 +24,19 @@
 #include "menu_list_item.h"
 #include "menu.h"
 
+enum
+{
+	MENU_WIDGET_NORMAL,
+	MENU_WIDGET_INSET,
+	MENU_WIDGET_OUTSET
+};
+
 void render_entry(Menu_list_item *entry);
 void render_directory(Menu_list_item *directory);
 void _fixup_menus(GtkFixedChild * child,GtkWidget * subwidget);
 
 void render_menu_widgets(Menu_list_item * menu_item,GtkWidget * mainbox);
+
+GtkWidget * build_menu_widget(Menu_item_color * mic, char * text,GdkPixbuf *pbuf,GdkPixbuf *pover,int flags);
 
 #endif

@@ -44,6 +44,7 @@
 #define GCONF_KEY_AWN_HONOUR_GTK  GCONF_AWN "/honour_gtk"
 #define GCONF_KEY_AWN_OVERRIDE_X  GCONF_AWN "/override_x"
 #define GCONF_KEY_AWN_OVERRIDE_Y  GCONF_AWN "/override_y"
+#define GCONF_KEY_AWN_TIMEOUT  GCONF_AWN "/override_override_timeout"
 
 #define NOTIFY_TYPE_DAEMON (notify_daemon_get_type())
 #define NOTIFY_DAEMON(obj) \

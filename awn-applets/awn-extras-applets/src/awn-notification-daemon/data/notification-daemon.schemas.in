@@ -121,5 +121,41 @@
    </locale>
   </schema>
   
+  <schema>
+   <key>/schemas/apps/avant-window-navigator/applets/awn-notification-daemon/override_x</key>
+   <applyto>/apps/avant-window-navigator/applets/awn-notification-daemon/override_x</applyto>
+   <owner>awn-notification-daemon</owner>
+   <type>int</type>
+   <default>-1</default>
+   <locale name="C">
+    <short>X Position</short>
+    <long> NOTE:  This key should not be considered stable... it is likely to change.  Arbitrary X position for notification window.  Default is -1 which signifies awn-notification-daemon should place windows relative to its position in the bar.</long>
+   </locale>
+  </schema>
+  
+  <schema>
+   <key>/schemas/apps/avant-window-navigator/applets/awn-notification-daemon/override_y</key>
+   <applyto>/apps/avant-window-navigator/applets/awn-notification-daemon/override_y</applyto>
+   <owner>awn-notification-daemon</owner>
+   <type>int</type>
+   <default>-1</default>
+   <locale name="C">
+    <short>X Position</short>
+    <long> NOTE:  This key should not be considered stable... it is likely to change.  Arbitrary Y position for notification window.  Default is -1 which signifies awn-notification-daemon should place windows relative to its position in the bar.</long>
+   </locale>
+  </schema>
+  
+  <schema>
+   <key>/schemas/apps/avant-window-navigator/applets/awn-notification-daemon/override_timeout</key>
+   <applyto>/apps/avant-window-navigator/applets/awn-notification-daemon/override_timeout</applyto>
+   <owner>awn-notification-daemon</owner>
+   <type>int</type>
+   <default>-1</default>
+   <locale name="C">
+    <short>Timeout Overide</short>
+    <long>This will override the client and default timeout periods for all notification windows with a timeout.  Value is in ms. A value less than or equal to 0 indicates that client and default values should be honoured.</long>
+   </locale>
+  </schema>  
+  
  </schemalist>
 </gconfschemafile>

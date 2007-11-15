@@ -123,7 +123,7 @@ class TrashBackend(Backend):
 
         uris = []
         for b in self.trash_dirs.values():
-            uris.append(b.backend_uri.as_uri())
+            uris.append(b.as_uri())
 
         # TODO: nice msg: "Emptying trash" in stacksvfs
         GUITransfer(uris, [], options)

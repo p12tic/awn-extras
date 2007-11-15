@@ -52,7 +52,7 @@ class GUITransfer(object):
             label_fromto.set_justify(gtk.JUSTIFY_RIGHT)
             hbox_info.pack_start(label_fromto, False, False, 0)
             srcdir = src[0].parent.path
-            if dst is not []:
+            if len(dst) > 0:
                 label_fromto.set_markup("<b>From:</b>\n<b>To:</b>")
                 dstdir = dst[0].parent.path
             else:

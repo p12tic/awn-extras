@@ -81,7 +81,7 @@ void pos_dialog(GtkWidget * mainwindow)
 	if (ysize>scrheight)
 		ysize=scrheight/2;		
 	gtk_widget_set_size_request(mainwindow,xsize,ysize);    //FIXME
-//    gtk_window_resize(GTK_WINDOW(mainwindow),xsize,ysize);   		  
+    gtk_window_resize(GTK_WINDOW(mainwindow),xsize,ysize);   		  
     gtk_window_move(GTK_WINDOW(mainwindow), x,y-G_Fixed->allocation.height+GTK_WIDGET(G_applet)->allocation.height/3);
     
 }

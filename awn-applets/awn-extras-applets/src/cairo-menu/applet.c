@@ -123,23 +123,23 @@ static _build_away(gpointer null)
 	gtk_widget_hide(menu->mainwindow);	
     	
 	icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (),
-			                       G_cairo_menu_conf.applet_icon,
+			                       g_filename_from_utf8(G_cairo_menu_conf.applet_icon,-1, NULL, NULL, NULL),
 			                       G_Height-2,
 			                       G_Height-2, NULL);
 	if (!icon)
-		icon=gdk_pixbuf_new_from_file_at_size(G_cairo_menu_conf.applet_icon,-G_Height-2,
+		icon=gdk_pixbuf_new_from_file_at_size(g_filename_from_utf8(G_cairo_menu_conf.applet_icon,-1, NULL, NULL, NULL),-G_Height-2,
 			                       G_Height-2,NULL);
 	if (!icon)
 	{
 		printf("failed to load icon: %s\n",G_cairo_menu_conf.applet_icon);
-		icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (),"stock_missing-image",
+		icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (),g_filename_from_utf8("stock_missing-image",-1, NULL, NULL, NULL),
 			                       G_Height-2,
 			                       G_Height-2, NULL);		
 	}		     
 	if (!icon)
 	{
 
-		icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (),"gnome-main-menu",
+		icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (),g_filename_from_utf8("gnome-main-menu",-1, NULL, NULL, NULL),
 			                       G_Height-2,
 			                       G_Height-2, NULL);					                       
 	}	

@@ -469,15 +469,48 @@ static gboolean _enter_notify_event(GtkWidget *widget,GdkEventCrossing *event,Mo
 
 	g_object_ref(data->hover);
 	gtk_container_remove(widget,gtk_bin_get_child(widget));
-	gtk_container_add(widget,data->hover);		
-	gtk_widget_show_all(data->hover);
+	gtk_container_add(widget,data->hover);	
+	int new_x;
+	new_x=widget->allocation.x+widget->allocation.width*0.8;
+	
+	printf("subwidget->allocation.x=%d\n",subwidget->allocation.x);	
+	printf("subwidget->allocation.width=%d\n",subwidget->allocation.width);
+	printf("subwidget->allocation.height=%d\n",subwidget->allocation.height);
+	printf("G_Fixed->allocation.y=%d\n",G_Fixed->allocation.y);			
+	printf("G_Fixed->allocation.width=%d\n",G_Fixed->allocation.width);		
+	printf("G_Fixed->allocation.height=%d\n",G_Fixed->allocation.height);	
+	printf("widget->allocation.x=%d\n",  widget->allocation.x);		
+	printf("subwidget->allocation.x+subwidget->allocation.width=%d\n",subwidget->allocation.x+subwidget->allocation.width);
+	printf("G_Fixed->allocation.width+subwidget->allocation.width*0.4=%d\n",(int)(G_Fixed->allocation.width+subwidget->allocation.width*0.4));
+	
+	if (new_x+subwidget->allocation.width > G_Fixed->allocation.width+subwidget->allocation.width*0.4)
+	{
+		new_x=widget->allocation.x-subwidget->allocation.width+G_cairo_menu_conf.text_size*4;
+		int i;
+		if (new_x<=G_cairo_menu_conf.text_size*4)
+		{
+			if (new_x>=-1* G_cairo_menu_conf.text_size*4)
+			{
+				new_x<=G_cairo_menu_conf.text_size*4;
+			}
+			else
+			{
+				new_x=widget->allocation.x+G_cairo_menu_conf.text_size*2;
+			}				
+		}
+	}	
+	
+	gtk_fixed_move(G_Fixed,subwidget,new_x,subwidget->allocation.y);	
+	gtk_widget_show_all(data->hover);	
 	g_list_foreach(GTK_FIXED(G_Fixed)->children,_fixup_menus,subwidget);		
-	gtk_widget_show_all(subwidget);
 
 	gint x,y;
 
 	gdk_window_get_origin (GTK_WIDGET (G_applet)->window,&x, &y);    
+	
 
+	
+	gtk_widget_show_all(subwidget);	
 	/*Ugly Hack ahead*/
 	int widget_ypos=widget->allocation.y;
 

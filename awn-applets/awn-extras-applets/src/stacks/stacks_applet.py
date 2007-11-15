@@ -354,6 +354,7 @@ class StacksApplet (awn.AppletSimple):
             if self.dialog:
                 self.dialog.hide()
             self.dialog_visible = False
+            awn.awn_effect_stop(self.effects, "desaturate")
 
 
     # show the dialog
@@ -365,6 +366,7 @@ class StacksApplet (awn.AppletSimple):
                self.dialog_show_new(self.current_page)
             else:
                self.dialog_show_new(0)
+            awn.awn_effect_start(self.effects, "desaturate")
 
 
     def dialog_focus_out(self, widget, event):

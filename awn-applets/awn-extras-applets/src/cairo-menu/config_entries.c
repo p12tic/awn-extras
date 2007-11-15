@@ -141,7 +141,7 @@ void read_config(void)
     }
     else             							
     {
-		G_cairo_menu_conf.menu_item_text_len=12;
+		G_cairo_menu_conf.menu_item_text_len=28;
         gconf_client_set_int(gconf_client,GCONF_MENU_ITEM_TEXT_LEN,G_cairo_menu_conf.menu_item_text_len,NULL);        
     }
     
@@ -421,11 +421,10 @@ void _mod_colour(GtkColorButton *widget,AwnColor * user_data)
 	user_data->green=colr.green/65535.0;	
 	user_data->blue=colr.blue/65535.0;	
 	user_data->alpha=gtk_color_button_get_alpha(widget)/65535.0;	
-	
 	gtk_widget_destroy(hover_ex);
 	gtk_widget_destroy(normal_ex);
-	hover_ex=build_menu_widget(&G_cairo_menu_conf.hover,"Hover",NULL,NULL,MENU_WIDGET_NORMAL);	
-	normal_ex=build_menu_widget(&G_cairo_menu_conf.normal,"Normal",NULL,NULL,MENU_WIDGET_NORMAL);
+	hover_ex=build_menu_widget(&G_cairo_menu_conf.hover,"Hover",NULL,NULL,200,MENU_WIDGET_NORMAL);	
+	normal_ex=build_menu_widget(&G_cairo_menu_conf.normal,"Normal",NULL,NULL,200,MENU_WIDGET_NORMAL);
 	
 	gtk_table_attach_defaults(gtk_off_table,normal_ex,3,4,0,1);	
 	gtk_table_attach_defaults(gtk_off_table,hover_ex,3,4,1,2);	
@@ -524,11 +523,11 @@ void show_prefs(void)
 	Menu_item_color mic;
 	mic.bg=G_cairo_menu_conf.normal.bg;
 	mic.fg=G_cairo_menu_conf.normal.fg;
-	normal_ex=build_menu_widget(&mic,"Normal",NULL,NULL,MENU_WIDGET_NORMAL);
+	normal_ex=build_menu_widget(&mic,"Normal",NULL,NULL,200,MENU_WIDGET_NORMAL);
 
 	mic.bg=G_cairo_menu_conf.hover.bg;
 	mic.fg=G_cairo_menu_conf.hover.fg;
-	hover_ex=build_menu_widget(&mic,"Hover",NULL,NULL,MENU_WIDGET_NORMAL);
+	hover_ex=build_menu_widget(&mic,"Hover",NULL,NULL,200,MENU_WIDGET_NORMAL);
 
 
     gtk_window_set_keep_above (GTK_WINDOW (prefs_win),TRUE);
@@ -568,9 +567,7 @@ void show_prefs(void)
 	gtk_container_add (GTK_CONTAINER (prefs_win), vbox); 
 
 	g_signal_connect (G_OBJECT (gtk), "toggled",G_CALLBACK (_toggle_gtk),gtk_off_section );	
-	
-	#if 1
-	
+
 	gtk_box_pack_start(GTK_CONTAINER (vbox),search,FALSE,FALSE,0);	
 	gtk_box_pack_start(GTK_CONTAINER (vbox),places,FALSE,FALSE,0);	
 	gtk_box_pack_start(GTK_CONTAINER (vbox),run,FALSE,FALSE,0);		
@@ -581,11 +578,12 @@ void show_prefs(void)
 	gtk_table_attach_defaults(text_table,gtk_label_new("Search command"),0,1,0,1);	
 	gtk_table_attach_defaults(text_table,search_cmd,1,2,0,1);		
 	gtk_table_attach_defaults(text_table,gtk_label_new("Filemanager"),0,1,1,2);	
-	gtk_table_attach_defaults(text_table,filemanager,1,2,1,2);		
+	gtk_table_attach_defaults(text_table,filemanager,1,2,1,2);
+	gtk_table_attach_defaults(text_table,gtk_label_new("Approx. Max Chars (worst case)"),0,1,2,3);		
+	gtk_table_attach_defaults(text_table,adjust_textlen,1,2,2,3);		
+	gtk_table_attach_defaults(text_table,gtk_label_new("Font Size"),0,1,3,4);			
+	gtk_table_attach_defaults(text_table,adjust_textsize,1,2,3,4);				
 	
-	gtk_box_pack_start(GTK_CONTAINER (vbox),adjust_textlen,FALSE,FALSE,0);			
-	gtk_box_pack_start(GTK_CONTAINER (vbox),adjust_textsize,FALSE,FALSE,0);		
-	#endif 
 	gtk_box_pack_start(GTK_CONTAINER (vbox),gtk,FALSE,FALSE,0);
 	
 	gtk_box_pack_start(GTK_CONTAINER (vbox),gtk_off_section,FALSE,FALSE,0);

@@ -33,7 +33,7 @@ GtkWidget	*	G_toplevel=NULL;
 GtkWidget * G_mainwindow;
 int G_height,G_y,G_x;
 gboolean 	G_repression=FALSE;
-
+int G_max_width=-1;
 
 
 typedef struct
@@ -55,7 +55,7 @@ At some point in time it might be good to cache cr and gradient.
 At this point it's a bit inefficient on initial startup... but that's the only
 time the code is run.
 */
-GtkWidget * build_menu_widget(Menu_item_color * mic, char * text,GdkPixbuf *pbuf,GdkPixbuf *pover,int flags)
+GtkWidget * build_menu_widget(Menu_item_color * mic, char * text,GdkPixbuf *pbuf,GdkPixbuf *pover,int max_width,int flags)
 {
     static cairo_t *cr = NULL;   
     GtkWidget * widget;
@@ -64,7 +64,7 @@ GtkWidget * build_menu_widget(Menu_item_color * mic, char * text,GdkPixbuf *pbuf
 	GdkColormap*	cmap;
     cairo_pattern_t *gradient=NULL;
     cairo_text_extents_t    extents;      
-    gint pixmap_width=G_cairo_menu_conf.text_size*G_cairo_menu_conf.menu_item_text_len;
+    gint pixmap_width=max_width;
     gint pixmap_height=G_cairo_menu_conf.text_size*1.6;
     
     if (pbuf)
@@ -87,7 +87,7 @@ GtkWidget * build_menu_widget(Menu_item_color * mic, char * text,GdkPixbuf *pbuf
 		}
 				    
     
-    pixmap=gdk_pixmap_new(NULL,G_cairo_menu_conf.text_size*G_cairo_menu_conf.menu_item_text_len, 
+    pixmap=gdk_pixmap_new(NULL, pixmap_width, 
     					G_cairo_menu_conf.text_size*1.6,32);   //FIXME
     widget=gtk_image_new_from_pixmap(pixmap,NULL);        
     pScreen = gtk_widget_get_screen (G_Fixed);
@@ -173,7 +173,7 @@ GtkWidget * build_menu_widget(Menu_item_color * mic, char * text,GdkPixbuf *pbuf
 	cairo_text_extents(cr,buf,&extents);   
 	while  ( ( nul_pos>5) &&
 			(extents.width +  G_cairo_menu_conf.text_size*1.3 > 
-			G_cairo_menu_conf.text_size*(G_cairo_menu_conf.menu_item_text_len-1))
+			pixmap_width-G_cairo_menu_conf.text_size)
 			)
 	{
 		nul_pos--;				
@@ -194,16 +194,15 @@ GtkWidget * build_menu_widget(Menu_item_color * mic, char * text,GdkPixbuf *pbuf
 }
 
 
-void render_blank(Menu_list_item *entry)
+void render_blank(Menu_list_item *entry,int max_width)
 {
 	GtkIconTheme*  g;  	
     static cairo_t *cr = NULL;   
-
     GdkScreen* pScreen;        
 	GdkPixmap * pixmap; 
 	GdkColormap*	cmap;
 
-    pixmap=gdk_pixmap_new(NULL,G_cairo_menu_conf.text_size*G_cairo_menu_conf.menu_item_text_len, 
+    pixmap=gdk_pixmap_new(NULL,max_width, 
     					G_cairo_menu_conf.text_size*0.3,32);   //FIXME
     entry->widget=gtk_image_new_from_pixmap(pixmap,NULL);        
     pScreen = gtk_widget_get_screen (G_Fixed);
@@ -224,16 +223,15 @@ void render_blank(Menu_list_item *entry)
     
 }
 
-void render_separator(Menu_list_item *entry)
+void render_separator(Menu_list_item *entry,int max_width)
 {
 	GtkIconTheme*  g;  	
-    static cairo_t *cr = NULL;   
-
+    static cairo_t *cr = NULL; 
     GdkScreen* pScreen;        
 	GdkPixmap * pixmap; 
 	GdkColormap*	cmap;
 
-    pixmap=gdk_pixmap_new(NULL,G_cairo_menu_conf.text_size*G_cairo_menu_conf.menu_item_text_len, 
+    pixmap=gdk_pixmap_new(NULL,max_width, 
     					G_cairo_menu_conf.text_size*0.1,32);   //FIXME
     entry->widget=gtk_image_new_from_pixmap(pixmap,NULL);        
     pScreen = gtk_widget_get_screen (G_Fixed);
@@ -254,7 +252,7 @@ void render_separator(Menu_list_item *entry)
     
 }
 
-void render_textentry(Menu_list_item *entry)
+void render_textentry(Menu_list_item *entry,int max_width)
 {
 	GtkIconTheme*  g;  	
 	GdkPixbuf *pbuf=NULL;
@@ -271,8 +269,8 @@ void render_textentry(Menu_list_item *entry)
 	entry->widget=gtk_event_box_new();
 	gtk_event_box_set_visible_window(entry->widget,FALSE);
 	gtk_event_box_set_above_child (entry->widget,TRUE);	
-	entry->normal=build_menu_widget(&G_cairo_menu_conf.normal,entry->name,pbuf,NULL,MENU_WIDGET_NORMAL);
-	entry->hover=build_menu_widget(&G_cairo_menu_conf.hover,entry->name,pbuf,NULL,MENU_WIDGET_NORMAL);	
+	entry->normal=build_menu_widget(&G_cairo_menu_conf.normal,entry->name,pbuf,NULL,max_width,MENU_WIDGET_NORMAL);
+	entry->hover=build_menu_widget(&G_cairo_menu_conf.hover,entry->name,pbuf,NULL,max_width,MENU_WIDGET_NORMAL);	
 	entry->text_entry=sexy_icon_entry_new();
 	sexy_icon_entry_set_icon( (SexyIconEntry *)entry->search_entry,SEXY_ICON_ENTRY_PRIMARY,
 							  gtk_image_new_from_pixbuf(pbuf) );
@@ -284,7 +282,7 @@ void render_textentry(Menu_list_item *entry)
 }
 
 
-void render_entry(Menu_list_item *entry)
+void render_entry(Menu_list_item *entry,int max_width)
 {
 	GtkIconTheme*  g;  	
 	GdkPixbuf *pbuf=NULL;
@@ -343,11 +341,11 @@ void render_entry(Menu_list_item *entry)
 	entry->widget=gtk_event_box_new();
 	gtk_event_box_set_visible_window(entry->widget,FALSE);
 	gtk_event_box_set_above_child (entry->widget,TRUE);	
-	entry->normal=build_menu_widget(&G_cairo_menu_conf.normal,entry->name,pbuf,NULL,MENU_WIDGET_NORMAL);
-	entry->hover=build_menu_widget(&G_cairo_menu_conf.hover,entry->name,pbuf,NULL,MENU_WIDGET_NORMAL);	
+	entry->normal=build_menu_widget(&G_cairo_menu_conf.normal,entry->name,pbuf,NULL,max_width,MENU_WIDGET_NORMAL);
+	entry->hover=build_menu_widget(&G_cairo_menu_conf.hover,entry->name,pbuf,NULL,max_width,MENU_WIDGET_NORMAL);	
 	if (G_cairo_menu_conf.on_button_release)
 	{	
-		entry->click=build_menu_widget(&G_cairo_menu_conf.hover,entry->name,pbuf,NULL,MENU_WIDGET_INSET);
+		entry->click=build_menu_widget(&G_cairo_menu_conf.hover,entry->name,pbuf,NULL,max_width,MENU_WIDGET_INSET);
 	}		
 	g_object_ref(entry->normal);
 	gtk_container_add(entry->widget,entry->normal);			
@@ -356,7 +354,7 @@ void render_entry(Menu_list_item *entry)
 }
 
 
-void render_directory(Menu_list_item *directory)
+void render_directory(Menu_list_item *directory,int max_width)
 {
 	GtkIconTheme*  g;  	
 	GdkPixbuf *pbuf1=NULL;
@@ -395,8 +393,8 @@ void render_directory(Menu_list_item *directory)
 	directory->widget=gtk_event_box_new();
 	gtk_event_box_set_visible_window(directory->widget,FALSE);
 	gtk_event_box_set_above_child (directory->widget,TRUE);	
-	directory->normal=build_menu_widget(&G_cairo_menu_conf.normal,directory->name,pbuf1,pbuf_over,MENU_WIDGET_NORMAL);
-	directory->hover=build_menu_widget(&G_cairo_menu_conf.hover,directory->name,pbuf2,pbuf_over,MENU_WIDGET_NORMAL);	
+	directory->normal=build_menu_widget(&G_cairo_menu_conf.normal,directory->name,pbuf1,pbuf_over,max_width,MENU_WIDGET_NORMAL);
+	directory->hover=build_menu_widget(&G_cairo_menu_conf.hover,directory->name,pbuf2,pbuf_over,max_width,MENU_WIDGET_NORMAL);	
 	g_object_ref(directory->normal);
 	gtk_container_add(directory->widget,directory->normal);		
 	if (pbuf1)
@@ -460,23 +458,24 @@ void _fixup_menus(GtkFixedChild * child,GtkWidget * subwidget)
 
 static gboolean _enter_notify_event(GtkWidget *widget,GdkEventCrossing *event,Mouseover_data *data)  
 {
+	int new_x;
+	gint x,y;
+
+	
 	if ( (gtk_bin_get_child(widget)==data->misc) || G_repression)
 	{
 		return FALSE;	
 	}
 
 	GtkWidget * subwidget=data->subwidget;
-
 	g_object_ref(data->hover);
 	gtk_container_remove(widget,gtk_bin_get_child(widget));
 	gtk_container_add(widget,data->hover);	
-	int new_x;
 	new_x=widget->allocation.x+widget->allocation.width*0.8;
 	
 	if (new_x+subwidget->allocation.width > G_Fixed->allocation.width+subwidget->allocation.width*0.4)
 	{
 		new_x=widget->allocation.x-subwidget->allocation.width+G_cairo_menu_conf.text_size*4;
-		int i;
 		if (new_x<=G_cairo_menu_conf.text_size*4)
 		{
 			if (new_x>=-1* G_cairo_menu_conf.text_size*4)
@@ -494,12 +493,7 @@ static gboolean _enter_notify_event(GtkWidget *widget,GdkEventCrossing *event,Mo
 	gtk_widget_show_all(data->hover);	
 	g_list_foreach(GTK_FIXED(G_Fixed)->children,_fixup_menus,subwidget);		
 
-	gint x,y;
-
 	gdk_window_get_origin (GTK_WIDGET (G_applet)->window,&x, &y);    
-	
-
-	
 	gtk_widget_show_all(subwidget);	
 	/*Ugly Hack ahead*/
 	int widget_ypos=widget->allocation.y;
@@ -740,17 +734,52 @@ void rerender(Menu_list_item ** menu_items,GtkWidget *box)
 		gtk_fixed_move(G_Fixed,box,box->allocation.x,0);
 	}
 }
+
+void measure_width(Menu_list_item * menu_item,int * max_width)
+{
+    static cairo_t *cr = NULL;   
+    static cairo_surface_t*  surface;
+    cairo_text_extents_t    extents;      
+    if (!cr)
+    {
+		surface=cairo_image_surface_create (CAIRO_FORMAT_ARGB32,G_cairo_menu_conf.text_size*G_cairo_menu_conf.menu_item_text_len, 
+    					G_cairo_menu_conf.text_size*1.6);   
+		cr=cairo_create(surface);
+    }
+    cairo_select_font_face (cr, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+    cairo_set_font_size (cr,G_cairo_menu_conf.text_size  );  
+	cairo_text_extents(cr,menu_item->name,&extents);   
+	if ( extents.width+G_cairo_menu_conf.text_size*1.5 > *max_width)
+	{
+		if (extents.width+G_cairo_menu_conf.text_size*1.5 >G_cairo_menu_conf.text_size*G_cairo_menu_conf.menu_item_text_len)
+		{
+			*max_width=G_cairo_menu_conf.text_size*G_cairo_menu_conf.menu_item_text_len;
+		}
+		else
+		{
+			*max_width=extents.width+G_cairo_menu_conf.text_size*2.5;
+		}			
+	}
+}
                                               
 void render_menu_widgets(Menu_list_item * menu_item,GtkWidget * box)
 {
+	static int max_width=-1;
 	static Xpos=0;
+	if (max_width==-1)
+	{
+		max_width=G_max_width;
+	}
+	
 //	gtk_widget_show_all(box);
 	switch (menu_item->item_type)
 	{
 		case MENU_ITEM_DIRECTORY:
 			{
-				GtkWidget *newbox;
-				render_directory(menu_item);
+				int temp_width=max_width;
+				GtkWidget *newbox;							
+				render_directory(menu_item,max_width);
+				g_slist_foreach(menu_item->sublist,measure_width,&max_width);
 				#if GTK_CHECK_VERSION(2,12,0)
 				if (menu_item->comment)
 					gtk_widget_set_tooltip_text(menu_item->widget,menu_item->comment);
@@ -777,11 +806,12 @@ void render_menu_widgets(Menu_list_item * menu_item,GtkWidget * box)
 				g_signal_connect(menu_item->widget, "button-press-event",G_CALLBACK (_button_clicked_ignore),data);	
 				g_tree_insert(G_cairo_menu_conf.submenu_deps,newbox,box);				
 				Xpos=Xpos-G_cairo_menu_conf.text_size*G_cairo_menu_conf.menu_item_text_len*4/5;//FIXME
+				max_width=temp_width;
 			}				
 			break;
 		case MENU_ITEM_ENTRY:
 			{
-				render_entry(menu_item);
+				render_entry(menu_item,max_width);
 				#if GTK_CHECK_VERSION(2,12,0)
 				if (menu_item->comment)
 					gtk_widget_set_tooltip_text(menu_item->widget,menu_item->comment);
@@ -808,7 +838,7 @@ void render_menu_widgets(Menu_list_item * menu_item,GtkWidget * box)
 			break;			
 		case MENU_ITEM_SEARCH:
 			{
-				render_textentry(menu_item);
+				render_textentry(menu_item,max_width);
 				#if GTK_CHECK_VERSION(2,12,0)
 				if (menu_item->comment)
 					gtk_widget_set_tooltip_text(menu_item->widget,menu_item->comment);
@@ -839,7 +869,7 @@ void render_menu_widgets(Menu_list_item * menu_item,GtkWidget * box)
 			break;				
 		case MENU_ITEM_RUN:
 			{
-				render_textentry(menu_item);
+				render_textentry(menu_item,max_width);
 				#if GTK_CHECK_VERSION(2,12,0)
 				if (menu_item->comment)
 					gtk_widget_set_tooltip_text(menu_item->widget,menu_item->comment);
@@ -873,12 +903,12 @@ void render_menu_widgets(Menu_list_item * menu_item,GtkWidget * box)
 			break;	
 		case MENU_ITEM_SEPARATOR:
 			{
-				render_separator(menu_item);
+				render_separator(menu_item,max_width);
 				break;
 			}
 		case MENU_ITEM_BLANK:
 			{
-				render_blank(menu_item);
+				render_blank(menu_item,max_width);
 				break;
 			}			
 		default:

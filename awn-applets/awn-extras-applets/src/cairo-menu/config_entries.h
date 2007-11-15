@@ -66,7 +66,6 @@ typedef struct
 	Menu_item_color selected;
 	int			text_size;
 	GTree *		submenu_deps;
-	
 	gboolean	show_search;
 	gchar		*search_cmd;
 	gboolean	show_run;	

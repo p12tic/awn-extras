@@ -44,6 +44,7 @@ extern GtkWidget * G_Fixed;
 extern GtkWidget	*	G_toplevel;
 extern GtkWidget * G_mainwindow;
 extern AwnApplet *G_applet;
+extern	int G_max_width;
 
 extern Cairo_menu_config G_cairo_menu_conf;
 
@@ -164,6 +165,7 @@ Cairo_main_menu * dialog_new(AwnApplet *applet)
 	gtk_widget_set_app_paintable(menu->mainbox ,TRUE);	   	
 	gtk_fixed_put(GTK_FIXED(menu->mainfixed),menu->mainbox,0,0);
 
+	g_slist_foreach(menu->menu_data,measure_width,&G_max_width);
 	g_slist_foreach(menu->menu_data,render_menu_widgets,menu->mainbox);
 	gtk_widget_show_all(menu->mainbox);  	
 

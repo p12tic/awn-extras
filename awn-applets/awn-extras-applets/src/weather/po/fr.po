@@ -280,6 +280,14 @@ msgid "N/A"
 msgstr ""
 
 #: weathertext.py:88
+msgid "Today"
+msgstr "Aujourd'hui"
+
+#: weathertext.py:88
+msgid "Tomorrow"
+msgstr "Demain"
+
+#: weathertext.py:88
 msgid "Monday"
 msgstr "Lundi"
 

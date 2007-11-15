@@ -44,7 +44,7 @@ import socket
 
 # locale stu
 APP="awn-weather-applet"
-DIR="locale"
+DIR=os.path.dirname (__file__) + '/locale'
 import locale
 import gettext
 #locale.setlocale(locale.LC_ALL, '')

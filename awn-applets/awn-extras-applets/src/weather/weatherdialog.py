@@ -20,6 +20,7 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 #
+import os
 import gtk
 from gtk import gdk
 import cairo
@@ -27,7 +28,7 @@ import wnck
 import weathericons
 import weathertext
 APP="awn-weather-applet"
-DIR="locale"
+DIR=os.path.dirname (__file__) + '/locale'
 import locale
 import gettext
 
@@ -67,13 +68,12 @@ class WeatherDialog(gtk.DrawingArea):
 
 	def get_text_width(self, context, text, maxwidth):
 		potential_text = text
-		text_width = context.text_extents(potential_text)[2]
+		text_width = context.text_extents(potential_text.encode('ascii','replace'))[2]
 		end = -1
 		while text_width > maxwidth:
 			end -= 1
-			potential_text = text[:end] + '...'
-			text_width = context.text_extents(potential_text)[2]
-
+			potential_text = text.encode('ascii','replace')[:end] + '...'
+			text_width = context.text_extents(potential_text.encode('ascii','replace'))[2]
 		return potential_text, text_width
 
 	def draw_day(self,context,x,y,f):
@@ -101,14 +101,14 @@ class WeatherDialog(gtk.DrawingArea):
 		context.set_font_size(12.0)
 		context.set_line_width(1)
 
+		day_name = _(f.day_of_week)
 		if f == self.forecast[0]:
 			day_name = _("Today")
 		elif f == self.forecast[1]:
 			day_name = _("Tomorrow")
-		else:
-			day_name = f.day_of_week
 		 
 		day_name, day_width = self.get_text_width(context, day_name, 999)
+		print rect_width, day_width
 		text_x = rect_x + (rect_width - day_width)/2
 		text_y = rect_y - 10
 		
@@ -131,10 +131,11 @@ class WeatherDialog(gtk.DrawingArea):
 		context.paint()
 
 		## Weather condition
+		condition_text = weathertext.WeatherText.conditions_text[f.condition_code]
 		context.select_font_face("Sans",cairo.FONT_SLANT_NORMAL,cairo.FONT_WEIGHT_NORMAL)
 		context.set_font_size(9.0)
 		context.set_line_width(1)
-		condition_text, text_width = self.get_text_width(context, f.condition_text, rect_width-5)			
+		condition_text, text_width = self.get_text_width(context, condition_text, rect_width-5)			
 		startx = (rect_width - text_width) / 2
 
 		## Text Shadow
@@ -171,36 +172,7 @@ class WeatherDialog(gtk.DrawingArea):
 
 	def expose(self,widget,event):
 		context = widget.window.cairo_create()
-		#context.set_source_rgb(0,0,0)
-		#context.select_font_face("Sans",cairo.FONT_SLANT_NORMAL,cairo.FONT_WEIGHT_NORMAL)
-		#context.set_font_size(10.0)
-		#context.set_line_width(1)
-		#i = 15
 		self.days(context)		
-		#for f in self.forecast[0:5]:
-		#	context.set_source_rgb(0,0,0)
-		#	self.draw_rounded_rect(context,i,5,70,100,8)
-		#	context.fill()			
-		#	context.set_source_rgba(0.6,0.7,1.0,1.0)
-		#	self.draw_rounded_rect(context,i+1,19,68,72,3)
-		#	context.fill()
-		#	context.move_to(i+5,15)
-		#	context.set_source_rgba(1,1,1)
-		#	day = weathertext.WeatherText.day_of_week[f.day_of_week]
-		#	context.show_text(day)
-		#	icon_name=self.icons.day_icons[f.condition_code]
-		#	icon = gdk.pixbuf_new_from_file(icon_name)
-		#	scaled = icon.scale_simple(55,55,gdk.INTERP_BILINEAR)
-		#	context.set_source_pixbuf(scaled,i+8,27)
-		#	context.fill()
-		#	context.paint()
-		#	context.move_to(i+11,102)
-		#	context.set_source_rgba(1.0,0.45,0.45,1.0)
-		#	context.show_text(f.high + u"\u00B0")
-		#	context.move_to(i+40,102)
-		#	context.set_source_rgba(0.45,0.45,1.0,1.0)
-		#	context.show_text(f.low + u"\u00B0")
-		#	i = i + 75
 		context.set_source_rgb(0.0,0.0,0.0)
 		# approximate the location of this string
 		length = len(_("Weather data provided by weather.com"))

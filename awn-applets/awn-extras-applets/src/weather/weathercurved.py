@@ -20,16 +20,18 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 #
+import os
 import gtk
 from gtk import gdk
 import cairo
 import wnck
 import weathericons
+import weathertext
 APP="awn-weather-applet"
-DIR="locale"
+DIR=os.path.dirname (__file__) + '/locale'
 import locale
 import gettext
-locale.setlocale(locale.LC_ALL, '')
+#locale.setlocale(locale.LC_ALL, '')
 gettext.bindtextdomain(APP, DIR)
 gettext.textdomain(APP)
 _ = gettext.gettext
@@ -114,13 +116,12 @@ class WeatherDialog(gtk.DrawingArea):
 
 	def get_text_width(self, context, text, maxwidth):
 		potential_text = text
-		text_width = context.text_extents(potential_text)[2]
+		text_width = context.text_extents(potential_text.encode('ascii','replace'))[2]
 		end = -1
 		while text_width > maxwidth:
 			end -= 1
-			potential_text = text[:end] + '...'
-			text_width = context.text_extents(potential_text)[2]
-
+			potential_text = text.encode('ascii','replace')[:end] + '...'
+			text_width = context.text_extents(potential_text.encode('ascii','replace'))[2]
 		return potential_text, text_width
 
 	def draw_day(self,context,x,y,f):
@@ -148,12 +149,11 @@ class WeatherDialog(gtk.DrawingArea):
 		context.set_font_size(12.0)
 		context.set_line_width(1)
 
+		day_name = _(f.day_of_week)
 		if f == self.forecast[0]:
 			day_name = _("Today")
 		elif f == self.forecast[1]:
 			day_name = _("Tomorrow")
-		else:
-			f.day_of_week
 		day_name, day_width = self.get_text_width(context, day_name, 999)
 		text_x = rect_x + (rect_width - day_width)/2
 		
@@ -175,11 +175,12 @@ class WeatherDialog(gtk.DrawingArea):
 		context.paint()
 
 		## Weather condition
+		condition_text = weathertext.WeatherText.conditions_text[f.condition_code]
 		context.select_font_face("Sans",cairo.FONT_SLANT_NORMAL,cairo.FONT_WEIGHT_NORMAL)
 		context.set_font_size(9.0)
 		context.set_line_width(1)
 		
-		condition_text, text_width = self.get_text_width(context, f.condition_text, rect_width-5)			
+		condition_text, text_width = self.get_text_width(context, condition_text, rect_width-5)			
 		startx = (rect_width - text_width) / 2
 		## Text Shadow
 		context.set_source_rgb(0,0,0)

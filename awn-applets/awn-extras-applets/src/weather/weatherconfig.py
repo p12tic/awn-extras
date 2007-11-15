@@ -20,6 +20,7 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 #
+import os
 import gtk
 from gtk import gdk
 import cairo
@@ -28,7 +29,7 @@ import weathericons
 import xml.dom.minidom
 import urllib
 APP="awn-weather-applet"
-DIR="locale"
+DIR=os.path.dirname (__file__) + '/locale'
 import locale
 import gettext
 #locale.setlocale(locale.LC_ALL, '')

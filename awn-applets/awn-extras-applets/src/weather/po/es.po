@@ -116,7 +116,7 @@ msgstr "Cambiar el topónimo"
 
 #: weatherdialog.py:82
 msgid "Weather data provided by weather.com"
-msgstr "Los datos tiempo proporcionaron cerca weather.com"
+msgstr "Los datos del tiempo son proporcionados gracias a weather.com"
 
 #: weathermap.py:50
 msgid "Weather Map"
@@ -283,6 +283,14 @@ msgstr "Nieve disperso"
 #: weathertext.py:90
 msgid "N/A"
 msgstr "Desconocido"
+
+#: weathertext.py:88
+msgid "Today"
+msgstr "hoy"
+
+#: weathertext.py:88
+msgid "Tomorrow"
+msgstr "mañana"
 
 #: weathertext.py:88
 msgid "Monday"

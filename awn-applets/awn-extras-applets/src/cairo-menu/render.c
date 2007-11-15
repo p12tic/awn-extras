@@ -473,16 +473,6 @@ static gboolean _enter_notify_event(GtkWidget *widget,GdkEventCrossing *event,Mo
 	int new_x;
 	new_x=widget->allocation.x+widget->allocation.width*0.8;
 	
-	printf("subwidget->allocation.x=%d\n",subwidget->allocation.x);	
-	printf("subwidget->allocation.width=%d\n",subwidget->allocation.width);
-	printf("subwidget->allocation.height=%d\n",subwidget->allocation.height);
-	printf("G_Fixed->allocation.y=%d\n",G_Fixed->allocation.y);			
-	printf("G_Fixed->allocation.width=%d\n",G_Fixed->allocation.width);		
-	printf("G_Fixed->allocation.height=%d\n",G_Fixed->allocation.height);	
-	printf("widget->allocation.x=%d\n",  widget->allocation.x);		
-	printf("subwidget->allocation.x+subwidget->allocation.width=%d\n",subwidget->allocation.x+subwidget->allocation.width);
-	printf("G_Fixed->allocation.width+subwidget->allocation.width*0.4=%d\n",(int)(G_Fixed->allocation.width+subwidget->allocation.width*0.4));
-	
 	if (new_x+subwidget->allocation.width > G_Fixed->allocation.width+subwidget->allocation.width*0.4)
 	{
 		new_x=widget->allocation.x-subwidget->allocation.width+G_cairo_menu_conf.text_size*4;

@@ -79,9 +79,9 @@ class FolderBackend(Backend):
                 options = gnomevfs.XFER_REMOVESOURCE
             else:
                 return None
-            options |= gnomevfs.XFER_FOLLOW_LINKS
-            options |= gnomevfs.XFER_RECURSIVE
-            options |= gnomevfs.XFER_FOLLOW_LINKS_RECURSIVE
+#            options |= gnomevfs.XFER_FOLLOW_LINKS
+#            options |= gnomevfs.XFER_RECURSIVE
+#            options |= gnomevfs.XFER_FOLLOW_LINKS_RECURSIVE
             GUITransfer(src_lst, dst_lst, options)
 
             return Backend.add(self, vfs_uri_lst)

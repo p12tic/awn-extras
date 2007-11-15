@@ -27,7 +27,6 @@
 #define GKEY_BACKEND "backend"
 #define GKEY_BACKEND_TYPE "backend_type"
 #define GKEY_FILE_OPERATIONS "file_operations"
-#define GKEY_TRASH_DIRS "trash_dirs"
 #define GKEY_BROWSING "browsing"
 #define GKEY_COMPOSITE "composite_icon"
 #define GKEY_ICON_EMPTY "applet_icon_empty"
@@ -41,89 +40,15 @@ typedef struct {
   GtkWidget *hbox;
 } Trasher;
 
-enum
-{
-  ADD_VOLUME,
-  DEL_VOLUME
-};
-
 static GConfClient *client = NULL;
-static GnomeVFSVolumeMonitor *monitor = NULL;
 static gchar *desktop_path = NULL;
 static gchar *key_prefix = "/apps/avant-window-navigator/applets/trasher";
 
 static void
-volume_sync_with_gconf(GnomeVFSAsyncHandle *handle, GList *results, gpointer data){
-
-  gchar *key = g_strdup_printf("%s/%s", key_prefix, GKEY_TRASH_DIRS);
-  GSList *list = gconf_client_get_list(client, key, GCONF_VALUE_STRING, NULL);
-  GSList *entry;
-  GList *element;
-
-  for (element = results; element != NULL; element = element->next) {
-    GnomeVFSFindDirectoryResult *result_item = (GnomeVFSFindDirectoryResult *)element->data;
-
-    if (result_item->result == GNOME_VFS_OK) {
-      for(entry = list; entry != NULL; entry = entry->next){
-        GnomeVFSURI *data_uri = gnome_vfs_uri_new((gchar *)entry->data);
-        if (gnome_vfs_uri_equal(data_uri, result_item->uri)){
-          list = g_slist_delete_link(list, entry);
-        }
-      }
-      if(GPOINTER_TO_INT(data) == ADD_VOLUME){
-        list = g_slist_prepend(list,
-            gnome_vfs_uri_to_string(result_item->uri, GNOME_VFS_URI_HIDE_PASSWORD));
-      }
-    }
-  }
-  gconf_client_set_list(client, key, GCONF_VALUE_STRING, list, NULL);
-  g_slist_free(list);
-}
-
-static void
-volume_find_trash(GnomeVFSVolume *volume, gint operation)
-{
-  if (!gnome_vfs_volume_handles_trash(volume))
-    return;
-
-  /* get the mount point for this volume */
-  gchar *uri_str = gnome_vfs_volume_get_activation_uri (volume);
-  GnomeVFSURI *mount_uri = gnome_vfs_uri_new (uri_str);
-  GnomeVFSURI *trash_uri = NULL;
-  g_free (uri_str);
-
-  if(mount_uri != NULL){
-    GnomeVFSAsyncHandle *handle;
-    GList *near_uri_list = NULL;
-    near_uri_list = g_list_append(near_uri_list, mount_uri);
-    gnome_vfs_async_find_directory(
-        &handle,
-        near_uri_list,
-        GNOME_VFS_DIRECTORY_KIND_TRASH,
-        FALSE, TRUE, 0777,
-        GNOME_VFS_PRIORITY_DEFAULT,
-        volume_sync_with_gconf,
-        GINT_TO_POINTER(operation));
-    gnome_vfs_uri_unref (mount_uri);
-  }
- 
-}
-
-static void
-volumes_initialization(GtkWidget *widget, gpointer user_data)
+trasher_initialization(GtkWidget *widget, gpointer user_data)
 {
   Trasher *app = user_data;
-
-  gchar *key = g_strdup_printf("%s/%s", key_prefix, GKEY_TRASH_DIRS);
-  gconf_client_unset(client, key, NULL);
-
-  GList *volumes = gnome_vfs_volume_monitor_get_mounted_volumes(monitor);
-  GList *vlist = NULL;
-  for(vlist = volumes; vlist != NULL; vlist = g_list_next(vlist)){
-    GnomeVFSVolume *volume = vlist->data;
-    volume_find_trash(volume, ADD_VOLUME);
-  }
-  g_list_free(volumes);
+  gchar *key = NULL;
 
   // Set "required" gconf keys
   gconf_client_set_string(client,
@@ -172,22 +97,6 @@ volumes_initialization(GtkWidget *widget, gpointer user_data)
   g_spawn_command_line_async (exec, NULL);
 }
 
-static void
-volume_mounted_cb(  GnomeVFSVolumeMonitor *volume_monitor,
-                    GnomeVFSVolume        *volume,
-                    gpointer               user_data)
-{
-  volume_find_trash(volume, ADD_VOLUME);
-}
-
-static void
-volume_pre_unmount_cb(  GnomeVFSVolumeMonitor *volume_monitor,
-                        GnomeVFSVolume        *volume,
-                        gpointer               user_data)
-{
-  volume_find_trash(volume, DEL_VOLUME);
-}
-
 AwnApplet*
 awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
 {
@@ -195,11 +104,6 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
   AwnApplet *applet = awn_applet_new( uid, orient, height );
   Trasher *app = g_new0(Trasher, 1);
   app->applet = applet;
-
-  // Monitor the vfs volumes and connect to its signals
-  monitor = gnome_vfs_get_volume_monitor();
-  g_signal_connect(monitor, "volume-pre-unmount", G_CALLBACK(volume_pre_unmount_cb), app);
-  g_signal_connect(monitor, "volume-mounted", G_CALLBACK(volume_mounted_cb), app);
 
   // Get a reference to the gconf client
   client = gconf_client_get_default();
@@ -221,7 +125,7 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
   gtk_widget_show_all(GTK_WIDGET(applet));
 
   // We first have to create (return) this applet, before we can add sockets
-  g_signal_connect_after(applet, "realize", G_CALLBACK(volumes_initialization), (gpointer)app);
+  g_signal_connect_after(applet, "realize", G_CALLBACK(trasher_initialization), (gpointer)app);
   return applet;
 }
 

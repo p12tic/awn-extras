@@ -108,7 +108,6 @@ class WeatherDialog(gtk.DrawingArea):
 			day_name = _("Tomorrow")
 		 
 		day_name, day_width = self.get_text_width(context, day_name, 999)
-		print rect_width, day_width
 		text_x = rect_x + (rect_width - day_width)/2
 		text_y = rect_y - 10
 		

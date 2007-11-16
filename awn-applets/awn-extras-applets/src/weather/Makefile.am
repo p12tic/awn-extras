@@ -1,4 +1,4 @@
-SUBDIRS = images
+SUBDIRS = images locale
 
 weather_DATA = 				\
 		weather.py		\

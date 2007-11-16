@@ -167,6 +167,17 @@ src/tsclient-applet/Makefile
 src/tsclient-applet/icons/Makefile
 src/weather/Makefile
 src/weather/images/Makefile
+src/weather/locale/Makefile
+src/weather/locale/es/Makefile
+src/weather/locale/es/LC_MESSAGES/Makefile
+src/weather/locale/fr/Makefile
+src/weather/locale/fr/LC_MESSAGES/Makefile
+src/weather/locale/nb/Makefile
+src/weather/locale/nb/LC_MESSAGES/Makefile
+src/weather/locale/nn/Makefile
+src/weather/locale/nn/LC_MESSAGES/Makefile
+src/weather/locale/pt/Makefile
+src/weather/locale/pt/LC_MESSAGES/Makefile
 src/wobblyzini/Makefile
 src/wobblyzini/icons/Makefile
 po/Makefile.in

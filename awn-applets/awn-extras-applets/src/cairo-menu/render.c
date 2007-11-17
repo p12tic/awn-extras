@@ -761,6 +761,30 @@ void measure_width(Menu_list_item * menu_item,int * max_width)
 		}			
 	}
 }
+
+
+static gboolean _button_do_drive_event(GtkWidget *widget,GdkEventButton *event,Menu_list_item * menu_item) 
+{
+	GError *err=NULL;
+	gchar * cmd;
+	gtk_widget_hide(G_Fixed->parent);
+	if (menu_item->drive_prep)
+	{
+		if ( !menu_item->drive_prep(menu_item,G_cairo_menu_conf.filemanager) )
+		{
+			//drive_prep failed. or it has taken care of opening file (if mount async op)
+			return TRUE;
+		}
+	}		
+	else
+	{
+		cmd=g_strdup_printf("%s %s",G_cairo_menu_conf.filemanager,menu_item->mount_point);
+		g_spawn_command_line_async(cmd,&err);
+		g_free(cmd);
+	}	
+	return TRUE;
+}          
+
                                               
 void render_menu_widgets(Menu_list_item * menu_item,GtkWidget * box)
 {
@@ -789,6 +813,11 @@ void render_menu_widgets(Menu_list_item * menu_item,GtkWidget * box)
 				Xpos=Xpos+G_cairo_menu_conf.text_size*G_cairo_menu_conf.menu_item_text_len*4/5;//FIXME
 				gtk_fixed_put(G_Fixed,newbox,Xpos,0);					
 				g_slist_foreach(menu_item->sublist,render_menu_widgets,newbox);				
+	
+				/*if monitor is set then we call it to initialize callbacks.
+				whenever there is a change to the contents of this dir
+				the first arg(rerender) will be called with an updated list
+				of menu items and the vbox they are to be in*/
 				if (menu_item->monitor)
 				{				
 					menu_item->monitor(rerender,&menu_item->sublist,newbox);
@@ -834,6 +863,35 @@ void render_menu_widgets(Menu_list_item * menu_item,GtkWidget * box)
 				{			
 					g_signal_connect (G_OBJECT (menu_item->widget), "button-press-event",G_CALLBACK (_button_do_event), menu_item);
 				}					
+			}				
+			break;			
+		case MENU_ITEM_DRIVE:
+			{
+				render_entry(menu_item,max_width);
+				#if GTK_CHECK_VERSION(2,12,0)
+				if (menu_item->comment)
+					gtk_widget_set_tooltip_text(menu_item->widget,menu_item->comment);
+				#endif
+				Mouseover_data	*data;				
+				data=g_malloc(sizeof(Mouseover_data));
+				data->subwidget=box;
+				data->normal=menu_item->normal;
+				data->hover=menu_item->hover;
+				data->click=menu_item->click;				
+				data->misc=NULL;
+				g_signal_connect(menu_item->widget, "enter-notify-event", G_CALLBACK (_enter_notify_event_entry), data);
+				g_signal_connect(menu_item->widget, "leave-notify-event", G_CALLBACK (_leave_notify_event_entry), data);
+				#if 1
+				if (G_cairo_menu_conf.on_button_release)				
+				{
+					g_signal_connect (G_OBJECT(menu_item->widget), "button-press-event",G_CALLBACK ( _button_clicked_ignore),data);
+					g_signal_connect (G_OBJECT (menu_item->widget), "button-release-event",G_CALLBACK (_button_do_drive_event), menu_item);
+				}
+				else
+				{			
+					g_signal_connect (G_OBJECT (menu_item->widget), "button-press-event",G_CALLBACK (_button_do_drive_event), menu_item);
+				}	
+				#endif				
 			}				
 			break;			
 		case MENU_ITEM_SEARCH:

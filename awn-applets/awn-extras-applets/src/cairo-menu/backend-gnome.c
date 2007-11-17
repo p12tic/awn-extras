@@ -33,18 +33,34 @@
 #include <assert.h>
 #include <libgen.h>
 #include <ctype.h>
+#include <libnotify/notify.h>
 
 #include "menu_list_item.h"
 
 
 char * G_file_manager;
 
+
+static gchar *_G_mount_result_filemanager=NULL;
+typedef struct
+{
+	Menu_list_item ** data;
+	void(* callback)(gpointer,gpointer);
+	GtkWidget * box;
+
+}Monitor_places;
+
+Monitor_places		* Monitor_place=NULL;
+
+
+
 static void print_directory (GMenuTreeDirectory *directory);
 static void print_entry (GMenuTreeEntry *entry,const char *path);
 static char *make_path (GMenuTreeDirectory *directory);
 static void append_directory_path (GMenuTreeDirectory *directory,GString *path);
+static void update_places(Menu_list_item **p,char* file_manager);
 
-
+static void _do_update_places(Monitor_places * user_data);
 
 
 static void
@@ -293,8 +309,90 @@ fill_er_up(GMenuTreeDirectory *directory,GSList**p)
 }
 
 
-void update_places(Menu_list_item **p,char* file_manager)
+
+
+
+
+
+
+void _mount_result(gboolean succeeded,char *error,char *detailed_error,	char* comment)
 {
+	gchar * mess;
+	if (!succeeded)
+	{
+		mess=g_strdup_printf("Mount Failed\nError:  %s\n*s",comment);	
+		display_message("Cairo Menu", mess,0);	
+		g_free(mess);
+	}
+	g_free(comment);
+}
+
+gboolean _mount_connected(Menu_list_item * p,char * filemanager)
+{
+
+	char * cmd;
+	char * mess;
+	_G_mount_result_filemanager=filemanager;
+	
+	mess=g_strdup_printf("%s is not mounted. \nAttempting to mount",p->name);
+	display_message("Cairo Menu", mess,4000);	
+	gnome_vfs_drive_mount(p->drive,_mount_result,g_strdup(p->comment) );	
+	g_free(mess);
+	return FALSE;
+}
+
+
+GnomeVFSDrive  *G_Drive_Is_GOING=NULL;	//the documentation LIES.  this is why this is here.
+
+void _vfs_changed(GnomeVFSDrive  *drive,GnomeVFSVolume *volume,gpointer null)
+{
+	G_Drive_Is_GOING=drive;
+	_do_update_places(Monitor_place);
+	G_Drive_Is_GOING=NULL;
+}
+
+void _fillin_connected(GnomeVFSDrive * drive,Menu_list_item ** p)
+{
+ 	
+//	printf("drive=%s\n",gnome_vfs_drive_get_display_name(drive));
+	Menu_list_item * item;	
+	Menu_list_item *sublist=*p;
+	char * dev_path;	
+	
+	item=g_malloc(sizeof(Menu_list_item));	
+	
+	item->item_type=MENU_ITEM_DRIVE;	
+	item->name=g_strdup(gnome_vfs_drive_get_display_name(drive));
+	item->icon=g_strdup(gnome_vfs_drive_get_icon(drive));	
+	item->drive=drive;
+	// FIXME gnome_vfs_drive_get_mounted_volume is deprecated.
+	if ( gnome_vfs_drive_get_mounted_volume(drive) && !gnome_vfs_drive_compare(G_Drive_Is_GOING,drive) )
+	{
+		GnomeVFSVolume* volume;		
+		volume=gnome_vfs_drive_get_mounted_volume(drive);
+		item->mount_point=gnome_vfs_volume_get_activation_uri(volume);
+		item->drive_prep=NULL;
+		gnome_vfs_volume_unref (volume)	;	
+	}
+	else
+	{
+		item->mount_point=g_strdup("Unmounted");		
+		item->drive_prep=_mount_connected;		
+	}		
+
+	dev_path=gnome_vfs_drive_get_device_path(drive);
+	item->comment=g_strdup_printf("%s\n%s\n%s",item->name,item->mount_point,dev_path ) ;
+	item->desktop=g_strdup("");			
+	sublist=g_slist_append(sublist,item);
+	g_free(dev_path);
+	
+	*p=sublist;
+}	
+
+
+static void update_places(Menu_list_item **p,char* file_manager)
+{
+	static GnomeVFSVolumeMonitor* vfsvolumes=NULL;
 	Menu_list_item * sublist=*p;
 	Menu_list_item * item;	
 	item=g_malloc(sizeof(Menu_list_item));	
@@ -317,6 +415,22 @@ void update_places(Menu_list_item **p,char* file_manager)
 	item->comment=g_strdup("Root File System");
 	item->desktop=g_strdup("");			
 	sublist=g_slist_append(sublist,item);
+
+//mount monitor
+	if (!vfsvolumes)
+	{	
+		vfsvolumes=gnome_vfs_get_volume_monitor(); 
+		g_signal_connect (G_OBJECT(vfsvolumes),"volume-mounted",G_CALLBACK (_vfs_changed),NULL);
+		g_signal_connect (G_OBJECT(vfsvolumes),"volume-unmounted",G_CALLBACK (_vfs_changed),NULL);
+		g_signal_connect (G_OBJECT(vfsvolumes),"drive-disconnected" ,G_CALLBACK (_vfs_changed),NULL);
+		g_signal_connect (G_OBJECT(vfsvolumes),"drive-connected",G_CALLBACK (_vfs_changed),NULL);			
+	}		
+	GList *connected=gnome_vfs_volume_monitor_get_connected_drives(vfsvolumes);	
+	if (connected)
+		g_list_foreach(connected,_fillin_connected,&sublist);
+	g_list_free(connected);
+	
+//bookmarks	
 	FILE*	handle;
 	char *  filename=g_strdup_printf("%s/.gtk-bookmarks",homedir);
 	handle=g_fopen(filename,"r");
@@ -356,19 +470,19 @@ void update_places(Menu_list_item **p,char* file_manager)
 		fclose(handle);
 		g_free(filename);
 	}		
+	else
+	{
+		printf("Unable to open bookmark file: %s/.gtk-bookmarks\n",homedir);
+	}	
 	*p=sublist;	
 }
 
-typedef struct
-{
-	Menu_list_item ** data;
-	void(* callback)(gpointer,gpointer);
-	GtkWidget * box;
-
-}Monitor_places;
-
 void free_menu_list_item(Menu_list_item * item,gpointer null)
 {
+/*	if (item->item_type==MENU_ITEM_DRIVE)
+	{
+		gnome_vfs_drive_unref(item->drive);
+	}*/
 	g_free(item->name);
 	g_free(item->icon);
 	g_free(item->exec);
@@ -377,12 +491,25 @@ void free_menu_list_item(Menu_list_item * item,gpointer null)
 //	gboolean	launch_in_terminal;
 //	void 	*	parent_menu;	
 //	GSList		*sublist;	
-//	gtk_widget_destroy(item->widget);
+	gtk_widget_destroy(item->widget);
 	gtk_widget_destroy(item->normal);
 	gtk_widget_destroy(item->hover);
 //	gtk_widget_destroy(item->click);			
 	
 }
+
+
+static void _do_update_places(Monitor_places * user_data)
+{
+	g_slist_foreach (*(user_data->data),free_menu_list_item,NULL);	
+	g_slist_free(*(user_data->data));
+	*(user_data->data)=NULL;
+	update_places(user_data->data,G_file_manager);	//FIXME
+	user_data->callback(user_data->data,user_data->box);
+
+
+}
+
 
 static void monitor_places_callback(GnomeVFSMonitorHandle *handle,
                                  const gchar *monitor_uri,
@@ -391,11 +518,7 @@ static void monitor_places_callback(GnomeVFSMonitorHandle *handle,
                                  Monitor_places * user_data)
 {
 //	gtk_widget_destroy(user_data->box);
-	g_slist_foreach (*(user_data->data),free_menu_list_item,NULL);	
-	g_slist_free(*(user_data->data));
-	*(user_data->data)=NULL;
-	update_places(user_data->data,G_file_manager);	//FIXME
-	user_data->callback(user_data->data,user_data->box);
+	_do_update_places(user_data);
 }                                 
 
 
@@ -403,7 +526,8 @@ static void monitor_places_callback(GnomeVFSMonitorHandle *handle,
 static void monitor_places(gpointer callback, gpointer data,gpointer box)
 {
 	GnomeVFSMonitorHandle * handle;
-	Monitor_places		*Monitor_place=g_malloc(sizeof(Monitor_places));
+
+	Monitor_place=g_malloc(sizeof(Monitor_places));
 	Monitor_place->data=data;
 	Monitor_place->callback=callback;
 	Monitor_place->box=box;
@@ -555,5 +679,37 @@ GSList* get_menu_data(gboolean show_search,gboolean show_run,gboolean show_place
 	}	
 	return data;
 }	
+
+
+gboolean display_message(gchar * summary, gchar * body,glong timeout)
+{
+	NotifyNotification *notify;	
+	gchar *type = NULL;
+	gchar *icon_str = NULL;
+	glong expire_timeout = NOTIFY_EXPIRES_DEFAULT;
+	printf("display_message\n");
+	if (timeout>0)
+	{
+		expire_timeout=timeout;
+	}			
+
+    NotifyUrgency urgency = NOTIFY_URGENCY_NORMAL;
+    GError *error = NULL;    
+
+    notify_init("notify-send");
+	notify = notify_notification_new(summary, body, icon_str, NULL);
+	if (notify)
+	{
+		notify_notification_set_category(notify, type);
+		notify_notification_set_urgency(notify, urgency);
+		notify_notification_set_timeout(notify, expire_timeout);    
+		notify_notification_show(notify, NULL);
+
+		g_object_unref(G_OBJECT(notify));
+	}		
+	notify_uninit();
+  	
+    return FALSE;
+}
 
 

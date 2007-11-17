@@ -109,12 +109,13 @@ static gboolean _button_clicked_event (GtkWidget *widget, GdkEventButton *event,
 }
 
 
-int G_Height=40;
+int G_Height;
 static _build_away(gpointer null)
 {
 	GdkPixbuf *icon;
 	Cairo_main_menu * menu;
 	menu=dialog_new(G_applet);
+	
 	gtk_widget_show_all(menu->mainwindow);	
 
 	gtk_widget_show(menu->mainwindow);	
@@ -145,6 +146,12 @@ static _build_away(gpointer null)
 	}	
 	if (icon)                      
 	{
+    	if(gdk_pixbuf_get_height(icon) !=G_Height)
+    	{
+    		GdkPixbuf *oldpbuf=icon; 		
+	    	icon=gdk_pixbuf_scale_simple(oldpbuf,G_Height-2,G_Height-2,GDK_INTERP_HYPER);  
+	    	g_object_unref(oldpbuf);
+		}	    	
 		awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (G_applet),icon);				
 	}		
 	else

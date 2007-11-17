@@ -35,7 +35,8 @@ enum
   
   MENU_ITEM_SEARCH,
   MENU_ITEM_RUN,
-  MENU_ITEM_BLANK    
+  MENU_ITEM_BLANK,
+  MENU_ITEM_DRIVE    
 };
 
 typedef struct
@@ -43,22 +44,32 @@ typedef struct
 	int			item_type;
 	gchar 	*	name;
 	gchar 	*	icon;
-	gchar 	*	exec;	
+	union
+	{
+		gchar 	*	exec;	
+		gchar	*	mount_point;
+	};		
 	gchar 	*	comment;
 	gchar 	*	desktop;
 	gboolean	launch_in_terminal;
-	void 	*	parent_menu;	
+	gpointer	parent_menu;	
 	GtkWidget	*widget;
 	GtkWidget	*normal;
 	GtkWidget	*hover;	
 	GtkWidget	*click;	
-	GSList		*sublist;	
+	gpointer		*drive;
+	union
+	{
+		GSList			*sublist;	
+
+	};
 	union
 	{
 		GtkWidget	*text_entry;			
 		GtkWidget	*search_entry;		
 		GtkWidget	*run_entry;
 		void (*monitor)(gpointer callback, gpointer data,gpointer box);
+		gboolean (*drive_prep)(gpointer menu_item,gchar * filemanager);
 		gpointer null;
 				
 	}	;	

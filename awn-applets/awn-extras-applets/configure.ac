@@ -97,6 +97,8 @@ AM_GCONF_SOURCE_2
 AC_OUTPUT([
 Makefile
 src/Makefile
+src/arss/Makefile
+src/arss/Core/Makefile
 src/awn-meebo/Makefile
 src/awn-meebo/profile/Makefile
 src/awn-notification-daemon/Makefile

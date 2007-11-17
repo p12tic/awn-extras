@@ -1,4 +1,5 @@
 SUBDIRS =			\
+	arss			\
 	awnsystemmonitor	\
 	awn-notification-daemon \
 	battery-applet		\

@@ -1,0 +1,16 @@
+A python feed launcher. Made for launching stories not reading them. 
+Requires feedparser and xdg-open (deb:python-feedparser, xdg-utils)
+
+Database is stored here: $HOME/.config/awn/applets/.[version].feeddatabase
+
+Use:
+Click to read
+Right click and select update to update
+
+Add feeds too the feedlist file ($HOME/.config/awn/applets/.feedlist)
+in this format(example follows, see feedlist_default):
+
+feed1url
+feed2url
+
+

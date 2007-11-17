@@ -320,7 +320,7 @@ void _mount_result(gboolean succeeded,char *error,char *detailed_error,	char* co
 	gchar * mess;
 	if (!succeeded)
 	{
-		mess=g_strdup_printf("Mount Failed\nError:  %s\n*s",comment);	
+		mess=g_strdup_printf("Mount Failed\n%s\nError:  %s\n",comment,error);	
 		display_message("Cairo Menu", mess,0);	
 		g_free(mess);
 	}
@@ -342,13 +342,33 @@ gboolean _mount_connected(Menu_list_item * p,char * filemanager)
 }
 
 
-GnomeVFSDrive  *G_Drive_Is_GOING=NULL;	//the documentation LIES.  this is why this is here.
 
-void _vfs_changed(GnomeVFSDrive  *drive,GnomeVFSVolume *volume,gpointer null)
+gboolean _do_update_places_wrapper(Monitor_places * p)
 {
-	G_Drive_Is_GOING=drive;
+	_do_update_places(p);
+	return FALSE;	
+}	
+
+
+
+void _vfs_changed_v_u(GnomeVFSDrive  *drive,GnomeVFSVolume *volume,gpointer null)
+{
+	g_timeout_add(500,_do_update_places_wrapper,Monitor_place);
+}
+
+void _vfs_changed_v_m(GnomeVFSDrive  *drive,GnomeVFSVolume *volume,gpointer null)
+{
+	g_timeout_add(500,_do_update_places_wrapper,Monitor_place);
+}
+
+void _vfs_changed_d_d(GnomeVFSDrive  *drive,GnomeVFSVolume *volume,gpointer null)
+{
 	_do_update_places(Monitor_place);
-	G_Drive_Is_GOING=NULL;
+}
+
+void _vfs_changed_d_c(GnomeVFSDrive  *drive,GnomeVFSVolume *volume,gpointer null)
+{
+	_do_update_places(Monitor_place);
 }
 
 void _fillin_connected(GnomeVFSDrive * drive,Menu_list_item ** p)
@@ -366,8 +386,12 @@ void _fillin_connected(GnomeVFSDrive * drive,Menu_list_item ** p)
 	item->icon=g_strdup(gnome_vfs_drive_get_icon(drive));	
 	item->drive=drive;
 	// FIXME gnome_vfs_drive_get_mounted_volume is deprecated.
-	if ( gnome_vfs_drive_get_mounted_volume(drive) && !gnome_vfs_drive_compare(G_Drive_Is_GOING,drive) )
+	
+
+
+	if ( gnome_vfs_drive_get_mounted_volume(drive) )
 	{
+
 		GnomeVFSVolume* volume;		
 		volume=gnome_vfs_drive_get_mounted_volume(drive);
 		item->mount_point=gnome_vfs_volume_get_activation_uri(volume);
@@ -420,10 +444,10 @@ static void update_places(Menu_list_item **p,char* file_manager)
 	if (!vfsvolumes)
 	{	
 		vfsvolumes=gnome_vfs_get_volume_monitor(); 
-		g_signal_connect (G_OBJECT(vfsvolumes),"volume-mounted",G_CALLBACK (_vfs_changed),NULL);
-		g_signal_connect (G_OBJECT(vfsvolumes),"volume-unmounted",G_CALLBACK (_vfs_changed),NULL);
-		g_signal_connect (G_OBJECT(vfsvolumes),"drive-disconnected" ,G_CALLBACK (_vfs_changed),NULL);
-		g_signal_connect (G_OBJECT(vfsvolumes),"drive-connected",G_CALLBACK (_vfs_changed),NULL);			
+		g_signal_connect (G_OBJECT(vfsvolumes),"volume-mounted",G_CALLBACK (_vfs_changed_v_m),NULL);
+		g_signal_connect (G_OBJECT(vfsvolumes),"volume-unmounted",G_CALLBACK (_vfs_changed_v_u),NULL);
+		g_signal_connect (G_OBJECT(vfsvolumes),"drive-disconnected" ,G_CALLBACK (_vfs_changed_d_d),NULL);
+		g_signal_connect (G_OBJECT(vfsvolumes),"drive-connected",G_CALLBACK (_vfs_changed_d_c),NULL);			
 	}		
 	GList *connected=gnome_vfs_volume_monitor_get_connected_drives(vfsvolumes);	
 	if (connected)

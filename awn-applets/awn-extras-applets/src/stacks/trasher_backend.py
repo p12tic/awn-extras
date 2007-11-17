@@ -43,14 +43,18 @@ class TrashBackend(Backend):
         for vol in self.vol_monitor.get_mounted_volumes():
             self._vol_mounted_cb(vol)
         self.vol_monitor.connect("volume_mounted", lambda v, d: self._vol_mounted_cb)
+        self.vol_monitor.connect("volume_pre_unmount", lambda v, d: self._vol_unmounted_cb)
 
     def _create(self):
         return
 
     def _vol_unmounted_cb(self, volume):
-        uri = volume.get_activation_uri()
+        uri = VfsUri(volume.get_activation_uri())
         try:
             dir = self.trash_dirs[uri]
+            vfs_uris = self.read_from_uri(dir)
+            if vfs_uris:
+                self.remove(vfs_uris)
             #mon = self.trash_monitors[uri]
             #mon.close()
             del self.trash_dirs[uri]
@@ -60,10 +64,10 @@ class TrashBackend(Backend):
 
 
     def _vol_mounted_cb(self, volume):
-        uri = volume.get_activation_uri()
-        if volume.handles_trash() and uri not in self.trash_dirs:
+        uri = VfsUri(volume.get_activation_uri())
+        if volume.handles_trash():
             gnomevfs.async.find_directory(
-                    near_uri_list = [gnomevfs.URI(uri)],
+                    near_uri_list = [uri.as_uri()],
                     kind = gnomevfs.DIRECTORY_KIND_TRASH,
                     create_if_needed = True,
                     find_if_needed = True,
@@ -79,15 +83,15 @@ class TrashBackend(Backend):
             if error != None:
                 continue
             trash_uri = VfsUri(str(uri))
-            print "trashdir: ", trash_uri.as_string()
-            if trash_uri in [x.as_uri() for x in self.trash_dirs.values()]:
+            if trash_uri.as_string() in [x.as_string() for x in self.trash_dirs.values()]:
                 continue
             monitor = Monitor(trash_uri)
             monitor.connect("created", self._created_cb)
             monitor.connect("deleted", self._deleted_cb)
             #self.trash_monitors[volume_uri] = monitor
-
-            self.read_from_uri(trash_uri)
+            vfs_uris = self.read_from_uri(trash_uri)
+            if vfs_uris:
+                self.add(vfs_uris)
             self.trash_dirs[volume_uri] = trash_uri
             break
 
@@ -192,7 +196,7 @@ class TrashBackend(Backend):
             dialog.add_action_widget(button, gtk.RESPONSE_ACCEPT)
             dialog.set_default_response(gtk.RESPONSE_ACCEPT)
             if dialog.run() == gtk.RESPONSE_ACCEPT:
-                options = gnomevfs.XFER_DELETE_ITEMS | gnomevfs.EMTPY_DIRECTORIES
+                options = gnomevfs.XFER_DELETE_ITEMS | gnomevfs.EMPTY_DIRECTORIES
                 GUITransfer(unmovable_uri_list, [], options)
 
     def add(self, vfs_uris, action=None):
@@ -232,10 +236,11 @@ class TrashBackend(Backend):
                 fileinfo = handle.next()
             except StopIteration:
                 break
-        if vfs_uris:
-            self.add(vfs_uris)
+        return vfs_uris
 
 
     def read(self):
         for vfs_uri in self.trash_dirs.values():
-            self.read_from_uri(vfs_uri)
+            vfs_uris = self.read_from_uri(vfs_uri)
+            if vfs_uris:
+                self.add(vfs_uris)

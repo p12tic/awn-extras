@@ -72,12 +72,11 @@ class FileBackend(Backend):
 
 
     def add(self, vfs_uris, action=None):
-        pixbuf = Backend.add(self, vfs_uris)
-        if action != None and pixbuf is not None:
+        if action is not None:
             for vfs_uri in vfs_uris:
                 self.handle.seek(0, gnomevfs.SEEK_END)
                 self.handle.write(vfs_uri.as_string() + os.linesep)
-        return pixbuf
+        return Backend.add(self, vfs_uris)
 
 
     def read(self):

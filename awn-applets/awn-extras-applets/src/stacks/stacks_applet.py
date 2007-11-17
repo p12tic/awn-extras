@@ -291,7 +291,7 @@ class StacksApplet (awn.AppletSimple):
     Functions concerning items in the stack
     """
     def item_clear_cb(self, widget, user_data):
-        self.backend.remove(user_data)
+        self.backend.remove([user_data])
 
 
     def item_menu_hide_cb(self, widget):
@@ -303,8 +303,7 @@ class StacksApplet (awn.AppletSimple):
     def item_button_cb(self, widget, event, user_data):
         uri, mimetype = user_data
         if event.button == 3:
-            #self.item_context_menu(uri).popup(None, None, None, event.button, event.time)
-            pass # for now
+            self.item_context_menu(uri).popup(None, None, None, event.button, event.time)
         elif event.button == 1:
             if self.just_dragged:
                 self.just_dragged = False

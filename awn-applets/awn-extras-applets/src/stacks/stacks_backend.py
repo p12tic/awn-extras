@@ -58,10 +58,9 @@ COL_BUTTON = 6
 
 class Backend(gobject.GObject):
 
-    applet = None
-    backend_uri = None
-    store = None
-    icon_size = 0
+    applet = None           # ref to the applet
+    store = None            # store that holds the stack items
+    icon_size = 0           # (current) icon size of the stack items
 
     __gsignals__ = {
         'attention' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
@@ -72,14 +71,12 @@ class Backend(gobject.GObject):
                         (gobject.TYPE_OBJECT,))
     }
 
-
-    def __init__(self, applet, vfs_uri, icon_size):
+    # initialize the backend
+    def __init__(self, applet, icon_size):
         gobject.GObject.__init__(self)
-
+        # set class references
         self.applet = applet
-        self.backend_uri = vfs_uri
         self.icon_size = icon_size
-
         # Setup store to hold the stack items
         self.store = gtk.ListStore( gobject.TYPE_OBJECT,
                                     gobject.TYPE_OBJECT,
@@ -114,6 +111,7 @@ class Backend(gobject.GObject):
             return cmp(n1, n2)
 
 
+    # emits attention signal
     def _get_attention(self):
         self.emit("attention", self.get_type())
 
@@ -121,14 +119,13 @@ class Backend(gobject.GObject):
     def _created_cb(self, widget, vfs_uri):
         assert isinstance(vfs_uri, VfsUri)
         if self.add([vfs_uri]):
-            self._get_attention()
+             self._get_attention()
 
 
     def _deleted_cb(self, widget, vfs_uri):
         assert isinstance(vfs_uri, VfsUri)
         if self.remove([vfs_uri]):
-            self._get_attention()
-
+             self._get_attention()
 
     # add item to the stack
     # -ignores hidden files
@@ -238,7 +235,7 @@ class Backend(gobject.GObject):
 
 
     def open(self):
-        LaunchManager().launch_uri(self.backend_uri.as_string(), None)
+        return
 
 
     def is_empty(self):

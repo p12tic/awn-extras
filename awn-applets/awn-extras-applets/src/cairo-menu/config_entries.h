@@ -49,6 +49,7 @@
 #define GCONF_APPLET_ICON GCONF_MENU "/applet_icon"
 
 #define GCONF_ON_BUTTON_RELEASE GCONF_MENU "/activate_on_release"
+#define GCONF_SHOW_TOOLTIPS GCONF_MENU "/show_tooltips"
 
 #define GCONF_HONOUR_GTK GCONF_MENU "/honour_gtk"
 
@@ -77,6 +78,7 @@ typedef struct
 	double 		menu_item_gradient_factor;
 	gboolean	honour_gtk;
 	gboolean 	on_button_release;
+	gboolean	show_tooltips;
 }Cairo_menu_config;
 
 void read_config(void);

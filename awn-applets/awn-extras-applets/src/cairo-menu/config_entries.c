@@ -195,7 +195,7 @@ void read_config(void)
 		}    		
 		else
 		{
-			svalue=g_strdup("terminal -x less");		
+			svalue=g_strdup("xdg-open");		
 		}
         gconf_client_set_string(gconf_client , GCONF_FILEMANAGER, svalue, NULL );
     }
@@ -223,7 +223,16 @@ void read_config(void)
         gconf_client_set_bool(gconf_client,GCONF_ON_BUTTON_RELEASE,G_cairo_menu_conf.on_button_release,NULL);        
     } 
 
-
+    value=gconf_client_get(gconf_client,GCONF_SHOW_TOOLTIPS,NULL);		
+    if (value)
+    {																		
+        G_cairo_menu_conf.show_tooltips=gconf_client_get_bool(gconf_client,GCONF_SHOW_TOOLTIPS,NULL) ;
+    }
+    else             							
+    {
+		G_cairo_menu_conf.show_tooltips=TRUE;        
+        gconf_client_set_bool(gconf_client,GCONF_SHOW_TOOLTIPS,G_cairo_menu_conf.show_tooltips,NULL);        
+    } 
     
     value=gconf_client_get(gconf_client,GCONF_HONOUR_GTK,NULL);		
     if (value)
@@ -341,6 +350,8 @@ static void _save_config(void)
     gconf_client_set_bool(gconf_client,GCONF_ON_BUTTON_RELEASE,G_cairo_menu_conf.on_button_release,NULL);        
     
     gconf_client_set_bool(gconf_client,GCONF_HONOUR_GTK,G_cairo_menu_conf.honour_gtk,NULL);        
+
+	gconf_client_set_bool(gconf_client,GCONF_SHOW_TOOLTIPS,G_cairo_menu_conf.show_tooltips,NULL);     
 }
 
 static gboolean _press_ok(GtkWidget *widget, GdkEventButton *event,GtkWidget * win)
@@ -403,7 +414,7 @@ int activate(GtkWidget *w,gchar **p)
 {
 	gchar * svalue=*p;
 	g_free(svalue);
-	svalue=g_strdup(gtk_entry_get_text (w) );
+	svalue=g_filename_to_utf8(gtk_entry_get_text (w) , -1, NULL, NULL, NULL);
 	*p=svalue;
 	return FALSE;
 }
@@ -464,6 +475,7 @@ void show_prefs(void)
 	GtkWidget * run=gtk_check_button_new_with_label("Show Run");
 	GtkWidget * fade_in=gtk_check_button_new_with_label("Fade in menu");	
 	GtkWidget * release=gtk_check_button_new_with_label("Activate On Release");
+	GtkWidget * tooltips=gtk_check_button_new_with_label("Show tooltips");	
 	
 	GtkWidget* gtk_off_section=gtk_vbox_new(FALSE,0);	
 	gtk_off_table=gtk_table_new(2,4,FALSE);
@@ -556,6 +568,9 @@ void show_prefs(void)
 	g_signal_connect (G_OBJECT (places), "toggled",G_CALLBACK (_toggle_),&G_cairo_menu_conf.show_places);		
 	gtk_toggle_button_set_active(release,G_cairo_menu_conf.on_button_release);		
 	g_signal_connect (G_OBJECT (release), "toggled",G_CALLBACK (_toggle_),&G_cairo_menu_conf.on_button_release);			
+	gtk_toggle_button_set_active(tooltips,G_cairo_menu_conf.show_tooltips);		
+	g_signal_connect (G_OBJECT (tooltips), "toggled",G_CALLBACK (_toggle_),&G_cairo_menu_conf.show_tooltips);			
+	
 	gtk_toggle_button_set_active(run,G_cairo_menu_conf.show_run);		
 	g_signal_connect (G_OBJECT (run), "toggled",G_CALLBACK (_toggle_),&G_cairo_menu_conf.show_run);		
 	gtk_toggle_button_set_active(fade_in,G_cairo_menu_conf.do_fade);	
@@ -573,6 +588,7 @@ void show_prefs(void)
 	gtk_box_pack_start(GTK_CONTAINER (vbox),run,FALSE,FALSE,0);		
 	gtk_box_pack_start(GTK_CONTAINER (vbox),fade_in,FALSE,FALSE,0);	
 	gtk_box_pack_start(GTK_CONTAINER (vbox),release,FALSE,FALSE,0);			
+	gtk_box_pack_start(GTK_CONTAINER (vbox),tooltips,FALSE,FALSE,0);			
 
 	gtk_box_pack_start(GTK_CONTAINER (vbox),text_table,FALSE,FALSE,0);		
 	gtk_table_attach_defaults(text_table,gtk_label_new("Search command"),0,1,0,1);	

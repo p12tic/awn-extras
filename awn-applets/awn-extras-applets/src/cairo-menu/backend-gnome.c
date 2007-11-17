@@ -59,7 +59,7 @@ static void print_entry (GMenuTreeEntry *entry,const char *path);
 static char *make_path (GMenuTreeDirectory *directory);
 static void append_directory_path (GMenuTreeDirectory *directory,GString *path);
 static void update_places(Menu_list_item **p,char* file_manager);
-
+static Menu_list_item *get_separator(void);
 static void _do_update_places(Monitor_places * user_data);
 
 
@@ -271,6 +271,7 @@ fill_er_up(GMenuTreeDirectory *directory,GSList**p)
 					dir_item->sublist=NULL;
 					data=g_slist_append(data,dir_item);
 					fill_er_up(GMENU_TREE_DIRECTORY (item),&dir_item->sublist);
+					dir_item->sublist=g_slist_prepend(dir_item->sublist,get_separator());	
 				}	
 
 				break;
@@ -414,11 +415,29 @@ void _fillin_connected(GnomeVFSDrive * drive,Menu_list_item ** p)
 }	
 
 
+static Menu_list_item *get_separator(void)
+{
+	Menu_list_item * item;	
+	item=g_malloc(sizeof(Menu_list_item));
+	item->item_type=MENU_ITEM_SEPARATOR;
+	item->name=NULL;
+	item->icon=NULL;
+	item->comment=NULL;		
+	item->sublist=NULL;
+	item->null=NULL;	
+	return item;
+}	
+
 static void update_places(Menu_list_item **p,char* file_manager)
 {
 	static GnomeVFSVolumeMonitor* vfsvolumes=NULL;
 	Menu_list_item * sublist=*p;
 	Menu_list_item * item;	
+
+	
+	sublist=g_slist_append(sublist,get_separator());
+	
+	
 	item=g_malloc(sizeof(Menu_list_item));	
 	item->item_type=MENU_ITEM_ENTRY;
 	item->name=g_strdup("Home");
@@ -453,6 +472,10 @@ static void update_places(Menu_list_item **p,char* file_manager)
 	if (connected)
 		g_list_foreach(connected,_fillin_connected,&sublist);
 	g_list_free(connected);
+
+	{
+		sublist=g_slist_append(sublist,get_separator());
+	}
 	
 //bookmarks	
 	FILE*	handle;
@@ -585,28 +608,19 @@ GSList* get_menu_data(gboolean show_search,gboolean show_run,gboolean show_place
 		fill_er_up(root,&data);
 		gmenu_tree_item_unref (root);		
 	}
-	
-	{
-		dir_item=g_malloc(sizeof(Menu_list_item));
-		dir_item->item_type=MENU_ITEM_BLANK;
-		dir_item->name=NULL;
-		dir_item->icon=NULL;
-		dir_item->comment=NULL;		
-		dir_item->sublist=NULL;
-		dir_item->null=NULL;	
-		data=g_slist_prepend(data,dir_item);
-	}
-//	if (show_separator)
-	{
-		dir_item=g_malloc(sizeof(Menu_list_item));
-		dir_item->item_type=GMENU_TREE_ITEM_SEPARATOR;
-		dir_item->name=NULL;
-		dir_item->icon=NULL;
-		dir_item->comment=NULL;		
-		dir_item->sublist=NULL;
-		dir_item->null=NULL;	
-		data=g_slist_append(data,dir_item);
-	}
+
+
+	data=g_slist_prepend(data,get_separator());	
+	dir_item=g_malloc(sizeof(Menu_list_item));
+	dir_item->item_type=MENU_ITEM_BLANK;
+	dir_item->name=NULL;
+	dir_item->icon=NULL;
+	dir_item->comment=NULL;		
+	dir_item->sublist=NULL;
+	dir_item->null=NULL;	
+	data=g_slist_prepend(data,dir_item);
+
+	data=g_slist_append(data,get_separator());
 	
 	menu_tree=gmenu_tree_lookup ("gnomecc.menu",GMENU_TREE_FLAGS_NONE);	
 	if (menu_tree)
@@ -641,17 +655,7 @@ GSList* get_menu_data(gboolean show_search,gboolean show_run,gboolean show_place
 		gmenu_tree_item_unref (root);		
 	}
 	
-//	if (show_separator)	
-	{
-		dir_item=g_malloc(sizeof(Menu_list_item));
-		dir_item->item_type=MENU_ITEM_SEPARATOR;
-		dir_item->name=NULL;
-		dir_item->icon=NULL;
-		dir_item->comment=NULL;		
-		dir_item->sublist=NULL;
-		dir_item->null=NULL;	
-		data=g_slist_append(data,dir_item);
-	}
+	data=g_slist_append(data,get_separator());
 	
 
 	if (show_places)
@@ -691,16 +695,17 @@ GSList* get_menu_data(gboolean show_search,gboolean show_run,gboolean show_place
 		data=g_slist_append(data,dir_item);
 
 	}	
-	{
-		dir_item=g_malloc(sizeof(Menu_list_item));
-		dir_item->item_type=MENU_ITEM_BLANK;
-		dir_item->name=NULL;
-		dir_item->icon=NULL;
-		dir_item->comment=NULL;		
-		dir_item->sublist=NULL;
-		dir_item->null=NULL;	
-		data=g_slist_append(data,dir_item);
-	}	
+	data=g_slist_append(data,get_separator());	
+
+	dir_item=g_malloc(sizeof(Menu_list_item));
+	dir_item->item_type=MENU_ITEM_BLANK;
+	dir_item->name=NULL;
+	dir_item->icon=NULL;
+	dir_item->comment=NULL;		
+	dir_item->sublist=NULL;
+	dir_item->null=NULL;	
+	data=g_slist_append(data,dir_item);
+
 	return data;
 }	
 

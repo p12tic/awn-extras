@@ -706,17 +706,20 @@ static gboolean _scroll_event(GtkWidget *widget,GdkEventMotion *event,GtkWidget 
 
 	 	if (event->state & GDK_SHIFT_MASK)
 		{
-			boxchild=g_list_first(GTK_BOX(box)->children)->data;
-			assert(boxchild);
-			GTK_IS_WIDGET (boxchild->widget);			
-			gtk_box_reorder_child (GTK_BOX(box),boxchild->widget,-1);
+			do
+			{
+				boxchild=g_list_first(GTK_BOX(box)->children)->data;		
+				gtk_box_reorder_child (GTK_BOX(box),boxchild->widget,-1);
+			}while(boxchild->widget->allocation.height < G_cairo_menu_conf.text_size);			
 		}
 		else
 		{
-			boxchild=g_list_last(GTK_BOX(box)->children)->data;
-			assert(boxchild);
-			GTK_IS_WIDGET (boxchild->widget);
-			gtk_box_reorder_child (GTK_BOX(box),boxchild->widget,0);			
+			do
+			{
+
+				boxchild=g_list_last(GTK_BOX(box)->children)->data;
+				gtk_box_reorder_child (GTK_BOX(box),boxchild->widget,0);			
+			}while(	boxchild->widget->allocation.height < G_cairo_menu_conf.text_size);			
 		}
 		gtk_widget_show_all(widget);
 	}
@@ -805,7 +808,7 @@ void render_menu_widgets(Menu_list_item * menu_item,GtkWidget * box)
 				render_directory(menu_item,max_width);
 				g_slist_foreach(menu_item->sublist,measure_width,&max_width);
 				#if GTK_CHECK_VERSION(2,12,0)
-				if (menu_item->comment)
+				if (G_cairo_menu_conf.show_tooltips&&menu_item->comment)
 					gtk_widget_set_tooltip_text(menu_item->widget,menu_item->comment);
 				#endif		
 				newbox=gtk_vbox_new(FALSE,0);
@@ -842,7 +845,7 @@ void render_menu_widgets(Menu_list_item * menu_item,GtkWidget * box)
 			{
 				render_entry(menu_item,max_width);
 				#if GTK_CHECK_VERSION(2,12,0)
-				if (menu_item->comment)
+				if (G_cairo_menu_conf.show_tooltips&&menu_item->comment)
 					gtk_widget_set_tooltip_text(menu_item->widget,menu_item->comment);
 				#endif
 				Mouseover_data	*data;				
@@ -869,7 +872,7 @@ void render_menu_widgets(Menu_list_item * menu_item,GtkWidget * box)
 			{
 				render_entry(menu_item,max_width);
 				#if GTK_CHECK_VERSION(2,12,0)
-				if (menu_item->comment)
+				if (G_cairo_menu_conf.show_tooltips&&menu_item->comment)
 					gtk_widget_set_tooltip_text(menu_item->widget,menu_item->comment);
 				#endif
 				Mouseover_data	*data;				
@@ -898,7 +901,7 @@ void render_menu_widgets(Menu_list_item * menu_item,GtkWidget * box)
 			{
 				render_textentry(menu_item,max_width);
 				#if GTK_CHECK_VERSION(2,12,0)
-				if (menu_item->comment)
+				if (G_cairo_menu_conf.show_tooltips&&menu_item->comment)
 					gtk_widget_set_tooltip_text(menu_item->widget,menu_item->comment);
 				#endif
 				Mouseover_data	*data;				
@@ -929,7 +932,7 @@ void render_menu_widgets(Menu_list_item * menu_item,GtkWidget * box)
 			{
 				render_textentry(menu_item,max_width);
 				#if GTK_CHECK_VERSION(2,12,0)
-				if (menu_item->comment)
+				if (G_cairo_menu_conf.show_tooltips&&menu_item->comment)
 					gtk_widget_set_tooltip_text(menu_item->widget,menu_item->comment);
 				#endif
 				Mouseover_data	*data;				

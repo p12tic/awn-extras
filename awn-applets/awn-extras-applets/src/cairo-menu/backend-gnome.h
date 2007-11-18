@@ -19,11 +19,14 @@
 
 #ifndef _BACKEND_GNOME_
 #define _BACKEND_GNOME_
-
+#include "menu_list_item.h"
 GSList* get_menu_data(gboolean show_search,gboolean show_run,gboolean show_places,gboolean show_logout,char* file_manager,char*logout);
 void monitor_places(gpointer callback, gpointer data);
 
 gboolean display_message(gchar * summary, gchar * body,glong timeout);
+
+void backend_eject(Menu_list_item * menu_item);
+void backend_unmount(Menu_list_item * menu_item);
 
 #endif
 

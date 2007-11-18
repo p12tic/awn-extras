@@ -36,6 +36,8 @@
 
 
 extern gboolean 	G_repression;
+extern gboolean 	G_total_repression;
+
 
 static gboolean _expose_event (GtkWidget *widget, GdkEventExpose *expose, Cairo_main_menu * menu);
 
@@ -125,16 +127,24 @@ gboolean _cmp_pointer(gconstpointer a,gconstpointer b)
 static gboolean _button_clicked_mainwindow(GtkWidget *widget, GdkEventButton *event, Cairo_main_menu * menu)
 {
     GdkEventButton *event_button;
-    event_button = (GdkEventButton *) event;
-    gtk_widget_hide(menu->mainwindow); 
-	G_repression=FALSE;
+    if (!G_total_repression)
+    {
+		event_button = (GdkEventButton *) event;
+		gtk_widget_hide(menu->mainwindow); 
+		G_repression=FALSE;
+	}		
+	G_total_repression=FALSE;
     return FALSE;
 } 
 
 static gboolean _focus_out_mainwindow(GtkWidget *widget, GdkEventButton *event, Cairo_main_menu * menu)
 {
-	g_list_foreach(GTK_FIXED(G_Fixed)->children,_fixup_menus,NULL); 	
-    gtk_widget_hide(menu->mainwindow);    
+    if (!G_total_repression)
+    {
+		g_list_foreach(GTK_FIXED(G_Fixed)->children,_fixup_menus,NULL); 	
+		gtk_widget_hide(menu->mainwindow);    
+	}		
+	G_total_repression=FALSE;
     return FALSE;
 }
  

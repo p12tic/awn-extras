@@ -33,6 +33,7 @@ GtkWidget	*	G_toplevel=NULL;
 GtkWidget * G_mainwindow;
 int G_height,G_y,G_x;
 gboolean 	G_repression=FALSE;
+gboolean 	G_total_repression=FALSE;
 int G_max_width=-1;
 
 
@@ -408,7 +409,7 @@ void render_directory(Menu_list_item *directory,int max_width)
 
 void _fixup_menus(GtkFixedChild * child,GtkWidget * subwidget)
 {
-	static int maxheight=600;		/*FIXME*/
+	static int maxheight=600;		/*FIXME*/	
 	if (!subwidget)
 	{
 		if (child->widget != G_toplevel)	
@@ -462,7 +463,7 @@ static gboolean _enter_notify_event(GtkWidget *widget,GdkEventCrossing *event,Mo
 	gint x,y;
 
 	
-	if ( (gtk_bin_get_child(widget)==data->misc) || G_repression)
+	if ( (gtk_bin_get_child(widget)==data->misc) || G_repression || G_total_repression)
 	{
 		return FALSE;	
 	}
@@ -664,7 +665,6 @@ int activate_run(GtkWidget *w,Menu_list_item * menu_item)
 	GError *err=NULL;
 	G_repression=FALSE;
 	gtk_widget_hide(G_Fixed->parent);
-	printf("activate_run: %s\n",gtk_entry_get_text (w));
 	g_spawn_command_line_async(gtk_entry_get_text (w),&err);    
 	gtk_entry_set_text (w,"")	;
 	return FALSE;
@@ -766,25 +766,74 @@ void measure_width(Menu_list_item * menu_item,int * max_width)
 }
 
 
+static _eject(GtkWidget *widget,GdkEventButton *event,Menu_list_item * menu_item) 
+{
+	backend_unmount(menu_item);
+	G_total_repression=FALSE;	
+	G_repression=FALSE;			
+	return FALSE;
+}
+
+static _unmount(GtkWidget *widget,GdkEventButton *event,Menu_list_item * menu_item) 
+{
+	backend_unmount(menu_item);
+	G_total_repression=FALSE;
+	G_repression=FALSE;					
+	return FALSE;
+}
+
+
 static gboolean _button_do_drive_event(GtkWidget *widget,GdkEventButton *event,Menu_list_item * menu_item) 
 {
 	GError *err=NULL;
 	gchar * cmd;
-	gtk_widget_hide(G_Fixed->parent);
-	if (menu_item->drive_prep)
-	{
-		if ( !menu_item->drive_prep(menu_item,G_cairo_menu_conf.filemanager) )
+	if (event->button == 1)
+    {
+		gtk_widget_hide(G_Fixed->parent);
+		if (menu_item->drive_prep)
 		{
-			//drive_prep failed. or it has taken care of opening file (if mount async op)
-			return TRUE;
-		}
+			if ( !menu_item->drive_prep(menu_item,G_cairo_menu_conf.filemanager) )
+			{
+				//drive_prep failed. or it has taken care of opening file (if mount async op)
+				return TRUE;
+			}
+		}		
+		else
+		{
+			cmd=g_strdup_printf("%s %s",G_cairo_menu_conf.filemanager,menu_item->mount_point);
+			g_spawn_command_line_async(cmd,&err);
+			g_free(cmd);
+		}	
 	}		
-	else
-	{
-		cmd=g_strdup_printf("%s %s",G_cairo_menu_conf.filemanager,menu_item->mount_point);
-		g_spawn_command_line_async(cmd,&err);
-		g_free(cmd);
-	}	
+    else if (event->button == 3)    
+    {
+    	static gboolean done_once=FALSE;
+    	static GtkWidget * menu=NULL;
+    	static GtkWidget * item;
+		G_total_repression=TRUE;
+	//	gtk_widget_hide(G_Fixed->parent);		
+    	if (menu)
+    	{
+    		gtk_widget_destroy(menu);
+    	}
+		menu=gtk_menu_new ();
+		if (!menu_item->drive_prep)
+		{			
+			item=gtk_menu_item_new_with_label("Unmount");				
+			gtk_widget_show(item);
+			gtk_menu_shell_append(menu,item);		
+			g_signal_connect (G_OBJECT (item), "button-press-event",G_CALLBACK (_unmount), menu_item);
+		}		
+		item=gtk_menu_item_new_with_label("Eject");				
+		gtk_widget_show(item);
+		gtk_menu_shell_append(menu,item);		
+		g_signal_connect (G_OBJECT (item), "button-press-event",G_CALLBACK (_eject), menu_item);
+		gtk_menu_set_screen(menu,NULL);    	
+    	gtk_menu_popup (menu, NULL, NULL, NULL, NULL, 
+			  event->button, event->time);
+		return FALSE;			  
+    }
+		
 	return TRUE;
 }          
 

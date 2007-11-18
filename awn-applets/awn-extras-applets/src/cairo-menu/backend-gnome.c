@@ -350,7 +350,15 @@ gboolean _do_update_places_wrapper(Monitor_places * p)
 	return FALSE;	
 }	
 
+void backend_unmount(Menu_list_item * menu_item)
+{
 
+}
+
+void backend_eject(Menu_list_item * menu_item)
+{
+
+}
 
 void _vfs_changed_v_u(GnomeVFSDrive  *drive,GnomeVFSVolume *volume,gpointer null)
 {
@@ -420,11 +428,15 @@ static Menu_list_item *get_separator(void)
 	Menu_list_item * item;	
 	item=g_malloc(sizeof(Menu_list_item));
 	item->item_type=MENU_ITEM_SEPARATOR;
+	item->exec=NULL;
 	item->name=NULL;
 	item->icon=NULL;
 	item->comment=NULL;		
 	item->sublist=NULL;
 	item->null=NULL;	
+	item->widget=NULL;
+	item->hover=NULL;
+	item->normal=NULL;
 	return item;
 }	
 
@@ -530,17 +542,33 @@ void free_menu_list_item(Menu_list_item * item,gpointer null)
 	{
 		gnome_vfs_drive_unref(item->drive);
 	}*/
-	g_free(item->name);
-	g_free(item->icon);
-	g_free(item->exec);
-	g_free(item->comment);
+	if (item->name)
+		g_free(item->name);
+	if (item->icon)
+		g_free(item->icon);
+	if 	(item->exec)
+		g_free(item->exec);
+	if 	(item->comment)
+		g_free(item->comment);
 //	g_free(item->desktop);
 //	gboolean	launch_in_terminal;
 //	void 	*	parent_menu;	
 //	GSList		*sublist;	
-	gtk_widget_destroy(item->widget);
-	gtk_widget_destroy(item->normal);
-	gtk_widget_destroy(item->hover);
+	if (item->widget)
+		gtk_widget_destroy(item->widget);
+	if (item->normal)
+		gtk_widget_destroy(item->normal);
+	if (item->hover)		
+		gtk_widget_destroy(item->hover);
+
+	item->name=NULL;
+	item->icon=NULL;
+	item->exec=NULL;	
+	item->comment=NULL;		
+	item->widget=NULL;
+	item->hover=NULL;	
+	item->normal=NULL;		
+
 //	gtk_widget_destroy(item->click);			
 	
 }
@@ -548,12 +576,17 @@ void free_menu_list_item(Menu_list_item * item,gpointer null)
 
 static void _do_update_places(Monitor_places * user_data)
 {
+	printf("_do_update_places 1\n");
 	g_slist_foreach (*(user_data->data),free_menu_list_item,NULL);	
+	printf("_do_update_places 2\n");
 	g_slist_free(*(user_data->data));
+	printf("_do_update_places 3\n");
 	*(user_data->data)=NULL;
+	printf("_do_update_places 4\n");
 	update_places(user_data->data,G_file_manager);	//FIXME
+	printf("_do_update_places 5\n");	
 	user_data->callback(user_data->data,user_data->box);
-
+	printf("_do_update_places 6\n");
 
 }
 

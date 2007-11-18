@@ -40,7 +40,6 @@ class PluggerBackend(FolderBackend):
              hudi = volume.get_hal_udi()
              if hudi is not None:
                 hal,sep,vid = hudi.rpartition(os.sep)
-                print vid
                 if not cmp(vid, self.applet.uid):
                     volume.unmount(self._eject_cb)
 

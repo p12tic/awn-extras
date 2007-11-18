@@ -33,9 +33,11 @@ _ = gettext.gettext
 class FolderBackend(Backend):
 
     monitor = None
+    backend_uri = None
 
     def __init__(self, applet, vfs_uri, icon_size):
-        Backend.__init__(self, applet, vfs_uri, icon_size)
+        Backend.__init__(self, applet, icon_size)
+        self.backend_uri = vfs_uri
         # Create folder if it does not exist
         self._create()
         self.monitor = Monitor(self.backend_uri)
@@ -79,11 +81,8 @@ class FolderBackend(Backend):
                 options = gnomevfs.XFER_REMOVESOURCE
             else:
                 return None
-#            options |= gnomevfs.XFER_FOLLOW_LINKS
-#            options |= gnomevfs.XFER_RECURSIVE
-#            options |= gnomevfs.XFER_FOLLOW_LINKS_RECURSIVE
-            GUITransfer(src_lst, dst_lst, options)
 
+            GUITransfer(src_lst, dst_lst, options)
             return Backend.add(self, vfs_uri_lst)
 
 
@@ -161,8 +160,12 @@ class FolderBackend(Backend):
         Backend.destroy(self)
 
 
+    def open(self):
+        LaunchManager().launch_uri(self.backend_uri.as_string(), None)
+
+
     def _open_cb(self, widget):
-        Backend.open(self)
+        self.open()
 
 
     def get_menu_items(self):

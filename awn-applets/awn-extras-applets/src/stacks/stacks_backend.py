@@ -58,28 +58,25 @@ COL_BUTTON = 6
 
 class Backend(gobject.GObject):
 
-    applet = None
-    backend_uri = None
-    store = None
-    icon_size = 0
+    applet = None           # ref to the applet
+    store = None            # store that holds the stack items
+    icon_size = 0           # (current) icon size of the stack items
 
     __gsignals__ = {
         'attention' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
                         (gobject.TYPE_INT,)),
-        'item_created' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+        'item-created' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
                         (gtk.TreeIter,)),
-        'restructure' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
-                        (gobject.TYPE_OBJECT,))
+        'item-removed' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+                        (gtk.TreeIter,))
     }
 
-
-    def __init__(self, applet, vfs_uri, icon_size):
+    # initialize the backend
+    def __init__(self, applet, icon_size):
         gobject.GObject.__init__(self)
-
+        # set class references
         self.applet = applet
-        self.backend_uri = vfs_uri
         self.icon_size = icon_size
-
         # Setup store to hold the stack items
         self.store = gtk.ListStore( gobject.TYPE_OBJECT,
                                     gobject.TYPE_OBJECT,
@@ -114,6 +111,7 @@ class Backend(gobject.GObject):
             return cmp(n1, n2)
 
 
+    # emits attention signal
     def _get_attention(self):
         self.emit("attention", self.get_type())
 
@@ -121,14 +119,13 @@ class Backend(gobject.GObject):
     def _created_cb(self, widget, vfs_uri):
         assert isinstance(vfs_uri, VfsUri)
         if self.add([vfs_uri]):
-            self._get_attention()
+             self._get_attention()
 
 
     def _deleted_cb(self, widget, vfs_uri):
         assert isinstance(vfs_uri, VfsUri)
         if self.remove([vfs_uri]):
-            self._get_attention()
-
+             self._get_attention()
 
     # add item to the stack
     # -ignores hidden files
@@ -149,12 +146,15 @@ class Backend(gobject.GObject):
                 continue
 
             # check for duplicates
+            duplicate = False
             iter = self.store.get_iter_first()
             while iter:
                 store_uri = self.store.get_value(iter, COL_URI)
                 if vfs_uri.equals(store_uri):
-                    continue
+                    duplicate = True
+                    break
                 iter = self.store.iter_next(iter)
+            if duplicate: continue
 
             # check for desktop item
             if name.endswith(".desktop"):
@@ -202,14 +202,13 @@ class Backend(gobject.GObject):
 
             # add to store
             iter = self.store.append([vfs_uri, monitor, type, name, mime_type, pixbuf, None])
-            self.emit("item_created", iter)
+            self.emit("item-created", iter)
 
             # return pixbuf later?
             if pixbuf: retval = pixbuf
 
         # restructure of dialog needed
-        if retval: return self.emit("restructure", retval)
-        return False
+        return (retval is not None)
 
 
     # remove file from store
@@ -224,7 +223,7 @@ class Backend(gobject.GObject):
                     changed = True
                     break
             iter = self.store.iter_next(iter)
-        if changed: self.emit("restructure", None)
+        if changed: self.emit("item-removed", iter)
         return changed
 
 
@@ -234,11 +233,11 @@ class Backend(gobject.GObject):
 
     def clear(self):
         self.store.clear()
-        self.emit("restructure", None)
+        self.emit("item-removed", None)
 
 
     def open(self):
-        LaunchManager().launch_uri(self.backend_uri.as_string(), None)
+        return
 
 
     def is_empty(self):

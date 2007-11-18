@@ -89,8 +89,6 @@ class StacksApplet (awn.AppletSimple):
                                     os.path.expanduser("~"), 
                                     ".config", "awn", "applets", "stacks")
 
-    gui = None
-
     def __init__ (self, uid, orient, height):
         awn.AppletSimple.__init__(self, uid, orient, height)
 
@@ -131,7 +129,10 @@ class StacksApplet (awn.AppletSimple):
         self.connect("height-changed", self.applet_height_changed_cb)
 
         import stacks_gui_dialog
-        self.gui = stacks_gui_dialog.StacksGuiDialog(self)
+        stacks_gui_dialog.StacksGuiDialog(self)
+        import stacks_gui_curved
+        #stacks_gui_curved.StacksGuiCurved(self)
+
         self.backend_get_config()
 
 
@@ -240,11 +241,10 @@ class StacksApplet (awn.AppletSimple):
     def applet_set_icon(self, pixbuf):
         # setting applet icon
         if not self.backend.is_empty():
-            if not isinstance(pixbuf, gtk.gdk.Pixbuf):
+            if not pixbuf:
                 pixbuf = self.backend.get_random_pixbuf()
-            self.applet_set_full_icon(pixbuf)
-        else:
-            self.applet_set_empty_icon()
+            if pixbuf: return self.applet_set_full_icon(pixbuf)
+        self.applet_set_empty_icon()
 
     # Set the empty icon as applet icon
     def applet_set_empty_icon(self):

@@ -275,14 +275,14 @@ class StacksGuiDialog():
                 t.remove(button)
             self.table.attach(button, x, x+1, y, y+1)
 
+            iter = self.store.iter_next(iter)
             x += 1
             if x == cols:
                 x = 0
                 y += 1
             if y == rows:
-                theres_more = True
+                theres_more = (iter is not None)
                 break
-            iter = self.store.iter_next(iter)
         self.hbox.add(self.table)
 
         # if we have more than 1 page and browsing is enabled

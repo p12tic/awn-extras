@@ -321,7 +321,7 @@ void _mount_result(gboolean succeeded,char *error,char *detailed_error,	char* co
 	gchar * mess;
 	if (!succeeded)
 	{
-		mess=g_strdup_printf("Mount Failed\n%s\nError:  %s\n",comment,error);	
+		mess=g_strdup_printf("Mount Failed\n%s\nError:  %s\n",comment,detailed_error);	
 		display_message("Cairo Menu", mess,0);	
 		g_free(mess);
 	}
@@ -342,6 +342,29 @@ gboolean _mount_connected(Menu_list_item * p,char * filemanager)
 	return FALSE;
 }
 
+void _unmount_result(gboolean succeeded,char *error,char *detailed_error,	char* comment)
+{
+	gchar * mess;
+	if (!succeeded)
+	{
+		mess=g_strdup_printf("Unmount Failed\n%s\nError:  %s\n",comment,detailed_error);	
+		display_message("Cairo Menu", mess,0);	
+		g_free(mess);
+	}
+	g_free(comment);
+}
+
+void _eject_result(gboolean succeeded,char *error,char *detailed_error,	char* comment)
+{
+	gchar * mess;
+	if (!succeeded)
+	{
+		mess=g_strdup_printf("Eject Failed\n%s\nError:  %s\n",comment,detailed_error);	
+		display_message("Cairo Menu", mess,0);	
+		g_free(mess);
+	}
+	g_free(comment);
+}
 
 
 gboolean _do_update_places_wrapper(Monitor_places * p)
@@ -352,12 +375,12 @@ gboolean _do_update_places_wrapper(Monitor_places * p)
 
 void backend_unmount(Menu_list_item * menu_item)
 {
-
+	gnome_vfs_drive_unmount(menu_item->drive,_unmount_result,g_strdup(menu_item->comment) );		
 }
 
 void backend_eject(Menu_list_item * menu_item)
 {
-
+	gnome_vfs_drive_eject(menu_item->drive,_eject_result,g_strdup(menu_item->comment) );		
 }
 
 void _vfs_changed_v_u(GnomeVFSDrive  *drive,GnomeVFSVolume *volume,gpointer null)
@@ -576,18 +599,11 @@ void free_menu_list_item(Menu_list_item * item,gpointer null)
 
 static void _do_update_places(Monitor_places * user_data)
 {
-	printf("_do_update_places 1\n");
 	g_slist_foreach (*(user_data->data),free_menu_list_item,NULL);	
-	printf("_do_update_places 2\n");
 	g_slist_free(*(user_data->data));
-	printf("_do_update_places 3\n");
 	*(user_data->data)=NULL;
-	printf("_do_update_places 4\n");
 	update_places(user_data->data,G_file_manager);	//FIXME
-	printf("_do_update_places 5\n");	
 	user_data->callback(user_data->data,user_data->box);
-	printf("_do_update_places 6\n");
-
 }
 
 

@@ -42,7 +42,7 @@ typedef struct {
 
 static GConfClient *client = NULL;
 static gchar *desktop_path = NULL;
-static gchar *key_prefix = "/apps/avant-window-navigator/applets/trasher";
+static gchar *key_prefix = "/apps/avant-window-navigator/applets/stacks/trasher";
 
 static void
 trasher_initialization(GtkWidget *widget, gpointer user_data)

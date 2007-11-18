@@ -98,7 +98,7 @@ volume_add(Plugger *app, GnomeVFSVolume *volume)
 
   // Store settings in gconf before loading stack applet
   gchar *key;
-  gchar *key_prefix = g_strdup_printf("/apps/avant-window-navigator/applets/%s", hudi);
+  gchar *key_prefix = g_strdup_printf("/apps/avant-window-navigator/applets/stacks/%s", hudi);
 
   // Check if this is a "hidden" (by applet) volume
   key = g_strdup_printf("%s/%s", key_prefix, GKEY_HIDE_VOLUME);

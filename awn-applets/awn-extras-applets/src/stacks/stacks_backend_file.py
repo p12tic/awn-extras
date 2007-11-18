@@ -32,9 +32,11 @@ _ = gettext.gettext
 class FileBackend(Backend):
 
     handle = None
+    backend_uri = None
 
     def __init__(self, applet, vfs_uri, icon_size):
-        Backend.__init__(self, applet, vfs_uri, icon_size)
+        Backend.__init__(self, applet, icon_size)
+        self.backend_uri = vfs_uri
         mode = gnomevfs.OPEN_WRITE | gnomevfs.OPEN_READ | gnomevfs.OPEN_RANDOM
         if not gnomevfs.exists(self.backend_uri.as_uri()):
             # create folder

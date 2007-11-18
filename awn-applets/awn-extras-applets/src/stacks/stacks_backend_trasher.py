@@ -37,7 +37,7 @@ class TrashBackend(Backend):
     trash_monitors = {}
 
     def __init__(self, applet, uri, icon_size):
-        Backend.__init__(self, applet, None, icon_size)
+        Backend.__init__(self, applet, icon_size)
 
         self.vol_monitor = gnomevfs.VolumeMonitor()
         for vol in self.vol_monitor.get_mounted_volumes():
@@ -115,23 +115,16 @@ class TrashBackend(Backend):
             button.show()
             dialog.add_action_widget(button, gtk.RESPONSE_ACCEPT)
             dialog.set_default_response(gtk.RESPONSE_ACCEPT)
-            if dialog.run() == gtk.RESPONSE_REJECT:
-                dialog.destroy()
-                return
+            if dialog.run() == gtk.RESPONSE_ACCEPT:
+                options = gnomevfs.XFER_EMPTY_DIRECTORIES
+                options |= gnomevfs.XFER_RECURSIVE
+                uris = []
+                for b in self.trash_dirs.values():
+                    uris.append(b.as_uri())
+                # TODO: nice msg: "Emptying trash" in stacksvfs
+                GUITransfer(uris, [], options)
+                Backend.clear(self)
             dialog.destroy()
-
-        options = gnomevfs.XFER_EMPTY_DIRECTORIES
-#        options |= gnomevfs.XFER_FOLLOW_LINKS
-        options |= gnomevfs.XFER_RECURSIVE
-#        options |= gnomevfs.XFER_FOLLOW_LINKS_RECURSIVE
-
-        uris = []
-        for b in self.trash_dirs.values():
-            uris.append(b.as_uri())
-
-        # TODO: nice msg: "Emptying trash" in stacksvfs
-        GUITransfer(uris, [], options)
-        Backend.clear(self)
 
     def get_title(self):
         title = self.applet.gconf_client.get_string(self.applet.gconf_path + "/title")
@@ -201,7 +194,7 @@ class TrashBackend(Backend):
 
     def add(self, vfs_uris, action=None):
         if action is None:
-            return Backend.add(self, vfs_uris, action)
+            return Backend.add(self, vfs_uris, None)
         uri_list = [u.as_uri() for u in vfs_uris]
         gnomevfs.async.find_directory(
                 near_uri_list = uri_list,

@@ -44,9 +44,9 @@ class LaunchManager:
         if not child:
             # Inside forked child
             os.setsid()
-            os.environ['GIMMIE_LAUNCHER'] = uri
+            os.environ['STACKS_LAUNCHER'] = uri
             os.environ['DESKTOP_STARTUP_ID'] = self.make_startup_id(uri)
-            os.spawnlp(os.P_NOWAIT, "gnome-open", "gnome-open", uri)
+            os.spawnlp(os.P_NOWAIT, "xdg-open", "xdg-open", uri)
             os._exit(0)
         else:
             os.wait()
@@ -104,14 +104,14 @@ class LaunchManager:
         if not ev_time:
             ev_time = gtk.get_current_event_time()
         if not key:
-            return "GIMMIE_TIME%d" % ev_time
+            return "STACKS_TIME%d" % ev_time
         else:
-            return "GIMMIE:%s_TIME%d" % (key, ev_time)
+            return "STACKS:%s_TIME%d" % (key, ev_time)
 
     def parse_startup_id(self, id):
-        if id and id.startswith("GIMMIE:"):
+        if id and id.startswith("STACKS:"):
             try:
-                uri = id[len("GIMMIE:"):id.rfind("_TIME")]
+                uri = id[len("STACKS:"):id.rfind("_TIME")]
                 timestamp = id[id.rfind("_TIME") + len("_TIME"):]
                 return (uri, timestamp)
             except IndexError:
@@ -126,7 +126,7 @@ class LaunchManager:
             os.setsid()
             os.environ['DESKTOP_STARTUP_ID'] = startup_id
             if launcher_uri:
-                os.environ['GIMMIE_LAUNCHER'] = launcher_uri
+                os.environ['STACKS_LAUNCHER'] = launcher_uri
             os.popen2(command)
             os._exit(0)
         else:

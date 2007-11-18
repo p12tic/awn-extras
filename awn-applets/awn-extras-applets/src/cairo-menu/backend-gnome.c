@@ -590,7 +590,7 @@ static void monitor_places(gpointer callback, gpointer data,gpointer box)
 	g_free(filename);                                                                                                 
 }                                                         
 
-GSList* get_menu_data(gboolean show_search,gboolean show_run,gboolean show_places,char* file_manager)
+GSList* get_menu_data(gboolean show_search,gboolean show_run,gboolean show_places,gboolean show_logout,char* file_manager,char*logout)
 {
 /*FIXME... I'm leaking a bit of memory here */
 
@@ -695,7 +695,24 @@ GSList* get_menu_data(gboolean show_search,gboolean show_run,gboolean show_place
 		data=g_slist_append(data,dir_item);
 
 	}	
+
+
+
+	if (show_logout)
+	{
+		dir_item=g_malloc(sizeof(Menu_list_item));
+		dir_item->item_type=MENU_ITEM_ENTRY;
+		dir_item->name=g_strdup("Logout...");
+		dir_item->icon=g_strdup("gnome-logout");
+		dir_item->exec=g_strdup(logout);			
+		dir_item->desktop=g_strdup("");					
+		dir_item->comment=g_strdup("Logout and related activities.");		
+		dir_item->sublist=NULL;
+		data=g_slist_append(data,dir_item);
+
+	}	
 	data=g_slist_append(data,get_separator());	
+
 
 	dir_item=g_malloc(sizeof(Menu_list_item));
 	dir_item->item_type=MENU_ITEM_BLANK;

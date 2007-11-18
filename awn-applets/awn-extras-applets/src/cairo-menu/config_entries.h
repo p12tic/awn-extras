@@ -51,6 +51,9 @@
 #define GCONF_ON_BUTTON_RELEASE GCONF_MENU "/activate_on_release"
 #define GCONF_SHOW_TOOLTIPS GCONF_MENU "/show_tooltips"
 
+#define GCONF_SHOW_LOGOUT GCONF_MENU "/show_logout"
+#define GCONF_LOGOUT GCONF_MENU "/logout"
+
 #define GCONF_HONOUR_GTK GCONF_MENU "/honour_gtk"
 
 typedef struct
@@ -69,6 +72,9 @@ typedef struct
 	GTree *		submenu_deps;
 	gboolean	show_search;
 	gchar		*search_cmd;
+	gboolean	show_logout;
+	gchar		*logout;
+
 	gboolean	show_run;	
 	gboolean	do_fade;	
 	gboolean	show_places;		

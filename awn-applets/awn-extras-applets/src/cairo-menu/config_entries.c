@@ -102,8 +102,7 @@ void read_config(void)
         gconf_client_set_bool(gconf_client,GCONF_SHOW_SEARCH,G_cairo_menu_conf.show_search,NULL);        
     }    
 
-    svalue = gconf_client_get_string(gconf_client,GCONF_SEARCH_CMD, NULL );
-    
+    svalue = gconf_client_get_string(gconf_client,GCONF_SEARCH_CMD, NULL );    
     if ( !svalue ) 
     {
 		svalue=g_find_program_in_path("tracker-search-tool");
@@ -247,6 +246,50 @@ void read_config(void)
 		G_cairo_menu_conf.show_tooltips=TRUE;        
         gconf_client_set_bool(gconf_client,GCONF_SHOW_TOOLTIPS,G_cairo_menu_conf.show_tooltips,NULL);        
     } 
+
+    svalue = gconf_client_get_string(gconf_client,GCONF_LOGOUT, NULL );    
+    if ( !svalue ) 
+    {
+
+		svalue=g_find_program_in_path("closure");
+		if (!svalue)
+		{
+
+			svalue=g_find_program_in_path("gnome-session-save");
+			if (svalue)
+			{
+				tmp=svalue;
+				svalue=g_strdup("gnome-session-save --kill");
+				g_free(tmp);
+			}
+			if (!svalue)
+			{
+				svalue=g_strdup("closure");
+			}    		
+		}			
+        gconf_client_set_string(gconf_client , GCONF_LOGOUT, svalue, NULL );
+    }
+    else
+    {
+    	tmp=svalue;
+    	svalue=g_filename_from_utf8(svalue,-1, NULL, NULL, NULL);
+    	g_free(tmp);
+    }
+    G_cairo_menu_conf.logout=g_strdup(svalue);
+    g_free(svalue);     
+
+
+    value=gconf_client_get(gconf_client,GCONF_SHOW_LOGOUT,NULL);		
+    if (value)
+    {																		
+        G_cairo_menu_conf.show_logout=gconf_client_get_bool(gconf_client,GCONF_SHOW_LOGOUT,NULL) ;
+    }
+    else             							
+    {
+		G_cairo_menu_conf.show_logout=FALSE;
+        gconf_client_set_bool(gconf_client,GCONF_SHOW_LOGOUT,G_cairo_menu_conf.show_logout,NULL);        
+    } 
+
     
     value=gconf_client_get(gconf_client,GCONF_HONOUR_GTK,NULL);		
     if (value)
@@ -365,7 +408,11 @@ static void _save_config(void)
     
     gconf_client_set_bool(gconf_client,GCONF_HONOUR_GTK,G_cairo_menu_conf.honour_gtk,NULL);        
 
-	gconf_client_set_bool(gconf_client,GCONF_SHOW_TOOLTIPS,G_cairo_menu_conf.show_tooltips,NULL);     
+	gconf_client_set_bool(gconf_client,GCONF_SHOW_TOOLTIPS,G_cairo_menu_conf.show_tooltips,NULL);    
+	
+	gconf_client_set_bool(gconf_client,GCONF_SHOW_LOGOUT,G_cairo_menu_conf.show_logout,NULL);   	 
+
+	gconf_client_set_string(gconf_client , GCONF_LOGOUT, G_cairo_menu_conf.logout, NULL );	
 }
 
 static gboolean _press_ok(GtkWidget *widget, GdkEventButton *event,GtkWidget * win)
@@ -500,10 +547,12 @@ void show_prefs(void)
 	GtkWidget * places=gtk_check_button_new_with_label("Show Places");
 	GtkWidget * search=gtk_check_button_new_with_label("Show Search");
 	GtkWidget * run=gtk_check_button_new_with_label("Show Run");
+	GtkWidget * logout=gtk_check_button_new_with_label("Show Logout");	
 	GtkWidget * fade_in=gtk_check_button_new_with_label("Fade in menu");	
 	GtkWidget * release=gtk_check_button_new_with_label("Activate On Release");
 	GtkWidget * tooltips=gtk_check_button_new_with_label("Show tooltips");	
-	
+
+		
 	GtkWidget* gtk_off_section=gtk_vbox_new(FALSE,0);	
 	gtk_off_table=gtk_table_new(2,4,FALSE);
 	
@@ -616,6 +665,9 @@ void show_prefs(void)
 	
 	gtk_toggle_button_set_active(run,G_cairo_menu_conf.show_run);		
 	g_signal_connect (G_OBJECT (run), "toggled",G_CALLBACK (_toggle_),&G_cairo_menu_conf.show_run);		
+	gtk_toggle_button_set_active(logout,G_cairo_menu_conf.show_logout);
+	g_signal_connect (G_OBJECT (logout), "toggled",G_CALLBACK (_toggle_),&G_cairo_menu_conf.show_logout);		
+
 	gtk_toggle_button_set_active(fade_in,G_cairo_menu_conf.do_fade);	
 	g_signal_connect (G_OBJECT (fade_in), "toggled",G_CALLBACK (_toggle_),&G_cairo_menu_conf.do_fade);				
 
@@ -629,6 +681,7 @@ void show_prefs(void)
 	gtk_box_pack_start(GTK_CONTAINER (vbox),search,FALSE,FALSE,0);	
 	gtk_box_pack_start(GTK_CONTAINER (vbox),places,FALSE,FALSE,0);	
 	gtk_box_pack_start(GTK_CONTAINER (vbox),run,FALSE,FALSE,0);		
+	gtk_box_pack_start(GTK_CONTAINER (vbox),logout,FALSE,FALSE,0);			
 	gtk_box_pack_start(GTK_CONTAINER (vbox),fade_in,FALSE,FALSE,0);	
 	gtk_box_pack_start(GTK_CONTAINER (vbox),release,FALSE,FALSE,0);			
 	gtk_box_pack_start(GTK_CONTAINER (vbox),tooltips,FALSE,FALSE,0);			

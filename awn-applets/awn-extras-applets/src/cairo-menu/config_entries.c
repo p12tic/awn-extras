@@ -44,6 +44,7 @@ extern AwnApplet *G_applet;
 void read_config(void)
 {
 	gchar	* svalue;
+	gchar 	* tmp;
 	GConfValue*	 value;	
 	gconf_client = gconf_client_get_default();
 	
@@ -102,6 +103,7 @@ void read_config(void)
     }    
 
     svalue = gconf_client_get_string(gconf_client,GCONF_SEARCH_CMD, NULL );
+    
     if ( !svalue ) 
     {
 		svalue=g_find_program_in_path("tracker-search-tool");
@@ -117,6 +119,12 @@ void read_config(void)
         gconf_client_set_string(gconf_client , GCONF_SEARCH_CMD, svalue, NULL );
 
 //    svalue==g_strdup("tracker-search-tool");
+    }
+    else
+    {
+    	tmp=svalue;
+    	svalue=g_filename_from_utf8(svalue,-1, NULL, NULL, NULL);
+    	g_free(tmp);
     }
     G_cairo_menu_conf.search_cmd=g_strdup(svalue);
     g_free(svalue);     
@@ -198,6 +206,12 @@ void read_config(void)
 			svalue=g_strdup("xdg-open");		
 		}
         gconf_client_set_string(gconf_client , GCONF_FILEMANAGER, svalue, NULL );
+    }
+    else
+    {
+    	tmp=svalue;
+    	svalue=g_filename_from_utf8(svalue,-1, NULL, NULL, NULL);
+    	g_free(tmp);
     }
 	G_cairo_menu_conf.filemanager=strdup(svalue);
     g_free(svalue);     
@@ -453,6 +467,18 @@ void spin_int_change(GtkSpinButton *spinbutton,int * val)
 	*val=gtk_spin_button_get_value(spinbutton);
 }
 
+void _file_set(GtkFileChooserButton *filechooserbutton,gchar **p )
+{
+	gchar * svalue=*p;
+	gchar * tmp;
+	g_free(svalue);
+	tmp=gtk_file_chooser_get_filename(GTK_FILE_CHOOSER (filechooserbutton));
+	svalue=g_filename_to_utf8(tmp,-1, NULL, NULL, NULL) ;
+	g_free(tmp);
+	*p=svalue;
+
+}
+
 void show_prefs(void)
 {
 	G_cairo_menu_conf_copy=G_cairo_menu_conf;
@@ -460,6 +486,7 @@ void show_prefs(void)
 	GtkWidget * prefs_win=gtk_window_new (GTK_WINDOW_TOPLEVEL);	
 	GdkColormap *colormap;
 	GdkScreen *screen;
+	gchar * tmp;
 		
 	screen = gtk_window_get_screen(GTK_WINDOW(prefs_win));
 	colormap = gdk_screen_get_rgba_colormap(screen);
@@ -522,8 +549,21 @@ void show_prefs(void)
 	g_signal_connect (G_OBJECT (hover_fg), "color-set",G_CALLBACK (_mod_colour),&G_cairo_menu_conf.hover.fg);		
 
 	GtkWidget * text_table=gtk_table_new(2,4,FALSE);
-	GtkWidget * search_cmd=gtk_entry_new();
-	GtkWidget * filemanager=gtk_entry_new();
+//	GtkWidget * search_cmd=gtk_entry_new();
+	GtkWidget * search_cmd=gtk_file_chooser_button_new("Search Util",GTK_FILE_CHOOSER_ACTION_OPEN);
+//	GtkWidget * filemanager=gtk_entry_new();
+	GtkWidget * filemanager=gtk_file_chooser_button_new("File Manager",GTK_FILE_CHOOSER_ACTION_OPEN);	
+//	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (filemanager),"/usr/bin");	
+
+	tmp=g_filename_from_utf8(G_cairo_menu_conf.filemanager,-1, NULL, NULL, NULL) ;
+	gtk_file_chooser_set_filename(GTK_FILE_CHOOSER (filemanager),tmp);
+	g_free(tmp);
+	
+	tmp=g_filename_from_utf8(G_cairo_menu_conf.search_cmd,-1, NULL, NULL, NULL) ;
+	gtk_file_chooser_set_filename(GTK_FILE_CHOOSER (search_cmd),tmp);
+	g_free(tmp);
+	
+	
 	GtkWidget * adjust_gradient=gtk_spin_button_new_with_range(0.0,1.0,0.01);
 
 	GtkWidget * adjust_textlen=gtk_spin_button_new_with_range(5,30,1);
@@ -556,10 +596,13 @@ void show_prefs(void)
 	g_signal_connect (G_OBJECT (adjust_textsize), "value-changed",G_CALLBACK (spin_int_change),
 									&G_cairo_menu_conf.text_size);	
 	
-	gtk_entry_set_text(search_cmd,G_cairo_menu_conf.search_cmd);
-	g_signal_connect (G_OBJECT(search_cmd), "activate",G_CALLBACK (activate), &G_cairo_menu_conf.search_cmd);	
-	gtk_entry_set_text(filemanager,G_cairo_menu_conf.filemanager);	
-	g_signal_connect (G_OBJECT(filemanager), "activate",G_CALLBACK (activate), &G_cairo_menu_conf.filemanager);		
+//	gtk_entry_set_text(search_cmd,G_cairo_menu_conf.search_cmd);
+//	g_signal_connect (G_OBJECT(search_cmd), "activate",G_CALLBACK (activate), &G_cairo_menu_conf.search_cmd);	
+//	gtk_entry_set_text(filemanager,G_cairo_menu_conf.filemanager);	
+//	g_signal_connect (G_OBJECT(filemanager), "activate",G_CALLBACK (activate), &G_cairo_menu_conf.filemanager);		
+	g_signal_connect (G_OBJECT(search_cmd), "file-set",G_CALLBACK (_file_set), &G_cairo_menu_conf.search_cmd);		
+	g_signal_connect (G_OBJECT(filemanager), "file-set",G_CALLBACK (_file_set), &G_cairo_menu_conf.filemanager);		
+
 	gtk_toggle_button_set_active(gtk,G_cairo_menu_conf.honour_gtk);
 	
 	gtk_toggle_button_set_active(search,G_cairo_menu_conf.show_search);
@@ -593,7 +636,7 @@ void show_prefs(void)
 	gtk_box_pack_start(GTK_CONTAINER (vbox),text_table,FALSE,FALSE,0);		
 	gtk_table_attach_defaults(text_table,gtk_label_new("Search command"),0,1,0,1);	
 	gtk_table_attach_defaults(text_table,search_cmd,1,2,0,1);		
-	gtk_table_attach_defaults(text_table,gtk_label_new("Filemanager"),0,1,1,2);	
+	gtk_table_attach_defaults(text_table,gtk_label_new("File Manager"),0,1,1,2);	
 	gtk_table_attach_defaults(text_table,filemanager,1,2,1,2);
 	gtk_table_attach_defaults(text_table,gtk_label_new("Approx. Max Chars (worst case)"),0,1,2,3);		
 	gtk_table_attach_defaults(text_table,adjust_textlen,1,2,2,3);		

@@ -66,21 +66,25 @@ class App (awn.AppletSimple):
     	pnut_item = gtk.MenuItem("Peanuts")
 	born_item = gtk.MenuItem("The Born Loser")
     	wiz_item = gtk.MenuItem("Wizard of ID")
+        xkcd_item = gtk.MenuItem("xkcd")
    	showho_item = gtk.CheckMenuItem("Hide Strip on Hover")
         self.popup_menu.append(dil_item)
     	self.popup_menu.append(pnut_item)
 	self.popup_menu.append(born_item)
 	self.popup_menu.append(wiz_item)
+	self.popup_menu.append(xkcd_item)
 	self.popup_menu.append(showho_item)
         dil_item.connect_object("activate",self.dil_callback,self)
         pnut_item.connect_object("activate",self.pnut_callback,self)
 	born_item.connect_object("activate",self.born_callback,self)
 	wiz_item.connect_object("activate",self.wiz_callback,self)
+	xkcd_item.connect_object("activate",self.xkcd_callback,self)
 	showho_item.connect_object("activate",self.showho_callback,self)
         dil_item.show()
         pnut_item.show()
 	born_item.show()
 	wiz_item.show()
+	xkcd_item.show()
 	showho_item.show()
 
         self.build_dialog()
@@ -141,6 +145,11 @@ class App (awn.AppletSimple):
     def wiz_callback(self, widget):
 	global GETWHAT
 	GETWHAT = 'getwiz.py'
+	self.build_dialog()
+
+    def xkcd_callback(self, widget):
+	global GETWHAT
+	GETWHAT = 'getxkcd.py'
 	self.build_dialog()
 
     def showho_callback(self, widget):

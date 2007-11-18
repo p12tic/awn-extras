@@ -6,6 +6,7 @@ dist_volumecontrol_DATA = \
 		getborn.py	\
 		getdilbert.py	\
 		getpcnp.py	\
+		getxkcd.py	\
 		getpeanuts.py	\
 		getwiz.py
 

@@ -58,8 +58,13 @@ class StacksConfig(GladeWindow):
         GladeWindow.__init__(self)
         self.applet = applet
         self.backend_type = applet.backend.get_type()
-        preferences = ALL_PREFS
 
+        config = get_config_from_gconf(
+                self.applet.gconf_client,
+                self.applet.gconf_path,
+                self.applet.uid)
+
+        preferences = ALL_PREFS
         if self.backend_type == BACKEND_TYPE_FILE:
             pass
         elif self.backend_type == BACKEND_TYPE_FOLDER:
@@ -90,22 +95,14 @@ class StacksConfig(GladeWindow):
             self.widgets['icons_hbbox'].set_sensitive(False)
         else:
             # get empty icon
-            self.applet_icon_empty = self.applet.gconf_client.get_string(
-                    self.applet.gconf_path + "/applet_icon_empty")
-            if self.applet_icon_empty is None:
-                self.applet_icon_empty = _to_full_path("icons/stacks-drop.svg")
             try:
-                empty_image = IconFactory().load_image(self.applet_icon_empty, 24)
+                empty_image = IconFactory().load_image(config['icon_empty'], 24)
                 self.widgets['empty_button'].set_image(empty_image)
             except:
                 pass
             # get full icon
-            self.applet_icon_full = self.applet.gconf_client.get_string(
-                    self.applet.gconf_path + "/applet_icon_full")
-            if self.applet_icon_full is None:
-                self.applet_icon_full = _to_full_path("icons/stacks-full.svg")
             try:
-                full_image = IconFactory().load_image(self.applet_icon_full, 24)
+                full_image = IconFactory().load_image(config['icon_full'], 24)
                 self.widgets['full_button'].set_image(full_image)
             except:
                 pass
@@ -115,33 +112,22 @@ class StacksConfig(GladeWindow):
             self.widgets['composite_hbox'].set_sensitive(False)
         else:
             # get composite
-            composite = self.applet.gconf_client.get_bool(
-                    self.applet.gconf_path + "/composite_icon")
-            self.widgets['nocomposite_radio'].set_active(not composite)
+            self.widgets['nocomposite_radio'].set_active(not config['composite_icon'])
 
         if (preferences & PREF_ICON_SIZE) == 0:
             self.widgets['iconsize_label'].set_sensitive(False)
             self.widgets['iconsize_spin'].set_sensitive(False)
         else:
             # get icon size
-            gconf_icon_size = self.applet.gconf_client.get_int(
-                    self.applet.gconf_path + "/icon_size")
-            if gconf_icon_size > 0:
-                self.widgets['iconsize_spin'].set_value(gconf_icon_size)
+            self.widgets['iconsize_spin'].set_value(config['icon_size'])
 
         if (preferences & PREF_DIMENSION) == 0:
             self.widgets['dimension_label'].set_sensitive(False)
             self.widgets['dimension_hbox'].set_sensitive(False)
         else:
             # get dimension
-            gconf_cols = self.applet.gconf_client.get_int(
-                    self.applet.gconf_path + "/cols")
-            if gconf_cols > 0:
-                self.widgets['cols_entry'].set_text(str(gconf_cols))
-            gconf_rows = self.applet.gconf_client.get_int(
-                    self.applet.gconf_path + "/rows")
-            if gconf_rows > 0:
-                self.widgets['rows_entry'].set_text(str(gconf_rows))
+            self.widgets['cols_entry'].set_text(str(config['cols']))
+            self.widgets['rows_entry'].set_text(str(config['rows']))
 
         if (preferences & PREF_TITLE) == 0:
             self.widgets['title_label'].set_sensitive(False)
@@ -155,9 +141,7 @@ class StacksConfig(GladeWindow):
             self.widgets['count_label'].set_sensitive(False)
             self.widgets['count_hbox'].set_sensitive(False)
         else:
-            gconf_count = self.applet.gconf_client.get_bool(
-                    self.applet.gconf_path + "/item_count")
-            self.widgets['nocount_radio'].set_active(not gconf_count)
+            self.widgets['nocount_radio'].set_active(not config['item_count'])
 
         # PAGE 3
 
@@ -171,8 +155,7 @@ class StacksConfig(GladeWindow):
             self.widgets['operations_hsep'].set_sensitive(False)
         else:
             # get file oprations
-            actions = self.applet.gconf_client.get_int(
-                    self.applet.gconf_path + "/file_operations")
+            actions = config['fileops']
             if actions > 0:
                 if (actions & gtk.gdk.ACTION_COPY) == 0:
                     self.widgets['copy_check'].set_active(False)
@@ -185,9 +168,7 @@ class StacksConfig(GladeWindow):
             self.widgets['browse_hbox'].set_sensitive(False)
         else:
             # get browsing
-            browsing = self.applet.gconf_client.get_bool(
-                    self.applet.gconf_path + "/browsing")
-            self.widgets['nobrowse_radio'].set_active(not browsing)
+            self.widgets['nobrowse_radio'].set_active(not config['browsing'])
 
     def on_backendselect_button_clicked(self, *args):
         filesel = gtk.FileChooserDialog(
@@ -307,3 +288,75 @@ class StacksConfig(GladeWindow):
 
     def set_current_page(self, page):
         self.widgets['main_notebook'].set_current_page(page)
+
+def get_config_from_gconf(gconf_client, gconf_path, uid):
+    # store config in dict
+    config = {}
+    # try to get backend from gconf
+    _config_backend = gconf_client.get_string(gconf_path + "/backend")
+    try:
+        config['backend'] = VfsUri(_config_backend)
+    except:
+        file_backend_prefix = "file://" + os.path.join(
+                os.path.expanduser("~"),
+                ".config", "awn", "applets", "stacks")
+        back_uri = VfsUri(file_backend_prefix).as_uri()
+        config['backend'] = VfsUri(back_uri.append_path(uid))
+
+    # get dimension
+    _config_cols = gconf_client.get_int(gconf_path + "/cols")
+    if _config_cols <= 0:
+        _config_cols = 5
+    config['cols'] = _config_cols
+
+    _config_rows = gconf_client.get_int(gconf_path + "/rows")
+    if _config_rows <= 0:
+        _config_rows = 4
+    config['rows'] = _config_rows
+
+    # get icon size
+    _config_icon_size = gconf_client.get_int(
+            gconf_path + "/icon_size")
+    if _config_icon_size <= 0:
+        _config_icon_size = 48
+    config['icon_size'] = _config_icon_size
+
+    # get file operations
+    _config_fileops = gconf_client.get_int(
+            gconf_path + "/file_operations")
+    if _config_fileops <= 0:
+        _config_fileops = gtk.gdk.ACTION_LINK
+    config['fileops'] = _config_fileops
+
+    # get composite icon
+    if gconf_client.get_bool(gconf_path + "/composite_icon"):
+        config['composite_icon'] = True
+    else:
+        config['composite_icon'] = False
+
+    # get browsing
+    if gconf_client.get_bool(gconf_path + "/browsing"):
+        config['browsing'] = True
+    else:
+        config['browsing'] = False
+
+    # get icons
+    _config_icon_empty = gconf_client.get_string(
+            gconf_path + "/applet_icon_empty")
+    if _config_icon_empty is None or len(_config_icon_empty) == 0:
+        _config_icon_empty = _to_full_path("icons/stacks-drop.svg")
+    config['icon_empty'] = _config_icon_empty
+
+    _config_icon_full = gconf_client.get_string(
+            gconf_path + "/applet_icon_full")
+    if _config_icon_full is None or len(_config_icon_full) == 0:
+        _config_icon_full = _to_full_path("icons/stacks-full.svg")
+    config['icon_full'] = _config_icon_full
+
+    # get item count
+    if gconf_client.get_bool(gconf_path + "/item_count"):
+        config['item_count'] = True
+    else:
+        config['item_count'] = False
+
+    return config

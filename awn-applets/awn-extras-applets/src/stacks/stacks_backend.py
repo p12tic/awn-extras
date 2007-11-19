@@ -220,12 +220,10 @@ class Backend(gobject.GObject):
             for vfs_uri in vfs_uris:
                 if vfs_uri.equals(store_uri):
                     self.store.remove(iter)
-                    changed = True
-                    break
+                    self.emit("item-removed", None) # iter not valid any more?
+                    return True
             iter = self.store.iter_next(iter)
-        if changed: self.emit("item-removed", iter)
-        return changed
-
+        return False
 
     def read(self):
         return
@@ -268,6 +266,7 @@ class Backend(gobject.GObject):
         rand = random.Random()
         pick = rand.randint(0, max-1)
         iter = self.store.iter_nth_child(None, pick)
+        if not iter: return None
         return self.store.get_value(iter, COL_ICON)
 
 

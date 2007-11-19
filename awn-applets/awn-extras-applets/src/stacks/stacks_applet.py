@@ -37,11 +37,16 @@ from stacks_backend_file import *
 from stacks_backend_folder import *
 from stacks_backend_plugger import *
 from stacks_backend_trasher import *
-from stacks_config import StacksConfig
+from stacks_config import *
 from stacks_launcher import LaunchManager
 from stacks_icons import IconFactory
 from stacks_vfs import VfsUri
 
+import stacks_gui_curved
+import stacks_gui_dialog
+
+STACKS_GUI_DIALOG=1
+STACKS_GUI_CURVED=2
 
 APP="Stacks"
 DIR="locale"
@@ -49,11 +54,6 @@ locale.setlocale(locale.LC_ALL, '')
 gettext.bindtextdomain(APP, DIR)
 gettext.textdomain(APP)
 _ = gettext.gettext
-
-
-def _to_full_path(path):
-    head, tail = os.path.split(__file__)
-    return os.path.join(head, path)
 
 
 """
@@ -67,6 +67,9 @@ class StacksApplet (awn.AppletSimple):
     height = None
     title = None
     effects = None
+
+    gui = None
+    gui_type = 0
 
     # GConf
     gconf_path = None
@@ -85,12 +88,6 @@ class StacksApplet (awn.AppletSimple):
     # Default configuration values, are overruled while reading config
     config = {}
 
-    file_backend_prefix = "file://" +    os.path.join(
-                                    os.path.expanduser("~"), 
-                                    ".config", "awn", "applets", "stacks")
-
-    gui = None
-
     def __init__ (self, uid, orient, height):
         awn.AppletSimple.__init__(self, uid, orient, height)
 
@@ -99,6 +96,8 @@ class StacksApplet (awn.AppletSimple):
         gobject.signal_new("stacks-gui-show", StacksApplet, gobject.SIGNAL_RUN_LAST,
                 gobject.TYPE_NONE, ())
         gobject.signal_new("stacks-gui-toggle", StacksApplet, gobject.SIGNAL_RUN_LAST,
+                gobject.TYPE_NONE, ())
+        gobject.signal_new("stacks-gui-destroy", StacksApplet, gobject.SIGNAL_RUN_LAST,
                 gobject.TYPE_NONE, ())
         gobject.signal_new("stacks-config-changed", StacksApplet, gobject.SIGNAL_RUN_LAST,
                 gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,))
@@ -130,8 +129,16 @@ class StacksApplet (awn.AppletSimple):
         self.connect("orientation-changed", self.applet_orient_changed_cb)
         self.connect("height-changed", self.applet_height_changed_cb)
 
-        import stacks_gui_dialog
-        self.gui = stacks_gui_dialog.StacksGuiDialog(self)
+        # experimental: makeing more guis available
+        self.gui_type = self.gconf_client.get_int(self.gconf_path + "/gui_type")
+        if self.gui_type <= 0 or self.gui_type > 2:
+            self.gui_type = STACKS_GUI_DIALOG
+
+        if self.gui_type == STACKS_GUI_CURVED:
+            self.gui = stacks_gui_curved.StacksGuiCurved(self)
+        else:
+            self.gui = stacks_gui_dialog.StacksGuiDialog(self)
+
         self.backend_get_config()
 
 
@@ -173,6 +180,17 @@ class StacksApplet (awn.AppletSimple):
     def applet_leave_cb (self, widget, event):
         self.title.hide(self)
 
+    def applet_menu_gui_cb(self, widget):
+        self.emit("stacks-gui-destroy")
+        if self.gui_type == STACKS_GUI_DIALOG:
+            self.gui = stacks_gui_curved.StacksGuiCurved(self)
+            self.gui_type = STACKS_GUI_CURVED
+        else:
+            self.gui = stacks_gui_dialog.StacksGuiDialog(self)
+            self.gui_type = STACKS_GUI_DIALOG
+        print "dialog type: ", self.gui_type
+        self.gconf_client.set_int(
+                self.gconf_path + "/gui_type", self.gui_type )
 
     # On mouseclick on applet ->
     # * hide the dialog and show the context menu on button 3
@@ -190,6 +208,10 @@ class StacksApplet (awn.AppletSimple):
                 for i in items:
                   popup_menu.append(i)
             popup_menu.append(gtk.SeparatorMenuItem())
+            gui_item = gtk.CheckMenuItem(label=_("Use experimental gui"))
+            gui_item.set_active(self.gui_type > STACKS_GUI_DIALOG)
+            gui_item.connect_object("toggled", self.applet_menu_gui_cb, self)
+            popup_menu.append(gui_item)
             pref_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
             popup_menu.append(pref_item)
             about_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_ABOUT)
@@ -240,11 +262,10 @@ class StacksApplet (awn.AppletSimple):
     def applet_set_icon(self, pixbuf):
         # setting applet icon
         if not self.backend.is_empty():
-            if not isinstance(pixbuf, gtk.gdk.Pixbuf):
+            if not pixbuf:
                 pixbuf = self.backend.get_random_pixbuf()
-            self.applet_set_full_icon(pixbuf)
-        else:
-            self.applet_set_empty_icon()
+            if pixbuf: return self.applet_set_full_icon(pixbuf)
+        self.applet_set_empty_icon()
 
     # Set the empty icon as applet icon
     def applet_set_empty_icon(self):
@@ -317,69 +338,7 @@ class StacksApplet (awn.AppletSimple):
         awn.awn_effect_stop(self.effects, "attention")
 
     def backend_get_config(self):
-        # try to get backend from gconf
-        _config_backend = self.gconf_client.get_string(
-                self.gconf_path + "/backend")
-        try: self.config['backend'] = VfsUri(_config_backend)
-        except:
-            back_uri = VfsUri(self.file_backend_prefix).as_uri()
-            self.config['backend'] = VfsUri(back_uri.append_path(self.uid))
-
-        # get dimension
-        _config_cols = self.gconf_client.get_int(self.gconf_path + "/cols")
-        if _config_cols <= 0:
-            _config_cols = 5
-        self.config['cols'] = _config_cols
-        _config_rows = self.gconf_client.get_int(self.gconf_path + "/rows")
-        if _config_rows <= 0:
-            _config_rows = 4
-        self.config['rows'] = _config_rows
-
-        # get icon size
-        _config_icon_size = self.gconf_client.get_int(
-                self.gconf_path + "/icon_size")
-        if _config_icon_size <= 0:
-            _config_icon_size = 48
-        self.config['icon_size'] = _config_icon_size
-
-        # get file operations
-        _config_fileops = self.gconf_client.get_int(
-                self.gconf_path + "/file_operations")
-        if _config_fileops <= 0:
-            _config_fileops = gtk.gdk.ACTION_LINK
-        self.config['fileops'] = _config_fileops
-
-        # get composite icon
-        if self.gconf_client.get_bool(self.gconf_path + "/composite_icon"):
-            self.config['composite_icon'] = True
-        else:
-            self.config['composite_icon'] = False
-
-        # get browsing
-        if self.gconf_client.get_bool(self.gconf_path + "/browsing"):
-            self.config['browsing'] = True
-        else:
-            self.config['browsing'] = False
-
-        # get icons
-        _config_icon_empty = self.gconf_client.get_string(
-                self.gconf_path + "/applet_icon_empty")
-        if _config_icon_empty is None or len(_config_icon_empty) == 0:
-            _config_icon_empty = _to_full_path("icons/stacks-drop.svg")
-        self.config['icon_empty'] = _config_icon_empty
-
-        _config_icon_full = self.gconf_client.get_string(
-                self.gconf_path + "/applet_icon_full")
-        if _config_icon_full is None or len(_config_icon_full) == 0:
-            _config_icon_full = _to_full_path("icons/stacks-full.svg")
-        self.config['icon_full'] = _config_icon_full
-
-        # get item count
-        if self.gconf_client.get_bool(self.gconf_path + "/item_count"):
-            self.config['item_count'] = True
-        else:
-            self.config['item_count'] = False
-
+        self.config = get_config_from_gconf(self.gconf_client, self.gconf_path, self.uid)
         self.emit("stacks-config-changed", self.config)
 
         # setup dnd area

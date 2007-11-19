@@ -163,6 +163,20 @@ GtkWidget * build_menu_widget(Menu_item_color * mic, char * text,GdkPixbuf *pbuf
 								G_cairo_menu_conf.text_size*1.2);	    						
 		cairo_fill(cr);		
 	}		
+	if (G_cairo_menu_conf.border_width>0 )
+	{
+	    cairo_set_source_rgba (cr, G_cairo_menu_conf.border_colour.red,
+	    							G_cairo_menu_conf.border_colour.green,
+	    							G_cairo_menu_conf.border_colour.blue, 
+	    							G_cairo_menu_conf.border_colour.alpha);		
+		cairo_set_line_width(cr,G_cairo_menu_conf.border_width);   		    							
+   		cairo_move_to(cr,G_cairo_menu_conf.border_width/2,0);
+   		cairo_line_to(cr,G_cairo_menu_conf.border_width/2,pixmap_height);   		
+   		cairo_stroke(cr);
+   		cairo_move_to(cr,pixmap_width-G_cairo_menu_conf.border_width/2,0);
+   		cairo_line_to(cr,pixmap_width-G_cairo_menu_conf.border_width/2,pixmap_height);   		
+   		cairo_stroke(cr);   		
+	}
     cairo_set_source_rgba (cr, mic->fg.red,mic->fg.green,mic->fg.blue, mic->fg.alpha);
     cairo_set_operator (cr, CAIRO_OPERATOR_OVER);	   	
    	cairo_move_to(cr,G_cairo_menu_conf.text_size*1.4 , G_cairo_menu_conf.text_size*1.1);
@@ -204,9 +218,17 @@ void render_blank(Menu_list_item *entry,int max_width)
     GdkScreen* pScreen;        
 	GdkPixmap * pixmap; 
 	GdkColormap*	cmap;
-
-    pixmap=gdk_pixmap_new(NULL,max_width, 
-    					G_cairo_menu_conf.text_size*0.3,32);   //FIXME
+	if (G_cairo_menu_conf.border_width>0)
+	{
+		pixmap=gdk_pixmap_new(NULL,max_width, 
+							G_cairo_menu_conf.border_width,32);   //FIXME
+	}
+	else
+	{
+		pixmap=gdk_pixmap_new(NULL,max_width, 
+							1,32);   //FIXME
+	
+	}							
     entry->widget=gtk_image_new_from_pixmap(pixmap,NULL);        
     pScreen = gtk_widget_get_screen (G_Fixed);
     cmap = gdk_screen_get_rgba_colormap (pScreen);
@@ -214,11 +236,20 @@ void render_blank(Menu_list_item *entry,int max_width)
             cmap = gdk_screen_get_rgb_colormap (pScreen); 
     gdk_drawable_set_colormap(pixmap,cmap);       
     cr=gdk_cairo_create(pixmap);
-    
-    cairo_set_source_rgba (cr, G_cairo_menu_conf.normal.bg.red,
-    						G_cairo_menu_conf.normal.bg.green,
-    						G_cairo_menu_conf.normal.bg.blue,
-    						G_cairo_menu_conf.normal.bg.alpha);
+	if (G_cairo_menu_conf.border_width>0)
+	{    
+	    cairo_set_source_rgba (cr, G_cairo_menu_conf.border_colour.red,
+	    							G_cairo_menu_conf.border_colour.green,
+	    							G_cairo_menu_conf.border_colour.blue, 
+	    							G_cairo_menu_conf.border_colour.alpha);		
+	}
+	else
+	{
+	    cairo_set_source_rgba (cr, G_cairo_menu_conf.normal.bg.red,
+	    							G_cairo_menu_conf.normal.bg.green,
+	    							G_cairo_menu_conf.normal.bg.blue, 
+	    							G_cairo_menu_conf.normal.bg.alpha);			
+	}	    							
     cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
     cairo_paint(cr);
     cairo_destroy(cr);
@@ -235,7 +266,7 @@ void render_separator(Menu_list_item *entry,int max_width)
 	GdkColormap*	cmap;
 
     pixmap=gdk_pixmap_new(NULL,max_width, 
-    					G_cairo_menu_conf.text_size*0.1,32);   //FIXME
+    					1,32);   //FIXME
     entry->widget=gtk_image_new_from_pixmap(pixmap,NULL);        
     pScreen = gtk_widget_get_screen (G_Fixed);
     cmap = gdk_screen_get_rgba_colormap (pScreen);
@@ -244,10 +275,10 @@ void render_separator(Menu_list_item *entry,int max_width)
     gdk_drawable_set_colormap(pixmap,cmap);       
     cr=gdk_cairo_create(pixmap);
     
-    cairo_set_source_rgba (cr, G_cairo_menu_conf.normal.bg.red/2,
-    						G_cairo_menu_conf.normal.bg.green/2,
-    						G_cairo_menu_conf.normal.bg.blue/2,
-    						G_cairo_menu_conf.normal.bg.alpha);
+    cairo_set_source_rgba (cr, G_cairo_menu_conf.border_colour.red,
+	    							G_cairo_menu_conf.border_colour.green,
+	    							G_cairo_menu_conf.border_colour.blue, 
+	    							G_cairo_menu_conf.border_colour.alpha);		
     cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
     cairo_paint(cr);
     cairo_destroy(cr);
@@ -782,22 +813,37 @@ static gboolean _scroll_event(GtkWidget *widget,GdkEventMotion *event,GtkWidget 
 	GtkBoxChild *boxchild;
 	if (event->type == GDK_SCROLL)
 	{
-
+		GList*  node;
+		gint	first=1;		
+		gint	last=g_list_length (GTK_BOX(box)->children)-2;
 	 	if (event->state & GDK_SHIFT_MASK)
 		{
 			do
 			{
-				boxchild=g_list_first(GTK_BOX(box)->children)->data;		
-				gtk_box_reorder_child (GTK_BOX(box),boxchild->widget,-1);
+				GList * second;
+				if (last>4)
+				{
+					second=g_list_next(g_list_first(GTK_BOX(box)->children));				
+					boxchild=second->data;		
+					gtk_box_reorder_child (GTK_BOX(box),boxchild->widget,last);
+				}
+				else
+					break;					
 			}while(boxchild->widget->allocation.height < G_cairo_menu_conf.text_size);			
 		}
 		else
 		{
 			do
 			{
-
-				boxchild=g_list_last(GTK_BOX(box)->children)->data;
-				gtk_box_reorder_child (GTK_BOX(box),boxchild->widget,0);			
+				GList *secondlast;
+				if (last>4)
+				{
+					secondlast=g_list_previous(g_list_last(GTK_BOX(box)->children));			
+					boxchild=secondlast->data;
+					gtk_box_reorder_child (GTK_BOX(box),boxchild->widget,first);			
+				}
+				else
+					break;					
 			}while(	boxchild->widget->allocation.height < G_cairo_menu_conf.text_size);			
 		}
 		gtk_widget_show_all(widget);

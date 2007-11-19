@@ -54,6 +54,9 @@
 #define GCONF_SHOW_LOGOUT GCONF_MENU "/show_logout"
 #define GCONF_LOGOUT GCONF_MENU "/logout"
 
+#define GCONF_BORDER_COLOUR GCONF_MENU "/border_colour"
+#define GCONF_BORDER_WIDTH GCONF_MENU "/border_width"
+
 #define GCONF_HONOUR_GTK GCONF_MENU "/honour_gtk"
 
 typedef struct
@@ -68,6 +71,8 @@ typedef struct
 	Menu_item_color	normal;
 	Menu_item_color hover;
 	Menu_item_color selected;
+	AwnColor	border_colour;
+	int			border_width;
 	int			text_size;
 	GTree *		submenu_deps;
 	gboolean	show_search;

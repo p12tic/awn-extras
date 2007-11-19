@@ -290,6 +290,26 @@ void read_config(void)
         gconf_client_set_bool(gconf_client,GCONF_SHOW_LOGOUT,G_cairo_menu_conf.show_logout,NULL);        
     } 
 
+
+    value=gconf_client_get(gconf_client,GCONF_BORDER_WIDTH,NULL);		
+    if (value)
+    {																		
+        G_cairo_menu_conf.border_width=gconf_client_get_int(gconf_client,GCONF_BORDER_WIDTH,NULL) ;
+    }
+    else             							
+    {
+		G_cairo_menu_conf.border_width=1;
+        gconf_client_set_int(gconf_client,GCONF_BORDER_WIDTH,G_cairo_menu_conf.border_width,NULL);        
+    }
+
+    svalue = gconf_client_get_string(gconf_client,GCONF_BORDER_COLOUR, NULL );
+    if ( !svalue ) 
+    {
+        gconf_client_set_string(gconf_client , GCONF_BORDER_COLOUR, svalue=g_strdup("11111133"), NULL );
+    }
+    awn_cairo_string_to_color( svalue,&G_cairo_menu_conf.border_colour );    
+    g_free(svalue);     	    
+
     
     value=gconf_client_get(gconf_client,GCONF_HONOUR_GTK,NULL);		
     if (value)
@@ -333,6 +353,13 @@ void read_config(void)
 		G_cairo_menu_conf.hover.fg.green=d.green/65535.0;    
 		G_cairo_menu_conf.hover.fg.blue=d.blue/65535.0;
 		G_cairo_menu_conf.hover.fg.alpha=0.9;   
+
+
+	   	d=top_win->style->text_aa[0];
+		G_cairo_menu_conf.border_colour.red=d.red/65535.0;
+		G_cairo_menu_conf.border_colour.green=d.green/65535.0;    
+		G_cairo_menu_conf.border_colour.blue=d.blue/65535.0;
+		G_cairo_menu_conf.border_colour.alpha=0.4;    
 		
 		G_cairo_menu_conf.menu_item_gradient_factor=1.0;
 	}		 
@@ -413,6 +440,13 @@ static void _save_config(void)
 	gconf_client_set_bool(gconf_client,GCONF_SHOW_LOGOUT,G_cairo_menu_conf.show_logout,NULL);   	 
 
 	gconf_client_set_string(gconf_client , GCONF_LOGOUT, G_cairo_menu_conf.logout, NULL );	
+
+	gconf_client_set_int(gconf_client,GCONF_BORDER_WIDTH,G_cairo_menu_conf.border_width,NULL);    	
+
+    svalue = awncolor_to_string(&G_cairo_menu_conf.border_colour);
+	gconf_client_set_string(gconf_client , GCONF_BORDER_COLOUR, svalue, NULL );
+    g_free(svalue);     	
+	
 }
 
 static gboolean _press_ok(GtkWidget *widget, GdkEventButton *event,GtkWidget * win)
@@ -558,8 +592,7 @@ void show_prefs(void)
 	
 	GtkWidget *normal_label=gtk_label_new("Normal");
 	GdkColor 	colr;
-		
-//	GtkWidget *normal_bg=gtk_button_new_with_label("Background");
+
 	colr.red=G_cairo_menu_conf.normal.bg.red*65535;
 	colr.green=G_cairo_menu_conf.normal.bg.green*65535;	
 	colr.blue=G_cairo_menu_conf.normal.bg.blue*65535;	
@@ -567,8 +600,7 @@ void show_prefs(void)
 	gtk_color_button_set_use_alpha (normal_bg,TRUE);
 	gtk_color_button_set_alpha (normal_bg,G_cairo_menu_conf.normal.bg.alpha*65535);
 	g_signal_connect (G_OBJECT (normal_bg), "color-set",G_CALLBACK (_mod_colour),&G_cairo_menu_conf.normal.bg);		
-	
-//	GtkWidget *normal_fg=gtk_button_new_with_label("Foreground");
+
 	colr.red=G_cairo_menu_conf.normal.fg.red*65535;
 	colr.green=G_cairo_menu_conf.normal.fg.green*65535;	
 	colr.blue=G_cairo_menu_conf.normal.fg.blue*65535;	
@@ -597,6 +629,18 @@ void show_prefs(void)
 	gtk_color_button_set_alpha (hover_fg,G_cairo_menu_conf.hover.fg.alpha*65535);	
 	g_signal_connect (G_OBJECT (hover_fg), "color-set",G_CALLBACK (_mod_colour),&G_cairo_menu_conf.hover.fg);		
 
+
+	GtkWidget *border_label=gtk_label_new("Border");
+
+	colr.red=G_cairo_menu_conf.border_colour.red*65535;
+	colr.green=G_cairo_menu_conf.border_colour.green*65535;	
+	colr.blue=G_cairo_menu_conf.border_colour.blue*65535;	
+	GtkWidget *border_colour=gtk_color_button_new_with_color(&colr);
+	gtk_color_button_set_use_alpha (border_colour,TRUE);
+	gtk_color_button_set_alpha (border_colour,G_cairo_menu_conf.border_colour.alpha*65535);
+	g_signal_connect (G_OBJECT (border_colour), "color-set",G_CALLBACK (_mod_colour),&G_cairo_menu_conf.border_colour);		
+
+
 	GtkWidget * text_table=gtk_table_new(2,4,FALSE);
 //	GtkWidget * search_cmd=gtk_entry_new();
 	GtkWidget * search_cmd=gtk_file_chooser_button_new("Search Util",GTK_FILE_CHOOSER_ACTION_OPEN);
@@ -616,7 +660,8 @@ void show_prefs(void)
 	GtkWidget * adjust_gradient=gtk_spin_button_new_with_range(0.0,1.0,0.01);
 
 	GtkWidget * adjust_textlen=gtk_spin_button_new_with_range(5,30,1);
-	GtkWidget * adjust_textsize=gtk_spin_button_new_with_range(4,40,1);	
+	GtkWidget * adjust_textsize=gtk_spin_button_new_with_range(4,40,1);
+	GtkWidget * adjust_borderwidth=gtk_spin_button_new_with_range(0,10,1);			
 	
 	GtkWidget* buttons=gtk_hbox_new(FALSE,0);	
 	GtkWidget* ok=gtk_button_new_with_label("Ok");
@@ -638,17 +683,16 @@ void show_prefs(void)
 	gtk_spin_button_set_value(adjust_gradient,G_cairo_menu_conf.menu_item_gradient_factor);
 	gtk_spin_button_set_value(adjust_textlen,G_cairo_menu_conf.menu_item_text_len);
 	gtk_spin_button_set_value(adjust_textsize,G_cairo_menu_conf.text_size);			
+	gtk_spin_button_set_value(adjust_borderwidth,G_cairo_menu_conf.border_width);	
 	g_signal_connect (G_OBJECT (adjust_gradient), "value-changed",G_CALLBACK (spin_change),
 									&G_cairo_menu_conf.menu_item_gradient_factor);	
 	g_signal_connect (G_OBJECT (adjust_textlen), "value-changed",G_CALLBACK (spin_int_change),
 									&G_cairo_menu_conf.menu_item_text_len);	
 	g_signal_connect (G_OBJECT (adjust_textsize), "value-changed",G_CALLBACK (spin_int_change),
 									&G_cairo_menu_conf.text_size);	
+	g_signal_connect (G_OBJECT (adjust_borderwidth), "value-changed",G_CALLBACK (spin_int_change),
+								&G_cairo_menu_conf.border_width);	
 	
-//	gtk_entry_set_text(search_cmd,G_cairo_menu_conf.search_cmd);
-//	g_signal_connect (G_OBJECT(search_cmd), "activate",G_CALLBACK (activate), &G_cairo_menu_conf.search_cmd);	
-//	gtk_entry_set_text(filemanager,G_cairo_menu_conf.filemanager);	
-//	g_signal_connect (G_OBJECT(filemanager), "activate",G_CALLBACK (activate), &G_cairo_menu_conf.filemanager);		
 	g_signal_connect (G_OBJECT(search_cmd), "file-set",G_CALLBACK (_file_set), &G_cairo_menu_conf.search_cmd);		
 	g_signal_connect (G_OBJECT(filemanager), "file-set",G_CALLBACK (_file_set), &G_cairo_menu_conf.filemanager);		
 
@@ -695,7 +739,9 @@ void show_prefs(void)
 	gtk_table_attach_defaults(text_table,adjust_textlen,1,2,2,3);		
 	gtk_table_attach_defaults(text_table,gtk_label_new("Font Size"),0,1,3,4);			
 	gtk_table_attach_defaults(text_table,adjust_textsize,1,2,3,4);				
-	
+	gtk_table_attach_defaults(text_table,gtk_label_new("Border Width"),0,1,4,5);			
+	gtk_table_attach_defaults(text_table,adjust_borderwidth,1,2,4,5);	
+		
 	gtk_box_pack_start(GTK_CONTAINER (vbox),gtk,FALSE,FALSE,0);
 	
 	gtk_box_pack_start(GTK_CONTAINER (vbox),gtk_off_section,FALSE,FALSE,0);
@@ -710,8 +756,12 @@ void show_prefs(void)
 	gtk_table_attach_defaults(gtk_off_table,hover_bg,1,2,1,2);	
 	gtk_table_attach_defaults(gtk_off_table,hover_fg,2,3,1,2);	
 	gtk_table_attach_defaults(gtk_off_table,hover_ex,3,4,1,2);		
-	gtk_table_attach_defaults(gtk_off_table,gtk_label_new("Gradient Factor"),0,1,2,3);	
-	gtk_table_attach_defaults(gtk_off_table,adjust_gradient,1,3,2,3);
+	
+	gtk_table_attach_defaults(gtk_off_table,border_label,0,1,2,3);		
+	gtk_table_attach_defaults(gtk_off_table,border_colour,2,3,2,3);
+
+	gtk_table_attach_defaults(gtk_off_table,gtk_label_new("Gradient Factor"),0,1,3,4);	
+	gtk_table_attach_defaults(gtk_off_table,adjust_gradient,2,3,3,4);
 
 
 	

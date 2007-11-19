@@ -61,7 +61,7 @@ static void append_directory_path (GMenuTreeDirectory *directory,GString *path);
 static void update_places(Menu_list_item **p,char* file_manager);
 static Menu_list_item *get_separator(void);
 static void _do_update_places(Monitor_places * user_data);
-
+static Menu_list_item *get_blank(void);
 
 static void
 append_directory_path (GMenuTreeDirectory *directory,
@@ -271,7 +271,8 @@ fill_er_up(GMenuTreeDirectory *directory,GSList**p)
 					dir_item->sublist=NULL;
 					data=g_slist_append(data,dir_item);
 					fill_er_up(GMENU_TREE_DIRECTORY (item),&dir_item->sublist);
-					dir_item->sublist=g_slist_prepend(dir_item->sublist,get_separator());	
+					dir_item->sublist=g_slist_prepend(dir_item->sublist,get_blank());
+					dir_item->sublist=g_slist_append(dir_item->sublist,get_blank());							
 				}	
 
 				break;
@@ -463,6 +464,23 @@ static Menu_list_item *get_separator(void)
 	return item;
 }	
 
+static Menu_list_item *get_blank(void)
+{
+	Menu_list_item * item;	
+	item=g_malloc(sizeof(Menu_list_item));
+	item->item_type=MENU_ITEM_BLANK;
+	item->exec=NULL;
+	item->name=NULL;
+	item->icon=NULL;
+	item->comment=NULL;		
+	item->sublist=NULL;
+	item->null=NULL;	
+	item->widget=NULL;
+	item->hover=NULL;
+	item->normal=NULL;
+	return item;
+}
+
 static void update_places(Menu_list_item **p,char* file_manager)
 {
 	static GnomeVFSVolumeMonitor* vfsvolumes=NULL;
@@ -470,7 +488,7 @@ static void update_places(Menu_list_item **p,char* file_manager)
 	Menu_list_item * item;	
 
 	
-	sublist=g_slist_append(sublist,get_separator());
+	sublist=g_slist_append(sublist,get_blank());
 	
 	
 	item=g_malloc(sizeof(Menu_list_item));	
@@ -508,10 +526,9 @@ static void update_places(Menu_list_item **p,char* file_manager)
 		g_list_foreach(connected,_fillin_connected,&sublist);
 	g_list_free(connected);
 
-	{
-		sublist=g_slist_append(sublist,get_separator());
-	}
-	
+
+	sublist=g_slist_append(sublist,get_separator());
+
 //bookmarks	
 	FILE*	handle;
 	char *  filename=g_strdup_printf("%s/.gtk-bookmarks",homedir);
@@ -564,6 +581,7 @@ static void update_places(Menu_list_item **p,char* file_manager)
 	{
 		printf("Unable to open bookmark file: %s/.gtk-bookmarks\n",homedir);
 	}	
+	sublist=g_slist_append(sublist,get_blank());	
 	*p=sublist;	
 }
 
@@ -667,15 +685,7 @@ GSList* get_menu_data(gboolean show_search,gboolean show_run,gboolean show_place
 	}
 
 
-	data=g_slist_prepend(data,get_separator());	
-	dir_item=g_malloc(sizeof(Menu_list_item));
-	dir_item->item_type=MENU_ITEM_BLANK;
-	dir_item->name=NULL;
-	dir_item->icon=NULL;
-	dir_item->comment=NULL;		
-	dir_item->sublist=NULL;
-	dir_item->null=NULL;	
-	data=g_slist_prepend(data,dir_item);
+	data=g_slist_prepend(data,get_blank());	
 
 	data=g_slist_append(data,get_separator());
 	
@@ -693,6 +703,8 @@ GSList* get_menu_data(gboolean show_search,gboolean show_run,gboolean show_place
 
 		root = gmenu_tree_get_root_directory (menu_tree);	
 		fill_er_up(root,&dir_item->sublist);
+		dir_item->sublist=g_slist_prepend(dir_item->sublist,get_blank());
+		dir_item->sublist=g_slist_append(dir_item->sublist,get_blank());		
 		gmenu_tree_item_unref (root);		
 	}
 	
@@ -709,6 +721,8 @@ GSList* get_menu_data(gboolean show_search,gboolean show_run,gboolean show_place
 		data=g_slist_append(data,dir_item);
 		root = gmenu_tree_get_root_directory (menu_tree);	
 		fill_er_up(root,&dir_item->sublist);
+		dir_item->sublist=g_slist_prepend(dir_item->sublist,get_blank());
+		dir_item->sublist=g_slist_append(dir_item->sublist,get_blank());				
 		gmenu_tree_item_unref (root);		
 	}
 	
@@ -768,17 +782,8 @@ GSList* get_menu_data(gboolean show_search,gboolean show_run,gboolean show_place
 		data=g_slist_append(data,dir_item);
 
 	}	
-	data=g_slist_append(data,get_separator());	
 
-
-	dir_item=g_malloc(sizeof(Menu_list_item));
-	dir_item->item_type=MENU_ITEM_BLANK;
-	dir_item->name=NULL;
-	dir_item->icon=NULL;
-	dir_item->comment=NULL;		
-	dir_item->sublist=NULL;
-	dir_item->null=NULL;	
-	data=g_slist_append(data,dir_item);
+	data=g_slist_append(data,get_blank());
 
 	return data;
 }	

@@ -1,6 +1,7 @@
 SUBDIRS = icons
 
 dist_stacksapplet_DATA = \
+		override.py \
 		stacks_preferences.glade \
 		stacks_applet.py \
 		stacks_backend.py \
@@ -10,6 +11,7 @@ dist_stacksapplet_DATA = \
 		stacks_backend_trasher.py \
 		stacks_config.py \
 		stacks_glade.py \
+		stacks_gui_curved.py \
 		stacks_gui_dialog.py \
 		stacks_icons.py \
 	    stacks_launcher.py \

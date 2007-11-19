@@ -106,8 +106,10 @@ GtkWidget * build_menu_widget(Menu_item_color * mic, char * text,GdkPixbuf *pbuf
 		        G_cairo_menu_conf.text_size*1.6);            
 		cairo_pattern_add_color_stop_rgba(gradient, 0,  mic->bg.red,mic->bg.green,mic->bg.blue, 
 								mic->bg.alpha*G_cairo_menu_conf.menu_item_gradient_factor);
-		cairo_pattern_add_color_stop_rgba(gradient, 0.5, mic->bg.red,mic->bg.green,mic->bg.blue, 
+		cairo_pattern_add_color_stop_rgba(gradient, 0.2, mic->bg.red,mic->bg.green,mic->bg.blue, 
 											mic->bg.alpha);
+		cairo_pattern_add_color_stop_rgba(gradient, 0.8, mic->bg.red,mic->bg.green,mic->bg.blue, 
+											mic->bg.alpha);											
 		cairo_pattern_add_color_stop_rgba(gradient, 1,mic->bg.red,mic->bg.green,mic->bg.blue, 
 									mic->bg.alpha*G_cairo_menu_conf.menu_item_gradient_factor);
 		cairo_set_source(cr, gradient);    
@@ -406,6 +408,83 @@ void render_directory(Menu_list_item *directory,int max_width)
 		g_object_unref(pbuf_over);	
 		
 }
+
+void render_drive(Menu_list_item *entry,int max_width)
+{
+	GtkIconTheme*  g;  	
+	GdkPixbuf *pbuf=NULL;
+	GdkPixbuf *pbuf_over=NULL;
+    g=gtk_icon_theme_get_default();
+        
+    pbuf=gtk_icon_theme_load_icon(g,entry->icon,G_cairo_menu_conf.text_size,0,NULL);
+	if (!pbuf)
+	{
+		pbuf=gdk_pixbuf_new_from_file_at_size(entry->icon,-1,G_cairo_menu_conf.text_size,NULL);		
+	}		
+	if (!pbuf)
+	{
+		pbuf=gtk_icon_theme_load_icon(g,entry->name,G_cairo_menu_conf.text_size,0,NULL);	
+	}		
+	if (!pbuf)
+	{
+		pbuf=gtk_icon_theme_load_icon(g,entry->exec,G_cairo_menu_conf.text_size,0,NULL);		
+	}			
+
+	if (!pbuf)
+	{
+		gchar * filename;
+		filename=g_strdup_printf("/usr/share/pixmaps/%s",entry->icon);
+		pbuf=gdk_pixbuf_new_from_file_at_size(filename,-1,G_cairo_menu_conf.text_size,NULL);		
+		g_free(filename);
+	}		
+	if (!pbuf)
+	{
+		gchar * filename;
+		filename=g_strdup_printf("/usr/share/pixmaps/%s.svg",entry->icon);
+		pbuf=gdk_pixbuf_new_from_file_at_size(filename,-1,G_cairo_menu_conf.text_size,NULL);		
+		g_free(filename);
+	}	
+	if (!pbuf)
+	{
+		gchar * filename;
+		filename=g_strdup_printf("/usr/share/pixmaps/%s.png",entry->icon);
+		pbuf=gdk_pixbuf_new_from_file_at_size(filename,-1,G_cairo_menu_conf.text_size,NULL);		
+		g_free(filename);
+	}	
+	if (!pbuf)
+	{
+		gchar * filename;
+		filename=g_strdup_printf("/usr/share/pixmaps/%s.xpm",entry->icon);
+		pbuf=gdk_pixbuf_new_from_file_at_size(filename,-1,G_cairo_menu_conf.text_size,NULL);		
+		g_free(filename);
+	}		
+	if (!pbuf)
+	{
+		pbuf=gtk_icon_theme_load_icon(g,"applications-other",G_cairo_menu_conf.text_size,0,NULL);		
+	}	
+	if (!pbuf)
+	{
+		pbuf=gtk_icon_theme_load_icon(g,"application-x-executable",G_cairo_menu_conf.text_size,0,NULL);		
+	}			
+
+	if (entry->drive_mount)
+		pbuf_over=gtk_icon_theme_load_icon(g,"important",G_cairo_menu_conf.text_size,0,NULL);
+
+	entry->widget=gtk_event_box_new();
+	gtk_event_box_set_visible_window(entry->widget,FALSE);
+	gtk_event_box_set_above_child (entry->widget,TRUE);	
+	entry->normal=build_menu_widget(&G_cairo_menu_conf.normal,entry->name,pbuf,pbuf_over,max_width,MENU_WIDGET_NORMAL);
+	entry->hover=build_menu_widget(&G_cairo_menu_conf.hover,entry->name,pbuf,pbuf_over,max_width,MENU_WIDGET_NORMAL);	
+
+	g_object_ref(entry->normal);
+	gtk_container_add(entry->widget,entry->normal);		
+	if (pbuf)
+		g_object_unref(pbuf);
+	if (pbuf_over)
+		g_object_unref(pbuf_over);	
+		
+}
+
 
 void _fixup_menus(GtkFixedChild * child,GtkWidget * subwidget)
 {
@@ -919,7 +998,7 @@ void render_menu_widgets(Menu_list_item * menu_item,GtkWidget * box)
 			break;			
 		case MENU_ITEM_DRIVE:
 			{
-				render_entry(menu_item,max_width);
+				render_drive(menu_item,max_width);
 				#if GTK_CHECK_VERSION(2,12,0)
 				if (G_cairo_menu_conf.show_tooltips&&menu_item->comment)
 					gtk_widget_set_tooltip_text(menu_item->widget,menu_item->comment);

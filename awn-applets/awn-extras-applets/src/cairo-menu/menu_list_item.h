@@ -70,6 +70,7 @@ typedef struct
 		GtkWidget	*run_entry;
 		void (*monitor)(gpointer callback, gpointer data,gpointer box);
 		gboolean (*drive_prep)(gpointer menu_item,gchar * filemanager);
+		gboolean (*drive_mount)(gpointer menu_item,gchar * filemanager);		
 		gpointer null;
 				
 	}	;	

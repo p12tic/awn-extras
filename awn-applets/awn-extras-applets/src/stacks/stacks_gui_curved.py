@@ -33,8 +33,6 @@ import locale
 import gettext
 import math
 
-import override
-
 from stacks_backend import *
 from stacks_backend_file import *
 from stacks_backend_folder import *
@@ -54,15 +52,29 @@ gettext.textdomain(APP)
 _ = gettext.gettext
 
 
-def _to_full_path(path):
-    head, tail = os.path.split(__file__)
-    return os.path.join(head, path)
+BOR = 4
+GAP = 20
+
+class Dialog (awn.AppletDialog):
+    def __init__ (self, applet):
+        awn.AppletDialog.__init__ (self, applet)
+        self.connect ("expose-event",self._expose)
+
+    def _expose (self, widget, event):
+        cr = widget.window.cairo_create ()
+        cr.set_operator (cairo.OPERATOR_CLEAR)
+        cr.paint ()
+        cr.set_operator (cairo.OPERATOR_OVER)
+
+        for c in self.get_children():
+            self.propagate_expose (c, event)
+        return True
 
 
 """
 Main Applet class
 """
-class StacksGuiCurved():
+class StacksGuiCurved:
 
     # Structures
     dialog = None
@@ -283,7 +295,7 @@ class StacksGuiCurved():
         if not self.dialog:
             
             self.dialog = awn.AppletDialog (self.applet)
-            self.dialog = override.Dialog (self.applet)
+            self.dialog = Dialog (self.applet)
             self.dialog.set_focus_on_map(True)
             self.dialog.connect("focus-out-event", self.dialog_focus_out)
             

@@ -54,7 +54,7 @@ _ = gettext.gettext
 """
 Main Applet class
 """
-class StacksGuiDialog():
+class StacksGuiDialog:
 
     # Structures
     dialog = None

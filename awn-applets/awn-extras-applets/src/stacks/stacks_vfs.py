@@ -25,6 +25,8 @@ import os
 
 class GUITransfer(object):
 
+    dialog = None
+
     def __init__(self, src, dst, options):
         self.__progress = None
         self.cancel = False

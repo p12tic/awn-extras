@@ -51,8 +51,7 @@ class StacksConfig(GladeWindow):
     applet = None
 
     backend = None
-    applet_icon_empty = None
-    applet_icon_full = None
+    config = None
 
     def __init__(self, applet):
         GladeWindow.__init__(self)
@@ -63,6 +62,7 @@ class StacksConfig(GladeWindow):
                 self.applet.gconf_client,
                 self.applet.gconf_path,
                 self.applet.uid)
+        self.config = config
 
         preferences = ALL_PREFS
         if self.backend_type == BACKEND_TYPE_FILE:
@@ -204,17 +204,17 @@ class StacksConfig(GladeWindow):
         img_filter.add_pixbuf_formats()
         filesel.add_filter(img_filter)
         if type == "empty":
-            filesel.set_filename(self.applet_icon_empty)
+            filesel.set_filename(self.config['icon_empty'])
         else:
-            filesel.set_filename(self.applet_icon_full)
+            filesel.set_filename(self.config['icon_full'])
         if filesel.run() == gtk.RESPONSE_OK and filesel.get_filename():
             image = IconFactory().load_image(filesel.get_filename(), 24)
             if image != None:
                 if type == "empty":
-                    self.applet_icon_empty = filesel.get_filename()
+                    self.config['icon_empty'] = filesel.get_filename()
                     self.widgets['empty_button'].set_image(image)
                 else:
-                    self.applet_icon_full = filesel.get_filename()
+                    self.config['icon_full'] = filesel.get_filename()
                     self.widgets['full_button'].set_image(image)
         filesel.destroy()
 
@@ -269,10 +269,10 @@ class StacksConfig(GladeWindow):
         # set icons
         self.applet.gconf_client.set_string(
                 self.applet.gconf_path + "/applet_icon_empty",
-                self.applet_icon_empty)
+                self.config['icon_empty'])
         self.applet.gconf_client.set_string(
                 self.applet.gconf_path + "/applet_icon_full",
-                self.applet_icon_full)
+                self.config['icon_full'])
         # set file operations
         actions = 0
         if self.widgets['copy_check'].get_active():

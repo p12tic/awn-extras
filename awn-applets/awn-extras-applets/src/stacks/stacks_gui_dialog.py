@@ -51,11 +51,6 @@ gettext.textdomain(APP)
 _ = gettext.gettext
 
 
-def _to_full_path(path):
-    head, tail = os.path.split(__file__)
-    return os.path.join(head, path)
-
-
 """
 Main Applet class
 """
@@ -77,15 +72,22 @@ class StacksGuiDialog():
     context_menu_visible = False
     just_dragged = False
 
+    signal_ids = []
+
     def __init__ (self, applet):
         # connect to events
         self.applet = applet
-        applet.connect("stacks-gui-hide", self._stacks_gui_hide_cb)
-        applet.connect("stacks-gui-show", self._stacks_gui_show_cb)
-        applet.connect("stacks-gui-toggle", self._stacks_gui_toggle_cb)
-        applet.connect("stacks-config-changed", self._stacks_config_changed_cb)
-        applet.connect("stacks-item-removed", self._item_removed_cb)
-        applet.connect("stacks-item-created", self._item_created_cb)
+        self.signal_ids.append(applet.connect("stacks-gui-hide", self._stacks_gui_hide_cb))
+        self.signal_ids.append(applet.connect("stacks-gui-show", self._stacks_gui_show_cb))
+        self.signal_ids.append(applet.connect("stacks-gui-toggle", self._stacks_gui_toggle_cb))
+        self.signal_ids.append(applet.connect("stacks-gui-destroy", self._destroy_cb))
+        self.signal_ids.append(applet.connect("stacks-config-changed", self._stacks_config_changed_cb))
+        self.signal_ids.append(applet.connect("stacks-item-removed", self._item_removed_cb))
+        self.signal_ids.append(applet.connect("stacks-item-created", self._item_created_cb))
+
+    def _destroy_cb(self, widget):
+        for id in self.signal_ids: self.applet.disconnect(id)
+        if self.dialog: self.dialog.destroy()
 
     def _stacks_gui_hide_cb(self, widget):
         if self.dialog:

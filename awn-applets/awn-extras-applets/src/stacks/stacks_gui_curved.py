@@ -71,11 +71,13 @@ class StacksGuiCurved():
     
     maxquantity = None
     stack_height = 100    
-    angle_interval = 0.5
+    angle_interval = 0.55
     radius = 7000
     direction = "RIGHT"
     text_distance = 50    
+    
 
+    active_button = None
     applet = None
     config = None
     store = None
@@ -86,15 +88,23 @@ class StacksGuiCurved():
     context_menu_visible = False
     just_dragged = False
 
+    signal_ids = []
+
     def __init__ (self, applet):
         # connect to events
         self.applet = applet
-        applet.connect("stacks-gui-hide", self._stacks_gui_hide_cb)
-        applet.connect("stacks-gui-show", self._stacks_gui_show_cb)
-        applet.connect("stacks-gui-toggle", self._stacks_gui_toggle_cb)
-        applet.connect("stacks-config-changed", self._stacks_config_changed_cb)
-        applet.connect("stacks-item-removed", self._item_removed_cb)
-        applet.connect("stacks-item-created", self._item_created_cb)
+        self.signal_ids.append(applet.connect("stacks-gui-hide", self._stacks_gui_hide_cb))
+        self.signal_ids.append(applet.connect("stacks-gui-show", self._stacks_gui_show_cb))
+        self.signal_ids.append(applet.connect("stacks-gui-toggle", self._stacks_gui_toggle_cb))
+        self.signal_ids.append(applet.connect("stacks-gui-destroy", self._destroy_cb))
+        self.signal_ids.append(applet.connect("stacks-config-changed", self._stacks_config_changed_cb))
+        self.signal_ids.append(applet.connect("stacks-item-removed", self._item_removed_cb))
+        self.signal_ids.append(applet.connect("stacks-item-created", self._item_created_cb))
+
+    def _destroy_cb(self, widget):
+        for id in self.signal_ids: self.applet.disconnect(id)
+        if self.dialog: self.dialog.destroy()
+
 
     def _stacks_gui_hide_cb(self, widget):
         if self.dialog:
@@ -171,7 +181,7 @@ class StacksGuiCurved():
         return context_menu
 
 
-    def _item_created_cb(self, widget, store, iter, angle = 0, direction = "LEFT"):
+    def _item_created_cb(self, widget, store, iter, angle = 0, direction = "LEFT",id = 0):
         if store:
             self.store = store
         # get values from store
@@ -181,12 +191,10 @@ class StacksGuiCurved():
         icon_size = self.config['icon_size']
         # create new button
         
-        #button = gtk.Button()
         ## using a gtk.EventBox because we want a transparent button        
         button = gtk.EventBox()
+
         button.set_visible_window(True)
-        
-        #button.set_relief(gtk.RELIEF_NONE)
         
         button.drag_source_set( gtk.gdk.BUTTON1_MASK,
                                 self.applet.dnd_targets,
@@ -206,19 +214,54 @@ class StacksGuiCurved():
                         self.item_drag_begin)
                         
                         
+               
+        #button.connect ("enter-notify-event", self.item_button_enter_notify, id)
+         
+        #button.connect ("motion-notify-event", self.item_button_motion_notify, id)
+
+        button.connect ("leave-notify-event", self.item_button_leave_notify, id)
+        
+        
+                        
+        if self.active_button == id:
+        	MouseOver = True
+        else:
+        	MouseOver = False
                         
         width = 210
         height = 50
         
         offset = int(round(width * math.sin(angle)+3))
-        CC = cairoItem(lbl_text,icon,150, 17, angle, direction, offset)  
+        CC = cairoItem(lbl_text,icon,150, 17, angle, direction, MouseOver, offset)  
+        CC.add_events(gtk.gdk.POINTER_MOTION_MASK)
+        CC.connect ("motion-notify-event", self.item_button_motion_notify, id)
         CC.set_size_request(width , height + offset ) 
+        
+        
         
         button.add(CC)  
         
         self.store.set_value(iter, COL_BUTTON, button)
         return button
 
+    def item_button_motion_notify (self, widget, event, id):
+    	if event.y > 5 and event.y < 60 and self.active_button != id:
+   			self.active_button = id
+   			self.dialog_show_new(self.current_page)
+    
+    
+    def item_button_enter_notify (self, widget, event, id):
+    	if self.active_button != id and event.y <60 :
+    		self.active_button = id
+    		self.dialog_show_new(self.current_page)
+    	
+
+    def item_button_leave_notify (self, widget, event, id):
+    	if self.active_button == id:
+    		self.active_button = None
+    		#self.dialog_show_new(self.current_page)
+    	
+		
 
     def dialog_show_prev_page(self, widget, t):
         self.dialog_show_new(self.current_page-1)
@@ -259,8 +302,6 @@ class StacksGuiCurved():
         if new_direction != self.direction:
         	self.direction = new_direction
         	direction_change = True
-        	print "direction changed to "
-        	print self.direction
         else:
         	direction_change = False
         
@@ -288,7 +329,7 @@ class StacksGuiCurved():
             x = self.calc_x_position (i, self.angle_interval, self.radius, self.direction, maxx)
             y = self.calc_y_position (i, self.angle_interval, self.radius, maxy)
             angle = self.calc_angle (i, self.angle_interval, self.radius)
-            button = self._item_created_cb(None, None, iter, angle, self.direction)
+            button = self._item_created_cb(None, None, iter, angle, self.direction, i)
             #t = button.get_parent()
             #if t:
             #    t.remove(button)
@@ -329,11 +370,18 @@ class StacksGuiCurved():
 				arrow_x_offset = -maxx
 			
 			if enable_left_arrow:
+				
+				if self.active_button == "bt_left":
+					MouseOver = True
+				else:
+					MouseOver = False
 				bt_left = gtk.EventBox()
 				bt_left.set_visible_window(True)
 				bt_left.connect( "button-release-event", self.dialog_show_prev_page)
-				
-				bt_left_cairoArrow = cairoArrow(arrow_size, "LEFT")  
+				bt_left.connect ("enter-notify-event", self.item_button_enter_notify, "bt_left")
+				bt_left.connect ("leave-notify-event", self.item_button_leave_notify, "bt_left")
+        			
+				bt_left_cairoArrow = cairoArrow(arrow_size, "LEFT", MouseOver)  
 				bt_left_cairoArrow.set_size_request(arrow_size , arrow_size) 
 				
 				bt_left.add(bt_left_cairoArrow)  
@@ -342,11 +390,17 @@ class StacksGuiCurved():
 				self.stack_container.move(bt_left,maxx - arrow_size + maxx,maxy )
 				
 			if enable_right_arrow:
+				if self.active_button == "bt_right":
+					MouseOver = True
+				else:
+					MouseOver = False				
 				bt_right = gtk.EventBox()
 				bt_right.set_visible_window(True)
 				bt_right.connect( "button-release-event", self.dialog_show_next_page)
+				bt_right.connect ("enter-notify-event", self.item_button_enter_notify, "bt_right")
+				bt_right.connect ("leave-notify-event", self.item_button_leave_notify, "bt_right")
 
-				bt_right_cairoArrow  = cairoArrow(arrow_size, "RIGHT") 
+				bt_right_cairoArrow  = cairoArrow(arrow_size, "RIGHT", MouseOver) 
 				bt_right_cairoArrow.set_size_request(arrow_size , arrow_size) 
 				
 				bt_right.add(bt_right_cairoArrow)  
@@ -354,8 +408,6 @@ class StacksGuiCurved():
 				self.stack_container.add(bt_right)  
 				self.stack_container.move(bt_right,maxx + arrow_size + maxx,maxy )
 			
-				
-
 
         self.dialog.show_all()
         
@@ -396,7 +448,7 @@ class StacksGuiCurved():
   		active_monitor_number = screen.get_monitor_at_point(wx, wy)
   		active_monitor_geometry = screen.get_monitor_geometry(active_monitor_number)
   		active_monitor_height = active_monitor_geometry.height    	
-  		maxquantity = int(round((active_monitor_height / (self.config['icon_size'] * 1.5))))
+  		maxquantity = int(round((active_monitor_height / (self.config['icon_size'] * 1.6))))
   		return maxquantity
     
     def detect_stack_position(self):
@@ -419,7 +471,7 @@ class StacksGuiCurved():
 # Create a GTK+ widget to draw the label
 class cairoItem(gtk.DrawingArea):
 
-    def __init__(self, labletext, icon, width, height, rotation, direction = "LEFT", y_offset = 0,  x_offset = 0):
+    def __init__(self, labletext, icon, width, height, rotation, direction = "LEFT", mouse_over = False, y_offset = 0,  x_offset = 0):
 		
 		self.labletext = labletext
 		self.width = width
@@ -429,6 +481,8 @@ class cairoItem(gtk.DrawingArea):
 		
 		self.x_offset = x_offset
 		self.y_offset = y_offset
+		
+		self.mouse_over = mouse_over
 		
 		if direction == "LEFT":
 			self.icon_xpos = 0
@@ -475,7 +529,10 @@ class cairoItem(gtk.DrawingArea):
 		context.set_font_size(12)
 		context.select_font_face("Sans",cairo.FONT_SLANT_NORMAL,cairo.FONT_WEIGHT_BOLD)
 		context.rotate(-self.rotation)
-		context.set_source_rgba (0,0,0,0.65)
+		if self.mouse_over:
+			context.set_source_rgba (0,0,0,0.75)
+		else:
+			context.set_source_rgba (0,0,0,0.55)
 		
 		label_width = context.text_extents(self.labletext)[2] + 10
 		
@@ -504,8 +561,15 @@ class cairoItem(gtk.DrawingArea):
 		context.show_text(self.labletext )	
 		
     def drawIcon(self, context):
+		
+		
+		if self.mouse_over:
+			context.set_source_rgba (0,0,0,0.45)
+			self.draw_rounded_rect(context,self.icon_xpos + self.x_offset,self.icon_ypos + self.y_offset,50,50,15)
+			context.fill()
+			context.save()
+			
 		icon = self.icon
-		#scaled = icon.scale_simple(60,60,gdk.INTERP_BILINEAR)
 		context.set_source_pixbuf(icon,self.icon_xpos + self.x_offset,self.icon_ypos + self.y_offset)
 		context.fill()
 		context.paint()
@@ -541,8 +605,9 @@ class cairoItem(gtk.DrawingArea):
 
 class cairoArrow(gtk.DrawingArea):
 
-    def __init__(self, size, direction = "LEFT"):
+    def __init__(self, size, direction = "LEFT", mouse_over = False):
 		
+		self.mouse_over = mouse_over		
 		self.size = size
 		self.direction = direction
 		self.r = int(round(size/2))
@@ -553,11 +618,7 @@ class cairoArrow(gtk.DrawingArea):
 		
     def expose(self, widget, event):
 		self.context = self.new_transparent_cairo_window(self)
-		#self.draw_box(self.context)
-		#self.days(self.context)
-		
 		self.drawArrow(self.context)
-		#self.bottom_text(self.context)
 		return True
 
     def new_transparent_cairo_window(self,widget):
@@ -569,7 +630,10 @@ class cairoArrow(gtk.DrawingArea):
 		return cr		
 	
     def drawArrow (self, context):
-    	context.set_source_rgba (0,0,0,0.65)
+	if self.mouse_over == True:
+    		context.set_source_rgba (0,0,0,0.75)
+	else:
+		context.set_source_rgba (0,0,0,0.55)
     	
     	context.arc (self.r, self.r, self.r, 0., 2 * math.pi);
     	context.fill()

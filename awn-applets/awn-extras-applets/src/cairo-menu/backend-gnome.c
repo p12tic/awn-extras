@@ -745,7 +745,7 @@ GSList* get_menu_data(gboolean show_search,gboolean show_run,gboolean show_place
 		dir_item=g_malloc(sizeof(Menu_list_item));
 		dir_item->item_type=MENU_ITEM_RUN;
 		dir_item->name=g_strdup("Run:");
-		dir_item->icon=g_strdup("stock_run");
+		dir_item->icon=g_strdup("exec");
 		dir_item->comment=g_strdup("Run a program");		
 		dir_item->sublist=NULL;
 		dir_item->search_entry=NULL;	

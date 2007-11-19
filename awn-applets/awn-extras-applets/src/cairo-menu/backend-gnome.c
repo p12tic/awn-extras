@@ -535,9 +535,17 @@ static void update_places(Menu_list_item **p,char* file_manager)
 						p--;
 					if (p!=line)
 					{
+						char * tmp;
 						p++;
 						item=g_malloc(sizeof(Menu_list_item));	
 						item->item_type=MENU_ITEM_ENTRY;
+						
+						for(tmp=p; *tmp && (*tmp!=' ');tmp++);
+						if (*tmp==' ')
+						{
+							*tmp='\0';
+							p=tmp+1;
+						}
 						item->name=g_strdup(p);
 						item->icon=g_strdup("stock_folder");
 						item->exec=g_strdup_printf("%s %s",file_manager,line);			

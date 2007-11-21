@@ -93,6 +93,7 @@ typedef struct
 }AwnNotificationDaemon;
 
 
+//FIXME  put in to a struct
 AwnApplet *G_awn_app=NULL;
 int G_awn_app_height=0;
 AwnColor G_awn_border;
@@ -1112,11 +1113,10 @@ _height_changed (AwnApplet *app, guint height, gpointer *data)
 {
 }
 
-gboolean send_startup_message(gpointer data)
+gboolean send_message(gchar *body)
 {
 	NotifyNotification *notify;	
 	gchar *summary = "Awn Notification Daemon Message";
-	gchar *body = "Awn Notification Daemon has loaded Successfully.\nClick <a href=\"http://wiki.awn-project.org/index.php?title=Awn_Notification-Daemon\">Here</a> for online documentation.";
 	gchar *type = NULL;
 	gchar *icon_str = NULL;
 	glong expire_timeout = NOTIFY_EXPIRES_DEFAULT;
@@ -1150,85 +1150,14 @@ gboolean hide_icon(gpointer data)
 	return FALSE;
 }
 
-AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
+
+
+static void read_config(void)
 {
-	NotifyDaemon *daemon;
-	DBusGConnection *connection;
-	DBusGProxy *bus_proxy;
-	GError *error;
-	guint request_name_result;
-	AwnApplet *applet;
+	static	gboolean	done_once=FALSE;
     GConfValue*	 value;
     gchar * svalue;
 
-    G_awn_app_height=height;
-
-    G_awn_app = applet = AWN_APPLET (awn_applet_simple_new (uid, orient, height));
-    
-    g_signal_connect (G_OBJECT (applet), "height-changed", G_CALLBACK (_height_changed), (gpointer)applet);    
-    gtk_widget_set_size_request (GTK_WIDGET (applet), height, height);
-
-    G_awn_icon=gdk_pixbuf_new(GDK_COLORSPACE_RGB,TRUE,8,height,height);
-    gdk_pixbuf_fill(G_awn_icon,0x00000033);  
-    awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (applet),G_awn_icon);  
-	G_awn_icon=NULL;
-
-    gtk_widget_show_all (GTK_WIDGET (applet));
-
-
-	g_log_set_always_fatal(G_LOG_LEVEL_ERROR | G_LOG_LEVEL_CRITICAL);
-
-	gconf_client = gconf_client_get_default();
-	gconf_client_add_dir(gconf_client, GCONF_KEY_DAEMON,
-						 GCONF_CLIENT_PRELOAD_NONE, NULL);
-
-
-
-	error = NULL;
-
-	connection = dbus_g_bus_get(DBUS_BUS_SESSION, &error);
-
-	while (connection == NULL)
-	{
-		printf("Failed to open connection to bus: %s. sleeping 5 s.\n",
-				   error->message);
-		g_error_free(error);
-    	connection = dbus_g_bus_get(DBUS_BUS_SESSION, &error);		
-        sleep(5);
-	}
-
-	dbus_conn = dbus_g_connection_get_connection(connection);
-    assert(dbus_conn);
-    
-	dbus_g_object_type_install_info(NOTIFY_TYPE_DAEMON,
-									&dbus_glib_notification_daemon_object_info);
-
-	bus_proxy = dbus_g_proxy_new_for_name(connection,
-										  "org.freedesktop.DBus",
-										  "/org/freedesktop/DBus",
-										  "org.freedesktop.DBus");
-    assert(bus_proxy);
-	while (!dbus_g_proxy_call(bus_proxy, "RequestName", &error,
-						   G_TYPE_STRING, "org.freedesktop.Notifications",
-						   G_TYPE_UINT, 0,
-						   G_TYPE_INVALID,
-						   G_TYPE_UINT, &request_name_result,
-						   G_TYPE_INVALID))
-	{
-		printf("Could not aquire name: %s. sleeping 2 seconds", error->message);
-		sleep(2);
-	}
-
-	daemon = g_object_new(NOTIFY_TYPE_DAEMON, NULL);
-    assert(daemon);
-    
-	gconf_client_notify_add(gconf_client, GCONF_KEY_POPUP_LOCATION,
-							popup_location_changed_cb, daemon,
-							NULL, NULL);
-
-	/* Emit signal to verify/set current key */
-	gconf_client_notify(gconf_client, GCONF_KEY_POPUP_LOCATION);
-	
     value=gconf_client_get(gconf_client, GCONF_KEY_AWN_KILL_ND,
 										NULL);		
 										
@@ -1236,26 +1165,33 @@ AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
     {																		
         if (gconf_client_get_bool(gconf_client,GCONF_KEY_AWN_KILL_ND ,NULL) )
         {
-            if ( system("pgrep notification-daemon && killall notification-daemon") == -1)
-            {            
-                printf("Failed to execute killall command: disable kill notication daemon and configure to kill daemon before loading applet\n");                
-            }
-            else
-            {
-                system("pgrep notification-daemon &&  killall -9 notification-daemon");
-            }
+        	if (!done_once)
+        	{
+        		printf("The following is an informational message only: \n");
+        		fflush(stdout);
+		        if ( system("killall notification-daemon") == -1)
+		        {            
+		            printf("Failed to execute killall command: disable kill notication daemon and configure to kill daemon before loading applet\n");                
+		        }
+		        else
+		        {
+					printf("First attempt failed:  The following is an informational message only: \n");
+					fflush(stdout);		        
+		            system("killall -9 notification-daemon");
+		        }
+			}		        
         }        										     										
     }	
     else
     {
         gconf_client_set_bool (gconf_client,GCONF_KEY_AWN_KILL_ND,TRUE ,NULL);
-        if ( system("pgrep notification-daemon && killall notification-daemon") == -1)
+        if ( system("killall notification-daemon") == -1)
         {
             printf("Failed to execute killall command: disable kill notication daemon and configure to kill daemon before loading applet\n");                
         }        
         else
         {
-            system("pgrep notification-daemon && killall -9 notification-daemon");
+            system("killall -9 notification-daemon");
         }
         
     }		
@@ -1365,10 +1301,181 @@ AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
         G_timeout=-1;
         gconf_client_set_int (gconf_client,GCONF_KEY_AWN_TIMEOUT,G_timeout ,NULL);        
     }
+    done_once=TRUE;
+}
+
+static void
+config_changed(GConfClient *client, guint cnxn_id,
+						  GConfEntry *entry, gpointer user_data)
+{
+	static	gboolean	done_once=FALSE;
+    GConfValue*	 value;
+    gchar * svalue;
+
+	printf("config_changed\n");
+
+    value=gconf_client_get(gconf_client, GCONF_KEY_AWN_CLIENT_POS,
+										NULL);		
+    if (value)
+    {																		
+        G_awn_client_pos=gconf_client_get_bool(gconf_client,GCONF_KEY_AWN_CLIENT_POS ,NULL);
+    }
+    
+    value=gconf_client_get(gconf_client, GCONF_KEY_AWN_HONOUR_GTK,
+										NULL);		
+    if (value)
+    {																		
+        G_awn_honour_gtk=gconf_client_get_bool(gconf_client,GCONF_KEY_AWN_HONOUR_GTK ,NULL);
+    }
+    
+    svalue = gconf_client_get_string(gconf_client,GCONF_KEY_AWN_BG, NULL );
+    if ( svalue ) 
+    {
+		awn_cairo_string_to_color( svalue,&G_awn_bg );    
+		g_free(svalue);
+ 	}
+ 	
+    svalue = gconf_client_get_string(gconf_client,GCONF_KEY_AWN_TEXT_COLOUR, NULL );
+    if ( svalue ) 
+    {
+		awn_cairo_string_to_color( svalue,&G_awn_text );    
+		G_awn_text_str=g_strdup(svalue);
+		if (strlen(G_awn_text_str)>6)
+		    G_awn_text_str[6]='\0';
+		g_free(svalue);
+	}
+	            	
+    svalue = gconf_client_get_string(gconf_client,GCONF_KEY_AWN_BORDER, NULL );
+    if ( svalue ) 
+    {
+		awn_cairo_string_to_color( svalue,&G_awn_border );    
+		g_free(svalue);     
+    }
+    
+    value=gconf_client_get(gconf_client,GCONF_KEY_AWN_BORDER_WIDTH,NULL);		
+    if (value)
+    {																		
+        G_awn_border_width=gconf_client_get_int(gconf_client,GCONF_KEY_AWN_BORDER_WIDTH,NULL) ;
+    }
+
+    value=gconf_client_get(gconf_client,GCONF_KEY_AWN_GRADIENT_FACTOR,NULL);		
+    if (value)
+    {																		
+        G_awn_gradient_factor=gconf_client_get_float(gconf_client,GCONF_KEY_AWN_GRADIENT_FACTOR,NULL) ;
+    }
+ 
+    value=gconf_client_get(gconf_client,GCONF_KEY_AWN_OVERRIDE_X,NULL);		
+    if (value)
+    {
+        G_awn_override_x=gconf_client_get_int(gconf_client,GCONF_KEY_AWN_OVERRIDE_X,NULL) ;
+    }
+    
+    value=gconf_client_get(gconf_client,GCONF_KEY_AWN_OVERRIDE_Y,NULL);		
+    if (value)
+    {																		
+        G_awn_override_y=gconf_client_get_int(gconf_client,GCONF_KEY_AWN_OVERRIDE_Y,NULL) ;
+    }
+
+
+    value=gconf_client_get(gconf_client,GCONF_KEY_AWN_TIMEOUT,NULL);		
+    if (value)
+    {																		
+        G_timeout=gconf_client_get_int(gconf_client,GCONF_KEY_AWN_TIMEOUT,NULL) ;
+    }
+
+	send_message("Configuration has been modified\nClick <a href=\"http://wiki.awn-project.org/index.php?title=Awn_Notification-Daemon\">Here</a> for online documentation.");
+}						  
+
+AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
+{
+	NotifyDaemon *daemon;
+	DBusGConnection *connection;
+	DBusGProxy *bus_proxy;
+	GError *error;
+	guint request_name_result;
+	AwnApplet *applet;
+
+
+    G_awn_app_height=height;
+
+    G_awn_app = applet = AWN_APPLET (awn_applet_simple_new (uid, orient, height));
+    
+    g_signal_connect (G_OBJECT (applet), "height-changed", G_CALLBACK (_height_changed), (gpointer)applet);    
+    gtk_widget_set_size_request (GTK_WIDGET (applet), height, height);
+
+    G_awn_icon=gdk_pixbuf_new(GDK_COLORSPACE_RGB,TRUE,8,height,height);
+    gdk_pixbuf_fill(G_awn_icon,0x00000033);  
+    awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (applet),G_awn_icon);  
+	G_awn_icon=NULL;
+
+    gtk_widget_show_all (GTK_WIDGET (applet));
+
+
+	g_log_set_always_fatal(G_LOG_LEVEL_ERROR | G_LOG_LEVEL_CRITICAL);
+
+	gconf_client = gconf_client_get_default();
+	gconf_client_add_dir(gconf_client, GCONF_KEY_DAEMON,
+						 GCONF_CLIENT_PRELOAD_NONE, NULL);
+
+
+
+	error = NULL;
+
+	connection = dbus_g_bus_get(DBUS_BUS_SESSION, &error);
+
+	while (connection == NULL)
+	{
+		printf("Failed to open connection to bus: %s. sleeping 5 s.\n",
+				   error->message);
+		g_error_free(error);
+    	connection = dbus_g_bus_get(DBUS_BUS_SESSION, &error);		
+        sleep(5);
+	}
+
+	dbus_conn = dbus_g_connection_get_connection(connection);
+    assert(dbus_conn);
+    
+	dbus_g_object_type_install_info(NOTIFY_TYPE_DAEMON,
+									&dbus_glib_notification_daemon_object_info);
+
+	bus_proxy = dbus_g_proxy_new_for_name(connection,
+										  "org.freedesktop.DBus",
+										  "/org/freedesktop/DBus",
+										  "org.freedesktop.DBus");
+    assert(bus_proxy);
+	while (!dbus_g_proxy_call(bus_proxy, "RequestName", &error,
+						   G_TYPE_STRING, "org.freedesktop.Notifications",
+						   G_TYPE_UINT, 0,
+						   G_TYPE_INVALID,
+						   G_TYPE_UINT, &request_name_result,
+						   G_TYPE_INVALID))
+	{
+		printf("Could not aquire name: %s. sleeping 2 seconds", error->message);
+		sleep(2);
+	}
+
+	daemon = g_object_new(NOTIFY_TYPE_DAEMON, NULL);
+    assert(daemon);   
+	
+	read_config();	
   
+	gconf_client_add_dir(gconf_client,GCONF_AWN,GCONF_CLIENT_PRELOAD_NONE,NULL);	
+	gconf_client_notify_add(gconf_client, GCONF_AWN,
+							config_changed, daemon,
+							NULL, NULL);	
+							
+
+	int id=gconf_client_notify_add(gconf_client, GCONF_KEY_POPUP_LOCATION,
+							popup_location_changed_cb, daemon,
+							NULL, NULL);
+
+	/* Emit signal to verify/set current key */
+	gconf_client_notify(gconf_client, GCONF_KEY_POPUP_LOCATION);
+	gconf_client_notify_remove(gconf_client,id);
+		  
 	dbus_g_connection_register_g_object(connection,"/org/freedesktop/Notifications",G_OBJECT(daemon));
     
-    g_timeout_add(5000, (GSourceFunc*)send_startup_message,NULL); 
+    g_timeout_add(5000, (GSourceFunc*)send_message,g_strdup("Awn Notification Daemon has loaded Successfully.\nClick <a href=\"http://wiki.awn-project.org/index.php?title=Awn_Notification-Daemon\">Here</a> for online documentation.")); 
     g_timeout_add(3000, (GSourceFunc*)hide_icon,NULL); 
     return applet;
 

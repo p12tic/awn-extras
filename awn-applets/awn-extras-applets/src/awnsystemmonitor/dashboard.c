@@ -377,9 +377,7 @@ void register_Dashboard( Dashboard * dashboard,AwnApplet *applet)
         dashboard->expose_handler_id=g_signal_connect (G_OBJECT (dashboard->mainfixed), 
                                 "expose-event", G_CALLBACK (_expose_event), dashboard);    
     }
-    
-    gtk_widget_show_all(dashboard->mainwindow);
-    gtk_widget_hide(dashboard->mainwindow);            
+          
 }    
 
 
@@ -430,7 +428,11 @@ void toggle_Dashboard_window(Dashboard *dashboard)
     else
     {
         if (dashboard->mainwindow)
+        {
+            if (!dashboard->show_awn_dialog)
+                awn_applet_dialog_position_reset(dashboard->mainwindow); 
             gtk_widget_show_all (dashboard->mainwindow);                
+        }            
     }
 }
 

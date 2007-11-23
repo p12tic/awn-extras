@@ -61,6 +61,8 @@ class StacksGuiDialog:
     hbox = None
     table = None
     navbuttons = None
+    bt_left = None
+    bt_right = None
 
     applet = None
     config = None
@@ -290,30 +292,30 @@ class StacksGuiDialog:
         # if we have more than 1 page and browsing is enabled
         if self.config['browsing'] and (theres_more or page > 0):
             if self.navbuttons is None:
-                buttonbox = gtk.HButtonBox()
-                buttonbox.set_layout(gtk.BUTTONBOX_EDGE)
-                self.dialog.add(buttonbox)
-                bt_left = gtk.Button(stock=gtk.STOCK_GO_BACK)
-                bt_left.set_use_stock(True)
-                bt_left.set_relief(gtk.RELIEF_NONE)
-                bt_left.connect("clicked", self.dialog_show_prev_page)
-                buttonbox.add(bt_left)
-                bt_right = gtk.Button(stock=gtk.STOCK_GO_FORWARD)
-                bt_right.set_use_stock(True)
-                bt_right.set_relief(gtk.RELIEF_NONE)
-                bt_right.connect("clicked", self.dialog_show_next_page)
-                buttonbox.add(bt_right)
-                self.navbuttons = (bt_left, bt_right)
+                self.navbuttons = gtk.HButtonBox()
+                self.navbuttons.set_layout(gtk.BUTTONBOX_EDGE)
+                self.dialog.add(self.navbuttons)
+
+                self.bt_left = gtk.Button(stock=gtk.STOCK_GO_BACK)
+                self.bt_left.set_use_stock(True)
+                self.bt_left.set_relief(gtk.RELIEF_NONE)
+                self.bt_left.connect("clicked", self.dialog_show_prev_page)
+                self.navbuttons.add(self.bt_left)
+                self.bt_right = gtk.Button(stock=gtk.STOCK_GO_FORWARD)
+                self.bt_right.set_use_stock(True)
+                self.bt_right.set_relief(gtk.RELIEF_NONE)
+                self.bt_right.connect("clicked", self.dialog_show_next_page)
+                self.navbuttons.add(self.bt_right)
 
             # enable appropriate navigation buttons
             if page > 0:
-                self.navbuttons[0].set_sensitive(True)
+                self.bt_left.set_sensitive(True)
             else:
-                self.navbuttons[0].set_sensitive(False)
+                self.bt_left.set_sensitive(False)
             if theres_more:
-                self.navbuttons[1].set_sensitive(True)
+                self.bt_right.set_sensitive(True)
             else:
-                self.navbuttons[1].set_sensitive(False)
+                self.bt_right.set_sensitive(False)
 
         # show everything on the dialog
         self.dialog.show_all()

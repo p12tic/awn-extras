@@ -12,6 +12,7 @@ dist_stacksapplet_DATA = \
 		stacks_glade.py \
 		stacks_gui_curved.py \
 		stacks_gui_dialog.py \
+		stacks_gui_trasher.py \
 		stacks_icons.py \
 	    stacks_launcher.py \
 		stacks_vfs.py 

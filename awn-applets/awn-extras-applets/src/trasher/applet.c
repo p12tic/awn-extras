@@ -31,6 +31,7 @@
 #define GKEY_COMPOSITE "composite_icon"
 #define GKEY_ICON_EMPTY "applet_icon_empty"
 #define GKEY_ICON_FULL "applet_icon_full"
+#define GKEY_GUI_TYPE "gui_type"
 
 #define STACKS_APPLET "/usr/lib/awn/applets/stacks.desktop"
 #define STACKS_APPLET_LOCAL "/usr/local/lib/awn/applets/stacks.desktop"
@@ -60,6 +61,10 @@ trasher_initialization(GtkWidget *widget, gpointer user_data)
   // Only "allow" file operation "Move"
   gconf_client_set_int(client,
           g_strdup_printf("%s/%s", key_prefix, GKEY_FILE_OPERATIONS), 4, NULL);
+
+  // Take the "trasher" gui as gui
+  gconf_client_set_int(client,
+          g_strdup_printf("%s/%s", key_prefix, GKEY_GUI_TYPE), 3, NULL);
 
   // Set "user customizable" gconf keys (if not already set)
   key = g_strdup_printf("%s/%s", key_prefix, GKEY_BROWSING);

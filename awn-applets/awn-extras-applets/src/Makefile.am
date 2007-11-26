@@ -19,6 +19,7 @@ SUBDIRS =			\
 	media-icon-play		\
 	MiMenu			\
 	notification-area	\
+	places			\
 	plugger 		\
 	PyClock			\
 	python-test 		\

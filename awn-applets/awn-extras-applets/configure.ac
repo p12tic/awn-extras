@@ -56,6 +56,19 @@ AC_SUBST(GDK_CFLAGS)
 AC_SUBST(GDK_LIBS)
 
 dnl
+dnl Check if desktop-agnostic is installed.
+dnl
+
+old_CFLAGS="${CFLAGS}"
+CFLAGS="${CFLAGS} ${DEPS_CFLAGS}"
+AC_CHECK_HEADER([libawn/awn-vfs.h], [have_desktop_agnostic=yes], [have_desktop_agnostic=no])
+if test "$have_desktop_agnostic" = "yes"; then
+    AC_DEFINE(USE_AWN_DESKTOP_AGNOSTIC, 1, [Use the APIs that originated in the desktop-agnostic branch of Awn.])
+fi
+CFLAGS="${old_CFLAGS}"
+old_CFLAGS=
+
+dnl
 dnl Check the D-BUS version.
 dnl
 
@@ -146,6 +159,7 @@ src/MiMenu/Makefile
 src/MiMenu/icons/Makefile
 src/showdesktop/Makefile
 src/notification-area/Makefile
+src/places/Makefile
 src/plugger/Makefile
 src/PyClock/Makefile
 src/PyClock/Themes/Makefile

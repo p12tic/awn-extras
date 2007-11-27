@@ -49,7 +49,8 @@ PKG_CHECK_MODULES(DEPS,
 	          gconf-2.0
 	          gdk-2.0
 		  gdk-pixbuf-2.0
-		  libnotify)
+		  libnotify
+		  vte)
 AC_SUBST(DEPS_CFLAGS)
 AC_SUBST(DEPS_LIBS)
 AC_SUBST(GDK_CFLAGS)
@@ -120,6 +121,7 @@ src/awn-notification-daemon/po/Makefile.in
 src/awn-notification-daemon/src/Makefile
 src/awn-notification-daemon/src/daemon/Makefile
 src/awnsystemmonitor/Makefile
+src/awnterm/Makefile
 src/battery-applet/Makefile
 src/battery-applet/icons/Makefile
 src/BlingSwitcher/Makefile

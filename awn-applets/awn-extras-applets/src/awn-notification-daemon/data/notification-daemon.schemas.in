@@ -2,30 +2,6 @@
  <schemalist>
 
   <schema>
-   <key>/schemas/apps/notification-daemon/popup_location</key>
-   <applyto>/apps/notification-daemon/popup_location</applyto>
-   <owner>notification-daemon</owner>
-   <type>string</type>
-   <default>bottom_right</default>
-   <locale name="C">
-    <short>Popup location</short>
-    <long>Default popup location on the workspace for stack notifications. Allowed values: &quot;top_left&quot;,&quot;top_right&quot;,&quot;bottom_left&quot; and &quot;bottom_right&quot;</long>
-   </locale>
-  </schema>
-
-  <schema>
-   <key>/schemas/apps/notification-daemon/theme</key>
-   <applyto>/apps/notification-daemon/theme</applyto>
-   <owner>notification-daemon</owner>
-   <type>string</type>
-   <default>standard</default>
-   <locale name="C">
-    <short>Current theme</short>
-    <long>The theme used when displaying notifications.</long>
-   </locale>
-  </schema>
-
-  <schema>
    <key>/schemas/apps/avant-window-navigator/applets/awn-notification-daemon/kill_standard_daemon</key>
    <applyto>/apps/avant-window-navigator/applets/awn-notification-daemon/kill_standard_daemon</applyto>
    <owner>awn-notification-daemon</owner>

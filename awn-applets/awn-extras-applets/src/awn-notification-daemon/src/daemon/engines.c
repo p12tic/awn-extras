@@ -835,11 +835,11 @@ set_notification_text(GtkWindow *nw, const char *summary, const char *body)
 
     if (windata->use_gtk_style)
     {
-        str = g_strdup_printf("<b><small><span>%s</span></small></b>",body);
+        str = g_strdup_printf("<b><small><span>%s\n</span></small></b>",body);
     }
     else
     {
-    	str = g_strdup_printf("<b><small><span foreground=\"#%s\">%s</span></small></b>",G_awn_text_str, body);
+    	str = g_strdup_printf("<b><small><span foreground=\"#%s\">%s\n</span></small></b>",G_awn_text_str, body);
     }    	
 //	gtk_label_set_markup(GTK_LABEL(windata->body_label), str);
     sexy_url_label_set_markup(SEXY_URL_LABEL(windata->body_label), str);

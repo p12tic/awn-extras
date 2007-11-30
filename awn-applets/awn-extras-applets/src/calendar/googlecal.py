@@ -62,7 +62,13 @@ class GoogleCal:
 		self.cal_client = gdata.calendar.service.CalendarService()
 		self.cal_client.email = self.applet.username
 		self.cal_client.password = self.applet.crypt(self.applet.password,-17760704)
-		self.cal_client.ProgrammaticLogin()
+		try:
+			self.cal_client.ProgrammaticLogin()
+		except gdata.service.CaptchaRequired:
+			# I'm not sure what to do about these.  :/
+			print "Google is saying CAPTCHA required... don't know what I should do about these... sleep???", sys.exc_info()[0], sys.exc_info()[1]
+			print "User can go to https://www.google.com/accounts/DisplayUnlockCaptcha?service=calendar to unlock"
+			pass						
 		query = gdata.calendar.service.CalendarEventQuery('default', 'private', 'full')
 		(year,month,date) = day
 		cal_date_start = datetime.datetime(year, month, date,0,0,0)
@@ -74,8 +80,14 @@ class GoogleCal:
 		for j, an_event in enumerate(feed.entry):			
 			if an_event.title.text != None:
 				for a_when in an_event.when:
-					start_text = self.convert_time_to_text(a_when.start_time)
-					end_text = self.convert_time_to_text(a_when.end_time)
+					if len(a_when.start_time) <= 10:
+						start_text = "12:00am"
+					else:
+						start_text = self.convert_time_to_text(a_when.start_time)
+					if len(a_when.end_time) <= 10:
+						end_text = "11:59pm"
+					else:
+						end_text = self.convert_time_to_text(a_when.end_time)
 					event_text = start_text + " - " + end_text + ": " + an_event.title.text
 					#print "event_text: %s" % (event_text)
 					event = ([a_when.start_time,event_text])

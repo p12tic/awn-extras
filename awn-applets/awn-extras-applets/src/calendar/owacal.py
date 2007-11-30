@@ -94,7 +94,7 @@ class OwaCal:
 			textre = re.compile("\".*\"")
 			if titlehtml != None:
 				text = textre.search(token)
-				result.append([None,text.group().replace("\"","")])  #"
+				result.append(["",text.group().replace("\"","")])  #"
 		if len(result) == 0:
 			result.append([None,_("No appointments")])
 		return result

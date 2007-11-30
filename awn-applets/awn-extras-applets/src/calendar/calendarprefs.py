@@ -93,14 +93,14 @@ class CalendarPrefs(gtk.Window):
 		hbox0.pack_start(self.twelve_hour_checkbox,True,False,0)
 		vbox.pack_start(hbox0,False,False,0)
 		
-		self.blink_checkbox = gtk.CheckButton(_("Blinking Colon"))
-		if applet.blinky_colon == True:
-			self.blink_checkbox.set_active(True)
-		else:
-			self.blink_checkbox.set_active(False)
-		hbox1 = gtk.HBox(False,0)
-		hbox1.pack_start(self.blink_checkbox,True,False,0)
-		vbox.pack_start(hbox1,False,False,0)
+#		self.blink_checkbox = gtk.CheckButton(_("Blinking Colon"))
+#		if applet.blinky_colon == True:
+#			self.blink_checkbox.set_active(True)
+#		else:
+#			self.blink_checkbox.set_active(False)
+#		hbox1 = gtk.HBox(False,0)
+#		hbox1.pack_start(self.blink_checkbox,True,False,0)
+#		vbox.pack_start(hbox1,False,False,0)
 
 		hbox1a = gtk.HBox(True, 0)
 		self.clock_appear_combo = gtk.combo_box_new_text()
@@ -202,7 +202,7 @@ class CalendarPrefs(gtk.Window):
 		#self.applet.gconf_client.set_string(self.applet.gconf_path + "/password", self.crypt(self.password.get_text(),17760704))
 		self.applet.gconf_client.set_string(self.applet.gconf_path + "/url", self.url.get_text())		
 		self.applet.gconf_client.set_bool(self.applet.gconf_path + "/twelve_hour_clock", self.twelve_hour_checkbox.get_active())
-		self.applet.gconf_client.set_bool(self.applet.gconf_path + "/blinking_colon", self.blink_checkbox.get_active())
+#		self.applet.gconf_client.set_bool(self.applet.gconf_path + "/blinking_colon", self.blink_checkbox.get_active())
 		background, text, border, plain = self.clock_appearance[self.clock_appear_combo.get_active_text()]
 		self.applet.gconf_client.set_string(self.applet.gconf_path + "/clock_background", background)
 		self.applet.gconf_client.set_string(self.applet.gconf_path + "/clock_foreground", text)

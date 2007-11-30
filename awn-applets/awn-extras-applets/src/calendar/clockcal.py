@@ -42,7 +42,7 @@ import random
 import googlecal
 import owacal
 import evocal
-
+import calthread
 
 # locale stuff
 APP="awn-calendar"
@@ -65,10 +65,11 @@ class App(awn.AppletSimple):
 	locale_lang = "en"
 	counter = 0
 	twelve_hour_clock = True
-	blinky_colon = True
+	blinky_colon = False
 	integration = None
 	integ_text = "None"
 	graphic = "calendar.png"
+	surface = None
 	plainClock = False
 	show_title = False
 	clock_background = (0.4,0.5,0.4,1.0)
@@ -79,6 +80,11 @@ class App(awn.AppletSimple):
 	password = None
 	url = ""
 	login_open = False
+	previous_minute = -1
+	previous_day = -1
+	ct = None
+	thread = None
+	days = []
 
 	def __init__(self, uid, orient, height):
 		awn.AppletSimple.__init__ (self, uid, orient, height)
@@ -93,7 +99,8 @@ class App(awn.AppletSimple):
 		self.connect ("leave-notify-event", self.leave_notify_callback)
 		self.dialog.connect ("focus-out-event", self.dialog_focus_out_callback)
 		gobject.timeout_add(100,self.first_paint)		
-		self.timer = gobject.timeout_add(1000,self.subsequent_paint)
+		self.timer = gobject.timeout_add(1000,self.timer_callback)
+		#self.timer = gobject.timeout_add(1000,self.subsequent_paint)
 		self.popup_menu = gtk.Menu()
 		pref_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
 		forget_item = gtk.MenuItem("Forget Password")
@@ -123,6 +130,9 @@ class App(awn.AppletSimple):
 			self.locale_lang = locale.getdefaultlocale()[0][0:2]
 		except:
 			print "locale not set"
+		self.connect("destroy",self.quit_callback)
+		gtk.gdk.threads_init()
+
 
 	############################################################################
 	# Configuration.
@@ -143,8 +153,9 @@ class App(awn.AppletSimple):
 		return result
 
 	def get_config(self, key_change=None):
+		self.previous_minute = -1 # forces a full repaint
 		self.twelve_hour_clock = self.get_boolean_config("twelve_hour_clock",True)
-		self.blinky_colon = self.get_boolean_config("blinking_colon",True)
+		self.blinky_colon = self.get_boolean_config("blinking_colon",False)
 		self.clock_plain = self.get_boolean_config("clock_plain",False)
 		self.integ_text = self.get_string_config("integration","None")
 		if self.integ_text == "Evolution":
@@ -162,7 +173,9 @@ class App(awn.AppletSimple):
 		else:
 			self.password = None
 		self.url = self.get_string_config("url","")		
-		self.graphic = self.get_string_config("graphic","calendar-red.png")		
+		self.graphic = self.get_string_config("graphic","calendar-red.png")	
+		self.surface = cairo.ImageSurface.create_from_png(os.path.dirname (__file__) + '/images/' + self.graphic)	
+		self.ct = cairo.Context(self.surface)
 		background = self.get_string_config("clock_background","667F66FF")		
 		self.clock_background = self.hex_string_to_color(background)
 		foreground = self.get_string_config("clock_foreground","000000FF")		
@@ -173,6 +186,11 @@ class App(awn.AppletSimple):
 		self.login_window.user.set_text(self.username)
 		if key_change == "/apps/avant-window-navigator/applets/calendar/integration":
 			self.login()
+		if self.thread != None:
+			self.thread.kill()
+			self.thread = None
+		self.thread = calthread.CalThread(self)
+		self.thread.start()
 
 	############################################################################
 	# Callbacks..
@@ -242,144 +260,221 @@ class App(awn.AppletSimple):
 				self.build_calendar_dialog()
 				self.dialog.show_all()
 				self.dialog_visible = True
-
-	############################################################################
-	# Drawing.
-	############################################################################
-
-	def first_paint(self):
-		self.repaint()
-		return False
-
-	def subsequent_paint(self):
-		self.repaint()
-		# force garbage collect.  I think Python's GC doesn't take the size of the 
-		# unreferenced objects into consideration when deciding what/when to release 
-		# to the OS, and the Pixbufs can get pretty large.  Hopefully this doesn't
-		# kill the CPU.  I'm too new at Python to know any better. 
-		self.counter = self.counter + 1
-		if self.counter % 20 == 0:
-			gc.collect()
-		return True
-
-	def repaint(self):
+				
+	def timer_callback(self):
+		result = None
+		current_minute = time.localtime()[4]
+		current_day = time.localtime()[2]
+		if current_day != self.previous_day:
+			self.ct = None
+		self.init_context()			
+		if current_minute != self.previous_minute:
+			self.surface = None
+			self.ct = None
+			result=self.repaint()
+		else:		
+			if self.blinky_colon == True:
+				self.draw_colon(self.ct,123,202,30)
+				ns = self.ct.get_target()
+				new_icon = self.get_pixbuf_from_surface(ns)
+				scaled_icon = new_icon.scale_simple(self.height, self.height, gtk.gdk.INTERP_BILINEAR) 
+				self.set_temp_icon(scaled_icon)
+			result=True
 		now = datetime.datetime.now()
-		width,height=self.window.get_size()
-		cs = cairo.ImageSurface.create_from_png(os.path.dirname (__file__) + '/images/' + self.graphic)
-		ct = cairo.Context(cs)
-		ct.set_source_surface(cs)
-		ct.paint()
-		if self.clock_plain == False:		
-			red, green, blue, alpha = self.clock_background
-			ct.set_source_rgba(red,green,blue,alpha)		
-			self.draw_rounded_rect(ct,35,191,182,51,20)
-			ct.fill()
-			red, green, blue, alpha = self.clock_border
-			ct.set_source_rgba(red,green,blue,alpha)
-			self.draw_rounded_rect(ct,35,191,182,51,20)
-			ct.stroke()
-			red, green, blue, alpha = self.clock_text
-			ct.set_source_rgba(red,green,blue,alpha)
-			led = sevensegled.SevenSegLed(ct) 
-			self.draw_time_led(ct, led, 58, 202, 20, 30)
-		else:
-			# Shadow first
-			red, green, blue, alpha = self.clock_background
-			ct.set_source_rgba(red,green,blue,alpha)
-			hour = now.strftime("%H")
-			minute = now.strftime("%M")
-			shorten = False			
-			if hour[0] == "0":
-				if hour[1] == "0": #is this 12AM?
-					hour = "12"
-				else:
-					shorten = True
-					hour = hour[1]
-			elif self.twelve_hour_clock and int(hour) > 12:
-				if int(hour) < 22:
-					shorten = True
-				hour = str(int(hour)-12)
-			ct.move_to(37,240)
-			ct.select_font_face("Deja Vu",cairo.FONT_SLANT_NORMAL,cairo.FONT_WEIGHT_BOLD)
-			ct.set_font_size(60.0)
-			if self.twelve_hour_clock == True:
-				# The leading zero looks stupid on twelve hour clocks
-				if shorten == True:
-					ct.move_to(60,240)
-				#seconds = time.localtime()[5]
-				# The blinky colon looks crappy with non-monospace text.  I can place the
-				# minutes and hours separately to fix it, but that'd a PITA.  Just shut it
-				# off for now. 
-				#if self.blinky_colon == False or seconds % 2 == 0:
-				ct.show_text(hour + ":" + minute)
-				#else:
-				#	ct.show_text(hour + " " + minute)
-			else:
-				ct.show_text(now.strftime("%H:%M"))
-			# Now foreground
-			red, green, blue, alpha = self.clock_text
-			ct.set_source_rgba(red,green,blue,alpha)
-			ct.move_to(30,232)
-			if self.twelve_hour_clock == True:
-				# The leading zero looks stupid on twelve hour clocks
-				if shorten == True:
-					ct.move_to(52,232)
-				#seconds = time.localtime()[5]				
-				#if self.blinky_colon == False or seconds % 2 == 0:
-				ct.show_text(hour + ":" + minute)
-				#else:
-				#	ct.show_text(hour + " " + minute)
-			else:
-				ct.show_text(now.strftime("%H:%M"))
-		ct.set_source_rgba(0.0,0.0,0.0,1.0)
-		ct.select_font_face("Deja Vu",cairo.FONT_SLANT_NORMAL,cairo.FONT_WEIGHT_BOLD)
-		ct.set_font_size(64.0)
-		ct.move_to(80,120)
-		ct.show_text(now.strftime("%d"))
-		ct.set_source_rgba(0.0,0.0,0.0,1.0)
-		ct.set_font_size(36.0)
-		ct.move_to(85,155)
-		ct.show_text(now.strftime("%a"))
-		ct.set_source_rgba(1.0,1.0,1.0,1.0)
-		ct.move_to(90,60)
-		ct.show_text(now.strftime("%b"))
-		ns = ct.get_target()
-		new_icon = self.get_pixbuf_from_surface(ns)
-		scaled_icon = new_icon.scale_simple(self.height, self.height, gtk.gdk.INTERP_HYPER) 
-		self.set_temp_icon(scaled_icon)
 		self.title_text = now.strftime("%x %X")
 		if self.show_title == True:
 			self.title.show(self, self.title_text)
 		else:
 			self.title.hide(self)
+		self.previous_minute = current_minute
+		self.previous_day = current_day
+		return result
+
+	def quit_callback(self):
+		print "quit_callback was called."
+		self.thread.kill()
+
+	def month_changed_callback(self,widget):
+		self.cal.clear_marks()
+		cal_sel_date = self.cal.get_date()
+		cal_date = (cal_sel_date[0], cal_sel_date[1]+1, cal_sel_date[2])
+		if self.thread.check_cache(cal_date) == True:
+			year,month,day = cal_date
+			busy = self.thread.get_days(year,month)
+			for day in busy:
+				self.cal.mark_day(day)
+
+
+	############################################################################
+	# Drawing.
+	############################################################################
+
+	def init_context(self):
+		if self.surface == None:
+			self.surface = cairo.ImageSurface.create_from_png(os.path.dirname (__file__) + '/images/' + self.graphic)
+		if self.ct == None:	
+			self.ct = cairo.Context(self.surface)
+		self.ct.set_source_surface(self.surface)
+
+	def first_paint(self):
+		self.repaint()
+		return False
+
+	def get_text_width(self, context, text, maxwidth):
+		potential_text = text
+		text_width = context.text_extents(potential_text.encode('ascii','replace'))[2]
+		end = -1
+		while text_width > maxwidth:
+			end -= 1
+			potential_text = text.encode('ascii','replace')[:end] + '...'
+			text_width = context.text_extents(potential_text.encode('ascii','replace'))[2]
+		return potential_text, text_width
+
+	def repaint(self):
+		self.init_context()
+		now = datetime.datetime.now()
+		width,height=self.window.get_size()
+		#cs = cairo.ImageSurface.create_from_png(os.path.dirname (__file__) + '/images/' + self.graphic)
+		#cs = self.surface
+		#if self.ct == None:
+		#	self.ct = cairo.Context(cs)
+		self.ct.set_source_rgba(0,0,0,0)
+		self.ct.paint()
+		self.ct.set_source_surface(self.surface)
+		self.ct.paint()
+		if self.clock_plain == False:		
+			red, green, blue, alpha = self.clock_background
+			self.ct.set_source_rgba(red,green,blue,alpha)		
+			self.draw_rounded_rect(self.ct,35,191,182,51,20)
+			self.ct.fill()
+			red, green, blue, alpha = self.clock_border
+			self.ct.set_source_rgba(red,green,blue,alpha)
+			self.draw_rounded_rect(self.ct,35,191,182,51,20)
+			self.ct.stroke()
+			red, green, blue, alpha = self.clock_text
+			self.ct.set_source_rgba(red,green,blue,alpha)
+			led = sevensegled.SevenSegLed(self.ct) 
+			self.draw_time_led(self.ct, led, 58, 202, 20, 30)
+		else:
+			# Shadow first
+			red, green, blue, alpha = self.clock_background
+			self.ct.set_source_rgba(red,green,blue,alpha)
+			hour = now.strftime("%H")
+			minute = now.strftime("%M")
+			shorten = False		
+			if hour[0] == "0":
+				shorten = True
+				hour = hour[1]
+				if hour == "0": #is this 12AM?
+					hour = "12"
+				else:
+					shorten = True
+			elif self.twelve_hour_clock and int(hour) > 12:
+				if int(hour) < 22:
+					shorten = True
+				hour = str(int(hour)-12)
+			#	
+			#
+			#self.ct.move_to(37,240)
+			self.ct.select_font_face("Deja Vu",cairo.FONT_SLANT_NORMAL,cairo.FONT_WEIGHT_BOLD)
+			self.ct.set_font_size(60.0)
+			t = now.strftime("%H:%M")			
+			if self.twelve_hour_clock == True:
+				t = hour + ":" + minute
+			text, width = self.get_text_width(self.ct, t, 250)
+			x = (256 - width)/2
+			self.ct.move_to(x,240)
+			self.ct.show_text(t)	
+			#
+			#
+			# Now foreground
+			red, green, blue, alpha = self.clock_text
+			self.ct.set_source_rgba(red,green,blue,alpha)
+			self.ct.move_to(x-7,232)
+			#if self.twelve_hour_clock == True:
+			#	# The leading zero looks stupid on twelve hour clocks
+			#	if shorten == True:
+			#		self.ct.move_to(52,232)
+			#	#seconds = time.localtime()[5]				
+			#	#if self.blinky_colon == False or seconds % 2 == 0:
+			#	self.ct.show_text(hour + ":" + minute)
+			#	#else:
+			#	#	ct.show_text(hour + " " + minute)
+			#else:
+			#	self.ct.show_text(now.strftime("%H:%M"))
+			self.ct.show_text(t)
+		self.ct.set_source_rgba(0.0,0.0,0.0,1.0)
+		self.ct.select_font_face("Deja Vu",cairo.FONT_SLANT_NORMAL,cairo.FONT_WEIGHT_BOLD)
+		self.ct.set_font_size(64.0)
+		daytext = now.strftime("%d")
+		if daytext[0] == "0":
+			daytext = daytext[-1]
+		text, width = self.get_text_width(self.ct, daytext, 999)
+		x = (250 - width)/2
+		self.ct.move_to(x,122)
+		self.ct.show_text(text)
+		self.ct.set_source_rgba(0.0,0.0,0.0,1.0)
+		self.ct.set_font_size(36.0)
+		text, width = self.get_text_width(self.ct, now.strftime("%a"), 999)
+		x = (250 - width)/2
+		self.ct.move_to(x,155)
+		self.ct.show_text(text)
+		text, width = self.get_text_width(self.ct, now.strftime("%b"), 999)
+		x = (250 - width)/2
+		self.ct.set_source_rgba(1.0,1.0,1.0,1.0)
+		self.ct.move_to(x,60)
+		self.ct.show_text(now.strftime("%b"))
+		ns = self.ct.get_target()
+		new_icon = self.get_pixbuf_from_surface(ns)
+		scaled_icon = new_icon.scale_simple(self.height, self.height, gtk.gdk.INTERP_BILINEAR) 
+		self.set_temp_icon(scaled_icon)
 		return True
 
-	def draw_time_led(self, ct, led, x0, y0, width, height):
+	def draw_time_led(self, context, led, x0, y0, width, height):
 		xpos = x0
 		ypos = y0
 		hours = time.localtime()[3]
 		minutes = time.localtime()[4]
 		seconds = time.localtime()[5]
 		if self.twelve_hour_clock == True:
-			hours = hours % 12
-			if hours == 0:
-				hours = 12
+			hours = hours - 12 if hours > 12 else hours
 		# For twelve-hour clocks, don't draw the leading zeros.
 		if self.twelve_hour_clock == False or hours > 9:
-			led.draw(hours/10, ct, xpos, ypos, xpos+width, ypos+height)
+			led.draw(hours/10, context, xpos, ypos, xpos+width, ypos+height)
 		xpos = xpos + 30
-		led.draw(hours%10, ct, xpos, ypos, xpos+width, ypos+height)
+		led.draw(hours%10, context, xpos, ypos, xpos+width, ypos+height)
 		# draw the separator (hard-code to a colon for now)
 		xpos = xpos + 35		
 		if self.blinky_colon == False or seconds % 2 == 0:
-			ct.move_to(xpos, ypos+(height/2)-2)
-			ct.rel_line_to(0, 4)
-			ct.move_to(xpos, ypos+height)
-			ct.rel_line_to(0, -4)
+			self.draw_colon(context,xpos,ypos,height)
+			#print "xpos %d ypos %d height %d" % (xpos, ypos, height)
+			#context.move_to(xpos, ypos+(height/2)-2)
+			#context.rel_line_to(0, 4)
+			#context.move_to(xpos, ypos+height)
+			#context.rel_line_to(0, -4)
 		xpos = xpos + 15			
-		led.draw(minutes/10, ct, xpos, ypos, xpos+width, ypos+height)
+		led.draw(minutes/10, context, xpos, ypos, xpos+width, ypos+height)
 		xpos = xpos + 30
-		led.draw(minutes%10, ct, xpos, ypos, xpos+width, ypos+height)
+		led.draw(minutes%10, context, xpos, ypos, xpos+width, ypos+height)
+
+	def draw_colon(self, context, xpos, ypos, height):
+		seconds = time.localtime()[5]
+		if self.blinky_colon == True:
+			if seconds % 2 == 0:
+				red, green, blue, alpha = self.clock_text
+			else:
+				red, green, blue, alpha = self.clock_background
+		else:
+			red, green, blue, alpha = self.clock_text
+		context.set_source_rgba(red,green,blue,alpha)
+		(xpos, ypos, height) = (123, 202, 30)
+		context.save()
+		context.move_to(xpos, ypos+(height/2)-2)
+		context.rel_line_to(0, 4)
+		context.move_to(xpos, ypos+height)
+		context.rel_line_to(0, -4)
+		context.stroke()
+		context.restore()
 
 	############################################################################
 	# Calendar Dialog.
@@ -401,6 +496,7 @@ class App(awn.AppletSimple):
 			hbox2.pack_start(self.opencal)
 		self.goto_today = gtk.Button(_("Today"))
 		self.goto_today.connect("button-press-event", self.goto_today_callback)
+		self.cal.connect("month-changed",self.month_changed_callback)
 		hbox2.pack_start(self.goto_today)
 		self.vbox.pack_start(hbox2)
 		self.hbox.pack_start(self.vbox,False)
@@ -423,14 +519,23 @@ class App(awn.AppletSimple):
 			self.update_tree_view(self.window)
 		self.dialog.add(self.hbox)
 		self.dialog.show_all()
+		year,month,day,hour,minute,sec,msec,who,cares = time.localtime()
+		self.cal.clear_marks()
+		if self.thread.check_cache((year,month,day)) == True:
+			busy = self.thread.get_days(year,month)
+			for day in busy:
+				self.cal.mark_day(day)
 	
 	def update_tree_view(self,widget):
 		if self.integration != None:
 			self.list.clear()
 			cal_sel_date = self.cal.get_date()
 			cal_date = (cal_sel_date[0], cal_sel_date[1]+1, cal_sel_date[2])
-			try:			
-				events = self.integration.get_appointments(cal_date,self.url)
+			try:
+				if self.thread.check_cache(cal_date):
+					events = self.thread.get_appointments(cal_date)
+				else:
+					events = self.integration.get_appointments(cal_date,self.url)
 				for i, event in enumerate(events):	
 					self.list.append([event[1],i])
 			except:
@@ -480,21 +585,21 @@ class App(awn.AppletSimple):
 			s += chr ((ord (sequence [i]) + r * sign) % 128)
 		return s
 
-	def draw_rounded_rect(self,ct,x,y,w,h,r = 10):
+	def draw_rounded_rect(self,context,x,y,w,h,r = 10):
 		#   A****BQ
 		#  H      C
 		#  *      *
 		#  G      D
 		#   F****E
-		ct.move_to(x+r,y)                      # Move to A
-		ct.line_to(x+w-r,y)                    # Straight line to B
-		ct.curve_to(x+w,y,x+w,y,x+w,y+r)       # Curve to C, Control points are both at Q
-		ct.line_to(x+w,y+h-r)                  # Move to D
-		ct.curve_to(x+w,y+h,x+w,y+h,x+w-r,y+h) # Curve to E
-		ct.line_to(x+r,y+h)                    # Line to F
-		ct.curve_to(x,y+h,x,y+h,x,y+h-r)       # Curve to G
-		ct.line_to(x,y+r)                      # Line to H
-		ct.curve_to(x,y,x,y,x+r,y)             # Curve to A
+		context.move_to(x+r,y)                      # Move to A
+		context.line_to(x+w-r,y)                    # Straight line to B
+		context.curve_to(x+w,y,x+w,y,x+w,y+r)       # Curve to C, Control points are both at Q
+		context.line_to(x+w,y+h-r)                  # Move to D
+		context.curve_to(x+w,y+h,x+w,y+h,x+w-r,y+h) # Curve to E
+		context.line_to(x+r,y+h)                    # Line to F
+		context.curve_to(x,y+h,x,y+h,x,y+h-r)       # Curve to G
+		context.line_to(x,y+r)                      # Line to H
+		context.curve_to(x,y,x,y,x+r,y)             # Curve to A
 		return
 
 	def hex_string_to_color(self,hex):
@@ -510,10 +615,13 @@ class App(awn.AppletSimple):
 
 if __name__ == "__main__":
 	awn.init (sys.argv[1:])
+	os.nice(19)
 	#print "main %s %d %d" % (awn.uid, awn.orient, awn.height)
 	applet = App(awn.uid, awn.orient, awn.height)
 	awn.init_applet(applet)
 	applet.show_all()
 	gtk.main()
+	applet.quit_callback()
+	print "clockcal exiting"
 
 

@@ -104,7 +104,7 @@ typedef struct
 	AwnConfigClient		*config;
 #else
 	GConfClient			*config;
-#endif;
+#endif
 	
 }Places;
 
@@ -125,6 +125,8 @@ typedef struct
 	
 }Menu_Item;
 
+
+GtkWidget * build_menu_widget(Places * places,Menu_item_color * mic,  char * text,GdkPixbuf *pbuf,GdkPixbuf *pover,int max_width);
 static gboolean _button_clicked_event (GtkWidget *widget, GdkEventButton *event, Places *places);
 static gboolean _show_prefs (GtkWidget *widget, GdkEventButton *event, Places * places);
 
@@ -901,170 +903,324 @@ static void render_places(Places * places)
 
 
 
-void show_prefs(Places * places)
-{	
-#if 0
-	GtkWidget * prefs_win=gtk_window_new (GTK_WINDOW_TOPLEVEL);	
+//****************************************************************************************************
+
+//FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME 
+
+
+
+typedef struct
+{
+	GtkWidget *gtk_off_table;
+	GtkWidget * hover_ex;
+	GtkWidget * normal_ex;
+	GtkWidget * prefs_win;	
 	GdkColormap *colormap;
 	GdkScreen *screen;
 	gchar * tmp;
-		
-	screen = gtk_window_get_screen(GTK_WINDOW(prefs_win));
-	colormap = gdk_screen_get_rgba_colormap(screen);
-	if (colormap != NULL && gdk_screen_is_composited(screen))
-	{
-		gtk_widget_set_colormap(prefs_win, colormap);
-	}	    	
-	gtk_window_set_title (prefs_win,"Places Preferences");
-	GtkWidget* vbox=gtk_vbox_new(FALSE,0);
-	GtkWidget * gtk=gtk_check_button_new_with_label("Use Gtk");
-	GtkWidget * tooltips=gtk_check_button_new_with_label("Show tooltips");	
-
-		
-	GtkWidget* gtk_off_section=gtk_vbox_new(FALSE,0);	
-	gtk_off_table=gtk_table_new(2,4,FALSE);
-	
-	GtkWidget *normal_label=gtk_label_new("Normal");
+	GtkWidget* vbox;
+	GtkWidget * gtk;
+	GtkWidget * tooltips;	
+	GtkWidget* gtk_off_section;	
+	GtkWidget *normal_label;
 	GdkColor 	colr;
+	GtkWidget *normal_bg;
+	GtkWidget *normal_fg;	
+	Places 	*places;
+	GtkWidget *hover_bg;	
+	GtkWidget *hover_fg;	
+	GtkWidget *hover_label;	
+	GtkWidget *border_label;
+	GtkWidget *border_colour;	
+	GtkWidget * text_table;
+	GtkWidget * filemanager;	
+	GtkWidget * adjust_gradient;
 
-	colr.red=places->normal_colours.base.red*65535;
-	colr.green=places->normal_colours.base.green*65535;	
-	colr.blue=places->normal_colours.base.blue*65535;	
-	GtkWidget *normal_bg=gtk_color_button_new_with_color(&colr);
-	gtk_color_button_set_use_alpha (normal_bg,TRUE);
-	gtk_color_button_set_alpha (normal_bg,places->normal_colours.base.alpha*65535);
-	g_signal_connect (G_OBJECT (normal_bg), "color-set",G_CALLBACK (_mod_colour),&places->normal_colours.base);		
-
-	colr.red=places->normal_colours.text.red*65535;
-	colr.green=places->normal_colours.text.green*65535;	
-	colr.blue=places->normal_colours.text.blue*65535;	
-	GtkWidget *normal_fg=gtk_color_button_new_with_color(&colr);
-	gtk_color_button_set_use_alpha (normal_fg,TRUE);
-	gtk_color_button_set_alpha (normal_fg,places->normal_colours.text.alpha*65535);
-	g_signal_connect (G_OBJECT (normal_fg), "color-set",G_CALLBACK (_mod_colour),&places->normal_colours.text);		
+	GtkWidget * adjust_textsize;
+	GtkWidget * adjust_borderwidth;			
 	
-	GtkWidget *hover_label=gtk_label_new("Hover");
-
-	colr.red=places->hover_colours.base.red*65535;
-	colr.green=places->hover_colours.base.green*65535;	
-	colr.blue=places->hover_colours.base.blue*65535;	
-	GtkWidget *hover_bg=gtk_color_button_new_with_color(&colr);
-	gtk_color_button_set_use_alpha (hover_bg,TRUE);
-	gtk_color_button_set_alpha (hover_bg,places->hover_colours.base.alpha*65535);
-	g_signal_connect (G_OBJECT (hover_bg), "color-set",G_CALLBACK (_mod_colour),&places->hover_colours.base);		
+	GtkWidget* buttons;	
+	GtkWidget* ok;
+	Menu_item_color mic;	
+}Pref_menu;
 	
-	colr.red=places->hover_colours.text.red*65535;
-	colr.green=places->hover_colours.text.green*65535;	
-	colr.blue=places->hover_colours.text.blue*65535;	
-	GtkWidget *hover_fg=gtk_color_button_new_with_color(&colr);
-	gtk_color_button_set_use_alpha (hover_fg,TRUE);
-	gtk_color_button_set_alpha (hover_fg,places->hover_colours.text.alpha*65535);	
-	g_signal_connect (G_OBJECT (hover_fg), "color-set",G_CALLBACK (_mod_colour),&places->hover_colours.text);		
+	
+Pref_menu 	*pref_menu=NULL;
+	
+static gboolean _press_ok(GtkWidget *widget, GdkEventButton *event,GtkWidget * win)
+{
+	save_config(pref_menu->places);
+	gtk_widget_destroy(win);
+	_do_update_places(pref_menu->places);	
+	g_free(pref_menu);
+	return FALSE;
+#if 0	
+	g_object_unref(pref_menu->places->config) ;
+	GError *err=NULL;	
+   GtkWidget *dialog, *label;
+   
+   dialog = gtk_dialog_new_with_buttons ("Places Message",
+                                         NULL,
+                                         GTK_DIALOG_DESTROY_WITH_PARENT,
+                                         GTK_STOCK_OK,
+                                         GTK_RESPONSE_NONE,
+                                         NULL);
+   label = gtk_label_new ("About to restart Places.  Please shutdown any instances of awn-manager");
+   
+   /* Ensure that the dialog box is destroyed when the user responds. */
+   
+   g_signal_connect_swapped (dialog,
+                             "response", 
+                             G_CALLBACK (gtk_widget_destroy),
+                             dialog);
+   gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox),
+                      label);
+	gtk_widget_show_all(dialog);                     
+   gtk_dialog_run(dialog);	
+	g_spawn_command_line_async("sh -c  'export T_STAMP=`date +\"%s\"`&& export AWN_G_ORIG=`gconftool-2 -g /apps/avant-window-navigator/applets_list | sed -e \"s/places\.desktop::[0-9]*/places\.desktop::$T_STAMP/\"` && export AWN_G_MOD=`echo $AWN_G_ORIG |sed -e \"s/[^,^\[]*places\.desktop::[0-9]*,?//\"` && gconftool-2 --type list --list-type=string -s /apps/avant-window-navigator/applets_list \"$AWN_G_MOD\" && sleep 2 && gconftool-2 --type list --list-type=string -s /apps/avant-window-navigator/applets_list \"$AWN_G_ORIG\"'",&err); 
+	exit(0);
+ 	return FALSE;
+#endif
+	
+}
 
 
-	GtkWidget *border_label=gtk_label_new("Border");
+static gboolean _toggle_(GtkWidget *widget,gboolean * value)
+{
+	*value=!*value;
 
-	colr.red=places->border_colour.red*65535;
-	colr.green=places->border_colour.green*65535;	
-	colr.blue=places->border_colour.blue*65535;	
-	GtkWidget *border_colour=gtk_color_button_new_with_color(&colr);
-	gtk_color_button_set_use_alpha (border_colour,TRUE);
-	gtk_color_button_set_alpha (border_colour,places->border_colour.alpha*65535);
-	g_signal_connect (G_OBJECT (border_colour), "color-set",G_CALLBACK (_mod_colour),&places->border_colour);		
+	return FALSE;
+}
+
+static gboolean _toggle_gtk(GtkWidget *widget,GtkWidget * gtk_off_section)
+{
+//	gtk_toggle_button_set_active(widget,G_cairo_menu_conf.honour_gtk);	
+	pref_menu->places->honour_gtk=gtk_toggle_button_get_active(widget);
+	if (pref_menu->places->honour_gtk)
+	{
+		gtk_widget_hide(pref_menu->gtk_off_section);
+	}
+	else
+	{
+		gtk_widget_show_all(pref_menu->gtk_off_section);
+	}	
+	return TRUE;	
+}
+
+int activate(GtkWidget *w,gchar **p)
+{
+	gchar * svalue=*p;
+	g_free(svalue);
+	svalue=g_filename_to_utf8(gtk_entry_get_text (w) , -1, NULL, NULL, NULL);
+	*p=svalue;
+	return FALSE;
+}	
+	
+void _mod_colour(GtkColorButton *widget,AwnColor * user_data) 
+{
+	GdkColor colr;
+	gtk_color_button_get_color(widget,&colr);
+	user_data->red=colr.red/65535.0;
+	user_data->green=colr.green/65535.0;	
+	user_data->blue=colr.blue/65535.0;	
+	user_data->alpha=gtk_color_button_get_alpha(widget)/65535.0;	
+	gtk_widget_destroy(pref_menu->hover_ex);
+	gtk_widget_destroy(pref_menu->normal_ex);
+	pref_menu->hover_ex=build_menu_widget(pref_menu->places,&pref_menu->places->hover_colours,"Hover",NULL,NULL,200);	
+	pref_menu->normal_ex=build_menu_widget(pref_menu->places,&pref_menu->places->normal_colours,"Normal",NULL,NULL,200);
+	
+	gtk_table_attach_defaults(pref_menu->gtk_off_table,pref_menu->normal_ex,3,4,0,1);	
+	gtk_table_attach_defaults(pref_menu->gtk_off_table,pref_menu->hover_ex,3,4,1,2);	
+	gtk_widget_show(pref_menu->hover_ex);
+	gtk_widget_show(pref_menu->normal_ex);
+}
+
+void spin_change(GtkSpinButton *spinbutton,double * val)
+{
+	*val=gtk_spin_button_get_value(spinbutton);
+}
+
+void spin_int_change(GtkSpinButton *spinbutton,int * val)
+{
+	*val=gtk_spin_button_get_value(spinbutton);
+}
 
 
-	GtkWidget * text_table=gtk_table_new(2,4,FALSE);
-	GtkWidget * filemanager=gtk_file_chooser_button_new("File Manager",GTK_FILE_CHOOSER_ACTION_OPEN);	
-
-	tmp=g_filename_from_utf8(places->filemanager,-1, NULL, NULL, NULL) ;
-	gtk_file_chooser_set_filename(GTK_FILE_CHOOSER (filemanager),tmp);
+void _file_set(GtkFileChooserButton *filechooserbutton,gchar **p )
+{
+	gchar * svalue=*p;
+	gchar * tmp;
+	g_free(svalue);
+	tmp=gtk_file_chooser_get_filename(GTK_FILE_CHOOSER (filechooserbutton));
+	svalue=g_filename_to_utf8(tmp,-1, NULL, NULL, NULL) ;
 	g_free(tmp);
+	*p=svalue;
+
+}
+
+
+void show_prefs(Places * places)
+{	
+	pref_menu=g_malloc(sizeof(Pref_menu) );
+	printf("begin\n");
+
+	pref_menu->places=places;
+	pref_menu->prefs_win=gtk_window_new (GTK_WINDOW_TOPLEVEL);			
+	pref_menu->screen = gtk_window_get_screen(GTK_WINDOW(pref_menu->prefs_win));
+	pref_menu->colormap = gdk_screen_get_rgba_colormap(pref_menu->screen);
+	if (pref_menu->colormap != NULL && gdk_screen_is_composited(pref_menu->screen))
+	{
+		gtk_widget_set_colormap(pref_menu->prefs_win, pref_menu->colormap);
+	}	    	
+	gtk_window_set_title (pref_menu->prefs_win,"Places Preferences");
+	pref_menu->vbox=gtk_vbox_new(FALSE,0);
+	pref_menu->gtk=gtk_check_button_new_with_label("Use Gtk");
+	pref_menu->tooltips=gtk_check_button_new_with_label("Show tooltips");	
+
+	printf("1-----\n");		
+	pref_menu->gtk_off_section=gtk_vbox_new(FALSE,0);	
+	pref_menu->gtk_off_table=gtk_table_new(2,4,FALSE);
 	
-	GtkWidget * adjust_gradient=gtk_spin_button_new_with_range(0.0,1.0,0.01);
+	pref_menu->normal_label=gtk_label_new("Normal");
 
-	GtkWidget * adjust_textsize=gtk_spin_button_new_with_range(4,40,1);
-	GtkWidget * adjust_borderwidth=gtk_spin_button_new_with_range(0,10,1);			
+	pref_menu->colr.red=places->normal_colours.base.red*65535;
+	pref_menu->colr.green=places->normal_colours.base.green*65535;	
+	pref_menu->colr.blue=places->normal_colours.base.blue*65535;	
+	pref_menu->normal_bg=gtk_color_button_new_with_color(&pref_menu->colr);
+	gtk_color_button_set_use_alpha (pref_menu->normal_bg,TRUE);
+	gtk_color_button_set_alpha (pref_menu->normal_bg,places->normal_colours.base.alpha*65535);
+	g_signal_connect (G_OBJECT (pref_menu->normal_bg), "color-set",G_CALLBACK (_mod_colour),&places->normal_colours.base);		
+	printf("2-----\n");		
+	pref_menu->colr.red=places->normal_colours.text.red*65535;
+	pref_menu->colr.green=places->normal_colours.text.green*65535;	
+	pref_menu->colr.blue=places->normal_colours.text.blue*65535;	
+	pref_menu->normal_fg=gtk_color_button_new_with_color(&pref_menu->colr);
+	gtk_color_button_set_use_alpha (pref_menu->normal_fg,TRUE);
+	gtk_color_button_set_alpha (pref_menu->normal_fg,places->normal_colours.text.alpha*65535);
+	g_signal_connect (G_OBJECT (pref_menu->normal_fg), "color-set",G_CALLBACK (_mod_colour),&places->normal_colours.text);		
 	
-	GtkWidget* buttons=gtk_hbox_new(FALSE,0);	
-	GtkWidget* ok=gtk_button_new_with_label("Ok");
+	pref_menu->hover_label=gtk_label_new("Hover");
+	printf("3-----\n");		
+	pref_menu->colr.red=places->hover_colours.base.red*65535;
+	pref_menu->colr.green=places->hover_colours.base.green*65535;	
+	pref_menu->colr.blue=places->hover_colours.base.blue*65535;	
+	pref_menu->hover_bg=gtk_color_button_new_with_color(&pref_menu->colr);
+	gtk_color_button_set_use_alpha (pref_menu->hover_bg,TRUE);
+	gtk_color_button_set_alpha (pref_menu->hover_bg,places->hover_colours.base.alpha*65535);
+	g_signal_connect (G_OBJECT (pref_menu->hover_bg), "color-set",G_CALLBACK (_mod_colour),&places->hover_colours.base);		
 	
-	Menu_item_color mic;
-	mic.bg=places->normal_colours.base;
-	mic.fg=places->normal_colours.text;
-	normal_ex=build_menu_widget(&mic,"Normal",NULL,NULL,200,MENU_WIDGET_NORMAL);
+	pref_menu->colr.red=places->hover_colours.text.red*65535;
+	pref_menu->colr.green=places->hover_colours.text.green*65535;	
+	pref_menu->colr.blue=places->hover_colours.text.blue*65535;	
+	pref_menu->hover_fg=gtk_color_button_new_with_color(&pref_menu->colr);
+	gtk_color_button_set_use_alpha (pref_menu->hover_fg,TRUE);
+	gtk_color_button_set_alpha (pref_menu->hover_fg,places->hover_colours.text.alpha*65535);	
+	g_signal_connect (G_OBJECT (pref_menu->hover_fg), "color-set",G_CALLBACK (_mod_colour),&places->hover_colours.text);		
+	printf("4-----\n");		
 
-	mic.bg=places->hover_colours.base;
-	mic.fg=places->hover_colours.text;
-	hover_ex=build_menu_widget(&mic,"Hover",NULL,NULL,200,MENU_WIDGET_NORMAL);
+	pref_menu->border_label=gtk_label_new("Border");
 
-    gtk_window_set_keep_above (GTK_WINDOW (prefs_win),TRUE);
-    gtk_window_set_accept_focus(GTK_WINDOW (prefs_win),TRUE);
-	gtk_window_set_focus_on_map (GTK_WINDOW (prefs_win),TRUE);	
+	pref_menu->colr.red=places->border_colour.red*65535;
+	pref_menu->colr.green=places->border_colour.green*65535;	
+	pref_menu->colr.blue=places->border_colour.blue*65535;	
+	pref_menu->border_colour=gtk_color_button_new_with_color(&pref_menu->colr);
+	gtk_color_button_set_use_alpha (pref_menu->border_colour,TRUE);
+	gtk_color_button_set_alpha (pref_menu->border_colour,places->border_colour.alpha*65535);
+	g_signal_connect (G_OBJECT (pref_menu->border_colour), "color-set",G_CALLBACK (_mod_colour),&places->border_colour);		
 
-	gtk_spin_button_set_value(adjust_gradient,places->menu_item_gradient_factor);
-	gtk_spin_button_set_value(adjust_textsize,places->text_size);			
-	gtk_spin_button_set_value(adjust_borderwidth,places->border_width);	
-	g_signal_connect (G_OBJECT (adjust_gradient), "value-changed",G_CALLBACK (spin_change),
+
+	pref_menu->text_table=gtk_table_new(2,4,FALSE);
+	pref_menu->filemanager=gtk_file_chooser_button_new("File Manager",GTK_FILE_CHOOSER_ACTION_OPEN);	
+	printf("5-----\n");		
+	pref_menu->tmp=g_filename_from_utf8(places->file_manager,-1, NULL, NULL, NULL) ;
+	gtk_file_chooser_set_filename(GTK_FILE_CHOOSER (pref_menu->filemanager),pref_menu->tmp);
+	g_free(pref_menu->tmp);
+	
+	pref_menu->adjust_gradient=gtk_spin_button_new_with_range(0.0,1.0,0.01);
+
+	pref_menu->adjust_textsize=gtk_spin_button_new_with_range(4,40,1);
+	pref_menu->adjust_borderwidth=gtk_spin_button_new_with_range(0,10,1);			
+	
+	pref_menu->buttons=gtk_hbox_new(FALSE,0);	
+	pref_menu->ok=gtk_button_new_with_label("Ok");
+	
+	printf("6-----\n");		
+	pref_menu->mic.base=places->normal_colours.base;
+	pref_menu->mic.text=places->normal_colours.text;
+	pref_menu->normal_ex=build_menu_widget(places, &pref_menu->mic,"Normal",NULL,NULL,200);
+
+	pref_menu->mic.base=places->hover_colours.base;
+	pref_menu->mic.text=places->hover_colours.text;
+	pref_menu->hover_ex=build_menu_widget(places,&pref_menu->mic,"Hover",NULL,NULL,200);
+
+    gtk_window_set_keep_above (GTK_WINDOW (pref_menu->prefs_win),TRUE);
+    gtk_window_set_accept_focus(GTK_WINDOW (pref_menu->prefs_win),TRUE);
+	gtk_window_set_focus_on_map (GTK_WINDOW (pref_menu->prefs_win),TRUE);	
+
+	gtk_spin_button_set_value(pref_menu->adjust_gradient,places->menu_item_gradient_factor);
+	gtk_spin_button_set_value(pref_menu->adjust_textsize,places->text_size);			
+	gtk_spin_button_set_value(pref_menu->adjust_borderwidth,places->border_width);	
+	g_signal_connect (G_OBJECT (pref_menu->adjust_gradient), "value-changed",G_CALLBACK (spin_change),
 									&places->menu_item_gradient_factor);	
-	g_signal_connect (G_OBJECT (adjust_textsize), "value-changed",G_CALLBACK (spin_int_change),
+	g_signal_connect (G_OBJECT (pref_menu->adjust_textsize), "value-changed",G_CALLBACK (spin_int_change),
 									&places->text_size);	
-	g_signal_connect (G_OBJECT (adjust_borderwidth), "value-changed",G_CALLBACK (spin_int_change),
+	g_signal_connect (G_OBJECT (pref_menu->adjust_borderwidth), "value-changed",G_CALLBACK (spin_int_change),
 								&places->border_width);	
 	
-	g_signal_connect (G_OBJECT(filemanager), "file-set",G_CALLBACK (_file_set), &places->filemanager);		
+	g_signal_connect (G_OBJECT(pref_menu->filemanager), "file-set",G_CALLBACK (_file_set), &places->file_manager);		
 
-	gtk_toggle_button_set_active(gtk,places->honour_gtk);
+	gtk_toggle_button_set_active(pref_menu->gtk,places->honour_gtk);
 	
-	gtk_toggle_button_set_active(tooltips,places->show_tooltips);		
-	g_signal_connect (G_OBJECT (tooltips), "toggled",G_CALLBACK (_toggle_),&places->show_tooltips);			
+	gtk_toggle_button_set_active(pref_menu->tooltips,places->show_tooltips);		
+	g_signal_connect (G_OBJECT (pref_menu->tooltips), "toggled",G_CALLBACK (_toggle_),&places->show_tooltips);			
 	
-	g_signal_connect (G_OBJECT (ok), "button-press-event",G_CALLBACK (_press_ok),prefs_win );	
+	g_signal_connect (G_OBJECT (pref_menu->ok), "button-press-event",G_CALLBACK (_press_ok),pref_menu->prefs_win );	
 
-	gtk_container_add (GTK_CONTAINER (prefs_win), vbox); 
+	gtk_container_add (GTK_CONTAINER (pref_menu->prefs_win), pref_menu->vbox); 
 
-	g_signal_connect (G_OBJECT (gtk), "toggled",G_CALLBACK (_toggle_gtk),gtk_off_section );	
+	g_signal_connect (G_OBJECT (pref_menu->gtk), "toggled",G_CALLBACK (_toggle_gtk),pref_menu->gtk_off_section );	
 
-	gtk_box_pack_start(GTK_CONTAINER (vbox),tooltips,FALSE,FALSE,0);			
-
-	gtk_box_pack_start(GTK_CONTAINER (vbox),text_table,FALSE,FALSE,0);		
-	gtk_table_attach_defaults(text_table,gtk_label_new("File Manager"),0,1,1,2);	
-	gtk_table_attach_defaults(text_table,filemanager,1,2,1,2);
-	gtk_table_attach_defaults(text_table,gtk_label_new("Font Size (px)"),0,1,3,4);			
-	gtk_table_attach_defaults(text_table,adjust_textsize,1,2,3,4);				
-	gtk_table_attach_defaults(text_table,gtk_label_new("Border Width"),0,1,4,5);			
-	gtk_table_attach_defaults(text_table,adjust_borderwidth,1,2,4,5);	
+	gtk_box_pack_start(GTK_CONTAINER (pref_menu->vbox),pref_menu->tooltips,FALSE,FALSE,0);			
+	printf("7-----\n");		
+	gtk_box_pack_start(GTK_CONTAINER (pref_menu->vbox),pref_menu->text_table,FALSE,FALSE,0);		
+	gtk_table_attach_defaults(pref_menu->text_table,gtk_label_new("File Manager"),0,1,1,2);	
+	gtk_table_attach_defaults(pref_menu->text_table,pref_menu->filemanager,1,2,1,2);
+	gtk_table_attach_defaults(pref_menu->text_table,gtk_label_new("Font Size (px)"),0,1,3,4);			
+	gtk_table_attach_defaults(pref_menu->text_table,pref_menu->adjust_textsize,1,2,3,4);				
+	gtk_table_attach_defaults(pref_menu->text_table,gtk_label_new("Border Width"),0,1,4,5);			
+	gtk_table_attach_defaults(pref_menu->text_table,pref_menu->adjust_borderwidth,1,2,4,5);	
 		
-	gtk_box_pack_start(GTK_CONTAINER (vbox),gtk,FALSE,FALSE,0);
+	gtk_box_pack_start(GTK_CONTAINER (pref_menu->vbox),pref_menu->gtk,FALSE,FALSE,0);
 	
-	gtk_box_pack_start(GTK_CONTAINER (vbox),gtk_off_section,FALSE,FALSE,0);
-	gtk_box_pack_start(GTK_CONTAINER(gtk_off_section),gtk_off_table,FALSE,FALSE,0);
+	gtk_box_pack_start(GTK_CONTAINER (pref_menu->vbox),pref_menu->gtk_off_section,FALSE,FALSE,0);
+	gtk_box_pack_start(GTK_CONTAINER(pref_menu->gtk_off_section),pref_menu->gtk_off_table,FALSE,FALSE,0);
 
-	gtk_table_attach_defaults(gtk_off_table,normal_label,0,1,0,1);	
-	gtk_table_attach_defaults(gtk_off_table,normal_bg,1,2,0,1);	
-	gtk_table_attach_defaults(gtk_off_table,normal_fg,2,3,0,1);
-	gtk_table_attach_defaults(gtk_off_table,normal_ex,3,4,0,1);			
+	gtk_table_attach_defaults(pref_menu->gtk_off_table,pref_menu->normal_label,0,1,0,1);	
+	gtk_table_attach_defaults(pref_menu->gtk_off_table,pref_menu->normal_bg,1,2,0,1);	
+	gtk_table_attach_defaults(pref_menu->gtk_off_table,pref_menu->normal_fg,2,3,0,1);
+	gtk_table_attach_defaults(pref_menu->gtk_off_table,pref_menu->normal_ex,3,4,0,1);			
 		
-	gtk_table_attach_defaults(gtk_off_table,hover_label,0,1,1,2);	
-	gtk_table_attach_defaults(gtk_off_table,hover_bg,1,2,1,2);	
-	gtk_table_attach_defaults(gtk_off_table,hover_fg,2,3,1,2);	
-	gtk_table_attach_defaults(gtk_off_table,hover_ex,3,4,1,2);		
+	gtk_table_attach_defaults(pref_menu->gtk_off_table,pref_menu->hover_label,0,1,1,2);	
+	gtk_table_attach_defaults(pref_menu->gtk_off_table,pref_menu->hover_bg,1,2,1,2);	
+	gtk_table_attach_defaults(pref_menu->gtk_off_table,pref_menu->hover_fg,2,3,1,2);	
+	gtk_table_attach_defaults(pref_menu->gtk_off_table,pref_menu->hover_ex,3,4,1,2);		
 	
-	gtk_table_attach_defaults(gtk_off_table,border_label,0,1,2,3);		
-	gtk_table_attach_defaults(gtk_off_table,border_colour,2,3,2,3);
+	gtk_table_attach_defaults(pref_menu->gtk_off_table,pref_menu->border_label,0,1,2,3);		
+	gtk_table_attach_defaults(pref_menu->gtk_off_table,pref_menu->border_colour,2,3,2,3);
 
-	gtk_table_attach_defaults(gtk_off_table,gtk_label_new("Gradient Factor"),0,1,3,4);	
-	gtk_table_attach_defaults(gtk_off_table,adjust_gradient,2,3,3,4);
+	gtk_table_attach_defaults(pref_menu->gtk_off_table,gtk_label_new("Gradient Factor"),0,1,3,4);	
+	gtk_table_attach_defaults(pref_menu->gtk_off_table,pref_menu->adjust_gradient,2,3,3,4);
 
 
-	
-	gtk_box_pack_start(GTK_CONTAINER (vbox),buttons,FALSE,FALSE,0);
-	gtk_box_pack_start(GTK_CONTAINER (buttons),ok,FALSE,FALSE,0);							
-	gtk_widget_show_all(prefs_win);	
+	printf("8-----\n");		
+	gtk_box_pack_start(GTK_CONTAINER (pref_menu->vbox),pref_menu->buttons,FALSE,FALSE,0);
+	gtk_box_pack_start(GTK_CONTAINER (pref_menu->buttons),pref_menu->ok,FALSE,FALSE,0);							
+	gtk_widget_show_all(pref_menu->prefs_win);	
 	if (places->honour_gtk)
 	{
-		gtk_widget_hide(gtk_off_section);
+		gtk_widget_hide(pref_menu->gtk_off_section);
 	}
-#endif
+	printf("end\n");
 }
 
 
@@ -1072,10 +1228,11 @@ void show_prefs(Places * places)
 
 static gboolean _show_prefs (GtkWidget *widget, GdkEventButton *event, Places * places)
 {
-//	show_prefs(places);
+	show_prefs(places);
 	return TRUE;
 }
 
+//****************************************************************************************************
 //-------------------------------------------------------------------------
 
 
@@ -1119,7 +1276,7 @@ static gboolean _button_clicked_event (GtkWidget *widget, GdkEventButton *event,
 			gtk_widget_show(item);
 			gtk_menu_set_screen(menu,NULL);    	
 			gtk_menu_shell_append(menu,item);
-			g_signal_connect (G_OBJECT (item), "button-press-event",G_CALLBACK (_show_prefs), NULL);
+			g_signal_connect (G_OBJECT (item), "button-press-event",G_CALLBACK (_show_prefs), places);
     		done_once=TRUE;
     	}
     	gtk_menu_popup (menu, NULL, NULL, NULL, NULL, 
@@ -1130,10 +1287,8 @@ static gboolean _button_clicked_event (GtkWidget *widget, GdkEventButton *event,
 
 static gboolean _focus_out_event(GtkWidget *widget, GdkEventButton *event, Places * places)
 {
-    if (  gdk_window_get_window_type (event->window) !=GDK_WINDOW_TEMP)
-    {        
-        gtk_widget_hide(places->mainwindow);
-    }
+ 	printf("_focus_out_event\n");
+    gtk_widget_hide(places->mainwindow);
     return TRUE;
 }
 
@@ -1142,6 +1297,9 @@ static void _bloody_thing_has_style(GtkWidget *widget,Places *places)
 {
 	init_config(places);	
 	render_places(places);
+	g_signal_connect (G_OBJECT (places->applet), "button-press-event",G_CALLBACK (_button_clicked_event), places);		
+	g_signal_connect(G_OBJECT(places->mainwindow),"focus-out-event",G_CALLBACK (_focus_out_event),places);    
+	g_signal_connect (G_OBJECT (places->mainwindow),"expose-event", G_CALLBACK (_expose_event), places);			
 }
 
 AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
@@ -1159,12 +1317,10 @@ AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
 	places->icon=icon;
 	awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (applet),icon);                                   	
 	gtk_widget_show_all (GTK_WIDGET (applet));		
-	places->mainwindow = awn_applet_dialog_new (applet);			
+	places->mainwindow = awn_applet_dialog_new (applet);		
+	gtk_window_set_focus_on_map(places->mainwindow,TRUE);
 	places->vbox=gtk_vbox_new(FALSE,0);	
 	gtk_container_add (GTK_CONTAINER (places->mainwindow),places->vbox);    
-	g_signal_connect (G_OBJECT (places->applet), "button-press-event",G_CALLBACK (_button_clicked_event), places);		
-	g_signal_connect(G_OBJECT(places->mainwindow),"focus-out-event",G_CALLBACK (_focus_out_event),places);    
-	g_signal_connect (G_OBJECT (places->mainwindow),"expose-event", G_CALLBACK (_expose_event), places);		
 	g_signal_connect_after(G_OBJECT (places->applet), "realize", _bloody_thing_has_style, places);
 	return applet;
 

@@ -813,13 +813,12 @@ GtkWidget * get_blank(Places * places)
 	{    
 	    cairo_set_source_rgba (cr, places->border_colour.red, places->border_colour.green,
 	    						   places->border_colour.blue,places->border_colour.alpha);		
+	    cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
 	}
 	else
 	{
-	    cairo_set_source_rgba (cr, places->normal_colours.base.red, places->normal_colours.base.green,
-	    						   places->normal_colours.base.blue,places->normal_colours.base.alpha);			
+	    cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR); 	
 	}	    							
-    cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
     cairo_paint(cr);
     cairo_destroy(cr);
     g_object_unref(pixmap);

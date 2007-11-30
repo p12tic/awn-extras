@@ -110,7 +110,7 @@ static gboolean _button_clicked_event (GtkWidget *widget, GdkEventButton *event,
 
 
 int G_Height;
-static _build_away(gpointer null)
+static gboolean  _build_away(gpointer null)
 {
 	GdkPixbuf *icon;
 	Cairo_main_menu * menu;
@@ -128,7 +128,7 @@ static _build_away(gpointer null)
 			                       G_Height-2,
 			                       0, NULL);
 	if (!icon)
-		icon=gdk_pixbuf_new_from_file_at_size(g_filename_from_utf8(G_cairo_menu_conf.applet_icon,-1, NULL, NULL, NULL),-G_Height-2,
+		icon=gdk_pixbuf_new_from_file_at_size(g_filename_from_utf8(G_cairo_menu_conf.applet_icon,-1, NULL, NULL, NULL),G_Height-2,
 			                       G_Height-2,NULL);
 	if (!icon)
 	{
@@ -146,7 +146,7 @@ static _build_away(gpointer null)
 	}	
 	if (icon)                      
 	{
-    	if(gdk_pixbuf_get_height(icon) !=G_Height)
+    	if(gdk_pixbuf_get_height(icon) !=G_Height-2)
     	{
     		GdkPixbuf *oldpbuf=icon; 		
 	    	icon=gdk_pixbuf_scale_simple(oldpbuf,G_Height-2,G_Height-2,GDK_INTERP_HYPER);  

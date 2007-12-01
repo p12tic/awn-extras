@@ -76,7 +76,8 @@ typedef struct
 typedef struct
 {
 	AwnApplet 			*applet	;
-	GdkPixbuf 			*icon;	
+	GdkPixbuf 			*icon;
+	int					applet_icon_height;	
 	GtkWidget			*mainwindow;
 	GtkWidget			*vbox;
 
@@ -809,6 +810,8 @@ GtkWidget * get_blank(Places * places)
             cmap = gdk_screen_get_rgb_colormap (pScreen); 
     gdk_drawable_set_colormap(pixmap,cmap);       
     cr=gdk_cairo_create(pixmap);
+    cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);        
+    cairo_paint(cr);       
 	if (places->border_width>0)
 	{    
 	    cairo_set_source_rgba (cr, places->border_colour.red, places->border_colour.green,
@@ -817,7 +820,9 @@ GtkWidget * get_blank(Places * places)
 	}
 	else
 	{
-	    cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR); 	
+
+	    cairo_set_source_rgba (cr, places->border_colour.red, places->border_colour.green,
+	    						   places->border_colour.blue,0);		
 	}	    							
     cairo_paint(cr);
     cairo_destroy(cr);
@@ -1294,7 +1299,18 @@ static gboolean _focus_out_event(GtkWidget *widget, GdkEventButton *event, Place
 
 static void _bloody_thing_has_style(GtkWidget *widget,Places *places)
 {
+	GdkPixbuf *newicon;	
 	init_config(places);	
+	
+	newicon=gtk_icon_theme_load_icon (gtk_icon_theme_get_default (),places->applet_icon_name,places->applet_icon_height,0, NULL);	
+	if (!newicon)
+		newicon=gdk_pixbuf_new_from_file_at_size(g_filename_from_utf8(places->applet_icon_name,-1, NULL, NULL, NULL),
+												places->applet_icon_height,places->applet_icon_height,NULL);			
+	if (newicon)
+	{
+		places->icon=newicon;
+		awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (places->applet),places->icon); 
+	}												
 	render_places(places);
 	g_signal_connect (G_OBJECT (places->applet), "button-press-event",G_CALLBACK (_button_clicked_event), places);		
 	g_signal_connect(G_OBJECT(places->mainwindow),"focus-out-event",G_CALLBACK (_focus_out_event),places);    
@@ -1313,6 +1329,7 @@ AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
     	icon=gdk_pixbuf_new(GDK_COLORSPACE_RGB,TRUE,8,height-2,height-2);
 	    gdk_pixbuf_fill(icon,0x11881133);  
 	}	    
+	places->applet_icon_height=height-2;
 	places->icon=icon;
 	awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (applet),icon);                                   	
 	gtk_widget_show_all (GTK_WIDGET (applet));		

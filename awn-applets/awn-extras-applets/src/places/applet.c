@@ -1309,8 +1309,14 @@ static void _bloody_thing_has_style(GtkWidget *widget,Places *places)
 	if (newicon)
 	{
 		places->icon=newicon;
-		awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (places->applet),places->icon); 
-	}												
+	}			
+	if(gdk_pixbuf_get_height(places->icon) !=places->applet_icon_height)
+	{
+		GdkPixbuf *oldpbuf=places->icon; 		
+		places->icon=gdk_pixbuf_scale_simple(oldpbuf,places->applet_icon_height,places->applet_icon_height,GDK_INTERP_HYPER);  
+		g_object_unref(oldpbuf);
+	}	    	
+	awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (places->applet),places->icon); 	
 	render_places(places);
 	g_signal_connect (G_OBJECT (places->applet), "button-press-event",G_CALLBACK (_button_clicked_event), places);		
 	g_signal_connect(G_OBJECT(places->mainwindow),"focus-out-event",G_CALLBACK (_focus_out_event),places);    

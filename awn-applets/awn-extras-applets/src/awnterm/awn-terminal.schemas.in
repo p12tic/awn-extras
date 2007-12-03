@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<gconfschemafile>
+  <schemalist>
+    <schema>
+      <key>/schemas/apps/avant-window-navigator/applets/awn-terminal/opacity</key>
+      <applyto>/apps/avant-window-navigator/applets/awn-terminal/opacity</applyto>
+      <owner>avant-window-navigator</owner>
+      <type>float</type>
+      <default>0.5</default>
+      <locale name="C">
+        <short/>
+        <long>The applet's opacity level.</long>
+      </locale>
+      <locale name="en_ca">
+        <short/>
+        <long>The applet's opacity level.</long>
+      </locale>
+    </schema>
+    <schema>
+      <key>/schemas/apps/avant-window-navigator/applets/awn-terminal/hide_on_unfocus</key>
+      <applyto>/apps/avant-window-navigator/applets/awn-terminal/hide_on_unfocus</applyto>
+      <owner>avant-window-navigator</owner>
+      <type>bool</type>
+      <default>true</default>
+      <locale name="C">
+        <short/>
+        <long>Set whether the applet should hide itself when it loses focus.</long>
+      </locale>
+      <locale name="en_ca">
+        <short/>
+        <long>Set whether the applet should hide itself when it loses focus</long>
+      </locale>
+    </schema>
+    <schema>
+      <key>/schemas/apps/avant-window-navigator/applets/awn-terminal/bg_img</key>
+      <applyto>/apps/avant-window-navigator/applets/awn-terminal/bg_img</applyto>
+      <owner>avant-window-navigator</owner>
+      <type>string</type>
+      <default></default>
+      <locale name="C">
+        <short/>
+        <long>The applet's background image.</long>
+      </locale>
+      <locale name="en_ca">
+        <short/>
+        <long>The applet's background image.</long>
+      </locale>
+    </schema>
+  </schemalist>
+</gconfschemafile>

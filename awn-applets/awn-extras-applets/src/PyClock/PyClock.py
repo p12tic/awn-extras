@@ -145,7 +145,7 @@ class Clock:
     ctx.fill()
     #draw hour pointer
     ctx.set_source_rgba(0, 0, 0, 0.6)
-    ctx.arc(24, 24, 16, (360/12) * (self.GetTime('H')+9) * (PI/180), (360/12) * (self.GetTime('H')+9) * (PI/180))
+    ctx.arc(24, 24, 16, (360/12) * (self.GetTime('H')+9+(self.GetTime('M')/60.0)) * (PI/180), (360/12) * (self.GetTime('H')+9+(self.GetTime('M')/60.0)) * (PI/180))
     ctx.line_to(24, 24)
     ctx.stroke()
     #draw minute pointer
@@ -171,7 +171,7 @@ class Clock:
     self.SVGH_Frame.render_cairo(ctx)
     ctx.translate(50,50)
     ctx.save()
-    ctx.rotate((360/12) * (self.GetTime('H')+9) * (3.141593/180))
+    ctx.rotate((360/12) * (self.GetTime('H')+9+(self.GetTime('M')/60.0)) * (3.141593/180))
     self.SVGH_Hour_Hand.render_cairo(ctx)
     ctx.restore()
     ctx.save()

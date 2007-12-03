@@ -4,6 +4,7 @@ dist_gmail_DATA = 				\
 		calendarlogin.py 			\
 		calendarprefs.py		\
 		clockcal.py		\
+		calthread.py	\
 		evocal.py	\
 		googlecal.py	\
 		icscal.py	\

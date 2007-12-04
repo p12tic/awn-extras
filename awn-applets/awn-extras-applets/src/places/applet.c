@@ -137,6 +137,39 @@ static char * awncolor_to_string(AwnColor * colour);
 static void free_menu_list_item(Menu_Item * item,gpointer null);
 
 
+char *urldecode(char *source, char *dest)
+{
+	char *ret;
+	if(!dest)
+		dest = source;
+	ret = dest;
+	while(*source)
+	{
+		switch(*source)
+		{
+		case '+':
+			*(dest++) = ' ';
+			break;
+		case '%':
+			// NOTE: wrong input can finish with "...%" giving
+			// buffer overflow, cut string here
+			if ( !(dest[0] = source[1]) )
+				return ret;
+			if ( !(dest[1] = source[2]) )
+				return ret;
+			dest[2] = 0;
+			*(dest++) = (char)strtol(dest, NULL, 16);
+			source += 2;
+			break;
+		default:
+			*(dest++) = *source;
+		}
+		++source;
+	}
+	*dest = 0;
+	return ret;
+}	
+
 static char * awncolor_to_string(AwnColor * colour)
 {
 
@@ -388,6 +421,7 @@ static void _fillin_connected(GnomeVFSDrive * drive,Places * places)
 	
 	item->places=places;
 	item->text = gnome_vfs_drive_get_display_name (drive);
+	item->text = urldecode(item->text,NULL);
 	item->icon = gnome_vfs_drive_get_icon (drive);
 	// FIXME gnome_vfs_drive_get_mounted_volume is deprecated.	
 	
@@ -420,7 +454,7 @@ static void _fillin_connected (ThunarVfsVolume *volume, Places *places)
 	mount_point = thunar_vfs_path_dup_string (thunar_vfs_volume_get_mount_point (volume));
 	item = g_malloc (sizeof (Menu_Item));
 	item->places = places;
-	item->text = g_strdup (thunar_vfs_volume_get_name (volume));
+	item->text = urldecode(g_strdup (thunar_vfs_volume_get_name (volume)),NULL);
 	item->icon = g_strdup (thunar_vfs_volume_lookup_icon_name (volume, gtk_icon_theme_get_default ()));
 	item->exec = g_strdup_printf ("%s %s", places->file_manager, mount_point);
 	item->comment = g_strdup_printf ("%s\n%s", item->text, mount_point);
@@ -446,6 +480,7 @@ static void _fillin_connected (GVolume *volume, Places *places)
 	item = g_malloc (sizeof (Menu_Item));
 	item->places = places;
 	item->text = g_volume_get_name (volume);
+	item->text = urldecode(item->text,NULL);
 	icon = g_volume_get_icon (icon);
 	if (G_IS_THEMED_ICON (icon)) {
 		const gchar * const *icon_names = g_themed_icon_get_names (G_THEMED_ICON (icon));
@@ -581,7 +616,7 @@ static GSList* get_places(Places * places)
 							*tmp='\0';
 							p=tmp+1;
 						}
-						item->text=g_strdup(p);
+						item->text=urldecode(g_strdup(p),NULL);
 						item->icon=g_strdup("stock_folder");
 						item->exec=g_strdup_printf("%s %s",places->file_manager,line);			
 						item->comment=g_strdup(line);
@@ -844,16 +879,9 @@ void measure_width(Menu_Item * menu_item)
     cairo_select_font_face (cr, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
     cairo_set_font_size (cr,places->text_size  );  
 	cairo_text_extents(cr,menu_item->text,&extents);   
-	if ( extents.width+places->text_size*1.5 > places->max_width)
+	if ( extents.width+places->text_size*2.5 > places->max_width)
 	{
-		if (extents.width+places->text_size*1.5 >places->text_size*40)
-		{
-			places->max_width=places->text_size*40;
-		}
-		else
-		{
-			places->max_width=extents.width+places->text_size*2.5;
-		}			
+		places->max_width=extents.width+places->text_size*2.5;
 	}
 }
 
@@ -958,34 +986,6 @@ static gboolean _press_ok(GtkWidget *widget, GdkEventButton *event,GtkWidget * w
 	_do_update_places(pref_menu->places);	
 	g_free(pref_menu);
 	return FALSE;
-#if 0	
-	g_object_unref(pref_menu->places->config) ;
-	GError *err=NULL;	
-   GtkWidget *dialog, *label;
-   
-   dialog = gtk_dialog_new_with_buttons ("Places Message",
-                                         NULL,
-                                         GTK_DIALOG_DESTROY_WITH_PARENT,
-                                         GTK_STOCK_OK,
-                                         GTK_RESPONSE_NONE,
-                                         NULL);
-   label = gtk_label_new ("About to restart Places.  Please shutdown any instances of awn-manager");
-   
-   /* Ensure that the dialog box is destroyed when the user responds. */
-   
-   g_signal_connect_swapped (dialog,
-                             "response", 
-                             G_CALLBACK (gtk_widget_destroy),
-                             dialog);
-   gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox),
-                      label);
-	gtk_widget_show_all(dialog);                     
-   gtk_dialog_run(dialog);	
-	g_spawn_command_line_async("sh -c  'export T_STAMP=`date +\"%s\"`&& export AWN_G_ORIG=`gconftool-2 -g /apps/avant-window-navigator/applets_list | sed -e \"s/places\.desktop::[0-9]*/places\.desktop::$T_STAMP/\"` && export AWN_G_MOD=`echo $AWN_G_ORIG |sed -e \"s/[^,^\[]*places\.desktop::[0-9]*,?//\"` && gconftool-2 --type list --list-type=string -s /apps/avant-window-navigator/applets_list \"$AWN_G_MOD\" && sleep 2 && gconftool-2 --type list --list-type=string -s /apps/avant-window-navigator/applets_list \"$AWN_G_ORIG\"'",&err); 
-	exit(0);
- 	return FALSE;
-#endif
-	
 }
 
 
@@ -1066,7 +1066,6 @@ void _file_set(GtkFileChooserButton *filechooserbutton,gchar **p )
 void show_prefs(Places * places)
 {	
 	pref_menu=g_malloc(sizeof(Pref_menu) );
-	printf("begin\n");
 
 	pref_menu->places=places;
 	pref_menu->prefs_win=gtk_window_new (GTK_WINDOW_TOPLEVEL);			
@@ -1081,7 +1080,6 @@ void show_prefs(Places * places)
 	pref_menu->gtk=gtk_check_button_new_with_label("Use Gtk");
 	pref_menu->tooltips=gtk_check_button_new_with_label("Show tooltips");	
 
-	printf("1-----\n");		
 	pref_menu->gtk_off_section=gtk_vbox_new(FALSE,0);	
 	pref_menu->gtk_off_table=gtk_table_new(2,4,FALSE);
 	
@@ -1093,8 +1091,7 @@ void show_prefs(Places * places)
 	pref_menu->normal_bg=gtk_color_button_new_with_color(&pref_menu->colr);
 	gtk_color_button_set_use_alpha (pref_menu->normal_bg,TRUE);
 	gtk_color_button_set_alpha (pref_menu->normal_bg,places->normal_colours.base.alpha*65535);
-	g_signal_connect (G_OBJECT (pref_menu->normal_bg), "color-set",G_CALLBACK (_mod_colour),&places->normal_colours.base);		
-	printf("2-----\n");		
+	g_signal_connect (G_OBJECT (pref_menu->normal_bg), "color-set",G_CALLBACK (_mod_colour),&places->normal_colours.base);			
 	pref_menu->colr.red=places->normal_colours.text.red*65535;
 	pref_menu->colr.green=places->normal_colours.text.green*65535;	
 	pref_menu->colr.blue=places->normal_colours.text.blue*65535;	
@@ -1104,7 +1101,6 @@ void show_prefs(Places * places)
 	g_signal_connect (G_OBJECT (pref_menu->normal_fg), "color-set",G_CALLBACK (_mod_colour),&places->normal_colours.text);		
 	
 	pref_menu->hover_label=gtk_label_new("Hover");
-	printf("3-----\n");		
 	pref_menu->colr.red=places->hover_colours.base.red*65535;
 	pref_menu->colr.green=places->hover_colours.base.green*65535;	
 	pref_menu->colr.blue=places->hover_colours.base.blue*65535;	
@@ -1120,7 +1116,6 @@ void show_prefs(Places * places)
 	gtk_color_button_set_use_alpha (pref_menu->hover_fg,TRUE);
 	gtk_color_button_set_alpha (pref_menu->hover_fg,places->hover_colours.text.alpha*65535);	
 	g_signal_connect (G_OBJECT (pref_menu->hover_fg), "color-set",G_CALLBACK (_mod_colour),&places->hover_colours.text);		
-	printf("4-----\n");		
 
 	pref_menu->border_label=gtk_label_new("Border");
 
@@ -1135,7 +1130,6 @@ void show_prefs(Places * places)
 
 	pref_menu->text_table=gtk_table_new(2,4,FALSE);
 	pref_menu->filemanager=gtk_file_chooser_button_new("File Manager",GTK_FILE_CHOOSER_ACTION_OPEN);	
-	printf("5-----\n");		
 	pref_menu->tmp=g_filename_from_utf8(places->file_manager,-1, NULL, NULL, NULL) ;
 	gtk_file_chooser_set_filename(GTK_FILE_CHOOSER (pref_menu->filemanager),pref_menu->tmp);
 	g_free(pref_menu->tmp);
@@ -1147,8 +1141,7 @@ void show_prefs(Places * places)
 	
 	pref_menu->buttons=gtk_hbox_new(FALSE,0);	
 	pref_menu->ok=gtk_button_new_with_label("Ok");
-	
-	printf("6-----\n");		
+		
 	pref_menu->mic.base=places->normal_colours.base;
 	pref_menu->mic.text=places->normal_colours.text;
 	pref_menu->normal_ex=build_menu_widget(places, &pref_menu->mic,"Normal",NULL,NULL,200);
@@ -1185,7 +1178,6 @@ void show_prefs(Places * places)
 	g_signal_connect (G_OBJECT (pref_menu->gtk), "toggled",G_CALLBACK (_toggle_gtk),pref_menu->gtk_off_section );	
 
 	gtk_box_pack_start(GTK_CONTAINER (pref_menu->vbox),pref_menu->tooltips,FALSE,FALSE,0);			
-	printf("7-----\n");		
 	gtk_box_pack_start(GTK_CONTAINER (pref_menu->vbox),pref_menu->text_table,FALSE,FALSE,0);		
 	gtk_table_attach_defaults(pref_menu->text_table,gtk_label_new("File Manager"),0,1,1,2);	
 	gtk_table_attach_defaults(pref_menu->text_table,pref_menu->filemanager,1,2,1,2);
@@ -1214,9 +1206,7 @@ void show_prefs(Places * places)
 
 	gtk_table_attach_defaults(pref_menu->gtk_off_table,gtk_label_new("Gradient Factor"),0,1,3,4);	
 	gtk_table_attach_defaults(pref_menu->gtk_off_table,pref_menu->adjust_gradient,2,3,3,4);
-
-
-	printf("8-----\n");		
+	
 	gtk_box_pack_start(GTK_CONTAINER (pref_menu->vbox),pref_menu->buttons,FALSE,FALSE,0);
 	gtk_box_pack_start(GTK_CONTAINER (pref_menu->buttons),pref_menu->ok,FALSE,FALSE,0);							
 	gtk_widget_show_all(pref_menu->prefs_win);	
@@ -1224,7 +1214,6 @@ void show_prefs(Places * places)
 	{
 		gtk_widget_hide(pref_menu->gtk_off_section);
 	}
-	printf("end\n");
 }
 
 

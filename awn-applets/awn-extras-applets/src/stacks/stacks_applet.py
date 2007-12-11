@@ -42,6 +42,10 @@ from stacks_launcher import LaunchManager
 from stacks_icons import IconFactory
 from stacks_vfs import VfsUri
 
+import stacks_gui_trasher
+import stacks_gui_curved
+import stacks_gui_dialog
+
 STACKS_GUI_DIALOG=1
 STACKS_GUI_CURVED=2
 STACKS_GUI_TRASHER=3
@@ -129,9 +133,7 @@ class StacksApplet (awn.AppletSimple):
 
         # experimental: makeing more guis available
         self.gui_type = self.gconf_client.get_int(self.gconf_path + "/gui_type")
-        import stacks_gui_trasher
-        import stacks_gui_curved
-        import stacks_gui_dialog
+
 
         if self.gui_type <= 0 or self.gui_type > 3:
             self.gui_type = STACKS_GUI_DIALOG

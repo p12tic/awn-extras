@@ -140,9 +140,9 @@ get_origin_coordinates(NotifyStackLocation stack_location,
 		case NOTIFY_STACK_LOCATION_TOP_RIGHT:
 		case NOTIFY_STACK_LOCATION_BOTTOM_LEFT:
 		case NOTIFY_STACK_LOCATION_BOTTOM_RIGHT:
-        	case NOTIFY_STACK_LOCATION_AWN:
-            		get_origin_awn(x,y,width,height);
-            		break;
+        case NOTIFY_STACK_LOCATION_AWN:
+            get_origin_awn(x,y,width,height);
+            break;
 		default:
 			g_assert_not_reached();
 	}
@@ -154,7 +154,8 @@ translate_coordinates(NotifyStackLocation stack_location,
 					  gint *x, gint *y, gint *shiftx, gint *shifty,
 					  gint width, gint height, gint index)
 {
-    	gint tmp;
+	gint 	stacking_direction=1;	//stack updward.
+    gint 	tmp;
 	switch (stack_location)
 	{
 		case NOTIFY_STACK_LOCATION_TOP_LEFT:
@@ -164,8 +165,12 @@ translate_coordinates(NotifyStackLocation stack_location,
         	case NOTIFY_STACK_LOCATION_AWN:
 			tmp=*y;
 			get_origin_awn(x,y,width,height);
-			*y=tmp-height*0.95;               
-            	break;
+			if (y<gdk_screen_get_height (gdk_screen_get_default() )/2 )
+			{
+				stacking_direction=-1; //stacking down
+			}
+			*y=tmp-height*0.95*stacking_direction;               
+            break;
 		default:
 			g_assert_not_reached();
 	}

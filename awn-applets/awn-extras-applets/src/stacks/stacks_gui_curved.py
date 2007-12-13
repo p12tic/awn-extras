@@ -112,7 +112,7 @@ from stacks_config import StacksConfig
 from stacks_launcher import LaunchManager
 from stacks_icons import IconFactory
 from stacks_vfs import VfsUri
-
+from stacks_glade import GladeWindow
 
 APP="Stacks"
 DIR="locale"
@@ -125,6 +125,10 @@ _ = gettext.gettext
 
 #constants
 stack_item_x = 1
+
+def _to_full_path(path):
+    head, tail = os.path.split(__file__)
+    return os.path.join(head, path)
 
 """
 Main Applet class
@@ -141,7 +145,7 @@ class StacksGuiCurved(gtk.Window):
     
     tooltips_enabled = True
     
-    max_text_length = 200
+
     base_angle_interval = 0.85
     currentwidth = 10
     currentheight = 10
@@ -178,6 +182,7 @@ class StacksGuiCurved(gtk.Window):
     context_menu_visible = False
     tooltip_visible = False
     just_dragged = False
+    gconf_client = None
 
     signal_ids = []
 
@@ -218,12 +223,16 @@ class StacksGuiCurved(gtk.Window):
     		self.errorwindow.show_all()
     		
     		return None
-        
-        
 
+        self.applet = applet
+        
+        curved_config = get_curved_gui_config(
+                self.applet.gconf_client,
+                self.applet.gconf_path,
+                self.applet.uid)
+        self.curved_config = curved_config
     		
         # connect to events
-        self.applet = applet
         self.signal_ids.append(applet.connect("stacks-gui-hide", self._stacks_gui_hide_cb))
         self.signal_ids.append(applet.connect("stacks-gui-show", self._stacks_gui_show_cb))
         self.signal_ids.append(applet.connect("stacks-gui-toggle", self._stacks_gui_toggle_cb))
@@ -231,6 +240,9 @@ class StacksGuiCurved(gtk.Window):
         self.signal_ids.append(applet.connect("stacks-config-changed", self._stacks_config_changed_cb))
         self.signal_ids.append(applet.connect("stacks-item-removed", self._item_removed_cb))
         self.signal_ids.append(applet.connect("stacks-item-created", self._item_created_cb))
+        self.signal_ids.append(applet.connect("stacks-gui-config", self.show_config))
+        
+        
 
         # Init the window
         gtk.Window.__init__(self)
@@ -513,7 +525,11 @@ class StacksGuiCurved(gtk.Window):
 
     def _destroy_cb(self, widget):
         for id in self.signal_ids: self.applet.disconnect(id)
+
         
+    def show_config(self, widget):
+    	curved_cfg = CurvedStacksConfig(self.applet)
+
 
     def _stacks_gui_hide_cb(self, widget, event = None):
     	if self.context_menu_visible: return
@@ -533,6 +549,11 @@ class StacksGuiCurved(gtk.Window):
 
     def _stacks_config_changed_cb(self, widget, config):
         self.config = config
+        curved_config = get_curved_gui_config(
+                self.applet.gconf_client,
+                self.applet.gconf_path,
+                self.applet.uid)
+        self.curved_config = curved_config
 
     def _item_created_cb(self, widget, store, iter, angle = 0, direction = "LEFT",id = 0):
         if store:
@@ -605,7 +626,7 @@ class StacksGuiCurved(gtk.Window):
         
         icon_size = self.config['icon_size']
         if self.direction == "RIGHT":
-        	x = ax + aw/2  - self.text_distance - self.max_text_length - icon_size / 2;
+        	x = ax + aw/2  - self.text_distance - self.curved_config['label_length'] - icon_size / 2;
         else:
         	x = ax + aw/2  - icon_size / 2 - self.maxx - icon_size / 4;
         y = ay - h + 50
@@ -714,7 +735,7 @@ class StacksGuiCurved(gtk.Window):
         
 
   
-        self.width = int(round( self.text_distance + self.max_text_length + icon_size + self.maxx + icon_size / 4))
+        self.width = int(round( self.text_distance + self.curved_config['label_length'] + icon_size + self.maxx + icon_size / 4))
         
         self.right_arrow_enabled = False
         self.left_arrow_enabled = False
@@ -805,12 +826,12 @@ class StacksGuiCurved(gtk.Window):
         	
         if self.right_arrow_enabled:
         	if self.direction == "RIGHT":
-        		self.right_arrow_position = self.drawArrow ( context, self.text_distance + self.max_text_length + icon_size *3 / 4, self.height - icon_size / 2, icon_size / 4, "RIGHT", self.right_arrow_active)
+        		self.right_arrow_position = self.drawArrow ( context, self.text_distance + self.curved_config['label_length'] + icon_size *3 / 4, self.height - icon_size / 2, icon_size / 4, "RIGHT", self.right_arrow_active)
         	else:
         		self.right_arrow_position = self.drawArrow ( context,  self.maxx + icon_size , self.height - icon_size / 2, icon_size / 4, "RIGHT", self.right_arrow_active)
         if self.left_arrow_enabled:
         	if self.direction == "RIGHT":
-        		self.left_arrow_position = self.drawArrow ( context, self.text_distance + self.max_text_length + icon_size / 4, self.height - icon_size / 2, icon_size / 4, "LEFT", self.left_arrow_active)
+        		self.left_arrow_position = self.drawArrow ( context, self.text_distance + self.curved_config['label_length'] + icon_size / 4, self.height - icon_size / 2, icon_size / 4, "LEFT", self.left_arrow_active)
         	else:
         		self.left_arrow_position = self.drawArrow ( context, self.maxx + icon_size / 2, self.height - icon_size / 2, icon_size / 4, "LEFT", self.left_arrow_active)
         	
@@ -831,7 +852,7 @@ class StacksGuiCurved(gtk.Window):
 
     	
     	if self.direction == "RIGHT":
-    		icon_x = si.x + self.text_distance + self.max_text_length
+    		icon_x = si.x + self.text_distance + self.curved_config['label_length']
     		label_x = 0
     		angle = si.angle
     	else:
@@ -907,10 +928,10 @@ class StacksGuiCurved(gtk.Window):
 		# adjust the icon position if it is smaller than the icon size. 
 		x_adjust = 0
 		y_adjust = 0
-		if iw < icon_size: x_adjust = (iw - icon_size) / 2
-		if ih < icon_size: y_adjust = (ih - icon_size) / 2
-
-		context.set_source_pixbuf(icon,x+x_adjust,y-y_adjust)
+		if iw < icon_size: x_adjust = (icon_size - iw) / 2
+		if ih < icon_size: y_adjust = (icon_size - ih) / 2
+		
+		context.set_source_pixbuf(icon,x+x_adjust,y+y_adjust)
 		context.fill()
 		context.paint()
 		
@@ -947,6 +968,11 @@ class StacksGuiCurved(gtk.Window):
 		
 		pango_layout.set_font_description(pango.FontDescription("sans 10"))
 		
+		#fontmap = pangocairo.cairo_font_map_get_default()
+		
+		#font.set_size(10)
+		#pango_layout.set_font_description(pango.FontDescription("10"))
+		
 		y = y -7 # compensating for lable height of 16
 
 		if selected:
@@ -955,7 +981,7 @@ class StacksGuiCurved(gtk.Window):
 			context.set_source_rgba (0,0,0,0.65)
 		
 		label_width = 10
-		labletext, label_width = self.get_text_width(pango_layout, labletext,self.max_text_length)
+		labletext, label_width = self.get_text_width(pango_layout, labletext,self.curved_config['label_length'])
 		label_width = label_width + 10
 		
 		if self.direction == "RIGHT":
@@ -1096,3 +1122,51 @@ class stack_item:
 		self.icon_y = 0
 
 
+class CurvedStacksConfig(GladeWindow):
+    glade_file = _to_full_path('curved_stacks_preferences.glade')
+    backend_type = BACKEND_TYPE_INVALID
+    applet = None
+
+    backend = None
+    config = None
+
+    def __init__(self, applet):
+        GladeWindow.__init__(self)
+        self.applet = applet
+        
+        config = get_curved_gui_config(
+                self.applet.gconf_client,
+                self.applet.gconf_path,
+                self.applet.uid)
+        self.config = config
+
+
+        #set label length
+        self.widgets['label_length_box'].set_value(config['label_length'])
+    
+    def on_cancel_button_clicked(self, *args):
+    	self.destroy()
+
+    def on_ok_button_clicked(self, *args):
+    	#save configuration to gconf
+    	label_length = self.widgets['label_length_box'].get_value()
+        if int(label_length) > 0:
+            self.applet.gconf_client.set_int(
+                    self.applet.gconf_path + "/curved_gui/label_length", int(label_length) )
+    	self.destroy()
+    	
+def get_curved_gui_config(gconf_client, gconf_path, uid):
+    # store config in dict
+    config = {}
+    # try to get backend from gconf
+
+    # get dimension
+    _config_label_length = gconf_client.get_int(gconf_path + "/curved_gui/label_length")
+    if _config_label_length <= 0:
+        _config_label_length = 200
+    config['label_length'] = _config_label_length
+
+	
+    
+    
+    return config

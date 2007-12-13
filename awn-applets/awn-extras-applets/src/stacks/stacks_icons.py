@@ -39,6 +39,7 @@ class Thumbnailer:
                 icon_size != self.cached_size or \
                 timestamp != self.cached_timestamp:
             self.cached_icon = self._lookup_or_make_thumb(icon_size, timestamp)
+            self.cached_icon = self.cached_icon.add_alpha (True, '\0', '\0', '\0')
             self.cached_size = icon_size
             self.cached_timestamp = timestamp
         return self.cached_icon
@@ -62,12 +63,15 @@ class Thumbnailer:
             if thumb:
                 # Fixup the thumbnail a bit
                 thumb = self._nicer_dimensions(thumb)
+                
                 return thumb
         except:
             pass
 
         # Fallback to mime-type icon on failure
-        return IconFactory().load_icon(icon_name, icon_size)
+        thumb = IconFactory().load_icon(icon_name, icon_size)
+        
+        return thumb
 
 
     def _is_local_uri(self, uri):
@@ -97,9 +101,11 @@ class IconFactory:
             try:
                 if icon_size:
                     # constrain height, not width
-                    return gtk.gdk.pixbuf_new_from_file_at_size(icon_path, -1, int(icon_size))
+                    thumb = gtk.gdk.pixbuf_new_from_file_at_size(icon_path, -1, int(icon_size))
+                    return thumb
                 else:
-                    return gtk.gdk.pixbuf_new_from_file(icon_path)
+                    thumb = gtk.gdk.pixbuf_new_from_file(icon_path)
+                    return thumb
             except:
                 pass
         return None
@@ -159,6 +165,7 @@ class IconFactory:
 
         if os.path.isabs(icon_value):
             icon = self.load_icon_from_path(icon_value, icon_size)
+
             if icon:
                 if force_size:
                     return self.scale_to_bounded(icon, icon_size)
@@ -177,6 +184,7 @@ class IconFactory:
         icon = None
         icon_theme = gtk.icon_theme_get_default()
         info = icon_theme.lookup_icon(icon_name, icon_size, gtk.ICON_LOOKUP_USE_BUILTIN)
+        
         if info:
             if icon_name.startswith("gtk-"):
                 # NOTE: IconInfo/IconTheme.load_icon leaks a ref to the icon, so
@@ -195,6 +203,7 @@ class IconFactory:
 
 
     def load_image(self, icon_value, icon_size, force_size = True):
+    	
         pixbuf = self.load_icon(icon_value, icon_size, force_size)
         img = gtk.Image()
         img.set_from_pixbuf(pixbuf)

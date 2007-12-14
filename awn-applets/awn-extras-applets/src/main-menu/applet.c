@@ -411,18 +411,14 @@ awn_applet_factory_initp (const gchar * uid, gint orient, gint height )
   app->window = awn_applet_dialog_new (applet);
   gtk_window_set_focus_on_map (GTK_WINDOW (app->window), TRUE);
 
-  app->box = gtk_alignment_new (0.5, 0.5, 1, 1);
-
+  app->box = gtk_alignment_new (0.5, 0.5, 1, 1);                               
   gtk_container_add (GTK_CONTAINER (app->window), app->box);
   g_signal_connect (G_OBJECT (app->window), "focus-out-event",
-                    G_CALLBACK (on_focus_out), NULL);
-
-  gtk_widget_show_all (app->window);
-  gtk_widget_hide (app->window);
+                    G_CALLBACK (on_focus_out), NULL);      
   app->root = gmenu_tree_get_root_directory (app->tree);
- 
+                       
   gtk_widget_set_size_request (GTK_WIDGET (applet), 60, -1);
- 
+                       
   g_signal_connect (G_OBJECT (applet), "button-press-event",
                     G_CALLBACK (on_icon_clicked), (gpointer)app);
 
@@ -431,8 +427,9 @@ awn_applet_factory_initp (const gchar * uid, gint orient, gint height )
                                    "gnome-main-menu",
                                    height-2,
                                    0, NULL);
+	
   awn_applet_simple_set_icon (AWN_APPLET_SIMPLE (applet), icon);
 
-  gtk_widget_show_all (GTK_WIDGET (applet));
+  gtk_widget_show_all (GTK_WIDGET (applet));                              
   return applet;
 }

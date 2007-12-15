@@ -1240,6 +1240,49 @@ static gboolean _expose_event (GtkWidget *widget, GdkEventExpose *expose, Places
     return TRUE;
 }
 
+
+void pos_dialog(GtkWidget * window,Places *places)
+{
+	gint x,y;	
+	gdk_window_get_origin (GTK_WIDGET (places->applet)->window,&x, &y);    
+    gtk_window_move(GTK_WINDOW(window), x,y-window->allocation.height+GTK_WIDGET(places->applet)->allocation.height/3   );
+
+}
+
+
+GtkWidget * menu_new(Places *places)
+{
+	int scrwidth;
+	GdkColormap *colormap;
+	GdkScreen *screen;
+    GtkWidget *win=gtk_window_new (GTK_WINDOW_TOPLEVEL);
+    
+    gtk_window_set_type_hint (GTK_WINDOW(win),GDK_WINDOW_TYPE_HINT_DIALOG);            
+    gtk_window_set_skip_taskbar_hint(GTK_WINDOW (win),TRUE);    
+
+    gtk_window_set_decorated(GTK_WINDOW(win),FALSE);      
+    gtk_window_set_accept_focus(GTK_WINDOW(win),TRUE);
+	gtk_window_set_focus_on_map (GTK_WINDOW(win),TRUE);
+    gtk_window_set_keep_above(GTK_WINDOW (win),TRUE);
+    gtk_window_set_skip_pager_hint(GTK_WINDOW (win),TRUE);
+    gtk_window_stick(GTK_WINDOW (win));    
+
+//	gtk_window_set_opacity(GTK_WINDOW (win),0.0);
+	screen = gtk_window_get_screen(GTK_WINDOW(win));	
+	colormap = gdk_screen_get_rgba_colormap(screen);
+	if (colormap != NULL && gdk_screen_is_composited(screen))
+	{	
+		gtk_widget_set_colormap(win, colormap);
+	}
+		    
+	gtk_widget_set_events(win, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK|GDK_FOCUS_CHANGE_MASK|GDK_POINTER_MOTION_MASK);
+	gtk_widget_set_app_paintable(win,TRUE);	
+
+	
+    return win;
+
+}
+
 static gboolean _button_clicked_event (GtkWidget *widget, GdkEventButton *event, Places * places)
 {
     GdkEventButton *event_button;
@@ -1254,7 +1297,8 @@ static gboolean _button_clicked_event (GtkWidget *widget, GdkEventButton *event,
 		}
 		else
 		{
-			gtk_widget_show_all(places->mainwindow);		
+			gtk_widget_show_all(places->mainwindow);
+			pos_dialog(places->mainwindow,places);						
 		}    
     }
     else if (event->button == 3)    
@@ -1328,7 +1372,7 @@ AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
 	places->icon=icon;
 	awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (applet),icon);                                   	
 	gtk_widget_show_all (GTK_WIDGET (applet));		
-	places->mainwindow = awn_applet_dialog_new (applet);		
+	places->mainwindow = menu_new(places);
 	gtk_window_set_focus_on_map(places->mainwindow,TRUE);
 	places->vbox=gtk_vbox_new(FALSE,0);	
 	gtk_container_add (GTK_CONTAINER (places->mainwindow),places->vbox);    

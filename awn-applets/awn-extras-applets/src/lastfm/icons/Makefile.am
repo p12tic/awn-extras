@@ -1,5 +1,5 @@
 dist_lastfm_DATA = 			\
-		ban.png			\		
+		ban.png			\
 		cd.png			\
 		lastfm_icon_small.png	\
 		love.png		\

@@ -57,6 +57,13 @@ AC_SUBST(GDK_CFLAGS)
 AC_SUBST(GDK_LIBS)
 
 dnl
+dnl Check python modules
+dnl
+AM_CHECK_PYMOD(alsaaudio,,,AC_MSG_ERROR([python module alsaaudio required (python-alsaaudio)]))
+AM_CHECK_PYMOD(libgmail,,,AC_MSG_ERROR([python module libgmail required (python-libgmail)]))
+AM_CHECK_PYMOD(gst,,,AC_MSG_ERROR([python module gstreamer required (python-gst0.10)]))
+
+dnl
 dnl Check if desktop-agnostic is installed.
 dnl
 

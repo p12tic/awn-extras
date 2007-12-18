@@ -1,3 +1,5 @@
+m4_include([m4/python.m4])
+
 dnl AS_AC_EXPAND(VAR, CONFIGURE_VAR)
 dnl
 dnl example

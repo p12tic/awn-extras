@@ -26,6 +26,7 @@ SUBDIRS =			\
 	python-test 		\
 	quit-applet		\
 	separator 		\
+	shiny-switcher		\
 	stacks 			\
 	switcher 		\
 	showdesktop 		\

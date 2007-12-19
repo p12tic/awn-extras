@@ -29,6 +29,11 @@
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus-glib-lowlevel.h>
 
+#include <libawn/awn-applet.h>
+#include <libawn/awn-applet-simple.h>
+#include <libawn/awn-applet-gconf.h>
+#include <libawn/awn-applet-dialog.h>
+
 #define GCONF_KEY_DAEMON         "/apps/notification-daemon"
 #define GCONF_KEY_THEME          GCONF_KEY_DAEMON "/theme"
 #define GCONF_KEY_POPUP_LOCATION GCONF_KEY_DAEMON "/popup_location"
@@ -45,6 +50,7 @@
 #define GCONF_KEY_AWN_OVERRIDE_X  GCONF_AWN "/override_x"
 #define GCONF_KEY_AWN_OVERRIDE_Y  GCONF_AWN "/override_y"
 #define GCONF_KEY_AWN_TIMEOUT  GCONF_AWN "/override_override_timeout"
+#define GCONF_KEY_AWN_BOLD_BODY  GCONF_AWN "/bold_text_body"
 
 #define NOTIFY_TYPE_DAEMON (notify_daemon_get_type())
 #define NOTIFY_DAEMON(obj) \
@@ -114,7 +120,24 @@ gboolean notify_daemon_get_server_information(NotifyDaemon *daemon,
 
 GConfClient *get_gconf_client(void);
 
-
+typedef struct 
+{
+	AwnApplet *awn_app;		//NULL
+	int awn_app_height;		//0
+	AwnColor awn_border;
+	AwnColor awn_bg;
+	AwnColor awn_text;
+	gchar * awn_text_str;
+	gboolean awn_client_pos;
+	gboolean awn_honour_gtk;
+	int awn_override_y;
+	int awn_override_x;
+	int awn_border_width;
+	float awn_gradient_factor;
+	GdkPixbuf *awn_icon;
+	int 	timeout;			//0
+	gboolean	bold_text_body;
+}Notification_Daemon;
 
 G_END_DECLS
 

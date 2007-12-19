@@ -25,6 +25,7 @@
 #include "config.h"
 #include "engines.h"
 #include "stack.h"
+#include "daemon.h"
 
 #include <X11/Xproto.h>
 #include <X11/Xlib.h>
@@ -44,10 +45,8 @@ struct _NotifyStack
 	GSList *windows;
 };
 
-extern AwnApplet *G_awn_app;
-extern int G_awn_app_height;
-extern int G_awn_override_y;
-extern int G_awn_override_x;
+extern Notification_Daemon	G_daemon_config;
+
 
 static gboolean
 get_work_area(GtkWidget *nw, GdkRectangle *rect)
@@ -102,28 +101,26 @@ get_work_area(GtkWidget *nw, GdkRectangle *rect)
 
 static void get_origin_awn(gint *x, gint *y,gint width, gint height)
 {
-        gint ax, ay, aw, ah;
-        gint w, h;
-        w=width;
-        h=height;
-        gdk_window_get_origin (GTK_WIDGET (G_awn_app)->window, 
-                         &ax, &ay);
+    gint ax, ay, aw, ah;
+    gint w, h;
+    w=width;
+    h=height;
+    gdk_window_get_origin (GTK_WIDGET (G_daemon_config.awn_app)->window, &ax, &ay);
 
-	ax=G_awn_override_x>=0?G_awn_override_x:ax;
+	ax=G_daemon_config.awn_override_x>=0?G_daemon_config.awn_override_x:ax;
 
 	
-        gtk_widget_get_size_request (GTK_WIDGET (G_awn_app), 
-                                     &aw, &ah);
-        *x = ax - w/2 + aw/2;
-        *y = gdk_screen_get_height (gdk_screen_get_default()) - height - G_awn_app_height*1.5;// + dialog->priv->offset;
+    gtk_widget_get_size_request (GTK_WIDGET (G_daemon_config.awn_app),&aw, &ah);
+    *x = ax - w/2 + aw/2;
+    *y = gdk_screen_get_height (gdk_screen_get_default()) - height - G_daemon_config.awn_app_height*1.5;// + dialog->priv->offset;
 
-	if ( G_awn_override_y>=0)
-		*y=G_awn_override_y;
+	if ( G_daemon_config.awn_override_y>=0)
+		*y=G_daemon_config.awn_override_y;
         
-        if (*x < 0)
-                *x = 2;
-        if ((*x+w) > gdk_screen_get_width (gdk_screen_get_default()))
-                *x = gdk_screen_get_width (gdk_screen_get_default ()) - w -20;       
+    if (*x < 0)
+        *x = 2;
+    if ((*x+w) > gdk_screen_get_width (gdk_screen_get_default()))
+        *x = gdk_screen_get_width (gdk_screen_get_default ()) - w -20;       
 }            
 
 
@@ -162,7 +159,7 @@ translate_coordinates(NotifyStackLocation stack_location,
 		case NOTIFY_STACK_LOCATION_TOP_RIGHT:
 		case NOTIFY_STACK_LOCATION_BOTTOM_LEFT:
 		case NOTIFY_STACK_LOCATION_BOTTOM_RIGHT:
-        	case NOTIFY_STACK_LOCATION_AWN:
+    	case NOTIFY_STACK_LOCATION_AWN:
 			tmp=*y;
 			get_origin_awn(x,y,width,height);
 			if (y<gdk_screen_get_height (gdk_screen_get_default() )/2 )
@@ -268,16 +265,9 @@ notify_stack_add_window(NotifyStack *stack,
 	gint x, y;
 
 	gtk_widget_size_request(GTK_WIDGET(nw), &req);
-#if 0
-	notify_stack_shift_notifications(stack, nw, NULL,
-									 req.width, req.height, &x, &y);
-#else
     gtk_widget_show(nw);
-		notify_stack_shift_notifications(stack, nw, NULL,
-  									 req.width, GTK_WIDGET(nw)->allocation.height, &x, &y);
-//	    gtk_widget_hide(nw);							 
-#endif		
-//    printf("notify_stack_add_window: %d, %d\n",x,y);				 
+	notify_stack_shift_notifications(stack, nw, NULL,
+  									 req.width, GTK_WIDGET(nw)->allocation.height, &x, &y);						 				 
 	move_notification(nw, x, y);
 
 	if (new_notification)

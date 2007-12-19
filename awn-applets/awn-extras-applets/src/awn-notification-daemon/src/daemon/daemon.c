@@ -59,10 +59,7 @@
 #define WNCK_I_KNOW_THIS_IS_UNSTABLE
 #include <libwnck/libwnck.h>
 
-#include <libawn/awn-applet.h>
-#include <libawn/awn-applet-simple.h>
-#include <libawn/awn-applet-gconf.h>
-#include <libawn/awn-applet-dialog.h>
+
 
 
 #include "daemon.h"
@@ -93,21 +90,8 @@ typedef struct
 }AwnNotificationDaemon;
 
 
-//FIXME  put in to a struct
-AwnApplet *G_awn_app=NULL;
-int G_awn_app_height=0;
-AwnColor G_awn_border;
-AwnColor G_awn_bg;
-AwnColor G_awn_text;
-gchar * G_awn_text_str;
-gboolean G_awn_client_pos;
-gboolean G_awn_honour_gtk;
-int G_awn_override_y;
-int G_awn_override_x;
-int G_awn_border_width;
-float G_awn_gradient_factor;
-GdkPixbuf *G_awn_icon;
-int 	G_timeout=0;
+Notification_Daemon	G_daemon_config;
+
 
 const PopupNotifyStackLocation popup_stack_locations[] =
 {
@@ -448,8 +432,8 @@ _calculate_timeout(NotifyDaemon *daemon, NotifyTimeout *nt, int timeout)
 	else
 	{
 		glong usec;
-		if (G_timeout>0)
-			timeout=G_timeout;
+		if (G_daemon_config.timeout>0)
+			timeout=G_daemon_config.timeout;
 		nt->has_timeout = TRUE;
 
 		if (timeout == -1)
@@ -1009,7 +993,7 @@ notify_daemon_notify_handler(NotifyDaemon *daemon,
 		}
 	}
 
-	if ( (use_pos_data)  && G_awn_client_pos) 
+	if ( (use_pos_data)  && G_daemon_config.awn_client_pos) 
 	{
 		/*
 		 * Typically, the theme engine will set its own position based on
@@ -1141,12 +1125,12 @@ gboolean send_message(gchar *body)
 
 gboolean hide_icon(gpointer data)
 {
-    gtk_widget_set_size_request (GTK_WIDGET (G_awn_app), 1, 1);
+    gtk_widget_set_size_request (GTK_WIDGET (G_daemon_config.awn_app), 1, 1);
 
-    G_awn_icon=gdk_pixbuf_new(GDK_COLORSPACE_RGB,TRUE,8,1,1);
-    gdk_pixbuf_fill(G_awn_icon,0x00000000);  
-    awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (G_awn_app),G_awn_icon);  
-	G_awn_icon=NULL;
+    G_daemon_config.awn_icon=gdk_pixbuf_new(GDK_COLORSPACE_RGB,TRUE,8,1,1);
+    gdk_pixbuf_fill(G_daemon_config.awn_icon,0x00000000);  
+    awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (G_daemon_config.awn_app),G_daemon_config.awn_icon);  
+	G_daemon_config.awn_icon=NULL;
 	return FALSE;
 }
 
@@ -1199,24 +1183,24 @@ static void read_config(void)
 										NULL);		
     if (value)
     {																		
-        G_awn_client_pos=gconf_client_get_bool(gconf_client,GCONF_KEY_AWN_CLIENT_POS ,NULL);
+        G_daemon_config.awn_client_pos=gconf_client_get_bool(gconf_client,GCONF_KEY_AWN_CLIENT_POS ,NULL);
     }
     else
     {
-        G_awn_client_pos=TRUE;
-        gconf_client_set_bool (gconf_client,GCONF_KEY_AWN_CLIENT_POS,G_awn_client_pos,NULL);
+        G_daemon_config.awn_client_pos=TRUE;
+        gconf_client_set_bool (gconf_client,GCONF_KEY_AWN_CLIENT_POS,G_daemon_config.awn_client_pos,NULL);
     }        
     
     value=gconf_client_get(gconf_client, GCONF_KEY_AWN_HONOUR_GTK,
 										NULL);		
     if (value)
     {																		
-        G_awn_honour_gtk=gconf_client_get_bool(gconf_client,GCONF_KEY_AWN_HONOUR_GTK ,NULL);
+        G_daemon_config.awn_honour_gtk=gconf_client_get_bool(gconf_client,GCONF_KEY_AWN_HONOUR_GTK ,NULL);
     }
     else
     {
-        G_awn_honour_gtk=TRUE;
-        gconf_client_set_bool (gconf_client,GCONF_KEY_AWN_HONOUR_GTK,G_awn_honour_gtk,NULL);
+        G_daemon_config.awn_honour_gtk=TRUE;
+        gconf_client_set_bool (gconf_client,GCONF_KEY_AWN_HONOUR_GTK,G_daemon_config.awn_honour_gtk,NULL);
     }  
     
     svalue = gconf_client_get_string(gconf_client,GCONF_KEY_AWN_BG, NULL );
@@ -1224,7 +1208,7 @@ static void read_config(void)
     {
         gconf_client_set_string(gconf_client , GCONF_KEY_AWN_BG, svalue=g_strdup("0a0a0abb"), NULL );
     }
-    awn_cairo_string_to_color( svalue,&G_awn_bg );    
+    awn_cairo_string_to_color( svalue,&G_daemon_config.awn_bg );    
     g_free(svalue);
  
     svalue = gconf_client_get_string(gconf_client,GCONF_KEY_AWN_TEXT_COLOUR, NULL );
@@ -1232,10 +1216,10 @@ static void read_config(void)
     {
         gconf_client_set_string(gconf_client , GCONF_KEY_AWN_TEXT_COLOUR, svalue=g_strdup("eeeeeebb"), NULL );
     }
-    awn_cairo_string_to_color( svalue,&G_awn_text );    
-    G_awn_text_str=g_strdup(svalue);
-    if (strlen(G_awn_text_str)>6)
-        G_awn_text_str[6]='\0';
+    awn_cairo_string_to_color( svalue,&G_daemon_config.awn_text );    
+    G_daemon_config.awn_text_str=g_strdup(svalue);
+    if (strlen(G_daemon_config.awn_text_str)>6)
+        G_daemon_config.awn_text_str[6]='\0';
     g_free(svalue);
             	
     svalue = gconf_client_get_string(gconf_client,GCONF_KEY_AWN_BORDER, NULL );
@@ -1243,64 +1227,80 @@ static void read_config(void)
     {
         gconf_client_set_string(gconf_client , GCONF_KEY_AWN_BORDER, svalue=g_strdup("ffffffaa"), NULL );
     }
-    awn_cairo_string_to_color( svalue,&G_awn_border );    
+    awn_cairo_string_to_color( svalue,&G_daemon_config.awn_border );    
     g_free(svalue);     
     
     value=gconf_client_get(gconf_client,GCONF_KEY_AWN_BORDER_WIDTH,NULL);		
     if (value)
     {																		
-        G_awn_border_width=gconf_client_get_int(gconf_client,GCONF_KEY_AWN_BORDER_WIDTH,NULL) ;
+        G_daemon_config.awn_border_width=gconf_client_get_int(gconf_client,GCONF_KEY_AWN_BORDER_WIDTH,NULL) ;
     }
     else             							
     {
-        G_awn_border_width=3;
-        gconf_client_set_int(gconf_client,GCONF_KEY_AWN_BORDER_WIDTH,G_awn_border_width ,NULL);        
+        G_daemon_config.awn_border_width=3;
+        gconf_client_set_int(gconf_client,GCONF_KEY_AWN_BORDER_WIDTH,G_daemon_config.awn_border_width ,NULL);        
     }
 
     value=gconf_client_get(gconf_client,GCONF_KEY_AWN_GRADIENT_FACTOR,NULL);		
     if (value)
     {																		
-        G_awn_gradient_factor=gconf_client_get_float(gconf_client,GCONF_KEY_AWN_GRADIENT_FACTOR,NULL) ;
+        G_daemon_config.awn_gradient_factor=gconf_client_get_float(gconf_client,GCONF_KEY_AWN_GRADIENT_FACTOR,NULL) ;
     }
     else             							
     {
-        G_awn_gradient_factor=0.75;
-        gconf_client_set_float (gconf_client,GCONF_KEY_AWN_GRADIENT_FACTOR,G_awn_gradient_factor ,NULL);        
+        G_daemon_config.awn_gradient_factor=0.75;
+        gconf_client_set_float (gconf_client,GCONF_KEY_AWN_GRADIENT_FACTOR,G_daemon_config.awn_gradient_factor ,NULL);        
     }
  
     value=gconf_client_get(gconf_client,GCONF_KEY_AWN_OVERRIDE_X,NULL);		
     if (value)
     {
-        G_awn_override_x=gconf_client_get_int(gconf_client,GCONF_KEY_AWN_OVERRIDE_X,NULL) ;
+        G_daemon_config.awn_override_x=gconf_client_get_int(gconf_client,GCONF_KEY_AWN_OVERRIDE_X,NULL) ;
     }
     else             							
     {
-        G_awn_override_x=-1;
-        gconf_client_set_int (gconf_client,GCONF_KEY_AWN_OVERRIDE_X,G_awn_override_x ,NULL);        
+        G_daemon_config.awn_override_x=-1;
+        gconf_client_set_int (gconf_client,GCONF_KEY_AWN_OVERRIDE_X,G_daemon_config.awn_override_x ,NULL);        
     }
     
     value=gconf_client_get(gconf_client,GCONF_KEY_AWN_OVERRIDE_Y,NULL);		
     if (value)
     {																		
-        G_awn_override_y=gconf_client_get_int(gconf_client,GCONF_KEY_AWN_OVERRIDE_Y,NULL) ;
+        G_daemon_config.awn_override_y=gconf_client_get_int(gconf_client,GCONF_KEY_AWN_OVERRIDE_Y,NULL) ;
     }
     else             							
     {
-        G_awn_override_y=-1;
-        gconf_client_set_int (gconf_client,GCONF_KEY_AWN_OVERRIDE_Y,G_awn_override_y ,NULL);        
+        G_daemon_config.awn_override_y=-1;
+        gconf_client_set_int (gconf_client,GCONF_KEY_AWN_OVERRIDE_Y,G_daemon_config.awn_override_y ,NULL);        
     }
 
 
     value=gconf_client_get(gconf_client,GCONF_KEY_AWN_TIMEOUT,NULL);		
     if (value)
     {																		
-        G_timeout=gconf_client_get_int(gconf_client,GCONF_KEY_AWN_TIMEOUT,NULL) ;
+        G_daemon_config.timeout=gconf_client_get_int(gconf_client,GCONF_KEY_AWN_TIMEOUT,NULL) ;
     }
     else             							
     {
-        G_timeout=-1;
-        gconf_client_set_int (gconf_client,GCONF_KEY_AWN_TIMEOUT,G_timeout ,NULL);        
+        G_daemon_config.timeout=-1;
+        gconf_client_set_int (gconf_client,GCONF_KEY_AWN_TIMEOUT,G_daemon_config.timeout ,NULL);        
     }
+    
+    
+
+    value=gconf_client_get(gconf_client,GCONF_KEY_AWN_BOLD_BODY,NULL);		
+    if (value)
+    {																		
+        G_daemon_config.bold_text_body=gconf_client_get_bool(gconf_client,GCONF_KEY_AWN_BOLD_BODY,NULL) ;
+    }
+    else             							
+    {
+        G_daemon_config.bold_text_body=FALSE;
+        gconf_client_set_bool(gconf_client,GCONF_KEY_AWN_BOLD_BODY,G_daemon_config.bold_text_body,NULL);        
+    }
+
+
+    
     done_once=TRUE;
 }
 
@@ -1318,71 +1318,71 @@ config_changed(GConfClient *client, guint cnxn_id,
 										NULL);		
     if (value)
     {																		
-        G_awn_client_pos=gconf_client_get_bool(gconf_client,GCONF_KEY_AWN_CLIENT_POS ,NULL);
+        G_daemon_config.awn_client_pos=gconf_client_get_bool(gconf_client,GCONF_KEY_AWN_CLIENT_POS ,NULL);
     }
     
     value=gconf_client_get(gconf_client, GCONF_KEY_AWN_HONOUR_GTK,
 										NULL);		
     if (value)
     {																		
-        G_awn_honour_gtk=gconf_client_get_bool(gconf_client,GCONF_KEY_AWN_HONOUR_GTK ,NULL);
+        G_daemon_config.awn_honour_gtk=gconf_client_get_bool(gconf_client,GCONF_KEY_AWN_HONOUR_GTK ,NULL);
     }
     
     svalue = gconf_client_get_string(gconf_client,GCONF_KEY_AWN_BG, NULL );
     if ( svalue ) 
     {
-		awn_cairo_string_to_color( svalue,&G_awn_bg );    
+		awn_cairo_string_to_color( svalue,&G_daemon_config.awn_bg );    
 		g_free(svalue);
  	}
  	
     svalue = gconf_client_get_string(gconf_client,GCONF_KEY_AWN_TEXT_COLOUR, NULL );
     if ( svalue ) 
     {
-		awn_cairo_string_to_color( svalue,&G_awn_text );    
-		G_awn_text_str=g_strdup(svalue);
-		if (strlen(G_awn_text_str)>6)
-		    G_awn_text_str[6]='\0';
+		awn_cairo_string_to_color( svalue,&G_daemon_config.awn_text );    
+		G_daemon_config.awn_text_str=g_strdup(svalue);
+		if (strlen(G_daemon_config.awn_text_str)>6)
+		    G_daemon_config.awn_text_str[6]='\0';
 		g_free(svalue);
 	}
 	            	
     svalue = gconf_client_get_string(gconf_client,GCONF_KEY_AWN_BORDER, NULL );
     if ( svalue ) 
     {
-		awn_cairo_string_to_color( svalue,&G_awn_border );    
+		awn_cairo_string_to_color( svalue,&G_daemon_config.awn_border );    
 		g_free(svalue);     
     }
     
     value=gconf_client_get(gconf_client,GCONF_KEY_AWN_BORDER_WIDTH,NULL);		
     if (value)
     {																		
-        G_awn_border_width=gconf_client_get_int(gconf_client,GCONF_KEY_AWN_BORDER_WIDTH,NULL) ;
+        G_daemon_config.awn_border_width=gconf_client_get_int(gconf_client,GCONF_KEY_AWN_BORDER_WIDTH,NULL) ;
     }
 
     value=gconf_client_get(gconf_client,GCONF_KEY_AWN_GRADIENT_FACTOR,NULL);		
     if (value)
     {																		
-        G_awn_gradient_factor=gconf_client_get_float(gconf_client,GCONF_KEY_AWN_GRADIENT_FACTOR,NULL) ;
+        G_daemon_config.awn_gradient_factor=gconf_client_get_float(gconf_client,GCONF_KEY_AWN_GRADIENT_FACTOR,NULL) ;
     }
  
     value=gconf_client_get(gconf_client,GCONF_KEY_AWN_OVERRIDE_X,NULL);		
     if (value)
     {
-        G_awn_override_x=gconf_client_get_int(gconf_client,GCONF_KEY_AWN_OVERRIDE_X,NULL) ;
+        G_daemon_config.awn_override_x=gconf_client_get_int(gconf_client,GCONF_KEY_AWN_OVERRIDE_X,NULL) ;
     }
     
     value=gconf_client_get(gconf_client,GCONF_KEY_AWN_OVERRIDE_Y,NULL);		
     if (value)
     {																		
-        G_awn_override_y=gconf_client_get_int(gconf_client,GCONF_KEY_AWN_OVERRIDE_Y,NULL) ;
+        G_daemon_config.awn_override_y=gconf_client_get_int(gconf_client,GCONF_KEY_AWN_OVERRIDE_Y,NULL) ;
     }
 
 
     value=gconf_client_get(gconf_client,GCONF_KEY_AWN_TIMEOUT,NULL);		
     if (value)
     {																		
-        G_timeout=gconf_client_get_int(gconf_client,GCONF_KEY_AWN_TIMEOUT,NULL) ;
+        G_daemon_config.timeout=gconf_client_get_int(gconf_client,GCONF_KEY_AWN_TIMEOUT,NULL) ;
     }
-
+    
 	send_message("Configuration has been modified\nClick <a href=\"http://wiki.awn-project.org/index.php?title=Awn_Notification-Daemon\">Here</a> for online documentation.");
 }						  
 
@@ -1396,17 +1396,17 @@ AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
 	AwnApplet *applet;
 
 
-    G_awn_app_height=height;
+    G_daemon_config.awn_app_height=height;
 
-    G_awn_app = applet = AWN_APPLET (awn_applet_simple_new (uid, orient, height));
+    G_daemon_config.awn_app = applet = AWN_APPLET (awn_applet_simple_new (uid, orient, height));
     
     g_signal_connect (G_OBJECT (applet), "height-changed", G_CALLBACK (_height_changed), (gpointer)applet);    
     gtk_widget_set_size_request (GTK_WIDGET (applet), height, height);
 
-    G_awn_icon=gdk_pixbuf_new(GDK_COLORSPACE_RGB,TRUE,8,height,height);
-    gdk_pixbuf_fill(G_awn_icon,0x00000033);  
-    awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (applet),G_awn_icon);  
-	G_awn_icon=NULL;
+    G_daemon_config.awn_icon=gdk_pixbuf_new(GDK_COLORSPACE_RGB,TRUE,8,height,height);
+    gdk_pixbuf_fill(G_daemon_config.awn_icon,0x00000033);  
+    awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (applet),G_daemon_config.awn_icon);  
+	G_daemon_config.awn_icon=NULL;
 
     gtk_widget_show_all (GTK_WIDGET (applet));
 

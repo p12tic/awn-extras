@@ -30,7 +30,7 @@
 #include "config.h"
 
 #define ENABLE_GRADIENT_LOOK 1
-//#undef ENABLE_GRADIENT_LOOK
+
 
 #include <gconf/gconf-client.h>
 #include "daemon.h"
@@ -47,6 +47,7 @@
 
 #include "config.h"
 
+#include <string.h>
 #include <gtk/gtk.h>
 #include <glib.h>
 #include <libsexy/sexy-url-label.h>
@@ -61,22 +62,13 @@
 typedef void (*ActionInvokedCb)(GtkWindow *nw, const char *key);
 //typedef void (*UrlClickedCb)(GtkWindow *nw, const char *url);
 
-extern AwnApplet *G_awn_app;
-extern int G_awn_app_height;
-extern AwnColor G_awn_border;
-extern AwnColor G_awn_bg;
-extern int G_awn_border_width;
-extern float G_awn_gradient_factor;
-extern AwnColor G_awn_text;
-extern gchar * G_awn_text_str;
-extern gboolean G_awn_honour_gtk;
 
 #define TTD_SHOWBORDER  1
 #define TTD_USE_GTK     2
 #define TTD_ROUNDED_CORNERS 4
 #define TTD_REL_POS 8
 
-
+extern Notification_Daemon G_daemon_config;
 
 typedef struct
 {
@@ -181,10 +173,10 @@ fill_background(GtkWidget *widget, WindowData *windata, cairo_t *cr)
 	GdkColor *background_color = &style->base[GTK_STATE_NORMAL];
 
 	cairo_set_source_rgba(cr,
-					  G_awn_bg.red,
-					  G_awn_bg.green,
-					  G_awn_bg.blue,
-					  G_awn_bg.alpha*windata->gradient_factor);
+					  G_daemon_config.awn_bg.red,
+					  G_daemon_config.awn_bg.green,
+					  G_daemon_config.awn_bg.blue,
+					  G_daemon_config.awn_bg.alpha*windata->gradient_factor);
 	cairo_rectangle(cr, 0, 0,
 					widget->allocation.width,
 					widget->allocation.height);
@@ -417,11 +409,6 @@ create_border_with_arrow(GtkWidget *nw, WindowData *windata)
 
 				y = windata->point_y - height;
 			}
-
-#if 0
-			g_assert(i == windata->num_border_points);
-			g_assert(windata->point_x - arrow_offset - arrow_side1_width >= 0);
-#endif
 			gtk_window_move(GTK_WINDOW(windata->win),
 							windata->point_x - arrow_offset -
 							arrow_side1_width,
@@ -458,7 +445,7 @@ create_border_with_arrow(GtkWidget *nw, WindowData *windata)
 static void
 draw_border(GtkWidget *widget, WindowData *windata, cairo_t *cr)
 {
-	cairo_set_source_rgba(cr, G_awn_border.red, G_awn_border.green,G_awn_border.blue, G_awn_border.alpha);
+	cairo_set_source_rgba(cr, G_daemon_config.awn_border.red, G_daemon_config.awn_border.green,G_daemon_config.awn_border.blue, G_daemon_config.awn_border.alpha);
 	cairo_set_line_width(cr, 1.0);
 
 	if (windata->has_arrow)
@@ -566,12 +553,6 @@ configure_event_cb(GtkWidget *nw,
 	update_spacers(nw);
 #endif	
 	gtk_widget_queue_draw(nw);
-	#if 0
-gtk_window_get_position             (GtkWindow *window,
-                                                         gint *root_x,
-                                                         gint *root_y);
-#endif 
-
 	return FALSE;
 }
 
@@ -593,10 +574,10 @@ create_notification(UrlClickedCb url_clicked)
 	WindowData *windata;
 
 	windata = g_new0(WindowData, 1);
-	windata->use_gtk_style=G_awn_honour_gtk;
+	windata->use_gtk_style=G_daemon_config.awn_honour_gtk;
     windata->show_notification_win_title=FALSE;
-    windata->border_width=G_awn_border_width;
-    windata->gradient_factor=G_awn_gradient_factor;
+    windata->border_width=G_daemon_config.awn_border_width;
+    windata->gradient_factor=G_daemon_config.awn_gradient_factor;
     
         
     if ( (windata->gradient_factor < 0) || (windata->gradient_factor>1) )
@@ -611,28 +592,12 @@ create_notification(UrlClickedCb url_clicked)
 	windata->urgency = URGENCY_NORMAL;
 	windata->url_clicked = url_clicked;
 
-//	win = awn_applet_dialog_new (G_awn_app);         //gtk_window_new(GTK_WINDOW_POPUP);     /*AWN hack*/
-    
     AwnColor bg;
     AwnColor base;
 	main_vbox=build_dialog(windata,0,&base,&bg);
     	
 	win=windata->win;
 	
-  //  assert(windata->enable_transparency);
-
-
-
-	/*
-	 * For some reason, there are occasionally graphics glitches when
-	 * repainting the window. Despite filling the window with a background
-	 * color, parts of the other windows on the screen or the shadows around
-	 * notifications will appear on the notification. Somehow, adding this
-	 * eventbox makes that problem just go away. Whatever works for now.
-	 */
-
-//	g_signal_connect(G_OBJECT(main_vbox), "expose_event",
-//					 G_CALLBACK(paint_window), windata);
 #ifdef SHOW_SPACERS
 
 	windata->top_spacer = gtk_image_new();
@@ -715,23 +680,14 @@ create_notification(UrlClickedCb url_clicked)
 	vbox = gtk_vbox_new(FALSE, 6);
 	gtk_widget_show(vbox);
 	gtk_box_pack_start(GTK_BOX(windata->content_hbox), vbox, TRUE, TRUE, 0);
-#if 1
+
 	windata->body_label = sexy_url_label_new();
 	gtk_box_pack_start(GTK_BOX(vbox), windata->body_label, TRUE, TRUE, 0);
 	gtk_misc_set_alignment(GTK_MISC(windata->body_label), 0, 0);
 	gtk_label_set_line_wrap(GTK_LABEL(windata->body_label), TRUE);
 	g_signal_connect_swapped(G_OBJECT(windata->body_label), "url_activated",
 							 G_CALLBACK(windata->url_clicked), win);
-#endif							 
-#if 0
-	windata->body_label = gtk_label_new(NULL);
-	gtk_widget_show(windata->body_label);
-	gtk_box_pack_start(GTK_BOX(vbox), windata->body_label, TRUE, TRUE, 0);
-	gtk_misc_set_alignment(GTK_MISC(windata->body_label), 0, 0);	
-	gtk_label_set_line_wrap(GTK_LABEL(windata->body_label), TRUE);	
-	g_signal_connect_swapped(G_OBJECT(windata->body_label), "url_activated",
-							 G_CALLBACK(windata->url_clicked), win);
-#endif
+
 	atkobj = gtk_widget_get_accessible(windata->body_label);
 	atk_object_set_description(atkobj, "Notification body text.");
 
@@ -746,20 +702,18 @@ create_notification(UrlClickedCb url_clicked)
     	GtkStyle *style = gtk_widget_get_style(windata->win);    	
     	GdkColor *background_color = &style->base[GTK_STATE_NORMAL];    
     	
-        G_awn_bg.red=background_color->red   / 65535.0;
-        G_awn_bg.green=background_color->green / 65535.0;
-        G_awn_bg.blue=background_color->blue  / 65535.0;
-		G_awn_bg.alpha=BACKGROUND_OPACITY;
+        G_daemon_config.awn_bg.red=background_color->red   / 65535.0;
+        G_daemon_config.awn_bg.green=background_color->green / 65535.0;
+        G_daemon_config.awn_bg.blue=background_color->blue  / 65535.0;
+		G_daemon_config.awn_bg.alpha=BACKGROUND_OPACITY;
 
     	GdkColor *fg_color = &style->fg[GTK_STATE_NORMAL];    
-        G_awn_border.red=fg_color->red   / 65535.0;
-        G_awn_border.green=fg_color->green / 65535.0;
-        G_awn_border.blue=fg_color->blue  / 65535.0;
-		G_awn_border.alpha=1.0;
+        G_daemon_config.awn_border.red=fg_color->red   / 65535.0;
+        G_daemon_config.awn_border.green=fg_color->green / 65535.0;
+        G_daemon_config.awn_border.blue=fg_color->blue  / 65535.0;
+		G_daemon_config.awn_border.alpha=1.0;
 
     }
-	
-//	gtk_widget_show_all(win);
 	return GTK_WINDOW(win);
 }
 
@@ -817,6 +771,10 @@ set_notification_text(GtkWindow *nw, const char *summary, const char *body)
 	WindowData *windata = g_object_get_data(G_OBJECT(nw), "windata");
 	g_assert(windata != NULL);
 	
+	char * endchar;
+	endchar=body[strlen(body)-1]=='\n'?' ':'\n';
+	
+	
     /*FIXME*/
     if (windata->use_gtk_style)
     {
@@ -824,24 +782,23 @@ set_notification_text(GtkWindow *nw, const char *summary, const char *body)
     }    
     else
     {
-    	str = g_strdup_printf("<b><big><span foreground=\"#%s\">%s</span></big></b>",G_awn_text_str, summary);
+    	str = g_strdup_printf("<b><big><span foreground=\"#%s\">%s</span></big></b>",G_daemon_config.awn_text_str, summary);
     }
     
 
 	gtk_label_set_markup(GTK_LABEL(windata->summary_label), str);
 	g_free(str);
 
-//	sexy_url_label_set_markup(SEXY_URL_LABEL(windata->body_label), body);
-
     if (windata->use_gtk_style)
     {
-        str = g_strdup_printf("<b><small><span>%s\n</span></small></b>",body);
+        str = g_strdup_printf("%s<small><span> %s%c</span></small>%s",G_daemon_config.bold_text_body?"<b>":"", 
+        														body,endchar,G_daemon_config.bold_text_body?"<b>":"");
     }
     else
     {
-    	str = g_strdup_printf("<b><small><span foreground=\"#%s\">%s\n</span></small></b>",G_awn_text_str, body);
+    	str = g_strdup_printf("%s<small><span foreground=\"#%s\"> %s%c\n</span></small>%s",G_daemon_config.bold_text_body?"<b>":"",
+    												G_daemon_config.awn_text_str,body,endchar,G_daemon_config.bold_text_body?"<b>":"");
     }    	
-//	gtk_label_set_markup(GTK_LABEL(windata->body_label), str);
     sexy_url_label_set_markup(SEXY_URL_LABEL(windata->body_label), str);
     
 	g_free(str);
@@ -924,9 +881,9 @@ countdown_expose_cb(GtkWidget *pie, GdkEventExpose *event,
 
 //		gdk_cairo_set_source_color(cr, &style->bg[GTK_STATE_ACTIVE]);
         cairo_set_source_rgba(cr,
-							  G_awn_border.red,
-							  G_awn_border.green,
-							  G_awn_border.blue,
+							  G_daemon_config.awn_border.red,
+							  G_daemon_config.awn_border.green,
+							  G_daemon_config.awn_border.blue,
 							  1);
 		cairo_move_to(cr, PIE_RADIUS, PIE_RADIUS);
 		cairo_arc_negative(cr, PIE_RADIUS, PIE_RADIUS, PIE_RADIUS,
@@ -989,13 +946,6 @@ void add_notification_action(GtkWindow *nw, const char *text,
 		gtk_container_add(GTK_CONTAINER(alignment), windata->pie_countdown);
 		gtk_widget_set_size_request(windata->pie_countdown,
 									PIE_WIDTH, PIE_HEIGHT);
-        /*AWN mod*/    
-        #if 0
-        cr=gdk_cairo_create(windata->pie_countdown->window);
-    	cairo_set_operator(cr, CAIRO_OPERATOR_CLEAR);        
-    	cairo_paint(cr);
-    	cairo_destroy(cr);
-    	#endif
 		g_signal_connect(G_OBJECT(windata->pie_countdown), "expose_event",
 						 G_CALLBACK(countdown_expose_cb), windata);
 	}
@@ -1159,29 +1109,28 @@ void draw_curved_cairo_rect(cairo_t *cr,double x0, double y0,double rect_width,
         /* Add a very subtle gradient to the bottom of the notification */
         gradient = cairo_pattern_create_linear(0, y0/*gradient_y*/, 0,
                 y0+rect_height);
-        cairo_pattern_add_color_stop_rgba(gradient, 0,  G_awn_bg.red, G_awn_bg.green, G_awn_bg.blue, 
-                                G_awn_bg.alpha);
-        cairo_pattern_add_color_stop_rgba(gradient, 0.2, G_awn_bg.red, G_awn_bg.green, G_awn_bg.blue, 
-                                G_awn_bg.alpha*gradient_factor);
-        cairo_pattern_add_color_stop_rgba(gradient, 0.8, G_awn_bg.red, G_awn_bg.green, G_awn_bg.blue, 
-                                G_awn_bg.alpha*gradient_factor);
-        cairo_pattern_add_color_stop_rgba(gradient, 1,  G_awn_bg.red, G_awn_bg.green, G_awn_bg.blue, 
-                                G_awn_bg.alpha);
+        cairo_pattern_add_color_stop_rgba(gradient, 0,  G_daemon_config.awn_bg.red,G_daemon_config.awn_bg.green,
+        							G_daemon_config.awn_bg.blue,G_daemon_config.awn_bg.alpha);
+        cairo_pattern_add_color_stop_rgba(gradient, 0.2, G_daemon_config.awn_bg.red,G_daemon_config.awn_bg.green, 
+        							G_daemon_config.awn_bg.blue,G_daemon_config.awn_bg.alpha*gradient_factor);
+        cairo_pattern_add_color_stop_rgba(gradient, 0.8, G_daemon_config.awn_bg.red, G_daemon_config.awn_bg.green,
+        							G_daemon_config.awn_bg.blue,G_daemon_config.awn_bg.alpha*gradient_factor);
+        cairo_pattern_add_color_stop_rgba(gradient, 1, G_daemon_config.awn_bg.red,G_daemon_config.awn_bg.green, 
+        							G_daemon_config.awn_bg.blue, G_daemon_config.awn_bg.alpha);
         cairo_set_source(cr, gradient);
         cairo_fill_preserve (cr);
-//        cairo_fill(cr);
     }        
     else
     {
-        cairo_set_source_rgba (cr, G_awn_bg.red, G_awn_bg.green, G_awn_bg.blue, 
-                            G_awn_bg.alpha);
+        cairo_set_source_rgba (cr, G_daemon_config.awn_bg.red, G_daemon_config.awn_bg.green,
+        							G_daemon_config.awn_bg.blue,G_daemon_config.awn_bg.alpha);
         cairo_fill_preserve (cr);                            
     }                            
     
 	if (border_width)
 	{
-        cairo_set_source_rgba (cr, G_awn_border.red, G_awn_border.green, 
-                                G_awn_border.blue, G_awn_border.alpha);
+        cairo_set_source_rgba (cr, G_daemon_config.awn_border.red, G_daemon_config.awn_border.green, 
+                               G_daemon_config.awn_border.blue, G_daemon_config.awn_border.alpha);
         cairo_set_line_width (cr, border_width);
 
     }        
@@ -1213,19 +1162,18 @@ static void dialog_fill_background(GtkWidget *widget, WindowData *windata, cairo
 
     cairo_move_to(cr, 3,sum_h+10+5); 
     cairo_line_to(cr, widget->allocation.width-3,sum_h+10+5); 
-    cairo_set_source_rgba(cr, G_awn_border.red, G_awn_border.green,G_awn_border.blue,G_awn_border.alpha);
+    cairo_set_source_rgba(cr, G_daemon_config.awn_border.red,G_daemon_config.awn_border.green,G_daemon_config.awn_border.blue,G_daemon_config.awn_border.alpha);
 	cairo_set_line_width(cr, windata->border_width);
     cairo_stroke(cr);
-#if 1
+
     if (windata->border_width >1)
     {
         cairo_move_to(cr, 3,sum_h+10+5); 
         cairo_line_to(cr, widget->allocation.width-3,sum_h+10+5); 
-        cairo_set_source_rgba(cr, G_awn_border.red*0.8, G_awn_border.green*0.8,G_awn_border.blue*0.8,G_awn_border.alpha*(windata->gradient_factor+1)/2);
+        cairo_set_source_rgba(cr, G_daemon_config.awn_border.red*0.8, G_daemon_config.awn_border.green*0.8,G_daemon_config.awn_border.blue*0.8,G_daemon_config.awn_border.alpha*(windata->gradient_factor+1)/2);
 	    cairo_set_line_width(cr, windata->border_width*0.5);
         cairo_stroke(cr);
     }        
-#endif    
 }
 
 
@@ -1274,7 +1222,6 @@ GtkWidget * build_dialog( WindowData *windata,long flags, AwnColor *base, AwnCol
 	GtkWidget *drawbox;
 	GtkWidget *main_vbox;	
     GtkWidget *win=gtk_window_new (GTK_WINDOW_POPUP);
-#if 1
     gtk_window_set_decorated(GTK_WINDOW (win),FALSE);      
     gtk_window_set_type_hint (GTK_WINDOW (win),GDK_WINDOW_TYPE_HINT_NOTIFICATION);
     gtk_window_stick (GTK_WINDOW (win));
@@ -1282,11 +1229,6 @@ GtkWidget * build_dialog( WindowData *windata,long flags, AwnColor *base, AwnCol
     gtk_window_set_skip_taskbar_hint(GTK_WINDOW (win),TRUE);
     gtk_window_set_keep_above (GTK_WINDOW (win),TRUE);
     gtk_window_set_accept_focus(GTK_WINDOW (win),FALSE);
-
-      
-//    gtk_window_set_focus_on_map(GTK_WINDOW (win),FALSE);
-//    gtk_window_set_auto_startup_notification (FALSE);
-#endif     
 	screen = gtk_window_get_screen(GTK_WINDOW(win));
 	colormap = gdk_screen_get_rgba_colormap(screen);
 	if (colormap != NULL && gdk_screen_is_composited(screen))
@@ -1300,7 +1242,7 @@ GtkWidget * build_dialog( WindowData *windata,long flags, AwnColor *base, AwnCol
         gtk_window_set_title(GTK_WINDOW(win), "Notification");
 	gtk_widget_add_events(win, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
 	gtk_widget_realize(win);
-    gdk_window_set_transient_for(GTK_WIDGET(win)->window,GTK_WIDGET(G_awn_app)->window);	
+    gdk_window_set_transient_for(GTK_WIDGET(win)->window,GTK_WIDGET(G_daemon_config.awn_app)->window);	
 	gtk_widget_show_all(win);
 	gtk_widget_hide(win);	
 	gtk_widget_set_size_request(win, WIDTH, -1);
@@ -1313,16 +1255,9 @@ GtkWidget * build_dialog( WindowData *windata,long flags, AwnColor *base, AwnCol
 	g_signal_connect(G_OBJECT(win), "configure_event",
 					 G_CALLBACK(configure_event_cb), windata);
 
-#if 0
 	drawbox = gtk_event_box_new();
 	gtk_widget_show(drawbox);
 	gtk_container_add(GTK_CONTAINER(win), drawbox);
-#endif
-
-	drawbox = gtk_event_box_new();
-	gtk_widget_show(drawbox);
-	gtk_container_add(GTK_CONTAINER(win), drawbox);
-
 	main_vbox = gtk_vbox_new(FALSE, 0);
 	gtk_widget_show(main_vbox);
 	gtk_container_add(GTK_CONTAINER(drawbox), main_vbox);
@@ -1330,7 +1265,6 @@ GtkWidget * build_dialog( WindowData *windata,long flags, AwnColor *base, AwnCol
 
 	g_signal_connect(G_OBJECT(main_vbox), "expose_event",
 					 G_CALLBACK(_paint_dialog), windata);	
-  //  assert(gtk_window_get_skip_taskbar_hint(GTK_WINDOW (win)));
     windata->win=win;
     	    
     return main_vbox;

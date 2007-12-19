@@ -9,7 +9,9 @@ INCLUDES =							\
 	-DLIBDIR=\"$(libdir)\"                                  
 
 SHINYSWITCHER_SOURCES =                              \
-	applet.c									
+	applet.c									\
+	shinyswitcherapplet.c  \
+	shinyswitcherapplet.h
 
 
 SHINYSWITCHER_LDADD =                        \

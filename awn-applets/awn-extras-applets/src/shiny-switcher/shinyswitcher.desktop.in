@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=C
+Name=Shiny Switcher
+Comment=A Desktop Switcher
+Exec=@LIBDIR@/awn/applets/shinyswitcher/shinyswitcher.so
+Icon=gnome-panel-workspace-switcher

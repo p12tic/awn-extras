@@ -792,12 +792,12 @@ set_notification_text(GtkWindow *nw, const char *summary, const char *body)
     if (windata->use_gtk_style)
     {
         str = g_strdup_printf("%s<small><span> %s%c</span></small>%s",G_daemon_config.bold_text_body?"<b>":"", 
-        														body,endchar,G_daemon_config.bold_text_body?"<b>":"");
+        														body,endchar,G_daemon_config.bold_text_body?"</b>":"");
     }
     else
     {
     	str = g_strdup_printf("%s<small><span foreground=\"#%s\"> %s%c\n</span></small>%s",G_daemon_config.bold_text_body?"<b>":"",
-    												G_daemon_config.awn_text_str,body,endchar,G_daemon_config.bold_text_body?"<b>":"");
+    												G_daemon_config.awn_text_str,body,endchar,G_daemon_config.bold_text_body?"</b>":"");
     }    	
     sexy_url_label_set_markup(SEXY_URL_LABEL(windata->body_label), str);
     

@@ -799,8 +799,21 @@ set_notification_text(GtkWindow *nw, const char *summary, const char *body)
     	str = g_strdup_printf("%s<small><span foreground=\"#%s\"> %s%c\n</span></small>%s",G_daemon_config.bold_text_body?"<b>":"",
     												G_daemon_config.awn_text_str,body,endchar,G_daemon_config.bold_text_body?"</b>":"");
     }    	
+
     sexy_url_label_set_markup(SEXY_URL_LABEL(windata->body_label), str);
-    
+
+	if ( !strlen(gtk_label_get_label(windata->body_label)) )
+	{
+		char *tmp=g_markup_escape_text(body,-1);
+		g_free(str);
+    	str = g_strdup_printf("%s<small><span foreground=\"#%s\"> %s%c\n</span></small>%s",G_daemon_config.bold_text_body?"<b>":"",
+    												G_daemon_config.awn_text_str,tmp,endchar,G_daemon_config.bold_text_body?"</b>":"");
+
+	    sexy_url_label_set_markup(SEXY_URL_LABEL(windata->body_label), str);		
+	    g_free(tmp);
+	}
+//	printf("strlength = %d\n",strlen(gtk_label_get_label(windata->body_label)) );
+        
 	g_free(str);
 
 	if (body == NULL || *body == '\0')

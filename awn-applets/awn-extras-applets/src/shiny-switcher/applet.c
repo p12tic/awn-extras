@@ -29,7 +29,6 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
 	Shiny_switcher*shiny_switcher;
 	applet = awn_applet_new( uid, orient, height );
 	shiny_switcher = applet_new(applet, height*3,height);
-	gtk_widget_set_size_request (GTK_WIDGET (applet), shiny_switcher->width+shiny_switcher->applet_border_width*2,height*2.5);	
 	return applet;
 }
 

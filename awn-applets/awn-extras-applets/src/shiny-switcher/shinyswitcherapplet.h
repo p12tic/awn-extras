@@ -153,7 +153,9 @@ typedef struct
 	AwnColor		background_colour;
 	
 	int				applet_border_width;
-		
+	gboolean		reconfigure;
+	gboolean		got_viewport;
+	
 
 #ifdef USE_AWN_DESKTOP_AGNOSTIC
 	AwnConfigClient		*config;

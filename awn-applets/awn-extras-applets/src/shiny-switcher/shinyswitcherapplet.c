@@ -1428,7 +1428,7 @@ applet_new (AwnApplet *applet,int width,int height)
 	Shiny_switcher *shinyswitcher = g_malloc(sizeof(Shiny_switcher)) ;
 	shinyswitcher->applet = applet;
 	shinyswitcher->ws_lookup_ev=g_tree_new(_cmp_ptrs);
-	
+
 	//doing this as a tree right now..  cause it's easy and I think I'll need a complex data structure eventually.
 	shinyswitcher->ws_changes=g_tree_new(_cmp_ptrs);
 	shinyswitcher->pixbuf_cache=g_tree_new(_cmp_ptrs);
@@ -1437,9 +1437,15 @@ applet_new (AwnApplet *applet,int width,int height)
 
 	wnck_set_client_type(WNCK_CLIENT_TYPE_PAGER )	;
 	shinyswitcher->wnck_screen=wnck_screen_get_default();
+
 	wnck_screen_force_update(shinyswitcher->wnck_screen);  	
-	
+	printf("WM=%s\n",wnck_screen_get_window_manager_name(shinyswitcher->wnck_screen));	
 	shinyswitcher->got_viewport=wnck_workspace_is_virtual(wnck_screen_get_active_workspace(shinyswitcher->wnck_screen) );
+	if (strcmp(wnck_screen_get_window_manager_name(shinyswitcher->wnck_screen),"compiz") == 0)
+	{
+		printf("ShinySwitcher Message:  compiz detected\n");
+		shinyswitcher->got_viewport=TRUE;
+	}
 	init_config	(shinyswitcher);
 //	printf("cols = %d,  rows=%d \n",shinyswitcher->cols,shinyswitcher->rows);		
  	screen = gtk_widget_get_screen(GTK_WIDGET(shinyswitcher->applet));	

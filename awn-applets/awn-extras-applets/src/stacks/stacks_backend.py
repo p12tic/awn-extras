@@ -177,6 +177,7 @@ class Backend(gobject.GObject):
                     if not icon_uri:
                         icon_uri = path
                     pixbuf = IconFactory().load_icon(icon_uri, self.icon_size)
+                    pixbuf.add_alpha (True, '\0', '\0', '\0')
             else:
                 # get file info
                 try:
@@ -192,6 +193,7 @@ class Backend(gobject.GObject):
                     continue
                 # get pixbuf for icon
                 pixbuf = Thumbnailer(path, mime_type).get_icon(self.icon_size)
+                pixbuf.add_alpha (True, '\0', '\0', '\0')
 
             # create monitor
             try:

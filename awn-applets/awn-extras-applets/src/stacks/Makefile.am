@@ -2,6 +2,7 @@ SUBDIRS = icons
 
 dist_stacksapplet_DATA = \
 		stacks_preferences.glade \
+		curved_stacks_preferences.glade \
 		stacks_applet.py \
 		stacks_backend.py \
 		stacks_backend_file.py \

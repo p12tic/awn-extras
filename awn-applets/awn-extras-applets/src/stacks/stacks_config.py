@@ -7,7 +7,7 @@ from gtk import gdk
 import os
 import locale
 import gettext
-
+        
 #from stacks_applet import StacksApplet
 from stacks_backend import *
 from stacks_glade import GladeWindow
@@ -29,6 +29,11 @@ PREF_FILE_OPERATIONS = 32
 PREF_BROWSING = 64
 PREF_TITLE = 128
 PREF_ITEM_COUNT = 256
+
+
+STACKS_GUI_DIALOG=1
+STACKS_GUI_CURVED=2
+STACKS_GUI_TRASHER=3
 
 LAYOUT_PREFS =  PREF_APPLET_ICON + \
                 PREF_COMPOSITE_ICON + \
@@ -112,7 +117,7 @@ class StacksConfig(GladeWindow):
             self.widgets['composite_hbox'].set_sensitive(False)
         else:
             # get composite
-            self.widgets['nocomposite_radio'].set_active(not config['composite_icon'])
+            self.widgets['composite_checkb'].set_active(config['composite_icon'])
 
         if (preferences & PREF_ICON_SIZE) == 0:
             self.widgets['iconsize_label'].set_sensitive(False)
@@ -120,6 +125,21 @@ class StacksConfig(GladeWindow):
         else:
             # get icon size
             self.widgets['iconsize_spin'].set_value(config['icon_size'])
+
+        if (preferences) == 0:
+            self.widgets['layout_combobox'].set_sensitive(False)
+        else:
+            self.widgets['layout_combobox'].set_active(config['gui_type']-1)
+            
+        if config['gui_type'] == 2:
+        	self.widgets['layout_settings_button'].set_sensitive(True)
+        	self.widgets['dimension_label'].hide_all()
+        	self.widgets['dimension_hbox'].hide_all()
+        else:
+        	self.widgets['layout_settings_button'].set_sensitive(False)                        
+        	self.widgets['dimension_label'].show_all()
+        	self.widgets['dimension_hbox'].show_all()
+            
 
         if (preferences & PREF_DIMENSION) == 0:
             self.widgets['dimension_label'].set_sensitive(False)
@@ -141,7 +161,7 @@ class StacksConfig(GladeWindow):
             self.widgets['count_label'].set_sensitive(False)
             self.widgets['count_hbox'].set_sensitive(False)
         else:
-            self.widgets['nocount_radio'].set_active(not config['item_count'])
+            self.widgets['count_checkbx'].set_active(config['item_count'])
 
         # PAGE 3
 
@@ -165,10 +185,11 @@ class StacksConfig(GladeWindow):
                     self.widgets['link_check'].set_active(False)
 
         if (preferences & PREF_BROWSING) == 0:
-            self.widgets['browse_hbox'].set_sensitive(False)
+            self.widgets['browse_enabled'].set_sensitive(False)
         else:
             # get browsing
-            self.widgets['nobrowse_radio'].set_active(not config['browsing'])
+            self.widgets['browse_enabled'].set_active(config['browsing'])
+            
 
     def on_backendselect_button_clicked(self, *args):
         filesel = gtk.FileChooserDialog(
@@ -225,7 +246,39 @@ class StacksConfig(GladeWindow):
         self._select_icon("full")
 
     def on_cancel_button_clicked(self, *args):
+        gui_type = self.widgets['layout_combobox'].get_active() +1
+        if gui_type <> self.config['gui_type']:
+        	gui_type = self.config['gui_type']
+        	if gui_type < 1 or gui_type > 3:
+        		gui_type = STACKS_GUI_DIALOG
+        	self.applet.set_gui(gui_type)   
+        	print "Reverted to previous gui settings" 	    	
+        	
         self.destroy()
+        
+    def on_layout_settings_button_clicked(self, *args):
+
+        self.applet.emit("stacks-gui-config")
+        
+    def on_layout_combobox_changed(self, *args):
+        #the stack gui is changed, we must update it.
+    	gui_type = self.widgets['layout_combobox'].get_active() +1
+    	if gui_type == 2:
+    		self.widgets['layout_settings_button'].set_sensitive(True)
+    		self.widgets['dimension_label'].hide_all()
+        	self.widgets['dimension_hbox'].hide_all()
+    	else:
+    		self.widgets['layout_settings_button'].set_sensitive(False)        
+    		self.widgets['dimension_label'].show_all()
+        	self.widgets['dimension_hbox'].show_all()
+
+        if self.widgets['layout_combobox'].get_active() <> -1:
+        	gui_type = self.widgets['layout_combobox'].get_active() +1
+        	if gui_type < 1 or gui_type > 3:
+				gui_type = STACKS_GUI_DIALOG
+
+        	self.applet.set_gui(gui_type)   
+        			
 
     def on_ok_button_clicked(self, *args):
         # set backend (and type)
@@ -253,7 +306,7 @@ class StacksConfig(GladeWindow):
         # set composite
         self.applet.gconf_client.set_bool(
                 self.applet.gconf_path + "/composite_icon",
-                self.widgets['composite_radio'].get_active())
+                self.widgets['composite_checkb'].get_active())
         # set title
         self.applet.gconf_client.set_string(
                 self.applet.gconf_path + "/title",
@@ -261,11 +314,11 @@ class StacksConfig(GladeWindow):
         # set item count
         self.applet.gconf_client.set_bool(
                 self.applet.gconf_path + "/item_count",
-                self.widgets['count_radio'].get_active())
+                self.widgets['count_checkbx'].get_active())
         # set browsing
         self.applet.gconf_client.set_bool(
                 self.applet.gconf_path + "/browsing",
-                self.widgets['browse_radio'].get_active())
+                self.widgets['browse_enabled'].get_active())
         # set icons
         self.applet.gconf_client.set_string(
                 self.applet.gconf_path + "/applet_icon_empty",
@@ -273,6 +326,21 @@ class StacksConfig(GladeWindow):
         self.applet.gconf_client.set_string(
                 self.applet.gconf_path + "/applet_icon_full",
                 self.config['icon_full'])
+        # set stack layout
+        if self.widgets['layout_combobox'].get_active() <> -1:
+        	gui_type = self.widgets['layout_combobox'].get_active() +1
+        	if gui_type <> self.config['gui_type']:
+        		
+        		if gui_type < 1 or gui_type > 3:
+        			gui_type = STACKS_GUI_DIALOG
+        		self.config['gui_type'] = gui_type
+        		
+        		self.applet.gconf_client.set_int(
+                    self.applet.gconf_path + "/gui_type", int(gui_type) )
+        		
+        		self.applet.set_gui(gui_type)
+
+        		
         # set file operations
         actions = 0
         if self.widgets['copy_check'].get_active():
@@ -285,6 +353,7 @@ class StacksConfig(GladeWindow):
                 self.applet.gconf_path + "/file_operations", actions)
         # destroy window
         self.window.destroy()
+        
 
     def set_current_page(self, page):
         self.widgets['main_notebook'].set_current_page(page)
@@ -324,8 +393,10 @@ def get_config_from_gconf(gconf_client, gconf_path, uid):
     # get file operations
     _config_fileops = gconf_client.get_int(
             gconf_path + "/file_operations")
+
     if _config_fileops <= 0:
         _config_fileops = gtk.gdk.ACTION_LINK
+
     config['fileops'] = _config_fileops
 
     # get composite icon
@@ -358,5 +429,13 @@ def get_config_from_gconf(gconf_client, gconf_path, uid):
         config['item_count'] = True
     else:
         config['item_count'] = False
+        
+    
+    if gconf_client.get_int(gconf_path + "/gui_type"):
+    	config['gui_type'] = gconf_client.get_int(gconf_path + "/gui_type")
+    else:
+    	config['gui_type'] = STACKS_GUI_DIALOG 
+    	
 
+    
     return config

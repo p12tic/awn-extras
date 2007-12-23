@@ -1451,6 +1451,7 @@ applet_new (AwnApplet *applet,int width,int height)
 //	printf("COLUMNS=%d, ROWS=%d \n",shinyswitcher->cols,shinyswitcher->rows);
 	if (shinyswitcher->reconfigure)
 	{
+		printf("ShinySwitcher Message:  attempting to configure workspaces\n");	
 	  	wnck_screen_change_workspace_count(shinyswitcher->wnck_screen,shinyswitcher->cols*shinyswitcher->rows);	
 		shinyswitcher->wnck_token =wnck_screen_try_set_workspace_layout(shinyswitcher->wnck_screen,0,shinyswitcher->rows,0);	
 		
@@ -1463,6 +1464,10 @@ applet_new (AwnApplet *applet,int width,int height)
 		}
 
 			
+	}
+	else
+	{
+		printf("ShinySwitcher Message:  viewport detected.. using existing workspace config\n");
 	}
 	g_timeout_add(1000,(GSourceFunc)_waited,shinyswitcher);	
 	return shinyswitcher;

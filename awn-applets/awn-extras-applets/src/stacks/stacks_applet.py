@@ -150,9 +150,11 @@ class StacksApplet (awn.AppletSimple):
 
         #self.gui_type = STACKS_GUI_DIALOG
         #self.gui = stacks_gui_dialog.StacksGuiDialog(self)
-        self.backend_get_config()
         
+        #self.backend_get_config()
+        self.config = get_config_from_gconf(self.gconf_client, self.gconf_path, self.uid)
         self.set_gui(self.config['gui_type'])
+        
         
         
 
@@ -203,7 +205,7 @@ class StacksApplet (awn.AppletSimple):
         else:
             self.gui = stacks_gui_dialog.StacksGuiDialog(self)
             self.gui_type = STACKS_GUI_DIALOG
-        print "dialog type: ", self.gui_type
+        
         self.gconf_client.set_int(
                 self.gconf_path + "/gui_type", self.gui_type )
 
@@ -348,9 +350,15 @@ class StacksApplet (awn.AppletSimple):
         self.backend_get_config()
 
     def backend_item_created_cb(self, widget, iter):
-        self.emit("stacks-item-created", self.backend.get_store(), iter)
-        pixbuf = self.backend.get_store().get_value(iter, COL_ICON)
-        self.applet_set_icon(pixbuf)
+
+    	if self.backend.get_store().iter_is_valid(iter):
+			self.emit("stacks-item-created", self.backend.get_store(), iter)
+			pixbuf = self.backend.get_store().get_value(iter, COL_ICON)
+			self.applet_set_icon(pixbuf)
+        else:
+        	print "ERROR in STACK: invalid iter!?  (stacks_applet.py)"
+        	
+
 
     def backend_item_removed_cb(self, widget, iter):
         self.emit("stacks-item-removed", self.backend.get_store(), iter)

@@ -133,7 +133,8 @@ class StacksGuiDialog:
                     uri.as_string(), gnomedesktop.LOAD_ONLY_IF_EXISTS)
             if item:
                 command = item.get_string(gnomedesktop.KEY_EXEC)
-                LaunchManager().launch_command(command, uri.as_string())
+                #LaunchManager().launch_command(command, uri.as_string())
+                LaunchManager().launch_dot_desktop(uri.as_string())
         else:
             LaunchManager().launch_uri(uri.as_string(), mimetype)
 
@@ -166,7 +167,9 @@ class StacksGuiDialog:
     def _item_created_cb(self, widget, store, iter):
         if store:
             self.store = store
+
         # get values from store
+        
         vfs_uri, lbl_text, mime_type, icon, button = self.store.get(
                 iter, COL_URI, COL_LABEL, COL_MIMETYPE, COL_ICON, COL_BUTTON)
         if button:

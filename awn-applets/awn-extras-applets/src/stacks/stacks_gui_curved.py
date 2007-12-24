@@ -348,7 +348,6 @@ class StacksGuiCurved(gtk.Window):
     		self.tooltip_image.set_from_pixbuf(icon)
     		self.tooltip_image.set_size_request(size, size)
     		_tooltipColor = self.curved_config['tooltip_text_hex_color']
-    		print _tooltipColor 
     		text = '<i><span foreground="'+ _tooltipColor +'" >' + self.stack_items[self.active_button-1].lbl_text + '</span></i>'
     		
     		self.tooltip_label.set_text(text)
@@ -557,14 +556,6 @@ class StacksGuiCurved(gtk.Window):
         self.curved_config = curved_config
 
     def _item_created_cb(self, widget, store, iter, angle = 0, direction = "LEFT",id = 0):
-        if store:
-            self.store = store
-        # get values from store
-        vfs_uri, lbl_text, mime_type, icon, button = self.store.get(
-                iter, COL_URI, COL_LABEL, COL_MIMETYPE, COL_ICON, COL_BUTTON)
-
-        icon_size = self.config['icon_size']
-
 
         return button
 
@@ -581,7 +572,8 @@ class StacksGuiCurved(gtk.Window):
                     uri.as_string(), gnomedesktop.LOAD_ONLY_IF_EXISTS)
             if item:
                 command = item.get_string(gnomedesktop.KEY_EXEC)
-                LaunchManager().launch_command(command, uri.as_string())
+                #LaunchManager().launch_command(command, uri.as_string())
+                LaunchManager().launch_dot_desktop(uri.as_string())
         else:
             LaunchManager().launch_uri(uri.as_string(), mimetype)
 

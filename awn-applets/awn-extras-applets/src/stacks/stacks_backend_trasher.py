@@ -193,6 +193,7 @@ class TrashBackend(Backend):
                 GUITransfer(unmovable_uri_list, [], options)
 
     def add(self, vfs_uris, action=None):
+    	
         if action is None:
             return Backend.add(self, vfs_uris, None)
         uri_list = [u.as_uri() for u in vfs_uris]

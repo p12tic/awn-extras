@@ -19,6 +19,7 @@
 
 import os
 import gtk
+import gnomedesktop
 
 #Borrowed LaunchManager from "gimmie"
 class LaunchManager:
@@ -133,3 +134,15 @@ class LaunchManager:
             os.wait()
             return (child, startup_id)
 
+    def launch_dot_desktop(self, uri):
+        item = gnomedesktop.item_new_from_uri(
+                    uri, gnomedesktop.LOAD_ONLY_IF_EXISTS)
+        if not item: return
+        
+        type = item.get_string(gnomedesktop.KEY_TYPE)
+        if type == "Application":
+            command = item.get_string(gnomedesktop.KEY_EXEC)
+            self.launch_command(command, uri)
+        elif type == "Link":
+            command = "xdg-open " + item.get_string(gnomedesktop.KEY_URL)
+            self.launch_command(command, uri)

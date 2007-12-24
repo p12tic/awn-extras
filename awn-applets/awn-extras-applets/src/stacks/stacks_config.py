@@ -171,8 +171,9 @@ class StacksConfig(GladeWindow):
 
         if (preferences & PREF_FILE_OPERATIONS) == 0:
             self.widgets['operations_label'].set_sensitive(False)
+            self.widgets['operations_info_label'].set_sensitive(False)
             self.widgets['operations_hbox'].set_sensitive(False)
-            self.widgets['operations_hsep'].set_sensitive(False)
+            
         else:
             # get file oprations
             actions = config['fileops']

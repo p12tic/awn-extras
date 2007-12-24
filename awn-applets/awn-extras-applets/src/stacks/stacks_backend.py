@@ -140,6 +140,8 @@ class Backend(gobject.GObject):
             name = uri.short_name
             mime_type = ""
             pixbuf = None
+            
+            
 
             # check for existence:
             if uri.scheme == "file" and not gnomevfs.exists(uri):
@@ -194,7 +196,7 @@ class Backend(gobject.GObject):
                 # get pixbuf for icon
                 pixbuf = Thumbnailer(path, mime_type).get_icon(self.icon_size)
                 pixbuf.add_alpha (True, '\0', '\0', '\0')
-
+            
             # create monitor
             try:
                 monitor = Monitor(vfs_uri)
@@ -202,12 +204,21 @@ class Backend(gobject.GObject):
             except gnomevfs.NotSupportedError:
                 monitor = None
 
+            
             # add to store
+            
             iter = self.store.append([vfs_uri, monitor, type, name, mime_type, pixbuf, None])
-            self.emit("item-created", iter)
+                
+            if self.store.iter_is_valid(iter):
+            	self.emit("item-created", iter)
+            else:
+            	print "ERROR in STACK: iter is NOK (stacks_backend.py)"
+            
 
             # return pixbuf later?
             if pixbuf: retval = pixbuf
+            
+            
 
         # restructure of dialog needed
         return (retval is not None)

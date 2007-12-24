@@ -137,6 +137,8 @@ typedef struct
 	GTree			*pixbuf_cache;
 	GTree			*surface_cache;
 	
+	GTree			*win_menus;
+	
 	double			win_active_icon_alpha;
 	double			win_inactive_icon_alpha;
 	
@@ -155,8 +157,8 @@ typedef struct
 	int				applet_border_width;
 	gboolean		reconfigure;
 	gboolean		got_viewport;
-	
-
+	gboolean		show_tooltips;
+	gboolean		show_right_click;
 #ifdef USE_AWN_DESKTOP_AGNOSTIC
 	AwnConfigClient		*config;
 #else
@@ -164,6 +166,12 @@ typedef struct
 #endif
 	
 }Shiny_switcher;
+
+typedef struct
+{
+	WnckWindow				*wnck_window;
+	Shiny_switcher			*shinyswitcher;
+}Win_press_data;
 
 // Applet
 Shiny_switcher* applet_new (AwnApplet *applet,int width, int height);

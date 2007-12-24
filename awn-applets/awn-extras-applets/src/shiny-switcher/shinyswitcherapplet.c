@@ -171,10 +171,11 @@ void init_config(Shiny_switcher *shinyswitcher)
 	shinyswitcher->active_window_on_workspace_change_method=1;
 	shinyswitcher->do_queue_freq=2;
 	shinyswitcher->override_composite_check=FALSE;
-	shinyswitcher->show_tooltips=FALSE;
-	shinyswitcher->show_right_click=TRUE;
+	shinyswitcher->show_tooltips=FALSE;						//buggy at the moment will be a config option eventually
+	
+	shinyswitcher->show_right_click=!shinyswitcher->got_viewport;	//for the moment buggy in compiz.will be a config option eventually
 
-	shinyswitcher->reconfigure=!shinyswitcher->got_viewport;
+	shinyswitcher->reconfigure=!shinyswitcher->got_viewport;		//for the moment... will be a config option eventually
 //	AwnColor		background_colour;
 	
 
@@ -1349,6 +1350,11 @@ void _win_state_change(WnckWindow *window,WnckWindowState changed_mask,WnckWindo
 {
 	_win_geom_change(window,shinyswitcher);
 }    
+
+void _win_ws_change(WnckWindow *window,Shiny_switcher *shinyswitcher) 
+{
+	queue_all_render(shinyswitcher);	
+}    
         
 gboolean create_windows(Shiny_switcher *shinyswitcher)
 {
@@ -1368,7 +1374,8 @@ gboolean create_windows(Shiny_switcher *shinyswitcher)
 			if (!wnck_window_is_skip_pager(win_iter->data) )
 			{
 				g_signal_connect(G_OBJECT(win_iter->data),"state-changed",G_CALLBACK(_win_state_change),shinyswitcher);
-				g_signal_connect(G_OBJECT(win_iter->data),"geometry-changed",G_CALLBACK(_win_geom_change),shinyswitcher);	
+				g_signal_connect(G_OBJECT(win_iter->data),"geometry-changed",G_CALLBACK(_win_geom_change),shinyswitcher);
+				g_signal_connect(G_OBJECT(win_iter->data),"workspace-changed",G_CALLBACK(_win_ws_change),shinyswitcher);					
 				g_tree_insert(shinyswitcher->win_menus,G_OBJECT(win_iter->data),wnck_create_window_action_menu(G_OBJECT(win_iter->data)));
 			}
 		}
@@ -1387,6 +1394,7 @@ void _window_opened(WnckScreen *screen,WnckWindow *window,Shiny_switcher *shinys
 {
 	g_signal_connect(G_OBJECT(window),"state-changed",G_CALLBACK(_win_state_change),shinyswitcher);
 	g_signal_connect(G_OBJECT(window),"geometry-changed",G_CALLBACK(_win_geom_change),shinyswitcher);	
+	g_signal_connect(G_OBJECT(window),"workspace-changed",G_CALLBACK(_win_ws_change),shinyswitcher);	
 	g_tree_insert(shinyswitcher->win_menus,window, wnck_create_window_action_menu(window) );
 	
 }
@@ -1397,7 +1405,8 @@ void _window_closed(WnckScreen *screen,WnckWindow *window,Shiny_switcher *shinys
 	image_cache_remove(shinyswitcher->surface_cache,window);
 	g_tree_remove(shinyswitcher->win_menus,window);	
 	g_signal_handlers_disconnect_by_func(G_OBJECT(window),G_CALLBACK(_win_state_change),shinyswitcher);
-	g_signal_handlers_disconnect_by_func(G_OBJECT(window),G_CALLBACK(_win_geom_change),shinyswitcher);	
+	g_signal_handlers_disconnect_by_func(G_OBJECT(window),G_CALLBACK(_win_geom_change),shinyswitcher);
+	g_signal_handlers_disconnect_by_func(G_OBJECT(window),G_CALLBACK(_win_ws_change),shinyswitcher);			
 } 
 
 

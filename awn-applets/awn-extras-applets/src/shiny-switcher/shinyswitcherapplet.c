@@ -1354,7 +1354,16 @@ gboolean create_windows(Shiny_switcher *shinyswitcher)
 				g_signal_connect(G_OBJECT(win_iter->data),"geometry-changed",G_CALLBACK(_win_geom_change),shinyswitcher);
 				g_signal_connect(G_OBJECT(win_iter->data),"workspace-changed",G_CALLBACK(_win_ws_change),shinyswitcher);
 				if (WNCK_IS_WINDOW(win_iter->data) )					
-					g_tree_insert(shinyswitcher->win_menus,G_OBJECT(win_iter->data),wnck_create_window_action_menu(G_OBJECT(win_iter->data)));
+				{
+					GtkWidget	*widget=wnck_create_window_action_menu(win_iter->data);
+					if (widget)
+					{
+						if (GTK_IS_WIDGET(widget) )
+						{
+							g_tree_insert(shinyswitcher->win_menus,G_OBJECT(win_iter->data),widget);
+						}
+					}
+				}
 			}
 		}
 	}					
@@ -1373,8 +1382,17 @@ void _window_opened(WnckScreen *screen,WnckWindow *window,Shiny_switcher *shinys
 	g_signal_connect(G_OBJECT(window),"state-changed",G_CALLBACK(_win_state_change),shinyswitcher);
 	g_signal_connect(G_OBJECT(window),"geometry-changed",G_CALLBACK(_win_geom_change),shinyswitcher);	
 	g_signal_connect(G_OBJECT(window),"workspace-changed",G_CALLBACK(_win_ws_change),shinyswitcher);	
-	if (WNCK_IS_WINDOW(window) )					
-		g_tree_insert(shinyswitcher->win_menus,window, wnck_create_window_action_menu(window) );
+	if (WNCK_IS_WINDOW(window) )
+	{
+		GtkWidget	*widget=wnck_create_window_action_menu(window);
+		if (widget)
+		{
+			if (GTK_IS_WIDGET(widget) )
+			{
+				g_tree_insert(shinyswitcher->win_menus,window, wnck_create_window_action_menu(window) );
+			}			
+		}			
+	}		
 	
 }
 

@@ -1353,7 +1353,7 @@ gboolean create_windows(Shiny_switcher *shinyswitcher)
 				g_signal_connect(G_OBJECT(win_iter->data),"state-changed",G_CALLBACK(_win_state_change),shinyswitcher);
 				g_signal_connect(G_OBJECT(win_iter->data),"geometry-changed",G_CALLBACK(_win_geom_change),shinyswitcher);
 				g_signal_connect(G_OBJECT(win_iter->data),"workspace-changed",G_CALLBACK(_win_ws_change),shinyswitcher);
-				if (WNCK_IS_WINDOW(win_iter->data) )					
+				if (  shinyswitcher->show_right_click && WNCK_IS_WINDOW(win_iter->data) )
 				{
 					GtkWidget	*widget=wnck_create_window_action_menu(win_iter->data);
 					if (widget)
@@ -1382,14 +1382,14 @@ void _window_opened(WnckScreen *screen,WnckWindow *window,Shiny_switcher *shinys
 	g_signal_connect(G_OBJECT(window),"state-changed",G_CALLBACK(_win_state_change),shinyswitcher);
 	g_signal_connect(G_OBJECT(window),"geometry-changed",G_CALLBACK(_win_geom_change),shinyswitcher);	
 	g_signal_connect(G_OBJECT(window),"workspace-changed",G_CALLBACK(_win_ws_change),shinyswitcher);	
-	if (WNCK_IS_WINDOW(window) )
+	if (WNCK_IS_WINDOW(window) && shinyswitcher->show_right_click)
 	{
 		GtkWidget	*widget=wnck_create_window_action_menu(window);
-		if (widget)
+		if (widget )
 		{
 			if (GTK_IS_WIDGET(widget) )
 			{
-				g_tree_insert(shinyswitcher->win_menus,window, wnck_create_window_action_menu(window) );
+				g_tree_insert(shinyswitcher->win_menus,window, widget );
 			}			
 		}			
 	}		
@@ -1400,7 +1400,8 @@ void _window_closed(WnckScreen *screen,WnckWindow *window,Shiny_switcher *shinys
 {
 	image_cache_remove(shinyswitcher->pixbuf_cache,window);
 	image_cache_remove(shinyswitcher->surface_cache,window);
-	g_tree_remove(shinyswitcher->win_menus,window);	
+	if (shinyswitcher->show_right_click)
+		g_tree_remove(shinyswitcher->win_menus,window);	
 	g_signal_handlers_disconnect_by_func(G_OBJECT(window),G_CALLBACK(_win_state_change),shinyswitcher);
 	g_signal_handlers_disconnect_by_func(G_OBJECT(window),G_CALLBACK(_win_geom_change),shinyswitcher);
 	g_signal_handlers_disconnect_by_func(G_OBJECT(window),G_CALLBACK(_win_ws_change),shinyswitcher);			

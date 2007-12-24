@@ -352,7 +352,11 @@ gboolean  _button_win(GtkWidget *widget,GdkEventButton *event,Win_press_data * d
 	else if (event->button == 3)
 	{				
 		if (data->shinyswitcher->show_right_click)		
-			gtk_menu_popup (g_tree_lookup(data->shinyswitcher->win_menus,wnck_win), NULL, NULL, NULL, NULL,event->button, event->time);	
+		{
+			GtkWidget * menu=g_tree_lookup(data->shinyswitcher->win_menus,wnck_win);
+			if (menu)
+				gtk_menu_popup (menu, NULL, NULL, NULL, NULL,event->button, event->time);	
+		}			
 		return TRUE;			  					  			
 	}
 	return FALSE;			
@@ -999,33 +1003,6 @@ void do_icon_overlays(Shiny_switcher *shinyswitcher,cairo_t *destcr,WnckWindow *
 	}							
 }
 
-#if 0
-gboolean  _button_window_ev(GtkWidget *widget,GdkEventButton *event,Win_press_data * data) 
-{
-	printf("_button_window_ev\n");
-
-	GtkWidget * menu;
-	GtkWidget * item;
-	menu=gtk_menu_new ();
-			
-	item=gtk_menu_item_new_with_label("Unmount");				
-	gtk_widget_show(item);
-	gtk_menu_shell_append(menu,item);		
-	g_signal_connect (G_OBJECT (item), "button-press-event",G_CALLBACK (_unmount), menu_item);
-
-	item=gtk_menu_item_new_with_label("Eject");				
-	gtk_widget_show(item);
-	gtk_menu_shell_append(menu,item);		
-	g_signal_connect (G_OBJECT (item), "button-press-event",G_CALLBACK (_eject), menu_item);
-
-	gtk_menu_set_screen(menu,NULL);    	
-
-	gtk_menu_popup (menu, NULL, NULL, NULL, NULL, 
-			  event->button, event->time);
-			  
-	return FALSE;
-}
-#endif
 
 void _unrealize_window_ev(GtkWidget *widget,Win_press_data * data)  
 {
@@ -1375,8 +1352,9 @@ gboolean create_windows(Shiny_switcher *shinyswitcher)
 			{
 				g_signal_connect(G_OBJECT(win_iter->data),"state-changed",G_CALLBACK(_win_state_change),shinyswitcher);
 				g_signal_connect(G_OBJECT(win_iter->data),"geometry-changed",G_CALLBACK(_win_geom_change),shinyswitcher);
-				g_signal_connect(G_OBJECT(win_iter->data),"workspace-changed",G_CALLBACK(_win_ws_change),shinyswitcher);					
-				g_tree_insert(shinyswitcher->win_menus,G_OBJECT(win_iter->data),wnck_create_window_action_menu(G_OBJECT(win_iter->data)));
+				g_signal_connect(G_OBJECT(win_iter->data),"workspace-changed",G_CALLBACK(_win_ws_change),shinyswitcher);
+				if (WNCK_IS_WINDOW(win_iter->data) )					
+					g_tree_insert(shinyswitcher->win_menus,G_OBJECT(win_iter->data),wnck_create_window_action_menu(G_OBJECT(win_iter->data)));
 			}
 		}
 	}					
@@ -1395,7 +1373,8 @@ void _window_opened(WnckScreen *screen,WnckWindow *window,Shiny_switcher *shinys
 	g_signal_connect(G_OBJECT(window),"state-changed",G_CALLBACK(_win_state_change),shinyswitcher);
 	g_signal_connect(G_OBJECT(window),"geometry-changed",G_CALLBACK(_win_geom_change),shinyswitcher);	
 	g_signal_connect(G_OBJECT(window),"workspace-changed",G_CALLBACK(_win_ws_change),shinyswitcher);	
-	g_tree_insert(shinyswitcher->win_menus,window, wnck_create_window_action_menu(window) );
+	if (WNCK_IS_WINDOW(window) )					
+		g_tree_insert(shinyswitcher->win_menus,window, wnck_create_window_action_menu(window) );
 	
 }
 

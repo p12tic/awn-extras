@@ -17,10 +17,6 @@
  * Boston, MA 02111-1307, USA.
  */
  
- 
- #define GMENU_I_KNOW_THIS_IS_UNSTABLE
-#include <gnome-menus/gmenu-tree.h>
-
 #include <libawn/awn-applet.h>
 #include <libawn/awn-applet-simple.h>
 #include <libawn/awn-applet-dialog.h>
@@ -33,125 +29,224 @@
 #include "backend-gnome.h"
 #include "menu.h"
 #include "render.h"
+#include "config_entries.h"
 
 
 extern gboolean 	G_repression;
-extern gboolean 	G_total_repression;
 
-
-static gboolean _expose_event (GtkWidget *widget, GdkEventExpose *expose, Cairo_main_menu * menu);
-
-
-extern GtkWidget * G_Fixed;
 extern GtkWidget	*	G_toplevel;
-extern GtkWidget * G_mainwindow;
 extern AwnApplet *G_applet;
-extern	int G_max_width;
+extern int G_max_width;
+Win_man	*	G_win_man;
 
 extern Cairo_menu_config G_cairo_menu_conf;
+gboolean 	G_focus=FALSE;
+gboolean 	G_entered=FALSE;
+guint32		G_last_motion=0;
+guint32		G_focus_out_time=0;
 
-void pos_dialog(GtkWidget * mainwindow)
+void init_win_man(void)
 {
-	gint x,y;
-	gint scrwidth;
-	gint scrheight;
-	gint xsize, ysize;
 	gint 	monitor_number;	
     GdkRectangle rect;
-	
 	GdkScreen * screen = gdk_screen_get_default();	
 	monitor_number=gdk_screen_get_monitor_at_window(screen,GTK_WIDGET(G_applet)->window);
 	gdk_screen_get_monitor_geometry(screen,monitor_number,&rect);
-	scrwidth=rect.width;
-	scrheight=rect.height;
-	gdk_window_get_origin (GTK_WIDGET (G_applet)->window,&x, &y);    
-	xsize=(scrwidth+rect.x)-x;
-	if (xsize<10)
-	{
-		xsize=300;
-	};
-	ysize=(scrheight+rect.y)-(scrheight-y);
-	if (ysize<10)
-	{	
-		ysize=550;	
-	}		
-	if (x>scrwidth)
-		x=0;
-	if (y>scrheight)
-		y=scrheight/2;
-	if (xsize>scrwidth)
-		xsize=scrwidth/2;
-	if (ysize>scrheight)
-		ysize=scrheight/2;		
-	gtk_widget_set_size_request(mainwindow,xsize,ysize);    //FIXME
-    gtk_window_resize(GTK_WINDOW(mainwindow),xsize,ysize);   		  
-    gtk_window_move(GTK_WINDOW(mainwindow), x,y-G_Fixed->allocation.height+GTK_WIDGET(G_applet)->allocation.height/3);
-    
+
+	G_win_man=g_malloc(sizeof(Win_man));
+	G_win_man->x=rect.x;
+	G_win_man->y=rect.y;
+	G_win_man->width=rect.width;
+	G_win_man->height=rect.height;
+	G_win_man->children=NULL;	
+	
 }
 
-GtkWidget * build_dialog_window( void)
+void fixed_move(GtkWidget *widget,gint x,gint y)
 {
-
-	int scrwidth;
-	GdkColormap *colormap;
-	GdkScreen *screen;
-    GtkWidget *win=gtk_window_new (GTK_WINDOW_TOPLEVEL);
-
-    gtk_window_set_decorated(GTK_WINDOW (win),FALSE);      
-    gtk_window_set_type_hint (GTK_WINDOW (win),GDK_WINDOW_TYPE_HINT_POPUP_MENU);
-    gtk_window_stick (GTK_WINDOW (win));
-
-    gtk_window_set_skip_taskbar_hint(GTK_WINDOW (win),TRUE);
-    gtk_window_set_keep_above (GTK_WINDOW (win),TRUE);
-    gtk_window_set_accept_focus(GTK_WINDOW (win),TRUE);
-	gtk_window_set_focus_on_map (GTK_WINDOW (win),FALSE);
-	screen = gtk_window_get_screen(GTK_WINDOW(win));
-	colormap = gdk_screen_get_rgba_colormap(screen);
-	if (colormap != NULL && gdk_screen_is_composited(screen))
-	{
-		gtk_widget_set_colormap(win, colormap);
-	}	    
-	gtk_widget_add_events(win, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK|GDK_FOCUS_CHANGE_MASK);
-	gtk_widget_set_app_paintable(win,TRUE);	
-	if (G_cairo_menu_conf.do_fade)
-		gtk_window_set_opacity(GTK_WINDOW(win),0.0)	;
-	gtk_widget_set_redraw_on_allocate(GTK_WINDOW(win),FALSE);
-    return win;
+	gtk_window_move(widget->parent->parent, G_win_man->x+x,G_win_man->y+y);
 }
+
+void fixed_put(GtkWidget *widget,gint x,gint y)
+{
+	G_win_man->children=g_list_append(G_win_man->children,widget);
+	gtk_window_move(widget->parent->parent, G_win_man->x+x,G_win_man->y+y);
+}
+
+
+void pos_dialog(GtkWidget * window)
+{
+	gint x,y;	
+	gdk_window_get_origin (GTK_WIDGET (G_applet)->window,&x, &y);    
+    gtk_window_move(GTK_WINDOW(window), x,y-window->allocation.height+GTK_WIDGET(G_applet)->allocation.height/3   );
+
+}
+
+void hide_all_menus(void)
+{    
+    gtk_widget_hide(G_toplevel->parent->parent);
+	_hide_all_windows(NULL);
+	G_repression=FALSE;	
+	G_focus=FALSE;
+	G_entered=FALSE;
+}	
+
 
 gboolean _cmp_pointer(gconstpointer a,gconstpointer b)
 {
 	return a-b;
 }
- 
-static gboolean _button_clicked_mainwindow(GtkWidget *widget, GdkEventButton *event, Cairo_main_menu * menu)
-{
-    GdkEventButton *event_button;
-    if (!G_total_repression)
-    {
-		event_button = (GdkEventButton *) event;
-		gtk_widget_hide(menu->mainwindow); 
-		G_repression=FALSE;
-	}		
-	G_total_repression=FALSE;
-    return FALSE;
-} 
 
-static gboolean _focus_out_mainwindow(GtkWidget *widget, GdkEventButton *event, Cairo_main_menu * menu)
+gboolean _enter_menu(GtkWidget *widget, GdkEventButton *event,GtkWidget * parent_menu)
 {
-    if (!G_total_repression)
-    {
-		g_list_foreach(GTK_FIXED(G_Fixed)->children,_fixup_menus,NULL); 	
-		gtk_widget_hide(menu->mainwindow);    
-	}		
-	G_total_repression=FALSE;
+	G_entered=TRUE;
+	G_last_motion=event->time;	
+//	printf("Enter Menu: %d\n",G_entered);
+	gtk_widget_grab_focus(widget);			
     return FALSE;
 }
  
-Cairo_main_menu * dialog_new(AwnApplet *applet)
+gboolean _leave_menu(GtkWidget *widget, GdkEventButton *event,GtkWidget * parent_menu)
+{
+	G_entered=FALSE;
+	G_last_motion=event->time;	
+//	printf("Leave Menu: %d\n",G_entered);
+	if (parent_menu)
+			gtk_widget_grab_focus(parent_menu);			
+    return FALSE;
+} 
+
+ 
+gboolean _focus_in_menu(GtkWidget *widget, GdkEventButton *event,GtkWidget * parent_menu)
+{
+	gtk_widget_grab_focus(widget);
+	G_focus=TRUE;
+	G_last_motion=event->time;	
+	//printf("Focus in: %d\n",G_focus);
+    return FALSE;
+}
+ 
+gboolean _check_if_really_done(GtkWidget * parent_menu)
+{ 
+//	printf("check_if_really_done\n");
+	if ( !G_focus && 	!G_entered)
+	{
+//		if ( ( G_focus_out_time-G_last_motion) >100 )
+		{
+			hide_all_menus();
+			G_focus=FALSE;
+			G_entered=FALSE;
+			return FALSE;
+		}			
+	} 
+	if (parent_menu)
+			gtk_widget_grab_focus(parent_menu);				
+	return FALSE;
+}
+ 
+gboolean _focus_out_menu(GtkWidget *widget, GdkEventButton *event,GtkWidget * parent_menu)
+{
+	G_focus=FALSE;
+//	printf("Focus out: %d\n",G_focus);
+	G_focus_out_time=event->time;
+	if (!G_entered)
+	{
+		g_timeout_add(250,_check_if_really_done, parent_menu);	
+	}
+	if (parent_menu)
+			gtk_widget_grab_focus(parent_menu);			
+    return FALSE;
+} 
+
+gboolean _motion_menu(GtkWidget *widget,GdkEventMotion *event,GtkWidget * parent_menu)
 {
 
-	read_config();  	
+	gtk_widget_grab_focus(widget);
+	G_entered=TRUE;	
+//	printf("Motion\n");
+	G_last_motion=event->time;
+    return FALSE;
+}
+
+
+
+static gboolean _expose_event (GtkWidget *widget, GdkEventExpose *expose, gpointer null)
+{
+    cairo_t *cr;
+    cr=gdk_cairo_create(widget->window);    
+    cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);        
+    cairo_paint(cr);                  
+    cairo_destroy(cr);                        
+    return FALSE;
+}
+ 
+GtkWidget * menu_new(GtkWidget * parent_menu)
+{
+	int scrwidth;
+	GdkColormap *colormap;
+	GdkScreen *screen;
+    GtkWidget *win=gtk_window_new (GTK_WINDOW_TOPLEVEL);
+    
+    gtk_window_set_type_hint (GTK_WINDOW(win),GDK_WINDOW_TYPE_HINT_DIALOG);            
+    gtk_window_set_skip_taskbar_hint(GTK_WINDOW (win),TRUE);    
+
+    gtk_window_set_decorated(GTK_WINDOW(win),FALSE);      
+    gtk_window_set_accept_focus(GTK_WINDOW(win),TRUE);
+	gtk_window_set_focus_on_map (GTK_WINDOW(win),TRUE);
+    gtk_window_set_keep_above(GTK_WINDOW (win),TRUE);
+    gtk_window_set_skip_pager_hint(GTK_WINDOW (win),TRUE);
+    gtk_window_stick(GTK_WINDOW (win));    
+
+//	gtk_window_set_opacity(GTK_WINDOW (win),0.0);
+#if 0
+    gtk_window_set_type_hint (GTK_WINDOW (win),GDK_WINDOW_TYPE_HINT_POPUP_MENU);
+
+#endif
+	screen = gtk_window_get_screen(GTK_WINDOW(win));	
+	colormap = gdk_screen_get_rgba_colormap(screen);
+	if (colormap != NULL && gdk_screen_is_composited(screen))
+	{	
+		gtk_widget_set_colormap(win, colormap);
+	}
+		    
+	gtk_widget_set_events(win, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK|GDK_FOCUS_CHANGE_MASK|GDK_POINTER_MOTION_MASK);
+	gtk_widget_set_app_paintable(win,TRUE);	
+	GtkWidget *vbox=gtk_vbox_new(FALSE,0);
+	gtk_widget_set_app_paintable(vbox,TRUE);		
+	GtkWidget * fixed=gtk_fixed_new();
+	gtk_widget_set_app_paintable(fixed,TRUE);		
+	gtk_fixed_set_has_window(fixed,TRUE);
+	
+	gtk_fixed_put(fixed,vbox,0,0);	   
+	gtk_container_add (GTK_CONTAINER (win),fixed);    
+	g_signal_connect (G_OBJECT (win), "focus-in-event",G_CALLBACK (_focus_in_menu), parent_menu);
+	g_signal_connect (G_OBJECT (win), "move-focus",G_CALLBACK (_focus_in_menu), parent_menu);	
+	g_signal_connect (G_OBJECT (win), "focus-out-event",G_CALLBACK (_focus_out_menu), parent_menu);	
+	g_signal_connect(G_OBJECT (win), "enter-notify-event", G_CALLBACK (_enter_menu), parent_menu);
+	g_signal_connect(G_OBJECT (win), "leave-notify-event", G_CALLBACK (_leave_menu), parent_menu);	
+	g_signal_connect(G_OBJECT (win), "motion-notify-event", G_CALLBACK (_motion_menu), parent_menu);	
+	
+
+	g_signal_connect (G_OBJECT (win),"expose-event", G_CALLBACK (_expose_event), NULL);		
+	g_signal_connect (G_OBJECT (fixed),"expose-event", G_CALLBACK (_expose_event), NULL);		
+	g_signal_connect (G_OBJECT (vbox),"expose-event", G_CALLBACK (_expose_event), NULL);			
+	if (parent_menu)
+		gtk_window_set_transient_for(parent_menu,win);
+    return vbox;
+
+}
+
+static gboolean _map_window(GtkWidget *widget, GdkEventButton *event, Cairo_main_menu * menu)
+{
+
+//	printf("map\n");
+	return FALSE;			
+}
+
+Cairo_main_menu * dialog_new(AwnApplet *applet)
+{
+	read_config();  
+	init_win_man();		
   	G_cairo_menu_conf.submenu_deps=g_tree_new(_cmp_pointer);
   	
 	Cairo_main_menu * menu=g_malloc(sizeof(Cairo_main_menu) );	
@@ -163,38 +258,11 @@ Cairo_main_menu * dialog_new(AwnApplet *applet)
 									G_cairo_menu_conf.logout									
 									);
 	menu->applet=applet;
-    G_mainwindow = menu->mainwindow = build_dialog_window(); 
-
-    gtk_window_set_focus_on_map (GTK_WINDOW (menu->mainwindow), TRUE);
-    G_Fixed=menu->mainfixed =  gtk_fixed_new(); 
-	gtk_widget_set_app_paintable(menu->mainfixed ,TRUE);	    
-	gtk_widget_show_all(menu->mainfixed);   
-	    
-    gtk_fixed_set_has_window(GTK_FIXED(menu->mainfixed),FALSE);    
-	gtk_widget_set_size_request(menu->mainfixed,222,555);    //FIXME   	   
-    gtk_container_add (GTK_CONTAINER (menu->mainwindow), menu->mainfixed);    
-	G_toplevel=menu->mainbox=gtk_vbox_new(FALSE,0);
-	gtk_widget_set_app_paintable(menu->mainbox ,TRUE);	   	
-	gtk_fixed_put(GTK_FIXED(menu->mainfixed),menu->mainbox,0,0);
-
-	g_slist_foreach(menu->menu_data,measure_width,&G_max_width);
-	g_slist_foreach(menu->menu_data,render_menu_widgets,menu->mainbox);
-	gtk_widget_show_all(menu->mainbox);  	
-
-    g_signal_connect (G_OBJECT (menu->mainfixed),"expose-event", G_CALLBACK (_expose_event), menu);
-	     		
-	g_signal_connect (G_OBJECT (menu->mainwindow), "button-press-event",G_CALLBACK (_button_clicked_mainwindow), menu);
-	g_signal_connect (G_OBJECT (menu->mainwindow), "focus-out-event",G_CALLBACK (_focus_out_mainwindow), menu);
+	G_toplevel=menu_new(NULL);
+	gtk_widget_set_size_request(G_toplevel->parent,-1,-1);	
+	g_slist_foreach(menu->menu_data,measure_width,&G_max_width);	
+	g_slist_foreach(menu->menu_data,render_menu_widgets,G_toplevel);	
+	g_signal_connect (G_OBJECT (G_toplevel->parent->parent), "map",G_CALLBACK (_map_window), menu);					
 	return menu;
-}
-
-
-static gboolean _expose_event (GtkWidget *widget, GdkEventExpose *expose, Cairo_main_menu * menu)
-{
-    cairo_t *cr;
-    cr=gdk_cairo_create(widget->window);   
-    cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
-    cairo_paint(cr);
-    return FALSE;        
 }
 

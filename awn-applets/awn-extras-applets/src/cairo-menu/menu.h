@@ -30,19 +30,35 @@
 #include "config_entries.h"
 
 
+
+typedef struct 
+{
+	gint 	x;
+	gint	y;
+	gint	width;
+	gint	height;
+	GList* children;
+		
+}Win_man;
+
+
 typedef struct
 {
-	AwnApplet 	*applet;
-	GtkWidget 	*mainwindow;    
-    GtkWidget 	*mainfixed;
-    GtkWidget 	*mainbox;
-    GSList		*menu_data;
-    
 
+	AwnApplet 	*applet;
+    GSList		*menu_data;
+        
+    Win_man				*window_manage;
+	Cairo_menu_config 	cairo_menu_config;
+    
 }Cairo_main_menu;
+
 
 Cairo_main_menu * dialog_new(AwnApplet *applet);
 void pos_dialog(GtkWidget * mainwindow);
+void fixed_move(GtkWidget *widget,gint x,gint y);
+void fixed_put(GtkWidget *widget,gint x,gint y);
+void hide_all_menus(void);
 
 #endif 
 

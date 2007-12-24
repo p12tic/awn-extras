@@ -23,6 +23,8 @@
 #define __MENU_LIST_ITEM_
 #include <gtk/gtk.h>
 #include <glib.h>
+#include "menu.h"
+
 
 enum
 {
@@ -75,5 +77,6 @@ typedef struct
 				
 	}	;	
 }Menu_list_item;
+
 
 #endif

@@ -478,8 +478,6 @@ static gboolean _press_ok(GtkWidget *widget, GdkEventButton *event,GtkWidget * w
 	g_spawn_command_line_async("sh -c  'export T_STAMP=`date +\"%s\"`&& export AWN_G_ORIG=`gconftool-2 -g /apps/avant-window-navigator/applets_list | sed -e \"s/cairo_main_menu\.desktop::[0-9]*/cairo_main_menu\.desktop::$T_STAMP/\"` && export AWN_G_MOD=`echo $AWN_G_ORIG |sed -e \"s/[^,^\[]*cairo_main_menu\.desktop::[0-9]*,?//\"` && gconftool-2 --type list --list-type=string -s /apps/avant-window-navigator/applets_list \"$AWN_G_MOD\" && sleep 2 && gconftool-2 --type list --list-type=string -s /apps/avant-window-navigator/applets_list \"$AWN_G_ORIG\"'",&err); 
 	exit(0);
  	return FALSE;
-
-	
 }
 
 
@@ -529,8 +527,8 @@ void _mod_colour(GtkColorButton *widget,AwnColor * user_data)
 	user_data->alpha=gtk_color_button_get_alpha(widget)/65535.0;	
 	gtk_widget_destroy(hover_ex);
 	gtk_widget_destroy(normal_ex);
-	hover_ex=build_menu_widget(&G_cairo_menu_conf.hover,"Hover",NULL,NULL,200,MENU_WIDGET_NORMAL);	
-	normal_ex=build_menu_widget(&G_cairo_menu_conf.normal,"Normal",NULL,NULL,200,MENU_WIDGET_NORMAL);
+	hover_ex=build_menu_widget(&G_cairo_menu_conf.hover,"Hover",NULL,NULL,200);	
+	normal_ex=build_menu_widget(&G_cairo_menu_conf.normal,"Normal",NULL,NULL,200);
 	
 	gtk_table_attach_defaults(gtk_off_table,normal_ex,3,4,0,1);	
 	gtk_table_attach_defaults(gtk_off_table,hover_ex,3,4,1,2);	
@@ -669,11 +667,11 @@ void show_prefs(void)
 	Menu_item_color mic;
 	mic.bg=G_cairo_menu_conf.normal.bg;
 	mic.fg=G_cairo_menu_conf.normal.fg;
-	normal_ex=build_menu_widget(&mic,"Normal",NULL,NULL,200,MENU_WIDGET_NORMAL);
+	normal_ex=build_menu_widget(&mic,"Normal",NULL,NULL,200);
 
 	mic.bg=G_cairo_menu_conf.hover.bg;
 	mic.fg=G_cairo_menu_conf.hover.fg;
-	hover_ex=build_menu_widget(&mic,"Hover",NULL,NULL,200,MENU_WIDGET_NORMAL);
+	hover_ex=build_menu_widget(&mic,"Hover",NULL,NULL,200);
 
 
     gtk_window_set_keep_above (GTK_WINDOW (prefs_win),TRUE);

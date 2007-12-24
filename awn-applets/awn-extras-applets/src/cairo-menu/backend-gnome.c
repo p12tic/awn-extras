@@ -404,12 +404,12 @@ void _vfs_changed_d_c(GnomeVFSDrive  *drive,GnomeVFSVolume *volume,gpointer null
 	_do_update_places(Monitor_place);
 }
 
-void _fillin_connected(GnomeVFSDrive * drive,Menu_list_item ** p)
+void _fillin_connected(GnomeVFSDrive * drive,GSList ** p)
 {
  	
 //	printf("drive=%s\n",gnome_vfs_drive_get_display_name(drive));
 	Menu_list_item * item;	
-	Menu_list_item *sublist=*p;
+	GSList *sublist=*p;
 	char * dev_path;	
 	
 	item=g_malloc(sizeof(Menu_list_item));	
@@ -680,8 +680,11 @@ GSList* get_menu_data(gboolean show_search,gboolean show_run,gboolean show_place
 	if (menu_tree)
 	{
 		root = gmenu_tree_get_root_directory (menu_tree);	
-		fill_er_up(root,&data);
-		gmenu_tree_item_unref (root);		
+		if (root)
+		{
+			fill_er_up(root,&data);
+			gmenu_tree_item_unref (root);		
+		}
 	}
 
 
@@ -692,38 +695,45 @@ GSList* get_menu_data(gboolean show_search,gboolean show_run,gboolean show_place
 	menu_tree=gmenu_tree_lookup ("gnomecc.menu",GMENU_TREE_FLAGS_NONE);	
 	if (menu_tree)
 	{
-		dir_item=g_malloc(sizeof(Menu_list_item));
-		dir_item->item_type=MENU_ITEM_DIRECTORY;
-		dir_item->name=g_strdup("Control Centre");
-		dir_item->comment=g_strdup("Gnome Control Centre");				
-		dir_item->null=NULL;		
-		dir_item->sublist=NULL;
-		dir_item->icon=g_strdup("gnome-control-center");
-		data=g_slist_append(data,dir_item);
-
 		root = gmenu_tree_get_root_directory (menu_tree);	
-		fill_er_up(root,&dir_item->sublist);
-		dir_item->sublist=g_slist_prepend(dir_item->sublist,get_blank());
-		dir_item->sublist=g_slist_append(dir_item->sublist,get_blank());		
-		gmenu_tree_item_unref (root);		
+		if (root)
+		{
+			dir_item=g_malloc(sizeof(Menu_list_item));
+			dir_item->item_type=MENU_ITEM_DIRECTORY;
+			dir_item->name=g_strdup("Control Centre");
+			dir_item->comment=g_strdup("Gnome Control Centre");				
+			dir_item->null=NULL;		
+			dir_item->sublist=NULL;
+			dir_item->icon=g_strdup("gnome-control-center");
+			data=g_slist_append(data,dir_item);
+
+			fill_er_up(root,&dir_item->sublist);
+			dir_item->sublist=g_slist_prepend(dir_item->sublist,get_blank());
+			dir_item->sublist=g_slist_append(dir_item->sublist,get_blank());		
+			gmenu_tree_item_unref (root);		
+		}			
 	}
 	
 	menu_tree=gmenu_tree_lookup ("settings.menu",GMENU_TREE_FLAGS_NONE);	
 	if (menu_tree)
 	{
-		dir_item=g_malloc(sizeof(Menu_list_item));
-		dir_item->item_type=MENU_ITEM_DIRECTORY;
-		dir_item->name=g_strdup("Settings");
-		dir_item->comment=g_strdup("System Settings");		
-		dir_item->sublist=NULL;
-		dir_item->null=NULL;
-		dir_item->icon=g_strdup("gnome-settings");
-		data=g_slist_append(data,dir_item);
 		root = gmenu_tree_get_root_directory (menu_tree);	
-		fill_er_up(root,&dir_item->sublist);
-		dir_item->sublist=g_slist_prepend(dir_item->sublist,get_blank());
-		dir_item->sublist=g_slist_append(dir_item->sublist,get_blank());				
-		gmenu_tree_item_unref (root);		
+		if (root)
+		{
+			dir_item=g_malloc(sizeof(Menu_list_item));
+			dir_item->item_type=MENU_ITEM_DIRECTORY;
+			dir_item->name=g_strdup("Settings");
+			dir_item->comment=g_strdup("System Settings");		
+			dir_item->sublist=NULL;
+			dir_item->null=NULL;
+			dir_item->icon=g_strdup("gnome-settings");
+			data=g_slist_append(data,dir_item);
+
+			fill_er_up(root,&dir_item->sublist);
+			dir_item->sublist=g_slist_prepend(dir_item->sublist,get_blank());
+			dir_item->sublist=g_slist_append(dir_item->sublist,get_blank());				
+			gmenu_tree_item_unref (root);		
+		}			
 	}
 	
 	data=g_slist_append(data,get_separator());

@@ -24,6 +24,7 @@
 #endif
 
 #include <math.h>
+#define NDEBUG 1
 #include <assert.h>
 
 #include <gdk/gdk.h>
@@ -244,6 +245,8 @@ void calc_dimensions(Shiny_switcher *shinyswitcher)
 }
 
 
+
+//FIXME use gdk_draw_drawable()
 GdkPixmap * copy_pixmap(Shiny_switcher *shinyswitcher,GdkPixmap * src)
 {
     GdkScreen* pScreen;    
@@ -544,7 +547,7 @@ void prepare_to_render_workspace(Shiny_switcher *shinyswitcher, WnckWorkspace * 
 	Workplace_info	* ws2;
 	ws2=g_tree_lookup(shinyswitcher->ws_lookup_ev,space);	
 	assert(ws2);
-	GdkGC * gdkgc=NULL;
+	static GdkGC * gdkgc=NULL;
 
 	if (!gdkgc)
 	{
@@ -552,14 +555,6 @@ void prepare_to_render_workspace(Shiny_switcher *shinyswitcher, WnckWorkspace * 
 	}		
 	if (shinyswitcher->got_viewport)
 	{
-/*		if (  wnck_screen_get_active_workspace(shinyswitcher->wnck_screen)==space)	
-		{
-			copy=copy_pixmap(shinyswitcher,shinyswitcher->wallpaper_active);
-		}
-		else
-		{
-			copy=copy_pixmap(shinyswitcher,shinyswitcher->wallpaper_inactive);	
-		}		*/
 		int	viewports_cols;
 		int viewports_rows;
 		int x,y;
@@ -685,6 +680,7 @@ void image_cache_unref_data(Image_cache_item * leaf)
 			break;
 		case IMAGE_CACHE_PIXBUF:
 		default:
+			assert( (G_OBJECT (leaf->data))->ref_count == 1 );
 			g_object_unref(G_OBJECT(leaf->data));
 			break;
 	}		
@@ -709,7 +705,7 @@ gpointer image_cache_lookup_key_width_height(Shiny_switcher *shinyswitcher,GTree
 
 		}
 		//if the leaf cached drawable is not a perfect match we get rid of it...
-		image_cache_unref_data(leaf);
+//		image_cache_unref_data(leaf);
 		g_tree_remove(cache,key);
 		g_free(leaf);		
 	}

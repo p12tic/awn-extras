@@ -550,12 +550,15 @@ void _file_set(GtkFileChooserButton *filechooserbutton,gchar **p )
 {
 	gchar * svalue=*p;
 	gchar * tmp;
-	g_free(svalue);
 	tmp=gtk_file_chooser_get_filename(GTK_FILE_CHOOSER (filechooserbutton));
-	svalue=g_filename_to_utf8(tmp,-1, NULL, NULL, NULL) ;
-	g_free(tmp);
-	*p=svalue;
 
+	if (tmp)
+	{	
+		g_free(svalue);
+		svalue=g_filename_to_utf8(tmp,-1, NULL, NULL, NULL) ;
+		g_free(tmp);
+		*p=svalue;
+	}
 }
 
 void show_prefs(void)

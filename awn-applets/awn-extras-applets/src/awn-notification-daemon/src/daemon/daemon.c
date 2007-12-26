@@ -59,8 +59,8 @@
 #define WNCK_I_KNOW_THIS_IS_UNSTABLE
 #include <libwnck/libwnck.h>
 
-
-
+#include <sys/types.h>
+#include <sys/wait.h>
 
 #include "daemon.h"
 #include "engines.h"
@@ -1097,6 +1097,11 @@ _height_changed (AwnApplet *app, guint height, gpointer *data)
 {
 }
 
+gboolean _do_wait(gpointer null)
+{
+	return (waitpid(-1, NULL,  WNOHANG) <= 0 ) ;
+
+}
 gboolean send_message(gchar *body)
 {
 	NotifyNotification *notify;	
@@ -1120,6 +1125,7 @@ gboolean send_message(gchar *body)
     	notify_uninit();
     	exit(0);
     }    	
+	g_timeout_add(3000, (GSourceFunc*)_do_wait,NULL);     
     return FALSE;
 }
 

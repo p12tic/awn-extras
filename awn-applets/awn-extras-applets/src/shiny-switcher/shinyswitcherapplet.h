@@ -159,6 +159,10 @@ typedef struct
 	gboolean		got_viewport;
 	gboolean		show_tooltips;
 	gboolean		show_right_click;
+	GdkGC 			*gdkgc;
+    GdkScreen		*pScreen;    
+	GdkColormap		*rgb_cmap;    	
+	GdkColormap		*rgba_cmap;    		
 #ifdef USE_AWN_DESKTOP_AGNOSTIC
 	AwnConfigClient		*config;
 #else

@@ -154,7 +154,7 @@ class StacksGuiCurved(gtk.Window):
     angle_interval = 0.02
     direction = "RIGHT"
     text_distance = 10    
-    icon_padding = 5
+    icon_padding = 7
     right_arrow_active = False
     left_arrow_active = False
     not_selected_draw_background = False
@@ -681,6 +681,7 @@ class StacksGuiCurved(gtk.Window):
     # prepare and show the stack
     def dialog_show_new(self, start_icon=None):
 
+        self.full_redraw = True
         self.store = self.applet.backend.get_store()
         self.item_count=len(self.store)
         
@@ -755,7 +756,7 @@ class StacksGuiCurved(gtk.Window):
         	if self.start_icon > 0:
         		self.left_arrow_enabled = True
 
-        self.height = int(round(self.maxy + icon_size))       
+        self.height = int(round(self.maxy + icon_size*3/2))       
         #and finally show the stuff
         self.show_all()
         
@@ -826,30 +827,46 @@ class StacksGuiCurved(gtk.Window):
         context.paint()
 
         context.set_operator(cairo.OPERATOR_OVER)
-        context.set_source_rgba(0.1, 0.1, 0.1, 0.8)
+        
         
         icon_size = self.config['icon_size']
+
+        pmcr = None
+        if self.full_redraw:
+        	pm = gtk.gdk.Pixmap(None, self.width, self.height, 1)
+        	pmcr = pm.cairo_create()
+        	self.full_redraw = False
+
         
         for si in self.stack_items[:]:
-        	self.draw_stack_item(context, si)
+        	self.draw_stack_item(context, si, pmcr)
         	
-        
         	
         if self.right_arrow_enabled:
         	if self.direction == "RIGHT":
         		self.right_arrow_position = self.drawArrow ( context, self.text_distance + self.curved_config['label_length'] + icon_size *3 / 4, self.height - icon_size / 2, icon_size / 4, "RIGHT", self.right_arrow_active)
+        		if pmcr:
+        			self.drawArrow ( pmcr, self.text_distance + self.curved_config['label_length'] + icon_size *3 / 4, self.height - icon_size / 2, icon_size / 4, "RIGHT", self.right_arrow_active)
         	else:
         		self.right_arrow_position = self.drawArrow ( context,  self.maxx + icon_size , self.height - icon_size / 2, icon_size / 4, "RIGHT", self.right_arrow_active)
+        		if pmcr:
+        			self.drawArrow ( pmcr,  self.maxx + icon_size , self.height - icon_size / 2, icon_size / 4, "RIGHT", self.right_arrow_active)
+        		
         if self.left_arrow_enabled:
         	if self.direction == "RIGHT":
         		self.left_arrow_position = self.drawArrow ( context, self.text_distance + self.curved_config['label_length'] + icon_size / 4, self.height - icon_size / 2, icon_size / 4, "LEFT", self.left_arrow_active)
+        		if pmcr:
+        			self.drawArrow ( pmcr, self.text_distance + self.curved_config['label_length'] + icon_size / 4, self.height - icon_size / 2, icon_size / 4, "LEFT", self.left_arrow_active)
         	else:
         		self.left_arrow_position = self.drawArrow ( context, self.maxx + icon_size / 2, self.height - icon_size / 2, icon_size / 4, "LEFT", self.left_arrow_active)
+        		if pmcr:
+        			self.drawArrow ( pmcr, self.maxx + icon_size / 2, self.height - icon_size / 2, icon_size / 4, "LEFT", self.left_arrow_active)
         	
-        	
+        if pmcr:
+        	self.window.input_shape_combine_mask(pm,0,0)
         self.reposition(self.width, self.height)
         	
-    def draw_stack_item(self, context, si, selected = False):
+    def draw_stack_item(self, context, si, pmcr = None, selected = False):
     	
     	if self.active_button == si.id:
     		selected = True
@@ -857,6 +874,8 @@ class StacksGuiCurved(gtk.Window):
     	icon_size = self.config['icon_size']
     	
     	mtrx = context.get_matrix()
+    	if pmcr:
+    		pmtrx = pmcr.get_matrix()
 
     	icon_y = (self.height - si.y - self.icon_vertical_offset ) / math.cos(si.angle)
     	si.icon_y = icon_y
@@ -875,32 +894,81 @@ class StacksGuiCurved(gtk.Window):
     	label_y = icon_y + icon_size / 2
     	context.translate(icon_x,icon_y)
     	context.rotate(angle)
-     	
-    	self.drawBackground(context, 0, 0, selected)
+    	if pmcr:
+    		pmcr.translate(icon_x,icon_y)
+    		pmcr.rotate(angle)
+    	
+    	pango_context = pangocairo.CairoContext (context)
+		
+    	pango_layout = pango_context.create_layout ()
+		
+		
+    	if self.curved_config['use_awn_title_font']:
+			l_font = self.curved_config['awn_title_font']
+    	else:
+			l_font = self.curved_config['label_font']
+    	pango_layout.set_font_description(pango.FontDescription(l_font))
+		
+    	label_width = 10
+    	labletext = si.lbl_text
+    	labletext, text_width, text_height = self.get_text_size(pango_layout, labletext,self.curved_config['label_length'])
+    	label_width = text_width + 10    
+    	label_height = text_height	
+    	y = icon_size / 2 - label_height / 2
+
+    	
+    	if self.curved_config['hoverbox_contains_label']:
+			if self.direction == "RIGHT":
+				x = label_x - label_width - self.text_distance
+			else:
+				x = 0   		
+			background_x = x
+			background_width = icon_size + label_width + self.text_distance
+			pm_width = background_width
+    	else:
+			x = 0		
+			background_x = x
+			background_width = icon_size
+			pm_width = icon_size + label_width + self.text_distance
+    	self.drawBackground(context, background_x, 0, selected, background_width, icon_size)
+    	if pmcr:
+    		self.drawPmBackground(pmcr, background_x, 0, pm_width, icon_size)
     	self.drawIcon(context, 0, 0, si.icon, selected)
     	si.label_position, si.label_width, si.displayed_lbl_text = self.drawLabel(context, label_x, icon_size / 2, si.lbl_text, selected)
-    	self.drawForeground(context, 0, 0, selected)
+    	self.drawForeground(context, background_x, 0, selected, background_width, icon_size)
     	
     	si.label_position = si.label_position + icon_x + label_x
     	
     	context.set_matrix (mtrx)
-    	"""
-    	if self.direction == "RIGHT":
-    		context.rotate(-si.angle)
-    	else:
-    		context.rotate(si.angle)
-    		"""
-    	
-    def drawBackground(self, context, x, y, selected = False):
+    	if pmcr:
+    		pmcr.set_matrix (mtrx)
+
+    def drawPmBackground(self, context, x, y, width = None, height = None):
 		icon_size = self.config['icon_size']
+		if not width:
+			width = icon_size
+		if not height:
+			height = icon_size
+		rx = x-self.icon_padding/2
+		ry = y-self.icon_padding/2
+		rw = width+self.icon_padding
+		rh = height+self.icon_padding
+		context.set_source_rgba(0., 0., 0., 1.)
+		self.draw_rounded_rect(context,rx,ry,rw,rh,15)
+		context.fill()
+    	
+    def drawBackground(self, context, x, y, selected = False, width = None, height = None):
+		icon_size = self.config['icon_size']
+		if not width:
+			width = icon_size
+		if not height:
+			height = icon_size
 		
 		if selected:
-			context.set_source_rgba (0,0,0,0.45)
-			
 			rx = x-self.icon_padding/2
 			ry = y-self.icon_padding/2
-			rw = icon_size+self.icon_padding
-			rh = icon_size+self.icon_padding
+			rw = width+self.icon_padding
+			rh = height+self.icon_padding
 			
 			self.linear = cairo.LinearGradient(rx, ry+rh, rx, ry)
 			r, g, b, a = rgba_values(self.curved_config['hoverbox_bg_color1'])
@@ -950,16 +1018,20 @@ class StacksGuiCurved(gtk.Window):
 		context.paint()
 		
     	
-    def drawForeground(self, context, x, y, selected = False):
+    def drawForeground(self, context, x, y, selected = False, width = None, height = None):
 		icon_size = self.config['icon_size']
-		
+		if not width:
+			width = icon_size
+		if not height:
+			height = icon_size
+				
 		if selected:
 			context.set_source_rgba (1,1,1,0.25)
 
 			rx = x-self.icon_padding/2
 			ry = y-self.icon_padding/2
-			rw = icon_size+self.icon_padding
-			rh = icon_size+self.icon_padding
+			rw = width+self.icon_padding
+			rh = height+self.icon_padding
 			
 			self.linear = cairo.LinearGradient(rx, ry, rx, ry+rh/4+15)
 			self.linear.add_color_stop_rgba(0, 1, 1, 1, 0.45)
@@ -999,7 +1071,7 @@ class StacksGuiCurved(gtk.Window):
 		label_width = text_width + 10
 		label_height = text_height
 		
-		label_cuve = int(round(text_height / 2))
+		label_curve = int(round(text_height / 2))
 		
 		y = y - label_height / 2
 		
@@ -1008,7 +1080,7 @@ class StacksGuiCurved(gtk.Window):
 		else:
 			x = x + self.text_distance
 		
-		self.draw_rounded_rect(context, x, y,label_width,label_height,label_cuve)
+		self.draw_rounded_rect(context, x, y,label_width,label_height,label_curve)
 		context.fill()
 		
 		if selected:
@@ -1017,7 +1089,7 @@ class StacksGuiCurved(gtk.Window):
 			r, g, b, a = rgba_values(self.curved_config['label_border_color'])
 		context.set_source_rgba (r, g, b, a)
 		
-		self.draw_rounded_rect(context, x, y,label_width,label_height,label_cuve)
+		self.draw_rounded_rect(context, x, y,label_width,label_height,label_curve)
 		context.set_line_width (0.5);
 		context.stroke()    	
 
@@ -1208,6 +1280,8 @@ class CurvedStacksConfig(GladeWindow):
         self.widgets['hoverbox_bg_color2'].set_alpha(config_to_alpha(config['hoverbox_bg_color2']))
         self.widgets['hoverbox_border_color'].set_color(config_to_color(config['hoverbox_border_color']))
         self.widgets['hoverbox_border_color'].set_alpha(config_to_alpha(config['hoverbox_border_color']))
+        self.widgets['hoverbox_contains_label_checkbx'].set_active(config['hoverbox_contains_label'])
+
 
     def on_use_awn_title_font_checkButton_toggled(self, *args):
     	if self.widgets['use_awn_title_font_checkButton'].get_active():
@@ -1251,6 +1325,7 @@ class CurvedStacksConfig(GladeWindow):
     	saveColor(gconf_client,gconf_path + "/curved_gui/hoverbox_bg_color1",self.widgets['hoverbox_bg_color1'].get_color(),self.widgets['hoverbox_bg_color1'].get_alpha())
     	saveColor(gconf_client,gconf_path + "/curved_gui/hoverbox_bg_color2",self.widgets['hoverbox_bg_color2'].get_color(),self.widgets['hoverbox_bg_color2'].get_alpha())
     	saveColor(gconf_client,gconf_path + "/curved_gui/hoverbox_border_color",self.widgets['hoverbox_border_color'].get_color(),self.widgets['hoverbox_border_color'].get_alpha())
+        saveBool(gconf_client,gconf_path + "/curved_gui/hoverbox_contains_label",self.widgets['hoverbox_contains_label_checkbx'].get_active())
 
                     
     	self.destroy()
@@ -1289,6 +1364,7 @@ def get_curved_gui_config(gconf_client, gconf_path, uid):
     config['hoverbox_bg_color1'] = loadColor(gconf_client,gconf_path + "/curved_gui/hoverbox_bg_color1","000000b6")
     config['hoverbox_bg_color2'] = loadColor(gconf_client,gconf_path + "/curved_gui/hoverbox_bg_color2","00000059")
     config['hoverbox_border_color'] = loadColor(gconf_client,gconf_path + "/curved_gui/hoverbox_border_color","ffffffe6")
+    config['hoverbox_contains_label'] = loadBool(gconf_client,gconf_path + "/curved_gui/hoverbox_contains_label",False)
     
 
     return config

@@ -980,7 +980,11 @@ class StacksGuiCurved(gtk.Window):
 		pango_layout = pango_context.create_layout ()
 		
 		
-		pango_layout.set_font_description(pango.FontDescription(self.curved_config['label_font']))
+		if self.curved_config['use_awn_title_font']:
+			l_font = self.curved_config['awn_title_font']
+		else:
+			l_font = self.curved_config['label_font']
+		pango_layout.set_font_description(pango.FontDescription(l_font))
 				
 		
 
@@ -1175,7 +1179,13 @@ class CurvedStacksConfig(GladeWindow):
         self.widgets['label_hover_border_color'].set_color(config_to_color(config['label_hover_border_color']))
         self.widgets['label_hover_border_color'].set_alpha(config_to_alpha(config['label_hover_border_color']))
         self.widgets['font_selector'].set_font_name(config['label_font'])
-
+        self.widgets['use_awn_title_font_checkButton'].set_active(config['use_awn_title_font'])
+        if config['use_awn_title_font']:
+        	self.widgets['label_font_label'].set_sensitive(False)
+        	self.widgets['font_selector'].set_sensitive(False)
+        else:
+        	self.widgets['label_font_label'].set_sensitive(True)
+        	self.widgets['font_selector'].set_sensitive(True)
         #set layout configuration
         self.widgets['layout_radius'].set_value(config['layout_radius'])
         _layout_interval = config['layout_interval']*100
@@ -1199,6 +1209,14 @@ class CurvedStacksConfig(GladeWindow):
         self.widgets['hoverbox_border_color'].set_color(config_to_color(config['hoverbox_border_color']))
         self.widgets['hoverbox_border_color'].set_alpha(config_to_alpha(config['hoverbox_border_color']))
 
+    def on_use_awn_title_font_checkButton_toggled(self, *args):
+    	if self.widgets['use_awn_title_font_checkButton'].get_active():
+        	self.widgets['label_font_label'].set_sensitive(False)
+        	self.widgets['font_selector'].set_sensitive(False)
+        else:
+        	self.widgets['label_font_label'].set_sensitive(True)
+        	self.widgets['font_selector'].set_sensitive(True)
+
 
     def on_cancel_button_clicked(self, *args):
     	self.destroy()
@@ -1216,6 +1234,7 @@ class CurvedStacksConfig(GladeWindow):
     	saveColor(gconf_client,gconf_path + "/curved_gui/label_hover_background_color",self.widgets['label_hover_background_color'].get_color(),self.widgets['label_hover_background_color'].get_alpha())
     	saveColor(gconf_client,gconf_path + "/curved_gui/label_border_color",self.widgets['label_border_color'].get_color(),self.widgets['label_border_color'].get_alpha())
     	saveColor(gconf_client,gconf_path + "/curved_gui/label_hover_border_color",self.widgets['label_hover_border_color'].get_color(),self.widgets['label_hover_border_color'].get_alpha())
+        saveBool(gconf_client,gconf_path + "/curved_gui/use_awn_title_font",self.widgets['use_awn_title_font_checkButton'].get_active())
     	saveString(gconf_client,gconf_path + "/curved_gui/label_font",self.widgets['font_selector'].get_font_name())
     
         #save layout configuration
@@ -1248,6 +1267,8 @@ def get_curved_gui_config(gconf_client, gconf_path, uid):
     config['label_hover_background_color'] = loadColor(gconf_client,gconf_path + "/curved_gui/label_hover_background_color","ffffffb6")
     config['label_border_color'] = loadColor(gconf_client,gconf_path + "/curved_gui/label_border_color","ffffffb6")
     config['label_hover_border_color'] = loadColor(gconf_client,gconf_path + "/curved_gui/label_hover_border_color","000000b6")
+    config['awn_title_font'] = loadString(gconf_client,"/apps/avant-window-navigator/title/font_face","sans 10")
+    config['use_awn_title_font'] = loadBool(gconf_client,gconf_path + "/curved_gui/use_awn_title_font",True)
     config['label_font'] = loadString(gconf_client,gconf_path + "/curved_gui/label_font","sans 10")
     
     # get layout configuration
@@ -1286,11 +1307,14 @@ def loadString(client, key, default):
 # Load a boolean from gconf
 #
 def loadBool(client, key, default):
-	v = client.get_bool( key )
-	if v == None:
-		return default
+	if client.get( key ):
+		v = client.get_bool( key )
+		if v == None:
+			return default
+		else:
+			return v
 	else:
-		return v
+		return default
 #
 # Load a int from gconf
 #

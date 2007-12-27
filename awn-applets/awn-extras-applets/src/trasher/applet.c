@@ -62,8 +62,10 @@ trasher_initialization(GtkWidget *widget, gpointer user_data)
   gconf_client_set_int(client,
           g_strdup_printf("%s/%s", key_prefix, GKEY_FILE_OPERATIONS), 4, NULL);
 
-  // Take the "trasher" gui as gui
-  gconf_client_set_int(client,
+  // Take the "trasher" gui as gui if not already set
+  key = g_strdup_printf("%s/%s", key_prefix, GKEY_GUI_TYPE);
+  if(!gconf_client_get(client, key, NULL))
+  	gconf_client_set_int(client,
           g_strdup_printf("%s/%s", key_prefix, GKEY_GUI_TYPE), 3, NULL);
 
   // Set "user customizable" gconf keys (if not already set)

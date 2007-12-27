@@ -557,7 +557,7 @@ class StacksGuiCurved(gtk.Window):
 
     def _item_created_cb(self, widget, store, iter, angle = 0, direction = "LEFT",id = 0):
 
-        return button
+        return None
 
     def _item_removed_cb(self, widget, store, iter):
         self.store = store

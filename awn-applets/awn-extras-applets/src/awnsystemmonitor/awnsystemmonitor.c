@@ -42,7 +42,7 @@
 #include "loadavg_component.h"
 #include "sysmem_component.h"
 #include "config.h"
-
+#include "gconf-config.h"
 
 //#undef NDEBUG
 #include <assert.h>
@@ -248,7 +248,7 @@ gboolean cpu_meter_render (gpointer data)
 		}    		    	
         gtk_widget_get_size_request (widget, &cpumeter->width, &cpumeter->height);  
         cpumeter->width=cpumeter->width-2;
-        cpumeter->height=cpumeter->height/2;
+        cpumeter->height=cpumeter->height/2-3;
         surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, cpumeter->width, cpumeter->height*2);
         cr = cairo_create (surface);
         assert(cr);

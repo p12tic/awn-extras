@@ -2,7 +2,24 @@ Source: awn-extras-applets-trunk
 Section: gnome
 Priority: optional
 Maintainer: Julien Lavergne <julien.lavergne@gmail.com>
-Build-Depends: debhelper (>= 5), cdbs, intltool, gnome-pkg-tools, autotools-dev, libgnome-menu-dev, libgconf2-dev, libgnome-desktop-dev, gnome-common, librsvg2-dev, libgtop2-dev, libawn-dev-trunk, libwnck-dev, python-central (>= 0.5.6), python
+Build-Depends: 	debhelper (>= 5), 
+		cdbs, 
+		intltool, 
+		gnome-pkg-tools, 
+		autotools-dev, 
+		libgnome-menu-dev, 
+		libgconf2-dev, 
+		libgnome-desktop-dev, 
+		gnome-common, 
+		librsvg2-dev, 
+		libgtop2-dev, 
+		libawn-dev | libawn-dev-trunk, 
+		libwnck-dev, 
+		python-central (>= 0.5.6), 
+		python, 
+		libvte-dev, 
+		libsexy-dev, 
+		libnotify-dev
 Standards-Version: 3.7.2
 XS-Python-Version: current
 
@@ -10,7 +27,15 @@ Package: awn-extras-applets-trunk
 Section: gnome
 Architecture: any
 Depends: ${shlibs:Depends}, ${python:Depends}
-Recommands: avant-window-navigator-trunk, python-libawn0-trunk, cairo-clock, python-alsaaudio, python-libgmail, python-imaging, python-gst0.10, tsclient, libvte
+Recommends: 	avant-window-navigator-trunk, 
+		python-libawn0-trunk, 
+		cairo-clock, 
+		python-alsaaudio, 
+		python-libgmail, 
+		python-imaging, 
+		python-gst0.10, 
+		tsclient, 
+		libvte
 Conflict: awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr
 Replaces: awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr
 XB-Python-Version: ${python:Versions}

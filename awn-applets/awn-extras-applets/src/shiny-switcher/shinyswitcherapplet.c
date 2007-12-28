@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007 Mike Desjardins
+ * Copyright (c) 2007 Rodney Cryderman (rcryderman@gmail.com) 
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

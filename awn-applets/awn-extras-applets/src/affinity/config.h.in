@@ -1,22 +1,13 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
-/* DBUS API is subject to change */
-#undef DBUS_API_SUBJECT_TO_CHANGE
-
-/* D-BUS major version. */
-#undef DBUS_MAJOR_VER
-
-/* D-BUS micro version. */
-#undef DBUS_MICRO_VER
-
-/* D-BUS minor version. */
-#undef DBUS_MINOR_VER
-
 /* always defined to indicate that i18n is enabled */
 #undef ENABLE_NLS
 
-/* Gettext package */
+/* Define to the Gettext package name */
 #undef GETTEXT_PACKAGE
+
+/* Define to enable applet support */
+#undef HAVE_APPLET
 
 /* Define to enable beagle support */
 #undef HAVE_BEAGLE
@@ -26,9 +17,6 @@
 
 /* Define to 1 if you have the `dcgettext' function. */
 #undef HAVE_DCGETTEXT
-
-/* Define to 1 if you have the <dlfcn.h> header file. */
-#undef HAVE_DLFCN_H
 
 /* Define if the GNU gettext() function is already present or preinstalled. */
 #undef HAVE_GETTEXT
@@ -89,9 +77,6 @@
 
 /* Define to 1 if you have the ANSI C header files. */
 #undef STDC_HEADERS
-
-/* Use the APIs that originated in the desktop-agnostic branch of Awn. */
-#undef USE_AWN_DESKTOP_AGNOSTIC
 
 /* Version number of package */
 #undef VERSION

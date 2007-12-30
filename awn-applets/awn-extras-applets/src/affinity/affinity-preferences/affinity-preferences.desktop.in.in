@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=Affinity Preferences
+Type=Application
+Comment=Affinity preferences
+Exec=affinity-preferences
+Icon=search
+Categories=Settings;GNOME;
+Name[en_GB]=Affinity Preferences 

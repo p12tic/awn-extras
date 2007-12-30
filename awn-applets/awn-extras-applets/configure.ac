@@ -191,7 +191,7 @@ src/affinity/data/48x48/Makefile
 src/affinity/data/scalable/Makefile
 src/affinity/data/actions/Makefile
 src/affinity/src/Makefile
-src/affinity/po/Makefile.in
+src/affinity/po/Makefile
 src/arss/Makefile
 src/arss/Core/Makefile
 src/awn-meebo/Makefile

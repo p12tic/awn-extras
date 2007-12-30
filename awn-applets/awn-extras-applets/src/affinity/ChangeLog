@@ -1,0 +1,73 @@
+2007-03-23  Neil J. Patel  <njpatel@gmail.com>
+
+	* Cleaned up applet code.
+	* Applet button icon can be set via gconf (under applet).
+	* Added properties & about for right-click menu.
+
+2007-03-23  Neil J. Patel  <njpatel@gmail.com>
+
+	* Affinity can now be chosen as a panel applet.
+
+2007-03-22  Neil J. Patel  <njpatel@gmail.com>
+
+	* Added commandline options to control behaviour, --disable-systray and
+	  --skip-taskbar. --skip-taskbar will launch Affinity in a menu-mode 
+	  which is best for a fast UI.
+
+2007-03-21  Neil J. Patel  <njpatel@gmail.com>
+
+	* More icon love
+
+2007-03-21  Neil J. Patel  <njpatel@gmail.com>
+
+	* Same rule applies to log out & lock screen
+
+2007-03-21  Neil J. Patel  <njpatel@gmail.com>
+
+	* Configuration options for computer & network.
+	* If either computer/network/software/control panel are unset (blank), 
+	  they do not show up in affinity.
+
+2007-03-20  Neil J. Patel  <njpatel@gmail.com>
+
+	* affinity-preferences allows changing of text
+	* Support for other desktops, allows chnaging the nautils + gnome-open
+	  commands. 
+
+2007-03-17  Neil Jagdish Patel   <njpatel@gmail.com>
+
+	* Enabled favourites. Just keeps a history of apps for now.
+
+2007-03-17  Neil Jagdish Patel  <njpatel@gmail.com>
+
+	* Launching of applications is now handled via gnome-vfs
+
+2007-03-17  Neil J. Patel  <njpatel@gmail.com>
+
+	* Added icons to make, installed into DATADIR/hicolor for theming
+	* Beagle - Contacts and emails now open up in Evolution
+	* Multicoloured rows in results treeview
+
+2007-03-16  Neil Jagdish Patel  <njpatel@gmail.com>
+
+	* Context menu on search results. Options to launch with other 
+	  applications registered to handle that mimetype.
+
+2007-03-16  Neil J. Patel  <njpatel@gmail.com>
+
+	* Places now supports mounted volumes through gnome-vfs. The list will
+	  dynamically change when a volume is mounted or unmounted.	
+
+2007-03-16  Neil J. Patel  <njpatel@gmail.com>
+
+	* Fixed icon sizing issues on sidebar.
+	* Set window properties instead of call gtk_window_set
+	* Corrected sizing for the sidebar
+
+2007-03-16  Neil J. Patel  <njpatel@gmail.com>
+
+	* Affinty remembers its last position.
+	* Made application loader much faster.
+	* Fixed error when loading user home directories.
+	* Fixed error when loading bookmark files
+

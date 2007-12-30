@@ -1,97 +1,83 @@
+/* config.h.  Generated from config.h.in by configure.  */
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
-/* DBUS API is subject to change */
-#undef DBUS_API_SUBJECT_TO_CHANGE
-
-/* D-BUS major version. */
-#undef DBUS_MAJOR_VER
-
-/* D-BUS micro version. */
-#undef DBUS_MICRO_VER
-
-/* D-BUS minor version. */
-#undef DBUS_MINOR_VER
-
 /* always defined to indicate that i18n is enabled */
-#undef ENABLE_NLS
+#define ENABLE_NLS 1
 
-/* Gettext package */
-#undef GETTEXT_PACKAGE
+/* Define to the Gettext package name */
+#define GETTEXT_PACKAGE "affinity"
+
+/* Define to enable applet support */
+#define HAVE_APPLET 1
 
 /* Define to enable beagle support */
-#undef HAVE_BEAGLE
+#define HAVE_BEAGLE 1
 
 /* Define to 1 if you have the `bind_textdomain_codeset' function. */
-#undef HAVE_BIND_TEXTDOMAIN_CODESET
+#define HAVE_BIND_TEXTDOMAIN_CODESET 1
 
 /* Define to 1 if you have the `dcgettext' function. */
-#undef HAVE_DCGETTEXT
-
-/* Define to 1 if you have the <dlfcn.h> header file. */
-#undef HAVE_DLFCN_H
+#define HAVE_DCGETTEXT 1
 
 /* Define if the GNU gettext() function is already present or preinstalled. */
-#undef HAVE_GETTEXT
+#define HAVE_GETTEXT 1
 
 /* Define to 1 if you have the <inttypes.h> header file. */
-#undef HAVE_INTTYPES_H
+#define HAVE_INTTYPES_H 1
 
 /* Define if your <locale.h> file defines LC_MESSAGES. */
-#undef HAVE_LC_MESSAGES
+#define HAVE_LC_MESSAGES 1
 
 /* Define to 1 if you have the <locale.h> header file. */
-#undef HAVE_LOCALE_H
+#define HAVE_LOCALE_H 1
 
 /* Define to 1 if you have the <memory.h> header file. */
-#undef HAVE_MEMORY_H
+#define HAVE_MEMORY_H 1
 
 /* Define to 1 if you have the <stdint.h> header file. */
-#undef HAVE_STDINT_H
+#define HAVE_STDINT_H 1
 
 /* Define to 1 if you have the <stdlib.h> header file. */
-#undef HAVE_STDLIB_H
+#define HAVE_STDLIB_H 1
 
 /* Define to 1 if you have the <strings.h> header file. */
-#undef HAVE_STRINGS_H
+#define HAVE_STRINGS_H 1
 
 /* Define to 1 if you have the <string.h> header file. */
-#undef HAVE_STRING_H
+#define HAVE_STRING_H 1
 
 /* Define to 1 if you have the <sys/stat.h> header file. */
-#undef HAVE_SYS_STAT_H
+#define HAVE_SYS_STAT_H 1
 
 /* Define to 1 if you have the <sys/types.h> header file. */
-#undef HAVE_SYS_TYPES_H
+#define HAVE_SYS_TYPES_H 1
 
 /* Define to enable tracker support */
-#undef HAVE_TRACKER
+#define HAVE_TRACKER 1
 
 /* Define to 1 if you have the <unistd.h> header file. */
-#undef HAVE_UNISTD_H
+#define HAVE_UNISTD_H 1
 
 /* Name of package */
-#undef PACKAGE
+#define PACKAGE "affinity"
 
 /* Define to the address where bug reports for this package should be sent. */
-#undef PACKAGE_BUGREPORT
+#define PACKAGE_BUGREPORT "http://code.google.com/p/affinity-search/"
 
 /* Define to the full name of this package. */
-#undef PACKAGE_NAME
+#define PACKAGE_NAME "affinity"
 
 /* Define to the full name and version of this package. */
-#undef PACKAGE_STRING
+#define PACKAGE_STRING "affinity 0.1"
 
 /* Define to the one symbol short name of this package. */
-#undef PACKAGE_TARNAME
+#define PACKAGE_TARNAME "affinity"
 
 /* Define to the version of this package. */
-#undef PACKAGE_VERSION
+#define PACKAGE_VERSION "0.1"
 
 /* Define to 1 if you have the ANSI C header files. */
-#undef STDC_HEADERS
-
-/* Use the APIs that originated in the desktop-agnostic branch of Awn. */
-#undef USE_AWN_DESKTOP_AGNOSTIC
+#define STDC_HEADERS 1
 
 /* Version number of package */
-#undef VERSION
+#define VERSION "0.1"

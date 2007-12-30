@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=Send Email
+Comment=Send email to %s
+Categories=@
+Exec=gnome-open mailto:%s
+Icon=email
+Type=scan

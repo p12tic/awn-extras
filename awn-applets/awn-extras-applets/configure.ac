@@ -181,17 +181,16 @@ AM_GCONF_SOURCE_2
 AC_OUTPUT([
 Makefile
 src/Makefile
-dnl src/affinity/Makefile
-dnl src/affinity/affinity-preferences/Makefile
-dnl src/affinity/data/Makefile
-dnl src/affinity/data/16x16/Makefile
-dnl src/affinity/data/22x22/Makefile
-dnl src/affinity/data/24x24/Makefile
-dnl src/affinity/data/48x48/Makefile
-dnl src/affinity/data/scalable/Makefile
-dnl src/affinity/data/actions/Makefile
-dnl src/affinity/src/Makefile
-dnl src/affinity/po/Makefile
+src/affinity/Makefile
+src/affinity/affinity-preferences/Makefile
+src/affinity/data/Makefile
+src/affinity/data/16x16/Makefile
+src/affinity/data/22x22/Makefile
+src/affinity/data/24x24/Makefile
+src/affinity/data/48x48/Makefile
+src/affinity/data/scalable/Makefile
+src/affinity/data/actions/Makefile
+src/affinity/po/Makefile
 src/arss/Makefile
 src/arss/Core/Makefile
 src/awn-meebo/Makefile
@@ -280,5 +279,5 @@ src/weather/locale/pt/Makefile
 src/weather/locale/pt/LC_MESSAGES/Makefile
 src/wobblyzini/Makefile
 src/wobblyzini/icons/Makefile
-po/Makefile.in
+po/Makefile
 ])

@@ -13,6 +13,8 @@
 # PARTICULAR PURPOSE.
 
 @SET_MAKE@
+
+
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkglibdir = $(libdir)/@PACKAGE@
@@ -31,10 +33,10 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
+@HAVE_BEAGLE_TRUE@am__append_1 = $(BEAGLE_SOURCES)
+@HAVE_TRACKER_TRUE@am__append_2 = $(TRACKER_SOURCES)
 subdir = src/affinity
-DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
-	AUTHORS COPYING ChangeLog INSTALL NEWS config.guess config.sub \
-	depcomp install-sh missing mkinstalldirs
+DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/acinclude.m4 \
 	$(top_srcdir)/m4/python.m4 $(top_srcdir)/configure.ac
@@ -43,20 +45,68 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
-SOURCES =
-DIST_SOURCES =
-RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
-	html-recursive info-recursive install-data-recursive \
-	install-dvi-recursive install-exec-recursive \
-	install-html-recursive install-info-recursive \
-	install-pdf-recursive install-ps-recursive install-recursive \
-	installcheck-recursive installdirs-recursive pdf-recursive \
-	ps-recursive uninstall-recursive
-RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
-  distclean-recursive maintainer-clean-recursive
+am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
+am__vpath_adj = case $$p in \
+    $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
+    *) f=$$p;; \
+  esac;
+am__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
+am__installdirs = "$(DESTDIR)$(affinitylibdir)" \
+	"$(DESTDIR)$(desktopdir)"
+affinitylibLTLIBRARIES_INSTALL = $(INSTALL)
+LTLIBRARIES = $(affinitylib_LTLIBRARIES)
+am__DEPENDENCIES_1 =
+am__DEPENDENCIES_2 = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
+affinity_la_DEPENDENCIES = $(am__DEPENDENCIES_2)
+am__affinity_la_SOURCES_DIST = applet.c affinity.c affinity.h \
+	aff-button.c aff-button.h aff-results.c aff-results.h \
+	aff-search-engine.c aff-search-engine.h \
+	aff-search-engine-actions.c aff-search-engine-actions.h \
+	aff-search-engine-apps.c aff-search-engine-apps.h \
+	aff-settings.c aff-settings.h aff-sidebar.c aff-sidebar.h \
+	aff-start.c aff-start.h aff-utils.c aff-utils.h aff-window.c \
+	aff-window.h eggaccelerators.c eggaccelerators.h \
+	tomboykeybinder.c tomboykeybinder.h aff-search-engine-beagle.c \
+	aff-search-engine-beagle.h aff-search-engine-tracker.c \
+	aff-search-engine-tracker.h
+am__objects_1 = affinity_la-aff-search-engine-beagle.lo
+@HAVE_BEAGLE_TRUE@am__objects_2 = $(am__objects_1)
+am__objects_3 = affinity_la-aff-search-engine-tracker.lo
+@HAVE_TRACKER_TRUE@am__objects_4 = $(am__objects_3)
+am__objects_5 = affinity_la-applet.lo affinity_la-affinity.lo \
+	affinity_la-aff-button.lo affinity_la-aff-results.lo \
+	affinity_la-aff-search-engine.lo \
+	affinity_la-aff-search-engine-actions.lo \
+	affinity_la-aff-search-engine-apps.lo \
+	affinity_la-aff-settings.lo affinity_la-aff-sidebar.lo \
+	affinity_la-aff-start.lo affinity_la-aff-utils.lo \
+	affinity_la-aff-window.lo affinity_la-eggaccelerators.lo \
+	affinity_la-tomboykeybinder.lo $(am__objects_2) \
+	$(am__objects_4)
+am_affinity_la_OBJECTS = $(am__objects_5)
+affinity_la_OBJECTS = $(am_affinity_la_OBJECTS)
+affinity_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(affinity_la_CFLAGS) \
+	$(CFLAGS) $(affinity_la_LDFLAGS) $(LDFLAGS) -o $@
+DEFAULT_INCLUDES = -I. -I$(top_builddir)@am__isrc@
+depcomp = $(SHELL) $(top_srcdir)/depcomp
+am__depfiles_maybe = depfiles
+COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
+	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+LTCOMPILE = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
+	--mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+CCLD = $(CC)
+LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
+	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
+	$(LDFLAGS) -o $@
+SOURCES = $(affinity_la_SOURCES)
+DIST_SOURCES = $(am__affinity_la_SOURCES_DIST)
+desktopDATA_INSTALL = $(INSTALL_DATA)
+DATA = $(desktop_DATA)
 ETAGS = etags
 CTAGS = ctags
-DIST_SUBDIRS = $(SUBDIRS)
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 ALL_LINGUAS = @ALL_LINGUAS@
@@ -233,19 +283,58 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-SUBDIRS = src data po affinity-preferences
+INCLUDES = \
+	-I$(srcdir) \
+	-DGNOMELOCALEDIR=\""$(datadir)/locale"\" \
+	$(DISABLE_DEPRECATED_CFLAGS) \
+	$(DEPS_CFLAGS) \
+	-DPREFIX=\"$(prefix)\" \
+	-DSYSCONFDIR=\"$(sysconfdir)\" \
+	-DACTIONDIR=\""$(datadir)/affinity/actions"\"  \
+	-DDATADIR=\"$(datadir)\" \
+	-DLIBDIR=\"$(libdir)\" \
+	$(TRACKER_CFLAGS) \
+	$(BEAGLE_CFLAGS) \
+	$(APPLET_CFLAGS)
 
-#MAINTAINERCLEANFILES = aclocal.m4 compile config.guess config.sub configure depcomp install-sh ltmain.sh Makefile.in missing
+affinity_SOURCES = applet.c affinity.c affinity.h aff-button.c \
+	aff-button.h aff-results.c aff-results.h aff-search-engine.c \
+	aff-search-engine.h aff-search-engine-actions.c \
+	aff-search-engine-actions.h aff-search-engine-apps.c \
+	aff-search-engine-apps.h aff-settings.c aff-settings.h \
+	aff-sidebar.c aff-sidebar.h aff-start.c aff-start.h \
+	aff-utils.c aff-utils.h aff-window.c aff-window.h \
+	eggaccelerators.c eggaccelerators.h tomboykeybinder.c \
+	tomboykeybinder.h $(am__append_1) $(am__append_2)
+BEAGLE_SOURCES = \
+	aff-search-engine-beagle.c \
+	aff-search-engine-beagle.h
+
+TRACKER_SOURCES = \
+	aff-search-engine-tracker.c \
+	aff-search-engine-tracker.h
+
+affinity_LDADD = \
+	$(DEPS_LIBS) $(BEAGLE_LIBS) $(TRACKER_LIBS)
+
+affinitylibdir = $(libdir)/awn/applets/affinity
+affinitylib_LTLIBRARIES = affinity.la
+affinity_la_SOURCES = $(affinity_SOURCES)
+affinity_la_LIBADD = $(affinity_LDADD)
+affinity_la_LDFLAGS = -module -avoid-version
+affinity_la_CFLAGS = 
+desktopdir = $(libdir)/awn/applets
+desktop_DATA = \
+		affinity.desktop
+
 EXTRA_DIST = \
-	autogen.sh		\
-	config.h.in		\
-	intltool-merge.in	\
-	intltool-update.in	\
-	intltool-extract.in	
+	affinity.desktop.in.in
 
-all: all-recursive
+MAINTAINERCLEANFILES = aclocal.m4 compile config.guess config.sub configure depcomp install-sh ltmain.sh Makefile.in missing
+all: all-am
 
 .SUFFIXES:
+.SUFFIXES: .c .lo .o .obj
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -275,81 +364,213 @@ $(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+install-affinitylibLTLIBRARIES: $(affinitylib_LTLIBRARIES)
+	@$(NORMAL_INSTALL)
+	test -z "$(affinitylibdir)" || $(MKDIR_P) "$(DESTDIR)$(affinitylibdir)"
+	@list='$(affinitylib_LTLIBRARIES)'; for p in $$list; do \
+	  if test -f $$p; then \
+	    f=$(am__strip_dir) \
+	    echo " $(LIBTOOL) --mode=install $(affinitylibLTLIBRARIES_INSTALL) $(INSTALL_STRIP_FLAG) '$$p' '$(DESTDIR)$(affinitylibdir)/$$f'"; \
+	    $(LIBTOOL) --mode=install $(affinitylibLTLIBRARIES_INSTALL) $(INSTALL_STRIP_FLAG) "$$p" "$(DESTDIR)$(affinitylibdir)/$$f"; \
+	  else :; fi; \
+	done
+
+uninstall-affinitylibLTLIBRARIES:
+	@$(NORMAL_UNINSTALL)
+	@list='$(affinitylib_LTLIBRARIES)'; for p in $$list; do \
+	  p=$(am__strip_dir) \
+	  echo " $(LIBTOOL) --mode=uninstall rm -f '$(DESTDIR)$(affinitylibdir)/$$p'"; \
+	  $(LIBTOOL) --mode=uninstall rm -f "$(DESTDIR)$(affinitylibdir)/$$p"; \
+	done
+
+clean-affinitylibLTLIBRARIES:
+	-test -z "$(affinitylib_LTLIBRARIES)" || rm -f $(affinitylib_LTLIBRARIES)
+	@list='$(affinitylib_LTLIBRARIES)'; for p in $$list; do \
+	  dir="`echo $$p | sed -e 's|/[^/]*$$||'`"; \
+	  test "$$dir" != "$$p" || dir=.; \
+	  echo "rm -f \"$${dir}/so_locations\""; \
+	  rm -f "$${dir}/so_locations"; \
+	done
+affinity.la: $(affinity_la_OBJECTS) $(affinity_la_DEPENDENCIES) 
+	$(affinity_la_LINK) -rpath $(affinitylibdir) $(affinity_la_OBJECTS) $(affinity_la_LIBADD) $(LIBS)
+
+mostlyclean-compile:
+	-rm -f *.$(OBJEXT)
+
+distclean-compile:
+	-rm -f *.tab.c
+
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/affinity_la-aff-button.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/affinity_la-aff-results.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/affinity_la-aff-search-engine-actions.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/affinity_la-aff-search-engine-apps.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/affinity_la-aff-search-engine-beagle.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/affinity_la-aff-search-engine-tracker.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/affinity_la-aff-search-engine.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/affinity_la-aff-settings.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/affinity_la-aff-sidebar.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/affinity_la-aff-start.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/affinity_la-aff-utils.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/affinity_la-aff-window.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/affinity_la-affinity.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/affinity_la-applet.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/affinity_la-eggaccelerators.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/affinity_la-tomboykeybinder.Plo@am__quote@
+
+.c.o:
+@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(COMPILE) -c $<
+
+.c.obj:
+@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(COMPILE) -c `$(CYGPATH_W) '$<'`
+
+.c.lo:
+@am__fastdepCC_TRUE@	$(LTCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
+
+affinity_la-applet.lo: applet.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(affinity_la_CFLAGS) $(CFLAGS) -MT affinity_la-applet.lo -MD -MP -MF $(DEPDIR)/affinity_la-applet.Tpo -c -o affinity_la-applet.lo `test -f 'applet.c' || echo '$(srcdir)/'`applet.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/affinity_la-applet.Tpo $(DEPDIR)/affinity_la-applet.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='applet.c' object='affinity_la-applet.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(affinity_la_CFLAGS) $(CFLAGS) -c -o affinity_la-applet.lo `test -f 'applet.c' || echo '$(srcdir)/'`applet.c
+
+affinity_la-affinity.lo: affinity.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(affinity_la_CFLAGS) $(CFLAGS) -MT affinity_la-affinity.lo -MD -MP -MF $(DEPDIR)/affinity_la-affinity.Tpo -c -o affinity_la-affinity.lo `test -f 'affinity.c' || echo '$(srcdir)/'`affinity.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/affinity_la-affinity.Tpo $(DEPDIR)/affinity_la-affinity.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='affinity.c' object='affinity_la-affinity.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(affinity_la_CFLAGS) $(CFLAGS) -c -o affinity_la-affinity.lo `test -f 'affinity.c' || echo '$(srcdir)/'`affinity.c
+
+affinity_la-aff-button.lo: aff-button.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(affinity_la_CFLAGS) $(CFLAGS) -MT affinity_la-aff-button.lo -MD -MP -MF $(DEPDIR)/affinity_la-aff-button.Tpo -c -o affinity_la-aff-button.lo `test -f 'aff-button.c' || echo '$(srcdir)/'`aff-button.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/affinity_la-aff-button.Tpo $(DEPDIR)/affinity_la-aff-button.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='aff-button.c' object='affinity_la-aff-button.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(affinity_la_CFLAGS) $(CFLAGS) -c -o affinity_la-aff-button.lo `test -f 'aff-button.c' || echo '$(srcdir)/'`aff-button.c
+
+affinity_la-aff-results.lo: aff-results.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(affinity_la_CFLAGS) $(CFLAGS) -MT affinity_la-aff-results.lo -MD -MP -MF $(DEPDIR)/affinity_la-aff-results.Tpo -c -o affinity_la-aff-results.lo `test -f 'aff-results.c' || echo '$(srcdir)/'`aff-results.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/affinity_la-aff-results.Tpo $(DEPDIR)/affinity_la-aff-results.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='aff-results.c' object='affinity_la-aff-results.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(affinity_la_CFLAGS) $(CFLAGS) -c -o affinity_la-aff-results.lo `test -f 'aff-results.c' || echo '$(srcdir)/'`aff-results.c
+
+affinity_la-aff-search-engine.lo: aff-search-engine.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(affinity_la_CFLAGS) $(CFLAGS) -MT affinity_la-aff-search-engine.lo -MD -MP -MF $(DEPDIR)/affinity_la-aff-search-engine.Tpo -c -o affinity_la-aff-search-engine.lo `test -f 'aff-search-engine.c' || echo '$(srcdir)/'`aff-search-engine.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/affinity_la-aff-search-engine.Tpo $(DEPDIR)/affinity_la-aff-search-engine.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='aff-search-engine.c' object='affinity_la-aff-search-engine.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(affinity_la_CFLAGS) $(CFLAGS) -c -o affinity_la-aff-search-engine.lo `test -f 'aff-search-engine.c' || echo '$(srcdir)/'`aff-search-engine.c
+
+affinity_la-aff-search-engine-actions.lo: aff-search-engine-actions.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(affinity_la_CFLAGS) $(CFLAGS) -MT affinity_la-aff-search-engine-actions.lo -MD -MP -MF $(DEPDIR)/affinity_la-aff-search-engine-actions.Tpo -c -o affinity_la-aff-search-engine-actions.lo `test -f 'aff-search-engine-actions.c' || echo '$(srcdir)/'`aff-search-engine-actions.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/affinity_la-aff-search-engine-actions.Tpo $(DEPDIR)/affinity_la-aff-search-engine-actions.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='aff-search-engine-actions.c' object='affinity_la-aff-search-engine-actions.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(affinity_la_CFLAGS) $(CFLAGS) -c -o affinity_la-aff-search-engine-actions.lo `test -f 'aff-search-engine-actions.c' || echo '$(srcdir)/'`aff-search-engine-actions.c
+
+affinity_la-aff-search-engine-apps.lo: aff-search-engine-apps.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(affinity_la_CFLAGS) $(CFLAGS) -MT affinity_la-aff-search-engine-apps.lo -MD -MP -MF $(DEPDIR)/affinity_la-aff-search-engine-apps.Tpo -c -o affinity_la-aff-search-engine-apps.lo `test -f 'aff-search-engine-apps.c' || echo '$(srcdir)/'`aff-search-engine-apps.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/affinity_la-aff-search-engine-apps.Tpo $(DEPDIR)/affinity_la-aff-search-engine-apps.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='aff-search-engine-apps.c' object='affinity_la-aff-search-engine-apps.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(affinity_la_CFLAGS) $(CFLAGS) -c -o affinity_la-aff-search-engine-apps.lo `test -f 'aff-search-engine-apps.c' || echo '$(srcdir)/'`aff-search-engine-apps.c
+
+affinity_la-aff-settings.lo: aff-settings.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(affinity_la_CFLAGS) $(CFLAGS) -MT affinity_la-aff-settings.lo -MD -MP -MF $(DEPDIR)/affinity_la-aff-settings.Tpo -c -o affinity_la-aff-settings.lo `test -f 'aff-settings.c' || echo '$(srcdir)/'`aff-settings.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/affinity_la-aff-settings.Tpo $(DEPDIR)/affinity_la-aff-settings.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='aff-settings.c' object='affinity_la-aff-settings.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(affinity_la_CFLAGS) $(CFLAGS) -c -o affinity_la-aff-settings.lo `test -f 'aff-settings.c' || echo '$(srcdir)/'`aff-settings.c
+
+affinity_la-aff-sidebar.lo: aff-sidebar.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(affinity_la_CFLAGS) $(CFLAGS) -MT affinity_la-aff-sidebar.lo -MD -MP -MF $(DEPDIR)/affinity_la-aff-sidebar.Tpo -c -o affinity_la-aff-sidebar.lo `test -f 'aff-sidebar.c' || echo '$(srcdir)/'`aff-sidebar.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/affinity_la-aff-sidebar.Tpo $(DEPDIR)/affinity_la-aff-sidebar.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='aff-sidebar.c' object='affinity_la-aff-sidebar.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(affinity_la_CFLAGS) $(CFLAGS) -c -o affinity_la-aff-sidebar.lo `test -f 'aff-sidebar.c' || echo '$(srcdir)/'`aff-sidebar.c
+
+affinity_la-aff-start.lo: aff-start.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(affinity_la_CFLAGS) $(CFLAGS) -MT affinity_la-aff-start.lo -MD -MP -MF $(DEPDIR)/affinity_la-aff-start.Tpo -c -o affinity_la-aff-start.lo `test -f 'aff-start.c' || echo '$(srcdir)/'`aff-start.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/affinity_la-aff-start.Tpo $(DEPDIR)/affinity_la-aff-start.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='aff-start.c' object='affinity_la-aff-start.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(affinity_la_CFLAGS) $(CFLAGS) -c -o affinity_la-aff-start.lo `test -f 'aff-start.c' || echo '$(srcdir)/'`aff-start.c
+
+affinity_la-aff-utils.lo: aff-utils.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(affinity_la_CFLAGS) $(CFLAGS) -MT affinity_la-aff-utils.lo -MD -MP -MF $(DEPDIR)/affinity_la-aff-utils.Tpo -c -o affinity_la-aff-utils.lo `test -f 'aff-utils.c' || echo '$(srcdir)/'`aff-utils.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/affinity_la-aff-utils.Tpo $(DEPDIR)/affinity_la-aff-utils.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='aff-utils.c' object='affinity_la-aff-utils.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(affinity_la_CFLAGS) $(CFLAGS) -c -o affinity_la-aff-utils.lo `test -f 'aff-utils.c' || echo '$(srcdir)/'`aff-utils.c
+
+affinity_la-aff-window.lo: aff-window.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(affinity_la_CFLAGS) $(CFLAGS) -MT affinity_la-aff-window.lo -MD -MP -MF $(DEPDIR)/affinity_la-aff-window.Tpo -c -o affinity_la-aff-window.lo `test -f 'aff-window.c' || echo '$(srcdir)/'`aff-window.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/affinity_la-aff-window.Tpo $(DEPDIR)/affinity_la-aff-window.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='aff-window.c' object='affinity_la-aff-window.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(affinity_la_CFLAGS) $(CFLAGS) -c -o affinity_la-aff-window.lo `test -f 'aff-window.c' || echo '$(srcdir)/'`aff-window.c
+
+affinity_la-eggaccelerators.lo: eggaccelerators.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(affinity_la_CFLAGS) $(CFLAGS) -MT affinity_la-eggaccelerators.lo -MD -MP -MF $(DEPDIR)/affinity_la-eggaccelerators.Tpo -c -o affinity_la-eggaccelerators.lo `test -f 'eggaccelerators.c' || echo '$(srcdir)/'`eggaccelerators.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/affinity_la-eggaccelerators.Tpo $(DEPDIR)/affinity_la-eggaccelerators.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='eggaccelerators.c' object='affinity_la-eggaccelerators.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(affinity_la_CFLAGS) $(CFLAGS) -c -o affinity_la-eggaccelerators.lo `test -f 'eggaccelerators.c' || echo '$(srcdir)/'`eggaccelerators.c
+
+affinity_la-tomboykeybinder.lo: tomboykeybinder.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(affinity_la_CFLAGS) $(CFLAGS) -MT affinity_la-tomboykeybinder.lo -MD -MP -MF $(DEPDIR)/affinity_la-tomboykeybinder.Tpo -c -o affinity_la-tomboykeybinder.lo `test -f 'tomboykeybinder.c' || echo '$(srcdir)/'`tomboykeybinder.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/affinity_la-tomboykeybinder.Tpo $(DEPDIR)/affinity_la-tomboykeybinder.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tomboykeybinder.c' object='affinity_la-tomboykeybinder.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(affinity_la_CFLAGS) $(CFLAGS) -c -o affinity_la-tomboykeybinder.lo `test -f 'tomboykeybinder.c' || echo '$(srcdir)/'`tomboykeybinder.c
+
+affinity_la-aff-search-engine-beagle.lo: aff-search-engine-beagle.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(affinity_la_CFLAGS) $(CFLAGS) -MT affinity_la-aff-search-engine-beagle.lo -MD -MP -MF $(DEPDIR)/affinity_la-aff-search-engine-beagle.Tpo -c -o affinity_la-aff-search-engine-beagle.lo `test -f 'aff-search-engine-beagle.c' || echo '$(srcdir)/'`aff-search-engine-beagle.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/affinity_la-aff-search-engine-beagle.Tpo $(DEPDIR)/affinity_la-aff-search-engine-beagle.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='aff-search-engine-beagle.c' object='affinity_la-aff-search-engine-beagle.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(affinity_la_CFLAGS) $(CFLAGS) -c -o affinity_la-aff-search-engine-beagle.lo `test -f 'aff-search-engine-beagle.c' || echo '$(srcdir)/'`aff-search-engine-beagle.c
+
+affinity_la-aff-search-engine-tracker.lo: aff-search-engine-tracker.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(affinity_la_CFLAGS) $(CFLAGS) -MT affinity_la-aff-search-engine-tracker.lo -MD -MP -MF $(DEPDIR)/affinity_la-aff-search-engine-tracker.Tpo -c -o affinity_la-aff-search-engine-tracker.lo `test -f 'aff-search-engine-tracker.c' || echo '$(srcdir)/'`aff-search-engine-tracker.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/affinity_la-aff-search-engine-tracker.Tpo $(DEPDIR)/affinity_la-aff-search-engine-tracker.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='aff-search-engine-tracker.c' object='affinity_la-aff-search-engine-tracker.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(affinity_la_CFLAGS) $(CFLAGS) -c -o affinity_la-aff-search-engine-tracker.lo `test -f 'aff-search-engine-tracker.c' || echo '$(srcdir)/'`aff-search-engine-tracker.c
 
 mostlyclean-libtool:
 	-rm -f *.lo
 
 clean-libtool:
 	-rm -rf .libs _libs
-
-# This directory's subdirectories are mostly independent; you can cd
-# into them and run `make' without going through this Makefile.
-# To change the values of `make' variables: instead of editing Makefiles,
-# (1) if the variable is set in `config.status', edit `config.status'
-#     (which will cause the Makefiles to be regenerated when you run `make');
-# (2) otherwise, pass the desired values on the `make' command line.
-$(RECURSIVE_TARGETS):
-	@failcom='exit 1'; \
-	for f in x $$MAKEFLAGS; do \
-	  case $$f in \
-	    *=* | --[!k]*);; \
-	    *k*) failcom='fail=yes';; \
-	  esac; \
-	done; \
-	dot_seen=no; \
-	target=`echo $@ | sed s/-recursive//`; \
-	list='$(SUBDIRS)'; for subdir in $$list; do \
-	  echo "Making $$target in $$subdir"; \
-	  if test "$$subdir" = "."; then \
-	    dot_seen=yes; \
-	    local_target="$$target-am"; \
-	  else \
-	    local_target="$$target"; \
-	  fi; \
-	  (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) $$local_target) \
-	  || eval $$failcom; \
-	done; \
-	if test "$$dot_seen" = "no"; then \
-	  $(MAKE) $(AM_MAKEFLAGS) "$$target-am" || exit 1; \
-	fi; test -z "$$fail"
-
-$(RECURSIVE_CLEAN_TARGETS):
-	@failcom='exit 1'; \
-	for f in x $$MAKEFLAGS; do \
-	  case $$f in \
-	    *=* | --[!k]*);; \
-	    *k*) failcom='fail=yes';; \
-	  esac; \
-	done; \
-	dot_seen=no; \
-	case "$@" in \
-	  distclean-* | maintainer-clean-*) list='$(DIST_SUBDIRS)' ;; \
-	  *) list='$(SUBDIRS)' ;; \
-	esac; \
-	rev=''; for subdir in $$list; do \
-	  if test "$$subdir" = "."; then :; else \
-	    rev="$$subdir $$rev"; \
-	  fi; \
-	done; \
-	rev="$$rev ."; \
-	target=`echo $@ | sed s/-recursive//`; \
-	for subdir in $$rev; do \
-	  echo "Making $$target in $$subdir"; \
-	  if test "$$subdir" = "."; then \
-	    local_target="$$target-am"; \
-	  else \
-	    local_target="$$target"; \
-	  fi; \
-	  (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) $$local_target) \
-	  || eval $$failcom; \
-	done && test -z "$$fail"
-tags-recursive:
-	list='$(SUBDIRS)'; for subdir in $$list; do \
-	  test "$$subdir" = . || (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) tags); \
+install-desktopDATA: $(desktop_DATA)
+	@$(NORMAL_INSTALL)
+	test -z "$(desktopdir)" || $(MKDIR_P) "$(DESTDIR)$(desktopdir)"
+	@list='$(desktop_DATA)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f=$(am__strip_dir) \
+	  echo " $(desktopDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(desktopdir)/$$f'"; \
+	  $(desktopDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(desktopdir)/$$f"; \
 	done
-ctags-recursive:
-	list='$(SUBDIRS)'; for subdir in $$list; do \
-	  test "$$subdir" = . || (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) ctags); \
+
+uninstall-desktopDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(desktop_DATA)'; for p in $$list; do \
+	  f=$(am__strip_dir) \
+	  echo " rm -f '$(DESTDIR)$(desktopdir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(desktopdir)/$$f"; \
 	done
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
@@ -362,23 +583,10 @@ ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	mkid -fID $$unique
 tags: TAGS
 
-TAGS: tags-recursive $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
+TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
 		$(TAGS_FILES) $(LISP)
 	tags=; \
 	here=`pwd`; \
-	if ($(ETAGS) --etags-include --version) >/dev/null 2>&1; then \
-	  include_option=--etags-include; \
-	  empty_fix=.; \
-	else \
-	  include_option=--include; \
-	  empty_fix=; \
-	fi; \
-	list='$(SUBDIRS)'; for subdir in $$list; do \
-	  if test "$$subdir" = .; then :; else \
-	    test ! -f $$subdir/TAGS || \
-	      tags="$$tags $$include_option=$$here/$$subdir/TAGS"; \
-	  fi; \
-	done; \
 	list='$(SOURCES) $(HEADERS)  $(LISP) $(TAGS_FILES)'; \
 	unique=`for i in $$list; do \
 	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
@@ -391,7 +599,7 @@ TAGS: tags-recursive $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
 	    $$tags $$unique; \
 	fi
 ctags: CTAGS
-CTAGS: ctags-recursive $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
+CTAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
 		$(TAGS_FILES) $(LISP)
 	tags=; \
 	here=`pwd`; \
@@ -439,37 +647,22 @@ distdir: $(DISTFILES)
 	    || exit 1; \
 	  fi; \
 	done
-	list='$(DIST_SUBDIRS)'; for subdir in $$list; do \
-	  if test "$$subdir" = .; then :; else \
-	    test -d "$(distdir)/$$subdir" \
-	    || $(MKDIR_P) "$(distdir)/$$subdir" \
-	    || exit 1; \
-	    distdir=`$(am__cd) $(distdir) && pwd`; \
-	    top_distdir=`$(am__cd) $(top_distdir) && pwd`; \
-	    (cd $$subdir && \
-	      $(MAKE) $(AM_MAKEFLAGS) \
-	        top_distdir="$$top_distdir" \
-	        distdir="$$distdir/$$subdir" \
-		am__remove_distdir=: \
-		am__skip_length_check=: \
-	        distdir) \
-	      || exit 1; \
-	  fi; \
-	done
 check-am: all-am
-check: check-recursive
-all-am: Makefile
-installdirs: installdirs-recursive
-installdirs-am:
-install: install-recursive
-install-exec: install-exec-recursive
-install-data: install-data-recursive
-uninstall: uninstall-recursive
+check: check-am
+all-am: Makefile $(LTLIBRARIES) $(DATA)
+installdirs:
+	for dir in "$(DESTDIR)$(affinitylibdir)" "$(DESTDIR)$(desktopdir)"; do \
+	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
+	done
+install: install-am
+install-exec: install-exec-am
+install-data: install-data-am
+uninstall: uninstall-am
 
 install-am: all-am
 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
 
-installcheck: installcheck-recursive
+installcheck: installcheck-am
 install-strip:
 	$(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM="$(INSTALL_STRIP_PROGRAM)" \
 	  install_sh_PROGRAM="$(INSTALL_STRIP_PROGRAM)" INSTALL_STRIP_FLAG=-s \
@@ -485,80 +678,88 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-clean: clean-recursive
+	-test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)
+clean: clean-am
 
-clean-am: clean-generic clean-libtool mostlyclean-am
+clean-am: clean-affinitylibLTLIBRARIES clean-generic clean-libtool \
+	mostlyclean-am
 
-distclean: distclean-recursive
+distclean: distclean-am
+	-rm -rf ./$(DEPDIR)
 	-rm -f Makefile
-distclean-am: clean-am distclean-generic distclean-tags
+distclean-am: clean-am distclean-compile distclean-generic \
+	distclean-tags
 
-dvi: dvi-recursive
+dvi: dvi-am
 
 dvi-am:
 
-html: html-recursive
+html: html-am
 
-info: info-recursive
+info: info-am
 
 info-am:
 
-install-data-am:
+install-data-am: install-affinitylibLTLIBRARIES install-desktopDATA
 
-install-dvi: install-dvi-recursive
+install-dvi: install-dvi-am
 
 install-exec-am:
 
-install-html: install-html-recursive
+install-html: install-html-am
 
-install-info: install-info-recursive
+install-info: install-info-am
 
 install-man:
 
-install-pdf: install-pdf-recursive
+install-pdf: install-pdf-am
 
-install-ps: install-ps-recursive
+install-ps: install-ps-am
 
 installcheck-am:
 
-maintainer-clean: maintainer-clean-recursive
+maintainer-clean: maintainer-clean-am
+	-rm -rf ./$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
-mostlyclean: mostlyclean-recursive
+mostlyclean: mostlyclean-am
 
-mostlyclean-am: mostlyclean-generic mostlyclean-libtool
+mostlyclean-am: mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool
 
-pdf: pdf-recursive
+pdf: pdf-am
 
 pdf-am:
 
-ps: ps-recursive
+ps: ps-am
 
 ps-am:
 
-uninstall-am:
+uninstall-am: uninstall-affinitylibLTLIBRARIES uninstall-desktopDATA
 
-.MAKE: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) install-am \
-	install-strip
+.MAKE: install-am install-strip
 
-.PHONY: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) CTAGS GTAGS \
-	all all-am check check-am clean clean-generic clean-libtool \
-	ctags ctags-recursive distclean distclean-generic \
+.PHONY: CTAGS GTAGS all all-am check check-am clean \
+	clean-affinitylibLTLIBRARIES clean-generic clean-libtool ctags \
+	distclean distclean-compile distclean-generic \
 	distclean-libtool distclean-tags distdir dvi dvi-am html \
-	html-am info info-am install install-am install-data \
-	install-data-am install-dvi install-dvi-am install-exec \
-	install-exec-am install-html install-html-am install-info \
-	install-info-am install-man install-pdf install-pdf-am \
-	install-ps install-ps-am install-strip installcheck \
-	installcheck-am installdirs installdirs-am maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-generic \
-	mostlyclean-libtool pdf pdf-am ps ps-am tags tags-recursive \
-	uninstall uninstall-am
+	html-am info info-am install install-affinitylibLTLIBRARIES \
+	install-am install-data install-data-am install-desktopDATA \
+	install-dvi install-dvi-am install-exec install-exec-am \
+	install-html install-html-am install-info install-info-am \
+	install-man install-pdf install-pdf-am install-ps \
+	install-ps-am install-strip installcheck installcheck-am \
+	installdirs maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool pdf pdf-am ps ps-am tags uninstall \
+	uninstall-affinitylibLTLIBRARIES uninstall-am \
+	uninstall-desktopDATA
 
+@INTLTOOL_DESKTOP_RULE@
 
-snapshot:
-	$(MAKE) dist distdir=$(PACKAGE)-snap`date +"%Y%m%d"`
+$(desktop_DATA).in: $(desktop_DATA).in.in
+	sed -e "s|\@LIBDIR\@|$(libdir)|g" $< > $@
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

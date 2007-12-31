@@ -1,7 +1,0 @@
-[Desktop Entry]
-Type=C
-Encoding=UTF-8
-Name=Affinity Search
-Comment=Search your computer via Affinity
-Exec=@LIBDIR@/awn/applets/affinity/affinity.so
-Icon=search

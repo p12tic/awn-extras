@@ -1,5 +1,4 @@
 SUBDIRS =			\
-	affinity		\
 	arss			\
 	awnsystemmonitor	\
 	awnterm			\

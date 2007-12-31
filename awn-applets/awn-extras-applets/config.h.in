@@ -18,9 +18,6 @@
 /* Gettext package */
 #undef GETTEXT_PACKAGE
 
-/* Define to enable beagle support */
-#undef HAVE_BEAGLE
-
 /* Define to 1 if you have the `bind_textdomain_codeset' function. */
 #undef HAVE_BIND_TEXTDOMAIN_CODESET
 
@@ -63,9 +60,6 @@
 /* Define to 1 if you have the <sys/types.h> header file. */
 #undef HAVE_SYS_TYPES_H
 
-/* Define to enable tracker support */
-#undef HAVE_TRACKER
-
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
 
@@ -89,9 +83,6 @@
 
 /* Define to 1 if you have the ANSI C header files. */
 #undef STDC_HEADERS
-
-/* Use the APIs that originated in the desktop-agnostic branch of Awn. */
-#undef USE_AWN_DESKTOP_AGNOSTIC
 
 /* Version number of package */
 #undef VERSION

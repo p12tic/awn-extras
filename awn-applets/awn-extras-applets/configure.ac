@@ -34,28 +34,23 @@ slicelocaledir='${prefix}/${DATADIRNAME}/locale'
 AC_SUBST(slicelocaledir)
 
 PKG_CHECK_MODULES(DEPS, 
-                    gtk+-2.0
-                    awn
-                    gnome-vfs-2.0
-                    libgnome-2.0
-                    x11
-                    xproto
-                    gnome-desktop-2.0
-                    libwnck-1.0 
-                    libglade-2.0
-                    libgnome-menu 
-                    gnome-desktop-2.0
-                    librsvg-2.0
-                    libgtop-2.0
-                    glib-2.0
-    	            dbus-1
-    	            dbus-glib-1
-                    libsexy
-    	            gconf-2.0
-    	            gdk-2.0
-    		        gdk-pixbuf-2.0
-    	    	    libnotify
-        		    vte)
+                  gtk+-2.0
+                  awn
+                  libwnck-1.0 
+                  libglade-2.0
+                  libgnome-menu 
+                  gnome-desktop-2.0
+                  librsvg-2.0
+                  libgtop-2.0
+                  glib-2.0
+	          dbus-1
+	          dbus-glib-1
+                  libsexy
+	          gconf-2.0
+	          gdk-2.0
+		  gdk-pixbuf-2.0
+		  libnotify
+		  vte)
 AC_SUBST(DEPS_CFLAGS)
 AC_SUBST(DEPS_LIBS)
 AC_SUBST(GDK_CFLAGS)
@@ -121,57 +116,6 @@ dnl GConf
 dnl ==============================================
 AM_GCONF_SOURCE_2
 
-dnl ==========================================================================
-dnl search implementations
-dnl ==========================================================================
-m4_define(beagle_minver,               0.0.12)
-m4_define(tracker_minver,              0.0.1)
-
-AM_CONDITIONAL(HAVE_TRACKER, false)
-
-dnl libtracker checking
-
-AC_ARG_ENABLE(tracker, [  --disable-tracker     build without tracker support])
-msg_tracker=no
-if test "x$enable_tracker" != "xno"; then
-    PKG_CHECK_MODULES(TRACKER, tracker >= tracker_minver, [
-              AM_CONDITIONAL(HAVE_TRACKER, true)
-              AC_DEFINE(HAVE_TRACKER, 1, [Define to enable tracker support])
-              ]
-                          msg_tracker=yes,
-                  [AM_CONDITIONAL(HAVE_TRACKER, false)])
-        AC_SUBST(TRACKER_CFLAGS)
-    AC_SUBST(TRACKER_LIBS)
-fi
-
-dnl ==========================================================================
-
-
-AM_CONDITIONAL(HAVE_BEAGLE, false)
-
-dnl libbeagle checking
-
-AC_ARG_ENABLE(beagle, [  --disable-beagle     build without beagle support])
-msg_beagle=no
-if test "x$enable_beagle" != "xno"; then
-    PKG_CHECK_MODULES(BEAGLE, libbeagle-0.0 >= beagle_minver, [
-              AM_CONDITIONAL(HAVE_BEAGLE, true)
-              AC_DEFINE(HAVE_BEAGLE, 1, [Define to enable beagle support])
-              ]
-                          msg_beagle=yes,
-                  [AM_CONDITIONAL(HAVE_BEAGLE, false)])
-        AC_SUBST(BEAGLE_CFLAGS)
-    AC_SUBST(BEAGLE_LIBS)
-fi
-
-dnl ==========================================================================
-echo "
-affinity-$VERSION:
-    tracker support:    $msg_tracker
-    beagle support:     $msg_beagle
-"
-
-
 dnl Please keep in alpha order
 
 dnl ==============================================
@@ -181,16 +125,6 @@ AM_GCONF_SOURCE_2
 AC_OUTPUT([
 Makefile
 src/Makefile
-src/affinity/Makefile
-src/affinity/affinity-preferences/Makefile
-src/affinity/data/Makefile
-src/affinity/data/16x16/Makefile
-src/affinity/data/22x22/Makefile
-src/affinity/data/24x24/Makefile
-src/affinity/data/48x48/Makefile
-src/affinity/data/scalable/Makefile
-src/affinity/data/actions/Makefile
-src/affinity/po/Makefile
 src/arss/Makefile
 src/arss/Core/Makefile
 src/awn-meebo/Makefile
@@ -279,5 +213,5 @@ src/weather/locale/pt/Makefile
 src/weather/locale/pt/LC_MESSAGES/Makefile
 src/wobblyzini/Makefile
 src/wobblyzini/icons/Makefile
-po/Makefile
+po/Makefile.in
 ])

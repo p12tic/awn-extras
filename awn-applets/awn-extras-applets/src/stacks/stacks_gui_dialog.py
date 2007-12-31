@@ -203,22 +203,23 @@ class StacksGuiDialog:
         image.set_size_request(icon_size, icon_size)
         vbox.pack_start(image, False, False, 0)
         # label
-        label = gtk.Label()
+        label = gtk.Label(lbl_text)
         label.set_justify(gtk.JUSTIFY_CENTER)
+        label.set_line_wrap(True)
+        # pango layout
         layout = label.get_layout()
-        layout.set_single_paragraph_mode(False)
-        layout.set_alignment(pango.ALIGN_CENTER)
+        lw, lh = layout.get_size()
         layout.set_width(int(1.5 * icon_size) * pango.SCALE)
         layout.set_wrap(pango.WRAP_WORD_CHAR)
-        layout.set_text(lbl_text)
+        layout.set_alignment(pango.ALIGN_CENTER)
+        _lbltxt = label.get_text()
         lbltxt = ""
         for i in range(layout.get_line_count()):
             length = layout.get_line(i).length
-            lbltxt += str(lbl_text[0:length]) + '\n'
-            lbl_text = lbl_text[length:]
-            if i == 1: break
+            lbltxt += str(_lbltxt[0:length]) + '\n'
+            _lbltxt = _lbltxt[length:]
         label.set_text(lbltxt)
-        label.set_size_request(-1, -1)
+        label.set_size_request(-1, lh*2/pango.SCALE)
         # add to vbox
         vbox.pack_start(label, True, True, 0)
         vbox.set_size_request(int(1.5 * icon_size), -1)

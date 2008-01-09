@@ -264,9 +264,10 @@ class StacksGuiCurved(gtk.Window):
         
 
                                 
-        #self.connect('screen-changed',
 
-        self.connect('focus-out-event', self._stacks_gui_hide_cb)
+        #self.connect('focus-out-event', self._stacks_gui_hide_cb)
+        
+        self.connect('focus-out-event', self.dialog_focus_out)
         self.connect('expose-event', self.draw_dialog)
         self.connect('leave-notify-event', self.focus_out)
         
@@ -603,7 +604,8 @@ class StacksGuiCurved(gtk.Window):
 
     def dialog_focus_out(self, widget, event):
         if self.context_menu_visible or self.tooltip_visible : return
-        self._stacks_gui_hide_cb(widget)
+        if self.config['close_on_focusout']:
+        	self._stacks_gui_hide_cb(widget)
         
     def reposition(self, w, h):
         # borrowed from awn-applet-dialog.c: awn_applet_dialog_position_reset

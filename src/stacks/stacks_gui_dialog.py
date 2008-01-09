@@ -236,7 +236,8 @@ class StacksGuiDialog:
 
     def dialog_focus_out(self, widget, event):
         if self.context_menu_visible: return
-        self._stacks_gui_hide_cb(widget)
+        if self.config['close_on_focusout']:
+        	self._stacks_gui_hide_cb(widget)
 
     def dialog_show_new(self, page=0):
         assert page >= 0

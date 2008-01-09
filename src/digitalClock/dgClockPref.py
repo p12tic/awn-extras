@@ -6,10 +6,14 @@ import gconf
 import time
 import subprocess
 
+def _to_full_path(path):
+    head, tail = os.path.split(__file__)
+    return os.path.join(head, path)
+
 class dgClockPref:
 
   #glade path
-  glade_path = os.path.join(os.path.expanduser('~'), ".config/awn/applets/digitalClock/pref.glade")
+  glade_path = _to_full_path("pref.glade")
 
   #gconf path
   gconf_path        = "/apps/avant-window-navigator/applets/digitalClock"

@@ -2,7 +2,8 @@ INCLUDES =							\
 	-I$(srcdir)						\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"		\
 	$(DISABLE_DEPRECATED_CFLAGS)				\
-	$(DEPS_CFLAGS)					\
+	$(AWN_CFLAGS)					\
+	$(RSVG_CFLAGS)					\
 	-DPREFIX=\"$(prefix)\"					\
 	-DSYSCONFDIR=\"$(sysconfdir)\"				\
 	-DDATADIR=\"$(datadir)\"				\
@@ -15,14 +16,10 @@ CLOCK_SOURCES =                              \
 	utils.c					\
 	utils.h
 
-CLOCK_LDADD =                        \
-        $(DEPS_LIBS)
-        
-
 clocklibdir = $(libdir)/awn/applets/clock
 clocklib_LTLIBRARIES = clock.la
 clock_la_SOURCES = $(CLOCK_SOURCES)
-clock_la_LIBADD = $(CLOCK_LDADD)
+clock_la_LIBADD = $(AWN_LIBS) $(RSVG_LIBS)
 clock_la_LDFLAGS = -module -avoid-version 
 clock_la_CFLAGS =
 

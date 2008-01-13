@@ -1,0 +1,25 @@
+# vim: set ft=automake :
+
+APPLET_SCHEMA = $(APPLET_NAME).schema-ini
+
+if GCONF_SCHEMAS
+schemasdir   = @GCONF_SCHEMA_FILE_DIR@
+schemas_FILE = $(APPLET_NAME).schemas
+schemas_in_files = $(schemas_FILE).in
+schemas_DATA = $(schemas_in_files:.schemas.in=.schemas)
+
+if DESKTOP_AGNOSTIC
+$(schemas_FILE).in: $(APPLET_SCHEMA)
+	awn-schema-to-gconf $< $@ "$(APPLET_NAME)"
+endif
+
+@INTLTOOL_SCHEMAS_RULE@
+
+if GCONF_SCHEMAS_INSTALL
+install-data-local: $(schemas_DATA)
+	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(schemas_DATA)
+endif
+else
+schemasdir = $(datadir)/avant-window-navigator/schemas
+schemas_DATA = $(APPLET_SCHEMA)
+endif

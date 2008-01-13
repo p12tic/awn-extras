@@ -2,7 +2,8 @@ INCLUDES =							\
 	-I$(srcdir)						\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"		\
 	$(DISABLE_DEPRECATED_CFLAGS)				\
-	$(DEPS_CFLAGS)					\
+	$(AWN_CFLAGS)					\
+	$(FILEBROWSER_CFLAGS)			\
 	-DPREFIX=\"$(prefix)\"					\
 	-DSYSCONFDIR=\"$(sysconfdir)\"				\
 	-DDATADIR=\"$(datadir)\"				\
@@ -24,8 +25,8 @@ FILEBROWSER_SOURCES =                              \
 	filebrowser-utils.h
 
 FILEBROWSER_LDADD =                        \
-        $(DEPS_LIBS)			        \
-        $(AWN_LIBS)
+        $(AWN_LIBS)							\
+		$(FILEBROWSER_LIBS)
 
 filebrowserlibdir = $(libdir)/awn/applets/filebrowser/
 filebrowserlib_LTLIBRARIES = filebrowser.la

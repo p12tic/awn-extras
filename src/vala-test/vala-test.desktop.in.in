@@ -1,0 +1,6 @@
+[Desktop Entry]
+X-AWNApplet-Type=Vala
+Name=Test Vala Applet
+Comment=A simple applet written in Vala.
+Exec=@LIBDIR@/awn/applets/vala-test/vala-test.so
+Icon=binary

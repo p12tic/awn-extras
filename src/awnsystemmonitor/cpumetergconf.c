@@ -20,14 +20,20 @@
  * Boston, MA 02111-1307, USA.
  */
 #include <string.h>
-#include <gconf/gconf-client.h>
+#include <glib/gmacros.h>
+#include <glib/gerror.h>
+#include <gconf/gconf-value.h> 
+
 #include <libawn/awn-applet.h>
-#include <libawn/awn-applet-gconf.h>
+#include <glib/gmacros.h>
+#include <glib/gerror.h>
+#include <gconf/gconf-value.h> 
+
 #include <libawn/awn-cairo-utils.h>
 
 #include "awnsystemmonitor.h"
 #include "config.h"
-
+#include "gconf-config.h"
 void cpumeter_gconf_event(GConfClient* client, guint cxnid, GConfEntry* entry, gpointer user_data);
 void cpumeter_gconf_get_color(GConfClient* client, AwnColor* color, gchar* key, gchar* def);
 gfloat cpumeter_gconf_get_border_width(GConfClient* client);

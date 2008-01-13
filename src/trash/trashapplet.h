@@ -23,7 +23,10 @@
 #define __TRASH_APPLET_H__
 
 #include <libawn/awn-applet.h>
-#include <libawn/awn-applet-gconf.h>
+#include <glib/gmacros.h>
+#include <glib/gerror.h>
+#include <gconf/gconf-value.h> 
+
 #include <libawn/awn-title.h>
 #include <libawn/awn-effects.h>
 #include <gnome.h>

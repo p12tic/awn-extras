@@ -436,8 +436,8 @@ class App(awn.AppletSimple):
 		hours = time.localtime()[3]
 		minutes = time.localtime()[4]
 		seconds = time.localtime()[5]
-		if self.twelve_hour_clock == True:
-			hours = hours - 12 if hours > 12 else hours
+		if self.twelve_hour_clock == True and hours > 12:
+			hours = hours - 12
 		# For twelve-hour clocks, don't draw the leading zeros.
 		if self.twelve_hour_clock == False or hours > 9:
 			led.draw(hours/10, context, xpos, ypos, xpos+width, ypos+height)

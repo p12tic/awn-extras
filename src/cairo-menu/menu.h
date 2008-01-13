@@ -45,12 +45,11 @@ typedef struct
 typedef struct
 {
 
-	AwnApplet 	*applet;
-    GSList		*menu_data;
+	AwnApplet 			*applet;
+    GSList				*menu_data;
         
     Win_man				*window_manage;
 	Cairo_menu_config 	cairo_menu_config;
-    
 }Cairo_main_menu;
 
 

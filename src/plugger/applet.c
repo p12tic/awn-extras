@@ -21,7 +21,7 @@
 #include <gconf/gconf-client.h>
 #include <libawn/awn-applet.h>
 #include <libawn/awn-plug.h>
-#include <libgnome/libgnome.h>
+//#include <libgnome/libgnome.h>
 #include <libgnomevfs/gnome-vfs.h>
 
 #define GKEY_BACKEND "backend"

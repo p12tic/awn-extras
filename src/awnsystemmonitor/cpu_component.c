@@ -18,7 +18,10 @@
  */
 
 #include <libawn/awn-applet.h>
-#include <libawn/awn-applet-gconf.h>
+#include <glib/gmacros.h>
+#include <glib/gerror.h>
+#include <gconf/gconf-value.h> 
+
 #include <libawn/awn-applet-dialog.h>
 #include <libawn/awn-applet-simple.h>
 #include <glib.h>
@@ -40,7 +43,7 @@
 #include "dashboard_util.h"
 #include "dashboard.h"
 #include "config.h"
-
+#include "gconf-config.h"
 #define GCONF_CPU_REFRESH GCONF_PATH  "/component_cpu_refresh_rate"
 #define GCONF_CPU_METER GCONF_PATH  "/component_cpu_shiny_meter"
 #define GCONF_CPU_SIZE_MULT GCONF_PATH  "/component_cpu_scale"

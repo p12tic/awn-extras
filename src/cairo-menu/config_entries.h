@@ -94,6 +94,7 @@ typedef struct
 
 void read_config(void);
 void show_prefs(void);
+void append_to_launchers(gchar * launcher);
 
 #endif
 

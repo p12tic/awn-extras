@@ -148,7 +148,7 @@ class Exaile:
     def button_previous_press (self):
         self.player.prev_track()
     def button_pp_press (self):
-        self.player.play ()
+        self.player.play_pause()
     def button_next_press (self):
         self.player.next_track()
 class Banshee:

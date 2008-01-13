@@ -26,8 +26,11 @@
 
 #include <gtk/gtk.h>
 #include <libawn/awn-applet.h>
-#include <libawn/awn-applet-gconf.h>
-#include <libgnome/libgnome.h>
+#include <glib/gmacros.h>
+#include <glib/gerror.h>
+#include <gconf/gconf-value.h> 
+
+//#include <libgnome/libgnome.h>
 
 #define PAGER_ROWS 2
 #define BAR_HEIGHT 100

@@ -42,7 +42,7 @@
 #include "loadavg_component.h"
 #include "sysmem_component.h"
 #include "config.h"
-//#include "gconf-config.h"
+#include "gconf-config.h"
 
 //#undef NDEBUG
 #include <assert.h>

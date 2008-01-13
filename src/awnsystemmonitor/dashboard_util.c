@@ -1,23 +1,29 @@
 /*
  * Copyright (c) 2007 Rodney Cryderman <rcryderman@gmail.com>
- *                   Copyright (C) 2004, 2005 Jody Goldberg (jody@gnome.org)
- *                       ->cairo -> pixbuf conversion function
+ 
+ * Parts Copyright (C) 2004, 2005 Jody Goldberg (jody@gnome.org)
+ *       ->cairo -> pixbuf conversion function 
  *
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
+ * Original code from abiword (http://www.abisource.com/)  go-image.c
+ * Function name:  static void pixbuf_to_cairo (GOImage *image);
+ * Copyright (C) 2004, 2005 Jody Goldberg (jody@gnome.org)
+ *   void surface_2_pixbuf( GdkPixbuf * pixbuf, cairo_surface_t * surface) 
  *
- * This library is distributed in the hope that it will be useful,
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of version 2 of the GNU General Public
+ * License as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301
+ * USA
  */
  
 
@@ -25,7 +31,8 @@
 #include <gdk/gdk.h>
 #include <glib.h>
 #include <stdlib.h>
-
+#include <math.h>
+#include "gconf-config.h"
 //#undef NDEBUG
 #include <assert.h>
 
@@ -47,6 +54,37 @@ static gboolean suppress_hide=FALSE;
 
 static void  _colour_change(GtkColorSelection *colorselection,gpointer p);
 static gboolean _cancel_colour_change(GtkWidget *widget, GdkEventButton *event, gpointer *p);
+
+
+void draw_pie_graph(cairo_t *cr, double x,double y, double radius, double start, double * values, AwnColor * colours,int numel)
+{
+	int i;
+	double end;
+	cairo_set_line_width (cr, 1);
+#if 0
+	cairo_set_source_rgba (cr, 1, 0.2, 0.2, 0.6);
+	cairo_move_to(cr,x,y);
+	cairo_arc (cr, x, y, radius, start, 2*M_PI* ( (100-90.0)/100) );
+	cairo_line_to (cr, x, y);
+	cairo_close_path(cr);
+//	cairo_stroke (cr);	
+	
+	cairo_fill (cr);
+#endif	
+	
+	for (i=0;i<numel;i++)
+	{
+		cairo_set_source_rgba (cr, colours[i].red,colours[i].green, colours[i].blue, colours[i].alpha);
+		cairo_move_to(cr,x,y);
+		end=start+ 2*M_PI* ( values[i]/100);
+		cairo_arc (cr, x, y, radius, start, end );				
+		start=end;
+		cairo_line_to (cr, x, y);
+		cairo_close_path(cr);
+		cairo_fill(cr);		
+	}
+
+}
 
 
 /* Function to open a dialog box displaying the message provided. 

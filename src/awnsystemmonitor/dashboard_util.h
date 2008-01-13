@@ -54,6 +54,8 @@ typedef struct
 
 }dashboard_cairo_widget;
 
+void draw_pie_graph(cairo_t *cr,double x,double y, double radius, double start, double * values, AwnColor * colours,int numel);
+
 void pick_awn_color(AwnColor * awncolour,const char *mess,void * arb_data, void (*notify_color_change)(void *));
     
 void set_dashboard_gconf(GConfClient* p);

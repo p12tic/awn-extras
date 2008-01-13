@@ -20,7 +20,7 @@
 #include <libawn/awn-applet-simple.h>
 
 #include "config.h"
-
+#include "gconf-config.h"
 #include "awnsystemmonitor.h"
 
 AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Python
+X-AWN-AppletType=Python
+Name=File Browser Launcher
+Comment=A customizable launcher for browsing your files.
+Exec=@LIBDIR@/awn/applets/file-browser-launcher/file-browser-launcher.py
+Icon=folder
+X-Ubuntu-Gettext-Domain=awn-extras-applets

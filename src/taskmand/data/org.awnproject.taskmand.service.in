@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=org.awnproject.taskmand
+Exec=@bindir@/taskmand
+

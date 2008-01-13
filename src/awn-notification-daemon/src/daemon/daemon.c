@@ -1420,7 +1420,7 @@ AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
 	g_log_set_always_fatal(G_LOG_LEVEL_ERROR | G_LOG_LEVEL_CRITICAL);
 
 	gconf_client = gconf_client_get_default();
-	gconf_client_add_dir(gconf_client, GCONF_KEY_DAEMON,
+	gconf_client_add_dir(gconf_client, "/apps",
 						 GCONF_CLIENT_PRELOAD_NONE, NULL);
 
 
@@ -1465,7 +1465,7 @@ AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
 	
 	read_config();	
   
-	gconf_client_add_dir(gconf_client,GCONF_AWN,GCONF_CLIENT_PRELOAD_NONE,NULL);	
+	gconf_client_add_dir(gconf_client,"/apps",GCONF_CLIENT_PRELOAD_NONE,NULL);	
 	gconf_client_notify_add(gconf_client, GCONF_AWN,
 							config_changed, daemon,
 							NULL, NULL);	

@@ -1,6 +1,9 @@
 
 #include <libawn/awn-applet.h>
-#include <libawn/awn-applet-gconf.h>
+#include <glib/gmacros.h>
+#include <glib/gerror.h>
+#include <gconf/gconf-value.h> 
+
 #include <libawn/awn-applet-dialog.h>
 #include <libawn/awn-applet-simple.h>
 #include <glib.h>
@@ -16,6 +19,7 @@
 #include "dashboard_util.h"
 #include "dashboard.h"
 #include "config.h"
+#include "gconf-config.h"
 
 //#undef NDEBUG
 #include <assert.h>
@@ -109,9 +113,9 @@ static GtkWidget* attach_right_click_menu(Uptime_plug_data **p)
     GtkWidget *menu = gtk_menu_new ();
          
     dashboard_build_clickable_menu_item(menu, G_CALLBACK(_set_fg),
-                                            "Non GTK Foreground",plug_data);        
+                                            "Foreground",plug_data);        
     dashboard_build_clickable_menu_item(menu, G_CALLBACK(_set_bg),
-                                            "Non GTK Background",plug_data);                        
+                                            "Background",plug_data);                        
     dashboard_build_clickable_check_menu_item(menu,G_CALLBACK(_toggle_show_seconds),
               "Show Seconds",plug_data,plug_data->show_seconds); 
     gtk_widget_show_all(menu);                         

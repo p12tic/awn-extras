@@ -1,1 +1,2 @@
-SUBDIRS = Default
+SUBDIRS = Tango 	\
+	Reserved

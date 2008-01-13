@@ -18,3 +18,4 @@ dist_lastfm_DATA = 			\
 		white.ico		
 
 lastfmdir = $(libdir)/awn/applets/lastfm/icons
+

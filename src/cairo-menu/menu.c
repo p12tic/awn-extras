@@ -33,7 +33,6 @@
 
 
 extern gboolean 	G_repression;
-
 extern GtkWidget	*	G_toplevel;
 extern AwnApplet *G_applet;
 extern int G_max_width;
@@ -44,6 +43,8 @@ gboolean 	G_focus=FALSE;
 gboolean 	G_entered=FALSE;
 guint32		G_last_motion=0;
 guint32		G_focus_out_time=0;
+
+
 
 void init_win_man(void)
 {
@@ -84,11 +85,14 @@ void pos_dialog(GtkWidget * window)
 
 void hide_all_menus(void)
 {    
-    gtk_widget_hide(G_toplevel->parent->parent);
-	_hide_all_windows(NULL);
-	G_repression=FALSE;	
-	G_focus=FALSE;
-	G_entered=FALSE;
+	if (!G_repression)
+	{
+		gtk_widget_hide(G_toplevel->parent->parent);
+		_hide_all_windows(NULL);
+//		G_repression=FALSE;	
+		G_focus=FALSE;
+		G_entered=FALSE;
+	}		
 }	
 
 
@@ -262,7 +266,8 @@ Cairo_main_menu * dialog_new(AwnApplet *applet)
 	gtk_widget_set_size_request(G_toplevel->parent,-1,-1);	
 	g_slist_foreach(menu->menu_data,measure_width,&G_max_width);	
 	g_slist_foreach(menu->menu_data,render_menu_widgets,G_toplevel);	
-	g_signal_connect (G_OBJECT (G_toplevel->parent->parent), "map",G_CALLBACK (_map_window), menu);					
+	g_signal_connect (G_OBJECT (G_toplevel->parent->parent), "map",G_CALLBACK (_map_window), menu);			
+
 	return menu;
 }
 

@@ -29,6 +29,7 @@ Architecture: any
 Depends: ${shlibs:Depends}, ${python:Depends}
 Recommends: 	avant-window-navigator-testing, 
 		python-awn-testing, 
+		vala-awn-testing,
 		cairo-clock, 
 		python-alsaaudio, 
 		python-libgmail, 

@@ -77,9 +77,6 @@ class App (awn.AppletSimple):
         self.connect                          ("leave-notify-event", self.leave_notify)
         self.dialog.connect                   ("focus-out-event", self.dialog_focus_out)
 
-        #Scroll Connect
-        self.connect                          ("scroll-event", self.scroll_wheel)
-        
         # Button Connects
         button_previous.connect               ("clicked", self.button_previous_press)
         button_play.connect                   ("clicked", self.button_pp_press)
@@ -88,14 +85,9 @@ class App (awn.AppletSimple):
     # Applet standard methods    
     #############
     def button_press                          (self, widget, event):
-        if event.button == 1 or event.button == 3 :
-            # left click or right click
-            self.labeler                          ()
-            self.dialog.show_all                  ()
-            self.title.hide                       (self)
-        elif event.button == 2:
-            # middle button
-            self.button_pp_press(widget)
+        self.labeler                          ()
+        self.dialog.show_all                  ()
+        self.title.hide                       (self)
     def dialog_focus_out                      (self, widget, event):
         self.dialog.hide                      ()
     def enter_notify                          (self, widget, event):
@@ -103,12 +95,6 @@ class App (awn.AppletSimple):
         self.title.show                       (self, self.resultToolTip)
     def leave_notify                          (self, widget, event):
         self.title.hide                       (self)
-    # Turning the mouse wheel up/down should change current song.
-    def scroll_wheel (self, widget, event):
-        if event.direction == gtk.gdk.SCROLL_UP:
-            self.button_next_press(widget)
-        elif event.direction == gtk.gdk.SCROLL_DOWN:
-            self.button_previous_press(widget)
     #############
     # Gconf
     ############# 

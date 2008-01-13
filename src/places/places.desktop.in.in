@@ -1,0 +1,6 @@
+[Desktop Entry]
+X-AWN-AppletType=C
+Name=Places
+Comment=Places Applet.
+Exec=@LIBDIR@/awn/applets/places/places.so
+Icon=stock_folder

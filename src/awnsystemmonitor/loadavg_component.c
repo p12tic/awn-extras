@@ -19,7 +19,10 @@
 
 #include <glibtop/loadavg.h>
 #include <libawn/awn-applet.h>
-#include <libawn/awn-applet-gconf.h>
+#include <glib/gmacros.h>
+#include <glib/gerror.h>
+#include <gconf/gconf-value.h> 
+
 #include <libawn/awn-applet-dialog.h>
 #include <libawn/awn-applet-simple.h>
 #include <glib.h>
@@ -32,7 +35,7 @@
 #include "dashboard_util.h"
 #include "dashboard.h"
 #include "config.h"
-
+#include "gconf-config.h"
 //#undef NDEBUG
 #include <assert.h>
 

@@ -22,7 +22,11 @@
  
  */
 #include <libawn/awn-cairo-utils.h>
-#include <libawn/awn-applet-gconf.h>
+#include <glib/gmacros.h>
+#include <glib/gerror.h>
+#include <gconf/gconf-value.h> 
+
+//#include <awn-applet.h>
 #include "config_entries.h"
 #include <gconf/gconf-client.h>
 #include <glib.h>
@@ -40,6 +44,20 @@ static Cairo_menu_config G_cairo_menu_conf_copy;
 static GConfClient *gconf_client;
 
 extern AwnApplet *G_applet;
+
+void append_to_launchers(gchar * launcher)
+{
+	GSList* launcher_list=gconf_client_get_list(gconf_client,"/apps/avant-window-navigator/window_manager/launchers",
+                                                          GCONF_VALUE_STRING,NULL);	
+	if(launcher_list)
+	{
+		launcher_list=g_slist_append(launcher_list,launcher);	
+		gconf_client_set_list(gconf_client,"/apps/avant-window-navigator/window_manager/launchers",
+                                                GCONF_VALUE_STRING,launcher_list,NULL);	
+	}
+	                                        
+
+}
 
 void read_config(void)
 {

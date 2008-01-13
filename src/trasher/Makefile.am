@@ -2,18 +2,21 @@ INCLUDES =							\
 	-I$(srcdir)						\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"		\
 	$(DISABLE_DEPRECATED_CFLAGS)				\
-	$(DEPS_CFLAGS)				\
+	$(AWN_CFLAGS)				\
+	$(GNOME_CFLAGS)				\
+	$(GNOME_VFS_CFLAGS)			\
 	-DPREFIX=\"$(prefix)\"					\
 	-DSYSCONFDIR=\"$(sysconfdir)\"				\
 	-DDATADIR=\"$(datadir)\"				\
-	-DLIBDIR=\"$(libdir)\"                                  
+	-DLIBDIR=\"$(libdir)\"                                   
 
 TRASHER_SOURCES =                              \
 	applet.c
 
 TRASHER_LDADD =                        \
-        $(DEPS_LIBS)			        
-        
+	$(AWN_LIBS)					\
+	$(GNOME_LIBS)				\
+	$(GNOME_VFS_LIBS)
 
 trasherlibdir = $(libdir)/awn/applets/trasher
 trasherlib_LTLIBRARIES = trasher.la

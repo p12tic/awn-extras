@@ -1,8 +1,8 @@
 SUBDIRS = Themes
 
 dist_gmail_DATA = 				\
-		gmail.py 			\
-		libgmail.py
+		gmail.py	 			\
+		AWN.py
 
 gmaildir = $(libdir)/awn/applets/gmail
 

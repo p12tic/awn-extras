@@ -2,7 +2,9 @@ INCLUDES =							\
 	-I$(srcdir)						\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"		\
 	$(DISABLE_DEPRECATED_CFLAGS)				\
-	$(DEPS_CFLAGS)					\
+	$(AWN_CFLAGS)					\
+	$(GNOMEUI_CFLAGS)				\
+	$(LIBGLADE_CFLAGS)				\
 	-DPREFIX=\"$(prefix)\"					\
 	-DSYSCONFDIR=\"$(sysconfdir)\"				\
 	-DDATADIR=\"$(datadir)\"				\
@@ -19,8 +21,9 @@ TRASH_SOURCES =                              \
 	xstuff.h
 
 TRASH_LDADD =                        \
-        $(DEPS_LIBS)		       \
-        $(AWN_LIBS)		        
+	$(AWN_LIBS)						\
+	$(GNOMEUI_LIBS)					\
+	$(LIBGLADE_LIBS)
         
 
 trashlibdir = $(libdir)/awn/applets/trash

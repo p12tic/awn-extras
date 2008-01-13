@@ -1,0 +1,163 @@
+%%
+headers
+/*
+ * Copyright (c) 2008 Mark Lee <avant-wn@lazymalevolence.com>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+*/
+#include <pycairo.h>
+#include <pygobject.h>
+#include <libawn/awn-cairo-utils.h>
+#include <gdk/gdkcolor.h>
+#include "awn-extras.h"
+
+static Pycairo_CAPI_t *Pycairo_CAPI;
+%%
+modulename _extras
+%%
+import gtk.gdk.Color as PyGdkColor_Type
+%%
+override get_pixbuf_from_surface kwargs
+static PyObject *
+_wrap_get_pixbuf_from_surface (PyObject *self, PyObject *args, PyObject *kwargs)
+{
+    static char *kwlist[] = { "surface", NULL };
+
+    PyObject *py_surface;
+    GdkPixbuf *pixbuf;
+
+    if (!PyArg_ParseTupleAndKeywords (args, kwargs, "O:Surface.to_pixbuf", kwlist, &py_surface)) {
+        return NULL;
+    }
+
+    if (!PyObject_TypeCheck (py_surface, &PycairoSurface_Type)) {
+        PyErr_SetString (PyExc_TypeError, "Argument must be a cairo surface");
+        return NULL;
+    }
+
+    pixbuf = get_pixbuf_from_surface (((PycairoSurface*)py_surface)->surface);
+    return pygobject_new (G_OBJECT (pixbuf));
+}
+%%
+override awncolor_to_string kwargs
+static PyObject *
+_wrap_awncolor_to_string (PyObject *self, PyObject *args, PyObject *kwargs)
+{
+#define COLOR_DICT_ERR PyErr_SetString (PyExc_TypeError, dict_err); return NULL
+
+    static char *kwlist[] = { "color", NULL };
+
+    PyObject *py_color;
+    AwnColor *color = g_malloc (sizeof (AwnColor));
+    PyObject *result;
+    char *dict_err = "Argument must be an RGBA color dictionary";
+
+    if (!PyArg_ParseTupleAndKeywords (args, kwargs, "O:dict_to_rgba_string", kwlist, &py_color)) {
+        return NULL;
+    }
+
+    if (!PyDict_Check (py_color)) {
+        COLOR_DICT_ERR;
+    }
+
+    if (!PyDict_Contains (py_color, PyString_FromString("red"))) {
+        COLOR_DICT_ERR;
+    }
+    color->red = PyFloat_AsDouble (PyDict_GetItemString (py_color, "red"));
+
+    if (!PyDict_Contains (py_color, PyString_FromString("green"))) {
+        COLOR_DICT_ERR;
+    }
+    color->green = PyFloat_AsDouble (PyDict_GetItemString (py_color, "green"));
+
+    if (!PyDict_Contains (py_color, PyString_FromString("blue"))) {
+        COLOR_DICT_ERR;
+    }
+    color->blue = PyFloat_AsDouble (PyDict_GetItemString (py_color, "blue"));
+
+    if (!PyDict_Contains (py_color, PyString_FromString("alpha"))) {
+        COLOR_DICT_ERR;
+    }
+    color->alpha = PyFloat_AsDouble (PyDict_GetItemString (py_color, "alpha"));
+
+    result = PyString_FromString (awncolor_to_string (color));
+    g_free (color);
+
+    return result;
+}
+%%
+override gdkcolor_to_awncolor kwargs
+static PyObject *
+_wrap_gdkcolor_to_awncolor (PyObject *self, PyObject *args, PyObject *kwargs)
+{
+    static char *kwlist[] = { "color", "alpha", NULL };
+
+    PyObject *py_color;
+    GdkColor *gcolor;
+    double *alpha = NULL;
+    AwnColor color;
+    PyObject *color_dict;
+
+    if (!PyArg_ParseTupleAndKeywords (args, kwargs, "O|d:Color.to_dict", kwlist, &py_color, alpha)) {
+        return NULL;
+    }
+
+    if (!PyObject_TypeCheck (py_color, &PyGdkColor_Type)) {
+        PyErr_SetString (PyExc_TypeError, "First argument must be a gdk.Color");
+        return NULL;
+    }
+
+    gcolor = (GdkColor*)pygobject_get (py_color);
+
+    if (alpha) {
+        color = gdkcolor_to_awncolor_with_alpha (gcolor, *alpha);
+    } else {
+        color = gdkcolor_to_awncolor (gcolor);
+    }
+
+    color_dict = PyDict_New ();
+    PyDict_SetItemString (color_dict, "red", PyFloat_FromDouble (color.red));
+    PyDict_SetItemString (color_dict, "green", PyFloat_FromDouble (color.green));
+    PyDict_SetItemString (color_dict, "blue", PyFloat_FromDouble (color.blue));
+    PyDict_SetItemString (color_dict, "alpha", PyFloat_FromDouble (color.alpha));
+
+    return color_dict;
+}
+%%
+override notify_message kwargs
+static PyObject *
+_wrap_notify_message (PyObject *self, PyObject *args, PyObject *kwargs)
+{
+    static char *kwlist[] = { "summary", "body", "icon", "timeout", "async", NULL };
+
+    gchar *summary;
+    gchar *body;
+    gchar *icon;
+    glong timeout;
+    gboolean async;
+
+    if (!PyArg_ParseTupleAndKeywords (args, kwargs, "ssslb:notify_message", kwlist, &summary, &body, &icon, &timeout, &async)) {
+        return NULL;
+    }
+
+    if (async) {
+        notify_message_async (summary, body, icon, timeout);
+        Py_INCREF(Py_None);
+        return Py_None;
+    } else {
+        return PyBool_FromLong (notify_message (summary, body, icon, timeout));
+    }
+}

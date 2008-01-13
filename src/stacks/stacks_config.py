@@ -190,10 +190,7 @@ class StacksConfig(GladeWindow):
         else:
             # get browsing
             self.widgets['browse_enabled'].set_active(config['browsing'])
-
-        # get close_on_focusout
-        self.widgets['close_on_focusout_enabled'].set_active(config['close_on_focusout'])
-       
+            
 
     def on_backendselect_button_clicked(self, *args):
         filesel = gtk.FileChooserDialog(
@@ -323,10 +320,6 @@ class StacksConfig(GladeWindow):
         self.applet.gconf_client.set_bool(
                 self.applet.gconf_path + "/browsing",
                 self.widgets['browse_enabled'].get_active())
-        # set close_on_focusout
-        self.applet.gconf_client.set_bool(
-                self.applet.gconf_path + "/close_on_focusout",
-                self.widgets['close_on_focusout_enabled'].get_active())
         # set icons
         self.applet.gconf_client.set_string(
                 self.applet.gconf_path + "/applet_icon_empty",
@@ -419,9 +412,6 @@ def get_config_from_gconf(gconf_client, gconf_path, uid):
     else:
         config['browsing'] = False
 
-    config['close_on_focusout'] = loadBool(gconf_client, gconf_path + "/close_on_focusout", True)
-
-
     # get icons
     _config_icon_empty = gconf_client.get_string(
             gconf_path + "/applet_icon_empty")
@@ -450,17 +440,3 @@ def get_config_from_gconf(gconf_client, gconf_path, uid):
 
     
     return config
-
-
-#
-# Load a boolean from gconf
-#
-def loadBool(client, key, default):
-	if client.get( key ):
-		v = client.get_bool( key )
-		if v == None:
-			return default
-		else:
-			return v
-	else:
-		return default

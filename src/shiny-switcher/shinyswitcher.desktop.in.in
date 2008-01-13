@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Awn-Applet
+X-AWN-AppletType=C
+Name=Shiny Switcher
+Comment=A Desktop Switcher
+Exec=@LIBDIR@/awn/applets/shinyswitcher/shinyswitcher.so
+Icon=gnome-panel-workspace-switcher

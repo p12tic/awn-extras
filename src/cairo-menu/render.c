@@ -27,7 +27,6 @@
 #include "menu_list_item.h"
 #include "render.h"
 
-
 extern Cairo_menu_config G_cairo_menu_conf;
 
 extern AwnApplet *G_applet;
@@ -682,16 +681,46 @@ gboolean hide_menu_on_a_timer(GtkWidget * widget)
 	return FALSE;
 }
 
+//FIXME the following needs to be placed into the gnome backend.
+
+static gboolean _add_to_bar(GtkWidget *widget,GdkEventButton *event,Menu_list_item * menu_item) 
+{
+	append_to_launchers(menu_item->desktop);
+	G_repression=FALSE;
+	hide_all_menus();		
+	return TRUE;
+}
+
+
 static gboolean _button_do_event(GtkWidget *widget,GdkEventButton *event,Menu_list_item * menu_item) 
 {
 	GError *err=NULL;
-	G_repression=TRUE;
-	hide_all_menus();	
-	printf("spawn=%s\n",menu_item->exec);
-	g_spawn_command_line_async(menu_item->exec,&err);
-	hide_all_menus();
-	g_timeout_add(250,hide_menu_on_a_timer,widget->parent->parent);		
-//	gtk_widget_hide(G_Fixed->parent);
+
+	if (event->button == 1)
+    {
+		G_repression=FALSE;
+		hide_all_menus();	
+		printf("spawn=%s\n",menu_item->exec);
+		g_spawn_command_line_async(menu_item->exec,&err);
+		hide_all_menus();
+		g_timeout_add(250,hide_menu_on_a_timer,widget->parent->parent);	
+	}		
+	else if (event->button == 3)
+	{
+		static GtkWidget 	*G_right_menu=NULL;	
+		GtkWidget	*item;
+		if (G_right_menu)
+			gtk_widget_destroy(G_right_menu);
+		G_right_menu=gtk_menu_new ();
+		item=gtk_menu_item_new_with_label("Add to Bar");
+		gtk_widget_show(item);
+		gtk_menu_shell_append(G_right_menu,item);		
+		g_signal_connect (G_OBJECT (item), "button-press-event",G_CALLBACK (_add_to_bar), menu_item);		
+		G_repression=TRUE;	
+		gtk_menu_popup (G_right_menu, NULL, NULL, NULL, NULL, 
+			  event->button, event->time);
+
+	}
 	return TRUE;
 }    
 
@@ -1018,8 +1047,7 @@ void render_menu_widgets(Menu_list_item * menu_item,GtkWidget * box)
 				Xpos=Xpos-G_cairo_menu_conf.text_size*G_cairo_menu_conf.menu_item_text_len*4/5;//FIXME
 				g_signal_connect(G_OBJECT(newbox->parent->parent), "focus-out-event",G_CALLBACK (_focus_out_window), NULL);	
 				gtk_widget_show_all(newbox);		
-//				gtk_widget_show_all(newbox->parent->parent);
-//				gtk_widget_hide(newbox->parent->parent);				
+				gtk_window_set_transient_for (newbox->parent->parent,box->parent->parent);				
 				gtk_widget_realize(newbox->parent->parent);
 				max_width=temp_width;
 			}				

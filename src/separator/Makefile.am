@@ -2,7 +2,7 @@ INCLUDES =							\
 	-I$(srcdir)						\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"		\
 	$(DISABLE_DEPRECATED_CFLAGS)				\
-	$(DEPS_CFLAGS)						\
+	$(AWN_CFLAGS)						\
 	-DPREFIX=\"$(prefix)\"					\
 	-DSYSCONFDIR=\"$(sysconfdir)\"				\
 	-DDATADIR=\"$(datadir)\"				\
@@ -12,7 +12,7 @@ SEPARATOR_SOURCES =                              \
 	applet.c
 
 SEPARATOR_LDADD =                        \
-        $(DEPS_LIBS)			        
+        $(AWN_LIBS)
         
 
 separatorlibdir = $(libdir)/awn/applets/separator

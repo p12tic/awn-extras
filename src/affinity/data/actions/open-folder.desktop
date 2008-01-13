@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=Open Folder
+Comment=%s
+Categories=n_
+Exec=gnome-open file://%s
+Icon=file-manager
+Type=match

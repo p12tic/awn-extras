@@ -1,0 +1,1 @@
+<gconfschemafile><schemalist><schema><key>/schemas/apps/avant-window-navigator/applets/taskmand/dummy</key><applyto>/apps/avant-window-navigator/applets/taskmand/dummy</applyto><owner>avant-window-navigator</owner><type>string</type><default>Dummy</default><locale name="C"><short /><long>dummy entry</long></locale></schema></schemalist></gconfschemafile>

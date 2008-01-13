@@ -19,7 +19,10 @@
 
 #include <glibtop/mem.h>
 #include <libawn/awn-applet.h>
-#include <libawn/awn-applet-gconf.h>
+#include <glib/gmacros.h>
+#include <glib/gerror.h>
+#include <gconf/gconf-value.h> 
+
 #include <libawn/awn-applet-dialog.h>
 #include <libawn/awn-applet-simple.h>
 #include <glib.h>
@@ -32,13 +35,26 @@
 #include "dashboard_util.h"
 #include "dashboard.h"
 #include "config.h"
-
+#include "gconf-config.h"
 #undef NDEBUG
 #include <assert.h>
 
 #define GCONF_SYSMEM_SIZE_MULT GCONF_PATH  "/component_sysmem_scale"
 #define GCONF_SYSMEM_FG  GCONF_PATH "/component_sysmem_fg"
 #define GCONF_SYSMEM_BG  GCONF_PATH "/component_sysmem_bg"
+#define GCONF_SYSMEM_FREE_COLOUR GCONF_PATH "/component_sysmem_free_colour"
+#define GCONF_SYSMEM_USER_COLOUR GCONF_PATH "/component_sysmem_user_colour"
+#define GCONF_SYSMEM_SHARED_COLOUR GCONF_PATH "/component_sysmem_shared_colour"
+#define GCONF_SYSMEM_BUFFER_COLOUR GCONF_PATH "/component_sysmem_buffer_colour"
+#define GCONF_SYSMEM_CACHED_COLOUR GCONF_PATH "/component_sysmem_cached_colour"
+
+enum{
+	SYSMEM_USER,
+	SYSMEM_FREE,
+	SYSMEM_BUFFER,
+	SYSMEM_CACHED,
+	SYSMEM_SHARED
+};
 
 typedef struct
 {
@@ -49,7 +65,9 @@ typedef struct
 	int refresh;
     AwnColor    bg;             /*colours if gtk colours are overridden */
     AwnColor    fg;            
-    float size_mult;               
+    float size_mult;   
+	AwnColor colours[5];
+ 		                       
 }Sysmem_plug_data;
 
 
@@ -188,25 +206,62 @@ static void construct(Sysmem_plug_data **p)
     data->frequency=1000; 
     data->timer=100;    
 
-    svalue = gconf_client_get_string(get_dashboard_gconf(),
-                                            GCONF_SYSMEM_BG, NULL );
+    svalue = gconf_client_get_string(get_dashboard_gconf(),GCONF_SYSMEM_BG, NULL );
     if ( !svalue ) 
     {
-        gconf_client_set_string(get_dashboard_gconf(),GCONF_SYSMEM_BG, 
-                                            svalue=g_strdup("222299EE"), NULL );
+        gconf_client_set_string(get_dashboard_gconf(),GCONF_SYSMEM_BG,svalue=g_strdup("222299EE"), NULL );
     }
     awn_cairo_string_to_color( svalue,&data->bg );    
     g_free(svalue);
 
-    svalue = gconf_client_get_string(get_dashboard_gconf(), 
-                                                GCONF_SYSMEM_FG,NULL);
+    svalue = gconf_client_get_string(get_dashboard_gconf(),GCONF_SYSMEM_FG,NULL);
     if ( !svalue ) 
     {
-        gconf_client_set_string(get_dashboard_gconf(),GCONF_SYSMEM_FG, 
-                                            svalue=g_strdup("00000000"), NULL );
+        gconf_client_set_string(get_dashboard_gconf(),GCONF_SYSMEM_FG,svalue=g_strdup("00000000"), NULL );
     }
     awn_cairo_string_to_color( svalue,&data->fg );    
     g_free(svalue);
+
+    svalue = gconf_client_get_string(get_dashboard_gconf(),GCONF_SYSMEM_USER_COLOUR,NULL);
+    if ( !svalue ) 
+    {
+        gconf_client_set_string(get_dashboard_gconf(),GCONF_SYSMEM_USER_COLOUR,svalue=g_strdup("DD0000DD"), NULL );
+    }
+    awn_cairo_string_to_color( svalue,&data->colours[SYSMEM_USER] );    
+    g_free(svalue);
+
+    svalue = gconf_client_get_string(get_dashboard_gconf(),GCONF_SYSMEM_FREE_COLOUR,NULL);
+    if ( !svalue ) 
+    {
+        gconf_client_set_string(get_dashboard_gconf(),GCONF_SYSMEM_FREE_COLOUR,svalue=g_strdup("00DD22DD"), NULL );
+    }
+    awn_cairo_string_to_color( svalue,&data->colours[SYSMEM_FREE] );    
+    g_free(svalue);
+
+    svalue = gconf_client_get_string(get_dashboard_gconf(),GCONF_SYSMEM_BUFFER_COLOUR,NULL);
+    if ( !svalue ) 
+    {
+        gconf_client_set_string(get_dashboard_gconf(),GCONF_SYSMEM_BUFFER_COLOUR,svalue=g_strdup("0000DDDD"), NULL );
+    }
+    awn_cairo_string_to_color( svalue,&data->colours[SYSMEM_BUFFER] );    
+    g_free(svalue);
+
+    svalue = gconf_client_get_string(get_dashboard_gconf(),GCONF_SYSMEM_CACHED_COLOUR,NULL);
+    if ( !svalue ) 
+    {
+        gconf_client_set_string(get_dashboard_gconf(),GCONF_SYSMEM_CACHED_COLOUR,svalue=g_strdup("AA0099DD"), NULL );
+    }
+    awn_cairo_string_to_color( svalue,&data->colours[SYSMEM_CACHED] );    
+    g_free(svalue);
+    
+    svalue = gconf_client_get_string(get_dashboard_gconf(),GCONF_SYSMEM_SHARED_COLOUR,NULL);
+    if ( !svalue ) 
+    {
+        gconf_client_set_string(get_dashboard_gconf(),GCONF_SYSMEM_SHARED_COLOUR,svalue=g_strdup("666666DD"), NULL );
+    }
+    awn_cairo_string_to_color( svalue,&data->colours[SYSMEM_SHARED] );    
+    g_free(svalue);
+
     
     value = gconf_client_get( get_dashboard_gconf(), GCONF_SYSMEM_SIZE_MULT, NULL );
     if ( value ) 
@@ -254,12 +309,16 @@ static gboolean render(GtkWidget ** pwidget,gint interval,Sysmem_plug_data **p)
     time_t t;
     struct tm *tmp;
     static int width=-1;
+    static int col_width=-1;
     static int height=-1;
+    static int text_height=-1;
     Sysmem_plug_data * data=*p;
     dashboard_cairo_widget c_widge; 
     float mult;
     cairo_text_extents_t    extents;            
     glibtop_mem  mem;
+    int i;
+    double values[5];
 
     assert(check_ptr==*p);
     data->timer=data->timer-interval;
@@ -282,30 +341,97 @@ static gboolean render(GtkWidget ** pwidget,gint interval,Sysmem_plug_data **p)
         {
             mult=data->size_mult;
             *pwidget=get_cairo_widget(&c_widge,width*mult,height*mult);
-            awn_cairo_rounded_rect (c_widge.cr,0,0,width*mult,height*mult,height*mult*0.1,ROUND_ALL);                    
+            cairo_rectangle(c_widge.cr,0,0,width*mult,height*mult);                    
             cairo_set_source_rgba (c_widge.cr,data->bg.red,data->bg.green,data->bg.blue,data->bg.alpha);                
             cairo_fill(c_widge.cr);            
         }        
-        snprintf(buf,sizeof(buf),"Total=%0.2fM   Used=%0.2fM   Free=%0.2fM  User=%0.2f",
-                            mem.total/1024.0/1024.0,mem.used/1024.0/1024.0,
-                            mem.free/1024.0/1024.0,mem.user/1024.0/1024.0);
+        snprintf(buf,sizeof(buf),"Total: ");
 	    cairo_select_font_face (c_widge.cr, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
 	    cairo_set_font_size (c_widge.cr, dashboard_get_font_size( DASHBOARD_FONT_SMALL)*mult );       
         cairo_set_source_rgba (c_widge.cr,data->fg.red,data->fg.green,data->fg.blue,data->fg.alpha);
-        cairo_move_to(c_widge.cr, 5.0*mult, height/2*mult-2*mult);        
+        cairo_move_to(c_widge.cr, 5.0*mult, text_height*mult-2*mult);        
         if( width<0)
         {
             cairo_text_extents(c_widge.cr,buf,&extents);                          
-            height=(extents.height+4)*2;
-            width=(extents.width+8);  
+
+            height=(extents.height+4)*4;                        
+            col_width=extents.width*1.7;
+            width=(col_width*4)+5+height;              
+            text_height=extents.height+4;
             return FALSE;          
-        }
+        }        
         cairo_show_text(c_widge.cr, buf);                    
-        cairo_move_to(c_widge.cr, 5.0*mult, height*mult-2*mult);  
-        snprintf(buf,sizeof(buf),"Shared=%0.2fM   Buffer=%0.2fM   Cached=%0.2fM",
-                            mem.shared/1024.0/1024.0,mem.buffer/1024.0/1024.0,
-                            mem.cached/1024.0/1024.0);
-        cairo_show_text(c_widge.cr, buf);                                    
+        
+        
+        
+        snprintf(buf,sizeof(buf),"%0.2fM",mem.total/1024.0/1024.0);
+		cairo_text_extents(c_widge.cr,buf,&extents);                                  
+		cairo_move_to(c_widge.cr, 5.0*mult+col_width*2*mult-extents.width-5*mult, text_height*mult-2*mult);        		
+		cairo_show_text(c_widge.cr, buf);                            
+                                
+        cairo_move_to(c_widge.cr, 5.0*mult+col_width*mult*2, text_height*mult-2*mult);         
+        snprintf(buf,sizeof(buf),"Used:");
+        cairo_show_text(c_widge.cr, buf);                    
+                        
+		snprintf(buf,sizeof(buf),"%0.2fM",mem.used/1024.0/1024.0);
+		cairo_text_extents(c_widge.cr,buf,&extents);                                  		
+        cairo_move_to(c_widge.cr, 5.0*mult+col_width*mult*4-extents.width-5*mult, text_height*mult-2*mult);                                 
+        cairo_show_text(c_widge.cr, buf);                    
+                        
+		//line 2.                        
+        cairo_move_to(c_widge.cr, 5.0*mult, text_height*2*mult-2*mult);          
+        snprintf(buf,sizeof(buf),"Free:");
+        cairo_show_text(c_widge.cr, buf);    
+        
+        snprintf(buf,sizeof(buf),"%0.2fM",mem.free/1024.0/1024.0);
+		cairo_text_extents(c_widge.cr,buf,&extents);                                  		        
+        cairo_move_to(c_widge.cr, 5.0*mult+col_width*mult*2-extents.width-5*mult, text_height*2*mult-2*mult);                          
+        cairo_show_text(c_widge.cr, buf);    
+                
+        cairo_move_to(c_widge.cr, 5.0*mult+col_width*mult*2, text_height*2*mult-2*mult);                  
+        snprintf(buf,sizeof(buf),"User:");
+        cairo_show_text(c_widge.cr, buf);  
+                                   
+		snprintf(buf,sizeof(buf),"%0.2fM",mem.user/1024.0/1024.0);                                   
+		cairo_text_extents(c_widge.cr,buf,&extents);             		
+        cairo_move_to(c_widge.cr, 5.0*mult+col_width*mult*4-extents.width-5*mult,text_height*2*mult-2*mult);
+        cairo_show_text(c_widge.cr, buf);  
+		
+		//line 3        		                                  
+        cairo_move_to(c_widge.cr, 5.0*mult, text_height*3*mult-2*mult);  
+        snprintf(buf,sizeof(buf),"Shared:");
+        cairo_show_text(c_widge.cr, buf);
+
+		snprintf(buf,sizeof(buf),"%0.2fM",mem.shared/1024.0/1024.0);
+		cairo_text_extents(c_widge.cr,buf,&extents);             				
+        cairo_move_to(c_widge.cr, 5.0*mult+col_width*2*mult-extents.width-5*mult, text_height*3*mult-2*mult);  
+        cairo_show_text(c_widge.cr, buf);
+        
+        cairo_move_to(c_widge.cr, 5.0*mult+col_width*mult*2, text_height*3*mult-2*mult);  
+		snprintf(buf,sizeof(buf),"Buffer:");
+        cairo_show_text(c_widge.cr, buf);
+
+		snprintf(buf,sizeof(buf),"%0.2fM",mem.buffer/1024.0/1024.0);
+		cairo_text_extents(c_widge.cr,buf,&extents);             						
+        cairo_move_to(c_widge.cr, 5.0*mult+col_width*mult*4-extents.width-5*mult, text_height*3*mult-2*mult);  
+        cairo_show_text(c_widge.cr, buf);
+		//line 4        		
+        cairo_move_to(c_widge.cr, 5.0*mult, text_height*4*mult-2*mult);          
+	    snprintf(buf,sizeof(buf),"Cached:");
+        cairo_show_text(c_widge.cr, buf);
+        	            
+		snprintf(buf,sizeof(buf),"%0.2fM",mem.cached/1024.0/1024.0);
+		cairo_text_extents(c_widge.cr,buf,&extents);             								        	            
+		cairo_move_to(c_widge.cr, 5.0*mult+col_width*2*mult-extents.width-5*mult, text_height*4*mult-2*mult);                  	            
+        cairo_show_text(c_widge.cr, buf);
+        				
+        values[0]=mem.user*100.0/mem.total;
+        values[1]=mem.free*100.0/mem.total;        
+        values[2]=mem.buffer*100.0/mem.total;        
+        values[3]=mem.cached*100.0/mem.total;
+        values[4]=mem.shared*100.0/mem.total;                        
+ 		
+		draw_pie_graph(c_widge.cr, width*mult-height/2*mult,height/2.0*mult-height/20.0*mult,height/2.0*0.9*mult,0,values,data->colours,4);
         del_cairo_widget(&c_widge);        
         return TRUE;        
     }       

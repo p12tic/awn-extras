@@ -32,7 +32,7 @@
 #include "backend-gnome.h"
 #include "menu.h"
 
-
+extern gboolean 	G_repression;
 extern Cairo_menu_config G_cairo_menu_conf;
 AwnApplet *G_applet;
 extern Win_man *G_win_man;
@@ -51,6 +51,7 @@ static gboolean _button_clicked_event (GtkWidget *widget, GdkEventButton *event,
 {
     GdkEventButton *event_button;
     event_button = (GdkEventButton *) event; 
+    G_repression=FALSE;
  //   printf("_button_clicked_event\n");
     if (event->button == 1)
     {

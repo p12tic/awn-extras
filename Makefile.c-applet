@@ -1,0 +1,15 @@
+# vim: set ft=automake :
+NULL = 
+include $(top_srcdir)/Makefile.desktop-files
+
+INCLUDES = \
+	-I$(srcdir)			\
+	-I$(top_srcdir)/src	\
+	$(AWN_CFLAGS)		\
+	$(APPLET_CFLAGS)	\
+	$(NULL)
+
+APPLET_LINKER_FLAGS = -module -avoid-version
+
+appletdir = $(libdir)/awn/applets/$(APPLET_NAME)
+

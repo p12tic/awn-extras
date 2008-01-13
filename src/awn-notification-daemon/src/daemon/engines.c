@@ -39,7 +39,10 @@
 
 
 #include <libawn/awn-applet.h>
-#include <libawn/awn-applet-gconf.h>
+#include <glib/gmacros.h>
+#include <glib/gerror.h>
+#include <gconf/gconf-value.h> 
+
 #include <libawn/awn-applet-dialog.h>
 #include <libawn/awn-applet-simple.h>
 #include <libawn/awn-cairo-utils.h>

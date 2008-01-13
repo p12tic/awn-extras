@@ -1,5 +1,6 @@
 [Desktop Entry]
-Type=C
+Type=Awn-Applet
+X-AWN-AppletType=C
 Name=Awn Notification Daemon
 Comment=Notification Daemon
 Exec=@LIBDIR@/awn/applets/awnnotificationdaemon/awnnotificationdaemon.so

@@ -22,7 +22,7 @@
 #include <gtk/gtk.h>
 
 #include <libawn/awn-applet.h>
-#include <libawn/awn-applet-gconf.h>
+
 #include <math.h>
 
 #include "eggtraymanager.h"

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007 Rodney Cryderman (rcryderman@gmail.com) 
+ * Copyright (c) 2007  Rodney Cryderman (rcryderman@gmail.com) 
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -119,7 +119,7 @@ typedef struct
 	WnckScreen		*wnck_screen;
 	int 			wnck_token;	
 	
-	double			wallpaper_alpha_active;
+	double			wallpaper_alpha_active;		
 	double			wallpaper_alpha_inactive;
 	double			applet_scale;
 	
@@ -159,6 +159,11 @@ typedef struct
 	gboolean		got_viewport;
 	gboolean		show_tooltips;
 	gboolean		show_right_click;
+	
+	gboolean		grab_wallpaper;
+	AwnColor		desktop_colour;		//used if grab_wallpaper is FALSE;
+	
+	
 	GdkGC 			*gdkgc;
     GdkScreen		*pScreen;    
 	GdkColormap		*rgb_cmap;    	

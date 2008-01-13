@@ -1,15 +1,4 @@
-dist_test_DATA = python-test.py
-testdir = $(libdir)/awn/applets/python_test
+APPLET_NAME = python-test
+include $(top_srcdir)/Makefile.python-applet
 
-desktopdir = $(libdir)/awn/applets
-desktop_DATA = \
-	python-test.desktop
-@INTLTOOL_DESKTOP_RULE@
-
-$(desktop_DATA).in: $(desktop_DATA).in.in
-	sed -e "s|\@LIBDIR\@|$(libdir)|g" $< > $@
-
-
-EXTRA_DIST = \
-	python-test.desktop.in.in
-
+dist_applet_DATA = python-test.py

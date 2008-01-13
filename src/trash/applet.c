@@ -22,12 +22,13 @@
  **/ 
 
 #include "config.h"
-#define WNCK_I_KNOW_THIS_IS_UNSTABLE 1
-#include <libwnck/libwnck.h>
 
 #include <gtk/gtk.h>
 #include <libawn/awn-applet.h>
-#include <libawn/awn-applet-gconf.h>
+#include <glib/gmacros.h>
+#include <glib/gerror.h>
+#include <gconf/gconf-value.h> 
+
 
 #include "trashapplet.h"
 

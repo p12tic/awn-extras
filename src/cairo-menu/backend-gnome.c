@@ -675,6 +675,9 @@ GSList* get_menu_data(gboolean show_search,gboolean show_run,gboolean show_place
 	const char * menu_file[]={"gnomecc.menu","preferences.menu","settings.menu",NULL};//
 	GMenuTreeDirectory *root;
 	int i;	
+	
+	if (!gnome_vfs_initialized ())
+		gnome_vfs_init();	
 	G_file_manager=file_manager;
 	menu_tree=gmenu_tree_lookup ("applications.menu",GMENU_TREE_FLAGS_NONE);
 	if (menu_tree)

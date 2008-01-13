@@ -9,6 +9,7 @@ dist_gmail_DATA = 				\
 		googlecal.py	\
 		icscal.py	\
 		owacal.py	\
+		calthread.py	\
 		sevensegled.py
 
 gmaildir = $(libdir)/awn/applets/calendar

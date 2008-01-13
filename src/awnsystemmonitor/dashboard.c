@@ -43,7 +43,7 @@
 #include "dashboard.h"
 #include "dashboard_util.h"
 #include "config.h"
-
+#include "gconf-config.h"
 
 #undef NDEBUG
 #include <assert.h>

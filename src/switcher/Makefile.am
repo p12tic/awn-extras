@@ -2,7 +2,8 @@ INCLUDES =							\
 	-I$(srcdir)						\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"		\
 	$(DISABLE_DEPRECATED_CFLAGS)				\
-	$(DEPS_CFLAGS)				\
+	$(AWN_CFLAGS)				\
+	$(LIBWNCK_CFLAGS)			\
 	-DPREFIX=\"$(prefix)\"					\
 	-DSYSCONFDIR=\"$(sysconfdir)\"				\
 	-DDATADIR=\"$(datadir)\"				\
@@ -12,7 +13,8 @@ SWITCHER_SOURCES =                              \
 	applet.c
 
 SWITCHER_LDADD =                        \
-        $(DEPS_LIBS)			        
+	$(AWN_LIBS)							\
+	$(LIBWNCK_LIBS)
         
 
 switcherlibdir = $(libdir)/awn/applets/switcher

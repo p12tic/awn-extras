@@ -2,7 +2,9 @@ INCLUDES =							\
 	-I$(srcdir)						\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"		\
 	$(DISABLE_DEPRECATED_CFLAGS)				\
-	$(DEPS_CFLAGS)						\
+	$(AWN_CFLAGS)						\
+	$(GNOME_MENU_CFLAGS)				\
+	$(GNOME_DESKTOP_CFLAGS)				\
 	-DPREFIX=\"$(prefix)\"					\
 	-DSYSCONFDIR=\"$(sysconfdir)\"				\
 	-DDATADIR=\"$(datadir)\"				\
@@ -12,7 +14,9 @@ MENU_SOURCES = \
 	applet.c
 
 MENU_LDADD =                        \
-        $(DEPS_LIBS)			                 
+        $(AWN_LIBS)					\
+		$(GNOME_MENU_LIBS)			\
+		$(GNOME_DESKTOP_LIBS)
 
 mainmenulibdir = $(libdir)/awn/applets/mainmenu
 mainmenulib_LTLIBRARIES = mainmenu.la

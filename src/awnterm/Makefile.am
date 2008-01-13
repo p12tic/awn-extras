@@ -2,23 +2,23 @@ INCLUDES =							\
 	-I$(srcdir)						\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"		\
 	$(DISABLE_DEPRECATED_CFLAGS)				\
-	$(DEPS_CFLAGS)					\
+	$(AWN_CFLAGS)					\
+	$(VTE_CFLAGS)					\
 	-DPREFIX=\"$(prefix)\"					\
 	-DSYSCONFDIR=\"$(sysconfdir)\"				\
 	-DDATADIR=\"$(datadir)\"				\
 	-DLIBDIR=\"$(libdir)\"    
 
-AWNTERM_SOURCES =                                            \
-	applet.c awnterm.c awnterm.h settings.c settings.h
-
-AWNTERM_LDADD =                        \
-        $(DEPS_LIBS)
-        
-
 awntermlibdir = $(libdir)/awn/applets/awnterm
 awntermlib_LTLIBRARIES = awnterm.la
-awnterm_la_SOURCES = $(AWNTERM_SOURCES)
-awnterm_la_LIBADD = $(AWNTERM_LDADD)
+awnterm_la_SOURCES =	\
+	applet.c awnterm.c awnterm.h settings.c settings.h
+
+awnterm_la_LIBADD =		\
+	$(AWN_LIBS)		\
+	$(VTE_LIBS)
+        
+
 awnterm_la_LDFLAGS = -module -avoid-version
 awnterm_la_CFLAGS =
 

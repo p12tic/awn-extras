@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007 Rodney Cryderman (rcryderman@gmail.com) 
+ * Copyright (c) 2007 (rcryderman@gmail.com) Rodney Cryderman
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -34,6 +34,8 @@
 #include <libwnck/libwnck.h>
 #include <time.h>
 #include <X11/Xlib.h>
+#include <X11/extensions/Xrender.h>
+#include <X11/extensions/Xfixes.h>
 
 #ifdef USE_AWN_DESKTOP_AGNOSTIC
 #include <libawn/awn-config-client.h>
@@ -60,7 +62,8 @@
 #define CONFIG_SCALE_ICON_POSITION CONFIG_KEY("scale_icon_position")
 #define CONFIG_APPLET_BORDER_WIDTH CONFIG_KEY("applet_border_width")
 #define CONFIG_APPLET_BORDER_COLOUR CONFIG_KEY("applet_border_colour")
-
+#define CONFIG_GRAB_WALLPAPER CONFIG_KEY("grab_wallpaper")
+#define CONFIG_DESKTOP_COLOUR CONFIG_KEY("desktop_colour")
 
 /*
  * STATIC FUNCTION DEFINITIONS
@@ -107,11 +110,6 @@ void init_config(Shiny_switcher *shinyswitcher)
 {
 #ifdef USE_AWN_DESKTOP_AGNOSTIC
 	shinyswitcher->config = awn_config_client_new_for_applet ("shinyswitcher", NULL);
-#else
-	shinyswitcher->config = gconf_client_get_default();
-#endif
-
-#ifdef USE_AWN_DESKTOP_AGNOSTIC
 	shinyswitcher->rows			= 	awn_config_client_get_int(shinyswitcher->config,AWN_CONFIG_CLIENT_DEFAULT_GROUP,
 																CONFIG_ROWS,NULL);
 	shinyswitcher->cols			=	awn_config_client_get_int(shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
@@ -145,7 +143,10 @@ void init_config(Shiny_switcher *shinyswitcher)
 						 										 CONFIG_SCALE_ICON_POSITION ,   NULL);  
 	shinyswitcher->applet_border_width=awn_config_client_get_int(shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
 																CONFIG_APPLET_BORDER_WIDTH ,   NULL); 						 
+	shinyswitcher->grab_wallpaper=awn_config_client_get_bool(shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+						 										CONFIG_GRAB_WALLPAPER,     NULL);
 #else
+	shinyswitcher->config = gconf_client_get_default();
 	shinyswitcher->rows              	= gconf_client_get_int   (shinyswitcher->config, CONFIG_ROWS,  NULL);
 	shinyswitcher->cols                 = gconf_client_get_int   (shinyswitcher->config, CONFIG_COLUMNS,     NULL);
 	shinyswitcher->wallpaper_alpha_active	= gconf_client_get_float(shinyswitcher->config,CONFIG_WALLPAPER_ALPHA_ACTIVE,  NULL);
@@ -162,9 +163,11 @@ void init_config(Shiny_switcher *shinyswitcher)
 	shinyswitcher->cache_expiry=gconf_client_get_int   (shinyswitcher->config, CONFIG_CACHE_EXPIRY,   NULL); 
 	shinyswitcher->scale_icon_pos=gconf_client_get_int   (shinyswitcher->config, CONFIG_SCALE_ICON_POSITION ,   NULL); 
 	shinyswitcher->applet_border_width=gconf_client_get_int   (shinyswitcher->config, CONFIG_APPLET_BORDER_WIDTH ,   NULL); 
+	shinyswitcher->grab_wallpaper=gconf_client_get_bool(shinyswitcher->config, CONFIG_GRAB_WALLPAPER, NULL);
 #endif
 
 	config_get_color(shinyswitcher->config,CONFIG_APPLET_BORDER_COLOUR,&shinyswitcher->applet_border_colour);						
+	config_get_color(shinyswitcher->config,CONFIG_DESKTOP_COLOUR,&shinyswitcher->desktop_colour);
 	
 	shinyswitcher->active_window_on_workspace_change_method=1;
 	shinyswitcher->do_queue_freq=2;
@@ -174,31 +177,18 @@ void init_config(Shiny_switcher *shinyswitcher)
 	shinyswitcher->show_right_click=!shinyswitcher->got_viewport;	//for the moment buggy in compiz.will be a config option eventually
 
 	shinyswitcher->reconfigure=!shinyswitcher->got_viewport;		//for the moment... will be a config option eventually
-	
-#ifdef USE_AWN_DESKTOP_AGNOSTIC
-
-#else
-	
-#endif	
 }
-
-#ifdef USE_AWN_DESKTOP_AGNOSTIC
 
 static void save_config(Shiny_switcher *shinyswitcher)
 {
-
-}
-
+#ifdef USE_AWN_DESKTOP_AGNOSTIC
+	awn_config_client_set_int (shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, CONFIG_ROWS, shinyswitcher->rows, NULL);
+	awn_config_client_set_int (shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, CONFIG_COLUMNS, shinyswitcher->cols, NULL);
 #else
-
-static void save_config(Shiny_switcher *shinyswitcher)
-{
-	gchar * svalue;
-
-    gconf_client_set_int   (shinyswitcher->config, CONFIG_ROWS,shinyswitcher->rows ,NULL);        
-	gconf_client_set_int   (shinyswitcher->config, CONFIG_COLUMNS,shinyswitcher->cols,NULL);    	
-}
+	gconf_client_set_int (shinyswitcher->config, CONFIG_ROWS, shinyswitcher->rows, NULL);
+	gconf_client_set_int (shinyswitcher->config, CONFIG_COLUMNS, shinyswitcher->cols, NULL);
 #endif
+}
 
 double vp_vscale(Shiny_switcher *shinyswitcher)
 {
@@ -254,6 +244,7 @@ void grab_wallpaper(Shiny_switcher *shinyswitcher)
 {
 	int w,h;	
 	GtkWidget	*	widget;
+		
 	gulong wallpaper_xid=wnck_screen_get_background_pixmap(shinyswitcher->wnck_screen);
 	GdkPixmap* wallpaper=gdk_pixmap_foreign_new (wallpaper_xid); 	
  	gdk_drawable_set_colormap(wallpaper,shinyswitcher->rgb_cmap);
@@ -287,12 +278,55 @@ void grab_wallpaper(Shiny_switcher *shinyswitcher)
 	cairo_destroy(destcr);
 }
 
+
+
+void set_background(Shiny_switcher *shinyswitcher)
+{
+	if (shinyswitcher->grab_wallpaper)
+	{	
+		grab_wallpaper(shinyswitcher);
+	}
+	else
+	{
+		cairo_t		*cr;
+		GtkWidget 	*widget;
+	    shinyswitcher->wallpaper_inactive=gdk_pixmap_new(NULL,shinyswitcher->mini_work_width*vp_hscale(shinyswitcher),shinyswitcher->mini_work_height*vp_vscale(shinyswitcher),32);   //FIXME		
+	    gdk_drawable_set_colormap(shinyswitcher->wallpaper_inactive,shinyswitcher->rgba_cmap);
+	    widget=gtk_image_new_from_pixmap(shinyswitcher->wallpaper_inactive,NULL);
+	 	gtk_widget_set_app_paintable(widget,TRUE);
+		cr=gdk_cairo_create(shinyswitcher->wallpaper_inactive);
+		cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
+		cairo_paint(cr);
+		cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
+		cairo_set_source_rgba (cr,shinyswitcher->desktop_colour.red, shinyswitcher->desktop_colour.green,
+								shinyswitcher->desktop_colour.blue, shinyswitcher->desktop_colour.alpha);
+		cairo_paint_with_alpha(cr,shinyswitcher->wallpaper_alpha_inactive);
+		gtk_widget_destroy(widget);
+		cairo_destroy(cr);
+				
+	    shinyswitcher->wallpaper_active=gdk_pixmap_new(NULL,shinyswitcher->mini_work_width*vp_hscale(shinyswitcher),shinyswitcher->mini_work_height*vp_vscale(shinyswitcher),32);   //FIXME
+	    gdk_drawable_set_colormap(shinyswitcher->wallpaper_active,shinyswitcher->rgba_cmap);
+	    widget=gtk_image_new_from_pixmap(shinyswitcher->wallpaper_active,NULL);
+	 	gtk_widget_set_app_paintable(widget,TRUE);
+		cr=gdk_cairo_create(shinyswitcher->wallpaper_active);
+		cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
+		cairo_paint(cr);
+		cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
+		cairo_set_source_rgba (cr,shinyswitcher->desktop_colour.red, shinyswitcher->desktop_colour.green,
+								shinyswitcher->desktop_colour.blue, shinyswitcher->desktop_colour.alpha);
+		cairo_paint_with_alpha(cr,shinyswitcher->wallpaper_alpha_active);
+		gtk_widget_destroy(widget);
+		cairo_destroy(cr);
+
+	}
+}	
+	
 gboolean  _button_workspace(GtkWidget *widget,GdkEventButton *event,Workplace_info	* ws)
 {
 
 	Shiny_switcher *shinyswitcher=ws->shinyswitcher;
 	if (shinyswitcher->got_viewport)
-	{	
+	{
 		int vp_pos_col= 1.0/vp_hscale(shinyswitcher)*(event->x/(double)shinyswitcher->mini_work_width);
 		int vp_pos_row= 1.0/vp_vscale(shinyswitcher)*(event->y/(double)shinyswitcher->mini_work_height);
 		wnck_screen_move_viewport(shinyswitcher->wnck_screen,
@@ -665,6 +699,7 @@ void grab_window_xrender_meth(Shiny_switcher *shinyswitcher,cairo_t *destcr,Wnck
 {
 	int event_base, error_base;
 	gboolean  hasNamePixmap = FALSE;
+	gulong 			Xid=wnck_window_get_xid(win );	
 	
 	Display* dpy=gdk_x11_get_default_xdisplay();
 
@@ -683,11 +718,44 @@ void grab_window_xrender_meth(Shiny_switcher *shinyswitcher,cairo_t *destcr,Wnck
 			hasNamePixmap = TRUE;
 	}
 	XWindowAttributes attr;
-//	if ( XGetWindowAttributes( dpy, wId, &attr ) )
+	if ( XGetWindowAttributes( dpy, Xid, &attr ) )
 	{
 	
+		XRenderPictFormat *format = XRenderFindVisualFormat( dpy, attr.visual );
+		gboolean hasAlpha          = ( format->type == PictTypeDirect && format->direct.alphaMask );
+		int x                     = attr.x;
+		int y                     = attr.y;
+		int width                 = attr.width;
+		int height                = attr.height;
 	
+		// Create a Render picture so we can reference the window contents.
+		// We need to set the subwindow mode to IncludeInferiors, otherwise child widgets
+		// in the window won't be included when we draw it, which is not what we want.
+		XRenderPictureAttributes pa;
+		pa.subwindow_mode = IncludeInferiors; // Don't clip child widgets
+
+		Picture picture = XRenderCreatePicture( dpy, Xid, format, CPSubwindowMode, &pa );
+
+		// Create a copy of the bounding region for the window
+		XserverRegion region = XFixesCreateRegionFromWindow( dpy, Xid, WindowRegionBounding );
+
+		// The region is relative to the screen, not the window, so we need to offset
+		// it with the windows position
+		XFixesTranslateRegion( dpy, region, -x, -y );
+		XFixesSetPictureClipRegion( dpy, picture, 0, 0, region );
+		XFixesDestroyRegion( dpy, region );
+
+		// [Fill the destination widget/pixmap with whatever you want to use as a background here]
+
+	//	XRenderComposite( dpy, hasAlpha ? PictOpOver : PictOpSrc, picture, None,
+		//		dest.x11RenderHandle(), 0, 0, 0, 0, destX, destY, width, height );
 	
+		
+		printf("xrender good\n");
+	}
+	else
+	{
+		printf("xrender bad\n");	
 	}
 	
 }	
@@ -819,6 +887,12 @@ void do_win_grabs(Shiny_switcher *shinyswitcher,cairo_t *destcr,WnckWindow *win,
 									on_active_space || wnck_window_is_pinned(win));
 				}
 				break;
+			case	1:				
+				grab_window_xrender_meth(shinyswitcher,destcr,win,scaled_x,scaled_y,
+									scaled_width,scaled_height,x,y,width,height,
+									on_active_space || wnck_window_is_pinned(win));
+				break;									
+
 			default:
 				printf("INVALID CONFIG OPTION: window grab method\n");
 				break;
@@ -1258,7 +1332,7 @@ void _wallpaper_change(WnckScreen *screen,Shiny_switcher *shinyswitcher)
 {
 	g_object_unref(shinyswitcher->wallpaper_inactive);
 	g_object_unref(shinyswitcher->wallpaper_active);	
-	grab_wallpaper(shinyswitcher);	
+	set_background(shinyswitcher);	
 }
 
 void _window_opened(WnckScreen *screen,WnckWindow *window,Shiny_switcher *shinyswitcher)
@@ -1338,7 +1412,7 @@ gboolean _waited(Shiny_switcher *shinyswitcher)
     shinyswitcher->rgba_cmap = gdk_screen_get_rgba_colormap (shinyswitcher->pScreen);	
     shinyswitcher->rgb_cmap = gdk_screen_get_rgb_colormap (shinyswitcher->pScreen);	
 	calc_dimensions(shinyswitcher);
-	grab_wallpaper(shinyswitcher);		
+	set_background(shinyswitcher);		
 	create_containers(shinyswitcher);		
 	create_windows(shinyswitcher);
 

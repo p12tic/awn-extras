@@ -2,13 +2,16 @@ INCLUDES =							\
 	-I$(srcdir)						\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"		\
 	$(DISABLE_DEPRECATED_CFLAGS)				\
-	$(DEPS_CFLAGS)					\
+	$(AWN_CFLAGS)					\
+	$(GTOP_CFLAGS)					\
 	-DPREFIX=\"$(prefix)\"					\
 	-DSYSCONFDIR=\"$(sysconfdir)\"				\
 	-DDATADIR=\"$(datadir)\"				\
-	-DLIBDIR=\"$(libdir)\"    
+	-DLIBDIR=\"$(libdir)\"
 
-AWNSYSTEMMONITOR_SOURCES =                              \
+awnsystemmonitorlibdir = $(libdir)/awn/applets/awnsystemmonitor
+awnsystemmonitorlib_LTLIBRARIES = awnsystemmonitor.la
+awnsystemmonitor_la_SOURCES =	\
 	applet.c									\
 	awnsystemmonitor.c						\
 	awnsystemmonitor.h          \
@@ -34,13 +37,10 @@ AWNSYSTEMMONITOR_SOURCES =                              \
 	uptime_component.h      \
 	config.h
 
-AWNSYSTEMMONITOR_LDADD =                        \
-        $(DEPS_LIBS)
+awnsystemmonitor_la_LIBADD =	\
+	$(AWN_LIBS)					\
+	$(GTOP_LIBS)
 
-awnsystemmonitorlibdir = $(libdir)/awn/applets/awnsystemmonitor
-awnsystemmonitorlib_LTLIBRARIES = awnsystemmonitor.la
-awnsystemmonitor_la_SOURCES = $(AWNSYSTEMMONITOR_SOURCES)
-awnsystemmonitor_la_LIBADD = $(AWNSYSTEMMONITOR_LDADD)
 awnsystemmonitor_la_LDFLAGS = -module -avoid-version
 awnsystemmonitor_la_CFLAGS =
 

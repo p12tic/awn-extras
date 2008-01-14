@@ -46,8 +46,27 @@ class Configuration: GLib.Object
 	protected	weak	Awn.ConfigClient	primary_conf;
 	protected			Awn.ConfigClient	default_conf;
 	protected			Awn.ConfigClient	dummy;
+	
+	private				int					_task_mode;
 
 	construct
+	{
+		read_config();
+/*		default_conf.notify_add(
+		if (!anon_mode)
+		{
+		
+		}
+*/
+	}
+	
+	Configuration(string uid,bool anon_mode)
+	{
+		this.uid=uid;
+		this.anon_mode=anon_mode;
+	}
+
+	private void read_config()
 	{
 		if (anon_mode)
 		{			
@@ -62,22 +81,8 @@ class Configuration: GLib.Object
 			primary_conf=dummy;
 			subdir="discrete/";			
 		}
+		_task_mode=get_int("task_mode");
 	}
-	
-	Configuration(string uid,bool anon_mode)
-	{
-		this.uid=uid;
-		this.anon_mode=anon_mode;
-	}
-	
-/*	public int prop_2 
-	{
-		get{
-			string name;
-			name=subdir+"task_mode";
-			 default_conf.get_int( CONFIG_CLIENT_DEFAULT_GROUP,name);
-		}
-	}	*/
 
 	private int get_int(string key)
 	{
@@ -94,9 +99,9 @@ class Configuration: GLib.Object
 	
 
     public int task_mode {
-            get { 
-				return get_int("task_mode");
-        	}
+        get { 
+			return _task_mode;
+    	}
     }
 	
 }
@@ -467,7 +472,6 @@ class LauncherApplet : AppletSimple
     
     private void button_dialog()
     {
-		stdout.printf("button_dialog\n");
 		if (dialog.visible )
 		{
 			dialog.hide();
@@ -493,31 +497,28 @@ class LauncherApplet : AppletSimple
     {
 		ulong		xid;
 		Wnck.Window  win;
-		if (config.task_mode==TaskMode.MULTIPLE)
-		{
-			if (XIDs.length() == 1 )
-			{		
-				dialog.hide();
-				xid=XIDs.nth_data(0);
-				win=find_win_by_xid(xid);
-				if (win!=null)
-				{
-					if (win.is_active() )
-					{
-						win.minimize();
-					}
-					else
-					{
-						win.activate(Gtk.get_current_event_time());
-					}
-				}
-				return (win!=null);			
-			}		
-			else
+		if (XIDs.length() == 1 )
+		{		
+			dialog.hide();
+			xid=XIDs.nth_data(0);
+			win=find_win_by_xid(xid);
+			if (win!=null)
 			{
-				button_dialog();
+				if (win.is_active() )
+				{
+					win.minimize();
+				}
+				else
+				{
+					win.activate(Gtk.get_current_event_time());
+				}
 			}
+			return (win!=null);			
 		}		
+		else
+		{
+			button_dialog();
+		}
 		return true;
     }
      
@@ -565,18 +566,12 @@ class LauncherApplet : AppletSimple
 	private void _window_closed(Wnck.Screen screen,Wnck.Window window)
 	{ 
 		dialog.hide();
-		stdout.printf("window closed xid  count = %d",XIDs.length() );
-//		if (PIDs.find(window.get_pid() ) !=null)
-		{
-			windows.remove(window);
-		}		
+		windows.remove(window);
 		XIDs.remove(window.get_xid() );
 		if (XIDs.length() == 0)
 		{
-			stdout.printf("XIDs = %d\n",XIDs.length());
 			if (launchmode == LaunchMode.ANONYMOUS)
 			{
-//				close();
 				Timeout.add(500,_timed_closed,this);
 			}				
 		}
@@ -593,8 +588,6 @@ class LauncherApplet : AppletSimple
 	
 	private bool _try_again()
 	{
-	
-		stdout.printf("Timer fired\n");
 		ulong xid;
 
 		foreach( ulong xid in retry_list)
@@ -627,12 +620,14 @@ class LauncherApplet : AppletSimple
 		int pid;
 		ulong xid;
 		xid=window.get_xid();
-		stdout.printf("window opened pid = %d\n",window.get_pid());
+		if ( (XIDs.length()>0) && (config.task_mode==TaskMode.SINGLE) )
+		{
+			return;
+		}
 		if (XIDs.find(window.get_xid() )==null)
 		{
 			if (PIDs.find(window.get_pid() ) !=null)
 			{
-				stdout.printf("Found pid\n");
 				do
 				{
 					response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"CLAIM");
@@ -658,7 +653,6 @@ class LauncherApplet : AppletSimple
 					if (is_it_good)
 					{
 						accepted=true;
-						stdout.printf("ACCEPTING\n");
 						do
 						{
 							response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"ACCEPT");
@@ -674,7 +668,6 @@ class LauncherApplet : AppletSimple
 				}
 				if (!accepted)
 				{
-					stdout.printf("NOT Found pid\n");
 					response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"DENY");
 					if (response=="RESET")
 							dbusconn.Register(uid);	

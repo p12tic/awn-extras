@@ -227,7 +227,7 @@ void init_config(Taskman * taskmanager)
 {
 	taskmanager->config = awn_config_client_new_for_applet ("taskmand", NULL);
 	taskmanager->core_config = awn_config_client_new ();	
-	taskmanager->applet_list_locking_fd=awn_config_client_lock_open( AWN_CONFIG_CLIENT_DEFAULT_GROUP  ,"applets_list");	
+	taskmanager->applet_list_locking_fd=awn_config_client_key_lock_open( AWN_CONFIG_CLIENT_DEFAULT_GROUP  ,"applets_list");	
 	g_assert(taskmanager->applet_list_locking_fd != -1);
     taskmanager->desktop_file=g_strdup("standalone-launcher.desktop");
     taskmanager->path=NULL;
@@ -253,7 +253,7 @@ gboolean launch_anonymous_launcher(gulong xid)
         g_message("taskmand: A LAUNCHER TIMED OUT !!!!!!!!!!!!!!!!!! or awn-core still hasn't been fixed\n");
     }
     remove_from_response_tree(taskmanager,xid);	
-    while( awn_config_client_lock(taskmanager->applet_list_locking_fd, LOCK_EX))
+    while( awn_config_client_key_lock(taskmanager->applet_list_locking_fd, LOCK_EX))
         g_warning("taskmand: failed to acquire lock\n");
     GSList *applet_list=awn_config_client_get_list(taskmanager->core_config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
                                             "applets_list", AWN_CONFIG_CLIENT_LIST_TYPE_STRING,NULL);
@@ -263,13 +263,13 @@ gboolean launch_anonymous_launcher(gulong xid)
     applet_list=g_slist_insert_before(applet_list,insert_point,applet_location);
     awn_config_client_set_list(taskmanager->core_config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
                    "applets_list",AWN_CONFIG_CLIENT_LIST_TYPE_STRING,applet_list,NULL);
-    awn_config_client_lock(taskmanager->applet_list_locking_fd, LOCK_UN  );
+    awn_config_client_key_lock(taskmanager->applet_list_locking_fd, LOCK_UN  );
     return TRUE;
 }
 
 void clean_applet_list(void)
 {
-    while ( awn_config_client_lock(taskmanager->applet_list_locking_fd, LOCK_EX  ) )
+    while ( awn_config_client_key_lock(taskmanager->applet_list_locking_fd, LOCK_EX  ) )
         g_warning("taskmand: failed to acquire lock\n");
     GSList *applet_list=awn_config_client_get_list(taskmanager->core_config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
                                             "applets_list", AWN_CONFIG_CLIENT_LIST_TYPE_STRING,NULL);
@@ -288,7 +288,7 @@ void clean_applet_list(void)
     }
     awn_config_client_set_list(taskmanager->core_config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
                                             "applets_list", AWN_CONFIG_CLIENT_LIST_TYPE_STRING,applet_list,NULL);
-    awn_config_client_lock(taskmanager->applet_list_locking_fd, LOCK_UN  );
+    awn_config_client_key_lock(taskmanager->applet_list_locking_fd, LOCK_UN  );
 }
 
 //Timers

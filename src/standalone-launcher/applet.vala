@@ -53,14 +53,14 @@ class Configuration: GLib.Object
 		{			
 			default_conf=new Awn.ConfigClient.for_applet("standalone-launcher",null);
 			primary_conf=default_conf;
-			subdir="anonymous";
+			subdir="anonymous/";
 		}
 		else
 		{
 			default_conf=new Awn.ConfigClient.for_applet("standalone-launcher",null);
 			dummy=new Awn.ConfigClient.for_applet("standalone-launcher",uid);
 			primary_conf=dummy;
-			subdir="discrete";			
+			subdir="discrete/";			
 		}
 	}
 	
@@ -69,7 +69,36 @@ class Configuration: GLib.Object
 		this.uid=uid;
 		this.anon_mode=anon_mode;
 	}
-		
+	
+/*	public int prop_2 
+	{
+		get{
+			string name;
+			name=subdir+"task_mode";
+			 default_conf.get_int( CONFIG_CLIENT_DEFAULT_GROUP,name);
+		}
+	}	*/
+
+	private int get_int(string key)
+	{
+		int value;
+		string name;
+		name=subdir+key;
+		try {
+			value = default_conf.get_int( CONFIG_CLIENT_DEFAULT_GROUP,name);
+		}catch (GLib.Error ex){
+			value = 0;   
+		}		
+		return value;
+	}
+	
+
+    public int task_mode {
+            get { 
+				return get_int("task_mode");
+        	}
+    }
+	
 }
 
 class DesktopFileManagement : GLib.Object
@@ -337,10 +366,10 @@ class LauncherApplet : AppletSimple
     {
 		string needle;
 		weak SList<string> applet_list;
-		int fd_lock=Awn.ConfigClient.lock_open(Awn.CONFIG_CLIENT_DEFAULT_GROUP,"applets_list");
+		int fd_lock=Awn.ConfigClient.key_lock_open(Awn.CONFIG_CLIENT_DEFAULT_GROUP,"applets_list");
 		if (fd_lock!=-1)
 		{
-//			Awn.ConfigClient.lock(fd_lock,1);
+			Awn.ConfigClient.key_lock(fd_lock,1);
 		    dbusconn.Unregister(uid);
 			applet_list = awn_config.get_list (Awn.CONFIG_CLIENT_DEFAULT_GROUP,"applets_list", Awn.ConfigListType.STRING) ;
 			needle="standalone-launcher.desktop::"+uid;
@@ -354,9 +383,9 @@ class LauncherApplet : AppletSimple
 				}
 		    }
 			awn_config.set_list(Awn.CONFIG_CLIENT_DEFAULT_GROUP,"applets_list", Awn.ConfigListType.STRING,applet_list);
-			Awn.ConfigClient.lock_close(fd_lock);
-		}				
-		Thread.usleep(5000000);
+			Awn.ConfigClient.key_lock_close(fd_lock);
+		}						
+		Thread.exit(null);
 		assert_not_reached ();
     }
 
@@ -464,28 +493,31 @@ class LauncherApplet : AppletSimple
     {
 		ulong		xid;
 		Wnck.Window  win;
-		if (XIDs.length() == 1 )
-		{		
-			dialog.hide();
-			xid=XIDs.nth_data(0);
-			win=find_win_by_xid(xid);
-			if (win!=null)
-			{
-				if (win.is_active() )
-				{
-					win.minimize();
-				}
-				else
-				{
-					win.activate(Gtk.get_current_event_time());
-				}
-			}
-			return (win!=null);			
-		}		
-		else
+		if (config.task_mode==TaskMode.MULTIPLE)
 		{
-			button_dialog();
-		}
+			if (XIDs.length() == 1 )
+			{		
+				dialog.hide();
+				xid=XIDs.nth_data(0);
+				win=find_win_by_xid(xid);
+				if (win!=null)
+				{
+					if (win.is_active() )
+					{
+						win.minimize();
+					}
+					else
+					{
+						win.activate(Gtk.get_current_event_time());
+					}
+				}
+				return (win!=null);			
+			}		
+			else
+			{
+				button_dialog();
+			}
+		}		
 		return true;
     }
      

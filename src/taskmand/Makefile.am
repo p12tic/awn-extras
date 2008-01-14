@@ -1,4 +1,7 @@
+APPLET_NAME = taskmand
 SUBDIRS = data
+
+include $(top_srcdir)/Makefile.schemas
 
 INCLUDES =				\
 	$(AWN_CFLAGS)			\

@@ -43,7 +43,8 @@
 #include "server-bindings.h"
 
 #define CONFIG_KEY(key) key
-#define CONFIG_DUMMY    CONFIG_KEY("dummy")
+#define CONFIG_POS_GRAV       CONFIG_KEY("pos_gravity")
+#define CONFIG_POS_OFFSET     CONFIG_KEY("pos_offset")
 
 typedef struct
 {
@@ -58,6 +59,9 @@ typedef struct
 	AwnConfigClient		*config;
 	AwnConfigClient		*core_config;	
     int                 applet_list_locking_fd;
+    guint               pos_gravity;                //0 for left. 1 for right.
+    gint                pos_offset;                 //convert to neg if grav =1
+    
 }Taskman;
 
 typedef struct
@@ -227,6 +231,13 @@ void init_config(Taskman * taskmanager)
 	g_assert(taskmanager->applet_list_locking_fd != -1);
     taskmanager->desktop_file=g_strdup("standalone-launcher.desktop");
     taskmanager->path=NULL;
+    taskmanager->pos_gravity=1 & 1; 
+//    taskmanager->pos_offset= ABS(6) * (1 - taskmanager->pos_gravity*2);
+    taskmanager->pos_offset= ABS(0) * (1 - taskmanager->pos_gravity*2);
+    
+	taskmanager->pos_gravity=awn_config_client_get_int(taskmanager->config,AWN_CONFIG_CLIENT_DEFAULT_GROUP,CONFIG_POS_GRAV, NULL)&1;    
+	taskmanager->pos_offset =awn_config_client_get_int(taskmanager->config,AWN_CONFIG_CLIENT_DEFAULT_GROUP,CONFIG_POS_OFFSET, NULL)
+	                                            * (1 - taskmanager->pos_gravity*2);
 }
 
 //==================================================
@@ -247,7 +258,9 @@ gboolean launch_anonymous_launcher(gulong xid)
     GSList *applet_list=awn_config_client_get_list(taskmanager->core_config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
                                             "applets_list", AWN_CONFIG_CLIENT_LIST_TYPE_STRING,NULL);
     char * applet_location=g_strdup_printf("%s::-%lu+%ld",taskmanager->path,xid,(long)time(NULL));
-    applet_list=g_list_append(applet_list,applet_location);
+//    applet_list=g_list_append(applet_list,applet_location);
+    GSList * insert_point=g_slist_nth(applet_list,g_list_length(applet_list)*taskmanager->pos_gravity+taskmanager->pos_offset );
+    applet_list=g_slist_insert_before(applet_list,insert_point,applet_location);
     awn_config_client_set_list(taskmanager->core_config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
                    "applets_list",AWN_CONFIG_CLIENT_LIST_TYPE_STRING,applet_list,NULL);
     awn_config_client_lock(taskmanager->applet_list_locking_fd, LOCK_UN  );
@@ -352,8 +365,30 @@ void set_path(Taskman * taskmanager,char * bin_name)
 
 //-------------------------------------------------------------------------
 
+static gboolean show_version = FALSE;
+
+static GOptionEntry entries[] = 
+{
+  { "version", 'v', 0, G_OPTION_ARG_NONE, &show_version, "Version", NULL },
+  { NULL }
+};
+
 int main (int argc, char *argv[])
 {
+    GError *error = NULL;
+    GOptionContext *context;
+
+    context = g_option_context_new ("- test tree model performance");
+    g_option_context_add_main_entries (context, entries, GETTEXT_PACKAGE);
+    g_option_context_add_group (context, gtk_get_option_group (TRUE));
+    g_option_context_parse (context, &argc, &argv, &error);
+    
+    if (show_version)
+    {
+        printf("taskmand version: %s","Not Implemented");
+        exit(0);
+    }
+
     GMainLoop *main_loop;
     taskmanager = g_malloc(sizeof(Taskman) );    
     g_type_init();

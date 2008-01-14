@@ -38,7 +38,39 @@ enum TaskMode
 	MULTIPLE
 }
 
+class Configuration: GLib.Object
+{
+	protected			bool				anon_mode   { get; construct; }
+	protected			string				uid			{ get; construct; }
+	protected			string				subdir;
+	protected	weak	Awn.ConfigClient	primary_conf;
+	protected			Awn.ConfigClient	default_conf;
+	protected			Awn.ConfigClient	dummy;
 
+	construct
+	{
+		if (anon_mode)
+		{			
+			default_conf=new Awn.ConfigClient.for_applet("standalone-launcher",null);
+			primary_conf=default_conf;
+			subdir="anonymous";
+		}
+		else
+		{
+			default_conf=new Awn.ConfigClient.for_applet("standalone-launcher",null);
+			dummy=new Awn.ConfigClient.for_applet("standalone-launcher",uid);
+			primary_conf=dummy;
+			subdir="discrete";			
+		}
+	}
+	
+	Configuration(string uid,bool anon_mode)
+	{
+		this.uid=uid;
+		this.anon_mode=anon_mode;
+	}
+		
+}
 
 class DesktopFileManagement : GLib.Object
 {
@@ -175,6 +207,7 @@ class LauncherApplet : AppletSimple
     protected   Gtk.Window				dialog;
     protected   Gtk.VButtonBox			vbox;
     protected	DesktopItem				desktopitem;
+    protected   Configuration			config;
 	protected	TargetEntry[]			targets;
 	protected	SList<ulong>			XIDs;
 	protected	SList<ulong>			PIDs;	
@@ -191,6 +224,7 @@ class LauncherApplet : AppletSimple
     construct 
     { 
 		stdout.printf("Construct\n");
+
 		dialog=new AppletDialog(this);
 		dialog.set_accept_focus(false);
 		dialog.set_app_paintable(true);
@@ -208,6 +242,7 @@ class LauncherApplet : AppletSimple
 			set_temp_icon (icon);   
 		if (uid.to_double()>0)
 		{				
+			config=new Configuration(uid,false);
 			launchmode = LaunchMode.DISCRETE;
 			if (desktopfile.Exists() )
 			{
@@ -220,6 +255,7 @@ class LauncherApplet : AppletSimple
 		}
 		else
 		{
+			config=new Configuration(uid,true);
 			launchmode = LaunchMode.ANONYMOUS;
 			desktopitem = new DesktopItem(desktopfile.Filename() );
 		    Wnck.Window win=find_win_by_xid(uid.substring(1,128).to_ulong() );

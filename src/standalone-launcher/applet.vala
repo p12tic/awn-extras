@@ -24,6 +24,7 @@ using   Awn;
 using   GLib;
 using   Wnck;
 using   DBus;
+using   Cairo;
 
 
 enum LaunchMode
@@ -38,6 +39,56 @@ enum TaskMode
 	MULTIPLE
 }
 
+
+static void print_desktop(DesktopItem desktopitem)
+{
+
+	stdout.printf("\n\nDesktop item \n");
+	stdout.printf("name = %s\n",desktopitem.get_name());
+//	stdout.printf("icon = \n",desktopitem.get_icon());
+	stdout.printf("exec = %s\n",desktopitem.get_exec());		
+	stdout.printf("\n");
+}
+
+static int _cmp_ptrs (pointer a, pointer b)
+{
+	return (int) a - (int) b;
+}
+static Pixbuf layer_pixbuf_scale(Pixbuf dest,Pixbuf under,Pixbuf over,int width,int height,
+								double under_alpha=0.7,double over_alpha=1.0,
+								int src_xpos=0,int src_ypos=0,
+								double scale_x=1.0, double scale_y=1.0								
+								)
+{
+	if (under!=null)
+	{
+		under.composite (dest,0, 0, width,height,0,0,1,1, Gdk.InterpType.BILINEAR,255);
+	}	
+	over.composite (dest,0, 0, width,height,src_xpos,src_ypos,scale_x,scale_y, Gdk.InterpType.BILINEAR,255);
+	return dest;
+}
+
+
+static Pixbuf layer_pixbuf(Pixbuf dest,Pixbuf under,Pixbuf over,int width,int height,double under_alpha=0.7,double over_alpha=1.0)
+{
+	dest=dest.scale_simple (height, height, Gdk.InterpType.BILINEAR );	
+	dest.fill(0x00000000);	
+	if (under!=null)
+		under=over.scale_simple (height, height, Gdk.InterpType.BILINEAR );	
+	over=over.scale_simple (height, height, Gdk.InterpType.BILINEAR );	
+	return layer_pixbuf_scale(dest,under,over,width,height);
+}
+
+static Pixbuf layer_pixbuf_filled(Pixbuf dest,uint pixels,Pixbuf over,int width,int height,double over_alpha=1.0)
+{
+	dest=dest.scale_simple (height, height, Gdk.InterpType.BILINEAR );	//FIXME
+	dest.fill(pixels);
+	over=over.scale_simple (height, height, Gdk.InterpType.BILINEAR );	
+	return layer_pixbuf_scale(dest,null,over,width,height);
+}
+
+
+
 class Configuration: GLib.Object
 {
 	protected			bool				anon_mode   { get; construct; }
@@ -46,27 +97,13 @@ class Configuration: GLib.Object
 	protected	weak	Awn.ConfigClient	primary_conf;
 	protected			Awn.ConfigClient	default_conf;
 	protected			Awn.ConfigClient	dummy;
+
 	
 	private				int					_task_mode;
-
-	construct
-	{
-		read_config();
-/*		default_conf.notify_add(
-		if (!anon_mode)
-		{
-		
-		}
-*/
-	}
+	private				string				_active_image;
+//	private				Awn.Color			_active_colour;
 	
-	Configuration(string uid,bool anon_mode)
-	{
-		this.uid=uid;
-		this.anon_mode=anon_mode;
-	}
-
-	private void read_config()
+	construct
 	{
 		if (anon_mode)
 		{			
@@ -81,18 +118,57 @@ class Configuration: GLib.Object
 			primary_conf=dummy;
 			subdir="discrete/";			
 		}
-		_task_mode=get_int("task_mode");
+//		_active_colour=new Awn.Color();
+		read_config();
+
+//Don't know why this is crapping out... probably a bindings issue. FIXME later.
+//        default_conf.notify_add((CONFIG_CLIENT_DEFAULT_GROUP,"standalone-launcher", _config_changed, null);
+		if (!anon_mode)
+		{
+				
+		}
+
+	}
+	
+	public static void _config_changed(Awn.ConfigClientNotifyEntry entry, pointer data)
+	{
+	
+		stdout.printf("config notifiy fired\n");
+	}
+	
+	Configuration(string uid,bool anon_mode)
+	{
+		this.uid=uid;
+		this.anon_mode=anon_mode;
 	}
 
-	private int get_int(string key)
+	private void read_config()
+	{   
+		string temp;
+		_task_mode=get_int(subdir+"task_mode",1);
+		_active_image=get_string("active_task_image","emblem-favorite");
+		temp=get_string("active_colour","00000000");		
+		//cairo_string_to_color(temp,_active_colour);
+	}
+
+	public int get_int(string key,int def=0)
 	{
 		int value;
-		string name;
-		name=subdir+key;
 		try {
-			value = default_conf.get_int( CONFIG_CLIENT_DEFAULT_GROUP,name);
+			value = default_conf.get_int( CONFIG_CLIENT_DEFAULT_GROUP,key);
 		}catch (GLib.Error ex){
-			value = 0;   
+			value = def;   
+		}		
+		return value;
+	}
+
+	public string get_string(string key,string def="")
+	{
+		string value;
+		try {
+			value = default_conf.get_string( CONFIG_CLIENT_DEFAULT_GROUP,key);
+		}catch (GLib.Error ex){
+			value = def;   
 		}		
 		return value;
 	}
@@ -101,6 +177,12 @@ class Configuration: GLib.Object
     public int task_mode {
         get { 
 			return _task_mode;
+    	}
+    }
+
+    public string active_image {
+        get { 
+			return _active_image;
     	}
     }
 	
@@ -128,7 +210,12 @@ class DesktopFileManagement : GLib.Object
 			{
 				//FIXME... throw an exception... it has to be a dir.
 			}
-		}		
+		}
+	}
+	
+	public void set_name(string name)
+	{
+		uid=name;		
 	}
 	
 	public DesktopFileManagement(string uid)
@@ -165,8 +252,7 @@ public class DBusComm : GLib.Object
         }
 
 		public void Register(string uid)
-		{
-			stdout.printf("calling Register\n");		
+		{	
 			taskobj.Launcher_Register(uid);
 		}
 		
@@ -218,7 +304,6 @@ class DiagButton: Gtk.Button
 	
     private bool _clicked(Gtk.Widget widget,Gdk.EventButton event)
     {
-		stdout.printf("clicked\n");
 		if (win.is_active() )
 		{
 			win.minimize();
@@ -227,7 +312,6 @@ class DiagButton: Gtk.Button
 		{
 			win.activate(Gtk.get_current_event_time());
 		}
-		stdout.printf("exit clicked\n");
 		container.hide();
 		return true;
 	}
@@ -253,12 +337,9 @@ class LauncherApplet : AppletSimple
 	protected   DBusComm				dbusconn;
 	protected   ConfigClient			awn_config;
 	protected   SList<ulong>			retry_list;	
-	protected   Tree<Pixbuf>			icons_list;
 	
     construct 
     { 
-		stdout.printf("Construct\n");
-
 		dialog=new AppletDialog(this);
 		dialog.set_accept_focus(false);
 		dialog.set_app_paintable(true);
@@ -273,18 +354,19 @@ class LauncherApplet : AppletSimple
         theme = IconTheme.get_default ();        
 		icon = theme.load_icon ("stock_stop", height - 2, IconLookupFlags.USE_BUILTIN);
 		if (icon!=null)
-			set_temp_icon (icon);   
+			set_icon (icon);   
 		if (uid.to_double()>0)
 		{				
 			config=new Configuration(uid,false);
 			launchmode = LaunchMode.DISCRETE;
-			if (desktopfile.Exists() )
+			desktopitem = new DesktopItem(desktopfile.Filename() );			
+			if (!desktopfile.Exists() )
 			{
+				desktopitem.set_exec("false");
+				desktopitem.set_icon("stock_stop");
+				desktopitem.set_item_type("Application");
+			
 				desktopitem = new DesktopItem(desktopfile.Filename() );
-			}
-			else
-			{
-				desktopitem = null;
 			}
 		}
 		else
@@ -292,6 +374,9 @@ class LauncherApplet : AppletSimple
 			config=new Configuration(uid,true);
 			launchmode = LaunchMode.ANONYMOUS;
 			desktopitem = new DesktopItem(desktopfile.Filename() );
+			desktopitem.set_exec("false");
+			desktopitem.set_icon("none");
+			desktopitem.set_item_type("Application");
 		    Wnck.Window win=find_win_by_xid(uid.substring(1,128).to_ulong() );
 		    if (win!=null)
 		    {
@@ -312,6 +397,7 @@ class LauncherApplet : AppletSimple
 				XIDs.append(win.get_xid());
 				PIDs.append(win.get_pid());
 				windows.prepend(win);
+
 				icon=win.get_icon();
 				if (icon !=null)
 				{
@@ -319,13 +405,17 @@ class LauncherApplet : AppletSimple
 				}
 				if (icon!=null)
 				{
-					set_temp_icon(icon); 
+					set_icon(icon); 
 				}		
+				
 				desktopitem.set_icon(win.get_icon_name());
-				desktopitem.set_exec(win.get_name());
-				icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
+//				desktopitem.set_exec(win.get_name());
+				if (desktopitem.get_icon(theme)!=null)
+				{
+					icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
+				}			
 				if (icon!=null)
-					set_temp_icon (icon );   
+					set_icon (icon );   
 		    }			
 		    else
 		    {
@@ -338,14 +428,16 @@ class LauncherApplet : AppletSimple
 			{
 				icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
 				if (icon!=null)
-					set_temp_icon (icon );   
+					set_icon (icon );   
 			}		
 		}	
-		targets = new TargetEntry[1];
+		targets = new TargetEntry[2];
 		targets[0].target = "STRING";
 		targets[0].flags = 0;
 		targets[0].info =  0;
-
+		targets[1].target = "text/uri-list";
+		targets[1].flags = 0;
+		targets[1].info =  0;
 
 		wnck_screen.window_closed+=_window_closed;
 		wnck_screen.window_opened+=_window_opened;		
@@ -364,9 +456,7 @@ class LauncherApplet : AppletSimple
         this.orient = orient;
         this.height = height;
     }
-    
-    
-    
+        
     private void close()
     {
 		string needle;
@@ -401,36 +491,80 @@ class LauncherApplet : AppletSimple
 
     private bool _drag_data_received(Gtk.Widget widget,Gdk.DragContext context,int x,int y,Gtk.SelectionData selectdata,uint info,uint time)
     {
-
 		weak SList <string>	fileURIs;
 		string  cmd;  
 		fileURIs=vfs_get_pathlist_from_string(selectdata.data);
-		if (uid.to_double()>0)
+		foreach (string str in fileURIs) 
 		{
-			foreach (string str in fileURIs) 
+			stdout.printf("MARKER 1\n");
+			print_desktop(desktopitem);			
+			if (uid.to_double()>0)
 			{
+
 				DesktopItem		tempdesk;
 				tempdesk = new DesktopItem(Filename.from_uri(str));
 				if (tempdesk.exists() )
 				{
-					tempdesk.save(desktopfile.Filename());//FIXME - throws
-					desktopitem = new DesktopItem(desktopfile.Filename() );				
-					if (desktopitem.get_icon(theme) != null)
+					if ( (tempdesk.get_exec() != null) && (tempdesk.get_name()!=null) )
 					{
-						icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
+						tempdesk.save(desktopfile.Filename());//FIXME - throws
+						desktopitem = tempdesk;//new DesktopItem(desktopfile.Filename() );				
+						if (desktopitem.get_icon(theme) != null)
+						{
+							icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
+						}
+						else
+						{
+							icon = theme.load_icon ("stock_stop", height - 2, IconLookupFlags.USE_BUILTIN);
+						}		
+						set_icon (icon );   
+				        while( XIDs.length()>0 ) 
+				        {
+				    		int val = XIDs.nth_data(0);
+							XIDs.remove_all(val);	
+				        }
+					}	        
+				}
+			}		
+			print_desktop(desktopitem);						
+			stdout.printf("MARKER 5\n");
+			Pixbuf temp_icon;
+			temp_icon=new Pixbuf.from_file_at_scale( Filename.from_uri(str) ,height-2,height-2,true );
+			if (temp_icon !=null)
+			{
+
+				icon=temp_icon;
+				if (launchmode == LaunchMode.ANONYMOUS)
+				{	
+					Wnck.Window  win;		
+					if (XIDs.length() > 0 )
+					{		
+						ulong xid=XIDs.nth_data(0);
+						win=find_win_by_xid(xid);
 					}
 					else
+						break;
+					if ( wnck_screen.get_workspaces().find(win) !=null)
 					{
-						icon = theme.load_icon ("stock_stop", height - 2, IconLookupFlags.USE_BUILTIN);
-					}		
-					set_temp_icon (icon );   
-		            while( XIDs.length()>0 ) 
-		            {
-		        		int val = XIDs.nth_data(0);
-						XIDs.remove_all(val);	
-		            }
-				}
-			}	
+						stdout.printf("MARKER 7\n");					
+						Wnck.Application app=win.get_application();	
+						desktopfile.set_name(app.get_name());		
+						desktopitem.set_icon(Filename.from_uri(str) );							
+						desktopitem.save(desktopfile.Filename() );
+						stdout.printf("MARKER 9\n");						
+					}			
+				}			
+				else
+				{
+					print_desktop(desktopitem);
+					//desktopitem = new DesktopItem(desktopfile.Filename() );				
+					desktopitem.set_icon(Filename.from_uri(str) );					
+					desktopitem.save(desktopfile.Filename() );										
+					print_desktop(desktopitem);
+				}			
+				stdout.printf("MARKER 10\n");				
+				set_icon(icon);	
+			}
 		}		
 		return false;
     }  
@@ -528,7 +662,7 @@ class LauncherApplet : AppletSimple
 		int		xid;
 		bool	launch_new=false;
 		SList<string>	documents;
-
+		stdout.printf("In button press \n");
 		switch (event.button) 
 		{
 			case 1:
@@ -542,13 +676,15 @@ class LauncherApplet : AppletSimple
 			default:
 				break;
 		}
+		
+		if (desktopitem==null)
+			stdout.printf("DESKTOP ITEM = NULL\n");
 						
 		if ( launch_new && (desktopitem!=null) )
 		{
 			pid=desktopitem.launch(documents);
 			if (pid>0)
 			{
-				stdout.printf("appending pid = %d\n",pid);
 				PIDs.append(pid);
 			}
 		}
@@ -558,7 +694,7 @@ class LauncherApplet : AppletSimple
 	private void _realized()
 	{
 		this.button_press_event+=_button_press;
-		drag_dest_set(this, Gtk.DestDefaults.ALL, targets, 1, Gdk.DragAction.COPY);
+		drag_dest_set(this, Gtk.DestDefaults.ALL, targets, 2, Gdk.DragAction.COPY);
 		this.drag_drop+=_drag_drop;
 		this.drag_data_received+=_drag_data_received;
 	}
@@ -574,6 +710,40 @@ class LauncherApplet : AppletSimple
 			{
 				Timeout.add(500,_timed_closed,this);
 			}				
+		}
+
+		if (windows.find(window) !=null)
+		{
+			Pixbuf new_icon=null;
+			if (!window.get_icon_is_fallback())
+			{
+				new_icon=window.get_icon();
+			}
+			if (XIDs.length() >0)
+			{
+				ulong xid;
+				Wnck.Window win;
+				xid=XIDs.nth_data(0);
+				win=find_win_by_xid(xid);
+				if (!win.get_icon_is_fallback())
+				{
+					new_icon=win.get_icon();
+				}			
+			}
+			if (new_icon !=null)
+			{
+				new_icon=new_icon.scale_simple (height-2, height-2, Gdk.InterpType.BILINEAR );
+			}
+			if (new_icon == null)
+				if ( desktopitem.get_icon(theme) != null )
+				{
+					new_icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws			
+				}		
+			if (new_icon !=null)
+			{
+				icon=new_icon;
+				set_icon (icon ); 
+			}
 		}
 	}
 	
@@ -601,6 +771,19 @@ class LauncherApplet : AppletSimple
 					windows.prepend(win);
 				XIDs.prepend(xid);
 				retry_list.remove(xid);
+
+				Pixbuf new_icon;
+				if (! win.get_icon_is_fallback() ||  (desktopitem.get_icon(theme) == null) )
+				{
+					new_icon=win.get_icon();
+					new_icon=new_icon.scale_simple (height-2, height-2, Gdk.InterpType.BILINEAR );							
+				}		
+				else
+				{
+					new_icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
+				}
+				icon=new_icon;
+				set_icon (icon );   		
 			}
 			else if (response=="HANDSOFF")
 			{
@@ -633,8 +816,20 @@ class LauncherApplet : AppletSimple
 					response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"CLAIM");
 					if (response=="MANAGE")
 					{
+						Pixbuf  new_icon;
 						windows.prepend(window);
 						XIDs.prepend(xid);
+						if (desktopitem.get_icon(theme) != null)
+						{
+							new_icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
+						}
+						else
+						{
+							new_icon=window.get_icon();
+							new_icon=new_icon.scale_simple (height-2, height-2, Gdk.InterpType.BILINEAR );							
+						}		
+						icon=new_icon;
+						set_icon (icon );   					
 					}
 					else if (response=="RESET")
 						dbusconn.Register(uid);										
@@ -643,7 +838,7 @@ class LauncherApplet : AppletSimple
 			else
 			{
 				bool	accepted=false;
-				foreach(Wnck.Window win in windows)
+				foreach(Wnck.Window win in windows)	 //does the new window match up with any of the existing ones.
 				{
 					bool is_it_good=false;
 					is_it_good=(window.get_name()==win.get_name() ) ;
@@ -658,8 +853,20 @@ class LauncherApplet : AppletSimple
 							response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"ACCEPT");
 							if (response=="MANAGE")
 							{
+								Pixbuf new_icon;
 								windows.prepend(window);
 								XIDs.prepend(xid);
+								if (! window.get_icon_is_fallback() ||  (desktopitem.get_icon(theme) == null) )
+								{
+									new_icon=window.get_icon();
+									new_icon=new_icon.scale_simple (height-2, height-2, Gdk.InterpType.BILINEAR );							
+								}		
+								else
+								{
+									new_icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
+								}
+								icon=new_icon;
+								set_icon (icon );   
 							}						
 							else if (response=="RESET")
 								dbusconn.Register(uid);										
@@ -695,19 +902,36 @@ class LauncherApplet : AppletSimple
 
 	private void _active_window_changed(Wnck.Screen screen,Wnck.Window prev)
 	{
-		 Wnck.Window active=screen.get_active_window();
-		 if (windows.find(active) != null)
-		 {
-			if (! active.get_icon_is_fallback() )
+		Pixbuf  temp;
+		bool	icon_changed=false;
+	
+		Wnck.Window active=screen.get_active_window();
+		if (windows.find(prev) != null)
+		{
+			if (!prev.get_icon_is_fallback() )
 			{
+				icon_changed=true;				
+				icon=prev.get_icon();
+			}		
+			
+		} 
+	
+		if (windows.find(active) != null)
+		{
+			if (!active.get_icon_is_fallback() )
+			{
+				icon_changed=true;				
 				icon=active.get_icon();
-				icon=icon.scale_simple (height-2, height-2, Gdk.InterpType.BILINEAR );
-				if (icon !=null)
-				{
-					set_temp_icon(icon);
-				}	
-			}	
-		 }
+			}		
+		}
+		if (icon_changed)	 
+		{
+			icon=icon.scale_simple (height-2, height-2, Gdk.InterpType.BILINEAR );		
+			if (icon !=null)
+			{
+				set_icon(icon);
+			}			
+		}
 		 
 	}
 }

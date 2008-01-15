@@ -19,7 +19,9 @@ Build-Depends: 	debhelper (>= 5),
 		python, 
 		libvte-dev, 
 		libsexy-dev, 
-		libnotify-dev
+		libnotify-dev,
+		vala-awn-testing,
+		valac
 Standards-Version: 3.7.2
 XS-Python-Version: current
 
@@ -28,7 +30,7 @@ Section: gnome
 Architecture: any
 Depends: ${shlibs:Depends}, ${python:Depends}
 Recommends: 	avant-window-navigator-testing, 
-		python-awn-testing, 
+		python-awn-testing,
 		vala-awn-testing,
 		cairo-clock, 
 		python-alsaaudio, 

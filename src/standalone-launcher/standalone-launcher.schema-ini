@@ -1,0 +1,22 @@
+[DEFAULT/anonymous/task_mode]
+type = int
+default = 1
+description = Default taskmode. 0=Single task.  1=Multiple
+
+[DEFAULT/discrete/task_mode]
+type = int
+default = 1
+description = Default taskmode. 0=Single task.  1=Multiple
+
+
+[DEFAULT/active_task_image]
+type = string
+default = _none_
+description = image to underlay the active icon.
+
+[DEFAULT/active_colour]
+type = string
+default = 00000000
+description = colour to underlay the active icon.
+
+; vim: set ft=dosini :

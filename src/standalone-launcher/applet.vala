@@ -102,6 +102,8 @@ class Configuration: GLib.Object
 	private				int					_task_mode;
 	private				string				_active_image;
 //	private				Awn.Color			_active_colour;
+	public				int					name_comparision_len;	//FIXME
+	public				bool				override_app_icon;
 	
 	construct
 	{
@@ -149,6 +151,8 @@ class Configuration: GLib.Object
 		_active_image=get_string("active_task_image","emblem-favorite");
 		temp=get_string("active_colour","00000000");		
 		//cairo_string_to_color(temp,_active_colour);
+		name_comparision_len=14;		
+		override_app_icon=true;
 	}
 
 	public int get_int(string key,int def=0)
@@ -685,6 +689,7 @@ class LauncherApplet : AppletSimple
 			pid=desktopitem.launch(documents);
 			if (pid>0)
 			{
+				stdout.printf("launched: pid = %d\n",pid);
 				PIDs.append(pid);
 			}
 		}
@@ -715,7 +720,15 @@ class LauncherApplet : AppletSimple
 		if (windows.find(window) !=null)
 		{
 			Pixbuf new_icon=null;
-			if (!window.get_icon_is_fallback())
+			
+			if (config.override_app_icon )
+			{
+				if (desktopitem.get_icon(theme) != null)
+				{			
+					new_icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
+				}
+			}			
+			else if (!window.get_icon_is_fallback() && !config.override_app_icon )
 			{
 				new_icon=window.get_icon();
 			}
@@ -725,7 +738,14 @@ class LauncherApplet : AppletSimple
 				Wnck.Window win;
 				xid=XIDs.nth_data(0);
 				win=find_win_by_xid(xid);
-				if (!win.get_icon_is_fallback())
+				if (config.override_app_icon )
+				{
+					if ( desktopitem.get_icon(theme) != null)
+					{
+						new_icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
+					}			
+				}				
+				else if (!win.get_icon_is_fallback())
 				{
 					new_icon=win.get_icon();
 				}			
@@ -807,9 +827,19 @@ class LauncherApplet : AppletSimple
 		{
 			return;
 		}
+		stdout.printf("window opened: pid = %d\n",window.get_pid());
+		stdout.printf("window opened: xid = %lu\n",xid);
+		stdout.printf("window name: = %s\n",window.get_name());						
 		if (XIDs.find(window.get_xid() )==null)
 		{
-			if (PIDs.find(window.get_pid() ) !=null)
+			string window_name=window.get_name();
+			string desk_name=desktopitem.get_name();
+			int cmp_len=config.name_comparision_len>0?config.name_comparision_len:(desk_name.len()>window_name.len()?window_name.len():desk_name.len() );
+			if ( 
+				(PIDs.find(window.get_pid() ) !=null)
+				||
+				(  desk_name.substring(0,cmp_len) == window_name.substring(0,cmp_len) ) //FIXME strncmp
+			)
 			{
 				do
 				{
@@ -893,11 +923,16 @@ class LauncherApplet : AppletSimple
 
 	private void _application_closed(Wnck.Screen screen,Wnck.Application app)
 	{ 
+		stdout.printf("removing pid = %d\n",app.get_pid() );
 		PIDs.remove(app.get_pid() );	
 	}
 	
 	private void _application_opened(Wnck.Screen screen,Wnck.Application app)
 	{ 
+		if (PIDs.find(app.get_pid() ) !=null)
+		{
+			PIDs.append(app.get_pid() );		
+		}		
 	}
 
 	private void _active_window_changed(Wnck.Screen screen,Wnck.Window prev)
@@ -906,10 +941,23 @@ class LauncherApplet : AppletSimple
 		bool	icon_changed=false;
 	
 		Wnck.Window active=screen.get_active_window();
+		if (config.override_app_icon)
+			stdout.printf("Override app icon on\n");		
+		
 		if (windows.find(prev) != null)
 		{
-			if (!prev.get_icon_is_fallback() )
+			if (config.override_app_icon )
 			{
+				if (desktopitem.get_icon(theme) != null)
+				{				
+					stdout.printf("Override app icon on\n");
+					icon_changed=true;			
+					icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
+				}			
+			}
+			else if (!prev.get_icon_is_fallback() )
+			{
+				stdout.printf("Override app icon NOT on\n");			
 				icon_changed=true;				
 				icon=prev.get_icon();
 			}		
@@ -918,8 +966,19 @@ class LauncherApplet : AppletSimple
 	
 		if (windows.find(active) != null)
 		{
-			if (!active.get_icon_is_fallback() )
+
+			if (config.override_app_icon )
 			{
+				if (desktopitem.get_icon(theme) != null)
+				{
+					stdout.printf("Override app icon on\n");
+					icon_changed=true;			
+					icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
+				}			
+			}
+			else if (!active.get_icon_is_fallback() )
+			{
+				stdout.printf("Override app icon NOT on\n");
 				icon_changed=true;				
 				icon=active.get_icon();
 			}		

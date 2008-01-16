@@ -535,10 +535,11 @@ class LauncherApplet : AppletSimple
 		return true;
     }  
 
-    private bool _drag_data_received(Gtk.Widget widget,Gdk.DragContext context,int x,int y,Gtk.SelectionData selectdata,uint info,uint time)
+    private void _drag_data_received(Gtk.Widget widget,Gdk.DragContext context,int x,int y,Gtk.SelectionData selectdata,uint info,uint time)
     {
 		weak SList <string>	fileURIs;
 		string  cmd;  
+		bool status=false;
 		fileURIs=vfs_get_pathlist_from_string(selectdata.data);
 		foreach (string str in fileURIs) 
 		{
@@ -568,6 +569,7 @@ class LauncherApplet : AppletSimple
 				    		int val = XIDs.nth_data(0);
 							XIDs.remove_all(val);	
 				        }
+						status=true;				        
 					}	        
 				}
 			}		
@@ -600,9 +602,11 @@ class LauncherApplet : AppletSimple
 				}			
 				desktopitem.save(desktopfile.Filename() );				
 				set_icon(icon);	
+				status=true;
 			}
 		}		
-		return false;
+		drag_finish (context, status, false, time);		
+
     }  
 
     private Wnck.Window  find_win_by_xid(ulong xid)

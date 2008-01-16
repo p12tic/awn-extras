@@ -186,7 +186,7 @@ AS_AC_EXPAND(LIBDIR, $libdir)
 AS_AC_EXPAND(DATADIR, $datadir)
 AS_AC_EXPAND(LIBEXECDIR, $libexecdir)
 
-DBUS_SERVICES_DIR="$DATADIR/dbus-1/services"
+DBUS_SERVICES_DIR="/usr/share/dbus-1/services"
 AC_SUBST(DBUS_SERVICES_DIR)
 
 

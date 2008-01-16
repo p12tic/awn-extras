@@ -397,11 +397,8 @@ class LauncherApplet : AppletSimple
 		{
 			config=new Configuration(uid,true);
 			launchmode = LaunchMode.ANONYMOUS;
-			desktopitem = new DesktopItem(desktopfile.Filename() );
-			desktopitem.set_exec("false");
-			desktopitem.set_icon("none");
-			desktopitem.set_item_type("Application");
 		    Wnck.Window win=find_win_by_xid(uid.substring(1,128).to_ulong() );
+
 		    if (win!=null)
 		    {
 				string response;
@@ -418,13 +415,11 @@ class LauncherApplet : AppletSimple
 						close();
 					}			
 				}
-				Wnck.Application app=win.get_application();	
-				desktopfile.set_name(app.get_name());		
-				desktopitem = new DesktopItem(desktopfile.Filename() );
-				icon=win.get_icon();
+				set_anon_desktop(win);
 				XIDs.append(win.get_xid());
 				PIDs.append(win.get_pid());
 				windows.prepend(win);
+				icon=win.get_icon();		//the fallback				
 				if (icon !=null)
 				{
 					icon=icon.scale_simple (height-2, height-2, Gdk.InterpType.BILINEAR );
@@ -436,7 +431,7 @@ class LauncherApplet : AppletSimple
 				close();
 		    }
 		}	
-		if (desktopitem.exists() )
+		if (desktopitem.exists() )  //we will use a user specified one if it exists.
 		{
 			if (desktopitem.get_icon(theme)!=null)
 			{
@@ -470,6 +465,42 @@ class LauncherApplet : AppletSimple
         this.uid = uid;
         this.orient = orient;
         this.height = height;
+    }
+    
+
+    private void set_anon_desktop(Wnck.Window win)
+    {
+		string  exec=new string();    
+		Wnck.Application app=win.get_application();	
+		if (app.get_name()!=null)
+		{
+			desktopfile.set_name(app.get_name());		
+		}
+		else
+		{
+			desktopfile.set_name(win.get_name());				
+		}		
+		desktopitem = new DesktopItem(desktopfile.Filename() );
+				
+		if (! desktopitem.exists() )		
+		{
+			desktopitem.set_icon("none");
+			desktopitem.set_item_type("Application");
+			desktopitem.set_exec("false");			
+		}
+
+		string filename=new string();
+		filename="/proc/"+(win.get_pid()).to_string()+"/cmdline";
+		if (FileUtils.get_contents(filename,out exec)==true )
+		{
+			desktopitem.set_exec(exec);
+			desktopitem.save(desktopfile.Filename() );
+			if (desktopitem.get_icon(theme)=="none")
+			{
+				desktopitem.set_icon(GLib.Path.get_basename(exec));			
+			}		
+		}    	
+		desktopitem.save(desktopfile.Filename() );					
     }
         
     private void close()
@@ -511,7 +542,6 @@ class LauncherApplet : AppletSimple
 		fileURIs=vfs_get_pathlist_from_string(selectdata.data);
 		foreach (string str in fileURIs) 
 		{
-			stdout.printf("MARKER 1\n");
 			print_desktop(desktopitem);			
 			if (uid.to_double()>0)
 			{
@@ -542,7 +572,6 @@ class LauncherApplet : AppletSimple
 				}
 			}		
 			print_desktop(desktopitem);						
-			stdout.printf("MARKER 5\n");
 			Pixbuf temp_icon;
 			temp_icon=new Pixbuf.from_file_at_scale( Filename.from_uri(str) ,height-2,height-2,true );
 			if (temp_icon !=null)
@@ -551,7 +580,6 @@ class LauncherApplet : AppletSimple
 				icon=temp_icon;
 				if (launchmode == LaunchMode.ANONYMOUS)
 				{	
-					stdout.printf("MARKER 6\n");									
 					Wnck.Window  win;		
 					if (XIDs.length() > 0 )
 					{		
@@ -562,23 +590,15 @@ class LauncherApplet : AppletSimple
 						break;
 //					if ( wnck_screen.get_workspaces().find(win) !=null)
 					{
-						stdout.printf("MARKER 7\n");					
-						Wnck.Application app=win.get_application();	
-						desktopfile.set_name(app.get_name());		
+//						set_anon_desktop(win);
 						desktopitem.set_icon(Filename.from_uri(str) );							
-						desktopitem.save(desktopfile.Filename() );
-						stdout.printf("MARKER 9\n");						
 					}			
 				}			
 				else
 				{
-					print_desktop(desktopitem);
-					//desktopitem = new DesktopItem(desktopfile.Filename() );				
 					desktopitem.set_icon(Filename.from_uri(str) );					
-					desktopitem.save(desktopfile.Filename() );										
-					print_desktop(desktopitem);
 				}			
-				stdout.printf("MARKER 10\n");				
+				desktopitem.save(desktopfile.Filename() );				
 				set_icon(icon);	
 			}
 		}		
@@ -679,6 +699,7 @@ class LauncherApplet : AppletSimple
 		bool	launch_new=false;
 		SList<string>	documents;
 		stdout.printf("In button press \n");
+		stdout.printf("exec = %s\n",desktopitem.get_exec() );
 		switch (event.button) 
 		{
 			case 1:
@@ -692,17 +713,19 @@ class LauncherApplet : AppletSimple
 			default:
 				break;
 		}
-		
-		if (desktopitem==null)
-			stdout.printf("DESKTOP ITEM = NULL\n");
 						
 		if ( launch_new && (desktopitem!=null) )
 		{
+			stdout.printf("Launching...\n");
 			pid=desktopitem.launch(documents);
 			if (pid>0)
 			{
 				stdout.printf("launched: pid = %d\n",pid);
 				PIDs.append(pid);
+			}
+			else if (pid==-1)
+			{
+				Process.spawn_command_line_async(desktopitem.get_exec());
 			}
 		}
 		return false;
@@ -810,7 +833,7 @@ class LauncherApplet : AppletSimple
 					Wnck.Application app=win.get_application();	
 					desktopfile.set_name(app.get_name());		
 				}		
-				desktopitem = new DesktopItem(desktopfile.Filename() );
+//				desktopitem = new DesktopItem(desktopfile.Filename() );
 				
 				if (config.override_app_icon )
 				{
@@ -877,7 +900,7 @@ class LauncherApplet : AppletSimple
 							Wnck.Application app=window.get_application();	
 							desktopfile.set_name(app.get_name());		
 						}		
-						desktopitem = new DesktopItem(desktopfile.Filename() );
+//						desktopitem = new DesktopItem(desktopfile.Filename() );
 						if (desktopitem.get_icon(theme) != null)
 						{
 							new_icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
@@ -912,7 +935,7 @@ class LauncherApplet : AppletSimple
 							Wnck.Application app=window.get_application();	
 							desktopfile.set_name(app.get_name());		
 						}		
-						desktopitem = new DesktopItem(desktopfile.Filename() );						
+//						desktopitem = new DesktopItem(desktopfile.Filename() );						
 						do
 						{
 							response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"ACCEPT");
@@ -973,7 +996,7 @@ class LauncherApplet : AppletSimple
 		if (PIDs.find(app.get_pid() ) !=null)
 		{
 			desktopfile.set_name(app.get_name());	
-			desktopitem = new DesktopItem(desktopfile.Filename() );
+//			desktopitem = new DesktopItem(desktopfile.Filename() );
 			PIDs.append(app.get_pid() );		
 		}		
 	}

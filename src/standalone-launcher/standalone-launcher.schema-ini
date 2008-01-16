@@ -8,6 +8,15 @@ type = int
 default = 1
 description = Default taskmode. 0=Single task.  1=Multiple
 
+[DEFAULT/anonymous/override_app_icon]
+type = bool
+default = true
+description = If there is an desktop file icon availabe whether to use it, in general, over one provided by wnck
+
+[DEFAULT/discrete/override_app_icon]
+type = bool
+default = true
+description = If there is an desktop file icon availabe whether to use it, in general, over one provided by wnck
 
 [DEFAULT/active_task_image]
 type = string
@@ -18,5 +27,6 @@ description = image to underlay the active icon.
 type = string
 default = 00000000
 description = colour to underlay the active icon.
+
 
 ; vim: set ft=dosini :

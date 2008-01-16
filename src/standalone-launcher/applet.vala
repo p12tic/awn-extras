@@ -103,7 +103,7 @@ class Configuration: GLib.Object
 	private				string				_active_image;
 //	private				Awn.Color			_active_colour;
 	public				int					name_comparision_len;	//FIXME
-	public				bool				override_app_icon;
+	private				bool				_override_app_icon;
 	
 	construct
 	{
@@ -149,11 +149,25 @@ class Configuration: GLib.Object
 		string temp;
 		_task_mode=get_int(subdir+"task_mode",1);
 		_active_image=get_string("active_task_image","emblem-favorite");
-		temp=get_string("active_colour","00000000");		
-		//cairo_string_to_color(temp,_active_colour);
+		_override_app_icon=get_bool(subdir+"override_app_icon",true);
+
 		name_comparision_len=14;		
-		override_app_icon=true;
+
+
+		temp=get_string("active_colour","00000000");		
+		//cairo_string_to_color(temp,_active_colour);		
 	}
+	
+	public bool get_bool(string key,bool def=false)
+	{
+		bool value;
+		try {
+			value = default_conf.get_bool( CONFIG_CLIENT_DEFAULT_GROUP,key);
+		}catch (GLib.Error ex){
+			value = def;   
+		}		
+		return value;
+	}	
 
 	public int get_int(string key,int def=0)
 	{
@@ -176,6 +190,13 @@ class Configuration: GLib.Object
 		}		
 		return value;
 	}
+
+    public bool override_app_icon{
+        get { 
+			return _override_app_icon;
+    	}
+    }
+
 	
 
     public int task_mode {

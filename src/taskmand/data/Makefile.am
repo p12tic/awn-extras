@@ -1,5 +1,5 @@
 # Dbus service file
-DBUS_SERVICES_DIR="$(DATADIR)/dbus-1/system-services"
+#DBUS_SERVICES_DIR="$(DATADIR)/dbus-1/system-services"
 servicedir = $(DBUS_SERVICES_DIR) 
 service_in_files = org.awnproject.taskmand.service.in
 service_DATA = $(service_in_files:.service.in=.service)

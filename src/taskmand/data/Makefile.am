@@ -6,7 +6,7 @@ service_DATA = $(service_in_files:.service.in=.service)
 
 # Rule to make the service file with bindir expanded
 $(service_DATA): $(service_in_files) Makefile
-	@sed -e "s|\@servicedir\@|$(bindir)|" $< > $@
+	@sed -e "s|\@bindir\@|$(bindir)|" $< > $@
 
 
 EXTRA_DIST = \

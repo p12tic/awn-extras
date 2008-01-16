@@ -368,8 +368,7 @@ class LauncherApplet : AppletSimple
 			{
 				desktopitem.set_exec("false");
 				desktopitem.set_icon("stock_stop");
-				desktopitem.set_item_type("Application");
-			
+				desktopitem.set_item_type("Application");			
 				desktopitem = new DesktopItem(desktopfile.Filename() );
 			}
 		}
@@ -398,28 +397,18 @@ class LauncherApplet : AppletSimple
 						close();
 					}			
 				}
+				Wnck.Application app=win.get_application();	
+				desktopfile.set_name(app.get_name());		
+				desktopitem = new DesktopItem(desktopfile.Filename() );
+				icon=win.get_icon();
 				XIDs.append(win.get_xid());
 				PIDs.append(win.get_pid());
 				windows.prepend(win);
-
-				icon=win.get_icon();
 				if (icon !=null)
 				{
 					icon=icon.scale_simple (height-2, height-2, Gdk.InterpType.BILINEAR );
-				}
-				if (icon!=null)
-				{
-					set_icon(icon); 
-				}		
-				
-				desktopitem.set_icon(win.get_icon_name());
-//				desktopitem.set_exec(win.get_name());
-				if (desktopitem.get_icon(theme)!=null)
-				{
-					icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
-				}			
-				if (icon!=null)
 					set_icon (icon );   
+				}
 		    }			
 		    else
 		    {
@@ -431,10 +420,11 @@ class LauncherApplet : AppletSimple
 			if (desktopitem.get_icon(theme)!=null)
 			{
 				icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
-				if (icon!=null)
-					set_icon (icon );   
 			}		
 		}	
+		if (icon!=null)
+			set_icon (icon );   
+		
 		targets = new TargetEntry[2];
 		targets[0].target = "STRING";
 		targets[0].flags = 0;
@@ -540,6 +530,7 @@ class LauncherApplet : AppletSimple
 				icon=temp_icon;
 				if (launchmode == LaunchMode.ANONYMOUS)
 				{	
+					stdout.printf("MARKER 6\n");									
 					Wnck.Window  win;		
 					if (XIDs.length() > 0 )
 					{		
@@ -548,7 +539,7 @@ class LauncherApplet : AppletSimple
 					}
 					else
 						break;
-					if ( wnck_screen.get_workspaces().find(win) !=null)
+//					if ( wnck_screen.get_workspaces().find(win) !=null)
 					{
 						stdout.printf("MARKER 7\n");					
 						Wnck.Application app=win.get_application();	
@@ -786,14 +777,28 @@ class LauncherApplet : AppletSimple
 			response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"ACCEPT");
 			if (response=="MANAGE")
 			{
+				Pixbuf new_icon;
 				Wnck.Window win=find_win_by_xid(xid);
 				if (win!=null)
 					windows.prepend(win);
 				XIDs.prepend(xid);
 				retry_list.remove(xid);
 
-				Pixbuf new_icon;
-				if (! win.get_icon_is_fallback() ||  (desktopitem.get_icon(theme) == null) )
+				if (launchmode == LaunchMode.ANONYMOUS)
+				{	
+					Wnck.Application app=win.get_application();	
+					desktopfile.set_name(app.get_name());		
+				}		
+				desktopitem = new DesktopItem(desktopfile.Filename() );
+				
+				if (config.override_app_icon )
+				{
+					if (desktopitem.get_icon(theme) != null)
+					{				
+						new_icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME 
+					}
+				}								
+				else if (! win.get_icon_is_fallback() ||  (desktopitem.get_icon(theme) == null) )
 				{
 					new_icon=win.get_icon();
 					new_icon=new_icon.scale_simple (height-2, height-2, Gdk.InterpType.BILINEAR );							
@@ -827,9 +832,6 @@ class LauncherApplet : AppletSimple
 		{
 			return;
 		}
-		stdout.printf("window opened: pid = %d\n",window.get_pid());
-		stdout.printf("window opened: xid = %lu\n",xid);
-		stdout.printf("window name: = %s\n",window.get_name());						
 		if (XIDs.find(window.get_xid() )==null)
 		{
 			string window_name=window.get_name();
@@ -849,6 +851,12 @@ class LauncherApplet : AppletSimple
 						Pixbuf  new_icon;
 						windows.prepend(window);
 						XIDs.prepend(xid);
+						if (launchmode == LaunchMode.ANONYMOUS)
+						{	
+							Wnck.Application app=window.get_application();	
+							desktopfile.set_name(app.get_name());		
+						}		
+						desktopitem = new DesktopItem(desktopfile.Filename() );
 						if (desktopitem.get_icon(theme) != null)
 						{
 							new_icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
@@ -878,6 +886,12 @@ class LauncherApplet : AppletSimple
 					if (is_it_good)
 					{
 						accepted=true;
+						if (launchmode == LaunchMode.ANONYMOUS)
+						{	
+							Wnck.Application app=window.get_application();	
+							desktopfile.set_name(app.get_name());		
+						}		
+						desktopitem = new DesktopItem(desktopfile.Filename() );						
 						do
 						{
 							response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"ACCEPT");
@@ -885,8 +899,15 @@ class LauncherApplet : AppletSimple
 							{
 								Pixbuf new_icon;
 								windows.prepend(window);
-								XIDs.prepend(xid);
-								if (! window.get_icon_is_fallback() ||  (desktopitem.get_icon(theme) == null) )
+								XIDs.prepend(xid);				
+								if (config.override_app_icon )
+								{
+									if (desktopitem.get_icon(theme) != null)
+									{				
+										new_icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME 
+									}			
+								}								
+								else if (! window.get_icon_is_fallback() ||  (desktopitem.get_icon(theme) == null) )
 								{
 									new_icon=window.get_icon();
 									new_icon=new_icon.scale_simple (height-2, height-2, Gdk.InterpType.BILINEAR );							
@@ -923,7 +944,6 @@ class LauncherApplet : AppletSimple
 
 	private void _application_closed(Wnck.Screen screen,Wnck.Application app)
 	{ 
-		stdout.printf("removing pid = %d\n",app.get_pid() );
 		PIDs.remove(app.get_pid() );	
 	}
 	
@@ -931,6 +951,8 @@ class LauncherApplet : AppletSimple
 	{ 
 		if (PIDs.find(app.get_pid() ) !=null)
 		{
+			desktopfile.set_name(app.get_name());	
+			desktopitem = new DesktopItem(desktopfile.Filename() );
 			PIDs.append(app.get_pid() );		
 		}		
 	}
@@ -940,45 +962,41 @@ class LauncherApplet : AppletSimple
 		Pixbuf  temp;
 		bool	icon_changed=false;
 	
-		Wnck.Window active=screen.get_active_window();
-		if (config.override_app_icon)
-			stdout.printf("Override app icon on\n");		
-		
+		Wnck.Window active=screen.get_active_window();		
 		if (windows.find(prev) != null)
 		{
 			if (config.override_app_icon )
 			{
 				if (desktopitem.get_icon(theme) != null)
 				{				
-					stdout.printf("Override app icon on\n");
 					icon_changed=true;			
 					icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
 				}			
 			}
 			else if (!prev.get_icon_is_fallback() )
 			{
-				stdout.printf("Override app icon NOT on\n");			
 				icon_changed=true;				
 				icon=prev.get_icon();
 			}		
 			
-		} 
-	
+		} 	
 		if (windows.find(active) != null)
 		{
-
 			if (config.override_app_icon )
 			{
 				if (desktopitem.get_icon(theme) != null)
 				{
-					stdout.printf("Override app icon on\n");
 					icon_changed=true;			
 					icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
-				}			
+				}
+				else if (!active.get_icon_is_fallback() )
+				{
+					icon_changed=true;				
+					icon=active.get_icon();				
+				}
 			}
 			else if (!active.get_icon_is_fallback() )
 			{
-				stdout.printf("Override app icon NOT on\n");
 				icon_changed=true;				
 				icon=active.get_icon();
 			}		

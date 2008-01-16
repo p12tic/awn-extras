@@ -179,14 +179,19 @@ AC_DEFINE_UNQUOTED(DBUS_MICRO_VER, $DBUS_MICRO_VER, [D-BUS micro version.])
 
 AC_DEFINE_UNQUOTED(DBUS_API_SUBJECT_TO_CHANGE, ,DBUS API is subject to change)
 
-icondir="$datarootdir/avant-window-navigator/applets/icons"
-AC_SUBST(icondir)
 
 AS_AC_EXPAND(ICONDIR, $icondir)
 AS_AC_EXPAND(SYSCONFDIR, $sysconfdir)
 AS_AC_EXPAND(LIBDIR, $libdir)
 AS_AC_EXPAND(DATADIR, $datadir)
 AS_AC_EXPAND(LIBEXECDIR, $libexecdir)
+
+DBUS_SERVICES_DIR="$DATADIR/dbus-1/services"
+AC_SUBST(DBUS_SERVICES_DIR)
+
+
+icondir="$datarootdir/avant-window-navigator/applets/icons"
+AC_SUBST(icondir)
 
 if test "x$GCC" = "xyes"; then
         GCC_FLAGS="-g -Wall"

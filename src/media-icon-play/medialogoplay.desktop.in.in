@@ -2,7 +2,8 @@
 Version=1.0
 Encoding=UTF-8
 Name=Media Icons Play
-Type=Python
+Type=Application
+X-AWN-AppletType=Python
 Comment=A media-control applet (Play)
 Exec=@LIBDIR@/awn/applets/media-icon-play/medialogoplay.py
 Icon=@LIBDIR@/awn/applets/media-icon-play/icons/play.svg

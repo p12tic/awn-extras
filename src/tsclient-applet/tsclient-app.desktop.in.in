@@ -1,5 +1,6 @@
 [Desktop Entry]
-Type=Python
+Type=Application
+X-AWN-AppletType=Python
 Encoding=UTF-8
 Name=TsClient Applet
 Comment=Quick access to your rdp files

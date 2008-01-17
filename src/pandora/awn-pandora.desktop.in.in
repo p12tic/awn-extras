@@ -1,7 +1,8 @@
 [Desktop Entry]
 Version=1.0
 Name=Pandora Radio
-Type=Python
+Type=Application
+X-AWN-AppletType=Python
 Comment=Listen to Pandora internet Radio from AWN.
 Exec=@LIBDIR@/awn/applets/pandora/awn-pandora.py
 Icon=@LIBDIR@/awn/applets/pandora/pandora.ico

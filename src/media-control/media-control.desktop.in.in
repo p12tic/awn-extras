@@ -2,8 +2,7 @@
 Version=1.0
 Encoding=UTF-8
 Name=Media Control
-Type=Application
-X-AWN-AppletType=Python
+Type=Python
 Comment=A media-control applet
 Exec=@LIBDIR@/awn/applets/media-control/mediacontrol.py
 Icon=multimedia-volume-control

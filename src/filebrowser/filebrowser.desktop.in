@@ -2,8 +2,7 @@
 Version=1.0
 Encoding=UTF-8
 Name=File Browser
-Type=Application
-X-AWN-AppletType=C
+Type=C
 Comment=Browse the filesystem
 Exec=@LIBDIR@/awn/applets/filebrowser/filebrowser.so
 Icon=@ICONDIR@/filebrowser.svg

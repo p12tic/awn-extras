@@ -1,5 +1,4 @@
 [Desktop Entry]
-Type=Application
 X-AWNApplet-Type=Vala
 Name=Test Vala Applet
 Comment=A simple applet written in Vala.

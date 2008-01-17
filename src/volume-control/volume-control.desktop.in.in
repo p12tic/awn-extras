@@ -1,7 +1,6 @@
 [Desktop Entry]
 Version=0.5
-Type=Application
-X-AWN-AppletType=Python
+Type=Python
 Encoding=UTF-8
 Name=volume-control
 Comment=Python applet to control the volume (v0.5).

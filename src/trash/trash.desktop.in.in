@@ -1,6 +1,5 @@
 [Desktop Entry]
-Type=Application
-X-AWN-AppletType=C
+Type=C
 Encoding=UTF-8
 Name=Trash Applet
 Comment=A Trash applet for Awn

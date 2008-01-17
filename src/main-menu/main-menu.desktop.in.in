@@ -1,6 +1,5 @@
 [Desktop Entry]
-Type=Application
-X-AWN-AppletType=C
+Type=C
 Encoding=UTF-8
 Name=Awn Main Menu
 Comment=A main menu for Awn

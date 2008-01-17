@@ -2,8 +2,7 @@
 Version=1.0
 Encoding=UTF-8
 Name=MiMenu
-Type=Application
-X-AWN-AppletType=Python
+Type=Python
 Comment=A Main Menu Applet
 Exec=@LIBDIR@/awn/applets/MiMenu/mimenu.py
 Icon=gtk-index

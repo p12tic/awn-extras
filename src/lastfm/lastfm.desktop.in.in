@@ -1,6 +1,5 @@
 [Desktop Entry]
-Type=Application
-X-AWN-AppletType=Python
+Type=Python
 Encoding=UTF-8
 Name=Last.fm Player Applet
 Comment=Last.fm Player for the Avant Window Navigator (v0.4beta)

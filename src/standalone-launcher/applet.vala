@@ -997,6 +997,8 @@ class LauncherApplet : AppletSimple
 				(PIDs.find(window.get_pid() ) !=null)
 				||
 				(  desk_name.substring(0,cmp_len) == window_name.substring(0,cmp_len) ) //FIXME strncmp
+				||
+				(desktopitem.get_exec() == exec) 
 			)
 			{
 				do

@@ -1,5 +1,5 @@
 [Desktop Entry]
-Type=Application
+Type=Python
 X-AWN-AppletType=Python
 Name=File Browser Launcher
 Comment=A customizable launcher for browsing your files.

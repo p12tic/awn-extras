@@ -1,5 +1,6 @@
 [Desktop Entry]
-Type=Python
+Type=Application
+X-AWN-AppletType=Python
 Encoding=UTF-8
 Name=Battery Applet
 Comment=An applet displaying battery state

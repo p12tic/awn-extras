@@ -1,5 +1,6 @@
 [Desktop Entry]
-Type=Python
+Type=Application
+X-AWN-AppletType=Python
 Encoding=UTF-8
 Name=Weather Applet
 Comment=Fetches the local weather.

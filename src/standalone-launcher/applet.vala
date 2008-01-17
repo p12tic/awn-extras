@@ -362,6 +362,9 @@ class LauncherApplet : AppletSimple
 	protected   DBusComm				dbusconn;
 	protected   ConfigClient			awn_config;
 	protected   SList<ulong>			retry_list;	
+	protected   Awn.Title               title;
+	protected   Awn.Effects             effects;
+	protected   string                  title_string;
 	
     construct 
     { 
@@ -378,6 +381,14 @@ class LauncherApplet : AppletSimple
 		wnck_screen.force_update();	
         theme = IconTheme.get_default ();        
 		icon = theme.load_icon ("stock_stop", height - 2, IconLookupFlags.USE_BUILTIN);
+		title_string = new string();
+		title = new Awn.Title();
+		title = (Awn.Title) Awn.Title.get_default();
+		effects = new Awn.Effects();
+		Effects.init(this,effects);		
+        effects.set_title(title, _get_title);
+
+
 		if (icon!=null)
 			set_icon (icon);   
 		if (uid.to_double()>0)
@@ -392,6 +403,7 @@ class LauncherApplet : AppletSimple
 				desktopitem.set_item_type("Application");			
 				desktopitem = new DesktopItem(desktopfile.Filename() );
 			}
+    		title_string = desktopitem.get_name();
 		}
 		else
 		{
@@ -415,6 +427,7 @@ class LauncherApplet : AppletSimple
 						close();
 					}			
 				}
+                title_string=win.get_name();
 				set_anon_desktop(win);
 				XIDs.append(win.get_xid());
 				PIDs.append(win.get_pid());
@@ -466,7 +479,12 @@ class LauncherApplet : AppletSimple
         this.orient = orient;
         this.height = height;
     }
-    
+
+    private string _get_title()
+    {
+        stdout.printf("In get_title() \n");
+        return title_string;
+    }    
 
     private void set_anon_desktop(Wnck.Window win)
     {
@@ -700,7 +718,8 @@ class LauncherApplet : AppletSimple
     {
 		int		pid;
 		int		xid;
-		bool	launch_new=false;
+
+        bool	launch_new=false;
 		SList<string>	documents;
 		stdout.printf("In button press \n");
 		stdout.printf("exec = %s\n",desktopitem.get_exec() );
@@ -741,8 +760,23 @@ class LauncherApplet : AppletSimple
 		drag_dest_set(this, Gtk.DestDefaults.ALL, targets, 2, Gdk.DragAction.COPY);
 		this.drag_drop+=_drag_drop;
 		this.drag_data_received+=_drag_data_received;
+        this.enter_notify_event+=_enter_notify;
+        this.leave_notify_event+=_leave_notify;
 	}
- 
+
+    private bool _leave_notify(Gtk.Widget widget,Gdk.EventCrossing event)
+    {
+        title.hide(this );
+        return false;   
+    }
+
+    
+    private bool _enter_notify(Gtk.Widget widget,Gdk.EventCrossing event)
+    {
+        title.show(this,title_string );
+        return false;   
+    }
+    
 	private void _window_closed(Wnck.Screen screen,Wnck.Window window)
 	{ 
 		dialog.hide();
@@ -915,7 +949,8 @@ class LauncherApplet : AppletSimple
 							new_icon=new_icon.scale_simple (height-2, height-2, Gdk.InterpType.BILINEAR );							
 						}		
 						icon=new_icon;
-						set_icon (icon );   					
+						set_icon (icon );   	
+                        title_string=window_name;
 					}
 					else if (response=="RESET")
 						dbusconn.Register(uid);										
@@ -966,6 +1001,7 @@ class LauncherApplet : AppletSimple
 								}
 								icon=new_icon;
 								set_icon (icon );   
+                                title_string=window_name;
 							}						
 							else if (response=="RESET")
 								dbusconn.Register(uid);										
@@ -1030,7 +1066,8 @@ class LauncherApplet : AppletSimple
 		} 	
 		if (windows.find(active) != null)
 		{
-			if (config.override_app_icon )
+            title_string=active.get_name();
+            if (config.override_app_icon )
 			{
 				if (desktopitem.get_icon(theme) != null)
 				{
@@ -1047,7 +1084,7 @@ class LauncherApplet : AppletSimple
 			{
 				icon_changed=true;				
 				icon=active.get_icon();
-			}		
+			}
 		}
 		if (icon_changed)	 
 		{
@@ -1060,7 +1097,7 @@ class LauncherApplet : AppletSimple
 		 
 	}
 }
-
+ 
 public Applet awn_applet_factory_initp (string uid, int orient, int height) 
 {
 	LauncherApplet applet;

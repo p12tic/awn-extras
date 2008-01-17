@@ -365,9 +365,56 @@ class LauncherApplet : AppletSimple
 	protected   Awn.Title               title;
 	protected   Awn.Effects             effects;
 	protected   string                  title_string;
+	protected   bool                    hidden;
+	protected   int                     timer_count;
 	
     construct 
     { 
+        timer_count=0;
+        blank_icon();
+		this.realize += _realized;        
+		hidden=true;
+    }
+
+
+    private void blank_icon()
+    {
+        Pixbuf  hidden_icon;       
+        set_size_request( height, -1);
+        icon=new Pixbuf( Colorspace.RGB,true, 8, height-2,height-2);
+        icon.fill( 0x00000066);
+        set_icon(icon);
+    }
+
+
+    private void hide_icon()
+    {
+        Pixbuf  hidden_icon;       
+        set_size_request( 2, 2);
+        hidden_icon=new Pixbuf( Colorspace.RGB,true, 8, 2,2);
+        hidden_icon.fill( 0x00000000);
+        set_icon(hidden_icon);
+    }
+
+    private bool _hide_icon()
+    {
+        hide_icon();
+        return false;
+    }
+    
+    private void show_icon()
+    {
+        if (hidden)
+        {
+            set_size_request(height, -1);    //not really necessary
+            hidden=false;
+        }            
+        set_icon(icon);
+    }    
+
+    private bool _initialize()
+    {
+        stdout.printf("initializing.......................................\n");
 		dialog=new AppletDialog(this);
 		dialog.set_accept_focus(false);
 		dialog.set_app_paintable(true);
@@ -388,7 +435,6 @@ class LauncherApplet : AppletSimple
 		Effects.init(this,effects);		
         effects.set_title(title, _get_title);
 
-
 		if (icon!=null)
 			set_icon (icon);   
 		if (uid.to_double()>0)
@@ -400,7 +446,8 @@ class LauncherApplet : AppletSimple
 			{
 				desktopitem.set_exec("false");
 				desktopitem.set_icon("stock_stop");
-				desktopitem.set_item_type("Application");			
+				desktopitem.set_item_type("Application");
+				desktopitem.set_item_type("None");				
 				desktopitem = new DesktopItem(desktopfile.Filename() );
 			}
     		title_string = desktopitem.get_name();
@@ -427,6 +474,8 @@ class LauncherApplet : AppletSimple
 						close();
 					}			
 				}
+				win.name_changed+=_win_name_change;
+				win.state_changed+=_win_state_change;				
                 title_string=win.get_name();
 				set_anon_desktop(win);
 				XIDs.append(win.get_xid());
@@ -468,10 +517,11 @@ class LauncherApplet : AppletSimple
 		wnck_screen.application_opened+=_application_opened;	
 		wnck_screen.active_window_changed+=	_active_window_changed;
 
-
-		this.realize += _realized;
 		taskmode=TaskMode.MULTIPLE;
+        show_icon();
+		return false;
     }
+
     
     public LauncherApplet(string uid, int orient, int height) 
     {
@@ -488,18 +538,22 @@ class LauncherApplet : AppletSimple
 
     private void set_anon_desktop(Wnck.Window win)
     {
+        string  temp=new string();
 		string  exec=new string();    
 		Wnck.Application app=win.get_application();	
 		if (app.get_name()!=null)
 		{
-			desktopfile.set_name(app.get_name());		
+		    temp=app.get_name();
+			desktopfile.set_name(temp);		
 		}
 		else
 		{
-			desktopfile.set_name(win.get_name());				
+		    temp=win.get_name();
+			desktopfile.set_name(temp);
 		}		
+		
 		desktopitem = new DesktopItem(desktopfile.Filename() );
-				
+		desktopitem.set_name(temp);
 		if (! desktopitem.exists() )		
 		{
 			desktopitem.set_icon("none");
@@ -524,6 +578,7 @@ class LauncherApplet : AppletSimple
     private void close()
     {
 		string needle;
+		stdout.printf("Closing uid = %s\n",uid);
 		weak SList<string> applet_list;
 		int fd_lock=Awn.ConfigClient.key_lock_open(Awn.CONFIG_CLIENT_DEFAULT_GROUP,"applets_list");
 		if (fd_lock!=-1)
@@ -754,6 +809,8 @@ class LauncherApplet : AppletSimple
 		return false;
     }
     
+    
+    
 	private void _realized()
 	{
 		this.button_press_event+=_button_press;
@@ -762,6 +819,7 @@ class LauncherApplet : AppletSimple
 		this.drag_data_received+=_drag_data_received;
         this.enter_notify_event+=_enter_notify;
         this.leave_notify_event+=_leave_notify;
+        Timeout.add(200,_initialize,this);
 	}
 
     private bool _leave_notify(Gtk.Widget widget,Gdk.EventCrossing event)
@@ -786,7 +844,9 @@ class LauncherApplet : AppletSimple
 		{
 			if (launchmode == LaunchMode.ANONYMOUS)
 			{
-				Timeout.add(500,_timed_closed,this);
+				Timeout.add(500,_hide_icon,this);	
+				timer_count++;		
+				Timeout.add(30000,_timed_closed,this);
 			}				
 		}
 
@@ -842,9 +902,13 @@ class LauncherApplet : AppletSimple
 	
 	private bool _timed_closed()
 	{
-		if (XIDs.length() == 0)
-		{
-			close();
+	    timer_count--;
+	    if (timer_count <=0)
+	    {
+        	if (XIDs.length() == 0)
+        	{
+        		close();
+            }        		
 		}	
 		return false;
 	}
@@ -867,30 +931,32 @@ class LauncherApplet : AppletSimple
 				retry_list.remove(xid);
 
 				if (launchmode == LaunchMode.ANONYMOUS)
-				{	
-					Wnck.Application app=win.get_application();	
-					desktopfile.set_name(app.get_name());		
-				}		
-//				desktopitem = new DesktopItem(desktopfile.Filename() );
-				
+				{
+					Wnck.Application app=win.get_application();
+					desktopfile.set_name(app.get_name());
+				}
+			
 				if (config.override_app_icon )
 				{
 					if (desktopitem.get_icon(theme) != null)
-					{				
+					{
 						new_icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME 
 					}
-				}								
+				}
 				else if (! win.get_icon_is_fallback() ||  (desktopitem.get_icon(theme) == null) )
 				{
 					new_icon=win.get_icon();
-					new_icon=new_icon.scale_simple (height-2, height-2, Gdk.InterpType.BILINEAR );							
-				}		
+					new_icon=new_icon.scale_simple (height-2, height-2, Gdk.InterpType.BILINEAR );
+				}
 				else
 				{
 					new_icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
 				}
 				icon=new_icon;
-				set_icon (icon );   		
+				win.name_changed+=_win_name_change;
+				win.state_changed+=_win_state_change;				
+                title_string=win.get_name();
+                show_icon();                
 			}
 			else if (response=="HANDSOFF")
 			{
@@ -916,13 +982,23 @@ class LauncherApplet : AppletSimple
 		}
 		if (XIDs.find(window.get_xid() )==null)
 		{
+		    string exec = new string();
+        	string filename=new string();
+        	filename="/proc/"+(window.get_pid()).to_string()+"/cmdline";
+    		if ( FileUtils.get_contents(filename,out exec)==false)
+    		{
+    		    exec=".";
+    		}
 			string window_name=window.get_name();
 			string desk_name=desktopitem.get_name();
+		    stdout.printf("window open: '%s', '%s'\n",window_name,desk_name);			
 			int cmp_len=config.name_comparision_len>0?config.name_comparision_len:(desk_name.len()>window_name.len()?window_name.len():desk_name.len() );
 			if ( 
 				(PIDs.find(window.get_pid() ) !=null)
 				||
 				(  desk_name.substring(0,cmp_len) == window_name.substring(0,cmp_len) ) //FIXME strncmp
+				||
+				(desktopitem.get_exec() == exec) 
 			)
 			{
 				do
@@ -949,8 +1025,10 @@ class LauncherApplet : AppletSimple
 							new_icon=new_icon.scale_simple (height-2, height-2, Gdk.InterpType.BILINEAR );							
 						}		
 						icon=new_icon;
-						set_icon (icon );   	
+                        show_icon();  
                         title_string=window_name;
+        				window.name_changed+=_win_name_change;
+        				window.state_changed+=_win_state_change;
 					}
 					else if (response=="RESET")
 						dbusconn.Register(uid);										
@@ -1000,8 +1078,10 @@ class LauncherApplet : AppletSimple
 									new_icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
 								}
 								icon=new_icon;
-								set_icon (icon );   
+                                show_icon();
                                 title_string=window_name;
+                				window.name_changed+=_win_name_change;
+                				window.state_changed+=_win_state_change;                				
 							}						
 							else if (response=="RESET")
 								dbusconn.Register(uid);										
@@ -1025,7 +1105,22 @@ class LauncherApplet : AppletSimple
 			}
 		}		
 	}
-
+    
+    private void _win_name_change(Wnck.Window  window)
+    {
+        title_string=window.get_name();            
+    }
+    
+    private void _win_state_change(Wnck.Window window,Wnck.WindowState changed_mask,Wnck.WindowState new_state)
+    {
+        stdout.printf("window state changed\n");
+        if ( (Wnck.WindowState.DEMANDS_ATTENTION & new_state) == Wnck.WindowState.DEMANDS_ATTENTION )
+        {
+            stdout.printf("demanding attention\n");
+            effect_start (effects, Effect.ATTENTION);
+        }
+    }    
+    
 	private void _application_closed(Wnck.Screen screen,Wnck.Application app)
 	{ 
 		PIDs.remove(app.get_pid() );	
@@ -1066,6 +1161,7 @@ class LauncherApplet : AppletSimple
 		} 	
 		if (windows.find(active) != null)
 		{
+           // effect_stop (effects, Effect.ATTENTION);
             title_string=active.get_name();
             if (config.override_app_icon )
 			{

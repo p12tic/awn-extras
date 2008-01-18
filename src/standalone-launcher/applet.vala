@@ -363,7 +363,7 @@ class LauncherApplet : AppletSimple
 	protected   ConfigClient			awn_config;
 	protected   SList<ulong>			retry_list;	
 	protected   Awn.Title               title;
-	protected   Awn.Effects             effects;
+	//protected   Awn.Effects             effects;
 	protected   string                  title_string;
 	protected   bool                    hidden;
 	protected   int                     timer_count;
@@ -431,9 +431,9 @@ class LauncherApplet : AppletSimple
 		title_string = new string();
 		title = new Awn.Title();
 		title = (Awn.Title) Awn.Title.get_default();
-		effects = new Awn.Effects();
-		Effects.init(this,effects);		
-        effects.set_title(title, _get_title);
+		//effects = new Awn.Effects();
+		//Effects.init(this,effects);		
+       // effects.set_title(title, _get_title);
 
 		if (icon!=null)
 			set_icon (icon);   
@@ -562,16 +562,23 @@ class LauncherApplet : AppletSimple
 		}
 
 		string filename=new string();
-		filename="/proc/"+(win.get_pid()).to_string()+"/cmdline";
-		if (FileUtils.get_contents(filename,out exec)==true )
+		if (win.get_pid() != 0)
 		{
-			desktopitem.set_exec(exec);
-			desktopitem.save(desktopfile.Filename() );
-			if (desktopitem.get_icon(theme)=="none")
-			{
-				desktopitem.set_icon(GLib.Path.get_basename(exec));			
-			}		
-		}    	
+    		filename="/proc/"+(win.get_pid()).to_string()+"/cmdline";
+        	if (FileUtils.get_contents(filename,out exec)==true )
+        	{
+        		desktopitem.set_exec(exec);
+        		desktopitem.save(desktopfile.Filename() );
+        		if (desktopitem.get_icon(theme)=="none")
+        		{
+        			desktopitem.set_icon(GLib.Path.get_basename(exec));			
+        		}		
+    		}    	
+        }
+        else
+        {
+        
+        }
 		desktopitem.save(desktopfile.Filename() );					
     }
         
@@ -613,6 +620,7 @@ class LauncherApplet : AppletSimple
 		weak SList <string>	fileURIs;
 		string  cmd;  
 		bool status=false;
+		stdout.printf("Drag and drop received \n");
 		fileURIs=vfs_get_pathlist_from_string(selectdata.data);
 		foreach (string str in fileURIs) 
 		{
@@ -776,8 +784,6 @@ class LauncherApplet : AppletSimple
 
         bool	launch_new=false;
 		SList<string>	documents;
-		stdout.printf("In button press \n");
-		stdout.printf("exec = %s\n",desktopitem.get_exec() );
 		switch (event.button) 
 		{
 			case 1:
@@ -794,7 +800,6 @@ class LauncherApplet : AppletSimple
 						
 		if ( launch_new && (desktopitem!=null) )
 		{
-			stdout.printf("Launching...\n");
 			pid=desktopitem.launch(documents);
 			if (pid>0)
 			{
@@ -984,11 +989,13 @@ class LauncherApplet : AppletSimple
 		{
 		    string exec = new string();
         	string filename=new string();
+/*        	
         	filename="/proc/"+(window.get_pid()).to_string()+"/cmdline";
     		if ( FileUtils.get_contents(filename,out exec)==false)
     		{
     		    exec=".";
     		}
+    		*/
 			string window_name=window.get_name();
 			string desk_name=desktopitem.get_name();
 		    stdout.printf("window open: '%s', '%s'\n",window_name,desk_name);			
@@ -997,8 +1004,8 @@ class LauncherApplet : AppletSimple
 				(PIDs.find(window.get_pid() ) !=null)
 				||
 				(  desk_name.substring(0,cmp_len) == window_name.substring(0,cmp_len) ) //FIXME strncmp
-				||
-				(desktopitem.get_exec() == exec) 
+//				||
+//				(desktopitem.get_exec() == exec) 
 			)
 			{
 				do
@@ -1117,7 +1124,7 @@ class LauncherApplet : AppletSimple
         if ( (Wnck.WindowState.DEMANDS_ATTENTION & new_state) == Wnck.WindowState.DEMANDS_ATTENTION )
         {
             stdout.printf("demanding attention\n");
-            effect_start (effects, Effect.ATTENTION);
+  //          effect_start (effects, Effect.ATTENTION);
         }
     }    
     

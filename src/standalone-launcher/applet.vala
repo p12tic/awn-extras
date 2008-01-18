@@ -564,11 +564,21 @@ class LauncherApplet : AppletSimple
 		string filename=new string();
 		if (win.get_pid() != 0)
 		{
-    		filename="/proc/"+(win.get_pid()).to_string()+"/cmdline";
-        	if (FileUtils.get_contents(filename,out exec)==true )
+		    bool result;
+		    filename="/proc/"+(win.get_pid()).to_string()+"/cmdline";
+		    try{
+                result=FileUtils.get_contents(filename,out exec);
+            }catch (GLib.FileError ex){
+                result=false;
+            }    		    
+        	if (result)
         	{
         		desktopitem.set_exec(exec);
-        		desktopitem.save(desktopfile.Filename() );
+        		try{
+            		desktopitem.save(desktopfile.Filename() );
+            	}catch(GLib.Error ex){
+            	    stdout.printf("error writing file %s\n",desktopfile.Filename());
+            	}
         		if (desktopitem.get_icon(theme)=="none")
         		{
         			desktopitem.set_icon(GLib.Path.get_basename(exec));			
@@ -579,7 +589,12 @@ class LauncherApplet : AppletSimple
         {
         
         }
-		desktopitem.save(desktopfile.Filename() );					
+        try{
+    		desktopitem.save(desktopfile.Filename() );	
+    	}catch(GLib.Error ex){
+    	    stdout.printf("error writing file %s\n",desktopfile.Filename());
+    	}
+						
     }
         
     private void close()
@@ -634,7 +649,12 @@ class LauncherApplet : AppletSimple
 				{
 					if ( (tempdesk.get_exec() != null) && (tempdesk.get_name()!=null) )
 					{
-						tempdesk.save(desktopfile.Filename());//FIXME - throws
+                        try{
+    						tempdesk.save(desktopfile.Filename());//FIXME - throws
+                    	}catch(GLib.Error ex){
+                    	    stdout.printf("error writing file %s\n",desktopfile.Filename());
+                    	}
+						
 						desktopitem = tempdesk;//new DesktopItem(desktopfile.Filename() );				
 						if (desktopitem.get_icon(theme) != null)
 						{
@@ -681,7 +701,12 @@ class LauncherApplet : AppletSimple
 				{
 					desktopitem.set_icon(Filename.from_uri(str) );					
 				}			
-				desktopitem.save(desktopfile.Filename() );				
+				try {
+    				desktopitem.save(desktopfile.Filename() );				
+            	}catch(GLib.Error ex){
+            	    stdout.printf("error writing file %s\n",desktopfile.Filename());
+            	}
+				
 				set_icon(icon);	
 				status=true;
 			}
@@ -1147,51 +1172,65 @@ class LauncherApplet : AppletSimple
 	{
 		Pixbuf  temp;
 		bool	icon_changed=false;
-	
-		Wnck.Window active=screen.get_active_window();		
-		if (windows.find(prev) != null)
+	    bool    scale_icon=false;
+	    
+		Wnck.Window active=screen.get_active_window();//active can be null
+		
+		if (prev !=null)
 		{
-			if (config.override_app_icon )
-			{
-				if (desktopitem.get_icon(theme) != null)
-				{				
-					icon_changed=true;			
-					icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
-				}			
-			}
-			else if (!prev.get_icon_is_fallback() )
-			{
-				icon_changed=true;				
-				icon=prev.get_icon();
-			}		
-			
-		} 	
-		if (windows.find(active) != null)
-		{
-           // effect_stop (effects, Effect.ATTENTION);
-            title_string=active.get_name();
-            if (config.override_app_icon )
-			{
-				if (desktopitem.get_icon(theme) != null)
-				{
-					icon_changed=true;			
-					icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
-				}
-				else if (!active.get_icon_is_fallback() )
-				{
-					icon_changed=true;				
-					icon=active.get_icon();				
-				}
-			}
-			else if (!active.get_icon_is_fallback() )
-			{
-				icon_changed=true;				
-				icon=active.get_icon();
-			}
+    		if (windows.find(prev) != null)
+    		{
+    			if (config.override_app_icon )
+    			{
+    				if (desktopitem.get_icon(theme) != null)
+    				{				
+    					icon_changed=true;			
+    					icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
+    				}			
+    			}
+    			else if (!prev.get_icon_is_fallback() )
+    			{
+    				icon_changed=true;				
+    				icon=prev.get_icon();
+                    scale_icon=true;
+    			}		
+    			
+    		} 			
 		}
+		if (active !=null)
+		{
+    		if (windows.find(active) != null)
+    		{
+               // effect_stop (effects, Effect.ATTENTION);
+                title_string=active.get_name();
+                if (config.override_app_icon )
+    			{
+    				if (desktopitem.get_icon(theme) != null)
+    				{
+    					icon_changed=true;			
+    					icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
+    				}
+    				else if (!active.get_icon_is_fallback() )
+    				{
+    					icon_changed=true;				
+    					icon=active.get_icon();
+                        scale_icon=true;
+    				}
+    			}
+    			else if (!active.get_icon_is_fallback() )
+    			{
+    				icon_changed=true;				
+    				icon=active.get_icon();
+                    scale_icon=true;    				
+    			}
+    		}
+        }    		
 		if (icon_changed)	 
 		{
-			icon=icon.scale_simple (height-2, height-2, Gdk.InterpType.BILINEAR );		
+		    if (scale_icon)
+		    {
+    			icon=icon.scale_simple (height-2, height-2, Gdk.InterpType.BILINEAR );		
+    		}
 			if (icon !=null)
 			{
 				set_icon(icon);

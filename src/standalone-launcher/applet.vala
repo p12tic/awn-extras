@@ -255,11 +255,11 @@ class DesktopFileManagement : GLib.Object
 	    result="anon-";
 	    for(int i=0;i<str.len();i++)
 	    {
-	        string piece = str.substring(i,1);
-	        if ( 
+	        string piece = str.substring(i,1);  //FIXME...  easy in C.. not sure of vala.
+	        if (
 	                    (piece=="%") || (piece==".") || (piece=="?") || (piece=="*") 
 	                ||  (piece=="&") || (piece=="~") || (piece=="@") || (piece==";")
-	                ||  (piece=="(") ||  (piece=="(") 
+	                ||  (piece=="(") || (piece=="\\")|| (piece=="/")
 	                ) 
 	        {
 	            piece="_";
@@ -559,6 +559,7 @@ class LauncherApplet : AppletSimple
 
 		taskmode=TaskMode.MULTIPLE;
         show_icon();
+        desktopitem.set_string ("Type","Application");        
 		return false;
     }
 
@@ -595,8 +596,9 @@ class LauncherApplet : AppletSimple
 		}		
 		stdout.printf("creating desktop = %s, %s\n",temp,desktopfile.Filename());
 		desktopitem = new DesktopItem(desktopfile.Filename() );
+        desktopitem.set_string ("Type","Application");		 		
         desktopitem.save(desktopfile.Filename());
-        desktopitem = new DesktopItem(desktopfile.Filename() );        
+//        desktopitem = new DesktopItem(desktopfile.Filename() );        
 		desktopitem.set_name(temp);
 		if (! desktopitem.exists() )		
 		{
@@ -639,6 +641,7 @@ class LauncherApplet : AppletSimple
     	}catch(GLib.Error ex){
     	    stdout.printf("error writing file %s\n",desktopfile.Filename());
     	}
+        desktopitem.set_string ("Type","Application");		    	
 //        desktopitem.save(desktopfile.Filename());    	
 //		desktopitem = new DesktopItem(desktopfile.Filename() );						
     }

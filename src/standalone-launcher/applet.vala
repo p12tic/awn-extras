@@ -451,8 +451,17 @@ class LauncherApplet : AppletSimple
     {
         stdout.printf("initializing.......................................\n");
 		this.button_press_event+=_button_press;
+
+		targets = new TargetEntry[2];
+		targets[0].target = "text/uri-list";
+		targets[0].flags = 0;
+		targets[0].info =  0;
+		targets[1].target = "text/plain";
+		targets[1].flags = 0;
+		targets[1].info =  0;
+
 		drag_dest_set(this, Gtk.DestDefaults.ALL, targets, 2, Gdk.DragAction.COPY);
-		this.drag_drop+=_drag_drop;
+		//this.drag_drop+=_drag_drop;
 		this.drag_data_received+=_drag_data_received;
         this.enter_notify_event+=_enter_notify;
         this.leave_notify_event+=_leave_notify;
@@ -551,14 +560,6 @@ class LauncherApplet : AppletSimple
 		}	
 		if (icon!=null)
 			set_icon (icon );   
-		
-		targets = new TargetEntry[2];
-		targets[0].target = "STRING";
-		targets[0].flags = 0;
-		targets[0].info =  0;
-		targets[1].target = "text/uri-list";
-		targets[1].flags = 0;
-		targets[1].info =  0;
 
 		wnck_screen.window_closed+=_window_closed;
 		wnck_screen.window_opened+=_window_opened;		

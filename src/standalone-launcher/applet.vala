@@ -104,9 +104,11 @@ class Configuration: GLib.Object
 //	private				Awn.Color			_active_colour;
 	public				int					name_comparision_len;	//FIXME
 	private				bool				_override_app_icon;
+	public              string              desktop_file_editor;
 	
 	construct
 	{
+    	desktop_file_editor=new string();
 		if (anon_mode)
 		{			
 			default_conf=new Awn.ConfigClient.for_applet("standalone-launcher",null);
@@ -152,7 +154,7 @@ class Configuration: GLib.Object
 		_override_app_icon=get_bool(subdir+"override_app_icon",true);
 
 		name_comparision_len=14;		
-
+        desktop_file_editor="gnome-desktop-item-edit";
 
 		temp=get_string("active_colour","00000000");		
 		//cairo_string_to_color(temp,_active_colour);		
@@ -393,7 +395,8 @@ class LauncherApplet : AppletSimple
 	protected   string                  title_string;
 	protected   bool                    hidden;
 	protected   int                     timer_count;
-	
+    protected   Gtk.Menu               right_menu;	
+
     construct 
     { 
         timer_count=0;
@@ -415,12 +418,16 @@ class LauncherApplet : AppletSimple
 
     private void hide_icon()
     {
-        Pixbuf  hidden_icon;      
-        stdout.printf("Hiding\n"); 
-        set_size_request( 2, 2);
-        hidden_icon=new Pixbuf( Colorspace.RGB,true, 8, 2,2);
-        hidden_icon.fill( 0x00000000);
-        set_icon(hidden_icon);
+        if (hidden==false)
+        {
+            Pixbuf  hidden_icon;      
+            stdout.printf("Hiding\n"); 
+            set_size_request( 2, 2);
+            hidden_icon=new Pixbuf( Colorspace.RGB,true, 8, 2,2);
+            hidden_icon.fill( 0x00000000);
+            set_icon(hidden_icon);
+            hidden=true;
+        }            
     }
 
     private bool _hide_icon()
@@ -454,6 +461,8 @@ class LauncherApplet : AppletSimple
 		dialog.set_app_paintable(true);
 		vbox=new VButtonBox();
 		dialog.add(vbox);
+        build_right_click();
+
 		dbusconn = new DBusComm();
 		dbusconn.Register(uid);
 		awn_config= new ConfigClient();
@@ -518,8 +527,8 @@ class LauncherApplet : AppletSimple
 				win.name_changed+=_win_name_change;
 				win.state_changed+=_win_state_change;				
                 title_string=win.get_name();
-				XIDs.append(win.get_xid());
-				PIDs.append(win.get_pid());
+				XIDs.prepend(win.get_xid());
+				PIDs.prepend(win.get_pid());
 				windows.prepend(win);
 				icon=win.get_icon();		//the fallback				
 				if (icon !=null)
@@ -558,7 +567,7 @@ class LauncherApplet : AppletSimple
 		wnck_screen.active_window_changed+=	_active_window_changed;
 
 		taskmode=TaskMode.MULTIPLE;
-        show_icon();
+        show_icon();        
         desktopitem.set_string ("Type","Application");        
 		return false;
     }
@@ -769,9 +778,9 @@ class LauncherApplet : AppletSimple
 
     private Wnck.Window  find_win_by_xid(ulong xid)
     {
-		weak	GLib.List	<Wnck.Window>	windows;
-		windows=wnck_screen.get_windows();
-		foreach (Wnck.Window win in windows)
+		weak	GLib.List	<Wnck.Window>	wins;
+		wins=wnck_screen.get_windows();
+		foreach (Wnck.Window win in wins)
 		{
 			if (win.get_xid() == xid)
 			{
@@ -853,6 +862,30 @@ class LauncherApplet : AppletSimple
 		}
 		return true;
     }
+    
+    private bool _click_right_menu(Gtk.Widget widget,Gdk.EventButton event)
+    {
+    
+        Process.spawn_command_line_async(config.desktop_file_editor+" "+desktopfile.Filename() );
+        return false;
+    }
+    private void build_right_click()
+    {
+        Gtk.MenuItem   menu_item;
+        right_menu=new Menu();
+        menu_item=new MenuItem.with_label ("Edit Launcher");
+        
+        right_menu.append(menu_item);
+        menu_item.show();
+        menu_item.button_press_event+=_click_right_menu;
+    }
+    
+    private void right_click(Gdk.EventButton event)
+    {
+        right_menu.popup(null, null, null, null,
+			  event.button, event.time);
+            
+    }
      
     private bool _button_press(Gtk.Widget widget,Gdk.EventButton event)
     {
@@ -864,13 +897,16 @@ class LauncherApplet : AppletSimple
 		switch (event.button) 
 		{
 			case 1:
-				launch_new=true;			
+				launch_new=true;	
 				if (XIDs.length() > 0 )
 				{
 					launch_new=!single_left_click();
 				}
 			case 2:
 				launch_new=true;
+            case 3:
+                launch_new=false;
+                right_click(event);
 			default:
 				break;
 		}
@@ -916,11 +952,12 @@ class LauncherApplet : AppletSimple
 	{ 
 		dialog.hide();
 		
-		if (windows.find(window) !=null)
+//		if (windows.find(window) !=null)
 		{		
     		XIDs.remove(window.get_xid() );
         }    		
-		if (XIDs.length() == 0)
+        
+		if ( (XIDs.length() == 0) &&  (windows.find(window)!=null) )
 		{
 			if (launchmode == LaunchMode.ANONYMOUS)
 			{
@@ -1074,7 +1111,12 @@ class LauncherApplet : AppletSimple
             }while(response=="RESET");			    
 			return;
 		}
-		if (XIDs.find(window.get_xid() )==null)
+		if ( (XIDs.find(window.get_xid()) != null) || (windows.find(window)!=null) )
+		{
+		    return;     //we already have been assigned it.  Note this is here because the signal seems to fire more than once.
+		}
+		
+//		if (XIDs.find(window.get_xid() )==null)
 		{
 		    string exec = new string();
         	string filename=new string();

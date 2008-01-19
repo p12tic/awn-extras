@@ -3,3 +3,9 @@ NULL =
 include $(top_srcdir)/Makefile.desktop-files
 
 appletdir = $(libdir)/awn/applets/$(APPLET_NAME)
+
+install-exec-local:
+	$(INSTALL) -m 755 "$(APPLET_MAIN_FILE)" "$(DESTDIR)$(appletdir)/$(APPLET_MAIN_FILE)"
+
+uninstall-local:
+	rm -f "$(DESTDIR)$(appletdir)/$(APPLET_MAIN_FILE)"

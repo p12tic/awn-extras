@@ -1097,10 +1097,6 @@ class LauncherApplet : AppletSimple
 		bool	accepted=false;		
 		xid=window.get_xid();
 		
-		if (desktopitem==null)
-		{
-		    stdout.printf("desktop item is null\n");
-		}
 		if ( (XIDs.length()>0) && (config.task_mode==TaskMode.SINGLE) )
 		{
 			string response;
@@ -1112,132 +1108,135 @@ class LauncherApplet : AppletSimple
             }while(response=="RESET");			    
 			return;
 		}
+
 		if ( (XIDs.find(window.get_xid()) != null) || (windows.find(window)!=null) )
 		{
-		    return;     //we already have been assigned it.  Note this is here because the signal seems to fire more than once.
+		    return;     
 		}
-		
-//		if (XIDs.find(window.get_xid() )==null)
-		{
-		    string exec = new string();
-        	string filename=new string();
+
+        if (window.is_skip_tasklist())
+        {
+            return;
+        }
+
+        string exec = new string();
+        string filename=new string();
 /*        	
-        	filename="/proc/"+(window.get_pid()).to_string()+"/cmdline";
-    		if ( FileUtils.get_contents(filename,out exec)==false)
-    		{
-    		    exec=".";
-    		}
-    		*/
-			string desk_name=desktopitem.get_name();
-            if (desk_name == null)
+        filename="/proc/"+(window.get_pid()).to_string()+"/cmdline";
+        if ( FileUtils.get_contents(filename,out exec)==false)
+        {
+            exec=".";
+        }
+        */
+        string desk_name=desktopitem.get_name();
+        if (desk_name == null)
+        {
+            desk_name=".";
+        }
+        if ( (PIDs.find(window.get_pid() ) !=null))
+        {
+            do
             {
-                desk_name=".";
+                response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"CLAIM");
+                if (response=="MANAGE")
+                {
+                    Pixbuf  new_icon;
+                    windows.prepend(window);
+                    XIDs.prepend(xid);
+                    if (launchmode == LaunchMode.ANONYMOUS)
+                    {	
+                        Wnck.Application app=window.get_application();	
+                        desktopfile.set_name(app.get_name());		
+                    }		
+                    if (desktopitem.get_icon(theme) != null)
+                    {
+                        new_icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
+                    }
+                    else
+                    {
+                        new_icon=window.get_icon();
+                        new_icon=new_icon.scale_simple (height-2, height-2, Gdk.InterpType.BILINEAR );							
+                    }		
+                    icon=new_icon;
+                    show_icon();  
+                    title_string=window.get_name();
+                    window.name_changed+=_win_name_change;
+                    window.state_changed+=_win_state_change;
+                }
+                else if (response=="RESET")
+                    dbusconn.Register(uid);										
+            }while (response=="RESET");
+        }
+        else
+        {
+            string  window_name = new string();
+            window_name=window.get_name();
+            int cmp_len=config.name_comparision_len>0?config.name_comparision_len:(desk_name.len()>window_name.len()?window_name.len():desk_name.len() );                		    			
+            stdout.printf("window open: '%s', '%s'\n",window_name,desk_name);			                		
+            if (desk_name.substring(0,cmp_len)==window_name.substring(0,cmp_len) ) //FIXME strncmp
+            {
+                accepted=true;                    
             }
-			if ( (PIDs.find(window.get_pid() ) !=null))
-			{
-				do
-				{
-					response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"CLAIM");
-					if (response=="MANAGE")
-					{
-						Pixbuf  new_icon;
-						windows.prepend(window);
-						XIDs.prepend(xid);
-						if (launchmode == LaunchMode.ANONYMOUS)
-						{	
-							Wnck.Application app=window.get_application();	
-							desktopfile.set_name(app.get_name());		
-						}		
-//						desktopitem = new DesktopItem(desktopfile.Filename() );
-						if (desktopitem.get_icon(theme) != null)
-						{
-							new_icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
-						}
-						else
-						{
-							new_icon=window.get_icon();
-							new_icon=new_icon.scale_simple (height-2, height-2, Gdk.InterpType.BILINEAR );							
-						}		
-						icon=new_icon;
-                        show_icon();  
-                        title_string=window.get_name();
-        				window.name_changed+=_win_name_change;
-        				window.state_changed+=_win_state_change;
-					}
-					else if (response=="RESET")
-						dbusconn.Register(uid);										
-				}while (response=="RESET");
-			}
-			else
-			{
-                string  window_name = new string();
-        		window_name=window.get_name();
-    			int cmp_len=config.name_comparision_len>0?config.name_comparision_len:(desk_name.len()>window_name.len()?window_name.len():desk_name.len() );                		    			
-    		    stdout.printf("window open: '%s', '%s'\n",window_name,desk_name);			                		
-		        if (desk_name.substring(0,cmp_len)==window_name.substring(0,cmp_len) ) //FIXME strncmp
-		        {
-                    accepted=true;                    
-                }
-				else
-				{
-    				foreach(Wnck.Window win in windows)	 //does the new window match up with any of the existing ones.
-    				{
-    					bool is_it_good=false;
-    					is_it_good=(window.get_name()==win.get_name() ) ;
-    					if (!is_it_good)
-    						if ( (win.get_session_id ()!=null ) && (window.get_session_id () !=null))
-    							is_it_good=(window.get_session_id () == win.get_session_id ());
-    					if (is_it_good)
-    					{
-    						accepted=true;
-    						break;
-    					}
-                    }					
-                }
-			}
-			if (accepted)
-			{
-				do
-				{
-					response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"ACCEPT");
-					if (response=="MANAGE")
-					{
-						Pixbuf new_icon;
-						windows.prepend(window);
-						XIDs.prepend(xid);				
-						if (config.override_app_icon )
-						{
-							if (desktopitem.get_icon(theme) != null)
-							{				
-								new_icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME 
-							}			
-						}								
-						else if (! window.get_icon_is_fallback() ||  (desktopitem.get_icon(theme) == null) )
-						{
-							new_icon=window.get_icon();
-							new_icon=new_icon.scale_simple (height-2, height-2, Gdk.InterpType.BILINEAR );							
-						}		
-						else
-						{
-							new_icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
-						}
-						icon=new_icon;
-                        show_icon();
-                        title_string=window.get_name();
-        				window.name_changed+=_win_name_change;
-        				window.state_changed+=_win_state_change;    
-					}						
-					else if (response=="RESET")
-						dbusconn.Register(uid);										
-				}while (response=="RESET");							
-			}
             else
             {
-    			response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"DENY");
-    			if (response=="RESET")
-    					dbusconn.Register(uid);	
-    		}					
-        }			
+                foreach(Wnck.Window win in windows)	 //does the new window match up with any of the existing ones.
+                {
+                    bool is_it_good=false;
+                    is_it_good=(window.get_name()==win.get_name() ) ;
+                    if (!is_it_good)
+                        if ( (win.get_session_id ()!=null ) && (window.get_session_id () !=null))
+                            is_it_good=(window.get_session_id () == win.get_session_id ());
+                    if (is_it_good)
+                    {
+                        accepted=true;
+                        break;
+                    }
+                }					
+            }
+        }
+        if (accepted)
+        {
+            do
+            {
+                response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"ACCEPT");
+                if (response=="MANAGE")
+                {
+                    Pixbuf new_icon;
+                    windows.prepend(window);
+                    XIDs.prepend(xid);				
+                    if (config.override_app_icon )
+                    {
+                        if (desktopitem.get_icon(theme) != null)
+                        {				
+                            new_icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME 
+                        }			
+                    }								
+                    else if (! window.get_icon_is_fallback() ||  (desktopitem.get_icon(theme) == null) )
+                    {
+                        new_icon=window.get_icon();
+                        new_icon=new_icon.scale_simple (height-2, height-2, Gdk.InterpType.BILINEAR );							
+                    }		
+                    else
+                    {
+                        new_icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
+                    }
+                    icon=new_icon;
+                    show_icon();
+                    title_string=window.get_name();
+                    window.name_changed+=_win_name_change;
+                    window.state_changed+=_win_state_change;    
+                }						
+                else if (response=="RESET")
+                    dbusconn.Register(uid);										
+            }while (response=="RESET");							
+        }
+        else
+        {
+            response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"DENY");
+            if (response=="RESET")
+                    dbusconn.Register(uid);	
+        }					
+
 		if (response=="WAIT")
 		{
 			retry_list.prepend(xid);

@@ -35,7 +35,6 @@ SUBDIRS =			\
 	places			\
 	plugger 		\
 	PyClock			\
-	python-test 		\
 	quit-applet		\
 	separator 		\
 	shiny-switcher		\

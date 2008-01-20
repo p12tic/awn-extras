@@ -51,6 +51,47 @@ static void print_desktop(DesktopItem desktopitem)
 	stdout.printf("\n");
 }
 
+static string get_exec(int pid)
+{
+    string filename=new string();
+    string exec=new string();
+    string after=new string();
+    string orig=new string();
+    int pos=0;
+    bool    result;
+    long   length=-1;
+    filename="/proc/"+pid.to_string()+"/cmdline";        	
+    try{
+        result=FileUtils.get_contents(filename,out exec,out length);
+    }
+    catch (GLib.FileError ex){
+        result=false;
+    }    
+    if ( result==false)
+    {
+        exec="false";
+        length=5;
+    }
+    stdout.printf("length = %ld\n",length);    
+    after="";
+    for(int i = 0; i<length;i++)
+    {
+        string temp = new string();
+        temp = exec.substring(i,1);
+        //stdout.printf("temp = %s\n",temp);
+        if (temp=="")
+        {
+            after=after+" ";
+        }
+        else
+        {
+            after=after+temp;
+        }
+        //stdout.printf("after = %s\n",after);
+    }
+
+    return after;
+}
 static int _cmp_ptrs (pointer a, pointer b)
 {
 	return (int) a - (int) b;
@@ -106,7 +147,6 @@ class Configuration: GLib.Object
 	public				int					name_comparision_len;	//FIXME
 	private				bool				_override_app_icon;
 	public              string              desktop_file_editor;
-    public              int                 taskmode;
 
 	construct
 	{
@@ -157,7 +197,6 @@ class Configuration: GLib.Object
 
 		name_comparision_len=14;		
         desktop_file_editor="gnome-desktop-item-edit";
-        taskmode=TaskMode.MULTIPLE;
 
 		temp=get_string("active_colour","00000000");		
 		//cairo_string_to_color(temp,_active_colour);		
@@ -389,12 +428,11 @@ class LauncherApplet : AppletSimple
 	protected   Wnck.Screen				wnck_screen;
 	protected   DesktopFileManagement   desktopfile;
 	protected   int						launchmode;
-	protected   int						taskmode;
 	protected   DBusComm				dbusconn;
 	protected   ConfigClient			awn_config;
 	protected   SList<ulong>			retry_list;	
 	protected   Awn.Title               title;
-	protected   weak Awn.Effects             effects;
+	protected   weak Awn.Effects        effects;
 	protected   string                  title_string;
 	protected   bool                    hidden;
 	protected   int                     timer_count;
@@ -437,7 +475,7 @@ class LauncherApplet : AppletSimple
     {
         if (XIDs.length()==0)
         {
-            if ( (PIDs.length()>0) && (launchmode == LaunchMode.DISCRETE) && (taskmode==TaskMode.MULTIPLE) )
+            if ( (PIDs.length()>0) && (launchmode == LaunchMode.DISCRETE) && (config.task_mode==TaskMode.MULTIPLE) )
             {
                 ulong pid=PIDs.nth_data(0);
                 Wnck.Window win=find_win_by_pid(pid);
@@ -488,10 +526,8 @@ class LauncherApplet : AppletSimple
 		this.drag_data_received+=_drag_data_received;
 		awn_config= new ConfigClient();
 
-        //taskmode=config.taskmode;       //FIXME get rid of taskmode -> use config.taskmode
-        taskmode=TaskMode.MULTIPLE;
         stdout.printf("Step 1\n");
-        if (taskmode != TaskMode.NONE)
+        if (config.task_mode != TaskMode.NONE)
         {
             this.enter_notify_event+=_enter_notify;
             this.leave_notify_event+=_leave_notify;
@@ -554,7 +590,7 @@ class LauncherApplet : AppletSimple
 				response=dbusconn.Inform_Task_Ownership(uid,win.get_xid().to_string(),"CLAIM");
 				if (response!="MANAGE")
 				{
-					if (response=="RESET")
+					while (response=="RESET")
 					{
 						dbusconn.Register(uid);					
 						response=dbusconn.Inform_Task_Ownership(uid,win.get_xid().to_string(),"CLAIM");					
@@ -598,7 +634,7 @@ class LauncherApplet : AppletSimple
 		if (icon!=null)
 			set_icon (icon );   
 
-        if (taskmode != TaskMode.NONE)
+        if (config.task_mode != TaskMode.NONE)
         {
             wnck_screen.window_closed+=_window_closed;
             wnck_screen.window_opened+=_window_opened;		
@@ -606,10 +642,7 @@ class LauncherApplet : AppletSimple
             wnck_screen.application_opened+=_application_opened;	
             wnck_screen.active_window_changed+=	_active_window_changed;
         }
-        else
-        {
-            taskmode=TaskMode.MULTIPLE;
-        }
+
         show_icon();        
         desktopitem.set_string ("Type","Application"); 
         
@@ -665,25 +698,20 @@ class LauncherApplet : AppletSimple
 		if (win.get_pid() != 0)
 		{
 		    bool result;
-		    filename="/proc/"+(win.get_pid()).to_string()+"/cmdline";
-		    try{
-                result=FileUtils.get_contents(filename,out exec);
-            }catch (GLib.FileError ex){
-                result=false;
-            }    		    
-        	if (result)
-        	{
-        		desktopitem.set_exec(exec);
-        		try{
-            		desktopitem.save(desktopfile.Filename() );
-            	}catch(GLib.Error ex){
-            	    stdout.printf("error writing file %s\n",desktopfile.Filename());
-            	}
-        		if (desktopitem.get_icon(theme)=="none")
-        		{
-        			desktopitem.set_icon(GLib.Path.get_basename(exec));			
-        		}		
-    		}    	
+            exec=get_exec(win.get_pid());
+            if (exec != "false")
+            {
+                desktopitem.set_exec(exec);
+                try{
+                    desktopitem.save(desktopfile.Filename() );
+                }catch(GLib.Error ex){
+                    stdout.printf("error writing file %s\n",desktopfile.Filename());
+                }
+                if (desktopitem.get_icon(theme)=="none")
+                {
+                    desktopitem.set_icon(GLib.Path.get_basename(exec));			
+                }		
+            }
         }
         else
         {
@@ -769,7 +797,7 @@ class LauncherApplet : AppletSimple
 						}		
                         if (icon!=null)              
                             set_icon(icon);
-                        if (taskmode != TaskMode.NONE)
+                        if (config.task_mode != TaskMode.NONE)
                         {
                             while( XIDs.length()>0 ) 
                             {
@@ -950,7 +978,8 @@ class LauncherApplet : AppletSimple
 
         bool	launch_new=false;
 		SList<string>	documents;
-        if (taskmode != TaskMode.NONE)
+        effect_stop (effects, Effect.ATTENTION);
+        if (config.task_mode != TaskMode.NONE)
         {
             switch (event.button) 
             {
@@ -960,11 +989,34 @@ class LauncherApplet : AppletSimple
                     {
                         launch_new=!single_left_click();
                     }
-                    else if (PIDs.length()>0)
+                    else if (PIDs.length()>0)   
                     {
-                        stdout.printf("No XIDs but we got a PID\n");
-                        pid=PIDs.nth_data(0);
-                        Wnck.Window win=find_win_by_pid(pid);
+                        Wnck.Window win=null;
+                        stdout.printf("No XIDs but we got a PID.. looking to reclaim\n");
+                        foreach( ulong p in PIDs)
+                        {
+                            win=find_win_by_pid(p);
+                            if (win!=null)
+                            {
+                                XIDs.prepend(win.get_xid() );
+                                if (windows.find(win)==null)
+                                {
+                                    windows.prepend(win);
+                                }
+                            }
+                            if (win!=null)
+                            {
+                                if (win.is_active() )
+                                {
+                                    win.minimize();
+                                }
+                                else
+                                {
+                                    win.activate(Gtk.get_current_event_time());
+                                }
+                                launch_new=false;
+                            }
+                        }
                     }
                 case 2:
                     launch_new=true;
@@ -1024,9 +1076,10 @@ class LauncherApplet : AppletSimple
 	{ 
 		dialog.hide();
 		
-//		if (windows.find(window) !=null)
+		if (windows.find(window) !=null)
 		{		
     		XIDs.remove(window.get_xid() );
+            stdout.printf("Window removed %s, xid=%lu, count=%d\n",window.get_name(),window.get_xid(),XIDs.length() );
         }    		
         
 		if ( (XIDs.length() == 0) &&  (windows.find(window)!=null) )
@@ -1119,7 +1172,7 @@ class LauncherApplet : AppletSimple
                     continue;					
 				XIDs.prepend(xid);
 				retry_list.remove(xid);
-
+                stdout.printf("Window Added %s, xid=%lu, count=%d\n",win.get_name(),xid,XIDs.length() );
 				if (launchmode == LaunchMode.ANONYMOUS)
 				{
 					Wnck.Application app=win.get_application();
@@ -1192,13 +1245,11 @@ class LauncherApplet : AppletSimple
 
         string exec = new string();
         string filename=new string();
-/*        	
-        filename="/proc/"+(window.get_pid()).to_string()+"/cmdline";
-        if ( FileUtils.get_contents(filename,out exec)==false)
-        {
-            exec=".";
-        }
-        */
+
+        exec=get_exec(window.get_pid() );
+
+        stdout.printf("exec = %s\n",exec);
+        
         string desk_name=desktopitem.get_name();
         if (desk_name == null)
         {
@@ -1206,6 +1257,7 @@ class LauncherApplet : AppletSimple
         }
         if ( (PIDs.find(window.get_pid() ) !=null))
         {
+            stdout.printf("Claiming\n");
             do
             {
                 response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"CLAIM");
@@ -1214,6 +1266,7 @@ class LauncherApplet : AppletSimple
                     Pixbuf  new_icon;
                     windows.prepend(window);
                     XIDs.prepend(xid);
+                    stdout.printf("Window Added %s, xid=%lu, count=%d\n",window.get_name(),xid,XIDs.length() );
                     if (launchmode == LaunchMode.ANONYMOUS)
                     {	
                         Wnck.Application app=window.get_application();	
@@ -1237,6 +1290,7 @@ class LauncherApplet : AppletSimple
                 else if (response=="RESET")
                     dbusconn.Register(uid);										
             }while (response=="RESET");
+            stdout.printf("response = %s\n",response);
         }
         else
         {
@@ -1246,7 +1300,11 @@ class LauncherApplet : AppletSimple
             stdout.printf("window open: '%s', '%s'\n",window_name,desk_name);			                		
             if (desk_name.substring(0,cmp_len)==window_name.substring(0,cmp_len) ) //FIXME strncmp
             {
-                accepted=true;                    
+                accepted=true;
+            }
+            else if (exec==desktopitem.get_exec() )
+            {
+                accepted=true;
             }
             else
             {
@@ -1275,6 +1333,7 @@ class LauncherApplet : AppletSimple
                     Pixbuf new_icon;
                     windows.prepend(window);
                     XIDs.prepend(xid);				
+                    stdout.printf("Window Added %s, xid=%lu, count=%d\n",window.get_name(),xid,XIDs.length() );
                     if (config.override_app_icon )
                     {
                         if (desktopitem.get_icon(theme) != null)
@@ -1383,7 +1442,6 @@ class LauncherApplet : AppletSimple
 		{
     		if (windows.find(active) != null)
     		{
-      //          effect_stop (effects, Effect.ATTENTION);
                 title_string=active.get_name();
                 if (config.override_app_icon )
     			{

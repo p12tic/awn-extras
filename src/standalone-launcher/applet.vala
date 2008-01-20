@@ -792,7 +792,7 @@ class LauncherApplet : AppletSimple
     }
 
     
-    private Wnck.Window  find_win_by_pid(int pid)
+    private Wnck.Window  find_win_by_pid(ulong pid)
     {
 		weak	GLib.List	<Wnck.Window>	windows;
 		windows=wnck_screen.get_windows();
@@ -844,6 +844,15 @@ class LauncherApplet : AppletSimple
 			dialog.hide();
 			xid=XIDs.nth_data(0);
 			win=find_win_by_xid(xid);
+            if (win==null)
+            {
+                if (PIDs.length()>0)
+                {
+                    stdout.printf("win = null. curious. trying pid.\n");
+                    ulong   pid=PIDs.nth_data(0);
+                    win=find_win_by_pid(pid);
+                }
+            }
 			if (win!=null)
 			{
 				if (win.is_active() )
@@ -890,7 +899,7 @@ class LauncherApplet : AppletSimple
      
     private bool _button_press(Gtk.Widget widget,Gdk.EventButton event)
     {
-		int		pid;
+		ulong	pid;
 		int		xid;
 
         bool	launch_new=false;
@@ -903,6 +912,12 @@ class LauncherApplet : AppletSimple
 				{
 					launch_new=!single_left_click();
 				}
+                else if (PIDs.length()>0)
+                {
+                    stdout.printf("This should not be happening!!!!!!!!!!!!!!!\n");
+                    pid=PIDs.nth_data(0);
+                    Wnck.Window win=find_win_by_pid(pid);
+                }
 			case 2:
 				launch_new=true;
             case 3:

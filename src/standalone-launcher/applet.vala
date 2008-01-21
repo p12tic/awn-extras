@@ -525,7 +525,7 @@ class LauncherApplet : AppletSimple
 		//this.drag_drop+=_drag_drop;
 		this.drag_data_received+=_drag_data_received;
 		awn_config= new ConfigClient();
-
+        config=new Configuration(uid,(uid.to_double()>0));
         stdout.printf("Step 1\n");
         if (config.task_mode != TaskMode.NONE)
         {
@@ -565,7 +565,6 @@ class LauncherApplet : AppletSimple
 		if (uid.to_double()>0) 
 		{				
             desktopfile = new DesktopFileManagement(uid);
-			config=new Configuration(uid,false);
 			launchmode = LaunchMode.DISCRETE;
 			desktopitem = new DesktopItem(desktopfile.Filename() );			
 			if (!desktopfile.Exists() )
@@ -580,7 +579,7 @@ class LauncherApplet : AppletSimple
 		}
 		else
 		{
-			config=new Configuration(uid,true);
+			
 			launchmode = LaunchMode.ANONYMOUS;
 		    Wnck.Window win=find_win_by_xid(uid.substring(1,128).to_ulong() );
 

@@ -144,13 +144,12 @@ class Configuration: GLib.Object
 	private				int					_task_mode;
 	private				string				_active_image;
 //	private				Awn.Color			_active_colour;
-	public				int					name_comparision_len;	//FIXME
+	private 			int					_name_comparision_len;
 	private				bool				_override_app_icon;
-	public              string              desktop_file_editor;
+	private             string              _desktop_file_editor;
 
 	construct
 	{
-    	desktop_file_editor=new string();
 		if (anon_mode)
 		{			
 			default_conf=new Awn.ConfigClient.for_applet("standalone-launcher",null);
@@ -166,14 +165,13 @@ class Configuration: GLib.Object
 		}
 //		_active_colour=new Awn.Color();
 		read_config();
-
 //Don't know why this is crapping out... probably a bindings issue. FIXME later.
-//        default_conf.notify_add((CONFIG_CLIENT_DEFAULT_GROUP,"standalone-launcher", _config_changed, null);
-		if (!anon_mode)
+        //default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"standalone-launcher", _config_changed, null);
+        default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"active_colour", _config_changed, null);;  
+        if (!anon_mode)
 		{
 				
 		}
-
 	}
 	
 	public static void _config_changed(Awn.ConfigClientNotifyEntry entry, pointer data)
@@ -194,9 +192,9 @@ class Configuration: GLib.Object
 		_task_mode=get_int(subdir+"task_mode",1);
 		_active_image=get_string("active_task_image","emblem-favorite");
 		_override_app_icon=get_bool(subdir+"override_app_icon",true);
+        _desktop_file_editor=get_string("desktop_file_editor","gnome-desktop-item-edit");        
+		_name_comparision_len=get_int("name_comparision_len",14);
 
-		name_comparision_len=14;		
-        desktop_file_editor="gnome-desktop-item-edit";
 
 		temp=get_string("active_colour","00000000");		
 		//cairo_string_to_color(temp,_active_colour);		
@@ -254,7 +252,18 @@ class Configuration: GLib.Object
 			return _active_image;
     	}
     }
-	
+
+    public string desktop_file_editor {
+        get { 
+			return _desktop_file_editor;
+    	}
+    }
+
+	public int name_comparision_len{
+        get { 
+			return _name_comparision_len;
+    	}
+    }
 }
 
 class DesktopFileManagement : GLib.Object
@@ -510,7 +519,6 @@ class LauncherApplet : AppletSimple
 
     private bool _initialize()
     {
-        stdout.printf("initializing.......................................\n");
 		this.button_press_event+=_button_press;
 
 		targets = new TargetEntry[2];
@@ -526,7 +534,6 @@ class LauncherApplet : AppletSimple
 		this.drag_data_received+=_drag_data_received;
 		awn_config= new ConfigClient();
         config=new Configuration(uid,(uid.to_double()>0));
-        stdout.printf("Step 1\n");
         if (config.task_mode != TaskMode.NONE)
         {
             this.enter_notify_event+=_enter_notify;
@@ -541,10 +548,8 @@ class LauncherApplet : AppletSimple
             dbusconn.Register(uid);
             wnck_screen = Wnck.Screen.get_default();	
             wnck_screen.force_update();	
-
         }
-
-        stdout.printf("Step 2\n");        
+     
         theme = IconTheme.get_default ();        
 		icon = theme.load_icon ("stock_stop", height - 2, IconLookupFlags.USE_BUILTIN);
 		title_string = new string();
@@ -561,7 +566,6 @@ class LauncherApplet : AppletSimple
         
 		if (icon!=null)
 			set_icon (icon); 
-        stdout.printf("Step 3\n");
 		if (uid.to_double()>0) 
 		{				
             desktopfile = new DesktopFileManagement(uid);
@@ -658,7 +662,6 @@ class LauncherApplet : AppletSimple
 
     private string _get_title()
     {
-        stdout.printf("In get_title() \n");
         return title_string;
     }    
 
@@ -679,7 +682,6 @@ class LauncherApplet : AppletSimple
 		    desktopfile = new DesktopFileManagement(temp);		
 			desktopfile.set_name(temp);
 		}		
-		stdout.printf("creating desktop = %s, %s\n",temp,desktopfile.Filename());
 		desktopitem = new DesktopItem(desktopfile.Filename() );
         desktopitem.set_string ("Type","Application");		 		
         desktopitem.save(desktopfile.Filename());
@@ -704,7 +706,7 @@ class LauncherApplet : AppletSimple
                 try{
                     desktopitem.save(desktopfile.Filename() );
                 }catch(GLib.Error ex){
-                    stdout.printf("error writing file %s\n",desktopfile.Filename());
+                    stderr.printf("error writing file %s\n",desktopfile.Filename());
                 }
                 if (desktopitem.get_icon(theme)=="none")
                 {
@@ -719,7 +721,7 @@ class LauncherApplet : AppletSimple
         try{
     		desktopitem.save(desktopfile.Filename() );	
     	}catch(GLib.Error ex){
-    	    stdout.printf("error writing file %s\n",desktopfile.Filename());
+    	    stderr.printf("error writing file %s\n",desktopfile.Filename());
     	}
         desktopitem.set_string ("Type","Application");		    	
 //        desktopitem.save(desktopfile.Filename());    	
@@ -756,7 +758,6 @@ class LauncherApplet : AppletSimple
 
     private bool _drag_drop(Gtk.Widget widget,Gdk.DragContext context,int x,int y,uint time)
     {
-        stdout.printf("Drag_ drop \n");
 		return true;
     }  
 
@@ -765,7 +766,6 @@ class LauncherApplet : AppletSimple
 		weak SList <string>	fileURIs;
 		string  cmd;  
 		bool status=false;
-		stdout.printf("Drag and drop received \n");
 		fileURIs=vfs_get_pathlist_from_string(selectdata.data);
 		foreach (string str in fileURIs) 
 		{
@@ -782,7 +782,7 @@ class LauncherApplet : AppletSimple
                         try{
     						tempdesk.save(desktopfile.Filename());//FIXME - throws
                     	}catch(GLib.Error ex){
-                    	    stdout.printf("error writing file %s\n",desktopfile.Filename());
+                    	    stderr.printf("error writing file %s\n",desktopfile.Filename());
                     	}
 						
 						desktopitem = tempdesk;//new DesktopItem(desktopfile.Filename() );				
@@ -838,7 +838,7 @@ class LauncherApplet : AppletSimple
 				try {
     				desktopitem.save(desktopfile.Filename() );				
             	}catch(GLib.Error ex){
-            	    stdout.printf("error writing file %s\n",desktopfile.Filename());
+            	    stderr.printf("error writing file %s\n",desktopfile.Filename());
             	}
 				
                 if (icon!=null)              
@@ -1246,8 +1246,6 @@ class LauncherApplet : AppletSimple
         string filename=new string();
 
         exec=get_exec(window.get_pid() );
-
-        stdout.printf("exec = %s\n",exec);
         
         string desk_name=desktopitem.get_name();
         if (desk_name == null)
@@ -1256,7 +1254,6 @@ class LauncherApplet : AppletSimple
         }
         if ( (PIDs.find(window.get_pid() ) !=null))
         {
-            stdout.printf("Claiming\n");
             do
             {
                 response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"CLAIM");
@@ -1289,7 +1286,6 @@ class LauncherApplet : AppletSimple
                 else if (response=="RESET")
                     dbusconn.Register(uid);										
             }while (response=="RESET");
-            stdout.printf("response = %s\n",response);
         }
         else
         {
@@ -1383,11 +1379,8 @@ class LauncherApplet : AppletSimple
     
     private void _win_state_change(Wnck.Window window,Wnck.WindowState changed_mask,Wnck.WindowState new_state)
     {
-        stdout.printf("window state changed\n");
-        
         if ( (Wnck.WindowState.DEMANDS_ATTENTION & new_state) == Wnck.WindowState.DEMANDS_ATTENTION )
         {
-            stdout.printf("demanding attention\n");
             //effect_start_ex(effects, Effect.ATTENTION,null,null,11);    
             effect_start(effects, Effect.ATTENTION);
         }

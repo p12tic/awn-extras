@@ -3,5 +3,5 @@ Type=Application
 X-AWN-AppletType=C
 Name=Taskmand Applet
 Comment=Convience Applet.  Allows easy placement of taskmanager tasks in the awn bar
-Exec=@LIBDIR@/awn/applets/taskmand-applet/taskmand-applet.so
+Exec=@LIBDIR@/awn/applets/Taskmand-applet/Taskmand-applet.so
 Icon=binary

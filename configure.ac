@@ -315,8 +315,8 @@ src/standalone-launcher/standalone-launcher.desktop.in
 src/switcher/Makefile
 src/taskmand/Makefile
 src/taskmand/data/Makefile
-src/taskmand-applet/Makefile
-src/taskmand-applet/taskmand-applet.desktop.in
+src/Taskmand-applet/Makefile
+src/Taskmand-applet/Taskmand-applet.desktop.in
 src/trash/Makefile
 src/trasher/Makefile
 src/tsclient-applet/Makefile

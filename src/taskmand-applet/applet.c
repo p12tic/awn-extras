@@ -33,7 +33,7 @@ AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
         gdk_pixbuf_fill(icon,0x11881133);
     }    
     gtk_widget_set_size_request (GTK_WIDGET (applet), 2, 2);
-    awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (places->applet),places->icon);    
+    awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (applet),icon);    
     return applet;
 }
 

@@ -236,13 +236,16 @@ src/awnsystemmonitor/Makefile
 src/awnterm/Makefile
 src/battery-applet/Makefile
 src/battery-applet/icons/Makefile
+src/battery-applet/battery-applet.desktop.in
 src/BlingSwitcher/Makefile
+src/BlingSwitcher/BlingSwitcher.desktop.in
 src/clock/Makefile
 src/cairo-menu-classic/Makefile
 src/cairo-menu-classic/cairo_main_menu_classic.desktop.in
 src/cairo-menu/Makefile
 src/cairo-menu/cairo_main_menu.desktop.in
 src/calendar/Makefile
+src/calendar/calendar.desktop.in
 src/calendar/google/Makefile
 src/calendar/google/atom/Makefile
 src/calendar/google/gdata/Makefile
@@ -253,8 +256,10 @@ src/calendar/google/gdata/docs/Makefile
 src/calendar/google/gdata/spreadsheet/Makefile
 src/calendar/images/Makefile
 src/comic/Makefile
+src/comic/comic.desktop.in
 src/comic/images/Makefile
 src/digg/Makefile
+src/digg/digg.desktop.in
 src/digg/profile/Makefile
 src/digg/profile/Cache/Makefile
 src/digitalClock/Makefile
@@ -310,7 +315,7 @@ src/standalone-launcher/standalone-launcher.desktop.in
 src/switcher/Makefile
 src/taskmand/Makefile
 src/taskmand/data/Makefile
-str/taskmand-applet/Makefile
+src/taskmand-applet/Makefile
 src/trash/Makefile
 src/trasher/Makefile
 src/tsclient-applet/Makefile

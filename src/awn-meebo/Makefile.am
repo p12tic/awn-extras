@@ -1,7 +1,8 @@
 SUBDIRS = profile
 APPLET_NAME = awn-meebo
+APPLET_MAIN_FILE = awn-meebo.py
 include $(top_srcdir)/Makefile.python-applet
 
 dist_applet_DATA = \
-		awn-meebo.py	\
-		meebo.png
+		meebo.png   \
+	    $(NULL)

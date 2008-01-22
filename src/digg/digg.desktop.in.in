@@ -1,7 +1,8 @@
 [Desktop Entry]
 Version=1.0
 Name=iPhone Digg
-Type=Python
+Type=Application
+X-AWN-AppletType=Python
 Comment=Access to the iPhone version of Digg
 Exec=@LIBDIR@/awn/applets/digg/awn-digg.py
 Icon=@LIBDIR@/awn/applets/digg/digg.png

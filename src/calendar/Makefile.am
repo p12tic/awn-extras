@@ -1,9 +1,12 @@
 SUBDIRS = google images
 
-dist_gmail_DATA = 				\
+APPLET_NAME = calendar
+APPLET_MAIN_FILE = clockcal.py
+include $(top_srcdir)/Makefile.python-applet
+
+dist_applet_DATA =	\
 		calendarlogin.py 			\
 		calendarprefs.py		\
-		clockcal.py		\
 		calthread.py	\
 		evocal.py	\
 		googlecal.py	\
@@ -12,17 +15,6 @@ dist_gmail_DATA = 				\
 		calthread.py	\
 		sevensegled.py
 
-gmaildir = $(libdir)/awn/applets/calendar
-
-desktopdir = $(libdir)/awn/applets
-desktop_DATA = \
-	calendar.desktop
-@INTLTOOL_DESKTOP_RULE@
-
-$(desktop_DATA).in: $(desktop_DATA).in.in
-	sed -e "s|\@LIBDIR\@|$(libdir)|g" $< > $@
 
 
-EXTRA_DIST = \
-	calendar.desktop.in.in
 

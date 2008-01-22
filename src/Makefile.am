@@ -42,6 +42,7 @@ SUBDIRS =			\
 	stacks 			\
 	switcher 		\
 	showdesktop 		\
+	taskmand-applet     \
 	trash 			\
 	trasher			\
 	tsclient-applet		\

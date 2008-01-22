@@ -310,6 +310,7 @@ src/standalone-launcher/standalone-launcher.desktop.in
 src/switcher/Makefile
 src/taskmand/Makefile
 src/taskmand/data/Makefile
+str/taskmand-applet/Makefile
 src/trash/Makefile
 src/trasher/Makefile
 src/tsclient-applet/Makefile

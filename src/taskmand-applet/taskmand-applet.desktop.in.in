@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+X-AWN-AppletType=C
+Name=Taskmand Applet
+Comment=Convience Applet.  Allows easy placement of taskmanager tasks in the awn bar
+Exec=@LIBDIR@/awn/applets/taskmand-applet/taskmand-applet.so
+Icon=binary

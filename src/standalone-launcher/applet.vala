@@ -529,9 +529,11 @@ class LauncherApplet : AppletSimple
 		targets[1].flags = 0;
 		targets[1].info =  0;
 
+        drag_source_set(this,Gdk.ModifierType.BUTTON1_MASK,targets,2, Gdk.DragAction.COPY);
 		drag_dest_set(this, Gtk.DestDefaults.ALL, targets, 2, Gdk.DragAction.COPY);
 		//this.drag_drop+=_drag_drop;
 		this.drag_data_received+=_drag_data_received;
+        this.drag_data_get+=_drag_data_get;
 		awn_config= new ConfigClient();
         config=new Configuration(uid,(uid.to_double()>0));
         if (config.task_mode != TaskMode.NONE)
@@ -761,8 +763,15 @@ class LauncherApplet : AppletSimple
 		return true;
     }  
 
+    private void _drag_data_get  (Gtk.Widget widget,Gdk.DragContext context, Gtk.SelectionData selection_data, uint info, uint time_)
+    {    
+        stdout.printf("_drag_data_get\n");
+        selection_data.set_text("BOOGER\n",-1);
+    }
+
     private void _drag_data_received(Gtk.Widget widget,Gdk.DragContext context,int x,int y,Gtk.SelectionData selectdata,uint info,uint time)
     {    
+        stdout.printf("drag data received\n");
 		weak SList <string>	fileURIs;
 		string  cmd;  
 		bool status=false;
@@ -1002,9 +1011,6 @@ class LauncherApplet : AppletSimple
                                 {
                                     windows.prepend(win);
                                 }
-                            }
-                            if (win!=null)
-                            {
                                 if (win.is_active() )
                                 {
                                     win.minimize();

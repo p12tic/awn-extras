@@ -39,5 +39,6 @@ static void taskmand_class_init(TaskmandClass *class);
 gboolean taskmand_launcher_register(Taskmand *obj, gchar *uid, GError **error);
 gboolean taskmand_inform_task_ownership(Taskmand *obj, gchar *uid,gchar *pid, gchar *request,gchar ** response,GError **error);
 gboolean taskmand_launcher_unregister(Taskmand *obj, gchar *uid, GError **error);
+gboolean taskmand_launcher_position(Taskmand *obj, gchar *uid, GError **error);
 
 #endif 

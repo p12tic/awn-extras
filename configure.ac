@@ -97,7 +97,7 @@ PKG_CHECK_MODULES(LIBSEXY, [libsexy])
 PKG_CHECK_MODULES(LIBNOTIFY, [libnotify])
 # awn-terminal
 PKG_CHECK_MODULES(VTE, [vte])
-# standalone-launcher, taskmand
+# standalone-launcher, taskmand, taskmand-applet
 PKG_CHECK_MODULES(DBUS_GLIB, [dbus-glib-1])
 
 # affinity
@@ -126,6 +126,7 @@ PKG_CHECK_MODULES(NOTIFICATION_DAEMON, [libnotify libsexy libwnck-1.0])
 PKG_CHECK_MODULES(SHINY_SWITCHER, [libwnck-1.0 x11 xcomposite xrender])
 PKG_CHECK_MODULES(STANDALONE_LAUNCHER, [dbus-glib-1 libwnck-1.0])
 PKG_CHECK_MODULES(TASKMAND, [dbus-glib-1 libwnck-1.0])
+PKG_CHECK_MODULES(TASKMAND_APPLET, [dbus-glib-1])
 
 dnl
 dnl Check python modules

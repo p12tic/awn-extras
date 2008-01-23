@@ -259,7 +259,20 @@ gboolean launch_anonymous_launcher(gulong xid)
                                             "applets_list", AWN_CONFIG_CLIENT_LIST_TYPE_STRING,NULL);
     char * applet_location=g_strdup_printf("%s::-%lu+%ld",taskmanager->path,xid,(long)time(NULL));
 //    applet_list=g_list_append(applet_list,applet_location);
-    GSList * insert_point=g_slist_nth(applet_list,g_list_length(applet_list)*taskmanager->pos_gravity+taskmanager->pos_offset );
+    
+    
+    GSList * insert_point=NULL;
+    GSList * iter;
+    for(iter=applet_list;iter;iter=g_slist_next(iter) ) //FIXME.. this is a quick hack. Do not leave this way. Not as bad as core though :-)
+    {
+        if ( g_strrstr_len(iter->data,strlen(iter->data) ,"Taskmand-applet.desktop") )
+        {
+            insert_point=iter;
+            break;
+        }
+    }
+    if (!insert_point)
+        insert_point=g_slist_nth(applet_list,g_list_length(applet_list)*taskmanager->pos_gravity+taskmanager->pos_offset );
     applet_list=g_slist_insert_before(applet_list,insert_point,applet_location);
     awn_config_client_set_list(taskmanager->core_config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
                    "applets_list",AWN_CONFIG_CLIENT_LIST_TYPE_STRING,applet_list,NULL);

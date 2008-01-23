@@ -20,5 +20,10 @@
 <annotation name="org.freedesktop.DBus.GLib.CSymbol" value="taskmand_launcher_unregister"/>
 <arg type="s" name="uid" direction="in"/>
 </method>
+−
+<method name="Launcher_Position">
+<annotation name="org.freedesktop.DBus.GLib.CSymbol" value="taskmand_launcher_position"/>
+<arg type="s" name="uid" direction="in"/>
+</method>
 </interface>
 </node>

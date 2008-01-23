@@ -61,7 +61,7 @@ typedef struct
     int                 applet_list_locking_fd;
     guint               pos_gravity;                //0 for left. 1 for right.
     gint                pos_offset;                 //convert to neg if grav =1
-    
+    gchar               *positioner_uid;
 }Taskman;
 
 typedef struct
@@ -216,6 +216,15 @@ gboolean taskmand_launcher_unregister(Taskmand *obj, gchar *uid, GError **error)
 	return TRUE;
 }
 
+gboolean taskmand_launcher_position(Taskmand *obj, gchar *uid, GError **error)
+{
+	g_message("received launcher position\n");
+    g_free(taskmanager->positioner_uid);
+    taskmanager->positioner_uid=g_strdup(uid);
+	*error=NULL;
+	return TRUE;
+}
+
 //END OF DBUS CRAP ***********************************************************************
 
 static void config_get_string (AwnConfigClient *client, const gchar *key, gchar **str)
@@ -238,6 +247,7 @@ void init_config(Taskman * taskmanager)
 	taskmanager->pos_gravity=awn_config_client_get_int(taskmanager->config,AWN_CONFIG_CLIENT_DEFAULT_GROUP,CONFIG_POS_GRAV, NULL)&1;    
 	taskmanager->pos_offset =awn_config_client_get_int(taskmanager->config,AWN_CONFIG_CLIENT_DEFAULT_GROUP,CONFIG_POS_OFFSET, NULL)
 	                                            * (1 - taskmanager->pos_gravity*2);
+    taskmanager->positioner_uid=NULL;
 }
 
 //==================================================
@@ -265,7 +275,7 @@ gboolean launch_anonymous_launcher(gulong xid)
     GSList * iter;
     for(iter=applet_list;iter;iter=g_slist_next(iter) ) //FIXME.. this is a quick hack. Do not leave this way. Not as bad as core though :-)
     {
-        if ( g_strrstr_len(iter->data,strlen(iter->data) ,"Taskmand-applet.desktop") )
+        if ( g_strrstr_len(iter->data,strlen(iter->data) ,taskmanager->positioner_uid) )
         {
             insert_point=iter;
             break;

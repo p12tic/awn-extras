@@ -625,7 +625,11 @@ class LauncherApplet : AppletSimple
 				store_XID(win.get_xid());
 				PIDs.prepend(win.get_pid());
 				windows.prepend(win);
-				icon=win.get_icon();		//the fallback				
+				icon=win.get_icon();		//the fallback	
+                if (icon==null)
+                {
+                    icon=(win.get_application()).get_icon();
+                }
 				if (icon !=null)
 				{
 					icon=icon.scale_simple (height-2, height-2, Gdk.InterpType.BILINEAR );

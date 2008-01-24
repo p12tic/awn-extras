@@ -20,7 +20,6 @@ SUBDIRS =			\
 	comic			\
 	digg			\
 	digitalClock		\
-	filebrowser     	\
 	file-browser-launcher	\
 	gmail			\
 	lastfm			\
@@ -40,10 +39,8 @@ SUBDIRS =			\
 	separator 		\
 	shiny-switcher		\
 	stacks 			\
-	switcher 		\
 	showdesktop 		\
 	Taskmand-applet     \
-	trash 			\
 	trasher			\
 	tsclient-applet		\
 	volume-control 		\

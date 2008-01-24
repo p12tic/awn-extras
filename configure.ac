@@ -208,6 +208,7 @@ AM_GCONF_SOURCE_2
 dnl Please keep in alphabetical order
 AC_OUTPUT([
 Makefile
+po/Makefile.in
 src/Makefile
 src/affinity/Makefile
 src/affinity/affinity.desktop.in
@@ -264,8 +265,8 @@ src/digg/digg.desktop.in
 src/digg/profile/Makefile
 src/digg/profile/Cache/Makefile
 src/digitalClock/Makefile
-src/filebrowser/Makefile
 src/file-browser-launcher/Makefile
+src/filebrowser/Makefile
 src/gmail/Makefile
 src/gmail/Themes/Makefile
 src/gmail/Themes/Tango/Makefile
@@ -303,9 +304,6 @@ src/python-test/python-test.desktop.in
 src/quit-applet/Makefile
 src/quit-applet/icons/Makefile
 src/volume-control/Makefile
-src/volume-control/Themes/Makefile
-src/volume-control/Themes/Black/Makefile
-src/volume-control/Themes/Tango/Makefile
 src/separator/Makefile
 src/shiny-switcher/Makefile
 src/shiny-switcher/shinyswitcher.desktop.in
@@ -324,6 +322,9 @@ src/tsclient-applet/Makefile
 src/tsclient-applet/icons/Makefile
 src/vala-test/Makefile
 src/vala-test/vala-test.desktop.in
+src/volume-control/Themes/Makefile
+src/volume-control/Themes/Black/Makefile
+src/volume-control/Themes/Tango/Makefile
 src/weather/Makefile
 src/weather/images/Makefile
 src/weather/locale/Makefile
@@ -340,5 +341,4 @@ src/weather/locale/pt/LC_MESSAGES/Makefile
 src/wobblyzini/Makefile
 src/wobblyzini/wobblyzini.desktop.in
 src/wobblyzini/icons/Makefile
-po/Makefile.in
 ])

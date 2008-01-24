@@ -497,7 +497,7 @@ static void update_places(Menu_list_item **p,char* file_manager)
 	item->icon=g_strdup("stock_home");
 	const char *homedir = g_getenv ("HOME");
 	if (!homedir)
- 		homedir = g_get_homedir ();
+ 		homedir = g_get_home_dir ();
 	item->exec=g_strdup_printf("%s %s",file_manager,homedir);			
 	item->comment=g_strdup("Your Home Directory");
 	item->desktop=g_strdup("");			
@@ -655,7 +655,7 @@ static void monitor_places(gpointer callback, gpointer data,gpointer box)
 	Monitor_place->box=box;
 	const char *homedir = g_getenv ("HOME");
 	if (!homedir)
-		homedir = g_get_homedir ();		
+		homedir = g_get_home_dir ();		
 	char *  filename=g_strdup_printf("%s/.gtk-bookmarks",homedir); 			
 	if ( gnome_vfs_monitor_add(&handle,filename,GNOME_VFS_MONITOR_FILE,
                                monitor_places_callback,Monitor_place) != GNOME_VFS_OK)

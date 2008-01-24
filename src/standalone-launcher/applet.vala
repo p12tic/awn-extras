@@ -432,6 +432,7 @@ class LauncherApplet : AppletSimple
     protected   Configuration			config;
 	protected	TargetEntry[]			targets;
 	protected	SList<ulong>			XIDs;
+    protected	SList<ulong>			XIDs_dup;
 	protected	SList<ulong>			PIDs;	
 	protected   SList<Wnck.Window>		windows;
 	protected   Wnck.Screen				wnck_screen;
@@ -455,7 +456,7 @@ class LauncherApplet : AppletSimple
 		hidden=true;
     }
 
-
+    /*sets the icon to a blank icon*/
     private void blank_icon()
     {
         Pixbuf  hidden_icon;       
@@ -465,7 +466,7 @@ class LauncherApplet : AppletSimple
         set_icon(icon);
     }
 
-
+    /*sets icon to a 2x2 transparent icon*/
     private void hide_icon()
     {
         if (hidden==false)
@@ -480,6 +481,13 @@ class LauncherApplet : AppletSimple
         }            
     }
 
+    private void store_XID(ulong xid)
+    {
+        XIDs.append(xid);
+        XIDs_dup.append(xid);
+    }
+
+    /*callback function - double checks to be sure icon should be hidden*/
     private bool _hide_icon()
     {
         if (XIDs.length()==0)
@@ -491,7 +499,7 @@ class LauncherApplet : AppletSimple
                 if (win!=null)
                 {
                     stdout.printf("Reclaiming an XID\n");
-                    XIDs.append(win.get_xid());
+                    store_XID(win.get_xid());
                 }
                 else
                 {
@@ -614,7 +622,7 @@ class LauncherApplet : AppletSimple
 				win.name_changed+=_win_name_change;
 				win.state_changed+=_win_state_change;				
                 title_string=win.get_name();
-				XIDs.prepend(win.get_xid());
+				store_XID(win.get_xid());
 				PIDs.prepend(win.get_pid());
 				windows.prepend(win);
 				icon=win.get_icon();		//the fallback				
@@ -769,6 +777,8 @@ class LauncherApplet : AppletSimple
         selection_data.set_text("BOOGER\n",-1);
     }
 
+
+
     private void _drag_data_received(Gtk.Widget widget,Gdk.DragContext context,int x,int y,Gtk.SelectionData selectdata,uint info,uint time)
     {    
         stdout.printf("drag data received\n");
@@ -834,16 +844,13 @@ class LauncherApplet : AppletSimple
 					}
 					else
 						break;
-//					if ( wnck_screen.get_workspaces().find(win) !=null)
-					{
-//						set_anon_desktop(win);
-						desktopitem.set_icon(Filename.from_uri(str) );							
-					}			
+                    desktopitem.set_icon(Filename.from_uri(str) );							
 				}			
 				else
 				{
 					desktopitem.set_icon(Filename.from_uri(str) );					
-				}			
+				}	
+		
 				try {
     				desktopitem.save(desktopfile.Filename() );				
             	}catch(GLib.Error ex){
@@ -856,7 +863,6 @@ class LauncherApplet : AppletSimple
 			}
 		}		
 		drag_finish (context, status, false, time);		
-
     }  
 
     private Wnck.Window  find_win_by_xid(ulong xid)
@@ -986,40 +992,45 @@ class LauncherApplet : AppletSimple
 
         bool	launch_new=false;
 		SList<string>	documents;
-        effect_stop (effects, Effect.ATTENTION);
-        if (config.task_mode != TaskMode.NONE)
+        effect_stop (effects, Effect.ATTENTION);//effect off
+        if (config.task_mode != TaskMode.NONE)  //if it does tasmanagement.
         {
             switch (event.button) 
             {
                 case 1:
-                    launch_new=true;	
-                    if (XIDs.length() > 0 )
+                    launch_new=true;	        //yes we will launch.
+                    if (XIDs.length() > 0 )     //already have some XIDs
                     {
-                        launch_new=!single_left_click();
+                        launch_new=!single_left_click();    //in general will end up false
                     }
-                    else if (PIDs.length()>0)   
+                    else if (PIDs.length()>0)   //no XIDs... but any PIDs
                     {
                         Wnck.Window win=null;
                         stdout.printf("No XIDs but we got a PID.. looking to reclaim\n");
                         foreach( ulong p in PIDs)
                         {
-                            win=find_win_by_pid(p);
-                            if (win!=null)
+
+                            weak	GLib.List	<Wnck.Window>	windows;
+                            windows=wnck_screen.get_windows();
+                            foreach (Wnck.Window win in windows)
                             {
-                                XIDs.prepend(win.get_xid() );
-                                if (windows.find(win)==null)
+                                if (win.get_pid()==p)
                                 {
-                                    windows.prepend(win);
+                                    store_XID(win.get_xid() );
+                                    if (windows.find(win)==null)
+                                    {
+                                        windows.prepend(win);
+                                    }
+                                    if (win.is_active() )
+                                    {
+                                        win.minimize();
+                                    }
+                                    else
+                                    {
+                                        win.activate(Gtk.get_current_event_time());
+                                    }
+                                    launch_new=false;
                                 }
-                                if (win.is_active() )
-                                {
-                                    win.minimize();
-                                }
-                                else
-                                {
-                                    win.activate(Gtk.get_current_event_time());
-                                }
-                                launch_new=false;
                             }
                         }
                     }
@@ -1091,7 +1102,7 @@ class LauncherApplet : AppletSimple
 		{
 			if (launchmode == LaunchMode.ANONYMOUS)
 			{
-				Timeout.add(500,_hide_icon,this);	
+				Timeout.add(750,_hide_icon,this);	
 				timer_count++;		
 				Timeout.add(30000,_timed_closed,this);
 			}				
@@ -1175,7 +1186,7 @@ class LauncherApplet : AppletSimple
 					windows.prepend(win);
                 else
                     continue;					
-				XIDs.prepend(xid);
+				store_XID(xid);
 				retry_list.remove(xid);
                 stdout.printf("Window Added %s, xid=%lu, count=%d\n",win.get_name(),xid,XIDs.length() );
 				if (launchmode == LaunchMode.ANONYMOUS)
@@ -1204,6 +1215,8 @@ class LauncherApplet : AppletSimple
 				win.name_changed+=_win_name_change;
 				win.state_changed+=_win_state_change;				
                 title_string=win.get_name();
+                if (PIDs.find(win.get_pid())==null)
+                    PIDs.prepend(win.get_pid() );
                 show_icon();                
 			}
 			else if (response=="HANDSOFF")
@@ -1267,7 +1280,7 @@ class LauncherApplet : AppletSimple
                 {
                     Pixbuf  new_icon;
                     windows.prepend(window);
-                    XIDs.prepend(xid);
+                    store_XID(xid);
                     stdout.printf("Window Added %s, xid=%lu, count=%d\n",window.get_name(),xid,XIDs.length() );
                     if (launchmode == LaunchMode.ANONYMOUS)
                     {	
@@ -1333,7 +1346,7 @@ class LauncherApplet : AppletSimple
                 {
                     Pixbuf new_icon;
                     windows.prepend(window);
-                    XIDs.prepend(xid);				
+                    store_XID(xid);				
                     stdout.printf("Window Added %s, xid=%lu, count=%d\n",window.get_name(),xid,XIDs.length() );
                     if (config.override_app_icon )
                     {
@@ -1354,6 +1367,9 @@ class LauncherApplet : AppletSimple
                     icon=new_icon;
                     show_icon();
                     title_string=window.get_name();
+                    if (PIDs.find(window.get_pid())==null)
+                        PIDs.prepend(window.get_pid() );
+
                     window.name_changed+=_win_name_change;
                     window.state_changed+=_win_state_change;    
                 }						
@@ -1390,6 +1406,8 @@ class LauncherApplet : AppletSimple
             //effect_start_ex(effects, Effect.ATTENTION,null,null,11);    
             effect_start(effects, Effect.ATTENTION);
         }
+        else
+            effect_stop (effects, Effect.ATTENTION);//effect off
     }    
     
 	private void _application_closed(Wnck.Screen screen,Wnck.Application app)
@@ -1440,6 +1458,7 @@ class LauncherApplet : AppletSimple
 		{
     		if (windows.find(active) != null)
     		{
+                effect_stop (effects, Effect.ATTENTION);//effect off
                 title_string=active.get_name();
                 if (config.override_app_icon )
     			{

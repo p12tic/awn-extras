@@ -23,6 +23,7 @@ libtool
 ltmain.sh
 missing
 po/.intltool-merge-cache
+po/Makefile.in.in
 po/POTFILES
 po/stamp-it
 py-compile

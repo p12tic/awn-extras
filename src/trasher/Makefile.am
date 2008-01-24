@@ -1,38 +1,13 @@
-INCLUDES =							\
-	-I$(srcdir)						\
-	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"		\
-	$(DISABLE_DEPRECATED_CFLAGS)				\
-	$(AWN_CFLAGS)				\
-	$(GNOME_CFLAGS)				\
-	$(GNOME_VFS_CFLAGS)			\
-	-DPREFIX=\"$(prefix)\"					\
-	-DSYSCONFDIR=\"$(sysconfdir)\"				\
-	-DDATADIR=\"$(datadir)\"				\
-	-DLIBDIR=\"$(libdir)\"                                   
-
-TRASHER_SOURCES =                              \
-	applet.c
-
-TRASHER_LDADD =                        \
-	$(AWN_LIBS)					\
-	$(GNOME_LIBS)				\
-	$(GNOME_VFS_LIBS)
-
-trasherlibdir = $(libdir)/awn/applets/trasher
-trasherlib_LTLIBRARIES = trasher.la
-trasher_la_SOURCES = $(TRASHER_SOURCES)
-trasher_la_LIBADD = $(TRASHER_LDADD)
-trasher_la_LDFLAGS = -module -avoid-version
-trasher_la_CFLAGS =
-
-desktopdir = $(libdir)/awn/applets
-
-desktop_DATA = \
-	trasher.desktop
-@INTLTOOL_DESKTOP_RULE@
-
-$(desktop_DATA).in: $(desktop_DATA).in.in
-	sed -e "s|\@LIBDIR\@|$(libdir)|g" $< > $@
-
-EXTRA_DIST = \
-	trasher.desktop.in.in
+APPLET_NAME = trasher
+APPLET_CFLAGS = $(GNOME_CFLAGS) $(GNOME_VFS_CFLAGS)
+include $(top_srcdir)/Makefile.c-applet
+applet_LTLIBRARIES = trasher.la
+trasher_la_SOURCES =	\
+	applet.c	\
+	$(NULL)
+trasher_la_LIBADD =		\
+	$(AWN_LIBS)		\
+	$(GNOME_LIBS)		\
+	$(GNOME_VFS_LIBS)	\
+	$(NULL)
+trasher_la_LDFLAGS = $(APPLET_LINKER_FLAGS)

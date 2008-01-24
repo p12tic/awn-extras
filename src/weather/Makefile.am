@@ -3,7 +3,6 @@ APPLET_NAME = weather
 APPLET_MAIN_FILE = weather.py
 include $(top_srcdir)/Makefile.python-applet
 dist_applet_DATA = 		\
-	weather.py		\
 	messages.pot		\
 	weatherconfig.py	\
 	weatherdialog.py	\

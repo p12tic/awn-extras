@@ -1,32 +1,28 @@
+NULL =
 APPLET_NAME = taskmand
 SUBDIRS = data
 
 include $(top_srcdir)/Makefile.schemas
 
-INCLUDES =				\
-	$(AWN_CFLAGS)			\
-	$(WARN_CFLAGS)
+INCLUDES =			\
+	$(AWN_CFLAGS)		\
+	$(TASKMAND_CFLAGS)	\
+	$(top_srcdir)/src	\
+	$(NULL)
 
 bin_PROGRAMS = taskmand
 
-AM_CFLAGS =								\
-	-DDATADIR=\""$(datadir)"\"					\
-	-DLIBDIR=\""$(libdir)"\"                                        \
-	-DGNOMELOCALEDIR=\""$(prefix)/$(DATADIRNAME)/locale"\"          \
-	-I/usr/include/dbus-1.0/                                        \
-	$(TASKMAND_CFLAGS)                                          \
-	-I../
+taskmand_LDADD =						\
+	$(AWN_LIBS)						\
+	$(TASKMAND_LIBS)					\
+	$(top_builddir)/src/libawn-extras/libawn-extras.la	\
+	$(NULL)
 
-taskmand_LDADD  = \
-        $(AWN_LIBS)       							\
-	    $(TASKMAND_LIBS)	                        \
-	    $(top_builddir)/src/libawn-extras/libawn-extras.la	
-
-taskmand_SOURCES =			\
+taskmand_SOURCES =		\
 	taskmand.c		\
-	taskmand.h      \
-	server-bindings.h 
-
+	taskmand.h		\
+	server-bindings.h	\
+	$(NULL)
 
 BUILT_SOURCES = server-bindings.h client-bindings.h
 # We don't want to install this header

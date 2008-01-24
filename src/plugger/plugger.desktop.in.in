@@ -1,5 +1,6 @@
 [Desktop Entry]
-Type=C
+Type=Application
+X-AWN-AppletType=C
 Encoding=UTF-8
 Name=Stacks Plugger
 Comment=Monitors removable media devices

@@ -7,7 +7,6 @@ SUBDIRS =			\
 	libawn-extras	\
 	affinity		\
 	arss			\
-	awnsystemmonitor	\
 	awnterm			\
 	awn-notification-daemon \
 	battery-applet		\

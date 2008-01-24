@@ -235,7 +235,7 @@ src/awn-notification-daemon/src/Makefile
 src/awn-notification-daemon/src/daemon/Makefile
 src/awn-notification-daemon/src/daemon/awnnotificationdaemon.desktop.in
 src/awnsystemmonitor/Makefile
-src/awnsystemmonitor/awn-system-monitor.desktop.in
+src/awnsystemmonitor/awnsystemmonitor.desktop.in
 src/awnterm/Makefile
 src/awnterm/awnterm.desktop.in
 src/battery-applet/Makefile

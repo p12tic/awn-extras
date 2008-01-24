@@ -2,15 +2,17 @@ APPLET_NAME = Taskmand-applet
 
 include $(top_srcdir)/Makefile.c-applet
 
-APPLET_CFLAGS =								\
-	$(TASKMAND_APPLET_CFLAGS)
+APPLET_CFLAGS =				\
+	$(TASKMAND_APPLET_CFLAGS)	\
+	$(NULL)
 
 applet_LTLIBRARIES = Taskmand-applet.la
-Taskmand_applet_la_SOURCES = \
+Taskmand_applet_la_SOURCES =	\
 	applet.c		\
 	$(NULL)
-Taskmand_applet_la_LIBADD =										\
-	$(AWN_LIBS)											\
+Taskmand_applet_la_LIBADD =	\
+	$(AWN_LIBS)		\
+	$(TASKMAND_APPLET_LIBS)	\
 	$(NULL)
 Taskmand_applet_la_LDFLAGS = $(APPLET_LINKER_FLAGS)
 
@@ -20,7 +22,7 @@ noinst_HEADERS = $(BUILT_SOURCES)
 
 # Correctly clean the generated headers, but keep the xml description
 
-EXTRA_DIST = taskmand-infos.xml
+EXTRA_DIST += taskmand-infos.xml
 
 #Rule to generate the binding headers
 server-bindings.h:  taskmand-infos.xml

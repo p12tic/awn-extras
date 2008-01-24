@@ -235,13 +235,16 @@ src/awn-notification-daemon/src/Makefile
 src/awn-notification-daemon/src/daemon/Makefile
 src/awn-notification-daemon/src/daemon/awnnotificationdaemon.desktop.in
 src/awnsystemmonitor/Makefile
+src/awnsystemmonitor/awn-system-monitor.desktop.in
 src/awnterm/Makefile
+src/awnterm/awnterm.desktop.in
 src/battery-applet/Makefile
 src/battery-applet/icons/Makefile
 src/battery-applet/battery-applet.desktop.in
 src/BlingSwitcher/Makefile
 src/BlingSwitcher/BlingSwitcher.desktop.in
 src/clock/Makefile
+src/clock/clock.desktop.in
 src/cairo-menu-classic/Makefile
 src/cairo-menu-classic/cairo_main_menu_classic.desktop.in
 src/cairo-menu/Makefile
@@ -274,6 +277,7 @@ src/gmail/Makefile
 src/gmail/Themes/Makefile
 src/gmail/Themes/Tango/Makefile
 src/gmail/Themes/Reserved/Makefile
+src/gmail/awngmail.desktop.in
 src/lastfm/Makefile
 src/lastfm/icons/Makefile
 src/lastfm/lastfm.desktop.in

@@ -1,30 +1,21 @@
-INCLUDES =							\
-	-I$(srcdir)						\
-	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"		\
-	$(DISABLE_DEPRECATED_CFLAGS)				\
-	$(AWN_CFLAGS)					\
-	$(RSVG_CFLAGS)					\
-	-DPREFIX=\"$(prefix)\"					\
-	-DSYSCONFDIR=\"$(sysconfdir)\"				\
-	-DDATADIR=\"$(datadir)\"				\
-	-DLIBDIR=\"$(libdir)\"                                 
+APPLET_NAME = clock
+APPLET_CFLAGS = $(RSVG_CFLAGS)
+include $(top_srcdir)/Makefile.c-applet
+applet_LTLIBRARIES = clock.la
+clock_la_SOURCES =	\
+	applet.c	\
+	clock-applet.h	\
+	clock-applet.c	\
+	utils.c		\
+	utils.h		\
+	$(NULL)
+clock_la_LIBADD =	\
+	$(AWN_LIBS)	\
+	$(RSVG_LIBS)	\
+	$(NULL)
+clock_la_LDFLAGS = $(APPLET_LINKER_FLAGS)
 
-CLOCK_SOURCES =                              \
-	applet.c				\
-	clock-applet.h				\
-	clock-applet.c				\
-	utils.c					\
-	utils.h
-
-clocklibdir = $(libdir)/awn/applets/clock
-clocklib_LTLIBRARIES = clock.la
-clock_la_SOURCES = $(CLOCK_SOURCES)
-clock_la_LIBADD = $(AWN_LIBS) $(RSVG_LIBS)
-clock_la_LDFLAGS = -module -avoid-version 
-clock_la_CFLAGS =
-
-
-schemasdir   = @GCONF_SCHEMA_FILE_DIR@
+schemasdir = @GCONF_SCHEMA_FILE_DIR@
 schemas_in_files = awn-clock.schemas.in
 schemas_DATA = $(schemas_in_files:.schemas.in=.schemas)
 
@@ -35,17 +26,4 @@ install-data-local: $(schemas_DATA)
 	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(schemas_DATA)
 endif
 
-
-desktopdir = $(libdir)/awn/applets
-
-desktop_DATA = \
-	clock.desktop
-@INTLTOOL_DESKTOP_RULE@
-
-$(desktop_DATA).in: $(desktop_DATA).in.in
-	sed -e "s|\@LIBDIR\@|$(libdir)|g" $< > $@
-
-
-EXTRA_DIST = \
-	clock.desktop.in.in 			\
-	awn-clock.schemas.in
+EXTRA_DIST += $(schemas_in_files)

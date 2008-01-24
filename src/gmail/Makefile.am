@@ -1,20 +1,7 @@
 SUBDIRS = Themes
-
-dist_gmail_DATA = 				\
-		gmail.py	 			\
-		AWN.py
-
-gmaildir = $(libdir)/awn/applets/gmail
-
-desktopdir = $(libdir)/awn/applets
-desktop_DATA = \
-	awngmail.desktop
-@INTLTOOL_DESKTOP_RULE@
-
-$(desktop_DATA).in: $(desktop_DATA).in.in
-	sed -e "s|\@LIBDIR\@|$(libdir)|g" $< > $@
-
-
-EXTRA_DIST = \
-	awngmail.desktop.in.in
-
+APPLET_NAME = awngmail
+APPLET_MAIN_FILE = gmail.py
+include $(top_srcdir)/Makefile.python-applet
+dist_applet_DATA = 	\
+	AWN.py		\
+	$(NULL)

@@ -22,6 +22,7 @@
 #include <config.h>
 #endif
 
+#include <dbus/dbus.h>
 #include <dbus/dbus-glib-bindings.h>
 #include <fcntl.h>
 #include <glib.h>
@@ -119,12 +120,30 @@ static void taskmand_class_init(TaskmandClass *class)
 {
 }
 
+static void offer_xid(Taskman * taskmanager, gchar *id)
+{
+    return;
+    //DBusConnection *bus=taskmanager->connection->server;
+    DBusMessage *message;
+
+    message = dbus_message_new_signal ("/org/awnproject/taskmand/offered",
+                                     "org.awnproject.taskmand.offered", "offered");    
+    dbus_message_append_args (message,
+                            DBUS_TYPE_STRING, "2222222",
+                            DBUS_TYPE_INVALID);
+    dbus_g_connection_send (taskmanager->server->connection, message, NULL);
+    dbus_message_unref (message);
+    g_print("offered xid\n");
+    return;    
+}
+
 static void taskmand_init(Taskmand *server) 
 {
 	GError *error = NULL;
 	DBusGProxy *driver_proxy;
 	int request_ret;
-	server->connection = dbus_g_bus_get(DBUS_BUS_SESSION, &error);
+	printf("MARKER\n");
+    server->connection = dbus_g_bus_get(DBUS_BUS_SESSION, &error);
 	if (server->connection == NULL)
 	{
 		g_warning("Unable to connect to dbus: %s", error->message);
@@ -140,6 +159,7 @@ static void taskmand_init(Taskmand *server)
 		g_error_free(error);
 	}	
 	g_object_unref(driver_proxy);
+    
 }
 
 gboolean taskmand_launcher_register(Taskmand *obj, gchar *uid, GError **error)
@@ -159,13 +179,13 @@ gboolean taskmand_inform_task_ownership(Taskmand *obj, gchar *uid,gchar *id, gch
         gboolean all_responded=add_to_response_list(taskmanager,id_as_long,uid);
 	    if (strcmp(request,"CLAIM")==0 )
 	    {
-	        if ( g_list_find(taskmanager->queue_new_tasks,id_as_long) )
+	        if ( g_list_find(taskmanager->queue_new_tasks,GINT_TO_POINTER(id_as_long)) )
 	        {
-	            taskmanager->queue_new_tasks=g_list_remove(taskmanager->queue_new_tasks,id_as_long);
+	            taskmanager->queue_new_tasks=g_list_remove(taskmanager->queue_new_tasks,GINT_TO_POINTER(id_as_long));
 	            g_message("taskmand: launcher claimed, uid=%s, id=%s\n",uid,id);
                 *response=g_strdup("MANAGE");
                 remove_from_response_tree(taskmanager,id_as_long);
-                g_tree_remove(taskmanager->grace_period_tree,id_as_long);
+                g_tree_remove(taskmanager->grace_period_tree,GINT_TO_POINTER(id_as_long));
 	        }
 	        else
 	        {
@@ -174,14 +194,14 @@ gboolean taskmand_inform_task_ownership(Taskmand *obj, gchar *uid,gchar *id, gch
         }
         else if (strcmp(request,"ACCEPT")==0 )
         {
-	        if ( g_list_find(taskmanager->queue_new_tasks,id_as_long) ) 
+	        if ( g_list_find(taskmanager->queue_new_tasks,GINT_TO_POINTER(id_as_long)) ) 
 	        {
-	            if (all_responded || (g_tree_lookup(taskmanager->grace_period_tree,id_as_long)==1) )
+	            if (GPOINTER_TO_INT((g_tree_lookup(taskmanager->grace_period_tree,GINT_TO_POINTER(id_as_long)))==1) )
 	            {
 	                g_message("taskmand: launcher accepted, uid=%s, id=%s\n",uid,id);
 	                taskmanager->queue_new_tasks=g_list_remove(taskmanager->queue_new_tasks,id_as_long);
-                    remove_from_response_tree(taskmanager,id_as_long);	
-                    g_tree_remove(taskmanager->grace_period_tree,id_as_long);                                    
+                    remove_from_response_tree(taskmanager,GINT_TO_POINTER(id_as_long));	
+                    g_tree_remove(taskmanager->grace_period_tree,GINT_TO_POINTER(id_as_long));                                    
                     *response=g_strdup("MANAGE");                
                 }                    
                 else
@@ -224,6 +244,13 @@ gboolean taskmand_launcher_position(Taskmand *obj, gchar *uid, GError **error)
 	*error=NULL;
 	return TRUE;
 }
+
+gboolean taskmand_return_xid(Taskmand *obj, gchar *uid,gchar *id, GError **error)
+{
+    
+    
+    return TRUE;
+}    
 
 //END OF DBUS CRAP ***********************************************************************
 
@@ -273,16 +300,19 @@ gboolean launch_anonymous_launcher(gulong xid)
     
     GSList * insert_point=NULL;
     GSList * iter;
-    for(iter=applet_list;iter;iter=g_slist_next(iter) ) //FIXME.. this is a quick hack. Do not leave this way. Not as bad as core though :-)
+    if (taskmanager->positioner_uid)
     {
-        if ( g_strrstr_len(iter->data,strlen(iter->data) ,taskmanager->positioner_uid) )
+        for(iter=applet_list;iter;iter=g_slist_next(iter) ) //FIXME.. this is a quick hack. Do not leave this way. Not as bad as core though :-)
         {
-            insert_point=iter;
-            break;
+            if ( g_strrstr_len(iter->data,strlen(iter->data) ,taskmanager->positioner_uid) )
+            {
+                insert_point=iter;
+                break;
+            }
         }
     }
     if (!insert_point)
-        insert_point=g_slist_nth(applet_list,g_list_length(applet_list)*taskmanager->pos_gravity+taskmanager->pos_offset );
+        insert_point=g_slist_nth(applet_list,g_slist_length(applet_list)*taskmanager->pos_gravity+taskmanager->pos_offset );
     applet_list=g_slist_insert_before(applet_list,insert_point,applet_location);
     awn_config_client_set_list(taskmanager->core_config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
                    "applets_list",AWN_CONFIG_CLIENT_LIST_TYPE_STRING,applet_list,NULL);
@@ -319,13 +349,13 @@ void clean_applet_list(void)
 gboolean _launcher_response_timeout(gpointer * xid_as_pointer)
 {
     ulong xid = (ulong) xid_as_pointer;
-    if (g_tree_lookup(taskmanager->grace_period_tree,xid)==-1)
+    if (GPOINTER_TO_INT(g_tree_lookup(taskmanager->grace_period_tree,GINT_TO_POINTER(xid)))==-1)
     {
-        g_tree_replace(taskmanager->grace_period_tree,xid,1);
+        g_tree_replace(taskmanager->grace_period_tree,GINT_TO_POINTER(xid),GINT_TO_POINTER(1));
         return TRUE;
     }
-    g_tree_remove(taskmanager->grace_period_tree,xid); 
-    if ( g_list_find(taskmanager->queue_new_tasks,xid) )
+    g_tree_remove(taskmanager->grace_period_tree,GINT_TO_POINTER(xid)); 
+    if ( g_list_find(taskmanager->queue_new_tasks,GINT_TO_POINTER(xid)) )
     {
         g_warning("taskmand: not claimed, xid=%lu, starting anonymous launcher\n",xid);
         launch_anonymous_launcher(xid);        
@@ -351,9 +381,12 @@ static void _window_opened(WnckScreen *screen,WnckWindow *window,Taskman * taskm
     if ( !wnck_window_is_skip_tasklist(window) )
     {
         ulong xid=wnck_window_get_xid(window);
-        taskmanager->queue_new_tasks=g_list_append(taskmanager->queue_new_tasks,xid);
-        g_timeout_add(425,(GSourceFunc)_launcher_response_timeout,xid);	            
-        g_tree_replace(taskmanager->grace_period_tree,xid,-1);
+        gchar * s_xid=g_strdup_printf("%lu",xid);
+        offer_xid(taskmanager,s_xid);
+        taskmanager->queue_new_tasks=g_list_append(taskmanager->queue_new_tasks,GINT_TO_POINTER(xid));
+        g_timeout_add(425,(GSourceFunc)_launcher_response_timeout,GINT_TO_POINTER(xid));	            
+        g_tree_replace(taskmanager->grace_period_tree,GINT_TO_POINTER(xid),GINT_TO_POINTER(-1));
+        g_free(s_xid);
     }        
 }
 
@@ -361,7 +394,7 @@ static void _window_closed(WnckScreen *screen,WnckWindow *window,Taskman * taskm
 {
     ulong xid=wnck_window_get_xid(window);    
     remove_from_response_tree(taskmanager,xid);
-    taskmanager->queue_new_tasks=g_list_remove(taskmanager->queue_new_tasks,xid);
+    taskmanager->queue_new_tasks=g_list_remove(taskmanager->queue_new_tasks,GINT_TO_POINTER(xid));
 } 
 
 static gint _cmp_ptrs(gconstpointer a,gconstpointer b)

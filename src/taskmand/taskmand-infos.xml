@@ -25,5 +25,15 @@
 <annotation name="org.freedesktop.DBus.GLib.CSymbol" value="taskmand_launcher_position"/>
 <arg type="s" name="uid" direction="in"/>
 </method>
+−
+<method name="Return_XID">
+<annotation name="org.freedesktop.DBus.GLib.CSymbol" value="taskmand_return_xid"/>
+<arg type="s" name="uid" direction="in"/>
+<arg type="s" name="id" direction="in"/>
+</method>
+-
+<signal name="Offered">
+	<arg type="s" name="xid"/>
+</signal>	
 </interface>
 </node>

@@ -7,7 +7,7 @@ include $(top_srcdir)/Makefile.schemas
 INCLUDES =			\
 	$(AWN_CFLAGS)		\
 	$(TASKMAND_CFLAGS)	\
-	$(top_srcdir)/src	\
+	-I$(top_srcdir)/src	\
 	$(NULL)
 
 bin_PROGRAMS = taskmand

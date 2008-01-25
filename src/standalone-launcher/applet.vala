@@ -1057,6 +1057,8 @@ class LauncherApplet : AppletSimple
 						
 		if ( launch_new && (desktopitem!=null) )
 		{
+            effect_start_ex(effects, Effect.LAUNCHING,null,null,10);
+           // effect_start(effects, Effect.LAUNCHING);
 			pid=desktopitem.launch(documents);
 			if (pid>0)
 			{
@@ -1277,6 +1279,7 @@ class LauncherApplet : AppletSimple
         }
         if ( (PIDs.find(window.get_pid() ) !=null))
         {
+            effect_stop (effects, Effect.LAUNCHING);//effect off
             do
             {
                 response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"CLAIM");

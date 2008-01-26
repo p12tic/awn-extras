@@ -314,32 +314,31 @@ class StacksConfig(GladeWindow):
     def on_ok_button_clicked(self, *args):
         # set backend (and type)
 
-        if self.widgets['file_backend_button'].get_active():
-        	file_backend_mode = True
-        	self.applet.gconf_client.set_int(
-                    self.applet.gconf_path + "/backend_type",
-                    BACKEND_TYPE_FILE)
-        	file_backend_prefix = "file://" + os.path.join(
-        	os.path.expanduser("~"),
-                ".config", "awn", "applets", "stacks")
-        	back_uri = VfsUri(file_backend_prefix).as_uri()
-        	backend_VfsUri = VfsUri(back_uri.append_path(self.applet.uid))
-        	self.backend = backend_VfsUri.as_string()
+        if self.backend_type == BACKEND_TYPE_FILE or self.backend_type == BACKEND_TYPE_FOLDER:
+        	if self.widgets['file_backend_button'].get_active():
+        		file_backend_mode = True
+        		self.applet.gconf_client.set_int(
+        				self.applet.gconf_path + "/backend_type",
+        				BACKEND_TYPE_FILE)
+        		file_backend_prefix = "file://" + os.path.join(
+        		os.path.expanduser("~"),
+        			".config", "awn", "applets", "stacks")
+        		back_uri = VfsUri(file_backend_prefix).as_uri()
+        		backend_VfsUri = VfsUri(back_uri.append_path(self.applet.uid))
+        		self.backend = backend_VfsUri.as_string()
+        		
+        	elif self.widgets['folder_backend_button'].get_active():
+        		folder_backend_mode = True
+        		self.applet.gconf_client.set_int(
+        				self.applet.gconf_path + "/backend_type",
+        				BACKEND_TYPE_FOLDER)
         	
-        elif self.widgets['folder_backend_button'].get_active():
-        	folder_backend_mode = True
-        	self.applet.gconf_client.set_int(
-                    self.applet.gconf_path + "/backend_type",
-                    BACKEND_TYPE_FOLDER)
-        
-        	self.backend = self.widgets['folder_location_entry'].get_text()
-        
-        if self.backend == "" or self.backend == None:
-        	self.backend = "file://" + os.path.expanduser("~")
-            
-        self.applet.gconf_client.set_string(
-                    self.applet.gconf_path + "/backend",
-                    self.backend )
+        		self.backend = self.widgets['folder_location_entry'].get_text()
+        	if self.backend == "" or self.backend == None:
+        		self.backend = "file://" + os.path.expanduser("~")
+        		
+        	self.applet.gconf_client.set_string(self.applet.gconf_path + "/backend",self.backend )
+
         # set dimension
         cols = self.widgets['cols_entry'].get_text()
         if int(cols) > 0:

@@ -649,9 +649,6 @@ class LauncherApplet : AppletSimple
 				icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
 			}		
 		}	
-		if (icon!=null)
-			set_icon (icon );   
-
         if (config.task_mode != TaskMode.NONE)
         {
             wnck_screen.window_closed+=_window_closed;
@@ -660,10 +657,8 @@ class LauncherApplet : AppletSimple
             wnck_screen.application_opened+=_application_opened;	
             wnck_screen.active_window_changed+=	_active_window_changed;
         }
-
         show_icon();        
-        desktopitem.set_string ("Type","Application"); 
-        
+        desktopitem.set_string ("Type","Application");         
 		return false;
     }
 
@@ -1226,7 +1221,13 @@ class LauncherApplet : AppletSimple
 				{
 					new_icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
 				}
-				icon=new_icon;
+                if (new_icon==null)
+                {
+					new_icon=win.get_icon();
+					new_icon=new_icon.scale_simple (height-2, height-2, Gdk.InterpType.BILINEAR );
+                }
+                if (new_icon!=null)
+                    icon=new_icon;
 				win.name_changed+=_win_name_change;
 				win.state_changed+=_win_state_change;				
                 title_string=win.get_name();
@@ -1311,8 +1312,14 @@ class LauncherApplet : AppletSimple
                     {
                         new_icon=window.get_icon();
                         new_icon=new_icon.scale_simple (height-2, height-2, Gdk.InterpType.BILINEAR );							
-                    }		
-                    icon=new_icon;
+                    }	
+                    if (icon==null)
+                    {
+                        new_icon=window.get_icon();
+                        new_icon=new_icon.scale_simple (height-2, height-2, Gdk.InterpType.BILINEAR );							
+                    }
+                    if (new_icon!=null)
+                        icon=new_icon;
                     show_icon();  
                     title_string=window.get_name();
                     window.name_changed+=_win_name_change;
@@ -1380,7 +1387,13 @@ class LauncherApplet : AppletSimple
                     {
                         new_icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
                     }
-                    icon=new_icon;
+                    if (new_icon==null)
+                    {
+                        new_icon=window.get_icon();
+                        new_icon=new_icon.scale_simple (height-2, height-2, Gdk.InterpType.BILINEAR );							
+                    }
+                    if (new_icon!=null)
+                        icon=new_icon;
                     show_icon();
                     title_string=window.get_name();
                     if (PIDs.find(window.get_pid())==null)

@@ -602,7 +602,7 @@ class LauncherApplet : AppletSimple
 		    {		    
 				string response;
 				response=dbusconn.Inform_Task_Ownership(uid,win.get_xid().to_string(),"CLAIM");
-				if (response!="MANAGE")
+                while(response!="MANAGE")
 				{
 					while (response=="RESET")
 					{
@@ -1320,7 +1320,7 @@ class LauncherApplet : AppletSimple
                 }
                 else if (response=="RESET")
                     dbusconn.Register(uid);										
-            }while (response=="RESET");
+            }while ( (response=="RESET") && (response!="HANDSOFF") );
         }
         else
         {

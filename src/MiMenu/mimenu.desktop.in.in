@@ -5,6 +5,6 @@ Name=MiMenu
 Type=Application
 X-AWN-AppletType=Python
 Comment=A Main Menu Applet
-Exec=@LIBDIR@/awn/applets/MiMenu/mimenu.py
+Exec=@LIBDIR@/awn/applets/mimenu/mimenu.py
 Icon=gtk-index
 Name[en_US]=MiMenu

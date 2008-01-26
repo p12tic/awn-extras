@@ -1450,7 +1450,9 @@ class LauncherApplet : AppletSimple
 		{
 			desktopfile.set_name(app.get_name());	
 //			desktopitem = new DesktopItem(desktopfile.Filename() );
-			PIDs.append(app.get_pid() );		
+			PIDs.append(app.get_pid() );	
+            if (app.get_name() != null)
+                this.window.set_title(app.get_name());
 		}		
 	}
 
@@ -1531,6 +1533,7 @@ public Applet awn_applet_factory_initp (string uid, int orient, int height)
 	Wnck.set_client_type (Wnck.ClientType.PAGER);
 	applet = new LauncherApplet (uid, orient, height);
 	applet.set_size_request (height, -1);
+    applet.window.set_title("None");
 	applet.show_all ();
 	return applet;
 }

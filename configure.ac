@@ -291,13 +291,13 @@ src/media-control/icons/Makefile
 src/media-control/media-control.desktop.in
 src/media-icon-back/Makefile
 src/media-icon-back/icons/Makefile
-src/media-icon-back/medialogoback.desktop.in
+src/media-icon-back/media-icon-back.desktop.in
 src/media-icon-next/Makefile
 src/media-icon-next/icons/Makefile
-src/media-icon-next/medialogonext.desktop.in
+src/media-icon-next/media-icon-next.desktop.in
 src/media-icon-play/Makefile
 src/media-icon-play/icons/Makefile
-src/media-icon-play/medialogoplay.desktop.in
+src/media-icon-play/media-icon-play.desktop.in
 src/MiMenu/Makefile
 src/MiMenu/icons/Makefile
 src/MiMenu/mimenu.desktop.in

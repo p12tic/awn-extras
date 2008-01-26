@@ -1,0 +1,395 @@
+#!/usr/bin/python
+#
+#       gmail.py Version 2.0
+#
+#       Copyright 2007 Pavel Panchekha <pavpanchekha@gmail.com>
+#
+#       This program is free software; you can redistribute it and/or modify
+#       it under the terms of the GNU General Public License as published by
+#       the Free Software Foundation; either version 2 of the License, or
+#       (at your option) any later version.
+#
+#       This program is distributed in the hope that it will be useful,
+#       but WITHOUT ANY WARRANTY; without even the implied warranty of
+#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#       GNU General Public License for more details.
+#
+#       You should have received a copy of the GNU General Public License
+#       along with this program; if not, write to the Free Software
+#       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+#       MA 02110-1301, USA.
+
+import AWNLib
+import gobject
+import gtk
+from gtk import gdk
+import re
+import os
+
+feedparser = None
+
+class MailError(Exception):
+    def __init__(self, type):
+        self.type = type
+
+    def __str__(self):
+        return "The Mail applet had an error while trying to %s" % self.type
+
+class Applet:
+    def __init__(self):
+        self.awn = AWNLib.initiate({"name": "Mail Applet", "short": "mail"})
+        self.awn.settings.require()
+        self.awn.keyring.require()
+        self.awn.notify.require()
+
+        try:
+            self.back = getattr(Backends(), self.awn.settings["backend"])
+        except:
+            self.back = Backends().GMail
+            self.awn.settings["backend"] = "GMail"
+
+        # The Joy of Python - Pavel Panchekha
+        # A haiku
+        #
+        #          Mucho Python love
+        # First class classes rock real hard
+        #           Joy and happiness
+        #
+
+        try:
+            self.theme = self.awn.settings["theme"]
+        except:
+            self.theme = "Tango"
+            self.awn.settings["theme"] = "Tango"
+
+        self.awn.title.set("Mail Applet (Click to Log In)")
+        self.awn.icon.set(self.getIcon("login"))
+        self.awn.module.get("feedparser", {"Ubuntu": "python-feedparser"}, \
+            self.init2)
+
+    def init2(self, module=None, force=False):
+        global feedparser
+        feedparser = module
+
+        if force:
+            return self.drawPWDDlog()
+
+        try:
+            token = self.awn.settings["login-token"]
+        except:
+             self.drawPWDDlog()
+        else:
+            key = self.awn.keyring.new()
+            key.token = token
+            self.awn.notify.send("Mail Applet", "Logging in as %s" % key.name, \
+                self.getIconPath("login", full=True))
+            self.submitPWD(key)
+
+    def submitPWD(self, key, dlog=None):
+        if dlog:
+            dlog.hide()
+
+        try:
+            self.mail = self.back(key)
+            self.mail.update()
+        except MailError:
+            #print "Mail Applet: Login unsuccessful"
+            self.drawPWDDlog(True)
+        else:
+            #print "Mail Applet: Login successful"
+            self.awn.icon.set(self.getIcon("read"))
+
+            self.awn.settings["login-token"] = key.token
+
+            self.timer = self.awn.timing.time(self.refresh, 15)
+            self.refresh()
+            self.drawPrefDlog()
+
+    def refresh(self, widget=None):
+        olen = self.mail.len()
+        try:
+            self.mail.update()
+        except MailError, (err):
+            self.awn.icon.set(self.getIcon("error"))
+            self.drawErrorDlog(err)
+            return False
+
+        if self.mail.len() != olen:
+            self.awn.notify.send("New Mail - Mail Applet", \
+                "You have %d new mail" % self.mail.len()-olen, \
+                self.getIconPath("unread", full=True))
+            self.awn.effects.notify()
+        self.awn.title.set(self.mail.title())
+        self.awn.icon.set(self.getIcon(self.mail.status()))
+        self.drawMainDlog()
+
+        #print "Applet Refreshed"
+        return True
+
+    def logout(self):
+        self.awn.icon.set(self.getIcon("login"))
+        self.drawPWDDlog()
+
+    def getIcon(self, name):
+        return self.awn.icon.getFile(self.getIconPath(name))
+
+    def getIconPath(self, name, full=False):
+        files = {
+                "error": "Themes/%s/error.svg" % self.theme,
+                "login": "Themes/%s/login.svg" % self.theme,
+                "read": "Themes/%s/read.svg" % self.theme,
+                "unread": "Themes/%s/unread.svg" % self.theme,
+                }
+        if not full:
+            return files[name]
+        else:
+            return os.path.join(os.path.abspath(os.path.dirname(__file__)), files[name])
+
+    def drawMainDlog(self):
+        dlog = self.awn.dialog.new("main")
+        dlog.set_title(" "+self.mail.title()+" ")
+
+        layout = gtk.Table()
+        layout.resize(2, 1)
+        dlog.add(layout)
+
+        if self.mail.len() > 0:
+            innerlyt = gtk.Table()
+            innerlyt.resize(self.mail.len(), 2)
+            #innerlyt.set_row_spacings(20)
+            #innerlyt.set_col_spacing(0, 10)
+
+            for i in xrange(self.mail.len()):
+                label = gtk.Label("%d:" % (i+1))
+                innerlyt.attach(label, 0, 1, i, i+1)
+
+                label = gtk.Label(self.mail.subjects[i])
+                innerlyt.attach(label, 1, 2, i, i+1)
+                #print "%d: %s" % (i+1, self.mail.subjects[i])
+
+            layout.attach(innerlyt, 0, 1, 1, 2)
+        else:
+            label = gtk.Label("<i>Hmmm, nothing here</i>")
+            label.set_use_markup(True)
+            layout.attach(label, 0, 1, 0, 1)
+
+        btnlayout = gtk.Table()
+        btnlayout.resize(1, 4)
+        button1 = gtk.Button()
+        button1.connect("clicked", lambda x: self.mail.showWeb())
+        button1.set_image(gtk.image_new_from_stock(gtk.STOCK_NETWORK, \
+            gtk.ICON_SIZE_BUTTON))
+        btnlayout.attach(button1, 0, 1, 0, 1)
+
+        button2 = gtk.Button()
+        button2.connect("clicked", lambda x: self.mail.showDesk())
+        button2.set_image(gtk.image_new_from_stock(gtk.STOCK_DISCONNECT, \
+            gtk.ICON_SIZE_BUTTON))
+        btnlayout.attach(button2, 1, 2, 0, 1)
+
+        button3 = gtk.Button()
+        button3.connect("clicked", lambda x: self.refresh())
+        button3.set_image(gtk.image_new_from_stock(gtk.STOCK_REFRESH, \
+            gtk.ICON_SIZE_BUTTON))
+        btnlayout.attach(button3, 2, 3, 0, 1)
+
+        button4 = gtk.Button()
+        button4.connect("clicked", lambda x: self.awn.dialog.secondaryFocus())
+        button4.set_image(gtk.image_new_from_stock(gtk.STOCK_PREFERENCES, \
+            gtk.ICON_SIZE_BUTTON))
+        btnlayout.attach(button4, 3, 4, 0, 1)
+        layout.attach(btnlayout, 0, 1, 2, 3)
+
+    def drawErrorDlog(self, msg=""):
+        dlog = self.awn.dialog.new("main")
+        dlog.set_title(" Error in Mail Applet ")
+
+        table = gtk.Table()
+        table.resize(3, 1)
+        dlog.add(table)
+
+        # Error Message
+        text = gtk.Label("There seem to be problems with our connection to \
+            your account. Your best bet is probably to log out and try again. \
+            \n\nHere is the error given:\n\n<i>%s</i>" % msg)
+        text.set_line_wrap(True)
+        table.attach(text, 0, 1, 1, 2)
+        text.set_use_markup(True)
+        text.set_justify(gtk.JUSTIFY_FILL)
+
+        # Submit button
+        ok = gtk.Button(label = "Fine, log me out.")
+        table.attach(ok, 0, 1, 2, 3)
+
+        def qu(x):
+            dlog.hide()
+            self.logout()
+
+        ok.connect("clicked", qu)
+
+        dlog.show_all()
+    def drawPWDDlog(self, error=False):
+        dlog = self.awn.dialog.new("main")
+        dlog.set_title(" Name and Password ")
+
+        table = gtk.Table()
+        dlog.add(table)
+
+        if error:
+            table.resize(5, 1)
+        else:
+            table.resize(4, 1)
+
+        # Username input box
+        usrE = gtk.Entry()
+        usrE.set_activates_default(True)
+        table.attach(usrE, 0, 1, 1, 2)
+
+        # Password input box
+        pwdE = gtk.Entry()
+        pwdE.set_visibility(False)
+        table.attach(pwdE, 0, 1, 2, 3)
+
+        # Submit button
+        submit = gtk.Button(label = "Log In", use_underline = False)
+        table.attach(submit, 0, 1, 3, 4)
+
+        if error:
+            errmsg = gtk.Label("<i>Wrong Username or Password</i>")
+            errmsg.set_use_markup(True)
+            table.attach(errmsg, 0, 2, 4, 5)
+
+        submit.connect("clicked", lambda x: \
+            self.submitPWD(self.awn.keyring.new(usrE.get_text(), \
+            pwdE.get_text(), {}, "network"), dlog))
+        dlog.show_all()
+
+    def drawPrefDlog(self):
+        dlog = self.awn.dialog.new("secondary", focus=False)
+        dlog.set_title(" Preferences ")
+
+        table = gtk.Table()
+        table.resize(3, 1)
+        dlog.add(table)
+
+        def showDlog(x=None, y=None):
+            dlog.show_all()
+            print "Reshowing Dialog"
+
+        theme = gtk.combo_box_new_text()
+        theme.set_title("Theme")
+        themes = [i for i in os.listdir(os.path.join(os.path.dirname( \
+            os.path.abspath(__file__)), "Themes"))]
+            # Ewww. Stupid AWN
+        for i in themes:
+            theme.append_text(i)
+        table.attach(theme, 0, 1, 0, 1)
+        theme.set_focus_on_click(True)
+
+        backend = gtk.combo_box_new_text()
+        backend.set_title("Backend")
+        backends = [i for i in dir(Backends) if i[:2] != "__"]
+        for i in backends:
+            backend.append_text(i)
+        table.attach(backend, 0, 1, 1, 2)
+        backend.set_focus_on_click(True)
+
+        save = gtk.Button(label = "Save", use_underline = False)
+        table.attach(save, 0, 1, 2, 3)
+
+        def saveit(self, t, b, dlog):
+            if b != -1:
+                self.awn.settings["backend"] = b
+                b = getattr(Backends(), b)
+            if t != self.theme and t != -1:
+                self.theme = t
+                self.awn.settings["theme"] = t
+                self.refresh()
+            if b != self.back and b != -1:
+                self.back = b
+                self.init2(force=True)
+            dlog.hide()
+
+        save.connect("clicked", lambda x: saveit(self, \
+            theme.get_active_text(), backend.get_active_text(), dlog))
+
+class Backends:
+    class GMail:
+        def __init__(self, key):
+            self.key = key
+
+        def url(self):
+            return "https://%s:%s@mail.google.com/gmail/feed/atom" % \
+                (self.key.name, self.key.password)
+            # rot13 * rot13 = orig
+
+        def update(self):
+            f = feedparser.parse(self.url())
+
+            if "bozo_exception" in f.keys():
+                raise MailError("login")
+
+            class MailItem:
+                def __init__(self, subject, author):
+                    self.subject = subject
+                    self.author = author
+
+            t = []
+            self.subjects = []
+            for i in f.entries:
+                i.title = self.cleanGmailSubject(i.title)
+                t.append(MailItem(i.title, i.author))
+                self.subjects.append(i.title)
+
+        def title(self):
+            return "%d Unread Message%s" % \
+                (len(self.subjects), len(self.subjects) != 1 and "s" or "")
+
+        def status(self):
+            if len(self.subjects) > 0:
+                return "unread"
+            else:
+                return "read"
+
+        def len(self):
+            return len(self.subjects)
+
+        def cleanGmailSubject(self, n):
+            n = re.sub(r"^[^>]*\\>", "", n) # "sadf\>fdas" -> "fdas"
+            n = re.sub(r"\\[^>]*\\>$", "", n) # "asdf\afdsasdf\>" -> "asdf"
+            n = n.replace("&quot;", "\"")
+            n = n.replace("&amp;", "&")
+            n = n.replace("&nbsp;", "")
+
+            if len(n) > 37:
+                n = n[:37] + "..."
+            elif n == "":
+                n = "[No Subject]"
+            return n
+
+        def cleanGmailMsg(self, n):
+            n = re.sub("\n\s*\n", "\n", n)
+            n = re.sub("&[#x(0x)]?\w*;", " ", n)
+            n = re.sub("\<[^\<\>]*?\>", "", n) # "<h>asdf<a></h>" -> "asdf"
+
+            f = False
+            h = []
+            n = n.split("\n")
+            for line in n:
+                if f:
+                    h.append(line)
+                elif re.match("X-Spam-Score", line):
+                    f = True
+            n = "\n".join(h)
+            # Get source of message
+            return n
+
+        def showWeb(self):
+            os.system('xdg-open http://mail.google.com/mail/')
+
+        def showDesk(self):
+            os.system('evolution')
+
+if __name__ == "__main__":
+    applet = Applet()
+    AWNLib.start(applet.awn)

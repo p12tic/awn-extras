@@ -4,5 +4,5 @@ X-AWN-AppletType=Python
 Encoding=UTF-8
 Name=TsClient Applet
 Comment=Quick access to your rdp files
-Exec=@LIBDIR@/awn/applets/tsclient-applet/tsclient_app.py
-Icon=@LIBDIR@/awn/applets/tsclient-applet/icons/Tsclient.svg
+Exec=@LIBDIR@/awn/applets/tsclient-app/tsclient_app.py
+Icon=@LIBDIR@/awn/applets/tsclient-app/icons/Tsclient.svg

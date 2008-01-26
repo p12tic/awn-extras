@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+X-AWN-AppletType=Python
+Encoding=UTF-8
+Name=Mail Applet
+Comment=Check Your Email from AWN
+Exec=@LIBDIR@/awn/applets/mail/mail.py
+Icon=@LIBDIR@/awn/applets/mail/Themes/Tango/read.svg
+X-AWN-Applet-Category=Internet

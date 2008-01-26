@@ -1,2 +1,0 @@
-SUBDIRS = Tango 	\
-	Reserved

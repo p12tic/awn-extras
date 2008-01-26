@@ -1,0 +1,3 @@
+SUBDIRS = Tango 	\
+	Reserved        \
+	GMail

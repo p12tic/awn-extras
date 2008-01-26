@@ -131,14 +131,13 @@ PKG_CHECK_MODULES(TASKMAND_APPLET, [dbus-glib-1])
 dnl
 dnl Check python modules
 dnl
-AC_ARG_ENABLE(pymod_checks, 
+AC_ARG_ENABLE(pymod_checks,
               AC_HELP_STRING([--disable-pymod-checks], [Disable checks for Python modules]),
               enable_pymod_checks=$enableval,
-	      enable_pymod_checks=yes)
-              
+          enable_pymod_checks=yes)
+
 if test x${enable_pymod_checks} = xyes; then
   AM_CHECK_PYMOD(alsaaudio,,,AC_MSG_ERROR([python module alsaaudio required (python-alsaaudio)]))
-  AM_CHECK_PYMOD(libgmail,,,AC_MSG_ERROR([python module libgmail required (python-libgmail)]))
   AM_CHECK_PYMOD(gst,,,AC_MSG_ERROR([python module gstreamer required (python-gst0.10)]))
 fi
 
@@ -273,11 +272,12 @@ src/file-browser-launcher/Makefile
 src/file-browser-launcher/file-browser-launcher.desktop.in
 src/filebrowser/Makefile
 src/filebrowser/filebrowser.desktop.in
-src/gmail/Makefile
-src/gmail/Themes/Makefile
-src/gmail/Themes/Tango/Makefile
-src/gmail/Themes/Reserved/Makefile
-src/gmail/awngmail.desktop.in
+src/mail/Makefile
+src/mail/Themes/Makefile
+src/mail/Themes/Tango/Makefile
+src/mail/Themes/Reserved/Makefile
+src/mail/Themes/GMail/Makefile
+src/mail/mail.desktop.in
 src/lastfm/Makefile
 src/lastfm/icons/Makefile
 src/lastfm/lastfm.desktop.in

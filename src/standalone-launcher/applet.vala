@@ -346,8 +346,8 @@ interface Taskman.TaskmanInterface;
 
 public class DBusComm : GLib.Object 
 {
-        private		DBus.Connection		conn;
-		private		Taskman.TaskmanInterface	taskobj;
+        public		DBus.Connection		conn;
+		public		Taskman.TaskmanInterface	taskobj;
 		
         construct
         {
@@ -556,6 +556,7 @@ class LauncherApplet : AppletSimple
             build_right_click();
             dbusconn = new DBusComm();
             dbusconn.Register(uid);
+            dbusconn.taskobj.Offered+=_offered;
             wnck_screen = Wnck.Screen.get_default();	
             wnck_screen.force_update();	
         }
@@ -781,7 +782,16 @@ class LauncherApplet : AppletSimple
         selection_data.set_text("BOOGER\n",-1);
     }
 
+    private void _offered(Taskman.TaskmanInterface o, string xid)
+    {
 
+        stdout.printf("received offer : %s\n",xid);
+        Wnck.Window window=find_win_by_xid(xid.to_ulong() );
+        if (window!=null)
+        {
+            _window_opened(wnck_screen,window);
+        }
+    }
 
     private void _drag_data_received(Gtk.Widget widget,Gdk.DragContext context,int x,int y,Gtk.SelectionData selectdata,uint info,uint time)
     {    

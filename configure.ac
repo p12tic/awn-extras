@@ -138,7 +138,6 @@ AC_ARG_ENABLE(pymod_checks,
               
 if test x${enable_pymod_checks} = xyes; then
   AM_CHECK_PYMOD(alsaaudio,,,AC_MSG_ERROR([python module alsaaudio required (python-alsaaudio)]))
-  AM_CHECK_PYMOD(libgmail,,,AC_MSG_ERROR([python module libgmail required (python-libgmail)]))
   AM_CHECK_PYMOD(gst,,,AC_MSG_ERROR([python module gstreamer required (python-gst0.10)]))
 fi
 

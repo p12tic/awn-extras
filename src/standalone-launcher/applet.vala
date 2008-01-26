@@ -1013,7 +1013,6 @@ class LauncherApplet : AppletSimple
                         stdout.printf("No XIDs but we got a PID.. looking to reclaim\n");
                         foreach( ulong p in PIDs)
                         {
-
                             weak	GLib.List	<Wnck.Window>	windows;
                             windows=wnck_screen.get_windows();
                             foreach (Wnck.Window win in windows)

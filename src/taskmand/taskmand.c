@@ -22,7 +22,6 @@
 #include <config.h>
 #endif
 
-#include <dbus/dbus.h>
 #include <dbus/dbus-glib-bindings.h>
 #include <fcntl.h>
 #include <glib.h>
@@ -73,6 +72,18 @@ typedef struct
 
 Taskman * taskmanager=NULL;
 
+enum
+{
+        SIGNAL_0,
+        OFFERED,
+
+        LAST_SIGNAL
+};
+
+static guint _signals[LAST_SIGNAL] = { 0 };
+
+static gboolean _launcher_response_timeout(gpointer * xid_as_pointer);
+
 //========================================================
 /*Caution:  Dealing with a Tree of Lists*/
 static void remove_from_response_tree(Taskman * taskmanager,ulong xid)
@@ -120,29 +131,12 @@ static void taskmand_class_init(TaskmandClass *class)
 {
 }
 
-static void offer_xid(Taskman * taskmanager, gchar *id)
-{
-    return;
-    //DBusConnection *bus=taskmanager->connection->server;
-    DBusMessage *message;
-
-    message = dbus_message_new_signal ("/org/awnproject/taskmand/offered",
-                                     "org.awnproject.taskmand.offered", "offered");    
-    dbus_message_append_args (message,
-                            DBUS_TYPE_STRING, "2222222",
-                            DBUS_TYPE_INVALID);
-    dbus_g_connection_send (taskmanager->server->connection, message, NULL);
-    dbus_message_unref (message);
-    g_print("offered xid\n");
-    return;    
-}
-
 static void taskmand_init(Taskmand *server) 
 {
 	GError *error = NULL;
 	DBusGProxy *driver_proxy;
 	int request_ret;
-	printf("MARKER\n");
+	
     server->connection = dbus_g_bus_get(DBUS_BUS_SESSION, &error);
 	if (server->connection == NULL)
 	{
@@ -151,15 +145,21 @@ static void taskmand_init(Taskmand *server)
 		return;
 	}
 	dbus_g_object_type_install_info(taskmand_get_type(), &dbus_glib_taskmand_object_info);
-	dbus_g_connection_register_g_object(server->connection, "/org/awnproject/taskmand", G_OBJECT(server));
-	driver_proxy = dbus_g_proxy_new_for_name(server->connection, DBUS_SERVICE_DBUS, DBUS_PATH_DBUS, DBUS_INTERFACE_DBUS);
-	if (!org_freedesktop_DBus_request_name (driver_proxy, "org.awnproject.taskmand", 0, &request_ret, &error)) 
+    
+    _signals[OFFERED]=g_signal_new ("offered",G_OBJECT_TYPE (server),
+                                    G_SIGNAL_RUN_FIRST,0,NULL, NULL,
+                                    g_cclosure_marshal_VOID__STRING,G_TYPE_NONE,
+                                    1, G_TYPE_STRING);    
+    dbus_g_connection_register_g_object(server->connection, "/org/awnproject/taskmand", G_OBJECT(server));
+    driver_proxy = dbus_g_proxy_new_for_name(server->connection, DBUS_SERVICE_DBUS, DBUS_PATH_DBUS, DBUS_INTERFACE_DBUS);
+    dbus_g_proxy_add_signal (driver_proxy, "offered", G_TYPE_STRING, G_TYPE_INVALID);    	
+
+    if (!org_freedesktop_DBus_request_name (driver_proxy, "org.awnproject.taskmand", 0, &request_ret, &error)) 
 	{
 		g_warning("Unable to register service: %s", error->message);
 		g_error_free(error);
 	}	
 	g_object_unref(driver_proxy);
-    
 }
 
 gboolean taskmand_launcher_register(Taskmand *obj, gchar *uid, GError **error)
@@ -247,8 +247,13 @@ gboolean taskmand_launcher_position(Taskmand *obj, gchar *uid, GError **error)
 
 gboolean taskmand_return_xid(Taskmand *obj, gchar *uid,gchar *id, GError **error)
 {
-    
-    
+    ulong xid=strtoul(id,NULL,10);	
+    gchar *s_xid=g_strdup_printf("%lu",xid);
+    g_signal_emit (G_OBJECT (taskmanager->server), _signals[OFFERED],0, s_xid);    
+    taskmanager->queue_new_tasks=g_list_append(taskmanager->queue_new_tasks,GINT_TO_POINTER(xid));
+    g_timeout_add(425,(GSourceFunc)_launcher_response_timeout,GINT_TO_POINTER(xid));	            
+    g_tree_replace(taskmanager->grace_period_tree,GINT_TO_POINTER(xid),GINT_TO_POINTER(-1));
+    g_free(s_xid);    
     return TRUE;
 }    
 
@@ -295,8 +300,6 @@ gboolean launch_anonymous_launcher(gulong xid)
     GSList *applet_list=awn_config_client_get_list(taskmanager->core_config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
                                             "applets_list", AWN_CONFIG_CLIENT_LIST_TYPE_STRING,NULL);
     char * applet_location=g_strdup_printf("%s::-%lu+%ld",taskmanager->path,xid,(long)time(NULL));
-//    applet_list=g_list_append(applet_list,applet_location);
-    
     
     GSList * insert_point=NULL;
     GSList * iter;
@@ -346,7 +349,7 @@ void clean_applet_list(void)
 
 //Timers
 
-gboolean _launcher_response_timeout(gpointer * xid_as_pointer)
+static gboolean _launcher_response_timeout(gpointer * xid_as_pointer)
 {
     ulong xid = (ulong) xid_as_pointer;
     if (GPOINTER_TO_INT(g_tree_lookup(taskmanager->grace_period_tree,GINT_TO_POINTER(xid)))==-1)
@@ -375,14 +378,13 @@ static void _application_closed(WnckScreen *screen,WnckApplication *app,Taskman 
     }
 }
 
-
 static void _window_opened(WnckScreen *screen,WnckWindow *window,Taskman * taskmanager)
 {
     if ( !wnck_window_is_skip_tasklist(window) )
     {
         ulong xid=wnck_window_get_xid(window);
         gchar * s_xid=g_strdup_printf("%lu",xid);
-        offer_xid(taskmanager,s_xid);
+        g_signal_emit (G_OBJECT (taskmanager->server), _signals[OFFERED],0, s_xid);    
         taskmanager->queue_new_tasks=g_list_append(taskmanager->queue_new_tasks,GINT_TO_POINTER(xid));
         g_timeout_add(425,(GSourceFunc)_launcher_response_timeout,GINT_TO_POINTER(xid));	            
         g_tree_replace(taskmanager->grace_period_tree,GINT_TO_POINTER(xid),GINT_TO_POINTER(-1));

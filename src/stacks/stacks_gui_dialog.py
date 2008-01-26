@@ -40,8 +40,7 @@ from stacks_backend_trasher import *
 from stacks_config import StacksConfig
 from stacks_launcher import LaunchManager
 from stacks_icons import IconFactory
-from stacks_vfs import VfsUri
-
+from stacks_vfs import *
 
 APP="Stacks"
 DIR="locale"
@@ -74,6 +73,11 @@ class StacksGuiDialog:
     context_menu_visible = False
     just_dragged = False
 
+    hide_timer = None
+    hide_timeout = 500
+    
+    dnd_targets = [("text/uri-list", 0, 0), ("text/plain", 0, 1)]
+
     signal_ids = []
 
     def __init__ (self, applet):
@@ -91,7 +95,7 @@ class StacksGuiDialog:
         for id in self.signal_ids: self.applet.disconnect(id)
         if self.dialog: self.dialog.destroy()
 
-    def _stacks_gui_hide_cb(self, widget):
+    def _stacks_gui_hide_cb(self, widget = None):
         if self.dialog:
             self.dialog.hide()
         self.gui_visible = False
@@ -147,6 +151,54 @@ class StacksGuiDialog:
     def item_drag_begin(self, widget, context):
         self.just_dragged = True
 
+    def button_drag_motion(self, widget, context, x, y, time):
+    	
+    	return True
+
+    def button_drag_leave(self, widget, context, time):
+    	"""
+    	if self.hide_timer:
+            gobject.source_remove(self.hide_timer)
+            self.hide_timer = None
+        self.hide_timer = gobject.timeout_add (self.hide_timeout, self._stacks_gui_hide_cb )
+        """
+        awn.awn_effect_stop(self.applet.effects, "hover")
+    	return
+
+    def button_drag_drop(self, widget, context, x, y,
+                            selection, targetType, time, target_uri):
+    	self._stacks_gui_hide_cb(widget)
+    	awn.awn_effect_stop(self.applet.effects, "hover")
+    	vfs_uris = []
+    	for uri in selection.data.split():
+    		try:
+    			vfs_uris.append(VfsUri(uri))
+    		except TypeError:
+    			pass                            	
+    	
+    	if context.action == gtk.gdk.ACTION_LINK:
+    		options = gnomevfs.XFER_LINK_ITEMS
+    	elif context.action == gtk.gdk.ACTION_MOVE:
+    		options = gnomevfs.XFER_REMOVESOURCE
+    	elif context.action == gtk.gdk.ACTION_COPY:
+    		options = gnomevfs.XFER_DEFAULT
+    	else:
+    		return False
+
+    	src_lst = []
+    	dst_lst = []
+    	vfs_uri_lst = []
+    	for vfs_uri in vfs_uris:
+    		dst_uri = target_uri.as_uri().append_path(vfs_uri.as_uri().short_name)
+    		src_lst.append(vfs_uri.as_uri())
+    		dst_lst.append(dst_uri)
+    		
+
+    	GUITransfer(src_lst, dst_lst, options)
+    	
+    	
+    	return True
+
     def item_clear_cb(self, widget, uri):
         self.applet.backend.remove([uri])
 
@@ -179,6 +231,11 @@ class StacksGuiDialog:
         # create new button
         button = gtk.Button()
         button.set_relief(gtk.RELIEF_NONE)
+        button.add_events(gtk.gdk.BUTTON_PRESS_MASK |
+                        gtk.gdk.BUTTON_RELEASE_MASK |
+                        gtk.gdk.POINTER_MOTION_MASK |
+                        gtk.gdk.LEAVE_NOTIFY) 
+
         button.drag_source_set( gtk.gdk.BUTTON1_MASK,
                                 self.applet.dnd_targets,
                                 self.config['fileops'])
@@ -194,6 +251,18 @@ class StacksGuiDialog:
                         vfs_uri)
         button.connect( "drag-begin",
                         self.item_drag_begin)
+                        
+        
+        if mime_type == "x-directory/normal":
+        	button.connect("drag-motion", self.button_drag_motion)
+        	button.connect("drag-leave", self.button_drag_leave)
+        	button.connect("drag-data-received", self.button_drag_drop,vfs_uri)
+        	button.drag_dest_set( gtk.DEST_DEFAULT_ALL,
+                            self.dnd_targets,
+                            self.config['fileops'])
+                            
+                     
+                        
         # add to vbox
         vbox = gtk.VBox(False, 4)
         button.add(vbox)
@@ -203,22 +272,23 @@ class StacksGuiDialog:
         image.set_size_request(icon_size, icon_size)
         vbox.pack_start(image, False, False, 0)
         # label
-        label = gtk.Label()
+        label = gtk.Label(lbl_text)
         label.set_justify(gtk.JUSTIFY_CENTER)
+        label.set_line_wrap(True)
+        # pango layout
         layout = label.get_layout()
-        layout.set_single_paragraph_mode(False)
-        layout.set_alignment(pango.ALIGN_CENTER)
+        lw, lh = layout.get_size()
         layout.set_width(int(1.5 * icon_size) * pango.SCALE)
         layout.set_wrap(pango.WRAP_WORD_CHAR)
-        layout.set_text(lbl_text)
+        layout.set_alignment(pango.ALIGN_CENTER)
+        _lbltxt = label.get_text()
         lbltxt = ""
         for i in range(layout.get_line_count()):
             length = layout.get_line(i).length
-            lbltxt += str(lbl_text[0:length]) + '\n'
-            lbl_text = lbl_text[length:]
-            if i == 1: break
+            lbltxt += str(_lbltxt[0:length]) + '\n'
+            _lbltxt = _lbltxt[length:]
         label.set_text(lbltxt)
-        label.set_size_request(-1, -1)
+        label.set_size_request(-1, lh*2/pango.SCALE)
         # add to vbox
         vbox.pack_start(label, True, True, 0)
         vbox.set_size_request(int(1.5 * icon_size), -1)
@@ -235,7 +305,8 @@ class StacksGuiDialog:
 
     def dialog_focus_out(self, widget, event):
         if self.context_menu_visible: return
-        self._stacks_gui_hide_cb(widget)
+        if self.config['close_on_focusout']:
+        	self._stacks_gui_hide_cb(widget)
 
     def dialog_show_new(self, page=0):
         assert page >= 0
@@ -245,6 +316,7 @@ class StacksGuiDialog:
         if not self.dialog:
             self.dialog = awn.AppletDialog (self.applet)
             self.dialog.set_focus_on_map(True)
+            self.dialog.set_keep_above(True) 
             self.dialog.connect("focus-out-event", self.dialog_focus_out)
             # TODO: preference -> set title?
             self.dialog.set_title(self.applet.backend.get_title())
@@ -320,4 +392,5 @@ class StacksGuiDialog:
                 self.bt_right.set_sensitive(False)
 
         # show everything on the dialog
+        self.dialog.present()
         self.dialog.show_all()

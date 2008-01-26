@@ -67,6 +67,8 @@ class StacksApplet (awn.AppletSimple):
     height = None
     title = None
     effects = None
+    drag_timer = None
+    drag_open_timeout = 500
 
     gui = None
     gui_type = 0
@@ -90,6 +92,7 @@ class StacksApplet (awn.AppletSimple):
     config = {}
 
     def __init__ (self, uid, orient, height):
+        self.awn = awn
         awn.AppletSimple.__init__(self, uid, orient, height)
 
         gobject.signal_new("stacks-gui-hide", StacksApplet, gobject.SIGNAL_RUN_LAST,
@@ -132,31 +135,8 @@ class StacksApplet (awn.AppletSimple):
         self.connect("orientation-changed", self.applet_orient_changed_cb)
         self.connect("height-changed", self.applet_height_changed_cb)
 
-        # experimental: makeing more guis available
-        #self.gui_type = self.gconf_client.get_int(self.gconf_path + "/gui_type")
-        """
-        self.gui_type = self.config['gui_type']
-
-        if self.gui_type <= 0 or self.gui_type > 3:
-            self.gui_type = STACKS_GUI_DIALOG
-
-        if self.gui_type == STACKS_GUI_CURVED:
-            self.gui = stacks_gui_curved.StacksGuiCurved(self)
-        elif self.gui_type == STACKS_GUI_TRASHER:
-            self.gui = stacks_gui_trasher.StacksGuiTrasher(self)
-        else:
-            self.gui = stacks_gui_dialog.StacksGuiDialog(self)
-        """
-
-        #self.gui_type = STACKS_GUI_DIALOG
-        #self.gui = stacks_gui_dialog.StacksGuiDialog(self)
-        
-        #self.backend_get_config()
         self.config = get_config_from_gconf(self.gconf_client, self.gconf_path, self.uid)
         self.set_gui(self.config['gui_type'])
-        
-        
-        
 
 
     """
@@ -219,7 +199,7 @@ class StacksApplet (awn.AppletSimple):
         else:
             self.gui = stacks_gui_dialog.StacksGuiDialog(self)
         self.backend_get_config()
-        print "Setting dialog type to ", gui_type
+        #print "Setting dialog type to ", gui_type
 
 
     # On mouseclick on applet ->
@@ -261,12 +241,23 @@ class StacksApplet (awn.AppletSimple):
 
     def applet_drag_leave_cb(self, widget, context, time):
         awn.awn_effect_stop(self.effects, "hover")
-
+        if self.drag_timer:
+            gobject.source_remove(self.drag_timer)
+        self.drag_timer = None;
+        #self.emit("stacks-gui-hide")
 
     def applet_drag_motion_cb(self, widget, context, x, y, time):
         awn.awn_effect_start(self.effects, "hover")
+        if self.drag_timer:
+            gobject.source_remove(self.drag_timer)
+        self.drag_timer = gobject.timeout_add (self.drag_open_timeout, self.show_gui )
         return True
 
+    def show_gui(self):
+        if self.drag_timer:
+            gobject.source_remove(self.drag_timer)
+        self.drag_timer = None;
+        self.emit("stacks-gui-show")
 
     # On drag-drop on applet icon ->
     # * add each uri in the list to the backend

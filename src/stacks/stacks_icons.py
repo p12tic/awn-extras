@@ -136,7 +136,7 @@ class IconFactory:
         if icon:
             if icon.get_height() > size:
                 _icon = icon.scale_simple(
-                        size * icon.get_width() / icon.get_height(),
+                        int(round(size * icon.get_width() / icon.get_height())),
                         size,
                         gtk.gdk.INTERP_BILINEAR)
                 if _icon is not None:

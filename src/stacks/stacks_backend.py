@@ -46,6 +46,7 @@ BACKEND_TYPE_FILE = 0
 BACKEND_TYPE_FOLDER = 1
 BACKEND_TYPE_PLUGGER = 2
 BACKEND_TYPE_TRASHER = 3
+BACKEND_TYPE_RECENT_FILES = 4
 
 # Columns in the ListStore
 COL_URI = 0
@@ -179,7 +180,8 @@ class Backend(gobject.GObject):
                     if not icon_uri:
                         icon_uri = path
                     pixbuf = IconFactory().load_icon(icon_uri, self.icon_size)
-                    pixbuf.add_alpha (True, '\0', '\0', '\0')
+                    if pixbuf:
+                    	pixbuf.add_alpha (True, '\0', '\0', '\0')
             else:
                 # get file info
                 try:
@@ -195,7 +197,8 @@ class Backend(gobject.GObject):
                     continue
                 # get pixbuf for icon
                 pixbuf = Thumbnailer(path, mime_type).get_icon(self.icon_size)
-                pixbuf.add_alpha (True, '\0', '\0', '\0')
+                if pixbuf:
+                	pixbuf.add_alpha (True, '\0', '\0', '\0')
             
             # create monitor
             try:

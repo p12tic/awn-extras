@@ -88,6 +88,25 @@ class StacksConfig(GladeWindow):
         if (preferences & PREF_BACKEND_FOLDER) == 0:
             page = self.widgets['main_notebook'].page_num(self.widgets['page1'])
             self.widgets['main_notebook'].remove_page(page)
+        else:
+        	file_backend_mode = False
+        	folder_backend_mode = False
+        	if self.backend_type == BACKEND_TYPE_FILE:
+        		file_backend_mode = True
+        	elif self.backend_type == BACKEND_TYPE_FOLDER:
+        		folder_backend_mode = True
+        	
+        	self.widgets['file_backend_button'].set_active(file_backend_mode)
+        	self.widgets['folder_backend_button'].set_active(folder_backend_mode)
+        	self.widgets['location_label'].set_sensitive(folder_backend_mode)
+        	self.widgets['folder_location_entry'].set_sensitive(folder_backend_mode)
+        	self.widgets['backendselect_button'].set_sensitive(folder_backend_mode)
+        	if folder_backend_mode:
+        		self.widgets['folder_location_entry'].set_text(config['backend'].as_string())
+        	else:
+        		self.widgets['folder_location_entry'].set_text("file://" + os.path.expanduser("~"))
+        	
+            
 
         # PAGE 2
 
@@ -157,6 +176,8 @@ class StacksConfig(GladeWindow):
             self.widgets['title_entry'].set_text(
                     self.applet.backend.get_title())
 
+                    
+
         if (preferences & PREF_ITEM_COUNT) == 0:
             self.widgets['count_label'].set_sensitive(False)
             self.widgets['count_hbox'].set_sensitive(False)
@@ -190,26 +211,35 @@ class StacksConfig(GladeWindow):
         else:
             # get browsing
             self.widgets['browse_enabled'].set_active(config['browsing'])
-            
+
+        # get close_on_focusout
+        self.widgets['close_on_focusout_enabled'].set_active(config['close_on_focusout'])
+       
+    def on_folder_backend_button_toggled(self, *args):
+    	folder_backend_mode = self.widgets['folder_backend_button'].get_active()
+    	self.widgets['location_label'].set_sensitive(folder_backend_mode)
+    	self.widgets['folder_location_entry'].set_sensitive(folder_backend_mode)
+    	self.widgets['backendselect_button'].set_sensitive(folder_backend_mode)
+    	
 
     def on_backendselect_button_clicked(self, *args):
         filesel = gtk.FileChooserDialog(
                 _("Select backend destination:"),
                 None,
                 gtk.FILE_CHOOSER_ACTION_CREATE_FOLDER |
-                gtk.FILE_CHOOSER_ACTION_SAVE,
+                gtk.FILE_CHOOSER_ACTION_SAVE | gtk.FILE_CHOOSER_ACTION_OPEN,
                 (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
                 gtk.STOCK_APPLY, gtk.RESPONSE_OK),
                 None)
         filesel.set_default_response(gtk.RESPONSE_OK)
-        gconf_backend = self.applet.gconf_client.get_string(
-            self.applet.gconf_path + "/backend")
-        if gconf_backend is None:
+        backend = self.widgets['folder_location_entry'].get_text()
+        if backend is None:
             filesel.set_current_folder(os.path.expanduser("~"))
         else:
-            filesel.set_current_folder(gconf_backend)
+            filesel.set_current_folder(backend)
         if filesel.run() == gtk.RESPONSE_OK:
-            self.backend = filesel.get_filename()
+            #self.backend = filesel.get_filename()
+            self.widgets['folder_location_entry'].set_text(filesel.get_filename())
         filesel.destroy()
 
     def _select_icon(self, type):
@@ -283,11 +313,31 @@ class StacksConfig(GladeWindow):
 
     def on_ok_button_clicked(self, *args):
         # set backend (and type)
-        if self.backend is not None:
-            self.applet.gconf_client.set_int(
+
+        if self.widgets['file_backend_button'].get_active():
+        	file_backend_mode = True
+        	self.applet.gconf_client.set_int(
+                    self.applet.gconf_path + "/backend_type",
+                    BACKEND_TYPE_FILE)
+        	file_backend_prefix = "file://" + os.path.join(
+        	os.path.expanduser("~"),
+                ".config", "awn", "applets", "stacks")
+        	back_uri = VfsUri(file_backend_prefix).as_uri()
+        	backend_VfsUri = VfsUri(back_uri.append_path(self.applet.uid))
+        	self.backend = backend_VfsUri.as_string()
+        	
+        elif self.widgets['folder_backend_button'].get_active():
+        	folder_backend_mode = True
+        	self.applet.gconf_client.set_int(
                     self.applet.gconf_path + "/backend_type",
                     BACKEND_TYPE_FOLDER)
-            self.applet.gconf_client.set_string(
+        
+        	self.backend = self.widgets['folder_location_entry'].get_text()
+        
+        if self.backend == "" or self.backend == None:
+        	self.backend = "file://" + os.path.expanduser("~")
+            
+        self.applet.gconf_client.set_string(
                     self.applet.gconf_path + "/backend",
                     self.backend )
         # set dimension
@@ -320,6 +370,10 @@ class StacksConfig(GladeWindow):
         self.applet.gconf_client.set_bool(
                 self.applet.gconf_path + "/browsing",
                 self.widgets['browse_enabled'].get_active())
+        # set close_on_focusout
+        self.applet.gconf_client.set_bool(
+                self.applet.gconf_path + "/close_on_focusout",
+                self.widgets['close_on_focusout_enabled'].get_active())
         # set icons
         self.applet.gconf_client.set_string(
                 self.applet.gconf_path + "/applet_icon_empty",
@@ -354,6 +408,8 @@ class StacksConfig(GladeWindow):
                 self.applet.gconf_path + "/file_operations", actions)
         # destroy window
         self.window.destroy()
+        
+        self.applet.backend_get_config()
         
 
     def set_current_page(self, page):
@@ -412,6 +468,9 @@ def get_config_from_gconf(gconf_client, gconf_path, uid):
     else:
         config['browsing'] = False
 
+    config['close_on_focusout'] = loadBool(gconf_client, gconf_path + "/close_on_focusout", True)
+
+
     # get icons
     _config_icon_empty = gconf_client.get_string(
             gconf_path + "/applet_icon_empty")
@@ -440,3 +499,17 @@ def get_config_from_gconf(gconf_client, gconf_path, uid):
 
     
     return config
+
+
+#
+# Load a boolean from gconf
+#
+def loadBool(client, key, default):
+	if client.get( key ):
+		v = client.get_bool( key )
+		if v == None:
+			return default
+		else:
+			return v
+	else:
+		return default

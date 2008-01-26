@@ -185,6 +185,8 @@ class StacksGuiCurved(gtk.Window):
     just_dragged = False
     gconf_client = None
 
+
+    dnd_targets = [("text/uri-list", 0, 0), ("text/plain", 0, 1)]
     signal_ids = []
 
     def __init__ (self, applet):
@@ -261,23 +263,17 @@ class StacksGuiCurved(gtk.Window):
         self.add_events(gtk.gdk.BUTTON_PRESS_MASK |
                         gtk.gdk.BUTTON_RELEASE_MASK |
                         gtk.gdk.POINTER_MOTION_MASK)        
-        
 
-                                
-        #self.connect('screen-changed',
-
-        self.connect('focus-out-event', self._stacks_gui_hide_cb)
+        #self.connect('focus-out-event', self._stacks_gui_hide_cb)
+        self.connect('focus-out-event', self.dialog_focus_out)
         self.connect('expose-event', self.draw_dialog)
         self.connect('leave-notify-event', self.focus_out)
         
-        
-
         self.hbox = gtk.HBox(False, 0)
         self.add(self.hbox)
         self.evb = gtk.EventBox()
         self.evb.set_visible_window(False)
         self.hbox.add(self.evb)
-        
         
         self.tooltip_window = gtk.Window()
         gtk.Window.__init__(self.tooltip_window)
@@ -312,13 +308,82 @@ class StacksGuiCurved(gtk.Window):
         self.evb.add_events(gtk.gdk.BUTTON_PRESS_MASK |
                         gtk.gdk.BUTTON_RELEASE_MASK |
                         gtk.gdk.POINTER_MOTION_MASK |
-                        gtk.gdk.LEAVE_NOTIFY)      
+                        gtk.gdk.LEAVE_NOTIFY |
+                        gtk.gdk.DRAG_MOTION |
+                        gtk.gdk.DRAG_ENTER |
+                        gtk.gdk.DRAG_LEAVE |
+                        gtk.gdk.DRAG_STATUS |
+                        gtk.gdk.DROP_START |
+                        gtk.gdk.DROP_FINISHED)
+            
         self.evb.connect('button-release-event', self.button_release)
         self.evb.connect('motion-notify-event', self.mouse_moved)
         self.evb.connect('leave-notify-event', self.focus_out)
-        
         self.connect("scroll_event", self.scroll_stack)
+        # connect events for dragging away items
+        self.evb.connect( "drag-data-get",self.item_drag_data_get)
+        self.evb.connect( "drag-begin",self.item_drag_begin)
+        # connect events for dragging items onto the stack and stack items
+        self.evb.connect("drag-motion", self.stack_drag_motion)
+        self.evb.connect("drag-leave", self.stack_drag_leave)
+        self.evb.connect("drag-data-received", self.stack_drag_drop)
+
+
         
+        
+
+    def stack_drag_motion(self, widget, context, x, y, time):
+    	self.mouse_moved(widget, None, x, y, time)
+    	#print "dragmotion on stack", time
+    	return True
+
+    def stack_drag_leave(self, widget, context, time):
+    	#print "drag leave on stack", time
+    	awn.awn_effect_stop(self.applet.effects, "hover")
+    	return True
+    	
+    def stack_drag_drop(self, widget, context, x, y,
+                            selection, targetType, time):
+    	
+    	self._stacks_gui_hide_cb(widget)
+    	if self.active_button <> None:
+        	target_uri = self.stack_items[self.active_button-1].vfs_uri
+        	mimetype = self.stack_items[self.active_button-1].mime_type
+        	
+        	if mimetype == "x-directory/normal":
+        		
+        		vfs_uris = []
+        		for uri in selection.data.split():
+        			try:
+        				vfs_uris.append(VfsUri(uri))
+        			except TypeError:
+        				pass   
+        		if context.action == gtk.gdk.ACTION_LINK:
+        			options = gnomevfs.XFER_LINK_ITEMS
+        		elif context.action == gtk.gdk.ACTION_MOVE:
+        			options = gnomevfs.XFER_REMOVESOURCE
+        		elif context.action == gtk.gdk.ACTION_COPY:
+        			options = gnomevfs.XFER_DEFAULT
+        		else:
+        			return False
+        			
+        		src_lst = []
+        		dst_lst = []
+        		vfs_uri_lst = []
+        		for vfs_uri in vfs_uris:
+        			dst_uri = target_uri.as_uri().append_path(vfs_uri.as_uri().short_name)
+        			src_lst.append(vfs_uri.as_uri())
+        			dst_lst.append(dst_uri)
+        			
+        		GUITransfer(src_lst, dst_lst, options)
+        		return True
+
+
+        	
+
+        awn.awn_effect_stop(self.applet.effects, "hover")
+        
+        return False
 
 
     def show_tooltip (self):
@@ -392,8 +457,6 @@ class StacksGuiCurved(gtk.Window):
     	return False
  
     def hide_tooltip (self):
-    	#if self.tooltip_timer:
-    	#	gobject.timeout_remove(self.tooltip_timer)
     	if self.tooltip_timer:
     		gobject.source_remove(self.tooltip_timer)
     	self.tooltip_timer = None;
@@ -455,18 +518,29 @@ class StacksGuiCurved(gtk.Window):
     	
     	self.queue_draw()
 
-    def mouse_moved(self, widget, event):
+    def mouse_moved(self, widget, event = None, x = None, y = None, time = None):
     	if not self.just_dragged:
 			icon_size = self.config['icon_size']
 			self.right_arrow_active = False
 			self.left_arrow_active = False
 			
+			if event:
+				cursor_x = event.x
+			else:
+				cursor_x = x
+			if event:
+				cursor_y = event.y
+			else:
+				cursor_y = y
+			
+			
 			for si in self.stack_items[:]:
 				y = si.icon_y
 				yt = si.icon_y + icon_size + self.icon_padding
-				if y < event.y and yt > event.y:
+				if y < cursor_y and yt > cursor_y:
 
-					if (event.x > si.label_position and self.direction == "RIGHT") or (event.x < (self.maxx - si.x + icon_size *5 / 4+ self.text_distance + si.label_width) and self.direction == "LEFT"):
+					
+					if (cursor_x > si.label_position and self.direction == "RIGHT") or (cursor_x < (self.maxx - si.x + icon_size *5 / 4+ self.text_distance + si.label_width) and self.direction == "LEFT"):
 						
 						if self.active_button <> si.id:
 							self.active_button = si.id
@@ -476,12 +550,13 @@ class StacksGuiCurved(gtk.Window):
 
 							self.hide_tooltip ()
 							self.tooltip_timer = gobject.timeout_add (self.tooltip_timeout, self.show_tooltip)
+							
 						return True
 						
 			
 			if self.left_arrow_enabled:
 				ax, ay, aw, ah = self.left_arrow_position
-				if event.x > ax and event.x < ax+aw and event.y > ay and event.y < ay+ah:
+				if cursor_x > ax and cursor_x < ax+aw and cursor_y > ay and cursor_y < ay+ah:
 					self.active_button = None
 					self.left_arrow_active = True
 					self.queue_draw()
@@ -489,7 +564,7 @@ class StacksGuiCurved(gtk.Window):
 
 			if self.right_arrow_enabled:
 				ax, ay, aw, ah = self.right_arrow_position
-				if event.x > ax and event.x < ax+aw and event.y > ay and event.y < ay+ah:
+				if cursor_x > ax and cursor_x < ax+aw and cursor_y > ay and cursor_y < ay+ah:
 					self.active_button = None
 					self.right_arrow_active = True
 					self.queue_draw()
@@ -603,13 +678,16 @@ class StacksGuiCurved(gtk.Window):
 
     def dialog_focus_out(self, widget, event):
         if self.context_menu_visible or self.tooltip_visible : return
-        self._stacks_gui_hide_cb(widget)
+        if self.config['close_on_focusout']:
+        	self._stacks_gui_hide_cb(widget)
         
     def reposition(self, w, h):
         # borrowed from awn-applet-dialog.c: awn_applet_dialog_position_reset
 
 		ax, ay = self.applet.window.get_origin()
 		aw, ah = self.applet.get_size_request()
+		
+		ay = ay + 50
 		
 		display_manager = gtk.gdk.display_manager_get()
 		default_display = display_manager.get_default_display()
@@ -641,7 +719,7 @@ class StacksGuiCurved(gtk.Window):
 			x = ax + aw/2  - self.text_distance - self.curved_config['label_length'] - icon_size / 2;
 		else:
 			x = ax + aw/2  - icon_size / 2 - self.maxx - icon_size / 4;
-		y = ay - h + 50
+		y = ay - h 
 		if x < 0:
 			x = 2
 		if x+w > sw:
@@ -695,9 +773,10 @@ class StacksGuiCurved(gtk.Window):
         
         self.start_icon = start_icon
         self.active_button = None
-       
-        self.evb.connect( "drag-data-get",self.item_drag_data_get)
-        self.evb.connect( "drag-begin",self.item_drag_begin)
+
+        self.evb.drag_dest_set( gtk.DEST_DEFAULT_DROP | gtk.DEST_DEFAULT_MOTION,
+                            self.dnd_targets,
+                            self.config['fileops'])       
         self.evb.drag_source_set( gtk.gdk.BUTTON1_MASK,
                                 self.applet.dnd_targets,
                                 self.config['fileops'])
@@ -728,7 +807,7 @@ class StacksGuiCurved(gtk.Window):
 
         	si = stack_item(x,y,angle,vfs_uri, lbl_text, mime_type, icon, i)
         	
-        	if si.y+icon_size * 5 /4 > max_height:
+        	if si.y+icon_size * 5 /4 + 50 > max_height:
         		#iter = self.store.iter_next(iter)
         		#self.height = self.maxy
         		        		
@@ -756,7 +835,8 @@ class StacksGuiCurved(gtk.Window):
         	if self.start_icon > 0:
         		self.left_arrow_enabled = True
 
-        self.height = int(round(self.maxy + icon_size*3/2))       
+        self.height = int(round(self.maxy + icon_size*3/2))
+        self.icon_vertical_offset = self.icon_vertical_offset + 10
         #and finally show the stuff
         self.show_all()
         

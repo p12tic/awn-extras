@@ -45,7 +45,7 @@ class Dialogs:
     def register(self, dlog, type="main", focus=True):
         assert type in ["main", "secondary", "program", "menu"]
         self.__dict__[type] = dlog
-        if focus and type != "program":
+        if focus:
             dlog.connect("focus-out-event", lambda x, y: dlog.hide())
 
     def toggle(self, w=None, e=None):
@@ -306,10 +306,7 @@ class Settings:
             self.update(folder)
             self.parent.module.get("gconf", {"Ubuntu": "python-gconf"}, self.init2)
 
-        def init2(self, module):
-            self.client = module.client_get_default()
-
-        def update(self, folder):
+        def cd(self, folder):
             self.folder = folder
 
         def notify(self, key, callback):

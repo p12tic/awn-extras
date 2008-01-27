@@ -4,6 +4,6 @@ Type=Application
 X-AWN-AppletType=Python
 Encoding=UTF-8
 Name=volume-control
-Comment=Python applet to control the volume (v0.5).
+Comment=Control your computer's volume
 Exec=@LIBDIR@/awn/applets/volume-control/volume-control.py
 Icon=gnome-reclevel

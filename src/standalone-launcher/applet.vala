@@ -428,6 +428,7 @@ enum Ownership
     DENY
 }
 
+//------------------------------------------------------------------------------
 
 class BookKeeper : GLib.Object 
 {
@@ -439,8 +440,6 @@ class BookKeeper : GLib.Object
     protected   SList<string>               names;
     protected   SList<string>               execs;
     protected   Wnck.Screen                 wnck_screen;
-
-
 
     construct 
     { 
@@ -785,6 +784,8 @@ class BookKeeper : GLib.Object
 
 }
 
+//------------------------------------------------------------------------------
+
 class LauncherApplet : AppletSimple
 {
     protected   BookKeeper              books;
@@ -796,10 +797,6 @@ class LauncherApplet : AppletSimple
     protected	DesktopItem				desktopitem;
     protected   Configuration			config;
 	protected	TargetEntry[]			targets;
-	//protected	SList<ulong>			XIDs;
-	//protected	SList<ulong>			dup_XIDs;
-	//protected	SList<ulong>			PIDs;	
-	//protected   SList<Wnck.Window>		windows;
 	protected   Wnck.Screen				wnck_screen;
 	protected   DesktopFileManagement   desktopfile;
 	protected   int						launchmode;
@@ -931,9 +928,9 @@ class LauncherApplet : AppletSimple
 			{
 				desktopitem.set_exec("false");
 				desktopitem.set_icon("stock_stop");
-				desktopitem.set_item_type("None");
+				desktopitem.set_item_type("Application");
 				desktopitem.set_name("None");				
-				desktopitem = new DesktopItem(desktopfile.Filename() );
+//				desktopitem = new DesktopItem(desktopfile.Filename() );
 			}
             else
             {

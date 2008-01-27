@@ -57,6 +57,9 @@ class lastfm:
         if station_type == "similarartists":
             url = "lastfm://artist/" + station_name + "/similarartists"
             station_desc = station_name + "'s Similar Artists"
+	elif station_type == "group":
+            url = "lastfm://group/" + station_name
+            station_desc = station_name + " Group Radio"
         elif station_type == "tag":
             url = "lastfm://globaltags/" + station_name
             station_desc = station_name + " Tag Radio"

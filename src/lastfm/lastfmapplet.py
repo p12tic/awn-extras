@@ -92,6 +92,7 @@ class App (awn.AppletSimple):
         
         self.station_type = gtk.combo_box_new_text()
         self.station_type.append_text("Similar Artists")
+	self.station_type.append_text("Group")
         self.station_type.append_text("Music for Tag")
         self.station_type.append_text("Music for User")
         self.station_type.set_active(0)
@@ -296,8 +297,10 @@ class App (awn.AppletSimple):
       if act == 0:
          station = "similarartists"
       elif act == 1:
-         station = "tag"
+         station = "group"
       elif act == 2:
+         station = "tag"
+      elif act == 3:
          station = "personal"
       
       self.lastfm.command("rtp")

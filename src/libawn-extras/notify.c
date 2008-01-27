@@ -23,10 +23,11 @@
 #include <libnotify/notify.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <unistd.h>
 
 #include "awn-extras.h" 
 
-static gboolean _do_wait(gpointer null)
+static gboolean _do_wait ()
 {
 	return (waitpid(-1, NULL,  WNOHANG) <= 0 ) ;
 }
@@ -50,9 +51,18 @@ gboolean notify_message(gchar * summary, gchar * body,gchar * icon_str,glong tim
 		notify_notification_set_category(notify, type);
 		notify_notification_set_urgency(notify, urgency);
 		notify_notification_set_timeout(notify, expire_timeout);    
-		notify_notification_show(notify, NULL);
+		notify_notification_show(notify, &error);
+        if (error)
+        {
+            g_warning ("libawn-extras [notify_message]: Failed to send notification (%s)", error->message);
+            g_error_free (error);
+            success = FALSE;
+        }
+        else
+        {
+            success = TRUE;
+        }
 		g_object_unref(G_OBJECT(notify));
-		success=TRUE;
 	}	
 	else
 	{
@@ -70,7 +80,7 @@ void notify_message_async(gchar * summary, gchar * body,gchar * icon_str,glong t
 		notify_message(summary,body,icon_str,timeout);
     	exit(0);
     }      
-	g_timeout_add(3000, (GSourceFunc*)_do_wait,NULL);     
+	g_timeout_add(3000, (GSourceFunc)_do_wait,NULL);
 }
 
 

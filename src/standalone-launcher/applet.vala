@@ -935,19 +935,39 @@ class LauncherApplet : AppletSimple
     private bool single_left_click()
     {
 		ulong		xid;
-		Wnck.Window  win;
-		if (XIDs.length() == 1 )
-		{		
+		Wnck.Window  win=null;
+		if ( (XIDs.length() == 1 ) || (windows.length()==1) )
+		{	
+            int i;
 			dialog.hide();
-			xid=XIDs.nth_data(0);
-			win=find_win_by_xid(xid);
+
+            for(i=0;(i<XIDs.length())&&(win!=null);i++)
+            {
+                xid=XIDs.nth_data(i);
+                win=find_win_by_xid(xid);
+                if (win==null)
+                {
+                    XIDs.remove(xid);
+                    i=0;
+                }
+            }
             if (win==null)
             {
                 if (PIDs.length()>0)
                 {
                     stdout.printf("win = null. curious. trying pid.\n");
-                    ulong   pid=PIDs.nth_data(0);
-                    win=find_win_by_pid(pid);
+                    for(i=0;(i<PIDs.length()) && (win!=null);i++)
+                    {
+                        ulong   pid=PIDs.nth_data(i);
+                        win=find_win_by_pid(pid);
+                    }
+                }
+            }
+            if (win==null)
+            {
+                if(windows.length()>0)
+                {
+                    win=windows.nth_data(0);
                 }
             }
 			if (win!=null)
@@ -1076,8 +1096,6 @@ class LauncherApplet : AppletSimple
 		}
 		return false;
     }
-    
-    
     
 	private void _realized()
 	{

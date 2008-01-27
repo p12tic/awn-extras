@@ -196,7 +196,7 @@ class Backend:
 
     def setChannel(self, channel=None):
         if channel:
-            self.channel = channel
+            self.channel = alsaaudio.mixers().index(channel)
         else:
             gclient = self.parent.awn.settings.GConfUser("", self.parent.awn)
             gclient.folder = "/desktop/gnome/sound/"

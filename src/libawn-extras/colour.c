@@ -18,20 +18,19 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#define _GNU_SOURCE
 #include <math.h>
 #include "awn-extras.h" 
-
-#include <math.h>
 
 gchar * awncolor_to_string(AwnColor * colour)
 {
 
 	return g_strdup_printf("%02x%02x%02x%02x",
-								(unsigned int) round((colour->red*255)),
-								(unsigned int) round((colour->green*255)),
-								(unsigned int) round((colour->blue*255)),
-								(unsigned int) round((colour->alpha*255))
-								);
+	                       (unsigned int) round (colour->red * 255),
+	                       (unsigned int) round (colour->green * 255),
+	                       (unsigned int) round (colour->blue * 255),
+	                       (unsigned int) round (colour->alpha * 255)
+	                       );
 }
 
 AwnColor gdkcolor_to_awncolor_with_alpha( GdkColor * gdk_color,double alpha)

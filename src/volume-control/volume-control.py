@@ -6,25 +6,26 @@
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.    See the
  GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA    02111-1307    USA
 --------------------------------------------------------------------------------
 
- The icons of the "Black"-icon-theme are licensed unter a
+ The icons of the "Black" icon theme are licensed under a
  Creative Commons Attribution-Share Alike 3.0 License.
 --------------------------------------------------------------------------------
 
-Name:        volume-control.py
-Version:     0.5.
-Date:        September/October 2007
+Name:                volume-control.py
+Version:         0.5.
+Date:                September/October 2007
 Description: A python Applet for the avant-windows-navigator to control the volume.
 
-Authors:     Richard "nazrat" Beyer
-             Jeff "Jawbreaker" Hubbard
+Authors:         Richard "nazrat" Beyer
+                         Jeff "Jawbreaker" Hubbard
+                         Pavel Panchekha <pavpanchekha@gmail.com>
 """
 
 #!/usr/bin/python
@@ -33,313 +34,209 @@ import gobject
 import pygtk
 import gtk
 from gtk import gdk
-import awn
+import AWNLib
 
-# Import python module to control the alsamixer and to get gconf keys.
-try:
-  import alsaaudio
-  import gconf
-except:
-  print "You need to install the alsaaudio-python module and the python-gconf !"
-  sys.exit(1)
+alsaaudio = None
 
+class VolumeApplet:
+    def __init__(self, awn):
+        self.awn = awn
+        self.awn.settings.require()
 
-# Set the mute level at startup.
-__tmp_mute_level = 0
+        self.theme = "Black"
+        self.backend = Backend(self)
 
+        try:
+            self.backend.setChannel(self.awn.settings["channel"])
+        except:
+            self.awn.settings["channel"] = self.backend.setChannel()
 
+        try:
+            self.theme = self.awn.settings["theme"]
+        except:
+            self.theme = "Tango"
+            self.awn.settings["theme"] = "Tango"
 
-class VolumeApp (awn.AppletSimple):
+        self.awn.connect("scroll-event", self.wheel)
 
-  # Set the main audio device through a gconf-key or the soundcard channels.
-  try:
-    key = '/desktop/gnome/sound/default_mixer_tracks'
-    client = gconf.client_get_default()
-    channels = client.get_list(key, gconf.VALUE_STRING)
-    control_channel = channels[0]
-  except:
-    try:
-      print "The gconf key is empty."
-      control_channel = alsaaudio.mixers()[0]
-    except:
-      control_channel = 'Master'
+        self.awn.module.get("alsaaudio", {"Ubuntu": "python-alsaaudio"}, self.init2)
 
+    def init2(self, module):
+        global alsaaudio
+        alsaaudio = module
+        self.drawMainDlog()
+        self.drawPrefDlog()
+        self.backend.setVolume(self.backend.getVolume())
 
-  # Set the path to the folder with the icon-theme.
-  theme = "Black"
-  themepath = os.path.abspath(os.path.dirname(__file__)) + "/Themes/" + theme + "/"
+    def drawMainDlog(self):
+        self.main = self.awn.dialog.new("main")
+        cont = gtk.HBox()
+        cont.set_spacing(4)
+        vCont = gtk.VBox ()
+        vCont.set_spacing(4)
 
+        self.main.volume = volume = gtk.VScale()
+        volume.set_range(0, 100)
+        volume.set_digits(0)
+        volume.set_inverted(True)
+        volume.set_value(self.backend.getVolume())
 
-  def __init__ (self, uid, orient, height):
-    awn.AppletSimple.__init__ (self, uid, orient, height)
-    self.height = height
-    self.theme = gtk.icon_theme_get_default()
-    self.set_applet_icon ()
-    self.title = awn.awn_title_get_default ()
+        bUp = gtk.Button ()
+        bUp.set_relief(gtk.RELIEF_NONE)
+        bUp.set_image(gtk.image_new_from_stock(gtk.STOCK_GO_UP, \
+            gtk.ICON_SIZE_BUTTON))
 
-  #
-  # Create the left-click pop-up dialog and the buttons/sliders within.
-  #  
-    self.dialog = awn.AppletDialog (self)
-    controls_container = gtk.HBox()
-    controls_container.set_spacing(4)
-    volume_container = gtk.VBox ()
-    volume_container.set_spacing(4)
-    
-    global volume_slider
-    volume_slider = gtk.VScale()
-    volume_slider.set_range(0, 100)
-    volume_slider.set_digits(0)
-    volume_slider.set_inverted(True)
-    volume_slider.set_value(alsaaudio.Mixer(self.control_channel).getvolume()[0])
-  
-    button_volume_up = gtk.Button ()
-    button_volume_up.set_relief(gtk.RELIEF_NONE)
-    button_volume_up_image = gtk.Image()
-    button_volume_up_image.set_from_stock('gtk-go-up', gtk.ICON_SIZE_LARGE_TOOLBAR)
-    button_volume_up.set_image(button_volume_up_image)
+        bDown = gtk.Button ()
+        bDown.set_relief(gtk.RELIEF_NONE)
+        bDown.set_image(gtk.image_new_from_stock(gtk.STOCK_GO_DOWN, \
+            gtk.ICON_SIZE_BUTTON))
 
-    button_volume_down = gtk.Button ()
-    button_volume_down.set_relief(gtk.RELIEF_NONE)
-    button_volume_down_image = gtk.Image()
-    button_volume_down_image.set_from_stock('gtk-go-down', gtk.ICON_SIZE_LARGE_TOOLBAR)
-    button_volume_down.set_image(button_volume_down_image)
-    
-    button_volume_mute = gtk.ToggleButton()
-    button_volume_mute.set_relief(gtk.RELIEF_NONE)
-    button_volume_mute_image = gtk.Image()
-    button_volume_mute_image.set_from_stock('gtk-no', gtk.ICON_SIZE_SMALL_TOOLBAR)
-    button_volume_mute.set_image(button_volume_mute_image)
-    
-    button_set = gtk.Button("Config")
-    button_set.set_relief(gtk.RELIEF_NONE)
-    
-    label = gtk.Label("Volume:")
+        bMute = gtk.ToggleButton()
+        bMute.set_relief(gtk.RELIEF_NONE)
+        bMute.set_image(gtk.image_new_from_stock(gtk.STOCK_NO, \
+            gtk.ICON_SIZE_BUTTON))
 
-    volume_container.add (label)
-    volume_container.add (button_volume_up)
-    volume_container.add (button_volume_down)
-    volume_container.add (button_volume_mute)
-    volume_container.add (button_set)
-    controls_container.add (volume_container)
-    controls_container.add (volume_slider)
-    
-    self.dialog.add (controls_container)
+        bSettings = gtk.Button("Config")
+        bSettings.set_relief(gtk.RELIEF_NONE)
 
-  #
-  # Create the Settings dialog: 
-  #  
-    self.settings_dialog = awn.AppletDialog (self)
-    settings_container = gtk.VBox ()
-    settings_container.set_spacing(4)
-    
-    # Device-Combo-Box:
-    device_label = gtk.Label("Mixer Channel:")
-    
-    device_liststore = gtk.ListStore(str)
-    device_cell = gtk.CellRendererText()
-    global device_list
-    device_list = gtk.ComboBox (device_liststore)
-    device_list.pack_start(device_cell, True)
-    device_list.add_attribute(device_cell, 'text', 0)
-    for m in alsaaudio.mixers():
-      device_liststore.append([m])
+        label = gtk.Label("Volume:")
 
-    
-    # Theme-Combo-Box:
-    theme_label = gtk.Label("Theme:")
+        vCont.add(label)
+        vCont.add(bUp)
+        vCont.add(bDown)
+        vCont.add(bMute)
+        vCont.add(bSettings)
+        cont.add(vCont)
+        cont.add(volume)
 
-    theme_liststore = gtk.ListStore(str)
-    theme_cell = gtk.CellRendererText()
-    global theme_list
-    theme_list = gtk.ComboBox (theme_liststore)
-    theme_list.pack_start(theme_cell, True)
-    theme_list.add_attribute(theme_cell, 'text', 0)
-    theme_liststore.append(["Black"])
-    theme_liststore.append(["Tango"])
-    
-    settings_container.add (device_label)
-    settings_container.add (device_list)
-    settings_container.add (theme_label)
-    settings_container.add (theme_list)
+        self.main.add(cont)
 
-    self.settings_dialog.add (settings_container)
+        bUp.connect("button-press-event", lambda x, y: self.backend.up())
+        bDown.connect("button-press-event", lambda x, y: self.backend.down())
+        bMute.connect("button-press-event", lambda x, y: self.backend.mute())
+        bSettings.connect("button-press-event", self.showSettings)
+        volume.connect("value-changed", lambda x: self.backend.setVolume(volume.get_value()))
+        volume.connect("scroll-event", self.wheel)
 
-  #
-  # Connect the events to the buttons, sliders and combo-boxes.
-  #  
-    self.connect ("button-press-event", self.button_press)
-    self.connect ("scroll-event", self.wheel_turn)
-    self.connect ("enter-notify-event", self.enter_notify)
-    self.connect ("leave-notify-event", self.leave_notify)
-    self.dialog.connect ("focus-out-event", self.dialog_focus_out)
-    self.settings_dialog.connect ("focus-out-event", self.settings_dialog_focus_out)
+    def drawPrefDlog(self):
+        self.prefs = self.awn.dialog.new("secondary", focus=False)
+        cont = gtk.VBox()
+        cont.set_spacing(4)
 
-    button_volume_up.connect ("button-press-event", self.button_volume_up_press)
-    button_volume_down.connect ("button-press-event", self.button_volume_down_press)
-    button_volume_mute.connect ("button-press-event", self.button_volume_mute_toggled)
-    button_set.connect ("button-press-event", self.button_volume_set_press)
-    volume_slider.connect ("value-changed", self.volume_slider_changed)
-    volume_slider.connect ("scroll-event", self.wheel_turn)
+        # Device-Combo-Box:
+        dLabel = gtk.Label("Mixer Channel:")
 
-    device_list.connect ("changed", self.device_list_changed)
-    theme_list.connect ("changed", self.theme_list_changed)
+        device = gtk.combo_box_new_text()
+        device.set_title("Mixer Channel")
+        for m in alsaaudio.mixers():
+            device.append_text(m)
 
-#
-# Functions for the main applet:
-#
+        # Theme-Combo-Box:
+        tLabel = gtk.Label("Theme:")
 
-  # Set the applet-icon based on the actual volume.
-  def set_applet_icon (self):
-    currentvolume = alsaaudio.Mixer(self.control_channel).getvolume()[0]
-    if currentvolume > 60 :
-      icon = gdk.pixbuf_new_from_file (self.themepath + "audio-volume-high.svg")
-    elif currentvolume > 25 :
-      icon = gdk.pixbuf_new_from_file (self.themepath + "audio-volume-medium.svg")
-    elif currentvolume > 0 :
-      icon = gdk.pixbuf_new_from_file (self.themepath + "audio-volume-low.svg")
-    else:
-      icon = gdk.pixbuf_new_from_file (self.themepath + "audio-volume-muted.svg")  
-    if self.height != icon.get_height():
-      icon = icon.scale_simple(self.height,self.height,gtk.gdk.INTERP_BILINEAR)
-    #self.set_temp_icon(icon)
-    self.set_icon(icon)
-   
+        theme = gtk.combo_box_new_text()
+        theme.set_title("Theme")
+        themes = [i for i in os.listdir(os.path.join(os.path.dirname( \
+            os.path.abspath(__file__)), "Themes"))]
+        for i in themes:
+            theme.append_text(i)
 
-  # When the applet is left-clicked the pop-up dialog appears, when middle-clicked 
-  # the volume is muted, and when right-clicked the mixer-control appears.
-  def button_press (self, widget, event):
-    if event.button == 1:
-        #print "leftmouse clicked -> open controls"
-        self.dialog.show_all ()
-    if event.button == 2:
-        #print "middlemouse clicked -> mute/unmute"
-        self.volume_mute_toggle()
-    if event.button == 3:
-        #print "rightmouse clicked -> run gnome-volume-control"
-        os.popen("gnome-volume-control &")
-        #self.player_dialog()
-    self.title.hide (self)
+        cont.add(dLabel)
+        cont.add(device)
+        cont.add(tLabel)
+        cont.add(theme)
 
+        self.prefs.add(cont)
 
-  # Turning the mouse wheel up/down should increase/decrease the volume.
-  def wheel_turn (self, widget, event):
-    if event.direction == gtk.gdk.SCROLL_UP:
-      self.volume_up()
-    elif event.direction == gtk.gdk.SCROLL_DOWN:
-      self.volume_down()
-    volumestring = "Volume: " + str(alsaaudio.Mixer(self.control_channel).getvolume()[0]) + "%"
-    self.title.show (self, volumestring)
+        device.connect("changed", lambda x: self.deviceRefresh(device.get_active()))
+        theme.connect("changed", lambda x: self.themeRefresh(theme.get_active_text()))
 
+    def setIcon(self):
+        volume = self.backend.getVolume()
+        if volume > 60 :
+            icon = self.getIcon("high")
+        elif volume > 30 :
+            icon = self.getIcon("medium")
+        elif volume > 0 :
+            icon = self.getIcon("low")
+        else:
+            icon = self.getIcon("muted")
+        self.awn.icon.set(icon)
 
-  # When "mouse over applet" the current volume is shown.
-  def enter_notify (self, widget, event):
-    volumestring = "Volume: " + str(alsaaudio.Mixer(self.control_channel).getvolume()[0]) + "%"
-    self.title.show (self, volumestring)
-    self.set_applet_icon ()
-    
-  # When the mouse leaves the applet the title disappears.
-  def leave_notify (self, widget, event):
-    self.title.hide (self)
-  
-  # When the mouse leaves the dialogs they disappear.
-  def dialog_focus_out (self, widget, event):
-    self.dialog.hide ()
-  def settings_dialog_focus_out (self, widget, event): 
-    self.settings_dialog.hide ()
+    def wheel(self, widget=None, event=None):
+        if event.direction == gtk.gdk.SCROLL_UP:
+            self.backend.up()
+        elif event.direction == gtk.gdk.SCROLL_DOWN:
+            self.backend.down()
 
-#
-# Functions for the control dialog:
-#
- 
-  # Moving the slider up and down changes the volume.
-  def volume_slider_changed (self, widget):
-    volume = int(volume_slider.get_value())
-    alsaaudio.Mixer(self.control_channel).setvolume(volume)
-    self.set_applet_icon ()
+    def showSettings(self, x=None, y=None):
+        self.main.hide()
+        self.prefs.show_all()
 
-  # Clicking the volume-control-buttons should increase/decrease/mute the volume.
-  def button_volume_up_press (self, widget, event):
-    self.volume_up()
+    def deviceRefresh(self, channel):
+        self.backend.channel = alsaaudio.mixers()[channel]
+        self.backend.setVolume(self.backend.getVolume())
+        self.awn.settings["channel"] = channel
 
-  def button_volume_down_press (self, widget, event):
-    self.volume_down()
+    def themeRefresh(self, theme):
+        self.theme = theme
+        self.backend.setVolume(self.backend.getVolume())
+        self.awn.settings["theme"] = theme
 
-  def button_volume_mute_toggled (self, widget, event):
-    self.volume_mute_toggle()
-    
-  def button_volume_set_press (self, widget, event):
-    self.settings_dialog.show_all ()
+    def themePath(self):
+        return os.path.join(os.path.abspath(os.path.dirname(__file__)), "Themes", self.theme)
 
-#
-# Functions for the settings dialog.    
-#  
+    def getIcon(self, name):
+        return self.awn.icon.getFile(os.path.join(self.themePath(), "audio-volume-%s.svg" % name))
 
-  # Changing the audio device. 
-  def device_list_changed (self, widget):
-    self.control_channel = alsaaudio.mixers()[device_list.get_active()]
-    print "device changed to " + self.control_channel
-  
-  # Changing the icon theme.    
-  def theme_list_changed (self, widget):
-    if theme_list.get_active() == 1 :
-      self.theme = "Tango"
-    else :
-      self.theme = "Black"
-    self.themepath = os.path.abspath(os.path.dirname(__file__)) + "/Themes/" + self.theme + "/"
-    print "theme changed to " + self.theme
+class Backend:
+    def __init__(self, parent):
+        self.tmpVolume = 0
+        self.parent = parent
 
+    def setChannel(self, channel=None):
+        if channel:
+            self.channel = channel
+        else:
+            gclient = self.parent.awn.settings.GConfUser("", self.parent.awn)
+            gclient.folder = "/desktop/gnome/sound/"
 
+            try:
+                self.channel = gclient.get("default_mixer_tracks")[0]
+            except:
+                try:
+                    self.channel = alsaaudio.mixers()[0]
+                except:
+                    self.channel = "PCM"
+        return self.channel
 
-#
-# Functions to increase/decrease/mute the volume.
-#
+    def getVolume(self):
+        return alsaaudio.Mixer(self.channel).getvolume()[0]
 
-  def volume_up(self):
-    volume = alsaaudio.Mixer(self.control_channel).getvolume()[0]
-    # if the volume is under 97, increase the volume one step.
-    if volume < 97:
-      alsaaudio.Mixer(self.control_channel).setvolume(volume+4)
-      volume_slider.set_value(volume+4)
-    # if the volume is over 97, set it to 100.
-    else:
-      alsaaudio.Mixer(self.control_channel).setvolume(100)
-      volume_slider.set_value(100)
-    self.set_applet_icon()
+    def setVolume(self, value):
+        alsaaudio.Mixer(self.channel).setvolume(value)
+        self.parent.awn.title.set("Volume: " + str(self.getVolume()) + "%")
+        self.parent.setIcon()
+        self.parent.main.volume.set_value(value/1.0)
 
-  def volume_down(self):
-    volume = alsaaudio.Mixer(self.control_channel).getvolume()[0]
-    # if the volume is over 3, decrease it's value one step.
-    if volume > 3:
-      alsaaudio.Mixer(self.control_channel).setvolume(volume-4)
-      volume_slider.set_value(volume-4)
-    # if the volume is under 3, set it to 0.
-    elif volume > 0:
-      alsaaudio.Mixer(self.control_channel).setvolume(0)
-      volume_slider.set_value(0)
-    self.set_applet_icon()
+    def up(self):
+        self.setVolume(min(100, self.getVolume() + 4))
+        self.parent.setIcon()
 
-  def volume_mute_toggle(self):
-    volume = alsaaudio.Mixer(self.control_channel).getvolume()[0]
-    if volume > 0:
-      self.__tmp_mute_level = volume
-      alsaaudio.Mixer(self.control_channel).setvolume(0)
-      #alsa.Mixer(control_channel).setmute(1)
-    else:
-      alsaaudio.Mixer(self.control_channel).setvolume(self.__tmp_mute_level)
-      #alsa.Mixer(control_channel).setmute(0)
-    self.set_applet_icon()
-    
-  
+    def down(self):
+        self.setVolume(max(0, self.getVolume() - 4))
+        self.parent.setIcon()
 
-#
-# Main loop
-#
+    def mute(self):
+        volume = self.getVolume()
+        if volume > 0:
+            self.tmpVolume = volume
+            self.setVolume(0)
+        else:
+            self.setVolume(self.tmpVolume)
+        self.parent.setIcon()
+
 if __name__ == "__main__":
-  awn.init (sys.argv[1:])
-  #print "%s %d %d" % (awn.uid, awn.orient, awn.height)
-  applet = VolumeApp (awn.uid, awn.orient, awn.height)
-  awn.init_applet (applet)
-  applet.show_all ()
-  gtk.main ()
-  
+    applet = AWNLib.initiate({"name": "Volume Control Applet", "short": "volume"})
+    VolumeApplet(applet)
+    AWNLib.start(applet)

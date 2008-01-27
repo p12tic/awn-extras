@@ -1,7 +1,7 @@
 SAC_PREREQ(2.53)
 
-AFFINITY_BEAGLE_MIN_VERSION="0.0.12"
-AFFINITY_TRACKER_MIN_VERSION="0.0.1"
+m4_define(affinity_beagle_min_version,   0.0.12)
+m4_define(affinity_tracker_min_version,  0.0.1)
 m4_define(pycairo_required_version,      1.0.2) dnl or 1.1.7
 m4_define(pygtk_required_version,        2.10.0)
 
@@ -102,20 +102,24 @@ PKG_CHECK_MODULES(DBUS_GLIB, [dbus-glib-1])
 
 # affinity
 affinity_pkgs="gnome-desktop-2.0 gnome-vfs-2.0 x11"
-affinity_beagle_pkg="libbeagle-0.0 >= $AFFINITY_BEAGLE_MIN_VERSION"
-PKG_CHECK_MODULES(BEAGLE, [$affinity_beagle_pkg], [
+affinity_beagle_pkg="libbeagle-0.0 >= affinity_beagle_min_version"
+AC_MSG_CHECKING([for optional Beagle support (Affinity)])
+PKG_CHECK_EXISTS([$affinity_beagle_pkg], [
     AC_DEFINE(HAVE_BEAGLE, 1, [Define to enable beagle support])
     have_beagle=yes
     affinity_pkgs="$affinity_pkgs $affinity_beagle_pkg"
 ], [have_beagle=no])
+AC_MSG_RESULT([$have_beagle])
 AM_CONDITIONAL(HAVE_BEAGLE, test "$have_beagle" = "yes")
 
-affinity_tracker_pkg="tracker >= $AFFINITY_TRACKER_MIN_VERSION"
-PKG_CHECK_MODULES(TRACKER, [$affinity_tracker_pkg], [
+affinity_tracker_pkg="tracker >= affinity_tracker_min_version"
+AC_MSG_CHECKING([for optional Tracker support (Affinity)])
+PKG_CHECK_EXISTS([$affinity_tracker_pkg], [
     AC_DEFINE(HAVE_TRACKER, 1, [Define to enable tracker support])
     have_tracker=yes
     affinity_pkgs="$affinity_pkgs $affinity_tracker_pkg"
 ], [have_tracker=no])
+AC_MSG_RESULT([$have_tracker])
 AM_CONDITIONAL(HAVE_TRACKER, test "$have_tracker" = "yes")
 
 # applet-specific libraries

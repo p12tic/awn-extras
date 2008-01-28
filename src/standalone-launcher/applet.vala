@@ -144,6 +144,8 @@ class Configuration: GLib.Object
 	private 			int					_name_comparision_len;
 	private				bool				_override_app_icon;
 	private             string              _desktop_file_editor;
+    private             int                 _highlight_method;
+    private             float              _highlight_saturate_value;
 
 	construct
 	{
@@ -191,7 +193,8 @@ class Configuration: GLib.Object
 		_override_app_icon=get_bool(subdir+"override_app_icon",true);
         _desktop_file_editor=get_string("desktop_file_editor","gnome-desktop-item-edit");        
 		_name_comparision_len=get_int("name_comparision_len",14);
-
+        _highlight_method=get_int("highlight_method",2);
+        _highlight_saturate_value=get_float("highlight_saturate_value",(float)2.0);
 
 		temp=get_string("active_colour","00000000");		
 		//cairo_string_to_color(temp,_active_colour);		
@@ -207,6 +210,17 @@ class Configuration: GLib.Object
 		}		
 		return value;
 	}	
+
+	public float get_float(string key,float def=0)
+	{
+		float value;
+		try {
+			value = default_conf.get_float( CONFIG_CLIENT_DEFAULT_GROUP,key);
+		}catch (GLib.Error ex){
+			value = def;   
+		}		
+		return value;
+	}
 
 	public int get_int(string key,int def=0)
 	{
@@ -243,6 +257,19 @@ class Configuration: GLib.Object
 			return _task_mode;
     	}
     }
+
+    public int highlight_method {
+        get { 
+			return _highlight_method;
+    	}
+    }
+
+    public float highlight_saturate_value {
+        get { 
+			return _highlight_saturate_value;
+    	}
+    }
+
 
     public string active_image {
         get { 
@@ -812,6 +839,7 @@ class LauncherApplet : AppletSimple
 	protected   bool                    hidden;
 	protected   int                     timer_count;
     protected   Gtk.Menu                right_menu;	
+    protected   bool                    activated;
 
     construct 
     { 
@@ -861,20 +889,48 @@ class LauncherApplet : AppletSimple
     
     private void show_icon()
     {
+        Pixbuf temp;
         show_all();
         if (hidden)
         {
             set_size_request(height, -1);    //not really necessary
             hidden=false;
-        }      
-        if (icon!=null)              
-            set_icon(icon);
+        } 
+        
+        if (activated)
+        {
+            temp=highlight_icon();
+        }
+        else
+        {
+            temp=icon;
+        }
+        if (temp!=null)              
+            set_icon(temp);
     }    
+
+    private Pixbuf highlight_icon()
+    {
+        float saturate=1.0;
+        bool    pixelate=false;
+        
+        Pixbuf temp=icon.copy();
+        
+        if ( (config.highlight_method & 0x1) > 0)
+        {
+            saturate=config.highlight_saturate_value;
+        }
+        pixelate=((config.highlight_method & 0x2) > 0);
+        //FIXME  minor optimization - don't do if both options off.
+        temp.saturate_and_pixelate (temp, saturate, pixelate);
+        return temp;
+    }
 
     private bool _initialize()
     {
         books = new BookKeeper();
         this.button_press_event+=_button_press;
+        activated=false;
 
 		targets = new TargetEntry[2];
 		targets[0].target = "text/uri-list";
@@ -921,8 +977,7 @@ class LauncherApplet : AppletSimple
         draw_set_window_size(effects,height,height);
         draw_set_icon_size(effects,height-2,height-2);
         
-		if (icon!=null)
-			set_icon (icon); 
+		show_icon();
 		if (uid.to_double()>0) 
 		{				
             desktopfile = new DesktopFileManagement(uid);
@@ -988,7 +1043,7 @@ class LauncherApplet : AppletSimple
 				if (icon !=null)
 				{
 					icon=icon.scale_simple (height-2, height-2, Gdk.InterpType.BILINEAR );
-					set_icon (icon );   
+					show_icon(); 
 				}
 		    }			
 		    else
@@ -1175,8 +1230,7 @@ class LauncherApplet : AppletSimple
 						{
 							icon = theme.load_icon ("stock_stop", height - 2, IconLookupFlags.USE_BUILTIN);
 						}		
-                        if (icon!=null)              
-                            set_icon(icon);
+                        show_icon();
                         if (config.task_mode != TaskMode.NONE)
                         {
                             books=new BookKeeper();
@@ -1199,8 +1253,7 @@ class LauncherApplet : AppletSimple
             	    stderr.printf("error writing file %s\n",desktopfile.Filename());
             	}
 				
-                if (icon!=null)              
-                    set_icon(icon);
+                show_icon();
 				status=true;
 			}
 		}		
@@ -1355,7 +1408,6 @@ class LauncherApplet : AppletSimple
 		if ( launch_new && (desktopitem!=null) )
 		{
             effect_start_ex(effects, Effect.LAUNCHING,null,null,10);
-           // effect_start(effects, Effect.LAUNCHING);
 			pid=desktopitem.launch(documents);
 			if (pid>0)
 			{
@@ -1585,11 +1637,10 @@ class LauncherApplet : AppletSimple
 	private void _active_window_changed(Wnck.Screen screen,Wnck.Window prev)
 	{
 		Pixbuf  temp;
-		bool	icon_changed=false;
 	    bool    scale_icon=false;
 	    
 		Wnck.Window active=screen.get_active_window();//active can be null
-		
+		activated=false;
 		if (prev !=null)
 		{
     		if (books.find_win(prev))
@@ -1598,13 +1649,11 @@ class LauncherApplet : AppletSimple
     			{
     				if (desktopitem.get_icon(theme) != null)
     				{				
-    					icon_changed=true;			
     					icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
     				}			
     			}
     			else if (!prev.get_icon_is_fallback() )
     			{
-    				icon_changed=true;				
     				icon=prev.get_icon();
                     scale_icon=true;
     			}		
@@ -1621,35 +1670,27 @@ class LauncherApplet : AppletSimple
     			{
     				if (desktopitem.get_icon(theme) != null)
     				{
-    					icon_changed=true;			
     					icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
     				}
     				else if (!active.get_icon_is_fallback() )
     				{
-    					icon_changed=true;				
     					icon=active.get_icon();
                         scale_icon=true;
     				}
     			}
     			else if (!active.get_icon_is_fallback() )
     			{
-    				icon_changed=true;				
     				icon=active.get_icon();
-                    scale_icon=true;    				
-    			}
+                    scale_icon=true;    				    		
+                }            
+                activated=true;
     		}
         }    		
-		if (icon_changed)	 
-		{
-		    if (scale_icon)
-		    {
-    			icon=icon.scale_simple (height-2, height-2, Gdk.InterpType.BILINEAR );		
-    		}
-			if (icon !=null)
-			{
-				set_icon(icon);
-			}			
-		}	 
+        if (scale_icon)
+        {
+            icon=icon.scale_simple (height-2, height-2, Gdk.InterpType.BILINEAR );		
+        }
+        show_icon();		
 	}
 }
  

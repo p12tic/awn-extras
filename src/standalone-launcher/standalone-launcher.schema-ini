@@ -36,8 +36,17 @@ description = desktop file editor.
 [DEFAULT/name_comparision_len]
 type = int
 default = 14
-description = Maximum number of chars to compare for determining window name = desktop item name
+description = Maximum number of chars to compare for determining window name = desktop item name. Option disabled... Currently compares to length of smallest string.
 
+[DEFAULT/highlight_method]
+type=int
+default=1
+description = 0 - none, 1 - saturate, 2 -pixelate, 3 saturate and pixelate
+
+[DEFAULT/highlight_saturate_value]
+type = float
+default = 1.5
+description = less < 1 moves towared grayscale.  >1 brighter colours.
 
 
 ; vim: set ft=dosini :

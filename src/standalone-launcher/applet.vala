@@ -71,14 +71,12 @@ static string get_exec(int pid)
     {
         exec="false";
         length=5;
-    }
-    stdout.printf("length = %ld\n",length);    
+    } 
     after="";
     for(int i = 0; i<length;i++)
     {
         string temp = new string();
         temp = exec.substring(i,1);
-        //stdout.printf("temp = %s\n",temp);
         if (temp=="")
         {
             after=after+" ";
@@ -87,7 +85,6 @@ static string get_exec(int pid)
         {
             after=after+temp;
         }
-        //stdout.printf("after = %s\n",after);
     }
 
     return after;
@@ -698,10 +695,8 @@ class BookKeeper : GLib.Object
         needle=needle.chomp();
         foreach(string exec in execs)
         {
-            stdout.printf("exec = '%s'   needle = '%s' \n",exec,needle);
             if (exec==needle)
             {
-                stdout.printf("Matched\n");
                 return true;
             }
         }
@@ -842,12 +837,12 @@ class LauncherApplet : AppletSimple
         if (hidden==false)
         {
             Pixbuf  hidden_icon;      
-            stdout.printf("Hiding\n"); 
-            set_size_request( 2, 2);
-            hidden_icon=new Pixbuf( Colorspace.RGB,true, 8, 2,2);
+            set_size_request( 1, 1);
+            hidden_icon=new Pixbuf( Colorspace.RGB,true, 8, 1,1);
             hidden_icon.fill( 0x00000000);
             set_icon(hidden_icon);
             hidden=true;
+            hide();
         }            
     }
 
@@ -866,6 +861,7 @@ class LauncherApplet : AppletSimple
     
     private void show_icon()
     {
+        show_all();
         if (hidden)
         {
             set_size_request(height, -1);    //not really necessary
@@ -1138,7 +1134,6 @@ class LauncherApplet : AppletSimple
     private void _offered(Taskman.TaskmanInterface o, string xid)
     {
 
-        stdout.printf("received offer : %s\n",xid);
         Wnck.Window window=find_win_by_xid(xid.to_ulong() );
         if (window!=null)
         {

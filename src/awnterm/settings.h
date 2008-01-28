@@ -24,6 +24,7 @@
 #define OPACITY GCONF_DIR"/opacity"
 #define BG_IMG GCONF_DIR"/bg_img"
 #define HIDE_ON_UNFOCUS GCONF_DIR"/hide_on_unfocus"
+#define MAIN_TERMINAL GCONF_DIR"/main_terminal"
 #define KEY(a) GCONF_DIR#a; 
 
 #include <gtk/gtk.h>
@@ -54,7 +55,11 @@ void save_opacity (GtkWidget *scale, GConfClient *config);
 void save_bg_img (GtkWidget *fc, GConfClient *config);
 void save_hide_on_unfocus (GtkWidget *check, GConfClient *config);
 
- // Show the preference window
+/* The following function is called when the main terminal option is changed from the preferences window
+ * By design, there is no load_main_terminal () because that setting is loaded on an as need basis. */
+void save_main_terminal (GtkWidget *entry, GConfClient *config);
+
+// Show the preference window
 void show_settings_window ();
 
 

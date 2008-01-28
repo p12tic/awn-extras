@@ -48,6 +48,14 @@ BACKEND_TYPE_PLUGGER = 2
 BACKEND_TYPE_TRASHER = 3
 BACKEND_TYPE_RECENT_FILES = 4
 
+# SORT METHODES
+BACKEND_SORT_BY_NAME = 1
+BACKEND_SORT_BY_DATE = 2
+
+# SORT DIRECTION
+BACKEND_SORT_ASCENDING = 1
+BACKEND_SORT_DESCENDING = 2
+
 # Columns in the ListStore
 COL_URI = 0
 COL_MONITOR = 1
@@ -87,7 +95,10 @@ class Backend(gobject.GObject):
                                     gtk.gdk.Pixbuf,
                                     gobject.TYPE_OBJECT)
         self.store.set_sort_column_id(COL_URI, gtk.SORT_ASCENDING)
-        self.store.set_sort_func(COL_URI, self._file_sort)
+        if self.applet.config['sort_methode'] == BACKEND_SORT_BY_DATE:
+        	self.store.set_sort_func(COL_URI, self._file_sort_date)
+        else:
+        	self.store.set_sort_func(COL_URI, self._file_sort)
 
 
     # we use a sorted liststore.
@@ -98,10 +109,10 @@ class Backend(gobject.GObject):
     def _file_sort(self, model, iter1, iter2):
         t1 = model.get_value(iter1, COL_TYPE)
         t2 = model.get_value(iter2, COL_TYPE)
-        if t1 == gnomevfs.FILE_TYPE_DIRECTORY and not \
+        if self.applet.config['sort_folders_before_files'] and t1 == gnomevfs.FILE_TYPE_DIRECTORY and not \
                 t2 == gnomevfs.FILE_TYPE_DIRECTORY:
             return -1
-        elif t2 == gnomevfs.FILE_TYPE_DIRECTORY and not \
+        elif self.applet.config['sort_folders_before_files'] and t2 == gnomevfs.FILE_TYPE_DIRECTORY and not \
                 t1 == gnomevfs.FILE_TYPE_DIRECTORY:
             return 1
         else:
@@ -109,8 +120,42 @@ class Backend(gobject.GObject):
             if n1 is not None: n1 = n1.lower()
             n2 = model.get_value(iter2, COL_LABEL)
             if n2 is not None: n2 = n2.lower()
-            return cmp(n1, n2)
+            if self.applet.config['sort_direction'] == BACKEND_SORT_ASCENDING:
+            	return cmp(n1, n2)
+            else:
+            	return cmp(n2, n1)
 
+
+    # this sort function sorts:
+    # -directories first
+    # -sort by date
+    def _file_sort_date(self, model, iter1, iter2):
+    	t1 = model.get_value(iter1, COL_TYPE)
+        t2 = model.get_value(iter2, COL_TYPE)
+        if self.applet.config['sort_folders_before_files'] and t1 == gnomevfs.FILE_TYPE_DIRECTORY and not \
+                t2 == gnomevfs.FILE_TYPE_DIRECTORY:
+            return -1
+        elif self.applet.config['sort_folders_before_files'] and t2 == gnomevfs.FILE_TYPE_DIRECTORY and not \
+                t1 == gnomevfs.FILE_TYPE_DIRECTORY:
+            return 1
+        else:
+			u1 = model.get_value(iter1, COL_URI)
+			u2 = model.get_value(iter2, COL_URI)
+			i1 = gnomevfs.get_file_info(
+					u1.uri,
+					gnomevfs.FILE_INFO_DEFAULT |
+					gnomevfs.FILE_INFO_FOLLOW_LINKS )
+			c1 = i1.mtime
+			i2 = gnomevfs.get_file_info(
+					u2.uri,
+					gnomevfs.FILE_INFO_DEFAULT |
+					gnomevfs.FILE_INFO_FOLLOW_LINKS )
+			c2 = i2.mtime
+
+			if self.applet.config['sort_direction'] == BACKEND_SORT_ASCENDING:
+				return cmp(c1, c2)
+			else:
+				return cmp(c2, c1)			
 
     # emits attention signal
     def _get_attention(self):

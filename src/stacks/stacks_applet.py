@@ -111,6 +111,8 @@ class StacksApplet (awn.AppletSimple):
                 gobject.TYPE_NONE, (gtk.ListStore, gtk.TreeIter,))
         gobject.signal_new("stacks-item-created", StacksApplet, gobject.SIGNAL_RUN_LAST,
                 gobject.TYPE_NONE, (gtk.ListStore, gtk.TreeIter,))
+        gobject.signal_new("stacks-gui-request-hide", StacksApplet, gobject.SIGNAL_RUN_LAST,
+                gobject.TYPE_NONE, ())
 
 
         # initalize variables
@@ -244,7 +246,8 @@ class StacksApplet (awn.AppletSimple):
         if self.drag_timer:
             gobject.source_remove(self.drag_timer)
         self.drag_timer = None;
-        #self.emit("stacks-gui-hide")
+        self.emit("stacks-gui-request-hide")
+
 
     def applet_drag_motion_cb(self, widget, context, x, y, time):
         awn.awn_effect_start(self.effects, "hover")

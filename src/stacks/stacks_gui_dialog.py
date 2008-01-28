@@ -90,12 +90,15 @@ class StacksGuiDialog:
         self.signal_ids.append(applet.connect("stacks-config-changed", self._stacks_config_changed_cb))
         self.signal_ids.append(applet.connect("stacks-item-removed", self._item_removed_cb))
         self.signal_ids.append(applet.connect("stacks-item-created", self._item_created_cb))
+        self.signal_ids.append(applet.connect("stacks-gui-request-hide", self._stacks_gui_request_hide))
+
 
     def _destroy_cb(self, widget):
         for id in self.signal_ids: self.applet.disconnect(id)
         if self.dialog: self.dialog.destroy()
 
     def _stacks_gui_hide_cb(self, widget = None):
+        self.reset_hide_timer()
         if self.dialog:
             self.dialog.hide()
         self.gui_visible = False
@@ -107,6 +110,21 @@ class StacksGuiDialog:
     def _stacks_gui_toggle_cb(self, widget):
         if self.gui_visible: return self._stacks_gui_hide_cb(None)
         return self._stacks_gui_show_cb(None)
+
+    def reset_hide_timer(self):
+    	#print "hide timer reset"
+    	if self.hide_timer:
+            gobject.source_remove(self.hide_timer)
+        self.hide_timer = None
+
+
+    def _stacks_gui_request_hide(self, widget = None):
+    	#print "request hide"
+
+    	#if self.hide_timer == None:
+    	#	self.hide_timer = gobject.timeout_add (self.hide_timeout, self._stacks_gui_hide_cb )
+    	return True
+
 
     def _stacks_config_changed_cb(self, widget, config):
         self.config = config
@@ -156,12 +174,6 @@ class StacksGuiDialog:
     	return True
 
     def button_drag_leave(self, widget, context, time):
-    	"""
-    	if self.hide_timer:
-            gobject.source_remove(self.hide_timer)
-            self.hide_timer = None
-        self.hide_timer = gobject.timeout_add (self.hide_timeout, self._stacks_gui_hide_cb )
-        """
         awn.awn_effect_stop(self.applet.effects, "hover")
     	return
 
@@ -303,10 +315,16 @@ class StacksGuiDialog:
     def dialog_show_next_page(self, widget):
         self.dialog_show_new(self.current_page+1)
 
+    def stack_drag_motion_event(self, *args):
+    	self.reset_hide_timer()
+
     def dialog_focus_out(self, widget, event):
         if self.context_menu_visible: return
         if self.config['close_on_focusout']:
         	self._stacks_gui_hide_cb(widget)
+        	
+    def dialog_drag_leave_event(self, *args):
+        self._stacks_gui_request_hide()        	
 
     def dialog_show_new(self, page=0):
         assert page >= 0
@@ -315,10 +333,21 @@ class StacksGuiDialog:
         # create new dialog if it does not exists yet
         if not self.dialog:
             self.dialog = awn.AppletDialog (self.applet)
+            self.dialog.add_events(gtk.gdk.BUTTON_PRESS_MASK |
+                        gtk.gdk.BUTTON_RELEASE_MASK |
+                        gtk.gdk.POINTER_MOTION_MASK |
+                        gtk.gdk.LEAVE_NOTIFY |
+                        gtk.gdk.DRAG_MOTION |
+                        gtk.gdk.DRAG_ENTER |
+                        gtk.gdk.DRAG_LEAVE |
+                        gtk.gdk.DRAG_STATUS |
+                        gtk.gdk.DROP_START |
+                        gtk.gdk.DROP_FINISHED)
             self.dialog.set_focus_on_map(True)
             self.dialog.set_keep_above(True) 
             self.dialog.connect("focus-out-event", self.dialog_focus_out)
-            # TODO: preference -> set title?
+            self.dialog.connect("drag-leave", self.dialog_drag_leave_event)
+            self.dialog.connect("drag-motion", self.stack_drag_motion_event)
             self.dialog.set_title(self.applet.backend.get_title())
             self.hbox = gtk.HBox(False, 0)
             self.dialog.add(self.hbox)

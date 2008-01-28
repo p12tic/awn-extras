@@ -31,9 +31,20 @@ PREF_TITLE = 128
 PREF_ITEM_COUNT = 256
 
 
+# GUI TYPES
 STACKS_GUI_DIALOG=1
 STACKS_GUI_CURVED=2
 STACKS_GUI_TRASHER=3
+
+# SORT METHODES
+BACKEND_SORT_BY_NAME = 1
+BACKEND_SORT_BY_DATE = 2
+
+# SORT DIRECTION
+BACKEND_SORT_ASCENDING = 1
+BACKEND_SORT_DESCENDING = 2
+
+
 
 LAYOUT_PREFS =  PREF_APPLET_ICON + \
                 PREF_COMPOSITE_ICON + \
@@ -214,6 +225,17 @@ class StacksConfig(GladeWindow):
 
         # get close_on_focusout
         self.widgets['close_on_focusout_enabled'].set_active(config['close_on_focusout'])
+        
+        # get sort methode
+        self.widgets['arange_by_combobox'].set_active(config['sort_methode']-1)
+
+        # get sort methode
+        self.widgets['sort_direction_combobox'].set_active(config['sort_direction']-1)
+        
+        # get sort folders before files
+        self.widgets['sort_folders_before_files'].set_active(config['sort_folders_before_files'])
+        
+        
        
     def on_folder_backend_button_toggled(self, *args):
     	folder_backend_mode = self.widgets['folder_backend_button'].get_active()
@@ -394,7 +416,22 @@ class StacksConfig(GladeWindow):
         		
         		self.applet.set_gui(gui_type)
 
-        		
+        # set sort methode
+        sort_methode = self.widgets['arange_by_combobox'].get_active() + 1
+        self.applet.gconf_client.set_int(
+                    self.applet.gconf_path + "/sort_methode", int(sort_methode) )
+
+        # set sort direction
+        sort_direction = self.widgets['sort_direction_combobox'].get_active() + 1
+        self.applet.gconf_client.set_int(
+                    self.applet.gconf_path + "/sort_direction", int(sort_direction) )
+                    
+        # get sort folders before files
+        self.applet.gconf_client.set_bool(
+                self.applet.gconf_path + "/sort_folders_before_files",
+                self.widgets['sort_folders_before_files'].get_active())
+        
+        
         # set file operations
         actions = 0
         if self.widgets['copy_check'].get_active():
@@ -495,7 +532,17 @@ def get_config_from_gconf(gconf_client, gconf_path, uid):
     else:
     	config['gui_type'] = STACKS_GUI_DIALOG 
     	
+    if gconf_client.get_int(gconf_path + "/sort_methode"):
+    	config['sort_methode'] = gconf_client.get_int(gconf_path + "/sort_methode")
+    else:
+    	config['sort_methode'] = BACKEND_SORT_BY_NAME 
 
+    config['sort_folders_before_files'] = loadBool(gconf_client,gconf_path + "/sort_folders_before_files", True)
+    
+    if gconf_client.get_int(gconf_path + "/sort_direction"):
+    	config['sort_direction'] = gconf_client.get_int(gconf_path + "/sort_direction")
+    else:
+    	config['sort_direction'] = BACKEND_SORT_ASCENDING 
     
     return config
 

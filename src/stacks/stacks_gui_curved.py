@@ -161,6 +161,8 @@ class StacksGuiCurved(gtk.Window):
     tooltip_timer = None
     tooltip_timeout = 800
     
+    hide_timer = None
+    hide_timeout = 500
     
     display_manager = gtk.gdk.display_manager_get()
     default_display = display_manager.get_default_display()
@@ -244,6 +246,7 @@ class StacksGuiCurved(gtk.Window):
         self.signal_ids.append(applet.connect("stacks-item-removed", self._item_removed_cb))
         self.signal_ids.append(applet.connect("stacks-item-created", self._item_created_cb))
         self.signal_ids.append(applet.connect("stacks-gui-config", self.show_config))
+        self.signal_ids.append(applet.connect("stacks-gui-request-hide", self._stacks_gui_request_hide))
         
         
 
@@ -333,6 +336,7 @@ class StacksGuiCurved(gtk.Window):
         
 
     def stack_drag_motion(self, widget, context, x, y, time):
+    	self.reset_hide_timer()
     	self.mouse_moved(widget, None, x, y, time)
     	#print "dragmotion on stack", time
     	return True
@@ -340,6 +344,7 @@ class StacksGuiCurved(gtk.Window):
     def stack_drag_leave(self, widget, context, time):
     	#print "drag leave on stack", time
     	awn.awn_effect_stop(self.applet.effects, "hover")
+    	self._stacks_gui_request_hide()
     	return True
     	
     def stack_drag_drop(self, widget, context, x, y,
@@ -389,7 +394,7 @@ class StacksGuiCurved(gtk.Window):
     def show_tooltip (self):
     	if self.tooltip_timer:
     		gobject.source_remove(self.tooltip_timer)
-    	self.tooltip_timer = None;
+    	self.tooltip_timer = None
     	
     	if self.curved_config['tooltips_enabled'] and self.active_button <> None and self.stack_items[self.active_button-1].lbl_text <> self.stack_items[self.active_button-1].displayed_lbl_text:
     		self.tooltip_visible = True
@@ -459,7 +464,7 @@ class StacksGuiCurved(gtk.Window):
     def hide_tooltip (self):
     	if self.tooltip_timer:
     		gobject.source_remove(self.tooltip_timer)
-    	self.tooltip_timer = None;
+    	self.tooltip_timer = None
     	self.tooltip_window.hide()
     	self.tooltip_visible = False
     	
@@ -601,18 +606,29 @@ class StacksGuiCurved(gtk.Window):
     def _destroy_cb(self, widget):
         for id in self.signal_ids: self.applet.disconnect(id)
 
-        
+    def _stacks_gui_request_hide(self, widget = None):
+    	if self.hide_timer == None:
+    		self.hide_timer = gobject.timeout_add (self.hide_timeout, self._stacks_gui_hide_cb )
+    	
+    
     def show_config(self, widget):
     	curved_cfg = CurvedStacksConfig(self.applet)
 
 
-    def _stacks_gui_hide_cb(self, widget, event = None):
+    def _stacks_gui_hide_cb(self, widget= None, event = None):
+    	self.reset_hide_timer()
     	if self.context_menu_visible: return
     	self.hide_tooltip()
     	self.hide()
     	self.start_icon = 0
     	
         self.gui_visible = False
+
+    def reset_hide_timer(self):
+    	if self.hide_timer:
+            gobject.source_remove(self.hide_timer)
+        self.hide_timer = None
+
 
     def _stacks_gui_show_cb(self, widget):
         self.dialog_show_new()
@@ -716,9 +732,9 @@ class StacksGuiCurved(gtk.Window):
 				self.direction = "LEFT"     
 				   	
 		if self.direction == "RIGHT":
-			x = ax + aw/2  - self.text_distance - self.curved_config['label_length'] - icon_size / 2;
+			x = ax + aw/2  - self.text_distance - self.curved_config['label_length'] - icon_size / 2
 		else:
-			x = ax + aw/2  - icon_size / 2 - self.maxx - icon_size / 4;
+			x = ax + aw/2  - icon_size / 2 - self.maxx - icon_size / 4
 		y = ay - h 
 		if x < 0:
 			x = 2
@@ -874,7 +890,7 @@ class StacksGuiCurved(gtk.Window):
         r, g, b, a = rgba_values(self.curved_config['tooltip_border_color'])
         tooltip_context.set_source_rgba (r, g, b, a)
         self.draw_rounded_rect(tooltip_context,rx,ry,rw,rh,15)
-        tooltip_context.set_line_width (2);
+        tooltip_context.set_line_width (2)
         tooltip_context.stroke()
         
         self.linear = cairo.LinearGradient(rx, ry, rx, ry+rh/4+15)
@@ -1063,7 +1079,7 @@ class StacksGuiCurved(gtk.Window):
 			r, g, b, a = rgba_values(self.curved_config['hoverbox_border_color'])
 			context.set_source_rgba (r, g, b, a)
 			self.draw_rounded_rect(context,rx,ry,rw,rh,15)
-			context.set_line_width (2);
+			context.set_line_width (2)
 			context.stroke()
 		elif self.not_selected_draw_background:
 			
@@ -1077,7 +1093,7 @@ class StacksGuiCurved(gtk.Window):
 			context.fill()
 			context.set_source_rgba (0,0,0,0.35)
 			self.draw_rounded_rect(context,rx,ry,rw,rh,15)
-			context.set_line_width (2);
+			context.set_line_width (2)
 			context.stroke()    	
     	
     
@@ -1170,7 +1186,7 @@ class StacksGuiCurved(gtk.Window):
 		context.set_source_rgba (r, g, b, a)
 		
 		self.draw_rounded_rect(context, x, y,label_width,label_height,label_curve)
-		context.set_line_width (0.5);
+		context.set_line_width (0.5)
 		context.stroke()    	
 
 		if selected:
@@ -1240,11 +1256,11 @@ class StacksGuiCurved(gtk.Window):
 		else:
 			context.set_source_rgba (0,0,0,0.75)
 			
-		context.arc (x, y, size, 0., 2 * math.pi);
+		context.arc (x, y, size, 0., 2 * math.pi)
 		context.fill()
 		context.set_source_rgba (1,1,1,0.65)
-		context.arc (x, y, size, 0., 2 * math.pi);
-		context.set_line_width (1);
+		context.arc (x, y, size, 0., 2 * math.pi)
+		context.set_line_width (1)
 
 		context.stroke()
 			

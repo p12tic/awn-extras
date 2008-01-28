@@ -27,6 +27,7 @@ SUBDIRS =            \
     media-icon-back        \
     media-icon-next        \
     media-icon-play        \
+    mount-applet	\
     MiMenu            \
     notification-area    \
     pandora                \

@@ -302,6 +302,9 @@ src/media-icon-next/media-icon-next.desktop.in
 src/media-icon-play/Makefile
 src/media-icon-play/icons/Makefile
 src/media-icon-play/media-icon-play.desktop.in
+src/mount-applet/Makefile
+src/mount-applet/icons/Makefile
+src/mount-applet/mount-applet.desktop.in
 src/MiMenu/Makefile
 src/MiMenu/icons/Makefile
 src/MiMenu/mimenu.desktop.in

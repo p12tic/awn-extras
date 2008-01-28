@@ -2,7 +2,9 @@ NULL =
 
 # awn python scripts
 pyawn_extrasdir = $(PYTHON_SITE_PKG)/awn/extras
-pyawn_extras_PYTHON = __init__.py
+pyawn_extras_PYTHON =	\
+	__init__.py	\
+	AWNLib.py
 
 INCLUDES = \
 	$(PYTHON_CPPFLAGS) \

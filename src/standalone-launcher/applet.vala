@@ -693,10 +693,15 @@ class BookKeeper : GLib.Object
     {
         if (needle==null)
             return false;
+        string [] arr=needle.split("%");
+        needle=arr[0];
+        needle=needle.chomp();
         foreach(string exec in execs)
         {
+            stdout.printf("exec = '%s'   needle = '%s' \n",exec,needle);
             if (exec==needle)
             {
+                stdout.printf("Matched\n");
                 return true;
             }
         }
@@ -772,6 +777,9 @@ class BookKeeper : GLib.Object
     {
         if (exec!=null)
         {
+            string [] arr=exec.split("%");
+            exec=arr[0];
+            exec=exec.chomp();
             if (!find_exec(exec) )
             {
                 if (exec!="false")
@@ -930,7 +938,6 @@ class LauncherApplet : AppletSimple
 				desktopitem.set_icon("stock_stop");
 				desktopitem.set_item_type("Application");
 				desktopitem.set_name("None");				
-//				desktopitem = new DesktopItem(desktopfile.Filename() );
 			}
             else
             {

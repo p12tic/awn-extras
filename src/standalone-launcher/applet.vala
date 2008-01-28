@@ -164,19 +164,28 @@ class Configuration: GLib.Object
 		}
 //		_active_colour=new Awn.Color();
 		read_config();
+    
 //Don't know why this is crapping out... probably a bindings issue. FIXME later.
         //default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"standalone-launcher", _config_changed, null);
-        default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"active_colour", _config_changed, null);;  
+        
+        default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"active_colour", _config_changed, this);
+        default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"anonymous/override_app_icon", _config_changed, this);
+        default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"discrete/override_app_icon", _config_changed, this);
+        default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"active_task_image", _config_changed, this);
+        default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"desktop_file_editor", _config_changed, this);
+        default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"highlight_method", _config_changed, this);
+        default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"highlight_saturate_value", _config_changed, this);
+
         if (!anon_mode)
 		{
 				
 		}
 	}
 	
-	public static void _config_changed(Awn.ConfigClientNotifyEntry entry, pointer data)
+	private static void _config_changed(Awn.ConfigClientNotifyEntry entry, Configuration self)
 	{
-	
-		stdout.printf("config notifiy fired\n");
+        self.read_config_dynamic();
+		stdout.printf("config notify fired\n");
 	}
 	
 	Configuration(string uid,bool anon_mode)
@@ -185,19 +194,24 @@ class Configuration: GLib.Object
 		this.anon_mode=anon_mode;
 	}
 
-	private void read_config()
-	{   
-		string temp;
-		_task_mode=get_int(subdir+"task_mode",1);
+    //config options that are monitored and can be dynamically changed
+	private void read_config_dynamic()
+    {
 		_active_image=get_string("active_task_image","emblem-favorite");
 		_override_app_icon=get_bool(subdir+"override_app_icon",true);
         _desktop_file_editor=get_string("desktop_file_editor","gnome-desktop-item-edit");        
 		_name_comparision_len=get_int("name_comparision_len",14);
         _highlight_method=get_int("highlight_method",2);
         _highlight_saturate_value=get_float("highlight_saturate_value",(float)2.0);
+    }
 
+	private void read_config()
+	{   
+		string temp;
+		_task_mode=get_int(subdir+"task_mode",1);        
 		temp=get_string("active_colour","00000000");		
-		//cairo_string_to_color(temp,_active_colour);		
+		//cairo_string_to_color(temp,_active_colour);	
+        read_config_dynamic();	
 	}
 	
 	public bool get_bool(string key,bool def=false)
@@ -575,6 +589,7 @@ class BookKeeper : GLib.Object
 
     public void cleanup()
     {
+        int i;
         foreach(ulong xid in XIDs)
         {
             Wnck.Window win;
@@ -585,14 +600,25 @@ class BookKeeper : GLib.Object
             }
         }
         //FIXME ?? at some point consider pruning removed_wins.
-        foreach(Wnck.Window win in wins)
+
+        for(i=0;i<wins.length();i++)
+        {
+            if ( search_win_by_win( wins.nth_data(i) )==null)
+            {
+                removed_wins.prepend(wins.nth_data(i));
+                wins.remove_all(wins.nth_data(i) );
+                i--;
+            }
+        }
+/*        foreach(Wnck.Window win in wins)
         {
             if (search_win_by_win(win) == null)
             {
                 removed_wins.prepend(win);
-                wins.remove(win);
+                wins.remove_all(win);
             }
         }
+*/
         foreach(Wnck.Window win in removed_wins)
         {
             if (search_win_by_win(win)!=null )
@@ -862,14 +888,13 @@ class LauncherApplet : AppletSimple
     /*sets icon to a 2x2 transparent icon*/
     private void hide_icon()
     {
-        if (hidden==false)
+        if (hidden)
         {
             Pixbuf  hidden_icon;      
             set_size_request( 1, 1);
             hidden_icon=new Pixbuf( Colorspace.RGB,true, 8, 1,1);
             hidden_icon.fill( 0x00000000);
             set_icon(hidden_icon);
-            hidden=true;
             hide();
         }            
     }
@@ -881,6 +906,7 @@ class LauncherApplet : AppletSimple
         {
             if ( launchmode == LaunchMode.ANONYMOUS )
             {
+                hidden=true;
                 hide_icon();
             }
         }
@@ -889,24 +915,23 @@ class LauncherApplet : AppletSimple
     
     private void show_icon()
     {
-        Pixbuf temp;
-        show_all();
-        if (hidden)
+        if (!hidden)
         {
+
+            Pixbuf temp;
+            show_all();
             set_size_request(height, -1);    //not really necessary
-            hidden=false;
-        } 
-        
-        if (activated)
-        {
-            temp=highlight_icon();
+            if (activated)
+            {
+                temp=highlight_icon();
+            }
+            else
+            {
+                temp=icon;
+            }
+            if (temp!=null)              
+                set_icon(temp);
         }
-        else
-        {
-            temp=icon;
-        }
-        if (temp!=null)              
-            set_icon(temp);
     }    
 
     private Pixbuf highlight_icon()
@@ -931,7 +956,7 @@ class LauncherApplet : AppletSimple
         books = new BookKeeper();
         this.button_press_event+=_button_press;
         activated=false;
-
+        hidden=false;
 		targets = new TargetEntry[2];
 		targets[0].target = "text/uri-list";
 		targets[0].flags = 0;
@@ -1015,6 +1040,7 @@ class LauncherApplet : AppletSimple
 
                 while(response!="MANAGE")
 				{
+                    hidden=false;
 					while (response=="RESET")
 					{
 						dbusconn.Register(uid);					
@@ -1449,9 +1475,14 @@ class LauncherApplet : AppletSimple
 			if (launchmode == LaunchMode.ANONYMOUS)
 			{
 				Timeout.add(750,_hide_icon,this);	
+                Timeout.add(2000,_hide_icon,this);	                
 				timer_count++;		
 				Timeout.add(30000,_timed_closed,this);
 			}				
+        }
+        else
+        {
+            stdout.printf("number() = %d\n",books.number() );
         }
 	}
 	
@@ -1463,7 +1494,12 @@ class LauncherApplet : AppletSimple
         	if (books.number() == 0)
         	{
         		close();
-            }        		
+            }     
+            else
+            {
+                hidden=true;
+                stdout.printf("number() = %d\n",books.number() );
+            }   		
 		}	
 		return false;
 	}
@@ -1507,6 +1543,7 @@ class LauncherApplet : AppletSimple
 			response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"ACCEPT");
 			if (response=="MANAGE")
 			{
+                hidden=false;
 				Wnck.Window win=find_win_by_xid(xid);
 				if (win!=null)          
 					books.update_with_win(win);
@@ -1578,6 +1615,7 @@ class LauncherApplet : AppletSimple
         
         if(response=="MANAGE")
         {
+            hidden=false;
             effect_stop (effects, Effect.LAUNCHING);
             Pixbuf new_icon;
             books.update_with_win(window);			

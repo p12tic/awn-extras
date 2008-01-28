@@ -1,12 +1,12 @@
 [DEFAULT/anonymous/task_mode]
 type = int
 default = 1
-description = Default taskmode. 0=Single task.  1=Multiple
+description = Default taskmode. 0=Single task.  1=Multiple: Requires Restart
 
 [DEFAULT/discrete/task_mode]
 type = int
 default = 1
-description = Default taskmode. 0=Single task.  1=Multiple.  2=None (no taskmanager function)
+description = Default taskmode. 0=Single task.  1=Multiple.  2=None (no taskmanager function): Requires Restart
 
 [DEFAULT/anonymous/override_app_icon]
 type = bool

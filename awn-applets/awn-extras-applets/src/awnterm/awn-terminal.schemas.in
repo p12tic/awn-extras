@@ -46,5 +46,20 @@
         <long>The applet's background image.</long>
       </locale>
     </schema>
+    <schema>
+      <key>/schemas/apps/avant-window-navigator/applets/awn-terminal/main_terminal</key>
+      <applyto>/apps/avant-window-navigator/applets/awn-terminal/main_terminal</applyto>
+      <owner>avant-window-navigator</owner>
+      <type>string</type>
+      <default>gnome-terminal</default>
+      <locale name="C">
+        <short/>
+        <long>The default external terminal application.</long>
+      </locale>
+      <locale name="en_ca">
+        <short/>
+        <long>The default external terminal application.</long>
+      </locale>
+    </schema>
   </schemalist>
 </gconfschemafile>

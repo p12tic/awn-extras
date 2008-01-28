@@ -69,10 +69,20 @@ void load_opacity (GConfClient *client, guint conxn, GConfEntry *entry, AwnTerm 
 	gtk_window_set_opacity (GTK_WINDOW (applet->dialog), gconf_value_get_float (entry->value));
 }
 
+void save_opacity (GtkWidget *scale, GConfClient *config)
+{
+	gconf_client_set_float (config, OPACITY, gtk_range_get_value (GTK_RANGE (scale)), NULL);
+}
+
 void load_bg_img (GConfClient *client, guint conxn, GConfEntry *entry, AwnTerm *applet)
 {
 	const gchar *file = gconf_value_get_string (gconf_entry_get_value (entry));
 	vte_terminal_set_background_image_file (VTE_TERMINAL (applet->terminal), file);
+}
+
+void save_bg_img (GtkWidget *fc, GConfClient *config)
+{
+	gconf_client_set_string (config, BG_IMG, gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (fc)), NULL);
 }
 
 void load_hide_on_unfocus (GConfClient *client, guint conxn, GConfEntry *entry, AwnTerm *applet)
@@ -83,19 +93,14 @@ void load_hide_on_unfocus (GConfClient *client, guint conxn, GConfEntry *entry, 
 		g_signal_handlers_unblock_by_func(applet->dialog, focus_out_cb, NULL);
 }
 
-void save_opacity (GtkWidget *scale, GConfClient *config)
-{
-	gconf_client_set_float (config, OPACITY, gtk_range_get_value (GTK_RANGE (scale)), NULL);
-}
-
-void save_bg_img (GtkWidget *fc, GConfClient *config)
-{
-	gconf_client_set_string (config, BG_IMG, gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (fc)), NULL);
-}
-
 void save_hide_on_unfocus (GtkWidget *check, GConfClient *config)
 {
 	gconf_client_set_bool (config, HIDE_ON_UNFOCUS, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check)), NULL);
+}
+
+void save_main_terminal (GtkWidget *entry, GConfClient *config)
+{
+	gconf_client_set_string (config, MAIN_TERMINAL, gtk_entry_get_text (GTK_ENTRY (entry)), NULL);
 }
 
 void show_about ()
@@ -107,6 +112,7 @@ void show_settings_window ()
 {
 	GtkWidget *window;
 	GtkWidget *box;
+	GtkWidget *main_terminal_box;
 	GtkWidget *widget;
 	
 	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -128,6 +134,20 @@ void show_settings_window ()
 	gtk_range_set_value (GTK_RANGE (widget), gconf_client_get_float (applet->config, OPACITY, NULL));
 	g_signal_connect (G_OBJECT (widget), "value-changed", G_CALLBACK (save_opacity), applet->config);
 	gtk_box_pack_start_defaults (GTK_BOX (box), widget);
+	
+	main_terminal_box = gtk_hbox_new (FALSE, 0);
+	gtk_box_pack_start_defaults (GTK_BOX (box), main_terminal_box);
+	
+	widget = gtk_label_new ("Main terminal:");
+	gtk_box_pack_start_defaults (GTK_BOX (main_terminal_box), widget);
+	
+	widget = gtk_entry_new ();
+	char *main_terminal = gconf_client_get_string (applet->config, MAIN_TERMINAL, NULL);
+	if (!main_terminal) main_terminal = g_strdup ("gnome-terminal");
+	gtk_entry_set_text (GTK_ENTRY (widget), main_terminal);
+	g_free (main_terminal);
+	g_signal_connect (G_OBJECT (widget), "activate", G_CALLBACK (save_main_terminal), applet->config);
+	gtk_box_pack_start_defaults (GTK_BOX (main_terminal_box), widget);
 	
 	gtk_widget_show_all (window);
 }

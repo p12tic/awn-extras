@@ -27,6 +27,7 @@
 #include <string.h>
 
 #include "awnterm.h"
+#include "settings.h"
 
 // Callback when the icon is clicked on.
 gboolean icon_clicked_cb (GtkWidget *widget, GdkEventButton *event, gpointer null)
@@ -34,7 +35,6 @@ gboolean icon_clicked_cb (GtkWidget *widget, GdkEventButton *event, gpointer nul
 	switch (event->button)
 	{
 		case 1:
-		case 2:
 			if (!GTK_WIDGET_VISIBLE (applet->dialog))
 			{
 				gtk_widget_show_all (applet->dialog);
@@ -43,6 +43,12 @@ gboolean icon_clicked_cb (GtkWidget *widget, GdkEventButton *event, gpointer nul
 			{
 				gtk_widget_hide (applet->dialog);
 			}
+			break;
+		case 2:
+			gchar *main_terminal = gconf_client_get_string (applet->config, MAIN_TERMINAL, NULL);
+			if (!main_terminal) main_terminal = g_strdup ("gnome-terminal");
+			gdk_spawn_command_line_on_screen (gtk_widget_get_screen (widget), main_terminal, NULL);
+			g_free (main_terminal);
 			break;
 		case 3:
 			// Create the popup menu if we haven't already done so
@@ -75,6 +81,8 @@ gboolean key_press_cb (GtkWidget *window, GdkEventKey *event, GtkWidget *termina
 		if (! strncmp (key, "c", 1)) vte_terminal_copy_clipboard (VTE_TERMINAL (terminal));
 		// Paste
 		if (! strncmp (key, "v", 1)) vte_terminal_paste_clipboard (VTE_TERMINAL (terminal));
+		// Free the memory
+		g_free (key);
 		// Signify that event has been handled
 		return TRUE;
 	}

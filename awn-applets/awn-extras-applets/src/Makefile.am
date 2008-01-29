@@ -1,6 +1,7 @@
 SUBDIRS =			\
 	arss			\
 	awnsystemmonitor	\
+	awnterm			\
 	awn-notification-daemon \
 	battery-applet		\
 	BlingSwitcher 		\

@@ -1128,8 +1128,12 @@ class LauncherApplet : AppletSimple
 			desktopfile.set_name(temp);
 		}		
 		desktopitem = new DesktopItem(desktopfile.Filename() );
-        desktopitem.set_string ("Type","Application");		 		
-        desktopitem.save(desktopfile.Filename());
+        desktopitem.set_string ("Type","Application");	
+        try{
+            desktopitem.save(desktopfile.Filename());
+        }catch (GLib.Error ex) {
+            stderr.printf("Non Fatal error. failed to write desktop file\n");
+        }
 //        desktopitem = new DesktopItem(desktopfile.Filename() );        
 		desktopitem.set_name(temp);
 		if (! desktopitem.exists() )		
@@ -1194,7 +1198,11 @@ class LauncherApplet : AppletSimple
 		            i=0;
 				}
 		    }
-			awn_config.set_list(Awn.CONFIG_CLIENT_DEFAULT_GROUP,"applets_list", Awn.ConfigListType.STRING,applet_list);
+            try{
+                awn_config.set_list(Awn.CONFIG_CLIENT_DEFAULT_GROUP,"applets_list", Awn.ConfigListType.STRING,applet_list);
+            }catch (GLib.Error ex ){
+                stderr.printf("Failed to write applet_list... exiting anyway\n");
+            }
 			Awn.ConfigClient.key_lock_close(fd_lock);
 		}						
 		Thread.exit(null);
@@ -1231,12 +1239,20 @@ class LauncherApplet : AppletSimple
 		fileURIs=vfs_get_pathlist_from_string(selectdata.data);
 		foreach (string str in fileURIs) 
 		{
+            
 			print_desktop(desktopitem);			
 			if (uid.to_double()>0)
 			{
-
-				DesktopItem		tempdesk;
-				tempdesk = new DesktopItem(Filename.from_uri(str));
+                DesktopItem		tempdesk;
+                string filename;
+                try{
+                    filename = Filename.from_uri(str);
+                }
+                catch(ConvertError ex  )
+                {
+                    filename="";
+                }
+                tempdesk = new Awn.DesktopItem(filename);
 				if (tempdesk.exists() )
 				{
 					if ( (tempdesk.get_exec() != null) && (tempdesk.get_name()!=null) )
@@ -1374,8 +1390,11 @@ class LauncherApplet : AppletSimple
     
     private bool _click_right_menu(Gtk.Widget widget,Gdk.EventButton event)
     {
-    
-        Process.spawn_command_line_async(config.desktop_file_editor+" "+desktopfile.Filename() );
+        try{
+            Process.spawn_command_line_async(config.desktop_file_editor+" "+desktopfile.Filename() );
+        }catch ( SpawnError ex ) {
+            stderr.printf("Failed to spawn '%s' \n",config.desktop_file_editor+" "+desktopfile.Filename());
+        }
         return false;
     }
     private void build_right_click()
@@ -1427,7 +1446,11 @@ class LauncherApplet : AppletSimple
         {
             if (desktopitem.launch(documents) == -1)
             {
-                Process.spawn_command_line_async(desktopitem.get_exec());
+                try{
+                    Process.spawn_command_line_async(desktopitem.get_exec());
+                }catch ( SpawnError ex ) {
+                    stderr.printf("failed to spawn '%s'\n",desktopitem.get_exec());
+                }
             }
         }
 						
@@ -1442,7 +1465,11 @@ class LauncherApplet : AppletSimple
 			}
 			else if (pid==-1)
 			{
-				Process.spawn_command_line_async(desktopitem.get_exec());
+                try{
+                    Process.spawn_command_line_async(desktopitem.get_exec());
+                }catch (  SpawnError ex) {
+                    stderr.printf("failed to spawn '%s'\n",desktopitem.get_exec());
+                }
 			}
 		}
 		return false;

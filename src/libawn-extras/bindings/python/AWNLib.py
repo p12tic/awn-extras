@@ -32,6 +32,13 @@ try:
 except:
     pass
 
+___file___ = sys.argv[0] # Voodoo
+# Basically, __file__ = current file location
+# sys.argv[0] = file name or called file
+# Since AWNLib is in site-packages, __file__ refers to something there
+# For relative paths to work, we need a way of determining where the
+# User applet is. So this bit of magic works
+
 class KeyRingError: pass
 
 class Dialogs:
@@ -122,7 +129,7 @@ class Icon:
 
     def getFile(self, file):
         return gdk.pixbuf_new_from_file(os.path.join(os.path.abspath( \
-            os.path.dirname(__file__)), file))
+            os.path.dirname(___file___)), file)) # That voodoo up above?
 
     def getTheme(self, name):
         self.theme = gtk.IconTheme()

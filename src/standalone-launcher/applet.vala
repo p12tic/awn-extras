@@ -1490,6 +1490,10 @@ class LauncherApplet : AppletSimple
     
     private bool _enter_notify(Gtk.Widget widget,Gdk.EventCrossing event)
     {
+        if (books.number()==0)
+        {
+            title_string = desktopitem.get_name();
+        }
         title.show(this,title_string );
         return false;   
     }

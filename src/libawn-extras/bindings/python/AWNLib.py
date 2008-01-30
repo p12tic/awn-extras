@@ -164,7 +164,7 @@ class Modules:
             return module
 
     def depend(self, name, packagelist, callback):
-        self.parent.dialog.new("main")
+        dlog = self.parent.dialog.new("main")
 
         # Table based layout
         table = gtk.Table()

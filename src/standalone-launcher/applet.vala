@@ -501,8 +501,7 @@ class Listing : GLib.Object
 
     construct
     {
-        string[] file_strings;
-        string file_data;
+
 		directory=Environment.get_home_dir()+"/.config/awn/applets/standalone-launcher/lists/";
         if (! FileUtils.test(directory,FileTest.EXISTS)  )
         {		
@@ -516,8 +515,20 @@ class Listing : GLib.Object
         {
             //FIXME... throw an exception... it has to be a dir.
         }        
+        read_list(directory+listingfile+".whitelist.pre",out whitelist_titles_pre,out whitelist_exec_pre);
+        read_list(Environment.get_home_dir()+"/.config/awn/applets/standalone-launcher/blacklist",out blacklist_titles_global,out blacklist_exec_global);    
+        read_list(directory+listingfile+".blacklist",out blacklist_titles,out blacklist_exec);
+        read_list(directory+listingfile+".whitelist.post",out whitelist_titles_post,out whitelist_exec_post);
+
+    }
+
+
+    void read_list(string file_name,out SList<string> title_list,out SList<string> exec_list)
+    {
+        string[] file_strings;
+        string file_data;
         try{
-            FileUtils.get_contents (directory+listingfile+".whitelist.pre", out file_data);
+            FileUtils.get_contents (file_name, out file_data);
         }catch (FileError ex ){
             stdout.printf("no whitelist: '%s'\n",directory+listingfile+".whitelist.pre");
             file_data="";
@@ -528,17 +539,15 @@ class Listing : GLib.Object
             if (entry.substring(0,6)=="TITLE:" )
             {
                 entry=entry.substring(6,entry.len() );
-                whitelist_titles_pre.prepend(entry);
+                title_list.prepend(entry);
             }
             else if (entry.substring(0,5)=="EXEC:")
             {
                 entry=entry.substring(5,entry.len() );
-                whitelist_exec_pre.prepend(entry);
+                exec_list.prepend(entry);
             }
             stdout.printf("data = %s\n",entry);
-            
         }
-
     }
 
     Listing(string listingfile)

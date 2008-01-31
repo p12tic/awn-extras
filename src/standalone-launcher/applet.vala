@@ -1635,7 +1635,7 @@ class LauncherApplet : AppletSimple
         }
         else
         {
-            stdout.printf("number() = %d\n",books.number() );
+  //          stdout.printf("number() = %d\n",books.number() );
         }
 	}
 	

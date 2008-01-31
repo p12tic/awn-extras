@@ -1,12 +1,12 @@
 SUBDIRS = . bindings
 lib_LTLIBRARIES = libawn-extras.la
 
-INCLUDES = \
-	$(AWN_CFLAGS)					\
-	$(LIBNOTIFY_CFLAGS)				\
-	-I$(top_srcdir) 				\
-	-I$(top_builddir) 				\
-	$(NULL)	
+AM_CFLAGS =			\
+	$(AWN_CFLAGS)		\
+	$(LIBNOTIFY_CFLAGS)	\
+	-I$(top_srcdir) 	\
+	-I$(top_builddir) 	\
+	$(NULL)
 
 libawn_extrasincdir = $(includedir)/libawn-extras
 

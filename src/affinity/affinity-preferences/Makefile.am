@@ -7,5 +7,5 @@ install-exec-local:
 
 EXTRA_DIST = $(glade_DATA) affinity-preferences.in
 
-clean:
+clean-local:
 	rm -f *.pyo *.pyc *.bak *.gladep

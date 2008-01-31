@@ -1,10 +1,10 @@
 NULL =
 APPLET_NAME = taskmand
-SUBDIRS = data
+SUBDIRS = . data
 
 include $(top_srcdir)/Makefile.schemas
 
-INCLUDES =			\
+AM_CFLAGS =			\
 	$(AWN_CFLAGS)		\
 	$(TASKMAND_CFLAGS)	\
 	-I$(top_srcdir)/src	\

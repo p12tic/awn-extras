@@ -6,7 +6,7 @@ pyawn_extras_PYTHON =	\
 	__init__.py	\
 	AWNLib.py
 
-INCLUDES = \
+AM_CFLAGS = \
 	$(PYTHON_CPPFLAGS) \
 	$(PYGTK_CFLAGS) \
 	$(PYCAIRO_CFLAGS) \
@@ -24,8 +24,8 @@ common_ldflags = -module -avoid-version
 AWN_EXTRAS_DEFS = awn_extras.defs
 AWN_EXTRAS_OVERRIDE = awn_extras.override
 CLEANFILES = awn_extras.c
-EXTRA_DIST = $(AWN_DEFS) $(AWN_EXTRAS_OVERRIDE)
-awn_extras.c: $(AWN_DEFS) $(AWN_EXTRAS_OVERRIDE)
+EXTRA_DIST = $(AWN_EXTRAS_DEFS) $(AWN_EXTRAS_OVERRIDE)
+awn_extras.c: $(AWN_EXTRAS_DEFS) $(AWN_EXTRAS_OVERRIDE)
 
 _extras_la_LDFLAGS = $(common_ldflags) -export-symbols-regex init_extras
 

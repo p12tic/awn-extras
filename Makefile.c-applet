@@ -1,8 +1,8 @@
-# vim: set ft=automake :
+# vim: set ft=automake ts-8 sts=8 sw=8 :
 NULL = 
 include $(top_srcdir)/Makefile.desktop-files
 
-INCLUDES = \
+AM_CFLAGS = 			\
 	-I$(srcdir)			\
 	-I$(top_srcdir)/src	\
 	$(AWN_CFLAGS)		\

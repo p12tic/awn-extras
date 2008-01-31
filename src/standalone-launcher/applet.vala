@@ -304,6 +304,8 @@ class Configuration: GLib.Object
     }
 }
 
+
+/* This class needs to be rethought*/
 class DesktopFileManagement : GLib.Object
 {
 	protected   string  directory;
@@ -311,7 +313,7 @@ class DesktopFileManagement : GLib.Object
 	
 	construct
 	{
-		directory=Environment.get_home_dir()+"/.config/awn/applets/standalone-launcher/";
+		directory=Environment.get_home_dir()+"/.config/awn/applets/standalone-launcher/desktops/";
 		if ( uid.to_double()>0)
 		{
 
@@ -328,6 +330,7 @@ class DesktopFileManagement : GLib.Object
 			{
 				//FIXME... throw an exception... it has to be a dir.
 			}
+
 		}
 		else
 		{
@@ -467,6 +470,123 @@ enum Ownership
 }
 
 //------------------------------------------------------------------------------
+
+enum ListingResult
+{
+    NOMATCH,
+    BLACKLISTED,
+    WHITELISTED
+}
+
+class Listing : GLib.Object
+{
+//There will be an advanced mode and simple mode.
+//overkill in general but it's not that much extra work at this point.
+    protected   SList<string>               blacklist_titles_global;
+    protected   SList<string>               blacklist_exec_global;
+
+    protected   SList<string>               whitelist_titles_pre;
+    protected   SList<string>               whitelist_exec_pre;
+    protected   SList<string>               blacklist_titles;
+    protected   SList<string>               blacklist_exec;
+    protected   SList<string>               whitelist_titles_post;
+    protected   SList<string>               whitelist_exec_post;
+
+    protected   string                      filename_global_blacklist;
+    protected   string                      filename_blacklist;
+    protected   string                      filename_whitelist_pre;
+    protected   string                      filename_whitelist_post;
+    protected   string                      listingfile { get; construct; }
+    protected   string                      directory;
+
+    construct
+    {
+        string[] file_strings;
+        string file_data;
+		directory=Environment.get_home_dir()+"/.config/awn/applets/standalone-launcher/lists/";
+        if (! FileUtils.test(directory,FileTest.EXISTS)  )
+        {		
+            stdout.printf("creating %s\n",directory);
+            if ( DirUtils.create_with_parents(directory,0777) != 0)
+            {
+                error("Fatal error creating %s\n",directory);
+            }
+        }
+        else if (!FileUtils.test(directory,FileTest.IS_DIR))
+        {
+            //FIXME... throw an exception... it has to be a dir.
+        }        
+        try{
+            FileUtils.get_contents (directory+listingfile+".whitelist.pre", out file_data);
+        }catch (FileError ex ){
+            stdout.printf("no whitelist: '%s'\n",directory+listingfile+".whitelist.pre");
+            file_data="";
+        }
+        file_strings=file_data.split("\n");
+        foreach(string entry in file_strings)
+        {
+            if (entry.substring(0,6)=="TITLE:" )
+            {
+                entry=entry.substring(6,entry.len() );
+                whitelist_titles_pre.prepend(entry);
+            }
+            else if (entry.substring(0,5)=="EXEC:")
+            {
+                entry=entry.substring(5,entry.len() );
+                whitelist_exec_pre.prepend(entry);
+            }
+            stdout.printf("data = %s\n",entry);
+            
+        }
+
+    }
+
+    Listing(string listingfile)
+    {
+            this.listingfile=listingfile;
+    }
+
+    protected bool check_list(SList list,string value)
+    {
+        if ( (value !=null) && (list!=null))
+        {
+            foreach (string pattern in list)
+            {
+                stdout.printf("CHECKING %s = %s \n",pattern,value);
+                if ( Regex.match_simple(pattern, value) )
+                {
+                    stdout.printf("MATCHING\n");
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+    public ListingResult check_listings(string title, string exec)
+    {
+        if (        check_list(whitelist_titles_pre,title)  ||
+                    check_list(whitelist_exec_pre,exec) )
+        {
+            return ListingResult.WHITELISTED;
+        }
+
+        if (        check_list(blacklist_titles_global,title)   ||
+                    check_list(blacklist_exec_global,exec)      ||
+                    check_list(blacklist_titles,title)          ||
+                    check_list(blacklist_exec,exec) )
+        {
+            return ListingResult.BLACKLISTED;
+        }
+        if (        check_list(whitelist_titles_post,title)  ||
+                    check_list(whitelist_exec_post,exec) )
+        {
+            return ListingResult.WHITELISTED;
+        }        
+        return ListingResult.NOMATCH;
+    }
+}
 
 class BookKeeper : GLib.Object 
 {
@@ -866,6 +986,7 @@ class LauncherApplet : AppletSimple
 	protected   int                     timer_count;
     protected   Gtk.Menu                right_menu;	
     protected   bool                    activated;
+    protected   Listing                 listing;
 
     construct 
     { 
@@ -1007,7 +1128,7 @@ class LauncherApplet : AppletSimple
 		{				
             desktopfile = new DesktopFileManagement(uid);
 			launchmode = LaunchMode.DISCRETE;
-			desktopitem = new DesktopItem(desktopfile.Filename() );			
+			desktopitem = new DesktopItem(desktopfile.Filename() );	
 			if (!desktopfile.Exists() )
 			{
 				desktopitem.set_exec("false");
@@ -1077,6 +1198,7 @@ class LauncherApplet : AppletSimple
 				close();
 		    }
 		}	
+        listing = new Listing(GLib.Path.get_basename(desktopfile.Filename()));
 		if (desktopitem.exists() )  //we will use a user specified one if it exists.
 		{
 			if (desktopitem.get_icon(theme)!=null)
@@ -1629,20 +1751,32 @@ class LauncherApplet : AppletSimple
         }
         do
         {
-            switch (books.what_to_do(window) )
+            ListingResult listings_check;
+            listings_check=listing.check_listings(window.get_name(),get_exec(window.get_pid()));
+            switch (listings_check)
             {
-                case    Ownership.CLAIM:
-                        response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"CLAIM");
+                case    ListingResult.WHITELISTED:
+                    response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"CLAIM");
+                case    ListingResult.BLACKLISTED:
+                    response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"DENY");
+                case    ListingResult.NOMATCH:
+                    {
+                        switch (books.what_to_do(window) )
+                        {
+                            case    Ownership.CLAIM:
+                                    response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"CLAIM");
 
-                case    Ownership.ACCEPT:
-                        response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"ACCEPT");
+                            case    Ownership.ACCEPT:
+                                    response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"ACCEPT");
 
-                case    Ownership.DENY:
-                        response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"DENY");
+                            case    Ownership.DENY:
+                                    response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"DENY");
+                        }
+                    }
             }
             if (response=="RESET")
                 dbusconn.Register(uid);										
-        }while(response=="RESET");
+        }while(response=="RESET");//this does not eval to true often... otherwise it should be fixed.
         
         if(response=="MANAGE")
         {

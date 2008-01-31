@@ -17,11 +17,20 @@ Build-Depends: 	debhelper (>= 5),
 		libwnck-dev, 
 		python-central (>= 0.5.6), 
 		python-all-dev,
+		python-cairo-dev
+		python-gtk2-dev
 		libvte-dev, 
 		libsexy-dev, 
 		libnotify-dev,
 		vala-awn-testing,
-		valac
+		valac,
+		libglade2-dev,
+		libxcomposite-dev,
+		libxdamage-dev,
+		librsvg2-dev,
+		libsexy-dev,
+		libnotify-dev,
+		libtrackerclient-dev
 Standards-Version: 3.7.2
 XS-Python-Version: current
 

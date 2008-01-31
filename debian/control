@@ -17,8 +17,8 @@ Build-Depends: 	debhelper (>= 5),
 		libwnck-dev, 
 		python-central (>= 0.5.6), 
 		python-all-dev,
-		python-cairo-dev
-		python-gtk2-dev
+		python-cairo-dev,
+		python-gtk2-dev,
 		libvte-dev, 
 		libsexy-dev, 
 		libnotify-dev,

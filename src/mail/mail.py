@@ -51,9 +51,9 @@ class Applet:
         # The Joy of Python - Pavel Panchekha
         # A haiku
         #
-        #          Mucho Python love
-        # First class classes rock real hard
-        #           Joy and happiness
+        #       Python is real cool
+        # First class classes are awesome
+        #        Joy and happiness
         #
 
         try:
@@ -61,6 +61,12 @@ class Applet:
         except:
             self.theme = "Tango"
             self.awn.settings["theme"] = "Tango"
+
+        try:
+            self.hide = self.awn.settings["hide"]
+        except:
+            self.hide = False
+            self.awn.settings["hide"] = False
 
         self.awn.title.set("Mail Applet (Click to Log In)")
         self.awn.icon.set(self.getIcon("login"))
@@ -74,10 +80,14 @@ class Applet:
         if force:
             return self.drawPWDDlog()
 
+        self.drawPrefDlog()
+
         try:
             token = self.awn.settings["login-token"]
+            if self.awn.settings["login-token"] == 0:
+                raise Exception
         except:
-             self.drawPWDDlog()
+            self.drawPWDDlog()
         else:
             key = self.awn.keyring.new()
             key.token = token
@@ -103,7 +113,6 @@ class Applet:
 
             self.timer = self.awn.timing.time(self.refresh, 15)
             self.refresh()
-            self.drawPrefDlog()
 
     def refresh(self, widget=None):
         olen = self.mail.len()
@@ -114,13 +123,19 @@ class Applet:
             self.drawErrorDlog(err)
             return False
 
-        if self.mail.len() != olen:
+        if self.mail.len() > olen:
             self.awn.notify.send("New Mail - Mail Applet", \
-                "You have %d new mail" % self.mail.len()-olen, \
+                "You have %s new mail" % str(self.mail.len() - olen), \
                 self.getIconPath("unread", full=True))
             self.awn.effects.notify()
         self.awn.title.set(self.mail.title())
         self.awn.icon.set(self.getIcon(self.mail.status()))
+
+        if self.hide and self.mail.status() == "read":
+            self.awn.icon.hide()
+
+        if self.awn.dialog.main:
+            self.awn.dialog.main.hide()
         self.drawMainDlog()
 
         #print "Applet Refreshed"
@@ -128,6 +143,7 @@ class Applet:
 
     def logout(self):
         self.awn.icon.set(self.getIcon("login"))
+        self.awn.settings["login-token"] = 0
         self.drawPWDDlog()
 
     def getIcon(self, name):
@@ -174,30 +190,42 @@ class Applet:
             layout.attach(label, 0, 1, 0, 1)
 
         btnlayout = gtk.Table()
-        btnlayout.resize(1, 4)
+        btnlayout.resize(1, 5)
         button1 = gtk.Button()
+        button1.set_relief(gtk.RELIEF_NONE) # Found it; that's a relief
         button1.connect("clicked", lambda x: self.mail.showWeb())
         button1.set_image(gtk.image_new_from_stock(gtk.STOCK_NETWORK, \
             gtk.ICON_SIZE_BUTTON))
         btnlayout.attach(button1, 0, 1, 0, 1)
 
         button2 = gtk.Button()
+        button2.set_relief(gtk.RELIEF_NONE)
         button2.connect("clicked", lambda x: self.mail.showDesk())
         button2.set_image(gtk.image_new_from_stock(gtk.STOCK_DISCONNECT, \
             gtk.ICON_SIZE_BUTTON))
         btnlayout.attach(button2, 1, 2, 0, 1)
 
         button3 = gtk.Button()
+        button3.set_relief(gtk.RELIEF_NONE)
         button3.connect("clicked", lambda x: self.refresh())
         button3.set_image(gtk.image_new_from_stock(gtk.STOCK_REFRESH, \
             gtk.ICON_SIZE_BUTTON))
         btnlayout.attach(button3, 2, 3, 0, 1)
 
         button4 = gtk.Button()
+        button4.set_relief(gtk.RELIEF_NONE)
         button4.connect("clicked", lambda x: self.awn.dialog.secondaryFocus())
         button4.set_image(gtk.image_new_from_stock(gtk.STOCK_PREFERENCES, \
             gtk.ICON_SIZE_BUTTON))
         btnlayout.attach(button4, 3, 4, 0, 1)
+
+        button5 = gtk.Button()
+        button5.set_relief(gtk.RELIEF_NONE)
+        button5.connect("clicked", lambda x: self.logout())
+        button5.set_image(gtk.image_new_from_stock(gtk.STOCK_STOP, \
+            gtk.ICON_SIZE_BUTTON))
+        btnlayout.attach(button5, 4, 5, 0, 1)
+
         layout.attach(btnlayout, 0, 1, 2, 3)
 
     def drawErrorDlog(self, msg=""):
@@ -230,15 +258,15 @@ class Applet:
         dlog.show_all()
     def drawPWDDlog(self, error=False):
         dlog = self.awn.dialog.new("main")
-        dlog.set_title(" Name and Password ")
+        dlog.set_title(" Log In ")
 
         table = gtk.Table()
         dlog.add(table)
 
         if error:
-            table.resize(5, 1)
+            table.resize(6, 1)
         else:
-            table.resize(4, 1)
+            table.resize(5, 1)
 
         # Username input box
         usrE = gtk.Entry()
@@ -262,19 +290,24 @@ class Applet:
         submit.connect("clicked", lambda x: \
             self.submitPWD(self.awn.keyring.new(usrE.get_text(), \
             pwdE.get_text(), {}, "network"), dlog))
+
+        button4 = gtk.Button(label="Choose Backend")
+        button4.connect("clicked", lambda x: self.awn.dialog.secondaryFocus())
+        table.attach(button4, 0, 2, 5, 6)
+
         dlog.show_all()
 
     def drawPrefDlog(self):
         dlog = self.awn.dialog.new("secondary", focus=False)
-        dlog.set_title(" Preferences ")
+        dlog.set_title(" Options ")
 
         table = gtk.Table()
-        table.resize(3, 1)
+        table.resize(4, 1)
         dlog.add(table)
 
         def showDlog(x=None, y=None):
             dlog.show_all()
-            print "Reshowing Dialog"
+            #print "Reshowing Dialog"
 
         theme = gtk.combo_box_new_text()
         theme.set_title("Theme")
@@ -294,10 +327,14 @@ class Applet:
         table.attach(backend, 0, 1, 1, 2)
         backend.set_focus_on_click(True)
 
-        save = gtk.Button(label = "Save", use_underline = False)
-        table.attach(save, 0, 1, 2, 3)
+        hidden = gtk.CheckButton(label="Hide Unless New")
+        hidden.set_active(self.hide)
+        table.attach(hidden, 0, 1, 2, 3)
 
-        def saveit(self, t, b, dlog):
+        save = gtk.Button(label = "Save", use_underline = False)
+        table.attach(save, 0, 1, 3, 4)
+
+        def saveit(self, t, b, h, dlog):
             if b != -1:
                 self.awn.settings["backend"] = b
                 b = getattr(Backends(), b)
@@ -308,10 +345,15 @@ class Applet:
             if b != self.back and b != -1:
                 self.back = b
                 self.init2(force=True)
+            if h != self.hide:
+                self.awn.settings["hide"] = h
+                self.hide = h
+                self.refresh()
             dlog.hide()
 
         save.connect("clicked", lambda x: saveit(self, \
-            theme.get_active_text(), backend.get_active_text(), dlog))
+            theme.get_active_text(), backend.get_active_text(), \
+            hidden.get_active(), dlog))
 
 class Backends:
     class GMail:

@@ -142,6 +142,12 @@ class Icon:
                 self.height, gtk.gdk.INTERP_BILINEAR)
         self.parent.set_temp_icon(icon)
 
+    def hide(self):
+        blank = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, True, 8, 1, 1)
+        blank.fill(0x00000000)
+        self.parent.set_temp_icon(blank)
+        self.parent.set_size_request(1, 1)
+
     def surfaceToPixbuf(self, surface):
         sio = StringIO()
         surface.write_to_png(sio)

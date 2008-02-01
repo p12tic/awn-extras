@@ -273,9 +273,7 @@ void init_config(Taskman * taskmanager)
     taskmanager->desktop_file=g_strdup("standalone-launcher.desktop");
     taskmanager->path=NULL;
     taskmanager->pos_gravity=1 & 1; 
-//    taskmanager->pos_offset= ABS(6) * (1 - taskmanager->pos_gravity*2);
-    taskmanager->pos_offset= ABS(0) * (1 - taskmanager->pos_gravity*2);
-    
+    taskmanager->pos_offset= ABS(0) * (1 - taskmanager->pos_gravity*2);    
 	taskmanager->pos_gravity=awn_config_client_get_int(taskmanager->config,AWN_CONFIG_CLIENT_DEFAULT_GROUP,CONFIG_POS_GRAV, NULL)&1;    
 	taskmanager->pos_offset =awn_config_client_get_int(taskmanager->config,AWN_CONFIG_CLIENT_DEFAULT_GROUP,CONFIG_POS_OFFSET, NULL)
 	                                            * (1 - taskmanager->pos_gravity*2);
@@ -299,8 +297,7 @@ gboolean launch_anonymous_launcher(gulong xid)
         g_warning("taskmand: failed to acquire lock\n");
     GSList *applet_list=awn_config_client_get_list(taskmanager->core_config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
                                             "applets_list", AWN_CONFIG_CLIENT_LIST_TYPE_STRING,NULL);
-    char * applet_location=g_strdup_printf("%s::-%lu+%ld",taskmanager->path,xid,(long)time(NULL));
-    
+    char * applet_location=g_strdup_printf("%s::-%lu+%ld",taskmanager->path,xid,(long)time(NULL));  
     GSList * insert_point=NULL;
     GSList * iter;
     if (taskmanager->positioner_uid)

@@ -146,9 +146,10 @@ class Configuration: GLib.Object
 	private             string              _desktop_file_editor;
     private             string              _whitelist_editor;
     private             int                 _highlight_method;
-    private             float              _highlight_saturate_value;
+    private             float               _highlight_saturate_value;
+    private             int                 _max_launch_effect_reps;
 
-	construct
+    construct
 	{
 		if (anon_mode)
 		{			
@@ -177,6 +178,7 @@ class Configuration: GLib.Object
         default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"highlight_method", _config_changed, this);
         default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"highlight_saturate_value", _config_changed, this);
         default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"whitelist_editor", _config_changed, this);
+        default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"max_launch_effect_reps", _config_changed, this);
 
         if (!anon_mode)
 		{
@@ -206,6 +208,7 @@ class Configuration: GLib.Object
 		_name_comparision_len=get_int("name_comparision_len",14);
         _highlight_method=get_int("highlight_method",2);
         _highlight_saturate_value=get_float("highlight_saturate_value",(float)2.0);
+        _max_launch_effect_reps=get_int("max_launch_effect_reps",4);
     }
 
 	private void read_config()
@@ -308,6 +311,12 @@ class Configuration: GLib.Object
         get { 
 			return _name_comparision_len;
     	}
+    }
+
+	public int max_launch_effect_reps{
+        get { 
+			return _max_launch_effect_reps;
+        }
     }
 }
 
@@ -419,6 +428,12 @@ public class DBusComm : GLib.Object
 			response=taskobj.Inform_Task_Ownership(uid,xid,request);
 			return response;
 		}
+
+		public string Return_XID(string uid, string xid)
+		{
+			taskobj.Return_XID(uid,xid);
+		}
+
 }
 
 class DiagButton: Gtk.Button
@@ -775,7 +790,7 @@ class BookKeeper : GLib.Object
     }
 
     //needle is a pointer because it may not be a Wnck.Window anymore... no harm done
-    private Wnck.Window  search_win_by_win(pointer needle)
+    public Wnck.Window  search_win_by_win(pointer needle)
     {
         if (needle==null)
             return null;
@@ -1012,9 +1027,11 @@ class LauncherApplet : AppletSimple
     protected   Gtk.Menu                right_menu;	
     protected   bool                    activated;
     protected   Listing                 listing;
+    protected   bool                    closing;
 
     construct 
     { 
+        closing=false;  //if this becomes true it means an irrevocable closing is in process.
         timer_count=0;
         blank_icon();
 		this.realize += _realized;        
@@ -1534,6 +1551,22 @@ class LauncherApplet : AppletSimple
 		}
 		return true;
     }
+
+    private bool _ungroup_all(Gtk.Widget widget,Gdk.EventButton event)
+    {
+        weak SList <Wnck.Window> wins=books.get_wins();
+        closing=true;
+        
+        foreach(Wnck.Window win in wins)
+        {
+            if (books.search_win_by_win(win) != null)
+            {
+                dbusconn.Return_XID(uid,win.get_xid().to_string());		
+            }
+        }
+        close();
+        return false;
+    }
     
     private bool _desktop_edit(Gtk.Widget widget,Gdk.EventButton event)
     {
@@ -1568,6 +1601,12 @@ class LauncherApplet : AppletSimple
     {
         Gtk.MenuItem   menu_item;
         right_menu=new Menu();
+
+        menu_item=new MenuItem.with_label ("Ungroup");        
+        right_menu.append(menu_item);
+        menu_item.show();
+        menu_item.button_press_event+=_ungroup_all;
+
         menu_item=new MenuItem.with_label ("Edit Launcher");        
         right_menu.append(menu_item);
         menu_item.show();
@@ -1577,6 +1616,8 @@ class LauncherApplet : AppletSimple
         right_menu.append(menu_item);
         menu_item.show();
         menu_item.button_press_event+=_whitelist_edit;
+
+        
     }
     
     private void right_click(Gdk.EventButton event)
@@ -1627,7 +1668,7 @@ class LauncherApplet : AppletSimple
 						
 		if ( launch_new && (desktopitem!=null) )
 		{
-            effect_start_ex(effects, Effect.LAUNCHING,null,null,10);
+            effect_start_ex(effects, Effect.LAUNCHING,null,null,config.max_launch_effect_reps);
 			pid=desktopitem.launch(documents);
 			if (pid>0)
 			{
@@ -1782,6 +1823,9 @@ class LauncherApplet : AppletSimple
 		ulong xid;
 		bool	accepted=false;		
 		xid=window.get_xid();
+
+        if (closing)
+            return;
 		
 		if ( (books.number()>0) && (config.task_mode==TaskMode.SINGLE) )
 		{

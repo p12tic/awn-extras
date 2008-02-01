@@ -297,7 +297,7 @@ gboolean launch_anonymous_launcher(gulong xid)
         g_warning("taskmand: failed to acquire lock\n");
     GSList *applet_list=awn_config_client_get_list(taskmanager->core_config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
                                             "applets_list", AWN_CONFIG_CLIENT_LIST_TYPE_STRING,NULL);
-    char * applet_location=g_strdup_printf("%s::-%lu+%ld",taskmanager->path,xid,(long)time(NULL));  
+    char * applet_location=g_strdup_printf("%s::-%lu_%ld",taskmanager->path,xid,(long)time(NULL));  
     GSList * insert_point=NULL;
     GSList * iter;
     if (taskmanager->positioner_uid)

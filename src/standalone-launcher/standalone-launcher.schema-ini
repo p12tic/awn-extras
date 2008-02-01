@@ -33,6 +33,11 @@ type = string
 default = gnome-desktop-item-edit
 description = desktop file editor.
 
+[DEFAULT/whitelist_editor]
+type = string
+default = gedit
+description = whitelist/blacklist file editor. A text editor
+
 [DEFAULT/name_comparision_len]
 type = int
 default = 14

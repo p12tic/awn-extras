@@ -430,7 +430,7 @@ class Backends:
             os.system('xdg-open http://mail.google.com/mail/')
 
         def showDesk(self):
-            os.system('evolution')
+            os.system('thunderbird')
 
 if __name__ == "__main__":
     applet = Applet()

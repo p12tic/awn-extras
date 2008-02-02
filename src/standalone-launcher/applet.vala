@@ -1054,7 +1054,8 @@ class LauncherApplet : AppletSimple
         if (hidden)
         {
             Pixbuf  hidden_icon;      
-            set_size_request( 1, 1);
+            //set_size_request( 1, 1);
+            draw_set_window_size(effects,1,1);
             hidden_icon=new Pixbuf( Colorspace.RGB,true, 8, 1,1);
             hidden_icon.fill( 0x00000000);
             set_icon(hidden_icon);

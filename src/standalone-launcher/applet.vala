@@ -1324,7 +1324,8 @@ class LauncherApplet : AppletSimple
                 }catch(GLib.Error ex){
                     stderr.printf("error writing file %s\n",desktopfile.Filename());
                 }
-                if (desktopitem.get_string("Icon")=="none")
+                if ( (desktopitem.get_string("Icon")=="none") ||
+                    (desktopitem.get_string("Icon")==null) )
                 {
                     desktopitem.set_icon(GLib.Path.get_basename(exec));			
                 }		

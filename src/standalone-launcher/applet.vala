@@ -523,12 +523,15 @@ class Listing : GLib.Object
     protected   string                      directory;
 
 
-    public string filename_whitelist_pre() {
-        
+    public string filename_whitelist_pre() 
+    {
 			return directory+listingfile+".whitelist.pre";
-    	
     }
 
+    public string filename_blacklist() 
+    {
+			return directory+listingfile+".blacklist";
+    }
 
     construct
     {
@@ -595,7 +598,6 @@ class Listing : GLib.Object
                 //stdout.printf("CHECKING %s = %s \n",pattern,value);
                 if ( Regex.match_simple(pattern, value) )
                 {
-                    stdout.printf("MATCHING\n");
                     return true;
                 }
             }
@@ -1505,7 +1507,7 @@ class LauncherApplet : AppletSimple
 		return true;
 	}
     
-    private void button_dialog()
+    private void button_dialog1()
     {
 		if (dialog.visible )
 		{
@@ -1516,7 +1518,7 @@ class LauncherApplet : AppletSimple
 			vbox.destroy();
 			vbox = new VButtonBox();
 			vbox.set_app_paintable(true);
-
+            dialog.set_app_paintable(false);
 			dialog.add(vbox);
 			foreach (Wnck.Window win in books.get_wins())
 			{
@@ -1525,6 +1527,40 @@ class LauncherApplet : AppletSimple
 			}
 			dialog.show_all();
 		}		
+    }
+
+    private void button_dialog2()
+    {
+		if (dialog.visible )
+		{
+			dialog.hide();
+		}
+		else
+		{
+			vbox.destroy();
+			vbox = new VButtonBox();
+			vbox.set_app_paintable(true);
+			dialog.set_app_paintable(true);
+			dialog.add(vbox);
+			foreach (Wnck.Window win in books.get_wins())
+			{
+				DiagButton  button = new DiagButton(win,dialog,height);//win.get_name() 				
+                button.set_app_paintable(true);
+				vbox.add(button);
+			}
+			dialog.show_all();
+		}		
+    }
+
+    private void button_dialog(int method)
+    {
+        switch(method)
+        {
+            case    1:
+                button_dialog1();
+            case    2:
+                button_dialog2();
+        }
     }
     
     private bool single_left_click()
@@ -1551,7 +1587,7 @@ class LauncherApplet : AppletSimple
 		}		
 		else
 		{
-			button_dialog();
+			button_dialog(2);
 		}
 		return true;
     }
@@ -1582,22 +1618,32 @@ class LauncherApplet : AppletSimple
         return false;
     }
 
-    private bool _whitelist_edit(Gtk.Widget widget,Gdk.EventButton event)
+    private void list_edit(string filename)
     {
-        if (!FileUtils.test(listing.filename_whitelist_pre(),FileTest.EXISTS) )
+        if (!FileUtils.test(filename,FileTest.EXISTS) )
         {
             try{
-                FileUtils.set_contents(listing.filename_whitelist_pre(),
-                "#whitelist\n#begin with 'TITLE:' or 'EXEC:' followed by regex\n");
+                FileUtils.set_contents(filename,"#\n#begin with 'TITLE:' or 'EXEC:' followed by regex\n#\n");
             }catch(GLib.FileError ex ){
-                stderr.printf("failed creating %s\n",listing.filename_whitelist_pre());
+                stderr.printf("failed creating %s\n",filename);
             }
         }
         try{
-            Process.spawn_command_line_async(config.whitelist_editor+" "+listing.filename_whitelist_pre() );
+            Process.spawn_command_line_async(config.whitelist_editor+" "+filename );
         }catch ( SpawnError ex ) {
-            stderr.printf("Failed to spawn '%s' \n",config.whitelist_editor+" "+listing.filename_whitelist_pre());
+            stderr.printf("Failed to spawn '%s' \n",config.whitelist_editor+" "+filename);
         }
+    }
+
+    private bool _whitelist_edit(Gtk.Widget widget,Gdk.EventButton event)
+    {
+        list_edit(listing.filename_whitelist_pre());
+        return false;
+    }
+
+    private bool _blacklist_edit(Gtk.Widget widget,Gdk.EventButton event)
+    {
+        list_edit(listing.filename_blacklist());
         return false;
     }
 
@@ -1621,6 +1667,10 @@ class LauncherApplet : AppletSimple
         menu_item.show();
         menu_item.button_press_event+=_whitelist_edit;
 
+        menu_item=new MenuItem.with_label ("Edit Launcher Blacklist");
+        right_menu.append(menu_item);
+        menu_item.show();
+        menu_item.button_press_event+=_blacklist_edit;
         
     }
     

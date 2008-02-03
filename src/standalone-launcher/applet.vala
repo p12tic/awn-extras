@@ -561,7 +561,7 @@ class Listing : GLib.Object
         try{
             FileUtils.get_contents (file_name, out file_data);
         }catch (FileError ex ){
-            stdout.printf("no whitelist: '%s'\n",directory+listingfile+".whitelist.pre");
+//            stdout.printf("no whitelist: '%s'\n",directory+listingfile+".whitelist.pre");
             file_data="";
         }
         file_strings=file_data.split("\n");
@@ -577,7 +577,7 @@ class Listing : GLib.Object
                 entry=entry.substring(5,entry.len() );
                 exec_list.prepend(entry);
             }
-            stdout.printf("data = %s\n",entry);
+            //stdout.printf("data = %s\n",entry);
         }
     }
 
@@ -1301,9 +1301,13 @@ class LauncherApplet : AppletSimple
         }
 //        desktopitem = new DesktopItem(desktopfile.Filename() );        
 		desktopitem.set_name(temp);
+        if ( desktopitem.get_string("Icon") == null)
+        {
+            desktopitem.set_icon("stock_stop");
+        }
 		if (! desktopitem.exists() )		
 		{
-			desktopitem.set_icon("none");
+			desktopitem.set_icon("stock_stop");
 			desktopitem.set_item_type("Application");
 			desktopitem.set_exec("false");			
 		}

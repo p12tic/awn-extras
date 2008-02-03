@@ -1770,7 +1770,10 @@ class LauncherApplet : AppletSimple
         }
         else
         {
-            new_icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
+            if ( (desktopitem.get_string("Icon")!=null) && (desktopitem.get_string("Icon")!="none") )
+            {
+                new_icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
+            }
         }
         if (new_icon==null)
         {
@@ -1949,10 +1952,13 @@ class LauncherApplet : AppletSimple
     		{
     			if (config.override_app_icon )
     			{
-    				if (desktopitem.get_icon(theme) != null)
-    				{				
-    					icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
-    				}			
+                    if ( (desktopitem.get_string("Icon")!=null) && (desktopitem.get_string("Icon")!="none") )
+                    {
+                        if (desktopitem.get_icon(theme) != null)
+                        {				
+                            icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
+                        }			
+                    }
     			}
     			else if (!prev.get_icon_is_fallback() )
     			{
@@ -1970,11 +1976,19 @@ class LauncherApplet : AppletSimple
                 title_string=active.get_name();
                 if (config.override_app_icon )
     			{
-    				if (desktopitem.get_icon(theme) != null)
-    				{
-    					icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
-    				}
-    				else if (!active.get_icon_is_fallback() )
+                    if ( (desktopitem.get_string("Icon")!=null) && (desktopitem.get_string("Icon")!="none") )
+                    {
+                        if (desktopitem.get_icon(theme) != null)
+                        {
+                            icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
+                        }
+                        else if (!active.get_icon_is_fallback() )
+                        {
+                            icon=active.get_icon();
+                            scale_icon=true;
+                        }
+                    }
+                    else if (!active.get_icon_is_fallback() )
     				{
     					icon=active.get_icon();
                         scale_icon=true;

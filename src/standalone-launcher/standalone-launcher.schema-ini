@@ -58,5 +58,9 @@ type = float
 default = 1.5
 description = less < 1 moves towared grayscale.  >1 brighter colours.
 
+[DEFAULT/discrete/multi_launcher]
+type = bool
+default = false
+description = Multi launcher mode
 
 ; vim: set ft=dosini :

@@ -148,6 +148,7 @@ class Configuration: GLib.Object
     private             int                 _highlight_method;
     private             float               _highlight_saturate_value;
     private             int                 _max_launch_effect_reps;
+    private             bool                _multi_launcher;
 
     construct
 	{
@@ -209,6 +210,7 @@ class Configuration: GLib.Object
         _highlight_method=get_int("highlight_method",2);
         _highlight_saturate_value=get_float("highlight_saturate_value",(float)2.0);
         _max_launch_effect_reps=get_int("max_launch_effect_reps",4);
+        _multi_launcher=get_bool(subdir+"multi_launcher",false);
     }
 
 	private void read_config()
@@ -267,6 +269,12 @@ class Configuration: GLib.Object
     public bool override_app_icon{
         get { 
 			return _override_app_icon;
+    	}
+    }
+
+    public bool multi_launcher{
+        get { 
+			return _multi_launcher;
     	}
     }
 

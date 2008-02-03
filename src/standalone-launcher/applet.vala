@@ -592,7 +592,7 @@ class Listing : GLib.Object
         {
             foreach (string pattern in list)
             {
-                stdout.printf("CHECKING %s = %s \n",pattern,value);
+                //stdout.printf("CHECKING %s = %s \n",pattern,value);
                 if ( Regex.match_simple(pattern, value) )
                 {
                     stdout.printf("MATCHING\n");
@@ -1301,13 +1301,11 @@ class LauncherApplet : AppletSimple
         }
 //        desktopitem = new DesktopItem(desktopfile.Filename() );        
 		desktopitem.set_name(temp);
-        if ( desktopitem.get_string("Icon") == null)
-        {
-            desktopitem.set_icon("stock_stop");
-        }
+    
+
 		if (! desktopitem.exists() )		
 		{
-			desktopitem.set_icon("stock_stop");
+			desktopitem.set_icon("none");
 			desktopitem.set_item_type("Application");
 			desktopitem.set_exec("false");			
 		}
@@ -1326,7 +1324,7 @@ class LauncherApplet : AppletSimple
                 }catch(GLib.Error ex){
                     stderr.printf("error writing file %s\n",desktopfile.Filename());
                 }
-                if (desktopitem.get_icon(theme)=="none")
+                if (desktopitem.get_string("Icon")=="none")
                 {
                     desktopitem.set_icon(GLib.Path.get_basename(exec));			
                 }		
@@ -1757,9 +1755,12 @@ class LauncherApplet : AppletSimple
         Pixbuf new_icon;
         if (config.override_app_icon )
         {
-            if (desktopitem.get_icon(theme) != null)
+            if ( (desktopitem.get_string("Icon")!=null) && (desktopitem.get_string("Icon")!="none") )
             {
-                new_icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME 
+                if (desktopitem.get_icon(theme) != null)
+                {
+                    new_icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME 
+                }
             }
         }
         else if (! win.get_icon_is_fallback() ||  (desktopitem.get_icon(theme) == null) )

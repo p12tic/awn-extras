@@ -25,11 +25,10 @@
 #endif
 
 #include <glib.h>
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 #include <string.h>
-#include <libgnome/gnome-i18n.h>
-#include <libgnomevfs/gnome-vfs.h>
 
 #include <libawn/awn-applet.h>
 #include <libawn/awn-applet-simple.h>

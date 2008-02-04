@@ -28,10 +28,8 @@
 
 #include "aff-utils.h"
 
-#include <libgnome/gnome-i18n.h>
-#include <libgnomevfs/gnome-vfs-utils.h>
-#include <libgnome/gnome-desktop-item.h>
-#include <libgnomevfs/gnome-vfs.h>
+#include <libawn/awn-desktop-item.h>
+#include <libawn/awn-vfs.h>
 #include <string.h>
 
 struct AffSearchEngineActionsDetails {
@@ -209,55 +207,58 @@ _add_app (AffSearchEngineActions *engine, const char *uri)
 	AffApplication *app;
 	app = g_new0 (AffApplication, 1);
 	const gchar *type;
-	GnomeDesktopItem *item= NULL;
-	
-	item = gnome_desktop_item_new_from_file (uri, GNOME_DESKTOP_ITEM_LOAD_ONLY_IF_EXISTS, NULL);
-        
-        if (item == NULL) {
-        	g_free (app);
-        	return;
-        }
-        app->icon = aff_utils_get_app_icon (gnome_desktop_item_get_string (item, GNOME_DESKTOP_ITEM_ICON));
-	app->name = g_strdup (gnome_desktop_item_get_localestring (item, GNOME_DESKTOP_ITEM_NAME));
-	app->desc = g_strdup (gnome_desktop_item_get_localestring (item, GNOME_DESKTOP_ITEM_COMMENT));
-	app->pattern = g_strdup (gnome_desktop_item_get_localestring (item, GNOME_DESKTOP_ITEM_CATEGORIES));;
+	AwnDesktopItem *item = awn_desktop_item_new ((gchar*)uri);
+
+	if (!item) {
+		g_free (app);
+		return;
+	}
+	app->icon = aff_utils_get_app_icon (awn_desktop_item_get_icon (item, gtk_icon_theme_get_default ()));
+	app->name = g_strdup (awn_desktop_item_get_name (item));
+	app->desc = g_strdup (awn_desktop_item_get_localestring (item, "Comment"));
+	app->pattern = g_strdup (awn_desktop_item_get_localestring (item, "Categories"));;
 	strrep(app->pattern, '_', ' ');
-	app->exec = g_strdup (gnome_desktop_item_get_string (item, GNOME_DESKTOP_ITEM_EXEC));
+	app->exec = g_strdup (awn_desktop_item_get_exec (item));
 	
-	type = gnome_desktop_item_get_localestring (item, GNOME_DESKTOP_ITEM_TYPE);
+	type = awn_desktop_item_get_item_type (item);
 	if (strcmp (type, "match") == 0)
 		app->type = AFF_ACTION_MATCH;
 	else
 		app->type = AFF_ACTION_SCAN;
 	
-	if (item)
-		gnome_desktop_item_unref (item);
+	if (item) {
+		awn_desktop_item_free (item);
+	}
 	/* app application to the hash */
 	g_hash_table_insert (engine->details->actions, app->name, app);
 }
 
 static void 
-watch_callback (GnomeVFSMonitorHandle *handle,const gchar *dir,
-					      const gchar *file,
-					      GnomeVFSMonitorEventType type,
-					      AffSearchEngineActions *engine)
+watch_callback (AwnVfsMonitor *monitor, const gchar *dir,
+                const gchar *file,
+                AwnVfsMonitorEvent event,
+                AffSearchEngineActions *engine)
 {
-        if (strstr(file, ".desktop") == NULL)
-                return;
-        GString *uri;
-        uri = g_string_new(file);
-        g_string_erase(uri, 0, 7);
-        
-        if ( type == GNOME_VFS_MONITOR_EVENT_CREATED) {
-                g_print("Created : %s\n", uri->str);
-                _add_app(engine, uri->str);        
-        }
-        else if ( type == GNOME_VFS_MONITOR_EVENT_DELETED)
-                g_print("Deleted : %s\n", uri->str);
-        else
-                ;
-                
-        g_string_free(uri, TRUE);
+	if (strstr(file, ".desktop") == NULL) {
+		return;
+	}
+	GString *uri;
+	uri = g_string_new(file);
+	g_string_erase(uri, 0, 7);
+
+	switch (event) {
+		case AWN_VFS_MONITOR_EVENT_CREATED:
+			g_print("Created : %s\n", uri->str);
+			_add_app(engine, uri->str);
+			break;
+		case AWN_VFS_MONITOR_EVENT_DELETED:
+			g_print("Deleted : %s\n", uri->str);
+			break;
+		default:
+			break;
+	}
+
+	g_string_free(uri, TRUE);
 }
 
 static void
@@ -285,14 +286,12 @@ _load_actions (const gchar *directory, AffSearchEngineActions *engine)
 	}
 	g_dir_close(dir);
 
-        GnomeVFSMonitorHandle *handle;
-        GnomeVFSResult result;
-        
-        result = gnome_vfs_monitor_add (&handle, directory, GNOME_VFS_MONITOR_DIRECTORY, 
-        				(GnomeVFSMonitorCallback)watch_callback, 
-        				(gpointer)engine);
-        if(! result == GNOME_VFS_OK)
-                g_print("VFS ERROR : %s", gnome_vfs_result_to_string (result));	
+	AwnVfsMonitor *monitor = awn_vfs_monitor_add ((gchar*)directory, AWN_VFS_MONITOR_DIRECTORY,
+	                                              (AwnVfsMonitorFunc)watch_callback,
+	                                              (gpointer)engine);
+	if (!monitor) {
+		g_warning ("VFS ERROR");
+	}
 }
 
 AffSearchEngine *
@@ -303,26 +302,21 @@ aff_search_engine_actions_new (void)
 	engine = g_object_new (AFF_TYPE_SEARCH_ENGINE_ACTIONS, NULL);
 
 	/* Load application directories */
-        gchar *dir = NULL;
+	gchar *dir = NULL;
 
-        char *home;
-        home = getenv("HOME");
-        if (home != NULL) {
-		dir = g_strdup_printf("%s/.gnome2/affinity/actions", home);
+	dir = g_strdup_printf("%s/affinity/actions", g_get_user_config_dir ());
+
+	/* Add user defined applications path to service directory list */
+	if (dir) {
+		engine->details->dirs = g_list_append (engine->details->dirs, dir);
 	}
-	
-              
-        /* Add user defined applications path to service directory list */
-        if (dir != NULL) {
-	        engine->details->dirs = g_list_append (engine->details->dirs, dir);
-        }
-                      
-        /* Add system defined applications path to service directory list */
-        dir = g_strdup (ACTIONDIR);
+
+	/* Add system defined applications path to service directory list */
+	dir = g_strdup (ACTIONDIR);
 	engine->details->dirs = g_list_append (engine->details->dirs, dir);
 	
 	engine->details->actions = g_hash_table_new (g_str_hash, g_str_equal);
-        
+
 	g_list_foreach (engine->details->dirs, (GFunc)_load_actions, (gpointer)engine);
 	
 	return AFF_SEARCH_ENGINE (engine);
@@ -340,5 +334,4 @@ finalize (GObject *object)
 	if (G_OBJECT_CLASS(parent_class)->finalize)
 		G_OBJECT_CLASS(parent_class)->finalize(object);
 }
-
 

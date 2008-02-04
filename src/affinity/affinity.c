@@ -28,8 +28,6 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 #include <string.h>
-#include <libgnome/gnome-i18n.h>
-#include <libgnomevfs/gnome-vfs.h>
 
 #include <libawn/awn-applet-dialog.h>
 #include <libawn/awn-applet.h>
@@ -316,10 +314,8 @@ affinity_app_show (AffinityApp *app)
     gint ax, ay, aw, ah;
     gint x, y, w, h;
 
-    GConfClient *client = gconf_client_get_default ();
-    gint offset = gconf_client_get_int (client,
-                              "/apps/avant-window-navigator/bar/icon_offset",
-                          NULL);
+    AwnConfigClient *client = awn_config_client_new ();
+    gint offset = awn_config_client_get_int (client, "bar", "icon_offset", NULL);
 
     gdk_window_get_origin (GTK_WIDGET (app->applet)->window, &ax, &ay);
     gtk_widget_get_size_request (GTK_WIDGET (app->applet), &aw, &ah);

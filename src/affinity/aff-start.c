@@ -24,12 +24,13 @@
 #include <config.h>
 #endif
 
-#include <gtk/gtk.h>
-#include <libgnome/gnome-i18n.h>
-#include <libgnomevfs/gnome-vfs.h>
-#include <libgnome/gnome-desktop-item.h>
 #include <stdio.h>
 #include <string.h>
+
+#include <gtk/gtk.h>
+#include <glib/gi18n.h>
+#include <libawn/awn-desktop-item.h>
+#include <libawn/awn-vfs.h>
 
 #include "aff-start.h"
 
@@ -84,13 +85,12 @@ refresh_favs (AffStart *start)
 			continue;
 		const char *uri = (char*)l->data;
 		
-		GnomeDesktopItem *item= NULL;
-		item = gnome_desktop_item_new_from_file (uri, GNOME_DESKTOP_ITEM_LOAD_ONLY_IF_EXISTS, NULL);
+		AwnDesktopItem *item = awn_desktop_item_new ((gchar*)uri);
 		if (item == NULL)
 			continue;
 		
-		const char *name = gnome_desktop_item_get_string (item, GNOME_DESKTOP_ITEM_ICON);
-		const char *icon_name = gnome_desktop_item_get_string (item, GNOME_DESKTOP_ITEM_ICON);
+		const char *name = awn_desktop_item_get_name (item);
+		const char *icon_name = awn_desktop_item_get_icon (item, gtk_icon_theme_get_default ());
 		GdkPixbuf *icon = aff_utils_get_app_icon_sized (icon_name, 48, 48);
 		
 		GtkWidget *image = gtk_image_new_from_pixbuf (icon);
@@ -117,17 +117,18 @@ refresh_favs (AffStart *start)
 			row++;						                    	
 		
 		i++;
-		if (item)
-			gnome_desktop_item_unref (item);
+		if (item) {
+			awn_desktop_item_free (item);
+        }
 	}					
 }
 
 static void
-_sync_gconf (AffStart *start)
+_sync_config (AffStart *start)
 {
 	AffStartPrivate *priv;	
 	priv = AFF_START_GET_PRIVATE (start);
-	GConfClient *client = aff_settings_get_client();
+	AwnConfigClient *client = aff_settings_get_client ();
 	
 	GList *l = NULL;
 	int i = 0;
@@ -146,7 +147,7 @@ _sync_gconf (AffStart *start)
 		g_free (temp);
 		i++;
 	}
-	gconf_client_set_string (client, "/apps/affinity/favourites", string, NULL);		
+	awn_config_client_set_string (client, AWN_CONFIG_CLIENT_DEFAULT_GROUP, "favourites", string, NULL);		
 	
 	g_free (string);
 	
@@ -179,7 +180,7 @@ aff_start_app_launched (AffStart *start, const char *uri)
 	
 	priv->favourites = g_list_prepend (priv->favourites, uri);
 	
-	_sync_gconf (start);
+	_sync_config (start);
 
 	col = row = 0;
 	refresh_favs (start);
@@ -199,7 +200,9 @@ _add_item (GtkRecentInfo *info, AffStart *start)
 	priv = AFF_START_GET_PRIVATE (start);
 	
 	mime = (gchar *)gtk_recent_info_get_mime_type (info);
-	local_uri = gnome_vfs_get_local_path_from_uri (gtk_recent_info_get_uri (info));
+    GFile *recent_file = g_file_new_for_uri (gtk_recent_info_get_uri (info));
+	local_uri = g_file_get_path (recent_file);
+    g_free (recent_file);
 	
 	gchar *res = strstr (mime, "image");
 	if (res && local_uri) {

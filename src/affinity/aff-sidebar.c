@@ -25,8 +25,8 @@
 #endif
 
 #include <gtk/gtk.h>
-#include <libgnome/gnome-i18n.h>
-#include <libgnomevfs/gnome-vfs.h>
+#include <glib/gi18n.h>
+#include <libawn/awn-vfs.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -50,7 +50,13 @@ G_DEFINE_TYPE (AffSidebar, aff_sidebar, GTK_TYPE_VBOX);
 struct _AffSidebarPrivate
 {
 	AffinityApp *app;
+#ifdef LIBAWN_USE_GNOME
 	GnomeVFSVolumeMonitor* vfs_monitor;
+#elif defined(LIBAWN_USE_XFCE)
+	ThunarVfsVolumeManager *vfs_monitor;
+#else
+	GVolumeMonitor *vfs_monitor;
+#endif
 
         GtkWidget *places;
         GtkWidget *places_box;
@@ -73,14 +79,14 @@ enum {
 };
 
 static char *icon_names[] = {
-	"gnome-fs-desktop",  
-	"gnome-fs-home",
-	"gnome-fs-directory",
+	"user-desktop",
+	"user-home",
+	"folder",
 	"drive-harddisk",
-	"gnome-fs-network",
+	"network-workgroup",
 	"computer",
 	"system-installer",
-	"gnome-control-center",
+	"preferences-desktop",
 	"system-lock-screen",
 	"system-log-out"
 };
@@ -235,27 +241,38 @@ read_gtk_shortcuts(AffinityApp *app, GdkPixbuf **pixbufs, GtkWidget *box)
         
         int count = 0;
         
-        if (f != NULL) {
-                
-                while (fgets(line, 1024, f) != NULL) {
-                        count++;
-                        GString *name = NULL;
-        		GString *uri = NULL;
-                        uri = g_string_new(line);
-                        make_uri(uri);
-                        
-                        char *format = gnome_vfs_format_uri_for_display (uri->str);
-                        name = g_string_new(format);
-                        make_name(name);
-                        g_free (format);
-                        
-                        strip_x(name->str);
-                        strip_x(uri->str);
-                        add_bookmark(pixbufs, name->str, uri->str, count);
-        	        g_string_free(uri, TRUE);
-		        g_string_free(name, TRUE);                        
-                }
-                fclose(f);
+		if (f != NULL) {
+			while (fgets(line, 1024, f) != NULL) {
+				count++;
+				GString *name = NULL;
+				GString *uri = NULL;
+				gchar *format;
+
+				uri = g_string_new (line);
+				make_uri (uri);
+
+#ifdef LIBAWN_USE_GNOME
+				format = gnome_vfs_format_uri_for_display (uri->str);
+#elif defined(LIBAWN_USE_XFCE)
+				ThunarVfsPath *path = thunar_vfs_path_new (uri->str, NULL);
+				format = thunar_vfs_path_dup_uri (path);
+				thunar_vfs_path_unref (path);
+#else
+				GFile *file = g_file_new_for_uri (uri->str);
+				format = g_file_get_path (file);
+				g_free (file);
+#endif
+				name = g_string_new(format);
+				make_name(name);
+				g_free (format);
+
+				strip_x(name->str);
+				strip_x(uri->str);
+				add_bookmark(pixbufs, name->str, uri->str, count);
+				g_string_free(uri, TRUE);
+				g_string_free(name, TRUE);
+			}
+			fclose(f);
 
         }
         
@@ -268,12 +285,11 @@ read_gtk_shortcuts(AffinityApp *app, GdkPixbuf **pixbufs, GtkWidget *box)
 }
 
 static void 
-watch_callback (GnomeVFSMonitorHandle *handle, const gchar *dir,const gchar *file, 
-					       GnomeVFSMonitorEventType type,AffinityApp *app)
+watch_callback (AwnVfsMonitor *monitor, const gchar *dir, const gchar *file, 
+                AwnVfsMonitorEvent event, AffinityApp *app)
 {
         menu = NULL;
         read_gtk_shortcuts(app, pixbufs, NULL);
-        
 }
 
 static void
@@ -333,31 +349,80 @@ init_vfs (AffSidebar *sidebar, GtkWidget *vbox)
 {
 	AffSidebarPrivate *priv;
 	priv = AFF_SIDEBAR_GET_PRIVATE (sidebar);
-	
-	GList *connected = gnome_vfs_volume_monitor_get_connected_drives (priv->vfs_monitor);
+
+	GList *connected;
 	GList *l;
-	
+
+#ifdef LIBAWN_USE_GNOME
+	connected = gnome_vfs_volume_monitor_get_connected_drives (priv->vfs_monitor);
+#elif defined(LIBAWN_USE_XFCE)
+	connected = thunar_vfs_volume_manager_get_volumes (priv->vfs_monitor);
+#else
+	connected = g_volume_monitor_get_connected_drives (priv->vfs_monitor);
+#endif
 	for (l = connected; l != NULL; l = l->next) {
+#ifdef LIBAWN_USE_GNOME
 		GnomeVFSDrive *drive = (GnomeVFSDrive*)l->data;
+#elif defined (LIBAWN_USE_XFCE)
+		ThunarVfsVolume *vol = (ThunarVfsVolume*)l->data;
+#else
+		GDrive *drive = (GDrive*)(l->data);
+#endif
+#ifndef LIBAWN_USE_XFCE
 		GList *volumes = NULL;
 		GList *v = NULL;
-		
+
 		int res = 0;
-				
+
+#ifdef LIBAWN_USE_GNOME
 		volumes = gnome_vfs_drive_get_mounted_volumes (drive);
+#else
+		volumes = g_drive_get_volumes (drive);
+#endif
 
 		for (v = volumes; v != NULL; v = v->next) {
+#ifdef LIBAWN_USE_GNOME
 			GnomeVFSVolume *vol = (GnomeVFSVolume*)v->data;
+#else
+			GVolume *vol = (GVolume*)(v->data);
+#endif
+#endif
 			GdkPixbuf *icon = NULL;
 			char *icon_name = NULL;
 			char *name = NULL;
 			char *uri = NULL;
 			char *exec = NULL;
-			GtkWidget *button, *image;		
-		
+			GtkWidget *button, *image;
+
+#ifdef LIBAWN_USE_GNOME
 			name = gnome_vfs_volume_get_display_name (vol);
 			uri = gnome_vfs_volume_get_activation_uri (vol);
 			icon_name = gnome_vfs_volume_get_icon (vol);
+#elif defined(LIBAWN_USE_XFCE)
+			name = (gchar*)thunar_vfs_volume_get_name (vol);
+			ThunarVfsPath *path = thunar_vfs_volume_get_mount_point (vol);
+			uri = thunar_vfs_path_dup_uri (path);
+			thunar_vfs_path_unref (path);
+			icon_name = thunar_vfs_volume_lookup_icon_name (vol, gtk_icon_theme_get_default ());
+#else
+			GMount *mount = g_volume_get_mount (vol);
+			if (mount) {
+				name = g_mount_get_name (mount);
+				GFile *file = g_mount_get_root (mount);
+				uri = g_file_get_uri (file);
+				g_free (file);
+				GIcon *icon_obj = g_mount_get_icon (mount);
+				if (G_IS_FILE_ICON (icon_obj)) {
+					GFile *icon_file = g_file_icon_get_file ((GFileIcon*)icon_obj);
+					icon_name = g_file_get_path (icon_file);
+					g_free (icon_file);
+				} else if (G_IS_THEMED_ICON (icon_obj)) {
+					const char * const * icon_names = g_themed_icon_get_names ((GThemedIcon*)icon_obj);
+					icon_name = g_strdup (icon_names[0]);
+				}
+				g_free (icon_obj);
+				g_free (mount);
+#endif
 			icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default(),
                                          		icon_name,
                                          		ICON_SIZE,
@@ -375,13 +440,20 @@ init_vfs (AffSidebar *sidebar, GtkWidget *vbox)
 			g_free (uri);
 			g_free (exec);
 			g_free (icon_name);
-			
+
+#ifndef LIBAWN_USE_XFCE
+#ifdef LIBAWN_USE_GNOME
 			gnome_vfs_volume_unref (vol);
+#else
+			}
+			g_free (vol);
+#endif
 			res ++;
 		}
-		
+#endif
+
 		//gnome_vfs_drive_volume_list_free (volumes);
-/*		
+/*
 		if (!res) {
 			GdkPixbuf *icon = NULL;
 			char *icon_name = NULL;
@@ -411,13 +483,21 @@ init_vfs (AffSidebar *sidebar, GtkWidget *vbox)
 			g_free (uri);
 			g_free (exec);
 			g_free (icon_name);
-			
+
 		}
 */
+#ifndef LIBAWN_USE_XFCE
+#ifdef LIBAWN_USE_GNOME
 		gnome_vfs_drive_unref(drive);
+#else
+		g_free (drive);
+#endif
+#endif
 	}
+#ifndef LIBAWN_USE_XFCE
 	g_list_free (connected);
-	
+#endif
+
 	gtk_widget_show_all (vbox);
 }
 
@@ -430,27 +510,47 @@ _reload_vfs (AffSidebar *sidebar)
 	init_vfs (sidebar, priv->vfs_box);
 	
 	return FALSE;
-}  
+}
 
-static void        
+static void
+#ifdef LIBAWN_USE_GNOME
 aff_sidebar_volume_mounted (GnomeVFSVolumeMonitor *volume_monitor,
                             GnomeVFSVolume        *volume,
                             AffSidebar            *sidebar)
+#elif defined(LIBAWN_USE_XFCE)
+aff_sidebar_volume_mounted (ThunarVfsVolumeManager *volume_monitor,
+                            ThunarVfsVolume        *volume,
+                            AffSidebar             *sidebar)
+#else
+aff_sidebar_volume_mounted (GVolumeMonitor *volume_monitor,
+                            GMount         *mount,
+                            AffSidebar     *sidebar)
+#endif
 {
 	AffSidebarPrivate *priv;
 	priv = AFF_SIDEBAR_GET_PRIVATE (sidebar);
-	
+
 	gtk_widget_destroy (priv->vfs_box);
 	priv->vfs_box = gtk_vbox_new (FALSE, 0);
 	g_timeout_add (1000, (GSourceFunc)_reload_vfs, (gpointer)sidebar);
-	
+
 	gtk_box_pack_start (GTK_BOX (priv->places_box), priv->vfs_box, FALSE, FALSE, 0); 
 }
 
-static void        
+static void
+#ifdef LIBAWN_USE_GNOME
 aff_sidebar_volume_unmounted (GnomeVFSVolumeMonitor *volume_monitor,
-                            GnomeVFSVolume        *volume,
-                            AffSidebar            *sidebar)
+                              GnomeVFSVolume        *volume,
+                              AffSidebar            *sidebar)
+#elif defined(LIBAWN_USE_XFCE)
+aff_sidebar_volume_unmounted (ThunarVfsVolumeManager *volume_monitor,
+                              ThunarVfsVolume        *volume,
+                              AffSidebar             *sidebar)
+#else
+aff_sidebar_volume_unmounted (GVolumeMonitor *volume_monitor,
+                              GMount         *mount,
+                              AffSidebar     *sidebar)
+#endif
 {
 	AffSidebarPrivate *priv;
 	priv = AFF_SIDEBAR_GET_PRIVATE (sidebar);
@@ -564,14 +664,32 @@ aff_sidebar_new(AffinityApp *app)
         /* VFS */
         box = gtk_vbox_new(FALSE, 0 );
         priv->vfs_box = box;
+#ifdef LIBAWN_USE_GNOME
         priv->vfs_monitor = gnome_vfs_get_volume_monitor ();
+#elif defined(LIBAWN_USE_XFCE)
+        priv->vfs_monitor = thunar_vfs_volume_manager_get_default ();
+#else
+        priv->vfs_monitor = g_volume_monitor_get ();
+#endif
         init_vfs (AFF_SIDEBAR (sidebar), priv->vfs_box);
-        
+
+#ifdef LIBAWN_USE_GNOME
         g_signal_connect (G_OBJECT (priv->vfs_monitor), "volume-mounted",
-        		  G_CALLBACK (aff_sidebar_volume_mounted), (gpointer)sidebar);
+                          G_CALLBACK (aff_sidebar_volume_mounted), (gpointer)sidebar);
         g_signal_connect (G_OBJECT (priv->vfs_monitor), "volume-unmounted",
-        		  G_CALLBACK (aff_sidebar_volume_unmounted), (gpointer)sidebar);
-        
+                          G_CALLBACK (aff_sidebar_volume_unmounted), (gpointer)sidebar);
+#elif defined(LIBAWN_USE_XFCE)
+        g_signal_connect (G_OBJECT (priv->vfs_monitor), "volume-mounted",
+                          G_CALLBACK (aff_sidebar_volume_mounted), (gpointer)sidebar);
+        g_signal_connect (G_OBJECT (priv->vfs_monitor), "volume-unmounted",
+                          G_CALLBACK (aff_sidebar_volume_unmounted), (gpointer)sidebar);
+#else
+        g_signal_connect (G_OBJECT (priv->vfs_monitor), "mount_added",
+                          G_CALLBACK (aff_sidebar_volume_mounted), (gpointer)sidebar);
+        g_signal_connect (G_OBJECT (priv->vfs_monitor), "mount_removed",
+                          G_CALLBACK (aff_sidebar_volume_unmounted), (gpointer)sidebar);
+#endif
+
 	/* System */
 	frame = gtk_frame_new(" ");
         priv->system = frame;
@@ -599,22 +717,23 @@ aff_sidebar_new(AffinityApp *app)
         /* Bookmarks */
 	read_gtk_shortcuts(app, pixbufs, priv->places_box);
 
-        GnomeVFSMonitorHandle *handle;
-        GnomeVFSResult result;
-        GString *file; /* Bookmarks file */
-        file = g_string_new (g_get_home_dir());
-        g_string_append(file, "/.gtk-bookmarks");
-        result = gnome_vfs_monitor_add (&handle, file->str , GNOME_VFS_MONITOR_FILE, 
-        				(GnomeVFSMonitorCallback)watch_callback, (gpointer)app);
-        if(! result == GNOME_VFS_OK)
-                g_print("VFS ERROR : %s", gnome_vfs_result_to_string (result));
-        
-        g_string_free(file, TRUE);	
-        
-        gtk_box_pack_start (GTK_BOX (sidebar), priv->places, TRUE, TRUE, 0);
-        gtk_box_pack_start (GTK_BOX (priv->places_box), priv->vfs_box, TRUE, TRUE, 0);
-        gtk_box_pack_end (GTK_BOX (sidebar), priv->system, FALSE, TRUE, 0);            
-		
+	AwnVfsMonitor *monitor;
+	GString *file; /* Bookmarks file */
+	file = g_string_new (g_get_home_dir());
+	g_string_append(file, "/.gtk-bookmarks");
+	monitor = awn_vfs_monitor_add (file->str, AWN_VFS_MONITOR_FILE,
+	                               (AwnVfsMonitorFunc)watch_callback,
+	                                   (gpointer)app);
+	if (!monitor) {
+		g_message ("VFS ERROR");
+	}
+
+	g_string_free(file, TRUE);
+
+	gtk_box_pack_start (GTK_BOX (sidebar), priv->places, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (priv->places_box), priv->vfs_box, TRUE, TRUE, 0);
+	gtk_box_pack_end (GTK_BOX (sidebar), priv->system, FALSE, TRUE, 0);
+
 	return GTK_WIDGET(sidebar);
 }
 

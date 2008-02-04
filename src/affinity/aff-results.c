@@ -30,10 +30,12 @@
 
 #include "aff-results.h"
 
-#include <libgnome/gnome-i18n.h>
-#include <libgnomevfs/gnome-vfs.h>
+#include <glib/gi18n.h>
+#ifdef LIBAWN_USE_GNOME
 #include <libgnomevfs/gnome-vfs-mime-handlers.h>
-#include <libgnome/gnome-desktop-item.h>
+#endif
+#include <libawn/awn-vfs.h>
+#include <libawn/awn-desktop-item.h>
 
 #include "aff-utils.h"
 #include "aff-search-engine.h"
@@ -290,7 +292,13 @@ aff_results_add_command (AffResults *this, gulong id,
 static AffResults *g_results = NULL; /* Yuk */
 
 static void
+#ifdef LIBAWN_USE_GNOME
 aff_results_menu_item_activated (GtkMenuItem *item, GnomeVFSMimeApplication *app)
+#elif defined(LIBAWN_USE_XFCE)
+aff_results_menu_item_activated (GtkMenuItem *item, ThunarVfsMimeApplication *app)
+#else
+aff_results_menu_item_activated (GtkMenuItem *item, GAppInfo *app)
+#endif
 {
 	GtkTreeView *treeview = GTK_TREE_VIEW (g_results);
         GtkTreeSelection *select;
@@ -307,15 +315,40 @@ aff_results_menu_item_activated (GtkMenuItem *item, GnomeVFSMimeApplication *app
 	if (uri == NULL) {
 		return;
 	}
-	
+
+#ifdef LIBAWN_USE_GNOME
 	GnomeVFSResult res;
+#else
+    gboolean res;
+#endif
 	GList *args = NULL;
+#ifdef LIBAWN_USE_GNOME
 	args = g_list_append (args, uri);
 	const char *name = gnome_vfs_mime_application_get_name (app);
+#elif defined(LIBAWN_USE_XFCE)
+	args = g_list_append (args, thunar_vfs_path_new (uri, NULL));
+	const char *name = thunar_vfs_mime_application_get_name (app);
+#else
+	args = g_list_append (args, g_file_new_for_uri (uri));
+	const char *name = g_app_info_get_name (app);
+#endif
 	g_print ("Launching with : %s", name);
 	
+#ifdef LIBAWN_USE_GNOME
 	res = gnome_vfs_mime_application_launch (app, args);
-	
+#elif defined(LIBAWN_USE_XFCE)
+	res = thunar_vfs_mime_handler_exec (THUNAR_VFS_MIME_HANDLER (app), NULL, args, NULL);
+#else
+	res = g_app_info_launch (app, args, NULL, NULL);
+#endif
+
+#ifndef LIBAWN_USE_GNOME
+#ifdef LIBAWN_USE_XFCE
+	thunar_vfs_path_unref (args->data);
+#else
+	g_free (args->data);
+#endif
+#endif
 	g_list_free (args);
 	
 	g_free (uri);
@@ -339,7 +372,15 @@ aff_results_popup_menu(AffResults *results)
         GtkTreeModel *model;
         GtkTreeIter iter;
         char *uri = NULL;
-        const char *mimetype;
+#ifdef LIBAWN_USE_GNOME
+		const char *mimetype;
+#elif defined(LIBAWN_USE_XFCE)
+		ThunarVfsMimeInfo *mime_info;
+		ThunarVfsMimeDatabase *mime_db = thunar_vfs_mime_database_get_default ();
+#else
+        GFile *file;
+        const char *content_type;
+#endif
         select = gtk_tree_view_get_selection(treeview);
         gtk_tree_selection_get_selected( select, &model, &iter);
         
@@ -351,23 +392,57 @@ aff_results_popup_menu(AffResults *results)
 		return;
 	}	
 	
+#ifdef LIBAWN_USE_GNOME
 	mimetype = gnome_vfs_get_mime_type_for_name (uri);
+#elif defined(LIBAWN_USE_XFCE)
+	ThunarVfsPath *path = thunar_vfs_path_new (uri, NULL);
+	gchar *path_str = thunar_vfs_path_dup_string (path);
+	mime_info = thunar_vfs_mime_database_get_info_for_file (mime_db, path_str, NULL);
+	g_free (path_str);
+	thunar_vfs_path_unref (path);
+#else
+	content_type = g_content_type_guess (uri, NULL, 0, NULL);
+#endif
 
 	GList *apps, *a;
 	GtkWidget *menu = gtk_menu_new ();
 	priv->menu = menu;
 	
+#ifdef LIBAWN_USE_GNOME
 	apps = gnome_vfs_mime_get_all_applications_for_uri (uri, mimetype);
+#elif defined(LIBAWN_USE_XFCE)
+	apps = thunar_vfs_mime_database_get_applications (mime_db, mime_info);
+#else
+	apps = g_app_info_get_all_for_type (content_type);
+#endif
 	
 	for (a = apps; a != NULL; a = a->next) {	
+#ifdef LIBAWN_USE_GNOME
 		GnomeVFSMimeApplication *app = (GnomeVFSMimeApplication *)a->data;
 		const char *name = gnome_vfs_mime_application_get_name (app);
 		const char *icon_name = gnome_vfs_mime_application_get_icon (app);
+#elif defined(LIBAWN_USE_XFCE)
+		ThunarVfsMimeApplication *app = (ThunarVfsApplication *)a->data;
+		const char *name = thunar_vfs_mime_application_get_name (app);
+		const char *icon_name = thunar_vfs_mime_handler_lookup_icon_name (THUNAR_VFS_MIME_HANDLER (app), gtk_icon_theme_get_default ());
+#else
+		GAppInfo *app = (GAppInfo *)a->data;
+		const char *name = g_app_info_get_name (app);
+		GIcon *icon = g_app_info_get_icon (app);
+		const char *icon_name = NULL;
+		if (G_IS_THEMED_ICON (icon)) {
+			icon_name = g_themed_icon_get_names (G_THEMED_ICON (icon))[0];
+		} else if (G_IS_FILE_ICON (icon)) {
+			GFile *icon_file = g_file_icon_get_file (G_FILE_ICON (icon));
+			icon_name = g_file_get_path (icon_file);
+			g_free (icon_file);
+		}
+#endif
 		char *markup = NULL;
 		markup = g_strdup_printf (_("Open with \"%s\""), name);
 		
-		GdkPixbuf *icon = aff_utils_get_app_icon_sized (icon_name, 24, 24);
-		GtkWidget *image = gtk_image_new_from_pixbuf (icon);
+		GdkPixbuf *icon_pixbuf = aff_utils_get_app_icon_sized (icon_name, 24, 24);
+		GtkWidget *image = gtk_image_new_from_pixbuf (icon_pixbuf);
 		GtkWidget *item = gtk_image_menu_item_new_with_label (markup);
 		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
 		
@@ -376,11 +451,15 @@ aff_results_popup_menu(AffResults *results)
 		
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 		gtk_widget_show_all (item);
+		g_free (app);
 	}
 	
-	//gnome_vfs_mime_application_list_free (apps);
 	g_list_free (apps);
 	g_free(uri);
+#ifdef LIBAWN_USE_XFCE
+	thunar_vfs_mime_info_unref (mime_info);
+	g_object_unref (mime_db);
+#endif
         
         gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL, 3, gtk_get_current_event_time() );
 }
@@ -542,24 +621,18 @@ static void aff_results_row_activated(GtkTreeView       *treeview,
 		char *res = NULL;
 		res = strstr (uri, ".desktop");
 		if (res) {
-			GnomeDesktopItem *item= NULL;
-			item = gnome_desktop_item_new_from_file (uri, GNOME_DESKTOP_ITEM_LOAD_ONLY_IF_EXISTS, NULL);
-			
-			if (item != NULL) {
-				GList *args = NULL;
-				gnome_desktop_item_launch_on_screen (item,
-                                             			     args,
-                                             			     0,
-                                                                     gdk_screen_get_default(),
-                                             			     -1,
-                                             			     NULL);
-				gnome_desktop_item_unref (item);                                             		
-				gtk_widget_hide (priv->app->window);
-				priv->app->visible = FALSE;	
-				aff_start_app_launched (AFF_START (priv->app->start), uri);	     
+			AwnDesktopItem *item = awn_desktop_item_new (uri);		
+			if (item) {
+				if (awn_desktop_item_exists (item)) {
+					GSList *args = NULL;
+					awn_desktop_item_launch (item, args, NULL);
+					gtk_widget_hide (priv->app->window);
+					priv->app->visible = FALSE;
+					aff_start_app_launched (AFF_START (priv->app->start), uri);
+				}
+				awn_desktop_item_free (item);
 				return;
-			}	
-			
+			}
 		} else {
 			exec = g_strdup_printf ("%s %s", priv->app->settings->open_uri, uri);
 			g_free (uri);
@@ -577,5 +650,3 @@ static void aff_results_row_activated(GtkTreeView       *treeview,
         
         affinity_app_hide (priv->app);
 }
-
-                                        

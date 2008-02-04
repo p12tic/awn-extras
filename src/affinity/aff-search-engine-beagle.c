@@ -26,9 +26,9 @@
 
 #include "aff-search-engine-beagle.h"
 
-#include <libgnome/gnome-i18n.h>
+#include <glib/gi18n.h>
 #include <beagle/beagle.h>
-#include <libgnomevfs/gnome-vfs-utils.h>
+#include <libawn/awn-vfs.h>
 #include <string.h>
 
 struct AffSearchEngineBeagleDetails {
@@ -358,7 +358,17 @@ _filter_added (BeagleQuery *query,
 				continue;
 		
 			name = g_markup_escape_text (filename, -1);
-			char * temp = gnome_vfs_get_local_path_from_uri (uri);
+#ifdef LIBAWN_USE_GNOME
+			char *temp = gnome_vfs_get_local_path_from_uri (uri);
+#elif defined(LIBAWN_USE_XFCE)
+			ThunarVfsPath *path = thunar_vfs_path_new (uri);
+			char *temp = thunar_vfs_path_dup_string (path);
+			thunar_vfs_path_unref (path);
+#else
+			GFile *file = g_file_new_for_uri (uri);
+			char *temp = g_file_get_path (file);
+			g_free (file);
+#endif
 			desc = g_markup_escape_text (temp, -1);
 			g_free (temp);
 			

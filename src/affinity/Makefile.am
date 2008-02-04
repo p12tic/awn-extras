@@ -35,7 +35,15 @@ affinity_la_SOURCES =			\
 	eggaccelerators.c		\
 	eggaccelerators.h		\
 	tomboykeybinder.c		\
-	tomboykeybinder.h		
+	tomboykeybinder.h		\
+	$(NULL)
+
+if !LIBAWN_USE_GNOME
+affinity_la_SOURCES +=		\
+	egg-pixbuf-thumbnail.c	\
+	egg-pixbuf-thumbnail.h	\
+	$(NULL)
+endif
 
 BEAGLE_SOURCES =			\
 	aff-search-engine-beagle.c	\

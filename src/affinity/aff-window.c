@@ -32,7 +32,7 @@
 #include <X11/extensions/shape.h>
 #include <gdk/gdkx.h>
 #endif
-#include <libgnome/gnome-i18n.h>
+#include <glib/gi18n.h>
 
 #include <libawn/awn-applet-dialog.h>
 

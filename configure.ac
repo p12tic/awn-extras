@@ -101,7 +101,7 @@ PKG_CHECK_MODULES(VTE, [vte])
 PKG_CHECK_MODULES(DBUS_GLIB, [dbus-glib-1])
 
 # affinity
-affinity_pkgs="gnome-desktop-2.0 gnome-vfs-2.0 x11"
+affinity_pkgs="x11"
 affinity_beagle_pkg="libbeagle-0.0 >= affinity_beagle_min_version"
 AC_MSG_CHECKING([for optional Beagle support (Affinity)])
 PKG_CHECK_EXISTS([$affinity_beagle_pkg], [
@@ -165,6 +165,7 @@ fi
 AM_CONDITIONAL(DESKTOP_AGNOSTIC, test "$have_desktop_agnostic" = "yes")
 AM_CONDITIONAL(GCONF_SCHEMAS, test "$have_desktop_agnostic" = "no" -o "$config_backend" = "GConf")
 AM_CONDITIONAL(HAVE_VALA, test -n "$AWN_VAPIDIR" -a -n "$VALAC")
+AM_CONDITIONAL(LIBAWN_USE_GNOME, test -n "`echo $AWN_CFLAGS | grep LIBAWN_USE_GNOME`")
 
 dnl
 dnl Check the D-BUS version.

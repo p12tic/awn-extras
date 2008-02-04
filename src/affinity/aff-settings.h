@@ -26,7 +26,7 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 
-#include <gconf/gconf-client.h>
+#include <libawn/awn-config-client.h>
 
 typedef struct {
 	float red; 
@@ -94,6 +94,6 @@ AffSettings* aff_settings_new(void);
 
 AffSettings* aff_Settings_get_default (void);
 
-GConfClient *aff_settings_get_client (void);
+AwnConfigClient *aff_settings_get_client (void);
 
 #endif /* _AFF_GCONF_H */

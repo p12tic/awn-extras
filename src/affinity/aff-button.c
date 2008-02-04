@@ -25,9 +25,6 @@
 #endif
 
 #include <gtk/gtk.h>
-#include <libgnome/gnome-i18n.h>
-#include <libgnomevfs/gnome-vfs.h>
-#include <libgnome/gnome-desktop-item.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -36,6 +33,8 @@
 #include <X11/extensions/shape.h>
 #include <gdk/gdkx.h>
 #endif
+
+#include <libawn/awn-desktop-item.h>
 
 #include "aff-button.h"
 #include "aff-settings.h"
@@ -86,20 +85,15 @@ aff_button_clicked (GtkButton *button)
 		char *res = NULL;
 		res = strstr (priv->uri, ".desktop");
 		if (res) {
-			GnomeDesktopItem *item= NULL;
-			item = gnome_desktop_item_new_from_file (priv->uri, GNOME_DESKTOP_ITEM_LOAD_ONLY_IF_EXISTS, NULL);
+			AwnDesktopItem *item = awn_desktop_item_new (priv->uri);
 			
-			if (item != NULL) {
-				GList *args = NULL;
-				gnome_desktop_item_launch_on_screen (item,
-                                             			     args,
-                                             			     0,
-                                                                     gdk_screen_get_default(),
-                                             			     -1,
-                                             			     NULL);
-				gnome_desktop_item_unref (item);                                             		
-				gtk_widget_hide (priv->app->window);
-				priv->app->visible = FALSE;	
+			if (item) {
+				if (awn_desktop_item_exists (item)) {
+					awn_desktop_item_launch (item, NULL, NULL);
+					gtk_widget_hide (priv->app->window);
+					priv->app->visible = FALSE;
+				}
+				awn_desktop_item_free (item);
 				return;
 			}	
 			

@@ -25,6 +25,7 @@ import gtk
 from gtk import gdk
 import re
 import os
+import subprocess
 
 feedparser = None
 
@@ -75,7 +76,8 @@ class Applet:
 
     def init2(self, module=None, force=False):
         global feedparser
-        feedparser = module
+        if module:
+            feedparser = module
 
         if force:
             return self.drawPWDDlog()
@@ -111,7 +113,7 @@ class Applet:
 
             self.awn.settings["login-token"] = key.token
 
-            self.timer = self.awn.timing.time(self.refresh, 15)
+            self.timer = self.awn.timing.time(self.refresh, 300)
             self.refresh()
 
     def refresh(self, widget=None):
@@ -138,8 +140,7 @@ class Applet:
             self.awn.dialog.main.hide()
         self.drawMainDlog()
 
-        #print "Applet Refreshed"
-        return True
+        print "Mail Applet Refreshed: %s new messages" % str(self.mail.len() - olen)
 
     def logout(self):
         self.awn.icon.set(self.getIcon("login"))
@@ -427,10 +428,32 @@ class Backends:
             return n
 
         def showWeb(self):
-            os.system('xdg-open http://mail.google.com/mail/')
+            subprocess.Popen(['xdg-open', 'http://mail.google.com/mail/'])
 
         def showDesk(self):
-            os.system('evolution')
+            subprocess.Popen(['evolution', '-c', 'mail'])
+
+    class Empty:
+        def __init__(self, key):
+            self.subjects = ["Dummy Message"]
+
+        def update(self):
+            pass
+
+        def title(self):
+            return "1 Unread Message"
+
+        def status(self):
+            return "unread"
+
+        def len(self):
+            return 1
+
+        def showWeb(self):
+            pass
+
+        def showDesk(self):
+            pass
 
 if __name__ == "__main__":
     applet = Applet()

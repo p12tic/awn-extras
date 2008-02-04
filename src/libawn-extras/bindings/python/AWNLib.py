@@ -454,8 +454,8 @@ class Timing:
         def run(self, x=None):
             if self.callValue:
                 self.callback()
-            else:
-                return False
+
+            return self.callValue
 
         def stop(self):
             self.callValue = False
@@ -479,7 +479,7 @@ class Notify:
         if not subject:
             subject = "Message From " + self.parent.meta.info["name"]
         try:
-            extras.notify_message(subject, body, icon, 0, 1)
+            extras.notify_message(subject, body, icon, 0, False)
         except:
             pass
         else:

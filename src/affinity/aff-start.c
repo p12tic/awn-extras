@@ -178,7 +178,7 @@ aff_start_app_launched (AffStart *start, const char *uri)
 	priv->fav_table = table;
 	gtk_container_add (GTK_CONTAINER (priv->fav_box), priv->fav_table);	
 	
-	priv->favourites = g_list_prepend (priv->favourites, uri);
+	priv->favourites = g_list_prepend (priv->favourites, (gchar*)uri);
 	
 	_sync_config (start);
 
@@ -200,9 +200,17 @@ _add_item (GtkRecentInfo *info, AffStart *start)
 	priv = AFF_START_GET_PRIVATE (start);
 	
 	mime = (gchar *)gtk_recent_info_get_mime_type (info);
-    GFile *recent_file = g_file_new_for_uri (gtk_recent_info_get_uri (info));
+#ifdef LIBAWN_USE_GNOME
+	local_uri = gnome_vfs_local_path_from_uri (gtk_recent_info_get_uri (info));
+#elif defined(LIBAWN_USE_XFCE)
+	ThunarVfsPath *path = thunar_vfs_path_new (gtk_recent_info_get_uri (info));
+	local_uri = thunar_vfs_path_dup_string (path);
+	thunar_vfs_path_unref (path);
+#else
+	GFile *recent_file = g_file_new_for_uri (gtk_recent_info_get_uri (info));
 	local_uri = g_file_get_path (recent_file);
-    g_free (recent_file);
+	g_free (recent_file);
+#endif
 	
 	gchar *res = strstr (mime, "image");
 	if (res && local_uri) {

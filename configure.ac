@@ -245,8 +245,6 @@ src/awnterm/awnterm.desktop.in
 src/battery-applet/Makefile
 src/battery-applet/icons/Makefile
 src/battery-applet/battery-applet.desktop.in
-src/BlingSwitcher/Makefile
-src/BlingSwitcher/BlingSwitcher.desktop.in
 src/clock/Makefile
 src/clock/clock.desktop.in
 src/cairo-menu-classic/Makefile

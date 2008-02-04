@@ -11,7 +11,6 @@ SUBDIRS =            \
     awnterm		\
     awn-notification-daemon \
     battery-applet        \
-    BlingSwitcher         \
     cairo-menu-classic        \
     cairo-menu    \
     calendar        \
@@ -41,6 +40,7 @@ SUBDIRS =            \
     shiny-switcher        \
     stacks             \
     showdesktop         \
+    switcher			\
     Taskmand-applet     \
     trasher            \
     tsclient-applet        \

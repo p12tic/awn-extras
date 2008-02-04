@@ -30,6 +30,10 @@
 #include <stdio.h>
 #include <string.h>
 
+#ifdef LIBAWN_USE_GNOME
+#include <libgnomevfs/gnome-vfs.h>
+#endif
+
 #if !GTK_CHECK_VERSION(2,9,0)
 #include <X11/Xlib.h>
 #include <X11/extensions/shape.h>

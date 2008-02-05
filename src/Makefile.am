@@ -24,7 +24,6 @@ GCONF_APPLETS +=		\
 	arss			\
 	awn-notification-daemon	\
 	awnterm			\
-	BlingSwitcher		\
 	clock			\
 	comic			\
 	digitalClock		\

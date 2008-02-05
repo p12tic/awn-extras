@@ -475,16 +475,28 @@ static void _vfs_drive_changed (GVolumeMonitor *monitor, GDrive *drive, Places *
 	g_timeout_add (500, (GSourceFunc)_do_update_places_wrapper, places);
 }
 
+#if GLIB_CHECK_VERSION(2,15,0)
+static void _fillin_connected (GMount *mount, Places *places)
+#else
 static void _fillin_connected (GVolume *volume, Places *places)
+#endif
 {
 	Menu_Item *item;
 	GIcon *icon;
+#if GLIB_CHECK_VERSION(2,15,0)
+	gchar *mount_point = g_file_get_path (g_mount_get_root (mount));
+#else
 	gchar *mount_point = g_file_get_path (g_volume_get_root (volume));
+#endif
 	item = g_malloc (sizeof (Menu_Item));
 	item->places = places;
-	item->text = g_volume_get_name (volume);
-	item->text = urldecode(item->text,NULL);
+#if GLIB_CHECK_VERSION(2,15,0)
+	item->text = urldecode (g_mount_get_name (mount), NULL);
+	icon = g_mount_get_icon (mount);
+#else
+	item->text = urldecode (g_volume_get_name (volume), NULL);
 	icon = g_volume_get_icon (volume);
+#endif
 	if (G_IS_THEMED_ICON (icon)) {
 		/* assume that this shouldn't be free()d manually */
 		const gchar * const *icon_names = g_themed_icon_get_names (G_THEMED_ICON (icon));
@@ -578,7 +590,11 @@ static void get_places(Places * places)
 		g_signal_connect (G_OBJECT (volume_monitor), "drive-connected",    G_CALLBACK (_vfs_drive_changed),places);
 		monitor_places (places);
 	}
+#if GLIB_CHECK_VERSION(2,15,0)
+	GList *volumes = g_volume_monitor_get_mounts (volume_monitor);
+#else
 	GList *volumes = g_volume_monitor_get_mounted_volumes (volume_monitor);
+#endif
 	if (volumes) {
 		g_list_foreach (volumes, (GFunc)_fillin_connected, places);
 	}

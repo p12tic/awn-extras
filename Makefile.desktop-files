@@ -1,8 +1,6 @@
 # vim: set ft=automake :
 
- ifdef $(APPLET_ICONS)
 icon_DATA = $(APPLET_ICONS)
- endif
 
 desktopdir = $(libdir)/awn/applets
 

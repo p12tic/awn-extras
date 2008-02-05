@@ -1,0 +1,7 @@
+[DEFAULT/show_count]
+type = bool
+default = False
+description = Whether the trash applet should show a count on its icon.
+description[en_CA] = The background colour (RGBA) of the menu.
+
+; vim: set ft=dosini :

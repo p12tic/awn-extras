@@ -181,6 +181,9 @@ dnl
 dnl Check if desktop-agnostic is installed.
 dnl
 
+AWN_BINDIR=`$PKG_CONFIG --variable=exec_prefix awn`/bin
+AC_SUBST(AWN_BINDIR)
+
 AC_CHECK_LIB([awn], [awn_vfs_init], [have_desktop_agnostic=yes], [have_desktop_agnostic=no], [$AWN_LIBS])
 if test "$have_desktop_agnostic" = "yes"; then
     config_backend=`$PKG_CONFIG --variable=config_backend awn`

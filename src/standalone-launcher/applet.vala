@@ -1042,7 +1042,7 @@ class LauncherApplet : AppletSimple
     { 
         closing=false;  //if this becomes true it means an irrevocable closing is in process.
         timer_count=0;
-        hide_icon();
+        blank_icon();
 		this.realize += _realized;        
 		hidden=true;
     }

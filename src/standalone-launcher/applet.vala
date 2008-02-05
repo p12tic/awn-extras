@@ -547,7 +547,6 @@ class Listing : GLib.Object
 		directory=Environment.get_home_dir()+"/.config/awn/applets/standalone-launcher/lists/";
         if (! FileUtils.test(directory,FileTest.EXISTS)  )
         {		
-            stdout.printf("creating %s\n",directory);
             if ( DirUtils.create_with_parents(directory,0777) != 0)
             {
                 error("Fatal error creating %s\n",directory);

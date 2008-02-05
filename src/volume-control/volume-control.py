@@ -33,7 +33,7 @@ import sys, os
 import gobject
 import gtk
 from gtk import gdk
-import AWNLib
+from awn.extras import AWNLib
 
 alsaaudio = None
 

@@ -241,7 +241,7 @@ trash_applet_new (AwnApplet *applet)
 
         app->awn_applet = applet;
         awn_applet_add_preferences (applet, 
-                                "/schemas/apps/awn-trash/prefs", NULL);
+                                "/schemas/apps/trash/prefs", NULL);
 
         app->show_count = awn_applet_gconf_get_bool (applet, "show_count",
                                                      NULL);

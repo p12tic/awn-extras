@@ -616,12 +616,12 @@ class Listing : GLib.Object
 
     public ListingResult check_listings(string title, string exec)
     {
+        stdout.printf("title = %s, exec = %s",title,exec);
         if (        check_list(whitelist_titles_pre,title)  ||
                     check_list(whitelist_exec_pre,exec) )
         {
             return ListingResult.WHITELISTED;
-        }
-
+        }        
         if (        check_list(blacklist_titles_global,title)   ||
                     check_list(blacklist_exec_global,exec)      ||
                     check_list(blacklist_titles,title)          ||
@@ -1043,7 +1043,7 @@ class LauncherApplet : AppletSimple
     { 
         closing=false;  //if this becomes true it means an irrevocable closing is in process.
         timer_count=0;
-        blank_icon();
+        hide_icon();
 		this.realize += _realized;        
 		hidden=true;
     }
@@ -1149,7 +1149,7 @@ class LauncherApplet : AppletSimple
         {
             this.enter_notify_event+=_enter_notify;
             this.leave_notify_event+=_leave_notify;
-            dialog=new AppletDialog(this);
+            dialog=get_dialog(true);
             dialog.set_accept_focus(false);
             dialog.set_app_paintable(true);
             vbox=new VButtonBox();
@@ -1194,6 +1194,7 @@ class LauncherApplet : AppletSimple
                 books.update_with_desktopitem(desktopitem);
             }
     		title_string = desktopitem.get_name();
+            listing = new Listing(GLib.Path.get_basename(desktopfile.Filename()));
 		}
 		else
 		{
@@ -1231,6 +1232,12 @@ class LauncherApplet : AppletSimple
                     stdout.printf("desktopitme == null. exiting\n");
                     close();
                 }
+                listing = new Listing(GLib.Path.get_basename(desktopfile.Filename()));
+                if (listing.check_listings(win.get_name(),get_exec(win.get_pid()))==ListingResult.BLACKLISTED)
+                {
+                    close();
+                }
+
                 books.update_with_desktopitem(desktopitem);
 				win.name_changed+=_win_name_change;
 				win.state_changed+=_win_state_change;				
@@ -1251,7 +1258,6 @@ class LauncherApplet : AppletSimple
 				close();
 		    }
 		}	
-        listing = new Listing(GLib.Path.get_basename(desktopfile.Filename()));
 		if (desktopitem.exists() )  //we will use a user specified one if it exists.
 		{
 			if (desktopitem.get_icon(theme)!=null)
@@ -1271,7 +1277,6 @@ class LauncherApplet : AppletSimple
         desktopitem.set_string ("Type","Application");         
 		return false;
     }
-
     
     public LauncherApplet(string uid, int orient, int height) 
     {
@@ -1280,6 +1285,13 @@ class LauncherApplet : AppletSimple
         this.height = height;
     }
 
+    private AppletDialog get_dialog(bool use_awn)
+    {
+        AppletDialog d;
+        d=new AppletDialog(this);
+        
+        return d;
+    }
     private string _get_title()
     {
         return title_string;
@@ -1751,7 +1763,8 @@ class LauncherApplet : AppletSimple
     
 	private void _realized()
 	{
-
+        this.window.set_back_pixmap (null,false);
+        this.show();
         Timeout.add(200,_initialize,this);
 	}
 

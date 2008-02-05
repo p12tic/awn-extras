@@ -156,7 +156,7 @@ if test x${enable_pymod_checks} = xyes; then
     # volume-control
     AM_CHECK_PYMOD(alsaaudio,,,AC_MSG_ERROR([python module alsaaudio required (python-alsaaudio)]))
     # arss, mail
-    AM_CHECK_PYMOD(feedreader,,,AC_MSG_ERROR([python module feedreader required (python-feedreader)]))
+    AM_CHECK_PYMOD(feedparser,,,AC_MSG_ERROR([python module feedparser required (python-feedparser)]))
     if test "$with_gnome" != "no"; then
     # MiMenu
     AM_CHECK_PYMOD(gmenu,,,AC_MSG_ERROR([python module gmenu required]))

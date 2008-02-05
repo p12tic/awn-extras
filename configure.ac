@@ -70,14 +70,13 @@ dnl
 dnl package support
 dnl
 
+AC_ARG_WITH([gconf], AS_HELP_STRING([--without-gconf],[Disable building/installing applets that need GConf]),,[with_gconf=yes])
+AC_ARG_WITH([gnome], AS_HELP_STRING([--without-gnome],[Disable building/installing applets that require Gnome-specific libraries]),,[with_gnome=yes])
+AM_CONDITIONAL(WITH_GCONF, test "$with_gconf" != "no")
+AM_CONDITIONAL(WITH_GNOME, test "$with_gnome" != "no")
+
 # all
 PKG_CHECK_MODULES(AWN, [awn])
-# filebrowser
-PKG_CHECK_MODULES(GNOMEUI, [libgnomeui-2.0])
-# filebrowser, affinity
-PKG_CHECK_MODULES(GNOME_DESKTOP, [gnome-desktop-2.0])
-# filebrowser, cairo-menu
-PKG_CHECK_MODULES(GNOME_VFS, [gnome-vfs-2.0])
 #trash
 PKG_CHECK_MODULES(LIBGLADE, [libglade-2.0])
 # awn-notification-daemon, shiny-switcher, standalone-launcher, switcher, taskmand
@@ -86,19 +85,30 @@ PKG_CHECK_MODULES(LIBWNCK, [libwnck-1.0])
 PKG_CHECK_MODULES(LIBX11, [x11])
 PKG_CHECK_MODULES(COMPOSITE, [xcomposite])
 PKG_CHECK_MODULES(XRENDER, [xrender])
+# awn-notification-daemon, cairo-menu
+PKG_CHECK_MODULES(LIBSEXY, [libsexy])
+PKG_CHECK_MODULES(LIBNOTIFY, [libnotify])
+# standalone-launcher, taskmand, taskmand-applet
+PKG_CHECK_MODULES(DBUS_GLIB, [dbus-glib-1])
+
+if test "$with_gconf" != "no"; then
+if test "$with_gnome" != "no"; then
+# filebrowser
+PKG_CHECK_MODULES(GNOMEUI, [libgnomeui-2.0])
+# filebrowser
+PKG_CHECK_MODULES(GNOME_DESKTOP, [gnome-desktop-2.0])
+# filebrowser, cairo-menu
+PKG_CHECK_MODULES(GNOME_VFS, [gnome-vfs-2.0])
 # clock
 PKG_CHECK_MODULES(RSVG, [librsvg-2.0])
 # main-menu, cairo-menu
 PKG_CHECK_MODULES(GNOME_MENU, [libgnome-menu])
 # awn-system-monitor
 PKG_CHECK_MODULES(GTOP, [libgtop-2.0])
-# awn-notification-daemon, cairo-menu
-PKG_CHECK_MODULES(LIBSEXY, [libsexy])
-PKG_CHECK_MODULES(LIBNOTIFY, [libnotify])
+fi
 # awn-terminal
 PKG_CHECK_MODULES(VTE, [vte])
-# standalone-launcher, taskmand, taskmand-applet
-PKG_CHECK_MODULES(DBUS_GLIB, [dbus-glib-1])
+fi
 
 # affinity
 affinity_pkgs="x11"
@@ -124,8 +134,10 @@ AM_CONDITIONAL(HAVE_TRACKER, test "$have_tracker" = "yes")
 
 # applet-specific libraries
 PKG_CHECK_MODULES(AFFINITY, [$affinity_pkgs])
+if test "$with_gconf" != "no" -o "$with_gnome" != "no"; then
 PKG_CHECK_MODULES(FILEBROWSER, [gnome-desktop-2.0 gnome-vfs-2.0 libgnomeui-2.0])
 PKG_CHECK_MODULES(CAIRO_MENU_GNOME, [gnome-vfs-2.0 libgnome-menu libnotify libsexy])
+fi
 PKG_CHECK_MODULES(NOTIFICATION_DAEMON, [libnotify libsexy libwnck-1.0])
 PKG_CHECK_MODULES(SHINY_SWITCHER, [libwnck-1.0 x11 xcomposite xrender])
 PKG_CHECK_MODULES(STANDALONE_LAUNCHER, [dbus-glib-1 libwnck-1.0])
@@ -138,11 +150,31 @@ dnl
 AC_ARG_ENABLE(pymod_checks,
               AC_HELP_STRING([--disable-pymod-checks], [Disable checks for Python modules]),
               enable_pymod_checks=$enableval,
-          enable_pymod_checks=yes)
+              enable_pymod_checks=yes)
 
 if test x${enable_pymod_checks} = xyes; then
-  AM_CHECK_PYMOD(alsaaudio,,,AC_MSG_ERROR([python module alsaaudio required (python-alsaaudio)]))
-  AM_CHECK_PYMOD(gst,,,AC_MSG_ERROR([python module gstreamer required (python-gst0.10)]))
+    # volume-control
+    AM_CHECK_PYMOD(alsaaudio,,,AC_MSG_ERROR([python module alsaaudio required (python-alsaaudio)]))
+    # arss, mail
+    AM_CHECK_PYMOD(feedreader,,,AC_MSG_ERROR([python module feedreader required (python-feedreader)]))
+    if test "$with_gnome" != "no"; then
+    # MiMenu
+    AM_CHECK_PYMOD(gmenu,,,AC_MSG_ERROR([python module gmenu required]))
+    fi
+    if test "$with_gconf" != "no" -o "$with_gnome" != "no"; then
+    # stacks
+    AM_CHECK_PYMOD(gnomedesktop,,,AC_MSG_ERROR([python module gnomedesktop required]))
+    # calendar, stacks
+    AM_CHECK_PYMOD(gnomevfs,,,AC_MSG_ERROR([python module gnomevfs required]))
+    # stacks
+    AM_CHECK_PYMOD(gnome.ui,,,AC_MSG_ERROR([python module gnome.ui required]))
+    fi
+    # awn-meebo, digg, pandora
+    AM_CHECK_PYMOD(gtkmozembed,,,AC_MSG_ERROR([python module gtkmozembed required]))
+    if test "$with_gconf" != "no"; then
+    # lastfm
+    AM_CHECK_PYMOD(gst,,,AC_MSG_ERROR([python module gstreamer required (python-gst0.10)]))
+    fi
 fi
 
 dnl

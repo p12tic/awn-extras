@@ -3,49 +3,69 @@ if HAVE_VALA
 VALA_APPLETS = vala-test standalone-launcher taskmand
 endif
 
-SUBDIRS =            \
-    libawn-extras    \
-    affinity        \
-    arss            \
-    awnsystemmonitor    \
-    awnterm		\
-    awn-notification-daemon \
-    battery-applet        \
-    cairo-menu-classic        \
-    cairo-menu    \
-    calendar        \
-    clock             \
-    cairo-menu        \
-    comic            \
-    digg            \
-    digitalClock        \
-    file-browser-launcher    \
-    mail            \
-    lastfm            \
-    main-menu         \
-    media-control        \
-    media-icon-back        \
-    media-icon-next        \
-    media-icon-play        \
-    mount-applet	\
-    MiMenu            \
-    notification-area    \
-    pandora                \
-    places            \
-    plugger         \
-    PyClock            \
-    python-test        \
-    quit-applet        \
-    separator         \
-    shiny-switcher        \
-    stacks             \
-    showdesktop         \
-    switcher			\
-    Taskmand-applet     \
-    trasher            \
-    tsclient-applet        \
-    volume-control         \
-    weather            \
-    wobblyzini        \
-    $(VALA_APPLETS)        \
-    $(NULL)
+GCONF_APPLETS =
+
+if WITH_GCONF
+if WITH_GNOME
+GCONF_APPLETS +=		\
+	awnsystemmonitor	\
+	cairo-menu		\
+	cairo-menu-classic	\
+	calendar		\
+	filebrowser		\
+	main-menu		\
+	plugger			\
+	stacks			\
+	trash			\
+	trasher			\
+	$(NULL)
+endif
+GCONF_APPLETS +=		\
+	arss			\
+	awn-notification-daemon	\
+	awnterm			\
+	BlingSwitcher		\
+	clock			\
+	comic			\
+	digitalClock		\
+	file-browser-launcher	\
+	lastfm			\
+	media-control		\
+	media-icon-back		\
+	media-icon-next		\
+	media-icon-play		\
+	mount-applet		\
+	quit-applet		\
+	switcher		\
+	weather			\
+	$(NULL)
+else
+if WITH_GNOME
+GCONF_APPLETS +=	\
+	MiMenu		\
+	$(NULL)
+endif
+endif
+
+SUBDIRS =			\
+	libawn-extras		\
+	affinity		\
+	battery-applet		\
+	comic			\
+	digg			\
+	mail			\
+	notification-area	\
+	pandora			\
+	places			\
+	PyClock			\
+	python-test		\
+	separator		\
+	shiny-switcher		\
+	showdesktop		\
+	Taskmand-applet		\
+	tsclient-applet		\
+	volume-control		\
+	wobblyzini		\
+	$(GCONF_APPLETS)	\
+	$(VALA_APPLETS)		\
+	$(NULL)

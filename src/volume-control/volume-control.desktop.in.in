@@ -7,3 +7,4 @@ Name=volume-control
 Comment=Control your computer's volume
 Exec=@LIBDIR@/awn/applets/volume-control/volume-control.py
 Icon=gnome-reclevel
+X-AWN-Applet-Category=System

@@ -195,11 +195,10 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
   g_signal_connect (G_OBJECT (applet), "button-press-event",
                     G_CALLBACK (on_button_press_event), app);
 
-  app->config = awn_config_client_new_for_applet ("switcher", uid);
+  app->config = awn_config_client_new_for_applet ("switcher", NULL);
 
   app->n_rows = awn_config_client_get_int (app->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, "n_rows", NULL);
   app->width = awn_config_client_get_int (app->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, "width", NULL);
-  
   /* Set up menus */
   menu = awn_applet_create_default_menu (applet);
   app->menu = menu;

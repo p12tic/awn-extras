@@ -615,7 +615,7 @@ class Listing : GLib.Object
 
     public ListingResult check_listings(string title, string exec)
     {
-        stdout.printf("title = %s, exec = %s",title,exec);
+       //stdout.printf("title = %s, exec = %s",title,exec);
         if (        check_list(whitelist_titles_pre,title)  ||
                     check_list(whitelist_exec_pre,exec) )
         {

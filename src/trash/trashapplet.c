@@ -231,6 +231,8 @@ trash_applet_size_allocate (GtkWidget    *widget,
 	(* GTK_WIDGET_CLASS (trash_applet_parent_class)->size_allocate) (widget, allocation);
 }
 
+#define CONFIG_TRASH_SHOW_COUNT "/apps/avant-window-navigator/applets/trash/show_count"
+
 GtkWidget*
 trash_applet_new (AwnApplet *applet)
 {
@@ -243,8 +245,7 @@ trash_applet_new (AwnApplet *applet)
         awn_applet_add_preferences (applet, 
                                 "/schemas/apps/trash/prefs", NULL);
 
-        app->show_count = awn_applet_gconf_get_bool (applet, "show_count",
-                                                     NULL);
+        app->show_count = gconf_client_get_bool (client,CONFIG_TRASH_SHOW_COUNT, NULL);
         
         app->height = awn_applet_get_height (applet);
         g_signal_connect (G_OBJECT (applet), "height-changed",
@@ -685,6 +686,7 @@ update_transfer_callback (GnomeVFSAsyncHandle *handle,
 /* this function is based on the one with the same name in
    libnautilus-private/nautilus-file-operations.c */
 #define NAUTILUS_PREFERENCES_CONFIRM_TRASH    "/apps/nautilus/preferences/confirm_trash"
+
 static gboolean
 confirm_empty_trash (GtkWidget *parent_view)
 {

@@ -22,8 +22,9 @@
 #include <libawn/awn-applet-simple.h>
 #include "client-bindings.h"
 
+#define HEARTBEAT_INTERVAL  1
 
-void do_dbus_stuff(const char * uid)
+gboolean do_dbus_stuff(const char * uid)
 {
 
     /* Somewhere in the code, we want to execute EchoString remote method */
@@ -58,17 +59,17 @@ void do_dbus_stuff(const char * uid)
     g_object_unref (proxy);
 
     /* The DBusGConnection should never be unreffed, it lives once and is shared amongst the process */
-    
+    return TRUE;
 }
 
 static void _realized(GtkWidget *widget,AwnApplet *applet)
 {
-	GdkPixbuf *icon;
+    GdkPixbuf *icon;
     
     icon=gdk_pixbuf_new(GDK_COLORSPACE_RGB,TRUE,8,2,2);
     gdk_pixbuf_fill(icon,0x00000000);
     gtk_widget_set_size_request (GTK_WIDGET (applet),2,2);
-    awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (applet),icon);
+    awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (applet),icon);    
 }
 
 AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
@@ -82,6 +83,7 @@ AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
     awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (applet),icon);
     g_signal_connect_after(G_OBJECT (applet), "realize", G_CALLBACK (_realized), applet);    
     do_dbus_stuff(uid);
+    g_timeout_add_seconds(HEARTBEAT_INTERVAL,do_dbus_stuff,g_strdup(uid));    
     return applet;
 }
 

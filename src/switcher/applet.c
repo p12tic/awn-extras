@@ -24,11 +24,12 @@
 #define WNCK_I_KNOW_THIS_IS_UNSTABLE 1
 #include <libwnck/libwnck.h>
 
-#include <gtk/gtk.h>
-#include <libawn/awn-applet.h>
+#include <glib/gi18n.h>
 #include <glib/gmacros.h>
 #include <glib/gerror.h>
-#include <gconf/gconf-value.h> 
+#include <gtk/gtk.h>
+#include <libawn/awn-applet.h>
+#include <libawn/awn-config-client.h>
 
 //#include <libgnome/libgnome.h>
 
@@ -44,6 +45,7 @@ typedef struct {
   gint       n_rows;
   gint       width;
   GtkWidget *menu;
+  AwnConfigClient *config;
 } Switcher;
 
 static void
@@ -51,7 +53,7 @@ on_rows_changed (GtkSpinButton *button, Switcher *app)
 {
   gint rows = gtk_spin_button_get_value (button);
 
-  awn_applet_gconf_set_int (app->applet, "n_rows", rows, NULL);
+  awn_config_client_set_int (app->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, "n_rows", rows, NULL);
 
   wnck_pager_set_n_rows (WNCK_PAGER (app->pager), rows);
 }
@@ -61,7 +63,7 @@ on_width_changed (GtkSpinButton *button, Switcher *app)
 {
   gint width = gtk_spin_button_get_value (button);
 
-  awn_applet_gconf_set_int (app->applet, "width", width, NULL);
+  awn_config_client_set_int (app->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, "width", width, NULL);
 
   gtk_widget_set_size_request (GTK_WIDGET (app->pager), width, -1);
 }
@@ -72,7 +74,7 @@ on_height_changed (GtkSpinButton *button, Switcher *app)
   gint height = gtk_spin_button_get_value (button);
   gint padding;
 
-  awn_applet_gconf_set_int (app->applet, "height", height, NULL);
+  awn_config_client_set_int (app->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, "height", height, NULL);
 
   gtk_widget_set_size_request (GTK_WIDGET (app->applet), -1, height);
 
@@ -123,7 +125,7 @@ show_prefs (GtkMenuItem *item, Switcher *app)
   button = gtk_spin_button_new_with_range (1, 4, 1.0);
   gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
   gtk_spin_button_set_value (GTK_SPIN_BUTTON (button),
-                             awn_applet_gconf_get_int (app->applet, "n_rows", NULL));
+                             awn_config_client_get_int (app->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, "n_rows", NULL));
   g_signal_connect (G_OBJECT (button), "value-changed", 
                     G_CALLBACK (on_rows_changed), app);
 
@@ -135,7 +137,7 @@ show_prefs (GtkMenuItem *item, Switcher *app)
   button = gtk_spin_button_new_with_range (1, 400, 1.0);
   gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
   gtk_spin_button_set_value (GTK_SPIN_BUTTON (button),
-                             awn_applet_gconf_get_int (app->applet, "width", NULL));
+                             awn_config_client_get_int (app->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, "width", NULL));
   g_signal_connect (G_OBJECT (button), "value-changed", 
                     G_CALLBACK (on_width_changed), app);
 
@@ -147,7 +149,7 @@ show_prefs (GtkMenuItem *item, Switcher *app)
   button = gtk_spin_button_new_with_range (1, 400, 1.0);
   gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
   gtk_spin_button_set_value (GTK_SPIN_BUTTON (button),
-                             awn_applet_gconf_get_int (app->applet, "height", NULL));
+                             awn_config_client_get_int (app->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, "height", NULL));
   g_signal_connect (G_OBJECT (button), "value-changed", 
                     G_CALLBACK (on_height_changed), app);
 
@@ -193,10 +195,10 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
   g_signal_connect (G_OBJECT (applet), "button-press-event",
                     G_CALLBACK (on_button_press_event), app);
 
-  awn_applet_add_preferences (applet, "/schemas/apps/awn-switcher/prefs", NULL);
+  app->config = awn_config_client_new_for_applet ("switcher", uid);
 
-  app->n_rows = awn_applet_gconf_get_int (applet, "n_rows", NULL);
-  app->width = awn_applet_gconf_get_int (applet, "width", NULL);
+  app->n_rows = awn_config_client_get_int (app->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, "n_rows", NULL);
+  app->width = awn_config_client_get_int (app->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, "width", NULL);
   
   /* Set up menus */
   menu = awn_applet_create_default_menu (applet);
@@ -221,7 +223,7 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
   align = gtk_alignment_new (0, 0.5, 0, 0);
   app->align = align;
   gint padding = height;
-  padding -= awn_applet_gconf_get_int (applet, "height", NULL);
+  padding -= awn_config_client_get_int (app->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, "height", NULL);
   padding /= 2;
   gtk_alignment_set_padding (GTK_ALIGNMENT (align), height+padding, 
                              padding, 0, 0); 

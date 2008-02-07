@@ -91,8 +91,7 @@ PKG_CHECK_MODULES(LIBNOTIFY, [libnotify])
 # standalone-launcher, taskmand, taskmand-applet
 PKG_CHECK_MODULES(DBUS_GLIB, [dbus-glib-1])
 
-if test "$with_gconf" != "no"; then
-if test "$with_gnome" != "no"; then
+if test "$with_gconf" != "no" -o "$with_gnome" != "no"; then
 # filebrowser
 PKG_CHECK_MODULES(GNOMEUI, [libgnomeui-2.0])
 # filebrowser
@@ -106,6 +105,8 @@ PKG_CHECK_MODULES(GNOME_MENU, [libgnome-menu])
 # awn-system-monitor
 PKG_CHECK_MODULES(GTOP, [libgtop-2.0])
 fi
+
+if test "$with_gconf" != "no"; then
 # awn-terminal
 PKG_CHECK_MODULES(VTE, [vte])
 fi

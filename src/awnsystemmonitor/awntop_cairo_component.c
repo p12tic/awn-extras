@@ -82,7 +82,7 @@ typedef struct
 typedef struct
 {
     dashboard_cairo_widget *w;
-    long *lookup_table;
+    guint64 *lookup_table;
     int size;
     int head;
     int tail;
@@ -95,11 +95,11 @@ typedef struct
     int     uid;
     int     pri;
     int     nice;
-    long    virt;
-    long    res;
+    guint    virt;
+    guint    res;
     long    shr;
     long     cpu;
-    long     mem;
+    guint64     mem;
     long    time;
     char    cmd[40];  
 }Topentry;
@@ -211,7 +211,7 @@ static int cmpcommand(const void *, const void *);
 
 static void invalidate_pixmap_cache(Small_Pixmap_cache *p);
 static Small_Pixmap_cache * get_s_pixmap_cache(long size);
-static GdkPixmap * lookup_pixmap(Small_Pixmap_cache *p, long key);
+static GdkPixmap * lookup_pixmap(Small_Pixmap_cache *p, guint64 key);
 static GtkWidget * lookup_icon(Awntop_cairo_plug_data * awntop,
                                     Topentry **topentries,int i);
 static void invalidate_pixmap_cache(Small_Pixmap_cache *p);
@@ -565,7 +565,7 @@ static Small_Pixmap_cache * get_s_pixmap_cache(long size)
         p->w[i].pixmap=NULL;
     }
     #endif         
-    p->lookup_table=g_malloc(sizeof(long)*(size));
+    p->lookup_table=g_malloc(sizeof(guint64)*(size));
     p->size=size;
     p->head=0;
     p->tail=0;
@@ -589,7 +589,7 @@ static void invalidate_pixmap_cache(Small_Pixmap_cache *p)
     p->tail=0;
 }
 
-static GdkPixmap * lookup_pixmap(Small_Pixmap_cache *p, long key)
+static GdkPixmap * lookup_pixmap(Small_Pixmap_cache *p, guint64 key)
 {
     int i;
 
@@ -636,7 +636,7 @@ static GdkPixmap * lookup_pixmap(Small_Pixmap_cache *p, long key)
      #endif   
 }
 
-static void add_pixmap(Small_Pixmap_cache *p, dashboard_cairo_widget c_widge, long key)
+static void add_pixmap(Small_Pixmap_cache *p, dashboard_cairo_widget c_widge, guint64 key)
 {
 //    dashboard_cairo_widget old= p->w[ p->tail ];
     p->w[p->head]=c_widge;
@@ -821,9 +821,10 @@ static void build_top_table(Awntop_cairo_plug_data * data )
             data->widgets[1][i]=eb;
         }            
 //=================================================
-
-        tmp2=tmp=topentries[i]->virt/1024;               /*FIXME?? consider as a fn*/
-        pixmap=lookup_pixmap(data->virt_res_pixmaps,tmp);
+        guint64 tmp_virt2,tmp_virt;
+        
+        tmp_virt2=tmp_virt=topentries[i]->virt/1024;               /*FIXME?? consider as a fn*/
+        pixmap=lookup_pixmap(data->virt_res_pixmaps,tmp_virt);
         eb=gtk_event_box_new();
         gtk_event_box_set_visible_window((GtkEventBox *)eb,FALSE);    
         if (pixmap)
@@ -832,14 +833,14 @@ static void build_top_table(Awntop_cairo_plug_data * data )
         }
         else
         {
-            if (tmp >=10000)                            
+            if (tmp_virt >=10000)                            
             {
-                tmp=tmp/1024;       //convert K into M
-                snprintf(buf,sizeof(buf),"%dM",tmp);              
+                tmp_virt=tmp_virt/1024;       //convert K into M
+                snprintf(buf,sizeof(buf),"%0.0lfM",(double)tmp_virt);              
             }
             else
             {
-                snprintf(buf,sizeof(buf),"%d",tmp);              
+                snprintf(buf,sizeof(buf),"%0.0lf",(double)tmp_virt);              
             }            
             widget=get_cairo_widget(&c_widge,
                             Global_tableheadings[2].unscaled_width*data->size_mult,
@@ -855,7 +856,7 @@ static void build_top_table(Awntop_cairo_plug_data * data )
             cairo_move_to(c_widge.cr, Global_tableheadings[2].unscaled_width*data->size_mult*0.9-te.width, 12*data->size_mult);                              	                	            
             cairo_show_text(c_widge.cr,buf);               
             g_object_ref (c_widge.pixmap);                                                   
-            add_pixmap(data->virt_res_pixmaps,c_widge,tmp2 );
+            add_pixmap(data->virt_res_pixmaps,c_widge,tmp_virt2 );
         }
         gtk_container_add (GTK_CONTAINER (eb), widget);
         gtk_table_attach_defaults (GTK_TABLE (data->table),eb,
@@ -871,8 +872,8 @@ static void build_top_table(Awntop_cairo_plug_data * data )
 
 //=================================================
 
-        tmp2=tmp=topentries[i]->res/1024;                    /*FIXME?? consider as a fn*/
-        pixmap=lookup_pixmap(data->virt_res_pixmaps,tmp);
+        tmp_virt2=tmp_virt=topentries[i]->res/1024;                    /*FIXME?? consider as a fn*/
+        pixmap=lookup_pixmap(data->virt_res_pixmaps,tmp_virt);
         eb=gtk_event_box_new();
         gtk_event_box_set_visible_window((GtkEventBox *)eb,FALSE);    
         if (pixmap)
@@ -881,14 +882,14 @@ static void build_top_table(Awntop_cairo_plug_data * data )
         }
         else
         {
-            if (tmp >=10000)                            
+            if (tmp_virt >=10000)                            
             {
-                tmp=tmp/1024;       //convert K into M
-                snprintf(buf,sizeof(buf),"%dM",tmp);              
+                tmp_virt=tmp_virt/1024;       //convert K into M
+                snprintf(buf,sizeof(buf),"%0.0lfM",(double)tmp_virt);              
             }
             else
             {
-                snprintf(buf,sizeof(buf),"%d",tmp);              
+                snprintf(buf,sizeof(buf),"%0.0lf",tmp_virt);              
             }
             widget=get_cairo_widget(&c_widge,
                             Global_tableheadings[3].unscaled_width*data->size_mult,
@@ -904,7 +905,7 @@ static void build_top_table(Awntop_cairo_plug_data * data )
 //            cairo_move_to(c_widge.cr, 9*data->size_mult, 12*data->size_mult);     
             cairo_show_text(c_widge.cr,buf);               
             g_object_ref (c_widge.pixmap);                                                   
-            add_pixmap(data->virt_res_pixmaps,c_widge,tmp2 );
+            add_pixmap(data->virt_res_pixmaps,c_widge,tmp_virt2 );
         }
         gtk_container_add (GTK_CONTAINER (eb), widget);
         gtk_table_attach_defaults (GTK_TABLE (data->table),eb,
@@ -971,7 +972,7 @@ static void build_top_table(Awntop_cairo_plug_data * data )
         }
         else
         {
-            snprintf(buf,sizeof(buf),"%ld",topentries[i]->mem);
+            snprintf(buf,sizeof(buf),"%0.0lf",(double)topentries[i]->mem);
             widget=get_cairo_widget(&c_widge,
                             Global_tableheadings[5].unscaled_width*data->size_mult,
                             15*data->size_mult);                       

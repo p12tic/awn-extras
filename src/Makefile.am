@@ -41,7 +41,9 @@ GCONF_APPLETS +=		\
 else
 if WITH_GNOME
 GCONF_APPLETS +=	\
+	digg			\
 	MiMenu		\
+	pandora			\
 	$(NULL)
 endif
 endif
@@ -51,10 +53,8 @@ SUBDIRS =			\
 	affinity		\
 	battery-applet		\
 	comic			\
-	digg			\
 	mail			\
 	notification-area	\
-	pandora			\
 	places			\
 	PyClock			\
 	python-test		\

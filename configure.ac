@@ -168,9 +168,9 @@ if test x${enable_pymod_checks} = xyes; then
     AM_CHECK_PYMOD(gnomevfs,,,AC_MSG_ERROR([python module gnomevfs required]))
     # stacks
     AM_CHECK_PYMOD(gnome.ui,,,AC_MSG_ERROR([python module gnome.ui required]))
-    fi
     # awn-meebo, digg, pandora
     AM_CHECK_PYMOD(gtkmozembed,,,AC_MSG_ERROR([python module gtkmozembed required]))
+    fi
     if test "$with_gconf" != "no"; then
     # lastfm
     AM_CHECK_PYMOD(gst,,,AC_MSG_ERROR([python module gstreamer required (python-gst0.10)]))

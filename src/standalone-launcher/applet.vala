@@ -1838,7 +1838,9 @@ class LauncherApplet : AppletSimple
                 Timeout.add(2000,_hide_icon,this);	                
 				timer_count++;		
 				Timeout.add(30000,_timed_closed,this);
-			}				
+			}	
+            else
+                show_icon();
         }
         else
         {

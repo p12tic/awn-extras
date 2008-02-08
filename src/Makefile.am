@@ -38,14 +38,13 @@ GCONF_APPLETS +=		\
 	switcher		\
 	weather			\
 	$(NULL)
-else
+endif
 if WITH_GNOME
 GCONF_APPLETS +=	\
 	digg			\
 	MiMenu		\
 	pandora			\
 	$(NULL)
-endif
 endif
 
 SUBDIRS =			\

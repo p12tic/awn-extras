@@ -182,7 +182,7 @@ class Configuration: GLib.Object
         default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"whitelist_editor", _config_changed, this);
         default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"max_launch_effect_reps", _config_changed, this);
         default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"discrete/task_icon_use", _config_changed, this);
-        
+        default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"discrete/task_icon_alpha", _config_changed, this);        
         if (!anon_mode)
 		{
 				
@@ -215,6 +215,9 @@ class Configuration: GLib.Object
         _multi_launcher=get_bool(subdir+"multi_launcher",false);
         _task_icon_name=get_string(subdir+"task_icon_name","stock_up");
         _task_icon_use=get_bool(subdir+"task_icon_use",false);
+        float temp_float;
+        temp_float=get_float(subdir+"task_icon_alpha",(float)0.5);
+        _task_icon_alpha=(int) Math.lroundf(temp_float* (float) 255.0);
     }
 
 	private void read_config()
@@ -805,15 +808,6 @@ class BookKeeper : GLib.Object
                 i--;
             }
         }
-/*        foreach(Wnck.Window win in wins)
-        {
-            if (search_win_by_win(win) == null)
-            {
-                removed_wins.prepend(win);
-                wins.remove_all(win);
-            }
-        }
-*/
         foreach(Wnck.Window win in removed_wins)
         {
             if (search_win_by_win(win)!=null )
@@ -1133,9 +1127,9 @@ class LauncherApplet : AppletSimple
             {                       //FIXME
                 if (task_icon != null)
                 {
-                    Pixbuf task;
-                    task=task_icon.copy();
-                    task.composite(temp,0, 0, height-2,height-2,0,0,1.0,1.0, Gdk.InterpType.BILINEAR,config.task_icon_alpha);
+                    //Pixbuf task;
+                    //task=task_icon.copy();
+                    task_icon.composite(temp,0, 0, height-2,height-2,0,0,1.0,1.0, Gdk.InterpType.BILINEAR,config.task_icon_alpha);
                     //temp=task.copy();
                 }
             }

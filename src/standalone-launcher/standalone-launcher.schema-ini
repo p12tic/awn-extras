@@ -73,4 +73,9 @@ type = string
 default =stock_up
 description = icon to overlay if task_icon_use is true;
 
+[DEFAULT/discrete/task_icon_alpha]
+type = float
+default = 0.7
+description = alpha value to apply to task icon overlays. range 0..1.
+
 ; vim: set ft=dosini :

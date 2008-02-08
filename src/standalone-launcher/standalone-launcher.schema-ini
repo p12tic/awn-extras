@@ -85,7 +85,7 @@ description = overlay a icon on a launcher that is managing multiple tasks
 
 [DEFAULT/multi_icon_name]
 type = string
-default =stock_up
+default =add
 description = icon to overlay if multi_icon_use is true and launcher managing >1 tasks
 
 [DEFAULT/multi_icon_scale]

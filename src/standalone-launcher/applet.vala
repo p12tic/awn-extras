@@ -224,13 +224,11 @@ class Configuration: GLib.Object
         temp_float=get_float(subdir+"task_icon_alpha",(float)0.5);
         _task_icon_alpha=(int) Math.lroundf(temp_float* (float) 255.0);
 
-        _multi_icon_name=get_string(subdir+"multi_icon_name","add");
-        _multi_icon_use=get_bool(subdir+"multi_icon_use",false);
-        temp_float=get_float(subdir+"multi_icon_alpha",(float)0.9);
+        _multi_icon_name=get_string("multi_icon_name","add");
+        _multi_icon_use=get_bool("multi_icon_use",false);
+        temp_float=get_float("multi_icon_alpha",(float)0.9);
         _multi_icon_alpha=(int) Math.lroundf(temp_float* (float) 255.0);
-        temp_float=get_float(subdir+"multi_icon_scale",(float)0.3);
-        _multi_icon_scale=(int) Math.lroundf(temp_float* (float) 255.0);
-
+        _multi_icon_scale=get_float("multi_icon_scale",(float)0.3);
     }
 
 	private void read_config()
@@ -1077,6 +1075,7 @@ class LauncherApplet : AppletSimple
     protected	IconTheme				theme;
     protected	Pixbuf					icon;
     protected	Pixbuf					task_icon;
+    protected	Pixbuf                  multi_emblem_icon;
     protected   Gtk.Window				dialog;
     protected   Gtk.VButtonBox			vbox;
     protected	DesktopItem				desktopitem;
@@ -1148,6 +1147,7 @@ class LauncherApplet : AppletSimple
     
     private void show_icon()
     {
+        uint num=0;
         if (!hidden)
         {
 
@@ -1162,7 +1162,8 @@ class LauncherApplet : AppletSimple
             {
                 temp=icon.copy();
             }
-            if (config.task_icon_use && (books.number()>0) && (launchmode==LaunchMode.DISCRETE))
+            num=books.number();
+            if (config.task_icon_use && (num>0) && (launchmode==LaunchMode.DISCRETE))
             {                       //FIXME
                 if (task_icon != null)
                 {
@@ -1171,6 +1172,15 @@ class LauncherApplet : AppletSimple
                     task_icon.composite(temp,0, 0, height-2,height-2,0,0,1.0,1.0, Gdk.InterpType.BILINEAR,config.task_icon_alpha);
                     //temp=task.copy();
                 }
+            }
+            if (config.multi_icon_use && (num>1) )
+            {
+                int scaled_size=(int) ((height - 2)*config.multi_icon_scale);
+                multi_emblem_icon.composite(temp,
+                                0,0,
+                                height-2,height-2,
+                                (height-2)-scaled_size , (height-2)-scaled_size,
+                                1.0,1.0, Gdk.InterpType.BILINEAR,config.multi_icon_alpha);
             }
             if (temp!=null)              
                 set_icon(temp);
@@ -1348,6 +1358,14 @@ class LauncherApplet : AppletSimple
             task_icon=new Pixbuf( Colorspace.RGB,true, 8,height-2,height-2);
             task_icon.fill(0x2020D0ff);
         }
+
+		multi_emblem_icon = theme.load_icon (config.multi_icon_name,(int) ((height - 2)*config.multi_icon_scale), IconLookupFlags.USE_BUILTIN);
+        if (multi_emblem_icon == null)
+        {
+            multi_emblem_icon=new Pixbuf( Colorspace.RGB,true, 8,(int) ((height - 2)*config.multi_icon_scale),(int) ((height - 2)*config.multi_icon_scale));
+            multi_emblem_icon.fill(0x20D020ff);
+        }
+
         show_icon();        
         desktopitem.set_string ("Type","Application");         
 		return false;
@@ -1875,9 +1893,9 @@ class LauncherApplet : AppletSimple
             else
                 show_icon();
         }
-        else
+        else if ( config.multi_icon_use && (books.number()==1) )
         {
-  //          stdout.printf("number() = %d\n",books.number() );
+            show_icon();
         }
 	}
 	

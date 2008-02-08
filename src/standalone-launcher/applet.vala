@@ -126,8 +126,6 @@ static Pixbuf layer_pixbuf_filled(Pixbuf dest,uint pixels,Pixbuf over,int width,
 	return layer_pixbuf_scale(dest,null,over,width,height);
 }
 
-
-
 class Configuration: GLib.Object
 {
 	protected			bool				anon_mode   { get; construct; }
@@ -149,6 +147,9 @@ class Configuration: GLib.Object
     private             float               _highlight_saturate_value;
     private             int                 _max_launch_effect_reps;
     private             bool                _multi_launcher;
+    private             string              _task_icon_name;
+    private             int                 _task_icon_alpha;
+    private             bool                _task_icon_use;
 
     construct
 	{
@@ -211,13 +212,19 @@ class Configuration: GLib.Object
         _highlight_saturate_value=get_float("highlight_saturate_value",(float)2.0);
         _max_launch_effect_reps=get_int("max_launch_effect_reps",4);
         _multi_launcher=get_bool(subdir+"multi_launcher",false);
+        _task_icon_name=get_string(subdir+"task_icon_name","stock_up");
+        stdout.printf("Task icon name %s (%s) = %s\n",uid,subdir,_task_icon_name);
+        _task_icon_use=get_bool(subdir+"task_icon_use",false);
     }
 
 	private void read_config()
 	{   
 		string temp;
 		_task_mode=get_int(subdir+"task_mode",1);        
-		temp=get_string("active_colour","00000000");		
+		temp=get_string("active_colour","00000000");	
+
+        _task_icon_alpha=127;
+
 		//cairo_string_to_color(temp,_active_colour);	
         read_config_dynamic();	
 	}
@@ -278,6 +285,12 @@ class Configuration: GLib.Object
     	}
     }
 
+    public bool task_icon_use{
+        get { 
+			return _task_icon_use;
+    	}
+    }
+
     public int task_mode {
         get { 
 			return _task_mode;
@@ -289,6 +302,13 @@ class Configuration: GLib.Object
 			return _highlight_method;
     	}
     }
+
+    public int task_icon_alpha {
+        get { 
+			return _task_icon_alpha;
+    	}
+    }
+
 
     public float highlight_saturate_value {
         get { 
@@ -306,6 +326,13 @@ class Configuration: GLib.Object
     public string desktop_file_editor {
         get { 
 			return _desktop_file_editor;
+    	}
+    }
+
+    public string task_icon_name {
+        get { 
+            stdout.printf("Task icon name = %s\n",_task_icon_name);
+			return _task_icon_name;
     	}
     }
 
@@ -1017,6 +1044,7 @@ class LauncherApplet : AppletSimple
 
     protected	IconTheme				theme;
     protected	Pixbuf					icon;
+    protected	Pixbuf					task_icon;
     protected   Gtk.Window				dialog;
     protected   Gtk.VButtonBox			vbox;
     protected	DesktopItem				desktopitem;
@@ -1100,7 +1128,17 @@ class LauncherApplet : AppletSimple
             }
             else
             {
-                temp=icon;
+                temp=icon.copy();
+            }
+            if ( (books.number()>0) && (launchmode==LaunchMode.DISCRETE))
+            {                       //FIXME
+                if (task_icon != null)
+                {
+                    Pixbuf task;
+                    task=task_icon.copy();
+                    task.composite(temp,0, 0, height-2,height-2,0,0,1.0,1.0, Gdk.InterpType.BILINEAR,config.task_icon_alpha);
+                    //temp=task.copy();
+                }
             }
             if (temp!=null)              
                 set_icon(temp);
@@ -1143,7 +1181,7 @@ class LauncherApplet : AppletSimple
 		this.drag_data_received+=_drag_data_received;
         this.drag_data_get+=_drag_data_get;
 		awn_config= new ConfigClient();
-        config=new Configuration(uid,(uid.to_double()>0));
+        config=new Configuration(uid,(uid.to_double()<=0));
         if (config.task_mode != TaskMode.NONE)
         {
             this.enter_notify_event+=_enter_notify;
@@ -1197,7 +1235,7 @@ class LauncherApplet : AppletSimple
 		}
 		else
 		{
-			
+			stdout.printf("anonymous\n");
 			launchmode = LaunchMode.ANONYMOUS;
             ulong   xid=uid.substring(1,128).to_ulong();
             books.update_with_xid(xid);    
@@ -1271,6 +1309,13 @@ class LauncherApplet : AppletSimple
             wnck_screen.application_closed+=_application_closed;
             wnck_screen.application_opened+=_application_opened;	
             wnck_screen.active_window_changed+=	_active_window_changed;
+        }
+
+		task_icon = theme.load_icon (config.task_icon_name, height - 2, IconLookupFlags.USE_BUILTIN);
+        if (task_icon == null)
+        {
+            task_icon=new Pixbuf( Colorspace.RGB,true, 8,height-2,height-2);
+            task_icon.fill(0x2020D0ff);
         }
         show_icon();        
         desktopitem.set_string ("Type","Application");         

@@ -63,4 +63,14 @@ type = bool
 default = false
 description = Multi launcher mode
 
+[DEFAULT/discrete/task_icon_use]
+type = bool
+default = true
+description = overlay a task icon on a discrete launcher that is managing a task
+
+[DEFAULT/discrete/task_icon_name]
+type = string
+default =stock_up
+description = icon to overlay if task_icon_use is true;
+
 ; vim: set ft=dosini :

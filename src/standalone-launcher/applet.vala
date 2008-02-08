@@ -151,6 +151,11 @@ class Configuration: GLib.Object
     private             int                 _task_icon_alpha;
     private             bool                _task_icon_use;
 
+    private             string              _multi_icon_name;
+    private             int                 _multi_icon_alpha;
+    private             bool                _multi_icon_use;
+    private             float               _multi_icon_scale;
+    
     construct
 	{
 		if (anon_mode)
@@ -218,6 +223,14 @@ class Configuration: GLib.Object
         float temp_float;
         temp_float=get_float(subdir+"task_icon_alpha",(float)0.5);
         _task_icon_alpha=(int) Math.lroundf(temp_float* (float) 255.0);
+
+        _multi_icon_name=get_string(subdir+"multi_icon_name","add");
+        _multi_icon_use=get_bool(subdir+"multi_icon_use",false);
+        temp_float=get_float(subdir+"multi_icon_alpha",(float)0.9);
+        _multi_icon_alpha=(int) Math.lroundf(temp_float* (float) 255.0);
+        temp_float=get_float(subdir+"multi_icon_scale",(float)0.3);
+        _multi_icon_scale=(int) Math.lroundf(temp_float* (float) 255.0);
+
     }
 
 	private void read_config()
@@ -355,6 +368,32 @@ class Configuration: GLib.Object
 			return _max_launch_effect_reps;
         }
     }
+
+    public int multi_icon_alpha {
+        get { 
+			return _multi_icon_alpha;
+    	}
+    }
+
+    public float multi_icon_scale {
+        get { 
+			return _multi_icon_scale;
+    	}
+    }
+
+    public bool multi_icon_use {
+        get { 
+			return _multi_icon_use;
+    	}
+    }
+
+    public string multi_icon_name {
+        get { 
+			return _multi_icon_name;
+    	}
+    }
+
+
 }
 
 

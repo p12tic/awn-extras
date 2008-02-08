@@ -78,4 +78,25 @@ type = float
 default = 0.7
 description = alpha value to apply to task icon overlays. range 0..1.
 
+[DEFAULT/multi_icon_use]
+type = bool
+default = true
+description = overlay a icon on a launcher that is managing multiple tasks
+
+[DEFAULT/multi_icon_name]
+type = string
+default =stock_up
+description = icon to overlay if multi_icon_use is true and launcher managing >1 tasks
+
+[DEFAULT/multi_icon_scale]
+type = float
+default =0.3
+description = scaling relative to full icon size.  will be placed in bottom right
+
+[DEFAULT/multi_icon_alpha]
+type = float
+default = 1.0
+description = alpha value to apply to multi icon overlays. range 0..1.
+
+
 ; vim: set ft=dosini :

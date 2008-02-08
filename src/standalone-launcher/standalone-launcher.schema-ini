@@ -30,7 +30,7 @@ description = colour to underlay the active icon. Not Implemented
 
 [DEFAULT/desktop_file_editor]
 type = string
-default = gnome-desktop-item-edit
+default = awn-launcher-editor
 description = desktop file editor.
 
 [DEFAULT/whitelist_editor]

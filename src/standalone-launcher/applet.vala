@@ -181,7 +181,8 @@ class Configuration: GLib.Object
         default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"highlight_saturate_value", _config_changed, this);
         default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"whitelist_editor", _config_changed, this);
         default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"max_launch_effect_reps", _config_changed, this);
-
+        default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"discrete/task_icon_use", _config_changed, this);
+        
         if (!anon_mode)
 		{
 				
@@ -213,7 +214,6 @@ class Configuration: GLib.Object
         _max_launch_effect_reps=get_int("max_launch_effect_reps",4);
         _multi_launcher=get_bool(subdir+"multi_launcher",false);
         _task_icon_name=get_string(subdir+"task_icon_name","stock_up");
-        stdout.printf("Task icon name %s (%s) = %s\n",uid,subdir,_task_icon_name);
         _task_icon_use=get_bool(subdir+"task_icon_use",false);
     }
 
@@ -330,8 +330,7 @@ class Configuration: GLib.Object
     }
 
     public string task_icon_name {
-        get { 
-            stdout.printf("Task icon name = %s\n",_task_icon_name);
+        get {
 			return _task_icon_name;
     	}
     }
@@ -1130,7 +1129,7 @@ class LauncherApplet : AppletSimple
             {
                 temp=icon.copy();
             }
-            if ( (books.number()>0) && (launchmode==LaunchMode.DISCRETE))
+            if (config.task_icon_use && (books.number()>0) && (launchmode==LaunchMode.DISCRETE))
             {                       //FIXME
                 if (task_icon != null)
                 {
@@ -1235,7 +1234,6 @@ class LauncherApplet : AppletSimple
 		}
 		else
 		{
-			stdout.printf("anonymous\n");
 			launchmode = LaunchMode.ANONYMOUS;
             ulong   xid=uid.substring(1,128).to_ulong();
             books.update_with_xid(xid);    

@@ -188,6 +188,9 @@ class Configuration: GLib.Object
         default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"max_launch_effect_reps", _config_changed, this);
         default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"discrete/task_icon_use", _config_changed, this);
         default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"discrete/task_icon_alpha", _config_changed, this);        
+        default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"multi_icon_alpha", _config_changed, this);        
+        default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"multi_icon_use", _config_changed, this);        
+        default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"multi_icon_scale", _config_changed, this);        
         if (!anon_mode)
 		{
 				
@@ -1180,7 +1183,7 @@ class LauncherApplet : AppletSimple
                                 0,0,
                                 height-2,height-2,
                                 (height-2)-scaled_size , (height-2)-scaled_size,
-                                1.0,1.0, Gdk.InterpType.BILINEAR,config.multi_icon_alpha);
+                                config.multi_icon_scale,config.multi_icon_scale, Gdk.InterpType.BILINEAR,config.multi_icon_alpha);
             }
             if (temp!=null)              
                 set_icon(temp);
@@ -1359,10 +1362,10 @@ class LauncherApplet : AppletSimple
             task_icon.fill(0x2020D0ff);
         }
 
-		multi_emblem_icon = theme.load_icon (config.multi_icon_name,(int) ((height - 2)*config.multi_icon_scale), IconLookupFlags.USE_BUILTIN);
+		multi_emblem_icon = theme.load_icon (config.multi_icon_name,height-2, IconLookupFlags.USE_BUILTIN);
         if (multi_emblem_icon == null)
         {
-            multi_emblem_icon=new Pixbuf( Colorspace.RGB,true, 8,(int) ((height - 2)*config.multi_icon_scale),(int) ((height - 2)*config.multi_icon_scale));
+            multi_emblem_icon=new Pixbuf( Colorspace.RGB,true, 8,height-2,height-2);
             multi_emblem_icon.fill(0x20D020ff);
         }
 

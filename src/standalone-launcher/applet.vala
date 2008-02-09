@@ -1211,6 +1211,7 @@ class LauncherApplet : AppletSimple
     {
         books = new BookKeeper();
         this.button_press_event+=_button_press;
+        this.scroll_event+=_scroll_event;
         activated=false;
         hidden=false;
 		targets = new TargetEntry[2];
@@ -1794,7 +1795,55 @@ class LauncherApplet : AppletSimple
     {
         right_menu.popup(null, null, null, null,
 			  event.button, event.time);
-            
+    }
+
+    private bool _scroll_event(Gtk.Widget widget,Gdk.EventMotion event)
+    {
+        stdout.printf("scroll_event\n");
+        stdout.printf("stage 1\n");
+        Wnck.Window win=null;
+        Wnck.Window active_win=wnck_screen.get_active_window();
+        weak GLib.SList<Wnck.Window> wins=books.get_wins();
+        if (active_win !=null)
+        {
+            stdout.printf("stage 2\n");
+            weak GLib.SList<Wnck.Window> result=wins.find(active_win);
+            if (result == null)
+            {
+                stdout.printf("stage 3\n");
+                win=wins.nth_data(0);
+                win.activate(event.time);
+            }
+            else
+            {
+                int position = wins.position(result);
+                if (  (event.state & Gdk.ModifierType.SHIFT_MASK) != 0)
+                {
+                    if (result.next !=null)
+                    {
+                        result=result.next;
+                        weak Wnck.Window win_weak=result.data;
+                        win=win_weak;
+                    }
+                    if(win==null)
+                    {
+                        win=wins.nth_data(0);
+                    }
+                }
+                else //UP
+                {
+                    position--;
+                    if (position<0)
+                    {
+                        position=(int)wins.length();
+                        position--;
+                    }
+                    win=wins.nth_data(position);
+                }
+                win.activate(event.time);
+            }
+        }
+        return false;
     }
      
     private bool _button_press(Gtk.Widget widget,Gdk.EventButton event)

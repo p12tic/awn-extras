@@ -1799,18 +1799,14 @@ class LauncherApplet : AppletSimple
 
     private bool _scroll_event(Gtk.Widget widget,Gdk.EventMotion event)
     {
-        stdout.printf("scroll_event\n");
-        stdout.printf("stage 1\n");
         Wnck.Window win=null;
         Wnck.Window active_win=wnck_screen.get_active_window();
         weak GLib.SList<Wnck.Window> wins=books.get_wins();
         if (active_win !=null)
         {
-            stdout.printf("stage 2\n");
             weak GLib.SList<Wnck.Window> result=wins.find(active_win);
             if (result == null)
             {
-                stdout.printf("stage 3\n");
                 win=wins.nth_data(0);
                 win.activate(event.time);
             }

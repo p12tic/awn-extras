@@ -90,7 +90,7 @@ description = icon to overlay if multi_icon_use is true and launcher managing >1
 
 [DEFAULT/multi_icon_scale]
 type = float
-default =0.3
+default =0.6
 description = scaling relative to full icon size.  will be placed in bottom right
 
 [DEFAULT/multi_icon_alpha]

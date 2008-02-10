@@ -24,7 +24,6 @@ GCONF_APPLETS +=		\
 	arss			\
 	awn-notification-daemon	\
 	awnterm			\
-	clock			\
 	comic			\
 	digitalClock		\
 	file-browser-launcher	\
@@ -51,7 +50,6 @@ SUBDIRS =			\
 	libawn-extras		\
 	affinity		\
 	battery-applet		\
-	comic			\
 	mail			\
 	notification-area	\
 	places			\

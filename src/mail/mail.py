@@ -383,8 +383,9 @@ class Backends:
             return "http://mail.google.com/mail/"
 
         def update(self):
-            f = feedparser.parse("https://%s:%s@mail.google.com/gmail/feed \
-                /atom" % (self.key.name, self.key.password))
+            f = feedparser.parse( \
+                "https://%s:%s@mail.google.com/gmail/feed/atom" \
+                 % (self.key.name, self.key.password))
 
             if "bozo_exception" in f.keys():
                 raise MailError("login")

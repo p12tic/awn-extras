@@ -74,8 +74,8 @@ class Applet:
         self.awn.module.get("feedparser", { \
             "Debian/Ubuntu": "python-feedparser", \
             "Gentoo": "dev-python/feedparser", \
-            "OpenSUSE": "python-feedparser"}
-            self.init2())
+            "OpenSUSE": "python-feedparser"},
+            self.init2)
 
     def init2(self, module=None, force=False):
         global feedparser

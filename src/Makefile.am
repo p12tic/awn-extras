@@ -12,6 +12,7 @@ GCONF_APPLETS +=		\
 	cairo-menu		\
 	cairo-menu-classic	\
 	calendar		\
+	comic			\
 	filebrowser		\
 	main-menu		\
 	plugger			\
@@ -49,7 +50,6 @@ SUBDIRS =			\
 	libawn-extras		\
 	affinity		\
 	battery-applet		\
-	comic			\
 	mail			\
 	notification-area	\
 	places			\

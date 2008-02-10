@@ -24,8 +24,6 @@ GCONF_APPLETS +=		\
 	arss			\
 	awn-notification-daemon	\
 	awnterm			\
-	clock			\
-	comic			\
 	digitalClock		\
 	file-browser-launcher	\
 	lastfm			\

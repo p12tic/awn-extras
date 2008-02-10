@@ -231,7 +231,7 @@ class App (awn.AppletSimple):
 		self.open_clicked = self.client.get_int('/apps/avant-window-navigator/applets/file-browser-launcher/places_open',2)
 		self.selection = self.treeview.get_selection()
 		if self.open_clicked==2:
-			self.launch_fb(None,self.places_paths[self.liststore[self.selection.get_selected()[1]-1].path[0]])
+			self.launch_fb(None,self.places_paths[self.liststore[self.selection.get_selected()[1]].path[0]-1])
 		else:
 			self.entry.set_text(self.places_paths[self.liststore[self.selection.get_selected()[1]-1].path[0]])
 			self.entry.grab_focus()

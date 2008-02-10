@@ -10,19 +10,18 @@ import awn
 class App (awn.AppletSimple):
   def __init__ (self, uid, orient, height):
     awn.AppletSimple.__init__ (self, uid, orient, height)
-    self.pref_path = os.path.join(os.path.expanduser('~'), ".config/awn/applets/digg")
+    self.pref_path = os.path.dirname (__file__)
     self.height = height
     icon = gdk.pixbuf_new_from_file(os.path.dirname (__file__) + '/digg.png')
-        
+
     if height != icon.get_height():
         icon = icon.scale_simple(height,height,gtk.gdk.INTERP_BILINEAR)
     self.set_icon(icon)
     self.title = awn.awn_title_get_default ()
     self.dialog = awn.AppletDialog (self)
 
-    self.mo  = gtkmozembed;
     gtkmozembed.set_profile_path(self.pref_path, "profile")
-    self.moz = self.mo.MozEmbed()
+    self.moz = gtkmozembed.MozEmbed()
     pad = gtk.Alignment()
     pad.add(self.moz)
     self.moz.set_size_request(450, 580)

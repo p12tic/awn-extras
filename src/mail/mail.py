@@ -71,7 +71,10 @@ class Applet:
 
         self.awn.title.set("Mail Applet (Click to Log In)")
         self.awn.icon.set(self.getIcon("login"))
-        self.awn.module.get("feedparser", {"Ubuntu": "python-feedparser"}, \
+        self.awn.module.get("feedparser", { \
+            "Debian/Ubuntu": "python-feedparser", \
+            "Gentoo": "dev-python/feedparser", \
+            "OpenSUSE": "python-feedparser"}
             self.init2)
 
     def init2(self, module=None, force=False):
@@ -117,7 +120,7 @@ class Applet:
             self.refresh()
 
     def refresh(self, widget=None):
-        olen = self.mail.len()
+        olen = len(self.mail.subjects)
         try:
             self.mail.update()
         except MailError, (err):
@@ -125,22 +128,23 @@ class Applet:
             self.drawErrorDlog(err)
             return False
 
-        if self.mail.len() > olen:
+        if len(self.mail.subjects) > olen:
             self.awn.notify.send("New Mail - Mail Applet", \
-                "You have %s new mail" % str(self.mail.len() - olen), \
+                "You have %s new mail" % str(len(self.mail.subjects) - olen), \
                 self.getIconPath("unread", full=True))
             self.awn.effects.notify()
-        self.awn.title.set(self.mail.title())
-        self.awn.icon.set(self.getIcon(self.mail.status()))
+        self.awn.title.set("%d Unread Message%s" % \
+                (len(self.mail.subjects), len(self.mail.subjects) \
+                != 1 and "s" or ""))
+        self.awn.icon.set(self.getIcon(len(self.mail.subjects) > 0 and \
+            "unread" or return "read"()))
 
-        if self.hide and self.mail.status() == "read":
+        if self.hide and len(self.mail.subjects) > 0:
             self.awn.icon.hide()
 
         if self.awn.dialog.main:
             self.awn.dialog.main.hide()
         self.drawMainDlog()
-
-        print "Mail Applet Refreshed: %s new messages" % str(self.mail.len() - olen)
 
     def logout(self):
         self.awn.icon.set(self.getIcon("login"))
@@ -162,21 +166,35 @@ class Applet:
         else:
             return os.path.join(os.path.abspath(os.path.dirname(__file__)), files[name])
 
+    def showWeb(self):
+        if hasattr(self.mail, "showWeb"):
+            self.mail.showWeb()
+        elif hasattr(self.mail, "url"):
+            subprocess.Popen(["xdg-open", self.mail.url()])
+
+    def showDesk(self):
+        if hasattr(self.mail, "showDesk"):
+            self.mail.showDesk()
+        else:
+            subprocess.Popen(['evolution', '-c', 'mail'])
+
     def drawMainDlog(self):
         dlog = self.awn.dialog.new("main")
-        dlog.set_title(" "+self.mail.title()+" ")
+        dlog.set_title(" %d Unread Message%s " % \
+                (len(self.mail.subjects), len(self.mail.subjects) \
+                != 1 and "s" or ""))
 
         layout = gtk.Table()
         layout.resize(2, 1)
         dlog.add(layout)
 
-        if self.mail.len() > 0:
+        if len(self.mail.subjects) > 0:
             innerlyt = gtk.Table()
-            innerlyt.resize(self.mail.len(), 2)
+            innerlyt.resize(len(self.mail.subjects), 2)
             #innerlyt.set_row_spacings(20)
             #innerlyt.set_col_spacing(0, 10)
 
-            for i in xrange(self.mail.len()):
+            for i in xrange(len(self.mail.subjects)):
                 label = gtk.Label("%d:" % (i+1))
                 innerlyt.attach(label, 0, 1, i, i+1)
 
@@ -194,14 +212,14 @@ class Applet:
         btnlayout.resize(1, 5)
         button1 = gtk.Button()
         button1.set_relief(gtk.RELIEF_NONE) # Found it; that's a relief
-        button1.connect("clicked", lambda x: self.mail.showWeb())
+        button1.connect("clicked", lambda x: self.showWeb())
         button1.set_image(gtk.image_new_from_stock(gtk.STOCK_NETWORK, \
             gtk.ICON_SIZE_BUTTON))
         btnlayout.attach(button1, 0, 1, 0, 1)
 
         button2 = gtk.Button()
         button2.set_relief(gtk.RELIEF_NONE)
-        button2.connect("clicked", lambda x: self.mail.showDesk())
+        button2.connect("clicked", lambda x: self.showDesk())
         button2.set_image(gtk.image_new_from_stock(gtk.STOCK_DISCONNECT, \
             gtk.ICON_SIZE_BUTTON))
         btnlayout.attach(button2, 1, 2, 0, 1)
@@ -362,12 +380,11 @@ class Backends:
             self.key = key
 
         def url(self):
-            return "https://%s:%s@mail.google.com/gmail/feed/atom" % \
-                (self.key.name, self.key.password)
-            # rot13 * rot13 = orig
+            return "http://mail.google.com/mail/"
 
         def update(self):
-            f = feedparser.parse(self.url())
+            f = feedparser.parse("https://%s:%s@mail.google.com/gmail/feed \
+                /atom" % (self.key.name, self.key.password))
 
             if "bozo_exception" in f.keys():
                 raise MailError("login")
@@ -380,24 +397,11 @@ class Backends:
             t = []
             self.subjects = []
             for i in f.entries:
-                i.title = self.cleanGmailSubject(i.title)
+                i.title = self.__cleanGmailSubject(i.title)
                 t.append(MailItem(i.title, i.author))
                 self.subjects.append(i.title)
 
-        def title(self):
-            return "%d Unread Message%s" % \
-                (len(self.subjects), len(self.subjects) != 1 and "s" or "")
-
-        def status(self):
-            if len(self.subjects) > 0:
-                return "unread"
-            else:
-                return "read"
-
-        def len(self):
-            return len(self.subjects)
-
-        def cleanGmailSubject(self, n):
+        def __cleanGmailSubject(self, n):
             n = re.sub(r"^[^>]*\\>", "", n) # "sadf\>fdas" -> "fdas"
             n = re.sub(r"\\[^>]*\\>$", "", n) # "asdf\afdsasdf\>" -> "asdf"
             n = n.replace("&quot;", "\"")
@@ -410,7 +414,7 @@ class Backends:
                 n = "[No Subject]"
             return n
 
-        def cleanGmailMsg(self, n):
+        def __cleanGmailMsg(self, n):
             n = re.sub("\n\s*\n", "\n", n)
             n = re.sub("&[#x(0x)]?\w*;", " ", n)
             n = re.sub("\<[^\<\>]*?\>", "", n) # "<h>asdf<a></h>" -> "asdf"
@@ -427,32 +431,11 @@ class Backends:
             # Get source of message
             return n
 
-        def showWeb(self):
-            subprocess.Popen(['xdg-open', 'http://mail.google.com/mail/'])
-
-        def showDesk(self):
-            subprocess.Popen(['evolution', '-c', 'mail'])
-
     class Empty:
         def __init__(self, key):
             self.subjects = ["Dummy Message"]
 
         def update(self):
-            pass
-
-        def title(self):
-            return "1 Unread Message"
-
-        def status(self):
-            return "unread"
-
-        def len(self):
-            return 1
-
-        def showWeb(self):
-            pass
-
-        def showDesk(self):
             pass
 
 if __name__ == "__main__":

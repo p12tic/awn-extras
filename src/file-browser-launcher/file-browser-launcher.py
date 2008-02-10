@@ -13,18 +13,18 @@ import gconfwrapper
 
 class App (awn.AppletSimple):
 	def __init__(self, uid, orient, height):
-		
+
 		#AWN Applet Configuration
 		awn.AppletSimple.__init__(self, uid, orient, height)
 		self.title = awn.awn_title_get_default()
 		self.dialog = awn.AppletDialog(self)
-		
+
 		#Has to do with GCONF
 		self.client = gconfwrapper.GConfWrapper()
-		
+
 		#Get the icon theme default theme thing
 		self.theme = gtk.icon_theme_get_default()
-		
+
 		#Get the icon path, or default to /dev/null which will become the stock folder icon
 		self.gconf_icon = self.client.get_string('/apps/avant-window-navigator/applets/file-browser-launcher/icon','/dev/null')
 		try:
@@ -37,7 +37,7 @@ class App (awn.AppletSimple):
 			self.set_icon(icon)
 		except:
 			self.set_icon(gtk.gdk.pixbuf_new_from_file('/'.join(__file__.split('/')[:-1])+'/images/folder.png'))
-		
+
 		#Make the dialog, will only be shown when approiate
 		#VBox for everything to go in
 		self.vbox = gtk.VBox()
@@ -60,7 +60,7 @@ class App (awn.AppletSimple):
 		#self.treeview.connect('key-press-event',lambda a:pass)
 		self.add_places()
 		self.vbox.pack_start(self.treeview)
-		
+
 		#Entry widget for displaying the path to open
 		self.entry = gtk.Entry()
 		self.entry.set_text(os.path.expanduser('~'))
@@ -75,34 +75,34 @@ class App (awn.AppletSimple):
 		#And add the HBox to the vbox and add the vbox to the dialog
 		self.vbox.pack_start(self.hbox)
 		self.dialog.add(self.vbox)
-		
+
 		#AWN applet signals
 		self.connect('button-press-event', self.button_press)
 		self.connect('enter-notify-event', lambda a,b: self.title.show(self,'File Browser Launcher'))
 		self.connect('leave-notify-event', lambda a,b: self.title.hide(self))
 		self.dialog.connect('focus-out-event', lambda a,b: self.dialog.hide())
-	
+
 	#Function to show the home folder, mounted drives/partitions, and bookmarks according to gconf
 	#This also refreshes in case a CD was inserted, MP3 player unplugged, bookmark added, etc.
 	def add_places(self):
 		#This function adds items to the liststore. The TreeView was already made in __init__()
-		
+
 		#Empty the liststore if it isn't
 		self.liststore.clear()
 		self.places_paths = []
-		
+
 		#Get the needed GConf values
 		self.show_home = self.client.get_int('/apps/avant-window-navigator/applets/file-browser-launcher/places_home',2)
 		self.show_local = self.client.get_int('/apps/avant-window-navigator/applets/file-browser-launcher/places_local',2)
 		self.show_network = self.client.get_int('/apps/avant-window-navigator/applets/file-browser-launcher/places_network',2)
 		self.show_bookmarks = self.client.get_int('/apps/avant-window-navigator/applets/file-browser-launcher/places_bookmarks',2)
-		
+
 		#Now make the actual mounted items. First: Home Folder
 		if self.show_home==2:
 			self.icon_home = self.theme.load_icon('user-home',24,24)
 			self.liststore.append([self.icon_home,'Home Folder'])
 			self.places_paths.append(os.path.expanduser('~'))
-		
+
 		#Get list of mounted drives from both $ mount and /etc/fstab AND the list of bookmarks
 		self.mount2 = os.popen('mount')
 		self.mount = self.mount2.readlines()
@@ -119,13 +119,13 @@ class App (awn.AppletSimple):
 		self.nfs_smb_corr_hnames = []
 		self.cd_paths = []
 		self.dvd_paths = []
-		
+
 		#Get whether the trash is empty or not
 		if len(os.listdir(os.path.expanduser('~/.Trash'))) > 2:
 			self.trash_full = True
 		else:
 			self.trash_full = False
-		
+
 		#Get the mounted drives/partitions that are suitable to list (from fstab)
 		z2 = []
 		z3 = 0
@@ -145,8 +145,8 @@ class App (awn.AppletSimple):
 				self.nfs_smb_paths.append(z2[(z3-1)])
 				self.nfs_smb_corr_hnames.append(z2[(z3-2)].replace('//',''))
 			z3 = z3+1
-				
-		
+
+
 		#Get the mounted drives/partitions that are suitable to list (from mount)
 		for x in self.mount:
 			y = x.split(' ')
@@ -159,7 +159,7 @@ class App (awn.AppletSimple):
 						self.dvd_paths.append(x.split(' on ')[1].split(' type ')[0])
 				elif x.split(' on ')[1].split(' type ')[0] in self.nfs_smb_paths:
 					self.paths.append(x.split(' on ')[1].split(' type ')[0])
-		
+
 		#Go through the list and get the right icon and name for specific ones
 		#ie/eg: / -> harddisk icon and "Filesystem"
 		#/media/Lexar -> usb-disk icon and "Lexar"
@@ -185,14 +185,14 @@ class App (awn.AppletSimple):
 						self.places_paths.append(x)
 				else: #Maybe /home, /boot, /usr, etc.
 					self.liststore.append([self.theme.load_icon('drive-harddisk',24,24),x])
-		
+
 		#Go through the list of network drives/etc. from /etc/fstab
 		if self.show_network==2:
 			for x in self.nfs_smb_paths:
 				self.liststore.append([self.theme.load_icon('network-folder',24,24),\
 				self.nfs_smb_corr_hnames[self.nfs_smb_paths.index(x)]])
 				self.places_paths.append(x)
-		
+
 		#Go through the list of bookmarks and add them to the list IF it's not in the mount list
 		if self.show_bookmarks==2:
 			for x in self.bmarks:
@@ -225,17 +225,17 @@ class App (awn.AppletSimple):
 						elif y=='fonts':
 							self.liststore.append([self.theme.load_icon('font',24,24),'Fonts'])
 							self.places_paths.append('%s:///' % y)
-	
+
 	#Function to do what should be done according to gconf when the treeview is clicked
 	def treeview_clicked(self,widget,event):
 		self.open_clicked = self.client.get_int('/apps/avant-window-navigator/applets/file-browser-launcher/places_open',2)
 		self.selection = self.treeview.get_selection()
 		if self.open_clicked==2:
-			self.launch_fb(None,self.places_paths[self.liststore[self.selection.get_selected()[1]].path[0]])
+			self.launch_fb(None,self.places_paths[self.liststore[self.selection.get_selected()[1]-1].path[0]])
 		else:
-			self.entry.set_text(self.places_paths[self.liststore[self.selection.get_selected()[1]].path[0]])
+			self.entry.set_text(self.places_paths[self.liststore[self.selection.get_selected()[1]-1].path[0]])
 			self.entry.grab_focus()
-	
+
 	#Applet show/hide methods - copied from MiMenu (and edited)
 	#When a button is pressed
 	def button_press(self, widget, event):
@@ -248,33 +248,33 @@ class App (awn.AppletSimple):
 			elif event.button==3:
 				self.show_menu(event)
 			self.title.hide(self)
-	
-	#dialog_config: 
+
+	#dialog_config:
 	def dialog_config(self,button):
 		if button!=1 and button!=2:
 			return False
 		self.curr_button = button
-		
+
 		#Get whether to focus the entry when displaying the dialog or not
 		self.gconf_focus = self.client.get_int('/apps/avant-window-navigator/applets/file-browser-launcher/focus_entry',2)
-		
+
 		if button==1: #Left mouse button
 		#Get the value for the left mouse button to automatically open. Create and default to 1 the entry if it doesn't exist
 		#Also get the default directory or default to ~
 			self.gconf_lmb = self.client.get_int('/apps/avant-window-navigator/applets/file-browser-launcher/lmb',1)
 			self.gconf_lmb_path = self.client.get_string('/apps/avant-window-navigator/applets/file-browser-launcher/lmb_path',\
 			os.path.expanduser('~'))
-		
+
 		elif button==2: #Middle mouse button
 		#Get the value for the middle mouse button to automatically open. Create and default to 2 the entry if it doesn't exist
 		#Also get the default directory or default to ~
 			self.gconf_mmb = self.client.get_int('/apps/avant-window-navigator/applets/file-browser-launcher/mmb',2)
 			self.gconf_mmb_path = self.client.get_string('/apps/avant-window-navigator/applets/file-browser-launcher/mmb_path',\
 			os.path.expanduser('~'))
-		
+
 		#Now get the chosen program for file browsing from gconf
 		self.gconf_fb = self.client.get_string('/apps/avant-window-navigator/applets/file-browser-launcher/fb','xdg-open')
-		
+
 		#Left mouse button - either popup with correct path or launch correct path OR do nothing
 		if button==1:
 			if self.gconf_lmb==1:
@@ -285,7 +285,7 @@ class App (awn.AppletSimple):
 				self.dialog.show_all()
 			elif self.gconf_lmb==2:
 				self.launch_fb(None,self.gconf_lmb_path)
-		
+
 		#Right mouse button - either popup with correct path or launch correct path OR do nothing
 		if button==2:
 			if self.gconf_mmb==1:
@@ -296,61 +296,61 @@ class App (awn.AppletSimple):
 				self.dialog.show_all()
 			elif self.gconf_mmb==2:
 				self.launch_fb(None,self.gconf_mmb_path)
-	
+
 	#If the user hits the enter key on the main part OR the number pad
 	def detect_enter(self,a,event):
 		if event.keyval==65293 or event.keyval==65421:
 			self.enter.clicked()
-	
+
 	#Launces file browser to open "path". If "path" is None: use value from the entry widget
 	def launch_fb(self,widget,path=None):
 		if path==None:
 			path = self.entry.get_text()
-		
+
 		#Get the file browser app, or set to xdg-open if it's not set
 		self.gconf_fb = self.client.get_string('/apps/avant-window-navigator/applets/file-browser-launcher/fb','xdg-open')
-		
+
 		#Launch file browser at path
 		subprocess.Popen(('%s %s' % (self.gconf_fb, path)).split(' '))
-	
+
 	#Right click menu - Preferences or About
 	def show_menu(self,event):
-		
+
 		#Hide the dialog if it's shown
 		self.dialog.hide()
-		
+
 		#Create the items for Preferences and About
 		self.prefs = gtk.ImageMenuItem(gtk.STOCK_PREFERENCES)
 		self.about = gtk.ImageMenuItem(gtk.STOCK_ABOUT)
-		
+
 		#Connect the two items to functions when clicked
 		self.prefs.connect("activate",self.open_prefs)
 		self.about.connect("activate",self.open_about)
-		
+
 		#Now create the menu to put the items in and show it
 		self.menu = gtk.Menu()
 		self.menu.append(self.prefs)
 		self.menu.append(self.about)
 		self.menu.show_all()
 		self.menu.popup(None, None, None, event.button, event.time)
-	
+
 	#Show the preferences window
 	def open_prefs(self,widget):
 		#Import the prefs file from the same directory
 		import prefs
-		
+
 		#Show the prefs window - see prefs.py
 		prefs.Prefs(self.set_icon)
-	
+
 	#Show the about window
 	def open_about(self,widget):
 		#Import the about file from the same directory
 		import about
-		
+
 		#Show the about window - see about.py
 		about.About()
-	
-		
+
+
 if __name__ == '__main__':
 	awn.init(sys.argv[1:])
 	applet = App(awn.uid, awn.orient,awn.height)

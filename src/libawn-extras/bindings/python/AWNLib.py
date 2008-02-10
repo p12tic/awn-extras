@@ -317,13 +317,17 @@ class Settings:
         def __init__(self, folder, parent):
             self.parent = parent
             self.update(folder)
-            self.parent.module.get("gconf", {"Ubuntu": "python-gconf"}, self.init2)
+            self.parent.module.get("gconf", { \
+                "Debian/Ubuntu": "python-gconf", \
+                "Gentoo": "dev-python/gnome-python", \
+                "OpenSUSE": "python-gnome"}, self.init2)
 
         def init2(self, module):
             self.client = module.client_get_default()
 
         def update(self, folder):
-            self.folder = folder
+            self.folder = os.path.join("/apps/avant-window-navigator/applets", \
+                folder)
 
         def notify(self, key, callback):
             self.client.notify_add(self.folder, key, callback)
@@ -366,7 +370,7 @@ class Settings:
             return f(self.folder, key)
 
         def delete(self, key):
-            self.client.unset(os.path.join(self.folder, key))
+            raise NotImplementedError
 
         def type(self, key):
             return self.client.get_value_type(self.folder, key).value_nick
@@ -376,7 +380,10 @@ class KeyRing:
         self.parent = parent
 
     def require(self):
-        self.parent.module.get("gnomekeyring", {"Ubuntu": "gnome-keyring"}, self.require2)
+        self.parent.module.get("gnomekeyring", { \
+            "Debian/Ubuntu": "gnome-keyring", \
+            "Gentoo": "gnome-base/gnome-keyring", \
+            "OpenSUSE": "gnome-keyring"}, self.require2)
 
     def require2(self, keyring):
         self.keyring = keyring
@@ -473,7 +480,10 @@ class Notify:
             return
         n = os.system("notify-send")
         if n != 256:
-            self.parent.module.depend("notify-send", {"Ubuntu": "libnotify-bin"}, self.require)
+            self.parent.module.depend("notify-send", { \
+                "Debian/Ubuntu": "libnotify-bin", \
+                "Gentoo": "x11-libs/libnotify", \
+                "OpenSUSE": "libnotify"}, self.require)
 
     def send(self, subject=None, body="", icon=""):
         if not subject:

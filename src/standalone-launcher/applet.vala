@@ -1371,6 +1371,7 @@ class LauncherApplet : AppletSimple
         }
 
         show_icon();        
+        effect_start_ex(effects, Effect.LAUNCHING,null,null,1);
         desktopitem.set_string ("Type","Application");         
 		return false;
     }

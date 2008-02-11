@@ -4,7 +4,6 @@ SUBDIRS =			\
 	awnterm			\
 	awn-notification-daemon \
 	battery-applet		\
-	BlingSwitcher 		\
 	calendar		\
 	cairo-menu		\
 	comic			\

@@ -138,7 +138,6 @@ src/awnsystemmonitor/Makefile
 src/awnterm/Makefile
 src/battery-applet/Makefile
 src/battery-applet/icons/Makefile
-src/BlingSwitcher/Makefile
 src/cairo-menu/Makefile
 src/calendar/Makefile
 src/calendar/google/Makefile

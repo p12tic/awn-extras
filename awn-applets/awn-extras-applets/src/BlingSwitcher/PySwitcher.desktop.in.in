@@ -1,9 +1,0 @@
-[Desktop Entry]
-Version=1.0
-Encoding=UTF-8
-Name=BlingSwitcher
-Type=Python
-Comment=A Desktop Switcher with visual effects
-Exec=@LIBDIR@/awn/applets/BlingSwitcher/PySwitcher.py
-Icon=@LIBDIR@/awn/applets/BlingSwitcher/BlingSwitcher.png
-Name[pt_BR]=PySwitcher

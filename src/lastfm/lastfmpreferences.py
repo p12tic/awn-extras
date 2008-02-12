@@ -9,7 +9,6 @@
 import gtk
 from gtk import gdk
 import cairo
-import wnck
 import locale
 import gettext
 import md5

@@ -23,7 +23,6 @@
 import gtk
 from gtk import gdk
 import cairo
-import wnck
 APP="awn-calendar-applet"
 DIR="locale"
 import locale

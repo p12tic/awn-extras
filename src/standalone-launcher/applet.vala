@@ -1066,6 +1066,41 @@ class BookKeeper : GLib.Object
             }
         }
     }
+}
+
+//------------------------------------------------------------------------------
+
+class Multi_Launcher:    GLib.Object
+{
+    protected           GLib.SList <DesktopItem>        items;
+    protected   weak    GLib.SList <string>             desktop_filenames { get; construct; }
+
+    construct
+    {
+        
+
+    }
+
+    public Multi_Launcher(GLib.SList<string> desktop_filenames)
+    {
+        this.desktop_filenames=desktop_filenames;
+    }
+
+    public void prepend(DesktopItem item)
+    {
+        items.prepend(item);
+    }
+
+    public void append(DesktopItem item)
+    {
+        items.append(item);
+    }
+
+    public void add(DesktopItem item)
+    {
+        prepend(item);
+    }
+
 
 }
 
@@ -1081,7 +1116,7 @@ class LauncherApplet : AppletSimple
     protected	Pixbuf                  multi_emblem_icon;
     protected   Gtk.Window				dialog;
     protected   Gtk.VButtonBox			vbox;
-    protected	DesktopItem				desktopitem;
+    protected	DesktopItem				desktopitem;//primary item
     protected   Configuration			config;
 	protected	TargetEntry[]			targets;
 	protected   Wnck.Screen				wnck_screen;

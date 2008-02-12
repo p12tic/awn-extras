@@ -24,7 +24,6 @@
 import gtk
 from gtk import gdk
 import cairo
-import wnck
 
 class ComicDialog(gtk.DrawingArea):
 	def __init__(self):

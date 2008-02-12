@@ -24,7 +24,6 @@ import os
 import gtk
 from gtk import gdk
 import cairo
-import wnck
 import weathericons
 import weathertext
 APP="awn-weather-applet"

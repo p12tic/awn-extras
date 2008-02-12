@@ -27,7 +27,6 @@ import awn
 import gtk
 from gtk import gdk
 import cairo
-import wnck
 import re
 import weathericons
 import weathertext

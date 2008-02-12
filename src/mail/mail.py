@@ -116,7 +116,7 @@ class Applet:
 
             self.awn.settings["login-token"] = key.token
 
-            self.timer = self.awn.timing.time(self.refresh, 300)
+            self.timer = self.awn.timing.time(self.refresh, 30)
             self.refresh()
 
     def refresh(self, widget=None):
@@ -139,7 +139,8 @@ class Applet:
         self.awn.icon.set(self.getIcon(len(self.mail.subjects) > 0 and \
             "unread" or "read"))
 
-        if self.hide and len(self.mail.subjects) > 0:
+        if self.hide and len(self.mail.subjects) == 0:
+            print "hiding"
             self.awn.icon.hide()
 
         if self.awn.dialog.main:

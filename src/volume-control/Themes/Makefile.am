@@ -1,3 +1,4 @@
 SUBDIRS = 	\
 	Black	\
-	Tango
+	Tango   \
+	Minimal

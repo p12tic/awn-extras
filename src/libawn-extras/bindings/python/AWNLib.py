@@ -137,9 +137,12 @@ class Icon:
 
 
     def set(self, icon):
-        if self.height != icon.get_height():
-            icon = icon.scale_simple(self.height, \
-                self.height, gtk.gdk.INTERP_BILINEAR)
+        h = icon.get_height
+        h2 = self.height
+        w = icon.get_width
+        w2 = h2/h*w
+        if h2 != h:
+            icon = icon.scale_simple(w2, h2, gtk.gdk.INTERP_BILINEAR)
         self.parent.set_temp_icon(icon)
 
     def hide(self):

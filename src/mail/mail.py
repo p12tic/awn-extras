@@ -137,7 +137,7 @@ class Applet:
                 (len(self.mail.subjects), len(self.mail.subjects) \
                 != 1 and "s" or ""))
         self.awn.icon.set(self.getIcon(len(self.mail.subjects) > 0 and \
-            "unread" or "read"()))
+            "unread" or "read"))
 
         if self.hide and len(self.mail.subjects) > 0:
             self.awn.icon.hide()

@@ -43,12 +43,6 @@ class VolumeApplet:
         self.awn.settings.require()
 
         self.theme = "Black"
-        self.backend = Backend(self)
-
-        try:
-            self.backend.setChannel(self.awn.settings["channel"])
-        except:
-            self.awn.settings["channel"] = self.backend.setChannel()
 
         try:
             self.theme = self.awn.settings["theme"]
@@ -63,6 +57,14 @@ class VolumeApplet:
     def init2(self, module):
         global alsaaudio
         alsaaudio = module
+
+        self.backend = Backend(self)
+
+        try:
+            self.backend.setChannel(self.awn.settings["channel"])
+        except:
+            self.awn.settings["channel"] = self.backend.setChannel()
+
         self.drawMainDlog()
         self.drawPrefDlog()
         self.backend.setVolume(self.backend.getVolume())
@@ -147,8 +149,11 @@ class VolumeApplet:
 
         self.prefs.add(cont)
 
-        device.connect("changed", lambda x: self.deviceRefresh(device.get_active_text()))
-        theme.connect("changed", lambda x: self.themeRefresh(theme.get_active_text()))
+        tr = self.themeRefresh
+        dr = self.deviceRefresh
+
+        theme.connect("changed", lambda x: tr(theme.get_active_text()))
+        device.connect("changed", lambda x: dr(device.get_active_text()))
 
     def setIcon(self):
         volume = self.backend.getVolume()
@@ -195,7 +200,7 @@ class Backend:
 
     def setChannel(self, channel=None):
         if channel:
-            self.channel = alsaaudio.mixers().index(channel)
+            self.channel = channel
         else:
             try:
                 self.channel = alsaaudio.mixers()[0]
@@ -207,10 +212,10 @@ class Backend:
         return alsaaudio.Mixer(self.channel).getvolume()[0]
 
     def setVolume(self, value):
-        alsaaudio.Mixer(self.channel).setvolume(value)
+        alsaaudio.Mixer(self.channel).setvolume(int(value))
         self.parent.awn.title.set("Volume: " + str(self.getVolume()) + "%")
         self.parent.setIcon()
-        self.parent.main.volume.set_value(value/1.0)
+        self.parent.main.volume.set_value(value)
 
     def up(self):
         self.setVolume(min(100, self.getVolume() + 4))

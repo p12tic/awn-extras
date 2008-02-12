@@ -137,10 +137,10 @@ class Icon:
 
 
     def set(self, icon):
-        h = icon.get_height
+        h = icon.get_height()
         h2 = self.height
-        w = icon.get_width
-        w2 = h2/h*w
+        w = icon.get_width()
+        w2 = int((1.0*h2)/h*w)
         if h2 != h:
             icon = icon.scale_simple(w2, h2, gtk.gdk.INTERP_BILINEAR)
         self.parent.set_temp_icon(icon)

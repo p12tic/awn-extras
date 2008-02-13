@@ -2045,7 +2045,9 @@ class LauncherApplet : AppletSimple
 	
 	private bool _try_again()
 	{
-        stdout.printf("_try_again\n");
+        int x;
+        int y;
+        this.window.get_origin(out x,out y);
 		foreach( ulong xid in retry_list)
 		{
 			string response;
@@ -2069,6 +2071,7 @@ class LauncherApplet : AppletSimple
 				win.name_changed+=_win_name_change;
 				win.state_changed+=_win_state_change;				
                 title_string=win.get_name();     
+                win.set_icon_geometry(x,y,height,height);
 			}
 			else if (response=="HANDSOFF")
 			{
@@ -2095,7 +2098,7 @@ class LauncherApplet : AppletSimple
         if (closing)
             return;
         
-       // this.window.get_origin(out x,out y);
+        this.window.get_origin(out x,out y);
         foreach (Wnck.Window win in books.get_wins())
         {
             win.set_icon_geometry(x,y,height,height);

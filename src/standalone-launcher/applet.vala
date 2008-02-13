@@ -2095,7 +2095,7 @@ class LauncherApplet : AppletSimple
         if (closing)
             return;
         
-        this.window.get_origin(out x,out y);
+       // this.window.get_origin(out x,out y);
         foreach (Wnck.Window win in books.get_wins())
         {
             win.set_icon_geometry(x,y,height,height);

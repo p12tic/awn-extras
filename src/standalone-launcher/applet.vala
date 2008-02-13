@@ -509,6 +509,7 @@ public class DBusComm : GLib.Object
 		public string Return_XID(string uid, string xid)
 		{
 			taskobj.Return_XID(uid,xid);
+            return xid;
 		}
 
 }
@@ -665,7 +666,7 @@ class Listing : GLib.Object
             this.listingfile=listingfile;
     }
 
-    protected bool check_list(SList list,string value)
+    protected bool check_list(SList<string> list,string value)
     {
         if ( (value !=null) && (list!=null))
         {
@@ -944,10 +945,10 @@ class BookKeeper : GLib.Object
     {
         if (needle==null)
             return false;
-        int len1=needle.len();
+        long len1=needle.len();
         foreach(string name in names)
         {
-            int len2 = name.len();
+            long len2 = name.len();
             string left;
             string right;
             if (len1>len2)
@@ -1085,21 +1086,17 @@ class Multi_Launcher:    GLib.Object
     {
         this.desktop_filenames=desktop_filenames;
     }
-
-    public void prepend(DesktopItem item)
+/*
+    public void prepend(ref DesktopItem item)
     {
         items.prepend(item);
     }
 
-    public void append(DesktopItem item)
+    public void append(ref DesktopItem item)
     {
         items.append(item);
     }
-
-    public void add(DesktopItem item)
-    {
-        prepend(item);
-    }
+*/
 
 
 }
@@ -1220,14 +1217,17 @@ class LauncherApplet : AppletSimple
                                 (height-2)-scaled_size , (height-2)-scaled_size,
                                 config.multi_icon_scale,config.multi_icon_scale, Gdk.InterpType.BILINEAR,config.multi_icon_alpha);
             }
-            if (temp!=null)              
+            if (temp!=null)    
+            {
                 set_icon(temp);
+                temp.unref();
+            }
         }
     }    
 
     private Pixbuf highlight_icon()
     {
-        float saturate=1.0;
+        float saturate=(float)1.0;
         bool    pixelate=false;
         
         Pixbuf temp=icon.copy();
@@ -1258,7 +1258,7 @@ class LauncherApplet : AppletSimple
 		targets[1].info =  0;
 
         drag_source_set(this,Gdk.ModifierType.BUTTON1_MASK,targets,2, Gdk.DragAction.COPY);
-		drag_dest_set(this, Gtk.DestDefaults.ALL, targets, 2, Gdk.DragAction.COPY);
+		drag_dest_set(this, Gtk.DestDefaults.ALL, targets,2, Gdk.DragAction.COPY);
 		this.drag_data_received+=_drag_data_received;
         this.drag_data_get+=_drag_data_get;
 		awn_config= new ConfigClient();
@@ -1586,7 +1586,7 @@ class LauncherApplet : AppletSimple
                     	    stderr.printf("error writing file %s\n",desktopfile.Filename());
                     	}
 						
-						desktopitem = tempdesk;//new DesktopItem(desktopfile.Filename() );				
+						desktopitem = new DesktopItem(desktopfile.Filename() );				
 						if (desktopitem.get_icon(theme) != null)
 						{
 							icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
@@ -1711,8 +1711,10 @@ class LauncherApplet : AppletSimple
         {
             case    1:
                 button_dialog1();
+                break;
             case    2:
                 button_dialog2();
+                break;
         }
     }
     
@@ -1896,11 +1898,14 @@ class LauncherApplet : AppletSimple
                     {
                         launch_new=!single_left_click();    //in general will end up false
                     }
+                    break;
                 case 2:
                     launch_new=true;
+                    break;
                 case 3:
                     launch_new=false;
                     right_click(event);
+                    break;
                 default:
                     break;
             }
@@ -2040,6 +2045,7 @@ class LauncherApplet : AppletSimple
 	
 	private bool _try_again()
 	{
+        stdout.printf("_try_again\n");
 		foreach( ulong xid in retry_list)
 		{
 			string response;
@@ -2081,11 +2087,19 @@ class LauncherApplet : AppletSimple
 		string response;
 		int pid;
 		ulong xid;
+        int x;
+        int y;
 		bool	accepted=false;		
 		xid=window.get_xid();
 
         if (closing)
             return;
+        
+        this.window.get_origin(out x,out y);
+        foreach (Wnck.Window win in books.get_wins())
+        {
+            win.set_icon_geometry(x,y,height,height);
+        }
 		
 		if ( (books.number()>0) && (config.task_mode==TaskMode.SINGLE) )
 		{
@@ -2110,22 +2124,26 @@ class LauncherApplet : AppletSimple
             {
                 case    ListingResult.WHITELISTED:
                     response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"CLAIM");
+                    break;
                 case    ListingResult.BLACKLISTED:
                     response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"DENY");
+                    break;
                 case    ListingResult.NOMATCH:
                     {
                         switch (books.what_to_do(window) )
                         {
                             case    Ownership.CLAIM:
                                     response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"CLAIM");
-
+                                    break;
                             case    Ownership.ACCEPT:
                                     response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"ACCEPT");
-
+                                    break;
                             case    Ownership.DENY:
                                     response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"DENY");
+                                    break;
                         }
                     }
+                    break;
             }
             if (response=="RESET")
                 dbusconn.Register(uid);										
@@ -2141,6 +2159,7 @@ class LauncherApplet : AppletSimple
             title_string=window.get_name();
             window.name_changed+=_win_name_change;
             window.state_changed+=_win_state_change;    
+            window.set_icon_geometry(x,y,height,height);
         }
         else if (response=="HANDSOFF")
         {
@@ -2194,7 +2213,7 @@ class LauncherApplet : AppletSimple
 	{
 		Pixbuf  temp;
 	    bool    scale_icon=false;
-	    
+        
 		Wnck.Window active=screen.get_active_window();//active can be null
 		activated=false;
 		if (prev !=null)

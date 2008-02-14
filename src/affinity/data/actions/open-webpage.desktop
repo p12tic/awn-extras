@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=Open Webpage
+Comment=www%s
+Categories=www
+Exec=gnome-open http://www%s
+Icon=browser
+Type=match

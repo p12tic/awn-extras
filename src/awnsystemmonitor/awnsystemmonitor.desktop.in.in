@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+X-AWN-AppletType=C
+Name=Awn System Monitor
+Comment=System Monitor
+Exec=@LIBDIR@/awn/applets/awnsystemmonitor/awnsystemmonitor.so
+Icon=utilities-system-monitor

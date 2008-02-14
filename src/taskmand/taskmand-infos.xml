@@ -1,0 +1,39 @@
+<node name="/org/awnproject/taskmand">
+−
+<interface name="org.awnproject.taskmand">
+<annotation name="org.freedesktop.DBus.GLib.CSymbol" value="taskmand"/>
+−
+<method name="Launcher_Register">
+<annotation name="org.freedesktop.DBus.GLib.CSymbol" value="taskmand_launcher_register"/>
+<arg type="s" name="uid" direction="in"/>
+</method>
+−
+<method name="Inform_Task_Ownership">
+<annotation name="org.freedesktop.DBus.GLib.CSymbol" value="taskmand_inform_task_ownership"/>
+<arg type="s" name="uid" direction="in"/>
+<arg type="s" name="id" direction="in"/>
+<arg type="s" name="request" direction="in"/>
+<arg type="s" name="response" direction="out"/>
+</method>
+−
+<method name="Launcher_Unregister">
+<annotation name="org.freedesktop.DBus.GLib.CSymbol" value="taskmand_launcher_unregister"/>
+<arg type="s" name="uid" direction="in"/>
+</method>
+−
+<method name="Launcher_Position">
+<annotation name="org.freedesktop.DBus.GLib.CSymbol" value="taskmand_launcher_position"/>
+<arg type="s" name="uid" direction="in"/>
+</method>
+−
+<method name="Return_XID">
+<annotation name="org.freedesktop.DBus.GLib.CSymbol" value="taskmand_return_xid"/>
+<arg type="s" name="uid" direction="in"/>
+<arg type="s" name="id" direction="in"/>
+</method>
+-
+<signal name="Offered">
+	<arg type="s" name="xid"/>
+</signal>	
+</interface>
+</node>

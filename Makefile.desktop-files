@@ -1,0 +1,14 @@
+# vim: set ft=automake :
+
+icon_DATA = $(APPLET_ICONS)
+
+desktopdir = $(libdir)/awn/applets
+
+desktop_DATA = $(APPLET_NAME).desktop
+@INTLTOOL_DESKTOP_RULE@
+
+EXTRA_DIST = \
+	$(icon_DATA) \
+	$(desktop_DATA).in
+
+CLEANFILES = $(desktop_DATA)

@@ -1,9 +1,0 @@
---- awn-extras-applets/src/Makefile.am	2007-11-07 23:52:02.000000000 +0100
-+++ awn-extras-applets/src/Makefile.am	2007-11-07 23:47:20.000000000 +0100
-@@ -1,4 +1,6 @@
- SUBDIRS =			\
-+	awn-meebo		\
-+	digg			\
- 	awnsystemmonitor	\
- 	awn-notification-daemon \
- 	battery-applet		\

@@ -1,9 +1,0 @@
-[Desktop Entry]
-Version=1.0
-Encoding=UTF-8
-Name=Media Icons Play
-Type=Python
-Comment=A media-control applet (Play)
-Exec=@LIBDIR@/awn/applets/media-icon-play/medialogoplay.py
-Icon=@LIBDIR@/awn/applets/media-icon-play/icons/play.svg
-Name[en_US]=Media Icons Play

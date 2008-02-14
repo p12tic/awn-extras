@@ -1,7 +1,0 @@
-[Desktop Entry]
-Type=C
-Encoding=UTF-8
-Name=Clock
-Comment=A clock.
-Exec=@LIBDIR@/awn/applets/clock/clock.so
-Icon=

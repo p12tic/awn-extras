@@ -1,0 +1,14 @@
+[DEFAULT/n_rows]
+type = int
+default = 1
+description = How many rows the switcher should have
+[DEFAULT/width]
+type = int
+default = 100
+description = The width of the switcher
+[DEFAULT/height]
+type = int
+default = 24
+description = The height of the switcher
+
+; vim: set ft=dosini :

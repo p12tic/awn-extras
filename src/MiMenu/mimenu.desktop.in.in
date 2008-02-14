@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=MiMenu
+Type=Application
+X-AWN-AppletType=Python
+Comment=A Main Menu Applet
+Exec=@LIBDIR@/awn/applets/mimenu/mimenu.py
+Icon=gtk-index
+Name[en_US]=MiMenu

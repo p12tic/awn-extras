@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+X-AWN-AppletType=C
+Encoding=UTF-8
+Name=Workspace Switcher
+Comment=A workspace switcher for Awn
+Exec=@LIBDIR@/awn/applets/switcher/switcher.so
+Icon=gnome-panel-workspace-switcher

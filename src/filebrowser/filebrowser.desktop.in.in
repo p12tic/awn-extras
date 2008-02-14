@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=File Browser
+Type=Application
+X-AWN-AppletType=C
+Comment=Browse the filesystem
+Exec=@LIBDIR@/awn/applets/filebrowser/filebrowser.so
+Icon=@ICONDIR@/filebrowser.svg
+Name[en_US]=File Browser

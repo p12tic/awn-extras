@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+X-AWN-AppletType=Python
+Encoding=UTF-8
+Name=Battery Applet
+Comment=An applet displaying battery state
+Exec=@LIBDIR@/awn/applets/battery-applet/battery-applet.py
+Icon=@LIBDIR@/awn/applets/battery-applet/icons/battery-charging-100.svg

@@ -1,0 +1,15 @@
+# vim: set ft=automake ts-8 sts=8 sw=8 :
+NULL = 
+include $(top_srcdir)/Makefile.desktop-files
+
+AM_CFLAGS = 			\
+	-I$(srcdir)			\
+	-I$(top_srcdir)/src	\
+	$(AWN_CFLAGS)		\
+	$(APPLET_CFLAGS)	\
+	$(NULL)
+
+APPLET_LINKER_FLAGS = -module -avoid-version
+
+appletdir = $(libdir)/awn/applets/$(APPLET_NAME)
+

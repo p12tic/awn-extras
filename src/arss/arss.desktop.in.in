@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=aRSS
+Type=Application
+X-AWN-AppletType=Python
+Comment=A RSS Applet
+Exec=@LIBDIR@/awn/applets/arss/rss_awn.py
+Icon=liferea
+Name[en_US]=aRSS

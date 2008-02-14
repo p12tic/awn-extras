@@ -1,7 +1,0 @@
-[Desktop Entry]
-Type=Python
-Encoding=UTF-8
-Name=Showdesktop Applet
-Comment=Showdesktop Applet
-Exec=@LIBDIR@/awn/applets/showdesktop/showdesktop.py
-Icon=desktop

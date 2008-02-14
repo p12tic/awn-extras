@@ -1,0 +1,13 @@
+# vim: set ft=automake :
+include $(top_srcdir)/Makefile.c-applet
+
+GENERATED_C_FILES = $(VALA_FILES:.vala=.c)
+GENERATED_H_FILES = $(VALA_FILES:.vala=.h)
+
+.vala.c:
+	$(VALAC) -C $< --vapidir=$(AWN_VAPIDIR) --pkg=awn $(AM_VALAFLAGS) $(VALAFLAGS)
+
+CLEANFILES +=				\
+	$(GENERATED_C_FILES)	\
+	$(GENERATED_H_FILES)	\
+	$(NULL)

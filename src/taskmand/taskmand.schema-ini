@@ -1,0 +1,12 @@
+[DEFAULT/pos_gravity]
+type = int
+default = 0
+description = Left or right gravity.  0 = left.  1 = right
+
+[DEFAULT/pos_offset]
+type = int
+default = 1
+description = Offset to place relative to left or right side.
+
+
+; vim: set ft=dosini :

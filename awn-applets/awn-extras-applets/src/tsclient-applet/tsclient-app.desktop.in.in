@@ -1,7 +1,0 @@
-[Desktop Entry]
-Type=Python
-Encoding=UTF-8
-Name=TsClient Applet
-Comment=Quick access to your rdp files
-Exec=@LIBDIR@/awn/applets/tsclient-applet/tsclient_app.py
-Icon=@LIBDIR@/awn/applets/tsclient-applet/icons/Tsclient.svg

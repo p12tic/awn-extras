@@ -2,6 +2,6 @@
 Type=Application
 X-AWN-AppletType=C
 Name=Awn Notification Daemon
-Comment=Notification Daemon
+Comment=AWN-like notification bubbles
 Exec=@LIBDIR@/awn/applets/awnnotificationdaemon/awnnotificationdaemon.so
 Icon=binary

@@ -2,7 +2,7 @@
 Type=Application
 Encoding=UTF-8
 Name=Stacks Applet
-Comment=An applet that supports file stacks
+Comment=Quick access to a file folder
 Exec=@LIBDIR@/awn/applets/stacks/stacks_applet.py
 Icon=@LIBDIR@/awn/applets/stacks/icons/stacks-drop.svg
 X-AWN-AppletType=Python

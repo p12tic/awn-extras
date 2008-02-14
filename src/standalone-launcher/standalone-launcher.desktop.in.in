@@ -2,6 +2,6 @@
 Type=Application
 X-AWN-AppletType=Vala
 Name=Standalone Launcher
-Comment=A Standalone Launcher.
+Comment=A single, standalone launcher
 Exec=@LIBDIR@/awn/applets/standalone-launcher/standalone-launcher.so
 Icon=binary

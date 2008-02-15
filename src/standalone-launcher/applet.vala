@@ -562,6 +562,49 @@ class DiagButton: Gtk.Button
 	}
 }
 
+
+//--------------------------------------------------------------
+
+class DesktopitemButton: Gtk.Button
+{
+	private		weak    DesktopItem     item			{ get; construct; }
+	private		Gtk.Widget		container		{ get; construct; }
+	private		int				icon_size		{ get; construct; }     
+    private     IconTheme		theme           { get; construct; }
+ 
+
+	construct
+	{
+		Gdk.Pixbuf pbuf;
+        pbuf = new Pixbuf.from_file_at_scale(item.get_icon(theme),icon_size-2,-1,true );//FIXME 
+        if (pbuf !=null)
+        {
+            pbuf=pbuf.scale_simple (icon_size-2, icon_size-2, Gdk.InterpType.BILINEAR );
+            Gtk.Image   image=new Gtk.Image.from_pixbuf(pbuf);
+            this.set_image(image);
+        }
+        this.set_label(item.get_name() );
+		this.button_press_event += _clicked;	
+	}
+	
+	DesktopitemButton(DesktopItem item,Gtk.Widget container,IconTheme theme,int icon_size) 
+    {
+        this.item = item;
+        this.container = container;
+        this.icon_size = icon_size;
+        this.theme = theme;
+    }
+	
+    private bool _clicked(Gtk.Widget widget,Gdk.EventButton event)
+    {
+        SList<string>	documents;
+        item.launch(documents);
+		container.hide();
+		return true;
+	}
+}
+
+
 enum Ownership
 {
 	CLAIM,
@@ -1073,18 +1116,30 @@ class BookKeeper : GLib.Object
 
 class Multi_Launcher:    GLib.Object
 {
-    protected           GLib.SList <DesktopItem>        items;
-    protected   weak    GLib.SList <string>             desktop_filenames { get; construct; }
+    protected           SList <DesktopItem>        items;
+    protected   weak    SList <string>             desktop_filenames { get; construct; }
 
     construct
-    {
-        
-
+    {        
+        foreach(string filename in desktop_filenames)
+        {	
+            items.append(new DesktopItem(filename ));
+        }
     }
 
     public Multi_Launcher(GLib.SList<string> desktop_filenames)
     {
         this.desktop_filenames=desktop_filenames;
+    }
+
+    public uint number()
+    {
+        return items.length();
+    }
+
+    public weak SList<DesktopItem> desktops()
+    {
+        return items;
     }
 /*
     public void prepend(ref DesktopItem item)
@@ -1131,6 +1186,7 @@ class LauncherApplet : AppletSimple
     protected   bool                    activated;
     protected   Listing                 listing;
     protected   bool                    closing;
+    protected   Multi_Launcher          multi_launcher;
 
     construct 
     { 
@@ -1245,6 +1301,7 @@ class LauncherApplet : AppletSimple
     private bool _initialize()
     {
         books = new BookKeeper();
+        multi_launcher = null;
         this.button_press_event+=_button_press;
         this.scroll_event+=_scroll_event;
         activated=false;
@@ -1310,6 +1367,23 @@ class LauncherApplet : AppletSimple
             else
             {
                 books.update_with_desktopitem(desktopitem);
+            }
+            if (config.multi_launcher)
+            {
+                GLib.SList <string> launchers;
+                string  desktop_key=desktopitem.get_string("X-AWN-StandaloneLauncherDesktops");
+                string []desktop_files=desktop_key.split(":");            
+                launchers.prepend(desktopfile.Filename());
+                foreach(string filename in desktop_files)
+                {
+                    launchers.prepend(filename);
+                    stdout.printf("--------------%s\n",filename);
+                }
+                multi_launcher = new Multi_Launcher( launchers);
+                foreach(weak DesktopItem item in multi_launcher.desktops() )
+                {
+                    books.update_with_desktopitem(item);
+                }
             }
     		title_string = desktopitem.get_name();
             listing = new Listing(GLib.Path.get_basename(desktopfile.Filename()));
@@ -1701,6 +1775,12 @@ class LauncherApplet : AppletSimple
                 button.set_app_paintable(true);
 				vbox.add(button);
 			}
+			foreach (weak DesktopItem item in multi_launcher.desktops() )
+			{
+                DesktopitemButton button = new DesktopitemButton(item,dialog,theme,height);
+                button.set_app_paintable(true);
+                vbox.add(button);
+            }
 			dialog.show_all();
 		}		
     }
@@ -1722,7 +1802,13 @@ class LauncherApplet : AppletSimple
     {
 		ulong		xid;
 		Wnck.Window  win=null;
-		if ( books.number()==1 )
+        uint multi_count=0;
+        if (multi_launcher !=null)
+        {
+            multi_count=multi_launcher.number();
+        }
+
+		if ( (books.number()==1) && (multi_count<=1) )
 		{	
             int i;
 			dialog.hide();
@@ -1894,7 +1980,7 @@ class LauncherApplet : AppletSimple
             {
                 case 1:
                     launch_new=true;	        //yes we will launch.
-                    if (books.number() > 0 )     //already have some XIDs
+                    if ( (books.number() > 0) || config.multi_launcher )     //already have some XIDs
                     {
                         launch_new=!single_left_click();    //in general will end up false
                     }

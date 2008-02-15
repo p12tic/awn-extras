@@ -38,6 +38,8 @@ def what_app():
         player_name = "Banshee"
     if bus_obj.NameHasOwner('org.gnome.Listen') == True:
         player_name = "Listen"
+    if bus_obj.NameHasOwner('net.sacredchao.QuodLibet') == True:
+        player_name = "QuodLibet"
     try:
         if pydcop.anyAppCalled("amarok") == None:pass
         else:player_name = "Amarok"
@@ -302,3 +304,55 @@ class Amarok:
         self.player.playPause()
     def button_next_press (self):
         self.player.next()
+
+class QuodLibet:
+    """
+    Full Support
+    """
+    def __init__(self):
+        self.dbus_driver()
+    def dbus_driver(self):
+        """
+        Defining the dbus location for
+        """
+        bus_obj = dbus.SessionBus().get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
+        if bus_obj.NameHasOwner('net.sacredchao.QuodLibet') == True:
+            self.session_bus = dbus.SessionBus()
+            self.proxy_obj = self.session_bus.get_object('net.sacredchao.QuodLibet', '/net/sacredchao/QuodLibet')
+            self.player = dbus.Interface(self.proxy_obj, 'net.sacredchao.QuodLibet')
+    def labeler(self,artOnOff,titleOrder,titleLen,titleBoldFont):
+        """
+        This method changes the application titles and album art
+        """
+        self.artOnOff = artOnOff
+        self.titleOrder = titleOrder
+        self.titleLen = titleLen
+        self.titleBoldFont = titleBoldFont
+        # You need to activate the "Picture Saver" plugin in QuodLibet
+        albumart_exact = os.environ["HOME"] + "/.quodlibet/current.cover"
+        self.dbus_driver()
+        result = self.player.CurrentSong()
+        
+        # Currently Playing Title
+        if self.titleOrder == 'artist - title':
+            try:result = result['artist'] + ' - ' + result['title']
+            except:SyntaxError
+        elif self.titleOrder == 'title - artist':
+            try:result = result['title'] + ' - ' + result['artist']
+            except:SyntaxError
+        if result.__len__() > self.titleLen:
+            result = result[:self.titleLen]
+            result = result + '..'
+        if self.titleBoldFont == 'on':
+            result = """<span weight="bold">""" + result + """</span>"""
+        result_tooltip = result.replace("""</span>""",'')
+        result_tooltip = result_tooltip.replace("""<span weight="bold">""",'')
+        
+        return albumart_exact,result,result_tooltip
+
+    def button_previous_press (self):
+        self.player.Previous ()
+    def button_pp_press (self):
+        self.player.PlayPause ()
+    def button_next_press (self):
+        self.player.Next ()

@@ -1132,6 +1132,12 @@ class Multi_Launcher:    GLib.Object
         this.desktop_filenames=desktop_filenames;
     }
 
+    public void add_file(string filename)
+    {
+       //desktop_filenames.append(filename);
+       items.append(new DesktopItem(filename));
+    }
+
     public uint number()
     {
         return items.length();
@@ -1367,22 +1373,27 @@ class LauncherApplet : AppletSimple
             else
             {
                 books.update_with_desktopitem(desktopitem);
-            }
-            if (config.multi_launcher)
-            {
-                GLib.SList <string> launchers;
-                string  desktop_key=desktopitem.get_string("X-AWN-StandaloneLauncherDesktops");
-                string []desktop_files=desktop_key.split(":");            
-                launchers.prepend(desktopfile.Filename());
-                foreach(string filename in desktop_files)
+            
+                if (config.multi_launcher)
                 {
-                    launchers.prepend(filename);
-                    stdout.printf("--------------%s\n",filename);
-                }
-                multi_launcher = new Multi_Launcher( launchers);
-                foreach(weak DesktopItem item in multi_launcher.desktops() )
-                {
-                    books.update_with_desktopitem(item);
+                    GLib.SList <string> launchers;
+                    string  desktop_key=desktopitem.get_string("X-AWN-StandaloneLauncherDesktops");
+                    if (desktop_key==null)
+                    {
+                        desktop_key="";
+                    }
+                    string []desktop_files=desktop_key.split(":");            
+                    launchers.prepend(desktopfile.Filename());
+                    foreach(string filename in desktop_files)
+                    {
+                        launchers.prepend(filename);
+                        stdout.printf("--------------%s\n",filename);
+                    }
+                    multi_launcher = new Multi_Launcher( launchers);
+                    foreach(weak DesktopItem item in multi_launcher.desktops() )
+                    {
+                        books.update_with_desktopitem(item);
+                    }
                 }
             }
     		title_string = desktopitem.get_name();
@@ -1645,38 +1656,70 @@ class LauncherApplet : AppletSimple
                 try{
                     filename = Filename.from_uri(str);
                 }
-                catch(ConvertError ex  )
-                {
+                catch(ConvertError ex  ){
                     filename="";
                 }
                 tempdesk = new Awn.DesktopItem(filename);
-				if (tempdesk.exists() )
-				{
-					if ( (tempdesk.get_exec() != null) && (tempdesk.get_name()!=null) )
-					{
-                        try{
-    						tempdesk.save(desktopfile.Filename());//FIXME - throws
-                    	}catch(GLib.Error ex){
-                    	    stderr.printf("error writing file %s\n",desktopfile.Filename());
-                    	}
-						
-						desktopitem = new DesktopItem(desktopfile.Filename() );				
-						if (desktopitem.get_icon(theme) != null)
-						{
-							icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
-						}
-						else
-						{
-							icon = theme.load_icon ("stock_stop", height - 2, IconLookupFlags.USE_BUILTIN);
-						}		
-                        show_icon();
-                        if (config.task_mode != TaskMode.NONE)
+
+                if (tempdesk.exists() )
+                {
+                    if ( !config.multi_launcher || ( desktopitem.get_exec()=="false")) 
+                    {
+                        if ( (tempdesk.get_exec() != null) && (tempdesk.get_name()!=null) )
                         {
-                            books=new BookKeeper();
+                            try{
+                                tempdesk.save(desktopfile.Filename());//FIXME - throws
+                            }catch(GLib.Error ex){
+                                stderr.printf("error writing file %s\n",desktopfile.Filename());
+                            }
+                            
+                            desktopitem = new DesktopItem(desktopfile.Filename() );				
+                            if (desktopitem.get_icon(theme) != null)
+                            {
+                                icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
+                            }
+                            else
+                            {
+                                icon = theme.load_icon ("stock_stop", height - 2, IconLookupFlags.USE_BUILTIN);
+                            }		
+                            show_icon();
+                            if (config.task_mode != TaskMode.NONE)
+                            {
+                                books=new BookKeeper();
+                            }
+                            status=true;				        
+                        }	        
+                    }
+                    else
+                    {
+                        stdout.printf("MULTI ADD\n");
+                        string  desktop_key=desktopitem.get_string("X-AWN-StandaloneLauncherDesktops");
+                    
+                        if ( desktop_key==null)
+                        {
+                            desktop_key="";
                         }
-						status=true;				        
-					}	        
-				}
+                        desktop_key.chomp();
+                        if (desktop_key=="")
+                        {
+                            desktop_key=filename;
+                        }
+                        else
+                        {
+                            desktop_key=desktop_key+":"+filename;
+                        }
+                        books.update_with_desktopitem(tempdesk);
+                        multi_launcher.add_file(filename);
+                        stdout.printf("key = %s\n",desktop_key);
+                        desktopitem.set_string("X-AWN-StandaloneLauncherDesktops",desktop_key);
+                        try{
+                            desktopitem.save(desktopitem.get_filename());//FIXME - throws
+                        }catch(GLib.Error ex){
+                            stderr.printf("error writing file %s\n",desktopfile.Filename());
+                        }
+
+                    }
+                }
 			}		
 			print_desktop(desktopitem);						
 			Pixbuf temp_icon;
@@ -1777,7 +1820,7 @@ class LauncherApplet : AppletSimple
 			}
 			foreach (weak DesktopItem item in multi_launcher.desktops() )
 			{
-                DesktopitemButton button = new DesktopitemButton(item,dialog,theme,height);
+                DesktopitemButton button = new DesktopitemButton(item,dialog,theme,height/2);
                 button.set_app_paintable(true);
                 vbox.add(button);
             }
@@ -1808,7 +1851,7 @@ class LauncherApplet : AppletSimple
             multi_count=multi_launcher.number();
         }
 
-		if ( (books.number()==1) && (multi_count<=1) )
+		if ( (books.number()==1) && (multi_count<=2) )
 		{	
             int i;
 			dialog.hide();

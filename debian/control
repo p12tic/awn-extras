@@ -1,4 +1,4 @@
-Source: awn-extras-applets-testing
+Source: awn-extras-applets-trunk
 Section: gnome
 Priority: optional
 Maintainer: Julien Lavergne <julien.lavergne@gmail.com>
@@ -14,7 +14,7 @@ Build-Depends: 	debhelper (>= 5),
 		gnome-common, 
 		librsvg2-dev, 
 		libgtop2-dev, 
-		libawn-dev-testing, 
+		libawn-dev-trunk | libawn-dev-testing, 
 		libwnck-dev, 
 		python-central (>= 0.5.6), 
 		python-all-dev,
@@ -23,7 +23,7 @@ Build-Depends: 	debhelper (>= 5),
 		libvte-dev, 
 		libsexy-dev, 
 		libnotify-dev,
-		vala-awn-testing,
+		vala-awn-trunk | vala-awn-testing,
 		valac,
 		libglade2-dev,
 		libxcomposite-dev,
@@ -35,13 +35,13 @@ Build-Depends: 	debhelper (>= 5),
 Standards-Version: 3.7.2
 XS-Python-Version: current
 
-Package: awn-extras-applets-testing
+Package: awn-extras-applets-trunk
 Section: gnome
 Architecture: any
 Depends: ${shlibs:Depends}, ${python:Depends}
-Recommends: 	avant-window-navigator-testing, 
-		python-awn-testing,
-		vala-awn-testing,
+Recommends: 	avant-window-navigator-trunk, 
+		python-awn-trunk,
+		vala-awn-trunk,
 		cairo-clock, 
 		python-alsaaudio, 
 		python-libgmail, 
@@ -49,8 +49,8 @@ Recommends: 	avant-window-navigator-testing,
 		python-gst0.10, 
 		tsclient, 
 		libvte
-Conflict: awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-trunk
-Replaces: awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-trunk
+Conflict: awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
+Replaces: awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 XB-Python-Version: ${python:Versions}
 Description: A collection of applets for avant-windows-navigator
  A collection of applets for avant-windows-navigator.

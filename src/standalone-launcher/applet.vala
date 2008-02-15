@@ -89,10 +89,12 @@ static string get_exec(int pid)
 
     return after;
 }
+
 static int _cmp_ptrs (pointer a, pointer b)
 {
 	return (int) a - (int) b;
 }
+
 static Pixbuf layer_pixbuf_scale(Pixbuf dest,Pixbuf under,Pixbuf over,int width,int height,
 								double under_alpha=0.7,double over_alpha=1.0,
 								int src_xpos=0,int src_ypos=0,
@@ -1687,14 +1689,18 @@ class LauncherApplet : AppletSimple
                             {
                                 books=new BookKeeper();
                             }
-                            status=true;				        
+                            status=true;
+                            books.update_with_desktopitem(desktopitem);
+                            SList<string> dummy;
+                            multi_launcher = new Multi_Launcher(dummy);
+                            multi_launcher.add_file(desktopfile.Filename());
                         }	        
                     }
                     else
                     {
                         stdout.printf("MULTI ADD\n");
                         string  desktop_key=desktopitem.get_string("X-AWN-StandaloneLauncherDesktops");
-                    
+
                         if ( desktop_key==null)
                         {
                             desktop_key="";
@@ -2016,6 +2022,12 @@ class LauncherApplet : AppletSimple
 
         bool	launch_new=false;
 		SList<string>	documents;
+        uint multi_count=0;
+        
+        if (multi_launcher !=null)
+        {
+            multi_count=multi_launcher.number();
+        }
         effect_stop (effects, Effect.ATTENTION);//effect off
         if (config.task_mode != TaskMode.NONE)  //if it does tasmanagement.
         {
@@ -2023,7 +2035,7 @@ class LauncherApplet : AppletSimple
             {
                 case 1:
                     launch_new=true;	        //yes we will launch.
-                    if ( (books.number() > 0) || config.multi_launcher )     //already have some XIDs
+                    if ( (books.number() > 0) || (multi_count>1) )     //already have some XIDs
                     {
                         launch_new=!single_left_click();    //in general will end up false
                     }

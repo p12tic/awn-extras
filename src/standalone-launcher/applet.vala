@@ -193,6 +193,7 @@ class Configuration: GLib.Object
         default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"multi_icon_alpha", _config_changed, this);        
         default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"multi_icon_use", _config_changed, this);        
         default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"multi_icon_scale", _config_changed, this);        
+        default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"discrete/multi_launcher", _config_changed, this);
         if (!anon_mode)
 		{
 				
@@ -2332,8 +2333,7 @@ class LauncherApplet : AppletSimple
             //effect_start_ex(effects, Effect.ATTENTION,null,null,11);    
             effect_start(effects, Effect.ATTENTION);
         }
-        else
-            effect_stop (effects, Effect.ATTENTION);//effect off
+
     }    
     
 	private void _application_closed(Wnck.Screen screen,Wnck.Application app)

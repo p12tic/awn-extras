@@ -129,7 +129,7 @@ class App(awn.AppletSimple):
 		try:
 			self.locale_lang = locale.getdefaultlocale()[0][0:2]
 		except:
-			print "locale not set"
+			#print "locale not set"
 		self.connect("destroy",self.quit_callback)
 		gtk.gdk.threads_init()
 
@@ -240,6 +240,8 @@ class App(awn.AppletSimple):
 
 	def dialog_focus_out_callback(self, widget, event):
 		self.show_title = False   
+                self.dialog.hide()
+                self.dialog_visible = False
 
 	def enter_notify_callback(self, widget, event):
 		self.show_title = True
@@ -291,7 +293,6 @@ class App(awn.AppletSimple):
 		return result
 
 	def quit_callback(self):
-		print "quit_callback was called."
 		self.thread.kill()
 
 	def month_changed_callback(self,widget):
@@ -539,7 +540,7 @@ class App(awn.AppletSimple):
 				for i, event in enumerate(events):	
 					self.list.append([event[1],i])
 			except:
-				print "Login error: ", sys.exc_info()[0], sys.exc_info()[1] 
+				#print "Login error: ", sys.exc_info()[0], sys.exc_info()[1] 
 				dialog = gtk.MessageDialog(parent=None, flags=gtk.DIALOG_MODAL, buttons=gtk.BUTTONS_OK, type=gtk.MESSAGE_WARNING, message_format=_("Unable to read calendar data from external source."))
 				dialog.run()
 				dialog.destroy()			
@@ -558,9 +559,9 @@ class App(awn.AppletSimple):
 					self.login_window.show_all()
 					self.login_open = False
 				else:
-					print "Already have password, or this calendar doesn't require a login."
+					#print "Already have password, or this calendar doesn't require a login."
 			else:
-				print "Login window already opened?"
+				#print "Login window already opened?"
 	
 	############################################################################
 	# Utilities.
@@ -622,6 +623,5 @@ if __name__ == "__main__":
 	applet.show_all()
 	gtk.main()
 	applet.quit_callback()
-	print "clockcal exiting"
 
 

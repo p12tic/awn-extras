@@ -49,6 +49,7 @@ class App (awn.AppletSimple):
         self.set_icon                         (icon)
         self.title                          = awn.awn_title_get_default ()
         self.dialog                         = awn.AppletDialog (self)
+        self.dialog_visible = False
 
         # Defining Widgets
         vbox                                = gtk.VBox()
@@ -87,9 +88,14 @@ class App (awn.AppletSimple):
     #############
     def button_press                          (self, widget, event):
         if event.button == 1:
-            self.labeler                          ()
-            self.dialog.show_all                  ()
-            self.title.hide                       (self)
+            if self.dialog_visible:
+                self.dialog.hide              ()
+                self.dialog_visible = False
+            else:
+                self.title.hide               (self)
+                self.labeler                  ()
+                self.dialog.show_all          ()
+                self.dialog_visible = True
         elif event.button == 2:
             self.button_pp_press(widget)
 
@@ -101,6 +107,7 @@ class App (awn.AppletSimple):
         self.labeler()
     def dialog_focus_out                      (self, widget, event):
         self.dialog.hide                      ()
+        self.dialog_visible = False
     def enter_notify                          (self, widget, event):
         self.labeler                          ()
         self.title.show                       (self, self.resultToolTip)
@@ -113,7 +120,6 @@ class App (awn.AppletSimple):
         self.player_name                    = mediaplayers.what_app()
         if self.player_name == None:pass
         else:self.MediaPlayer               = mediaplayers.__dict__[self.player_name]()
-        print self.player_name
     def key_control(self,keyname,default):
         """
         This Method takes the keyname and the defualt value and either loads an existing key -or- loads and saves the defualt key if no key is defined

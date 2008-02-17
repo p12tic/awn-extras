@@ -55,6 +55,7 @@ class App (awn.AppletSimple):
         
         player_vbox = gtk.VBox(False, 0)
         player_hbox = gtk.HBox(False, 0)
+        self.player_dialog_visible = False
         
         #title_hbox = gtk.HBox(False,0)
         #self.playing_title = gtk.LinkButton()
@@ -242,11 +243,15 @@ class App (awn.AppletSimple):
   def applet_button_press (self, widget, event):
       self.station_dialog.hide ()
       self.title.hide (self)
-
-      if event.button == 3:
+      if event.button == 1:
+        if self.player_dialog_visible:
+            self.player_dialog.hide ()
+            self.player_dialog_visible = False
+        else:
+            self.player_dialog.show_all ()
+            self.player_dialog_visible = True
+      elif event.button == 3:
           self.popup_menu.popup(None,None,None,event.button,event.time)
-      else:
-          self.player_dialog.show_all()
 
   def player_dialog_focus_out (self, widget, event):
       self.player_dialog.hide ()

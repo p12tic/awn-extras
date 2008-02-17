@@ -40,7 +40,7 @@ def file_check(file):
         pass
     else:
         os.system(('touch ' + file))
-        print 'please add feeds to ' + file
+        #print 'please add feeds to ' + file
 
 def add_feed_to_file(feeds, fileloc = Settings.__feedsfile__):
     file_check(fileloc)
@@ -60,8 +60,8 @@ def build_feedlist(file):
         else:
             feeds.append(feed)
     if len(feeds) == 0:
-        print 'please add feeds to ' + file
-        print 'loading temp feeds'
+        #print 'please add feeds to ' + file
+        #print 'loading temp feeds'
         feeds = []
         feeddata.close()
         feeddata = open((Settings.__location__ + 'feedlist-default'))
@@ -79,7 +79,7 @@ def get_feeds(url):
         feed.entries.sort(compare_by('updated_parsed'))
     except:
         feed.entries.sort(compare_by('title'))
-        print feed.feed.title
+        #print feed.feed.title
     feed.entries = feed.entries[::-1]
     if len(feed.entries) > Settings.__MAX_ENTRIES__:
         feed.entries = feed.entries[:Settings.__MAX_ENTRIES__]
@@ -95,7 +95,7 @@ def build_db(file = Settings.__feedsfile__):
             feed, name = get_feeds(url)
             database[name] = [feed.entries, name]
         except AttributeError:
-            print url + ' is not a proper feed'
+            #print url + ' is not a proper feed'
             pass
     return database
 

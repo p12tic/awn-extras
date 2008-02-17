@@ -17,6 +17,7 @@ def timer1 (applet, ObjClock):
 class App (awn.AppletSimple):
   def __init__ (self, uid, orient, height):
     awn.AppletSimple.__init__ (self, uid, orient, height)
+    self.height = height
 
     self.ObjClock = Clock()
     self.ObjClock.LoadTheme("Tango")
@@ -54,7 +55,7 @@ class App (awn.AppletSimple):
 
 class Clock:
 
-  Hover = False 
+  Hover = False
   ClockBaseSurface = ""
 
   #Svg Memory Space
@@ -67,8 +68,8 @@ class Clock:
   SVGH_Minute_Hand = ""
   SVGH_Second_Hand = ""
 
-  
-  
+
+
   def GetTime(self, part):
     GotTime = time.localtime()
     if part == 'H':
@@ -81,7 +82,7 @@ class Clock:
   def GetTimeString(self):
     Hour = str(self.GetTime('H'))
     Mins = str(self.GetTime('M'))
-    Secs = str(self.GetTime('S')) 
+    Secs = str(self.GetTime('S'))
     if len(Hour) == 1:
         Hour = "0" + Hour
     if len(Mins) == 1:
@@ -130,7 +131,10 @@ class Clock:
 
   def SetIconFromSurface(self, applet, surface):
     icon = self.GetPixbufFromSurface(surface)
+    if applet.height != icon.get_height(): # Check if the icon height is not correct
+        icon = icon.scale_simple(self.height, self.height, gtk.gdk.INTERP_BILINEAR) # Scale it if so
     applet.set_temp_icon (icon)
+
 
   def DrawClockCairo(self, applet):
     PI = 3.141593
@@ -157,7 +161,7 @@ class Clock:
     ctx.set_source_rgba(0.2, 0.2, 1, 0.6)
     ctx.arc(24, 24, 21, (360/60) * (self.GetTime('S')+45) * (PI/180), (360/60) * (self.GetTime('S')+45) * (PI/180))
     ctx.line_to(24, 24)
-    ctx.stroke()   
+    ctx.stroke()
 
     self.SetIconFromSurface(applet, surface)
 
@@ -183,7 +187,7 @@ class Clock:
     self.SVGH_Second_Hand.render_cairo(ctx)
 
     self.SetIconFromSurface(applet, surface)
-    
+
 
 
 

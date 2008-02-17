@@ -10,7 +10,7 @@ def feeds_from_opml(file):
         if 'http://' in url:
             out.append(url)
     return out
-        
+
 if __name__ == '__main__':
     for item in feeds_from_opml(sys.argv[1]):
         print item

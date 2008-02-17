@@ -1,8 +1,8 @@
 [Desktop Entry]
 Version=1.0
-Encoding=UTF-8
 Name=PyClock
-Type=Python
+Type=Application
+X-AWN-AppletType
 Comment=A Simple Python Clock
 Exec=@LIBDIR@/awn/applets/PyClock/PyClock.py
 Icon=@LIBDIR@/awn/applets/PyClock/PyClock.png

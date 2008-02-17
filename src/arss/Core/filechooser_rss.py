@@ -19,12 +19,12 @@ def new_chooser():
                                    (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
                                     gtk.STOCK_OPEN, gtk.RESPONSE_OK))
     dialog.set_default_response(gtk.RESPONSE_OK)
-    
+
     filter = gtk.FileFilter()
     filter.set_name("All files")
     filter.add_pattern("*")
     dialog.add_filter(filter)
-    
+
     filter = gtk.FileFilter()
     filter.set_name("Images")
     filter.add_mime_type("image/png")
@@ -36,16 +36,16 @@ def new_chooser():
     filter.add_pattern("*.tif")
     filter.add_pattern("*.xpm")
     dialog.add_filter(filter)
-    
+
     response = dialog.run()
     if response == gtk.RESPONSE_OK:
         sel = dialog.get_filename()
-        print sel, 'selected'
+        #print sel, 'selected'
         dialog.hide()
         dialog.destroy()
         return sel
     elif response == gtk.RESPONSE_CANCEL:
-        print 'Closed, no files selected'
+        #print 'Closed, no files selected'
         dialog.hide()
         dialog.destroy()
         return False

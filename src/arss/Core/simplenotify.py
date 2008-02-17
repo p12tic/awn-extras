@@ -14,15 +14,15 @@ class Notif:
     proxy_obj = session_bus.get_object(service['service_name'],
                                        service['object_path'])
     dbus_int = dbus.Interface(proxy_obj, service['interface'])
-    
+
 def send(app_name = "None" , replaces_id = 0, icon = "",
          title = "", body = "", actions = [], hints = {}, timeout = 9000):
     """
-    A simple method that 
-    
-    A call of notif.send(title="some text") will display a notification 
+    A simple method that
+
+    A call of notif.send(title="some text") will display a notification
     with just a title. All the arguments are optional.
-    
+
     title is the title of the notification
     body is the notification's body
     timeout is the time until the notification goes away
@@ -43,8 +43,8 @@ def send_advanced(app_name = "None" , replaces_id = 0,
                   hints = {}, timeout = 9000, properties=None):
     """
     the properties argument is a list containing any properties you
-    would like to pass to the notification daemon 
-    
+    would like to pass to the notification daemon
+
     Refer to the send function's documentation for more info
     """
     app_name = dbus.String(app_name)
@@ -54,7 +54,7 @@ def send_advanced(app_name = "None" , replaces_id = 0,
     if properties != None:
         for item in properties:
             body = body + "$||@" + item + "@||$"
-    print body
+    #print body
     body = dbus.String(body)
     actions = dbus.Array(actions)
     timeout = dbus.Int32(timeout)

@@ -29,15 +29,15 @@ import thread
 import time
 import Core.handle_rss as handle_rss
 from Core.settings_rss import *
-from Core.filechooser_rss import * 
-from Core.opml_rss import * 
+from Core.filechooser_rss import *
+from Core.opml_rss import *
 import Core.join_rss as Join
 import Core.saveout as saveout
 import Core.other_rss as other_rss
 try:
     import Core.simplenotify as notify
 except:
-    print 'Notifications Disabled'
+    #print 'Notifications Disabled'
 
 def get_icon(name, size):
     return gdk.pixbuf_new_from_file(name).scale_simple(size,
@@ -50,7 +50,7 @@ def compare_by(fieldname):
     return compare_two_dicts
 
 def clicked(widget, url):
-    print url
+    #print url
     if url != None:
         url = 'xdg-open ' + repr(str(url))
         os.system(url)
@@ -58,7 +58,7 @@ def clicked(widget, url):
 class App (awn.AppletSimple):
     """
     """
-    def __init__ (self, uid, orient, height):   
+    def __init__ (self, uid, orient, height):
         """
         Creating the applets core
         """
@@ -84,10 +84,10 @@ class App (awn.AppletSimple):
             if '.opml' in chosen.lower():
                 newlist = feeds_from_opml(chosen)
                 handle_rss.add_feed_to_file(newlist)
-            print (chosen +'\n')*8
+            #print (chosen +'\n')*8
 
     def build_db(self,*unused):
-        print 'loading...'
+        #print 'loading...'
         # See what situation we are starting with
         if self.database != []:
             # Merge the old with the new
@@ -98,7 +98,7 @@ class App (awn.AppletSimple):
             if test == False:
                 self.database = handle_rss.build_db()
             else:
-                print 'loading stored database'
+                #print 'loading stored database'
                 self.database = test
                 #self.database = \
                 #    Join.merge_db(self.database, handle_rss.build_db())
@@ -108,7 +108,7 @@ class App (awn.AppletSimple):
         for feed in self.database:
             self.database[feed][0] = \
                 self.database[feed][0][:Settings.__MAX_ENTRIES__]
-        
+
         saveout.save_database(self.database) # Save the database
 
 
@@ -122,7 +122,7 @@ class App (awn.AppletSimple):
                         title = 'aRSS has been updated')
                         #icon = Settings.__feed_icon__)
         except:
-            print message
+            #print message
 
     def build_db_threaded(self,*unused):
         """
@@ -131,7 +131,7 @@ class App (awn.AppletSimple):
         self.set_icon(get_icon(Settings.__feed_icon_gray__, self.size))
         thread.start_new_thread(self.build_db,())
 
-    def build_db_threaded_clocked(self):          
+    def build_db_threaded_clocked(self):
         """
         A looping handler for the update_db system, Non threaded
         """

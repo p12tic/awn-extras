@@ -22,6 +22,7 @@ class App (awn.AppletSimple):
     self.set_temp_icon (icon0)
     self.title = awn.awn_title_get_default ()
     self.dialog = awn.AppletDialog (self)
+    self.dialog_showing = False
     self.connect ("button-press-event", self.button_press)
     #self.connect ("enter-notify-event", self.enter_notify)
     #self.connect ("leave-notify-event", self.leave_notify)
@@ -31,7 +32,7 @@ class App (awn.AppletSimple):
     a=os.listdir(home + '/.tsclient')
     self.rootPath = home + "/.tsclient/"
     for item in a:
-        (shortname, extension) = os.path.splitext(item)	
+        (shortname, extension) = os.path.splitext(item)
 	if extension == '.rdp':
 	    button = gtk.Button (label=shortname)
 	    self.dialog.add (button)
@@ -41,19 +42,24 @@ class App (awn.AppletSimple):
     self.dialog.add (button)
     button.show_all ()
     button.connect ("button-press-event", self.start_tsclient, "")
- 
+
   def start_tsclient (self, widget, event, rdpFile):
     os.system('tsclient -x ' + self.rootPath + rdpFile)
-    print rdpFile
+    #print rdpFile
 
   def button_press (self, widget, event):
-    self.dialog.show_all ()
+    if self.dialog_showing:
+        self.dialog.hide()
+        self.dialog_showing = False
+    else:
+        self.dialog.show_all ()
+        self.dialog_showing = True
     self.title.hide (self)
-    print os.path.expanduser('~')
+    #print os.path.expanduser('~')
 
   def dialog_focus_out (self, widget, event):
     self.dialog.hide ()
-    print "hide dialog"
+    #print "hide dialog"
 
   def enter_notify (self, widget, event):
     self.title.show (self, "TsClient Applet")
@@ -61,7 +67,7 @@ class App (awn.AppletSimple):
     if self.height != icon.get_height():
       icon = icon.scale_simple(self.height,self.height,gtk.gdk.INTERP_BILINEAR)
     self.set_temp_icon (icon)
-    print "show title"
+    #print "show title"
 
   def leave_notify (self, widget, event):
     self.title.hide (self)
@@ -69,7 +75,7 @@ class App (awn.AppletSimple):
     if self.height != icon.get_height():
       icon = icon.scale_simple(self.height,self.height,gtk.gdk.INTERP_BILINEAR)
     self.set_temp_icon (icon)
-    print "hide title"
+    #print "hide title"
 
 if __name__ == "__main__":
   awn.init (sys.argv[1:])

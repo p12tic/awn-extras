@@ -1359,7 +1359,6 @@ class LauncherApplet : AppletSimple
                     foreach(string filename in desktop_files)
                     {
                         launchers.prepend(filename);
-                        stdout.printf("--------------%s\n",filename);
                     }
                     multi_launcher = new Multi_Launcher( launchers);
                     foreach(weak DesktopItem item in multi_launcher.desktops() )

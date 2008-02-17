@@ -3,6 +3,6 @@ Type=Application
 X-AWN-AppletType=C
 Encoding=UTF-8
 Name=Awn Terminal Applet
-Comment=An Awn terminal applet
+Comment=A simple popup terminal
 Exec=@LIBDIR@/awn/applets/awnterm/awnterm.so
 Icon=terminal

@@ -2,6 +2,6 @@
 Type=Application
 X-AWN-AppletType=C
 Name=Places
-Comment=Places Applet.
+Comment=Launch your folder bookmarks
 Exec=@LIBDIR@/awn/applets/places/places.so
 Icon=stock_folder

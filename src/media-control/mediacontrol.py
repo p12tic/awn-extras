@@ -32,7 +32,7 @@ class App (awn.AppletSimple):
         """
         Creating the applets core
         """
-        
+
         self.resultToolTip                  = "Media Control Applet"
         self.keylocation                    = "/apps/avant-window-navigator/applets/MediaControl/"
         location                            =  __file__
@@ -40,7 +40,7 @@ class App (awn.AppletSimple):
         self.location_icon                  = self.location + '/icons/rhythmbox.svg'
         self.load_keys()
         self.what_app()
-        # The Heart       
+        # The Heart
         awn.AppletSimple.__init__             (self, uid, orient, height)
         self.height                         = height
         icon                                = gdk.pixbuf_new_from_file (self.location_icon)
@@ -72,6 +72,7 @@ class App (awn.AppletSimple):
         vbox.show_all                         ()
 
         # Standard AWN Connects
+        self.connect                          ("scroll-event", self.wheel_turn)
         self.connect                          ("button-press-event", self.button_press)
         self.connect                          ("enter-notify-event", self.enter_notify)
         self.connect                          ("leave-notify-event", self.leave_notify)
@@ -80,14 +81,24 @@ class App (awn.AppletSimple):
         # Button Connects
         button_previous.connect               ("clicked", self.button_previous_press)
         button_play.connect                   ("clicked", self.button_pp_press)
-        button_next.connect                   ("clicked", self.button_next_press)  
+        button_next.connect                   ("clicked", self.button_next_press)
     #############
-    # Applet standard methods    
+    # Applet standard methods
     #############
     def button_press                          (self, widget, event):
-        self.labeler                          ()
-        self.dialog.show_all                  ()
-        self.title.hide                       (self)
+        if event.button == 1:
+            self.labeler                          ()
+            self.dialog.show_all                  ()
+            self.title.hide                       (self)
+        elif event.button == 2:
+            self.button_pp_press(widget)
+
+    def wheel_turn (self, widget, event):
+        if event.direction == gtk.gdk.SCROLL_UP:
+          self.button_next_press(widget)
+        elif event.direction == gtk.gdk.SCROLL_DOWN:
+          self.button_previous_press(widget)
+        self.labeler()
     def dialog_focus_out                      (self, widget, event):
         self.dialog.hide                      ()
     def enter_notify                          (self, widget, event):
@@ -97,7 +108,7 @@ class App (awn.AppletSimple):
         self.title.hide                       (self)
     #############
     # Gconf
-    ############# 
+    #############
     def what_app(self):
         self.player_name                    = mediaplayers.what_app()
         if self.player_name == None:pass
@@ -115,10 +126,10 @@ class App (awn.AppletSimple):
                 self.client.set_string        (keylocation_with_name,var)
         except NameError:
             var                             = default
-        return var     
+        return var
     def load_keys(self):
         """
-        Loads all the gconf variables by calling the key_control method 
+        Loads all the gconf variables by calling the key_control method
         """
         self.client                         = gconf.client_get_default()
         #self.player_name                    = self.key_control ("PlayerName","Rhythmbox")
@@ -146,7 +157,7 @@ class App (awn.AppletSimple):
                     try:
                         if self.artOnOff               == 'on':
                             self.image.set_from_pixbuf    (gtk.gdk.pixbuf_new_from_file(artExact).scale_simple(self.albumArtSize,self.albumArtSize,gtk.gdk.INTERP_BILINEAR))
-                    except gobject.GError: 
+                    except gobject.GError:
                         try:self.image.set_from_pixbuf    (gtk.gdk.pixbuf_new_from_file(self.noArtIcon).scale_simple(self.albumArtSize,self.albumArtSize,gtk.gdk.INTERP_BILINEAR))
                         except:gobject.GError
                 except dbus.exceptions.DBusException:self.what_app()
@@ -159,14 +170,14 @@ class App (awn.AppletSimple):
                     self.MediaPlayer.button_previous_press()
                     self.labeler                          ()
                 except dbus.exceptions.DBusException:self.what_app()
-            except AttributeError:self.what_app()    
+            except AttributeError:self.what_app()
         except RuntimeError:self.what_app()
     def button_pp_press                       (self, widget):
         try:
             try:
                 try:
                     self.MediaPlayer.button_pp_press()
-                    self.labeler                        ()
+                    self.labeler()
                 except dbus.exceptions.DBusException:self.what_app()
             except AttributeError:self.what_app()
         except RuntimeError:self.what_app()

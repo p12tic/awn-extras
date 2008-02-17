@@ -301,10 +301,6 @@ src/calendar/images/Makefile
 src/comic/Makefile
 src/comic/comic.desktop.in
 src/comic/images/Makefile
-src/digg/Makefile
-src/digg/digg.desktop.in
-src/digg/profile/Makefile
-src/digg/profile/Cache/Makefile
 src/digitalClock/Makefile
 src/digitalClock/digitalClock.desktop.in
 src/file-browser-launcher/Makefile

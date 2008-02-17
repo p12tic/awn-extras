@@ -40,7 +40,6 @@ GCONF_APPLETS +=		\
 endif
 if WITH_GNOME
 GCONF_APPLETS +=	\
-	digg			\
 	MiMenu		\
 	pandora			\
 	$(NULL)

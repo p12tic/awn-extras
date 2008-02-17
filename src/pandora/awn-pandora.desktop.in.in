@@ -7,3 +7,4 @@ Comment=Listen to Pandora Internet Radio
 Exec=@LIBDIR@/awn/applets/awn-pandora/awn-pandora.py
 Icon=@LIBDIR@/awn/applets/awn-pandora/pandora.ico
 Name[en_US]=Pandora Radio
+X-AWN-AppletCategory=AudioVideo,Audio,Network,Player

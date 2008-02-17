@@ -8,3 +8,4 @@ Comment=A media-control applet (Go Back)
 Exec=@LIBDIR@/awn/applets/media-icon-back/medialogoback.py
 Icon=@LIBDIR@/awn/applets/media-icon-back/icons/backward.svg
 Name[en_US]=Media Icons Back
+X-AWN-AppletCategory=AudioVideo,Audio,Player

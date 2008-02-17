@@ -6,3 +6,4 @@ Name=Separator
 Comment=A simple separator.
 Exec=@LIBDIR@/awn/applets/separator/separator.so
 Icon=@ICONDIR@/separator.svg
+X-AWN-AppletCategory=Utility,Core

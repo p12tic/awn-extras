@@ -5,3 +5,4 @@ Name=Standalone Launcher
 Comment=A single, standalone launcher
 Exec=@LIBDIR@/awn/applets/standalone-launcher/standalone-launcher.so
 Icon=binary
+X-AWN-AppletCategory=Utility

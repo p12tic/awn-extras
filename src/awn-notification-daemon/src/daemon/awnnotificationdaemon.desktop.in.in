@@ -5,3 +5,4 @@ Name=Awn Notification Daemon
 Comment=AWN-like notification bubbles
 Exec=@LIBDIR@/awn/applets/awnnotificationdaemon/awnnotificationdaemon.so
 Icon=binary
+X-AWN-AppletCategory=System,Monitor

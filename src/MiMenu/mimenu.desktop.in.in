@@ -8,3 +8,4 @@ Comment=A two-paned menu browser
 Exec=@LIBDIR@/awn/applets/mimenu/mimenu.py
 Icon=gtk-index
 Name[en_US]=MiMenu
+X-AWN-AppletCategory=Utility

@@ -7,3 +7,4 @@ Comment=A Simple Python Clock
 Exec=@LIBDIR@/awn/applets/PyClock/PyClock.py
 Icon=@LIBDIR@/awn/applets/PyClock/PyClock.png
 Name[pt_BR]=PyClock
+X-AWN-AppletCategory=Utility,Clock

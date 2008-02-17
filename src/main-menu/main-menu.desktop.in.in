@@ -6,3 +6,4 @@ Name=Awn Main Menu
 Comment=A main menu for Awn
 Exec=@LIBDIR@/awn/applets/main-menu/main-menu.so
 Icon=gnome-main-menu
+X-AWN-AppletCategory=Utility

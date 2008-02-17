@@ -8,3 +8,4 @@ Comment=Watch your feeds
 Exec=@LIBDIR@/awn/applets/arss/rss_awn.py
 Icon=@LIBDIR@/awn/applets/arss/Core/feed-icon.svg
 Name[en_US]=aRSS
+X-AWN-AppletCategory=Network,News

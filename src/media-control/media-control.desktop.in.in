@@ -8,3 +8,4 @@ Comment=Control your music player
 Exec=@LIBDIR@/awn/applets/media-control/mediacontrol.py
 Icon=multimedia-volume-control
 Name[en_US]=Media Control
+X-AWN-AppletCategory=AudioVideo,Audio,Player

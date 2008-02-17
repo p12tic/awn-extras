@@ -6,3 +6,4 @@ Name=Last.fm Player Applet
 Comment=Last.fm Player for AWN
 Exec=@LIBDIR@/awn/applets/lastfm/lastfmapplet.py
 Icon=@LIBDIR@/awn/applets/lastfm/icons/lastfm_icon_small.png
+X-AWN-AppletCategory=AudioVideo,Audio,Network,Player

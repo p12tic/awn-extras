@@ -6,3 +6,4 @@ Name=Stacks Plugger
 Comment=Monitors removable media devices
 Exec=@LIBDIR@/awn/applets/plugger/plugger.so
 Icon=drive-removable-media
+X-AWN-AppletCategory=System,Filesystem

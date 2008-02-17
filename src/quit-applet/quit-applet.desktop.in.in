@@ -8,3 +8,4 @@ Comment=A applet to exit your session
 Exec=@LIBDIR@/awn/applets/quit-applet/quit-applet.py
 Icon=@LIBDIR@/awn/applets/quit-applet/icons/application-exit.svg
 Name[en_US]=Quit-Logoff applet
+X-AWN-AppletCategory=System

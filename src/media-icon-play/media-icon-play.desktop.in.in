@@ -8,3 +8,4 @@ Comment=A media-control applet (Play)
 Exec=@LIBDIR@/awn/applets/media-icon-play/medialogoplay.py
 Icon=@LIBDIR@/awn/applets/media-icon-play/icons/play.svg
 Name[en_US]=Media Icons Play
+X-AWN-AppletCategory=AudioVideo,Audio,Player

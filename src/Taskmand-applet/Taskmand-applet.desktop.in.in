@@ -5,3 +5,4 @@ Name=Standalone Taskmanager
 Comment=A standalone window switcher
 Exec=@LIBDIR@/awn/applets/Taskmand-applet/Taskmand-applet.so
 Icon=binary
+X-AWN-AppletCategory=Utility,Monitor

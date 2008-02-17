@@ -6,3 +6,4 @@ Name=Trash Applet
 Comment=A lightweight trash applet
 Exec=@LIBDIR@/awn/applets/trash/trash.so
 Icon=gnome-stock-trash
+X-AWN-AppletCategory=Utility,FileTools

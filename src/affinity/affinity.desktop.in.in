@@ -6,3 +6,4 @@ Name=Affinity Search
 Comment=Search your computer via Affinity
 Exec=@LIBDIR@/awn/applets/affinity/affinity.so
 Icon=search
+X-AWN-AppletCategory=Utility,FileTools

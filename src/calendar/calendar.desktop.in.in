@@ -6,3 +6,4 @@ Name=Clock/Calendar Applet
 Comment=Watch appointments on your dock
 Exec=@LIBDIR@/awn/applets/calendar/clockcal.py
 Icon=@LIBDIR@/awn/applets/calendar/images/icon.png
+X-AWN-AppletCategory=Office,Calendar

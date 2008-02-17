@@ -6,3 +6,4 @@ Name=Showdesktop Applet
 Comment=Quickly hide all your windows
 Exec=@LIBDIR@/awn/applets/showdesktop/showdesktop.py
 Icon=desktop
+X-AWN-AppletCategory=Utility

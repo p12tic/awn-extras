@@ -1,5 +1,26 @@
-#!/usr/bin/env python
+#! /usr/bin/env python
 # -*- coding: utf-8 -*-
+#
+# Copyright (c) 2008 sharkbaitbobby <sharkbaitbobby+awn@gmail.com>
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+#File Browser Launcher
+#Preferences file
+
 import pygtk
 pygtk.require('2.0')
 import gtk
@@ -17,6 +38,9 @@ class Prefs:
 		self.nbook = gtk.Notebook()
 		self.theme = gtk.icon_theme_get_default()
 		self.initializing = True
+		
+		#Get default icon path (not gconf)
+		self.default_icon_path = '/'.join(__file__.split('/')[:-1])+'/folder.png'
 		
 		#Get ALL the GConf stuff
 		self.client = gconfwrapper.GConfWrapper()
@@ -82,48 +106,63 @@ class Prefs:
 		self.general_icon_default_radio = gtk.RadioButton()
 		self.general_icon_default_radio.identifier = 'general.icon.default'
 		self.general_icon_default_radio.connect('toggled',self.radio_changed)
-		self.general_icon_default_pixbuf = self.theme.load_icon('folder',48,48)
-		self.general_icon_default_img = gtk.image_new_from_pixbuf(self.general_icon_default_pixbuf)
+		self.general_icon_default_img = gtk.image_new_from_file(self.default_icon_path)
 		self.general_icon_default_label = gtk.Label('Default')
+		if self.icon in ['default','','/dev/null']:
+			self.general_icon_default_radio.set_active(True)
+		
+		#Second row: theme default icon
+		self.general_icon_theme_radio = gtk.RadioButton(self.general_icon_default_radio)
+		self.general_icon_theme_radio.identifier = 'general.icon.theme'
+		self.general_icon_theme_radio.connect('toggled',self.radio_changed)
+		self.general_icon_theme_pixbuf = self.theme.load_icon('folder',48,48)
+		self.general_icon_theme_img = gtk.image_new_from_pixbuf(self.general_icon_theme_pixbuf)
+		self.general_icon_theme_label = gtk.Label('Theme default')
+		if self.icon=='theme':
+			self.general_icon_theme_radio.set_active(True)
+		
 		#Attach the widgets to the table
 		self.general_icon_table.attach(self.general_icon_default_radio,0,1,0,1,yoptions=gtk.SHRINK)
 		self.general_icon_table.attach(self.general_icon_default_img,1,2,0,1,yoptions=gtk.SHRINK)
 		self.general_icon_table.attach(self.general_icon_default_label,2,3,0,1,yoptions=gtk.SHRINK)
+		self.general_icon_table.attach(self.general_icon_theme_radio,0,1,1,2,yoptions=gtk.SHRINK)
+		self.general_icon_table.attach(self.general_icon_theme_img,1,2,1,2,yoptions=gtk.SHRINK)
+		self.general_icon_table.attach(self.general_icon_theme_label,2,3,1,2,yoptions=gtk.SHRINK)
 		
-		#Second row: custom icon
+		#Third row: custom icon
 		self.general_icon_custom_radio = gtk.RadioButton(self.general_icon_default_radio)
 		self.general_icon_custom_radio.identifier = 'general.icon.custom'
 		self.general_icon_custom_radio.connect('toggled',self.radio_changed)
-		if self.icon!='/dev/null':
+		if self.icon not in ['/dev/null','','default','theme']:
 			self.general_icon_custom_radio.set_active(True)
 		if self.icon!='/dev/null' and os.path.exists(self.icon):
 			self.general_icon_custom_pixbuf = gtk.gdk.pixbuf_new_from_file(self.icon)
 			self.general_icon_custom_pixbuf = self.general_icon_custom_pixbuf.scale_simple(48,48,gtk.gdk.INTERP_BILINEAR)
 			self.general_icon_custom_img = gtk.image_new_from_pixbuf(self.general_icon_custom_pixbuf)
 		
-		#Third row: text box and browse button
+		#Fourth row: text box and browse button
 		self.general_icon_custom_label = gtk.Label('Custom')
 		self.general_icon_custom_entry = gtk.Entry()
 		self.general_icon_custom_browse = gtk.Button(stock=gtk.STOCK_OPEN)
 		self.general_icon_custom_browse.get_children()[0].get_children()[0].get_children()[1].set_text('Browse')
 		self.general_icon_custom_browse.connect('clicked',lambda a: self.browse_file('Choose an icon'))
-		if self.icon!='/dev/null' and os.path.exists(self.icon):
+		if self.icon not in ['/dev/null','','default','theme'] and os.path.exists(self.icon):
 			self.general_icon_custom_entry.set_text(self.icon)
 		else:
 			self.general_icon_custom_entry.set_sensitive(False)
 			self.general_icon_custom_browse.set_sensitive(False)
 		
-		#Put the 2nd and 3rd rows in the table
-		self.general_icon_table.attach(self.general_icon_custom_radio,0,1,1,2,yoptions=gtk.SHRINK)
+		#Put the 3rd and 4th rows in the table
+		self.general_icon_table.attach(self.general_icon_custom_radio,0,1,2,3,yoptions=gtk.SHRINK)
 		try:
-			self.general_icon_table.attach(self.general_icon_custom_img,1,2,1,2,yoptions=gtk.SHRINK)
+			self.general_icon_table.attach(self.general_icon_custom_img,1,2,2,3,yoptions=gtk.SHRINK)
 		except:
 			pass
-		self.general_icon_table.attach(self.general_icon_custom_label,2,3,1,2,yoptions=gtk.SHRINK)
+		self.general_icon_table.attach(self.general_icon_custom_label,2,3,2,3,yoptions=gtk.SHRINK)
 		self.general_icon_custom_hbox = gtk.HBox()
 		self.general_icon_custom_hbox.pack_start(self.general_icon_custom_entry)
 		self.general_icon_custom_hbox.pack_end(self.general_icon_custom_browse)
-		self.general_icon_table.attach(self.general_icon_custom_hbox,0,3,2,3,yoptions=gtk.SHRINK)
+		self.general_icon_table.attach(self.general_icon_custom_hbox,0,3,3,4,yoptions=gtk.SHRINK)
 		
 		#Next section: File Browser
 		#Bold text: File Browser with an HSeparator under it
@@ -134,15 +173,16 @@ class Prefs:
 		#Make the table for the file browser selection
 		self.general_fb_table = gtk.Table(2,2)
 		
-		#First row: () Nautilus (default)
+		#First row: () xdg-open (default)
 		self.general_fb_default_radio = gtk.RadioButton()
 		self.general_fb_default_radio.identifier = 'general.fb.default'
 		self.general_fb_default_radio.connect('toggled',self.radio_changed)
-		self.general_fb_default_label = gtk.Label('Nautilus (default)')
+		self.general_fb_default_label = gtk.Label('xdg-open (default)')
 		self.general_fb_table.attach(self.general_fb_default_radio,0,1,0,1,yoptions=gtk.SHRINK)
 		self.general_fb_table.attach(self.general_fb_default_label,1,2,0,1,yoptions=gtk.SHRINK)
+		
 		#Go through short list of common file managers, include them in a list just like nautilus
-		self.general_fb_list = ['thunar','konqueror','dolphin']
+		self.general_fb_list = ['nautilus','thunar','konqueror','dolphin']
 		self.general_fb_other_radios = []
 		self.general_fb_other_labels = []
 		self.general_fb_y = 0
@@ -155,24 +195,25 @@ class Prefs:
 					self.general_fb_other_radios[self.general_fb_y].set_active(True)
 				self.general_fb_other_labels.append(gtk.Label(self.general_fb_x.capitalize()))
 				self.general_fb_table.attach(self.general_fb_other_radios[self.general_fb_y],0,1,\
-				(self.general_fb_y+1),(self.general_fb_y+2),yoptions=gtk.SHRINK)
+					(self.general_fb_y+1),(self.general_fb_y+2),yoptions=gtk.SHRINK)
 				self.general_fb_table.attach(self.general_fb_other_labels[self.general_fb_y],1,2,\
-				(self.general_fb_y+1),(self.general_fb_y+2),yoptions=gtk.SHRINK)
+					(self.general_fb_y+1),(self.general_fb_y+2),yoptions=gtk.SHRINK)
 				self.general_fb_y = self.general_fb_y+1
+		
 		#Last option: custom with an entry for the app name
 		self.general_fb_custom_radio = gtk.RadioButton(self.general_fb_default_radio)
 		self.general_fb_custom_radio.identifier = 'general.fb.custom'
 		self.general_fb_custom_radio.connect('toggled',self.radio_changed)
 		self.general_fb_custom_label = gtk.Label('Custom')
 		self.general_fb_custom_entry = gtk.Entry()
-		if self.fb in ['nautilus','thunar','konqueror','dolphin']:
+		if self.fb in ['xdg-open','nautilus','thunar','konqueror','dolphin']:
 			self.general_fb_custom_entry.set_sensitive(False)
 		else:
 			self.general_fb_custom_radio.set_active(True)
 		self.general_fb_custom_entry.set_text(self.fb)
 		self.general_fb_custom_entry.connect('changed',\
 		lambda w:self.client.set_string('/apps/avant-window-navigator/applets/file-browser-launcher/fb',w.get_text()))
-		if self.fb in ['nautilus','thunar','konqueror','dolphin']:
+		if self.fb in ['xdg-open','nautilus','thunar','konqueror','dolphin']:
 			self.general_fb_custom_entry.set_sensitive(False)
 		self.general_fb_table.attach(self.general_fb_custom_radio,0,1,\
 		(self.general_fb_y+1),(self.general_fb_y+2),yoptions=gtk.SHRINK)
@@ -524,10 +565,20 @@ class Prefs:
 		#Now do what is needed based on the radio's identifier
 		#Tab: General; Section: Icon; Radio: Default
 		if radio.identifier=='general.icon.default':
-			self.client.set_string('/apps/avant-window-navigator/applets/file-browser-launcher/icon','/dev/null')
+			self.client.set_string('/apps/avant-window-navigator/applets/file-browser-launcher/icon','default')
+			self.general_icon_custom_entry.set_sensitive(False)
+			self.general_icon_custom_browse.set_sensitive(False)
+			self.awn_new_icon = gtk.gdk.pixbuf_new_from_file(self.default_icon_path)
+			self.awn_new_icon = self.awn_new_icon.scale_simple(48,48,gtk.gdk.INTERP_BILINEAR)
+			self.window.set_icon(self.awn_new_icon)
+			self.set_icon(self.awn_new_icon)
+		#Tab: General; Section: Icon; Radio: Theme default
+		elif radio.identifier=='general.icon.theme':
+			self.client.set_string('/apps/avant-window-navigator/applets/file-browser-launcher/icon','folder')
 			self.general_icon_custom_entry.set_sensitive(False)
 			self.general_icon_custom_browse.set_sensitive(False)
 			self.awn_new_icon = self.theme.load_icon('folder',48,48)
+			self.awn_new_icon = self.awn_new_icon.scale_simple(48,48,gtk.gdk.INTERP_BILINEAR)
 			self.window.set_icon(self.awn_new_icon)
 			self.set_icon(self.awn_new_icon)
 		#Tab: General; Section: Icon; Radio: Custom

@@ -95,38 +95,6 @@ static int _cmp_ptrs (pointer a, pointer b)
 	return (int) a - (int) b;
 }
 
-static Pixbuf layer_pixbuf_scale(Pixbuf dest,Pixbuf under,Pixbuf over,int width,int height,
-								double under_alpha=0.7,double over_alpha=1.0,
-								int src_xpos=0,int src_ypos=0,
-								double scale_x=1.0, double scale_y=1.0								
-								)
-{
-	if (under!=null)
-	{
-		under.composite (dest,0, 0, width,height,0,0,1,1, Gdk.InterpType.BILINEAR,255);
-	}	
-	over.composite (dest,0, 0, width,height,src_xpos,src_ypos,scale_x,scale_y, Gdk.InterpType.BILINEAR,255);
-	return dest;
-}
-
-
-static Pixbuf layer_pixbuf(Pixbuf dest,Pixbuf under,Pixbuf over,int width,int height,double under_alpha=0.7,double over_alpha=1.0)
-{
-	dest=dest.scale_simple (height, height, Gdk.InterpType.BILINEAR );	
-	dest.fill(0x00000000);	
-	if (under!=null)
-		under=over.scale_simple (height, height, Gdk.InterpType.BILINEAR );	
-	over=over.scale_simple (height, height, Gdk.InterpType.BILINEAR );	
-	return layer_pixbuf_scale(dest,under,over,width,height);
-}
-
-static Pixbuf layer_pixbuf_filled(Pixbuf dest,uint pixels,Pixbuf over,int width,int height,double over_alpha=1.0)
-{
-	dest=dest.scale_simple (height, height, Gdk.InterpType.BILINEAR );	//FIXME
-	dest.fill(pixels);
-	over=over.scale_simple (height, height, Gdk.InterpType.BILINEAR );	
-	return layer_pixbuf_scale(dest,null,over,width,height);
-}
 
 class Configuration: GLib.Object
 {
@@ -587,6 +555,7 @@ class DesktopitemButton: Gtk.Button
             this.set_image(image);
         }
         this.set_label(item.get_name() );
+        this.set_relief(ReliefStyle.NONE);
 		this.button_press_event += _clicked;	
 	}
 	
@@ -1699,28 +1668,34 @@ class LauncherApplet : AppletSimple
                     }
                     else
                     {
-                        stdout.printf("MULTI ADD\n");
+                        string file_copy;
                         string  desktop_key=desktopitem.get_string("X-AWN-StandaloneLauncherDesktops");
 
                         if ( desktop_key==null)
                         {
                             desktop_key="";
                         }
+                        file_copy=GLib.Path.get_dirname(desktopfile.Filename())+"/"+GLib.Path.get_basename(filename);
+                        try{
+                            tempdesk.save(file_copy);
+                        }catch(GLib.Error ex){
+                            stderr.printf("error writing file %s\n",file_copy);
+                        }
+                        
                         desktop_key.chomp();
                         if (desktop_key=="")
                         {
-                            desktop_key=filename;
+                            desktop_key=file_copy;
                         }
                         else
                         {
-                            desktop_key=desktop_key+":"+filename;
+                            desktop_key=desktop_key+":"+file_copy;
                         }
                         books.update_with_desktopitem(tempdesk);
-                        multi_launcher.add_file(filename);
-                        stdout.printf("key = %s\n",desktop_key);
+                        multi_launcher.add_file(file_copy);
                         desktopitem.set_string("X-AWN-StandaloneLauncherDesktops",desktop_key);
                         try{
-                            desktopitem.save(desktopitem.get_filename());//FIXME - throws
+                            desktopitem.save(desktopitem.get_filename());
                         }catch(GLib.Error ex){
                             stderr.printf("error writing file %s\n",desktopfile.Filename());
                         }

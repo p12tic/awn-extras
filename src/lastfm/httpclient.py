@@ -78,7 +78,7 @@ class httpclient:
                 self.response = self.response + line
             s.close()
         except:
-            print "Unexpected error: ", sys.exc_info()[0]
-            print "Unable to contact last.fm"
+            #print "Unexpected error: ", sys.exc_info()[0]
+            #print "Unable to contact last.fm"
             raise lastfmexception.LastFmException(sys.exc_info()[0])
 

@@ -7,7 +7,7 @@
 
 number_of_days = 1
 
-path_prefix = './' # where do you want to save the files?
+path_prefix = '/tmp' # where do you want to save the files?
 
 # --END configuration
 ################################################################
@@ -34,7 +34,7 @@ filename = None
 
 for i in range(number_of_days):
     url = temp1 % (date.strftime('%Y%m%d'))
-    print '? %s' % (url)
+    #print '? %s' % (url)
     fil = urllib.urlopen(url)
     for line in fil:
         match = pattern.search(line)
@@ -50,7 +50,7 @@ for i in range(number_of_days):
 
     if filename != None:
         url = temp2 % (filename)
-        print '+ %s' % (url)
+        #print '+ %s' % (url)
         fil = urllib.urlopen(url)
         diskfile = file(path_prefix + 'dilbert.gif', 'w')
         diskfile.write(fil.read())

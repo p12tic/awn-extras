@@ -53,7 +53,7 @@ wobblyzini_applet_new (AwnApplet *applet)
 	g_object_ref (wobblyzini->tooltips);
 	gtk_object_sink (GTK_OBJECT (wobblyzini->tooltips));
 
-	printf ("signal\n");
+	/*printf ("signal\n");*/
 	// connect to button events
 	g_signal_connect (G_OBJECT (wobblyzini->applet), "button-release-event", G_CALLBACK (_button_release_event), (gpointer)wobblyzini );
 	g_signal_connect (G_OBJECT (wobblyzini->applet), "expose-event", G_CALLBACK (_expose_event), wobblyzini);
@@ -84,17 +84,17 @@ _expose_event (GtkWidget *widget, GdkEventExpose *expose, gpointer data)
 
 	if (!GDK_IS_DRAWABLE (widget->window))
 	{
-		printf("pas drawable !!\n");
+		/*printf("pas drawable !!\n");*/
 		return FALSE;
 	}
 
 	cr = gdk_cairo_create (widget->window);
 	if (!cr)
 	{
-		printf( "eee\n");
+		/*printf( "eee\n");*/
 		return FALSE;
 	}
-	
+
 	gtk_widget_get_size_request (widget, &width, &height);
 
 	wobbly_zini_render (cr, width, height);
@@ -151,7 +151,7 @@ wobbly_zini_render (cairo_t *cr, int width, int height)
 }
 
 
-static gboolean 
+static gboolean
 time_handler (WobblyZini *wobblyzini)
 {
 	gtk_widget_queue_draw (GTK_WIDGET(wobblyzini->applet));

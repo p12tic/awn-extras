@@ -6,7 +6,7 @@
 # BEGIN configuration
 
 
-path_prefix = './' # where do you want to save the files?
+path_prefix = '/tmp/' # where do you want to save the files?
 
 # --END configuration
 ################################################################

@@ -32,14 +32,14 @@ class App (awn.AppletSimple):
         """
         Creating the applets core
         """
-        
+
         #self.resultToolTip                  = "Rhythmbox Control Applet"
         self.keylocation                    = "/apps/avant-window-navigator/applets/MediaControl/"
         location                            =  __file__
         self.location                       = location.replace('medialogoplay.py','')
         self.location_icon                  = self.location + 'icons/play.svg'
         self.what_app()
-        # The Heart       
+        # The Heart
         awn.AppletSimple.__init__             (self, uid, orient, height)
         self.height                         = height
         icon                                = gdk.pixbuf_new_from_file (self.location_icon)
@@ -54,7 +54,7 @@ class App (awn.AppletSimple):
         #self.connect                          ("leave-notify-event", self.leave_notify)
 
     #############
-    # Applet standard methods    
+    # Applet standard methods
     #############
     def button_press                          (self, widget, event):
         self.button_pp_press                  ()
@@ -67,12 +67,12 @@ class App (awn.AppletSimple):
     #    self.title.hide                       (self)
     #############
     # Gconf
-    ############# 
+    #############
     def what_app(self):
         self.player_name                    = mediaplayers.what_app()
         if self.player_name == None:pass
         else:self.MediaPlayer               = mediaplayers.__dict__[self.player_name]()
-        print self.player_name
+        #print self.player_name
     #############
     # Rhythmbox specific control methods
     #############
@@ -82,7 +82,7 @@ class App (awn.AppletSimple):
                 try:
                     self.MediaPlayer.button_previous_press()
                 except dbus.exceptions.DBusException:self.what_app()
-            except AttributeError:self.what_app()    
+            except AttributeError:self.what_app()
         except RuntimeError:self.what_app()
     def button_pp_press                       (self):
         try:

@@ -42,8 +42,8 @@ class lastfm:
             x = string.split(string.rstrip(v), "=", 1)
             if len(x) == 2:
                 res[x[0]] = x[1]
-            elif x != [""]:
-                print "(urk?", x, ")"
+            #elif x != [""]:
+            #    print "(urk?", x, ")"
         return res
 
     def connect(self, username, password):
@@ -54,9 +54,9 @@ class lastfm:
 
         #self.state = 1
         
-        print "status:", repr(s.status)
+        #print "status:", repr(s.status)
         #print "headers:", repr(s.headers)
-        print "info:", repr(self.info)
+        #print "info:", repr(self.info)
 
         if self.info["session"] == "FAILED":
            return 1
@@ -68,8 +68,8 @@ class lastfm:
         s = httpclient.httpclient(self.info["base_url"], 80)
         s.req(self.info["base_path"] + "/control.php?command=" + cmd + "&session=" + self.info["session"])
         res = self.parselines(s.response)
-        if res["response"] != "OK":
-            print "command " + cmd + " returned:", res
+        #if res["response"] != "OK":
+        #    print "command " + cmd + " returned:", res
         return res["response"]
 
     def changestation(self, station_type, station_name):
@@ -88,14 +88,12 @@ class lastfm:
          
         url = urllib.quote(url) # fixes bug for artists with spaces in names, thanks to Mike (mosburger) Desjardins <desjardinsmike@gmail.com>
 
-        print url
-
         s = httpclient.httpclient(self.info["base_url"], 80)
         s.req(self.info["base_path"] + "/adjust.php?session=" + self.info["session"] + "&url=" + url)
         res = self.parselines(s.response)
         
         if res["response"] != "OK":
-            print "station " + url + " returned:", res
+            #print "station " + url + " returned:", res
             return False
         
         return station_desc
@@ -122,7 +120,7 @@ class lastfm:
                 self.metadata = tmp
                 #self.metadatatime = time.time()
                 return 1
-        print "getmetadata: got funky metadata:", repr(tmp)
+        #print "getmetadata: got funky metadata:", repr(tmp)
         return 0
     
     def get_cover_url(self):

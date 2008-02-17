@@ -27,13 +27,13 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
 {
 	AwnApplet *applet;
 	WobblyZini *wobblyzini;
-	
-	printf ("avant init\n");
+
+	/*printf ("avant init\n");*/
 	applet = awn_applet_new( uid, orient, height );
 	gtk_widget_set_size_request (GTK_WIDGET (applet), awn_applet_get_height (applet) * 2, awn_applet_get_height (applet) );
 	wobblyzini = wobblyzini_applet_new(applet);
-	printf ("apres init\n");
-	
+	/*printf ("apres init\n");*/
+
 	return applet;
 }
 

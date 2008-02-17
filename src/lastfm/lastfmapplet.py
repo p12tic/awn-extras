@@ -315,7 +315,6 @@ class App (awn.AppletSimple):
       self.station_desc = self.lastfm.changestation(station, self.station_name.get_text())
       
       if  self.station_desc == False:
-          print "bad thing happend, returning"
           return
       
       self.gst_player.set_property('uri', self.lastfm.info['stream_url'])

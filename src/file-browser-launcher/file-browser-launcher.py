@@ -27,7 +27,6 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 import awn
-import gconf
 import subprocess
 import pango
 import gconfwrapper
@@ -97,7 +96,7 @@ class App (awn.AppletSimple):
 		#HBox to put the two together
 		self.hbox = gtk.HBox()
 		self.hbox.pack_start(self.entry)
-		self.hbox.pack_start(self.enter)
+		self.hbox.pack_start(self.enter, False)
 		#And add the HBox to the vbox and add the vbox to the dialog
 		self.vbox.pack_start(self.hbox)
 		self.dialog.add(self.vbox)
@@ -402,8 +401,12 @@ class App (awn.AppletSimple):
 		#Get the file browser app, or set to xdg-open if it's not set
 		self.gconf_fb = self.client.get_string('/apps/avant-window-navigator/applets/file-browser-launcher/fb','xdg-open')
 		
+		#In case there is nothing but whitespace (or at all) in the entry widget
+		if path.replace(' ','')=='':
+			path = os.path.expanduser('~')
+		
 		#Launch file browser at path
-		subprocess.Popen(('%s %s' % (self.gconf_fb, path)).split(' '))
+		subprocess.Popen(self.gconf_fb.split(' ')+[path])
 	
 	#Right click menu - Preferences or About
 	def show_menu(self,event):
@@ -433,6 +436,7 @@ class App (awn.AppletSimple):
 		
 		#Show the prefs window - see prefs.py
 		prefs.Prefs(self.set_icon)
+		gtk.main()
 	
 	#Show the about window
 	def open_about(self,widget):

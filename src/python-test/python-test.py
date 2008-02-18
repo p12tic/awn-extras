@@ -1,4 +1,24 @@
 #!/usr/bin/python
+#
+#       AWN Test Python Applet
+#
+#       Copyright (c) 2007 Neil Jagdish Patel
+#
+#       This library is free software; you can redistribute it and/or
+#       modify it under the terms of the GNU Lesser General Public
+#       License as published by the Free Software Foundation; either
+#       version 2 of the License, or (at your option) any later version.
+#
+#       This library is distributed in the hope that it will be useful,
+#       but WITHOUT ANY WARRANTY; without even the implied warranty of
+#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#       Lesser General Public License for more details.
+#
+#       You should have received a copy of the GNU Lesser General Public
+#       License along with this library; if not, write to the
+#       Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+#       Boston, MA 02111-1307, USA.
+
 import sys, os
 import gobject
 import pygtk
@@ -29,6 +49,8 @@ class App(awn.AppletSimple):
         self.dialog.add(button)
         button.show_all()
 
+        self.showing_dlog = False
+
         # Connect our events
         self.connect("button-press-event", self.button_press)
         self.connect("enter-notify-event", self.enter_notify)
@@ -36,8 +58,13 @@ class App(awn.AppletSimple):
         self.dialog.connect("focus-out-event", self.dialog_focus_out)
 
     def button_press(self, widget, event):
-        self.dialog.show_all()
+        if self.showing_dlog:
+            self.dialog.hide()
+        else:
+            self.dialog.show_all()
+
         self.title.hide(self)
+        self.showing_dlog = not self.showing_dlog
         # show dialog
 
     def dialog_focus_out(self, widget, event):

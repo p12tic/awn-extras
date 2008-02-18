@@ -24,7 +24,6 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
-import gconf
 import pango
 import os
 import gconfwrapper
@@ -139,6 +138,8 @@ class Prefs:
 			self.general_icon_custom_pixbuf = gtk.gdk.pixbuf_new_from_file(self.icon)
 			self.general_icon_custom_pixbuf = self.general_icon_custom_pixbuf.scale_simple(48,48,gtk.gdk.INTERP_BILINEAR)
 			self.general_icon_custom_img = gtk.image_new_from_pixbuf(self.general_icon_custom_pixbuf)
+		else:
+			self.general_icon_custom_img = gtk.image_new_from_pixbuf(None)
 		
 		#Fourth row: text box and browse button
 		self.general_icon_custom_label = gtk.Label('Custom')
@@ -161,7 +162,7 @@ class Prefs:
 		self.general_icon_table.attach(self.general_icon_custom_label,2,3,2,3,yoptions=gtk.SHRINK)
 		self.general_icon_custom_hbox = gtk.HBox()
 		self.general_icon_custom_hbox.pack_start(self.general_icon_custom_entry)
-		self.general_icon_custom_hbox.pack_end(self.general_icon_custom_browse)
+		self.general_icon_custom_hbox.pack_end(self.general_icon_custom_browse,False)
 		self.general_icon_table.attach(self.general_icon_custom_hbox,0,3,3,4,yoptions=gtk.SHRINK)
 		
 		#Next section: File Browser
@@ -297,14 +298,18 @@ class Prefs:
 		if self.places_open==2:
 			self.dialog_behavior_open.set_active(True)
 		
+		#Make a VBox for the focus location text box and open the selected place when clicked checkbuttons
+		self.dialog_behavior_vbox = gtk.VBox()
+		self.dialog_behavior_vbox.pack_start(self.dialog_behavior_focus)
+		self.dialog_behavior_vbox.pack_start(self.dialog_behavior_open)
+		
 		#Put ALL of the dialog tab together
-		self.dialog_vbox.pack_start(self.dialog_places_label)
-		self.dialog_vbox.pack_start(self.dialog_separator0)
-		self.dialog_vbox.pack_start(self.dialog_places_vbox)
-		self.dialog_vbox.pack_start(self.dialog_behavior_label)
-		self.dialog_vbox.pack_start(self.dialog_separator1)
-		self.dialog_vbox.pack_start(self.dialog_behavior_focus)
-		self.dialog_vbox.pack_start(self.dialog_behavior_open)
+		self.dialog_vbox.pack_start(self.dialog_places_label,False,False,5)
+		self.dialog_vbox.pack_start(self.dialog_separator0,False,False,5)
+		self.dialog_vbox.pack_start(self.dialog_places_vbox,False,False,5)
+		self.dialog_vbox.pack_start(self.dialog_behavior_label,False,False,5)
+		self.dialog_vbox.pack_start(self.dialog_separator1,False,False,5)
+		self.dialog_vbox.pack_start(self.dialog_behavior_vbox,False,False,5)
 		self.nbook.append_page(self.dialog_vbox,self.dialog_tab)
 		
 		#Left mouse button tab: two options: when clicked, do ... and the default folder (to display in entry widget or to launch)
@@ -320,32 +325,27 @@ class Prefs:
 		self.lmb_clicked_table = gtk.Table(3,2)
 		
 		#Row 1: () Display the dialog (default) (gconf:0)
-		self.lmb_clicked_display_radio = gtk.RadioButton()
+		self.lmb_clicked_display_radio = gtk.RadioButton(label='Display the dialog')
 		self.lmb_clicked_display_radio.identifier = 'lmb.clicked.display'
 		self.lmb_clicked_display_radio.connect('toggled',self.radio_changed)
-		self.lmb_clicked_display_label = gtk.Label('Display the dialog')
 		self.lmb_clicked_table.attach(self.lmb_clicked_display_radio,0,1,0,1,yoptions=gtk.SHRINK)
-		self.lmb_clicked_table.attach(self.lmb_clicked_display_label,1,2,0,1,yoptions=gtk.SHRINK)
 		
 		#Row 2: () Open the folder (gconf:1)
-		self.lmb_clicked_open_radio = gtk.RadioButton(self.lmb_clicked_display_radio)
+		self.lmb_clicked_open_radio = gtk.RadioButton(self.lmb_clicked_display_radio,'Open the folder')
 		if self.lmb==2:
 			self.lmb_clicked_open_radio.set_active(True)
 		self.lmb_clicked_open_radio.identifier = 'lmb.clicked.open'
 		self.lmb_clicked_open_radio.connect('toggled',self.radio_changed)
 		self.lmb_clicked_open_label = gtk.Label('Open the folder')
 		self.lmb_clicked_table.attach(self.lmb_clicked_open_radio,0,1,1,2,yoptions=gtk.SHRINK)
-		self.lmb_clicked_table.attach(self.lmb_clicked_open_label,1,2,1,2,yoptions=gtk.SHRINK)
 		
 		#Row 3: () Do nothing (gconf:2)
-		self.lmb_clicked_nothing_radio = gtk.RadioButton(self.lmb_clicked_display_radio)
+		self.lmb_clicked_nothing_radio = gtk.RadioButton(self.lmb_clicked_display_radio,'Do nothing')
 		if self.lmb==3:
 			self.lmb_clicked_nothing_radio.set_active(True)
 		self.lmb_clicked_nothing_radio.identifier = 'lmb.clicked.nothing'
 		self.lmb_clicked_nothing_radio.connect('toggled',self.radio_changed)
-		self.lmb_clicked_nothing_label = gtk.Label('Do nothing')
 		self.lmb_clicked_table.attach(self.lmb_clicked_nothing_radio,0,1,2,3,yoptions=gtk.SHRINK)
-		self.lmb_clicked_table.attach(self.lmb_clicked_nothing_label,1,2,2,3,yoptions=gtk.SHRINK)
 		
 		#Bold: Default Folder & separator under it
 		self.lmb_folder_label = gtk.Label('Default Folder')
@@ -356,20 +356,16 @@ class Prefs:
 		self.lmb_folder_table = gtk.Table(3,2)
 		
 		#Row 1: () Home Folder ($HOME, default)
-		self.lmb_folder_default_radio = gtk.RadioButton()
+		self.lmb_folder_default_radio = gtk.RadioButton(label='Home Folder (%s, default)' % os.path.expanduser('~'))
 		self.lmb_folder_default_radio.identifier = 'lmb.folder.default'
 		self.lmb_folder_default_radio.connect('toggled',self.radio_changed)
-		self.lmb_folder_default_label = gtk.Label('Home Folder (%s, default)' % os.path.expanduser('~'))
 		self.lmb_folder_table.attach(self.lmb_folder_default_radio,0,1,0,1,yoptions=gtk.SHRINK)
-		self.lmb_folder_table.attach(self.lmb_folder_default_label,1,2,0,1,yoptions=gtk.SHRINK)
 		
 		#Row 2: () Custom
-		self.lmb_folder_custom_radio = gtk.RadioButton(self.lmb_folder_default_radio)
+		self.lmb_folder_custom_radio = gtk.RadioButton(self.lmb_folder_default_radio,'Custom')
 		self.lmb_folder_custom_radio.identifier = 'lmb.folder.custom'
 		self.lmb_folder_custom_radio.connect('toggled',self.radio_changed)
-		self.lmb_folder_custom_label = gtk.Label('Custom')
 		self.lmb_folder_table.attach(self.lmb_folder_custom_radio,0,1,1,2,yoptions=gtk.SHRINK)
-		self.lmb_folder_table.attach(self.lmb_folder_custom_label,1,2,1,2,yoptions=gtk.SHRINK)
 		
 		#Row 3: _______________________[Browse]
 		self.lmb_folder_custom_entry = gtk.Entry()
@@ -378,7 +374,7 @@ class Prefs:
 		self.lmb_folder_custom_browse.connect('clicked',self.browse_dir_lmb)
 		self.lmb_folder_custom_hbox = gtk.HBox()
 		self.lmb_folder_custom_hbox.pack_start(self.lmb_folder_custom_entry)
-		self.lmb_folder_custom_hbox.pack_end(self.lmb_folder_custom_browse)
+		self.lmb_folder_custom_hbox.pack_end(self.lmb_folder_custom_browse,False)
 		if self.lmb_path!=os.path.expanduser('~'):
 			self.lmb_folder_custom_entry.set_text(self.lmb_path)
 			self.lmb_folder_custom_radio.set_active(True)
@@ -388,12 +384,12 @@ class Prefs:
 		self.lmb_folder_table.attach(self.lmb_folder_custom_hbox,0,2,2,3,yoptions=gtk.SHRINK)
 		
 		#Now put ALL of the LMB Tab together
-		self.lmb_vbox.pack_start(self.lmb_clicked_label)
-		self.lmb_vbox.pack_start(self.lmb_separator0)
-		self.lmb_vbox.pack_start(self.lmb_clicked_table)
-		self.lmb_vbox.pack_start(self.lmb_folder_label)
-		self.lmb_vbox.pack_start(self.lmb_separator1)
-		self.lmb_vbox.pack_start(self.lmb_folder_table)
+		self.lmb_vbox.pack_start(self.lmb_clicked_label,False,False,5)
+		self.lmb_vbox.pack_start(self.lmb_separator0,False,False,5)
+		self.lmb_vbox.pack_start(self.lmb_clicked_table,False,False,5)
+		self.lmb_vbox.pack_start(self.lmb_folder_label,False,False,5)
+		self.lmb_vbox.pack_start(self.lmb_separator1,False,False,5)
+		self.lmb_vbox.pack_start(self.lmb_folder_table,False,False,5)
 		self.nbook.append_page(self.lmb_vbox,self.lmb_tab)
 		
 		#Middle mouse button tab: two options: when clicked, do ... and the default folder (to display in entry widget or to launch)
@@ -409,32 +405,26 @@ class Prefs:
 		self.mmb_clicked_table = gtk.Table(3,2)
 		
 		#Row 1: () Display the dialog (default) (gconf:1)
-		self.mmb_clicked_display_radio = gtk.RadioButton()
+		self.mmb_clicked_display_radio = gtk.RadioButton(label='Display the dialog')
 		self.mmb_clicked_display_radio.identifier = 'mmb.clicked.display'
 		self.mmb_clicked_display_radio.connect('toggled',self.radio_changed)
-		self.mmb_clicked_display_label = gtk.Label('Display the dialog')
 		self.mmb_clicked_table.attach(self.mmb_clicked_display_radio,0,1,0,1,yoptions=gtk.SHRINK)
-		self.mmb_clicked_table.attach(self.mmb_clicked_display_label,1,2,0,1,yoptions=gtk.SHRINK)
 		
 		#Row 2: () Open the folder (gconf:2)
-		self.mmb_clicked_open_radio = gtk.RadioButton(self.mmb_clicked_display_radio)
+		self.mmb_clicked_open_radio = gtk.RadioButton(self.mmb_clicked_display_radio,'Open the folder')
 		if self.mmb==2:
 			self.mmb_clicked_open_radio.set_active(True)
 		self.mmb_clicked_open_radio.identifier = 'mmb.clicked.open'
 		self.mmb_clicked_open_radio.connect('toggled',self.radio_changed)
-		self.mmb_clicked_open_label = gtk.Label('Open the folder')
 		self.mmb_clicked_table.attach(self.mmb_clicked_open_radio,0,1,1,2,yoptions=gtk.SHRINK)
-		self.mmb_clicked_table.attach(self.mmb_clicked_open_label,1,2,1,2,yoptions=gtk.SHRINK)
 		
 		#Row 3: () Do nothing (gconf:3)
-		self.mmb_clicked_nothing_radio = gtk.RadioButton(self.mmb_clicked_display_radio)
+		self.mmb_clicked_nothing_radio = gtk.RadioButton(self.mmb_clicked_display_radio,'Do nothing')
 		if self.mmb==3:
 			self.mmb_clicked_nothing_radio.set_active(True)
 		self.mmb_clicked_nothing_radio.identifier = 'mmb.clicked.nothing'
 		self.mmb_clicked_nothing_radio.connect('toggled',self.radio_changed)
-		self.mmb_clicked_nothing_label = gtk.Label('Do nothing')
 		self.mmb_clicked_table.attach(self.mmb_clicked_nothing_radio,0,1,2,3,yoptions=gtk.SHRINK)
-		self.mmb_clicked_table.attach(self.mmb_clicked_nothing_label,1,2,2,3,yoptions=gtk.SHRINK)
 		
 		#Bold: Default Folder & separator under it
 		self.mmb_folder_label = gtk.Label('Default Folder')
@@ -445,20 +435,16 @@ class Prefs:
 		self.mmb_folder_table = gtk.Table(3,2)
 		
 		#Row 1: () Home Folder ($HOME, default)
-		self.mmb_folder_default_radio = gtk.RadioButton()
+		self.mmb_folder_default_radio = gtk.RadioButton(label='Home Folder (%s, default)' % os.path.expanduser('~'))
 		self.mmb_folder_default_radio.identifier = 'mmb.folder.default'
 		self.mmb_folder_default_radio.connect('toggled',self.radio_changed)
-		self.mmb_folder_default_label = gtk.Label('Home Folder (%s, default)' % os.path.expanduser('~'))
 		self.mmb_folder_table.attach(self.mmb_folder_default_radio,0,1,0,1,yoptions=gtk.SHRINK)
-		self.mmb_folder_table.attach(self.mmb_folder_default_label,1,2,0,1,yoptions=gtk.SHRINK)
 		
 		#Row 2: () Custom
-		self.mmb_folder_custom_radio = gtk.RadioButton(self.mmb_folder_default_radio)
+		self.mmb_folder_custom_radio = gtk.RadioButton(self.mmb_folder_default_radio,'Custom')
 		self.mmb_folder_custom_radio.identifier = 'mmb.folder.custom'
 		self.mmb_folder_custom_radio.connect('toggled',self.radio_changed)
-		self.mmb_folder_custom_label = gtk.Label('Custom')
 		self.mmb_folder_table.attach(self.mmb_folder_custom_radio,0,1,1,2,yoptions=gtk.SHRINK)
-		self.mmb_folder_table.attach(self.mmb_folder_custom_label,1,2,1,2,yoptions=gtk.SHRINK)
 		
 		#Row 3: _______________________[Browse]
 		self.mmb_folder_custom_entry = gtk.Entry()
@@ -467,7 +453,7 @@ class Prefs:
 		self.mmb_folder_custom_browse.connect('clicked',self.browse_dir_mmb)
 		self.mmb_folder_custom_hbox = gtk.HBox()
 		self.mmb_folder_custom_hbox.pack_start(self.mmb_folder_custom_entry)
-		self.mmb_folder_custom_hbox.pack_end(self.mmb_folder_custom_browse)
+		self.mmb_folder_custom_hbox.pack_end(self.mmb_folder_custom_browse,False)
 		if self.mmb_path!=os.path.expanduser('~'):
 			self.mmb_folder_custom_entry.set_text(self.mmb_path)
 			self.mmb_folder_custom_radio.set_active(True)
@@ -477,12 +463,12 @@ class Prefs:
 		self.mmb_folder_table.attach(self.mmb_folder_custom_hbox,0,2,2,3,yoptions=gtk.SHRINK)
 		
 		#Now put ALL of the mmb Tab together
-		self.mmb_vbox.pack_start(self.mmb_clicked_label)
-		self.mmb_vbox.pack_start(self.mmb_separator0)
-		self.mmb_vbox.pack_start(self.mmb_clicked_table)
-		self.mmb_vbox.pack_start(self.mmb_folder_label)
-		self.mmb_vbox.pack_start(self.mmb_separator1)
-		self.mmb_vbox.pack_start(self.mmb_folder_table)
+		self.mmb_vbox.pack_start(self.mmb_clicked_label,False,False,5)
+		self.mmb_vbox.pack_start(self.mmb_separator0,False,False,5)
+		self.mmb_vbox.pack_start(self.mmb_clicked_table,False,False,5)
+		self.mmb_vbox.pack_start(self.mmb_folder_label,False,False,5)
+		self.mmb_vbox.pack_start(self.mmb_separator1,False,False,5)
+		self.mmb_vbox.pack_start(self.mmb_folder_table,False,False,5)
 		self.nbook.append_page(self.mmb_vbox,self.mmb_tab)
 		
 		#Now for a close button - no apply button needed since everything is done instantly
@@ -498,7 +484,6 @@ class Prefs:
 		self.window.add(self.main_table)
 		self.window.show_all()
 		self.initializing = False
-		gtk.main()
 	
 	#Browses for a FILE
 	def browse_file(self,title):
@@ -514,6 +499,7 @@ class Prefs:
 			self.awn_new_icon = self.awn_new_icon.scale_simple(48,48,gtk.gdk.INTERP_BILINEAR)
 			self.window.set_icon(self.awn_new_icon)
 			self.set_icon(self.awn_new_icon)
+			self.general_icon_custom_img.set_from_pixbuf(self.awn_new_icon)
 			self.client.set_string('/apps/avant-window-navigator/applets/file-browser-launcher/icon',self.file_chooser_filename)
 		except:
 			self.browse_err_dialog = gtk.Dialog('Error',self.window,gtk.DIALOG_DESTROY_WITH_PARENT,(gtk.STOCK_OK,gtk.RESPONSE_OK))
@@ -574,7 +560,7 @@ class Prefs:
 			self.set_icon(self.awn_new_icon)
 		#Tab: General; Section: Icon; Radio: Theme default
 		elif radio.identifier=='general.icon.theme':
-			self.client.set_string('/apps/avant-window-navigator/applets/file-browser-launcher/icon','folder')
+			self.client.set_string('/apps/avant-window-navigator/applets/file-browser-launcher/icon','theme')
 			self.general_icon_custom_entry.set_sensitive(False)
 			self.general_icon_custom_browse.set_sensitive(False)
 			self.awn_new_icon = self.theme.load_icon('folder',48,48)
@@ -725,8 +711,3 @@ class Prefs:
 				self.client.set_int('/apps/avant-window-navigator/applets/file-browser-launcher/places_open',2)
 			else:
 				self.client.set_int('/apps/avant-window-navigator/applets/file-browser-launcher/places_open',1)
-			
-		
-			
-		
-		

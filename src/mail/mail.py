@@ -2,7 +2,7 @@
 #
 #       gmail.py Version 2.0
 #
-#       Copyright 2007 Pavel Panchekha <pavpanchekha@gmail.com>
+#       Copyright 2008 Pavel Panchekha <pavpanchekha@gmail.com>
 #
 #       This program is free software; you can redistribute it and/or modify
 #       it under the terms of the GNU General Public License as published by

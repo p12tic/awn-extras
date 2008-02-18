@@ -109,6 +109,7 @@ class Title:
         if not text:
             text = self.parent.meta.info["name"]
         self.text = text
+        self.__showing = False
 
     def show(self, x=None, y=None, show=True):
         def f(text):
@@ -118,9 +119,12 @@ class Title:
                 self.__title.hide(self.parent)
 
         f(self.text)
+        self.__showing = show
 
     def set(self, text=""):
         self.text = text
+        if self.__showing:
+            self.show()
 
 class Icon:
     def __init__(self, parent):

@@ -46,6 +46,8 @@ class MountApplet(awn.AppletSimple):
 
 		self.dialog = awn.AppletDialog (self)
 
+        self.showing_dialog = False
+
 		self.connect ("button-press-event", self.button_press)
 		self.connect ("enter-notify-event", self.enter_notify)
 		self.connect ("leave-notify-event", self.leave_notify)
@@ -72,7 +74,7 @@ class MountApplet(awn.AppletSimple):
 
 
 	def config_event(self, gconf_client, *args, **kwargs):
-		self.dialog.hide()     
+		self.dialog.hide()
 		self.title.hide (self)
 		self.get_config()
 
@@ -92,8 +94,13 @@ class MountApplet(awn.AppletSimple):
 			self.popup_menu.popup(None, None, None, event.button, event.time)
 		else:
 			self.initialize_dialog()
-			self.dialog.show_all ()
+			if self.showing_dialog:
+			    self.dialog.hide()
+            else:
+			    self.dialog.show_all ()
 			self.title.hide (self)
+
+			self.showing_dialog = not self.showing_dialog
 
 
 	def initialize_dialog(self):
@@ -148,7 +155,7 @@ class MountApplet(awn.AppletSimple):
 			if (not line.isspace() and not line.startswith('#') and not line.startswith('none')):
 				fstabline = line.split()
 				fstab.append(fstabline[1])
-	
+
 		fstab.sort()
 		return fstab
 
@@ -219,14 +226,14 @@ class PreferenceDialog(gtk.Window):
 		hbox4.add(cancel)
 		vbox.pack_end(hbox4,True,False,2)
 
-		
+
 	def ok_button(self, widget, event):
 		self.applet.gconf_client.set_list(self.applet.gconf_path + "/hidden_mounts", gconf.VALUE_STRING, self.hidden_list.get_text().rstrip().split(' '))
 		self.applet.gconf_client.set_string(self.applet.gconf_path + "/execute_command", self.execute_command.get_text().strip())
 		self.destroy()
 
 
-	def cancel_button(self, widget, event):		
+	def cancel_button(self, widget, event):
 		self.destroy()
 
 if __name__ == "__main__":

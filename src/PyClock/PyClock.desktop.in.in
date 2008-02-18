@@ -2,7 +2,7 @@
 Version=1.0
 Name=PyClock
 Type=Application
-X-AWN-AppletType
+X-AWN-AppletType=Python
 Comment=A Simple Python Clock
 Exec=@LIBDIR@/awn/applets/PyClock/PyClock.py
 Icon=@LIBDIR@/awn/applets/PyClock/PyClock.png

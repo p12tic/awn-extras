@@ -58,6 +58,7 @@
 
 #define CONFIG_FILEMANAGER   CONFIG_KEY("filemanager")
 #define CONFIG_APPLET_ICON   CONFIG_KEY("applet_icon")
+#define CONFIG_DESKTOP_DIR   CONFIG_KEY("desktop_dir")
 
 #define CONFIG_SHOW_TOOLTIPS CONFIG_KEY("show_tooltips")
 #define CONFIG_BORDER_COLOUR CONFIG_KEY("border_colour")
@@ -111,6 +112,7 @@ typedef struct
 	gboolean			show_tooltips;
 
 	gchar				*file_manager;
+	gchar				*desktop_dir;    
 
 #ifdef USE_AWN_DESKTOP_AGNOSTIC
 	AwnConfigClient		*config;
@@ -230,7 +232,7 @@ void init_config(Places * places)
 	places->show_tooltips             = gconf_client_get_bool  (places->config, CONFIG_SHOW_TOOLTIPS, NULL);
 	places->honour_gtk                = gconf_client_get_bool  (places->config, CONFIG_HONOUR_GTK,    NULL);
 #endif
-
+    config_get_string (places->config, CONFIG_DESKTOP_DIR, &(places->desktop_dir));
 	config_get_string (places->config, CONFIG_FILEMANAGER, &(places->file_manager));
 	config_get_string (places->config, CONFIG_APPLET_ICON, &(places->applet_icon_name));
 	if (places->honour_gtk)
@@ -487,8 +489,16 @@ static void get_places(Places * places)
 	places->menu_list=g_slist_append(places->menu_list,item);
 
 	item=g_malloc(sizeof(Menu_Item));
+	item->text=g_strdup("Desktop");
+	item->icon=g_strdup("desktop");
+	item->exec=g_strdup_printf("%s %s",places->file_manager,places->desktop_dir);
+	item->comment=g_strdup("Desktop");
+	item->places=places;
+	places->menu_list=g_slist_append(places->menu_list,item);
+    
+	item=g_malloc(sizeof(Menu_Item));
 	item->text=g_strdup("File System");
-	item->icon=g_strdup("stock_folder");
+	item->icon=g_strdup("system");
 	item->exec=g_strdup_printf("%s /",places->file_manager);
 	item->comment=g_strdup("Root File System");
 	item->places=places;

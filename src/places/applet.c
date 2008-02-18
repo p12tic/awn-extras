@@ -146,62 +146,10 @@ static void get_places(Places * places);
 static void render_places(Places * places);
 //static char * awncolor_to_string(AwnColor * colour);
 static void free_menu_list_item (Menu_Item * item);
+static GtkWidget * menu_new(Places *places);
+static gboolean _focus_out_event(GtkWidget *widget, GdkEventButton *event, Places * places);
+static gboolean _expose_event (GtkWidget *widget, GdkEventExpose *expose, Places * places);
 
-#if 0
-char *urldecode(char *source, char *dest)
-{
-	char *ret;
-	if(!dest)
-		dest = source;
-	ret = dest;
-	while(*source)
-	{
-		switch(*source)
-		{
-		case '+':
-			*(dest++) = ' ';
-			break;
-		case '%':
-			// NOTE: wrong input can finish with "...%" giving
-			// buffer overflow, cut string here
-			if ( !(dest[0] = source[1]) )
-				return ret;
-			if ( !(dest[1] = source[2]) )
-				return ret;
-			dest[2] = 0;
-			*(dest++) = (char)strtol(dest, NULL, 16);
-			source += 2;
-			break;
-		default:
-			*(dest++) = *source;
-		}
-		++source;
-	}
-	*dest = 0;
-	return ret;
-}
-
-static char * awncolor_to_string(AwnColor * colour)
-{
-
-	return g_strdup_printf("%02x%02x%02x%02x",
-								(unsigned int) round((colour->red*255)),
-								(unsigned int) round((colour->green*255)),
-								(unsigned int) round((colour->blue*255)),
-								(unsigned int) round((colour->alpha*255))
-								);
-}
-
-static AwnColor GdkColor2AwnColor( GdkColor * gdk_color)
-{
-	AwnColor colour;
-	colour.red=gdk_color->red/65535.0;
-	colour.green=gdk_color->green/65535.0;
-	colour.blue=gdk_color->blue/65535.0;
-	colour.alpha=0.9;
-	return colour;
-}
-#endif
 static void free_menu_list_item(Menu_Item * item)
 {
 	if (item->text)
@@ -333,10 +281,11 @@ static void _do_update_places(Places * places)
 	g_slist_free(places->menu_list);
 	places->menu_list=NULL;
     gtk_widget_destroy(places->vbox);
-    gtk_widget_set_size_request (GTK_WIDGET (places->mainwindow),1, 1);
-    gtk_widget_set_size_request (GTK_WIDGET (places->mainwindow),-1, -1);
+    places->mainwindow=menu_new(places);
     places->vbox=gtk_vbox_new(FALSE,0);
     gtk_container_add (GTK_CONTAINER (places->mainwindow),places->vbox);    
+    g_signal_connect(G_OBJECT(places->mainwindow),"focus-out-event",G_CALLBACK (_focus_out_event),places);
+	g_signal_connect (G_OBJECT (places->mainwindow),"expose-event", G_CALLBACK (_expose_event), places);    
 	render_places(places);	//FIXME
 
 }
@@ -1286,7 +1235,7 @@ void pos_dialog(GtkWidget * window,Places *places)
 }
 
 
-GtkWidget * menu_new(Places *places)
+static GtkWidget * menu_new(Places *places)
 {
 	GdkColormap *colormap;
 	GdkScreen *screen;

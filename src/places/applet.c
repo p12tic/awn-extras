@@ -332,6 +332,11 @@ static void _do_update_places(Places * places)
 	g_slist_foreach (places->menu_list, (GFunc)free_menu_list_item, NULL);
 	g_slist_free(places->menu_list);
 	places->menu_list=NULL;
+    gtk_widget_destroy(places->vbox);
+    gtk_widget_set_size_request (GTK_WIDGET (places->mainwindow),1, 1);
+    gtk_widget_set_size_request (GTK_WIDGET (places->mainwindow),-1, -1);
+    places->vbox=gtk_vbox_new(FALSE,0);
+    gtk_container_add (GTK_CONTAINER (places->mainwindow),places->vbox);    
 	render_places(places);	//FIXME
 
 }
@@ -1259,15 +1264,6 @@ static gboolean _expose_event (GtkWidget *widget, GdkEventExpose *expose, Places
 {
     cairo_t *cr;
 	GdkEvent *evt;
-#if 0
-    gint x, y;
-    gint w, h;
-
-    gdk_window_get_origin(GTK_WIDGET(places->applet)->window, &x, &y);
-	gtk_widget_get_size_request(GTK_WIDGET(places->applet),&w, &h);
-
-	gtk_window_move(GTK_WINDOW(places->mainwindow), x,y-places->mainwindow->allocation.height+h/2);
-#endif
 
     cr=gdk_cairo_create(widget->window);
     cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);

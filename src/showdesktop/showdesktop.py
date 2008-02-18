@@ -49,9 +49,8 @@ class ShowDesktopButton (awn.AppletSimple):
         self.connect ("button-press-event", self.__on_button_press)
     
     def __on_button_press(self,widget, event):
-        if event.button == 1:
-            screen = wnck.screen_get_default()
-            screen.toggle_showing_desktop(not screen.get_showing_desktop())
+        screen = wnck.screen_get_default()
+        screen.toggle_showing_desktop(not screen.get_showing_desktop())
         
 if __name__ == '__main__':
     awn.init (sys.argv[1:])

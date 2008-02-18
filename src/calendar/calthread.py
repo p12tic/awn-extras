@@ -53,7 +53,6 @@ class CalThread(threading.Thread):
 		self.die = True
 
 	def run(self):
-		print "thread running"
 		while self.die == False:
 			if self.refresh_counter % 60 == 0:
 				#print "fetching update"

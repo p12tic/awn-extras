@@ -129,6 +129,7 @@ class App(awn.AppletSimple):
 		try:
 			self.locale_lang = locale.getdefaultlocale()[0][0:2]
 		except:
+                        pass
 			#print "locale not set"
 		self.connect("destroy",self.quit_callback)
 		gtk.gdk.threads_init()
@@ -559,8 +560,10 @@ class App(awn.AppletSimple):
 					self.login_window.show_all()
 					self.login_open = False
 				else:
+                                        pass
 					#print "Already have password, or this calendar doesn't require a login."
 			else:
+                                pass
 				#print "Login window already opened?"
 	
 	############################################################################

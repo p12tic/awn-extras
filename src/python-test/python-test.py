@@ -54,7 +54,7 @@ class App(awn.AppletSimple):
         # show title
 
     def leave_notify(self, widget, event):
-        #self.title.hide (self)
+        self.title.hide (self)
         #icon = self.theme.load_icon ("gtk-cancel", self.height, 0)
         #if self.height != icon.get_height():
           #icon = icon.scale_simple(self.height,self.height,gtk.gdk.INTERP_BILINEAR)

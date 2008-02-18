@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# vim: ts=4 
+# vim: ts=4
 ###
 #
 # showdesktop.py
@@ -23,7 +23,7 @@
 # Name : showdesktop.py
 # Version: 0.1
 # Author : mehdi ABAAKOUK Mehdi <theli48@gmail.com>
-# Description: Applet to show/hide desktop for awn 
+# Description: Applet to show/hide desktop for awn
 #
 ###
 
@@ -47,11 +47,19 @@ class ShowDesktopButton (awn.AppletSimple):
             icon = icon.scale_simple(height,height,gtk.gdk.INTERP_BILINEAR)
         self.set_icon(icon)
         self.connect ("button-press-event", self.__on_button_press)
-    
+        self.connect("enter-notify-event", self.__enter_notify)
+        self.connect("leave-notify-event", self.__leave_notify)
+
     def __on_button_press(self,widget, event):
         screen = wnck.screen_get_default()
         screen.toggle_showing_desktop(not screen.get_showing_desktop())
-        
+
+    def __enter_notify(self, widget, event):
+        self.title.show(self, "Test python applet")
+
+    def __leave_notify(self, widget, event):
+        self.title.hide (self)
+
 if __name__ == '__main__':
     awn.init (sys.argv[1:])
     applet = ShowDesktopButton (awn.uid, awn.orient, awn.height)

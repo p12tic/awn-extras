@@ -38,6 +38,7 @@ try:
     import Core.simplenotify as notify
 except:
     #print 'Notifications Disabled'
+    pass
 
 def get_icon(name, size):
     return gdk.pixbuf_new_from_file(name).scale_simple(size,
@@ -123,6 +124,7 @@ class App (awn.AppletSimple):
                         #icon = Settings.__feed_icon__)
         except:
             #print message
+            pass
 
     def build_db_threaded(self,*unused):
         """

@@ -7,7 +7,8 @@ EXTRA_DIST =				\
 	intltool-merge.in		\
 	intltool-update.in		\
 	po/Makefile.in.in \
-	po/POTFILES.skip
+	po/POTFILES.skip \
+	autogen.sh
 
 DISTCLEANFILES =			\
 	intltool-extract		\

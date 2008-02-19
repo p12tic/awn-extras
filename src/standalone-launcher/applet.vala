@@ -1596,7 +1596,7 @@ class LauncherApplet : AppletSimple
     private void _drag_data_get  (Gtk.Widget widget,Gdk.DragContext context, Gtk.SelectionData selection_data, uint info, uint time_)
     {    
         stdout.printf("_drag_data_get\n");
-        selection_data.set_text("BOOGER\n",-1);
+        selection_data.set_text("test data\n",-1);
     }
 
     private void _offered(Taskman.TaskmanInterface o, string xid)

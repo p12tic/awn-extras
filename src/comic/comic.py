@@ -1,41 +1,36 @@
 #!/usr/bin/python
 # -*- coding: iso-8859-15 -*-
-# by Chris Johnson
-# Much code was taken from Mike (mosburger) Desjardins <desjardinsmike@gmail.com>
-# Weather applet
 #
-# This is a comic applet for Avant Window Navigator.
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License version 2 as
+# published by the Free Software Foundation
 #
-# This library is free software; you can redistribute it and/or
-# modify it under the terms of the GNU Lesser General Public
-# License as published by the Free Software Foundation; either
-# version 2 of the License, or (at your option) any later version.
-#
-# This library is distributed in the hope that it will be useful,
+# This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# Lesser General Public License for more details.
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
-# You should have received a copy of the GNU Lesser General Public
-# License along with this library; if not, write to the
-# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-# Boston, MA 02111-1307, USA.
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
+# Name:        comic.py
+# Version:     .5.
+# Date:        10-15-07
+# Description: A python Applet for the avant-windows-navigator to display comic strips.
+#
+# Authors:     cj13
+#             pavpanchekha
+
 import sys, os
 import gobject
-import pygtk
 import gtk
-from gtk import gdk
 import gconf
 import awn
-import urllib
-import cairo
-from StringIO import StringIO
 import comicdialog
-from string import join
 #default comic
 GETWHAT = 'getdilbert.py'
-showhover = True
+showhover = False
 
 class App (awn.AppletSimple):
     titleText = "Daily Comic"
@@ -45,7 +40,7 @@ class App (awn.AppletSimple):
     def __init__ (self, uid, orient, height):
         awn.AppletSimple.__init__ (self, uid, orient, height)
         self.height = height
-        icon = gdk.pixbuf_new_from_file(os.path.dirname (__file__) + '/images/kmouth.png')
+        icon = gtk.gdk.pixbuf_new_from_file(os.path.dirname (__file__) + '/images/kmouth.png')
 
         if height != icon.get_height():
             icon = icon.scale_simple(height,height,gtk.gdk.INTERP_BILINEAR)
@@ -60,32 +55,32 @@ class App (awn.AppletSimple):
 
         self.gconf_client = gconf.client_get_default()
 
-	# Setup popup menu
-    	self.popup_menu = gtk.Menu()
-    	dil_item = gtk.MenuItem("Dilbert")
-    	pnut_item = gtk.MenuItem("Peanuts")
-	born_item = gtk.MenuItem("The Born Loser")
-    	wiz_item = gtk.MenuItem("Wizard of ID")
+        # Setup popup menu
+        self.popup_menu = gtk.Menu()
+        dil_item = gtk.MenuItem("Dilbert")
+        pnut_item = gtk.MenuItem("Peanuts")
+        born_item = gtk.MenuItem("The Born Loser")
+        wiz_item = gtk.MenuItem("Wizard of ID")
         xkcd_item = gtk.MenuItem("xkcd")
-   	showho_item = gtk.CheckMenuItem("Hide Strip on Hover")
+        showho_item = gtk.CheckMenuItem("Hide Strip on Hover")
         self.popup_menu.append(dil_item)
-    	self.popup_menu.append(pnut_item)
-	self.popup_menu.append(born_item)
-	self.popup_menu.append(wiz_item)
-	self.popup_menu.append(xkcd_item)
-	self.popup_menu.append(showho_item)
+        self.popup_menu.append(pnut_item)
+        self.popup_menu.append(born_item)
+        self.popup_menu.append(wiz_item)
+        self.popup_menu.append(xkcd_item)
+        self.popup_menu.append(showho_item)
         dil_item.connect_object("activate",self.dil_callback,self)
         pnut_item.connect_object("activate",self.pnut_callback,self)
-	born_item.connect_object("activate",self.born_callback,self)
-	wiz_item.connect_object("activate",self.wiz_callback,self)
-	xkcd_item.connect_object("activate",self.xkcd_callback,self)
-	showho_item.connect_object("activate",self.showho_callback,self)
+        born_item.connect_object("activate",self.born_callback,self)
+        wiz_item.connect_object("activate",self.wiz_callback,self)
+        xkcd_item.connect_object("activate",self.xkcd_callback,self)
+        showho_item.connect_object("activate",self.showho_callback,self)
         dil_item.show()
         pnut_item.show()
-	born_item.show()
-	wiz_item.show()
-	xkcd_item.show()
-	showho_item.show()
+        born_item.show()
+        wiz_item.show()
+        xkcd_item.show()
+        showho_item.show()
 
         self.build_dialog()
 
@@ -109,71 +104,70 @@ class App (awn.AppletSimple):
 
 
     def button_press (self, widget, event):
-	if event.button == 3:
-          # right click
-          self.title.hide(self)
-          self.visible = False
-          self.dialog.hide()
-          self.popup_menu.popup(None, None, None, event.button, event.time)
-          #print "right click"
-        else:
-          if self.visible:
-            self.dialog.hide()
-            self.title.hide(self)
-          else:
-            self.title.hide(self)
-            self.dialog.show_all()
-          #self.visible = False
+        if event.button == 3:
+                # right click
+                self.title.hide(self)
+                self.visible = False
+                self.dialog.hide()
+                self.popup_menu.popup(None, None, None, event.button, event.time)
+        elif event.button == 1:
+            if self.visible:
+                self.dialog.hide()
+                self.title.hide(self)
+            else:
+                self.title.hide(self)
+                self.dialog.show_all()
+            self.visible = not self.visible
 
 
     def dil_callback(self, widget):
         global GETWHAT
-	GETWHAT = 'getdilbert.py'
-	self.build_dialog()
+        GETWHAT = 'getdilbert.py'
+        self.build_dialog()
 
 
     def pnut_callback(self, widget):
-	global GETWHAT
-	GETWHAT = 'getpeanuts.py'
-	self.build_dialog()
+        global GETWHAT
+        GETWHAT = 'getpeanuts.py'
+        self.build_dialog()
 
     def born_callback(self, widget):
-	global GETWHAT
-	GETWHAT = 'getborn.py'
-	self.build_dialog()
+        global GETWHAT
+        GETWHAT = 'getborn.py'
+        self.build_dialog()
 
     def wiz_callback(self, widget):
-	global GETWHAT
-	GETWHAT = 'getwiz.py'
-	self.build_dialog()
+        global GETWHAT
+        GETWHAT = 'getwiz.py'
+        self.build_dialog()
 
     def xkcd_callback(self, widget):
-	global GETWHAT
-	GETWHAT = 'getxkcd.py'
-	self.build_dialog()
+        global GETWHAT
+        GETWHAT = 'getxkcd.py'
+        self.build_dialog()
 
     def showho_callback(self, widget):
-	global showhover
-	showhover = not showhover
+        global showhover
+        showhover = not showhover
 
 
     def dialog_focus_out (self, widget, event):
         self.visible = False
         self.dialog.hide()
-        self.title.show (self, self.titleText)
 
 
     def enter_notify (self, widget, event):
         self.title.show (self, self.titleText)
-	if showhover:
-	  self.title.hide(self)
-	  self.dialog.show_all()
-	  self.visible = False
+        if showhover:
+            self.title.hide(self)
+            self.dialog.show_all()
+            self.visible = False
 
     def leave_notify (self, widget, event):
-        self.visible = False
         self.title.hide(self)
-	self.dialog.hide()
+        if self.showhover:
+            self.dialog.hide()
+            self.visible = False
 
 
 if __name__ == "__main__":

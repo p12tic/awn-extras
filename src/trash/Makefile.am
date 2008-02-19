@@ -27,3 +27,5 @@ glade_DATA = trashapplet.glade
 EXTRA_DIST += 			\
 	trashapplet.glade	\
 	$(NULL)
+
+EXTRA_DIST=trash.schema-ini trashapplet.glade

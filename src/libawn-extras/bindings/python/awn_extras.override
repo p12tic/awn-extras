@@ -22,7 +22,7 @@ headers
 #include <pygobject.h>
 #include <libawn/awn-cairo-utils.h>
 #include <gdk/gdkcolor.h>
-#include "awn-extras.h"
+#include <libawn-extras/awn-extras.h>
 
 static Pycairo_CAPI_t *Pycairo_CAPI;
 %%

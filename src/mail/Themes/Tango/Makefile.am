@@ -1,4 +1,4 @@
-gmail_DATA = 		\
+dist_gmail_DATA = 		\
 error.svg  	\
 login.svg  	\
 read.svg  	\

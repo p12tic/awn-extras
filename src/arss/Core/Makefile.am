@@ -1,5 +1,5 @@
 NULL =
-arss_DATA =	\
+dist_arss_DATA =	\
 	COPYING	\
 	feed-icon-gray.svg	\
 	feed-icon-new.png	\

@@ -12,3 +12,5 @@ places_la_LIBADD =										\
 	$(top_builddir)/src/libawn-extras/libawn-extras.la	\
 	$(NULL)
 places_la_LDFLAGS = $(APPLET_LINKER_FLAGS)
+
+EXTRA_DIST=places.schema-ini

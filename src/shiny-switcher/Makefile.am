@@ -17,3 +17,5 @@ shinyswitcher_la_LIBADD =	\
 	$(SHINY_SWITCHER_LIBS)	\
 	$(NULL)
 shinyswitcher_la_LDFLAGS = $(APPLET_LINKER_FLAGS)
+
+EXTRA_DIST=shinyswitcher.schema-ini

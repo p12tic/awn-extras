@@ -67,3 +67,5 @@ affinity_la_LIBADD =		\
 	$(AFFINITY_LIBS)	\
 	$(NULL)
 affinity_la_LDFLAGS = $(APPLET_LINKER_FLAGS)
+
+EXTRA_DIST=po/Makefile.in.in

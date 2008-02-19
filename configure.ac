@@ -6,7 +6,7 @@ m4_define(pycairo_required_version,      1.0.2) dnl or 1.1.7
 m4_define(pygtk_required_version,        2.10.0)
 
 
-AC_INIT(awn-extras-applets, 0.2.1, [])
+AC_INIT(awn-extras-applets, 0.2.4, [])
 AM_INIT_AUTOMAKE()
 AC_CONFIG_SRCDIR(src)
 AM_CONFIG_HEADER(config.h)
@@ -265,9 +265,6 @@ src/affinity/po/Makefile.in
 src/arss/Makefile
 src/arss/arss.desktop.in
 src/arss/Core/Makefile
-src/awn-meebo/Makefile
-src/awn-meebo/awn-meebo.desktop.in
-src/awn-meebo/profile/Makefile
 src/awn-notification-daemon/Makefile
 src/awn-notification-daemon/data/Makefile
 src/awn-notification-daemon/po/Makefile.in
@@ -281,8 +278,6 @@ src/awnterm/awnterm.desktop.in
 src/battery-applet/battery-applet.desktop.in
 src/battery-applet/Makefile
 src/battery-applet/icons/Makefile
-src/clock/Makefile
-src/clock/clock.desktop.in
 src/cairo-menu-classic/Makefile
 src/cairo-menu-classic/cairo_main_menu_classic.desktop.in
 src/cairo-menu/Makefile
@@ -367,14 +362,8 @@ src/showdesktop/showdesktop.desktop.in
 src/stacks/Makefile
 src/stacks/icons/Makefile
 src/stacks/stacks.desktop.in
-src/standalone-launcher/Makefile
-src/standalone-launcher/standalone-launcher.desktop.in
 src/switcher/Makefile
 src/switcher/switcher.desktop.in
-src/taskmand/Makefile
-src/taskmand/data/Makefile
-src/Taskmand-applet/Makefile
-src/Taskmand-applet/Taskmand-applet.desktop.in
 src/trash/Makefile
 src/trash/trash.desktop.in
 src/trasher/Makefile
@@ -382,8 +371,6 @@ src/trasher/trasher.desktop.in
 src/tsclient-applet/Makefile
 src/tsclient-applet/icons/Makefile
 src/tsclient-applet/tsclient-app.desktop.in
-src/vala-test/Makefile
-src/vala-test/vala-test.desktop.in
 src/volume-control/Makefile
 src/volume-control/Themes/Makefile
 src/volume-control/Themes/Black/Makefile

@@ -20,13 +20,13 @@ awnsystemmonitor_la_SOURCES =		\
 	dashboard_util.h		\
 	date_time_component.c		\
 	date_time_component.h		\
+	gconf-config.h \
 	loadavg_component.c		\
 	loadavg_component.h		\
 	sysmem_component.c		\
 	sysmem_component.h		\
 	uptime_component.c		\
-	uptime_component.h		\
-	config.h			\
+	uptime_component.h		
 	$(NULL)
 awnsystemmonitor_la_LIBADD =	\
 	$(AWN_LIBS)		\

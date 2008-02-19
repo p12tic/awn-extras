@@ -710,7 +710,7 @@ create_notification(UrlClickedCb url_clicked)
         G_daemon_config.awn_bg.blue=background_color->blue  / 65535.0;
 		G_daemon_config.awn_bg.alpha=BACKGROUND_OPACITY;
 
-    	GdkColor *fg_color = &style->fg[GTK_STATE_NORMAL];    
+    	GdkColor *fg_color = &style->bg[GTK_STATE_SELECTED];    
         G_daemon_config.awn_border.red=fg_color->red   / 65535.0;
         G_daemon_config.awn_border.green=fg_color->green / 65535.0;
         G_daemon_config.awn_border.blue=fg_color->blue  / 65535.0;

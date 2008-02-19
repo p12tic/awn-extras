@@ -132,7 +132,7 @@ class Clock:
   def SetIconFromSurface(self, applet, surface):
     icon = self.GetPixbufFromSurface(surface)
     if applet.height != icon.get_height(): # Check if the icon height is not correct
-        icon = icon.scale_simple(self.height, self.height, gtk.gdk.INTERP_BILINEAR) # Scale it if so
+        icon = icon.scale_simple(applet.height, applet.height, gtk.gdk.INTERP_BILINEAR) # Scale it if so
     applet.set_temp_icon (icon)
 
 

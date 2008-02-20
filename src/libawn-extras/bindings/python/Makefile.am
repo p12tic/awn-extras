@@ -11,7 +11,7 @@ AM_CFLAGS = \
 	$(PYGTK_CFLAGS) \
 	$(PYCAIRO_CFLAGS) \
 	$(AWN_CFLAGS) \
-	-I$(top_builddir)/src/libawn-extras \
+	-I$(top_builddir)/src \
 	-DHAVE_PYCAIRO \
 	$(NULL)
 

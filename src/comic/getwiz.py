@@ -21,7 +21,7 @@
 
 number_of_days = 1
 
-path_prefix = '/tmp' # where do you want to save the files?
+path_prefix = '/tmp/' # where do you want to save the files?
 
 # --END configuration
 ################################################################

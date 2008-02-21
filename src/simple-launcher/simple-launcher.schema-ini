@@ -1,0 +1,6 @@
+[DEFAULT/desktop_file_editor]
+type = string
+default = awn-launcher-editor
+description = desktop file editor.
+
+; vim: set ft=dosini :

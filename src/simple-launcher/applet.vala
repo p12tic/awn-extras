@@ -31,8 +31,9 @@ class Configuration: GLib.Object
 
     construct
 	{
-		read_config();    
-        default_conf=new Awn.ConfigClient.for_applet("simple-launcher",uid);
+		 
+        default_conf=new Awn.ConfigClient.for_applet("simple-launcher",null);
+        read_config();   
         default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"desktop_file_editor", _config_changed, this);
 	}
 	
@@ -126,6 +127,7 @@ class LauncherApplet : AppletSimple
 
     construct 
     { 
+        stdout.printf("construct\n");
         blank_icon();
 		this.realize += _realized;        
     }
@@ -143,6 +145,8 @@ class LauncherApplet : AppletSimple
 
     private bool _initialize()
     {
+        string directory;
+        stdout.printf("initialize\n");
         this.button_press_event+=_button_press;
 		targets = new TargetEntry[2];
 		targets[0].target = "text/uri-list";
@@ -156,8 +160,36 @@ class LauncherApplet : AppletSimple
 		drag_dest_set(this, Gtk.DestDefaults.ALL, targets,2, Gdk.DragAction.COPY);
 		this.drag_data_received+=_drag_data_received;
         this.drag_data_get+=_drag_data_get;
+     
+        //FIXME
+        stdout.printf("create dir\n");
+        directory=Environment.get_home_dir()+"~/.config/awn/applets/simple-launcher/";
+        if (! FileUtils.test(directory,FileTest.EXISTS)  )
+        {		
+            if ( DirUtils.create_with_parents(directory,0777) != 0)
+            {
+                stdout.printf("Fatal error creating %s\n",directory);
+            }
+        }
+        stdout.printf("finish create\n");        
+        stdout.printf("config\n");
         config=new Configuration(uid);
-      
+        stdout.printf("finish config\n");                             
+        if (!FileUtils.test(directory+config.uid+".desktop",FileTest.EXISTS ))
+        {
+            stdout.printf("file does not exist\n");
+            desktopitem = new DesktopItem(directory+config.uid+".desktop" );	
+            desktopitem.set_exec("false");
+            desktopitem.set_icon("stock_stop");
+            desktopitem.set_item_type("Application");
+            desktopitem.set_name("None");				
+        }
+        else
+        {
+            desktopitem = new DesktopItem(directory+config.uid+".desktop" );	
+        }
+
+        effects=get_effects();                  
         effect_start_ex(effects, Effect.LAUNCHING,null,null,1);
         desktopitem.set_string ("Type","Application");         
 		return false;
@@ -267,6 +299,7 @@ class LauncherApplet : AppletSimple
     
 	private void _realized()
 	{
+        stdout.printf("realized\n");
         this.window.set_back_pixmap (null,false);
         this.show();
         Timeout.add(200,_initialize,this);

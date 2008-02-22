@@ -162,7 +162,7 @@ translate_coordinates(NotifyStackLocation stack_location,
     	case NOTIFY_STACK_LOCATION_AWN:
 			tmp=*y;
 			get_origin_awn(x,y,width,height);
-			if (y<gdk_screen_get_height (gdk_screen_get_default() )/2 )
+			if (*y<gdk_screen_get_height (gdk_screen_get_default() )/2 )
 			{
 				stacking_direction=-1; //stacking down
 			}
@@ -247,7 +247,7 @@ notify_stack_shift_notifications(NotifyStack *stack,
 								  &shiftx, &shifty, req.width, GTK_WIDGET(nw2)->allocation.height,
 								  index++);
         //    printf("notify_stack_shift_notifications: %d, %d\n",x,y);								  
-			move_notification(nw2, x, y);         /*AWN*/
+			move_notification(GTK_WIDGET(nw2), x, y);         /*AWN*/
 		}
 		else if (nw_l != NULL)
 		{
@@ -265,10 +265,10 @@ notify_stack_add_window(NotifyStack *stack,
 	gint x, y;
 
 	gtk_widget_size_request(GTK_WIDGET(nw), &req);
-    gtk_widget_show(nw);
+    gtk_widget_show(GTK_WIDGET(nw));
 	notify_stack_shift_notifications(stack, nw, NULL,
   									 req.width, GTK_WIDGET(nw)->allocation.height, &x, &y);						 				 
-	move_notification(nw, x, y);
+	move_notification(GTK_WIDGET(nw), x, y);
 
 	if (new_notification)
 	{

@@ -774,7 +774,7 @@ set_notification_text(GtkWindow *nw, const char *summary, const char *body)
 	WindowData *windata = g_object_get_data(G_OBJECT(nw), "windata");
 	g_assert(windata != NULL);
 	
-	char * endchar;
+	char  endchar;
 	endchar=body[strlen(body)-1]=='\n'?' ':'\n';
 	
 	
@@ -805,7 +805,7 @@ set_notification_text(GtkWindow *nw, const char *summary, const char *body)
 
     sexy_url_label_set_markup(SEXY_URL_LABEL(windata->body_label), str);
 
-	if ( !strlen(gtk_label_get_label(windata->body_label)) )
+	if ( !strlen(gtk_label_get_label(GTK_LABEL(windata->body_label))) )
 	{
 		char *tmp=g_markup_escape_text(body,-1);
 		g_free(str);

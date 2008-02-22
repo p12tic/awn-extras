@@ -1000,8 +1000,8 @@ notify_daemon_notify_handler(NotifyDaemon *daemon,
 		 * the arrow X, Y hints. However, in case, move the notification to
 		 * that position.
 		 */
-		set_notification_arrow(nw, TRUE, x, y);
-		move_notification(nw, x, y);
+		set_notification_arrow(GTK_WIDGET(nw), TRUE, x, y);
+		move_notification(GTK_WIDGET(nw), x, y);
 	}
 	else
 	{
@@ -1009,7 +1009,7 @@ notify_daemon_notify_handler(NotifyDaemon *daemon,
 		GdkScreen *screen;
 		gint x, y;
 
-		set_notification_arrow(nw, FALSE, 0, 0);
+		set_notification_arrow(GTK_WIDGET(nw), FALSE, 0, 0);
 
 		gdk_display_get_pointer(gdk_display_get_default(),
 								&screen, &x, &y, NULL);
@@ -1125,7 +1125,7 @@ gboolean send_message(gchar *body)
     	notify_uninit();
     	exit(0);
     }    	
-	g_timeout_add(3000, (GSourceFunc*)_do_wait,NULL);     
+	g_timeout_add(3000, (GSourceFunc)_do_wait,NULL);     
     return FALSE;
 }
 
@@ -1481,8 +1481,8 @@ AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
 		  
 	dbus_g_connection_register_g_object(connection,"/org/freedesktop/Notifications",G_OBJECT(daemon));
     
-    g_timeout_add(5000, (GSourceFunc*)send_message,g_strdup("Awn Notification Daemon has loaded Successfully.\nClick <a href=\"http://wiki.awn-project.org/index.php?title=Awn_Notification-Daemon\">Here</a> for online documentation.")); 
-    g_timeout_add(3000, (GSourceFunc*)hide_icon,NULL); 
+    g_timeout_add(5000, (GSourceFunc)send_message,g_strdup("Awn Notification Daemon has loaded Successfully.\nClick <a href=\"http://wiki.awn-project.org/index.php?title=Awn_Notification-Daemon\">Here</a> for online documentation.")); 
+    g_timeout_add(3000, (GSourceFunc)hide_icon,NULL); 
     return applet;
 
 }

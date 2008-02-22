@@ -119,11 +119,11 @@ class LauncherApplet : AppletSimple
     protected	DesktopItem				desktopitem;//primary item
     protected   Configuration			config;
 	protected	TargetEntry[]			targets;
-	protected   ConfigClient			awn_config;
 	protected   Awn.Title               title;
 	protected   weak Awn.Effects        effects;
 	protected   string                  title_string;
     protected   Gtk.Menu                right_menu;	
+    protected   string                  directory;
 
     construct 
     { 
@@ -144,8 +144,7 @@ class LauncherApplet : AppletSimple
 
 
     private bool _initialize()
-    {
-        string directory;
+    {        
         stdout.printf("initialize\n");
         this.button_press_event+=_button_press;
 		targets = new TargetEntry[2];
@@ -160,10 +159,12 @@ class LauncherApplet : AppletSimple
 		drag_dest_set(this, Gtk.DestDefaults.ALL, targets,2, Gdk.DragAction.COPY);
 		this.drag_data_received+=_drag_data_received;
         this.drag_data_get+=_drag_data_get;
-     
+        build_right_click();
+        theme = IconTheme.get_default ();  
+
         //FIXME
         stdout.printf("create dir\n");
-        directory=Environment.get_home_dir()+"~/.config/awn/applets/simple-launcher/";
+        directory=Environment.get_home_dir()+"/.config/awn/applets/simple-launcher/";
         if (! FileUtils.test(directory,FileTest.EXISTS)  )
         {		
             if ( DirUtils.create_with_parents(directory,0777) != 0)
@@ -186,9 +187,16 @@ class LauncherApplet : AppletSimple
         }
         else
         {
-            desktopitem = new DesktopItem(directory+config.uid+".desktop" );	
+            desktopitem = new DesktopItem(directory+config.uid+".desktop");
         }
-
+        if (desktopitem != null)
+        {
+            if (desktopitem.get_icon(theme)!=null)
+            {
+                icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
+            }		
+        }
+        set_icon(icon);
         effects=get_effects();                  
         effect_start_ex(effects, Effect.LAUNCHING,null,null,1);
         desktopitem.set_string ("Type","Application");         
@@ -226,7 +234,7 @@ class LauncherApplet : AppletSimple
     private bool _desktop_edit(Gtk.Widget widget,Gdk.EventButton event)
     {
         try{
-            Process.spawn_command_line_async(config.desktop_file_editor+" "+desktopitem.get_filename() );
+            Process.spawn_command_line_async(config.desktop_file_editor+" "+directory+config.uid+".desktop" );
         }catch ( SpawnError ex ) {
             stderr.printf("Failed to spawn '%s' \n",config.desktop_file_editor+" "+desktopitem.get_filename());
         }

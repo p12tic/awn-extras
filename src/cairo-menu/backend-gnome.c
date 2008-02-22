@@ -808,7 +808,7 @@ GSList* get_menu_data(gboolean show_search,gboolean show_run,gboolean show_place
 gboolean display_message(gchar * summary, gchar * body,glong timeout)
 {
     
-    notify_message_async(summary, body,NULL,-1);
+    notify_message(summary, body,NULL,-1);
     return FALSE;
 }
 

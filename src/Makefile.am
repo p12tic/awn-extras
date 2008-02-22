@@ -1,4 +1,8 @@
 NULL =
+if HAVE_VALA
+VALA_APPLETS = vala-test standalone-launcher taskmand simple-launcher
+endif
+
 GCONF_APPLETS =
 
 if WITH_GCONF
@@ -53,6 +57,7 @@ SUBDIRS =			\
 	separator		\
 	shiny-switcher		\
 	showdesktop		\
+	Taskmand-applet		\
 	tsclient-applet		\
 	volume-control		\
 	wobblyzini		\

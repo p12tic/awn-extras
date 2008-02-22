@@ -26,6 +26,9 @@
 
 #include <libawn/awn-applet.h>
 #include <libawn/awn-applet-simple.h>
+
+#include <libawn-extras/awn-extras.h>
+
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
 #include <string.h>
@@ -804,32 +807,8 @@ GSList* get_menu_data(gboolean show_search,gboolean show_run,gboolean show_place
 
 gboolean display_message(gchar * summary, gchar * body,glong timeout)
 {
-	NotifyNotification *notify;	
-	gchar *type = NULL;
-	gchar *icon_str = NULL;
-	glong expire_timeout = NOTIFY_EXPIRES_DEFAULT;
-	printf("display_message\n");
-	if (timeout>0)
-	{
-		expire_timeout=timeout;
-	}			
-
-    NotifyUrgency urgency = NOTIFY_URGENCY_NORMAL;
-    GError *error = NULL;    
-
-    notify_init("notify-send");
-	notify = notify_notification_new(summary, body, icon_str, NULL);
-	if (notify)
-	{
-		notify_notification_set_category(notify, type);
-		notify_notification_set_urgency(notify, urgency);
-		notify_notification_set_timeout(notify, expire_timeout);    
-		notify_notification_show(notify, NULL);
-
-		g_object_unref(G_OBJECT(notify));
-	}		
-	notify_uninit();
-  	
+    
+    notify_message_async(summary, body,NULL,-1);
     return FALSE;
 }
 

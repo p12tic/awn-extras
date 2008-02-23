@@ -94,7 +94,7 @@ class QueryFeed(Feed):
 		if has_enclosures(entry) and len(entry.enclosures) == 1:
 			item[URL] = entry.enclosures[0].href
 		elif has_description(entry):
-			item[IMAGES] = IMG_SRC_RE.findall(data)
+			item[IMAGES] = IMG_SRC_RE.findall(entry.description)
 			if len(self.items) == 2:
 				self.detect_images()
 		elif LINK in item:

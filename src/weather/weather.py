@@ -44,7 +44,7 @@ import socket
 
 # locale stu
 APP="awn-weather-applet"
-DIR=os.path.dirname (__file__) + '/locale'
+DIR=os.path.dirname(__file__) + '/locale'
 import locale
 import gettext
 #locale.setlocale(locale.LC_ALL, '')
@@ -100,19 +100,19 @@ class App(awn.AppletSimple):
 	countdown = 0
 	
 	def __init__(self, uid, orient, height):
-		awn.AppletSimple.__init__ (self, uid, orient, height)
+		awn.AppletSimple.__init__(self, uid, orient, height)
 		self.height = height
 		# Implementation of awn-effects
 		self.effects = self.get_effects()
-		icon = gdk.pixbuf_new_from_file(os.path.dirname (__file__) + '/images/twc-logo.png')
-		self.set_temp_icon (icon)
+		icon = gdk.pixbuf_new_from_file_at_scale(os.path.dirname(__file__)+'/images/twc-logo.png', -1, height, True)
+		self.set_temp_icon(icon)
 		self.title = awn.awn_title_get_default()
-		self.dialog = awn.AppletDialog (self)
+		self.dialog = awn.AppletDialog(self)
 		#self.dialog = override.Dialog(self)
-		self.connect ("button-press-event", self.button_press)
-		self.connect ("enter-notify-event", self.enter_notify)
-		self.connect ("leave-notify-event", self.leave_notify)
-		self.dialog.connect ("focus-out-event", self.dialog_focus_out)
+		self.connect("button-press-event", self.button_press)
+		self.connect("enter-notify-event", self.enter_notify)
+		self.connect("leave-notify-event", self.leave_notify)
+		self.dialog.connect("focus-out-event", self.dialog_focus_out)
 		gobject.timeout_add(1,self.download_first_map)
 		self.gconf_client = gconf.client_get_default()
 		self.gconf_client.notify_add(self.gconf_path, self.config_event)
@@ -146,8 +146,8 @@ class App(awn.AppletSimple):
 
 	def build_forecast_dialog(self):
 		if self.curved_dialog == True:
-			self.dialog = override.Dialog (self)
-			#dialog = awn.AppletDialog (self)
+			self.dialog = override.Dialog(self)
+			#dialog = awn.AppletDialog(self)
 			self.forecast_area = weathercurved.WeatherDialog(self.forecast)
 			box = gtk.VBox()
 			self.forecast_area.set_size_request(450,160)
@@ -155,7 +155,7 @@ class App(awn.AppletSimple):
 			box.show_all()
 			self.dialog.add(box)
 		else:
-			self.dialog = awn.AppletDialog (self)
+			self.dialog = awn.AppletDialog(self)
 			self.dialog.set_title(_("Forecast"))
 			box = gtk.VBox()
 			self.forecast_area = weatherdialog.WeatherDialog(self.forecast)
@@ -168,7 +168,7 @@ class App(awn.AppletSimple):
 	def config_event(self, gconf_client, *args, **kwargs):
 		self.forecast_visible = False
 		self.dialog.hide()     
-		self.title.hide (self)
+		self.title.hide(self)
 		self.get_config()
 		self.update_weather()
 		self.update_forecast()
@@ -525,7 +525,7 @@ class App(awn.AppletSimple):
 
 
 if __name__ == "__main__":
-	awn.init (sys.argv[1:])
+	awn.init(sys.argv[1:])
 	#print "main %s %d %d" % (awn.uid, awn.orient, awn.height)
 	applet = App(awn.uid, awn.orient, awn.height)
 	awn.init_applet(applet)

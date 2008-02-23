@@ -1,0 +1,128 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-02-23 16:34+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: comics/glade/main.glade:12
+msgid "Comics"
+msgstr ""
+
+#: comics/glade/main.glade:26 comics/glade/manage.glade:7
+msgid "Manage comics"
+msgstr ""
+
+#: comics/glade/add.glade:8 comics/glade/add.glade:35
+msgid "Add Comic"
+msgstr ""
+
+#: comics/glade/add.glade:26
+msgid ""
+"This guide will help you to add a new comic.\n"
+"\n"
+"Press \"next\" to proceed."
+msgstr ""
+
+#: comics/glade/add.glade:54
+msgid "Enter the URL of the RSS feed:"
+msgstr ""
+
+#: comics/glade/add.glade:77
+msgid "Select Comic"
+msgstr ""
+
+#: comics/glade/add.glade:97
+msgid "Downloading Comic"
+msgstr ""
+
+#: comics/glade/add.glade:111
+msgid "The guide found more than one image. Please select which one to use."
+msgstr ""
+
+#: comics/glade/add.glade:143
+msgid "Select Image"
+msgstr ""
+
+#: comics/glade/add.glade:167
+msgid "Ready to add comic!"
+msgstr ""
+
+#: comics/glade/manage.glade:24
+msgid "The following comics are installed:"
+msgstr ""
+
+#: comics/glade/view.glade:28
+msgid "Size"
+msgstr ""
+
+#: comics/glade/view.glade:71
+msgid "Show link"
+msgstr ""
+
+#: comics/comics.py:161
+#, python-format
+msgid "There is a new strip of %s!"
+msgstr ""
+
+#: comics/comics_add.py:60
+#, python-format
+msgid "Failed to download %s. Press \"next\" to try again."
+msgstr ""
+
+#: comics/comics_add.py:67
+msgid "The URL is not a valid comic feed. Press \"next\" to try again"
+msgstr ""
+
+#: comics/comics_add.py:150
+#, python-format
+msgid "Connecting to <i>%s</i>..."
+msgstr ""
+
+#: comics/comics_add.py:203
+#, python-format
+msgid ""
+"This guide has finished.\n"
+"\n"
+"Press \"apply\" to add <i>%s</i>."
+msgstr ""
+
+#: comics/comics_add.py:217
+#, python-format
+msgid ""
+"Found <b>%(name)s</b>!\n"
+"\n"
+"<i>%(description)s</i>"
+msgstr ""
+
+#: comics/comics_manage.py:75
+msgid "Shared comics"
+msgstr ""
+
+#: comics/comics_manage.py:81
+msgid "Your comics"
+msgstr ""
+
+#: comics/comics_manage.py:146
+#, python-format
+msgid "Failed to remove <i>%s</i>."
+msgstr ""
+
+#: comics/comics_manage.py:147
+msgid "Error"
+msgstr ""
+
+#: comics/comics_view.py:159
+msgid "%A %d %B"
+msgstr ""

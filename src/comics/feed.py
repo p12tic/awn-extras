@@ -1,0 +1,311 @@
+# -*- coding: utf-8 -*-
+
+# Copyright (c) 2008 Moses Palmér
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+
+
+import feedparser
+import gobject
+import locale
+import os
+import re
+import time
+import urllib
+import urlparse
+
+from downloader import Downloader
+from settings import Settings
+
+try:
+	import gnomevfs
+	GNOME_VFS = True
+except ImportError:
+	GNOME_VFS = False
+
+
+IMG_RE = re.compile('(<img .*?>)', re.IGNORECASE)
+IMG_SRC_RE = re.compile('<img .*?src=["\'](.*?)["\'].*?>', re.IGNORECASE)
+IMG_ALT_TEMPLATE = '(<img .*?alt=["\']%s.*?["\'].*?>)'
+
+URL = 'url'
+TITLE = 'title'
+TYPE = 'type'
+LINK = 'link'
+DATE = 'date'
+DOWNLOADER = 'downloader'
+
+NAME = 'name'
+TIME_FORMAT = 'time_format'
+IMG_INDEX = 'img_index'
+ALT_TEXT = 'alt_text'
+
+def has_title(entry):
+	return 'title' in entry
+
+def has_link(entry):
+	return 'link' in entry
+
+def has_enclosures(entry):
+	return 'enclosures' in entry
+
+def has_description(entry):
+	return 'description' in entry
+
+def get_time_stamp(index, entry):
+	if 'published' in entry:
+		return time.mktime(entry.published_parsed)
+	elif 'create' in entry:
+		return time.mktime(entry.created_parsed)
+	elif 'updated' in entry:
+		return time.mktime(entry.updated_parsed)
+	else:
+		return -float(index + 1)
+
+
+def normalize_whitespace(text):
+	"""Remove redundant whitespace from a string."""
+	return ' '.join(text.split())
+
+def make_absolute(url, from_doc):
+	"""Convert a relative URL to an absolute one."""
+	if url is None or len(url) == 0:
+		return None
+	parsed = (urlparse.urlparse(url), urlparse.urlparse(from_doc))
+	if len(parsed[0][1]) > 0:
+		return url
+	elif parsed[0][2][0] == '/':
+		return parsed[1][0] + '://' + parsed[1][1] + parsed[0][2]
+	else:
+		return parsed[1][0] + '://' + parsed[1][1] \
+			+ parsed[1][2].rsplit('/', 1)[0] + parsed[0][2]
+
+
+class Feed(gobject.GObject):
+	"""A feed class."""
+	
+	DOWNLOAD_OK = 0
+	DOWNLOAD_FAILED = -1
+	DOWNLOAD_NOT_FEED = -2
+	
+	__gsignals__ = dict(
+		updated = (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+			(gobject.TYPE_INT,)))
+	
+	def download_indirect(self, item):
+		self.is_indirect = True
+		self.files_pending += 1
+		item[DOWNLOADER] = Downloader(item[LINK])
+		item[DOWNLOADER].connect('completed',
+			self.on_indirect_download_completed, item)
+		item[DOWNLOADER].download()
+	
+	def __init__(self, filename, settings):
+		"""Initialize a feed.
+		
+		name is the name initially displayed for the feed.
+		
+		url is the URL of the feed."""
+		super(Feed, self).__init__()
+		self.filename = filename
+		self.feed = None
+		self.items = {}
+		self.name = settings.get_string('name', '---')
+		self.description = ''
+		self.url = settings.get_string('url')
+		self.is_indirect = False
+		self.img_index = settings.get_int('img_index', 0)
+		self.newest = 0.0
+		self.ready = False
+		if 'alt_text' in settings:
+			self.alt_re = re.compile(IMG_ALT_TEMPLATE % settings['alt_text'],
+				re.IGNORECASE)
+		else:
+			self.alt_re = None
+		self.__timeout = gobject.timeout_add(10 * 60 * 1000, self.on_timeout)
+	
+	def process_entry(self, index, entry):
+		item = {}
+		
+		if has_title(entry):
+			item[TITLE] = entry.title
+		else:
+			item[TITLE] = self.name
+		
+		if has_link(entry):
+			item[LINK] = entry.link
+		
+		if has_enclosures(entry) and len(entry.enclosures) == 1:
+			item[URL] = entry.enclosures[0].href
+		elif has_description(entry):
+			matches = IMG_SRC_RE.findall(entry.description)
+			if len(matches) >= self.img_index:
+				item[URL] = make_absolute(matches[self.img_index - 1], self.url)
+			else:
+				return
+		elif LINK in item:
+			self.download_indirect(item)
+		else:
+			return
+		
+		time_stamp = get_time_stamp(index, entry)
+		item[DATE] = time_stamp
+		self.items[time_stamp] = item
+		
+		if time_stamp > self.newest:
+			self.newest = time_stamp
+			self.updated = True
+	
+	def finalize(self):
+		self.updated = False
+		for (index, entry) in enumerate(self.feed.entries):
+			self.process_entry(index, entry)
+	
+	def update(self):
+		"""Reload the feed."""
+		downloader = Downloader(self.url)
+		downloader.connect('completed', self.on_download_completed)
+		downloader.download()
+		self.files_pending = 1
+	
+	def on_download_completed(self, o, code):
+		self.files_pending -= 1
+		
+		if code != Downloader.DOWNLOAD_OK:
+			self.emit('updated', Feed.DOWNLOAD_FAILED)
+			return
+		
+		try:
+			self.feed = feedparser.parse(o.filename)
+		except:
+			self.emit('updated', Feed.DOWNLOAD_NOT_FEED)
+		
+		if 'description' in self.feed:
+			self.description = self.feed.description
+		if 'title' in self.feed.feed:
+			self.name = self.feed.feed.title
+		self.finalize()
+		if len(self.items) == 0:
+			self.emit('updated', Feed.DOWNLOAD_NOT_FEED)
+		elif self.files_pending == 0:
+			self.ready = True
+			if self.updated:
+				self.emit('updated', Feed.DOWNLOAD_OK)
+		
+		os.remove(o.filename)
+	
+	def on_indirect_download_completed(self, o, code, item):
+		self.files_pending -= 1
+		
+		if code != Downloader.DOWNLOAD_OK:
+			del self.items[item[DATE]]
+			return
+		
+		f = open(o.filename)
+		data = f.read()
+		f.close()
+		os.remove(o.filename)
+		
+		matches = IMG_RE.findall(data)
+		if len(matches) >= self.img_index:
+			img = matches[self.img_index - 1]
+			if self.alt_re:
+				if self.alt_re.search(img):
+					item[URL] = make_absolute(
+						IMG_SRC_RE.search(img).group(1), self.url)
+				else:
+					del self.items[item[DATE]]
+			else:
+				item[URL] = make_absolute(
+					IMG_SRC_RE.search(img).group(1), self.url)
+		else:
+			del self.items[item[DATE]]
+		
+		if self.files_pending == 0:
+			self.ready = True
+			if self.updated:
+				self.emit('updated', Feed.DOWNLOAD_OK)
+	
+	def on_timeout(self):
+		self.update()
+		return True
+
+
+def on_directory_changed(monitored_uri, altered_uri, event_type,
+		self):
+	uri = gnomevfs.get_local_path_from_uri(altered_uri)
+	if not uri.endswith('.feed'):
+		return
+	
+	if (event_type == gnomevfs.MONITOR_EVENT_CREATED):
+		self.add_feed(uri)
+	elif (event_type == gnomevfs.MONITOR_EVENT_DELETED):
+		for feed in self.feeds.values():
+			if feed.filename == uri:
+				self.remove_feed(feed.name)
+				break
+
+class FeedContainer(gobject.GObject):
+	__gsignals__ = dict(
+		feed_added = (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+			(gobject.TYPE_STRING,)),
+		feed_removed = (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+			(gobject.TYPE_STRING,)))
+	
+	def add_feed(self, filename):
+		"""Loads a feed description from a file."""
+		# Read file
+		settings = Settings(filename)
+		
+		# Check whether all required parameters have been supplied
+		if NAME in settings and URL in settings \
+				and not settings[NAME] in self.feeds:
+			try:
+				feed = Feed(filename, settings)
+				feed.filename = filename
+				self.feeds[settings[NAME]] = feed
+				feed.update()
+				self.emit('feed-added', feed)
+			except:
+				pass
+		
+		del settings
+	
+	def remove_feed(self, feed_name):
+		if feed_name in self.feeds:
+			del self.feeds[feed_name]
+			self.emit('feed-removed', feed_name)
+	
+	def __init__(self):
+		super(FeedContainer, self).__init__()
+		self.directories = []
+		self.feeds = {}
+	
+	def load_directory(self, directory):
+		# Traverse .feed-files in the directory
+		if not directory in self.directories:
+			if GNOME_VFS:
+				# Add notifier if GnomeVFS is present
+				gnomevfs.monitor_add(directory, gnomevfs.MONITOR_DIRECTORY,
+					on_directory_changed, self)
+			self.directories.append(directory)
+		try:
+			for filename in filter(lambda f: f.endswith('.feed'),
+					os.listdir(directory)):
+				self.add_feed(os.path.join(directory, filename))
+		except OSError:
+			pass
+

@@ -46,4 +46,6 @@ gboolean focus_out_cb (GtkWidget *window, GdkEventFocus *event, gpointer null);
 // Callback when a key is pressed. We check for the keyboard shortcuts for copy and paste. If they're found, we act accordingly.
 gboolean key_press_cb (GtkWidget *window, GdkEventKey *event, GtkWidget *terminal);
 
+// Callback when the vte terminal widget quits. This doesn't do anything yet.
+void exited_cb (GtkWidget *terminal, gpointer null);
 #endif /*AWNTERM_H_*/

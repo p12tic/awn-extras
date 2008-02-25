@@ -227,7 +227,58 @@ class LauncherApplet : AppletSimple
 		weak SList <string>	fileURIs;
 		string  cmd;  
 		bool status=false;
-		fileURIs=vfs_get_pathlist_from_string(selectdata.data);
+        fileURIs=vfs_get_pathlist_from_string(selectdata.data);
+		foreach (string str in fileURIs) 
+		{
+            DesktopItem		tempdesk;
+            string filename;
+            try{
+                filename = Filename.from_uri(str);
+            }
+            catch(ConvertError ex  ){
+                filename="";
+            }
+            tempdesk = new Awn.DesktopItem(filename);
+
+            if (tempdesk.exists() )
+            {                
+                try{
+                    tempdesk.save(directory+config.uid+".desktop");
+                }catch(GLib.Error ex){
+                    stderr.printf("error writing file %s\n",directory+config.uid+".desktop");
+                }
+                desktopitem = new DesktopItem(directory+config.uid+".desktop");
+                if (desktopitem.get_icon(theme) != null)
+                {
+                    icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );
+                }
+                else
+                {
+                    icon = theme.load_icon ("stock_stop", height - 2, IconLookupFlags.USE_BUILTIN);
+                }		
+                if (icon !=null)
+                {
+                    set_icon(icon);
+                }
+                status=true;
+            }
+			Pixbuf temp_icon;
+			temp_icon=new Pixbuf.from_file_at_scale( Filename.from_uri(str) ,height-2,height-2,true );
+			if (temp_icon !=null)
+			{
+				icon=temp_icon;
+                desktopitem.set_icon(Filename.from_uri(str) );									
+				try {
+    				desktopitem.save(directory+config.uid+".desktop");				
+            	}catch(GLib.Error ex){
+            	    stderr.printf("error writing file %s\n",directory+config.uid+".desktop");
+            	}
+                set_icon(icon);
+				status=true;
+			}
+
+        }
+		
 		drag_finish (context, status, false, time);		
     }  
     

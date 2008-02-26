@@ -224,7 +224,7 @@ GtkWidget * menu_new(GtkWidget * parent_menu)
 	gtk_fixed_put(fixed,vbox,0,0);	   
 	gtk_container_add (GTK_CONTAINER (win),fixed);    
 	g_signal_connect (G_OBJECT (win), "focus-in-event",G_CALLBACK (_focus_in_menu), parent_menu);
-	g_signal_connect (G_OBJECT (win), "move-focus",G_CALLBACK (_focus_in_menu), parent_menu);	
+	//g_signal_connect (G_OBJECT (win), "move-focus",G_CALLBACK (_focus_in_menu), parent_menu);	
 	g_signal_connect (G_OBJECT (win), "focus-out-event",G_CALLBACK (_focus_out_menu), parent_menu);	
 	g_signal_connect(G_OBJECT (win), "enter-notify-event", G_CALLBACK (_enter_menu), parent_menu);
 	g_signal_connect(G_OBJECT (win), "leave-notify-event", G_CALLBACK (_leave_menu), parent_menu);	

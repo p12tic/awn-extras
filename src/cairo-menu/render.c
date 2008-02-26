@@ -58,6 +58,7 @@ time the code is run.
 */
 GtkWidget * build_menu_widget(Menu_item_color * mic, char * text,GdkPixbuf *pbuf,GdkPixbuf *pover,int max_width)
 {
+    //printf("build_menu_widget\n");     
     static cairo_t *cr = NULL;   
     GtkWidget * widget;
     GdkScreen* pScreen;        
@@ -186,6 +187,7 @@ GtkWidget * build_menu_widget(Menu_item_color * mic, char * text,GdkPixbuf *pbuf
 
 void render_blank(Menu_list_item *entry,int max_width)
 {
+    //printf("render_blank\n");     
 	GtkIconTheme*  g;  	
     static cairo_t *cr = NULL;   
     GdkScreen* pScreen;        
@@ -232,6 +234,7 @@ void render_blank(Menu_list_item *entry,int max_width)
 
 void render_separator(Menu_list_item *entry,int max_width)
 {
+    //printf("render_separator\n");     
 	GtkIconTheme*  g;  	
     static cairo_t *cr = NULL; 
     GdkScreen* pScreen;        
@@ -261,6 +264,7 @@ void render_separator(Menu_list_item *entry,int max_width)
 
 void render_textentry(Menu_list_item *entry,int max_width)
 {
+    //printf("render_textentry\n");     
 	GtkIconTheme*  g;  	
 	GdkPixbuf *pbuf=NULL;
 
@@ -274,16 +278,16 @@ void render_textentry(Menu_list_item *entry,int max_width)
 	}		
 		
 	entry->widget=gtk_event_box_new();
-	gtk_event_box_set_visible_window(entry->widget,FALSE);
-	gtk_event_box_set_above_child (entry->widget,TRUE);	
+	gtk_event_box_set_visible_window(GTK_EVENT_BOX(entry->widget),FALSE);
+	gtk_event_box_set_above_child (GTK_EVENT_BOX(entry->widget),TRUE);	
 	entry->normal=build_menu_widget(&G_cairo_menu_conf.normal,entry->name,pbuf,NULL,max_width);
 	entry->hover=build_menu_widget(&G_cairo_menu_conf.hover,entry->name,pbuf,NULL,max_width);	
 	entry->text_entry=sexy_icon_entry_new();
 	sexy_icon_entry_set_icon( (SexyIconEntry *)entry->search_entry,SEXY_ICON_ENTRY_PRIMARY,
-							  gtk_image_new_from_pixbuf(pbuf) );
+							  GTK_IMAGE(gtk_image_new_from_pixbuf(pbuf)) );
 	sexy_icon_entry_add_clear_button((SexyIconEntry *)entry->search_entry);
 	g_object_ref(entry->normal);
-	gtk_container_add(entry->widget,entry->normal);			
+	gtk_container_add(GTK_CONTAINER(entry->widget),entry->normal);			
 	if (pbuf)
 		g_object_unref(pbuf);
 }
@@ -291,6 +295,7 @@ void render_textentry(Menu_list_item *entry,int max_width)
 
 void render_entry(Menu_list_item *entry,int max_width)
 {
+    //printf("render_entry\n"); 
 	GtkIconTheme*  g;  	
 	GdkPixbuf *pbuf=NULL;
     g=gtk_icon_theme_get_default();
@@ -346,8 +351,8 @@ void render_entry(Menu_list_item *entry,int max_width)
 		pbuf=gtk_icon_theme_load_icon(g,"application-x-executable",G_cairo_menu_conf.text_size,0,NULL);		
 	}			
 	entry->widget=gtk_event_box_new();
-	gtk_event_box_set_visible_window(entry->widget,FALSE);
-	gtk_event_box_set_above_child (entry->widget,TRUE);	
+	gtk_event_box_set_visible_window(GTK_EVENT_BOX(entry->widget),FALSE);
+	gtk_event_box_set_above_child (GTK_EVENT_BOX(entry->widget),TRUE);	
 	entry->normal=build_menu_widget(&G_cairo_menu_conf.normal,entry->name,pbuf,NULL,max_width);
 	entry->hover=build_menu_widget(&G_cairo_menu_conf.hover,entry->name,pbuf,NULL,max_width);	
 	if (G_cairo_menu_conf.on_button_release)
@@ -355,7 +360,7 @@ void render_entry(Menu_list_item *entry,int max_width)
 		entry->click=build_menu_widget(&G_cairo_menu_conf.hover,entry->name,pbuf,NULL,max_width);
 	}		
 	g_object_ref(entry->normal);
-	gtk_container_add(entry->widget,entry->normal);			
+	gtk_container_add(GTK_CONTAINER(entry->widget),entry->normal);			
 	if (pbuf)
 		g_object_unref(pbuf);
 }
@@ -363,6 +368,7 @@ void render_entry(Menu_list_item *entry,int max_width)
 
 void render_directory(Menu_list_item *directory,int max_width)
 {
+    //printf("render_directory\n"); 
 	GtkIconTheme*  g;  	
 	GdkPixbuf *pbuf1=NULL;
 	GdkPixbuf *pbuf2=NULL;
@@ -398,12 +404,12 @@ void render_directory(Menu_list_item *directory,int max_width)
     }
 
 	directory->widget=gtk_event_box_new();
-	gtk_event_box_set_visible_window(directory->widget,FALSE);
-	gtk_event_box_set_above_child (directory->widget,TRUE);	
+	gtk_event_box_set_visible_window(GTK_EVENT_BOX(directory->widget),FALSE);
+	gtk_event_box_set_above_child (GTK_EVENT_BOX(directory->widget),TRUE);	
 	directory->normal=build_menu_widget(&G_cairo_menu_conf.normal,directory->name,pbuf1,pbuf_over,max_width);
 	directory->hover=build_menu_widget(&G_cairo_menu_conf.hover,directory->name,pbuf2,pbuf_over,max_width);	
 	g_object_ref(directory->normal);
-	gtk_container_add(directory->widget,directory->normal);		
+	gtk_container_add(GTK_CONTAINER(directory->widget),directory->normal);		
 	if (pbuf1)
 		g_object_unref(pbuf1);
 	if  ((pbuf2) && (pbuf1!=pbuf2) )
@@ -415,6 +421,7 @@ void render_directory(Menu_list_item *directory,int max_width)
 
 void render_drive(Menu_list_item *entry,int max_width)
 {
+    //printf("render_drive\n"); 
 	GtkIconTheme*  g;  	
 	GdkPixbuf *pbuf=NULL;
 	GdkPixbuf *pbuf_over=NULL;
@@ -475,13 +482,13 @@ void render_drive(Menu_list_item *entry,int max_width)
 		pbuf_over=gtk_icon_theme_load_icon(g,"important",G_cairo_menu_conf.text_size,0,NULL);
 
 	entry->widget=gtk_event_box_new();
-	gtk_event_box_set_visible_window(entry->widget,FALSE);
-	gtk_event_box_set_above_child (entry->widget,TRUE);	
+	gtk_event_box_set_visible_window(GTK_EVENT_BOX(entry->widget),FALSE);
+	gtk_event_box_set_above_child (GTK_EVENT_BOX(entry->widget),TRUE);	
 	entry->normal=build_menu_widget(&G_cairo_menu_conf.normal,entry->name,pbuf,pbuf_over,max_width);
 	entry->hover=build_menu_widget(&G_cairo_menu_conf.hover,entry->name,pbuf,pbuf_over,max_width);	
 
 	g_object_ref(entry->normal);
-	gtk_container_add(entry->widget,entry->normal);		
+	gtk_container_add(GTK_CONTAINER(entry->widget),entry->normal);		
 	if (pbuf)
 		g_object_unref(pbuf);
 	if (pbuf_over)
@@ -491,6 +498,7 @@ void render_drive(Menu_list_item *entry,int max_width)
 
 void _fixup_menus(GtkWidget * node,GtkWidget * subwidget)
 {
+    //printf("_fixup_menus\n");     
 	static int maxheight=600;		/*FIXME*/
 	if (!subwidget)
 	{
@@ -538,17 +546,19 @@ GtkWidget *G_cur_menu=NULL;
 
 static gboolean _delayed_show_menu(GtkWidget * subwidget)
 {
+    //printf("_delayed_show_menu\n");
 	if ((G_cur_menu!=subwidget) && subwidget)
 	{
+        //printf("EXIT _delayed_show_menu\n");        
 		return FALSE;
 	}
 	if (subwidget != G_toplevel)
 	{
-		g_list_foreach(G_win_man->children,_fixup_menus,subwidget);		
+		g_list_foreach(G_win_man->children,(GFunc)_fixup_menus,subwidget);		
 	}		
 	else
 	{	
-		g_list_foreach(G_win_man->children,_fixup_menus,NULL); 	
+		g_list_foreach(G_win_man->children,(GFunc)_fixup_menus,NULL); 	
 	}		
 	if (gtk_window_get_opacity(GTK_WINDOW (subwidget->parent->parent))<0.99 )
 	{
@@ -559,13 +569,15 @@ static gboolean _delayed_show_menu(GtkWidget * subwidget)
 	gtk_widget_show(subwidget->parent->parent);					
 	gtk_widget_grab_focus(subwidget->parent->parent);		
 	G_cur_menu=NULL;	
+    //printf("EXIT _delayed_show_menu\n");    
 	return FALSE;
 }
 
 static gboolean _enter_notify_event(GtkWidget *widget,GdkEventCrossing *event,Mouseover_data *data)  
 {
+    //printf("_enter_notify_event\n");
 	G_cancel_hide_all=TRUE;
-	if ( (gtk_bin_get_child(widget)==data->misc) || G_repression)
+	if ( (gtk_bin_get_child(GTK_BIN(widget))==data->misc) || G_repression)
 	{
 		return FALSE;	
 	}
@@ -573,16 +585,16 @@ static gboolean _enter_notify_event(GtkWidget *widget,GdkEventCrossing *event,Mo
 	GtkWidget * subwidget=data->subwidget;
 
 	g_object_ref(data->hover);
-	gtk_container_remove(widget,gtk_bin_get_child(widget));
-	gtk_container_add(widget,data->hover);		
+	gtk_container_remove(GTK_CONTAINER(widget),gtk_bin_get_child(GTK_BIN(widget)));
+	gtk_container_add(GTK_CONTAINER(widget),data->hover);		
 	gtk_widget_show_all(data->hover);
 	
 	if (!GTK_WIDGET_REALIZED(subwidget) )//keeps blank menus from occuring..
 	{
-		g_timeout_add(500,_delayed_show_menu,G_cur_menu=subwidget);				
+		g_timeout_add(500,(GSourceFunc)_delayed_show_menu,G_cur_menu=subwidget);				
 	}		
 	else
-		g_timeout_add(100,_delayed_show_menu,G_cur_menu=subwidget);		
+		g_timeout_add(100,(GSourceFunc)_delayed_show_menu,G_cur_menu=subwidget);		
 
 	gint xpos_sub,tmp,ypos_sub;
 
@@ -594,7 +606,7 @@ static gboolean _enter_notify_event(GtkWidget *widget,GdkEventCrossing *event,Mo
 		gtk_widget_set_size_request(subwidget,-1,subwidget->allocation.height);		
 		gtk_widget_set_size_request(subwidget->parent,-1,subwidget->allocation.height);
 		gtk_widget_set_size_request(subwidget->parent->parent,-1,subwidget->allocation.height);		
-	 	gtk_window_resize(subwidget->parent->parent,subwidget->allocation.width,subwidget->allocation.height);
+	 	gtk_window_resize(GTK_WINDOW(subwidget->parent->parent),subwidget->allocation.width,subwidget->allocation.height);
 	}		
 	tmp=xpos_sub;
 	xpos_sub=xpos_sub+widget->allocation.width*0.99;
@@ -603,16 +615,16 @@ static gboolean _enter_notify_event(GtkWidget *widget,GdkEventCrossing *event,Mo
 			- GTK_WIDGET(G_applet)->allocation.width/2)
 	{
 		ypos_sub=G_win_man->y + G_win_man->height-subwidget->allocation.height;
-		gtk_window_move(subwidget->parent->parent,xpos_sub,ypos_sub );	
+		gtk_window_move(GTK_WINDOW(subwidget->parent->parent),xpos_sub,ypos_sub );	
 	}
 	else
 	{
-		gtk_window_move(subwidget->parent->parent,xpos_sub,ypos_sub);	
+		gtk_window_move(GTK_WINDOW(subwidget->parent->parent),xpos_sub,ypos_sub);	
 	}			
 	if (xpos_sub + subwidget->allocation.width > G_win_man->x+G_win_man->width)
 	{
 		xpos_sub=tmp-subwidget->allocation.width;
-		gtk_window_move(subwidget->parent->parent,xpos_sub,ypos_sub);	
+		gtk_window_move(GTK_WINDOW(subwidget->parent->parent),xpos_sub,ypos_sub);	
 	}
 	if (!GTK_WIDGET_REALIZED(subwidget) )//keeps blank menus from occuring..
 	{
@@ -622,6 +634,7 @@ static gboolean _enter_notify_event(GtkWidget *widget,GdkEventCrossing *event,Mo
 		gtk_widget_show_all(subwidget->parent->parent);	
 		gtk_widget_hide(subwidget->parent->parent);			
 	}
+    //printf("EXIT _enter_notify_event\n");    
 	return TRUE;
 }
 
@@ -629,17 +642,18 @@ static gboolean _enter_notify_event(GtkWidget *widget,GdkEventCrossing *event,Mo
 
 static gboolean _enter_notify_event_entry(GtkWidget *widget,GdkEventCrossing *event,Mouseover_data *data)  
 {
+    //printf("_enter_notify_event_entry\n");    
 	G_cancel_hide_all=TRUE;
 	G_cur_menu=NULL;
-	if ( (gtk_bin_get_child(widget)!=data->misc) && ! G_repression)
+	if ( (gtk_bin_get_child(GTK_BIN(widget))!=data->misc) && ! G_repression)
 	{
 		GtkWidget * subwidget=data->subwidget;
 
 		g_object_ref(data->hover);
-		gtk_container_remove(widget,gtk_bin_get_child(widget) );
-		gtk_container_add(widget,data->hover);		
+		gtk_container_remove(GTK_CONTAINER(widget),gtk_bin_get_child(GTK_BIN(widget)) );
+		gtk_container_add(GTK_CONTAINER(widget),data->hover);		
 		gtk_widget_show_all(widget);
-		g_timeout_add(100,_delayed_show_menu,G_cur_menu=subwidget);		
+		g_timeout_add(100,(GSourceFunc) _delayed_show_menu,G_cur_menu=subwidget);		
 		return TRUE;		
 	}		
 	return FALSE;
@@ -647,13 +661,14 @@ static gboolean _enter_notify_event_entry(GtkWidget *widget,GdkEventCrossing *ev
 
 static gboolean _leave_notify_event(GtkWidget *widget,GdkEventCrossing *event,Mouseover_data *data)  
 {
+    //printf("_leave_notify_event\n");    
 	G_cur_menu=NULL;
-	if ( (gtk_bin_get_child(widget)!=data->misc) && ! G_repression)
+	if ( (gtk_bin_get_child(GTK_BIN( widget))!=data->misc) && ! G_repression)
 	{
 	//	gtk_widget_show(data->subwidget);
 		g_object_ref(data->normal);
-		gtk_container_remove(widget,gtk_bin_get_child(widget));
-		gtk_container_add(widget,data->normal);		
+		gtk_container_remove(GTK_CONTAINER( widget),gtk_bin_get_child(GTK_BIN( widget)));
+		gtk_container_add(GTK_CONTAINER( widget),data->normal);		
 		gtk_widget_show_all(widget);
 		return TRUE;		
 	}
@@ -662,13 +677,14 @@ static gboolean _leave_notify_event(GtkWidget *widget,GdkEventCrossing *event,Mo
 
 static gboolean _leave_notify_event_entry(GtkWidget *widget,GdkEventCrossing *event,Mouseover_data *data)  
 {
+    //printf("_leave_notify_event_entry\n");    
 	G_cur_menu=NULL;
-	if ((gtk_bin_get_child(widget)!=data->misc) &&! G_repression)
+	if ((gtk_bin_get_child(GTK_BIN(widget))!=data->misc) &&! G_repression)
 	{
 		gtk_widget_show(data->subwidget);
 		g_object_ref(data->normal);
-		gtk_container_remove(widget,gtk_bin_get_child(widget));
-		gtk_container_add(widget,data->normal);		
+		gtk_container_remove(GTK_CONTAINER(widget),gtk_bin_get_child(GTK_BIN( widget)));
+		gtk_container_add(GTK_CONTAINER( widget),data->normal);		
 		gtk_widget_show_all(widget);
 		return TRUE;		
 	}
@@ -677,6 +693,7 @@ static gboolean _leave_notify_event_entry(GtkWidget *widget,GdkEventCrossing *ev
  
 gboolean hide_menu_on_a_timer(GtkWidget * widget)
 {
+    //printf("hide_menu_on_a_timer\n");    
 	gtk_widget_hide(widget);
 	return FALSE;
 }
@@ -685,6 +702,7 @@ gboolean hide_menu_on_a_timer(GtkWidget * widget)
 
 static gboolean _add_to_bar(GtkWidget *widget,GdkEventButton *event,Menu_list_item * menu_item) 
 {
+    //printf("add_to_bar\n");    
 	append_to_launchers(menu_item->desktop);
 	G_repression=FALSE;
 	hide_all_menus();		
@@ -695,7 +713,7 @@ static gboolean _add_to_bar(GtkWidget *widget,GdkEventButton *event,Menu_list_it
 static gboolean _button_do_event(GtkWidget *widget,GdkEventButton *event,Menu_list_item * menu_item) 
 {
 	GError *err=NULL;
-
+    //printf("_button_do_event\n");
 	if (event->button == 1)
     {
 		G_repression=FALSE;
@@ -703,7 +721,7 @@ static gboolean _button_do_event(GtkWidget *widget,GdkEventButton *event,Menu_li
 		printf("spawn=%s\n",menu_item->exec);
 		g_spawn_command_line_async(menu_item->exec,&err);
 		hide_all_menus();
-		g_timeout_add(250,hide_menu_on_a_timer,widget->parent->parent);	
+		g_timeout_add(250,(GSourceFunc) hide_menu_on_a_timer,widget->parent->parent);	
 	}		
 	else if (event->button == 3)
 	{
@@ -714,10 +732,10 @@ static gboolean _button_do_event(GtkWidget *widget,GdkEventButton *event,Menu_li
 		G_right_menu=gtk_menu_new ();
 		item=gtk_menu_item_new_with_label("Add to Bar");
 		gtk_widget_show(item);
-		gtk_menu_shell_append(G_right_menu,item);		
+		gtk_menu_shell_append(GTK_MENU_SHELL(G_right_menu),item);		
 		g_signal_connect (G_OBJECT (item), "button-press-event",G_CALLBACK (_add_to_bar), menu_item);		
 		G_repression=TRUE;	
-		gtk_menu_popup (G_right_menu, NULL, NULL, NULL, NULL, 
+		gtk_menu_popup (GTK_MENU(G_right_menu), NULL, NULL, NULL, NULL, 
 			  event->button, event->time);
 
 	}
@@ -726,13 +744,14 @@ static gboolean _button_do_event(GtkWidget *widget,GdkEventButton *event,Menu_li
 
 void hide_search(void)
 {
+    //printf("hide_search\n");
 	if (G_Search)
 	{
-		if (gtk_bin_get_child(G_Search->aux) == G_Search->misc)
+		if (gtk_bin_get_child(GTK_BIN(G_Search->aux)) == G_Search->misc)
 		{
-			g_object_ref(gtk_bin_get_child(G_Search->aux));
-			gtk_container_remove(G_Search->aux,gtk_bin_get_child(G_Search->aux));
-			gtk_container_add(G_Search->aux,G_Search->normal);		
+			g_object_ref(gtk_bin_get_child(GTK_BIN(G_Search->aux)));
+			gtk_container_remove(GTK_CONTAINER( G_Search->aux),gtk_bin_get_child(GTK_BIN(G_Search->aux)));
+			gtk_container_add(GTK_CONTAINER( G_Search->aux),G_Search->normal);		
 			gtk_widget_show_all(G_Search->normal);			
 		}			
 	}
@@ -741,6 +760,7 @@ void hide_search(void)
 
 static gboolean _focus_out_search(GtkWidget *widget, GdkEventButton *event, Mouseover_data *data)
 {
+    //printf("_focus_out_search\n");
 	hide_search();
 	G_repression=FALSE;
 //	printf(" _focus_out_search\n");
@@ -751,7 +771,7 @@ int activate_search(GtkWidget *w,Menu_list_item * menu_item)
 {
 	GError *err=NULL;
 	char  *cmd;
-
+//printf("activate_search\n");
 	G_repression=FALSE;
 	cmd=g_malloc(strlen(G_cairo_menu_conf.search_cmd) + strlen(gtk_entry_get_text (w)) +4 );
 	strcpy(cmd,G_cairo_menu_conf.search_cmd);
@@ -766,6 +786,7 @@ int activate_search(GtkWidget *w,Menu_list_item * menu_item)
 
 static _eject(GtkWidget *widget,GdkEventButton *event,Menu_list_item * menu_item) 
 {
+    //printf("_eject\n"); 
 	backend_unmount(menu_item);
 	G_repression=FALSE;			
 	hide_all_menus();
@@ -774,6 +795,7 @@ static _eject(GtkWidget *widget,GdkEventButton *event,Menu_list_item * menu_item
 
 static _unmount(GtkWidget *widget,GdkEventButton *event,Menu_list_item * menu_item) 
 {
+    //printf("_unmount\n");     
 	backend_unmount(menu_item);
 	G_repression=FALSE;					
 	return FALSE;
@@ -781,6 +803,7 @@ static _unmount(GtkWidget *widget,GdkEventButton *event,Menu_list_item * menu_it
 
 static void hide_textentries(void)
 {
+    //printf("hide_textentries\n");
 	static gboolean block_reenter=FALSE;
 	if (block_reenter)
 		return;
@@ -810,6 +833,7 @@ static void hide_textentries(void)
 
 static gboolean _button_clicked_ignore(GtkWidget *widget,GdkEventButton *event,Menu_list_item * menu_item) 
 {
+    //printf("_button_clicked_ignore\n");    
 	G_repression=FALSE;
 	hide_textentries();
 	return TRUE;
@@ -817,6 +841,7 @@ static gboolean _button_clicked_ignore(GtkWidget *widget,GdkEventButton *event,M
 
 static gboolean _button_do_event_textentry(GtkWidget *widget,GdkEventButton *event,Mouseover_data *data) 
 {
+    //printf("_button_do_event_textentry\n");    
 	hide_textentries();
 	g_list_foreach(G_win_man->children,_fixup_menus,NULL); 	
 	gtk_widget_show(data->misc);
@@ -833,7 +858,7 @@ static gboolean _button_do_event_textentry(GtkWidget *widget,GdkEventButton *eve
 
 static gboolean _focus_out_textentry(GtkWidget *widget, GdkEventButton *event, Mouseover_data *data)
 {
-//	printf("_focus_out_textentry\n");
+	//printf("_focus_out_textentry\n");
 	hide_textentries();
 	G_repression=FALSE;
     return FALSE;
@@ -842,6 +867,7 @@ static gboolean _focus_out_textentry(GtkWidget *widget, GdkEventButton *event, M
 
 int activate_run(GtkWidget *w,Menu_list_item * menu_item)
 {
+    //printf("activate_run\n");
 	GError *err=NULL;
 	G_repression=FALSE;	
 	g_spawn_command_line_async(gtk_entry_get_text (w),&err);    
@@ -852,6 +878,7 @@ int activate_run(GtkWidget *w,Menu_list_item * menu_item)
 
 static gboolean _button_do_drive_event(GtkWidget *widget,GdkEventButton *event,Menu_list_item * menu_item) 
 {
+    //printf("_button_do_drive_event\n"); 
 	GError *err=NULL;
 	gchar * cmd;
 	if (event->button == 1)
@@ -907,6 +934,7 @@ static gboolean _button_do_drive_event(GtkWidget *widget,GdkEventButton *event,M
 
 static gboolean _scroll_event(GtkWidget *widget,GdkEventMotion *event,GtkWidget * box) 
 {
+    //printf("_scroll_event\n"); 
 	GtkBoxChild *boxchild;
 	if (event->type == GDK_SCROLL)
 	{
@@ -950,6 +978,7 @@ static gboolean _scroll_event(GtkWidget *widget,GdkEventMotion *event,GtkWidget 
 
 gboolean _hide_all_windows(gpointer null)
 {
+    //printf("_hide_all_windows\n"); 
 	g_list_foreach(G_win_man->children,_fixup_menus,NULL); 
 	return FALSE;
 }
@@ -957,12 +986,14 @@ gboolean _hide_all_windows(gpointer null)
 
 static gboolean _focus_out_window(GtkWidget *widget, GdkEventButton *event, Mouseover_data *data)
 {
+    //printf("_focus_out_window\n"); 
 	G_cancel_hide_all=FALSE;
 	return FALSE;
 }	
 
 void rerender(Menu_list_item ** menu_items,GtkWidget *box)
 {
+    //printf("rerender\n");     
 	gtk_container_foreach(box,gtk_widget_destroy,NULL);	
 	g_slist_foreach(*menu_items,render_menu_widgets,box);	
 	gtk_widget_show_all(box);
@@ -971,6 +1002,7 @@ void rerender(Menu_list_item ** menu_items,GtkWidget *box)
           
 void measure_width(Menu_list_item * menu_item,int * max_width)
 {
+    //printf("_measure_width\n");     
     static cairo_t *cr = NULL;   
     static cairo_surface_t*  surface;
     cairo_text_extents_t    extents;      
@@ -998,6 +1030,7 @@ void measure_width(Menu_list_item * menu_item,int * max_width)
                                               
 void render_menu_widgets(Menu_list_item * menu_item,GtkWidget * box)
 {
+    //printf("render_menu_widgets\n"); 
 	static int max_width=-1;
 	static Xpos=0;
 	if (max_width==-1)

@@ -6,4 +6,5 @@ dist_applet_DATA =			\
 	file-browser-launcher.py	\
 	prefs.py			\
 	gconfwrapper.py			\
+    folder.png      \
 	$(NULL)

@@ -1639,12 +1639,12 @@ class LauncherApplet : AppletSimple
                         if ( (tempdesk.get_exec() != null) && (tempdesk.get_name()!=null) )
                         {
                             try{
-                                tempdesk.save(desktopfile.Filename());//FIXME - throws
+                                tempdesk.save(desktopfile.Filename());
                             }catch(GLib.Error ex){
                                 stderr.printf("error writing file %s\n",desktopfile.Filename());
                             }
                             
-                            desktopitem = new DesktopItem(desktopfile.Filename() );				
+                            desktopitem = new DesktopItem(desktopfile.Filename() );
                             if (desktopitem.get_icon(theme) != null)
                             {
                                 icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
@@ -1690,6 +1690,7 @@ class LauncherApplet : AppletSimple
                         {
                             desktop_key=desktop_key+":"+file_copy;
                         }
+                        status=true;
                         books.update_with_desktopitem(tempdesk);
                         multi_launcher.add_file(file_copy);
                         desktopitem.set_string("X-AWN-StandaloneLauncherDesktops",desktop_key);

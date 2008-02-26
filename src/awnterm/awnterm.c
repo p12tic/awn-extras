@@ -79,13 +79,10 @@ gboolean key_press_cb (GtkWidget *window, GdkEventKey *event, GtkWidget *termina
 	if (event->state & GDK_CONTROL_MASK && event->state & GDK_SHIFT_MASK)
 	{
 		gchar *key = gdk_keyval_name (gdk_keyval_to_lower (event->keyval));
-		
 		// Copy
 		if (! strncmp (key, "c", 1)) vte_terminal_copy_clipboard (VTE_TERMINAL (terminal));
 		// Paste
 		if (! strncmp (key, "v", 1)) vte_terminal_paste_clipboard (VTE_TERMINAL (terminal));
-		// Free the memory
-		g_free (key);
 		// Signify that event has been handled
 		return TRUE;
 	}
@@ -94,4 +91,10 @@ gboolean key_press_cb (GtkWidget *window, GdkEventKey *event, GtkWidget *termina
 		// Signify that event has not been handled
 		return FALSE;
 	}
+}
+
+// This doesn't get called yet...
+void exited_cb (GtkWidget *terminal, gpointer null)
+{
+	printf ("exited");
 }

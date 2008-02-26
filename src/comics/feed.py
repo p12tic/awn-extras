@@ -30,12 +30,6 @@ import urlparse
 from downloader import Downloader
 from settings import Settings
 
-try:
-	import gnomevfs
-	GNOME_VFS = True
-except ImportError:
-	GNOME_VFS = False
-
 
 IMG_RE = re.compile('(<img .*?>)', re.IGNORECASE)
 IMG_SRC_RE = re.compile('<img .*?src=["\'](.*?)["\'].*?>', re.IGNORECASE)
@@ -89,9 +83,7 @@ def extract_urls(entry):
 		link = None
 	
 	if 'description' in entry:
-		matches = IMG_SRC_RE.findall(entry.description)
-		for url in matches:
-			images.append(url)
+		images.extend(IMG_SRC_RE.findall(entry.description))
 	
 	if 'enclosures' in entry:
 		for enclosure in entry.enclosures:
@@ -147,7 +139,7 @@ class Feed(gobject.GObject):
 		self.description = ''
 		self.url = settings.get_string('url')
 		self.is_indirect = settings.get_string('type', '') == 'indirect'
-		self.img_index = settings.get_int('img_index', 1)
+		self.img_index = settings.get_int('img_index', 1) - 1
 		self.newest = 0.0
 		self.ready = False
 		self.__timeout = gobject.timeout_add(20 * 60 * 1000, self.on_timeout)
@@ -167,7 +159,7 @@ class Feed(gobject.GObject):
 			self.download_indirect(item, link)
 		else:
 			if len(images) >= self.img_index:
-				item[URL] = images[self.img_index - 1]
+				item[URL] = images[self.img_index]
 			else:
 				return
 				
@@ -229,11 +221,10 @@ class Feed(gobject.GObject):
 		f.close()
 		os.remove(o.filename)
 		
-		matches = IMG_RE.findall(data)
-		if len(matches) >= self.img_index:
-			img = matches[self.img_index - 1]
-			item[URL] = make_absolute_url(IMG_SRC_RE.search(img).group(1),
-				self.url)
+		urls = map(lambda u: make_absolute_url(u, o.url),
+			IMG_SRC_RE.findall(data))
+		if len(urls) >= self.img_index:
+			item[URL] = urls[self.img_index]
 		else:
 			del self.items[item[DATE]]
 		
@@ -246,20 +237,6 @@ class Feed(gobject.GObject):
 		self.update()
 		return True
 
-
-def on_directory_changed(monitored_uri, altered_uri, event_type,
-		self):
-	uri = gnomevfs.get_local_path_from_uri(altered_uri)
-	if not uri.endswith('.feed'):
-		return
-	
-	if (event_type == gnomevfs.MONITOR_EVENT_CREATED):
-		self.add_feed(uri)
-	elif (event_type == gnomevfs.MONITOR_EVENT_DELETED):
-		for feed in self.feeds.values():
-			if feed.filename == uri:
-				self.remove_feed(feed.name)
-				break
 
 class FeedContainer(gobject.GObject):
 	__gsignals__ = dict(
@@ -289,8 +266,8 @@ class FeedContainer(gobject.GObject):
 	
 	def remove_feed(self, feed_name):
 		if feed_name in self.feeds:
-			del self.feeds[feed_name]
 			self.emit('feed-removed', feed_name)
+			del self.feeds[feed_name]
 	
 	def __init__(self):
 		super(FeedContainer, self).__init__()
@@ -300,10 +277,6 @@ class FeedContainer(gobject.GObject):
 	def load_directory(self, directory):
 		# Traverse .feed-files in the directory
 		if not directory in self.directories:
-			if GNOME_VFS:
-				# Add notifier if GnomeVFS is present
-				gnomevfs.monitor_add(directory, gnomevfs.MONITOR_DIRECTORY,
-					on_directory_changed, self)
 			self.directories.append(directory)
 		try:
 			for filename in filter(lambda f: f.endswith('.feed'),

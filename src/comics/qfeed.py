@@ -23,52 +23,49 @@ import os
 
 from downloader import Downloader
 from feed import Feed, IMG_RE, IMG_SRC_RE, URL, TITLE, TYPE, \
-	LINK, DATE, DOWNLOADER, NAME, TIME_FORMAT, IMG_INDEX, ALT_TEXT, has_title, \
-	has_link, has_enclosures, has_description, get_time_stamp
+	LINK, DATE, DOWNLOADER, DATA, NAME, IMG_INDEX, has_title, has_link, \
+	get_time_stamp, type_is_image, extract_urls, make_absolute_url
 from settings import Settings
 
 IMAGES = 'images'
 IMG_ALT_RE = re.compile('<img .*?alt=["\'](.*?)["\'].*?>', re.IGNORECASE)
 
 
+class ImageEntry:
+	def __init__(self, url, img_index, is_indirect):
+		self.url = url
+		self.img_index = img_index
+		self.is_indirect = is_indirect
+	
+	def __cmp__(self, other):
+		return cmp(self.url, other.url)
+
+def generate_images(urls, is_indirect):
+	result = []
+	for i, url in enumerate(urls):
+		result.append(ImageEntry(url, i, is_indirect))
+	return result
+
+
 class QueryFeed(Feed):
+	def count_occurrences(self, image):
+		result = 0
+		for i in self.items.itervalues():
+			if image in i[IMAGES]:
+				result += 1
+		return result
+	
 	def detect_images(self):
-		alist = items[0][IMAGES]
-		blist = items[1][IMAGES]
+		keys = self.items.keys()
+		if not keys:
+			return
+		
+		images = self.items[keys[0]][IMAGES]
 		
 		# List unique
-		unique = []
-		for i, img in enumerate(alist):
-			if not img in blist:
-				unique.append(i, img)
-		
-		# Generate images and alt texts
-		self.images = []
-		self.alt_texts = []
-		for i, img in unique:
-			src = IMG_SRC_RE.search(img).group(1)
-			alt = None
-			
-			amatch = IMG_ALT_RE.search(img)
-			bmatch = IMG_ALT_RE.search(blist[i])
-			if amatch and bmatch:
-				# Find the longest common string of the alt texts not containing
-				# a digit---a digit probably comes from a date
-				length = 0
-				aalt = amatch.group(1)
-				balt = bmatch.group(1)
-				for j, letter in enumerate(aalt):
-					if letter.isdigit() or j >= len(balt) \
-							or balt[j] != letter:
-						# Stop when there is a mismatch or a digit
-						break
-					length = length + 1
-				
-				if length > 0:
-					alt = aalt[:length].strip()
-			
-			self.images.append((i + 1, src))
-			self.alt_texts.append((i + 1, alt))
+		for image in images:
+			if self.count_occurrences(image) == 1 and not image in self.images:
+				self.images.append(image)
 	
 	def __init__(self, url):
 		"""Initialize a parser."""
@@ -78,7 +75,6 @@ class QueryFeed(Feed):
 		super(QueryFeed, self).__init__(None, settings)
 		
 		self.images = []
-		self.alt_texts = []
 	
 	def process_entry(self, index, entry):
 		item = {}
@@ -91,17 +87,6 @@ class QueryFeed(Feed):
 		if has_link(entry):
 			item[LINK] = entry.link
 		
-		if has_enclosures(entry) and len(entry.enclosures) == 1:
-			item[URL] = entry.enclosures[0].href
-		elif has_description(entry):
-			item[IMAGES] = IMG_SRC_RE.findall(entry.description)
-			if len(self.items) == 2:
-				self.detect_images()
-		elif LINK in item:
-			self.download_indirect(item)
-		else:
-			return
-		
 		time_stamp = get_time_stamp(index, entry)
 		item[DATE] = time_stamp
 		self.items[time_stamp] = item
@@ -109,6 +94,16 @@ class QueryFeed(Feed):
 		
 		if time_stamp > self.newest:
 			self.newest = time_stamp
+		
+		# Always prefer image enclosures
+		if 'enclosures' in entry and len(entry.enclosures) == 1 \
+				and type_is_image(entry.enclosures[0].type):
+			item[URL] = entry.enclosures[0].href
+			self.images = [ImageEntry(None, 0, False)]
+		else:
+			images, link = extract_urls(entry)
+			item[IMAGES] = generate_images(images, False)
+			self.download_indirect(item, link)
 	
 	def on_indirect_download_completed(self, o, code, item):
 		self.files_pending -= 1
@@ -122,7 +117,9 @@ class QueryFeed(Feed):
 		f.close()
 		os.remove(o.filename)
 		
-		item[IMAGES] = IMG_SRC_RE.findall(data)
+		urls = map(lambda u: make_absolute_url(u, item[LINK]),
+			IMG_SRC_RE.findall(data))
+		item[IMAGES].extend(generate_images(urls, True))
 		
 		if self.files_pending == 0:
 			self.detect_images()

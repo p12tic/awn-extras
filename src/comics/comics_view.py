@@ -385,16 +385,8 @@ class ComicsViewer(ScalableWindow):
 		self.__border = BORDER
 		self.__border_radii = BORDER_RADII
 		
-		# Initialize properties
-		self.show_link = False
-		self.has_shadow = False
-		self.feed_name = None
-		
 		# Connect events
-		self.connect('realize', self.on_realize)
 		feeds.connect('feed-removed', self.on_feed_removed)
-		
-		# Connect dialogue events
 		self.__xml.signal_autoconnect(self)
 		
 		# Build UI
@@ -405,8 +397,9 @@ class ComicsViewer(ScalableWindow):
 		
 		self.set_skip_taskbar_hint(True)
 		self.set_skip_pager_hint(True)
-		self.update_size()
 		self.set_visibility(visible)
+		
+		self.load_settings()
 		
 	########################################################################
 	# Property updating methods                                            #
@@ -418,9 +411,9 @@ class ComicsViewer(ScalableWindow):
 		w, h = self.get_size()
 		
 		self.set_show_link(self.__settings.get_bool('show_link',
-			self.show_link))
+			False))
 		self.set_feed_name(self.__settings.get_string('feed_name',
-			self.feed_name))
+			None))
 		self.move(self.__settings.get_int('x', (screen.get_width() - w) / 2),
 			self.__settings.get_int('y', (screen.get_height() - h) / 2))
 	
@@ -467,9 +460,6 @@ class ComicsViewer(ScalableWindow):
 	########################################################################
 	# Event hooks                                                          #
 	########################################################################
-	
-	def on_realize(self, widget):
-		self.load_settings()
 	
 	def on_link_clicked(self, widget, e):
 		# Start the web browser in another process
@@ -526,7 +516,7 @@ class ComicsViewer(ScalableWindow):
 		"""The feed has been updated."""
 		if result == Feed.DOWNLOAD_OK:
 			# Only emit the updated signal when there actually is an update
-			if self.__current_timestamp > 0.0:
+			if self.__current_timestamp != 0.0:
 				self.emit('updated', feed.items[feed.newest][TITLE])
 			self.select_item(feed.items[feed.newest])
 	

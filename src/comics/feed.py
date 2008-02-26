@@ -47,11 +47,10 @@ TYPE = 'type'
 LINK = 'link'
 DATE = 'date'
 DOWNLOADER = 'downloader'
+DATA = 'data'
 
 NAME = 'name'
-TIME_FORMAT = 'time_format'
 IMG_INDEX = 'img_index'
-ALT_TEXT = 'alt_text'
 
 def has_title(entry):
 	return 'title' in entry
@@ -68,19 +67,40 @@ def has_description(entry):
 def get_time_stamp(index, entry):
 	if 'published' in entry:
 		return time.mktime(entry.published_parsed)
-	elif 'create' in entry:
+	elif 'created' in entry:
 		return time.mktime(entry.created_parsed)
 	elif 'updated' in entry:
 		return time.mktime(entry.updated_parsed)
 	else:
 		return -float(index + 1)
 
+def type_is_image(type_descriptor):
+	return type_descriptor.startswith('image/')
 
-def normalize_whitespace(text):
-	"""Remove redundant whitespace from a string."""
-	return ' '.join(text.split())
+def extract_urls(entry):
+	"""Returns a tuple containg all URLS in the entry: the first item is a list
+	containing URLs pointing directly to images and the second is a URL
+	pointing to a web page."""
+	images = []
+	
+	if 'link' in entry:
+		link = entry.link
+	else:
+		link = None
+	
+	if 'description' in entry:
+		matches = IMG_SRC_RE.findall(entry.description)
+		for url in matches:
+			images.append(url)
+	
+	if 'enclosures' in entry:
+		for enclosure in entry.enclosures:
+			if type_is_image(enclosure.type):
+				images.append(enclosure.href)
+	
+	return (images, link)
 
-def make_absolute(url, from_doc):
+def make_absolute_url(url, from_doc):
 	"""Convert a relative URL to an absolute one."""
 	if url is None or len(url) == 0:
 		return None
@@ -105,10 +125,10 @@ class Feed(gobject.GObject):
 		updated = (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
 			(gobject.TYPE_INT,)))
 	
-	def download_indirect(self, item):
+	def download_indirect(self, item, url):
 		self.is_indirect = True
 		self.files_pending += 1
-		item[DOWNLOADER] = Downloader(item[LINK])
+		item[DOWNLOADER] = Downloader(url)
 		item[DOWNLOADER].connect('completed',
 			self.on_indirect_download_completed, item)
 		item[DOWNLOADER].download()
@@ -126,16 +146,11 @@ class Feed(gobject.GObject):
 		self.name = settings.get_string('name', '---')
 		self.description = ''
 		self.url = settings.get_string('url')
-		self.is_indirect = False
-		self.img_index = settings.get_int('img_index', 0)
+		self.is_indirect = settings.get_string('type', '') == 'indirect'
+		self.img_index = settings.get_int('img_index', 1)
 		self.newest = 0.0
 		self.ready = False
-		if 'alt_text' in settings:
-			self.alt_re = re.compile(IMG_ALT_TEMPLATE % settings['alt_text'],
-				re.IGNORECASE)
-		else:
-			self.alt_re = None
-		self.__timeout = gobject.timeout_add(10 * 60 * 1000, self.on_timeout)
+		self.__timeout = gobject.timeout_add(20 * 60 * 1000, self.on_timeout)
 	
 	def process_entry(self, index, entry):
 		item = {}
@@ -145,27 +160,22 @@ class Feed(gobject.GObject):
 		else:
 			item[TITLE] = self.name
 		
-		if has_link(entry):
-			item[LINK] = entry.link
-		
-		if has_enclosures(entry) and len(entry.enclosures) == 1:
-			item[URL] = entry.enclosures[0].href
-		elif has_description(entry):
-			matches = IMG_SRC_RE.findall(entry.description)
-			if len(matches) >= self.img_index:
-				item[URL] = make_absolute(matches[self.img_index - 1], self.url)
+		images, link = extract_urls(entry)
+		if link:
+			item[LINK] = link
+		if self.is_indirect:
+			self.download_indirect(item, link)
+		else:
+			if len(images) >= self.img_index:
+				item[URL] = images[self.img_index - 1]
 			else:
 				return
-		elif LINK in item:
-			self.download_indirect(item)
-		else:
-			return
-		
+				
 		time_stamp = get_time_stamp(index, entry)
 		item[DATE] = time_stamp
 		self.items[time_stamp] = item
 		
-		if time_stamp > self.newest:
+		if time_stamp > self.newest or self.newest == 0.0:
 			self.newest = time_stamp
 			self.updated = True
 	
@@ -192,20 +202,20 @@ class Feed(gobject.GObject):
 			self.feed = feedparser.parse(o.filename)
 		except:
 			self.emit('updated', Feed.DOWNLOAD_NOT_FEED)
+		finally:
+			os.remove(o.filename)
 		
 		if 'description' in self.feed:
 			self.description = self.feed.description
 		if 'title' in self.feed.feed:
 			self.name = self.feed.feed.title
 		self.finalize()
-		if len(self.items) == 0:
+		if not self.is_indirect and len(self.items) == 0:
 			self.emit('updated', Feed.DOWNLOAD_NOT_FEED)
 		elif self.files_pending == 0:
 			self.ready = True
 			if self.updated:
 				self.emit('updated', Feed.DOWNLOAD_OK)
-		
-		os.remove(o.filename)
 	
 	def on_indirect_download_completed(self, o, code, item):
 		self.files_pending -= 1
@@ -222,15 +232,8 @@ class Feed(gobject.GObject):
 		matches = IMG_RE.findall(data)
 		if len(matches) >= self.img_index:
 			img = matches[self.img_index - 1]
-			if self.alt_re:
-				if self.alt_re.search(img):
-					item[URL] = make_absolute(
-						IMG_SRC_RE.search(img).group(1), self.url)
-				else:
-					del self.items[item[DATE]]
-			else:
-				item[URL] = make_absolute(
-					IMG_SRC_RE.search(img).group(1), self.url)
+			item[URL] = make_absolute_url(IMG_SRC_RE.search(img).group(1),
+				self.url)
 		else:
 			del self.items[item[DATE]]
 		

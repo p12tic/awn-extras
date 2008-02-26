@@ -75,17 +75,12 @@ class ComicApplet(awn.AppletSimple):
 		if not feed_name in feeds.feeds:
 			return
 		
-		print 1
-		
 		if not visible:
-			print 2
 			windows = filter(lambda w: w.feed_name == feed_name, self.windows)
 			if not windows:
 				return
-			print 3
 			
 			for window in windows:
-				print window
 				window.close()
 		
 		else:

@@ -19,24 +19,17 @@
 
 
 # Libraries used
-import datetime
 import gobject
 import gtk
 import gtk.glade
 import os
-import tempfile
-import time
 
 # Symbols used
 from locale import gettext as _
-from math import pi
 
 # Local
 from comics_add import ComicsAdder
-from feed import NAME, URL
-from shared import SYS_FEEDS_DIR, USER_FEEDS_DIR, GLADE_DIR
-from settings import Settings
-from strptime import c_strptime as strptime
+from shared import GLADE_DIR, feeds
 
 GLADE_FILE = os.path.join(GLADE_DIR, 'manage.glade')
 
@@ -52,36 +45,19 @@ class ComicsManager:
 	# Helper methods                                                       #
 	########################################################################
 	
-	def load_folder(self, folder):
-		result = []
-		
-		# Traverse .feed-files in the directory
-		try:
-			for filename in filter(lambda f: f.endswith('.feed'),
-					os.listdir(folder)):
-				feed = Settings(os.path.join(folder, filename))
-				if NAME in feed and URL in feed:
-					result.append((feed[NAME], os.path.join(folder, filename)))
-		except OSError:
-			pass
-		
-		return result
-	
 	def load_feeds(self):
 		"""Load the descriptions of all installed feeds."""
+		global feeds
+		
 		self.model.clear()
 		
-		# Add shared comics
-		iterator = self.model.append(None, (_('Shared comics'), ''))
-		feeds = self.load_folder(SYS_FEEDS_DIR)
-		for feed in feeds:
-			self.model.append(iterator, (feed[0], feed[1]))
-		
-		# Add user comics
-		iterator = self.model.append(None, (_('Your comics'), ''))
-		feeds = self.load_folder(USER_FEEDS_DIR)
-		for feed in feeds:
-			self.model.append(iterator, (feed[0], feed[1]))
+		shared_iterator = self.model.append(None, (_('Shared comics'), ''))
+		user_iterator = self.model.append(None, (_('Your comics'), ''))
+		for feed_name, feed in feeds.feeds.items():
+			if os.access(os.path.dirname(feed.filename), os.W_OK):
+				self.model.append(user_iterator, (feed_name, feed.filename))
+			else:
+				self.model.append(shared_iterator, (feed_name, feed.filename))
 		
 		self.comics_list.expand_all()
 	
@@ -133,9 +109,13 @@ class ComicsManager:
 		adder.assistant.connect('destroy', self.on_adder_destroy)
 	
 	def on_remove_button_clicked(self, widget):
+		global feeds
+		
 		model, iterator = self.comics_list.get_selection().get_selected()
+		feed_name = self.model.get_value(iterator, 0)
 		filename = self.model.get_value(iterator, 1)
 		try:
+			feeds.remove_feed(feed_name)
 			os.remove(filename)
 		except:
 			dialog = gtk.MessageDialog(

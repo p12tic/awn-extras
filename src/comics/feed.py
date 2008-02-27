@@ -239,11 +239,13 @@ class Feed(gobject.GObject):
 
 
 class FeedContainer(gobject.GObject):
+	FEED_ADDED = 0
+	FEED_REMOVED = 1
+	FEED_MODIFIED = 2
+	
 	__gsignals__ = dict(
-		feed_added = (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-			(gobject.TYPE_STRING,)),
-		feed_removed = (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-			(gobject.TYPE_STRING,)))
+		feed_changed = (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+			(gobject.TYPE_STRING, gobject.TYPE_INT)))
 	
 	def add_feed(self, filename):
 		"""Loads a feed description from a file."""
@@ -258,7 +260,7 @@ class FeedContainer(gobject.GObject):
 				feed.filename = filename
 				self.feeds[settings[NAME]] = feed
 				feed.update()
-				self.emit('feed-added', feed)
+				self.emit('feed-changed', feed, FeedContainer.FEED_ADDED)
 			except:
 				pass
 		
@@ -266,7 +268,7 @@ class FeedContainer(gobject.GObject):
 	
 	def remove_feed(self, feed_name):
 		if feed_name in self.feeds:
-			self.emit('feed-removed', feed_name)
+			self.emit('feed-changed', feed_name, FeedContainer.FEED_REMOVED)
 			del self.feeds[feed_name]
 	
 	def __init__(self):

@@ -35,7 +35,7 @@ from math import pi
 
 # Local
 from downloader import Downloader
-from feed import URL, TITLE, LINK, DATE, Feed
+from feed import URL, TITLE, LINK, DATE, Feed, FeedContainer
 from settings import Settings
 from widgets import ScalableWindow, WWWLink, Ticker
 from shared import SHARE_DIR, USER_DIR, SYS_FEEDS_DIR, USER_FEEDS_DIR, \
@@ -386,7 +386,7 @@ class ComicsViewer(ScalableWindow):
 		self.__border_radii = BORDER_RADII
 		
 		# Connect events
-		feeds.connect('feed-removed', self.on_feed_removed)
+		feeds.connect('feed-changed', self.on_feed_changed)
 		self.__xml.signal_autoconnect(self)
 		
 		# Build UI
@@ -539,9 +539,10 @@ class ComicsViewer(ScalableWindow):
 		
 		self.update_size()
 	
-	def on_feed_removed(self, feeds, feed_name):
-		"""A feed has been removed from disk."""
-		if self.feed_name == feed_name:
-			self.__settings.delete()
-			self.destroy()
+	def on_feed_changed(self, feeds, feed_name, action):
+		"""A feed has been changed."""
+		if action == FeedContainer.FEED_REMOVED:
+			if self.feed_name == feed_name:
+				self.__settings.delete()
+				self.destroy()
 

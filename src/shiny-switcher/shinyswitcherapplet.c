@@ -294,6 +294,10 @@ gboolean  _button_workspace(GtkWidget *widget,GdkEventButton *event,Workplace_in
 gboolean  _button_win(GtkWidget *widget,GdkEventButton *event,Win_press_data * data)
 {
 	WnckWindow*  wnck_win=data->wnck_window;
+    if (! WNCK_IS_WINDOW(wnck_win) )
+    {
+        return TRUE;
+    }
 	if (event->button == 1)
     {	
 		WnckWorkspace* space=wnck_window_get_workspace(wnck_win);
@@ -725,7 +729,13 @@ void grab_window_gdk_meth(Shiny_switcher *shinyswitcher,cairo_t *destcr,WnckWind
 	cairo_surface_t* cached_srfc=NULL;
 	cairo_surface_t* srfc=NULL;	
 	cairo_t			*cr;	
-	cached_srfc=image_cache_lookup_key_width_height(shinyswitcher,shinyswitcher->surface_cache,win,scaled_width,scaled_height,allow_update);
+
+    if (! WNCK_IS_WINDOW(win) )
+    {
+        goto error_out ;
+    }    
+	
+    cached_srfc=image_cache_lookup_key_width_height(shinyswitcher,shinyswitcher->surface_cache,win,scaled_width,scaled_height,allow_update);
 //	printf("xid=%ld\n",Xid);
 	if (cached_srfc)
 	{
@@ -824,7 +834,12 @@ error_out:
 
 void do_win_grabs(Shiny_switcher *shinyswitcher,cairo_t *destcr,WnckWindow *win,double scaled_x,double scaled_y, 
 						double scaled_width,double scaled_height,int x, int y, int width,int height,gboolean on_active_space)
-{						
+{		
+    if (! WNCK_IS_WINDOW(win) )
+    {
+        return ;
+    }    
+    
 	//Do we grab the window in this particular circumstance?
 	if ( ( shinyswitcher->win_grab_mode==1) || ( (shinyswitcher->win_grab_mode==2) &&  on_active_space) 
 		|| ( (shinyswitcher->win_grab_mode==3) && wnck_window_is_active (win))){
@@ -857,7 +872,12 @@ void do_win_grabs(Shiny_switcher *shinyswitcher,cairo_t *destcr,WnckWindow *win,
 
 void do_icon_overlays(Shiny_switcher *shinyswitcher,cairo_t *destcr,WnckWindow *win,double scaled_x,double scaled_y, 
 						double scaled_width,double scaled_height,int x, int y, int width,int height,gboolean on_active_space)
-{						
+{		
+    if (! WNCK_IS_WINDOW(win) )
+    {
+        return ;
+    }    
+    
 	double scale=scaled_width>scaled_height?scaled_height:scaled_width;						
 	if( ( (shinyswitcher->show_icon_mode==1) && !on_active_space) ||(  (shinyswitcher->show_icon_mode==2) && !wnck_window_is_active (win) )
 		||   (shinyswitcher->show_icon_mode==3) )							
@@ -956,6 +976,11 @@ void _unrealize_window_ev(GtkWidget *widget,Win_press_data * data)
 void do_event_boxes(Shiny_switcher *shinyswitcher,WnckWindow *win,Workplace_info *ws,double scaled_x,double scaled_y,
 										double scaled_width,double scaled_height)
 {
+    if (! WNCK_IS_WINDOW(win) )
+    {
+        return ;
+    }    
+    
 	if ( (shinyswitcher->active_window_on_workspace_change_method) && (scaled_height>1.0) &&(scaled_width>1.0) )
 	{
 		GtkWidget *ev=gtk_event_box_new();
@@ -1141,6 +1166,11 @@ void _activewin_change(WnckScreen *screen,WnckWindow *previously_active_window,S
 	act_space=wnck_screen_get_active_workspace(shinyswitcher->wnck_screen)	;
 	if (previously_active_window)
 	{
+        if (! WNCK_IS_WINDOW(previously_active_window) )
+        {
+            return ;
+        }    
+        
 		prev_space=wnck_window_get_workspace(previously_active_window);		
 	}		
 	if (!act_space)
@@ -1220,6 +1250,12 @@ void _window_stacking_change(WnckScreen *screen,Shiny_switcher *shinyswitcher)
 
 void _win_geom_change(WnckWindow *window,Shiny_switcher *shinyswitcher) 
 {
+    if (! WNCK_IS_WINDOW(window) )
+    {
+        return ;
+    }    
+
+    
 	WnckWorkspace *space=wnck_window_get_workspace(window);
 	if (!space)
 	{
@@ -1237,7 +1273,7 @@ void _win_geom_change(WnckWindow *window,Shiny_switcher *shinyswitcher)
            
 
 void _win_state_change(WnckWindow *window,WnckWindowState changed_mask,WnckWindowState new_state,Shiny_switcher *shinyswitcher) 
-{
+{    
 	_win_geom_change(window,shinyswitcher);
 }    
 
@@ -1291,7 +1327,12 @@ void _wallpaper_change(WnckScreen *screen,Shiny_switcher *shinyswitcher)
 
 void _window_opened(WnckScreen *screen,WnckWindow *window,Shiny_switcher *shinyswitcher)
 {
-	g_signal_connect(G_OBJECT(window),"state-changed",G_CALLBACK(_win_state_change),shinyswitcher);
+    if (! WNCK_IS_WINDOW(window) )
+    {
+        return ;
+    }    
+    
+    g_signal_connect(G_OBJECT(window),"state-changed",G_CALLBACK(_win_state_change),shinyswitcher);
 	g_signal_connect(G_OBJECT(window),"geometry-changed",G_CALLBACK(_win_geom_change),shinyswitcher);	
 	g_signal_connect(G_OBJECT(window),"workspace-changed",G_CALLBACK(_win_ws_change),shinyswitcher);	
 	if (WNCK_IS_WINDOW(window) && shinyswitcher->show_right_click)

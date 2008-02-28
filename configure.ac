@@ -301,6 +301,14 @@ src/calendar/images/Makefile
 src/comic/Makefile
 src/comic/comic.desktop.in
 src/comic/images/Makefile
+src/comics/comics.desktop.in
+src/comics/Makefile
+src/comics/feeds/Makefile
+src/comics/glade/Makefile
+src/comics/locale/Makefile
+src/comics/pixmaps/Makefile
+src/comics/locale/sv_SE/Makefile
+src/comics/locale/sv_SE/LC_MESSAGES/Makefile
 src/digitalClock/Makefile
 src/digitalClock/digitalClock.desktop.in
 src/file-browser-launcher/Makefile

@@ -134,7 +134,7 @@ void init_config(Shiny_switcher *shinyswitcher)
 	shinyswitcher->show_tooltips=FALSE;						//buggy at the moment will be a config option eventually
 
 	shinyswitcher->show_right_click=!shinyswitcher->got_viewport;	//for the moment buggy in compiz.will be a config option eventually
-
+    shinyswitcher->show_right_click=FALSE;  //FIXME disabling right click menu in all a cases. appears to cause occasional crash
 	shinyswitcher->reconfigure=!shinyswitcher->got_viewport;		//for the moment... will be a config option eventually
 }
 
@@ -293,7 +293,7 @@ gboolean  _button_workspace(GtkWidget *widget,GdkEventButton *event,Workplace_in
 
 gboolean  _button_win(GtkWidget *widget,GdkEventButton *event,Win_press_data * data)
 {
-	WnckWindow*  wnck_win=data->wnck_window;
+    WnckWindow*  wnck_win=data->wnck_window;
     if (! WNCK_IS_WINDOW(wnck_win) )
     {
         return TRUE;

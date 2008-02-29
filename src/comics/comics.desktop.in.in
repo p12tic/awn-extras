@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=comics
+Type=Application
+X-AWN-AppletType=Python
+Comment=View RSS feeds of your favorite comics
+Exec=@LIBDIR@/awn/applets/comics/comics.py
+Icon=@LIBDIR@/awn/applets/comics/icon.svg
+Name[en_US]=comics
+X-AWN-AppletCategory=Network,News

@@ -18,167 +18,200 @@
  */
 
 #include <string.h>
-#include <gconf/gconf-client.h>
 #include <libawn/awn-applet.h>
+#include <libawn/awn-config-client.h>
 #include <glib/gmacros.h>
 #include <glib/gerror.h>
-#include <gconf/gconf-value.h> 
 
 #include <libawn/awn-cairo-utils.h>
 
 #include "filebrowser-gconf.h"
 #include "filebrowser-defines.h"
 
-static GConfClient *client = NULL;
+static AwnConfigClient *client = NULL;
 static AwnApplet *applet = NULL;
 
 /**
  * Initializes the GConf stuff
  */
 void filebrowser_gconf_init(
-    AwnApplet * awn_applet ) {
+    AwnApplet * awn_applet, gchar * uid ) {
 
     if ( !client ) {
-        client = gconf_client_get_default(  );
+        client = awn_config_client_new_for_applet("filebrowser",uid);
     }
     if ( !applet ) {
         applet = awn_applet;
     }
-
-    awn_applet_add_preferences( awn_applet, "/schemas/apps/awn-filebrowser/prefs", NULL );
 }
 
 /**
  * Should we be creative and composite the applet icon
  */
-gboolean filebrowser_gconf_is_composite_applet_icon(
-) {
-
+gboolean filebrowser_gconf_is_composite_applet_icon() {
     gboolean iscomp;
-    GConfValue *value = awn_applet_gconf_get_value( applet,
-                            FILEBROWSER_GCONFKEY_COMPOSITE_APPLET_ICON,
-                            NULL );
 
-    if ( value ) {
-        iscomp = awn_applet_gconf_get_bool( applet, FILEBROWSER_GCONFKEY_COMPOSITE_APPLET_ICON, NULL );
-    } else {
-        iscomp = FILEBROWSER_DEFAULT_COMPOSITE_APPLET_ICON;
-        awn_applet_gconf_set_bool( applet,
+    AwnConfigValueType value = awn_config_client_get_value_type(client,
+                                   AWN_CONFIG_CLIENT_DEFAULT_GROUP,
                                    FILEBROWSER_GCONFKEY_COMPOSITE_APPLET_ICON,
-                                   FILEBROWSER_DEFAULT_COMPOSITE_APPLET_ICON, NULL );
+                                   NULL);
+    
+    if (value!=AWN_CONFIG_VALUE_TYPE_NULL)
+    {
+        iscomp = awn_config_client_get_bool( client, 
+                                   AWN_CONFIG_CLIENT_DEFAULT_GROUP, 
+                                   FILEBROWSER_GCONFKEY_COMPOSITE_APPLET_ICON,
+                                   NULL);
     }
-
+    else
+    {
+            iscomp = FILEBROWSER_DEFAULT_COMPOSITE_APPLET_ICON;
+            awn_config_client_set_bool( client,
+                         AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+                         FILEBROWSER_GCONFKEY_COMPOSITE_APPLET_ICON,
+                         iscomp, NULL );
+    }
     return iscomp;
 }
 
 gboolean filebrowser_gconf_is_browsing(){
     gboolean browsing;
-    GConfValue *value = awn_applet_gconf_get_value( applet,
-                            FILEBROWSER_GCONFKEY_ENABLE_BROWSING,
-                            NULL );
-
-    if ( value ) {
-        browsing = awn_applet_gconf_get_bool( applet, FILEBROWSER_GCONFKEY_ENABLE_BROWSING, NULL );
-    } else {
-        browsing = FILEBROWSER_DEFAULT_ENABLE_BROWSING;
-        awn_applet_gconf_set_bool( applet,
+    AwnConfigValueType value = awn_config_client_get_value_type(client,
+                                   AWN_CONFIG_CLIENT_DEFAULT_GROUP,
                                    FILEBROWSER_GCONFKEY_ENABLE_BROWSING,
-                                   FILEBROWSER_DEFAULT_ENABLE_BROWSING, NULL );
+                                   NULL);    
+    if (value!=AWN_CONFIG_VALUE_TYPE_NULL)
+    {
+        browsing = awn_config_client_get_bool( client,   AWN_CONFIG_CLIENT_DEFAULT_GROUP, 
+                                            FILEBROWSER_GCONFKEY_ENABLE_BROWSING,
+                                            NULL );
     }
-
+    else
+    {
+        browsing = FILEBROWSER_DEFAULT_ENABLE_BROWSING;
+        awn_config_client_set_bool( client,
+                     AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+                     FILEBROWSER_GCONFKEY_ENABLE_BROWSING,
+                     browsing, NULL );
+    }
+        
     return browsing;
 }
 
 gboolean filebrowser_gconf_show_files(){
 	
 	gboolean show;
-    GConfValue *value = awn_applet_gconf_get_value( applet,
-                            FILEBROWSER_GCONFKEY_SHOW_FILES,
-                            NULL );
-
-    if ( value ) {
-        show = awn_applet_gconf_get_bool( applet, FILEBROWSER_GCONFKEY_SHOW_FILES, NULL );
-    } else {
-        show = FILEBROWSER_DEFAULT_SHOW_FILES;
-        awn_applet_gconf_set_bool( applet,
+    
+    AwnConfigValueType value = awn_config_client_get_value_type(client,
+                                   AWN_CONFIG_CLIENT_DEFAULT_GROUP,
                                    FILEBROWSER_GCONFKEY_SHOW_FILES,
-                                   FILEBROWSER_DEFAULT_SHOW_FILES, NULL );
+                                   NULL);    
+    if (value!=AWN_CONFIG_VALUE_TYPE_NULL)
+    {
+        show = awn_config_client_get_bool(client,   AWN_CONFIG_CLIENT_DEFAULT_GROUP, 
+                                            FILEBROWSER_GCONFKEY_SHOW_FILES,
+                                            NULL );
     }
-
+    else
+    {
+        show = FILEBROWSER_DEFAULT_SHOW_FILES;
+        awn_config_client_set_bool( client,
+                     AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+                    FILEBROWSER_GCONFKEY_SHOW_FILES,
+                     show, NULL );
+    }
+        
     return show;
 }
 
 gboolean filebrowser_gconf_show_hidden_files(){
 
 	gboolean show;
-    GConfValue *value = awn_applet_gconf_get_value( applet,
-                            FILEBROWSER_GCONFKEY_SHOW_HIDDEN_FILES,
-                            NULL );
-
-    if ( value ) {
-        show = awn_applet_gconf_get_bool( applet, FILEBROWSER_GCONFKEY_SHOW_HIDDEN_FILES, NULL );
-    } else {
-        show = FILEBROWSER_DEFAULT_SHOW_HIDDEN_FILES;
-        awn_applet_gconf_set_bool( applet,
+    AwnConfigValueType value = awn_config_client_get_value_type(client,
+                                   AWN_CONFIG_CLIENT_DEFAULT_GROUP,
                                    FILEBROWSER_GCONFKEY_SHOW_HIDDEN_FILES,
-                                   FILEBROWSER_DEFAULT_SHOW_HIDDEN_FILES, NULL );
+                                   NULL);    
+    if (value!=AWN_CONFIG_VALUE_TYPE_NULL)
+    {
+        show = awn_config_client_get_bool(client,   AWN_CONFIG_CLIENT_DEFAULT_GROUP, 
+                                        FILEBROWSER_GCONFKEY_SHOW_HIDDEN_FILES,
+                                        NULL );
     }
-
+    else
+    {
+        show = FILEBROWSER_DEFAULT_SHOW_HIDDEN_FILES;
+        awn_config_client_set_bool( client,
+                     AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+                     FILEBROWSER_GCONFKEY_SHOW_HIDDEN_FILES,
+                     show, NULL );
+    }
     return show;
 }
 
 gboolean filebrowser_gconf_show_folders(){
 
 	gboolean show;
-    GConfValue *value = awn_applet_gconf_get_value( applet,
-                            FILEBROWSER_GCONFKEY_SHOW_FOLDERS,
-                            NULL );
-
-    if ( value ) {
-        show = awn_applet_gconf_get_bool( applet, FILEBROWSER_GCONFKEY_SHOW_FOLDERS, NULL );
-    } else {
-        show = FILEBROWSER_DEFAULT_SHOW_FOLDERS;
-        awn_applet_gconf_set_bool( applet,
+    AwnConfigValueType value = awn_config_client_get_value_type(client,
+                                   AWN_CONFIG_CLIENT_DEFAULT_GROUP,
                                    FILEBROWSER_GCONFKEY_SHOW_FOLDERS,
-                                   FILEBROWSER_DEFAULT_SHOW_FOLDERS, NULL );
+                                   NULL);    
+    if (value!=AWN_CONFIG_VALUE_TYPE_NULL)
+    {
+        show = awn_config_client_get_bool(client,AWN_CONFIG_CLIENT_DEFAULT_GROUP, 
+                                            FILEBROWSER_GCONFKEY_SHOW_FOLDERS,
+                                            NULL );
     }
-
+    else
+    {
+        show = FILEBROWSER_DEFAULT_SHOW_FOLDERS;
+        awn_config_client_set_bool( client,
+                         AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+                         FILEBROWSER_GCONFKEY_SHOW_FOLDERS,
+                         show, NULL );
+    }
     return show;
 }
 
 gboolean filebrowser_gconf_show_desktop_items(){
 
 	gboolean show;
-    GConfValue *value = awn_applet_gconf_get_value( applet,
-                            FILEBROWSER_GCONFKEY_SHOW_DESKTOP_ITEMS,
-                            NULL );
-
-    if ( value ) {
-        show = awn_applet_gconf_get_bool( applet, FILEBROWSER_GCONFKEY_SHOW_DESKTOP_ITEMS, NULL );
-    } else {
-        show = FILEBROWSER_DEFAULT_SHOW_DESKTOP_ITEMS;
-        awn_applet_gconf_set_bool( applet,
+    AwnConfigValueType value = awn_config_client_get_value_type(client,
+                                   AWN_CONFIG_CLIENT_DEFAULT_GROUP,
                                    FILEBROWSER_GCONFKEY_SHOW_DESKTOP_ITEMS,
-                                   FILEBROWSER_DEFAULT_SHOW_DESKTOP_ITEMS, NULL );
+                                   NULL);    
+    if (value!=AWN_CONFIG_VALUE_TYPE_NULL)
+    {
+            
+        show = awn_config_client_get_bool(client,AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+                                            FILEBROWSER_GCONFKEY_SHOW_DESKTOP_ITEMS,
+                                            NULL );
     }
-
+    else
+    {
+            show = FILEBROWSER_DEFAULT_SHOW_DESKTOP_ITEMS;
+            awn_config_client_set_bool( client,
+                         AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+                         FILEBROWSER_GCONFKEY_SHOW_DESKTOP_ITEMS,
+                         show, NULL );
+    }
     return show;
 }
 
 /**
  * What is the backend folder of this applet (and is it set)?
  */
-gchar *filebrowser_gconf_get_backend_folder(
-) {
-
-    gchar *folder = awn_applet_gconf_get_string( applet,
-                             FILEBROWSER_GCONFKEY_BACKEND_FOLDER,
-                             NULL );
-    if ( !folder ) {
+gchar *filebrowser_gconf_get_backend_folder() {
+	gchar *folder = NULL;
+    folder = awn_config_client_get_string(client,AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+                                                FILEBROWSER_GCONFKEY_BACKEND_FOLDER,
+                                                NULL );
+    if ( !folder || (strlen(folder)==0) )
+    {
+        g_free(folder);
         folder = g_strdup_printf( "/home/%s", g_get_user_name(  ) );
         filebrowser_gconf_set_backend_folder( folder );
     }
-
+    printf("folder = %s\n",folder);
     return folder;
 }
 
@@ -186,17 +219,19 @@ gchar *filebrowser_gconf_get_backend_folder(
  * What is the default drag action?
  */
 gchar *filebrowser_gconf_get_default_drag_action() {
+	gchar *action = NULL;
+    action = awn_config_client_get_string(client,AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+                                                FILEBROWSER_GCONFKEY_DEFAULT_DRAG_ACTION,
+                                                NULL );
+    if (!action)
+    {
+         action = g_strdup(FILEBROWSER_DEFAULT_DEFAULT_DRAG_ACTION DRAG_ACTION_LINK);
+         awn_config_client_set_string( client,
+                                   AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+                                   FILEBROWSER_GCONFKEY_DEFAULT_DRAG_ACTION,
+                                   action, NULL );
 
-    gchar *action = awn_applet_gconf_get_string( applet,
-                             FILEBROWSER_GCONFKEY_DEFAULT_DRAG_ACTION,
-                             NULL );
-
-    if ( !action ) {
-		awn_applet_gconf_set_string( applet,
-                                     FILEBROWSER_GCONFKEY_DEFAULT_DRAG_ACTION, FILEBROWSER_DEFAULT_DEFAULT_DRAG_ACTION, NULL );
-        action = FILEBROWSER_DEFAULT_DEFAULT_DRAG_ACTION;
     }
-
     return action;
 }
 
@@ -205,8 +240,11 @@ gchar *filebrowser_gconf_get_default_drag_action() {
  */
 void filebrowser_gconf_set_backend_folder(
     const gchar * folder ) {
-
-    awn_applet_gconf_set_string( applet, FILEBROWSER_GCONFKEY_BACKEND_FOLDER, folder, NULL );
+	
+	awn_config_client_set_string (client,
+                                    AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+                                    FILEBROWSER_GCONFKEY_BACKEND_FOLDER,
+                                    folder, NULL );  
 }
 
 /**
@@ -214,17 +252,19 @@ void filebrowser_gconf_set_backend_folder(
  */
 gchar          *filebrowser_gconf_get_applet_icon(
 ) {
+	gchar *icon= NULL;
+    icon = awn_config_client_get_string(client,AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+                                        FILEBROWSER_GCONFKEY_APPLET_ICON,
+                                        NULL );
+    if (!icon)
+    {
+         icon = g_strdup(FILEBROWSER_DEFAULT_APPLET_ICON);
+         awn_config_client_set_string(client,
+                                   AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+                                   FILEBROWSER_GCONFKEY_APPLET_ICON,
+                                   icon, NULL );
 
-    gchar          *icon = awn_applet_gconf_get_string( applet,
-                           FILEBROWSER_GCONFKEY_APPLET_ICON,
-                           NULL );
-
-    if ( !icon ) {
-        awn_applet_gconf_set_string( applet,
-                                     FILEBROWSER_GCONFKEY_APPLET_ICON, FILEBROWSER_DEFAULT_APPLET_ICON, NULL );
-        icon = FILEBROWSER_DEFAULT_APPLET_ICON;
     }
-
     return icon;
 }
 
@@ -233,41 +273,77 @@ gchar          *filebrowser_gconf_get_applet_icon(
  */
 guint filebrowser_gconf_get_icon_size(
 ) {
-
-    guint icon_size = awn_applet_gconf_get_int( applet,
-                                FILEBROWSER_GCONFKEY_ICON_SIZE, NULL );
-
-    if ( !( icon_size > 0 ) ) {
-        awn_applet_gconf_set_int( applet, FILEBROWSER_GCONFKEY_ICON_SIZE, FILEBROWSER_DEFAULT_ICON_SIZE, NULL );
-        icon_size = FILEBROWSER_DEFAULT_ICON_SIZE;
+	guint icon_size;
+    AwnConfigValueType value = awn_config_client_get_value_type(client,
+                                   AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+                                   FILEBROWSER_GCONFKEY_ICON_SIZE,
+                                   NULL);    
+    if (value!=AWN_CONFIG_VALUE_TYPE_NULL)
+    {
+        icon_size = awn_config_client_get_int(client,   AWN_CONFIG_CLIENT_DEFAULT_GROUP, 
+                                            FILEBROWSER_GCONFKEY_ICON_SIZE,
+                                            NULL );
     }
-
+    else
+    {
+        icon_size = FILEBROWSER_DEFAULT_ICON_SIZE;
+        awn_config_client_set_int( client,
+                     AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+                     FILEBROWSER_GCONFKEY_ICON_SIZE,
+                     icon_size, NULL );
+    }
+        
     return icon_size;
 }
 
 guint filebrowser_gconf_get_max_rows(){
+	guint rows;
+    AwnConfigValueType value = awn_config_client_get_value_type(client,
+                                   AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+                                   FILEBROWSER_GCONFKEY_MAX_ROWS,
+                                   NULL);    
+    if (value!=AWN_CONFIG_VALUE_TYPE_NULL)
+    {
 
-    guint rows = awn_applet_gconf_get_int( applet,
-                                FILEBROWSER_GCONFKEY_MAX_ROWS, NULL );
-
-    if ( !( rows > 0 ) ) {
-        awn_applet_gconf_set_int( applet, FILEBROWSER_GCONFKEY_MAX_ROWS, FILEBROWSER_DEFAULT_MAX_ROWS, NULL );
-        rows = FILEBROWSER_DEFAULT_MAX_ROWS;
+        rows = awn_config_client_get_int(client,AWN_CONFIG_CLIENT_DEFAULT_GROUP, 
+                                            FILEBROWSER_GCONFKEY_MAX_ROWS,
+    										NULL );
     }
-
+    else
+    {
+        rows = FILEBROWSER_DEFAULT_MAX_ROWS;
+        awn_config_client_set_int( client,
+                     AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+                     FILEBROWSER_GCONFKEY_MAX_ROWS,
+                     rows, NULL );
+    }
+    printf("rows = %d\n",rows);
     return rows;
+
 }
 
 guint filebrowser_gconf_get_max_cols(){
-
-    guint cols = awn_applet_gconf_get_int( applet,
-                                FILEBROWSER_GCONFKEY_MAX_COLS, NULL );
-
-    if ( !( cols > 0 ) ) {
-        awn_applet_gconf_set_int( applet, FILEBROWSER_GCONFKEY_MAX_COLS, FILEBROWSER_DEFAULT_MAX_COLS, NULL );
-        cols = FILEBROWSER_DEFAULT_MAX_COLS;
+	guint cols;
+    AwnConfigValueType value = awn_config_client_get_value_type(client,
+                                   AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+                                    FILEBROWSER_GCONFKEY_MAX_COLS,
+                                   NULL);    
+    if (value!=AWN_CONFIG_VALUE_TYPE_NULL)
+    {
+        cols = awn_config_client_get_int(client,   AWN_CONFIG_CLIENT_DEFAULT_GROUP, 
+                                            FILEBROWSER_GCONFKEY_MAX_COLS,
+                                            NULL );
     }
-
+    else
+    {
+        printf("BOOGER\n");
+        cols =  FILEBROWSER_DEFAULT_MAX_COLS;
+        awn_config_client_set_int( client,
+                     AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+                     FILEBROWSER_GCONFKEY_MAX_COLS,
+                     cols, NULL );
+    }        
+    printf("cols = %d\n",cols);
     return cols;
 }
 

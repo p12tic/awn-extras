@@ -31,8 +31,8 @@ type = bool
 default = TRUE
 description = If true, the applet icon is a composite of the 3 last added files
 [DEFAULT/backend_folder]
-type = bool
-default = TRUE
+type = string
+default = 
 description = The absolute path to a folder to use as a backend
 [DEFAULT/icon_size]
 type = int

@@ -23,7 +23,7 @@
 #include <libawn/awn-applet.h>
 #include <libawn/awn-cairo-utils.h>
 
-void filebrowser_gconf_init( AwnApplet * applet );
+void filebrowser_gconf_init( AwnApplet * applet, gchar * uid );
     
 gboolean filebrowser_gconf_is_composite_applet_icon();
 gboolean filebrowser_gconf_is_browsing();

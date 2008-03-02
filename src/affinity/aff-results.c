@@ -422,7 +422,7 @@ aff_results_popup_menu(AffResults *results)
 		const char *name = gnome_vfs_mime_application_get_name (app);
 		const char *icon_name = gnome_vfs_mime_application_get_icon (app);
 #elif defined(LIBAWN_USE_XFCE)
-		ThunarVfsMimeApplication *app = (ThunarVfsApplication *)a->data;
+		ThunarVfsMimeApplication *app = (ThunarVfsMimeApplication *)a->data;
 		const char *name = thunar_vfs_mime_application_get_name (app);
 		const char *icon_name = thunar_vfs_mime_handler_lookup_icon_name (THUNAR_VFS_MIME_HANDLER (app), gtk_icon_theme_get_default ());
 #else

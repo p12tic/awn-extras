@@ -26,7 +26,7 @@ class App (awn.AppletSimple):
     pad = gtk.Alignment()
     pad.add(self.moz)
     self.moz.set_size_request(640, 535)
-    self.moz.load_url('http://www.pandora.com/radio/tuner_8_2_0_2_pandora.swf')
+    self.moz.load_url('https://www.pandora.com:443/radio/tuner_8_3_0_0_pandora.swf')
     pad.show_all()
     self.dialog.add(pad)
 
@@ -41,7 +41,7 @@ class App (awn.AppletSimple):
     print "show dialog"
 
   def dialog_focus_out (self, widget, event):
-    #self.moz.load_url('https://www.pandora.com/radio/tuner_8_2_0_1_pandora.swf')
+    #self.moz.load_url('https://www.pandora.com:443/radio/tuner_8_3_0_0_pandora.swf')
     self.dialog.hide ()
     print "hide dialog"
 

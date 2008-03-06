@@ -27,6 +27,11 @@ using   DBus;
 using   Cairo;
 
 
+//FIXME... ugly hack (self) to deal with vala 0.1.7 dbus signal bug
+//or maybe I was just doing it wrong to begin with....
+//doing this for now.
+public pointer global_self;
+
 enum LaunchMode
 {
 	ANONYMOUS,
@@ -168,8 +173,9 @@ class Configuration: GLib.Object
 		}
 	}
 	
-	private static void _config_changed(Awn.ConfigClientNotifyEntry entry, Configuration self)
+	private static void _config_changed(Awn.ConfigClientNotifyEntry entry,pointer ptr)
 	{
+        weak Configuration self = (Configuration) ptr;
         self.read_config_dynamic();
 		stdout.printf("config notify fired\n");
 	}
@@ -434,7 +440,8 @@ class DesktopFileManagement : GLib.Object
 		
 	public string Filename()
 	{
-		return  directory+uid+".desktop";
+        string fullpath=directory+uid+".desktop";
+		return  fullpath;
 	}
 	
 	public bool Exists()
@@ -487,9 +494,10 @@ public class DBusComm : GLib.Object
 
 class DiagButton: Gtk.Button
 {
-	private		Wnck.Window		win				{ get; construct; }
-	private		Gtk.Widget		container		{ get; construct; }
-	private		int				icon_size		{ get; construct; }     
+    //FIXME... make into properties.
+	public		Wnck.Window		win				{ get; construct; }
+	public		Gtk.Widget		container		{ get; construct; }
+	public		int				icon_size		{ get; construct; }     
 
     
 	construct
@@ -538,10 +546,11 @@ class DiagButton: Gtk.Button
 
 class DesktopitemButton: Gtk.Button
 {
-	private		weak    DesktopItem     item			{ get; construct; }
-	private		Gtk.Widget		container		{ get; construct; }
-	private		int				icon_size		{ get; construct; }     
-    private     IconTheme		theme           { get; construct; }
+	public		weak    DesktopItem     item			{ get; construct; }
+//FIXME... make into properties.
+	public		Gtk.Widget		container		{ get; construct; }
+	public		int				icon_size		{ get; construct; }     
+    public      IconTheme		theme           { get; construct; }
  
 
 	construct
@@ -597,21 +606,16 @@ class Listing : GLib.Object
 {
 //There will be an advanced mode and simple mode.
 //overkill in general but it's not that much extra work at this point.
-    protected   SList<string>               blacklist_titles_global;
-    protected   SList<string>               blacklist_exec_global;
+    protected   List<string>               blacklist_titles_global;
+    protected   List<string>               blacklist_exec_global;
 
-    protected   SList<string>               whitelist_titles_pre;
-    protected   SList<string>               whitelist_exec_pre;
-    protected   SList<string>               blacklist_titles;
-    protected   SList<string>               blacklist_exec;
-    protected   SList<string>               whitelist_titles_post;
-    protected   SList<string>               whitelist_exec_post;
+    protected   List<string>               whitelist_titles_pre;
+    protected   List<string>               whitelist_exec_pre;
+    protected   List<string>               blacklist_titles;
+    protected   List<string>               blacklist_exec;
+    protected   List<string>               whitelist_titles_post;
+    protected   List<string>               whitelist_exec_post;
 
-/*    protected   string                      filename_global_blacklist;
-    protected   string                      filename_blacklist;
-    protected   string                      filename_whitelist_pre { get; construct;}
-    protected   string                      filename_whitelist_post;
-*/
     protected   string                      listingfile { get; construct; }
     protected   string                      directory;
 
@@ -640,19 +644,29 @@ class Listing : GLib.Object
         else if (!FileUtils.test(directory,FileTest.IS_DIR))
         {
             //FIXME... throw an exception... it has to be a dir.
-        }        
-        read_list(directory+listingfile+".whitelist.pre",out whitelist_titles_pre,out whitelist_exec_pre);
-        read_list(Environment.get_home_dir()+"/.config/awn/applets/standalone-launcher/blacklist",out blacklist_titles_global,out blacklist_exec_global);    
-        read_list(directory+listingfile+".blacklist",out blacklist_titles,out blacklist_exec);
-        read_list(directory+listingfile+".whitelist.post",out whitelist_titles_post,out whitelist_exec_post);
-
+        }      
+        
+        //FIXME...  this was a lot cleaner before vala v 0.17
+        whitelist_titles_pre=read_list_title(directory+listingfile+".whitelist.pre");
+        whitelist_exec_pre=read_list_exec(directory+listingfile+".whitelist.pre");
+        blacklist_titles_global=read_list_title(Environment.get_home_dir()+"/.config/awn/applets/standalone-launcher/blacklist");
+        blacklist_exec_global=read_list_exec(Environment.get_home_dir()+"/.config/awn/applets/standalone-launcher/blacklist");
+        blacklist_titles=read_list_title(directory+listingfile+".blacklist");
+        blacklist_exec=read_list_exec(directory+listingfile+".blacklist");
+        whitelist_titles_post=read_list_title(directory+listingfile+".whitelist.post");
+        whitelist_exec_post=read_list_exec(directory+listingfile+".whitelist.post");
+/*        read_list(Environment.get_home_dir()+"/.config/awn/applets/standalone-launcher/blacklist",ref blacklist_titles_global,ref blacklist_exec_global);    
+        read_list(directory+listingfile+".blacklist",ref blacklist_titles,ref blacklist_exec);
+        read_list(directory+listingfile+".whitelist.post",ref whitelist_titles_post,ref whitelist_exec_post);
+*/
     }
 
-
-    void read_list(string file_name,out SList<string> title_list,out SList<string> exec_list)
+    //FIXME...  this was a lot cleaner before vala v 0.17
+    List<string> read_list_exec(string file_name)
     {
+        List<string> result;
         string[] file_strings;
-        string file_data;
+        weak string file_data;
         try{
             FileUtils.get_contents (file_name, out file_data);
         }catch (FileError ex ){
@@ -665,15 +679,34 @@ class Listing : GLib.Object
             if (entry.substring(0,6)=="TITLE:" )
             {
                 entry=entry.substring(6,entry.len() );
-                title_list.prepend(entry);
+                result.prepend(entry);
             }
-            else if (entry.substring(0,5)=="EXEC:")
-            {
-                entry=entry.substring(5,entry.len() );
-                exec_list.prepend(entry);
-            }
-            //stdout.printf("data = %s\n",entry);
         }
+        return result;
+    }
+
+    //FIXME...  this was a lot cleaner before vala v 0.17
+    List<string> read_list_title(string file_name)
+    {
+        List<string> result;
+        string[] file_strings;
+        weak string file_data;
+        try{
+            FileUtils.get_contents (file_name, out file_data);
+        }catch (FileError ex ){
+//            stdout.printf("no whitelist: '%s'\n",directory+listingfile+".whitelist.pre");
+            file_data="";
+        }
+        file_strings=file_data.split("\n");
+        foreach(string entry in file_strings)
+        {
+            if (entry.substring(0,6)=="TITLE:" )
+            {
+                entry=entry.substring(6,entry.len() );
+                result.prepend(entry);
+            }
+        }
+        return result;
     }
 
     Listing(string listingfile)
@@ -681,7 +714,7 @@ class Listing : GLib.Object
             this.listingfile=listingfile;
     }
 
-    protected bool check_list(SList<string> list,string value)
+    protected bool check_list(List<string> list,string value)
     {
         if ( (value !=null) && (list!=null))
         {
@@ -1168,6 +1201,7 @@ class LauncherApplet : AppletSimple
 
     construct 
     { 
+        global_self=this;
         closing=false;  //if this becomes true it means an irrevocable closing is in process.
         timer_count=0;
         blank_icon();
@@ -1292,8 +1326,8 @@ class LauncherApplet : AppletSimple
 		targets[1].flags = 0;
 		targets[1].info =  0;
 
-        drag_source_set(this,Gdk.ModifierType.BUTTON1_MASK,targets,2, Gdk.DragAction.COPY);
-		drag_dest_set(this, Gtk.DestDefaults.ALL, targets,2, Gdk.DragAction.COPY);
+        drag_source_set(this,Gdk.ModifierType.BUTTON1_MASK,targets, Gdk.DragAction.COPY);
+		drag_dest_set(this, Gtk.DestDefaults.ALL, targets, Gdk.DragAction.COPY);
 		this.drag_data_received+=_drag_data_received;
         this.drag_data_get+=_drag_data_get;
 		awn_config= new ConfigClient();
@@ -1314,7 +1348,6 @@ class LauncherApplet : AppletSimple
             wnck_screen = Wnck.Screen.get_default();	
             wnck_screen.force_update();	
         }
-     
         theme = IconTheme.get_default ();        
 		icon = theme.load_icon ("stock_stop", height - 2, IconLookupFlags.USE_BUILTIN);
 		title_string = new string();
@@ -1328,7 +1361,6 @@ class LauncherApplet : AppletSimple
         }
         draw_set_window_size(effects,height,height);
         draw_set_icon_size(effects,height-2,height-2);
-        
 		show_icon();
 		if (uid.to_double()>0) 
 		{				
@@ -1340,7 +1372,7 @@ class LauncherApplet : AppletSimple
 				desktopitem.set_exec("false");
 				desktopitem.set_icon("stock_stop");
 				desktopitem.set_item_type("Application");
-				desktopitem.set_name("None");				
+				desktopitem.set_name("None");
 			}
             else
             {
@@ -1365,7 +1397,7 @@ class LauncherApplet : AppletSimple
                     {
                         books.update_with_desktopitem(item);
                     }
-                }
+                }                
             }
     		title_string = desktopitem.get_name();
             listing = new Listing(GLib.Path.get_basename(desktopfile.Filename()));
@@ -1599,13 +1631,16 @@ class LauncherApplet : AppletSimple
         selection_data.set_text("test data\n",-1);
     }
 
-    private void _offered(Taskman.TaskmanInterface o, string xid)
+    //FIXME... ugly hack (self) to deal with vala 0.1.7 dbus signal bug
+    //or maybe I was just doing it wrong to begin with....
+    //doing this for now.
+    private static void _offered(Taskman.TaskmanInterface o, string xid)
     {
-
-        Wnck.Window window=find_win_by_xid(xid.to_ulong() );
+        LauncherApplet applet=(LauncherApplet) global_self;
+        Wnck.Window window=applet.find_win_by_xid(xid.to_ulong() );
         if (window!=null)
         {
-            _window_opened(wnck_screen,window);
+            applet._window_opened(applet.wnck_screen,window);
         }
     }
 
@@ -1942,8 +1977,7 @@ class LauncherApplet : AppletSimple
     
     private void right_click(Gdk.EventButton event)
     {
-        right_menu.popup(null, null, null, null,
-			  event.button, event.time);
+        right_menu.popup(null, null, null, event.button, event.time);
     }
 
     private bool _scroll_event(Gtk.Widget widget,Gdk.EventMotion event)
@@ -2064,7 +2098,7 @@ class LauncherApplet : AppletSimple
 	{
         this.window.set_back_pixmap (null,false);
         this.show();
-        Timeout.add(200,_initialize,this);
+        Timeout.add(200,_initialize);
 	}
 
     private bool _leave_notify(Gtk.Widget widget,Gdk.EventCrossing event)
@@ -2091,10 +2125,10 @@ class LauncherApplet : AppletSimple
         {
 			if (launchmode == LaunchMode.ANONYMOUS)
 			{
-				Timeout.add(750,_hide_icon,this);	
-                Timeout.add(2000,_hide_icon,this);	                
+				Timeout.add(750,_hide_icon);	
+                Timeout.add(2000,_hide_icon);	                
 				timer_count++;		
-				Timeout.add(30000,_timed_closed,this);
+				Timeout.add(30000,_timed_closed);
 			}	
             else
                 show_icon();
@@ -2291,7 +2325,7 @@ class LauncherApplet : AppletSimple
 			retry_list.prepend(xid);
 			if (retry_list.length()<2)
 			{
-				Timeout.add(100,_try_again,this);
+				Timeout.add(100,_try_again);
 			}		
         }        
 	}

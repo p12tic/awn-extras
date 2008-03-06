@@ -37,8 +37,9 @@ class Configuration: GLib.Object
         default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"desktop_file_editor", _config_changed, this);
 	}
 	
-	private static void _config_changed(Awn.ConfigClientNotifyEntry entry, Configuration self)
+	private static void _config_changed(Awn.ConfigClientNotifyEntry entry, pointer ptr)
 	{
+        weak Configuration self=(Configuration) ptr;
         self.read_config_dynamic();
 		stdout.printf("config notify fired\n");
 	}
@@ -155,8 +156,8 @@ class LauncherApplet : AppletSimple
 		targets[1].flags = 0;
 		targets[1].info =  0;
 
-        drag_source_set(this,Gdk.ModifierType.BUTTON1_MASK,targets,2, Gdk.DragAction.COPY);
-		drag_dest_set(this, Gtk.DestDefaults.ALL, targets,2, Gdk.DragAction.COPY);
+        drag_source_set(this,Gdk.ModifierType.BUTTON1_MASK,targets, Gdk.DragAction.COPY);
+		drag_dest_set(this, Gtk.DestDefaults.ALL, targets, Gdk.DragAction.COPY);
 		this.drag_data_received+=_drag_data_received;
         this.drag_data_get+=_drag_data_get;
         build_right_click();
@@ -307,8 +308,7 @@ class LauncherApplet : AppletSimple
     
     private void right_click(Gdk.EventButton event)
     {
-        right_menu.popup(null, null, null, null,
-			  event.button, event.time);
+        right_menu.popup(null, null, null,event.button, event.time);
     }
 
     private bool _button_press(Gtk.Widget widget,Gdk.EventButton event)
@@ -361,7 +361,7 @@ class LauncherApplet : AppletSimple
         stdout.printf("realized\n");
         this.window.set_back_pixmap (null,false);
         this.show();
-        Timeout.add(200,_initialize,this);
+        Timeout.add(200,_initialize);
 	}
 
     private bool _leave_notify(Gtk.Widget widget,Gdk.EventCrossing event)

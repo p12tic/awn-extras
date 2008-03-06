@@ -123,13 +123,6 @@ typedef struct
 	float       gradient_factor;	
 } WindowData;
 
-enum
-{
-	URGENCY_LOW,
-	URGENCY_NORMAL,
-	URGENCY_CRITICAL
-};
-
 
 GtkWidget * build_dialog( WindowData *windata,long flags, AwnColor *base, AwnColor * border);
 //#define ENABLE_GRADIENT_LOOK

@@ -81,7 +81,7 @@ PKG_CHECK_MODULES(AWN, [awn])
 PKG_CHECK_MODULES(LIBGLADE, [libglade-2.0])
 # awn-notification-daemon, shiny-switcher, standalone-launcher, switcher, taskmand
 PKG_CHECK_MODULES(LIBWNCK, [libwnck-1.0])
-# affinity, shiny-switcher
+# affinity, awn-notification-daemon, shiny-switcher
 PKG_CHECK_MODULES(LIBX11, [x11])
 PKG_CHECK_MODULES(COMPOSITE, [xcomposite])
 PKG_CHECK_MODULES(XRENDER, [xrender])
@@ -111,6 +111,33 @@ if test "$with_gconf" != "no"; then
 PKG_CHECK_MODULES(VTE, [vte])
 fi
 
+#awn-notification-daemon
+AC_ARG_ENABLE(sound,
+    AS_HELP_STRING([--enable-sound=auto|gstreamer|no],[Sound support for awn-notification-daemon (default=auto)])
+)
+
+if test x$enable_sound != xno -a x$enable_sound != xgstreamer; then
+	enable_sound=auto
+fi
+
+if test x$enable_sound != xno; then
+	gstreampkg="gstreamer-0.10"
+
+	if test x$enable_sound = xauto; then
+		PKG_CHECK_MODULES(GSTREAMER, $gstreampkg,
+		                  [enable_sound=gstreamer], [enable_sound=no])
+	else
+		PKG_CHECK_MODULES(GSTREAMER, $gstreampkg, [enable_sound=gstreamer])
+	fi
+
+	if test x$enable_sound = xgstreamer; then
+		AC_DEFINE([HAVE_GSTREAMER], 1, [Defined if Gstreamer is detected])
+    else
+        gstreampkg=
+	fi
+fi
+
+
 # affinity
 affinity_pkgs="x11"
 affinity_beagle_pkg="libbeagle-0.0 >= affinity_beagle_min_version"
@@ -139,7 +166,7 @@ if test "$with_gconf" != "no" -o "$with_gnome" != "no"; then
 PKG_CHECK_MODULES(FILEBROWSER, [gnome-desktop-2.0 gnome-vfs-2.0 libgnomeui-2.0])
 PKG_CHECK_MODULES(CAIRO_MENU_GNOME, [gnome-vfs-2.0 libgnome-menu libnotify libsexy])
 fi
-PKG_CHECK_MODULES(NOTIFICATION_DAEMON, [libnotify libsexy libwnck-1.0])
+PKG_CHECK_MODULES(NOTIFICATION_DAEMON, [$gstreampkg libnotify libsexy libwnck-1.0 x11])
 PKG_CHECK_MODULES(SHINY_SWITCHER, [libwnck-1.0 x11 xcomposite xrender])
 PKG_CHECK_MODULES(STANDALONE_LAUNCHER, [dbus-glib-1 libwnck-1.0])
 PKG_CHECK_MODULES(TASKMAND, [dbus-glib-1 libwnck-1.0])
@@ -229,7 +256,6 @@ AS_AC_EXPAND(LIBEXECDIR, $libexecdir)
 
 DBUS_SERVICES_DIR="/usr/share/dbus-1/services"
 AC_SUBST(DBUS_SERVICES_DIR)
-
 
 icondir="$datarootdir/avant-window-navigator/applets/icons"
 AC_SUBST(icondir)

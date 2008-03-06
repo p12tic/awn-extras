@@ -40,6 +40,8 @@
 #define GCONF_KEY_DAEMON         "/apps/notification-daemon"
 #define GCONF_KEY_THEME          GCONF_KEY_DAEMON "/theme"
 #define GCONF_KEY_POPUP_LOCATION GCONF_KEY_DAEMON "/popup_location"
+#define GCONF_KEY_SOUND_ENABLED  GCONF_KEY_DAEMON "/sound_enabled"
+#define GCONF_KEY_DEFAULT_SOUND  GCONF_KEY_DAEMON "/default_sound"
 
 #define GCONF_AWN "/apps/avant-window-navigator/applets/awn-notification-daemon"
 #define GCONF_KEY_AWN_KILL_ND GCONF_AWN "/kill_standard_daemon"
@@ -69,6 +71,22 @@
 
 #define NOTIFY_DAEMON_DEFAULT_TIMEOUT 7000
 
+enum
+{
+	URGENCY_LOW,
+	URGENCY_NORMAL,
+	URGENCY_CRITICAL
+};
+
+typedef enum
+{
+	NOTIFYD_CLOSED_EXPIRED = 1,
+	NOTIFYD_CLOSED_USER = 2,
+	NOTIFYD_CLOSED_API = 3,
+	NOTIFYD_CLOSED_RESERVED = 4
+
+} NotifydClosedReason;
+
 typedef struct _NotifyDaemon        NotifyDaemon;
 typedef struct _NotifyDaemonClass   NotifyDaemonClass;
 typedef struct _NotifyDaemonPrivate NotifyDaemonPrivate;
@@ -86,17 +104,11 @@ struct _NotifyDaemonClass
 	GObjectClass parent_class;
 };
 
-enum _NotifyDaemonError
-{
-	NOTIFY_DAEMON_ERROR_GENERIC = 0,
-};
-
 G_BEGIN_DECLS
 
 GType notify_daemon_get_type(void);
 
-NotifyDaemon *notify_daemon_new(void)
-	G_GNUC_MALLOC;
+GQuark notify_daemon_error_quark(void);
 
 gboolean notify_daemon_notify_handler(NotifyDaemon *daemon,
 									  const gchar *app_name,

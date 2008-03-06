@@ -12,6 +12,8 @@ awnnotificationdaemon_la_SOURCES =	\
 	daemon.h			\
 	engines.c			\
 	engines.h			\
+	sound.c				\
+	sound.h				\
 	stack.c				\
 	stack.h				\
 	$(NULL)

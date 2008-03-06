@@ -6,7 +6,6 @@
  * Copyright (C) 2006 Christian Hammond <chipx86@chipx86.com>
  * Copyright (C) 2005 John (J5) Palmieri <johnp@redhat.com>
  *
- *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
@@ -32,7 +31,6 @@
 #include <errno.h>
 #include <string.h>
 #include <stdio.h>
-#include <stdlib.h>
 
 #include <dbus/dbus.h>
 #include <dbus/dbus-glib.h>
@@ -65,6 +63,7 @@
 #include "daemon.h"
 #include "engines.h"
 #include "stack.h"
+#include "sound.h"
 #include "notificationdaemon-dbus-glue.h"
 
 #define IMAGE_SIZE 48
@@ -126,14 +125,12 @@ struct _NotifyDaemonPrivate
 	gint stacks_size;
 };
 
-
 static GConfClient *gconf_client = NULL;
 static DBusConnection *dbus_conn = NULL;
 
 #define CHECK_DBUS_VERSION(major, minor) \
 	(DBUS_MAJOR_VER > (major) || \
 	 (DBUS_MAJOR_VER == (major) && DBUS_MINOR_VER >= (minor)))
-
 
 #if !CHECK_DBUS_VERSION(0, 60)
 /* This is a hack that will go away in time. For now, it's fairly safe. */
@@ -148,8 +145,9 @@ struct _DBusGMethodInvocation
 
 static void notify_daemon_finalize(GObject *object);
 static void _close_notification(NotifyDaemon *daemon, guint id,
-								gboolean hide_notification);
-static void _emit_closed_signal(GtkWindow *nw);
+								gboolean hide_notification,
+								NotifydClosedReason reason);
+static void _emit_closed_signal(GtkWindow *nw, NotifydClosedReason reason);
 static void _action_invoked_cb(GtkWindow *nw, const char *key);
 static NotifyStackLocation get_stack_location_from_string(const char *slocation);
 
@@ -284,19 +282,23 @@ _action_invoked_cb(GtkWindow *nw, const char *key)
 	dbus_connection_send(dbus_conn, message, NULL);
 	dbus_message_unref(message);
 
-	_close_notification(daemon, id, TRUE);
+	_close_notification(daemon, id, TRUE, NOTIFYD_CLOSED_USER);
 }
 
 static void
-_emit_closed_signal(GtkWindow *nw)
+_emit_closed_signal(GtkWindow *nw, NotifydClosedReason reason)
 {
 	DBusMessage *message = create_signal(nw, "NotificationClosed");
+	dbus_message_append_args(message,
+							 DBUS_TYPE_UINT32, &reason,
+							 DBUS_TYPE_INVALID);
 	dbus_connection_send(dbus_conn, message, NULL);
 	dbus_message_unref(message);
 }
 
 static void
-_close_notification(NotifyDaemon *daemon, guint id, gboolean bhide_notification)
+_close_notification(NotifyDaemon *daemon, guint id,
+					gboolean bhide_notification, NotifydClosedReason reason)
 {
 	NotifyDaemonPrivate *priv = daemon->priv;
 	NotifyTimeout *nt;
@@ -305,7 +307,7 @@ _close_notification(NotifyDaemon *daemon, guint id, gboolean bhide_notification)
 
 	if (nt != NULL)
 	{
-		_emit_closed_signal(nt->nw);
+		_emit_closed_signal(nt->nw, reason);
 
 		if (bhide_notification)
 			hide_notification(nt->nw);
@@ -317,7 +319,12 @@ _close_notification(NotifyDaemon *daemon, guint id, gboolean bhide_notification)
 static void
 _notification_destroyed_cb(GtkWindow *nw, NotifyDaemon *daemon)
 {
-	_close_notification(daemon, NW_GET_NOTIFY_ID(nw), FALSE);
+	/*
+	 * This usually won't happen, but can if notification-daemon dies before
+	 * all notifications are closed. Mark them as expired.
+	 */
+	_close_notification(daemon, NW_GET_NOTIFY_ID(nw), FALSE,
+						NOTIFYD_CLOSED_EXPIRED);
 }
 
 static void
@@ -385,7 +392,7 @@ _is_expired(gpointer key, gpointer value, gpointer data)
 	if (now_time > expiration_time)
 	{
 		notification_tick(nt->nw, 0);
-		_emit_closed_signal(nt->nw);
+		_emit_closed_signal(nt->nw, NOTIFYD_CLOSED_EXPIRED);
 		return TRUE;
 	}
 	else if (nt->paused)
@@ -687,7 +694,8 @@ window_clicked_cb(GtkWindow *nw, GdkEventButton *button, NotifyDaemon *daemon)
 	}
 
 	_action_invoked_cb(nw, "default");
-	_close_notification(daemon, NW_GET_NOTIFY_ID(nw), TRUE);
+	_close_notification(daemon, NW_GET_NOTIFY_ID(nw), TRUE,
+						NOTIFYD_CLOSED_USER);
 }
 
 static void
@@ -735,11 +743,12 @@ url_clicked_cb(GtkWindow *nw, const char *url)
 	daemon->priv->url_clicked_lock = TRUE;
 
 	escaped_url = g_shell_quote(url);
+
 	/*
 	 * We can't actually check for GNOME_DESKTOP_SESSION_ID, because it's
 	 * not in the environment for this program :(
 	 */
-	if (
+	if (/*g_getenv("GNOME_DESKTOP_SESSION_ID") != NULL &&*/
 		g_find_program_in_path("gnome-open") != NULL)
 	{
 		cmd = g_strdup_printf("gnome-open %s", escaped_url);
@@ -820,7 +829,8 @@ fullscreen_window_exists(GtkWidget *nw)
 	{
 		WnckWindow *wnck_win = (WnckWindow *)l->data;
 
-		if (wnck_window_is_fullscreen(wnck_win))
+		if (wnck_window_is_fullscreen(wnck_win) &&
+			wnck_window_is_active(wnck_win))
 		{
 			/*
 			 * Sanity check if the window is _really_ fullscreen to
@@ -839,6 +849,17 @@ fullscreen_window_exists(GtkWidget *nw)
 	}
 
 	return FALSE;
+}
+
+GQuark
+notify_daemon_error_quark(void)
+{
+	static GQuark q = 0;
+
+	if (q == 0)
+		q = g_quark_from_static_string("notification-daemon-error-quark");
+
+	return q;
 }
 
 gboolean
@@ -862,6 +883,8 @@ notify_daemon_notify_handler(NotifyDaemon *daemon,
 	gint y = 0;
 	guint return_id;
 	gchar *sender;
+	gchar *sound_file = NULL;
+	gboolean sound_enabled;
 	gint i;
 
 	if (id > 0)
@@ -912,6 +935,63 @@ notify_daemon_notify_handler(NotifyDaemon *daemon,
 		{
 			y = g_value_get_int(data);
 			use_pos_data = TRUE;
+		}
+	}
+
+	/* Deal with sound hints */
+	sound_enabled = gconf_client_get_bool(gconf_client,
+										  GCONF_KEY_SOUND_ENABLED, NULL);
+	data = (GValue *)g_hash_table_lookup(hints, "suppress-sound");
+
+	if (data != NULL)
+	{
+		if (G_VALUE_HOLDS_BOOLEAN(data))
+			sound_enabled = !g_value_get_boolean(data);
+		else if (G_VALUE_HOLDS_INT(data))
+			sound_enabled = (g_value_get_int(data) != 0);
+		else
+		{
+			g_warning("suppress-sound is of type %s (expected bool or int)\n",
+					  g_type_name(G_VALUE_TYPE(data)));
+		}
+	}
+
+	if (sound_enabled)
+	{
+		data = (GValue *)g_hash_table_lookup(hints, "sound-file");
+
+		if (data != NULL)
+		{
+			sound_file = g_value_dup_string(data);
+
+			if (*sound_file == '\0' ||
+				!g_file_test(sound_file, G_FILE_TEST_EXISTS))
+			{
+				g_free(sound_file);
+				sound_file = NULL;
+			}
+		}
+
+		/*
+		 * TODO: If we don't have a sound_file yet, get the urgency hint, then
+		 *       get the corresponding system event sound
+		 *
+		 *       We will need to parse /etc/sound/events/gnome-2.soundlist
+		 *       and ~/.gnome2/sound/events/gnome-2.soundlist.
+		 */
+
+		/* If we don't have a sound file yet, use our gconf default */
+		if (sound_file == NULL)
+		{
+			sound_file = gconf_client_get_string(gconf_client,
+												 GCONF_KEY_DEFAULT_SOUND, NULL);
+			if (sound_file != NULL &&
+				(*sound_file == '\0' ||
+				 !g_file_test(sound_file, G_FILE_TEST_EXISTS)))
+			{
+				g_free(sound_file);
+				sound_file = NULL;
+			}
 		}
 	}
 
@@ -1023,7 +1103,11 @@ notify_daemon_notify_handler(NotifyDaemon *daemon,
 		!fullscreen_window_exists(GTK_WIDGET(nw)))
 	{
 		show_notification(nw);
+		if (sound_file != NULL)
+			sound_play(sound_file);
 	}
+
+	g_free(sound_file);
 
 	return_id = (id == 0 ? _store_notification(daemon, nw, timeout) : id);
 
@@ -1051,9 +1135,15 @@ gboolean
 notify_daemon_close_notification_handler(NotifyDaemon *daemon,
 										 guint id, GError **error)
 {
-	_close_notification(daemon, id, TRUE);
-
-	return TRUE;
+	if (id == 0)
+	{
+		g_set_error(error, notify_daemon_error_quark(), 100,
+					_("%u is not a valid notification ID"), id);
+		return FALSE;
+	} else {
+		_close_notification(daemon, id, TRUE, NOTIFYD_CLOSED_API);
+		return TRUE;
+	}
 }
 
 gboolean
@@ -1081,7 +1171,7 @@ notify_daemon_get_server_information(NotifyDaemon *daemon,
 	*out_name     = g_strdup("Notification Daemon");
 	*out_vendor   = g_strdup("Galago Project");
 	*out_version  = g_strdup(VERSION);
-	*out_spec_ver = g_strdup("0.9");
+	*out_spec_ver = g_strdup("1.0");
 
 	return TRUE;
 }
@@ -1418,6 +1508,8 @@ AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
 
 
 	g_log_set_always_fatal(G_LOG_LEVEL_ERROR | G_LOG_LEVEL_CRITICAL);
+
+	sound_init();
 
 	gconf_client = gconf_client_get_default();
 	gconf_client_add_dir(gconf_client, "/apps",

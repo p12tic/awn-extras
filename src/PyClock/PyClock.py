@@ -80,16 +80,8 @@ class Clock:
         return GotTime[5]
 
   def GetTimeString(self):
-    Hour = str(self.GetTime('H'))
-    Mins = str(self.GetTime('M'))
-    Secs = str(self.GetTime('S'))
-    if len(Hour) == 1:
-        Hour = "0" + Hour
-    if len(Mins) == 1:
-        Mins = "0" + Mins
-    if len(Secs) == 1:
-        Secs = "0" + Secs
-    return Hour + ":" + Mins + ":" + Secs
+    now = time.localtime()
+    return time.asctime(now)
 
   def SetTittle(self, applet):
     applet.title.show (applet, self.GetTimeString())

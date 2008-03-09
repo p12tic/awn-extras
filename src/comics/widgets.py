@@ -186,7 +186,7 @@ class ScalableWindow(gtk.Window, Scalable):
 	def update_shadow_offset(self):
 		"""Change size and reposition children when shadow_offset has
 		changed."""
-		self.canvas_size = self.canvas_size				
+		self.canvas_size = self.canvas_size
 		self.layout.foreach(self.reposition_child)
 	
 	def __init__(self):
@@ -277,7 +277,10 @@ class ScalableWindow(gtk.Window, Scalable):
 		if self.window:
 			# Create background Pixmap
 			width, height = self.size_request()
-			w, h = self.background.get_size() if self.background else (0, 0)
+			if self.background:
+				w, h = self.background.get_size()
+			else:
+				w, h = (0, 0)
 			if (w, h) != (width, height):
 				del self.background
 				self.background = gtk.gdk.Pixmap(self.window, width,

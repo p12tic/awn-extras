@@ -191,9 +191,10 @@ class Feed(gobject.GObject):
 			return
 		
 		try:
-			self.feed = feedparser.parse(o.filename)
-		except:
-			self.emit('updated', Feed.DOWNLOAD_NOT_FEED)
+			try:
+				self.feed = feedparser.parse(o.filename)
+			except:
+				self.emit('updated', Feed.DOWNLOAD_NOT_FEED)
 		finally:
 			os.remove(o.filename)
 		

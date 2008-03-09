@@ -39,7 +39,7 @@ from downloader import Downloader
 from shared import SHARE_DIR, USER_DIR, SYS_FEEDS_DIR, USER_FEEDS_DIR, \
 	GLADE_DIR, PIXMAPS_DIR, feeds
 from settings import Settings
-from strptime import c_strptime as strptime
+from time import strptime
 
 GLADE_FILE = os.path.join(GLADE_DIR, 'add.glade')
 

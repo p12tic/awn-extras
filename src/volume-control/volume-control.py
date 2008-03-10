@@ -1,40 +1,42 @@
-"""
---------------------------------------------------------------------------------
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License version 2 as
- published by the Free Software Foundation
-
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.    See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with this program; if not, write to the Free Software
- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA    02111-1307    USA
---------------------------------------------------------------------------------
-
- The icons of the "Black" icon theme are licensed under a
- Creative Commons Attribution-Share Alike 3.0 License.
---------------------------------------------------------------------------------
-
-Name:                volume-control.py
-Version:         0.5.
-Date:                September/October 2007
-Description: A python Applet for the avant-windows-navigator to control the volume.
-
-Authors:         Richard "nazrat" Beyer
-                         Jeff "Jawbreaker" Hubbard
-                         Pavel Panchekha <pavpanchekha@gmail.com>
-"""
-
 #!/usr/bin/python
-import sys, os
-import gobject
+
+#--------------------------------------------------------------------------------
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License version 2 as
+# published by the Free Software Foundation
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.    See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA    02111-1307    USA
+#--------------------------------------------------------------------------------
+
+# The icons of the "Black" icon theme are licensed under a
+# Creative Commons Attribution-Share Alike 3.0 License.
+#--------------------------------------------------------------------------------
+
+# Name:                volume-control.py
+# Version:             1.0
+# Date:                March 2008
+# Description: An applet for awn to control the computer's volume.
+# Authors:        Richard "nazrat" Beyer
+#                 Jeff "Jawbreaker" Hubbard
+#                 Pavel Panchekha <pavpanchekha@gmail.com>
+
+# Listing theme directories and showing icons
+import os
+
+# Drawing the GUI
 import gtk
-from gtk import gdk
+
+# Interaction with AWN
 from awn.extras import AWNLib
 
+# To later import alsaaudio
 alsaaudio = None
 
 class VolumeApplet:
@@ -42,22 +44,33 @@ class VolumeApplet:
         self.awn = awn
         self.awn.settings.require()
 
-        self.theme = "Black"
+        # Scroll to change volume
+        self.awn.connect("scroll-event", self.wheel)
 
+        self.awn.module.get("alsaaudio", {"Ubuntu": "python-alsaaudio",
+            "Gentoo": "dev-python/pyalsaaudio",
+            "Mandriva": "python-alsaaudio"}, self.__init2)
+
+    def __init2(self, module):
+        # Store alsaaudio module
+        global alsaaudio
+        alsaaudio = module
+
+        self.__readSettings()
+
+        self.drawMainDlog()
+        self.drawPrefDlog()
+        self.backend.refresh()
+
+    def __readSettings(self):
+        # Theme
         try:
             self.theme = self.awn.settings["theme"]
         except:
             self.theme = "Tango"
             self.awn.settings["theme"] = "Tango"
 
-        self.awn.connect("scroll-event", self.wheel)
-
-        self.awn.module.get("alsaaudio", {"Ubuntu": "python-alsaaudio"}, self.init2)
-
-    def init2(self, module):
-        global alsaaudio
-        alsaaudio = module
-
+        # Backend
         self.backend = Backend(self)
 
         try:
@@ -65,9 +78,43 @@ class VolumeApplet:
         except:
             self.awn.settings["channel"] = self.backend.setChannel()
 
-        self.drawMainDlog()
-        self.drawPrefDlog()
-        self.backend.setVolume(self.backend.getVolume())
+    def __getIcon(self, name):
+        themepath = os.path.join(os.path.abspath(os.path.dirname(__file__)), \
+            "Themes", self.theme)
+        return self.awn.icon.file(os.path.join(themepath, \
+            "audio-volume-%s.svg" % name))
+
+    def setIcon(self):
+        volume = self.backend.getVolume()
+        if volume > 60 :
+            icon = "high"
+        elif volume > 30 :
+            icon = "medium"
+        elif volume > 0 :
+            icon = "low"
+        else:
+            icon = "muted"
+
+        themepath = os.path.join(os.path.abspath(os.path.dirname(__file__)), \
+            "Themes", self.theme)
+        self.awn.icon.file(os.path.join(themepath, \
+            "audio-volume-%s.svg" % icon))
+
+    def wheel(self, widget=None, event=None):
+        if event.direction == gtk.gdk.SCROLL_UP:
+            self.backend.up()
+        elif event.direction == gtk.gdk.SCROLL_DOWN:
+            self.backend.down()
+
+    def setDevice(self, channel):
+        self.backend.setChannel(channel)
+        self.backend.refresh()
+        self.awn.settings["channel"] = channel
+
+    def setTheme(self, theme):
+        self.theme = theme
+        self.backend.refresh()
+        self.awn.settings["theme"] = theme
 
     def drawMainDlog(self):
         self.main = self.awn.dialog.new("main")
@@ -115,12 +162,12 @@ class VolumeApplet:
         bUp.connect("button-press-event", lambda x, y: self.backend.up())
         bDown.connect("button-press-event", lambda x, y: self.backend.down())
         bMute.connect("button-press-event", lambda x, y: self.backend.mute())
-        bSettings.connect("button-press-event", self.showSettings)
+        bSettings.connect("button-press-event", lambda x, y: self.awn.dialogs.toggle("prefs"))
         volume.connect("value-changed", lambda x: self.backend.setVolume(volume.get_value()))
         volume.connect("scroll-event", self.wheel)
 
     def drawPrefDlog(self):
-        self.prefs = self.awn.dialog.new("secondary", focus=False)
+        self.prefs = self.awn.dialog.new("prefs", focus=False)
         cont = gtk.VBox()
         cont.set_spacing(4)
 
@@ -149,49 +196,8 @@ class VolumeApplet:
 
         self.prefs.add(cont)
 
-        tr = self.themeRefresh
-        dr = self.deviceRefresh
-
-        theme.connect("changed", lambda x: tr(theme.get_active_text()))
-        device.connect("changed", lambda x: dr(device.get_active_text()))
-
-    def setIcon(self):
-        volume = self.backend.getVolume()
-        if volume > 60 :
-            icon = self.getIcon("high")
-        elif volume > 30 :
-            icon = self.getIcon("medium")
-        elif volume > 0 :
-            icon = self.getIcon("low")
-        else:
-            icon = self.getIcon("muted")
-        self.awn.icon.set(icon)
-
-    def wheel(self, widget=None, event=None):
-        if event.direction == gtk.gdk.SCROLL_UP:
-            self.backend.up()
-        elif event.direction == gtk.gdk.SCROLL_DOWN:
-            self.backend.down()
-
-    def showSettings(self, x=None, y=None):
-        self.main.hide()
-        self.prefs.show_all()
-
-    def deviceRefresh(self, channel):
-        self.backend.setChannel(channel)
-        self.backend.setVolume(self.backend.getVolume())
-        self.awn.settings["channel"] = channel
-
-    def themeRefresh(self, theme):
-        self.theme = theme
-        self.backend.setVolume(self.backend.getVolume())
-        self.awn.settings["theme"] = theme
-
-    def themePath(self):
-        return os.path.join(os.path.abspath(os.path.dirname(__file__)), "Themes", self.theme)
-
-    def getIcon(self, name):
-        return self.awn.icon.getFile(os.path.join(self.themePath(), "audio-volume-%s.svg" % name))
+        theme.connect("changed", lambda x: self.setTheme(theme.get_active_text()))
+        device.connect("changed", lambda x: self.setDevice(device.get_active_text()))
 
 class Backend:
     def __init__(self, parent):
@@ -206,6 +212,7 @@ class Backend:
                 self.channel = alsaaudio.mixers()[0]
             except:
                 self.channel = "PCM"
+
         return self.channel
 
     def getVolume(self):
@@ -216,6 +223,9 @@ class Backend:
         self.parent.awn.title.set("Volume: " + str(self.getVolume()) + "%")
         self.parent.setIcon()
         self.parent.main.volume.set_value(value)
+
+    def refresh(self):
+        self.setVolume(self.getVolume())
 
     def up(self):
         self.setVolume(min(100, self.getVolume() + 4))
@@ -235,6 +245,15 @@ class Backend:
         self.parent.setIcon()
 
 if __name__ == "__main__":
-    applet = AWNLib.initiate({"name": "Volume Control Applet", "short": "volume"})
+    # Initiation and metadata
+    applet = AWNLib.initiate({"name": "Volume Control Applet",
+        "short": "volume",
+        "author": "Pavel Panchekha",
+        "email": "pavpanchekha@gmail.com",
+        "description": "An applet to control the computer's volume"})
+
+    # Applet creating
     VolumeApplet(applet)
+
+    # Applet starts
     AWNLib.start(applet)

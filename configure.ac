@@ -246,7 +246,7 @@ AS_AC_EXPAND(LIBDIR, $libdir)
 AS_AC_EXPAND(DATADIR, $datadir)
 AS_AC_EXPAND(LIBEXECDIR, $libexecdir)
 
-DBUS_SERVICES_DIR="/usr/share/dbus-1/services"
+DBUS_SERVICES_DIR=`$PKG_CONFIG --variable=session_bus_services_dir dbus-1`
 AC_SUBST(DBUS_SERVICES_DIR)
 
 icondir="$datarootdir/avant-window-navigator/applets/icons"

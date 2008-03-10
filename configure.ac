@@ -213,7 +213,7 @@ if test "$have_desktop_agnostic" = "yes"; then
     dnl
     AWN_VAPIDIR=`$PKG_CONFIG --variable=vapidir awn`
     if test -n "$AWN_VAPIDIR" -a -f "$AWN_VAPIDIR/awn.vapi"; then
-        VALA_PROG_VALAC(0.1.6)
+        VALA_PROG_VALAC(0.1.7)
         AC_SUBST(AWN_VAPIDIR)
     fi
 fi

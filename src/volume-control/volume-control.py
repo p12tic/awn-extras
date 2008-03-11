@@ -162,7 +162,7 @@ class VolumeApplet:
         bUp.connect("button-press-event", lambda x, y: self.backend.up())
         bDown.connect("button-press-event", lambda x, y: self.backend.down())
         bMute.connect("button-press-event", lambda x, y: self.backend.mute())
-        bSettings.connect("button-press-event", lambda x, y: self.awn.dialogs.toggle("prefs"))
+        bSettings.connect("button-press-event", lambda x, y: self.awn.dialog.toggle("prefs"))
         volume.connect("value-changed", lambda x: self.backend.setVolume(volume.get_value()))
         volume.connect("scroll-event", self.wheel)
 

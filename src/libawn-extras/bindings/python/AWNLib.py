@@ -108,7 +108,7 @@ class Dialogs:
 
         self.__register[dialog] = dlog
 
-    def toggle(self, dialog, force=""):
+    def toggle(self, dialog, force="", once=False):
         """
         Shows a dialog.
 
@@ -117,11 +117,17 @@ class Dialogs:
         @param force: "Hide" or "Show". Whether to force the hiding or showing
                       of the dialog in question.
         @type force: C{string}
+        @param once: Only show or hide one dialog. If a dialog is already
+            opened, and you request that another dialog be toggled, only the
+            open one is hidden. False by default.
+        @type once: C{bool}
         """
 
         force = force.lower()
-        assert force in ("hide", "show"), "Force must be \"hide\" or \"show\""
-        assert dialog in self.__register, "Dialog does not exist"
+        assert force in ("hide", "show", ""), \
+            "Force must be \"hide\", \"show\", or \"\""
+        assert dialog in self.__register, \
+            "Dialog must be registered"
 
         if self.__parent:
             self.__parent.title.hide()
@@ -134,11 +140,16 @@ class Dialogs:
             if self.__register[dialog].is_active() or force == "hide" and \
                 force != "show":
                 self.__register[dialog].hide()
+                self.__current = None
             else:
                 if self.__current:
                     self.__current.hide()
+                    if once:
+                        self.__current = None
+                        return
+
                 self.__register[dialog].show_all()
-                self.__current = dialog
+                self.__current = self.__register[dialog]
 
     def click(self, w=None, e=None):
         """
@@ -146,13 +157,13 @@ class Dialogs:
         """
 
         if e.button == 3 and "menu" in self.__register: # Right click
-            self.show("menu")
+            self.toggle("menu", once=True)
         elif e.button == 2 and "program" in self.__register: # Middle click
-            self.show("program")
+            self.toggle("program", once=True)
         elif e.button == 2 and "secondary" in self.__register: # Middle click
-            self.show("secondary")
+            self.toggle("secondary", once=True)
         elif e.button == 1 and "main" in self.__register:
-            self.show("main")
+            self.toggle("main", once=True)
 
 class Title:
     def __init__(self, parent, text=None):
@@ -501,7 +512,7 @@ class Settings:
             self.get(key)
             self.client.set(key, value)
         except:
-            self.new(key, value, type)
+            self.client.new(key, value, type)
 
     def __get(self, key):
         v = self.client.get(key)
@@ -1154,7 +1165,7 @@ class Applet(awn.AppletSimple):
         self.effects = Effects(self)
 
         # Connect the necessary events to the sub-objects.
-        self.connect("button-press-event", self.dialog.toggle)
+        self.connect("button-press-event", self.dialog.click)
         self.connect("enter-notify-event", self.title.show)
         self.connect("leave-notify-event", self.title.hide)
 

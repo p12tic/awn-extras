@@ -196,7 +196,7 @@ gboolean taskmand_inform_task_ownership(Taskmand *obj, gchar *uid,gchar *id, gch
         {
 	        if ( g_list_find(taskmanager->queue_new_tasks,GINT_TO_POINTER(id_as_long)) ) 
 	        {
-	            if (GPOINTER_TO_INT((g_tree_lookup(taskmanager->grace_period_tree,GINT_TO_POINTER(id_as_long)))==1) )
+	            if (GPOINTER_TO_INT((g_tree_lookup(taskmanager->grace_period_tree,GINT_TO_POINTER(id_as_long)))>=1) )
 	            {
 	                g_message("taskmand: launcher accepted, uid=%s, id=%s\n",uid,id);
 	                taskmanager->queue_new_tasks=g_list_remove(taskmanager->queue_new_tasks,id_as_long);
@@ -290,8 +290,14 @@ gboolean launch_anonymous_launcher(gulong xid)
     timer=time(NULL);                               
     if ( ! check_response_list(taskmanager,xid) )
     {
-        g_message("taskmand: A LAUNCHER TIMED OUT !!!!!!!!!!!!!!!!!! or awn-core still hasn't been fixed\n");
+        g_warning("taskmand: A LAUNCHER TIMED OUT !!!!!!!!!!!!!!!!!! or awn-core still hasn't been fixed\n");
+        gint timeout_tick = GPOINTER_TO_INT(g_tree_lookup(taskmanager->grace_period_tree,GINT_TO_POINTER(xid)));
+        timeout_tick++;
+        g_tree_replace(taskmanager->grace_period_tree,GINT_TO_POINTER(xid),GINT_TO_POINTER(timeout_tick));
+        if (timeout_tick<40)  //FIXME
+          return TRUE;
     }
+    g_tree_remove(taskmanager->grace_period_tree,GINT_TO_POINTER(xid)); 
     remove_from_response_tree(taskmanager,xid);	
     while( awn_config_client_key_lock(taskmanager->applet_list_locking_fd, LOCK_EX))
         g_warning("taskmand: failed to acquire lock\n");
@@ -317,7 +323,7 @@ gboolean launch_anonymous_launcher(gulong xid)
     awn_config_client_set_list(taskmanager->core_config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
                    "applets_list",AWN_CONFIG_CLIENT_LIST_TYPE_STRING,applet_list,NULL);
     awn_config_client_key_lock(taskmanager->applet_list_locking_fd, LOCK_UN  );
-    return TRUE;
+    return FALSE;
 }
 
 void clean_applet_list(void)
@@ -354,13 +360,13 @@ static gboolean _launcher_response_timeout(gpointer * xid_as_pointer)
         g_tree_replace(taskmanager->grace_period_tree,GINT_TO_POINTER(xid),GINT_TO_POINTER(1));
         return TRUE;
     }
-    g_tree_remove(taskmanager->grace_period_tree,GINT_TO_POINTER(xid)); 
     if ( g_list_find(taskmanager->queue_new_tasks,GINT_TO_POINTER(xid)) )
     {
         g_warning("taskmand: not claimed, xid=%lu, starting anonymous launcher\n",xid);
-        launch_anonymous_launcher(xid);        
+        return launch_anonymous_launcher(xid);        
     }
-	return FALSE;
+    g_tree_remove(taskmanager->grace_period_tree,GINT_TO_POINTER(xid)); 
+    return FALSE;
 }
 
 //wnck crap
@@ -383,7 +389,7 @@ static void _window_opened(WnckScreen *screen,WnckWindow *window,Taskman * taskm
         gchar * s_xid=g_strdup_printf("%lu",xid);
         g_signal_emit (G_OBJECT (taskmanager->server), _signals[OFFERED],0, s_xid);    
         taskmanager->queue_new_tasks=g_list_append(taskmanager->queue_new_tasks,GINT_TO_POINTER(xid));
-        g_timeout_add(425,(GSourceFunc)_launcher_response_timeout,GINT_TO_POINTER(xid));	            
+        g_timeout_add(225,(GSourceFunc)_launcher_response_timeout,GINT_TO_POINTER(xid));	            
         g_tree_replace(taskmanager->grace_period_tree,GINT_TO_POINTER(xid),GINT_TO_POINTER(-1));
         g_free(s_xid);
     }        

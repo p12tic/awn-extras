@@ -1,0 +1,6 @@
+[DEFAULT/HTML_engine]
+type = string
+default = webkit
+description = HTML engine to use.
+
+; vim: set ft=dosini :

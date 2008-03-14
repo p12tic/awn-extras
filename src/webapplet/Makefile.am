@@ -20,7 +20,7 @@ webapplet_la_LIBADD =										\
 	$(NULL)
 webapplet_la_LDFLAGS = $(APPLET_LINKER_FLAGS)
 
-CFLAGS =    -I/usr/include/WebKit/ \
+AM_CFLAGS =    -I/usr/include/WebKit/ \
             -lWebKitGtk
 
 EXTRA_DIST=webapplet.schema-ini

@@ -31,7 +31,8 @@ Build-Depends: 	debhelper (>= 5),
 		librsvg2-dev,
 		libsexy-dev,
 		libnotify-dev,
-		libtrackerclient-dev
+		libtrackerclient-dev,
+		libwebkitgdk-dev
 Standards-Version: 3.7.2
 XS-Python-Version: current
 

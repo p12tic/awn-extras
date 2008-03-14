@@ -17,10 +17,11 @@ webapplet_la_SOURCES = \
 webapplet_la_LIBADD =										\
 	$(AWN_LIBS)											\
 	$(top_builddir)/src/libawn-extras/libawn-extras.la	\
+  -lWebKitGtk
 	$(NULL)
 webapplet_la_LDFLAGS = $(APPLET_LINKER_FLAGS)
 
-AM_CFLAGS =    -I/usr/include/WebKit/ \
-            -lWebKitGtk
+AM_CFLAGS +=    -I/usr/include/WebKit/ 
+            
 
-EXTRA_DIST=webapplet.schema-ini
+EXTRA_DIST+=webapplet.schema-ini

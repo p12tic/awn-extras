@@ -261,7 +261,7 @@ AC_SUBST(GCC_FLAGS)
 dnl ==============================================
 dnl GConf
 dnl ==============================================
-if test "$with_gconf" != "no"; then
+if test "$config_backend" = "GConf" -o "$with_gconf" != "no"; then
 AC_PATH_PROG(GCONFTOOL, gconftool-2, no)
   if test x"$GCONFTOOL" = xno; then
     AC_MSG_ERROR([gconftool-2 executable not found in your path - should be installed with GConf])

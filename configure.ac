@@ -68,7 +68,7 @@ AM_CONDITIONAL(WITH_GCONF, test "$with_gconf" != "no")
 AM_CONDITIONAL(WITH_GNOME, test "$with_gnome" != "no")
 
 # all
-PKG_CHECK_MODULES(AWN, [awn])
+PKG_CHECK_MODULES(AWN, [awn >= 0.2.6])
 #trash
 PKG_CHECK_MODULES(LIBGLADE, [libglade-2.0])
 # awn-notification-daemon, shiny-switcher, standalone-launcher, switcher, taskmand

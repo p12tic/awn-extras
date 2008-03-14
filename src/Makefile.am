@@ -60,6 +60,7 @@ SUBDIRS =			\
 	Taskmand-applet		\
 	tsclient-applet		\
 	volume-control		\
+	webapplet		\
 	wobblyzini		\
 	$(GCONF_APPLETS)	\
 	$(VALA_APPLETS)		\

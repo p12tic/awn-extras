@@ -21,9 +21,6 @@
 #include <config.h>
 #endif
 
-#include <libawn/awn-config-client.h>
-#include <libawn/awn-vfs.h>
-
 #define GCONF_MENU "/apps/avant-window-navigator/applets/webapplet"
 
 #define CONFIG_KEY(key) GCONF_MENU "/" key
@@ -39,24 +36,13 @@
 #include <glib.h>
 
 #include <libawn-extras/awn-extras.h>
-#include <webkit/webkitwebview.h>
 
-typedef struct
-{
-    AwnApplet   *applet;
-    GtkWidget   *mainwindow;
-    GdkPixbuf   *icon;  
-    GtkWidget   *box;
-    GtkWidget   *viewer;
-  
-    gint        applet_icon_height;
-    gchar       *applet_icon_name;
-}WebApplet;
+#include "engine_html.h"
+#include "applet.h"
 
 
 static gboolean _show_prefs (GtkWidget *widget, GdkEventButton *event, WebApplet * webapplet)
 {
-
 	return TRUE;
 }
 
@@ -67,11 +53,10 @@ static void awn_html_dialog_new(WebApplet * webapplet)
     webapplet->box = gtk_vbox_new(FALSE,1);
     gtk_widget_set_size_request (GTK_WIDGET (webapplet->box),860,510);
     //gtk_widget_set_size_request (GTK_WIDGET (webapplet->mainwindow),300,300);
-    webapplet->viewer = webkit_web_view_new(); 
+    webapplet->viewer = html_web_view_new(); 
     gtk_container_add (GTK_CONTAINER(webapplet->box),webapplet->viewer);
     gtk_container_add (GTK_CONTAINER(webapplet->mainwindow),webapplet->box);
-    webkit_web_view_open(WEBKIT_WEB_VIEW(webapplet->viewer),"http://awn.planetblur.org");    
-
+    html_web_view_open(webapplet->viewer,"http://awn.planetblur.org");    
 }
 
 
@@ -145,13 +130,13 @@ static void _bloody_thing_has_style(GtkWidget *widget,WebApplet *webapplet)
 	awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (webapplet->applet),webapplet->icon);
 	g_signal_connect (G_OBJECT (webapplet->applet), "button-press-event",G_CALLBACK (_button_clicked_event), webapplet);
 	g_signal_connect(G_OBJECT(webapplet->mainwindow),"focus-out-event",G_CALLBACK (_focus_out_event),webapplet);
-
 }
 
 AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
 {
 	GdkPixbuf *icon;
 	g_on_error_stack_trace (NULL);
+  html_init();  
 	WebApplet * webapplet = g_malloc(sizeof(WebApplet) );
   webapplet->applet= AWN_APPLET (awn_applet_simple_new (uid, orient, height));
 	gtk_widget_set_size_request (GTK_WIDGET (webapplet->applet), height, -1);
@@ -170,6 +155,5 @@ AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
 	gtk_window_set_focus_on_map (GTK_WINDOW (webapplet->mainwindow), TRUE);
 	g_signal_connect_after (G_OBJECT (webapplet->applet), "realize", G_CALLBACK (_bloody_thing_has_style), webapplet);
 	return webapplet->applet;
-
 }
 

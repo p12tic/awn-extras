@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007   Rodney (moonbeam) Cryderman <rcryderman@gmail.com>
+ * Copyright (c) 2008   Rodney (moonbeam) Cryderman <rcryderman@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -16,24 +16,28 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
+#ifndef __ENGINE_HTML_H
  
- 
- #ifndef __WEBAPPLET_APPLET
- 
-#define __WEBAPPLET_APPLET
+#define __ENGINE_HTML_H
 
-#include <libawn/awn-applet.h>
+#include <gtk/gtk.h>
+
+enum
+{
+  ENGINE_WEBKIT   
+};
+
+typedef void (*html_web_view_open_fn)(GtkWidget * viewer,const gchar * uri);
+typedef GtkWidget * (*html_web_view_new_fn)(void);
 
 typedef struct
 {
-    AwnApplet   *applet;
-    GtkWidget   *mainwindow;
-    GdkPixbuf   *icon;  
-    GtkWidget   *box;
-    GtkWidget   *viewer;
+      html_web_view_open_fn   _html_web_view_open;
+      html_web_view_new_fn    _html_web_view_new;
   
-    gint        applet_icon_height;
-    gchar       *applet_icon_name;
-}WebApplet;
+}FunctionList;  
 
-#endif 
+void html_web_view_open(GtkWidget * viewer,const gchar * uri);
+GtkWidget * html_web_view_new(void);
+
+#endif

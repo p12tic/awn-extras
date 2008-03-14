@@ -17,23 +17,13 @@
  * Boston, MA 02111-1307, USA.
  */
  
+
+#ifndef __ENGINE_WEBKIT_H
  
- #ifndef __WEBAPPLET_APPLET
- 
-#define __WEBAPPLET_APPLET
+#define __ENGINE_WEBKIT_H
 
-#include <libawn/awn-applet.h>
+#include "engine_html.h"
 
-typedef struct
-{
-    AwnApplet   *applet;
-    GtkWidget   *mainwindow;
-    GdkPixbuf   *icon;  
-    GtkWidget   *box;
-    GtkWidget   *viewer;
-  
-    gint        applet_icon_height;
-    gchar       *applet_icon_name;
-}WebApplet;
+void wrapper_webkit_init_engine(FunctionList *function_list);
 
-#endif 
+#endif

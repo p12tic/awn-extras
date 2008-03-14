@@ -439,6 +439,8 @@ src/weather/locale/nn/LC_MESSAGES/Makefile
 src/weather/locale/pt/Makefile
 src/weather/locale/pt/LC_MESSAGES/Makefile
 src/weather/weather.desktop.in
+src/webapplet/Makefile
+src/webapplet/webapplet.desktop.in
 src/wobblyzini/Makefile
 src/wobblyzini/wobblyzini.desktop.in
 src/wobblyzini/icons/Makefile

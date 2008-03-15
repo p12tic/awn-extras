@@ -46,19 +46,22 @@ class ShowDesktopButton (awn.AppletSimple):
         if height != icon.get_height():
             icon = icon.scale_simple(height,height,gtk.gdk.INTERP_BILINEAR)
         self.set_icon(icon)
+        self.title = awn.awn_title_get_default ()
         self.connect ("button-press-event", self.__on_button_press)
-        self.connect("enter-notify-event", self.__enter_notify)
-        self.connect("leave-notify-event", self.__leave_notify)
+        self.connect ("enter-notify-event", self.enter_notify)
+        self.connect ("leave-notify-event", self.leave_notify)
 
     def __on_button_press(self,widget, event):
         screen = wnck.screen_get_default()
         screen.toggle_showing_desktop(not screen.get_showing_desktop())
 
-    def __enter_notify(self, widget, event):
-        self.title.show(self, "Test python applet")
+    def enter_notify (self, widget, event):
+        self.title.show (self, "Show Desktop")
+      # print "show title"
 
-    def __leave_notify(self, widget, event):
+    def leave_notify (self, widget, event):
         self.title.hide (self)
+      # print "hide title"
 
 if __name__ == '__main__':
     awn.init (sys.argv[1:])

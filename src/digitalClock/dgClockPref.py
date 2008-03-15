@@ -9,7 +9,7 @@ import subprocess
 class dgClockPref:
 
   #glade path
-  glade_path = os.path.join(os.path.expanduser('~'), ".config/awn/applets/digitalClock/pref.glade")
+  glade_path = os.path.join((os.path.dirname(__file__)), "pref.glade")
 
   #gconf path
   gconf_path        = "/apps/avant-window-navigator/applets/digitalClock"

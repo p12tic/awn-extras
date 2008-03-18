@@ -42,6 +42,7 @@ if WITH_GNOME
 GCONF_APPLETS +=	\
 	MiMenu		\
 	pandora			\
+	rtm	\
 	$(NULL)
 endif
 if WITH_WEBKIT

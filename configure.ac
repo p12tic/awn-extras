@@ -393,6 +393,8 @@ src/python-test/python-test.desktop.in
 src/quit-applet/Makefile
 src/quit-applet/icons/Makefile
 src/quit-applet/quit-applet.desktop.in
+src/rtm/Makefile
+src/rtm/rtm.desktop.in
 src/separator/Makefile
 src/separator/separator.desktop.in
 src/shiny-switcher/Makefile

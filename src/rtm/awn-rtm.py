@@ -139,7 +139,7 @@ class App (awn.AppletSimple):
     about_dialog = gtk.AboutDialog()
     about_dialog.set_logo(gtk.gdk.pixbuf_new_from_file(os.path.dirname (__file__) + '/rtm.png'))
     about_dialog.set_name("RTM Applet")
-    about_dialog.set_version("0.1")
+    about_dialog.set_version("0.2")
     about_dialog.set_copyright("Copyright 2008 LGPL")
   # about_dialog.set_license("LGPL")
     about_dialog.set_comments("RememberTheMilk is an on-line based prodcutivity application, and the RTM Applet brings it to your desktop. RTM Applet is not endorsed or certified by RememberTheMilk.")

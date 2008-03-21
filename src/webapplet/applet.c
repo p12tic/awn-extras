@@ -56,7 +56,7 @@ static void awn_html_dialog_new(WebApplet * webapplet)
     webapplet->viewer = html_web_view_new(); 
     gtk_container_add (GTK_CONTAINER(webapplet->box),webapplet->viewer);
     gtk_container_add (GTK_CONTAINER(webapplet->mainwindow),webapplet->box);
-    html_web_view_open(webapplet->viewer,"http://awn.planetblur.org");    
+    html_web_view_open(webapplet->viewer,"http://www.daylightmap.com/");    
 }
 
 

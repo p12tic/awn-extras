@@ -105,12 +105,12 @@ class CalThread(threading.Thread):
 					cal_date = (y,m,x)
 					if self.applet.integ_text == "Google Calendar":
 						time.sleep(2) # so google doesn't think we're DoS'ing them and require a captcha, and to use less CPU
-					try:			
-						temp_list[cal_date] = self.applet.integration.get_appointments(cal_date,self.applet.url)
-					except:
-						print "Login error: ", sys.exc_info()[0], sys.exc_info()[1]
-					finally:
-						x=x+1
+					#try:			
+					temp_list[cal_date] = self.applet.integration.get_appointments(cal_date,self.applet.url)
+					#except:
+					#	print "Login error: ", sys.exc_info()[0], sys.exc_info()[1]
+					#finally:
+					x=x+1
 			self.list = temp_list
 			self.cache_ready = True
 

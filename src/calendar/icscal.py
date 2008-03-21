@@ -34,10 +34,11 @@ import re
 import string
 # This will allow me to distribute google data services with the calendar applet, which might (?) be a
 # non-Pythonic, bad idea.  
-#here = os.getcwd()
-sys.path.append(os.path.abspath(os.path.dirname(__file__)) + "/icalendar")
 from datetime import datetime
+sys.path.append(os.path.abspath(os.path.dirname(__file__)) + "/icalendar")
 from icalendar import Calendar, Event, UTC, vDatetime
+sys.path.append(os.path.abspath(os.path.dirname(__file__)) + "/dateutil")
+from dateutil.rrule import *
 # locale stuff
 APP="awn-calendar"
 DIR="locale"
@@ -71,15 +72,23 @@ class IcsCal:
 			cal = Calendar.from_string(open(file,'rb').read())
 			for component in cal.walk():
 				if component.name == "VEVENT":
-					# Need to figure out if this thing is for the current day
-					if component['rrule'] != None:
-						print "RRULE Exists"
+					# See if this is a recurring appointment
+					#rrule = None
 					dtstart = component.decoded('dtstart')
 					dtend = component.decoded('dtend')
 					summary = str(component['summary'])
-					text = dtstart.strftime("%I:%M%p") + "-" + dtend.strftime("%I:%M%p") + " " + summary
-					if dtstart.year == year and dtstart.month == month and dtstart.day == x:
-						self.events.append([dtstart.strftime("%H:%M"),text])
+					try:
+						rrule = component.decoded('RRULE')
+						daylist=list(rrulestr(component['RRULE'].ical()))
+						# See if an instance happens to be today.
+						for appt in daylist:
+							if appt.year == year and appt.month == month and appt.day == x:
+								text = dtstart.strftime("%I:%M%p") + "-" + dtend.strftime("%I:%M%p") + " " + summary
+								self.events.append([dtstart.strftime("%H:%M"),text])
+					except KeyError:
+						text = dtstart.strftime("%I:%M%p") + "-" + dtend.strftime("%I:%M%p") + " " + summary
+						if dtstart.year == year and dtstart.month == month and dtstart.day == x:
+							self.events.append([dtstart.strftime("%H:%M"),text])
 		self.events.sort()
 		if len(self.events) == 0:
 			self.events.append([None,_("No appointments")])

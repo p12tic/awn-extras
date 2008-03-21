@@ -5,7 +5,6 @@ dist_calendar_DATA = 				\
 		calendar-gray.png	\
 		calendar-green.png	\
 		calendar-red.png	\
-		icon.png	\
-		x.x		
+		icon.png
 
 calendardir = $(libdir)/awn/applets/calendar/images

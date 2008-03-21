@@ -45,8 +45,8 @@ class EvoCal:
 		for file in os.popen(cmd).readlines():     # run find command
 			name = file[:-1]                       # strip '\n'
 			filelist.append(name)
-			calendar = icscal.IcsCal(self.applet,filelist)
-			return calendar.get_appointments(day,url)
+		calendar = icscal.IcsCal(self.applet,filelist)
+		return calendar.get_appointments(day,url)
 			
 	def open_integrated_calendar(self, when, url):
 		dat = "%02d%02d%02d" % (when[0], (when[1]+1), when[2])

@@ -203,7 +203,7 @@ _add_item (GtkRecentInfo *info, AffStart *start)
 #ifdef LIBAWN_USE_GNOME
 	local_uri = gnome_vfs_get_local_path_from_uri (gtk_recent_info_get_uri (info));
 #elif defined(LIBAWN_USE_XFCE)
-	ThunarVfsPath *path = thunar_vfs_path_new (gtk_recent_info_get_uri (info));
+	ThunarVfsPath *path = thunar_vfs_path_new (gtk_recent_info_get_uri (info), NULL);
 	local_uri = thunar_vfs_path_dup_string (path);
 	thunar_vfs_path_unref (path);
 #else

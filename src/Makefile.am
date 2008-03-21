@@ -42,8 +42,14 @@ if WITH_GNOME
 GCONF_APPLETS +=	\
 	MiMenu		\
 	pandora			\
+	rtm	\
 	$(NULL)
 endif
+if WITH_WEBKIT
+WEBKIT_APPLETS = \
+	webapplet	\
+	$(NULL)
+endif	
 
 SUBDIRS =			\
 	libawn-extras		\
@@ -63,4 +69,5 @@ SUBDIRS =			\
 	wobblyzini		\
 	$(GCONF_APPLETS)	\
 	$(VALA_APPLETS)		\
+	$(WEBKIT_APPLETS)	\
 	$(NULL)

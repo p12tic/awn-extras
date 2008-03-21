@@ -18,22 +18,8 @@
  */
  
  
- #ifndef __WEBAPPLET_APPLET
+#ifndef __CONF_H
  
-#define __WEBAPPLET_APPLET
+#define __CONF_H
 
-#include <libawn/awn-applet.h>
-
-typedef struct
-{
-    AwnApplet   *applet;
-    GtkWidget   *mainwindow;
-    GdkPixbuf   *icon;  
-    GtkWidget   *box;
-    GtkWidget   *viewer;
-  
-    gint        applet_icon_height;
-    gchar       *applet_icon_name;
-}WebApplet;
-
-#endif 
+#endif

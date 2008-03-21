@@ -151,6 +151,15 @@ class Dialogs:
                 self.__register[dialog].show_all()
                 self.__current = self.__register[dialog]
 
+    def hide(self):
+        """
+        Hide all dialogs.
+        """
+
+        if self.__current:
+            self.__current.hide()
+            self.__current = None
+
     def click(self, w=None, e=None):
         """
         Responds to click events. Only called by GTK.
@@ -315,6 +324,7 @@ class Icon:
             if h2 != h:
                 icon = icon.scale_simple(w2, h2, gtk.gdk.INTERP_BILINEAR)
         self.__parent.set_temp_icon(icon)
+        self.__parent.show()
 
     def hide(self):
         """
@@ -847,6 +857,20 @@ class KeyRing:
             k.set(name, pwd, attrs, type)
         return k
 
+    def fromToken(self, token):
+        """
+        Load the key with the given token.
+
+        @param token: The password token of the key
+        @type token: C{int} or C{long}
+        @return: A new L{Key} object
+        @rtype: L{Key}
+        """
+
+        k = self.Key(self.__keyring)
+        k.token = token
+        return k
+
     class Key(object):
         def __init__(self, keyring, token=0):
             """
@@ -906,16 +930,16 @@ class KeyRing:
             return self.__keyring.item_set_attributes_sync(None, self.token, a)
 
         def __getName(self):
-            return self.get().get_display_name()
+            return self.__get().get_display_name()
 
         def __setName(self, name):
-            self.get().set_display_name(name)
+            self.__get().set_display_name(name)
 
         def __getPass(self):
-            return self.get().get_secret()
+            return self.__get().get_secret()
 
         def __setPass(self, passwd):
-            self.get().set_secret(passwd)
+            self.__get().set_secret(passwd)
 
         attrs = property(__getAttrs, __setAttrs)
         """

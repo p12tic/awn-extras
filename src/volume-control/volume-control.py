@@ -250,7 +250,8 @@ if __name__ == "__main__":
         "short": "volume",
         "author": "Pavel Panchekha",
         "email": "pavpanchekha@gmail.com",
-        "description": "An applet to control the computer's volume"})
+        "description": "An applet to control the computer's volume",
+        "type": ["Audio", "Midi"]})
 
     # Applet creating
     VolumeApplet(applet)

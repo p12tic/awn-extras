@@ -19,143 +19,181 @@
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
 
+# AWN API
 from awn.extras import AWNLib
-import gobject
+
+#GUI
 import gtk
-from gtk import gdk
+
+# Decrufting subject lines
 import re
+
+# Path stuff
 import os
+
+# Launching the browser and email client
 import subprocess
 
+# For later AWNLib-mediated import
 feedparser = None
 
 class MailError(Exception):
+    """
+    Because networks never crash or anything, right?
+    """
+
     def __init__(self, type):
         self.type = type
 
     def __str__(self):
+        """
+        TODO: More descriptive text?
+        """
+
         return "The Mail applet had an error while trying to %s" % self.type
 
-class Applet:
-    def __init__(self):
-        self.awn = AWNLib.initiate({"name": "Mail Applet", "short": "mail"})
-        self.awn.settings.require()
-        self.awn.keyring.require()
-        self.awn.notify.require()
+class MailApplet:
+    def __init__(self, awn):
+        # Interface with AWN
+        self.awn = awn
+
+        self.awn.settings.require() # Settings like mail backend and login
+        self.awn.keyring.require() # Secure login remembering
+        self.awn.notify.require() # "You have # new messages"
 
         try:
             self.back = getattr(Backends(), self.awn.settings["backend"])
+            # Backends has a number of classes as attributes
+            # The setting has the name, as a string, of one of them
         except:
             self.back = Backends().GMail
             self.awn.settings["backend"] = "GMail"
-
-        # The Joy of Python - Pavel Panchekha
-        # A haiku
-        #
-        #       Python is real cool
-        # First class classes are awesome
-        #        Joy and happiness
-        #
+            # If you can't find the setting, assign a default one.
 
         try:
             self.theme = self.awn.settings["theme"]
+            # Set the theme...
         except:
             self.theme = "Tango"
             self.awn.settings["theme"] = "Tango"
+            # ... or at least a default
 
         try:
             self.hide = self.awn.settings["hide"]
+            # Whether to autohide
         except:
             self.hide = False
             self.awn.settings["hide"] = False
+            # No by default
 
         self.awn.title.set("Mail Applet (Click to Log In)")
-        self.awn.icon.set(self.getIcon("login"))
+        self.__setIcon("login")
         self.awn.module.get("feedparser", { \
             "Debian/Ubuntu": "python-feedparser", \
             "Gentoo": "dev-python/feedparser", \
             "OpenSUSE": "python-feedparser"},
-            self.init2)
+            self.__init2)
 
-    def init2(self, module=None, force=False):
+    def __init2(self, module):
         global feedparser
         if module:
             feedparser = module
 
+        self.login()
+
+    def login(self, force=False):
         if force:
             return self.drawPWDDlog()
+        # If we're forcing initiation, just draw the dialog
+        # We wouldn't be forcing if we want to use the saved login token
 
         self.drawPrefDlog()
 
         try:
             token = self.awn.settings["login-token"]
-            if self.awn.settings["login-token"] == 0:
-                raise Exception
         except:
-            self.drawPWDDlog()
-        else:
-            key = self.awn.keyring.new()
-            key.token = token
-            self.awn.notify.send("Mail Applet", "Logging in as %s" % key.name, \
-                self.getIconPath("login", full=True))
-            self.submitPWD(key)
+            self.login(True)
 
-    def submitPWD(self, key, dlog=None):
-        if dlog:
-            dlog.hide()
+        if token == 0:
+            self.login(True)
+        # Force login if the token is 0, which we take to mean that there
+        # is no login information. We'd delete the key, but that's not
+        # always supported.
 
+        key = self.awn.keyring.fromToken(token)
+
+        self.submitPWD(key)
+
+    def logout(self):
+        self.timer.stop()
+        self.__setIcon("login")
+        self.awn.settings["login-token"] = 0
+        self.login(True)
+
+    def submitPWD(self, key):
         try:
-            self.mail = self.back(key)
-            self.mail.update()
-        except MailError:
-            #print "Mail Applet: Login unsuccessful"
+            self.mail = self.back(key) # Login
+            self.mail.update() # Update
+
+            # Either of the operations can go wrong.
+        except:
+            # Login has failed
             self.drawPWDDlog(True)
+
         else:
-            #print "Mail Applet: Login successful"
-            self.awn.icon.set(self.getIcon("read"))
+            self.awn.notify.send("Mail Applet", \
+                "Logging in as %s" % key.attrs["username"], \
+                self.__getIconPath("login", full=True))
+
+            # Login successful
+            self.__setIcon("read")
 
             self.awn.settings["login-token"] = key.token
 
             self.timer = self.awn.timing.time(self.refresh, 30)
             self.refresh()
 
-    def refresh(self, widget=None):
+    def refresh(self, x=None):
         olen = len(self.mail.subjects)
+        # Previous number of subject lines
+
         try:
             self.mail.update()
         except MailError, (err):
             self.awn.icon.set(self.getIcon("error"))
             self.drawErrorDlog(err)
-            return False
+            return
 
         if len(self.mail.subjects) > olen:
+            # Its a crappy heuristic, but you know, it works well enough,
+            # and I'm too lazy to code a better one.
+
             self.awn.notify.send("New Mail - Mail Applet", \
                 "You have %s new mail" % str(len(self.mail.subjects) - olen), \
-                self.getIconPath("unread", full=True))
+                self.__getIconPath("unread", full=True))
+            # Show the new mail dialog
+
             self.awn.effects.notify()
+            # Do the "attention" effect
+
         self.awn.title.set("%d Unread Message%s" % \
                 (len(self.mail.subjects), len(self.mail.subjects) \
                 != 1 and "s" or ""))
-        self.awn.icon.set(self.getIcon(len(self.mail.subjects) > 0 and \
-            "unread" or "read"))
+        # Yes, I even correct for the Messages/Message
+        # Its little things like that that waste your time. w/e
+
+        self.__setIcon(len(self.mail.subjects) > 0 and "unread" or "read")
 
         if self.hide and len(self.mail.subjects) == 0:
-            print "hiding"
             self.awn.icon.hide()
 
-        if self.awn.dialog.main:
-            self.awn.dialog.main.hide()
+        self.awn.dialog.hide()
         self.drawMainDlog()
 
-    def logout(self):
-        self.awn.icon.set(self.getIcon("login"))
-        self.awn.settings["login-token"] = 0
-        self.drawPWDDlog()
+    def __setIcon(self, name):
+        self.awn.icon.file(self.__getIconPath(name))
 
-    def getIcon(self, name):
-        return self.awn.icon.getFile(self.getIconPath(name))
-
-    def getIconPath(self, name, full=False):
+    def __getIconPath(self, name, full=False):
         files = {
                 "error": "Themes/%s/error.svg" % self.theme,
                 "login": "Themes/%s/login.svg" % self.theme,
@@ -165,21 +203,28 @@ class Applet:
         if not full:
             return files[name]
         else:
-            return os.path.join(os.path.abspath(os.path.dirname(__file__)), files[name])
+            return os.path.join(os.path.abspath(os.path.dirname(__file__)), \
+                files[name])
 
-    def showWeb(self):
+    def __showWeb(self):
         if hasattr(self.mail, "showWeb"):
             self.mail.showWeb()
         elif hasattr(self.mail, "url"):
             subprocess.Popen(["xdg-open", self.mail.url()])
 
-    def showDesk(self):
+    def __showDesk(self):
         if hasattr(self.mail, "showDesk"):
             self.mail.showDesk()
         else:
             subprocess.Popen(['evolution', '-c', 'mail'])
+            # Now if xdg-open had an option to just open the email client,
+            # not start composing a message, that you be just wonderful.
 
     def drawMainDlog(self):
+        """
+        TODO: Convert to VBox
+        """
+
         dlog = self.awn.dialog.new("main")
         dlog.set_title(" %d Unread Message%s " % \
                 (len(self.mail.subjects), len(self.mail.subjects) \
@@ -211,20 +256,27 @@ class Applet:
 
         btnlayout = gtk.Table()
         btnlayout.resize(1, 5)
-        button1 = gtk.Button()
-        button1.set_relief(gtk.RELIEF_NONE) # Found it; that's a relief
-        button1.connect("clicked", lambda x: self.showWeb())
-        button1.set_image(gtk.image_new_from_stock(gtk.STOCK_NETWORK, \
-            gtk.ICON_SIZE_BUTTON))
-        btnlayout.attach(button1, 0, 1, 0, 1)
 
+        if hasattr(self.mail, "url") or hasattr(self.mail, "showWeb"):
+            # Don't show the button if it doesn't do anything
+
+            # This'll be the "show web interface" button
+            button1 = gtk.Button()
+            button1.set_relief(gtk.RELIEF_NONE) # Found it; that's a relief
+            button1.connect("clicked", lambda x: self.__showWeb())
+            button1.set_image(gtk.image_new_from_stock(gtk.STOCK_NETWORK, \
+                gtk.ICON_SIZE_BUTTON))
+            btnlayout.attach(button1, 0, 1, 0, 1)
+
+        # This is the "show desktop client" button
         button2 = gtk.Button()
         button2.set_relief(gtk.RELIEF_NONE)
-        button2.connect("clicked", lambda x: self.showDesk())
+        button2.connect("clicked", lambda x: self.__showDesk())
         button2.set_image(gtk.image_new_from_stock(gtk.STOCK_DISCONNECT, \
             gtk.ICON_SIZE_BUTTON))
         btnlayout.attach(button2, 1, 2, 0, 1)
 
+        # Refresh button
         button3 = gtk.Button()
         button3.set_relief(gtk.RELIEF_NONE)
         button3.connect("clicked", lambda x: self.refresh())
@@ -232,13 +284,16 @@ class Applet:
             gtk.ICON_SIZE_BUTTON))
         btnlayout.attach(button3, 2, 3, 0, 1)
 
+        # Show preferences
         button4 = gtk.Button()
         button4.set_relief(gtk.RELIEF_NONE)
-        button4.connect("clicked", lambda x: self.awn.dialog.secondaryFocus())
+        button4.connect("clicked", \
+            lambda x: self.awn.dialog.toggle("secondary"))
         button4.set_image(gtk.image_new_from_stock(gtk.STOCK_PREFERENCES, \
             gtk.ICON_SIZE_BUTTON))
         btnlayout.attach(button4, 3, 4, 0, 1)
 
+        # Log out
         button5 = gtk.Button()
         button5.set_relief(gtk.RELIEF_NONE)
         button5.connect("clicked", lambda x: self.logout())
@@ -249,6 +304,10 @@ class Applet:
         layout.attach(btnlayout, 0, 1, 2, 3)
 
     def drawErrorDlog(self, msg=""):
+        """
+        TODO: Convert to VBox
+        """
+
         dlog = self.awn.dialog.new("main")
         dlog.set_title(" Error in Mail Applet ")
 
@@ -276,7 +335,12 @@ class Applet:
         ok.connect("clicked", qu)
 
         dlog.show_all()
+
     def drawPWDDlog(self, error=False):
+        """
+        TODO: Convert to VBox
+        """
+
         dlog = self.awn.dialog.new("main")
         dlog.set_title(" Log In ")
 
@@ -307,12 +371,17 @@ class Applet:
             errmsg.set_use_markup(True)
             table.attach(errmsg, 0, 2, 4, 5)
 
-        submit.connect("clicked", lambda x: \
-            self.submitPWD(self.awn.keyring.new(usrE.get_text(), \
-            pwdE.get_text(), {}, "network"), dlog))
+        def onsubmit(x=None, y=None):
+            dlog.hide()
+            self.submitPWD(self.awn.keyring.new("GMail Applet - %s" \
+                % usrE.get_text(), pwdE.get_text(), \
+                {"username": usrE.get_text()}, "network"))
+
+        submit.connect("clicked", onsubmit)
 
         button4 = gtk.Button(label="Choose Backend")
-        button4.connect("clicked", lambda x: self.awn.dialog.secondaryFocus())
+        button4.connect("clicked", \
+            lambda x: self.awn.dialog.toggle("secondary"))
         table.attach(button4, 0, 2, 5, 6)
 
         dlog.show_all()
@@ -355,21 +424,27 @@ class Applet:
         table.attach(save, 0, 1, 3, 4)
 
         def saveit(self, t, b, h, dlog):
-            if b != -1:
-                self.awn.settings["backend"] = b
-                b = getattr(Backends(), b)
+            dlog.hide()
+
             if t != self.theme and t != -1:
                 self.theme = t
                 self.awn.settings["theme"] = t
                 self.refresh()
-            if b != self.back and b != -1:
-                self.back = b
-                self.init2(force=True)
+
             if h != self.hide:
                 self.awn.settings["hide"] = h
                 self.hide = h
                 self.refresh()
-            dlog.hide()
+
+            if b != -1 and b:
+                self.awn.settings["backend"] = b
+                b = getattr(Backends(), b)
+            else:
+                return
+
+            if b != self.back and b != -1:
+                self.back = b
+                self.logout()
 
         save.connect("clicked", lambda x: saveit(self, \
             theme.get_active_text(), backend.get_active_text(), \
@@ -386,10 +461,11 @@ class Backends:
         def update(self):
             f = feedparser.parse( \
                 "https://%s:%s@mail.google.com/gmail/feed/atom" \
-                 % (self.key.name, self.key.password))
+                 % (self.key.attrs["username"], self.key.password))
 
             if "bozo_exception" in f.keys():
                 raise MailError("login")
+            # Hehe, Google is funny. Bozo exception
 
             class MailItem:
                 def __init__(self, subject, author):
@@ -441,5 +517,11 @@ class Backends:
             pass
 
 if __name__ == "__main__":
-    applet = Applet()
+    applet = AWNLib.initiate({"name": "Mail Applet",
+        "short": "mail",
+        "author": "Pavel Panchekha",
+        "email": "pavpanchekha@gmail.com",
+        "description": "An applet to check one's email",
+        "type": ["Network", "Email"]})
+    applet = MailApplet(applet)
     AWNLib.start(applet.awn)

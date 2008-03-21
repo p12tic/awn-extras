@@ -18,14 +18,6 @@ AC_STDC_HEADERS
 AC_PROG_LIBTOOL
 
 dnl ==============================================
-dnl gconf stuff
-dnl ==============================================
-AC_PATH_PROG(GCONFTOOL, gconftool-2, no)
-if test x"$GCONFTOOL" = xno; then
-  AC_MSG_ERROR([gconftool-2 executable not found in your path - should be installed with GConf])
-fi
-
-dnl ==============================================
 dnl translation support
 dnl ==============================================
 
@@ -72,11 +64,13 @@ dnl
 
 AC_ARG_WITH([gconf], AS_HELP_STRING([--without-gconf],[Disable building/installing applets that need GConf]),,[with_gconf=yes])
 AC_ARG_WITH([gnome], AS_HELP_STRING([--without-gnome],[Disable building/installing applets that require Gnome-specific libraries]),,[with_gnome=yes])
+AC_ARG_WITH([webkit], AS_HELP_STRING([--with-webkit],[Enable building/installing applets that require webkitgtk]),,[with_webkit=no])
 AM_CONDITIONAL(WITH_GCONF, test "$with_gconf" != "no")
 AM_CONDITIONAL(WITH_GNOME, test "$with_gnome" != "no")
+AM_CONDITIONAL(WITH_WEBKIT, test "$with_webkit" != "no")
 
 # all
-PKG_CHECK_MODULES(AWN, [awn])
+PKG_CHECK_MODULES(AWN, [awn >= 0.2.6])
 #trash
 PKG_CHECK_MODULES(LIBGLADE, [libglade-2.0])
 # awn-notification-daemon, shiny-switcher, standalone-launcher, switcher, taskmand
@@ -221,7 +215,7 @@ if test "$have_desktop_agnostic" = "yes"; then
     dnl
     AWN_VAPIDIR=`$PKG_CONFIG --variable=vapidir awn`
     if test -n "$AWN_VAPIDIR" -a -f "$AWN_VAPIDIR/awn.vapi"; then
-        VALA_PROG_VALAC(0.1.6)
+        VALA_PROG_VALAC(0.1.7)
         AC_SUBST(AWN_VAPIDIR)
     fi
 fi
@@ -254,7 +248,7 @@ AS_AC_EXPAND(LIBDIR, $libdir)
 AS_AC_EXPAND(DATADIR, $datadir)
 AS_AC_EXPAND(LIBEXECDIR, $libexecdir)
 
-DBUS_SERVICES_DIR="/usr/share/dbus-1/services"
+DBUS_SERVICES_DIR=`$PKG_CONFIG --variable=session_bus_services_dir dbus-1`
 AC_SUBST(DBUS_SERVICES_DIR)
 
 icondir="$datarootdir/avant-window-navigator/applets/icons"
@@ -269,6 +263,13 @@ AC_SUBST(GCC_FLAGS)
 dnl ==============================================
 dnl GConf
 dnl ==============================================
+if test "$config_backend" = "GConf" -o "$with_gconf" != "no"; then
+AC_PATH_PROG(GCONFTOOL, gconftool-2, no)
+  if test x"$GCONFTOOL" = xno; then
+    AC_MSG_ERROR([gconftool-2 executable not found in your path - should be installed with GConf])
+  fi
+fi
+
 AM_GCONF_SOURCE_2
 
 dnl Please keep in alphabetical order
@@ -392,6 +393,8 @@ src/python-test/python-test.desktop.in
 src/quit-applet/Makefile
 src/quit-applet/icons/Makefile
 src/quit-applet/quit-applet.desktop.in
+src/rtm/Makefile
+src/rtm/rtm.desktop.in
 src/separator/Makefile
 src/separator/separator.desktop.in
 src/shiny-switcher/Makefile
@@ -440,6 +443,8 @@ src/weather/locale/nn/LC_MESSAGES/Makefile
 src/weather/locale/pt/Makefile
 src/weather/locale/pt/LC_MESSAGES/Makefile
 src/weather/weather.desktop.in
+src/webapplet/Makefile
+src/webapplet/webapplet.desktop.in
 src/wobblyzini/Makefile
 src/wobblyzini/wobblyzini.desktop.in
 src/wobblyzini/icons/Makefile

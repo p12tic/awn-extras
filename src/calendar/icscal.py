@@ -72,6 +72,8 @@ class IcsCal:
 			for component in cal.walk():
 				if component.name == "VEVENT":
 					# Need to figure out if this thing is for the current day
+					if component['rrule'] != None:
+						print "RRULE Exists"
 					dtstart = component.decoded('dtstart')
 					dtend = component.decoded('dtend')
 					summary = str(component['summary'])

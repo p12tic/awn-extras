@@ -1369,6 +1369,11 @@ void _window_closed(WnckScreen *screen,WnckWindow *window,Shiny_switcher *shinys
 	image_cache_remove(shinyswitcher->surface_cache,window);
 	if (shinyswitcher->show_right_click)
 		g_tree_remove(shinyswitcher->win_menus,window);	
+    if (!shinyswitcher->got_viewport)
+    {
+        queue_all_render(shinyswitcher);
+    }
+  
 	g_signal_handlers_disconnect_by_func(G_OBJECT(window),G_CALLBACK(_win_state_change),shinyswitcher);
 	g_signal_handlers_disconnect_by_func(G_OBJECT(window),G_CALLBACK(_win_geom_change),shinyswitcher);
 	g_signal_handlers_disconnect_by_func(G_OBJECT(window),G_CALLBACK(_win_ws_change),shinyswitcher);			

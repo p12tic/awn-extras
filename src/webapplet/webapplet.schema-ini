@@ -1,6 +1,9 @@
+[DEFAULT/URI]
+type = string
+default = http://wiki.awn-project.org/Web_Applet
+description = URI
+
 [DEFAULT/HTML_engine]
 type = string
 default = webkit
 description = HTML engine to use.
-
-; vim: set ft=dosini :

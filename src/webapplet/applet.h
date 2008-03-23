@@ -23,17 +23,23 @@
 #define __WEBAPPLET_APPLET
 
 #include <libawn/awn-applet.h>
+#include <libawn/awn-config-client.h>
 
 typedef struct
 {
-    AwnApplet   *applet;
-    GtkWidget   *mainwindow;
-    GdkPixbuf   *icon;  
-    GtkWidget   *box;
-    GtkWidget   *viewer;
-  
-    gint        applet_icon_height;
-    gchar       *applet_icon_name;
+  AwnApplet         *applet;
+  GtkWidget         *mainwindow;
+  GdkPixbuf         *icon;  
+  GtkWidget         *box;
+  GtkWidget         *viewer;
+  AwnConfigClient		*instance_config;  
+  AwnConfigClient		*default_config;  
+
+  gint            applet_icon_height;
+  gchar           *applet_icon_name;
+  gchar           *uri;
 }WebApplet;
+
+#define APPLET_NAME "webapplet"
 
 #endif 

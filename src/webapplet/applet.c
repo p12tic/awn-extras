@@ -21,11 +21,7 @@
 #include <config.h>
 #endif
 
-#define GCONF_MENU "/apps/avant-window-navigator/applets/webapplet"
 
-#define CONFIG_KEY(key) GCONF_MENU "/" key
-
-#define CONFIG_HTML_ENGINE     CONFIG_KEY("HTML_engine")
 
 
 #include <libawn/awn-cairo-utils.h>
@@ -39,24 +35,24 @@
 
 #include "engine_html.h"
 #include "applet.h"
+#include "configuration.h"
 
 
 static gboolean _show_prefs (GtkWidget *widget, GdkEventButton *event, WebApplet * webapplet)
 {
-	return TRUE;
+  return TRUE;
 }
 
 static void awn_html_dialog_new(WebApplet * webapplet)
 {
-    GtkWidget * win=NULL;
-    webapplet->mainwindow = awn_applet_dialog_new (webapplet->applet);
-    webapplet->box = gtk_vbox_new(FALSE,1);
-    gtk_widget_set_size_request (GTK_WIDGET (webapplet->box),860,510);
-    //gtk_widget_set_size_request (GTK_WIDGET (webapplet->mainwindow),300,300);
-    webapplet->viewer = html_web_view_new(); 
-    gtk_container_add (GTK_CONTAINER(webapplet->box),webapplet->viewer);
-    gtk_container_add (GTK_CONTAINER(webapplet->mainwindow),webapplet->box);
-    html_web_view_open(webapplet->viewer,"http://www.daylightmap.com/");    
+  GtkWidget * win=NULL;
+  webapplet->mainwindow = awn_applet_dialog_new (webapplet->applet);
+  webapplet->box = gtk_vbox_new(FALSE,1);
+  gtk_widget_set_size_request (GTK_WIDGET (webapplet->box),640,480);
+  webapplet->viewer = html_web_view_new(); 
+  gtk_container_add (GTK_CONTAINER(webapplet->box),webapplet->viewer);
+  gtk_container_add (GTK_CONTAINER(webapplet->mainwindow),webapplet->box);  
+  html_web_view_open(webapplet->viewer,webapplet->uri);   
 }
 
 
@@ -138,6 +134,7 @@ AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
 	g_on_error_stack_trace (NULL);
   html_init();  
 	WebApplet * webapplet = g_malloc(sizeof(WebApplet) );
+  init_config(webapplet, uid);
   webapplet->applet= AWN_APPLET (awn_applet_simple_new (uid, orient, height));
 	gtk_widget_set_size_request (GTK_WIDGET (webapplet->applet), height, -1);
 	icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), "stock_folder",height-2, 0, NULL);

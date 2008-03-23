@@ -24,6 +24,7 @@
 #define CONFIG_KEY(key) key
 #define CONFIG_URI              CONFIG_KEY("URI")
 #define CONFIG_HTML_ENGINE      CONFIG_KEY("HTML_engine")
+#define CONFIG_LAST_ACCESS      CONFIG_KEY("last_access")
 
 void init_config(WebApplet * webapplet, gchar * uid);
 

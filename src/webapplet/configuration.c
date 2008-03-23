@@ -39,9 +39,18 @@ static char * get_string(WebApplet * webapplet,const gchar * key)
 
 void init_config(WebApplet * webapplet, gchar * uid)
 {
+  GTimeVal time_val;
+  g_get_current_time(&time_val);
+  gchar* date_time =g_time_val_to_iso8601(&time_val);  
 	webapplet->default_config = awn_config_client_new_for_applet (APPLET_NAME, NULL);
   webapplet->instance_config = awn_config_client_new_for_applet (APPLET_NAME, uid);
-
+  
+  awn_config_client_set_string(webapplet->instance_config,AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+                                CONFIG_LAST_ACCESS, date_time, NULL);
+ 
+  
+  
   webapplet->uri=get_string(webapplet,CONFIG_URI);
+  g_free(date_time);
 }
 

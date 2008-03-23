@@ -66,6 +66,7 @@
  */
 static void shiny_switcher_render (cairo_t *cr, int width, int height);
 static gboolean time_handler (Shiny_switcher *shinyswitcher);
+static void queue_all_render(Shiny_switcher *shinyswitcher);
 
 // Events
 static gboolean _expose_event_window(GtkWidget *widget, GdkEventExpose *expose, gpointer data);
@@ -1147,7 +1148,7 @@ void queue_render(Shiny_switcher *shinyswitcher,WnckWorkspace *space)
 	}		
 }
 
-void queue_all_render(Shiny_switcher *shinyswitcher)
+static void queue_all_render(Shiny_switcher *shinyswitcher)
 {
 	GList* wnck_spaces=wnck_screen_get_workspaces(shinyswitcher->wnck_screen);	
 	GList * iter;
@@ -1218,7 +1219,14 @@ void _workspace_change(WnckScreen *screen,WnckWorkspace *previously_active_space
 		render_windows_to_wallpaper(shinyswitcher,act_space);		
 		if (act_space != previously_active_space)
 		{
-			queue_render(shinyswitcher,previously_active_space);
+            if (shinyswitcher->got_viewport)
+            {
+                queue_render(shinyswitcher,previously_active_space);
+            }
+            else
+            {
+                queue_all_render(shinyswitcher);
+            }
 		}			
 	}		
 	else if (act_space)
@@ -1263,7 +1271,14 @@ void _win_geom_change(WnckWindow *window,Shiny_switcher *shinyswitcher)
 	}		
 	if (space)
 	{
-		queue_render(shinyswitcher,space);
+        if (shinyswitcher->got_viewport)
+        {
+            queue_render(shinyswitcher,space);
+        }
+        else
+        {
+            queue_all_render(shinyswitcher);
+        }
 	}		
 	else
 	{

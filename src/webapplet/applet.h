@@ -37,6 +37,10 @@ typedef struct
   gint            applet_icon_height;
   gchar           *applet_icon_name;
   gchar           *uri;
+  
+  int             width;
+  int             height;
+  
 }WebApplet;
 
 #define APPLET_NAME "webapplet"

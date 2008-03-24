@@ -7,3 +7,14 @@ description = URI
 type = string
 default = webkit
 description = HTML engine to use.
+
+[DEFAULT/width]
+type = string
+default = 33%%
+description = Width in %% or px.
+
+[DEFAULT/height]
+type = string
+default = 33%%
+description = height in %% or px.
+

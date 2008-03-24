@@ -26,6 +26,8 @@
 #define CONFIG_URI              CONFIG_KEY("URI")
 #define CONFIG_HTML_ENGINE      CONFIG_KEY("HTML_engine")
 #define CONFIG_LAST_ACCESS      CONFIG_KEY("last_access")
+#define CONFIG_HEIGHT           CONFIG_KEY("height")
+#define CONFIG_WIDTH            CONFIG_KEY("width")
 
 void init_config(WebApplet * webapplet, gchar * uid);
 

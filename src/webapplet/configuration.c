@@ -36,7 +36,47 @@ static char * get_string(WebApplet * webapplet,const gchar * key)
                                                 key, NULL);
   }
   return str;
-}                    
+} 
+
+int get_width(WebApplet * webapplet, gchar * uid)
+{
+  gchar * str = get_string(webapplet,CONFIG_WIDTH);
+  int width;
+  if (g_strrstr(str,"%") )
+  {
+    int screen_width;
+    double percent;
+    screen_width=gdk_screen_get_width (gdk_screen_get_default());
+    percent=g_strtod(str,NULL);
+    width=(int) (screen_width*percent/100.0);    
+  }
+  else
+  {
+    width = (int) g_strtod(str,NULL);
+  }
+  g_free(str);
+  return width;
+}
+
+int get_height(WebApplet * webapplet, gchar * uid)
+{
+  gchar * str = get_string(webapplet,CONFIG_HEIGHT);
+  int height;
+  if (g_strrstr(str,"%") )
+  {
+    int screen_height;
+    double percent;
+    screen_height=gdk_screen_get_height (gdk_screen_get_default());
+    percent=g_strtod(str,NULL);
+    height=(int) (screen_height*percent/100.0);    
+  }
+  else
+  {
+    height = (int) g_strtod(str,NULL);
+  }
+  g_free(str);
+  return height;
+}
 
 void init_config(WebApplet * webapplet, gchar * uid)
 {
@@ -48,10 +88,10 @@ void init_config(WebApplet * webapplet, gchar * uid)
   
   awn_config_client_set_string(webapplet->instance_config,AWN_CONFIG_CLIENT_DEFAULT_GROUP,
                                 CONFIG_LAST_ACCESS, date_time, NULL);
- 
-  
-  
   webapplet->uri=get_string(webapplet,CONFIG_URI);
+  webapplet->width=get_width(webapplet,uid);
+  webapplet->height=get_height(webapplet,uid);  
+  
   g_free(date_time);
 }
 

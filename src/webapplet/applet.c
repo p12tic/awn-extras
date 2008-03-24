@@ -48,7 +48,7 @@ static void awn_html_dialog_new(WebApplet * webapplet)
   GtkWidget * win=NULL;
   webapplet->mainwindow = awn_applet_dialog_new (webapplet->applet);
   webapplet->box = gtk_vbox_new(FALSE,1);
-  gtk_widget_set_size_request (GTK_WIDGET (webapplet->box),640,480);
+  gtk_widget_set_size_request (GTK_WIDGET (webapplet->box),webapplet->width,webapplet->height);
   webapplet->viewer = html_web_view_new(); 
   gtk_container_add (GTK_CONTAINER(webapplet->box),webapplet->viewer);
   gtk_container_add (GTK_CONTAINER(webapplet->mainwindow),webapplet->box);  

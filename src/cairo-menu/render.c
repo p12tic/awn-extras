@@ -498,8 +498,12 @@ void render_drive(Menu_list_item *entry,int max_width)
 
 void _fixup_menus(GtkWidget * node,GtkWidget * subwidget)
 {
-    //printf("_fixup_menus\n");     
-	static int maxheight=600;		/*FIXME*/
+    
+	static int maxheight=-1;
+  
+    if (maxheight==-1)
+        maxheight = gdk_screen_get_height (gdk_screen_get_default())*0.60;	
+    
 	if (!subwidget)
 	{
 		if (node != G_toplevel)	
@@ -546,10 +550,9 @@ GtkWidget *G_cur_menu=NULL;
 
 static gboolean _delayed_show_menu(GtkWidget * subwidget)
 {
-    //printf("_delayed_show_menu\n");
+ 
 	if ((G_cur_menu!=subwidget) && subwidget)
 	{
-        //printf("EXIT _delayed_show_menu\n");        
 		return FALSE;
 	}
 	if (subwidget != G_toplevel)
@@ -576,6 +579,10 @@ static gboolean _delayed_show_menu(GtkWidget * subwidget)
 static gboolean _enter_notify_event(GtkWidget *widget,GdkEventCrossing *event,Mouseover_data *data)  
 {
     //printf("_enter_notify_event\n");
+    int maxheight = gdk_screen_get_height (gdk_screen_get_default())*0.80;	  
+    maxheight = maxheight / (double)(G_cairo_menu_conf.text_size*1.6);
+    maxheight = maxheight * (G_cairo_menu_conf.text_size*1.6) + 2 * G_cairo_menu_conf.border_width;
+  
 	G_cancel_hide_all=TRUE;
 	if ( (gtk_bin_get_child(GTK_BIN(widget))==data->misc) || G_repression)
 	{
@@ -594,20 +601,37 @@ static gboolean _enter_notify_event(GtkWidget *widget,GdkEventCrossing *event,Mo
 		g_timeout_add(500,(GSourceFunc)_delayed_show_menu,G_cur_menu=subwidget);				
 	}		
 	else
-		g_timeout_add(100,(GSourceFunc)_delayed_show_menu,G_cur_menu=subwidget);		
+		g_timeout_add(50,(GSourceFunc)_delayed_show_menu,G_cur_menu=subwidget);		
 
 	gint xpos_sub,tmp,ypos_sub;
 
 	gdk_window_get_origin (widget->parent->parent->window,&xpos_sub, &ypos_sub);    
 	//printf("w = %d , h = %d \n",subwidget->allocation.width,subwidget->allocation.height);
 	
+	if (!GTK_WIDGET_REALIZED(subwidget) )//keeps blank menus from occuring..
+	{
+		gtk_widget_realize(subwidget);
+		gtk_widget_realize(subwidget->parent);		
+		gtk_widget_realize(subwidget->parent->parent);				
+		gtk_widget_show_all(subwidget->parent->parent);	
+		gtk_widget_hide(subwidget->parent->parent);			
+	}  
 	if (subwidget->allocation.height < subwidget->parent->allocation.height) 
 	{
 		gtk_widget_set_size_request(subwidget,-1,subwidget->allocation.height);		
 		gtk_widget_set_size_request(subwidget->parent,-1,subwidget->allocation.height);
 		gtk_widget_set_size_request(subwidget->parent->parent,-1,subwidget->allocation.height);		
 	 	gtk_window_resize(GTK_WINDOW(subwidget->parent->parent),subwidget->allocation.width,subwidget->allocation.height);
-	}		
+	}
+
+    if (subwidget->allocation.height > maxheight)
+    {
+        printf("force resize!!!!!!!!!\n");
+		gtk_widget_set_size_request(subwidget,-1,maxheight);		
+		gtk_widget_set_size_request(subwidget->parent,-1,maxheight);
+		gtk_widget_set_size_request(subwidget->parent->parent,-1,maxheight);
+        gtk_window_resize(GTK_WINDOW(subwidget->parent->parent),subwidget->allocation.width,maxheight);      
+    }
 	tmp=xpos_sub;
 	xpos_sub=xpos_sub+widget->allocation.width*0.99;
 	ypos_sub=widget->allocation.y+ypos_sub-widget->allocation.height/3;
@@ -623,18 +647,14 @@ static gboolean _enter_notify_event(GtkWidget *widget,GdkEventCrossing *event,Mo
 	}			
 	if (xpos_sub + subwidget->allocation.width > G_win_man->x+G_win_man->width)
 	{
+        //This appears to be causing the overlapping menus...
 		xpos_sub=tmp-subwidget->allocation.width;
 		gtk_window_move(GTK_WINDOW(subwidget->parent->parent),xpos_sub,ypos_sub);	
 	}
-	if (!GTK_WIDGET_REALIZED(subwidget) )//keeps blank menus from occuring..
-	{
-		gtk_widget_realize(subwidget);
-		gtk_widget_realize(subwidget->parent);		
-		gtk_widget_realize(subwidget->parent->parent);				
-		gtk_widget_show_all(subwidget->parent->parent);	
-		gtk_widget_hide(subwidget->parent->parent);			
-	}
-    //printf("EXIT _enter_notify_event\n");    
+
+    //printf("EXIT _enter_notify_event\n");   
+    printf("width allocation = %d \n",subwidget->allocation.width);
+    printf("height allocation = %d \n",subwidget->allocation.height);  
 	return TRUE;
 }
 

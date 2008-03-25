@@ -626,7 +626,6 @@ static gboolean _enter_notify_event(GtkWidget *widget,GdkEventCrossing *event,Mo
 
     if (subwidget->allocation.height > maxheight)
     {
-        printf("force resize!!!!!!!!!\n");
 		gtk_widget_set_size_request(subwidget,-1,maxheight);		
 		gtk_widget_set_size_request(subwidget->parent,-1,maxheight);
 		gtk_widget_set_size_request(subwidget->parent->parent,-1,maxheight);
@@ -653,8 +652,6 @@ static gboolean _enter_notify_event(GtkWidget *widget,GdkEventCrossing *event,Mo
 	}
 
     //printf("EXIT _enter_notify_event\n");   
-    printf("width allocation = %d \n",subwidget->allocation.width);
-    printf("height allocation = %d \n",subwidget->allocation.height);  
 	return TRUE;
 }
 

@@ -440,7 +440,7 @@ class DesktopFileManagement : GLib.Object
 		
 	public string Filename()
 	{
-        string fullpath=directory+uid+".desktop";
+        string fullpath="file://"+directory+uid+".desktop";
 		return  fullpath;
 	}
 	

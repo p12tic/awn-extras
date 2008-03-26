@@ -244,7 +244,7 @@ class LauncherApplet : AppletSimple
             if (tempdesk.exists() )
             {                
                 try{
-                    tempdesk.save(directory+config.uid+".desktop");
+                    tempdesk.save("file://"+directory+config.uid+".desktop");
                 }catch(GLib.Error ex){
                     stderr.printf("error writing file %s\n",directory+config.uid+".desktop");
                 }
@@ -270,7 +270,7 @@ class LauncherApplet : AppletSimple
 				icon=temp_icon;
                 desktopitem.set_icon(Filename.from_uri(str) );									
 				try {
-    				desktopitem.save(directory+config.uid+".desktop");				
+    				desktopitem.save("file://"+directory+config.uid+".desktop");				
             	}catch(GLib.Error ex){
             	    stderr.printf("error writing file %s\n",directory+config.uid+".desktop");
             	}

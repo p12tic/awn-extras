@@ -1758,7 +1758,7 @@ class LauncherApplet : AppletSimple
             	}catch(GLib.Error ex){
             	    stderr.printf("error writing file %s\n",desktopfile.Filename());
             	}
-				
+				set_icon(icon);
                 show_icon();
 				status=true;
 			}

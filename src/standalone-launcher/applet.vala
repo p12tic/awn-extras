@@ -1716,7 +1716,6 @@ class LauncherApplet : AppletSimple
                             desktop_key="";
                         }
                         file_copy=GLib.Path.get_dirname(desktopfile.Filename())+"/"+GLib.Path.get_basename(filename);
-                        file_copy=file_copy;    
                         try{
                             tempdesk.save("file://"+file_copy);
                         }catch(GLib.Error ex){

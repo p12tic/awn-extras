@@ -438,9 +438,15 @@ class DesktopFileManagement : GLib.Object
 		this.uid = uid;
 	}
 		
-	public string Filename()
+	public string URI()
 	{
         string fullpath="file://"+directory+uid+".desktop";
+		return  fullpath;
+	}
+
+	public string Filename()
+	{
+        string fullpath=directory+uid+".desktop";
 		return  fullpath;
 	}
 	
@@ -1538,7 +1544,7 @@ class LauncherApplet : AppletSimple
 		desktopitem = new DesktopItem(desktopfile.Filename() );
         desktopitem.set_string ("Type","Application");	
         try{
-            desktopitem.save(desktopfile.Filename());
+            desktopitem.save(desktopfile.URI());
         }catch (GLib.Error ex) {
             stderr.printf("Non Fatal error. failed to write desktop file\n");
         }
@@ -1563,7 +1569,7 @@ class LauncherApplet : AppletSimple
             {
                 desktopitem.set_exec(exec);
                 try{
-                    desktopitem.save(desktopfile.Filename() );
+                    desktopitem.save(desktopfile.URI() );
                 }catch(GLib.Error ex){
                     stderr.printf("error writing file %s\n",desktopfile.Filename());
                 }
@@ -1579,7 +1585,7 @@ class LauncherApplet : AppletSimple
         
         }
         try{
-    		desktopitem.save(desktopfile.Filename() );	
+    		desktopitem.save(desktopfile.URI() );	
     	}catch(GLib.Error ex){
     	    stderr.printf("error writing file %s\n",desktopfile.Filename());
     	}
@@ -1674,7 +1680,7 @@ class LauncherApplet : AppletSimple
                         if ( (tempdesk.get_exec() != null) && (tempdesk.get_name()!=null) )
                         {
                             try{
-                                tempdesk.save(desktopfile.Filename());
+                                tempdesk.save(desktopfile.URI());
                             }catch(GLib.Error ex){
                                 stderr.printf("error writing file %s\n",desktopfile.Filename());
                             }
@@ -1710,6 +1716,7 @@ class LauncherApplet : AppletSimple
                             desktop_key="";
                         }
                         file_copy=GLib.Path.get_dirname(desktopfile.Filename())+"/"+GLib.Path.get_basename(filename);
+                        file_copy="file://"+file_copy;    
                         try{
                             tempdesk.save(file_copy);
                         }catch(GLib.Error ex){
@@ -1747,7 +1754,7 @@ class LauncherApplet : AppletSimple
 				icon=temp_icon;
                 desktopitem.set_icon(Filename.from_uri(str) );									
 				try {
-    				desktopitem.save(desktopfile.Filename() );				
+    				desktopitem.save(desktopfile.URI() );				
             	}catch(GLib.Error ex){
             	    stderr.printf("error writing file %s\n",desktopfile.Filename());
             	}

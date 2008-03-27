@@ -1716,9 +1716,9 @@ class LauncherApplet : AppletSimple
                             desktop_key="";
                         }
                         file_copy=GLib.Path.get_dirname(desktopfile.Filename())+"/"+GLib.Path.get_basename(filename);
-                        file_copy="file://"+file_copy;    
+                        file_copy=file_copy;    
                         try{
-                            tempdesk.save(file_copy);
+                            tempdesk.save("file://"+file_copy);
                         }catch(GLib.Error ex){
                             stderr.printf("error writing file %s\n",file_copy);
                         }
@@ -1737,7 +1737,7 @@ class LauncherApplet : AppletSimple
                         multi_launcher.add_file(file_copy);
                         desktopitem.set_string("X-AWN-StandaloneLauncherDesktops",desktop_key);
                         try{
-                            desktopitem.save(desktopitem.get_filename());
+                            desktopitem.save("file://"+desktopitem.get_filename());
                         }catch(GLib.Error ex){
                             stderr.printf("error writing file %s\n",desktopfile.Filename());
                         }
@@ -1754,7 +1754,7 @@ class LauncherApplet : AppletSimple
 				icon=temp_icon;
                 desktopitem.set_icon(Filename.from_uri(str) );									
 				try {
-    				desktopitem.save("file://"+desktopfile.URI() );				
+    				desktopitem.save(desktopfile.URI() );				
             	}catch(GLib.Error ex){
             	    stderr.printf("error writing file %s\n",desktopfile.Filename());
             	}

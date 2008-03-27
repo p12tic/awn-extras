@@ -1754,7 +1754,7 @@ class LauncherApplet : AppletSimple
 				icon=temp_icon;
                 desktopitem.set_icon(Filename.from_uri(str) );									
 				try {
-    				desktopitem.save(desktopfile.URI() );				
+    				desktopitem.save("file://"+desktopfile.URI() );				
             	}catch(GLib.Error ex){
             	    stderr.printf("error writing file %s\n",desktopfile.Filename());
             	}

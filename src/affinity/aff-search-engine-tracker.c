@@ -122,7 +122,7 @@ _add_results (gchar **data, AffTrackerSearchTerm *term)
 #ifdef LIBAWN_USE_GNOME
 	uri = gnome_vfs_get_uri_from_local_path (data[0]);
 #elif defined(LIBAWN_USE_XFCE)
-    ThunarVfsPath *path = thunar_vfs_path_new (data[0]);
+    ThunarVfsPath *path = thunar_vfs_path_new (data[0], NULL);
     uri = thunar_vfs_path_dup_uri (path);
     thunar_vfs_path_unref (path);
 #else

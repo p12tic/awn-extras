@@ -52,7 +52,12 @@ ___file___ = sys.argv[0]
 # For relative paths to work, we need a way of determining where the
 # User applet is. So this bit of magic works.
 
-class KeyRingError: pass
+class KeyRingError:
+    def __init__(self, str):
+        self.msg = str
+
+    def __str__(self):
+        return self.msg
 # Stupid keyring has quite a few ways to go wrong.
 
 class Dialogs:
@@ -70,12 +75,14 @@ class Dialogs:
         self.__parent = parent
 
 
-    def new(self, dialog, focus=True):
+    def new(self, dialog, title=None, focus=True):
         """
         Create a new AWN dialog
 
         @param dialog: The name to register the dialog under.
         @type dialog: C{string}
+        @param title: The title of the new dialog
+        @type title: C{string}
         @param focus: Whether to force the focus
         @type focus: C{bool}
         @return: The new menu or dialog
@@ -92,6 +99,9 @@ class Dialogs:
         self.register(dialog, dlog)
         if focus and dialog not in ("program", "menu"):
             dlog.connect("focus-out-event", lambda x, y: dlog.hide())
+
+        if dialog not in ("program", "menu") and title:
+            dlog.set_title(title)
 
         return dlog
 
@@ -242,8 +252,8 @@ class Icon:
         @type file: C{string}
         @param set: Whether to also set the icon. True by default.
         @type set: C{bool}
-        @return: The resultant pixbuf
-        @rtype: C{gtk.gdk.Pixbuf} or C{None} (if C{set} is C{True})
+        @return: The resultant pixbuf or None (if C{set} is C{True})
+        @rtype: C{gtk.gdk.Pixbuf} or C{None}
         """
 
         if file[0] != "/":
@@ -265,8 +275,8 @@ class Icon:
         @type name: C{string}
         @param set: Whether to also set the icon. True by default.
         @type set: C{bool}
-        @return: The resultant pixbuf
-        @rtype: C{gtk.gdk.Pixbuf} or C{None} (if C{set} is C{True})
+        @return: The resultant pixbuf or None (if C{set} is C{True})
+        @rtype: C{gtk.gdk.Pixbuf} or C{None}
         """
 
         self.theme = gtk.IconTheme()
@@ -285,8 +295,8 @@ class Icon:
         @type surface: C{cairo.Surface}
         @param set: Whether to also set the icon. True by default.
         @type set: C{bool}
-        @return: The resultant pixbuf
-        @rtype: C{gtk.gdk.Pixbuf} or C{None} (if C{set} is C{True})
+        @return: The resultant pixbuf or None (if C{set} is C{True})
+        @rtype: C{gtk.gdk.Pixbuf} or C{None}
         """
 
         if extras:
@@ -519,9 +529,8 @@ class Settings:
 
     def __set(self, key, value, type="string"):
         try:
-            self.get(key)
             self.client.set(key, value)
-        except:
+        except ValueError, AttributeError:
             self.client.new(key, value, type)
 
     def __get(self, key):
@@ -743,7 +752,10 @@ class Settings:
             @type value: C{bool}, C{int}, C{float}, or C{string}
             """
 
-            f = getattr(self.__client, "set_%s" % self.type(key))
+            try:
+                f = getattr(self.__client, "set_%s" % self.type(key))
+            except:
+                raise ValueError
             f(self.__folder, key, value)
 
         def new(self, key, value, type):
@@ -771,7 +783,10 @@ class Settings:
             @rtype: C{object}
             """
 
-            f = getattr(self.__client, "get_%s" % self.type(key))
+            try:
+                f = getattr(self.__client, "get_%s" % self.type(key))
+            except:
+                raise ValueError
             return f(self.__folder, key)
 
         def delete(self, key):
@@ -783,7 +798,7 @@ class Settings:
             @type key: C{string}
             """
 
-            raise NotImplementedError
+            raise NotImplementedError, "AWNConfig does not support deleting"
 
         def type(self, key):
             """
@@ -823,16 +838,16 @@ class KeyRing:
         self.__keyring = keyring
 
         if not self.__keyring.is_available():
-            raise KeyRingError
+            raise KeyRingError, "Keyring not available"
 
         keyring_list = self.__keyring.list_keyring_names_sync()
 
         if len(keyring_list) == 0:
-            raise KeyRingError
+            raise KeyRingError, "No keyrings available"
         try:
             self.__keyring.get_default_keyring_sync()
-        except:
-            raise KeyRingError
+        except __keyring.NoKeyringDaemonError:
+            raise KeyRingError, "Had trouble connecting to daemon"
 
     def new(self, name=None, pwd=None, attrs={}, type="generic"):
         """

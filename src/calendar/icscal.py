@@ -26,12 +26,19 @@ import gobject
 from StringIO import StringIO
 import datetime
 import time
+from datetime import date
 import subprocess
 import calendarprefs
 import fileinput
 import re
 import string
-
+# This will allow me to distribute google data services with the calendar applet, which might (?) be a
+# non-Pythonic, bad idea.  
+from datetime import datetime
+sys.path.append(os.path.abspath(os.path.dirname(__file__)) + "/icalendar")
+from icalendar import Calendar, Event, UTC, vDatetime
+sys.path.append(os.path.abspath(os.path.dirname(__file__)) + "/dateutil")
+from dateutil.rrule import *
 # locale stuff
 APP="awn-calendar"
 DIR="locale"
@@ -60,81 +67,28 @@ class IcsCal:
 
 	def get_appointments(self, day, url):
 		self.events = []
-		for line in fileinput.input(self.files):
-			if line[:12] == "BEGIN:VEVENT":
-				self.in_event = True
-			elif line[:10] == "END:VEVENT":
-				self.in_event = False
-				if self.start != None and self.end != None and self.summary != None:
-					# Determine if this thing is even for the current day
-					if day == (int(self.start[:4]), int(self.start[4:6]), int(self.start[6:8])):
-						starttext = self.convert_time_to_text(self.start)
-						endtext = self.convert_time_to_text(self.end)
-						eventtext = starttext + "-" + endtext + " " + self.summary
-						self.events.append([self.start,eventtext])
-						self.start = None
-						self.end = None
-						self.summary = None
-			if self.get_start == True:
-				ex = re.compile("[0-9]{8}T[0-9]{6}$")
-				if re.search(ex,line) != None:
-					self.start = line.replace(' ','')
-					self.get_start = False
-			if self.get_end == True:
-				ex = re.compile("[0-9]{8}T[0-9]{6}$")
-				if re.search(ex,line) != None:
-					self.end = line.replace(' ','')
-					self.get_end = False
-			if line[:7] == "DTSTART" and self.in_event == True:
-				# Need to determine if the start time is on this line, or the next.  Evo puts it on a separate line :(
-				ex = re.compile("[0-9]{8}T[0-9]{6}$")
-				if re.search(ex, line) != None:
-					pos = string.find(line,':')
-					if pos > 0:
-						self.start = line[pos+1:-1]
-				else:
-					# First, see if it's an all day event.
-					ex = re.compile("[0-9]{8}$")
-					if re.search(ex,line) != None:
-						# All-day.
-						pos = string.find(line,':')
-						if pos > 0:
-							self.start = line[pos+1:-1]						
-							self.start = self.start + "T000000" 
-					else:
-						ex = re.compile("[:;]$")
-						if re.search(ex,line) != None:
-							self.get_start = True
-						else:
-							# ???
-							self.start = "000000000"
-			#else:
-			#	self.get_start = False
-			if line[:5] == "DTEND" and self.in_event == True:
-				# Need to determine if the end time is on this line, or the next.  Evo puts it on a separate line :(
-				ex = re.compile("[0-9]{8}T[0-9]{6}$")
-				if re.search(ex,line) != None:
-					pos = string.find(line,':')
-					if pos > 0:
-						self.end = line[pos+1:-1]
-				else:
-					# First, see if it's an all day event.
-					ex = re.compile("[0-9]{8}$")
-					if re.search(ex,line) != None:
-						# All-day.
-						pos = string.find(line,':')
-						if pos > 0:
-							self.end = line[pos+1:-1]						
-							self.end = self.end + "T235959" 
-					else:
-						ex = re.compile("[:;]$")
-						if re.search(ex,line) != None:
-							self.get_end = True
-						else:
-							# ???
-							self.end = "000000000"
-			if line[:8] == "SUMMARY:":
-				self.summary = line[8:-1]
+		year,month,x=day
+		for file in self.files:
+			cal = Calendar.from_string(open(file,'rb').read())
+			for component in cal.walk():
+				if component.name == "VEVENT":
+					# See if this is a recurring appointment
+					#rrule = None
+					dtstart = component.decoded('dtstart')
+					dtend = component.decoded('dtend')
+					summary = str(component['summary'])
+					try:
+						rrule = component.decoded('RRULE')
+						daylist=list(rrulestr(component['RRULE'].ical()))
+						# See if an instance happens to be today.
+						for appt in daylist:
+							if appt.year == year and appt.month == month and appt.day == x:
+								text = dtstart.strftime("%I:%M%p") + "-" + dtend.strftime("%I:%M%p") + " " + summary
+								self.events.append([dtstart.strftime("%H:%M"),text])
+					except KeyError:
+						text = dtstart.strftime("%I:%M%p") + "-" + dtend.strftime("%I:%M%p") + " " + summary
+						if dtstart.year == year and dtstart.month == month and dtstart.day == x:
+							self.events.append([dtstart.strftime("%H:%M"),text])
 		self.events.sort()
 		if len(self.events) == 0:
 			self.events.append([None,_("No appointments")])

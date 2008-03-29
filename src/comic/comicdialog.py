@@ -31,7 +31,7 @@ class ComicDialog(gtk.DrawingArea):
 		self.connect("expose_event", self.expose)
 
 	def expose(self,widget,event):
-		icon_name = './dilbert.gif'
+		icon_name = '/tmp/dilbert.gif'
 		icon = gdk.pixbuf_new_from_file(icon_name)
 		dim = [icon.get_width(),icon.get_height()]
 		self.set_size_request(dim[0], dim[1])

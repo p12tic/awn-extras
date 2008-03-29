@@ -3,7 +3,9 @@ APPLET_NAME = webapplet
 include $(top_srcdir)/Makefile.c-applet
 include $(top_srcdir)/Makefile.schemas
 
+
 applet_LTLIBRARIES = webapplet.la
+
 webapplet_la_SOURCES = \
 	applet.c		\
   applet.h    \
@@ -13,7 +15,10 @@ webapplet_la_SOURCES = \
   engine_webkit.h \
   engine_html.c   \
   engine_html.h   \
+  configuration.c \
+  configuration.h \
 	$(NULL)
+
 webapplet_la_LIBADD =										\
 	$(AWN_LIBS)											\
 	$(top_builddir)/src/libawn-extras/libawn-extras.la	\

@@ -325,6 +325,9 @@ src/calendar/google/gdata/calendar/Makefile
 src/calendar/google/gdata/docs/Makefile
 src/calendar/google/gdata/spreadsheet/Makefile
 src/calendar/images/Makefile
+src/calendar/icalendar/Makefile
+src/calendar/dateutil/Makefile
+src/calendar/dateutil/zoneinfo/Makefile
 src/comic/Makefile
 src/comic/comic.desktop.in
 src/comic/images/Makefile

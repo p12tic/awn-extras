@@ -1,21 +1,22 @@
 /*
- * Copyright (c) 2007 (rcryderman@gmail.com) Rodney Cryderman
+ * Copyright (C) 2007, 2008 Rodney Cryderman <rcryderman@gmail.com>
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
- */
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA.
+ *
+*/
+
  
 #define WNCK_I_KNOW_THIS_IS_UNSTABLE 1
 
@@ -66,6 +67,7 @@
  */
 static void shiny_switcher_render (cairo_t *cr, int width, int height);
 static gboolean time_handler (Shiny_switcher *shinyswitcher);
+static void queue_all_render(Shiny_switcher *shinyswitcher);
 
 // Events
 static gboolean _expose_event_window(GtkWidget *widget, GdkEventExpose *expose, gpointer data);
@@ -1147,7 +1149,7 @@ void queue_render(Shiny_switcher *shinyswitcher,WnckWorkspace *space)
 	}		
 }
 
-void queue_all_render(Shiny_switcher *shinyswitcher)
+static void queue_all_render(Shiny_switcher *shinyswitcher)
 {
 	GList* wnck_spaces=wnck_screen_get_workspaces(shinyswitcher->wnck_screen);	
 	GList * iter;
@@ -1218,7 +1220,14 @@ void _workspace_change(WnckScreen *screen,WnckWorkspace *previously_active_space
 		render_windows_to_wallpaper(shinyswitcher,act_space);		
 		if (act_space != previously_active_space)
 		{
-			queue_render(shinyswitcher,previously_active_space);
+            if (shinyswitcher->got_viewport)
+            {
+                queue_render(shinyswitcher,previously_active_space);
+            }
+            else
+            {
+                queue_all_render(shinyswitcher);
+            }
 		}			
 	}		
 	else if (act_space)
@@ -1263,7 +1272,14 @@ void _win_geom_change(WnckWindow *window,Shiny_switcher *shinyswitcher)
 	}		
 	if (space)
 	{
-		queue_render(shinyswitcher,space);
+        if (shinyswitcher->got_viewport)
+        {
+            queue_render(shinyswitcher,space);
+        }
+        else
+        {
+            queue_all_render(shinyswitcher);
+        }
 	}		
 	else
 	{
@@ -1354,6 +1370,11 @@ void _window_closed(WnckScreen *screen,WnckWindow *window,Shiny_switcher *shinys
 	image_cache_remove(shinyswitcher->surface_cache,window);
 	if (shinyswitcher->show_right_click)
 		g_tree_remove(shinyswitcher->win_menus,window);	
+    if (!shinyswitcher->got_viewport)
+    {
+        queue_all_render(shinyswitcher);
+    }
+  
 	g_signal_handlers_disconnect_by_func(G_OBJECT(window),G_CALLBACK(_win_state_change),shinyswitcher);
 	g_signal_handlers_disconnect_by_func(G_OBJECT(window),G_CALLBACK(_win_geom_change),shinyswitcher);
 	g_signal_handlers_disconnect_by_func(G_OBJECT(window),G_CALLBACK(_win_ws_change),shinyswitcher);			

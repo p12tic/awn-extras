@@ -1,31 +1,27 @@
 /*
- * Copyright (c) 2008   Rodney (moonbeam) Cryderman <rcryderman@gmail.com>
+ * Copyright (C) 2008 Rodney Cryderman <rcryderman@gmail.com>
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
- */
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA.
+ *
+*/
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
 
-#define GCONF_MENU "/apps/avant-window-navigator/applets/webapplet"
 
-#define CONFIG_KEY(key) GCONF_MENU "/" key
-
-#define CONFIG_HTML_ENGINE     CONFIG_KEY("HTML_engine")
 
 
 #include <libawn/awn-cairo-utils.h>
@@ -39,24 +35,24 @@
 
 #include "engine_html.h"
 #include "applet.h"
+#include "configuration.h"
 
 
 static gboolean _show_prefs (GtkWidget *widget, GdkEventButton *event, WebApplet * webapplet)
 {
-	return TRUE;
+  return TRUE;
 }
 
 static void awn_html_dialog_new(WebApplet * webapplet)
 {
-    GtkWidget * win=NULL;
-    webapplet->mainwindow = awn_applet_dialog_new (webapplet->applet);
-    webapplet->box = gtk_vbox_new(FALSE,1);
-    gtk_widget_set_size_request (GTK_WIDGET (webapplet->box),860,510);
-    //gtk_widget_set_size_request (GTK_WIDGET (webapplet->mainwindow),300,300);
-    webapplet->viewer = html_web_view_new(); 
-    gtk_container_add (GTK_CONTAINER(webapplet->box),webapplet->viewer);
-    gtk_container_add (GTK_CONTAINER(webapplet->mainwindow),webapplet->box);
-    html_web_view_open(webapplet->viewer,"http://awn.planetblur.org");    
+  GtkWidget * win=NULL;
+  webapplet->mainwindow = awn_applet_dialog_new (webapplet->applet);
+  webapplet->box = gtk_vbox_new(FALSE,1);
+  gtk_widget_set_size_request (GTK_WIDGET (webapplet->box),webapplet->width,webapplet->height);
+  webapplet->viewer = html_web_view_new(); 
+  gtk_container_add (GTK_CONTAINER(webapplet->box),webapplet->viewer);
+  gtk_container_add (GTK_CONTAINER(webapplet->mainwindow),webapplet->box);  
+  html_web_view_open(webapplet->viewer,webapplet->uri);   
 }
 
 
@@ -138,6 +134,7 @@ AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
 	g_on_error_stack_trace (NULL);
   html_init();  
 	WebApplet * webapplet = g_malloc(sizeof(WebApplet) );
+  init_config(webapplet, uid);
   webapplet->applet= AWN_APPLET (awn_applet_simple_new (uid, orient, height));
 	gtk_widget_set_size_request (GTK_WIDGET (webapplet->applet), height, -1);
 	icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), "stock_folder",height-2, 0, NULL);

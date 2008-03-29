@@ -38,7 +38,7 @@ class CalThread(threading.Thread):
 		self.applet = applet
 		self.die = False
 
-	def days_in_month(self,month):
+	def days_in_month(self,month,year):
 		days = 31
 		if month in (4,6,9,11):
 			days = 30
@@ -71,7 +71,7 @@ class CalThread(threading.Thread):
 		return self.list[cal_date]
 		
 	def get_days(self,year,month):
-		days = self.days_in_month(month)
+		days = self.days_in_month(month,year)
 		x=1
 		busy_day = []
 		while x <= days:
@@ -96,7 +96,7 @@ class CalThread(threading.Thread):
 			scan = [(prev_year,prev_month),(year,month),(next_year,next_month)]
 			temp_list = dict()
 			for y,m in scan:
-				days = self.days_in_month(m)
+				days = self.days_in_month(m,y)
 				x = 1
 				while x <= days:
 					if self.die == True:
@@ -105,11 +105,12 @@ class CalThread(threading.Thread):
 					cal_date = (y,m,x)
 					if self.applet.integ_text == "Google Calendar":
 						time.sleep(2) # so google doesn't think we're DoS'ing them and require a captcha, and to use less CPU
-					try:			
-						temp_list[cal_date] = self.applet.integration.get_appointments(cal_date,self.applet.url)
-						x=x+1			
-					except:
-						print "Login error: ", sys.exc_info()[0], sys.exc_info()[1]
+					#try:			
+					temp_list[cal_date] = self.applet.integration.get_appointments(cal_date,self.applet.url)
+					#except:
+					#	print "Login error: ", sys.exc_info()[0], sys.exc_info()[1]
+					#finally:
+					x=x+1
 			self.list = temp_list
 			self.cache_ready = True
 

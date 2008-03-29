@@ -148,10 +148,7 @@ class Configuration: GLib.Object
 		}
 //		_active_colour=new Awn.Color();
 		read_config();
-    
-//Don't know why this is crapping out... probably a bindings issue. FIXME later.
-        //default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"standalone-launcher", _config_changed, null);
-        
+            
         default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"active_colour", _config_changed, this);
         default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"anonymous/override_app_icon", _config_changed, this);
         default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"discrete/override_app_icon", _config_changed, this);
@@ -1954,6 +1951,18 @@ class LauncherApplet : AppletSimple
         return false;
     }
 
+    private bool _reread_config(Gtk.Widget widget,Gdk.EventButton event)
+    {
+        listing = new Listing(GLib.Path.get_basename(desktopfile.Filename()));
+        desktopitem = new DesktopItem(desktopfile.Filename() );	
+        if (desktopitem.get_icon(theme) != null)
+        {
+            icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );
+        }
+        show_icon();
+        return false;
+    }
+
     private void build_right_click()
     {
         Gtk.MenuItem   menu_item;
@@ -1978,6 +1987,11 @@ class LauncherApplet : AppletSimple
         right_menu.append(menu_item);
         menu_item.show();
         menu_item.button_press_event+=_blacklist_edit;
+
+        menu_item=new MenuItem.with_label ("Reread Configuration Files");
+        right_menu.append(menu_item);
+        menu_item.show();
+        menu_item.button_press_event+=_reread_config;
         
     }
     

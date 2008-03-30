@@ -40,6 +40,16 @@ import email
 # For later AWNLib-mediated import
 feedparser = None
 
+import gettext
+APP = "Mail Applet"
+DIR = "locale"
+gettext.bindtextdomain(APP, DIR)
+gettext.textdomain(APP)
+_ = gettext.gettext
+
+import locale
+
+
 def Label(str):
     """
     Create a button, add the markup
@@ -82,11 +92,15 @@ class MailError(Exception):
         self.type = type
 
     def __str__(self):
-        """
-        TODO: More descriptive text?
-        """
+        return _("The Mail Applet had an error: %s") % self.type
 
-        return "The Mail Applet had an error: %s" % self.type
+def strMailMessages(num):
+    return gettext.ngettext("You have %d new message", \
+        "You have %d new messages", num) % num
+
+def strMessages(num):
+    return gettext.ngettext("%d unread message", \
+        "%d unread messages", num) % num
 
 class MailApplet:
     def __init__(self, awn):
@@ -141,7 +155,7 @@ class MailApplet:
             self.awn.settings["show-network-errors"] = True
             # Yes by default
 
-        self.awn.title.set("Mail Applet (Click to Log In)")
+        self.awn.title.set(_("Mail Applet (Click to Log In)"))
         self.drawPrefDlog()
 
         self.awn.module.get("feedparser", { \
@@ -198,8 +212,8 @@ class MailApplet:
             self.drawPWDDlog(True)
 
         else:
-            self.awn.notify.send("Mail Applet", \
-                "Logging in as %s" % key.attrs["username"], \
+            self.awn.notify.send(_("Mail Applet"), \
+                _("Logging in as %s") % key.attrs["username"], \
                 self.__getIconPath("login", full=True))
 
             # Login successful
@@ -226,24 +240,19 @@ class MailApplet:
             oldSubjects]
         if len(diffSubjects) > 0:
 
-            msg = "You have %s new mail message%s:" % (str(len(diffSubjects)), \
-                len(diffSubjects) > 1 and "s" or "")
+            msg = strNewMessages(len(diffSubjects))
 
             for i in diffSubjects:
                 msg.append("\n" + i)
 
-            self.awn.notify.send("New Mail - Mail Applet", msg, \
+            self.awn.notify.send(_("New Mail - Mail Applet"), msg, \
                 self.__getIconPath("unread", full=True))
             # Show the new mail dialog
 
             self.awn.effects.notify()
             # Do the "attention" effect
 
-        self.awn.title.set("%d Unread Message%s" % \
-                (len(self.mail.subjects), len(self.mail.subjects) \
-                != 1 and "s" or ""))
-        # Yes, I even correct for the Messages/Message
-        # Its little things like that that waste your time. w/e
+        self.awn.title.set(strMessages(len(self.mail.subjects)))
 
         self.__setIcon(len(self.mail.subjects) > 0 and "unread" or "read")
 
@@ -284,9 +293,7 @@ class MailApplet:
             # not start composing a message, that would be just wonderful.
 
     def drawMainDlog(self):
-        dlog = self.awn.dialog.new("main", " %d Unread Message%s " % \
-                (len(self.mail.subjects), len(self.mail.subjects) \
-                != 1 and "s" or ""))
+        dlog=self.awn.dialog.new("main", strMessages(len(self.mail.subjects)))
 
         layout = gtk.VBox()
         dlog.add(layout)
@@ -300,7 +307,7 @@ class MailApplet:
                 #print "%d: %s" % (i+1, self.mail.subjects[i])
             layout.add(tbl)
         else:
-            layout.add(Label("<i>Hmmm, nothing here</i>"))
+            layout.add(Label("<i>" + _("Hmmm, nothing here") + "</i>"))
 
         buttons = []
 
@@ -351,22 +358,22 @@ class MailApplet:
         layout.add(HBox(buttons))
 
     def drawErrorDlog(self, msg=""):
-        dlog = self.awn.dialog.new("main", " Error in Mail Applet ")
+        dlog = self.awn.dialog.new("main", _("Error in Mail Applet"))
 
         layout = gtk.VBox()
         dlog.add(layout)
 
         # Error Message
-        text = gtk.Label("There seem to be problems with our connection to \
+        text = gtk.Label(_("There seem to be problems with our connection to \
             your account. Your best bet is probably to log out and try again. \
-            \n\nHere is the error given:\n\n<i>%s</i>" % msg)
+            \n\nHere is the error given:\n\n<i>%s</i>") % msg)
         text.set_line_wrap(True)
         text.set_use_markup(True)
         text.set_justify(gtk.JUSTIFY_FILL)
         layout.add(text)
 
         # Submit button
-        ok = gtk.Button(label = "Fine, log me out.")
+        ok = gtk.Button(label = _("Fine, log me out"))
         layout.add(ok)
 
         def qu(x):
@@ -378,12 +385,12 @@ class MailApplet:
         dlog.show_all() # We want the dialog to show itself right away
 
     def drawPWDDlog(self, error=False):
-        dlog = self.awn.dialog.new("main", " Log In ")
+        dlog = self.awn.dialog.new("main", _("Log In"))
         layout = gtk.VBox()
         dlog.add(layout)
 
         if error:
-            layout.add(Label("<i>Wrong Username or Password</i>"))
+            layout.add(Label("<i>" + _("Wrong Username or Password") + "</i>"))
 
         if hasattr(self.back, "drawLoginWindow"):
             t = self.back.drawLoginWindow()
@@ -396,8 +403,8 @@ class MailApplet:
             pwdE = gtk.Entry()
             pwdE.set_visibility(False)
 
-            ilayout = VBox([HBox([Label("Username:"), usrE]),
-                HBox([Label("Password:"), pwdE])])
+            ilayout = VBox([HBox([Label(_("Username:")), usrE]),
+                HBox([Label(_("Password:")), pwdE])])
 
             t = {}
 
@@ -412,7 +419,7 @@ class MailApplet:
         layout.add(ilayout)
 
         # Submit button
-        submit = gtk.Button(label = "Log In", use_underline = False)
+        submit = gtk.Button(label = _("Log In"), use_underline = False)
         layout.add(submit)
 
         def onsubmit(x=None, y=None):
@@ -421,7 +428,7 @@ class MailApplet:
 
         submit.connect("clicked", onsubmit)
 
-        button = gtk.Button(label="Change Options")
+        button = gtk.Button(label=_("Change Options"))
         button.connect("clicked", \
             lambda x: self.awn.dialog.toggle("secondary"))
         layout.add(button)
@@ -429,42 +436,42 @@ class MailApplet:
         dlog.show_all()
 
     def drawPrefDlog(self):
-        dlog = self.awn.dialog.new("secondary", " Options ", focus=False)
+        dlog = self.awn.dialog.new("secondary", _("Options"), focus=False)
 
         layout = gtk.VBox()
         dlog.add(layout)
 
         theme = gtk.combo_box_new_text()
-        theme.set_title("Theme")
+        theme.set_title(_("Theme"))
         themes = [i for i in os.listdir(os.path.join(os.path.dirname( \
             os.path.abspath(__file__)), "Themes"))]
             # Ewww. Stupid AWN
         for i in themes:
             theme.append_text(i)
         theme.set_focus_on_click(True)
-        layout.add(HBox([Label("Theme: "), theme]))
+        layout.add(HBox([Label(_("Theme: ")), theme]))
 
         backend = gtk.combo_box_new_text()
-        backend.set_title("Backend")
+        backend.set_title(_("Backend"))
         backends = [i for i in dir(Backends) if i[:2] != "__"]
         for i in backends:
             backend.append_text(i)
         backend.set_focus_on_click(True)
-        layout.add(HBox([Label("Backend: "), backend]))
+        layout.add(HBox([Label(_("Backend: ")), backend]))
 
         email = gtk.Entry()
         email.set_text(self.emailclient)
-        layout.add(HBox([Label("Email Client: "), email]))
+        layout.add(HBox([Label(_("Email Client: ")), email]))
 
-        hidden = gtk.CheckButton(label="Hide Unless New")
+        hidden = gtk.CheckButton(label=_("Hide Unless New"))
         hidden.set_active(self.hide)
         layout.add(hidden)
 
-        showerror = gtk.CheckButton(label="Alert on Network Errors")
+        showerror = gtk.CheckButton(label=_("Alert on Network Errors"))
         showerror.set_active(self.showerror)
         layout.add(showerror)
 
-        save = gtk.Button(label = "Save", use_underline = False)
+        save = gtk.Button(label = _("Save"), use_underline = False)
         layout.add(save)
 
         def saveit(self, t, b, c, h, s, dlog):
@@ -525,7 +532,7 @@ class Backends:
                  % (self.key.attrs["username"], self.key.password))
 
             if "bozo_exception" in f.keys():
-                raise MailError, "Could not log in"
+                raise MailError, _("Could not log in")
             # Hehe, Google is funny. Bozo exception
 
             class MailItem:
@@ -550,7 +557,7 @@ class Backends:
             if len(n) > 37:
                 n = n[:37] + "..."
             elif n == "":
-                n = "[No Subject]"
+                n = _("[No Subject]")
             return n
 
         def __cleanMsg(self, n):
@@ -572,13 +579,10 @@ class Backends:
 
     class Empty:
         def __init__(self, key):
-            self.subjects = ["Dummy Message"]
+            self.subjects = [_("Dummy Message")]
 
         def update(self):
             pass
-
-
-
 
     try:
         global poplib
@@ -597,7 +601,7 @@ class Backends:
                 try:
                     self.server.pass_(key.password)
                 except poplib.error_proto:
-                    raise MailError, "Could not log in"
+                    raise MailError, _("Could not log in")
 
             def update(self):
                 messagesInfo = self.server.list()[1][-20:]
@@ -645,11 +649,11 @@ class Backends:
                 # Server input box
                 srvE = gtk.Entry()
 
-                sslE = gtk.CheckButton(label="Use SSL encryption")
+                sslE = gtk.CheckButton(label=_("Use SSL encryption"))
 
-                layout = VBox([HBox([Label("Username:"), usrE]),
-                    HBox([Label("Password:"), pwdE]),
-                    HBox([Label("Server:  "), srvE]),
+                layout = VBox([HBox([Label(_("Username:")), usrE]),
+                    HBox([Label(_("Password:")), pwdE]),
+                    HBox([Label(_("Server:")), srvE]),
                     sslE])
 
                 return {"layout": layout, "callback": cls.__submitLoginWindow,
@@ -665,11 +669,11 @@ class Backends:
                     "usessl": widgets[3].get_active()}, "network")
 
 if __name__ == "__main__":
-    applet = AWNLib.initiate({"name": "Mail Applet",
+    applet = AWNLib.initiate({"name": _("Mail Applet"),
         "short": "mail",
         "author": "Pavel Panchekha",
         "email": "pavpanchekha@gmail.com",
-        "description": "An applet to check one's email",
+        "description": _("An applet to check one's email"),
         "type": ["Network", "Email"]})
     applet = MailApplet(applet)
     AWNLib.start(applet.awn)

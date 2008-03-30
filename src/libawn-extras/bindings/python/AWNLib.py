@@ -101,7 +101,7 @@ class Dialogs:
             dlog.connect("focus-out-event", lambda x, y: dlog.hide())
 
         if dialog not in ("program", "menu") and title:
-            dlog.set_title(title)
+            dlog.set_title(" " + title + " ")
 
         return dlog
 

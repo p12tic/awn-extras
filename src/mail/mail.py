@@ -577,6 +577,92 @@ class Backends:
             # Get source of message
             return n
 
+    class GApps:
+        def __init__(self, key):
+            self.key = key
+
+        def url(self):
+            return "http://mail.google.com/mail/"
+
+        def update(self):
+            f = feedparser.parse( \
+                "https://%s:%s@mail.google.com/a/%s/feed/atom" \
+                 % (self.key.attrs["username"], self.key.password, \
+                 self.key.attrs["domain"]))
+
+            if "bozo_exception" in f.keys():
+                raise MailError, _("Could not log in")
+            # Hehe, Google is funny. Bozo exception
+
+            class MailItem:
+                def __init__(self, subject, author):
+                    self.subject = subject
+                    self.author = author
+
+            t = []
+            self.subjects = []
+            for i in f.entries:
+                i.title = self.__cleanGmailSubject(i.title)
+                t.append(MailItem(i.title, i.author))
+                self.subjects.append(i.title)
+
+        def __cleanGmailSubject(self, n):
+            n = re.sub(r"^[^>]*\\>", "", n) # "sadf\>fdas" -> "fdas"
+            n = re.sub(r"\\[^>]*\\>$", "", n) # "asdf\afdsasdf\>" -> "asdf"
+            n = n.replace("&quot;", "\"")
+            n = n.replace("&amp;", "&")
+            n = n.replace("&nbsp;", "")
+
+            if len(n) > 37:
+                n = n[:37] + "..."
+            elif n == "":
+                n = _("[No Subject]")
+            return n
+
+        def __cleanMsg(self, n):
+            n = re.sub("\n\s*\n", "\n", n)
+            n = re.sub("&[#x(0x)]?\w*;", " ", n)
+            n = re.sub("\<[^\<\>]*?\>", "", n) # "<h>asdf<a></h>" -> "asdf"
+
+            f = False
+            h = []
+            n = n.split("\n")
+            for line in n:
+                if f:
+                    h.append(line)
+                elif re.match("X-Spam-Score", line):
+                    f = True
+            n = "\n".join(h)
+            # Get source of message
+            return n
+
+            @classmethod
+            def drawLoginWindow(cls):
+                # Username input box
+                usrE = gtk.Entry()
+
+                # Password input box
+                pwdE = gtk.Entry()
+                pwdE.set_visibility(False)
+
+                # Server input box
+                domE = gtk.Entry()
+
+                layout = VBox([HBox([Label(_("Username:")), usrE]),
+                    HBox([Label(_("Password:")), pwdE]),
+                    HBox([Label(_("Domain:")), domE])])
+
+                return {"layout": layout, "callback": cls.__submitLoginWindow,
+                    "widgets": [usrE, pwdE, domE]}
+
+            @staticmethod
+            def __submitLoginWindow(widgets, awn):
+                return awn.keyring.new("Mail Applet - %s(%s)" \
+                    % (widgets[0].get_text(), "GApps"), \
+                    widgets[1].get_text(), \
+                    {"username": widgets[0].get_text(),
+                    "domain": widgets[2].get_text()}, "network")
+
     class Empty:
         def __init__(self, key):
             self.subjects = [_("Dummy Message")]

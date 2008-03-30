@@ -61,6 +61,8 @@
 #define CONFIG_APPLET_BORDER_COLOUR CONFIG_KEY("applet_border_colour")
 #define CONFIG_GRAB_WALLPAPER CONFIG_KEY("grab_wallpaper")
 #define CONFIG_DESKTOP_COLOUR CONFIG_KEY("desktop_colour")
+#define CONFIG_QUEUED_RENDER_FREQ CONFIG_KEY("queued_render_timer")
+
 
 /*
  * STATIC FUNCTION DEFINITIONS
@@ -126,18 +128,17 @@ void init_config(Shiny_switcher *shinyswitcher)
 	                                                                       CONFIG_APPLET_BORDER_WIDTH , NULL);
 	shinyswitcher->grab_wallpaper           = awn_config_client_get_bool  (shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
 	                                                                       CONFIG_GRAB_WALLPAPER, NULL);
+    shinyswitcher->do_queue_freq            = awn_config_client_get_int   (shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+	                                                                       CONFIG_QUEUED_RENDER_FREQ , NULL);
 
 	config_get_color (shinyswitcher->config, CONFIG_APPLET_BORDER_COLOUR, &shinyswitcher->applet_border_colour);
 	config_get_color (shinyswitcher->config, CONFIG_DESKTOP_COLOUR,       &shinyswitcher->desktop_colour);
 
-	shinyswitcher->active_window_on_workspace_change_method=1;
-	shinyswitcher->do_queue_freq=2;
+	
+    shinyswitcher->active_window_on_workspace_change_method=1;	
 	shinyswitcher->override_composite_check=FALSE;
 	shinyswitcher->show_tooltips=FALSE;						//buggy at the moment will be a config option eventually
 
-	shinyswitcher->show_right_click=!shinyswitcher->got_viewport;	//for the moment buggy in compiz.will be a config option eventually
-    shinyswitcher->show_right_click=FALSE;  //FIXME disabling right click menu in all a cases. appears to cause occasional crash
-	shinyswitcher->reconfigure=!shinyswitcher->got_viewport;		//for the moment... will be a config option eventually
 }
 
 static void save_config(Shiny_switcher *shinyswitcher)
@@ -1439,11 +1440,19 @@ gboolean _waited(Shiny_switcher *shinyswitcher)
 	g_signal_connect(G_OBJECT(shinyswitcher->wnck_screen),"window-closed",G_CALLBACK (_window_closed),shinyswitcher);  
 	g_signal_connect(G_OBJECT(shinyswitcher->wnck_screen),"window-opened",G_CALLBACK (_window_opened),shinyswitcher);  
 	#if GLIB_CHECK_VERSION(2,14,0)
-	g_timeout_add_seconds(shinyswitcher->do_queue_freq,(GSourceFunc)do_queued_renders,shinyswitcher);
-	g_timeout_add_seconds(shinyswitcher->do_queue_freq+1,(GSourceFunc)do_queue_act_ws,shinyswitcher);	//FIXME
+    if (shinyswitcher->do_queue_freq % 1000 == 0)
+    {
+        g_timeout_add_seconds(shinyswitcher->do_queue_freq/1000,(GSourceFunc)do_queued_renders,shinyswitcher);
+        g_timeout_add_seconds((shinyswitcher->do_queue_freq+1000)/1000,(GSourceFunc)do_queue_act_ws,shinyswitcher);	//FIXME
+    }
+    else
+    {
+        g_timeout_add( shinyswitcher->do_queue_freq,(GSourceFunc)do_queued_renders,shinyswitcher);
+        g_timeout_add( shinyswitcher->do_queue_freq+1000,(GSourceFunc)do_queue_act_ws,shinyswitcher);	//FIXME
+    }
 	#else
-	g_timeout_add( (shinyswitcher->do_queue_freq)*1000,(GSourceFunc)do_queued_renders,shinyswitcher);
-	g_timeout_add( (shinyswitcher->do_queue_freq+1)*1000,(GSourceFunc)do_queue_act_ws,shinyswitcher);	//FIXME
+	g_timeout_add( shinyswitcher->do_queue_freq,(GSourceFunc)do_queued_renders,shinyswitcher);
+	g_timeout_add( shinyswitcher->do_queue_freq+1000,(GSourceFunc)do_queue_act_ws,shinyswitcher);	//FIXME
 	#endif	
 	g_signal_connect (G_OBJECT (shinyswitcher->applet), "height-changed", G_CALLBACK (_height_changed), (gpointer)shinyswitcher);
 	g_signal_connect (G_OBJECT (shinyswitcher->applet), "orientation-changed", G_CALLBACK (_orient_changed), (gpointer)shinyswitcher);
@@ -1490,7 +1499,12 @@ applet_new (AwnApplet *applet,int width,int height)
 			shinyswitcher->got_viewport=TRUE;
 		}
 	init_config	(shinyswitcher);	
- 	screen = gtk_widget_get_screen(GTK_WIDGET(shinyswitcher->applet));	
+	shinyswitcher->show_right_click=!shinyswitcher->got_viewport;	//for the moment buggy in compiz.will be a config option eventually
+    shinyswitcher->show_right_click=FALSE;  //FIXME disabling right click menu in all a cases. appears to cause occasional crash
+	shinyswitcher->reconfigure=!shinyswitcher->got_viewport;		//for the moment... will be a config option eventually
+    
+  
+   	screen = gtk_widget_get_screen(GTK_WIDGET(shinyswitcher->applet));	
  	while(! gdk_screen_is_composited (screen) )		//FIXME
  	{
  		printf("Shinyswitcher startup:  screen not composited.. waiting 1 second\n");

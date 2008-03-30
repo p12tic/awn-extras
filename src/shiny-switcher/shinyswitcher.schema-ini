@@ -95,5 +95,9 @@ default = 00000088
 description = The colour of the desktop (RGBA) if grab_wallpaper is FALSE.
 description[en_US] = The color of the desktop (RGBA) if grab_wallpaper is FALSE.
 
+[DEFAULT/queued_render_timer]
+type = int
+default = 2000
+description = Queued render timer. Number of milliseconds between queued render updates. The smaller the number the less lag will be apparent on shinyswitcher updates.  Multiples of 1000 are more power and CPU efficient.
 
 ; vim: set ft=dosini :

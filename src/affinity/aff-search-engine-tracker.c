@@ -26,9 +26,15 @@
 
 #include "aff-search-engine-tracker.h"
 
-#include <libgnome/gnome-i18n.h>
+#include <glib/gi18n.h>
 #include <tracker.h>
+#ifdef LIBAWN_USE_GNOME
 #include <libgnomevfs/gnome-vfs-utils.h>
+#elif defined(LIBAWN_USE_XFCE)
+#include <thunar-vfs/thunar-vfs.h>
+#else
+#include <gio/gio.h>
+#endif
 #include <string.h>
 
 struct AffSearchEngineTrackerDetails {
@@ -113,7 +119,17 @@ _add_results (gchar **data, AffTrackerSearchTerm *term)
 		return;
 	}
 
+#ifdef LIBAWN_USE_GNOME
 	uri = gnome_vfs_get_uri_from_local_path (data[0]);
+#elif defined(LIBAWN_USE_XFCE)
+    ThunarVfsPath *path = thunar_vfs_path_new (data[0], NULL);
+    uri = thunar_vfs_path_dup_uri (path);
+    thunar_vfs_path_unref (path);
+#else
+    GFile *path = g_file_new_for_path (data[0]);
+    uri = g_file_get_uri (path);
+    g_free (path);
+#endif
 	temp = g_filename_display_name (data[0]);
 	name = g_markup_escape_text (temp, -1);
 	g_free (temp);

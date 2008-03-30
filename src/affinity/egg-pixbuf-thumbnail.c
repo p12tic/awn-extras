@@ -35,7 +35,11 @@
 
 #include <glib/gi18n.h>
 #include <glib/gstdio.h>
+#ifdef LIBAWN_USE_XFCE
+#include <exo/exo.h>
+#else
 #include <glib/gchecksum.h>
+#endif
 
 #include <gdk-pixbuf/gdk-pixbuf-io.h>
 
@@ -1132,7 +1136,11 @@ egg_pixbuf_has_failed_thumbnail (const gchar *uri,
 
   retval = FALSE;
   
+#ifdef LIBAWN_USE_XFCE
+  md5 = exo_str_get_md5_str (uri);
+#else
   md5 = g_compute_checksum_for_string (G_CHECKSUM_MD5, uri, strlen (uri));
+#endif
   basename = g_strconcat (md5, ".png", NULL);
   g_free (md5);
   filename = g_build_filename (g_get_home_dir (), ".thumbnails", FAIL_DIR_NAME,
@@ -1194,7 +1202,11 @@ egg_pixbuf_save_failed_thumbnail (const gchar  *uri,
       return;
     }
 
+#ifdef LIBAWN_USE_XFCE
+  md5 = exo_str_get_md5_str (uri);
+#else
   md5 = g_compute_checksum_for_string (G_CHECKSUM_MD5, uri, strlen (uri));
+#endif
   basename = g_strconcat (md5, ".png", NULL);
   g_free (md5);
   filename = g_build_filename (g_get_home_dir (), ".thumbnails", FAIL_DIR_NAME,
@@ -1906,7 +1918,11 @@ egg_pixbuf_get_thumbnail_filename (const gchar           *uri,
   else
     home_dir = g_get_tmp_dir ();
 
+#ifdef LIBAWN_USE_XFCE
+  md5 = exo_str_get_md5_str (uri);
+#else
   md5 = g_compute_checksum_for_string (G_CHECKSUM_MD5, uri, strlen (uri));
+#endif
   basename = g_strconcat (md5, ".png", NULL);
   filename = g_build_filename (home_dir, ".thumbnails", SIZE_TO_DIR (size),
 			       basename, NULL);

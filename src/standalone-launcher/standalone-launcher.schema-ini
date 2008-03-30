@@ -98,5 +98,9 @@ type = float
 default = 1.0
 description = alpha value to apply to multi icon overlays. range 0..1.
 
+[DEFAULT/anonymous/show_if_on_inactive]
+type = bool
+default = true
+description = Show task icon if all tasks are on inactive workspace.
 
 ; vim: set ft=dosini :

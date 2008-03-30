@@ -131,6 +131,8 @@ class Configuration: GLib.Object
     private             bool                _multi_icon_use;
     private             float               _multi_icon_scale;
     
+    private             bool                _show_if_on_inactive;
+
     construct
 	{
 		if (anon_mode)
@@ -164,6 +166,7 @@ class Configuration: GLib.Object
         default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"multi_icon_use", _config_changed, this);        
         default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"multi_icon_scale", _config_changed, this);        
         default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"discrete/multi_launcher", _config_changed, this);
+        default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"anonymous/show_if_on_inactive", _config_changed, this);
         if (!anon_mode)
 		{
 				
@@ -206,6 +209,8 @@ class Configuration: GLib.Object
         temp_float=get_float("multi_icon_alpha",(float)0.9);
         _multi_icon_alpha=(int) Math.lroundf(temp_float* (float) 255.0);
         _multi_icon_scale=get_float("multi_icon_scale",(float)0.3);
+        
+        _show_if_on_inactive=get_bool(subdir+"show_if_on_inactive",true);
     }
 
 	private void read_config()
@@ -368,7 +373,12 @@ class Configuration: GLib.Object
     	}
     }
 
-
+    public bool show_if_on_inactive{
+        get { 
+			return _show_if_on_inactive;
+    	}
+    }
+    
 }
 
 
@@ -1481,6 +1491,7 @@ class LauncherApplet : AppletSimple
             wnck_screen.application_opened+=_application_opened;	
             wnck_screen.active_window_changed+=	_active_window_changed;
         }
+        wnck_screen.active_workspace_changed+=_active_workspace_changed;
 
 		task_icon = theme.load_icon (config.task_icon_name, height - 2, IconLookupFlags.USE_BUILTIN);
         if (task_icon == null)
@@ -2382,6 +2393,31 @@ class LauncherApplet : AppletSimple
         }
 	}
 
+	private void _active_workspace_changed(Wnck.Screen screen,Wnck.Workspace prev)
+	{
+        if ( (launchmode != LaunchMode.DISCRETE ) && (!config.show_if_on_inactive) )
+        {
+            Wnck.Workspace active_workspace=screen.get_active_workspace();
+            
+            hidden=true;
+            if (active_workspace !=null)
+            {
+                weak List<Wnck.Window> wins=screen.get_windows ();
+                foreach(weak Wnck.Window win in wins)
+                {
+                    if (books.find_win(win) )
+                    {
+                        if ( (win.get_workspace()).get_number()== active_workspace.get_number() )
+                        {
+                            stdout.printf("active workspace change.  HIDING\n");
+                            hidden=false;
+                        }
+                    }
+                } 
+                hide_icon();
+            }
+        }
+    }
 	private void _active_window_changed(Wnck.Screen screen,Wnck.Window prev)
 	{
 		Pixbuf  temp;

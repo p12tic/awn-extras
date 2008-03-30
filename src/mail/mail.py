@@ -240,7 +240,7 @@ class MailApplet:
             oldSubjects]
         if len(diffSubjects) > 0:
 
-            msg = strMessages(len(diffSubjects))
+            msg = strNewMessages(len(diffSubjects))
 
             for i in diffSubjects:
                 msg.append("\n" + i)

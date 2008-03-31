@@ -2377,7 +2377,9 @@ class LauncherApplet : AppletSimple
     
     private void _win_state_change(Wnck.Window window,Wnck.WindowState changed_mask,Wnck.WindowState new_state)
     {
-        if ( (Wnck.WindowState.DEMANDS_ATTENTION & new_state) == Wnck.WindowState.DEMANDS_ATTENTION )
+        if ( ((Wnck.WindowState.DEMANDS_ATTENTION & new_state) == Wnck.WindowState.DEMANDS_ATTENTION) ||
+             ((Wnck.WindowState.URGENT & new_state) == Wnck.WindowState.URGENT)
+            )
         {
             //effect_start_ex(effects, Effect.ATTENTION,null,null,11);    
             effect_start(effects, Effect.ATTENTION);

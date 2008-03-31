@@ -2270,7 +2270,7 @@ class LauncherApplet : AppletSimple
 	private void _window_opened(Wnck.Screen screen,Wnck.Window window)
 	{ 
 		string response;
-		int pid;
+		int pid=window.get_pid();
 		ulong xid;
         int x;
         int y;
@@ -2301,39 +2301,48 @@ class LauncherApplet : AppletSimple
         {
             return;
         }
-        do
+        else if (books.find_pid(pid) )
         {
-            ListingResult listings_check;
-            listings_check=listing.check_listings(window.get_name(),get_exec(window.get_pid()));
-            switch (listings_check)
+            do
             {
-                case    ListingResult.WHITELISTED:
-                    response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"CLAIM");
-                    break;
-                case    ListingResult.BLACKLISTED:
-                    response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"DENY");
-                    break;
-                case    ListingResult.NOMATCH:
-                    {
-                        switch (books.what_to_do(window) )
+                response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"CLAIM");            
+            }while(response=="RESET");              
+        }
+        else
+        {
+            do
+            {
+                ListingResult listings_check;
+                listings_check=listing.check_listings(window.get_name(),get_exec(pid));
+                switch (listings_check)
+                {
+                    case    ListingResult.WHITELISTED:
+                        response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"CLAIM");
+                        break;
+                    case    ListingResult.BLACKLISTED:
+                        response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"DENY");
+                        break;
+                    case    ListingResult.NOMATCH:
                         {
-                            case    Ownership.CLAIM:
-                                    response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"CLAIM");
-                                    break;
-                            case    Ownership.ACCEPT:
-                                    response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"ACCEPT");
-                                    break;
-                            case    Ownership.DENY:
-                                    response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"DENY");
-                                    break;
+                            switch (books.what_to_do(window) )
+                            {
+                                case    Ownership.CLAIM:
+                                        response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"CLAIM");
+                                        break;
+                                case    Ownership.ACCEPT:
+                                        response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"ACCEPT");
+                                        break;
+                                case    Ownership.DENY:
+                                        response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"DENY");
+                                        break;
+                            }
                         }
-                    }
-                    break;
-            }
-            if (response=="RESET")
-                dbusconn.Register(uid);										
-        }while(response=="RESET");//this does not eval to true often... otherwise it should be fixed.
-        
+                        break;
+                }
+                if (response=="RESET")
+                    dbusconn.Register(uid);										
+            }while(response=="RESET");//this does not eval to true often... otherwise it should be fixed.
+        }        
         if(response=="MANAGE")
         {
             hidden=false;

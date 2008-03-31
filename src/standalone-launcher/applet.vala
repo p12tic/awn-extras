@@ -1849,11 +1849,14 @@ class LauncherApplet : AppletSimple
                 button.set_app_paintable(true);
 				vbox.add(button);
 			}
-			foreach (weak DesktopItem item in multi_launcher.desktops() )
-			{
-                DesktopitemButton button = new DesktopitemButton(item,dialog,theme,height/2);
-                button.set_app_paintable(true);
-                vbox.add(button);
+            if (config.multi_launcher) 
+            {
+			    foreach (weak DesktopItem item in multi_launcher.desktops() )
+			    {
+                    DesktopitemButton button = new DesktopitemButton(item,dialog,theme,height/2);
+                    button.set_app_paintable(true);
+                    vbox.add(button);
+                }
             }
 			dialog.show_all();
 		}		

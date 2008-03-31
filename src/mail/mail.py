@@ -636,32 +636,32 @@ class Backends:
             # Get source of message
             return n
 
-            @classmethod
-            def drawLoginWindow(cls):
-                # Username input box
-                usrE = gtk.Entry()
+        @classmethod
+        def drawLoginWindow(cls):
+            # Username input box
+            usrE = gtk.Entry()
 
-                # Password input box
-                pwdE = gtk.Entry()
-                pwdE.set_visibility(False)
+            # Password input box
+            pwdE = gtk.Entry()
+            pwdE.set_visibility(False)
 
-                # Server input box
-                domE = gtk.Entry()
+            # Server input box
+            domE = gtk.Entry()
 
-                layout = VBox([HBox([Label(_("Username:")), usrE]),
-                    HBox([Label(_("Password:")), pwdE]),
-                    HBox([Label(_("Domain:")), domE])])
+            layout = VBox([HBox([Label(_("Username:")), usrE]),
+                HBox([Label(_("Password:")), pwdE]),
+                HBox([Label(_("Domain:")), domE])])
 
-                return {"layout": layout, "callback": cls.__submitLoginWindow,
-                    "widgets": [usrE, pwdE, domE]}
+            return {"layout": layout, "callback": cls.__submitLoginWindow,
+                "widgets": [usrE, pwdE, domE]}
 
-            @staticmethod
-            def __submitLoginWindow(widgets, awn):
-                return awn.keyring.new("Mail Applet - %s(%s)" \
-                    % (widgets[0].get_text(), "GApps"), \
-                    widgets[1].get_text(), \
-                    {"username": widgets[0].get_text(),
-                    "domain": widgets[2].get_text()}, "network")
+        @staticmethod
+        def __submitLoginWindow(widgets, awn):
+            return awn.keyring.new("Mail Applet - %s(%s)" \
+                % (widgets[0].get_text(), "GApps"), \
+                widgets[1].get_text(), \
+                {"username": widgets[0].get_text(),
+                "domain": widgets[2].get_text()}, "network")
 
     class Empty:
         def __init__(self, key):

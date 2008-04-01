@@ -2165,12 +2165,13 @@ class LauncherApplet : AppletSimple
 				Timeout.add(30000,_timed_closed);
 			}	
             else
-                show_icon();
+                show_icon();            
         }
         else if ( config.multi_icon_use && (books.number()==1) )
-        {
+        {            
             show_icon();
         }
+        title_string=desktopitem.get_name();
 	}
 	
 	private bool _timed_closed()
@@ -2384,8 +2385,11 @@ class LauncherApplet : AppletSimple
              ((Wnck.WindowState.URGENT & new_state) == Wnck.WindowState.URGENT)
             )
         {
-            //effect_start_ex(effects, Effect.ATTENTION,null,null,11);    
-            effect_start(effects, Effect.ATTENTION);
+            if (window != wnck_screen.get_active_window ())
+            {
+                //effect_start_ex(effects, Effect.ATTENTION,null,null,11);    
+                effect_start(effects, Effect.ATTENTION);
+            }
         }
 
     }    

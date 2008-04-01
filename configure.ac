@@ -102,7 +102,8 @@ fi
 
 if test "$with_webkit" != "no"; then
 # webapplet
-PKG_CHECK_MODULES(WEBKIT, [webkit-1.0])
+PKG_CHECK_MODULES(WEBKIT, [webkit-1.0],,
+    [PKG_CHECK_MODULES(WEBKIT, [WebKitGtk])])
 fi
 
 if test "$with_gconf" != "no"; then

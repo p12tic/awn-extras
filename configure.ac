@@ -100,6 +100,11 @@ PKG_CHECK_MODULES(GNOME_MENU, [libgnome-menu])
 PKG_CHECK_MODULES(GTOP, [libgtop-2.0])
 fi
 
+if test "$with_webkit" != "no"; then
+# webapplet
+PKG_CHECK_MODULES(WEBKIT, [webkit-1.0])
+fi
+
 if test "$with_gconf" != "no"; then
 # awn-terminal
 PKG_CHECK_MODULES(VTE, [vte])

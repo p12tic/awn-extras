@@ -40,9 +40,10 @@ import email
 # For later AWNLib-mediated import
 feedparser = None
 
+# Start localization and internationalization stuff
 import gettext
-APP = "Mail Applet"
-DIR = "locale"
+APP = "awn-mail-applet"
+DIR=os.path.dirname(__file__) + '/locale'
 gettext.bindtextdomain(APP, DIR)
 gettext.textdomain(APP)
 _ = gettext.gettext
@@ -230,7 +231,7 @@ class MailApplet:
         try:
             self.mail.update()
         except MailError, (err):
-            self.awn.icon.set(self.getIcon("error"))
+            self.__setIcon("error")
 
             if self.showerror:
                 self.drawErrorDlog(err)
@@ -243,7 +244,7 @@ class MailApplet:
             msg = strNewMessages(len(diffSubjects))
 
             for i in diffSubjects:
-                msg.append("\n" + i)
+                msg += "\n" + i
 
             self.awn.notify.send(_("New Mail - Mail Applet"), msg, \
                 self.__getIconPath("unread", full=True))
@@ -586,9 +587,9 @@ class Backends:
 
         def update(self):
             f = feedparser.parse( \
-                "https://%s:%s@mail.google.com/a/%s/feed/atom" \
-                 % (self.key.attrs["username"], self.key.password, \
-                 self.key.attrs["domain"]))
+                "https://%s%%40%s:%s@mail.google.com/a/%s/feed/atom" \
+                 % (self.key.attrs["username"], self.key.attrs["domain"], \
+                 self.key.password, self.key.attrs["domain"]))
 
             if "bozo_exception" in f.keys():
                 raise MailError, _("Could not log in")

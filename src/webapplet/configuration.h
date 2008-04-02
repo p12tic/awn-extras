@@ -15,20 +15,20 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA.
  *
-*/
- 
+ */
+
 #ifndef __CONFIGURATION_H
- 
 #define __CONFIGURATION_H
+
 #include "applet.h"
 
-#define CONFIG_KEY(key) key
-#define CONFIG_URI              CONFIG_KEY("URI")
-#define CONFIG_HTML_ENGINE      CONFIG_KEY("HTML_engine")
-#define CONFIG_LAST_ACCESS      CONFIG_KEY("last_access")
-#define CONFIG_HEIGHT           CONFIG_KEY("height")
-#define CONFIG_WIDTH            CONFIG_KEY("width")
+#define CONFIG_URI                    "URI"
+#define CONFIG_HTML_ENGINE            "HTML_engine"
+#define CONFIG_LAST_ACCESS            "last_access"
+#define CONFIG_HEIGHT                 "height"
+#define CONFIG_WIDTH                  "width"
 
-void init_config(WebApplet * webapplet, gchar * uid);
+void init_config (WebApplet *webapplet, gchar *uid);
 
 #endif
+/* vim: set et ts=2 sts=2 sw=2 : */

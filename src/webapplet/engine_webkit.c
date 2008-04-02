@@ -15,16 +15,17 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA.
  *
-*/
+ */
 
 #include  <webkit/webkitwebview.h>
 
 #include  "engine_webkit.h"
 #include  "engine_html.h"
 
-void wrapper_webkit_init_engine(FunctionList *function_list)
+void
+wrapper_webkit_init_engine (FunctionList *function_list)
 {
-  function_list->_html_web_view_open=(html_web_view_open_fn)webkit_web_view_open;
-  function_list->_html_web_view_new=webkit_web_view_new;
-  
+  function_list->_html_web_view_open = (html_web_view_open_fn)webkit_web_view_open;
+  function_list->_html_web_view_new = webkit_web_view_new;
 }
+/* vim: set et ts=2 sts=2 sw=2 : */

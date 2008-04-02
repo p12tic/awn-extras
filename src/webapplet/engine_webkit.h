@@ -15,15 +15,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA.
  *
-*/
- 
+ */
+
 
 #ifndef __ENGINE_WEBKIT_H
- 
 #define __ENGINE_WEBKIT_H
 
 #include "engine_html.h"
 
-void wrapper_webkit_init_engine(FunctionList *function_list);
+void wrapper_webkit_init_engine (FunctionList *function_list);
 
 #endif
+/* vim: set et ts=2 sts=2 sw=2 : */

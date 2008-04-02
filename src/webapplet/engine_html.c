@@ -15,41 +15,46 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA.
  *
-*/
+ */
 
 #define HAVE_WEBKIT
 #undef  HAVE_MOZ
 
 #include <gtk/gtk.h>
 
-#ifdef HAVE_WEBKIT  
+#ifdef HAVE_WEBKIT
 #include "engine_webkit.h"
 #endif
 
 #include "engine_html.h"
 
-static  engine=ENGINE_WEBKIT;
+static int engine = ENGINE_WEBKIT;
 
-static  FunctionList  function_list;  
+static FunctionList function_list;
 
-void html_init()
+void
+html_init ()
 {
-  switch(engine)
+  switch (engine)
   {
-#ifdef HAVE_WEBKIT    
-    case  ENGINE_WEBKIT:
-      wrapper_webkit_init_engine(&function_list);
+#ifdef HAVE_WEBKIT
+
+    case ENGINE_WEBKIT:
+      wrapper_webkit_init_engine (&function_list);
       break;
-#endif      
+#endif
   }
-}  
+}
 
-void html_web_view_open(GtkWidget * viewer,const gchar * uri)
+void
+html_web_view_open (GtkWidget *viewer, const gchar *uri)
 {
-  function_list._html_web_view_open(viewer,uri);
-}  
+  function_list._html_web_view_open (viewer, uri);
+}
 
-GtkWidget * html_web_view_new(void)
+GtkWidget *
+html_web_view_new (void)
 {
-  return function_list._html_web_view_new();
-}  
+  return function_list._html_web_view_new ();
+}
+/* vim: set et ts=2 sts=2 sw=2 : */

@@ -15,10 +15,9 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA.
  *
-*/
- 
- #ifndef __WEBAPPLET_APPLET
- 
+ */
+
+#ifndef __WEBAPPLET_APPLET
 #define __WEBAPPLET_APPLET
 
 #include <libawn/awn-applet.h>
@@ -26,23 +25,27 @@
 
 typedef struct
 {
-  AwnApplet         *applet;
-  GtkWidget         *mainwindow;
-  GdkPixbuf         *icon;  
-  GtkWidget         *box;
-  GtkWidget         *viewer;
-  AwnConfigClient		*instance_config;  
-  AwnConfigClient		*default_config;  
+  AwnApplet       *applet;
+  GtkWidget       *mainwindow;
+  GdkPixbuf       *icon;
+  GtkWidget       *box;
+  GtkWidget       *viewer;
+  GtkWidget       *location_dialog;
+
+  AwnConfigClient *instance_config;
+  AwnConfigClient *default_config;
 
   gint            applet_icon_height;
   gchar           *applet_icon_name;
   gchar           *uri;
-  
-  int             width;
-  int             height;
-  
-}WebApplet;
+  gboolean         enable_location_dialog;
+
+  gint             width;
+  gint             height;
+
+} WebApplet;
 
 #define APPLET_NAME "webapplet"
 
-#endif 
+#endif
+/* vim: set et ts=2 sts=2 sw=2 : */

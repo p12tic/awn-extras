@@ -15,29 +15,29 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA.
  *
-*/
+ */
 #ifndef __ENGINE_HTML_H
- 
 #define __ENGINE_HTML_H
 
 #include <gtk/gtk.h>
 
 enum
 {
-  ENGINE_WEBKIT   
+  ENGINE_WEBKIT
 };
 
-typedef void (*html_web_view_open_fn)(GtkWidget * viewer,const gchar * uri);
-typedef GtkWidget * (*html_web_view_new_fn)(void);
+typedef void (*html_web_view_open_fn)(GtkWidget *viewer, const gchar *uri);
+typedef GtkWidget* (*html_web_view_new_fn)(void);
 
 typedef struct
 {
-      html_web_view_open_fn   _html_web_view_open;
-      html_web_view_new_fn    _html_web_view_new;
-  
-}FunctionList;  
+  html_web_view_open_fn _html_web_view_open;
+  html_web_view_new_fn  _html_web_view_new;
 
-void html_web_view_open(GtkWidget * viewer,const gchar * uri);
-GtkWidget * html_web_view_new(void);
+} FunctionList;
+
+void html_init ();
+void html_web_view_open (GtkWidget *viewer, const gchar *uri);
+GtkWidget *html_web_view_new (void);
 
 #endif

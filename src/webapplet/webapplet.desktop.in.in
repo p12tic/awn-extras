@@ -4,4 +4,4 @@ X-AWN-AppletType=C
 Name=WebApplet
 Comment=Applet for HTML applets
 Exec=@LIBDIR@/awn/applets/webapplet/webapplet.so
-Icon=binary
+Icon=apple-green

@@ -30,12 +30,11 @@ typedef struct
   GdkPixbuf       *icon;
   GtkWidget       *box;
   GtkWidget       *viewer;
-  GtkWidget       *location_dialog;
 
   AwnConfigClient *instance_config;
   AwnConfigClient *default_config;
 
-  gint            applet_icon_height;
+  gint             applet_icon_height;
   gchar           *applet_icon_name;
   gchar           *uri;
   gboolean         enable_location_dialog;

@@ -27,6 +27,7 @@
 #define CONFIG_LAST_ACCESS            "last_access"
 #define CONFIG_HEIGHT                 "height"
 #define CONFIG_WIDTH                  "width"
+#define CONFIG_ENABLE_LOCATION_CONFIG "enable_location_dialog"
 
 void init_config (WebApplet *webapplet, gchar *uid);
 

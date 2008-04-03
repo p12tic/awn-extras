@@ -23,13 +23,13 @@
 #include "applet.h"
 #include "configuration.h"
 
-static char *
+static gchar *
 get_string (WebApplet *webapplet, const gchar *key)
 {
-  char *str;
-  str = awn_config_client_get_string(webapplet->instance_config,
-                                     AWN_CONFIG_CLIENT_DEFAULT_GROUP,
-                                     key, NULL);
+  gchar *str;
+  str = awn_config_client_get_string (webapplet->instance_config,
+                                      AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+                                      key, NULL);
   if (!str)
   {
     str = awn_config_client_get_string (webapplet->default_config,
@@ -37,6 +37,26 @@ get_string (WebApplet *webapplet, const gchar *key)
                                         key, NULL);
   }
   return str;
+}
+
+static gboolean
+get_bool (WebApplet *webapplet, const gchar *key)
+{
+  gboolean value;
+  if (awn_config_client_entry_exists (webapplet->instance_config,
+                                      AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+                                      key)) {
+    value = awn_config_client_get_bool (webapplet->instance_config,
+                                        AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+                                        key, NULL);
+  }
+  else
+  {
+    value = awn_config_client_get_bool (webapplet->default_config,
+                                        AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+                                        key, NULL);
+  }
+  return value;
 }
 
 gint
@@ -98,6 +118,7 @@ init_config(WebApplet *webapplet, gchar *uid)
   webapplet->uri = get_string (webapplet, CONFIG_URI);
   webapplet->width = get_width (webapplet, uid);
   webapplet->height = get_height (webapplet, uid);
+  webapplet->enable_location_dialog = get_bool (webapplet, CONFIG_ENABLE_LOCATION_CONFIG);
 
   g_free (date_time);
 }

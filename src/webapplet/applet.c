@@ -26,6 +26,7 @@
 #include <libawn/awn-applet-dialog.h>
 #include <gtk/gtk.h>
 #include <glib.h>
+#include <glib/gi18n.h>
 
 #include <libawn-extras/awn-extras.h>
 
@@ -35,14 +36,64 @@
 
 
 static gboolean
-_show_prefs (GtkWidget *widget, GdkEventButton *event, WebApplet * webapplet)
+_show_prefs (GtkWidget *widget, GdkEventButton *event, WebApplet *webapplet)
 {
+  return TRUE;
+}
+
+static void
+_send_dialog_response (GtkEntry *entry, GtkWidget *dialog)
+{
+  gtk_dialog_response (dialog, GTK_RESPONSE_OK);
+}
+
+static gboolean
+_show_location_dialog (GtkWidget      *widget,
+                       GdkEventButton *event,
+                       WebApplet      *webapplet)
+{
+  static gboolean done_once = FALSE;
+  static GtkWidget *location_dialog;
+  static GtkWidget *entry;
+  gint response;
+  if (!done_once)
+  {
+    location_dialog = gtk_dialog_new_with_buttons (_("Open Location"),
+                                                     GTK_WINDOW (webapplet->mainwindow),
+                                                     GTK_DIALOG_DESTROY_WITH_PARENT,
+                                                     GTK_STOCK_CANCEL,
+                                                     GTK_RESPONSE_CANCEL,
+                                                     GTK_STOCK_OPEN,
+                                                     GTK_RESPONSE_OK,
+                                                     NULL);
+    GtkWidget *hbox = gtk_hbox_new (FALSE, 5);
+    gtk_container_add (GTK_CONTAINER (hbox), gtk_label_new (_("URI:")));
+    entry = gtk_entry_new ();
+    g_signal_connect (G_OBJECT (entry), "activate",
+                      G_CALLBACK (_send_dialog_response),
+                      location_dialog);
+    gtk_container_add (GTK_CONTAINER (hbox), entry);
+    gtk_widget_show_all (hbox);
+    gtk_container_add (GTK_CONTAINER (GTK_DIALOG (location_dialog)->vbox),
+                       hbox);
+    done_once = TRUE;
+  }
+  response = gtk_dialog_run (GTK_DIALOG (location_dialog));
+  gtk_widget_hide (location_dialog);
+  if (response == GTK_RESPONSE_OK)
+  {
+    html_web_view_open (webapplet->viewer,
+                        gtk_entry_get_text (GTK_ENTRY (entry)));
+  }
   return TRUE;
 }
 
 static void
 awn_html_dialog_new (WebApplet *webapplet)
 {
+  /* create location dialog if configured */
+  if (webapplet->enable_location_dialog)
+  /* create viewer */
   webapplet->mainwindow = awn_applet_dialog_new (webapplet->applet);
   webapplet->box = gtk_vbox_new (FALSE, 1);
   gtk_widget_set_size_request (GTK_WIDGET (webapplet->box), webapplet->width,
@@ -78,17 +129,28 @@ _button_clicked_event (GtkWidget      *widget,
   {
     static gboolean done_once = FALSE;
     static GtkWidget *menu;
-    static GtkWidget *item;
     if (!done_once)
     {
+      GtkWidget *item;
       menu = gtk_menu_new ();
-      item = gtk_menu_item_new_with_label ("Preferences");
-      gtk_widget_show (item);
       gtk_menu_set_screen (GTK_MENU (menu), NULL);
+      if (webapplet->enable_location_dialog)
+      {
+        item = gtk_image_menu_item_new_with_label (_("Open Location"));
+        gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),
+                                       gtk_image_new_from_stock (GTK_STOCK_OPEN,
+                                                                 GTK_ICON_SIZE_MENU));
+        gtk_widget_show_all (item);
+        gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
+        g_signal_connect (G_OBJECT (item), "button-press-event",
+                          G_CALLBACK (_show_location_dialog), webapplet);
+      }
+      item = gtk_image_menu_item_new_from_stock (GTK_STOCK_PREFERENCES, NULL);
+      gtk_widget_show (item);
       gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
       g_signal_connect (G_OBJECT (item), "button-press-event",
                         G_CALLBACK (_show_prefs), webapplet);
-      done_once=TRUE;
+      done_once = TRUE;
     }
     gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL,
                     event_button->button, event_button->time);

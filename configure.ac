@@ -363,6 +363,9 @@ src/mail/Themes/Tango/Makefile
 src/mail/Themes/Reserved/Makefile
 src/mail/Themes/GMail/Makefile
 src/mail/mail.desktop.in
+src/mail/locale/Makefile
+src/mail/locale/ru/Makefile
+src/mail/locale/ru/LC_MESSAGES/Makefile
 src/main-menu/Makefile
 src/main-menu/main-menu.desktop.in
 src/media-control/Makefile

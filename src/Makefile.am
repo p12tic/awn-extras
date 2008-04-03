@@ -55,6 +55,7 @@ SUBDIRS =			\
 	libawn-extras		\
 	affinity		\
 	battery-applet		\
+	comics			\
 	mail			\
 	notification-area	\
 	places			\

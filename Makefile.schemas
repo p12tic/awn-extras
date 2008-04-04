@@ -23,3 +23,5 @@ else
 schemasdir = $(datadir)/avant-window-navigator/schemas
 schemas_DATA = $(APPLET_SCHEMA)
 endif
+
+EXTRA_DIST += $(APPLET_SCHEMA)

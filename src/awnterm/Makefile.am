@@ -27,4 +27,4 @@ install-data-local: $(schemas_DATA)
 	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(schemas_DATA)
 endif
 
-EXTRA_DIST=awn-terminal.schemas.in
+EXTRA_DIST += awn-terminal.schemas.in

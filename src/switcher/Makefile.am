@@ -11,5 +11,3 @@ switcher_la_LIBADD =	\
 	$(LIBWNCK_LIBS)	\
 	$(NULL)
 switcher_la_LDFLAGS = $(APPLET_LINKER_FLAGS)
-
-EXTRA_DIST=switcher.schema-ini

@@ -26,4 +26,4 @@ filebrowser_la_LIBADD =		\
 	$(NULL)
 filebrowser_la_LDFLAGS = $(APPLET_LINKER_FLAGS)
 
-EXTRA_DIST=filebrowser.schema-ini filebrowser.svg 
+EXTRA_DIST += filebrowser.svg

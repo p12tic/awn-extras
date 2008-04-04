@@ -32,4 +32,4 @@ notificationdaemon-dbus-glue.h: notificationdaemon.xml
 DISTCLEANFILES = \
 	notificationdaemon-dbus-glue.h
 
-EXTRA_DIST=notificationdaemon.xml
+EXTRA_DIST += notificationdaemon.xml

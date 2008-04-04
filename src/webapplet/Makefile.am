@@ -26,5 +26,3 @@ webapplet_la_LIBADD =						\
 	$(WEBKIT_LIBS)						\
 	$(NULL)
 webapplet_la_LDFLAGS = $(APPLET_LINKER_FLAGS)
-
-EXTRA_DIST += webapplet.schema-ini

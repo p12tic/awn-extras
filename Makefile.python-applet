@@ -11,4 +11,4 @@ install-exec-local:
 uninstall-local:
 	rm -f "$(DESTDIR)$(appletdir)/$(APPLET_MAIN_FILE)"
 
-EXTRA_DIST=$(APPLET_MAIN_FILE)
+EXTRA_DIST += $(APPLET_MAIN_FILE)

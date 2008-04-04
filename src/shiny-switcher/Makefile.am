@@ -1,6 +1,5 @@
 APPLET_NAME = shinyswitcher
-APPLET_CFLAGS = 		\
-	$(SHINY_SWITCHER_CFLAGS)
+APPLET_CFLAGS = $(SHINY_SWITCHER_CFLAGS)
 
 include $(top_srcdir)/Makefile.c-applet
 include $(top_srcdir)/Makefile.schemas
@@ -8,14 +7,12 @@ include $(top_srcdir)/Makefile.schemas
 applet_LTLIBRARIES = shinyswitcher.la
 
 shinyswitcher_la_SOURCES =	\
-	applet.c				\
+	applet.c		\
 	shinyswitcherapplet.c	\
 	shinyswitcherapplet.h	\
 	$(NULL)
 shinyswitcher_la_LIBADD =	\
-	$(AWN_LIBS)				\
+	$(AWN_LIBS)		\
 	$(SHINY_SWITCHER_LIBS)	\
 	$(NULL)
 shinyswitcher_la_LDFLAGS = $(APPLET_LINKER_FLAGS)
-
-EXTRA_DIST=shinyswitcher.schema-ini

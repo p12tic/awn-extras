@@ -68,4 +68,4 @@ affinity_la_LIBADD =		\
 	$(NULL)
 affinity_la_LDFLAGS = $(APPLET_LINKER_FLAGS)
 
-EXTRA_DIST=po/Makefile.in.in
+EXTRA_DIST += po/Makefile.in.in

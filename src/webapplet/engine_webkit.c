@@ -17,7 +17,15 @@
  *
  */
 
-#include  <webkit/webkitwebview.h>
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#ifdef HAVE_OLD_WEBKITGTK
+#include <webkitwebview.h>
+#else
+#include <webkit/webkitwebview.h>
+#endif
 
 #include  "engine_webkit.h"
 #include  "engine_html.h"

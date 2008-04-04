@@ -100,10 +100,17 @@ PKG_CHECK_MODULES(GNOME_MENU, [libgnome-menu])
 PKG_CHECK_MODULES(GTOP, [libgtop-2.0])
 fi
 
+webkit_module=no
 if test "$with_webkit" != "no"; then
 # webapplet
-PKG_CHECK_MODULES(WEBKIT, [webkit-1.0],,
-    [PKG_CHECK_MODULES(WEBKIT, [WebKitGtk])])
+PKG_CHECK_EXISTS([webkit-1.0],[webkit_module="webkit-1.0"],
+    [PKG_CHECK_EXISTS([WebKitGtk],[
+        webkit_module="WebKitGtk"
+        AC_DEFINE([HAVE_OLD_WEBKITGTK],[1],[Define if the installed WebKit uses the old pkgconfig file and header structure.])
+        ],[AC_MSG_ERROR([Could not find packages webkit-1.0 or WebKitGtk.  Either one is required for webkit support to be enabled.])])])
+PKG_CHECK_MODULES(WEBKIT, [$webkit_module])
+AC_SUBST(WEBKIT_CFLAGS)
+AC_SUBST(WEBKIT_LIBS)
 fi
 
 if test "$with_gconf" != "no"; then
@@ -473,4 +480,6 @@ echo ""
 echo "    Configuration Backend:   $config_backend"
 echo ""
 echo "             Vala Support:   $HAVE_VALA"
+echo ""
+echo "           WebKit Support:   $webkit_module"
 echo ""

@@ -45,6 +45,8 @@ GLADE_FILE = join(GLADE_DIR, 'main.glade')
 
 
 class ComicApplet(awn.AppletSimple):
+	DIALOG_DURATION = 3000
+	
 	def set_visibility(self, visible):
 		"""Show or hide the comic windows."""
 		self.visible = visible
@@ -62,7 +64,7 @@ class ComicApplet(awn.AppletSimple):
 		if template:
 			settings.update(template)
 		settings['cache-file'] = filename.rsplit('.', 1)[0] + '.cache'
-		window = comics_view.ComicsViewer(settings, self.visible)
+		window = comics_view.ComicsViewer(self, settings, self.visible)
 		self.windows.append(window)
 		window.connect('removed', self.on_window_removed)
 		window.connect('updated', self.on_window_updated)
@@ -122,6 +124,12 @@ class ComicApplet(awn.AppletSimple):
 		
 		return self.__xml.get_widget('menu')
 	
+	def show_message(self, message, icon_id):
+		self.message_label.set_markup(message)
+		self.message_icon.set_from_stock(icon_id, gtk.ICON_SIZE_DIALOG)
+		self.dialog.show_all()
+		gobject.timeout_add(self.DIALOG_DURATION, self.on_dialog_timer)
+	
 	def __init__(self, uid, orient, height):
 		global feeds
 		
@@ -132,6 +140,16 @@ class ComicApplet(awn.AppletSimple):
 		self.update_icon()
 		self.notify = awn.extras.AWNLib.Notify(self)
 		self.notify.require()
+		self.dialog = awn.AppletDialog(self)
+		self.dialog.connect('button-press-event', self.on_dialog_button_press)
+		
+		hbox = gtk.HBox(False)
+		self.message_icon = gtk.Image()
+		self.message_label = gtk.Label()
+		hbox.pack_start(self.message_icon, expand = False, fill = False)
+		hbox.pack_end(self.message_label)
+		hbox.show_all()
+		self.dialog.add(hbox)
 		
 		self.connect('destroy', self.on_destroy)
 		self.connect('button-press-event', self.on_button_press)
@@ -174,6 +192,12 @@ class ComicApplet(awn.AppletSimple):
 		else:
 			return False
 		return True
+	
+	def on_dialog_button_press(self, widget, event):
+		self.dialog.hide()
+	
+	def on_dialog_timer(self):
+		self.dialog.hide()
 	
 	def on_comics_toggled(self, widget):
 		self.toggle_window(widget.data, widget.get_active())

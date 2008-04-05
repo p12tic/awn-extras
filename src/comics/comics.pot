@@ -126,3 +126,7 @@ msgstr ""
 #: comics/comics_view.py:159
 msgid "%A %d %B"
 msgstr ""
+
+#: comics/comics_view.py:523
+msgid "Failed to save <i>%s</i>."
+msgstr ""

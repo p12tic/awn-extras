@@ -132,6 +132,10 @@ msgstr "%A %d %B"
 msgid "None"
 msgstr "Ingen"
 
+#: comics/comics_view.py:523
+msgid "Failed to save <i>%s</i>."
+msgstr "Det gick inte att spara <i>%s</i>."
+
 #: comics/comics.py:160 comics/comics.py:161
 #, python-format
 msgid "There is a new strip of %s!"

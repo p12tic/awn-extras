@@ -329,6 +329,20 @@ class ComicsViewer(ScalableWindow):
 		
 		ctx.restore()
 	
+	def make_file_type_chooser(self):
+		"""Add the possible image types to the file chooser dialog."""
+		combo = self.__xml.get_widget('file_format_combo')
+		model = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING,
+			gobject.TYPE_STRING)
+		for format in gtk.gdk.pixbuf_get_formats():
+			if format['is_writable']:
+				text = '%s (*.%s)' % (format['description'],
+					format['extensions'][0])
+				model.append((format['description'], format['name'],
+					format['extensions'][0]))
+		combo.set_model(model)
+		combo.set_active(0)
+	
 	def make_menu(self):
 		"""Create the context menu."""
 		global feeds
@@ -356,6 +370,8 @@ class ComicsViewer(ScalableWindow):
 		self.__xml.get_widget('show_link_item').set_active(self.show_link)
 		self.__xml.get_widget('history_container').set_sensitive(
 			len(feeds.feeds[self.feed_name].items) > 0)
+		self.__xml.get_widget('save_as_item').set_sensitive(not self.__pixbuf \
+			is None)
 		
 		return self.__xml.get_widget('menu')
 	
@@ -363,11 +379,12 @@ class ComicsViewer(ScalableWindow):
 	# Standard python methods                                              #
 	########################################################################
 	
-	def __init__(self, settings, visible = False):
+	def __init__(self, applet, settings, visible = False):
 		"""Create a new ComicsView instance."""
 		global feeds
 		
 		super(ComicsViewer, self).__init__()
+		self.applet = applet
 		self.__settings = settings
 		
 		# Initialize fields
@@ -378,6 +395,7 @@ class ComicsViewer(ScalableWindow):
 			self.__pixbuf = None
 		self.__is_error = False
 		self.__xml = gtk.glade.XML(GLADE_FILE)
+		self.make_file_type_chooser()
 		self.__link = WWWLink('', '', LINK_FONTSIZE)
 		self.__link.connect('size-allocate', self.on_link_size_allocate)
 		self.__ticker = Ticker((20.0, 20.0))
@@ -487,6 +505,35 @@ class ComicsViewer(ScalableWindow):
 	
 	def on_close_activated(self, widget):
 		self.close()
+	
+	def on_save_as_activated(self, widget):
+		dialog = self.__xml.get_widget('save_as_dialog')
+		dialog.set_title(self.feed_name)
+		combo = self.__xml.get_widget('file_format_combo')
+		model, iterator = combo.get_model(), combo.get_active_iter()
+		format = model.get_value(iterator, 1)
+		ext = model.get_value(iterator, 2)
+		dialog.set_current_name('%s.%s' % (self.__link.text, ext))
+		if dialog.run():
+			model, iterator = combo.get_model(), combo.get_active_iter()
+			format = model.get_value(iterator, 1)
+			try:
+				self.__pixbuf.save(dialog.get_filename(), format)
+			except:
+				self.applet.show_message(_('Failed to save <i>%s</i>.') %
+					dialog.get_filename(), gtk.STOCK_DIALOG_ERROR)
+		
+		dialog.hide()
+	
+	def on_file_format_combo_changed(self, widget):
+		dialog = self.__xml.get_widget('save_as_dialog')
+		current_name = dialog.get_filename().rsplit('.', 1)
+		if len(current_name) == 2:
+			combo = widget
+			model, iterator = combo.get_model(), combo.get_active_iter()
+			ext = model.get_value(iterator, 2)
+			dialog.set_current_name('%s.%s' % (
+				os.path.basename(current_name[0]), ext))
 	
 	def on_link_size_allocate(self, widget, e):
 		i_dim = self.get_image_dimensions()

@@ -19,18 +19,15 @@
 
 
 # Libraries used
-import datetime
 import gobject
 import gtk
 import gtk.glade
 import os
 import re
 import tempfile
-import time
 
 # Symbols used
 from locale import gettext as _
-from math import pi
 
 # Local
 from feed import Feed
@@ -39,7 +36,6 @@ from downloader import Downloader
 from shared import SHARE_DIR, USER_DIR, SYS_FEEDS_DIR, USER_FEEDS_DIR, \
 	GLADE_DIR, PIXMAPS_DIR, feeds
 from settings import Settings
-from time import strptime
 
 GLADE_FILE = os.path.join(GLADE_DIR, 'add.glade')
 

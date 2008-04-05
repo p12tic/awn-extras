@@ -82,6 +82,7 @@ class ComicApplet(awn.AppletSimple):
 			
 			for window in windows:
 				window.close()
+				window.destroy()
 		
 		else:
 			template = Settings()

@@ -198,13 +198,14 @@ class ScalableWindow(gtk.Window, Scalable):
 		self.set_events(gtk.gdk.ALL_EVENTS_MASK)
 		
 		# Connect signals
-		self.connect('map-event', self.on_map)
-		self.connect('size-allocate', self.on_size_allocate)
-		self.connect('screen-changed', self.on_screen_changed)
-		self.connect('button-press-event', self.on_button_press_event)
+		self.connect('map-event', self.__on_map)
+		self.connect('size-allocate', self.__on_size_allocate)
+		self.connect('screen-changed', self.__on_screen_changed)
+		self.connect('button-press-event', self.__on_button_press_event)
+		self.connect('destroy', self.__on_destroy)
 		
 		# Enable alpha
-		self.on_screen_changed(self)
+		self.__on_screen_changed(self)
 		
 		# Create layout on which to place all child widgets
 		self.layout = ScalableWidgetContainer()
@@ -303,7 +304,7 @@ class ScalableWindow(gtk.Window, Scalable):
 		if self.window:
 			self.window.invalidate_rect(None, True)
 	
-	def on_map(self, widget, event):
+	def __on_map(self, widget, event):
 		"""Update the shape and background when the window is mapped. This
 		should really be done when the window is realized, but then the child
 		widgets have not been realized."""
@@ -311,12 +312,12 @@ class ScalableWindow(gtk.Window, Scalable):
 			self.update_shape()
 			self.update_background()
 	
-	def on_size_allocate(self, widget, event):
+	def __on_size_allocate(self, widget, event):
 		"""Update the shape and background."""
 		self.update_shape()
 		self.update_background()
 		
-	def on_screen_changed(self, widget, screen = None):
+	def __on_screen_changed(self, widget, screen = None):
 		"""Set the colormap for the window"""
 		if not screen:
 			screen = self.get_screen()
@@ -327,7 +328,7 @@ class ScalableWindow(gtk.Window, Scalable):
 			self.window.shape_combine_mask(None, 0, 0)
 		self.set_colormap(cm)
 	
-	def on_button_press_event(self, widget, event):
+	def __on_button_press_event(self, widget, event):
 		"""Called when the mouse button is pressed."""
 		if event.window == self.window:
 			if event.button == 1:
@@ -341,6 +342,9 @@ class ScalableWindow(gtk.Window, Scalable):
 				return False
 			return True
 		return False
+	
+	def __on_destroy(self, widget):
+		del self.background
 	
 	def on_scale(self, oldscale):
 		"""Called when the widget has been rescaled."""

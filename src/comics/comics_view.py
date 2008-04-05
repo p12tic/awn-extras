@@ -63,6 +63,10 @@ LINK_FONTSIZE = 10 * 1000			# The size of the font
 TICKER_DISTANCE = 8					# The distance from the ticker to the border
 COMPIZ_WIDGET = '_COMPIZ_WIDGET'	# The WM atom for a Compiz widget
 
+# Common images
+DEFAULT_IMAGE = rsvg.Handle(os.path.join(PIXMAPS_DIR, 'default.svg'))
+ERROR_IMAGE = rsvg.Handle(os.path.join(PIXMAPS_DIR, 'error.svg'))
+
 
 def compiz_widget_set(widget, value):
 	"""Sets or unsets the Compiz widget property."""
@@ -186,12 +190,10 @@ class ComicsViewer(ScalableWindow):
 		"""Return the dimensions of the current image."""
 		if self.__pixbuf:
 			return (self.__pixbuf.get_width(), self.__pixbuf.get_height())
-		elif self.__is_error and self.__error:
-			return self.__error.get_dimension_data()[:2]
-		elif self.__default:
-			return self.__default.get_dimension_data()[:2]
+		elif self.__is_error:
+			return ERROR_IMAGE.get_dimension_data()[:2]
 		else:
-			return (0, 0)
+			return DEFAULT_IMAGE.get_dimension_data()[:2]
 	
 	def get_window_dimensions(self):
 		"""Get the required size of the window."""
@@ -318,12 +320,12 @@ class ComicsViewer(ScalableWindow):
 		elif self.__is_error:
 			ctx.set_operator(cairo.OPERATOR_OVER)
 			ctx.translate(x, self.__border[1])
-			self.__error.render_cairo(ctx)
+			ERROR_IMAGE.render_cairo(ctx)
 		# Otherwise draw the default image
 		else:
 			ctx.set_operator(cairo.OPERATOR_OVER)
 			ctx.translate(x, self.__border[1])
-			self.__default.render_cairo(ctx)
+			DEFAULT_IMAGE.render_cairo(ctx)
 		
 		ctx.restore()
 	
@@ -374,8 +376,6 @@ class ComicsViewer(ScalableWindow):
 			self.__pixbuf = gtk.gdk.pixbuf_new_from_file(settings['cache-file'])
 		except:
 			self.__pixbuf = None
-		self.__default = rsvg.Handle(os.path.join(PIXMAPS_DIR, 'default.svg'))
-		self.__error = rsvg.Handle(os.path.join(PIXMAPS_DIR, 'error.svg'))
 		self.__is_error = False
 		self.__xml = gtk.glade.XML(GLADE_FILE)
 		self.__link = WWWLink('', '', LINK_FONTSIZE)
@@ -386,6 +386,7 @@ class ComicsViewer(ScalableWindow):
 		self.__border_radii = BORDER_RADII
 		
 		# Connect events
+		self.connect('destroy', self.on_destroy)
 		feeds.connect('feed-changed', self.on_feed_changed)
 		self.__xml.signal_autoconnect(self)
 		
@@ -460,6 +461,9 @@ class ComicsViewer(ScalableWindow):
 	########################################################################
 	# Event hooks                                                          #
 	########################################################################
+	
+	def on_destroy(self, widget):
+		del self.__pixbuf
 	
 	def on_link_clicked(self, widget, e):
 		# Start the web browser in another process

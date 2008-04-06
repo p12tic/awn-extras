@@ -280,7 +280,7 @@ class Icon:
         """
 
         self.theme = gtk.IconTheme()
-        icon = self.theme.load_icon(name, self.height, 0)
+        icon = self.theme.load_icon(name, self.__height, 0)
 
         if set:
             self.set(icon)

@@ -1,5 +1,5 @@
-dist_weather_DATA =                            \
+dist_mail_DATA =                            \
 	awn-mail-applet.mo
 
-weatherdir = $(libdir)/awn/applets/main/locale/ru/LC_MESSAGES
+maildir = $(libdir)/awn/applets/mail/locale/ru/LC_MESSAGES
 

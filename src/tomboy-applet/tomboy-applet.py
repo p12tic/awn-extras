@@ -34,7 +34,10 @@ version = interface.Version()
 class TomboyApplet:
 	def __init__(self, awnlib):
 		self.awn=awnlib	
-		self.awn.icon.set(applet.icon.getTheme("tomboy"))
+		try: 
+			self.awn.icon.set(applet.icon.getTheme("tomboy"))
+		except:
+			self.awn.icon.set(applet.icon.getFile("tomboy.png"))
 		self.awn.title.set("Tomboy Applet")
 
 	def DisplaySearch(self, widget, data=None):

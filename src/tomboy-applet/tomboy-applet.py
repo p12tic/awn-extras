@@ -68,8 +68,8 @@ class TomboyApplet:
 	def MainDialog(self):
 		self.dlog = applet.dialog.new("main")
 
-		for s in self.ListAllNotes():
-			print s
+		li = self.ListAllNotes()
+		for s in li[:10]:
 			self.button = gtk.Button(label=interface.GetNoteTitle(s))
 			self.button.connect("clicked", self.ButtonDisplay, s)
 			self.dlog.add(self.button)

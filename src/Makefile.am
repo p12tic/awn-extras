@@ -66,6 +66,7 @@ SUBDIRS =			\
 	showdesktop		\
 	Taskmand-applet		\
 	tsclient-applet		\
+	tomboy-applet		\
 	volume-control		\
 	wobblyzini		\
 	$(GCONF_APPLETS)	\

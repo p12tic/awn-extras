@@ -47,7 +47,7 @@ class VolumeApplet:
         # Scroll to change volume
         self.awn.connect("scroll-event", self.wheel)
 
-        self.awn.module.get("alsaaudio", {"Ubuntu": "python-alsaaudio",
+        self.awn.errors.module("alsaaudio", {"Ubuntu": "python-alsaaudio",
             "Gentoo": "dev-python/pyalsaaudio",
             "Mandriva": "python-alsaaudio"}, self.__init2)
 

@@ -349,7 +349,7 @@ class Icon:
 
         self.__parent.hide()
 
-class Modules:
+class Modules: # DEPRECATED
     def __init__(self, parent):
         """
         Creates a new Modules object.
@@ -466,6 +466,168 @@ class Modules:
 
         ok.connect("clicked", qu)
         dlog.show_all()
+
+class Errors:
+    def __init__(self, parent):
+        """
+        Creates a new Modules object.
+
+        @param parent: The parent applet of the icon instance.
+        @type parent: L{Applet}
+        """
+
+        self.__parent = parent
+
+    def program(self, name, packagelist, callback):
+        """
+        Tells the user that they need to install a program to use your applet.
+        Note that this does not do any checking to determine whether the
+        said program is installed. You must do all checking yourself - this is
+        typically done with co-recursive functions.
+
+        @param name: the name of the program that must be installed.
+        @type name: C{string}
+        @param packagelist: A dict of "distro": "package" pairs with the names
+            of the packages of the given distro that can be used to install the
+            said program.
+        @type packagelist: C{dict}
+        @param callback: The function to be called when the user claims to have
+            installed the necessary program. Remember that you must check
+            whether or not this is true.
+        @type callback: C{function}
+        """
+
+        dlog = self.__parent.dialog.new("main")
+
+        dlog = self.__parent.dialog.new("main", "<b>Error in %s:</b>" % \
+            self.__parent.meta["name"])
+        vbox = gtk.VBox()
+
+        error = "You must have the program <i>%s</i> installed to use %s. \
+        Make sure you do and click OK.\nHere is a list of distros and the \
+         package names for each:\n\n" % (name, self.__parent.meta["name"])
+        for (k, v) in packagelist.items():
+            error = "%s%s: <i>%s</i>\n" % (error, k, v)
+
+        # Error Message
+        text = gtk.Label(error)
+        text.set_line_wrap(True)
+        text.set_use_markup(True)
+        text.set_justify(gtk.JUSTIFY_FILL)
+        vbox.pack_start(text)
+
+        # Submit button
+        ok = gtk.Button(label = "OK, I've installed it")
+        ok.show_all()
+        vbox.pack_start(text)
+
+        def qu(x):
+            dlog.hide()
+            callback()
+
+        ok.connect("clicked", qu)
+        dlog.show_all()
+
+    def module(self, name, packagelist, callback):
+        """
+        Tells the user that they need to install a module to use your applet.
+        This function will attempts to import the module, and if this is not
+        possible, alert the user. Otherwise, it will call your callback with
+        the module as the first (and only) argument
+
+        @param name: the name of the module that must be installed.
+        @type name: C{string}
+        @param packagelist: A dict of "distro": "package" pairs with the names
+            of the packages of the given distro that can be used to install the
+            said module.
+        @type packagelist: C{dict}
+        @param callback: The function to be called when the user claims to have
+            installed the necessary module. The module is passed as the first
+            and only argument to the callback.
+        @type callback: C{function}
+        @return: The module requested.
+        @rtype: C{module}
+        """
+
+        try:
+            module = __import__(name)
+        except ImportError:
+            module = False
+
+        if module:
+            return callback(module)
+
+        dlog = self.__parent.dialog.new("main", "<b>Error in %s:</b>" % \
+            self.__parent.meta["name"])
+        vbox = gtk.VBox()
+
+        error = "You must have the python module <i>%s</i> installed to use %s. \
+        Make sure you do and click OK.\nHere is a list of distros and the \
+        package names for each:\n\n" % (name, self.__parent.meta["name"])
+        for (k, v) in packagelist.items():
+            error = "%s%s: <i>%s</i>\n" % (error, k, v)
+
+        # Error Message
+        text = gtk.Label(error)
+        text.set_line_wrap(True)
+        text.set_use_markup(True)
+        text.set_justify(gtk.JUSTIFY_FILL)
+        vbox.pack_start(text)
+
+        # Submit button
+        ok = gtk.Button(label = "OK, I've installed it")
+        ok.show_all()
+        vbox.pack_start(text)
+
+        def qu(x):
+            dlog.hide()
+            self.get(name, packagelist, callback)
+
+        ok.connect("clicked", qu)
+        dlog.show_all()
+
+    def general(self, error, callback):
+        """
+        Tells the user that they need to install a module to use your applet.
+        This function will attempts to import the module, and if this is not
+        possible, alert the user. Otherwise, it will call your callback with
+        the module as the first (and only) argument
+
+        @param error: the error itself.
+        @type name: C{string} or C{Exception}
+        @param callback: The function to be called when the user claims to have
+            installed the necessary module. The module is passed as the first
+            and only argument to the callback.
+        @type callback: C{function}
+        """
+
+        if type(error) == type(Exception()) or type(BaseException()):
+            error = error.message
+
+
+        dlog = self.__parent.dialog.new("main", "<b>Error in %s:</b>" % \
+            self.__parent.meta["name"])
+        vbox = gtk.VBox()
+
+        text = gtk.Label("There seem to be problems in the %s applet. \
+            \n\nHere is the error given:\n\n<i>%s</i>" % \
+            (self.__parent.meta["name"], error))
+        text.set_line_wrap(True)
+        text.set_use_markup(True)
+        text.set_justify(gtk.JUSTIFY_FILL)
+        vbox.add(text)
+
+        # Submit button
+        ok = gtk.Button(label = "Close")
+        vbox.add(ok)
+
+        def qu(x):
+            dlog.hide()
+            callback()
+
+        ok.connect("clicked", qu)
+
+        dlog.show_all() # We want the dialog to show itself right away
 
 class Settings:
     def __init__(self, parent):
@@ -1062,7 +1224,7 @@ class Notify:
                 "Gentoo": "x11-libs/libnotify", \
                 "OpenSUSE": "libnotify"}, self.require)
 
-    def send(self, subject=None, body="", icon=""):
+    def send(self, subject=None, body="", icon="", attention=True):
         """
         Sends a new libnotify message.
 
@@ -1073,6 +1235,9 @@ class Notify:
         @type body: C{string}
         @param icon: The full absolute path to the name of the icon to use.
         @type icon: C{string}
+        @param attention: Whether or not to call the attention effect after
+            sending the message. True by default.
+        @type attention: C{bool}
         """
 
         if not subject:
@@ -1084,6 +1249,9 @@ class Notify:
         body = '"' + body.replace("\"", "\\\"") + '"'
         icon = '"' + icon + '"'
         subprocess.call(["notify-send", subject, body, "-i", icon])
+
+        if attention:
+            self.__parent.effects.attention()
 
 class Effects:
     def __init__(self, parent):
@@ -1097,13 +1265,15 @@ class Effects:
         self.__parent = parent
         self.__effects = self.__parent.get_effects()
 
-    def notify(self):
+    def attention(self):
         """
         Launches the notify effect. Should be used when the user's attention
         is required.
         """
 
         awn.awn_effect_start_ex(self.__effects, "attention", 0, 0, 1)
+
+    notify = attention # DEPRECATED
 
     def launch(self):
         """
@@ -1202,6 +1372,7 @@ class Applet(awn.AppletSimple):
         self.dialog = Dialogs(self)
         self.title = Title(self)
         self.module = Modules(self)
+        self.errors = Errors(self)
         self.settings = Settings(self)
         self.timing = Timing(self)
         self.keyring = KeyRing(self)

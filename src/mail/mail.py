@@ -84,17 +84,6 @@ def VBox(list, homog=True):
 
     return q
 
-class MailError(Exception):
-    """
-    Because networks never crash or anything, right?
-    """
-
-    def __init__(self, type):
-        self.type = type
-
-    def __str__(self):
-        return _("The Mail Applet had an error: %s") % self.type
-
 def strMailMessages(num):
     return gettext.ngettext("You have %d new message", \
         "You have %d new messages", num) % num
@@ -159,7 +148,7 @@ class MailApplet:
         self.awn.title.set(_("Mail Applet (Click to Log In)"))
         self.drawPrefDlog()
 
-        self.awn.module.get("feedparser", { \
+        self.awn.errors.module("feedparser", { \
             "Debian/Ubuntu": "python-feedparser", \
             "Gentoo": "dev-python/feedparser", \
             "OpenSUSE": "python-feedparser"},
@@ -234,7 +223,7 @@ class MailApplet:
             self.__setIcon("error")
 
             if self.showerror:
-                self.drawErrorDlog(err)
+                self.awn.errors.general(err, lambda: ())
             return
 
         diffSubjects = [i for i in self.mail.subjects if i not in \
@@ -249,9 +238,6 @@ class MailApplet:
             self.awn.notify.send(_("New Mail - Mail Applet"), msg, \
                 self.__getIconPath("unread", full=True))
             # Show the new mail dialog
-
-            self.awn.effects.notify()
-            # Do the "attention" effect
 
         self.awn.title.set(strMessages(len(self.mail.subjects)))
 
@@ -357,33 +343,6 @@ class MailApplet:
 
         buttons.append(b)
         layout.add(HBox(buttons))
-
-    def drawErrorDlog(self, msg=""):
-        dlog = self.awn.dialog.new("main", _("Error in Mail Applet"))
-
-        layout = gtk.VBox()
-        dlog.add(layout)
-
-        # Error Message
-        text = gtk.Label(_("There seem to be problems with our connection to \
-            your account. Your best bet is probably to log out and try again. \
-            \n\nHere is the error given:\n\n<i>%s</i>") % msg)
-        text.set_line_wrap(True)
-        text.set_use_markup(True)
-        text.set_justify(gtk.JUSTIFY_FILL)
-        layout.add(text)
-
-        # Submit button
-        ok = gtk.Button(label = _("Fine, log me out"))
-        layout.add(ok)
-
-        def qu(x):
-            dlog.hide()
-            self.logout()
-
-        ok.connect("clicked", qu)
-
-        dlog.show_all() # We want the dialog to show itself right away
 
     def drawPWDDlog(self, error=False):
         dlog = self.awn.dialog.new("main", _("Log In"))
@@ -533,7 +492,9 @@ class Backends:
                  % (self.key.attrs["username"], self.key.password))
 
             if "bozo_exception" in f.keys():
-                raise MailError, _("Could not log in")
+                raise MailError, _("There seem to be problems with our \
+                    connection to your account. Your best bet is probably \
+                    to log out and try again.")
             # Hehe, Google is funny. Bozo exception
 
             class MailItem:
@@ -592,7 +553,9 @@ class Backends:
                  self.key.password, self.key.attrs["domain"]))
 
             if "bozo_exception" in f.keys():
-                raise MailError, _("Could not log in")
+                raise MailError, _("There seem to be problems with our \
+                    connection to your account. Your best bet is probably \
+                    to log out and try again.")
             # Hehe, Google is funny. Bozo exception
 
             class MailItem:

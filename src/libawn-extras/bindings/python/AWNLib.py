@@ -20,6 +20,8 @@
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
 
+# Version: 1.5.bugfix
+
 # Path manipulations and file name
 import sys, os, subprocess
 
@@ -279,8 +281,12 @@ class Icon:
         @rtype: C{gtk.gdk.Pixbuf} or C{None}
         """
 
-        self.theme = gtk.IconTheme()
-        icon = self.theme.load_icon(name, self.__height, 0)
+        try:
+            self.theme = gtk.IconTheme()
+            icon = self.theme.load_icon(name, self.__height, 0)
+        except:
+            self.theme = gtk.icon_theme_get_default()
+            icon = self.theme.load_icon(name, self.__height, 0)
 
         if set:
             self.set(icon)
@@ -1070,11 +1076,10 @@ class Notify:
         """
 
         if not subject:
-            subject = "Message From " + self.__parent.meta["name"]
+            subject = '"' + "Message From " + self.__parent.meta["name"] + '"'
 
         if extras:
-            extras.notify_message(subject, body, icon, 0, False)
-            return
+            return extras.notify_message(subject, body, icon, 0, False)
 
         body = '"' + body.replace("\"", "\\\"") + '"'
         icon = '"' + icon + '"'

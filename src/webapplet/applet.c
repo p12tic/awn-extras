@@ -42,7 +42,7 @@ _show_prefs (GtkWidget *widget, GdkEventButton *event, WebApplet *webapplet)
 }
 
 static void
-_send_dialog_response (GtkEntry *entry, GtkWidget *dialog)
+_send_dialog_response (GtkEntry *entry, GtkDialog *dialog)
 {
   gtk_dialog_response (dialog, GTK_RESPONSE_OK);
 }

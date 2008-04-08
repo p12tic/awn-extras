@@ -37,8 +37,8 @@ src/taskmand/client-bindings.h
 src/taskmand/data/org.awnproject.taskmand.service
 src/taskmand/server-bindings.h
 src/taskmand/taskmand
-src/standalone-launcher/applet.c
-src/standalone-launcher/applet.h
-src/vala-test/applet.c
-src/vala-test/applet.h
+src/simple-launcher/applet.[ch]
+src/standalone-launcher/applet.[ch]
+SRc/standalone-launcher/applet.h
+src/vala-test/applet.[ch]
 stamp-h1

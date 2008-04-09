@@ -281,12 +281,8 @@ class Icon:
         @rtype: C{gtk.gdk.Pixbuf} or C{None}
         """
 
-        try:
-            self.theme = gtk.IconTheme()
-            icon = self.theme.load_icon(name, self.__height, 0)
-        except:
-            self.theme = gtk.icon_theme_get_default()
-            icon = self.theme.load_icon(name, self.__height, 0)
+        theme = gtk.icon_theme_get_default()
+        icon = theme.load_icon(name, self.__height, 0)
 
         if set:
             self.set(icon)
@@ -497,11 +493,11 @@ class Errors:
         @type callback: C{function}
         """
 
-        dlog = self.__parent.dialog.new("main")
-
         dlog = self.__parent.dialog.new("main", "<b>Error in %s:</b>" % \
             self.__parent.meta["name"])
         vbox = gtk.VBox()
+
+        dlog.add(vbox)
 
         error = "You must have the program <i>%s</i> installed to use %s. \
         Make sure you do and click OK.\nHere is a list of distros and the \
@@ -561,6 +557,8 @@ class Errors:
             self.__parent.meta["name"])
         vbox = gtk.VBox()
 
+        dlog.add(vbox)
+
         error = "You must have the python module <i>%s</i> installed to use %s. \
         Make sure you do and click OK.\nHere is a list of distros and the \
         package names for each:\n\n" % (name, self.__parent.meta["name"])
@@ -600,18 +598,23 @@ class Errors:
             and only argument to the callback.
         @type callback: C{function}
         """
-
-        if type(error) == type(Exception()) or type(BaseException()):
-            error = error.message
-
+        
+        # BaseException new to Python 2.5
+        try:
+            if type(error) == type(Exception()) or type(BaseException()):
+                error = error.message
+        except:
+            # Python 2.4, so fallback without BaseException
+            if type(error) == type(Exception()):
+                error = error.message
 
         dlog = self.__parent.dialog.new("main", "<b>Error in %s:</b>" % \
             self.__parent.meta["name"])
         vbox = gtk.VBox()
 
-        text = gtk.Label("There seem to be problems in the %s applet. \
-            \n\nHere is the error given:\n\n<i>%s</i>" % \
-            (self.__parent.meta["name"], error))
+        dlog.add(vbox)
+
+        text = gtk.Label("There seem to be problems in the %s applet. \n\nHere is the error given:\n\n<i>%s</i>" % (self.__parent.meta["name"], error))
         text.set_line_wrap(True)
         text.set_use_markup(True)
         text.set_justify(gtk.JUSTIFY_FILL)
@@ -658,7 +661,7 @@ class Settings:
             self.client = self.AWNConfigUser(folder)
         else:
             self.client = self.GConfUser(folder)
-            self.__parent.module.get("gconf", { \
+            self.__parent.errors.module("gconf", { \
                 "Debian/Ubuntu": "python-gconf", \
                 "Gentoo": "dev-python/gnome-python", \
                 "OpenSUSE": "python-gnome"}, self.client.load)
@@ -997,7 +1000,7 @@ class KeyRing:
         are used. Should only be called if the applet expects to use KeyRing.
         """
 
-        self.__parent.module.get("gnomekeyring", { \
+        self.__parent.errors.module("gnomekeyring", { \
             "Debian/Ubuntu": "gnome-keyring", \
             "Gentoo": "gnome-base/gnome-keyring", \
             "OpenSUSE": "gnome-keyring"}, self.__require2)
@@ -1219,7 +1222,7 @@ class Notify:
 
         n = subprocess.call(["notify-send"])
         if n != 256:
-            self.__parent.module.depend("notify-send", { \
+            self.__parent.errors.program("notify-send", { \
                 "Debian/Ubuntu": "libnotify-bin", \
                 "Gentoo": "x11-libs/libnotify", \
                 "OpenSUSE": "libnotify"}, self.require)

@@ -24,11 +24,11 @@ import gobject
 import gtk
 from gtk import gdk
 import dbus
-import os, sys
-
-___file___ = sys.argv[0]
 
 bus = dbus.SessionBus()
+
+
+#os.system("/usr/bin/tomboy")
 
 interface = bus.get_object('org.gnome.Tomboy','/org/gnome/Tomboy/RemoteControl')
 interface = dbus.Interface(interface,dbus_interface='org.gnome.Tomboy.RemoteControl')
@@ -37,14 +37,10 @@ version = interface.Version()
 class TomboyApplet:
 	def __init__(self, awnlib):
 		self.awn=awnlib	
-		#try: 
-		icon = gdk.pixbuf_new_from_file(os.path.join(os.path.abspath( \
-            os.path.dirname(___file___)), "tomboy.png"))
-		#icon = gtk.gdk.pixbuf_new_from_file("tomboy.png")
-		#self.awn.set_icon(icon)
-		self.awn.icon.set(icon)
-		#except:
-		#	self.awn.icon.set(applet.icon.file("tomboy.png"))
+		try:
+			self.awn.icon.theme("tomboy")
+		except:
+			self.awn.icon.file("tomboy.png")
 		self.awn.title.set("Tomboy Applet")
 
 	def DisplaySearch(self, widget, data=None):

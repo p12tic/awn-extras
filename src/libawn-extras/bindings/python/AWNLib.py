@@ -598,10 +598,11 @@ class Errors:
             and only argument to the callback.
         @type callback: C{function}
         """
-        
+
         # BaseException new to Python 2.5
         try:
-            if type(error) == type(Exception()) or type(BaseException()):
+            if isinstance(error, Exception) or \
+                isinstance(error, BaseException):
                 error = error.message
         except:
             # Python 2.4, so fallback without BaseException
@@ -1154,7 +1155,7 @@ class Timing:
 
         self.__parent = parent
 
-    def time(self, callback, sec):
+    def register(self, callback, sec):
         """
         Create a new timer-run function.
 
@@ -1169,6 +1170,8 @@ class Timing:
         c = self.Callback(callback)
         gobject.timeout_add(int(sec*1000), c.run)
         return c
+
+    time = register # DEPRECATED
 
     class Callback:
         def __init__(self, callback):

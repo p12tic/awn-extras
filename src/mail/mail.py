@@ -211,7 +211,7 @@ class MailApplet:
 
             self.awn.settings["login-token"] = key.token
 
-            self.timer = self.awn.timing.time(self.refresh, 300)
+            self.timer = self.awn.timing.register(self.refresh, 300)
             self.refresh()
 
     def refresh(self, x=None):
@@ -230,7 +230,7 @@ class MailApplet:
             oldSubjects]
         if len(diffSubjects) > 0:
 
-            msg = strNewMessages(len(diffSubjects))
+            msg = strMailMessages(len(diffSubjects))
 
             for i in diffSubjects:
                 msg += "\n" + i

@@ -25,7 +25,7 @@ using   GLib;
 
 class Configuration: GLib.Object
 {
-	protected			string				uid			{ get; construct; }
+	public		string				uid			{ get; construct; }
 	protected			Awn.ConfigClient	default_conf;
 	private             string              _desktop_file_editor;
 

@@ -179,12 +179,12 @@ class Dialogs:
 
         if e.button == 3 and "menu" in self.__register: # Right click
             self.toggle("menu", once=True)
-            self.toggle("program", once=True)
         elif e.button == 2 and "secondary" in self.__register: # Middle click
             self.toggle("secondary", once=True)
         elif e.button == 1 and "main" in self.__register:
             self.toggle("main", once=True)
         elif "program" in self.__register: # Act like launcher
+            self.toggle("program", once=True)
 
 class Title:
     def __init__(self, parent, text=None):

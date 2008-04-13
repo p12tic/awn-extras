@@ -103,8 +103,8 @@ static int _cmp_ptrs (pointer a, pointer b)
 
 class Configuration: GLib.Object
 {
-	protected			bool				anon_mode   { get; construct; }
-	protected			string				uid			{ get; construct; }
+	public  			bool				anon_mode   { get; construct; }
+	public			string				uid			{ get; construct; }
 	protected			string				subdir;
 	protected	weak	Awn.ConfigClient	primary_conf;
 	protected			Awn.ConfigClient	default_conf;
@@ -386,7 +386,7 @@ class Configuration: GLib.Object
 class DesktopFileManagement : GLib.Object
 {
 	protected   string  directory;
-	protected   string  uid { get; construct; }
+	public   string  uid { get; construct; }
 	
 	construct
 	{
@@ -629,7 +629,7 @@ class Listing : GLib.Object
     protected   List<string>               whitelist_titles_post;
     protected   List<string>               whitelist_exec_post;
 
-    protected   string                      listingfile { get; construct; }
+    public      string                      listingfile { get; construct; }
     protected   string                      directory;
 
 
@@ -1135,7 +1135,7 @@ class BookKeeper : GLib.Object
 class Multi_Launcher:    GLib.Object
 {
     protected           SList <DesktopItem>        items;
-    protected   weak    SList <string>             desktop_filenames { get; construct; }
+    public     weak    SList <string>             desktop_filenames { get; construct; }
 
     construct
     {        

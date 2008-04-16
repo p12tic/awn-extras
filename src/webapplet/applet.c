@@ -92,16 +92,16 @@ static void
 awn_html_dialog_new (WebApplet *webapplet)
 {
   /* create location dialog if configured */
-  if (webapplet->enable_location_dialog)
+//  if (webapplet->enable_location_dialog)      //Puzzled about this... removing.
   /* create viewer */
   webapplet->mainwindow = awn_applet_dialog_new (webapplet->applet);
   webapplet->box = gtk_vbox_new (FALSE, 1);
-  gtk_widget_set_size_request (GTK_WIDGET (webapplet->box), webapplet->width,
-                               webapplet->height);
+  gtk_widget_set_size_request (GTK_WIDGET (webapplet->box), config_get_width(webapplet),
+                               config_get_height(webapplet) );
   webapplet->viewer = html_web_view_new ();
   gtk_container_add (GTK_CONTAINER (webapplet->box),webapplet->viewer);
   gtk_container_add (GTK_CONTAINER (webapplet->mainwindow), webapplet->box);
-  html_web_view_open (webapplet->viewer, webapplet->uri);
+  html_web_view_open (webapplet->viewer, config_get_uri(webapplet));
 }
 
 
@@ -134,7 +134,7 @@ _button_clicked_event (GtkWidget      *widget,
       GtkWidget *item;
       menu = gtk_menu_new ();
       gtk_menu_set_screen (GTK_MENU (menu), NULL);
-      if (webapplet->enable_location_dialog)
+      if (config_get_enable_location_dialog(webapplet))
       {
         item = gtk_image_menu_item_new_with_label (_("Open Location"));
         gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),

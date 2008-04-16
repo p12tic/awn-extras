@@ -60,7 +60,7 @@ get_bool (WebApplet *webapplet, const gchar *key)
 }
 
 gint
-get_width (WebApplet *webapplet, gchar *uid)
+get_width (WebApplet *webapplet)
 {
   gchar *str = get_string (webapplet, CONFIG_WIDTH);
   gint width;
@@ -81,7 +81,7 @@ get_width (WebApplet *webapplet, gchar *uid)
 }
 
 gint
-get_height (WebApplet *webapplet, gchar *uid)
+get_height (WebApplet *webapplet)
 {
   gchar *str = get_string (webapplet, CONFIG_HEIGHT);
   gint height;
@@ -101,6 +101,36 @@ get_height (WebApplet *webapplet, gchar *uid)
   return height;
 }
 
+const gchar * 
+config_get_uri(WebApplet *webapplet)
+{
+    static gchar * str=NULL;
+    if (str)
+    {
+        g_free(str);
+    }
+    str=get_string (webapplet, CONFIG_URI);
+    return str;
+}  
+
+gint 
+config_get_width(WebApplet *webapplet)
+{
+  return get_width (webapplet);
+}  
+
+gint 
+config_get_height(WebApplet *webapplet)
+{
+  return get_height (webapplet);
+}
+
+gboolean 
+config_get_enable_location_dialog(WebApplet *webapplet)
+{
+  return get_bool (webapplet, CONFIG_ENABLE_LOCATION_CONFIG);
+}  
+
 void
 init_config(WebApplet *webapplet, gchar *uid)
 {
@@ -115,11 +145,6 @@ init_config(WebApplet *webapplet, gchar *uid)
   awn_config_client_set_string(webapplet->instance_config,
                                AWN_CONFIG_CLIENT_DEFAULT_GROUP,
                                CONFIG_LAST_ACCESS, date_time, NULL);
-  webapplet->uri = get_string (webapplet, CONFIG_URI);
-  webapplet->width = get_width (webapplet, uid);
-  webapplet->height = get_height (webapplet, uid);
-  webapplet->enable_location_dialog = get_bool (webapplet, CONFIG_ENABLE_LOCATION_CONFIG);
-
   g_free (date_time);
 }
 /* vim: set et ts=2 sts=2 sw=2 : */

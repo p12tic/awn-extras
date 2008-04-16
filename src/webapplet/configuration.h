@@ -31,5 +31,10 @@
 
 void init_config (WebApplet *webapplet, gchar *uid);
 
+const gchar * config_get_uri(WebApplet *webapplet);
+gint  config_get_width(WebApplet *webapplet);
+gint  config_get_height(WebApplet *webapplet);
+gboolean  config_get_enable_location_dialog(WebApplet *webapplet);
+
 #endif
 /* vim: set et ts=2 sts=2 sw=2 : */

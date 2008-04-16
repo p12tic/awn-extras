@@ -36,11 +36,6 @@ typedef struct
 
   gint             applet_icon_height;
   gchar           *applet_icon_name;
-  gchar           *uri;
-  gboolean         enable_location_dialog;
-
-  gint             width;
-  gint             height;
 
 } WebApplet;
 

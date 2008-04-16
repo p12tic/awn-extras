@@ -91,8 +91,6 @@ _show_location_dialog (GtkWidget      *widget,
 static void
 awn_html_dialog_new (WebApplet *webapplet)
 {
-  /* create location dialog if configured */
-//  if (webapplet->enable_location_dialog)      //Puzzled about this... removing.
   /* create viewer */
   webapplet->mainwindow = awn_applet_dialog_new (webapplet->applet);
   webapplet->box = gtk_vbox_new (FALSE, 1);

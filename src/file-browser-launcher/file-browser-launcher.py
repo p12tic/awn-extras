@@ -34,6 +34,8 @@ import gconfwrapper
 class App (awn.AppletSimple):
 	def __init__(self, uid, orient, height):
 		self.uid = uid
+		self.height = height
+		
 		#AWN Applet Configuration
 		awn.AppletSimple.__init__(self, uid, orient, height)
 		self.title = awn.awn_title_get_default()
@@ -44,24 +46,27 @@ class App (awn.AppletSimple):
 		
 		#Get the icon theme default theme thing
 		self.theme = gtk.icon_theme_get_default()
+		self.theme.connect('changed',self.icon_theme_changed)
 		
 		#get the default icon path
 		self.default_icon_path = '/'.join(__file__.split('/')[:-1])+'/folder.png'
 		
 		#Get the icon path, or default to /dev/null which will become the stock folder icon
 		self.gconf_icon = self.client.get_string('/apps/avant-window-navigator/applets/'+str(self.uid)+'/icon','default')
+		
+		#Get and set the icon
 		try:
-			if self.gconf_icon in ['/dev/null','','folder']:
-				icon = self.theme.load_icon('folder',height,0)
+			if self.gconf_icon in ['/dev/null','','theme']:
+				icon = self.theme.load_icon('folder',height,height)
 			elif self.gconf_icon=='default':
-				icon = gtk.gdk.pixbuf_new_from_file(self.default_icon_path)
+				icon = gtk.gdk.pixbuf_new_from_file_at_size(self.default_icon_path,height,height)
 			else:
-				icon = gtk.gdk.pixbuf_new_from_file(self.gconf_icon)
+				icon = gtk.gdk.pixbuf_new_from_file_at_size(self.gconf_icon,height,height)
 			if height != icon.get_height():
 				icon = icon.scale_simple(height,height,gtk.gdk.INTERP_BILINEAR)
 			self.set_icon(icon)
 		except:
-			self.set_icon(gtk.gdk.pixbuf_new_from_file(self.default_icon_path))
+			self.set_icon(gtk.gdk.pixbuf_new_from_file_at_size(self.default_icon_path,height,height))
 		
 		#Make the dialog, will only be shown when approiate
 		#VBox for everything to go in
@@ -82,7 +87,6 @@ class App (awn.AppletSimple):
 		self.treeview.append_column(self.column0)
 		self.treeview.append_column(self.column1)
 		self.treeview.connect('button-press-event',self.treeview_clicked)
-		#self.treeview.connect('key-press-event',lambda a:pass)
 		self.add_places()
 		self.vbox.pack_start(self.treeview)
 		
@@ -105,6 +109,7 @@ class App (awn.AppletSimple):
 		self.connect('button-press-event', self.button_press)
 		self.connect('enter-notify-event', lambda a,b: self.title.show(self,'File Browser Launcher'))
 		self.connect('leave-notify-event', lambda a,b: self.title.hide(self))
+		self.connect('height-changed',self.height_changed)
 		self.dialog.connect('focus-out-event', lambda a,b: self.dialog.hide())
 	
 	#Function to show the home folder, mounted drives/partitions, and bookmarks according to gconf
@@ -176,7 +181,7 @@ class App (awn.AppletSimple):
 					if z!='':
 						z2.append(z)
 		for x in z2:
-			if x in ['smbfs','nfs']:
+			if x in ['smbfs','nfs','cifs']:
 				self.nfs_smb_paths.append(z2[(z3-1)])
 				self.nfs_smb_corr_hnames.append(z2[(z3-2)].replace('//',''))
 			z3 = z3+1
@@ -192,8 +197,6 @@ class App (awn.AppletSimple):
 						self.cd_paths.append(x.split(' on ')[1].split(' type ')[0])
 					elif x.split(' type ')[1].split(' ')[0]=='udf':
 						self.dvd_paths.append(x.split(' on ')[1].split(' type ')[0])
-				elif x.split(' on ')[1].split(' type ')[0] in self.nfs_smb_paths:
-					self.paths.append(x.split(' on ')[1].split(' type ')[0])
 		
 		#Go through the list and get the right icon and name for specific ones
 		#ie/eg: / -> harddisk icon and "Filesystem"
@@ -428,6 +431,21 @@ class App (awn.AppletSimple):
 		
 		#Launch file browser at path
 		subprocess.Popen(self.gconf_fb.split(' ')+[path])
+	
+	#The applet's height has changed - update the reference
+	def height_changed(self,applet,height):
+		self.height = height
+	
+	#The icon theme has changed - update the icon if necessary
+	def icon_theme_changed(self,*args):
+		
+		#Check if the current icon is to use the stock folder icon
+		if self.client.get_string('/apps/avant-window-navigator/applets/'+str(self.uid)+'/icon','default') in\
+			['theme','','/dev/null']:
+				
+				#It is; update the icon at the right size
+				self.icon = self.theme.load_icon('folder',self.height,self.height)
+				self.set_icon(self.icon)
 	
 	#Right click menu - Preferences or About
 	def show_menu(self,event):

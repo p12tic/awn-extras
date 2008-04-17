@@ -24,13 +24,14 @@
 import gconf
 class GConfWrapper:
 	
-	def __init__(self):
+	def __init__(self,uid):
+		self.uid = uid
 		self.client = gconf.client_get_default()
 	
 	#Get a GConf string
 	def get_string(self,key,default):
 		try:
-			self.client.add_dir('/apps/avant-window-navigator/applets/file-browser-launcher')
+			self.client.add_dir('/apps/avant-window-navigator/applets/'+str(self.uid))
 		except:
 			pass
 		val = self.client.get_string(key)
@@ -42,7 +43,7 @@ class GConfWrapper:
 	#Set a GConf string
 	def set_string(self,key,val):
 		try:
-			self.client.add_dir('/apps/avant-window-navigator/applets/file-browser-launcher')
+			self.client.add_dir('/apps/avant-window-navigator/applets/'+str(self.uid))
 		except:
 			pass
 		val = self.client.set_string(key,val)
@@ -51,7 +52,7 @@ class GConfWrapper:
 	#Get a GConf integer
 	def get_int(self,key,default):
 		try:
-			self.client.add_dir('/apps/avant-window-navigator/applets/file-browser-launcher')
+			self.client.add_dir('/apps/avant-window-navigator/applets/'+str(self.uid))
 		except:
 			pass
 		val = self.client.get_int(key)
@@ -63,7 +64,7 @@ class GConfWrapper:
 	#Set a GConf integer	
 	def set_int(self,key,val):
 		try:
-			self.client.add_dir('/apps/avant-window-navigator/applets/file-browser-launcher')
+			self.client.add_dir('/apps/avant-window-navigator/applets/'+str(self.uid))
 		except:
 			pass
 		val = self.client.set_int(key,val)

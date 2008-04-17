@@ -7,10 +7,10 @@ import os, glob
 import gtk
 
 # AWN
-import AWNLib
+from awn.extras import AWNLib
 
 class TSClient:
-    def __init__ (self, awnd, orient, height)
+    def __init__ (self, awn):
         self.awn = awn
         self.awn.icon.file("icons/Tsclient.svg")
 
@@ -38,5 +38,5 @@ if __name__ == "__main__":
         "short": "tsclient",
         "description": "Interact with the Terminal Services Client",
         "type": ["Utility", "RemoteAccess"]})
-    applet = TSClientApplet(awn)
+    applet = TSClient(awn)
     AWNLib.start(applet.awn)

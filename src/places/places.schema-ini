@@ -64,9 +64,4 @@ default = True
 description = Determines whether to use the current Gtk+ theme's color/font settings, or the applet-specific style settings.
 description[en_CA] = Determines whether to use the current Gtk+ theme's colour/font settings, or the applet-specific style settings.
 
-[DEFAULT/desktop_dir]
-type = string
-default = ~/Desktop
-description = The desktop directory
-
 ; vim: set ft=dosini :

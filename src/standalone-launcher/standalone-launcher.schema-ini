@@ -33,10 +33,10 @@ type = string
 default = awn-launcher-editor
 description = desktop file editor.
 
-[DEFAULT/whitelist_editor]
+[DEFAULT/advanced_text_editor]
 type = string
 default = gedit
-description = whitelist/blacklist file editor. A text editor
+description = whitelist/blacklist file editor and advanced desktop editor. A text editor
 
 [DEFAULT/name_comparision_len]
 type = int

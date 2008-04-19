@@ -117,7 +117,7 @@ class Configuration: GLib.Object
 	private 			int					_name_comparision_len;
 	private				bool				_override_app_icon;
 	private             string              _desktop_file_editor;
-    private             string              _whitelist_editor;
+    private             string              _advanced_text_editor;
     private             int                 _highlight_method;
     private             float               _highlight_saturate_value;
     private             int                 _max_launch_effect_reps;
@@ -158,7 +158,7 @@ class Configuration: GLib.Object
         default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"desktop_file_editor", _config_changed, this);
         default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"highlight_method", _config_changed, this);
         default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"highlight_saturate_value", _config_changed, this);
-        default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"whitelist_editor", _config_changed, this);
+        default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"advanced_text_editor", _config_changed, this);
         default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"max_launch_effect_reps", _config_changed, this);
         default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"discrete/task_icon_use", _config_changed, this);
         default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"discrete/task_icon_alpha", _config_changed, this);        
@@ -192,7 +192,7 @@ class Configuration: GLib.Object
 		_active_image=get_string("active_task_image","emblem-favorite");
 		_override_app_icon=get_bool(subdir+"override_app_icon",true);
         _desktop_file_editor=get_string("desktop_file_editor","gnome-desktop-item-edit");        
-        _whitelist_editor=get_string("whitelist_editor","gedit");
+        _advanced_text_editor=get_string("advanced_text_editor","gedit");
 		_name_comparision_len=get_int("name_comparision_len",14);
         _highlight_method=get_int("highlight_method",2);
         _highlight_saturate_value=get_float("highlight_saturate_value",(float)2.0);
@@ -331,9 +331,9 @@ class Configuration: GLib.Object
     	}
     }
 
-    public string whitelist_editor {
+    public string advanced_text_editor {
         get { 
-			return _whitelist_editor;
+			return _advanced_text_editor;
     	}
     }
 
@@ -1935,6 +1935,16 @@ class LauncherApplet : AppletSimple
         }
         return false;
     }
+  
+    private bool _advanced_desktop_edit(Gtk.Widget widget,Gdk.EventButton event)
+    {
+        try{
+            Process.spawn_command_line_async(config.advanced_text_editor+" "+desktopfile.Filename() );
+        }catch ( SpawnError ex ) {
+            stderr.printf("Failed to spawn '%s' \n",config.advanced_text_editor+" "+desktopfile.Filename());
+        }
+        return false;
+    }  
 
     private void list_edit(string filename)
     {
@@ -1947,9 +1957,9 @@ class LauncherApplet : AppletSimple
             }
         }
         try{
-            Process.spawn_command_line_async(config.whitelist_editor+" "+filename );
+            Process.spawn_command_line_async(config.advanced_text_editor+" "+filename );
         }catch ( SpawnError ex ) {
-            stderr.printf("Failed to spawn '%s' \n",config.whitelist_editor+" "+filename);
+            stderr.printf("Failed to spawn '%s' \n",config.advanced_text_editor+" "+filename);
         }
     }
 
@@ -1991,7 +2001,12 @@ class LauncherApplet : AppletSimple
         right_menu.append(menu_item);
         menu_item.show();
         menu_item.button_press_event+=_desktop_edit;
-        
+
+        menu_item=new MenuItem.with_label ("Advanced Edit Launcher");        
+        right_menu.append(menu_item);
+        menu_item.show();
+        menu_item.button_press_event+=_advanced_desktop_edit;
+      
         menu_item=new MenuItem.with_label ("Edit Launcher Whitelist");
         right_menu.append(menu_item);
         menu_item.show();

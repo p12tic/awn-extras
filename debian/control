@@ -32,7 +32,7 @@ Build-Depends: 	debhelper (>= 5),
 		libsexy-dev,
 		libnotify-dev,
 		libtrackerclient-dev,
-		libwebkitgtk-dev | libwebkitgdk-dev,
+		libwebkit-dev | libwebkitgtk-dev,
 		awn-manager-trunk
 Standards-Version: 3.7.2
 XS-Python-Version: current
@@ -54,5 +54,5 @@ Recommends: 	avant-window-navigator-trunk,
 Conflict: awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 Replaces: awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 XB-Python-Version: ${python:Versions}
-Description: A collection of applets for avant-windows-navigator
- A collection of applets for avant-windows-navigator.
+Description: A collection of applets for Avant Window Navigator
+ A collection of applets for Avant Window Navigator.

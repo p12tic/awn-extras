@@ -17,21 +17,18 @@
  * Boston, MA 02111-1307, USA.
  */
 
-/* This is one of the most basic applets you can make, it just embeds the 
-   WnckPager into the applet container*/ 
-
 #include "config.h"
 #define GMENU_I_KNOW_THIS_IS_UNSTABLE 1
 #include <gmenu-tree.h>
-#include <libgnome/gnome-desktop-item.h>
 
 #include <string.h>
 
 #include <gtk/gtk.h>
 #include <libawn/awn-applet.h>
+#include <libawn/awn-config-client.h>
+#include <libawn/awn-desktop-item.h>
 #include <glib/gmacros.h>
 #include <glib/gerror.h>
-#include <gconf/gconf-value.h> 
 
 #include <libawn/awn-applet-dialog.h>
 #include <libawn/awn-applet-simple.h>
@@ -143,18 +140,22 @@ get_icon (const gchar *name, gint size)
 static void
 launch (GMenuTreeEntry *entry)
 {
-  GnomeDesktopItem *item;
-
- item = gnome_desktop_item_new_from_file  (
-            gmenu_tree_entry_get_desktop_file_path (entry),
-            0,
-            NULL);
-  if (!item)
+  AwnDesktopItem *item;
+  gchar *path = gmenu_tree_entry_get_desktop_file_path (entry);
+  if (!g_file_test (path, G_FILE_TEST_IS_REGULAR))
+  {
     return;
+  }
 
-  gnome_desktop_item_launch (item, NULL, 0, NULL);
+  item = awn_desktop_item_new (path);
+  if (!item)
+  {
+    return;
+  }
 
-  gnome_desktop_item_unref (item);
+  awn_desktop_item_launch (item, NULL, NULL);
+
+  awn_desktop_item_free (item);
 } 
 
 static void

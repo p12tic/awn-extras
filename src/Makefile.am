@@ -13,7 +13,6 @@ GCONF_APPLETS +=		\
 	cairo-menu-classic	\
 	calendar		\
 	filebrowser		\
-	main-menu		\
 	plugger			\
 	stacks			\
 	trash			\
@@ -40,6 +39,7 @@ GCONF_APPLETS +=		\
 endif
 if WITH_GNOME
 GCONF_APPLETS +=	\
+	main-menu		\
 	MiMenu		\
 	pandora			\
 	rtm	\

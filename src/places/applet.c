@@ -29,24 +29,27 @@
 /* isalpha() */
 #include <ctype.h>
 
-#if !defined(USE_AWN_DESKTOP_AGNOSTIC) || defined(LIBAWN_USE_GNOME)
+#include <libawn/awn-applet.h>
+#include <libawn/awn-applet-simple.h>
+#include <libawn/awn-cairo-utils.h>
+#include <libawn/awn-config-client.h>
+#include <libawn/awn-vfs.h>
+
+#include <gtk/gtk.h>
+#ifndef LIBAWN_USE_XFCE
+#include <glib/gi18n.h>
+#endif
+#include <glib/gstdio.h>
+#include <string.h>
+
+#include <libawn-extras/awn-extras.h>
+
+#ifdef LIBAWN_USE_GNOME
 #include <libgnomevfs/gnome-vfs.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
 #endif
 
-#ifdef USE_AWN_DESKTOP_AGNOSTIC
-#include <libawn/awn-config-client.h>
-#include <libawn/awn-vfs.h>
-
 #define CONFIG_KEY(key) key
-#else
-
-#include <gconf/gconf-client.h>
-
-#define GCONF_MENU "/apps/avant-window-navigator/applets/places"
-
-#define CONFIG_KEY(key) GCONF_MENU "/" key
-#endif
 
 #define CONFIG_NORMAL_BG     CONFIG_KEY("bg_normal_colour")
 #define CONFIG_NORMAL_FG     CONFIG_KEY("text_normal_colour")
@@ -67,18 +70,6 @@
 
 #define CONFIG_HONOUR_GTK    CONFIG_KEY("honour_gtk")
 
-#include <libawn/awn-cairo-utils.h>
-#include <libawn/awn-applet.h>
-#include <libawn/awn-applet-simple.h>
-#include <gtk/gtk.h>
-#ifndef LIBAWN_USE_XFCE
-#include <glib/gi18n.h>
-#endif
-#include <glib/gstdio.h>
-#include <string.h>
-
-#include <libawn-extras/awn-extras.h>
-
 typedef struct
 {
 	AwnColor	base;
@@ -88,7 +79,7 @@ typedef struct
 
 typedef struct
 {
-	AwnApplet 			*applet	;
+	AwnApplet 			*applet;
 	GdkPixbuf 			*icon;
 	int					applet_icon_height;
 	GtkWidget			*mainwindow;
@@ -115,11 +106,7 @@ typedef struct
 	gchar				*file_manager;
 	gchar				*desktop_dir;    
 
-#ifdef USE_AWN_DESKTOP_AGNOSTIC
 	AwnConfigClient		*config;
-#else
-	GConfClient			*config;
-#endif
 
 }Places;
 
@@ -180,7 +167,6 @@ static void free_menu_list_item(Menu_Item * item)
 }
 //CONF STUFF
 
-#ifdef USE_AWN_DESKTOP_AGNOSTIC
 static void config_get_string (AwnConfigClient *client, const gchar *key, gchar **str)
 {
 	*str = awn_config_client_get_string (client, AWN_CONFIG_CLIENT_DEFAULT_GROUP, key, NULL);
@@ -191,28 +177,10 @@ static void config_get_color (AwnConfigClient *client, const gchar *key, AwnColo
 	awn_cairo_string_to_color (value, color);
 	g_free (value);
 }
-#else
-static void config_get_string (GConfClient *client, const gchar *key, gchar **str)
-{
-	gchar *value = gconf_client_get_string (client, key, NULL);
-	*str = g_strdup (value);
-	g_free (value);
-}
-static void config_get_color (GConfClient *client, const gchar *key, AwnColor *color)
-{
-	GConfValue *value = gconf_client_get_string (client, key, NULL);
-	awn_cairo_string_to_color (value, color);
-	g_free (value);
-}
-#endif
 
 void init_config(Places * places)
 {
-#ifdef USE_AWN_DESKTOP_AGNOSTIC
 	places->config = awn_config_client_new_for_applet ("places", NULL);
-#else
-	places->config = gconf_client_get_default();
-#endif
 
 	config_get_color (places->config, CONFIG_NORMAL_BG,     &places->normal_colours.base);
 	config_get_color (places->config, CONFIG_NORMAL_FG,     &places->normal_colours.text);
@@ -220,19 +188,11 @@ void init_config(Places * places)
 	config_get_color (places->config, CONFIG_HOVER_FG,      &places->hover_colours.text);
 	config_get_color (places->config, CONFIG_BORDER_COLOUR, &places->border_colour);
 
-#ifdef USE_AWN_DESKTOP_AGNOSTIC
 	places->border_width              = awn_config_client_get_int   (places->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, CONFIG_BORDER_WIDTH,  NULL);
 	places->text_size                 = awn_config_client_get_int   (places->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, CONFIG_TEXT_SIZE,     NULL);
 	places->menu_item_gradient_factor = awn_config_client_get_float (places->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, CONFIG_MENU_GRADIENT, NULL);
 	places->show_tooltips             = awn_config_client_get_bool  (places->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, CONFIG_SHOW_TOOLTIPS, NULL);
 	places->honour_gtk                = awn_config_client_get_bool  (places->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, CONFIG_HONOUR_GTK,    NULL);
-#else
-	places->border_width              = gconf_client_get_int   (places->config, CONFIG_BORDER_WIDTH,  NULL);
-	places->text_size                 = gconf_client_get_int   (places->config, CONFIG_TEXT_SIZE,     NULL);
-	places->menu_item_gradient_factor = gconf_client_get_float (places->config, CONFIG_MENU_GRADIENT, NULL);
-	places->show_tooltips             = gconf_client_get_bool  (places->config, CONFIG_SHOW_TOOLTIPS, NULL);
-	places->honour_gtk                = gconf_client_get_bool  (places->config, CONFIG_HONOUR_GTK,    NULL);
-#endif
 	config_get_string (places->config, CONFIG_FILEMANAGER, &(places->file_manager));
 	config_get_string (places->config, CONFIG_APPLET_ICON, &(places->applet_icon_name));
 	if (places->honour_gtk)
@@ -248,11 +208,7 @@ void init_config(Places * places)
 	places->menu_list=NULL;
 }
 
-#ifdef USE_AWN_DESKTOP_AGNOSTIC
 #define SET_CONFIG_OPTION(type, key, value) awn_config_client_set_##type (places->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, key, value, NULL)
-#else
-#define SET_CONFIG_OPTION(type, key, value) gconf_client_set_##type (places->config, key, value, NULL)
-#endif
 static void set_config_colour (Places *places, const gchar *key, AwnColor *color)
 {
 	gchar *str;
@@ -302,7 +258,6 @@ static gboolean _do_update_places_wrapper(Places * places)
 //===========================================================================
 
 
-#ifdef USE_AWN_DESKTOP_AGNOSTIC
 static void monitor_places_callback (AwnVfsMonitor *monitor,
                                      gchar *monitor_path,
                                      gchar *event_path,
@@ -329,35 +284,8 @@ static void monitor_places (Places *places)
 	g_free (filename);
 }
 
-#else
 
-static void monitor_places_callback(GnomeVFSMonitorHandle *handle,
-                                 const gchar *monitor_uri,
-                                 const gchar *info_uri,
-                                 GnomeVFSMonitorEventType event_type,
-                                 Places * places)
-{
-	_do_update_places(places);
-}
-
-static void monitor_places(Places * places)
-{
-	GnomeVFSMonitorHandle * handle;
-
-	const char *homedir = g_getenv ("HOME");
-	if (!homedir)
-		homedir = g_get_home_dir ();
-	gchar *  filename=g_strdup_printf("%s/.gtk-bookmarks",homedir);
-	if ( gnome_vfs_monitor_add(&handle,filename,GNOME_VFS_MONITOR_FILE,
-                               monitor_places_callback,places) != GNOME_VFS_OK)
-	{
-		printf("attempt to monitor '%s' failed \n",filename);
-	}
-	g_free(filename);
-}
-#endif
-
-#if !defined(USE_AWN_DESKTOP_AGNOSTIC) || defined(LIBAWN_USE_GNOME)
+#ifdef LIBAWN_USE_GNOME
 static void _vfs_changed(GnomeVFSDrive  *drive,GnomeVFSVolume *volume,Places * places)
 {
 	g_timeout_add (500, (GSourceFunc)_do_update_places_wrapper, places);
@@ -513,7 +441,7 @@ static void get_places(Places * places)
 	item->places=places;
 	places->menu_list=g_slist_append(places->menu_list,item);
 
-#if !defined(USE_AWN_DESKTOP_AGNOSTIC) || defined(LIBAWN_USE_GNOME)
+#ifdef LIBAWN_USE_GNOME
 	gnome_vfs_init();
 	static GnomeVFSVolumeMonitor* vfsvolumes = NULL;
 	if (!vfsvolumes)

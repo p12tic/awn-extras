@@ -36,22 +36,10 @@
 #include <config.h>
 #endif
 
-
-#ifdef  USE_AWN_DESKTOP_AGNOSTIC
 #include <libawn/awn-config-client.h>
 #include <libawn/awn-vfs.h>
  
 #define CONFIG_KEY(key) key
-#else
-#include <libgnomevfs/gnome-vfs.h>
-#include <libgnomevfs/gnome-vfs-utils.h>
- 
-#include <gconf/gconf-client.h>	
-
-#define GCONF_MENU "/apps/avant-window-navigator/applets/shinyswitcher"
-
-#define CONFIG_KEY(key) GCONF_MENU "/" key
-#endif
 
 enum
 {
@@ -169,11 +157,7 @@ typedef struct
     GdkScreen		*pScreen;    
 	GdkColormap		*rgb_cmap;    	
 	GdkColormap		*rgba_cmap;    		
-#ifdef USE_AWN_DESKTOP_AGNOSTIC
 	AwnConfigClient		*config;
-#else
-	GConfClient			*config;
-#endif
 	
 }Shiny_switcher;
 

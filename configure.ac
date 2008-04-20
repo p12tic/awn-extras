@@ -219,21 +219,16 @@ dnl
 AWN_BINDIR=`$PKG_CONFIG --variable=exec_prefix awn`/bin
 AC_SUBST(AWN_BINDIR)
 
-AC_CHECK_LIB([awn], [awn_vfs_init], [have_desktop_agnostic=yes], [have_desktop_agnostic=no], [$AWN_LIBS])
-if test "$have_desktop_agnostic" = "yes"; then
-    config_backend=`$PKG_CONFIG --variable=config_backend awn`
-    AC_DEFINE(USE_AWN_DESKTOP_AGNOSTIC, 1, [Use the APIs that originated in the desktop-agnostic branch of Awn.])
-    dnl
-    dnl Check for Vala support.
-    dnl
-    AWN_VAPIDIR=`$PKG_CONFIG --variable=vapidir awn`
-    if test -n "$AWN_VAPIDIR" -a -f "$AWN_VAPIDIR/awn.vapi"; then
-        VALA_PROG_VALAC(0.1.7)
-        AC_SUBST(AWN_VAPIDIR)
-    fi
+config_backend=`$PKG_CONFIG --variable=config_backend awn`
+dnl
+dnl Check for Vala support.
+dnl
+AWN_VAPIDIR=`$PKG_CONFIG --variable=vapidir awn`
+if test -n "$AWN_VAPIDIR" -a -f "$AWN_VAPIDIR/awn.vapi"; then
+    VALA_PROG_VALAC(0.1.7)
+    AC_SUBST(AWN_VAPIDIR)
 fi
-AM_CONDITIONAL(DESKTOP_AGNOSTIC, test "$have_desktop_agnostic" = "yes")
-AM_CONDITIONAL(GCONF_SCHEMAS, test "$have_desktop_agnostic" = "no" -o "$config_backend" = "GConf")
+AM_CONDITIONAL(GCONF_SCHEMAS, test "$config_backend" = "GConf")
 AM_CONDITIONAL(HAVE_VALA, test -n "$AWN_VAPIDIR" -a -n "$VALAC")
 AM_CONDITIONAL(LIBAWN_USE_GNOME, test -n "`echo $AWN_CFLAGS | grep LIBAWN_USE_GNOME`")
 

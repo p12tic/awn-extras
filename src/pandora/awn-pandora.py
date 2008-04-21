@@ -4,8 +4,23 @@ import gobject
 import pygtk
 import gtk
 from gtk import gdk
-import gtkmozembed
+#import gtkmozembed
 import awn
+import re
+
+# workaround for weirdness with regards to Ubuntu + gtkmozembed
+if os.path.exists('/etc/issue'):
+   fp = open('/etc/issue')
+   os_version = fp.read()
+   fp.close()
+   if re.search(r'7\.(?:04|10)', os_version): # feisty or gutsy
+       os.putenv('LD_LIBRARY_PATH', '/usr/lib/firefox')
+       os.putenv('MOZILLA_FIVE_HOME', '/usr/lib/firefox')
+
+try:
+       import gtkmozembed
+except:
+       print 'Gtkmozembed is need to run the RTM-Applet, please install'
 
 class App (awn.AppletSimple):
   def __init__ (self, uid, orient, height):

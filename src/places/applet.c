@@ -485,8 +485,13 @@ static void get_places(Places * places)
 	if (!volume_monitor)
 	{
 		volume_monitor = g_volume_monitor_get ();
+#if GLIB_CHECK_VERSION(2,15,0)
+		g_signal_connect (G_OBJECT (volume_monitor), "volume-added",     G_CALLBACK (_vfs_volume_changed),places);
+		g_signal_connect (G_OBJECT (volume_monitor), "volume-removed",   G_CALLBACK (_vfs_volume_changed),places);
+#else
 		g_signal_connect (G_OBJECT (volume_monitor), "volume-mounted",     G_CALLBACK (_vfs_volume_changed),places);
 		g_signal_connect (G_OBJECT (volume_monitor), "volume-unmounted",   G_CALLBACK (_vfs_volume_changed),places);
+#endif
 		g_signal_connect (G_OBJECT (volume_monitor), "drive-disconnected", G_CALLBACK (_vfs_drive_changed),places);
 		g_signal_connect (G_OBJECT (volume_monitor), "drive-connected",    G_CALLBACK (_vfs_drive_changed),places);
 		monitor_places (places);

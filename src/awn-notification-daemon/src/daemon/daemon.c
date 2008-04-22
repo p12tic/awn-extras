@@ -24,13 +24,18 @@
 
  
  /*tabsize =4*/
- 
+
+#ifdef HAVE_CONFIG_H
 #include "config.h"
+#endif
 
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
 #include <stdio.h>
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
 
 #include <dbus/dbus.h>
 #include <dbus/dbus-glib.h>

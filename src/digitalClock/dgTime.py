@@ -1,10 +1,10 @@
 import os
 import gtk
 import gtk.glade
-from gtk import gdk
 import time
 import tempfile
 import cairo
+from awn import extras
 
 class dgTime:
 
@@ -55,9 +55,7 @@ class dgTime:
       self.draw_text(ct, t[1], 4) #Day
       self.draw_text(ct, t[2], 4.4) #Month
 
-    cs.write_to_png (self.tmp_image)
-    new_icon = gdk.pixbuf_new_from_file(self.tmp_image)
-    self.awn.set_temp_icon(new_icon)
+    self.awn.set_temp_icon(extras.surface_to_pixbuf(cs))
     return True
 
   def draw_text(self, ct, text, size):

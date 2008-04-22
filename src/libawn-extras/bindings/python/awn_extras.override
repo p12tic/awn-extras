@@ -29,6 +29,7 @@ static Pycairo_CAPI_t *Pycairo_CAPI;
 modulename _extras
 %%
 import gtk.gdk.Color as PyGdkColor_Type
+import cairo.Surface as PyCairoSurface_Type
 %%
 override get_pixbuf_from_surface kwargs
 static PyObject *
@@ -43,7 +44,7 @@ _wrap_get_pixbuf_from_surface (PyObject *self, PyObject *args, PyObject *kwargs)
         return NULL;
     }
 
-    if (!PyObject_TypeCheck (py_surface, &PycairoSurface_Type)) {
+    if (!PyObject_TypeCheck (py_surface, &PyCairoSurface_Type)) {
         PyErr_SetString (PyExc_TypeError, "Argument must be a cairo surface");
         return NULL;
     }

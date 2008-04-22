@@ -23,7 +23,6 @@ GCONF_APPLETS +=		\
 	arss			\
 	awn-notification-daemon	\
 	comic			\
-	digitalClock		\
 	file-browser-launcher	\
 	media-control		\
 	media-icon-back		\
@@ -55,6 +54,7 @@ SUBDIRS =			\
 	awnterm			\
 	battery-applet		\
 	comics			\
+	digitalClock		\
 	lastfm			\
 	mail			\
 	notification-area	\

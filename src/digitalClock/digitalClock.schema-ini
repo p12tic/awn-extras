@@ -1,0 +1,22 @@
+[DEFAULT/font_face]
+type = string
+default = Sans 10
+description = The font face of the clock text.
+[DEFAULT/font_color]
+type = string
+default = 255,255,255
+description = The color of the clock text, as a three-part tuple of integers between 0 and 255 inclusive.
+[DEFAULT/font_shadow_color]
+type = string
+default = 0,0,0
+description = The shadow color of the clock text, as a three-part tuple of integers between 0 and 255 inclusive.
+[DEFAULT/hour12]
+type = bool
+default = TRUE
+description = Toggle 12-hour mode.
+[DEFAULT/dbt]
+type = bool
+default = TRUE
+description = Show the date before the time.
+
+; vim: set ft=dosini :

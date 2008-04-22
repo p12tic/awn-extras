@@ -2,7 +2,6 @@ import os
 import gtk
 import gtk.glade
 from gtk import gdk
-import gconf
 import time
 import tempfile
 import cairo

@@ -2,27 +2,28 @@ import os
 import gtk
 import gtk.glade
 from gtk import gdk
-import gconf
 import time
 import subprocess
+import awn
 
 class dgClockPref:
 
   #glade path
   glade_path = os.path.join((os.path.dirname(__file__)), "pref.glade")
 
-  #gconf path
-  gconf_path        = "/apps/avant-window-navigator/applets/digitalClock"
-  font_face_path    = os.path.join(gconf_path, 'font_face')
-  font_color_path   = os.path.join(gconf_path, 'font_color')
-  shadow_color_path = os.path.join(gconf_path, 'font_shadow_color')
-  hour12_path       = os.path.join(gconf_path, 'hour12')
-  date_b4_time_path = os.path.join(gconf_path, 'dbt')
-  prefs             = {}
+  pref_map = {
+    'dbt': ('bool', 'dateBeforeTime'),
+    'hour12': ('bool', 'hour12'),
+    'font_face': ('string', 'fontFace'),
+    'font_color': ('color', 'fontColor'),
+    'font_shadow_color': ('color', 'fontShadowColor')
+    }
+  prefs = {}
 
-  def __init__(self):
-    self.gconf_client = gconf.client_get_default()
-    #self.gconf_client.notify_add(self.gconf_path, self.gconf_event)
+  def __init__(self, config):
+    self.config = config
+    for key, details in self.pref_map.iteritems():
+      self.config.notify_add(awn.CONFIG_DEFAULT_GROUP, key, self.config_notify, details)
     self.menu = self.buildMenu()
     self.get_prefs()
 
@@ -75,40 +76,21 @@ class dgClockPref:
     popup_menu.show_all()
     return popup_menu
 
+  def update_pref(self, key, ptype, pkey):
+      if ptype == 'bool':
+        value = self.config.get_bool(awn.CONFIG_DEFAULT_GROUP, key)
+      else:
+        value = self.config.get_string(awn.CONFIG_DEFAULT_GROUP, key)
+        if ptype == 'color':
+          value = self.parseColors(value)
+      self.prefs[pkey] = value
+
+  def config_notify(self, entry, pref):
+    self.update_pref(entry['key'], pref[0], pref[1])
+
   def get_prefs(self):
-    try:
-      self.gconf_client.get_value(self.date_b4_time_path)
-      self.prefs['dateBeforeTime'] = self.gconf_client.get_bool(self.date_b4_time_path)
-    except ValueError:
-      self.gconf_client.set_bool(self.date_b4_time_path, False)
-      self.prefs['dateBeforeTime'] = True
-
-    try:
-      self.gconf_client.get_value(self.hour12_path)
-      self.prefs['hour12'] = self.gconf_client.get_bool(self.hour12_path)
-    except ValueError:
-      self.gconf_client.set_bool(self.hour12_path, True)
-      self.prefs['hour12'] = True
-
-    self.prefs['fontFace'] = self.gconf_client.get_string(self.font_face_path)
-    if(self.prefs['fontFace'] == None):
-      self.gconf_client.set_string(self.font_face_path, "Sans 10")
-      self.prefs['fontFace'] = "Sans 10"
-      self.clean_font_name(self.prefs['fontFace'])
-
-    self.prefs['fontColor'] = self.gconf_client.get_string(self.font_color_path)
-    if(self.prefs['fontColor'] == None or self.prefs['fontColor'] == ""):
-      self.gconf_client.set_string(self.font_color_path, "255,255,255")
-      self.prefs['fontColor'] = self.parseColors("255,255,255")
-    else:
-      self.prefs['fontColor'] = self.parseColors(self.prefs['fontColor'])
-
-    self.prefs['fontShadowColor'] = self.gconf_client.get_string(self.shadow_color_path)
-    if(self.prefs['fontShadowColor'] == None or self.prefs['fontShadowColor'] == ""):
-      self.gconf_client.set_string(self.shadow_color_path, "0,0,0")
-      self.prefs['fontShadowColor'] = self.parseColors("0,0,0")
-    else:
-      self.prefs['fontShadowColor'] = self.parseColors(self.prefs['fontShadowColor'])
+    for key, details in self.pref_map.iteritems():
+      self.update_pref(key, details[0], details[1])
 
   def show_prefs(self, widget):
     self.wTree = gtk.glade.XML(self.glade_path)
@@ -119,26 +101,24 @@ class dgClockPref:
 
     font_btn = self.wTree.get_widget("fontface")
     font_btn.set_font_name(self.prefs['fontFace'])
-    font_btn.connect("font-set", self.font_changed, self.font_face_path)
+    font_btn.connect("font-set", self.font_changed, 'font_face')
 
     color_btn = self.wTree.get_widget("fontcolor")
-    c = self.parseColors(self.gconf_client.get_string(self.font_color_path))
-    color_btn.set_color(c)
-    color_btn.connect("color-set", self.color_changed, self.font_color_path, self.prefs['fontColor'])
+    color_btn.set_color(self.prefs['fontColor'])
+    color_btn.connect("color-set", self.color_changed, 'font_color', self.prefs['fontColor'])
 
     scolor_btn = self.wTree.get_widget("shadowcolor")
-    c = self.parseColors(self.gconf_client.get_string(self.shadow_color_path))
-    scolor_btn.set_color(c)
+    scolor_btn.set_color(self.prefs['fontShadowColor'])
     scolor_btn.set_use_alpha(False) #Not used yet
-    scolor_btn.connect("color-set", self.color_changed, self.shadow_color_path, self.prefs['fontShadowColor'])
+    scolor_btn.connect("color-set", self.color_changed, 'font_shadow_color', self.prefs['fontShadowColor'])
 
     h12 = self.wTree.get_widget("hour12")
     h12.set_active(self.prefs['hour12'])
-    h12.connect("toggled", self.set_bool, self.hour12_path)
+    h12.connect("toggled", self.set_bool, 'hour12')
 
     tbd = self.wTree.get_widget("timebesidedate")
     tbd.set_active(self.prefs['dateBeforeTime'])
-    tbd.connect("toggled", self.set_bool, self.date_b4_time_path)
+    tbd.connect("toggled", self.set_bool, 'dbt')
 
     window.show_all()
 
@@ -163,17 +143,17 @@ class dgClockPref:
     win.destroy()
 
   def set_bool(self, check, key):
-    self.gconf_client.set_bool(key, check.get_active())
+    self.config.set_bool(awn.CONFIG_DEFAULT_GROUP, key, check.get_active())
 
   def font_changed(self, font_btn, key):
     self.clean_font_name(font_btn.get_font_name())
-    self.gconf_client.set_string(key, self.prefs['fontFace'])
+    self.config.set_string(awn.CONFIG_DEFAULT_GROUP, key, self.prefs['fontFace'])
 
   def color_changed(self, color_btn, key, var):
     var = color_btn.get_color()
     if color_btn.get_use_alpha():
       alpha = color_btn.get_alpha() #Not used yet
-    self.gconf_client.set_string(key, "%s,%s,%s" % (var.red, var.green, var.blue))
+    self.config.set_string(awn.CONFIG_DEFAULT_GROUP, key, '%s,%s,%s' % (var.red, var.green, var.blue))
 
   def clean_font_name(self, fontface):
     rem = ["Condensed", "Book", "Oblique", "Bold", "Italic", "Regular", "Medium", "Light"]
@@ -182,7 +162,6 @@ class dgClockPref:
       fontface = fontface.rstrip('0123456789 ')
     self.prefs['fontFace'] = fontface
 
-  def parseColors(self,color):
-    colors = color.split(',')
-    c = gtk.gdk.Color(int(colors[0]), int(colors[1]), int(colors[2]))
-    return c
+  def parseColors(self, color):
+    colors = [int(p) for p in color.split(',')]
+    return gtk.gdk.Color(*colors[:3])

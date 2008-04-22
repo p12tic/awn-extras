@@ -8,7 +8,6 @@ import gtk.glade
 from gtk import gdk
 from StringIO import StringIO
 import string
-import gconf
 import cairo
 import time
 import math
@@ -22,15 +21,11 @@ import dgTime
 class App (awn.AppletSimple):
 
   dialog_visible    = False
-  gconf_path        = "/apps/avant-window-navigator/applets/digitalClock"
 
   def __init__ (self, uid, orient, height):
     awn.AppletSimple.__init__ (self, uid, orient, height)
 
-    self.gconf_client = gconf.client_get_default()
-    self.gconf_client.notify_add(self.gconf_path, self.gconf_event)
-
-    self.pf = dgClockPref.dgClockPref()
+    self.pf = dgClockPref.dgClockPref(awn.Config('digitalClock', None))
     self.clock = dgTime.dgTime(self.pf.prefs, self)
 
     self.timer = gobject.timeout_add(1000, self.clock.draw_clock)
@@ -45,8 +40,6 @@ class App (awn.AppletSimple):
     print utc
 
     #12:00 - UTC = tz_sun_zone
-
-
 
     self.connect ("button-press-event", self.button_press)
     #self.connect ("enter-notify-event", self.enter_notify)
@@ -100,10 +93,6 @@ class App (awn.AppletSimple):
     da = cal.get_date()
     dat = "%02d%02d%02d" % (da[0], (da[1]+1), da[2])
     subprocess.Popen('evolution calendar:///?startdate='+dat+'T120000', shell=True)
-
-  def gconf_event(self, gconf_client, *args, **kwargs):
-    self.pf.get_prefs()
-    self.clock.update_prefs(self.pf.prefs)
 
 if __name__ == "__main__":
   awn.init (sys.argv[1:])

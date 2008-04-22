@@ -23,7 +23,6 @@
 #include <libawn/awn-applet-simple.h>
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
-#include <gconf/gconf-client.h>
 #include <vte/vte.h>
 #include <string.h>
 
@@ -48,7 +47,7 @@ gboolean icon_clicked_cb (GtkWidget *widget, GdkEventButton *event, gpointer nul
 			}
 			break;
 		case 2:
-			main_terminal = gconf_client_get_string (applet->config, MAIN_TERMINAL, NULL);
+			main_terminal = awn_config_client_get_string (applet->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, MAIN_TERMINAL, NULL);
 			if (!main_terminal) main_terminal = g_strdup ("gnome-terminal");
 			gdk_spawn_command_line_on_screen (gtk_widget_get_screen (widget), main_terminal, NULL);
 			g_free (main_terminal);

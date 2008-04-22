@@ -21,8 +21,8 @@
 #define AWNTERM_H_
 
 #include <libawn/awn-applet.h>
+#include <libawn/awn-config-client.h>
 #include <gtk/gtk.h>
-#include <gconf/gconf-client.h>
 
 typedef struct
 {
@@ -31,7 +31,7 @@ typedef struct
 	GtkWidget *dialog;
 	GtkWidget *terminal;
 	GtkWidget *menu;
-	GConfClient *config;
+	AwnConfigClient *config;
 }AwnTerm;
 
 // The applet instance. We need to make it global so that we can access it in a bunch of callbacks.

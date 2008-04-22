@@ -22,7 +22,6 @@ endif
 GCONF_APPLETS +=		\
 	arss			\
 	awn-notification-daemon	\
-	awnterm			\
 	comic			\
 	digitalClock		\
 	file-browser-launcher	\
@@ -54,6 +53,7 @@ endif
 SUBDIRS =			\
 	libawn-extras		\
 	affinity		\
+	awnterm			\
 	battery-applet		\
 	comics			\
 	mail			\

@@ -84,6 +84,8 @@ PKG_CHECK_MODULES(LIBSEXY, [libsexy])
 PKG_CHECK_MODULES(LIBNOTIFY, [libnotify])
 # standalone-launcher, taskmand, taskmand-applet
 PKG_CHECK_MODULES(DBUS_GLIB, [dbus-glib-1])
+# awn-terminal
+PKG_CHECK_MODULES(VTE, [vte])
 
 if test "$with_gconf" != "no" -o "$with_gnome" != "no"; then
 # filebrowser
@@ -111,11 +113,6 @@ PKG_CHECK_EXISTS([webkit-1.0],[webkit_module="webkit-1.0"],
 PKG_CHECK_MODULES(WEBKIT, [$webkit_module])
 AC_SUBST(WEBKIT_CFLAGS)
 AC_SUBST(WEBKIT_LIBS)
-fi
-
-if test "$with_gconf" != "no"; then
-# awn-terminal
-PKG_CHECK_MODULES(VTE, [vte])
 fi
 
 #awn-notification-daemon

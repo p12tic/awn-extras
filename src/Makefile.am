@@ -25,7 +25,6 @@ GCONF_APPLETS +=		\
 	comic			\
 	digitalClock		\
 	file-browser-launcher	\
-	lastfm			\
 	media-control		\
 	media-icon-back		\
 	media-icon-next		\
@@ -56,6 +55,7 @@ SUBDIRS =			\
 	awnterm			\
 	battery-applet		\
 	comics			\
+	lastfm			\
 	mail			\
 	notification-area	\
 	places			\

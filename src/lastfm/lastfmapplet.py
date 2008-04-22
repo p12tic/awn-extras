@@ -31,7 +31,6 @@ from gtk import gdk
 import lastfmpreferences
 import lastfmconfig
 import lastfmexception
-import gconf
 import imageproducer
       
 

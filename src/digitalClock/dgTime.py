@@ -125,6 +125,8 @@ class dgTime:
       if h > 12:
         h = str(h-12)
         am_pm = " PM"
+      elif h == 12:
+        am_pm = " PM"
       elif h == 0:
         h = 12
         am_pm = " AM"

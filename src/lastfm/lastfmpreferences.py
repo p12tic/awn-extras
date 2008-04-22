@@ -138,15 +138,15 @@ class LastFmPreferences(gtk.Window):
       pwd_hash = self.applet.config.set_password(self.password.get_text())
       
       try:
-          retval = self.applet.lastfm.connect(self.username.get_text(), pwd_hash)
-          if retval == 0:
-             # login succesfull
-             self.destroy()        
-          else:
-             self.labelw.set_text("Invalid username/password. Try again.")
-      except lastfmexception.LastFmException:
-          self.labelw.set_text("Network Connection error: unable to contact Last.Fm")
-          
+          try:
+              retval = self.applet.lastfm.connect(self.username.get_text(), pwd_hash)
+              if retval == 0:
+                 # login successful
+                 self.destroy()
+              else:
+                 self.labelw.set_text("Invalid username/password. Try again.")
+          except lastfmexception.LastFmException:
+              self.labelw.set_text("Network Connection error: unable to contact Last.Fm")
       finally:
           #reload the config no matter if we are connected or not - it will at least change the icon 
           self.applet.reload_config()

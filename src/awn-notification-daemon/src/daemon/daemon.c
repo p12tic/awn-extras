@@ -822,11 +822,14 @@ static gboolean
 fullscreen_window_exists(GtkWidget *nw)
 {
 	WnckScreen *wnck_screen;
+	WnckWorkspace *wnck_workspace;
 	GList *l;
 
 	wnck_screen = wnck_screen_get(GDK_SCREEN_XNUMBER(
 		gdk_drawable_get_screen(GDK_DRAWABLE(GTK_WIDGET(nw)->window))));
 	wnck_screen_force_update(wnck_screen);
+
+	wnck_workspace = wnck_screen_get_active_workspace(wnck_screen);
 
 	for (l = wnck_screen_get_windows_stacked(wnck_screen);
 		 l != NULL;
@@ -834,7 +837,8 @@ fullscreen_window_exists(GtkWidget *nw)
 	{
 		WnckWindow *wnck_win = (WnckWindow *)l->data;
 
-		if (wnck_window_is_fullscreen(wnck_win) &&
+		if (wnck_window_is_on_workspace(wnck_win, wnck_workspace) &&
+			wnck_window_is_fullscreen(wnck_win) &&
 			wnck_window_is_active(wnck_win))
 		{
 			/*

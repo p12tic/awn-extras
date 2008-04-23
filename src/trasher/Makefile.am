@@ -1,5 +1,5 @@
 APPLET_NAME = trasher
-APPLET_CFLAGS = $(GNOME_CFLAGS) $(GNOME_VFS_CFLAGS)
+APPLET_CFLAGS = $(GNOME_CFLAGS) $(GNOME_VFS_CFLAGS) -DPREFIX=\"$(prefix)\"
 include $(top_srcdir)/Makefile.c-applet
 applet_LTLIBRARIES = trasher.la
 trasher_la_SOURCES =	\

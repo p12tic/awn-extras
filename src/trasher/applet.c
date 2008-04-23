@@ -33,7 +33,7 @@
 #define GKEY_ICON_FULL "applet_icon_full"
 #define GKEY_GUI_TYPE "gui_type"
 
-#define STACKS_APPLET "/usr/lib/awn/applets/stacks.desktop"
+#define STACKS_APPLET PREFIX "/lib/awn/applets/stacks.desktop"
 #define STACKS_APPLET_LOCAL "/usr/local/lib/awn/applets/stacks.desktop"
 
 typedef struct {
@@ -107,6 +107,7 @@ trasher_initialization(GtkWidget *widget, gpointer user_data)
 AwnApplet*
 awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
 {
+  gnome_vfs_init ();
   // Create a new applet and set a reference to the new Trasher
   AwnApplet *applet = awn_applet_new( uid, orient, height );
   Trasher *app = g_new0(Trasher, 1);

@@ -29,18 +29,20 @@ static Pycairo_CAPI_t *Pycairo_CAPI;
 modulename _extras
 %%
 import gtk.gdk.Color as PyGdkColor_Type
+import gtk.gdk.Pixbuf as PyGdkPixbuf_Type
 import cairo.Surface as PyCairoSurface_Type
 %%
 override get_pixbuf_from_surface kwargs
 static PyObject *
 _wrap_get_pixbuf_from_surface (PyObject *self, PyObject *args, PyObject *kwargs)
 {
-    static char *kwlist[] = { "surface", NULL };
+    static char *kwlist[] = { "surface", "pixbuf", NULL };
 
     PyObject *py_surface;
+    PyObject *py_pixbuf = NULL;
     GdkPixbuf *pixbuf;
 
-    if (!PyArg_ParseTupleAndKeywords (args, kwargs, "O:Surface.to_pixbuf", kwlist, &py_surface)) {
+    if (!PyArg_ParseTupleAndKeywords (args, kwargs, "O|O:Surface.to_pixbuf", kwlist, &py_surface, &py_pixbuf)) {
         return NULL;
     }
 
@@ -49,7 +51,15 @@ _wrap_get_pixbuf_from_surface (PyObject *self, PyObject *args, PyObject *kwargs)
         return NULL;
     }
 
-    pixbuf = get_pixbuf_from_surface (((PycairoSurface*)py_surface)->surface);
+    if (py_pixbuf) {
+        if (!pygobject_check (py_pixbuf, &PyGdkPixbuf_Type)) {
+            PyErr_SetString (PyExc_TypeError, "Second argument (if set) must be a GdkPixbuf");
+            return NULL;
+        }
+        pixbuf = surface_2_pixbuf (GDK_PIXBUF (pygobject_get (py_pixbuf)), ((PycairoSurface*)py_surface)->surface);
+    } else {
+        pixbuf = get_pixbuf_from_surface (((PycairoSurface*)py_surface)->surface);
+    }
     return pygobject_new (G_OBJECT (pixbuf));
 }
 %%

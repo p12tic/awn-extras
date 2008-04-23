@@ -1,5 +1,5 @@
 APPLET_NAME = plugger
-APPLET_CFLAGS = $(GNOME_CFLAGS) $(GNOME_VFS_CFLAGS)
+APPLET_CFLAGS = $(GNOME_CFLAGS) $(GNOME_VFS_CFLAGS) -DPREFIX=\"$(prefix)\"
 include $(top_srcdir)/Makefile.c-applet
 applet_LTLIBRARIES = plugger.la
 plugger_la_SOURCES =	\

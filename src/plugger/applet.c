@@ -34,7 +34,7 @@
 #define GKEY_HIDE_VOLUME "hide_volume"
 #define GKEY_FILE_OPERATIONS "file_operations"
 
-#define STACKS_APPLET "/usr/lib/awn/applets/stacks.desktop"
+#define STACKS_APPLET PREFIX "/lib/awn/applets/stacks.desktop"
 #define STACKS_APPLET_LOCAL "/usr/local/lib/awn/applets/stacks.desktop"
 
 typedef struct {
@@ -90,8 +90,14 @@ volume_add(Plugger *app, GnomeVFSVolume *volume)
         path = gnome_vfs_volume_get_device_path(volume);
 
   // Get identifier for this device from HAL; use to store gconf settings
-  gchar *hudi = g_strrstr(gnome_vfs_volume_get_hal_udi(volume), "/");
-  hudi += sizeof(gchar);
+  
+  gchar *hudi = gnome_vfs_volume_get_hal_udi(volume);
+  if (hudi) {
+    hudi = g_strrstr (hudi, "/");
+    hudi += sizeof(gchar);
+  } else {
+    hudi = g_strdup_printf ("%lu", gnome_vfs_volume_get_id (volume));
+  }
 
   // Get the appropriate icon for the device type
   gchar *icon = gnome_vfs_volume_get_icon(volume);
@@ -208,6 +214,7 @@ volume_unmounted_cb(    GnomeVFSVolumeMonitor *volume_monitor,
 AwnApplet*
 awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
 {
+  gnome_vfs_init ();
   // Create a new applet and set a reference to the new Plugger
   AwnApplet *applet = awn_applet_new( uid, orient, height );
   Plugger *app = g_new0 (Plugger, 1);

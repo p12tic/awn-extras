@@ -75,7 +75,7 @@ PKG_CHECK_MODULES(AWN, [awn >= 0.2.6])
 PKG_CHECK_MODULES(LIBGLADE, [libglade-2.0])
 # awn-notification-daemon, shiny-switcher, standalone-launcher, switcher, taskmand
 PKG_CHECK_MODULES(LIBWNCK, [libwnck-1.0])
-# affinity, awn-notification-daemon, shiny-switcher
+# affinity, awn-notification-daemon, shiny-switcher, trash
 PKG_CHECK_MODULES(LIBX11, [x11])
 PKG_CHECK_MODULES(COMPOSITE, [xcomposite])
 PKG_CHECK_MODULES(XRENDER, [xrender])
@@ -92,7 +92,7 @@ if test "$with_gconf" != "no" -o "$with_gnome" != "no"; then
 PKG_CHECK_MODULES(GNOMEUI, [libgnomeui-2.0])
 # filebrowser
 PKG_CHECK_MODULES(GNOME_DESKTOP, [gnome-desktop-2.0])
-# filebrowser, cairo-menu
+# filebrowser, cairo-menu, trash, trasher
 PKG_CHECK_MODULES(GNOME_VFS, [gnome-vfs-2.0])
 # clock
 PKG_CHECK_MODULES(RSVG, [librsvg-2.0])
@@ -169,6 +169,7 @@ PKG_CHECK_MODULES(AFFINITY, [$affinity_pkgs])
 if test "$with_gconf" != "no" -o "$with_gnome" != "no"; then
 PKG_CHECK_MODULES(FILEBROWSER, [gnome-desktop-2.0 gnome-vfs-2.0 libgnomeui-2.0])
 PKG_CHECK_MODULES(CAIRO_MENU_GNOME, [gnome-vfs-2.0 libgnome-menu libnotify libsexy])
+PKG_CHECK_MODULES(TRASH, [gnome-vfs-2.0 libgnomeui-2.0 libglade-2.0 x11])
 fi
 PKG_CHECK_MODULES(NOTIFICATION_DAEMON, [$gstreampkg libnotify libsexy libwnck-1.0 x11])
 PKG_CHECK_MODULES(SHINY_SWITCHER, [libwnck-1.0 x11 xcomposite xrender])

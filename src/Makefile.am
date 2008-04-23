@@ -15,7 +15,6 @@ GCONF_APPLETS +=		\
 	filebrowser		\
 	plugger			\
 	stacks			\
-	trash			\
 	trasher			\
 	$(NULL)
 endif
@@ -36,10 +35,11 @@ GCONF_APPLETS +=		\
 endif
 if WITH_GNOME
 GCONF_APPLETS +=	\
-	main-menu		\
+	main-menu	\
 	MiMenu		\
-	pandora			\
-	rtm	\
+	pandora		\
+	rtm		\
+	trash		\
 	$(NULL)
 endif
 if WITH_WEBKIT

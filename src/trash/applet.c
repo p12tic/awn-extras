@@ -27,8 +27,6 @@
 #include <libawn/awn-applet.h>
 #include <glib/gmacros.h>
 #include <glib/gerror.h>
-#include <gconf/gconf-value.h> 
-
 
 #include "trashapplet.h"
 

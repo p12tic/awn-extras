@@ -1,7 +1,6 @@
 APPLET_NAME = trash
 APPLET_CFLAGS = 					\
-	$(GNOMEUI_CFLAGS)				\
-	$(LIBGLADE_CFLAGS)				\
+	$(TRASH_CFLAGS)				\
 	-DGLADEDIR=\"$(libdir)/awn/applets/trash\"	\
 	$(NULL)
 include $(top_srcdir)/Makefile.c-applet
@@ -18,8 +17,7 @@ trash_la_SOURCES =	\
 	$(NULL)
 trash_la_LIBADD =		\
 	$(AWN_LIBS)		\
-	$(GNOMEUI_LIBS)		\
-	$(LIBGLADE_LIBS)	\
+	$(TRASH_LIBS)		\
 	$(NULL)
 trash_la_LDFLAGS = $(APPLET_LINKER_FLAGS)
 gladedir = $(libdir)/awn/applets/trash

@@ -1,7 +1,17 @@
 [DEFAULT/show_count]
 type = bool
-default = False
+default = false
 description = Whether the trash applet should show a count on its icon.
 description[en_CA] = The background colour (RGBA) of the menu.
+
+[DEFAULT/enable_animations]
+type = bool
+default = true
+description = Enable a trash opening animation.
+
+[DEFAULT/confirm_trash]
+type = bool
+default = true
+description = Enable the confirmation dialog for when one wishes to empty the trash.
 
 ; vim: set ft=dosini :

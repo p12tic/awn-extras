@@ -28,7 +28,7 @@
 #include <time.h>
 
 #include <gtk/gtk.h>
-#include <gconf/gconf-client.h>
+#include <libawn/awn-config-client.h>
 #include <libgnome/gnome-help.h>
 #include <glade/glade.h>
 
@@ -43,7 +43,7 @@ enum {
   TRASH_DIR_UP = 1
 };
 
-static GConfClient *client = NULL;
+static AwnConfigClient *client = NULL;
 
 G_DEFINE_TYPE(TrashApplet, trash_applet, GTK_TYPE_DRAWING_AREA)
 
@@ -118,9 +118,9 @@ trash_applet_init (TrashApplet *applet)
 	GnomeVFSURI *trash_uri;
 	gtk_window_set_default_icon_name (TRASH_ICON_FULL);
 
-	/* get the default gconf client */
+	/* get the default config client */
 	if (!client)
-		client = gconf_client_get_default ();
+		client = awn_config_client_new_for_applet ("trash", NULL);
 		
         gtk_widget_add_events (GTK_WIDGET (applet),
                                GDK_ALL_EVENTS_MASK);
@@ -231,7 +231,7 @@ trash_applet_size_allocate (GtkWidget    *widget,
 	(* GTK_WIDGET_CLASS (trash_applet_parent_class)->size_allocate) (widget, allocation);
 }
 
-#define CONFIG_TRASH_SHOW_COUNT "/apps/avant-window-navigator/applets/trash/show_count"
+#define CONFIG_TRASH_SHOW_COUNT "show_count"
 
 GtkWidget*
 trash_applet_new (AwnApplet *applet)
@@ -242,10 +242,8 @@ trash_applet_new (AwnApplet *applet)
                       NULL);
 
         app->awn_applet = applet;
-        awn_applet_add_preferences (applet, 
-                                "/schemas/apps/trash/prefs", NULL);
 
-        app->show_count = gconf_client_get_bool (client,CONFIG_TRASH_SHOW_COUNT, NULL);
+        app->show_count = awn_config_client_get_bool (client, AWN_CONFIG_CLIENT_DEFAULT_GROUP, CONFIG_TRASH_SHOW_COUNT, NULL);
         
         app->height = awn_applet_get_height (applet);
         g_signal_connect (G_OBJECT (applet), "height-changed",
@@ -398,7 +396,7 @@ trash_applet_expose_event (GtkWidget *widget, GdkEventExpose *expose)
 	return TRUE;
 }
 
-#define PANEL_ENABLE_ANIMATIONS "/apps/panel/global/enable_animations"
+#define PANEL_ENABLE_ANIMATIONS "enable_animations"
 static gboolean
 trash_applet_button_release (GtkWidget      *widget,
 			     GdkEventButton *event)
@@ -406,7 +404,7 @@ trash_applet_button_release (GtkWidget      *widget,
 	TrashApplet *applet = TRASH_APPLET (widget);
 
 	if (event->button == 1) {
-		if (gconf_client_get_bool (client, PANEL_ENABLE_ANIMATIONS, NULL))
+		if (awn_config_client_get_bool (client, AWN_CONFIG_CLIENT_DEFAULT_GROUP, PANEL_ENABLE_ANIMATIONS, NULL))
 			xstuff_zoom_animate (widget, NULL);
 		trash_applet_open_folder (applet);
 		return TRUE;
@@ -685,7 +683,7 @@ update_transfer_callback (GnomeVFSAsyncHandle *handle,
 
 /* this function is based on the one with the same name in
    libnautilus-private/nautilus-file-operations.c */
-#define NAUTILUS_PREFERENCES_CONFIRM_TRASH    "/apps/nautilus/preferences/confirm_trash"
+#define CONFIG_CONFIRM_TRASH    "confirm_trash"
 
 static gboolean
 confirm_empty_trash (GtkWidget *parent_view)
@@ -696,10 +694,8 @@ confirm_empty_trash (GtkWidget *parent_view)
 	int response;
 
 	/* Just Say Yes if the preference says not to confirm. */
-	/* Note: use directly gconf instead eel as in original nautilus function*/
-	if (!gconf_client_get_bool (client,
-				    NAUTILUS_PREFERENCES_CONFIRM_TRASH,
-				    NULL)) {
+	/* Note: use directly config instead eel as in original nautilus function*/
+	if (!awn_config_client_get_bool (client, AWN_CONFIG_CLIENT_DEFAULT_GROUP, CONFIG_CONFIRM_TRASH, NULL)) {
 		return TRUE;
 	}
 	

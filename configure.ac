@@ -169,7 +169,7 @@ PKG_CHECK_MODULES(AFFINITY, [$affinity_pkgs])
 if test "$with_gconf" != "no" -o "$with_gnome" != "no"; then
 PKG_CHECK_MODULES(FILEBROWSER, [gnome-desktop-2.0 gnome-vfs-2.0 libgnomeui-2.0])
 PKG_CHECK_MODULES(CAIRO_MENU_GNOME, [gnome-vfs-2.0 libgnome-menu libnotify libsexy])
-PKG_CHECK_MODULES(TRASH, [gnome-vfs-2.0 libgnomeui-2.0 libglade-2.0 x11])
+PKG_CHECK_MODULES(TRASH, [gnome-vfs-2.0 libglade-2.0 x11])
 fi
 PKG_CHECK_MODULES(NOTIFICATION_DAEMON, [$gstreampkg libnotify libsexy libwnck-1.0 x11])
 PKG_CHECK_MODULES(SHINY_SWITCHER, [libwnck-1.0 x11 xcomposite xrender])

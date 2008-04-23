@@ -23,13 +23,15 @@
 #include "config.h"
 #endif
 
+#include <math.h>
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
 
+#include <glib/gi18n.h>
+#include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
 #include <libawn/awn-config-client.h>
-#include <libgnome/gnome-help.h>
 #include <glade/glade.h>
 
 #include "trashapplet.h"
@@ -783,15 +785,12 @@ trash_applet_do_empty (TrashApplet *applet)
 				   &hnd, update_transfer_callback, applet);
 }
 
-
-
-void 
-trash_applet_open_folder (TrashApplet *applet)
+static void
+trash_applet_open_uri (TrashApplet *applet, const gchar *uri, const gchar *error_msg)
 {
 	GdkScreen *screen;
 
-	/* Open the "trash:" URI with gnome-open */
-	gchar *argv[] = { "gnome-open", "trash:", NULL };
+	gchar *argv[] = { "xdg-open", uri, NULL };
 	GError *err = NULL;
 	gboolean res;	
 
@@ -806,29 +805,26 @@ trash_applet_open_folder (TrashApplet *applet)
 			           &err);
 	
 	if (! res) {
-		error_dialog (applet, _("Error while spawning nautilus:\n%s"),
-			      err->message);
+		error_dialog (applet, error_msg, err->message);
 		g_error_free (err);
 	}
 }
 
 void 
+trash_applet_open_folder (TrashApplet *applet)
+{
+    g_return_if_fail (TRASH_IS_APPLET (applet));
+
+    trash_applet_open_uri (applet, "trash:///", _("Error while spawning file manager:\n%s"));
+}
+
+void 
 trash_applet_show_help (TrashApplet *applet)
 {
-        GError *err = NULL;
-
-        g_return_if_fail (TRASH_IS_APPLET (applet));
+    g_return_if_fail (TRASH_IS_APPLET (applet));
 
 	/* FIXME - Actually, we need a user guide */
-        gnome_help_display_desktop_on_screen
-		(NULL, "trashapplet", "trashapplet", NULL,
-		 gtk_widget_get_screen (GTK_WIDGET (applet)),
-		 &err);
-
-        if (err) {
-        	error_dialog (applet, _("There was an error displaying help: %s"), err->message);
-        	g_error_free (err);
-        }
+    trash_applet_open_uri (applet, "ghelp:///awn-applet-trash", _("There was an error displaying help: %s"));
 }
 
 

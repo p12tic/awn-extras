@@ -28,7 +28,6 @@
 
 #include <libawn/awn-title.h>
 #include <libawn/awn-effects.h>
-#include <gnome.h>
 #include <libgnomevfs/gnome-vfs.h>
 #include <glade/glade.h>
 

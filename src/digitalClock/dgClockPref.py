@@ -93,34 +93,35 @@ class dgClockPref:
       self.update_pref(key, details[0], details[1])
 
   def show_prefs(self, widget):
-    self.wTree = gtk.glade.XML(self.glade_path)
-    window = self.wTree.get_widget("main_window")
+    if not hasattr(self, 'wTree'):
+      self.wTree = gtk.glade.XML(self.glade_path)
+      self.window = self.wTree.get_widget("main_window")
 
-    close = self.wTree.get_widget("close_button")
-    close.connect("clicked", self.close_prefs, window)
+      close = self.wTree.get_widget("close_button")
+      close.connect("clicked", self.close_prefs)
 
-    font_btn = self.wTree.get_widget("fontface")
-    font_btn.set_font_name(self.prefs['fontFace'])
-    font_btn.connect("font-set", self.font_changed, 'font_face')
+      font_btn = self.wTree.get_widget("fontface")
+      font_btn.set_font_name(self.prefs['fontFace'])
+      font_btn.connect("font-set", self.font_changed, 'font_face')
 
-    color_btn = self.wTree.get_widget("fontcolor")
-    color_btn.set_color(self.prefs['fontColor'])
-    color_btn.connect("color-set", self.color_changed, 'font_color', self.prefs['fontColor'])
+      color_btn = self.wTree.get_widget("fontcolor")
+      color_btn.set_color(self.prefs['fontColor'])
+      color_btn.connect("color-set", self.color_changed, 'font_color', self.prefs['fontColor'])
 
-    scolor_btn = self.wTree.get_widget("shadowcolor")
-    scolor_btn.set_color(self.prefs['fontShadowColor'])
-    scolor_btn.set_use_alpha(False) #Not used yet
-    scolor_btn.connect("color-set", self.color_changed, 'font_shadow_color', self.prefs['fontShadowColor'])
+      scolor_btn = self.wTree.get_widget("shadowcolor")
+      scolor_btn.set_color(self.prefs['fontShadowColor'])
+      scolor_btn.set_use_alpha(False) #Not used yet
+      scolor_btn.connect("color-set", self.color_changed, 'font_shadow_color', self.prefs['fontShadowColor'])
 
-    h12 = self.wTree.get_widget("hour12")
-    h12.set_active(self.prefs['hour12'])
-    h12.connect("toggled", self.set_bool, 'hour12')
+      h12 = self.wTree.get_widget("hour12")
+      h12.set_active(self.prefs['hour12'])
+      h12.connect("toggled", self.set_bool, 'hour12')
 
-    tbd = self.wTree.get_widget("timebesidedate")
-    tbd.set_active(self.prefs['dateBeforeTime'])
-    tbd.connect("toggled", self.set_bool, 'dbt')
+      tbd = self.wTree.get_widget("timebesidedate")
+      tbd.set_active(self.prefs['dateBeforeTime'])
+      tbd.connect("toggled", self.set_bool, 'dbt')
 
-    window.show_all()
+    self.window.show_all()
 
   def copy_date(self, widget):
     cb = gtk.Clipboard()
@@ -139,8 +140,8 @@ class dgClockPref:
   def time_admin(self, widget):
     subprocess.Popen('gksudo time-admin', shell=True)
 
-  def close_prefs(self, btn, win):
-    win.destroy()
+  def close_prefs(self, btn):
+    self.window.hide_all()
 
   def set_bool(self, check, key):
     self.config.set_bool(awn.CONFIG_DEFAULT_GROUP, key, check.get_active())

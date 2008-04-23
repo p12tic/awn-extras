@@ -6,14 +6,9 @@ import pygtk
 import gtk
 import gtk.glade
 from gtk import gdk
-from StringIO import StringIO
-import string
 import cairo
 import time
-import math
 import subprocess
-import tempfile
-import datetime
 import awn
 import dgClockPref
 import dgTime
@@ -32,15 +27,6 @@ class App (awn.AppletSimple):
 
     #self.title = awn.awn_title_get_default ()
 
-    cur_time = time.localtime()
-    h = cur_time[3]
-    m = cur_time[4]
-    s = cur_time[5]
-    utc = ((h*60*60) + (m*60) + s) - time.timezone
-    print utc
-
-    #12:00 - UTC = tz_sun_zone
-
     self.connect ("button-press-event", self.button_press)
     #self.connect ("enter-notify-event", self.enter_notify)
     #self.connect ("leave-notify-event", self.dialog_focus_out)
@@ -54,19 +40,20 @@ class App (awn.AppletSimple):
         self.dialog.hide()
         self.dialog_visible = False
       else:
-        hbox = gtk.HBox(False,2)
-        cal = gtk.Calendar()
-        cal.set_display_options(gtk.CALENDAR_SHOW_HEADING | gtk.CALENDAR_SHOW_DAY_NAMES | gtk.CALENDAR_SHOW_WEEK_NUMBERS)
-        cal.connect("day-selected-double-click", self.startEvolution)
-        hbox.pack_start(cal, expand=False, fill=False, padding=0)
+        if not hasattr(self, 'dialog'):
+          hbox = gtk.HBox(False,2)
+          cal = gtk.Calendar()
+          cal.set_display_options(gtk.CALENDAR_SHOW_HEADING | gtk.CALENDAR_SHOW_DAY_NAMES | gtk.CALENDAR_SHOW_WEEK_NUMBERS)
+          cal.connect("day-selected-double-click", self.startEvolution)
+          hbox.pack_start(cal, expand=False, fill=False, padding=0)
 
-        #map_image = self.create_map()
-        #hbox.pack_start(map_image, expand=False, fill=False, padding=0)
+          #map_image = self.create_map()
+          #hbox.pack_start(map_image, expand=False, fill=False, padding=0)
 
-        self.dialog = awn.AppletDialog (self)
-        self.dialog.connect ("focus-out-event", self.dialog_focus_out)
-        self.dialog.set_title("Calendar")
-        self.dialog.add(hbox)
+          self.dialog = awn.AppletDialog (self)
+          self.dialog.connect ("focus-out-event", self.dialog_focus_out)
+          self.dialog.set_title("Calendar")
+          self.dialog.add(hbox)
         self.dialog.show_all()
         self.dialog_visible = True
   '''

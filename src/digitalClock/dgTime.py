@@ -8,10 +8,6 @@ from awn import extras
 
 class dgTime:
 
-  #temp directory
-  tmp_dir   = tempfile.gettempdir()
-  tmp_image = os.path.join(tmp_dir, 'digitalclock.png')
-
   curY = 0
   curX = 0
   shadow_offset = 1
@@ -19,6 +15,7 @@ class dgTime:
   def __init__(self, prefs, awn):
     self.awn = awn
     self.prefs = prefs
+    self.pixbuf = None
     self.draw_clock()
 
   def update_prefs(self, prefs):
@@ -55,7 +52,14 @@ class dgTime:
       self.draw_text(ct, t[1], 4) #Day
       self.draw_text(ct, t[2], 4.4) #Month
 
-    self.awn.set_temp_icon(extras.surface_to_pixbuf(cs))
+    if self.pixbuf is None:
+      self.pixbuf = extras.surface_to_pixbuf(cs)
+    else:
+      self.pixbuf = extras.surface_to_pixbuf(cs, self.pixbuf)
+    self.awn.set_icon(self.pixbuf)
+    del ct
+    cs.finish()
+    del cs
     return True
 
   def draw_text(self, ct, text, size):
@@ -113,29 +117,11 @@ class dgTime:
 
   def get_time_string(self):
     fullDate = []
-    am_pm = ''
-    cur_time = time.localtime()
-    h = cur_time[3]
-    m = cur_time[4]
-    s = cur_time[5]
 
     if self.prefs['hour12']:
-      if h > 12:
-        h = str(h-12)
-        am_pm = " PM"
-      elif h == 12:
-        am_pm = " PM"
-      elif h == 0:
-        h = 12
-        am_pm = " AM"
-      else:
-        am_pm = " AM"
+      fullDate.append(time.strftime('%I:%M %p'))
     else:
-      h = "%02d" % (h)
-    m = "%02d" % (m)
-    s = "%02d" % (s)
-
-    fullDate.append(str(h) + ":" + m + am_pm)
+      fullDate.append(time.strftime('%H:%M'))
     fullDate.append(time.strftime("%a"))
-    fullDate.append(time.strftime("%b") + " " + time.strftime("%d"))
+    fullDate.append(time.strftime('%b %d'))
     return fullDate

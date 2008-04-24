@@ -32,7 +32,7 @@
 
 #include <libawn/awn-applet-dialog.h>
 #include <libawn/awn-applet-simple.h>
-
+#include <libawn-extras/awn-extras.h>
 
 typedef struct {
 
@@ -352,7 +352,10 @@ on_icon_clicked (GtkWidget *eb,
 static gboolean
 on_focus_out (GtkWidget *window, GdkEventFocus *event, gpointer null)
 {
-    gtk_widget_hide (window);
+    if (share_config_bool(SHR_KEY_FOCUS_LOSS) )
+    {    
+        gtk_widget_hide (window);
+    }        
 }
 
 

@@ -95,8 +95,8 @@ typedef struct
     int     uid;
     int     pri;
     int     nice;
-    guint    virt;
-    guint    res;
+    guint64    virt;
+    guint64    res;
     long    shr;
     long     cpu;
     guint64     mem;

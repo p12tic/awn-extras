@@ -89,8 +89,6 @@ void enable_suppress_hide_main(void);
 void disable_suppress_hide_main(void);
 gboolean get_hide_main(void);
 
-void surface_2_pixbuf( GdkPixbuf * pixbuf, cairo_surface_t * surface);
-
 gboolean toggle_boolean_menu(GtkWidget *widget, GdkEventButton *event, gboolean *p);
 
 void quick_message (gchar *message,GtkWidget * mainwin);

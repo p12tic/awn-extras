@@ -39,11 +39,13 @@
 #include <libgen.h>
 #include <gdk/gdk.h>
 
+#include <libawn-extras/awn-extras.h>
 
 #include "dashboard.h"
 #include "dashboard_util.h"
 #include "config.h"
 #include "gconf-config.h"
+
 
 #undef NDEBUG
 #include <assert.h>
@@ -898,7 +900,10 @@ static gboolean _focus_out_event(GtkWidget *widget, GdkEventButton *event,
     {
         if (  gdk_window_get_window_type (event->window) !=GDK_WINDOW_TEMP)
         {        
-            gtk_widget_hide(dashboard->mainwindow);
+            if (share_config_bool(SHR_KEY_FOCUS_LOSS) )
+            {            
+                gtk_widget_hide(dashboard->mainwindow);
+            }
         }
     }
     disable_suppress_hide_main();        

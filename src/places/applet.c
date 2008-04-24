@@ -1263,7 +1263,10 @@ static gboolean _button_clicked_event (GtkWidget *widget, GdkEventButton *event,
 
 static gboolean _focus_out_event(GtkWidget *widget, GdkEventButton *event, Places * places)
 {
-    gtk_widget_hide(places->mainwindow);
+    if (share_config_bool(SHR_KEY_FOCUS_LOSS) )
+    {
+        gtk_widget_hide(places->mainwindow);
+    }
     return TRUE;
 }
 

@@ -203,10 +203,10 @@ static gint proctime_key_compare_func(gconstpointer a,gconstpointer b,
 
 static int cmppid(const void *, const void *);
 static int cmpuser(const void *, const void *);
-static int cmpvirt(const void *, const void *);
-static int cmpres(const void *, const void *);
+static gint64 cmpvirt(const void *, const void *);
+static gint64 cmpres(const void *, const void *);
 static int cmpcpu(const void *, const void *);
-static int cmpmem(const void *, const void *);
+static gint64 cmpmem(const void *, const void *);
 static int cmpcommand(const void *, const void *);
 
 static void invalidate_pixmap_cache(Small_Pixmap_cache *p);
@@ -1348,7 +1348,6 @@ static gint icons_key_compare_func(gconstpointer a,gconstpointer b,   gpointer u
 /************Section:  qsort compare functions-------------*/
 static int cmppid(const void * p1 , const void * p2)
 {
-    int result=0;
     Topentry ** l = (Topentry **) p1;
     Topentry ** r = (Topentry **) p2;
     
@@ -1358,24 +1357,21 @@ static int cmppid(const void * p1 , const void * p2)
 /*FIXME ???  currently sort on uid not user name */
 static int cmpuser(const void * p1 , const void * p2)
 {
-    int result=0;
     Topentry ** l = (Topentry **) p1;
     Topentry ** r = (Topentry **) p2;
     
     return ( (*l)->uid -(*r)->uid) * gcomparedir;
 }
 
-static int cmpvirt(const void * p1 , const void * p2)
+static gint64 cmpvirt(const void * p1 , const void * p2)
 {
-    int result=0;
     Topentry ** l = (Topentry **) p1;
     Topentry ** r = (Topentry **) p2;
     
     return ( (*l)->virt -(*r)->virt) * gcomparedir;
 }
-static int cmpres(const void * p1 , const void * p2)
+static gint64 cmpres(const void * p1 , const void * p2)
 {
-    int result=0;
     Topentry ** l = (Topentry **) p1;
     Topentry ** r = (Topentry **) p2;
     
@@ -1383,15 +1379,13 @@ static int cmpres(const void * p1 , const void * p2)
 }
 static int cmpcpu(const void * p1 , const void * p2)
 {
-    int result=0;
     Topentry ** l = (Topentry **) p1;
     Topentry ** r = (Topentry **) p2;
     
     return ( (*l)->cpu -(*r)->cpu) * gcomparedir;
 }
-static int cmpmem(const void * p1 , const void * p2)
+static gint64 cmpmem(const void * p1 , const void * p2)
 {
-    int result=0;
     Topentry ** l = (Topentry **) p1;
     Topentry ** r = (Topentry **) p2;
     
@@ -1399,7 +1393,6 @@ static int cmpmem(const void * p1 , const void * p2)
 }
 static int cmpcommand(const void * p1 , const void * p2)
 {
-    int result=0;
     Topentry ** l = (Topentry **) p1;
     Topentry ** r = (Topentry **) p2;
     

@@ -21,6 +21,7 @@
 
 #include <libawn/awn-applet.h>
 #include <libawn/awn-applet-simple.h>
+#include <libawn-extras/awn-extras.h>
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 #include <vte/vte.h>
@@ -67,7 +68,10 @@ gboolean icon_clicked_cb (GtkWidget *widget, GdkEventButton *event, gpointer nul
 // Callback when the applet's dialog box loses focus
 gboolean focus_out_cb (GtkWidget *window, GdkEventFocus *event, gpointer null)
 {
-	gtk_widget_hide (window);
+    if (share_config_bool(SHR_KEY_FOCUS_LOSS) )
+    {
+    	gtk_widget_hide (window);
+    }        
 	return FALSE;
 }
 

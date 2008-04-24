@@ -74,4 +74,17 @@ Implementation Notes:
 */
 void notify_message_async(gchar * summary, gchar * body,gchar * icon_str,glong timeout);
 
+
+
+
+#define SHR_KEY_CONFIG_KEY(key) key
+#define SHR_KEY_FOCUS_LOSS    SHR_KEY_CONFIG_KEY("dialog_focus_loss_behavior")
+
+/* 
+share_config_bool
+	returns a boolean shared configuration key.
+*/
+
+gboolean share_config_bool(const gchar * key);
+
 #endif

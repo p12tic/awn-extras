@@ -17,7 +17,8 @@ source_c =	\
 	colour.c	\
 	pixbufs.c	\
 	url.c		\
-	notify.c
+	notify.c    \
+	config_shared.c
 	
 libawn_extrasinc_HEADERS = \
 	$(source_h)

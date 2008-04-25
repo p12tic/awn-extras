@@ -1,0 +1,89 @@
+Source: awn-extras-applets-trunk
+Section: gnome
+Priority: optional
+Maintainer: Julien Lavergne <julien.lavergne@gmail.com>
+AUTOPPA_INCLUDE(feisty):Build-Depends: 	debhelper (>= 5), 
+		cdbs, 
+		intltool, 
+		gnome-pkg-tools, 
+		autotools-dev, 
+		automake1.8,
+		libgnome-menu-dev, 
+		libgconf2-dev, 
+		libgnome-desktop-dev, 
+		gnome-common, 
+		librsvg2-dev, 
+		libgtop2-dev, 
+		libawn-dev-trunk, 
+		libwnck-dev, 
+		python-central (>= 0.5.6), 
+		python-all-dev,
+		python-cairo-dev,
+		python-gtk2-dev,
+		libvte-dev, 
+		libsexy-dev, 
+		libnotify-dev,
+		vala-awn-trunk,
+		valac,
+		libglade2-dev,
+		libxcomposite-dev,
+		libxdamage-dev,
+		librsvg2-dev,
+		libsexy-dev,
+		libnotify-dev,
+		libtrackerclient-dev,
+		awn-manager-trunk
+AUTOPPA_INCLUDE(gutsy,hardy):Build-Depends: 	debhelper (>= 5), 
+		cdbs, 
+		intltool, 
+		gnome-pkg-tools, 
+		autotools-dev, 
+		automake1.8,
+		libgnome-menu-dev, 
+		libgconf2-dev, 
+		libgnome-desktop-dev, 
+		gnome-common, 
+		librsvg2-dev, 
+		libgtop2-dev, 
+		libawn-dev-trunk, 
+		libwnck-dev, 
+		python-central (>= 0.5.6), 
+		python-all-dev,
+		python-cairo-dev,
+		python-gtk2-dev,
+		libvte-dev, 
+		libsexy-dev, 
+		libnotify-dev,
+		vala-awn-trunk,
+		valac,
+		libglade2-dev,
+		libxcomposite-dev,
+		libxdamage-dev,
+		librsvg2-dev,
+		libsexy-dev,
+		libnotify-dev,
+		libtrackerclient-dev,
+		libwebkit-dev | libwebkitgtk-dev,
+		awn-manager-trunk
+Standards-Version: 3.7.2
+XS-Python-Version: current
+
+Package: awn-extras-applets-trunk
+Section: gnome
+Architecture: any
+Depends: ${shlibs:Depends}, ${python:Depends}
+Recommends: 	avant-window-navigator-trunk, 
+		python-awn-trunk,
+		vala-awn-trunk,
+		cairo-clock, 
+		python-alsaaudio, 
+		python-libgmail, 
+		python-imaging, 
+		python-gst0.10, 
+		tsclient, 
+		libvte
+Conflict: awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
+Replaces: awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
+XB-Python-Version: ${python:Versions}
+Description: A collection of applets for Avant Window Navigator
+ A collection of applets for Avant Window Navigator.

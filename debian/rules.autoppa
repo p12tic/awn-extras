@@ -1,0 +1,11 @@
+#!/usr/bin/make -f
+#export DH_VERBOSE=1
+#DEB_FIXPERMS_EXCLUDE := *.so
+
+include /usr/share/cdbs/1/rules/debhelper.mk
+include /usr/share/cdbs/1/class/gnome.mk
+include /usr/share/cdbs/1/rules/simple-patchsys.mk
+		
+DEB_CONFIGURE_SCRIPT := $(CURDIR)/$(DEB_SRCDIR)/autogen.sh
+AUTOPPA_INCLUDE(feisty):DEB_CONFIGURE_EXTRA_FLAGS += 	--disable-pymod-checks
+AUTOPPA_INCLUDE(gutsy,hardy):DEB_CONFIGURE_EXTRA_FLAGS += 	--disable-pymod-checks --with-webkit

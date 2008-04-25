@@ -165,7 +165,7 @@ class App (awn.AppletSimple):
 
     def leave_notify (self, widget, event):
         self.title.hide(self)
-        if self.showhover:
+        if showhover:
             self.dialog.hide()
             self.visible = False
 

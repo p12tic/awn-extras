@@ -38,8 +38,8 @@ if len(sys.argv) > 1:
 
 pattern = re.compile('dilbert\\d+\\.gif')
 pattern2 = re.compile('dilbert\\d+\\.jpg')
-temp1 = 'http://www.dilbert.com/comics/dilbert/archive/dilbert-%s.html'
-temp2 = 'http://www.dilbert.com/comics/dilbert/archive/images/%s'
+temp1 = 'http://www.comics.com/comics/dilbert/archive/dilbert-%s.html'
+temp2 = 'http://www.comics.com/comics/dilbert/archive/images/%s'
 
 date = datetime.today()
 one_day = timedelta(1)

@@ -157,6 +157,7 @@ class App (awn.AppletSimple):
 
 
     def enter_notify (self, widget, event):
+        global showhover
         self.title.show (self, self.titleText)
         if showhover:
             self.title.hide(self)
@@ -164,6 +165,7 @@ class App (awn.AppletSimple):
             self.visible = False
 
     def leave_notify (self, widget, event):
+        global showhover
         self.title.hide(self)
         if showhover:
             self.dialog.hide()

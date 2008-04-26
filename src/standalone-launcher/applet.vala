@@ -2272,7 +2272,7 @@ class LauncherApplet : AppletSimple
 				win.name_changed+=_win_name_change;
 				win.state_changed+=_win_state_change;				
                 title_string=win.get_name();     
-                win.set_icon_geometry(x,y,height,height);
+                win.set_icon_geometry(x,y,height,height);                
 			}
 			else if (response=="HANDSOFF")
 			{
@@ -2373,6 +2373,15 @@ class LauncherApplet : AppletSimple
             window.name_changed+=_win_name_change;
             window.state_changed+=_win_state_change;    
             window.set_icon_geometry(x,y,height,height);
+            
+            stdout.printf("checking for X-AWN-Workspace\n");
+            string ws_num_string=desktopitem.get_string("X-AWN-Workspace");            
+            if (ws_num_string !=null)
+            {
+                stdout.printf("Found X-AWN-Workspace\n");
+                window.move_to_workspace( screen.get_workspace(ws_num_string.to_int() ) );
+            }
+            
         }
         else if (response=="HANDSOFF")
         {

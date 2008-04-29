@@ -29,7 +29,6 @@ GCONF_APPLETS +=		\
 	media-icon-play		\
 	mount-applet		\
 	quit-applet		\
-	switcher		\
 	weather			\
 	$(NULL)
 endif
@@ -64,6 +63,7 @@ SUBDIRS =			\
 	separator		\
 	shiny-switcher		\
 	showdesktop		\
+	switcher		\
 	Taskmand-applet		\
 	tsclient-applet		\
 	tomboy-applet		\

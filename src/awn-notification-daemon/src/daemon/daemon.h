@@ -56,6 +56,8 @@
 #define GCONF_KEY_AWN_OVERRIDE_Y  GCONF_AWN "/override_y"
 #define GCONF_KEY_AWN_TIMEOUT  GCONF_AWN "/override_override_timeout"
 #define GCONF_KEY_AWN_BOLD_BODY  GCONF_AWN "/bold_text_body"
+#define GCONF_KEY_AWN_SHOW_ICON GCONF_AWN "/show_icon"
+
 
 #define NOTIFY_TYPE_DAEMON (notify_daemon_get_type())
 #define NOTIFY_DAEMON(obj) \
@@ -152,6 +154,7 @@ typedef struct
 	GdkPixbuf *awn_icon;
 	int 	timeout;			//0
 	gboolean	bold_text_body;
+	gboolean    show_icon;
 }Notification_Daemon;
 
 G_END_DECLS

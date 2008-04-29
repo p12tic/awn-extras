@@ -1404,7 +1404,16 @@ static void read_config(void)
         gconf_client_set_bool(gconf_client,GCONF_KEY_AWN_BOLD_BODY,G_daemon_config.bold_text_body,NULL);        
     }
 
-
+    value=gconf_client_get(gconf_client,GCONF_KEY_AWN_SHOW_ICON,NULL);		
+    if (value)
+    {																		
+        G_daemon_config.show_icon=gconf_client_get_bool(gconf_client,GCONF_KEY_AWN_SHOW_ICON,NULL) ;
+    }
+    else             							
+    {
+        G_daemon_config.show_icon=FALSE;
+        gconf_client_set_bool(gconf_client,GCONF_KEY_AWN_SHOW_ICON,G_daemon_config.show_icon,NULL);        
+    }
     
     done_once=TRUE;
 }
@@ -1583,7 +1592,9 @@ AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
 	dbus_g_connection_register_g_object(connection,"/org/freedesktop/Notifications",G_OBJECT(daemon));
     
     g_timeout_add(5000, (GSourceFunc)send_message,g_strdup("Awn Notification Daemon has loaded Successfully.\nClick <a href=\"http://wiki.awn-project.org/index.php?title=Awn_Notification-Daemon\">Here</a> for online documentation.")); 
-    g_timeout_add(3000, (GSourceFunc)hide_icon,NULL); 
+    
+    if (! G_daemon_config.show_icon)
+        g_timeout_add(3000, (GSourceFunc)hide_icon,NULL); 
     return applet;
 
 }

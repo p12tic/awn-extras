@@ -132,6 +132,19 @@
     <long>This will override the client and default timeout periods for all notification windows with a timeout.  Value is in ms. A value less than or equal to 0 indicates that client and default values should be honoured.</long>
    </locale>
   </schema>  
-  
+
+  <schema>
+   <key>/schemas/apps/avant-window-navigator/applets/awn-notification-daemon/show_icon</key>
+   <applyto>/apps/avant-window-navigator/applets/awn-notification-daemon/show_icon</applyto>
+   <owner>awn-notification-daemon</owner>
+   <type>bool</type>
+   <default>0</default>
+   <locale name="C">
+    <short>Show icon</short>
+    <long>Display icon for awn notification daemon.  Allows toggling of notification display</long>
+   </locale>
+  </schema>  
+
+    
  </schemalist>
 </gconfschemafile>

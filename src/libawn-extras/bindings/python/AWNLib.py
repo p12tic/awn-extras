@@ -289,7 +289,7 @@ class Icon:
         else:
             return icon
 
-    def surface(self, surface, set=True):
+    def surface(self, surface, pixbuf=None, set=True):
         """
         Convert a C{cairo} surface to a C{gtk.gdk.Pixbuf}.
 
@@ -302,7 +302,10 @@ class Icon:
         """
 
         if extras:
-            icon = extras.surface_to_pixbuf(surface)
+            if pixbuf=None:
+                icon = extras.surface_to_pixbuf(surface)
+            else:
+                icon = extras.get_pixbuf_from_surface(surface, pixbuf)
         else:
             sio = StringIO()
             surface.write_to_png(sio)

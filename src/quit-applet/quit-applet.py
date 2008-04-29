@@ -17,21 +17,23 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
-import sys, os
+import sys, os, re
 import gobject
-import pygtk
 import gtk
 from gtk import gdk
 import awn
-import gconf
 
 class App (awn.AppletSimple):
     def __init__ (self, uid, orient, height):
         self.location = __file__.replace('quit-applet.py','')
-        self.keylocation = "/apps/avant-window-navigator/applets/QuitApplet"
-        self.client = gconf.client_get_default()
+        self.client = awn.Config('QuitApplet', None)
+        self.defaults = {
+            'IconLocation': os.path.join(self.location, 'icons', 'application-exit.svg'),
+            'LogoutCommand': 'gnome-session-save --kill'
+            }
         self.load_keys()
-        self.client.notify_add(self.keylocation, self.config_event)
+        self.client.notify_add(awn.CONFIG_DEFAULT_GROUP, 'IconLocation', self.load_config)
+        self.client.notify_add(awn.CONFIG_DEFAULT_GROUP, 'LogoutCommand', self.load_config)
         awn.AppletSimple.__init__ (self, uid, orient, height)
         self.height = height
         self.theme = gtk.IconTheme ()
@@ -72,23 +74,22 @@ class App (awn.AppletSimple):
         self.title.show (self, "Quit/Logout?")
     def leave_notify (self, widget, event):
         self.title.hide (self)
-    def config_event(self, gconf_client, *args, **kwargs):
-        self.load_keys()
+    def attr_from_key(self, key):
+        return key[0].lower() + re.sub(r'[A-Z]', lambda m: '_' + m.group(0).lower(), key[1:])
+    def load_config(self, entry, arg):
+        setattr(self, self.attr_from_key(entry['key']), self.get_pref(entry['key'], self.defaults[entry['key']]))
     def load_keys(self):
-        #<Name of Variable> = self.key_control (<Name of Key>,<Default Value>)
-        self.icon_location                       = self.key_control ("/IconLocation",self.location + "icons/application-exit.svg")
-        self.command                                 = self.key_control ("/LogoutCommand", "gnome-session-save --kill")
-
-    def key_control(self,keyname,default):
-        keylocation_with_name               = self.keylocation + keyname
+        for key, default in self.defaults.iteritems():
+            setattr(self, self.attr_from_key(key), self.get_pref(key, default))
+    def get_pref(self, key, default):
         try:
-            var                             = self.client.get_string(keylocation_with_name)
-            if var                         == None:
-                var                         = default
-                self.client.set_string        (keylocation_with_name,var)
+            value = self.client.get_string(awn.CONFIG_DEFAULT_GROUP, key)
+            if value is None:
+                value = default
+                self.client.set_string(awn.CONFIG_DEFAULT_GROUP, key, value)
         except NameError:
-            var                             = default
-        return var
+            value = default
+        return value
 
 class PreferenceDialog(gtk.Window):
     def __init__(self,applet):
@@ -117,7 +118,7 @@ class PreferenceDialog(gtk.Window):
         vbox.pack_end(hbox4,True,False,2)
 
     def ok_button(self, widget, event):
-        self.applet.client.set_string(self.applet.keylocation + "/LogoutCommand", self.logout_command.get_text().strip())
+        self.applet.client.set_string(awn.CONFIG_DEFAULT_GROUP, 'LogoutCommand', self.logout_command.get_text().strip())
         self.destroy()
 
     def cancel_button(self, widget, event):

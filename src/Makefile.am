@@ -28,7 +28,6 @@ GCONF_APPLETS +=		\
 	media-icon-next		\
 	media-icon-play		\
 	mount-applet		\
-	quit-applet		\
 	weather			\
 	$(NULL)
 endif
@@ -60,6 +59,7 @@ SUBDIRS =			\
 	places			\
 	PyClock			\
 	python-test		\
+	quit-applet		\
 	separator		\
 	shiny-switcher		\
 	showdesktop		\

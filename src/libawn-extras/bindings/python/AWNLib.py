@@ -295,6 +295,10 @@ class Icon:
 
         @param surface: The C{cairo} surface to convert.
         @type surface: C{cairo.Surface}
+        @param pixbuf: The reference to the pixbuf created from the surface.
+        If you use this method multiple times, please keep a reference to
+        this variable, or else your applet will leak memory.
+        @type pixbuf: C{gtk.gdk.Pixbuf}
         @param set: Whether to also set the icon. True by default.
         @type set: C{bool}
         @return: The resultant pixbuf or None (if C{set} is C{True})
@@ -302,10 +306,10 @@ class Icon:
         """
 
         if extras:
-            if pixbuf=None:
+            if pixbuf is None:
                 icon = extras.surface_to_pixbuf(surface)
             else:
-                icon = extras.get_pixbuf_from_surface(surface, pixbuf)
+                icon = extras.surface_to_pixbuf(surface, pixbuf)
         else:
             sio = StringIO()
             surface.write_to_png(sio)

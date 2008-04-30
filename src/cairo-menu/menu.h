@@ -54,6 +54,7 @@ void pos_dialog(GtkWidget * mainwindow);
 void fixed_move(GtkWidget *widget,gint x,gint y);
 void fixed_put(GtkWidget *widget,gint x,gint y);
 void hide_all_menus(void);
+GtkWidget * menu_new(GtkWidget * parent_menu);
 
 #endif 
 

@@ -34,6 +34,7 @@
 #include <libgen.h>
 #include <ctype.h>
 #include <libnotify/notify.h>
+#include <glib/gstdio.h>
 
 #include "menu_list_item.h"
 

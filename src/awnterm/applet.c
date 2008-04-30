@@ -21,6 +21,7 @@
 
 #include <libawn/awn-applet.h>
 #include <libawn/awn-applet-simple.h>
+#include <libawn/awn-applet-dialog.h>
 #include <vte/vte.h>
 #include <gtk/gtk.h>
 

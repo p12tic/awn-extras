@@ -33,4 +33,6 @@ void hide_search(void);
 void measure_width(Menu_list_item * menu_item,int * max_width);
 gboolean _hide_all_windows(gpointer null);
 
+GtkWidget * build_menu_widget(Menu_item_color * mic, char * text,GdkPixbuf *pbuf,GdkPixbuf *pover,int max_width);
+
 #endif

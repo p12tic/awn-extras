@@ -155,6 +155,7 @@ typedef struct
 	int 	timeout;			//0
 	gboolean	bold_text_body;
 	gboolean    show_icon;
+	gboolean    show_status;
 }Notification_Daemon;
 
 G_END_DECLS

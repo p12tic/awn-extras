@@ -1231,7 +1231,8 @@ gboolean send_message(gchar *body)
 gboolean hide_icon(gpointer data)
 {
     gtk_widget_set_size_request (GTK_WIDGET (G_daemon_config.awn_app), 1, 1);
-
+    g_object_unref (G_daemon_config.awn_icon);
+    
     G_daemon_config.awn_icon=gdk_pixbuf_new(GDK_COLORSPACE_RGB,TRUE,8,1,1);
     gdk_pixbuf_fill(G_daemon_config.awn_icon,0x00000000);  
     awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (G_daemon_config.awn_app),G_daemon_config.awn_icon);  
@@ -1498,7 +1499,23 @@ config_changed(GConfClient *client, guint cnxn_id,
     }
     
 	send_message("Configuration has been modified\nClick <a href=\"http://wiki.awn-project.org/index.php?title=Awn_Notification-Daemon\">Here</a> for online documentation.");
-}						  
+}	
+
+static gboolean _button_clicked_event (GtkWidget *widget, GdkEventButton *event, void * null)
+{
+    G_daemon_config.show_status= !G_daemon_config.show_status;
+    if (G_daemon_config.show_status)
+    {
+        gdk_pixbuf_fill(G_daemon_config.awn_icon,0xdddddd33);  
+    }
+    else
+    {
+        gdk_pixbuf_fill(G_daemon_config.awn_icon,0x00000033);  
+    }        
+    awn_applet_simple_set_icon (AWN_APPLET_SIMPLE (G_daemon_config.awn_app),G_daemon_config.awn_icon);  
+    
+    return TRUE;
+}
 
 AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
 {
@@ -1511,16 +1528,17 @@ AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
 
 
     G_daemon_config.awn_app_height=height;
-
+    G_daemon_config.show_status=TRUE;
+    
     G_daemon_config.awn_app = applet = AWN_APPLET (awn_applet_simple_new (uid, orient, height));
     
     g_signal_connect (G_OBJECT (applet), "height-changed", G_CALLBACK (_height_changed), (gpointer)applet);    
     gtk_widget_set_size_request (GTK_WIDGET (applet), height, height);
 
     G_daemon_config.awn_icon=gdk_pixbuf_new(GDK_COLORSPACE_RGB,TRUE,8,height,height);
-    gdk_pixbuf_fill(G_daemon_config.awn_icon,0x00000033);  
-    awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (applet),G_daemon_config.awn_icon);  
-	G_daemon_config.awn_icon=NULL;
+    gdk_pixbuf_fill(G_daemon_config.awn_icon,0xdddddd33);  
+    awn_applet_simple_set_icon (AWN_APPLET_SIMPLE (applet),G_daemon_config.awn_icon);  
+
 
     gtk_widget_show_all (GTK_WIDGET (applet));
 
@@ -1594,7 +1612,13 @@ AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
     g_timeout_add(5000, (GSourceFunc)send_message,g_strdup("Awn Notification Daemon has loaded Successfully.\nClick <a href=\"http://wiki.awn-project.org/index.php?title=Awn_Notification-Daemon\">Here</a> for online documentation.")); 
     
     if (! G_daemon_config.show_icon)
+    {
         g_timeout_add(3000, (GSourceFunc)hide_icon,NULL); 
+    }
+    else
+    {
+        g_signal_connect (G_OBJECT (G_daemon_config.awn_app), "button-press-event",G_CALLBACK (_button_clicked_event), NULL);
+    }        
     return applet;
 
 }

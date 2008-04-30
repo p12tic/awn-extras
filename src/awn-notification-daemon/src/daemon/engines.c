@@ -591,9 +591,11 @@ create_notification(UrlClickedCb url_clicked)
     AwnColor bg;
     AwnColor base;
 	main_vbox=build_dialog(windata,0,&base,&bg);
-    	
 	win=windata->win;
-	
+    if (!G_daemon_config.show_status)
+    {
+        gtk_widget_hide_all(win);
+    }	
 #ifdef SHOW_SPACERS
 
 	windata->top_spacer = gtk_image_new();
@@ -710,6 +712,11 @@ create_notification(UrlClickedCb url_clicked)
 		G_daemon_config.awn_border.alpha=1.0;
 
     }
+    if (!G_daemon_config.show_status)
+    {
+        gtk_widget_hide_all(win);
+    }
+    
 	return GTK_WINDOW(win);
 }
 
@@ -868,8 +875,11 @@ static gboolean
 countdown_expose_cb(GtkWidget *pie, GdkEventExpose *event,
 					WindowData *windata)
 {
+    if (!G_daemon_config.show_status)
+    {
+        return TRUE;
+    }    
 	GtkStyle *style = gtk_widget_get_style(windata->win);
-
 	cairo_t *context;
 	cairo_surface_t *surface;
 	cairo_t *cr;
@@ -908,8 +918,6 @@ countdown_expose_cb(GtkWidget *pie, GdkEventExpose *event,
 	cairo_paint(context);
 	cairo_surface_destroy(surface);
 	cairo_destroy(context);
-
-
 	return TRUE;
 }
 
@@ -937,6 +945,10 @@ void add_notification_action(GtkWindow *nw, const char *text,
 	char *buf;
     cairo_t *cr;
 	g_assert(windata != NULL);
+    if (!G_daemon_config.show_status)
+    {
+        return;
+    }    
 
 	if (!GTK_WIDGET_VISIBLE(windata->actions_box))
 	{
@@ -1016,7 +1028,15 @@ move_notification(GtkWidget *nw, int x, int y)
 {
     /*bloody hell... this should get it right in _most_ situations*/
 
-    gtk_widget_show(nw);
+
+    if (G_daemon_config.show_status)
+    {
+        gtk_widget_show(nw);      
+    }
+    else
+    {
+        return;
+    }
     
     if (x+WIDTH >= gdk_screen_get_width (gdk_screen_get_default()) )
     {
@@ -1059,8 +1079,14 @@ hide_notification(GtkWindow *nw)
 void
 show_notification(GtkWindow *nw)
 {
-
-    gtk_widget_show(GTK_WIDGET(nw));
+    if (G_daemon_config.show_status)
+    {
+        gtk_widget_show(GTK_WIDGET(nw));
+    }
+    else
+    {
+        gtk_widget_hide_all(GTK_WIDGET(nw));
+    }        
 }
 
 
@@ -1189,8 +1215,11 @@ static void dialog_fill_background(GtkWidget *widget, WindowData *windata, cairo
 
 static gboolean _paint_dialog(GtkWidget *widget,GdkEventExpose *event,WindowData *windata)
 {			 
-    gtk_window_resize(GTK_WINDOW(windata->win),  WIDTH,100);     
-    gtk_widget_show(widget);
+    gtk_window_resize(GTK_WINDOW(windata->win),  WIDTH,100);    
+    if (G_daemon_config.show_status)
+    {
+        gtk_widget_show(widget);
+    }    
 	if (windata->width == 0) {
 		windata->width = windata->win->allocation.width;
 		windata->height = windata->win->allocation.height;
@@ -1230,7 +1259,7 @@ GtkWidget * build_dialog( WindowData *windata,long flags, AwnColor *base, AwnCol
 	GdkScreen *screen;
 	GtkWidget *drawbox;
 	GtkWidget *main_vbox;	
-    GtkWidget *win=gtk_window_new (GTK_WINDOW_POPUP);
+    GtkWidget *win=gtk_window_new (GTK_WINDOW_POPUP);    
     gtk_window_set_decorated(GTK_WINDOW (win),FALSE);      
     gtk_window_set_type_hint (GTK_WINDOW (win),GDK_WINDOW_TYPE_HINT_NOTIFICATION);
     gtk_window_stick (GTK_WINDOW (win));

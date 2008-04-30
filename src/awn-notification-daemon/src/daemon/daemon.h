@@ -57,7 +57,7 @@
 #define GCONF_KEY_AWN_TIMEOUT  GCONF_AWN "/override_override_timeout"
 #define GCONF_KEY_AWN_BOLD_BODY  GCONF_AWN "/bold_text_body"
 #define GCONF_KEY_AWN_SHOW_ICON GCONF_AWN "/show_icon"
-
+#define GCONF_KEY_AWN_HIDE_OPACITY GCONF_AWN "/hide_opacity"
 
 #define NOTIFY_TYPE_DAEMON (notify_daemon_get_type())
 #define NOTIFY_DAEMON(obj) \
@@ -156,6 +156,7 @@ typedef struct
 	gboolean	bold_text_body;
 	gboolean    show_icon;
 	gboolean    show_status;
+	float hide_opacity;
 }Notification_Daemon;
 
 G_END_DECLS

@@ -594,7 +594,14 @@ create_notification(UrlClickedCb url_clicked)
 	win=windata->win;
     if (!G_daemon_config.show_status)
     {
-        gtk_widget_hide(win);
+        if (G_daemon_config.hide_opacity >0.01)
+        {
+            gtk_window_set_opacity(GTK_WINDOW(win),G_daemon_config.hide_opacity);
+        }
+        else
+        {
+            gtk_widget_hide(win);
+        }
     }	
 #ifdef SHOW_SPACERS
 
@@ -711,10 +718,6 @@ create_notification(UrlClickedCb url_clicked)
         G_daemon_config.awn_border.blue=fg_color->blue  / 65535.0;
 		G_daemon_config.awn_border.alpha=1.0;
 
-    }
-    if (!G_daemon_config.show_status)
-    {
-        gtk_widget_hide(win);
     }
     
 	return GTK_WINDOW(win);
@@ -875,7 +878,7 @@ static gboolean
 countdown_expose_cb(GtkWidget *pie, GdkEventExpose *event,
 					WindowData *windata)
 {
-    if (!G_daemon_config.show_status)
+    if (( !G_daemon_config.show_status) && (G_daemon_config.hide_opacity <=0.01) )
     {
         return TRUE;
     }    
@@ -945,7 +948,7 @@ void add_notification_action(GtkWindow *nw, const char *text,
 	char *buf;
     cairo_t *cr;
 	g_assert(windata != NULL);
-    if (!G_daemon_config.show_status)
+    if ((!G_daemon_config.show_status) && (G_daemon_config.hide_opacity <=0.01))
     {
         return;
     }    
@@ -1029,7 +1032,7 @@ move_notification(GtkWidget *nw, int x, int y)
     /*bloody hell... this should get it right in _most_ situations*/
 
 
-    if (G_daemon_config.show_status)
+    if ( (G_daemon_config.show_status) || (G_daemon_config.hide_opacity > 0.01) )
     {
         gtk_widget_show(nw);      
     }
@@ -1080,7 +1083,7 @@ hide_notification(GtkWindow *nw)
 void
 show_notification(GtkWindow *nw)
 {
-    if (G_daemon_config.show_status)
+    if ( (G_daemon_config.show_status) || (G_daemon_config.hide_opacity > 0.01) )
     {
         gtk_widget_show(GTK_WIDGET(nw));
     }
@@ -1217,7 +1220,7 @@ static void dialog_fill_background(GtkWidget *widget, WindowData *windata, cairo
 static gboolean _paint_dialog(GtkWidget *widget,GdkEventExpose *event,WindowData *windata)
 {			 
     gtk_window_resize(GTK_WINDOW(windata->win),  WIDTH,100);    
-    if (G_daemon_config.show_status)
+    if ( (G_daemon_config.show_status) || (G_daemon_config.hide_opacity > 0.01))
     {
         gtk_widget_show(widget);
     }    

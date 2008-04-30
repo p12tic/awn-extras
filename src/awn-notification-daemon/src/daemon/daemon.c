@@ -1415,6 +1415,17 @@ static void read_config(void)
         G_daemon_config.show_icon=FALSE;
         gconf_client_set_bool(gconf_client,GCONF_KEY_AWN_SHOW_ICON,G_daemon_config.show_icon,NULL);        
     }
+
+    value=gconf_client_get(gconf_client,GCONF_KEY_AWN_HIDE_OPACITY,NULL);		
+    if (value)
+    {																		
+        G_daemon_config.hide_opacity=gconf_client_get_float(gconf_client,GCONF_KEY_AWN_HIDE_OPACITY,NULL) ;
+    }
+    else             							
+    {
+        G_daemon_config.hide_opacity=0.0;
+        gconf_client_set_float(gconf_client,GCONF_KEY_AWN_HIDE_OPACITY,G_daemon_config.hide_opacity,NULL);        
+    }
     
     done_once=TRUE;
 }

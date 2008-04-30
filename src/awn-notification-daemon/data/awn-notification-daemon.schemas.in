@@ -145,6 +145,17 @@
    </locale>
   </schema>  
 
+  <schema>
+   <key>/schemas/apps/avant-window-navigator/applets/awn-notification-daemon/hide_opacity</key>
+   <applyto>/apps/avant-window-navigator/applets/awn-notification-daemon/hide_opacity</applyto>
+   <owner>awn-notification-daemon</owner>
+   <type>float</type>
+   <default>0.0</default>
+   <locale name="C">
+    <short>Increased opacity instead of Hiding</short>
+    <long>If the value is >0.0 then this opacity value will be applied to window instead of hiding.</long>
+   </locale>
+  </schema> 
     
  </schemalist>
 </gconfschemafile>

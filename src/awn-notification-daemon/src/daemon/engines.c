@@ -594,7 +594,7 @@ create_notification(UrlClickedCb url_clicked)
 	win=windata->win;
     if (!G_daemon_config.show_status)
     {
-        gtk_widget_hide_all(win);
+        gtk_widget_hide(win);
     }	
 #ifdef SHOW_SPACERS
 
@@ -714,7 +714,7 @@ create_notification(UrlClickedCb url_clicked)
     }
     if (!G_daemon_config.show_status)
     {
-        gtk_widget_hide_all(win);
+        gtk_widget_hide(win);
     }
     
 	return GTK_WINDOW(win);
@@ -1072,6 +1072,7 @@ void
 hide_notification(GtkWindow *nw)
 {
     gtk_widget_hide(GTK_WIDGET(nw));
+    gtk_widget_destroy(GTK_WIDGET(nw));
 }
 
 
@@ -1085,7 +1086,7 @@ show_notification(GtkWindow *nw)
     }
     else
     {
-        gtk_widget_hide_all(GTK_WIDGET(nw));
+        gtk_widget_hide(GTK_WIDGET(nw));
     }        
 }
 

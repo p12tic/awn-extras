@@ -577,12 +577,12 @@ class Errors:
         text.set_line_wrap(True)
         text.set_use_markup(True)
         text.set_justify(gtk.JUSTIFY_FILL)
-        vbox.pack_start(text)
+        vbox.add(text)
 
         # Submit button
         ok = gtk.Button(label = "OK, I've installed it")
         ok.show_all()
-        vbox.pack_start(text)
+        vbox.add(text)
 
         def qu(x):
             dlog.hide()

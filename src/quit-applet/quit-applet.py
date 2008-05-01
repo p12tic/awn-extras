@@ -67,7 +67,7 @@ class App (awn.AppletSimple):
             # right click
             self.popup_menu.popup(None, None, None, event.button, event.time)
         else:
-            os.system(self.command)
+            os.system(self.logout_command)
     #def dialog_focus_out (self, widget, event):
     #  print ""
     def enter_notify (self, widget, event):

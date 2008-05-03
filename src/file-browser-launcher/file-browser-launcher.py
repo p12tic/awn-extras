@@ -155,11 +155,11 @@ class App (awn.AppletSimple):
 		self.dvd_paths = []
 		
 		#Get whether the trash is empty or not - but first find out if the Trash is in
-		#~/.Trash or ~/.local/share/Trashuid
-		if os.path.isdir(os.path.expanduser('~/.Trash')):
-			self.trash_path = os.path.expanduser('~/.Trash')
+		#~/.Trash or ~/.local/share/Trash
+		if os.path.isdir(os.path.expanduser('~/.local/share/Trash/files')):
+			self.trash_path = os.path.expanduser('~/.local/share/Trash/files')
 		else:
-			self.trash_path = os.path.expanduser('~/.local/share/Trash')
+			self.trash_path = os.path.expanduser('~/.Trash')
 		
 		if len(os.listdir(self.trash_path)) > 0:
 			self.trash_full = True
@@ -247,6 +247,7 @@ class App (awn.AppletSimple):
 					except:
 						self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
 							.scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),x])
+					self.places_paths.append(x)
 		
 		#Go through the list of network drives/etc. from /etc/fstab
 		if self.show_network==2:
@@ -263,66 +264,67 @@ class App (awn.AppletSimple):
 		if self.show_bookmarks==2:
 			for x in self.bmarks:
 				x = x.replace('file://','')
-				if x not in self.paths and x!=os.path.expanduser('~'):
-					if x[0]=='/': #Normal filesystem bookmark, not computer:///,burn:///,network:///,etc.
-						try:
-							self.liststore.append([self.theme.load_icon('folder',24,24),self.parse_bookmark(x.replace('\n',''),'name')])
-						except:
-							self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-								.scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),self.parse_bookmark(x.replace('\n',''),'name')])
-						self.places_paths.append(self.parse_bookmark(x.replace('\n',''),'path'))
-					else:
-						y = x.split(':')[0]
-						if y=='computer':
+				if os.path.isdir(x):
+					if x not in self.paths and x!=os.path.expanduser('~'):
+						if x[0]=='/': #Normal filesystem bookmark, not computer:///,burn:///,network:///,etc.
 							try:
-								self.liststore.append([self.theme.load_icon('computer',24,24),'Computer'])
+								self.liststore.append([self.theme.load_icon('folder',24,24),self.parse_bookmark(x.replace('\n',''),'name')])
 							except:
 								self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-									.scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),'Computer'])
-							self.places_paths.append('%s:///' % y)
-						elif y in ['network','smb','nfs','ftp','ssh']:
-							try:
-								self.liststore.append([self.theme.load_icon('network-server',24,24),'Network'])
-							except:
-								self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-									.scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),'Network'])
-							self.places_paths.append('%s:///' % y)
-						elif y=='trash':
-							if self.trash_full==True:
+									.scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),self.parse_bookmark(x.replace('\n',''),'name')])
+							self.places_paths.append(self.parse_bookmark(x.replace('\n',''),'path'))
+						else:
+							y = x.split(':')[0]
+							if y=='computer':
 								try:
-									self.liststore.append([self.theme.load_icon('user-trash-full',24,24),'Trash'])
+									self.liststore.append([self.theme.load_icon('computer',24,24),'Computer'])
 								except:
 									self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-										.scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),'Trash'])
+										.scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),'Computer'])
 								self.places_paths.append('%s:///' % y)
-							else:
+							elif y in ['network','smb','nfs','ftp','ssh']:
 								try:
-									self.liststore.append([self.theme.load_icon('user-trash',24,24),'Trash'])
+									self.liststore.append([self.theme.load_icon('network-server',24,24),'Network'])
 								except:
 									self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-										.scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),'Trash'])
+										.scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),'Network'])
 								self.places_paths.append('%s:///' % y)
-						elif y=='x-nautilus-search':
-							try:
-								self.liststore.append([self.theme.load_icon('search',24,24),'Search'])
-							except:
-								self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-									.scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),'Search'])
-							self.places_paths.append('%s:///' % y)
-						elif y=='burn':
-							try:
-								self.liststore.append([self.theme.load_icon('drive-optical',24,24),'CD/DVD Burner'])
-							except:
-								self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-									.scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),'CD/DVD Burner'])
-							self.places_paths.append('%s:///' % y)
-						elif y=='fonts':
-							try:
-								self.liststore.append([self.theme.load_icon('font',24,24),'Fonts'])
-							except:
-								self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-									.scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),'Fonts'])
-							self.places_paths.append('%s:///' % y)
+							elif y=='trash':
+								if self.trash_full==True:
+									try:
+										self.liststore.append([self.theme.load_icon('user-trash-full',24,24),'Trash'])
+									except:
+										self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
+											.scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),'Trash'])
+									self.places_paths.append('%s:///' % y)
+								else:
+									try:
+										self.liststore.append([self.theme.load_icon('user-trash',24,24),'Trash'])
+									except:
+										self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
+											.scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),'Trash'])
+									self.places_paths.append('%s:///' % y)
+							elif y=='x-nautilus-search':
+								try:
+									self.liststore.append([self.theme.load_icon('search',24,24),'Search'])
+								except:
+									self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
+										.scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),'Search'])
+								self.places_paths.append('%s:///' % y)
+							elif y=='burn':
+								try:
+									self.liststore.append([self.theme.load_icon('drive-optical',24,24),'CD/DVD Burner'])
+								except:
+									self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
+										.scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),'CD/DVD Burner'])
+								self.places_paths.append('%s:///' % y)
+							elif y=='fonts':
+								try:
+									self.liststore.append([self.theme.load_icon('font',24,24),'Fonts'])
+								except:
+									self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
+										.scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),'Fonts'])
+								self.places_paths.append('%s:///' % y)
 	
 	#Parses the text of a line of ~/.gtk-bookmarks after the file:/// and gets the real filepath or the name of it
 	def parse_bookmark(self,string,pathorname):

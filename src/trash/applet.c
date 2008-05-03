@@ -17,9 +17,9 @@
  * Boston, MA 02111-1307, USA.
  */
 
-/* This is a trash applet. the code has been adapted form the gnome-panel 
+/* This is a trash applet. the code has been adapted form the gnome-panel
  * trash applet
- **/ 
+ **/
 
 #include "config.h"
 
@@ -35,96 +35,97 @@
 #define PADDING 2
 
 static void
-open_trash (GtkMenuItem *item, TrashApplet *applet)
+open_trash(GtkMenuItem *item, TrashApplet *applet)
 {
-	trash_applet_open_folder (applet);
+  trash_applet_open_folder(applet);
 }
 
 static void
-empty_trash (GtkMenuItem *item, TrashApplet *applet)
+empty_trash(GtkMenuItem *item, TrashApplet *applet)
 {
-	trash_applet_do_empty (applet);
+  trash_applet_do_empty(applet);
 }
 
 static void
-show_help (GtkMenuItem *item, TrashApplet *applet)
+show_help(GtkMenuItem *item, TrashApplet *applet)
 {
-	trash_applet_show_help (applet);
+  trash_applet_show_help(applet);
 }
 
 static void
-show_about (GtkMenuItem *item, TrashApplet *applet)
+show_about(GtkMenuItem *item, TrashApplet *applet)
 {
-	trash_applet_show_about (applet);
+  trash_applet_show_about(applet);
 }
 
 static gboolean
-applet_button_release (GtkWidget      *widget,
-			     GdkEventButton *event,
-			     GtkMenu *menu)
+applet_button_release(GtkWidget      *widget,
+                      GdkEventButton *event,
+                      GtkMenu *menu)
 {
-	if (event->button == 3) {
-                gtk_menu_popup (menu, NULL, NULL, NULL, NULL, 3, event->time);
-		return TRUE;
-	}
-	else
-		return FALSE;
+  if (event->button == 3)
+  {
+    gtk_menu_popup(menu, NULL, NULL, NULL, NULL, 3, event->time);
+    return TRUE;
+  }
+  else
+    return FALSE;
 }
 
 AwnApplet*
-awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
+awn_applet_factory_initp(gchar* uid, gint orient, gint height)
 {
-  AwnApplet *applet = awn_applet_new( uid, orient, height );
+  AwnApplet *applet = awn_applet_new(uid, orient, height);
   GtkWidget     *trash;
   GtkWidget     *menu;
   GtkWidget     *item;
-  
-  gnome_vfs_init ();
-  
+
+  gnome_vfs_init();
+
   /* trash */
-  trash = trash_applet_new (applet);
+  trash = trash_applet_new(applet);
 
   /* menu */
-  menu = awn_applet_create_default_menu (applet);
+  menu = awn_applet_create_default_menu(applet);
 
-  item = gtk_image_menu_item_new_from_stock (GTK_STOCK_ABOUT, NULL);
-  gtk_menu_shell_prepend (GTK_MENU_SHELL (menu), item);
-  g_signal_connect (G_OBJECT (item), "activate", 
-                    G_CALLBACK (show_about), trash);
-
-
-  item = gtk_image_menu_item_new_from_stock (GTK_STOCK_HELP, NULL);
-  gtk_menu_shell_prepend (GTK_MENU_SHELL (menu), item);
-  g_signal_connect (G_OBJECT (item), "activate", 
-                    G_CALLBACK (show_help), trash);
+  item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ABOUT, NULL);
+  gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), item);
+  g_signal_connect(G_OBJECT(item), "activate",
+                   G_CALLBACK(show_about), trash);
 
 
-  item = gtk_separator_menu_item_new ();
-  gtk_menu_shell_prepend (GTK_MENU_SHELL (menu), item);
+  item = gtk_image_menu_item_new_from_stock(GTK_STOCK_HELP, NULL);
+  gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), item);
+  g_signal_connect(G_OBJECT(item), "activate",
+                   G_CALLBACK(show_help), trash);
 
-  item = gtk_menu_item_new_with_mnemonic ("_Empty the Wastebasket");
-  gtk_menu_shell_prepend (GTK_MENU_SHELL (menu), item);
-  g_signal_connect (G_OBJECT (item), "activate", 
-                    G_CALLBACK (empty_trash), trash);
-  
-  item = gtk_image_menu_item_new_from_stock (GTK_STOCK_OPEN, NULL);
-  gtk_menu_shell_prepend (GTK_MENU_SHELL (menu), item);
-  g_signal_connect (G_OBJECT (item), "activate", 
-                    G_CALLBACK (open_trash), trash);
 
-  g_signal_connect (G_OBJECT (applet), "button-release-event", 
-                    G_CALLBACK (applet_button_release), menu);
-                         
+  item = gtk_separator_menu_item_new();
+  gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), item);
+
+  item = gtk_menu_item_new_with_mnemonic("_Empty the Wastebasket");
+  gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), item);
+  g_signal_connect(G_OBJECT(item), "activate",
+                   G_CALLBACK(empty_trash), trash);
+
+  item = gtk_image_menu_item_new_from_stock(GTK_STOCK_OPEN, NULL);
+  gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), item);
+  g_signal_connect(G_OBJECT(item), "activate",
+                   G_CALLBACK(open_trash), trash);
+
+  g_signal_connect(G_OBJECT(applet), "button-release-event",
+                   G_CALLBACK(applet_button_release), menu);
+
 
   gint applet_height = awn_applet_get_height(applet);
-  gtk_widget_set_size_request (GTK_WIDGET (applet),
-                               applet_height * 5/4, 
-                               applet_height * 2);
-  
-  gtk_container_add (GTK_CONTAINER (applet), trash);
-  
-  gtk_widget_show_all (GTK_WIDGET (menu));
+  gtk_widget_set_size_request(GTK_WIDGET(applet),
+                              applet_height * 5 / 4,
+                              applet_height * 2);
+
+  gtk_container_add(GTK_CONTAINER(applet), trash);
+
+  gtk_widget_show_all(GTK_WIDGET(menu));
 
   return applet;
 }
-  
+

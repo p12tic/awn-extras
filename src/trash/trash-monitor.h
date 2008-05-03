@@ -26,6 +26,7 @@
 #include <libgnomevfs/gnome-vfs.h>
 
 typedef struct _TrashMonitor TrashMonitor;
+
 typedef struct _TrashMonitorClass TrashMonitorClass;
 
 #define TRASH_TYPE_MONITOR (trash_monitor_get_type ())
@@ -35,15 +36,15 @@ typedef struct _TrashMonitorClass TrashMonitorClass;
 #define TRASH_IS_MONITOR_CLASS(obj) (G_TYPE_CHECK_CLASS_TYPE ((obj), TRASH_TYPE_MONITOR))
 #define TRASH_MONITOR_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), TRASH_TYPE_MONITOR, TrashMonitorClass))
 
-GType         trash_monitor_get_type  (void);
-TrashMonitor *trash_monitor_get       (void);
+GType         trash_monitor_get_type(void);
+TrashMonitor *trash_monitor_get(void);
 
 /* check if new trash dirs have been created */
-void trash_monitor_recheck_trash_dirs (TrashMonitor *monitor);
-void trash_monitor_empty_trash        (TrashMonitor *monitor,
-				       GnomeVFSAsyncHandle **handle,
-				       GnomeVFSAsyncXferProgressCallback func,
-				       gpointer user_data);
-int  trash_monitor_get_item_count     (TrashMonitor *monitor);
+void trash_monitor_recheck_trash_dirs(TrashMonitor *monitor);
+void trash_monitor_empty_trash(TrashMonitor *monitor,
+                               GnomeVFSAsyncHandle **handle,
+                               GnomeVFSAsyncXferProgressCallback func,
+                               gpointer user_data);
+int  trash_monitor_get_item_count(TrashMonitor *monitor);
 
 #endif

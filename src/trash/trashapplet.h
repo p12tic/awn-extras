@@ -8,14 +8,14 @@
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,  
- * but WITHOUT ANY WARRANTY; without even the implied warranty of  
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License  
- * along with this program; if not, write to the Free Software  
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -42,77 +42,82 @@
 #define TRASH_IS_APPLET_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), TRASH_TYPE_APPLET))
 #define TRASH_APPLET_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), TRASH_TYPE_APPLET, TrashAppletClass))
 
-#define TRASH_ICON_EMPTY	"user-trash"
+#define TRASH_ICON_EMPTY "user-trash"
 #define TRASH_ICON_EMPTY_ACCEPT "user-trash"
-#define TRASH_ICON_FULL		"user-trash-full"
+#define TRASH_ICON_FULL  "user-trash-full"
 
-typedef enum {
-	TRASH_STATE_UNKNOWN,
-	TRASH_STATE_EMPTY,
-	TRASH_STATE_FULL,
-	TRASH_STATE_ACCEPT
+typedef enum
+{
+  TRASH_STATE_UNKNOWN,
+  TRASH_STATE_EMPTY,
+  TRASH_STATE_FULL,
+  TRASH_STATE_ACCEPT
 } TrashState;
 
-typedef struct _TrashApplet	 TrashApplet;
+typedef struct _TrashApplet  TrashApplet;
+
 typedef struct _TrashAppletClass TrashAppletClass;
+
 struct _TrashApplet
 {
-	GtkDrawingArea applet;
-        
-        AwnApplet *awn_applet;
-        gboolean show_count;
+  GtkDrawingArea applet;
 
-        GladeXML *xml;
+  AwnApplet *awn_applet;
+  gboolean show_count;
 
-	guint size;
-	guint new_size;
-	GtkOrientation orient;
+  GladeXML *xml;
 
-	AwnTitle *title;
-	gchar *title_text;
-	
-	GtkWidget *image;
-	GdkPixbuf *empty_icon;
-	GdkPixbuf *full_icon;
-	GdkPixbuf *reflect_empty;
-	GdkPixbuf *reflect_full;
-	TrashState icon_state;
+  guint size;
+  guint new_size;
+  GtkOrientation orient;
 
-	gint item_count;
-	gboolean is_empty;
-	gboolean drag_hover;
+  AwnTitle *title;
+  gchar *title_text;
 
-	TrashMonitor *monitor;
-	guint monitor_signal_id;
+  GtkWidget *image;
+  GdkPixbuf *empty_icon;
+  GdkPixbuf *full_icon;
+  GdkPixbuf *reflect_empty;
+  GdkPixbuf *reflect_full;
+  TrashState icon_state;
 
-	guint update_id;
-	
-	/* Effect stuff */
-	AwnEffects effects;
-	guint height;
-	gfloat progress;
-};
-struct _TrashAppletClass {
-	GtkDrawingAreaClass parent_class;
+  gint item_count;
+  gboolean is_empty;
+  gboolean drag_hover;
+
+  TrashMonitor *monitor;
+  guint monitor_signal_id;
+
+  guint update_id;
+
+  /* Effect stuff */
+  AwnEffects effects;
+  guint height;
+  gfloat progress;
 };
 
-GType trash_applet_get_type (void);
+struct _TrashAppletClass
+{
+  GtkDrawingAreaClass parent_class;
+};
+
+GType trash_applet_get_type(void);
 
 GtkWidget*
-trash_applet_new (AwnApplet *applet);
+trash_applet_new(AwnApplet *applet);
 
-void 
-trash_applet_do_empty (TrashApplet *applet);
+void
+trash_applet_do_empty(TrashApplet *applet);
 
-void 
-trash_applet_show_about (TrashApplet *applet);
+void
+trash_applet_show_about(TrashApplet *applet);
 
-void 
-trash_applet_open_folder (TrashApplet *applet);
+void
+trash_applet_open_folder(TrashApplet *applet);
 
 
-void 
-trash_applet_show_help (TrashApplet *applet);
+void
+trash_applet_show_help(TrashApplet *applet);
 
 
 #endif /* __TRASH_APPLET_H__ */

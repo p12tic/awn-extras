@@ -315,7 +315,7 @@ class App(awn.AppletSimple):
 
 
 	def get_conditions(self):
-		url = 'http://xoap.weather.com/weather/local/' + self.location_code + '?cc=*&prod=xoap&par=1048871467&key=12daac2f3a67cb39'
+		url = 'http://xoap.weather.com/weather/local/' + self.location_code + '?cc=*&prod=xoap&par=1048871467&key=12daac2f3a67cb39&link=xoap'
 		if self.units == "Metric":
 			url = url + '&unit=m'
 		try:    
@@ -371,7 +371,7 @@ class App(awn.AppletSimple):
 
 
 	def get_forecast(self):
-		url = 'http://xoap.weather.com/weather/local/' + self.location_code + '?dayf=5&prod=xoap&par=1048871467&key=12daac2f3a67cb39'
+		url = 'http://xoap.weather.com/weather/local/' + self.location_code + '?dayf=5&prod=xoap&par=1048871467&key=12daac2f3a67cb39&link=xoap'
 		if self.units == "Metric":
 			url = url + '&unit=m'
 		try:

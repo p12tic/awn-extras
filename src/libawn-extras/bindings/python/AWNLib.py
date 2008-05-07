@@ -582,7 +582,7 @@ class Errors:
         # Submit button
         ok = gtk.Button(label = "OK, I've installed it")
         ok.show_all()
-        vbox.add(text)
+        vbox.add(ok)
 
         def qu(x):
             dlog.hide()

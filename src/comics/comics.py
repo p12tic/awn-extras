@@ -44,6 +44,38 @@ from shared import SHARE_DIR, SYS_FEEDS_DIR, USER_FEEDS_DIR, GLADE_DIR, \
 GLADE_FILE = join(GLADE_DIR, 'main.glade')
 
 
+class BidirectionalIterator:
+	def __init__(self, sequence):
+		self.sequence = sequence
+		self.index = None
+		self.direction = 1
+	
+	def set_direction(self, direction):
+		if direction < 0:
+			self.direction = -1
+		elif direction > 0:
+			self.direction = 1
+		else:
+			self.direction = None
+			self.index = None
+	
+	def next(self):
+		if not self.sequence or self.direction is None:
+			return None
+		if self.index is None:
+			if self.direction > 0:
+				self.index = 0
+			else:
+				self.index = len(self.sequence) - 1
+		else:
+			self.index += self.direction
+			if self.index < 0:
+				self.index = len(self.sequence) - 1
+			elif self.index >= len(self.sequence):
+				self.index = 0
+		return self.sequence[self.index]
+
+
 class ComicApplet(awn.AppletSimple):
 	DIALOG_DURATION = 3000
 	
@@ -53,6 +85,16 @@ class ComicApplet(awn.AppletSimple):
 		
 		for window in self.windows:
 			window.set_visibility(visible)
+		
+		if visible:
+			self.current_window = None
+	
+	def show_next(self):
+		if self.current_window:
+			self.current_window.set_visibility(False)
+		self.current_window = self.window_iterator.next()
+		if self.current_window:
+			self.current_window.set_visibility(True)
 	
 	def create_window(self, filename = None, template = None):
 		"""Creates a new strip and stores its configuration in the directory
@@ -70,7 +112,7 @@ class ComicApplet(awn.AppletSimple):
 		window.connect('updated', self.on_window_updated)
 		settings.save()
 	
-	def toggle_window(self, feed_name, visible):
+	def toggle_feed(self, feed_name, visible):
 		"""Toggles a comic."""
 		global feeds
 		
@@ -153,12 +195,15 @@ class ComicApplet(awn.AppletSimple):
 		
 		self.connect('destroy', self.on_destroy)
 		self.connect('button-press-event', self.on_button_press)
+		self.connect('scroll-event', self.on_scroll)
 		
 		self.__xml = gtk.glade.XML(GLADE_FILE)
 		self.__xml.signal_autoconnect(self)
 		
 		self.visible = False
 		self.windows = []
+		self.window_iterator = BidirectionalIterator(self.windows)
+		self.current_window = None
 		
 		try:
 			for filename in filter(lambda f: f.endswith('.strip'),
@@ -182,16 +227,30 @@ class ComicApplet(awn.AppletSimple):
 		for window in self.windows:
 			window.save_settings()
 	
+	def on_button1_pressed(self, event):
+		self.set_visibility(not self.visible)
+	
+	def on_button3_pressed(self, event):
+		menu = self.make_menu()
+		if menu:
+			menu.popup(None, None, None, event.button, event.time)
+		
 	def on_button_press(self, widget, event):
 		if event.button == 1:
-			self.set_visibility(not self.visible)
+			self.on_button1_pressed(event)
 		elif event.button == 3:
-			menu = self.make_menu()
-			if menu:
-				menu.popup(None, None, None, event.button, event.time)
-		else:
-			return False
+			self.on_button3_pressed(event)
 		return True
+	
+	def on_scroll(self, widget, event):
+		if self.visible:
+			return
+		if event.direction == gtk.gdk.SCROLL_UP:
+			self.window_iterator.set_direction(-1)
+			self.show_next()
+		elif event.direction == gtk.gdk.SCROLL_DOWN:
+			self.window_iterator.set_direction(1)
+			self.show_next()
 	
 	def on_dialog_button_press(self, widget, event):
 		self.dialog.hide()
@@ -200,7 +259,7 @@ class ComicApplet(awn.AppletSimple):
 		self.dialog.hide()
 	
 	def on_comics_toggled(self, widget):
-		self.toggle_window(widget.data, widget.get_active())
+		self.toggle_feed(widget.data, widget.get_active())
 	
 	def on_manage_comics_activated(self, widget):
 		manager = comics_manage.ComicsManager()

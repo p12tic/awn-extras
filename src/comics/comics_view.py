@@ -250,9 +250,13 @@ class ComicsViewer(ScalableWindow):
 	def select_item(self, item):
 		"""Select a strip for downloading."""
 		self.__ticker.set_ticking(True)
-		downloader = Downloader(item[URL], self.__settings['cache-file'])
-		downloader.connect('completed', self.on_download_completed, item)
-		downloader.download()
+		if self.__download_id and self.__downloader:
+			self.__downloader.disconnect(self.__download_id)
+			self.__download_id = None
+		self.__downloader = Downloader(item[URL], self.__settings['cache-file'])
+		self.__download_id = self.__downloader.connect('completed',
+			self.on_download_completed, item)
+		self.__downloader.download()
 		
 	def draw_frame(self, ctx, p1, p2, rad):
 		"""Trace a rectangle with rounded corners."""
@@ -388,7 +392,9 @@ class ComicsViewer(ScalableWindow):
 		self.__settings = settings
 		
 		# Initialize fields
-		self.__update_id = 0
+		self.__update_id = None
+		self.__download_id = None
+		self.__downloader = None
 		try:
 			self.__pixbuf = gtk.gdk.pixbuf_new_from_file(settings['cache-file'])
 		except:
@@ -481,6 +487,12 @@ class ComicsViewer(ScalableWindow):
 	########################################################################
 	
 	def on_destroy(self, widget):
+		if self.__update_id:
+			feeds.feeds[self.feed_name].disconnect(self.__update_id)
+			self.__update_id = None
+		if self.__download_id and self.__downloader:
+			self.__downloader.disconnect(self.__download_id)
+			self.__download_id = None
 		del self.__pixbuf
 	
 	def on_link_clicked(self, widget, e):
@@ -579,6 +591,9 @@ class ComicsViewer(ScalableWindow):
 		self.__current_timestamp = item[DATE]
 		self.__link.set_text(self.get_link_name(item))
 		self.__link.set_url(item[LINK])
+		
+		self.__downloader.disconnect(self.__download_id)
+		self.__download_id = None
 		
 		if not self.__is_error:
 			del self.__pixbuf

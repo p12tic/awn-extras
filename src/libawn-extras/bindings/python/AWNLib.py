@@ -599,7 +599,7 @@ class Errors:
         the module as the first (and only) argument
 
         @param error: the error itself.
-        @type name: C{string} or C{Exception}
+        @type error: C{string} or C{Exception}
         @param callback: The function to be called when the user claims to have
             installed the necessary module. The module is passed as the first
             and only argument to the callback.

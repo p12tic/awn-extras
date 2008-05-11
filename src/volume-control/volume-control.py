@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 #--------------------------------------------------------------------------------
 # This program is free software; you can redistribute it and/or modify
@@ -26,6 +26,7 @@
 # Authors:        Richard "nazrat" Beyer
 #                 Jeff "Jawbreaker" Hubbard
 #                 Pavel Panchekha <pavpanchekha@gmail.com>
+#                 Spencer Creasey <screasey@gmail.com>
 
 # Listing theme directories and showing icons
 import os
@@ -41,11 +42,16 @@ alsaaudio = None
 
 class VolumeApplet:
     def __init__(self, awn):
+        print "HI"
+
         self.awn = awn
         self.awn.settings.require()
 
         # Scroll to change volume
         self.awn.connect("scroll-event", self.wheel)
+        self.awn.timing.register(self.setIcon, 10)
+
+        self.__lastVolume = 0
 
         self.awn.errors.module("alsaaudio", {"Ubuntu": "python-alsaaudio",
             "Gentoo": "dev-python/pyalsaaudio",
@@ -86,19 +92,21 @@ class VolumeApplet:
 
     def setIcon(self):
         volume = self.backend.getVolume()
-        if volume > 60 :
-            icon = "high"
-        elif volume > 30 :
-            icon = "medium"
-        elif volume > 0 :
-            icon = "low"
-        else:
-            icon = "muted"
+
+        if volume == self.__lastVolume :
+            return
+
+        for i in [100, 93, 86, 79, 71, 64, 57, 50, 43, 36, 29, 21, 14, 7]:
+            if volume >= i:
+                icon = str(i)
+                break
 
         themepath = os.path.join(os.path.abspath(os.path.dirname(__file__)), \
             "Themes", self.theme)
         self.awn.icon.file(os.path.join(themepath, \
             "audio-volume-%s.svg" % icon))
+
+        self.__lastVolume = volume
 
     def wheel(self, widget=None, event=None):
         if event.direction == gtk.gdk.SCROLL_UP:

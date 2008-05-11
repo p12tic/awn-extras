@@ -73,9 +73,17 @@ class Dialogs:
 
         self.__register = {}
         self.__current = None
-
         self.__parent = parent
 
+        self.__parent.settings.cd("shared")
+
+        try:
+            self.__loseFocus = self.__parent.settings[ \
+                "dialog_focus_loss_behavior"]
+        except ValueError:
+            self.__loseFocus = True
+
+        self.__parent.settings.cd()
 
     def new(self, dialog, title=None, focus=True):
         """
@@ -99,8 +107,12 @@ class Dialogs:
             dlog = awn.AppletDialog(self.__parent)
 
         self.register(dialog, dlog)
-        if focus and dialog not in ("program", "menu"):
-            dlog.connect("focus-out-event", lambda x, y: dlog.hide())
+        if focus and dialog not in ("program", "menu") and self.__loseFocus:
+            def hideDlog():
+                self.__current = None
+                dlog.hide()
+
+            dlog.connect("focus-out-event", lambda x, y: hideDlog())
 
         if dialog not in ("program", "menu") and title:
             dlog.set_title(" " + title + " ")
@@ -154,7 +166,10 @@ class Dialogs:
                 self.__register[dialog].hide()
                 self.__current = None
             else:
-                if self.__current:
+                if self.__current and not self.__current.is_active():
+                    self.__current.hide()
+                    self.__current.show_all()
+                elif self.__current:
                     self.__current.hide()
                     if once:
                         self.__current = None
@@ -652,31 +667,20 @@ class Settings:
 
         self.__parent = parent
 
+        try:
+            folder = self.__parent.meta["short"]
+        except:
+            folder = ""
+
+        self.client = self.AWNConfigUser(folder)
+
     def require(self, folder=None):
         """
-        Imports necessary modules. Should be called before any other functions
-        are used. Should only be called if the applet expects to use Settings.
-
-        @param folder: The folder to use for your applet. If not given, the
-            "short" meta information is used.
-        @type folder: C{string}
+        Dummy function. No longer required
         """
+        pass
 
-        if not folder:
-            folder = self.__parent.meta["short"]
-
-        if hasattr(awn, "Config"):
-            self.client = self.AWNConfigUser(folder)
-        else:
-            self.client = self.GConfUser(folder)
-            self.__parent.errors.module("gconf", { \
-                "Debian/Ubuntu": "python-gconf", \
-                "Gentoo": "dev-python/gnome-python", \
-                "OpenSUSE": "python-gnome"}, self.client.load)
-
-        self.cd(folder)
-
-    def cd(self, folder):
+    def cd(self, folder=None):
         """
         Change to another folder. Note that this will change folders to e.g.
         /apps/avant-window-navigator/applets/[folder] in the GConf
@@ -759,124 +763,6 @@ class Settings:
         """
 
         self.client.delete(key)
-
-    class GConfUser:
-        def __init__(self, folder):
-            """
-            Creates a new GConfUser.
-
-            @param folder: Folder to start with. /apps/avant-window-navigator \
-            /applets is prepended to the folder name. To change to a folder
-            without that prepended, pass the raw=True parameter to cd().
-            @type folder: C{string}
-            """
-
-            self.cd(folder)
-
-        def load(self, module):
-            """
-            Loads the gconf module to allow the GConfUser object to actually
-            work.
-
-            @param module: the gconf module.
-            @type module: C{module}
-            """
-
-            self.__client = module.client_get_default()
-
-        def cd(self, folder, raw=False):
-            """
-            Change the current directory. If the C{raw} parameter if False,
-            "/apps/avant-window-navigator/applets" is prepended to C{folder}.
-
-            @param folder: the folder to change into
-            @type folder: C{string}
-            @param raw: If False, "/apps/avant-window-navigator/applets" \
-                is prepended to C{folder}.
-            @type raw: C{bool}
-            """
-
-            if not raw:
-                folder = os.path.join("/apps/avant-window-navigator/applets", \
-                    folder)
-
-            self.__folder = folder
-
-        def notify(self, key, callback):
-            """
-            Set up a function to be executed every time a key changes. Works
-            best (if at all) on whole folders, not individual keys.
-
-            @param key: The key or folder to monitor for changes.
-            @type key: C{string}
-            @param callback: The function to call upon changes.
-            @type callback: C{function}
-            """
-
-            self.__client.notify_add(self.__folder, key, callback)
-
-        def set(self, key, value):
-            """
-            Set an existing key's value.
-
-            @param key: The name of the key, relative to the current folder.
-            @type key: C{string}
-            @param value: The value to set the key to.
-            @type value: C{bool}, C{int}, C{float}, or C{string}
-            """
-
-            a = self.__client.set_value(os.path.join(self.__folder, key) \
-                , value)
-
-        def new(self, key, value, type):
-            """
-            Create a new key and set its value.
-
-            @param key: The name of the key, relative to the current folder.
-            @type key: C{string}
-            @param value: The value to set the key to.
-            @type value: C{bool}, C{int}, C{float}, or C{string}
-            @param type: The type to make the new key.
-            @type type: C{string}; "bool", "int", "float", or "string"
-            """
-
-            func = getattr(self.__client, "set_%s" % type)
-            func(os.path.join(self.__folder, key), value)
-
-        def get(self, key):
-            """
-            Get an existing key's value.
-
-            @param key: The name of the key, relative to the current folder.
-            @type key: C{string}
-            @return: The value of the key
-            @rtype: C{object}
-            """
-
-            return self.__client.get_value(os.path.join(self.__folder, key))
-
-        def delete(self, key):
-            """
-            Delete an existing key.
-
-            @param key: The name of the key, relative to the current folder.
-            @type key: C{string}
-            """
-
-            self.__client.unset(os.path.join(self.__folder, key))
-
-        def type(self, key):
-            """
-            Get an existing key's type.
-
-            @param key: The name of the key, relative to the current folder.
-            @type key: C{string}
-            @return: The type of the key.
-            @rtype: C{string}
-            """
-
-            return self.__client(os.path.join(self.__folder, key)).type \
-                .value_nick
 
     class AWNConfigUser:
         def __init__(self, folder):
@@ -1382,11 +1268,11 @@ class Applet(awn.AppletSimple):
         # Create all the child-objects
         self.meta = Meta(self, meta)
         self.icon = Icon(self)
-        self.dialog = Dialogs(self)
         self.title = Title(self)
         self.module = Modules(self)
         self.errors = Errors(self)
         self.settings = Settings(self)
+        self.dialog = Dialogs(self) # Dialogs depends on settings
         self.timing = Timing(self)
         self.keyring = KeyRing(self)
         self.notify = Notify(self)

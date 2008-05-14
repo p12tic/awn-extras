@@ -70,9 +70,11 @@ class BidirectionalIterator:
 		else:
 			self.index += self.direction
 			if self.index < 0:
-				self.index = len(self.sequence) - 1
+				self.index = len(self.sequence)
+				return None
 			elif self.index >= len(self.sequence):
-				self.index = 0
+				self.index = -1
+				return None
 		return self.sequence[self.index]
 
 

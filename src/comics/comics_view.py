@@ -145,6 +145,7 @@ class ComicsViewer(ScalableWindow):
 				compiz_widget_set(self, False)
 		else:
 			if has_widget_layer():
+				self.show()
 				compiz_widget_set(self, True)
 			else:
 				self.hide()
@@ -592,7 +593,7 @@ class ComicsViewer(ScalableWindow):
 		self.__link.set_text(self.get_link_name(item))
 		self.__link.set_url(item[LINK])
 		
-		self.__downloader.disconnect(self.__download_id)
+		self.__downloader = None
 		self.__download_id = None
 		
 		if not self.__is_error:

@@ -154,7 +154,7 @@ launch (GMenuTreeEntry *entry)
   }
 
   awn_desktop_item_launch (item, NULL, NULL);
-
+  gtk_widget_hide(menu->window);
   awn_desktop_item_free (item);
 } 
 

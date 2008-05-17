@@ -87,7 +87,6 @@ class App (awn.AppletSimple):
 		self.treeview.append_column(self.column0)
 		self.treeview.append_column(self.column1)
 		self.treeview.connect('button-press-event',self.treeview_clicked)
-		self.add_places()
 		self.vbox.pack_start(self.treeview)
 		
 		#Entry widget for displaying the path to open
@@ -142,15 +141,16 @@ class App (awn.AppletSimple):
 		self.mount = self.mount2.readlines()
 		self.mount2.close()
 		self.fstab2 = open('/etc/fstab','r')
-		self.fstab = self.fstab2.readlines()
+		self.fstab = self.fstab2.read().split('\n')
 		self.fstab2.close()
 		self.bmarks2 = open(os.path.expanduser('~/.gtk-bookmarks'))
 		self.bmarks = self.bmarks2.readlines()
 		self.bmarks2.close()
 		self.paths = []
+		self.paths_hnames = []
 		self.paths_fstab = []
-		self.nfs_smb_paths = []
-		self.nfs_smb_corr_hnames = []
+		self.network_paths = []
+		self.network_corr_hnames = []
 		self.cd_paths = []
 		self.dvd_paths = []
 		
@@ -167,25 +167,29 @@ class App (awn.AppletSimple):
 			self.trash_full = False
 		
 		#Get the mounted drives/partitions that are suitable to list (from fstab)
-		z2 = []
-		z3 = 0
 		for x in self.fstab:
-			if x[0]!="#":
+			if x.replace(' ','').replace('\t','')!='' and x[0]!="#":
 				y = x.split(' ')
 				for z in y[1:]:
 					if z!='':
 						if z[0]=='/':
 							if z!='/proc':
 								self.paths_fstab.append(z)
-				for z in y:
-					if z!='':
-						z2.append(z)
-		for x in z2:
-			if x in ['smbfs','nfs','cifs']:
-				self.nfs_smb_paths.append(z2[(z3-1)])
-				self.nfs_smb_corr_hnames.append(z2[(z3-2)].replace('//',''))
-			z3 = z3+1
-				
+				z = x.replace('  ',' ').split(' ')
+				z2 = []
+				for z3 in z:
+					z2.extend(z3.split('\t'))
+				print "abc:", z2
+				if z2[2] == 'smbfs':
+					print "SMBFS:", z2
+					self.network_paths.append('smb:'+z2[0])
+					self.network_corr_hnames.append(z2[0].split(':')[-1].split('/')[-1]+\
+						' on '+z2[0].split('/')[2])
+				elif z2[2] in ['cifs','nfs','ftpfs','sshfs']:
+					self.network_paths.append(z2[1])
+					self.network_corr_hnames.append(z2[0].split(':')[-1].split('/')[-1]+\
+						' on '+z2[0].split('/')[2])
+			
 		
 		#Get the mounted drives/partitions that are suitable to list (from mount)
 		for x in self.mount:
@@ -193,6 +197,11 @@ class App (awn.AppletSimple):
 			if y[0].find('/')!=-1:
 				if y[0].split('/')[1]=='dev':
 					self.paths.append(x.split(' on ')[1].split(' type ')[0])
+					if x[-1]==']':
+						self.paths_hnames.append(x.split('[')[-1][:-1])
+					else:
+						self.paths_hnames.append(x.split(' on ')[1].split(' type ')[0]\
+							.split('/')[-1])
 					if x.split(' type ')[1].split(' ')[0]=='iso9660':
 						self.cd_paths.append(x.split(' on ')[1].split(' type ')[0])
 					elif x.split(' type ')[1].split(' ')[0]=='udf':
@@ -201,6 +210,7 @@ class App (awn.AppletSimple):
 		#Go through the list and get the right icon and name for specific ones
 		#ie/eg: / -> harddisk icon and "Filesystem"
 		#/media/Lexar -> usb-disk icon and "Lexar"
+		#TODO: Clean this up (oh it's so ugly)
 		if self.show_local==2:
 			for x in self.paths:
 				if x=='/':
@@ -229,36 +239,57 @@ class App (awn.AppletSimple):
 							self.places_paths.append(x)
 					elif x not in self.paths_fstab: #Means it's USB or firewire
 						try:
-							self.liststore.append([self.theme.load_icon('gnome-dev-harddisk-usb',24,24),x.split('/')[2].capitalize()])
+							self.liststore.append([self.theme.load_icon('gnome-dev-harddisk-usb',24,24),\
+								self.paths_hnames[self.paths.index(x)]])
 						except:
 							self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-								.scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),x.split('/')[2].capitalize()])
+								.scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),\
+									self.paths_hnames[self.paths.index(x)]])
 						self.places_paths.append(x)
 					else: #Regular mounted drive (ie/eg windows partition)
 						try:
-							self.liststore.append([self.theme.load_icon('drive-harddisk',24,24),x])
+							self.liststore.append([self.theme.load_icon('drive-harddisk',24,24),\
+								self.paths_hnames[self.paths.index(x)]])
 						except:
 							self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-								.scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),x])
+								.scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),self.paths_hnames[self.paths.index(x)]])
 						self.places_paths.append(x)
 				else: #Maybe /home, /boot, /usr, etc.
 					try:
-						self.liststore.append([self.theme.load_icon('drive-harddisk',24,24),x])
+						self.liststore.append([\
+							self.theme.load_icon('drive-harddisk',24,24),self.paths_hnames[self.paths.index(x)]])
 					except:
 						self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-							.scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),x])
+							.scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),self.paths_hnames[self.paths.index(x)]])
 					self.places_paths.append(x)
 		
 		#Go through the list of network drives/etc. from /etc/fstab
 		if self.show_network==2:
-			for x in self.nfs_smb_paths:
-				try:
-					self.liststore.append([self.theme.load_icon('network-folder',24,24),\
-						self.nfs_smb_corr_hnames[self.nfs_smb_paths.index(x)]])
-				except:
-					self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-						.scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),self.nfs_smb_corr_hnames[self.nfs_smb_paths.index(x)]])
-				self.places_paths.append(x)
+			print self.network_paths
+			if os.path.isdir(os.path.expanduser('~/.gvfs')):
+				for x in os.listdir(os.path.expanduser('~/.gvfs')):
+					try:
+						self.liststore.append([self.theme.load_icon('network-folder',24,24),\
+							x])
+					except:
+						self.liststore.append([gtk.gdk.pixbuf_new_from_file(\
+							self.default_icon_path).scale_simple(\
+							24,24,gtk.gdk.INTERP_BILINEAR),x])
+					self.places_paths.append(os.path.expanduser('~/.gvfs')+'/'+x)
+			else:
+				y = 0
+				for x in self.network_paths:
+					try:
+						self.liststore.append([self.theme.load_icon('network-folder',24,24),\
+							self.network_corr_hnames[y]])
+					except:
+						self.liststore.append([gtk.gdk.pixbuf_new_from_file(\
+							self.default_icon_path).scale_simple(\
+							24,24,gtk.gdk.INTERP_BILINEAR),self.network_corr_hnames[y]])
+					self.places_paths.append(x)
+					y+=1
+				
+			
 		
 		#Go through the list of bookmarks and add them to the list IF it's not in the mount list
 		if self.show_bookmarks==2:
@@ -432,7 +463,8 @@ class App (awn.AppletSimple):
 			path = os.path.expanduser('~')
 		
 		#Launch file browser at path
-		subprocess.Popen(self.gconf_fb.split(' ')+[path])
+		print "Running:", self.gconf_fb+' '+path.replace(' ','\ ')
+		subprocess.Popen(self.gconf_fb+' '+path.replace(' ','\ '),shell=True)
 	
 	#The applet's height has changed - update the reference
 	def height_changed(self,applet,height):

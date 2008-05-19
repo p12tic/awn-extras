@@ -45,10 +45,11 @@ WEBKIT_APPLETS = \
 	$(NULL)
 endif	
 
+# please keep alphabetized (except for libawn-extras)
 SUBDIRS =			\
 	libawn-extras		\
-	arss			\
 	affinity		\
+	arss			\
 	awnterm			\
 	battery-applet		\
 	comics			\
@@ -65,8 +66,8 @@ SUBDIRS =			\
 	showdesktop		\
 	switcher		\
 	Taskmand-applet		\
-	tsclient-applet		\
 	tomboy-applet		\
+	tsclient-applet		\
 	volume-control		\
 	wobblyzini		\
 	$(GCONF_APPLETS)	\

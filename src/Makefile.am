@@ -19,7 +19,6 @@ GCONF_APPLETS +=		\
 	$(NULL)
 endif
 GCONF_APPLETS +=		\
-	arss			\
 	awn-notification-daemon	\
 	comic			\
 	file-browser-launcher	\
@@ -48,6 +47,7 @@ endif
 
 SUBDIRS =			\
 	libawn-extras		\
+	arss			\
 	affinity		\
 	awnterm			\
 	battery-applet		\

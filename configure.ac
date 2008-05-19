@@ -297,7 +297,7 @@ src/affinity/data/actions/Makefile
 src/affinity/po/Makefile.in
 src/arss/Makefile
 src/arss/arss.desktop.in
-src/arss/Core/Makefile
+src/arss/Icons/Makefile
 src/awn-meebo/Makefile
 src/awn-meebo/awn-meebo.desktop.in
 src/awn-meebo/profile/Makefile

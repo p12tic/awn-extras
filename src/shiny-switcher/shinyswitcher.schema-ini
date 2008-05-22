@@ -1,11 +1,11 @@
 [DEFAULT/rows]
 type = int
-default = 1
+default = 2
 description = The number of rows in the pager.
 
 [DEFAULT/columns]
 type = int
-default = 4
+default = 3
 description = The number of columns in the pager.
 
 [DEFAULT/background_alpha_active]
@@ -30,17 +30,17 @@ description = When to  overly the app icon:  0...no	1...on inactive workspace on
 
 [DEFAULT/scale_icon_mode]
 type = int
-default = 1
+default = 0.75
 description = When to scale icons:  0...none  1...on all active ws  2...on_active_win 3...all
 
 [DEFAULT/scale_icon_factor]
 type = float
-default = 0.5
+default = 1.0
 description = Factor to scale icons as specified by scale_icon_mode.  range >0, <=1
 
 [DEFAULT/win_grab_mode]
 type = int
-default = 2
+default = 3
 description = Win grabs:  0...none	1...all (grab method may override) 2..active ws (and sticky)  3...active win
 
 [DEFAULT/win_grab_method]
@@ -65,7 +65,7 @@ description = Mousewheel  0. off. 1 up left, down right. 2 Opposite direction of
 
 [DEFAULT/cache_expiry]
 type = int
-default = 30
+default = 7
 description = Number of seconds before a cached window surface is considered to be expired.  After this duration it will be updated when needed if it possible to do so.
 
 [DEFAULT/scale_icon_position]
@@ -97,7 +97,7 @@ description[en_US] = The color of the desktop (RGBA) if grab_wallpaper is FALSE.
 
 [DEFAULT/queued_render_timer]
 type = int
-default = 2000
+default = 1000
 description = Queued render timer. Number of milliseconds between queued render updates. The smaller the number the less lag will be apparent on shinyswitcher updates.  Multiples of 1000 are more power and CPU efficient.
 
 ; vim: set ft=dosini :

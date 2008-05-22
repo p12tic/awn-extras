@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.2 on Mon May 12 02:33:27 2008 -->
+<!--Generated with glade3 3.4.5 on Thu May 22 14:32:00 2008 -->
 <glade-interface>
   <widget class="GtkDialog" id="DialogWindow">
     <property name="border_width">5</property>
@@ -15,12 +15,20 @@
           <widget class="GtkVBox" id="vbox1">
             <property name="visible">True</property>
             <child>
-              <widget class="GtkViewport" id="Port">
+              <widget class="GtkScrolledWindow" id="scrolledwindow1">
                 <property name="visible">True</property>
-                <property name="resize_mode">GTK_RESIZE_QUEUE</property>
-                <property name="shadow_type">GTK_SHADOW_OUT</property>
+                <property name="can_focus">True</property>
+                <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
                 <child>
-                  <placeholder/>
+                  <widget class="GtkViewport" id="Port">
+                    <property name="visible">True</property>
+                    <property name="resize_mode">GTK_RESIZE_QUEUE</property>
+                    <property name="shadow_type">GTK_SHADOW_OUT</property>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </widget>
                 </child>
               </widget>
             </child>

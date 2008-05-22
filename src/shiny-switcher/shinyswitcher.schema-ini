@@ -30,12 +30,12 @@ description = When to  overly the app icon:  0...no	1...on inactive workspace on
 
 [DEFAULT/scale_icon_mode]
 type = int
-default = 0.75
+default = 2
 description = When to scale icons:  0...none  1...on all active ws  2...on_active_win 3...all
 
 [DEFAULT/scale_icon_factor]
 type = float
-default = 1.0
+default = 0.75
 description = Factor to scale icons as specified by scale_icon_mode.  range >0, <=1
 
 [DEFAULT/win_grab_mode]

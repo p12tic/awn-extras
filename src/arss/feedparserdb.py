@@ -41,7 +41,7 @@ Recommended: sqlalchemy 0.40, sqlite3
 
 """
 
-__version__ = "0.0.1" # revision 487 of awn-extras/tehks-testing
+__version__ = "0.0.2" # base on revision 493 of awn-extras
 __license__ = """Copyright (c) 2007-2008 Randal Barlow
 
  This library is free software; you can redistribute it and/or
@@ -103,6 +103,14 @@ def check_if_new(lastchecked, newentries):
         # the same(or older)?
         return []
 
+def  _publication_date_check(entries):
+    isupdatable = True
+    while isupdatable == True:
+        for entry in entries:
+            if 'updated_parsed' not in entry.keys():
+                isupdatable = False
+        break
+    return isupdatable
 
 def _nettest(fn):
     """Used by _updatefeed to test the quality of the feed and its entries"""
@@ -171,7 +179,10 @@ class Feed(object):
         self.Title = Title
         self.URI = URI.replace(' ','')
         self.Entries = Entries
-        if LastChecked == None: self.LastChecked = self.Entries[0]['updated_parsed']
+        if LastChecked == None: 
+            try:
+                self.LastChecked = self.Entries[0]['updated_parsed']
+            except KeyError: self.LastChecked = False
 
     def __repr__(self):
         return "<Feed('%s', '%s', 'Entries:%d')>" % (self.Title, self.URI, len(self.Entries))
@@ -187,15 +198,20 @@ class Feed(object):
         """
         A per feed updater which updates a feed and sets the LastChecked value
         """
-        self.Entries = _updatefeed(self.LastChecked, self.Entries,self.URI)
-        if len(self.Entries) != 0:
-            self.LastChecked = self.Entries[0]['updated_parsed']
+        if _publication_date_check(self.Entries) == True:
+            self.Entries = _updatefeed(self.LastChecked, self.Entries,self.URI)
+            if len(self.Entries) != 0:
+                self.LastChecked = self.Entries[0]['updated_parsed']
+        else:
+            #Legacy updating
+            self.Entries = feedparser.parse(self.URI).entries
 
     def clear_feed(self):
         """
         Sets the feeds as 'empty'
         """
-        self.LastChecked = self.Entries[0]['updated_parsed']
+        if self.LastChecked != False:
+            self.LastChecked = self.Entries[0]['updated_parsed']
         self.Entries = []
 
     

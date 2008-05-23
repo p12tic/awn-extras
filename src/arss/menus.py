@@ -81,7 +81,9 @@ class RssMenu(gtk.Menu):
                 else:
                     entrymenu = MenuItem(entry.title[:60], _location + 'Icons/feed-icon-unread.png')
                 submenu.append(entrymenu)
-                entrymenu.connect("activate",obj.clicks, entry.link, feed, feed.get_entries().index(entry),feedindex)
+                try:entrymenu.connect("activate",obj.clicks, entry.link, feed, feed.get_entries().index(entry),feedindex)
+                except AttributeError:
+                    print entry.title + " is malformed and all objects do not have links"
             feedindex+=1
         self.show_all()
 

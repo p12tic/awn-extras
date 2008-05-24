@@ -1211,6 +1211,7 @@ class LauncherApplet : AppletSimple
     protected   Listing                 listing;
     protected   bool                    closing;
     protected   Multi_Launcher          multi_launcher;
+    protected   uint                    last_time;
 
     construct 
     { 
@@ -1220,6 +1221,7 @@ class LauncherApplet : AppletSimple
         blank_icon();
 		this.realize += _realized;        
 		hidden=true;
+        last_time=0;
     }
 
     /*sets the icon to a blank icon*/
@@ -1650,9 +1652,16 @@ class LauncherApplet : AppletSimple
         }
     }
     
-    private bool _drag_motion(Gtk.Widget widget,Gdk.DragContext context, int x, int y, uint time_)
+    private bool _drag_motion(Gtk.Widget widget,Gdk.DragContext context, int x, int y, uint time)
     {
-        stdout.printf("Drag motion\n");
+        stdout.printf("Drag motion... enter\n");        
+        
+        if (time - last_time > 2000)
+        {
+            stdout.printf("Drag motion - change\n");            
+            activate_next_win(time);
+        }
+        last_time=time;
 		return true;
     }  
 
@@ -2042,24 +2051,31 @@ class LauncherApplet : AppletSimple
     {
         right_menu.popup(null, null, null, event.button, event.time);
     }
-
-    private bool _scroll_event(Gtk.Widget widget,Gdk.EventMotion event)
+    
+    private void scroll_active_win(int offset,uint timestamp)
     {
         Wnck.Window win=null;
         Wnck.Window active_win=wnck_screen.get_active_window();
         weak GLib.SList<Wnck.Window> wins=books.get_wins();
+        weak GLib.SList<Wnck.Window> result;
+        if (active_win == null)
+        {
+            win=wins.nth_data(0);        
+            win.activate(timestamp);
+        }
+        
         if (active_win !=null)
         {
-            weak GLib.SList<Wnck.Window> result=wins.find(active_win);
+            result=wins.find(active_win);
             if (result == null)
             {
                 win=wins.nth_data(0);
-                win.activate(event.time);
+                win.activate(timestamp);
             }
             else
             {
                 int position = wins.position(result);
-                if (  (event.state & Gdk.ModifierType.SHIFT_MASK) != 0)
+                if ( offset < 0)
                 {
                     if (result.next !=null)
                     {
@@ -2072,7 +2088,7 @@ class LauncherApplet : AppletSimple
                         win=wins.nth_data(0);
                     }
                 }
-                else //UP
+                else if (offset>0) //UP
                 {
                     position--;
                     if (position<0)
@@ -2082,8 +2098,30 @@ class LauncherApplet : AppletSimple
                     }
                     win=wins.nth_data(position);
                 }
-                win.activate(event.time);
+                win.activate(timestamp);
             }
+        }
+        
+    }
+    
+    private void activate_next_win(uint timestamp)
+    {
+        scroll_active_win(1,timestamp);        
+    }
+    private void activate_prev_win(uint timestamp)
+    {
+        scroll_active_win(-1,timestamp);
+    }
+
+    private bool _scroll_event(Gtk.Widget widget,Gdk.EventMotion event)
+    {
+        if (  (event.state & Gdk.ModifierType.SHIFT_MASK) != 0)
+        {
+            activate_prev_win(event.time);
+        }
+        else
+        {
+            activate_next_win(event.time);   
         }
         return false;
     }

@@ -1343,6 +1343,9 @@ class LauncherApplet : AppletSimple
 		drag_dest_set(this, Gtk.DestDefaults.ALL, targets, Gdk.DragAction.COPY);
 		this.drag_data_received+=_drag_data_received;
         this.drag_data_get+=_drag_data_get;
+        this.drag_motion+=_drag_motion;
+        this.drag_leave+=_drag_leave;
+        
 		awn_config= new ConfigClient();
         config=new Configuration(uid,(uid.to_double()<=0));
         if (config.task_mode != TaskMode.NONE)
@@ -1634,17 +1637,6 @@ class LauncherApplet : AppletSimple
 		assert_not_reached ();
     }
 
-    private bool _drag_drop(Gtk.Widget widget,Gdk.DragContext context,int x,int y,uint time)
-    {
-		return true;
-    }  
-
-    private void _drag_data_get  (Gtk.Widget widget,Gdk.DragContext context, Gtk.SelectionData selection_data, uint info, uint time_)
-    {    
-        stdout.printf("_drag_data_get\n");
-        selection_data.set_text("test data\n",-1);
-    }
-
     //FIXME... ugly hack (self) to deal with vala 0.1.7 dbus signal bug
     //or maybe I was just doing it wrong to begin with....
     //doing this for now.
@@ -1656,6 +1648,28 @@ class LauncherApplet : AppletSimple
         {
             applet._window_opened(applet.wnck_screen,window);
         }
+    }
+    
+    private bool _drag_motion(Gtk.Widget widget,Gdk.DragContext context, int x, int y, uint time_)
+    {
+        stdout.printf("Drag motion\n");
+		return true;
+    }  
+
+    private void _drag_leave (Gtk.Widget widget,Gdk.DragContext context, uint time_)
+    {
+        stdout.printf("Drag leave\n");
+    }  
+    
+    private bool _drag_drop(Gtk.Widget widget,Gdk.DragContext context,int x,int y,uint time)
+    {
+		return true;
+    }  
+
+    private void _drag_data_get  (Gtk.Widget widget,Gdk.DragContext context, Gtk.SelectionData selection_data, uint info, uint time_)
+    {    
+        stdout.printf("_drag_data_get\n");
+        selection_data.set_text("test data\n",-1);
     }
 
     private void _drag_data_received(Gtk.Widget widget,Gdk.DragContext context,int x,int y,Gtk.SelectionData selectdata,uint info,uint time)

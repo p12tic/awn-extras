@@ -1211,7 +1211,7 @@ class LauncherApplet : AppletSimple
     protected   Listing                 listing;
     protected   bool                    closing;
     protected   Multi_Launcher          multi_launcher;
-    protected   uint                    last_time;
+    protected   uint                    dnd_motion_last_time;
 
     construct 
     { 
@@ -1221,7 +1221,7 @@ class LauncherApplet : AppletSimple
         blank_icon();
 		this.realize += _realized;        
 		hidden=true;
-        last_time=0;
+        dnd_motion_last_time=0;
     }
 
     /*sets the icon to a blank icon*/
@@ -1656,18 +1656,26 @@ class LauncherApplet : AppletSimple
     {
         stdout.printf("Drag motion... enter\n");        
         
-        if (time - last_time > 2000)
+        if ( dnd_motion_last_time == 0)
         {
-            stdout.printf("Drag motion - change\n");            
             activate_next_win(time);
+            if ( books.number()==1)
+            {
+                stdout.printf("Drag motion - change\n");            
+            }
+            else if ( books.number()>1)
+            {
+                stdout.printf("Drag motion - multi\n");            
+            }
+            dnd_motion_last_time=time;                        
         }
-        last_time=time;
 		return true;
     }  
 
     private void _drag_leave (Gtk.Widget widget,Gdk.DragContext context, uint time_)
     {
         stdout.printf("Drag leave\n");
+        dnd_motion_last_time=0;        
     }  
     
     private bool _drag_drop(Gtk.Widget widget,Gdk.DragContext context,int x,int y,uint time)

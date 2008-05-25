@@ -290,7 +290,7 @@ gboolean  _button_workspace(GtkWidget *widget,GdkEventButton *event,Workplace_in
 				vp_pos_col*wnck_screen_get_width(shinyswitcher->wnck_screen ),
 				vp_pos_row*wnck_screen_get_height(shinyswitcher->wnck_screen ));
 	}
-	wnck_workspace_activate(ws->space,time(NULL));
+	wnck_workspace_activate(ws->space,event->time);
 	return FALSE;
 }
 
@@ -308,8 +308,8 @@ gboolean  _button_win(GtkWidget *widget,GdkEventButton *event,Win_press_data * d
 		{
 //			if (space !=wnck_screen_get_active_workspace(data->shinyswitcher->wnck_screen))
 			{
-				wnck_workspace_activate(space,time(NULL));	
-				wnck_window_activate(wnck_win,time(NULL));
+				wnck_workspace_activate(space,event->time);	
+				wnck_window_activate(wnck_win,event->time);
 			}		
 			return TRUE;		
 		}
@@ -364,7 +364,7 @@ static gboolean _scroll_event(GtkWidget *widget,GdkEventMotion *event,Shiny_swit
 		}
 		if (new_space)
 		{
-		   wnck_workspace_activate(new_space,time(NULL) ); //FIXME
+		   wnck_workspace_activate(new_space,event->time ); //FIXME
 		}
 	}		
 	return TRUE;

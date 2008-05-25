@@ -44,13 +44,14 @@ Depends: ${shlibs:Depends}, ${python:Depends}
 Recommends: 	avant-window-navigator-trunk, 
 		python-awn-trunk,
 		vala-awn-trunk,
-		cairo-clock, 
 		python-alsaaudio, 
-		python-libgmail, 
-		python-imaging, 
+		python-feedparser, 
+		python-gnome2, 
+		python-gnome2-desktop, 
+		python-gnome2-extras, 
 		python-gst0.10, 
-		tsclient, 
-		libvte
+		python-sqlalchemy, 
+		tsclient
 Conflict: awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 Replaces: awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 XB-Python-Version: ${python:Versions}

@@ -30,7 +30,7 @@
 #include <string.h>
 #include <gdk/gdk.h>
 #include <glib.h>
-
+#include <libnotify/notify.h>
 
 char* urlencode(const char *source, char *dest, unsigned max);
 char *urldecode(char *source, char *dest);
@@ -73,8 +73,18 @@ Implementation Notes:
 	-Uses fork()
 */
 void notify_message_async(gchar * summary, gchar * body,gchar * icon_str,glong timeout);
-
-
+/*
+void notify_message
+	Sends a notificication to a notification daemon.
+	summary	-	message summary.
+	body	-	body of message
+	icon	-	full path to icon to display.  NULL indicates no icon.
+	urgency -   Urgency of notification.  
+	timeout	-	notificiation window timeout in ms.  0 indicates default should be used.
+	perror  -   typical g_error situation.
+	returns	TRUE on success, FALSE on failure	
+*/
+void notify_message_extended(gchar * summary, gchar * body,gchar * icon_str,NotifyUrgency urgency,glong timeout,GError **perror);
 
 
 #define SHR_KEY_CONFIG_KEY(key) key

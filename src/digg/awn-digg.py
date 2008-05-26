@@ -19,8 +19,16 @@ if os.path.exists('/etc/issue'):
 
 try:
        import gtkmozembed
-except:
-       print 'Gtkmozembed is need to run the RTM-Applet, please install'
+except ImportError:
+        print '       #####################################'
+        print 'Gtkmozembed is needed to run the Digg Applet, please install.'
+        print ' * On Debian or Ubuntu based systems, install python-gnome2-extras'
+        print ' * On Gentoo based systems, install dev-python/gnome-python-extras'
+        print ' * On Fedora based systems, install gnome-python2-gtkmozembed'
+        print ' * On SUSE based systems, install python-gnome-extras'
+        print ' * On Mandriva based systems, install gnome-python-gtkmozembed'
+        print 'See: http://wiki.awn-project.org/Awn_Extras:Dependency_Matrix'
+        print '       #####################################'
 
 class App (awn.AppletSimple):
   def __init__ (self, uid, orient, height):

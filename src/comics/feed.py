@@ -158,7 +158,7 @@ class Feed(gobject.GObject):
 		if self.is_indirect:
 			self.download_indirect(item, link)
 		else:
-			if len(images) >= self.img_index:
+			if len(images) > self.img_index:
 				item[URL] = images[self.img_index]
 			else:
 				return

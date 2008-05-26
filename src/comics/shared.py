@@ -19,12 +19,13 @@
 
 
 from feed import FeedContainer
-from os import access, getenv, mkdir, W_OK
+from os import access, getenv, makedirs, symlink, W_OK
 from os.path import join, split
 
 # Data locations
 SHARE_DIR		= join(split(__file__)[0])
-USER_DIR		= join(getenv('HOME'), '.comics')
+ALT_USER_DIR	= join(getenv('HOME'), '.comics')
+USER_DIR		= join(getenv('HOME'), '.config', 'awn', 'applets', 'comics')
 
 SYS_FEEDS_DIR	= join(SHARE_DIR, 'feeds')
 USER_FEEDS_DIR	= join(USER_DIR, 'feeds')
@@ -36,9 +37,12 @@ STRIPS_DIR		= USER_DIR
 CACHE_FILE		= join(USER_DIR, '%s.cache')
 
 if not access(USER_DIR, W_OK):
-	mkdir(USER_DIR)
+	if access(ALT_USER_DIR, W_OK):
+		symlink(ALT_USER_DIR, USER_DIR)
+	else:
+		makedirs(USER_DIR)
 if not access(USER_FEEDS_DIR, W_OK):
-	mkdir(USER_FEEDS_DIR)
+	makedirs(USER_FEEDS_DIR)
 
 feeds = FeedContainer()
 feeds.load_directory(SYS_FEEDS_DIR)

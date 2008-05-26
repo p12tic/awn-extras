@@ -224,7 +224,7 @@ class Feed(gobject.GObject):
 		
 		urls = map(lambda u: make_absolute_url(u, o.url),
 			IMG_SRC_RE.findall(data))
-		if len(urls) >= self.img_index:
+		if len(urls) > self.img_index:
 			item[URL] = urls[self.img_index]
 		else:
 			del self.items[item[DATE]]

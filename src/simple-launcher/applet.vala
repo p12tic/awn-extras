@@ -281,7 +281,18 @@ class LauncherApplet : AppletSimple
         }
 		
 		drag_finish (context, status, false, time);		
-    }  
+    }
+    
+    private bool _reread_config(Gtk.Widget widget,Gdk.EventButton event)
+    {
+        desktopitem = new DesktopItem(directory+config.uid+".desktop" );	
+        if (desktopitem.get_icon(theme) != null)
+        {
+            icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );
+        }
+        set_icon(icon);
+        return false;
+    }    
     
     private bool _desktop_edit(Gtk.Widget widget,Gdk.EventButton event)
     {
@@ -302,7 +313,11 @@ class LauncherApplet : AppletSimple
         right_menu.append(menu_item);
         menu_item.show();
         menu_item.button_press_event+=_desktop_edit;
-        
+
+        menu_item=new MenuItem.with_label ("Reread Configuration");        
+        right_menu.append(menu_item);
+        menu_item.show();
+        menu_item.button_press_event+=_reread_config;
         
     }
     

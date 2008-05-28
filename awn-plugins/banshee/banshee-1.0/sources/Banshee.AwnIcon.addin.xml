@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Addin 
+    id="Banshee.AwnIcon"
+    version="1.0"
+    compatVersion="1.0"
+    copyright=""
+    name="AwnIcon"
+    category="AwnIcon"
+    description="Simple awn icon plugin"
+    author="tehk"
+    url=""
+    defaultEnabled="true">
+
+  <Dependencies>
+    <Addin id="Banshee.Services" version="1.0"/>
+  </Dependencies>
+
+  <Extension path="/Banshee/ServiceManager/Service">
+    <Service class="Banshee.AwnIcon.AwnIconService"/>
+  </Extension>
+</Addin>

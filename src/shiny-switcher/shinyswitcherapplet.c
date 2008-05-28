@@ -82,11 +82,18 @@ static void _orient_changed (AwnApplet *appt, guint orient, gpointer *data);
 
 static void config_get_string (AwnConfigClient *client, const gchar *key, gchar **str)
 {
-	*str = awn_config_client_get_string (client, AWN_CONFIG_CLIENT_DEFAULT_GROUP, key, NULL);
+    GError *error = NULL; 
+	*str = awn_config_client_get_string (client, AWN_CONFIG_CLIENT_DEFAULT_GROUP, key, &error);
+    if (error)
+    {
+        g_warning ("shinyswitcher: error reading config string (%s):",key, error->message);
+        g_error_free (error);
+    }    
 }
 static void config_get_color (AwnConfigClient *client, const gchar *key, AwnColor *color)
 {
-	gchar *value = awn_config_client_get_string (client, AWN_CONFIG_CLIENT_DEFAULT_GROUP, key, NULL);
+    GError *error = NULL;     
+	gchar *value = awn_config_client_get_string (client, AWN_CONFIG_CLIENT_DEFAULT_GROUP, key, &error);
     if (value)
     {
 	    awn_cairo_string_to_color (value, color);
@@ -94,7 +101,12 @@ static void config_get_color (AwnConfigClient *client, const gchar *key, AwnColo
     }
     else
     {
-        g_warning("Failed to read config key: %s\n",key);
+        if (error)
+        {
+            g_warning ("shinyswitcher: error reading config string (%s):",key, error->message);
+            g_error_free (error);
+        }    
+        g_warning("shinyswitcher: Failed to read config key: %s.  Setting  to 0x000000\n",key);        
         awn_cairo_string_to_color ("000000", color);
     }
 

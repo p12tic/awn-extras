@@ -96,6 +96,7 @@ namespace Banshee.AwnIcon
         {
             if (awn != null && ServiceManager.PlaybackController.CurrentTrack != null &&
                 File.Exists (CoverArtSpec.GetPath(ServiceManager.PlaybackController.CurrentTrack.ArtworkId))) {
+                awn.SetInfoByName (taskname, ServiceManager.PlaybackController.CurrentTrack.TrackNumber.ToString());
                 awn.SetTaskIconByName (taskname, CoverArtSpec.GetPath (ServiceManager.PlaybackController.CurrentTrack.ArtworkId));
             }
         }

@@ -1,7 +1,7 @@
 <Project name="Banshee.AwnIcon" fileversion="2.0" Description="An extension which sends cover art to AWN for use as its Icon" language="C#" clr-version="Net_2_0" UseParentDirectoryAsNamespace="True" ctype="DotNetProject">
   <Configurations active="Debug">
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
-      <Output directory="../../../bin" assemblyKeyFile="." assembly="Banshee.AwnIcon" />
+      <Output directory="bin" assemblyKeyFile="." assembly="Banshee.AwnIcon" />
       <Build debugmode="True" target="Library" />
       <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" clr-version="Net_2_0" />
       <CodeGeneration compiler="Mcs" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />

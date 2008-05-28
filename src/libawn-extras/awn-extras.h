@@ -89,7 +89,7 @@ void notify_message_extended(gchar * summary, gchar * body,gchar * icon_str,Noti
 
 #define SHR_KEY_CONFIG_KEY(key) key
 #define SHR_KEY_FOCUS_LOSS      SHR_KEY_CONFIG_KEY("dialog_focus_loss_behavior")
-#define SHR_KEY_GENERIC_PREFS    SHR_KEY_CONFIG_KEY("allow_generic_config_edit")
+#define SHR_KEY_GENERIC_PREFS   SHR_KEY_CONFIG_KEY("allow_generic_config_edit")
 
 /* 
 share_config_bool
@@ -101,15 +101,14 @@ gboolean share_config_bool(const gchar * key);
 
 typedef enum
 {
+    AWN_MENU_DEFAULT,
     AWN_MENU_MANAGER_DISABLE=1,
-    AWN_MENU_CLOSE_DISABLE=2,
     AWN_MENU_APPLET_PREFS_ENABLE=4
 } AwnMenu;
 
 typedef enum
 {
     AWN_MENU_ITEM_MANAGER,
-    AWN_MENU_ITEM_CLOSE,
     AWN_MENU_ITEM_APPLET_PREFS
 } AwnMenuItem;
 

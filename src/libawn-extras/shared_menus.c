@@ -42,17 +42,6 @@ static gboolean _start_awn_manager(GtkWidget *widget, GdkEventButton *event, voi
     return TRUE;
 }
 
-static gboolean _close_awn(GtkWidget *widget, GdkEventButton *event, void * null)
-{
-	GError *err=NULL;
-    g_spawn_command_line_async("killall awn",&err);//FIXME
-    if (err)
-    {
-        g_error_free (err);
-    }
-    return TRUE;
-}
-
 GtkWidget * create_applet_menu(GtkWidget * menu, guint features)
 {
     GtkWidget *item;  
@@ -78,11 +67,6 @@ GtkWidget * create_applet_menu(GtkWidget * menu, guint features)
         item = create_applet_menu_item(AWN_MENU_ITEM_MANAGER);
         gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);      
     }
-    if ( ! (features  & AWN_MENU_CLOSE_DISABLE) )
-    {
-        item = create_applet_menu_item(AWN_MENU_ITEM_CLOSE);
-        gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);          
-    }
     return menu;
 }
 
@@ -95,11 +79,6 @@ GtkWidget * create_applet_menu_item(AwnMenuItem menu_item_type)
             item = gtk_image_menu_item_new_with_label ("Awn Preferences");
             g_signal_connect (G_OBJECT (item), "button-press-event",
                         G_CALLBACK (_start_awn_manager), NULL);
-            break;
-        case AWN_MENU_ITEM_CLOSE:
-            item = gtk_image_menu_item_new_with_label ("Close");
-            g_signal_connect (G_OBJECT (item), "button-press-event",
-                        G_CALLBACK (_close_awn), NULL);
             break;
         case AWN_MENU_ITEM_APPLET_PREFS:
             item = gtk_image_menu_item_new_with_label ("Applet Preferences");        

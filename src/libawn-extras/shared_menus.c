@@ -55,30 +55,34 @@ static gboolean _close_awn(GtkWidget *widget, GdkEventButton *event, void * null
 
 GtkWidget * create_applet_menu(GtkWidget * menu, guint features)
 {
-    GtkWidget *item;    
+    GtkWidget *item;  
     if (!menu)
     {
         menu = gtk_menu_new (); 
-        gtk_menu_set_screen (GTK_MENU (menu), NULL);
+        gtk_menu_set_screen (GTK_MENU (menu), NULL);   
     }
     if ( features  & AWN_MENU_APPLET_PREFS_ENABLE)
     {
-        item = create_applet_menu_item(AWN_MENU_ITEM_APPLET_PREFS);
-        gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
+        if ( share_config_bool ( SHR_KEY_GENERIC_PREFS ) )
+        {
+            item = create_applet_menu_item(AWN_MENU_ITEM_APPLET_PREFS);
+            gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
+        }
+        else
+        {
+            g_warning("Generic Preferences Requested but support is not enabled in configuration\n");
+        }
     }
-
     if ( ! (features  & AWN_MENU_MANAGER_DISABLE) )
     {
         item = create_applet_menu_item(AWN_MENU_ITEM_MANAGER);
-        gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
+        gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);      
     }
-
     if ( ! (features  & AWN_MENU_CLOSE_DISABLE) )
     {
         item = create_applet_menu_item(AWN_MENU_ITEM_CLOSE);
-        gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);        
+        gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);          
     }
-        
     return menu;
 }
 

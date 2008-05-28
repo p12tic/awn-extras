@@ -88,7 +88,8 @@ void notify_message_extended(gchar * summary, gchar * body,gchar * icon_str,Noti
 
 
 #define SHR_KEY_CONFIG_KEY(key) key
-#define SHR_KEY_FOCUS_LOSS    SHR_KEY_CONFIG_KEY("dialog_focus_loss_behavior")
+#define SHR_KEY_FOCUS_LOSS      SHR_KEY_CONFIG_KEY("dialog_focus_loss_behavior")
+#define SHR_KEY_GENERIC_PREFS    SHR_KEY_CONFIG_KEY("allow_generic_config_edit")
 
 /* 
 share_config_bool
@@ -116,7 +117,7 @@ typedef enum
 
 */
 
-GtkWidget * create_applet_menu(GtkWidget * custom_menu, guint features);
+GtkWidget * create_applet_menu(GtkWidget * custom_menu, guint features_flags);
 
 GtkWidget * create_applet_menu_item(AwnMenuItem menu_item_type);
 

@@ -32,7 +32,7 @@
 #include <glib.h>
 #include <libnotify/notify.h>
 
-char* urlencode(const char *source, char *dest, unsigned max);
+char *urlencode(const char *source, char *dest, unsigned max);
 char *urldecode(char *source, char *dest);
 
 /*
@@ -96,5 +96,29 @@ share_config_bool
 */
 
 gboolean share_config_bool(const gchar * key);
+
+
+typedef enum
+{
+    AWN_MENU_MANAGER_DISABLE=1,
+    AWN_MENU_CLOSE_DISABLE=2,
+    AWN_MENU_APPLET_PREFS_ENABLE=4
+} AwnMenu;
+
+typedef enum
+{
+    AWN_MENU_ITEM_MANAGER,
+    AWN_MENU_ITEM_CLOSE,
+    AWN_MENU_ITEM_APPLET_PREFS
+} AwnMenuItem;
+
+/*
+
+*/
+
+GtkWidget * create_applet_menu(GtkWidget * custom_menu, guint features);
+
+GtkWidget * create_applet_menu_item(AwnMenuItem menu_item_type);
+
 
 #endif

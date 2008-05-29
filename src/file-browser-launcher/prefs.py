@@ -26,7 +26,7 @@ pygtk.require('2.0')
 import gtk
 import pango
 import os
-import gconfwrapper
+import gconfwrapper as awnccwrapper
 
 class Prefs:
 	def __init__(self,set_icon,uid):
@@ -40,44 +40,44 @@ class Prefs:
 		self.theme = gtk.icon_theme_get_default()
 		self.initializing = True
 		
-		#Get default icon path (not gconf)
+		#Get default icon path (not awncc)
 		self.default_icon_path = '/'.join(__file__.split('/')[:-1])+'/folder.png'
 		
-		#Get ALL the GConf stuff
-		self.client = gconfwrapper.GConfWrapper(self.uid)
+		#Get ALL the awncc stuff
+		self.client = awnccwrapper.AwnCCWrapper(self.uid)
 		
 		#File browser
-		self.fb = self.client.get_string('/apps/avant-window-navigator/applets/'+str(self.uid)+'/fb','xdg-open')
+		self.fb = self.client.get_string('fb','xdg-open')
 		
 		#Left mouse button action
-		self.lmb = self.client.get_int('/apps/avant-window-navigator/applets/'+str(self.uid)+'/lmb',1)
+		self.lmb = self.client.get_int('lmb',1)
 		
 		#Left mouse button path
-		self.lmb_path = self.client.get_string('/apps/avant-window-navigator/applets/'+str(self.uid)+'/lmb_path',\
+		self.lmb_path = self.client.get_string('lmb_path',\
 		os.path.expanduser('~'))
 		
 		#Middle mouse button action
-		self.mmb = self.client.get_int('/apps/avant-window-navigator/applets/'+str(self.uid)+'/mmb',2)
+		self.mmb = self.client.get_int('mmb',2)
 		
 		#Middle mouse button path
-		self.mmb_path = self.client.get_string('/apps/avant-window-navigator/applets/'+str(self.uid)+'/mmb_path',\
+		self.mmb_path = self.client.get_string('mmb_path',\
 		os.path.expanduser('~'))
 		
 		#Icon path or default
-		self.icon = self.client.get_string('/apps/avant-window-navigator/applets/'+str(self.uid)+'/icon',\
+		self.icon = self.client.get_string('icon',\
 		'/dev/null')
 		
 		#Places: show bookmarks, home, local, network
-		self.show_bookmarks = self.client.get_int('/apps/avant-window-navigator/applets/'+str(self.uid)+'/places_bookmarks',2)
-		self.show_home = self.client.get_int('/apps/avant-window-navigator/applets/'+str(self.uid)+'/places_home',2)
-		self.show_local = self.client.get_int('/apps/avant-window-navigator/applets/'+str(self.uid)+'/places_local',2)
-		self.show_network = self.client.get_int('/apps/avant-window-navigator/applets/'+str(self.uid)+'/places_network',2)
+		self.show_bookmarks = self.client.get_int('places_bookmarks',2)
+		self.show_home = self.client.get_int('places_home',2)
+		self.show_local = self.client.get_int('places_local',2)
+		self.show_network = self.client.get_int('places_network',2)
 		
 		#Open the places item when clicked
-		self.places_open = self.client.get_int('/apps/avant-window-navigator/applets/'+str(self.uid)+'/places_open',2)
+		self.places_open = self.client.get_int('places_open',2)
 		
 		#Focus the location entry widget
-		self.focus_entry = self.client.get_int('/apps/avant-window-navigator/applets/'+str(self.uid)+'/focus_entry',2)
+		self.focus_entry = self.client.get_int('focus_entry',2)
 		
 		#Set the icon approiately
 		if self.icon=='/dev/null':
@@ -215,7 +215,7 @@ class Prefs:
 			self.general_fb_custom_radio.set_active(True)
 		self.general_fb_custom_entry.set_text(self.fb)
 		self.general_fb_custom_entry.connect('changed',\
-		lambda w:self.client.set_string('/apps/avant-window-navigator/applets/'+str(self.uid)+'/fb',w.get_text()))
+		lambda w:self.client.set_string('fb',w.get_text()))
 		if self.fb in ['xdg-open','nautilus','thunar','konqueror','dolphin']:
 			self.general_fb_custom_entry.set_sensitive(False)
 		self.general_fb_table.attach(self.general_fb_custom_radio,0,1,\
@@ -326,13 +326,13 @@ class Prefs:
 		#Table
 		self.lmb_clicked_table = gtk.Table(3,2)
 		
-		#Row 1: () Display the dialog (default) (gconf:0)
+		#Row 1: () Display the dialog (default) (awncc:0)
 		self.lmb_clicked_display_radio = gtk.RadioButton(label='Display the dialog')
 		self.lmb_clicked_display_radio.identifier = 'lmb.clicked.display'
 		self.lmb_clicked_display_radio.connect('toggled',self.radio_changed)
 		self.lmb_clicked_table.attach(self.lmb_clicked_display_radio,0,1,0,1,yoptions=gtk.SHRINK)
 		
-		#Row 2: () Open the folder (gconf:1)
+		#Row 2: () Open the folder (awncc:1)
 		self.lmb_clicked_open_radio = gtk.RadioButton(self.lmb_clicked_display_radio,'Open the folder')
 		if self.lmb==2:
 			self.lmb_clicked_open_radio.set_active(True)
@@ -341,7 +341,7 @@ class Prefs:
 		self.lmb_clicked_open_label = gtk.Label('Open the folder')
 		self.lmb_clicked_table.attach(self.lmb_clicked_open_radio,0,1,1,2,yoptions=gtk.SHRINK)
 		
-		#Row 3: () Do nothing (gconf:2)
+		#Row 3: () Do nothing (awncc:2)
 		self.lmb_clicked_nothing_radio = gtk.RadioButton(self.lmb_clicked_display_radio,'Do nothing')
 		if self.lmb==3:
 			self.lmb_clicked_nothing_radio.set_active(True)
@@ -406,13 +406,13 @@ class Prefs:
 		#Table
 		self.mmb_clicked_table = gtk.Table(3,2)
 		
-		#Row 1: () Display the dialog (default) (gconf:1)
+		#Row 1: () Display the dialog (default) (awncc:1)
 		self.mmb_clicked_display_radio = gtk.RadioButton(label='Display the dialog')
 		self.mmb_clicked_display_radio.identifier = 'mmb.clicked.display'
 		self.mmb_clicked_display_radio.connect('toggled',self.radio_changed)
 		self.mmb_clicked_table.attach(self.mmb_clicked_display_radio,0,1,0,1,yoptions=gtk.SHRINK)
 		
-		#Row 2: () Open the folder (gconf:2)
+		#Row 2: () Open the folder (awncc:2)
 		self.mmb_clicked_open_radio = gtk.RadioButton(self.mmb_clicked_display_radio,'Open the folder')
 		if self.mmb==2:
 			self.mmb_clicked_open_radio.set_active(True)
@@ -420,7 +420,7 @@ class Prefs:
 		self.mmb_clicked_open_radio.connect('toggled',self.radio_changed)
 		self.mmb_clicked_table.attach(self.mmb_clicked_open_radio,0,1,1,2,yoptions=gtk.SHRINK)
 		
-		#Row 3: () Do nothing (gconf:3)
+		#Row 3: () Do nothing (awncc:3)
 		self.mmb_clicked_nothing_radio = gtk.RadioButton(self.mmb_clicked_display_radio,'Do nothing')
 		if self.mmb==3:
 			self.mmb_clicked_nothing_radio.set_active(True)
@@ -502,7 +502,7 @@ class Prefs:
 			self.window.set_icon(self.awn_new_icon)
 			self.set_icon(self.awn_new_icon)
 			self.general_icon_custom_img.set_from_pixbuf(self.awn_new_icon)
-			self.client.set_string('/apps/avant-window-navigator/applets/'+str(self.uid)+'/icon',self.file_chooser_filename)
+			self.client.set_string('icon',self.file_chooser_filename)
 		except:
 			self.browse_err_dialog = gtk.Dialog('Error',self.window,gtk.DIALOG_DESTROY_WITH_PARENT,(gtk.STOCK_OK,gtk.RESPONSE_OK))
 			self.browse_err_dialog_label = gtk.Label('The file you selected is not a compatible image.')			self.browse_err_dialog_label.show()
@@ -523,7 +523,7 @@ class Prefs:
 		self.lmb_folder_custom_entry.set_text(self.dir_chooser_dirname)
 		self.lmb_folder_custom_entry.set_sensitive(True)
 		self.lmb_folder_custom_browse.set_sensitive(True)
-		self.client.set_string('/apps/avant-window-navigator/applets/'+str(self.uid)+'/lmb_path',self.dir_chooser_dirname)
+		self.client.set_string('lmb_path',self.dir_chooser_dirname)
 	
 	#Browses for a directory/folder - for the middle button
 	def browse_dir_mmb(self,widget):
@@ -537,9 +537,9 @@ class Prefs:
 		self.mmb_folder_custom_entry.set_text(self.dir_chooser_dirname)
 		self.mmb_folder_custom_entry.set_sensitive(True)
 		self.mmb_folder_custom_browse.set_sensitive(True)
-		self.client.set_string('/apps/avant-window-navigator/applets/'+str(self.uid)+'/mmb_path',self.dir_chooser_dirname)
+		self.client.set_string('mmb_path',self.dir_chooser_dirname)
 	
-	#Determines what radio button was selected and changes gconf and other important things
+	#Determines what radio button was selected and changes awncc and other important things
 	def radio_changed(self,radio):
 		
 		#No need to do this when everything is loaded
@@ -553,7 +553,7 @@ class Prefs:
 		#Now do what is needed based on the radio's identifier
 		#Tab: General; Section: Icon; Radio: Default
 		if radio.identifier=='general.icon.default':
-			self.client.set_string('/apps/avant-window-navigator/applets/'+str(self.uid)+'/icon','default')
+			self.client.set_string('icon','default')
 			self.general_icon_custom_entry.set_sensitive(False)
 			self.general_icon_custom_browse.set_sensitive(False)
 			self.awn_new_icon = gtk.gdk.pixbuf_new_from_file(self.default_icon_path)
@@ -562,7 +562,7 @@ class Prefs:
 			self.set_icon(self.awn_new_icon)
 		#Tab: General; Section: Icon; Radio: Theme default
 		elif radio.identifier=='general.icon.theme':
-			self.client.set_string('/apps/avant-window-navigator/applets/'+str(self.uid)+'/icon','theme')
+			self.client.set_string('icon','theme')
 			self.general_icon_custom_entry.set_sensitive(False)
 			self.general_icon_custom_browse.set_sensitive(False)
 			self.awn_new_icon = self.theme.load_icon('folder',48,48)
@@ -593,44 +593,44 @@ class Prefs:
 		elif radio.identifier=='general.fb.default':
 			self.general_fb_custom_entry.set_sensitive(False)
 			self.general_fb_custom_entry.set_text('xdg-open')
-			self.client.set_string('/apps/avant-window-navigator/applets/'+str(self.uid)+'/fb','xdg-open')
+			self.client.set_string('fb','xdg-open')
 		#Tab: General; Section: File Browser; Radio: Nautilus
 		elif radio.identifier=='general.fb.nautilus':
 			self.general_fb_custom_entry.set_sensitive(False)
 			self.general_fb_custom_entry.set_text('nautilus')
-			self.client.set_string('/apps/avant-window-navigator/applets/'+str(self.uid)+'/fb','nautilus')
+			self.client.set_string('fb','nautilus')
 		#Tab: General; Section: File Browser; Radio: Thunar
 		elif radio.identifier=='general.fb.thunar':
 			self.general_fb_custom_entry.set_sensitive(False)
 			self.general_fb_custom_entry.set_text('thunar')
-			self.client.set_string('/apps/avant-window-navigator/applets/'+str(self.uid)+'/fb','thunar')
+			self.client.set_string('fb','thunar')
 		#Tab: General; Section: File Browser; Radio: Konqueror
 		elif radio.identifier=='general.fb.konqueror':
 			self.general_fb_custom_entry.set_sensitive(False)
 			self.general_fb_custom_entry.set_text('konqueror')
-			self.client.set_string('/apps/avant-window-navigator/applets/'+str(self.uid)+'/fb','konqueror')
+			self.client.set_string('fb','konqueror')
 		#Tab: General; Section: File Browser; Radio: Dolphin
 		elif radio.identifier=='general.fb.dolphin':
 			self.general_fb_custom_entry.set_sensitive(False)
 			self.general_fb_custom_entry.set_text('dolphin')
-			self.client.set_string('/apps/avant-window-navigator/applets/'+str(self.uid)+'/fb','dolphin')
+			self.client.set_string('fb','dolphin')
 		#Tab: General; Section: File Browser; Radio: Custom
 		elif radio.identifier=='general.fb.custom':
 			self.general_fb_custom_entry.set_sensitive(True)
-			self.client.set_string('/apps/avant-window-navigator/applets/'+str(self.uid)+'/fb',\
+			self.client.set_string('fb',\
 			self.general_fb_custom_entry.get_text())
 		#Tab: LMB; Section: When clicked; Radio: Display
 		elif radio.identifier=='lmb.clicked.display':
-			self.client.set_int('/apps/avant-window-navigator/applets/'+str(self.uid)+'/lmb',1)
+			self.client.set_int('lmb',1)
 		#Tab: LMB; Section: When clicked; Radio: Open
 		elif radio.identifier=='lmb.clicked.open':
-			self.client.set_int('/apps/avant-window-navigator/applets/'+str(self.uid)+'/lmb',2)
+			self.client.set_int('lmb',2)
 		#Tab: LMB; Section: When clicked; Radio: Nothing
 		elif radio.identifier=='lmb.clicked.nothing':
-			self.client.set_int('/apps/avant-window-navigator/applets/'+str(self.uid)+'/lmb',3)
+			self.client.set_int('lmb',3)
 		#Tab: LMB; Section: Default Folder; Radio: Home Folder
 		elif radio.identifier=='lmb.folder.default':
-			self.client.set_string('/apps/avant-window-navigator/applets/'+str(self.uid)+'/lmb_path',os.path.expanduser('~'))
+			self.client.set_string('lmb_path',os.path.expanduser('~'))
 			self.lmb_folder_custom_entry.set_sensitive(False)
 			self.lmb_folder_custom_browse.set_sensitive(False)
 		#Tab: LMB; Section: Default Folder; Radio: Custom
@@ -638,7 +638,7 @@ class Prefs:
 			if self.lmb_folder_custom_entry.get_text()=='':
 				self.browse_dir_lmb(None)
 			elif os.path.exists(self.lmb_folder_custom_entry.get_text()):
-				self.client.set_string('/apps/avant-window-navigator/applets/'+str(self.uid)+'/lmb_path',\
+				self.client.set_string('lmb_path',\
 				self.lmb_folder_custom_entry.get_text())
 				self.lmb_folder_custom_entry.set_sensitive(True)
 				self.lmb_folder_custom_browse.set_sensitive(True)
@@ -646,16 +646,16 @@ class Prefs:
 				self.browse_dir_lmb(None)
 		#Tab: MMB; Section: When clicked; Radio: Display
 		elif radio.identifier=='mmb.clicked.display':
-			self.client.set_int('/apps/avant-window-navigator/applets/'+str(self.uid)+'/mmb',1)
+			self.client.set_int('mmb',1)
 		#Tab: MMB; Section: When clicked; Radio: Open
 		elif radio.identifier=='mmb.clicked.open':
-			self.client.set_int('/apps/avant-window-navigator/applets/'+str(self.uid)+'/mmb',2)
+			self.client.set_int('mmb',2)
 		#Tab: MMB; Section: When clicked; Radio: Nothing
 		elif radio.identifier=='mmb.clicked.nothing':
-			self.client.set_int('/apps/avant-window-navigator/applets/'+str(self.uid)+'/mmb',3)
+			self.client.set_int('mmb',3)
 		#Tab: MMB; Section: Default Folder; Radio: Home Folder
 		elif radio.identifier=='mmb.folder.default':
-			self.client.set_string('/apps/avant-window-navigator/applets/'+str(self.uid)+'/mmb_path',os.path.expanduser('~'))
+			self.client.set_string('mmb_path',os.path.expanduser('~'))
 			self.mmb_folder_custom_entry.set_sensitive(False)
 			self.mmb_folder_custom_browse.set_sensitive(False)
 		#Tab: MMB; Section: Default Folder; Radio: Custom
@@ -663,14 +663,14 @@ class Prefs:
 			if self.mmb_folder_custom_entry.get_text()=='':
 				self.browse_dir_mmb(None)
 			elif os.path.exists(self.mmb_folder_custom_entry.get_text()):
-				self.client.set_string('/apps/avant-window-navigator/applets/'+str(self.uid)+'/mmb_path',\
+				self.client.set_string('mmb_path',\
 				self.mmb_folder_custom_entry.get_text())
 				self.mmb_folder_custom_entry.set_sensitive(True)
 				self.mmb_folder_custom_browse.set_sensitive(True)
 			else:
 				self.browse_dir_mmb(None)
 	
-	#Determines what check button was selected and changes gconf and other important things
+	#Determines what check button was selected and changes awncc and other important things
 	def check_changed(self,check):
 		
 		#No need to do this when everything is loaded
@@ -680,36 +680,36 @@ class Prefs:
 		#Tab: Dialog; Section: Places; Checkbox: Home Folder
 		if check.identifier=='dialog.places.home':
 			if check.get_active()==True:
-				self.client.set_int('/apps/avant-window-navigator/applets/'+str(self.uid)+'/places_home',2)
+				self.client.set_int('places_home',2)
 			else:
-				self.client.set_int('/apps/avant-window-navigator/applets/'+str(self.uid)+'/places_home',1)
+				self.client.set_int('places_home',1)
 		#Tab: Dialog; Section: Places; Checkbox: Local drives
 		elif check.identifier=='dialog.places.local':
 			if check.get_active()==True:
-				self.client.set_int('/apps/avant-window-navigator/applets/'+str(self.uid)+'/places_local',2)
+				self.client.set_int('places_local',2)
 			else:
-				self.client.set_int('/apps/avant-window-navigator/applets/'+str(self.uid)+'/places_local',1)
+				self.client.set_int('places_local',1)
 		#Tab: Dialog; Section: Places; Checkbox: Network drives
 		elif check.identifier=='dialog.places.network':
 			if check.get_active()==True:
-				self.client.set_int('/apps/avant-window-navigator/applets/'+str(self.uid)+'/places_network',2)
+				self.client.set_int('places_network',2)
 			else:
-				self.client.set_int('/apps/avant-window-navigator/applets/'+str(self.uid)+'/places_network',1)
+				self.client.set_int('places_network',1)
 		#Tab: Dialog; Section: Places; Checkbox: Bookmarks
 		elif check.identifier=='dialog.places.bookmarks':
 			if check.get_active()==True:
-				self.client.set_int('/apps/avant-window-navigator/applets/'+str(self.uid)+'/places_bookmarks',2)
+				self.client.set_int('places_bookmarks',2)
 			else:
-				self.client.set_int('/apps/avant-window-navigator/applets/'+str(self.uid)+'/places_bookmarks',1)
+				self.client.set_int('places_bookmarks',1)
 		#Tab: Dialog; Section: Behavior; Checkbox: Focus
 		elif check.identifier=='dialog.behavior.focus':
 			if check.get_active()==True:
-				self.client.set_int('/apps/avant-window-navigator/applets/'+str(self.uid)+'/focus_entry',2)
+				self.client.set_int('focus_entry',2)
 			else:
-				self.client.set_int('/apps/avant-window-navigator/applets/'+str(self.uid)+'/focus_entry',1)
+				self.client.set_int('focus_entry',1)
 		#Tab: Dialog; Section: Behavior; Checkbox: Open place
 		elif check.identifier=='dialog.behavior.open':
 			if check.get_active()==True:
-				self.client.set_int('/apps/avant-window-navigator/applets/'+str(self.uid)+'/places_open',2)
+				self.client.set_int('places_open',2)
 			else:
-				self.client.set_int('/apps/avant-window-navigator/applets/'+str(self.uid)+'/places_open',1)
+				self.client.set_int('places_open',1)

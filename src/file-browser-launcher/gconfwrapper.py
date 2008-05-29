@@ -19,53 +19,36 @@
 # Boston, MA 02111-1307, USA.
 #
 #File Browser Launcher
-#GCONF Wrapper File
+#AwnConfigClient wrapper file
 
-import gconf
-class GConfWrapper:
+import awn
+class AwnCCWrapper:
 	
 	def __init__(self,uid):
-		self.uid = uid
-		self.client = gconf.client_get_default()
+		self.client = awn.Config(str(uid),None)
 	
-	#Get a GConf string
+	#Get an AwnConfigClient string
 	def get_string(self,key,default):
-		try:
-			self.client.add_dir('/apps/avant-window-navigator/applets/'+str(self.uid))
-		except:
-			pass
-		val = self.client.get_string(key)
+		val = self.client.get_string(awn.CONFIG_DEFAULT_GROUP,key)
 		if val==None:
 			val = default
-			self.client.set_string(key,default)
+			self.client.set_string(awn.CONFIG_DEFAULT_GROUP,key,default)
 		return val
 
-	#Set a GConf string
+	#Set an AwnConfigClient string
 	def set_string(self,key,val):
-		try:
-			self.client.add_dir('/apps/avant-window-navigator/applets/'+str(self.uid))
-		except:
-			pass
-		val = self.client.set_string(key,val)
+		val = self.client.set_string(awn.CONFIG_DEFAULT_GROUP,key,val)
 		return val
 
-	#Get a GConf integer
+	#Get an AwnConfigClient integer
 	def get_int(self,key,default):
-		try:
-			self.client.add_dir('/apps/avant-window-navigator/applets/'+str(self.uid))
-		except:
-			pass
-		val = self.client.get_int(key)
+		val = self.client.get_int(awn.CONFIG_DEFAULT_GROUP,key)
 		if val==0:
 			val = default
-			self.client.set_int(key,default)
+			self.client.set_int(awn.CONFIG_DEFAULT_GROUP,key,default)
 		return val
 
-	#Set a GConf integer	
+	#Set an AwnConfigClient integer	
 	def set_int(self,key,val):
-		try:
-			self.client.add_dir('/apps/avant-window-navigator/applets/'+str(self.uid))
-		except:
-			pass
-		val = self.client.set_int(key,val)
+		val = self.client.set_int(awn.CONFIG_DEFAULT_GROUP,key,val)
 		return val

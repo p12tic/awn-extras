@@ -29,7 +29,7 @@ import gtk
 import awn
 import subprocess
 import pango
-import gconfwrapper
+import gconfwrapper as awnccwrapper
 
 class App (awn.AppletSimple):
 	def __init__(self, uid, orient, height):
@@ -41,8 +41,8 @@ class App (awn.AppletSimple):
 		self.title = awn.awn_title_get_default()
 		self.dialog = awn.AppletDialog(self)
 		
-		#Has to do with GCONF
-		self.client = gconfwrapper.GConfWrapper(self.uid)
+		#Has to do with awncc
+		self.client = awnccwrapper.AwnCCWrapper(self.uid)
 		
 		#Get the icon theme default theme thing
 		self.theme = gtk.icon_theme_get_default()
@@ -52,16 +52,16 @@ class App (awn.AppletSimple):
 		self.default_icon_path = '/'.join(__file__.split('/')[:-1])+'/folder.png'
 		
 		#Get the icon path, or default to /dev/null which will become the stock folder icon
-		self.gconf_icon = self.client.get_string('/apps/avant-window-navigator/applets/'+str(self.uid)+'/icon','default')
+		self.awncc_icon = self.client.get_string('icon','default')
 		
 		#Get and set the icon
 		try:
-			if self.gconf_icon in ['/dev/null','','theme']:
+			if self.awncc_icon in ['/dev/null','','theme']:
 				icon = self.theme.load_icon('folder',height,height)
-			elif self.gconf_icon=='default':
+			elif self.awncc_icon=='default':
 				icon = gtk.gdk.pixbuf_new_from_file_at_size(self.default_icon_path,height,height)
 			else:
-				icon = gtk.gdk.pixbuf_new_from_file_at_size(self.gconf_icon,height,height)
+				icon = gtk.gdk.pixbuf_new_from_file_at_size(self.awncc_icon,height,height)
 			if height != icon.get_height():
 				icon = icon.scale_simple(height,height,gtk.gdk.INTERP_BILINEAR)
 			self.set_icon(icon)
@@ -111,7 +111,7 @@ class App (awn.AppletSimple):
 		self.connect('height-changed',self.height_changed)
 		self.dialog.connect('focus-out-event', lambda a,b: self.dialog.hide())
 	
-	#Function to show the home folder, mounted drives/partitions, and bookmarks according to gconf
+	#Function to show the home folder, mounted drives/partitions, and bookmarks according to awncc
 	#This also refreshes in case a CD was inserted, MP3 player unplugged, bookmark added, etc.
 	def add_places(self):
 		#This function adds items to the liststore. The TreeView was already made in __init__()
@@ -120,11 +120,11 @@ class App (awn.AppletSimple):
 		self.liststore.clear()
 		self.places_paths = []
 		
-		#Get the needed GConf values
-		self.show_home = self.client.get_int('/apps/avant-window-navigator/applets/'+str(self.uid)+'/places_home',2)
-		self.show_local = self.client.get_int('/apps/avant-window-navigator/applets/'+str(self.uid)+'/places_local',2)
-		self.show_network = self.client.get_int('/apps/avant-window-navigator/applets/'+str(self.uid)+'/places_network',2)
-		self.show_bookmarks = self.client.get_int('/apps/avant-window-navigator/applets/'+str(self.uid)+'/places_bookmarks',2)
+		#Get the needed awncc values
+		self.show_home = self.client.get_int('places_home',2)
+		self.show_local = self.client.get_int('places_local',2)
+		self.show_network = self.client.get_int('places_network',2)
+		self.show_bookmarks = self.client.get_int('places_bookmarks',2)
 		
 		#Now make the actual mounted items. First: Home Folder
 		if self.show_home==2:
@@ -179,9 +179,9 @@ class App (awn.AppletSimple):
 				z2 = []
 				for z3 in z:
 					z2.extend(z3.split('\t'))
-				print "abc:", z2
+				#print "abc:", z2
 				if z2[2] == 'smbfs':
-					print "SMBFS:", z2
+					#print "SMBFS:", z2
 					self.network_paths.append('smb:'+z2[0])
 					self.network_corr_hnames.append(z2[0].split(':')[-1].split('/')[-1]+\
 						' on '+z2[0].split('/')[2])
@@ -265,7 +265,7 @@ class App (awn.AppletSimple):
 		
 		#Go through the list of network drives/etc. from /etc/fstab
 		if self.show_network==2:
-			print self.network_paths
+			#print self.network_paths
 			if os.path.isdir(os.path.expanduser('~/.gvfs')):
 				for x in os.listdir(os.path.expanduser('~/.gvfs')):
 					try:
@@ -370,9 +370,9 @@ class App (awn.AppletSimple):
 			except:
 				return string.split('/')[-1].replace('%20',' ')
 	
-	#Function to do what should be done according to gconf when the treeview is clicked
+	#Function to do what should be done according to awncc when the treeview is clicked
 	def treeview_clicked(self,widget,event):
-		self.open_clicked = self.client.get_int('/apps/avant-window-navigator/applets/'+str(self.uid)+'/places_open',2)
+		self.open_clicked = self.client.get_int('places_open',2)
 		self.selection = self.treeview.get_selection()
 		if self.open_clicked==2:
 			self.dialog.hide()
@@ -401,48 +401,48 @@ class App (awn.AppletSimple):
 		self.curr_button = button
 		
 		#Get whether to focus the entry when displaying the dialog or not
-		self.gconf_focus = self.client.get_int('/apps/avant-window-navigator/applets/'+str(self.uid)+'/focus_entry',2)
+		self.awncc_focus = self.client.get_int('focus_entry',2)
 		
 		if button==1: #Left mouse button
 		#Get the value for the left mouse button to automatically open. Create and default to 1 the entry if it doesn't exist
 		#Also get the default directory or default to ~
-			self.gconf_lmb = self.client.get_int('/apps/avant-window-navigator/applets/'+str(self.uid)+'/lmb',1)
-			self.gconf_lmb_path = self.client.get_string('/apps/avant-window-navigator/applets/'+str(self.uid)+'/lmb_path',\
+			self.awncc_lmb = self.client.get_int('lmb',1)
+			self.awncc_lmb_path = self.client.get_string('lmb_path',\
 			os.path.expanduser('~'))
 		
 		elif button==2: #Middle mouse button
 		#Get the value for the middle mouse button to automatically open. Create and default to 2 the entry if it doesn't exist
 		#Also get the default directory or default to ~
-			self.gconf_mmb = self.client.get_int('/apps/avant-window-navigator/applets/'+str(self.uid)+'/mmb',2)
-			self.gconf_mmb_path = self.client.get_string('/apps/avant-window-navigator/applets/'+str(self.uid)+'/mmb_path',\
+			self.awncc_mmb = self.client.get_int('mmb',2)
+			self.awncc_mmb_path = self.client.get_string('mmb_path',\
 			os.path.expanduser('~'))
 		
-		#Now get the chosen program for file browsing from gconf
-		self.gconf_fb = self.client.get_string('/apps/avant-window-navigator/applets/'+str(self.uid)+'/fb','xdg-open')
+		#Now get the chosen program for file browsing from awncc
+		self.awncc_fb = self.client.get_string('fb','xdg-open')
 		
 		#Left mouse button - either popup with correct path or launch correct path OR do nothing
 		if button==1:
-			if self.gconf_lmb==1:
-				self.entry.set_text(self.gconf_lmb_path)
+			if self.awncc_lmb==1:
+				self.entry.set_text(self.awncc_lmb_path)
 				self.add_places()
-				if self.gconf_focus==2:
+				if self.awncc_focus==2:
 					self.entry.grab_focus()
 					self.entry.set_position(-1)
 				self.dialog.show_all()
-			elif self.gconf_lmb==2:
-				self.launch_fb(None,self.gconf_lmb_path)
+			elif self.awncc_lmb==2:
+				self.launch_fb(None,self.awncc_lmb_path)
 		
 		#Right mouse button - either popup with correct path or launch correct path OR do nothing
 		if button==2:
-			if self.gconf_mmb==1:
-				self.entry.set_text(self.gconf_mmb_path)
+			if self.awncc_mmb==1:
+				self.entry.set_text(self.awncc_mmb_path)
 				self.add_places()
-				if self.gconf_focus==2:
+				if self.awncc_focus==2:
 					self.entry.grab_focus()
 					self.entry.set_position(-1)
 				self.dialog.show_all()
-			elif self.gconf_mmb==2:
-				self.launch_fb(None,self.gconf_mmb_path)
+			elif self.awncc_mmb==2:
+				self.launch_fb(None,self.awncc_mmb_path)
 	
 	#If the user hits the enter key on the main part OR the number pad
 	def detect_enter(self,a,event):
@@ -456,15 +456,15 @@ class App (awn.AppletSimple):
 			path = self.entry.get_text()
 		
 		#Get the file browser app, or set to xdg-open if it's not set
-		self.gconf_fb = self.client.get_string('/apps/avant-window-navigator/applets/'+str(self.uid)+'/fb','xdg-open')
+		self.awncc_fb = self.client.get_string('fb','xdg-open')
 		
 		#In case there is nothing but whitespace (or at all) in the entry widget
 		if path.replace(' ','')=='':
 			path = os.path.expanduser('~')
 		
 		#Launch file browser at path
-		print "Running:", self.gconf_fb+' '+path.replace(' ','\ ')
-		subprocess.Popen(self.gconf_fb+' '+path.replace(' ','\ '),shell=True)
+		#print "Running:", self.awncc_fb+' '+path.replace(' ','\ ')
+		subprocess.Popen(self.awncc_fb+' '+path.replace(' ','\ '),shell=True)
 	
 	#The applet's height has changed - update the reference
 	def height_changed(self,applet,height):
@@ -474,7 +474,7 @@ class App (awn.AppletSimple):
 	def icon_theme_changed(self,*args):
 		
 		#Check if the current icon is to use the stock folder icon
-		if self.client.get_string('/apps/avant-window-navigator/applets/'+str(self.uid)+'/icon','default') in\
+		if self.client.get_string('icon','default') in\
 			['theme','','/dev/null']:
 				
 				#It is; update the icon at the right size

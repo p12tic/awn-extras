@@ -103,7 +103,7 @@ class PreferenceDialog(gtk.Window):
         vbox1 = gtk.VBox(True, 0)
         label1 = gtk.Label("Logout command:")
         self.logout_command = gtk.Entry(max=0)
-        self.logout_command.set_text(applet.command)
+        self.logout_command.set_text(applet.logout_command)
         vbox1.pack_start(label1)
         vbox1.pack_end(self.logout_command)
         vbox.pack_start(vbox1,True,False,2)

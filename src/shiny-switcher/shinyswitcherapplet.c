@@ -112,45 +112,60 @@ static void config_get_color (AwnConfigClient *client, const gchar *key, AwnColo
 
 }
 
+#define GET_VALUE(val,default,type,conf,group,key,err)                    \
+                                            \
+                    do {            \
+                        val=awn_config_client_get_##type(conf,group,key,&err);  \
+                        if (err)                \
+                        {                       \
+                            g_warning("Shinyswitcher: error retrieving key (%s). error = %s\n",key,err->message);   \
+                            g_error_free(err);   \
+                            err=NULL;            \
+                            val=default;         \
+                        }                       \
+                    }while(0)
+                
+
 void init_config(Shiny_switcher *shinyswitcher)
 {
+    GError  *error=NULL;
 	shinyswitcher->config                   = awn_config_client_new_for_applet ("shinyswitcher", NULL);
-	shinyswitcher->rows                     = awn_config_client_get_int   (shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
-	                                                                       CONFIG_ROWS, NULL);
-	shinyswitcher->cols                     = awn_config_client_get_int   (shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
-	                                                                       CONFIG_COLUMNS, NULL);
-	shinyswitcher->wallpaper_alpha_active   = awn_config_client_get_float (shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
-	                                                                       CONFIG_WALLPAPER_ALPHA_ACTIVE, NULL);
-	shinyswitcher->wallpaper_alpha_inactive	= awn_config_client_get_float (shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
-	                                                                       CONFIG_WALLPAPER_ALPHA_INACTIVE, NULL);
-	shinyswitcher->applet_scale             = awn_config_client_get_float (shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
-	                                                                       CONFIG_APPLET_SCALE,NULL);
-	shinyswitcher->scale_icon_mode          = awn_config_client_get_int   (shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
-	                                                                       CONFIG_SCALE_ICON_MODE, NULL);
-	shinyswitcher->scale_icon_factor        = awn_config_client_get_float (shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
-	                                                                       CONFIG_SCALE_ICON_FACTOR, NULL);
-	shinyswitcher->show_icon_mode           = awn_config_client_get_int   (shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
-	                                                                       CONFIG_SHOW_ICON_MODE, NULL);
-	shinyswitcher->win_grab_mode            = awn_config_client_get_int   (shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
-	                                                                       CONFIG_WIN_GRAB_MODE, NULL);
-	shinyswitcher->win_grab_method          = awn_config_client_get_int   (shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
-	                                                                       CONFIG_WIN_GRAB_METHOD, NULL);
-	shinyswitcher->win_active_icon_alpha    = awn_config_client_get_float (shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
-	                                                                       CONFIG_WIN_ACTIVE_ICON_ALPHA, NULL);
-	shinyswitcher->win_inactive_icon_alpha  = awn_config_client_get_float (shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
-	                                                                       CONFIG_WIN_INACTIVE_ICON_ALPHA, NULL);
-	shinyswitcher->mousewheel               = awn_config_client_get_int   (shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
-	                                                                       CONFIG_MOUSEWHEEL, NULL);
-	shinyswitcher->cache_expiry             = awn_config_client_get_int   (shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
-	                                                                       CONFIG_CACHE_EXPIRY, NULL);
-	shinyswitcher->scale_icon_pos           = awn_config_client_get_int   (shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
-	                                                                       CONFIG_SCALE_ICON_POSITION, NULL);
-	shinyswitcher->applet_border_width      = awn_config_client_get_int   (shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
-	                                                                       CONFIG_APPLET_BORDER_WIDTH , NULL);
-	shinyswitcher->grab_wallpaper           = awn_config_client_get_bool  (shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
-	                                                                       CONFIG_GRAB_WALLPAPER, NULL);
-    shinyswitcher->do_queue_freq            = awn_config_client_get_int   (shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
-	                                                                       CONFIG_QUEUED_RENDER_FREQ , NULL);
+    GET_VALUE (shinyswitcher->rows,2,int,shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+	                                                                       CONFIG_ROWS, error);    
+	GET_VALUE (shinyswitcher->cols,3,int,shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+	                                                                       CONFIG_COLUMNS, error);
+	GET_VALUE (shinyswitcher->wallpaper_alpha_active,0.9,float,shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+	                                                                       CONFIG_WALLPAPER_ALPHA_ACTIVE, error);
+	GET_VALUE (shinyswitcher->wallpaper_alpha_inactive,0.6,float,shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+	                                                                       CONFIG_WALLPAPER_ALPHA_INACTIVE, error);
+	GET_VALUE (shinyswitcher->applet_scale,0.95,float,shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+	                                                                       CONFIG_APPLET_SCALE,error);
+	GET_VALUE (shinyswitcher->scale_icon_mode,2,int,shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+	                                                                       CONFIG_SCALE_ICON_MODE, error);
+	GET_VALUE (shinyswitcher->scale_icon_factor,0.8,float,shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+	                                                                       CONFIG_SCALE_ICON_FACTOR, error);
+	GET_VALUE (shinyswitcher->show_icon_mode,3,int,shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+	                                                                       CONFIG_SHOW_ICON_MODE, error);
+	GET_VALUE (shinyswitcher->win_grab_mode,3,int,shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+	                                                                       CONFIG_WIN_GRAB_MODE, error);
+	GET_VALUE (shinyswitcher->win_grab_method,0,int,shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+	                                                                       CONFIG_WIN_GRAB_METHOD, error);
+	GET_VALUE (shinyswitcher->win_active_icon_alpha,0.65,float,shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+	                                                                       CONFIG_WIN_ACTIVE_ICON_ALPHA, error);
+	GET_VALUE (shinyswitcher->win_inactive_icon_alpha,1.0,float,shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+	                                                                       CONFIG_WIN_INACTIVE_ICON_ALPHA, error);
+	GET_VALUE (shinyswitcher->mousewheel,1,int,shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+	                                                                       CONFIG_MOUSEWHEEL, error);
+	GET_VALUE (shinyswitcher->cache_expiry,7,int,shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+	                                                                       CONFIG_CACHE_EXPIRY, error);
+	GET_VALUE (shinyswitcher->scale_icon_pos,3,int,shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+	                                                                       CONFIG_SCALE_ICON_POSITION, error);
+	GET_VALUE (shinyswitcher->applet_border_width,1,int,shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+	                                                                       CONFIG_APPLET_BORDER_WIDTH , error);
+	GET_VALUE (shinyswitcher->grab_wallpaper,TRUE,bool,shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+	                                                                       CONFIG_GRAB_WALLPAPER, error);
+    GET_VALUE (shinyswitcher->do_queue_freq,1000,int,shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+	                                                                       CONFIG_QUEUED_RENDER_FREQ , error);
 
 	config_get_color (shinyswitcher->config, CONFIG_APPLET_BORDER_COLOUR, &shinyswitcher->applet_border_colour);
 	config_get_color (shinyswitcher->config, CONFIG_DESKTOP_COLOUR,       &shinyswitcher->desktop_colour);

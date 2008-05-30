@@ -14,5 +14,6 @@ shinyswitcher_la_SOURCES =	\
 shinyswitcher_la_LIBADD =	\
 	$(AWN_LIBS)		\
 	$(SHINY_SWITCHER_LIBS)	\
+	$(top_builddir)/src/libawn-extras/libawn-extras.la	\
 	$(NULL)
 shinyswitcher_la_LDFLAGS = $(APPLET_LINKER_FLAGS)

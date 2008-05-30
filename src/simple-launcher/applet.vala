@@ -307,7 +307,7 @@ class LauncherApplet : AppletSimple
     private void build_right_click()
     {
         Gtk.MenuItem   menu_item;
-        right_menu=new Menu();
+        right_menu=(Gtk.Menu) create_default_menu();  //FIXME typecast bad.        
 
         menu_item=new MenuItem.with_label ("Edit Launcher");        
         right_menu.append(menu_item);

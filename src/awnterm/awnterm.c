@@ -57,7 +57,7 @@ gboolean icon_clicked_cb (GtkWidget *widget, GdkEventButton *event, gpointer nul
 			// Create the popup menu if we haven't already done so
 			if (applet->menu == NULL)
 			{
-				applet->menu = create_popup_menu ();
+				applet->menu = create_popup_menu (applet);
 			}
 			gtk_menu_popup (GTK_MENU (applet->menu), NULL, NULL, NULL, NULL, 3, event->time);
 			break;

@@ -30,7 +30,7 @@
 #include "awnterm.h"
 
 // Create the right click popup menu.
-GtkWidget* create_popup_menu ();
+GtkWidget* create_popup_menu (AwnTerm *applet);
 
 // Shows the about box which is currently empty :)
 void show_about ();

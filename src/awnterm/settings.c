@@ -32,12 +32,12 @@ static void set_opacity (AwnTerm *applet, gfloat opacity);
 static void set_bg_img (AwnTerm *applet, gchar *path);
 static void set_hide_on_unfocus (AwnTerm *applet, gboolean value);
 
-GtkWidget* create_popup_menu ()
+GtkWidget* create_popup_menu (AwnTerm *applet)
 {
 	GtkWidget *menu;
 	GtkWidget *menuitem;
 	
-	menu = gtk_menu_new ();
+	menu = awn_applet_create_default_menu (applet->applet);
 	
 	menuitem = gtk_menu_item_new_with_label ("Preferences");
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);

@@ -42,9 +42,7 @@ _send_dialog_response (GtkEntry *entry, GtkDialog *dialog)
 }
 
 static gboolean
-_show_location_dialog (GtkWidget      *widget,
-                       GdkEventButton *event,
-                       WebApplet      *webapplet)
+_show_location_dialog (GtkMenuItem *menuitem,WebApplet *webapplet)
 {
   static gboolean done_once = FALSE;
   static GtkWidget *location_dialog;
@@ -102,6 +100,7 @@ _button_clicked_event (GtkWidget      *widget,
                        GdkEventButton *event,
                        WebApplet      *webapplet)
 {
+  static GtkWidget *menu=NULL;
   GdkEventButton *event_button;
   event_button = (GdkEventButton *)event;
   if (event->button == 1)
@@ -119,7 +118,6 @@ _button_clicked_event (GtkWidget      *widget,
   }
   else if (event->button == 3)
   {
-    static GtkWidget *menu=NULL;
     if (!menu)
     {
       GtkWidget *item;
@@ -127,7 +125,7 @@ _button_clicked_event (GtkWidget      *widget,
       gtk_menu_set_screen (GTK_MENU (menu), NULL);
       if (config_get_enable_location_dialog(webapplet))
       {        
-        item = gtk_image_menu_item_new_with_label ("Open Location");
+        item = gtk_image_menu_item_new_with_label (_("Open Location"));
         gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),
                                        gtk_image_new_from_stock (GTK_STOCK_OPEN,
                                                           GTK_ICON_SIZE_MENU));

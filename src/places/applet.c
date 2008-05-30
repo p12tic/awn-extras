@@ -1388,24 +1388,19 @@ static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, 
   }
   else if (event->button == 3)
   {
-    static gboolean done_once = FALSE;
-    static GtkWidget * menu;
+    static GtkWidget * menu=NULL;
     static GtkWidget * item;
 
-    if (!done_once)
+    if (!menu)
     {
-      menu = gtk_menu_new();
+      menu = awn_applet_create_default_menu(places->applet);
       item = gtk_menu_item_new_with_label("Preferences");
       gtk_widget_show(item);
       gtk_menu_set_screen(GTK_MENU(menu), NULL);
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
       g_signal_connect(G_OBJECT(item), "button-press-event", G_CALLBACK(_show_prefs), places);
-      done_once = TRUE;
     }
-
-    gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL,
-
-                   event_button->button, event_button->time);
+    gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL,event_button->button, event_button->time);
   }
 
   return TRUE;

@@ -66,6 +66,7 @@ class App(awn.AppletSimple):
         self.height = height
         self.size = height
         self.set_icon(get_icon(_location + 'Icons/feed-icon.svg', self.size))
+        self.updated = True
         self.connect("button-press-event", self.clicked ,) # set icon clicks
         self.get_feeds()
     def get_feeds(self):
@@ -79,23 +80,30 @@ class App(awn.AppletSimple):
         """
         if event.button == 1:
             # Primary click to launch the feed list/menu
-            menu = menus.RssMenu()
-            #build that menu's children
-            menu.build_children(self.feeds, self)
-            menu.popup(None, None, None, event.button, event.time)
+            if hasattr(self, 'menu') == False:
+                self.menu = menus.RssMenu()
+            if self.updated == True:
+                self.menu = menus.RssMenu()
+                #build that menu's children
+                self.menu.build_children(self.feeds, self)
+            self.menu.popup(None, None, None, event.button, event.time)
+            self.updated = False
         elif event.button == 3:
             # Right click to show option menu
-            lol = menus.OptionMenu(self)
-            lol.popup(None, None, None, event.button, event.time)
+            if hasattr(self, 'option_menu') == False:
+                self.option_menu = menus.OptionMenu(self)
+            self.option_menu.popup(None, None, None, event.button, event.time)
         else:
-            print event.button
-            for feed in self.feeds:
-                feed.update_feed()
+            pass
+            #print event.button
+            #for feed in self.feeds:
+                #feed.update_feed()
             
     def clicks(self, widget, url, feed, index, feedindex):
         """
         Handles the feed clicks by launching the browser
         """
+        widget.set_image(gtk.Image())
         os.system("xdg-open %s &" % url) # Opens the url in your browser
         self.feeds[feedindex].get_entries()[index]['read'] = True # Metadata for future support
 

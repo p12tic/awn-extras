@@ -91,8 +91,9 @@ class OptionMenu(gtk.Menu):
     """
     Draws the option window normally shown when you right click
     """
-    def __init__(self, *args):
+    def __init__(self, applet, *args):
         super(OptionMenu, self).__init__()
+        self.applet = applet
         AddFeedItem = MenuItem('Add Feed')
         self.append(AddFeedItem)
         ConfigWindowItem = MenuItem('Config Window')
@@ -113,5 +114,6 @@ class OptionMenu(gtk.Menu):
         """
         Updates the feeds by replacing them  with a new set
         """
-        self.args[-1].Database.update_feeds(arssconfig.get_feeds())
-        self.args[-1].feeds = self.args[-1].Database.get_feed_objects()
+        self.applet.Database.update_feeds(arssconfig.get_feeds())
+        self.applet.feeds = self.applet.Database.get_feed_objects()
+        self.applet.updated = True

@@ -1665,6 +1665,7 @@ class LauncherApplet : AppletSimple
             }
             else if ( books.number()>1)
             {
+                button_dialog(2);
                 stdout.printf("Drag motion - multi\n");            
             }
             dnd_motion_last_time=time;                        
@@ -2021,7 +2022,7 @@ class LauncherApplet : AppletSimple
     private void build_right_click()
     {
         Gtk.MenuItem   menu_item;
-        right_menu=new Menu();
+        right_menu=(Gtk.Menu) create_default_menu();  //FIXME typecast bad.
 
         menu_item=new MenuItem.with_label ("Ungroup");        
         right_menu.append(menu_item);

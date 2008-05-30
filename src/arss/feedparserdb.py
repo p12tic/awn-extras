@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright (c) 2007-2008 Randal Barlow
+# Copyright (c) 2007-2008 Randal Barlow <im.tehk at gmail.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -42,7 +42,7 @@ Recommended: sqlalchemy 0.40, sqlite3
 """
 
 __version__ = "0.0.2" # base on revision 493 of awn-extras
-__license__ = """Copyright (c) 2007-2008 Randal Barlow
+__license__ = """Copyright (c) 2007-2008 Randal Barlow <im.tehk at gmail.com>
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public

@@ -1,7 +1,7 @@
 # !/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2007 Randal Barlow
+# Copyright (c) 2007 Randal Barlow <im.tehk at gmail.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public

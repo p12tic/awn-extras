@@ -19,7 +19,7 @@ source_c =	\
 	url.c		\
 	notify.c    \
 	config_shared.c \
-	shared_menus.c
+	shared_menuitems.c
 	
 libawn_extrasinc_HEADERS = \
 	$(source_h)

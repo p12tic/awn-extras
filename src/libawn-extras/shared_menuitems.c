@@ -26,15 +26,14 @@ typedef struct
 } PrefsLocation;  
 
 static gboolean 
-_start_applet_prefs(GtkWidget *widget, GdkEventButton *event, 
-                      PrefsLocation  * prefs_location)
-{
+_start_applet_prefs(GtkMenuItem *menuitem,PrefsLocation  * prefs_location)
+{ 
   GError *err = NULL;
   gchar * editor = "gconf-editor";  //temporary...
   gchar * folder = "/apps/avant-window-navigator/applets/"; //temporary
   gchar * cmdline;
   cmdline = g_strdup_printf("%s %s%s", editor, folder, prefs_location->instance);
-  g_printf("launching... %s\n", cmdline);
+  g_printf("1) launching... %s\n", cmdline);
   g_spawn_command_line_async(cmdline, &err);//FIXME
   if (err)
   {
@@ -46,16 +45,15 @@ _start_applet_prefs(GtkWidget *widget, GdkEventButton *event,
   if (prefs_location->base)
   {
     cmdline = g_strdup_printf("%s %s%s", editor, folder, prefs_location->base);
-    g_printf("launching... %s\n", cmdline);    
+    g_printf("2) launching... %s\n", cmdline);    
     g_spawn_command_line_async(cmdline, &err);//FIXME
     if (err)
     {
       g_warning("Failed to launch applet preferences dialog (%s): %s\n", cmdline, err->message);
       g_error_free(err);
     }
+    g_free(cmdline);    
   }
-  g_free(cmdline);
-  
   return TRUE;
 }
 
@@ -93,14 +91,14 @@ GtkWidget * shared_menuitem_create_applet_prefs(gchar * instance,
   GtkWidget * item = NULL;
   gchar * keysdir_copy = NULL;
   PrefsLocation  * prefs_location = g_malloc(sizeof(PrefsLocation));
-  prefs_location->instance = g_strdup(instance);
-  prefs_location->base = g_strdup(baseconf);
   
+  prefs_location->instance = g_strdup(instance);
+  prefs_location->base = baseconf?g_strdup(baseconf):NULL; 
   if (share_config_bool(SHR_KEY_GENERIC_PREFS))
   {
     item = gtk_image_menu_item_new_with_label("Applet Preferences");
     gtk_widget_show_all(item);
-    g_signal_connect(G_OBJECT(item), "button-press-event",
+    g_signal_connect(G_OBJECT(item), "activate",
                      G_CALLBACK(_start_applet_prefs), prefs_location);
     g_signal_connect(G_OBJECT(item), "destroy-event",
                      G_CALLBACK(_cleanup_applet_prefs_item), prefs_location);
@@ -109,5 +107,6 @@ GtkWidget * shared_menuitem_create_applet_prefs(gchar * instance,
   {
       g_warning("Generic Preferences Requested but support is not enabled in configuration\n");
   }
+ 
   return item;
 }

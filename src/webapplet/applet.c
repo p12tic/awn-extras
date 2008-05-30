@@ -112,8 +112,6 @@ _button_clicked_event (GtkWidget      *widget,
     else
     {
       gtk_widget_show_all (webapplet->mainwindow);
-//      webkit_web_view_open (WEBKIT_WEB_VIEW (webapplet->viewer),
-//                            "http://www.musicpd.org/");
     }
   }
   else if (event->button == 3)

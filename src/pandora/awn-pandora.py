@@ -49,7 +49,7 @@ class App (awn.AppletSimple):
     pad = gtk.Alignment()
     pad.add(self.moz)
     self.moz.set_size_request(640, 535)
-    self.moz.load_url('https://www.pandora.com/radio/tuner_8_4_0_0_pandora.swf')
+    self.moz.load_url('https://www.pandora.com/radio/tuner_8_5_0_0_pandora.swf')
     pad.show_all()
     self.dialog.add(pad)
 

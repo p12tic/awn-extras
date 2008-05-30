@@ -151,7 +151,7 @@ cpumeter_applet_new(AwnApplet *applet)
   g_signal_connect(G_OBJECT(cpumeter->applet), "leave-notify-event", G_CALLBACK(_leave_notify_event), (gpointer)cpumeter);
 
 
-  cpumeter->right_click_menu = gtk_menu_new();
+  cpumeter->right_click_menu = awn_applet_create_default_menu(applet);
   dashboard_build_clickable_menu_item(cpumeter->right_click_menu,
                                       G_CALLBACK(_set_icon_graph_fg), "Icon Foreground", (gpointer)cpumeter
                                      );

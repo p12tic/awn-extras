@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2007,2008  Rodney Cryderman    <rcryderman@gmail.com>
- # Copyright (c) 2007,2008 	Mark Lee 	        <avant-wn@lazymalevolence.com>
+ # Copyright (c) 2007,2008  Mark Lee          <avant-wn@lazymalevolence.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,11 +17,11 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA.
  *
 */
- 
- 
- #ifndef __PLACES_APPLET
- 
+
+
+#ifndef __PLACES_APPLET
+
 #define __PLACES_APPLET
 
 
-#endif 
+#endif

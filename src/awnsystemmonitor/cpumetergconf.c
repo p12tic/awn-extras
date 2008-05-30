@@ -22,12 +22,12 @@
 #include <string.h>
 #include <glib/gmacros.h>
 #include <glib/gerror.h>
-#include <gconf/gconf-value.h> 
+#include <gconf/gconf-value.h>
 
 #include <libawn/awn-applet.h>
 #include <glib/gmacros.h>
 #include <glib/gerror.h>
-#include <gconf/gconf-value.h> 
+#include <gconf/gconf-value.h>
 
 #include <libawn/awn-cairo-utils.h>
 
@@ -37,71 +37,82 @@
 void cpumeter_gconf_event(GConfClient* client, guint cxnid, GConfEntry* entry, gpointer user_data);
 void cpumeter_gconf_get_color(GConfClient* client, AwnColor* color, gchar* key, gchar* def);
 gfloat cpumeter_gconf_get_border_width(GConfClient* client);
-gboolean cpumeter_gconf_use_gradient (GConfClient* client);
+gboolean cpumeter_gconf_use_gradient(GConfClient* client);
 gboolean cpumeter_gconf_do_subtitle(GConfClient* client);
-guint cpumeter_gconf_get_update_frequency (GConfClient* client);
+guint cpumeter_gconf_get_update_frequency(GConfClient* client);
 
 /**
  * Initializes the GConf stuff
  */
-void cpumeter_gconf_init(CpuMeter* cpumeter) {
-  cpumeter->client = gconf_client_get_default();    
+void cpumeter_gconf_init(CpuMeter* cpumeter)
+{
+  cpumeter->client = gconf_client_get_default();
   // TODO - Add Callback for updates
-  gconf_client_add_dir( cpumeter->client, GCONF_PATH, GCONF_CLIENT_PRELOAD_NONE, NULL );
-  gconf_client_notify_add( cpumeter->client, GCONF_PATH, cpumeter_gconf_event, cpumeter, NULL, NULL ); 
+  gconf_client_add_dir(cpumeter->client, GCONF_PATH, GCONF_CLIENT_PRELOAD_NONE, NULL);
+  gconf_client_notify_add(cpumeter->client, GCONF_PATH, cpumeter_gconf_event, cpumeter, NULL, NULL);
 }
 
 /**
  * GConf callback, receives notifications of configuration changes.
  */
-void cpumeter_gconf_event(GConfClient* client, guint cxnid, GConfEntry* entry, gpointer user_data) {
+void cpumeter_gconf_event(GConfClient* client, guint cxnid, GConfEntry* entry, gpointer user_data)
+{
   CpuMeter* cpumeter = (CpuMeter*)user_data;
 
   // Re-read everything instead of trying to figure out what changed.
-  cpumeter_gconf_get_color( client, &cpumeter->bg, GCONF_BG_COLOR, GCONF_DEFAULT_BG_COLOR );
-  cpumeter_gconf_get_color( client, &cpumeter->graph, GCONF_GRAPH_COLOR, GCONF_DEFAULT_GRAPH_COLOR );
-  cpumeter_gconf_get_color( client, &cpumeter->border, GCONF_BORDER_COLOR, GCONF_DEFAULT_BORDER_COLOR );
+  cpumeter_gconf_get_color(client, &cpumeter->bg, GCONF_BG_COLOR, GCONF_DEFAULT_BG_COLOR);
+  cpumeter_gconf_get_color(client, &cpumeter->graph, GCONF_GRAPH_COLOR, GCONF_DEFAULT_GRAPH_COLOR);
+  cpumeter_gconf_get_color(client, &cpumeter->border, GCONF_BORDER_COLOR, GCONF_DEFAULT_BORDER_COLOR);
   cpumeter->border_width = cpumeter_gconf_get_border_width(client);
   cpumeter->do_gradient = cpumeter_gconf_use_gradient(client);
   cpumeter->do_subtitle = cpumeter_gconf_do_subtitle(client);
-  cpumeter->update_freq = cpumeter_gconf_get_update_frequency (client);
+  cpumeter->update_freq = cpumeter_gconf_get_update_frequency(client);
 
 #if 0
-/*this is causing strange issues with the render function - removing */
-  if (cpumeter->timer_id != -1) {
+  /*this is causing strange issues with the render function - removing */
+
+  if (cpumeter->timer_id != -1)
+  {
     g_source_remove(cpumeter->timer_id);
   }
 
   cpumeter->timer_id = g_timeout_add(cpumeter->update_freq, (GSourceFunc*)cpu_meter_render, cpumeter);
-#endif   
+
+#endif
 }
 
 /**
  * Gets a color component from gconf
  */
-void cpumeter_gconf_get_color( GConfClient* client, AwnColor* color, gchar* key, gchar* def ) {
-  gchar *value = gconf_client_get_string( client, key, NULL );
+void cpumeter_gconf_get_color(GConfClient* client, AwnColor* color, gchar* key, gchar* def)
+{
+  gchar *value = gconf_client_get_string(client, key, NULL);
 
-  if ( !value ) {
-    gconf_client_set_string( client, key, def, NULL );
-    value = g_strdup( def );
+  if (!value)
+  {
+    gconf_client_set_string(client, key, def, NULL);
+    value = g_strdup(def);
   }
 
-  awn_cairo_string_to_color( value, color );
+  awn_cairo_string_to_color(value, color);
 }
 
 /**
  * Gets the border width
  */
-gfloat cpumeter_gconf_get_border_width(GConfClient* client) {
+gfloat cpumeter_gconf_get_border_width(GConfClient* client)
+{
   gfloat width;
-  GConfValue *value = gconf_client_get(client, GCONF_BORDER_WIDTH, NULL );
+  GConfValue *value = gconf_client_get(client, GCONF_BORDER_WIDTH, NULL);
 
-  if ( value ) {
-    width = gconf_client_get_float(client, GCONF_BORDER_WIDTH, NULL );
-  } else {
+  if (value)
+  {
+    width = gconf_client_get_float(client, GCONF_BORDER_WIDTH, NULL);
+  }
+  else
+  {
     width = GCONF_DEFAULT_BORDER_WIDTH;
-    gconf_client_set_float( client, GCONF_BORDER_WIDTH, GCONF_DEFAULT_BORDER_WIDTH, NULL );
+    gconf_client_set_float(client, GCONF_BORDER_WIDTH, GCONF_DEFAULT_BORDER_WIDTH, NULL);
   }
 
   return width;
@@ -111,15 +122,19 @@ gfloat cpumeter_gconf_get_border_width(GConfClient* client) {
 /**
  * Should we do the pretty gradient on the graph.
  */
-gboolean cpumeter_gconf_use_gradient(GConfClient* client) {
+gboolean cpumeter_gconf_use_gradient(GConfClient* client)
+{
   gboolean do_gradient;
-  GConfValue *value = gconf_client_get(client, GCONF_DO_GRADIENT, NULL );
+  GConfValue *value = gconf_client_get(client, GCONF_DO_GRADIENT, NULL);
 
-  if ( value ) {
-    do_gradient = gconf_client_get_bool(client, GCONF_DO_GRADIENT, NULL );
-  } else {
+  if (value)
+  {
+    do_gradient = gconf_client_get_bool(client, GCONF_DO_GRADIENT, NULL);
+  }
+  else
+  {
     do_gradient = GCONF_DEFAULT_DO_GRADIENT;
-    gconf_client_set_bool(client, GCONF_DO_GRADIENT, GCONF_DEFAULT_DO_GRADIENT, NULL );
+    gconf_client_set_bool(client, GCONF_DO_GRADIENT, GCONF_DEFAULT_DO_GRADIENT, NULL);
   }
 
   return do_gradient;
@@ -129,15 +144,19 @@ gboolean cpumeter_gconf_use_gradient(GConfClient* client) {
 /**
  * Should we do the CPU - nn% subtitle?
  */
-gboolean cpumeter_gconf_do_subtitle(GConfClient* client) {
+gboolean cpumeter_gconf_do_subtitle(GConfClient* client)
+{
   gboolean do_subtitle;
-  GConfValue *value = gconf_client_get(client, GCONF_DO_SUBTITLE, NULL );
+  GConfValue *value = gconf_client_get(client, GCONF_DO_SUBTITLE, NULL);
 
-  if ( value ) {
-    do_subtitle = gconf_client_get_bool(client, GCONF_DO_SUBTITLE, NULL );
-  } else {
+  if (value)
+  {
+    do_subtitle = gconf_client_get_bool(client, GCONF_DO_SUBTITLE, NULL);
+  }
+  else
+  {
     do_subtitle = GCONF_DEFAULT_DO_SUBTITLE;
-    gconf_client_set_bool(client, GCONF_DO_SUBTITLE, GCONF_DEFAULT_DO_SUBTITLE, NULL );
+    gconf_client_set_bool(client, GCONF_DO_SUBTITLE, GCONF_DEFAULT_DO_SUBTITLE, NULL);
   }
 
   return do_subtitle;
@@ -147,15 +166,19 @@ gboolean cpumeter_gconf_do_subtitle(GConfClient* client) {
 /**
  * Get the graph update frequency.
  */
-guint cpumeter_gconf_get_update_frequency (GConfClient* client) {
+guint cpumeter_gconf_get_update_frequency(GConfClient* client)
+{
   guint update_freq;
-  GConfValue *value = gconf_client_get(client, GCONF_UPDATE_FREQ, NULL );
+  GConfValue *value = gconf_client_get(client, GCONF_UPDATE_FREQ, NULL);
 
-  if ( value ) {
-    update_freq = gconf_client_get_int(client, GCONF_UPDATE_FREQ, NULL );
-  } else {
+  if (value)
+  {
+    update_freq = gconf_client_get_int(client, GCONF_UPDATE_FREQ, NULL);
+  }
+  else
+  {
     update_freq = GCONF_DEFAULT_UPDATE_FREQ;
-    gconf_client_set_int(client, GCONF_UPDATE_FREQ, GCONF_DEFAULT_UPDATE_FREQ, NULL );
+    gconf_client_set_int(client, GCONF_UPDATE_FREQ, GCONF_DEFAULT_UPDATE_FREQ, NULL);
   }
 
   return update_freq;

@@ -40,13 +40,15 @@
 /* Public functions */
 gboolean cpu_meter_render(gpointer data);
 
-enum {
+enum
+{
   CPU_TOTAL,
   CPU_USED,
   N_CPU_STATES
 };
 
-typedef struct {
+typedef struct
+{
   guint num_cpus;
   gfloat data[NUM_POINTS];
   guint index;
@@ -61,12 +63,13 @@ typedef struct {
 #define ARC 8
 
 /* Applet struct */
+
 typedef struct
 {
   AwnApplet *applet;
   LoadGraph *loadgraph;
 
-  Dashboard	dashboard;
+  Dashboard dashboard;
   Awntop    awntop;
   void *    cpu_plug;
   void *    uptime_plug;
@@ -74,7 +77,7 @@ typedef struct
   void *    date_time_plug;
   void *    loadavg_plug;
   void *    sysmem_plug;
-  
+
   guint size;
   guint new_size;
   GtkOrientation orient;
@@ -88,9 +91,9 @@ typedef struct
   /* Effect stuff */
   guint height;
   guint width;
-  
+
   gint y_offset;
-	gboolean show_title;
+  gboolean show_title;
 
   /* Configuration Data */
   GConfClient* client;
@@ -101,11 +104,11 @@ typedef struct
   gboolean do_gradient;
   gboolean do_subtitle;
   guint update_freq;
-	gboolean doneonce;
-    GtkWidget*  right_click_menu;
+  gboolean doneonce;
+  GtkWidget*  right_click_menu;
 }CpuMeter;
 
 // Applet
-CpuMeter* cpumeter_applet_new (AwnApplet *applet);
+CpuMeter* cpumeter_applet_new(AwnApplet *applet);
 
 #endif /*CPUMETERAPPLET_H_*/

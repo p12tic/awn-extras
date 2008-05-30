@@ -28,10 +28,10 @@
 #include <libawn/awn-cairo-utils.h>
 
 void cpumeter_gconf_init(CpuMeter* cpumeter);
-void cpumeter_gconf_get_color( AwnApplet* applet, AwnColor* color, gchar* key, gchar* def );
-gfloat cpumeter_gconf_get_border_width( AwnApplet* applet );
-gboolean cpumeter_gconf_use_gradient (AwnApplet* applet);
+void cpumeter_gconf_get_color(AwnApplet* applet, AwnColor* color, gchar* key, gchar* def);
+gfloat cpumeter_gconf_get_border_width(AwnApplet* applet);
+gboolean cpumeter_gconf_use_gradient(AwnApplet* applet);
 gboolean cpumeter_gconf_do_subtitle(CpuMeter* cpumeter);
-guint cpumeter_gconf_get_update_frequency (AwnApplet* applet);
+guint cpumeter_gconf_get_update_frequency(AwnApplet* applet);
 
 #endif  /* __CPUMETER_GCONF_H__ */

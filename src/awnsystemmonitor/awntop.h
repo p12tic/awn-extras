@@ -19,52 +19,52 @@
 
 #ifndef Awntop_H_
 #define Awntop_H_
- 
+
 #include <libawn/awn-applet.h>
 #include <libawn/awn-cairo-utils.h>
 #include <libawn/awn-title.h>
- 
+
 #include <glib.h>
 #include <gtk/gtk.h>
- 
+
 
 typedef struct
 {
-    long     pid;
-    int     uid;
-    int     pri;
-    int     nice;
-    long    virt;
-    long    res;
-    long    shr;
-    long     cpu;
-    long     mem;
-    long    time;
-    char    cmd[40];  
+  long     pid;
+  int     uid;
+  int     pri;
+  int     nice;
+  long    virt;
+  long    res;
+  long    shr;
+  long     cpu;
+  long     mem;
+  long    time;
+  char    cmd[40];
 }Topentry;
 
 
 
 typedef struct
 {
-	guint	updateinterval;
-	gboolean   forceupdatefixup;
-	guint    accum_interval;
-	int maxtopentries;
-    int     (*compar)(const void *, const void *);
-    long    *   displayed_pid_list;
-    GTree*  proctimes;
-    GTree*  icons;    
-    GTree*  pixbufs;
-    Topentry **topentries;  	
-    int num_top_entries;    
-	int filterlevel;  
-	glibtop_mem libtop_mem;	
-	
-	void (*redraw_window_fn) (void *);
-	void * redraw_window_data;
+  guint updateinterval;
+  gboolean   forceupdatefixup;
+  guint    accum_interval;
+  int maxtopentries;
+  int (*compar)(const void *, const void *);
+  long    *   displayed_pid_list;
+  GTree*  proctimes;
+  GTree*  icons;
+  GTree*  pixbufs;
+  Topentry **topentries;
+  int num_top_entries;
+  int filterlevel;
+  glibtop_mem libtop_mem;
+
+  void (*redraw_window_fn)(void *);
+  void * redraw_window_data;
 }Awntop;
 
 void * awntop_plug_lookup(int fn_id);
- 
+
 #endif

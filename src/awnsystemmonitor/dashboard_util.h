@@ -16,7 +16,7 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
- 
+
 
 #ifndef DASHBOARD_UTIL_H_
 #define DASHBOARD_UTIL_H_
@@ -48,42 +48,42 @@ typedef struct
 
 typedef struct
 {
-    GdkPixmap *pixmap;
-    cairo_t *cr;
-    GdkColormap* cmap;    
+  GdkPixmap *pixmap;
+  cairo_t *cr;
+  GdkColormap* cmap;
 
 }dashboard_cairo_widget;
 
-void draw_pie_graph(cairo_t *cr,double x,double y, double radius, double start, double * values, AwnColor * colours,int numel);
+void draw_pie_graph(cairo_t *cr, double x, double y, double radius, double start, double * values, AwnColor * colours, int numel);
 
-void pick_awn_color(AwnColor * awncolour,const char *mess,void * arb_data, void (*notify_color_change)(void *));
-    
+void pick_awn_color(AwnColor * awncolour, const char *mess, void * arb_data, void (*notify_color_change)(void *));
+
 void set_dashboard_gconf(GConfClient* p);
 GConfClient* get_dashboard_gconf(void);
 
 void set_fg_rbg(GdkColor *);
 void set_bg_rbg(GdkColor *);
-    
+
 void get_fg_rgb_colour(rgb_colour *);
 void get_fg_rgba_colour(rgba_colour *);
 void get_bg_rgb_colour(rgb_colour *);
 void get_bg_rgba_colour(rgba_colour *);
 
 void use_bg_rgb_colour(cairo_t * cr);
-void use_bg_rgba_colour(cairo_t * cr);    
-void use_fg_rgb_colour(cairo_t * cr);    
-void use_fg_rgba_colour(cairo_t * cr);        
+void use_bg_rgba_colour(cairo_t * cr);
+void use_fg_rgb_colour(cairo_t * cr);
+void use_fg_rgba_colour(cairo_t * cr);
 
-GtkWidget * get_cairo_widget(dashboard_cairo_widget *,int width,int height);
+GtkWidget * get_cairo_widget(dashboard_cairo_widget *, int width, int height);
 
 void del_cairo_widget(dashboard_cairo_widget * d);
 
-float dashboard_get_font_size(int size); 
+float dashboard_get_font_size(int size);
 
 char * dashboard_cairo_colour_to_string(AwnColor * colour);
 
-GtkWidget * dashboard_build_clickable_menu_item(GtkWidget * menu, GCallback fn,char * mess,void *data);
-GtkWidget * dashboard_build_clickable_check_menu_item(GtkWidget * menu,GCallback fn,char * mess,void *data,gboolean state);
+GtkWidget * dashboard_build_clickable_menu_item(GtkWidget * menu, GCallback fn, char * mess, void *data);
+GtkWidget * dashboard_build_clickable_check_menu_item(GtkWidget * menu, GCallback fn, char * mess, void *data, gboolean state);
 
 void enable_suppress_hide_main(void);
 void disable_suppress_hide_main(void);
@@ -91,7 +91,7 @@ gboolean get_hide_main(void);
 
 gboolean toggle_boolean_menu(GtkWidget *widget, GdkEventButton *event, gboolean *p);
 
-void quick_message (gchar *message,GtkWidget * mainwin);
+void quick_message(gchar *message, GtkWidget * mainwin);
 
 /*void set_tiles_x(int x);
 void set_tiles_y(int y);
@@ -102,6 +102,6 @@ float get_tile_size_y(void);
 */
 
 
-#endif 
+#endif
 
 

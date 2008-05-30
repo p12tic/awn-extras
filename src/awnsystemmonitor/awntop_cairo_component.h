@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007 
+ * Copyright (c) 2007
  *                      Rodney (moonbeam) Cryderman <rcryderman@gmail.com>
  *
  * This library is free software; you can redistribute it and/or

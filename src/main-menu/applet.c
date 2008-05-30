@@ -341,11 +341,26 @@ on_icon_clicked (GtkWidget *eb,
                  GdkEventButton *event,
                  Menu *app)
 {
-  if(!GTK_WIDGET_VISIBLE(app->window)) {
-  app->root = gmenu_tree_get_root_directory (app->tree);
-  populate (app);
-  } else {
-  	gtk_widget_hide(app->window);
+  if (event->button == 1)
+  {
+    if(!GTK_WIDGET_VISIBLE(app->window)) {
+      app->root = gmenu_tree_get_root_directory (app->tree);
+      populate (app);
+    } else {
+    	gtk_widget_hide(app->window);
+    }
+  }
+  else if (event->button == 3)
+  {
+    static GtkWidget * menu=NULL;
+    static GtkWidget * item;
+
+    if (!menu)
+    {
+      menu = awn_applet_create_default_menu (app->applet);
+    }
+    gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL,event->button, 
+                   event->time);
   }
 }
 
@@ -399,7 +414,8 @@ awn_applet_factory_initp (const gchar * uid, gint orient, gint height )
 {
   AwnApplet *applet = AWN_APPLET (awn_applet_simple_new (uid, orient, height));
   Menu      *app = menu =  g_new0 (Menu, 1);
- 
+  app->applet = applet;
+    
   app->apps = gmenu_tree_lookup ("applications.menu", GMENU_TREE_FLAGS_NONE);
   if (!app->apps)
   {
@@ -428,7 +444,6 @@ awn_applet_factory_initp (const gchar * uid, gint orient, gint height )
                        
   g_signal_connect (G_OBJECT (applet), "button-press-event",
                     G_CALLBACK (on_icon_clicked), (gpointer)app);
-
   GdkPixbuf *icon;
   icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (),
                                    "gnome-main-menu",

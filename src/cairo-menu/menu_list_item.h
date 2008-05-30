@@ -33,48 +33,48 @@ enum
   MENU_ITEM_SEPARATOR,
   MENU_ITEM_HEADER,
   MENU_ITEM_ALIAS,
-  
+
   MENU_ITEM_SEARCH,
   MENU_ITEM_RUN,
   MENU_ITEM_BLANK,
-  MENU_ITEM_DRIVE    
+  MENU_ITEM_DRIVE
 };
 
 typedef struct
 {
-	int			item_type;
-	gchar 	*	name;
-	gchar 	*	icon;
-	union
-	{
-		gchar 	*	exec;	
-		gchar	*	mount_point;
-	};		
-	gchar 	*	comment;
-	gchar 	*	desktop;
-	gboolean	launch_in_terminal;
-	gpointer	parent_menu;	
-	GtkWidget	*widget;
-	GtkWidget	*normal;
-	GtkWidget	*hover;	
-	GtkWidget	*click;	
-	gpointer		*drive;
-	union
-	{
-		GSList			*sublist;	
+  int   item_type;
+  gchar  * name;
+  gchar  * icon;
+  union
+  {
+    gchar  * exec;
+    gchar * mount_point;
+  };
+  gchar  * comment;
+  gchar  * desktop;
+  gboolean launch_in_terminal;
+  gpointer parent_menu;
+  GtkWidget *widget;
+  GtkWidget *normal;
+  GtkWidget *hover;
+  GtkWidget *click;
+  gpointer  *drive;
+  union
+  {
+    GSList   *sublist;
 
-	};
-	union
-	{
-		GtkWidget	*text_entry;			
-		GtkWidget	*search_entry;		
-		GtkWidget	*run_entry;
-		void (*monitor)(gpointer callback, gpointer data,gpointer box);
-		gboolean (*drive_prep)(gpointer menu_item,gchar * filemanager);
-		gboolean (*drive_mount)(gpointer menu_item,gchar * filemanager);		
-		gpointer null;
-				
-	}	;	
+  };
+  union
+  {
+    GtkWidget *text_entry;
+    GtkWidget *search_entry;
+    GtkWidget *run_entry;
+    void (*monitor)(gpointer callback, gpointer data, gpointer box);
+    gboolean(*drive_prep)(gpointer menu_item, gchar * filemanager);
+    gboolean(*drive_mount)(gpointer menu_item, gchar * filemanager);
+    gpointer null;
+
+  } ;
 }Menu_list_item;
 
 

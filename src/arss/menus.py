@@ -116,4 +116,4 @@ class OptionMenu(gtk.Menu):
         """
         self.applet.Database.update_feeds(arssconfig.get_feeds())
         self.applet.feeds = self.applet.Database.get_feed_objects()
-        self.applet.updated = True
+        self.applet.update_menu()

@@ -127,13 +127,13 @@ _button_clicked_event (GtkWidget      *widget,
       gtk_menu_set_screen (GTK_MENU (menu), NULL);
       if (config_get_enable_location_dialog(webapplet))
       {        
-        item = gtk_image_menu_item_new_with_label (_("Open Location"));
+        item = gtk_image_menu_item_new_with_label ("Open Location");
         gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),
                                        gtk_image_new_from_stock (GTK_STOCK_OPEN,
-                                                                 GTK_ICON_SIZE_MENU));
+                                                          GTK_ICON_SIZE_MENU));
         gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
         gtk_widget_show_all (item);        
-        g_signal_connect (G_OBJECT (item), "button-press-event",
+        g_signal_connect (G_OBJECT (item), "activate",
                           G_CALLBACK (_show_location_dialog), webapplet);          
         
         item = shared_menuitem_create_applet_prefs(webapplet->uid,APPLET_NAME);

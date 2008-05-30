@@ -134,14 +134,14 @@ _button_clicked_event (GtkWidget      *widget,
         gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
         gtk_widget_show_all (item);        
         g_signal_connect (G_OBJECT (item), "activate",
-                          G_CALLBACK (_show_location_dialog), webapplet);          
-        
-        item = shared_menuitem_create_applet_prefs(webapplet->uid,APPLET_NAME);
-        if (item) //generic preferences is enabled
-        {
-          gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);          
-        }        
+                          G_CALLBACK (_show_location_dialog), webapplet);                  
       }           
+      item = shared_menuitem_create_applet_prefs(webapplet->uid,APPLET_NAME);
+      if (item) //generic preferences is enabled
+      {
+        gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);          
+      }        
+      
     }
     gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL,
                     event_button->button, event_button->time);

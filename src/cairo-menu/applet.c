@@ -79,14 +79,12 @@ static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, 
       menu = awn_applet_create_default_menu (G_applet);
       item = gtk_menu_item_new_with_label("Preferences");
       gtk_widget_show(item);
-      gtk_menu_set_screen(menu, NULL);
-      gtk_menu_shell_append(menu, item);
+      gtk_menu_set_screen(GTK_MENU(menu), NULL);
+      gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
       g_signal_connect(G_OBJECT(item), "button-press-event", G_CALLBACK(_show_prefs), NULL);
     }
 
-    gtk_menu_popup(menu, NULL, NULL, NULL, NULL,
-
-                   event_button->button, event_button->time);
+    gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL,event_button->button, event_button->time);
   }
 
   return TRUE;

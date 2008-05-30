@@ -119,26 +119,29 @@ _button_clicked_event (GtkWidget      *widget,
   }
   else if (event->button == 3)
   {
-    static gboolean done_once = FALSE;
-    static GtkWidget *menu;
-    if (!done_once)
+    static GtkWidget *menu=NULL;
+    if (!menu)
     {
       GtkWidget *item;
-      menu = gtk_menu_new ();
+      menu = awn_applet_create_default_menu (webapplet->applet);
       gtk_menu_set_screen (GTK_MENU (menu), NULL);
       if (config_get_enable_location_dialog(webapplet))
-      {
+      {        
         item = gtk_image_menu_item_new_with_label (_("Open Location"));
         gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),
                                        gtk_image_new_from_stock (GTK_STOCK_OPEN,
                                                                  GTK_ICON_SIZE_MENU));
-        gtk_widget_show_all (item);
         gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
+        gtk_widget_show_all (item);        
         g_signal_connect (G_OBJECT (item), "button-press-event",
-                          G_CALLBACK (_show_location_dialog), webapplet);
-      }
-      menu=create_applet_menu(menu,AWN_MENU_APPLET_PREFS_ENABLE);              
-      done_once = TRUE;
+                          G_CALLBACK (_show_location_dialog), webapplet);          
+        
+        item = shared_menuitem_create_applet_prefs(webapplet->uid,APPLET_NAME);
+        if (item) //generic preferences is enabled
+        {
+          gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);          
+        }        
+      }           
     }
     gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL,
                     event_button->button, event_button->time);
@@ -201,6 +204,7 @@ awn_applet_factory_initp (gchar *uid, gint orient, gint height)
   g_on_error_stack_trace (NULL);
   html_init ();
   WebApplet *webapplet = g_malloc (sizeof (WebApplet));
+  webapplet->uid=g_strdup(uid);
   init_config (webapplet, uid);
   webapplet->applet = AWN_APPLET (awn_applet_simple_new (uid, orient, height));
   gtk_widget_set_size_request (GTK_WIDGET (webapplet->applet), height, -1);

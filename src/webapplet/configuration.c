@@ -26,10 +26,14 @@
 static gchar *
 get_string (WebApplet *webapplet, const gchar *key)
 {
-  gchar *str;
-  str = awn_config_client_get_string (webapplet->instance_config,
+  gchar *str=NULL;
+  if (awn_config_client_entry_exists (webapplet->instance_config,
+                                      AWN_CONFIG_CLIENT_DEFAULT_GROUP,key) )
+  {        
+    str = awn_config_client_get_string (webapplet->instance_config,
                                       AWN_CONFIG_CLIENT_DEFAULT_GROUP,
                                       key, NULL);
+  }    
   if (!str)
   {
     str = awn_config_client_get_string (webapplet->default_config,

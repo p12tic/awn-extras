@@ -23,9 +23,9 @@
  * 02111-1307, USA.
  */
 
- 
- /*tabsize =4*/
- 
+
+/*tabsize =4*/
+
 #include "config.h"
 
 #include <stdlib.h>
@@ -66,7 +66,7 @@
 
 void
 popup_location_changed_cb(GConfClient *client, guint cnxn_id,
-						  GConfEntry *entry, gpointer user_data);
+                          GConfEntry *entry, gpointer user_data);
 
 extern AwnApplet *G_awn_app;
 extern int G_awn_app_height;
@@ -85,146 +85,167 @@ extern GConfClient *gconf_client;
 
 void read_configuration(NotifyDaemon *daemon)
 {
-    GConfValue*	 value;
-    gchar * svalue;
- 
-    
-	gconf_client = gconf_client_get_default();
-	gconf_client_add_dir(gconf_client, GCONF_KEY_DAEMON,
-						 GCONF_CLIENT_PRELOAD_NONE, NULL);
+  GConfValue*  value;
+  gchar * svalue;
+
+
+  gconf_client = gconf_client_get_default();
+  gconf_client_add_dir(gconf_client, GCONF_KEY_DAEMON,
+                       GCONF_CLIENT_PRELOAD_NONE, NULL);
 
 #if 1
-	gconf_client_notify_add(gconf_client, GCONF_KEY_POPUP_LOCATION,
-							popup_location_changed_cb, daemon,
-							NULL, NULL);
+  gconf_client_notify_add(gconf_client, GCONF_KEY_POPUP_LOCATION,
+                          popup_location_changed_cb, daemon,
+                          NULL, NULL);
 
-	/* Emit signal to verify/set current key */
-	gconf_client_notify(gconf_client, GCONF_KEY_POPUP_LOCATION);
+  /* Emit signal to verify/set current key */
+  gconf_client_notify(gconf_client, GCONF_KEY_POPUP_LOCATION);
 #endif
-	
-    value=gconf_client_get(gconf_client, GCONF_KEY_AWN_KILL_ND,
-										NULL);		
-										
-    if (value)
-    {																		
-        if (gconf_client_get_bool(gconf_client,GCONF_KEY_AWN_KILL_ND ,NULL) )
-        {
-            if ( system("pgrep notification-daemon && killall notification-daemon") == -1)
-            {            
-                printf("Failed to execute killall command: disable kill notication daemon and configure to kill daemon before loading applet\n");                
-            }
-            else
-            {
-                system("pgrep notification-daemon &&  killall -9 notification-daemon");
-            }
-        }        										     										
-    }	
-    else
+
+  value = gconf_client_get(gconf_client, GCONF_KEY_AWN_KILL_ND,
+                           NULL);
+
+  if (value)
+  {
+    if (gconf_client_get_bool(gconf_client, GCONF_KEY_AWN_KILL_ND , NULL))
     {
-        gconf_client_set_bool (gconf_client,GCONF_KEY_AWN_KILL_ND,TRUE ,NULL);
-        if ( system("pgrep notification-daemon && killall notification-daemon") == -1)
-        {
-            printf("Failed to execute killall command: disable kill notication daemon and configure to kill daemon before loading applet\n");                
-        }        
-        else
-        {
-            system("pgrep notification-daemon && killall -9 notification-daemon");
-        }
-        
-    }		
-    value=gconf_client_get(gconf_client, GCONF_KEY_AWN_CLIENT_POS,
-										NULL);		
-    if (value)
-    {																		
-        G_awn_client_pos=gconf_client_get_bool(gconf_client,GCONF_KEY_AWN_CLIENT_POS ,NULL);
+      if (system("pgrep notification-daemon && killall notification-daemon") == -1)
+      {
+        printf("Failed to execute killall command: disable kill notication daemon and configure to kill daemon before loading applet\n");
+      }
+      else
+      {
+        system("pgrep notification-daemon &&  killall -9 notification-daemon");
+      }
+    }
+  }
+  else
+  {
+    gconf_client_set_bool(gconf_client, GCONF_KEY_AWN_KILL_ND, TRUE , NULL);
+
+    if (system("pgrep notification-daemon && killall notification-daemon") == -1)
+    {
+      printf("Failed to execute killall command: disable kill notication daemon and configure to kill daemon before loading applet\n");
     }
     else
     {
-        G_awn_client_pos=TRUE;
-        gconf_client_set_bool (gconf_client,GCONF_KEY_AWN_CLIENT_POS,G_awn_client_pos,NULL);
-    }        
-    
-    value=gconf_client_get(gconf_client, GCONF_KEY_AWN_HONOUR_GTK,
-										NULL);		
-    if (value)
-    {																		
-        G_awn_honour_gtk=gconf_client_get_bool(gconf_client,GCONF_KEY_AWN_HONOUR_GTK ,NULL);
-    }
-    else
-    {
-        G_awn_honour_gtk=TRUE;
-        gconf_client_set_bool (gconf_client,GCONF_KEY_AWN_HONOUR_GTK,G_awn_honour_gtk,NULL);
-    }  
-    
-    svalue = gconf_client_get_string(gconf_client,GCONF_KEY_AWN_BG, NULL );
-    if ( !svalue ) 
-    {
-        gconf_client_set_string(gconf_client , GCONF_KEY_AWN_BG, svalue=g_strdup("0a0a0abb"), NULL );
-    }
-    awn_cairo_string_to_color( svalue,&G_awn_bg );    
-    g_free(svalue);
- 
-    svalue = gconf_client_get_string(gconf_client,GCONF_KEY_AWN_TEXT_COLOUR, NULL );
-    if ( !svalue ) 
-    {
-        gconf_client_set_string(gconf_client , GCONF_KEY_AWN_TEXT_COLOUR, svalue=g_strdup("eeeeeebb"), NULL );
-    }
-    awn_cairo_string_to_color( svalue,&G_awn_text );    
-    G_awn_text_str=g_strdup(svalue);
-    if (strlen(G_awn_text_str)>6)
-        G_awn_text_str[6]='\0';
-    g_free(svalue);
-            	
-    svalue = gconf_client_get_string(gconf_client,GCONF_KEY_AWN_BORDER, NULL );
-    if ( !svalue ) 
-    {
-        gconf_client_set_string(gconf_client , GCONF_KEY_AWN_BORDER, svalue=g_strdup("ffffffaa"), NULL );
-    }
-    awn_cairo_string_to_color( svalue,&G_awn_border );    
-    g_free(svalue);     
-    
-    value=gconf_client_get(gconf_client,GCONF_KEY_AWN_BORDER_WIDTH,NULL);		
-    if (value)
-    {																		
-        G_awn_border_width=gconf_client_get_int(gconf_client,GCONF_KEY_AWN_BORDER_WIDTH,NULL) ;
-    }
-    else             							
-    {
-        G_awn_border_width=3;
-        gconf_client_set_int(gconf_client,GCONF_KEY_AWN_BORDER_WIDTH,G_awn_border_width ,NULL);        
+      system("pgrep notification-daemon && killall -9 notification-daemon");
     }
 
-    value=gconf_client_get(gconf_client,GCONF_KEY_AWN_GRADIENT_FACTOR,NULL);		
-    if (value)
-    {																		
-        G_awn_gradient_factor=gconf_client_get_float(gconf_client,GCONF_KEY_AWN_GRADIENT_FACTOR,NULL) ;
-    }
-    else             							
-    {
-        G_awn_gradient_factor=0.75;
-        gconf_client_set_float (gconf_client,GCONF_KEY_AWN_GRADIENT_FACTOR,G_awn_gradient_factor ,NULL);        
-    }
- 
-    value=gconf_client_get(gconf_client,GCONF_KEY_AWN_OVERRIDE_X,NULL);		
-    if (value)
-    {
-        G_awn_override_x=gconf_client_get_int(gconf_client,GCONF_KEY_AWN_OVERRIDE_X,NULL) ;
-    }
-    else             							
-    {
-        G_awn_override_x=-1;
-        gconf_client_set_int (gconf_client,GCONF_KEY_AWN_OVERRIDE_X,G_awn_override_x ,NULL);        
-    }
-    
-    value=gconf_client_get(gconf_client,GCONF_KEY_AWN_OVERRIDE_Y,NULL);		
-    if (value)
-    {																		
-        G_awn_override_y=gconf_client_get_int(gconf_client,GCONF_KEY_AWN_OVERRIDE_Y,NULL) ;
-    }
-    else             							
-    {
-        G_awn_override_y=-1;
-        gconf_client_set_int (gconf_client,GCONF_KEY_AWN_OVERRIDE_Y,G_awn_override_y ,NULL);        
-    }
-    
-}    
+  }
+
+  value = gconf_client_get(gconf_client, GCONF_KEY_AWN_CLIENT_POS,
+
+                           NULL);
+
+  if (value)
+  {
+    G_awn_client_pos = gconf_client_get_bool(gconf_client, GCONF_KEY_AWN_CLIENT_POS , NULL);
+  }
+  else
+  {
+    G_awn_client_pos = TRUE;
+    gconf_client_set_bool(gconf_client, GCONF_KEY_AWN_CLIENT_POS, G_awn_client_pos, NULL);
+  }
+
+  value = gconf_client_get(gconf_client, GCONF_KEY_AWN_HONOUR_GTK,
+
+                           NULL);
+
+  if (value)
+  {
+    G_awn_honour_gtk = gconf_client_get_bool(gconf_client, GCONF_KEY_AWN_HONOUR_GTK , NULL);
+  }
+  else
+  {
+    G_awn_honour_gtk = TRUE;
+    gconf_client_set_bool(gconf_client, GCONF_KEY_AWN_HONOUR_GTK, G_awn_honour_gtk, NULL);
+  }
+
+  svalue = gconf_client_get_string(gconf_client, GCONF_KEY_AWN_BG, NULL);
+
+  if (!svalue)
+  {
+    gconf_client_set_string(gconf_client , GCONF_KEY_AWN_BG, svalue = g_strdup("0a0a0abb"), NULL);
+  }
+
+  awn_cairo_string_to_color(svalue, &G_awn_bg);
+
+  g_free(svalue);
+
+  svalue = gconf_client_get_string(gconf_client, GCONF_KEY_AWN_TEXT_COLOUR, NULL);
+
+  if (!svalue)
+  {
+    gconf_client_set_string(gconf_client , GCONF_KEY_AWN_TEXT_COLOUR, svalue = g_strdup("eeeeeebb"), NULL);
+  }
+
+  awn_cairo_string_to_color(svalue, &G_awn_text);
+
+  G_awn_text_str = g_strdup(svalue);
+
+  if (strlen(G_awn_text_str) > 6)
+    G_awn_text_str[6] = '\0';
+
+  g_free(svalue);
+
+  svalue = gconf_client_get_string(gconf_client, GCONF_KEY_AWN_BORDER, NULL);
+
+  if (!svalue)
+  {
+    gconf_client_set_string(gconf_client , GCONF_KEY_AWN_BORDER, svalue = g_strdup("ffffffaa"), NULL);
+  }
+
+  awn_cairo_string_to_color(svalue, &G_awn_border);
+
+  g_free(svalue);
+
+  value = gconf_client_get(gconf_client, GCONF_KEY_AWN_BORDER_WIDTH, NULL);
+
+  if (value)
+  {
+    G_awn_border_width = gconf_client_get_int(gconf_client, GCONF_KEY_AWN_BORDER_WIDTH, NULL) ;
+  }
+  else
+  {
+    G_awn_border_width = 3;
+    gconf_client_set_int(gconf_client, GCONF_KEY_AWN_BORDER_WIDTH, G_awn_border_width , NULL);
+  }
+
+  value = gconf_client_get(gconf_client, GCONF_KEY_AWN_GRADIENT_FACTOR, NULL);
+
+  if (value)
+  {
+    G_awn_gradient_factor = gconf_client_get_float(gconf_client, GCONF_KEY_AWN_GRADIENT_FACTOR, NULL) ;
+  }
+  else
+  {
+    G_awn_gradient_factor = 0.75;
+    gconf_client_set_float(gconf_client, GCONF_KEY_AWN_GRADIENT_FACTOR, G_awn_gradient_factor , NULL);
+  }
+
+  value = gconf_client_get(gconf_client, GCONF_KEY_AWN_OVERRIDE_X, NULL);
+
+  if (value)
+  {
+    G_awn_override_x = gconf_client_get_int(gconf_client, GCONF_KEY_AWN_OVERRIDE_X, NULL) ;
+  }
+  else
+  {
+    G_awn_override_x = -1;
+    gconf_client_set_int(gconf_client, GCONF_KEY_AWN_OVERRIDE_X, G_awn_override_x , NULL);
+  }
+
+  value = gconf_client_get(gconf_client, GCONF_KEY_AWN_OVERRIDE_Y, NULL);
+
+  if (value)
+  {
+    G_awn_override_y = gconf_client_get_int(gconf_client, GCONF_KEY_AWN_OVERRIDE_Y, NULL) ;
+  }
+  else
+  {
+    G_awn_override_y = -1;
+    gconf_client_set_int(gconf_client, GCONF_KEY_AWN_OVERRIDE_Y, G_awn_override_y , NULL);
+  }
+
+}

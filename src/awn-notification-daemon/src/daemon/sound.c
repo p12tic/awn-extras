@@ -29,39 +29,40 @@ static GstElement *player;
 
 static void
 sound_play_uri(const gchar* uri)
-{  
-	/*
-	 * TODO: Fade out the current sound and then start the new sound?
-	 *       Right now we just cut off the existing sound, which is kind of
-	 *       abrupt
-	 */
+{
+  /*
+   * TODO: Fade out the current sound and then start the new sound?
+   *       Right now we just cut off the existing sound, which is kind of
+   *       abrupt
+   */
 
-	/* Stop the pipeline */
-	gst_element_set_state(player, GST_STATE_NULL);
+  /* Stop the pipeline */
+  gst_element_set_state(player, GST_STATE_NULL);
 
-	/* Set the input to a local file uri */
-	g_object_set(G_OBJECT(player), "uri", uri, NULL);
+  /* Set the input to a local file uri */
+  g_object_set(G_OBJECT(player), "uri", uri, NULL);
 
-	/* Start the pipeline again */
-	gst_element_set_state(player, GST_STATE_PLAYING);
+  /* Start the pipeline again */
+  gst_element_set_state(player, GST_STATE_PLAYING);
 }
+
 #endif /* HAVE_GSTREAMER */
 
 void
 sound_init(void)
-{  
+{
 #ifdef HAVE_GSTREAMER
-	gst_init(NULL, NULL);
+  gst_init(NULL, NULL);
 
-	player = gst_element_factory_make("playbin", "Notification Player");
+  player = gst_element_factory_make("playbin", "Notification Player");
 
-	/*
-	 * Instead of using the default audiosink, use the gconfaudiosink,
-	 * which will respect the defaults in gstreamer-properties
-	 */
-	g_object_set(G_OBJECT(player), "audio-sink",
-		gst_element_factory_make("gconfaudiosink", "GconfAudioSink"),
-		NULL);
+  /*
+   * Instead of using the default audiosink, use the gconfaudiosink,
+   * which will respect the defaults in gstreamer-properties
+   */
+  g_object_set(G_OBJECT(player), "audio-sink",
+               gst_element_factory_make("gconfaudiosink", "GconfAudioSink"),
+               NULL);
 
 #endif /* HAVE_GSTREAMER */
 }
@@ -69,12 +70,12 @@ sound_init(void)
 void
 sound_play(const gchar* filename)
 {
-	/* We are guaranteed here that the file exists */
+  /* We are guaranteed here that the file exists */
 #ifdef HAVE_GSTREAMER
-	/* gstreamer's playbin takes uris, so make a file:// uri */
-	gchar* uri = g_strdup_printf("file://%s", filename);
-	sound_play_uri(uri);
-	g_free(uri);
+  /* gstreamer's playbin takes uris, so make a file:// uri */
+  gchar* uri = g_strdup_printf("file://%s", filename);
+  sound_play_uri(uri);
+  g_free(uri);
 #endif /* HAVE_GSTREAMER */
 }
 

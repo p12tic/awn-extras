@@ -16,15 +16,15 @@ void set_notification_hints(GtkWindow *nw, GHashTable *hints);
 void set_notification_timeout(GtkWindow *nw, glong timeout);
 void notification_tick(GtkWindow *nw, glong remaining);
 void set_notification_text(GtkWindow *nw, const char *summary,
-								 const char *body);
+                           const char *body);
 void set_notification_icon(GtkWindow *nw, GdkPixbuf *pixbuf);
 void set_notification_arrow(GtkWidget *nw, gboolean visible, int x, int y);
 
 void add_notification_action(GtkWindow *nw, const char *label,
-								   const char *key, GCallback cb);
+                             const char *key, GCallback cb);
 void clear_notification_actions(GtkWindow *nw);
 void move_notification(GtkWidget *nw, int x, int y);
 
-		  				 
+
 
 #endif /* _ENGINES_H_ */

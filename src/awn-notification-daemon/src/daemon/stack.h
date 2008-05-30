@@ -26,13 +26,13 @@
 
 typedef enum
 {
-	NOTIFY_STACK_LOCATION_UNKNOWN = -1,
-	NOTIFY_STACK_LOCATION_TOP_LEFT,
-	NOTIFY_STACK_LOCATION_TOP_RIGHT,
-	NOTIFY_STACK_LOCATION_BOTTOM_LEFT,
-	NOTIFY_STACK_LOCATION_BOTTOM_RIGHT,
-	NOTIFY_STACK_LOCATION_AWN,	
-	NOTIFY_STACK_LOCATION_DEFAULT = NOTIFY_STACK_LOCATION_AWN
+  NOTIFY_STACK_LOCATION_UNKNOWN = -1,
+  NOTIFY_STACK_LOCATION_TOP_LEFT,
+  NOTIFY_STACK_LOCATION_TOP_RIGHT,
+  NOTIFY_STACK_LOCATION_BOTTOM_LEFT,
+  NOTIFY_STACK_LOCATION_BOTTOM_RIGHT,
+  NOTIFY_STACK_LOCATION_AWN,
+  NOTIFY_STACK_LOCATION_DEFAULT = NOTIFY_STACK_LOCATION_AWN
 
 
 } NotifyStackLocation;
@@ -40,15 +40,15 @@ typedef enum
 typedef struct _NotifyStack NotifyStack;
 
 NotifyStack *notify_stack_new(NotifyDaemon *daemon,
-							  GdkScreen *screen,
-							  guint monitor,
-							  NotifyStackLocation stack_location);
+                              GdkScreen *screen,
+                              guint monitor,
+                              NotifyStackLocation stack_location);
 void notify_stack_destroy(NotifyStack *stack);
 
 void notify_stack_set_location(NotifyStack *stack,
-							   NotifyStackLocation location);
+                               NotifyStackLocation location);
 void notify_stack_add_window(NotifyStack *stack, GtkWindow *nw,
-							 gboolean new_notification);
+                             gboolean new_notification);
 void notify_stack_remove_window(NotifyStack *stack, GtkWindow *nw);
 
 #endif /* _NOTIFY_STACK_H_ */

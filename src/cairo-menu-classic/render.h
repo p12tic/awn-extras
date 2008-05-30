@@ -26,17 +26,17 @@
 
 enum
 {
-	MENU_WIDGET_NORMAL,
-	MENU_WIDGET_INSET,
-	MENU_WIDGET_OUTSET
+  MENU_WIDGET_NORMAL,
+  MENU_WIDGET_INSET,
+  MENU_WIDGET_OUTSET
 };
 
-void render_entry(Menu_list_item *entry,int max_width);
-void render_directory(Menu_list_item *directory,int max_width);
-void _fixup_menus(GtkFixedChild * child,GtkWidget * subwidget);
-void measure_width(Menu_list_item * menu_item,int * max_width);
-void render_menu_widgets(Menu_list_item * menu_item,GtkWidget * mainbox);
+void render_entry(Menu_list_item *entry, int max_width);
+void render_directory(Menu_list_item *directory, int max_width);
+void _fixup_menus(GtkFixedChild * child, GtkWidget * subwidget);
+void measure_width(Menu_list_item * menu_item, int * max_width);
+void render_menu_widgets(Menu_list_item * menu_item, GtkWidget * mainbox);
 
-GtkWidget * build_menu_widget(Menu_item_color * mic, char * text,GdkPixbuf *pbuf,GdkPixbuf *pover,int max_width,int flags);
+GtkWidget * build_menu_widget(Menu_item_color * mic, char * text, GdkPixbuf *pbuf, GdkPixbuf *pover, int max_width, int flags);
 
 #endif

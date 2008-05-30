@@ -28,17 +28,17 @@
 
 typedef struct
 {
-	AwnApplet 	*applet;
-	GtkWidget 	*mainwindow;    
-    GtkWidget 	*mainfixed;
-    GtkWidget 	*mainbox;
-    GSList		*menu_data;
-    
+  AwnApplet  *applet;
+  GtkWidget  *mainwindow;
+  GtkWidget  *mainfixed;
+  GtkWidget  *mainbox;
+  GSList  *menu_data;
+
 
 }Cairo_main_menu;
 
 Cairo_main_menu * dialog_new(AwnApplet *applet);
 void pos_dialog(GtkWidget * mainwindow);
 
-#endif 
+#endif
 

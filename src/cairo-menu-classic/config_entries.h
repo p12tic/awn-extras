@@ -16,8 +16,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA.
  *
 */
- 
- 
+
+
 #ifndef __CAIRO_MENU_CONFIG_
 #define __CAIRO_MENU_CONFIG_
 
@@ -57,35 +57,35 @@
 
 typedef struct
 {
-	AwnColor	bg;
-	AwnColor	fg;	
+  AwnColor bg;
+  AwnColor fg;
 
 }Menu_item_color;
 
 typedef struct
 {
-	Menu_item_color	normal;
-	Menu_item_color hover;
-	Menu_item_color selected;
-	AwnColor	border_colour;
-	int			border_width;
-	int			text_size;
-	GTree *		submenu_deps;
-	gboolean	show_search;
-	gchar		*search_cmd;
-	gboolean	show_logout;
-	gchar		*logout;
+  Menu_item_color normal;
+  Menu_item_color hover;
+  Menu_item_color selected;
+  AwnColor border_colour;
+  int   border_width;
+  int   text_size;
+  GTree *  submenu_deps;
+  gboolean show_search;
+  gchar  *search_cmd;
+  gboolean show_logout;
+  gchar  *logout;
 
-	gboolean	show_run;	
-	gboolean	do_fade;	
-	gboolean	show_places;		
-	gchar 		*filemanager;
-	gchar		*applet_icon;
-	int			menu_item_text_len;
-	double 		menu_item_gradient_factor;
-	gboolean	honour_gtk;
-	gboolean 	on_button_release;
-	gboolean	show_tooltips;
+  gboolean show_run;
+  gboolean do_fade;
+  gboolean show_places;
+  gchar   *filemanager;
+  gchar  *applet_icon;
+  int   menu_item_text_len;
+  double   menu_item_gradient_factor;
+  gboolean honour_gtk;
+  gboolean  on_button_release;
+  gboolean show_tooltips;
 }Cairo_menu_config;
 
 void read_config(void);

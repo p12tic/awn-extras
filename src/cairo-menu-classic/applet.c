@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA.
  *
 */
- 
+
 #include "config.h"
 
 #define GMENU_I_KNOW_THIS_IS_UNSTABLE
@@ -36,165 +36,184 @@ AwnApplet *G_applet;
 extern GtkWidget * G_Fixed;
 extern Cairo_menu_config G_cairo_menu_conf;
 
-static gboolean _button_clicked_event (GtkWidget *widget, GdkEventButton *event, Cairo_main_menu * menu);
+static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, Cairo_main_menu * menu);
 
 
 gboolean _fade_in(GtkWidget * window)
 {
-	static	float	opacity=0.2;
-	
-	opacity=opacity+0.1;
-	
-	if (opacity>=0.95)
-	{
-		gtk_window_set_opacity(GTK_WINDOW(window),1.0);	
-		opacity=0.2;
-		return FALSE;
-	}
-	gtk_window_set_opacity(GTK_WINDOW(window),opacity);				
-	return TRUE;
-}			
+  static float opacity = 0.2;
 
-static gboolean _show_prefs (GtkWidget *widget, GdkEventButton *event, Cairo_main_menu * menu)
-{
+  opacity = opacity + 0.1;
 
-	show_prefs();
-	return TRUE;
+  if (opacity >= 0.95)
+  {
+    gtk_window_set_opacity(GTK_WINDOW(window), 1.0);
+    opacity = 0.2;
+    return FALSE;
+  }
+
+  gtk_window_set_opacity(GTK_WINDOW(window), opacity);
+
+  return TRUE;
 }
 
-static gboolean _button_clicked_event (GtkWidget *widget, GdkEventButton *event, Cairo_main_menu * menu)
+static gboolean _show_prefs(GtkWidget *widget, GdkEventButton *event, Cairo_main_menu * menu)
 {
-    GdkEventButton *event_button;
-    event_button = (GdkEventButton *) event; 
-    if (event->button == 1)
-    {
-    	/*the gtk_window_set_opacity is a hack because the mainwindow window flickers, 
-    	  	visibly, briefly on the screen sometimes without it*/
-		if (GTK_WIDGET_VISIBLE(menu->mainwindow) )
-		{
-			if (G_cairo_menu_conf.do_fade)
-				gtk_window_set_opacity(GTK_WINDOW(menu->mainwindow),0.0)	;	
-			g_list_foreach(GTK_FIXED(G_Fixed)->children,_fixup_menus,NULL);      
-		    gtk_widget_hide (menu->mainwindow);    
-		}
-		else
-		{
 
-			gtk_widget_show(menu->mainwindow);  
-			gtk_fixed_move(menu->mainfixed,menu->mainbox,0,menu->mainwindow->allocation.height-menu->mainbox->allocation.height);								
-			pos_dialog(menu->mainwindow);		
-			if (G_cairo_menu_conf.do_fade)
-				g_timeout_add (120,_fade_in,menu->mainwindow);
-		}    
-    }
-    else if (event->button == 3)    
+  show_prefs();
+  return TRUE;
+}
+
+static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, Cairo_main_menu * menu)
+{
+  GdkEventButton *event_button;
+  event_button = (GdkEventButton *) event;
+
+  if (event->button == 1)
+  {
+    /*the gtk_window_set_opacity is a hack because the mainwindow window flickers,
+       visibly, briefly on the screen sometimes without it*/
+    if (GTK_WIDGET_VISIBLE(menu->mainwindow))
     {
-    	static gboolean done_once=FALSE;
-    	static GtkWidget * menu;
-    	static GtkWidget * item;
-    	if (!done_once)
-    	{
-			menu=gtk_menu_new ();
-			item=gtk_menu_item_new_with_label("Preferences");
-			gtk_widget_show(item);
-			gtk_menu_set_screen(menu,NULL);    	
-			gtk_menu_shell_append(menu,item);
-			g_signal_connect (G_OBJECT (item), "button-press-event",G_CALLBACK (_show_prefs), NULL);
-    		done_once=TRUE;
-    	}
-    	gtk_menu_popup (menu, NULL, NULL, NULL, NULL, 
-			  event_button->button, event_button->time);
+      if (G_cairo_menu_conf.do_fade)
+        gtk_window_set_opacity(GTK_WINDOW(menu->mainwindow), 0.0) ;
+
+      g_list_foreach(GTK_FIXED(G_Fixed)->children, _fixup_menus, NULL);
+
+      gtk_widget_hide(menu->mainwindow);
     }
- 	return TRUE;
+    else
+    {
+
+      gtk_widget_show(menu->mainwindow);
+      gtk_fixed_move(menu->mainfixed, menu->mainbox, 0, menu->mainwindow->allocation.height - menu->mainbox->allocation.height);
+      pos_dialog(menu->mainwindow);
+
+      if (G_cairo_menu_conf.do_fade)
+        g_timeout_add(120, _fade_in, menu->mainwindow);
+    }
+  }
+  else if (event->button == 3)
+  {
+    static gboolean done_once = FALSE;
+    static GtkWidget * menu;
+    static GtkWidget * item;
+
+    if (!done_once)
+    {
+      menu = gtk_menu_new();
+      item = gtk_menu_item_new_with_label("Preferences");
+      gtk_widget_show(item);
+      gtk_menu_set_screen(menu, NULL);
+      gtk_menu_shell_append(menu, item);
+      g_signal_connect(G_OBJECT(item), "button-press-event", G_CALLBACK(_show_prefs), NULL);
+      done_once = TRUE;
+    }
+
+    gtk_menu_popup(menu, NULL, NULL, NULL, NULL,
+
+                   event_button->button, event_button->time);
+  }
+
+  return TRUE;
 }
 
 
 int G_Height;
 static gboolean  _build_away(gpointer null)
 {
-	GdkPixbuf *icon;
-	Cairo_main_menu * menu;
-	menu=dialog_new(G_applet);
-	
-	gtk_widget_show_all(menu->mainwindow);	
+  GdkPixbuf *icon;
+  Cairo_main_menu * menu;
+  menu = dialog_new(G_applet);
 
-	gtk_widget_show(menu->mainwindow);	
-	pos_dialog(menu->mainwindow);	
-	g_list_foreach(GTK_FIXED(G_Fixed)->children,_fixup_menus,NULL); 		
-	gtk_widget_hide(menu->mainwindow);	
-    	
-	icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (),
-			                       G_cairo_menu_conf.applet_icon,
-			                       G_Height-2,
-			                       0, NULL);
-	if (!icon)
-		icon=gdk_pixbuf_new_from_file_at_size(g_filename_from_utf8(G_cairo_menu_conf.applet_icon,-1, NULL, NULL, NULL),G_Height-2,
-			                       G_Height-2,NULL);
-	if (!icon)
-	{
-		printf("failed to load icon: %s\n",G_cairo_menu_conf.applet_icon);
-		icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (),"stock_missing-image",
-			                       G_Height-2,
-			                       0, NULL);		
-	}		     
-	if (!icon)
-	{
+  gtk_widget_show_all(menu->mainwindow);
 
-		icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (),"gnome-main-menu",
-			                       G_Height-2,
-			                       0, NULL);					                       
-	}	
-	if (icon)                      
-	{
-    	if(gdk_pixbuf_get_height(icon) !=G_Height-2)
-    	{
-    		GdkPixbuf *oldpbuf=icon; 		
-	    	icon=gdk_pixbuf_scale_simple(oldpbuf,G_Height-2,G_Height-2,GDK_INTERP_HYPER);  
-	    	g_object_unref(oldpbuf);
-		}	    	
-		awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (G_applet),icon);				
-	}		
-	else
-	{
-	    icon=gdk_pixbuf_new(GDK_COLORSPACE_RGB,TRUE,8,G_Height-2,G_Height-2);
-		gdk_pixbuf_fill(icon,0x00000000);  
-		awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (G_applet),icon);                                   	
-	}
-	g_signal_connect (G_OBJECT (menu->applet), "button-press-event",G_CALLBACK (_button_clicked_event), menu);		
-	return FALSE;
+  gtk_widget_show(menu->mainwindow);
+  pos_dialog(menu->mainwindow);
+  g_list_foreach(GTK_FIXED(G_Fixed)->children, _fixup_menus, NULL);
+  gtk_widget_hide(menu->mainwindow);
+
+  icon = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(),
+                                  G_cairo_menu_conf.applet_icon,
+                                  G_Height - 2,
+                                  0, NULL);
+
+  if (!icon)
+    icon = gdk_pixbuf_new_from_file_at_size(g_filename_from_utf8(G_cairo_menu_conf.applet_icon, -1, NULL, NULL, NULL), G_Height - 2,
+                                            G_Height - 2, NULL);
+
+  if (!icon)
+  {
+    printf("failed to load icon: %s\n", G_cairo_menu_conf.applet_icon);
+    icon = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "stock_missing-image",
+                                    G_Height - 2,
+                                    0, NULL);
+  }
+
+  if (!icon)
+  {
+
+    icon = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gnome-main-menu",
+                                    G_Height - 2,
+                                    0, NULL);
+  }
+
+  if (icon)
+  {
+    if (gdk_pixbuf_get_height(icon) != G_Height - 2)
+    {
+      GdkPixbuf *oldpbuf = icon;
+      icon = gdk_pixbuf_scale_simple(oldpbuf, G_Height - 2, G_Height - 2, GDK_INTERP_HYPER);
+      g_object_unref(oldpbuf);
+    }
+
+    awn_applet_simple_set_temp_icon(AWN_APPLET_SIMPLE(G_applet), icon);
+  }
+  else
+  {
+    icon = gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8, G_Height - 2, G_Height - 2);
+    gdk_pixbuf_fill(icon, 0x00000000);
+    awn_applet_simple_set_temp_icon(AWN_APPLET_SIMPLE(G_applet), icon);
+  }
+
+  g_signal_connect(G_OBJECT(menu->applet), "button-press-event", G_CALLBACK(_button_clicked_event), menu);
+
+  return FALSE;
 }
 
 
-static gboolean _expose_event (GtkWidget *widget, GdkEventExpose *expose, gpointer null)
+static gboolean _expose_event(GtkWidget *widget, GdkEventExpose *expose, gpointer null)
 {
-	static gboolean done_once=FALSE;
-		
-	if (!done_once)
-	{
-		g_timeout_add(500,_build_away,null);
-                              	
-	}		
-	done_once=TRUE;
-	return FALSE;
-}	
+  static gboolean done_once = FALSE;
 
-	
-AwnApplet* awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
+  if (!done_once)
+  {
+    g_timeout_add(500, _build_away, null);
+
+  }
+
+  done_once = TRUE;
+
+  return FALSE;
+}
+
+
+AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient, gint height)
 {
 
-  	AwnApplet *applet = AWN_APPLET (awn_applet_simple_new (uid, orient, height));
-  	G_applet=applet;
-	gtk_widget_set_size_request (GTK_WIDGET (applet), height, -1);
-	GdkPixbuf *icon;
-	G_Height=height;
-    icon=gdk_pixbuf_new(GDK_COLORSPACE_RGB,TRUE,8,1,height);
-    gdk_pixbuf_fill(icon,0x00000000);  
-	awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (applet),icon);                                   
-	gtk_widget_show_all (GTK_WIDGET (applet));
-	
-	g_signal_connect (G_OBJECT (applet),"expose-event", G_CALLBACK (_expose_event), NULL);	
+  AwnApplet *applet = AWN_APPLET(awn_applet_simple_new(uid, orient, height));
+  G_applet = applet;
+  gtk_widget_set_size_request(GTK_WIDGET(applet), height, -1);
+  GdkPixbuf *icon;
+  G_Height = height;
+  icon = gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8, 1, height);
+  gdk_pixbuf_fill(icon, 0x00000000);
+  awn_applet_simple_set_temp_icon(AWN_APPLET_SIMPLE(applet), icon);
+  gtk_widget_show_all(GTK_WIDGET(applet));
 
-	return applet;
+  g_signal_connect(G_OBJECT(applet), "expose-event", G_CALLBACK(_expose_event), NULL);
+
+  return applet;
 
 }
 

@@ -121,7 +121,7 @@ class App(awn.AppletSimple):
 		self.forecast_timer = gobject.timeout_add(7200000,self.update_forecast)
 		self.icons = weathericons.WeatherIcons()
 		# Setup popup menu
-		self.popup_menu = gtk.Menu()
+		self.popup_menu = self.create_default_menu()
 		refresh_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_REFRESH)
 		map_item = gtk.MenuItem("View Weather Map")
 		pref_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)

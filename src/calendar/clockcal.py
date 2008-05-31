@@ -101,7 +101,7 @@ class App(awn.AppletSimple):
 		gobject.timeout_add(100,self.first_paint)		
 		self.timer = gobject.timeout_add(1000,self.timer_callback)
 		#self.timer = gobject.timeout_add(1000,self.subsequent_paint)
-		self.popup_menu = gtk.Menu()
+		self.popup_menu = self.create_default_menu()
 		pref_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
 		forget_item = gtk.MenuItem("Forget Password")
 		about_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_ABOUT)

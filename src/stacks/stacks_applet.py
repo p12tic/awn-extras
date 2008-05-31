@@ -213,7 +213,7 @@ class StacksApplet (awn.AppletSimple):
             # right click
             self.emit("stacks-gui-hide")
             # create popup menu
-            popup_menu = gtk.Menu()
+            popup_menu = self.create_default_menu()
             # get list of backend specified menu items
             items = self.backend.get_menu_items()
             if items:

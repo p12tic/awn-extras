@@ -56,7 +56,7 @@ class App (awn.AppletSimple):
         self.gconf_client = gconf.client_get_default()
 
         # Setup popup menu
-        self.popup_menu = gtk.Menu()
+        self.popup_menu = self.create_default_menu()
         dil_item = gtk.MenuItem("Dilbert")
         pnut_item = gtk.MenuItem("Peanuts")
         born_item = gtk.MenuItem("The Born Loser")

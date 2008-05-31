@@ -100,7 +100,7 @@ class App (awn.AppletSimple):
 # create context menu
 
   def context_menu(self, widget, event):
-    menu = gtk.Menu()
+    menu = self.create_default_menu()
     about_icon = gtk.ImageMenuItem(stock_id=gtk.STOCK_ABOUT)
     menu.append(about_icon)
     menu.show_all()

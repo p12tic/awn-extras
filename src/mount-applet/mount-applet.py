@@ -54,7 +54,7 @@ class MountApplet(awn.AppletSimple):
         self.dialog.connect ("focus-out-event", self.dialog_focus_out)
 
         # Setup popup menu
-        self.popup_menu = gtk.Menu()
+        self.popup_menu = self.create_default_menu()
         pref_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
         self.popup_menu.append(pref_item)
         pref_item.connect_object("activate", self.pref_callback, self)

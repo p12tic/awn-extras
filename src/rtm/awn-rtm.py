@@ -64,6 +64,9 @@ except ImportError:
         print 'See: http://wiki.awn-project.org/Awn_Extras:Dependency_Matrix'
         print '       #####################################'
 
+# Add pop up if gtkmozembed isn't found
+awn.check_dependencies(globals(), 'gtkmozembed')
+
 # set up applet
 class App (awn.AppletSimple):
   def __init__ (self, uid, orient, height):

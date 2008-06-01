@@ -41,6 +41,8 @@ AC_PYTHON_DEVEL()
 PKG_CHECK_MODULES(PYCAIRO, pycairo >= pycairo_required_version)
 PYGTK_CODEGEN_DEFINES="-DHAVE_PYCAIRO $PYGTK_CODEGEN_DEFINES";
 
+PKG_CHECK_EXISTS([libwnck-1.0 >= 2.21.99.9], [AC_DEFINE(HAVE_LIBWNCK_222, 1, [Have libwnck 2.22.x])])
+
 PKG_CHECK_MODULES(PYGTK, pygtk-2.0 >= pygtk_required_version)
 AC_PATH_PROG(PYGTK_CODEGEN, pygtk-codegen-2.0, no)
 if test "x$PYGTK_CODEGEN" = "xno"; then

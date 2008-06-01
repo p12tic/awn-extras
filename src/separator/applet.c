@@ -48,6 +48,26 @@ expose (GtkWidget *widget, GdkEventExpose *event, gpointer null)
   return TRUE;
 }
 
+static gboolean
+_button_clicked_event (GtkWidget      *widget,
+                       GdkEventButton *event,
+                       AwnApplet *applet)
+{
+  static GtkWidget *menu=NULL;
+  if (event->button == 3)
+  {
+    if (!menu)
+    {
+      menu = awn_applet_create_default_menu (applet);
+    }
+    gtk_menu_set_screen (GTK_MENU (menu), NULL);
+    gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL,
+                    event->button, event->time);
+  }
+  return TRUE;
+}
+
+
 gboolean
 awn_applet_factory_init ( AwnApplet *applet )
 {
@@ -55,6 +75,8 @@ awn_applet_factory_init ( AwnApplet *applet )
 
   guint height = awn_applet_get_height( applet );
   gtk_widget_set_size_request (GTK_WIDGET (applet), 5, height * 2);
+  g_signal_connect (G_OBJECT (applet), "button-press-event",
+                    G_CALLBACK (_button_clicked_event), applet);  
   return TRUE;
 }
 

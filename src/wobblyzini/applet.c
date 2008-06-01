@@ -22,6 +22,25 @@
 
 #include "wobblyziniapplet.h"
 
+static gboolean
+_button_clicked_event (GtkWidget      *widget,
+                       GdkEventButton *event,
+                       AwnApplet *applet)
+{
+  static GtkWidget *menu=NULL;
+  if (event->button == 3)
+  {
+    if (!menu)
+    {
+      menu = awn_applet_create_default_menu (applet);
+    }
+    gtk_menu_set_screen (GTK_MENU (menu), NULL);
+    gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL,
+                    event->button, event->time);
+  }
+  return TRUE;
+}
+
 AwnApplet*
 awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
 {
@@ -33,7 +52,8 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
 	gtk_widget_set_size_request (GTK_WIDGET (applet), awn_applet_get_height (applet) * 2, awn_applet_get_height (applet) );
 	wobblyzini = wobblyzini_applet_new(applet);
 	/*printf ("apres init\n");*/
-
+  g_signal_connect (G_OBJECT (applet), "button-press-event",
+                    G_CALLBACK (_button_clicked_event), applet); 
 	return applet;
 }
 

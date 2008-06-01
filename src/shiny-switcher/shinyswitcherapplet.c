@@ -64,7 +64,7 @@
 #define CONFIG_GRAB_WALLPAPER CONFIG_KEY("grab_wallpaper")
 #define CONFIG_DESKTOP_COLOUR CONFIG_KEY("desktop_colour")
 #define CONFIG_QUEUED_RENDER_FREQ CONFIG_KEY("queued_render_timer")
-#define CONFIG_SHOW_RIGHT_CLICK CONFIG_KEY("show_right_click_menu")
+#define CONFIG_SHOW_RIGHT_CLICK CONFIG_KEY("show_right_click")
 
 #define APPLET_NAME "shinyswitcher"
 
@@ -349,12 +349,11 @@ gboolean  _button_workspace(GtkWidget *widget, GdkEventButton *event, Workplace_
     if (!menu)
     {
       GtkWidget *item;
+      menu = awn_applet_create_default_menu (shinyswitcher->applet);
+      gtk_menu_set_screen (GTK_MENU (menu), NULL);              
       item = shared_menuitem_create_applet_prefs(APPLET_NAME,NULL);
       if (item) //generic preferences is enabled
       {
-        //we don't bother building this menu... if we don't have this item... it's the only thing at the moment.
-        menu = awn_applet_create_default_menu (shinyswitcher->applet);
-        gtk_menu_set_screen (GTK_MENU (menu), NULL);        
         gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);          
       }        
     }
@@ -368,10 +367,17 @@ gboolean  _button_workspace(GtkWidget *widget, GdkEventButton *event, Workplace_
   return FALSE;
 }
 
+static void _menu_selection_done (GtkMenuShell *menushell,Shiny_switcher *shinyswitcher)
+{
+  queue_all_render(shinyswitcher);
+}
+
+
 gboolean  _button_win(GtkWidget *widget, GdkEventButton *event, Win_press_data * data)
 {
   WnckWindow*  wnck_win = data->wnck_window;
-
+  GtkWidget *menu=NULL;
+  
   if (! WNCK_IS_WINDOW(wnck_win))
   {
     return TRUE;
@@ -392,9 +398,24 @@ gboolean  _button_win(GtkWidget *widget, GdkEventButton *event, Win_press_data *
   {
     if (data->shinyswitcher->show_right_click)
     {
-      GtkWidget * menu = g_tree_lookup(data->shinyswitcher->win_menus, wnck_win);
-      if (menu)
+      Shiny_switcher *shinyswitcher=g_tree_lookup(data->shinyswitcher->win_menus, wnck_win);
+      if (WNCK_IS_WINDOW(wnck_win) && shinyswitcher)
       {
+#ifdef HAVE_LIBWNCK_222
+        menu = wnck_action_menu_new (wnck_win);
+#else          
+        menu = wnck_create_window_action_menu(wnck_win);
+#endif
+        gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL, event->button, event->time);
+        g_signal_connect(G_OBJECT(menu), "selection-done",G_CALLBACK (_menu_selection_done),shinyswitcher);
+        
+      }      
+    }
+    else
+    {
+      menu = g_tree_lookup(data->shinyswitcher->win_menus, wnck_win);
+      if (menu)
+      {        
         gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL, event->button, event->time);
       }
     }
@@ -1495,15 +1516,20 @@ gboolean create_windows(Shiny_switcher *shinyswitcher)
 
         if (shinyswitcher->show_right_click && WNCK_IS_WINDOW(win_iter->data))
         {
-          GtkWidget *widget = wnck_create_window_action_menu(win_iter->data);
-
-          if (widget)
+          g_tree_insert(shinyswitcher->win_menus, G_OBJECT(win_iter->data), shinyswitcher);
+        }
+        else if (!shinyswitcher->show_right_click && WNCK_IS_WINDOW(win_iter->data))
+        {
+          GtkWidget * menu;          
+          GtkWidget *item;
+          menu = awn_applet_create_default_menu (shinyswitcher->applet);
+          gtk_menu_set_screen (GTK_MENU (menu), NULL);              
+          item = shared_menuitem_create_applet_prefs(APPLET_NAME,NULL);
+          if (item) //generic preferences is enabled
           {
-            if (GTK_IS_WIDGET(widget))
-            {
-              g_tree_insert(shinyswitcher->win_menus, G_OBJECT(win_iter->data), widget);
-            }
+            gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);          
           }
+          g_tree_insert(shinyswitcher->win_menus, G_OBJECT(win_iter->data), menu);
         }
       }
     }
@@ -1531,18 +1557,23 @@ void _window_opened(WnckScreen *screen, WnckWindow *window, Shiny_switcher *shin
   g_signal_connect(G_OBJECT(window), "geometry-changed", G_CALLBACK(_win_geom_change), shinyswitcher);
   g_signal_connect(G_OBJECT(window), "workspace-changed", G_CALLBACK(_win_ws_change), shinyswitcher);
 
-  if (WNCK_IS_WINDOW(window) && shinyswitcher->show_right_click)
+  if (shinyswitcher->show_right_click && WNCK_IS_WINDOW(window))
   {
-    GtkWidget *widget = wnck_create_window_action_menu(window);
-
-    if (widget)
-    {
-      if (GTK_IS_WIDGET(widget))
-      {
-        g_tree_insert(shinyswitcher->win_menus, window, widget);
-      }
-    }
+    g_tree_insert(shinyswitcher->win_menus, G_OBJECT(window), shinyswitcher);
   }
+  else if (!shinyswitcher->show_right_click && WNCK_IS_WINDOW(window))
+  {
+    GtkWidget * menu;          
+    GtkWidget *item;
+    menu = awn_applet_create_default_menu (shinyswitcher->applet);
+    gtk_menu_set_screen (GTK_MENU (menu), NULL);              
+    item = shared_menuitem_create_applet_prefs(APPLET_NAME,NULL);
+    if (item) //generic preferences is enabled
+    {
+      gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);          
+    }
+    g_tree_insert(shinyswitcher->win_menus, G_OBJECT(window), menu);
+  }  
 }
 
 void _window_closed(WnckScreen *screen, WnckWindow *window, Shiny_switcher *shinyswitcher)

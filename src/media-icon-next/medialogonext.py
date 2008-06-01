@@ -47,7 +47,7 @@ class App (awn.AppletSimple):
             icon = icon.scale_simple(height,height,gtk.gdk.INTERP_BILINEAR)
         self.set_icon                         (icon)
         self.title                          = awn.awn_title_get_default ()
-
+        self.popup_menu = self.create_default_menu()
         # Standard AWN Connects
         self.connect                          ("button-press-event", self.button_press)
         #self.connect                          ("enter-notify-event", self.enter_notify)
@@ -57,7 +57,10 @@ class App (awn.AppletSimple):
     # Applet standard methods
     #############
     def button_press                          (self, widget, event):
-        self.button_next_press                  ()
+        if event.button == 1:
+            self.button_next_press                  ()
+        elif event.button == 3:
+            self.popup_menu.popup(None, None, None, event.button, event.time)
     #    self.title.hide                       (self)
     #def dialog_focus_out                      (self, widget, event):
     #    print ''

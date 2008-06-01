@@ -50,7 +50,7 @@ class App (awn.AppletSimple):
         self.title                          = awn.awn_title_get_default ()
         self.dialog                         = awn.AppletDialog (self)
         self.dialog_visible = False
-
+        self.popup_menu = self.create_default_menu()
         # Defining Widgets
         vbox                                = gtk.VBox()
         hbox                                = gtk.HBox()
@@ -98,12 +98,14 @@ class App (awn.AppletSimple):
                 self.dialog_visible = True
         elif event.button == 2:
             self.button_pp_press(widget)
+        elif event.button == 3:
+            self.popup_menu.popup(None, None, None, event.button, event.time)
 
     def wheel_turn (self, widget, event):
         if event.direction == gtk.gdk.SCROLL_UP:
-          self.button_next_press(widget)
+            self.button_next_press(widget)
         elif event.direction == gtk.gdk.SCROLL_DOWN:
-          self.button_previous_press(widget)
+            self.button_previous_press(widget)
         self.labeler()
     def dialog_focus_out                      (self, widget, event):
         self.dialog.hide                      ()

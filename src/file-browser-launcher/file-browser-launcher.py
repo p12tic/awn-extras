@@ -496,7 +496,7 @@ class App (awn.AppletSimple):
 		self.about.connect("activate",self.open_about)
 		
 		#Now create the menu to put the items in and show it
-		self.menu = gtk.Menu()
+		self.menu = self.create_default_menu()
 		self.menu.append(self.prefs)
 		self.menu.append(self.about)
 		self.menu.show_all()

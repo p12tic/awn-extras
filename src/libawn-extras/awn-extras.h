@@ -104,6 +104,7 @@ gboolean share_config_bool(const gchar * key);
 * configuration folder.
 * baseconf - If there is a default configuration location that is different than
 * the instance provided.  Otherwise NULL.
+* applet_name - applet name used to reference the associated schema-ini
 *
 *  Returns:
 *    A gtk_menu_item or NULL if the generic applet preferences configuration is
@@ -113,7 +114,42 @@ gboolean share_config_bool(const gchar * key);
 *    There is no need to attach the returned item to a
 *  signal as this is handled by the function.
 */
-GtkWidget *shared_menuitem_create_applet_prefs(gchar *instance,gchar *baseconf);
+GtkWidget *shared_menuitem_create_applet_prefs(gchar *instance,gchar *baseconf,
+                                              gchar * applet_name);
+
+
+typedef enum
+{
+  AWN_APPLET_LICENSE_GPLV2=10,
+  AWN_APPLET_LICENSE_GPLV3=11,
+  AWN_APPLET_LICENSE_LGPLV2_1=12,
+  AWN_APPLET_LICENSE_LGPLV3=13
+}AwnAppletLicense;
+
+/* 
+*  see GtkAboutDialog() for a description of args other than license.
+*   license must be one of the values enumerated in AwnAppletLicense.
+*   copyright,license and program_name are mandatory.
+*  Returns:
+*    A about applet gtk_menu_item 
+*/
+GtkWidget *shared_menuitem_about_applet_simple(const gchar * copyright,
+                                        AwnAppletLicense license,
+                                        const gchar * program_name,
+                                        const gchar * version);
+
+GtkWidget *shared_menuitem_about_applet(const gchar * copyright,
+                                        AwnAppletLicense license,
+                                        const gchar * program_name,
+                                        const gchar * version,                                        
+                                        const gchar * comments,
+                                        const gchar * website,
+                                        const gchar * website_label,
+                                        const gchar * icon_name,                                        
+                                        const gchar * translator_credits,                                        
+                                        const gchar **authors,
+                                        const gchar **artists,
+                                        const gchar **documenters);
 
 
 #endif

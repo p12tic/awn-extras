@@ -224,6 +224,10 @@ GtkWidget *shared_menuitem_about_applet(const gchar * copyright,
                    G_CALLBACK(_show_about), dialog);
   g_signal_connect(G_OBJECT(item), "destroy-event",
                    G_CALLBACK(_cleanup_about), dialog);
+   g_signal_connect_swapped (dialog,
+                             "response", 
+                             G_CALLBACK (gtk_widget_hide),
+                             dialog);  
   return item;
 }
 

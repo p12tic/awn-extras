@@ -128,7 +128,7 @@ static gboolean
 _cleanup_about(GtkWidget *widget, GdkEvent *event,
                            GtkWidget * dialog)
 {
-  gkt_widget_destroy(dialog); 
+  gtk_widget_destroy(dialog); 
 }
 
 
@@ -197,7 +197,7 @@ GtkWidget *shared_menuitem_about_applet(const gchar * copyright,
   }
   if (icon_name)
   {
-    gtk_about_dialog_set_icon_name (dialog,icon_name);
+    gtk_about_dialog_set_logo_icon_name (dialog,icon_name);
   }
   if (translator_credits)
   {

@@ -111,7 +111,7 @@ affinity_right_click (GtkWidget *widget, GdkEventButton *event, AwnApplet *app)
     		menu = awn_applet_create_default_menu (AWN_APPLET(app));
 				//using a string here instead of APPLET_NAME which is defined in aff-settings.c
 				//don't feel like determining how it is being used in said file...
-				item = shared_menuitem_create_applet_prefs("affinity",NULL);
+				item = shared_menuitem_create_applet_prefs("affinity",NULL,"affinity");
 				if (item) //generic preferences is enabled
 				{
 				  gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);          

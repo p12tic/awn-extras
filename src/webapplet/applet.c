@@ -132,7 +132,7 @@ _button_clicked_event (GtkWidget      *widget,
         g_signal_connect (G_OBJECT (item), "activate",
                           G_CALLBACK (_show_location_dialog), webapplet);                  
       }           
-      item = shared_menuitem_create_applet_prefs(webapplet->uid,APPLET_NAME);
+      item = shared_menuitem_create_applet_prefs(webapplet->uid,APPLET_NAME,APPLET_NAME);
       if (item) //generic preferences is enabled
       {
         gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);          

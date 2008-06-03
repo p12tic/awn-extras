@@ -351,7 +351,7 @@ gboolean  _button_workspace(GtkWidget *widget, GdkEventButton *event, Workplace_
       GtkWidget *item;
       menu = awn_applet_create_default_menu (shinyswitcher->applet);
       gtk_menu_set_screen (GTK_MENU (menu), NULL);              
-      item = shared_menuitem_create_applet_prefs(APPLET_NAME,NULL);
+      item = shared_menuitem_create_applet_prefs(APPLET_NAME,NULL,APPLET_NAME);
       if (item) //generic preferences is enabled
       {
         gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);          
@@ -1524,7 +1524,7 @@ gboolean create_windows(Shiny_switcher *shinyswitcher)
           GtkWidget *item;
           menu = awn_applet_create_default_menu (shinyswitcher->applet);
           gtk_menu_set_screen (GTK_MENU (menu), NULL);              
-          item = shared_menuitem_create_applet_prefs(APPLET_NAME,NULL);
+          item = shared_menuitem_create_applet_prefs(APPLET_NAME,NULL,APPLET_NAME);
           if (item) //generic preferences is enabled
           {
             gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);          
@@ -1567,7 +1567,7 @@ void _window_opened(WnckScreen *screen, WnckWindow *window, Shiny_switcher *shin
     GtkWidget *item;
     menu = awn_applet_create_default_menu (shinyswitcher->applet);
     gtk_menu_set_screen (GTK_MENU (menu), NULL);              
-    item = shared_menuitem_create_applet_prefs(APPLET_NAME,NULL);
+    item = shared_menuitem_create_applet_prefs(APPLET_NAME,NULL,APPLET_NAME);
     if (item) //generic preferences is enabled
     {
       gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);          

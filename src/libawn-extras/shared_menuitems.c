@@ -131,7 +131,13 @@ _cleanup_about(GtkWidget *widget, GdkEvent *event,
   gtk_widget_destroy(dialog); 
 }
 
-
+/* 
+*  see GtkAboutDialog() for a description of args other than license.
+*   license must be one of the values enumerated in AwnAppletLicense.
+*   copyright,license and program_name are mandatory.
+*  Returns:
+*    A about applet gtk_menu_item 
+*/
 GtkWidget *shared_menuitem_about_applet(const gchar * copyright,
                                         AwnAppletLicense license,
                                         const gchar * program_name,
@@ -216,7 +222,7 @@ GtkWidget *shared_menuitem_about_applet(const gchar * copyright,
     gtk_about_dialog_set_documenters (dialog,documenters);
   }  
   item_text = g_strdup_printf("About %s",program_name);
-  item = gtk_image_menu_item_new_with_label(item_text);
+  item = gtk_image_menu_item_new_with_label(item_text); //FIXME Add pretty icon
   g_free(item_text);
 
   gtk_widget_show_all(item);
@@ -224,10 +230,8 @@ GtkWidget *shared_menuitem_about_applet(const gchar * copyright,
                    G_CALLBACK(_show_about), dialog);
   g_signal_connect(G_OBJECT(item), "destroy-event",
                    G_CALLBACK(_cleanup_about), dialog);
-   g_signal_connect_swapped (dialog,
-                             "response", 
-                             G_CALLBACK (gtk_widget_hide),
-                             dialog);  
+  g_signal_connect_swapped (dialog, "response",
+                   G_CALLBACK (gtk_widget_hide),dialog);  
   return item;
 }
 

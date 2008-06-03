@@ -118,6 +118,8 @@ GtkWidget *shared_menuitem_create_applet_prefs(gchar *instance,gchar *baseconf,
                                               gchar * applet_name);
 
 
+/*Setting the acceptable values starting at 10... makes it rather unlikely
+that someone can specify a license type by accident.*/
 typedef enum
 {
   AWN_APPLET_LICENSE_GPLV2=10,

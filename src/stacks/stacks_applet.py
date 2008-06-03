@@ -187,7 +187,7 @@ class StacksApplet (awn.AppletSimple):
         else:
             self.gui = stacks_gui_dialog.StacksGuiDialog(self)
             self.gui_type = STACKS_GUI_DIALOG
-        
+
         self.gconf_client.set_int(
                 self.gconf_path + "/gui_type", self.gui_type )
 
@@ -207,7 +207,7 @@ class StacksApplet (awn.AppletSimple):
     # On mouseclick on applet ->
     # * hide the dialog and show the context menu on button 3
     # * open the backend on button 2
-    # * show/hide the dialog on button 1 (if backend not empty) 
+    # * show/hide the dialog on button 1 (if backend not empty)
     def applet_button_cb(self, widget, event):
         if event.button == 3:
             # right click
@@ -215,17 +215,18 @@ class StacksApplet (awn.AppletSimple):
             # create popup menu
             popup_menu = self.create_default_menu()
             # get list of backend specified menu items
+	    popup_menu.prepend(gtk.SeparatorMenuItem())
+	    pref_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
+            popup_menu.prepend(pref_item)
+
             items = self.backend.get_menu_items()
             if items:
                 for i in items:
-                  popup_menu.append(i)
-                popup_menu.append(gtk.SeparatorMenuItem())
+		    popup_menu.prepend(i)
             #gui_item = gtk.CheckMenuItem(label=_("Use experimental gui"))
             #gui_item.set_active(self.gui_type > STACKS_GUI_DIALOG)
             #gui_item.connect_object("toggled", self.applet_menu_gui_cb, self)
             #popup_menu.append(gui_item)
-            pref_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
-            popup_menu.append(pref_item)
             about_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_ABOUT)
             popup_menu.append(about_item)
             pref_item.connect_object("activate",self.applet_menu_pref_cb,self)
@@ -351,7 +352,7 @@ class StacksApplet (awn.AppletSimple):
 			self.applet_set_icon(pixbuf)
         else:
         	print "ERROR in STACK: invalid iter!?  (stacks_applet.py)"
-        	
+
 
 
     def backend_item_removed_cb(self, widget, iter):

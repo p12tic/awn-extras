@@ -58,6 +58,7 @@ def get_places(theme):
             bookmarks[tempitem] = [0,item]
     return model,bookmarks
     bookmark_list.close()
+
 def set_model(treeview,lst,theme,location_icon):
     """
     This item produces a complete model from a treeview,
@@ -82,7 +83,7 @@ def set_model(treeview,lst,theme,location_icon):
                 row[0] = theme.load_icon(row[0],22,0)
         except:
             row[0] = gdk.pixbuf_new_from_file (location_icon)
-        
+
         try:
             if 22 != row[0].get_height():
                 row[0] = row[0].scale_simple(22,22,gtk.gdk.INTERP_BILINEAR)
@@ -107,16 +108,14 @@ def get_menus(root,root2=None):
             listall.append(lst)
             listobj[name] = [2,menu]
         elif menu.get_type() == gmenu.TYPE_ENTRY:
-            if menu.get_name() == 'Add/Remove...':pass
-            else:
-                name = menu.get_name()
-                if len(name) >= 21:
-                    name = name[:21] +'..' 
-                lst = []
-                lst.append(menu.get_icon())
-                lst.append(name)
-                listall.append(lst)
-                listobj[name] = [1,menu.exec_info]
+            name = menu.get_name()
+            if len(name) >= 21:
+                name = name[:21] +'..'
+            lst = []
+            lst.append(menu.get_icon())
+            lst.append(name)
+            listall.append(lst)
+            listobj[name] = [1,menu.exec_info]
     if root2 != None:
         for menu in root2.contents:
             if menu.get_type() == gmenu.TYPE_SEPARATOR:pass
@@ -132,7 +131,7 @@ def get_menus(root,root2=None):
             elif menu.get_type() == gmenu.TYPE_ENTRY:
                 name = menu.get_name()
                 if len(name) >= 21:
-                    name = name[:21] + '...' 
+                    name = name[:21] + '...'
                 lst = []
                 lst.append(menu.get_icon())
                 lst.append(name)

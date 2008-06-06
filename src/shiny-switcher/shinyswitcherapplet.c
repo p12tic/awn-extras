@@ -64,7 +64,7 @@
 #define CONFIG_GRAB_WALLPAPER CONFIG_KEY("grab_wallpaper")
 #define CONFIG_DESKTOP_COLOUR CONFIG_KEY("desktop_colour")
 #define CONFIG_QUEUED_RENDER_FREQ CONFIG_KEY("queued_render_timer")
-#define CONFIG_SHOW_RIGHT_CLICK CONFIG_KEY("show_right_click")
+//#define CONFIG_SHOW_RIGHT_CLICK CONFIG_KEY("show_right_click")
 
 #define APPLET_NAME "shinyswitcher"
 
@@ -175,13 +175,13 @@ void init_config(Shiny_switcher *shinyswitcher)
             CONFIG_GRAB_WALLPAPER, error);
   GET_VALUE(shinyswitcher->do_queue_freq, 1000, int, shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
             CONFIG_QUEUED_RENDER_FREQ , error);
-  GET_VALUE(shinyswitcher->show_right_click,FALSE,bool,shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
-            CONFIG_SHOW_RIGHT_CLICK , error);            
-  
+//  GET_VALUE(shinyswitcher->show_right_click,FALSE,bool,shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+//            CONFIG_SHOW_RIGHT_CLICK , error);            
+  shinyswitcher->show_right_click = TRUE; //let's enable by default and see if ther are issues.
   config_get_color(shinyswitcher->config, CONFIG_APPLET_BORDER_COLOUR, &shinyswitcher->applet_border_colour);
   config_get_color(shinyswitcher->config, CONFIG_DESKTOP_COLOUR,       &shinyswitcher->desktop_colour);
 
-
+  
   shinyswitcher->active_window_on_workspace_change_method = 1;
   shinyswitcher->override_composite_check = FALSE;
   shinyswitcher->show_tooltips = FALSE;    //buggy at the moment will be a config option eventually
@@ -377,6 +377,7 @@ gboolean  _button_win(GtkWidget *widget, GdkEventButton *event, Win_press_data *
 {
   WnckWindow*  wnck_win = data->wnck_window;
   GtkWidget *menu=NULL;
+  GtkWidget *item=NULL;
   
   if (! WNCK_IS_WINDOW(wnck_win))
   {
@@ -396,20 +397,23 @@ gboolean  _button_win(GtkWidget *widget, GdkEventButton *event, Win_press_data *
   }
   else if (event->button == 3)
   {
-    if (data->shinyswitcher->show_right_click)
+    Shiny_switcher *shinyswitcher=g_tree_lookup(data->shinyswitcher->win_menus, wnck_win);
+    if (WNCK_IS_WINDOW(wnck_win) && shinyswitcher)
     {
-      Shiny_switcher *shinyswitcher=g_tree_lookup(data->shinyswitcher->win_menus, wnck_win);
-      if (WNCK_IS_WINDOW(wnck_win) && shinyswitcher)
-      {
 #ifdef HAVE_LIBWNCK_222
-        menu = wnck_action_menu_new (wnck_win);
+      menu = wnck_action_menu_new (wnck_win);
 #else          
-        menu = wnck_create_window_action_menu(wnck_win);
+      menu = wnck_create_window_action_menu(wnck_win);
 #endif
-        gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL, event->button, event->time);
-        g_signal_connect(G_OBJECT(menu), "selection-done",G_CALLBACK (_menu_selection_done),shinyswitcher);
-        
-      }      
+      item = gtk_separator_menu_item_new();
+      gtk_widget_show_all(item);
+      gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), item);
+      
+      item=awn_applet_create_pref_item();
+      gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), item);      
+      
+      gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL, event->button, event->time);
+      g_signal_connect(G_OBJECT(menu), "selection-done",G_CALLBACK (_menu_selection_done),shinyswitcher);        
     }
     else
     {

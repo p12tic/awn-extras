@@ -100,9 +100,4 @@ type = int
 default = 1000
 description = Queued render timer. Number of milliseconds between queued render updates. The smaller the number the less lag will be apparent on shinyswitcher updates.  Multiples of 1000 are more power and CPU efficient.
 
-[DEFAULT/show_right_click]
-type = bool
-default = false
-description = Present full right click menu.  May be buggy.
-
 ; vim: set ft=dosini :

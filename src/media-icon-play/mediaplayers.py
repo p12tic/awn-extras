@@ -16,6 +16,8 @@
 # License along with this library; if not, write to the
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
+
+
 import sys, os
 import gobject
 import pygtk
@@ -25,8 +27,11 @@ import awn
 import dbus
 import gconf
 import string
+
 try:import pydcop
 except: ImportError
+
+
 def what_app():
     player_name = None
     bus_obj = dbus.SessionBus().get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
@@ -45,12 +50,16 @@ def what_app():
         else:player_name = "Amarok"
     except: SyntaxError
     return player_name
+
+
 class Rhythmbox:
     """
     Full Support
     """
+
     def __init__(self):
         self.dbus_driver()
+
     def dbus_driver(self):
         """
         Defining the dbus location for
@@ -61,6 +70,7 @@ class Rhythmbox:
             self.proxy_obj = self.session_bus.get_object('org.gnome.Rhythmbox', '/org/gnome/Rhythmbox/Player')
             self.player = dbus.Interface(self.proxy_obj, 'org.gnome.Rhythmbox.Player')
             self.player1 = self.session_bus.get_object('org.gnome.Rhythmbox', '/org/gnome/Rhythmbox/Shell')
+
     def labeler(self,artOnOff,titleOrder,titleLen,titleBoldFont):
         """
         This method changes the application titles and album art
@@ -96,18 +106,25 @@ class Rhythmbox:
 
     def button_previous_press (self):
         self.player.previous ()
+        
     def button_pp_press (self):
         self.player.playPause (1)
+        
     def button_next_press (self):
         self.player.next ()
+        
+
+
 class Exaile:
     """
     Full Support for the Exaile media player
     
     Issues exist with play. It stops the player when pushed. Need further dbus info.
     """
+    
     def __init__(self):
         self.dbus_driver()
+        
     def dbus_driver(self):
         """
         Defining the dbus location for
@@ -117,6 +134,7 @@ class Exaile:
             self.session_bus = dbus.SessionBus()
             self.proxy_obj = self.session_bus.get_object('org.exaile.DBusInterface', '/DBusInterfaceObject')
             self.player = dbus.Interface(self.proxy_obj, "org.exaile.DBusInterface")
+            
     def labeler(self,artOnOff,titleOrder,titleLen,titleBoldFont):
         """
         This method changes the application titles and album art
@@ -149,10 +167,14 @@ class Exaile:
 
     def button_previous_press (self):
         self.player.prev_track()
+        
     def button_pp_press (self):
         self.player.play_pause()
+        
     def button_next_press (self):
         self.player.next_track()
+
+
 class Banshee:
     """
     Full Support for the banshee media player
@@ -168,6 +190,7 @@ class Banshee:
             self.session_bus = dbus.SessionBus()
             self.proxy_obj = self.session_bus.get_object('org.gnome.Banshee',"/org/gnome/Banshee/Player")
             self.player = dbus.Interface(self.proxy_obj, "org.gnome.Banshee.Core")
+            
     def labeler(self,artOnOff,titleOrder,titleLen,titleBoldFont):
         """
         This method changes the application titles and album art
@@ -200,16 +223,22 @@ class Banshee:
 
     def button_previous_press (self):
         self.player.Previous()
+        
     def button_pp_press (self):
         self.player.TogglePlaying ()
+        
     def button_next_press (self):
         self.player.Next()
+
+
 class Listen:
     """
     Partial Support
     """
+
     def __init__(self):
         self.dbus_driver()
+
     def dbus_driver(self):
         """
         Defining the dbus location for
@@ -219,6 +248,7 @@ class Listen:
             self.session_bus = dbus.SessionBus()
             self.proxy_obj = self.session_bus.get_object('org.gnome.Listen',"/org/gnome/listen")
             self.player = dbus.Interface(self.proxy_obj, "org.gnome.Listen")
+            
     def labeler(self,artOnOff,titleOrder,titleLen,titleBoldFont):
         """
         This method changes the application titles and album art
@@ -249,12 +279,17 @@ class Listen:
         result_tooltip = result.replace("""</span>""",'')
         result_tooltip = result_tooltip.replace("""<span weight="bold">""",'')    
         return albumart,result,result_tooltip
+    
     def button_previous_press (self):
         self.player.previous()
+        
     def button_pp_press (self):
         self.player.play_pause ()
+        
     def button_next_press (self):
         self.player.next()
+
+
 class Amarok:
     """
     Not Working
@@ -298,12 +333,16 @@ class Amarok:
         result_tooltip = result.replace("""</span>""",'')
         result_tooltip = result_tooltip.replace("""<span weight="bold">""",'')    
         return albumart,result,result_tooltip
+
     def button_previous_press (self):
         self.player.prev()
+        
     def button_pp_press (self):
         self.player.playPause()
+        
     def button_next_press (self):
         self.player.next()
+
 
 class QuodLibet:
     """
@@ -352,7 +391,9 @@ class QuodLibet:
 
     def button_previous_press (self):
         self.player.Previous ()
+
     def button_pp_press (self):
         self.player.PlayPause ()
+
     def button_next_press (self):
         self.player.Next ()

@@ -1,0 +1,5 @@
+To build the extension you must run this command:
+
+gmcs -noconfig -codepage:utf8 -warn:4 -optimize+ -debug -define:DEBUG -out:Banshee.AwnIcon.dll -target:library -resource:Banshee.AwnIcon.addin.xml -pkg:banshee-1-core -pkg:banshee-1-services -pkg:banshee-1-thickclient -pkg:gtk-sharp-2.0 -pkg:ndesk-dbus-1.0 -r:System Banshee.AwnIcon/AwnIcon.cs 
+
+then copy it to /usr/lib/banshee-1/Extensions/

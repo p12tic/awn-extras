@@ -17,14 +17,17 @@
 # License along with this library; if not, write to the
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
+
 import sys, os
-import gobject
+import subprocess
+import string
+
 import pygtk
 import gtk
 from gtk import gdk
+
 import awn
 import menus
-import string
 import pathfinder
 import keyboard
 
@@ -98,7 +101,6 @@ class App (awn.AppletSimple):
         tree2.set_model(model)
         tree2.connect("button-press-event", keyboard.tree2faux,
                       self.treeclick,tree2,self.objlist2)
-        #
         entry = gtk.Entry()
         entry.set_size_request(-1,28)
         search_button = gtk.Button(stock="gtk-find")
@@ -135,12 +137,11 @@ class App (awn.AppletSimple):
     def search(self,widget):
         test = pathfinder.exists(self.entry.get_text())
         if test[0] == True and test[1] != None:
-            os.system(test[1]+' &')
-        else:gobject.spawn_async(["tracker-search-tool", self.entry.get_text()],
-                                 flags=gobject.SPAWN_SEARCH_PATH)
-    #############
-    # Applet standard methods
-    #############
+            subprocess.Popen([test[1]], shell=False)
+        else:
+            subprocess.Popen(["tracker-search-tool", self.entry.get_text()],
+                             shell=False)
+
     def button_press(self, widget, event):
         if event.button == 1:
             if self.dialog.flags() & gtk.VISIBLE:
@@ -156,15 +157,16 @@ class App (awn.AppletSimple):
                 self.tree1.grab_focus()
         elif event.button == 3:
             self.popup_menu.popup(None, None, None, event.button, event.time)
+
     def dialog_focus_out(self, widget, event):
         self.dialog.hide()
+
     def enter_notify(self, widget, event):
         self.title.show(self, self.resultToolTip)
+
     def leave_notify(self, widget, event):
         self.title.hide(self)
-    #############
-    # Dirty
-    #############
+
     def treeclick(self,widget,tree,obj,toggle,t2act=False):
         """
         this method is activated when tree1 is clicked.
@@ -180,11 +182,12 @@ class App (awn.AppletSimple):
         except:name=None
         if name != None:
             try:
-                if toggle == True:obj = self.objlist2
+                if toggle == True:
+                    obj = self.objlist2
                 if obj[name][0] == 1:
                     command = obj[name][1]
                     if '%' in command:command = command[:command.index('%')]
-                    os.system(command+' &')
+                    subprocess.Popen([command], shell=True)
                     self.dialog.hide()
                 if obj[name][0] == 2:
                     lst,self.objlist2 = menus.get_menus(obj[name][1])
@@ -199,8 +202,10 @@ class App (awn.AppletSimple):
                                                   start_editing=False)
             except KeyError:
                 if self.objlist3[name][0] == 0:
-                    gobject.spawn_async(["nautilus", self.objlist3[name][1]],
-                                        flags=gobject.SPAWN_SEARCH_PATH)
+                    print self.objlist3[name][1].replace('file://','')
+                    subprocess.Popen(["xdg-open",
+                                      self.objlist3[name][1].replace('file://','')],
+                                     shell=False)
                     self.dialog.hide()
             try:
                 if obj[name][0] == 4:

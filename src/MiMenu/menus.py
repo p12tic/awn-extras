@@ -1,4 +1,5 @@
 # !/usr/bin/env python
+
 import sys, os
 import os.path as check
 import gobject
@@ -7,12 +8,15 @@ import gtk
 from gtk import gdk
 import string
 import gmenu
+
 class MenuDateStore:
     MENUCORE = gmenu.lookup_tree('applications.menu')
     MENUROOT = MENUCORE.get_root_directory()
     SYSTEMMENUCORE = gmenu.lookup_tree('settings.menu')
     SYSTEMMENUROOT = SYSTEMMENUCORE.get_root_directory()
     PATH = []
+
+
 def get_places(theme):
     """
     this method parses the gtk bookmarks file and serves it back as a list
@@ -59,6 +63,7 @@ def get_places(theme):
     return model,bookmarks
     bookmark_list.close()
 
+
 def set_model(treeview,lst,theme,location_icon):
     """
     This item produces a complete model from a treeview,
@@ -90,6 +95,8 @@ def set_model(treeview,lst,theme,location_icon):
         except:print row[0]
         model.append(row)
     return model
+
+
 def get_menus(root,root2=None):
     """
     returns a list of menus from root and root2
@@ -143,4 +150,5 @@ def get_menus(root,root2=None):
         listall.append(lst)
         listobj['Places'] = [4,'Places']
     return listall,listobj
+
 data = MenuDateStore()

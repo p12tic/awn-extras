@@ -1,7 +1,10 @@
 # /usr/bin/env python
+
 import string
 import os
 import os.path as osp
+
+
 def path_finder():
     a = 0
     paths = []
@@ -16,6 +19,8 @@ def path_finder():
     pathlist = pathlist.replace(paths[a] + ':','')
     paths[-1] = string.rstrip(paths[-1])
     return paths
+
+
 def exists(program):
     work = [False,None]
     if paths != None:
@@ -24,6 +29,8 @@ def exists(program):
             if osp.exists(test) == True:
                 work = [True,test]
     return work
+
+
 global paths
 try:paths = path_finder()
 except:paths=None

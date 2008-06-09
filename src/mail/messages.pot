@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-04-02 17:31-0400\n"
+"POT-Creation-Date: 2008-06-09 15:17-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,145 +17,128 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: mail.py:95
-#, python-format
-msgid "The Mail Applet had an error: %s"
-msgstr ""
-
-#: mail.py:98
+#: mail.py:88
 #, python-format
 msgid "You have %d new message"
 msgid_plural "You have %d new messages"
 msgstr[0] ""
 msgstr[1] ""
 
-#: mail.py:102
+#: mail.py:92
 #, python-format
-msgid "%d unread message"
-msgid_plural "%d unread messages"
+msgid "%d message"
+msgid_plural "%d messages"
 msgstr[0] ""
 msgstr[1] ""
 
-#: mail.py:158
+#: mail.py:148
 msgid "Mail Applet (Click to Log In)"
 msgstr ""
 
-#: mail.py:215 mail.py:758
+#: mail.py:205 mail.py:714
 msgid "Mail Applet"
 msgstr ""
 
-#: mail.py:216
+#: mail.py:206
 #, python-format
 msgid "Logging in as %s"
 msgstr ""
 
-#: mail.py:248
+#: mail.py:238
 msgid "New Mail - Mail Applet"
 msgstr ""
 
-#: mail.py:310
+#: mail.py:297
 msgid "Hmmm, nothing here"
 msgstr ""
 
-#: mail.py:361
-msgid "Error in Mail Applet"
-msgstr ""
-
-#: mail.py:367
-#, python-format
-msgid ""
-"There seem to be problems with our connection to             your account. "
-"Your best bet is probably to log out and try again.             \n"
-"\n"
-"Here is the error given:\n"
-"\n"
-"<i>%s</i>"
-msgstr ""
-
-#: mail.py:376
-msgid "Fine, log me out"
-msgstr ""
-
-#: mail.py:388 mail.py:422
+#: mail.py:348 mail.py:382
 msgid "Log In"
 msgstr ""
 
-#: mail.py:393
+#: mail.py:353
 msgid "Wrong Username or Password"
 msgstr ""
 
-#: mail.py:406 mail.py:651 mail.py:740
+#: mail.py:366 mail.py:607 mail.py:696
 msgid "Username:"
 msgstr ""
 
-#: mail.py:407 mail.py:652 mail.py:741
+#: mail.py:367 mail.py:608 mail.py:697
 msgid "Password:"
 msgstr ""
 
-#: mail.py:431
+#: mail.py:391
 msgid "Change Options"
 msgstr ""
 
-#: mail.py:439
+#: mail.py:399
 msgid "Options"
 msgstr ""
 
-#: mail.py:445
+#: mail.py:405
 msgid "Theme"
 msgstr ""
 
-#: mail.py:452
+#: mail.py:412
 msgid "Theme: "
 msgstr ""
 
-#: mail.py:455
+#: mail.py:415
 msgid "Backend"
 msgstr ""
 
-#: mail.py:460
+#: mail.py:420
 msgid "Backend: "
 msgstr ""
 
-#: mail.py:464
+#: mail.py:424
 msgid "Email Client: "
 msgstr ""
 
-#: mail.py:466
+#: mail.py:426
 msgid "Hide Unless New"
 msgstr ""
 
-#: mail.py:470
+#: mail.py:430
 msgid "Alert on Network Errors"
 msgstr ""
 
-#: mail.py:474
+#: mail.py:434
 msgid "Save"
 msgstr ""
 
-#: mail.py:535 mail.py:594 mail.py:690
-msgid "Could not log in"
+#: mail.py:489 mail.py:549
+msgid ""
+"There seem to be problems with our                     connection to your "
+"account. Your best bet is probably                     to log out and try "
+"again."
 msgstr ""
 
-#: mail.py:560 mail.py:619
+#: mail.py:515 mail.py:575
 msgid "[No Subject]"
 msgstr ""
 
-#: mail.py:653
+#: mail.py:609
 msgid "Domain:"
 msgstr ""
 
-#: mail.py:668
+#: mail.py:624
 msgid "Dummy Message"
 msgstr ""
 
-#: mail.py:738
+#: mail.py:646
+msgid "Could not log in"
+msgstr ""
+
+#: mail.py:694
 msgid "Use SSL encryption"
 msgstr ""
 
-#: mail.py:742
+#: mail.py:698
 msgid "Server:"
 msgstr ""
 
-#: mail.py:762
+#: mail.py:718
 msgid "An applet to check one's email"
 msgstr ""

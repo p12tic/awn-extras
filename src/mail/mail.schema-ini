@@ -1,0 +1,31 @@
+[DEFAULT/backend]
+type=string
+default=GMail
+description=The backend from which to fetch mail.
+
+[DEFAULT/email-client]
+type=string
+default=evolution
+description=The command to run to open the desktop email client
+
+[DEFAULT/hide]
+type=bool
+default=false
+description=Whether to hide the applet when there are no unread messages
+
+[DEFAULT/login-token]
+type=int
+default=0
+description=The token number of the GNOME-Keyring login key. Used internally
+
+[DEFAULT/show-network-errors]
+type=bool
+default=true
+description=Whether to show a popup when a network error occurs
+
+[DEFAULT/theme]
+type=string
+default=Tango
+description=The theme used by the GMail applet
+
+; vim: set ft=dosini :

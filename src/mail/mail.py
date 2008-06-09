@@ -60,26 +60,26 @@ def Label(str):
     q.set_use_markup(True)
     return q
 
-def HBox(list, homog=True):
+def HBox(*args, homog=True):
     """
     Create a new HBox and add all the widgets from list to it
     """
 
     q = gtk.HBox(homog)
 
-    for i in list:
+    for i in args:
         q.add(i)
 
     return q
 
-def VBox(list, homog=True):
+def VBox(*args, homog=True):
     """
     Create a new HBox and add all the widgets from list to it
     """
 
     q = gtk.VBox(homog)
 
-    for i in list:
+    for i in args:
         q.add(i)
 
     return q
@@ -89,8 +89,8 @@ def strMailMessages(num):
         "You have %d new messages", num) % num
 
 def strMessages(num):
-    return gettext.ngettext("%d unread message", \
-        "%d unread messages", num) % num
+    return gettext.ngettext("%d message", \
+        "%d messages", num) % num
 
 class MailApplet:
     def __init__(self, awn):
@@ -103,48 +103,13 @@ class MailApplet:
 
         self.awn.settings.cd("mail-%s" % self.awn.uid)
 
-        try:
-            self.back = getattr(Backends(), self.awn.settings["backend"])
-            # Backends has a number of classes as attributes
-            # The setting has the name, as a string, of one of them
-        except ValueError:
-            self.back = Backends().GMail
-            self.awn.settings["backend"] = "GMail"
-            # If you can't find the setting, assign a default one.
+        self.back = getattr(Backends(), self.awn.settings["backend"])
+        self.theme = self.awn.settings["theme"]
+        self.emailclient = self.awn.settings["email-client"]
+        self.hide = self.awn.settings["hide"]
+        self.showerror = self.awn.settings["show-network-errors"]
 
-        try:
-            self.theme = self.awn.settings["theme"]
-            self.__setIcon("login")
-            # Set the theme...
-        except ValueError, gobject.GError:
-            self.theme = "Tango"
-            self.awn.settings["theme"] = "Tango"
-            # ... or at least a default
-
-        try:
-            self.emailclient = self.awn.settings["email-client"]
-            # Email clients. Pft.
-        except ValueError:
-            self.emailclient = "evolution -c mail"
-            self.awn.settings["email-client"] = "evolution"
-            # Moonbeam, are you happy?
-
-        try:
-            self.hide = self.awn.settings["hide"]
-            # Whether to autohide
-        except ValueError:
-            self.hide = False
-            self.awn.settings["hide"] = False
-            # No by default
-
-        try:
-            self.showerror = self.awn.settings["show-network-errors"]
-            # Whether to show errors
-        except ValueError:
-            self.showerror = True
-            self.awn.settings["show-network-errors"] = True
-            # Yes by default
-
+        self.__setIcon("login")
         self.awn.title.set(_("Mail Applet (Click to Log In)"))
         self.drawPrefDlog()
 
@@ -437,12 +402,6 @@ class MailApplet:
         def saveit(self, t, b, c, h, s, dlog):
             dlog.hide()
 
-            #print t
-            #print b
-            #print c # Oh, how I wish for a debugger
-            #print h
-            #print s
-
             if t and t != self.theme and t != -1:
                 self.theme = t
                 self.awn.settings["theme"] = t
@@ -495,7 +454,6 @@ class Backends:
                 raise MailError, _("There seem to be problems with our \
                     connection to your account. Your best bet is probably \
                     to log out and try again.")
-            # Hehe, Google is funny. Bozo exception
 
             class MailItem:
                 def __init__(self, subject, author):
@@ -556,7 +514,6 @@ class Backends:
                 raise MailError, _("There seem to be problems with our \
                     connection to your account. Your best bet is probably \
                     to log out and try again.")
-            # Hehe, Google is funny. Bozo exception
 
             class MailItem:
                 def __init__(self, subject, author):

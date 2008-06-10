@@ -47,7 +47,7 @@
 //#undef NDEBUG
 #include <assert.h>
 
-#define AWN_CAIRO_EFFECTS 1
+//#define AWN_CAIRO_EFFECTS 1
 /*
  * FUNCTION DEFINITIONS
  */

@@ -76,9 +76,9 @@ GdkPixbuf * surface_2_pixbuf( GdkPixbuf * pixbuf, cairo_surface_t * surface)
 	src_rowstride=cairo_image_surface_get_stride (surface);
 	src = cairo_image_surface_get_data (surface);
 
-    g_return_if_fail( src_width == dst_width  );
-    g_return_if_fail( src_height == dst_height  );   
-    g_return_if_fail( cairo_image_surface_get_format(surface) == CAIRO_FORMAT_ARGB32);
+  g_return_val_if_fail( src_width == dst_width,NULL  );
+  g_return_val_if_fail( src_height == dst_height,NULL  );   
+  g_return_val_if_fail( cairo_image_surface_get_format(surface) == CAIRO_FORMAT_ARGB32,NULL);
 
 	for (i = 0; i < dst_height; i++) 
 	{

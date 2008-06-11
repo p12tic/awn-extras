@@ -27,7 +27,7 @@ import gtk
 from gtk import gdk
 import gconf
 import pango
-import awn
+import awn, awn.extras
 import cairo
 from StringIO import StringIO
 import datetime
@@ -427,7 +427,7 @@ class App(awn.AppletSimple):
 		self.ct.move_to(x,60)
 		self.ct.show_text(now.strftime("%b"))
 		ns = self.ct.get_target()
-		new_icon = self.get_pixbuf_from_surface(ns)
+		new_icon = awn.extras.surface_to_pixbuf(ns)
 		scaled_icon = new_icon.scale_simple(self.height, self.height, gtk.gdk.INTERP_BILINEAR) 
 		self.set_temp_icon(scaled_icon)
 		return True

@@ -328,8 +328,8 @@ class MailApplet:
             pwdE = gtk.Entry()
             pwdE.set_visibility(False)
 
-            ilayout = VBox([HBox([Label(_("Username:")), usrE]),
-                HBox([Label(_("Password:")), pwdE])])
+            ilayout = VBox(HBox(Label(_("Username:")), usrE),
+                HBox(Label(_("Password:")), pwdE))
 
             t = {}
 
@@ -374,7 +374,7 @@ class MailApplet:
         for i in themes:
             theme.append_text(i)
         theme.set_focus_on_click(True)
-        layout.add(HBox([Label(_("Theme: ")), theme]))
+        layout.add(HBox(Label(_("Theme: ")), theme))
 
         backend = gtk.combo_box_new_text()
         backend.set_title(_("Backend"))
@@ -382,7 +382,7 @@ class MailApplet:
         for i in backends:
             backend.append_text(i)
         backend.set_focus_on_click(True)
-        layout.add(HBox([Label(_("Backend: ")), backend]))
+        layout.add(HBox(Label(_("Backend: ")), backend))
 
         email = gtk.Entry()
         email.set_text(self.emailclient)
@@ -569,9 +569,9 @@ class Backends:
             # Server input box
             domE = gtk.Entry()
 
-            layout = VBox([HBox([Label(_("Username:")), usrE]),
-                HBox([Label(_("Password:")), pwdE]),
-                HBox([Label(_("Domain:")), domE])])
+            layout = VBox(HBox(Label(_("Username:")), usrE),
+                HBox(Label(_("Password:")), pwdE),
+                HBox(Label(_("Domain:")), domE))
 
             return {"layout": layout, "callback": cls.__submitLoginWindow,
                 "widgets": [usrE, pwdE, domE]}
@@ -658,10 +658,10 @@ class Backends:
 
                 sslE = gtk.CheckButton(label=_("Use SSL encryption"))
 
-                layout = VBox([HBox([Label(_("Username:")), usrE]),
-                    HBox([Label(_("Password:")), pwdE]),
-                    HBox([Label(_("Server:")), srvE]),
-                    sslE])
+                layout = VBox(HBox(Label(_("Username:")), usrE),
+                    HBox(Label(_("Password:")), pwdE),
+                    HBox(Label(_("Server:")), srvE),
+                    sslE)
 
                 return {"layout": layout, "callback": cls.__submitLoginWindow,
                     "widgets": [usrE, pwdE, srvE, sslE]}

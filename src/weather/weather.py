@@ -421,35 +421,21 @@ class App(awn.AppletSimple):
 		if self.map != "":
 			old_map = self.map
 		try:
-			usock = urllib.urlopen('http://www.weather.com/outlook/travel/businesstraveler/map/' + self.location_code)
-			lines = usock.readlines()
-			iframe_re = re.compile(".*[iI][fF][rR][aA][mM][eE].*")
-			for line in lines:
-				if iframe_re.match(line):
-					frame_src_start = line.find("src")
-					frame_src_end = line.find("?")
-					if frame_src_start > -1 and frame_src_end > -1:
-						frame_src = line[frame_src_start+5 : frame_src_end]
-						usock2 =  urllib.urlopen('http://www.weather.com' + frame_src)
-						frame_lines = usock2.readlines()
-						img_re = re.compile(".*[iI][mM][gG] [nN][aA][mM][eE]=\"mapImg\".*")
-						for frame_line in frame_lines:
-							if img_re.match(frame_line):
-								img_src_start = frame_line.find("SRC")
-								img_src_end = frame_line.find("jpg")
-								img_src = frame_line[img_src_start+5 : img_src_end+3]
-								self.img_file = urllib.urlretrieve(img_src)[0]
-						usock2.close()
-			usock.close()
-			# practice good hygeine.
+			page = urllib.urlopen('http://www.weather.com/outlook/travel/businesstraveler/map/' + self.location_code).read()
+		except:
+			print "Weather Applet: Unable to download weather map. ", sys.exc_info()[0], sys.exc_info()[1]
+			self.countdown = 0
+		else:
+			mapExp = """<IMG NAME="mapImg" SRC="([^\"]+)" WIDTH=([0-9]+) HEIGHT=([0-9]+) BORDER"""
+			result = re.findall(mapExp, page)
+			if result and len(result) == 1:
+				img_src, width, height = result[0]
+				self.img_file = urllib.urlretrieve(img_src)[0]
 			try:
 				if old_map != "" and old_map != None:
 					os.remove(old_map)
 			except:
-				pass
-		except:
-			print "Unable to download weather map. ", sys.exc_info()[0], sys.exc_info()[1]
-			self.countdown = 0
+				print "Weather Applet: Unable to remove old map file %s"%old_map
 
 
 	def draw_current_conditions(self):

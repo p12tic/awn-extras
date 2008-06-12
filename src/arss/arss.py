@@ -68,13 +68,13 @@ class App(awn.AppletSimple):
         self.set_icon(get_icon(_location + 'Icons/feed-icon.svg', self.size))
         self.connect("button-press-event", self.clicked ,) # set icon clicks
         self.get_feeds()
-        
+
     def get_feeds(self):
         listoffeeds = arssconfig.get_feeds()
         self.Database = feedparserdb.FeedDatabase("sqlite:///"+userpath+"/.config/awn/arsstest.db", echo=False)
         self.Database.update_feeds(arssconfig.get_feeds())
         self.feeds = self.Database.get_feed_objects()
-        
+
     def update_menu(self):
         self.menu = menus.RssMenu()
         self.menu.build_children(self.feeds, self)
@@ -91,14 +91,16 @@ class App(awn.AppletSimple):
         elif event.button == 3:
             # Right click to show option menu
             if hasattr(self, 'option_menu') == False:
-                self.option_menu = menus.OptionMenu(self)
+                rightclickmenu = menus.OptionMenu(self)
+                self.option_menu = rightclickmenu.damndefaultrightclickmenu
+
             self.option_menu.popup(None, None, None, event.button, event.time)
         else:
             pass
             #print event.button
             #for feed in self.feeds:
                 #feed.update_feed()
-            
+
     def clicks(self, widget, url, feed, index, feedindex):
         """
         Handles the feed clicks by launching the browser
@@ -106,7 +108,7 @@ class App(awn.AppletSimple):
         widget.set_image(gtk.Image())
         os.system("xdg-open %s &" % url) # Opens the url in your browser
         self.feeds[feedindex].get_entries()[index]['read'] = True # Metadata for future support
-        
+
 if __name__ == "__main__":
     awn.init                      (sys.argv[1:])
     gtk.gdk.threads_init()

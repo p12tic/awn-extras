@@ -7,6 +7,7 @@ import arssconfig
 
 _location = __file__[::-1][__file__[::-1].index('/'):][::-1]
 
+
 def _unread(feed, Value=True):
     """
     !!!Future use!!! Number of unread stories in a feed
@@ -19,6 +20,8 @@ def _unread(feed, Value=True):
         else:
             if Value != False:unread+=1
     return unread
+
+
 def _unread_list(feeds, Value=True):
     """
     !!!Future use!!! Number of unread stories in a list of feeds
@@ -28,32 +31,40 @@ def _unread_list(feeds, Value=True):
         unread += _unread(feed, Value)
     return unread
 
+
 class MenuItem(gtk.ImageMenuItem):
     """
     A simple subclass of ImageMenuItem
-    
+
     title = The label of the item
     image = the items images(optional)
     """
+
     def __init__(self, title, image=None):
         super(MenuItem, self).__init__(title)
         if image != None:
             unread_image = gtk.Image()
             unread_image.set_from_file(image)
             self.set_image(unread_image)
-        
+
+
 class RssMenu(gtk.Menu):
     """
     Parses thru a list of Feed objects and displays them
     """
+
     def __init__(self, *args):
         super(RssMenu, self).__init__()
+
     def build_children(self, feeds, obj):
+
         def _clear_feed(widget, feed):
             feed.clear_feed()
+
         def _mark_feed_as_read(widget, feed):
             for entry in feed.Entries:
                 entry['read'] = True
+
         feedindex = 0
         unread = MenuItem('Unread: %d' % _unread_list(feeds), _location + 'Icons/feed-icon-unread.png')
         self.append(unread)
@@ -87,29 +98,38 @@ class RssMenu(gtk.Menu):
             feedindex+=1
         self.show_all()
 
-class OptionMenu(gtk.Menu):
+class OptionMenu(object):
     """
     Draws the option window normally shown when you right click
+
+    It was a subclass of gtk.Menu but
+    has been converted for create_default_menu
     """
+
     def __init__(self, applet, *args):
+        self.damndefaultrightclickmenu = applet.create_default_menu()
+        self._config_window = self._config_window
         super(OptionMenu, self).__init__()
         self.applet = applet
         AddFeedItem = MenuItem('Add Feed')
-        self.append(AddFeedItem)
+        self.damndefaultrightclickmenu.append(AddFeedItem)
         ConfigWindowItem = MenuItem('Config Window')
-        self.append(ConfigWindowItem)
+        self.damndefaultrightclickmenu.append(ConfigWindowItem)
         ConfigWindowItem.connect("activate", self._config_window)
         UpdateItem = MenuItem('Update')
-        self.append(UpdateItem)
+        self.damndefaultrightclickmenu.append(UpdateItem)
         AddFeedItem.connect("activate", self._launch_add_feed)
         UpdateItem.connect("activate", self._update_feed)
-        self.show_all()
+        self.damndefaultrightclickmenu.show_all()
         self.args = args
         print self.args
+
     def _config_window(self, *args):
         arssconfig.config_window()
+
     def _launch_add_feed(self, *args):
         arssconfig.add_feed_dialog()
+
     def _update_feed(self, *args):
         """
         Updates the feeds by replacing them  with a new set

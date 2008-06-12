@@ -26,7 +26,7 @@ from gtk import gdk
 import awn
 import dbus
 import gconf
-import mediaplayers
+import awnmediaplayers as mediaplayers
 
 
 class App (awn.AppletSimple):

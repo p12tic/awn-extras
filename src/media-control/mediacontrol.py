@@ -26,7 +26,7 @@ from gtk import gdk
 import awn
 import dbus
 import gconf
-import awnmediaplayers as mediaplayers
+import awn.extras.awnmediaplayers as mediaplayers
 
 
 class App (awn.AppletSimple):
@@ -106,7 +106,7 @@ class App (awn.AppletSimple):
         elif event.direction == gtk.gdk.SCROLL_DOWN:
             self.button_previous_press(widget)
         self.labeler()
-        
+
     def dialog_focus_out(self, widget, event):
         self.dialog.hide()
         self.dialog_visible = False
@@ -122,7 +122,7 @@ class App (awn.AppletSimple):
         self.player_name = mediaplayers.what_app()
         if self.player_name == None:pass
         else:self.MediaPlayer = mediaplayers.__dict__[self.player_name]()
-        
+
     def key_control(self,keyname,default):
         """
         This Method takes the keyname and the defualt value and either loads an existing key -or- loads and saves the defualt key if no key is defined
@@ -136,7 +136,7 @@ class App (awn.AppletSimple):
         except NameError:
             somevar = default
         return somevar
-    
+
     def load_keys(self):
         """
         Loads all the gconf variables by calling the key_control method
@@ -201,8 +201,8 @@ class App (awn.AppletSimple):
                 except dbus.exceptions.DBusException:self.what_app()
             except AttributeError:self.what_app()
         except RuntimeError:self.what_app()
-        
-        
+
+
 if __name__ == "__main__":
     awn.init                      (sys.argv[1:])
     applet = App                  (awn.uid, awn.orient,awn.height)

@@ -17,13 +17,17 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+
 import sys, os, re
 import gobject
 import gtk
 from gtk import gdk
 import awn
 
+
 class App (awn.AppletSimple):
+    """an applet which calls a defined quit/logout command"""
+
     def __init__ (self, uid, orient, height):
         self.location = __file__.replace('quit-applet.py','')
         self.client = awn.Config('QuitApplet', None)
@@ -68,19 +72,23 @@ class App (awn.AppletSimple):
             self.popup_menu.popup(None, None, None, event.button, event.time)
         else:
             os.system(self.logout_command)
-    #def dialog_focus_out (self, widget, event):
-    #  print ""
+
     def enter_notify (self, widget, event):
         self.title.show (self, "Quit/Logout?")
+
     def leave_notify (self, widget, event):
         self.title.hide (self)
+
     def attr_from_key(self, key):
         return key[0].lower() + re.sub(r'[A-Z]', lambda m: '_' + m.group(0).lower(), key[1:])
+
     def load_config(self, entry, arg):
         setattr(self, self.attr_from_key(entry['key']), self.get_pref(entry['key'], self.defaults[entry['key']]))
+
     def load_keys(self):
         for key, default in self.defaults.iteritems():
             setattr(self, self.attr_from_key(key), self.get_pref(key, default))
+
     def get_pref(self, key, default):
         try:
             value = self.client.get_string(awn.CONFIG_DEFAULT_GROUP, key)
@@ -91,15 +99,15 @@ class App (awn.AppletSimple):
             value = default
         return value
 
+
 class PreferenceDialog(gtk.Window):
+
     def __init__(self,applet):
         super(PreferenceDialog, self).__init__(gtk.WINDOW_TOPLEVEL)
         self.applet = applet
-
         self.set_title("Preferences")
         vbox = gtk.VBox(True, 0)
         self.add(vbox)
-
         vbox1 = gtk.VBox(True, 0)
         label1 = gtk.Label("Logout command:")
         self.logout_command = gtk.Entry(max=0)
@@ -107,7 +115,6 @@ class PreferenceDialog(gtk.Window):
         vbox1.pack_start(label1)
         vbox1.pack_end(self.logout_command)
         vbox.pack_start(vbox1,True,False,2)
-
         hbox4 = gtk.HBox(True, 0)
         ok = gtk.Button(stock=gtk.STOCK_OK)
         ok.connect("clicked", self.ok_button, "ok")

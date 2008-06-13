@@ -41,6 +41,8 @@ def what_app():
         player_name = "Exaile"
     if bus_obj.NameHasOwner('org.gnome.Banshee') == True:
         player_name = "Banshee"
+    if bus_obj.NameHasOwner('org.bansheeproject.Banshee') == True:
+        player_name = "BansheeOne"
     if bus_obj.NameHasOwner('org.gnome.Listen') == True:
         player_name = "Listen"
     if bus_obj.NameHasOwner('net.sacredchao.QuodLibet') == True:
@@ -52,10 +54,57 @@ def what_app():
     return player_name
 
 
-class Rhythmbox:
-    """
-    Full Support
-    """
+class GenericPlayer(object):
+    """Insert the level of support here"""
+
+    def __init__(self):
+        self.dbus_driver()
+
+    def dbus_driver(self):
+        """
+        Defining the dbus location for GenericPlayer
+
+        Provides self.player and any other interfaces needed by labeler and
+        the button methods
+        """
+        #bus_obj = dbus.SessionBus().get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
+        #if bus_obj.NameHasOwner('org.gnome.Rhythmbox') == True:
+        #    self.session_bus = dbus.SessionBus()
+        #    self.proxy_obj = self.session_bus.get_object('org.gnome.Rhythmbox', '/org/gnome/Rhythmbox/Player')
+        #    self.player = dbus.Interface(self.proxy_obj, 'org.gnome.Rhythmbox.Player')
+        #    self.player1 = self.session_bus.get_object('org.gnome.Rhythmbox', '/org/gnome/Rhythmbox/Shell')
+        pass
+
+    def labeler(self, artOnOff, titleOrder, titleLen, titleBoldFont):
+        """
+        This method changes the application titles and album art
+
+        Arguments
+        * bool artOnOff = should the labeler return art locations? True or False
+        * str titleOrder = 'artist - title' or 'title - artist'
+        * int titleLen = length of the title
+        * bool titleBoldFont = should the labeler use bold fonts via pango?
+
+        Returns
+        * str albumart_exact = the location of album art on the file system
+        * str result = the title/album string
+        * str result_tooltip = a result with no bolding and less len
+        """
+        #return albumart_exact, result, result_tooltip
+        pass
+
+    def button_previous_press (self):
+        pass
+
+    def button_pp_press (self):
+        pass
+
+    def button_next_press (self):
+        pass
+
+
+class Rhythmbox(GenericPlayer):
+    """Full Support"""
 
     def __init__(self):
         self.dbus_driver()
@@ -83,7 +132,7 @@ class Rhythmbox:
         self.dbus_driver()
         result = self.player.getPlayingUri()
         result = self.player1.getSongProperties(result)
-        
+
         if self.artOnOff == 'on':
             albumart_exact = self.albumart_general + result['artist'] + ' - ' + result['album'] + ".jpg"
 
@@ -101,30 +150,29 @@ class Rhythmbox:
             result = """<span weight="bold">""" + result + """</span>"""
         result_tooltip = result.replace("""</span>""",'')
         result_tooltip = result_tooltip.replace("""<span weight="bold">""",'')
-        
+
         return albumart_exact,result,result_tooltip
 
     def button_previous_press (self):
         self.player.previous ()
-        
+
     def button_pp_press (self):
         self.player.playPause (1)
-        
+
     def button_next_press (self):
         self.player.next ()
-        
 
 
-class Exaile:
-    """
-    Full Support for the Exaile media player
-    
+
+class Exaile(GenericPlayer):
+    """Full Support for the Exaile media player
+
     Issues exist with play. It stops the player when pushed. Need further dbus info.
     """
-    
+
     def __init__(self):
         self.dbus_driver()
-        
+
     def dbus_driver(self):
         """
         Defining the dbus location for
@@ -134,7 +182,7 @@ class Exaile:
             self.session_bus = dbus.SessionBus()
             self.proxy_obj = self.session_bus.get_object('org.exaile.DBusInterface', '/DBusInterfaceObject')
             self.player = dbus.Interface(self.proxy_obj, "org.exaile.DBusInterface")
-            
+
     def labeler(self,artOnOff,titleOrder,titleLen,titleBoldFont):
         """
         This method changes the application titles and album art
@@ -162,25 +210,25 @@ class Exaile:
             result = """<span weight="bold">""" + result + """</span>"""
         result_tooltip = result.replace("""</span>""",'')
         result_tooltip = result_tooltip.replace("""<span weight="bold">""",'')
-        
+
         return self.player.get_cover_path(),result,result_tooltip
 
     def button_previous_press (self):
         self.player.prev_track()
-        
+
     def button_pp_press (self):
         self.player.play_pause()
-        
+
     def button_next_press (self):
         self.player.next_track()
 
 
-class Banshee:
-    """
-    Full Support for the banshee media player
-    """
+class Banshee(GenericPlayer):
+    """Full Support for the banshee media player"""
+
     def __init__(self):
         self.dbus_driver()
+
     def dbus_driver(self):
         """
         Defining the dbus location for
@@ -190,7 +238,7 @@ class Banshee:
             self.session_bus = dbus.SessionBus()
             self.proxy_obj = self.session_bus.get_object('org.gnome.Banshee',"/org/gnome/Banshee/Player")
             self.player = dbus.Interface(self.proxy_obj, "org.gnome.Banshee.Core")
-            
+
     def labeler(self,artOnOff,titleOrder,titleLen,titleBoldFont):
         """
         This method changes the application titles and album art
@@ -218,23 +266,62 @@ class Banshee:
             result = """<span weight="bold">""" + result + """</span>"""
         result_tooltip = result.replace("""</span>""",'')
         result_tooltip = result_tooltip.replace("""<span weight="bold">""",'')
-        
+
         return self.player.GetPlayingCoverUri(),result,result_tooltip
 
     def button_previous_press (self):
         self.player.Previous()
-        
+
     def button_pp_press (self):
         self.player.TogglePlaying ()
-        
+
     def button_next_press (self):
         self.player.Next()
 
 
-class Listen:
-    """
-    Partial Support
-    """
+class BansheeOne(GenericPlayer):
+    """Full Support for the banshee media player"""
+
+    def __init__(self):
+        self.dbus_driver()
+
+    def dbus_driver(self):
+        """
+        Defining the dbus location for
+        """
+        bus_obj = dbus.SessionBus().get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
+        if bus_obj.NameHasOwner('org.bansheeproject.Banshee') == True:
+            self.session_bus = dbus.SessionBus()
+            self.proxy_obj = self.session_bus.get_object('org.bansheeproject.Banshee',"/org/bansheeproject/Banshee/PlayerEngine")
+            self.proxy_obj1 = self.session_bus.get_object('org.bansheeproject.Banshee',"/org/bansheeproject/Banshee/PlaybackController")
+            self.player = dbus.Interface(self.proxy_obj, "org.bansheeproject.Banshee.PlayerEngine")
+            self.player1 = dbus.Interface(self.proxy_obj1, "org.bansheeproject.Banshee.PlaybackController")
+
+    def labeler(self,artOnOff,titleOrder,titleLen,titleBoldFont):
+        """
+        This method changes the application titles and album art
+        """
+        self.artOnOff = artOnOff
+        self.titleOrder = titleOrder
+        self.titleLen = titleLen
+        self.titleBoldFont = titleBoldFont
+        self.dbus_driver()
+
+
+        return self.player.GetPlayingCoverUri(), "dd", "sfdasd"
+
+    def button_previous_press (self):
+        self.player1.Previous(False)
+
+    def button_pp_press (self):
+        self.player.TogglePlaying ()
+
+    def button_next_press (self):
+        self.player1.Next(False)
+
+
+class Listen(GenericPlayer):
+    """Partial Support"""
 
     def __init__(self):
         self.dbus_driver()
@@ -248,7 +335,7 @@ class Listen:
             self.session_bus = dbus.SessionBus()
             self.proxy_obj = self.session_bus.get_object('org.gnome.Listen',"/org/gnome/listen")
             self.player = dbus.Interface(self.proxy_obj, "org.gnome.Listen")
-            
+
     def labeler(self,artOnOff,titleOrder,titleLen,titleBoldFont):
         """
         This method changes the application titles and album art
@@ -277,32 +364,32 @@ class Listen:
         if self.titleBoldFont == 'on':
             result = """<span weight="bold">""" + result + """</span>"""
         result_tooltip = result.replace("""</span>""",'')
-        result_tooltip = result_tooltip.replace("""<span weight="bold">""",'')    
+        result_tooltip = result_tooltip.replace("""<span weight="bold">""",'')
         return albumart,result,result_tooltip
-    
+
     def button_previous_press (self):
         self.player.previous()
-        
+
     def button_pp_press (self):
         self.player.play_pause ()
-        
+
     def button_next_press (self):
         self.player.next()
 
 
-class Amarok:
-    """
-    Not Working
-    """
+class Amarok(GenericPlayer):
+    """Not Working"""
+
     def __init__(self):
         self.dbus_driver()
+
     def dbus_driver(self):
         """
         Defining the dbus location for Amarok
         """
         if pydcop.anyAppCalled("amarok") == None:pass
         else:self.player = pydcop.anyAppCalled("amarok").player
-        
+
     def labeler(self,artOnOff,titleOrder,titleLen,titleBoldFont):
         """
         This method changes the application titles and album art
@@ -331,25 +418,25 @@ class Amarok:
         if self.titleBoldFont == 'on':
             result = """<span weight="bold">""" + result + """</span>"""
         result_tooltip = result.replace("""</span>""",'')
-        result_tooltip = result_tooltip.replace("""<span weight="bold">""",'')    
+        result_tooltip = result_tooltip.replace("""<span weight="bold">""",'')
         return albumart,result,result_tooltip
 
     def button_previous_press (self):
         self.player.prev()
-        
+
     def button_pp_press (self):
         self.player.playPause()
-        
+
     def button_next_press (self):
         self.player.next()
 
 
-class QuodLibet:
-    """
-    Full Support
-    """
+class QuodLibet(GenericPlayer):
+    """Full Support"""
+
     def __init__(self):
         self.dbus_driver()
+
     def dbus_driver(self):
         """
         Defining the dbus location for
@@ -359,6 +446,7 @@ class QuodLibet:
             self.session_bus = dbus.SessionBus()
             self.proxy_obj = self.session_bus.get_object('net.sacredchao.QuodLibet', '/net/sacredchao/QuodLibet')
             self.player = dbus.Interface(self.proxy_obj, 'net.sacredchao.QuodLibet')
+
     def labeler(self,artOnOff,titleOrder,titleLen,titleBoldFont):
         """
         This method changes the application titles and album art
@@ -371,7 +459,7 @@ class QuodLibet:
         albumart_exact = os.environ["HOME"] + "/.quodlibet/current.cover"
         self.dbus_driver()
         result = self.player.CurrentSong()
-        
+
         # Currently Playing Title
         if self.titleOrder == 'artist - title':
             try:result = result['artist'] + ' - ' + result['title']
@@ -386,7 +474,7 @@ class QuodLibet:
             result = """<span weight="bold">""" + result + """</span>"""
         result_tooltip = result.replace("""</span>""",'')
         result_tooltip = result_tooltip.replace("""<span weight="bold">""",'')
-        
+
         return albumart_exact,result,result_tooltip
 
     def button_previous_press (self):

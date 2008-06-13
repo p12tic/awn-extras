@@ -22,15 +22,16 @@ import gobject
 import pygtk
 import gtk
 from gtk import gdk
+
 import awn
 import time
 import dbus
+
+
 class App (awn.AppletSimple):
-    """
-    Main Applet class
-    """
+    """An applet which displays battery information"""
+
     def __init__ (self, uid, orient, height):
-        # <dbus>
         try:
             from dbus.mainloop.glib import DBusGMainLoop
             DBusGMainLoop(set_as_default=True)
@@ -44,34 +45,29 @@ class App (awn.AppletSimple):
         except:
             self.dbuson = False
             pass
-        # </dbus>
-        # <AWN>
         awn.AppletSimple.__init__ (self, uid, orient, height)
-        
         self.height = height
-        #>>> self.set_temp_icon(self.icon)
         self.title = awn.awn_title_get_default ()
-
         self.set_temp_icon
         self.connect ("enter-notify-event", self.enter_notify)
         self.connect ("leave-notify-event", self.leave_notify)
-        # </AWN>
         if self.dbuson == True:
             self.dbus_int.connect_to_signal("OnBatteryChanged", self.checker, False)
         self.checker(True)
+
     def enter_notify (self, widget, event):
-        #self.checker(False)
         self.title.show (self, self.percent + ' || '+ self.remaining)
+
     def leave_notify (self, widget, event):
         self.title.hide (self)
-    def checker(self,x):
+
+    def checker(self, x):
+        """Parses the text returned from 'acpi -v' to get battery info"""
         height = self.height
-        #print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
         pipe = os.popen(r"acpi -V")
-        #pipe = os.popen(r"python ~/apw.py")
         raw_report = pipe.read()
         if "remaining" in raw_report:
-            try: 
+            try:
                 self.remaining = raw_report[raw_report.index('%,') + 3:raw_report.index('remaining') + 9]
             except:self.remaining = "Unknown"
         elif "until charged" in raw_report:
@@ -93,7 +89,6 @@ class App (awn.AppletSimple):
         if self.onac == True: actoggle = "charging"
         elif self.onac == False: actoggle = "discharging"
         else: actoggle = "charging"
-         
         self.percent = str(var1) + "%"
         var = var1
         location = __file__.replace('battery-applet.py','')
@@ -129,10 +124,12 @@ class App (awn.AppletSimple):
             if height != icon.get_height():
                 icon = icon.scale_simple(height,height,gtk.gdk.INTERP_BILINEAR)
         self.set_temp_icon(icon)
-        if x == True: gobject.timeout_add (60000, self.checker, (True))
+        if x == True:
+            gobject.timeout_add (60000, self.checker, (True))
+
+
 if __name__ == "__main__":
     awn.init (sys.argv[1:])
-    
     applet = App (awn.uid, awn.orient, awn.height)
     awn.init_applet (applet)
     applet.show_all ()

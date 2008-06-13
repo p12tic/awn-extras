@@ -49,11 +49,19 @@ class App (awn.AppletSimple):
         self.height = height
         self.title = awn.awn_title_get_default ()
         self.set_temp_icon
+        self.popup_menu = self.create_default_menu()
+        self.connect ("button-press-event", self.button_press)
         self.connect ("enter-notify-event", self.enter_notify)
         self.connect ("leave-notify-event", self.leave_notify)
         if self.dbuson == True:
             self.dbus_int.connect_to_signal("OnBatteryChanged", self.checker, False)
         self.checker(True)
+
+    def button_press (self, widget, event):
+        self.title.hide(self)
+        if event.button == 3:
+            # right click
+            self.popup_menu.popup(None, None, None, event.button, event.time)
 
     def enter_notify (self, widget, event):
         self.title.show (self, self.percent + ' || '+ self.remaining)

@@ -280,7 +280,7 @@ class Banshee(GenericPlayer):
 
 
 class BansheeOne(GenericPlayer):
-    """Full Support for the banshee media player"""
+    """Partial support for the banshee media player"""
 
     def __init__(self):
         self.dbus_driver()
@@ -308,7 +308,7 @@ class BansheeOne(GenericPlayer):
         self.dbus_driver()
 
 
-        return self.player.GetPlayingCoverUri(), "dd", "sfdasd"
+        return "", "", ""
 
     def button_previous_press (self):
         self.player1.Previous(False)

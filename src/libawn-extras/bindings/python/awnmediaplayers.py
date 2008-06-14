@@ -296,6 +296,7 @@ class BansheeOne(GenericPlayer):
             self.proxy_obj1 = self.session_bus.get_object('org.bansheeproject.Banshee',"/org/bansheeproject/Banshee/PlaybackController")
             self.player = dbus.Interface(self.proxy_obj, "org.bansheeproject.Banshee.PlayerEngine")
             self.player1 = dbus.Interface(self.proxy_obj1, "org.bansheeproject.Banshee.PlaybackController")
+
     def labeler(self,artOnOff,titleOrder,titleLen,titleBoldFont):
         """
         This method changes the application titles and album art
@@ -305,12 +306,15 @@ class BansheeOne(GenericPlayer):
         self.titleLen = titleLen
         self.titleBoldFont = titleBoldFont
         self.dbus_driver()
-
+        self.albumart_general = ".cache/album-art/"
         # Currently Playing Title
         info = self.player.GetCurrentTrack()
         result = {}
         result['title'] = str(info['name'])
         result['artist'] = str(info['artist'])
+        if self.artOnOff == 'on':
+            albumart_exact = self.albumart_general + result['artist'].replace(' ','').lower() + '-' + info['album'].replace(' ','').lower() + ".jpg"
+            print albumart_exact
         if self.titleOrder == 'artist - title':
             try:result = result['artist'] + ' - ' + result['title']
             except:SyntaxError
@@ -324,7 +328,7 @@ class BansheeOne(GenericPlayer):
             result = """<span weight="bold">""" + result + """</span>"""
         result_tooltip = result.replace("""</span>""",'')
         result_tooltip = result_tooltip.replace("""<span weight="bold">""",'')
-        return "", result, result_tooltip
+        return albumart_exact, result, result_tooltip
 
     def button_previous_press (self):
         self.player1.Previous(False)

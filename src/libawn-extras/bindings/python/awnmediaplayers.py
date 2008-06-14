@@ -310,11 +310,20 @@ class BansheeOne(GenericPlayer):
         # Currently Playing Title
         info = self.player.GetCurrentTrack()
         result = {}
-        result['title'] = str(info['name'])
-        result['artist'] = str(info['artist'])
+        if "name" in info.keys():
+            result['title'] = str(info['name'])
+        else:
+            result['title'] = ""
+        if 'artist' in info.keys():
+            result['artist'] = str(info['artist'])
+        else:
+            result['artist'] = ""
         if self.artOnOff == 'on':
-            albumart_exact = self.albumart_general + result['artist'] + '-' + info['album'] + ".jpg"
-            albumart_exact = albumart_exact.replace(' ','').lower()
+            if 'album' in info:
+                albumart_exact = self.albumart_general + result['artist'] + '-' + info['album'] + ".jpg"
+                albumart_exact = albumart_exact.replace(' ','').lower()
+            else:
+                albumart_exact = ""
         if self.titleOrder == 'artist - title':
             try:result = result['artist'] + ' - ' + result['title']
             except:SyntaxError

@@ -19,24 +19,36 @@
 
 
 import sys, os
+
 import gobject
-import pygtk
 import gtk
 from gtk import gdk
-import awn
 import dbus
 import gconf
+
+import awn
+
 import awn.extras.awnmediaplayers as mediaplayers
 
 
-class App (awn.AppletSimple):
-    """
-    """
-    def __init__ (self, uid, orient, height):
-        """
-        Creating the applets core
-        """
+def error_decorator(fn):
+    """Handles errors caused by dbus"""
+    def errors(cls, *args, **kwargs):
+        try:
+            try:
+                try:
+                    fn(cls, *args)
+                except dbus.exceptions.DBusException:cls.what_app()
+            except AttributeError:cls.what_app()
+        except RuntimeError:cls.what_app()
+    return errors
 
+
+class App (awn.AppletSimple):
+    """Displays a dialog with controls and track/album info and art"""
+
+    def __init__ (self, uid, orient, height):
+        """Creating the applets core"""
         self.resultToolTip = "Media Control Applet"
         self.keylocation = "/apps/avant-window-navigator/applets/MediaControl/"
         location =  __file__
@@ -125,7 +137,9 @@ class App (awn.AppletSimple):
 
     def key_control(self,keyname,default):
         """
-        This Method takes the keyname and the defualt value and either loads an existing key -or- loads and saves the defualt key if no key is defined
+        This Method takes the keyname and the defualt
+        value and either loads an existing key -or-
+        loads and saves the defualt key if no key is defined
         """
         keylocation_with_name = self.keylocation + keyname
         try:
@@ -142,7 +156,6 @@ class App (awn.AppletSimple):
         Loads all the gconf variables by calling the key_control method
         """
         self.client = gconf.client_get_default()
-        #self.player_name = self.key_control ("PlayerName","Rhythmbox")
         self.artOnOff = self.key_control("Album_Art",'on')
         self.titleBoldFont = self.key_control("titleBoldFont","on")
         self.titleLen = self.key_control("TitleLen","33")
@@ -153,54 +166,45 @@ class App (awn.AppletSimple):
         self.noArtIcon = self.key_control('noArtIcon',self.noArtIconDefault)
         self.titleOrder = self.key_control('titleOrder',"artist - title")
 
+    @error_decorator
     def labeler(self):
         """
         This method changes the application titles and album art
         """
-        try:
-            try:
-                try:
-                    artExact, result, self.resultToolTip = self.MediaPlayer.labeler(self.artOnOff,self.titleOrder,self.titleLen,self.titleBoldFont)
-                    self.label.set_markup(result)
-                    try:
-                        if self.artOnOff               == 'on':
-                            self.image.set_from_pixbuf    (gtk.gdk.pixbuf_new_from_file(artExact).scale_simple(self.albumArtSize,self.albumArtSize,gtk.gdk.INTERP_BILINEAR))
-                    except gobject.GError:
-                        try:self.image.set_from_pixbuf    (gtk.gdk.pixbuf_new_from_file(self.noArtIcon).scale_simple(self.albumArtSize,self.albumArtSize,gtk.gdk.INTERP_BILINEAR))
-                        except:gobject.GError
-                except dbus.exceptions.DBusException:self.what_app()
-            except:AttributeError
-        except RuntimeError: self.what_app()
 
-    def button_previous_press                 (self, widget):
+        artExact, result, self.resultToolTip = self.MediaPlayer.labeler(self.artOnOff,
+                                                                        self.titleOrder,
+                                                                        self.titleLen,
+                                                                        self.titleBoldFont)
+        self.label.set_markup(result)
         try:
-            try:
-                try:
-                    self.MediaPlayer.button_previous_press()
-                    self.labeler                          ()
-                except dbus.exceptions.DBusException:self.what_app()
-            except AttributeError:self.what_app()
-        except RuntimeError:self.what_app()
+            if self.artOnOff == 'on':
+                self.image.set_from_pixbuf(gtk.gdk.pixbuf_new_from_file(
+                    artExact).scale_simple(self.albumArtSize,
+                                           self.albumArtSize,
+                                           gtk.gdk.INTERP_BILINEAR))
+        except gobject.GError:
+            try:self.image.set_from_pixbuf(gtk.gdk.pixbuf_new_from_file(
+                self.noArtIcon).scale_simple(
+                    self.albumArtSize,
+                    self.albumArtSize,
+                    gtk.gdk.INTERP_BILINEAR))
+            except gobject.GError: pass
 
-    def button_pp_press                       (self, widget):
-        try:
-            try:
-                try:
-                    self.MediaPlayer.button_pp_press()
-                    self.labeler()
-                except dbus.exceptions.DBusException:self.what_app()
-            except AttributeError:self.what_app()
-        except RuntimeError:self.what_app()
+    @error_decorator
+    def button_previous_press(self, widget):
+        self.MediaPlayer.button_previous_press()
+        self.labeler()
 
-    def button_next_press                     (self, widget):
-        try:
-            try:
-                try:
-                    self.MediaPlayer.button_next_press()
-                    self.labeler                        ()
-                except dbus.exceptions.DBusException:self.what_app()
-            except AttributeError:self.what_app()
-        except RuntimeError:self.what_app()
+    @error_decorator
+    def button_pp_press(self, widget):
+        self.MediaPlayer.button_pp_press()
+        self.labeler()
+
+    @error_decorator
+    def button_next_press(self, widget):
+        self.MediaPlayer.button_next_press()
+        self.labeler()
 
 
 if __name__ == "__main__":

@@ -72,7 +72,8 @@ class App(awn.AppletSimple):
     def get_feeds(self):
         listoffeeds = arssconfig.get_feeds()
         self.Database = feedparserdb.FeedDatabase("sqlite:///"+userpath+"/.config/awn/arsstest.db", echo=False)
-        self.Database.update_feeds(arssconfig.get_feeds())
+        if self.Database.get_feed_objects() == []:
+            self.Database.update_feeds(arssconfig.get_feeds())
         self.feeds = self.Database.get_feed_objects()
 
     def update_menu(self):

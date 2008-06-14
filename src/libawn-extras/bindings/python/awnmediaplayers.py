@@ -313,8 +313,8 @@ class BansheeOne(GenericPlayer):
         result['title'] = str(info['name'])
         result['artist'] = str(info['artist'])
         if self.artOnOff == 'on':
-            albumart_exact = self.albumart_general + result['artist'].replace(' ','').lower() + '-' + info['album'].replace(' ','').lower() + ".jpg"
-            print albumart_exact
+            albumart_exact = self.albumart_general + result['artist'] + '-' + info['album'] + ".jpg"
+            albumart_exact = albumart_exact.replace(' ','').lower()
         if self.titleOrder == 'artist - title':
             try:result = result['artist'] + ' - ' + result['title']
             except:SyntaxError

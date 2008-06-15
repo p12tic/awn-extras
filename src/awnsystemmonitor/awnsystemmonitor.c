@@ -47,7 +47,7 @@
 //#undef NDEBUG
 #include <assert.h>
 
-//#define AWN_CAIRO_EFFECTS 1
+#define AWN_CAIRO_EFFECTS 1
 /*
  * FUNCTION DEFINITIONS
  */
@@ -252,7 +252,7 @@ gboolean cpu_meter_render(gpointer data)
 
     gtk_widget_get_size_request(widget, &cpumeter->width, &cpumeter->height);
 
-    cpumeter->width = cpumeter->width - 2;
+    cpumeter->width = cpumeter->width - 3;
     cpumeter->height = cpumeter->height / 2 - 3;
 #ifdef AWN_CAIRO_EFFECTS
     surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, cpumeter->width, cpumeter->height);

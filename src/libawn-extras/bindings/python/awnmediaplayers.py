@@ -51,11 +51,9 @@ def what_app():
     elif bus_obj.NameHasOwner('net.sacredchao.QuodLibet') == True:
         player_name = "QuodLibet"
     else:
-        try:
+        if 'pydcop' in globals():
             if pydcop.anyAppCalled("amarok") != None:
                 player_name = "Amarok"
-        except (SyntaxError, NameError):
-            pass
     return player_name
 
 

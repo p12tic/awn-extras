@@ -35,12 +35,9 @@ def error_decorator(fn):
     """Handles errors caused by dbus"""
     def errors(cls, *args, **kwargs):
         try:
-            try:
-                try:
-                    fn(cls, *args)
-                except dbus.exceptions.DBusException:cls.what_app()
-            except AttributeError:cls.what_app()
-        except RuntimeError:cls.what_app()
+            fn(cls, *args)
+        except (dbus.exceptions.DBusException, AttributeError, RuntimeError):
+            cls.what_app()
     return errors
 
 

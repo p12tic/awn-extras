@@ -23,9 +23,6 @@ GCONF_APPLETS +=		\
 	comic			\
 	file-browser-launcher	\
 	media-control		\
-	media-icon-back		\
-	media-icon-next		\
-	media-icon-play		\
 	mount-applet		\
 	weather			\
 	$(NULL)
@@ -43,7 +40,7 @@ if WITH_WEBKIT
 WEBKIT_APPLETS = \
 	webapplet	\
 	$(NULL)
-endif	
+endif
 
 # please keep alphabetized (except for libawn-extras)
 SUBDIRS =			\
@@ -56,6 +53,9 @@ SUBDIRS =			\
 	digitalClock		\
 	lastfm			\
 	mail			\
+	media-icon-back		\
+	media-icon-next		\
+	media-icon-play		\
 	notification-area	\
 	places			\
 	PyClock			\

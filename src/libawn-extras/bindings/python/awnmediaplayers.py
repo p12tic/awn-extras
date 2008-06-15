@@ -19,17 +19,20 @@
 
 
 import sys, os
+
 import gobject
 import pygtk
 import gtk
 from gtk import gdk
+
 import awn
 import dbus
-import gconf
 import string
 
-try:import pydcop
-except: ImportError
+try:
+    import pydcop
+except ImportError:
+    pass
 
 
 def what_app():
@@ -37,20 +40,22 @@ def what_app():
     bus_obj = dbus.SessionBus().get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
     if bus_obj.NameHasOwner('org.gnome.Rhythmbox') == True:
         player_name = "Rhythmbox"
-    if bus_obj.NameHasOwner('org.exaile.DBusInterface') == True:
+    elif bus_obj.NameHasOwner('org.exaile.DBusInterface') == True:
         player_name = "Exaile"
-    if bus_obj.NameHasOwner('org.gnome.Banshee') == True:
+    elif bus_obj.NameHasOwner('org.gnome.Banshee') == True:
         player_name = "Banshee"
-    if bus_obj.NameHasOwner('org.bansheeproject.Banshee') == True:
+    elif bus_obj.NameHasOwner('org.bansheeproject.Banshee') == True:
         player_name = "BansheeOne"
-    if bus_obj.NameHasOwner('org.gnome.Listen') == True:
+    elif bus_obj.NameHasOwner('org.gnome.Listen') == True:
         player_name = "Listen"
-    if bus_obj.NameHasOwner('net.sacredchao.QuodLibet') == True:
+    elif bus_obj.NameHasOwner('net.sacredchao.QuodLibet') == True:
         player_name = "QuodLibet"
-    try:
-        if pydcop.anyAppCalled("amarok") == None:pass
-        else:player_name = "Amarok"
-    except: SyntaxError
+    else:
+        try:
+            if pydcop.anyAppCalled("amarok") != None:
+                player_name = "Amarok"
+        except (SyntaxError, NameError):
+            pass
     return player_name
 
 

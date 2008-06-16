@@ -101,6 +101,7 @@ class Dialogs:
 
         if dialog == "menu":
             dlog = gtk.Menu()
+            dlog.show_all()
         elif dialog == "program":
             dlog = lambda: None
         else:
@@ -132,7 +133,7 @@ class Dialogs:
 
         self.__register[dialog] = dlog
 
-    def toggle(self, dialog, force="", once=False):
+    def toggle(self, dialog, force="", once=False, time=0):
         """
         Shows a dialog.
 
@@ -145,6 +146,8 @@ class Dialogs:
             opened, and you request that another dialog be toggled, only the
             open one is hidden. False by default.
         @type once: C{bool}
+        @param time: The time of the toggle. Usually taken from gtkEvent.time
+        @type time: C{int}
         """
 
         force = force.lower()
@@ -157,23 +160,24 @@ class Dialogs:
             self.__parent.title.hide()
 
         if dialog == "menu":
-            self.__register["menu"].popup(None, None, None, e.button, e.time)
+            self.__register["menu"].popup(None, None, None, 3, time)
         elif dialog == "program":
             self.__register["program"]()
         else:
-            if self.__register[dialog].is_active() or force == "hide" and \
+            if (self.__register[dialog].is_active() or force == "hide") and \
                 force != "show":
                 self.__register[dialog].hide()
                 self.__current = None
             else:
-                if self.__current and not self.__current.is_active():
-                    self.__current.hide()
-                    self.__current.show_all()
-                elif self.__current:
-                    self.__current.hide()
-                    if once:
-                        self.__current = None
-                        return
+                if self.__current: 
+                    if not self.__current.is_active():
+                        self.__current.hide()
+                        self.__current.show_all()
+                    else:
+                        self.__current.hide()
+                        if once:
+                            self.__current = None
+                            return
 
                 self.__register[dialog].show_all()
                 self.__current = self.__register[dialog]
@@ -193,7 +197,7 @@ class Dialogs:
         """
 
         if e.button == 3 and "menu" in self.__register: # Right click
-            self.toggle("menu", once=True)
+            self.toggle("menu", once=True, time=e.time)
         elif e.button == 2 and "secondary" in self.__register: # Middle click
             self.toggle("secondary", once=True)
         elif e.button == 1 and "main" in self.__register:

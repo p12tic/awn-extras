@@ -60,26 +60,26 @@ def Label(str):
     q.set_use_markup(True)
     return q
 
-def HBox(list, homog=True):
+def HBox(*args, homog=True):
     """
     Create a new HBox and add all the widgets from list to it
     """
 
     q = gtk.HBox(homog)
 
-    for i in list:
+    for i in args:
         q.add(i)
 
     return q
 
-def VBox(list, homog=True):
+def VBox(*args, homog=True):
     """
     Create a new HBox and add all the widgets from list to it
     """
 
     q = gtk.VBox(homog)
 
-    for i in list:
+    for i in args:
         q.add(i)
 
     return q

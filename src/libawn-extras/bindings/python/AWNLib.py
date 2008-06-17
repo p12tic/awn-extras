@@ -768,6 +768,21 @@ class Settings:
 
         self.client.delete(key)
 
+    def __contains__(self, item):
+        """
+        Test if a key exists in the current directory.
+
+        @param item: A key name
+        @type key: C{string}
+        """
+
+        try:
+            self[item]
+        except:
+            return false
+        else:
+            return true
+
     class AWNConfigUser:
         def __init__(self, folder):
             """

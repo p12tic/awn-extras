@@ -76,6 +76,7 @@ class Dialogs:
         self.__parent = parent
 
         self.__parent.settings.cd("shared")
+        self.menu = self.new("menu")
 
         try:
             self.__loseFocus = self.__parent.settings[ \
@@ -100,7 +101,7 @@ class Dialogs:
         """
 
         if dialog == "menu":
-            dlog = gtk.Menu()
+            dlog = self.__parent.create_default_menu()
             dlog.show_all()
         elif dialog == "program":
             dlog = lambda: None

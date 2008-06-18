@@ -23,32 +23,32 @@
 
 import awn
 class AwnCCWrapper:
-	
-	def __init__(self,uid):
-		self.client = awn.Config(str(uid),None)
-	
-	#Get an AwnConfigClient string
-	def get_string(self,key,default):
-		val = self.client.get_string(awn.CONFIG_DEFAULT_GROUP,key)
-		if val==None:
-			val = default
-			self.client.set_string(awn.CONFIG_DEFAULT_GROUP,key,default)
-		return val
+  
+  def __init__(self,uid):
+    self.client = awn.Config(str(uid),None)
+  
+  #Get an AwnConfigClient string
+  def get_string(self,key,default):
+    val = self.client.get_string(awn.CONFIG_DEFAULT_GROUP,key)
+    if val==None:
+      val = default
+      self.client.set_string(awn.CONFIG_DEFAULT_GROUP,key,default)
+    return val
 
-	#Set an AwnConfigClient string
-	def set_string(self,key,val):
-		val = self.client.set_string(awn.CONFIG_DEFAULT_GROUP,key,val)
-		return val
+  #Set an AwnConfigClient string
+  def set_string(self,key,val):
+    val = self.client.set_string(awn.CONFIG_DEFAULT_GROUP,key,val)
+    return val
 
-	#Get an AwnConfigClient integer
-	def get_int(self,key,default):
-		val = self.client.get_int(awn.CONFIG_DEFAULT_GROUP,key)
-		if val==0:
-			val = default
-			self.client.set_int(awn.CONFIG_DEFAULT_GROUP,key,default)
-		return val
+  #Get an AwnConfigClient integer
+  def get_int(self,key,default):
+    val = self.client.get_int(awn.CONFIG_DEFAULT_GROUP,key)
+    if val==0:
+      val = default
+      self.client.set_int(awn.CONFIG_DEFAULT_GROUP,key,default)
+    return val
 
-	#Set an AwnConfigClient integer	
-	def set_int(self,key,val):
-		val = self.client.set_int(awn.CONFIG_DEFAULT_GROUP,key,val)
-		return val
+  #Set an AwnConfigClient integer  
+  def set_int(self,key,val):
+    val = self.client.set_int(awn.CONFIG_DEFAULT_GROUP,key,val)
+    return val

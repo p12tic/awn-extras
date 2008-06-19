@@ -37,6 +37,9 @@ import cPickle as cpickle
 # For the raw AWN API
 import awn
 
+# For the Networking class
+import urllib
+
 try:
     # The libawn-extras additions. Not always available
     import awn.extras as extras
@@ -53,6 +56,8 @@ ___file___ = sys.argv[0]
 # Since AWNLib is in site-packages, __file__ refers to something there
 # For relative paths to work, we need a way of determining where the
 # User applet is. So this bit of magic works.
+
+_globalRegister = {}
 
 class KeyRingError:
     def __init__(self, str):
@@ -501,7 +506,7 @@ class Errors:
 
         self.__parent = parent
 
-    def program(self, name, packagelist, callback):
+    def program(self, name, packagelist):
         """
         Tells the user that they need to install a program to use your applet.
         Note that this does not do any checking to determine whether the
@@ -659,6 +664,33 @@ class Errors:
         ok.connect("clicked", qu)
 
         dlog.show_all() # We want the dialog to show itself right away
+
+class Networking:
+    def __init__(self, parent):
+        """
+        Creates a new Settings object. Note that the Settings object should be
+        used as a dictionary.
+
+        @param parent: The parent applet of the settings instance.
+        @type parent: L{Applet}
+        """
+        
+        self.__parent = parent
+
+    def __get_thread(self, url, callback):
+        callback(urllib.urlopen(url))
+
+    def get(self, url, callback):
+        """
+        Get the contents of the page located on the internet.
+        
+        @param url: The URL of the page to get
+        @type url: C{string}
+        @param callback: The function to call after the page is retrieved. The file-like object will be passed as the first argument
+        @type callback: C{function}
+        """
+        
+        gobject.idle_add(self.__get_thread(url, callback))
 
 class Settings:
     def __init__(self, parent):
@@ -1297,6 +1329,7 @@ class Applet(awn.AppletSimple):
         self.keyring = KeyRing(self)
         self.notify = Notify(self)
         self.effects = Effects(self)
+        self.network = Networking(self)
 
         # Connect the necessary events to the sub-objects.
         self.connect("button-press-event", self.dialog.click)
@@ -1328,4 +1361,5 @@ def start(applet):
     """
 
     applet.show_all() # Show
+    gobject.threads_init() # Threading for Networking
     gtk.main() # Start

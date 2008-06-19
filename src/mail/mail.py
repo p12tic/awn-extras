@@ -60,10 +60,15 @@ def Label(str):
     q.set_use_markup(True)
     return q
 
-def HBox(*args, homog=True):
+def HBox(*args, **kwarg):
     """
     Create a new HBox and add all the widgets from list to it
     """
+    
+    if "homog" not in kwarg:
+        homog = True
+    else:
+        homog = kwarg["homog"]
 
     q = gtk.HBox(homog)
 
@@ -72,10 +77,15 @@ def HBox(*args, homog=True):
 
     return q
 
-def VBox(*args, homog=True):
+def VBox(*args, **kwarg):
     """
     Create a new HBox and add all the widgets from list to it
     """
+
+    if "homog" not in kwarg:
+        homog = True
+    else:
+        homog = kwarg["homog"]
 
     q = gtk.VBox(homog)
 

@@ -431,7 +431,7 @@ class MailApplet:
 
         email = gtk.Entry()
         email.set_text(self.emailclient)
-        layout.add(HBox([Label(_("Email Client: ")), email]))
+        layout.add(HBox(Label(_("Email Client: ")), email))
 
         hidden = gtk.CheckButton(label=_("Hide Unless New"))
         hidden.set_active(self.hide)

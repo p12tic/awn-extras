@@ -126,6 +126,11 @@ class App (awn.AppletSimple):
     self.show_network = self.client.get_int('places_network',2)
     self.show_bookmarks = self.client.get_int('places_bookmarks',2)
     
+    #Check to see if we should check /etc/fstab and $mount
+    self.do_mounted = False
+    if 2 in [self.show_local, self.show_network]:
+      self.do_mounted = True
+    
     #Now make the actual mounted items. First: Home Folder
     if self.show_home==2:
       self.icon_home = self.theme.load_icon('user-home',24,24)
@@ -136,23 +141,28 @@ class App (awn.AppletSimple):
           .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),'Home Folder'])
       self.places_paths.append(os.path.expanduser('~'))
     
-    #Get list of mounted drives from both $ mount and /etc/fstab AND the list of bookmarks
-    self.mount2 = os.popen('mount')
-    self.mount = self.mount2.readlines()
-    self.mount2.close()
-    self.fstab2 = open('/etc/fstab','r')
-    self.fstab = self.fstab2.read().split('\n')
-    self.fstab2.close()
+    #Get list of mounted drives from $mount and /etc/fstab
+    if self.do_mounted:
+      self.mount2 = os.popen('mount')
+      self.mount = self.mount2.readlines()
+      self.mount2.close()
+      self.fstab2 = open('/etc/fstab','r')
+      self.fstab = self.fstab2.read().split('\n')
+      self.fstab2.close()
+      self.paths_fstab = []
+      self.network_paths = []
+      self.network_corr_hnames = []
+      self.cd_paths = []
+      self.dvd_paths = []
+    
+    #Get list of bookmarks
     self.bmarks2 = open(os.path.expanduser('~/.gtk-bookmarks'))
     self.bmarks = self.bmarks2.readlines()
     self.bmarks2.close()
+    
+    #Set list of paths, regardless of location
     self.paths = []
     self.paths_hnames = []
-    self.paths_fstab = []
-    self.network_paths = []
-    self.network_corr_hnames = []
-    self.cd_paths = []
-    self.dvd_paths = []
     
     #Get whether the trash is empty or not - but first find out if the Trash is in
     #~/.Trash or ~/.local/share/Trash
@@ -174,49 +184,50 @@ class App (awn.AppletSimple):
       self.trash_full = False
     
     #Get the mounted drives/partitions that are suitable to list (from fstab)
-    for x in self.fstab:
-      try:
-        if x.replace(' ','').replace('\t','')!='' and x[0]!="#":
-          y = x.split(' ')
-          for z in y[1:]:
-            if z!='':
-              if z[0]=='/':
-                if z!='/proc':
-                  self.paths_fstab.append(z)
-          z = x.replace('  ',' ').split(' ')
-          z2 = []
-          for z3 in z:
-            z2.extend(z3.split('\t'))
-          #print "abc:", z2
-          if z2[2] == 'smbfs':
-            #print "SMBFS:", z2
-            self.network_paths.append('smb:'+z2[0])
-            self.network_corr_hnames.append(z2[0].split(':')[-1].split('/')[-1]+\
-              ' on '+z2[0].split('/')[2])
-          elif z2[2] in ['cifs','nfs','ftpfs','sshfs']:
-            self.network_paths.append(z2[1])
-            self.network_corr_hnames.append(z2[0].split(':')[-1].split('/')[-1]+\
-              ' on '+z2[0].split('/')[2])
-      except:
-        #Maybe a syntax error or something in this line of fstab?
-        #Just ignore it (better than not working at all (thanks Kinap/Felix)
-        pass
-    
-    #Get the mounted drives/partitions that are suitable to list (from mount)
-    for x in self.mount:
-      y = x.split(' ')
-      if y[0].find('/')!=-1:
-        if y[0].split('/')[1]=='dev':
-          self.paths.append(x.split(' on ')[1].split(' type ')[0])
-          if x[-1]==']':
-            self.paths_hnames.append(x.split('[')[-1][:-1])
-          else:
-            self.paths_hnames.append(x.split(' on ')[1].split(' type ')[0]\
-              .split('/')[-1])
-          if x.split(' type ')[1].split(' ')[0]=='iso9660':
-            self.cd_paths.append(x.split(' on ')[1].split(' type ')[0])
-          elif x.split(' type ')[1].split(' ')[0]=='udf':
-            self.dvd_paths.append(x.split(' on ')[1].split(' type ')[0])
+    if self.do_mounted:
+      for x in self.fstab:
+        try:
+          if x.replace(' ','').replace('\t','')!='' and x[0]!="#":
+            y = x.split(' ')
+            for z in y[1:]:
+              if z!='':
+                if z[0]=='/':
+                  if z!='/proc':
+                    self.paths_fstab.append(z)
+            z = x.replace('  ',' ').split(' ')
+            z2 = []
+            for z3 in z:
+              z2.extend(z3.split('\t'))
+            #print "abc:", z2
+            if z2[2] == 'smbfs':
+              #print "SMBFS:", z2
+              self.network_paths.append('smb:'+z2[0])
+              self.network_corr_hnames.append(z2[0].split(':')[-1].split('/')[-1]+\
+                ' on '+z2[0].split('/')[2])
+            elif z2[2] in ['cifs','nfs','ftpfs','sshfs']:
+              self.network_paths.append(z2[1])
+              self.network_corr_hnames.append(z2[0].split(':')[-1].split('/')[-1]+\
+                ' on '+z2[0].split('/')[2])
+        except:
+          #Maybe a syntax error or something in this line of fstab?
+          #Just ignore it (better than not working at all (thanks Kinap/Felix)
+          pass
+      
+      #Get the mounted drives/partitions that are suitable to list (from mount)
+      for x in self.mount:
+        y = x.split(' ')
+        if y[0].find('/')!=-1:
+          if y[0].split('/')[1]=='dev':
+            self.paths.append(x.split(' on ')[1].split(' type ')[0])
+            if x[-1]==']':
+              self.paths_hnames.append(x.split('[')[-1][:-1])
+            else:
+              self.paths_hnames.append(x.split(' on ')[1].split(' type ')[0]\
+                .split('/')[-1])
+            if x.split(' type ')[1].split(' ')[0]=='iso9660':
+              self.cd_paths.append(x.split(' on ')[1].split(' type ')[0])
+            elif x.split(' type ')[1].split(' ')[0]=='udf':
+              self.dvd_paths.append(x.split(' on ')[1].split(' type ')[0])
     
     #Go through the list and get the right icon and name for specific ones
     #ie/eg: / -> harddisk icon and "Filesystem"

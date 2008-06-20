@@ -812,9 +812,9 @@ class Settings:
         try:
             self[item]
         except:
-            return false
+            return False
         else:
-            return true
+            return True
 
     class AWNConfigUser:
         def __init__(self, folder):

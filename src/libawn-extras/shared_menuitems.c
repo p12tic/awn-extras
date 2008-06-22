@@ -181,10 +181,12 @@ GtkWidget *shared_menuitem_about_applet(const gchar * copyright,
       g_warning("License must be set\n");
       g_assert_not_reached ();
   }
+#if GTK_CHECK_VERSION(2,12,0)
   if (program_name)
   {
     gtk_about_dialog_set_program_name (dialog,program_name);
   }
+#endif
   if (version)    //we can probably append some addition build info in here...
   {
     gtk_about_dialog_set_version (dialog,version);

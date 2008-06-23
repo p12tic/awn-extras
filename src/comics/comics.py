@@ -38,8 +38,9 @@ import comics_add
 import comics_manage
 import comics_view
 
-from shared import SHARE_DIR, SYS_FEEDS_DIR, USER_FEEDS_DIR, GLADE_DIR, \
-	PIXMAPS_DIR, LOCALE_DIR, STRIPS_DIR, feeds
+from feed import FeedContainer
+from shared import SHARE_DIR, USER_DIR, SYS_FEEDS_DIR, USER_FEEDS_DIR, \
+	ALT_USER_DIR, GLADE_DIR, PIXMAPS_DIR, LOCALE_DIR, STRIPS_DIR
 
 GLADE_FILE = join(GLADE_DIR, 'main.glade')
 
@@ -116,9 +117,7 @@ class ComicApplet(awn.AppletSimple):
 	
 	def toggle_feed(self, feed_name, visible):
 		"""Toggles a comic."""
-		global feeds
-		
-		if not feed_name in feeds.feeds:
+		if not feed_name in self.feeds.feeds:
 			return
 		
 		if not visible:
@@ -145,14 +144,12 @@ class ComicApplet(awn.AppletSimple):
 	
 	def make_menu(self):
 		"""Generate the menu listing the comics."""
-		global feeds
-		
 		# Generate comics menu
 		feed_menu = self.__xml.get_widget('comics_menu')
 		feed_menu.foreach(lambda child: feed_menu.remove(child))
-		for feed in feeds.feeds:
+		for feed in self.feeds.feeds:
 			label = gtk.Label()
-			label.set_markup(feeds.feeds[feed].name)
+			label.set_markup(self.feeds.feeds[feed].name)
 			align = gtk.Alignment(xalign = 0.0)
 			align.add(label)
 			menu_item = gtk.CheckMenuItem()
@@ -164,7 +161,7 @@ class ComicApplet(awn.AppletSimple):
 			feed_menu.append(menu_item)
 		feed_menu.show_all()
 		self.__xml.get_widget('comics_container').set_sensitive(
-			len(feeds.feeds) > 0)
+			len(self.feeds.feeds) > 0)
 		
 		return self.__xml.get_widget('menu')
 	
@@ -174,10 +171,10 @@ class ComicApplet(awn.AppletSimple):
 		self.dialog.show_all()
 		gobject.timeout_add(self.DIALOG_DURATION, self.on_dialog_timer)
 	
-	def __init__(self, uid, orient, height):
-		global feeds
-		
+	def __init__(self, uid, orient, height, feeds):
 		awn.AppletSimple.__init__(self, uid, orient, height)
+		
+		self.feeds = feeds
 		
 		self.height = height
 		self.icon = gtk.gdk.pixbuf_new_from_file(join(SHARE_DIR, 'icon.svg'))
@@ -214,8 +211,7 @@ class ComicApplet(awn.AppletSimple):
 		except OSError:
 			return
 	
-		for feed in feeds.feeds.values():
-			feed.update()
+		self.feeds.update()
 	
 	def on_window_updated(self, widget, title):
 		self.notify.send(title,
@@ -278,9 +274,23 @@ if __name__ == '__main__':
 	gobject.threads_init()
 	gtk.gdk.threads_init()
 	
+	# Make sure that all required directories exist
+	if not os.access(USER_DIR, os.W_OK):
+		if os.access(ALT_USER_DIR, os.W_OK):
+			os.symlink(ALT_USER_DIR, USER_DIR)
+		else:
+			os.makedirs(USER_DIR)
+	if not os.access(USER_FEEDS_DIR, os.W_OK):
+		os.makedirs(USER_FEEDS_DIR)
+	
+	# Load the feeds
+	feeds = FeedContainer()
+	feeds.load_directory(SYS_FEEDS_DIR)
+	feeds.load_directory(USER_FEEDS_DIR)
+	
 	#Initialise AWN and create the applet
 	awn.init(sys.argv[1:])
-	applet = ComicApplet(awn.uid, awn.orient, awn.height)
+	applet = ComicApplet(awn.uid, awn.orient, awn.height, feeds)
 	awn.init_applet(applet)
 	applet.show_all()
 	

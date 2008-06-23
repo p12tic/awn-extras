@@ -19,7 +19,7 @@
 
 
 from feed import FeedContainer
-from os import access, getenv, makedirs, symlink, W_OK
+from os import getenv
 from os.path import join, split
 
 # Data locations
@@ -35,16 +35,4 @@ LOCALE_DIR		= join(SHARE_DIR, 'locale')
 
 STRIPS_DIR		= USER_DIR
 CACHE_FILE		= join(USER_DIR, '%s.cache')
-
-if not access(USER_DIR, W_OK):
-	if access(ALT_USER_DIR, W_OK):
-		symlink(ALT_USER_DIR, USER_DIR)
-	else:
-		makedirs(USER_DIR)
-if not access(USER_FEEDS_DIR, W_OK):
-	makedirs(USER_FEEDS_DIR)
-
-feeds = FeedContainer()
-feeds.load_directory(SYS_FEEDS_DIR)
-feeds.load_directory(USER_FEEDS_DIR)
 

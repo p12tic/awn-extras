@@ -195,6 +195,7 @@ class Feed(gobject.GObject):
 				self.feed = feedparser.parse(o.filename)
 			except:
 				self.emit('updated', Feed.DOWNLOAD_NOT_FEED)
+				return
 		finally:
 			os.remove(o.filename)
 		
@@ -242,7 +243,6 @@ class Feed(gobject.GObject):
 class FeedContainer(gobject.GObject):
 	FEED_ADDED = 0
 	FEED_REMOVED = 1
-	FEED_MODIFIED = 2
 	
 	__gsignals__ = dict(
 		feed_changed = (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
@@ -260,7 +260,6 @@ class FeedContainer(gobject.GObject):
 				feed = Feed(filename, settings)
 				feed.filename = filename
 				self.feeds[settings[NAME]] = feed
-				feed.update()
 				self.emit('feed-changed', feed, FeedContainer.FEED_ADDED)
 			except:
 				pass
@@ -287,4 +286,8 @@ class FeedContainer(gobject.GObject):
 				self.add_feed(os.path.join(directory, filename))
 		except OSError:
 			pass
+	
+	def update(self):
+		for feed in self.feeds.values():
+			feed.update()
 

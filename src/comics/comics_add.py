@@ -34,7 +34,7 @@ from feed import Feed
 from qfeed import QueryFeed, NAME, URL, TYPE, IMG_INDEX
 from downloader import Downloader
 from shared import SHARE_DIR, USER_DIR, SYS_FEEDS_DIR, USER_FEEDS_DIR, \
-	GLADE_DIR, PIXMAPS_DIR, feeds
+	GLADE_DIR, PIXMAPS_DIR
 from settings import Settings
 
 GLADE_FILE = os.path.join(GLADE_DIR, 'add.glade')
@@ -73,8 +73,9 @@ class ComicsAdder:
 	# Standard python methods                                              #
 	########################################################################
 	
-	def __init__(self):
+	def __init__(self, feeds):
 		"""Create a new ComicsAdder instance."""
+		self.feeds = feeds
 		self.name = ''
 		self.url = ''
 		self.feed = None
@@ -111,8 +112,6 @@ class ComicsAdder:
 		self.assistant.destroy()
 	
 	def on_add_assistant_apply(self, widget):
-		global feeds
-		
 		try:
 			os.mkdir(USER_FEEDS_DIR)
 		except:
@@ -133,7 +132,7 @@ class ComicsAdder:
 				'The index of the image in the HTML-code'
 		
 		settings.save()
-		feeds.add_feed(filename)
+		self.feeds.add_feed(filename)
 	
 	def on_add_assistant_prepare(self, widget, page):
 		if page is self.xml.get_widget('url_page'):

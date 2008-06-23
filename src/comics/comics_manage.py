@@ -29,7 +29,7 @@ from locale import gettext as _
 
 # Local
 from comics_add import ComicsAdder
-from shared import GLADE_DIR, feeds
+from shared import GLADE_DIR
 
 GLADE_FILE = os.path.join(GLADE_DIR, 'manage.glade')
 
@@ -47,13 +47,11 @@ class ComicsManager:
 	
 	def load_feeds(self):
 		"""Load the descriptions of all installed feeds."""
-		global feeds
-		
 		self.model.clear()
 		
 		shared_iterator = self.model.append(None, (_('Shared comics'), ''))
 		user_iterator = self.model.append(None, (_('Your comics'), ''))
-		for feed_name, feed in feeds.feeds.items():
+		for feed_name, feed in self.feeds.feeds.items():
 			if os.access(os.path.dirname(feed.filename), os.W_OK):
 				self.model.append(user_iterator, (feed_name, feed.filename))
 			else:
@@ -68,11 +66,13 @@ class ComicsManager:
 	# Standard python methods                                              #
 	########################################################################
 	
-	def __init__(self):
+	def __init__(self, feeds):
 		"""Create a new ComicsManage instance."""
 		# Connect dialogue events
 		self.xml = gtk.glade.XML(GLADE_FILE)
 		self.xml.signal_autoconnect(self)
+		
+		self.feeds = feeds
 		
 		self.manage_window = self.xml.get_widget('manage_window')
 		
@@ -109,13 +109,11 @@ class ComicsManager:
 		adder.assistant.connect('destroy', self.on_adder_destroy)
 	
 	def on_remove_button_clicked(self, widget):
-		global feeds
-		
 		model, iterator = self.comics_list.get_selection().get_selected()
 		feed_name = self.model.get_value(iterator, 0)
 		filename = self.model.get_value(iterator, 1)
 		try:
-			feeds.remove_feed(feed_name)
+			self.feeds.remove_feed(feed_name)
 			os.remove(filename)
 		except:
 			dialog = gtk.MessageDialog(

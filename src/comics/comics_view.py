@@ -39,7 +39,7 @@ from feed import URL, TITLE, LINK, DATE, Feed, FeedContainer
 from settings import Settings
 from widgets import ScalableWindow, WWWLink, Ticker
 from shared import SHARE_DIR, USER_DIR, SYS_FEEDS_DIR, USER_FEEDS_DIR, \
-	GLADE_DIR, PIXMAPS_DIR, feeds
+	GLADE_DIR, PIXMAPS_DIR
 
 STRIPS_DIR = USER_DIR
 CACHE_FILE = os.path.join(USER_DIR, '%s.cache')
@@ -350,12 +350,10 @@ class ComicsViewer(ScalableWindow):
 	
 	def make_menu(self):
 		"""Create the context menu."""
-		global feeds
-		
 		# Generate history menu
 		history_menu = self.__xml.get_widget('history_menu')
 		history_menu.foreach(lambda child: history_menu.remove(child))
-		items = feeds.feeds[self.feed_name].items.items()
+		items = self.feeds.feeds[self.feed_name].items.items()
 		items.sort(reverse = True)
 		for date, item in items:
 			label = gtk.Label()
@@ -374,7 +372,7 @@ class ComicsViewer(ScalableWindow):
 		history_menu.show_all()
 		self.__xml.get_widget('show_link_item').set_active(self.show_link)
 		self.__xml.get_widget('history_container').set_sensitive(
-			len(feeds.feeds[self.feed_name].items) > 0)
+			len(self.feeds.feeds[self.feed_name].items) > 0)
 		self.__xml.get_widget('save_as_item').set_sensitive(not self.__pixbuf \
 			is None)
 		
@@ -386,13 +384,12 @@ class ComicsViewer(ScalableWindow):
 	
 	def __init__(self, applet, settings, visible = False):
 		"""Create a new ComicsView instance."""
-		global feeds
-		
 		super(ComicsViewer, self).__init__()
 		self.applet = applet
 		self.__settings = settings
 		
 		# Initialize fields
+		self.feeds = applet.feeds
 		self.__update_id = None
 		self.__download_id = None
 		self.__downloader = None
@@ -412,7 +409,7 @@ class ComicsViewer(ScalableWindow):
 		
 		# Connect events
 		self.connect('destroy', self.on_destroy)
-		feeds.connect('feed-changed', self.on_feed_changed)
+		self.feeds.connect('feed-changed', self.on_feed_changed)
 		self.__xml.signal_autoconnect(self)
 		
 		# Build UI
@@ -452,22 +449,20 @@ class ComicsViewer(ScalableWindow):
 	
 	def set_feed_name(self, new_feed_name):
 		"""Set the name of the feed to use."""
-		global feeds
-		
 		if self.__update_id:
-			feeds.feeds[self.feed_name].disconnect(self.__update_id)
+			self.feeds.feeds[self.feed_name].disconnect(self.__update_id)
 			self.__update_id = None
 		
-		if new_feed_name in feeds.feeds:
+		if new_feed_name in self.feeds.feeds:
 			self.feed_name = new_feed_name
-			self.__update_id = feeds.feeds[self.feed_name].connect('updated',
-				self.on_feed_updated)
-			if feeds.feeds[self.feed_name].ready:
-				self.on_feed_updated(feeds.feeds[self.feed_name],
+			self.__update_id = self.feeds.feeds[self.feed_name] \
+				.connect('updated', self.on_feed_updated)
+			if self.feeds.feeds[self.feed_name].ready:
+				self.on_feed_updated(self.feeds.feeds[self.feed_name],
 					Feed.DOWNLOAD_OK)
 			self.__settings['feed_name'] = str(new_feed_name)
-		elif feeds:
-			self.set_feed_name(feeds.feeds.keys()[0])
+		elif len(self.feeds.feeds) > 0:
+			self.set_feed_name(self.feeds.feeds.keys()[0])
 	
 	def set_show_link(self, new_show_link):
 		"""Show or hide the link label."""
@@ -489,7 +484,7 @@ class ComicsViewer(ScalableWindow):
 	
 	def on_destroy(self, widget):
 		if self.__update_id:
-			feeds.feeds[self.feed_name].disconnect(self.__update_id)
+			self.feeds.feeds[self.feed_name].disconnect(self.__update_id)
 			self.__update_id = None
 		if self.__download_id and self.__downloader:
 			self.__downloader.disconnect(self.__download_id)

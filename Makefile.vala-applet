@@ -1,13 +1,16 @@
-# vim: set ft=automake :
+# vim: set ft=automake ts=8 sts=8 sw=8 :
 include $(top_srcdir)/Makefile.c-applet
 
-GENERATED_C_FILES = $(VALA_FILES:.vala=.c)
-GENERATED_H_FILES = $(VALA_FILES:.vala=.h)
+BUILT_SOURCES = $(APPLET_NAME).so
 
-.vala.c:
-	$(VALAC) -C $< --vapidir=$(AWN_VAPIDIR) --pkg=awn $(AM_VALAFLAGS) $(VALAFLAGS)
+$(APPLET_NAME).so: $(VALA_FILES)
+	$(VALAC) --Xcc="-shared -fPIC $(APPLET_CFLAGS) $(CFLAGS)" -o $@ $^ --vapidir=$(AWN_VAPIDIR) --pkg=awn $(AM_VALAFLAGS) $(VALAFLAGS)
 
-CLEANFILES +=				\
-	$(GENERATED_C_FILES)	\
-	$(GENERATED_H_FILES)	\
-	$(NULL)
+install-exec-hook:
+	test -d "$(appletdir)" || $(MKDIR_P) "$(appletdir)"
+	$(INSTALL) -m 755 $(APPLET_NAME).so "$(DESTDIR)$(appletdir)"
+
+uninstall-hook:
+	rm -f "$(appletdir)/$(APPLET_NAME).so"
+
+CLEANFILES += $(APPLET_NAME).so

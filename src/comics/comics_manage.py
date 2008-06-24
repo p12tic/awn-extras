@@ -104,7 +104,7 @@ class ComicsManager:
 			self.xml.get_widget('remove_button').set_sensitive(False)
 	
 	def on_add_button_clicked(self, widget):
-		adder = ComicsAdder()
+		adder = ComicsAdder(self.feeds)
 		adder.assistant.set_transient_for(self.manage_window)
 		adder.assistant.connect('destroy', self.on_adder_destroy)
 	

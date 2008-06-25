@@ -7,7 +7,7 @@ $(APPLET_NAME).so: $(VALA_FILES)
 	$(VALAC) --Xcc="-shared -fPIC $(APPLET_CFLAGS) $(CFLAGS)" -o $@ $^ --vapidir=$(AWN_VAPIDIR) --pkg=awn $(AM_VALAFLAGS) $(VALAFLAGS)
 
 install-exec-hook:
-	test -d "$(appletdir)" || $(MKDIR_P) "$(appletdir)"
+	test -d "$(DESTDIR)$(appletdir)" || mkdir -p "$(DESTDIR)$(appletdir)"
 	$(INSTALL) -m 755 $(APPLET_NAME).so "$(DESTDIR)$(appletdir)"
 
 uninstall-hook:

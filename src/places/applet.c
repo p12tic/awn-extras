@@ -1472,7 +1472,7 @@ AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient, gint height)
   gtk_window_set_focus_on_map(GTK_WINDOW(places->mainwindow), TRUE);
   places->vbox = gtk_vbox_new(FALSE, 0);
   gtk_container_add(GTK_CONTAINER(places->mainwindow), places->vbox);
-  g_signal_connect_after(G_OBJECT(places->applet), "realize", G_CALLBACK(_bloody_thing_has_style), places);
+  g_signal_connect_after(G_OBJECT(places->applet), "map", G_CALLBACK(_bloody_thing_has_style), places);
   return applet;
 
 }

@@ -90,7 +90,7 @@ static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, 
   return TRUE;
 }
 
-static gboolean _expose_event(GtkWidget *widget, GdkEventExpose *expose, gpointer null)
+static gboolean _icon_done(gpointer null)
 {
   static gboolean done_once = FALSE;
 
@@ -157,6 +157,17 @@ static gboolean _expose_event(GtkWidget *widget, GdkEventExpose *expose, gpointe
   return FALSE;
 }
 
+static gboolean _map_event(GtkWidget *widget, gpointer null)
+{
+  static gboolean done_once = FALSE;
+
+  if (!done_once)
+  {
+    g_timeout_add(1000,_icon_done,null);    
+    done_once = TRUE;    
+  }
+  return FALSE;
+}
 AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient, gint height)
 {
 
@@ -165,13 +176,23 @@ AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient, gint height)
   gtk_widget_set_size_request(GTK_WIDGET(applet), height, -1);
   GdkPixbuf *icon;
   G_Height = height;
-  icon = gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8, 1, height);
-  gdk_pixbuf_fill(icon, 0x00000000);
+  
+  read_config();
+  icon = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(),
+                                  G_cairo_menu_conf.applet_icon,
+                                  height ,
+                                  0, NULL);
+  
+  if (!icon)
+  {
+    icon = gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8, 1, height);
+    gdk_pixbuf_fill(icon, 0x00000000);
+  }
   awn_applet_simple_set_temp_icon(AWN_APPLET_SIMPLE(applet), icon);
   gtk_widget_show_all(GTK_WIDGET(applet));
 
-  g_signal_connect(G_OBJECT(applet), "expose-event", G_CALLBACK(_expose_event), NULL);
-
+  g_signal_connect_after(G_OBJECT(applet),"map" , G_CALLBACK(_map_event), NULL);
+  
   return applet;
 
 }

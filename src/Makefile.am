@@ -46,6 +46,7 @@ SUBDIRS =			\
 	libawn-extras		\
 	affinity		\
 	arss			\
+	awn-meebo		\
 	awnterm			\
 	battery-applet		\
 	comics			\

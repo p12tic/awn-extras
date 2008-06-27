@@ -318,6 +318,10 @@ src/battery-applet/Makefile
 src/battery-applet/icons/Makefile
 src/clock/Makefile
 src/clock/clock.desktop.in
+src/cairo-clock/Makefile
+src/cairo-clock/cairo-clock.desktop.in
+src/cairo-clock/themes/Makefile
+src/cairo-clock/themes/tango/Makefile
 src/cairo-menu-classic/Makefile
 src/cairo-menu-classic/cairo_main_menu_classic.desktop.in
 src/cairo-menu/Makefile

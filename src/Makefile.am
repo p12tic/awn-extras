@@ -9,6 +9,7 @@ if WITH_GCONF
 if WITH_GNOME
 GCONF_APPLETS +=		\
 	awnsystemmonitor	\
+	cairo-clock		\
 	cairo-menu		\
 	cairo-menu-classic	\
 	calendar		\

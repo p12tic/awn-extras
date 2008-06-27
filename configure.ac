@@ -400,12 +400,6 @@ src/places/Makefile
 src/places/places.desktop.in
 src/plugger/Makefile
 src/plugger/plugger.desktop.in
-src/PyClock/Makefile
-src/PyClock/PyClock.desktop.in
-src/PyClock/Themes/Makefile
-src/PyClock/Themes/Plain-Clock/Makefile
-src/PyClock/Themes/SBB/Makefile
-src/PyClock/Themes/Tango/Makefile
 src/python-test/Makefile
 src/python-test/python-test.desktop.in
 src/quit-applet/Makefile

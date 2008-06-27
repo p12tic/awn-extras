@@ -60,7 +60,6 @@ SUBDIRS =			\
 	media-icon-play		\
 	notification-area	\
 	places			\
-	PyClock			\
 	python-test		\
 	quit-applet		\
 	separator		\

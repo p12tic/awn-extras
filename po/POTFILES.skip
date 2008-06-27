@@ -13,7 +13,6 @@ src/shiny-switcher/shinyswitcher.schemas.in
 src/switcher/switcher.schemas.in
 src/trash/trash.schemas.in
 src/MiMenu/mimenu.desktop.in
-src/PyClock/PyClock.desktop.in
 src/arss/arss.desktop.in
 src/media-control/media-control.desktop.in
 src/media-icon-back/media-icon-back.desktop.in
@@ -24,8 +23,6 @@ src/pandora/awn-pandora.desktop.in
 src/quit-applet/quit-applet.desktop.in
 src/MiMenu/mimenu.desktop.in
 src/MiMenu/mimenu.desktop.in.in
-src/PyClock/PyClock.desktop.in
-src/PyClock/PyClock.desktop.in.in
 src/affinity/aff-results.c
 src/affinity/aff-search-engine-beagle.c
 src/affinity/aff-search-engine-tracker.c
@@ -81,7 +78,6 @@ src/weather/weatherdialog.py
 src/weather/weathermap.py
 src/weather/weathertext.py
 src/MiMenu/mimenu.desktop.in
-src/PyClock/PyClock.desktop.in
 src/arss/arss.desktop.in
 src/media-control/media-control.desktop.in
 src/media-icon-back/media-icon-back.desktop.in

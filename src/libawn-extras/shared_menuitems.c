@@ -102,6 +102,8 @@ GtkWidget * shared_menuitem_create_applet_prefs(gchar * instance,
   if (share_config_bool(SHR_KEY_GENERIC_PREFS))
   {
     item = gtk_image_menu_item_new_with_label("Applet Preferences");
+    gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),
+          gtk_image_new_from_stock (GTK_STOCK_PREFERENCES,GTK_ICON_SIZE_MENU));    
     gtk_widget_show_all(item);
     g_signal_connect(G_OBJECT(item), "activate",
                      G_CALLBACK(_start_applet_prefs), prefs_location);

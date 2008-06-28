@@ -225,6 +225,10 @@ GtkWidget *shared_menuitem_about_applet(const gchar * copyright,
   }  
   item_text = g_strdup_printf("About %s",program_name);
   item = gtk_image_menu_item_new_with_label(item_text); //FIXME Add pretty icon
+  
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),
+                gtk_image_new_from_stock (GTK_STOCK_ABOUT,GTK_ICON_SIZE_MENU));
+   
   g_free(item_text);
 
   gtk_widget_show_all(item);

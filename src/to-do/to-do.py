@@ -1055,16 +1055,11 @@ class App(awn.AppletSimple):
           y = 0
           for cat in self.settings['category']:
             if y > where and cat != -1:
-              #print 'adding item in category: y > where and cat != -1;\ny: %s, where: %s, cat: %s' % \
-                (y, where, cat)
               tmp_list_category.append(cat+1)
             else:
-              #print 'adding item in category: else; y: %s, where: %s, cat: %s' % \
-                (y, where, cat)
               tmp_list_category.append(cat)
             
             if y == where:
-              #print 'adding item in category: y == where (%s)' % y
               tmp_list_category.append(self.add_category)
             y+=1
           

@@ -1,0 +1,59 @@
+[DEFAULT/items]
+type = list-string
+default = 
+description = List of items' names
+
+[DEFAULT/details]
+type = list-string
+default = 
+description = List of items' details
+
+[DEFAULT/progress]
+type = list-string
+default = 
+description = List of items' progresses in percent (0-100)
+
+[DEFAULT/priority]
+type = list-string
+default = 
+description = List of items' priorities (0-3)
+
+[DEFAULT/color]
+type = string
+default = skyblue
+description = The color to use for the icon
+
+[DEFAULT/title]
+type = string
+default = To-Do List
+description = The title to display
+
+[DEFAULT/icon-type]
+type = string
+default = items
+description = What type of icon to display (progress, progress-items, items)
+
+[DEFAULT/colors]
+type = list-string
+default = 
+description = List of colors to use for the custom color
+
+[DEFAULT/category]
+type = list-string
+default = 
+description = The list of items' categories
+
+[DEFAULT/category_name]
+type = list-string
+default = 
+description = The list of categories' names
+
+[DEFAULT/expanded]
+type = list-string
+default = 
+description = The list of categories that are expanded
+
+[DEFAULT/icon-opacity]
+type = int
+default = 100
+description = The icon's opacity (10-100)

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Comment=Manage a simple To-Do list
+Exec=to-do/to-do.py
+Icon=view-sort-descending
+Name=To-Do List
+Type=Application
+X-AWN-AppletCategory=Utility
+X-AWN-AppletType=Python

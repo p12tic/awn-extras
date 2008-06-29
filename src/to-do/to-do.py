@@ -40,6 +40,7 @@ from awn.extras import detach
 #TODO: Preferences dialog
 
 class App(awn.AppletSimple):
+  last_num_items = -1
   def __init__(self, uid, orient, height):
     self.uid = uid
     self.height = height
@@ -57,55 +58,55 @@ class App(awn.AppletSimple):
     self.accel = gtk.AccelGroup()
     self.dialog.add_accel_group(self.accel)
     
-    #Set up Settings (GConf)
+    #Set up Settings
     #TODO: Switch to AwnConfigClient
-    self.settings = settings.Settings(\
-      '/apps/avant-window-navigator/applets/%s' % uid)
+    self.settings = settings.Settings('to-do', uid)
     self.settings.register({'items':[str],'details':[str],'progress':[int],\
       'priority':[int],'color':str,'title':str,'icon-type':str,'colors':[int],\
       'category':[int],'category_name':[str],'expanded':[int],\
       'icon-opacity':int})
-    self.last_num_items = len(self.settings['items'])
+    print self.settings._values
     
-    #Get the title or default to "To-Do List"
-    if self.settings['title'] in ['',None]:
-      self.settings['title'] = 'To-Do List'
     
-    #Set up the keys for item progress, priorities, and details
-    #Details
-    tmp_list = []
-    if len(self.settings['details'])!=len(self.settings['items']):
-      for x in self.settings['items']:
-        tmp_list.append('')
-      self.settings['details'] = tmp_list
-    
-    #Progress
-    tmp_list = []
-    if len(self.settings['progress'])!=len(self.settings['items']):
-      for x in self.settings['items']:
-        tmp_list.append(0)
-      self.settings['progress'] = tmp_list
-    
-    #Priority
-    tmp_list = []
-    if len(self.settings['priority'])!=len(self.settings['items']):
-      for x in self.settings['items']:
-        tmp_list.append(0)
-      self.settings['priority'] = tmp_list
-    
-    #Categories
-    tmp_list = []
-    if len(self.settings['category'])!=len(self.settings['items']):
-      for x in self.settings['items']:
-        tmp_list.append(-1)
-      self.settings['category'] = tmp_list
-    
-    #Category names
-    tmp_list = []
-    if len(self.settings['category_name'])!=len(self.settings['items']):
-      for x in self.settings['items']:
-        tmp_list.append('')
-      self.settings['category_name'] = tmp_list
+#    #Get the title or default to "To-Do List"
+#    if self.settings['title'] in ['',None]:
+#      self.settings['title'] = 'To-Do List'
+#    
+#    #Set up the keys for item progress, priorities, and details
+#    #Details
+#    tmp_list = []
+#    if len(self.settings['details'])!=len(self.settings['items']):
+#      for x in self.settings['items']:
+#        tmp_list.append('')
+#      self.settings['details'] = tmp_list
+#    
+#    #Progress
+#    tmp_list = []
+#    if len(self.settings['progress'])!=len(self.settings['items']):
+#      for x in self.settings['items']:
+#        tmp_list.append(0)
+#      self.settings['progress'] = tmp_list
+#    
+#    #Priority
+#    tmp_list = []
+#    if len(self.settings['priority'])!=len(self.settings['items']):
+#      for x in self.settings['items']:
+#        tmp_list.append(0)
+#      self.settings['priority'] = tmp_list
+#    
+#    #Categories
+#    tmp_list = []
+#    if len(self.settings['category'])!=len(self.settings['items']):
+#      for x in self.settings['items']:
+#        tmp_list.append(-1)
+#      self.settings['category'] = tmp_list
+#    
+#    #Category names
+#    tmp_list = []
+#    if len(self.settings['category_name'])!=len(self.settings['items']):
+#      for x in self.settings['items']:
+#        tmp_list.append('')
+#      self.settings['category_name'] = tmp_list
     
     #Icon Type
     if self.settings['icon-type'] not in ['progress','progress-items','items']:
@@ -162,27 +163,10 @@ class App(awn.AppletSimple):
     #Set up detach (settings, etc. is done a little later)
     self.detach = detach.Detach()
     
-    #If the number of items is 0, use a theme icon
-    try:
-      assert len(self.settings['items']) == 0
-      self.pixbuf = self.icon_theme.load_icon('view-sort-descending',\
-        self.height,self.height)
-    
-    #Use the Cairo-drawn icon
-    except:
-      #Make the icon (returns a surface)
-      #See icon.py for the intense Cairo action
-      icon_surface = icon.icon(height,self.settings,self.color)
-      
-      #Set the icon as the applet's icon
-      self.pixbuf = self.detach.surface_to_pixbuf(icon_surface)
-    
-    #Either way, set the icon
-    self.set_icon(self.pixbuf)
+    #Setup the icon
+    self.update_icon()
     
     #Set some settings
-    self.detach['icon-mode'] = 'pixbuf'#This changes from time to time
-    self.detach['icon'] = self.pixbuf
     self.detach['applet-right-click'] = 'signal'
     self.detach['right-click'] = 'signal'
     
@@ -243,7 +227,6 @@ class App(awn.AppletSimple):
     menu = self.create_default_menu()
     #menu.append(prefs_menu)
     menu.append(detach_menu)
-    #menu.append(test_item)
     menu.append(about_menu)
     menu.show_all()
     menu.popup(None, None, None, event.button, event.time)
@@ -258,6 +241,7 @@ class App(awn.AppletSimple):
   #Do NOT hide the icon; hide the dialog (just in case)
   def was_detached(self):
     self.detached = True
+    self.update_icon()
     self.hide_dialog()
   
   #Show the preferences menu
@@ -531,7 +515,6 @@ class App(awn.AppletSimple):
   
   #Called when an item has been edited by the default dialog
   #(or the edit details dialog)
-  #update gconf
   def item_updated(self,widget,event):
     if widget.get_text()!='':
       tmp_list_names = []
@@ -875,38 +858,41 @@ class App(awn.AppletSimple):
     if self.last_num_items!=len(self.settings['items']) or\
       self.settings['icon-type'] in ['progress','progress-items']:
       
-      #If detached - change the detached window
-      if self.detached:
-        try:
-          assert len(self.settings['items']) == 0
-          self.detach['icon-mode'] = 'pixbuf'
-          self.detach.set_pixbuf(self.icon_theme.load_icon(\
-            'view-sort-descending',self.height,self.height))
-        except:
-          self.detach['icon-mode'] = 'surface'
-          self.detach.set_surface(icon.icon(self.height,self.settings,\
-            self.color))
+      #Change the detached icon first
+      try:
+        assert len(self.settings['items']) == 0
+        self.detach['icon-mode'] = 'pixbuf'
+        self.detach.set_pixbuf(self.icon_theme.load_icon(\
+          'view-sort-descending',self.height,self.height))
+      except:
+        self.detach['icon-mode'] = 'surface'
+        self.detach.set_surface(icon.icon(self.height,self.settings,\
+          self.color))
       
-      #Not detached - change the applet icon
-      else:
+      #Change the attached applet icon second
+      if self.detached == False:
         self.show_all()
-        try:
-          assert len(self.settings['items']) == 0
-          self.set_icon(self.icon_theme.load_icon(\
-            'view-sort-descending',self.height,self.height))
-        except:
-          
-          #If Awn supports settings the icon as a cairo context
-          if hasattr(self, 'set_icon_context'):
-            surface = icon.icon(self.height, self.settings, self.color)
-            self.context = cairo.Context(surface)
-            self.set_icon_context(self.context)
-          
-          #It doesn't; use surface->pixbuf via detach
+      
+      try:
+        assert len(self.settings['items']) == 0
+        self.set_icon(self.icon_theme.load_icon(\
+          'view-sort-descending',self.height,self.height))
+      except:
+        
+        #If Awn supports setting the icon as a cairo context
+        if hasattr(self, 'set_icon_context'):
+          surface = icon.icon(self.height, self.settings, self.color)
+          self.context = cairo.Context(surface)
+          self.set_icon_context(self.context)
+        
+        #It doesn't; use surface->pixbuf via detach
+        else:
+          surface = icon.icon(self.height, self.settings, self.color)
+          if self.pixbuf is None:
+            self.pixbuf = self.detach.surface_to_pixbuf(surface)
           else:
-            surface = icon.icon(self.height, self.settings, self.color)
             self.detach.surface_to_pixbuf(surface, self.pixbuf)
-            self.set_icon(self.pixbuf)
+          self.set_icon(self.pixbuf)
       
       self.last_num_items = len(self.settings['items'])
   
@@ -1069,13 +1055,12 @@ class App(awn.AppletSimple):
           
           y = 0
           for x in self.settings['category']:
-            t
             if y == z:
               tmp_list_category.append(self.add_category)
             elif y > z and x != -1:
               tmp_list_category.append(x+1)
             else:
-              mp_list_category.append(x)
+              tmp_list_category.append(x)
             y+=1
           
           y = 0

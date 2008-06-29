@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #-*- coding: utf-8 -*-
 #
 # Copyright (c) 2008 sharkbaitbobby <sharkbaitbobby+awn@gmail.com>

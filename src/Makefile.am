@@ -67,6 +67,7 @@ SUBDIRS =			\
 	showdesktop		\
 	switcher		\
 	Taskmand-applet		\
+	to-do				\
 	tomboy-applet		\
 	tsclient-applet		\
 	volume-control		\

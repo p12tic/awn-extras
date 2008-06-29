@@ -16,21 +16,15 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 #
-#A class to sort of act like a daemon for the GConf settings  
+#A class to sort of act like a daemon for the AwnConfigClient settings
+
+import awn
+
 class Settings:
-  def __init__(self,prefix=''):
+  def __init__(self,applet_name,applet_uid):
     
-    #Parse the prefix
-    if prefix!='':
-      if prefix[-1]!='/':
-        self.prefix = prefix+'/'
-      else:
-        self.prefix = prefix
-    else:
-      self.prefix = prefix
-    
-    import gconf
-    self._client = gconf.client_get_default()
+    self._default_client = awn.Config(applet_name,None)
+    self._instance_client = awn.Config(applet_name,applet_uid)
     self._values = {} #{key:value,key:value,etc:etc}
     self._registered = {} #{key:type,key:type,etc:etc}
     self._connects = {} #{key:[[func,arg],[func,arg]],key:[[func,arg],[func,arg]]}
@@ -46,28 +40,52 @@ class Settings:
   
   #A function to get the value of a key -- assumes that <string> has already been registered
   def get(self,string):
-    import gconf
-    try:#Has been fetched from GConf -- return the value
+    try:#Has been fetched from AwnCC -- return the value
       self._values[string]
       return self._values[string]
-    except:#Has not been fetched from GConf -- fetch it and return the value
-      if self._registered[string] in ['string','str',str]:
-        self._values[string] = self._client.get_string(self.prefix+string)
-      elif self._registered[string] in ['integer','int',int]:
-        self._values[string] = self._client.get_int(self.prefix+string)
-      elif self._registered[string] in ['float',float]:
-        self._values[string] = self._client.get_float(self.prefix+string)
-      elif self._registered[string] in ['boolean','bool',bool]:
-        self._values[string] = self._client.get_bool(self.prefix+string)
-      elif self._registered[string] in ['list-string','list-str',['string'],['str'],[str]]:
-        self._values[string] = self._client.get_list(self.prefix+string,gconf.VALUE_STRING)
-      elif self._registered[string] in ['list-integer','list-int',['integer'],['int'],[int]]:
-        self._values[string] = self._client.get_list(self.prefix+string,gconf.VALUE_INT)
-      elif self._registered[string] in ['list-boolean','list-bool',['boolean'],['bool'],[bool]]:
-        self._values[string] = self._client.get_list(self.prefix+string,gconf.VALUE_BOOL)
-      else:#Error when registering the key (setting the type)
-        print "KEY TYPE ERROR for %s" % string
-        return "KEY TYPE ERROR for %s" % string
+    except:#Has not been fetched from AwnCC -- fetch it and return the value
+      print 'getting '+string
+      if self._instance_client.exists('DEFAULT', string):
+        print string+' exists in instance'
+        if self._registered[string] in ['string','str',str]:
+          self._values[string] = self._instance_client.get_string('DEFAULT', string)
+        elif self._registered[string] in ['integer','int',int]:
+          self._values[string] = self._instance_client.get_int('DEFAULT', string)
+        elif self._registered[string] in ['float',float]:
+          self._values[string] = self._instance_client.get_float('DEFAULT', string)
+        elif self._registered[string] in ['boolean','bool',bool]:
+          self._values[string] = self._instance_client.get_bool('DEFAULT', string)
+        elif self._registered[string] in ['list-string','list-str',['string'],['str'],[str]]:
+          self._values[string] = self._instance_client.get_list('DEFAULT', string,awn.CONFIG_LIST_STRING)
+        elif self._registered[string] in ['list-integer','list-int',['integer'],['int'],[int]]:
+          self._values[string] = intify(self._instance_client.get_list('DEFAULT', string,awn.CONFIG_LIST_STRING))
+        elif self._registered[string] in ['list-boolean','list-bool',['boolean'],['bool'],[bool]]:
+          self._values[string] = self._instance_client.get_list('DEFAULT', string,awn.CONFIG_LIST_BOOL)
+        
+        else:#Error when registering the key (setting the type)
+          print "KEY TYPE ERROR for %s" % string
+          return "KEY TYPE ERROR for %s" % string
+        print 'Got '+string+' from instance'
+      else:
+        print string+' not in instance'
+        if self._registered[string] in ['string','str',str]:
+          self._values[string] = self._default_client.get_string('DEFAULT', string)
+        elif self._registered[string] in ['integer','int',int]:
+          self._values[string] = self._default_client.get_int('DEFAULT', string)
+        elif self._registered[string] in ['float',float]:
+          self._values[string] = self._default_client.get_float('DEFAULT', string)
+        elif self._registered[string] in ['boolean','bool',bool]:
+          self._values[string] = self._default_client.get_bool('DEFAULT', string)
+        elif self._registered[string] in ['list-string','list-str',['string'],['str'],[str]]:
+          self._values[string] = self._default_client.get_list('DEFAULT', string,awn.CONFIG_LIST_STRING)
+        elif self._registered[string] in ['list-integer','list-int',['integer'],['int'],[int]]:
+          self._values[string] = intify(self._default_client.get_list('DEFAULT', string,awn.CONFIG_LIST_STRING))
+        elif self._registered[string] in ['list-boolean','list-bool',['boolean'],['bool'],[bool]]:
+          self._values[string] = self._default_client.get_list('DEFAULT', string,awn.CONFIG_LIST_BOOL)
+        else:#Error when registering the key (setting the type)
+          print "KEY TYPE ERROR for %s" % string
+          return "KEY TYPE ERROR for %s" % string
+        print 'Got '+string+' from default'
       
       #Set the functions to call for when <string> is changed as an empty list
       self._connects[string] = []
@@ -82,25 +100,26 @@ class Settings:
   #A function to set the value of a key -- assumes that <string> has already been registered and the <value> is the
   #same type as when registered
   def set(self,string,value):
-    import gconf
-    #Set the GConf value first
+    print 'setting '+string+' to '+str(value)
+    #Set the AwnCC value first
     if self._registered[string] in ['string','str',str]:
-      self._client.set_string(self.prefix+string,value)
+      self._instance_client.set_string('DEFAULT', string, value)
     elif self._registered[string] in ['integer','int',int]:
-      self._client.set_int(self.prefix+string,value)
+      self._instance_client.set_int('DEFAULT', string, value)
     elif self._registered[string] in ['float',float]:
-      self._client.set_float(self.prefix+string,value)
+      self._instance_client.set_float('DEFAULT', string, value)
     elif self._registered[string] in ['boolean','bool',bool]:
-      self._client.set_bool(self.prefix+string,value)
+      self._instance_client.set_bool('DEFAULT', string, value)
     elif self._registered[string] in ['list-string','list-str',['string'],['str'],[str]]:
-      self._client.set_list(self.prefix+string,gconf.VALUE_STRING,value)
+      self._instance_client.set_list('DEFAULT', string, awn.CONFIG_LIST_STRING, value)
     elif self._registered[string] in ['list-integer','list-int',['integer'],['int'],[int]]:
-      self._client.set_list(self.prefix+string,gconf.VALUE_INT,value)
+      self._instance_client.set_list('DEFAULT', string, awn.CONFIG_LIST_STRING, stringify(value))
     elif self._registered[string] in ['list-boolean','list-bool',['boolean'],['bool'],[bool]]:
-      self._client.set_list(self.prefix+string,gconf.VALUE_BOOL,value)
+      self._instance_client.set_list('DEFAULT', string, awn.CONFIG_LIST_BOOL, value)
     else:
       print "KEY TYPE ERROR for %s" % self._registered[string]
       return "KEY TYPE ERROR for %s" % self._registered[string]
+    print 'set '+string+' to '+str(value)
     
     #Set the value (internally)
     self._values[string] = value
@@ -130,3 +149,17 @@ class Settings:
   #In case the user wants to set a value via <settingsinstance>[<key>] = ...
   def __setitem__(self,key,value):
     return self.set(key,value)
+
+#list of integers -> list of equivalent strings
+def stringify(list1):
+  list2 = []
+  for item in list1:
+    list2.append(str(item))
+  return list2
+
+#list of strings -> list of equivalent integers
+def intify(list1):
+  list2 = []
+  for item in list1:
+    list2.append(int(float(item)))
+  return list2

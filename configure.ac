@@ -426,6 +426,8 @@ src/taskmand/Makefile
 src/taskmand/data/Makefile
 src/Taskmand-applet/Makefile
 src/Taskmand-applet/Taskmand-applet.desktop.in
+src/to-do/Makefile
+src/to-do/to-do.desktop.in
 src/tomboy-applet/Makefile
 src/tomboy-applet/tomboy-applet.desktop.in
 src/trash/Makefile

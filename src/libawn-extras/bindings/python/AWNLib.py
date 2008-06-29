@@ -3,7 +3,7 @@
 #       AWN Applet Library - simplifies the API's used in programming applets
 #       for AWN.
 #
-#       Copyright 2007 Pavel Panchekha <pavpanchekha@gmail.com>
+#       Copyright (C) 2007 - 2008 Pavel Panchekha <pavpanchekha@gmail.com>
 #
 #       This program is free software; you can redistribute it and/or modify
 #       it under the terms of the GNU General Public License as published by
@@ -23,10 +23,13 @@
 # Version: 1.5.bugfix
 
 # Path manipulations and file name
-import sys, os, subprocess
+import os
+import subprocess
+import sys
 
 # GUI drawing and timers
-import gobject, gtk
+import gobject
+import gtk
 
 # For type checking for gconf/settings
 import types
@@ -59,6 +62,7 @@ ___file___ = sys.argv[0]
 
 _globalRegister = {}
 
+
 class KeyRingError:
     def __init__(self, str):
         self.msg = str
@@ -66,6 +70,7 @@ class KeyRingError:
     def __str__(self):
         return self.msg
 # Stupid keyring has quite a few ways to go wrong.
+
 
 class Dialogs:
     def __init__(self, parent):
@@ -211,41 +216,31 @@ class Dialogs:
         elif "program" in self.__register: # Act like launcher
             self.toggle("program", once=True)
 
+
 class Title:
-    def __init__(self, parent, text=None):
+    def __init__(self, parent):
         """
         Creates a new Title object.
 
         @param parent: The parent applet of the title instance.
         @type parent: L{Applet}
-        @param text: The text to fill the title with. Defaults to the meta name
-                     property.
-        @type text: C{string}
         """
 
-        if not text:
-            text = parent.meta["name"]
-
-        self.__title = awn.awn_title_get_default()
         self.__parent = parent
-        self.__text = text
-        self.__showing = False
 
     def show(self, w=None, e=None):
         """
         Show the applet title.
         """
 
-        self.__title.show(self.__parent, self.__text)
-        self.__showing = True
+        self.__parent.set_title_visibility(True)
 
     def hide(self, w=None, e=None):
         """
         Hides the applet title.
         """
 
-        self.__title.hide(self.__parent)
-        self.__showing = False
+        self.__parent.set_title_visibility(False)
 
     def set(self, text=""):
         """
@@ -255,9 +250,8 @@ class Title:
         @type text: C{string}
         """
 
-        self.__text = text
-        if self.__showing:
-            self.show()
+        self.__parent.set_title(text)
+
 
 class Icon:
     def __init__(self, parent):
@@ -377,6 +371,7 @@ class Icon:
 
         self.__parent.hide()
 
+
 class Modules: # DEPRECATED
     def __init__(self, parent):
         """
@@ -494,6 +489,7 @@ class Modules: # DEPRECATED
 
         ok.connect("clicked", qu)
         dlog.show_all()
+
 
 class Errors:
     def __init__(self, parent):
@@ -665,6 +661,7 @@ class Errors:
 
         dlog.show_all() # We want the dialog to show itself right away
 
+
 class Networking:
     def __init__(self, parent):
         """
@@ -691,6 +688,7 @@ class Networking:
         """
         
         gobject.idle_add(self.__get_thread(url, callback))
+
 
 class Settings:
     def __init__(self, parent):
@@ -929,6 +927,7 @@ class Settings:
 
             return self.__client.get_value_type(self.__folder, key).value_nick
 
+
 class KeyRing:
     def __init__(self, parent):
         """
@@ -1089,6 +1088,7 @@ class KeyRing:
         @ivar: The password stored in the Key. Can be used like any property.
         """
 
+
 class Timing:
     def __init__(self, parent):
         """
@@ -1147,6 +1147,7 @@ class Timing:
 
             self.__callValue = False
 
+
 class Notify:
     def __init__(self, parent):
         """
@@ -1204,6 +1205,7 @@ class Notify:
         if attention:
             self.__parent.effects.attention()
 
+
 class Effects:
     def __init__(self, parent):
         """
@@ -1233,6 +1235,7 @@ class Effects:
         """
 
         awn.awn_effect_start_ex(self.__effects, "launching", 0, 0, 1)
+
 
 class Meta:
     def __init__(self, parent, info={}):
@@ -1293,6 +1296,7 @@ class Meta:
 
         del self.__info[key]
 
+
 class Applet(awn.AppletSimple):
     def __init__(self, uid, orient, height, meta={}):
         """
@@ -1333,8 +1337,7 @@ class Applet(awn.AppletSimple):
 
         # Connect the necessary events to the sub-objects.
         self.connect("button-press-event", self.dialog.click)
-        self.connect("enter-notify-event", self.title.show)
-        self.connect("leave-notify-event", self.title.hide)
+
 
 def initiate(meta={}):
     """
@@ -1351,6 +1354,7 @@ def initiate(meta={}):
     awn.init_applet(applet) # Add
 
     return applet
+
 
 def start(applet):
     """

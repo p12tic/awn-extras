@@ -44,9 +44,9 @@ class Settings:
       self._values[string]
       return self._values[string]
     except:#Has not been fetched from AwnCC -- fetch it and return the value
-      print 'getting '+string
+      #print 'getting '+string
       if self._instance_client.exists('DEFAULT', string):
-        print string+' exists in instance'
+        #print string+' exists in instance'
         if self._registered[string] in ['string','str',str]:
           self._values[string] = self._instance_client.get_string('DEFAULT', string)
         elif self._registered[string] in ['integer','int',int]:
@@ -63,11 +63,11 @@ class Settings:
           self._values[string] = self._instance_client.get_list('DEFAULT', string,awn.CONFIG_LIST_BOOL)
         
         else:#Error when registering the key (setting the type)
-          print "KEY TYPE ERROR for %s" % string
+          #print "KEY TYPE ERROR for %s" % string
           return "KEY TYPE ERROR for %s" % string
-        print 'Got '+string+' from instance'
+        #print 'Got '+string+' from instance'
       else:
-        print string+' not in instance'
+        #print string+' not in instance'
         if self._registered[string] in ['string','str',str]:
           self._values[string] = self._default_client.get_string('DEFAULT', string)
         elif self._registered[string] in ['integer','int',int]:
@@ -83,9 +83,9 @@ class Settings:
         elif self._registered[string] in ['list-boolean','list-bool',['boolean'],['bool'],[bool]]:
           self._values[string] = self._default_client.get_list('DEFAULT', string,awn.CONFIG_LIST_BOOL)
         else:#Error when registering the key (setting the type)
-          print "KEY TYPE ERROR for %s" % string
+          #print "KEY TYPE ERROR for %s" % string
           return "KEY TYPE ERROR for %s" % string
-        print 'Got '+string+' from default'
+        #print 'Got '+string+' from default'
       
       #Set the functions to call for when <string> is changed as an empty list
       self._connects[string] = []
@@ -100,7 +100,7 @@ class Settings:
   #A function to set the value of a key -- assumes that <string> has already been registered and the <value> is the
   #same type as when registered
   def set(self,string,value):
-    print 'setting '+string+' to '+str(value)
+    #print 'setting '+string+' to '+str(value)
     #Set the AwnCC value first
     if self._registered[string] in ['string','str',str]:
       self._instance_client.set_string('DEFAULT', string, value)
@@ -117,9 +117,9 @@ class Settings:
     elif self._registered[string] in ['list-boolean','list-bool',['boolean'],['bool'],[bool]]:
       self._instance_client.set_list('DEFAULT', string, awn.CONFIG_LIST_BOOL, value)
     else:
-      print "KEY TYPE ERROR for %s" % self._registered[string]
+      #print "KEY TYPE ERROR for %s" % self._registered[string]
       return "KEY TYPE ERROR for %s" % self._registered[string]
-    print 'set '+string+' to '+str(value)
+    #print 'set '+string+' to '+str(value)
     
     #Set the value (internally)
     self._values[string] = value

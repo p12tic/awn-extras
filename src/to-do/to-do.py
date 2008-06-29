@@ -41,6 +41,7 @@ from awn.extras import detach
 
 class App(awn.AppletSimple):
   last_num_items = -1
+  pixbuf = None
   def __init__(self, uid, orient, height):
     self.uid = uid
     self.height = height

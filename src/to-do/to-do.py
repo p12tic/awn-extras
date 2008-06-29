@@ -60,14 +60,12 @@ class App(awn.AppletSimple):
     self.dialog.add_accel_group(self.accel)
     
     #Set up Settings
-    #TODO: Switch to AwnConfigClient
     self.settings = settings.Settings('to-do', uid)
     self.settings.register({'items':[str],'details':[str],'progress':[int],\
       'priority':[int],'color':str,'title':str,'icon-type':str,'colors':[int],\
       'category':[int],'category_name':[str],'expanded':[int],\
       'icon-opacity':int})
-    print self.settings._values
-    
+    #print self.settings._values
     
 #    #Get the title or default to "To-Do List"
 #    if self.settings['title'] in ['',None]:
@@ -1008,16 +1006,16 @@ class App(awn.AppletSimple):
         #A category was selected; add this item to the end of that category!
         else:
           #Find where to put the new item
-          z = -1
+          where = -1
           y = 0
           for x in self.settings['category']:
             if x == self.add_category:
-              z = y
+              where = y
             y += 1
           
-          if z==-1:
+          if where==-1:
             #This means that there are no items in the category
-            z = self.add_category
+            where = self.add_category
           
           tmp_list_names = []
           tmp_list_priority = []
@@ -1029,45 +1027,51 @@ class App(awn.AppletSimple):
           y = 0
           for x in self.settings['items']:
             tmp_list_names.append(x)
-            if y == z:
+            if y == where:
               tmp_list_names.append(self.add_entry.get_text())
             y+=1
           
           y = 0
           for x in self.settings['priority']:
             tmp_list_priority.append(x)
-            if y == z:
+            if y == where:
               tmp_list_priority.append(0)
             y+=1
           
           y = 0
           for x in self.settings['progress']:
             tmp_list_progress.append(x)
-            if y == z:
+            if y == where:
               tmp_list_progress.append(0)
             y+=1
           
           y = 0
           for x in self.settings['details']:
             tmp_list_details.append(x)
-            if y == z:
+            if y == where:
               tmp_list_details.append('')
             y+=1
           
           y = 0
-          for x in self.settings['category']:
-            if y == z:
-              tmp_list_category.append(self.add_category)
-            elif y > z and x != -1:
-              tmp_list_category.append(x+1)
+          for cat in self.settings['category']:
+            if y > where and cat != -1:
+              #print 'adding item in category: y > where and cat != -1;\ny: %s, where: %s, cat: %s' % \
+                (y, where, cat)
+              tmp_list_category.append(cat+1)
             else:
-              tmp_list_category.append(x)
+              #print 'adding item in category: else; y: %s, where: %s, cat: %s' % \
+                (y, where, cat)
+              tmp_list_category.append(cat)
+            
+            if y == where:
+              #print 'adding item in category: y == where (%s)' % y
+              tmp_list_category.append(self.add_category)
             y+=1
           
           y = 0
           for x in self.settings['category_name']:
             tmp_list_category_name.append(x)
-            if y == z:
+            if y == where:
               tmp_list_category_name.append('')
             y+=1
           
@@ -1081,7 +1085,7 @@ class App(awn.AppletSimple):
           #Re-show the main dialog
           self.displayed = False#TODO:Is this necessary?
           self.clear_dialog()
-          self.edit_details(z+1)
+          self.edit_details(where+1)
       
       #The new item is a category
       else:
@@ -1142,7 +1146,7 @@ class App(awn.AppletSimple):
     #If this is a category and it has items in it,
     #remove its items first
     if self.settings['items'][itemid]=='':#Means it's a category
-      
+      #print 'Removing a category'
       #Remove this category's items
       y = 0
       for x in self.settings['category']:
@@ -1188,12 +1192,16 @@ class App(awn.AppletSimple):
       y+=1
     
     y = 0
-    for x in self.settings['category']:
+    #print 'list of items: ' + str(list_of_items)
+    for cat in self.settings['category']:
       if y not in list_of_items:
-        if y > list_of_items[-1] and y != -1:
-          tmp_list_category.append(x-1)
+        #print '%s not in list_of_items:' % y
+        if y > list_of_items[-1] and cat != -1:
+          #print 'y > last item (%s) and cat != -1; cat == %s, ' % (list_of_items[-1], y)
+          tmp_list_category.append(cat-1)
         else:
-          tmp_list_category.append(x)
+          #print 'normal append to category list'
+          tmp_list_category.append(cat)
       y+=1
     
     y = 0

@@ -77,6 +77,10 @@ _show_location_dialog (GtkMenuItem *menuitem,WebApplet *webapplet)
     html_web_view_open (webapplet->viewer,
                         gtk_entry_get_text (GTK_ENTRY (entry)));
   }
+  gchar * title = g_strdup_printf("%30s",gtk_entry_get_text (GTK_ENTRY (entry)));  //FIXME put the URL or page title in here...
+  awn_applet_simple_set_title(AWN_APPLET_SIMPLE(webapplet->applet),title);
+  g_free(title);
+  
   return TRUE;
 }
 
@@ -162,8 +166,9 @@ _bloody_thing_has_style (GtkWidget *widget,WebApplet *webapplet)
 {
   GdkPixbuf *newicon;
 
-  //init_config(webapplet);
-
+  gchar * title = g_strdup_printf("%30s",config_get_uri(webapplet));  //FIXME put the URL or page title in here...
+  awn_applet_simple_set_title(AWN_APPLET_SIMPLE(webapplet->applet),title);
+  g_free(title);
   newicon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (),
                                       webapplet->applet_icon_name,
                                       webapplet->applet_icon_height,
@@ -188,7 +193,7 @@ _bloody_thing_has_style (GtkWidget *widget,WebApplet *webapplet)
                                                webapplet->applet_icon_height,
                                                GDK_INTERP_HYPER);
     g_object_unref (oldpbuf);
-  }
+  }  
   awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (webapplet->applet),
                                    webapplet->icon);
   g_signal_connect (G_OBJECT (webapplet->applet), "button-press-event",

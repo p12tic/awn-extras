@@ -1384,6 +1384,7 @@ static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, 
     {
       gtk_widget_show_all(places->mainwindow);
       pos_dialog(places->mainwindow, places);
+      awn_applet_simple_set_title_visibility(AWN_APPLET_SIMPLE(places->applet),FALSE);
     }
   }
   else if (event->button == 3)
@@ -1441,6 +1442,8 @@ static void _bloody_thing_has_style(GtkWidget *widget, Places *places)
   }
 
   awn_applet_simple_set_temp_icon(AWN_APPLET_SIMPLE(places->applet), places->icon);
+  
+  awn_applet_simple_set_title(AWN_APPLET_SIMPLE(places->applet),"Places");
 
   render_places(places);
   g_signal_connect(G_OBJECT(places->applet), "button-press-event", G_CALLBACK(_button_clicked_event), places);

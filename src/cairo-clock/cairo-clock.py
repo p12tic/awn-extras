@@ -115,7 +115,7 @@ class CairoClockApplet:
         applet.connect("leave-notify-event", self.leave_notify_cb)
         
         self.setup_context_menu()
-        
+
         gobject.timeout_add(1000, self.clock.draw_clock_cb)
     
     def setup_context_menu(self):
@@ -284,6 +284,7 @@ class CairoClock:
             year = ""
         
         self.applet.title.set(time.strftime(date + hours + ":%M" + seconds + ampm + year))
+        self.applet.title.show()
     
     def enable_title(self, show):
         """ Shows or hides the title, if it must show, the title is updated first """
@@ -293,9 +294,6 @@ class CairoClock:
         if show:
             # Update the title immediately because it is visible now
             self.update_title()
-            self.applet.title.show()
-        else:
-            self.applet.title.hide()
     
     def draw_clock_cb(self):
         """ Draws the clock and updates the title if the title is visible """

@@ -426,6 +426,9 @@ src/taskmand/Makefile
 src/taskmand/data/Makefile
 src/Taskmand-applet/Makefile
 src/Taskmand-applet/Taskmand-applet.desktop.in
+src/thinkhdaps/Makefile
+src/thinkhdaps/images/Makefile
+src/thinkhdaps/thinkhdaps.desktop.in
 src/to-do/Makefile
 src/to-do/to-do.desktop.in
 src/tomboy-applet/Makefile

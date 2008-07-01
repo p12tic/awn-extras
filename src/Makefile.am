@@ -67,6 +67,7 @@ SUBDIRS =			\
 	showdesktop		\
 	switcher		\
 	Taskmand-applet		\
+	thinkhdaps			\
 	to-do				\
 	tomboy-applet		\
 	tsclient-applet		\

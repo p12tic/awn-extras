@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=ThinkHDAPS
+Type=Application
+X-AWN-AppletType=Python
+Comment=Displays the status of HDAPS
+Exec=@LIBDIR@/awn/applets/thinkhdaps/thinkhdaps.py
+Icon=@LIBDIR@/awn/applets/thinkhdaps/images/thinkhdaps-logo.svg
+X-AWN-Applet-Category=System

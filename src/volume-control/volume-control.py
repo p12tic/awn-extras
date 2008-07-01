@@ -385,7 +385,18 @@ class Backend:
         self.set_volume(self.get_volume())
     
     def can_be_muted(self):
-        return "Playback Mute" in alsaaudio.Mixer(self.channel).switchcap()
+        mixer = alsaaudio.Mixer(self.channel)
+        
+        if "Playback Mute" not in mixer.switchcap():
+            return False
+        
+        """ Test if mute switch is really present because
+        alsaaudio is sometimes a little bit crazy """
+        try:
+            mixer.getmute()
+            return True
+        except alsaaudio.ALSAAudioError:
+            return False
     
     def is_muted(self):
         """ Mixer is only called 'muted' if both channels (left and right)
@@ -417,7 +428,7 @@ class Backend:
         else:
             volume = volume_channels[0]
         
-        # Sometimes ALSA is a little crazy and returns -(2^32 / 2) 
+        # Sometimes ALSA is a little bit crazy and returns -(2^32 / 2) 
         return max(0, volume)
     
     def set_volume(self, value):

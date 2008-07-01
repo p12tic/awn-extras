@@ -393,7 +393,10 @@ class Backend:
         
         muted_channels = alsaaudio.Mixer(self.channel).getmute()
         
-        return bool(muted_channels[0]) and bool(muted_channels[1])
+        if len(muted_channels) > 1:
+            return bool(muted_channels[0]) and bool(muted_channels[1])
+        else:
+            return bool(muted_channels[0])
     
     def refresh_mute_checkbox(self):
         """ Enables/disables 'Mute' checkbox. This does not update the applet's icon! """
@@ -409,8 +412,13 @@ class Backend:
     def get_volume(self):
         volume_channels = alsaaudio.Mixer(self.channel).getvolume()
         
+        if len(volume_channels) > 1:
+            volume = (volume_channels[0] + volume_channels[1]) / 2
+        else:
+            volume = volume_channels[0]
+        
         # Sometimes ALSA is a little crazy and returns -(2^32 / 2) 
-        return max(0, (volume_channels[0] + volume_channels[1]) / 2)
+        return max(0, volume)
     
     def set_volume(self, value):
         alsaaudio.Mixer(self.channel).setvolume(int(value))

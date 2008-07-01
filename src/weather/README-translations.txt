@@ -28,7 +28,7 @@ to contribute to Open Source!  Here's what you need to do:
     a working po file.
 
 If you're not feeling adventurous, you can stop here.  E-mail your .po file
-to desjardinsmike@gmail.com, and I'll try to get your translation into the
+to mrooney@gmail.com, and I'll try to get your translation into the
 next build.  If you'd actually like to see immediate results for your hard 
 work, then read on...
 

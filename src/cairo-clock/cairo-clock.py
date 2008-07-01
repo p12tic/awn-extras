@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright (C) 2008  onox
+# Copyright (C) 2008  onox <denkpadje@gmail.com>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 
 import math
 import os
-import sys
+import time
 
 import gobject
 import pygtk
@@ -26,8 +26,10 @@ import gtk
 from gtk import glade
 from gtk import gdk
 from awn.extras import AWNLib
-import time
 import rsvg
+
+# Interval in milliseconds between two successive draws of the clock
+draw_clock_interval = 1000
 
 applet_name = "Cairo Clock Applet"
 applet_version = "0.2.8"
@@ -37,7 +39,7 @@ theme_dir = "/usr/share/cairo-clock/themes"
 default_theme = os.path.join(os.path.dirname(__file__), "themes", "tango")
 glade_file = os.path.join(os.path.dirname(__file__), "cairo-clock.glade")
 
-# Logo of the GNOME applet, shown in the GNOME About dialog
+# Logo of the applet, shown in the GTK About dialog
 applet_logo = os.path.join(os.path.dirname(__file__), "cairo-clock-logo.png")
 
 
@@ -66,6 +68,7 @@ class AboutDialog(gtk.AboutDialog):
     def response_event(self, widget, response):
         if response < 0:
             self.hide()
+
 
 class PreferencesDialog:
     """ Shows the preferences window """
@@ -116,7 +119,7 @@ class CairoClockApplet:
         
         self.setup_context_menu()
 
-        gobject.timeout_add(1000, self.clock.draw_clock_cb)
+        gobject.timeout_add(draw_clock_interval, self.clock.draw_clock_cb)
     
     def setup_context_menu(self):
         """ Creates a context menu to activate "Preferences" or "About" window """

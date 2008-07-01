@@ -42,10 +42,13 @@ applet_description = "Applet to control your computer's volume"
 theme_dir = "/usr/share/icons"
 glade_file = os.path.join(os.path.dirname(__file__), "volume-control.glade")
 
+moonbeam_theme_dir = os.path.join(os.path.dirname(__file__), "themes")
+moonbeam_ranges = [100, 93, 86, 79, 71, 64, 57, 50, 43, 36, 29, 21, 14, 1, 0]
+
 # Logo of the applet, shown in the GTK About dialog
 applet_logo = os.path.join(theme_dir, "Tango/scalable/status/audio-volume-high.svg")
 
-volume_ranges = {"high": (100, 66), "medium": (65, 36), "low": (35, 6), "muted": (5, 0)}
+volume_ranges = {"high": (100, 66), "medium": (65, 36), "low": (35, 1)}
 volume_step = 4
 
 
@@ -273,6 +276,13 @@ class VolumeControlApplet:
         for i in self.themes:
             combobox_theme.append_text(i)
         
+        moonbeam_themes = os.listdir(moonbeam_theme_dir)
+        moonbeam_themes.sort()
+        self.themes.extend(moonbeam_themes)
+        
+        for i in moonbeam_themes:
+            combobox_theme.append_text(i)
+        
         combobox_theme.set_active(self.themes.index(self.theme))
         
         combobox_theme.connect("changed", self.combobox_theme_changed_cb)
@@ -323,17 +333,25 @@ class VolumeControlApplet:
             if mute_changed:
                 self.backend.refresh_mute_checkbox()
             
-            if muted:
-                icon = "muted"
-                self.applet.title.set(self.backend.channel + ": muted")
-            else:
-                print "Volume is now " + str(volume)
-                icon = [key for key, value in volume_ranges.iteritems() if volume <= value[0] and volume >= value[1]]
-                print icon
-                icon = icon[0]
-                self.applet.title.set(self.backend.channel + ": " + str(volume) + "%")
+            this_is_moonbeam_theme = os.path.isdir(os.path.join(moonbeam_theme_dir, self.theme))
             
-            icon = os.path.join(theme_dir, self.theme, "scalable/status/audio-volume-%s.svg" % icon)
+            if muted or volume == 0:
+                self.applet.title.set(self.backend.channel + ": muted")
+                icon = "muted"
+            else:
+                self.applet.title.set(self.backend.channel + ": " + str(volume) + "%")
+                
+                if this_is_moonbeam_theme:
+                    icon = filter(lambda i: volume >= i, moonbeam_ranges)[0]
+                else:
+                    icon = [key for key, value in volume_ranges.iteritems() if volume <= value[0] and volume >= value[1]][0]
+                    
+            
+            if this_is_moonbeam_theme:
+                icon = os.path.join(moonbeam_theme_dir, self.theme, "audio-volume-%s.svg" % icon)
+            else:
+                icon = os.path.join(theme_dir, self.theme, "scalable/status/audio-volume-%s.svg" % icon)
+            
             height = self.applet.get_height()
             self.applet.icon.set(gdk.pixbuf_new_from_file_at_size(icon, height, height), True)
             
@@ -370,7 +388,12 @@ class Backend:
         return "Playback Mute" in alsaaudio.Mixer(self.channel).switchcap()
     
     def is_muted(self):
-        return bool(alsaaudio.Mixer(self.channel).getmute()[0])
+        """ Mixer is only called 'muted' if both channels (left and right)
+        are muted """
+        
+        muted_channels = alsaaudio.Mixer(self.channel).getmute()
+        
+        return bool(muted_channels[0]) and bool(muted_channels[1])
     
     def refresh_mute_checkbox(self):
         """ Enables/disables 'Mute' checkbox. This does not update the applet's icon! """
@@ -384,8 +407,10 @@ class Backend:
             self.parent.mute_item.set_active(False)
     
     def get_volume(self):
+        volume_channels = alsaaudio.Mixer(self.channel).getvolume()
+        
         # Sometimes ALSA is a little crazy and returns -(2^32 / 2) 
-        return max(0, alsaaudio.Mixer(self.channel).getvolume()[0])
+        return max(0, (volume_channels[0] + volume_channels[1]) / 2)
     
     def set_volume(self, value):
         alsaaudio.Mixer(self.channel).setvolume(int(value))

@@ -1,6 +1,6 @@
 dist_volumecontrol_DATA = 				\
-		audio-volume-0.svg 	\
-		audio-volume-7.svg 	\
+		audio-volume-muted.svg 	\
+		audio-volume-1.svg 	\
 		audio-volume-14.svg 	\
 		audio-volume-21.svg 	\
 		audio-volume-29.svg 	\
@@ -15,4 +15,4 @@ dist_volumecontrol_DATA = 				\
 		audio-volume-93.svg 	\
 		audio-volume-100.svg
 
-volumecontroldir = $(libdir)/awn/applets/volume-control/Themes/Black
+volumecontroldir = $(libdir)/awn/applets/volume-control/themes/Black

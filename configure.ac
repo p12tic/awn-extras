@@ -443,9 +443,9 @@ src/tsclient-applet/tsclient-app.desktop.in
 src/vala-test/Makefile
 src/vala-test/vala-test.desktop.in
 src/volume-control/Makefile
-src/volume-control/Themes/Makefile
-src/volume-control/Themes/Black/Makefile
-src/volume-control/Themes/Minimal/Makefile
+src/volume-control/themes/Makefile
+src/volume-control/themes/Black/Makefile
+src/volume-control/themes/Minimal/Makefile
 src/volume-control/volume-control.desktop.in
 src/weather/Makefile
 src/weather/images/Makefile

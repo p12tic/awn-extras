@@ -44,3 +44,4 @@ src/vala-test/applet.[ch]
 stamp-h1
 .pydevproject
 .project
+.settings

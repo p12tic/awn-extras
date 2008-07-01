@@ -125,8 +125,6 @@ class VolumeControlApplet:
     def __init__(self, applet):
         self.applet = applet
         
-        applet.connect("height-changed", self.height_changed_cb)
-        
         self.applet.errors.module("alsaaudio", {"Ubuntu": "python-alsaaudio",
             "Gentoo": "dev-python/pyalsaaudio",
             "Mandriva": "python-alsaaudio"}, self.__init2)
@@ -145,7 +143,16 @@ class VolumeControlApplet:
         self.setup_context_menu()
         PreferencesDialog(self)
         
+        applet.connect("scroll-event", self.scroll_event_cb)
+        applet.connect("height-changed", self.height_changed_cb)
+        
         self.applet.timing.register(self.refresh_icon, read_volume_interval)
+    
+    def scroll_event_cb(self, widget, event):
+        if event.direction == gdk.SCROLL_UP:
+            self.backend.up()
+        elif event.direction == gdk.SCROLL_DOWN:
+            self.backend.down()
     
     def height_changed_cb(self, widget, event):
         """ Updates the applet's icon and the icon of

@@ -275,7 +275,7 @@ class VolumeControlApplet:
         vbox_channel = prefs.get_widget("vbox-mixer-channel")
         
         if "channel" not in self.applet.settings:
-            self.applet.settings["channel"] = self.backend.channel
+            self.applet.settings["channel"] = self.backend.channels[0]
         channel = self.applet.settings["channel"]
         
         self.combobox_channel = gtk.combo_box_new_text()

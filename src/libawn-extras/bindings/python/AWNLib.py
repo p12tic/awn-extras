@@ -83,14 +83,18 @@ class Dialogs:
         self.__parent = parent
 
         self.__parent.settings.cd("shared")
+        
         self.menu = self.new("menu")
-        aboutItem = gtk.ImageMenuItem(stock_id=gtk.STOCK_ABOUT)
-        aboutItem.connect("activate", lambda w, e: self.toggle("about"))
-        self.menu.append(aboutItem)
+        
+        # Create the About dialog
+        about_dialog = self.new("about")
+        
+        about_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_ABOUT)
+        self.menu.append(about_item)
+        about_item.connect("activate", lambda w: self.toggle("about"))
 
         try:
-            self.__loseFocus = self.__parent.settings[ \
-                "dialog_focus_loss_behavior"]
+            self.__loseFocus = self.__parent.settings["dialog_focus_loss_behavior"]
         except ValueError:
             self.__loseFocus = True
 
@@ -180,6 +184,8 @@ class Dialogs:
             self.__register["menu"].popup(None, None, None, 3, time)
         elif dialog == "program":
             self.__register["program"]()
+        elif dialog == "about":
+            self.__register["about"].show()
         else:
             if (self.__register[dialog].is_active() or force == "hide") and \
                 force != "show":

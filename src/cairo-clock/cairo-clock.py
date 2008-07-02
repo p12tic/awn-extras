@@ -97,19 +97,10 @@ class CairoClockApplet:
     def setup_context_menu(self):
         """ Creates a context menu to activate "Preferences" or "About" window """
         
-        self.about_dialog = self.applet.dialog.new("about")
-        
-        menu = self.applet.dialog.new("menu")
         prefs_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
-        menu.append(prefs_item)
-        about_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_ABOUT)
-        menu.append(about_item)
-        menu.show_all()
-        about_item.connect("activate", self.activate_about_dialog_cb)
         prefs_item.connect("activate", self.show_dialog_cb)
-    
-    def activate_about_dialog_cb(self, widget):
-        self.about_dialog.show()
+        
+        self.applet.dialog.menu.append(prefs_item)
     
     def show_dialog_cb(self, widget):
         self.applet.dialog.toggle("dialog-settings", "show")

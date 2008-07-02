@@ -27,7 +27,7 @@ from gtk import gdk
 import xml.dom.minidom
 import urllib
 import weathericons
-from helpers import debug, _
+from helpers import debug
 
 class WeatherCodeSearch(gtk.Window):
     def __init__(self, config_win):

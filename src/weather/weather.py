@@ -25,8 +25,12 @@
 from awn.extras import AWNLib
 import gtk, cairo, urllib2, urllib, re, time, sys, traceback
 from xml.dom import minidom
+
+from helpers import debug, initGetText
+#initialize localization, must be done before local imports
+initGetText("awn-weather-applet")
 import weathericons, forecast, weatherprefs
-from helpers import debug, _
+from helpers import debug
 
 class WeatherApplet:
     def __init__(self, applet):
@@ -136,7 +140,6 @@ class WeatherApplet:
         so that it doesn't look bad. It is automatically
         scaled but this is not good enough to look good.
         """
-        debug('bar height!')
         self.setIcon(self.cachedConditions['CODE'])
         return False
                 

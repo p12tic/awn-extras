@@ -27,7 +27,7 @@ import gtk, cairo, awn
 import urllib2, urllib, re, time, sys, traceback
 from xml.dom import minidom
 import forecastdialogs, override
-from helpers import debug, _
+from helpers import debug
 
 class Forecast:
     def __init__(self, parent):

@@ -27,13 +27,6 @@
 #   the XML feed gives us a description already so the mapping below isn't necessary,
 #   and the gettext wrapping can be done in weather.py.
 
-import os, locale, gettext
-APP="awn-weather-applet"
-DIR=os.path.dirname (__file__) + '/locale'
-gettext.bindtextdomain(APP, DIR)
-gettext.textdomain(APP)
-_ = gettext.gettext
-
 conditions = {
     "0": _("Tornado"),
     "1": _("Tropical Storm"),

@@ -20,13 +20,21 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
-# set up localization
-import os, locale, gettext
-APP = "awn-weather-applet"
-DIR = os.path.dirname (__file__) + '/locale'
-gettext.bindtextdomain(APP, DIR)
-gettext.textdomain(APP)
-_ = gettext.gettext
+def initGetText(APP):
+    """
+    Initialize localization, and put the gettext
+    wrapper '_' in the global scope.
+    """
+    import os, locale, gettext
+    DIR = os.path.dirname (__file__) + '/locale'
+    gettext.bindtextdomain(APP, DIR)
+    gettext.textdomain(APP)
+    __builtins__['_'] = gettext.gettext
 
 def debug(msg):
+    """
+    A small wrapper around debug/error printing,
+    to make it easy to identify which applet the
+    message came from.
+    """
     print "Weather Applet: %s"%msg

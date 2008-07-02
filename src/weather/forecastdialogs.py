@@ -25,7 +25,6 @@
 import gtk, cairo
 from gtk import gdk
 import weathericons, weathertext
-from helpers import _
 
 class NormalDialog(gtk.DrawingArea):
     def __init__(self,forecast):

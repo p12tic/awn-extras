@@ -285,7 +285,6 @@ class App(awn.AppletSimple):
   
   #Hide the icon
   def hide_icon(self):
-    self.set_icon(self.detach.empty_pixbuf())
     self.hide()
   
   #Hide the dialog

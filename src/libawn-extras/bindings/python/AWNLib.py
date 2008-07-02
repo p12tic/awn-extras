@@ -26,7 +26,6 @@ import sys
 
 import gobject
 import gtk
-from gtk import gdk
 
 # For type checking for gconf/settings
 import types
@@ -72,7 +71,8 @@ class KeyRingError:
 class Dialogs:
     def __init__(self, parent):
         """
-        Creates instance of Dialogs object
+        Creates instance of Dialogs object. Will create a menu,
+        an about dialog, and add that to the menu.
 
         @param parent: The parent applet of the dialogs instance.
         @type parent: L{Applet}
@@ -84,6 +84,9 @@ class Dialogs:
 
         self.__parent.settings.cd("shared")
         self.menu = self.new("menu")
+        aboutItem = gtk.ImageMenuItem(stock_id=gtk.STOCK_ABOUT)
+        aboutItem.connect("activate", lambda w, e: self.toggle("about"))
+        self.menu.append(aboutItem)
 
         try:
             self.__loseFocus = self.__parent.settings[ \
@@ -117,29 +120,32 @@ class Dialogs:
         else:
             dlog = awn.AppletDialog(self.__parent)
 
-        self.register(dialog, dlog)
-        if focus and dialog not in ("program", "menu", "about") and self.__loseFocus:
-            def hideDlog():
-                self.__current = None
-                dlog.hide()
-
-            dlog.connect("focus-out-event", lambda x, y: hideDlog())
+        self.register(dialog, dlog, focus)
 
         if dialog not in ("program", "menu") and title:
             dlog.set_title(" " + title + " ")
 
         return dlog
 
-    def register(self, dialog, dlog):
+    def register(self, dialog, dlog, focus=True):
         """
-        Register a dialog to be used by AWNLib.
+        Register a dialog to be used by AWNLib. Will also 
 
         @param dialog: The name to use for the dialog. The predefined values
                        are main, secondary, menu, and program.
         @type dialog: C{string}
         @param dlog: The actual dialog or menu or function.
         @type dlog: C{function}, C{gtk.Menu}, or C{awn.AppletDialog}
+        @param focus: Whether to bind focus in-out handlers for the dialog.
+        @type focus: C{bool}
         """
+
+        if focus and dialog not in ("program", "menu", "about") and self.__loseFocus:
+            def hideDlog():
+                self.__current = None
+                dlog.hide()
+
+            dlog.connect("focus-out-event", lambda x, y: hideDlog())
 
         self.__register[dialog] = dlog
 
@@ -170,6 +176,7 @@ class Dialogs:
             self.__parent.title.hide()
 
         if dialog == "menu":
+            self.__register["menu"].show_all()
             self.__register["menu"].popup(None, None, None, 3, time)
         elif dialog == "program":
             self.__register["program"]()
@@ -236,7 +243,7 @@ class Dialogs:
             if "artists" in self.__parent.meta:
                 self.set_artists(self.__parent.meta["artists"])
 
-            self.set_logo(gdk.pixbuf_new_from_file_at_size(self.__parent.meta["logo"], 48, 48))
+            self.set_logo(gtk.gdk.pixbuf_new_from_file_at_size(self.__parent.meta["logo"], 48, 48))
 
             self.update_icon()
 
@@ -257,7 +264,7 @@ class Dialogs:
             """ Updates the applet's logo to be of the same height as the panel """
 
             height = self.__parent.get_height()
-            self.set_icon(gdk.pixbuf_new_from_file_at_size(self.__parent.meta["logo"], height, height))
+            self.set_icon(gtk.gdk.pixbuf_new_from_file_at_size(self.__parent.meta["logo"], height, height))
 
 
 class Title:

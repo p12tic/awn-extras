@@ -3,7 +3,7 @@
 # Copyright (C) 2007  Richard "nazrat" Beyer, Jeff "Jawbreaker" Hubbard,
 #                     Pavel Panchekha <pavpanchekha@gmail.com>,
 #                     Spencer Creasey <screasey@gmail.com>
-# Copyright (C) 2008  onox (complete rewrite and new features)
+# Copyright (C) 2008  onox <denkpadje@gmail.com>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -50,44 +50,6 @@ applet_logo = os.path.join(theme_dir, "Tango/scalable/status/audio-volume-high.s
 
 volume_ranges = {"high": (100, 66), "medium": (65, 36), "low": (35, 1)}
 volume_step = 4
-
-
-class AboutDialog(gtk.AboutDialog):
-    """ Shows the GTK About dialog """
-    
-    def __init__(self, applet):
-        gtk.AboutDialog.__init__(self)
-        
-        self.applet = applet
-        
-        self.set_name(applet_name)
-        self.set_version(applet_version)
-        self.set_comments(applet_description)
-        self.set_copyright("Copyright \xc2\xa9 2008 onox")
-        self.set_authors(["onox (complete rewrite and new features)",
-                          'Richard "nazrat" Beyer',
-                          'Jeff "Jawbreaker" Hubbard',
-                          "Pavel Panchekha <pavpanchekha@gmail.com>",
-                          "Spencer Creasey <screasey@gmail.com>"])
-        self.set_logo(gdk.pixbuf_new_from_file_at_size(applet_logo, 48, 48))
-        self.set_icon(gdk.pixbuf_new_from_file(applet_logo))
-        
-        # Connect some signals to be able to hide the window
-        self.connect("response", self.response_event)
-        self.connect("delete_event", self.delete_event)
-    
-    def delete_event(self, widget, event):
-        return True
-    
-    def response_event(self, widget, response):
-        if response < 0:
-            self.hide()
-    
-    def update_icon(self):
-        """ Reloads the applet's logo to be of the same height as the panel """
-        
-        height = self.applet.get_height()
-        self.set_icon(gdk.pixbuf_new_from_file_at_size(applet_logo, height, height))
 
 
 class PreferencesDialog:
@@ -162,9 +124,6 @@ class VolumeControlApplet:
         the About dialog to reflect the new height """
         
         self.refresh_icon(True)
-        
-        # Update the icon of the AboutDialog
-        self.about_dialog.update_icon()
     
     def setup_main_dialog(self):
         dialog = self.applet.dialog.new("volume-dialog")
@@ -218,7 +177,7 @@ class VolumeControlApplet:
     def setup_context_menu(self):
         """ Creates a context menu to activate "Preferences" or "About" window """
         
-        self.about_dialog = AboutDialog(self.applet)
+        self.about_dialog = self.applet.dialog.new("about")
         
         menu = self.applet.dialog.new("menu")
         
@@ -453,11 +412,16 @@ class Backend:
 
 
 if __name__ == "__main__":
-    applet = AWNLib.initiate({"name": applet_name,
-        "short": "volume-control",
-        "author": "Pavel Panchekha",
-        "email": "pavpanchekha@gmail.com",
+    applet = AWNLib.initiate({"name": applet_name, "short": "volume-control",
+        "version": applet_version,
         "description": applet_description,
+        "logo": applet_logo,
+        "author": "Pavel Panchekha, onox",
+        "copyright-year": 2008,
+        "authors": ['Richard "nazrat" Beyer', 'Jeff "Jawbreaker" Hubbard',
+                    'Spencer Creasey <screasey@gmail.com>',
+                    "Pavel Panchekha <pavpanchekha@gmail.com>",
+                    "onox <denkpadje@gmail.com>"],
         "type": ["Audio", "Midi"]})
     VolumeControlApplet(applet)
     AWNLib.start(applet)

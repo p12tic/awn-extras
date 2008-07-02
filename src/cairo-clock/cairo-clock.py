@@ -43,33 +43,6 @@ glade_file = os.path.join(os.path.dirname(__file__), "cairo-clock.glade")
 applet_logo = os.path.join(os.path.dirname(__file__), "cairo-clock-logo.png")
 
 
-class AboutDialog(gtk.AboutDialog):
-    """ Shows the GTK About dialog """
-    
-    def __init__(self):
-        gtk.AboutDialog.__init__(self)
-        
-        self.set_name(applet_name)
-        self.set_version(applet_version)
-        self.set_comments(applet_description)
-        self.set_copyright("Copyright \xc2\xa9 2008 onox")
-        self.set_authors(["onox"])
-        self.set_artists(["Artists of MacSlow's Cairo-Clock"])
-        self.set_logo(gdk.pixbuf_new_from_file_at_size(applet_logo, 48, 48))
-        self.set_icon(gdk.pixbuf_new_from_file(applet_logo))
-        
-        # Connect some signals to be able to hide the window
-        self.connect("response", self.response_event)
-        self.connect("delete_event", self.delete_event)
-    
-    def delete_event(self, widget, event):
-        return True
-    
-    def response_event(self, widget, response):
-        if response < 0:
-            self.hide()
-
-
 class PreferencesDialog:
     """ Shows the preferences window """
     
@@ -124,7 +97,7 @@ class CairoClockApplet:
     def setup_context_menu(self):
         """ Creates a context menu to activate "Preferences" or "About" window """
         
-        self.about_dialog = AboutDialog()
+        self.about_dialog = self.applet.dialog.new("about")
         
         menu = self.applet.dialog.new("menu")
         prefs_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
@@ -378,6 +351,13 @@ class CairoClock:
 
 
 if __name__ == "__main__":
-    applet = AWNLib.initiate({"name": applet_name, "short": "cairo-clock"})
+    applet = AWNLib.initiate({"name": applet_name, "short": "cairo-clock",
+        "version": applet_version,
+        "description": applet_description,
+        "logo": applet_logo,
+        "author": "onox",
+        "copyright-year": 2008,
+        "authors": ["onox"],
+        "artists": ["Artists of MacSlow's Cairo-Clock"]})
     CairoClockApplet(applet)
     AWNLib.start(applet)

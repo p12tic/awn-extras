@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 #
 #       AWN Applet Library - simplifies the API's used in programming applets
 #       for AWN.
@@ -20,16 +20,13 @@
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
 
-# Version: 1.5.bugfix
-
-# Path manipulations and file name
 import os
 import subprocess
 import sys
 
-# GUI drawing and timers
 import gobject
 import gtk
+from gtk import gdk
 
 # For type checking for gconf/settings
 import types
@@ -115,11 +112,13 @@ class Dialogs:
             dlog.show_all()
         elif dialog == "program":
             dlog = lambda: None
+        elif dialog == "about":
+            dlog = self.AboutDialog(self.__parent)
         else:
             dlog = awn.AppletDialog(self.__parent)
 
         self.register(dialog, dlog)
-        if focus and dialog not in ("program", "menu") and self.__loseFocus:
+        if focus and dialog not in ("program", "menu", "about") and self.__loseFocus:
             def hideDlog():
                 self.__current = None
                 dlog.hide()
@@ -215,6 +214,50 @@ class Dialogs:
             self.toggle("main", once=True)
         elif "program" in self.__register: # Act like launcher
             self.toggle("program", once=True)
+
+    class AboutDialog(gtk.AboutDialog):
+        """ Applet's About dialog """
+
+        def __init__(self, parent):
+            gtk.AboutDialog.__init__(self)
+
+            self.__parent = parent
+
+            self.set_name(self.__parent.meta["name"])
+            self.set_version(self.__parent.meta["version"])
+            self.set_comments(self.__parent.meta["description"])
+
+            self.set_copyright("Copyright \xc2\xa9 " \
+                               + str(self.__parent.meta["copyright-year"]) \
+                               + " " + self.__parent.meta["author"])
+
+            if "authors" in self.__parent.meta:
+                self.set_authors(self.__parent.meta["authors"])
+            if "artists" in self.__parent.meta:
+                self.set_artists(self.__parent.meta["artists"])
+
+            self.set_logo(gdk.pixbuf_new_from_file_at_size(self.__parent.meta["logo"], 48, 48))
+
+            self.update_icon()
+
+            # Connect some signals to be able to hide the window
+            self.connect("response", self.response_event)
+            self.connect("delete_event", self.delete_event)
+            
+            parent.connect("height-changed", self.update_icon)
+
+        def delete_event(self, widget, event):
+            return True
+
+        def response_event(self, widget, response):
+            if response < 0:
+                self.hide()
+
+        def update_icon(self, widget=None, event=None):
+            """ Updates the applet's logo to be of the same height as the panel """
+
+            height = self.__parent.get_height()
+            self.set_icon(gdk.pixbuf_new_from_file_at_size(self.__parent.meta["logo"], height, height))
 
 
 class Title:
@@ -1295,6 +1338,9 @@ class Meta:
         """
 
         del self.__info[key]
+
+    def __contains__(self, key):
+        return key in self.__info
 
 
 class Applet(awn.AppletSimple):

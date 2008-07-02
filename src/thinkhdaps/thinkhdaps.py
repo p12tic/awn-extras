@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright (C) 2008  onox
+# Copyright (C) 2008  onox <denkpadje@gmail.com>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,7 +15,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import sys
 
 import gobject
 import pygtk
@@ -47,41 +46,6 @@ file_icon_running = os.path.join(image_dir, "thinkhdaps-logo.svg")
 file_icon_paused = os.path.join(image_dir, "thinkhdaps-paused.svg")
 file_icon_error = os.path.join(image_dir, "thinkhdaps-error.svg")
 
-
-class AboutDialog(gtk.AboutDialog):
-    """ Shows the GTK+ About dialog """
-    
-    def __init__(self, applet):
-        gtk.AboutDialog.__init__(self)
-        
-        self.applet = applet
-        
-        self.set_name(applet_name)
-        self.set_version(applet_version)
-        self.set_comments(applet_description)
-        self.set_copyright("Copyright \xc2\xa9 2008 onox")
-        self.set_authors(["onox"])
-        self.set_artists(["Jakub Steiner", "Lapo Calamandrei", "Rodney Dawes", "Garrett LeSage", "onox"])
-        self.set_logo(gdk.pixbuf_new_from_file(applet_logo))
-        
-        self.update_icon()
-        
-        # Connect some signals to be able to hide the window
-        self.connect("response", self.response_event)
-        self.connect("delete_event", self.delete_event)
-    
-    def delete_event(self, widget, event):
-        return True
-    
-    def response_event(self, widget, response):
-        if response < 0:
-            self.hide()
-    
-    def update_icon(self):
-        """ Reloads the applet's logo to be of the same height as the panel """
-        
-        height = self.applet.get_height()
-        self.set_icon(gdk.pixbuf_new_from_file_at_size(applet_logo, height, height))
 
 class ThinkHDAPSApplet:
     """ Applet that shows the status of HDAPS """
@@ -127,7 +91,7 @@ class ThinkHDAPSApplet:
         self.setup_icon()
         
         # Set the applet's current icon
-        self.applet.icon.set(self.icon_running, True)
+        applet.icon.set(self.icon_running, True)
         
         applet.title.set(hdaps_short_description + " active")
         
@@ -162,9 +126,6 @@ class ThinkHDAPSApplet:
         
         # Check the status to update the applet's icon
         self.check_status_cb(self)
-        
-        # Update the icon of the AboutDialog
-        self.about_dialog.update_icon()
     
     def setup_icon(self):
         """ Loads the images that are going to be used as the applet's icon """
@@ -176,7 +137,7 @@ class ThinkHDAPSApplet:
     def setup_dialog_about(self):
         """ Creates the GTK+ About dialog """
         
-        self.about_dialog = AboutDialog(self.applet)
+        self.about_dialog = self.applet.dialog.new("about")
         
         menu = self.applet.dialog.new("menu")
         about_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_ABOUT)
@@ -189,6 +150,13 @@ class ThinkHDAPSApplet:
     
 
 if __name__ == "__main__":
-    applet = AWNLib.initiate({"name": applet_name, "short": "hdaps"})
+    applet = AWNLib.initiate({"name": applet_name, "short": "hdaps",
+        "version": applet_version,
+        "description": applet_description,
+        "logo": applet_logo,
+        "author": "onox",
+        "copyright-year": 2008,
+        "authors": ["onox"],
+        "artists": ["Jakub Steiner", "Lapo Calamandrei", "Rodney Dawes", "Garrett LeSage", "onox"]})
     ThinkHDAPSApplet(applet)
     AWNLib.start(applet)

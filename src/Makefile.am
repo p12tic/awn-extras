@@ -9,7 +9,6 @@ if WITH_GCONF
 if WITH_GNOME
 GCONF_APPLETS +=		\
 	awnsystemmonitor	\
-	cairo-clock		\
 	cairo-menu		\
 	cairo-menu-classic	\
 	calendar		\
@@ -21,9 +20,11 @@ GCONF_APPLETS +=		\
 endif
 GCONF_APPLETS +=		\
 	awn-notification-daemon	\
+	cairo-clock		\
 	comic			\
 	media-control		\
 	mount-applet		\
+	volume-control	\
 	weather			\
 	$(NULL)
 endif
@@ -71,7 +72,6 @@ SUBDIRS =			\
 	to-do				\
 	tomboy-applet		\
 	tsclient-applet		\
-	volume-control		\
 	wobblyzini		\
 	$(GCONF_APPLETS)	\
 	$(VALA_APPLETS)		\

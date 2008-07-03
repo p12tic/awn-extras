@@ -86,12 +86,22 @@ class Dialogs:
         
         self.menu = self.new("menu")
         
-        # Create the About dialog
-        about_dialog = self.new("about")
+        if "all" not in globals():
+            def all(iterable):
+                for element in iterable:
+                    if not element:
+                        return False
+                return True
         
-        about_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_ABOUT)
-        self.menu.append(about_item)
-        about_item.connect("activate", lambda w: self.toggle("about"))
+        meta_keys = self.__parent.meta.keys()
+
+        # Create the About dialog if the applet provides the necessary metadata
+        if all([key in meta_keys for key in ("name", "author", "copyright-year")]):
+            about_dialog = self.new("about")
+
+            about_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_ABOUT)
+            self.menu.append(about_item)
+            about_item.connect("activate", lambda w: self.toggle("about"))
 
         try:
             self.__loseFocus = self.__parent.settings["dialog_focus_loss_behavior"]
@@ -1354,7 +1364,21 @@ class Meta:
 
         del self.__info[key]
 
+    def keys(self):
+        """
+        Returns a list of keys from the dictionary
+        """
+
+        return self.__info.keys()
+
     def __contains__(self, key):
+        """
+        Returns True if the dictionary contains the key, False otherwise
+
+        @param key: The key
+        @type key: C{string}
+        """
+        
         return key in self.__info
 
 

@@ -237,8 +237,11 @@ class Dialogs:
             self.__parent = parent
 
             self.set_name(self.__parent.meta["name"])
-            self.set_version(self.__parent.meta["version"])
-            self.set_comments(self.__parent.meta["description"])
+
+            if "version" in self.__parent.meta:
+                self.set_version(self.__parent.meta["version"])
+            if "description" in self.__parent.meta:
+                self.set_comments(self.__parent.meta["description"])
 
             self.set_copyright("Copyright \xc2\xa9 " \
                 + str(self.__parent.meta["copyright-year"]) \
@@ -249,15 +252,14 @@ class Dialogs:
             if "artists" in self.__parent.meta:
                 self.set_artists(self.__parent.meta["artists"])
 
-            self.set_logo(gtk.gdk.pixbuf_new_from_file_at_size(self.__parent.meta["logo"], 48, 48))
-
-            self.update_icon()
+            if "logo" in self.__parent.meta:
+                self.set_logo(gtk.gdk.pixbuf_new_from_file_at_size(self.__parent.meta["logo"], 48, 48))
+                self.update_icon()
+                parent.connect("height-changed", self.update_icon)
 
             # Connect some signals to be able to hide the window
             self.connect("response", self.response_event)
             self.connect("delete_event", self.delete_event)
-            
-            parent.connect("height-changed", self.update_icon)
 
         def delete_event(self, widget, event):
             return True

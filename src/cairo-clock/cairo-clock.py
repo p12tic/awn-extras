@@ -53,7 +53,7 @@ class PreferencesDialog:
         
         # Register the dialog window
         self.dialog = prefs.get_widget("dialog-window")
-        self.clock_applet.applet.dialog.register("dialog-settings", self.dialog)
+        self.clock_applet.applet.dialog.register("dialog-settings", self.dialog, False)
         
         self.dialog.set_icon(gdk.pixbuf_new_from_file(applet_logo))
         

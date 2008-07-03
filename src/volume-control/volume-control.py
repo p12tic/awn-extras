@@ -62,7 +62,7 @@ class PreferencesDialog:
         
         # Register the dialog window
         self.dialog = prefs.get_widget("dialog-window")
-        self.volume_applet.applet.dialog.register("dialog-settings", self.dialog)
+        self.volume_applet.applet.dialog.register("dialog-settings", self.dialog, False)
         
         self.dialog.set_icon(gdk.pixbuf_new_from_file(applet_logo))
         
@@ -209,10 +209,6 @@ class VolumeControlApplet:
         # Combobox in preferences window to choose a theme
         vbox_theme = prefs.get_widget("vbox-theme")
         
-        if "theme" not in self.applet.settings:
-            self.applet.settings["theme"] = "Tango"
-        self.theme = self.applet.settings["theme"]
-        
         # Only use themes that are likely to provide all the files
         self.themes = filter(self.filter_themes, os.listdir(theme_dir))
         
@@ -230,6 +226,10 @@ class VolumeControlApplet:
         
         for i in moonbeam_themes:
             combobox_theme.append_text(i)
+        
+        if "theme" not in self.applet.settings:
+            self.applet.settings["theme"] = self.themes[0]
+        self.theme = self.applet.settings["theme"]
         
         combobox_theme.set_active(self.themes.index(self.theme))
         

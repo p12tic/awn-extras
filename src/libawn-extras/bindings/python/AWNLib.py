@@ -120,7 +120,7 @@ class Dialogs:
         elif dialog == "program":
             dlog = lambda: None
         elif dialog == "about":
-            dlog = self.__AboutDialog(self.__parent)
+            dlog = self.AboutDialog(self.__parent)
         else:
             dlog = awn.AppletDialog(self.__parent)
 
@@ -228,7 +228,7 @@ class Dialogs:
         elif "program" in self.__register: # Act like launcher
             self.toggle("program", once=True)
 
-    class __AboutDialog(gtk.AboutDialog):
+    class AboutDialog(gtk.AboutDialog):
         """ Applet's About dialog """
 
         def __init__(self, parent):
@@ -236,26 +236,20 @@ class Dialogs:
 
             self.__parent = parent
 
-            if "name" in self.__parent.meta:
-                self.set_name(self.__parent.meta["name"])
-            if "version" in self.__parent.meta:
-                self.set_version(self.__parent.meta["version"])
-            if "description" in self.__parent.meta:
-                self.set_comments(self.__parent.meta["description"])
+            self.set_name(self.__parent.meta["name"])
+            self.set_version(self.__parent.meta["version"])
+            self.set_comments(self.__parent.meta["description"])
 
-            if "copyright-year" in self.__parent.meta and "author" in \
-                self.__parent.meta:
-                self.set_copyright("Copyright \xc2\xa9 " \
-                    + str(self.__parent.meta["copyright-year"]) \
-                    + " " + self.__parent.meta["author"])
+            self.set_copyright("Copyright \xc2\xa9 " \
+                + str(self.__parent.meta["copyright-year"]) \
+                + " " + self.__parent.meta["author"])
 
             if "authors" in self.__parent.meta:
                 self.set_authors(self.__parent.meta["authors"])
             if "artists" in self.__parent.meta:
                 self.set_artists(self.__parent.meta["artists"])
 
-            if "logo" in self.__parent.meta:
-                self.set_logo(gtk.gdk.pixbuf_new_from_file_at_size(self.__parent.meta["logo"], 48, 48))
+            self.set_logo(gtk.gdk.pixbuf_new_from_file_at_size(self.__parent.meta["logo"], 48, 48))
 
             self.update_icon()
 

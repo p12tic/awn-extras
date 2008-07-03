@@ -50,6 +50,12 @@ _ = gettext.gettext
 
 import locale
 
+applet_name = _("Mail Applet")
+applet_version = "0.2.8"
+applet_description = _("An applet to check one's email")
+
+# Logo of the applet, shown in the GTK About dialog
+applet_logo = os.path.join(os.path.dirname(__file__), "Themes/Tango/read.svg")
 
 def Label(str):
     """
@@ -729,11 +735,13 @@ class Backends:
                     "usessl": widgets[3].get_active()}, "network")
 
 if __name__ == "__main__":
-    applet = AWNLib.initiate({"name": _("Mail Applet"),
-        "short": "mail",
+    applet = AWNLib.initiate({"name": applet_name, "short": "mail",
+	    "version": applet_version,
+        "description": applet_description,
+        "logo": applet_logo,
         "author": "Pavel Panchekha",
+        "copyright-year": 2008,
         "email": "pavpanchekha@gmail.com",
-        "description": _("An applet to check one's email"),
         "type": ["Network", "Email"]})
     applet = MailApplet(applet)
     AWNLib.start(applet.awn)

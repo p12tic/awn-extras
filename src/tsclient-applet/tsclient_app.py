@@ -1,13 +1,22 @@
 #!/usr/bin/python
 
 # File matching and folder listing
-import os, glob
+import glob
+import os
 
 # GUI
 import gtk
 
 # AWN
 from awn.extras import AWNLib
+
+applet_name = "TSClient Applet"
+applet_version = "0.2.8"
+applet_description = "Interact with the Terminal Services Client"
+
+# Logo of the applet, shown in the GTK About dialog
+applet_logo = os.path.join(os.path.dirname(__file__), "icons/Tsclient.svg")
+
 
 class TSClient:
     def __init__ (self, awn):
@@ -34,9 +43,12 @@ class TSClient:
         #print "hide title"
 
 if __name__ == "__main__":
-    awn = AWNLib.initiate({"name": "TSClient Applet",
-        "short": "tsclient",
-        "description": "Interact with the Terminal Services Client",
+    awn = AWNLib.initiate({"name": applet_name, "short": "tsclient",
+        "version": applet_version,
+        "description": applet_description,
+        "logo": applet_logo,
+        "author": "chimby",
+        "copyright-year": 2007,
         "type": ["Utility", "RemoteAccess"]})
     applet = TSClient(awn)
     AWNLib.start(applet.awn)

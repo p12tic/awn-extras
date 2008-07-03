@@ -25,14 +25,18 @@ import gtk
 from gtk import gdk
 import dbus
 
+applet_name = "Tomboy Applet"
+applet_version = "0.2.8"
+applet_description = "Control Tomboy with D-Bus"
+
 bus = dbus.SessionBus()
-
-
-#os.system("/usr/bin/tomboy")
-
 interface = bus.get_object('org.gnome.Tomboy','/org/gnome/Tomboy/RemoteControl')
 interface = dbus.Interface(interface,dbus_interface='org.gnome.Tomboy.RemoteControl')
 version = interface.Version()
+
+# Logo of the applet, shown in the GTK About dialog
+applet_logo = os.path.join(os.path.dirname(__file__), "tomboy.png")
+
 
 class TomboyApplet:
 	def __init__(self, awnlib):
@@ -42,6 +46,8 @@ class TomboyApplet:
 		except:
 			self.awn.icon.file("tomboy.png")
 		self.awn.title.set("Tomboy Applet")
+		
+		self.MainDialog()
 
 	def DisplaySearch(self, widget, data=None):
 		interface.DisplaySearch()
@@ -91,7 +97,13 @@ class TomboyApplet:
 		self.button2.connect("clicked", self.CreateNote)
 		self.dlog.add(self.button2)
 
-applet = AWNLib.initiate({"name": "Tomboy Applet", "short": "tomboy applet"})
-awntomboy = TomboyApplet(applet)
-awntomboy.MainDialog()
-AWNLib.start(applet)
+if __name__ == "__main__":
+    applet = AWNLib.initiate({"name": applet_name, "short": "tomboy",
+        "version": applet_version,
+        "description": applet_description,
+        "logo": applet_logo,
+        "author": "Julien Lavergne",
+        "copyright-year": 2008,
+        "authors": ["Julien Lavergne <julien.lavergne@gmail.com>"]})
+    TomboyApplet(applet)
+    AWNLib.start(applet)

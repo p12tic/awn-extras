@@ -1,4 +1,4 @@
 dist_comic_DATA = 				\
 		kmouth.png
 
-comicdir = $(libdir)/awn/applets/comic/images
+comicdir = $(datadir)/awn/applets/comic/images

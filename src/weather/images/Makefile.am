@@ -50,4 +50,4 @@ dist_weather_DATA = 		\
 twc-logo.png	\
 na.png
 
-weatherdir = $(libdir)/awn/applets/weather/images
+weatherdir = $(datadir)/awn/applets/weather/images

@@ -1,9 +1,8 @@
 [Desktop Entry]
 Type=Application
 X-AWN-AppletType=Python
-Encoding=UTF-8
 Name=TsClient Applet
 Comment=Quick access to RDP files
-Exec=@LIBDIR@/awn/applets/tsclient-app/tsclient_app.py
-Icon=@LIBDIR@/awn/applets/tsclient-app/icons/Tsclient.svg
+Exec=tsclient-app/tsclient_app.py
+Icon=tsclient-app/icons/Tsclient.svg
 X-AWN-AppletCategory=Utility,RemoteAccess

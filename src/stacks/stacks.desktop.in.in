@@ -1,9 +1,8 @@
 [Desktop Entry]
 Type=Application
-Encoding=UTF-8
 Name=Stacks Applet
 Comment=Quick access to a file folder
-Exec=@LIBDIR@/awn/applets/stacks/stacks_applet.py
-Icon=@LIBDIR@/awn/applets/stacks/icons/stacks-drop.svg
+Exec=stacks/stacks_applet.py
+Icon=stacks/icons/stacks-drop.svg
 X-AWN-AppletType=Python
 X-AWN-AppletCategory=Utility,FileManager

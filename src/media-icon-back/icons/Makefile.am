@@ -2,4 +2,4 @@ dist_mediaiconback_DATA = 				\
 		backward.svg		\
 		COPYING	
 
-mediaiconbackdir = $(libdir)/awn/applets/media-icon-back/icons
+mediaiconbackdir = $(datadir)/awn/applets/media-icon-back/icons

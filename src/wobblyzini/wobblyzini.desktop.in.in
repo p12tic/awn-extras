@@ -5,5 +5,5 @@ Encoding=UTF-8
 Name=Wobbly Zini
 Comment=A simple test animation
 Exec=@LIBDIR@/awn/applets/wobblyzini/wobblyzini.so
-Icon=@LIBDIR@/awn/applets/wobblyzini/icons/wobblyzini.png
+Icon=icons/wobblyzini.png
 X-AWN-AppletCategory=Game,Amusement

@@ -3,4 +3,4 @@ dist_mediacontrol_DATA = 				\
 		README		\
 		rhythmbox.svg 
 
-mediacontroldir = $(libdir)/awn/applets/media-control/icons
+mediacontroldir = $(datadir)/awn/applets/media-control/icons

@@ -177,38 +177,27 @@ class VolumeControlApplet:
     def setup_context_menu(self):
         """ Creates a context menu to activate "Preferences" or "About" window """
         
-        self.about_dialog = self.applet.dialog.new("about")
-        
-        menu = self.applet.dialog.new("menu")
+        menu = self.applet.dialog.menu
         
         self.mute_item = gtk.CheckMenuItem("Mu_te")
-        menu.append(self.mute_item)
+        self.mute_item.connect("toggled", self.backend.mute_toggled_cb)
+        menu.insert(self.mute_item, 2)
         
         volume_control_item = gtk.MenuItem("_Open Volume Control")
-        menu.append(volume_control_item)
+        volume_control_item.connect("activate", self.show_volume_control_cb)
+        menu.insert(volume_control_item, 3)
         
-        menu.append(gtk.SeparatorMenuItem())
+        menu.insert(gtk.SeparatorMenuItem(), 4)
         
         prefs_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
-        menu.append(prefs_item)
-        about_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_ABOUT)
-        menu.append(about_item)
-        
-        menu.show_all()
-        
-        self.mute_item.connect("toggled", self.backend.mute_toggled_cb)
-        volume_control_item.connect("activate", self.show_volume_control_cb)
         prefs_item.connect("activate", self.show_dialog_cb)
-        about_item.connect("activate", self.activate_about_dialog_cb)
+        menu.insert(prefs_item, 5)
     
     def show_volume_control_cb(self, widget):
         subprocess.Popen("gnome-volume-control")
     
     def show_dialog_cb(self, widget):
         self.applet.dialog.toggle("dialog-settings", "show")
-    
-    def activate_about_dialog_cb(self, widget):
-        self.about_dialog.show()
     
     def setup_dialog_settings(self, prefs):
         """ Loads the settings from gconf """

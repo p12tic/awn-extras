@@ -100,7 +100,7 @@ class CairoClockApplet:
         prefs_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
         prefs_item.connect("activate", self.show_dialog_cb)
         
-        self.applet.dialog.menu.append(prefs_item)
+        self.applet.dialog.menu.insert(prefs_item, 2)
     
     def show_dialog_cb(self, widget):
         self.applet.dialog.toggle("dialog-settings", "show")

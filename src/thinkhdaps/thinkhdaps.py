@@ -95,8 +95,6 @@ class ThinkHDAPSApplet:
         
         applet.title.set(hdaps_short_description + " active")
         
-        self.setup_dialog_about()
-        
         self.paused = 0
         self.was_paused = False
         self.error_occurred = False
@@ -133,21 +131,7 @@ class ThinkHDAPSApplet:
         height = self.applet.get_height()
         self.icon_running = gdk.pixbuf_new_from_file_at_size(file_icon_running, height, height)
         self.icon_paused = gdk.pixbuf_new_from_file_at_size(file_icon_paused, height, height)
-    
-    def setup_dialog_about(self):
-        """ Creates the GTK+ About dialog """
-        
-        self.about_dialog = self.applet.dialog.new("about")
-        
-        menu = self.applet.dialog.new("menu")
-        about_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_ABOUT)
-        menu.append(about_item)
-        menu.show_all()
-        about_item.connect("activate", self.activate_about_dialog_cb)
-    
-    def activate_about_dialog_cb(self, widget):
-        self.about_dialog.show()
-    
+
 
 if __name__ == "__main__":
     applet = AWNLib.initiate({"name": applet_name, "short": "hdaps",

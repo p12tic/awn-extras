@@ -23,7 +23,6 @@ GCONF_APPLETS +=		\
 	comic			\
 	media-control		\
 	mount-applet		\
-	weather			\
 	$(NULL)
 endif
 if WITH_GNOME
@@ -72,6 +71,7 @@ SUBDIRS =			\
 	tomboy-applet		\
 	tsclient-applet		\
 	volume-control		\
+	weather			\
 	wobblyzini		\
 	$(GCONF_APPLETS)	\
 	$(VALA_APPLETS)		\

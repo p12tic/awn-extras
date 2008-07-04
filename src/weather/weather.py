@@ -23,27 +23,31 @@
 # Boston, MA 02111-1307, USA.
 
 from awn.extras import AWNLib
-import gtk, cairo, urllib2, urllib, re, time, sys, traceback
+import gtk, cairo, gobject
+import urllib2, urllib, re, time, sys, traceback
 from xml.dom import minidom
+
+# import socket to set the default timeout, it is unlimited by default!
+TIMEOUT_RETRY = 5 # how many minutes in the future to retry, on a timeout
+SOCKET_TIMEOUT = 20 # how many seconds to allow a network operation to succeed
+import socket
+socket.setdefaulttimeout(SOCKET_TIMEOUT)
 
 from helpers import debug, initGetText
 #initialize localization, must be done before local imports
 initGetText("awn-weather-applet")
 import weathericons, forecast, weatherprefs
-from helpers import debug
 
 class WeatherApplet:
     def __init__(self, applet):
         self.applet = applet
         self.cachedConditions = None
-        self.hasInitialData = False
         self.iconPixBuf = self.mapPixBuf = None
         self.forecaster = forecast.Forecast(self)
         self.onRefreshForecast = self.forecaster.onRefreshForecast # <3 python
         
         # handle the persisted settings (such as gconf)
-        self.applet.settings.require()
-        self.fetchSettings() #grab all the persisted settings
+        self.fetchSettings()
         ##self.applet.settings.notify("weather", self.onSettingsChanged)
         
         # set default icons/titles/dialogs so the applet is informative without data
@@ -62,9 +66,9 @@ class WeatherApplet:
         self.applet.connect("height-changed", self.onBarHeightChange)
         
         # first, get the current conditions, so we can display the icon
-        self.onRefreshConditions() # TODO: have this called later so the icon pops up right away
+        gobject.timeout_add(1500, self.fetchInitialConditions)
         # get everything else in a few seconds, the applet icon is done, let's not hold things up
-        self.applet.timing.time(self.fetchInitialData, 3) # TODO: ideally we just want to call this once, or unregister, is that possible?
+        gobject.timeout_add(5000, self.fetchInitialData)
         
     def fetchSettings(self, push=True):
         """
@@ -73,17 +77,17 @@ class WeatherApplet:
         """
         # create our settings dictionary with default values
         self.settingsDict = {
-            'temp_position': 0,
-            'temp_fontsize': 32.0,
-            'metric': False,
-            'curved_dialog': False,
-            'location': 'Portland, ME', # mosburger's hometown :)
-            'location_code': 'USME0328',
-            'frequency': 30,
-            'frequency_map': 30,
-            'frequency_5day': 30,
-            'map_maxwidth': 450,
-            'open_til_clicked': True,
+            'temp_position':        0,
+            'temp_fontsize':        32.0,
+            'metric':               False,
+            'curved_dialog':        False,
+            'location':             'Portland, ME', # mosburger's hometown :)
+            'location_code':        'USME0328',
+            'frequency':            30,
+            'frequency_map':        30,
+            'frequency_5day':       30,
+            'map_maxwidth':         450,
+            'open_til_clicked':     True,
             }
             
         # first, tell AWNLib which applet we are
@@ -124,15 +128,16 @@ class WeatherApplet:
                     # just recreate the forecast dialog from the existing data
                     self.forecaster.createForecastDialog()
                     
-            #TODO: update timer frequencies somehow
+            #TODO: update timer frequencies somehow, so an applet restart isn't required
 
     def onMouseOut(self, widget, event):
         """
-        Hide the dialog if it is appropriate to do so.
+        Hide the dialogs if it is appropriate to do so.
         """
         if self.settingsDict['open_til_clicked'] == False:
             if hasattr(self.forecaster, 'forecastDialog'):
-                self.forecaster.forecastDialog.hide()
+                #self.forecaster.forecastDialog.hide()
+                self.applet.dialog.hide()
 
     def onBarHeightChange(self, widget, event):
         """
@@ -151,15 +156,13 @@ class WeatherApplet:
         # create the menu items
         refreshItem = gtk.ImageMenuItem(stock_id=gtk.STOCK_REFRESH)
         prefsItem = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
-        aboutItem = gtk.ImageMenuItem(stock_id=gtk.STOCK_ABOUT)
         # add them to the menu
-        for item in [aboutItem, refreshItem, prefsItem]:
+        for item in [refreshItem, prefsItem]:
             menu.append(item)
             item.show()
         # attach callbacks
         refreshItem.connect_object("activate", self.onClickRefreshData, "refresh")
         prefsItem.connect_object("activate", self.onClickPreferences, "preferences")
-        aboutItem.connect_object("activate", self.onClickAbout, "about")
    
     def onClickRefreshData(self, message=None):
         """
@@ -169,20 +172,6 @@ class WeatherApplet:
         self.onRefreshConditions()
         self.onRefreshForecast()
         self.onRefreshMap()
-        
-    def onClickAbout(self, message=None):
-        """
-        Creates and shows the About dialog.
-        Called by the right-click "About" option.
-        """
-        about_dialog = gtk.AboutDialog()
-        about_dialog.set_name("Avant Weather Applet")
-        about_dialog.set_copyright("Copyright 2007, 2008 Mike Desjardins, Mike Rooney")
-        about_dialog.set_comments("A Weather Applet for the Avant Window Navigator.  Weather data provided by weather.com.  Images by Wojciech Grzanka.")
-        about_dialog.set_authors(["Mike Desjardins","Mike Rooney", "Isaac J."])
-        about_dialog.set_artists(["Wojciech Grzanka", "Mike Desjardins"])
-        about_dialog.connect("response", lambda d, r: d.destroy())
-        about_dialog.show()
         
     def onClickPreferences(self, message=None):
         """
@@ -203,16 +192,27 @@ class WeatherApplet:
         """
         return self.settingsDict['location_code'], self.settingsDict['metric'], self.cachedConditions
         
+    def fetchInitialConditions(self):
+        """
+        This is called in the init (well, a second after) to
+        grab the initial conditions and set the icon.
+        """
+        #debug("Fetching initial conditions...")
+        result = self.onRefreshConditions()
+        if result is None:
+            debug("Failed fetching initial conditions, trying again in %i minutes"%(TIMEOUT_RETRY))
+            # we couldn't get the conditions, try again soon
+            gobject.timeout_add(TIMEOUT_RETRY*1000*60, self.fetchInitialConditions)
+        return False # stop this timer, we just needed it once
+        
     def fetchInitialData(self):
         """
         This function is called to grab the forecast and map data
         when the applet is initialized.
         """
-        #TODO: append something useful to the title such as (Fetching data...) temporarily
-        if not self.hasInitialData:
-            self.onRefreshForecast()
-            self.onRefreshMap()
-            self.hasInitialData = True
+        self.onRefreshForecast()
+        self.onRefreshMap()
+        return False # stop this timer, we just needed it once
             
     def overlayTemperature(self, iconFile):
         """
@@ -314,6 +314,7 @@ class WeatherApplet:
                 self.applet.title.set(title)
                 self.cachedConditions = conditions
                 self.setIcon(conditions['CODE'])
+        return conditions
                 
     def dictFromXML(self, rootNode, keys, paths):
         """
@@ -388,7 +389,6 @@ class WeatherApplet:
         if self.mapPixBuf is None: # we don't have a map yet
             dlog.set_title(_("Fetching map..."))
         else: # we have a map, let's put it in the dialog
-            #dlog.set_title(_("Weather Map"))
             dlog.set_title(self.settingsDict['location'])
             map = gtk.image_new_from_pixbuf(self.mapPixBuf)
             mapSize = self.mapPixBuf.get_width(), self.mapPixBuf.get_height()
@@ -404,13 +404,18 @@ class WeatherApplet:
             dlog.add(map)
 
 def main():
-    appletInfo = { # what does AWNLib use this for?
-        "name": _("Weather Applet"),
-        "short": "weather",
-        "author": "Mike Rooney",
+    appletInfo = { # used for automatic AWNLib About dialog
+        "name": _("Avant Weather Applet"), ##
+        "description": _("A Weather Applet for the Avant Window Navigator. Weather data provided by weather.com. Images by Wojciech Grzanka."), ##
+        "version" : "0.8.1", ##
+        "author": "Mike Desjardins, Mike Rooney", ##
+        "copyright-year": "2007-2008", ##
+        "logo": weathericons.GetIcon("44"), ##
+        "authors": ["Mike Desjardins","Mike Rooney", "Isaac J."], #
+        "artists": ["Wojciech Grzanka", "Mike Desjardins"], #
         "email": "mrooney@gmail.com",
-        "description": _("Fetch and display local weather conditions."),
-        "type": ["Network", "Weather"]
+        "short": "weather",
+        "type": ["Network", "Weather"],
     }
         
     applet = AWNLib.initiate(appletInfo)

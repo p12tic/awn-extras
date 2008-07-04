@@ -151,7 +151,7 @@ class WeatherConfig(gtk.Window):
         vbox.pack_start(hbox0,False,False,0)
 
         hbox025 = gtk.HBox(True, 0)
-        self.click_checkbox = gtk.CheckButton(_("Close forecast dialog on mouse-out"))  # needs i18n
+        self.click_checkbox = gtk.CheckButton(_("Close dialogs on mouse-out"))  # needs i18n
         if applet.settingsDict['open_til_clicked']:
             self.click_checkbox.set_active(False)
         else: 

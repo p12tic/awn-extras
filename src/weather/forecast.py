@@ -93,23 +93,25 @@ class Forecast:
             self.forecastDialog = self.applet.dialog.new("main")
             self.forecastDialog.set_title(_("Fetching forecast..."))
         else:
-            if self.parent.settingsDict['curved_dialog'] == True:
-                self.forecastDialog = override.Dialog(self.applet) #TODO: figure out how to get rid of override
-                #self.forecastDialog = awn.AppletDialog(self.applet)
-                forecastArea = forecastdialogs.CurvedDialog(self.cachedForecast)
-                #TODO: fix incorrect x pos of this dialog if the weather applet moves
-            else:
+            try:
+                if self.parent.settingsDict['curved_dialog'] == True:
+                    #self.forecastDialog = self.applet.dialog.new("main", dialogConstructor=override.Dialog)
+                    self.forecastDialog = override.Dialog(self.applet)
+                    self.applet.dialog.register("main", self.forecastDialog)
+                    forecastArea = forecastdialogs.CurvedDialog(self.cachedForecast)
+                else:
+                    self.forecastDialog = self.applet.dialog.new("main")
+                    self.forecastDialog.set_title("%s %s %s"%(_("Forecast"), _("for"), self.cachedForecast['CITY']))
+                    forecastArea = forecastdialogs.NormalDialog(self.cachedForecast)
+                
+                box = gtk.VBox()
+                forecastArea.set_size_request(450,160)
+                box.pack_start(forecastArea, False, False, 0)
+                box.show_all()
+                self.forecastDialog.add(box)
+            except:
                 self.forecastDialog = self.applet.dialog.new("main")
-                self.forecastDialog.set_title("%s %s %s"%(_("Forecast"), _("for"), self.cachedForecast['CITY']))
-                forecastArea = forecastdialogs.NormalDialog(self.cachedForecast)
-            
-            box = gtk.VBox()
-            forecastArea.set_size_request(450,160)
-            box.pack_start(forecastArea, False, False, 0)
-            box.show_all()
-            self.forecastDialog.add(box)
-        
-        self.applet.dialog.register("main", self.forecastDialog)
+                self.forecastDialog.set_title(_("Dialog Error"))
         
     def cropText(self, context, text, maxwidth):
         """

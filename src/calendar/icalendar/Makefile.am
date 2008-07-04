@@ -8,4 +8,4 @@ dist_calendar_DATA = 				\
 		tools.py	\
 		util.py		
 
-calendardir = $(libdir)/awn/applets/calendar/icalendar
+calendardir = $(datadir)/awn/applets/calendar/icalendar

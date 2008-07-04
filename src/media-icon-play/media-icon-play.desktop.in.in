@@ -1,11 +1,10 @@
 [Desktop Entry]
 Version=1.0
-Encoding=UTF-8
 Name=Media Icons Play
 Type=Application
 X-AWN-AppletType=Python
 Comment=A media-control applet (Play)
-Exec=@LIBDIR@/awn/applets/media-icon-play/mediaicon.py
-Icon=@LIBDIR@/awn/applets/media-icon-play/icons/play.svg
+Exec=media-icon-play/mediaicon.py
+Icon=media-icon-play/icons/play.svg
 Name[en_US]=Media Icons Play
 X-AWN-AppletCategory=AudioVideo,Audio,Player

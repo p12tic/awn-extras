@@ -1,9 +1,8 @@
 [Desktop Entry]
 Type=Application
 X-AWN-AppletType=Python
-Encoding=UTF-8
 Name=Weather Applet
 Comment=Display the local weather
-Exec=@LIBDIR@/awn/applets/weather/weather.py
+Exec=weather/weather.py
 Icon=weather-clear
 X-AWN-AppletCategory=Network,News

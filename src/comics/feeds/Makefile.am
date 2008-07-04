@@ -5,4 +5,4 @@ dist_comics_DATA =	\
 		pearls.feed	\
 		xkcd.feed	
 
-comicsdir = $(libdir)/awn/applets/comics/feeds
+comicsdir = $(datadir)/awn/applets/comics/feeds

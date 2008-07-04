@@ -1,7 +1,6 @@
 [Desktop Entry]
 Type=Application
 X-AWN-AppletType=C
-Encoding=UTF-8
 Name=Wobbly Zini
 Comment=A simple test animation
 Exec=@LIBDIR@/awn/applets/wobblyzini/wobblyzini.so

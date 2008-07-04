@@ -3,6 +3,6 @@ Type=Application
 X-AWN-AppletType=Python
 Name=Tomboy Applet
 Comment=Control Tomboy with D-Bus
-Exec=@LIBDIR@/awn/applets/tomboy-applet/tomboy-applet.py
+Exec=tomboy-applet/tomboy-applet.py
 Icon=tomboy
 X-AWN-AppletCategory=Notes

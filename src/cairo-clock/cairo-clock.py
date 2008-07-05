@@ -23,15 +23,15 @@ import pygtk
 pygtk.require("2.0")
 import cairo
 import gtk
-from gtk import glade
 from gtk import gdk
+from gtk import glade
 from awn.extras import AWNLib
 import rsvg
 
 # Interval in milliseconds between two successive draws of the clock
 draw_clock_interval = 1000
 
-applet_name = "Cairo Clock Applet"
+applet_name = "Cairo Clock"
 applet_version = "0.2.8"
 applet_description = "Applet that displays an analog clock using\n(optionally) MacSlow's Cairo-Clock's themes"
 
@@ -43,38 +43,6 @@ glade_file = os.path.join(os.path.dirname(__file__), "cairo-clock.glade")
 applet_logo = os.path.join(os.path.dirname(__file__), "cairo-clock-logo.png")
 
 
-class PreferencesDialog:
-    """ Shows the preferences window """
-    
-    def __init__(self, clock_applet):
-        self.clock_applet = clock_applet
-        
-        prefs = glade.XML(glade_file)
-        
-        # Register the dialog window
-        self.dialog = prefs.get_widget("dialog-window")
-        self.clock_applet.applet.dialog.register("dialog-settings", self.dialog, False)
-        
-        self.dialog.set_icon(gdk.pixbuf_new_from_file(applet_logo))
-        
-        self.clock_applet.setup_dialog_settings(prefs)
-        
-        # Connect some signals to be able to hide the window
-        prefs.get_widget("button-close").connect("clicked", self.button_close_clicked_cb)
-        self.dialog.connect("response", self.response_event)
-        self.dialog.connect("delete_event", self.delete_event)
-    
-    def button_close_clicked_cb(self, button):
-        self.clock_applet.applet.dialog.toggle("dialog-settings", "hide")
-    
-    def delete_event(self, widget, event):
-        return True
-    
-    def response_event(self, widget, response):
-        if response < 0:
-            self.clock_applet.applet.dialog.toggle("dialog-settings", "hide")
-
-
 class CairoClockApplet:
     """ Applet that display an analog clock """
     
@@ -83,27 +51,31 @@ class CairoClockApplet:
         
         self.clock = CairoClock(applet)
         
-        PreferencesDialog(self)
+        self.setup_context_menu()
         
         self.clock.draw_clock()
         
         applet.connect("enter-notify-event", self.enter_notify_cb)
         applet.connect("leave-notify-event", self.leave_notify_cb)
         
-        self.setup_context_menu()
-
         gobject.timeout_add(draw_clock_interval, self.clock.draw_clock_cb)
     
     def setup_context_menu(self):
-        """ Creates a context menu to activate "Preferences" or "About" window """
+        """ Creates a context menu to activate "Preferences" ("About" window
+        is created automatically by AWNLib) """
         
         prefs_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
         prefs_item.connect("activate", self.show_dialog_cb)
         
         self.applet.dialog.menu.insert(prefs_item, 2)
+        
+        prefs = glade.XML(glade_file)
+        prefs.get_widget("dialog-vbox").reparent(self.applet.dialog.new("preferences").vbox)
+        
+        self.setup_dialog_settings(prefs)
     
     def show_dialog_cb(self, widget):
-        self.applet.dialog.toggle("dialog-settings", "show")
+        self.applet.dialog.toggle("preferences", "show")
     
     def setup_dialog_settings(self, prefs):
         """ Loads the settings from gconf """

@@ -24,8 +24,8 @@ import time
 import pygtk
 pygtk.require("2.0")
 import gtk
-from gtk import glade
 from gtk import gdk
+from gtk import glade
 from awn.extras import AWNLib
 
 # To later import alsaaudio
@@ -34,7 +34,7 @@ alsaaudio = None
 # Interval in seconds between two successive reads of the current volume
 read_volume_interval = 0.5
 
-applet_name = "Volume Control Applet"
+applet_name = "Volume Control"
 applet_version = "0.2.8"
 applet_description = "Applet to control your computer's volume"
 
@@ -50,38 +50,6 @@ applet_logo = os.path.join(theme_dir, "Tango/scalable/status/audio-volume-high.s
 
 volume_ranges = {"high": (100, 66), "medium": (65, 36), "low": (35, 1)}
 volume_step = 4
-
-
-class PreferencesDialog:
-    """ Shows the preferences window """
-    
-    def __init__(self, volume_applet):
-        self.volume_applet = volume_applet
-        
-        prefs = glade.XML(glade_file)
-        
-        # Register the dialog window
-        self.dialog = prefs.get_widget("dialog-window")
-        self.volume_applet.applet.dialog.register("dialog-settings", self.dialog, False)
-        
-        self.dialog.set_icon(gdk.pixbuf_new_from_file(applet_logo))
-        
-        self.volume_applet.setup_dialog_settings(prefs)
-        
-        # Connect some signals to be able to hide the window
-        prefs.get_widget("button-close").connect("clicked", self.button_close_clicked_cb)
-        self.dialog.connect("response", self.response_event)
-        self.dialog.connect("delete_event", self.delete_event)
-    
-    def button_close_clicked_cb(self, button):
-        self.volume_applet.applet.dialog.toggle("dialog-settings", "hide")
-    
-    def delete_event(self, widget, event):
-        return True
-    
-    def response_event(self, widget, response):
-        if response < 0:
-            self.volume_applet.applet.dialog.toggle("dialog-settings", "hide")
 
 
 class VolumeControlApplet:
@@ -106,7 +74,6 @@ class VolumeControlApplet:
         
         self.setup_main_dialog()
         self.setup_context_menu()
-        PreferencesDialog(self)
         
         applet.connect("scroll-event", self.scroll_event_cb)
         applet.connect("height-changed", self.height_changed_cb)
@@ -175,7 +142,8 @@ class VolumeControlApplet:
             self.backend.set_volume(volume)
     
     def setup_context_menu(self):
-        """ Creates a context menu to activate "Preferences" or "About" window """
+        """ Creates a context menu to activate "Preferences" ("About" window
+        is created automatically by AWNLib) """
         
         menu = self.applet.dialog.menu
         
@@ -190,17 +158,22 @@ class VolumeControlApplet:
         menu.insert(gtk.SeparatorMenuItem(), 4)
         
         prefs_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
-        prefs_item.connect("activate", self.show_dialog_cb)
+        prefs_item.connect("activate", self.show_prefs_dialog_cb)
         menu.insert(prefs_item, 5)
+        
+        self.setup_dialog_settings()
     
     def show_volume_control_cb(self, widget):
         subprocess.Popen("gnome-volume-control")
     
-    def show_dialog_cb(self, widget):
-        self.applet.dialog.toggle("dialog-settings", "show")
+    def show_prefs_dialog_cb(self, widget):
+        self.applet.dialog.toggle("preferences", "show")
     
-    def setup_dialog_settings(self, prefs):
-        """ Loads the settings from gconf """
+    def setup_dialog_settings(self):
+        """ Loads the settings """
+        
+        prefs = glade.XML(glade_file)
+        prefs.get_widget("dialog-vbox").reparent(self.applet.dialog.new("preferences").vbox)
         
         self.load_theme_pref(prefs)
         self.load_channel_pref(prefs)

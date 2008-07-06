@@ -131,6 +131,9 @@ class Dialogs:
             dlog = lambda: None
         elif dialog == "about":
             dlog = self.AboutDialog(self.__parent)
+        elif dialog == "preferences":
+            dlog = self.PreferencesDialog(self.__parent)
+            focus = False
         else:
             dlog = awn.AppletDialog(self.__parent)
 
@@ -268,6 +271,41 @@ class Dialogs:
                 parent.connect("height-changed", self.update_icon)
 
             # Connect some signals to be able to hide the window
+            self.connect("response", self.response_event)
+            self.connect("delete_event", self.delete_event)
+
+        def delete_event(self, widget, event):
+            return True
+
+        def response_event(self, widget, response):
+            if response < 0:
+                self.hide()
+
+        def update_icon(self, widget=None, event=None):
+            """ Updates the applet's logo to be of the same height as the panel """
+
+            height = self.__parent.get_height()
+            self.set_icon(gtk.gdk.pixbuf_new_from_file_at_size(self.__parent.meta["logo"], height, height))
+
+    class PreferencesDialog(gtk.Dialog):
+        """ A Dialog window that has the title "<applet's name> Preferences",
+        uses the applet's logo as its icon and has a Close button """
+
+        def __init__(self, parent):
+            gtk.Dialog.__init__(self, flags=gtk.DIALOG_NO_SEPARATOR)
+
+            self.__parent = parent
+            
+            self.set_resizable(False)
+            self.set_border_width(5)
+
+            self.set_title(self.__parent.meta["name"] + " Preferences")
+            self.add_button(gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE)
+
+            if "logo" in self.__parent.meta:
+                self.update_icon()
+                parent.connect("height-changed", self.update_icon)
+
             self.connect("response", self.response_event)
             self.connect("delete_event", self.delete_event)
 

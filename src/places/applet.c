@@ -34,6 +34,7 @@
 #include <libawn/awn-cairo-utils.h>
 #include <libawn/awn-config-client.h>
 #include <libawn/awn-vfs.h>
+#include <libawn/awn-icons.h>
 
 #include <gtk/gtk.h>
 #ifndef LIBAWN_USE_XFCE
@@ -48,6 +49,9 @@
 #include <libgnomevfs/gnome-vfs.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
 #endif
+
+
+#define APPLET_NAME "places"
 
 #define CONFIG_KEY(key) key
 
@@ -107,7 +111,9 @@ typedef struct
   gchar    *desktop_dir;
 
   AwnConfigClient  *config;
-
+  
+  AwnIcons  *awn_icons;
+  gchar * uid;
 }Places;
 
 
@@ -1417,12 +1423,18 @@ static gboolean _focus_out_event(GtkWidget *widget, GdkEventButton *event, Place
   return TRUE;
 }
 
+void _icon_changed(AwnIcons * awn_icons, Places * places)
+{
+  printf("in _icon_changed\n");
+  awn_applet_simple_set_temp_icon(AWN_APPLET_SIMPLE(places->applet), awn_icons_get_icon_simple(places->awn_icons));  
+}
 
 static void _bloody_thing_has_style(GtkWidget *widget, Places *places)
 {
   GdkPixbuf *newicon;
   init_config(places);
 
+  /*
   newicon = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), places->applet_icon_name, places->applet_icon_height, 0, NULL);
 
   if (!newicon)
@@ -1442,7 +1454,13 @@ static void _bloody_thing_has_style(GtkWidget *widget, Places *places)
   }
 
   awn_applet_simple_set_temp_icon(AWN_APPLET_SIMPLE(places->applet), places->icon);
+*/  
+  awn_icons_set_icon_info(places->awn_icons,GTK_WIDGET(places->applet),APPLET_NAME,places->uid,
+                          places->applet_icon_height, places->applet_icon_name);
+  awn_icons_set_changed_cb(places->awn_icons,(AwnIconsChange)_icon_changed,places);
   
+  awn_applet_simple_set_temp_icon(AWN_APPLET_SIMPLE(places->applet), awn_icons_get_icon_simple(places->awn_icons));
+
   awn_applet_simple_set_title(AWN_APPLET_SIMPLE(places->applet),"Places");
 
   render_places(places);
@@ -1458,6 +1476,7 @@ AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient, gint height)
   Places * places = g_malloc(sizeof(Places));
   AwnApplet *applet = places->applet = AWN_APPLET(awn_applet_simple_new(uid, orient, height));
   gtk_widget_set_size_request(GTK_WIDGET(applet), height, -1);
+/*
   icon = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "stock_folder", height - 2, 0, NULL);
 
   if (!icon)
@@ -1465,17 +1484,20 @@ AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient, gint height)
     icon = gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8, height - 2, height - 2);
     gdk_pixbuf_fill(icon, 0x11881133);
   }
-
+*/
   places->applet_icon_height = height - 2;
 
-  places->icon = icon;
-  awn_applet_simple_set_temp_icon(AWN_APPLET_SIMPLE(applet), icon);
+//  places->icon = icon;
+//  awn_applet_simple_set_temp_icon(AWN_APPLET_SIMPLE(applet), icon);
   gtk_widget_show_all(GTK_WIDGET(applet));
   places->mainwindow = menu_new(places);
   gtk_window_set_focus_on_map(GTK_WINDOW(places->mainwindow), TRUE);
   places->vbox = gtk_vbox_new(FALSE, 0);
   gtk_container_add(GTK_CONTAINER(places->mainwindow), places->vbox);
   g_signal_connect_after(G_OBJECT(places->applet), "map", G_CALLBACK(_bloody_thing_has_style), places);
+  
+  places->uid = g_strdup(uid);
+  places->awn_icons = awn_icons_new();
   return applet;
 
 }

@@ -21,7 +21,7 @@
 
 import cairo
 from math import pi
-
+size = 0
 #Setup the colors - lists going from darkest to lightest
 #These are the Tango Desktop Project Color Palatte
 #(The last set of numbers is the color of the number, added by yours truly)
@@ -36,7 +36,9 @@ colors['scarletred'] = [[239,41,41],[204,0,0],[164,0,0],[255,255,255]]
 colors['aluminium1'] = [[238,238,236],[211,215,207],[186,189,182],[64,64,64]]
 colors['aluminium2'] = [[136,138,133],[85,87,83],[46,52,54],[255,255,255]]
 
-def icon(size,settings,color):
+def icon(size2,settings,color):
+  global size
+  size = size2
   surface = cairo.ImageSurface(cairo.FORMAT_ARGB32,size,size)
   cr = cairo.Context(surface)
   
@@ -76,7 +78,7 @@ def icon(size,settings,color):
   #Draw the outer circle
   cr.set_source_rgba(float(color[2][0])/255.0,float(color[2][1])/255.0,\
     float(color[2][2])/255.0,settings['icon-opacity']/100.0)
-  cr.arc(24.0,24.0,23,0,2*pi)
+  cr.arc(size/2.0,size/2.0,size/2.08,0,2*pi)
   cr.stroke()
   cr.close_path()
   
@@ -87,7 +89,7 @@ def icon(size,settings,color):
     #(Probably) medium background
     cr.set_source_rgba(float(color[1][0])/255.0,float(color[1][1])/255.0,\
       float(color[1][2])/255.0,settings['icon-opacity']/100.0)
-    cr.arc(24.0,24.0,22,0,2*pi)
+    cr.arc(size/2.0,size/2.0,size/2.18,0,2*pi)
     cr.stroke()
     cr.close_path()
     
@@ -96,23 +98,24 @@ def icon(size,settings,color):
       float(color[0][2])/255.0,settings['icon-opacity']/100.0)
     #Crazy maths here
     #http://en.wikipedia.org/wiki/Radians saved my life here :)
-    cr.arc(24.0,24.0,22,((3.0*pi)/2.0),((3.0*pi)/2.0)+2*pi*(progress/100.0))
+    cr.arc(size/2.0,size/2.0,size/2.18,((3.0*pi)/2.0), \
+      ((3.0*pi)/2.0)+2*pi*(progress/100.0))
     cr.stroke()
     cr.close_path()
   
   
-  #Draw the middle circle normalls
+  #Draw the middle circle normally
   else:
     cr.set_source_rgba(float(color[0][0])/255.0,float(color[0][1])/255.0,\
       float(color[0][2])/255.0,settings['icon-opacity']/100.0)
-    cr.arc(24.0,24.0,22,0,2*pi)
+    cr.arc(size/2.0,size/2.0,size/2.18,0,2*pi)
     cr.stroke()
     cr.close_path()
   
   #Draw the inside circle and fill it
   cr.set_source_rgba(float(color[1][0])/255.0,float(color[1][1])/255.0,\
     float(color[1][2])/255.0,settings['icon-opacity']/100.0)
-  cr.arc(24.0,24.0,21,0,2*pi)
+  cr.arc(size/2.0,size/2.0,size/2.235,0,2*pi)
   cr.clip()
   cr.paint()
   
@@ -122,34 +125,33 @@ def icon(size,settings,color):
     cairo.FONT_WEIGHT_BOLD)
   cr.set_source_rgba(float(color[3][0])/255.0,float(color[3][1])/255.0,\
     float(color[3][2])/255.0,settings['icon-opacity']/100.0)
-  
   #Actually draw the number
   #determine the size and position of the number based on its digits
-  #Note that the # of "digits" includes any % sign
-  
+  #Note that the number of "digits" includes any % sign
+
   #TODO: Isn't there a better way to do this???
   #1-digit number
   if len(number) == 1:
-    cr.move_to(13,38)
-    cr.set_font_size(38)
+    cr.move_to(diff(13), diff(38))
+    cr.set_font_size(diff(38))
     cr.show_text(number)
   
   #2-digit number
   elif len(number) == 2:
-    cr.move_to(8,33)
-    cr.set_font_size(26)
+    cr.move_to(diff(8), diff(33))
+    cr.set_font_size(diff(26))
     cr.show_text(number)
   
   #3+-digit number
   elif len(number) == 3:
-    cr.move_to(7,30)
-    cr.set_font_size(19)
+    cr.move_to(diff(7), diff(30))
+    cr.set_font_size(diff(19))
     cr.show_text(number)
   
   #100% or this user is crazy (>= 1000 items)
   else:
-    cr.move_to(6,29)
-    cr.set_font_size(15)
+    cr.move_to(diff(6), diff(29))
+    cr.set_font_size(diff(15))
     cr.show_text(number)
   
   #Finish the drawing
@@ -159,3 +161,10 @@ def icon(size,settings,color):
   
   del cr
   return surface
+
+def diff(num):
+  global size
+  
+  ans = num * (size / 48.0)
+  
+  return ans

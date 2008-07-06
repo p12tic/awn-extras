@@ -856,41 +856,46 @@ class App(awn.AppletSimple):
     if self.last_num_items!=len(self.settings['items']) or\
       self.settings['icon-type'] in ['progress','progress-items']:
       
+      #Get the number of items, excluding categories
+      tmp_items = []
+      for item in self.settings['items']:
+        if item != '':
+          tmp_items.append(item)
+        
       #Change the detached icon first
       try:
-        assert len(self.settings['items']) == 0
+        assert len(tmp_items) == 0
         self.detach['icon-mode'] = 'pixbuf'
         self.detach.set_pixbuf(self.icon_theme.load_icon(\
           'view-sort-descending',self.height,self.height))
       except:
         self.detach['icon-mode'] = 'surface'
-        self.detach.set_surface(icon.icon(self.height,self.settings,\
-          self.color))
+        self.detach.set_surface(icon.icon(48, self.settings, self.color))
       
       #Change the attached applet icon second
       if self.detached == False:
         self.show_all()
       
-      try:
-        assert len(self.settings['items']) == 0
-        self.set_icon(self.icon_theme.load_icon(\
-          'view-sort-descending',self.height,self.height))
-      except:
-        
-        #If Awn supports setting the icon as a cairo context
-        if hasattr(self, 'set_icon_context'):
-          surface = icon.icon(self.height, self.settings, self.color)
-          self.context = cairo.Context(surface)
-          self.set_icon_context(self.context)
-        
-        #It doesn't; use surface->pixbuf via detach
-        else:
-          surface = icon.icon(self.height, self.settings, self.color)
-          if self.pixbuf is None:
-            self.pixbuf = self.detach.surface_to_pixbuf(surface)
+        try:
+          assert len(tmp_items) == 0
+          self.set_icon(self.icon_theme.load_icon(\
+            'view-sort-descending',self.height,self.height))
+        except:
+          
+          #If Awn supports setting the icon as a cairo context
+          if hasattr(self, 'set_icon_context'):
+            surface = icon.icon(self.height, self.settings, self.color)
+            self.context = cairo.Context(surface)
+            self.set_icon_context(self.context)
+          
+          #It doesn't; use surface->pixbuf via detach
           else:
-            self.detach.surface_to_pixbuf(surface, self.pixbuf)
-          self.set_icon(self.pixbuf)
+            surface = icon.icon(self.height, self.settings, self.color)
+            if self.pixbuf is None:
+              self.pixbuf = self.detach.surface_to_pixbuf(surface)
+            else:
+              self.detach.surface_to_pixbuf(surface, self.pixbuf)
+            self.set_icon(self.pixbuf)
       
       self.last_num_items = len(self.settings['items'])
   
@@ -1185,14 +1190,27 @@ class App(awn.AppletSimple):
         tmp_list_details.append(x)
       y+=1
     
+    #Please, for your own sake, do not write code like this next section.
     y = 0
     #print 'list of items: ' + str(list_of_items)
     for cat in self.settings['category']:
       if y not in list_of_items:
         #print '%s not in list_of_items:' % y
         if y > list_of_items[-1] and cat != -1:
-          #print 'y > last item (%s) and cat != -1; cat == %s, ' % (list_of_items[-1], y)
-          tmp_list_category.append(cat-1)
+          #print 'y > last item (%s) and cat != -1; y == %s, ' % \
+          #  (list_of_items[-1], y)
+          if len(list_of_items) == 1:
+            #Check if the iterated item is in a different category
+            if cat != self.settings['category'][list_of_items[0]]:
+              #It is; just append normally
+              #print 'In same category'
+              tmp_list_category.append(cat)
+            else:
+              #print 'In different category'
+              tmp_list_category.append(cat-1)
+          else:
+            #print 'deleting a category'
+            tmp_list_category.append(cat-1)
         else:
           #print 'normal append to category list'
           tmp_list_category.append(cat)

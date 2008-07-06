@@ -51,6 +51,7 @@ class CairoClockApplet:
         
         self.clock = CairoClock(applet)
         
+        self.setup_main_dialog()
         self.setup_context_menu()
         
         self.clock.draw_clock()
@@ -59,6 +60,26 @@ class CairoClockApplet:
         applet.connect("leave-notify-event", self.leave_notify_cb)
         
         gobject.timeout_add(draw_clock_interval, self.clock.draw_clock_cb)
+    
+    def setup_main_dialog(self):
+        dialog = self.applet.dialog.new("calendar-dialog")
+        
+        calendar = gtk.Calendar()
+        calendar.props.show_week_numbers = True
+        
+        dialog.add(calendar)
+        
+        self.dialog_focus_lost_time = time.time()
+        self.applet.connect("button-press-event", self.button_press_event_cb)
+        dialog.connect("focus-out-event", self.dialog_focus_out_cb)
+    
+    def button_press_event_cb(self, widget, event):
+        if event.button == 1 and (time.time() - self.dialog_focus_lost_time) > 0.01:
+            self.applet.dialog.toggle("calendar-dialog")
+            self.clock.title_is_visible = False
+    
+    def dialog_focus_out_cb(self, dialog, event):
+        self.dialog_focus_lost_time = time.time()
     
     def setup_context_menu(self):
         """ Creates a context menu to activate "Preferences" ("About" window

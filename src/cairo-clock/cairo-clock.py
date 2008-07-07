@@ -49,15 +49,15 @@ class CairoClockApplet:
     def __init__(self, applet):
         self.applet = applet
         
-        self.clock = CairoClock(applet)
+        self.clock = ClockUpdater(applet)
         
         self.setup_main_dialog()
         self.setup_context_menu()
         
-        self.clock.draw_clock()
+        self.clock.draw_clock_cb()
         
-        applet.connect("enter-notify-event", self.enter_notify_cb)
-        applet.connect("leave-notify-event", self.leave_notify_cb)
+        applet.connect("enter-notify-event", lambda w, e: self.clock.enable_title(True))
+        applet.connect("leave-notify-event", lambda w, e: self.clock.enable_title(False))
         
         gobject.timeout_add(draw_clock_interval, self.clock.draw_clock_cb)
     
@@ -99,46 +99,49 @@ class CairoClockApplet:
         self.applet.dialog.toggle("preferences", "show")
     
     def setup_dialog_settings(self, prefs):
-        """ Loads the settings from gconf """
+        """ Loads the settings """
+        
+        default_values = {
+            "time-24-format": self.clock.time_24_format,
+            "time-date": self.clock.time_date,
+            "time-seconds": self.clock.time_seconds,
+            "show-second-hand": self.clock.show_second_hand,
+            "theme": "tango"
+        }
+        self.applet.settings.load(default_values)
         
         # Time format
-        if "time-24-format" not in self.applet.settings:
-            self.applet.settings["time-24-format"] = self.clock.time_24_format
         self.clock.time_24_format = self.applet.settings["time-24-format"]
         
         radio_24_format = prefs.get_widget("radio-24-format")
         radio_24_format.set_active(self.clock.time_24_format)
+        radio_24_format.connect("toggled", self.radiobutton_24_format_toggled_cb)
         
         # Showing date in title
-        if "time-date" not in self.applet.settings:
-            self.applet.settings["time-date"] = self.clock.time_date
         self.clock.time_date = self.applet.settings["time-date"]
         
         check_title_date = prefs.get_widget("check-time-date")
         check_title_date.set_active(self.clock.time_date)
+        check_title_date.connect("toggled", self.checkbox_title_date_toggled_cb)
         
         # Showing seconds in title
-        if "time-seconds" not in self.applet.settings:
-            self.applet.settings["time-seconds"] = self.clock.time_seconds
         self.clock.time_seconds = self.applet.settings["time-seconds"]
         
         check_title_seconds = prefs.get_widget("check-time-seconds")
         check_title_seconds.set_active(self.clock.time_seconds)
+        check_title_seconds.connect("toggled", self.checkbox_title_seconds_toggled_cb)
         
         # Showing the seconds hand in the applet's icon
-        if "show-second-hand" not in self.applet.settings:
-            self.applet.settings["show-second-hand"] = self.clock.show_second_hand
         self.clock.show_second_hand = self.applet.settings["show-second-hand"]
         
         checkbox_second_hand = prefs.get_widget("check-second-hand")
         checkbox_second_hand.set_active(self.clock.show_second_hand)
+        checkbox_second_hand.connect("toggled", self.second_hand_toggled_cb)
         
         # Combobox in preferences window to choose a theme
         vbox_theme = prefs.get_widget("vbox-theme")
         
         if os.path.isdir(theme_dir):
-            if "theme" not in self.applet.settings:
-                self.applet.settings["theme"] = "tango"
             theme = self.applet.settings["theme"]
             
             self.themes = os.listdir(theme_dir)
@@ -162,12 +165,6 @@ class CairoClockApplet:
             current_theme = default_theme
         
         self.clock.load_theme(current_theme)
-        
-        
-        radio_24_format.connect("toggled", self.radiobutton_24_format_toggled_cb)
-        check_title_date.connect("toggled", self.checkbox_title_date_toggled_cb)
-        check_title_seconds.connect("toggled", self.checkbox_title_seconds_toggled_cb)
-        checkbox_second_hand.connect("toggled", self.second_hand_toggled_cb)
     
     def combobox_theme_changed_cb(self, button):
         self.applet.settings["theme"] = theme = self.themes[button.get_active()]
@@ -191,26 +188,17 @@ class CairoClockApplet:
         # Update clock immediately
         self.clock.draw_clock_cb()
     
-    def enter_notify_cb(self, widget, event):
-        self.clock.enable_title(True)
-    
-    def leave_notify_cb(self, widget, event):
-        self.clock.enable_title(False)
 
-
-class CairoClock:
-    """ Renders a clock using SVG files as the applet icon """
+class ClockUpdater:
+    """ Redraws the clock and sets the title (when visible) every second  """
     
     def __init__(self, applet):
         self.applet = applet
         
         self.title_is_visible = False
-        self.pixbuf = None
-        
-        self.panel_height = self.applet.get_height()
         
         """ Values of the properties below will be used to initialize 
-        the corresponding gconf settings """
+        the corresponding settings """
         
         # True if the time in the title must display 24 hours, False if AM/PM
         self.time_24_format = True
@@ -220,6 +208,8 @@ class CairoClock:
         
         # True if the clock must display a second hand, False otherwise
         self.show_second_hand = True
+        
+        self.clock = AnalogClock(self)
     
     def update_title(self):
         """ Updates the title according to the settings """
@@ -258,13 +248,26 @@ class CairoClock:
     def draw_clock_cb(self):
         """ Draws the clock and updates the title if the title is visible """
         
-        self.draw_clock()
+        self.clock.draw_clock()
         
         # Update the title to keep it synchronized with the drawn clock
         if self.title_is_visible:
             self.update_title()
         
         return True
+    
+    def load_theme(self, theme):
+        self.clock.load_theme(theme)
+
+class AnalogClock:
+    """ Renders an analog clock using SVG files as the applet icon """
+    
+    def __init__(self, clock_manager):
+        self.applet = clock_manager.applet
+        self.clock_manager = clock_manager
+        
+        self.pixbuf = None
+        self.panel_height = self.applet.get_height()
     
     def load_theme(self, theme):
         """ Loads the necessary SVG files of the specified theme """
@@ -287,50 +290,52 @@ class CairoClock:
         local_time = time.localtime()
         hours, minutes, seconds = (local_time[3], local_time[4], local_time[5])
         
-        surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.applet.get_height(), self.applet.get_height())
-        ctx = cairo.Context(surface)
+        height = self.applet.get_height()
+        
+        surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, height, height)
+        context = cairo.Context(surface)
         
         # Clear the pixbuf when the height changes (a new one will be created)
-        if self.applet.get_height() != self.panel_height:
-            self.panel_height = self.applet.get_height()
+        if height != self.panel_height:
+            self.panel_height = height
             self.pixbuf = None
         
         scale = self.applet.get_height() / 100.0
-        ctx.scale(scale, scale)
+        context.scale(scale, scale)
         
         # Draw the clock itself
-        self.clock_drop_shadow.render_cairo(ctx)
-        self.clock_face.render_cairo(ctx)
-        self.clock_marks.render_cairo(ctx)
-        self.clock_frame.render_cairo(ctx)
+        self.clock_drop_shadow.render_cairo(context)
+        self.clock_face.render_cairo(context)
+        self.clock_marks.render_cairo(context)
+        self.clock_frame.render_cairo(context)
         
-        ctx.translate(50, 50)
+        context.translate(50, 50)
         
         # Draw the hour hand
-        ctx.save()
-        ctx.rotate((360/12) * (hours+9+(minutes/60.0)) * (math.pi/180))
-        self.clock_hour_hand.render_cairo(ctx)
-        ctx.restore()
+        context.save()
+        context.rotate((360/12) * (hours+9+(minutes/60.0)) * (math.pi/180))
+        self.clock_hour_hand.render_cairo(context)
+        context.restore()
         
         # Draw the minute hand
-        ctx.save()
-        ctx.rotate((360/60) * (minutes+45) * (math.pi/180))
-        self.clock_minute_hand.render_cairo(ctx)
-        ctx.restore()
+        context.save()
+        context.rotate((360/60) * (minutes+45) * (math.pi/180))
+        self.clock_minute_hand.render_cairo(context)
+        context.restore()
         
         # Draw the second hand if configured to do so
-        if self.show_second_hand:
-            ctx.save()
-            ctx.rotate((360/60) * (seconds+45) * (math.pi/180))
-            self.clock_second_hand.render_cairo(ctx)
-            ctx.restore()
+        if self.clock_manager.show_second_hand:
+            context.save()
+            context.rotate((360/60) * (seconds+45) * (math.pi/180))
+            self.clock_second_hand.render_cairo(context)
+            context.restore()
         
         self.pixbuf = self.applet.icon.surface(surface, self.pixbuf, False)
         self.applet.icon.set(self.pixbuf, True)
         
         """ Sometimes the Cairo context and surface are wearing
         stealth suits and The Garbage Collector can't see them """
-        del ctx
+        del context
         del surface
 
 

@@ -1423,44 +1423,24 @@ static gboolean _focus_out_event(GtkWidget *widget, GdkEventButton *event, Place
   return TRUE;
 }
 
-void _icon_changed(AwnIcons * awn_icons, Places * places)
-{
-  printf("in _icon_changed\n");
-  awn_applet_simple_set_temp_icon(AWN_APPLET_SIMPLE(places->applet), awn_icons_get_icon_simple(places->awn_icons));  
-}
-
 static void _bloody_thing_has_style(GtkWidget *widget, Places *places)
 {
   GdkPixbuf *newicon;
   init_config(places);
 
-  /*
-  newicon = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), places->applet_icon_name, places->applet_icon_height, 0, NULL);
-
-  if (!newicon)
-    newicon = gdk_pixbuf_new_from_file_at_size(g_filename_from_utf8(places->applet_icon_name, -1, NULL, NULL, NULL),
-              places->applet_icon_height, places->applet_icon_height, NULL);
-
-  if (newicon)
-  {
-    places->icon = newicon;
-  }
-
-  if (gdk_pixbuf_get_height(places->icon) != places->applet_icon_height)
-  {
-    GdkPixbuf *oldpbuf = places->icon;
-    places->icon = gdk_pixbuf_scale_simple(oldpbuf, places->applet_icon_height, places->applet_icon_height, GDK_INTERP_HYPER);
-    g_object_unref(oldpbuf);
-  }
-
-  awn_applet_simple_set_temp_icon(AWN_APPLET_SIMPLE(places->applet), places->icon);
-*/  
+/* The Hard way to use awn-icons   See the init also
   awn_icons_set_icon_info(places->awn_icons,GTK_WIDGET(places->applet),APPLET_NAME,places->uid,
                           places->applet_icon_height, places->applet_icon_name);
   awn_icons_set_changed_cb(places->awn_icons,(AwnIconsChange)_icon_changed,places);
   
   awn_applet_simple_set_temp_icon(AWN_APPLET_SIMPLE(places->applet), awn_icons_get_icon_simple(places->awn_icons));
-
+*/   
+  
+  //The EASY way to use awn icons.
+  awn_applet_simple_set_awn_icon(places->applet,
+                                    APPLET_NAME,
+                                    places->uid,
+                                    places->applet_icon_name)  ;
   awn_applet_simple_set_title(AWN_APPLET_SIMPLE(places->applet),"Places");
 
   render_places(places);
@@ -1476,19 +1456,10 @@ AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient, gint height)
   Places * places = g_malloc(sizeof(Places));
   AwnApplet *applet = places->applet = AWN_APPLET(awn_applet_simple_new(uid, orient, height));
   gtk_widget_set_size_request(GTK_WIDGET(applet), height, -1);
-/*
-  icon = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "stock_folder", height - 2, 0, NULL);
 
-  if (!icon)
-  {
-    icon = gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8, height - 2, height - 2);
-    gdk_pixbuf_fill(icon, 0x11881133);
-  }
-*/
   places->applet_icon_height = height - 2;
 
-//  places->icon = icon;
-//  awn_applet_simple_set_temp_icon(AWN_APPLET_SIMPLE(applet), icon);
+
   gtk_widget_show_all(GTK_WIDGET(applet));
   places->mainwindow = menu_new(places);
   gtk_window_set_focus_on_map(GTK_WINDOW(places->mainwindow), TRUE);
@@ -1497,7 +1468,9 @@ AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient, gint height)
   g_signal_connect_after(G_OBJECT(places->applet), "map", G_CALLBACK(_bloody_thing_has_style), places);
   
   places->uid = g_strdup(uid);
-  places->awn_icons = awn_icons_new();
+/* The Hard way to use awn-icons
+   places->awn_icons = awn_icons_new();
+   */
   return applet;
 
 }

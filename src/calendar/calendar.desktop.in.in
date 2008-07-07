@@ -1,9 +1,8 @@
 [Desktop Entry]
 Type=Application
 X-AWN-AppletType=Python
-Encoding=UTF-8
 Name=Clock/Calendar Applet
 Comment=Watch appointments on your dock
-Exec=@LIBDIR@/awn/applets/calendar/clockcal.py
-Icon=@LIBDIR@/awn/applets/calendar/images/icon.png
+Exec=calendar/clockcal.py
+Icon=calendar/images/icon.png
 X-AWN-AppletCategory=Office,Calendar

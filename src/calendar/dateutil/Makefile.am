@@ -9,4 +9,4 @@ dist_calendar_DATA = 				\
 		tz.py	\
 		tzwin.py
 
-calendardir = $(libdir)/awn/applets/calendar/dateutil
+calendardir = $(datadir)/awn/applets/calendar/dateutil

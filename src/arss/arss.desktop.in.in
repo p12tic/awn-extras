@@ -1,11 +1,10 @@
 [Desktop Entry]
 Version=1.0
-Encoding=UTF-8
 Name=aRSS
 Type=Application
 X-AWN-AppletType=Python
 Comment=Watch your feeds
-Exec=@LIBDIR@/awn/applets/arss/arss.py
-Icon=@LIBDIR@/awn/applets/arss/Icons/feed-icon.svg
+Exec=arss/arss.py
+Icon=arss/Icons/feed-icon.svg
 Name[en_US]=aRSS
 X-AWN-AppletCategory=Network,News

@@ -1,7 +1,6 @@
 [Desktop Entry]
 Type=Application
 X-AWN-AppletType=C
-Encoding=UTF-8
 Name=Clock
 Comment=A clock.
 Exec=@LIBDIR@/awn/applets/clock/clock.so

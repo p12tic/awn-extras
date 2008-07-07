@@ -5,4 +5,4 @@ dist_digg_DATA = 				\
 		_CACHE_003_	\
 		_CACHE_MAP_
 
-diggdir = $(libdir)/awn/applets/digg/profile/Cache
+diggdir = $(datadir)/awn/applets/digg/profile/Cache

@@ -1,11 +1,10 @@
 [Desktop Entry]
 Version=1.0
-Encoding=UTF-8
 Name=Mount Applet
 Type=Application
 X-AWN-AppletType=Python
 Comment=An applet to (u)mount devices from /etc/fstab
-Exec=@LIBDIR@/awn/applets/mount-applet/mount-applet.py
-Icon=@LIBDIR@/awn/applets/mount-applet/icons/mount-applet.png
+Exec=mount-applet/mount-applet.py
+Icon=mount-applet/icons/mount-applet.png
 Name[en_US]=Mount Applet
 X-AWN-AppletCategory=System,Filesystem

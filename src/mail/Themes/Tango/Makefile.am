@@ -5,4 +5,4 @@ read.svg  	\
 unread.svg
 
 
-gmaildir = $(libdir)/awn/applets/mail/Themes/Tango
+gmaildir = $(datadir)/awn/applets/mail/Themes/Tango

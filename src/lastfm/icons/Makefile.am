@@ -17,5 +17,5 @@ dist_lastfm_DATA = 			\
 		red.ico			\
 		white.ico		
 
-lastfmdir = $(libdir)/awn/applets/lastfm/icons
+lastfmdir = $(datadir)/awn/applets/lastfm/icons
 

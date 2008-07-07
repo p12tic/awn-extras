@@ -1,9 +1,8 @@
 [Desktop Entry]
 Type=Application
 X-AWN-AppletType=Python
-Encoding=UTF-8
 Name=Digital Clock Applet
 Comment=A clock and calendar in one.
-Exec=@LIBDIR@/awn/applets/digitalClock/digitalClock.py
+Exec=digitalClock/digitalClock.py
 Icon=gnome-panel-clock
 X-AWN-AppletCategory=Utility,Clock

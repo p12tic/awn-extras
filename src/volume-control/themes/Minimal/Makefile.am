@@ -15,4 +15,4 @@ dist_volumecontrol_DATA = 				\
 		audio-volume-93.svg 	\
 		audio-volume-100.svg
 
-volumecontroldir = $(libdir)/awn/applets/volume-control/themes/Minimal
+volumecontroldir = $(datadir)/awn/applets/volume-control/themes/Minimal

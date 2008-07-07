@@ -4,4 +4,4 @@ dist_arss_DATA =	\
 	feed-icon-read.png \
 	feed-icon.svg \
 	feed-icon-unread.png
-arssdir = $(libdir)/awn/applets/arss/Icons
+arssdir = $(datadir)/awn/applets/arss/Icons

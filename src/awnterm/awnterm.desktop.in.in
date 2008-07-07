@@ -1,7 +1,6 @@
 [Desktop Entry]
 Type=Application
 X-AWN-AppletType=C
-Encoding=UTF-8
 Name=Awn Terminal Applet
 Comment=A simple popup terminal
 Exec=@LIBDIR@/awn/applets/awnterm/awnterm.so

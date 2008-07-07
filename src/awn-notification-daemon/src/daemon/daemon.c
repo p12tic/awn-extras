@@ -1270,6 +1270,7 @@ gboolean send_message(gchar *body)
 
 gboolean hide_icon(gpointer data)
 {
+#if 0
   gtk_widget_set_size_request(GTK_WIDGET(G_daemon_config.awn_app), 1, 1);
   g_object_unref(G_daemon_config.awn_icon);
 
@@ -1277,6 +1278,7 @@ gboolean hide_icon(gpointer data)
   gdk_pixbuf_fill(G_daemon_config.awn_icon, 0x00000000);
   awn_applet_simple_set_temp_icon(AWN_APPLET_SIMPLE(G_daemon_config.awn_app), G_daemon_config.awn_icon);
   G_daemon_config.awn_icon = NULL;
+#endif
   return FALSE;
 }
 
@@ -1599,14 +1601,16 @@ static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, 
   {
     if (G_daemon_config.show_status)
     {
-      gdk_pixbuf_fill(G_daemon_config.awn_icon, 0xdddddd33);
+//      gdk_pixbuf_fill(G_daemon_config.awn_icon, 0xdddddd33);
+      awn_applet_simple_set_awn_icon_state(AWN_APPLET_SIMPLE(G_daemon_config.awn_app),"On");
     }
     else
     {
-      gdk_pixbuf_fill(G_daemon_config.awn_icon, 0x00000033);
+//      gdk_pixbuf_fill(G_daemon_config.awn_icon, 0x00000033);
+      awn_applet_simple_set_awn_icon_state(AWN_APPLET_SIMPLE(G_daemon_config.awn_app),"Off");      
     }
 
-    awn_applet_simple_set_icon(AWN_APPLET_SIMPLE(G_daemon_config.awn_app), G_daemon_config.awn_icon);
+//    awn_applet_simple_set_icon(AWN_APPLET_SIMPLE(G_daemon_config.awn_app), G_daemon_config.awn_icon);
   }
   else if (event->button == 3)
   {
@@ -1645,11 +1649,20 @@ AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient, gint height)
   g_signal_connect(G_OBJECT(applet), "height-changed", G_CALLBACK(_height_changed), (gpointer)applet);
   gtk_widget_set_size_request(GTK_WIDGET(applet), height, height);
 
+#if 0
   G_daemon_config.awn_icon = gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8, height, height);
   gdk_pixbuf_fill(G_daemon_config.awn_icon, 0xdddddd33);
   awn_applet_simple_set_icon(AWN_APPLET_SIMPLE(applet), G_daemon_config.awn_icon);
+#endif
 
-
+  gchar * states[]={"On","Off",NULL};
+  gchar * icon_names[]={"stock_up","stock_down",NULL};
+  awn_applet_simple_set_awn_icons(AWN_APPLET_SIMPLE(applet),
+                                    "Awn Notification Daemon",
+                                    uid,
+                                    states,
+                                    icon_names
+                                    );
   gtk_widget_show_all(GTK_WIDGET(applet));
 
 

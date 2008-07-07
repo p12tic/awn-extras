@@ -5,6 +5,6 @@ Type=Application
 X-AWN-AppletType=C
 Comment=Browse the filesystem
 Exec=@LIBDIR@/awn/applets/filebrowser/filebrowser.so
-Icon=@LIBDIR@/awn/applets/filebrowser/icons/filebrowser.svg
+Icon=@ICONDIR@/filebrowser.svg
 Name[en_US]=File Browser
 X-AWN-AppletCategory=System,FileManager

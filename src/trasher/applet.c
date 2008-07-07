@@ -35,6 +35,7 @@
 
 #define STACKS_APPLET PREFIX "/lib/awn/applets/stacks.desktop"
 #define STACKS_APPLET_LOCAL "/usr/local/lib/awn/applets/stacks.desktop"
+#define STACKS_APPLET_SHARE "/usr/share/awn/applets/stacks.desktop"
 
 typedef struct {
   AwnApplet *applet;
@@ -121,10 +122,12 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
     desktop_path = STACKS_APPLET;
   }else if(gnome_vfs_uri_exists(gnome_vfs_uri_new(STACKS_APPLET_LOCAL))){
     desktop_path = STACKS_APPLET_LOCAL;
+  }else if(gnome_vfs_uri_exists(gnome_vfs_uri_new(STACKS_APPLET_SHARE))){
+    desktop_path = STACKS_APPLET_SHARE;
   }else{
     g_print("!! Stacks Trasher Error: dependency on Stacks Applet not met:\n \
              !! Could not find stacks.desktop file at:\n \
-             !! %s or %s\n", STACKS_APPLET, STACKS_APPLET_LOCAL);
+             !! %s or %s\n", STACKS_APPLET, STACKS_APPLET_LOCAL, STACKS_APPLET_SHARE);
   }
 
   // Create a box that will hold the stacks applets

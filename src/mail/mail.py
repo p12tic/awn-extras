@@ -113,7 +113,6 @@ class MailApplet:
         # Interface with AWN
         self.awn = awn
 
-        self.awn.settings.require() # Settings like mail backend and login
         self.awn.keyring.require() # Secure login remembering
         self.awn.notify.require() # "You have # new messages"
 

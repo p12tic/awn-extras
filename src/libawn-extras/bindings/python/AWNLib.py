@@ -112,7 +112,7 @@ class Dialogs:
 
     def new(self, dialog, title=None, focus=True):
         """
-        Create a new AWN dialog
+        Create a new AWN dialog.
 
         @param dialog: The name to register the dialog under.
         @type dialog: C{string}
@@ -146,7 +146,7 @@ class Dialogs:
 
     def register(self, dialog, dlog, focus=True):
         """
-        Register a dialog to be used by AWNLib. Will also 
+        Register a dialog to be used by AWNLib. 
 
         @param dialog: The name to use for the dialog. The predefined values
                        are main, secondary, menu, and program.
@@ -206,14 +206,13 @@ class Dialogs:
                 self.__current = None
             else:
                 if self.__current: 
-                    if not self.__current.is_active():
-                        self.__current.hide()
-                        self.__current.show_all()
-                    else:
-                        self.__current.hide()
-                        if once:
-                            self.__current = None
-                            return
+                    current_was_active = self.__current.is_active()
+
+                    self.__current.hide()
+
+                    if current_was_active and once:
+                        self.__current = None
+                        return
 
                 self.__register[dialog].show_all()
                 self.__current = self.__register[dialog]
@@ -777,7 +776,7 @@ class Networking:
         @param parent: The parent applet of the settings instance.
         @type parent: L{Applet}
         """
-        
+
         self.__parent = parent
 
     def __get_thread(self, url, callback):
@@ -786,13 +785,13 @@ class Networking:
     def get(self, url, callback):
         """
         Get the contents of the page located on the internet.
-        
+
         @param url: The URL of the page to get
         @type url: C{string}
         @param callback: The function to call after the page is retrieved. The file-like object will be passed as the first argument
         @type callback: C{function}
         """
-        
+
         gobject.idle_add(self.__get_thread(url, callback))
 
 
@@ -815,11 +814,24 @@ class Settings:
 
         self.client = self.AWNConfigUser(folder)
 
-    def require(self, folder=None):
+    def load(self, dict, push_defaults=True):
         """
-        Dummy function. No longer required
+        Synchronize the values from the given dictionary with the stored
+        settings, replacing values in the given dictionary if they have been
+        overridden.
+
+        @param dict: Default values for the dictionary.
+        @type parent: L{dict}
+        @param push_defaults: Whether to store non-overridden defaults in
+        the settings backend. True by default.
+        @type parent: L{bool}
         """
-        pass
+
+        for key in dict:
+            if key in self:
+                dict[key] = self[key]
+            elif push_defaults:
+                self[key] = dict[key]
 
     def cd(self, folder=None):
         """
@@ -1363,7 +1375,7 @@ class Meta:
 
     def update(self, info):
         """
-        Updates the meta instance with new information
+        Updates the meta instance with new information.
 
         @param info: Default values for the meta dictionary
         @type info: C{dict}
@@ -1373,7 +1385,7 @@ class Meta:
 
     def __getitem__(self, key):
         """
-        Get a key from the dictionary
+        Get a key from the dictionary.
 
         @param key: The key
         @type key: C{string}
@@ -1383,7 +1395,7 @@ class Meta:
 
     def __setitem__(self, key, value):
         """
-        Set a key in the dictionary
+        Set a key in the dictionary.
 
         @param key: The key
         @type key: C{string}
@@ -1394,7 +1406,7 @@ class Meta:
 
     def __delitem__(self, key):
         """
-        Delete a key from the dictionary
+        Delete a key from the dictionary.
 
         @param key: The key
         @type key: C{string}
@@ -1404,14 +1416,14 @@ class Meta:
 
     def keys(self):
         """
-        Returns a list of keys from the dictionary
+        Returns a list of keys from the dictionary.
         """
 
         return self.__info.keys()
 
     def __contains__(self, key):
         """
-        Returns True if the dictionary contains the key, False otherwise
+        Returns True if the dictionary contains the key, False otherwise.
 
         @param key: The key
         @type key: C{string}

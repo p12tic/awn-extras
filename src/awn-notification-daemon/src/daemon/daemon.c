@@ -1270,15 +1270,17 @@ gboolean send_message(gchar *body)
 
 gboolean hide_icon(gpointer data)
 {
-#if 0
-  gtk_widget_set_size_request(GTK_WIDGET(G_daemon_config.awn_app), 1, 1);
-  g_object_unref(G_daemon_config.awn_icon);
+
+  gtk_widget_set_size_request(GTK_WIDGET(G_daemon_config.awn_app), 0, 0);
+//  gtk_widget_hide(GTK_WIDGET(G_daemon_config.awn_app));
+//  g_object_unref(G_daemon_config.awn_icon);
 
   G_daemon_config.awn_icon = gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8, 1, 1);
   gdk_pixbuf_fill(G_daemon_config.awn_icon, 0x00000000);
   awn_applet_simple_set_temp_icon(AWN_APPLET_SIMPLE(G_daemon_config.awn_app), G_daemon_config.awn_icon);
+//  g_object_unref(G_daemon_config.awn_icon);  
   G_daemon_config.awn_icon = NULL;
-#endif
+
   return FALSE;
 }
 

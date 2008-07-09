@@ -189,6 +189,7 @@ class App(awn.AppletSimple):
       lambda *a: self.title.show(self,self.settings['title']))
     self.connect('leave-notify-event',\
       lambda *a: self.title.hide(self))
+    self.connect('height-changed', self.height_changed)
     self.dialog.connect('focus-out-event',self.hide_dialog)
     self.settings.connect('items',self.update_icon,'settings')
     self.settings.connect('progress',self.update_icon,'settings')
@@ -207,6 +208,12 @@ class App(awn.AppletSimple):
       self.detach.add(self.dialog_widget)
     else:
       self.dialog.add(self.dialog_widget)
+  
+  #The height of Awn has changed
+  def height_changed(self, applet, new_height):
+    self.height = new_height
+    self.last_num_items = -1
+    self.update_icon()
   
   #Display a right-click context menu
   def show_menu(self,event):

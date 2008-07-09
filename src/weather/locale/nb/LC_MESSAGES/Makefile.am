@@ -1,5 +1,5 @@
 dist_weather_DATA =                            \
 	awn-weather-applet.mo
 
-weatherdir = $(datadir)/awn/applets/weather/locale/nb/LC_MESSAGES
+weatherdir = $(datadir)/avant-window-navigator/applets/weather/locale/nb/LC_MESSAGES
 

@@ -10,4 +10,4 @@ dist_calendar_DATA = 				\
 		service.py	\
 		test_data.py	
 
-calendardir = $(datadir)/awn/applets/calendar/google/gdata
+calendardir = $(datadir)/avant-window-navigator/applets/calendar/google/gdata

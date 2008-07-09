@@ -4,4 +4,4 @@ login.svg  	\
 read.svg  	\
 unread.svg
 
-gmaildir = $(datadir)/awn/applets/mail/Themes/Reserved
+gmaildir = $(datadir)/avant-window-navigator/applets/mail/Themes/Reserved

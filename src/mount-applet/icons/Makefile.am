@@ -2,4 +2,4 @@ dist_mountapplet_DATA = 				\
 		mount-applet.png 	\
 		AUTHORS
 
-mountappletdir = $(datadir)/awn/applets/mount-applet/icons
+mountappletdir = $(datadir)/avant-window-navigator/applets/mount-applet/icons

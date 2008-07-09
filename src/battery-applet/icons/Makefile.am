@@ -14,4 +14,4 @@ dist_batteryapplet_DATA = 				\
 		COPYING				\
 		LGPL
 
-batteryappletdir = $(datadir)/awn/applets/battery-applet/icons
+batteryappletdir = $(datadir)/avant-window-navigator/applets/battery-applet/icons

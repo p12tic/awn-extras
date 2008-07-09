@@ -1,4 +1,4 @@
 dist_tsclient_DATA = 				\
 		Tsclient.svg
 
-tsclientdir = $(datadir)/awn/applets/tsclient-app/icons
+tsclientdir = $(datadir)/avant-window-navigator/applets/tsclient-app/icons

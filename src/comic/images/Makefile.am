@@ -1,4 +1,4 @@
 dist_comic_DATA = 				\
 		kmouth.png
 
-comicdir = $(datadir)/awn/applets/comic/images
+comicdir = $(datadir)/avant-window-navigator/applets/comic/images

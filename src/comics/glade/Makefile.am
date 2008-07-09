@@ -8,4 +8,4 @@ dist_comics_DATA =	\
 		manage.svg	\
 		view.glade
 
-comicsdir = $(datadir)/awn/applets/comics/glade
+comicsdir = $(datadir)/avant-window-navigator/applets/comics/glade

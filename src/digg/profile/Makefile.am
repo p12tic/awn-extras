@@ -7,5 +7,5 @@ dist_digg_DATA = 				\
 		prefs.js	\
 		secmod.db
 
-diggdir = $(datadir)/awn/applets/digg/profile
+diggdir = $(datadir)/avant-window-navigator/applets/digg/profile
 

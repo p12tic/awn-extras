@@ -5,4 +5,4 @@ dist_digg_DATA = 				\
 		_CACHE_003_	\
 		_CACHE_MAP_
 
-diggdir = $(datadir)/awn/applets/digg/profile/Cache
+diggdir = $(datadir)/avant-window-navigator/applets/digg/profile/Cache

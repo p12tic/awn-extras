@@ -2,4 +2,4 @@ dist_calendar_DATA = 				\
 		__init__.py 	\
 		service.py		
 
-calendardir = $(datadir)/awn/applets/calendar/google/atom
+calendardir = $(datadir)/avant-window-navigator/applets/calendar/google/atom

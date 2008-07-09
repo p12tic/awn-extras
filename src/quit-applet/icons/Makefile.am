@@ -3,4 +3,4 @@ dist_quitapplet_DATA = 				\
 		COPYING		\
 		LGPL
 
-quitappletdir = $(datadir)/awn/applets/quit-applet/icons
+quitappletdir = $(datadir)/avant-window-navigator/applets/quit-applet/icons

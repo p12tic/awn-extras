@@ -15,4 +15,4 @@ dist_volumecontrol_DATA = 				\
 		audio-volume-93.svg 	\
 		audio-volume-100.svg
 
-volumecontroldir = $(datadir)/awn/applets/volume-control/themes/Black
+volumecontroldir = $(datadir)/avant-window-navigator/applets/volume-control/themes/Black

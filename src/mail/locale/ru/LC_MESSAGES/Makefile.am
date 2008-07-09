@@ -1,5 +1,5 @@
 dist_mail_DATA =                            \
 	awn-mail-applet.mo
 
-maildir = $(datadir)/awn/applets/mail/locale/ru/LC_MESSAGES
+maildir = $(datadir)/avant-window-navigator/applets/mail/locale/ru/LC_MESSAGES
 

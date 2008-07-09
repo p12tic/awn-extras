@@ -456,13 +456,7 @@ void set_path(Taskman * taskmanager, char * bin_name)
   {
     char *bin_path = g_find_program_in_path(bin_name);
     char *prefix = g_path_get_dirname(bin_path);
-    taskmanager->path = g_strdup_printf("%s/../share/awn/applets/%s", prefix, taskmanager->desktop_file);
-
-    if (!g_file_test(taskmanager->path, G_FILE_TEST_EXISTS))
-    {
-      g_free(taskmanager->path);
-      taskmanager->path = g_strdup_printf("%s/../lib64/awn/applets/%s", prefix, taskmanager->desktop_file);
-    }
+    taskmanager->path = g_strdup_printf("%s/../share/avant-window-navigator/applets/%s", prefix, taskmanager->desktop_file);
 
     g_free(bin_path);
 

@@ -2,7 +2,7 @@
 NULL =
 include $(top_srcdir)/Makefile.desktop-files
 
-appletdir = $(datadir)/awn/applets/$(APPLET_NAME)
+appletdir = $(datadir)/avant-window-navigator/applets/$(APPLET_NAME)
 
 install-exec-local:
 	test -d "$(DESTDIR)$(appletdir)" || mkdir -p "$(DESTDIR)$(appletdir)"

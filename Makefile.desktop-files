@@ -2,7 +2,7 @@
 
 icon_DATA = $(APPLET_ICONS)
 
-desktopdir = $(datadir)/awn/applets
+desktopdir = $(datadir)/avant-window-navigator/applets
 
 desktop_DATA = $(APPLET_NAME).desktop
 @INTLTOOL_DESKTOP_RULE@

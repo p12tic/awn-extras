@@ -1,0 +1,10 @@
+----------------------------------------------------------------
+                          Installing
+----------------------------------------------------------------
+
+Dependencies:
+    Avant-window-navigator
+    pypanel
+
+Instuctions:
+    This tar.gz should install from the awn-manager applet menu.

@@ -66,10 +66,9 @@ def icon(size2,settings,color):
       number = '100%'
     else:
       progress = settings['progress']
-      number = str(len(progress))
       progress = float(sum(progress))/float(num_items)
       progress = int(progress)
-      number = str(progress)+'%'
+      number = str(num_items)
   
   #items: number shows # items
   elif settings['icon-type']=='items':

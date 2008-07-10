@@ -65,7 +65,6 @@ class App(awn.AppletSimple):
       'priority':[int],'color':str,'title':str,'icon-type':str,'colors':[int],\
       'category':[int],'category_name':[str],'expanded':[int],\
       'icon-opacity':int})
-    #print self.settings._values
     
 #    #Get the title or default to "To-Do List"
 #    if self.settings['title'] in ['',None]:
@@ -130,24 +129,7 @@ class App(awn.AppletSimple):
     
     #Custom colors
     elif self.settings['color'] == 'custom':
-      #Get the colors of the custom icon color
-      self.color = []
-      
-      #Outer border - red, green, blue
-      self.color[0] = [self.settings['colors'][0],self.settings['colors'][1],\
-        self.settings['colors'][2]]
-      
-      #Inner border - red, green, blue
-      self.color[1] = [self.settings['colors'][3],self.settings['colors'][4],\
-        self.settings['colors'][5]]
-      
-      #Main color - red, green, blue
-      self.color[2] = [self.settings['colors'][6],self.settings['colors'][7],\
-        self.settings['colors'][8]]
-      
-      #Text color - reg, green, blue
-      self.color[3] = [self.settings['colors'][9],self.settings['colors'][10],\
-        self.settings['color'][11]]
+      self.update_custom_colors()
     
     #Gtk Theme colors
     elif self.settings['color'] == 'gtk':
@@ -191,8 +173,11 @@ class App(awn.AppletSimple):
       lambda *a: self.title.hide(self))
     self.connect('height-changed', self.height_changed)
     self.dialog.connect('focus-out-event',self.hide_dialog)
-    self.settings.connect('items',self.update_icon,'settings')
-    self.settings.connect('progress',self.update_icon,'settings')
+    self.settings.connect('items',self.update_icon)
+    self.settings.connect('progress',self.update_icon)
+    self.settings.connect('color', self.update_icon)
+    self.settings.connect('colors', self.update_icon)
+    self.settings.connect('icon-type', self.update_icon)
   
   #Remove anything shown in the dialog - does not hide the dialog
   def clear_dialog(self,*args):
@@ -221,17 +206,17 @@ class App(awn.AppletSimple):
     self.hide_dialog()
     
     #Create the items for Preferences, Detach, and About
-    #prefs_menu = gtk.ImageMenuItem(gtk.STOCK_PREFERENCES)
+    prefs_menu = gtk.ImageMenuItem(gtk.STOCK_PREFERENCES)
     detach_menu = self.detach.menu_item(self.do_detach,self.do_attach)
     about_menu = gtk.ImageMenuItem(gtk.STOCK_ABOUT)
     
     #Connect the two items to functions when selected
-    #prefs_menu.connect('activate',self.show_prefs)
+    prefs_menu.connect('activate',self.show_prefs)
     about_menu.connect('activate',self.show_about)
     
     #Now create the menu to put the items in and show it
     menu = self.create_default_menu()
-    #menu.append(prefs_menu)
+    menu.append(prefs_menu)
     menu.append(detach_menu)
     menu.append(about_menu)
     menu.show_all()
@@ -252,7 +237,8 @@ class App(awn.AppletSimple):
   
   #Show the preferences menu
   def show_prefs(self,*args):
-    pass
+    import prefs
+    prefs.Prefs(self.settings)
   
   #Attach the applet
   def do_attach(self,*args):
@@ -860,8 +846,21 @@ class App(awn.AppletSimple):
   
   #Called when the list of items has been changed - change the icon
   def update_icon(self,*args):
-    if self.last_num_items!=len(self.settings['items']) or\
-      self.settings['icon-type'] in ['progress','progress-items']:
+    if self.last_num_items!=len(self.settings['items']) or \
+      self.settings['icon-type'] in ['progress','progress-items'] or \
+      (len(args) > 0 and args[0] in ['color', 'colors', 'icon-type']):
+      
+      #Update the icon colors
+      if self.settings['color'] in ['butter','chameleon','orange','skyblue',\
+        'plum','chocolate','scarletred','aluminium1','aluminium2']:
+        self.color = icon.colors[self.settings['color']]
+      elif self.settings['color'] == 'custom':
+        self.update_custom_colors()
+      elif self.settings['color'] == 'gtk':
+        self.update_icon_theme()
+      else:
+        self.settings['color'] = 'skyblue'
+        self.color = icon.colors['skyblue']
       
       #Get the number of items, excluding categories
       tmp_items = []
@@ -935,6 +934,32 @@ class App(awn.AppletSimple):
       
       #Save some memory (is this necessary?)
       tmp_window.destroy()
+      #Get the colors of the custom icon color
+  
+  def update_custom_colors(self):
+    self.color = []
+    
+    #Check if the list of colors is set
+    if len(self.settings['colors']) < 12:
+      self.settings['colors'] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 255]
+        #Inner border - red, green, blue
+    self.color.append([self.settings['colors'][3],self.settings['colors'][4],\
+      self.settings['colors'][5]])
+
+    
+    #Main color - red, green, blue
+    self.color.append([self.settings['colors'][6],self.settings['colors'][7],\
+      self.settings['colors'][8]])
+
+        #Outer border - red, green, blue
+    self.color.append([self.settings['colors'][0],self.settings['colors'][1],\
+      self.settings['colors'][2]])
+
+    
+    
+    #Text color - reg, green, blue
+    self.color.append([self.settings['colors'][9],self.settings['colors'][10],\
+      self.settings['colors'][11]])
   
   #Change the opacity of the icon by 5%
   def opacity(self,event,more):
@@ -1152,7 +1177,6 @@ class App(awn.AppletSimple):
     #If this is a category and it has items in it,
     #remove its items first
     if self.settings['items'][itemid]=='':#Means it's a category
-      #print 'Removing a category'
       #Remove this category's items
       y = 0
       for x in self.settings['category']:

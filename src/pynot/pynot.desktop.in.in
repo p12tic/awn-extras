@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Name=PyNot
+Type=Application
+X-AWN-AppletType=Python
+Comment=A Simple Python System tray 
+Exec=pynot/pynot.py
+Icon=pynot/PyTray.png
+Name[pt_BR]=PyNot
+X-AWN-AppletCategory=Utility
+X-Ubuntu-Gettext-Domain=awn-extras-applets
+

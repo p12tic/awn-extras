@@ -22,17 +22,18 @@ Copyright (c) 2008 Nathan Howard (triggerhapp@googlemail.com)
 # Would especially like to thank the guys at #awn, without whom
 # I would still be trying to add this widget to the panel :)
 
-
+import sys
 from awn.extras import AWNLib # Interact with awn
 import gtk # For GUI building
 from gtk import gdk
 from distutils import sysconfig
+import awn
+awn.check_dependencies(globals(),"Xlib")
 from Xlib import X, display, error, Xatom, Xutil
 import Xlib.protocol.event
 import locale, os, pwd, select, sys, time
 import pdb
 import gobject
-import awn
 import cairo
 import math
 import subprocess

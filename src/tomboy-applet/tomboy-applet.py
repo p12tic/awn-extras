@@ -24,6 +24,7 @@ import gobject
 import gtk
 from gtk import gdk
 import dbus
+import os
 
 applet_name = "Tomboy Applet"
 applet_version = "0.2.8"

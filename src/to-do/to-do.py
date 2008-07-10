@@ -37,7 +37,7 @@ import sys
 import awn
 from awn.extras import detach
 
-#TODO: Preferences dialog
+#TODO: Warning dialogs when deleting items or categories
 
 class App(awn.AppletSimple):
   last_num_items = -1
@@ -941,21 +941,20 @@ class App(awn.AppletSimple):
     
     #Check if the list of colors is set
     if len(self.settings['colors']) < 12:
-      self.settings['colors'] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 255]
-        #Inner border - red, green, blue
+      self.settings['colors'] = [255, 255, 255, 127, 127, 127, 0, 0, 0, \
+        255, 255, 255]
+    
+    #Inner border - red, green, blue
     self.color.append([self.settings['colors'][3],self.settings['colors'][4],\
       self.settings['colors'][5]])
-
     
     #Main color - red, green, blue
     self.color.append([self.settings['colors'][6],self.settings['colors'][7],\
       self.settings['colors'][8]])
-
-        #Outer border - red, green, blue
+    
+    #Outer border - red, green, blue
     self.color.append([self.settings['colors'][0],self.settings['colors'][1],\
       self.settings['colors'][2]])
-
-    
     
     #Text color - reg, green, blue
     self.color.append([self.settings['colors'][9],self.settings['colors'][10],\

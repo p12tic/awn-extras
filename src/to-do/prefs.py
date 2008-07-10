@@ -192,6 +192,12 @@ class Prefs:
     label = gtk.Label(human)
     
     #Make a GdkColor
+    
+    #Get the default color
+    if len(self.settings['colors']) < 12:
+      self.settings['colors'] = [255, 255, 255, 127, 127, 127, 0, 0, 0, \
+        255, 255, 255]
+    
     color = self.settings['colors'][index:(index+3)]
     color[0] *= 256
     color[1] *= 256

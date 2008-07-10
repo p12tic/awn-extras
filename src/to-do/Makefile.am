@@ -8,4 +8,5 @@ dist_applet_DATA =			\
 	to-do.py	\
 	settings.py	\
 	icon.py	\
+	prefs.py	\
 	$(NULL)

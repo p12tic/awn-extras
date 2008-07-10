@@ -551,15 +551,17 @@ def cleanup(k):
     # not get an X window error
     d = display.Display()
     scree=d.screen()
+    k.widg.selowin.destroy()
 
     for tid in k.widg.tray.order:
         t = k.widg.tray.tasks[tid]
-        print t.obj.query_tree()
-        
-#        t.obj.reparent(scree.root,0,0)
-
-    d.sync()
-    k.widg.wind.destroy(onerror=error)
+        g= t.obj.query_tree()
+        print t.pid
+        t.obj.unmap()
+        t.obj.unmap_sub_windows()
+        t.obj.reparent(g.root.id,0,0)
+    d.flush()
+    print "Done"
 
 
 global path

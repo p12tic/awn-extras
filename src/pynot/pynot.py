@@ -1,6 +1,6 @@
 #!/usr/bin/python
 """
-PyNot v0.15 - Awn Notificaion/system tray.
+PyNot v0.20 - Awn Notificaion/system tray.
 Copyright (c) 2008 Nathan Howard (triggerhapp@googlemail.com)
          2003-2005 Jon Gelo      (ziljian@users.sourceforge.net)
 
@@ -56,7 +56,7 @@ D_REFRESH=10
 D_DIVIDEBYZERO=False
 D_BORDER=True
 D_ZEROPID=True
-D_IMPATH="Your image here"
+D_IMPATH="/usr/lib/awn/applets/pynot/pattern.png"
 D_USEIM = False
 D_ICONSIZE=24
 

@@ -35,7 +35,7 @@ D_BORDER=True
 D_TRANS=False
 D_ZEROPID=True
 D_USEIM=False
-D_IMPATH="path/to/image"
+D_IMPATH="/usr/lib/awn/applets/pynot/pattern.png"
 
 
 

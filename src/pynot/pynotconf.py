@@ -1,6 +1,6 @@
 #!/usr/bin/python
 """
-PyNotConfig v0.18 - Awn Notification/system tray config manager.
+PyNotConfig v0.20 - Awn Notification/system tray config manager.
 Copyright (c) 2008 Nathan Howard (triggerhapp@googlemail.com)
 
    This program is free software: you can redistribute it and/or modify
@@ -18,6 +18,9 @@ Copyright (c) 2008 Nathan Howard (triggerhapp@googlemail.com)
 
 """
 
+# Forgive me, comments are completely lacking and source is obfuscated.
+# For now, make do that it just works ;)
+
 import awn
 from distutils import sysconfig
 import locale, os, pwd, select, sys, time
@@ -26,7 +29,7 @@ import gtk.glade
 
 global D_BG_COLOR,D_CUSTOM_Y, D_HIGH,D_BORDER,D_TRANS,D_USEIM,D_IMPATH
 D_BG_COLOR="0x0070E0"
-D_CUSTOM_Y=50
+D_CUSTOM_Y=10
 D_HIGH=2
 D_BORDER=True
 D_TRANS=False

@@ -32,7 +32,7 @@ D_BORDER=True
 D_TRANS=False
 D_ZEROPID=True
 D_USEIM=False
-D_IMPATH="/"+.join(__file__.split("/")[:-1])+"/pattern.png"
+D_IMPATH="/".join(__file__.split("/")[:-1])+"/pattern.png"
 
 
 
@@ -57,7 +57,7 @@ def savestuff(self):
  
 
 
-awn_options=awn.Config('pysystemtray',None)
+awn_options=awn.Config('pynot',None)
 BG_COLOR = awn_options.get_string(awn.CONFIG_DEFAULT_GROUP,"BG_COLOR")
 CUSTOM_Y = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"CUSTOM_Y")
 HIGH     = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"HIGH"    )

@@ -56,7 +56,7 @@ D_REFRESH=10
 D_DIVIDEBYZERO=False
 D_BORDER=True
 D_ZEROPID=True
-D_IMPATH="/"+join(__file__.split("/")[:-1])+"/pattern.png"
+D_IMPATH="/".join(__file__.split("/")[:-1])+"/pattern.png"
 D_USEIM = False
 D_ICONSIZE=24
 
@@ -466,7 +466,7 @@ class mywidget(gtk.Widget):
 
     def OpenConf(self,thing):
         program = "%s%s"%(path,"pynotconf.py")
-        self.config=subprocess.Popen(program)
+        self.config=subprocess.Popen("python "+program,shell=True)
         return 1
 
     def tr__setProps(self,dsp, win):
@@ -536,7 +536,10 @@ class App(awn.Applet):
                               # again, may be a good idea to do this less often
 
     def chbg(self,widg):
-        image=gdk.pixbuf_new_from_file(IMPATH)
+        if IMPATH in [None,'']:
+            image=gdk.pixbuf_new_from_file(D_IMPATH)
+        else:
+            image=gdk.pixbuf_new_from_file(IMPATH)
         (pic,mask)=image.render_pixmap_and_mask()
         if(USEIM==True):  # If the user wants an image ...
             widg.gwin.set_back_pixmap(pic,False) #Change image
@@ -570,7 +573,7 @@ path = path[0:-8]
 # path takes the directory that pynot is in
 
 awn.init(sys.argv[1:])
-awn_options=awn.Config('pysystemtray',None)
+awn_options=awn.Config('pynot',None)
 
 def loadconf(thingie):
     # Load the config

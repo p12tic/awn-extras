@@ -1,0 +1,39 @@
+[DEFAULT/BG_COLOR]
+type = string
+default = 0x0070E0
+description = The background color
+
+[DEFAULT/CUSTOM_Y]
+type = int
+default = 10
+description = Offset from bottom of screen
+
+[DEFAULT/HIGH]
+type = int
+default = 2
+description = Number of icons in a column
+
+[DEFAULT/BORDER]
+type = int
+default = 1
+description = Whether or not to draw rounded borders
+
+[DEFAULT/TRANS]
+type = int
+default = 0
+description = Whether or not to use transparency
+
+[DEFAULT/ZEROPID]
+type = int
+default = 1
+description = Whether or not to hide icons from PID of 0
+
+[DEFAULT/USEIM]
+type = int
+default = 0
+description = Whether or not to use a background image
+
+[DEFAULT/IMPATH]
+type = string
+default = 
+description = The path to the background image

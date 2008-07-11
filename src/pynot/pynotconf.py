@@ -22,10 +22,7 @@ Copyright (c) 2008 Nathan Howard (triggerhapp@googlemail.com)
 # For now, make do that it just works ;)
 
 import awn
-from distutils import sysconfig
-import locale, os, pwd, select, sys, time
 import gtk
-import gtk.glade
 
 global D_BG_COLOR,D_CUSTOM_Y, D_HIGH,D_BORDER,D_TRANS,D_USEIM,D_IMPATH
 D_BG_COLOR="0x0070E0"
@@ -35,7 +32,7 @@ D_BORDER=True
 D_TRANS=False
 D_ZEROPID=True
 D_USEIM=False
-D_IMPATH="/usr/lib/awn/applets/pynot/pattern.png"
+D_IMPATH="/"+.join(__file__.split("/")[:-1])+"/pattern.png"
 
 
 

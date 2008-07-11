@@ -56,7 +56,7 @@ D_REFRESH=10
 D_DIVIDEBYZERO=False
 D_BORDER=True
 D_ZEROPID=True
-D_IMPATH="/usr/lib/awn/applets/pynot/pattern.png"
+D_IMPATH="/"+join(__file__.split("/")[:-1])+"/pattern.png"
 D_USEIM = False
 D_ICONSIZE=24
 

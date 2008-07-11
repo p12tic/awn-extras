@@ -1,6 +1,7 @@
 APPLET_NAME = pynot
 APPLET_MAIN_FILE = pynot.py
 include $(top_srcdir)/Makefile.python-applet
+include $(top_srcdir)/Makefile.schema
 
 dist_applet_DATA =      \
         pynotconf.py    \

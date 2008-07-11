@@ -400,6 +400,8 @@ src/places/Makefile
 src/places/places.desktop.in
 src/plugger/Makefile
 src/plugger/plugger.desktop.in
+src/pynot/Makefile
+src/pynot/pynot.desktop.in
 src/python-test/Makefile
 src/python-test/python-test.desktop.in
 src/quit-applet/Makefile

@@ -57,3 +57,13 @@ description = The list of categories that are expanded
 type = int
 default = 100
 description = The icon's opacity (10-100)
+
+[DEFAULT/confirm-items]
+type = bool
+default = True
+description = Whether or not to confirm the deletion of items
+
+[DEFAULT/confirm-categories]
+type = bool
+default = True
+description = Whether or not to confirm the deletion of categories

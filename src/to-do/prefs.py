@@ -62,6 +62,17 @@ class Prefs:
     #Get the window's icon
     self.win.set_icon(icon)
     
+    #Make the main GtkNotebook along with three VBoxes and two Labels
+    notebook = gtk.Notebook()
+    general_vbox = gtk.VBox()
+    icon_vbox = gtk.VBox()
+    general_label = gtk.Label(_('General'))
+    icon_label = gtk.Label(_('Icon'))
+    notebook.append_page(general_vbox, general_label)
+    notebook.append_page(icon_vbox, icon_label)
+    main_vbox = gtk.VBox()
+    main_vbox.pack_start(notebook)
+    
     #Label: Title (bold)
     title_label = gtk.Label(_('Title'))
     title_label.modify_font(pango.FontDescription('bold'))
@@ -70,6 +81,31 @@ class Prefs:
     title_entry = gtk.Entry()
     title_entry.set_text(self.settings['title'])
     title_entry.connect('focus-out-event', self.update)
+    
+    #Label: Confirm when deleting... (bold)
+    confirm_label = gtk.Label(_('Confirm when deleting...'))
+    confirm_label.modify_font(pango.FontDescription('bold'))
+    
+    #CheckButton: Items
+    confirm_items = gtk.CheckButton(_('_Items'))
+    confirm_items.key = 'confirm-items'
+    if self.settings['confirm-items']:
+      confirm_items.set_active(True)
+    confirm_items.connect('toggled', self.confirm_toggled)
+    
+    #CheckButton: Categories
+    confirm_cats = gtk.CheckButton(_('C_ategories'))
+    confirm_cats.key = 'confirm-categories'
+    if self.settings['confirm-categories']:
+      confirm_cats.set_active(True)
+    confirm_cats.connect('toggled', self.confirm_toggled)
+
+    #Put the General tab together
+    general_vbox.pack_start(title_label, False)
+    general_vbox.pack_start(title_entry, False)
+    general_vbox.pack_start(confirm_label, False)
+    general_vbox.pack_start(confirm_items, False)
+    general_vbox.pack_start(confirm_cats, False)
     
     #Label: Icon Color (bold)
     icon_color_label = gtk.Label(_('Icon Color'))
@@ -117,8 +153,16 @@ class Prefs:
     _type_cb.key = 'icon-type'
     _type_cb.connect('changed', self.cb_changed)
     
-    #Simple HSeparator
-    hsep = gtk.HSeparator()
+    #Put the Icon tab together
+    icon_vbox.pack_start(icon_color_label, False)
+    icon_vbox.pack_start(color_cb, False)
+    icon_vbox.pack_start(custom_colors_label, False)
+    icon_vbox.pack_start(outer_border, False)
+    icon_vbox.pack_start(inner_border, False)
+    icon_vbox.pack_start(main_color, False)
+    icon_vbox.pack_start(text_color, False)
+    icon_vbox.pack_start(icon_type_label, False)
+    icon_vbox.pack_start(_type_cb, False)
     
     #Close button
     close_button = gtk.Button(stock=gtk.STOCK_CLOSE)
@@ -129,24 +173,9 @@ class Prefs:
     close_hbbox.set_layout(gtk.BUTTONBOX_SPREAD)
     close_hbbox.pack_start(close_button, False)
     
-    #VBox to put all this in
-    vbox = gtk.VBox()
-    vbox.pack_start(title_label)
-    vbox.pack_start(title_entry)
-    vbox.pack_start(icon_color_label)
-    vbox.pack_start(color_cb)
-    vbox.pack_start(custom_colors_label)
-    vbox.pack_start(outer_border)
-    vbox.pack_start(inner_border)
-    vbox.pack_start(main_color)
-    vbox.pack_start(text_color)
-    vbox.pack_start(icon_type_label)
-    vbox.pack_start(_type_cb)
-    vbox.pack_start(hsep)
-    vbox.pack_start(close_hbbox)
-    
     #Show the window
-    self.win.add(vbox)
+    main_vbox.pack_start(close_hbbox)
+    self.win.add(main_vbox)
     self.win.show_all()
   
   #A value was updated
@@ -165,7 +194,6 @@ class Prefs:
     li[(button.index+1)] = green / 256
     li[(button.index+2)] = blue / 256
     self.settings['colors'] = li
-    
   
   #The icon theme has changed
   def icon_theme_changed(self, *args):
@@ -179,6 +207,10 @@ class Prefs:
       self.settings['color'] = icon_colors_real[index]
     else:
       self.settings['icon-type'] = icon_types_real[index]
+  
+  #A CheckButton for confirming was toggled
+  def confirm_toggled(self, widget):
+    self.settings[widget.key] = widget.get_active()
   
   #The close button was clicked
   def close(self, widget):

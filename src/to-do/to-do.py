@@ -64,7 +64,7 @@ class App(awn.AppletSimple):
     self.settings.register({'items':[str],'details':[str],'progress':[int],\
       'priority':[int],'color':str,'title':str,'icon-type':str,'colors':[int],\
       'category':[int],'category_name':[str],'expanded':[int],\
-      'icon-opacity':int})
+      'icon-opacity':int,'confirm-items':bool,'confirm-categories':bool})
     
 #    #Get the title or default to "To-Do List"
 #    if self.settings['title'] in ['',None]:
@@ -354,7 +354,7 @@ class App(awn.AppletSimple):
         dialog_x.set_image(dialog_x_icon)
         dialog_x.set_relief(gtk.RELIEF_NONE)
         dialog_x.iterator = y
-        dialog_x.connect('clicked',self.remove_item_from_list)
+        dialog_x.connect('clicked',self.delete_item)
         
         #Make an entry widget for the item
         dialog_entry = gtk.Entry()
@@ -439,7 +439,7 @@ class App(awn.AppletSimple):
         dialog_x.set_image(dialog_x_icon)
         dialog_x.set_relief(gtk.RELIEF_NONE)
         dialog_x.iterator = y
-        dialog_x.connect('clicked',self.remove_item_from_list)
+        dialog_x.connect('clicked',self.delete_item)
         
         #Make the Expander widget
         dialog_expander = gtk.Expander(self.settings['category_name'][y])
@@ -1164,6 +1164,88 @@ class App(awn.AppletSimple):
       self.displayed = False
       self.toggle_dialog()
   
+  #Display a confirmation dialog about deleting an item/category from the list
+  #(If appropriate)
+  def delete_item(self,itemid):
+    if type(itemid)!=int:
+      itemid = itemid.iterator
+    
+    #If the 'item' is a category
+    if self.settings['items'][itemid] == '':
+      #If user wants to be warned
+      if self.settings['confirm-categories'] == True:
+        
+        #Make Label
+        confirm_label = gtk.Label('Are you sure you want to delete the ' + \
+          'category "%s?"\nAll of its items will be deleted.' % \
+          self.settings['category_name'][itemid])
+        
+        #Make CheckButton
+        confirm_check = gtk.CheckButton('Don\'t show this again.')
+        confirm_check.key = 'confirm-categories'
+        confirm_check.connect('toggled', self.confirm_check)
+        
+        #Cancel and OK buttons
+        cancel_button = gtk.Button(stock=gtk.STOCK_CANCEL)
+        cancel_button.connect('clicked', self.make_dialog)
+        delete_button = gtk.Button(stock=gtk.STOCK_DELETE)
+        delete_button.iterator = itemid
+        delete_button.connect('clicked', self.remove_item_from_list)
+        
+        #Now put it all together
+        vbox = gtk.VBox()
+        hbbox = gtk.HButtonBox()
+        hbbox.set_layout(gtk.BUTTONBOX_END)
+        hbbox.pack_start(cancel_button)
+        hbbox.pack_start(delete_button)
+        vbox.pack_start(confirm_label, False)
+        vbox.pack_start(confirm_check, False)
+        vbox.pack_start(hbbox, False)
+        vbox.show_all()
+        self.clear_dialog()
+        self.add_to_dialog(vbox)
+      
+      #User does not want to be warned
+      else:
+        self.remove_item_from_list(itemid)
+    
+    #deletion-prone item is deletion-prone
+    else:
+      #If user wants to be warned
+      if self.settings['confirm-items'] == True:
+        
+        #Make Label
+        confirm_label = gtk.Label('Are you sure you want to delete this item?')
+        
+        #Make CheckButton
+        confirm_check = gtk.CheckButton('Don\'t show this again.')
+        confirm_check.key = 'confirm-items'
+        confirm_check.connect('toggled', self.confirm_check)
+        
+        #Cancel and OK buttons
+        cancel_button = gtk.Button(stock=gtk.STOCK_CANCEL)
+        cancel_button.connect('clicked', self.make_dialog)
+        delete_button = gtk.Button(stock=gtk.STOCK_DELETE)
+        delete_button.iterator = itemid
+        delete_button.connect('clicked', self.remove_item_from_list)
+        
+        #Now put it all together
+        vbox = gtk.VBox()
+        hbbox = gtk.HButtonBox()
+        hbbox.set_layout(gtk.BUTTONBOX_END)
+        hbbox.pack_start(cancel_button)
+        hbbox.pack_start(delete_button)
+        vbox.pack_start(confirm_label, False)
+        vbox.pack_start(confirm_check, False)
+        vbox.pack_start(hbbox, False)
+        vbox.show_all()
+        self.clear_dialog()
+        self.add_to_dialog(vbox)
+      
+      #User does not want to be warned
+      else:
+        self.remove_item_from_list(itemid)
+  
   #Remove an item from the list of items
   def remove_item_from_list(self,itemid):
     
@@ -1262,7 +1344,10 @@ class App(awn.AppletSimple):
     #The icon is automatically changed, but the dialog is not
     self.displayed = False
     self.toggle_dialog()
-    
+  
+  #When a CheckButton for "Don't show this again." is toggled
+  def confirm_check(self, button):
+    self.settings[button.key] = not button.get_active()
 
 if __name__ == '__main__':
   awn.init(sys.argv[1:])

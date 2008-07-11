@@ -164,38 +164,10 @@ _focus_out_event(GtkWidget *widget, GdkEventButton *event, void * null)
 static void
 _bloody_thing_has_style (GtkWidget *widget,WebApplet *webapplet)
 {
-  GdkPixbuf *newicon;
 
   gchar * title = g_strdup_printf("%30s",config_get_uri(webapplet));  //FIXME put the URL or page title in here...
   awn_applet_simple_set_title(AWN_APPLET_SIMPLE(webapplet->applet),title);
   g_free(title);
-  newicon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (),
-                                      webapplet->applet_icon_name,
-                                      webapplet->applet_icon_height,
-                                      0, NULL);
-  if (!newicon)
-  {
-    newicon = gdk_pixbuf_new_from_file_at_size (g_filename_from_utf8 (webapplet->applet_icon_name,
-                                                                      -1, NULL, NULL, NULL),
-                                                webapplet->applet_icon_height,
-                                                webapplet->applet_icon_height,
-                                                NULL);
-  }
-  if (newicon)
-  {
-    webapplet->icon = newicon;
-  }
-  if (gdk_pixbuf_get_height (webapplet->icon) != webapplet->applet_icon_height)
-  {
-    GdkPixbuf *oldpbuf = webapplet->icon;
-    webapplet->icon = gdk_pixbuf_scale_simple (oldpbuf,
-                                               webapplet->applet_icon_height,
-                                               webapplet->applet_icon_height,
-                                               GDK_INTERP_HYPER);
-    g_object_unref (oldpbuf);
-  }  
-  awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (webapplet->applet),
-                                   webapplet->icon);
   g_signal_connect (G_OBJECT (webapplet->applet), "button-press-event",
                     G_CALLBACK (_button_clicked_event), webapplet);
   g_signal_connect (G_OBJECT (webapplet->mainwindow), "focus-out-event",
@@ -205,7 +177,6 @@ _bloody_thing_has_style (GtkWidget *widget,WebApplet *webapplet)
 AwnApplet *
 awn_applet_factory_initp (gchar *uid, gint orient, gint height)
 {
-  GdkPixbuf *icon;
   g_on_error_stack_trace (NULL);
   html_init ();
   WebApplet *webapplet = g_malloc (sizeof (WebApplet));
@@ -213,17 +184,13 @@ awn_applet_factory_initp (gchar *uid, gint orient, gint height)
   init_config (webapplet, uid);
   webapplet->applet = AWN_APPLET (awn_applet_simple_new (uid, orient, height));
   gtk_widget_set_size_request (GTK_WIDGET (webapplet->applet), height, -1);
-  icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (),
-                                   "stock_folder", height - 2, 0, NULL);
-  if (!icon)
-  {
-    icon = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, height - 2, height - 2);
-    gdk_pixbuf_fill (icon, 0x11881133);
-  }
+
   webapplet->applet_icon_height = height - 2;
-  webapplet->icon = icon;
-  webapplet->applet_icon_name = g_strdup ("apple-green");
-  awn_applet_simple_set_temp_icon (AWN_APPLET_SIMPLE (webapplet->applet), icon);
+  webapplet->applet_icon_name = g_strdup ("apple-green");  
+  webapplet->icon = awn_applet_simple_set_awn_icon(webapplet->applet,
+                                    APPLET_NAME,
+                                    uid,
+                                    webapplet->applet_icon_name)  ;
   gtk_widget_show_all (GTK_WIDGET (webapplet->applet));
   awn_html_dialog_new (webapplet);
   gtk_window_set_focus_on_map (GTK_WINDOW (webapplet->mainwindow), TRUE);

@@ -5,5 +5,5 @@ X-AWN-AppletType=Python
 Name=Volume Control
 Comment=Control your computer's volume
 Exec=volume-control/volume-control.py
-Icon=gnome-reclevel
+Icon=volume-control/volume-control.svg
 X-AWN-Applet-Category=Audio,Midi

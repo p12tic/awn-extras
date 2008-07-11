@@ -46,7 +46,7 @@ moonbeam_theme_dir = os.path.join(os.path.dirname(__file__), "themes")
 moonbeam_ranges = [100, 93, 86, 79, 71, 64, 57, 50, 43, 36, 29, 21, 14, 1, 0]
 
 # Logo of the applet, shown in the GTK About dialog
-applet_logo = os.path.join(theme_dir, "Tango/scalable/status/audio-volume-high.svg")
+applet_logo = os.path.join(os.path.dirname(__file__), "volume-control.svg")
 
 volume_ranges = {"high": (100, 66), "medium": (65, 36), "low": (35, 1)}
 volume_step = 4
@@ -200,7 +200,7 @@ class VolumeControlApplet:
         for i in moonbeam_themes:
             combobox_theme.append_text(i)
         
-        if "theme" not in self.applet.settings:
+        if "theme" not in self.applet.settings or self.applet.settings["theme"] not in self.themes:
             self.applet.settings["theme"] = self.themes[0]
         self.theme = self.applet.settings["theme"]
         
@@ -252,7 +252,7 @@ class VolumeControlApplet:
         # Update if the update is forced or volume/mute has changed
         if force_update or self.old_volume != volume or mute_changed:
             if mute_changed:
-                self.backend.refresh_mute_checkbox()
+                self.refresh_mute_checkbox()
             
             this_is_moonbeam_theme = os.path.isdir(os.path.join(moonbeam_theme_dir, self.theme))
             
@@ -280,6 +280,17 @@ class VolumeControlApplet:
             
             self.old_volume = volume
             self.was_muted = muted
+    
+    def refresh_mute_checkbox(self):
+        """ Enables/disables 'Mute' checkbox. This does not update the applet's icon! """
+        can_be_muted = self.backend.can_be_muted()
+        
+        self.mute_item.set_sensitive(can_be_muted)
+        if can_be_muted:
+            self.mute_item.set_active(self.backend.is_muted())
+        else:
+            # Clear checkbox (this will fire the "toggled" signal)
+            self.mute_item.set_active(False)
 
 
 class Backend:
@@ -300,7 +311,7 @@ class Backend:
         
         self.channel = channel
         
-        self.refresh_mute_checkbox()
+        self.parent.refresh_mute_checkbox()
         
         # Read volume from new channel
         self.set_volume(self.get_volume())
@@ -329,17 +340,6 @@ class Backend:
             return bool(muted_channels[0]) and bool(muted_channels[1])
         else:
             return bool(muted_channels[0])
-    
-    def refresh_mute_checkbox(self):
-        """ Enables/disables 'Mute' checkbox. This does not update the applet's icon! """
-        can_be_muted = self.can_be_muted()
-        
-        self.parent.mute_item.set_sensitive(can_be_muted)
-        if can_be_muted:
-            self.parent.mute_item.set_active(self.is_muted())
-        else:
-            # Clear checkbox (this will fire the "toggled" signal)
-            self.parent.mute_item.set_active(False)
     
     def get_volume(self):
         volume_channels = alsaaudio.Mixer(self.channel).getvolume()
@@ -378,12 +378,13 @@ if __name__ == "__main__":
         "version": applet_version,
         "description": applet_description,
         "logo": applet_logo,
-        "author": "Pavel Panchekha, onox",
+        "author": "onox, Pavel Panchekha",
         "copyright-year": 2008,
         "authors": ['Richard "nazrat" Beyer', 'Jeff "Jawbreaker" Hubbard',
                     'Spencer Creasey <screasey@gmail.com>',
                     "Pavel Panchekha <pavpanchekha@gmail.com>",
                     "onox <denkpadje@gmail.com>"],
+        "artists": ["Jakub Steiner"],
         "type": ["Audio", "Midi"]})
     VolumeControlApplet(applet)
     AWNLib.start(applet)

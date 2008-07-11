@@ -357,7 +357,7 @@ class MailApplet:
         b.connect("clicked", lambda x: self.logout())
 
         buttons.append(b)
-        layout.add(HBox(buttons))
+        layout.add(HBox(*buttons))
 
     def drawPWDDlog(self, error=False):
         dlog = self.awn.dialog.new("main", _("Log In"))

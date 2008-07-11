@@ -29,6 +29,8 @@
 #include <string.h>
 #include "render.h"
 
+#define APPLET_NAME "Cairo Menu"
+
 #include "backend-gnome.h"
 #include "menu.h"
 
@@ -104,49 +106,6 @@ static gboolean _icon_done(gpointer null)
     gtk_widget_hide(G_toplevel);
     g_signal_connect(G_OBJECT(menu->applet), "button-press-event", G_CALLBACK(_button_clicked_event), menu);
 
-    icon = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(),
-                                    G_cairo_menu_conf.applet_icon,
-                                    G_Height - 2,
-                                    0, NULL);
-
-    if (!icon)
-      icon = gdk_pixbuf_new_from_file_at_size(g_filename_from_utf8(G_cairo_menu_conf.applet_icon, -1, NULL, NULL, NULL), G_Height - 2,
-                                              G_Height - 2, NULL);
-
-    if (!icon)
-    {
-      printf("failed to load icon: %s\n", G_cairo_menu_conf.applet_icon);
-      icon = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "stock_missing-image",
-                                      G_Height - 2,
-                                      0, NULL);
-    }
-
-    if (!icon)
-    {
-
-      icon = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gnome-main-menu",
-                                      G_Height - 2,
-                                      0, NULL);
-    }
-
-    if (icon)
-    {
-      if (gdk_pixbuf_get_height(icon) != G_Height - 2)
-      {
-        GdkPixbuf *oldpbuf = icon;
-        icon = gdk_pixbuf_scale_simple(oldpbuf, G_Height - 2, G_Height - 2, GDK_INTERP_HYPER);
-        g_object_unref(oldpbuf);
-      }
-
-      awn_applet_simple_set_temp_icon(AWN_APPLET_SIMPLE(G_applet), icon);
-    }
-    else
-    {
-      icon = gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8, G_Height - 2, G_Height - 2);
-      gdk_pixbuf_fill(icon, 0x00000000);
-      awn_applet_simple_set_temp_icon(AWN_APPLET_SIMPLE(G_applet), icon);
-    }
-
     hide_all_menus();
 
     gtk_window_set_opacity(GTK_WINDOW(G_toplevel->parent->parent), 1.0);
@@ -178,17 +137,17 @@ AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient, gint height)
   G_Height = height;
   
   read_config();
+  
+  
+  awn_applet_simple_set_awn_icon(applet,
+                                    APPLET_NAME,
+                                    uid,
+                                    G_cairo_menu_conf.applet_icon)  ;
+  
   icon = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(),
                                   G_cairo_menu_conf.applet_icon,
                                   height ,
                                   0, NULL);
-  
-  if (!icon)
-  {
-    icon = gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8, 1, height);
-    gdk_pixbuf_fill(icon, 0x00000000);
-  }
-  awn_applet_simple_set_temp_icon(AWN_APPLET_SIMPLE(applet), icon);
   gtk_widget_show_all(GTK_WIDGET(applet));
 
   g_signal_connect_after(G_OBJECT(applet),"map" , G_CALLBACK(_map_event), NULL);

@@ -59,6 +59,7 @@ SUBDIRS =			\
 	media-icon-play		\
 	notification-area	\
 	places			\
+        pynot                   \
 	python-test		\
 	quit-applet		\
 	separator		\

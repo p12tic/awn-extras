@@ -29,3 +29,8 @@ libawn_extras_la_SOURCES = \
 	
 libawn_extras_la_LIBADD = $(AWN_LIBS) $(LIBNOTIFY_LIBS)
 libawn_extras_la_LDFLAGS = -version-info 0:1:0
+
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = awn-extras.pc
+
+EXTRA_DIST = awn-extras.pc.in

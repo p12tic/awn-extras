@@ -1,0 +1,11 @@
+prefix=@prefix@
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: libawn-extras
+Description: Avant Window Navigator Extras utility library
+Version: @VERSION@
+Libs: -L${libdir} -lawn-extras
+Cflags: -I${includedir}
+Requires: awn libnotify

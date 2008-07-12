@@ -361,6 +361,7 @@ src/lastfm/Makefile
 src/lastfm/icons/Makefile
 src/lastfm/lastfm.desktop.in
 src/libawn-extras/Makefile
+src/libawn-extras/awn-extras.pc
 src/libawn-extras/bindings/Makefile
 src/libawn-extras/bindings/python/Makefile
 src/mail/Makefile

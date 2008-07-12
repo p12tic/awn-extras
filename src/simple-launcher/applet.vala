@@ -34,13 +34,12 @@ class Configuration: GLib.Object
 		 
         default_conf=new Awn.ConfigClient.for_applet("simple-launcher",null);
         read_config();   
-        default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"desktop_file_editor", _config_changed, this);
+        default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"desktop_file_editor", this._config_changed);
 	}
 	
-	private static void _config_changed(Awn.ConfigClientNotifyEntry entry, pointer ptr)
+	private void _config_changed (Awn.ConfigClientNotifyEntry entry)
 	{
-        weak Configuration self=(Configuration) ptr;
-        self.read_config_dynamic();
+        this.read_config_dynamic();
 		stdout.printf("config notify fired\n");
 	}
 	
@@ -194,7 +193,15 @@ class LauncherApplet : AppletSimple
         {
             if (desktopitem.get_icon(theme)!=null)
             {
-                icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );//FIXME - throws
+                try 
+                {
+                    icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );
+                }
+                catch (Error ex)
+                {
+                    warning ("Could not find the icon '%s'.", desktopitem.get_icon (theme));
+                    return false;
+                }
             }		
         }
         set_icon(icon);
@@ -228,7 +235,14 @@ class LauncherApplet : AppletSimple
 		weak SList <string>	fileURIs;
 		string  cmd;  
 		bool status=false;
-        fileURIs=vfs_get_pathlist_from_string(selectdata.data);
+        try
+        {
+            fileURIs=vfs_get_pathlist_from_string((string)(selectdata.data));
+        }
+        catch (Error ex)
+        {
+            warning ("Could not parse drag data.");
+        }
 		foreach (string str in fileURIs) 
 		{
             DesktopItem		tempdesk;
@@ -251,11 +265,25 @@ class LauncherApplet : AppletSimple
                 desktopitem = new DesktopItem(directory+config.uid+".desktop");
                 if (desktopitem.get_icon(theme) != null)
                 {
-                    icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );
+                    try
+                    {
+                        icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );
+                    }
+                    catch (Error ex)
+                    {
+                        /* do nothing */
+                    }
                 }
                 else
                 {
-                    icon = theme.load_icon ("stock_stop", height - 2, IconLookupFlags.USE_BUILTIN);
+                    try
+                    {
+	                    icon = theme.load_icon ("stock_stop", height - 2, IconLookupFlags.USE_BUILTIN);
+                    }
+                    catch (Error ex)
+                    {
+                        /* do nothing */
+                    }
                 }		
                 if (icon !=null)
                 {
@@ -264,7 +292,14 @@ class LauncherApplet : AppletSimple
                 status=true;
             }
 			Pixbuf temp_icon;
-			temp_icon=new Pixbuf.from_file_at_scale( Filename.from_uri(str) ,height-2,height-2,true );
+			try
+			{
+				temp_icon=new Pixbuf.from_file_at_scale( Filename.from_uri(str) ,height-2,height-2,true );
+			}
+			catch (Error ex)
+			{
+				/* do nothing */
+			}
 			if (temp_icon !=null)
 			{
 				icon=temp_icon;
@@ -288,7 +323,14 @@ class LauncherApplet : AppletSimple
         desktopitem = new DesktopItem(directory+config.uid+".desktop" );	
         if (desktopitem.get_icon(theme) != null)
         {
-            icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );
+            try
+            {
+                icon = new Pixbuf.from_file_at_scale(desktopitem.get_icon(theme),height-2,-1,true );
+            }
+            catch (Error ex)
+            {
+                return false;
+            }
         }
         set_icon(icon);
         return false;
@@ -354,10 +396,17 @@ class LauncherApplet : AppletSimple
 		if ( launch_new && (desktopitem!=null) )
 		{
             effect_start_ex(effects, Effect.LAUNCHING,null,null,3);
-			pid=desktopitem.launch(documents);
+			try
+			{
+				pid=desktopitem.launch(documents);
+			}
+			catch (Error ex)
+			{
+				warning ("Launch error: %s", ex.message);
+			}
 			if (pid>0)
 			{
-				stdout.printf("launched: pid = %d\n",pid);
+				stdout.printf("launched: pid = %lu\n",pid);
 			}
 			else if (pid==-1)
 			{

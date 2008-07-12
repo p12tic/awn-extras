@@ -41,11 +41,14 @@ class ShowDesktopButton (awn.AppletSimple):
     def __init__ (self, uid, orient, height):
         awn.AppletSimple.__init__ (self, uid, orient, height)
         self.height = height
-        self.theme = gtk.icon_theme_get_default()
-        icon = self.theme.load_icon ("desktop", height, 0)
-        if height != icon.get_height():
-            icon = icon.scale_simple(height,height,gtk.gdk.INTERP_BILINEAR)
-        self.set_icon(icon)
+        if hasattr(self, "set_awn_icon"):
+            self.set_awn_icon("showdesktop", uid, "desktop")
+        else:
+            self.theme = gtk.icon_theme_get_default()
+            icon = self.theme.load_icon ("desktop", height, 0)
+            if height != icon.get_height():
+                icon = icon.scale_simple(height,height,gtk.gdk.INTERP_BILINEAR)
+            self.set_icon(icon)
         self.title = awn.awn_title_get_default ()
         self.connect ("button-press-event", self.__on_button_press)
         self.connect ("enter-notify-event", self.enter_notify)

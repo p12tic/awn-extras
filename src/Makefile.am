@@ -1,6 +1,6 @@
 NULL =
 if HAVE_VALA
-VALA_APPLETS = vala-test taskmand simple-launcher
+VALA_APPLETS = vala-test taskmand simple-launcher Taskmand-applet
 endif
 
 GCONF_APPLETS =
@@ -66,7 +66,6 @@ SUBDIRS =			\
 	shiny-switcher		\
 	showdesktop		\
 	switcher		\
-	Taskmand-applet		\
 	thinkhdaps			\
 	to-do				\
 	tomboy-applet		\

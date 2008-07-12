@@ -20,6 +20,8 @@
  *
  */
 
+#define APPLET_NAME "affinity"
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -56,25 +58,11 @@ awn_applet_factory_initp (const gchar* uid, gint orient, gint height )
     GdkPixbuf *icon;
 
     applet = AWN_APPLET (awn_applet_simple_new (uid, orient, height));
-
-    icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), "search", height -2, 0, NULL);
-    //gtk_icon_theme_load_icon () doesn't always give us a properly sized icon
-    if (icon)
-    {
-      int difference=gdk_pixbuf_get_height (icon) - (height-2);
-      difference=ABS(difference);
-      if ( difference > (height-2)*0.1 )  //within 10%?
-      {
-	g_warning("gtk_icon_theme_load_icon() failed to scale icon\n");
-	icon=gdk_pixbuf_scale_simple(icon,height-2,height-2,GDK_INTERP_HYPER);
-      }
-    }
-    if (!icon)//failsafe
-    {
-      icon=gdk_pixbuf_new(GDK_COLORSPACE_RGB,TRUE,8,height-2,height-2);
-      gdk_pixbuf_fill(icon,0x11881133);     
-    }    
-    awn_applet_simple_set_icon (AWN_APPLET_SIMPLE (applet), icon);	
+	
+		awn_applet_simple_set_awn_icon( AWN_APPLET_SIMPLE(applet),
+                                    APPLET_NAME,
+                                    uid,
+																	  "search")  ;	 
     app = affinity_app_new( TRUE, applet);
     affinity_app_hide(app);
     g_signal_connect(G_OBJECT(applet), "button-press-event",

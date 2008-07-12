@@ -19,6 +19,8 @@
 
 #include "config.h"
 
+#define APPLET_NAME "awnterminal"
+
 #include <libawn/awn-applet.h>
 #include <libawn/awn-applet-simple.h>
 #include <libawn/awn-applet-dialog.h>
@@ -36,9 +38,10 @@ AwnApplet* awn_applet_factory_initp (const gchar* uid, gint orient, gint height 
 	applet->applet = AWN_APPLET (awn_applet_simple_new (uid, orient, height));
 	
 	// Set up the icon 
-	applet->icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), "terminal", height -2, 0, NULL);
-	awn_applet_simple_set_icon (AWN_APPLET_SIMPLE (applet->applet), applet->icon);
-
+  awn_applet_simple_set_awn_icon(   AWN_APPLET_SIMPLE(applet->applet),
+                                    APPLET_NAME,
+                                    uid,
+                                    "terminal")  ;
 	// Set up the dialog
 	applet->dialog = awn_applet_dialog_new (applet->applet);
 	

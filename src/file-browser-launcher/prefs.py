@@ -29,13 +29,14 @@ import os
 import gconfwrapper as awnccwrapper
 
 class Prefs:
-  def __init__(self,set_icon,uid):
-    self.uid = uid
+  def __init__(self, applet):
+    self.applet = applet
+    self.uid = applet.uid
+    self.set_icon = applet.set_icon
     
     #Initiate what is needed
     self.window = gtk.Window()
     self.window.set_title('File Browser Launcher Preferences')
-    self.set_icon = set_icon
     self.nbook = gtk.Notebook()
     self.theme = gtk.icon_theme_get_default()
     self.initializing = True
@@ -80,92 +81,100 @@ class Prefs:
     self.focus_entry = self.client.get_int('focus_entry',2)
     
     #Set the icon approiately
-    if self.icon=='/dev/null':
-      self.awn_new_icon = self.theme.load_icon('folder',48,48)
-      self.window.set_icon(self.awn_new_icon)
-    elif os.path.exists(self.icon):
-      self.awn_new_icon = gtk.gdk.pixbuf_new_from_file(self.icon)
-      self.window.set_icon(self.awn_new_icon)
-      self.awn_new_icon = self.awn_new_icon.scale_simple(48,48,gtk.gdk.INTERP_BILINEAR)
+    if hasattr(applet, 'set_awn_icon'):
+      self.window.set_icon(applet.icon)
     else:
-      self.awn_new_icon = self.theme.load_icon('folder',48,48)
-      self.window.set_icon(self.awn_new_icon)
+      if self.icon=='/dev/null':
+        self.awn_new_icon = self.theme.load_icon('folder',48,48)
+        self.window.set_icon(self.awn_new_icon)
+      elif os.path.exists(self.icon):
+        self.awn_new_icon = gtk.gdk.pixbuf_new_from_file(self.icon)
+        self.window.set_icon(self.awn_new_icon)
+        self.awn_new_icon = self.awn_new_icon.scale_simple(48,48,gtk.gdk.INTERP_BILINEAR)
+      else:
+        self.awn_new_icon = self.theme.load_icon('folder',48,48)
+        self.window.set_icon(self.awn_new_icon)
     
     #Make the "General" tab
     self.general_tab = gtk.Label('General')
     self.general_vbox = gtk.VBox()
     
-    #Bold text: "Icon" with HSeparator under it
-    self.general_icon_label = gtk.Label('Icon')
-    self.general_icon_label.modify_font(pango.FontDescription('bold'))
-    self.general_separator0 = gtk.HSeparator()
-    
-    #Table for selecting which icon to use: default or custom(by path)
-    self.general_icon_table = gtk.Table(3,2)
-    
-    #First row: default icon
-    self.general_icon_default_radio = gtk.RadioButton()
-    self.general_icon_default_radio.identifier = 'general.icon.default'
-    self.general_icon_default_radio.connect('toggled',self.radio_changed)
-    self.general_icon_default_img = gtk.image_new_from_file(self.default_icon_path)
-    self.general_icon_default_label = gtk.Label('Default')
-    if self.icon in ['default','','/dev/null']:
-      self.general_icon_default_radio.set_active(True)
-    
-    #Second row: theme default icon
-    self.general_icon_theme_radio = gtk.RadioButton(self.general_icon_default_radio)
-    self.general_icon_theme_radio.identifier = 'general.icon.theme'
-    self.general_icon_theme_radio.connect('toggled',self.radio_changed)
-    self.general_icon_theme_pixbuf = self.theme.load_icon('folder',48,48)
-    self.general_icon_theme_img = gtk.image_new_from_pixbuf(self.general_icon_theme_pixbuf)
-    self.general_icon_theme_label = gtk.Label('Theme default')
-    if self.icon=='theme':
-      self.general_icon_theme_radio.set_active(True)
-    
-    #Attach the widgets to the table
-    self.general_icon_table.attach(self.general_icon_default_radio,0,1,0,1,yoptions=gtk.SHRINK)
-    self.general_icon_table.attach(self.general_icon_default_img,1,2,0,1,yoptions=gtk.SHRINK)
-    self.general_icon_table.attach(self.general_icon_default_label,2,3,0,1,yoptions=gtk.SHRINK)
-    self.general_icon_table.attach(self.general_icon_theme_radio,0,1,1,2,yoptions=gtk.SHRINK)
-    self.general_icon_table.attach(self.general_icon_theme_img,1,2,1,2,yoptions=gtk.SHRINK)
-    self.general_icon_table.attach(self.general_icon_theme_label,2,3,1,2,yoptions=gtk.SHRINK)
-    
-    #Third row: custom icon
-    self.general_icon_custom_radio = gtk.RadioButton(self.general_icon_default_radio)
-    self.general_icon_custom_radio.identifier = 'general.icon.custom'
-    self.general_icon_custom_radio.connect('toggled',self.radio_changed)
-    if self.icon not in ['/dev/null','','default','theme']:
-      self.general_icon_custom_radio.set_active(True)
-    if self.icon!='/dev/null' and os.path.exists(self.icon):
-      self.general_icon_custom_pixbuf = gtk.gdk.pixbuf_new_from_file(self.icon)
-      self.general_icon_custom_pixbuf = self.general_icon_custom_pixbuf.scale_simple(48,48,gtk.gdk.INTERP_BILINEAR)
-      self.general_icon_custom_img = gtk.image_new_from_pixbuf(self.general_icon_custom_pixbuf)
-    else:
-      self.general_icon_custom_img = gtk.image_new_from_pixbuf(None)
-    
-    #Fourth row: text box and browse button
-    self.general_icon_custom_label = gtk.Label('Custom')
-    self.general_icon_custom_entry = gtk.Entry()
-    self.general_icon_custom_browse = gtk.Button(stock=gtk.STOCK_OPEN)
-    self.general_icon_custom_browse.get_children()[0].get_children()[0].get_children()[1].set_text('Browse')
-    self.general_icon_custom_browse.connect('clicked',lambda a: self.browse_file('Choose an icon'))
-    if self.icon not in ['/dev/null','','default','theme'] and os.path.exists(self.icon):
-      self.general_icon_custom_entry.set_text(self.icon)
-    else:
-      self.general_icon_custom_entry.set_sensitive(False)
-      self.general_icon_custom_browse.set_sensitive(False)
-    
-    #Put the 3rd and 4th rows in the table
-    self.general_icon_table.attach(self.general_icon_custom_radio,0,1,2,3,yoptions=gtk.SHRINK)
-    try:
-      self.general_icon_table.attach(self.general_icon_custom_img,1,2,2,3,yoptions=gtk.SHRINK)
-    except:
-      pass
-    self.general_icon_table.attach(self.general_icon_custom_label,2,3,2,3,yoptions=gtk.SHRINK)
-    self.general_icon_custom_hbox = gtk.HBox()
-    self.general_icon_custom_hbox.pack_start(self.general_icon_custom_entry)
-    self.general_icon_custom_hbox.pack_end(self.general_icon_custom_browse,False)
-    self.general_icon_table.attach(self.general_icon_custom_hbox,0,3,3,4,yoptions=gtk.SHRINK)
+    if not hasattr(applet, 'set_awn_icon'):
+      #Bold text: "Icon" with HSeparator under it
+      self.general_icon_label = gtk.Label('Icon')
+      self.general_icon_label.modify_font(pango.FontDescription('bold'))
+      self.general_separator0 = gtk.HSeparator()
+      
+      #Table for selecting which icon to use: default or custom(by path)
+      self.general_icon_table = gtk.Table(3,2)
+      
+      #First row: default icon
+      self.general_icon_default_radio = gtk.RadioButton()
+      self.general_icon_default_radio.identifier = 'general.icon.default'
+      self.general_icon_default_radio.connect('toggled',self.radio_changed)
+      self.general_icon_default_img = gtk.image_new_from_file(self.default_icon_path)
+      self.general_icon_default_label = gtk.Label('Default')
+      if self.icon in ['default','','/dev/null']:
+        self.general_icon_default_radio.set_active(True)
+      
+      #Second row: theme default icon
+      self.general_icon_theme_radio = gtk.RadioButton(self.general_icon_default_radio)
+      self.general_icon_theme_radio.identifier = 'general.icon.theme'
+      self.general_icon_theme_radio.connect('toggled',self.radio_changed)
+      self.general_icon_theme_pixbuf = self.theme.load_icon('folder',48,48)
+      self.general_icon_theme_img = gtk.image_new_from_pixbuf(self.general_icon_theme_pixbuf)
+      self.general_icon_theme_label = gtk.Label('Theme default')
+      if self.icon=='theme':
+        self.general_icon_theme_radio.set_active(True)
+      
+      #Attach the widgets to the table
+      self.general_icon_table.attach(self.general_icon_default_radio,0,1,0,1,yoptions=gtk.SHRINK)
+      self.general_icon_table.attach(self.general_icon_default_img,1,2,0,1,yoptions=gtk.SHRINK)
+      self.general_icon_table.attach(self.general_icon_default_label,2,3,0,1,yoptions=gtk.SHRINK)
+      self.general_icon_table.attach(self.general_icon_theme_radio,0,1,1,2,yoptions=gtk.SHRINK)
+      self.general_icon_table.attach(self.general_icon_theme_img,1,2,1,2,yoptions=gtk.SHRINK)
+      self.general_icon_table.attach(self.general_icon_theme_label,2,3,1,2,yoptions=gtk.SHRINK)
+      
+      #Third row: custom icon
+      self.general_icon_custom_radio = gtk.RadioButton(self.general_icon_default_radio)
+      self.general_icon_custom_radio.identifier = 'general.icon.custom'
+      self.general_icon_custom_radio.connect('toggled',self.radio_changed)
+      if self.icon not in ['/dev/null','','default','theme']:
+        self.general_icon_custom_radio.set_active(True)
+      if self.icon!='/dev/null' and os.path.exists(self.icon):
+        self.general_icon_custom_pixbuf = gtk.gdk.pixbuf_new_from_file(self.icon)
+        self.general_icon_custom_pixbuf = self.general_icon_custom_pixbuf.scale_simple(48,48,gtk.gdk.INTERP_BILINEAR)
+        self.general_icon_custom_img = gtk.image_new_from_pixbuf(self.general_icon_custom_pixbuf)
+      else:
+        self.general_icon_custom_img = gtk.image_new_from_pixbuf(None)
+      
+      #Fourth row: text box and browse button
+      self.general_icon_custom_label = gtk.Label('Custom')
+      self.general_icon_custom_entry = gtk.Entry()
+      self.general_icon_custom_browse = gtk.Button(stock=gtk.STOCK_OPEN)
+      self.general_icon_custom_browse.get_children()[0].get_children()[0].get_children()[1].set_text('Browse')
+      self.general_icon_custom_browse.connect('clicked',lambda a: self.browse_file('Choose an icon'))
+      if self.icon not in ['/dev/null','','default','theme'] and os.path.exists(self.icon):
+        self.general_icon_custom_entry.set_text(self.icon)
+      else:
+        self.general_icon_custom_entry.set_sensitive(False)
+        self.general_icon_custom_browse.set_sensitive(False)
+      
+      #Put the 3rd and 4th rows in the table
+      self.general_icon_table.attach(self.general_icon_custom_radio,0,1,2,3,yoptions=gtk.SHRINK)
+      try:
+        self.general_icon_table.attach(self.general_icon_custom_img,1,2,2,3,yoptions=gtk.SHRINK)
+      except:
+        pass
+      self.general_icon_table.attach(self.general_icon_custom_label,2,3,2,3,yoptions=gtk.SHRINK)
+      self.general_icon_custom_hbox = gtk.HBox()
+      self.general_icon_custom_hbox.pack_start(self.general_icon_custom_entry)
+      self.general_icon_custom_hbox.pack_end(self.general_icon_custom_browse,False)
+      self.general_icon_table.attach(self.general_icon_custom_hbox,0,3,3,4,yoptions=gtk.SHRINK)
+      
+      self.general_vbox.pack_start(self.general_icon_label)
+      self.general_vbox.pack_start(self.general_separator0)
+      self.general_vbox.pack_start(self.general_icon_table)
     
     #Next section: File Browser
     #Bold text: File Browser with an HSeparator under it
@@ -226,9 +235,6 @@ class Prefs:
     (self.general_fb_y+2),(self.general_fb_y+3),yoptions=gtk.SHRINK)
     
     #Put ALL of the general tab together
-    self.general_vbox.pack_start(self.general_icon_label)
-    self.general_vbox.pack_start(self.general_separator0)
-    self.general_vbox.pack_start(self.general_icon_table)
     self.general_vbox.pack_start(self.general_fb_label)
     self.general_vbox.pack_start(self.general_separator1)
     self.general_vbox.pack_start(self.general_fb_table)

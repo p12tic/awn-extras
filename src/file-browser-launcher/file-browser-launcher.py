@@ -46,27 +46,36 @@ class App (awn.AppletSimple):
     
     #Get the icon theme default theme thing
     self.theme = gtk.icon_theme_get_default()
-    self.theme.connect('changed',self.icon_theme_changed)
     
-    #get the default icon path
-    self.default_icon_path = '/'.join(__file__.split('/')[:-1])+'/folder.png'
+    #Use awn-icons if supported
+    if hasattr(self, 'set_awn_icon'):
+      self.icon = self.set_awn_icon('file-browser-launcher', uid, 'folder')
+      #Now isn't that just a billion times easier?
     
-    #Get the icon path, or default to /dev/null which will become the stock folder icon
-    self.awncc_icon = self.client.get_string('icon','default')
-    
-    #Get and set the icon
-    try:
-      if self.awncc_icon in ['/dev/null','','theme']:
-        icon = self.theme.load_icon('folder',height,height)
-      elif self.awncc_icon=='default':
-        icon = gtk.gdk.pixbuf_new_from_file_at_size(self.default_icon_path,height,height)
-      else:
-        icon = gtk.gdk.pixbuf_new_from_file_at_size(self.awncc_icon,height,height)
-      if height != icon.get_height():
-        icon = icon.scale_simple(height,height,gtk.gdk.INTERP_BILINEAR)
-      self.set_icon(icon)
-    except:
-      self.set_icon(gtk.gdk.pixbuf_new_from_file_at_size(self.default_icon_path,height,height))
+    #awn-icons isn't supported
+    else:
+      #Change the applet icon if the icon theme changes
+      self.theme.connect('changed',self.icon_theme_changed)
+      
+      #get the default icon path
+      self.default_icon_path = '/'.join(__file__.split('/')[:-1])+'/folder.png'
+      
+      #Get the icon path, or default to /dev/null which will become the stock folder icon
+      self.awncc_icon = self.client.get_string('icon','default')
+      
+      #Get and set the icon
+      try:
+        if self.awncc_icon in ['/dev/null','','theme']:
+          icon = self.theme.load_icon('folder',height,height)
+        elif self.awncc_icon=='default':
+          icon = gtk.gdk.pixbuf_new_from_file_at_size(self.default_icon_path,height,height)
+        else:
+          icon = gtk.gdk.pixbuf_new_from_file_at_size(self.awncc_icon,height,height)
+        if height != icon.get_height():
+          icon = icon.scale_simple(height,height,gtk.gdk.INTERP_BILINEAR)
+        self.set_icon(icon)
+      except:
+        self.set_icon(gtk.gdk.pixbuf_new_from_file_at_size(self.default_icon_path,height,height))
     
     #Make the dialog, will only be shown when approiate
     #VBox for everything to go in
@@ -536,7 +545,7 @@ class App (awn.AppletSimple):
     import prefs
     
     #Show the prefs window - see prefs.py
-    prefs.Prefs(self.set_icon,self.uid)
+    prefs.Prefs(self)
     gtk.main()
   
   #Show the about window

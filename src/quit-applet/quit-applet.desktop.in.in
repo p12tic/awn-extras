@@ -5,6 +5,6 @@ Type=Application
 X-AWN-AppletType=Python
 Comment=A applet to exit your session
 Exec=quit-applet/quit-applet.py
-Icon=quit-applet/icons/application-exit.svg
+Icon=quit-applet/icons/scalable/apps/application-exit.svg
 Name[en_US]=Quit-Logoff applet
 X-AWN-AppletCategory=System

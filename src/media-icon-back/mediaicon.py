@@ -50,34 +50,47 @@ class App (awn.AppletSimple):
         """
         Creating the applets core
         """
-        self.media_button_type = media_button_type
-        if self.media_button_type == "--next": # --next --previous --pp
-            self.media_icon_name = "icons/forward.svg"
-        elif self.media_button_type == "--previous":
-            self.media_icon_name = "icons/backward.svg"
-        elif self.media_button_type == "--pp":
-            self.media_icon_name = "icons/play.svg"
-        location =  __file__
-        self.location = location.replace(FILENAME,'')
-        self.location_icon = self.location + self.media_icon_name
-        self.what_app()
         awn.AppletSimple.__init__(self, uid, orient, height)
+        
+        self.media_button_type = media_button_type
+        if not hasattr(self, 'set_awn_icon'):
+            if self.media_button_type == "-next": # -next -previous -pp
+                self.media_icon_name = "forward.svg"
+            elif self.media_button_type == "-previous":
+                self.media_icon_name = "backward.svg"
+            elif self.media_button_type == "-pp":
+                self.media_icon_name = "play.svg"
+            location =  __file__
+            self.location = location.replace(FILENAME,'')
+            self.location_icon = self.location + 'icons/' + self.media_icon_name
+            icon = gdk.pixbuf_new_from_file (self.location_icon)
+            if height != icon.get_height():
+                icon = icon.scale_simple(height,height,gtk.gdk.INTERP_BILINEAR)
+            self.set_icon(icon)
+        else:
+            print 'set_awn_icon is supported'
+            if self.media_button_type == "-next": # -next -previous -pp
+                self.media_icon_name = "media-skip-forward"
+            elif self.media_button_type == "-previous":
+                self.media_icon_name = "media-skip-backward"
+            elif self.media_button_type == "-pp":
+                self.media_icon_name = "media-playback-start"
+            self.set_awn_icon('media-icon' + self.media_button_type, uid, \
+                self.media_icon_name)
+        
+        self.what_app()
         self.height = height
-        icon = gdk.pixbuf_new_from_file (self.location_icon)
-        if height != icon.get_height():
-            icon = icon.scale_simple(height,height,gtk.gdk.INTERP_BILINEAR)
-        self.set_icon(icon)
         self.title = awn.awn_title_get_default()
         self.popup_menu = self.create_default_menu()
         self.connect("button-press-event", self.button_press)
 
     def button_press(self, widget, event):
         if event.button == 1:
-            if self.media_button_type == "--next": # --next --previous --pp
+            if self.media_button_type == "-next": # -next -previous -pp
                 self.button_next_press()
-            elif self.media_button_type == "--previous":
+            elif self.media_button_type == "-previous":
                 self.button_previous_press()
-            elif self.media_button_type == "--pp":
+            elif self.media_button_type == "-pp":
                 self.button_pp_press()
         elif event.button == 3:
             self.popup_menu.popup(None, None, None, event.button, event.time)
@@ -103,7 +116,7 @@ class App (awn.AppletSimple):
 
 if __name__ == "__main__":
     awn.init(sys.argv[1:])
-    applet = App(awn.uid, awn.orient, awn.height, "--previous")
+    applet = App(awn.uid, awn.orient, awn.height, "-previous")
     awn.init_applet(applet)
     applet.show_all()
     gtk.main()

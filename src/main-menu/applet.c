@@ -34,6 +34,8 @@
 #include <libawn/awn-applet-simple.h>
 #include <libawn-extras/awn-extras.h>
 
+#define APPLET_NAME "main-menu"
+
 typedef struct {
 
   AwnApplet *applet;
@@ -444,13 +446,11 @@ awn_applet_factory_initp (const gchar * uid, gint orient, gint height )
                        
   g_signal_connect (G_OBJECT (applet), "button-press-event",
                     G_CALLBACK (on_icon_clicked), (gpointer)app);
-  GdkPixbuf *icon;
-  icon = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (),
-                                   "gnome-main-menu",
-                                   height-2,
-                                   0, NULL);
-	
-  awn_applet_simple_set_icon (AWN_APPLET_SIMPLE (applet), icon);
+  
+  awn_applet_simple_set_awn_icon( AWN_APPLET_SIMPLE(app->applet),
+                                    APPLET_NAME,
+                                    uid,
+                                    "gnome-main-menu")  ;
 
   gtk_widget_show_all (GTK_WIDGET (applet));                              
   return applet;

@@ -19,7 +19,7 @@
 
 #include "config.h"
 
-#define APPLET_NAME "awnterminal"
+#define APPLET_NAME "awnterm"
 
 #include <libawn/awn-applet.h>
 #include <libawn/awn-applet-simple.h>

@@ -37,8 +37,6 @@ import sys
 import awn
 from awn.extras import detach
 
-#TODO: Warning dialogs when deleting items or categories
-
 class App(awn.AppletSimple):
   last_num_items = -1
   pixbuf = None
@@ -361,6 +359,8 @@ class App(awn.AppletSimple):
         dialog_entry.set_text(x)
         dialog_entry.iterator = y
         dialog_entry.type = 'items'
+        if self.settings['details'][y].replace(' ','').replace('\n','') != '':
+          dialog_entry.set_tooltip_text(self.settings['details'][y])
         dialog_entry.connect('focus-out-event',self.item_updated)
         
         #Try to colorize the entry widget based on its priority

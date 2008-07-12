@@ -53,13 +53,16 @@ class App (awn.AppletSimple):
         awn.AppletSimple.__init__ (self, uid, orient, height)
         self.height = height
         self.theme = gtk.icon_theme_get_default()
-        try:icon = self.theme.load_icon ("gnome-main-menu", height, 0)
-        except:
-            icon = gdk.pixbuf_new_from_file (self.location_icon)
-            print 'noicon'
-        if height != icon.get_height():
-            icon = icon.scale_simple(height,height,gtk.gdk.INTERP_BILINEAR)
-        self.set_icon (icon)
+        if hasattr(self, 'set_awn_icon'):
+            self.set_awn_icon('MiMenu', uid, 'gnome-main-menu')
+        else:
+          try:icon = self.theme.load_icon ("gnome-main-menu", height, 0)
+          except:
+              icon = gdk.pixbuf_new_from_file (self.location_icon)
+              print 'noicon'
+          if height != icon.get_height():
+              icon = icon.scale_simple(height,height,gtk.gdk.INTERP_BILINEAR)
+          self.set_icon (icon)
         self.title = awn.awn_title_get_default ()
         self.resultToolTip = "Main Menu Applet"
         self.dialog = awn.AppletDialog (self)

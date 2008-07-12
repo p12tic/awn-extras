@@ -1,6 +1,6 @@
 NULL =
 if HAVE_VALA
-VALA_APPLETS = vala-test standalone-launcher taskmand simple-launcher
+VALA_APPLETS = vala-test taskmand simple-launcher
 endif
 
 GCONF_APPLETS =

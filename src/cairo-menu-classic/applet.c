@@ -19,6 +19,8 @@
 
 #include "config.h"
 
+#define APPLET_NAME "cairo-menu-classic"
+
 #define GMENU_I_KNOW_THIS_IS_UNSTABLE
 #include <gnome-menus/gmenu-tree.h>
 
@@ -131,49 +133,6 @@ static gboolean  _build_away(gpointer null)
   g_list_foreach(GTK_FIXED(G_Fixed)->children, _fixup_menus, NULL);
   gtk_widget_hide(menu->mainwindow);
 
-  icon = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(),
-                                  G_cairo_menu_conf.applet_icon,
-                                  G_Height - 2,
-                                  0, NULL);
-
-  if (!icon)
-    icon = gdk_pixbuf_new_from_file_at_size(g_filename_from_utf8(G_cairo_menu_conf.applet_icon, -1, NULL, NULL, NULL), G_Height - 2,
-                                            G_Height - 2, NULL);
-
-  if (!icon)
-  {
-    printf("failed to load icon: %s\n", G_cairo_menu_conf.applet_icon);
-    icon = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "stock_missing-image",
-                                    G_Height - 2,
-                                    0, NULL);
-  }
-
-  if (!icon)
-  {
-
-    icon = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gnome-main-menu",
-                                    G_Height - 2,
-                                    0, NULL);
-  }
-
-  if (icon)
-  {
-    if (gdk_pixbuf_get_height(icon) != G_Height - 2)
-    {
-      GdkPixbuf *oldpbuf = icon;
-      icon = gdk_pixbuf_scale_simple(oldpbuf, G_Height - 2, G_Height - 2, GDK_INTERP_HYPER);
-      g_object_unref(oldpbuf);
-    }
-
-    awn_applet_simple_set_temp_icon(AWN_APPLET_SIMPLE(G_applet), icon);
-  }
-  else
-  {
-    icon = gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8, G_Height - 2, G_Height - 2);
-    gdk_pixbuf_fill(icon, 0x00000000);
-    awn_applet_simple_set_temp_icon(AWN_APPLET_SIMPLE(G_applet), icon);
-  }
-
   g_signal_connect(G_OBJECT(menu->applet), "button-press-event", G_CALLBACK(_button_clicked_event), menu);
 
   return FALSE;
@@ -202,11 +161,13 @@ AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient, gint height)
   AwnApplet *applet = AWN_APPLET(awn_applet_simple_new(uid, orient, height));
   G_applet = applet;
   gtk_widget_set_size_request(GTK_WIDGET(applet), height, -1);
-  GdkPixbuf *icon;
   G_Height = height;
-  icon = gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8, 1, height);
-  gdk_pixbuf_fill(icon, 0x00000000);
-  awn_applet_simple_set_temp_icon(AWN_APPLET_SIMPLE(applet), icon);
+  
+  awn_applet_simple_set_awn_icon( AWN_APPLET_SIMPLE(applet),
+                                    APPLET_NAME,
+                                    uid,
+                                    "gnome-main-menu")  ;
+  
   gtk_widget_show_all(GTK_WIDGET(applet));
 
   g_signal_connect(G_OBJECT(applet), "expose-event", G_CALLBACK(_expose_event), NULL);

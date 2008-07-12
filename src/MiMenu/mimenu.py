@@ -46,23 +46,12 @@ class App (awn.AppletSimple):
             self.screen_hieght = int(screen_hieght * 0.5)
         if screen_hieght <= 700:
             self.screen_hieght = int(screen_hieght * 0.55)
-        theme = gtk.IconTheme()
         location =  __file__
         self.location = location.replace('mimenu.py','')
         self.location_icon = self.location + '/icons/icon.svg'
         awn.AppletSimple.__init__ (self, uid, orient, height)
         self.height = height
-        self.theme = gtk.icon_theme_get_default()
-        if hasattr(self, 'set_awn_icon'):
-            self.set_awn_icon('MiMenu', uid, 'gnome-main-menu')
-        else:
-          try:icon = self.theme.load_icon ("gnome-main-menu", height, 0)
-          except:
-              icon = gdk.pixbuf_new_from_file (self.location_icon)
-              print 'noicon'
-          if height != icon.get_height():
-              icon = icon.scale_simple(height,height,gtk.gdk.INTERP_BILINEAR)
-          self.set_icon (icon)
+        self.set_awn_icon('MiMenu', uid, 'gnome-main-menu')
         self.title = awn.awn_title_get_default ()
         self.resultToolTip = "Main Menu Applet"
         self.dialog = awn.AppletDialog (self)

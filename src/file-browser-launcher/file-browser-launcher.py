@@ -34,7 +34,6 @@ import gconfwrapper as awnccwrapper
 class App (awn.AppletSimple):
   def __init__(self, uid, orient, height):
     self.uid = uid
-    self.height = height
     
     #AWN Applet Configuration
     awn.AppletSimple.__init__(self, uid, orient, height)
@@ -44,38 +43,10 @@ class App (awn.AppletSimple):
     #Has to do with awncc
     self.client = awnccwrapper.AwnCCWrapper(self.uid)
     
-    #Get the icon theme default theme thing
+    #Get the default icon theme
     self.theme = gtk.icon_theme_get_default()
     
-    #Use awn-icons if supported
-    if hasattr(self, 'set_awn_icon'):
-      self.icon = self.set_awn_icon('file-browser-launcher', uid, 'folder')
-      #Now isn't that just a billion times easier?
-    
-    #awn-icons isn't supported
-    else:
-      #Change the applet icon if the icon theme changes
-      self.theme.connect('changed',self.icon_theme_changed)
-      
-      #get the default icon path
-      self.default_icon_path = '/'.join(__file__.split('/')[:-1])+'/folder.png'
-      
-      #Get the icon path, or default to /dev/null which will become the stock folder icon
-      self.awncc_icon = self.client.get_string('icon','default')
-      
-      #Get and set the icon
-      try:
-        if self.awncc_icon in ['/dev/null','','theme']:
-          icon = self.theme.load_icon('folder',height,height)
-        elif self.awncc_icon=='default':
-          icon = gtk.gdk.pixbuf_new_from_file_at_size(self.default_icon_path,height,height)
-        else:
-          icon = gtk.gdk.pixbuf_new_from_file_at_size(self.awncc_icon,height,height)
-        if height != icon.get_height():
-          icon = icon.scale_simple(height,height,gtk.gdk.INTERP_BILINEAR)
-        self.set_icon(icon)
-      except:
-        self.set_icon(gtk.gdk.pixbuf_new_from_file_at_size(self.default_icon_path,height,height))
+    self.icon = self.set_awn_icon('file-browser-launcher', uid, 'folder')
     
     #Make the dialog, will only be shown when approiate
     #VBox for everything to go in
@@ -117,7 +88,6 @@ class App (awn.AppletSimple):
     self.connect('button-press-event', self.button_press)
     self.connect('enter-notify-event', lambda a,b: self.title.show(self,'File Browser Launcher'))
     self.connect('leave-notify-event', lambda a,b: self.title.hide(self))
-    self.connect('height-changed',self.height_changed)
     self.dialog.connect('focus-out-event', lambda a,b: self.dialog.hide())
   
   #Function to show the home folder, mounted drives/partitions, and bookmarks according to awncc
@@ -502,21 +472,6 @@ class App (awn.AppletSimple):
     #Launch file browser at path
     #print "Running:", self.awncc_fb+' '+path.replace(' ','\ ')
     subprocess.Popen(self.awncc_fb+' '+path.replace(' ','\ '),shell=True)
-  
-  #The applet's height has changed - update the reference
-  def height_changed(self,applet,height):
-    self.height = height
-  
-  #The icon theme has changed - update the icon if necessary
-  def icon_theme_changed(self,*args):
-    
-    #Check if the current icon is to use the stock folder icon
-    if self.client.get_string('icon','default') in\
-      ['theme','','/dev/null']:
-        
-        #It is; update the icon at the right size
-        self.icon = self.theme.load_icon('folder',self.height,self.height)
-        self.set_icon(self.icon)
   
   #Right click menu - Preferences or About
   def show_menu(self,event):

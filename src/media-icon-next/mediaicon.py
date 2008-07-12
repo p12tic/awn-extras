@@ -53,30 +53,14 @@ class App (awn.AppletSimple):
         awn.AppletSimple.__init__(self, uid, orient, height)
         
         self.media_button_type = media_button_type
-        if not hasattr(self, 'set_awn_icon'):
-            if self.media_button_type == "-next": # -next -previous -pp
-                self.media_icon_name = "forward.svg"
-            elif self.media_button_type == "-previous":
-                self.media_icon_name = "backward.svg"
-            elif self.media_button_type == "-pp":
-                self.media_icon_name = "play.svg"
-            location =  __file__
-            self.location = location.replace(FILENAME,'')
-            self.location_icon = self.location + 'icons/' + self.media_icon_name
-            icon = gdk.pixbuf_new_from_file (self.location_icon)
-            if height != icon.get_height():
-                icon = icon.scale_simple(height,height,gtk.gdk.INTERP_BILINEAR)
-            self.set_icon(icon)
-        else:
-            print 'set_awn_icon is supported'
-            if self.media_button_type == "-next": # -next -previous -pp
-                self.media_icon_name = "media-skip-forward"
-            elif self.media_button_type == "-previous":
-                self.media_icon_name = "media-skip-backward"
-            elif self.media_button_type == "-pp":
-                self.media_icon_name = "media-playback-start"
-            self.set_awn_icon('media-icon' + self.media_button_type, uid, \
-                self.media_icon_name)
+        if self.media_button_type == "-next": # -next -previous -pp
+        self.media_icon_name = "media-skip-forward"
+        elif self.media_button_type == "-previous":
+            self.media_icon_name = "media-skip-backward"
+        elif self.media_button_type == "-pp":
+            self.media_icon_name = "media-playback-start"
+        self.set_awn_icon('media-icon' + self.media_button_type, uid, \
+            self.media_icon_name)
         
         self.what_app()
         self.height = height

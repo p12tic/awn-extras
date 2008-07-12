@@ -40,18 +40,7 @@ class App (awn.AppletSimple):
         self.client.notify_add(awn.CONFIG_DEFAULT_GROUP, 'LogoutCommand', self.load_config)
         awn.AppletSimple.__init__ (self, uid, orient, height)
         self.height = height
-
-        if hasattr(self, 'set_awn_icon'):
-            self.set_awn_icon('quit-applet', uid, 'application-exit')
-        else:
-            self.theme = gtk.IconTheme ()
-            try:
-                icon = gdk.pixbuf_new_from_file (self.icon_location)
-            except: icon = gdk.pixbuf_new_from_file (self.location + "icons/scalable/apps/application-exit.svg")
-            if height != icon.get_height():
-                icon = icon.scale_simple(height,height,gtk.gdk.INTERP_BILINEAR)
-            self.set_temp_icon (icon)
-
+        self.set_awn_icon('quit-applet', uid, 'application-exit')
         self.title = awn.awn_title_get_default ()
         self.connect ("button-press-event", self.button_press)
         self.connect ("enter-notify-event", self.enter_notify)

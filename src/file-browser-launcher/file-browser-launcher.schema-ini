@@ -1,57 +1,53 @@
-[DEFAULT/show_time]
-type = int
-default = 10
-description = the amount of time (in seconds) that the thumbnail stays on the screen before a new one is picked
-
-[DEFAULT/picture_folders]
-type = list-string
-default = ; # this is an empty list
-description = the list of folders where the pictures to be chosen reside
-
 [DEFAULT/fb]
 type = string
 default = xdg-open
 description = The file browser to use
+
 [DEFAULT/lmb]
 type = int
 default = 1
 description = The action to perform on left click
+
 [DEFAULT/lmb_path]
 type = string
 default = ~
 description = The path to use on left click
+
 [DEFAULT/mmb]
 type = int
 default = 2
 description = The action to perform on middle click
+
 [DEFAULT/mmb_path]
 type = string
 default = ~
 description = The path to use on middle click
-[DEFAULT/icon]
-type = string
-default = /dev/null
-description = The icon to use
+
 [DEFAULT/show_bookmarks]
 type = int
 default = 2
 description = Whether or not to display bookmarks
+
 [DEFAULT/show_home]
 type = int
 default = 2
 description = Whether or not to display the home folder
+
 [DEFAULT/show_local]
 type = int
 default = 2
 description = Whether or not to display local drives
+
 [DEFAULT/show_network]
 type = int
 default = 2
 description = Whether or not to display network drives
+
 [DEFAULT/places_open]
 type = int
 default = 2
 description = Whether or not to open the place when clicked
+
 [DEFAULT/focus_entry]
 type = int
 default = 2

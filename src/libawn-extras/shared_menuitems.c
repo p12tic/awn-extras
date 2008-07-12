@@ -157,6 +157,7 @@ GtkWidget *shared_menuitem_about_applet(const gchar * copyright,
   GtkAboutDialog *dialog=GTK_ABOUT_DIALOG(gtk_about_dialog_new ());
   GtkWidget *item;
   gchar * item_text=NULL;
+  GdkPixbuf * pixbuf=NULL;
   
   g_assert(copyright!=NULL);
   g_assert(strlen(copyright)>8);
@@ -205,10 +206,19 @@ GtkWidget *shared_menuitem_about_applet(const gchar * copyright,
   {
     gtk_about_dialog_set_website_label (dialog,website_label);
   }
-  if (icon_name)
+  
+
+  if (!icon_name)
   {
-    gtk_about_dialog_set_logo_icon_name (dialog,icon_name);
+    icon_name="stock_about";
   }
+  gtk_about_dialog_set_logo_icon_name (dialog,icon_name);
+  pixbuf = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), 
+                                  icon_name,64, 
+                                  0, NULL);
+  gtk_window_set_icon(GTK_WINDOW(dialog),pixbuf );
+  g_object_unref(pixbuf);
+
   if (translator_credits)
   {
     gtk_about_dialog_set_translator_credits (dialog,translator_credits);

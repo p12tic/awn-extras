@@ -39,15 +39,7 @@ import awn
 # For the Networking class
 import urllib
 
-try:
-    # The libawn-extras additions. Not always available
-    import awn.extras as extras
-except:
-    # Use in surfaceToPixbuf
-    import StringIO
-
-    # To make tests easier later
-    extras = None
+import awn.extras as extras
 
 ___file___ = sys.argv[0]
 # Basically, __file__ = current file location
@@ -393,7 +385,7 @@ class Icon:
         else:
             return icon
 
-    def theme(self, name, set=True):
+    def theme(self, name, set=None):
         """
         Get an icon from the default icon theme.
 
@@ -401,16 +393,12 @@ class Icon:
         @type name: C{string}
         @param set: Whether to also set the icon. True by default.
         @type set: C{bool}
-        @return: The resultant pixbuf or None (if C{set} is C{True})
-        @rtype: C{gtk.gdk.Pixbuf} or C{None}
         """
+        
+        if set != None:
+            print "WARNING: parameter 'set' is now deprecated because set_awn_icon() is used"
 
         self.__parent.set_awn_icon(self.__parent.meta["short"], name)
-
-        if set:
-            self.set(icon)
-        else:
-            return icon
 
     def surface(self, surface, pixbuf=None, set=True):
         """
@@ -428,19 +416,10 @@ class Icon:
         @rtype: C{gtk.gdk.Pixbuf} or C{None}
         """
 
-        if extras:
-            if pixbuf is None:
-                icon = extras.surface_to_pixbuf(surface)
-            else:
-                icon = extras.surface_to_pixbuf(surface, pixbuf)
+        if pixbuf is None:
+            icon = extras.surface_to_pixbuf(surface)
         else:
-            sio = StringIO()
-            surface.write_to_png(sio)
-            sio.seek(0)
-            loader = gtk.gdk.PixbufLoader()
-            loader.write(sio.getvalue())
-            loader.close()
-            icon = loader.get_pixbuf()
+            icon = extras.surface_to_pixbuf(surface, pixbuf)
 
         if set:
             self.set(icon)
@@ -1283,15 +1262,8 @@ class Notify:
         applet expects to use Notify.
         """
 
-        if extras:
-            return
-
-        n = subprocess.call(["notify-send"])
-        if n != 256:
-            self.__parent.errors.program("notify-send", { \
-                "Debian/Ubuntu": "libnotify-bin", \
-                "Gentoo": "x11-libs/libnotify", \
-                "OpenSUSE": "libnotify"}, self.require)
+        print "WARNING: notify.require() is no longer necessary"
+        pass
 
     def send(self, subject=None, body="", icon="", attention=True):
         """
@@ -1312,15 +1284,7 @@ class Notify:
         if not subject:
             subject = '"' + "Message From " + self.__parent.meta["name"] + '"'
 
-        if extras:
-            return extras.notify_message(subject, body, icon, 0, False)
-
-        body = '"' + body.replace("\"", "\\\"") + '"'
-        icon = '"' + icon + '"'
-        subprocess.call(["notify-send", subject, body, "-i", icon])
-
-        if attention:
-            self.__parent.effects.attention()
+        return extras.notify_message(subject, body, icon, 0, False)
 
 
 class Effects:

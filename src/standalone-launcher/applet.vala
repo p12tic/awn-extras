@@ -30,7 +30,7 @@ using   Cairo;
 //FIXME... ugly hack (self) to deal with vala 0.1.7 dbus signal bug
 //or maybe I was just doing it wrong to begin with....
 //doing this for now.
-public pointer global_self;
+//public pointer global_self;
 
 enum LaunchMode
 {
@@ -95,10 +95,10 @@ static string get_exec(int pid)
     return after;
 }
 
-static int _cmp_ptrs (pointer a, pointer b)
+/*static int _cmp_ptrs (pointer a, pointer b)
 {
 	return (int) a - (int) b;
-}
+}*/
 
 
 class Configuration: GLib.Object
@@ -150,7 +150,7 @@ class Configuration: GLib.Object
 		}
 //		_active_colour=new Awn.Color();
 		read_config();
-            
+      /*      
         default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"active_colour", _config_changed, this);
         default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"anonymous/override_app_icon", _config_changed, this);
         default_conf.notify_add(CONFIG_CLIENT_DEFAULT_GROUP,"discrete/override_app_icon", _config_changed, this);
@@ -170,16 +170,16 @@ class Configuration: GLib.Object
         if (!anon_mode)
 		{
 				
-		}
+		}*/
 	}
-	
-	private static void _config_changed(Awn.ConfigClientNotifyEntry entry,pointer ptr)
+    
+/*	private static void _config_changed(Awn.ConfigClientNotifyEntry entry,Configuration ptr)
 	{
         weak Configuration self = (Configuration) ptr;
         self.read_config_dynamic();
 		stdout.printf("config notify fired\n");
 	}
-	
+	*/
 	Configuration(string uid,bool anon_mode)
 	{
 		this.uid=uid;
@@ -383,21 +383,64 @@ class Configuration: GLib.Object
 
 
 /* This class needs to be rethought*/
-class DesktopFileManagement : GLib.Object
+class DesktopFileManagement: GLib.Object 
 {
-	protected   string  directory;
-	public   string  uid { get; construct; }
+    public  string uid;
+    public  string directory;
+    
+	construct
+	{
+	    directory=Environment.get_home_dir()+"/.config/awn/applets/standalone-launcher/desktops/";
+    }
+	public string Filename()
+	{
+        string fullpath=directory+Checksum(uid)+".desktop";
+		return  fullpath;
+	}   
+	public bool Exists()
+	{
+		return FileUtils.test(directory+Checksum(uid)+".desktop", FileTest.EXISTS | FileTest.IS_REGULAR);
+		
+	}  
+	public string URI()
+	{
+        string fullpath="file://"+directory+Checksum(uid)+".desktop";
+		return  fullpath;
+	}  
+    
+	private string Checksum(string str)
+	{
+        return str;
+	    string result=new string();
+        stdout.printf("DesktopFileManagement checksum \n");          
+	    result="anon-";
+	    for(int i=0;i<str.len();i++)
+	    {
+	        string piece = str.substring(i,1);  //FIXME...  easy in C.. not sure of vala.
+	        if (
+	                (piece=="%") ||    (piece==".") || (piece=="?") || (piece=="*") 
+	                ||  (piece=="&") || (piece=="~") || (piece=="@") || (piece==";")
+	                ||  (piece=="(") || (piece=="\\")|| (piece=="/")
+	                ) 
+	        {
+	            piece="_";
+            }	            
+	        result=result+piece;
+	    }
+	    return result;
+	}    
+    
+/*	protected  string  directory;
+	public     string  _uid {get; construct;  }
+    private    string userid;
 	
 	construct
 	{
 		directory=Environment.get_home_dir()+"/.config/awn/applets/standalone-launcher/desktops/";
-		if ( uid.to_double()>0)
+		if ( _uid.to_double()>0)
 		{
-
-            uid=Checksum(uid);
 			if (! FileUtils.test(directory,FileTest.EXISTS)  )
 			{		
-				stdout.printf("creating %s\n",directory);
 				if ( DirUtils.create_with_parents(directory,0777) != 0)
 				{
 					error("Fatal error creating %s\n",directory);
@@ -409,26 +452,28 @@ class DesktopFileManagement : GLib.Object
 			}
 
 		}
-		else
-		{
-            uid=Checksum(uid);
-		}
+        userid=Checksum(_uid);
 	}
-	
-	public void set_name(string name)
-	{
-            uid=Checksum(name);
+
+    
+	public string uid{
+        set{
+            stdout.printf("DesktopFileManagement uid \n");      
+            userid=Checksum(value);
+        }
 	}
 	
 	private string Checksum(string str)
 	{
+        return str;
 	    string result=new string();
+        stdout.printf("DesktopFileManagement checksum \n");          
 	    result="anon-";
 	    for(int i=0;i<str.len();i++)
 	    {
 	        string piece = str.substring(i,1);  //FIXME...  easy in C.. not sure of vala.
 	        if (
-	                    (piece=="%") || (piece==".") || (piece=="?") || (piece=="*") 
+	                    (piece==".") || (piece=="?") || (piece=="*") 
 	                ||  (piece=="&") || (piece=="~") || (piece=="@") || (piece==";")
 	                ||  (piece=="(") || (piece=="\\")|| (piece=="/")
 	                ) 
@@ -440,66 +485,79 @@ class DesktopFileManagement : GLib.Object
 	    return result;
 	}
 	
-	public DesktopFileManagement(string uid)
-	{
-		this.uid = uid;
+	public DesktopFileManagement(string _uid)
+	{    
+		this._uid = _uid;
 	}
-		
+	
 	public string URI()
 	{
-        string fullpath="file://"+directory+uid+".desktop";
+        string fullpath="file://"+directory+userid+".desktop";
 		return  fullpath;
 	}
 
 	public string Filename()
 	{
-        string fullpath=directory+uid+".desktop";
+        string fullpath=directory+userid+".desktop";
 		return  fullpath;
 	}
 	
 	public bool Exists()
 	{
-		return FileUtils.test(directory+uid+".desktop", FileTest.EXISTS | FileTest.IS_REGULAR);
+		return FileUtils.test(directory+userid+".desktop", FileTest.EXISTS | FileTest.IS_REGULAR);
 		
-	}
+	}*/
 }
 
 
-[DBusInterface (name = "org.awnproject.taskmand")]
-interface Taskman.TaskmanInterface;
+//[DBusInterface (name = "org.awnproject.taskmand")]
+//interface Taskman.TaskmanInterface;
+
+//[DBus (name = "org.awnproject.taskmand")]
 
 
-public class DBusComm : GLib.Object 
+
+public class DBusComm : GLib.Object
 {
         public		DBus.Connection		conn;
-		public		Taskman.TaskmanInterface	taskobj;
-		
+//		public		Taskman.TaskmanInterface	taskobj;
+		dynamic DBus.Object server_object;
+//        var conn;
+    
         construct
         {
-                conn = DBus.Bus.get (DBus.BusType.SESSION);
-   				taskobj = conn.get_object<Taskman.TaskmanInterface> ("org.awnproject.taskmand", "/org/awnproject/taskmand");
+            stdout.printf("Dbuscomm. construct 1\n");
+            conn = DBus.Bus.get(DBus.BusType.SESSION);
+            stdout.printf("Dbuscomm. construct 2\n");
+             server_object = conn.get_object ("org.awnproject.taskmand", "/org/awnproject/taskmand", "org.awnproject.taskmand");
+            stdout.printf("Dbuscomm. construct 3\n");            
+            
+//                conn = DBus.Bus.get (DBus.BusType.SESSION);
+//   				taskobj = conn.get_object<Taskman.TaskmanInterface> ("org.awnproject.taskmand", "/org/awnproject/taskmand");
         }
 
-		public void Register(string uid)
+		public void Launcher_Register(string uid)
 		{	
-			taskobj.Launcher_Register(uid);
+            stdout.printf("Launcher_Register 1\n");
+			server_object.Launcher_Register(uid);
+            stdout.printf("Launcher_Register 2\n");
 		}
 		
-		public void Unregister(string uid)
+		public void Launcher_Unregister(string uid)
 		{
-			taskobj.Launcher_Unregister(uid);
+			server_object.Launcher_Unregister(uid);
 		}
 		
 		public string Inform_Task_Ownership(string uid, string xid, string request)
 		{
 			string response;
-			response=taskobj.Inform_Task_Ownership(uid,xid,request);
+			response=server_object.Inform_Task_Ownership(uid,xid,request);
 			return response;
 		}
 
 		public string Return_XID(string uid, string xid)
 		{
-			taskobj.Return_XID(uid,xid);
+			server_object.Return_XID(uid,xid);
             return xid;
 		}
 
@@ -679,7 +737,7 @@ class Listing : GLib.Object
     {
         List<string> result;
         string[] file_strings;
-        weak string file_data;
+        string file_data;
         try{
             FileUtils.get_contents (file_name, out file_data);
         }catch (FileError ex ){
@@ -703,7 +761,7 @@ class Listing : GLib.Object
     {
         List<string> result;
         string[] file_strings;
-        weak string file_data;
+        string file_data;
         try{
             FileUtils.get_contents (file_name, out file_data);
         }catch (FileError ex ){
@@ -878,7 +936,7 @@ class BookKeeper : GLib.Object
         return (number()>0);
     }
 
-    Wnck.Application    get_app_from_win(Wnck.Window win)
+    Wnck.Application  get_app_from_win(Wnck.Window win)
     {
         if (win!=null)
         {
@@ -921,7 +979,7 @@ class BookKeeper : GLib.Object
     }
 
     //needle is a pointer because it may not be a Wnck.Window anymore... no harm done
-    public Wnck.Window  search_win_by_win(pointer needle)
+    public Wnck.Window search_win_by_win(Wnck.Window needle)
     {
         if (needle==null)
             return null;
@@ -1091,10 +1149,10 @@ class BookKeeper : GLib.Object
     {
         if (app != null)
         {
-            if (!find_app(app) )
+/*            if (!find_app(app) )
             {
                 wins.prepend(app);
-            }
+            }*/
         }
     }
 
@@ -1215,13 +1273,14 @@ class LauncherApplet : AppletSimple
 
     construct 
     { 
-        global_self=this;
+//        global_self=this;
         closing=false;  //if this becomes true it means an irrevocable closing is in process.
         timer_count=0;
         blank_icon();
 		this.realize += _realized;        
 		hidden=true;
         dnd_motion_last_time=0;
+        stdout.printf("construct\n");
     }
 
     /*sets the icon to a blank icon*/
@@ -1327,6 +1386,7 @@ class LauncherApplet : AppletSimple
 
     private bool _initialize()
     {
+        stdout.printf("_initialize\n");
         books = new BookKeeper();
         multi_launcher = null;
         this.button_press_event+=_button_press;
@@ -1347,25 +1407,34 @@ class LauncherApplet : AppletSimple
         this.drag_data_get+=_drag_data_get;
         this.drag_motion+=_drag_motion;
         this.drag_leave+=_drag_leave;
-        
+        stdout.printf("_initialize...2\n");        
 		awn_config= new ConfigClient();
         config=new Configuration(uid,(uid.to_double()<=0));
         if (config.task_mode != TaskMode.NONE)
         {
+            stdout.printf("_initialize...3.0\n");              
             this.enter_notify_event+=_enter_notify;
             this.leave_notify_event+=_leave_notify;
+            stdout.printf("_initialize...3.2\n");                          
             dialog=get_dialog(true);
             dialog.set_accept_focus(false);
             dialog.set_app_paintable(true);
+            stdout.printf("_initialize...3.6\n");                          
             vbox=new VButtonBox();
             dialog.add(vbox);
             build_right_click();
+            stdout.printf("_initialize...3.8\n");                          
             dbusconn = new DBusComm();
-            dbusconn.Register(uid);
-            dbusconn.taskobj.Offered+=_offered;
+            stdout.printf("_initialize...3.8.1\n");            
+            dbusconn.Launcher_Register(uid);
+            stdout.printf("_initialize...3.8.2\n");                        
+            //dbusconn.Launcher_Offered+=_offered;
+            stdout.printf("_initialize...3.8.3\n");                        
             wnck_screen = Wnck.Screen.get_default();	
+            stdout.printf("_initialize...3.8.4\n");                        
             wnck_screen.force_update();	
         }
+        stdout.printf("_initialize...4\n");         
         theme = IconTheme.get_default ();        
 		icon = theme.load_icon ("stock_stop", height - 2, IconLookupFlags.USE_BUILTIN);
 		title_string = new string();
@@ -1380,13 +1449,21 @@ class LauncherApplet : AppletSimple
         draw_set_window_size(effects,height,height);
         draw_set_icon_size(effects,height-2,height-2);
 		show_icon();
+        stdout.printf("_initialize...6\n");         
 		if (uid.to_double()>0) 
 		{				
-            desktopfile = new DesktopFileManagement(uid);
+            stdout.printf("_initialize...6.1\n");              
+//            desktopfile = new DesktopFileManagement(uid);
+            desktopfile = new DesktopFileManagement();
+            desktopfile.uid = uid;
+            stdout.printf("_initialize...6.2\n");                          
 			launchmode = LaunchMode.DISCRETE;
+            stdout.printf("_initialize...6.3\n");                          
 			desktopitem = new DesktopItem(desktopfile.Filename() );	
+            stdout.printf("_initialize...7.3\n");               
 			if (!desktopfile.Exists() )
 			{
+                stdout.printf("_initialize...7.3.1\n");                               
 				desktopitem.set_exec("false");
 				desktopitem.set_icon("stock_stop");
 				desktopitem.set_item_type("Application");
@@ -1394,6 +1471,7 @@ class LauncherApplet : AppletSimple
 			}
             else
             {
+                stdout.printf("_initialize...7.5\n");                               
                 books.update_with_desktopitem(desktopitem);
             
                 if (config.multi_launcher)
@@ -1404,6 +1482,7 @@ class LauncherApplet : AppletSimple
                     {
                         desktop_key="";
                     }
+                    stdout.printf("_initialize...7.6\n");                                                   
                     string []desktop_files=desktop_key.split(":");            
                     launchers.prepend(desktopfile.Filename());
                     foreach(string filename in desktop_files)
@@ -1411,6 +1490,7 @@ class LauncherApplet : AppletSimple
                         launchers.prepend(filename);
                     }
                     multi_launcher = new Multi_Launcher( launchers);
+                    stdout.printf("_initialize...7.7\n");                                                   
                     foreach(weak DesktopItem item in multi_launcher.desktops() )
                     {
                         books.update_with_desktopitem(item);
@@ -1441,7 +1521,7 @@ class LauncherApplet : AppletSimple
                     hidden=false;
 					while (response=="RESET")
 					{
-						dbusconn.Register(uid);					
+						dbusconn.Launcher_Register(uid);					
 						response=dbusconn.Inform_Task_Ownership(uid,win.get_xid().to_string(),"CLAIM");					
 					}
 					if (response=="HANDSOFF")
@@ -1481,6 +1561,7 @@ class LauncherApplet : AppletSimple
 				close();
 		    }
 		}	
+        stdout.printf("_initialize...16\n"); 
 		if (desktopitem.exists() )  //we will use a user specified one if it exists.
 		{
 			if (desktopitem.get_icon(theme)!=null)
@@ -1497,7 +1578,7 @@ class LauncherApplet : AppletSimple
             wnck_screen.active_window_changed+=	_active_window_changed;
         }
         wnck_screen.active_workspace_changed+=_active_workspace_changed;
-
+        stdout.printf("_initialize...18\n"); 
 		task_icon = theme.load_icon (config.task_icon_name, height - 2, IconLookupFlags.USE_BUILTIN);
         if (task_icon == null)
         {
@@ -1515,6 +1596,7 @@ class LauncherApplet : AppletSimple
         show_icon();        
         effect_start_ex(effects, Effect.LAUNCHING,null,null,1);
         desktopitem.set_string ("Type","Application");         
+        stdout.printf("_initialize....20\n");        
 		return false;
     }
     
@@ -1545,14 +1627,16 @@ class LauncherApplet : AppletSimple
 		if (app.get_name()!=null)
 		{
 		    temp=app.get_name();
-            desktopfile = new DesktopFileManagement(temp);
-			desktopfile.set_name(temp);		
+//            desktopfile = new DesktopFileManagement(temp);
+            desktopfile = new DesktopFileManagement();            
+			desktopfile.uid = temp ;		
 		}
 		else
 		{
 		    temp=win.get_name();
-		    desktopfile = new DesktopFileManagement(temp);		
-			desktopfile.set_name(temp);
+//		    desktopfile = new DesktopFileManagement(temp);	
+		    desktopfile = new DesktopFileManagement();	
+			desktopfile.uid = temp;
 		}		
 		desktopitem = new DesktopItem(desktopfile.Filename() );
         desktopitem.set_string ("Type","Application");	
@@ -1616,7 +1700,7 @@ class LauncherApplet : AppletSimple
 		if (fd_lock!=-1)
 		{
 			Awn.ConfigClient.key_lock(fd_lock,1);
-		    dbusconn.Unregister(uid);
+		    dbusconn.Launcher_Unregister(uid);
 			applet_list = awn_config.get_list (Awn.CONFIG_CLIENT_DEFAULT_GROUP,"applets_list", Awn.ConfigListType.STRING) ;
 			needle="standalone-launcher.desktop::"+uid;
 
@@ -1642,7 +1726,7 @@ class LauncherApplet : AppletSimple
     //FIXME... ugly hack (self) to deal with vala 0.1.7 dbus signal bug
     //or maybe I was just doing it wrong to begin with....
     //doing this for now.
-    private static void _offered(Taskman.TaskmanInterface o, string xid)
+/*    private static void _offered(Taskman.TaskmanInterface o, string xid)
     {
         LauncherApplet applet=(LauncherApplet) global_self;
         Wnck.Window window=applet.find_win_by_xid(xid.to_ulong() );
@@ -1651,6 +1735,7 @@ class LauncherApplet : AppletSimple
             applet._window_opened(applet.wnck_screen,window);
         }
     }
+*/     
     
     private bool _drag_motion(Gtk.Widget widget,Gdk.DragContext context, int x, int y, uint time)
     {
@@ -1696,7 +1781,7 @@ class LauncherApplet : AppletSimple
 		weak SList <string>	fileURIs;
 		string  cmd;  
 		bool status=false;
-		fileURIs=vfs_get_pathlist_from_string(selectdata.data);
+		fileURIs=vfs_get_pathlist_from_string((string)selectdata.data);
 		foreach (string str in fileURIs) 
 		{
             
@@ -2122,7 +2207,7 @@ class LauncherApplet : AppletSimple
         scroll_active_win(-1,timestamp);
     }
 
-    private bool _scroll_event(Gtk.Widget widget,Gdk.EventMotion event)
+    private bool _scroll_event(LauncherApplet widget,Gdk.EventScroll event)
     {
         if (  (event.state & Gdk.ModifierType.SHIFT_MASK) != 0)
         {
@@ -2189,7 +2274,7 @@ class LauncherApplet : AppletSimple
 			pid=desktopitem.launch(documents);
 			if (pid>0)
 			{
-				stdout.printf("launched: pid = %d\n",pid);
+				stdout.printf("launched: pid = %lu\n",pid);
 				books.update_with_pid(pid);
 			}
 			else if (pid==-1)
@@ -2262,7 +2347,7 @@ class LauncherApplet : AppletSimple
             else
             {
                 hidden=true;
-                stdout.printf("number() = %d\n",books.number() );
+                stdout.printf("number() = %u\n",books.number() );
             }   		
 		}	
 		return false;
@@ -2327,7 +2412,7 @@ class LauncherApplet : AppletSimple
 				if (launchmode == LaunchMode.ANONYMOUS)
 				{
 					Wnck.Application app=win.get_application();
-					desktopfile.set_name(app.get_name());
+					desktopfile.uid = app.get_name();
 				}
                 deal_with_icon(win);
 				win.name_changed+=_win_name_change;
@@ -2341,7 +2426,7 @@ class LauncherApplet : AppletSimple
 			}
 			else if (response=="RESET")
 			{
-				dbusconn.Register(uid);										
+				dbusconn.Launcher_Register(uid);										
 			}		
 		}		
 		return (retry_list.length() != 0 );
@@ -2373,7 +2458,7 @@ class LauncherApplet : AppletSimple
 			{
 			    response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"DENY");
                 if (response=="RESET")  
-					dbusconn.Register(uid);													    
+					dbusconn.Launcher_Register(uid);													    
             }while(response=="RESET");			    
 			return;
 		}
@@ -2420,7 +2505,7 @@ class LauncherApplet : AppletSimple
                         break;
                 }
                 if (response=="RESET")
-                    dbusconn.Register(uid);										
+                    dbusconn.Launcher_Register(uid);										
             }while(response=="RESET");//this does not eval to true often... otherwise it should be fixed.
         }        
         if(response=="MANAGE")
@@ -2490,7 +2575,7 @@ class LauncherApplet : AppletSimple
         {
             if (books.find_pid(app.get_pid() ))
             {
-                desktopfile.set_name(app.get_name());	
+                desktopfile.uid = app.get_name();	
                 books.update_with_name(app.get_name());
             }
         }

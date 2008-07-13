@@ -395,6 +395,7 @@ class DesktopFileManagement: GLib.Object
 	public string Filename()
 	{
         string fullpath=directory+Checksum(uid)+".desktop";
+        stdout.printf("Filename() = %s\n",fullpath);
 		return  fullpath;
 	}   
 	public bool Exists()
@@ -410,7 +411,6 @@ class DesktopFileManagement: GLib.Object
     
 	private string Checksum(string str)
 	{
-        return str;
 	    string result=new string();
         stdout.printf("DesktopFileManagement checksum \n");          
 	    result="anon-";
@@ -516,36 +516,46 @@ class DesktopFileManagement: GLib.Object
 //[DBus (name = "org.awnproject.taskmand")]
 
 
-
-public class DBusComm : GLib.Object
+public class DBusComm : AppletSimple
 {
         public		DBus.Connection		conn;
-//		public		Taskman.TaskmanInterface	taskobj;
-		dynamic DBus.Object server_object;
-//        var conn;
+		public      dynamic DBus.Object server_object;
     
         construct
         {
-            stdout.printf("Dbuscomm. construct 1\n");
             conn = DBus.Bus.get(DBus.BusType.SESSION);
-            stdout.printf("Dbuscomm. construct 2\n");
-             server_object = conn.get_object ("org.awnproject.taskmand", "/org/awnproject/taskmand", "org.awnproject.taskmand");
-            stdout.printf("Dbuscomm. construct 3\n");            
-            
-//                conn = DBus.Bus.get (DBus.BusType.SESSION);
-//   				taskobj = conn.get_object<Taskman.TaskmanInterface> ("org.awnproject.taskmand", "/org/awnproject/taskmand");
+            server_object = conn.get_object ("org.awnproject.taskmand", "/org/awnproject/taskmand", "org.awnproject.taskmand");
+            server_object.Offered += _offered;
         }
+    
+        private void _offered (dynamic DBus.Object obj,string xid)
+        {
+        // dbus signal handler
+
+            message ("Message received %s *****************\n", xid);
+        }
+        
 
 		public void Launcher_Register(string uid)
 		{	
-            stdout.printf("Launcher_Register 1\n");
-			server_object.Launcher_Register(uid);
-            stdout.printf("Launcher_Register 2\n");
+            stdout.printf("Launcher_Register\n");
+            try{
+			    server_object.Launcher_Register(uid);
+            }
+            catch (GLib.Error ex){
+                stderr.printf("D-Bus Error Launcher_Register()\n");
+            }            
 		}
 		
 		public void Launcher_Unregister(string uid)
 		{
-			server_object.Launcher_Unregister(uid);
+            try{
+			    server_object.Launcher_Unregister(uid);
+            }
+            catch (GLib.Error ex){
+                stderr.printf("D-Bus Error Launcher_Unregister()\n");
+            }
+                
 		}
 		
 		public string Inform_Task_Ownership(string uid, string xid, string request)
@@ -560,7 +570,6 @@ public class DBusComm : GLib.Object
 			server_object.Return_XID(uid,xid);
             return xid;
 		}
-
 }
 
 class DiagButton: Gtk.Button
@@ -1240,7 +1249,7 @@ class Multi_Launcher:    GLib.Object
 
 //------------------------------------------------------------------------------
 
-class LauncherApplet : AppletSimple
+class LauncherApplet : DBusComm
 {
     protected   BookKeeper              books;
 
@@ -1256,7 +1265,7 @@ class LauncherApplet : AppletSimple
 	protected   Wnck.Screen				wnck_screen;
 	protected   DesktopFileManagement   desktopfile;
 	protected   int						launchmode;
-	protected   DBusComm				dbusconn;
+//	protected   DBusComm				dbusconn;
 	protected   ConfigClient			awn_config;
 	protected   SList<ulong>			retry_list;	
 	protected   Awn.Title               title;
@@ -1424,11 +1433,11 @@ class LauncherApplet : AppletSimple
             dialog.add(vbox);
             build_right_click();
             stdout.printf("_initialize...3.8\n");                          
-            dbusconn = new DBusComm();
+//            dbusconn = new DBusComm();
             stdout.printf("_initialize...3.8.1\n");            
-            dbusconn.Launcher_Register(uid);
+            Launcher_Register(uid);
             stdout.printf("_initialize...3.8.2\n");                        
-            //dbusconn.Launcher_Offered+=_offered;
+            server_object.Offered+=_offered;
             stdout.printf("_initialize...3.8.3\n");                        
             wnck_screen = Wnck.Screen.get_default();	
             stdout.printf("_initialize...3.8.4\n");                        
@@ -1509,7 +1518,7 @@ class LauncherApplet : AppletSimple
 		    if (win!=null)
 		    {		    
 				string response;
-				response=dbusconn.Inform_Task_Ownership(uid,win.get_xid().to_string(),"CLAIM");
+				response=Inform_Task_Ownership(uid,win.get_xid().to_string(),"CLAIM");
                 if (response==null)
                 {			               
                     stdout.printf("response == null. exiting\n");
@@ -1521,8 +1530,8 @@ class LauncherApplet : AppletSimple
                     hidden=false;
 					while (response=="RESET")
 					{
-						dbusconn.Launcher_Register(uid);					
-						response=dbusconn.Inform_Task_Ownership(uid,win.get_xid().to_string(),"CLAIM");					
+						Launcher_Register(uid);					
+						response=Inform_Task_Ownership(uid,win.get_xid().to_string(),"CLAIM");					
 					}
 					if (response=="HANDSOFF")
 					{
@@ -1700,7 +1709,7 @@ class LauncherApplet : AppletSimple
 		if (fd_lock!=-1)
 		{
 			Awn.ConfigClient.key_lock(fd_lock,1);
-		    dbusconn.Launcher_Unregister(uid);
+		    Launcher_Unregister(uid);
 			applet_list = awn_config.get_list (Awn.CONFIG_CLIENT_DEFAULT_GROUP,"applets_list", Awn.ConfigListType.STRING) ;
 			needle="standalone-launcher.desktop::"+uid;
 
@@ -1726,16 +1735,17 @@ class LauncherApplet : AppletSimple
     //FIXME... ugly hack (self) to deal with vala 0.1.7 dbus signal bug
     //or maybe I was just doing it wrong to begin with....
     //doing this for now.
-/*    private static void _offered(Taskman.TaskmanInterface o, string xid)
+    private void _offered(dynamic DBus.Object obj,string xid)
     {
-        LauncherApplet applet=(LauncherApplet) global_self;
+        stdout.printf("_offered\n");
+        LauncherApplet applet= this;
         Wnck.Window window=applet.find_win_by_xid(xid.to_ulong() );
         if (window!=null)
         {
             applet._window_opened(applet.wnck_screen,window);
         }
     }
-*/     
+     
     
     private bool _drag_motion(Gtk.Widget widget,Gdk.DragContext context, int x, int y, uint time)
     {
@@ -1802,6 +1812,7 @@ class LauncherApplet : AppletSimple
                 {
                     if ( !config.multi_launcher || ( desktopitem.get_exec()=="false")) 
                     {
+                        stdout.printf("drag_data_received 2\n");                        
                         if ( (tempdesk.get_exec() != null) && (tempdesk.get_name()!=null) )
                         {
                             try{
@@ -1827,12 +1838,15 @@ class LauncherApplet : AppletSimple
                             status=true;
                             books.update_with_desktopitem(desktopitem);
                             SList<string> dummy;
+                            dummy.append(desktopfile.Filename());
+                            stdout.printf("drag_data_received MULTILAUNCHER  1!!!!\n");
                             multi_launcher = new Multi_Launcher(dummy);
-                            multi_launcher.add_file(desktopfile.Filename());
+//                            multi_launcher.add_file(desktopfile.Filename());
                         }	        
                     }
                     else
                     {
+                        stdout.printf("drag_data_received 5\n"); 
                         string file_copy;
                         string  desktop_key=desktopitem.get_string("X-AWN-StandaloneLauncherDesktops");
 
@@ -1858,6 +1872,7 @@ class LauncherApplet : AppletSimple
                         }
                         status=true;
                         books.update_with_desktopitem(tempdesk);
+                        stdout.printf("drag_data_received MULTILAUNCHER 2!!!!\n");
                         multi_launcher.add_file(file_copy);
                         desktopitem.set_string("X-AWN-StandaloneLauncherDesktops",desktop_key);
                         try{
@@ -2036,7 +2051,7 @@ class LauncherApplet : AppletSimple
         {
             if (books.search_win_by_win(win) != null)
             {
-                dbusconn.Return_XID(uid,win.get_xid().to_string());		
+                Return_XID(uid,win.get_xid().to_string());		
             }
         }
         close();
@@ -2398,7 +2413,7 @@ class LauncherApplet : AppletSimple
 		foreach( ulong xid in retry_list)
 		{
 			string response;
-			response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"ACCEPT");
+			response=Inform_Task_Ownership(uid,xid.to_string(),"ACCEPT");
 			if (response=="MANAGE")
 			{
                 hidden=false;
@@ -2426,7 +2441,7 @@ class LauncherApplet : AppletSimple
 			}
 			else if (response=="RESET")
 			{
-				dbusconn.Launcher_Register(uid);										
+				Launcher_Register(uid);										
 			}		
 		}		
 		return (retry_list.length() != 0 );
@@ -2456,9 +2471,9 @@ class LauncherApplet : AppletSimple
 			string response;
 			do
 			{
-			    response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"DENY");
+			    response=Inform_Task_Ownership(uid,xid.to_string(),"DENY");
                 if (response=="RESET")  
-					dbusconn.Launcher_Register(uid);													    
+					Launcher_Register(uid);													    
             }while(response=="RESET");			    
 			return;
 		}
@@ -2470,7 +2485,7 @@ class LauncherApplet : AppletSimple
         {
             do
             {
-                response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"CLAIM");            
+                response=Inform_Task_Ownership(uid,xid.to_string(),"CLAIM");            
             }while(response=="RESET");              
         }
         else
@@ -2482,30 +2497,30 @@ class LauncherApplet : AppletSimple
                 switch (listings_check)
                 {
                     case    ListingResult.WHITELISTED:
-                        response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"CLAIM");
+                        response=Inform_Task_Ownership(uid,xid.to_string(),"CLAIM");
                         break;
                     case    ListingResult.BLACKLISTED:
-                        response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"DENY");
+                        response=Inform_Task_Ownership(uid,xid.to_string(),"DENY");
                         break;
                     case    ListingResult.NOMATCH:
                         {
                             switch (books.what_to_do(window) )
                             {
                                 case    Ownership.CLAIM:
-                                        response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"CLAIM");
+                                        response=Inform_Task_Ownership(uid,xid.to_string(),"CLAIM");
                                         break;
                                 case    Ownership.ACCEPT:
-                                        response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"ACCEPT");
+                                        response=Inform_Task_Ownership(uid,xid.to_string(),"ACCEPT");
                                         break;
                                 case    Ownership.DENY:
-                                        response=dbusconn.Inform_Task_Ownership(uid,xid.to_string(),"DENY");
+                                        response=Inform_Task_Ownership(uid,xid.to_string(),"DENY");
                                         break;
                             }
                         }
                         break;
                 }
                 if (response=="RESET")
-                    dbusconn.Launcher_Register(uid);										
+                    Launcher_Register(uid);										
             }while(response=="RESET");//this does not eval to true often... otherwise it should be fixed.
         }        
         if(response=="MANAGE")

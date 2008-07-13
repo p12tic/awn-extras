@@ -405,11 +405,7 @@ class Icon:
         @rtype: C{gtk.gdk.Pixbuf} or C{None}
         """
 
-        if hasattr(self.__parent, "set_awn_icon"):
-            self.__parent.set_awn_icon(self.__parent.meta['short'], name)
-        else:
-            theme = gtk.icon_theme_get_default()
-            icon = theme.load_icon(name, self.__height, 0)
+        self.__parent.set_awn_icon(self.__parent.meta["short"], name)
 
         if set:
             self.set(icon)

@@ -1,10 +1,13 @@
 # vim: set ft=automake ts=8 sts=8 sw=8 :
 include $(top_srcdir)/Makefile.c-applet
 
+VALA_CC = $(CC) -shared -fPIC $(APPLET_CFLAGS) $(CFLAGS)
+VALA_EXTRALDFLAGS = $(foreach flag,$(LDFLAGS),--Xcc="$(flag)")
+
 BUILT_SOURCES = $(APPLET_NAME).so
 
 $(APPLET_NAME).so: $(VALA_FILES)
-	$(VALAC) --Xcc="-shared -fPIC $(APPLET_CFLAGS) $(CFLAGS)" -o $@ $^ --vapidir=$(AWN_VAPIDIR) --pkg=awn $(AM_VALAFLAGS) $(VALAFLAGS)
+	$(VALAC) --cc="$(VALA_CC)" -o $@ $^ --vapidir=$(AWN_VAPIDIR) --pkg=awn $(AM_VALAFLAGS) $(VALAFLAGS) $(VALA_EXTRALDFLAGS)
 
 install-exec-hook:
 	test -d "$(DESTDIR)$(appletdir)" || mkdir -p "$(DESTDIR)$(appletdir)"

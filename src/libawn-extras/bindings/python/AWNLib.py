@@ -387,18 +387,18 @@ class Icon:
 
     def theme(self, name, set=None):
         """
-        Get an icon from the default icon theme.
+        Set an icon from the default icon theme. The resultant pixbuf will be returned
 
         @param name: The name of the theme icon.
         @type name: C{string}
-        @param set: Whether to also set the icon. True by default.
-        @type set: C{bool}
+        @return: The resultant pixbuf
+        @rtype: C{gtk.gdk.Pixbuf}
         """
-        
+
         if set != None:
             print "WARNING: parameter 'set' is now deprecated because set_awn_icon() is used"
 
-        self.__parent.set_awn_icon(self.__parent.meta["short"], name)
+        return self.__parent.set_awn_icon(self.__parent.meta["short"], name)
 
     def surface(self, surface, pixbuf=None, set=True):
         """

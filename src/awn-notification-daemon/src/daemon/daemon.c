@@ -1661,7 +1661,6 @@ AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient, gint height)
   gchar * icon_names[]={"stock_up","stock_down",NULL};
   awn_applet_simple_set_awn_icons(AWN_APPLET_SIMPLE(applet),
                                     "Awn Notification Daemon",
-                                    uid,
                                     states,
                                     icon_names
                                     );

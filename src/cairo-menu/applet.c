@@ -141,7 +141,6 @@ AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient, gint height)
   
   awn_applet_simple_set_awn_icon(applet,
                                     APPLET_NAME,
-                                    uid,
                                     G_cairo_menu_conf.applet_icon)  ;
   
   icon = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(),

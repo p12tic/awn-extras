@@ -189,7 +189,6 @@ awn_applet_factory_initp (gchar *uid, gint orient, gint height)
   webapplet->applet_icon_name = g_strdup ("apple-green");  
   webapplet->icon = awn_applet_simple_set_awn_icon(webapplet->applet,
                                     APPLET_NAME,
-                                    uid,
                                     webapplet->applet_icon_name)  ;
   gtk_widget_show_all (GTK_WIDGET (webapplet->applet));
   awn_html_dialog_new (webapplet);

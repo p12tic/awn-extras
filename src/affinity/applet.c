@@ -61,7 +61,6 @@ awn_applet_factory_initp (const gchar* uid, gint orient, gint height )
 	
 		awn_applet_simple_set_awn_icon( AWN_APPLET_SIMPLE(applet),
                                     APPLET_NAME,
-                                    uid,
 																	  "search")  ;	 
     app = affinity_app_new( TRUE, applet);
     affinity_app_hide(app);

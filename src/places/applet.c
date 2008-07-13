@@ -1439,7 +1439,6 @@ static void _bloody_thing_has_style(GtkWidget *widget, Places *places)
   //The EASY way to use awn icons.
   awn_applet_simple_set_awn_icon(places->applet,
                                     APPLET_NAME,
-                                    places->uid,
                                     places->applet_icon_name)  ;
   awn_applet_simple_set_title(AWN_APPLET_SIMPLE(places->applet),"Places");
 

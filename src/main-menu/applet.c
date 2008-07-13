@@ -449,7 +449,6 @@ awn_applet_factory_initp (const gchar * uid, gint orient, gint height )
   
   awn_applet_simple_set_awn_icon( AWN_APPLET_SIMPLE(app->applet),
                                     APPLET_NAME,
-                                    uid,
                                     "gnome-main-menu")  ;
 
   gtk_widget_show_all (GTK_WIDGET (applet));                              

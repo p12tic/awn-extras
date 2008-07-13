@@ -20,6 +20,7 @@
  * Author : Mark Lee <avant-wn@lazymalevolence.com>
  */
 
+using GLib;
 using Gdk;
 using Gtk;
 using Awn;
@@ -31,7 +32,12 @@ public Applet awn_applet_factory_initp (string uid, int orient, int height) {
 	applet = new AppletSimple (uid, orient, height);
 	applet.set_size_request (height, -1);
 	theme = IconTheme.get_default ();
-	icon = theme.load_icon ("gtk-yes", (int)(applet.get_height () - 2), IconLookupFlags.USE_BUILTIN);
+	try {
+		icon = theme.load_icon ("gtk-yes", (int)(applet.get_height () - 2),
+		                        IconLookupFlags.USE_BUILTIN);
+	} catch (Error e) {
+		warning ("Could not load the icon. Something's probably wrong with Gtk+.");
+	}
 	applet.set_temp_icon (icon);
 	applet.show_all ();
 	return applet;

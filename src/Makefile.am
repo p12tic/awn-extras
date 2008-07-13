@@ -1,6 +1,9 @@
 NULL =
 if HAVE_VALA
-VALA_APPLETS = vala-test taskmand simple-launcher Taskmand-applet
+if MAINTAINER_MODE
+VALA_TEST = vala-test
+endif
+VALA_APPLETS = $(VALA_TEST) taskmand simple-launcher Taskmand-applet
 endif
 
 GCONF_APPLETS =
@@ -39,6 +42,10 @@ WEBKIT_APPLETS = \
 	webapplet	\
 	$(NULL)
 endif
+if MAINTAINER_MODE
+PYTHON_TEST = python-test
+WOBBLYZINI = wobblyzini
+endif
 
 # please keep alphabetized (except for libawn-extras)
 SUBDIRS =			\
@@ -60,7 +67,7 @@ SUBDIRS =			\
 	notification-area	\
 	places			\
         pynot                   \
-	python-test		\
+	$(PYTHON_TEST)		\
 	quit-applet		\
 	separator		\
 	shiny-switcher		\
@@ -72,7 +79,7 @@ SUBDIRS =			\
 	tsclient-applet		\
 	volume-control		\
 	weather			\
-	wobblyzini		\
+	$(WOBBLYZINI)		\
 	$(GCONF_APPLETS)	\
 	$(VALA_APPLETS)		\
 	$(WEBKIT_APPLETS)	\

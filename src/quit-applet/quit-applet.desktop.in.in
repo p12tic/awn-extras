@@ -1,9 +1,10 @@
 [Desktop Entry]
 Version=1.0
-Name=Quit-Logoff applet
+Encoding=UTF-8
+Name=Quit-Log Out applet
 Type=Application
 X-AWN-AppletType=Python
-Comment=An applet to exit your session
+Comment=An applet to exit or log out of your session
 Exec=quit-applet/quit-applet.py
 Icon=quit-applet/icons/scalable/apps/application-exit.svg
 Name[en_US]=Quit-Logoff applet

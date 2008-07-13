@@ -951,7 +951,7 @@ class Settings:
             @type callback: C{function}
             """
 
-            self.__client.notify_add(self.__folder, callback)
+            self.__client.notify_add(self.__folder, key, callback)
 
         def set(self, key, value):
             """

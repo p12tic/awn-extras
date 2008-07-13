@@ -40,7 +40,7 @@ class App (awn.AppletSimple):
         self.client.notify_add(awn.CONFIG_DEFAULT_GROUP, 'LogoutCommand', self.load_config)
         awn.AppletSimple.__init__ (self, uid, orient, height)
         self.height = height
-        self.set_awn_icon('quit-applet', uid, 'application-exit')
+        self.set_awn_icon('quit-applet', 'application-exit')
         self.title = awn.awn_title_get_default ()
         self.connect ("button-press-event", self.button_press)
         self.connect ("enter-notify-event", self.enter_notify)

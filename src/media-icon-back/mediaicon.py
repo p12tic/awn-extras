@@ -59,7 +59,7 @@ class App (awn.AppletSimple):
             self.media_icon_name = "media-skip-backward"
         elif self.media_button_type == "-pp":
             self.media_icon_name = "media-playback-start"
-        self.set_awn_icon('media-icon' + self.media_button_type, uid, \
+        self.set_awn_icon('media-icon' + self.media_button_type, \
             self.media_icon_name)
         
         self.what_app()

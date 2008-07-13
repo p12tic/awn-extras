@@ -41,7 +41,7 @@ class ShowDesktopButton (awn.AppletSimple):
     def __init__ (self, uid, orient, height):
         awn.AppletSimple.__init__ (self, uid, orient, height)
         self.height = height
-        self.set_awn_icon("showdesktop", uid, "desktop")
+        self.set_awn_icon("showdesktop", "desktop")
         self.title = awn.awn_title_get_default ()
         self.connect ("button-press-event", self.__on_button_press)
         self.connect ("enter-notify-event", self.enter_notify)

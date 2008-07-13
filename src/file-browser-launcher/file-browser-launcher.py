@@ -46,7 +46,7 @@ class App (awn.AppletSimple):
     #Get the default icon theme
     self.theme = gtk.icon_theme_get_default()
     
-    self.icon = self.set_awn_icon('file-browser-launcher', uid, 'folder')
+    self.icon = self.set_awn_icon('file-browser-launcher', 'folder')
     
     #Make the dialog, will only be shown when approiate
     #VBox for everything to go in

@@ -225,7 +225,8 @@ dnl Check for Vala support.
 dnl
 AWN_VAPIDIR=`$PKG_CONFIG --variable=vapidir awn`
 if test -n "$AWN_VAPIDIR" -a -f "$AWN_VAPIDIR/awn.vapi"; then
-    VALA_PROG_VALAC(0.1.7)
+    VALA_PROG_VALAC(0.3.4)
+    AC_PATH_PROG(VAPIGEN, vapigen, vapigen, [])
     AC_SUBST(AWN_VAPIDIR)
 fi
 AM_CONDITIONAL(GCONF_SCHEMAS, test "$config_backend" = "GConf")
@@ -364,6 +365,7 @@ src/libawn-extras/Makefile
 src/libawn-extras/awn-extras.pc
 src/libawn-extras/bindings/Makefile
 src/libawn-extras/bindings/python/Makefile
+src/libawn-extras/bindings/vala/Makefile
 src/mail/Makefile
 src/mail/Themes/Makefile
 src/mail/Themes/Tango/Makefile

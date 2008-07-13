@@ -32,15 +32,13 @@ class App (awn.AppletSimple):
         self.location = __file__.replace('quit-applet.py','')
         self.client = awn.Config('QuitApplet', None)
         self.defaults = {
-            'IconLocation': os.path.join(self.location, 'icons', 'application-exit.svg'),
             'LogoutCommand': 'gnome-session-save --kill'
             }
         self.load_keys()
-        self.client.notify_add(awn.CONFIG_DEFAULT_GROUP, 'IconLocation', self.load_config)
         self.client.notify_add(awn.CONFIG_DEFAULT_GROUP, 'LogoutCommand', self.load_config)
         awn.AppletSimple.__init__ (self, uid, orient, height)
         self.height = height
-        self.set_awn_icon('quit-applet', 'application-exit')
+        self.icon = self.set_awn_icon('quit-applet', 'application-exit')
         self.title = awn.awn_title_get_default ()
         self.connect ("button-press-event", self.button_press)
         self.connect ("enter-notify-event", self.enter_notify)
@@ -100,6 +98,7 @@ class PreferenceDialog(gtk.Window):
         super(PreferenceDialog, self).__init__(gtk.WINDOW_TOPLEVEL)
         self.applet = applet
         self.set_title("Preferences")
+        self.set_icon(self.applet.icon)
         vbox = gtk.VBox(True, 0)
         self.add(vbox)
         vbox1 = gtk.VBox(True, 0)

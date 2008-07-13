@@ -32,6 +32,7 @@ src/Taskmand-applet/client-bindings.h
 src/Taskmand-applet/server-bindings.h
 src/affinity/affinity-preferences/affinity-preferences
 src/awn-notification-daemon/src/daemon/notificationdaemon-dbus-glue.h
+src/libawn-extras/awn-extras.pc
 src/libawn-extras/bindings/python/awn_extras.c
 src/taskmand/client-bindings.h
 src/taskmand/data/org.awnproject.taskmand.service

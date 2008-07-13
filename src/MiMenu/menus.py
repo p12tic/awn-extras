@@ -22,46 +22,50 @@ def get_places(theme):
     this method parses the gtk bookmarks file and serves it back as a list
     """
     model = gtk.ListStore(gtk.gdk.Pixbuf, gobject.TYPE_STRING)
-    book_loc = os.path.expanduser("~") + "/.gtk-bookmarks"
-    bookmark_list = open(book_loc,"r")
     bookmarks = {}
     model_list = []
+    
     home = [theme.load_icon('user-home',24,0),"Home"]
     bookmarks["Home"] = [0,"file://" + os.path.expanduser("~")]
     model.append(home)
+    
     home = [theme.load_icon('drive-harddisk',24,0),"File System"]
     bookmarks["File System"] = [0,"file:///"]
     model.append(home)
-    for item in bookmark_list:
-        tempitem = item[::-1]
-        tempitem = tempitem[:tempitem.index('/')]
-        tempitem = tempitem[::-1]
-        tempitem = string.rstrip(tempitem)
-        ico = 'folder'
-        if string.rstrip(item) == "network:///":
-            tempitem = "Network"
-            ico = 'network-server'
-        item = string.rstrip(item)
-        # Is dir check
-        dirCheck = True
-        item = item.replace('file://','')
-        if check.isdir(item) == False:
-            if ' ' in item:
-                itemOLD = item
-                item = string.rstrip(item[:item.index(' ')])
-                if check.isdir(item) == False:
-                    dirCheck = False
-                else:
-                    tempitem = itemOLD[itemOLD.index(' '):]
-        if '%20' in tempitem:
-            tempitem = tempitem.replace('%20',' ')
-        item = 'file://' + item
-        if dirCheck == True:
-            thing = [theme.load_icon(ico,24,0),tempitem]
-            model.append(thing)
-            bookmarks[tempitem] = [0,item]
+    
+    book_loc = os.path.expanduser("~") + "/.gtk-bookmarks"
+    if os.path.exists(book_loc):
+        bookmark_list = open(book_loc,"r")
+        for item in bookmark_list:
+            tempitem = item[::-1]
+            tempitem = tempitem[:tempitem.index('/')]
+            tempitem = tempitem[::-1]
+            tempitem = string.rstrip(tempitem)
+            ico = 'folder'
+            if string.rstrip(item) == "network:///":
+                tempitem = "Network"
+                ico = 'network-server'
+            item = string.rstrip(item)
+            # Is dir check
+            dirCheck = True
+            item = item.replace('file://','')
+            if not check.isdir(item):
+                if ' ' in item:
+                    itemOLD = item
+                    item = string.rstrip(item[:item.index(' ')])
+                    if check.isdir(item) == False:
+                        dirCheck = False
+                    else:
+                        tempitem = itemOLD[itemOLD.index(' '):]
+            if '%20' in tempitem:
+                tempitem = tempitem.replace('%20',' ')
+            item = 'file://' + item
+            if dirCheck:
+                thing = [theme.load_icon(ico,24,0),tempitem]
+                model.append(thing)
+                bookmarks[tempitem] = [0,item]
+        bookmark_list.close()
     return model,bookmarks
-    bookmark_list.close()
 
 
 def set_model(treeview,lst,theme,location_icon):

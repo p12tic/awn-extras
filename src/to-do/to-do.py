@@ -443,6 +443,8 @@ class App(awn.AppletSimple):
         
         #Make the Expander widget
         dialog_expander = gtk.Expander(self.settings['category_name'][y])
+        if self.settings['details'][y].replace(' ','').replace('\n','') != '':
+          dialog_expander.set_tooltip_text(self.settings['details'][y])
         dialog_expander.iterator = y
         if y in self.settings['expanded']:
           dialog_expander.set_expanded(True)

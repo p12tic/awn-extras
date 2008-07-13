@@ -11,4 +11,4 @@ clock-minute-hand-shadow.svg \
 clock-second-hand.svg \
 clock-second-hand-shadow.svg
 
-tangodir = $(datadir)/awn/applets/cairo-clock/themes/tango
+tangodir = $(datadir)/avant-window-navigator/applets/cairo-clock/themes/tango

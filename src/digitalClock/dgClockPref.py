@@ -38,15 +38,16 @@ class dgClockPref:
     }
   prefs = {}
 
-  def __init__(self, config):
+  def __init__(self, config, applet):
     self.config = config
+    self.applet = applet
     for key, details in self.pref_map.iteritems():
       self.config.notify_add(awn.CONFIG_DEFAULT_GROUP, key, self.config_notify, details)
     self.menu = self.buildMenu()
     self.get_prefs()
 
   def buildMenu(self):
-    popup_menu = gtk.Menu()
+    popup_menu = self.applet.create_default_menu()
     hbox = gtk.HBox(False,2)
     img = gtk.Image()
     img.set_from_stock(gtk.STOCK_PREFERENCES, gtk.ICON_SIZE_MENU)

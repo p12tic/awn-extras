@@ -39,7 +39,7 @@ class App (awn.AppletSimple):
   def __init__ (self, uid, orient, height):
     awn.AppletSimple.__init__ (self, uid, orient, height)
 
-    self.pf = dgClockPref.dgClockPref(awn.Config('digitalClock', None))
+    self.pf = dgClockPref.dgClockPref(awn.Config('digitalClock', None), self)
     self.clock = dgTime.dgTime(self.pf.prefs, self)
 
     self.timer = gobject.timeout_add(1000, self.clock.draw_clock)

@@ -303,6 +303,7 @@ src/arss/arss.desktop.in
 src/arss/Icons/Makefile
 src/awn-meebo/Makefile
 src/awn-meebo/awn-meebo.desktop.in
+src/awn-meebo/icons/Makefile
 src/awn-meebo/profile/Makefile
 src/awn-notification-daemon/Makefile
 src/awn-notification-daemon/data/Makefile

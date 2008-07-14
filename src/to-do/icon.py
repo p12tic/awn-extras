@@ -53,6 +53,7 @@ def icon(size2,settings,color):
   #progress: border shows progress, number shows percent completed
   if settings['icon-type']=='progress':
     if len(settings['progress'])==0:
+      progress = 100
       number = '100%'
     else:
       progress = settings['progress']
@@ -63,6 +64,7 @@ def icon(size2,settings,color):
   #progress-items: border shows progress, number shows # items
   elif settings['icon-type']=='progress-items':
     if len(settings['progress'])==0:
+      progress = 100
       number = '100%'
     else:
       progress = settings['progress']

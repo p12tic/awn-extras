@@ -398,7 +398,8 @@ src/MiMenu/mimenu.desktop.in
 src/notification-area/Makefile
 src/notification-area/notification-area.desktop.in
 src/pandora/Makefile
-src/pandora/awn-pandora.desktop.in
+src/pandora/icons/Makefile
+src/pandora/pandora.desktop.in
 src/places/Makefile
 src/places/places.desktop.in
 src/plugger/Makefile

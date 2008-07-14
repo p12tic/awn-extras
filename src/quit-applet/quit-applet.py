@@ -25,7 +25,6 @@ import subprocess
 import pygtk
 pygtk.require("2.0")
 import gtk
-from gtk import gdk
 from awn.extras import AWNLib
 
 applet_name = "Quit-Log Out"

@@ -1,68 +1,63 @@
 # -*- coding: utf-8 -*-
 # vim: ts=4
-###
-#
-# showdesktop.py
-# Copyright (c) 2006 Mehdi Abaakouk
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License version 2 as
-# published by the Free Software Foundation
-#
+# 
+# Copyright (C) 2006  Mehdi Abaakouk <theli48@gmail.com>
+#               2008  onox <denkpadje@gmail.com>
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, version 2 of the License.
+# 
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-#
+# 
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-#
-###
-#
-# Name : showdesktop.py
-# Version: 0.1
-# Author : mehdi ABAAKOUK Mehdi <theli48@gmail.com>
-# Description: Applet to show/hide desktop for awn
-#
-###
-
-
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import pygtk
 pygtk.require('2.0')
 import gtk
-import sys
-
+from awn.extras import AWNLib
 import wnck
-import awn
 
-class ShowDesktopButton (awn.AppletSimple):
-    def __init__ (self, uid, orient, height):
-        awn.AppletSimple.__init__ (self, uid, orient, height)
-        self.height = height
-        self.set_awn_icon("showdesktop", "desktop")
-        self.title = awn.awn_title_get_default ()
-        self.connect ("button-press-event", self.__on_button_press)
-        self.connect ("enter-notify-event", self.enter_notify)
-        self.connect ("leave-notify-event", self.leave_notify)
+applet_name = "Show Desktop"
+applet_version = "0.2.8"
+applet_description = "An applet to hide your windows and show your desktop"
 
-    def __on_button_press(self,widget, event):
-        screen = wnck.screen_get_default()
-        screen.toggle_showing_desktop(not screen.get_showing_desktop())
+titles = {True: "Show Desktop", False: "Hide Desktop"}
 
-    def enter_notify (self, widget, event):
-        self.title.show (self, "Show Desktop")
-      # print "show title"
+class ShowDesktopApplet:
+    """ An applet to hide your windows and show your desktop """
+    
+    def __init__(self, applet):
+        self.applet = applet
+        
+        applet.icon.theme("desktop")
+        applet.title.set(titles[wnck.screen_get_default().get_showing_desktop()])
+        
+        applet.connect("button-press-event", self.button_press_event_cb)
+    
+    def button_press_event_cb(self, widget, event):
+        if event.button == 1:
+            screen = wnck.screen_get_default()
+            
+            # showing windows = not showing desktop
+            showing_windows = not screen.get_showing_desktop()
+            screen.toggle_showing_desktop(showing_windows)
+            
+            """ If windows were shown, they are now hidden, and next switch
+            will make them visible again """
+            applet.title.set(titles[showing_windows])
 
-    def leave_notify (self, widget, event):
-        self.title.hide (self)
-      # print "hide title"
 
-if __name__ == '__main__':
-    awn.init (sys.argv[1:])
-    applet = ShowDesktopButton (awn.uid, awn.orient, awn.height)
-    awn.init_applet (applet)
-    applet.show_all ()
-    gtk.main ()
-
+if __name__ == "__main__":
+    applet = AWNLib.initiate({"name": applet_name, "short": "show-desktop",
+        "version": applet_version,
+        "description": applet_description,
+        "author": "Mehdi Abaakouk, onox",
+        "copyright-year": 2006,
+        "authors": ["Mehdi Abaakouk <theli48@gmail.com>", "onox <denkpadje@gmail.com>"]})
+    ShowDesktopApplet(applet)
+    AWNLib.start(applet)

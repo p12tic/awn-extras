@@ -1,8 +1,8 @@
 [Desktop Entry]
 Type=Application
 X-AWN-AppletType=Python
-Name=Showdesktop Applet
-Comment=Quickly hide all your windows
+Name=Show Desktop
+Comment=Hide your windows and show your desktop
 Exec=showdesktop/showdesktop.py
 Icon=desktop
 X-AWN-AppletCategory=Utility

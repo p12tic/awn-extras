@@ -35,7 +35,7 @@
 
 #define STACKS_APPLET PREFIX "/lib/awn/applets/stacks.desktop"
 #define STACKS_APPLET_LOCAL "/usr/local/lib/awn/applets/stacks.desktop"
-#define STACKS_APPLET_SHARE "/usr/share/awn/applets/stacks.desktop"
+#define STACKS_APPLET_SHARE PREFIX "/share/avant-window-navigator/applets/stacks.desktop"
 
 typedef struct {
   AwnApplet *applet;

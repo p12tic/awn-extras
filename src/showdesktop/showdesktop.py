@@ -26,7 +26,7 @@ applet_name = "Show Desktop"
 applet_version = "0.2.8"
 applet_description = "An applet to hide your windows and show your desktop"
 
-titles = {True: "Show Desktop", False: "Hide Desktop"}
+titles = {True: "Show hidden windows", False: "Hide windows and show desktop"}
 
 class ShowDesktopApplet:
     """ An applet to hide your windows and show your desktop """

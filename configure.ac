@@ -414,6 +414,7 @@ src/quit-applet/icons/Makefile
 src/quit-applet/quit-applet.desktop.in
 src/rtm/Makefile
 src/rtm/rtm.desktop.in
+src/rtm/icons/Makefile
 src/separator/Makefile
 src/separator/separator.desktop.in
 src/shiny-switcher/Makefile

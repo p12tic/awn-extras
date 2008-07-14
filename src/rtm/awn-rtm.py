@@ -33,10 +33,8 @@
 
 # import modules
 import sys, os
-import gobject
 import pygtk
 import gtk
-from gtk import gdk
 # import gtkmozembed
 import webbrowser
 import awn
@@ -71,20 +69,16 @@ awn.check_dependencies(globals(), 'gtkmozembed')
 class App (awn.AppletSimple):
   def __init__ (self, uid, orient, height):
     awn.AppletSimple.__init__ (self, uid, orient, height)
-    self.pref_path = os.path.join(os.path.expanduser('~'), ".config/awn/applets/rtm")
-    self.height = height
-    icon = gdk.pixbuf_new_from_file(os.path.dirname (__file__) + '/rtm.png')
-        
-    if height != icon.get_height():
-        icon = icon.scale_simple(height,height,gtk.gdk.INTERP_BILINEAR)
-    self.set_icon(icon)
+    
+    #self.pref_path = os.path.join(os.path.expanduser('~'), ".config/awn/applets/rtm")
+    self.icon = self.set_awn_icon('rtm', 'awn-rtm')
     self.title = awn.awn_title_get_default ()
     self.dialog = awn.AppletDialog (self)
 
 # set up gtkmozembed widget
 
     self.mo  = gtkmozembed;
-    gtkmozembed.set_profile_path(self.pref_path, "profile")
+    #gtkmozembed.set_profile_path(self.pref_path, "profile")
     self.moz = self.mo.MozEmbed()
     pad = gtk.Alignment()
     pad.add(self.moz)
@@ -146,9 +140,9 @@ class App (awn.AppletSimple):
 
 # create gtk about dialog
 
-  def about(self, widget):
+  def about(self, applet):
     about_dialog = gtk.AboutDialog()
-    about_dialog.set_logo(gtk.gdk.pixbuf_new_from_file(os.path.dirname (__file__) + '/rtm.png'))
+    about_dialog.set_logo(applet.icon)
     about_dialog.set_name("RTM Applet")
     about_dialog.set_version("0.2")
     about_dialog.set_copyright("Copyright 2008 LGPL")

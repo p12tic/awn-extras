@@ -17,15 +17,11 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
-import sys, os
-import gobject
+import sys
 import pygtk
 import gtk
-from gtk import gdk
 import awn
 import gconf
-import locale
-import gettext
 
 class MountApplet(awn.AppletSimple):
     gconf_path = "/apps/avant-window-navigator/applets/mountapplet"
@@ -37,11 +33,7 @@ class MountApplet(awn.AppletSimple):
         self.get_config()
 
         self.height = height
-        self.theme = gtk.IconTheme ()
-        icon = gdk.pixbuf_new_from_file(os.path.dirname (__file__) + '/icons/mount-applet.png')
-        if height != icon.get_height():
-            icon = icon.scale_simple(height,height,gtk.gdk.INTERP_BILINEAR)
-        self.set_temp_icon (icon)
+        self.icon = self.set_awn_icon('mount-applet', 'mount-applet')
         self.title = awn.awn_title_get_default ()
 
         self.dialog = awn.AppletDialog (self)
@@ -138,6 +130,7 @@ class MountApplet(awn.AppletSimple):
 
     def dialog_focus_out (self, widget, event):
         self.dialog.hide ()
+        self.showing_dialog = False
 
 
     def enter_notify (self, widget, event):
@@ -171,11 +164,11 @@ class MountApplet(awn.AppletSimple):
         if self.isMounted(mountpoint, mounts) and self.execute_command != '':
             command = self.execute_command.replace('%D', mountpoint)
             print command
-            os.system(command)
+            subprocess.Popen(command, shell=True)
 
 
     def execute_mount(self, command):
-        output = os.system(command)
+        output = subprocess.Popen(command, shell=True)
         self.initialize_dialog()
         self.dialog.show_all ()
         self.title.hide (self)
@@ -191,6 +184,7 @@ class PreferenceDialog(gtk.Window):
         self.applet = applet
 
         self.set_title("Preferences")
+        self.set_icon(applet.icon)
         vbox = gtk.VBox(True, 0)
         self.add(vbox)
 

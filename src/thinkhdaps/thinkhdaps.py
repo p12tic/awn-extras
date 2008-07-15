@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-#
 # Copyright (C) 2008  onox <denkpadje@gmail.com>
 # 
 # This program is free software: you can redistribute it and/or modify
@@ -23,7 +21,7 @@ import gtk
 from gtk import gdk
 from awn.extras import AWNLib
 
-applet_name = "ThinkHDAPS Applet"
+applet_name = "ThinkHDAPS"
 applet_version = "0.2.8"
 applet_description = "Applet that shows the status of HDAPS"
 

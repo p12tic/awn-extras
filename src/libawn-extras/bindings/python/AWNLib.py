@@ -118,7 +118,6 @@ class Dialogs:
 
         if dialog == "menu":
             dlog = self.__parent.create_default_menu()
-            dlog.show_all()
         elif dialog == "program":
             dlog = lambda: None
         elif dialog == "about":

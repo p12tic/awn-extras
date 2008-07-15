@@ -50,6 +50,20 @@ ___file___ = sys.argv[0]
 
 _globalRegister = {}
 
+if "any" not in globals():
+    def any(iterable):
+        for element in iterable:
+            if element:
+                return True
+        return False
+
+if "all" not in globals():
+    def all(iterable):
+        for element in iterable:
+            if not element:
+                return False
+        return True
+
 
 class KeyRingError:
     def __init__(self, str):
@@ -61,6 +75,9 @@ class KeyRingError:
 
 
 class Dialogs:
+    
+    __special_dialogs = ("menu", "program", "about", "preferences")
+    
     def __init__(self, parent):
         """
         Creates instance of Dialogs object. Will create a menu,
@@ -75,16 +92,9 @@ class Dialogs:
         self.__parent = parent
 
         self.__parent.settings.cd("shared")
-        
+
         self.menu = self.new("menu")
-        
-        if "all" not in globals():
-            def all(iterable):
-                for element in iterable:
-                    if not element:
-                        return False
-                return True
-        
+
         meta_keys = self.__parent.meta.keys()
 
         # Create the About dialog if the applet provides the necessary metadata
@@ -124,13 +134,12 @@ class Dialogs:
             dlog = self.AboutDialog(self.__parent)
         elif dialog == "preferences":
             dlog = self.PreferencesDialog(self.__parent)
-            focus = False
         else:
             dlog = awn.AppletDialog(self.__parent)
 
         self.register(dialog, dlog, focus)
 
-        if dialog not in ("program", "menu") and title:
+        if dialog not in self.__special_dialogs and title:
             dlog.set_title(" " + title + " ")
 
         return dlog
@@ -148,12 +157,12 @@ class Dialogs:
         @type focus: C{bool}
         """
 
-        if focus and dialog not in ("program", "menu", "about") and self.__loseFocus:
-            def hideDlog():
+        if focus and dialog not in self.__special_dialogs and self.__loseFocus:
+            def hide_dialog(widget, event):
                 self.__current = None
                 dlog.hide()
 
-            dlog.connect("focus-out-event", lambda x, y: hideDlog())
+            dlog.connect("focus-out-event", hide_dialog)
 
         self.__register[dialog] = dlog
 

@@ -18,11 +18,9 @@
 # Boston, MA 02111-1307, USA.
 
 
-import sys, os
-import gobject
+import sys
 import pygtk
 import gtk
-from gtk import gdk
 
 import awn
 import dbus

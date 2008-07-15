@@ -18,11 +18,9 @@
 # Boston, MA 02111-1307, USA.
 
 
-import sys, os
-import gobject
+import sys
 import pygtk
 import gtk
-from gtk import gdk
 
 import awn
 import dbus
@@ -54,7 +52,7 @@ class App (awn.AppletSimple):
         
         self.media_button_type = media_button_type
         if self.media_button_type == "-next": # -next -previous -pp
-        self.media_icon_name = "media-skip-forward"
+            self.media_icon_name = "media-skip-forward"
         elif self.media_button_type == "-previous":
             self.media_icon_name = "media-skip-backward"
         elif self.media_button_type == "-pp":

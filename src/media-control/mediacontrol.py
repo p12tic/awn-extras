@@ -18,11 +18,10 @@
 # Boston, MA 02111-1307, USA.
 
 
-import sys, os
+import sys
 
-import gobject
+from gobject import GError
 import gtk
-from gtk import gdk
 import dbus
 import gconf
 
@@ -46,20 +45,16 @@ class App (awn.AppletSimple):
 
     def __init__ (self, uid, orient, height):
         """Creating the applets core"""
+        awn.AppletSimple.__init__(self, uid, orient, height)
         self.resultToolTip = "Media Control Applet"
-        self.keylocation = "/apps/avant-window-navigator/applets/MediaControl/"
         location =  __file__
         self.location = location.replace('mediacontrol.py','')
-        self.location_icon = self.location + '/icons/rhythmbox.svg'
+        self.keylocation = "/apps/avant-window-navigator/applets/MediaControl/"
+        self.set_awn_icon('media-control', 'media-control')
         self.load_keys()
         self.what_app()
         # The Heart
-        awn.AppletSimple.__init__(self, uid, orient, height)
         self.height = height
-        icon = gdk.pixbuf_new_from_file (self.location_icon)
-        if height != icon.get_height():
-            icon = icon.scale_simple(height,height,gtk.gdk.INTERP_BILINEAR)
-        self.set_icon(icon)
         self.title = awn.awn_title_get_default ()
         self.dialog = awn.AppletDialog (self)
         self.dialog_visible = False
@@ -159,7 +154,7 @@ class App (awn.AppletSimple):
         self.titleLen = eval(self.titleLen)
         self.albumArtSize = self.key_control('albumArtSize',"150")
         self.albumArtSize = eval(self.albumArtSize)
-        self.noArtIconDefault = self.location + "noArtIcon.png"
+        self.noArtIconDefault = self.location + "/icons/noArtIcon.png"
         self.noArtIcon = self.key_control('noArtIcon',self.noArtIconDefault)
         self.titleOrder = self.key_control('titleOrder',"artist - title")
 
@@ -180,13 +175,13 @@ class App (awn.AppletSimple):
                     artExact).scale_simple(self.albumArtSize,
                                            self.albumArtSize,
                                            gtk.gdk.INTERP_BILINEAR))
-        except gobject.GError:
+        except GError:
             try:self.image.set_from_pixbuf(gtk.gdk.pixbuf_new_from_file(
                 self.noArtIcon).scale_simple(
                     self.albumArtSize,
                     self.albumArtSize,
                     gtk.gdk.INTERP_BILINEAR))
-            except gobject.GError: pass
+            except GError: pass
 
     @error_decorator
     def button_previous_press(self, widget):

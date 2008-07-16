@@ -440,6 +440,7 @@ src/thinkhdaps/thinkhdaps.desktop.in
 src/to-do/Makefile
 src/to-do/to-do.desktop.in
 src/tomboy-applet/Makefile
+src/tomboy-applet/icons/Makefile
 src/tomboy-applet/tomboy-applet.desktop.in
 src/trash/Makefile
 src/trash/trash.desktop.in

@@ -20,9 +20,7 @@
 #       MA 02110-1301, USA.
 
 from awn.extras import AWNLib
-import gobject
 import gtk
-from gtk import gdk
 import dbus
 import os
 
@@ -36,16 +34,13 @@ interface = dbus.Interface(interface,dbus_interface='org.gnome.Tomboy.RemoteCont
 version = interface.Version()
 
 # Logo of the applet, shown in the GTK About dialog
-applet_logo = os.path.join(os.path.dirname(__file__), "tomboy.png")
+applet_logo = os.path.join(os.path.dirname(__file__), "icons", "tomboy.png")
 
 
 class TomboyApplet:
 	def __init__(self, awnlib):
 		self.awn=awnlib	
-		try:
-			self.awn.icon.theme("tomboy")
-		except:
-			self.awn.icon.file("tomboy.png")
+		self.awn.icon.theme("tomboy")
 		self.awn.title.set("Tomboy Applet")
 		
 		self.MainDialog()

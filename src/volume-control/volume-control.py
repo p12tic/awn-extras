@@ -212,7 +212,7 @@ class VolumeControlApplet:
         # Combobox in preferences window to choose a channel
         vbox_channel = prefs.get_widget("vbox-mixer-channel")
         
-        if "channel" not in self.applet.settings:
+        if "channel" not in self.applet.settings or self.applet.settings["channel"] not in self.backend.channels:
             self.applet.settings["channel"] = self.backend.channels[0]
         channel = self.applet.settings["channel"]
         

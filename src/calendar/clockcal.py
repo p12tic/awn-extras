@@ -278,11 +278,7 @@ class App(awn.AppletSimple):
 		else:		
 			if self.blinky_colon == True:
 				self.draw_colon(self.ct,123,202,30)
-				#ns = self.ct.get_target()
-				#new_icon = self.get_pixbuf_from_surface(ns)
-				#scaled_icon = new_icon.scale_simple(self.height, self.height, gtk.gdk.INTERP_BILINEAR) 
-				#self.set_temp_icon(scaled_icon)
-				self.set_icon_context(self.ct)
+				self.set_icon_context_scaled(self.ct)
 			result=True
 		now = datetime.datetime.now()
 		self.title_text = now.strftime("%x %X")
@@ -427,11 +423,7 @@ class App(awn.AppletSimple):
 		self.ct.set_source_rgba(1.0,1.0,1.0,1.0)
 		self.ct.move_to(x,60)
 		self.ct.show_text(now.strftime("%b"))
-		self.set_icon_context(self.ct)
-		#ns = self.ct.get_target()
-		#new_icon = awn.extras.surface_to_pixbuf(ns)
-		#scaled_icon = new_icon.scale_simple(self.height, self.height, gtk.gdk.INTERP_BILINEAR) 
-		#self.set_temp_icon(scaled_icon)
+		self.set_icon_context_scaled(self.ct)
 		return True
 
 	def draw_time_led(self, context, led, x0, y0, width, height):

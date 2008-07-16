@@ -1272,7 +1272,7 @@ gboolean hide_icon(gpointer data)
 {
 
   gtk_widget_set_size_request(GTK_WIDGET(G_daemon_config.awn_app), 0, 0);
-//  gtk_widget_hide(GTK_WIDGET(G_daemon_config.awn_app));
+  gtk_widget_hide(GTK_WIDGET(G_daemon_config.awn_app));
 //  g_object_unref(G_daemon_config.awn_icon);
 
   G_daemon_config.awn_icon = gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8, 1, 1);

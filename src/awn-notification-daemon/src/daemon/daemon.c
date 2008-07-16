@@ -1736,7 +1736,7 @@ AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient, gint height)
 
   dbus_g_connection_register_g_object(connection, "/org/freedesktop/Notifications", G_OBJECT(daemon));
 
-  g_timeout_add(5000, (GSourceFunc)send_message, g_strdup("Awn Notification Daemon has loaded Successfully.\nClick <a href=\"http://wiki.awn-project.org/index.php?title=Awn_Notification-Daemon\">Here</a> for online documentation."));
+//  g_timeout_add(5000, (GSourceFunc)send_message, g_strdup("Awn Notification Daemon has loaded Successfully.\nClick <a href=\"http://wiki.awn-project.org/index.php?title=Awn_Notification-Daemon\">Here</a> for online documentation."));
 
   if (! G_daemon_config.show_icon)
   {

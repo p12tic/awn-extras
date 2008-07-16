@@ -185,11 +185,12 @@ awn_applet_factory_initp (gchar *uid, gint orient, gint height)
   webapplet->applet = AWN_APPLET (awn_applet_simple_new (uid, orient, height));
   gtk_widget_set_size_request (GTK_WIDGET (webapplet->applet), height, -1);
 
-  webapplet->applet_icon_height = height - 2;
   webapplet->applet_icon_name = g_strdup ("apple-green");  
-  webapplet->icon = awn_applet_simple_set_awn_icon(webapplet->applet,
+
+  awn_applet_simple_set_awn_icon(AWN_APPLET_SIMPLE(webapplet->applet),
                                     APPLET_NAME,
                                     webapplet->applet_icon_name)  ;
+  
   gtk_widget_show_all (GTK_WIDGET (webapplet->applet));
   awn_html_dialog_new (webapplet);
   gtk_window_set_focus_on_map (GTK_WINDOW (webapplet->mainwindow), TRUE);

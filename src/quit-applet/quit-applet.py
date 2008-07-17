@@ -58,7 +58,7 @@ class QuitLogOutApplet:
         
         prefs_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
         prefs_item.connect("activate", self.show_prefs_dialog_cb)
-        self.applet.dialog.menu.insert(prefs_item, 2)
+        self.applet.dialog.menu.insert(prefs_item, 3)
         
         pref_dialog = self.applet.dialog.new("preferences")
         pref_dialog.connect("response", self.pref_dialog_response_cb)
@@ -71,9 +71,9 @@ class QuitLogOutApplet:
     def setup_dialog_settings(self, vbox):
         """ Loads the settings """
         
-        if "logout_command" not in applet.settings:
-            applet.settings["logout_command"] = "gnome-session-save --kill"
-        self.logout_command = applet.settings["logout_command"]
+        if "logout_command" not in self.applet.settings:
+            self.applet.settings["logout_command"] = "gnome-session-save --kill"
+        self.logout_command = self.applet.settings["logout_command"]
         
         # TODO replace the entry by a combobox that has the values: GNOME, KDE, ..., custom, etc.
         self.entry_logout = gtk.Entry()
@@ -88,7 +88,7 @@ class QuitLogOutApplet:
         vbox.add(extra_vbox)
     
     def pref_dialog_response_cb(self, widget, response):
-        applet.settings["logout_command"] = self.logout_command = self.entry_logout.get_text()
+        self.applet.settings["logout_command"] = self.logout_command = self.entry_logout.get_text()
 
 
 if __name__ == "__main__":

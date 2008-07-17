@@ -149,17 +149,17 @@ class VolumeControlApplet:
         
         self.mute_item = gtk.CheckMenuItem("Mu_te")
         self.mute_item.connect("toggled", self.backend.mute_toggled_cb)
-        menu.insert(self.mute_item, 2)
+        menu.insert(self.mute_item, 3)
         
         volume_control_item = gtk.MenuItem("_Open Volume Control")
         volume_control_item.connect("activate", self.show_volume_control_cb)
-        menu.insert(volume_control_item, 3)
+        menu.insert(volume_control_item, 4)
         
-        menu.insert(gtk.SeparatorMenuItem(), 4)
+        menu.insert(gtk.SeparatorMenuItem(), 5)
         
         prefs_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
         prefs_item.connect("activate", self.show_prefs_dialog_cb)
-        menu.insert(prefs_item, 5)
+        menu.insert(prefs_item, 6)
         
         self.setup_dialog_settings()
     

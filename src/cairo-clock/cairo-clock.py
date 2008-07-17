@@ -88,7 +88,7 @@ class CairoClockApplet:
         prefs_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
         prefs_item.connect("activate", self.show_dialog_cb)
         
-        self.applet.dialog.menu.insert(prefs_item, 2)
+        self.applet.dialog.menu.insert(prefs_item, 3)
         
         prefs = glade.XML(glade_file)
         prefs.get_widget("dialog-vbox").reparent(self.applet.dialog.new("preferences").vbox)
@@ -265,23 +265,20 @@ class AnalogClock:
     def __init__(self, clock_manager):
         self.applet = clock_manager.applet
         self.clock_manager = clock_manager
-        
-        self.pixbuf = None
-        self.panel_height = self.applet.get_height()
     
     def load_theme(self, theme):
         """ Loads the necessary SVG files of the specified theme """
         
-        get_theme = lambda filename, theme: os.path.join(theme, filename)
+        get_theme = lambda filename, theme: rsvg.Handle(os.path.join(theme, filename))
         
-        self.clock_drop_shadow = rsvg.Handle(get_theme('clock-drop-shadow.svg', theme))
-        self.clock_face = rsvg.Handle(get_theme('clock-face.svg', theme))
-        self.clock_marks = rsvg.Handle(get_theme('clock-marks.svg', theme))
-        self.clock_frame = rsvg.Handle(get_theme('clock-frame.svg', theme))
+        self.clock_drop_shadow = get_theme('clock-drop-shadow.svg', theme)
+        self.clock_face = get_theme('clock-face.svg', theme)
+        self.clock_marks = get_theme('clock-marks.svg', theme)
+        self.clock_frame = get_theme('clock-frame.svg', theme)
         
-        self.clock_hour_hand = rsvg.Handle(get_theme('clock-hour-hand.svg', theme))
-        self.clock_minute_hand = rsvg.Handle(get_theme('clock-minute-hand.svg', theme))
-        self.clock_second_hand = rsvg.Handle(get_theme('clock-second-hand.svg', theme))
+        self.clock_hour_hand = get_theme('clock-hour-hand.svg', theme)
+        self.clock_minute_hand = get_theme('clock-minute-hand.svg', theme)
+        self.clock_second_hand = get_theme('clock-second-hand.svg', theme)
     
     def draw_clock(self):
         """ Renders the SVGs on a Cairo surface and converts it to a gdk.Pixbuf,
@@ -294,11 +291,6 @@ class AnalogClock:
         
         surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, height, height)
         context = cairo.Context(surface)
-        
-        # Clear the pixbuf when the height changes (a new one will be created)
-        if height != self.panel_height:
-            self.panel_height = height
-            self.pixbuf = None
         
         scale = self.applet.get_height() / 100.0
         context.scale(scale, scale)
@@ -330,13 +322,7 @@ class AnalogClock:
             self.clock_second_hand.render_cairo(context)
             context.restore()
         
-        self.pixbuf = self.applet.icon.surface(surface, self.pixbuf, False)
-        self.applet.icon.set(self.pixbuf, True)
-        
-        """ Sometimes the Cairo context and surface are wearing
-        stealth suits and The Garbage Collector can't see them """
-        del context
-        del surface
+        self.applet.icon.set_context(context)
 
 
 if __name__ == "__main__":

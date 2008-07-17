@@ -255,9 +255,9 @@ gboolean cpu_meter_render(gpointer data)
     cpumeter->width = 50;
     cpumeter->height = 40;
 
-    
-    surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, cpumeter->width, cpumeter->height);
-
+    cairo_t * temp_cr = gdk_cairo_create(GTK_WIDGET(cpumeter->applet)->window);
+    surface = cairo_surface_create_similar  (cairo_get_target(temp_cr),CAIRO_CONTENT_COLOR_ALPHA, cpumeter->width, cpumeter->height);
+    cairo_destroy(temp_cr);
     cr = cairo_create(surface);
     assert(cr);
     cpumeter->doneonce = TRUE;

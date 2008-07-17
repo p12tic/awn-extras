@@ -5,6 +5,6 @@ Type=Application
 X-AWN-AppletType=Python
 Comment=Listen to Pandora Internet Radio
 Exec=pandora/pandora.py
-Icon=pandora/icons/48x48/apps/pandora.png
+Icon=pandora/icons/pandora.png
 Name[en_US]=Pandora Radio
 X-AWN-AppletCategory=AudioVideo,Audio,Network,Player

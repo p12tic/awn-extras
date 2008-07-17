@@ -32,6 +32,7 @@ except ImportError:
 awn.check_dependencies(globals(), 'gtkmozembed')
 
 class App (awn.AppletSimple):
+  displayed = False
   def __init__ (self, uid, orient, height):
     awn.AppletSimple.__init__ (self, uid, orient, height)
     self.height = height
@@ -56,11 +57,21 @@ class App (awn.AppletSimple):
     self.dialog.connect ("focus-out-event", self.dialog_focus_out)
 
   def button_press (self, widget, event):
-    self.dialog.show_all ()
-    self.title.hide (self)
+    if self.displayed == True:
+      self.dialog.hide()
+      self.displayed = False
+    if event.button == 3:
+      menu = self.create_default_menu()
+      menu.show_all()
+      menu.popup(None, None, None, event.button, event.time)
+    else:
+      self.dialog.show_all()
+      self.title.hide(self)
+      self.displayed = True
 
   def dialog_focus_out (self, widget, event):
-    self.dialog.hide ()
+    self.displayed = False
+    self.dialog.hide()
 
   def enter_notify (self, widget, event):
     self.title.show (self, "Pandora Applet")

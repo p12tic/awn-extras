@@ -347,8 +347,9 @@ class App(awn.AppletSimple):
         #This is a normal item
         #Make an "X" button to clear the item
         dialog_x = gtk.Button()
+        dialog_x.set_tooltip_text('Delete item')
         dialog_x_icon = gtk.image_new_from_pixbuf(\
-          self.icon_theme.load_icon('gtk-cancel',16,16))
+          self.icon_theme.load_icon('gtk-clear',16,16))
         dialog_x.set_image(dialog_x_icon)
         dialog_x.set_relief(gtk.RELIEF_NONE)
         dialog_x.iterator = y
@@ -395,6 +396,7 @@ class App(awn.AppletSimple):
         
         #Make a right arrow button to edit/add details about the item
         dialog_details = gtk.Button()
+        dialog_details.set_tooltip_text('View/Edit details')
         dialog_details_icon = gtk.image_new_from_pixbuf(\
           self.icon_theme.load_icon('go-next',16,16))
         dialog_details.set_image(dialog_details_icon)
@@ -434,8 +436,9 @@ class App(awn.AppletSimple):
       else:
         #Make a normal X button
         dialog_x = gtk.Button()
+        dialog_x.set_tooltip_text('Delete category')
         dialog_x_icon = gtk.image_new_from_pixbuf(\
-          self.icon_theme.load_icon('gtk-cancel',16,16))
+          self.icon_theme.load_icon('gtk-clear',16,16))
         dialog_x.set_image(dialog_x_icon)
         dialog_x.set_relief(gtk.RELIEF_NONE)
         dialog_x.iterator = y
@@ -453,6 +456,7 @@ class App(awn.AppletSimple):
         #Make a normal -> button - but different function
         #for the category
         dialog_details = gtk.Button()
+        dialog_details.set_tooltip_text('View/Edit details')
         dialog_details_icon = gtk.image_new_from_pixbuf(\
           self.icon_theme.load_icon('go-next',16,16))
         dialog_details.set_image(dialog_details_icon)

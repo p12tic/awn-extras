@@ -350,7 +350,7 @@ src/comics/Makefile
 src/comics/feeds/Makefile
 src/comics/glade/Makefile
 src/comics/locale/Makefile
-src/comics/pixmaps/Makefile
+src/comics/icons/Makefile
 src/comics/locale/sv_SE/Makefile
 src/comics/locale/sv_SE/LC_MESSAGES/Makefile
 src/digitalClock/Makefile

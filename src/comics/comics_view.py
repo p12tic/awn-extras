@@ -38,8 +38,7 @@ from downloader import Downloader
 from feed import URL, TITLE, LINK, DATE, Feed, FeedContainer
 from settings import Settings
 from widgets import ScalableWindow, WWWLink, Ticker
-from shared import SHARE_DIR, USER_DIR, SYS_FEEDS_DIR, USER_FEEDS_DIR, \
-	GLADE_DIR, PIXMAPS_DIR
+from shared import *
 
 STRIPS_DIR = USER_DIR
 CACHE_FILE = os.path.join(USER_DIR, '%s.cache')
@@ -64,8 +63,8 @@ TICKER_DISTANCE = 8					# The distance from the ticker to the border
 COMPIZ_WIDGET = '_COMPIZ_WIDGET'	# The WM atom for a Compiz widget
 
 # Common images
-DEFAULT_IMAGE = rsvg.Handle(os.path.join(PIXMAPS_DIR, 'default.svg'))
-ERROR_IMAGE = rsvg.Handle(os.path.join(PIXMAPS_DIR, 'error.svg'))
+DEFAULT_IMAGE = rsvg.Handle(os.path.join(ICONS_DIR, 'default.svg'))
+ERROR_IMAGE = rsvg.Handle(os.path.join(ICONS_DIR, 'error.svg'))
 
 
 def compiz_widget_set(widget, value):

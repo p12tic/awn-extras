@@ -30,7 +30,7 @@ USER_DIR		= join(getenv('HOME'), '.config', 'awn', 'applets', 'comics')
 SYS_FEEDS_DIR	= join(SHARE_DIR, 'feeds')
 USER_FEEDS_DIR	= join(USER_DIR, 'feeds')
 GLADE_DIR		= join(SHARE_DIR, 'glade')
-PIXMAPS_DIR		= join(SHARE_DIR, 'pixmaps')
+ICONS_DIR		= join(SHARE_DIR, 'icons')
 LOCALE_DIR		= join(SHARE_DIR, 'locale')
 
 STRIPS_DIR		= USER_DIR

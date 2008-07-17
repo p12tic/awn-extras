@@ -33,8 +33,7 @@ from locale import gettext as _
 from feed import Feed
 from qfeed import QueryFeed, NAME, URL, TYPE, IMG_INDEX
 from downloader import Downloader
-from shared import SHARE_DIR, USER_DIR, SYS_FEEDS_DIR, USER_FEEDS_DIR, \
-	GLADE_DIR, PIXMAPS_DIR
+from shared import *
 from settings import Settings
 
 GLADE_FILE = os.path.join(GLADE_DIR, 'add.glade')

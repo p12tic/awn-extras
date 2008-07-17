@@ -1,4 +1,4 @@
-SUBDIRS = feeds glade locale pixmaps
+SUBDIRS = feeds glade locale icons
 		
 APPLET_NAME = comics
 APPLET_MAIN_FILE = comics.py
@@ -12,7 +12,6 @@ dist_applet_DATA =      \
 		COPYING      \
 		downloader.py   \
 		feed.py	\
-		icon.svg	\
 		qfeed.py	\
 		settings.py	\
 		shared.py	\

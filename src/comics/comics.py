@@ -39,8 +39,7 @@ import comics_manage
 import comics_view
 
 from feed import FeedContainer
-from shared import SHARE_DIR, USER_DIR, SYS_FEEDS_DIR, USER_FEEDS_DIR, \
-	ALT_USER_DIR, GLADE_DIR, PIXMAPS_DIR, LOCALE_DIR, STRIPS_DIR
+from shared import *
 
 GLADE_FILE = join(GLADE_DIR, 'main.glade')
 
@@ -134,19 +133,11 @@ class ComicApplet(awn.AppletSimple):
 			template['feed_name'] = feed_name
 			self.create_window(template = template)
 	
-	def update_icon(self):
-		"""Update the icon of the applet, scaling it if necessary."""
-		if self.height != self.icon.get_height():
-			self.set_icon(self.icon.scale_simple(self.height, self.height,
-				gtk.gdk.INTERP_BILINEAR))
-		else:
-			self.set_icon(self.icon)
-	
 	def make_menu(self):
 		"""Generate the menu listing the comics."""
 		# Generate comics menu
-		feed_menu = self.__xml.get_widget('comics_menu')
-		feed_menu.foreach(lambda child: feed_menu.remove(child))
+		menu = self.create_default_menu()
+		feed_menu = gtk.Menu()
 		for feed in self.feeds.feeds:
 			label = gtk.Label()
 			label.set_markup(self.feeds.feeds[feed].name)
@@ -160,10 +151,16 @@ class ComicApplet(awn.AppletSimple):
 			menu_item.connect('toggled', self.on_comics_toggled)
 			feed_menu.append(menu_item)
 		feed_menu.show_all()
-		self.__xml.get_widget('comics_container').set_sensitive(
-			len(self.feeds.feeds) > 0)
-		
-		return self.__xml.get_widget('menu')
+		container = gtk.MenuItem(_('Comics'))
+		container.set_sensitive(len(self.feeds.feeds) > 0)
+		container.set_submenu(feed_menu)
+		menu.append(container)
+		manage_item = self.__xml.get_widget('manage_comics_item')
+		if manage_item.parent is not None:
+			manage_item.parent.remove(manage_item)
+		menu.append(manage_item)
+		menu.show_all()
+		return menu
 	
 	def show_message(self, message, icon_id):
 		self.message_label.set_markup(message)
@@ -177,10 +174,8 @@ class ComicApplet(awn.AppletSimple):
 		self.feeds = feeds
 		
 		self.height = height
-		self.icon = gtk.gdk.pixbuf_new_from_file(join(SHARE_DIR, 'icon.svg'))
-		self.update_icon()
+		self.set_awn_icon('comics', 'comics-icon')
 		self.notify = awn.extras.AWNLib.Notify(self)
-		self.notify.require()
 		self.dialog = awn.AppletDialog(self)
 		self.dialog.connect('button-press-event', self.on_dialog_button_press)
 		
@@ -216,7 +211,7 @@ class ComicApplet(awn.AppletSimple):
 	def on_window_updated(self, widget, title):
 		self.notify.send(title,
 			_('There is a new strip of %s!') % widget.feed_name,
-			os.path.join(SHARE_DIR, 'icon.svg'))
+			os.path.join(ICONS_DIR, 'icon.svg'))
 	
 	def on_window_removed(self, widget):
 		self.windows.remove(widget)

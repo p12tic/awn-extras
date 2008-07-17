@@ -356,6 +356,7 @@ src/comics/locale/sv_SE/LC_MESSAGES/Makefile
 src/digitalClock/Makefile
 src/digitalClock/digitalClock.desktop.in
 src/file-browser-launcher/Makefile
+src/file-browser-launcher/icons/Makefile
 src/file-browser-launcher/file-browser-launcher.desktop.in
 src/filebrowser/Makefile
 src/filebrowser/filebrowser.desktop.in

@@ -115,7 +115,8 @@ class mywidget(gtk.Widget):
         self.wind = self.root.create_window(0, 0, 80, 48,
                 0, self.scr.root_depth, window_class=X.InputOutput,
                 visual=X.CopyFromParent, colormap=X.CopyFromParent,
-                event_mask=(X.ExposureMask|X.ButtonPressMask|X.ButtonReleaseMask|X.EnterWindowMask))
+                event_mask=(X.ButtonPressMask|X.ButtonReleaseMask|X.ExposureMask))
+                                      
         # System Tray window
 
 
@@ -179,6 +180,7 @@ class mywidget(gtk.Widget):
             gobject.timeout_add(100,self.tr__updateAlpha,False)
         # Either do a single render of Alpha, or cause one every REFRESH 
         # milliseconds
+        self.gtkwin.chbg(self)
 
         self.realized= 1
         # and now we can safely render alpha :D
@@ -294,19 +296,18 @@ class mywidget(gtk.Widget):
             # if i use a function to draw on certain pixels, those
             # that are set to True will be shown, all False will be 
             # 100% transparent.
-            bitmap = gtk.gdk.Pixmap(None, w, h, 1)
-            cr = bitmap.cairo_create()
-
-            # Clear the bitmap to False
-            cr.set_source_rgb(0, 0, 0)
-            cr.set_operator(cairo.OPERATOR_DEST_OUT)
-            cr.paint()
-
-            # Draw our shape into the bitmap using cairo
-            cr.set_operator(cairo.OPERATOR_OVER)
-
-
             if(DIVIDEBYZERO == False):
+                bitmap = gtk.gdk.Pixmap(None, w, h, 1)
+                cr = bitmap.cairo_create()
+
+                # Clear the bitmap to False
+                cr.set_source_rgb(0, 0, 0)
+                cr.set_operator(cairo.OPERATOR_DEST_OUT)
+                cr.paint()
+
+                # Draw our shape into the bitmap using cairo
+                cr.set_operator(cairo.OPERATOR_OVER)
+
                 # Lets not do the impossible. Just draw a box around it.
                 if(BORDER == True):
                     newh= (HIGH*ICONSIZE)
@@ -326,68 +327,31 @@ class mywidget(gtk.Widget):
                     cr.fill()
                     cr.rectangle(4,offsety-4,w-12,newh+8)
                     cr.fill()
-
-
-
-
                 else:
-                    cr.rectangle(0,CUSTOM_Y,w,h)
+                    cr.rectangle(0,offsety,w,h)
                     cr.fill()
 
                 self.gwin.shape_combine_mask(bitmap, 0, 0)
             else:
-                # THIS BIT deals with Transparency for all of the BG colour
-                cr.rectangle(0,CUSTOM_Y,w,h)
-                cr.fill()
-                self.gwin.shape_combine_mask(bitmap, 0, 0)
-                # And ^THIS^ is the bit that causes flicker...
-                # If you take this away, any updates to the image will not get
-                # seen by the "trayimage" comming up. Thus animated icons or
-                # new icons are not seen until a resize
-
-                trayimage=gdk.Image(gdk.IMAGE_FASTEST, gdk.visual_get_system(),w,h)
-                trayimage=self.gwin.copy_to_image(trayimage,0,0,0,0,w,h)
-#                trayimage=pfft
-
-
-
-                # Attempt to minimise the time that the background is all shown
-                # By borrowing the last mask used. Nasty but shorter flicker
-
+                newh= (HIGH*ICONSIZE)
                 bitmap = gtk.gdk.Pixmap(None, w, h, 1)
                 cr = bitmap.cairo_create()
-                # Create a B/W mask. Drawing on a pixel means it is shown.
-                # Pixels that arent shown are transparent
 
+                # Clear the bitmap to False
                 cr.set_source_rgb(0, 0, 0)
                 cr.set_operator(cairo.OPERATOR_DEST_OUT)
                 cr.paint()
-                # Clear the Bitmap
-                
+
+                # Draw our shape into the bitmap using cairo
                 cr.set_operator(cairo.OPERATOR_OVER)
-                cr.set_line_width(1)
-
-                bg_r    =int("0x"+BG_COLOR[2:4],0)
-                bg_g    =int("0x"+BG_COLOR[4:6],0)
-                bg_b    =int("0x"+BG_COLOR[6:8],0)
-                # Store the Background colour
-
-
-
-                for y in range(CUSTOM_Y,h):
-                    for x in range(0,w):
-                        # Pixel by pixel checking within the tray area.
-                        # This isnt as slow as some might assume! :P
-                        col = trayimage.get_pixel(x,y)
-                        if(self.tr__isBackground(col,bg_r,bg_g,bg_b)==False):
-                            # If its an icon pixel...
-                            cr.move_to(x,y)
-                            cr.line_to(x,y+1)
-                            cr.stroke()
-                            # Draw a dodgy line that somehow seems to work :D
+                cr.rectangle(0,offsety,w,newh)
+                cr.fill()
                 self.gwin.shape_combine_mask(bitmap, 0, 0)
-                # Attach mask
+
+                self.gwin.merge_child_shapes()
+
         return returnvar
+
 
     def tr__isBackground(self,col,bg_r,bg_g,bg_b):
         # Used in transparency render.
@@ -439,6 +403,10 @@ class mywidget(gtk.Widget):
                 task = self.tray.tasks[e.window.id]
                 task.obj.configure(onerror=self.error,width=ICONSIZE, height=ICONSIZE)
                 self.tr__updatePanel(self.root, self.wind)
+            if e.type == X.Expose and e.count==0:
+                if(e.window.id==self.wind.id):
+                    self.wind.clear_area(0,0,0,0)
+#                self.tr__updateAlpha(False)
             if e.type == X.ClientMessage:
                 data = e.data[1][1]
                 task = e.data[1][2]
@@ -559,12 +527,10 @@ def cleanup(k):
     for tid in k.widg.tray.order:
         t = k.widg.tray.tasks[tid]
         g= t.obj.query_tree()
-        print t.pid
         t.obj.unmap()
         t.obj.unmap_sub_windows()
         t.obj.reparent(g.root.id,0,0)
     d.flush()
-    print "Done"
 
 
 global path

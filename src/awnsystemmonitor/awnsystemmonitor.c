@@ -252,13 +252,12 @@ gboolean cpu_meter_render(gpointer data)
 
     gtk_widget_get_size_request(widget, &cpumeter->width, &cpumeter->height);
 
-    cpumeter->width = cpumeter->width - 3;
-    cpumeter->height = cpumeter->height / 2 - 3;
-#ifdef AWN_CAIRO_EFFECTS
+    cpumeter->width = 50;
+    cpumeter->height = 40;
+
+    
     surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, cpumeter->width, cpumeter->height);
-#else    
-    surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, cpumeter->width, cpumeter->height * 2);
-#endif    
+
     cr = cairo_create(surface);
     assert(cr);
     cpumeter->doneonce = TRUE;
@@ -268,27 +267,14 @@ gboolean cpu_meter_render(gpointer data)
 
   /*recreating this on every render as if I reuse it some
   bug(s) seem to get triggered in awn-applet-simple or awn-effects*/
-#ifdef AWN_CAIRO_EFFECTS
-//  apixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8, cpumeter->width, cpumeter->height);
-#else  
-  apixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8, cpumeter->width, cpumeter->height * 2);
-#endif  
 
   LoadGraph* g = cpumeter->loadgraph;
 
   render_graph(cr, g, text, cpumeter->width, cpumeter->height, cpumeter);
-
-#ifndef AWN_CAIRO_EFFECTS
-  surface_2_pixbuf(apixbuf, surface);
-#endif
   
-#ifdef AWN_CAIRO_EFFECTS
-  awn_applet_simple_set_icon_context(AWN_APPLET_SIMPLE(cpumeter->applet),
+
+  awn_applet_simple_set_icon_context_scaled(AWN_APPLET_SIMPLE(cpumeter->applet),
                                   cr);
-#else
-  awn_applet_simple_set_temp_icon(AWN_APPLET_SIMPLE(cpumeter->applet),
-                                  apixbuf);
-#endif
   if (cpumeter->show_title)
   {
     awn_title_show(cpumeter->title, GTK_WIDGET(cpumeter->applet), text);
@@ -316,11 +302,9 @@ void render_graph(cairo_t * cr, LoadGraph * g, char* text, int width, int height
   cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
 
   /* Set the background color */
-#ifdef AWN_CAIRO_EFFECTS
+
   awn_cairo_rounded_rect(cr, PAD - 1, 1, width - PAD - 4, height - PAD - 1, ARC, ROUND_ALL);
-#else  
-  awn_cairo_rounded_rect(cr, PAD - 1, height + 1, width - PAD - 4, height - PAD - 1, ARC, ROUND_ALL);
-#endif  
+ 
   cairo_set_source_rgba(cr, cpumeter->bg.red, cpumeter->bg.green, cpumeter->bg.blue, cpumeter->bg.alpha);
   cairo_fill(cr);
 
@@ -350,13 +334,9 @@ void render_graph(cairo_t * cr, LoadGraph * g, char* text, int width, int height
   }
 
 
-#ifdef AWN_CAIRO_EFFECTS
   guint top = PAD;  
   guint bottom = height - PAD;  
-#else  
-  guint top = height + PAD;  
-  guint bottom = height * 2 - PAD;
-#endif  
+
   guint tallest = bottom - top;
   cairo_set_line_width(cr, 1.0);
 
@@ -389,11 +369,9 @@ void render_graph(cairo_t * cr, LoadGraph * g, char* text, int width, int height
   cairo_set_line_width(cr, cpumeter->border_width);
 
   cairo_set_source_rgba(cr, cpumeter->border.red, cpumeter->border.green, cpumeter->border.blue, cpumeter->border.alpha);
-#ifdef AWN_CAIRO_EFFECTS
+
   awn_cairo_rounded_rect(cr, PAD - 1, 1, width - PAD - 4, height - PAD - 1, ARC, ROUND_ALL);  
-#else  
-  awn_cairo_rounded_rect(cr, PAD - 1, height + 1, width - PAD - 4, height - PAD - 1, ARC, ROUND_ALL);
-#endif  
+
   cairo_stroke(cr);
 
   if (cpumeter->do_gradient)
@@ -568,7 +546,7 @@ _height_changed(AwnApplet *app, guint height, gpointer *data)
     update_icons (applet);*/
   CpuMeter* cpumeter = data;
   gtk_widget_set_size_request(GTK_WIDGET(cpumeter->applet), height*1.25, height*2);
-  cpumeter->doneonce = FALSE;
+//  cpumeter->doneonce = FALSE;
 }
 
 /**

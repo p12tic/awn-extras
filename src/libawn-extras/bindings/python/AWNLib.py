@@ -204,6 +204,9 @@ class Dialogs:
                 force != "show":
                 self.__register[dialog].hide()
                 self.__current = None
+
+                # Because the dialog is now hidden, the title can be shown again
+                self.__parent.title.show()
             else:
                 if self.__current: 
                     current_was_active = self.__current.is_active()
@@ -370,6 +373,8 @@ class Icon:
         self.__parent = parent
         self.__height = self.__parent.height
 
+        self.__previous_context = None
+
     def file(self, file, set=True):
         """
         Get an icon from a file location.
@@ -454,6 +459,20 @@ class Icon:
                 icon = icon.scale_simple(w2, h2, gtk.gdk.INTERP_BILINEAR)
         self.__parent.set_temp_icon(icon)
         self.__parent.show()
+
+    def set_context(self, context):
+        """
+        Sets a C{cairo} context as your applet icon.
+
+        @param context The C{cairo} context to use
+        @type surface: C{cairo.Context}
+        """
+
+        self.__parent.set_icon_context(context)
+
+        if self.__previous_context != context:
+            del self.__previous_context
+            self.__previous_context = context
 
     def hide(self):
         """

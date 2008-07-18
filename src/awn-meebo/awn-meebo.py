@@ -19,10 +19,36 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import sys#, os
 import pygtk
 import gtk
-import gtkmozembed
 import awn
 
+# workaround for weirdness with regards to Ubuntu + gtkmozembed
+if os.path.exists('/etc/issue'):
+  fp = open('/etc/issue')
+  os_version = fp.read()
+  fp.close()
+  if re.search(r'7\.(?:04|10)', os_version): # feisty or gutsy
+    os.putenv('LD_LIBRARY_PATH', '/usr/lib/firefox')
+    os.putenv('MOZILLA_FIVE_HOME', '/usr/lib/firefox')
+
+try:
+  import gtkmozembed
+except ImportError:
+  print '       #####################################'
+  print 'Gtkmozembed is needed to run Mobile Meebo, please install.'
+  print ' * On Debian or Ubuntu based systems, install python-gnome2-extras'
+  print ' * On Gentoo based systems, install dev-python/gnome-python-extras'
+  print ' * On Fedora based systems, install gnome-python2-gtkmozembed'
+  print ' * On SUSE based systems, install python-gnome-extras'
+  print ' * On Mandriva based systems, install gnome-python-gtkmozembed'
+  print 'See: http://wiki.awn-project.org/Awn_Extras:Dependency_Matrix'
+  print '       #####################################'
+
+# Add pop up if gtkmozembed isn't found
+awn.check_dependencies(globals(), 'gtkmozembed')
+
+
 class App (awn.AppletSimple):
+  displayed = False
   def __init__ (self, uid, orient, height):
     awn.AppletSimple.__init__ (self, uid, orient, height)
     #self.pref_path = os.path.join(os.path.expanduser('~'), ".config/awn/applets/awn-meebo")
@@ -46,11 +72,21 @@ class App (awn.AppletSimple):
     self.dialog.connect ("focus-out-event", self.dialog_focus_out)
 
   def button_press (self, widget, event):
-    self.dialog.show_all ()
-    self.title.hide (self)
+    if self.displayed == True:
+      self.dialog.hide()
+      self.displayed = False
+    if event.button == 3:
+      menu = self.create_default_menu()
+      menu.show_all()
+      menu.popup(None, None, None, event.button, event.time)
+    else:
+      self.dialog.show_all()
+      self.title.hide(self)
+      self.displayed = True
 
   def dialog_focus_out (self, widget, event):
     self.dialog.hide ()
+    self.displayed = False
 
   def enter_notify (self, widget, event):
     self.title.show (self, "Mobile Meebo")

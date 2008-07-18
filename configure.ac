@@ -344,7 +344,7 @@ src/calendar/dateutil/Makefile
 src/calendar/dateutil/zoneinfo/Makefile
 src/comic/Makefile
 src/comic/comic.desktop.in
-src/comic/images/Makefile
+src/comic/icons/Makefile
 src/comics/comics.desktop.in
 src/comics/Makefile
 src/comics/feeds/Makefile

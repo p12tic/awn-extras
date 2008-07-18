@@ -1,4 +1,4 @@
-SUBDIRS = images
+SUBDIRS = icons
 
 APPLET_NAME = comic
 APPLET_MAIN_FILE = 	comic.py

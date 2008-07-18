@@ -33,100 +33,108 @@ class dgTime:
   def __init__(self, prefs, awn):
     self.awn = awn
     self.prefs = prefs
-    self.pixbuf = None
-    self.draw_clock()
+    self.context = None
+    self.surface = None
+    self.time_string = None
+    self.update_clock()
 
   def update_prefs(self, prefs):
     self.prefs = prefs
 
+  def update_clock(self):
+    time_string = self.get_time_string()
+    if time_string != self.time_string:
+      self.time_string = time_string
+      self.draw_clock()
+    return True
+
+  def create_context(self):
+    self.height = 48 # doesn't matter what the height is because it will be scaled
+
+    if self.prefs['dateBeforeTime']:
+      self.width = int(self.height * 2.5)
+    else:
+      self.width = int(self.height * 1.3)
+
+    self.surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.width, self.height)
+    self.context = cairo.Context(self.surface)
+
   def draw_clock (self):
     self.curY = 0
-    if self.prefs['dateBeforeTime']:
-      self.width = int(self.awn.get_height()*2.5)
-    else:
-      self.width = int(self.awn.get_height()*1.3)
 
     if self.prefs['hour12']:
       increase_size = 0
     else:
       increase_size = 1
 
-    self.height = self.awn.get_height()
-
-    t = self.get_time_string()
-
-    cs = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.width, self.height)
-    ct = cairo.Context(cs)
-    ct.set_source_surface(cs)
-    ct.paint()
-    ct.select_font_face(self.prefs['fontFace'], cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+    if self.context is None:
+      self.create_context()
+    # clear context
+    self.context.set_operator (cairo.OPERATOR_CLEAR)
+    self.context.paint()
+    self.context.set_operator (cairo.OPERATOR_SOURCE)
+    self.context.set_source_surface(self.surface)
+    self.context.paint()
+    self.context.select_font_face(self.prefs['fontFace'], cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
 
     if self.prefs['dateBeforeTime']:
-      self.draw_text_beside(ct, t[1], 8, 'd') #Day
-      self.draw_text_beside(ct, t[2], 9.5, 'm') #Month
-      self.draw_text_beside(ct, t[0], 4.4-increase_size, 't') #Time
+      self.draw_text_beside(self.time_string[1], 8, 'd') #Day
+      self.draw_text_beside(self.time_string[2], 9.5, 'm') #Month
+      self.draw_text_beside(self.time_string[0], 4.4 - increase_size, 't') #Time
     else:
-      self.draw_text(ct, t[0], 5-increase_size) #Time
-      self.draw_text(ct, t[1], 4) #Day
-      self.draw_text(ct, t[2], 4.4) #Month
+      self.draw_text(self.time_string[0], 5 - increase_size) #Time
+      self.draw_text(self.time_string[1], 4) #Day
+      self.draw_text(self.time_string[2], 4.4) #Month
 
-    if self.pixbuf is None:
-      self.pixbuf = extras.surface_to_pixbuf(cs)
-    else:
-      self.pixbuf = extras.surface_to_pixbuf(cs, self.pixbuf)
-    self.awn.set_icon(self.pixbuf)
-    del ct
-    cs.finish()
-    del cs
-    return True
+    self.awn.set_icon_context_scaled(self.context)
 
-  def draw_text(self, ct, text, size):
+  def draw_text(self, text, size):
     size = self.width/size
-    ct.set_font_size(size)
-    font_dim = self.get_font_size(ct, text)
+    self.context.set_font_size(size)
+    font_dim = self.get_font_size(text)
     x = (self.width/2) - (font_dim['width']/2)
-    v_space = ((self.awn.get_height()/2.4)-font_dim["height"])/2.5 #adjust vert spacing
+    v_space = ((self.height/2.4)-font_dim["height"])/2.5 #adjust vert spacing
     y = self.curY+font_dim["height"]+(v_space)
     #Shadow
-    ct.move_to(x+self.shadow_offset,y+self.shadow_offset)
-    ct.set_source_rgba(self.prefs['fontShadowColor'].red/65535.0, self.prefs['fontShadowColor'].green/65535.0, self.prefs['fontShadowColor'].blue/65535.0, 0.8)
-    ct.show_text(text)
+    self.context.move_to(x+self.shadow_offset,y+self.shadow_offset)
+    self.context.set_source_rgba(self.prefs['fontShadowColor'].red/65535.0, self.prefs['fontShadowColor'].green/65535.0, self.prefs['fontShadowColor'].blue/65535.0, 0.8)
+    self.context.show_text(text)
     #Text
-    ct.move_to(x,y)
-    ct.set_source_rgb(self.prefs['fontColor'].red/65535.0, self.prefs['fontColor'].green/65535.0, self.prefs['fontColor'].blue/65535.0)
-    ct.show_text(text)
+    self.context.move_to(x,y)
+    self.context.set_source_rgb(self.prefs['fontColor'].red/65535.0, self.prefs['fontColor'].green/65535.0, self.prefs['fontColor'].blue/65535.0)
+    self.context.show_text(text)
     self.curY = y
 
-  def draw_text_beside(self, ct, text, size, type):
+  def draw_text_beside(self, text, size, type):
     if self.curY == 0:
-      self.curY = self.awn.get_height()/5
+      self.curY = self.height/5
     if type == "t":
       self.width = self.width - (self.curX + 5)
       size = self.width/size
     else:
       size = self.width/size
-    ct.set_font_size(size)
-    font_dim = self.get_font_size(ct, text)
+    self.context.set_font_size(size)
+    font_dim = self.get_font_size(text)
     x = 0
-    v_space = ((self.awn.get_height()/2.4)-font_dim["height"])/1.5 #adjust vert spacing
+    v_space = ((self.height/2.4)-font_dim["height"])/1.5 #adjust vert spacing
     y = self.curY+font_dim["height"]+(v_space)
     if type == 't':
       x = self.curX + 5
-      y = (self.awn.get_height()/2)+(font_dim['height']/2)
+      y = (self.height/2)+(font_dim['height']/2)
     self.curX = font_dim['width']
 
     #Shadow
-    ct.move_to(x+self.shadow_offset,y+self.shadow_offset)
-    ct.set_source_rgba(self.prefs['fontShadowColor'].red/65535.0, self.prefs['fontShadowColor'].green/65535.0, self.prefs['fontShadowColor'].blue/65535.0, 0.8)
-    ct.show_text(text)
+    self.context.move_to(x+self.shadow_offset,y+self.shadow_offset)
+    self.context.set_source_rgba(self.prefs['fontShadowColor'].red/65535.0, self.prefs['fontShadowColor'].green/65535.0, self.prefs['fontShadowColor'].blue/65535.0, 0.8)
+    self.context.show_text(text)
     #Text
-    ct.move_to(x,y)
-    ct.set_source_rgb(self.prefs['fontColor'].red/65535.0, self.prefs['fontColor'].green/65535.0, self.prefs['fontColor'].blue/65535.0)
-    ct.show_text(text)
+    self.context.move_to(x,y)
+    self.context.set_source_rgb(self.prefs['fontColor'].red/65535.0, self.prefs['fontColor'].green/65535.0, self.prefs['fontColor'].blue/65535.0)
+    self.context.show_text(text)
     self.curY = y
 
-  def get_font_size(self, ct, text):
-    xbearing, ybearing, width, height, xadvance, yadvance = (ct.text_extents(text))
+  def get_font_size(self, text):
+    xbearing, ybearing, width, height, xadvance, yadvance = (self.context.text_extents(text))
     if xadvance > width:
       fwidth = xadvance
     else:

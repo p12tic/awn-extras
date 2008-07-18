@@ -42,7 +42,7 @@ class App (awn.AppletSimple):
     self.pf = dgClockPref.dgClockPref(awn.Config('digitalClock', None), self)
     self.clock = dgTime.dgTime(self.pf.prefs, self)
 
-    self.timer = gobject.timeout_add(1000, self.clock.draw_clock)
+    self.timer = gobject.timeout_add(1000, self.clock.update_clock)
 
     #self.title = awn.awn_title_get_default ()
 

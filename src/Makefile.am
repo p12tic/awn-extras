@@ -23,7 +23,6 @@ GCONF_APPLETS +=		\
 endif
 GCONF_APPLETS +=		\
 	awn-notification-daemon	\
-	comic			\
 	media-control		\
 	mount-applet		\
 	$(NULL)
@@ -56,9 +55,10 @@ SUBDIRS =			\
 	awnterm			\
 	battery-applet		\
 	cairo-clock		\
+	comic			\
 	comics			\
 	digitalClock		\
-	file-browser-launcher \
+	file-browser-launcher	\
 	lastfm			\
 	mail			\
 	media-icon-back		\

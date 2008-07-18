@@ -82,8 +82,8 @@ class Prefs:
     title_entry.set_text(self.settings['title'])
     title_entry.connect('focus-out-event', self.update)
     
-    #Label: Confirm when deleting... (bold)
-    confirm_label = gtk.Label(_('Confirm when deleting...'))
+    #Label: Confirm when removing... (bold)
+    confirm_label = gtk.Label(_('Confirm when removing...'))
     confirm_label.modify_font(pango.FontDescription('bold'))
     
     #CheckButton: Items

@@ -347,13 +347,13 @@ class App(awn.AppletSimple):
         #This is a normal item
         #Make an "X" button to clear the item
         dialog_x = gtk.Button()
-        dialog_x.set_tooltip_text('Delete item')
+        dialog_x.set_tooltip_text('Remove item')
         dialog_x_icon = gtk.image_new_from_pixbuf(\
-          self.icon_theme.load_icon('gtk-clear',16,16))
+          self.icon_theme.load_icon('list-remove',16,16))
         dialog_x.set_image(dialog_x_icon)
         dialog_x.set_relief(gtk.RELIEF_NONE)
         dialog_x.iterator = y
-        dialog_x.connect('clicked',self.delete_item)
+        dialog_x.connect('clicked',self.remove_item)
         
         #Make an entry widget for the item
         dialog_entry = gtk.Entry()
@@ -436,13 +436,13 @@ class App(awn.AppletSimple):
       else:
         #Make a normal X button
         dialog_x = gtk.Button()
-        dialog_x.set_tooltip_text('Delete category')
+        dialog_x.set_tooltip_text('Remove category')
         dialog_x_icon = gtk.image_new_from_pixbuf(\
-          self.icon_theme.load_icon('gtk-clear',16,16))
+          self.icon_theme.load_icon('list-remove',16,16))
         dialog_x.set_image(dialog_x_icon)
         dialog_x.set_relief(gtk.RELIEF_NONE)
         dialog_x.iterator = y
-        dialog_x.connect('clicked',self.delete_item)
+        dialog_x.connect('clicked',self.remove_item)
         
         #Make the Expander widget
         dialog_expander = gtk.Expander(self.settings['category_name'][y])
@@ -1170,9 +1170,9 @@ class App(awn.AppletSimple):
       self.displayed = False
       self.toggle_dialog()
   
-  #Display a confirmation dialog about deleting an item/category from the list
+  #Display a confirmation dialog about removing an item/category from the list
   #(If appropriate)
-  def delete_item(self,itemid):
+  def remove_item(self,itemid):
     if type(itemid)!=int:
       itemid = itemid.iterator
     
@@ -1182,8 +1182,8 @@ class App(awn.AppletSimple):
       if self.settings['confirm-categories'] == True:
         
         #Make Label
-        confirm_label = gtk.Label('Are you sure you want to delete the ' + \
-          'category "%s?"\nAll of its items will be deleted.' % \
+        confirm_label = gtk.Label('Are you sure you want to remove the ' + \
+          'category "%s?"\nAll of its items will be removed.' % \
           self.settings['category_name'][itemid])
         
         #Make CheckButton
@@ -1194,16 +1194,16 @@ class App(awn.AppletSimple):
         #Cancel and OK buttons
         cancel_button = gtk.Button(stock=gtk.STOCK_CANCEL)
         cancel_button.connect('clicked', self.make_dialog)
-        delete_button = gtk.Button(stock=gtk.STOCK_DELETE)
-        delete_button.iterator = itemid
-        delete_button.connect('clicked', self.remove_item_from_list)
+        remove_button = gtk.Button(stock=gtk.STOCK_REMOVE)
+        remove_button.iterator = itemid
+        remove_button.connect('clicked', self.remove_item_from_list)
         
         #Now put it all together
         vbox = gtk.VBox()
         hbbox = gtk.HButtonBox()
         hbbox.set_layout(gtk.BUTTONBOX_END)
-        hbbox.pack_start(cancel_button)
-        hbbox.pack_start(delete_button)
+        hbbox.pack_start(cancel_button, padding=12)
+        hbbox.pack_start(remove_button)
         vbox.pack_start(confirm_label, False)
         vbox.pack_start(confirm_check, False)
         vbox.pack_start(hbbox, False)
@@ -1221,7 +1221,7 @@ class App(awn.AppletSimple):
       if self.settings['confirm-items'] == True:
         
         #Make Label
-        confirm_label = gtk.Label('Are you sure you want to delete this item?')
+        confirm_label = gtk.Label('Are you sure you want to remove this item?')
         
         #Make CheckButton
         confirm_check = gtk.CheckButton('Don\'t show this again.')
@@ -1231,16 +1231,16 @@ class App(awn.AppletSimple):
         #Cancel and OK buttons
         cancel_button = gtk.Button(stock=gtk.STOCK_CANCEL)
         cancel_button.connect('clicked', self.make_dialog)
-        delete_button = gtk.Button(stock=gtk.STOCK_DELETE)
-        delete_button.iterator = itemid
-        delete_button.connect('clicked', self.remove_item_from_list)
+        remove_button = gtk.Button(stock=gtk.STOCK_REMOVE)
+        remove_button.iterator = itemid
+        remove_button.connect('clicked', self.remove_item_from_list)
         
         #Now put it all together
         vbox = gtk.VBox()
         hbbox = gtk.HButtonBox()
         hbbox.set_layout(gtk.BUTTONBOX_END)
-        hbbox.pack_start(cancel_button)
-        hbbox.pack_start(delete_button)
+        hbbox.pack_start(cancel_button, padding=12)
+        hbbox.pack_start(remove_button)
         vbox.pack_start(confirm_label, False)
         vbox.pack_start(confirm_check, False)
         vbox.pack_start(hbbox, False)
@@ -1283,6 +1283,7 @@ class App(awn.AppletSimple):
     tmp_list_details = []
     tmp_list_category = []
     tmp_list_category_name = []
+    tmp_list_expanded = []
     
     y = 0
     for x in self.settings['items']:
@@ -1309,30 +1310,33 @@ class App(awn.AppletSimple):
       y+=1
     
     #Please, for your own sake, do not write code like this next section.
-    y = 0
+    i = 0
     #print 'list of items: ' + str(list_of_items)
-    for cat in self.settings['category']:
-      if y not in list_of_items:
-        #print '%s not in list_of_items:' % y
-        if y > list_of_items[-1] and cat != -1:
-          #print 'y > last item (%s) and cat != -1; y == %s, ' % \
-          #  (list_of_items[-1], y)
+    for item_category in self.settings['category']:
+      if i not in list_of_items:
+        #print '%s not in list_of_items:' % i
+        if i > list_of_items[-1] and item_category != -1:
+          #print 'i > last item (%s) and item_category != -1; i == %s, ' % \
+          #  (list_of_items[-1], i)
           if len(list_of_items) == 1:
-            #Check if the iterated item is in a different category
-            if cat != self.settings['category'][list_of_items[0]]:
+            #print 'not removing a category'
+            #Check if the iterated item is in a category lower than or equal to
+            #the item being removed's category (lower = lower in list, higher #)
+            if item_category <= self.settings['category'][list_of_items[0]]:
               #It is; just append normally
-              #print 'In same category'
-              tmp_list_category.append(cat)
+              #print 'In same or previous category'
+              tmp_list_category.append(item_category)
             else:
               #print 'In different category'
-              tmp_list_category.append(cat-1)
+              tmp_list_category.append(item_category-1)
           else:
-            #print 'deleting a category'
-            tmp_list_category.append(cat-1)
+            #print 'removing a category'
+            tmp_list_category.append(item_category-len(list_of_items))
         else:
           #print 'normal append to category list'
-          tmp_list_category.append(cat)
-      y+=1
+          tmp_list_category.append(item_category)
+        #print
+      i+=1
     
     y = 0
     for x in self.settings['category_name']:
@@ -1340,12 +1344,21 @@ class App(awn.AppletSimple):
         tmp_list_category_name.append(x)
       y+=1
     
+    y = 0
+    for cat in self.settings['expanded']:
+      if cat >= self.settings['category'][list_of_items[-1]]:
+        tmp_list_expanded.append(cat-len(list_of_items))
+      else:
+        tmp_list_expanded.append(cat)
+      y += 1
+    
     self.settings['items'] = tmp_list_names
     self.settings['priority'] = tmp_list_priority
     self.settings['progress'] = tmp_list_progress
     self.settings['details'] = tmp_list_details
     self.settings['category'] = tmp_list_category
     self.settings['category_name'] = tmp_list_category_name
+    self.settings['expanded'] = tmp_list_expanded
     
     #The icon is automatically changed, but the dialog is not
     self.displayed = False

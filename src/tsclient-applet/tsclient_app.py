@@ -10,18 +10,21 @@ import gtk
 # AWN
 from awn.extras import AWNLib
 
+#Running tsclient
+import subprocess
+
 applet_name = "TSClient Applet"
 applet_version = "0.2.8"
 applet_description = "Interact with the Terminal Services Client"
 
 # Logo of the applet, shown in the GTK About dialog
-applet_logo = os.path.join(os.path.dirname(__file__), "icons/Tsclient.svg")
+applet_logo = os.path.join(os.path.dirname(__file__), "icons/tsclient-applet.svg")
 
 
 class TSClient:
     def __init__ (self, awn):
         self.awn = awn
-        self.awn.icon.file("icons/Tsclient.svg")
+        self.awn.icon.theme("tsclient-applet")
 
         self.dialog = self.awn.dialog.new("main")
 
@@ -38,12 +41,12 @@ class TSClient:
         button.connect("button-press-event", self.start_tsclient, "")
 
     def start_tsclient (self, widget, event, rdpFile):
-        os.system('tsclient -x ' + rdpFile)
+        subprocess.Popen('tsclient -x ' + rdpFile, shell=True)
         #print rdpFile
         #print "hide title"
 
 if __name__ == "__main__":
-    awn = AWNLib.initiate({"name": applet_name, "short": "tsclient",
+    awn = AWNLib.initiate({"name": applet_name, "short": "tsclient-app",
         "version": applet_version,
         "description": applet_description,
         "logo": applet_logo,

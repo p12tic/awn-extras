@@ -322,7 +322,7 @@ class App (awn.AppletSimple):
       self.play_button.set_image(self.stop_button_image)
       
   def enter_notify (self, widget, event):     
-      if self.lastfm.metadata.has_key('station') and self.playing == True:
+      if self.playing == True:
           self.title.show (self, self.station_desc + ": " + self.lastfm.metadata['artist'] + " - " + self.lastfm.metadata['track'])
       else:
           self.title.show (self, self.title_text)

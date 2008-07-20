@@ -106,12 +106,15 @@ class VolumeControlApplet:
         
         inc_button = gtk.Button("+")
         inc_button.set_relief(gtk.RELIEF_NONE)
+        inc_button.props.can_focus = False
         vbox.pack_start(inc_button, expand=False)
         
         vbox.add(self.volume_scale)
+        self.volume_scale.props.can_focus = False
         
         dec_button = gtk.Button("-")
         dec_button.set_relief(gtk.RELIEF_NONE)
+        dec_button.props.can_focus = False
         vbox.pack_start(dec_button, expand=False)
         
         dialog.add(vbox)

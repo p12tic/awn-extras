@@ -31,8 +31,8 @@ applet_name = "Quit-Log Out"
 applet_version = "0.2.8"
 applet_description = "An applet to exit or log out of your session"
 
-# Logo of the applet, shown in the GTK About dialog
-applet_logo = os.path.join(os.path.dirname(__file__), "icons/scalable/apps/application-exit.svg")
+# Themed logo of the applet, used as the applet's icon and shown in the GTK About dialog
+applet_logo = "application-exit"
 
 
 class QuitLogOutApplet:
@@ -41,7 +41,6 @@ class QuitLogOutApplet:
     def __init__(self, applet):
         self.applet = applet
         
-        applet.icon.theme("application-exit")
         applet.title.set("Log Out " + commands.getoutput("/usr/bin/whoami") + "...")
         
         self.setup_context_menu()
@@ -95,7 +94,7 @@ if __name__ == "__main__":
     applet = AWNLib.initiate({"name": applet_name, "short": "quit",
         "version": applet_version,
         "description": applet_description,
-        "logo": applet_logo,
+        "theme": applet_logo,
         "author": "onox, tehk",
         "copyright-year": 2008,
         "authors": ["Randal Barlow <im.tehk at gmail.com>", "onox <denkpadje@gmail.com>"]})

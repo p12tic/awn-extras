@@ -26,6 +26,9 @@ applet_name = "Show Desktop"
 applet_version = "0.2.8"
 applet_description = "An applet to hide your windows and show your desktop"
 
+# Themed logo of the applet, used as the applet's icon and shown in the GTK About dialog
+applet_logo = "desktop"
+
 titles = {True: "Show hidden windows", False: "Hide windows and show desktop"}
 
 class ShowDesktopApplet:
@@ -34,7 +37,6 @@ class ShowDesktopApplet:
     def __init__(self, applet):
         self.applet = applet
         
-        applet.icon.theme("desktop")
         applet.title.set(titles[wnck.screen_get_default().get_showing_desktop()])
         
         applet.connect("button-press-event", self.button_press_event_cb)
@@ -56,6 +58,7 @@ if __name__ == "__main__":
     applet = AWNLib.initiate({"name": applet_name, "short": "show-desktop",
         "version": applet_version,
         "description": applet_description,
+        "theme": applet_logo,
         "author": "Mehdi Abaakouk, onox",
         "copyright-year": 2006,
         "authors": ["Mehdi Abaakouk <theli48@gmail.com>", "onox <denkpadje@gmail.com>"]})

@@ -48,6 +48,7 @@ AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient, gint height)
   awn_applet_simple_set_temp_icon(AWN_APPLET_SIMPLE(applet), icon);
 #endif
   cpumeter = cpumeter_applet_new(applet);
+  cpumeter->height = height;
   gtk_widget_show_all(GTK_WIDGET(applet));
   return applet;
 }

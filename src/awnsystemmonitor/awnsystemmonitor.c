@@ -250,10 +250,7 @@ gboolean cpu_meter_render(gpointer data)
       surface = NULL;
     }
 
-    gtk_widget_get_size_request(widget, &cpumeter->width, &cpumeter->height);
-
-    cpumeter->width = 50;
-    cpumeter->height = 40;
+    cpumeter->width = cpumeter->height * 1.25;
 
     cairo_t * temp_cr = gdk_cairo_create(GTK_WIDGET(cpumeter->applet)->window);
     surface = cairo_surface_create_similar  (cairo_get_target(temp_cr),CAIRO_CONTENT_COLOR_ALPHA, cpumeter->width, cpumeter->height);
@@ -261,7 +258,7 @@ gboolean cpu_meter_render(gpointer data)
     cr = cairo_create(surface);
     assert(cr);
     cpumeter->doneonce = TRUE;
-
+    cairo_scale(cr,(double)cpumeter->width/50.0,(double)cpumeter->height/40.0);
 
   }
 
@@ -270,7 +267,7 @@ gboolean cpu_meter_render(gpointer data)
 
   LoadGraph* g = cpumeter->loadgraph;
 
-  render_graph(cr, g, text, cpumeter->width, cpumeter->height, cpumeter);
+  render_graph(cr, g, text, 50 , 40, cpumeter);
   
 
   awn_applet_simple_set_icon_context_scaled(AWN_APPLET_SIMPLE(cpumeter->applet),
@@ -545,8 +542,9 @@ _height_changed(AwnApplet *app, guint height, gpointer *data)
     gtk_widget_queue_draw (GTK_WIDGET (applet));
     update_icons (applet);*/
   CpuMeter* cpumeter = data;
-  gtk_widget_set_size_request(GTK_WIDGET(cpumeter->applet), height*1.25, height*2);
-//  cpumeter->doneonce = FALSE;
+//  gtk_widget_set_size_request(GTK_WIDGET(cpumeter->applet), height*1.25, height*2);
+  cpumeter->doneonce = FALSE;
+  cpumeter->height = height;
 }
 
 /**

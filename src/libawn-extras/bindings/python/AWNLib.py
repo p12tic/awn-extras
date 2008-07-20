@@ -251,26 +251,33 @@ class Dialogs:
 
             self.__parent = parent
 
-            self.set_name(self.__parent.meta["name"])
+            self.set_name(parent.meta["name"])
 
-            if "version" in self.__parent.meta:
-                self.set_version(self.__parent.meta["version"])
-            if "description" in self.__parent.meta:
-                self.set_comments(self.__parent.meta["description"])
+            if "version" in parent.meta:
+                self.set_version(parent.meta["version"])
+            if "description" in parent.meta:
+                self.set_comments(parent.meta["description"])
 
             self.set_copyright("Copyright \xc2\xa9 " \
-                + str(self.__parent.meta["copyright-year"]) \
-                + " " + self.__parent.meta["author"])
+                + str(parent.meta["copyright-year"]) \
+                + " " + parent.meta["author"])
 
-            if "authors" in self.__parent.meta:
-                self.set_authors(self.__parent.meta["authors"])
-            if "artists" in self.__parent.meta:
-                self.set_artists(self.__parent.meta["artists"])
+            if "authors" in parent.meta:
+                self.set_authors(parent.meta["authors"])
+            if "artists" in parent.meta:
+                self.set_artists(parent.meta["artists"])
 
-            if "logo" in self.__parent.meta:
-                self.set_logo(gtk.gdk.pixbuf_new_from_file_at_size(self.__parent.meta["logo"], 48, 48))
-                self.update_icon()
-                parent.connect("height-changed", self.update_icon)
+            if "logo" in parent.meta:
+                self.set_logo(gtk.gdk.pixbuf_new_from_file_at_size(parent.meta["logo"], 48, 48))
+
+                self.update_logo_icon()
+                parent.connect("height-changed", self.update_logo_icon)
+            elif "theme" in parent.meta:
+                # It is assumed that the C{awn.Icons} object has been set via set_awn_icon() in C{Icon}
+                self.set_logo(parent.get_awn_icons().get_icon_simple_at_height(48))
+
+                self.update_theme_icon()
+                parent.connect("height-changed", self.update_theme_icon)
 
             # Connect some signals to be able to hide the window
             self.connect("response", self.response_event)
@@ -283,11 +290,16 @@ class Dialogs:
             if response < 0:
                 self.hide()
 
-        def update_icon(self, widget=None, event=None):
+        def update_logo_icon(self, widget=None, event=None):
             """ Updates the applet's logo to be of the same height as the panel """
 
             height = self.__parent.get_height()
             self.set_icon(gtk.gdk.pixbuf_new_from_file_at_size(self.__parent.meta["logo"], height, height))
+
+        def update_theme_icon(self, widget=None, event=None):
+            """ Updates the applet's themed logo to be of the same height as the panel """
+
+            self.set_icon(self.__parent.get_awn_icons().get_icon_simple_at_height(self.__parent.get_height()))
 
     class PreferencesDialog(gtk.Dialog):
         """ A Dialog window that has the title "<applet's name> Preferences",
@@ -301,12 +313,15 @@ class Dialogs:
             self.set_resizable(False)
             self.set_border_width(5)
 
-            self.set_title(self.__parent.meta["name"] + " Preferences")
+            self.set_title(parent.meta["name"] + " Preferences")
             self.add_button(gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE)
 
-            if "logo" in self.__parent.meta:
-                self.update_icon()
-                parent.connect("height-changed", self.update_icon)
+            if "logo" in parent.meta:
+                self.update_logo_icon()
+                parent.connect("height-changed", self.update_logo_icon)
+            elif "theme" in parent.meta:
+                self.update_theme_icon()
+                parent.connect("height-changed", self.update_theme_icon)
 
             self.connect("response", self.response_event)
             self.connect("delete_event", self.delete_event)
@@ -318,11 +333,16 @@ class Dialogs:
             if response < 0:
                 self.hide()
 
-        def update_icon(self, widget=None, event=None):
+        def update_logo_icon(self, widget=None, event=None):
             """ Updates the applet's logo to be of the same height as the panel """
 
             height = self.__parent.get_height()
             self.set_icon(gtk.gdk.pixbuf_new_from_file_at_size(self.__parent.meta["logo"], height, height))
+
+        def update_theme_icon(self, widget=None, event=None):
+            """ Updates the applet's themed logo to be of the same height as the panel """
+
+            self.set_icon(self.__parent.get_awn_icons().get_icon_simple_at_height(self.__parent.get_height()))
 
 
 class Title:
@@ -374,6 +394,11 @@ class Icon:
         self.__height = self.__parent.height
 
         self.__previous_context = None
+
+        # Set the themed icon to set the C{awn.Icons} object
+        if "theme" in parent.meta:
+            # TODO does not handle multiple icons yet
+            self.theme(parent.meta["theme"])
 
     def file(self, file, set=True):
         """

@@ -265,9 +265,13 @@ class AnalogClock:
     def __init__(self, clock_manager):
         self.applet = clock_manager.applet
         self.clock_manager = clock_manager
+        
+        self.previous_state = None
     
     def load_theme(self, theme):
         """ Loads the necessary SVG files of the specified theme """
+        
+        self.theme = theme
         
         get_theme = lambda filename, theme: rsvg.Handle(os.path.join(theme, filename))
         
@@ -288,6 +292,11 @@ class AnalogClock:
         hours, minutes, seconds = (local_time[3], local_time[4], local_time[5])
         
         height = self.applet.get_height()
+        
+        new_state = (self.clock_manager.show_second_hand, height, self.theme, hours, minutes)
+        if not self.clock_manager.show_second_hand and self.previous_state == new_state:
+            return
+        self.previous_state = new_state
         
         surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, height, height)
         context = cairo.Context(surface)

@@ -112,8 +112,7 @@ class ThinkHDAPSApplet:
             self.check_status_cb(self)
     
     def height_changed_cb(self, widget, event):
-        """ Updates the applet's icon and the icon of
-        the About dialog to reflect the new height """
+        """ Updates the applet's icon to reflect the new height """
         
         self.setup_icon()
         

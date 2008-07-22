@@ -275,11 +275,22 @@ class AnalogClock:
         
         get_theme = lambda filename, theme: rsvg.Handle(os.path.join(theme, filename))
         
+        # Background
         self.clock_drop_shadow = get_theme('clock-drop-shadow.svg', theme)
         self.clock_face = get_theme('clock-face.svg', theme)
         self.clock_marks = get_theme('clock-marks.svg', theme)
+        
+        # Foreground
+        self.clock_face_shadow = get_theme('clock-face-shadow.svg', theme)
+        self.clock_glass = get_theme('clock-glass.svg', theme)
         self.clock_frame = get_theme('clock-frame.svg', theme)
         
+        # Shadows of hands
+        self.clock_hour_hand_shadow = get_theme('clock-hour-hand-shadow.svg', theme)
+        self.clock_minute_hand_shadow = get_theme('clock-minute-hand-shadow.svg', theme)
+        self.clock_second_hand_shadow = get_theme('clock-second-hand-shadow.svg', theme)
+        
+        # Hands
         self.clock_hour_hand = get_theme('clock-hour-hand.svg', theme)
         self.clock_minute_hand = get_theme('clock-minute-hand.svg', theme)
         self.clock_second_hand = get_theme('clock-second-hand.svg', theme)
@@ -301,26 +312,29 @@ class AnalogClock:
         surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, height, height)
         context = cairo.Context(surface)
         
-        scale = self.applet.get_height() / 100.0
-        context.scale(scale, scale)
+        svg_width, svg_height = map(float, self.clock_face.get_dimension_data()[:2])
+        context.scale(height / svg_width, height / svg_height)
         
-        # Draw the clock itself
+        # Draw the background of the clock
         self.clock_drop_shadow.render_cairo(context)
         self.clock_face.render_cairo(context)
         self.clock_marks.render_cairo(context)
-        self.clock_frame.render_cairo(context)
         
-        context.translate(50, 50)
+        context.save()
+        
+        context.translate(svg_width / 2, svg_height / 2)
         
         # Draw the hour hand
         context.save()
         context.rotate((360/12) * (hours+9+(minutes/60.0)) * (math.pi/180))
+        self.clock_hour_hand_shadow.render_cairo(context)
         self.clock_hour_hand.render_cairo(context)
         context.restore()
         
         # Draw the minute hand
         context.save()
         context.rotate((360/60) * (minutes+45) * (math.pi/180))
+        self.clock_minute_hand_shadow.render_cairo(context)
         self.clock_minute_hand.render_cairo(context)
         context.restore()
         
@@ -328,8 +342,16 @@ class AnalogClock:
         if self.clock_manager.show_second_hand:
             context.save()
             context.rotate((360/60) * (seconds+45) * (math.pi/180))
+            self.clock_second_hand_shadow.render_cairo(context)
             self.clock_second_hand.render_cairo(context)
             context.restore()
+        
+        context.restore()
+        
+        # Draw the foreground of the clock
+        self.clock_face_shadow.render_cairo(context)
+        self.clock_glass.render_cairo(context)
+        self.clock_frame.render_cairo(context)
         
         self.applet.icon.set_context(context)
 

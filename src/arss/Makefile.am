@@ -1,4 +1,4 @@
-SUBDIRS = Icons
+SUBDIRS = icons
 APPLET_NAME = arss
 APPLET_MAIN_FILE = arss.py
 include $(top_srcdir)/Makefile.python-applet

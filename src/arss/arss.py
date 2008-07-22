@@ -26,7 +26,8 @@ import feedparserdb
 import arssconfig
 userpath = os.path.expanduser('~/')
 _location = __file__[::-1][__file__[::-1].index('/'):][::-1]
-
+list_of_states = ['Unread', 'Read']
+list_of_icon_names = ['feed-icon', 'feed-icon-gray']
 
 if 'AWNDEV' in os.environ.keys() and os.environ['AWNDEV'] == 'TRUE':
     import pango
@@ -65,9 +66,13 @@ class App(awn.AppletSimple):
         awn.AppletSimple.__init__ (self, uid, orient, height)
         self.height = height
         self.size = height
-        self.set_icon(get_icon(_location + 'Icons/feed-icon.svg', self.size))
+        self.set_awn_icons('arss', list_of_states, list_of_icon_names)
         self.connect("button-press-event", self.clicked ,) # set icon clicks
         self.get_feeds()
+        if menus._unread_list(self.feeds) == 0:
+          self.set_awn_icon_state('Read')
+        else:
+          self.set_awn_icon_state('Unread')
 
     def get_feeds(self):
         listoffeeds = arssconfig.get_feeds()
@@ -79,6 +84,11 @@ class App(awn.AppletSimple):
     def update_menu(self):
         self.menu = menus.RssMenu()
         self.menu.build_children(self.feeds, self)
+        if menus._unread_list(self.feeds) == 0:
+          self.set_awn_icon_state('Read')
+        else:
+          self.set_awn_icon_state('Unread')
+
     def clicked(self, widget, event):
         """
         This Method Handles awn icon clicks

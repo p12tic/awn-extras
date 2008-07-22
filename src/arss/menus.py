@@ -66,7 +66,7 @@ class RssMenu(gtk.Menu):
                 entry['read'] = True
 
         feedindex = 0
-        unread = MenuItem('Unread: %d' % _unread_list(feeds), _location + 'Icons/feed-icon-unread.png')
+        unread = MenuItem('Unread: %d' % _unread_list(feeds), _location + 'icons/feed-icon-unread.png')
         self.append(unread)
         seperator = gtk.SeparatorMenuItem()
         self.append(seperator)
@@ -81,16 +81,16 @@ class RssMenu(gtk.Menu):
             clearfeed = MenuItem('Clear/Empty Feed')
             submenu.append(clearfeed)
             clearfeed.connect("activate", _clear_feed, feed)
-            unread = MenuItem('Unread: %d' % _unread(feed),  _location + 'Icons/feed-icon-unread.png')
+            unread = MenuItem('Unread: %d' % _unread(feed),  _location + 'icons/feed-icon-unread.png')
             submenu.append(unread)
             seperator = gtk.SeparatorMenuItem()
             submenu.append(seperator)
             for entry in feed.get_entries():
-                #image= _location + 'Icons/feed-icon-unread.png'
+                #image= _location + 'icons/feed-icon-unread.png'
                 if 'read' in entry.keys() and entry['read'] == True:
                     entrymenu = MenuItem(entry.title[:60])
                 else:
-                    entrymenu = MenuItem(entry.title[:60], _location + 'Icons/feed-icon-unread.png')
+                    entrymenu = MenuItem(entry.title[:60], _location + 'icons/feed-icon-unread.png')
                 submenu.append(entrymenu)
                 try:entrymenu.connect("activate",obj.clicks, entry.link, feed, feed.get_entries().index(entry),feedindex)
                 except AttributeError:
@@ -122,7 +122,6 @@ class OptionMenu(object):
         UpdateItem.connect("activate", self._update_feed)
         self.damndefaultrightclickmenu.show_all()
         self.args = args
-        print self.args
 
     def _config_window(self, *args):
         arssconfig.config_window()

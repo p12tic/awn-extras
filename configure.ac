@@ -300,7 +300,7 @@ src/affinity/data/actions/Makefile
 src/affinity/po/Makefile.in
 src/arss/Makefile
 src/arss/arss.desktop.in
-src/arss/Icons/Makefile
+src/arss/icons/Makefile
 src/awn-meebo/Makefile
 src/awn-meebo/awn-meebo.desktop.in
 src/awn-meebo/icons/Makefile

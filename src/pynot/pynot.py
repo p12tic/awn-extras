@@ -593,6 +593,11 @@ if(HIGH==0):
     awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"USEIM",USEIM)
     awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"ICONSIZE",ICONSIZE)
 
+if(ICONSIZE==0):
+    ICONSIZE = D_ICONSIZE
+    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"ICONSIZE",ICONSIZE)
+
+
 a = App(awn.uid, awn.orient, awn.height)
 awn.init_applet(a)
 a.show_all()

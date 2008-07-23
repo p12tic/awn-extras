@@ -112,7 +112,7 @@ class mywidget(gtk.Widget):
                                          # Set to True when BG colour is 
                                          # changed in config
 
-        self.wind = self.root.create_window(0, 0, 80, 48,
+        self.wind = self.root.create_window(0, 0, 1, 10,
                 0, self.scr.root_depth, window_class=X.InputOutput,
                 visual=X.CopyFromParent, colormap=X.CopyFromParent,
                 event_mask=(X.ButtonPressMask|X.ButtonReleaseMask|X.ExposureMask))
@@ -231,6 +231,8 @@ class mywidget(gtk.Widget):
         # find the gdk windows geometry (for the size of y)
 
         offsety=rr[3]-((HIGH*ICONSIZE)+CUSTOM_Y)
+        if(offsety<0):
+            offsety=0
         # find the Y position to start drawing icons at
 
 
@@ -240,7 +242,12 @@ class mywidget(gtk.Widget):
             space+=5 # For rounder corners, more border space is needed
         tempy=0
         for t in self.tray.tasks.values():
-            if ICONSIZE:
+            iwant=0
+            try:
+                iwant=t.obj.get_wm_normal_hints().min_width
+            except:
+                pass
+            if iwant>1:
                 t.width = ICONSIZE
                 #space += t.width
                 if(tempy==0):
@@ -249,6 +256,7 @@ class mywidget(gtk.Widget):
                     tempy+=1
                 else:
                     tempy=0
+
         if(BORDER==True):
             space+=5
         self.set_size_request(space,CUSTOM_Y+HIGH*ICONSIZE)
@@ -283,7 +291,7 @@ class mywidget(gtk.Widget):
         offsety=rr[3]-((HIGH*ICONSIZE)+CUSTOM_Y)
         # Again : find location of icons on the widget
        
-        if(self.realized == 1):
+        if(self.realized == 1 and offsety>-1):
             w= self.curr_x
             h= offsety+ (HIGH*ICONSIZE)
             if(BORDER==True):
@@ -531,6 +539,7 @@ def cleanup(k):
         t.obj.unmap_sub_windows()
         t.obj.reparent(g.root.id,0,0)
     d.flush()
+    return None
 
 
 global path
@@ -543,7 +552,7 @@ awn_options=awn.Config('pynot',None)
 
 def loadconf(thingie):
     # Load the config
-    global BG_COLOR, CUSTOM_Y, HIGH, BORDER, DIVIDEBYZERO,ZEROPID,IMPATH,USEIM
+    global BG_COLOR, CUSTOM_Y, HIGH, BORDER, DIVIDEBYZERO,ZEROPID,IMPATH,USEIM,ICONSIZE
     oldBG=BG_COLOR
     BG_COLOR     = awn_options.get_string(awn.CONFIG_DEFAULT_GROUP,"BG_COLOR")
     CUSTOM_Y     = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"CUSTOM_Y")
@@ -553,6 +562,7 @@ def loadconf(thingie):
     ZEROPID      = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"ZEROPID" )
     IMPATH       = awn_options.get_string(awn.CONFIG_DEFAULT_GROUP,"IMPATH"  )
     USEIM        = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"USEIM"   )
+    ICONSIZE     = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"ICONSIZE")
     # If BG has changed, reset it
     if(oldBG != BG_COLOR):
         if(thingie != None):
@@ -572,6 +582,7 @@ if(HIGH==0):
     ZEROPID  = D_ZEROPID
     IMPATH   = D_IMPATH
     USEIM    = D_USEIM
+    ICONSIZE = D_ICONSIZE
     awn_options.set_string(awn.CONFIG_DEFAULT_GROUP,"BG_COLOR",BG_COLOR)
     awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"BORDER",BORDER)
     awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"CUSTOM_Y",CUSTOM_Y)
@@ -580,6 +591,7 @@ if(HIGH==0):
     awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"ZEROPID",ZEROPID)
     awn_options.set_string(awn.CONFIG_DEFAULT_GROUP,"IMPATH",IMPATH)
     awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"USEIM",USEIM)
+    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"ICONSIZE",ICONSIZE)
 
 a = App(awn.uid, awn.orient, awn.height)
 awn.init_applet(a)

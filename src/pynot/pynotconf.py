@@ -32,6 +32,7 @@ D_BORDER=True
 D_TRANS=False
 D_ZEROPID=True
 D_USEIM=False
+D_ICONSIZE=24
 D_IMPATH="/".join(__file__.split("/")[:-1])+"/pattern.png"
 
 
@@ -54,6 +55,7 @@ def savestuff(self):
     awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"ZEROPID",int(pid.get_active()))
     awn_options.set_string(awn.CONFIG_DEFAULT_GROUP,"IMPATH",impath.get_text())
     awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"USEIM",int(useim.get_active()))
+    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"ICONSIZE",int(iconsize.get_value()))
  
 
 
@@ -66,6 +68,7 @@ TRANS    = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"TRANS"   )
 ZEROPID  = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"ZEROPID" )
 USEIM    = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"USEIM"   )
 IMPATH   = awn_options.get_string(awn.CONFIG_DEFAULT_GROUP,"IMPATH"  )
+ICONSIZE = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"ICONSIZE")
 if(HIGH==0):
     HIGH     = D_HIGH
     BORDER   = D_BORDER
@@ -75,6 +78,7 @@ if(HIGH==0):
     ZEROPID  = D_ZEROPID
     USEIM    = D_USEIM
     IMPATH   = D_IMPATH
+    ICONSIZE = D_ICONSIZE
     awn_options.set_string(awn.CONFIG_DEFAULT_GROUP,"BG_COLOR",BG_COLOR)
     awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"BORDER",BORDER)
     awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"CUSTOM_Y",CUSTOM_Y)
@@ -83,10 +87,14 @@ if(HIGH==0):
     awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"ZEROPID",ZEROPID)
     awn_options.set_string(awn.CONFIG_DEFAULT_GROUP,"IMPATH",IMPATH)
     awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"USEIM",USEIM)
+    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"ICONSIZE",ICONSIZE)
 
-if(IMPATH==None):
-    IMPATH="Image here"
+if(IMPATH==""):
+    IMPATH=D_IMPATH
+print ICONSIZE
 
+if(ICONSIZE==0):
+    ICONSIZE=D_ICONSIZE
 
 
 r = int("0x"+BG_COLOR[2:4],0)*256
@@ -103,6 +111,7 @@ t1=gtk.Label("PyTray Config")
 t2=gtk.Label("Number of Icons High")
 t3=gtk.Label("Offset from Bottom")
 t4=gtk.Label("Background Colour")
+t5=gtk.Label("Size of Icons")
 adj=gtk.Adjustment(1,1,5,1,1,0)
 high=gtk.SpinButton(adj,1,0)
 adj2=gtk.Adjustment(45,0,100,1,1,0)
@@ -112,6 +121,8 @@ border=gtk.CheckButton("Use a Rounded Border",False)
 trans=gtk.CheckButton("Use Transparent Background (BUGGY)",False)
 pid=gtk.CheckButton("Do Not Show Icons for PID=0.",False)
 useim=gtk.CheckButton("Use Image",False)
+adj3=gtk.Adjustment(24,8,128,1,1,0)
+iconsize=gtk.SpinButton(adj3,1,0)
 impath=gtk.Entry()
 
 bg_color.set_color(cbg)
@@ -122,6 +133,7 @@ trans.set_active(TRANS)
 pid.set_active(ZEROPID)
 useim.set_active(USEIM)
 impath.set_text(IMPATH)
+iconsize.set_value(ICONSIZE)
 
 hbox1=gtk.HBox()
 hbox2=gtk.HBox()
@@ -130,6 +142,7 @@ hbox4=gtk.HBox()
 hbox5=gtk.HBox()
 hbox6=gtk.HBox()
 hbox7=gtk.HBox()
+hbox8=gtk.HBox()
 
 
 vbox.add(t1)
@@ -140,6 +153,9 @@ hbox2.add(custom_y)
 hbox2.add(t3)
 vbox.add(hbox2)
 vbox.add(t4)
+hbox8.add(iconsize)
+hbox8.add(t5)
+vbox.add(hbox8)
 vbox.add(bg_color)
 hbox3.add(border)
 vbox.add(hbox3)

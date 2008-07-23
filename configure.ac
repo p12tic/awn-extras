@@ -323,6 +323,8 @@ src/clock/clock.desktop.in
 src/cairo-clock/Makefile
 src/cairo-clock/cairo-clock.desktop.in
 src/cairo-clock/themes/Makefile
+src/cairo-clock/themes/gnome/Makefile
+src/cairo-clock/themes/onox/Makefile
 src/cairo-clock/themes/tango/Makefile
 src/cairo-menu-classic/Makefile
 src/cairo-menu-classic/cairo_main_menu_classic.desktop.in

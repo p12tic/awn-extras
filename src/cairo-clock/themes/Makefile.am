@@ -1,1 +1,1 @@
-SUBDIRS = tango
+SUBDIRS = gnome onox tango

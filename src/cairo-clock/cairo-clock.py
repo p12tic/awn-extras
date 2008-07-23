@@ -35,8 +35,10 @@ applet_name = "Cairo Clock"
 applet_version = "0.2.8"
 applet_description = "Applet that displays an analog clock using\n(optionally) MacSlow's Cairo-Clock's themes"
 
-theme_dir = "/usr/share/cairo-clock/themes"
-default_theme = os.path.join(os.path.dirname(__file__), "themes", "tango")
+cairo_clock_themes_dir = "/usr/share/cairo-clock/themes"
+default_themes_dir = os.path.join(os.path.dirname(__file__), "themes")
+
+default_theme = "onox"
 glade_file = os.path.join(os.path.dirname(__file__), "cairo-clock.glade")
 
 # Logo of the applet, shown in the GTK About dialog
@@ -106,7 +108,7 @@ class CairoClockApplet:
             "time-date": self.clock.time_date,
             "time-seconds": self.clock.time_seconds,
             "show-second-hand": self.clock.show_second_hand,
-            "theme": "tango"
+            "theme": default_theme
         }
         self.applet.settings.load(default_values)
         
@@ -141,36 +143,49 @@ class CairoClockApplet:
         # Combobox in preferences window to choose a theme
         vbox_theme = prefs.get_widget("vbox-theme")
         
-        if os.path.isdir(theme_dir):
-            theme = self.applet.settings["theme"]
-            
-            self.themes = os.listdir(theme_dir)
-            self.themes.sort()
-            
-            combobox_theme = gtk.combo_box_new_text()
-            vbox_theme.add(combobox_theme)
-            
-            for i in self.themes:
-                combobox_theme.append_text(i)
-            
-            combobox_theme.set_active(self.themes.index(theme))
-            current_theme = os.path.join(theme_dir, theme)
-            
-            combobox_theme.connect("changed", self.combobox_theme_changed_cb)
+        combobox_theme = gtk.combo_box_new_text()
+        vbox_theme.add(combobox_theme)
+        
+        self.themes = os.listdir(default_themes_dir)
+        
+        if os.path.isdir(cairo_clock_themes_dir):
+            self.themes.extend(os.listdir(cairo_clock_themes_dir))
         else:
             label = gtk.Label()
-            label.set_markup("<i><b>Note:</b> the current theme can be changed once\nyou have installed MacSlow's Cairo-Clock's\nthemes</i>")
+            label.set_markup("<i><b>Note:</b> you can choose more themes by\ninstalling MacSlow's Cairo-Clock's\nthemes</i>")
             vbox_theme.add(label)
-            
-            current_theme = default_theme
         
-        self.clock.load_theme(current_theme)
+        # Remove duplicates and sort the list
+        self.themes = list(set(self.themes))
+        self.themes.sort()
+        
+        for i in self.themes:
+            combobox_theme.append_text(i)
+        
+        theme = self.applet.settings["theme"]
+        if theme not in self.themes:
+            self.applet.settings["theme"] = theme = default_theme
+        
+        combobox_theme.set_active(self.themes.index(theme))
+        combobox_theme.connect("changed", self.combobox_theme_changed_cb)
+        
+        self.clock.load_theme(self.get_theme_dir(theme))
+    
+    def get_theme_dir(self, theme):
+        theme_dirs = (cairo_clock_themes_dir, default_themes_dir)
+        
+        for theme_dir in theme_dirs:
+            path = os.path.join(theme_dir, theme)
+            if os.path.isdir(path):
+                return path
+        
+        raise RuntimeError, "Did not find path to theme '" + theme + "'"
     
     def combobox_theme_changed_cb(self, button):
         self.applet.settings["theme"] = theme = self.themes[button.get_active()]
         
         # Load the new theme and update the clock
-        self.clock.load_theme(os.path.join(theme_dir, theme))
+        self.clock.load_theme(self.get_theme_dir(theme))
         self.clock.draw_clock_cb()
     
     def checkbox_title_date_toggled_cb(self, button):
@@ -364,6 +379,6 @@ if __name__ == "__main__":
         "author": "onox",
         "copyright-year": 2008,
         "authors": ["onox"],
-        "artists": ["Artists of MacSlow's Cairo-Clock"]})
+        "artists": ["Lapo Calamandrei", "Rodney Dawes", "Jakub Steiner", "Artists of MacSlow's Cairo-Clock"]})
     CairoClockApplet(applet)
     AWNLib.start(applet)

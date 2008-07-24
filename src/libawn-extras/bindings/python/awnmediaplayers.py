@@ -27,13 +27,15 @@ from gtk import gdk
 
 import awn
 import dbus
+from dbus.mainloop.glib import DBusGMainLoop
 import string
+
+DBusGMainLoop(set_as_default=True)
 
 try:
     import pydcop
 except ImportError:
     pass
-
 
 def what_app():
     player_name = None
@@ -60,8 +62,50 @@ def what_app():
 class GenericPlayer(object):
     """Insert the level of support here"""
 
-    def __init__(self):
+    def __init__(self, dbus_name = None):
+        # set signalling_supported to True in your subclass's constructor if you use signal(s) which are received when currently played song changes (e.g. playingUriChanged signal)
+        self.signalling_supported = False
+        # set to DBus service name string in your subclass
+        self.dbus_base_name = dbus_name
+        self.registered_cb = None
         self.dbus_driver()
+
+    def set_callback(self, cb):
+        self.registered_cb = cb
+
+    def callback_fn(self, args):
+        if (self.registered_cb):
+            self.registered_cb()
+
+    def is_async(self):
+        """
+        Returns True if this player class supports song change signalling.
+        """
+        return self.signalling_supported
+
+    def is_available(self):
+        """
+        Returns true if this player is present on the system.
+        Override if necessary.
+        """
+        if (self.dbus_base_name != None):
+            bus_obj = dbus.SessionBus().get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
+            ACTIVATABLE_SERVICES = bus_obj.ListActivatableNames()
+            return self.dbus_base_name in ACTIVATABLE_SERVICES
+        return False
+
+    def start(self):
+        """
+        Starts given player.
+        Override if necessary.
+        """
+        if (self.dbus_base_name != None):
+            object_path = '/' + self.dbus_base_name.replace('.', '/')
+            bus = dbus.SessionBus()
+            obj = bus.get_object(self.dbus_base_name, object_path)
+            return True
+        else:
+            return False
 
     def dbus_driver(self):
         """
@@ -70,12 +114,6 @@ class GenericPlayer(object):
         Provides self.player and any other interfaces needed by labeler and
         the button methods
         """
-        #bus_obj = dbus.SessionBus().get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
-        #if bus_obj.NameHasOwner('org.gnome.Rhythmbox') == True:
-        #    self.session_bus = dbus.SessionBus()
-        #    self.proxy_obj = self.session_bus.get_object('org.gnome.Rhythmbox', '/org/gnome/Rhythmbox/Player')
-        #    self.player = dbus.Interface(self.proxy_obj, 'org.gnome.Rhythmbox.Player')
-        #    self.player1 = self.session_bus.get_object('org.gnome.Rhythmbox', '/org/gnome/Rhythmbox/Shell')
         pass
 
     def labeler(self, artOnOff, titleOrder, titleLen, titleBoldFont):
@@ -110,18 +148,20 @@ class Rhythmbox(GenericPlayer):
     """Full Support"""
 
     def __init__(self):
-        self.dbus_driver()
+        GenericPlayer.__init__(self, 'org.gnome.Rhythmbox')
+        self.signalling_supported = True
 
     def dbus_driver(self):
         """
-        Defining the dbus location for
+        Defining the dbus location for Rhythmbox
         """
         bus_obj = dbus.SessionBus().get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
-        if bus_obj.NameHasOwner('org.gnome.Rhythmbox') == True:
+        if bus_obj.NameHasOwner(self.dbus_base_name) == True:
             self.session_bus = dbus.SessionBus()
-            self.proxy_obj = self.session_bus.get_object('org.gnome.Rhythmbox', '/org/gnome/Rhythmbox/Player')
+            self.proxy_obj = self.session_bus.get_object(self.dbus_base_name, '/org/gnome/Rhythmbox/Player')
             self.player = dbus.Interface(self.proxy_obj, 'org.gnome.Rhythmbox.Player')
-            self.player1 = self.session_bus.get_object('org.gnome.Rhythmbox', '/org/gnome/Rhythmbox/Shell')
+            self.player.connect_to_signal('playingUriChanged', self.callback_fn)
+            self.rbShell = self.session_bus.get_object(self.dbus_base_name, '/org/gnome/Rhythmbox/Shell')
 
     def labeler(self,artOnOff,titleOrder,titleLen,titleBoldFont):
         """
@@ -131,13 +171,13 @@ class Rhythmbox(GenericPlayer):
         self.titleOrder = titleOrder
         self.titleLen = titleLen
         self.titleBoldFont = titleBoldFont
-        self.albumart_general = ".gnome2/rhythmbox/covers/"
         self.dbus_driver()
-        result = self.player.getPlayingUri()
-        result = self.player1.getSongProperties(result)
+        result = self.rbShell.getSongProperties(self.player.getPlayingUri())
 
-        if self.artOnOff == 'on':
-            albumart_exact = self.albumart_general + result['artist'] + ' - ' + result['album'] + ".jpg"
+        if self.artOnOff == 'on' and 'rb:coverArt-uri' in result:
+            albumart_exact = result['rb:coverArt-uri']
+        else:
+            albumart_exact = ''
 
         # Currently Playing Title
         if self.titleOrder == 'artist - title':
@@ -174,7 +214,7 @@ class Exaile(GenericPlayer):
     """
 
     def __init__(self):
-        self.dbus_driver()
+        GenericPlayer.__init__(self, 'org.exaile.DBusInterface')
 
     def dbus_driver(self):
         """
@@ -230,7 +270,7 @@ class Banshee(GenericPlayer):
     """Full Support for the banshee media player"""
 
     def __init__(self):
-        self.dbus_driver()
+        GenericPlayer.__init__(self, 'org.gnome.Banshee')
 
     def dbus_driver(self):
         """
@@ -286,7 +326,7 @@ class BansheeOne(GenericPlayer):
     """Partial support for the banshee media player"""
 
     def __init__(self):
-        self.dbus_driver()
+        GenericPlayer.__init__(self, 'org.bansheeproject.Banshee')
 
     def dbus_driver(self):
         """
@@ -356,7 +396,7 @@ class Listen(GenericPlayer):
     """Partial Support"""
 
     def __init__(self):
-        self.dbus_driver()
+        GenericPlayer.__init__(self, 'org.gnome.Listen')
 
     def dbus_driver(self):
         """
@@ -413,13 +453,13 @@ class Amarok(GenericPlayer):
     """Not Working"""
 
     def __init__(self):
-        self.dbus_driver()
+        GenericPlayer.__init__(self)
 
     def dbus_driver(self):
         """
         Defining the dbus location for Amarok
         """
-        if pydcop.anyAppCalled("amarok") == None:pass
+        if 'pydcop' not in globals() or pydcop.anyAppCalled("amarok") == None:pass
         else:self.player = pydcop.anyAppCalled("amarok").player
 
     def labeler(self,artOnOff,titleOrder,titleLen,titleBoldFont):
@@ -467,7 +507,7 @@ class QuodLibet(GenericPlayer):
     """Full Support"""
 
     def __init__(self):
-        self.dbus_driver()
+        GenericPlayer.__init__(self, 'net.sacredchao.QuodLibet')
 
     def dbus_driver(self):
         """

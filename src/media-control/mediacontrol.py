@@ -21,6 +21,7 @@
 import sys
 
 from gobject import GError
+import gobject
 import gtk
 import dbus
 import gconf
@@ -47,11 +48,18 @@ class App (awn.AppletSimple):
         """Creating the applets core"""
         awn.AppletSimple.__init__(self, uid, orient, height)
         self.resultToolTip = "Media Control Applet"
-        location =  __file__
-        self.location = location.replace('mediacontrol.py','')
+        self.MediaPlayer = None
+        self.location = __file__.replace('mediacontrol.py','')
         self.keylocation = "/apps/avant-window-navigator/applets/MediaControl/"
         self.set_awn_icon('media-control', 'media-control')
         self.load_keys()
+        self.timer_running = False
+
+        self.players_frame = gtk.Frame()
+        self.controls = gtk.VBox()
+        self.controls.set_spacing(5)
+        self.label = gtk.Label("Media Control Applet")
+
         self.what_app()
         # The Heart
         self.height = height
@@ -61,20 +69,29 @@ class App (awn.AppletSimple):
         self.popup_menu = self.create_default_menu()
         # Defining Widgets
         vbox = gtk.VBox()
-        hbox = gtk.HBox()
-        self.label = gtk.Label("Media Control Applet")
+        self.players_frame.add(vbox)
+        for player in self.get_supported_player_names():
+          button = gtk.Button(player)
+          button.connect("clicked", self.start_player_pressed, player)
+          vbox.add(button)
+
         button_previous = gtk.ToolButton ("gtk-media-previous")
         button_play = gtk.ToolButton ("gtk-media-play")
         button_pause = gtk.ToolButton ("gtk-media-pause")
         button_next = gtk.ToolButton ("gtk-media-next")
         self.image = gtk.Image()
         # Packing Widgets
+        hbox = gtk.HBox()
         hbox.pack_start(button_previous)
         hbox.add(button_play)
         hbox.add(button_next)
-        vbox.pack_start(self.image)
-        vbox.add(self.label)
-        vbox.add(hbox)
+        self.controls.pack_start(self.image)
+        self.controls.add(hbox)
+        vbox = gtk.VBox()
+        vbox.set_spacing(5)
+        vbox.pack_start(self.label)
+        vbox.add(self.players_frame)
+        vbox.add(self.controls)
         self.dialog.add(vbox)
         hbox.show_all()
         vbox.show_all()
@@ -96,9 +113,10 @@ class App (awn.AppletSimple):
                 self.dialog_visible = False
             else:
                 self.title.hide(self)
+                if self.MediaPlayer == None: self.what_app()
+                self.dialog_visible = True
                 self.labeler()
                 self.dialog.show_all()
-                self.dialog_visible = True
         elif event.button == 2:
             self.button_pp_press(widget)
         elif event.button == 3:
@@ -109,14 +127,21 @@ class App (awn.AppletSimple):
             self.button_next_press(widget)
         elif event.direction == gtk.gdk.SCROLL_DOWN:
             self.button_previous_press(widget)
-        self.labeler()
+
+    def start_player_pressed(self, widget, args):
+        mediaplayers.__dict__[args]().start()
+        self.dialog.hide()
+        self.dialog_visible = False
 
     def dialog_focus_out(self, widget, event):
         self.dialog.hide()
         self.dialog_visible = False
 
     def enter_notify(self, widget, event):
-        self.labeler()
+        try:
+            if (self.MediaPlayer and self.MediaPlayer.is_async() == False): self.labeler()
+        except:
+            self.MediaPlayer = None
         self.title.show(self, self.resultToolTip)
 
     def leave_notify(self, widget, event):
@@ -124,8 +149,33 @@ class App (awn.AppletSimple):
 
     def what_app(self):
         self.player_name = mediaplayers.what_app()
-        if self.player_name == None:pass
-        else:self.MediaPlayer = mediaplayers.__dict__[self.player_name]()
+        if self.player_name == None:
+            self.players_frame.set_no_show_all(False)
+            self.controls.set_no_show_all(True)
+            self.controls.hide()
+            self.resultToolTip = "Media Control Applet"
+            self.label.set_text("Media Control Applet")
+            self.MediaPlayer = None
+        else:
+            self.MediaPlayer = mediaplayers.__dict__[self.player_name]()
+            self.MediaPlayer.set_callback(self.song_changed)
+            self.players_frame.set_no_show_all(True)
+            self.controls.set_no_show_all(False)
+            self.players_frame.hide()
+
+    def get_supported_player_names(self):
+        """
+        This function gets all supported player names from
+        awn.extras.awnmediaplayers module.
+        """
+        result = []
+        for name, value in mediaplayers.__dict__.iteritems():
+            # check if value is subclass of GenericPlayer
+            if hasattr(value, '__bases__') and issubclass(value, mediaplayers.GenericPlayer) and value != mediaplayers.GenericPlayer:result.append(name)
+        
+        result = filter(lambda x: mediaplayers.__dict__[x]().is_available(), result)
+        result.sort()
+        return result
 
     def key_control(self,keyname,default):
         """
@@ -158,16 +208,23 @@ class App (awn.AppletSimple):
         self.noArtIcon = self.key_control('noArtIcon',self.noArtIconDefault)
         self.titleOrder = self.key_control('titleOrder',"artist - title")
 
+    def song_changed(self):
+        if self.timer_running == False:
+          self.timer_running = True
+          gobject.timeout_add(150, self.labeler)
+
     @error_decorator
     def labeler(self):
         """
         This method changes the application titles and album art
         """
 
+        self.timer_running = False
         artExact, result, self.resultToolTip = self.MediaPlayer.labeler(self.artOnOff,
                                                                         self.titleOrder,
                                                                         self.titleLen,
                                                                         self.titleBoldFont)
+        if self.dialog_visible == False: return False
         self.label.set_markup(result)
         try:
             if self.artOnOff == 'on':
@@ -182,21 +239,22 @@ class App (awn.AppletSimple):
                     self.albumArtSize,
                     gtk.gdk.INTERP_BILINEAR))
             except GError: pass
+        return False
 
     @error_decorator
     def button_previous_press(self, widget):
         self.MediaPlayer.button_previous_press()
-        self.labeler()
+        if (self.MediaPlayer and self.MediaPlayer.is_async() == False): self.labeler()
 
     @error_decorator
     def button_pp_press(self, widget):
         self.MediaPlayer.button_pp_press()
-        self.labeler()
+        if (self.MediaPlayer and self.MediaPlayer.is_async() == False): self.labeler()
 
     @error_decorator
     def button_next_press(self, widget):
         self.MediaPlayer.button_next_press()
-        self.labeler()
+        if (self.MediaPlayer and self.MediaPlayer.is_async() == False): self.labeler()
 
 
 if __name__ == "__main__":

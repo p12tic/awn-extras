@@ -41,6 +41,9 @@ import urllib
 
 import awn.extras as extras
 
+# For type checking
+import cairo
+
 ___file___ = sys.argv[0]
 # Basically, __file__ = current file location
 # sys.argv[0] = file name or called file
@@ -64,6 +67,14 @@ if "all" not in globals():
                 return False
         return True
 
+# Decorator method
+def deprecated(old, new):
+    def d(f):
+        def w(*args, **kwargs):
+            print "\nAWNLib Warning in %s:\n\t%s is deprecated; use %s instead\n" % (os.path.split(___file___)[1], old, new)
+            return f(*args, **kwargs)
+        return w
+    return d
 
 class KeyRingError:
     def __init__(self, str):
@@ -466,13 +477,22 @@ class Icon:
 
     def set(self, icon, raw=False):
         """
-        Set a C{gtk.gdk.pixbuf} as your applet icon.
+        Set a C{gtk.gdk.pixbuf} or C{cairo.Context} as your applet icon.
 
         @param icon: The icon to set your applet icon to.
-        @type icon: C{gtk.gdk.Pixbuf}
+        @type icon: C{gtk.gdk.Pixbuf} or C{cairo.Context}
         @param raw: If true, don't resize the passed pixbuf. False by default.
         @type raw: C{bool}
         """
+
+        if isinstance(icon, cairo.Context):
+            self.__parent.set_icon_context(context)
+            
+            if self.__previous_context != context:
+                del self.__previous_context
+                self.__previous_context = context
+            
+            return
 
         if not raw:
             h = icon.get_height() # To resize non-square icons.
@@ -485,19 +505,10 @@ class Icon:
         self.__parent.set_temp_icon(icon)
         self.__parent.show()
 
+    @deprecated("icon.set_context", "icon.set")
     def set_context(self, context):
-        """
-        Sets a C{cairo} context as your applet icon.
-
-        @param context The C{cairo} context to use
-        @type surface: C{cairo.Context}
-        """
-
-        self.__parent.set_icon_context(context)
-
-        if self.__previous_context != context:
-            del self.__previous_context
-            self.__previous_context = context
+        return self.set(context)
+        
 
     def hide(self):
         """
@@ -1264,7 +1275,9 @@ class Timing:
         gobject.timeout_add(int(sec*1000), c.run)
         return c
 
-    time = register # DEPRECATED
+    @deprecated("timing.time", "timing.register")
+    def time(self, callback, sec):
+        return self.register(callback, sec)
 
     class Callback:
         def __init__(self, callback):
@@ -1359,7 +1372,9 @@ class Effects:
 
         awn.awn_effect_start_ex(self.__effects, "attention", 0, 0, 1)
 
-    notify = attention # DEPRECATED
+    @deprecated("effects.notify", "effects.attention")
+    def notify(self):
+        return self.attention()
 
     def launch(self):
         """

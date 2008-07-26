@@ -1,24 +1,20 @@
-#!/usr/bin/env python
-#
-#       AWN Applet Library - simplifies the API's used in programming applets
-#       for AWN.
-#
-#       Copyright (C) 2007 - 2008 Pavel Panchekha <pavpanchekha@gmail.com>
-#
-#       This program is free software; you can redistribute it and/or modify
-#       it under the terms of the GNU General Public License as published by
-#       the Free Software Foundation; either version 2 of the License, or
-#       (at your option) any later version.
-#
-#       This program is distributed in the hope that it will be useful,
-#       but WITHOUT ANY WARRANTY; without even the implied warranty of
-#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#       GNU General Public License for more details.
-#
-#       You should have received a copy of the GNU General Public License
-#       along with this program; if not, write to the Free Software
-#       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-#       MA 02110-1301, USA.
+# AWN Applet Library - simplifies the API's used in programming applets for AWN.
+# 
+# Copyright (C) 2007 - 2008  Pavel Panchekha <pavpanchekha@gmail.com>
+#                      2008  onox <denkpadje@gmail.com>
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
 import subprocess
@@ -76,6 +72,7 @@ def deprecated(old, new):
         return w
     return d
 
+
 class KeyRingError:
     def __init__(self, str):
         self.msg = str
@@ -86,9 +83,9 @@ class KeyRingError:
 
 
 class Dialogs:
-    
+
     __special_dialogs = ("menu", "program", "about", "preferences")
-    
+
     def __init__(self, parent):
         """
         Creates instance of Dialogs object. Will create a menu,
@@ -486,12 +483,12 @@ class Icon:
         """
 
         if isinstance(icon, cairo.Context):
-            self.__parent.set_icon_context(context)
-            
-            if self.__previous_context != context:
+            self.__parent.set_icon_context(icon)
+
+            if self.__previous_context != icon:
                 del self.__previous_context
-                self.__previous_context = context
-            
+                self.__previous_context = icon
+
             return
 
         if not raw:
@@ -504,11 +501,6 @@ class Icon:
                 icon = icon.scale_simple(w2, h2, gtk.gdk.INTERP_BILINEAR)
         self.__parent.set_temp_icon(icon)
         self.__parent.show()
-
-    @deprecated("icon.set_context", "icon.set")
-    def set_context(self, context):
-        return self.set(context)
-        
 
     def hide(self):
         """

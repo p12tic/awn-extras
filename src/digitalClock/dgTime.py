@@ -20,9 +20,7 @@ import os
 import gtk
 import gtk.glade
 import time
-import tempfile
 import cairo
-from awn import extras
 
 class dgTime:
 

@@ -161,4 +161,4 @@ class dgClockPref:
 
   def parseColors(self, color):
     colors = [int(p) for p in color.split(',')]
-    return gtk.gdk.Color(*colors[:3])
+    return gdk.Color(*colors[:3])

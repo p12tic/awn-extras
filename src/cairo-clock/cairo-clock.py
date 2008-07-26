@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-#
 # Copyright (C) 2008  onox <denkpadje@gmail.com>
 # 
 # This program is free software: you can redistribute it and/or modify
@@ -281,7 +279,7 @@ class AnalogClock:
         self.applet = clock_manager.applet
         self.clock_manager = clock_manager
         
-        self.previous_state = None
+        self.__previous_state = None
     
     def load_theme(self, theme):
         """ Loads the necessary SVG files of the specified theme """
@@ -320,9 +318,9 @@ class AnalogClock:
         height = self.applet.get_height()
         
         new_state = (self.clock_manager.show_second_hand, height, self.theme, hours, minutes)
-        if not self.clock_manager.show_second_hand and self.previous_state == new_state:
+        if not self.clock_manager.show_second_hand and self.__previous_state == new_state:
             return
-        self.previous_state = new_state
+        self.__previous_state = new_state
         
         surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, height, height)
         context = cairo.Context(surface)
@@ -368,7 +366,7 @@ class AnalogClock:
         self.clock_glass.render_cairo(context)
         self.clock_frame.render_cairo(context)
         
-        self.applet.icon.set_context(context)
+        self.applet.icon.set(context)
 
 
 if __name__ == "__main__":

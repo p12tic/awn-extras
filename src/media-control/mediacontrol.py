@@ -44,21 +44,23 @@ def error_decorator(fn):
 class App (awn.AppletSimple):
     """Displays a dialog with controls and track/album info and art"""
 
+    APPLET_NAME = "Media Control Applet"
     def __init__ (self, uid, orient, height):
         """Creating the applets core"""
         awn.AppletSimple.__init__(self, uid, orient, height)
-        self.resultToolTip = "Media Control Applet"
+        self.resultToolTip = App.APPLET_NAME
         self.MediaPlayer = None
         self.location = __file__.replace('mediacontrol.py','')
         self.keylocation = "/apps/avant-window-navigator/applets/MediaControl/"
         self.set_awn_icon('media-control', 'media-control')
         self.load_keys()
         self.timer_running = False
+        self.dbus_names = {}
 
         self.players_frame = gtk.Frame()
         self.controls = gtk.VBox()
         self.controls.set_spacing(5)
-        self.label = gtk.Label("Media Control Applet")
+        self.label = gtk.Label(App.APPLET_NAME)
 
         self.what_app()
         # The Heart
@@ -106,6 +108,13 @@ class App (awn.AppletSimple):
         button_play.connect("clicked", self.button_pp_press)
         button_next.connect("clicked", self.button_next_press)
 
+        try:
+            if self.MediaPlayer: self.labeler()
+        except: pass
+
+        proxy = dbus.SessionBus().get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
+        proxy.connect_to_signal('NameOwnerChanged', self.name_owner_changed_cb)
+
     def button_press(self, widget, event):
         if event.button == 1:
             if self.dialog_visible:
@@ -113,9 +122,10 @@ class App (awn.AppletSimple):
                 self.dialog_visible = False
             else:
                 self.title.hide(self)
-                if self.MediaPlayer == None: self.what_app()
+                if not self.MediaPlayer: self.what_app()
                 self.dialog_visible = True
-                self.labeler()
+                # update controls
+                if self.MediaPlayer: self.labeler()
                 self.dialog.show_all()
         elif event.button == 2:
             self.button_pp_press(widget)
@@ -147,14 +157,15 @@ class App (awn.AppletSimple):
     def leave_notify(self, widget, event):
         self.title.hide(self)
 
-    def what_app(self):
-        self.player_name = mediaplayers.what_app()
-        if self.player_name == None:
+    def what_app(self, player_name = None):
+        if not player_name: self.player_name = mediaplayers.what_app()
+        else: self.player_name = player_name
+        if self.player_name in [None, '']:
             self.players_frame.set_no_show_all(False)
             self.controls.set_no_show_all(True)
             self.controls.hide()
-            self.resultToolTip = "Media Control Applet"
-            self.label.set_text("Media Control Applet")
+            self.resultToolTip = App.APPLET_NAME
+            self.label.set_text(App.APPLET_NAME)
             self.MediaPlayer = None
         else:
             self.MediaPlayer = mediaplayers.__dict__[self.player_name]()
@@ -172,9 +183,19 @@ class App (awn.AppletSimple):
         for name, value in mediaplayers.__dict__.iteritems():
             # check if value is subclass of GenericPlayer
             if hasattr(value, '__bases__') and issubclass(value, mediaplayers.GenericPlayer) and value != mediaplayers.GenericPlayer:result.append(name)
-        
-        result = filter(lambda x: mediaplayers.__dict__[x]().is_available(), result)
+
+        self.dbus_names = {}
+        def filter_and_append(clsName):
+            obj = mediaplayers.__dict__[clsName]()
+            if obj.is_available():
+                name = obj.get_dbus_name()
+                if name != None: self.dbus_names[name] = clsName
+                return True
+            return False
+
+        result = filter(filter_and_append, result)
         result.sort()
+
         return result
 
     def key_control(self,keyname,default):
@@ -209,9 +230,18 @@ class App (awn.AppletSimple):
         self.titleOrder = self.key_control('titleOrder',"artist - title")
 
     def song_changed(self):
+        # multiple signals can come in at once - better use a timer
         if self.timer_running == False:
           self.timer_running = True
           gobject.timeout_add(150, self.labeler)
+
+    def name_owner_changed_cb(self, name, oldAddress, newAddress):
+        if name in self.dbus_names:
+            started = newAddress != ''
+            if started and not self.MediaPlayer:
+                self.what_app(self.dbus_names[name])
+            elif self.MediaPlayer and started == False and name == self.MediaPlayer.get_dbus_name():
+                self.what_app('')
 
     @error_decorator
     def labeler(self):
@@ -220,12 +250,13 @@ class App (awn.AppletSimple):
         """
 
         self.timer_running = False
-        artExact, result, self.resultToolTip = self.MediaPlayer.labeler(self.artOnOff,
-                                                                        self.titleOrder,
-                                                                        self.titleLen,
-                                                                        self.titleBoldFont)
+        artExact, markup, self.resultToolTip = self.MediaPlayer.labeler(
+            self.artOnOff,
+            self.titleOrder,
+            self.titleLen,
+            self.titleBoldFont)
         if self.dialog_visible == False: return False
-        self.label.set_markup(result)
+        self.label.set_markup(markup)
         try:
             if self.artOnOff == 'on':
                 self.image.set_from_pixbuf(gtk.gdk.pixbuf_new_from_file(

@@ -177,7 +177,6 @@ class App (awn.AppletSimple):
             z2 = []
             for z3 in z:
               z2.extend(z3.split('\t'))
-            #print "abc:", z2
             if z2[2] == 'smbfs':
               #print "SMBFS:", z2
               self.network_paths.append('smb:'+z2[0])
@@ -267,6 +266,7 @@ class App (awn.AppletSimple):
     #Go through the list of network drives/etc. from /etc/fstab
     if self.show_network==2:
       #print self.network_paths
+      #GVFS stuff
       if os.path.isdir(os.path.expanduser('~/.gvfs')):
         for x in os.listdir(os.path.expanduser('~/.gvfs')):
           try:
@@ -277,18 +277,18 @@ class App (awn.AppletSimple):
               self.default_icon_path).scale_simple(\
               24,24,gtk.gdk.INTERP_BILINEAR),x])
           self.places_paths.append(os.path.expanduser('~/.gvfs')+'/'+x)
-      else:
-        y = 0
-        for x in self.network_paths:
-          try:
-            self.liststore.append([self.theme.load_icon('network-folder',24,24),\
-              self.network_corr_hnames[y]])
-          except:
-            self.liststore.append([gtk.gdk.pixbuf_new_from_file(\
-              self.default_icon_path).scale_simple(\
-              24,24,gtk.gdk.INTERP_BILINEAR),self.network_corr_hnames[y]])
-          self.places_paths.append(x)
-          y+=1
+      #Non-GVFS stuff
+      y = 0
+      for x in self.network_paths:
+        try:
+          self.liststore.append([self.theme.load_icon('network-folder',24,24),\
+            self.network_corr_hnames[y]])
+        except:
+          self.liststore.append([gtk.gdk.pixbuf_new_from_file(\
+            self.default_icon_path).scale_simple(\
+            24,24,gtk.gdk.INTERP_BILINEAR),self.network_corr_hnames[y]])
+        self.places_paths.append(x)
+        y+=1
         
       
     

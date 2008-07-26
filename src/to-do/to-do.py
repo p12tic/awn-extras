@@ -39,7 +39,8 @@ from awn.extras import detach
 
 class App(awn.AppletSimple):
   last_num_items = -1
-  pixbuf = None
+  surface = None
+  last_height = -1
   def __init__(self, uid, orient, height):
     self.uid = uid
     self.height = height
@@ -882,7 +883,8 @@ class App(awn.AppletSimple):
           'view-sort-descending',self.height,self.height))
       except:
         self.detach['icon-mode'] = 'surface'
-        self.detach.set_surface(icon.icon(48, self.settings, self.color))
+        self.detach.set_surface(icon.icon(48, self.settings, self.color, \
+          self.surface, self.last_height))
       
       #Change the attached applet icon second
       if self.detached == False:
@@ -895,20 +897,12 @@ class App(awn.AppletSimple):
         except:
           
           #If Awn supports setting the icon as a cairo context
-          if hasattr(self, 'set_icon_context'):
-            surface = icon.icon(self.height, self.settings, self.color)
-            self.context = cairo.Context(surface)
-            self.set_icon_context(self.context)
-          
-          #It doesn't; use surface->pixbuf via detach
-          else:
-            surface = icon.icon(self.height, self.settings, self.color)
-            if self.pixbuf is None:
-              self.pixbuf = self.detach.surface_to_pixbuf(surface)
-            else:
-              self.detach.surface_to_pixbuf(surface, self.pixbuf)
-            self.set_icon(self.pixbuf)
+          self.surface = icon.icon(self.height, self.settings, self.color, \
+            self.surface, self.last_height)
+          self.context = cairo.Context(self.surface)
+          self.set_icon_context(self.context)
       
+      self.last_height = self.height
       self.last_num_items = len(self.settings['items'])
   
   #Update the colors for the icon if the current icon theme

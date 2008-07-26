@@ -36,11 +36,19 @@ colors['scarletred'] = [[239,41,41],[204,0,0],[164,0,0],[255,255,255]]
 colors['aluminium1'] = [[238,238,236],[211,215,207],[186,189,182],[64,64,64]]
 colors['aluminium2'] = [[136,138,133],[85,87,83],[46,52,54],[255,255,255]]
 
-def icon(size2,settings,color):
+def icon(size2, settings, color, surface, last_height):
   global size
   size = size2
-  surface = cairo.ImageSurface(cairo.FORMAT_ARGB32,size,size)
-  cr = cairo.Context(surface)
+  if last_height != size or surface is None:
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32,size,size)
+    cr = cairo.Context(surface)
+  else:
+    cr = cairo.Context(surface)
+  
+  #Clear the surface
+  cr.set_operator(cairo.OPERATOR_CLEAR)
+  cr.paint()
+  cr.set_operator(cairo.OPERATOR_OVER)
   
   #Get some data
   num_items = 0

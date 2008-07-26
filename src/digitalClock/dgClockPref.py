@@ -23,6 +23,7 @@ from gtk import gdk
 import time
 import subprocess
 import awn
+from awn import extras
 
 class dgClockPref:
 
@@ -48,48 +49,24 @@ class dgClockPref:
 
   def buildMenu(self):
     popup_menu = self.applet.create_default_menu()
-    hbox = gtk.HBox(False,2)
-    img = gtk.Image()
-    img.set_from_stock(gtk.STOCK_PREFERENCES, gtk.ICON_SIZE_MENU)
-    hbox.pack_start(img, expand=False, fill=False, padding=0)
-    lbl = gtk.Label("Preferences")
-    hbox.pack_start(lbl, expand=False, fill=False, padding=0)
-    pref = gtk.MenuItem()
-    pref.add(hbox)
+    pref = gtk.ImageMenuItem(gtk.STOCK_PREFERENCES)
 
-    hbox = gtk.HBox(False,2)
-    img = gtk.Image()
-    img.set_from_stock(gtk.STOCK_EDIT, gtk.ICON_SIZE_MENU)
-    hbox.pack_start(img, expand=False, fill=False, padding=0)
-    hbox.pack_start(gtk.Label("Adjust Date & Time"))
-    timead = gtk.MenuItem()
-    timead.add(hbox)
+    timeadj = extras.image_menu_item_new_with_label('Adjust Date & Time')
+    timeadj.set_image(gtk.image_new_from_stock(gtk.STOCK_EDIT, gtk.ICON_SIZE_MENU))
 
-    hbox = gtk.HBox(False,2)
-    img = gtk.Image()
-    img.set_from_stock(gtk.STOCK_COPY, gtk.ICON_SIZE_MENU)
-    hbox.pack_start(img, expand=False, fill=False, padding=0)
-    lbl = gtk.Label("Copy Time")
-    hbox.pack_start(lbl, expand=False, fill=False, padding=0)
-    ctime = gtk.MenuItem()
-    ctime.add(hbox)
+    ctime = extras.image_menu_item_new_with_label('Copy Time')
+    ctime.set_image(gtk.image_new_from_stock(gtk.STOCK_COPY, gtk.ICON_SIZE_MENU))
 
-    hbox = gtk.HBox(False,2)
-    img = gtk.Image()
-    img.set_from_stock(gtk.STOCK_COPY, gtk.ICON_SIZE_MENU)
-    hbox.pack_start(img, expand=False, fill=False, padding=0)
-    lbl = gtk.Label("Copy Date")
-    hbox.pack_start(lbl, expand=False, fill=False, padding=0)
-    cdate = gtk.MenuItem()
-    cdate.add(hbox)
+    cdate = extras.image_menu_item_new_with_label('Copy Date')
+    cdate.set_image(gtk.image_new_from_stock(gtk.STOCK_COPY, gtk.ICON_SIZE_MENU))
 
     popup_menu.append(ctime)
     popup_menu.append(cdate)
     popup_menu.append(pref)
-    popup_menu.append(timead)
+    popup_menu.append(timeadj)
 
     pref.connect_object("activate",self.show_prefs, self)
-    timead.connect_object("activate",self.time_admin, self)
+    timeadj.connect_object("activate",self.time_admin, self)
     ctime.connect_object("activate",self.copy_time, self)
     cdate.connect_object("activate",self.copy_date, self)
     popup_menu.show_all()

@@ -60,6 +60,7 @@ class dgTime:
     gdk_surface = self.awn.window.cairo_create().get_target()
     self.surface = gdk_surface.create_similar(cairo.CONTENT_COLOR_ALPHA, self.width, self.height)
     self.context = cairo.Context(self.surface)
+    del gdk_surface
 
   def draw_clock (self):
     self.curY = 0

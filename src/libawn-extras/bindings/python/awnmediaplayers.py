@@ -73,7 +73,7 @@ class GenericPlayer(object):
     def set_callback(self, cb):
         self.registered_cb = cb
 
-    def callback_fn(self, args):
+    def callback_fn(self, *args, **kwargs):
         if (self.registered_cb):
             self.registered_cb()
 
@@ -106,6 +106,12 @@ class GenericPlayer(object):
             return True
         else:
             return False
+
+    def get_dbus_name(self):
+        """
+        Returns player's dbus name.
+        """
+        return self.dbus_base_name
 
     def dbus_driver(self):
         """
@@ -143,6 +149,19 @@ class GenericPlayer(object):
     def button_next_press (self):
         pass
 
+    def get_title_and_tooltip (self, text):
+        # titleLen and titleBoldFont should be declared
+        # here and not just in subclasses
+        if text.__class__ not in [str, unicode]:return '',''
+        if len(text) > self.titleLen:
+            text = text[:self.titleLen]
+            text = text + '..'
+        tooltip = text
+        if self.titleBoldFont == 'on':
+            text = """<span weight="bold">""" + gobject.markup_escape_text(text) + """</span>"""
+
+        return text, tooltip
+
 
 class Rhythmbox(GenericPlayer):
     """Full Support"""
@@ -160,7 +179,8 @@ class Rhythmbox(GenericPlayer):
             self.session_bus = dbus.SessionBus()
             self.proxy_obj = self.session_bus.get_object(self.dbus_base_name, '/org/gnome/Rhythmbox/Player')
             self.player = dbus.Interface(self.proxy_obj, 'org.gnome.Rhythmbox.Player')
-            self.player.connect_to_signal('playingUriChanged', self.callback_fn)
+            self.player.connect_to_signal('playingUriChanged', self.callback_fn, member_keyword='member')
+            self.player.connect_to_signal('playingSongPropertyChanged', self.callback_fn, member_keyword='member')
             self.rbShell = self.session_bus.get_object(self.dbus_base_name, '/org/gnome/Rhythmbox/Shell')
 
     def labeler(self,artOnOff,titleOrder,titleLen,titleBoldFont):
@@ -180,21 +200,23 @@ class Rhythmbox(GenericPlayer):
             albumart_exact = ''
 
         # Currently Playing Title
-        if self.titleOrder == 'artist - title':
-            try:result = result['artist'] + ' - ' + result['title']
-            except:SyntaxError
-        elif self.titleOrder == 'title - artist':
-            try:result = result['title'] + ' - ' + result['artist']
-            except:SyntaxError
-        if result.__len__() > self.titleLen:
-            result = result[:self.titleLen]
-            result = result + '..'
-        if self.titleBoldFont == 'on':
-            result = """<span weight="bold">""" + result + """</span>"""
-        result_tooltip = result.replace("""</span>""",'')
-        result_tooltip = result_tooltip.replace("""<span weight="bold">""",'')
+        if result['artist'] != '':
+            if self.titleOrder == 'artist - title':
+                try:result = result['artist'] + ' - ' + result['title']
+                except:SyntaxError
+            elif self.titleOrder == 'title - artist':
+                try:result = result['title'] + ' - ' + result['artist']
+                except:SyntaxError
+        elif 'rb:stream-song-title' in result:
+            if result['title'] != '':
+                try:result = result['rb:stream-song-title'] + ' (' + result['title'] + ')'
+                except:SyntaxError
+            else:
+               try:result = result['rb:stream-song-title']
+               except:SyntaxError
 
-        return albumart_exact,result,result_tooltip
+        markup, tooltip = self.get_title_and_tooltip(result)
+        return albumart_exact, markup, tooltip
 
     def button_previous_press (self):
         self.player.previous ()
@@ -246,15 +268,9 @@ class Exaile(GenericPlayer):
         elif self.titleOrder == 'title - artist':
             try:result = result['title'] + ' - ' + result['artist']
             except:SyntaxError
-        if result.__len__() > self.titleLen:
-            result = result[:self.titleLen]
-            result = result + '..'
-        if self.titleBoldFont == 'on':
-            result = """<span weight="bold">""" + result + """</span>"""
-        result_tooltip = result.replace("""</span>""",'')
-        result_tooltip = result_tooltip.replace("""<span weight="bold">""",'')
 
-        return self.player.get_cover_path(),result,result_tooltip
+        markup, tooltip = self.get_title_and_tooltip(result)
+        return self.player.get_cover_path(), markup, tooltip
 
     def button_previous_press (self):
         self.player.prev_track()
@@ -302,15 +318,9 @@ class Banshee(GenericPlayer):
         elif self.titleOrder == 'title - artist':
             try:result = result['title'] + ' - ' + result['artist']
             except:SyntaxError
-        if result.__len__() > self.titleLen:
-            result = result[:self.titleLen]
-            result = result + '..'
-        if self.titleBoldFont == 'on':
-            result = """<span weight="bold">""" + result + """</span>"""
-        result_tooltip = result.replace("""</span>""",'')
-        result_tooltip = result_tooltip.replace("""<span weight="bold">""",'')
 
-        return self.player.GetPlayingCoverUri(),result,result_tooltip
+        markup, tooltip = self.get_title_and_tooltip(result)
+        return self.player.GetPlayingCoverUri(), markup, tooltip
 
     def button_previous_press (self):
         self.player.Previous()
@@ -373,14 +383,9 @@ class BansheeOne(GenericPlayer):
         elif self.titleOrder == 'title - artist':
             try:result = result['title'] + ' - ' + result['artist']
             except:SyntaxError
-        if result.__len__() > self.titleLen:
-            result = result[:self.titleLen]
-            result = result + '..'
-        if self.titleBoldFont == 'on':
-            result = """<span weight="bold">""" + result + """</span>"""
-        result_tooltip = result.replace("""</span>""",'')
-        result_tooltip = result_tooltip.replace("""<span weight="bold">""",'')
-        return albumart_exact, result, result_tooltip
+
+        markup, tooltip = self.get_title_and_tooltip(result)
+        return albumart_exact, markup, tooltip
 
     def button_previous_press (self):
         self.player1.Previous(False)
@@ -430,14 +435,9 @@ class Listen(GenericPlayer):
         elif self.titleOrder == 'title - artist':
             try:result = result['title'] + ' - ' + result['artist']
             except:SyntaxError
-        if result.__len__() > self.titleLen:
-            result = result[:self.titleLen]
-            result = result + '..'
-        if self.titleBoldFont == 'on':
-            result = """<span weight="bold">""" + result + """</span>"""
-        result_tooltip = result.replace("""</span>""",'')
-        result_tooltip = result_tooltip.replace("""<span weight="bold">""",'')
-        return albumart,result,result_tooltip
+
+        markup, tooltip = self.get_title_and_tooltip(result)
+        return albumart, markup, tooltip
 
     def button_previous_press (self):
         self.player.previous()
@@ -484,14 +484,9 @@ class Amarok(GenericPlayer):
         elif self.titleOrder == 'title - artist':
             try:result = result['title'] + ' - ' + result['artist']
             except:SyntaxError
-        if result.__len__() > self.titleLen:
-            result = result[:self.titleLen]
-            result = result + '..'
-        if self.titleBoldFont == 'on':
-            result = """<span weight="bold">""" + result + """</span>"""
-        result_tooltip = result.replace("""</span>""",'')
-        result_tooltip = result_tooltip.replace("""<span weight="bold">""",'')
-        return albumart,result,result_tooltip
+
+        markup, tooltip = self.get_title_and_tooltip(result)
+        return albumart, markup, tooltip
 
     def button_previous_press (self):
         self.player.prev()
@@ -539,15 +534,9 @@ class QuodLibet(GenericPlayer):
         elif self.titleOrder == 'title - artist':
             try:result = result['title'] + ' - ' + result['artist']
             except:SyntaxError
-        if result.__len__() > self.titleLen:
-            result = result[:self.titleLen]
-            result = result + '..'
-        if self.titleBoldFont == 'on':
-            result = """<span weight="bold">""" + result + """</span>"""
-        result_tooltip = result.replace("""</span>""",'')
-        result_tooltip = result_tooltip.replace("""<span weight="bold">""",'')
 
-        return albumart_exact,result,result_tooltip
+        markup, tooltip = self.get_title_and_tooltip(result)
+        return albumart_exact, markup, tooltip
 
     def button_previous_press (self):
         self.player.Previous ()

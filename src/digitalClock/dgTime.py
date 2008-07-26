@@ -34,7 +34,10 @@ class dgTime:
     self.context = None
     self.surface = None
     self.time_string = None
-    self.update_clock()
+    def on_map_event(widget, event):
+      self.update_clock()
+      return True
+    self.awn.connect('map-event', on_map_event)
 
   def update_prefs(self, prefs):
     self.prefs = prefs
@@ -54,7 +57,8 @@ class dgTime:
     else:
       self.width = int(self.height * 1.3)
 
-    self.surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.width, self.height)
+    gdk_surface = self.awn.window.cairo_create().get_target()
+    self.surface = gdk_surface.create_similar(cairo.CONTENT_COLOR_ALPHA, self.width, self.height)
     self.context = cairo.Context(self.surface)
 
   def draw_clock (self):

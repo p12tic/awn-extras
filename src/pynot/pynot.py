@@ -415,6 +415,7 @@ class mywidget(gtk.Widget):
                 if(e.window.id==self.wind.id):
                     self.wind.clear_area(0,0,0,0)
 #                self.tr__updateAlpha(False)
+                    self.tr__updatePanel(self.root,self.wind)
             if e.type == X.ClientMessage:
                 data = e.data[1][1]
                 task = e.data[1][2]
@@ -602,5 +603,9 @@ a = App(awn.uid, awn.orient, awn.height)
 awn.init_applet(a)
 a.show_all()
 atexit.register(cleanup,a)
-gtk.main()
+try:
+    gtk.main()
+except:
+    cleanup(a) 
+
 

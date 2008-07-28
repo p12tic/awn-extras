@@ -65,10 +65,13 @@ class Prefs:
     #Make the main GtkNotebook along with three VBoxes and two Labels
     notebook = gtk.Notebook()
     general_vbox = gtk.VBox()
+    priority_vbox = gtk.VBox()
     icon_vbox = gtk.VBox()
     general_label = gtk.Label(_('General'))
+    priority_label = gtk.Label(_('Priority'))
     icon_label = gtk.Label(_('Icon'))
     notebook.append_page(general_vbox, general_label)
+    notebook.append_page(priority_vbox, priority_label)
     notebook.append_page(icon_vbox, icon_label)
     main_vbox = gtk.VBox()
     main_vbox.pack_start(notebook)
@@ -91,21 +94,85 @@ class Prefs:
     confirm_items.key = 'confirm-items'
     if self.settings['confirm-items']:
       confirm_items.set_active(True)
-    confirm_items.connect('toggled', self.confirm_toggled)
+    confirm_items.connect('toggled', self.check_toggled)
     
     #CheckButton: Categories
     confirm_cats = gtk.CheckButton(_('C_ategories'))
     confirm_cats.key = 'confirm-categories'
     if self.settings['confirm-categories']:
       confirm_cats.set_active(True)
-    confirm_cats.connect('toggled', self.confirm_toggled)
-
+    confirm_cats.connect('toggled', self.check_toggled)
+    
+    #Label: Width (bold)
+    width_label = gtk.Label(_('Width'))
+    width_label.modify_font(pango.FontDescription('bold'))
+    
+    #CheckButton: Use Custom Width
+    width_check = gtk.CheckButton(_('_Use Custom Width'))
+    if self.settings['use_custom_width'] == True:
+      width_check.set_active(True)
+    width_check.key = 'use_custom_width'
+    width_check.connect('toggled', self.check_toggled)
+    
+    #HBox for Label and SpinButton
+    width_hbox = gtk.HBox()
+    
+    #Label: Width (pixels)
+    width_label2 = gtk.Label(_('Width (pixels)'))
+    
+    #SpinButton for custom width in pixels
+    width_adj = gtk.Adjustment(float(self.settings['custom_width']), 25, 500, \
+      1, 5, 1)
+    width_spin = gtk.SpinButton(width_adj, 1, 0)
+    width_spin.key = 'custom_width'
+    width_spin.connect('focus-out-event', self.spin_focusout)
+    
     #Put the General tab together
     general_vbox.pack_start(title_label, False)
     general_vbox.pack_start(title_entry, False)
     general_vbox.pack_start(confirm_label, False)
     general_vbox.pack_start(confirm_items, False)
     general_vbox.pack_start(confirm_cats, False)
+    general_vbox.pack_start(width_label, False)
+    general_vbox.pack_start(width_check, False)
+    width_hbox.pack_start(width_label2)
+    width_hbox.pack_start(width_spin, False)
+    general_vbox.pack_start(width_hbox, False)
+    
+    #Label: Low Priority (bold)
+    priority_low_label = gtk.Label(_('Low Priority'))
+    priority_low_label.modify_font(pango.FontDescription('bold'))
+    
+    #Low Priority Colors
+    priority_low_background = self.color2('low')
+    priority_low_text = self.color2('low', True)
+    
+    #Label: Medium Priority (bold)
+    priority_med_label = gtk.Label(_('Medium Priority'))
+    priority_med_label.modify_font(pango.FontDescription('bold'))
+    
+    #Medium Priority Colors
+    priority_med_background = self.color2('med')
+    priority_med_text = self.color2('med', True)
+    
+    #Label: High Priority (bold)
+    priority_high_label = gtk.Label(_('High Priority'))
+    priority_high_label.modify_font(pango.FontDescription('bold'))
+    
+    #High Priority Colors
+    priority_high_background = self.color2('high')
+    priority_high_text = self.color2('high', True)
+    
+    #Put the Priority tab together
+    priority_vbox.pack_start(priority_low_label, False)
+    priority_vbox.pack_start(priority_low_background, False)
+    priority_vbox.pack_start(priority_low_text, False)
+    priority_vbox.pack_start(priority_med_label, False)
+    priority_vbox.pack_start(priority_med_background, False)
+    priority_vbox.pack_start(priority_med_text, False)
+    priority_vbox.pack_start(priority_high_label, False)
+    priority_vbox.pack_start(priority_high_background, False)
+    priority_vbox.pack_start(priority_high_text, False)
     
     #Label: Icon Color (bold)
     icon_color_label = gtk.Label(_('Icon Color'))
@@ -195,6 +262,11 @@ class Prefs:
     li[(button.index+2)] = blue / 256
     self.settings['colors'] = li
   
+  #A color was set from a different GtkColorButton
+  def color_set2(self, button):
+    #Get the color from the button
+    self.settings[button.key] = self.convert_color(button)
+  
   #The icon theme has changed
   def icon_theme_changed(self, *args):
     icon = self.icon_theme.load_icon('view-sort-descending', 48, 48)
@@ -208,22 +280,24 @@ class Prefs:
     else:
       self.settings['icon-type'] = icon_types_real[index]
   
-  #A CheckButton for confirming was toggled
-  def confirm_toggled(self, widget):
+  #A CheckButton was toggled
+  def check_toggled(self, widget):
     self.settings[widget.key] = widget.get_active()
+  
+  #A SpinButton has lost focus
+  def spin_focusout(self, widget, event):
+    self.settings[widget.key] = int(widget.get_value())
   
   #The close button was clicked
   def close(self, widget):
     self.win.destroy()
     del self.win
   
-  #Return a list: [GtkLabel, GtkColorButton]
+  #Return an HBox of: GtkLabel, GtkColorButton
   def color(self, human, index):
     
     #Make a GtkLabel
     label = gtk.Label(human)
-    
-    #Make a GdkColor
     
     #Get the default color
     if len(self.settings['colors']) < 12:
@@ -248,3 +322,56 @@ class Prefs:
     
     #Return the HBox
     return hbox
+  
+  #Return an HBox of: GtkLabel, GtkColorButton
+  def color2(self, key, text=False):
+    
+    key = 'color_' + key
+    if text:
+      key += '_text'
+    
+    #Make a GtkLabel
+    if not text:
+      label = gtk.Label(_('Background'))
+    else:
+      label = gtk.Label(_('Text'))
+    
+    #Get a GdkColor
+    color = gtk.gdk.color_parse(self.settings[key])
+    
+    #Make a GtkColorButton
+    button = gtk.ColorButton(color)
+    button.key = key
+    button.connect('color-set', self.color_set2)
+    
+    #HBox for the two widgets
+    hbox = gtk.HBox()
+    hbox.pack_start(label)
+    hbox.pack_end(button, False)
+    
+    #Return it
+    return hbox
+  
+  #GtkColorButton -> 'RRGGBB'
+  def convert_color(self, button):
+    color = button.get_color()
+    
+    #RR
+    if color.red == 0:
+      s = '00'
+    else:
+      s = '%0.2X' % (color.red / 256.0)
+    
+    #GG
+    if color.green == 0:
+      s += '00'
+    else:
+      s += '%0.2X' % (color.green / 256.0)
+    
+    #BB
+    if color.blue == 0:
+      s += '00'
+    else:
+      s += '%0.2X' % (color.blue / 256.0)
+    
+    return '#' + s

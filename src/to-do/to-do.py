@@ -60,10 +60,29 @@ class App(awn.AppletSimple):
     
     #Set up Settings
     self.settings = settings.Settings('to-do', uid)
-    self.settings.register({'items':[str],'details':[str],'progress':[int],\
-      'priority':[int],'color':str,'title':str,'icon-type':str,'colors':[int],\
-      'category':[int],'category_name':[str],'expanded':[int],\
-      'icon-opacity':int,'confirm-items':bool,'confirm-categories':bool})
+    self.settings.register({ \
+      'color':str, \
+      'title':str, \
+      'items':[str], \
+      'colors':[int], \
+      'icon-type':str, \
+      'details':[str], \
+      'color_low':str, \
+      'color_med':str, \
+      'color_high':str, \
+      'progress':[int], \
+      'priority':[int], \
+      'expanded':[int], \
+      'category':[int], \
+      'custom_width':int, \
+      'icon-opacity':int, \
+      'color_low_text':str, \
+      'color_med_text':str, \
+      'confirm-items':bool, \
+      'category_name':[str], \
+      'color_high_text':str, \
+      'use_custom_width':bool, \
+      'confirm-categories':bool})
     
 #    #Get the title or default to "To-Do List"
 #    if self.settings['title'] in ['',None]:
@@ -363,6 +382,10 @@ class App(awn.AppletSimple):
         dialog_entry.type = 'items'
         if self.settings['details'][y].replace(' ','').replace('\n','') != '':
           dialog_entry.set_tooltip_text(self.settings['details'][y])
+        if self.settings['use_custom_width']:
+          if self.settings['custom_width'] >= 25 and \
+            self.settings['custom_width'] <= 500:
+            dialog_entry.set_size_request(self.settings['custom_width'], -1)
         dialog_entry.connect('focus-out-event',self.item_updated)
         
         #Try to colorize the entry widget based on its priority
@@ -370,27 +393,24 @@ class App(awn.AppletSimple):
           #High: Red
           if self.settings['priority'][y]==3:
             dialog_entry.modify_base(\
-              gtk.STATE_NORMAL,gtk.gdk.color_parse('#aa0000'))
+              gtk.STATE_NORMAL,gtk.gdk.color_parse(self.settings['color_high']))
             dialog_entry.modify_text(\
-              gtk.STATE_NORMAL,gtk.gdk.color_parse('#dddddd'))
-            dialog_entry.modify_bg(\
-              gtk.STATE_SELECTED,gtk.gdk.color_parse('#ffbbbb'))
+              gtk.STATE_NORMAL,gtk.gdk.color_parse( \
+              self.settings['color_high_text']))
           #Medium: Yellow
           elif self.settings['priority'][y]==2:
             dialog_entry.modify_base(\
-              gtk.STATE_NORMAL,gtk.gdk.color_parse('#c0c000'))
+              gtk.STATE_NORMAL,gtk.gdk.color_parse(self.settings['color_med']))
             dialog_entry.modify_text(\
-              gtk.STATE_NORMAL,gtk.gdk.color_parse('#000000'))
-            dialog_entry.modify_bg(\
-              gtk.STATE_SELECTED,gtk.gdk.color_parse('#ffff88'))
+              gtk.STATE_NORMAL,gtk.gdk.color_parse( \
+              self.settings['color_med_text']))
           #Low: Green
           elif self.settings['priority'][y]==1:
             dialog_entry.modify_base(\
-              gtk.STATE_NORMAL,gtk.gdk.color_parse('#009900'))
+              gtk.STATE_NORMAL,gtk.gdk.color_parse(self.settings['color_low']))
             dialog_entry.modify_text(\
-              gtk.STATE_NORMAL,gtk.gdk.color_parse('#000000'))
-            dialog_entry.modify_bg(\
-              gtk.STATE_SELECTED,gtk.gdk.color_parse('#88ff88'))
+              gtk.STATE_NORMAL,gtk.gdk.color_parse(\
+              self.settings['color_low_text']))
         
         except:
           pass
@@ -449,6 +469,10 @@ class App(awn.AppletSimple):
         dialog_expander = gtk.Expander(self.settings['category_name'][y])
         if self.settings['details'][y].replace(' ','').replace('\n','') != '':
           dialog_expander.set_tooltip_text(self.settings['details'][y])
+        if self.settings['use_custom_width']:
+          if self.settings['custom_width'] >= 25 and \
+            self.settings['custom_width'] <= 500:
+            dialog_expander.set_size_request(self.settings['custom_width'], -1)
         dialog_expander.iterator = y
         if y in self.settings['expanded']:
           dialog_expander.set_expanded(True)
@@ -680,6 +704,10 @@ class App(awn.AppletSimple):
     name_entry.set_text(name)
     name_entry.iterator = num
     name_entry.type = 'items'
+    if self.settings['use_custom_width']:
+      if self.settings['custom_width'] >= 25 and \
+        self.settings['custom_width'] <= 500:
+        name_entry.set_size_request(self.settings['custom_width'], -1)
     name_entry.connect('focus-out-event',self.item_updated)
     
     #HBoxes for Priority Label and RadioButtons

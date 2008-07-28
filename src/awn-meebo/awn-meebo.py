@@ -16,10 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import sys#, os
+import sys, os
 import pygtk
 import gtk
 import awn
+import re
 
 # workaround for weirdness with regards to Ubuntu + gtkmozembed
 if os.path.exists('/etc/issue'):

@@ -36,11 +36,11 @@ applet_description = "Applet that displays an analog clock using\n(optionally) M
 cairo_clock_themes_dir = "/usr/share/cairo-clock/themes"
 default_themes_dir = os.path.join(os.path.dirname(__file__), "themes")
 
-default_theme = "onox"
+default_theme = "gnome"
 glade_file = os.path.join(os.path.dirname(__file__), "cairo-clock.glade")
 
 # Logo of the applet, shown in the GTK About dialog
-applet_logo = os.path.join(os.path.dirname(__file__), "cairo-clock-logo.png")
+applet_logo = os.path.join(os.path.dirname(__file__), "cairo-clock-logo.svg")
 
 
 class CairoClockApplet:

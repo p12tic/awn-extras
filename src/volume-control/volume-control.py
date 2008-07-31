@@ -70,7 +70,7 @@ class VolumeControlApplet:
         self.old_volume = None
         self.was_muted = None
         
-        self.backend = Backend(self)
+        self.backend = ALSABackend(self)
         
         self.setup_main_dialog()
         self.setup_context_menu()
@@ -160,26 +160,14 @@ class VolumeControlApplet:
         
         menu.insert(gtk.SeparatorMenuItem(), 5)
         
-        prefs_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
-        prefs_item.connect("activate", self.show_prefs_dialog_cb)
-        menu.insert(prefs_item, 6)
-        
-        self.setup_dialog_settings()
-    
-    def show_volume_control_cb(self, widget):
-        subprocess.Popen("gnome-volume-control")
-    
-    def show_prefs_dialog_cb(self, widget):
-        self.applet.dialog.toggle("preferences", "show")
-    
-    def setup_dialog_settings(self):
-        """ Loads the settings """
-        
         prefs = glade.XML(glade_file)
         prefs.get_widget("dialog-vbox").reparent(self.applet.dialog.new("preferences").vbox)
         
         self.load_theme_pref(prefs)
         self.load_channel_pref(prefs)
+    
+    def show_volume_control_cb(self, widget):
+        subprocess.Popen("gnome-volume-control")
     
     def load_theme_pref(self, prefs):
         # Combobox in preferences window to choose a theme
@@ -296,7 +284,7 @@ class VolumeControlApplet:
             self.mute_item.set_active(False)
 
 
-class Backend:
+class ALSABackend:
     """  ALSA backend. Controls the volume, mute and channels """
     
     def __init__(self, parent):

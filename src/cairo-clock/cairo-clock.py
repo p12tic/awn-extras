@@ -26,21 +26,21 @@ from gtk import glade
 from awn.extras import AWNLib
 import rsvg
 
-# Interval in milliseconds between two successive draws of the clock
-draw_clock_interval = 1000
-
 applet_name = "Cairo Clock"
 applet_version = "0.2.8"
 applet_description = "Applet that displays an analog clock using\n(optionally) MacSlow's Cairo-Clock's themes"
 
-cairo_clock_themes_dir = "/usr/share/cairo-clock/themes"
-default_themes_dir = os.path.join(os.path.dirname(__file__), "themes")
-
-default_theme = "gnome"
-glade_file = os.path.join(os.path.dirname(__file__), "cairo-clock.glade")
-
 # Logo of the applet, shown in the GTK About dialog
 applet_logo = os.path.join(os.path.dirname(__file__), "cairo-clock-logo.svg")
+
+# Interval in milliseconds between two successive draws of the clock
+draw_clock_interval = 1000
+
+cairo_clock_themes_dir = "/usr/share/cairo-clock/themes"
+default_themes_dir = os.path.join(os.path.dirname(__file__), "themes")
+default_theme = "gnome"
+
+glade_file = os.path.join(os.path.dirname(__file__), "cairo-clock.glade")
 
 
 class CairoClockApplet:
@@ -49,17 +49,17 @@ class CairoClockApplet:
     def __init__(self, applet):
         self.applet = applet
         
-        self.clock = ClockUpdater(applet)
+        self.clock_updater = ClockUpdater(applet)
         
         self.setup_main_dialog()
         self.setup_context_menu()
         
-        self.clock.draw_clock_cb()
+        self.clock_updater.draw_clock_cb()
         
-        applet.connect("enter-notify-event", lambda w, e: self.clock.enable_title(True))
-        applet.connect("leave-notify-event", lambda w, e: self.clock.enable_title(False))
+        applet.connect("enter-notify-event", lambda w, e: self.clock_updater.enable_title(True))
+        applet.connect("leave-notify-event", lambda w, e: self.clock_updater.enable_title(False))
         
-        gobject.timeout_add(draw_clock_interval, self.clock.draw_clock_cb)
+        gobject.timeout_add(draw_clock_interval, self.clock_updater.draw_clock_cb)
     
     def setup_main_dialog(self):
         dialog = self.applet.dialog.new("calendar-dialog")
@@ -76,7 +76,7 @@ class CairoClockApplet:
     def button_press_event_cb(self, widget, event):
         if event.button == 1 and (time.time() - self.dialog_focus_lost_time) > 0.01:
             self.applet.dialog.toggle("calendar-dialog")
-            self.clock.title_is_visible = False
+            self.clock_updater.title_is_visible = False
     
     def dialog_focus_out_cb(self, dialog, event):
         self.dialog_focus_lost_time = time.time()
@@ -85,57 +85,49 @@ class CairoClockApplet:
         """ Creates a context menu to activate "Preferences" ("About" window
         is created automatically by AWNLib) """
         
-        prefs_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
-        prefs_item.connect("activate", self.show_dialog_cb)
-        
-        self.applet.dialog.menu.insert(prefs_item, 3)
-        
         prefs = glade.XML(glade_file)
         prefs.get_widget("dialog-vbox").reparent(self.applet.dialog.new("preferences").vbox)
         
         self.setup_dialog_settings(prefs)
     
-    def show_dialog_cb(self, widget):
-        self.applet.dialog.toggle("preferences", "show")
-    
     def setup_dialog_settings(self, prefs):
         """ Loads the settings """
         
         default_values = {
-            "time-24-format": self.clock.time_24_format,
-            "time-date": self.clock.time_date,
-            "time-seconds": self.clock.time_seconds,
-            "show-second-hand": self.clock.show_second_hand,
+            "time-24-format": self.clock_updater.time_24_format,
+            "time-date": self.clock_updater.time_date,
+            "time-seconds": self.clock_updater.time_seconds,
+            "show-second-hand": self.clock_updater.show_second_hand,
             "theme": default_theme
         }
         self.applet.settings.load(default_values)
         
         # Time format
-        self.clock.time_24_format = self.applet.settings["time-24-format"]
+        self.clock_updater.time_24_format = self.applet.settings["time-24-format"]
         
         radio_24_format = prefs.get_widget("radio-24-format")
-        radio_24_format.set_active(self.clock.time_24_format)
+        radio_24_format.set_active(self.clock_updater.time_24_format)
         radio_24_format.connect("toggled", self.radiobutton_24_format_toggled_cb)
         
         # Showing date in title
-        self.clock.time_date = self.applet.settings["time-date"]
+        self.clock_updater.time_date = self.applet.settings["time-date"]
         
         check_title_date = prefs.get_widget("check-time-date")
-        check_title_date.set_active(self.clock.time_date)
+        check_title_date.set_active(self.clock_updater.time_date)
         check_title_date.connect("toggled", self.checkbox_title_date_toggled_cb)
         
         # Showing seconds in title
-        self.clock.time_seconds = self.applet.settings["time-seconds"]
+        self.clock_updater.time_seconds = self.applet.settings["time-seconds"]
         
         check_title_seconds = prefs.get_widget("check-time-seconds")
-        check_title_seconds.set_active(self.clock.time_seconds)
+        check_title_seconds.set_active(self.clock_updater.time_seconds)
         check_title_seconds.connect("toggled", self.checkbox_title_seconds_toggled_cb)
         
         # Showing the seconds hand in the applet's icon
-        self.clock.show_second_hand = self.applet.settings["show-second-hand"]
+        self.clock_updater.show_second_hand = self.applet.settings["show-second-hand"]
         
         checkbox_second_hand = prefs.get_widget("check-second-hand")
-        checkbox_second_hand.set_active(self.clock.show_second_hand)
+        checkbox_second_hand.set_active(self.clock_updater.show_second_hand)
         checkbox_second_hand.connect("toggled", self.second_hand_toggled_cb)
         
         # Combobox in preferences window to choose a theme
@@ -167,7 +159,7 @@ class CairoClockApplet:
         combobox_theme.set_active(self.themes.index(theme))
         combobox_theme.connect("changed", self.combobox_theme_changed_cb)
         
-        self.clock.load_theme(self.get_theme_dir(theme))
+        self.clock_updater.load_theme(self.get_theme_dir(theme))
     
     def get_theme_dir(self, theme):
         theme_dirs = (cairo_clock_themes_dir, default_themes_dir)
@@ -183,23 +175,23 @@ class CairoClockApplet:
         self.applet.settings["theme"] = theme = self.themes[button.get_active()]
         
         # Load the new theme and update the clock
-        self.clock.load_theme(self.get_theme_dir(theme))
-        self.clock.draw_clock_cb()
+        self.clock_updater.load_theme(self.get_theme_dir(theme))
+        self.clock_updater.draw_clock_cb()
     
     def checkbox_title_date_toggled_cb(self, button):
-        self.applet.settings["time-date"] = self.clock.time_date = button.get_active()
+        self.applet.settings["time-date"] = self.clock_updater.time_date = button.get_active()
     
     def checkbox_title_seconds_toggled_cb(self, button):
-        self.applet.settings["time-seconds"] = self.clock.time_seconds = button.get_active()
+        self.applet.settings["time-seconds"] = self.clock_updater.time_seconds = button.get_active()
     
     def radiobutton_24_format_toggled_cb(self, button):
-        self.applet.settings["time-24-format"] = self.clock.time_24_format = button.get_active()
+        self.applet.settings["time-24-format"] = self.clock_updater.time_24_format = button.get_active()
     
     def second_hand_toggled_cb(self, button):
-        self.applet.settings["show-second-hand"] = self.clock.show_second_hand = button.get_active()
+        self.applet.settings["show-second-hand"] = self.clock_updater.show_second_hand = button.get_active()
         
         # Update clock immediately
-        self.clock.draw_clock_cb()
+        self.clock_updater.draw_clock_cb()
     
 
 class ClockUpdater:

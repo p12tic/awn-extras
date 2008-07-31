@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 # Copyright (c) 2007  Randal Barlow <im.tehk at gmail.com>
 #               2008  onox <denkpadje@gmail.com>
 #
@@ -55,17 +53,10 @@ class QuitLogOutApplet:
         """ Creates a context menu to activate "Preferences" ("About" window
         is created automatically by AWNLib) """
         
-        prefs_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
-        prefs_item.connect("activate", self.show_prefs_dialog_cb)
-        self.applet.dialog.menu.insert(prefs_item, 3)
-        
         pref_dialog = self.applet.dialog.new("preferences")
         pref_dialog.connect("response", self.pref_dialog_response_cb)
         
         self.setup_dialog_settings(pref_dialog.vbox)
-    
-    def show_prefs_dialog_cb(self, widget):
-        self.applet.dialog.toggle("preferences", "show")
     
     def setup_dialog_settings(self, vbox):
         """ Loads the settings """
@@ -95,7 +86,7 @@ if __name__ == "__main__":
         "version": applet_version,
         "description": applet_description,
         "theme": applet_logo,
-        "author": "onox, tehk",
+        "author": "onox, Randal Barlow",
         "copyright-year": 2008,
         "authors": ["Randal Barlow <im.tehk at gmail.com>", "onox <denkpadje@gmail.com>"]})
     QuitLogOutApplet(applet)

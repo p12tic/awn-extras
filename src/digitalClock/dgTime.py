@@ -117,8 +117,10 @@ class dgTime:
     if self.curY == 0:
       self.curY = self.height/5
     if type == "t":
-      self.width = self.width - (self.curX + 5)
-      size = self.width/size
+      self.width -= (self.curX + 5)
+      size = self.width / size
+      if self.prefs['hour12']:
+        size -= 2
     else:
       size = self.width/size
     self.context.set_font_size(size)

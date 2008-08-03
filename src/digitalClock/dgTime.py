@@ -34,6 +34,8 @@ class dgTime:
     self.context = None
     self.surface = None
     self.time_string = None
+    self.height = 48 # doesn't matter what the height is because it will be scaled
+
     def on_map_event(widget, event):
       self.update_clock()
       return True
@@ -49,13 +51,15 @@ class dgTime:
       self.draw_clock()
     return True
 
-  def create_context(self):
-    self.height = 48 # doesn't matter what the height is because it will be scaled
-
+  def reset_width(self):
     if self.prefs['dateBeforeTime']:
       self.width = int(self.height * 2.5)
     else:
       self.width = int(self.height * 1.3)
+
+
+  def create_context(self):
+    self.reset_width()
 
     gdk_surface = self.awn.window.cairo_create().get_target()
     self.surface = gdk_surface.create_similar(cairo.CONTENT_COLOR_ALPHA, self.width, self.height)
@@ -64,6 +68,7 @@ class dgTime:
 
   def draw_clock (self):
     self.curY = 0
+    self.reset_width()
 
     if self.prefs['hour12']:
       increase_size = 0

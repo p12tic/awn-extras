@@ -49,24 +49,26 @@ class CairoClockApplet:
     def __init__(self, applet):
         self.applet = applet
         
-        self.clock_updater = ClockUpdater(applet)
-        
         self.setup_main_dialog()
         self.setup_context_menu()
         
-        self.clock_updater.draw_clock_cb()
+        self.__clock_updater = ClockUpdater(self)
         
-        applet.connect("enter-notify-event", lambda w, e: self.clock_updater.enable_title(True))
-        applet.connect("leave-notify-event", lambda w, e: self.clock_updater.enable_title(False))
+        self.__clock_updater.load_theme()
+        self.__clock_updater.draw_clock_cb()
         
-        gobject.timeout_add(draw_clock_interval, self.clock_updater.draw_clock_cb)
+        applet.connect("enter-notify-event", lambda w, e: self.__clock_updater.show_title(True))
+        applet.connect("leave-notify-event", lambda w, e: self.__clock_updater.show_title(False))
+        
+        applet.connect("height-changed", lambda w, e: self.__clock_updater.draw_clock_cb())
+        
+        gobject.timeout_add(draw_clock_interval, self.__clock_updater.draw_clock_cb)
     
     def setup_main_dialog(self):
         dialog = self.applet.dialog.new("calendar-dialog")
         
         calendar = gtk.Calendar()
         calendar.props.show_week_numbers = True
-        
         dialog.add(calendar)
         
         self.dialog_focus_lost_time = time.time()
@@ -76,7 +78,7 @@ class CairoClockApplet:
     def button_press_event_cb(self, widget, event):
         if event.button == 1 and (time.time() - self.dialog_focus_lost_time) > 0.01:
             self.applet.dialog.toggle("calendar-dialog")
-            self.clock_updater.title_is_visible = False
+            self.__clock_updater.show_title(False)
     
     def dialog_focus_out_cb(self, dialog, event):
         self.dialog_focus_lost_time = time.time()
@@ -88,47 +90,34 @@ class CairoClockApplet:
         prefs = glade.XML(glade_file)
         prefs.get_widget("dialog-vbox").reparent(self.applet.dialog.new("preferences").vbox)
         
-        self.setup_dialog_settings(prefs)
-    
-    def setup_dialog_settings(self, prefs):
-        """ Loads the settings """
-        
-        default_values = {
-            "time-24-format": self.clock_updater.time_24_format,
-            "time-date": self.clock_updater.time_date,
-            "time-seconds": self.clock_updater.time_seconds,
-            "show-second-hand": self.clock_updater.show_second_hand,
+        self.default_values = {
+            "time-24-format": True, # True if the time in the title must display 24 hours, False if AM/PM
+            "time-date": True,
+            "time-seconds": True,
+            "show-seconds-hand": True, # True if the clock must display a second hand, False otherwise
             "theme": default_theme
         }
-        self.applet.settings.load(default_values)
+        self.applet.settings.load(self.default_values)
         
         # Time format
-        self.clock_updater.time_24_format = self.applet.settings["time-24-format"]
-        
         radio_24_format = prefs.get_widget("radio-24-format")
-        radio_24_format.set_active(self.clock_updater.time_24_format)
+        radio_24_format.set_active(self.default_values["time-24-format"])
         radio_24_format.connect("toggled", self.radiobutton_24_format_toggled_cb)
         
         # Showing date in title
-        self.clock_updater.time_date = self.applet.settings["time-date"]
-        
         check_title_date = prefs.get_widget("check-time-date")
-        check_title_date.set_active(self.clock_updater.time_date)
+        check_title_date.set_active(self.default_values["time-date"])
         check_title_date.connect("toggled", self.checkbox_title_date_toggled_cb)
         
         # Showing seconds in title
-        self.clock_updater.time_seconds = self.applet.settings["time-seconds"]
-        
         check_title_seconds = prefs.get_widget("check-time-seconds")
-        check_title_seconds.set_active(self.clock_updater.time_seconds)
+        check_title_seconds.set_active(self.default_values["time-seconds"])
         check_title_seconds.connect("toggled", self.checkbox_title_seconds_toggled_cb)
         
         # Showing the seconds hand in the applet's icon
-        self.clock_updater.show_second_hand = self.applet.settings["show-second-hand"]
-        
         checkbox_second_hand = prefs.get_widget("check-second-hand")
-        checkbox_second_hand.set_active(self.clock_updater.show_second_hand)
-        checkbox_second_hand.connect("toggled", self.second_hand_toggled_cb)
+        checkbox_second_hand.set_active(self.default_values["show-seconds-hand"])
+        checkbox_second_hand.connect("toggled", self.seconds_hand_toggled_cb)
         
         # Combobox in preferences window to choose a theme
         vbox_theme = prefs.get_widget("vbox-theme")
@@ -152,86 +141,72 @@ class CairoClockApplet:
         for i in self.themes:
             combobox_theme.append_text(i)
         
-        theme = self.applet.settings["theme"]
+        theme = self.default_values["theme"]
         if theme not in self.themes:
             self.applet.settings["theme"] = theme = default_theme
         
         combobox_theme.set_active(self.themes.index(theme))
         combobox_theme.connect("changed", self.combobox_theme_changed_cb)
-        
-        self.clock_updater.load_theme(self.get_theme_dir(theme))
-    
-    def get_theme_dir(self, theme):
-        theme_dirs = (cairo_clock_themes_dir, default_themes_dir)
-        
-        for theme_dir in theme_dirs:
-            path = os.path.join(theme_dir, theme)
-            if os.path.isdir(path):
-                return path
-        
-        raise RuntimeError, "Did not find path to theme '" + theme + "'"
     
     def combobox_theme_changed_cb(self, button):
-        self.applet.settings["theme"] = theme = self.themes[button.get_active()]
+        self.applet.settings["theme"] = self.themes[button.get_active()]
         
         # Load the new theme and update the clock
-        self.clock_updater.load_theme(self.get_theme_dir(theme))
-        self.clock_updater.draw_clock_cb()
+        self.__clock_updater.load_theme()
+        self.__clock_updater.draw_clock_cb()
     
     def checkbox_title_date_toggled_cb(self, button):
-        self.applet.settings["time-date"] = self.clock_updater.time_date = button.get_active()
+        self.applet.settings["time-date"] = button.get_active()
+        self.__clock_updater.update_title()
     
     def checkbox_title_seconds_toggled_cb(self, button):
-        self.applet.settings["time-seconds"] = self.clock_updater.time_seconds = button.get_active()
+        self.applet.settings["time-seconds"] = button.get_active()
+        self.__clock_updater.update_title()
     
     def radiobutton_24_format_toggled_cb(self, button):
-        self.applet.settings["time-24-format"] = self.clock_updater.time_24_format = button.get_active()
+        self.applet.settings["time-24-format"] = button.get_active()
+        self.__clock_updater.update_title()
     
-    def second_hand_toggled_cb(self, button):
-        self.applet.settings["show-second-hand"] = self.clock_updater.show_second_hand = button.get_active()
+    def seconds_hand_toggled_cb(self, button):
+        self.applet.settings["show-seconds-hand"] = button.get_active()
         
         # Update clock immediately
-        self.clock_updater.draw_clock_cb()
+        self.__clock_updater.draw_clock_cb()
     
 
 class ClockUpdater:
     """ Redraws the clock and sets the title (when visible) every second  """
     
-    def __init__(self, applet):
-        self.applet = applet
+    def __init__(self, clock_applet):
+        self.applet = clock_applet.applet
+        self.default_values = clock_applet.default_values
         
-        self.title_is_visible = False
+        self.__title_is_visible = False
         
         """ Values of the properties below will be used to initialize 
         the corresponding settings """
         
-        # True if the time in the title must display 24 hours, False if AM/PM
-        self.time_24_format = True
-        
-        self.time_seconds = True
-        self.time_date = True
-        
-        # True if the clock must display a second hand, False otherwise
-        self.show_second_hand = True
-        
-        self.clock = AnalogClock(self)
+        self.__clock = AnalogClock(self)
     
     def update_title(self):
         """ Updates the title according to the settings """
         
-        if self.time_24_format:
+        if not self.__title_is_visible:
+            return
+        
+        if self.default_values["time-24-format"]:
             hours = "%H"
             ampm = ""
         else:
             hours = "%I"
             ampm = " %p"
         
-        if self.time_seconds:
+        if self.default_values["time-seconds"]:
             seconds = ":%S"
         else:
             seconds = ""
         
-        if self.time_date:
+        if self.default_values["time-date"]:
             date = "%a %b %d "
             year = " %Y"
         else:
@@ -241,42 +216,38 @@ class ClockUpdater:
         self.applet.title.set(time.strftime(date + hours + ":%M" + seconds + ampm + year))
         self.applet.title.show()
     
-    def enable_title(self, show):
+    def show_title(self, show):
         """ Shows or hides the title, if it must show, the title is updated first """
         
-        self.title_is_visible = show
+        self.__title_is_visible = show
         
-        if show:
-            # Update the title immediately because it is visible now
-            self.update_title()
+        # Update the title immediately (if visible) because it is visible now
+        self.update_title()
     
     def draw_clock_cb(self):
-        """ Draws the clock and updates the title if the title is visible """
+        """ Draws the clock and updates the title to keep it synchronized with the drawn clock """
         
-        self.clock.draw_clock()
-        
-        # Update the title to keep it synchronized with the drawn clock
-        if self.title_is_visible:
-            self.update_title()
+        self.__clock.draw_clock()
+        self.update_title()
         
         return True
     
-    def load_theme(self, theme):
-        self.clock.load_theme(theme)
+    def load_theme(self):
+        self.__clock.load_theme()
 
 class AnalogClock:
     """ Renders an analog clock using SVG files as the applet icon """
     
-    def __init__(self, clock_manager):
-        self.applet = clock_manager.applet
-        self.clock_manager = clock_manager
+    def __init__(self, clock_updater):
+        self.applet = clock_updater.applet
+        self.default_values = clock_updater.default_values
         
         self.__previous_state = None
     
-    def load_theme(self, theme):
+    def load_theme(self):
         """ Loads the necessary SVG files of the specified theme """
         
-        self.theme = theme
+        theme = self.get_theme_dir(self.default_values["theme"])
         
         get_theme = lambda filename, theme: rsvg.Handle(os.path.join(theme, filename))
         
@@ -300,6 +271,16 @@ class AnalogClock:
         self.clock_minute_hand = get_theme('clock-minute-hand.svg', theme)
         self.clock_second_hand = get_theme('clock-second-hand.svg', theme)
     
+    def get_theme_dir(self, theme):
+        theme_dirs = (cairo_clock_themes_dir, default_themes_dir)
+        
+        for theme_dir in theme_dirs:
+            path = os.path.join(theme_dir, theme)
+            if os.path.isdir(path):
+                return path
+        
+        raise RuntimeError, "Did not find path to theme '" + theme + "'"
+    
     def draw_clock(self):
         """ Renders the SVGs on a Cairo surface and converts it to a gdk.Pixbuf,
         which is used as the applet's icon """
@@ -308,9 +289,10 @@ class AnalogClock:
         hours, minutes, seconds = (local_time[3], local_time[4], local_time[5])
         
         height = self.applet.get_height()
+        show_seconds_hand = self.default_values["show-seconds-hand"]
         
-        new_state = (self.clock_manager.show_second_hand, height, self.theme, hours, minutes)
-        if not self.clock_manager.show_second_hand and self.__previous_state == new_state:
+        new_state = (show_seconds_hand, height, self.default_values["theme"], hours, minutes)
+        if not show_seconds_hand and self.__previous_state == new_state:
             return
         self.__previous_state = new_state
         
@@ -344,7 +326,7 @@ class AnalogClock:
         context.restore()
         
         # Draw the second hand if configured to do so
-        if self.clock_manager.show_second_hand:
+        if show_seconds_hand:
             context.save()
             context.rotate((360/60) * (seconds+45) * (math.pi/180))
             self.clock_second_hand_shadow.render_cairo(context)

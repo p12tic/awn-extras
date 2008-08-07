@@ -49,6 +49,7 @@ ___file___ = sys.argv[0]
 
 _globalRegister = {}
 
+
 if "any" not in globals():
     def any(iterable):
         for element in iterable:
@@ -56,12 +57,14 @@ if "any" not in globals():
                 return True
         return False
 
+
 if "all" not in globals():
     def all(iterable):
         for element in iterable:
             if not element:
                 return False
         return True
+
 
 # Decorator method
 def deprecated(old, new):
@@ -224,25 +227,27 @@ class Dialogs:
                 # Because the dialog is now hidden, the title can be shown again
                 self.__parent.title.show()
             else:
-                if self.__current: 
-                    current_was_active = self.__current.is_active()
+                if self.__current is not None and self.__current not in self.__special_dialogs:
+                    current = self.__register[self.__current]
 
-                    self.__current.hide()
+                    current_was_active = current.is_active()
+
+                    current.hide()
 
                     if current_was_active and once:
                         self.__current = None
                         return
 
                 self.__register[dialog].show_all()
-                self.__current = self.__register[dialog]
+                self.__current = dialog
 
     def hide(self):
         """
         Hide all dialogs.
         """
 
-        if self.__current:
-            self.__current.hide()
+        if self.__current is not None:
+            self.__register[self.__current].hide()
             self.__current = None
 
     def click(self, w=None, e=None):
@@ -847,6 +852,7 @@ class Settings:
         """
 
         self.__parent = parent
+        self.__dict = None
 
         try:
             folder = self.__parent.meta["short"]
@@ -867,6 +873,10 @@ class Settings:
         the settings backend. True by default.
         @type parent: L{bool}
         """
+
+        assert self.__dict is None
+
+        self.__dict = dict
 
         for key in dict:
             if key in self:
@@ -909,6 +919,9 @@ class Settings:
             self.client.set(key, value)
         except ValueError, AttributeError:
             self.client.new(key, value, type)
+
+        if self.__dict is not None:
+            self.__dict[key] = value
 
     def __get(self, key):
         v = self.client.get(key)
@@ -1259,54 +1272,105 @@ class Timing:
 
         self.__parent = parent
 
-    def register(self, callback, sec):
+    def register(self, callback, seconds, start=True):
         """
         Create a new timer-run function.
 
         @param callback: Function to be called.
         @type callback: C{function}
-        @param sec: Number of seconds within each call.
-        @type sec: C{float} or C{int}
+        @param seconds: Number of seconds within each call.
+        @type seondsc: C{float} or C{int}
+        @param start: Whether to start the callback automatically. True by default
+        @type start: C{bool}
         @return: A L{Callback} object for the C{callback} parameter
         @rtype: L{Callback}
         """
 
-        c = self.Callback(callback)
-        gobject.timeout_add(int(sec*1000), c.run)
+        c = self.Callback(callback, seconds)
+        if start:
+            c.start()
         return c
 
     @deprecated("timing.time", "timing.register")
-    def time(self, callback, sec):
-        return self.register(callback, sec)
+    def time(self, callback, seconds):
+        return self.register(callback, seconds)
 
     class Callback:
-        def __init__(self, callback):
+        def __init__(self, callback, seconds):
             """
             Creates a new Callback object.
 
             @param callback: The function to wrap the Callback around.
             @type callback: C{function}
+            @param seconds: Number of seconds within each call.
+            @type seconds: C{float} or C{int}
             """
 
-            self.__callValue = True
             self.__callback = callback
+            self.__seconds = seconds
+            self.__timer_id = None
 
-        def run(self, x=None, y=None):
+        def __run(self, x=None, y=None):
             """
             The function to be called by the timer.
             """
 
-            if self.__callValue:
-                self.__callback()
+            self.__callback()
 
-            return self.__callValue
+            return True
+        
+        def is_started(self):
+            """
+            Returns True if the callback has been scheduled to run after
+            each interval, False if the callback is stopped.
+
+            @return: True if the callback is running, False otherwise 
+            @rtype: L{bool}
+            """
+
+            return self.__timer_id is not None
+
+        def start(self):
+            """
+            Start the callback.
+
+            @return: True if the callback was started, False otherwise 
+            @rtype: L{bool}
+            """
+
+            if self.__timer_id is None:
+                self.__timer_id = gobject.timeout_add(int(self.__seconds * 1000), self.__run)
+                return True
+            return False
 
         def stop(self):
             """
-            Stop the callback from ever running again.
+            Stop the callback from ever running again if it was scheduled to run.
+
+            @return: True if the callback was stopped, False otherwise 
+            @rtype: L{bool}
             """
 
-            self.__callValue = False
+            if self.__timer_id is not None:
+                gobject.source_remove(self.__timer_id)
+                self.__timer_id = None
+                return True
+            return False
+
+        def change_interval(self, seconds):
+            """
+            Changes the interval and restarts the callback if it was scheduled
+            to run.
+
+            @param seconds: Number of seconds within each call.
+            @type seconds: C{float} or C{int}
+            """
+
+            self.__seconds = seconds
+
+            # Restart if the callback was scheduled to run
+            if self.stop():
+                self.start()
 
 
 class Notify:
@@ -1432,6 +1496,7 @@ class Meta:
         @param value: The value
         @type value: C{string}
         """
+
         self.__info[key] = value
 
     def __delitem__(self, key):

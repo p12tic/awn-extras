@@ -16,10 +16,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-
-URL = 'https://www.pandora.com/radio/tuner_8_5_0_1_pandora.swf'
-
-
 import os
 import awn
 from awn.extras import AWNLib
@@ -38,7 +34,7 @@ try:
   import gtkmozembed
 except ImportError:
   print '       #####################################'
-  print 'Gtkmozembed is needed to run Pandora, please install.'
+  print 'Gtkmozembed is needed to run Digg Applet, please install.'
   print ' * On Debian or Ubuntu based systems, install python-gnome2-extras'
   print ' * On Gentoo based systems, install dev-python/gnome-python-extras'
   print ' * On Fedora based systems, install gnome-python2-gtkmozembed'
@@ -50,33 +46,33 @@ except ImportError:
 # Add pop up if gtkmozembed isn't found
 awn.check_dependencies(globals(), 'gtkmozembed')
 
-applet_name = "Pandora"
+applet_name = "Digg Applet"
 applet_version = "0.2.8"
-applet_description = "Listen to Pandora from Awn"
-applet_theme_logo = "pandora"
+applet_description = "Browse Digg in Awn"
+applet_theme_logo = "digg"
 
-class PandoraApplet:
-    """ Listens to Pandora from Awn """
+class DiggApplet:
+    """ Browses Digg from Awn """
     def __init__(self, applet):
         self.applet = applet
         
-        applet.title.set("Pandora")
+        applet.title.set("Digg")
         
         self.dialog = applet.dialog.new("main")
         
         self.moz = gtkmozembed.MozEmbed()
-        self.moz.set_size_request(640, 535)
-        self.moz.load_url(URL)
+        self.moz.set_size_request(450, 580)
+        self.moz.load_url('http://digg.com/iphone#_stories')
         
         self.dialog.add(self.moz)
 
 if __name__ == "__main__":
-    applet = AWNLib.initiate({"name": applet_name, "short": "pandora",
+    applet = AWNLib.initiate({"name": applet_name, "short": "digg",
         "version": applet_version,
         "description": applet_description,
         "theme": applet_theme_logo,
         "author": "Sharkbaitbobby",
         "copyright-year": 2008,
         "authors": ["Sharkbaitbobby <sharkbaitbobby+awn@gmail.com>"]})
-    PandoraApplet(applet)
+    DiggApplet(applet)
     AWNLib.start(applet)

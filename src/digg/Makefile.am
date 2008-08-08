@@ -1,8 +1,8 @@
-SUBDIRS = profile
+SUBDIRS = profile icons
 
 APPLET_NAME = digg
-APPLET_MAIN_FILE = awn-digg.py
+APPLET_MAIN_FILE = digg.py
 include $(top_srcdir)/Makefile.python-applet
 
 dist_applet_DATA =	\
-        digg.png    
+        $(NULL)

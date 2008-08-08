@@ -355,6 +355,11 @@ src/comics/locale/Makefile
 src/comics/icons/Makefile
 src/comics/locale/sv_SE/Makefile
 src/comics/locale/sv_SE/LC_MESSAGES/Makefile
+src/digg/digg.desktop.in
+src/digg/Makefile
+src/digg/icons/Makefile
+src/digg/profile/Makefile
+src/digg/profile/Cache/Makefile
 src/digitalClock/Makefile
 src/digitalClock/digitalClock.desktop.in
 src/file-browser-launcher/Makefile

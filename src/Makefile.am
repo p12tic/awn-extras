@@ -29,6 +29,7 @@ GCONF_APPLETS +=		\
 endif
 if WITH_GNOME
 GCONF_APPLETS +=	\
+	digg		\
 	main-menu	\
 	MiMenu		\
 	pandora		\

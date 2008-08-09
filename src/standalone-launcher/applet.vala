@@ -395,7 +395,7 @@ class DesktopFileManagement: GLib.Object
 	public string Filename()
 	{
         string fullpath=directory+Checksum(uid)+".desktop";
-        stdout.printf("Filename() = %s\n",fullpath);
+ //       stdout.printf("Filename() = %s\n",fullpath);
 		return  fullpath;
 	}   
 	public bool Exists()
@@ -412,7 +412,7 @@ class DesktopFileManagement: GLib.Object
 	private string Checksum(string str)
 	{
 	    string result=new string();
-        stdout.printf("DesktopFileManagement checksum \n");          
+ //       stdout.printf("DesktopFileManagement checksum \n");          
 	    result="anon-";
 	    for(int i=0;i<str.len();i++)
 	    {
@@ -538,7 +538,7 @@ public class DBusComm : AppletSimple
 
 		public void Launcher_Register(string uid)
 		{	
-            stdout.printf("Launcher_Register\n");
+  //          stdout.printf("Launcher_Register\n");
             try{
 			    server_object.Launcher_Register(uid);
             }
@@ -1289,7 +1289,7 @@ class LauncherApplet : DBusComm
 		this.realize += _realized;        
 		hidden=true;
         dnd_motion_last_time=0;
-        stdout.printf("construct\n");
+ //       stdout.printf("construct\n");
     }
 
     /*sets the icon to a blank icon*/
@@ -1395,7 +1395,7 @@ class LauncherApplet : DBusComm
 
     private bool _initialize()
     {
-        stdout.printf("_initialize\n");
+    //    stdout.printf("_initialize\n");
         books = new BookKeeper();
         multi_launcher = null;
         this.button_press_event+=_button_press;
@@ -1416,34 +1416,34 @@ class LauncherApplet : DBusComm
         this.drag_data_get+=_drag_data_get;
         this.drag_motion+=_drag_motion;
         this.drag_leave+=_drag_leave;
-        stdout.printf("_initialize...2\n");        
+  //      stdout.printf("_initialize...2\n");        
 		awn_config= new ConfigClient();
         config=new Configuration(uid,(uid.to_double()<=0));
         if (config.task_mode != TaskMode.NONE)
         {
-            stdout.printf("_initialize...3.0\n");              
+   //         stdout.printf("_initialize...3.0\n");              
             this.enter_notify_event+=_enter_notify;
             this.leave_notify_event+=_leave_notify;
-            stdout.printf("_initialize...3.2\n");                          
+ //           stdout.printf("_initialize...3.2\n");                          
             dialog=get_dialog(true);
             dialog.set_accept_focus(false);
             dialog.set_app_paintable(true);
-            stdout.printf("_initialize...3.6\n");                          
+ //           stdout.printf("_initialize...3.6\n");                          
             vbox=new VButtonBox();
             dialog.add(vbox);
             build_right_click();
-            stdout.printf("_initialize...3.8\n");                          
+ //           stdout.printf("_initialize...3.8\n");                          
 //            dbusconn = new DBusComm();
-            stdout.printf("_initialize...3.8.1\n");            
+ //           stdout.printf("_initialize...3.8.1\n");            
             Launcher_Register(uid);
-            stdout.printf("_initialize...3.8.2\n");                        
+//            stdout.printf("_initialize...3.8.2\n");                        
             server_object.Offered+=_offered;
-            stdout.printf("_initialize...3.8.3\n");                        
+ //           stdout.printf("_initialize...3.8.3\n");                        
             wnck_screen = Wnck.Screen.get_default();	
-            stdout.printf("_initialize...3.8.4\n");                        
+  //          stdout.printf("_initialize...3.8.4\n");                        
             wnck_screen.force_update();	
         }
-        stdout.printf("_initialize...4\n");         
+ //       stdout.printf("_initialize...4\n");         
         theme = IconTheme.get_default ();        
 		icon = theme.load_icon ("stock_stop", height - 2, IconLookupFlags.USE_BUILTIN);
 		title_string = new string();
@@ -1458,21 +1458,21 @@ class LauncherApplet : DBusComm
         draw_set_window_size(effects,height,height);
         draw_set_icon_size(effects,height-2,height-2);
 		show_icon();
-        stdout.printf("_initialize...6\n");         
+ //       stdout.printf("_initialize...6\n");         
 		if (uid.to_double()>0) 
 		{				
-            stdout.printf("_initialize...6.1\n");              
+  //          stdout.printf("_initialize...6.1\n");              
 //            desktopfile = new DesktopFileManagement(uid);
             desktopfile = new DesktopFileManagement();
             desktopfile.uid = uid;
-            stdout.printf("_initialize...6.2\n");                          
+ //           stdout.printf("_initialize...6.2\n");                          
 			launchmode = LaunchMode.DISCRETE;
-            stdout.printf("_initialize...6.3\n");                          
+  //          stdout.printf("_initialize...6.3\n");                          
 			desktopitem = new DesktopItem(desktopfile.Filename() );	
-            stdout.printf("_initialize...7.3\n");               
+  //          stdout.printf("_initialize...7.3\n");               
 			if (!desktopfile.Exists() )
 			{
-                stdout.printf("_initialize...7.3.1\n");                               
+ //               stdout.printf("_initialize...7.3.1\n");                               
 				desktopitem.set_exec("false");
 				desktopitem.set_icon("stock_stop");
 				desktopitem.set_item_type("Application");
@@ -1480,7 +1480,7 @@ class LauncherApplet : DBusComm
 			}
             else
             {
-                stdout.printf("_initialize...7.5\n");                               
+  //              stdout.printf("_initialize...7.5\n");                               
                 books.update_with_desktopitem(desktopitem);
             
                 if (config.multi_launcher)
@@ -1491,7 +1491,7 @@ class LauncherApplet : DBusComm
                     {
                         desktop_key="";
                     }
-                    stdout.printf("_initialize...7.6\n");                                                   
+//                    stdout.printf("_initialize...7.6\n");                                                   
                     string []desktop_files=desktop_key.split(":");            
                     launchers.prepend(desktopfile.Filename());
                     foreach(string filename in desktop_files)
@@ -1499,7 +1499,7 @@ class LauncherApplet : DBusComm
                         launchers.prepend(filename);
                     }
                     multi_launcher = new Multi_Launcher( launchers);
-                    stdout.printf("_initialize...7.7\n");                                                   
+ //                   stdout.printf("_initialize...7.7\n");                                                   
                     foreach(weak DesktopItem item in multi_launcher.desktops() )
                     {
                         books.update_with_desktopitem(item);
@@ -1570,7 +1570,7 @@ class LauncherApplet : DBusComm
 				close();
 		    }
 		}	
-        stdout.printf("_initialize...16\n"); 
+//        stdout.printf("_initialize...16\n"); 
 		if (desktopitem.exists() )  //we will use a user specified one if it exists.
 		{
 			if (desktopitem.get_icon(theme)!=null)
@@ -1587,7 +1587,7 @@ class LauncherApplet : DBusComm
             wnck_screen.active_window_changed+=	_active_window_changed;
         }
         wnck_screen.active_workspace_changed+=_active_workspace_changed;
-        stdout.printf("_initialize...18\n"); 
+//        stdout.printf("_initialize...18\n"); 
 		task_icon = theme.load_icon (config.task_icon_name, height - 2, IconLookupFlags.USE_BUILTIN);
         if (task_icon == null)
         {
@@ -1605,7 +1605,7 @@ class LauncherApplet : DBusComm
         show_icon();        
         effect_start_ex(effects, Effect.LAUNCHING,null,null,1);
         desktopitem.set_string ("Type","Application");         
-        stdout.printf("_initialize....20\n");        
+ //       stdout.printf("_initialize....20\n");        
 		return false;
     }
     
@@ -1737,7 +1737,7 @@ class LauncherApplet : DBusComm
     //doing this for now.
     private void _offered(dynamic DBus.Object obj,string xid)
     {
-        stdout.printf("_offered\n");
+//        stdout.printf("_offered\n");
         LauncherApplet applet= this;
         Wnck.Window window=applet.find_win_by_xid(xid.to_ulong() );
         if (window!=null)
@@ -1749,19 +1749,19 @@ class LauncherApplet : DBusComm
     
     private bool _drag_motion(Gtk.Widget widget,Gdk.DragContext context, int x, int y, uint time)
     {
-        stdout.printf("Drag motion... enter\n");        
+//        stdout.printf("Drag motion... enter\n");        
         
         if ( dnd_motion_last_time == 0)
         {
             activate_next_win(time);
             if ( books.number()==1)
             {
-                stdout.printf("Drag motion - change\n");            
+ //               stdout.printf("Drag motion - change\n");            
             }
             else if ( books.number()>1)
             {
                 button_dialog(2);
-                stdout.printf("Drag motion - multi\n");            
+ //               stdout.printf("Drag motion - multi\n");            
             }
             dnd_motion_last_time=time;                        
         }
@@ -1770,7 +1770,7 @@ class LauncherApplet : DBusComm
 
     private void _drag_leave (Gtk.Widget widget,Gdk.DragContext context, uint time_)
     {
-        stdout.printf("Drag leave\n");
+ //       stdout.printf("Drag leave\n");
         dnd_motion_last_time=0;        
     }  
     
@@ -1781,13 +1781,13 @@ class LauncherApplet : DBusComm
 
     private void _drag_data_get  (Gtk.Widget widget,Gdk.DragContext context, Gtk.SelectionData selection_data, uint info, uint time_)
     {    
-        stdout.printf("_drag_data_get\n");
+  //      stdout.printf("_drag_data_get\n");
         selection_data.set_text("test data\n",-1);
     }
 
     private void _drag_data_received(Gtk.Widget widget,Gdk.DragContext context,int x,int y,Gtk.SelectionData selectdata,uint info,uint time)
     {    
-        stdout.printf("drag data received\n");
+ //       stdout.printf("drag data received\n");
 		weak SList <string>	fileURIs;
 		string  cmd;  
 		bool status=false;
@@ -1812,7 +1812,7 @@ class LauncherApplet : DBusComm
                 {
                     if ( !config.multi_launcher || ( desktopitem.get_exec()=="false")) 
                     {
-                        stdout.printf("drag_data_received 2\n");                        
+       //                 stdout.printf("drag_data_received 2\n");                        
                         if ( (tempdesk.get_exec() != null) && (tempdesk.get_name()!=null) )
                         {
                             try{
@@ -1839,14 +1839,14 @@ class LauncherApplet : DBusComm
                             books.update_with_desktopitem(desktopitem);
                             SList<string> dummy;
                             dummy.append(desktopfile.Filename());
-                            stdout.printf("drag_data_received MULTILAUNCHER  1!!!!\n");
+  //                         stdout.printf("drag_data_received MULTILAUNCHER  1!!!!\n");
                             multi_launcher = new Multi_Launcher(dummy);
 //                            multi_launcher.add_file(desktopfile.Filename());
                         }	        
                     }
                     else
                     {
-                        stdout.printf("drag_data_received 5\n"); 
+  //                      stdout.printf("drag_data_received 5\n"); 
                         string file_copy;
                         string  desktop_key=desktopitem.get_string("X-AWN-StandaloneLauncherDesktops");
 
@@ -1872,7 +1872,7 @@ class LauncherApplet : DBusComm
                         }
                         status=true;
                         books.update_with_desktopitem(tempdesk);
-                        stdout.printf("drag_data_received MULTILAUNCHER 2!!!!\n");
+//                        stdout.printf("drag_data_received MULTILAUNCHER 2!!!!\n");
                         multi_launcher.add_file(file_copy);
                         desktopitem.set_string("X-AWN-StandaloneLauncherDesktops",desktop_key);
                         try{
@@ -2362,7 +2362,7 @@ class LauncherApplet : DBusComm
             else
             {
                 hidden=true;
-                stdout.printf("number() = %u\n",books.number() );
+//                stdout.printf("number() = %u\n",books.number() );
             }   		
 		}	
 		return false;
@@ -2535,11 +2535,11 @@ class LauncherApplet : DBusComm
             window.state_changed+=_win_state_change;    
             window.set_icon_geometry(x,y,height,height);
             
-            stdout.printf("checking for X-AWN-Workspace\n");
+ //           stdout.printf("checking for X-AWN-Workspace\n");
             string ws_num_string=desktopitem.get_string("X-AWN-Workspace");            
             if (ws_num_string !=null)
             {
-                stdout.printf("Found X-AWN-Workspace\n");
+//                stdout.printf("Found X-AWN-Workspace\n");
                 window.move_to_workspace( screen.get_workspace(ws_num_string.to_int() ) );
             }
             

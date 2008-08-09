@@ -1341,6 +1341,8 @@ class Timing:
             @type seconds: C{float} or C{int}
             """
 
+            assert seconds > 0.0
+
             self.__callback = callback
             self.__seconds = seconds
             self.__timer_id = None
@@ -1374,7 +1376,10 @@ class Timing:
             """
 
             if self.__timer_id is None:
-                self.__timer_id = gobject.timeout_add(int(self.__seconds * 1000), self.__run)
+                if int(self.__seconds) == self.__seconds:
+                    self.__timer_id = gobject.timeout_add_seconds(int(self.__seconds), self.__run)
+                else:
+                    self.__timer_id = gobject.timeout_add(int(self.__seconds * 1000), self.__run)
                 return True
             return False
 
@@ -1400,6 +1405,8 @@ class Timing:
             @param seconds: Number of seconds within each call.
             @type seconds: C{float} or C{int}
             """
+
+            assert seconds > 0.0
 
             self.__seconds = seconds
 

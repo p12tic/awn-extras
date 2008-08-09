@@ -376,6 +376,7 @@ if __name__ == "__main__":
                     "Pavel Panchekha <pavpanchekha@gmail.com>",
                     "onox <denkpadje@gmail.com>"],
         "artists": ["Jakub Steiner"],
-        "type": ["Audio", "Midi"]})
+        "type": ["Audio", "Midi"],
+        "settings-per-instance": True})
     VolumeControlApplet(applet)
     AWNLib.start(applet)

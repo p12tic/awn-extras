@@ -98,9 +98,9 @@ class Dialogs:
         @type parent: L{Applet}
         """
 
+        self.__parent = parent
         self.__register = {}
         self.__current = None
-        self.__parent = parent
 
         self.__parent.settings.cd("shared")
 
@@ -187,7 +187,7 @@ class Dialogs:
 
     def toggle(self, dialog, force="", once=False, time=0):
         """
-        Shows a dialog.
+        Show or hide a dialog.
 
         @param dialog: The dialog that should be shown.
         @type dialog: C{string}
@@ -444,7 +444,7 @@ class Icon:
         else:
             return icon
 
-    def theme(self, name, set=None):
+    def theme(self, name):
         """
         Set an icon from the default icon theme. The resultant pixbuf will be returned
 
@@ -453,9 +453,6 @@ class Icon:
         @return: The resultant pixbuf
         @rtype: C{gtk.gdk.Pixbuf}
         """
-
-        if set != None:
-            print "WARNING: parameter 'set' is now deprecated because set_awn_icon() is used"
 
         return self.__parent.set_awn_icon(self.__parent.meta["short"], name)
 
@@ -845,7 +842,9 @@ class Settings:
     def __init__(self, parent):
         """
         Creates a new Settings object. Note that the Settings object should be
-        used as a dictionary.
+        used as a dictionary. The default folder will be the short name, a '-',
+        and the uid, if the meta dictionary contains the "short" key. Otherwise
+        the default folder will be just the uid of the applet.
 
         @param parent: The parent applet of the settings instance.
         @type parent: L{Applet}
@@ -854,12 +853,15 @@ class Settings:
         self.__parent = parent
         self.__dict = None
 
-        try:
-            folder = self.__parent.meta["short"]
-        except:
-            folder = ""
+        if "short" in parent.meta:
+            if "settings-per-instance" in parent.meta and parent.meta["settings-per-instance"]:
+                self.__folder = "%s-%s" % (parent.meta["short"], parent.uid)
+            else:
+                self.__folder = parent.meta["short"]
+        else:
+            self.__folder = parent.uid
 
-        self.client = self.AWNConfigUser(folder)
+        self.client = self.AWNConfigUser(self.__folder)
 
     def load(self, dict, push_defaults=True):
         """
@@ -897,7 +899,7 @@ class Settings:
         """
 
         if not folder:
-            folder = self.__parent.meta["short"]
+            folder = self.__folder
 
         self.client.cd(folder)
 
@@ -914,20 +916,24 @@ class Settings:
 
         self.client.notify(key, callback)
 
-    def __set(self, key, value, type="string"):
-        try:
-            self.client.set(key, value)
-        except ValueError, AttributeError:
-            self.client.new(key, value, type)
+    def __set(self, key, value, value_type="string"):
+        if key in self:
+            try:
+                self.client.set(key, value)
+            except AttributeError:
+                self.client.new(key, value, value_type)
+        else:
+            self.client.new(key, value, value_type)
 
+        # Update the value in the loaded dictionary
         if self.__dict is not None:
             self.__dict[key] = value
 
     def __get(self, key):
-        v = self.client.get(key)
-        if type(v) == types.StringType and v[:9] == "!pickle;\n":
-            v = cpickle.loads(v[9:])
-        return v
+        value = self.client.get(key)
+        if type(value) == types.StringType and value[:9] == "!pickle;\n":
+            value = cpickle.loads(value[9:])
+        return value
 
     def __getitem__(self, key):
         """
@@ -941,6 +947,14 @@ class Settings:
 
         return self.__get(key)
 
+    __setting_types = {
+        types.BooleanType: "bool",
+        types.IntType: "int",
+        types.LongType: "int",
+        types.FloatType: "float",
+        types.StringType: "string"
+    }
+
     def __setitem__(self, key, value):
         """
         Set or create a key from the currect directory.
@@ -948,18 +962,13 @@ class Settings:
         @param key: A relative path to the correct key
         @type key: C{string}
         """
-        tlist = {types.BooleanType: "bool",
-                 types.IntType: "int",
-                 types.LongType: "int",
-                 types.FloatType: "float",
-                 types.StringType: "string",
-                }
-        if type(value) in tlist.keys():
-            t = tlist[type(value)]
+
+        if type(value) in self.__setting_types.keys():
+            value_type = self.__setting_types[type(value)]
         else:
             value = "!pickle;\n%s" % cpickle.dumps(value)
-            t = "string"
-        self.__set(key, value, t)
+            value_type = "string"
+        self.__set(key, value, value_type)
 
     def __delitem__(self, key):
         """
@@ -971,20 +980,15 @@ class Settings:
 
         self.client.delete(key)
 
-    def __contains__(self, item):
+    def __contains__(self, key):
         """
         Test if a key exists in the current directory.
 
-        @param item: A key name
+        @param key: A relative path to the correct key
         @type key: C{string}
         """
 
-        try:
-            self[item]
-        except:
-            return False
-        else:
-            return True
+        return self.client.contains(key)
 
     class AWNConfigUser:
         def __init__(self, folder):
@@ -1045,7 +1049,7 @@ class Settings:
                 raise ValueError
             f(self.__folder, key, value)
 
-        def new(self, key, value, type):
+        def new(self, key, value, value_type):
             """
             Create a new key and set its value.
 
@@ -1057,8 +1061,8 @@ class Settings:
             @type type: C{string}; "bool", "int", "float", or "string"
             """
 
-            func = getattr(self.__client, "set_%s" % type)
-            func(self.__folder, key, value)
+            f = getattr(self.__client, "set_%s" % value_type)
+            f(self.__folder, key, value)
 
         def get(self, key):
             """
@@ -1075,6 +1079,18 @@ class Settings:
             except:
                 raise ValueError
             return f(self.__folder, key)
+        
+        def contains(self, key):
+            """
+            Test if the key maps to a value.
+
+            @param key: The name of the key, relative to the current folder.
+            @type key: C{string}
+            @return: True if the key maps to a value, False otherwise
+            @rtype: C{bool}
+            """
+
+            return hasattr(self.__client, "get_%s" % self.type(key))
 
         def delete(self, key):
             """

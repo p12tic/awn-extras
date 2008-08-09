@@ -356,6 +356,11 @@ gboolean  _button_workspace(GtkWidget *widget, GdkEventButton *event, Workplace_
       {
         gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);          
       }        
+      item=shared_menuitem_about_applet_simple("Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
+                                    AWN_APPLET_LICENSE_GPLV2,
+                                    "Shiny Switcher",
+                                    NULL);
+      gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);      
     }
     if (menu)
     {
@@ -411,7 +416,13 @@ gboolean  _button_win(GtkWidget *widget, GdkEventButton *event, Win_press_data *
       
       item=awn_applet_create_pref_item();
       gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), item);      
-      
+
+      item=shared_menuitem_about_applet_simple("Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
+                                        AWN_APPLET_LICENSE_GPLV2,
+                                        "Shiny Switcher",
+                                        NULL);
+      gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+            
       gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL, event->button, event->time);
       g_signal_connect(G_OBJECT(menu), "selection-done",G_CALLBACK (_menu_selection_done),shinyswitcher);        
     }
@@ -1533,6 +1544,12 @@ gboolean create_windows(Shiny_switcher *shinyswitcher)
           {
             gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);          
           }
+          item=shared_menuitem_about_applet_simple("Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
+                                        AWN_APPLET_LICENSE_GPLV2,
+                                        "Shiny Switcher",
+                                        NULL);
+          gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+          
           g_tree_insert(shinyswitcher->win_menus, G_OBJECT(win_iter->data), menu);
         }
       }
@@ -1576,6 +1593,11 @@ void _window_opened(WnckScreen *screen, WnckWindow *window, Shiny_switcher *shin
     {
       gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);          
     }
+    item=shared_menuitem_about_applet_simple("Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
+                                  AWN_APPLET_LICENSE_GPLV2,
+                                  "Shiny Switcher",
+                                  NULL);
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);    
     g_tree_insert(shinyswitcher->win_menus, G_OBJECT(window), menu);
   }  
 }

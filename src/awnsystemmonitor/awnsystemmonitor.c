@@ -31,6 +31,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <libawn-extras/awn-extras.h>
 
 #include <math.h>
 #include "awnsystemmonitor.h"
@@ -161,6 +162,13 @@ cpumeter_applet_new(AwnApplet *applet)
   dashboard_build_clickable_menu_item(cpumeter->right_click_menu,
                                       G_CALLBACK(_set_icon_text), "Icon Text", (gpointer)cpumeter
                                      );
+  GtkWidget * item;
+  item=shared_menuitem_about_applet_simple("Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>\n"
+                                           "Copyright 2007 Mike (mosburger) Desjardins <desjardinsmike@gmail.com>\n",
+                                AWN_APPLET_LICENSE_GPLV2,
+                                "Awn System Monitor",
+                                NULL);
+  gtk_menu_shell_append(GTK_MENU_SHELL(cpumeter->right_click_menu), item);    
   cpumeter->timer_id = g_timeout_add(cpumeter->update_freq, (GSourceFunc*)cpu_meter_render, cpumeter);
   return cpumeter;
 }

@@ -24,6 +24,7 @@
 
 #include <libawn/awn-applet.h>
 #include <libawn/awn-applet-simple.h>
+#include <libawn-extras/awn-extras.h>
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
 #include <string.h>
@@ -80,10 +81,17 @@ static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, 
     {
       menu = awn_applet_create_default_menu (G_applet);
       item = gtk_menu_item_new_with_label("Preferences");
+      
       gtk_widget_show(item);
       gtk_menu_set_screen(GTK_MENU(menu), NULL);
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
       g_signal_connect(G_OBJECT(item), "button-press-event", G_CALLBACK(_show_prefs), NULL);
+      item=shared_menuitem_about_applet_simple("Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
+                                        AWN_APPLET_LICENSE_GPLV2,
+                                        "Cairo Menu",
+                                        NULL);
+      gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);      
+      
     }
 
     gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL,event_button->button, event_button->time);
@@ -139,7 +147,7 @@ AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient, gint height)
   read_config();
   
   
-  awn_applet_simple_set_awn_icon(applet,
+  awn_applet_simple_set_awn_icon( applet,
                                     APPLET_NAME,
                                     G_cairo_menu_conf.applet_icon)  ;
   

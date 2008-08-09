@@ -293,7 +293,8 @@ class ALSABackend:
     
     def filter_channels(self, channel):
         try:
-            return bool(alsaaudio.Mixer(channel).getvolume())
+            mixer = alsaaudio.Mixer(channel)
+            return bool(mixer.getvolume()) and "Playback Volume" in mixer.volumecap()
         except alsaaudio.ALSAAudioError:
             return False
     

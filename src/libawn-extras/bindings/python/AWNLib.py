@@ -66,6 +66,25 @@ if "all" not in globals():
         return True
 
 
+def create_frame(parent, label):
+    vbox = gtk.VBox(spacing=6)
+    parent.add(vbox)
+
+    label = gtk.Label("<b>" + label + "</b>")
+    label.set_use_markup(True)
+    label.props.xalign = 0.0
+    vbox.add(label)
+
+    alignment = gtk.Alignment()
+    alignment.set_padding(0, 0, 12, 0)
+    vbox.add(alignment)
+
+    frame_vbox = gtk.VBox(spacing=6)
+    alignment.add(frame_vbox)
+
+    return frame_vbox
+
+
 # Decorator method
 def deprecated(old, new):
     def d(f):

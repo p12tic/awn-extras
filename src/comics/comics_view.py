@@ -122,20 +122,19 @@ class ComicsViewer(ScalableWindow):
 			screen_width, screen_height = (screen.get_width(),
 				screen.get_height())
 			
-			x, y = self.get_position()
-			
-			while x < 0:
-				x += screen_width
-			while x > screen_width:
-				x -= screen_width
-			
-			while y < 0:
-				y += screen_height
-			while y > screen_height:
-				y -= screen_height
-			
-			self.move(x, y)
+			# Show the window first...
 			self.show()
+			
+			x, y = self.get_position()
+			x %= screen_width
+			if x < 0:
+				x += screen_width
+			y %= screen_height
+			if y < 0:
+				y += screen_height
+			
+			# ...and then move it
+			self.move(x, y)
 			
 			self.__settings['x'] = x
 			self.__settings['y'] = y

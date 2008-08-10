@@ -41,6 +41,7 @@ class App(awn.AppletSimple):
         self.load_keys()
 
         # some initialization stuff
+        self.isVideo = False
         self.height = height
         self.title = awn.awn_title_get_default()
         self.dialog = awn.AppletDialog(self)
@@ -48,13 +49,12 @@ class App(awn.AppletSimple):
         self.popup_menu = self.create_default_menu()
 
         # gstreamer stuff
-        self.vSink = gst.element_factory_make(self.videosink, "vSink")
-        # non-default audiosink doesnt work - why???
-        #self.aSink = gst.element_factory_make(self.audiosink, "aSink")
+        self.viSink = gst.element_factory_make(self.videosink, "viSink")
+        self.auSink = gst.element_factory_make(self.audiosink, "auSink")
         # Set up our playbin
         self.playbin = gst.element_factory_make("playbin", "pbin")
-        #self.playbin.set_property("video-sink", self.vSink)
-        #self.playbin.set_property("audio-sink", self.aSink)
+        self.playbin.set_property("video-sink", self.viSink)
+        self.playbin.set_property("audio-sink", self.auSink)
 
         bus = self.playbin.get_bus()
         bus.enable_sync_message_emission()
@@ -65,7 +65,6 @@ class App(awn.AppletSimple):
         self.vbox = gtk.VBox()
         self.da = gtk.DrawingArea()
         self.da.set_size_request(self.videoW, self.videoH)
-        self.da.set_no_show_all(True)
         self.vbox.pack_start(self.da)
         # Buttons
         self.button_play = gtk.Button(stock='gtk-media-play')
@@ -78,7 +77,11 @@ class App(awn.AppletSimple):
         hbox.add(self.button_stop)
         self.vbox.add(hbox)
         self.dialog.add(self.vbox)
-        self.vbox.show_all()
+        # Video can't be played into RGBA widget
+        rgbColormap = self.vbox.get_screen().get_rgb_colormap()
+        self.da.set_colormap(rgbColormap)
+        self.da.realize()
+
         # Standard AWN Connects
         self.connect("button-press-event", self.button_press)
         self.connect("enter-notify-event", self.enter_notify)
@@ -93,10 +96,26 @@ class App(awn.AppletSimple):
                            [("text/uri-list", 0, 0), ("text/plain", 0, 1)],
                            gtk.gdk.ACTION_COPY)
 
+    def showApplet(self):
+        self.dialog_visible = True
+        self.dialog.show_all()
+        self.da.set_property("visible", self.isVideo)
+
+    def hideApplet(self):
+        self.dialog_visible = False
+        self.dialog.hide()
+
     def OnGstMessage(self, bus, message, data = None):
         if message.type in [gst.MESSAGE_EOS, gst.MESSAGE_ERROR]:
             self.playbin.set_state(gst.STATE_NULL)
             self.button_play.set_label('gtk-media-play')
+            if self.dialog_visible:
+                self.hideApplet()
+        elif message.type is gst.MESSAGE_NEW_CLOCK:
+            if self.isVideo and self.dialog_visible == False:
+                self.showApplet()
+            elif self.isVideo:
+                self.da.set_property("visible", self.isVideo)
         #elif message.type in [gst.MESSAGE_STATE_CHANGED]:
         #    oldstate, newstate, pending = message.parse_state_changed()
         #    print "state change %s -> %s" % (str(oldstate), str(newstate))
@@ -108,27 +127,23 @@ class App(awn.AppletSimple):
         return True
 
     def OnGstSyncMessage(self, bus, message, data = None):
+        # careful here it's different thread
         if message.structure is None: return
         message_name = message.structure.get_name()
         if message_name == "prepare-xwindow-id":
             self.isVideo = True
             videosink = message.src
             videosink.set_property("force-aspect-ratio", True)
-            # atm it's impossible to embed the window to applet dialog
-            # there's a BadMatch error from Xserver... but why???
-            #videosink.set_xwindow_id(self.da.window.xid)
+            videosink.set_xwindow_id(self.da.window.xid)
         return True
 
     def button_press(self, widget, event):
         if event.button == 1:
             if self.dialog_visible:
-                self.dialog.hide()
-                self.dialog_visible = False
+                self.hideApplet()
             else:
                 self.title.hide(self)
-                self.dialog_visible = True
-                # update controls
-                self.dialog.show_all()
+                self.showApplet()
         elif event.button == 2:
             self.button_play_pause_cb(widget)
         elif event.button == 3:
@@ -142,8 +157,7 @@ class App(awn.AppletSimple):
 
     def dialog_focus_out(self, widget, event):
         if not self.isVideo:
-            self.dialog.hide()
-            self.dialog_visible = False
+            self.hideApplet()
 
     def key_control(self, keyname, default):
         """
@@ -189,12 +203,6 @@ class App(awn.AppletSimple):
           self.audiosink = self.client.get_string("/system/gstreamer/0.10/default/audiosink")
 
     def play_pause(self):
-        #if self.dialog_visible == False:
-        #    self.da.set_no_show_all(False)
-        #    self.da.set_size_request(self.videoW, self.videoH)
-        #    self.vbox.show_all()
-        #    self.dialog.show_all()
-        #    self.dialog_visible = True
         oldstate, currentstate, pending = self.playbin.get_state()
         if currentstate != gst.STATE_PLAYING:
             self.playbin.set_state(gst.STATE_PLAYING)
@@ -207,10 +215,8 @@ class App(awn.AppletSimple):
         self.playbin.set_state(gst.STATE_NULL)
         self.button_play.set_label('gtk-media-play')
         self.isVideo = False
-        self.da.set_no_show_all(True)
         if self.dialog_visible:
-            self.dialog.hide()
-            self.dialog_visible = False
+            self.hideApplet()
 
     def applet_drag_motion_cb(self, widget, context, x, y, time):
         awn.awn_effect_start(self.get_effects(), "launching")

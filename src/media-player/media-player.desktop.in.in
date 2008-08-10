@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=Media Player
+Type=Application
+X-AWN-AppletType=Python
+Comment=Plays any media files you drop on the applet
+Exec=media-player/media_player.py
+Icon=media-player/icons/media-player.png
+Name[en_US]=Media Player
+X-AWN-AppletCategory=AudioVideo,Audio,Video,Player

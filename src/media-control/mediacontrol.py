@@ -30,7 +30,6 @@ import awn
 
 import awn.extras.awnmediaplayers as mediaplayers
 
-
 def error_decorator(fn):
     """Handles errors caused by dbus"""
     def errors(cls, *args, **kwargs):
@@ -103,10 +102,18 @@ class App (awn.AppletSimple):
         self.connect("enter-notify-event", self.enter_notify)
         self.connect("leave-notify-event", self.leave_notify)
         self.dialog.connect("focus-out-event", self.dialog_focus_out)
+        # Drag&drop support
+        self.connect("drag-data-received", self.applet_drop_cb)
+        self.connect("drag-motion", self.applet_drag_motion_cb)
+        self.connect("drag-leave", self.applet_drag_leave_cb)
         # Button Connects
         button_previous.connect("clicked", self.button_previous_press)
         button_play.connect("clicked", self.button_pp_press)
         button_next.connect("clicked", self.button_next_press)
+
+        self.drag_dest_set(gtk.DEST_DEFAULT_ALL,
+                           [("text/uri-list", 0, 0), ("text/plain", 0, 1)],
+                           gtk.gdk.ACTION_COPY)
 
         try:
             if self.MediaPlayer: self.labeler()
@@ -274,18 +281,48 @@ class App (awn.AppletSimple):
 
     @error_decorator
     def button_previous_press(self, widget):
-        self.MediaPlayer.button_previous_press()
+        self.MediaPlayer.previous()
         if (self.MediaPlayer and self.MediaPlayer.is_async() == False): self.labeler()
 
     @error_decorator
     def button_pp_press(self, widget):
-        self.MediaPlayer.button_pp_press()
+        self.MediaPlayer.play_pause()
         if (self.MediaPlayer and self.MediaPlayer.is_async() == False): self.labeler()
 
     @error_decorator
     def button_next_press(self, widget):
-        self.MediaPlayer.button_next_press()
+        self.MediaPlayer.next()
         if (self.MediaPlayer and self.MediaPlayer.is_async() == False): self.labeler()
+
+    @error_decorator
+    def applet_drag_motion_cb(self, widget, context, x, y, time):
+        if not self.MediaPlayer: return True
+        awn.awn_effect_start(self.get_effects(), "launching")
+        return True
+
+    @error_decorator
+    def applet_drag_leave_cb(self, widget, context, time):
+        awn.awn_effect_stop(self.get_effects(), "launching")
+        return True
+
+    @error_decorator
+    def applet_drop_cb(self, wdgt, context, x, y, selection, targetType, time):
+        if not self.MediaPlayer:
+            context.finish(False, False, time)
+            return True
+        result = False
+        if len(selection.data.split()) > 1:
+            for uri in selection.data.split():
+                # I wonder why there are zeroes sometimes?
+                uri = uri.strip('\000').strip()
+                result = self.MediaPlayer.enqueue_uri(uri)
+        else:
+            # I wonder why there are zeroes sometimes?
+            uri = selection.data.strip('\000').strip()
+            result = self.MediaPlayer.play_uri(uri)
+        context.finish(result, False, time)
+        return True
+
 
 
 if __name__ == "__main__":

@@ -140,14 +140,26 @@ class GenericPlayer(object):
         #return albumart_exact, result, result_tooltip
         pass
 
-    def button_previous_press (self):
+    def previous (self):
         pass
 
-    def button_pp_press (self):
+    def play_pause (self):
         pass
 
-    def button_next_press (self):
+    def next (self):
         pass
+
+    def play_uri(self, uri):
+        """
+        Immediately starts playing the specified URI.
+        """
+        return False
+
+    def enqueue_uri(self, uri):
+        """
+        Adds uri to current playlist.
+        """
+        return False
 
     def get_title_and_tooltip (self, text):
         # titleLen and titleBoldFont should be declared
@@ -164,7 +176,7 @@ class GenericPlayer(object):
 
 
 class Rhythmbox(GenericPlayer):
-    """Full Support"""
+    """Full Support with signals"""
 
     def __init__(self):
         GenericPlayer.__init__(self, 'org.gnome.Rhythmbox')
@@ -218,19 +230,29 @@ class Rhythmbox(GenericPlayer):
         markup, tooltip = self.get_title_and_tooltip(result)
         return albumart_exact, markup, tooltip
 
-    def button_previous_press (self):
+    def previous (self):
         self.player.previous ()
 
-    def button_pp_press (self):
+    def play_pause (self):
         self.player.playPause (1)
 
-    def button_next_press (self):
+    def next (self):
         self.player.next ()
 
+    def play_uri(self, uri):
+        # unfortunatelly this only works for items present in media library
+        self.rbShell.loadURI(uri, True)
+        return True
+
+    def enqueue_uri(self, uri):
+        # unfortunatelly this only works for items present in media library
+        self.rbShell.addToQueue(uri)
+        return True
 
 
 class Exaile(GenericPlayer):
     """Full Support for the Exaile media player
+    No signals as of Exaile 0.2.11
 
     Issues exist with play. It stops the player when pushed. Need further dbus info.
     """
@@ -272,18 +294,20 @@ class Exaile(GenericPlayer):
         markup, tooltip = self.get_title_and_tooltip(result)
         return self.player.get_cover_path(), markup, tooltip
 
-    def button_previous_press (self):
+    def previous (self):
         self.player.prev_track()
 
-    def button_pp_press (self):
+    def play_pause (self):
         self.player.play_pause()
 
-    def button_next_press (self):
+    def next (self):
         self.player.next_track()
 
 
 class Banshee(GenericPlayer):
-    """Full Support for the banshee media player"""
+    """Full Support for the banshee media player
+    No signals as of Banshee 0.13.2
+    """
 
     def __init__(self):
         GenericPlayer.__init__(self, 'org.gnome.Banshee')
@@ -322,13 +346,13 @@ class Banshee(GenericPlayer):
         markup, tooltip = self.get_title_and_tooltip(result)
         return self.player.GetPlayingCoverUri(), markup, tooltip
 
-    def button_previous_press (self):
+    def previous (self):
         self.player.Previous()
 
-    def button_pp_press (self):
+    def play_pause (self):
         self.player.TogglePlaying ()
 
-    def button_next_press (self):
+    def next (self):
         self.player.Next()
 
 
@@ -387,13 +411,13 @@ class BansheeOne(GenericPlayer):
         markup, tooltip = self.get_title_and_tooltip(result)
         return albumart_exact, markup, tooltip
 
-    def button_previous_press (self):
+    def previous (self):
         self.player1.Previous(False)
 
-    def button_pp_press (self):
+    def play_pause (self):
         self.player.TogglePlaying ()
 
-    def button_next_press (self):
+    def next (self):
         self.player1.Next(False)
 
 
@@ -439,13 +463,13 @@ class Listen(GenericPlayer):
         markup, tooltip = self.get_title_and_tooltip(result)
         return albumart, markup, tooltip
 
-    def button_previous_press (self):
+    def previous (self):
         self.player.previous()
 
-    def button_pp_press (self):
+    def play_pause (self):
         self.player.play_pause ()
 
-    def button_next_press (self):
+    def next (self):
         self.player.next()
 
 
@@ -488,18 +512,18 @@ class Amarok(GenericPlayer):
         markup, tooltip = self.get_title_and_tooltip(result)
         return albumart, markup, tooltip
 
-    def button_previous_press (self):
+    def previous (self):
         self.player.prev()
 
-    def button_pp_press (self):
+    def play_pause (self):
         self.player.playPause()
 
-    def button_next_press (self):
+    def next (self):
         self.player.next()
 
 
 class QuodLibet(GenericPlayer):
-    """Full Support"""
+    """Full Support with signals""" #(but not implemented yet)
 
     def __init__(self):
         GenericPlayer.__init__(self, 'net.sacredchao.QuodLibet')
@@ -538,11 +562,11 @@ class QuodLibet(GenericPlayer):
         markup, tooltip = self.get_title_and_tooltip(result)
         return albumart_exact, markup, tooltip
 
-    def button_previous_press (self):
+    def previous (self):
         self.player.Previous ()
 
-    def button_pp_press (self):
+    def play_pause (self):
         self.player.PlayPause ()
 
-    def button_next_press (self):
+    def next (self):
         self.player.Next ()

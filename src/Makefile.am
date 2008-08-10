@@ -65,6 +65,7 @@ SUBDIRS =			\
 	media-icon-back		\
 	media-icon-next		\
 	media-icon-play		\
+	media-player		\
 	notification-area	\
 	places			\
         pynot                   \

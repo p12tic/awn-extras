@@ -28,9 +28,6 @@ from gtk import gdk
 from gtk import glade
 from awn.extras import AWNLib
 
-# To later import alsaaudio
-alsaaudio = None
-
 # Interval in seconds between two successive reads of the current volume
 read_volume_interval = 0.5
 
@@ -58,13 +55,7 @@ class VolumeControlApplet:
     def __init__(self, applet):
         self.applet = applet
         
-        self.applet.errors.module("alsaaudio", {"Ubuntu": "python-alsaaudio",
-            "Gentoo": "dev-python/pyalsaaudio",
-            "Mandriva": "python-alsaaudio"}, self.__init2)
-    
-    def __init2(self, module):
-        global alsaaudio
-        alsaaudio = module
+        self.applet.errors.module(globals(), "alsaaudio")
         
         # Contains old values to check if the applet's icon must be updated
         self.old_volume = None

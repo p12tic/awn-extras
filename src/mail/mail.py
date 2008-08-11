@@ -37,9 +37,6 @@ import subprocess
 # Yes! Someone else wrote the header-parsing algorithm!
 import email
 
-# For later AWNLib-mediated import
-feedparser = None
-
 # Start localization and internationalization stuff
 import gettext
 APP = "awn-mail-applet"
@@ -163,16 +160,7 @@ class MailApplet:
         self.awn.title.set(_("Mail Applet (Click to Log In)"))
         self.drawPrefDlog()
 
-        self.awn.errors.module("feedparser", { \
-            "Debian/Ubuntu": "python-feedparser", \
-            "Gentoo": "dev-python/feedparser", \
-            "OpenSUSE": "python-feedparser"},
-            self.__init2)
-
-    def __init2(self, module):
-        global feedparser
-        if module:
-            feedparser = module
+        self.awn.errors.module(globals(), "feedparser")
 
         self.login()
         #print "Initing"

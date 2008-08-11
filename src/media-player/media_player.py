@@ -97,6 +97,8 @@ class App(awn.AppletSimple):
                            gtk.gdk.ACTION_COPY)
 
     def showApplet(self):
+        self.dialog.stick()
+        self.dialog.set_keep_above(True)
         self.dialog_visible = True
         self.dialog.show_all()
         self.da.set_property("visible", self.isVideo)

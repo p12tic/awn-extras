@@ -88,6 +88,7 @@ if __name__ == "__main__":
         "theme": applet_logo,
         "author": "onox, Randal Barlow",
         "copyright-year": 2008,
-        "authors": ["Randal Barlow <im.tehk at gmail.com>", "onox <denkpadje@gmail.com>"]})
+        "authors": ["Randal Barlow <im.tehk at gmail.com>", "onox <denkpadje@gmail.com>"],
+        "settings-per-instance": True})
     QuitLogOutApplet(applet)
     AWNLib.start(applet)

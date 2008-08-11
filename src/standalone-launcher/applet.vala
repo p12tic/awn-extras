@@ -525,16 +525,16 @@ public class DBusComm : AppletSimple
         {
             conn = DBus.Bus.get(DBus.BusType.SESSION);
             server_object = conn.get_object ("org.awnproject.taskmand", "/org/awnproject/taskmand", "org.awnproject.taskmand");
-            server_object.Offered += _offered;
+//            server_object.Offered += _offered;
         }
     
-        private void _offered (dynamic DBus.Object obj,string xid)
+/*        private void _offered (dynamic DBus.Object obj,string xid)
         {
         // dbus signal handler
 
             message ("Message received %s *****************\n", xid);
         }
-        
+  */      
 
 		public void Launcher_Register(string uid)
 		{	

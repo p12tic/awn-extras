@@ -318,6 +318,8 @@ src/awnterm/awnterm.desktop.in
 src/battery-applet/battery-applet.desktop.in
 src/battery-applet/Makefile
 src/battery-applet/themes/Makefile
+src/battery-applet/themes/gpm/Makefile
+src/battery-applet/themes/oxygen/Makefile
 src/clock/Makefile
 src/clock/clock.desktop.in
 src/cairo-clock/Makefile

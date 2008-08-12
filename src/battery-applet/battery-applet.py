@@ -202,9 +202,9 @@ class BatteryStatusApplet:
         self.spinbutton_low_level.connect("value-changed", self.changed_value_low_level_cb)
         self.spinbutton_low_level.set_sensitive(self.default_values["warn-low-level"])
         
-        combobox_low_level = prefs.get_widget("combobox-low-level")
-        combobox_low_level.set_active(low_level_units.index(self.default_values["low-level-unit"]))
-        combobox_low_level.connect("changed", self.combobox_low_level_unit_changed_cb)
+        self.combobox_low_level = prefs.get_widget("combobox-low-level")
+        self.combobox_low_level.set_active(low_level_units.index(self.default_values["low-level-unit"]))
+        self.combobox_low_level.connect("changed", self.combobox_low_level_unit_changed_cb)
         
         checkbutton_high_level = prefs.get_widget("checkbutton-notify-high-level")
         checkbutton_high_level.set_active(self.default_values["notify-high-level"])
@@ -219,6 +219,7 @@ class BatteryStatusApplet:
         self.applet.settings["warn-low-level"] = active = button.get_active()
         
         self.spinbutton_low_level.set_sensitive(active)
+        self.combobox_low_level.set_sensitive(active)
         
         if active:
             self.check_status_cb()

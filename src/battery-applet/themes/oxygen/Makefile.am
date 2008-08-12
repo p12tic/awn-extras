@@ -1,4 +1,5 @@
-dist_batteryapplet_DATA = 				\
+dist_oxygen_DATA = 				\
+        battery-charged.svg    \
 		battery-charging-000.svg 	\
 		battery-charging-020.svg		\
 		battery-charging-040.svg 		\
@@ -11,7 +12,8 @@ dist_batteryapplet_DATA = 				\
 		battery-discharging-060.svg	\
 		battery-discharging-080.svg	\
 		battery-discharging-100.svg	\
+        battery-missing.svg    \
 		COPYING				\
 		LGPL
 
-batteryappletdir = $(datadir)/avant-window-navigator/applets/battery-applet/icons
+oxygendir = $(datadir)/avant-window-navigator/applets/battery-applet/themes/oxygen

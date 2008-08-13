@@ -22,6 +22,8 @@ Copyright (c) 2008 Nathan Howard (triggerhapp@googlemail.com)
 # Would especially like to thank the guys at #awn, without whom
 # I would still be trying to add this widget to the panel :)
 
+# Especially qball whos deconstructive criticsm has kept me up many nights
+
 import sys
 
 import gtk 
@@ -243,11 +245,13 @@ class mywidget(gtk.Widget):
         tempy=0
         for t in self.tray.tasks.values():
             iwant=0
+            ifail=0
             try:
                 iwant=t.obj.get_wm_normal_hints().min_width
             except:
+                ifail=1
                 pass
-            if iwant>1:
+            if ifail==0:
                 t.width = ICONSIZE
                 #space += t.width
                 if(tempy==0):

@@ -335,7 +335,7 @@ class BatteryStatusApplet:
     def dropped_to_low_level(self, time, percentage):
         unit = self.default_values["low-level-unit"]
         
-        if unit == "Percent" and charge_percentage <= self.default_values["level-warn-low"]:
+        if unit == "Percent" and percentage <= self.default_values["level-warn-low"]:
             return True
         
         hours, minutes = time

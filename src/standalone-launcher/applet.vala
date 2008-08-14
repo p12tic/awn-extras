@@ -713,7 +713,7 @@ class Listing : GLib.Object
     construct
     {
 
-		directory=Environment.get_home_dir()+"/.config/awn/applets/standalone-launcher/lists/";
+		    directory=Environment.get_home_dir()+"/.config/awn/applets/standalone-launcher/lists/";
         if (! FileUtils.test(directory,FileTest.EXISTS)  )
         {		
             if ( DirUtils.create_with_parents(directory,0777) != 0)
@@ -728,13 +728,21 @@ class Listing : GLib.Object
         
         //FIXME...  this was a lot cleaner before vala v 0.17
         whitelist_titles_pre=read_list_title(directory+listingfile+".whitelist.pre");
+        whitelist_titles_pre.prepend("thisisadummystringtosupppressanASSERTION");
         whitelist_exec_pre=read_list_exec(directory+listingfile+".whitelist.pre");
+        whitelist_exec_pre.prepend("thisisadummystringtosupppressanASSERTION");      
         blacklist_titles_global=read_list_title(Environment.get_home_dir()+"/.config/awn/applets/standalone-launcher/blacklist");
+        blacklist_titles_global.prepend("thisisadummystringtosupppressanASSERTION");        
         blacklist_exec_global=read_list_exec(Environment.get_home_dir()+"/.config/awn/applets/standalone-launcher/blacklist");
+        blacklist_exec_global.prepend("thisisadummystringtosupppressanASSERTION");         
         blacklist_titles=read_list_title(directory+listingfile+".blacklist");
+        blacklist_titles.prepend("thisisadummystringtosupppressanASSERTION");      
         blacklist_exec=read_list_exec(directory+listingfile+".blacklist");
+        blacklist_exec.prepend("thisisadummystringtosupppressanASSERTION");       
         whitelist_titles_post=read_list_title(directory+listingfile+".whitelist.post");
+        whitelist_titles_post.prepend("thisisadummystringtosupppressanASSERTION");        
         whitelist_exec_post=read_list_exec(directory+listingfile+".whitelist.post");
+        whitelist_exec_post.prepend("thisisadummystringtosupppressanASSERTION");        
 /*        read_list(Environment.get_home_dir()+"/.config/awn/applets/standalone-launcher/blacklist",ref blacklist_titles_global,ref blacklist_exec_global);    
         read_list(directory+listingfile+".blacklist",ref blacklist_titles,ref blacklist_exec);
         read_list(directory+listingfile+".whitelist.post",ref whitelist_titles_post,ref whitelist_exec_post);
@@ -747,6 +755,7 @@ class Listing : GLib.Object
         List<string> result;
         string[] file_strings;
         string file_data;
+      
         try{
             FileUtils.get_contents (file_name, out file_data);
         }catch (FileError ex ){

@@ -573,7 +573,7 @@ class Errors:
             self.__parent.icon.theme("dialog-error")
             self.__parent.title.set("Python module %s not found" % name)
 
-            awn.check_dependencies(globals(), name)
+            awn.check_dependencies(scope, name)
 
     def general(self, error, callback):
         """
@@ -950,17 +950,17 @@ class KeyRing:
 
         self.__parent.errors.module(globals(), "gnomekeyring")
 
-        if not keyring.is_available():
+        if not gnomekeyring.is_available():
             raise KeyRingError, "Keyring not available"
 
-        keyring_list = keyring.list_keyring_names_sync()
+        keyring_list = gnomekeyring.list_keyring_names_sync()
 
         if len(keyring_list) == 0:
             raise KeyRingError, "No keyrings available"
 
         try:
-            keyring.get_default_keyring_sync()
-        except keyring.NoKeyringDaemonError:
+            gnomekeyring.get_default_keyring_sync()
+        except gnomekeyring.NoKeyringDaemonError:
             raise KeyRingError, "Had trouble connecting to daemon"
 
     def new(self, name=None, pwd=None, attrs={}, type="generic"):
@@ -981,7 +981,7 @@ class KeyRing:
         @rtype: L{Key}
         """
 
-        k = self.Key(self.__keyring)
+        k = self.Key()
         if name and pwd:
             k.set(name, pwd, attrs, type)
         return k
@@ -996,12 +996,12 @@ class KeyRing:
         @rtype: L{Key}
         """
 
-        k = self.Key(self.__keyring)
+        k = self.Key()
         k.token = token
         return k
 
     class Key(object):
-        def __init__(self, keyring, token=0):
+        def __init__(self, token=0):
             """
             Create a new key.
 
@@ -1011,7 +1011,6 @@ class KeyRing:
             @type token: C{long}
             """
 
-            self.__keyring = keyring
             self.token = token
 
         def set(self, name, pwd, attrs={}, type="generic"):
@@ -1030,13 +1029,13 @@ class KeyRing:
             """
 
             if type == "network":
-                type = self.__keyring.ITEM_NETWORK_PASSWORD
+                type = gnomekeyring.ITEM_NETWORK_PASSWORD
             elif type == "note":
-                type = self.__keyring.ITEM_NOTE
+                type = gnomekeyring.ITEM_NOTE
             else: # Generic included
-                type = self.__keyring.ITEM_GENERIC_SECRET
+                type = gnomekeyring.ITEM_GENERIC_SECRET
 
-            self.token = self.__keyring.item_create_sync(None, type, name, \
+            self.token = gnomekeyring.item_create_sync(None, type, name, \
                 attrs, pwd, True)
 
         def delete(self):
@@ -1046,17 +1045,17 @@ class KeyRing:
             destructive. delete() MUST be called manually.
             """
 
-            self.__keyring.item_delete_sync(None, self.token)
+            gnomekeyring.item_delete_sync(None, self.token)
             self.token = 0
 
         def __get(self):
-            return self.__keyring.item_get_info_sync(None, self.token)
+            return gnomekeyring.item_get_info_sync(None, self.token)
 
         def __getAttrs(self):
-            return self.__keyring.item_get_attributes_sync(None, self.token)
+            return gnomekeyring.item_get_attributes_sync(None, self.token)
 
         def __setAttrs(self, a):
-            return self.__keyring.item_set_attributes_sync(None, self.token, a)
+            return gnomekeyring.item_set_attributes_sync(None, self.token, a)
 
         def __getName(self):
             return self.__get().get_display_name()

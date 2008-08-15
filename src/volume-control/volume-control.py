@@ -136,8 +136,7 @@ class VolumeControlApplet:
             self.backend.set_volume(volume)
     
     def setup_context_menu(self):
-        """ Creates a context menu to activate "Preferences" ("About" window
-        is created automatically by AWNLib) """
+        """ Adds "Mute" and "Open Volume Control" to the context menu """
         
         menu = self.applet.dialog.menu
         

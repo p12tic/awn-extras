@@ -84,7 +84,7 @@ class VolumeControlApplet:
         self.refresh_icon(True)
     
     def setup_main_dialog(self):
-        dialog = self.applet.dialog.new("volume-dialog")
+        dialog = self.applet.dialog.new("main")
         dialog.set_geometry_hints(min_width=50, min_height=200)
         
         vbox = gtk.VBox()
@@ -114,19 +114,12 @@ class VolumeControlApplet:
         inc_button.connect("button-press-event", self.backend.up)
         dec_button.connect("button-press-event", self.backend.down)
         
-        self.dialog_focus_lost_time = time.time()
         self.applet.connect("button-press-event", self.button_press_event_cb)
-        dialog.connect("focus-out-event", self.dialog_focus_out_cb)
     
     def button_press_event_cb(self, widget, event):
-        if event.button == 1 and (time.time() - self.dialog_focus_lost_time) > 0.01:
-            self.applet.dialog.toggle("volume-dialog")
-        elif event.button == 2:
+        if event.button == 2:
             # Toggle 'Mute' checkbutton
             self.mute_item.set_active(not self.mute_item.get_active())
-    
-    def dialog_focus_out_cb(self, dialog, event):
-        self.dialog_focus_lost_time = time.time()
     
     def volume_scale_changed_cb(self, widget):
         volume = widget.get_value()

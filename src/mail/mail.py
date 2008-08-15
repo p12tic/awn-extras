@@ -183,7 +183,7 @@ class MailApplet:
             # not start composing a message, that would be just wonderful.
 
     def drawMainDlog(self):
-        dialog = self.awn.dialog.new("main-dialog", strMessages(len(self.mail.subjects)))
+        dialog = self.awn.dialog.new("main", strMessages(len(self.mail.subjects)))
 
         vbox = gtk.VBox()
         dialog.add(vbox)
@@ -246,7 +246,7 @@ class MailApplet:
         vbox.add(hbox_buttons)
 
     def setup_login_dialog(self, error=False):
-        dialog = self.awn.dialog.new("main-dialog", _("Log In"))
+        dialog = self.awn.dialog.new("main", _("Log In"))
         vbox = gtk.VBox(spacing=12)
         vbox.set_border_width(6)
         dialog.add(vbox)
@@ -292,18 +292,7 @@ class MailApplet:
         submit_button.connect("clicked", onsubmit)
         vbox.add(submit_button)
 
-        self.dialog_focus_lost_time = time.time()
-        self.awn.connect("button-press-event", self.button_press_event_cb)
-        dialog.connect("focus-out-event", self.dialog_focus_out_cb)
-        
-        self.awn.dialog.toggle("main-dialog", "show")
-    
-    def button_press_event_cb(self, widget, event):
-        if event.button == 1 and (time.time() - self.dialog_focus_lost_time) > 0.01:
-            self.awn.dialog.toggle("main-dialog")
-    
-    def dialog_focus_out_cb(self, dialog, event):
-        self.dialog_focus_lost_time = time.time()
+        self.awn.dialog.toggle("main", "show")
     
     def setup_context_menu(self):
         prefs_vbox = self.awn.dialog.new("preferences").vbox

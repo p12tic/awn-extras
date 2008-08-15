@@ -1,51 +1,37 @@
-#!/usr/bin/python
-#
-#       gmail.py Version 2.0
-#
-#       Copyright 2008 Pavel Panchekha <pavpanchekha@gmail.com>
-#
-#       This program is free software; you can redistribute it and/or modify
-#       it under the terms of the GNU General Public License as published by
-#       the Free Software Foundation; either version 2 of the License, or
-#       (at your option) any later version.
-#
-#       This program is distributed in the hope that it will be useful,
-#       but WITHOUT ANY WARRANTY; without even the implied warranty of
-#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#       GNU General Public License for more details.
-#
-#       You should have received a copy of the GNU General Public License
-#       along with this program; if not, write to the Free Software
-#       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-#       MA 02110-1301, USA.
+# Copyright (C) 2008  Pavel Panchekha <pavpanchekha@gmail.com>
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# AWN API
-from awn.extras import AWNLib
-
-#GUI
-import gtk, gobject
-
-# Decrufting subject lines
-import re
-
-# Path stuff
+import email
+import gettext
+import locale
 import os
-
-# Launching the browser and email client
+import re
+import time
 import subprocess
 
-# Yes! Someone else wrote the header-parsing algorithm!
-import email
+import gobject
+import pygtk
+pygtk.require("2.0")
+import gtk
+from awn.extras import AWNLib
 
-# Start localization and internationalization stuff
-import gettext
 APP = "awn-mail-applet"
 DIR=os.path.dirname(__file__) + '/locale'
 gettext.bindtextdomain(APP, DIR)
 gettext.textdomain(APP)
 _ = gettext.gettext
-
-import locale
 
 applet_name = _("Mail Applet")
 applet_version = "0.2.8"
@@ -54,121 +40,51 @@ applet_description = _("An applet to check one's email")
 # Logo of the applet, shown in the GTK About dialog
 applet_logo = os.path.join(os.path.dirname(__file__), "Themes/Tango/read.svg")
 
-def Label(str):
-    """
-    Create a button, add the markup
-    """
+themes_dir = os.path.join(os.path.dirname(__file__), "Themes")
 
-    q = gtk.Label(str)
-    q.set_use_markup(True)
-    return q
-
-def HBox(*args, **kwarg):
-    """
-    Create a new HBox and add all the widgets from list to it
-    """
-    
-    if "homog" not in kwarg:
-        homog = True
-    else:
-        homog = kwarg["homog"]
-
-    q = gtk.HBox(homog)
-
-    for i in args:
-        q.add(i)
-
-    return q
-
-def VBox(*args, **kwarg):
-    """
-    Create a new HBox and add all the widgets from list to it
-    """
-
-    if "homog" not in kwarg:
-        homog = True
-    else:
-        homog = kwarg["homog"]
-
-    q = gtk.VBox(homog)
-
-    for i in args:
-        q.add(i)
-
-    return q
 
 def strMailMessages(num):
-    return gettext.ngettext("You have %d new message", \
-        "You have %d new messages", num) % num
+    return gettext.ngettext("You have %d new message", "You have %d new messages", num) % num
+
 
 def strMessages(num):
-    return gettext.ngettext("%d unread message", \
-        "%d unread messages", num) % num
+    return gettext.ngettext("%d unread message", "%d unread messages", num) % num
+
 
 class MailApplet:
-    def __init__(self, awn):
-        # Interface with AWN
-        self.awn = awn
-
-        self.awn.keyring.require() # Secure login remembering
-        self.awn.notify.require() # "You have # new messages"
-
-        self.awn.settings.cd("mail-%s" % self.awn.uid)
-
-        try:
-            self.back = getattr(Backends(), self.awn.settings["backend"])
-            # Backends has a number of classes as attributes
-            # The setting has the name, as a string, of one of them
-        except ValueError:
-            self.back = Backends().GMail
-            self.awn.settings["backend"] = "GMail"
-            # If you can't find the setting, assign a default one.
-
-        try:
-            self.theme = self.awn.settings["theme"]
-            self.__setIcon("login")
-            # Set the theme...
-        except ValueError, gobject.GError:
-            self.theme = "Tango"
-            self.awn.settings["theme"] = "Tango"
-            # ... or at least a default
-
-        try:
-            self.emailclient = self.awn.settings["email-client"]
-            # Email clients. Pft.
-        except ValueError:
-            self.emailclient = "evolution -c mail"
-            self.awn.settings["email-client"] = "evolution"
-            # Moonbeam, are you happy?
-
-        try:
-            self.hide = self.awn.settings["hide"]
-            # Whether to autohide
-        except ValueError:
-            self.hide = False
-            self.awn.settings["hide"] = False
-            # No by default
-
-        try:
-            self.showerror = self.awn.settings["show-network-errors"]
-            # Whether to show errors
-        except ValueError:
-            self.showerror = True
-            self.awn.settings["show-network-errors"] = True
-            # Yes by default
-
+    def __init__(self, applet):
+        self.awn = applet
+        
+        self.awn.keyring.require()
+        
+        default_values = {
+            "backend": "GMail",
+            "theme": "Tango",
+            "email-client": "evolution -c mail",
+            "hide": False,
+            "show-network-errors": True
+        }
+        applet.settings.load(default_values)
+        
+        self.back = getattr(Backends(), self.awn.settings["backend"])
+        self.theme = self.awn.settings["theme"]
+        self.emailclient = self.awn.settings["email-client"]
+        self.hide = self.awn.settings["hide"]
+        self.showerror = self.awn.settings["show-network-errors"]
+        
+        self.__setIcon("login")
         self.awn.title.set(_("Mail Applet (Click to Log In)"))
-        self.drawPrefDlog()
-
+        
+        self.setup_context_menu()
+        
         self.awn.errors.module(globals(), "feedparser")
-
+        
         self.login()
-        #print "Initing"
-
+    
     def login(self, force=False):
         self.__setIcon("login")
         if force:
-            return self.drawPWDDlog()
+            return self.setup_login_dialog()
         # If we're forcing initiation, just draw the dialog
         # We wouldn't be forcing if we want to use the saved login token
 
@@ -199,10 +115,8 @@ class MailApplet:
 
         try:
             self.mail.update() # Update
-            # Either of the operations can go wrong.
         except MailError:
-            # Login has failed
-            self.drawPWDDlog(True)
+            self.setup_login_dialog(True)
 
         else:
             self.awn.notify.send(_("Mail Applet"), \
@@ -229,23 +143,16 @@ class MailApplet:
                 self.awn.errors.general(err, lambda: ())
             return
 
-        diffSubjects = [i for i in self.mail.subjects if i not in \
-            oldSubjects]
+        diffSubjects = [i for i in self.mail.subjects if i not in oldSubjects]
+        
         if len(diffSubjects) > 0:
-
-            msg = strMailMessages(len(diffSubjects))
-
-            for i in diffSubjects:
-                msg += "\n" + i
-
-            self.awn.notify.send(_("New Mail - Mail Applet"), msg, \
-                self.__getIconPath("unread", full=True))
-            # Show the new mail dialog
+            msg = strMailMessages(len(diffSubjects)) + "\n" + "\n".join(diffSubjects)
+            self.awn.notify.send(_("New Mail - Mail Applet"), msg, self.__getIconPath("unread", full=True))
 
         self.awn.title.set(strMessages(len(self.mail.subjects)))
-
+        
         self.__setIcon(len(self.mail.subjects) > 0 and "unread" or "read")
-
+        
         if self.hide and len(self.mail.subjects) == 0:
             self.awn.icon.hide()
 
@@ -254,19 +161,12 @@ class MailApplet:
 
     def __setIcon(self, name):
         self.awn.icon.file(self.__getIconPath(name))
-
+    
     def __getIconPath(self, name, full=False):
-        files = {
-                "error": "Themes/%s/error.svg" % self.theme,
-                "login": "Themes/%s/login.svg" % self.theme,
-                "read": "Themes/%s/read.svg" % self.theme,
-                "unread": "Themes/%s/unread.svg" % self.theme,
-                }
-        if not full:
-            return files[name]
+        if full:
+            return os.path.join(themes_dir, self.theme, name + ".svg")
         else:
-            return os.path.join(os.path.abspath(os.path.dirname(__file__)), \
-                files[name])
+            return os.path.join("Themes", self.theme, name + ".svg")
 
     def __showWeb(self):
         if hasattr(self.mail, "showWeb"):
@@ -283,21 +183,29 @@ class MailApplet:
             # not start composing a message, that would be just wonderful.
 
     def drawMainDlog(self):
-        dlog=self.awn.dialog.new("main", strMessages(len(self.mail.subjects)))
+        dialog = self.awn.dialog.new("main-dialog", strMessages(len(self.mail.subjects)))
 
-        layout = gtk.VBox()
-        dlog.add(layout)
+        vbox = gtk.VBox()
+        dialog.add(vbox)
 
         if len(self.mail.subjects) > 0:
             tbl = gtk.Table(len(self.mail.subjects), 2)
             tbl.set_col_spacings(10)
             for i in xrange(len(self.mail.subjects)):
-                tbl.attach(Label("<b>"+str(i+1)+"</b>"), 0, 1, i, i+1)
-                tbl.attach(Label(self.mail.subjects[i]), 1, 2, i, i+1)
+                
+                label = gtk.Label("<b>"+str(i+1)+"</b>")
+                label.set_use_markup(True)
+                tbl.attach(label, 0, 1, i, i+1)
+                
+                label = gtk.Label(self.mail.subjects[i])
+                label.set_use_markup(True)
+                tbl.attach(label, 1, 2, i, i+1)
                 #print "%d: %s" % (i+1, self.mail.subjects[i])
-            layout.add(tbl)
+            vbox.add(tbl)
         else:
-            layout.add(Label("<i>" + _("Hmmm, nothing here") + "</i>"))
+            label = gtk.Label("<i>" + _("Hmmm, nothing here") + "</i>")
+            label.set_use_markup(True)
+            vbox.add(label)
 
         buttons = []
 
@@ -307,68 +215,66 @@ class MailApplet:
             # This'll be the "show web interface" button
             b = gtk.Button()
             b.set_relief(gtk.RELIEF_NONE) # Found it; that's a relief
-            b.set_image(gtk.image_new_from_stock(gtk.STOCK_NETWORK, \
-                gtk.ICON_SIZE_BUTTON))
+            b.set_image(gtk.image_new_from_stock(gtk.STOCK_NETWORK, gtk.ICON_SIZE_BUTTON))
             b.connect("clicked", lambda x: self.__showWeb())
             buttons.append(b)
 
         # This is the "show desktop client" button
         b = gtk.Button()
         b.set_relief(gtk.RELIEF_NONE)
-        b.set_image(gtk.image_new_from_stock(gtk.STOCK_DISCONNECT, \
-            gtk.ICON_SIZE_BUTTON))
+        b.set_image(gtk.image_new_from_stock(gtk.STOCK_DISCONNECT, gtk.ICON_SIZE_BUTTON))
         b.connect("clicked", lambda x: self.__showDesk())
         buttons.append(b)
 
         # Refresh button
         b = gtk.Button()
         b.set_relief(gtk.RELIEF_NONE)
-        b.set_image(gtk.image_new_from_stock(gtk.STOCK_REFRESH, \
-            gtk.ICON_SIZE_BUTTON))
+        b.set_image(gtk.image_new_from_stock(gtk.STOCK_REFRESH, gtk.ICON_SIZE_BUTTON))
         b.connect("clicked", lambda x: self.refresh())
-        buttons.append(b)
-
-        # Show preferences
-        b = gtk.Button()
-        b.set_relief(gtk.RELIEF_NONE)
-        b.set_image(gtk.image_new_from_stock(gtk.STOCK_PREFERENCES, \
-            gtk.ICON_SIZE_BUTTON))
-        b.connect("clicked", \
-            lambda x: self.awn.dialog.toggle("secondary"))
         buttons.append(b)
 
         # Log out
         b = gtk.Button()
         b.set_relief(gtk.RELIEF_NONE)
-        b.set_image(gtk.image_new_from_stock(gtk.STOCK_STOP, \
-            gtk.ICON_SIZE_BUTTON))
+        b.set_image(gtk.image_new_from_stock(gtk.STOCK_STOP, gtk.ICON_SIZE_BUTTON))
         b.connect("clicked", lambda x: self.logout())
 
         buttons.append(b)
-        layout.add(HBox(*buttons))
+        hbox_buttons = gtk.HBox()
+        for i in buttons:
+            hbox_buttons.add(i)
+        vbox.add(hbox_buttons)
 
-    def drawPWDDlog(self, error=False):
-        dlog = self.awn.dialog.new("main", _("Log In"))
-        layout = gtk.VBox()
-        dlog.add(layout)
-
+    def setup_login_dialog(self, error=False):
+        dialog = self.awn.dialog.new("main-dialog", _("Log In"))
+        vbox = gtk.VBox(spacing=12)
+        vbox.set_border_width(6)
+        dialog.add(vbox)
+        
         if error:
-            layout.add(Label("<i>" + _("Wrong Username or Password") + "</i>"))
+            label = gtk.Label("<i>" + _("Wrong Username or Password") + "</i>")
+            label.set_use_markup(True)
+            vbox.add(label)
 
         if hasattr(self.back, "drawLoginWindow"):
             t = self.back.drawLoginWindow()
-            ilayout = t["layout"]
+            vbox.add(t["layout"])
         else:
-            # Username input box
+            hbox_username = gtk.HBox(spacing=13)
+            vbox.add(hbox_username)
+            
+            hbox_username.add(gtk.Label(_("Username:") + "\t"))
             usrE = gtk.Entry()
-
-            # Password input box
+            hbox_username.add(usrE)
+            
+            hbox_password = gtk.HBox(spacing=13)
+            vbox.add(hbox_password)
+            
+            hbox_password.add(gtk.Label(_("Password:") + "\t"))
             pwdE = gtk.Entry()
             pwdE.set_visibility(False)
-
-            ilayout = VBox(HBox(Label(_("Username:")), usrE),
-                HBox(Label(_("Password:")), pwdE))
-
+            hbox_password.add(pwdE)
+            
             t = {}
 
             t["callback"] = \
@@ -378,108 +284,112 @@ class MailApplet:
                 {"username": widgets[0].get_text()}, "network")
 
             t["widgets"] = [usrE, pwdE]
-
-        layout.add(ilayout)
-
-        # Submit button
-        submit = gtk.Button(label = _("Log In"), use_underline = False)
-        layout.add(submit)
-
+        
+        submit_button = gtk.Button(label=_("Log In"), use_underline=False)
         def onsubmit(x=None, y=None):
-            dlog.hide()
+            self.awn.dialog.toggle("main-dialog", "hide")
             self.submitPWD(t["callback"](t["widgets"], self.awn))
+        submit_button.connect("clicked", onsubmit)
+        vbox.add(submit_button)
 
-        submit.connect("clicked", onsubmit)
-
-        button = gtk.Button(label=_("Change Options"))
-        button.connect("clicked", \
-            lambda x: self.awn.dialog.toggle("secondary"))
-        layout.add(button)
-
-        dlog.show_all()
-
-    def drawPrefDlog(self):
-        dlog = self.awn.dialog.new("secondary", _("Options"), focus=False)
-
-        layout = gtk.VBox()
-        dlog.add(layout)
-
-        theme = gtk.combo_box_new_text()
-        theme.set_title(_("Theme"))
-        themes = [i for i in os.listdir(os.path.join(os.path.dirname( \
-            os.path.abspath(__file__)), "Themes"))]
-            # Ewww. Stupid AWN
-        for i in themes:
-            theme.append_text(i)
-        theme.set_focus_on_click(True)
-        layout.add(HBox(Label(_("Theme: ")), theme))
-
+        self.dialog_focus_lost_time = time.time()
+        self.awn.connect("button-press-event", self.button_press_event_cb)
+        dialog.connect("focus-out-event", self.dialog_focus_out_cb)
+        
+        self.awn.dialog.toggle("main-dialog", "show")
+    
+    def button_press_event_cb(self, widget, event):
+        if event.button == 1 and (time.time() - self.dialog_focus_lost_time) > 0.01:
+            self.awn.dialog.toggle("main-dialog")
+    
+    def dialog_focus_out_cb(self, dialog, event):
+        self.dialog_focus_lost_time = time.time()
+    
+    def setup_context_menu(self):
+        prefs_vbox = self.awn.dialog.new("preferences").vbox
+        vbox = gtk.VBox(spacing=18)
+        prefs_vbox.add(vbox)
+        vbox.set_border_width(5)
+        
+        vbox_mail = AWNLib.create_frame(vbox, "Mail")
+        
+        hbox_backend = gtk.HBox(spacing=13)
+        vbox_mail.add(hbox_backend)
+        hbox_backend.pack_start(gtk.Label(_("Backend: ")), expand=False)
+        
         backend = gtk.combo_box_new_text()
         backend.set_title(_("Backend"))
         backends = [i for i in dir(Backends) if i[:2] != "__"]
         for i in backends:
             backend.append_text(i)
-        backend.set_focus_on_click(True)
-        layout.add(HBox(Label(_("Backend: ")), backend))
-
+        backend.set_active(backends.index(self.awn.settings["backend"]))
+        backend.connect("changed", self.changed_backend_cb)
+        hbox_backend.add(backend)
+        
+        hbox_client = gtk.HBox(spacing=13)
+        vbox_mail.add(hbox_client)
+        hbox_client.add(gtk.Label(_("Email Client: ")))
+        
         email = gtk.Entry()
         email.set_text(self.emailclient)
-        layout.add(HBox(Label(_("Email Client: ")), email))
-
+        email.connect("changed", self.changed_client_cb)
+        hbox_client.add(email)
+        
+        vbox_display = AWNLib.create_frame(vbox, "Display")
+        
+        hbox_theme = gtk.HBox(spacing=13)
+        vbox_display.add(hbox_theme)
+        hbox_theme.pack_start(gtk.Label(_("Theme: ")), expand=False)
+        
+        theme = gtk.combo_box_new_text()
+        theme.set_title(_("Theme"))
+        themes = [i for i in os.listdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), "Themes"))]
+        for i in themes:
+            theme.append_text(i)
+        theme.connect("changed", self.changed_theme_cb)
+        theme.set_active(themes.index(self.theme))
+        hbox_theme.add(theme)
+        
         hidden = gtk.CheckButton(label=_("Hide Unless New"))
         hidden.set_active(self.hide)
-        layout.add(hidden)
+        hidden.connect("toggled", self.toggled_hide_cb)
+        vbox_display.add(hidden)
 
-        showerror = gtk.CheckButton(label=_("Alert on Network Errors"))
-        showerror.set_active(self.showerror)
-        layout.add(showerror)
-
-        save = gtk.Button(label = _("Save"), use_underline = False)
-        layout.add(save)
-
-        def saveit(self, t, b, c, h, s, dlog):
-            dlog.hide()
-
-            #print t
-            #print b
-            #print c # Oh, how I wish for a debugger
-            #print h
-            #print s
-
-            if t and t != self.theme and t != -1:
-                self.theme = t
-                self.awn.settings["theme"] = t
-                if hasattr(self, "mail"):
-                    self.refresh()
-
-            if c and c != self.emailclient:
-                self.awn.settings["email-client"] = c
-                self.emailclient = c
-
-            if h != self.hide:
-                self.awn.settings["hide"] = h
-                self.hide = h
-                if hasattr(self, "mail"):
-                    self.refresh()
-
-            if s != self.showerror:
-                self.awn.settings["show-network-errors"] = s
-                self.showerror = s
-
-            if b != -1 and b:
-                self.awn.settings["backend"] = b
-                b = getattr(Backends(), b)
+        show_errors = gtk.CheckButton(label=_("Alert on Network Errors"))
+        show_errors.set_active(self.showerror)
+        show_errors.connect("toggled", self.toggled_show_errors_cb)
+        vbox_display.add(show_errors)
+    
+    def toggled_hide_cb(self, button):
+        self.awn.settings["hide"] = self.hide = button.get_active()
+        
+        if hasattr(self, "mail"):
+            self.refresh()
+    
+    def toggled_show_errors_cb(self, button):
+        self.awn.settings["show-network-errors"] = self.showerror = button.get_active()
+    
+    def changed_theme_cb(self, combobox):
+        theme = combobox.get_active_text()
+        if theme != -1:
+            self.awn.settings["theme"] = self.theme = theme
+            
+            if hasattr(self, "mail"):
+                self.refresh()
             else:
-                return
+                self.__setIcon("login")
+    
+    def changed_backend_cb(self, combobox):
+        backend = combobox.get_active_text()
+        
+        if backend != -1:
+            self.awn.settings["backend"] = backend
+            self.back = getattr(Backends(), backend)
+            self.logout()
+    
+    def changed_client_cb(self, entry):
+        self.awn.settings["email-client"] = self.emailclient = entry.get_text()
 
-            if b != self.back and b != -1:
-                self.back = b
-                self.logout()
-
-        save.connect("clicked", lambda x: saveit(self, \
-            theme.get_active_text(), backend.get_active_text(), \
-            email.get_text(), hidden.get_active(), \
-            showerror.get_active(), dlog))
 
 class Backends:
     class GMail:
@@ -605,21 +515,32 @@ class Backends:
 
         @classmethod
         def drawLoginWindow(cls):
-            # Username input box
+            vbox = gtk.VBox(spacing=12)
+            vbox.set_border_width(6)
+            
+            hbox_username = gtk.HBox(spacing=13)
+            vbox.add(hbox_username)
+            
+            hbox_username.add(gtk.Label(_("Username:") + "\t"))
             usrE = gtk.Entry()
-
-            # Password input box
+            hbox_username.add(usrE)
+            
+            hbox_password = gtk.HBox(spacing=13)
+            vbox.add(hbox_password)
+            
+            hbox_password.add(gtk.Label(_("Password:") + "\t"))
             pwdE = gtk.Entry()
             pwdE.set_visibility(False)
-
-            # Server input box
+            hbox_password.add(pwdE)
+            
+            hbox_domain = gtk.HBox(spacing=13)
+            vbox.add(hbox_domain)
+            
+            hbox_domain.add(gtk.Label(_("Domain:") + "\t"))
             domE = gtk.Entry()
-
-            layout = VBox(HBox(Label(_("Username:")), usrE),
-                HBox(Label(_("Password:")), pwdE),
-                HBox(Label(_("Domain:")), domE))
-
-            return {"layout": layout, "callback": cls.__submitLoginWindow,
+            hbox_domain.add(domE)
+            
+            return {"layout": vbox, "callback": cls.__submitLoginWindow,
                 "widgets": [usrE, pwdE, domE]}
 
         @staticmethod
@@ -692,24 +613,34 @@ class Backends:
 
             @classmethod
             def drawLoginWindow(cls):
-                # Username input box
+                vbox = gtk.VBox(spacing=12)
+                vbox.set_border_width(6)
+                
+                hbox_username = gtk.HBox(spacing=13)
+                vbox.add(hbox_username)
+                
+                hbox_username.add(gtk.Label(_("Username:") + "\t"))
                 usrE = gtk.Entry()
-
-                # Password input box
+                hbox_username.add(usrE)
+                
+                hbox_password = gtk.HBox(spacing=13)
+                vbox.add(hbox_password)
+                
+                hbox_password.add(gtk.Label(_("Password:") + "\t"))
                 pwdE = gtk.Entry()
                 pwdE.set_visibility(False)
-
-                # Server input box
+                hbox_password.add(pwdE)
+                
+                hbox_server = gtk.HBox(spacing=13)
+                vbox.add(hbox_server)
+                
+                hbox_server.add(gtk.Label(_("Server:") + "\t"))
                 srvE = gtk.Entry()
-
+                hbox_server.add(srvE)
                 sslE = gtk.CheckButton(label=_("Use SSL encryption"))
-
-                layout = VBox(HBox(Label(_("Username:")), usrE),
-                    HBox(Label(_("Password:")), pwdE),
-                    HBox(Label(_("Server:")), srvE),
-                    sslE)
-
-                return {"layout": layout, "callback": cls.__submitLoginWindow,
+                hbox_server.add(sslE)
+                
+                return {"layout": vbox, "callback": cls.__submitLoginWindow,
                     "widgets": [usrE, pwdE, srvE, sslE]}
 
             @staticmethod
@@ -729,6 +660,7 @@ if __name__ == "__main__":
         "author": "Pavel Panchekha",
         "copyright-year": 2008,
         "email": "pavpanchekha@gmail.com",
-        "type": ["Network", "Email"]})
+        "type": ["Network", "Email"],
+        "settings-per-instance": True})
     applet = MailApplet(applet)
     AWNLib.start(applet.awn)

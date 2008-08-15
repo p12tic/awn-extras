@@ -21,24 +21,17 @@ import subprocess
 import sys
 
 import gobject
+import pygtk
+pygtk.require("2.0")
 import gtk
 
-# For type checking for gconf/settings
-import types
-
-# For object serialization into gconf
-import cPickle as cpickle
-
-# For the raw AWN API
 import awn
-
-# For the Networking class
+import awn.extras as extras
+import cairo
+import cPickle as cpickle # For object serialization into gconf
+import types # For type checking for gconf/settings
 import urllib
 
-import awn.extras as extras
-
-# For type checking
-import cairo
 
 ___file___ = sys.argv[0]
 # Basically, __file__ = current file location
@@ -142,6 +135,8 @@ class Dialogs:
 
         self.__parent.settings.cd()
 
+        parent.connect("button-press-event", self.button_press_event_cb)
+
     def new(self, dialog, title=None, focus=True):
         """
         Create a new AWN dialog.
@@ -196,11 +191,7 @@ class Dialogs:
         """
 
         if focus and dialog not in self.__special_dialogs and self.__loseFocus:
-            def hide_dialog(widget, event):
-                self.__current = None
-                dlog.hide()
-
-            dlog.connect("focus-out-event", hide_dialog)
+            dlog.connect("focus-out-event", lambda w, e: self.toggle(dialog, "hide"))
 
         self.__register[dialog] = dlog
 
@@ -269,17 +260,17 @@ class Dialogs:
             self.__register[self.__current].hide()
             self.__current = None
 
-    def click(self, w=None, e=None):
+    def button_press_event_cb(self, widget, event):
         """
         Responds to click events. Only called by GTK.
         """
 
-        if e.button == 3 and "menu" in self.__register: # Right click
-            self.toggle("menu", once=True, time=e.time)
-        elif e.button == 2 and "secondary" in self.__register: # Middle click
+        if event.button == 3 and "menu" in self.__register: # Right click
+            self.toggle("menu", once=True, time=event.time)
+        elif event.button == 2 and "secondary" in self.__register: # Middle click
             self.toggle("secondary", once=True)
-        elif e.button == 1 and "main" in self.__register:
-            self.toggle("main", once=True)
+        elif event.button == 1 and "main" in self.__register:
+            self.toggle("main")
         elif "program" in self.__register: # Act like launcher
             self.toggle("program", once=True)
 
@@ -1395,9 +1386,6 @@ class Applet(awn.AppletSimple):
         self.notify = Notify(self)
         self.effects = Effects(self)
         self.network = Networking(self)
-
-        # Connect the necessary events to the sub-objects.
-        self.connect("button-press-event", self.dialog.click)
 
 
 def initiate(meta={}):

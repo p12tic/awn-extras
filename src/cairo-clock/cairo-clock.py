@@ -33,8 +33,8 @@ applet_description = "Applet that displays an analog clock using\n(optionally) M
 # Logo of the applet, shown in the GTK About dialog
 applet_logo = os.path.join(os.path.dirname(__file__), "cairo-clock-logo.svg")
 
-# Interval in milliseconds between two successive draws of the clock
-draw_clock_interval = 1000
+# Interval in seconds between two successive draws of the clock
+draw_clock_interval = 1.0
 
 cairo_clock_themes_dir = "/usr/share/cairo-clock/themes"
 default_themes_dir = os.path.join(os.path.dirname(__file__), "themes")
@@ -57,31 +57,17 @@ class CairoClockApplet:
         self.__clock_updater.load_theme()
         self.__clock_updater.draw_clock_cb()
         
-        applet.connect("enter-notify-event", lambda w, e: self.__clock_updater.show_title(True))
-        applet.connect("leave-notify-event", lambda w, e: self.__clock_updater.show_title(False))
-        
+        applet.connect("enter-notify-event", lambda w, e: self.__clock_updater.update_title())
         applet.connect("height-changed", lambda w, e: self.__clock_updater.draw_clock_cb())
         
-        gobject.timeout_add(draw_clock_interval, self.__clock_updater.draw_clock_cb)
+        applet.timing.register(self.__clock_updater.draw_clock_cb, draw_clock_interval)
     
     def setup_main_dialog(self):
-        dialog = self.applet.dialog.new("calendar-dialog")
+        dialog = self.applet.dialog.new("main")
         
         calendar = gtk.Calendar()
         calendar.props.show_week_numbers = True
         dialog.add(calendar)
-        
-        self.dialog_focus_lost_time = time.time()
-        self.applet.connect("button-press-event", self.button_press_event_cb)
-        dialog.connect("focus-out-event", self.dialog_focus_out_cb)
-    
-    def button_press_event_cb(self, widget, event):
-        if event.button == 1 and (time.time() - self.dialog_focus_lost_time) > 0.01:
-            self.applet.dialog.toggle("calendar-dialog")
-            self.__clock_updater.show_title(False)
-    
-    def dialog_focus_out_cb(self, dialog, event):
-        self.dialog_focus_lost_time = time.time()
     
     def setup_context_menu(self):
         """ Creates a context menu to activate "Preferences" ("About" window
@@ -181,8 +167,6 @@ class ClockUpdater:
         self.applet = clock_applet.applet
         self.default_values = clock_applet.default_values
         
-        self.__title_is_visible = False
-        
         """ Values of the properties below will be used to initialize 
         the corresponding settings """
         
@@ -191,7 +175,7 @@ class ClockUpdater:
     def update_title(self):
         """ Updates the title according to the settings """
         
-        if not self.__title_is_visible:
+        if not self.applet.title.is_visible():
             return
         
         if self.default_values["time-24-format"]:
@@ -215,14 +199,6 @@ class ClockUpdater:
         
         self.applet.title.set(time.strftime(date + hours + ":%M" + seconds + ampm + year))
         self.applet.title.show()
-    
-    def show_title(self, show):
-        """ Shows or hides the title, if it must show, the title is updated first """
-        
-        self.__title_is_visible = show
-        
-        # Update the title immediately (if visible) because it is visible now
-        self.update_title()
     
     def draw_clock_cb(self):
         """ Draws the clock and updates the title to keep it synchronized with the drawn clock """

@@ -114,8 +114,6 @@ class Dialogs:
         self.__register = {}
         self.__current = None
 
-        self.__parent.settings.cd("shared")
-
         self.menu = self.new("menu")
 
         meta_keys = self.__parent.meta.keys()
@@ -128,9 +126,11 @@ class Dialogs:
             self.menu.append(about_item)
             about_item.connect("activate", lambda w: self.toggle("about"))
 
-        try:
+        self.__parent.settings.cd("shared")
+
+        if "dialog_focus_loss_behavior" in self.__parent.settings:
             self.__loseFocus = self.__parent.settings["dialog_focus_loss_behavior"]
-        except ValueError:
+        else:
             self.__loseFocus = True
 
         self.__parent.settings.cd()
@@ -191,7 +191,10 @@ class Dialogs:
         """
 
         if focus and dialog not in self.__special_dialogs and self.__loseFocus:
-            dlog.connect("focus-out-event", lambda w, e: self.toggle(dialog, "hide"))
+            def dialog_focus_out_cb(widget, event):
+                self.__current = None
+                dlog.hide()
+            dlog.connect("focus-out-event", dialog_focus_out_cb)
 
         self.__register[dialog] = dlog
 
@@ -229,12 +232,11 @@ class Dialogs:
         elif dialog == "about":
             self.__register["about"].show()
         else:
-            if (self.__register[dialog].is_active() or force == "hide") and \
-                force != "show":
+            if force == "hide" or (self.__register[dialog].is_active() and force != "show"):
                 self.__register[dialog].hide()
                 self.__current = None
 
-                # Because the dialog is now hidden, the title can be shown again
+                # Because the dialog is now hidden, the title may be shown again
                 self.__parent.title.show()
             else:
                 if self.__current is not None and self.__current not in self.__special_dialogs:
@@ -387,21 +389,32 @@ class Title:
 
         self.__parent = parent
 
-    def show(self, w=None, e=None):
+        self.__is_visible = False
+        def set_visible(visible):
+            self.__is_visible = visible
+        parent.connect("enter-notify-event", lambda w, e: set_visible(True))
+        parent.connect("leave-notify-event", lambda w, e: set_visible(False))
+
+    def is_visible(self):
+        return self.__is_visible
+
+    def show(self):
         """
         Show the applet title.
         """
 
+        self.__is_visible = True
         self.__parent.set_title_visibility(True)
 
-    def hide(self, w=None, e=None):
+    def hide(self):
         """
         Hides the applet title.
         """
 
+        self.__is_visible = False
         self.__parent.set_title_visibility(False)
 
-    def set(self, text=""):
+    def set(self, text):
         """
         Sets the applet title.
 

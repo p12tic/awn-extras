@@ -37,4 +37,4 @@ if __name__ == "__main__":
     dlog = applet.dialog.new("main") # "main" will be the left-click dialog
     button = gtk.Button(stock="gtk-apply") # Standard GTK
     dlog.add(button) # Again, GTK. dialog's are Box's
-    AWN.start(applet) # Show the actual icon. Get here as fast as possible.
+    AWNLib.start(applet) # Show the actual icon. Get here as fast as possible.

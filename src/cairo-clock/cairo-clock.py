@@ -16,14 +16,13 @@ import math
 import os
 import time
 
-import gobject
 import pygtk
 pygtk.require("2.0")
-import cairo
 import gtk
-from gtk import gdk
 from gtk import glade
+
 from awn.extras import AWNLib
+import cairo
 import rsvg
 
 applet_name = "Cairo Clock"
@@ -258,8 +257,7 @@ class AnalogClock:
         raise RuntimeError, "Did not find path to theme '" + theme + "'"
     
     def draw_clock(self):
-        """ Renders the SVGs on a Cairo surface and converts it to a gdk.Pixbuf,
-        which is used as the applet's icon """
+        """ Renders the SVGs on a Cairo surface and uses it as the applet's icon """
         
         local_time = time.localtime()
         hours, minutes, seconds = (local_time[3], local_time[4], local_time[5])

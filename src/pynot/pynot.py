@@ -155,17 +155,17 @@ class mywidget(gtk.Widget):
     def do_realize(self):
         self.set_flags(gtk.REALIZED)
 
-        self.gwin=gdk.window_foreign_new(self.wind.id)
-        self.gwin.reparent(self.parent_window.window,0,0)
+        self.window=gdk.window_foreign_new(self.wind.id)
+        self.window.reparent(self.parent_window.window,0,0)
         # Take the system manager window (not selection owner!)
         # And make it the gdk.window of the custom widget.
 
-        self.gwin.set_user_data(self)
-        self.style.attach(self.gwin)
+        self.window.set_user_data(self)
+        self.style.attach(self.window)
         # Set it up as a custom widget and tell it what style (theme) to use
 
-        self.style.set_background(self.gwin, gtk.STATE_NORMAL)
-        self.gwin.move_resize(*self.allocation)
+        self.style.set_background(self.window, gtk.STATE_NORMAL)
+        self.window.move_resize(*self.allocation)
         # Tell it to use the background colour as background colour...
         # Im sure theres a reason i need to tell it that ;)
 
@@ -212,7 +212,7 @@ class mywidget(gtk.Widget):
         # If we're realized, move and resize the window to the
         # requested coordinates/positions
         if self.flags() & gtk.REALIZED:
-            self.gwin.move_resize(*allocation)
+            self.window.move_resize(*allocation)
  
 
 
@@ -229,7 +229,7 @@ class mywidget(gtk.Widget):
 
     def tr__updatePanel(self,root,win):
         # Requested re-draw/re-position
-        rr= self.gwin.get_geometry()
+        rr= self.window.get_geometry()
         # find the gdk windows geometry (for the size of y)
 
         offsety=rr[3]-((HIGH*ICONSIZE)+CUSTOM_Y)
@@ -291,7 +291,7 @@ class mywidget(gtk.Widget):
         # And then update the alpha again, just to make sure
 
     def tr__updateAlpha(self,returnvar):
-        rr= self.gwin.get_geometry()
+        rr= self.window.get_geometry()
         offsety=rr[3]-((HIGH*ICONSIZE)+CUSTOM_Y)
         # Again : find location of icons on the widget
        
@@ -343,7 +343,7 @@ class mywidget(gtk.Widget):
                     cr.rectangle(0,offsety,w,h)
                     cr.fill()
 
-                self.gwin.shape_combine_mask(bitmap, 0, 0)
+                self.window.shape_combine_mask(bitmap, 0, 0)
             else:
                 newh= (HIGH*ICONSIZE)
                 bitmap = gtk.gdk.Pixmap(None, w, h, 1)
@@ -358,9 +358,9 @@ class mywidget(gtk.Widget):
                 cr.set_operator(cairo.OPERATOR_OVER)
                 cr.rectangle(0,offsety,w,newh)
                 cr.fill()
-                self.gwin.shape_combine_mask(bitmap, 0, 0)
+                self.window.shape_combine_mask(bitmap, 0, 0)
 
-                self.gwin.merge_child_shapes()
+                self.window.merge_child_shapes()
 
         return returnvar
 
@@ -523,9 +523,9 @@ class App(awn.Applet):
             image=gdk.pixbuf_new_from_file(IMPATH)
         (pic,mask)=image.render_pixmap_and_mask()
         if(USEIM==True):  # If the user wants an image ...
-            widg.gwin.set_back_pixmap(pic,False) #Change image
-            widg.gwin.clear()
-            widg.gwin.clear_area_e(0,0,self.widg.curr_x*2,self.widg.curr_y)
+            widg.window.set_back_pixmap(pic,False) #Change image
+            widg.window.clear()
+            widg.window.clear_area_e(0,0,self.widg.curr_x*2,self.widg.curr_y)
                 #and cause an expose.
         return True
 

@@ -155,9 +155,9 @@ class GenericPlayer(object):
         """
         return False
 
-    def enqueue_uri(self, uri):
+    def enqueue_uris(self, uris):
         """
-        Adds uri to current playlist.
+        Adds uris to current playlist.
         """
         return False
 
@@ -244,9 +244,10 @@ class Rhythmbox(GenericPlayer):
         self.rbShell.loadURI(uri, True)
         return True
 
-    def enqueue_uri(self, uri):
+    def enqueue_uris(self, uris):
         # unfortunatelly this only works for items present in media library
-        self.rbShell.addToQueue(uri)
+        for uri in uris:
+          self.rbShell.addToQueue(uri)
         return True
 
 
@@ -303,6 +304,14 @@ class Exaile(GenericPlayer):
     def next (self):
         self.player.next_track()
 
+    def play_uri(self, uri):
+        self.player.play_file(uri)
+        return True
+
+    def enqueue_uris(self, uris):
+        for uri in uris:
+          self.player.play_file(uri)
+        return True
 
 class Banshee(GenericPlayer):
     """Full Support for the banshee media player
@@ -354,6 +363,14 @@ class Banshee(GenericPlayer):
 
     def next (self):
         self.player.Next()
+
+    def play_uri(self, uri):
+        self.player.EnqueueFiles([uri])
+        return True
+
+    def enqueue_uris(self, uris):
+        self.player.EnqueueFiles(uris)
+        return True
 
 
 class BansheeOne(GenericPlayer):
@@ -471,6 +488,14 @@ class Listen(GenericPlayer):
 
     def next (self):
         self.player.next()
+
+    def play_uri(self, uri):
+        self.player.play([uri])
+        return True
+
+    def enqueue_uris(self, uris):
+        self.player.enqueue(uris)
+        return True
 
 
 class Amarok(GenericPlayer):

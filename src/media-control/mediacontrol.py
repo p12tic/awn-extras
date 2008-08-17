@@ -19,6 +19,9 @@
 
 
 import sys
+import os.path
+import gnomevfs
+import urllib
 
 from gobject import GError
 import gobject
@@ -311,15 +314,30 @@ class App (awn.AppletSimple):
             context.finish(False, False, time)
             return True
         result = False
-        if len(selection.data.split()) > 1:
-            for uri in selection.data.split():
-                # I wonder why there are zeroes sometimes?
-                uri = uri.strip('\000').strip()
-                result = self.MediaPlayer.enqueue_uri(uri)
+        # I wonder why there are zeroes sometimes?
+        all_uris = selection.data.strip('\000').strip()
+        uris = []
+
+        # lets support directories
+        for uri in all_uris.split():
+            uri_obj = gnomevfs.URI(uri)
+            path = urllib.unquote(uri_obj.path)
+            if os.path.isdir(path) == True:
+                for dir, subdirs, filenames in os.walk(path):
+                    for filename in filenames:
+                        file_uri = gnomevfs.URI(urllib.quote(dir))
+                        file_uri = file_uri.append_file_name(filename)
+                        is_audio = gnomevfs.Handle(file_uri).get_file_info(gnomevfs.FILE_INFO_GET_MIME_TYPE).mime_type.find('audio') != -1
+                        if is_audio == True: uris.append(str(file_uri))
+            else:
+                uris.append(str(uri_obj))
+
+        if len(uris) == 0: 
+            result = False
+        elif len(uris) > 1:
+            result = self.MediaPlayer.enqueue_uris(uris)
         else:
-            # I wonder why there are zeroes sometimes?
-            uri = selection.data.strip('\000').strip()
-            result = self.MediaPlayer.play_uri(uri)
+            result = self.MediaPlayer.play_uri(uris[0])
         context.finish(result, False, time)
         return True
 

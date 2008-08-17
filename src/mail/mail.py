@@ -21,7 +21,6 @@ import re
 import time
 import subprocess
 
-import gobject
 import pygtk
 pygtk.require("2.0")
 import gtk
@@ -115,7 +114,7 @@ class MailApplet:
 
         try:
             self.mail.update() # Update
-        except MailError:
+        except RuntimeError:
             self.setup_login_dialog(True)
 
         else:
@@ -136,7 +135,7 @@ class MailApplet:
 
         try:
             self.mail.update()
-        except MailError, (err):
+        except RuntimeError, (err):
             self.__setIcon("error")
 
             if self.showerror:
@@ -287,7 +286,7 @@ class MailApplet:
         
         submit_button = gtk.Button(label=_("Log In"), use_underline=False)
         def onsubmit(x=None, y=None):
-            self.awn.dialog.toggle("main-dialog", "hide")
+            self.awn.dialog.toggle("main", "hide")
             self.submitPWD(t["callback"](t["widgets"], self.awn))
         submit_button.connect("clicked", onsubmit)
         vbox.add(submit_button)
@@ -394,7 +393,7 @@ class Backends:
                  % (self.key.attrs["username"], self.key.password))
 
             if "bozo_exception" in f.keys():
-                raise MailError, _("There seem to be problems with our \
+                raise RuntimeError, _("There seem to be problems with our \
                     connection to your account. Your best bet is probably \
                     to log out and try again.")
             # Hehe, Google is funny. Bozo exception
@@ -455,7 +454,7 @@ class Backends:
                  self.key.password, self.key.attrs["domain"]))
 
             if "bozo_exception" in f.keys():
-                raise MailError, _("There seem to be problems with our \
+                raise RuntimeError, _("There seem to be problems with our \
                     connection to your account. Your best bet is probably \
                     to log out and try again.")
             # Hehe, Google is funny. Bozo exception
@@ -564,7 +563,7 @@ class Backends:
                 try:
                     self.server.pass_(key.password)
                 except poplib.error_proto:
-                    raise MailError, _("Could not log in")
+                    raise RuntimeError, _("Could not log in")
 
             def update(self):
                 messagesInfo = self.server.list()[1][-20:]

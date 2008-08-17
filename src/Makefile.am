@@ -3,7 +3,7 @@ if HAVE_VALA
 if MAINTAINER_MODE
 VALA_TEST = vala-test
 endif
-VALA_APPLETS = $(VALA_TEST) taskmand simple-launcher Taskmand-applet
+VALA_APPLETS = $(VALA_TEST) taskmand simple-launcher standalone-launcher Taskmand-applet 
 endif
 
 GCONF_APPLETS =

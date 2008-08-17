@@ -18,9 +18,6 @@
 
 import commands
 import os
-import re
-import sys
-import time
 
 import pygtk
 pygtk.require('2.0')

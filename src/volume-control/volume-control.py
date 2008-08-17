@@ -19,7 +19,6 @@
 
 import os
 import subprocess
-import time
 
 import pygtk
 pygtk.require("2.0")

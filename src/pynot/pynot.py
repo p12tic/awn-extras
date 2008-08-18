@@ -90,17 +90,13 @@ class Obj(object):
         self.__dict__.update(kwargs)
 
 class mywidget(gtk.Widget):
-    def __init__(self, display,error,parent_window,gtkwin):
+    def __init__(self, display,error,gtkwin):
         gtk.Widget.__init__(self)
         
         # Define widget value and set to default
         self.curr_x=1 #Starting width and height
         self.curr_y=1
  
-        self.parent_window=parent_window # reference to the box 
-                                         # inside the applet
-                                         # used to re-parent this widget
-
         self.dsp = display.Display()      # references to Xlib
         self.scr = self.dsp.screen()
         self.root    = self.scr.root
@@ -135,9 +131,7 @@ class mywidget(gtk.Widget):
         self.selection = self.dsp.intern_atom("_NET_SYSTEM_TRAY_S%d" % self.dsp.get_default_screen())
         self.selowin = self.scr.root.create_window(-1, -1, 1, 1, 0, self.scr.root_depth)
         owner = self.dsp.get_selection_owner(self.selection)
-        if(owner==X.NONE):
-            print "K."
-        else:
+        if(owner!=X.NONE):
             # If someone already has the system tray... BAIL!
             pynotify.init("PyNot")
             n=pynotify.Notification("PyNot Error", "A system tray already exists")
@@ -174,7 +168,7 @@ class mywidget(gtk.Widget):
         self.set_flags(gtk.REALIZED)
 
         self.window=gdk.window_foreign_new(self.wind.id)
-        self.window.reparent(self.parent_window.window,0,0)
+        self.window.reparent(self.gtkwin.window,0,0)
         # Take the system manager window (not selection owner!)
         # And make it the gdk.window of the custom widget.
 
@@ -200,13 +194,16 @@ class mywidget(gtk.Widget):
             gobject.timeout_add(100,self.tr__updateAlpha,False)
         # Either do a single render of Alpha, or cause one every REFRESH 
         # milliseconds
-        self.gtkwin.chbg(self)
+        self.chbg()
+        self.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#"+BG_COLOR[2:8]))
+                              # Change the theme for this window
+        gobject.timeout_add(1000,self.chbg)
+                              # check for BG change every second,
+                              # again, may be a good idea to do this less often
+
 
         self.realized= 1
         # and now we can safely render alpha :D
-
-
-
     
     def do_unrealize(self):
         # The do_unrealized method is responsible for freeing the GDK resources
@@ -232,10 +229,6 @@ class mywidget(gtk.Widget):
         if self.flags() & gtk.REALIZED:
             self.window.move_resize(*allocation)
  
-
-
-
-
     def tr__taskDelete(self,tid):
     #--------------------------------
         """ Delete the given task ID if it's in the tray/task list """
@@ -509,6 +502,34 @@ class mywidget(gtk.Widget):
         win.change_property(self._DESKTOP, Xatom.CARDINAL, 32, [0xffffffffL])
         win.change_property(dsp.intern_atom("_NET_WM_WINDOW_TYPE"),
             Xatom.ATOM, 32, [dsp.intern_atom("_NET_WM_WINDOW_TYPE_UTILITY")])
+    
+    def cleanup(self):
+        # This is my attempt to cleanly close, in such a way that the icons do
+        # not get an X window error
+
+        for tid in self.tray.order:
+            t = self.tray.tasks[tid]
+            g= t.obj.query_tree()
+            t.obj.unmap()
+            t.obj.unmap_sub_windows()
+            t.obj.reparent(g.root.id,0,0)
+        self.dsp.flush()
+        return None
+
+    def chbg(self):
+        if IMPATH in [None,'']:
+            image=gdk.pixbuf_new_from_file(D_IMPATH)
+        else:
+            image=gdk.pixbuf_new_from_file(IMPATH)
+        (pic,mask)=image.render_pixmap_and_mask()
+        if(USEIM==True):  # If the user wants an image ...
+            self.window.set_back_pixmap(pic,False) #Change image
+            self.window.clear()
+            self.window.clear_area_e(0,0,self.curr_x*2,self.curr_y)
+                #and cause an expose.
+        return True
+
+
 
 gobject.type_register(mywidget)
 # Register it as a widget
@@ -517,53 +538,49 @@ class App(awn.Applet):
     def __init__(self,uid,orient,height):
         awn.Applet.__init__(self,uid,orient,height)
         self.height=height
-        self.box1= gtk.VBox() # Create a box,
-        self.add(self.box1)   # put it in the applet
-        self.box1.show()      # and show it.
-        self.widg = mywidget(display, error, self.box1,self)
+        self.widg=None
+        self.loadconf()
+        if(HIGH==0):
+            self.makeconf()
+        self.widg = mywidget(display, error, self)
                               # create a new custom widget.
                               # This is the system tray
-        gobject.timeout_add(1000,loadconf,self.widg)
+        gobject.timeout_add(1000,self.loadconf)
                               # This causes a time out of 1 second,
                               # each second, checking if the config has changed
                               # May be a good idea to turn this down
-        self.box1.add(self.widg)
-        self.widg.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#"+BG_COLOR[2:8]))
-                              # Change the theme for this window
-        gobject.timeout_add(1000,self.chbg,self.widg)
-                              # check for BG change every second,
-                              # again, may be a good idea to do this less often
+        self.add(self.widg)
 
-    def chbg(self,widg):
-        if IMPATH in [None,'']:
-            image=gdk.pixbuf_new_from_file(D_IMPATH)
-        else:
-            image=gdk.pixbuf_new_from_file(IMPATH)
-        (pic,mask)=image.render_pixmap_and_mask()
-        if(USEIM==True):  # If the user wants an image ...
-            widg.window.set_back_pixmap(pic,False) #Change image
-            widg.window.clear()
-            widg.window.clear_area_e(0,0,self.widg.curr_x*2,self.widg.curr_y)
-                #and cause an expose.
+    def loadconf(self):
+        # Load the config
+        global BG_COLOR, CUSTOM_Y, HIGH, BORDER, DIVIDEBYZERO,ZEROPID,IMPATH,USEIM,ICONSIZE
+        oldBG=BG_COLOR
+        BG_COLOR     = awn_options.get_string(awn.CONFIG_DEFAULT_GROUP,"BG_COLOR")
+        CUSTOM_Y     = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"CUSTOM_Y")
+        HIGH         = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"HIGH"    )
+        BORDER       = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"BORDER"  )
+        DIVIDEBYZERO = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"TRANS"   )
+        ZEROPID      = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"ZEROPID" )
+        IMPATH       = awn_options.get_string(awn.CONFIG_DEFAULT_GROUP,"IMPATH"  )
+        USEIM        = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"USEIM"   )
+        ICONSIZE     = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"ICONSIZE")
+        # If BG has changed, reset it
+        if(oldBG != BG_COLOR):
+            if(self.widg != None):
+                self.widg.needredraw=True
         return True
 
-
-def cleanup(k):
-    # This is my attempt to cleanly close, in such a way that the icons do
-    # not get an X window error
-    d = display.Display()
-    scree=d.screen()
-    k.widg.selowin.destroy()
-
-    for tid in k.widg.tray.order:
-        t = k.widg.tray.tasks[tid]
-        g= t.obj.query_tree()
-        t.obj.unmap()
-        t.obj.unmap_sub_windows()
-        t.obj.reparent(g.root.id,0,0)
-    d.flush()
-    return None
-
+    def makeconf(self):
+        awn_options.set_string(awn.CONFIG_DEFAULT_GROUP,"BG_COLOR",D_BG_COLOR)
+        awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"BORDER",D_BORDER)
+        awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"CUSTOM_Y",D_CUSTOM_Y)
+        awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"HIGH",D_HIGH)
+        awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"TRANS",D_DIVIDEBYZERO)
+        awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"ZEROPID",D_ZEROPID)
+        awn_options.set_string(awn.CONFIG_DEFAULT_GROUP,"IMPATH",D_IMPATH)
+        awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"USEIM",D_USEIM)
+        awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"ICONSIZE",D_ICONSIZE)
+        self.loadconf()
 
 global path
 path= sys.argv[0] 
@@ -573,61 +590,13 @@ path = path[0:-8]
 awn.init(sys.argv[1:])
 awn_options=awn.Config('pynot',None)
 
-def loadconf(thingie):
-    # Load the config
-    global BG_COLOR, CUSTOM_Y, HIGH, BORDER, DIVIDEBYZERO,ZEROPID,IMPATH,USEIM,ICONSIZE
-    oldBG=BG_COLOR
-    BG_COLOR     = awn_options.get_string(awn.CONFIG_DEFAULT_GROUP,"BG_COLOR")
-    CUSTOM_Y     = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"CUSTOM_Y")
-    HIGH         = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"HIGH"    )
-    BORDER       = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"BORDER"  )
-    DIVIDEBYZERO = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"TRANS"   ) 
-    ZEROPID      = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"ZEROPID" )
-    IMPATH       = awn_options.get_string(awn.CONFIG_DEFAULT_GROUP,"IMPATH"  )
-    USEIM        = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"USEIM"   )
-    ICONSIZE     = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"ICONSIZE")
-    # If BG has changed, reset it
-    if(oldBG != BG_COLOR):
-        if(thingie != None):
-            thingie.needredraw=True
-    return True
-
-loadconf(None)
-
-if(HIGH==0):
-    # HIGH would only =0 if it has not been set before :)
-    # Set the default values
-    HIGH     = D_HIGH
-    BORDER   = D_BORDER
-    CUSTOM_Y = D_CUSTOM_Y
-    BG_COLOR = D_BG_COLOR
-    DIVIDEBYZERO = D_DIVIDEBYZERO
-    ZEROPID  = D_ZEROPID
-    IMPATH   = D_IMPATH
-    USEIM    = D_USEIM
-    ICONSIZE = D_ICONSIZE
-    awn_options.set_string(awn.CONFIG_DEFAULT_GROUP,"BG_COLOR",BG_COLOR)
-    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"BORDER",BORDER)
-    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"CUSTOM_Y",CUSTOM_Y)
-    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"HIGH",HIGH)
-    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"TRANS",DIVIDEBYZERO)
-    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"ZEROPID",ZEROPID)
-    awn_options.set_string(awn.CONFIG_DEFAULT_GROUP,"IMPATH",IMPATH)
-    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"USEIM",USEIM)
-    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"ICONSIZE",ICONSIZE)
-
-if(ICONSIZE==0):
-    ICONSIZE = D_ICONSIZE
-    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"ICONSIZE",ICONSIZE)
-
-
 a = App(awn.uid, awn.orient, awn.height)
 awn.init_applet(a)
 a.show_all()
-atexit.register(cleanup,a)
+atexit.register(a.widg.cleanup)
 try:
     gtk.main()
 except:
-    cleanup(a) 
+    a.widg.cleanup() 
 
 

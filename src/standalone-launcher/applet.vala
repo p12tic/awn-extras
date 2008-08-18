@@ -2635,7 +2635,8 @@ class LauncherApplet : DBusComm
 		Pixbuf  temp;
 	    bool    scale_icon=false;
         
-		Wnck.Window active=screen.get_active_window();//active can be null
+        prev = (Wnck.Window) screen;
+		Wnck.Window active=wnck_screen.get_active_window();//active can be null
 		activated=false;
 		if (prev !=null)
 		{

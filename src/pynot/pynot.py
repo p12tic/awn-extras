@@ -33,6 +33,8 @@ import gobject      #Gtk/Gdk/GObj for interfacing with the applet
 import awn
 import cairo        # Awn and cairo drawing
 
+import pynotify
+
 awn.check_dependencies(globals(),"Xlib")
 from Xlib import X, display, error, Xatom, Xutil
 import Xlib.protocol.event
@@ -132,11 +134,27 @@ class mywidget(gtk.Widget):
         self.manager = self.dsp.intern_atom("MANAGER")
         self.selection = self.dsp.intern_atom("_NET_SYSTEM_TRAY_S%d" % self.dsp.get_default_screen())
         self.selowin = self.scr.root.create_window(-1, -1, 1, 1, 0, self.scr.root_depth)
+        owner = self.dsp.get_selection_owner(self.selection)
+        if(owner==X.NONE):
+            print "K."
+        else:
+            # If someone already has the system tray... BAIL!
+            pynotify.init("PyNot")
+            n=pynotify.Notification("PyNot Error", "A system tray already exists")
+            n.set_urgency(pynotify.URGENCY_CRITICAL)
+            n.show()
+            dock_config = awn.Config()
+            lst = [x for x in dock_config.get_list(awn.CONFIG_DEFAULT_GROUP, 'applets_list', awn.CONFIG_LIST_STRING)  if 'pynot.desktop' not in x]
+
+            dock_config.set_list(awn.CONFIG_DEFAULT_GROUP, 'applets_list',awn.CONFIG_LIST_STRING, lst)
+
+            sys.exit()
+
+        
         self.selowin.set_selection_owner(self.selection, X.CurrentTime)
         self.tr__sendEvent(self.root, self.manager,[X.CurrentTime, self.selection,self.selowin.id], (X.StructureNotifyMask))
-        # All new icons, and all events for the system tray get sent to this
-        # window
 
+ 
         self.tr__setProps(self.dsp, self.wind)
         # Set a list of Properties that we'll need
 

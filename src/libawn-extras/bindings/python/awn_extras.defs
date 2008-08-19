@@ -21,6 +21,15 @@
 ; object definitions ...
 ;; Enumerations and flags ...
 
+(define-enum Urgency
+  (in-module "AwnExtras")
+  (c-name "NotifyUrgency")
+  (values
+	  '("low" "NOTIFY_URGENCY_LOW")
+	  '("normal" "NOTIFY_URGENCY_NORMAL")
+	  '("critical" "NOTIFY_URGENCY_CRITICAL")    
+  )
+)
 
 ;; From awn-extras.h
 
@@ -58,6 +67,19 @@
     '("gchar*" "icon_str")
     '("glong" "timeout")
     '("gboolean" "async")
+  )
+)
+
+(define-function notify_message_extended
+  (c-name "notify_message_extended")
+  (return-type "none")
+  (parameters
+    '("gchar*" "summary")
+    '("gchar*" "body")
+    '("gchar*" "icon_str")
+    '("NotifyUrgency" "urgency")
+    '("glong" "timeout")
+    '("GError**" "perror")
   )
 )
 

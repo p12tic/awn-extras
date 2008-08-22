@@ -82,7 +82,9 @@ def create_frame(parent, label):
 def deprecated(old, new):
     def d(f):
         def w(*args, **kwargs):
-            print "\nAWNLib Warning in %s:\n\t%s is deprecated; use %s instead\n" % (os.path.split(___file___)[1], old, new)
+            if _globalRegister["Applet"][0].meta.hasOption("debug"):
+                print "\nAWNLib Warning in %s:\n\t%s is deprecated;\
+ use %s instead\n" % (os.path.split(___file___)[1], old, new)
             return f(*args, **kwargs)
         return w
     return d
@@ -301,13 +303,16 @@ class Dialogs:
                 self.set_artists(parent.meta["artists"])
 
             if "logo" in parent.meta:
-                self.set_logo(gtk.gdk.pixbuf_new_from_file_at_size(parent.meta["logo"], 48, 48))
+                self.set_logo(gtk.gdk.pixbuf_new_from_file_at_size( \
+                    parent.meta["logo"], 48, 48))
 
                 self.update_logo_icon()
                 parent.connect("height-changed", self.update_logo_icon)
             elif "theme" in parent.meta:
-                # It is assumed that the C{awn.Icons} object has been set via set_awn_icon() in C{Icon}
-                self.set_logo(parent.get_awn_icons().get_icon_simple_at_height(48))
+                # It is assumed that the C{awn.Icons} object has been set via
+                # set_awn_icon() in C{Icon}
+                self.set_logo(parent.get_awn_icons(). \
+                    get_icon_simple_at_height(48))
 
                 self.update_theme_icon()
                 parent.connect("height-changed", self.update_theme_icon)
@@ -324,15 +329,17 @@ class Dialogs:
                 self.hide()
 
         def update_logo_icon(self, widget=None, event=None):
-            """ Updates the applet's logo to be of the same height as the panel """
+            """ Sets the applet's logo to be of the same height as the panel """
 
             height = self.__parent.get_height()
-            self.set_icon(gtk.gdk.pixbuf_new_from_file_at_size(self.__parent.meta["logo"], height, height))
+            self.set_icon(gtk.gdk.pixbuf_new_from_file_at_size( \
+                self.__parent.meta["logo"], height, height))
 
         def update_theme_icon(self, widget=None, event=None):
-            """ Updates the applet's themed logo to be of the same height as the panel """
+            """ Sets the applet's logo to be of the same height as the panel """
 
-            self.set_icon(self.__parent.get_awn_icons().get_icon_simple_at_height(self.__parent.get_height()))
+            self.set_icon(self.__parent.get_awn_icons(). \
+                get_icon_simple_at_height(self.__parent.get_height()))
 
     class PreferencesDialog(gtk.Dialog):
         """ A Dialog window that has the title "<applet's name> Preferences",
@@ -444,7 +451,7 @@ class Icon:
             # TODO does not handle multiple icons yet
             self.theme(parent.meta["theme"])
 
-    def file(self, file, set=True):
+    def file(self, file, set=True, interp="bilinear"):
         """
         Get an icon from a file location.
 
@@ -452,6 +459,8 @@ class Icon:
         @type file: C{string}
         @param set: Whether to also set the icon. True by default.
         @type set: C{bool}
+        @param interp: Interpolation method.
+        @type interp: C{str}, one of "bilinear", "hyper", "nearest", "tile"
         @return: The resultant pixbuf or None (if C{set} is C{True})
         @rtype: C{gtk.gdk.Pixbuf} or C{None}
         """
@@ -463,7 +472,7 @@ class Icon:
         icon = gtk.gdk.pixbuf_new_from_file(file)
 
         if set:
-            self.set(icon)
+            self.set(icon, interp=interp)
         else:
             return icon
 
@@ -479,7 +488,7 @@ class Icon:
 
         return self.__parent.set_awn_icon(self.__parent.meta["short"], name)
 
-    def surface(self, surface, pixbuf=None, set=True):
+    def surface(self, surface, pixbuf=None, set=True, interp="bilinear"):
         """
         Convert a C{cairo} surface to a C{gtk.gdk.Pixbuf}.
 
@@ -491,6 +500,8 @@ class Icon:
         @type pixbuf: C{gtk.gdk.Pixbuf}
         @param set: Whether to also set the icon. True by default.
         @type set: C{bool}
+        @param interp: Interpolation method.
+        @type interp: C{str}, one of "bilinear", "hyper", "nearest", "tile"
         @return: The resultant pixbuf or None (if C{set} is C{True})
         @rtype: C{gtk.gdk.Pixbuf} or C{None}
         """
@@ -501,11 +512,11 @@ class Icon:
             icon = extras.surface_to_pixbuf(surface, pixbuf)
 
         if set:
-            self.set(icon)
+            self.set(icon, interp=interp)
         else:
             return icon
 
-    def set(self, icon, raw=False):
+    def set(self, icon, raw=False, interp="bilinear"):
         """
         Set a C{gtk.gdk.pixbuf} or C{cairo.Context} as your applet icon.
 
@@ -513,6 +524,8 @@ class Icon:
         @type icon: C{gtk.gdk.Pixbuf} or C{cairo.Context}
         @param raw: If true, don't resize the passed pixbuf. False by default.
         @type raw: C{bool}
+        @param interp: Interpolation method.
+        @type interp: C{str}, one of "bilinear", "hyper", "nearest", "tile"
         """
 
         if isinstance(icon, cairo.Context):
@@ -529,9 +542,11 @@ class Icon:
             h2 = self.__height
             w = icon.get_width()
             w2 = int((1.0*h2)/h*w)
+            
+            interp = getattr(gtk.gdk, "INTERP_"+interp.upper())
 
             if h2 != h:
-                icon = icon.scale_simple(w2, h2, gtk.gdk.INTERP_BILINEAR)
+                icon = icon.scale_simple(w2, h2, interp)
         self.__parent.set_temp_icon(icon)
         self.__parent.show()
 
@@ -673,7 +688,8 @@ class Settings:
         self.__dict = None
 
         if "short" in parent.meta:
-            if "settings-per-instance" in parent.meta and parent.meta["settings-per-instance"]:
+            if "settings-per-instance" in parent.meta.options and \
+                parent.meta.options["settings-per-instance"]:
                 self.__folder = "%s-%s" % (parent.meta["short"], parent.uid)
             else:
                 self.__folder = parent.meta["short"]
@@ -1108,8 +1124,8 @@ class Timing:
         @param callback: Function to be called.
         @type callback: C{function}
         @param seconds: Number of seconds within each call.
-        @type seondsc: C{float} or C{int}
-        @param start: Whether to start the callback automatically. True by default
+        @type seconds: C{float} or C{int}
+        @param start: Whether to start the callback automatically
         @type start: C{bool}
         @return: A L{Callback} object for the C{callback} parameter
         @rtype: L{Callback}
@@ -1119,6 +1135,23 @@ class Timing:
         if start:
             c.start()
         return c
+    
+    def delay(self, callback, seconds):
+        """
+        Delay the execution of a function
+        
+        @param callback: Function
+        @type callback: C{function}
+        @param seconds: Number of seconds to delay function call
+        @type seconds: C{float} or C{int}
+        """
+        
+        def t():
+            callback()
+            return False
+        
+        gobject.timeout_add(int(self.__seconds * 1000), t)
+        
 
     @deprecated("timing.time", "timing.register")
     def time(self, callback, seconds):
@@ -1150,7 +1183,7 @@ class Timing:
 
             return True
         
-        def is_started(self):
+        def isStarted(self):
             """
             Returns True if the callback has been scheduled to run after
             each interval, False if the callback is stopped.
@@ -1160,6 +1193,14 @@ class Timing:
             """
 
             return self.__timer_id is not None
+
+        @deprecated("Callabck.is_started", "Callback.isStarted")
+        def is_started(self):
+            """
+            Deprecated. Use isStarted instead
+            """
+            
+            return self.isStarted()
 
         def start(self):
             """
@@ -1171,15 +1212,17 @@ class Timing:
 
             if self.__timer_id is None:
                 if int(self.__seconds) == self.__seconds:
-                    self.__timer_id = gobject.timeout_add_seconds(int(self.__seconds), self.__run)
+                    self.__timer_id = gobject.timeout_add_seconds( \
+                        int(self.__seconds), self.__run)
                 else:
-                    self.__timer_id = gobject.timeout_add(int(self.__seconds * 1000), self.__run)
+                    self.__timer_id = gobject.timeout_add(int( \
+                        self.__seconds * 1000), self.__run)
                 return True
             return False
 
         def stop(self):
             """
-            Stop the callback from ever running again if it was scheduled to run.
+            Stop the callback from ever running again if it was scheduled to run
 
             @return: True if the callback was stopped, False otherwise 
             @rtype: L{bool}
@@ -1286,14 +1329,17 @@ class Effects:
 
 
 class Meta:
-    def __init__(self, parent, info={}):
+    def __init__(self, parent, info={}, options=()):
         """
         Creates a new Meta object.
 
         @param parent: The parent applet of the meta instance.
         @type parent: L{Applet}
-        @param info: Default values for the meta dictionary
+        @param info: Values for the meta dictionary
         @type info: C{dict}
+        @param options: Options to set. Format:
+            (option", "option", ("option": True|False), ("option":
+                ("suboption", "suboption", ("suboption": True|False), ...)))
         """
 
         self.__parent = parent
@@ -1302,6 +1348,8 @@ class Meta:
                      "short": "applet",
                      }
         self.update(info)
+        
+        self.__options = self.__parseOptions(options)
 
     def update(self, info):
         """
@@ -1312,6 +1360,22 @@ class Meta:
         """
 
         self.__info.update(info)
+        
+    def __parseOptions(options):
+        t = {}
+        for i in options:
+            if type(i) == types.StringType:
+                t[i] = True
+            elif type(i) in (types.TupleType, types.ListType):
+                if type(i[1]) == types.BooleanType:
+                    t[i[0]] = i[1]
+                elif type(i[1]) in (types.TupleType, types.ListType):
+                    t[i[0]] = f(i[1])
+        
+        return t
+        
+    def options(self, opts):
+        self.__options = self.__parseOptions(opts)
 
     def __getitem__(self, key):
         """
@@ -1364,7 +1428,7 @@ class Meta:
 
 
 class Applet(awn.AppletSimple):
-    def __init__(self, uid, orient, height, meta={}):
+    def __init__(self, uid, orient, height, meta={}, options=[]):
         """
         Create a new instance of the Applet object.
 
@@ -1388,7 +1452,7 @@ class Applet(awn.AppletSimple):
         self.orient = orient
 
         # Create all the child-objects
-        self.meta = Meta(self, meta)
+        self.meta = Meta(self, meta, options)
         self.icon = Icon(self)
         self.title = Title(self)
         self.errors = Errors(self)
@@ -1399,9 +1463,14 @@ class Applet(awn.AppletSimple):
         self.notify = Notify(self)
         self.effects = Effects(self)
         self.network = Networking(self)
+        
+        if "Applet" in _globalRegister:
+            _globalRegister["Applet"].append(self)
+        else:
+            _globalRegister["Applet"] = [self]
 
 
-def initiate(meta={}):
+def initiate(meta={}, options=[]):
     """
     Do the work to create a new applet. This does not yet run the applet.
 
@@ -1412,7 +1481,8 @@ def initiate(meta={}):
     """
 
     awn.init(sys.argv[1:]) # Initiate
-    applet = Applet(awn.uid, awn.orient, awn.height, meta=meta) # Construct
+    applet = Applet(awn.uid, awn.orient, awn.height, meta=meta, options=options)
+    # Construct
     awn.init_applet(applet) # Add
 
     return applet

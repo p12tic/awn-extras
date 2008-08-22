@@ -32,13 +32,6 @@ gettext.bindtextdomain(APP, DIR)
 gettext.textdomain(APP)
 _ = gettext.gettext
 
-applet_name = _("Mail Applet")
-applet_version = "0.2.8"
-applet_description = _("An applet to check one's email")
-
-# Logo of the applet, shown in the GTK About dialog
-applet_logo = os.path.join(os.path.dirname(__file__), "Themes/Tango/read.svg")
-
 themes_dir = os.path.join(os.path.dirname(__file__), "Themes")
 
 
@@ -641,14 +634,16 @@ class Backends:
                     "usessl": widgets[3].get_active()}, "network")
 
 if __name__ == "__main__":
-    applet = AWNLib.initiate({"name": applet_name, "short": "mail",
-	    "version": applet_version,
-        "description": applet_description,
-        "logo": applet_logo,
+    applet = AWNLib.initiate({
+        "name": _("Mail Applet"),
+        "short": "mail",
+	    "version": "0.2.8",
+        "description": _("An applet to check one's email"),
+        "logo": os.path.join(os.path.dirname(__file__), "Themes/Tango/read.svg"),
         "author": "Pavel Panchekha",
         "copyright-year": 2008,
         "email": "pavpanchekha@gmail.com",
-        "type": ["Network", "Email"],
-        "settings-per-instance": True})
+        "type": ["Network", "Email"]},
+        ["settings-per-instance", "detach"])
     applet = MailApplet(applet)
     AWNLib.start(applet.awn)

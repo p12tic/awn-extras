@@ -69,9 +69,6 @@ class CairoClockApplet:
         dialog.add(calendar)
     
     def setup_context_menu(self):
-        """ Creates a context menu to activate "Preferences" ("About" window
-        is created automatically by AWNLib) """
-        
         prefs = glade.XML(glade_file)
         prefs.get_widget("dialog-vbox").reparent(self.applet.dialog.new("preferences").vbox)
         
@@ -133,8 +130,8 @@ class CairoClockApplet:
         combobox_theme.set_active(self.themes.index(theme))
         combobox_theme.connect("changed", self.combobox_theme_changed_cb)
     
-    def combobox_theme_changed_cb(self, button):
-        self.applet.settings["theme"] = self.themes[button.get_active()]
+    def combobox_theme_changed_cb(self, combobox):
+        self.applet.settings["theme"] = self.themes[combobox.get_active()]
         
         # Load the new theme and update the clock
         self.__clock_updater.load_theme()

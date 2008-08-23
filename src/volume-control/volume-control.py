@@ -352,7 +352,7 @@ if __name__ == "__main__":
         "version": applet_version,
         "description": applet_description,
         "logo": applet_logo,
-        "author": "onox, Pavel Panchekha",
+        "author": "onox",
         "copyright-year": 2008,
         "authors": ['Richard "nazrat" Beyer', 'Jeff "Jawbreaker" Hubbard',
                     'Spencer Creasey <screasey@gmail.com>',

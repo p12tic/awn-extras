@@ -218,10 +218,9 @@ class Dialogs:
         """
 
         force = force.lower()
-        assert force in ("hide", "show", ""), \
-            "Force must be \"hide\", \"show\", or \"\""
-        assert dialog in self.__register, \
-            "Dialog must be registered"
+
+        assert force in ("hide", "show", ""), "Force must be \"hide\", \"show\", or \"\""
+        assert dialog in self.__register, "Dialog must be registered"
 
         if self.__parent:
             self.__parent.title.hide()
@@ -293,9 +292,8 @@ class Dialogs:
             if "description" in parent.meta:
                 self.set_comments(parent.meta["description"])
 
-            self.set_copyright("Copyright \xc2\xa9 " \
-                + str(parent.meta["copyright-year"]) \
-                + " " + parent.meta["author"])
+            copyright_info = (parent.meta["copyright-year"], parent.meta["author"])
+            self.set_copyright("Copyright \xc2\xa9 %d %s" % copyright_info)
 
             if "authors" in parent.meta:
                 self.set_authors(parent.meta["authors"])
@@ -303,16 +301,13 @@ class Dialogs:
                 self.set_artists(parent.meta["artists"])
 
             if "logo" in parent.meta:
-                self.set_logo(gtk.gdk.pixbuf_new_from_file_at_size( \
-                    parent.meta["logo"], 48, 48))
+                self.set_logo(gtk.gdk.pixbuf_new_from_file_at_size(parent.meta["logo"], 48, 48))
 
                 self.update_logo_icon()
                 parent.connect("height-changed", self.update_logo_icon)
             elif "theme" in parent.meta:
-                # It is assumed that the C{awn.Icons} object has been set via
-                # set_awn_icon() in C{Icon}
-                self.set_logo(parent.get_awn_icons(). \
-                    get_icon_simple_at_height(48))
+                # It is assumed that the C{awn.Icons} object has been set via set_awn_icon() in C{Icon}
+                self.set_logo(parent.get_awn_icons().get_icon_simple_at_height(48))
 
                 self.update_theme_icon()
                 parent.connect("height-changed", self.update_theme_icon)
@@ -332,14 +327,12 @@ class Dialogs:
             """ Sets the applet's logo to be of the same height as the panel """
 
             height = self.__parent.get_height()
-            self.set_icon(gtk.gdk.pixbuf_new_from_file_at_size( \
-                self.__parent.meta["logo"], height, height))
+            self.set_icon(gtk.gdk.pixbuf_new_from_file_at_size(self.__parent.meta["logo"], height, height))
 
         def update_theme_icon(self, widget=None, event=None):
             """ Sets the applet's logo to be of the same height as the panel """
 
-            self.set_icon(self.__parent.get_awn_icons(). \
-                get_icon_simple_at_height(self.__parent.get_height()))
+            self.set_icon(self.__parent.get_awn_icons().get_icon_simple_at_height(self.__parent.get_height()))
 
     class PreferencesDialog(gtk.Dialog):
         """ A Dialog window that has the title "<applet's name> Preferences",
@@ -688,8 +681,7 @@ class Settings:
         self.__dict = None
 
         if "short" in parent.meta:
-            if "settings-per-instance" in parent.meta.options and \
-                parent.meta.options["settings-per-instance"]:
+            if "settings-per-instance" in parent.meta.options and parent.meta.options["settings-per-instance"]:
                 self.__folder = "%s-%s" % (parent.meta["short"], parent.uid)
             else:
                 self.__folder = parent.meta["short"]
@@ -1131,11 +1123,11 @@ class Timing:
         @rtype: L{Callback}
         """
 
-        c = self.Callback(callback, seconds)
+        cb = self.Callback(callback, seconds)
         if start:
-            c.start()
-        return c
-    
+            cb.start()
+        return cb
+
     def delay(self, callback, seconds):
         """
         Delay the execution of a function
@@ -1145,12 +1137,12 @@ class Timing:
         @param seconds: Number of seconds to delay function call
         @type seconds: C{float} or C{int}
         """
-        
-        def t():
+
+        def delayed_cb():
             callback()
             return False
-        
-        gobject.timeout_add(int(self.__seconds * 1000), t)
+
+        gobject.timeout_add(int(self.__seconds * 1000), delayed_cb)
         
 
     @deprecated("timing.time", "timing.register")
@@ -1183,7 +1175,7 @@ class Timing:
 
             return True
         
-        def isStarted(self):
+        def is_started(self):
             """
             Returns True if the callback has been scheduled to run after
             each interval, False if the callback is stopped.
@@ -1193,14 +1185,6 @@ class Timing:
             """
 
             return self.__timer_id is not None
-
-        @deprecated("Callabck.is_started", "Callback.isStarted")
-        def is_started(self):
-            """
-            Deprecated. Use isStarted instead
-            """
-            
-            return self.isStarted()
 
         def start(self):
             """
@@ -1212,17 +1196,15 @@ class Timing:
 
             if self.__timer_id is None:
                 if int(self.__seconds) == self.__seconds:
-                    self.__timer_id = gobject.timeout_add_seconds( \
-                        int(self.__seconds), self.__run)
+                    self.__timer_id = gobject.timeout_add_seconds(int(self.__seconds), self.__run)
                 else:
-                    self.__timer_id = gobject.timeout_add(int( \
-                        self.__seconds * 1000), self.__run)
+                    self.__timer_id = gobject.timeout_add(int(self.__seconds * 1000), self.__run)
                 return True
             return False
 
         def stop(self):
             """
-            Stop the callback from ever running again if it was scheduled to run
+            Stop the callback from ever running again if it was scheduled to run.
 
             @return: True if the callback was stopped, False otherwise 
             @rtype: L{bool}
@@ -1344,9 +1326,9 @@ class Meta:
 
         self.__parent = parent
         self.__info = {
-                     "name": "Applet",
-                     "short": "applet",
-                     }
+            "name": "Applet",
+            "short": "applet"
+        }
         self.update(info)
         
         self.__options = self.__parseOptions(options)
@@ -1360,7 +1342,7 @@ class Meta:
         """
 
         self.__info.update(info)
-        
+
     def __parseOptions(options):
         t = {}
         for i in options:
@@ -1371,9 +1353,9 @@ class Meta:
                     t[i[0]] = i[1]
                 elif type(i[1]) in (types.TupleType, types.ListType):
                     t[i[0]] = f(i[1])
-        
+
         return t
-        
+
     def options(self, opts):
         self.__options = self.__parseOptions(opts)
 
@@ -1480,22 +1462,21 @@ def initiate(meta={}, options=[]):
     @rtype: L{Applet}
     """
 
-    awn.init(sys.argv[1:]) # Initiate
+    awn.init(sys.argv[1:])
     applet = Applet(awn.uid, awn.orient, awn.height, meta=meta, options=options)
-    # Construct
-    awn.init_applet(applet) # Add
+    awn.init_applet(applet)
 
     return applet
 
 
 def start(applet):
     """
-    Start the applet. This makes the icon appear on the bar and starts GTK+/
+    Start the applet. This makes the icon appear on the bar and starts GTK+.
 
     @param applet: The applet to start.
     @type applet: L{Applet}
     """
 
-    applet.show_all() # Show
+    applet.show_all()
     gobject.threads_init() # Threading for Networking
-    gtk.main() # Start
+    gtk.main()

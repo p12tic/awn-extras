@@ -681,7 +681,7 @@ class Settings:
         self.__dict = None
 
         if "short" in parent.meta:
-            if "settings-per-instance" in parent.meta.options and parent.meta.options["settings-per-instance"]:
+            if "settings-per-instance" in parent.meta and parent.meta["settings-per-instance"]:
                 self.__folder = "%s-%s" % (parent.meta["short"], parent.uid)
             else:
                 self.__folder = parent.meta["short"]
@@ -1329,9 +1329,9 @@ class Meta:
             "name": "Applet",
             "short": "applet"
         }
+
         self.update(info)
-        
-        self.__options = self.__parseOptions(options)
+        self.update(self.__parse_options(options))
 
     def update(self, info):
         """
@@ -1343,7 +1343,7 @@ class Meta:
 
         self.__info.update(info)
 
-    def __parseOptions(options):
+    def __parse_options(self, options):
         t = {}
         for i in options:
             if type(i) == types.StringType:
@@ -1355,9 +1355,6 @@ class Meta:
                     t[i[0]] = f(i[1])
 
         return t
-
-    def options(self, opts):
-        self.__options = self.__parseOptions(opts)
 
     def __getitem__(self, key):
         """

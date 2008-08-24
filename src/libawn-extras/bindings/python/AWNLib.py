@@ -1141,7 +1141,7 @@ class Timing:
             callback()
             return False
 
-        gobject.timeout_add(int(self.__seconds * 1000), cb)
+        gobject.timeout_add(int(seconds * 1000), cb)
         
 
     @deprecated("timing.time", "timing.register")
@@ -1337,6 +1337,8 @@ class Meta:
             "short": "applet"
         }
 
+        self.__options = {}
+
         self.update(info)
         self.options(options)
 
@@ -1358,7 +1360,7 @@ class Meta:
         @type opts: C{list} or C{tuple}
         """
         
-        self.__otions.update(self.__parseOptions(opts))
+        self.__options.update(self.__parseOptions(opts))
 
     def hasOption(self, option):
         """

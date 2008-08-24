@@ -1378,6 +1378,7 @@ class Meta:
             else:
                 srch = srch[i]
         
+        return True
 
     def __parseOptions(self, options):
         t = {}

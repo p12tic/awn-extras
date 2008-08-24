@@ -322,7 +322,7 @@ if __name__ == "__main__":
         "author": "onox",
         "copyright-year": 2008,
         "authors": ["onox"],
-        "artists": ["Lapo Calamandrei", "Rodney Dawes", "Jakub Steiner", "Artists of MacSlow's Cairo-Clock"],
-        "settings-per-instance": True})
+        "artists": ["Lapo Calamandrei", "Rodney Dawes", "Jakub Steiner", "Artists of MacSlow's Cairo-Clock"]},
+        ["settings-per-instance"])
     CairoClockApplet(applet)
     AWNLib.start(applet)

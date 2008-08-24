@@ -500,7 +500,7 @@ if __name__ == "__main__":
         "theme": applet_theme_logo,
         "author": "onox, Randal Barlow",
         "copyright-year": 2008,
-        "authors": ["onox <denkpadje@gmail.com>", "Randal Barlow <im.tehk at gmail.com>"],
-        "settings-per-instance": True})
+        "authors": ["onox <denkpadje@gmail.com>", "Randal Barlow <im.tehk at gmail.com>"]},
+        ["settings-per-instance"])
     BatteryStatusApplet(applet)
     AWNLib.start(applet)

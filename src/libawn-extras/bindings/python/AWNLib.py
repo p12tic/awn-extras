@@ -680,7 +680,7 @@ class Settings:
         self.__dict = None
 
         if "short" in parent.meta:
-            if self.parent.meta.hasOption("settings-per-instance"):
+            if parent.meta.hasOption("settings-per-instance"):
                 self.__folder = "%s-%s" % (parent.meta["short"], parent.uid)
             else:
                 self.__folder = parent.meta["short"]

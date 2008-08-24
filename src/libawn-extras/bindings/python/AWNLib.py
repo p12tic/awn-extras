@@ -293,7 +293,7 @@ class Dialogs:
                 self.set_comments(parent.meta["description"])
 
             copyright_info = (parent.meta["copyright-year"], parent.meta["author"])
-            self.set_copyright("Copyright \xc2\xa9 %d %s" % copyright_info)
+            self.set_copyright("Copyright \xc2\xa9 %s %s" % copyright_info)
 
             if "authors" in parent.meta:
                 self.set_authors(parent.meta["authors"])

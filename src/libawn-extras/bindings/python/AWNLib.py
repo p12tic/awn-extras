@@ -640,8 +640,7 @@ class Errors:
 class Networking:
     def __init__(self, parent):
         """
-        Creates a new Settings object. Note that the Settings object should be
-        used as a dictionary.
+        Creates a new Networking object.
 
         @param parent: The parent applet of the settings instance.
         @type parent: L{Applet}
@@ -681,7 +680,7 @@ class Settings:
         self.__dict = None
 
         if "short" in parent.meta:
-            if "settings-per-instance" in parent.meta and parent.meta["settings-per-instance"]:
+            if self.parent.meta.hasOption("settings-per-instance"):
                 self.__folder = "%s-%s" % (parent.meta["short"], parent.uid)
             else:
                 self.__folder = parent.meta["short"]
@@ -1138,11 +1137,11 @@ class Timing:
         @type seconds: C{float} or C{int}
         """
 
-        def delayed_cb():
+        def cb():
             callback()
             return False
 
-        gobject.timeout_add(int(self.__seconds * 1000), delayed_cb)
+        gobject.timeout_add(int(self.__seconds * 1000), cb)
         
 
     @deprecated("timing.time", "timing.register")
@@ -1175,7 +1174,7 @@ class Timing:
 
             return True
         
-        def is_started(self):
+        def isStarted(self):
             """
             Returns True if the callback has been scheduled to run after
             each interval, False if the callback is stopped.
@@ -1185,6 +1184,14 @@ class Timing:
             """
 
             return self.__timer_id is not None
+
+        @deprecated("Callabck.is_started", "Callback.isStarted")
+        def is_started(self):
+            """
+            Deprecated. Use isStarted instead
+            """
+
+            return self.isStarted()
 
         def start(self):
             """
@@ -1331,19 +1338,48 @@ class Meta:
         }
 
         self.update(info)
-        self.update(self.__parse_options(options))
+        self.options(options)
 
     def update(self, info):
         """
         Updates the meta instance with new information.
 
-        @param info: Default values for the meta dictionary
+        @param info: Updated values for the meta dictionary
         @type info: C{dict}
         """
 
         self.__info.update(info)
 
-    def __parse_options(self, options):
+    def options(self, opts):
+        """
+        Updates the options the applet has set
+        
+        @param opts: Options to set
+        @type opts: C{list} or C{tuple}
+        """
+        
+        self.__otions.update(self.__parseOptions(opts))
+
+    def hasOption(self, option):
+        """
+        Checks if applet has set a specific option
+        
+        @param option: Option to check. Format: "option/suboption/suboption"
+        @type option: C{str}
+        """
+        
+        option = option.split("/")
+        srch = self.__options
+        for i in option:
+            if i not in srch or not srch[i]:
+                return False
+            elif srch[i] == True: # tuples evaluate to True
+                return True
+            else:
+                srch = srch[i]
+        
+
+    def __parseOptions(self, options):
         t = {}
         for i in options:
             if type(i) == types.StringType:

@@ -134,7 +134,7 @@ class mywidget(gtk.Widget):
             print "K."
         else:
             # If someone already has the system tray... BAIL!
-            extras.notify_message("PyNot Error","Another System Tray is already running","%s%s"%(path,"PyNot.png"),10000,0)
+            extras.notify_message("PyNot Error","Another System Tray is already running\nPyNot has been removed!","%s%s"%(path,"PyNot.png"),10000,0)
             dock_config = awn.Config()
             lst = [x for x in dock_config.get_list(awn.CONFIG_DEFAULT_GROUP, 'applets_list', awn.CONFIG_LIST_STRING)  if 'pynot.desktop' not in x]
 

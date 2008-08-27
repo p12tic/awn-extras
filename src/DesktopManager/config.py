@@ -20,14 +20,17 @@
 #       MA 02110-1301, USA.
 import awn
 import os
+import gtk
 class ConfigManager :
 	def __init__(self) :
 		self.cfg = awn.Config("DesktopManager", None)
 		self.button_actions = [0,0,0]
-		if (self.cfg.exists(awn.CONFIG_DEFAULT_GROUP, "folder")) :
+		if (self.cfg.exists(awn.CONFIG_DEFAULT_GROUP, "folder") and self.cfg.get_string(awn.CONFIG_DEFAULT_GROUP, "folder") != "tba") :
 			self.folder = self.cfg.get_string(awn.CONFIG_DEFAULT_GROUP, "folder")
+			if (os.path.isdir(self.folder) == False) :
+				self.set_folder(self.prompt_for_folder())
 		else :
-			self.set_folder("~")
+			self.set_folder(self.prompt_for_folder())
 		if (self.cfg.exists(awn.CONFIG_DEFAULT_GROUP, "secs")) :
 			self.secs = self.cfg.get_int(awn.CONFIG_DEFAULT_GROUP, "secs")
 		else :
@@ -40,10 +43,10 @@ class ConfigManager :
 			self.sub_folder = self.cfg.get_string(awn.CONFIG_DEFAULT_GROUP, "subfolder")
 		else :
 			self.set_sub_folder("")
-		if (self.cfg.exists(awn.CONFIG_DEFAULT_GROUP, "environment")) :
+		if (self.cfg.exists(awn.CONFIG_DEFAULT_GROUP, "environment") and self.cfg.get_string(awn.CONFIG_DEFAULT_GROUP, "environment") != "tba") :
 			self.environment = self.cfg.get_string(awn.CONFIG_DEFAULT_GROUP, "environment")
 		else :
-			self.set_environment("GNOME")
+			self.set_environment(self.prompt_for_environment())
 		if (self.cfg.exists(awn.CONFIG_DEFAULT_GROUP, "attention")) :
 			self.attention = self.cfg.get_bool(awn.CONFIG_DEFAULT_GROUP, "attention")
 		else :
@@ -64,6 +67,10 @@ class ConfigManager :
 			self.method = self.cfg.get_string(awn.CONFIG_DEFAULT_GROUP, "method")
 		else :
 			self.set_method("Random")
+		if (self.cfg.exists(awn.CONFIG_DEFAULT_GROUP, "scale")) :
+			self.scale = self.cfg.get_float(awn.CONFIG_DEFAULT_GROUP, "scale")
+		else :
+			self.set_scale(95)
 		self.makepod()
 	def makepod(self) :
 		if (self.environment == "GNOME") :
@@ -75,12 +82,52 @@ class ConfigManager :
 		else :
 			from configgnome import ConfigManagerGnome
 			self.enviropod = ConfigManagerGnome()
+	def prompt_for_folder(self) :
+		dialog = gtk.Dialog("Choose a folder", None, gtk.DIALOG_NO_SEPARATOR, (gtk.STOCK_OK, gtk.RESPONSE_ACCEPT))
+		label = gtk.Label("Choose the folder that contains your desktop wallpapers. Choosing your home directory is NOT recommended.")
+		dialog.vbox.pack_start(label,False,False)
+		chooser = gtk.FileChooserWidget(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
+		dialog.vbox.pack_start(chooser)
+		dialog.vbox.show_all()
+		dialog.set_default_size(500,500)
+	        theme = gtk.icon_theme_get_default()
+		pixbuf = theme.load_icon("desktop", 64, 0)
+		dialog.set_icon(pixbuf)
+		response = dialog.run()
+		dialog.hide()
+		if (response != gtk.RESPONSE_ACCEPT) :
+			self.prompt_for_folder()
+		else :
+			return chooser.get_filename()
+	def prompt_for_environment(self) :
+		dialog = gtk.Dialog("Choose your environment", None, gtk.DIALOG_NO_SEPARATOR, (gtk.STOCK_OK, gtk.RESPONSE_ACCEPT))
+		label = gtk.Label("Choose which environment you use to manage your desktop.")
+		dialog.vbox.pack_start(label,False,False)
+		combo = gtk.combo_box_new_text()
+		types = ["GNOME", "Xfce"]
+		i = 0
+		for type in types :
+			combo.append_text(type)
+		combo.set_active(0)
+		dialog.vbox.pack_start(combo)
+		dialog.vbox.show_all()
+	        theme = gtk.icon_theme_get_default()
+		pixbuf = theme.load_icon("desktop", 64, 0)
+		dialog.set_icon(pixbuf)
+		response = dialog.run()
+		dialog.hide()
+		if (response != gtk.RESPONSE_ACCEPT) :
+			self.prompt_for_environment()
+		else :
+			return combo.get_active_text()
 	def get_play(self) :
 		return self.play
 	def get_attention(self) :
 		return self.attention
 	def get_secs(self) :
 		return self.secs
+	def get_scale(self) :
+		return self.scale
 	def get_folder(self) :
 		if (self.folder == "~") :
 			self.folder = os.path.expanduser(self.folder)
@@ -108,6 +155,9 @@ class ConfigManager :
 	def set_secs(self, secs) :
 		self.cfg.set_int(awn.CONFIG_DEFAULT_GROUP, "secs", secs)
 		self.secs = secs
+	def set_scale(self, scale) :
+		self.cfg.set_float(awn.CONFIG_DEFAULT_GROUP, "scale", scale)
+		self.scale = scale
 	def set_folder(self, folder) :
 		self.cfg.set_string(awn.CONFIG_DEFAULT_GROUP, "folder", folder)
 		self.folder = folder

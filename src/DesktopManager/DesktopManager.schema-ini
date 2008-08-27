@@ -12,11 +12,11 @@ default = None
 description = Applet action on middle click
 [DEFAULT/environment]
 type = string
-default = GNOME
+default = tba
 description = What mode to use
 [DEFAULT/folder]
 type = string
-default = ~
+default = tba
 description = Base Folder
 [DEFAULT/method]
 type = string
@@ -38,3 +38,7 @@ description = What to do when showing the desktop
 type = string
 default = 
 description = The sub-folder
+[DEFAULT/scale]
+type = float
+default = 95
+description = Amount to scale the icon

@@ -30,7 +30,7 @@ class Menu(gtk.Menu) :
 		self.config = config
 		self.createMenu()
 		# Set up our Popup Menu
-	def createMenu(self) :
+	def createMenu(self, half=False) :
 		folder = self.config.get_folder()
 		play = self.config.get_play()
 		self.foreach(self.remove)
@@ -42,52 +42,52 @@ class Menu(gtk.Menu) :
 			defaultmenu.remove(item)
 			self.append(item)
 		# Set up our Radio Buttons for selecting which folder to use
-	
-		try :
-			All = RadioMenuItemFixed(None, "Base Folder")
-			activated = 0
-			if (self.config.get_sub_folder() == "") :
-				All.set_active(True)
-				activated = 1
-			All.connect("toggled",self.changeDir)
-			Allgroup = All.get_group()
-			folderscount = 0
-			folders = gtk.MenuItem("Subfolders")
-			folderssubmenu = gtk.Menu()
-			folders.set_submenu(folderssubmenu)
-			menutree = {"":folderssubmenu}
-			itemtree = {"":folders}
-			#dirlist = os.listdir(folder)
-			for root, dirs, files in os.walk(folder) :
-				root = root.partition(folder)[2]
-				if (root != "" and len(dirs) != 0) :
-					tempmenu = gtk.Menu()
-					itemtree[root].set_submenu(tempmenu)
-					menutree[root] = tempmenu
-				for dir in dirs :
-					#temp = gtk.RadioMenuItem(All, dir, False)
-					temp = RadioMenuItemFixed(Allgroup, dir)
-					menutree[root].append(temp)
-					itemtree[root+"/"+dir] = temp
-					temp.connect("toggled",self.changeDir, root+"/"+dir)
-					if (root+"/"+dir == self.config.get_sub_folder()) :
-						temp.set_active(True)
-						activated = 1
-					folderscount += 1
-		except OSError:
-			error = extras.notify_message("Error","A problem occured when trying to read the selected directory.", "desktop",15000,True)
-			All = gtk.MenuItem("Could not read directory")
-			All.set_sensitive(False)
-		else :
-			if (folderscount == 0) :
-				nofolders = gtk.MenuItem("No Subfolders")
-				nofolders.set_sensitive(False)
-				self.append(nofolders)
+		if (half != True) :
+			try :
+				self.All = RadioMenuItemFixed(None, "Base Folder")
+				activated = 0
+				if (self.config.get_sub_folder() == "") :
+					self.All.set_active(True)
+					activated = 1
+				self.All.connect("toggled",self.changeDir)
+				Allgroup = self.All.get_group()
+				folderscount = 0
+				self.folders = gtk.MenuItem("Subfolders")
+				folderssubmenu = gtk.Menu()
+				self.folders.set_submenu(folderssubmenu)
+				menutree = {"":folderssubmenu}
+				itemtree = {"":self.folders}
+				for root, dirs, files in os.walk(folder) :
+					root = root.partition(folder)[2]
+					if (root != "" and len(dirs) != 0) :
+						tempmenu = gtk.Menu()
+						itemtree[root].set_submenu(tempmenu)
+						menutree[root] = tempmenu
+					for dir in dirs :
+						temp = RadioMenuItemFixed(Allgroup, dir)
+						menutree[root].append(temp)
+						itemtree[root+"/"+dir] = temp
+						temp.connect("toggled",self.changeDir, root+"/"+dir)
+						if (root+"/"+dir == self.config.get_sub_folder()) :
+							temp.set_active(True)
+							activated = 1
+						folderscount += 1
+			except OSError:
+				error = extras.notify_message("Error","A problem occured when trying to read the selected directory.", "desktop",15000,True)
+				self.All = gtk.MenuItem("Could not read directory")
+				self.All.set_sensitive(False)
 			else :
-				self.append(folders)
-			if (activated == 0) :
-				All.set_active(True)
-		self.append(All)
+				if (folderscount == 0) :
+					nofolders = gtk.MenuItem("No Subfolders")
+					nofolders.set_sensitive(False)
+					self.append(nofolders)
+				else :
+					self.append(self.folders)
+				if (activated == 0) :
+					self.All.set_active(True)
+		else :
+			self.append(self.folders)
+		self.append(self.All)
 		sep = gtk.SeparatorMenuItem()
 		self.append(sep)
 		# Setup the menu for selecting the image manually if in manual mode
@@ -144,10 +144,12 @@ class Menu(gtk.Menu) :
 		self.show_all()
 		gtk.Menu.popup(self,parent_menu_shell, parent_menu_item, func, button, activate_time, data)
 	def changeDir(self, widget, active, dir="") :
+		self.hide()
 		self.config.set_sub_folder(dir)
 		self.switcher.getter.kill()
 		self.switcher.getter = GetList(self.config,self.switcher)
 		self.switcher.getter.start()
+		self.createMenu()
 	def changeImage(self,widget,active,image) :
 		self.config.set_desktop(image)
 		self.switcher.make_icon()

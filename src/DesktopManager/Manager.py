@@ -38,16 +38,16 @@ class DesktopManager(awn.AppletSimple):
 	        # Initiate Applet
 	        awn.AppletSimple.__init__(self, uid, orient, height)
 	        self.height = height
+	        self.theme = gtk.icon_theme_get_default()
+
 		self.config_manager = ConfigManager()
-		if (os.path.isdir(self.config_manager.get_folder()) == False) :
-			error = extras.notify_message("Error", "The selected images folder does not exist. Using your home directory instead.\nThis can be changed in the Preferences dialog.","desktop", 15000,True)
-			self.config_manager.set_folder(os.path.expanduser("~"))
-	        # Get, resize, set icon
 		self.make_icon()
+
 	        # Get our title ready
 	        self.title = awn.awn_title_get_default()
 		self.titleLabel = "DesktopManager"
-		
+		# Create the popup menu
+		self.popup_menu = Menu(self, self.config_manager)
 		# Generate the preliminary list
 		self.getter = GetList(self.config_manager,self)
 		self.getter.start()
@@ -56,7 +56,6 @@ class DesktopManager(awn.AppletSimple):
 			self.timeout = gobject.timeout_add(self.config_manager.get_secs(),self.refresh)
 		else :
 			self.timeout = False
-		self.popup_menu = None
 		# Connect Our Events
 	        self.connect("button-press-event", self.button_press)
 	        self.connect("enter-notify-event", self.enter_notify)
@@ -68,13 +67,11 @@ class DesktopManager(awn.AppletSimple):
 			try :
 				pixbuf = gtk.gdk.pixbuf_new_from_file(self.config_manager.get_desktop())
 				ratio = float(pixbuf.get_width())/float(pixbuf.get_height())
-				pixbuf = pixbuf.scale_simple(int(self.height*ratio*.95),int(float(self.height)*.95),gtk.gdk.INTERP_BILINEAR)
+				pixbuf = pixbuf.scale_simple(int(self.height*ratio*(self.config_manager.get_scale()/float(100))),int(float(self.height)*(self.config_manager.get_scale()/float(100))),gtk.gdk.INTERP_BILINEAR)
 			except gobject.GError:
-	        		theme = gtk.icon_theme_get_default()
-				pixbuf = theme.load_icon("desktop", self.height, 0)
+				pixbuf = self.theme.load_icon("desktop", int(self.height*(self.config_manager.get_scale()/100)), 0)
 		else :
-	        	theme = gtk.icon_theme_get_default()
-			pixbuf = theme.load_icon("desktop", self.height, 0)
+			pixbuf = self.theme.load_icon("desktop", int(self.height*(self.config_manager.get_scale()/100)), 0)
 		self.set_icon(pixbuf)
 	def preferences(self, widget) :
 		self.config = ConfigDialog(self, self.config_manager)
@@ -90,11 +87,6 @@ class DesktopManager(awn.AppletSimple):
 	def button_press(self, widget, event):
 		if (event.button == 3) :
 			self.title.hide(self)
-			# Create the popup Menu
-			if (self.popup_menu == None) :
-				self.popup_menu = Menu(self, self.config_manager)
-			else :
-				self.popup_menu.createMenu()
 			self.popup_menu.popup(None, None, None, event.button, event.time)
 		elif (event.button == 2 or event.button == 1) :
 			if (self.config_manager.get_button_action(event.button) == "Show Desktop") :
@@ -131,8 +123,10 @@ class DesktopManager(awn.AppletSimple):
 	        self.title.hide(self)
 	def updateConfig(self) :
 		self.getter.kill()
+		self.popup_menu.createMenu()
 		self.getter = GetList(self.config_manager,self)
 		self.getter.start()
+		self.make_icon()
 		if (self.timeout != False) :
 			gobject.source_remove(self.timeout)
 			self.timeout = False
@@ -152,7 +146,9 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 		""")
 		about.set_wrap_license(True)
-		about.set_logo(gtk.icon_theme_get_default().load_icon("desktop", 150, 0))
+		about.set_logo(self.theme.load_icon("desktop", 150, 0))
+		pixbuf = self.theme.load_icon("desktop", 64, 0)
+		about.set_icon(pixbuf)
 		about.show()
 		about.connect("response", self.aboutResponse)
 	def aboutResponse(self, widget, response) :

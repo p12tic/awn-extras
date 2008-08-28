@@ -19,14 +19,12 @@
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
 
-import sys, os
+import sys
 import random
 import gobject
-import pygtk
 import gtk
 import awn
 from awn import extras
-import threading
 import wnck
 
 from config import ConfigManager

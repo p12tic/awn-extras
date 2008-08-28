@@ -1,0 +1,8 @@
+SUBDIRS = images
+APPLET_NAME = cpufreq
+APPLET_MAIN_FILE = cpufreq.py
+include $(top_srcdir)/Makefile.python-applet
+dist_applet_DATA =  \
+    cpufreq.svg \
+    cpufreq.glade \
+    $(NULL)

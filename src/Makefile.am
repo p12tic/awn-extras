@@ -58,6 +58,7 @@ SUBDIRS =			\
 	cairo-clock		\
 	comic			\
 	comics			\
+	cpufreq			\
 	digitalClock		\
 	file-browser-launcher	\
 	lastfm			\
@@ -68,7 +69,7 @@ SUBDIRS =			\
 	media-player		\
 	notification-area	\
 	places			\
-        pynot                   \
+	pynot				\
 	$(PYTHON_TEST)		\
 	quit-applet		\
 	separator		\

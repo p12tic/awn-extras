@@ -357,6 +357,9 @@ src/comics/locale/Makefile
 src/comics/icons/Makefile
 src/comics/locale/sv_SE/Makefile
 src/comics/locale/sv_SE/LC_MESSAGES/Makefile
+src/cpufreq/Makefile
+src/cpufreq/cpufreq.desktop.in
+src/cpufreq/images/Makefile
 src/digg/digg.desktop.in
 src/digg/Makefile
 src/digg/icons/Makefile

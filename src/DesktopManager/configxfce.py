@@ -25,7 +25,7 @@ class ConfigManagerXfce :
 	trans = ["","centered","","stretched","scaled","zoom"]
 	def __init__(self) :
 		self.config = os.path.expanduser("~")+"/.config/xfce4/mcs_settings/desktop.xml"
-		self.filename = os.path.expanduser("~")+"/.config/xfce4/desktop/backdrops.list"
+		#self.filename = os.path.expanduser("~")+"/.config/xfce4/desktop/backdrops.list"
 		confighandle = open(self.config, "r")
 		lines = confighandle.readlines()
 		for line in lines :
@@ -33,8 +33,9 @@ class ConfigManagerXfce :
 			#lines[lines.index(line)] = line2
 			if (re.search('<option name="imagestyle_0_0" type="int" value="(.+)"/>', line) != None) :
 				self.render = self.trans[int(re.findall('<option name="imagestyle_0_0" type="int" value="(.+)"/>', line)[0])]
+			if (re.search('<option name="imagepath_0_0" type="string" value="(.+)"/>', line) != None) :
+				self.filename = re.findall('<option name="imagepath_0_0" type="string" value="(.+)"/>', line)[0]
 		confighandle.close()
-		print self.render
 		#confighandle = open(self.config, "w")
 		#confighandle.writelines(lines)
 		#confighandle.close()
@@ -48,7 +49,10 @@ class ConfigManagerXfce :
 				pass
 		else :
 			lines = file.readlines()
-			self.current = lines[1]
+			try :
+				self.current = lines[1]
+			except IndexError:
+				self.current = ""
 			file.close()
 	def get_desktop(self) :
 		return self.current

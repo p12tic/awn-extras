@@ -18,20 +18,17 @@
 #       along with this program; if not, write to the Free Software
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
-import awn
 import pygtk
 import gtk
-from awn import extras
 
 class ConfigDialog(gtk.Dialog) :
 	def __init__(self, parent, config) :
 		self.config = config
 		self.browsing = False
 		self.switcher = parent
-		#awn.AppletDialog.__init__(self,self.switcher)
 		gtk.Dialog.__init__(self,"Preferences", None, 0, (gtk.STOCK_ABOUT,gtk.RESPONSE_HELP,gtk.STOCK_OK,gtk.RESPONSE_OK,gtk.STOCK_CANCEL,gtk.RESPONSE_CANCEL))
-	        theme = gtk.icon_theme_get_default()
-		pixbuf = theme.load_icon("desktop", 64, 0)
+	        self.theme = gtk.icon_theme_get_default()
+		pixbuf = self.theme.load_icon("desktop", 64, 0)
 		self.set_icon(pixbuf)
 		#table = gtk.Table(9, 2)
 		table = gtk.Table(10,2)
@@ -129,8 +126,6 @@ class ConfigDialog(gtk.Dialog) :
 			self.combo.set_active(self.types.index(self.config.get_render()))
 		else :
 			self.combo.set_sensitive(True)
-		self.config.set_environment(widget.get_active_text())
-		self.switcher.make_icon()
 	def combo0changed(self, widget) :
 		if (widget.get_active_text() == "Manual") :
 			self.secsentry.set_sensitive(False)
@@ -182,7 +177,6 @@ class ConfigDialog(gtk.Dialog) :
 		if (self.folder != self.folder2) :
 			self.config.set_sub_folder("")
 		self.config.set_render(render)
-		self.config.set_environment(environment)
 		self.config.set_attention(attention)
 		self.config.set_button_action(1,button1_action)
 		self.config.set_button_action(2,button2_action)
@@ -190,7 +184,12 @@ class ConfigDialog(gtk.Dialog) :
 		self.config.set_method(method)
 		self.config.set_scale(scale)
 		if (environment == "Xfce") :
-			extras.notify_message("Info", "When in Xfce Mode, you must change the \"File\" field of your Desktop Settings to ~/.config/xfce4/desktop/backdrops.list", "desktop", 60000,True)
+			message = gtk.MessageDialog(self,type=gtk.MESSAGE_WARNING,buttons=gtk.BUTTONS_OK,message_format="In order for DesktopManager to function properly in Xfce mode, you must right click on your desktop, select \"Desktop Settings\" and then click \"New List...\" in the Preferences dialog. After that click \"Save\" on the list creation dialog. You can then close the desktop preferences dialog and click \"OK\" in this window.\n\nIf you do not do this, your current desktop wallpaper will be overwritten!")
+			pixbuf = self.theme.load_icon("desktop", 64, 0)
+			message.set_icon(pixbuf)
+			result = message.run()
+			message.hide()
+		self.config.set_environment(environment)
 		self.switcher.updateConfig()
 		self.destroy()
 	def browse(self, widget) :

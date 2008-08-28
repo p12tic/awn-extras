@@ -119,6 +119,12 @@ class ConfigManager :
 		if (response != gtk.RESPONSE_ACCEPT) :
 			self.prompt_for_environment()
 		else :
+			if (combo.get_active_text() == "Xfce") :
+				message = gtk.MessageDialog(type=gtk.MESSAGE_WARNING,buttons=gtk.BUTTONS_OK,message_format="In order for DesktopManager to function properly in Xfce mode, you must right click on your desktop, select \"Desktop Settings\" and then click \"New List...\" in the Preferences dialog. After that click \"Save\" on the list creation dialog. You can then close the desktop preferences dialog and click \"OK\" in this window.\n\nIf you do not do this, your current desktop wallpaper will be overwritten!")
+				pixbuf = gtk.icon_theme_get_default().load_icon("desktop", 64, 0)
+				message.set_icon(pixbuf)
+				result = message.run()
+				message.hide()
 			return combo.get_active_text()
 	def get_play(self) :
 		return self.play

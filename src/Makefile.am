@@ -59,6 +59,7 @@ SUBDIRS =			\
 	comic			\
 	comics			\
 	cpufreq			\
+	DesktopManager		\
 	digitalClock		\
 	file-browser-launcher	\
 	lastfm			\

@@ -360,6 +360,8 @@ src/comics/locale/sv_SE/LC_MESSAGES/Makefile
 src/cpufreq/Makefile
 src/cpufreq/cpufreq.desktop.in
 src/cpufreq/images/Makefile
+src/DesktopManager/DesktopManager.desktop.in
+src/DesktopManager/Makefile
 src/digg/digg.desktop.in
 src/digg/Makefile
 src/digg/icons/Makefile

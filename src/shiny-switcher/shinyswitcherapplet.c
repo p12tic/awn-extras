@@ -1564,6 +1564,7 @@ void _wallpaper_change(WnckScreen *screen, Shiny_switcher *shinyswitcher)
   g_object_unref(shinyswitcher->wallpaper_inactive);
   g_object_unref(shinyswitcher->wallpaper_active);
   set_background(shinyswitcher);
+  queue_all_render(shinyswitcher); 
 }
 
 void _window_opened(WnckScreen *screen, WnckWindow *window, Shiny_switcher *shinyswitcher)

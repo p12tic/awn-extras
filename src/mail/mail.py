@@ -170,7 +170,10 @@ class MailApplet:
         if hasattr(self.mail, "showDesk"):
             self.mail.showDesk()
         else:
-            subprocess.Popen(self.emailclient, shell=True)
+            if " " in self.emailclient:
+                subprocess.Popen(self.emailclient, shell=True)
+            else:
+                subprocess.Popen(self.emailclient)
             # Now if xdg-open had an option to just open the email client,
             # not start composing a message, that would be just wonderful.
 

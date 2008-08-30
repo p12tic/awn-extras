@@ -84,7 +84,7 @@ static void on_awn_orient_changed(AwnApplet *app,
                                   TrashApplet *applet);
 
 /* Callback function for libawn title */
-static const gchar* get_title_text(GObject* obj);
+static const gchar* get_title_text(GtkWidget* obj);
 
 static void update_icons(TrashApplet *applet);
 
@@ -272,9 +272,9 @@ trash_applet_new(AwnApplet *applet)
                    G_CALLBACK(on_awn_orient_changed), (gpointer)app);
 
   /* effects */
-  awn_effects_init(G_OBJECT(app), &app->effects);
-  awn_register_effects(G_OBJECT(applet), &app->effects);
-  awn_effects_set_title(&app->effects, app->title, get_title_text);
+  app->effects = awn_effects_new_for_widget(GTK_WIDGET(app)); // FIXME: never freed
+  awn_effects_register(app->effects, GTK_WIDGET(applet));
+  awn_effects_set_title(app->effects, app->title, get_title_text);
 
   update_icons(app);
   return GTK_WIDGET(app);
@@ -342,7 +342,7 @@ draw(GtkWidget *widget, cairo_t *cr, gint width, gint height)
 {
   TrashApplet *applet = TRASH_APPLET(widget);
 
-  awn_draw_set_window_size(&applet->effects, width, height);
+  awn_effects_draw_set_window_size(applet->effects, width, height);
 
   /* Clear the background to transparent */
   cairo_set_source_rgba(cr, 1.0f, 1.0f, 1.0f, 0.0f);
@@ -351,14 +351,14 @@ draw(GtkWidget *widget, cairo_t *cr, gint width, gint height)
 
   cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
 
-  awn_draw_background(&applet->effects, cr);
+  awn_effects_draw_background(applet->effects, cr);
 
   if (applet->is_empty)
-    awn_draw_icons(&applet->effects, cr, applet->empty_icon, applet->reflect_empty);
+    awn_effects_draw_icons(applet->effects, cr, applet->empty_icon, applet->reflect_empty);
   else
-    awn_draw_icons(&applet->effects, cr, applet->full_icon, applet->reflect_full);
+    awn_effects_draw_icons(applet->effects, cr, applet->full_icon, applet->reflect_full);
 
-  awn_draw_foreground(&applet->effects, cr);
+  awn_effects_draw_foreground(applet->effects, cr);
 
   if (applet->progress != 0 && applet->progress != 1)
   {
@@ -504,7 +504,7 @@ trash_applet_drag_motion(GtkWidget      *widget,
   {
     applet->drag_hover = TRUE;
     trash_applet_queue_update(applet);
-    awn_effect_start_ex(&applet->effects, AWN_EFFECT_ATTENTION, NULL, NULL, 1);
+    awn_effects_start_ex(applet->effects, AWN_EFFECT_ATTENTION, NULL, NULL, 1);
   }
 
   gdk_drag_status(context, GDK_ACTION_MOVE, time_);
@@ -1118,7 +1118,7 @@ trash_applet_drag_data_received(GtkWidget        *widget,
   gtk_drag_finish(context, TRUE, FALSE, time_);
 }
 
-static const gchar* get_title_text(GObject* obj)
+static const gchar* get_title_text(GtkWidget* obj)
 {
   TrashApplet *applet = TRASH_APPLET(obj);
   return applet->title_text;

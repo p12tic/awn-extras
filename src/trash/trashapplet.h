@@ -91,7 +91,7 @@ struct _TrashApplet
   guint update_id;
 
   /* Effect stuff */
-  AwnEffects effects;
+  AwnEffects * effects;
   guint height;
   gfloat progress;
 };

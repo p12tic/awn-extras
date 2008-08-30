@@ -1302,7 +1302,7 @@ class Effects:
         is required.
         """
 
-        awn.awn_effect_start_ex(self.__effects, "attention", 0, 0, 1)
+        self.__effects.start_ex("attention", 0, 0, 1)
 
     @deprecated("effects.notify", "effects.attention")
     def notify(self):
@@ -1314,7 +1314,7 @@ class Effects:
         program.
         """
 
-        awn.awn_effect_start_ex(self.__effects, "launching", 0, 0, 1)
+        self.__effects.start_ex("launching", 0, 0, 1)
 
 
 class Meta:

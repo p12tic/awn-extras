@@ -343,7 +343,7 @@ class StacksGuiCurved(gtk.Window):
 
     def stack_drag_leave(self, widget, context, time):
     	#print "drag leave on stack", time
-    	awn.awn_effect_stop(self.applet.effects, "hover")
+    	self.applet.effects.stop("launching")
     	self._stacks_gui_request_hide()
     	return True
     	
@@ -386,7 +386,7 @@ class StacksGuiCurved(gtk.Window):
 
         	
 
-        awn.awn_effect_stop(self.applet.effects, "hover")
+        self.applet.effects.stop("launching")
         
         return False
 

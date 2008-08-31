@@ -1318,7 +1318,7 @@ class LauncherApplet : DBusComm
         {
             Pixbuf  hidden_icon;      
             //set_size_request( 1, 1);
-            draw_set_window_size(effects,1,1);
+            effects.draw_set_window_size(1,1);
             hidden_icon=new Pixbuf( Colorspace.RGB,true, 8, 1,1);
             hidden_icon.fill( 0x00000000);
             set_icon(hidden_icon);
@@ -1464,8 +1464,8 @@ class LauncherApplet : DBusComm
         {
             stdout.printf("ERROR------------------------------\n");
         }
-        draw_set_window_size(effects,height,height);
-        draw_set_icon_size(effects,height-2,height-2);
+        effects.draw_set_window_size(height,height);
+        effects.draw_set_icon_size(height-2,height-2);
 		show_icon();
  //       stdout.printf("_initialize...6\n");         
 		if (uid.to_double()>0) 
@@ -1612,7 +1612,7 @@ class LauncherApplet : DBusComm
         }
 
         show_icon();        
-        effect_start_ex(effects, Effect.LAUNCHING,null,null,1);
+        effects.start_ex(Effect.LAUNCHING,null,null,1);
         desktopitem.set_string ("Type","Application");         
  //       stdout.printf("_initialize....20\n");        
 		return false;
@@ -2257,7 +2257,7 @@ class LauncherApplet : DBusComm
         {
             multi_count=multi_launcher.number();
         }
-        effect_stop (effects, Effect.ATTENTION);//effect off
+        effects.stop ( Effect.ATTENTION);//effect off
         if (config.task_mode != TaskMode.NONE)  //if it does tasmanagement.
         {
             switch (event.button) 
@@ -2294,7 +2294,7 @@ class LauncherApplet : DBusComm
 						
 		if ( launch_new && (desktopitem!=null) )
 		{
-            effect_start_ex(effects, Effect.LAUNCHING,null,null,config.max_launch_effect_reps);
+      effects.start_ex(Effect.LAUNCHING,null,null,config.max_launch_effect_reps);
 			pid=desktopitem.launch(documents);
 			if (pid>0)
 			{
@@ -2535,7 +2535,7 @@ class LauncherApplet : DBusComm
         if(response=="MANAGE")
         {
             hidden=false;
-            effect_stop (effects, Effect.LAUNCHING);
+            effects.stop (Effect.LAUNCHING);
             Pixbuf new_icon;
             books.update_with_win(window);			
             deal_with_icon(window);
@@ -2582,7 +2582,7 @@ class LauncherApplet : DBusComm
             if (window != wnck_screen.get_active_window ())
             {
                 //effect_start_ex(effects, Effect.ATTENTION,null,null,11);    
-                effect_start(effects, Effect.ATTENTION);
+                effects.start(Effect.ATTENTION);
             }
         }
 
@@ -2664,7 +2664,7 @@ class LauncherApplet : DBusComm
 		{
     		if (books.find_win(active))
     		{
-                effect_stop (effects, Effect.ATTENTION);//effect off
+                effects.stop ( Effect.ATTENTION);//effect off
                 title_string=active.get_name();
                 if (config.override_app_icon )
     			{

@@ -374,6 +374,10 @@ class MailApplet:
     def changed_client_cb(self, entry):
         self.awn.settings["email-client"] = self.emailclient = entry.get_text()
 
+class MailItem:
+    def __init__(self, subject, author):
+        self.subject = subject
+        self.author = author
 
 class Backends:
     class GMail:
@@ -393,11 +397,6 @@ class Backends:
                     connection to your account. Your best bet is probably \
                     to log out and try again.")
             # Hehe, Google is funny. Bozo exception
-
-            class MailItem:
-                def __init__(self, subject, author):
-                    self.subject = subject
-                    self.author = author
 
             t = []
             self.subjects = []
@@ -454,11 +453,6 @@ class Backends:
                     connection to your account. Your best bet is probably \
                     to log out and try again.")
             # Hehe, Google is funny. Bozo exception
-
-            class MailItem:
-                def __init__(self, subject, author):
-                    self.subject = subject
-                    self.author = author
 
             t = []
             self.subjects = []
@@ -535,12 +529,61 @@ class Backends:
                 {"username": widgets[0].get_text(),
                 "domain": widgets[2].get_text()}, "network")
 
-    class Empty:
-        def __init__(self, key):
-            self.subjects = [_("Dummy Message")]
+#    class Empty:
+#        def __init__(self, key):
+#            self.subjects = [_("Dummy Message")]
+#
+#        def update(self):
+#            pass
 
-        def update(self):
-            pass
+    try:
+        global mailbox
+        import mailbox
+    except:
+        pass
+    else:
+        class UnixSpool:
+            def __init__(self, key):
+                self.path = key.attrs["path"]
+            
+            def update(self):
+                self.box = mailbox.mbox(self.path)
+                email = []
+
+                self.subjects = []
+                for i, msg in self.box.items():
+                    if "subject" in msg:
+                        subject = msg["subject"]
+                    else:
+                        subject = "[No Subject]"
+
+                    self.subjects.append(subject)
+            
+            @classmethod
+            def drawLoginWindow(cls):
+                vbox = gtk.VBox(spacing=12)
+                vbox.set_border_width(6)
+
+                hbox = gtk.HBox(spacing=13)
+                vbox.add(hbox)
+                
+                hbox.add(gtk.Label(_("Spool Path:") + "\t"))
+                
+                path = gtk.Entry()
+                path.set_text("/var/spool/mail/" + os.path.split( \
+                    os.path.expanduser("~"))[1])
+                hbox.add(path)
+                
+                return {"layout": vbox, "callback": cls.__submitLoginWindow,
+                    "widgets": [path]}
+
+            @staticmethod
+            def __submitLoginWindow(widgets, awn):
+                return awn.keyring.new("Mail Applet - %s" \
+                    % "UnixSpool", "-", \
+                    {"path": widgets[0].get_text(),
+                     "username": os.path.split(widgets[0].get_text())[1]},
+                     "network")
 
     try:
         global poplib
@@ -573,11 +616,6 @@ class Backends:
                         message = self.server.retr(msgNum)[1]
                         message = "\n".join(message)
                         emails.append(message)
-
-                class MailItem:
-                    def __init__(self, subject, author):
-                        self.subject = subject
-                        self.author = author
 
                 #t = []
                 self.subjects = []

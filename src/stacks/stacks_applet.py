@@ -243,7 +243,7 @@ class StacksApplet (awn.AppletSimple):
 
 
     def applet_drag_leave_cb(self, widget, context, time):
-        awn.awn_effect_stop(self.effects, "hover")
+        self.effects.stop("launching")
         if self.drag_timer:
             gobject.source_remove(self.drag_timer)
         self.drag_timer = None;
@@ -251,7 +251,7 @@ class StacksApplet (awn.AppletSimple):
 
 
     def applet_drag_motion_cb(self, widget, context, x, y, time):
-        awn.awn_effect_start(self.effects, "hover")
+        self.effects.start("launching")
         if self.drag_timer:
             gobject.source_remove(self.drag_timer)
         self.drag_timer = gobject.timeout_add (self.drag_open_timeout, self.show_gui )
@@ -364,9 +364,7 @@ class StacksApplet (awn.AppletSimple):
         self.applet_set_icon(pixbuf)
 
     def backend_attention_cb(self, widget, backend_type):
-        awn.awn_effect_start(self.effects, "attention")
-        time.sleep(1.0)
-        awn.awn_effect_stop(self.effects, "attention")
+        self.effects.start_ex("attention", 0, 0, 1)
 
     def backend_get_config(self):
         self.config = get_config_from_gconf(self.gconf_client, self.gconf_path, self.uid)

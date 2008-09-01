@@ -211,7 +211,7 @@ class LauncherApplet : AppletSimple
       set_awn_icon("simple-launcher",desktopitem.get_string("Icon"));
     }
     effects = get_effects();
-    effect_start_ex(effects, Effect.LAUNCHING, null, null, 1);
+    effects.start_ex( Effect.LAUNCHING, null, null, 1);
     desktopitem.set_string("Type", "Application");
     return false;
   }
@@ -358,7 +358,7 @@ class LauncherApplet : AppletSimple
     SList<string> documents;
     uint multi_count = 0;
 
-    effect_stop(effects, Effect.ATTENTION); //effect off
+    effects.stop( Effect.ATTENTION); //effect off
 
     switch (event.button)
     {
@@ -381,7 +381,7 @@ class LauncherApplet : AppletSimple
 
     if (launch_new && (desktopitem != null))
     {
-      effect_start_ex(effects, Effect.LAUNCHING, null, null, 3);
+      effects.start_ex( Effect.LAUNCHING, null, null, 3);
 
       try
       {

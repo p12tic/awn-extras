@@ -174,13 +174,13 @@ class StacksGuiDialog:
     	return True
 
     def button_drag_leave(self, widget, context, time):
-        awn.awn_effect_stop(self.applet.effects, "hover")
+        self.applet.effects.stop("launching")
     	return
 
     def button_drag_drop(self, widget, context, x, y,
                             selection, targetType, time, target_uri):
     	self._stacks_gui_hide_cb(widget)
-    	awn.awn_effect_stop(self.applet.effects, "hover")
+    	self.applet.effects.stop("launching")
     	vfs_uris = []
     	for uri in selection.data.split():
     		try:

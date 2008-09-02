@@ -255,17 +255,17 @@ class MailApplet:
             t = self.back.drawLoginWindow()
             vbox.add(t["layout"])
         else:
-            hbox_username = gtk.HBox(spacing=13)
+            hbox_username = gtk.HBox(spacing=13, homogeneous=True)
             vbox.add(hbox_username)
             
-            hbox_username.add(gtk.Label(_("Username:") + "\t"))
+            hbox_username.add(gtk.Label(_("Username:")))
             usrE = gtk.Entry()
             hbox_username.add(usrE)
             
-            hbox_password = gtk.HBox(spacing=13)
+            hbox_password = gtk.HBox(spacing=13, homogeneous=True)
             vbox.add(hbox_password)
             
-            hbox_password.add(gtk.Label(_("Password:") + "\t"))
+            hbox_password.add(gtk.Label(_("Password:")))
             pwdE = gtk.Entry()
             pwdE.set_visibility(False)
             hbox_password.add(pwdE)
@@ -496,25 +496,25 @@ class Backends:
             vbox = gtk.VBox(spacing=12)
             vbox.set_border_width(6)
             
-            hbox_username = gtk.HBox(spacing=13)
+            hbox_username = gtk.HBox(spacing=13, homogeneous=True)
             vbox.add(hbox_username)
             
-            hbox_username.add(gtk.Label(_("Username:") + "\t"))
+            hbox_username.add(gtk.Label(_("Username:")))
             usrE = gtk.Entry()
             hbox_username.add(usrE)
             
-            hbox_password = gtk.HBox(spacing=13)
+            hbox_password = gtk.HBox(spacing=13, homogeneous=True)
             vbox.add(hbox_password)
             
-            hbox_password.add(gtk.Label(_("Password:") + "\t"))
+            hbox_password.add(gtk.Label(_("Password:")))
             pwdE = gtk.Entry()
             pwdE.set_visibility(False)
             hbox_password.add(pwdE)
             
-            hbox_domain = gtk.HBox(spacing=13)
+            hbox_domain = gtk.HBox(spacing=13, homogeneous=True)
             vbox.add(hbox_domain)
             
-            hbox_domain.add(gtk.Label(_("Domain:") + "\t"))
+            hbox_domain.add(gtk.Label(_("Domain:")))
             domE = gtk.Entry()
             hbox_domain.add(domE)
             
@@ -564,14 +564,12 @@ class Backends:
                 vbox = gtk.VBox(spacing=12)
                 vbox.set_border_width(6)
 
-                hbox = gtk.HBox(spacing=13)
+                hbox = gtk.HBox(spacing=13, homogeneous=True)
                 vbox.add(hbox)
                 
-                hbox.add(gtk.Label(_("Spool Path:") + "\t"))
-                
+                hbox.add(gtk.Label(_("Spool Path:")))
                 path = gtk.Entry()
-                path.set_text("/var/spool/mail/" + os.path.split( \
-                    os.path.expanduser("~"))[1])
+                path.set_text("/var/spool/mail/" + os.path.split(os.path.expanduser("~"))[1])
                 hbox.add(path)
                 
                 return {"layout": vbox, "callback": cls.__submitLoginWindow,
@@ -638,29 +636,29 @@ class Backends:
                 vbox = gtk.VBox(spacing=12)
                 vbox.set_border_width(6)
                 
-                hbox_username = gtk.HBox(spacing=13)
+                hbox_username = gtk.HBox(spacing=13, homogeneous=True)
                 vbox.add(hbox_username)
                 
-                hbox_username.add(gtk.Label(_("Username:") + "\t"))
+                hbox_username.add(gtk.Label(_("Username:")))
                 usrE = gtk.Entry()
                 hbox_username.add(usrE)
                 
-                hbox_password = gtk.HBox(spacing=13)
+                hbox_password = gtk.HBox(spacing=13, homogeneous=True)
                 vbox.add(hbox_password)
                 
-                hbox_password.add(gtk.Label(_("Password:") + "\t"))
+                hbox_password.add(gtk.Label(_("Password:")))
                 pwdE = gtk.Entry()
                 pwdE.set_visibility(False)
                 hbox_password.add(pwdE)
                 
-                hbox_server = gtk.HBox(spacing=13)
+                hbox_server = gtk.HBox(spacing=13, homogeneous=True)
                 vbox.add(hbox_server)
                 
-                hbox_server.add(gtk.Label(_("Server:") + "\t"))
+                hbox_server.add(gtk.Label(_("Server:")))
                 srvE = gtk.Entry()
                 hbox_server.add(srvE)
                 sslE = gtk.CheckButton(label=_("Use SSL encryption"))
-                hbox_server.add(sslE)
+                vbox.add(sslE)
                 
                 return {"layout": vbox, "callback": cls.__submitLoginWindow,
                     "widgets": [usrE, pwdE, srvE, sslE]}
@@ -673,6 +671,137 @@ class Backends:
                     {"username": widgets[0].get_text(),
                     "url": widgets[2].get_text(),
                     "usessl": widgets[3].get_active()}, "network")
+
+    try:
+        global imaplib
+        import imaplib
+    except:
+        pass
+    else:
+        class IMAP:
+            def __init__(self, key):
+                args = key.attrs["url"].split(":")
+                
+                if key.attrs["usessl"]:
+                    self.server = imaplib.IMAP4_SSL(*args)
+                else:
+                    self.server = imaplib.IMAP(*args)
+
+                try:
+                    self.server.login(key.attrs["username"], key.password)
+                except poplib.error_proto:
+                    raise RuntimeError, _("Could not log in")
+                
+                mboxs = [i.split()[2][1:-1] for i in self.server.list()[1]]
+                self.box = key.attrs["folder"]
+
+                if self.box not in mboxs and self.box != "":
+                    raise RuntimeError, _("Folder does not exst")
+
+                if self.box != "":
+                    self.server.select(self.box)
+
+            def update(self):
+                self.subjects = []
+
+                if self.box != "":
+                    emails = [i for i in self.server.search("UTF8", "(UNSEEN)")[1][0].split(" ") if i != ""]
+                    
+                    for i in emails:
+                        s = self.server.fetch(i, '(BODY[HEADER.FIELDS (SUBJECT)])')[1][0]
+                        
+                        if s is not None:
+                            self.subjects.append(s[1][9:].replace("\r\n", "\n").replace("\n", "")) # Don't ask
+                else:
+                    mboxs = [re.search("(\W*) (\W*) (.*)", i).groups()[2][1:-1] for i in self.server.list()[1]]
+                    mboxs = [i for i in mboxs if i not in ("Sent", "Trash") and i[:6] != "[Gmail]"]
+                    
+                    emails = []
+                    for b in mboxs:
+                        r, d = self.server.select(b)
+
+                        if r == "NO":
+                            continue
+                        
+                        p = self.server.search("UTF8", "(UNSEEN)")[1][0].split(" ")
+                        
+                        emails.extend([i for i in p if i != ""])
+                        
+                        for i in emails:
+                            s = self.server.fetch(i, '(BODY[HEADER.FIELDS (SUBJECT)])')[1][0]
+                            
+                            if s is not None:
+                                self.subjects.append(s[1][9:].replace("\r\n", "\n").replace("\n", "")) # Don't ask
+
+            @classmethod
+            def drawLoginWindow(cls):
+                vbox = gtk.VBox(spacing=12)
+                vbox.set_border_width(6)
+                
+                hbox_username = gtk.HBox(spacing=13, homogeneous=True)
+                vbox.add(hbox_username)
+                
+                hbox_username.add(gtk.Label(_("Username:")))
+                usrE = gtk.Entry()
+                hbox_username.add(usrE)
+                
+                hbox_password = gtk.HBox(spacing=13, homogeneous=True)
+                vbox.add(hbox_password)
+                
+                hbox_password.add(gtk.Label(_("Password:")))
+                pwdE = gtk.Entry()
+                pwdE.set_visibility(False)
+                hbox_password.add(pwdE)
+                
+                hbox_server = gtk.HBox(spacing=13, homogeneous=True)
+                vbox.add(hbox_server)
+                
+                hbox_server.add(gtk.Label(_("Server:")))
+                srvE = gtk.Entry()
+                hbox_server.add(srvE)
+
+                sslE = gtk.CheckButton(label=_("Use SSL encryption"))
+                vbox.add(sslE)
+
+                allE = gtk.CheckButton(label=_("Get messages from only one folder"))
+                allE.set_active(True)
+                vbox.add(allE)
+
+                hbox_box = gtk.HBox(spacing=13, homogeneous=True)
+                vbox.add(hbox_box)
+                
+                t = gtk.Label(_("Folder:"))
+                hbox_box.add(t)
+                boxE = gtk.Entry()
+                boxE.set_text("INBOX")
+                hbox_box.add(boxE)
+
+                def on_toggle(w):
+                    t.set_sensitive(allE.get_active())
+                    boxE.set_sensitive(allE.get_active())
+
+                allE.connect("toggled", on_toggle)
+
+                return {"layout": vbox, "callback": cls.__submitLoginWindow,
+                    "widgets": [usrE, pwdE, srvE, sslE, allE, boxE]}
+
+            @staticmethod
+            def __submitLoginWindow(widgets, awn):
+                if widgets[4].get_active():
+                    folder = widgets[5].get_text()
+
+                    if folder == "":
+                        folder = "INBOX"
+                else:
+                    folder = ""
+                
+                return awn.keyring.new("Mail Applet - %s(%s)" \
+                    % (widgets[0].get_text(), "IMAP"), \
+                    widgets[1].get_text(), \
+                    {"username": widgets[0].get_text(),
+                    "url": widgets[2].get_text(),
+                    "usessl": widgets[3].get_active(),
+                    "folder": folder}, "network")
 
 if __name__ == "__main__":
     applet = AWNLib.initiate({

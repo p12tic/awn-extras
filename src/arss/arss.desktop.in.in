@@ -5,6 +5,6 @@ Type=Application
 X-AWN-AppletType=Python
 Comment=Watch your feeds
 Exec=arss/arss.py
-Icon=arss/Icons/feed-icon.svg
+Icon=arss/icons/feed-icon.svg
 Name[en_US]=aRSS
 X-AWN-AppletCategory=Network,News

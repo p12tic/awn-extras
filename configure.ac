@@ -298,6 +298,9 @@ src/affinity/data/48x48/Makefile
 src/affinity/data/scalable/Makefile
 src/affinity/data/actions/Makefile
 src/affinity/po/Makefile.in
+src/animal-farm/Makefile
+src/animal-farm/icons/Makefile
+src/animal-farm/animal-farm.desktop.in
 src/arss/Makefile
 src/arss/arss.desktop.in
 src/arss/icons/Makefile

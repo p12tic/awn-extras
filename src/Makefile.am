@@ -51,6 +51,7 @@ endif
 SUBDIRS =			\
 	libawn-extras		\
 	affinity		\
+	animal-farm		\
 	arss			\
 	awn-meebo		\
 	awnterm			\

@@ -40,6 +40,7 @@ class dgTime:
             self.update_clock()
             return True
         self.awn.connect('map-event', on_map_event)
+        self.fallback()
 
     def update_prefs(self, prefs):
         self.prefs = prefs
@@ -57,11 +58,17 @@ class dgTime:
         else:
             self.width = int(self.height * 1.3)
 
+    def fallback(self):
+        icon = gtk.icon_theme_get_default().load_icon('gnome-panel-clock', self.height, 0)
+        self.awn.set_icon(icon)
 
     def create_context(self):
         self.reset_width()
 
         gdk_surface = self.awn.window.cairo_create().get_target()
+        if gdk_surface is None:
+            self.fallback()
+            return
         self.surface = gdk_surface.create_similar(cairo.CONTENT_COLOR_ALPHA, self.width, self.height)
         self.context = cairo.Context(self.surface)
         del gdk_surface
@@ -77,6 +84,9 @@ class dgTime:
 
         if self.context is None:
             self.create_context()
+        if self.surface is None or self.context is None:
+            self.fallback()
+            return
         # clear context
         self.context.set_operator (cairo.OPERATOR_CLEAR)
         self.context.paint()

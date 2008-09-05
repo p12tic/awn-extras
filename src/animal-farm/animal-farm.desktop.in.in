@@ -5,7 +5,7 @@ Type=Application
 X-AWN-AppletType=Python
 X-AWN-AppletCategory=Game,Amusement
 Comment=Display fortune messages
-Exec=@LIBDIR@/awn/applets/animal-farm/animal-farm.py
-Icon=@LIBDIR@/awn/applets/animal-farm/icons/donkey.png
+Exec=animal-farm/animal-farm.py
+Icon=animal-farm/icons/donkey.png
 Name[en_US]=Animal Farm
 

@@ -18,5 +18,5 @@ dist_animalfarm_DATA = 				\
 		walrus.png \
 		AUTHORS
 
-animalfarmdir = $(libdir)/awn/applets/animalfarm/icons
+animalfarmdir = ${prefix}/share/avant-window-navigator/applets/animal-farm/icons/
 

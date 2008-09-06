@@ -692,7 +692,7 @@ class Backends:
                 except poplib.error_proto:
                     raise RuntimeError, _("Could not log in")
                 
-                mboxs = [i.split()[2][1:-1] for i in self.server.list()[1]]
+                mboxs = [i.split(")")[1].split(" ", 2)[2].strip('"') for i in self.server.list()[1]]
                 self.box = key.attrs["folder"]
 
                 if self.box not in mboxs and self.box != "":
@@ -705,7 +705,7 @@ class Backends:
                 self.subjects = []
 
                 if self.box != "":
-                    emails = [i for i in self.server.search("UTF8", "(UNSEEN)")[1][0].split(" ") if i != ""]
+                    emails = [i for i in self.server.search(None, "(UNSEEN)")[1][0].split(" ") if i != ""]
                     
                     for i in emails:
                         s = self.server.fetch(i, '(BODY[HEADER.FIELDS (SUBJECT)])')[1][0]

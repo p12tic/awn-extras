@@ -57,7 +57,7 @@ class CairoClockApplet:
         self.__clock_updater.draw_clock_cb()
         
         applet.connect("enter-notify-event", lambda w, e: self.__clock_updater.update_title())
-        applet.connect("height-changed", lambda w, e: self.__clock_updater.draw_clock_cb())
+        applet.connect("size-changed", lambda w, e: self.__clock_updater.draw_clock_cb())
         
         applet.timing.register(self.__clock_updater.draw_clock_cb, draw_clock_interval)
     
@@ -259,7 +259,7 @@ class AnalogClock:
         local_time = time.localtime()
         hours, minutes, seconds = (local_time[3], local_time[4], local_time[5])
         
-        height = self.applet.get_height()
+        height = self.applet.get_size()
         show_seconds_hand = self.default_values["show-seconds-hand"]
         
         new_state = (show_seconds_hand, height, self.default_values["theme"], hours, minutes)

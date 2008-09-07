@@ -190,6 +190,8 @@ AC_ARG_ENABLE(pymod_checks,
 if test x${enable_pymod_checks} = xyes; then
     # volume-control
     AM_CHECK_PYMOD(alsaaudio,,,AC_MSG_ERROR([python module alsaaudio required (python-alsaaudio)]))
+    # battery-applet
+    AM_CHECK_PYMOD(pynotify,,,AC_MSG_ERROR([python module pynotify required (python-pynotify)]))
     # arss, mail
     AM_CHECK_PYMOD(feedparser,,,AC_MSG_ERROR([python module feedparser required (python-feedparser)]))
     if test "$with_gnome" != "no"; then

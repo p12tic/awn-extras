@@ -12,9 +12,7 @@
 # Lesser General Public License for more details.
 #
 # You should have received a copy of the GNU Lesser General Public
-# License along with this library; if not, write to the
-# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-# Boston, MA 02111-1307, USA.
+# License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 import commands
 import os
@@ -24,7 +22,9 @@ pygtk.require('2.0')
 import gtk
 from gtk import gdk
 from gtk import glade
+
 from awn.extras import AWNLib
+from messagehandler import MessageHandler
 
 try:
     import dbus
@@ -47,7 +47,6 @@ default_theme = "gpm"
 glade_file = os.path.join(os.path.dirname(__file__), "battery-status.glade")
 
 charge_ranges = {"100": (100, 86), "080": (85, 66), "060": (65, 46), "040": (45, 21), "020": (20, 7), "000": (6, 0)}
-
 low_level_units = ["Percent", "Time Remaining"]
 
 """
@@ -57,51 +56,9 @@ TODO:
 """
 
 
-class WarningDialog(gtk.MessageDialog):
-    """ A Dialog window that has the title "<applet's name> Preferences",
-    uses the applet's logo as its icon and has a Close button """
-    
-    def __init__(self, applet, title, callback, dialog_type):
-        gtk.MessageDialog.__init__(self, type=dialog_type)
-        
-        self.__applet = applet
-        self.__callback = callback
-        
-        self.set_resizable(False)
-        self.set_border_width(5)
-        
-        self.set_title(title)
-        self.add_button(gtk.STOCK_OK, gtk.RESPONSE_CLOSE)
-        
-        self.update_theme_icon()
-        applet.connect("height-changed", self.update_theme_icon)
-        
-        self.set_property("skip-pager-hint", False)
-        self.set_property("skip-taskbar-hint", False)
-        
-        self.connect("response", self.response_event)
-        self.connect("delete_event", self.delete_event)
-    
-    def delete_event(self, widget, event):
-        return True
-    
-    def response_event(self, widget, response):
-        if response < 0:
-            self.destroy_dialog()
-    
-    def destroy_dialog(self):
-        self.__callback.stop()
-        self.destroy()
-        del self
-    
-    def update_theme_icon(self, widget=None, event=None):
-        """ Updates the applet's themed logo to be of the same height as the panel """
-        
-        self.set_icon(self.__applet.get_awn_icons().get_icon_simple_at_height(self.__applet.get_height()))
-
-
 class BatteryStatusApplet:
-    """ An applet which displays battery information """
+
+    """An applet which displays battery information."""
     
     def __init__(self, applet):
         self.applet = applet
@@ -112,9 +69,9 @@ class BatteryStatusApplet:
                 self.backend = b()
                 break
         
-        self.warning_dialog = None
-        
         self.setup_context_menu()
+        
+        self.__message_handler = MessageHandler(self)
         
         if self.backend is not None:
             applet.timing.register(self.check_status_cb, check_status_interval)
@@ -125,20 +82,17 @@ class BatteryStatusApplet:
     def set_battery_missing(self):
         applet.title.set("No batteries")
         
-        icon = os.path.join(themes_dir, "gpm", "battery-missing.svg")
+        icon = os.path.join(themes_dir, self.settings["theme"], "battery-missing.svg")
         height = self.applet.get_height()
         applet.icon.set(gdk.pixbuf_new_from_file_at_size(icon, height, height))
     
     def setup_context_menu(self):
-        """ Creates a context menu to activate "Preferences" ("About" window
-        is created automatically by AWNLib) """
-        
         prefs = glade.XML(glade_file)
         prefs.get_widget("vbox-preferences").reparent(self.applet.dialog.new("preferences").vbox)
         
         batteries = self.backend.get_batteries()
         
-        self.default_values = {
+        self.settings = {
             "theme": default_theme,
             "battery-udi": batteries.keys()[0],
             "warn-low-level": True,
@@ -147,10 +101,9 @@ class BatteryStatusApplet:
             "level-notify-high": 100.0,
             "low-level-unit": low_level_units[0]
         }
-        self.applet.settings.load(self.default_values)
+        self.applet.settings.load(self.settings)
         
         """ Battery """
-        
         vbox = prefs.get_widget("vbox-battery")
         
         self.combobox_battery = gtk.combo_box_new_text()
@@ -159,15 +112,14 @@ class BatteryStatusApplet:
         for model in batteries.values():
             self.combobox_battery.append_text(model)
         
-        if self.default_values["battery-udi"] not in batteries:
+        if self.settings["battery-udi"] not in batteries:
             self.applet.settings["battery-udi"] = batteries.keys()[0]
-        udi = self.default_values["battery-udi"]
+        udi = self.settings["battery-udi"]
         
         self.combobox_battery.set_active(batteries.values().index(batteries[udi]))
         self.combobox_battery.connect("changed", self.combobox_battery_changed_cb)
         
         """ Display """
-        
         hbox = prefs.get_widget("hbox-theme")
         
         combobox_theme = gtk.combo_box_new_text()
@@ -189,28 +141,27 @@ class BatteryStatusApplet:
         prefs.get_widget("label-theme").set_mnemonic_widget(combobox_theme)
         
         """ Notifications """
-        
         checkbutton_low_level = prefs.get_widget("checkbutton-warn-low-level")
-        checkbutton_low_level.set_active(self.default_values["warn-low-level"])
+        checkbutton_low_level.set_active(self.settings["warn-low-level"])
         checkbutton_low_level.connect("toggled", self.toggled_warn_low_level_cb)
         
         self.spinbutton_low_level = prefs.get_widget("spinbutton-low-level")
-        self.spinbutton_low_level.set_value(self.default_values["level-warn-low"])
+        self.spinbutton_low_level.set_value(self.settings["level-warn-low"])
         self.spinbutton_low_level.connect("value-changed", self.changed_value_low_level_cb)
-        self.spinbutton_low_level.set_sensitive(self.default_values["warn-low-level"])
+        self.spinbutton_low_level.set_sensitive(self.settings["warn-low-level"])
         
         self.combobox_low_level = prefs.get_widget("combobox-low-level")
-        self.combobox_low_level.set_active(low_level_units.index(self.default_values["low-level-unit"]))
+        self.combobox_low_level.set_active(low_level_units.index(self.settings["low-level-unit"]))
         self.combobox_low_level.connect("changed", self.combobox_low_level_unit_changed_cb)
         
         checkbutton_high_level = prefs.get_widget("checkbutton-notify-high-level")
-        checkbutton_high_level.set_active(self.default_values["notify-high-level"])
+        checkbutton_high_level.set_active(self.settings["notify-high-level"])
         checkbutton_high_level.connect("toggled", self.toggled_notify_high_level_cb)
         
         self.spinbutton_high_level = prefs.get_widget("spinbutton-high-level")
-        self.spinbutton_high_level.set_value(self.default_values["level-notify-high"])
+        self.spinbutton_high_level.set_value(self.settings["level-notify-high"])
         self.spinbutton_high_level.connect("value-changed", self.changed_value_high_level_cb)
-        self.spinbutton_high_level.set_sensitive(self.default_values["notify-high-level"])
+        self.spinbutton_high_level.set_sensitive(self.settings["notify-high-level"])
     
     def toggled_warn_low_level_cb(self, button):
         self.applet.settings["warn-low-level"] = active = button.get_active()
@@ -218,34 +169,29 @@ class BatteryStatusApplet:
         self.spinbutton_low_level.set_sensitive(active)
         self.combobox_low_level.set_sensitive(active)
         
-        if active:
-            self.check_status_cb()
-        elif self.warning_dialog is not None:
-            self.warning_dialog.destroy_dialog()
-            self.warning_dialog = None
+        self.__message_handler.evaluate()
     
     def toggled_notify_high_level_cb(self, button):
         self.applet.settings["notify-high-level"] = active = button.get_active()
         
         self.spinbutton_high_level.set_sensitive(active)
         
-        if active:
-            self.check_status_cb()
-        elif self.warning_dialog is not None:
-            self.warning_dialog.destroy_dialog()
-            self.warning_dialog = None
+        self.__message_handler.evaluate()
     
     def changed_value_low_level_cb(self, button):
         self.applet.settings["level-warn-low"] = button.get_value()
-        self.check_status_cb()
+        
+        self.__message_handler.evaluate()
     
     def changed_value_high_level_cb(self, button):
         self.applet.settings["level-notify-high"] = button.get_value()
-        self.check_status_cb()
+        
+        self.__message_handler.evaluate()
     
     def combobox_low_level_unit_changed_cb(self, button):
         self.applet.settings["low-level-unit"] = low_level_units[button.get_active()]
-        self.check_status_cb()
+        
+        self.__message_handler.evaluate()
     
     def combobox_battery_changed_cb(self, button):
         batteries = self.backend.get_batteries()
@@ -271,7 +217,7 @@ class BatteryStatusApplet:
     def check_status_cb(self):
         if not self.backend.is_present():
             self.set_battery_missing()
-            return True
+            return
         
         charge_percentage = self.backend.get_capacity_percentage()
         
@@ -279,7 +225,7 @@ class BatteryStatusApplet:
         
         if self.backend.is_charged():
             charge_message += "\nBattery charged"
-            icon = os.path.join(themes_dir, self.default_values["theme"], "battery-charged.svg")
+            icon = os.path.join(themes_dir, self.settings["theme"], "battery-charged.svg")
         else:
             is_charging = self.backend.is_charging()
             
@@ -287,57 +233,42 @@ class BatteryStatusApplet:
                 actoggle = "charging"
                 time = self.backend.get_charge_time()
                 title_message_suffix = "until charged"
-                
-                if self.default_values["notify-high-level"] and self.warning_dialog is None and charge_percentage >= self.default_values["level-notify-high"]:
-                    dialog_image = gtk.image_new_from_icon_name(self.applet.meta["theme"], 48)
-                    
-                    self.update_callback = applet.timing.register(self.update_notify_high_level_cb, check_status_interval, False)
-                    
-                    self.warning_dialog = WarningDialog(self.applet, "Battery Charged", self.update_callback, gtk.MESSAGE_INFO)
-                    self.warning_dialog.set_markup("<span size=\"large\"><b>Your battery is charged</b></span>")
-                    
-                    self.update_notify_high_level_cb()
-                    self.warning_dialog.show()
-                    
-                    self.update_callback.start()
             else:
                 actoggle = "discharging"
                 time = self.backend.get_remaining_time()
                 title_message_suffix = "remaining"
-                
-                if self.default_values["warn-low-level"] and self.warning_dialog is None and time is not None and self.dropped_to_low_level(time, charge_percentage):
-                    self.update_callback = applet.timing.register(self.update_warning_low_level_cb, check_status_interval, False)
-                    
-                    self.warning_dialog = WarningDialog(self.applet, "Battery Low", self.update_callback, gtk.MESSAGE_WARNING)
-                    self.warning_dialog.set_markup("<span size=\"large\"><b>Your battery is running low</b></span>")
-                    
-                    self.update_warning_low_level_cb()
-                    self.warning_dialog.show()
-                    
-                    self.update_callback.start()
             
+            # May be None because charge rate is not always known (when switching between charging and discharging)
             if time is not None:
                 charge_message += "\n" + self.format_time(time, suffix=title_message_suffix)
             
             level = [key for key, value in charge_ranges.iteritems() if charge_percentage <= value[0] and charge_percentage >= value[1]][0]
-            icon = os.path.join(themes_dir, self.default_values["theme"], "battery-" + actoggle + "-" + level + ".svg")
+            icon = os.path.join(themes_dir, self.settings["theme"], "battery-" + actoggle + "-" + level + ".svg")
         
         self.applet.title.set(" ".join([charge_message, "(" + str(charge_percentage) + "%)"]))
         
+        # TODO don't read and set everytime
         height = self.applet.get_height()
         self.applet.icon.set(gdk.pixbuf_new_from_file_at_size(icon, height, height))
         
-        return True
+        self.__message_handler.evaluate()
     
-    def dropped_to_low_level(self, time, percentage):
-        unit = self.default_values["low-level-unit"]
+    def is_battery_low(self):
+        if not self.backend.is_discharging():
+            return False
         
-        if unit == "Percent" and percentage <= self.default_values["level-warn-low"]:
+        unit = self.settings["low-level-unit"]
+        
+        if unit == "Percent" and self.backend.get_capacity_percentage() <= self.settings["level-warn-low"]:
             return True
         
-        hours, minutes = time
+        time = self.backend.get_remaining_time()
         
-        return unit == "Time Remaining" and hours == 0 and minutes <= self.default_values["level-warn-low"]
+        if time is None:
+            return None
+        
+        hours, minutes = time
+        return unit == "Time Remaining" and hours == 0 and minutes <= self.settings["level-warn-low"]
     
     def format_time(self, time, prefix="", suffix=""):
         hours, minutes = time
@@ -346,10 +277,10 @@ class BatteryStatusApplet:
         time = []
         
         if hours > 0:
-            message.append("%d hour")
+            message.append("%d hour" + ["", "s"][hours > 1])
             time.append(hours)
         if minutes > 0:
-            message.append("%d minutes")
+            message.append("%d minute" + ["", "s"][minutes > 1])
             time.append(minutes)
         
         message = " ".join(message) % tuple(time)
@@ -357,39 +288,13 @@ class BatteryStatusApplet:
             return " ".join([prefix, message, suffix]).strip()
         else:
             return ""
-    
-    def update_notify_high_level_cb(self):
-        if self.warning_dialog is not None:
-            if not self.backend.is_discharging():
-                charge_percentage = self.backend.get_capacity_percentage()
-                if charge_percentage < 100:
-                    self.warning_dialog.format_secondary_markup("Your battery is charged to <b>%d%%</b>." % charge_percentage)
-                else:
-                    self.warning_dialog.format_secondary_markup("Your battery is fully charged.")
-                
-                return True
-            else:
-                self.warning_dialog.destroy()
-                self.warning_dialog = None
-    
-    def update_warning_low_level_cb(self):
-        if self.warning_dialog is not None:
-            if self.backend.is_discharging():
-                time = self.backend.get_remaining_time()
-                
-                assert time is not None
-                
-                charge_percentage = self.backend.get_capacity_percentage()
-                self.warning_dialog.format_secondary_markup("You have approximately <b>%s</b> of remaining battery power (%d%%)." % (self.format_time(time), charge_percentage))
-                
-                return True
-            else:
-                self.warning_dialog.destroy()
-                self.warning_dialog = None
 
 
 class AbstractBackend:
-    """ """
+
+    """Abstract backend that provides general implementations of some common methods.
+    
+    """
     
     def get_charge_time(self):
         assert self.is_charging()
@@ -420,11 +325,14 @@ class AbstractBackend:
         return not self.is_charging() and not self.is_discharging()
     
     def is_below_low_capacity(self):
-        return self.get_remaining_time() <= self.get_warning_capacity()
+        return self.get_remaining_capacity() <= self.get_warning_capacity()
 
 
 class HalBackend(AbstractBackend):
-    """ """
+
+    """Backend that uses HAL via DBus.
+    
+    """
     
     def __init__(self):
         self.udi = HalBackend.get_batteries().keys()[0]

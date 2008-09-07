@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-# vim: ts=4
-# 
 # Copyright (C) 2006  Mehdi Abaakouk <theli48@gmail.com>
 #               2008  onox <denkpadje@gmail.com>
 # 
@@ -19,6 +16,7 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
+
 from awn.extras import AWNLib
 import wnck
 
@@ -31,8 +29,12 @@ applet_logo = "desktop"
 
 titles = {True: "Show hidden windows", False: "Hide windows and show desktop"}
 
+
 class ShowDesktopApplet:
-    """ An applet to hide your windows and show your desktop """
+
+    """An applet to hide your windows and show your desktop.
+    
+    """
     
     def __init__(self, applet):
         self.applet = applet

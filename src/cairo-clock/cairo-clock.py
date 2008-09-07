@@ -43,7 +43,10 @@ glade_file = os.path.join(os.path.dirname(__file__), "cairo-clock.glade")
 
 
 class CairoClockApplet:
-    """ Applet that display an analog clock """
+
+    """Applet that display an analog clock.
+    
+    """
     
     def __init__(self, applet):
         self.applet = applet
@@ -157,7 +160,10 @@ class CairoClockApplet:
     
 
 class ClockUpdater:
-    """ Redraws the clock and sets the title (when visible) every second  """
+
+    """Redraws the clock and sets the title (when visible) every second.
+    
+    """
     
     def __init__(self, clock_applet):
         self.applet = clock_applet.applet
@@ -169,8 +175,9 @@ class ClockUpdater:
         self.__clock = AnalogClock(self)
     
     def update_title(self):
-        """ Updates the title according to the settings """
+        """Update the title according to the settings.
         
+        """
         if not self.applet.title.is_visible():
             return
         
@@ -197,8 +204,10 @@ class ClockUpdater:
         self.applet.title.show()
     
     def draw_clock_cb(self):
-        """ Draws the clock and updates the title to keep it synchronized with the drawn clock """
+        """Draw the clock and update the title to keep it synchronized with
+        the drawn clock.
         
+        """
         self.__clock.draw_clock()
         self.update_title()
         
@@ -208,7 +217,10 @@ class ClockUpdater:
         self.__clock.load_theme()
 
 class AnalogClock:
-    """ Renders an analog clock using SVG files as the applet icon """
+
+    """Renders an analog clock using SVG files as the applet icon.
+    
+    """
     
     def __init__(self, clock_updater):
         self.applet = clock_updater.applet
@@ -217,8 +229,9 @@ class AnalogClock:
         self.__previous_state = None
     
     def load_theme(self):
-        """ Loads the necessary SVG files of the specified theme """
+        """Load the necessary SVG files of the specified theme.
         
+        """
         theme = self.get_theme_dir(self.default_values["theme"])
         
         get_theme = lambda filename, theme: rsvg.Handle(os.path.join(theme, filename))
@@ -254,8 +267,9 @@ class AnalogClock:
         raise RuntimeError, "Did not find path to theme '" + theme + "'"
     
     def draw_clock(self):
-        """ Renders the SVGs on a Cairo surface and uses it as the applet's icon """
+        """Render the SVGs on a Cairo surface and uses it as the applet's icon.
         
+        """
         local_time = time.localtime()
         hours, minutes, seconds = (local_time[3], local_time[4], local_time[5])
         

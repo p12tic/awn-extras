@@ -19,6 +19,7 @@ import pygtk
 pygtk.require("2.0")
 import gtk
 from gtk import gdk
+
 from awn.extras import AWNLib
 
 applet_name = "ThinkHDAPS"
@@ -46,12 +47,16 @@ file_icon_error = os.path.join(image_dir, "thinkhdaps-error.svg")
 
 
 class ThinkHDAPSApplet:
-    """ Applet that shows the status of HDAPS """
+
+    """Applet that shows the status of HDAPS.
+    
+    """
 
     def check_status_cb(self, this):
-        """ Checks the status the hard disk monitored by HDAPS. Changes
-        the applet's icon when necessary """
+        """Check the status the hard disk monitored by HDAPS and change
+        the applet's icon if necessary,
         
+        """
         try:
             self.was_paused = self.paused
             self.paused = int(open("/sys/block/" + self.hdaps_device + "/queue/protect").readline())
@@ -112,8 +117,10 @@ class ThinkHDAPSApplet:
             self.check_status_cb(self)
     
     def height_changed_cb(self, widget, event):
-        """ Updates the applet's icon to reflect the new height """
+        """Update the applet's icon, because the height of the panel
+        has changed.
         
+        """
         self.setup_icon()
         
         # Toggle the flag to the wrong state to trigger the update of the icon
@@ -123,8 +130,9 @@ class ThinkHDAPSApplet:
         self.check_status_cb(self)
     
     def setup_icon(self):
-        """ Loads the images that are going to be used as the applet's icon """
+        """Load the images that are going to be used as the applet's icon.
         
+        """
         height = self.applet.get_height()
         self.icon_running = gdk.pixbuf_new_from_file_at_size(file_icon_running, height, height)
         self.icon_paused = gdk.pixbuf_new_from_file_at_size(file_icon_paused, height, height)

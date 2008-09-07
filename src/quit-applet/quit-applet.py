@@ -23,6 +23,7 @@ import subprocess
 import pygtk
 pygtk.require("2.0")
 import gtk
+
 from awn.extras import AWNLib
 
 applet_name = "Quit-Log Out"
@@ -34,7 +35,10 @@ applet_logo = "application-exit"
 
 
 class QuitLogOutApplet:
-    """ An applet to exit or log out of your session """
+
+    """An applet to exit or log out of your session.
+    
+    """
     
     def __init__(self, applet):
         self.applet = applet
@@ -50,17 +54,12 @@ class QuitLogOutApplet:
             subprocess.Popen(self.logout_command, shell=True)
     
     def setup_context_menu(self):
-        """ Creates a context menu to activate "Preferences" ("About" window
-        is created automatically by AWNLib) """
-        
         pref_dialog = self.applet.dialog.new("preferences")
         pref_dialog.connect("response", self.pref_dialog_response_cb)
         
         self.setup_dialog_settings(pref_dialog.vbox)
     
     def setup_dialog_settings(self, vbox):
-        """ Loads the settings """
-        
         if "logout_command" not in self.applet.settings:
             self.applet.settings["logout_command"] = "gnome-session-save --kill"
         self.logout_command = self.applet.settings["logout_command"]

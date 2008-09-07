@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-#
 # Copyright (C) 2007  Richard "nazrat" Beyer, Jeff "Jawbreaker" Hubbard,
 #                     Pavel Panchekha <pavpanchekha@gmail.com>,
 #                     Spencer Creasey <screasey@gmail.com>
@@ -25,6 +23,7 @@ pygtk.require("2.0")
 import gtk
 from gtk import gdk
 from gtk import glade
+
 from awn.extras import AWNLib
 
 # Interval in seconds between two successive reads of the current volume
@@ -49,16 +48,19 @@ volume_step = 4
 
 
 class VolumeControlApplet:
-    """ Applet to control your computer's volume """
+
+    """Applet to control your computer's volume.
+    
+    """
+    
+    # Contains old values used to check if the applet's icon must be updated
+    __old_volume = None
+    __was_muted = None
     
     def __init__(self, applet):
         self.applet = applet
         
         self.applet.errors.module(globals(), "alsaaudio")
-        
-        # Contains old values to check if the applet's icon must be updated
-        self.old_volume = None
-        self.was_muted = None
         
         self.backend = ALSABackend(self)
         
@@ -77,9 +79,10 @@ class VolumeControlApplet:
             self.backend.down()
     
     def height_changed_cb(self, widget, event):
-        """ Updates the applet's icon and the icon of
-        the About dialog to reflect the new height """
+        """Reload the applet's icon, because the height of the panel has
+        changed.
         
+        """
         self.refresh_icon(True)
     
     def setup_main_dialog(self):
@@ -128,8 +131,9 @@ class VolumeControlApplet:
             self.backend.set_volume(volume)
     
     def setup_context_menu(self):
-        """ Adds "Mute" and "Open Volume Control" to the context menu """
+        """Add "Mute" and "Open Volume Control" to the context menu.
         
+        """
         menu = self.applet.dialog.menu
         
         self.mute_item = gtk.CheckMenuItem("Mu_te")
@@ -157,7 +161,6 @@ class VolumeControlApplet:
         
         # Only use themes that are likely to provide all the files
         self.themes = filter(self.filter_themes, os.listdir(theme_dir))
-        
         self.themes.sort()
         
         combobox_theme = gtk.combo_box_new_text()
@@ -220,10 +223,10 @@ class VolumeControlApplet:
         else:
             muted = False
         
-        mute_changed = self.was_muted != muted
+        mute_changed = self.__was_muted != muted
         
         # Update if the update is forced or volume/mute has changed
-        if force_update or self.old_volume != volume or mute_changed:
+        if force_update or self.__old_volume != volume or mute_changed:
             if mute_changed:
                 self.refresh_mute_checkbox()
             
@@ -251,14 +254,17 @@ class VolumeControlApplet:
             
             self.volume_scale.set_value(volume)
             
-            self.old_volume = volume
-            self.was_muted = muted
+            self.__old_volume = volume
+            self.__was_muted = muted
     
     def refresh_mute_checkbox(self):
-        """ Enables/disables 'Mute' checkbox. This does not update the applet's icon! """
+        """Update the state of the 'Mute' checkbox.
+        
+        """
         can_be_muted = self.backend.can_be_muted()
         
         self.mute_item.set_sensitive(can_be_muted)
+        
         if can_be_muted:
             self.mute_item.set_active(self.backend.is_muted())
         else:
@@ -267,7 +273,10 @@ class VolumeControlApplet:
 
 
 class ALSABackend:
-    """  ALSA backend. Controls the volume, mute and channels """
+
+    """ALSA backend. Controls the volume, mute and channels.
+    
+    """
     
     def __init__(self, parent):
         self.parent = parent
@@ -281,8 +290,9 @@ class ALSABackend:
             return False
     
     def set_channel(self, channel):
-        """ Changes the current channel and enables/disables the 'Mute' checkbox """
+        """Changes the current channel and enables/disables the 'Mute' checkbox.
         
+        """
         self.channel = channel
         
         self.parent.refresh_mute_checkbox()
@@ -305,9 +315,10 @@ class ALSABackend:
             return False
     
     def is_muted(self):
-        """ Mixer is only called 'muted' if both channels (left and right)
-        are muted """
+        """Return whether all channels (left and right if there are two)
+        are muted.
         
+        """
         muted_channels = alsaaudio.Mixer(self.channel).getmute()
         
         if len(muted_channels) > 1:

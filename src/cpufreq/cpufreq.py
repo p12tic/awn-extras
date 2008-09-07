@@ -62,7 +62,7 @@ if dbus is not None:
     
     class CpuFreqBackendDBusObject(dbus.service.Object):
     
-        """ A DBus object to read available frequencies and governors, current
+        """A DBus object to read available frequencies and governors, current
         frequency and governor, and to set new frequency or governor.
         
         """
@@ -114,7 +114,9 @@ if dbus is not None:
 
 class CpuFreqApplet:
 
-    """An applet to monitor and control the CPU frequency."""
+    """An applet to monitor and control the CPU frequency.
+    
+    """
     
     __button_press_event_id = None
     

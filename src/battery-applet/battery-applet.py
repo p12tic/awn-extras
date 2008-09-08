@@ -270,6 +270,12 @@ class BatteryStatusApplet:
         hours, minutes = time
         return unit == "Time Remaining" and hours == 0 and minutes <= self.settings["level-warn-low"]
     
+    def is_battery_high(self):
+        if self.backend.is_discharging():
+            return False
+        
+        return self.backend.get_capacity_percentage() >= self.settings["level-notify-high"]
+    
     def format_time(self, time, prefix="", suffix=""):
         hours, minutes = time
         

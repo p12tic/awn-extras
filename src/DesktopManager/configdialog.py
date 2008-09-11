@@ -29,15 +29,12 @@ class ConfigDialog(gtk.Dialog) :
 	        self.theme = gtk.icon_theme_get_default()
 		pixbuf = self.theme.load_icon("desktop", 64, 0)
 		self.set_icon(pixbuf)
-		#table = gtk.Table(9, 2)
-		table = gtk.Table(10,2)
+
+		table = gtk.Table(5,2)
 		label = gtk.Label("Base Folder:")
 		table.attach(label, 0,1,0,1)
-		self.filedialog = gtk.FileChooserDialog("Choose a Folder",self, gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER, (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN, gtk.RESPONSE_OK), None)
-		self.filedialog.connect("response", self.fileResponse)
-		self.filedialog.set_icon(pixbuf)
-		self.folderentry = gtk.Button()
-		self.folderentry.connect("clicked", self.browse)
+		self.folderentry = gtk.FileChooserButton("Choose a Folder")
+		self.folderentry.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
 		table.attach(self.folderentry, 1,2,0,1)
 
 		label1 = gtk.Label("Method of choosing the wallpaper:")
@@ -78,46 +75,52 @@ class ConfigDialog(gtk.Dialog) :
 			self.combo2.append_text(type)
 		self.combo2.connect("changed", self.combo2changed)
 		table.attach(self.combo2,1,2,4,5)
-		label5 = gtk.Label("Play attention effect on change")
-		table.attach(label5,0,1,5,6)
+		#SPLIT
+		table2 = gtk.Table(5,2)
+		label5 = gtk.Label("Play attention effect on change:")
+		table2.attach(label5,0,1,0,1)
 		self.check = gtk.CheckButton()
-		table.attach(self.check,1,2,5,6,0)
+		table2.attach(self.check,1,2,0,1,0)
 
 		label6 = gtk.Label("Applet action on left click:")
-		table.attach(label6,0,1,6,7)
+		table2.attach(label6,0,1,1,2)
 		self.combo3 = gtk.combo_box_new_text()
 		self.types3 = ["Switch Desktop Image", "Show Desktop", "None"]
 		i = 0
 		for type in self.types3 :
 			self.combo3.append_text(type)
-		table.attach(self.combo3,1,2,6,7)
+		table2.attach(self.combo3,1,2,1,2)
 
 		label7 = gtk.Label("Applet action on middle click:")
-		table.attach(label7,0,1,7,8)
+		table2.attach(label7,0,1,2,3)
 		self.combo4 = gtk.combo_box_new_text()
 		i = 0
 		for type in self.types3 :
 			self.combo4.append_text(type)
-		table.attach(self.combo4,1,2,7,8)
+		table2.attach(self.combo4,1,2,2,3)
 
 		label8 = gtk.Label("What to do when showing the desktop:")
-		table.attach(label8,0,1,8,9)
+		table2.attach(label8,0,1,3,4)
 		self.combo5 = gtk.combo_box_new_text()
 		i = 0
 		self.types5 = ["Toggle showing the desktop", "Just show the desktop"]
 		for type in self.types5 :
 			self.combo5.append_text(type)
-		table.attach(self.combo5,1,2,8,9)
+		table2.attach(self.combo5,1,2,3,4)
 		hbox10 = gtk.HBox()
 		label10 = gtk.Label("How much to scale the icon:")
-		table.attach(label10,0,1,9,10)
+		table2.attach(label10,0,1,4,5)
 		adjustment10 = gtk.Adjustment(1, 1, 100, 1, 10,0)
 		self.secsentry10 = gtk.SpinButton(adjustment10)
 		hbox10.pack_start(self.secsentry10,True,True)
 		label10b = gtk.Label("Percent")
 		hbox10.pack_end(label10b, False, False,10)
-		table.attach(hbox10,1,2,9,10)
-		self.vbox.add(table)
+		table2.attach(hbox10,1,2,4,5)
+
+		notebook = gtk.Notebook()
+		notebook.append_page(table, gtk.Label("Wallpaper"))
+		notebook.append_page(table2, gtk.Label("Applet"))
+		self.vbox.add(notebook)
 		self.connect("response", self.response)
 	def combo2changed(self, widget) :
 		if (widget.get_active_text() == "Xfce") :
@@ -141,7 +144,6 @@ class ConfigDialog(gtk.Dialog) :
 			self.switcher.aboutDialog(None)
 	def show(self) :
 		self.folder = self.config.get_folder()
-		self.folder2 = self.folder
 		secs = self.config.get_secs()
 		scale = self.config.get_scale()
 		render = self.config.get_render()
@@ -150,7 +152,7 @@ class ConfigDialog(gtk.Dialog) :
 		button2_action = self.config.get_button_action(2)
 		show_desktop = self.config.get_show_desktop()
 		method = self.config.get_method()
-		self.setFolder(self.folder)
+		self.folderentry.set_filename(self.folder)
 		self.secsentry.set_value(float(secs)/float(60000))
 		self.secsentry10.set_value(scale)
 		self.combo0.set_active(self.types0.index(method))
@@ -171,9 +173,10 @@ class ConfigDialog(gtk.Dialog) :
 		show_desktop = self.combo5.get_active_text()
 		attention = self.check.get_active()
 		method = self.combo0.get_active_text()
-		self.config.set_folder(self.folder)
+		folder = self.folderentry.get_filename()
+		self.config.set_folder(folder)
 		self.config.set_secs(secs)
-		if (self.folder != self.folder2) :
+		if (folder != self.folder) :
 			self.config.set_sub_folder("")
 		self.config.set_render(render)
 		self.config.set_attention(attention)
@@ -191,25 +194,7 @@ class ConfigDialog(gtk.Dialog) :
 		self.config.set_environment(environment)
 		self.switcher.updateConfig()
 		self.destroy()
-	def browse(self, widget) :
-		self.browsing = True
-		self.filedialog.show()
-		self.filedialog.set_filename(self.folder)
 	def errorResponse(self, widget, response) :
 		widget.destroy()
-	def setFolder(self, folder) :
-		if (len(folder) <= 25) :
-			self.folderentry.set_label(folder)
-		else :
-			length = len(folder)
-			firstpart = folder[0:11]
-			lastpart = folder[-11:len(folder)]
-			total = firstpart+"..."+lastpart
-			self.folderentry.set_label(total)
-	def fileResponse(self, widget, response = None) :
-		self.setFolder(self.filedialog.get_filename())
-		self.folder = self.filedialog.get_filename()
-		widget.hide()
-		self.browsing = False
 	def close(self, widget=None) :
 		self.destroy()

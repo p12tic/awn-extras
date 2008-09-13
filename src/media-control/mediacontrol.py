@@ -70,7 +70,15 @@ class App (awn.AppletSimple):
         self.title = awn.awn_title_get_default ()
         self.dialog = awn.AppletDialog (self)
         self.dialog_visible = False
+
+        #Popup menu
+        self.about = gtk.ImageMenuItem(gtk.STOCK_ABOUT)
+        self.about.connect("activate", self.show_about)
+
         self.popup_menu = self.create_default_menu()
+        self.popup_menu.append(self.about)
+        self.popup_menu.show_all()
+
         # Defining Widgets
         vbox = gtk.VBox()
         self.players_frame.add(vbox)
@@ -341,6 +349,18 @@ class App (awn.AppletSimple):
         context.finish(result, False, time)
         return True
 
+    def show_about(self, widget):
+        about = gtk.AboutDialog()
+        about.set_name("Media Control Applet")
+        about.set_copyright("Copyright (c) 2007 Randal Barlow <im.tehk at gmail.com>")
+        about.set_authors(["Randal Barlow <im.tehk at gmail.com>", "Michal Hruby <michal.mhr at gmail.com>"])
+        about.set_comments("Controls your favourite music player.")
+        about.set_license("This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA.")
+        about.set_wrap_license(True)
+        about.set_documenters(["Randal Barlow <im.tehk at gmail.com>"])
+        about.set_artists(["Claudio Benech"])
+        about.run()
+        about.destroy()
 
 
 if __name__ == "__main__":

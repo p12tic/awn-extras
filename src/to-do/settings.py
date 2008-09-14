@@ -142,6 +142,19 @@ class Settings:
       for x in strings:
         self._connects[x].append([function,args1,args2])
   
+  #Opposite of connect
+  def disconnect(self, strings, function):
+    if type(strings) == str:
+      for func in self._connects[strings]:
+        if func[0] == function:
+          self._connects[strings].remove(func)
+    
+    else:
+      for string in strings:
+        for func in self._connects[strings]:
+          if func[0] == function:
+            self._connects[strings].remove(func)
+  
   #In case the user wants to get a value via <settingsinstance>[<key>]
   def __getitem__(self,key):
     return self.get(key)

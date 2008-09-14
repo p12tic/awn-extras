@@ -177,3 +177,48 @@ def diff(num):
   ans = num * (size / 48.0)
   
   return ans
+
+def icon2(settings, color, surface, percent):
+  if surface is None:
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 16, 16)
+    cr = cairo.Context(surface)
+  else:
+    cr = cairo.Context(surface)
+  
+  #Clear the surface
+  cr.set_operator(cairo.OPERATOR_CLEAR)
+  cr.paint()
+  cr.set_operator(cairo.OPERATOR_OVER)
+  cr.set_line_width(1)
+  
+  #Draw the outer circle
+  cr.set_source_rgb(float(color[2][0])/255.0,float(color[2][1])/255.0,\
+    float(color[2][2])/255.0)
+  cr.arc(8, 8, 7, 0, 2 * pi)
+  cr.stroke()
+  cr.close_path()
+  
+  
+  
+  #(Probably) lightest foreground to indicate progress
+  cr.set_source_rgb(float(color[0][0])/255.0,float(color[0][1])/255.0,\
+    float(color[0][2])/255.0)
+  #Crazy maths here
+  #http://en.wikipedia.org/wiki/Radians saved my life here :)
+  cr.arc(8, 8, 6,((3.0*pi)/2.0), \
+    ((3.0*pi)/2.0)+2*pi*(percent/100.0))
+  #cr.stroke()
+  cr.line_to(8, 8)
+  cr.clip()
+
+  cr.close_path()
+  cr.fill()
+  cr.paint()
+  
+  #Finish the drawing
+  cr.close_path()
+  cr.set_line_width(1)
+  cr.stroke()
+  
+  del cr
+  return surface

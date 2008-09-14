@@ -35,12 +35,14 @@ import icon
 #Awn stuff
 import sys
 import awn
-from awn.extras import detach
+from awn.extras import detach, surface_to_pixbuf
 
 class App(awn.AppletSimple):
   last_num_items = -1
   surface = None
   last_height = -1
+  progress_buttons = []
+  
   def __init__(self, uid, orient, height):
     self.uid = uid
     self.height = height
@@ -199,6 +201,16 @@ class App(awn.AppletSimple):
   
   #Remove anything shown in the dialog - does not hide the dialog
   def clear_dialog(self,*args):
+    for pb in self.progress_buttons:
+      pb.disconn()
+      pb.destroy()
+    
+    while True:
+      try:
+        del self.progress_buttons[0]
+      except:
+        break
+    
     try:
       self.dialog_widget.destroy()
     except:
@@ -415,6 +427,9 @@ class App(awn.AppletSimple):
         except:
           pass
         
+        #Make a ProgressButton
+        dialog_progress = ProgressButton(self, y)
+        
         #Make a right arrow button to edit/add details about the item
         dialog_details = gtk.Button()
         dialog_details.set_tooltip_text('View/Edit details')
@@ -431,24 +446,31 @@ class App(awn.AppletSimple):
             xoptions=gtk.SHRINK,yoptions=gtk.SHRINK)
           dialog_table.attach(dialog_entry,2,3,y,(y+1),\
             yoptions=gtk.SHRINK)
-          dialog_table.attach(dialog_details,3,4,y,(y+1),\
+          dialog_table.attach(dialog_progress, 3, 4, y, (y+1), \
+            xoptions=gtk.SHRINK, yoptions=gtk.SHRINK)
+          dialog_table.attach(dialog_details,4,5,y,(y+1),\
             xoptions=gtk.SHRINK,yoptions=gtk.SHRINK)
         else:
           dialog_table.attach(dialog_x,0,1,y,(y+1),\
             xoptions=gtk.SHRINK,yoptions=gtk.SHRINK)
           dialog_table.attach(dialog_entry,1,3,y,(y+1),\
             yoptions=gtk.SHRINK)
-          dialog_table.attach(dialog_details,3,4,y,(y+1),\
+          dialog_table.attach(dialog_progress, 3, 4, y, (y+1), \
+            xoptions=gtk.SHRINK, yoptions=gtk.SHRINK)
+          dialog_table.attach(dialog_details,4,5,y,(y+1),\
             xoptions=gtk.SHRINK,yoptions=gtk.SHRINK)
         
         
         #Put the widgets in a list of widgets - used for expanding categories
-        self.dialog_widgets.append([dialog_x,dialog_entry,dialog_details])
+        self.dialog_widgets.append([dialog_x,dialog_entry,dialog_progress, \
+          dialog_details])
+        self.progress_buttons.append(dialog_progress)
         
         #If this item is in a category - don't show it automatically (show_all)
         if self.settings['category'][y] not in [-1]+self.settings['expanded']:
           dialog_x.set_no_show_all(True)
           dialog_entry.set_no_show_all(True)
+          dialog_progress.set_no_show_all(True)
           dialog_details.set_no_show_all(True)
         
         y+=1
@@ -503,9 +525,9 @@ class App(awn.AppletSimple):
         #Put the widgets in the table
         dialog_table.attach(dialog_x,0,1,y,(y+1),\
           xoptions=gtk.SHRINK,yoptions=gtk.SHRINK)
-        dialog_table.attach(dialog_expander,1,3,y,(y+1),\
+        dialog_table.attach(dialog_expander,1,4,y,(y+1),\
           yoptions=gtk.SHRINK)
-        dialog_table.attach(dialog_details,3,4,y,(y+1),\
+        dialog_table.attach(dialog_details,4,5,y,(y+1),\
           xoptions=gtk.SHRINK,yoptions=gtk.SHRINK)
         if num_items > 0:
           dialog_table.attach(dialog_vsep,1,2,y+1,(y+1+num_items),\
@@ -523,12 +545,12 @@ class App(awn.AppletSimple):
     
     if len(self.settings['items'])==0:
       #If # items is 0, make the button take up all the width
-      dialog_table.attach(self.dialog_add,0,4,y,(y+1),\
+      dialog_table.attach(self.dialog_add,0,5,y,(y+1),\
         yoptions=gtk.SHRINK)
     
     else:
       #Otherwise, just add it normally; center aligned
-      dialog_table.attach(self.dialog_add,0,4,y,(y+1),\
+      dialog_table.attach(self.dialog_add,0,5,y,(y+1),\
         xoptions=gtk.SHRINK,yoptions=gtk.SHRINK)
     
     #Put the table in the dialog
@@ -686,7 +708,7 @@ class App(awn.AppletSimple):
       func(*args)
   
   #Edit the details of an item
-  def edit_details(self,num):
+  def edit_details(self, num, edit_progress=False):
     if type(num)==gtk.Button:
       num = num.iterator
     
@@ -759,6 +781,8 @@ class App(awn.AppletSimple):
     progress_spin = gtk.SpinButton(progress_adj,1,0)
     progress_spin.iterator = num
     progress_spin.connect('focus-out-event',self.spin_focusout)
+    if edit_progress == True:
+      progress_spin.grab_focus()
     
     #Pack the widgets to the HBox
     progress_hbox.pack_start(progress_label,False)
@@ -792,7 +816,8 @@ class App(awn.AppletSimple):
     widget.show_all()
     self.clear_dialog()
     self.add_to_dialog(widget)
-    ok_button.grab_focus()
+    if not edit_progress:
+      ok_button.grab_focus()
   
   #When a RadioButton from the edit details dialog has been selected
   def radio_selected(self,widget):
@@ -1333,7 +1358,6 @@ class App(awn.AppletSimple):
     
     #Please, for your own sake, do not write code like this next section.
     i = 0
-    #print 'list of items: ' + str(list_of_items)
     for item_category in self.settings['category']:
       if i not in list_of_items:
         #print '%s not in list_of_items:' % i
@@ -1389,6 +1413,99 @@ class App(awn.AppletSimple):
   #When a CheckButton for "Don't show this again." is toggled
   def confirm_check(self, button):
     self.settings[button.key] = not button.get_active()
+
+#A gtk.Button that displays and changes an item's progress
+class ProgressButton(gtk.Button):
+  def __init__(self, applet, Id):
+    self.applet = applet
+    self.settings = applet.settings
+    self.Id = Id
+    gtk.Button.__init__(self)
+    
+    self.surface = None
+    self.pixbuf = None
+    self.conn = None
+    self.conn2 = None
+  
+    #Set up the icon
+    progress = self.settings['progress'][self.Id]
+    self.surface = icon.icon2(self.settings, applet.color, self.surface, \
+      progress)
+    self.pixbuf = surface_to_pixbuf(self.surface)
+    image = gtk.image_new_from_pixbuf(self.pixbuf)
+    self.set_image(image)
+    
+    #For looks
+    self.set_relief(gtk.RELIEF_NONE)
+    
+    #Connect to changes in color or items' progress
+    self.settings.connect('color', self.update)
+    
+    #Connect to the scroll event
+    self.conn = self.connect('scroll-event', self.scroll)
+    self.conn2 = self.connect('clicked', \
+      lambda *a: applet.edit_details(self.Id, True))
+    
+    #Set the tooltip: X% done
+    self.set_tooltip_text(str(int(progress)) + '% done')
+  
+  def update(self, *args):
+    #Reset up the icon
+    progress = self.settings['progress'][self.Id]
+    self.surface = icon.icon2(self.settings, applet.color, self.surface, \
+      progress)
+    self.pixbuf = surface_to_pixbuf(self.surface)
+    image = gtk.image_new_from_pixbuf(self.pixbuf)
+    self.set_image(image)
+    
+    #Reset the tooltip
+    self.set_tooltip_text(str(int(progress)) + '% done')
+  
+  def scroll(self, widget, event):
+    #Scrolling up
+    if event.direction == gtk.gdk.SCROLL_UP:
+      #Increase percentage
+      list_of_progress = []
+      y = 0
+      for progress in self.settings['progress']:
+        if y == self.Id:
+          if progress + 5 >= 100:
+            list_of_progress.append(100)
+          else:
+            list_of_progress.append(progress + 5)
+        
+        else:
+          list_of_progress.append(progress)
+        y += 1
+      
+      self.settings['progress'] = list_of_progress
+      self.update()
+    
+    #Scrolling down
+    elif event.direction == gtk.gdk.SCROLL_DOWN:
+      #Decrease percentage
+      list_of_progress = []
+      y = 0
+      for progress in self.settings['progress']:
+        if y == self.Id:
+          if progress - 5 <= 0:
+            list_of_progress.append(0)
+          else:
+            list_of_progress.append(progress - 5)
+        
+        else:
+          list_of_progress.append(progress)
+        y += 1
+      
+      self.settings['progress'] = list_of_progress
+      self.update()
+  
+  #Why does this not work the way it should???
+  def disconn(self):
+    self.settings.disconnect('color', self.update)
+    for x in dir(self):
+      del x
+    del self
 
 if __name__ == '__main__':
   awn.init(sys.argv[1:])

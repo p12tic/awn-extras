@@ -49,6 +49,8 @@ glade_file = os.path.join(os.path.dirname(__file__), "battery-status.glade")
 charge_ranges = {"100": (100, 86), "080": (85, 66), "060": (65, 46), "040": (45, 21), "020": (20, 7), "000": (6, 0)}
 low_level_units = ["Percent", "Time Remaining"]
 
+warning_percentage = 5.0
+
 """
 TODO:
 1) update battery_models before displaying prefs
@@ -401,7 +403,10 @@ class HalBackend(AbstractBackend):
         return int(self.__hal_battery.GetProperty("battery.charge_level.percentage"))
     
     def get_warning_capacity(self):
-        return int(self.__hal_battery.GetProperty("battery.charge_level.warning"))
+        try:
+            return int(self.__hal_battery.GetProperty("battery.charge_level.warning"))
+        except dbus.DBusException:
+            return int(int(self.__hal_battery.GetProperty("battery.charge_level.design")) * (warning_percentage / 100.))
 
 
 backends = [HalBackend]

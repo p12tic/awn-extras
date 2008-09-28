@@ -251,6 +251,10 @@ void grab_wallpaper(Shiny_switcher *shinyswitcher)
 
   gulong wallpaper_xid = wnck_screen_get_background_pixmap(shinyswitcher->wnck_screen);
   GdkPixmap* wallpaper = gdk_pixmap_foreign_new(wallpaper_xid);
+  if (!wallpaper)
+  {
+    return;
+  }
   gdk_drawable_set_colormap(wallpaper, shinyswitcher->rgb_cmap);
 
   shinyswitcher->wallpaper_inactive = gdk_pixmap_new(NULL, shinyswitcher->mini_work_width * vp_hscale(shinyswitcher), shinyswitcher->mini_work_height * vp_vscale(shinyswitcher), 32);   //FIXME
@@ -258,13 +262,16 @@ void grab_wallpaper(Shiny_switcher *shinyswitcher)
   gtk_widget_set_app_paintable(widget, TRUE);
   gdk_drawable_set_colormap(shinyswitcher->wallpaper_inactive, shinyswitcher->rgba_cmap);
   cairo_t * destcr = gdk_cairo_create(shinyswitcher->wallpaper_inactive);
-  cairo_set_operator(destcr, CAIRO_OPERATOR_CLEAR);
-  cairo_paint(destcr);
-  gdk_drawable_get_size(wallpaper, &w, &h);
-  cairo_scale(destcr, shinyswitcher->mini_work_width / (double)w*vp_hscale(shinyswitcher), shinyswitcher->mini_work_height / (double)h*vp_vscale(shinyswitcher));
-  gdk_cairo_set_source_pixmap(destcr, wallpaper, 0, 0);
-  cairo_set_operator(destcr, CAIRO_OPERATOR_OVER);
-  cairo_paint_with_alpha(destcr, shinyswitcher->wallpaper_alpha_inactive);
+  if (destcr)
+  {
+    cairo_set_operator(destcr, CAIRO_OPERATOR_CLEAR);
+    cairo_paint(destcr);
+    gdk_drawable_get_size(wallpaper, &w, &h);
+    cairo_scale(destcr, shinyswitcher->mini_work_width / (double)w*vp_hscale(shinyswitcher), shinyswitcher->mini_work_height / (double)h*vp_vscale(shinyswitcher));
+    gdk_cairo_set_source_pixmap(destcr, wallpaper, 0, 0);
+    cairo_set_operator(destcr, CAIRO_OPERATOR_OVER);
+    cairo_paint_with_alpha(destcr, shinyswitcher->wallpaper_alpha_inactive);
+  }
   gtk_widget_destroy(widget);
 
   shinyswitcher->wallpaper_active = gdk_pixmap_new(NULL, shinyswitcher->mini_work_width * vp_hscale(shinyswitcher), shinyswitcher->mini_work_height * vp_vscale(shinyswitcher), 32);   //FIXME
@@ -272,14 +279,17 @@ void grab_wallpaper(Shiny_switcher *shinyswitcher)
   gtk_widget_set_app_paintable(widget, TRUE);
   gdk_drawable_set_colormap(shinyswitcher->wallpaper_active, shinyswitcher->rgba_cmap);
   destcr = gdk_cairo_create(shinyswitcher->wallpaper_active);
-  cairo_set_operator(destcr, CAIRO_OPERATOR_CLEAR);
-  cairo_paint(destcr);
-  cairo_scale(destcr, shinyswitcher->mini_work_width / (double)w*vp_hscale(shinyswitcher), shinyswitcher->mini_work_height / (double)h*vp_vscale(shinyswitcher));
-  gdk_cairo_set_source_pixmap(destcr, wallpaper, 0, 0);
-  cairo_set_operator(destcr, CAIRO_OPERATOR_OVER);
-  cairo_paint_with_alpha(destcr, shinyswitcher->wallpaper_alpha_active);
+  if (destcr)
+  {
+    cairo_set_operator(destcr, CAIRO_OPERATOR_CLEAR);
+    cairo_paint(destcr);
+    cairo_scale(destcr, shinyswitcher->mini_work_width / (double)w*vp_hscale(shinyswitcher), shinyswitcher->mini_work_height / (double)h*vp_vscale(shinyswitcher));
+    gdk_cairo_set_source_pixmap(destcr, wallpaper, 0, 0);
+    cairo_set_operator(destcr, CAIRO_OPERATOR_OVER);
+    cairo_paint_with_alpha(destcr, shinyswitcher->wallpaper_alpha_active);
+    cairo_destroy(destcr);    
+  }
   gtk_widget_destroy(widget);
-  cairo_destroy(destcr);
 }
 
 
@@ -299,29 +309,33 @@ void set_background(Shiny_switcher *shinyswitcher)
     widget = gtk_image_new_from_pixmap(shinyswitcher->wallpaper_inactive, NULL);
     gtk_widget_set_app_paintable(widget, TRUE);
     cr = gdk_cairo_create(shinyswitcher->wallpaper_inactive);
-    cairo_set_operator(cr, CAIRO_OPERATOR_CLEAR);
-    cairo_paint(cr);
-    cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
-    cairo_set_source_rgba(cr, shinyswitcher->desktop_colour.red, shinyswitcher->desktop_colour.green,
-                          shinyswitcher->desktop_colour.blue, shinyswitcher->desktop_colour.alpha);
-    cairo_paint_with_alpha(cr, shinyswitcher->wallpaper_alpha_inactive);
-    gtk_widget_destroy(widget);
-    cairo_destroy(cr);
-
+    if (cr)
+    {
+      cairo_set_operator(cr, CAIRO_OPERATOR_CLEAR);
+      cairo_paint(cr);
+      cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
+      cairo_set_source_rgba(cr, shinyswitcher->desktop_colour.red, shinyswitcher->desktop_colour.green,
+                            shinyswitcher->desktop_colour.blue, shinyswitcher->desktop_colour.alpha);
+      cairo_paint_with_alpha(cr, shinyswitcher->wallpaper_alpha_inactive);
+      gtk_widget_destroy(widget);
+      cairo_destroy(cr);
+    }
     shinyswitcher->wallpaper_active = gdk_pixmap_new(NULL, shinyswitcher->mini_work_width * vp_hscale(shinyswitcher), shinyswitcher->mini_work_height * vp_vscale(shinyswitcher), 32);   //FIXME
     gdk_drawable_set_colormap(shinyswitcher->wallpaper_active, shinyswitcher->rgba_cmap);
     widget = gtk_image_new_from_pixmap(shinyswitcher->wallpaper_active, NULL);
     gtk_widget_set_app_paintable(widget, TRUE);
     cr = gdk_cairo_create(shinyswitcher->wallpaper_active);
-    cairo_set_operator(cr, CAIRO_OPERATOR_CLEAR);
-    cairo_paint(cr);
-    cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
-    cairo_set_source_rgba(cr, shinyswitcher->desktop_colour.red, shinyswitcher->desktop_colour.green,
-                          shinyswitcher->desktop_colour.blue, shinyswitcher->desktop_colour.alpha);
-    cairo_paint_with_alpha(cr, shinyswitcher->wallpaper_alpha_active);
+    if (cr)
+    {
+      cairo_set_operator(cr, CAIRO_OPERATOR_CLEAR);
+      cairo_paint(cr);
+      cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
+      cairo_set_source_rgba(cr, shinyswitcher->desktop_colour.red, shinyswitcher->desktop_colour.green,
+                            shinyswitcher->desktop_colour.blue, shinyswitcher->desktop_colour.alpha);
+      cairo_paint_with_alpha(cr, shinyswitcher->wallpaper_alpha_active);
+      cairo_destroy(cr);      
+    }
     gtk_widget_destroy(widget);
-    cairo_destroy(cr);
-
   }
 }
 

@@ -242,6 +242,9 @@ void calc_dimensions(Shiny_switcher *shinyswitcher)
   shinyswitcher->mini_work_width = shinyswitcher->mini_work_height * shinyswitcher->applet_scale * scr_ratio *
                                    (double)wnck_ws_width / (double)wnck_scr_width * vp_vscale(shinyswitcher);
   shinyswitcher->width = shinyswitcher->mini_work_width * shinyswitcher->cols;
+  g_assert(shinyswitcher->mini_work_height);
+  g_assert(shinyswitcher->mini_work_width);
+  g_assert(shinyswitcher->width);
 }
 
 

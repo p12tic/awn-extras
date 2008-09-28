@@ -196,13 +196,28 @@ static void save_config(Shiny_switcher *shinyswitcher)
 
 double vp_vscale(Shiny_switcher *shinyswitcher)
 {
-  return (double)wnck_screen_get_height(shinyswitcher->wnck_screen) / (double)wnck_workspace_get_height(wnck_screen_get_active_workspace(shinyswitcher->wnck_screen));
-
+  static double cached = 1;
+  double result = cached;
+  WnckWorkspace * space =  wnck_screen_get_active_workspace(shinyswitcher->wnck_screen);
+  if (space)
+  {
+    result = (double)wnck_screen_get_height(shinyswitcher->wnck_screen) / (double)wnck_workspace_get_height(space);
+    cached = result;
+  }
+  return result;
 }
 
 double vp_hscale(Shiny_switcher *shinyswitcher)
 {
-  return (double)wnck_screen_get_width(shinyswitcher->wnck_screen) / (double)wnck_workspace_get_width(wnck_screen_get_active_workspace(shinyswitcher->wnck_screen));
+  static double cached = 1;
+  double result = cached;
+  WnckWorkspace * space = wnck_screen_get_active_workspace(shinyswitcher->wnck_screen);
+  if (space)
+  {
+    result = (double)wnck_screen_get_width(shinyswitcher->wnck_screen) / (double)wnck_workspace_get_width(space);
+    cached = result;
+  }
+  return result;
 
 }
 

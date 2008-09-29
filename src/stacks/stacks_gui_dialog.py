@@ -159,7 +159,7 @@ class StacksGuiDialog:
                 LaunchManager().launch_dot_desktop(uri.as_string())
         else:
             LaunchManager().launch_uri(uri.as_string(), mimetype)
-
+        self._stacks_gui_hide_cb(widget)
 
     def item_drag_data_get(
             self, widget, context, selection, info, time, vfs_uri):

@@ -530,7 +530,7 @@ class StacksGuiCurved(gtk.Window):
         cr.set_operator(cairo.OPERATOR_CLEAR)
         cr.paint()
         del cr
-        widget.window.set_back_pixmap(pixmap)
+        widget.window.set_back_pixmap(pixmap, False)
 
     def mouse_moved(self, widget, event = None, x = None, y = None, time = None):
     	if not self.just_dragged:

@@ -258,6 +258,8 @@ class App(awn.AppletSimple):
 
     def show_about(self, widget):
         about = gtk.AboutDialog()
+        about.set_logo(self.get_awn_icons().get_icon_simple_at_height(48))
+        about.set_icon(self.get_awn_icons().get_icon_simple())
         about.set_name("Media Player Applet")
         about.set_copyright("Copyright (c) 2008 Michal Hruby <michal.mhr at gmail.com>")
         about.set_authors(["Michal Hruby <michal.mhr at gmail.com>"])

@@ -240,6 +240,7 @@ class StacksApplet (awn.AppletSimple):
             # left click
             if not self.backend.is_empty():
                 self.emit("stacks-gui-toggle")
+            self.title.hide(self)
 
 
     def applet_drag_leave_cb(self, widget, context, time):

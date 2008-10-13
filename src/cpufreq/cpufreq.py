@@ -349,7 +349,8 @@ class SysFSBackend:
         return self.__cpu_nr
     
     def get_number_of_cpus(self):
-        return len(os.listdir(sysfs_dir))
+        pattern = re.compile("cpu\d")
+        return len([i for i in os.listdir(sysfs_dir) if pattern.match(i)])
     
     def get_governors(self):
         return open(os.path.join(sysfs_dir, "cpu" + str(self.__cpu_nr), "cpufreq/scaling_available_governors")).read().strip().split()

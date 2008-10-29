@@ -109,6 +109,7 @@ class CairoClockApplet:
         
         combobox_theme = gtk.combo_box_new_text()
         vbox_theme.add(combobox_theme)
+        prefs.get_widget("label-vbox-theme").set_mnemonic_widget(combobox_theme)
         
         self.themes = os.listdir(default_themes_dir)
         
@@ -169,9 +170,6 @@ class ClockUpdater:
         self.applet = clock_applet.applet
         self.default_values = clock_applet.default_values
         
-        """ Values of the properties below will be used to initialize 
-        the corresponding settings """
-        
         self.__clock = AnalogClock(self)
     
     def update_title(self):
@@ -225,8 +223,6 @@ class AnalogClock:
     def __init__(self, clock_updater):
         self.applet = clock_updater.applet
         self.default_values = clock_updater.default_values
-        
-        self.__previous_state = None
     
     def load_theme(self):
         """Load the necessary SVG files of the specified theme.
@@ -255,6 +251,8 @@ class AnalogClock:
         self.clock_hour_hand = get_theme('clock-hour-hand.svg', theme)
         self.clock_minute_hand = get_theme('clock-minute-hand.svg', theme)
         self.clock_second_hand = get_theme('clock-second-hand.svg', theme)
+        
+        self.__previous_state = None
     
     def get_theme_dir(self, theme):
         theme_dirs = (cairo_clock_themes_dir, default_themes_dir)
@@ -265,6 +263,33 @@ class AnalogClock:
                 return path
         
         raise RuntimeError, "Did not find path to theme '" + theme + "'"
+    
+    def create_scaled_surface(self, source_surface, height):
+        surface = source_surface.create_similar(cairo.CONTENT_COLOR_ALPHA, height, height)
+        context = cairo.Context(surface)
+        
+        svg_width, svg_height = map(float, self.clock_face.get_dimension_data()[:2])
+        context.scale(height / svg_width, height / svg_height)
+        
+        return surface, context
+    
+    def setup_background_foreground(self, source_surface, height):
+        """Create new Cairo surfaces for the background and foreground.
+        
+        """
+        self.__background_surface, background_context = self.create_scaled_surface(source_surface, height)
+        
+        # Draw the background of the clock
+        self.clock_drop_shadow.render_cairo(background_context)
+        self.clock_face.render_cairo(background_context)
+        self.clock_marks.render_cairo(background_context)
+        
+        self.__foreground_surface, foreground_context = self.create_scaled_surface(source_surface, height)
+        
+        # Draw the foreground of the clock
+        self.clock_face_shadow.render_cairo(foreground_context)
+        self.clock_glass.render_cairo(foreground_context)
+        self.clock_frame.render_cairo(foreground_context)
     
     def draw_clock(self):
         """Render the SVGs on a Cairo surface and uses it as the applet's icon.
@@ -279,18 +304,25 @@ class AnalogClock:
         new_state = (show_seconds_hand, height, self.default_values["theme"], hours, minutes)
         if not show_seconds_hand and self.__previous_state == new_state:
             return
-        self.__previous_state = new_state
         
         surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, height, height)
         context = cairo.Context(surface)
         
+        if self.__previous_state is None or (self.__previous_state and height != self.__previous_state[1]):
+            self.setup_background_foreground(surface, height)
+        
+        self.__previous_state = new_state
+        
         svg_width, svg_height = map(float, self.clock_face.get_dimension_data()[:2])
-        context.scale(height / svg_width, height / svg_height)
         
         # Draw the background of the clock
-        self.clock_drop_shadow.render_cairo(context)
-        self.clock_face.render_cairo(context)
-        self.clock_marks.render_cairo(context)
+        context.set_operator(cairo.OPERATOR_SOURCE)
+        context.set_source_surface(self.__background_surface)
+        context.paint()
+        context.set_operator(cairo.OPERATOR_OVER)
+        
+        # Scale hands (after having painted the background to avoid messing it up)
+        context.scale(height / svg_width, height / svg_height)
         
         context.save()
         
@@ -320,10 +352,12 @@ class AnalogClock:
         
         context.restore()
         
-        # Draw the foreground of the clock
-        self.clock_face_shadow.render_cairo(context)
-        self.clock_glass.render_cairo(context)
-        self.clock_frame.render_cairo(context)
+        # Don't scale to avoid messing up the foreground
+        context.scale(svg_width / height, svg_height / height)
+        
+        # Draw foreground of the clock
+        context.set_source_surface(self.__foreground_surface)
+        context.paint()
         
         self.applet.icon.set(context)
 

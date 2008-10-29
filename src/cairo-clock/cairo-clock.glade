@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Thu Aug  7 20:32:51 2008 -->
+<!--Generated with glade3 3.4.5 on Wed Oct 29 22:28:56 2008 -->
 <glade-interface>
   <widget class="GtkDialog" id="dialog-window">
     <property name="border_width">5</property>
@@ -161,9 +161,10 @@
                                 <property name="visible">True</property>
                                 <property name="spacing">13</property>
                                 <child>
-                                  <widget class="GtkLabel" id="label2">
+                                  <widget class="GtkLabel" id="label-vbox-theme">
                                     <property name="visible">True</property>
-                                    <property name="label" translatable="yes">Theme:</property>
+                                    <property name="label" translatable="yes">_Theme:</property>
+                                    <property name="use_underline">True</property>
                                   </widget>
                                   <packing>
                                     <property name="expand">False</property>

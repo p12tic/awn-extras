@@ -195,8 +195,16 @@ static void config_get_string(AwnConfigClient *client, const gchar *key, gchar *
 static void config_get_color(AwnConfigClient *client, const gchar *key, AwnColor *color)
 {
   gchar *value = awn_config_client_get_string(client, AWN_CONFIG_CLIENT_DEFAULT_GROUP, key, NULL);
-  awn_cairo_string_to_color(value, color);
-  g_free(value);
+   if (value)
+   {
+    awn_cairo_string_to_color (value, color);
+    g_free (value);
+   }
+   else
+   {
+    g_warning("Failed to read config key: %s\n",key);
+    awn_cairo_string_to_color ("000000", color); 
+   }
 }
 
 void init_config(Places * places)

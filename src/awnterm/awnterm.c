@@ -96,8 +96,17 @@ gboolean key_press_cb (GtkWidget *window, GdkEventKey *event, GtkWidget *termina
 	}
 }
 
-// This doesn't get called yet...
+// Callback when "exit" command is executed
 void exited_cb (GtkWidget *terminal, gpointer null)
 {
-	printf ("exited");
+	// fork new vte
+	vte_terminal_fork_command (VTE_TERMINAL (terminal),
+								NULL,
+								NULL,
+								NULL,
+								"~/",
+								FALSE,
+								FALSE,
+								FALSE);
+	gtk_widget_hide (applet->dialog);
 }

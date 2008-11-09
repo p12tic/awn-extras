@@ -67,6 +67,8 @@ AwnApplet* awn_applet_factory_initp (const gchar* uid, gint orient, gint height 
 	g_signal_connect (G_OBJECT (applet->applet), "button-press-event", G_CALLBACK (icon_clicked_cb), NULL);
 	g_signal_connect (G_OBJECT (applet->dialog), "focus-out-event", G_CALLBACK (focus_out_cb), NULL);
 	g_signal_connect (G_OBJECT (applet->dialog), "key-press-event", G_CALLBACK (key_press_cb), applet->terminal);
+	g_signal_connect (G_OBJECT (applet->terminal), "child-exited", G_CALLBACK (exited_cb), NULL);
+	
 	// Set up the config client
 	init_settings (applet);
 	//Show the applet

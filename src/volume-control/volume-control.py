@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # Copyright (C) 2007  Richard "nazrat" Beyer, Jeff "Jawbreaker" Hubbard,
 #                     Pavel Panchekha <pavpanchekha@gmail.com>,
 #                     Spencer Creasey <screasey@gmail.com>

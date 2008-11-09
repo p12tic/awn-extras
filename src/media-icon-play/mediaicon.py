@@ -1,4 +1,4 @@
-# !/usr/bin/python
+#!/usr/bin/python
 
 # Copyright (c) 2007 Randal Barlow <im.tehk at gmail.com>
 #

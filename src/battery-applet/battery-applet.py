@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # Copyright (c) 2007 - 2008  Randal Barlow <im.tehk at gmail.com>
 #                      2008  onox <denkpadje@gmail.com>
 # 

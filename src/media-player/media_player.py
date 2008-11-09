@@ -1,4 +1,4 @@
-# !/usr/bin/python
+#!/usr/bin/python
 
 # Copyright (c) 2008 Michal Hruby <michal.mhr at gmail.com>
 # Thanks for inspiration from media-control appplet by im-tehk.

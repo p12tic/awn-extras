@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # Copyright (C) 2006  Mehdi Abaakouk <theli48@gmail.com>
 #               2008  onox <denkpadje@gmail.com>
 # 

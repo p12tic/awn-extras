@@ -6,5 +6,5 @@ X-AWN-AppletType=Python
 X-AWN-AppletCategory=Network,Office
 Comment=Use Remember The Milk from AWN.
 Exec=rtm/awn-rtm.py
-Icon=rtm/icons/rtm.png
+Icon=rtm/icons/awn-rtm.png
 

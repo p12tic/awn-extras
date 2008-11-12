@@ -187,8 +187,7 @@ class App(awn.AppletSimple):
     self.detach.prepare_awn_drag_drop(self)
     
     #Connect to events
-    self.connect('enter-notify-event',\
-      lambda *a: self.title.show(self,self.settings['title']))
+    self.connect('enter-notify-event', self.show_title)
     self.connect('leave-notify-event',\
       lambda *a: self.title.hide(self))
     self.connect('height-changed', self.height_changed)
@@ -1413,6 +1412,14 @@ class App(awn.AppletSimple):
   #When a CheckButton for "Don't show this again." is toggled
   def confirm_check(self, button):
     self.settings[button.key] = not button.get_active()
+
+  #Show the title on hover
+  def show_title(self, *args):
+    if self.settings['title'] is None:
+      self.title.show(self, "To-Do List")
+
+    else:
+      self.title.show(self, self.settings['title'])
 
 #A gtk.Button that displays and changes an item's progress
 class ProgressButton(gtk.Button):

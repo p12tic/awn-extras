@@ -74,9 +74,9 @@ class BatteryStatusApplet:
         
         self.setup_context_menu()
         
-        self.__message_handler = MessageHandler(self)
-        
         if self.backend is not None:
+            self.__message_handler = MessageHandler(self)
+            
             applet.timing.register(self.check_status_cb, check_status_interval)
             self.check_status_cb()
         else:
@@ -93,34 +93,39 @@ class BatteryStatusApplet:
         prefs = glade.XML(glade_file)
         prefs.get_widget("vbox-preferences").reparent(self.applet.dialog.new("preferences").vbox)
         
-        batteries = self.backend.get_batteries()
-        
         self.settings = {
             "theme": default_theme,
-            "battery-udi": batteries.keys()[0],
             "warn-low-level": True,
             "notify-high-level": False,
             "level-warn-low": 15.0,
             "level-notify-high": 100.0,
             "low-level-unit": low_level_units[0]
         }
+        
+        if self.backend is not None:
+            batteries = self.backend.get_batteries()
+            self.settings["battery-udi"] = batteries.keys()[0]
+        
         self.applet.settings.load(self.settings)
         
         """ Battery """
-        vbox = prefs.get_widget("vbox-battery")
-        
-        self.combobox_battery = gtk.combo_box_new_text()
-        vbox.add(self.combobox_battery)
-        
-        for model in batteries.values():
-            self.combobox_battery.append_text(model)
-        
-        if self.settings["battery-udi"] not in batteries:
-            self.applet.settings["battery-udi"] = batteries.keys()[0]
-        udi = self.settings["battery-udi"]
-        
-        self.combobox_battery.set_active(batteries.values().index(batteries[udi]))
-        self.combobox_battery.connect("changed", self.combobox_battery_changed_cb)
+        if self.backend is not None:
+            vbox = prefs.get_widget("vbox-battery")
+            
+            self.combobox_battery = gtk.combo_box_new_text()
+            vbox.add(self.combobox_battery)
+            
+            for model in batteries.values():
+                self.combobox_battery.append_text(model)
+            
+            if self.settings["battery-udi"] not in batteries:
+                self.applet.settings["battery-udi"] = batteries.keys()[0]
+            udi = self.settings["battery-udi"]
+            
+            self.combobox_battery.set_active(batteries.values().index(batteries[udi]))
+            self.combobox_battery.connect("changed", self.combobox_battery_changed_cb)
+        else:
+            prefs.get_widget("frame-battery").destroy()
         
         """ Display """
         hbox = prefs.get_widget("hbox-theme")
@@ -144,27 +149,30 @@ class BatteryStatusApplet:
         prefs.get_widget("label-theme").set_mnemonic_widget(combobox_theme)
         
         """ Notifications """
-        checkbutton_low_level = prefs.get_widget("checkbutton-warn-low-level")
-        checkbutton_low_level.set_active(self.settings["warn-low-level"])
-        checkbutton_low_level.connect("toggled", self.toggled_warn_low_level_cb)
-        
-        self.spinbutton_low_level = prefs.get_widget("spinbutton-low-level")
-        self.spinbutton_low_level.set_value(self.settings["level-warn-low"])
-        self.spinbutton_low_level.connect("value-changed", self.changed_value_low_level_cb)
-        self.spinbutton_low_level.set_sensitive(self.settings["warn-low-level"])
-        
-        self.combobox_low_level = prefs.get_widget("combobox-low-level")
-        self.combobox_low_level.set_active(low_level_units.index(self.settings["low-level-unit"]))
-        self.combobox_low_level.connect("changed", self.combobox_low_level_unit_changed_cb)
-        
-        checkbutton_high_level = prefs.get_widget("checkbutton-notify-high-level")
-        checkbutton_high_level.set_active(self.settings["notify-high-level"])
-        checkbutton_high_level.connect("toggled", self.toggled_notify_high_level_cb)
-        
-        self.spinbutton_high_level = prefs.get_widget("spinbutton-high-level")
-        self.spinbutton_high_level.set_value(self.settings["level-notify-high"])
-        self.spinbutton_high_level.connect("value-changed", self.changed_value_high_level_cb)
-        self.spinbutton_high_level.set_sensitive(self.settings["notify-high-level"])
+        if self.backend is not None:
+            checkbutton_low_level = prefs.get_widget("checkbutton-warn-low-level")
+            checkbutton_low_level.set_active(self.settings["warn-low-level"])
+            checkbutton_low_level.connect("toggled", self.toggled_warn_low_level_cb)
+            
+            self.spinbutton_low_level = prefs.get_widget("spinbutton-low-level")
+            self.spinbutton_low_level.set_value(self.settings["level-warn-low"])
+            self.spinbutton_low_level.connect("value-changed", self.changed_value_low_level_cb)
+            self.spinbutton_low_level.set_sensitive(self.settings["warn-low-level"])
+            
+            self.combobox_low_level = prefs.get_widget("combobox-low-level")
+            self.combobox_low_level.set_active(low_level_units.index(self.settings["low-level-unit"]))
+            self.combobox_low_level.connect("changed", self.combobox_low_level_unit_changed_cb)
+            
+            checkbutton_high_level = prefs.get_widget("checkbutton-notify-high-level")
+            checkbutton_high_level.set_active(self.settings["notify-high-level"])
+            checkbutton_high_level.connect("toggled", self.toggled_notify_high_level_cb)
+            
+            self.spinbutton_high_level = prefs.get_widget("spinbutton-high-level")
+            self.spinbutton_high_level.set_value(self.settings["level-notify-high"])
+            self.spinbutton_high_level.connect("value-changed", self.changed_value_high_level_cb)
+            self.spinbutton_high_level.set_sensitive(self.settings["notify-high-level"])
+        else:
+            prefs.get_widget("frame-notifications").destroy()
     
     def toggled_warn_low_level_cb(self, button):
         self.applet.settings["warn-low-level"] = active = button.get_active()
@@ -215,7 +223,10 @@ class BatteryStatusApplet:
     def combobox_theme_changed_cb(self, button):
         self.applet.settings["theme"] = self.themes[button.get_active()]
         
-        self.check_status_cb()
+        if self.backend is not None:
+            self.check_status_cb()
+        else:
+            self.set_battery_missing()
     
     def check_status_cb(self):
         if not self.backend.is_present():

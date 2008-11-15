@@ -27,6 +27,11 @@ import gtk
 
 from awn.extras import AWNLib
 
+try:
+    import dbus
+except ImportError:
+    dbus = None
+
 applet_name = "Quit-Log Out"
 applet_version = "0.2.8"
 applet_description = "An applet to exit or log out of your session"
@@ -46,13 +51,28 @@ class QuitLogOutApplet:
         
         applet.title.set("Log Out " + commands.getoutput("/usr/bin/whoami") + "...")
         
-        self.setup_context_menu()
+        self.logout_cb = None
+        
+        if dbus is not None:
+            try:
+                bus = dbus.SessionBus()
+                names = bus.list_names()
+                if "org.gnome.SessionManager" in names and "org.freedesktop.PowerManagement" in names:
+                    proxy = bus.get_object("org.freedesktop.PowerManagement", "/org/freedesktop/PowerManagement")
+                    if dbus.Interface(proxy, "org.freedesktop.PowerManagement").CanShutDown():
+                        self.logout_cb = self.logout_gnome_session_manager
+            except dbus.DBusException:
+                print e.message
+        
+        if self.logout_cb is None:
+            self.logout_cb = self.logout_shell_command
+            self.setup_context_menu()
         
         applet.connect("button-press-event", self.button_press_event_cb)
     
     def button_press_event_cb(self, widget, event):
         if event.button == 1:
-            subprocess.Popen(self.logout_command, shell=True)
+            self.logout_cb()
     
     def setup_context_menu(self):
         pref_dialog = self.applet.dialog.new("preferences")
@@ -79,6 +99,13 @@ class QuitLogOutApplet:
     
     def pref_dialog_response_cb(self, widget, response):
         self.applet.settings["logout_command"] = self.logout_command = self.entry_logout.get_text()
+    
+    def logout_gnome_session_manager(self):
+        proxy = dbus.SessionBus().get_object("org.gnome.SessionManager", "/org/gnome/SessionManager")
+        dbus.Interface(proxy, "org.gnome.SessionManager").Shutdown()
+    
+    def logout_shell_command(self):
+        subprocess.Popen(self.logout_command, shell=True)
 
 
 if __name__ == "__main__":

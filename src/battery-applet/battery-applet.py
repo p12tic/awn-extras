@@ -374,7 +374,7 @@ class HalBackend(AbstractBackend):
                 # TODO use dbus
                 udi_models[str(udi)] = commands.getoutput("hal-get-property --udi " + str(udi) + " --key battery.model")
             return udi_models
-        except DBusException, e:
+        except dbus.DBusException, e:
             print e.message
             return {}
     

@@ -37,10 +37,11 @@ AwnApplet* awn_applet_factory_initp (const gchar* uid, gint orient, gint height 
 	applet = g_new0 (AwnTerm, 1);
 	applet->applet = AWN_APPLET (awn_applet_simple_new (uid, orient, height));
 	
-	// Set up the icon 
-  awn_applet_simple_set_awn_icon(   AWN_APPLET_SIMPLE(applet->applet),
-                                    APPLET_NAME,
-                                    "terminal")  ;
+	// Set up the icon
+	awn_applet_simple_set_awn_icon(AWN_APPLET_SIMPLE(applet->applet),
+									APPLET_NAME,
+									"terminal");
+	
 	// Set up the dialog
 	applet->dialog = awn_applet_dialog_new (applet->applet);
 	

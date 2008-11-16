@@ -56,8 +56,6 @@ AwnApplet* awn_applet_factory_initp (const gchar* uid, gint orient, gint height 
                                              FALSE,
                                              FALSE,
                                              FALSE);
-	// This doesn't work... Fix it in a future release.
-	//g_signal_connect (G_OBJECT (applet->terminal), "child-exited", G_CALLBACK (exited_cb), NULL);
 	gtk_container_add (GTK_CONTAINER (applet->dialog), applet->terminal);
 	
 	// Set up the right click popup menu

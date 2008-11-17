@@ -45,6 +45,12 @@ AwnApplet* awn_applet_factory_initp (const gchar* uid, gint orient, gint height 
 	// Set up the dialog
 	applet->dialog = awn_applet_dialog_new (applet->applet);
 	
+	// Set up the notebook
+	applet->notebook = gtk_notebook_new();
+	gtk_notebook_set_tab_pos (GTK_NOTEBOOK (applet->notebook), GTK_POS_TOP);
+	gtk_widget_show(applet->notebook);	
+	gtk_container_add (GTK_CONTAINER(applet->dialog), applet->notebook);
+
 	// Set up the vte terminal
 	applet->terminal = vte_terminal_new ();
 	vte_terminal_set_emulation (VTE_TERMINAL (applet->terminal), "xterm");
@@ -56,8 +62,17 @@ AwnApplet* awn_applet_factory_initp (const gchar* uid, gint orient, gint height 
                                              FALSE,
                                              FALSE,
                                              FALSE);
-	gtk_container_add (GTK_CONTAINER (applet->dialog), applet->terminal);
-	
+	// Add page
+	applet->label = gtk_label_new("Term #1");
+	gtk_notebook_append_page (GTK_NOTEBOOK (applet->notebook),
+								GTK_WIDGET(applet->terminal),
+								applet->label);
+
+	gtk_notebook_set_scrollable(GTK_NOTEBOOK (applet->notebook), TRUE);
+
+	// Hide tabs bar
+	gtk_notebook_set_show_tabs (applet->notebook, FALSE);
+
 	// Set up the right click popup menu
 	// applet->menu = create_popup_menu ();
 	applet->menu = NULL;

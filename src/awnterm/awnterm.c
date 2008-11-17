@@ -83,10 +83,18 @@ gboolean key_press_cb (GtkWidget *window, GdkEventKey *event, GtkWidget *termina
 	{
 		gchar *key = gdk_keyval_name (gdk_keyval_to_lower (event->keyval));
 		// Copy
-		if (! strncmp (key, "c", 1)) vte_terminal_copy_clipboard (VTE_TERMINAL (terminal));
+		if (! strncmp (key, "c", 1))
+			vte_terminal_copy_clipboard (VTE_TERMINAL (terminal));
+		
 		// Paste
-		if (! strncmp (key, "v", 1)) vte_terminal_paste_clipboard (VTE_TERMINAL (terminal));
-		// Signify that event has been handled
+		if (! strncmp (key, "v", 1))
+			vte_terminal_paste_clipboard (VTE_TERMINAL (terminal));
+		
+		// New tab
+		if (! strncmp (key, "t", 1))
+			create_new_tab();
+		
+		// Signify that the event has been handled
 		return TRUE;
 	}
 	else
@@ -99,8 +107,24 @@ gboolean key_press_cb (GtkWidget *window, GdkEventKey *event, GtkWidget *termina
 // Callback when "exit" command is executed
 void exited_cb (GtkWidget *terminal, gpointer null)
 {
-	// fork new vte
-	vte_terminal_fork_command (VTE_TERMINAL (terminal),
+	gint page;
+	gint n_page = gtk_notebook_get_n_pages (GTK_NOTEBOOK(applet->notebook));
+
+	if (n_page > 1)
+	{
+		page = gtk_notebook_current_page(GTK_NOTEBOOK(applet->notebook));
+		gtk_notebook_remove_page (GTK_NOTEBOOK(applet->notebook), page);
+		gtk_widget_show_all(GTK_WIDGET(applet->dialog));
+		
+		if (n_page == 2)
+		{
+			gtk_notebook_set_show_tabs (GTK_WIDGET(applet->notebook), FALSE);
+	  		gtk_notebook_set_show_border (GTK_WIDGET(applet->notebook), FALSE);
+		}
+	}
+	else {
+		// fork new vte
+		vte_terminal_fork_command (VTE_TERMINAL (terminal),
 								NULL,
 								NULL,
 								NULL,
@@ -108,5 +132,42 @@ void exited_cb (GtkWidget *terminal, gpointer null)
 								FALSE,
 								FALSE,
 								FALSE);
-	gtk_widget_hide (applet->dialog);
+		gtk_widget_hide (applet->dialog);
+	}
+}
+
+// Create a new tab
+gboolean create_new_tab()
+{
+	char buffer[32];
+	
+	// Set up the new vte terminal
+	applet->terminal = vte_terminal_new ();
+	vte_terminal_set_emulation (VTE_TERMINAL (applet->terminal), "xterm");
+	vte_terminal_fork_command (VTE_TERMINAL (applet->terminal),
+								NULL,
+								NULL,
+								NULL,
+								"~/",
+								FALSE,
+								FALSE,
+								FALSE);
+
+	// New Label
+	numTabs += 1;
+	sprintf(buffer, "Term #%d", numTabs);
+	applet->label = gtk_label_new(buffer);
+
+	// Show Tab
+	if(gtk_notebook_get_n_pages(GTK_NOTEBOOK(applet->notebook)))
+		gtk_notebook_set_show_tabs (GTK_NOTEBOOK(applet->notebook), TRUE);
+
+	// New Page
+	gtk_notebook_append_page (GTK_NOTEBOOK (applet->notebook), GTK_WIDGET(applet->terminal), applet->label);
+	gtk_widget_show_all(GTK_WIDGET(applet->dialog));
+	
+	// Set up event
+	g_signal_connect (G_OBJECT (applet->terminal), "child-exited", G_CALLBACK (exited_cb), NULL);
+	
+	return TRUE;
 }

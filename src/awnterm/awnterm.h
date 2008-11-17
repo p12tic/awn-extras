@@ -29,6 +29,8 @@ typedef struct
 	AwnApplet *applet;
 	GdkPixbuf *icon;
 	GtkWidget *dialog;
+	GtkWidget *notebook;
+	GtkWidget *label;
 	GtkWidget *terminal;
 	GtkWidget *menu;
 	AwnConfigClient *config;
@@ -36,6 +38,10 @@ typedef struct
 
 // The applet instance. We need to make it global so that we can access it in a bunch of callbacks.
 AwnTerm *applet;
+static unsigned int numTabs = 1;
+
+// Create new tab
+gboolean create_new_tab();
 
 // Callback when the icon is clicked on.
 gboolean icon_clicked_cb (GtkWidget *widget, GdkEventButton *event, gpointer null);

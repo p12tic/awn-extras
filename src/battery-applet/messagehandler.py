@@ -13,6 +13,11 @@
 # You should have received a copy of the GNU Lesser General Public
 # License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
+try:
+    import glib
+except ImportError:
+    import gobject as glib
+
 import pynotify
 
 # Minutes until the a closed warning is shown again
@@ -39,7 +44,10 @@ class InvisibleMessageState:
     def __init__(self, handler):
         self.handler = handler
         
-        self.handler.message.close()
+        try:
+            self.handler.message.close()
+        except glib.GError:
+            pass # Ignore error thrown when there's no message to close
     
     def evaluate(self):
         if self.handler.applet.settings["warn-low-level"]:

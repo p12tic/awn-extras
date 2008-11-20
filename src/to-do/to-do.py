@@ -399,6 +399,7 @@ class App(awn.AppletSimple):
             dialog_entry.set_size_request(self.settings['custom_width'], -1)
         dialog_entry.connect('focus-out-event',self.item_updated)
         
+        
         #Try to colorize the entry widget based on its priority
         try:
           #High: Red
@@ -429,16 +430,6 @@ class App(awn.AppletSimple):
         #Make a ProgressButton
         dialog_progress = ProgressButton(self, y)
         
-        #Make a right arrow button to edit/add details about the item
-        dialog_details = gtk.Button()
-        dialog_details.set_tooltip_text('View/Edit details')
-        dialog_details_icon = gtk.image_new_from_pixbuf(\
-          self.icon_theme.load_icon('go-next',16,16))
-        dialog_details.set_image(dialog_details_icon)
-        dialog_details.set_relief(gtk.RELIEF_NONE)
-        dialog_details.iterator = y
-        dialog_details.connect('clicked',self.edit_details)
-        
         #Put the widgets in the table
         if self.settings['category'][y]!=-1:
           dialog_table.attach(dialog_x,0,1,y,(y+1),\
@@ -447,22 +438,17 @@ class App(awn.AppletSimple):
             yoptions=gtk.SHRINK)
           dialog_table.attach(dialog_progress, 3, 4, y, (y+1), \
             xoptions=gtk.SHRINK, yoptions=gtk.SHRINK)
-          dialog_table.attach(dialog_details,4,5,y,(y+1),\
-            xoptions=gtk.SHRINK,yoptions=gtk.SHRINK)
         else:
           dialog_table.attach(dialog_x,0,1,y,(y+1),\
             xoptions=gtk.SHRINK,yoptions=gtk.SHRINK)
-          dialog_table.attach(dialog_entry,1,3,y,(y+1),\
+          dialog_table.attach(dialog_entry,2,3,y,(y+1),\
             yoptions=gtk.SHRINK)
           dialog_table.attach(dialog_progress, 3, 4, y, (y+1), \
             xoptions=gtk.SHRINK, yoptions=gtk.SHRINK)
-          dialog_table.attach(dialog_details,4,5,y,(y+1),\
-            xoptions=gtk.SHRINK,yoptions=gtk.SHRINK)
         
         
         #Put the widgets in a list of widgets - used for expanding categories
-        self.dialog_widgets.append([dialog_x,dialog_entry,dialog_progress, \
-          dialog_details])
+        self.dialog_widgets.append([dialog_x,dialog_entry,dialog_progress])
         self.progress_buttons.append(dialog_progress)
         
         #If this item is in a category - don't show it automatically (show_all)
@@ -470,7 +456,6 @@ class App(awn.AppletSimple):
           dialog_x.set_no_show_all(True)
           dialog_entry.set_no_show_all(True)
           dialog_progress.set_no_show_all(True)
-          dialog_details.set_no_show_all(True)
         
         y+=1
       
@@ -524,9 +509,9 @@ class App(awn.AppletSimple):
         #Put the widgets in the table
         dialog_table.attach(dialog_x,0,1,y,(y+1),\
           xoptions=gtk.SHRINK,yoptions=gtk.SHRINK)
-        dialog_table.attach(dialog_expander,1,4,y,(y+1),\
+        dialog_table.attach(dialog_expander,1,3,y,(y+1),\
           yoptions=gtk.SHRINK)
-        dialog_table.attach(dialog_details,4,5,y,(y+1),\
+        dialog_table.attach(dialog_details,3,4,y,(y+1),\
           xoptions=gtk.SHRINK,yoptions=gtk.SHRINK)
         if num_items > 0:
           dialog_table.attach(dialog_vsep,1,2,y+1,(y+1+num_items),\
@@ -612,7 +597,7 @@ class App(awn.AppletSimple):
       self.settings['expanded'] = tmp_list_expanded
   
   #Display dialog to add an item to the To-Do list
-  def add_item(self,*args):
+  def add_item(self, *args):
     #Clear the dialog
     self.clear_dialog()
     
@@ -670,6 +655,10 @@ class App(awn.AppletSimple):
     self.add_entry.connect('key-press-event',self.key_press_event,\
       self.add_item_to_list)
     add_hbox.pack_start(self.add_entry)
+    if self.settings['use_custom_width']:
+      if self.settings['custom_width'] >= 25 and \
+        self.settings['custom_width'] <= 500:
+        self.add_entry.set_size_request(self.settings['custom_width'], -1)
     
     #OK Button
     add_button = gtk.Button(stock=gtk.STOCK_OK)
@@ -875,6 +864,10 @@ class App(awn.AppletSimple):
     name_entry.iterator = catid
     name_entry.type = 'category_name'
     name_entry.connect('focus-out-event',self.item_updated)
+    if self.settings['use_custom_width']:
+      if self.settings['custom_width'] >= 25 and \
+        self.settings['custom_width'] <= 500:
+        name_entry.set_size_request(self.settings['custom_width'], -1)
     
     #Make a TextView to edit the details of the the item
     details_scrolled = gtk.ScrolledWindow()

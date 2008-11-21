@@ -338,7 +338,9 @@ class App(awn.AppletSimple):
       #Deal with the dialog as appropriate
       if self.detached==False:
         self.dialog.show_all()
-        if self.settings['title']!='To-Do List':
+        if self.settings['title'] in [None, 'To-Do List']:
+          self.dialog.set_title('')
+        else:
           self.dialog.set_title(self.settings['title'])
       else:
         self.dialog_widget.show_all()

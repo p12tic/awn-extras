@@ -49,7 +49,7 @@ filename = None
 
 for i in range(number_of_days):
     url = temp1 % (date.strftime('%Y%m%d'))
-    print '? %s' % (url)
+#   print '? %s' % (url)
     fil = urllib.urlopen(url)
     for line in fil:
         match = pattern.search(line)
@@ -65,7 +65,7 @@ for i in range(number_of_days):
 
     if filename != None:
         url = temp2 % (lower(date.strftime('%y%b')),filename)
-        print '+ %s' % (url)
+#       print '+ %s' % (url)
         fil = urllib.urlopen(url)
         diskfile = file(path_prefix + 'dilbert.gif', 'w')
         diskfile.write(fil.read())

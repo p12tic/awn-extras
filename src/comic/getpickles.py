@@ -14,7 +14,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 ################################################################
-# get_wizofid_strips.py -- fetch wizofids strips of last N days
+# get_bornloser_strips.py -- fetch strips of last N days
 
 ################################################################
 # BEGIN configuration
@@ -36,9 +36,9 @@ from datetime import datetime, timedelta
 if len(sys.argv) > 1:
     number_of_days = int(sys.argv[1])
 
-pattern = re.compile('str_strip[0-9/]+\\.full\\.gif')
+pattern  = re.compile('str_strip[0-9/]+\\.full\\.gif')
 pattern2 = re.compile('str_strip[0-9/]+\\.full\\.jpg')
-temp1 = 'http://comics.com/wizard_of_id/%s/'
+temp1 = 'http://www.comics.com/pickles/%s/'
 temp2 = 'http://assets.comics.com/dyn/%s'
 
 date = datetime.today()
@@ -47,7 +47,7 @@ one_day = timedelta(1)
 filename = None
 
 for i in range(number_of_days):
-    url = temp1 % (date.strftime('%Y%m%d'))
+    url = temp1 % (date.strftime('%Y-%m-%d'))
     #print '? %s' % (url)
     fil = urllib.urlopen(url)
     for line in fil:

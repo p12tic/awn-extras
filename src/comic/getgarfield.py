@@ -14,7 +14,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 ################################################################
-# get_wizofid_strips.py -- fetch wizofids strips of last N days
+# get_bornloser_strips.py -- fetch strips of last N days
 
 ################################################################
 # BEGIN configuration
@@ -36,10 +36,10 @@ from datetime import datetime, timedelta
 if len(sys.argv) > 1:
     number_of_days = int(sys.argv[1])
 
-pattern = re.compile('str_strip[0-9/]+\\.full\\.gif')
-pattern2 = re.compile('str_strip[0-9/]+\\.full\\.jpg')
-temp1 = 'http://comics.com/wizard_of_id/%s/'
-temp2 = 'http://assets.comics.com/dyn/%s'
+pattern = re.compile('ga\\d+\\.gif')
+pattern2 = re.compile('ga\\d+\\.jpg')
+temp1 = 'http://www.gocomics.com/garfield/%s/%s/%s/'
+temp2 = 'http://images.ucomics.com/comics/ga/%s/%s'
 
 date = datetime.today()
 one_day = timedelta(1)
@@ -47,7 +47,7 @@ one_day = timedelta(1)
 filename = None
 
 for i in range(number_of_days):
-    url = temp1 % (date.strftime('%Y%m%d'))
+    url = temp1 % (date.strftime('%Y'),date.strftime('%m'),date.strftime('%d'))
     #print '? %s' % (url)
     fil = urllib.urlopen(url)
     for line in fil:
@@ -63,7 +63,7 @@ for i in range(number_of_days):
     fil.close()
 
     if filename != None:
-        url = temp2 % (filename)
+        url = temp2 % (date.strftime('%Y'),filename)
         #print '+ %s' % (url)
         fil = urllib.urlopen(url)
         diskfile = file(path_prefix + 'dilbert.gif', 'w')

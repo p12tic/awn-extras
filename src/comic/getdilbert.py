@@ -36,10 +36,10 @@ from datetime import datetime, timedelta
 if len(sys.argv) > 1:
     number_of_days = int(sys.argv[1])
 
-pattern = re.compile('dilbert\\d+\\.gif')
-pattern2 = re.compile('dilbert\\d+\\.jpg')
-temp1 = 'http://www.comics.com/comics/dilbert/archive/dilbert-%s.html'
-temp2 = 'http://www.comics.com/comics/dilbert/archive/images/%s'
+pattern = re.compile('str_strip[0-9/]+\\.strip\\.gif')
+pattern2 = re.compile('str_strip[0-9/]+\\.strip\\.sunday\\.gif')
+temp1 = 'http://dilbert.com/%s/'
+temp2 = 'http://dilbert.com/dyn/%s'
 
 date = datetime.today()
 one_day = timedelta(1)
@@ -47,7 +47,7 @@ one_day = timedelta(1)
 filename = None
 
 for i in range(number_of_days):
-    url = temp1 % (date.strftime('%Y%m%d'))
+    url = temp1 % (date.strftime('%Y-%m-%d'))
     #print '? %s' % (url)
     fil = urllib.urlopen(url)
     for line in fil:

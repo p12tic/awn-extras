@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # Copyright (c) 2008  Arvind Ganga
 #
 # This library is free software; you can redistribute it and/or

@@ -32,6 +32,8 @@ msgstr ""
 msgid ""
 "This guide will help you to add a new comic.\n"
 "\n"
+"To find comics suitable for adding, you may search the Internet for \"comics rss\"."
+"\n"
 "Press \"next\" to proceed."
 msgstr ""
 

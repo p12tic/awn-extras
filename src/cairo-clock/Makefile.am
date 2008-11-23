@@ -5,4 +5,5 @@ include $(top_srcdir)/Makefile.python-applet
 dist_applet_DATA =  \
     cairo-clock-logo.svg \
     cairo-clock.glade \
+    locations.py
     $(NULL)

@@ -47,7 +47,7 @@ class Locations:
         self.__cities_vbox = gtk.VBox(spacing=6)
         
         if "cities_timezones" not in applet.applet.settings:
-            applet.applet.settings["cities_timezones"] = []
+            applet.applet.settings["cities_timezones"] = set()
         self.__cities_timezones = applet.applet.settings["cities_timezones"]
         
         applet.applet.timing.register(self.draw_clock_cb, draw_clock_interval)
@@ -55,7 +55,7 @@ class Locations:
     def draw_clock_cb(self):
         local_time = time.localtime()
         
-        new_state = (local_time[3], local_time[4])
+        new_state = (local_time[3], local_time[4], self.__applet.default_values["time-24-format"])
         if self.__previous_state == new_state:
             return
         self.__previous_state = new_state
@@ -203,7 +203,7 @@ class Locations:
         
         # Certain tuples are already present if dictionary was constructed from settings
         if city_timezone not in self.__cities_timezones:
-            self.__cities_timezones.append(city_timezone)
+            self.__cities_timezones.add(city_timezone)
             self.__applet.applet.settings["cities_timezones"] = self.__cities_timezones
         
         if len(self.__cities_timezones) > 0:

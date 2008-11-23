@@ -26,6 +26,8 @@ from awn.extras import AWNLib
 import cairo
 import rsvg
 
+import locations
+
 applet_name = "Cairo Clock"
 applet_version = "0.2.8"
 applet_description = "Applet that displays an analog clock using\n(optionally) MacSlow's Cairo-Clock's themes"
@@ -42,6 +44,9 @@ default_theme = "gnome"
 
 glade_file = os.path.join(os.path.dirname(__file__), "cairo-clock.glade")
 
+# List of all available plugins
+plugin_classes = [locations.Locations]
+
 
 class CairoClockApplet:
 
@@ -51,6 +56,9 @@ class CairoClockApplet:
     
     def __init__(self, applet):
         self.applet = applet
+        
+        # Initialize useable plugins
+        self.__plugins = [plugin(self) for plugin in plugin_classes if plugin.plugin_useable()]
         
         self.setup_main_dialog()
         self.setup_context_menu()
@@ -68,13 +76,77 @@ class CairoClockApplet:
     def setup_main_dialog(self):
         dialog = self.applet.dialog.new("main")
         
+        vbox = gtk.VBox(spacing=6)
+        vbox.set_focus_chain([])
+        dialog.add(vbox)
+        
+        for i in self.__plugins:
+            expander = gtk.Expander("<b>" + i.get_name() + "</b>")
+            expander.set_use_markup(True)
+            expander.set_expanded(True)
+            
+            callback = i.get_callback()
+            
+            element = i.get_element()
+            
+            # Add extra padding because of the callback button
+            if callback is not None:
+                alignment = gtk.Alignment()
+                alignment.set_padding(6, 0, 0, 0)
+                alignment.add(element)
+                expander.add(alignment)
+            else:
+                expander.add(element)
+            
+            hbox = gtk.HBox()
+            hbox.add(expander)
+            
+            if callback is not None:
+                label = gtk.Label("<small>" + callback[0] + "</small>")
+                label.set_use_markup(True)
+                button = gtk.Button()
+                button.add(label)
+                
+                """ Get the wrapper via an additional function to avoid that
+                every wrapper uses "callback[1]"'s last binded value """
+                def get_clicked_cb(cb):
+                    def clicked_cb(widget):
+                        cb()
+                    return clicked_cb
+                button.connect("clicked", get_clicked_cb(callback[1]))
+                
+                alignment = gtk.Alignment(xalign=1.0)                    
+                alignment.add(button)
+                hbox.pack_start(alignment, expand=False)
+                
+                def hide_edit_button_cb(widget):
+                    if not widget.get_expanded(): # Old state of expander
+                        button.show()
+                    else:
+                        button.hide()
+                expander.connect("activate", hide_edit_button_cb)
+            
+            vbox.add(hbox)
+            i.set_parent_container(hbox)
+        
         calendar = gtk.Calendar()
         calendar.props.show_week_numbers = True
-        dialog.add(calendar)
+        vbox.add(calendar)
     
     def setup_context_menu(self):
+        self.preferences_notebook = gtk.Notebook()
+        self.preferences_notebook.props.border_width = 6
+        self.applet.dialog.new("preferences").vbox.add(self.preferences_notebook)
+        
         prefs = glade.XML(glade_file)
-        prefs.get_widget("dialog-vbox").reparent(self.applet.dialog.new("preferences").vbox)
+        
+        self.setup_general_preferences(prefs)
+        self.setup_plugins_preferens(prefs)
+    
+    def setup_general_preferences(self, prefs):
+        container = gtk.VBox()
+        prefs.get_widget("vbox-general").reparent(container)
+        self.preferences_notebook.append_page(container, gtk.Label("General"))
         
         self.default_values = {
             "time-24-format": True, # True if the time in the title must display 24 hours, False if AM/PM
@@ -134,6 +206,15 @@ class CairoClockApplet:
         
         combobox_theme.set_active(self.themes.index(theme))
         combobox_theme.connect("changed", self.combobox_theme_changed_cb)
+        
+    def setup_plugins_preferens(self, prefs):
+        for i in self.__plugins:
+            preferences = i.get_preferences(prefs)
+            if preferences is not None:
+                container = gtk.VBox()
+                preferences.reparent(container)
+                page_number = self.preferences_notebook.append_page(container, gtk.Label(i.get_name()))
+                i.set_preferences_page_number(page_number)
     
     def combobox_theme_changed_cb(self, combobox):
         self.applet.settings["theme"] = self.themes[combobox.get_active()]

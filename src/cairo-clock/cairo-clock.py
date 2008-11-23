@@ -80,55 +80,55 @@ class CairoClockApplet:
         vbox.set_focus_chain([])
         dialog.add(vbox)
         
+        """ Plug-ins """
         for i in self.__plugins:
+            plugin_vbox = gtk.VBox(spacing=6)
+            
+            hbox = gtk.HBox()
+            plugin_vbox.add(hbox)
+            
             expander = gtk.Expander("<b>" + i.get_name() + "</b>")
             expander.set_use_markup(True)
             expander.set_expanded(True)
+            hbox.pack_start(expander, expand=False)
+            
+            expander_vbox = gtk.VBox()
             
             callback = i.get_callback()
-            
-            element = i.get_element()
-            
-            # Add extra padding because of the callback button
             if callback is not None:
-                alignment = gtk.Alignment()
-                alignment.set_padding(6, 0, 0, 0)
-                alignment.add(element)
-                expander.add(alignment)
-            else:
-                expander.add(element)
-            
-            hbox = gtk.HBox()
-            hbox.add(expander)
-            
-            if callback is not None:
+                alignment = gtk.Alignment(xalign=1.0)                    
+                hbox.add(alignment)
+                
                 label = gtk.Label("<small>" + callback[0] + "</small>")
                 label.set_use_markup(True)
                 button = gtk.Button()
                 button.add(label)
-                
-                """ Get the wrapper via an additional function to avoid that
-                every wrapper uses "callback[1]"'s last binded value """
-                def get_clicked_cb(cb):
-                    def clicked_cb(widget):
-                        cb()
-                    return clicked_cb
-                button.connect("clicked", get_clicked_cb(callback[1]))
-                
-                alignment = gtk.Alignment(xalign=1.0)                    
                 alignment.add(button)
-                hbox.pack_start(alignment, expand=False)
                 
-                def hide_edit_button_cb(widget):
+                button.connect("clicked", lambda w, cb: cb(), callback[1])
+                
+                def toggle_edit_button_cb(widget, button):
                     if not widget.get_expanded(): # Old state of expander
                         button.show()
                     else:
                         button.hide()
-                expander.connect("activate", hide_edit_button_cb)
+                expander.connect("activate", toggle_edit_button_cb, button)
             
-            vbox.add(hbox)
-            i.set_parent_container(hbox)
+            def toggle_expander_vbox_cb(widget, vbox):
+                if not widget.get_expanded(): # Old state of expander
+                    vbox.set_no_show_all(False)
+                    vbox.show_all()
+                else:
+                    vbox.hide_all()
+                    vbox.set_no_show_all(True)
+            expander.connect("activate", toggle_expander_vbox_cb, expander_vbox)
+            
+            expander_vbox.add(i.get_element())
+            plugin_vbox.add(expander_vbox)
+            i.set_parent_container(plugin_vbox)
+            vbox.add(plugin_vbox)
         
+        """ Calendar """
         calendar = gtk.Calendar()
         calendar.props.show_week_numbers = True
         vbox.add(calendar)

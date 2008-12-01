@@ -237,7 +237,7 @@ class LauncherApplet : AppletSimple
   private void _drag_data_received(Gtk.Widget widget, Gdk.DragContext context, int x, int y, Gtk.SelectionData selectdata, uint info, uint time)
   {
     stdout.printf("drag data received\n");
-    weak SList <string> fileURIs;
+    weak SList <string> fileURIs = null;
     string  cmd;
     bool status = false;
 
@@ -351,11 +351,11 @@ class LauncherApplet : AppletSimple
 
   private bool _button_press(Gtk.Widget widget, Gdk.EventButton event)
   {
-    ulong pid;
+    ulong pid = -1;
     int  xid;
 
     bool launch_new = false;
-    SList<string> documents;
+    SList<string> documents = null;
     uint multi_count = 0;
 
     effects.stop( Effect.ATTENTION); //effect off

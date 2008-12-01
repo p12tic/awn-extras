@@ -658,7 +658,7 @@ class DesktopitemButton: Gtk.Button
 	
     private bool _clicked(Gtk.Widget widget,Gdk.EventButton event)
     {
-        SList<string>	documents;
+        SList<string>	documents = null;
         item.launch(documents);
 		container.hide();
 		return true;
@@ -752,7 +752,7 @@ class Listing : GLib.Object
     //FIXME...  this was a lot cleaner before vala v 0.17
     List<string> read_list_exec(string file_name)
     {
-        List<string> result;
+        List<string> result = null;
         string[] file_strings;
         string file_data;
       
@@ -777,7 +777,7 @@ class Listing : GLib.Object
     //FIXME...  this was a lot cleaner before vala v 0.17
     List<string> read_list_title(string file_name)
     {
-        List<string> result;
+        List<string> result = null;
         string[] file_strings;
         string file_data;
         try{
@@ -1494,7 +1494,7 @@ class LauncherApplet : DBusComm
             
                 if (config.multi_launcher)
                 {
-                    GLib.SList <string> launchers;
+                    GLib.SList <string> launchers = null;
                     string  desktop_key=desktopitem.get_string("X-AWN-StandaloneLauncherDesktops");
                     if (desktop_key==null)
                     {
@@ -1846,7 +1846,7 @@ class LauncherApplet : DBusComm
                             }
                             status=true;
                             books.update_with_desktopitem(desktopitem);
-                            SList<string> dummy;
+                            SList<string> dummy = null;
                             dummy.append(desktopfile.Filename());
   //                         stdout.printf("drag_data_received MULTILAUNCHER  1!!!!\n");
                             multi_launcher = new Multi_Launcher(dummy);
@@ -2250,7 +2250,7 @@ class LauncherApplet : DBusComm
 		int		xid;
 
         bool	launch_new=false;
-		SList<string>	documents;
+		SList<string>	documents = null;
         uint multi_count=0;
         
         if (multi_launcher !=null)
@@ -2379,7 +2379,7 @@ class LauncherApplet : DBusComm
 
     private void deal_with_icon(Wnck.Window win)
     {
-        Pixbuf new_icon;
+        Pixbuf new_icon = null;
         if (config.override_app_icon )
         {
             if ( (desktopitem.get_string("Icon")!=null) && (desktopitem.get_string("Icon")!="none") )
@@ -2458,7 +2458,7 @@ class LauncherApplet : DBusComm
 	
 	private void _window_opened(Wnck.Screen screen,Wnck.Window window)
 	{ 
-		string response;
+		string response = null;
 		int pid=window.get_pid();
 		ulong xid;
         int x;

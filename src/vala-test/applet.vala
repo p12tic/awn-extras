@@ -28,7 +28,7 @@ using Awn;
 public Applet awn_applet_factory_initp (string uid, int orient, int height) {
 	AppletSimple applet;
 	IconTheme theme;
-	Pixbuf icon;
+	Pixbuf icon = null;
 	applet = new AppletSimple (uid, orient, height);
 	applet.set_size_request (height, -1);
 	theme = IconTheme.get_default ();

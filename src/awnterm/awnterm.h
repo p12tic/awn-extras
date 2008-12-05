@@ -29,10 +29,12 @@ typedef struct
 	AwnApplet *applet;
 	GdkPixbuf *icon;
 	GtkWidget *dialog;
+	GtkWidget *box;
 	GtkWidget *notebook;
 	GtkWidget *label;
 	GtkWidget *terminal;
 	GtkWidget *menu;
+	guint32 number_of_tabs;
 	AwnConfigClient *config;
 }AwnTerm;
 

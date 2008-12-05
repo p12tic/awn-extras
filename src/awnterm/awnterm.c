@@ -108,6 +108,7 @@ gboolean key_press_cb (GtkWidget *window, GdkEventKey *event, GtkWidget *termina
 void exited_cb (GtkWidget *terminal, gpointer null)
 {
 	gint page;
+	
 	gint n_page = gtk_notebook_get_n_pages (GTK_NOTEBOOK(applet->notebook));
 
 	if (n_page > 1)
@@ -118,9 +119,10 @@ void exited_cb (GtkWidget *terminal, gpointer null)
 		
 		if (n_page == 2)
 		{
-			gtk_notebook_set_show_tabs (GTK_WIDGET(applet->notebook), FALSE);
-	  		gtk_notebook_set_show_border (GTK_WIDGET(applet->notebook), FALSE);
+			gtk_notebook_set_show_tabs (GTK_NOTEBOOK(applet->notebook), FALSE);
 		}
+		
+		gtk_widget_show_all(GTK_WIDGET(applet->dialog));
 	}
 	else {
 		// fork new vte
@@ -154,17 +156,20 @@ gboolean create_new_tab()
 								FALSE);
 
 	// New Label
-	numTabs += 1;
-	sprintf(buffer, "Term #%d", numTabs);
+	applet->number_of_tabs += 1;
+	sprintf(buffer, "Term #%d", applet->number_of_tabs);
 	applet->label = gtk_label_new(buffer);
 
-	// Show Tab
-	if(gtk_notebook_get_n_pages(GTK_NOTEBOOK(applet->notebook)))
-		gtk_notebook_set_show_tabs (GTK_NOTEBOOK(applet->notebook), TRUE);
-
 	// New Page
+	applet->label = gtk_label_new(buffer);
 	gtk_notebook_append_page (GTK_NOTEBOOK (applet->notebook), GTK_WIDGET(applet->terminal), applet->label);
-	gtk_widget_show_all(GTK_WIDGET(applet->dialog));
+	
+	// Show Tab
+	if(gtk_notebook_get_n_pages(GTK_NOTEBOOK(applet->notebook)) > 1)
+	{
+		gtk_notebook_set_show_tabs (GTK_NOTEBOOK(applet->notebook), TRUE);
+		gtk_widget_show_all(GTK_WIDGET(applet->dialog));
+	}
 	
 	// Set up event
 	g_signal_connect (G_OBJECT (applet->terminal), "child-exited", G_CALLBACK (exited_cb), NULL);

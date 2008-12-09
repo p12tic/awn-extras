@@ -96,7 +96,7 @@ PKG_CHECK_MODULES(GNOMEUI, [libgnomeui-2.0])
 PKG_CHECK_MODULES(GNOME_DESKTOP, [gnome-desktop-2.0])
 # filebrowser, cairo-menu, trash, trasher
 PKG_CHECK_MODULES(GNOME_VFS, [gnome-vfs-2.0])
-# clock
+# cairo-clock
 PKG_CHECK_MODULES(RSVG, [librsvg-2.0])
 # main-menu, cairo-menu
 PKG_CHECK_MODULES(GNOME_MENU, [libgnome-menu])
@@ -321,8 +321,6 @@ src/battery-applet/Makefile
 src/battery-applet/themes/Makefile
 src/battery-applet/themes/gpm/Makefile
 src/battery-applet/themes/oxygen/Makefile
-src/clock/Makefile
-src/clock/clock.desktop.in
 src/cairo-clock/Makefile
 src/cairo-clock/themes/Makefile
 src/cairo-clock/themes/gnome/Makefile

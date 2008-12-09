@@ -1,7 +1,0 @@
-[Desktop Entry]
-Type=Application
-X-AWN-AppletType=C
-Name=Clock
-Comment=A clock.
-Exec=@LIBDIR@/awn/applets/clock/clock.so
-Icon=

@@ -8,5 +8,6 @@ dist_applet_DATA =      \
         pattern.png     \
         bolt.png        \
         PyNot.png       \
+        pythonicon.py   \
         $(NULL)
 

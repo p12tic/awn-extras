@@ -82,7 +82,6 @@ SUBDIRS =			\
 	thinkhdaps			\
 	to-do				\
 	tomboy-applet		\
-	tsclient-applet		\
 	volume-control		\
 	weather			\
 	$(WOBBLYZINI)		\

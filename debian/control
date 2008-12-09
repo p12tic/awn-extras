@@ -51,8 +51,7 @@ Recommends: 	avant-window-navigator-trunk,
 		python-gnome2-extras, 
 		python-gst0.10, 
 		python-notify, 
-		python-sqlalchemy, 
-		tsclient
+		python-sqlalchemy
 Conflict: awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 Replaces: awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 XB-Python-Version: ${python:Versions}

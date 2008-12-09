@@ -438,8 +438,6 @@ src/trash/Makefile
 src/trash/trash.desktop.in
 src/trasher/Makefile
 src/trasher/trasher.desktop.in
-src/tsclient-applet/Makefile
-src/tsclient-applet/icons/Makefile
 src/vala-test/Makefile
 src/vala-test/vala-test.desktop.in
 src/volume-control/Makefile

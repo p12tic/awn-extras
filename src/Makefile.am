@@ -72,6 +72,7 @@ SUBDIRS =			\
 	notification-area	\
 	places			\
 	pynot				\
+	pynot-rgba		\
 	$(PYTHON_TEST)		\
 	quit-applet		\
 	separator		\

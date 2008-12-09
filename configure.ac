@@ -406,6 +406,7 @@ src/places/places.desktop.in
 src/plugger/Makefile
 src/plugger/plugger.desktop.in
 src/pynot/Makefile
+src/pynot-rgba/Makefile
 src/python-test/Makefile
 src/quit-applet/Makefile
 src/quit-applet/icons/Makefile

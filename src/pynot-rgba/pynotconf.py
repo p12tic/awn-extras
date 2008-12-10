@@ -59,7 +59,7 @@ def savestuff(self):
  
 
 
-awn_options=awn.Config('pynotrgba',None)
+awn_options=awn.Config('pynot-rgba',None)
 BG_COLOR = awn_options.get_string(awn.CONFIG_DEFAULT_GROUP,"BG_COLOR")
 CUSTOM_Y = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"CUSTOM_Y")
 HIGH     = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"HIGH"    )

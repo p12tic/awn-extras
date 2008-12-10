@@ -36,7 +36,9 @@ Copyright (c) 2008 Nathan Howard (triggerhapp@googlemail.com)
 # X errors, and the workaround to that would be to make it look ugly again...
 # So pynot just turns down RGB icons when they attempt to embed
 
+
 import sys
+import os
 
 import gtk 
 from gtk import gdk
@@ -59,23 +61,12 @@ import subprocess
 import atexit
                     # Used in an attempt at clean closing
 
+import math
+                    # Used only for pi -.-
 
-# Default Values
-# Used if no config is found.
-global D_BG_COLOR,D_CUSTOM_Y, D_HIGH,D_ALLOW_COL,D_ALPHA,D_BORDER,D_ZEROPID,D_IMPATH,D_USEIM,D_ICONSIZE
-D_BG_COLOR="0x0070E0"
-D_CUSTOM_Y=10
-D_HIGH=2
-D_ALLOW_COL=50
-D_ALPHA=0
-D_BORDER=True
-D_ZEROPID=True
-D_IMPATH="/".join(__file__.split("/")[:-1])+"/pattern.png"
-D_USEIM = False
-D_ICONSIZE=24
 
 # And thier current value!
-global BG_COLOR,CUSTOM_Y, HIGH,ALLOW_COL,ALPHA,BORDER,ZEROPID,IMPATH,USEIM,ICONSIZE
+global BG_COLOR,CUSTOM_Y, HIGH,ALLOW_COL,ALPHA,BORDER,ZEROPID,IMPATH,USEIM,ICONSIZE,ALPHA2,FG_COLOR,EDGING,LINEWIDTH
 
 ICONSIZE=24   # Icon size, 24 is optimal, Application has to support the
               # icon size as well as tray.
@@ -85,7 +76,6 @@ BG_COLOR=""   # Set it or it'll complain when trying to compare in the first
 
 
 global awn_options
-
 
 class Obj(object):
 #----------------------------------------------------------------------------
@@ -107,6 +97,8 @@ class mywidget(gtk.Widget):
         self.scr = self.dsp.screen()
         self.root    = self.scr.root
         self.error   = error.CatchError()
+
+
 
         
         self.gtkwin=gtkwin               # Applet's reference
@@ -448,37 +440,123 @@ class mywidget(gtk.Widget):
         # the height can be gained by calculating HIGH * ICONSIZE
         # and the width from the same get_geometry function
 
-        if(USEIM==True):
+        if(BORDER==True):
+            y=offsety
+            h=(HIGH*ICONSIZE)
+            x=0
+            w=rr[2]
+            linewidth = LINEWIDTH
+            edging = EDGING
             cr = self.window.cairo_create()
             cr.set_source_rgba(0.0,0.0,0.0,0.0)
-            cr.set_operator(cairo.OPERATOR_SOURCE)
-            cr.paint()
-            image=None
-            
-            if IMPATH in [None,'']:
-                image=cairo.ImageSurface.create_from_png (D_IMPATH);
-            else:
-                image=cairo.ImageSurface.create_from_png (IMPATH);
-            pattern =cairo.SurfacePattern(image)
-            cr.set_source(pattern)
-            cr.paint()
- 
-        else:        
+            cr.set_line_width(linewidth)
+
             col= gtk.gdk.color_parse("#"+BG_COLOR[2:8])
-            cr = self.window.cairo_create()
-            cr.set_source_rgba(0.0,0.0,0.0,0.0)
+            col2= gtk.gdk.color_parse("#"+FG_COLOR[2:8])
+
             cr.set_operator(cairo.OPERATOR_SOURCE)
             cr.paint()
+            # Ok. First problem, if this wont fit in, dont draw a BG.
+            if(rr[2]<(edging*2)):
+                return 1
+            if(rr[3]<(edging*2)):
+                return 1
             cr.set_source_rgba(float(col.red)/float(65535),
                                float(col.green)/float(65535),
                                float(col.blue)/float(65535),
-                               float(ALPHA)/float(65535)) # Transparent`
-            cr.set_operator(cairo.OPERATOR_SOURCE)
-            w= self.curr_x
-            h= (HIGH*ICONSIZE)
-
-            cr.rectangle(0,offsety,w,h)
+                               float(ALPHA)/float(65535))
+            cr.arc(x+edging, y+edging,edging,1.0*math.pi, 1.5*math.pi)
+            cr.line_to(x+edging,y+edging)
             cr.fill()
+            cr.arc(x+w-edging, y+edging,edging,1.5*math.pi, 2*math.pi)
+            cr.line_to(x+w-edging, y+edging)
+            cr.fill()
+            cr.arc(x+edging, y+h-edging,edging,0.5*math.pi, 1.0*math.pi)
+            cr.line_to(x+edging, y+h-edging)
+            cr.fill()
+            cr.arc(x+w-edging, y+h-edging,edging,0., 0.5*math.pi)
+            cr.line_to(x+w-edging, y+h-edging)
+            cr.fill()
+
+            cr.set_source_rgba(float(col2.red)/float(65535),
+                               float(col2.green)/float(65535),
+                               float(col2.blue)/float(65535),
+                               float(ALPHA2)/float(65535))
+            cr.arc(x+edging, y+edging,edging,1.0*math.pi, 1.5*math.pi)
+            cr.stroke()
+            cr.arc(x+w-edging, y+edging,edging,1.5*math.pi, 2*math.pi)
+            cr.stroke()
+            cr.arc(x+edging, y+h-edging,edging,0.5*math.pi, 1*math.pi)
+            cr.stroke()
+            cr.arc(x+w-edging, y+h-edging,edging,0., 0.5*math.pi)
+            cr.stroke()
+
+            cr.set_source_rgba(float(col.red)/float(65535),
+                               float(col.green)/float(65535),
+                               float(col.blue)/float(65535),
+                               float(ALPHA)/float(65535))
+            cr.rectangle(x+edging,y,w-(2*edging),h)
+            cr.fill()
+            cr.set_source_rgba(float(col2.red)/float(65535),
+                               float(col2.green)/float(65535),
+                               float(col2.blue)/float(65535),
+                               float(ALPHA2)/float(65535))
+            cr.move_to(x+edging,y)
+            cr.line_to(x+w-edging,y)
+            cr.stroke()
+            cr.move_to(x+edging,y+h)
+            cr.line_to(x+w-edging,y+h)
+            cr.stroke()
+
+            cr.set_source_rgba(float(col.red)/float(65535),
+                               float(col.green)/float(65535),
+                               float(col.blue)/float(65535),
+                               float(ALPHA)/float(65535))
+            cr.rectangle(x,y+edging,w,h-(2*edging))
+            cr.fill()
+            cr.set_source_rgba(float(col2.red)/float(65535),
+                               float(col2.green)/float(65535),
+                               float(col2.blue)/float(65535),
+                               float(ALPHA2)/float(65535))
+            cr.move_to(x,y+edging)
+            cr.line_to(x,y+h-edging)
+            cr.stroke()
+            cr.move_to(x+w,y+edging)
+            cr.line_to(x+w,y+h-edging)
+            cr.stroke()
+
+        else:
+            if(USEIM==True):
+                cr = self.window.cairo_create()
+                cr.set_source_rgba(0.0,0.0,0.0,0.0)
+                cr.set_operator(cairo.OPERATOR_SOURCE)
+                cr.paint()
+                image=None
+            
+                if IMPATH in [None,'']:
+                    image=cairo.ImageSurface.create_from_png (D_IMPATH);
+                else:
+                    image=cairo.ImageSurface.create_from_png (IMPATH);
+                pattern =cairo.SurfacePattern(image)
+                cr.set_source(pattern)
+                cr.paint()
+ 
+            else:        
+                col= gtk.gdk.color_parse("#"+BG_COLOR[2:8])
+                cr = self.window.cairo_create()
+                cr.set_source_rgba(0.0,0.0,0.0,0.0)
+                cr.set_operator(cairo.OPERATOR_SOURCE)
+                cr.paint()
+                cr.set_source_rgba(float(col.red)/float(65535),
+                                   float(col.green)/float(65535),
+                                   float(col.blue)/float(65535),
+                               float(ALPHA)/float(65535)) # Transparent`
+                cr.set_operator(cairo.OPERATOR_SOURCE)
+                w= self.curr_x
+                h= (HIGH*ICONSIZE)
+
+                cr.rectangle(0,offsety,w,h)
+                cr.fill()
 
         return True
 
@@ -495,8 +573,6 @@ class App(awn.Applet):
         self.height=height
         self.widg=None
         self.loadconf()
-        if(HIGH==0):
-            self.makeconf()
         self.widg = mywidget(display, error, self)
                               # create a new custom widget.
                               # This is the system tray
@@ -508,34 +584,30 @@ class App(awn.Applet):
 
     def loadconf(self):
         # Load the config
-        global BG_COLOR, CUSTOM_Y, HIGH, BORDER, ALPHA,ZEROPID,IMPATH,USEIM,ICONSIZE
+        global BG_COLOR, CUSTOM_Y, HIGH, BORDER, ALPHA,ZEROPID,IMPATH,USEIM,ICONSIZE,ALPHA2,FG_COLOR,EDGING,LINEWIDTH
         oldBG=BG_COLOR
         BG_COLOR     = awn_options.get_string(awn.CONFIG_DEFAULT_GROUP,"BG_COLOR")
+        FG_COLOR     = awn_options.get_string(awn.CONFIG_DEFAULT_GROUP,"FG_COLOR")
         CUSTOM_Y     = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"CUSTOM_Y")
         HIGH         = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"HIGH"    )
         BORDER       = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"BORDER"  )
         ALPHA = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"TRANS"   )
+        ALPHA2= awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"TRANS2"   )
+
         ZEROPID      = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"ZEROPID" )
         IMPATH       = awn_options.get_string(awn.CONFIG_DEFAULT_GROUP,"IMPATH"  )
         USEIM        = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"USEIM"   )
         ICONSIZE     = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"ICONSIZE")
+        EDGING       = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"EDGING")
+        LINEWIDTH    = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"LINEWIDTH")
+
         # If BG has changed, reset it
         if(oldBG != BG_COLOR):
             if(self.widg != None):
                 self.widg.needredraw=True
         return True
 
-    def makeconf(self):
-        awn_options.set_string(awn.CONFIG_DEFAULT_GROUP,"BG_COLOR",D_BG_COLOR)
-        awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"BORDER",D_BORDER)
-        awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"CUSTOM_Y",D_CUSTOM_Y)
-        awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"HIGH",D_HIGH)
-        awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"TRANS",D_ALPHA)
-        awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"ZEROPID",D_ZEROPID)
-        awn_options.set_string(awn.CONFIG_DEFAULT_GROUP,"IMPATH",D_IMPATH)
-        awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"USEIM",D_USEIM)
-        awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"ICONSIZE",D_ICONSIZE)
-        self.loadconf()
+#        self.loadconf()
 
 global path
 path= sys.argv[0] 
@@ -543,7 +615,7 @@ path = path[0:-8]
 # path takes the directory that pynot is in
 
 awn.init(sys.argv[1:])
-awn_options=awn.Config('pynotrgba',None)
+awn_options=awn.Config('pynot-rgba',None)
 
 a = App(awn.uid, awn.orient, awn.height)
 awn.init_applet(a)

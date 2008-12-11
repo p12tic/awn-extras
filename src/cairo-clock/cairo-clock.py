@@ -109,9 +109,11 @@ class CairoClockApplet:
                 
                 def toggle_edit_button_cb(widget, button):
                     if not widget.get_expanded(): # Old state of expander
+                        button.set_no_show_all(False)
                         button.show()
                     else:
                         button.hide()
+                        button.set_no_show_all(True)
                 expander.connect("activate", toggle_edit_button_cb, button)
             
             def toggle_expander_vbox_cb(widget, vbox):
@@ -153,7 +155,8 @@ class CairoClockApplet:
             "time-date": True,
             "time-seconds": True,
             "show-seconds-hand": True, # True if the clock must display a second hand, False otherwise
-            "theme": default_theme
+            "theme": default_theme,
+            "custom-time-format": ""
         }
         self.applet.settings.load(self.default_values)
         
@@ -255,32 +258,39 @@ class ClockUpdater:
         self.__clock = AnalogClock(self)
     
     def update_title(self):
-        """Update the title according to the settings.
+        """Update the title according to the settings or a custom time
+        format if it's not empty.
         
         """
         if not self.applet.title.is_visible():
             return
         
-        if self.default_values["time-24-format"]:
-            hours = "%H"
-            ampm = ""
+        if len(self.default_values["custom-time-format"]) > 0:
+            format = self.default_values["custom-time-format"]
         else:
-            hours = "%I"
-            ampm = " %p"
+            if self.default_values["time-24-format"]:
+                hours = "%H"
+                ampm = ""
+            else:
+                # Strip leading zero for single-digit hours
+                hours = str(int(time.strftime("%I")))
+                ampm = " %p"
+            
+            if self.default_values["time-seconds"]:
+                seconds = ":%S"
+            else:
+                seconds = ""
+            
+            if self.default_values["time-date"]:
+                date = "%a %b %d "
+                year = " %Y"
+            else:
+                date = ""
+                year = ""
+            
+            format = date + hours + ":%M" + seconds + ampm + year
         
-        if self.default_values["time-seconds"]:
-            seconds = ":%S"
-        else:
-            seconds = ""
-        
-        if self.default_values["time-date"]:
-            date = "%a %b %d "
-            year = " %Y"
-        else:
-            date = ""
-            year = ""
-        
-        self.applet.title.set(time.strftime(date + hours + ":%M" + seconds + ampm + year))
+        self.applet.title.set(time.strftime(format))
         self.applet.title.show()
     
     def draw_clock_cb(self):

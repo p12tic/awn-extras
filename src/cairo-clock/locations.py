@@ -21,6 +21,7 @@ import pygtk
 pygtk.require("2.0")
 import gtk
 import gobject
+import pango
 
 try:
     from dateutil import tz
@@ -78,7 +79,6 @@ class Locations:
         return "Locations"
     
     def get_callback(self):
-        # TODO edit button seems to have no content below it thus taking extra empty space below it
         return ("Edit", self.edit_action_cb)
     
     def get_element(self):
@@ -123,7 +123,7 @@ class Locations:
         # Set up search dialog
         self.__search_dialog = prefs.get_widget("locations-search-dialog")
         prefs.get_widget("button-cancel-location-search").connect("clicked", lambda w: self.__search_dialog.hide())
-        # TODO in pager, but not in taskbar
+        self.__search_dialog.set_skip_taskbar_hint(True)
         self.setup_location_search()
         
         return prefs.get_widget("vbox-locations")
@@ -185,10 +185,11 @@ class Locations:
         vbox = gtk.VBox()
         hbox.pack_start(vbox, expand=False)
         
-        # TODO use ellipsis when name of city is large
         city_label = gtk.Label("<big><b>" + city + "</b></big>")
         city_label.set_use_markup(True)
         city_label.set_alignment(0.0, 0.5)
+        city_label.set_ellipsize(pango.ELLIPSIZE_END)
+        city_label.set_max_width_chars(25)
         vbox.pack_start(city_label, expand=False)
         
         timezone_label = gtk.Label()
@@ -215,17 +216,26 @@ class Locations:
         if self.__applet.default_values["time-24-format"]:
             format = "%H:%M"
         else:
-            format = "%I:%M %p"
+            # Strip leading zero for single-digit hours
+            format = str(int(city_datetime.strftime("%I"))) + ":%M %p"
         
         if city_datetime.day != local_datetime.day:
             format = format + " (%A)"
         
         format = city_datetime.strftime(format + " %Z")
-        time_diff = city_datetime.hour - local_datetime.hour
-        if time_diff != 0:
-            if time_diff > 12:
-                time_diff = time_diff - 24
-            format = format + [" ", " +"][time_diff > 0] + str(time_diff)
+        
+        if city_datetime.tzname() != local_datetime.tzname():
+            remote_offset = city_datetime.utcoffset()
+            local_offset = local_datetime.utcoffset()
+            
+            remote_minutes  = remote_offset.days * 24 * 60 + (remote_offset.seconds / 60)
+            local_minutes  = local_offset.days * 24 * 60 + (local_offset.seconds / 60)
+            time_diff = remote_minutes - local_minutes
+            
+            hours, minutes = divmod(abs(time_diff), 60)
+            format += [" -", " +"][time_diff > 0] + str(hours) 
+            if minutes != 0:
+                format += ":" + str(minutes)
         
         self.__timezone_labels[(city, timezone)].set_text(format)
     
@@ -261,7 +271,7 @@ class Locations:
         self.__all_locations_selection.connect("changed", self.all_locations_selection_changed_cb)
         
         self.__prefs.get_widget("entry-location-name").connect("changed", self.entry_location_changed_cb)
-        # widgets in search window: entry-location-name button-find-next
+        # TODO find next entry when clicking button-find-next
     
     def parse_locations(self):
         dom = parse(locations_file)
@@ -306,10 +316,11 @@ class Locations:
         if self.is_location(row):
             parent_row = self.__all_locations_store[self.__all_locations_store.iter_parent(select_iter)]
             
-            # Use the name of city instead and put name of actual location between parentheses
-            city = row[0]
+            # Use name of city if the row is a location in a city
             if parent_row[2]:
-                city = parent_row[0] + " (%s)" % city
+                city = parent_row[0]
+            else:
+                city = row[0]
             
             city_timezone = (city, row[1])
             if city_timezone not in self.__city_boxes:

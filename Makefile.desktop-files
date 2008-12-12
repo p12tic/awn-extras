@@ -1,6 +1,8 @@
 # vim: set ft=automake :
 
+# for now, assume that icons = SVG
 icon_DATA = $(APPLET_ICONS)
+icondir = $(datadir)/icons/hicolor/scalable/apps
 
 desktopdir = $(datadir)/avant-window-navigator/applets
 

@@ -59,7 +59,7 @@ class dgTime:
             self.width = int(self.height * 1.3)
 
     def fallback(self):
-        icon = gtk.icon_theme_get_default().load_icon('gnome-panel-clock', self.height, 0)
+        icon = gtk.icon_theme_get_default().load_icon('awn-applet-digital-clock', self.height, 0)
         self.awn.set_icon(icon)
 
     def create_context(self):

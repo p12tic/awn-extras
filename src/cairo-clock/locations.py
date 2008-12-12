@@ -47,9 +47,9 @@ class Locations:
         self.__applet = applet
         self.__cities_vbox = gtk.VBox(spacing=6)
         
-        if "cities_timezones" not in applet.applet.settings:
-            applet.applet.settings["cities_timezones"] = set()
-        self.__cities_timezones = applet.applet.settings["cities_timezones"]
+        if "cities-timezones" not in applet.applet.settings:
+            applet.applet.settings["cities-timezones"] = set()
+        self.__cities_timezones = applet.applet.settings["cities-timezones"]
         
         applet.applet.timing.register(self.draw_clock_cb, draw_clock_interval)
     
@@ -156,12 +156,11 @@ class Locations:
         
         # Remove element from list of locations in the GUI
         del self.__timezone_labels[city_timezone]
-        self.__city_boxes[city_timezone].destroy()
-        del self.__city_boxes[city_timezone]
+        self.__city_boxes.pop(city_timezone).destroy()
         
         if len(self.__cities_timezones) == 0:
             self.hide_plugin()
-        self.__applet.applet.settings["cities_timezones"] = self.__cities_timezones
+        self.__applet.applet.settings["cities-timezones"] = self.__cities_timezones
     
     def is_location(self, row):
         return row[0] is not None and row[1] is not None
@@ -205,7 +204,7 @@ class Locations:
         # Certain tuples are already present if dictionary was constructed from settings
         if city_timezone not in self.__cities_timezones:
             self.__cities_timezones.add(city_timezone)
-            self.__applet.applet.settings["cities_timezones"] = self.__cities_timezones
+            self.__applet.applet.settings["cities-timezones"] = self.__cities_timezones
         
         if len(self.__cities_timezones) > 0:
             self.show_plugin()

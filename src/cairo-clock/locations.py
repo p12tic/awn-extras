@@ -48,7 +48,7 @@ class Locations:
         self.__cities_vbox = gtk.VBox(spacing=6)
 
         if "cities-timezones" not in applet.applet.settings:
-            applet.applet.settings["cities-timezones"] = set()
+            applet.applet.settings["cities-timezones"] = list()
         self.__cities_timezones = applet.applet.settings["cities-timezones"]
 
         applet.applet.timing.register(self.draw_clock_cb, draw_clock_interval)
@@ -203,11 +203,24 @@ class Locations:
 
         # Certain tuples are already present if dictionary was constructed from settings
         if city_timezone not in self.__cities_timezones:
-            self.__cities_timezones.add(city_timezone)
+            self.__cities_timezones.append(city_timezone)
+
+            # Sort the list based on its UTC offset or city name
+            key_compare = lambda obj: (self.city_compare_key(obj[1]), obj[0])
+            self.__cities_timezones.sort(reverse=True, key=key_compare)
+
             self.__applet.applet.settings["cities-timezones"] = self.__cities_timezones
+
+        # After having sorted the list (see above), reorder the child
+        index = self.__cities_timezones.index(city_timezone)
+        self.__cities_vbox.reorder_child(hbox, index)
 
         if len(self.__cities_timezones) > 0:
             self.show_plugin()
+
+    def city_compare_key(self, timezone):
+        offset = datetime.now(tz.gettz(timezone)).utcoffset()
+        return offset.days * 24 * 60 + (offset.seconds / 60)
 
     def update_timezone_label(self, local_datetime, city, timezone):
         city_datetime = datetime.now(tz.gettz(timezone))

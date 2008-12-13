@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Sun Nov 23 02:06:57 2008 -->
+<!--Generated with glade3 3.4.5 on Sat Dec 13 03:57:14 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="general-preferences">
     <child>
@@ -9,7 +9,7 @@
         <property name="border_width">6</property>
         <property name="spacing">6</property>
         <child>
-          <widget class="GtkVBox" id="clock-options-vbox">
+          <widget class="GtkVBox" id="title-options-vbox">
             <property name="visible">True</property>
             <property name="spacing">6</property>
             <child>
@@ -118,7 +118,7 @@
           </packing>
         </child>
         <child>
-          <widget class="GtkVBox" id="icon-display-vbox">
+          <widget class="GtkVBox" id="clock-display-vbox">
             <property name="visible">True</property>
             <property name="spacing">6</property>
             <child>
@@ -148,31 +148,40 @@
                           </widget>
                         </child>
                         <child>
-                          <widget class="GtkHBox" id="hbox1">
+                          <widget class="GtkVBox" id="theme-vbox">
                             <property name="visible">True</property>
-                            <property name="spacing">13</property>
+                            <property name="spacing">6</property>
                             <child>
-                              <widget class="GtkLabel" id="label-vbox-theme">
+                              <widget class="GtkHBox" id="hbox1">
                                 <property name="visible">True</property>
-                                <property name="label" translatable="yes">_Theme:</property>
-                                <property name="use_underline">True</property>
-                              </widget>
-                              <packing>
-                                <property name="expand">False</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkVBox" id="vbox-theme">
-                                <property name="visible">True</property>
-                                <property name="spacing">6</property>
+                                <property name="spacing">13</property>
                                 <child>
-                                  <placeholder/>
+                                  <widget class="GtkLabel" id="label-vbox-theme">
+                                    <property name="visible">True</property>
+                                    <property name="label" translatable="yes">_Theme:</property>
+                                    <property name="use_underline">True</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkVBox" id="vbox-theme">
+                                    <property name="visible">True</property>
+                                    <property name="spacing">6</property>
+                                    <child>
+                                      <placeholder/>
+                                    </child>
+                                  </widget>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="position">1</property>
+                                  </packing>
                                 </child>
                               </widget>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="position">1</property>
-                              </packing>
+                            </child>
+                            <child>
+                              <placeholder/>
                             </child>
                           </widget>
                           <packing>

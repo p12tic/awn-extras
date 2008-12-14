@@ -21,6 +21,8 @@ import pygtk
 pygtk.require("2.0")
 import gtk
 import gobject
+
+import cairo
 import pango
 
 try:
@@ -28,8 +30,12 @@ try:
 except ImportError:
     tz = None
 
+from analogclock import AnalogClock, AnalogClockThemeProvider
+
 # Interval in seconds between two successive draws of the clocks
 draw_clock_interval = 1.0
+
+clock_size = 48
 
 # File of libgweather
 locations_file = "/usr/share/libgweather/Locations.xml"
@@ -41,7 +47,7 @@ class Locations:
     __parent_container = None
 
     __city_boxes = {}
-    __timezone_labels = {}
+    __images_labels = {}
 
     def __init__(self, applet):
         self.__applet = applet
@@ -56,12 +62,16 @@ class Locations:
     def draw_clock_cb(self):
         local_time = time.localtime()
 
-        new_state = (local_time[3], local_time[4], self.__applet.default_values["time-24-format"])
+        new_state = (local_time[3], local_time[4], self.__applet.default_values["theme"], self.__applet.default_values["time-24-format"])
         if self.__previous_state == new_state:
             return
+
+        if self.__previous_state is None or self.__previous_state[2] != new_state[2]:
+            self.__base_clock = AnalogClock(AnalogClockThemeProvider(new_state[2]), clock_size)
+
         self.__previous_state = new_state
 
-        self.update_all_timezone_labels()
+        self.update_all_images_labels()
 
     def show_plugin(self):
         self.__parent_container.set_no_show_all(False)
@@ -155,7 +165,7 @@ class Locations:
         self.__cities_timezones.remove(city_timezone)
 
         # Remove element from list of locations in the GUI
-        del self.__timezone_labels[city_timezone]
+        del self.__images_labels[city_timezone]
         self.__city_boxes.pop(city_timezone).destroy()
 
         if len(self.__cities_timezones) == 0:
@@ -176,10 +186,25 @@ class Locations:
         assert city_timezone not in self.__city_boxes
 
         hbox = gtk.HBox(spacing=6)
+        self.__city_boxes[city_timezone] = hbox
 
-        # TODO replace by real cairo clock :)
-        image = gtk.image_new_from_file("/usr/share/avant-window-navigator/applets/cairo-clock/cairo-clock-logo.svg")
+        image = gtk.DrawingArea()
+        image.set_size_request(clock_size, clock_size)
         hbox.pack_start(image, expand=False)
+
+        image.set_colormap(image.get_toplevel().get_screen().get_rgba_colormap())
+        image.set_app_paintable(True)
+
+        def update_image_cb(widget, event):
+            # TODO only update if hour, minute or theme changes
+            context = widget.window.cairo_create()
+
+            context.set_operator(cairo.OPERATOR_CLEAR)
+            context.paint_with_alpha(0.1)
+
+            city_datetime = datetime.now(tz.gettz(timezone))
+            self.__base_clock.draw_clock(context, clock_size, city_datetime.hour, city_datetime.minute, None)
+        image.connect("expose-event", update_image_cb)
 
         vbox = gtk.VBox()
         hbox.pack_start(vbox, expand=False)
@@ -195,10 +220,9 @@ class Locations:
         timezone_label.set_alignment(0.0, 0.5)
         vbox.pack_start(timezone_label, expand=False)
 
-        self.__timezone_labels[city_timezone] = timezone_label
-        self.update_timezone_label(datetime.now(tz.tzlocal()), *city_timezone)
+        self.__images_labels[city_timezone] = (image, timezone_label)
+        self.update_timezone_label(datetime.now(tz.tzlocal()), timezone_label, timezone)
 
-        self.__city_boxes[city_timezone] = hbox
         self.__cities_vbox.add(hbox)
 
         # Certain tuples are already present if dictionary was constructed from settings
@@ -219,10 +243,13 @@ class Locations:
             self.show_plugin()
 
     def city_compare_key(self, timezone):
-        offset = datetime.now(tz.gettz(timezone)).utcoffset()
+        return self.get_offset_minutes(datetime.now(tz.gettz(timezone)))
+
+    def get_offset_minutes(self, city_time):
+        offset = city_time.utcoffset()
         return offset.days * 24 * 60 + (offset.seconds / 60)
 
-    def update_timezone_label(self, local_datetime, city, timezone):
+    def update_timezone_label(self, local_datetime, label, timezone):
         city_datetime = datetime.now(tz.gettz(timezone))
 
         if self.__applet.default_values["time-24-format"]:
@@ -237,25 +264,21 @@ class Locations:
         format = city_datetime.strftime(format + " %Z")
 
         if city_datetime.tzname() != local_datetime.tzname():
-            remote_offset = city_datetime.utcoffset()
-            local_offset = local_datetime.utcoffset()
-
-            remote_minutes = remote_offset.days * 24 * 60 + (remote_offset.seconds / 60)
-            local_minutes = local_offset.days * 24 * 60 + (local_offset.seconds / 60)
-            time_diff = remote_minutes - local_minutes
+            time_diff = self.get_offset_minutes(city_datetime) - self.get_offset_minutes(local_datetime)
 
             hours, minutes = divmod(abs(time_diff), 60)
             format += [" -", " +"][time_diff > 0] + str(hours)
             if minutes != 0:
                 format += ":" + str(minutes)
 
-        self.__timezone_labels[(city, timezone)].set_text(format)
+        label.set_text(format)
 
-    def update_all_timezone_labels(self):
+    def update_all_images_labels(self):
         local_datetime = datetime.now(tz.tzlocal())
 
-        for city_timezone in self.__timezone_labels:
-            self.update_timezone_label(local_datetime, *city_timezone)
+        for city_timezone, image_label in self.__images_labels.iteritems():
+            image_label[0].queue_draw()
+            self.update_timezone_label(local_datetime, image_label[1], city_timezone[1])
 
     def edit_action_cb(self):
         self.__applet.applet.dialog.toggle("preferences", "show")

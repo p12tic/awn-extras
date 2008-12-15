@@ -54,7 +54,7 @@ class ShowDesktopApplet:
             
             """ If windows were shown, they are now hidden, and next switch
             will make them visible again """
-            applet.title.set(titles[showing_windows])
+            self.applet.title.set(titles[showing_windows])
 
 
 if __name__ == "__main__":

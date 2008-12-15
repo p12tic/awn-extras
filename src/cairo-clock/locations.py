@@ -196,7 +196,6 @@ class Locations:
         image.set_app_paintable(True)
 
         def update_image_cb(widget, event):
-            # TODO only update if hour, minute or theme changes
             context = widget.window.cairo_create()
 
             context.set_operator(cairo.OPERATOR_CLEAR)

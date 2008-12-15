@@ -57,9 +57,9 @@ class WeatherApplet:
         self.createContextMenu() # create the right click menu
         
         # set up the timers which will refresh the conditions, forecast, and weather map
-        self.applet.timing.time(self.onRefreshConditions, self.settingsDict['frequency']*60)
-        self.applet.timing.time(self.onRefreshForecast, self.settingsDict['frequency_5day']*60)
-        self.applet.timing.time(self.onRefreshMap, self.settingsDict['frequency_map']*60)
+        self.applet.timing.register(self.onRefreshConditions, self.settingsDict['frequency']*60)
+        self.applet.timing.register(self.onRefreshForecast, self.settingsDict['frequency_5day']*60)
+        self.applet.timing.register(self.onRefreshMap, self.settingsDict['frequency_map']*60)
 
         # bind to some events we are concerned about
         self.applet.connect("leave-notify-event", self.onMouseOut)

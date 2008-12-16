@@ -7,5 +7,6 @@ include $(top_srcdir)/Makefile.schemas
 dist_applet_DATA =  \
     cairo-clock-logo.svg \
     cairo-clock.glade \
+    analogclock.py \
     locations.py
     $(NULL)

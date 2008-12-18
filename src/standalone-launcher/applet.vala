@@ -585,7 +585,6 @@ class DiagButton: Gtk.Button
 		weak Gdk.Pixbuf pbuf;
 		if (! win.get_icon_is_fallback() )
 		{
-			weak Gdk.Pixbuf pbuf;
 			pbuf=win.get_icon();
 			pbuf=pbuf.scale_simple (icon_size-2, icon_size-2, Gdk.InterpType.BILINEAR );
 		}	
@@ -2477,7 +2476,6 @@ class LauncherApplet : DBusComm
 		
 		if ( (books.number()>0) && (config.task_mode==TaskMode.SINGLE) )
 		{
-			string response;
 			do
 			{
 			    response=Inform_Task_Ownership(uid,xid.to_string(),"DENY");

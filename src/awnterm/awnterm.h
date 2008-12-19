@@ -32,7 +32,6 @@ typedef struct
 	GtkWidget *box;
 	GtkWidget *notebook;
 	GtkWidget *label;
-	GtkWidget *terminal;
 	GtkWidget *menu;
 	guint32 number_of_tabs;
 	AwnConfigClient *config;
@@ -52,7 +51,7 @@ gboolean icon_clicked_cb (GtkWidget *widget, GdkEventButton *event, gpointer nul
 gboolean focus_out_cb (GtkWidget *window, GdkEventFocus *event, gpointer null);
 
 // Callback when a key is pressed. We check for the keyboard shortcuts for copy and paste. If they're found, we act accordingly.
-gboolean key_press_cb (GtkWidget *window, GdkEventKey *event, GtkWidget *terminal);
+gboolean key_press_cb (GtkWidget *terminal, GdkEventKey *event);
 
 // Callback when "exit" command is executed
 void exited_cb (GtkWidget *terminal, gpointer null);

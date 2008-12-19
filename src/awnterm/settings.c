@@ -83,7 +83,14 @@ void save_opacity (GtkWidget *scale, AwnConfigClient *config)
 
 static void set_bg_img (AwnTerm *applet, gchar *path)
 {
-	vte_terminal_set_background_image_file (VTE_TERMINAL (applet->terminal), path);
+	GtkWidget *terminal;
+	int i;
+	
+	for(i = 0; i <= applet->number_of_tabs; i++)
+	{
+		terminal = gtk_notebook_get_nth_page(GTK_NOTEBOOK(applet->notebook), i);
+		vte_terminal_set_background_image_file (VTE_TERMINAL (terminal), path);
+	}
 }
 
 void load_bg_img (AwnConfigClientNotifyEntry *entry, AwnTerm *applet)

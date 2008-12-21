@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Wed Nov 19 21:28:26 2008 -->
+<!--Generated with glade3 3.4.5 on Sun Dec 21 06:46:29 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="window1">
     <child>
@@ -182,7 +182,7 @@ Time Remaining</property>
                               <widget class="GtkSpinButton" id="spinbutton-high-level">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
-                                <property name="adjustment">100 85 100 5 10 10</property>
+                                <property name="adjustment">100 85 100 5 10 0</property>
                                 <property name="climb_rate">5</property>
                                 <property name="update_policy">GTK_UPDATE_IF_VALID</property>
                               </widget>

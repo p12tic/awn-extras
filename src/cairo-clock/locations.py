@@ -38,7 +38,11 @@ draw_clock_interval = 1.0
 clock_size = 48
 
 # File of libgweather
-locations_file = "/usr/share/libgweather/Locations.xml"
+locations_file = os.path.join(os.path.dirname(__file__), "locations.xml")
+
+
+def is_location(row):
+    return row[0] is not None and row[1] is not None
 
 
 class Locations:
@@ -48,6 +52,8 @@ class Locations:
 
     __city_boxes = {}
     __images_labels = {}
+
+    __cache_surface = {}
 
     def __init__(self, applet):
         self.__applet = applet
@@ -71,6 +77,9 @@ class Locations:
 
         self.__previous_state = new_state
 
+        # Clear cache because theme might have changed and to avoid memory leaks
+        self.__cache_surface.clear()
+
         self.update_all_images_labels()
 
     def show_plugin(self):
@@ -83,13 +92,17 @@ class Locations:
 
     @classmethod
     def plugin_useable(self):
-        return tz is not None and os.path.isfile(locations_file)
+        return tz is not None
 
     def get_name(self):
         return "Locations"
 
     def get_callback(self):
         return ("Edit", self.edit_action_cb)
+
+    def edit_action_cb(self):
+        self.__applet.applet.dialog.toggle("preferences", "show")
+        self.__applet.preferences_notebook.set_current_page(self.__page_number)
 
     def get_element(self):
         return self.__cities_vbox
@@ -102,64 +115,9 @@ class Locations:
         self.__page_number = page_number
 
     def get_preferences(self, prefs):
-        self.__prefs = prefs
-        self.location_store = gtk.TreeStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
+        self.__prefs_tab = LocationsPreferencesTab(prefs, self.__cities_timezones, self.add_city, self.remove_city, self.contains_city_timezone)
 
-        tree_view = prefs.get_widget("treeview-locations")
-        # TODO use ellepsis to handle large names of certain cities
-        city_column = gtk.TreeViewColumn("City", gtk.CellRendererText(), text=0)
-        city_column.set_min_width(100)
-        city_column.set_max_width(150)
-        tree_view.append_column(city_column)
-        tree_view.append_column(gtk.TreeViewColumn("Timezone", gtk.CellRendererText(), text=1))
-
-        self.__selection_buttons = (prefs.get_widget("button-edit-location"), prefs.get_widget("button-remove-location"))
-        for button in self.__selection_buttons:
-            button.set_sensitive(False)
-        self.tree_selection = tree_view.get_selection()
-
-        self.tree_selection.connect("changed", self.selection_changed_cb)
-        self.location_store.connect("row-changed", self.row_changed_cb)
-
-        prefs.get_widget("button-add-location").connect("clicked", self.clicked_add_location_button_cb)
-        prefs.get_widget("button-remove-location").connect("clicked", self.clicked_remove_location_button_cb)
-
-        for city_and_timezone in self.__cities_timezones:
-            self.location_store.append(None, city_and_timezone)
-
-        tree_view.set_model(self.location_store)
-        self.location_store.set_sort_column_id(0, gtk.SORT_ASCENDING)
-
-        # Set up search dialog
-        self.__search_dialog = prefs.get_widget("locations-search-dialog")
-        prefs.get_widget("button-cancel-location-search").connect("clicked", lambda w: self.__search_dialog.hide())
-        self.__search_dialog.set_skip_taskbar_hint(True)
-        self.setup_location_search()
-
-        return prefs.get_widget("vbox-locations")
-
-    def selection_changed_cb(self, selection):
-        row_selected = selection.count_selected_rows() > 0
-
-        for button in self.__selection_buttons:
-            button.set_sensitive(row_selected)
-
-    def clicked_add_location_button_cb(self, button):
-        self.__all_locations_view.collapse_all()
-        self.__prefs.get_widget("scroll-all-locations").get_vadjustment().set_value(0)
-        entry_location = self.__prefs.get_widget("entry-location-name")
-        entry_location.set_text("")
-        entry_location.grab_focus()
-
-        self.__search_dialog.show_all()
-
-    def clicked_remove_location_button_cb(self, button):
-        iter = self.tree_selection.get_selected()[1]
-        row = self.location_store[iter]
-        city_timezone = (row[0], row[1])
-        self.location_store.remove(iter)
-
-        self.remove_city(city_timezone)
+        return self.__prefs_tab.get_prefs_widget()
 
     def remove_city(self, city_timezone):
         self.__cities_timezones.remove(city_timezone)
@@ -172,14 +130,8 @@ class Locations:
             self.hide_plugin()
         self.__applet.applet.settings["cities-timezones"] = self.__cities_timezones
 
-    def is_location(self, row):
-        return row[0] is not None and row[1] is not None
-
-    def row_changed_cb(self, model, path, iter):
-        row = self.location_store[iter]
-
-        if self.is_location(row):
-            self.add_city(row[0], row[1])
+    def contains_city_timezone(self, city_timezone):
+        return city_timezone not in self.__city_boxes
 
     def add_city(self, city, timezone):
         city_timezone = (city, timezone)
@@ -192,9 +144,6 @@ class Locations:
         image.set_size_request(clock_size, clock_size)
         hbox.pack_start(image, expand=False)
 
-        image.set_colormap(image.get_toplevel().get_screen().get_rgba_colormap())
-        image.set_app_paintable(True)
-
         def update_image_cb(widget, event):
             context = widget.window.cairo_create()
 
@@ -202,7 +151,17 @@ class Locations:
             context.paint_with_alpha(0.1)
 
             city_datetime = datetime.now(tz.gettz(timezone))
-            self.__base_clock.draw_clock(context, clock_size, city_datetime.hour, city_datetime.minute, None)
+            key = (city_datetime.hour % 12, city_datetime.minute)  # Modulo 12 because clock has only 12 hours
+
+            if key not in self.__cache_surface:
+                self.__cache_surface[key] = context.get_target().create_similar(cairo.CONTENT_COLOR_ALPHA, clock_size, clock_size)
+                cache_context = cairo.Context(self.__cache_surface[key])
+
+                self.__base_clock.draw_clock(cache_context, clock_size, city_datetime.hour, city_datetime.minute, None)
+
+            context.set_operator(cairo.OPERATOR_OVER)
+            context.set_source_surface(self.__cache_surface[key])
+            context.paint()
         image.connect("expose-event", update_image_cb)
 
         vbox = gtk.VBox()
@@ -279,17 +238,101 @@ class Locations:
             image_label[0].queue_draw()
             self.update_timezone_label(local_datetime, image_label[1], city_timezone[1])
 
-    def edit_action_cb(self):
-        self.__applet.applet.dialog.toggle("preferences", "show")
-        self.__applet.preferences_notebook.set_current_page(self.__page_number)
 
-    def setup_location_search(self):
+class LocationsPreferencesTab:
+
+    __search_window = None
+
+    def __init__(self, prefs, cities_timezones, add_city, remove_city, contains_city_timezone):
+        self.__prefs = prefs
+        self.add_city = add_city
+        self.remove_city = remove_city
+        self.contains_city_timezone = contains_city_timezone
+
+        self.location_store = gtk.TreeStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
+
+        tree_view = prefs.get_widget("treeview-locations")
+        # TODO use ellepsis to handle large names of certain cities
+        city_column = gtk.TreeViewColumn("City", gtk.CellRendererText(), text=0)
+        city_column.set_min_width(100)
+        city_column.set_max_width(150)
+        tree_view.append_column(city_column)
+        tree_view.append_column(gtk.TreeViewColumn("Timezone", gtk.CellRendererText(), text=1))
+
+        self.__selection_buttons = (prefs.get_widget("button-edit-location"), prefs.get_widget("button-remove-location"))
+        for button in self.__selection_buttons:
+            button.set_sensitive(False)
+        self.tree_selection = tree_view.get_selection()
+
+        self.tree_selection.connect("changed", self.selection_changed_cb)
+        self.location_store.connect("row-changed", self.row_changed_cb)
+
+        prefs.get_widget("button-add-location").connect("clicked", self.clicked_add_location_button_cb)
+        prefs.get_widget("button-remove-location").connect("clicked", self.clicked_remove_location_button_cb)
+
+        for city_and_timezone in cities_timezones:
+            self.location_store.append(None, city_and_timezone)
+
+        tree_view.set_model(self.location_store)
+        self.location_store.set_sort_column_id(0, gtk.SORT_ASCENDING)
+
+    def get_prefs_widget(self):
+        return self.__prefs.get_widget("vbox-locations")
+
+    def selection_changed_cb(self, selection):
+        row_selected = selection.count_selected_rows() > 0
+
+        for button in self.__selection_buttons:
+            button.set_sensitive(row_selected)
+
+    def clicked_add_location_button_cb(self, button):
+        if self.__search_window is None:
+            def add_row(city_timezone):
+                """Adds a row to the tree store that represents all added
+                locations.
+
+                """
+                self.location_store.append(None, city_timezone)
+            self.__search_window = LocationSearchWindow(self.__prefs, add_row, self.contains_city_timezone)
+            # TODO maybe display message "Loading locations..."
+
+        self.__search_window.show_window()
+
+    def clicked_remove_location_button_cb(self, button):
+        iter = self.tree_selection.get_selected()[1]
+        row = self.location_store[iter]
+        city_timezone = (row[0], row[1])
+        self.location_store.remove(iter)
+
+        self.remove_city(city_timezone)
+
+    def row_changed_cb(self, model, path, iter):
+        row = self.location_store[iter]
+
+        if is_location(row):
+            self.add_city(row[0], row[1])
+
+
+class LocationSearchWindow:
+
+    def __init__(self, prefs, add_row, contains_city_timezone):
+        self.__prefs = prefs
+        self.add_row = add_row
+        self.contains_city_timezone = contains_city_timezone
+
+        self.__search_dialog = prefs.get_widget("locations-search-dialog")
+        self.__search_dialog.connect("delete_event", lambda w, e: True)
+        self.__search_dialog.connect("response", self.response_event_cb)
+
+        prefs.get_widget("button-cancel-location-search").connect("clicked", lambda w: self.hide_window())
+        self.__search_dialog.set_skip_taskbar_hint(True)
+
         self.__all_locations_store = gtk.TreeStore(gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_BOOLEAN)
 
         self.__all_locations_view = self.__prefs.get_widget("treeview-all-locations")
         self.__all_locations_view.append_column(gtk.TreeViewColumn("Location", gtk.CellRendererText(), text=0))
 
-        # TODO only when ("Locations" tab in preferences window | search window) is visible for the first time?
+        # Parse locations _before_ setting model and sorting to avoid slowdown
         self.parse_locations()
 
         self.__all_locations_view.set_model(self.__all_locations_store)
@@ -306,6 +349,24 @@ class Locations:
 
         self.__prefs.get_widget("entry-location-name").connect("changed", self.entry_location_changed_cb)
         # TODO find next entry when clicking button-find-next
+
+        self.__vadjustment = self.__prefs.get_widget("scroll-all-locations").get_vadjustment()
+        self.__entry_location = self.__prefs.get_widget("entry-location-name")
+
+    def response_event_cb(self, widget, response):
+        if response < 0:
+            self.hide_window()
+
+    def hide_window(self):
+        self.__search_dialog.hide()
+
+    def show_window(self):
+        self.__all_locations_view.collapse_all()
+        self.__vadjustment.set_value(0)
+        self.__entry_location.set_text("")
+        self.__entry_location.grab_focus()
+
+        self.__search_dialog.show_all()
 
     def parse_locations(self):
         dom = parse(locations_file)
@@ -329,13 +390,17 @@ class Locations:
                 self.__all_locations_store.append(parent_node, (element.firstChild.firstChild.nodeValue, timezone, False))
 
     def all_locations_selection_changed_cb(self, selection):
+        """Enable the 'OK' button if the user selected a valid location,
+        disable otherwise.
+
+        """
         if selection.count_selected_rows() == 0:
             self.__button_ok_search.set_sensitive(False)
 
         select_iter = selection.get_selected()[1]
         if select_iter is not None:
             row = self.__all_locations_store[select_iter]
-            self.__button_ok_search.set_sensitive(self.is_location(row))
+            self.__button_ok_search.set_sensitive(is_location(row))
 
     def all_locations_row_activated_cb(self, view, path, column):
         self.add_new_location()
@@ -344,10 +409,18 @@ class Locations:
         self.add_new_location()
 
     def add_new_location(self):
+        """Add the selected location to the list of locations in the
+        preferences window. This will subsequently trigger an event that adds
+        the necessary widgets to the main dialog of the applet.
+
+        Invoked when the user double clicks on a row or presses the 'OK'
+        button.
+
+        """
         select_iter = self.__all_locations_selection.get_selected()[1]
         row = self.__all_locations_store[select_iter]
 
-        if self.is_location(row):
+        if is_location(row):
             parent_row = self.__all_locations_store[self.__all_locations_store.iter_parent(select_iter)]
 
             # Use name of city if the row is a location in a city
@@ -357,11 +430,15 @@ class Locations:
                 city = row[0]
 
             city_timezone = (city, row[1])
-            if city_timezone not in self.__city_boxes:
-                self.location_store.append(None, city_timezone)
-            self.__search_dialog.hide()
+            if self.contains_city_timezone(city_timezone):
+                self.add_row(city_timezone)
+            self.hide_window()
 
     def entry_location_changed_cb(self, entry):
+        """Expand the tree and scroll to the first location that matches the
+        text in the text entry.
+
+        """
         iter = self.find_location(None, entry.get_text())
         if iter is not None:
             path = self.__all_locations_store.get_path(iter)

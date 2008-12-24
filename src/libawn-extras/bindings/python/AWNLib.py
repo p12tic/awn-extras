@@ -194,8 +194,14 @@ class Dialogs:
 
         if focus and dialog not in self.__special_dialogs and self.__loseFocus:
             def dialog_focus_out_cb(widget, event):
-                self.__current = None
-                dlog.hide()
+                try:
+                    parent = dlog.get_focus().get_parent()
+                    combobox_shown = parent.get_property("popup-shown")
+                except:
+                    combobox_shown = False
+                if not combobox_shown:
+                    self.__current = None
+                    dlog.hide()
             dlog.connect("focus-out-event", dialog_focus_out_cb)
 
         self.__register[dialog] = dlog

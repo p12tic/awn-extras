@@ -102,8 +102,6 @@ PKG_CHECK_MODULES(GNOMEUI, [libgnomeui-2.0])
 PKG_CHECK_MODULES(GNOME_DESKTOP, [gnome-desktop-2.0])
 # filebrowser, cairo-menu, plugger, trash, trasher
 PKG_CHECK_MODULES(GNOME_VFS, [gnome-vfs-2.0])
-# cairo-clock
-PKG_CHECK_MODULES(RSVG, [librsvg-2.0])
 # main-menu, cairo-menu
 PKG_CHECK_MODULES(GNOME_MENU, [libgnome-menu])
 # awn-system-monitor
@@ -205,6 +203,8 @@ if test x${enable_pymod_checks} = xyes; then
     AM_CHECK_PYMOD(pynotify,,,AC_MSG_ERROR([python module pynotify required (python-notify)]))
     # arss, mail
     AM_CHECK_PYMOD(feedparser,,,AC_MSG_ERROR([python module feedparser required (python-feedparser)]))
+    # cairo-clock
+    AM_CHECK_PYMOD(rsvg,,,AC_MSG_ERROR([python module rsvg required (gnome-python-desktop)]))
     if test "$with_gnome" != "no"; then
     # MiMenu
     AM_CHECK_PYMOD(gmenu,,,AC_MSG_ERROR([python module gmenu required]))

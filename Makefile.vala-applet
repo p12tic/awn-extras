@@ -2,7 +2,7 @@
 include $(top_srcdir)/Makefile.c-applet
 
 VALA_CC = $(CC) -shared -fPIC $(APPLET_CFLAGS) $(CFLAGS)
-VALA_EXTRALDFLAGS = $(foreach flag,$(LDFLAGS),--Xcc="$(flag)")
+VALA_EXTRALDFLAGS = $(foreach flag,$(LDFLAGS),--Xcc="$(flag)") $(foreach flag,$(AM_LDFLAGS),--Xcc="$(flag)")
 
 BUILT_SOURCES = $(APPLET_NAME).so
 

@@ -1,5 +1,5 @@
 APPLET_NAME = awnsystemmonitor
-APPLET_CFLAGS = $(GTOP_CFLAGS)
+APPLET_CFLAGS = $(AWN_SYSTEM_MONITOR_CFLAGS)
 include $(top_srcdir)/Makefile.c-applet
 applet_LTLIBRARIES = awnsystemmonitor.la
 awnsystemmonitor_la_SOURCES =		\
@@ -28,10 +28,10 @@ awnsystemmonitor_la_SOURCES =		\
 	uptime_component.c		\
 	uptime_component.h		
 	$(NULL)
-awnsystemmonitor_la_LIBADD =	\
-	$(AWN_LIBS)		\
-	$(GTOP_LIBS)		\
+awnsystemmonitor_la_LIBADD =					\
+	$(AWN_LIBS)						\
 	$(top_builddir)/src/libawn-extras/libawn-extras.la	\
+	$(AWN_SYSTEM_MONITOR_LIBS)				\
 	$(NULL)
 awnsystemmonitor_la_LDFLAGS = $(APPLET_LINKER_FLAGS)
 

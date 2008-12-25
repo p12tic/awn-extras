@@ -89,12 +89,18 @@ PKG_CHECK_MODULES(DBUS_GLIB, [dbus-glib-1])
 # awn-terminal
 PKG_CHECK_MODULES(VTE, [vte])
 
+# awn-system-monitor, awn-notification-daemon, cairo-menu, cairo-menu-classic, filebrowser, plugger, trasher
+if test "$with_gconf" != "no" -a "$config_backend" != "GConf"; then
+  PKG_CHECK_MODULES(GCONF, [gconf-2.0])
+  gconf=gconf-2.0
+fi
+
 if test "$with_gconf" != "no" -o "$with_gnome" != "no"; then
 # filebrowser
 PKG_CHECK_MODULES(GNOMEUI, [libgnomeui-2.0])
 # filebrowser
 PKG_CHECK_MODULES(GNOME_DESKTOP, [gnome-desktop-2.0])
-# filebrowser, cairo-menu, trash, trasher
+# filebrowser, cairo-menu, plugger, trash, trasher
 PKG_CHECK_MODULES(GNOME_VFS, [gnome-vfs-2.0])
 # cairo-clock
 PKG_CHECK_MODULES(RSVG, [librsvg-2.0])
@@ -169,11 +175,16 @@ AM_CONDITIONAL(HAVE_TRACKER, test "$have_tracker" = "yes")
 # applet-specific libraries
 PKG_CHECK_MODULES(AFFINITY, [$affinity_pkgs])
 if test "$with_gconf" != "no" -o "$with_gnome" != "no"; then
-PKG_CHECK_MODULES(FILEBROWSER, [gnome-desktop-2.0 gnome-vfs-2.0 libgnomeui-2.0])
-PKG_CHECK_MODULES(CAIRO_MENU_GNOME, [gnome-vfs-2.0 libgnome-menu libnotify libsexy])
+PKG_CHECK_MODULES(AWN_SYSTEM_MONITOR, [$gconf libgtop-2.0])
+PKG_CHECK_MODULES(FILEBROWSER, [$gconf gnome-desktop-2.0 gnome-vfs-2.0 libgnomeui-2.0])
+PKG_CHECK_MODULES(CAIRO_MENU_GNOME, [$gconf gnome-vfs-2.0 libgnome-menu libnotify libsexy])
+PKG_CHECK_MODULES(PLUGGER, [$gconf gnome-vfs-2.0])
 PKG_CHECK_MODULES(TRASH, [gnome-vfs-2.0 libglade-2.0 x11])
+PKG_CHECK_MODULES(TRASHER, [$gconf gnome-vfs-2.0])
 fi
-PKG_CHECK_MODULES(NOTIFICATION_DAEMON, [$gstreampkg libnotify libsexy libwnck-1.0 x11])
+if test "$with_gconf" != "no"; then
+PKG_CHECK_MODULES(NOTIFICATION_DAEMON, [$gconf $gstreampkg libnotify libsexy libwnck-1.0 x11])
+fi
 PKG_CHECK_MODULES(SHINY_SWITCHER, [libwnck-1.0 x11 xcomposite xrender])
 PKG_CHECK_MODULES(STANDALONE_LAUNCHER, [dbus-glib-1 libwnck-1.0])
 PKG_CHECK_MODULES(TASKMAND, [dbus-glib-1 libwnck-1.0])
@@ -209,7 +220,9 @@ if test x${enable_pymod_checks} = xyes; then
     AM_CHECK_PYMOD(gtkmozembed,,,AC_MSG_ERROR([python module gtkmozembed required]))
     fi
     if test "$with_gconf" != "no"; then
-    # lastfm
+    # calendar, media-control, media-player, mount-applet, stacks
+    AM_CHECK_PYMOD(gconf,,,AC_MSG_ERROR([python module gconf required]))
+    # lastfm, media-player
     AM_CHECK_PYMOD(gst,,,AC_MSG_ERROR([python module gstreamer required (python-gst0.10)]))
     fi
 fi

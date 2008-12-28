@@ -15,7 +15,8 @@
 import os
 from datetime import datetime
 import time
-from xml.dom.minidom import parse
+from xml.sax.handler import ContentHandler
+from xml.sax import make_parser
 
 import pygtk
 pygtk.require("2.0")
@@ -249,7 +250,7 @@ class LocationsPreferencesTab:
         self.remove_city = remove_city
         self.contains_city_timezone = contains_city_timezone
 
-        self.location_store = gtk.TreeStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
+        self.location_store = gtk.TreeStore(str, str)
 
         tree_view = prefs.get_widget("treeview-locations")
         # TODO use ellepsis to handle large names of certain cities
@@ -327,31 +328,34 @@ class LocationSearchWindow:
         prefs.get_widget("button-cancel-location-search").connect("clicked", lambda w: self.hide_window())
         self.__search_dialog.set_skip_taskbar_hint(True)
 
-        self.__all_locations_store = gtk.TreeStore(gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_BOOLEAN)
-
-        self.__all_locations_view = self.__prefs.get_widget("treeview-all-locations")
-        self.__all_locations_view.append_column(gtk.TreeViewColumn("Location", gtk.CellRendererText(), text=0))
-
-        # Parse locations _before_ setting model and sorting to avoid slowdown
-        self.parse_locations()
-
-        self.__all_locations_view.set_model(self.__all_locations_store)
-        self.__all_locations_store.set_sort_column_id(0, gtk.SORT_ASCENDING)
-
         self.__button_ok_search = self.__prefs.get_widget("button-ok-location-search")
         self.__button_ok_search.set_sensitive(False)
-
         self.__button_ok_search.connect("clicked", self.button_ok_search_clicked_cb)
-        self.__all_locations_view.connect("row-activated", self.all_locations_row_activated_cb)
-
-        self.__all_locations_selection = self.__all_locations_view.get_selection()
-        self.__all_locations_selection.connect("changed", self.all_locations_selection_changed_cb)
 
         self.__prefs.get_widget("entry-location-name").connect("changed", self.entry_location_changed_cb)
         # TODO find next entry when clicking button-find-next
 
         self.__vadjustment = self.__prefs.get_widget("scroll-all-locations").get_vadjustment()
         self.__entry_location = self.__prefs.get_widget("entry-location-name")
+
+        self.__all_locations_store = gtk.TreeStore(str, str, bool)
+
+        self.__all_locations_view = self.__prefs.get_widget("treeview-all-locations")
+        self.__all_locations_view.connect("row-activated", self.all_locations_row_activated_cb)
+
+        self.__all_locations_selection = self.__all_locations_view.get_selection()
+        self.__all_locations_selection.connect("changed", self.all_locations_selection_changed_cb)
+
+        column = gtk.TreeViewColumn("Location", gtk.CellRendererText(), text=0)
+        column.set_sizing(gtk.TREE_VIEW_COLUMN_FIXED)
+        self.__all_locations_view.append_column(column)
+        self.__all_locations_view.set_fixed_height_mode(True)
+
+        # Parse locations _before_ setting model and sorting to avoid slowdown
+        self.parse_locations()
+
+        self.__all_locations_view.set_model(self.__all_locations_store)
+        self.__all_locations_store.set_sort_column_id(0, gtk.SORT_ASCENDING)
 
     def response_event_cb(self, widget, response):
         if response < 0:
@@ -368,26 +372,68 @@ class LocationSearchWindow:
 
         self.__search_dialog.show_all()
 
+    class LocationsParser(ContentHandler):
+
+        __in_name_tag= False
+        __name_tag = ""
+        __in_tz_tag = False
+        __tz_tag = ""
+
+        __node_type = None  # An element from __locations
+        __node_stack = []  # [TreeIter, has_tz_hint]
+        __tz_stack = []  # Contains tz-hints
+
+        __locations = ("region", "state", "country", "city", "location")
+        __names = ("_name", "name")
+
+        def __init__(self, store):
+            self.__loc_store = store
+
+        def startElement(self, name, attrs):
+            if name in self.__names:
+                self.__no_lang = not bool(attrs)
+                self.__in_name_tag = self.__no_lang
+            elif name == "tz-hint":
+                self.__in_tz_tag = True
+            else:
+                self.__node_type = name
+
+        def endElement(self, name):
+            if self.__no_lang and name in self.__names:
+                parent = self.__node_stack[-1][0] if len(self.__node_stack) > 0 else None
+
+                if self.__node_type in self.__locations:
+                    tz = self.__tz_stack[-1] if len(self.__tz_stack) > 0 and self.__node_type == "location" else None
+
+                    # tz-hint may get updated later
+                    row = (self.__name_tag, tz, self.__node_type == "city")
+                    currrent_node = self.__loc_store.append(parent, row)
+
+                    self.__node_stack.append([currrent_node, False])
+                self.__in_name_tag = False
+                self.__name_tag = ""
+            elif name == "tz-hint":
+                node = self.__node_stack[-1]
+                node[1] = True
+                if self.__node_type == "location":
+                    self.__loc_store.set_value(node[0], 1, self.__tz_tag)
+                self.__tz_stack.append(self.__tz_tag)
+                self.__in_tz_tag = False
+                self.__tz_tag = ""
+            elif name in self.__locations:
+                if self.__node_stack.pop()[1]:
+                    self.__tz_stack.pop()
+
+        def characters(self, chars):
+            if self.__in_name_tag:
+                self.__name_tag += chars
+            if self.__in_tz_tag:
+                self.__tz_tag += chars
+
     def parse_locations(self):
-        dom = parse(locations_file)
-
-        self.recursive_parse_locations(dom.childNodes[1], None, None)
-
-        """ Clean up manually because certain versios of Python cannot
-        garbage collect objects that are in a cycle """
-        dom.unlink()
-
-    def recursive_parse_locations(self, parent, parent_node, timezone):
-        for element in parent.childNodes:
-            if element.tagName == "tz-hint":
-                timezone = element.firstChild.nodeValue
-            elif element.tagName in ("region", "state", "country", "city"):
-                location_node = self.__all_locations_store.append(parent_node, (element.firstChild.firstChild.nodeValue, None, element.tagName == "city"))
-                self.recursive_parse_locations(element, location_node, timezone)
-            elif element.tagName == "location":
-                if timezone is None:
-                    timezone = element.getElementsByTagName("tz-hint")[0].firstChild.nodeValue
-                self.__all_locations_store.append(parent_node, (element.firstChild.firstChild.nodeValue, timezone, False))
+        parser = make_parser()
+        parser.setContentHandler(self.LocationsParser(self.__all_locations_store))
+        parser.parse(locations_file)
 
     def all_locations_selection_changed_cb(self, selection):
         """Enable the 'OK' button if the user selected a valid location,
@@ -429,10 +475,10 @@ class LocationSearchWindow:
             else:
                 city = row[0]
 
+            self.hide_window()
             city_timezone = (city, row[1])
             if self.contains_city_timezone(city_timezone):
                 self.add_row(city_timezone)
-            self.hide_window()
 
     def entry_location_changed_cb(self, entry):
         """Expand the tree and scroll to the first location that matches the

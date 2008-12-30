@@ -8,6 +8,5 @@ dist_applet_DATA =  \
     cairo-clock-logo.svg \
     cairo-clock.glade \
     analogclock.py \
-    locations.py \
-    locations.xml
+    locations.py
     $(NULL)

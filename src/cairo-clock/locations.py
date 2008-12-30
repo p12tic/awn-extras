@@ -39,7 +39,7 @@ draw_clock_interval = 1.0
 clock_size = 48
 
 # File of libgweather
-locations_file = os.path.join(os.path.dirname(__file__), "locations.xml")
+locations_file = "/usr/share/libgweather/Locations.xml"
 
 
 def is_location(row):

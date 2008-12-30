@@ -16,7 +16,7 @@ import os
 from datetime import datetime
 import time
 from xml.sax.handler import ContentHandler
-from xml.sax import make_parser
+from xml.sax import parse
 
 import pygtk
 pygtk.require("2.0")
@@ -380,10 +380,10 @@ class LocationSearchWindow:
         __tz_tag = ""
 
         __node_type = None  # An element from __locations
-        __node_stack = []  # [TreeIter, has_tz_hint]
+        __node_stack = []  # [node_type, TreeIter, has_tz_hint]
         __tz_stack = []  # Contains tz-hints
 
-        __locations = ("region", "state", "country", "city", "location")
+        __locations = ("region", "state", "country", "city", "location", "timezone")
         __names = ("_name", "name")
 
         def __init__(self, store):
@@ -397,32 +397,49 @@ class LocationSearchWindow:
                 self.__in_tz_tag = True
             else:
                 self.__node_type = name
+                if name == "timezone":
+                    self.__tz_tag = attrs["id"]
 
         def endElement(self, name):
             if self.__no_lang and name in self.__names:
-                parent = self.__node_stack[-1][0] if len(self.__node_stack) > 0 else None
+                parent = self.__node_stack[-1][1] if len(self.__node_stack) > 0 else None
 
                 if self.__node_type in self.__locations:
-                    tz = self.__tz_stack[-1] if len(self.__tz_stack) > 0 and self.__node_type == "location" else None
+                    tz = self.__tz_stack[-1] if len(self.__tz_stack) > 0 else None
+
+                    if self.__node_type == "timezone":
+                        self.__tz_stack.append(self.__tz_tag)
+                        tz = self.__tz_tag
+                        self.__tz_tag = ""
 
                     # tz-hint may get updated later
                     row = (self.__name_tag, tz, self.__node_type == "city")
-                    currrent_node = self.__loc_store.append(parent, row)
+                    current_node = self.__loc_store.append(parent, row)
 
-                    self.__node_stack.append([currrent_node, False])
+                    self.__node_stack.append([self.__node_type, current_node, parent == "timezone"])
+
                 self.__in_name_tag = False
                 self.__name_tag = ""
             elif name == "tz-hint":
+                assert self.__node_type != "timezone"
+
                 node = self.__node_stack[-1]
-                node[1] = True
-                if self.__node_type == "location":
-                    self.__loc_store.set_value(node[0], 1, self.__tz_tag)
+                node[2] = True
                 self.__tz_stack.append(self.__tz_tag)
+                if self.__node_type == "location":
+                    self.__loc_store.set_value(node[1], 1, self.__tz_tag)
+
                 self.__in_tz_tag = False
                 self.__tz_tag = ""
             elif name in self.__locations:
-                if self.__node_stack.pop()[1]:
-                    self.__tz_stack.pop()
+                if name == "timezone":
+                    self.__tz_tag = ""
+                self.__node_type = ""
+
+                if self.__node_stack[-1][0] == name:
+                    node = self.__node_stack.pop()
+                    if node[2]:
+                        self.__tz_stack.pop()
 
         def characters(self, chars):
             if self.__in_name_tag:
@@ -431,9 +448,8 @@ class LocationSearchWindow:
                 self.__tz_tag += chars
 
     def parse_locations(self):
-        parser = make_parser()
-        parser.setContentHandler(self.LocationsParser(self.__all_locations_store))
-        parser.parse(locations_file)
+        handler = self.LocationsParser(self.__all_locations_store)
+        parse(locations_file, handler)
 
     def all_locations_selection_changed_cb(self, selection):
         """Enable the 'OK' button if the user selected a valid location,
@@ -446,7 +462,8 @@ class LocationSearchWindow:
         select_iter = selection.get_selected()[1]
         if select_iter is not None:
             row = self.__all_locations_store[select_iter]
-            self.__button_ok_search.set_sensitive(is_location(row))
+            is_leaf_node = not self.__all_locations_store.iter_has_child(select_iter)
+            self.__button_ok_search.set_sensitive(is_location(row) and is_leaf_node)
 
     def all_locations_row_activated_cb(self, view, path, column):
         self.add_new_location()

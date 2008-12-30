@@ -19,6 +19,7 @@
 # Boston, MA 02111-1307, USA.
 
 
+# Import standard modules
 import awn
 import awn.extras.AWNLib
 import gettext
@@ -29,15 +30,15 @@ import locale
 import os
 import sys
 import tempfile
-
 from locale import gettext as _
 from os.path import join
-from settings import Settings
 
+# Import Comics! modules, but check dependencies first
+awn.check_dependencies(globals(), 'feedparser')
 import comics_add
 import comics_manage
 import comics_view
-
+from settings import Settings
 from feed import FeedContainer
 from shared import *
 

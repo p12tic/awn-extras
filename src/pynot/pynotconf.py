@@ -24,7 +24,7 @@ Copyright (c) 2008 Nathan Howard (triggerhapp@googlemail.com)
 import awn
 import gtk
 
-global D_BG_COLOR,D_CUSTOM_Y, D_HIGH,D_BORDER,D_TRANS,D_USEIM,D_IMPATH
+global D_BG_COLOR, D_CUSTOM_Y, D_HIGH, D_BORDER, D_TRANS, D_USEIM, D_IMPATH
 D_BG_COLOR="0x0070E0"
 D_CUSTOM_Y=10
 D_HIGH=2
@@ -36,58 +36,66 @@ D_ICONSIZE=24
 D_IMPATH="/".join(__file__.split("/")[:-1])+"/pattern.png"
 
 
-
 def endstuff(self):
+
     gtk.main_quit()
 
+
 def savestuff(self):
+
     nbg=bg_color.get_color()
     ntbg=nbg.to_string()
-    r=int("0x"+ntbg[1:3],0)
-    g=int("0x"+ntbg[5:7],0)
-    b=int("0x"+ntbg[9:11],0)
-    final = "0x%02X%02X%02X" % (r,g,b)
-    awn_options.set_string(awn.CONFIG_DEFAULT_GROUP,"BG_COLOR",final)
-    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"CUSTOM_Y",int(custom_y.get_value()))
-    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"HIGH",int(high.get_value()))
-    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"BORDER",int(border.get_active()))
-    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"TRANS",int(trans.get_active()))
-    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"ZEROPID",int(pid.get_active()))
-    awn_options.set_string(awn.CONFIG_DEFAULT_GROUP,"IMPATH",impath.get_text())
-    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"USEIM",int(useim.get_active()))
-    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"ICONSIZE",int(iconsize.get_value()))
- 
+    r=int("0x"+ntbg[1:3], 0)
+    g=int("0x"+ntbg[5:7], 0)
+    b=int("0x"+ntbg[9:11], 0)
+    final = "0x%02X%02X%02X" % (r, g, b)
+    awn_options.set_string(awn.CONFIG_DEFAULT_GROUP, "BG_COLOR", final)
+    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,
+        "CUSTOM_Y", int(custom_y.get_value()))
+    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,
+        "HIGH", int(high.get_value()))
+    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,
+        "BORDER", int(border.get_active()))
+    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,
+        "TRANS", int(trans.get_active()))
+    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,
+        "ZEROPID", int(pid.get_active()))
+    awn_options.set_string(awn.CONFIG_DEFAULT_GROUP,
+        "IMPATH", impath.get_text())
+    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,
+        "USEIM", int(useim.get_active()))
+    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,
+        "ICONSIZE", int(iconsize.get_value()))
 
-
-awn_options=awn.Config('pynot',None)
-BG_COLOR = awn_options.get_string(awn.CONFIG_DEFAULT_GROUP,"BG_COLOR")
-CUSTOM_Y = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"CUSTOM_Y")
-HIGH     = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"HIGH"    )
-BORDER   = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"BORDER"  )
-TRANS    = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"TRANS"   )
-ZEROPID  = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"ZEROPID" )
-USEIM    = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"USEIM"   )
-IMPATH   = awn_options.get_string(awn.CONFIG_DEFAULT_GROUP,"IMPATH"  )
-ICONSIZE = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"ICONSIZE")
+awn_options=awn.Config('pynot', None)
+BG_COLOR = awn_options.get_string(awn.CONFIG_DEFAULT_GROUP, "BG_COLOR")
+CUSTOM_Y = awn_options.get_int(awn.CONFIG_DEFAULT_GROUP, "CUSTOM_Y")
+HIGH = awn_options.get_int(awn.CONFIG_DEFAULT_GROUP, "HIGH")
+BORDER = awn_options.get_int(awn.CONFIG_DEFAULT_GROUP, "BORDER")
+TRANS = awn_options.get_int(awn.CONFIG_DEFAULT_GROUP, "TRANS")
+ZEROPID = awn_options.get_int(awn.CONFIG_DEFAULT_GROUP, "ZEROPID")
+USEIM = awn_options.get_int(awn.CONFIG_DEFAULT_GROUP, "USEIM")
+IMPATH = awn_options.get_string(awn.CONFIG_DEFAULT_GROUP, "IMPATH")
+ICONSIZE = awn_options.get_int(awn.CONFIG_DEFAULT_GROUP, "ICONSIZE")
 if(HIGH==0):
-    HIGH     = D_HIGH
-    BORDER   = D_BORDER
+    HIGH = D_HIGH
+    BORDER = D_BORDER
     CUSTOM_Y = D_CUSTOM_Y
     BG_COLOR = D_BG_COLOR
-    TRANS    = D_TRANS
-    ZEROPID  = D_ZEROPID
-    USEIM    = D_USEIM
-    IMPATH   = D_IMPATH
+    TRANS = D_TRANS
+    ZEROPID = D_ZEROPID
+    USEIM = D_USEIM
+    IMPATH = D_IMPATH
     ICONSIZE = D_ICONSIZE
-    awn_options.set_string(awn.CONFIG_DEFAULT_GROUP,"BG_COLOR",BG_COLOR)
-    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"BORDER",BORDER)
-    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"CUSTOM_Y",CUSTOM_Y)
-    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"HIGH",HIGH)
-    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"TRANS",TRANS)
-    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"ZEROPID",ZEROPID)
-    awn_options.set_string(awn.CONFIG_DEFAULT_GROUP,"IMPATH",IMPATH)
-    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"USEIM",USEIM)
-    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"ICONSIZE",ICONSIZE)
+    awn_options.set_string(awn.CONFIG_DEFAULT_GROUP, "BG_COLOR", BG_COLOR)
+    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP, "BORDER", BORDER)
+    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP, "CUSTOM_Y", CUSTOM_Y)
+    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP, "HIGH", HIGH)
+    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP, "TRANS", TRANS)
+    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP, "ZEROPID", ZEROPID)
+    awn_options.set_string(awn.CONFIG_DEFAULT_GROUP, "IMPATH", IMPATH)
+    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP, "USEIM", USEIM)
+    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP, "ICONSIZE", ICONSIZE)
 
 if(IMPATH==""):
     IMPATH=D_IMPATH
@@ -96,11 +104,10 @@ print ICONSIZE
 if(ICONSIZE==0):
     ICONSIZE=D_ICONSIZE
 
-
-r = int("0x"+BG_COLOR[2:4],0)*256
-g = int("0x"+BG_COLOR[4:6],0)*256
-b = int("0x"+BG_COLOR[6:8],0)*256
-cbg=gtk.gdk.Color(r,g,b,0)
+r = int("0x"+BG_COLOR[2:4], 0)*256
+g = int("0x"+BG_COLOR[4:6], 0)*256
+b = int("0x"+BG_COLOR[6:8], 0)*256
+cbg=gtk.gdk.Color(r, g, b, 0)
 
 window= gtk.Window(gtk.WINDOW_TOPLEVEL)
 vbox=gtk.VBox()
@@ -112,17 +119,17 @@ t2=gtk.Label("Number of Icons High")
 t3=gtk.Label("Offset from Bottom")
 t4=gtk.Label("Background Colour")
 t5=gtk.Label("Size of Icons")
-adj=gtk.Adjustment(1,1,5,1,1,0)
-high=gtk.SpinButton(adj,1,0)
-adj2=gtk.Adjustment(45,0,100,1,1,0)
-custom_y=gtk.SpinButton(adj2,1,0)
+adj=gtk.Adjustment(1, 1, 5, 1, 1, 0)
+high=gtk.SpinButton(adj, 1, 0)
+adj2=gtk.Adjustment(45, 0, 100, 1, 1, 0)
+custom_y=gtk.SpinButton(adj2, 1, 0)
 bg_color=gtk.ColorButton()
-border=gtk.CheckButton("Use a Rounded Border",False)
-trans=gtk.CheckButton("Use Transparent Background (BUGGY)",False)
-pid=gtk.CheckButton("Do Not Show Icons for PID=0.",False)
-useim=gtk.CheckButton("Use Image",False)
-adj3=gtk.Adjustment(24,8,128,1,1,0)
-iconsize=gtk.SpinButton(adj3,1,0)
+border=gtk.CheckButton("Use a Rounded Border", False)
+trans=gtk.CheckButton("Use Transparent Background (BUGGY)", False)
+pid=gtk.CheckButton("Do Not Show Icons for PID=0.", False)
+useim=gtk.CheckButton("Use Image", False)
+adj3=gtk.Adjustment(24, 8, 128, 1, 1, 0)
+iconsize=gtk.SpinButton(adj3, 1, 0)
 impath=gtk.Entry()
 
 bg_color.set_color(cbg)
@@ -171,8 +178,6 @@ vbox.add(hbox7)
 hbox.add(alldone)
 vbox.add(hbox)
 window.show_all()
-window.connect("destroy",endstuff)
-alldone.connect("clicked",savestuff)
+window.connect("destroy", endstuff)
+alldone.connect("clicked", savestuff)
 gtk.main()
-
-

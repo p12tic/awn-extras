@@ -22,7 +22,8 @@
 
 #include <libawn/awn-applet.h>
 #include <libawn/awn-cairo-utils.h>
-#include <libawn/awn-title.h>
+//#include <libawn/awn-title.h>
+#include <libawn/awn-tooltip.h>
 
 #include <glib/gtypes.h>
 #include <glibtop/cpu.h>
@@ -84,7 +85,7 @@ typedef struct
 
   GtkTooltips *tooltips;
   GdkPixbuf *icon;
-  AwnTitle *title;
+  AwnTooltip *title;
 
   guint timer_id;
 

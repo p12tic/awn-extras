@@ -24,7 +24,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the
+* License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
@@ -93,10 +93,10 @@ cpumeter_applet_new(AwnApplet *applet)
   CpuMeter *cpumeter = g_new0(CpuMeter, 1);
   cpumeter->loadgraph = g_new0(LoadGraph, 1);
   cpumeter->applet = applet;
-  cpumeter->height = awn_applet_get_height(applet) * 2;
+  cpumeter->height = awn_applet_get_size(applet) * 2;
   cpumeter->timer_id = -1;
   cpumeter->show_title = FALSE;
-  cpumeter->title = AWN_TITLE(awn_title_get_default());
+  cpumeter->title = awn_tooltip_new_for_widget(applet);
   GdkScreen* pScreen;
 
 
@@ -275,18 +275,18 @@ gboolean cpu_meter_render(gpointer data)
 
   LoadGraph* g = cpumeter->loadgraph;
 
-  render_graph(cr, g, text, 50 , 40, cpumeter);
+  render_graph(cr, g, text, cpumeter->height * 1.25 , cpumeter->height, cpumeter);
   
 
-  awn_applet_simple_set_icon_context_scaled(AWN_APPLET_SIMPLE(cpumeter->applet),
+   awn_applet_simple_set_icon_context(AWN_APPLET_SIMPLE(cpumeter->applet),
                                   cr);
   if (cpumeter->show_title)
   {
-    awn_title_show(cpumeter->title, GTK_WIDGET(cpumeter->applet), text);
+    //awn_title_show(cpumeter->title, GTK_WIDGET(cpumeter->applet), text);
   }
   else
   {
-    awn_title_hide(cpumeter->title, GTK_WIDGET(cpumeter->applet));
+    //awn_title_hide(cpumeter->title, GTK_WIDGET(cpumeter->applet));
   }
 
   return TRUE;

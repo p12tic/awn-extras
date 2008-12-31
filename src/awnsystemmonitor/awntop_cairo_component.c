@@ -56,7 +56,8 @@
 
 #include <libawn/awn-applet.h>
 #include <libawn/awn-cairo-utils.h>
-#include <libawn/awn-title.h>
+//#include <libawn/awn-title.h>
+#include <libawn/awn-tooltip.h>
 
 #include "awntop_cairo_component.h"
 #include "dashboard_util.h"

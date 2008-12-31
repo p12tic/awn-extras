@@ -291,7 +291,7 @@ class mywidget(gtk.Widget):
             t.x = self.curr_x
             t.y = offsety+self.curr_y*ICONSIZE
             t.obj.configure(onerror=self.error, x=t.x, y=t.y,
-                            width=t.width, height=t.height)
+                            width=ICONSIZE, height=ICONSIZE)
             t.obj.map(onerror=self.error)
             if(self.curr_y < HIGH-1):
                 self.curr_y+=1
@@ -417,6 +417,7 @@ class mywidget(gtk.Widget):
         # quickest hack towards multi-threading i had ;)
         while self.dsp.pending_events()>0:
             e = self.dsp.next_event()
+            print e
             if e.type == X.ButtonRelease:
                 if(e.detail == 3):
                     # Button 3 is right click.
@@ -564,7 +565,7 @@ class App(awn.Applet):
 
     def loadconf(self):
         # Load the config
-        global BG_COLOR, CUSTOM_Y, HIGH, BORDER,
+        global BG_COLOR, CUSTOM_Y, HIGH, BORDER
         global DIVIDEBYZERO, ZEROPID, IMPATH, USEIM, ICONSIZE
         oldBG=BG_COLOR
         BG_COLOR = awn_options.get_string(awn.CONFIG_DEFAULT_GROUP, "BG_COLOR")

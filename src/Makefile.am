@@ -14,6 +14,7 @@ GCONF_APPLETS +=		\
 	$(NULL)
 endif
 GCONF_APPLETS +=		\
+	awnsystemmonitor	\
 	$(NULL)
 endif
 if WITH_GNOME
@@ -32,6 +33,7 @@ endif
 # please keep alphabetized (except for libawn-extras)
 SUBDIRS =			\
 	libawn-extras		\
+	shiny-switcher		\
 	$(WOBBLYZINI)		\
 	$(GCONF_APPLETS)	\
 	$(VALA_APPLETS)		\

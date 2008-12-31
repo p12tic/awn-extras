@@ -539,7 +539,7 @@ void create_containers(Shiny_switcher *shinyswitcher)
   gtk_widget_set_app_paintable(shinyswitcher->container, TRUE);
 
   GdkPixmap *border = gdk_pixmap_new(NULL,
-                                     shinyswitcher->width + shinyswitcher->width + shinyswitcher->applet_border_width * 2,
+                                     shinyswitcher->width + shinyswitcher->applet_border_width * 2,
                                      (shinyswitcher->height + shinyswitcher->applet_border_width * 2) * shinyswitcher->applet_scale,
                                      32);   //FIXME
   GtkWidget *border_widget = gtk_image_new_from_pixmap(border, NULL);
@@ -1748,8 +1748,8 @@ gboolean _waited(Shiny_switcher *shinyswitcher)
 
   g_signal_connect(G_OBJECT(shinyswitcher->applet), "expose_event", G_CALLBACK(_expose_event_outer), shinyswitcher);
 
-  gtk_widget_set_size_request(GTK_WIDGET(shinyswitcher->applet), shinyswitcher->width + shinyswitcher->applet_border_width*2,
-                              shinyswitcher->height*2.5);
+//  gtk_widget_set_size_request(GTK_WIDGET(shinyswitcher->applet), shinyswitcher->width + shinyswitcher->applet_border_width*2,
+//                              shinyswitcher->height*2.5);
 
   return FALSE;
 }

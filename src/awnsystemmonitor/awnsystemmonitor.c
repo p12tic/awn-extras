@@ -142,7 +142,7 @@ cpumeter_applet_new(AwnApplet *applet)
   g_signal_connect(G_OBJECT(cpumeter->applet), "button-press-event", G_CALLBACK(_button_clicked_event), (gpointer)cpumeter);
 
   // connect to height and orientation changes
-  g_signal_connect(G_OBJECT(cpumeter->applet), "height-changed", G_CALLBACK(_height_changed), (gpointer)cpumeter);
+  g_signal_connect(G_OBJECT(cpumeter->applet), "size-changed", G_CALLBACK(_height_changed), (gpointer)cpumeter);
   g_signal_connect(G_OBJECT(cpumeter->applet), "orientation-changed", G_CALLBACK(_orient_changed), (gpointer)cpumeter);
 
   /*FIXME why doesn't this work????*/

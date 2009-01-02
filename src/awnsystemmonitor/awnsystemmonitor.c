@@ -266,7 +266,7 @@ gboolean cpu_meter_render(gpointer data)
     cr = cairo_create(surface);
     assert(cr);
     cpumeter->doneonce = TRUE;
-    cairo_scale(cr,(double)cpumeter->width/50.0,(double)cpumeter->height/40.0);
+//    cairo_scale(cr,(double)cpumeter->width/50.0,(double)cpumeter->height/40.0);
 
   }
 

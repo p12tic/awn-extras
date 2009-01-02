@@ -78,7 +78,7 @@ _show_location_dialog (GtkMenuItem *menuitem,WebApplet *webapplet)
                         gtk_entry_get_text (GTK_ENTRY (entry)));
   }
   gchar * title = g_strdup_printf("%30s",gtk_entry_get_text (GTK_ENTRY (entry)));  //FIXME put the URL or page title in here...
-  awn_applet_simple_set_title(AWN_APPLET_SIMPLE(webapplet->applet),title);
+//  awn_applet_simple_set_title(AWN_APPLET_SIMPLE(webapplet->applet),title);
   g_free(title);
   
   return TRUE;
@@ -166,7 +166,7 @@ _bloody_thing_has_style (GtkWidget *widget,WebApplet *webapplet)
 {
 
   gchar * title = g_strdup_printf("%30s",config_get_uri(webapplet));  //FIXME put the URL or page title in here...
-  awn_applet_simple_set_title(AWN_APPLET_SIMPLE(webapplet->applet),title);
+  //awn_applet_simple_set_title(AWN_APPLET_SIMPLE(webapplet->applet),title);
   g_free(title);
   g_signal_connect (G_OBJECT (webapplet->applet), "button-press-event",
                     G_CALLBACK (_button_clicked_event), webapplet);
@@ -187,10 +187,10 @@ awn_applet_factory_initp (gchar *uid, gint orient, gint height)
 
   webapplet->applet_icon_name = g_strdup ("apple-green");  
 
-  awn_applet_simple_set_awn_icon(AWN_APPLET_SIMPLE(webapplet->applet),
+  awn_applet_simple_set_icon_name(AWN_APPLET_SIMPLE(webapplet->applet),
                                     APPLET_NAME,
                                     webapplet->applet_icon_name)  ;
-  
+ 
   gtk_widget_show_all (GTK_WIDGET (webapplet->applet));
   awn_html_dialog_new (webapplet);
   gtk_window_set_focus_on_map (GTK_WINDOW (webapplet->mainwindow), TRUE);

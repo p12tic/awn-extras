@@ -49,6 +49,7 @@ html_init ()
 void
 html_web_view_open (GtkWidget *viewer, const gchar *uri)
 {
+  g_debug ("uri = '%s'\n",uri);
   function_list._html_web_view_open (viewer, uri);
 }
 

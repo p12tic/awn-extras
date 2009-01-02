@@ -34,6 +34,7 @@ endif
 SUBDIRS =			\
 	libawn-extras		\
 	shiny-switcher		\
+	webapplet		\
 	$(WOBBLYZINI)		\
 	$(GCONF_APPLETS)	\
 	$(VALA_APPLETS)		\

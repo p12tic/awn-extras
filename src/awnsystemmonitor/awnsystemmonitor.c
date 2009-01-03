@@ -266,7 +266,7 @@ gboolean cpu_meter_render(gpointer data)
     cr = cairo_create(surface);
     assert(cr);
     cpumeter->doneonce = TRUE;
-//    cairo_scale(cr,(double)cpumeter->width/50.0,(double)cpumeter->height/40.0);
+    cairo_scale(cr,(double)cpumeter->width/50.0,(double)cpumeter->height/40.0);
 
   }
 
@@ -275,10 +275,11 @@ gboolean cpu_meter_render(gpointer data)
 
   LoadGraph* g = cpumeter->loadgraph;
 
-  render_graph(cr, g, text, cpumeter->height * 1.25 , cpumeter->height, cpumeter);
-  
+  //render_graph(cr, g, text, cpumeter->height * 1.25 , cpumeter->height, cpumeter);
+  render_graph(cr, g, text, 50 , 40, cpumeter);
 
-   awn_applet_simple_set_icon_context(AWN_APPLET_SIMPLE(cpumeter->applet),
+
+  awn_applet_simple_set_icon_context(AWN_APPLET_SIMPLE(cpumeter->applet),
                                   cr);
   if (cpumeter->show_title)
   {

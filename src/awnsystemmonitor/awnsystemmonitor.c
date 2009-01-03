@@ -96,7 +96,7 @@ cpumeter_applet_new(AwnApplet *applet)
   cpumeter->height = awn_applet_get_size(applet) * 2;
   cpumeter->timer_id = -1;
   cpumeter->show_title = FALSE;
-  cpumeter->title = awn_tooltip_new_for_widget(applet);
+//  cpumeter->title = awn_tooltip_new_for_widget(AWN_APPLET(applet));
   GdkScreen* pScreen;
 
 
@@ -282,6 +282,7 @@ gboolean cpu_meter_render(gpointer data)
                                   cr);
   if (cpumeter->show_title)
   {
+    awn_applet_simple_set_tooltip_text(AWN_APPLET_SIMPLE(cpumeter->applet), text);
     //awn_title_show(cpumeter->title, GTK_WIDGET(cpumeter->applet), text);
   }
   else
@@ -571,7 +572,6 @@ _enter_notify_event(GtkWidget *window, GdkEventButton *event, gpointer *data)
 {
   CpuMeter *cpumeter = (CpuMeter *)data;
   cpumeter->show_title = TRUE;
-  //awn_title_show (clock->title,GTK_WIDGET(clock->applet), clock->txt_time);
 }
 
 static gboolean

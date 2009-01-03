@@ -34,7 +34,6 @@
 #include <libawn/awn-cairo-utils.h>
 #include <libawn/awn-config-client.h>
 #include <libawn/awn-vfs.h>
-#include <libawn/awn-icons.h>
 
 #include <gtk/gtk.h>
 #ifndef LIBAWN_USE_XFCE
@@ -112,7 +111,6 @@ typedef struct
 
   AwnConfigClient  *config;
   
-  AwnIcons  *awn_icons;
   gchar * uid;
 }Places;
 
@@ -1398,7 +1396,7 @@ static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, 
     {
       gtk_widget_show_all(places->mainwindow);
       pos_dialog(places->mainwindow, places);
-      awn_applet_simple_set_title_visibility(AWN_APPLET_SIMPLE(places->applet),FALSE);
+//      awn_applet_simple_set_title_visibility(AWN_APPLET_SIMPLE(places->applet),FALSE);
     }
   }
   else if (event->button == 3)
@@ -1442,19 +1440,11 @@ static void _bloody_thing_has_style(GtkWidget *widget, Places *places)
   GdkPixbuf *newicon;
   init_config(places);
 
-/* The Hard way to use awn-icons   See the init also
-  awn_icons_set_icon_info(places->awn_icons,GTK_WIDGET(places->applet),APPLET_NAME,places->uid,
-                          places->applet_icon_height, places->applet_icon_name);
-  awn_icons_set_changed_cb(places->awn_icons,(AwnIconsChange)_icon_changed,places);
-  
-  awn_applet_simple_set_temp_icon(AWN_APPLET_SIMPLE(places->applet), awn_icons_get_icon_simple(places->awn_icons));
-*/   
-  
   //The EASY way to use awn icons.
-  awn_applet_simple_set_awn_icon(AWN_APPLET_SIMPLE(places->applet),
+  awn_applet_simple_set_icon_name(AWN_APPLET_SIMPLE(places->applet),
                                     APPLET_NAME,
                                     places->applet_icon_name)  ;
-  awn_applet_simple_set_title(AWN_APPLET_SIMPLE(places->applet),"Places");
+  awn_applet_simple_set_tooltip_text(AWN_APPLET_SIMPLE(places->applet),"Places");
 
   render_places(places);
   g_signal_connect(G_OBJECT(places->applet), "button-press-event", G_CALLBACK(_button_clicked_event), places);
@@ -1481,9 +1471,6 @@ AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient, gint height)
   g_signal_connect_after(G_OBJECT(places->applet), "map", G_CALLBACK(_bloody_thing_has_style), places);
   
   places->uid = g_strdup(uid);
-/* The Hard way to use awn-icons
-   places->awn_icons = awn_icons_new();
-   */
   return applet;
 
 }

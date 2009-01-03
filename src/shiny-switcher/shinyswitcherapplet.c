@@ -1734,7 +1734,7 @@ gboolean _waited(Shiny_switcher *shinyswitcher)
   g_timeout_add(shinyswitcher->do_queue_freq + 1000, (GSourceFunc)do_queue_act_ws, shinyswitcher); //FIXME
 
 #endif
-  g_signal_connect(G_OBJECT(shinyswitcher->applet), "height-changed", G_CALLBACK(_height_changed), (gpointer)shinyswitcher);
+  g_signal_connect(G_OBJECT(shinyswitcher->applet), "size-changed", G_CALLBACK(_height_changed), (gpointer)shinyswitcher);
 
   g_signal_connect(G_OBJECT(shinyswitcher->applet), "orientation-changed", G_CALLBACK(_orient_changed), (gpointer)shinyswitcher);
 

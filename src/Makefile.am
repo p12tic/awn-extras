@@ -11,6 +11,7 @@ GCONF_APPLETS =
 if WITH_GCONF
 if WITH_GNOME
 GCONF_APPLETS +=		\
+	cairo-menu		\
 	$(NULL)
 endif
 GCONF_APPLETS +=		\

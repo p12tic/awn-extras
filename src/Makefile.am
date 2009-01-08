@@ -20,6 +20,7 @@ GCONF_APPLETS +=		\
 endif
 if WITH_GNOME
 GCONF_APPLETS +=	\
+	awn-notification-daemon \
 	$(NULL)
 endif
 if WITH_WEBKIT

@@ -41,19 +41,21 @@ _button_clicked_event (GtkWidget      *widget,
   return TRUE;
 }
 
+// entry method
 AwnApplet*
 awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
 {
 	AwnApplet *applet;
 	WobblyZini *wobblyzini;
 
-	/*printf ("avant init\n");*/
+	// initialize the applet
 	applet = awn_applet_new( uid, orient, height );
-	gtk_widget_set_size_request (GTK_WIDGET (applet), awn_applet_get_height (applet) * 2, awn_applet_get_height (applet) );
+	// our initialize
 	wobblyzini = wobblyzini_applet_new(applet);
-	/*printf ("apres init\n");*/
-  g_signal_connect (G_OBJECT (applet), "button-press-event",
-                    G_CALLBACK (_button_clicked_event), applet); 
+	// right-click handling
+	g_signal_connect (G_OBJECT (applet), "button-press-event",
+	                  G_CALLBACK (_button_clicked_event), applet);
+	gtk_widget_show_all(GTK_WIDGET (applet));
 	return applet;
 }
 

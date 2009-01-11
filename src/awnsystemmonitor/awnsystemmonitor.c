@@ -96,7 +96,7 @@ cpumeter_applet_new(AwnApplet *applet)
   cpumeter->height = awn_applet_get_size(applet) * 2;
   cpumeter->timer_id = -1;
   cpumeter->show_title = FALSE;
-  cpumeter->title = awn_tooltip_new_for_widget(applet);
+//  cpumeter->title = awn_tooltip_new_for_widget(AWN_APPLET(applet));
   GdkScreen* pScreen;
 
 
@@ -142,7 +142,7 @@ cpumeter_applet_new(AwnApplet *applet)
   g_signal_connect(G_OBJECT(cpumeter->applet), "button-press-event", G_CALLBACK(_button_clicked_event), (gpointer)cpumeter);
 
   // connect to height and orientation changes
-  g_signal_connect(G_OBJECT(cpumeter->applet), "height-changed", G_CALLBACK(_height_changed), (gpointer)cpumeter);
+  g_signal_connect(G_OBJECT(cpumeter->applet), "size-changed", G_CALLBACK(_height_changed), (gpointer)cpumeter);
   g_signal_connect(G_OBJECT(cpumeter->applet), "orientation-changed", G_CALLBACK(_orient_changed), (gpointer)cpumeter);
 
   /*FIXME why doesn't this work????*/
@@ -275,13 +275,15 @@ gboolean cpu_meter_render(gpointer data)
 
   LoadGraph* g = cpumeter->loadgraph;
 
-  render_graph(cr, g, text, cpumeter->height * 1.25 , cpumeter->height, cpumeter);
-  
+  //render_graph(cr, g, text, cpumeter->height * 1.25 , cpumeter->height, cpumeter);
+  render_graph(cr, g, text, 50 , 40, cpumeter);
 
-   awn_applet_simple_set_icon_context(AWN_APPLET_SIMPLE(cpumeter->applet),
+
+  awn_applet_simple_set_icon_context(AWN_APPLET_SIMPLE(cpumeter->applet),
                                   cr);
   if (cpumeter->show_title)
   {
+    awn_applet_simple_set_tooltip_text(AWN_APPLET_SIMPLE(cpumeter->applet), text);
     //awn_title_show(cpumeter->title, GTK_WIDGET(cpumeter->applet), text);
   }
   else
@@ -571,7 +573,6 @@ _enter_notify_event(GtkWidget *window, GdkEventButton *event, gpointer *data)
 {
   CpuMeter *cpumeter = (CpuMeter *)data;
   cpumeter->show_title = TRUE;
-  //awn_title_show (clock->title,GTK_WIDGET(clock->applet), clock->txt_time);
 }
 
 static gboolean

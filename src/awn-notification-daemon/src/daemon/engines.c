@@ -46,7 +46,7 @@
 #include <libawn/awn-applet-dialog.h>
 #include <libawn/awn-applet-simple.h>
 #include <libawn/awn-cairo-utils.h>
-#include <libawn/awn-title.h>
+#include <libawn/awn-tooltip.h>
 
 #include "config.h"
 

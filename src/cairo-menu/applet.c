@@ -147,7 +147,7 @@ AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient, gint height)
   read_config();
   
   
-  awn_applet_simple_set_awn_icon( applet,
+   awn_applet_simple_set_icon_name ( applet,
                                     APPLET_NAME,
                                     G_cairo_menu_conf.applet_icon)  ;
   

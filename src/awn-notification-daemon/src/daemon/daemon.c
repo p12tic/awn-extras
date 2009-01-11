@@ -1271,13 +1271,13 @@ gboolean send_message(gchar *body)
 gboolean hide_icon(gpointer data)
 {
 
-  gtk_widget_set_size_request(GTK_WIDGET(G_daemon_config.awn_app), 0, 0);
+  gtk_widget_set_size_request(GTK_WIDGET(G_daemon_config.awn_app), 1, 1);
   gtk_widget_hide(GTK_WIDGET(G_daemon_config.awn_app));
 //  g_object_unref(G_daemon_config.awn_icon);
 
   G_daemon_config.awn_icon = gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8, 1, 1);
   gdk_pixbuf_fill(G_daemon_config.awn_icon, 0x00000000);
-  awn_applet_simple_set_temp_icon(AWN_APPLET_SIMPLE(G_daemon_config.awn_app), G_daemon_config.awn_icon);
+  awn_applet_simple_set_icon_pixbuf(AWN_APPLET_SIMPLE(G_daemon_config.awn_app), G_daemon_config.awn_icon);
 //  g_object_unref(G_daemon_config.awn_icon);  
   G_daemon_config.awn_icon = NULL;
 
@@ -1648,7 +1648,7 @@ AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient, gint height)
 
   G_daemon_config.awn_app = applet = AWN_APPLET(awn_applet_simple_new(uid, orient, height));
 
-  g_signal_connect(G_OBJECT(applet), "height-changed", G_CALLBACK(_height_changed), (gpointer)applet);
+  g_signal_connect(G_OBJECT(applet), "size-changed", G_CALLBACK(_height_changed), (gpointer)applet);
   gtk_widget_set_size_request(GTK_WIDGET(applet), height, height);
 
 #if 0
@@ -1659,11 +1659,14 @@ AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient, gint height)
 
   gchar * states[]={"On","Off",NULL};
   gchar * icon_names[]={"stock_up","stock_down",NULL};
-  awn_applet_simple_set_awn_icons(AWN_APPLET_SIMPLE(applet),
+  awn_applet_simple_set_icon_info(AWN_APPLET_SIMPLE(applet),
                                     "Awn Notification Daemon",
                                     states,
                                     icon_names
                                     );
+  awn_applet_simple_set_icon_name (AWN_APPLET_SIMPLE(applet),
+                                    "Awn Notification Daemon",
+				    "Off");
   gtk_widget_show_all(GTK_WIDGET(applet));
 
 

@@ -1670,6 +1670,12 @@ void  _composited_changed(GdkScreen *screen, Shiny_switcher *shinyswitcher)
   }
 }
 
+void  _wm_changed(GdkScreen *screen, Shiny_switcher *shinyswitcher)
+{
+	g_debug (" WM Changed \n");
+}
+
+
 void  _screen_size_changed(GdkScreen *screen, Shiny_switcher *shinyswitcher)
 {
   calc_dimensions(shinyswitcher);
@@ -1716,6 +1722,7 @@ gboolean _waited(Shiny_switcher *shinyswitcher)
   g_signal_connect(G_OBJECT(shinyswitcher->wnck_screen), "window-stacking-changed", G_CALLBACK(_window_stacking_change), shinyswitcher);
   g_signal_connect(G_OBJECT(shinyswitcher->wnck_screen), "window-closed", G_CALLBACK(_window_closed), shinyswitcher);
   g_signal_connect(G_OBJECT(shinyswitcher->wnck_screen), "window-opened", G_CALLBACK(_window_opened), shinyswitcher);
+  g_signal_connect(G_OBJECT(shinyswitcher->wnck_screen), "window-manager-changed", G_CALLBACK(_wm_changed), shinyswitcher);
 #if GLIB_CHECK_VERSION(2,14,0)
 
   if (shinyswitcher->do_queue_freq % 1000 == 0)

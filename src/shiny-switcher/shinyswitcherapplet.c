@@ -80,7 +80,7 @@ static gboolean _expose_event_window(GtkWidget *widget, GdkEventExpose *expose, 
 static gboolean _expose_event_outer(GtkWidget *widget, GdkEventExpose *expose, Shiny_switcher *shinyswitcher);
 static gboolean _expose_event_border(GtkWidget *widget, GdkEventExpose *expose, Shiny_switcher *shinyswitcher);
 static gboolean _button_release_event(GtkWidget *widget, GdkEventButton *event, gpointer *data);
-static void _height_changed(AwnApplet *app, guint height, gpointer *data);
+static void _height_changed(AwnApplet *app, guint height, Shiny_switcher * shinyswitcher);
 static void _orient_changed(AwnApplet *appt, guint orient, gpointer *data);
 
 
@@ -1772,20 +1772,9 @@ applet_new(AwnApplet *applet, int width, int height)
   shinyswitcher->surface_cache = g_tree_new(_cmp_ptrs);
   shinyswitcher->win_menus = g_tree_new(_cmp_ptrs);
   shinyswitcher->height = height;
-
-  wnck_set_client_type(WNCK_CLIENT_TYPE_PAGER) ;
   shinyswitcher->wnck_screen = wnck_screen_get_default();
 
-  wnck_screen_force_update(shinyswitcher->wnck_screen);
-  printf("WM=%s\n", wnck_screen_get_window_manager_name(shinyswitcher->wnck_screen));
   shinyswitcher->got_viewport = wnck_workspace_is_virtual(wnck_screen_get_active_workspace(shinyswitcher->wnck_screen));
-
-  if (wnck_screen_get_window_manager_name(shinyswitcher->wnck_screen))
-    if (strcmp(wnck_screen_get_window_manager_name(shinyswitcher->wnck_screen), "compiz") == 0)
-    {
-      printf("ShinySwitcher Message:  compiz detected\n");
-      shinyswitcher->got_viewport = TRUE;
-    }
 
   init_config(shinyswitcher);
 
@@ -1850,8 +1839,70 @@ _button_release_event(GtkWidget *widget, GdkEventButton *event, gpointer *data)
 
 
 static void
-_height_changed(AwnApplet *app, guint height, gpointer *data)
+_height_changed(AwnApplet *app, guint height, Shiny_switcher *shinyswitcher)
 {
+  GdkScreen *screen;
+
+  shinyswitcher->applet = app;
+  //doing this as a tree right now..  cause it's easy and I think I'll need a complex data structure eventually.
+  shinyswitcher->height = height;
+
+  wnck_set_client_type(WNCK_CLIENT_TYPE_PAGER) ;
+  shinyswitcher->wnck_screen = wnck_screen_get_default();
+
+  wnck_screen_force_update(shinyswitcher->wnck_screen);
+  printf("WM=%s\n", wnck_screen_get_window_manager_name(shinyswitcher->wnck_screen));
+  shinyswitcher->got_viewport = wnck_workspace_is_virtual(wnck_screen_get_active_workspace(shinyswitcher->wnck_screen));
+
+  if (wnck_screen_get_window_manager_name(shinyswitcher->wnck_screen))
+    if (strcmp(wnck_screen_get_window_manager_name(shinyswitcher->wnck_screen), "compiz") == 0)
+    {
+      printf("ShinySwitcher Message:  compiz detected\n");
+      shinyswitcher->got_viewport = TRUE;
+    }
+
+  init_config(shinyswitcher);
+
+//  shinyswitcher->show_right_click = !shinyswitcher->got_viewport; //for the moment buggy in compiz.will be a config option eventually
+//  shinyswitcher->show_right_click = FALSE;  //FIXME disabling right click menu in all a cases. appears to cause occasional crash
+  shinyswitcher->reconfigure = !shinyswitcher->got_viewport;  //for the moment... will be a config option eventually
+
+
+  screen = gtk_widget_get_screen(GTK_WIDGET(shinyswitcher->applet));
+
+  while (! gdk_screen_is_composited(screen))   //FIXME
+  {
+    printf("Shinyswitcher startup:  screen not composited.. waiting 1 second\n");
+    g_usleep(G_USEC_PER_SEC);
+  }
+
+  shinyswitcher->pScreen = gtk_widget_get_screen(GTK_WIDGET(shinyswitcher->applet));
+  wnck_screen_force_update(shinyswitcher->wnck_screen);
+  shinyswitcher->rows = wnck_workspace_get_layout_row(wnck_screen_get_workspace(shinyswitcher->wnck_screen,
+                        wnck_screen_get_workspace_count(shinyswitcher->wnck_screen) - 1)
+                                                     ) + 1;
+  shinyswitcher->cols = wnck_workspace_get_layout_column(wnck_screen_get_workspace(shinyswitcher->wnck_screen,
+                        wnck_screen_get_workspace_count(shinyswitcher->wnck_screen) - 1)
+                                                        ) + 1 ;
+
+  shinyswitcher->gdkgc = gdk_gc_new(GTK_WIDGET(shinyswitcher->applet)->window);
+  shinyswitcher->rgba_cmap = gdk_screen_get_rgba_colormap(shinyswitcher->pScreen);
+  shinyswitcher->rgb_cmap = gdk_screen_get_rgb_colormap(shinyswitcher->pScreen);
+  
+//  g_debug("calc dim \n");
+  calc_dimensions(shinyswitcher);
+//  g_debug("set bg \n");	
+  set_background(shinyswitcher);
+ // g_debug("create cont \n");	
+  
+  gtk_container_remove(GTK_CONTAINER(shinyswitcher->applet),shinyswitcher->container);
+//  gtk_widget_destroy(shinyswitcher->container);
+  shinyswitcher->container = NULL;
+  create_containers(shinyswitcher);
+//  g_debug("create win \n");	
+  create_windows(shinyswitcher);
+//  g_debug("Done... \n");
+  gtk_widget_show_all( shinyswitcher->applet);
 }
 
 

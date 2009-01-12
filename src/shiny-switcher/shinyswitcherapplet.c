@@ -1848,7 +1848,6 @@ _height_changed(AwnApplet *app, guint height, Shiny_switcher *shinyswitcher)
   //doing this as a tree right now..  cause it's easy and I think I'll need a complex data structure eventually.
   shinyswitcher->height = height;
 
-  wnck_set_client_type(WNCK_CLIENT_TYPE_PAGER) ;
   shinyswitcher->wnck_screen = wnck_screen_get_default();
 
 //  init_config(shinyswitcher);
@@ -1869,6 +1868,8 @@ _height_changed(AwnApplet *app, guint height, Shiny_switcher *shinyswitcher)
 //  g_debug("calc dim \n");
   calc_dimensions(shinyswitcher);
 //  g_debug("set bg \n");	
+//  g_free(shinyswitcher->wallpaper_inactive);   //FIXME
+//  g_free(shinyswitcher->wallpaper_active);   //FIXME
   set_background(shinyswitcher);
  // g_debug("create cont \n");	
   

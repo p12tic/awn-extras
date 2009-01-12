@@ -24,7 +24,7 @@ GCONF_APPLETS +=	\
 	$(NULL)
 endif
 if WITH_WEBKIT
-WEBKIT_APPLETS = \
+WEBKIT_APPLETS = webapplet \
 	$(NULL)
 endif
 if MAINTAINER_MODE
@@ -37,7 +37,6 @@ SUBDIRS =			\
 	libawn-extras		\
 	shiny-switcher		\
 	places			\
-	webapplet		\
 	$(WOBBLYZINI)		\
 	$(GCONF_APPLETS)	\
 	$(VALA_APPLETS)		\

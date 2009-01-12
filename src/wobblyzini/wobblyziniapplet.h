@@ -21,11 +21,12 @@
 #define WOBBLYZINIAPPLET_H_
 
 #include <libawn/awn-applet.h>
+#include <libawn/awn-icon.h>
 
 #include <math.h>
 #include <sys/time.h>
 
-#define MS_INTERVAL 10
+#define MS_INTERVAL 40
 struct timeval	g_timeValue;
 typedef struct 
 {
@@ -36,11 +37,7 @@ typedef struct
 	GtkOrientation orient;
 
 	GtkTooltips *tooltips;
-	GdkPixbuf *icon;
-
-	/* Effect stuff */
-	guint height;
-	gint y_offset;
+	AwnIcon *icon;
 
 }WobblyZini;
 

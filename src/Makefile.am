@@ -29,7 +29,7 @@ WEBKIT_APPLETS = \
 endif
 if MAINTAINER_MODE
 PYTHON_TEST = 
-WOBBLYZINI = 
+WOBBLYZINI = wobblyzini
 endif
 
 # please keep alphabetized (except for libawn-extras)

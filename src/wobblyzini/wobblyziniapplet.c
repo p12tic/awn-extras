@@ -18,17 +18,18 @@
  */
 
 #include "wobblyziniapplet.h"
+#include <string.h>
 
 /*
  * STATIC FUNCTION DEFINITIONS
  */
-static void wobbly_zini_render (cairo_t *cr, int width, int height);
+static void wobbly_zini_render (cairo_t *cr);
 static gboolean time_handler (WobblyZini *wobblyzini);
 
 // Events
 static gboolean _expose_event (GtkWidget *widget, GdkEventExpose *expose, gpointer data);
 static gboolean _button_release_event (GtkWidget *widget, GdkEventButton *event, gpointer *data);
-static void _height_changed (AwnApplet *app, guint height, gpointer *data);
+static void _size_changed (AwnApplet *app, guint size, gpointer *data);
 static void _orient_changed (AwnApplet *appt, guint orient, gpointer *data);
 
 /**
@@ -37,33 +38,45 @@ static void _orient_changed (AwnApplet *appt, guint orient, gpointer *data);
 WobblyZini*
 wobblyzini_applet_new (AwnApplet *applet)
 {
+	// this applet is very simple - it just uses a simple structure
 	WobblyZini *wobblyzini = g_new0 (WobblyZini, 1);
+	// we'll save the applet, it could be useful
 	wobblyzini->applet = applet;
-	wobblyzini->height = awn_applet_get_height(applet) * 2;
+	// to determine our size we'll ask the applet
+	wobblyzini->size = awn_applet_get_size(applet);
 
 	// set the icon
 	gtk_window_set_default_icon_name ("Wobbly Zini");
-
-	wobblyzini->size = 0;
-	wobblyzini->new_size = 0;
-	wobblyzini->y_offset = 0;
-	wobblyzini->orient = GTK_ORIENTATION_HORIZONTAL;
 
 	wobblyzini->tooltips = gtk_tooltips_new ();
 	g_object_ref (wobblyzini->tooltips);
 	gtk_object_sink (GTK_OBJECT (wobblyzini->tooltips));
 
+	// AwnIcon supports nicely orientation, size and effects
+	GtkWidget *icon = awn_icon_new();
+	wobblyzini->icon = icon;
+	// we'll set correct orientation, so icon can be painted properly
+	awn_icon_set_orientation(AWN_ICON(icon),
+	                         awn_applet_get_orientation(applet));
+	// this applet paints itself, no static icon
+	awn_icon_set_custom_paint(AWN_ICON(icon),
+	                          wobblyzini->size, wobblyzini->size);
+	// to paint the icon we'll use standard expose event
+	g_signal_connect (icon, "expose-event", G_CALLBACK (_expose_event), wobblyzini);
+	// add the AwnIcon to the container
+        gtk_container_add(GTK_CONTAINER(applet), icon);
+
 	/*printf ("signal\n");*/
 	// connect to button events
 	g_signal_connect (G_OBJECT (wobblyzini->applet), "button-release-event", G_CALLBACK (_button_release_event), (gpointer)wobblyzini );
-	g_signal_connect (G_OBJECT (wobblyzini->applet), "expose-event", G_CALLBACK (_expose_event), wobblyzini);
 
 	// connect to height and orientation changes
-	g_signal_connect (G_OBJECT (wobblyzini->applet), "height-changed", G_CALLBACK (_height_changed), (gpointer)wobblyzini);
+	g_signal_connect (G_OBJECT (wobblyzini->applet), "size-changed", G_CALLBACK (_size_changed), (gpointer)wobblyzini);
 	g_signal_connect (G_OBJECT (wobblyzini->applet), "orientation-changed", G_CALLBACK (_orient_changed), (gpointer)wobblyzini);
 
+	// update the icon a few times per second
 	gtk_timeout_add (MS_INTERVAL, (GtkFunction) time_handler, wobblyzini);
-	bzero (&g_timeValue, sizeof (g_timeValue));
+	memset (&g_timeValue, '\0', sizeof (g_timeValue));
 
 	// return widget
 	return wobblyzini;
@@ -82,25 +95,23 @@ _expose_event (GtkWidget *widget, GdkEventExpose *expose, gpointer data)
 	cairo_t *cr = NULL;
 	gint width, height;
 
-	if (!GDK_IS_DRAWABLE (widget->window))
-	{
-		/*printf("pas drawable !!\n");*/
-		return FALSE;
-	}
+        AwnIcon *icon = AWN_ICON(widget);
+        AwnEffects *fx = awn_icon_get_effects(icon);
 
-	cr = gdk_cairo_create (widget->window);
+	cr = awn_effects_cairo_create_clipped (fx, expose->region);
 	if (!cr)
 	{
 		/*printf( "eee\n");*/
 		return FALSE;
 	}
 
-	gtk_widget_get_size_request (widget, &width, &height);
-
-	wobbly_zini_render (cr, width, height);
+	// the render method paints to [0,0] - [1,1], so we will scale
+        cairo_scale(cr, wobblyzini->size, wobblyzini->size);
+	// actual drawing
+	wobbly_zini_render (cr);
 
 	/* Clean up */
-	cairo_destroy (cr);
+	awn_effects_cairo_destroy (fx);
 
 	return TRUE;
 }
@@ -109,7 +120,7 @@ _expose_event (GtkWidget *widget, GdkEventExpose *expose, gpointer data)
  * Graphics Drawing Functions
  */
 static void
-wobbly_zini_render (cairo_t *cr, int width, int height)
+wobbly_zini_render (cairo_t *cr)
 {
 	//printf("render debut\n");
 	double fLength = 1.0f / 25.0f;
@@ -120,14 +131,7 @@ wobbly_zini_render (cairo_t *cr, int width, int height)
 	gettimeofday (&g_timeValue, NULL);
 	ulMilliSeconds = g_timeValue.tv_usec / 1000.0f;
 
-	/* Clear the background to transparent */
-	cairo_set_source_rgba (cr, 1.0f, 1.0f, 1.0f, 0.0f);
-	cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
-	cairo_paint (cr);
-
 	cairo_save (cr);
-	cairo_translate(cr, 0, 40);
-	cairo_scale (cr, (double) width / 1.0f, (double) height / 1.0f);
 	cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
 	cairo_set_line_cap (cr, CAIRO_LINE_CAP_ROUND);
 	for (i = 0; i < 60; i++)
@@ -177,11 +181,15 @@ _button_release_event (GtkWidget *widget, GdkEventButton *event, gpointer *data)
  * -set height and redraw applet
  */
 static void
-_height_changed (AwnApplet *app, guint height, gpointer *data)
+_size_changed (AwnApplet *app, guint size, gpointer *data)
 {
-	/*applet->height = height;
-	gtk_widget_queue_draw (GTK_WIDGET (applet));
-	update_icons (applet);*/
+	WobblyZini *wobblyzini = (WobblyZini *)data;
+	AwnIcon *icon = AWN_ICON(wobblyzini->icon);
+
+	// update our size
+        wobblyzini->size = size;
+	// this call is necessary, so the AwnIcon requests more space etc.
+	awn_icon_set_custom_paint(icon, size, size);
 }
 
 /**
@@ -191,6 +199,9 @@ _height_changed (AwnApplet *app, guint height, gpointer *data)
 static void
 _orient_changed (AwnApplet *app, guint orient, gpointer *data)
 {
-  /*applet->orient = orient;
-  gtk_widget_queue_draw (GTK_WIDGET (applet));*/
+	WobblyZini *wobblyzini = (WobblyZini *)data;
+	AwnIcon *icon = AWN_ICON(wobblyzini->icon);
+
+	// update the orientation
+	awn_icon_set_orientation(icon, orient);
 }

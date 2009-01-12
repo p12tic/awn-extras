@@ -1850,23 +1850,7 @@ _height_changed(AwnApplet *app, guint height, Shiny_switcher *shinyswitcher)
   wnck_set_client_type(WNCK_CLIENT_TYPE_PAGER) ;
   shinyswitcher->wnck_screen = wnck_screen_get_default();
 
-  wnck_screen_force_update(shinyswitcher->wnck_screen);
-  printf("WM=%s\n", wnck_screen_get_window_manager_name(shinyswitcher->wnck_screen));
-  shinyswitcher->got_viewport = wnck_workspace_is_virtual(wnck_screen_get_active_workspace(shinyswitcher->wnck_screen));
-
-  if (wnck_screen_get_window_manager_name(shinyswitcher->wnck_screen))
-    if (strcmp(wnck_screen_get_window_manager_name(shinyswitcher->wnck_screen), "compiz") == 0)
-    {
-      printf("ShinySwitcher Message:  compiz detected\n");
-      shinyswitcher->got_viewport = TRUE;
-    }
-
   init_config(shinyswitcher);
-
-//  shinyswitcher->show_right_click = !shinyswitcher->got_viewport; //for the moment buggy in compiz.will be a config option eventually
-//  shinyswitcher->show_right_click = FALSE;  //FIXME disabling right click menu in all a cases. appears to cause occasional crash
-  shinyswitcher->reconfigure = !shinyswitcher->got_viewport;  //for the moment... will be a config option eventually
-
 
   screen = gtk_widget_get_screen(GTK_WIDGET(shinyswitcher->applet));
 
@@ -1875,20 +1859,12 @@ _height_changed(AwnApplet *app, guint height, Shiny_switcher *shinyswitcher)
     printf("Shinyswitcher startup:  screen not composited.. waiting 1 second\n");
     g_usleep(G_USEC_PER_SEC);
   }
-
-  shinyswitcher->pScreen = gtk_widget_get_screen(GTK_WIDGET(shinyswitcher->applet));
-  wnck_screen_force_update(shinyswitcher->wnck_screen);
   shinyswitcher->rows = wnck_workspace_get_layout_row(wnck_screen_get_workspace(shinyswitcher->wnck_screen,
                         wnck_screen_get_workspace_count(shinyswitcher->wnck_screen) - 1)
                                                      ) + 1;
   shinyswitcher->cols = wnck_workspace_get_layout_column(wnck_screen_get_workspace(shinyswitcher->wnck_screen,
                         wnck_screen_get_workspace_count(shinyswitcher->wnck_screen) - 1)
-                                                        ) + 1 ;
-
-  shinyswitcher->gdkgc = gdk_gc_new(GTK_WIDGET(shinyswitcher->applet)->window);
-  shinyswitcher->rgba_cmap = gdk_screen_get_rgba_colormap(shinyswitcher->pScreen);
-  shinyswitcher->rgb_cmap = gdk_screen_get_rgb_colormap(shinyswitcher->pScreen);
-  
+                                                        ) + 1 ;  
 //  g_debug("calc dim \n");
   calc_dimensions(shinyswitcher);
 //  g_debug("set bg \n");	

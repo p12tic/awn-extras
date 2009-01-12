@@ -316,6 +316,7 @@ void set_background(Shiny_switcher *shinyswitcher)
 {
   if (shinyswitcher->grab_wallpaper)
   {
+    g_debug("grabbing wallpaper\n");
     grab_wallpaper(shinyswitcher);
   }
   else
@@ -1850,7 +1851,7 @@ _height_changed(AwnApplet *app, guint height, Shiny_switcher *shinyswitcher)
   wnck_set_client_type(WNCK_CLIENT_TYPE_PAGER) ;
   shinyswitcher->wnck_screen = wnck_screen_get_default();
 
-  init_config(shinyswitcher);
+//  init_config(shinyswitcher);
 
   screen = gtk_widget_get_screen(GTK_WIDGET(shinyswitcher->applet));
 

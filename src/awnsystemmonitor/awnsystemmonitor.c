@@ -377,13 +377,13 @@ void render_graph(cairo_t * cr, LoadGraph * g, char* text, int width, int height
 
   cairo_set_source_rgba(cr, cpumeter->border.red, cpumeter->border.green, cpumeter->border.blue, cpumeter->border.alpha);
 
-  awn_cairo_rounded_rect(cr, PAD - 1, 1, width - PAD - 4, height - PAD - 1, ARC, ROUND_ALL);  
+  awn_cairo_rounded_rect(cr, (double)PAD - 1, (double)1, (double) width - PAD - 4, (double)height - PAD - 1, ARC, ROUND_ALL);  
 
   cairo_stroke(cr);
 
   if (cpumeter->do_gradient)
   {
-    awn_cairo_rounded_rect(cr, PAD - 1, height + 1, width - PAD - 4, height - PAD - 1, ARC, ROUND_ALL);
+    awn_cairo_rounded_rect(cr, (double)PAD - 1, (double)height + 1, (double)width - PAD - 4, (double)height - PAD - 1, ARC, ROUND_ALL);
     pattern = cairo_pattern_create_linear(28, 68, 28, 48);
     cairo_pattern_add_color_stop_rgba(pattern, 0.00,  .1, .1, .1, .1);
     cairo_pattern_add_color_stop_rgba(pattern, 1.00,  .99, .99, .99, .1);

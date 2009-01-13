@@ -310,7 +310,7 @@ void render_graph(cairo_t * cr, LoadGraph * g, char* text, int width, int height
 
   /* Set the background color */
 
-  awn_cairo_rounded_rect(cr, PAD - 1, 1, width - PAD - 4, height - PAD - 1, ARC, ROUND_ALL);
+  awn_cairo_rounded_rect(cr, (double)PAD - 1, (double)1, (double)width - PAD - 4, (double)height - PAD - 1, ARC, ROUND_ALL);
  
   cairo_set_source_rgba(cr, cpumeter->bg.red, cpumeter->bg.green, cpumeter->bg.blue, cpumeter->bg.alpha);
   cairo_fill(cr);

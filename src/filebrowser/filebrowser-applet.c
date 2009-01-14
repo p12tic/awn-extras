@@ -469,9 +469,6 @@ AwnApplet *awn_applet_factory_initp(
               G_CALLBACK (filebrowser_applet_drag_data_received), 
               applet);                   
                                        
-	/* Size request and show */    
-    gtk_widget_set_size_request( awn_applet, awn_applet_get_height ( AWN_APPLET(awn_applet)), 
-                                awn_applet_get_height (AWN_APPLET(awn_applet)) * 2);
 
     gtk_widget_show_all( awn_applet );
     g_print("return\n");

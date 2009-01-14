@@ -33,7 +33,8 @@ Build-Depends: 	debhelper (>= 5),
 		libnotify-dev,
 		libtrackerclient-dev,
 		libwebkit-dev | libwebkitgtk-dev,
-		awn-manager-trunk
+		awn-manager-trunk,
+		libgnomeui-dev,
 Standards-Version: 3.7.2
 XS-Python-Version: current
 

@@ -22,6 +22,7 @@ import pygtk
 import gtk
 import awn
 import gconf
+import subprocess
 
 class MountApplet(awn.AppletSimple):
     gconf_path = "/apps/avant-window-navigator/applets/mountapplet"

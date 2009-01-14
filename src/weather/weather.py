@@ -63,7 +63,7 @@ class WeatherApplet:
 
         # bind to some events we are concerned about
         self.applet.connect("leave-notify-event", self.onMouseOut)
-        self.applet.connect("height-changed", self.onBarHeightChange)
+        self.applet.connect("size-changed", self.onBarHeightChange)
         
         # first, get the current conditions, so we can display the icon
         gobject.timeout_add(1500, self.fetchInitialConditions)
@@ -280,7 +280,7 @@ class WeatherApplet:
                 # don't use AWNLib's built in setting and resizing, it needs to be raw because
                 # in the case of a bar resize, our event is called first and AWNLib has the old size.
                 self.iconPixBuf = self.applet.icon.surface(surface, self.iconPixBuf, set=False)
-                height = self.applet.get_height()
+                height = self.applet.get_size()
                 scaledIcon = self.iconPixBuf.scale_simple(height, height, gtk.gdk.INTERP_HYPER)
                 self.applet.icon.set(scaledIcon, raw=True)
                 

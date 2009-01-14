@@ -310,13 +310,13 @@ class Dialogs:
                 self.set_logo(gtk.gdk.pixbuf_new_from_file_at_size(parent.meta["logo"], 48, 48))
 
                 self.update_logo_icon()
-                parent.connect("height-changed", self.update_logo_icon)
+                parent.connect("size-changed", self.update_logo_icon)
             elif "theme" in parent.meta:
                 # It is assumed that the C{awn.Icons} object has been set via set_awn_icon() in C{Icon}
                 self.set_logo(parent.get_awn_icons().get_icon_simple_at_height(48))
 
                 self.update_theme_icon()
-                parent.connect("height-changed", self.update_theme_icon)
+                parent.connect("size-changed", self.update_theme_icon)
 
             # Connect some signals to be able to hide the window
             self.connect("response", self.response_event)
@@ -332,13 +332,13 @@ class Dialogs:
         def update_logo_icon(self, widget=None, event=None):
             """ Sets the applet's logo to be of the same height as the panel """
 
-            height = self.__parent.get_height()
+            height = self.__parent.get_size()
             self.set_icon(gtk.gdk.pixbuf_new_from_file_at_size(self.__parent.meta["logo"], height, height))
 
         def update_theme_icon(self, widget=None, event=None):
             """ Sets the applet's logo to be of the same height as the panel """
 
-            self.set_icon(self.__parent.get_awn_icons().get_icon_simple_at_height(self.__parent.get_height()))
+            self.set_icon(self.__parent.get_awn_icons().get_icon_simple_at_height(self.__parent.get_size()))
 
     class PreferencesDialog(gtk.Dialog):
         """ A Dialog window that has the title "<applet's name> Preferences",
@@ -357,10 +357,10 @@ class Dialogs:
 
             if "logo" in parent.meta:
                 self.update_logo_icon()
-                parent.connect("height-changed", self.update_logo_icon)
+                parent.connect("size-changed", self.update_logo_icon)
             elif "theme" in parent.meta:
                 self.update_theme_icon()
-                parent.connect("height-changed", self.update_theme_icon)
+                parent.connect("size-changed", self.update_theme_icon)
 
             self.connect("response", self.response_event)
             self.connect("delete_event", self.delete_event)
@@ -375,13 +375,13 @@ class Dialogs:
         def update_logo_icon(self, widget=None, event=None):
             """ Updates the applet's logo to be of the same height as the panel """
 
-            height = self.__parent.get_height()
+            height = self.__parent.get_size()
             self.set_icon(gtk.gdk.pixbuf_new_from_file_at_size(self.__parent.meta["logo"], height, height))
 
         def update_theme_icon(self, widget=None, event=None):
             """ Updates the applet's themed logo to be of the same height as the panel """
 
-            self.set_icon(self.__parent.get_awn_icons().get_icon_simple_at_height(self.__parent.get_height()))
+            self.set_icon(self.__parent.get_awn_icons().get_icon_simple_at_height(self.__parent.get_size()))
 
 
 class Title:

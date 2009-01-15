@@ -96,7 +96,7 @@ if test "$with_gconf" != "no" -a "$config_backend" != "GConf"; then
 fi
 
 if test "$with_gconf" != "no" -o "$with_gnome" != "no"; then
-# filebrowser
+# affinity, filebrowser
 PKG_CHECK_MODULES(GNOMEUI, [libgnomeui-2.0])
 # filebrowser
 PKG_CHECK_MODULES(GNOME_DESKTOP, [gnome-desktop-2.0])
@@ -169,6 +169,9 @@ PKG_CHECK_EXISTS([$affinity_tracker_pkg], [
 ], [have_tracker=no])
 AC_MSG_RESULT([$have_tracker])
 AM_CONDITIONAL(HAVE_TRACKER, test "$have_tracker" = "yes")
+if test -n "`echo $AWN_CFLAGS | grep LIBAWN_USE_GNOME`"; then
+    affinity_pkgs="$affinity_pkgs libgnomeui-2.0"
+fi
 
 # applet-specific libraries
 PKG_CHECK_MODULES(AFFINITY, [$affinity_pkgs])

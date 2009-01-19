@@ -11,9 +11,6 @@ dist_applet_DATA =      \
 		comics_view.py      \
 		COPYING      \
 		downloader.py   \
-		feed.py	\
-		qfeed.py	\
-		settings.py	\
 		shared.py	\
 		sv_SE.po	\
 		widgets.py 

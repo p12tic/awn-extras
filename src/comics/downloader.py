@@ -28,9 +28,9 @@ class Downloader(gobject.GObject, threading.Thread):
 		completed = (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
 			(gobject.TYPE_INT,)))
 	
-	DOWNLOAD_OK = 0
-	DOWNLOAD_TRANSFER_ERROR = 1
-	DOWNLOAD_OTHER_ERROR = 2
+	OK = 0
+	TRANSFER_ERROR = 1
+	OTHER_ERROR = 2
 	
 	def __init__(self, url, filename = None):
 		"""Create a new downloader for the specified URL."""
@@ -46,9 +46,9 @@ class Downloader(gobject.GObject, threading.Thread):
 	def run(self):
 		try:
 			self.filename, headers = urllib.urlretrieve(self.url, self.filename)
-			self.emit('completed', Downloader.DOWNLOAD_OK)
+			self.emit('completed', Downloader.OK)
 		except:
-			self.emit('completed', Downloader.DOWNLOAD_TRANSFER_ERROR)
+			self.emit('completed', Downloader.TRANSFER_ERROR)
 		
 	def download(self):
 		self.setDaemon(True)

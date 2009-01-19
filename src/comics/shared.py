@@ -18,17 +18,20 @@
 # Boston, MA 02111-1307, USA.
 
 
-from feed import FeedContainer
 from os import getenv
 from os.path import join, split
+import urllib
+from xdg import BaseDirectory
 
 # Data locations
 SHARE_DIR		= join(split(__file__)[0])
 ALT_USER_DIR	= join(getenv('HOME'), '.comics')
-USER_DIR		= join(getenv('HOME'), '.config', 'awn', 'applets', 'comics')
+USER_DIR		= join(BaseDirectory.xdg_config_home, 'awn', 'applets',
+	'comics')
 
 SYS_FEEDS_DIR	= join(SHARE_DIR, 'feeds')
 USER_FEEDS_DIR	= join(USER_DIR, 'feeds')
+PLUGINS_DIR		= join(SHARE_DIR, 'feed', 'plugins')
 GLADE_DIR		= join(SHARE_DIR, 'glade')
 ICONS_DIR		= join(SHARE_DIR, 'icons')
 LOCALE_DIR		= join(SHARE_DIR, 'locale')

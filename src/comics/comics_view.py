@@ -34,9 +34,11 @@ from locale import gettext as _
 from math import pi
 
 # Local
+from feed import FeedContainer
+from feed.basic import URL, TITLE, LINK, DATE, Feed
 from downloader import Downloader
-from feed import URL, TITLE, LINK, DATE, Feed, FeedContainer
-from settings import Settings
+from feed.settings import Settings
+
 from widgets import ScalableWindow, WWWLink, Ticker
 from shared import *
 
@@ -433,8 +435,7 @@ class ComicsViewer(ScalableWindow):
 		
 		self.set_show_link(self.__settings.get_bool('show_link',
 			False))
-		self.set_feed_name(self.__settings.get_string('feed_name',
-			None))
+		self.set_feed_name(self.__settings.get_string('feed_name', ''))
 		self.move(self.__settings.get_int('x', (screen.get_width() - w) / 2),
 			self.__settings.get_int('y', (screen.get_height() - h) / 2))
 	
@@ -457,7 +458,7 @@ class ComicsViewer(ScalableWindow):
 				.connect('updated', self.on_feed_updated)
 			if self.feeds.feeds[self.feed_name].ready:
 				self.on_feed_updated(self.feeds.feeds[self.feed_name],
-					Feed.DOWNLOAD_OK)
+					Feed.OK)
 			self.__settings['feed_name'] = str(new_feed_name)
 		elif len(self.feeds.feeds) > 0:
 			self.set_feed_name(self.feeds.feeds.keys()[0])
@@ -580,7 +581,7 @@ class ComicsViewer(ScalableWindow):
 	def on_download_completed(self, o, code, item):
 		"""A new image has been downloaded."""
 		self.__ticker.set_ticking(False)
-		self.__is_error = code != Downloader.DOWNLOAD_OK
+		self.__is_error = code != Downloader.OK
 		
 		self.__current_timestamp = item[DATE]
 		self.__link.set_text(self.get_link_name(item))

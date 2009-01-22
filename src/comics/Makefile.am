@@ -1,4 +1,4 @@
-SUBDIRS = feeds glade locale icons
+SUBDIRS = feed feeds glade locale icons
 		
 APPLET_NAME = comics
 APPLET_MAIN_FILE = comics.py

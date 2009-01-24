@@ -25,16 +25,15 @@ from awn.extras import AWNLib
 
 applet_name = "ThinkHDAPS"
 applet_version = "0.3.1"
-applet_description = "Applet that shows the status of HDAPS"
+applet_description = "Applet that shows the shock protection status of your disks"
 
 # Interval in milliseconds between two successive status checks
 check_status_interval = 100
 
-""" Set of names of possible hard disk devices. It's important
-that names of devices that may not be a hard disk are at the end of the set """
-devices = ("sda", "hda")
+sysfs_dir = "/sys/block"
+pm_file = "queue/protect_method"
 
-hdaps_short_description = "Active Protection System"
+hdaps_short_description = "protected from shocks"
 
 image_dir = os.path.join(os.path.dirname(__file__), "images")
 
@@ -75,7 +74,7 @@ class ThinkHDAPSApplet:
 
             if self.__error_occurred:
                 self.__error_occurred = False
-                self.applet.title.set(hdaps_short_description + " active")
+                self.applet.title.set(self.__hdaps_device + " " + hdaps_short_description)
 
             self.__was_paused = paused
         except IOError:
@@ -83,7 +82,7 @@ class ThinkHDAPSApplet:
                 self.__error_occurred = True
 
                 self.set_error_icon()
-                self.applet.title.set(hdaps_short_description + " disabled")
+                self.applet.title.set(self.__hdaps_device + " not " + hdaps_short_description)
 
         return True
 
@@ -92,19 +91,20 @@ class ThinkHDAPSApplet:
 
         self.setup_icon()
 
-        # Set the applet's current icon
         applet.icon.set(self.icon_running, True)
 
-        applet.title.set(hdaps_short_description + " active")
+        def can_unload(disk):
+            file = os.path.join(sysfs_dir, disk, pm_file)
+            return os.path.isfile(file) and "[unload]" in open(file).read()
+        disks = [disk for disk in os.listdir(sysfs_dir) if can_unload(disk)]
 
-        for device in devices:
-            if os.path.isdir(os.path.join("/sys/block", device)):
-                self.__hdaps_device = device
-                break
+        if len(disks) > 0:
+            self.__hdaps_device = disks[0]
 
         applet.connect("height-changed", self.height_changed_cb)
 
         if self.__hdaps_device is not None:
+            applet.title.set(self.__hdaps_device + " " + hdaps_short_description)
             gobject.timeout_add(check_status_interval, self.check_status_cb, self)
         else:
             self.set_error_icon()

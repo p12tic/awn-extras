@@ -362,6 +362,7 @@ src/calendar/dateutil/zoneinfo/Makefile
 src/comic/Makefile
 src/comic/icons/Makefile
 src/comics/Makefile
+src/comics/feed/Makefile
 src/comics/feeds/Makefile
 src/comics/glade/Makefile
 src/comics/locale/Makefile

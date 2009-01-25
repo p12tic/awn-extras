@@ -208,6 +208,9 @@ class Rhythmbox(GenericPlayer):
 
         if self.artOnOff == 'on' and 'rb:coverArt-uri' in result:
             albumart_exact = result['rb:coverArt-uri']
+            # bug in rhythmbox 0.11.6 - returns uri, but not properly encoded,
+            # so it's enough to remove the file:// prefix
+            albumart_exact = albumart_exact.replace('file://', '', 1)
         else:
             albumart_exact = ''
 

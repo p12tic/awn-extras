@@ -47,6 +47,7 @@ class App (awn.AppletSimple):
     """Displays a dialog with controls and track/album info and art"""
 
     APPLET_NAME = "Media Control Applet"
+    APPLET_NAME_MARKUP = "<span weight=\"bold\">Media Control Applet</span>"
     def __init__ (self, uid, orient, height):
         """Creating the applets core"""
         awn.AppletSimple.__init__(self, uid, orient, height)
@@ -62,7 +63,8 @@ class App (awn.AppletSimple):
         self.players_frame = gtk.Frame()
         self.controls = gtk.VBox()
         self.controls.set_spacing(5)
-        self.label = gtk.Label(App.APPLET_NAME)
+        self.label = gtk.Label()
+        self.label.set_markup(App.APPLET_NAME_MARKUP)
 
         self.what_app()
         # The Heart
@@ -182,7 +184,7 @@ class App (awn.AppletSimple):
             self.controls.set_no_show_all(True)
             self.controls.hide()
             self.set_title(App.APPLET_NAME)
-            self.label.set_text(App.APPLET_NAME)
+            self.label.set_markup(App.APPLET_NAME_MARKUP)
             self.MediaPlayer = None
         else:
             self.MediaPlayer = mediaplayers.__dict__[self.player_name]()

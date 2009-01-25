@@ -47,22 +47,24 @@ def get_places(theme):
                 ico = 'network-server'
             item = string.rstrip(item)
             # Is dir check
-            dirCheck = True
+            dirCheck = False
             item = item.replace('file://','')
             if not check.isdir(item):
                 if ' ' in item:
                     itemOLD = item
                     item = string.rstrip(item[:item.index(' ')])
-                    if check.isdir(item) == False:
-                        dirCheck = False
-                    else:
+                    dirCheck = check.isdir(item)
+                    if check.isdir(item):
+                        dirCheck = True
                         tempitem = itemOLD[itemOLD.index(' '):]
+
             if '%20' in tempitem:
                 tempitem = tempitem.replace('%20',' ')
+            dirCheck = check.isdir(item)
             item = 'file://' + item
             if dirCheck:
-                thing = [theme.load_icon(ico,24,0),tempitem]
-                model.append(thing)
+                row = [theme.load_icon(ico,24,0),tempitem]
+                model.append(row)
                 bookmarks[tempitem] = [0,item]
         bookmark_list.close()
     return model,bookmarks

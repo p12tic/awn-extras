@@ -44,6 +44,12 @@ static unsigned int numTabs = 1;
 // Create new tab
 gboolean create_new_tab();
 
+// Callback when the icon is hovered.
+gboolean enter_notify_cb (GtkWidget *widget, GdkEventCrossing *event, gpointer null);
+
+// Callback when the icon is left.
+gboolean leave_notify_cb (GtkWidget *widget, GdkEventCrossing *event, gpointer null);
+
 // Callback when the icon is clicked on.
 gboolean icon_clicked_cb (GtkWidget *widget, GdkEventButton *event, gpointer null);
 

@@ -1,177 +1,102 @@
 #!/usr/bin/python
-"""
-PyNotConfig v0.20 - Awn Notification/system tray config manager.
-Copyright (c) 2008 Nathan Howard (triggerhapp@googlemail.com)
+# PyNotConfig - Awn Notification/system tray config manager.
+#
+# Copyright (C) 2008 Nathan Howard (triggerhapp@googlemail.com)
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-   This program is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
+import os
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-"""
-
-# Forgive me, comments are completely lacking and source is obfuscated.
-# For now, make do that it just works ;)
+import pygtk
+pygtk.require("2.0")
+import gtk
+from gtk import glade
 
 import awn
-import gtk
 
-global D_BG_COLOR,D_CUSTOM_Y, D_HIGH,D_BORDER,D_TRANS,D_USEIM,D_IMPATH
-D_BG_COLOR="0x0070E0"
-D_CUSTOM_Y=10
-D_HIGH=2
-D_BORDER=True
-D_TRANS=0
-D_ZEROPID=True
-D_USEIM=False
-D_ICONSIZE=24
-D_IMPATH="/".join(__file__.split("/")[:-1])+"/pattern.png"
+glade_file = os.path.join(os.path.dirname(__file__), "pynot-rgba.glade")
 
+global D_CUSTOM_Y, D_HIGH, D_ICONSIZE
+D_CUSTOM_Y = 10
+D_HIGH = 2
+D_ICONSIZE = 24
 
+awn_options = awn.Config("pynot-rgba", None)
 
-def endstuff(self):
-    gtk.main_quit()
+CUSTOM_Y = awn_options.get_int(awn.CONFIG_DEFAULT_GROUP, "CUSTOM_Y")
+HIGH = awn_options.get_int(awn.CONFIG_DEFAULT_GROUP, "HIGH")
+ICONSIZE = awn_options.get_int(awn.CONFIG_DEFAULT_GROUP, "ICONSIZE")
 
-def savestuff(self):
-    nbg=bg_color.get_color()
-    ntbg=nbg.to_string()
-    r=int("0x"+ntbg[1:3],0)
-    g=int("0x"+ntbg[5:7],0)
-    b=int("0x"+ntbg[9:11],0)
-    final = "0x%02X%02X%02X" % (r,g,b)
-    awn_options.set_string(awn.CONFIG_DEFAULT_GROUP,"BG_COLOR",final)
-    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"CUSTOM_Y",int(custom_y.get_value()))
-    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"HIGH",int(high.get_value()))
-    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"BORDER",int(border.get_active()))
-    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"TRANS",int(bg_color.get_alpha()))
-    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"ZEROPID",int(pid.get_active()))
-    awn_options.set_string(awn.CONFIG_DEFAULT_GROUP,"IMPATH",impath.get_text())
-    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"USEIM",int(useim.get_active()))
-    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"ICONSIZE",int(iconsize.get_value()))
- 
-
-
-awn_options=awn.Config('pynot-rgba',None)
-BG_COLOR = awn_options.get_string(awn.CONFIG_DEFAULT_GROUP,"BG_COLOR")
-CUSTOM_Y = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"CUSTOM_Y")
-HIGH     = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"HIGH"    )
-BORDER   = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"BORDER"  )
-TRANS    = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"TRANS"   )
-ZEROPID  = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"ZEROPID" )
-USEIM    = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"USEIM"   )
-IMPATH   = awn_options.get_string(awn.CONFIG_DEFAULT_GROUP,"IMPATH"  )
-ICONSIZE = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"ICONSIZE")
-if(HIGH==0):
-    HIGH     = D_HIGH
-    BORDER   = D_BORDER
+if HIGH == 0:
+    HIGH = D_HIGH
     CUSTOM_Y = D_CUSTOM_Y
-    BG_COLOR = D_BG_COLOR
-    TRANS    = D_TRANS
-    ZEROPID  = D_ZEROPID
-    USEIM    = D_USEIM
-    IMPATH   = D_IMPATH
     ICONSIZE = D_ICONSIZE
-    awn_options.set_string(awn.CONFIG_DEFAULT_GROUP,"BG_COLOR",BG_COLOR)
-    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"BORDER",BORDER)
-    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"CUSTOM_Y",CUSTOM_Y)
-    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"HIGH",HIGH)
-    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"TRANS",TRANS)
-    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"ZEROPID",ZEROPID)
-    awn_options.set_string(awn.CONFIG_DEFAULT_GROUP,"IMPATH",IMPATH)
-    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"USEIM",USEIM)
-    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,"ICONSIZE",ICONSIZE)
+    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP, "CUSTOM_Y", CUSTOM_Y)
+    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP, "HIGH", HIGH)
+    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP, "ICONSIZE", ICONSIZE)
 
-if(IMPATH==""):
-    IMPATH=D_IMPATH
-print ICONSIZE
-
-if(ICONSIZE==0):
-    ICONSIZE=D_ICONSIZE
+if ICONSIZE == 0:
+    ICONSIZE = D_ICONSIZE
 
 
-r = int("0x"+BG_COLOR[2:4],0)*256
-g = int("0x"+BG_COLOR[4:6],0)*256
-b = int("0x"+BG_COLOR[6:8],0)*256
-cbg=gtk.gdk.Color(r,g,b,0)
+class PreferencesDialog(gtk.Dialog):
 
-window= gtk.Window(gtk.WINDOW_TOPLEVEL)
-vbox=gtk.VBox()
-window.add(vbox)
-hbox=gtk.HBox()
-alldone=gtk.Button("Save")
-t1=gtk.Label("PyNot Config")
-t2=gtk.Label("Number of Icons High")
-t3=gtk.Label("Offset from Bottom")
-t4=gtk.Label("Background Colour")
-t5=gtk.Label("Size of Icons")
-adj=gtk.Adjustment(1,1,5,1,1,0)
-high=gtk.SpinButton(adj,1,0)
-adj2=gtk.Adjustment(45,0,100,1,1,0)
-custom_y=gtk.SpinButton(adj2,1,0)
-bg_color=gtk.ColorButton()
-bg_color.set_use_alpha(True)
-border=gtk.CheckButton("Use a Rounded Border",False)
-pid=gtk.CheckButton("Do Not Show Icons for PID=0.",False)
-useim=gtk.CheckButton("Use Image",False)
-adj3=gtk.Adjustment(24,8,128,1,1,0)
-iconsize=gtk.SpinButton(adj3,1,0)
-impath=gtk.Entry()
+    """A Dialog window that has the title "PyNot Preferences",
+    uses the applet's logo as its icon and has a Close button.
 
-bg_color.set_color(cbg)
-bg_color.set_alpha(TRANS)
-high.set_value(HIGH)
-custom_y.set_value(CUSTOM_Y)
-border.set_active(BORDER)
-pid.set_active(ZEROPID)
-useim.set_active(USEIM)
-impath.set_text(IMPATH)
-iconsize.set_value(ICONSIZE)
+    """
 
-hbox1=gtk.HBox()
-hbox2=gtk.HBox()
-hbox3=gtk.HBox()
-hbox4=gtk.HBox()
-hbox5=gtk.HBox()
-hbox6=gtk.HBox()
-hbox7=gtk.HBox()
-hbox8=gtk.HBox()
+    def __init__(self):
+        gtk.Dialog.__init__(self, flags=gtk.DIALOG_NO_SEPARATOR)
+
+        self.set_resizable(False)
+        self.set_border_width(5)
+
+        self.set_title("PyNot Preferences")
+        self.add_button(gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE)
+
+        self.set_icon(gtk.gdk.pixbuf_new_from_file_at_size("PyNot.png", 48, 48))
+
+        self.connect("response", self.response_event)
+
+    def response_event(self, widget, response):
+        if response < 0:
+            gtk.main_quit()
 
 
-vbox.add(t1)
-hbox1.add(high)
-hbox1.add(t2)
-vbox.add(hbox1)
-hbox2.add(custom_y)
-hbox2.add(t3)
-vbox.add(hbox2)
-hbox8.add(iconsize)
-hbox8.add(t5)
-vbox.add(hbox8)
-#vbox.add(t4)
-#vbox.add(bg_color)
-#hbox3.add(border)
-vbox.add(hbox3)
-hbox5.add(pid)
-hbox6.add(useim)
-#vbox.add(hbox4)
-#vbox.add(hbox5)
-#vbox.add(hbox6)
-hbox7.add(impath)
-#vbox.add(hbox7)
+dialog = PreferencesDialog()
 
-hbox.add(alldone)
-vbox.add(hbox)
-window.show_all()
-window.connect("destroy",endstuff)
-alldone.connect("clicked",savestuff)
+prefs = glade.XML(glade_file)
+prefs.get_widget("vbox-preferences").reparent(dialog.vbox)
+
+spinbutton_column = prefs.get_widget("spinbutton-icons-per-column")
+spinbutton_column.set_value(HIGH)
+def column_value_changed_cb(widget):
+    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP, "HIGH", widget.get_value_as_int())
+spinbutton_column.connect("value-changed", column_value_changed_cb)
+
+spinbutton_offset = prefs.get_widget("spinbutton-offset-from-bottom")
+spinbutton_offset.set_value(CUSTOM_Y)
+def offset_value_changed_cb(widget):
+    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP, "CUSTOM_Y", widget.get_value_as_int())
+spinbutton_offset.connect("value-changed", offset_value_changed_cb)
+
+spinbutton_size = prefs.get_widget("spinbutton-size-of-icons")
+spinbutton_size.set_value(ICONSIZE)
+def size_value_changed_cb(widget):
+    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP, "ICONSIZE", widget.get_value_as_int())
+spinbutton_size.connect("value-changed", size_value_changed_cb)
+
+dialog.show_all()
 gtk.main()
-
-

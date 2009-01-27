@@ -65,7 +65,7 @@ D_ICONSIZE=24
 
 # And thier current value!
 global BG_COLOR, CUSTOM_Y, HIGH, ALLOW_COL, REFRESH, DIVIDEBYZERO
-global BORDER, ZEROPID, IMPATH, USEIM, ICONSIZE
+global BORDER, ZEROPID, IMPATH, USEIM, ICONSIZE, USEGTK
 
 REFRESH=10    # Not in config yet. Wont be needed until Transparency works
                 # if <90 milliseconds then its ignored.
@@ -198,8 +198,9 @@ class mywidget(gtk.Widget):
         # Either do a single render of Alpha, or cause one every REFRESH
         # milliseconds
         self.chbg()
-        self.modify_bg(gtk.STATE_NORMAL,
-                       gtk.gdk.color_parse("#"+BG_COLOR[2:8]))
+        if USEGTK == 0:
+            self.modify_bg(gtk.STATE_NORMAL,
+                           gtk.gdk.color_parse("#"+BG_COLOR[2:8]))
                               # Change the theme for this window
         gobject.timeout_add(1000, self.chbg)
                               # check for BG change every second,
@@ -380,26 +381,6 @@ class mywidget(gtk.Widget):
 
         return returnvar
 
-    def tr__isBackground(self, col, bg_r, bg_g, bg_b):
-        # Used in transparency render.
-        # will return TRUE if the colour passed to it resembles the BG colour.
-        # works within a range, since icons can have shadows
-        col_s = "0x%06X" % col
-        if(col_s == BG_COLOR):
-            return True
-        col_r =int("0x"+col_s[2:4], 0)
-        col_g =int("0x"+col_s[4:6], 0)
-        col_b =int("0x"+col_s[6:8], 0)
-
-        # Just smile and nod.
-
-        if(bg_r-ALLOW_COL<col_r and bg_r+ALLOW_COL>col_r):
-            if(bg_g-ALLOW_COL<col_g and bg_g+ALLOW_COL>col_g):
-                if(bg_b-ALLOW_COL<col_b and bg_b+ALLOW_COL>col_b):
-                    return True
-
-        return False
-
     def tr__sendEvent(self, win, ctype, data, mask=None):
     #------------------------------------------------
         """ Send a ClientMessage event to the root """
@@ -417,7 +398,7 @@ class mywidget(gtk.Widget):
         # quickest hack towards multi-threading i had ;)
         while self.dsp.pending_events()>0:
             e = self.dsp.next_event()
-            print e
+            #print e
             if e.type == X.ButtonRelease:
                 if(e.detail == 3):
                     # Button 3 is right click.
@@ -528,17 +509,19 @@ class mywidget(gtk.Widget):
         return None
 
     def chbg(self):
-        if IMPATH in [None, '']:
-            image=gdk.pixbuf_new_from_file(D_IMPATH)
-        else:
-            image=gdk.pixbuf_new_from_file(IMPATH)
-        (pic, mask)=image.render_pixmap_and_mask()
-        if(USEIM==True):  # If the user wants an image ...
-            self.window.set_back_pixmap(pic, False) #Change image
-            self.window.clear()
-            self.window.clear_area_e(0, 0, self.curr_x*2, self.curr_y)
-                #and cause an expose.
-        return True
+         if(USEGTK == 0):
+            if IMPATH in [None, '']:
+                image=gdk.pixbuf_new_from_file(D_IMPATH)
+            else:
+                image=gdk.pixbuf_new_from_file(IMPATH)
+                (pic, mask)=image.render_pixmap_and_mask()
+                if(USEIM==True):
+                    # If the user wants an image ...
+                    self.window.set_back_pixmap(pic, False) #Change image
+                    self.window.clear()
+                    self.window.clear_area_e(0, 0, self.curr_x*2, self.curr_y)
+                    #and cause an expose.
+         return True
 
 gobject.type_register(mywidget)
 # Register it as a widget
@@ -551,22 +534,39 @@ class App(awn.Applet):
         awn.Applet.__init__(self, uid, orient, height)
         self.height = height
         self.widg = None
-        self.loadconf()
+        self.loadconf(1,2)
         if(HIGH == 0):
             self.makeconf()
         self.widg = mywidget(display, error, self)
                               # create a new custom widget.
                               # This is the system tray
-        gobject.timeout_add(1000, self.loadconf)
-                              # This causes a time out of 1 second,
-                              # each second, checking if the config has changed
-                              # May be a good idea to turn this down
+        #gobject.timeout_add(1000, self.loadconf)
+        #                      # This causes a time out of 1 second,
+        #                      # each second, checking if the config has changed
+        #                      # May be a good idea to turn this down
+        awn_options.notify_add(awn.CONFIG_DEFAULT_GROUP,
+                                "BG_COLOR", self.loadconf)
+        awn_options.notify_add(awn.CONFIG_DEFAULT_GROUP,
+                                "CUSTOM_Y", self.loadconf)
+        awn_options.notify_add(awn.CONFIG_DEFAULT_GROUP,
+                                "HIGH", self.loadconf)
+        awn_options.notify_add(awn.CONFIG_DEFAULT_GROUP,
+                                "BORDER", self.loadconf)
+        awn_options.notify_add(awn.CONFIG_DEFAULT_GROUP,
+                                "TRANS", self.loadconf)
+        awn_options.notify_add(awn.CONFIG_DEFAULT_GROUP,
+                                "IMPATH", self.loadconf)
+        awn_options.notify_add(awn.CONFIG_DEFAULT_GROUP,
+                                "USEIM", self.loadconf)
+        awn_options.notify_add(awn.CONFIG_DEFAULT_GROUP,
+                                "ICONSIZE", self.loadconf)
+
         self.add(self.widg)
 
-    def loadconf(self):
+    def loadconf(self,dud1,dud2):
         # Load the config
         global BG_COLOR, CUSTOM_Y, HIGH, BORDER
-        global DIVIDEBYZERO, ZEROPID, IMPATH, USEIM, ICONSIZE
+        global DIVIDEBYZERO, ZEROPID, IMPATH, USEIM, ICONSIZE,USEGTK
         oldBG=BG_COLOR
         BG_COLOR = awn_options.get_string(awn.CONFIG_DEFAULT_GROUP, "BG_COLOR")
         CUSTOM_Y = awn_options.get_int(awn.CONFIG_DEFAULT_GROUP, "CUSTOM_Y")
@@ -577,10 +577,11 @@ class App(awn.Applet):
         IMPATH = awn_options.get_string(awn.CONFIG_DEFAULT_GROUP, "IMPATH")
         USEIM = awn_options.get_int(awn.CONFIG_DEFAULT_GROUP, "USEIM")
         ICONSIZE = awn_options.get_int(awn.CONFIG_DEFAULT_GROUP, "ICONSIZE")
+        USEGTK = awn_options.get_int(awn.CONFIG_DEFAULT_GROUP, "USEGTK")
+        print USEGTK
         # If BG has changed, reset it
-        if(oldBG != BG_COLOR):
-            if(self.widg != None):
-                self.widg.needredraw=True
+        if(self.widg != None):
+            self.widg.needredraw=True
         return True
 
     def makeconf(self):

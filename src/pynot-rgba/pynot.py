@@ -163,7 +163,7 @@ class mywidget(gtk.Widget):
         self.selowin = self.scr.root.create_window(-1, -1, 1, 1, 0, self.scr.root_depth)
         owner = self.dsp.get_selection_owner(self.selection)
         if(owner==X.NONE):
-            print "K."
+            print "PyNot Initialised"
         else:
             # If someone already has the system tray... BAIL!
 
@@ -312,7 +312,7 @@ class mywidget(gtk.Widget):
             t = self.tray.tasks[tid]
             t.x = self.curr_x
             t.y = offsety+self.curr_y*ICONSIZE
-            t.obj.configure(onerror=self.error, x=t.x, y=t.y, width=t.width, height=t.height)
+            t.obj.configure(onerror=self.error, x=t.x, y=t.y, width=ICONSIZE, height=ICONSIZE)
             t.obj.map(onerror=self.error)
             if(self.curr_y < HIGH-1):
                 self.curr_y+=1
@@ -572,17 +572,44 @@ class App(awn.Applet):
         awn.Applet.__init__(self,uid,orient,height)
         self.height=height
         self.widg=None
-        self.loadconf()
+        self.loadconf(1, 2)
         self.widg = mywidget(display, error, self)
                               # create a new custom widget.
                               # This is the system tray
-        gobject.timeout_add(10000,self.loadconf)
-                              # This causes a time out of 1 second,
-                              # each second, checking if the config has changed
-                              # May be a good idea to turn this down
+        #gobject.timeout_add(10000,self.loadconf)
+        #                      # This causes a time out of 1 second,
+        #                      # each second, checking if the config has changed
+        #                      # May be a good idea to turn this down
+        awn_options.notify_add(awn.CONFIG_DEFAULT_GROUP, 
+                                "BG_COLOR", self.loadconf)
+        awn_options.notify_add(awn.CONFIG_DEFAULT_GROUP, 
+                                "FG_COLOR", self.loadconf)
+        awn_options.notify_add(awn.CONFIG_DEFAULT_GROUP, 
+                                "CUSTOM_Y", self.loadconf)
+        awn_options.notify_add(awn.CONFIG_DEFAULT_GROUP, 
+                                "HIGH", self.loadconf)
+        awn_options.notify_add(awn.CONFIG_DEFAULT_GROUP, 
+                                "BORDER", self.loadconf)
+        awn_options.notify_add(awn.CONFIG_DEFAULT_GROUP, 
+                                "TRANS", self.loadconf)
+        awn_options.notify_add(awn.CONFIG_DEFAULT_GROUP, 
+                                "TRANS2", self.loadconf)
+        awn_options.notify_add(awn.CONFIG_DEFAULT_GROUP, 
+                                "ZEROPID", self.loadconf)
+        awn_options.notify_add(awn.CONFIG_DEFAULT_GROUP, 
+                                "IMPATH", self.loadconf)
+        awn_options.notify_add(awn.CONFIG_DEFAULT_GROUP, 
+                                "USEIM", self.loadconf)
+        awn_options.notify_add(awn.CONFIG_DEFAULT_GROUP, 
+                                "ICONSIZE", self.loadconf)
+        awn_options.notify_add(awn.CONFIG_DEFAULT_GROUP, 
+                                "EDGING", self.loadconf)
+        awn_options.notify_add(awn.CONFIG_DEFAULT_GROUP, 
+                                "LINEWIDTH", self.loadconf)
+        
         self.add(self.widg)
 
-    def loadconf(self):
+    def loadconf(self, t, t2):
         # Load the config
         global BG_COLOR, CUSTOM_Y, HIGH, BORDER, ALPHA,ZEROPID,IMPATH,USEIM,ICONSIZE,ALPHA2,FG_COLOR,EDGING,LINEWIDTH
         oldBG=BG_COLOR
@@ -601,10 +628,8 @@ class App(awn.Applet):
         EDGING       = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"EDGING")
         LINEWIDTH    = awn_options.get_int(   awn.CONFIG_DEFAULT_GROUP,"LINEWIDTH")
 
-        # If BG has changed, reset it
-        if(oldBG != BG_COLOR):
-            if(self.widg != None):
-                self.widg.needredraw=True
+        if(self.widg != None):
+            self.widg.needredraw=True
         return True
 
 #        self.loadconf()

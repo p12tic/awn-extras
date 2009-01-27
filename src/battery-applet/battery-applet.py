@@ -61,7 +61,12 @@ TODO:
 
 class BatteryStatusApplet:
 
-    """An applet which displays battery information."""
+    """An applet which displays battery information.
+
+    """
+    
+    # State of the icon (a tuple containing the icon path and height)
+    __previous_state = None
     
     def __init__(self, applet):
         self.applet = applet
@@ -79,8 +84,11 @@ class BatteryStatusApplet:
             
             applet.timing.register(self.check_status_cb, check_status_interval)
             self.check_status_cb()
+            
+            applet.connect("height-changed", lambda w, e: self.check_status_cb())
         else:
             self.set_battery_missing()
+            applet.connect("height-changed", lambda w, e: self.set_battery_missing())
     
     def set_battery_missing(self):
         applet.title.set("No batteries")
@@ -261,11 +269,17 @@ class BatteryStatusApplet:
         
         self.applet.title.set(" ".join([charge_message, "(" + str(charge_percentage) + "%)"]))
         
-        # TODO don't read and set everytime
-        height = self.applet.get_height()
-        self.applet.icon.set(gdk.pixbuf_new_from_file_at_size(icon, height, height))
-        
+        self.draw_icon(icon, self.applet.get_height())
         self.__message_handler.evaluate()
+    
+    def draw_icon(self, icon, height):
+        new_state = (icon, height)
+        if self.__previous_state == new_state:
+            return
+
+        self.__previous_state = new_state
+
+        self.applet.icon.set(gdk.pixbuf_new_from_file_at_size(icon, height, height), True)
     
     def is_battery_low(self):
         if not self.backend.is_discharging():

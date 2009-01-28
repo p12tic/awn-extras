@@ -215,18 +215,14 @@ class StacksApplet (awn.AppletSimple):
             # create popup menu
             popup_menu = self.create_default_menu()
             # get list of backend specified menu items
-	    popup_menu.prepend(gtk.SeparatorMenuItem())
-	    pref_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
-            popup_menu.prepend(pref_item)
-
             items = self.backend.get_menu_items()
             if items:
                 for i in items:
-		    popup_menu.prepend(i)
-            #gui_item = gtk.CheckMenuItem(label=_("Use experimental gui"))
-            #gui_item.set_active(self.gui_type > STACKS_GUI_DIALOG)
-            #gui_item.connect_object("toggled", self.applet_menu_gui_cb, self)
-            #popup_menu.append(gui_item)
+		    popup_menu.append(i)
+	    pref_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
+            popup_menu.append(pref_item)
+	    popup_menu.append(gtk.SeparatorMenuItem())
+
             about_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_ABOUT)
             popup_menu.append(about_item)
             pref_item.connect_object("activate",self.applet_menu_pref_cb,self)

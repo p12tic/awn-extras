@@ -163,11 +163,15 @@ class Dialogs:
             dlog = self.PreferencesDialog(self.__parent)
 
             position = len(self.menu)
+            separator = None
             if "about" in self.__register:
                  position = position - 1
+                 separator = gtk.SeparatorMenuItem()
 
             prefs_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
             self.menu.insert(prefs_item, position)
+            if (separator != None):
+                self.menu.insert(separator, len(self.menu)-1)
             prefs_item.connect("activate", lambda w: self.toggle("preferences", "show"))
         else:
             dlog = awn.AppletDialog(self.__parent)

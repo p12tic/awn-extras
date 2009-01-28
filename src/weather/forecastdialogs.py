@@ -26,9 +26,9 @@ import gtk, cairo
 from gtk import gdk
 import weathericons, weathertext
 
-class NormalDialog(gtk.DrawingArea):
+class NormalDialog(gtk.Image):
     def __init__(self,forecast):
-        gtk.DrawingArea.__init__(self)
+        gtk.Image.__init__(self)
         self.connect("expose_event", self.onExpose)
         self.forecast = forecast
         self.xPositions = [16, 101, 189, 277, 362]
@@ -156,6 +156,7 @@ class NormalDialog(gtk.DrawingArea):
 
     def onExpose(self, widget, event):
         context = widget.window.cairo_create()
+        context.translate(event.area.x, event.area.y)
         self.drawDays(context)
         context.set_source_rgb(0.0,0.0,0.0)
         # approximate the location of this string

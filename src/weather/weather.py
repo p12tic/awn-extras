@@ -156,9 +156,10 @@ class WeatherApplet:
         # create the menu items
         refreshItem = gtk.ImageMenuItem(stock_id=gtk.STOCK_REFRESH)
         prefsItem = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
+        sepItem = gtk.SeparatorMenuItem()
         # add them to the menu
-        for item in [refreshItem, prefsItem]:
-            menu.append(item)
+        for item in [refreshItem, prefsItem, sepItem]:
+            menu.insert(item, len(menu)-1)
             item.show()
         # attach callbacks
         refreshItem.connect_object("activate", self.onClickRefreshData, "refresh")
@@ -178,8 +179,8 @@ class WeatherApplet:
         Creates and shows the Preferences dialog.
         Called by the right-click "Preferences" option.
         """
-        window = weatherprefs.WeatherConfig(self)
-        window.set_size_request(500, 350)
+        window = weatherprefs.WeatherConfig(self).get_toplevel()
+        #window.set_size_request(500, 350)
         window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
         window.set_destroy_with_parent(True)
         icon = gtk.gdk.pixbuf_new_from_file(weathericons.GetIcon("44"))

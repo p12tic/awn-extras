@@ -4,11 +4,12 @@ APPLET_MAIN_FILE = weather.py
 include $(top_srcdir)/Makefile.python-applet
 dist_applet_DATA = 		\
 	messages.pot		\
-    forecast.py          \
-    forecastdialogs.py  \
-    helpers.py          \
-    weatherprefs.py     \
+	forecast.py          \
+	forecastdialogs.py  \
+	helpers.py          \
+	weatherprefs.py     \
 	weathericons.py		\
 	weathertext.py		\
-   	override.py 		\
+	override.py 		\
+	weather-prefs.glade	\
 	$(NULL)

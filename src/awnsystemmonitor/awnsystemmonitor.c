@@ -82,6 +82,7 @@ static gboolean _set_icon_text(GtkWidget *widget, GdkEventButton *event, CpuMete
 
 
 //static gint width, height;
+static gchar TITLE_TEXT[20] = "";
 
 /**
  * Create new applet
@@ -162,13 +163,15 @@ cpumeter_applet_new(AwnApplet *applet)
   dashboard_build_clickable_menu_item(cpumeter->right_click_menu,
                                       G_CALLBACK(_set_icon_text), "Icon Text", (gpointer)cpumeter
                                      );
-  GtkWidget * item;
+  GtkWidget *item = gtk_separator_menu_item_new();
+  gtk_widget_show(item);
+  gtk_menu_shell_append(GTK_MENU_SHELL(cpumeter->right_click_menu), item);
   item=shared_menuitem_about_applet_simple("Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>\n"
                                            "Copyright 2007 Mike (mosburger) Desjardins <desjardinsmike@gmail.com>\n",
                                 AWN_APPLET_LICENSE_GPLV2,
                                 "Awn System Monitor",
                                 NULL);
-  gtk_menu_shell_append(GTK_MENU_SHELL(cpumeter->right_click_menu), item);    
+  gtk_menu_shell_append(GTK_MENU_SHELL(cpumeter->right_click_menu), item);
   cpumeter->timer_id = g_timeout_add(cpumeter->update_freq, (GSourceFunc*)cpu_meter_render, cpumeter);
   return cpumeter;
 }
@@ -221,8 +224,6 @@ static gboolean _expose_event(GtkWidget *widget, GdkEventExpose *expose, gpointe
  */
 gboolean cpu_meter_render(gpointer data)
 {
-  char text[20];
-
   static cairo_surface_t *surface;
   static GdkPixbuf * apixbuf;
   CpuMeter* cpumeter = (CpuMeter *)data;
@@ -275,18 +276,14 @@ gboolean cpu_meter_render(gpointer data)
 
   LoadGraph* g = cpumeter->loadgraph;
 
-  render_graph(cr, g, text, 50 , 40, cpumeter);
+  render_graph(cr, g, TITLE_TEXT, 50 , 40, cpumeter);
   
 
   awn_applet_simple_set_icon_context_scaled(AWN_APPLET_SIMPLE(cpumeter->applet),
                                   cr);
   if (cpumeter->show_title)
   {
-    awn_title_show(cpumeter->title, GTK_WIDGET(cpumeter->applet), text);
-  }
-  else
-  {
-    awn_title_hide(cpumeter->title, GTK_WIDGET(cpumeter->applet));
+    awn_title_show(cpumeter->title, GTK_WIDGET(cpumeter->applet), TITLE_TEXT);
   }
 
   return TRUE;
@@ -571,7 +568,7 @@ _enter_notify_event(GtkWidget *window, GdkEventButton *event, gpointer *data)
 {
   CpuMeter *cpumeter = (CpuMeter *)data;
   cpumeter->show_title = TRUE;
-  //awn_title_show (clock->title,GTK_WIDGET(clock->applet), clock->txt_time);
+  awn_title_show(cpumeter->title, GTK_WIDGET(cpumeter->applet), TITLE_TEXT);
 }
 
 static gboolean
@@ -579,7 +576,7 @@ _leave_notify_event(GtkWidget *window, GdkEvent *event, gpointer *data)
 {
   CpuMeter *cpumeter = (CpuMeter *)data;
   cpumeter->show_title = FALSE;
-  //awn_title_hide (clock->title, GTK_WIDGET(clock->applet));
+  awn_title_hide(cpumeter->title, GTK_WIDGET(cpumeter->applet));
 }
 
 static gboolean

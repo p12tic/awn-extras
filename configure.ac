@@ -220,7 +220,7 @@ if test x${enable_pymod_checks} = xyes; then
     # stacks
     AM_CHECK_PYMOD(gnome.ui,,,AC_MSG_ERROR([python module gnome.ui required]))
     # awn-meebo, digg, pandora
-    AM_CHECK_PYMOD(gtkmozembed,,,AC_MSG_ERROR([python module gtkmozembed required]))
+    AM_CHECK_PYMOD(gtkmozembed,,,AC_MSG_ERROR([python module gtkmozembed required (python-gnome2-extras)]))
     fi
     if test "$with_gconf" != "no"; then
     # calendar, media-control, media-player, mount-applet, stacks

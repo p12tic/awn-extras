@@ -159,10 +159,11 @@ class mywidget(gtk.Widget):
         self.dsp.flush()
         # Show the window and flush the display
 
-        appchoice=gtk.MenuItem("PyNot Setup")
+        appchoice=gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
         self.dockmenu=self.gtkwin.create_default_menu()
         appchoice.connect("activate", self.OpenConf)
         self.dockmenu.append(appchoice)
+        # TODO: add About dialog
         appchoice.show()
 
         # Create a Menu from Awn's default, and add our config script to it

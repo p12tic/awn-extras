@@ -66,7 +66,8 @@ class PreferencesDialog(gtk.Dialog):
         self.set_title("PyNot Preferences")
         self.add_button(gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE)
 
-        self.set_icon(gtk.gdk.pixbuf_new_from_file_at_size("PyNot.png", 48, 48))
+        self.set_icon(gtk.gdk.pixbuf_new_from_file_at_size(
+                                os.path.dirname(__file__)+"/PyNot.png", 48, 48))
 
         self.connect("response", self.response_event)
 

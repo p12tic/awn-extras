@@ -139,6 +139,8 @@ void init_config(Shiny_switcher *shinyswitcher)
 {
   GError  *error = NULL;
   shinyswitcher->config                   = awn_config_client_new_for_applet("shinyswitcher", NULL);
+	shinyswitcher->dock_config = awn_config_client_new();
+	
   GET_VALUE(shinyswitcher->rows, 2, int, shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
             CONFIG_ROWS, error);
   GET_VALUE(shinyswitcher->cols, 3, int, shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
@@ -559,7 +561,7 @@ void create_containers(Shiny_switcher *shinyswitcher)
 
   y_offset = (shinyswitcher->height - (shinyswitcher->mini_work_height * shinyswitcher->rows)) / 2;
 
-  gtk_fixed_put(GTK_CONTAINER(shinyswitcher->container), border_widget, 0, shinyswitcher->height + y_offset);
+  gtk_fixed_put(GTK_CONTAINER(shinyswitcher->container), border_widget, 0, y_offset);
 	gtk_widget_show (border_widget);
   y_offset = y_offset + shinyswitcher->applet_border_width;
   x_offset = shinyswitcher->applet_border_width;
@@ -627,7 +629,7 @@ void create_containers(Shiny_switcher *shinyswitcher)
 
     gtk_fixed_put(GTK_FIXED(shinyswitcher->container), shinyswitcher->mini_wins[win_num],
                   shinyswitcher->mini_work_width*wnck_workspace_get_layout_column(iter->data) + x_offset,
-                  shinyswitcher->mini_work_height*wnck_workspace_get_layout_row(iter->data) + shinyswitcher->height
+                  shinyswitcher->mini_work_height*wnck_workspace_get_layout_row(iter->data) 
                   + y_offset);
     ws = g_malloc(sizeof(Workplace_info));
     ws->shinyswitcher = shinyswitcher;
@@ -641,8 +643,41 @@ void create_containers(Shiny_switcher *shinyswitcher)
     g_signal_connect(G_OBJECT(shinyswitcher->mini_wins[win_num]), "expose_event", G_CALLBACK(_expose_event_window), NULL);
   }
 	
-  gtk_container_add(GTK_CONTAINER(shinyswitcher->applet), shinyswitcher->container);
+	GtkWidget * align;
+  gint padding = shinyswitcher->height;
+	padding = awn_config_client_get_int (shinyswitcher->dock_config, "panel","offset", NULL);
 
+	switch (shinyswitcher->orient)
+	{
+		case 0:
+			align = gtk_alignment_new (0, 0, 0, 0);		
+			gtk_alignment_set_padding (GTK_ALIGNMENT (align), padding, 0, 
+                             0, 0); 
+			break;
+		case 1:
+			align = gtk_alignment_new (1.0, 0, 0, 0);		
+			gtk_alignment_set_padding (GTK_ALIGNMENT (align), 0, 0, 
+                             0, padding); 
+			break;
+			
+		case 2:		
+			align = gtk_alignment_new (0, 1.0,0, 0);		
+			gtk_alignment_set_padding (GTK_ALIGNMENT (align), 0, 
+                             padding, 0, 0); 
+			break;
+		case 3:
+			align = gtk_alignment_new (1.0, 0, 0, 0);		
+			gtk_alignment_set_padding (GTK_ALIGNMENT (align), 0, 0, 
+                             padding,0); 
+			break;
+
+			
+			
+	}
+  gtk_container_add (GTK_CONTAINER (align), shinyswitcher->container);
+  gtk_container_add(GTK_CONTAINER(shinyswitcher->applet), align);
+
+	
   g_signal_connect(GTK_WIDGET(shinyswitcher->applet), "scroll-event" , G_CALLBACK(_scroll_event), shinyswitcher);
 }
 
@@ -653,7 +688,7 @@ gint _cmp_ptrs(gconstpointer a, gconstpointer b)
 
 void prepare_to_render_workspace(Shiny_switcher *shinyswitcher, WnckWorkspace * space)
 {
-  GdkPixmap * copy;
+	GdkPixmap * copy;
   Workplace_info * ws2;
   ws2 = g_tree_lookup(shinyswitcher->ws_lookup_ev, space);
   assert(ws2);
@@ -1757,6 +1792,7 @@ gboolean _waited(Shiny_switcher *shinyswitcher)
 
   g_signal_connect(G_OBJECT(shinyswitcher->applet), "expose_event", G_CALLBACK(_expose_event_outer), shinyswitcher);
 
+
 //  gtk_widget_set_size_request(GTK_WIDGET(shinyswitcher->applet), shinyswitcher->width + shinyswitcher->applet_border_width*2,
 //                              shinyswitcher->height/2);
 
@@ -1767,11 +1803,13 @@ gboolean _waited(Shiny_switcher *shinyswitcher)
  * Create new applet
  */
 Shiny_switcher*
-applet_new(AwnApplet *applet, int width, int height)
+applet_new(AwnApplet *applet, gint orient, int width, int height)
 {
   GdkScreen *screen;
 
-  Shiny_switcher *shinyswitcher = g_malloc(sizeof(Shiny_switcher)) ;
+  Shiny_switcher *shinyswitcher = g_malloc(sizeof(Shiny_switcher)) ;	
+	shinyswitcher->orient = orient;
+	
   shinyswitcher->applet = applet;
   shinyswitcher->ws_lookup_ev = g_tree_new(_cmp_ptrs);
 

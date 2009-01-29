@@ -159,8 +159,11 @@ typedef struct
   GdkColormap  *rgb_cmap;
   GdkColormap  *rgba_cmap;
   AwnConfigClient  *config;
+  AwnConfigClient  *dock_config;
 
+	gint orient;
 }Shiny_switcher;
+
 
 typedef struct
 {
@@ -169,6 +172,6 @@ typedef struct
 }Win_press_data;
 
 // Applet
-Shiny_switcher* applet_new(AwnApplet *applet, int width, int height);
+Shiny_switcher* applet_new(AwnApplet *applet, gint orient,int width, int height);
 
 #endif

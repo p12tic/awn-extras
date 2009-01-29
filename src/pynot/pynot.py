@@ -319,7 +319,6 @@ class mywidget(gtk.Widget):
             if(BORDER==True):
                 h+=10
 
-            #print w
             # get the width and height again
 
             # Create a 1Bit-map, each pixel is either True of False
@@ -399,7 +398,6 @@ class mywidget(gtk.Widget):
         # quickest hack towards multi-threading i had ;)
         while self.dsp.pending_events()>0:
             e = self.dsp.next_event()
-            #print e
             if e.type == X.ButtonRelease:
                 if(e.detail == 3):
                     # Button 3 is right click.
@@ -454,11 +452,9 @@ class mywidget(gtk.Widget):
             for t in self.tray.tasks.values():
                 t.obj.clear_area()
 
-            self.window.clear()
-            self.window.clear_area_e(0, 0, self.curr_x*2, self.curr_y)
-
-            
             self.tr__updatePanel(self.root, self.wind)
+            self.tr__updatePanel(self.root, self.wind)
+
             self.needredraw=False
         return True
 
@@ -575,6 +571,9 @@ class App(awn.Applet):
                                 "USEIM", self.loadconf)
         awn_options.notify_add(awn.CONFIG_DEFAULT_GROUP,
                                 "ICONSIZE", self.loadconf)
+        awn_options.notify_add(awn.CONFIG_DEFAULT_GROUP,
+                                "USEGTK", self.loadconf)
+
 
         self.add(self.widg)
 
@@ -593,7 +592,6 @@ class App(awn.Applet):
         USEIM = awn_options.get_int(awn.CONFIG_DEFAULT_GROUP, "USEIM")
         ICONSIZE = awn_options.get_int(awn.CONFIG_DEFAULT_GROUP, "ICONSIZE")
         USEGTK = awn_options.get_int(awn.CONFIG_DEFAULT_GROUP, "USEGTK")
-        #print USEGTK
         # If BG has changed, reset it
         if(self.widg != None):
             self.widg.needredraw=True

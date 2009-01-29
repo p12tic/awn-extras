@@ -82,7 +82,7 @@ static gboolean _expose_event_border(GtkWidget *widget, GdkEventExpose *expose, 
 static gboolean _button_release_event(GtkWidget *widget, GdkEventButton *event, gpointer *data);
 static void _height_changed(AwnApplet *app, guint height, Shiny_switcher * shinyswitcher);
 static void _orient_changed(AwnApplet *app, guint orient, Shiny_switcher * shinyswitcher);
-
+static void _changed (AwnApplet *app,  Shiny_switcher *shinyswitcher);
 
 static void config_get_string(AwnConfigClient *client, const gchar *key, gchar **str)
 {
@@ -134,13 +134,124 @@ static void config_get_color(AwnConfigClient *client, const gchar *key, AwnColor
     }                       \
   }while(0)
 
-
+void _change_config_cb(AwnConfigClientNotifyEntry *entry, Shiny_switcher *shinyswitcher)
+{
+	init_config(shinyswitcher);
+	_changed (shinyswitcher->applet,  shinyswitcher);
+}
 void init_config(Shiny_switcher *shinyswitcher)
 {
   GError  *error = NULL;
-  shinyswitcher->config                   = awn_config_client_new_for_applet("shinyswitcher", NULL);
-	shinyswitcher->dock_config = awn_config_client_new();
-	
+	if (!shinyswitcher->config )
+	{
+		shinyswitcher->config                   = awn_config_client_new_for_applet("shinyswitcher", NULL);
+		shinyswitcher->dock_config = awn_config_client_new();
+		/*awn_config_client_notify_add     (AwnConfigClient *client, 
+                                                   const gchar *group,
+                                                   const gchar *key, 
+                                                   AwnConfigClientNotifyFunc cb,
+                                                   gpointer     user_data);
+	*/
+		awn_config_client_notify_add (shinyswitcher->config,
+																	AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+																	"grab_wallpaper",
+																	_change_config_cb,
+																	shinyswitcher);
+		awn_config_client_notify_add (shinyswitcher->config,
+																	AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+																	"applet_border_colour",
+																	_change_config_cb,
+																	shinyswitcher);
+
+		awn_config_client_notify_add (shinyswitcher->config,
+																	AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+																	"applet_border_width",
+																	_change_config_cb,
+																	shinyswitcher);
+		awn_config_client_notify_add (shinyswitcher->config,
+																	AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+																	"applet_scale",
+																	_change_config_cb,
+																	shinyswitcher);
+		awn_config_client_notify_add (shinyswitcher->config,
+																	AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+																	"background_alpha_active",
+																	_change_config_cb,
+																	shinyswitcher);
+		awn_config_client_notify_add (shinyswitcher->config,
+																	AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+																	"background_alpha_inactive",
+																	_change_config_cb,
+																	shinyswitcher);
+		awn_config_client_notify_add (shinyswitcher->config,
+																	AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+																	"cache_expiry",
+																	_change_config_cb,
+																	shinyswitcher);
+
+		awn_config_client_notify_add (shinyswitcher->config,
+																	AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+																	"columns",
+																	_change_config_cb,
+																	shinyswitcher);
+		awn_config_client_notify_add (shinyswitcher->config,
+																	AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+																	"desktop_colour",
+																	_change_config_cb,
+																	shinyswitcher);
+		awn_config_client_notify_add (shinyswitcher->config,
+																	AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+																	"mousewheel",
+																	_change_config_cb,
+																	shinyswitcher);
+		awn_config_client_notify_add (shinyswitcher->config,
+																	AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+																	"queued_render_timer",
+																	_change_config_cb,
+																	shinyswitcher);
+		awn_config_client_notify_add (shinyswitcher->config,
+																	AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+																	"rows",
+																	_change_config_cb,
+																	shinyswitcher);
+		awn_config_client_notify_add (shinyswitcher->config,
+																	AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+																	"scale_icon_factor",
+																	_change_config_cb,
+																	shinyswitcher);
+		awn_config_client_notify_add (shinyswitcher->config,
+																	AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+																	"scale_icon_mode",
+																	_change_config_cb,
+																	shinyswitcher);
+		awn_config_client_notify_add (shinyswitcher->config,
+																	AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+																	"scale_icon_position",
+																	_change_config_cb,
+																	shinyswitcher);
+		awn_config_client_notify_add (shinyswitcher->config,
+																	AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+																	"show_icon_mode",
+																	_change_config_cb,
+																	shinyswitcher);
+		awn_config_client_notify_add (shinyswitcher->config,
+																	AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+																	"win_active_icon_alpha",
+																	_change_config_cb,
+																	shinyswitcher);
+		awn_config_client_notify_add (shinyswitcher->config,
+																	AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+																	"win_grab_mode",
+																	_change_config_cb,
+																	shinyswitcher);
+		awn_config_client_notify_add (shinyswitcher->config,
+																	AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+																	"win_inactive_icon_alpha",
+																	_change_config_cb,
+																	shinyswitcher);
+
+		
+	}
   GET_VALUE(shinyswitcher->rows, 2, int, shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
             CONFIG_ROWS, error);
   GET_VALUE(shinyswitcher->cols, 3, int, shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
@@ -1828,6 +1939,7 @@ applet_new(AwnApplet *applet, gint orient, int width, int height)
   Shiny_switcher *shinyswitcher = g_malloc(sizeof(Shiny_switcher)) ;	
 	shinyswitcher->orient = orient;
 	shinyswitcher->align	 = NULL;
+	shinyswitcher->config = NULL;
   shinyswitcher->applet = applet;
   shinyswitcher->ws_lookup_ev = g_tree_new(_cmp_ptrs);
 

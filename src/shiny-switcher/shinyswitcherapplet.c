@@ -666,7 +666,7 @@ void create_containers(Shiny_switcher *shinyswitcher)
                              padding, 0, 0); 
 			break;
 		case 3:
-			align = gtk_alignment_new (1.0, 0, 0, 0);		
+			align = gtk_alignment_new (0.0, 0, 0, 0);		
 			gtk_alignment_set_padding (GTK_ALIGNMENT (align), 0, 0, 
                              padding,0); 
 			break;

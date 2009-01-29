@@ -319,7 +319,7 @@ class mywidget(gtk.Widget):
             if(BORDER==True):
                 h+=10
 
-            print w
+            #print w
             # get the width and height again
 
             # Create a 1Bit-map, each pixel is either True of False
@@ -445,7 +445,21 @@ class mywidget(gtk.Widget):
                         self.tray.order.append(task)
                         self.tr__updatePanel(self.root, self.wind)
         if(self.needredraw == True):
+            if USEGTK == 0:
+                self.modify_bg(gtk.STATE_NORMAL,
+                           gtk.gdk.color_parse("#"+BG_COLOR[2:8]))
+                              # Change the theme for this window
+            else:
+                self.modify_bg(gtk.STATE_NORMAL,None)
+            for t in self.tray.tasks.values():
+                t.obj.clear_area()
+
+            self.window.clear()
+            self.window.clear_area_e(0, 0, self.curr_x*2, self.curr_y)
+
+            
             self.tr__updatePanel(self.root, self.wind)
+            self.needredraw=False
         return True
 
     def OpenConf(self, thing):
@@ -579,7 +593,7 @@ class App(awn.Applet):
         USEIM = awn_options.get_int(awn.CONFIG_DEFAULT_GROUP, "USEIM")
         ICONSIZE = awn_options.get_int(awn.CONFIG_DEFAULT_GROUP, "ICONSIZE")
         USEGTK = awn_options.get_int(awn.CONFIG_DEFAULT_GROUP, "USEGTK")
-        print USEGTK
+        #print USEGTK
         # If BG has changed, reset it
         if(self.widg != None):
             self.widg.needredraw=True

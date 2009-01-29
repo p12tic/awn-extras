@@ -113,7 +113,7 @@ if(HIGH==0):
 
 if(IMPATH==""):
     IMPATH=D_IMPATH
-print ICONSIZE
+#print ICONSIZE
 
 if(ICONSIZE==0):
     ICONSIZE=D_ICONSIZE

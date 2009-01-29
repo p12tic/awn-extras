@@ -2,8 +2,8 @@
  * Copyright (C) 2007, 2008 Rodney Cryderman <rcryderman@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * it under the terms of the GNU General Public License as published bshinyswitcher->y
+ * the Free Software Foundation; either version 2 of the License, orign
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -81,7 +81,7 @@ static gboolean _expose_event_outer(GtkWidget *widget, GdkEventExpose *expose, S
 static gboolean _expose_event_border(GtkWidget *widget, GdkEventExpose *expose, Shiny_switcher *shinyswitcher);
 static gboolean _button_release_event(GtkWidget *widget, GdkEventButton *event, gpointer *data);
 static void _height_changed(AwnApplet *app, guint height, Shiny_switcher * shinyswitcher);
-static void _orient_changed(AwnApplet *appt, guint orient, gpointer *data);
+static void _orient_changed(AwnApplet *app, guint orient, Shiny_switcher * shinyswitcher);
 
 
 static void config_get_string(AwnConfigClient *client, const gchar *key, gchar **str)
@@ -240,9 +240,24 @@ void calc_dimensions(Shiny_switcher *shinyswitcher)
   scr_ratio = wnck_scr_width / (double)wnck_scr_height;
 
   printf("cols = %d,  rows=%d \n", shinyswitcher->cols, shinyswitcher->rows);
-  shinyswitcher->mini_work_height = shinyswitcher->height * shinyswitcher->applet_scale / shinyswitcher->rows;
-  shinyswitcher->mini_work_width = shinyswitcher->mini_work_height * shinyswitcher->applet_scale * scr_ratio *
+	switch (shinyswitcher->orient)
+	{
+		case 2:
+		case 0:
+		  shinyswitcher->mini_work_height = shinyswitcher->height * shinyswitcher->applet_scale / shinyswitcher->rows;
+			shinyswitcher->mini_work_width = shinyswitcher->mini_work_height * shinyswitcher->applet_scale * scr_ratio *
                                    (double)wnck_ws_width / (double)wnck_scr_width * vp_vscale(shinyswitcher);
+			break;
+		case 1:
+		case 3:
+/*			shinyswitcher->mini_work_width = shinyswitcher->height * shinyswitcher->applet_scale / shinyswitcher->cols;	
+			shinyswitcher->mini_work_height = shinyswitcher->mini_work_width * shinyswitcher->applet_scale * 1.0 /scr_ratio *
+                                   (double)wnck_ws_width / (double)wnck_scr_width * vp_vscale(shinyswitcher);*/
+		  shinyswitcher->mini_work_height = shinyswitcher->height * shinyswitcher->applet_scale / shinyswitcher->rows;
+			shinyswitcher->mini_work_width = shinyswitcher->mini_work_height * shinyswitcher->applet_scale * scr_ratio *
+                                   (double)wnck_ws_width / (double)wnck_scr_width * vp_vscale(shinyswitcher);
+			break;
+	}
   shinyswitcher->width = shinyswitcher->mini_work_width * shinyswitcher->cols;
   g_assert(shinyswitcher->mini_work_height);
   g_assert(shinyswitcher->mini_work_width);
@@ -643,39 +658,42 @@ void create_containers(Shiny_switcher *shinyswitcher)
     g_signal_connect(G_OBJECT(shinyswitcher->mini_wins[win_num]), "expose_event", G_CALLBACK(_expose_event_window), NULL);
   }
 	
-	GtkWidget * align;
   gint padding = shinyswitcher->height;
-	padding = awn_config_client_get_int (shinyswitcher->dock_config, "panel","offset", NULL);
+	padding = awn_config_client_get_int (shinyswitcher->dock_config,"panel","offset", NULL);
 
+	if (shinyswitcher->align)
+	{
+		gtk_container_remove (shinyswitcher->applet,shinyswitcher->align);
+	}
 	switch (shinyswitcher->orient)
 	{
 		case 0:
-			align = gtk_alignment_new (0, 0, 0, 0);		
-			gtk_alignment_set_padding (GTK_ALIGNMENT (align), padding, 0, 
+			shinyswitcher->align = gtk_alignment_new (0, 0, 0, 0);		
+			gtk_alignment_set_padding (GTK_ALIGNMENT (shinyswitcher->align), padding, 0, 
                              0, 0); 
 			break;
 		case 1:
-			align = gtk_alignment_new (1.0, 0, 0, 0);		
-			gtk_alignment_set_padding (GTK_ALIGNMENT (align), 0, 0, 
+			shinyswitcher->align = gtk_alignment_new (1.0, 0, 0, 0);		
+			gtk_alignment_set_padding (GTK_ALIGNMENT (shinyswitcher->align), 0, 0, 
                              0, padding); 
 			break;
 			
 		case 2:		
-			align = gtk_alignment_new (0, 1.0,0, 0);		
-			gtk_alignment_set_padding (GTK_ALIGNMENT (align), 0, 
+			shinyswitcher->align = gtk_alignment_new (0, 1.0,0, 0);		
+			gtk_alignment_set_padding (GTK_ALIGNMENT (shinyswitcher->align), 0, 
                              padding, 0, 0); 
 			break;
 		case 3:
-			align = gtk_alignment_new (0.0, 0, 0, 0);		
-			gtk_alignment_set_padding (GTK_ALIGNMENT (align), 0, 0, 
+			shinyswitcher->align = gtk_alignment_new (0.0, 0, 0, 0);		
+			gtk_alignment_set_padding (GTK_ALIGNMENT (shinyswitcher->align), 0, 0, 
                              padding,0); 
 			break;
 
 			
 			
 	}
-  gtk_container_add (GTK_CONTAINER (align), shinyswitcher->container);
-  gtk_container_add(GTK_CONTAINER(shinyswitcher->applet), align);
+  gtk_container_add (GTK_CONTAINER (shinyswitcher->align), shinyswitcher->container);
+  gtk_container_add(GTK_CONTAINER(shinyswitcher->applet), shinyswitcher->align);
 
 	
   g_signal_connect(GTK_WIDGET(shinyswitcher->applet), "scroll-event" , G_CALLBACK(_scroll_event), shinyswitcher);
@@ -1809,7 +1827,7 @@ applet_new(AwnApplet *applet, gint orient, int width, int height)
 
   Shiny_switcher *shinyswitcher = g_malloc(sizeof(Shiny_switcher)) ;	
 	shinyswitcher->orient = orient;
-	
+	shinyswitcher->align	 = NULL;
   shinyswitcher->applet = applet;
   shinyswitcher->ws_lookup_ev = g_tree_new(_cmp_ptrs);
 
@@ -1885,15 +1903,11 @@ _button_release_event(GtkWidget *widget, GdkEventButton *event, gpointer *data)
 }
 
 
-static void
-_height_changed(AwnApplet *app, guint height, Shiny_switcher *shinyswitcher)
+static void _changed (AwnApplet *app,  Shiny_switcher *shinyswitcher)
 {
   GdkScreen *screen;
 
   shinyswitcher->applet = app;
-  //doing this as a tree right now..  cause it's easy and I think I'll need a complex data structure eventually.
-  shinyswitcher->height = height;
-
   shinyswitcher->wnck_screen = wnck_screen_get_default();
 
 //  init_config(shinyswitcher);
@@ -1927,12 +1941,23 @@ _height_changed(AwnApplet *app, guint height, Shiny_switcher *shinyswitcher)
   create_windows(shinyswitcher);
 //  g_debug("Done... \n");
   gtk_widget_show_all( shinyswitcher->applet);
+	
+}
+
+static void
+_height_changed(AwnApplet *app, guint height, Shiny_switcher *shinyswitcher)
+{
+  //doing this as a tree right now..  cause it's easy and I think I'll need a complex data structure eventually.
+  shinyswitcher->height = height;
+  _changed(app,shinyswitcher);
 }
 
 
 static void
-_orient_changed(AwnApplet *app, guint orient, gpointer *data)
+_orient_changed(AwnApplet *app, guint orient, Shiny_switcher * shinyswitcher)
 {
+	shinyswitcher->orient = orient;
+	_changed(app,shinyswitcher);
 }
 
 

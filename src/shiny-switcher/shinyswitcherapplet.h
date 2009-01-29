@@ -160,7 +160,8 @@ typedef struct
   GdkColormap  *rgba_cmap;
   AwnConfigClient  *config;
   AwnConfigClient  *dock_config;
-
+	GtkWidget * align;
+	
 	gint orient;
 }Shiny_switcher;
 

@@ -560,6 +560,7 @@ void create_containers(Shiny_switcher *shinyswitcher)
   y_offset = (shinyswitcher->height - (shinyswitcher->mini_work_height * shinyswitcher->rows)) / 2;
 
   gtk_fixed_put(GTK_CONTAINER(shinyswitcher->container), border_widget, 0, shinyswitcher->height + y_offset);
+	gtk_widget_show (border_widget);
   y_offset = y_offset + shinyswitcher->applet_border_width;
   x_offset = shinyswitcher->applet_border_width;
   wnck_spaces = wnck_screen_get_workspaces(shinyswitcher->wnck_screen);
@@ -639,7 +640,7 @@ void create_containers(Shiny_switcher *shinyswitcher)
     g_signal_connect(G_OBJECT(ev), "expose_event", G_CALLBACK(_expose_event_window), shinyswitcher);
     g_signal_connect(G_OBJECT(shinyswitcher->mini_wins[win_num]), "expose_event", G_CALLBACK(_expose_event_window), NULL);
   }
-
+	
   gtk_container_add(GTK_CONTAINER(shinyswitcher->applet), shinyswitcher->container);
 
   g_signal_connect(GTK_WIDGET(shinyswitcher->applet), "scroll-event" , G_CALLBACK(_scroll_event), shinyswitcher);
@@ -1757,7 +1758,7 @@ gboolean _waited(Shiny_switcher *shinyswitcher)
   g_signal_connect(G_OBJECT(shinyswitcher->applet), "expose_event", G_CALLBACK(_expose_event_outer), shinyswitcher);
 
 //  gtk_widget_set_size_request(GTK_WIDGET(shinyswitcher->applet), shinyswitcher->width + shinyswitcher->applet_border_width*2,
-//                              shinyswitcher->height*2.5);
+//                              shinyswitcher->height/2);
 
   return FALSE;
 }

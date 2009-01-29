@@ -187,11 +187,19 @@ class mywidget(gtk.Widget):
         self.dsp.flush()
         # Show the window and flush the display
 
-        appchoice=gtk.MenuItem("PyNot Setup")
-        self.dockmenu=self.gtkwin.create_default_menu()
-        appchoice.connect("activate",self.OpenConf)
+        appchoice = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
+        aboutchoice = gtk.ImageMenuItem(stock_id=gtk.STOCK_ABOUT)
+        sep = gtk.SeparatorMenuItem()
+        self.dockmenu = self.gtkwin.create_default_menu()
+        appchoice.connect("activate", self.OpenConf)
+        aboutchoice.connect("activate", self.About)
         self.dockmenu.append(appchoice)
+        self.dockmenu.append(sep)
+        self.dockmenu.append(aboutchoice)
+        aboutchoice.show()
+        sep.show()
         appchoice.show()
+
         # Create a Menu from Awn's default, and add our config script to it
 
     def expose_event(self,widget,event):
@@ -407,6 +415,7 @@ class mywidget(gtk.Widget):
                         self.tr__updatePanel(self.root,self.wind)
         if(self.needredraw == True):
             self.tr__updatePanel(self.root,self.wind)
+            self.needredraw = False
         return True
 
     def OpenConf(self,thing):
@@ -560,7 +569,17 @@ class mywidget(gtk.Widget):
 
         return True
 
+    def About(self, var):
+        this = gtk.AboutDialog()
+        this.set_name("PyNot")
+        this.set_copyright("Copyright 2008 triggerhapp, Nathan Howard")
+        this.set_comments("A Configurable System tray applet")
+        this.set_logo(gtk.gdk.pixbuf_new_from_file_at_size(path+"PyNot.png", 48, 48))
+        this.connect("response",self.endAbout)
+        this.show()
 
+    def endAbout(self, var1, var2):
+        var1.destroy()
 
 gobject.type_register(mywidget)
 # Register it as a widget

@@ -7,7 +7,7 @@ dist_applet_DATA =        \
         pynotconf.py      \
         pattern.png       \
         new.png           \
-        PyNot.png         \
+        pynot.svg         \
         pynot-prefs.glade \
         $(NULL)
 

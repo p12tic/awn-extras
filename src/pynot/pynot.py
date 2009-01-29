@@ -314,12 +314,12 @@ class mywidget(gtk.Widget):
         # Again : find location of icons on the widget
 
         if(self.realized == 1 and offsety>-1):
-            w= self.curr_x
+            w= rr[2]
             h= offsety+ (HIGH*ICONSIZE)
             if(BORDER==True):
-                w+=10
                 h+=10
 
+            print w
             # get the width and height again
 
             # Create a 1Bit-map, each pixel is either True of False
@@ -345,7 +345,7 @@ class mywidget(gtk.Widget):
 
                     # For the rounded edges, I just hacked together some
                     # hardwired numbers that looked acceptable.
-                    cr.rectangle(0, offsety+1, w, newh-2)
+                    cr.rectangle(0, offsety+1, w-4, newh-2)
                     cr.fill()
                     cr.rectangle(6, offsety-5, w-16, newh+10)
                     cr.fill()

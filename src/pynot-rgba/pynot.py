@@ -132,8 +132,6 @@ class mywidget(gtk.Widget):
         self.dudwindow.connect("expose-event", self.expose_event)
         self.dudwindow.connect("button-press-event", self.button_event)
 
-
-
         screen = self.get_screen()
         colormap = screen.get_rgba_colormap()
         self.dudwindow.set_colormap(colormap)
@@ -162,45 +160,47 @@ class mywidget(gtk.Widget):
         self.selection = self.dsp.intern_atom("_NET_SYSTEM_TRAY_S%d" % self.dsp.get_default_screen())
         self.selowin = self.scr.root.create_window(-1, -1, 1, 1, 0, self.scr.root_depth)
         owner = self.dsp.get_selection_owner(self.selection)
-        if(owner==X.NONE):
-            print "PyNot Initialised"
-        else:
+        if(owner!=X.NONE):
             # If someone already has the system tray... BAIL!
 
             extras.notify_message("PyNot Error","Another System Tray is"
-                                               +" already running\nremove"
-                                               +" PyNot to remove the white"
-                                               +" line!",
+                                               +" already running",
                                          "%s%s"%(path,"PyNot.png"),10000,0)
-            sys.exit()
+            gtkwin.trayExists(self)
+            self.dudwindow.hide()
+            self.dudwindow.destroy()
+            self.wind.destroy()
+            return None
+        else:
+            self.selowin.set_selection_owner(self.selection, X.CurrentTime)
+            self.tr__sendEvent(self.root, self.manager,
+       [X.CurrentTime, self.selection,self.selowin.id], (X.StructureNotifyMask))
 
-        self.selowin.set_selection_owner(self.selection, X.CurrentTime)
-        self.tr__sendEvent(self.root, self.manager,
-      [X.CurrentTime, self.selection,self.selowin.id], (X.StructureNotifyMask))
-
-        self.selowin.change_property(self.visatom,Xatom.VISUALID,
+            self.selowin.change_property(self.visatom,Xatom.VISUALID,
                                              32,[self.rgbavisid])
-        self.wind.change_property(self.visatom,Xatom.VISUALID,
+            self.wind.change_property(self.visatom,Xatom.VISUALID,
                                              32,[self.rgbavisid])
 
  
-        self.dsp.flush()
-        # Show the window and flush the display
+            self.dsp.flush()
+            # Show the window and flush the display
 
-        appchoice = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
-        aboutchoice = gtk.ImageMenuItem(stock_id=gtk.STOCK_ABOUT)
-        sep = gtk.SeparatorMenuItem()
-        self.dockmenu = self.gtkwin.create_default_menu()
-        appchoice.connect("activate", self.OpenConf)
-        aboutchoice.connect("activate", self.About)
-        self.dockmenu.append(appchoice)
-        self.dockmenu.append(sep)
-        self.dockmenu.append(aboutchoice)
-        aboutchoice.show()
-        sep.show()
-        appchoice.show()
+            appchoice = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
+            aboutchoice = gtk.ImageMenuItem(stock_id=gtk.STOCK_ABOUT)
+            sep = gtk.SeparatorMenuItem()
+            self.dockmenu = self.gtkwin.create_default_menu()
+            appchoice.connect("activate", self.OpenConf)
+            aboutchoice.connect("activate", self.About)
+            self.dockmenu.append(appchoice)
+            self.dockmenu.append(sep)
+            self.dockmenu.append(aboutchoice)
+            aboutchoice.show()
+            sep.show()
+            appchoice.show()
+            gtkwin.trayWorks(self)
 
-        # Create a Menu from Awn's default, and add our config script to it
+
+            # Create a Menu from Awn's default, and add our config script to it
 
     def expose_event(self,widget,event):
        self.chbg()
@@ -309,6 +309,7 @@ class mywidget(gtk.Widget):
         if(BORDER==True):
             space+=5
         self.set_size_request(space,250)
+        self.gtkwin.set_size_request(space,250)
         # Request resize to the new size we need :)
 
         #Second pass, telling each icon where it is to go now.
@@ -592,13 +593,14 @@ class App(awn.Applet):
         self.height=height
         self.widg=None
         self.loadconf(1, 2)
+        self.reloada = gtk.Alignment(0.0,0.85,1.0,0.15)
+        self.reload = gtk.Button(stock=gtk.STOCK_REFRESH)
+        self.reloada.add(self.reload)
+        self.reload.connect("clicked",self.retry)
+        #self.set_size_request(50,30)
         self.widg = mywidget(display, error, self)
                               # create a new custom widget.
                               # This is the system tray
-        #gobject.timeout_add(10000,self.loadconf)
-        #                      # This causes a time out of 1 second,
-        #                      # each second, checking if the config has changed
-        #                      # May be a good idea to turn this down
         awn_options.notify_add(awn.CONFIG_DEFAULT_GROUP, 
                                 "BG_COLOR", self.loadconf)
         awn_options.notify_add(awn.CONFIG_DEFAULT_GROUP, 
@@ -626,7 +628,19 @@ class App(awn.Applet):
         awn_options.notify_add(awn.CONFIG_DEFAULT_GROUP, 
                                 "LINEWIDTH", self.loadconf)
         
-        self.add(self.widg)
+    def trayExists(self,widget):
+        self.add(self.reloada)
+        widget.destroy()
+        self.widg = None
+
+    def trayWorks(self,widget):
+        self.add(widget)
+
+    def retry(self, var):
+        self.remove(self.reloada)
+        self.widg = mywidget(display, error, self)
+                              # create a new custom widget.
+                              # This is the system tray
 
     def loadconf(self, t, t2):
         # Load the config
@@ -650,8 +664,6 @@ class App(awn.Applet):
         if(self.widg != None):
             self.widg.needredraw=True
         return True
-
-#        self.loadconf()
 
 global path
 path= sys.argv[0] 

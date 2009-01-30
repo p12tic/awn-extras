@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008 Rodney Cryderman <rcryderman@gmail.com>
+ * Copyright (C) 2007, 2008, 2009 Rodney Cryderman <rcryderman@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -133,7 +133,7 @@ class mywidget(gtk.Widget):
             # If someone already has the system tray... BAIL!
             extras.notify_message("PyNot Error",
                 "Another System Tray is already running",
-                "%s%s"%(path, "PyNot.png"), 10000, 0)
+                "%s%s"%(path, "pynot.svg"), 10000, 0)
 
             gtkwin.trayExists(self)
 
@@ -491,10 +491,11 @@ class mywidget(gtk.Widget):
 
     def About(self, var):
         this = gtk.AboutDialog()
-        this.set_name("PyNot") 
+        this.set_name("PyNot")
         this.set_copyright("Copyright 2008 triggerhapp")
         this.set_comments("A Configurable System tray applet")
-        this.set_logo(gtk.gdk.pixbuf_new_from_file_at_size(path+"PyNot.png", 48, 48))
+        this.set_logo(gtk.gdk.pixbuf_new_from_file_at_size(path+"pynot.svg", 48, 48))
+        this.set_icon(gtk.gdk.pixbuf_new_from_file(path+"pynot.svg"))
         this.connect("response",self.endAbout)
         this.show()
 

@@ -128,6 +128,7 @@ glade_path = os.path.join(os.path.dirname(__file__),
 wTree = gtk.glade.XML(glade_path)
 
 window = wTree.get_widget("dialog1")
+window.set_icon(gtk.gdk.pixbuf_new_from_file(os.path.join(os.path.dirname(__file__), "pynot.svg")))
 
 ok_button = wTree.get_widget("okButton")
 cancel_button = wTree.get_widget("cancelButton")

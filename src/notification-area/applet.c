@@ -237,7 +237,9 @@ offset_changed(AwnConfigClientNotifyEntry *entry, gpointer user_data)
 {
   GtkAlignment *align = GTK_ALIGNMENT (user_data);
 
-  gtk_alignment_set_padding (align, 0, entry->value.int_val, BORDER, BORDER);
+  gtk_alignment_set_padding (align,
+                             0, entry->value.int_val,
+                             BORDER+1, BORDER+1);
 }
 
 static void
@@ -319,7 +321,7 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
   awn_config_client_notify_add(client, "bar", "icon_offset", offset_changed, align);
 
   gtk_alignment_set_padding (GTK_ALIGNMENT (align),
-                             0, offset, BORDER, BORDER);
+                             0, offset, BORDER+1, BORDER+1);
   
   gtk_container_add (GTK_CONTAINER (applet), align);
   gtk_container_add (GTK_CONTAINER (align), eb);

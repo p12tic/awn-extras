@@ -110,9 +110,6 @@ class mywidget(gtk.Widget):
         self.realized= 0                 # Is the Xwindow realized yet?
                                          # if not, can cause problems with
                                          # certain functions
-        self.needredraw=False
-                                         # Set to True when BG colour is
-                                         # changed in config
         ourmask = (X.ButtonPressMask|X.ButtonReleaseMask|X.ExposureMask)
 
         self.wind = self.root.create_window(0, 0, 1, 10,
@@ -207,15 +204,7 @@ class mywidget(gtk.Widget):
             gobject.timeout_add(100, self.tr__updateAlpha, False)
         # Either do a single render of Alpha, or cause one every REFRESH
         # milliseconds
-        self.chbg()
-        if USEGTK == 0:
-            self.modify_bg(gtk.STATE_NORMAL,
-                           gtk.gdk.color_parse("#"+BG_COLOR[2:8]))
-                              # Change the theme for this window
-        gobject.timeout_add(1000, self.chbg)
-                              # check for BG change every second,
-                              # again, may be a good idea to do this less often
-
+        self.redraw()
 
         self.realized= 1
         # and now we can safely render alpha :D
@@ -425,8 +414,7 @@ class mywidget(gtk.Widget):
                 self.tr__updatePanel(self.root, self.wind)
             if e.type == X.Expose and e.count==0:
                 if(e.window.id==self.wind.id):
-                    self.wind.clear_area(0, 0, 0, 0)
-#                self.tr__updateAlpha(False)
+                    #self.wind.clear_area(0, 0, 0, 0)
                     self.tr__updatePanel(self.root, self.wind)
             if e.type == X.ClientMessage:
                 data = e.data[1][1]
@@ -452,20 +440,6 @@ class mywidget(gtk.Widget):
                             width=0, height=ICONSIZE, pid=pid)
                         self.tray.order.append(task)
                         self.tr__updatePanel(self.root, self.wind)
-        if(self.needredraw == True):
-            if USEGTK == 0:
-                self.modify_bg(gtk.STATE_NORMAL,
-                           gtk.gdk.color_parse("#"+BG_COLOR[2:8]))
-                              # Change the theme for this window
-            else:
-                self.modify_bg(gtk.STATE_NORMAL,None)
-            for t in self.tray.tasks.values():
-                t.obj.clear_area(0, 0, 0, 0, 1)
-
-            self.wind.clear_area(0, 0, 0, 0, 1)
-            self.tr__updatePanel(self.root, self.wind)
-
-            self.needredraw=False
         return True
 
     def OpenConf(self, thing):
@@ -529,21 +503,6 @@ class mywidget(gtk.Widget):
         self.dsp.flush()
         return None
 
-    def chbg(self):
-         if(USEGTK == 0):
-            if IMPATH in [None, '']:
-                image=gdk.pixbuf_new_from_file(D_IMPATH)
-            else:
-                image=gdk.pixbuf_new_from_file(IMPATH)
-                (pic, mask)=image.render_pixmap_and_mask()
-                if(USEIM==True):
-                    # If the user wants an image ...
-                    self.window.set_back_pixmap(pic, False) #Change image
-                    self.window.clear()
-                    self.window.clear_area_e(0, 0, self.curr_x*2, self.curr_y)
-                    #and cause an expose.
-         return True
-
     def About(self, var):
         this = gtk.AboutDialog()
         this.set_name("PyNot") 
@@ -555,6 +514,24 @@ class mywidget(gtk.Widget):
 
     def endAbout(self, var1, var2):
         var1.destroy()
+
+    def redraw(self):
+        if USEGTK ==0 and USEIM == 0:
+            self.modify_bg(gtk.STATE_NORMAL,
+                           gtk.gdk.color_parse("#"+BG_COLOR[2:8]))
+        elif USEGTK == 1:
+            self.modify_bg(gtk.STATE_NORMAL,None)
+        else: #USE_IM == 1
+            image = None
+            if IMPATH in [None,'']:
+                image=gdk.pixbuf_new_from_file(D_IMPATH)
+            else:
+                image=gdk.pixbuf_new_from_file(IMPATH)
+            (pic, mask) = image.render_pixmap_and_mask()
+            self.window.set_back_pixmap(pic, False)
+        self.window.clear_area_e(0, 0,
+                            self.allocation.width, self.allocation.height)
+
 
 gobject.type_register(mywidget)
 # Register it as a widget
@@ -631,7 +608,7 @@ class App(awn.Applet):
         USEGTK = awn_options.get_int(awn.CONFIG_DEFAULT_GROUP, "USEGTK")
         # If BG has changed, reset it
         if(self.widg != None):
-            self.widg.needredraw=True
+            self.widg.redraw()
         return True
 
     def makeconf(self):

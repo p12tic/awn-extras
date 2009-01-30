@@ -137,6 +137,7 @@ class mywidget(gtk.Widget):
         self.dudwindow.set_colormap(colormap)
         # Sets a RGBA visual/colormap
 
+        self.dudwindow.set_property("skip-taskbar-hint", True)
         self.dudwindow.show()
         self.wind_id= self.dudwindow.window.xid
         self.wind=self.dsp.create_resource_object("window",self.wind_id)

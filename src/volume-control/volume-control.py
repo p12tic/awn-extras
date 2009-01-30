@@ -31,12 +31,14 @@ from awn.extras import AWNLib
 read_volume_interval = 0.5
 
 applet_name = "Volume Control"
-applet_version = "0.2.8"
+applet_version = "0.3.1"
 applet_description = "Applet to control your computer's volume"
 
 #theme_dir = os.path.join(os.path.dirname(__file__), "Themes")
 theme_dir = "/usr/share/icons"
 glade_file = os.path.join(os.path.dirname(__file__), "volume-control.glade")
+
+volume_control_apps = ("gnome-volume-control", "xfce4-mixer")
 
 moonbeam_theme_dir = os.path.join(os.path.dirname(__file__), "themes")
 moonbeam_ranges = [100, 93, 86, 79, 71, 64, 57, 50, 43, 36, 29, 21, 14, 1, 0]
@@ -156,7 +158,13 @@ class VolumeControlApplet:
         self.load_channel_pref(prefs)
 
     def show_volume_control_cb(self, widget):
-        subprocess.Popen("gnome-volume-control")
+        for command in volume_control_apps:
+            try:
+                subprocess.Popen(command)
+                return
+            except OSError:
+                pass
+        raise RuntimeError("No volume control found (%s)" % ", ".join(volume_control_apps))
 
     def load_theme_pref(self, prefs):
         # Combobox in preferences window to choose a theme

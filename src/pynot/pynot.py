@@ -155,7 +155,6 @@ class mywidget(gtk.Widget):
             self.tr__setProps(self.dsp, self.wind)
             # Set a list of Properties that we'll need
 
-            self.wind.map()
             self.dsp.flush()
             # Show the window and flush the display
 

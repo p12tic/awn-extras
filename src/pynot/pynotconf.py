@@ -23,8 +23,10 @@ Copyright (c) 2008 Nathan Howard (triggerhapp@googlemail.com)
 
 import awn
 import gtk
+import gtk.glade
+import os
 
-global D_BG_COLOR, D_CUSTOM_Y, D_HIGH, D_BORDER, D_TRANS, D_USEIM, D_IMPATH
+global D_BG_COLOR, D_CUSTOM_Y, D_HIGH, D_BORDER, D_TRANS, D_USEIM, D_IMPATH, D_USEGTK
 D_BG_COLOR="0x0070E0"
 D_CUSTOM_Y=10
 D_HIGH=2
@@ -32,14 +34,22 @@ D_BORDER=True
 D_TRANS=False
 D_ZEROPID=True
 D_USEIM=False
+D_USEGTK=True
 D_ICONSIZE=24
 D_IMPATH="/".join(__file__.split("/")[:-1])+"/pattern.png"
 
 
+def activate_entry(self):
+
+    impath.set_sensitive(useim.get_active())
+ 
+def close_window(self):
+
+    window.destroy()
+
 def endstuff(self):
 
     gtk.main_quit()
-
 
 def savestuff(self):
 
@@ -57,8 +67,6 @@ def savestuff(self):
     awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,
         "BORDER", int(border.get_active()))
     awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,
-        "TRANS", int(trans.get_active()))
-    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,
         "ZEROPID", int(pid.get_active()))
     awn_options.set_string(awn.CONFIG_DEFAULT_GROUP,
         "IMPATH", impath.get_text())
@@ -66,6 +74,10 @@ def savestuff(self):
         "USEIM", int(useim.get_active()))
     awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,
         "ICONSIZE", int(iconsize.get_value()))
+    awn_options.set_int(awn.CONFIG_DEFAULT_GROUP,
+        "USEGTK", int(usegtk.get_active()))
+    window.destroy()
+
 
 awn_options=awn.Config('pynot', None)
 BG_COLOR = awn_options.get_string(awn.CONFIG_DEFAULT_GROUP, "BG_COLOR")
@@ -77,6 +89,7 @@ ZEROPID = awn_options.get_int(awn.CONFIG_DEFAULT_GROUP, "ZEROPID")
 USEIM = awn_options.get_int(awn.CONFIG_DEFAULT_GROUP, "USEIM")
 IMPATH = awn_options.get_string(awn.CONFIG_DEFAULT_GROUP, "IMPATH")
 ICONSIZE = awn_options.get_int(awn.CONFIG_DEFAULT_GROUP, "ICONSIZE")
+USEGTK = awn_options.get_int(awn.CONFIG_DEFAULT_GROUP, "USEGTK")
 if(HIGH==0):
     HIGH = D_HIGH
     BORDER = D_BORDER
@@ -87,6 +100,7 @@ if(HIGH==0):
     USEIM = D_USEIM
     IMPATH = D_IMPATH
     ICONSIZE = D_ICONSIZE
+    USEGTK = D_USEGTK
     awn_options.set_string(awn.CONFIG_DEFAULT_GROUP, "BG_COLOR", BG_COLOR)
     awn_options.set_int(awn.CONFIG_DEFAULT_GROUP, "BORDER", BORDER)
     awn_options.set_int(awn.CONFIG_DEFAULT_GROUP, "CUSTOM_Y", CUSTOM_Y)
@@ -99,7 +113,7 @@ if(HIGH==0):
 
 if(IMPATH==""):
     IMPATH=D_IMPATH
-print ICONSIZE
+#print ICONSIZE
 
 if(ICONSIZE==0):
     ICONSIZE=D_ICONSIZE
@@ -109,75 +123,42 @@ g = int("0x"+BG_COLOR[4:6], 0)*256
 b = int("0x"+BG_COLOR[6:8], 0)*256
 cbg=gtk.gdk.Color(r, g, b, 0)
 
-window= gtk.Window(gtk.WINDOW_TOPLEVEL)
-vbox=gtk.VBox()
-window.add(vbox)
-hbox=gtk.HBox()
-alldone=gtk.Button("Save")
-t1=gtk.Label("PyTray Config")
-t2=gtk.Label("Number of Icons High")
-t3=gtk.Label("Offset from Bottom")
-t4=gtk.Label("Background Colour")
-t5=gtk.Label("Size of Icons")
-adj=gtk.Adjustment(1, 1, 5, 1, 1, 0)
-high=gtk.SpinButton(adj, 1, 0)
-adj2=gtk.Adjustment(45, 0, 100, 1, 1, 0)
-custom_y=gtk.SpinButton(adj2, 1, 0)
-bg_color=gtk.ColorButton()
-border=gtk.CheckButton("Use a Rounded Border", False)
-trans=gtk.CheckButton("Use Transparent Background (BUGGY)", False)
-pid=gtk.CheckButton("Do Not Show Icons for PID=0.", False)
-useim=gtk.CheckButton("Use Image", False)
-adj3=gtk.Adjustment(24, 8, 128, 1, 1, 0)
-iconsize=gtk.SpinButton(adj3, 1, 0)
-impath=gtk.Entry()
+glade_path = os.path.join(os.path.dirname(__file__),
+                          "pynot-prefs.glade")
+wTree = gtk.glade.XML(glade_path)
+
+window = wTree.get_widget("dialog1")
+
+ok_button = wTree.get_widget("okButton")
+cancel_button = wTree.get_widget("cancelButton")
+
+high = wTree.get_widget("iconRowsSpinbutton")
+custom_y = wTree.get_widget("offsetSpinbutton")
+bg_color = wTree.get_widget("bgColorbutton")
+border = wTree.get_widget("roundedCheckbutton")
+pid = wTree.get_widget("pidCheckbutton")
+useim = wTree.get_widget("useImgRadiobutton")
+usegtk = wTree.get_widget("useGtkRadiobutton")
+usecolor =  wTree.get_widget("useCustomColorRadiobutton")
+iconsize = wTree.get_widget("iconSizeSpinbutton")
+impath = wTree.get_widget("imagePathEntry")
 
 bg_color.set_color(cbg)
 high.set_value(HIGH)
 custom_y.set_value(CUSTOM_Y)
 border.set_active(BORDER)
-trans.set_active(TRANS)
 pid.set_active(ZEROPID)
+usegtk.set_active(USEGTK)
 useim.set_active(USEIM)
+usecolor.set_active(not USEGTK and not USEIM)
+impath.set_sensitive(USEIM)
 impath.set_text(IMPATH)
 iconsize.set_value(ICONSIZE)
 
-hbox1=gtk.HBox()
-hbox2=gtk.HBox()
-hbox3=gtk.HBox()
-hbox4=gtk.HBox()
-hbox5=gtk.HBox()
-hbox6=gtk.HBox()
-hbox7=gtk.HBox()
-hbox8=gtk.HBox()
-
-
-vbox.add(t1)
-hbox1.add(high)
-hbox1.add(t2)
-vbox.add(hbox1)
-hbox2.add(custom_y)
-hbox2.add(t3)
-vbox.add(hbox2)
-vbox.add(t4)
-hbox8.add(iconsize)
-hbox8.add(t5)
-vbox.add(hbox8)
-vbox.add(bg_color)
-hbox3.add(border)
-vbox.add(hbox3)
-hbox4.add(trans)
-hbox5.add(pid)
-hbox6.add(useim)
-vbox.add(hbox4)
-vbox.add(hbox5)
-vbox.add(hbox6)
-hbox7.add(impath)
-vbox.add(hbox7)
-
-hbox.add(alldone)
-vbox.add(hbox)
-window.show_all()
+useim.connect("toggled", activate_entry)
 window.connect("destroy", endstuff)
-alldone.connect("clicked", savestuff)
+ok_button.connect("clicked", savestuff)
+cancel_button.connect("clicked", close_window)
+
+window.show_all()
 gtk.main()

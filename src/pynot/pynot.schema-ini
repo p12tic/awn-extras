@@ -28,6 +28,11 @@ type = int
 default = 1
 description = Whether or not to hide icons from PID of 0
 
+[DEFAULT/USEGTK]
+type = int
+default = 1
+description = Whether or not to use GTK Theme defaults only
+
 [DEFAULT/USEIM]
 type = int
 default = 0

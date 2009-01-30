@@ -47,10 +47,11 @@ class App (awn.AppletSimple):
     """Displays a dialog with controls and track/album info and art"""
 
     APPLET_NAME = "Media Control Applet"
+    APPLET_NAME_MARKUP = "<span weight=\"bold\">Media Control Applet</span>"
     def __init__ (self, uid, orient, height):
         """Creating the applets core"""
         awn.AppletSimple.__init__(self, uid, orient, height)
-        self.resultToolTip = App.APPLET_NAME
+        self.set_title(App.APPLET_NAME)
         self.MediaPlayer = None
         self.location = __file__.replace('mediacontrol.py','')
         self.keylocation = "/apps/avant-window-navigator/applets/MediaControl/"
@@ -62,12 +63,12 @@ class App (awn.AppletSimple):
         self.players_frame = gtk.Frame()
         self.controls = gtk.VBox()
         self.controls.set_spacing(5)
-        self.label = gtk.Label(App.APPLET_NAME)
+        self.label = gtk.Label()
+        self.label.set_markup(App.APPLET_NAME_MARKUP)
 
         self.what_app()
         # The Heart
         self.height = height
-        self.title = awn.awn_title_get_default ()
         self.dialog = awn.AppletDialog (self)
         self.dialog_visible = False
 
@@ -139,7 +140,7 @@ class App (awn.AppletSimple):
                 self.dialog.hide()
                 self.dialog_visible = False
             else:
-                self.title.hide(self)
+                self.set_title_visibility(False)
                 if not self.MediaPlayer: self.what_app()
                 self.dialog_visible = True
                 # update controls
@@ -170,10 +171,10 @@ class App (awn.AppletSimple):
             if (self.MediaPlayer and self.MediaPlayer.is_async() == False): self.labeler()
         except:
             self.MediaPlayer = None
-        self.title.show(self, self.resultToolTip)
+        self.set_title_visibility(True)
 
     def leave_notify(self, widget, event):
-        self.title.hide(self)
+        self.set_title_visibility(False)
 
     def what_app(self, player_name = None):
         if not player_name: self.player_name = mediaplayers.what_app()
@@ -182,8 +183,8 @@ class App (awn.AppletSimple):
             self.players_frame.set_no_show_all(False)
             self.controls.set_no_show_all(True)
             self.controls.hide()
-            self.resultToolTip = App.APPLET_NAME
-            self.label.set_text(App.APPLET_NAME)
+            self.set_title(App.APPLET_NAME)
+            self.label.set_markup(App.APPLET_NAME_MARKUP)
             self.MediaPlayer = None
         else:
             self.MediaPlayer = mediaplayers.__dict__[self.player_name]()
@@ -268,11 +269,12 @@ class App (awn.AppletSimple):
         """
 
         self.timer_running = False
-        artExact, markup, self.resultToolTip = self.MediaPlayer.labeler(
+        artExact, markup, resultToolTip = self.MediaPlayer.labeler(
             self.artOnOff,
             self.titleOrder,
             self.titleLen,
             self.titleBoldFont)
+        self.set_title(resultToolTip)
         if self.dialog_visible == False: return False
         self.label.set_markup(markup)
         try:

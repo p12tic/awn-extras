@@ -65,7 +65,7 @@ D_ICONSIZE=24
 
 # And thier current value!
 global BG_COLOR, CUSTOM_Y, HIGH, ALLOW_COL, REFRESH, DIVIDEBYZERO
-global BORDER, ZEROPID, IMPATH, USEIM, ICONSIZE
+global BORDER, ZEROPID, IMPATH, USEIM, ICONSIZE, USEGTK
 
 REFRESH=10    # Not in config yet. Wont be needed until Transparency works
                 # if <90 milliseconds then its ignored.
@@ -137,35 +137,43 @@ class mywidget(gtk.Widget):
         self.selowin = self.scr.root.create_window(-1,
                                   -1, 1, 1, 0, self.scr.root_depth)
         owner = self.dsp.get_selection_owner(self.selection)
-        if(owner==X.NONE):
-            print "K."
-        else:
+        if(owner!=X.NONE):
             # If someone already has the system tray... BAIL!
             extras.notify_message("PyNot Error",
                 "Another System Tray is already running",
                 "%s%s"%(path, "PyNot.png"), 10000, 0)
 
-            sys.exit()
+            gtkwin.trayExists(self)
 
-        self.selowin.set_selection_owner(self.selection, X.CurrentTime)
-        self.tr__sendEvent(self.root, self.manager,
-              [X.CurrentTime, self.selection, self.selowin.id],
-              (X.StructureNotifyMask))
 
-        self.tr__setProps(self.dsp, self.wind)
-        # Set a list of Properties that we'll need
+        else:
+            self.selowin.set_selection_owner(self.selection, X.CurrentTime)
+            self.tr__sendEvent(self.root, self.manager,
+                  [X.CurrentTime, self.selection, self.selowin.id],
+                  (X.StructureNotifyMask))
 
-        self.wind.map()
-        self.dsp.flush()
-        # Show the window and flush the display
+            self.tr__setProps(self.dsp, self.wind)
+            # Set a list of Properties that we'll need
 
-        appchoice=gtk.MenuItem("PyNot Setup")
-        self.dockmenu=self.gtkwin.create_default_menu()
-        appchoice.connect("activate", self.OpenConf)
-        self.dockmenu.append(appchoice)
-        appchoice.show()
+            self.wind.map()
+            self.dsp.flush()
+            # Show the window and flush the display
 
-        # Create a Menu from Awn's default, and add our config script to it
+            appchoice = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
+            aboutchoice = gtk.ImageMenuItem(stock_id=gtk.STOCK_ABOUT)
+            sep = gtk.SeparatorMenuItem()
+            self.dockmenu = self.gtkwin.create_default_menu()
+            appchoice.connect("activate", self.OpenConf)
+            aboutchoice.connect("activate", self.About)
+            self.dockmenu.append(appchoice)
+            self.dockmenu.append(sep)
+            self.dockmenu.append(aboutchoice)
+            aboutchoice.show()
+            sep.show() 
+            appchoice.show()
+            gtkwin.trayWorks(self)
+
+            # Create a Menu from Awn's default, and add our config script to it
 
     def do_realize(self):
         self.set_flags(gtk.REALIZED)
@@ -198,8 +206,9 @@ class mywidget(gtk.Widget):
         # Either do a single render of Alpha, or cause one every REFRESH
         # milliseconds
         self.chbg()
-        self.modify_bg(gtk.STATE_NORMAL,
-                       gtk.gdk.color_parse("#"+BG_COLOR[2:8]))
+        if USEGTK == 0:
+            self.modify_bg(gtk.STATE_NORMAL,
+                           gtk.gdk.color_parse("#"+BG_COLOR[2:8]))
                               # Change the theme for this window
         gobject.timeout_add(1000, self.chbg)
                               # check for BG change every second,
@@ -279,6 +288,7 @@ class mywidget(gtk.Widget):
         if(BORDER==True):
             space+=5
         self.set_size_request(space, CUSTOM_Y+HIGH*ICONSIZE)
+        self.gtkwin.set_size_request(space, CUSTOM_Y+HIGH*ICONSIZE)
         # Request resize to the new size we need :)
 
         #Second pass, telling each icon where it is to go now.
@@ -312,10 +322,9 @@ class mywidget(gtk.Widget):
         # Again : find location of icons on the widget
 
         if(self.realized == 1 and offsety>-1):
-            w= self.curr_x
+            w= rr[2]
             h= offsety+ (HIGH*ICONSIZE)
             if(BORDER==True):
-                w+=10
                 h+=10
 
             # get the width and height again
@@ -343,7 +352,7 @@ class mywidget(gtk.Widget):
 
                     # For the rounded edges, I just hacked together some
                     # hardwired numbers that looked acceptable.
-                    cr.rectangle(0, offsety+1, w, newh-2)
+                    cr.rectangle(0, offsety+1, w-4, newh-2)
                     cr.fill()
                     cr.rectangle(6, offsety-5, w-16, newh+10)
                     cr.fill()
@@ -380,26 +389,6 @@ class mywidget(gtk.Widget):
 
         return returnvar
 
-    def tr__isBackground(self, col, bg_r, bg_g, bg_b):
-        # Used in transparency render.
-        # will return TRUE if the colour passed to it resembles the BG colour.
-        # works within a range, since icons can have shadows
-        col_s = "0x%06X" % col
-        if(col_s == BG_COLOR):
-            return True
-        col_r =int("0x"+col_s[2:4], 0)
-        col_g =int("0x"+col_s[4:6], 0)
-        col_b =int("0x"+col_s[6:8], 0)
-
-        # Just smile and nod.
-
-        if(bg_r-ALLOW_COL<col_r and bg_r+ALLOW_COL>col_r):
-            if(bg_g-ALLOW_COL<col_g and bg_g+ALLOW_COL>col_g):
-                if(bg_b-ALLOW_COL<col_b and bg_b+ALLOW_COL>col_b):
-                    return True
-
-        return False
-
     def tr__sendEvent(self, win, ctype, data, mask=None):
     #------------------------------------------------
         """ Send a ClientMessage event to the root """
@@ -417,7 +406,6 @@ class mywidget(gtk.Widget):
         # quickest hack towards multi-threading i had ;)
         while self.dsp.pending_events()>0:
             e = self.dsp.next_event()
-            print e
             if e.type == X.ButtonRelease:
                 if(e.detail == 3):
                     # Button 3 is right click.
@@ -463,7 +451,19 @@ class mywidget(gtk.Widget):
                         self.tray.order.append(task)
                         self.tr__updatePanel(self.root, self.wind)
         if(self.needredraw == True):
+            if USEGTK == 0:
+                self.modify_bg(gtk.STATE_NORMAL,
+                           gtk.gdk.color_parse("#"+BG_COLOR[2:8]))
+                              # Change the theme for this window
+            else:
+                self.modify_bg(gtk.STATE_NORMAL,None)
+            for t in self.tray.tasks.values():
+                t.obj.clear_area()
+
             self.tr__updatePanel(self.root, self.wind)
+            self.tr__updatePanel(self.root, self.wind)
+
+            self.needredraw=False
         return True
 
     def OpenConf(self, thing):
@@ -528,17 +528,31 @@ class mywidget(gtk.Widget):
         return None
 
     def chbg(self):
-        if IMPATH in [None, '']:
-            image=gdk.pixbuf_new_from_file(D_IMPATH)
-        else:
-            image=gdk.pixbuf_new_from_file(IMPATH)
-        (pic, mask)=image.render_pixmap_and_mask()
-        if(USEIM==True):  # If the user wants an image ...
-            self.window.set_back_pixmap(pic, False) #Change image
-            self.window.clear()
-            self.window.clear_area_e(0, 0, self.curr_x*2, self.curr_y)
-                #and cause an expose.
-        return True
+         if(USEGTK == 0):
+            if IMPATH in [None, '']:
+                image=gdk.pixbuf_new_from_file(D_IMPATH)
+            else:
+                image=gdk.pixbuf_new_from_file(IMPATH)
+                (pic, mask)=image.render_pixmap_and_mask()
+                if(USEIM==True):
+                    # If the user wants an image ...
+                    self.window.set_back_pixmap(pic, False) #Change image
+                    self.window.clear()
+                    self.window.clear_area_e(0, 0, self.curr_x*2, self.curr_y)
+                    #and cause an expose.
+         return True
+
+    def About(self, var):
+        this = gtk.AboutDialog()
+        this.set_name("PyNot") 
+        this.set_copyright("Copyright 2008 triggerhapp")
+        this.set_comments("A Configurable System tray applet")
+        this.set_logo(gtk.gdk.pixbuf_new_from_file_at_size(path+"PyNot.png", 48, 48))
+        this.connect("response",self.endAbout)
+        this.show()
+
+    def endAbout(self, var1, var2):
+        var1.destroy()
 
 gobject.type_register(mywidget)
 # Register it as a widget
@@ -551,22 +565,57 @@ class App(awn.Applet):
         awn.Applet.__init__(self, uid, orient, height)
         self.height = height
         self.widg = None
-        self.loadconf()
+        self.loadconf(1,2)
         if(HIGH == 0):
             self.makeconf()
+        self.reloada = gtk.Alignment(0.0,0.85,1.0,0.15)
+        self.reload = gtk.Button(stock=gtk.STOCK_REFRESH)
+        self.reloada.add(self.reload)
+        self.reload.connect("clicked",self.retry)
         self.widg = mywidget(display, error, self)
                               # create a new custom widget.
                               # This is the system tray
-        gobject.timeout_add(1000, self.loadconf)
-                              # This causes a time out of 1 second,
-                              # each second, checking if the config has changed
-                              # May be a good idea to turn this down
-        self.add(self.widg)
+        #gobject.timeout_add(1000, self.loadconf)
+        #                      # This causes a time out of 1 second,
+        #                      # each second, checking if the config has changed
+        #                      # May be a good idea to turn this down
+        awn_options.notify_add(awn.CONFIG_DEFAULT_GROUP,
+                                "BG_COLOR", self.loadconf)
+        awn_options.notify_add(awn.CONFIG_DEFAULT_GROUP,
+                                "CUSTOM_Y", self.loadconf)
+        awn_options.notify_add(awn.CONFIG_DEFAULT_GROUP,
+                                "HIGH", self.loadconf)
+        awn_options.notify_add(awn.CONFIG_DEFAULT_GROUP,
+                                "BORDER", self.loadconf)
+        awn_options.notify_add(awn.CONFIG_DEFAULT_GROUP,
+                                "TRANS", self.loadconf)
+        awn_options.notify_add(awn.CONFIG_DEFAULT_GROUP,
+                                "IMPATH", self.loadconf)
+        awn_options.notify_add(awn.CONFIG_DEFAULT_GROUP,
+                                "USEIM", self.loadconf)
+        awn_options.notify_add(awn.CONFIG_DEFAULT_GROUP,
+                                "ICONSIZE", self.loadconf)
+        awn_options.notify_add(awn.CONFIG_DEFAULT_GROUP,
+                                "USEGTK", self.loadconf)
 
-    def loadconf(self):
+    def trayExists(self,widget):
+        self.add(self.reloada)
+        widget.destroy()
+        self.widg = None
+
+    def trayWorks(self,widget):
+        self.add(widget)
+
+    def retry(self, var):
+        self.remove(self.reloada)
+        self.widg = mywidget(display, error, self)
+                              # create a new custom widget.
+                              # This is the system tray
+
+    def loadconf(self,dud1,dud2):
         # Load the config
         global BG_COLOR, CUSTOM_Y, HIGH, BORDER
-        global DIVIDEBYZERO, ZEROPID, IMPATH, USEIM, ICONSIZE
+        global DIVIDEBYZERO, ZEROPID, IMPATH, USEIM, ICONSIZE,USEGTK
         oldBG=BG_COLOR
         BG_COLOR = awn_options.get_string(awn.CONFIG_DEFAULT_GROUP, "BG_COLOR")
         CUSTOM_Y = awn_options.get_int(awn.CONFIG_DEFAULT_GROUP, "CUSTOM_Y")
@@ -577,10 +626,10 @@ class App(awn.Applet):
         IMPATH = awn_options.get_string(awn.CONFIG_DEFAULT_GROUP, "IMPATH")
         USEIM = awn_options.get_int(awn.CONFIG_DEFAULT_GROUP, "USEIM")
         ICONSIZE = awn_options.get_int(awn.CONFIG_DEFAULT_GROUP, "ICONSIZE")
+        USEGTK = awn_options.get_int(awn.CONFIG_DEFAULT_GROUP, "USEGTK")
         # If BG has changed, reset it
-        if(oldBG != BG_COLOR):
-            if(self.widg != None):
-                self.widg.needredraw=True
+        if(self.widg != None):
+            self.widg.needredraw=True
         return True
 
     def makeconf(self):

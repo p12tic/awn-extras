@@ -8,5 +8,6 @@ dist_applet_DATA =      \
         bolt.png        \
         PyNot.png       \
         pythonicon.py   \
+        pynot-rgba.glade \
         $(NULL)
 

@@ -85,15 +85,15 @@ class App (awn.AppletSimple):
 
     @error_decorator
     def button_previous_press(self):
-        self.MediaPlayer.button_previous_press()
+        self.MediaPlayer.previous()
 
     @error_decorator
     def button_pp_press(self):
-        self.MediaPlayer.button_pp_press()
+        self.MediaPlayer.play_pause()
 
     @error_decorator
     def button_next_press(self):
-        self.MediaPlayer.button_next_press()
+        self.MediaPlayer.next()
 
 
 if __name__ == "__main__":

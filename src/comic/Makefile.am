@@ -6,11 +6,17 @@ include $(top_srcdir)/Makefile.python-applet
 
 dist_applet_DATA =	\
 		comicdialog.py	\
+		getben.py	\
 		getborn.py	\
 		getdilbert.py	\
+		getferdnand.py	\
+		getgarfield.py	\
+		getnancy.py	\
 		getpcnp.py	\
-		getxkcd.py	\
 		getpeanuts.py	\
+		getpickles.py	\
+		getuf.py	\
+		getxkcd.py	\
 		getwiz.py
 
 

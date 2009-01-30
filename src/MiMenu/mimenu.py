@@ -131,8 +131,18 @@ class App (awn.AppletSimple):
         if test[0] == True and test[1] != None:
             subprocess.Popen([test[1]], shell=False)
         else:
-            subprocess.Popen(["tracker-search-tool", self.entry.get_text()],
-                             shell=False)
+            try:
+                subprocess.Popen(["tracker-search-tool", self.entry.get_text()],
+                                 shell=False)
+            except OSError:#Probably tracker not installed
+                dialog = gtk.MessageDialog(None, gtk.DIALOG_DESTROY_WITH_PARENT, \
+                  gtk.MESSAGE_ERROR, gtk.BUTTONS_CLOSE, "You need Tracker " + \
+                  "installed to search.\nInstall it by using your package " + \
+                  "manager or downloading from http://projects.gnome.org/tracker/")
+                dialog.set_title("Error")
+                dialog.set_icon_name(gtk.STOCK_DIALOG_ERROR)
+                dialog.run()
+                dialog.destroy()
 
     def button_press(self, widget, event):
         if event.button == 1:

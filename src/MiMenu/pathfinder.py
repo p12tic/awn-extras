@@ -8,9 +8,7 @@ import os.path as osp
 def path_finder():
     a = 0
     paths = []
-    temp = os.popen(r"echo $PATH")
-    pathlist = temp.read()
-    temp.close()
+    pathlist = os.environ['PATH']
     while ':' in pathlist:
         paths.append(pathlist[:pathlist.index(':')])
         pathlist = pathlist.replace(paths[a] + ':','')

@@ -96,7 +96,7 @@ if test "$with_gconf" != "no" -a "$config_backend" != "GConf"; then
 fi
 
 if test "$with_gconf" != "no" -o "$with_gnome" != "no"; then
-# filebrowser
+# affinity, filebrowser
 PKG_CHECK_MODULES(GNOMEUI, [libgnomeui-2.0])
 # filebrowser
 PKG_CHECK_MODULES(GNOME_DESKTOP, [gnome-desktop-2.0])
@@ -169,6 +169,9 @@ PKG_CHECK_EXISTS([$affinity_tracker_pkg], [
 ], [have_tracker=no])
 AC_MSG_RESULT([$have_tracker])
 AM_CONDITIONAL(HAVE_TRACKER, test "$have_tracker" = "yes")
+if test -n "`echo $AWN_CFLAGS | grep LIBAWN_USE_GNOME`"; then
+    affinity_pkgs="$affinity_pkgs libgnomeui-2.0"
+fi
 
 # applet-specific libraries
 PKG_CHECK_MODULES(AFFINITY, [$affinity_pkgs])
@@ -217,7 +220,7 @@ if test x${enable_pymod_checks} = xyes; then
     # stacks
     AM_CHECK_PYMOD(gnome.ui,,,AC_MSG_ERROR([python module gnome.ui required]))
     # awn-meebo, digg, pandora
-    AM_CHECK_PYMOD(gtkmozembed,,,AC_MSG_ERROR([python module gtkmozembed required]))
+    AM_CHECK_PYMOD(gtkmozembed,,,AC_MSG_ERROR([python module gtkmozembed required (python-gnome2-extras)]))
     fi
     if test "$with_gconf" != "no"; then
     # calendar, media-control, media-player, mount-applet, stacks
@@ -359,6 +362,7 @@ src/calendar/dateutil/zoneinfo/Makefile
 src/comic/Makefile
 src/comic/icons/Makefile
 src/comics/Makefile
+src/comics/feed/Makefile
 src/comics/feeds/Makefile
 src/comics/glade/Makefile
 src/comics/locale/Makefile

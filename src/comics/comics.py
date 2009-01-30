@@ -38,7 +38,7 @@ awn.check_dependencies(globals(), 'feedparser')
 import comics_add
 import comics_manage
 import comics_view
-from settings import Settings
+from feed.settings import Settings
 from feed import FeedContainer
 from shared import *
 
@@ -169,10 +169,11 @@ class ComicApplet(awn.AppletSimple):
 		self.dialog.show_all()
 		gobject.timeout_add(self.DIALOG_DURATION, self.on_dialog_timer)
 	
-	def __init__(self, uid, orient, height, feeds):
+	def __init__(self, uid, orient, height, feeds, configuration):
 		awn.AppletSimple.__init__(self, uid, orient, height)
 		
 		self.feeds = feeds
+		self.configuration = configuration
 		
 		self.height = height
 		self.set_awn_icon('comics', 'comics-icon')
@@ -270,6 +271,17 @@ if __name__ == '__main__':
 	gobject.threads_init()
 	gtk.gdk.threads_init()
 	
+	# Initialize user agent string
+	import urllib
+	configuration = awn.Config('comics', None)
+	user_agent = configuration.get_string(awn.CONFIG_DEFAULT_GROUP,
+		'user_agent')
+	if user_agent is None:
+		user_agent = 'Mozilla/3.0'
+	class ComicURLOpener(urllib.FancyURLopener):
+		version = user_agent
+	urllib._urlopener = ComicURLOpener()
+	
 	# Make sure that all required directories exist
 	if not os.access(USER_DIR, os.W_OK):
 		if os.access(ALT_USER_DIR, os.W_OK):
@@ -286,7 +298,7 @@ if __name__ == '__main__':
 	
 	#Initialise AWN and create the applet
 	awn.init(sys.argv[1:])
-	applet = ComicApplet(awn.uid, awn.orient, awn.height, feeds)
+	applet = ComicApplet(awn.uid, awn.orient, awn.height, feeds, configuration)
 	awn.init_applet(applet)
 	applet.show_all()
 	

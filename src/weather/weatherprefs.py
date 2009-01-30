@@ -23,6 +23,8 @@
 # Boston, MA 02111-1307, USA.
 
 import gtk, cairo
+import gtk.glade
+import os
 from gtk import gdk
 import xml.dom.minidom
 import urllib
@@ -35,7 +37,7 @@ class WeatherCodeSearch(gtk.Window):
 
         self.config_win = config_win
         self.set_title(_("Search for Location Code"))        # needs i18n
-        vbox = gtk.VBox(False, 0)
+        vbox = gtk.VBox(False, 2)
         self.add(vbox)
         # row 1
         hbox1 = gtk.HBox(True,0)
@@ -77,7 +79,8 @@ class WeatherCodeSearch(gtk.Window):
         self.scrolled_win.add_with_viewport(self.treeview)
         vbox.pack_start(self.scrolled_win,True,True,5)
         # row 3
-        hbox3 = gtk.HBox(True, 0)
+        hbox3 = gtk.HButtonBox()
+        hbox3.set_layout(gtk.BUTTONBOX_END)
         self.ok = gtk.Button(stock=gtk.STOCK_OK)
         self.ok.set_sensitive(False)
         self.ok.connect("clicked", self.ok_button, "ok")
@@ -103,7 +106,7 @@ class WeatherCodeSearch(gtk.Window):
         self.selected_code = model.get_value(iter, 1)
         self.config_win.location = self.selected_location
         self.config_win.location_code = self.selected_code
-        self.config_win.loc_label.set_label(_("Current Location:") + "  <b>" + self.selected_location + "</b>")
+        self.config_win.loc_label.set_label("<b>" + self.selected_location + "</b>")
         self.destroy()
 
     def cancel_button(self, widget, window):
@@ -131,136 +134,82 @@ class WeatherCodeSearch(gtk.Window):
                 self.list.clear()
                 self.list.append([_("No records found."),None])
 
-class WeatherConfig(gtk.Window):
+class WeatherConfig:
     def __init__(self, applet):
-        gtk.Window.__init__(self)
+        glade_path = os.path.join(os.path.dirname(__file__),
+                                  "weather-prefs.glade")
+        self.wTree = gtk.glade.XML(glade_path)
+
+        self.toplevel = self.wTree.get_widget("weatherDialog")
 
         self.applet = applet
         self.location = applet.settingsDict['location']
         self.location_code = applet.settingsDict['location_code']
-        self.set_title(_("Preferences"))  # needs i18n
-        vbox = gtk.VBox(True, 0)
-        self.add(vbox)
-        self.units_checkbox = gtk.CheckButton(_("Use metric units"))  # needs i18n
+        self.units_checkbox = self.wTree.get_widget("metricCheckbutton")
         if applet.settingsDict['metric']:
             self.units_checkbox.set_active(True)
         else:
             self.units_checkbox.set_active(False)
-        hbox0 = gtk.HBox(False,0)
-        hbox0.pack_start(self.units_checkbox,True,False,0)
-        vbox.pack_start(hbox0,False,False,0)
 
-        hbox025 = gtk.HBox(True, 0)
-        self.click_checkbox = gtk.CheckButton(_("Close dialogs on mouse-out"))  # needs i18n
+        self.click_checkbox = self.wTree.get_widget("clickCheckbutton")
         if applet.settingsDict['open_til_clicked']:
             self.click_checkbox.set_active(False)
         else: 
             self.click_checkbox.set_active(True)
-        hbox025.pack_start(self.click_checkbox,True,False,0)
-        vbox.pack_start(hbox025,False,False,0)
 
-        hbox05 = gtk.HBox(True, 0)
-        self.click_checkbox2 = gtk.CheckButton(_("Use transparent/curved forecast dialog"))  # needs i18n
+        self.click_checkbox2 = self.wTree.get_widget("curvedCheckbutton")
         if applet.settingsDict['curved_dialog']:
             self.click_checkbox2.set_active(True)
         else: 
             self.click_checkbox2.set_active(False)
-        hbox05.pack_start(self.click_checkbox2,True,False,0)
-        vbox.pack_start(hbox05,False,False,0)
         
-        hbox075 = gtk.HBox(True, 0)
-        self.temp_pos = gtk.combo_box_new_text()  # needs i18n
-        self.temp_pos.append_text(_("Lower Center"))
-        self.temp_pos.append_text(_("Lower Left"))
-        self.temp_pos.append_text(_("Lower Right"))
-        self.temp_pos.append_text(_("Upper Center"))
-        self.temp_pos.append_text(_("Upper Left"))
-        self.temp_pos.append_text(_("Upper Right"))
-        self.temp_pos.append_text(_("Never"))
+        self.temp_pos = self.wTree.get_widget("posCombobox")
 
         self.temp_pos.set_active(applet.settingsDict['temp_position'])
-        pos_label = gtk.Label(_("Show Temperature"))
-        hbox075.pack_start(pos_label,True,False,0)
-        hbox075.pack_start(self.temp_pos,True,False,0)
-        vbox.pack_start(hbox075,False,False,0)
         
         # TEMP_FONTSIZE
-        hbox6 = gtk.HBox(True, 0)
-        label6 = gtk.Label(_("Temp Font Size"))  # needs i18n
-        adj = gtk.Adjustment(32, 8, 100, 1, 1, 0)
-        self.tempspin = gtk.SpinButton(adj, 0.5, 0)
+        self.tempspin = self.wTree.get_widget("fontSpinbutton")
         font_size = applet.settingsDict['temp_fontsize']
         self.tempspin.set_value(font_size)
-        hbox6.pack_start(label6)
-        hbox6.pack_end(self.tempspin)
-        vbox.pack_start(hbox6,True,False,2)
         
         # MAP_MAXWIDTH
-        hbox5 = gtk.HBox(True, 0)
-        label5 = gtk.Label(_("Maximum Map Width"))  # needs i18n
-        adj = gtk.Adjustment(450, 100, 800, 10, 100, 0)
-        self.spin2 = gtk.SpinButton(adj, 0.5, 0)
+        self.spin2 = self.wTree.get_widget("mapWidthSpinbutton")
         current_size = applet.settingsDict['map_maxwidth']
         self.spin2.set_value(current_size)
-        hbox5.pack_start(label5)
-        hbox5.pack_end(self.spin2)
-        vbox.pack_start(hbox5,True,False,2)
 
         # FREQUENCY (ICON)
-        hbox1 = gtk.HBox(True, 0)
-        label1 = gtk.Label(_("Icon Poll Frequency (Mins)"))  # needs i18n
-        adj = gtk.Adjustment(30, 30, 120, 5, 15, 0)
-        self.spin = gtk.SpinButton(adj, 0.5, 0)
+        self.spin = self.wTree.get_widget("iconSpinbutton")
         current_freq = applet.settingsDict['frequency']
         self.spin.set_value(current_freq)
-        hbox1.pack_start(label1)
-        hbox1.pack_end(self.spin)
-        vbox.pack_start(hbox1,True,False,2)
 
         # FREQUENCY (5DAY)
-        hbox7 = gtk.HBox(True, 0)
-        label7 = gtk.Label(_("Forecast Poll Frequency (Mins)"))  # needs i18n
         adj = gtk.Adjustment(30, 30, 120, 5, 15, 0)
-        self.spin3 = gtk.SpinButton(adj, 0.5, 0)
+        self.spin3 = self.wTree.get_widget("freqSpinbutton")
         current_freq = applet.settingsDict['frequency_5day']
         self.spin3.set_value(current_freq)
-        hbox7.pack_start(label7)
-        hbox7.pack_end(self.spin3)
-        vbox.pack_start(hbox7,True,False,2)
 
         # FREQUENCY (MAP)
-        hbox8 = gtk.HBox(True, 0)
-        label8 = gtk.Label(_("Map Poll Frequency (Mins)"))  # needs i18n
-        adj = gtk.Adjustment(30, 30, 120, 5, 15, 0)
-        self.spin4 = gtk.SpinButton(adj, 0.5, 0)
+        self.spin4 = self.wTree.get_widget("mapSpinbutton")
         current_freq = applet.settingsDict['frequency_map']
         self.spin4.set_value(current_freq)
-        hbox8.pack_start(label8)
-        hbox8.pack_end(self.spin4)
-        vbox.pack_start(hbox8,True,False,2)
 
         # LOCATION
         hbox2 = gtk.HBox(True, 0)
-        self.loc_label = gtk.Label(_("Current Location:") + " <b>" + self.location + "</b>")  # needs i18n
-        self.loc_label.set_use_markup(True)
-        hbox2.add(self.loc_label)
-        #vbox.pack_start(hbox2,True,False,2)
+        self.loc_label = self.wTree.get_widget("locationLabel")
+        self.loc_label.set_markup("<b>" + self.location + "</b>")
         
         # change location button
-        search = gtk.Button(_("Change Location"))
-        hbox2.add(search)
+        search = self.wTree.get_widget("locationButton")
         search.connect("clicked", self.search_button, "search")
-        vbox.pack_start(hbox2,True,False,2)
 
-        hbox4 = gtk.HBox(True, 0)
-        ok = gtk.Button(stock=gtk.STOCK_OK)
+        ok = self.wTree.get_widget("okButton")
         ok.connect("clicked", self.ok_button, applet)
-        hbox4.pack_start(ok,True,True,75)
-        cancel = gtk.Button(stock=gtk.STOCK_CANCEL)
+        cancel = self.wTree.get_widget("cancelButton")
         cancel.connect("clicked", self.cancel_button, applet)
-        hbox4.pack_start(cancel,True,True,75)
-        vbox.pack_end(hbox4,True,False,2)
-        
+      
+    def get_toplevel(self):
+        return self.toplevel
+
     def search_button(self, widget, event):
         self.code_window = WeatherCodeSearch(self)
         self.code_window.set_size_request(400, 400)
@@ -291,7 +240,7 @@ class WeatherConfig(gtk.Window):
             self.applet.applet.settings[name] = value
 
         parent.onSettingsChanged() #TODO: remove this once we have listening properly working, maybe?
-        self.destroy()
+        self.toplevel.destroy()
 
     def cancel_button(self, widget, event):
-        self.destroy()
+        self.toplevel.destroy()

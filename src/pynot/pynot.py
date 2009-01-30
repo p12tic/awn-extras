@@ -137,42 +137,43 @@ class mywidget(gtk.Widget):
         self.selowin = self.scr.root.create_window(-1,
                                   -1, 1, 1, 0, self.scr.root_depth)
         owner = self.dsp.get_selection_owner(self.selection)
-        if(owner==X.NONE):
-            print "K."
-        else:
+        if(owner!=X.NONE):
             # If someone already has the system tray... BAIL!
             extras.notify_message("PyNot Error",
                 "Another System Tray is already running",
                 "%s%s"%(path, "PyNot.png"), 10000, 0)
 
-            sys.exit()
+            gtkwin.trayExists(self)
 
-        self.selowin.set_selection_owner(self.selection, X.CurrentTime)
-        self.tr__sendEvent(self.root, self.manager,
-              [X.CurrentTime, self.selection, self.selowin.id],
-              (X.StructureNotifyMask))
 
-        self.tr__setProps(self.dsp, self.wind)
-        # Set a list of Properties that we'll need
+        else:
+            self.selowin.set_selection_owner(self.selection, X.CurrentTime)
+            self.tr__sendEvent(self.root, self.manager,
+                  [X.CurrentTime, self.selection, self.selowin.id],
+                  (X.StructureNotifyMask))
 
-        self.wind.map()
-        self.dsp.flush()
-        # Show the window and flush the display
+            self.tr__setProps(self.dsp, self.wind)
+            # Set a list of Properties that we'll need
 
-        appchoice = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
-        aboutchoice = gtk.ImageMenuItem(stock_id=gtk.STOCK_ABOUT)
-        sep = gtk.SeparatorMenuItem()
-        self.dockmenu = self.gtkwin.create_default_menu()
-        appchoice.connect("activate", self.OpenConf)
-        aboutchoice.connect("activate", self.About)
-        self.dockmenu.append(appchoice)
-        self.dockmenu.append(sep)
-        self.dockmenu.append(aboutchoice)
-        aboutchoice.show()
-        sep.show() 
-        appchoice.show()
+            self.wind.map()
+            self.dsp.flush()
+            # Show the window and flush the display
 
-        # Create a Menu from Awn's default, and add our config script to it
+            appchoice = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
+            aboutchoice = gtk.ImageMenuItem(stock_id=gtk.STOCK_ABOUT)
+            sep = gtk.SeparatorMenuItem()
+            self.dockmenu = self.gtkwin.create_default_menu()
+            appchoice.connect("activate", self.OpenConf)
+            aboutchoice.connect("activate", self.About)
+            self.dockmenu.append(appchoice)
+            self.dockmenu.append(sep)
+            self.dockmenu.append(aboutchoice)
+            aboutchoice.show()
+            sep.show() 
+            appchoice.show()
+            gtkwin.trayWorks(self)
+
+            # Create a Menu from Awn's default, and add our config script to it
 
     def do_realize(self):
         self.set_flags(gtk.REALIZED)
@@ -287,6 +288,7 @@ class mywidget(gtk.Widget):
         if(BORDER==True):
             space+=5
         self.set_size_request(space, CUSTOM_Y+HIGH*ICONSIZE)
+        self.gtkwin.set_size_request(space, CUSTOM_Y+HIGH*ICONSIZE)
         # Request resize to the new size we need :)
 
         #Second pass, telling each icon where it is to go now.
@@ -566,6 +568,10 @@ class App(awn.Applet):
         self.loadconf(1,2)
         if(HIGH == 0):
             self.makeconf()
+        self.reloada = gtk.Alignment(0.0,0.85,1.0,0.15)
+        self.reload = gtk.Button(stock=gtk.STOCK_REFRESH)
+        self.reloada.add(self.reload)
+        self.reload.connect("clicked",self.retry)
         self.widg = mywidget(display, error, self)
                               # create a new custom widget.
                               # This is the system tray
@@ -592,8 +598,19 @@ class App(awn.Applet):
         awn_options.notify_add(awn.CONFIG_DEFAULT_GROUP,
                                 "USEGTK", self.loadconf)
 
+    def trayExists(self,widget):
+        self.add(self.reloada)
+        widget.destroy()
+        self.widg = None
 
-        self.add(self.widg)
+    def trayWorks(self,widget):
+        self.add(widget)
+
+    def retry(self, var):
+        self.remove(self.reloada)
+        self.widg = mywidget(display, error, self)
+                              # create a new custom widget.
+                              # This is the system tray
 
     def loadconf(self,dud1,dud2):
         # Load the config

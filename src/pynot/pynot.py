@@ -49,13 +49,12 @@ import atexit
 #Default Values
 # Used if no config is found.
 global D_BG_COLOR, D_CUSTOM_Y, D_HIGH, D_ALLOW_COL
-global D_REFRESH, D_DIVIDEBYZERO, D_BORDER, D_ZEROPID
+global D_DIVIDEBYZERO, D_BORDER, D_ZEROPID
 global D_IMPATH, D_USEIM, D_ICONSIZE
 D_BG_COLOR="0x0070E0"
 D_CUSTOM_Y=10
 D_HIGH=2
 D_ALLOW_COL=50
-D_REFRESH=10
 D_DIVIDEBYZERO=False
 D_BORDER=True
 D_ZEROPID=True
@@ -64,12 +63,8 @@ D_USEIM = False
 D_ICONSIZE=24
 
 # And thier current value!
-global BG_COLOR, CUSTOM_Y, HIGH, ALLOW_COL, REFRESH, DIVIDEBYZERO
+global BG_COLOR, CUSTOM_Y, HIGH, ALLOW_COL, DIVIDEBYZERO
 global BORDER, ZEROPID, IMPATH, USEIM, ICONSIZE, USEGTK
-
-REFRESH=10    # Not in config yet. Wont be needed until Transparency works
-                # if <90 milliseconds then its ignored.
-                # otherwise, its the milliseconds between alpha-redraws
 
 ICONSIZE=24   # Icon size, 24 is optimal, Application has to support the
               # icon size as well as tray.
@@ -192,18 +187,9 @@ class mywidget(gtk.Widget):
         # First render. Grab all the icons we know about, tell them where to
         # draw, and call a resize if necessary (likely, the first time around)
 
-        #gobject.timeout_add(100, self.tr__testTiming)
         gobject.io_add_watch(self.dsp.fileno(), gobject.IO_IN | gobject.IO_PRI,
                              self.tr__testTiming)
 
-        # Check for new X signals every 100 miliseconds (1/10th second)
-
-        if(REFRESH>80):
-            gobject.timeout_add(REFRESH, self.tr__updateAlpha, True)
-        else:
-            gobject.timeout_add(100, self.tr__updateAlpha, False)
-        # Either do a single render of Alpha, or cause one every REFRESH
-        # milliseconds
         self.redraw()
 
         self.realized= 1

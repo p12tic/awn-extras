@@ -1,6 +1,6 @@
 APPLET_NAME = notification-area
+APPLET_ICONS = notification-area.svg
 APPLET_CFLAGS = $(LIBX11_CFLAGS)
-APPLET_ICONS = notification.svg
 
 include $(top_srcdir)/Makefile.c-applet
 

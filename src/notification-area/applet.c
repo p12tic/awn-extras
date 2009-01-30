@@ -21,7 +21,10 @@
 #include <stdio.h>
 #include <gtk/gtk.h>
 
+#include <cairo.h>
 #include <libawn/awn-applet.h>
+#include <libawn/awn-cairo-utils.h>
+#include <libawn/awn-config-client.h>
 
 #include <math.h>
 
@@ -37,10 +40,11 @@ typedef struct {
 
 } TrayApplet;
 
+#define BORDER 3
 
 static GQuark new_quark = 0;
 static GQuark del_quark = 0;
-static gint   n_rows    = 0;
+static gint   n_rows    = 2;
 static int   height    = 0; 
 static int   icon_size = 24;
 
@@ -145,7 +149,6 @@ tray_applet_refresh (TrayApplet *applet)
           col++;
         }
     }
-  //gtk_widget_set_size_request (GTK_WIDGET (applet->applet), 24*col, 100);
 }
 
 static void
@@ -153,8 +156,6 @@ tray_icon_added (EggTrayManager *manager,
                  GtkWidget      *icon,
                  TrayApplet     *applet)
 {
-  //gtk_widget_set_size_request (GTK_WIDGET (icon), 24, 24);
-
   g_object_set_qdata (G_OBJECT (icon), new_quark, GINT_TO_POINTER (1));
   g_object_set_qdata (G_OBJECT (icon), del_quark, GINT_TO_POINTER (0));
 
@@ -192,6 +193,68 @@ tray_icon_message_cancelled (EggTrayManager *manager,
                              TrayApplet     *applet)
 {
   /* FIXME: Er, cancel the message :-/? */
+}
+
+static gboolean
+applet_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
+{
+  GtkWidget *table = GTK_WIDGET(data);
+
+  cairo_t *cr = gdk_cairo_create(widget->window);
+  if (!cr) return FALSE;
+
+  cairo_set_operator(cr, CAIRO_OPERATOR_CLEAR);
+  cairo_paint(cr);
+
+  cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
+  gdk_cairo_set_source_color (cr, &(gtk_widget_get_style(widget)->bg[GTK_STATE_NORMAL]));
+
+  gint x,y;
+  gtk_widget_translate_coordinates(table, widget, 0, 0, &x, &y);
+
+  awn_cairo_rounded_rect (cr, x-BORDER, y-BORDER,
+                          table->allocation.width + 2*BORDER,
+                          table->allocation.height + 2*BORDER,
+                          4.0*BORDER, ROUND_ALL);
+  cairo_fill_preserve(cr);
+
+  gdk_cairo_set_source_color (cr, &(gtk_widget_get_style(widget)->bg[GTK_STATE_SELECTED]));
+  cairo_set_line_width(cr, 1.5);
+  cairo_stroke(cr);
+
+  cairo_destroy(cr);
+
+  GtkWidget* child = gtk_bin_get_child(GTK_BIN(widget));
+
+  if (child)
+    gtk_container_propagate_expose(GTK_CONTAINER(widget), child,  event);
+
+  return TRUE;
+}
+
+static void
+offset_changed(AwnConfigClientNotifyEntry *entry, gpointer user_data)
+{
+  GtkAlignment *align = GTK_ALIGNMENT (user_data);
+
+  gtk_alignment_set_padding (align, 0, entry->value.int_val, BORDER, BORDER);
+}
+
+static void
+resize_icon(GtkWidget *widget, gpointer user_data)
+{
+  gtk_widget_set_size_request(widget, icon_size, icon_size);
+}
+
+static void
+height_changed(AwnApplet *applet, guint height, gpointer user_data)
+{
+  GtkTable *table = GTK_TABLE (user_data);
+
+  icon_size = height / 2;
+
+  // foreach child call set_size_request
+  gtk_container_foreach (GTK_CONTAINER (table), resize_icon, NULL);
 }
 
 AwnApplet*
@@ -236,6 +299,7 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
                     G_CALLBACK (tray_icon_message_cancelled), app);
 
   height = awn_applet_get_height (applet);
+  icon_size = height / 2;
   gtk_widget_set_size_request (GTK_WIDGET (applet), -1, height* 2 );
 
   table = gtk_table_new (1, 1, FALSE);
@@ -247,16 +311,25 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
   eb = gtk_event_box_new ();
   gtk_event_box_set_visible_window (GTK_EVENT_BOX (eb), TRUE);
   
-  align = gtk_alignment_new (0, 0.5, 1, 0);
+  align = gtk_alignment_new (0, 1, 1, 0);
   app->align = align;
+
+  AwnConfigClient *client = awn_config_client_new();
+  gint offset = awn_config_client_get_int(client, "bar", "icon_offset", NULL);
+  awn_config_client_notify_add(client, "bar", "icon_offset", offset_changed, align);
+
   gtk_alignment_set_padding (GTK_ALIGNMENT (align),
-                             height,
-                             0, 0, 0); 
+                             0, offset, BORDER, BORDER);
   
   gtk_container_add (GTK_CONTAINER (applet), align);
   gtk_container_add (GTK_CONTAINER (align), eb);
   gtk_widget_set_colormap (eb, gdk_screen_get_rgb_colormap (screen));
   gtk_container_add (GTK_CONTAINER (eb), table);
-  
+
+  g_signal_connect(GTK_WIDGET(applet), "expose-event",
+                   G_CALLBACK(applet_expose), table);
+  g_signal_connect(applet, "height-changed",
+                   G_CALLBACK (height_changed), table);
+
   return applet;
 }

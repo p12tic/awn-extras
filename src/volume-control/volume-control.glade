@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Sat Jul  5 10:07:49 2008 -->
+<!--Generated with glade3 3.4.5 on Sat Jan 31 03:43:09 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window1">
     <child>
@@ -9,7 +9,7 @@
         <property name="border_width">2</property>
         <property name="spacing">18</property>
         <child>
-          <widget class="GtkVBox" id="mixer-channel-vbox">
+          <widget class="GtkVBox" id="vbox1">
             <property name="visible">True</property>
             <property name="spacing">6</property>
             <child>
@@ -23,11 +23,27 @@
                     <property name="top_padding">6</property>
                     <property name="left_padding">12</property>
                     <child>
-                      <widget class="GtkVBox" id="vbox-mixer-channel">
+                      <widget class="GtkVBox" id="vbox2">
                         <property name="visible">True</property>
                         <property name="spacing">6</property>
                         <child>
-                          <placeholder/>
+                          <widget class="GtkHBox" id="hbox-mixer-channel">
+                            <property name="visible">True</property>
+                            <property name="spacing">13</property>
+                            <child>
+                              <widget class="GtkLabel" id="label-mixer-channel">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">_Mixer channel:</property>
+                                <property name="use_underline">True</property>
+                              </widget>
+                              <packing>
+                                <property name="expand">False</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                          </widget>
                         </child>
                       </widget>
                     </child>
@@ -36,7 +52,7 @@
                 <child>
                   <widget class="GtkLabel" id="label2">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">&lt;b&gt;Mixer Channel&lt;/b&gt;</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Audio Options&lt;/b&gt;</property>
                     <property name="use_markup">True</property>
                   </widget>
                   <packing>
@@ -51,7 +67,7 @@
           </packing>
         </child>
         <child>
-          <widget class="GtkVBox" id="theme-vbox">
+          <widget class="GtkVBox" id="vbox3">
             <property name="visible">True</property>
             <property name="spacing">6</property>
             <child>
@@ -65,11 +81,27 @@
                     <property name="top_padding">6</property>
                     <property name="left_padding">12</property>
                     <child>
-                      <widget class="GtkVBox" id="vbox-theme">
+                      <widget class="GtkVBox" id="vbox4">
                         <property name="visible">True</property>
                         <property name="spacing">6</property>
                         <child>
-                          <placeholder/>
+                          <widget class="GtkHBox" id="hbox-theme">
+                            <property name="visible">True</property>
+                            <property name="spacing">13</property>
+                            <child>
+                              <widget class="GtkLabel" id="label-theme">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">_Theme:</property>
+                                <property name="use_underline">True</property>
+                              </widget>
+                              <packing>
+                                <property name="expand">False</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                          </widget>
                         </child>
                       </widget>
                     </child>
@@ -78,7 +110,7 @@
                 <child>
                   <widget class="GtkLabel" id="label4">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">&lt;b&gt;Theme&lt;/b&gt;</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Display&lt;/b&gt;</property>
                     <property name="use_markup">True</property>
                   </widget>
                   <packing>

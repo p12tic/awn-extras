@@ -275,11 +275,23 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
   
 
   if (egg_tray_manager_check_running(screen))
-    {
-      g_error ("There is already another notification area running on this "
-               "screen\n");
-      return FALSE;
-    }
+  {
+    const gchar *msg = "There is already another notification area "
+                       "running on this screen!";
+
+    GtkWidget *dialog = gtk_message_dialog_new (NULL, 
+        GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "%s", msg);
+
+    gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
+        "%s", "Please remove the existing notification area and then "
+        "restart the applet.");
+
+    gtk_dialog_run (GTK_DIALOG (dialog));
+    gtk_widget_destroy (dialog);
+
+    g_error ("%s\n", msg);
+    return FALSE;
+  }
 
   new_quark = g_quark_from_string ("awn-na-icon-new");
   del_quark = g_quark_from_string ("awn-na-icon-del");

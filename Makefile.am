@@ -15,7 +15,5 @@ DISTCLEANFILES =			\
 	intltool-merge			\
 	intltool-update
 
-CFLAGS =	\
-	src\libawn-extras
-
 ACLOCAL_AMFLAGS = -I m4
+AUTOMAKE_OPTIONS = foreign

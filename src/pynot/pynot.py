@@ -157,7 +157,6 @@ class mywidget(gtk.Widget):
             appchoice.connect("activate", self.OpenConf)
             aboutchoice.connect("activate", self.About)
             self.dockmenu.append(appchoice)
-            self.dockmenu.append(sep)
             self.dockmenu.append(aboutchoice)
             aboutchoice.show()
             sep.show() 
@@ -492,8 +491,8 @@ class mywidget(gtk.Widget):
     def About(self, var):
         this = gtk.AboutDialog()
         this.set_name("PyNot")
-        this.set_copyright("Copyright 2008 triggerhapp")
-        this.set_comments("A Configurable System tray applet")
+        this.set_copyright("Copyright \xc2\xa9 2008-2009 triggerhapp")
+        this.set_comments("A configurable system tray applet")
         this.set_logo(gtk.gdk.pixbuf_new_from_file_at_size(path+"pynot.svg", 48, 48))
         this.set_icon(gtk.gdk.pixbuf_new_from_file(path+"pynot.svg"))
         this.connect("response",self.endAbout)
@@ -503,7 +502,7 @@ class mywidget(gtk.Widget):
         var1.destroy()
 
     def redraw(self):
-        if USEGTK ==0 and USEIM == 0:
+        if USEGTK == 0 and USEIM == 0:
             self.modify_bg(gtk.STATE_NORMAL,
                            gtk.gdk.color_parse("#"+BG_COLOR[2:8]))
         elif USEGTK == 1:

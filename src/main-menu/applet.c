@@ -259,7 +259,7 @@ _compare (GMenuTreeItem *item1, GMenuTreeItem *item2)
     default:
       ;
   }
-  return strcmp (name1, name2);
+  return g_strcmp0 (name1, name2);
 }
 
 static void
@@ -447,7 +447,7 @@ awn_applet_factory_initp (const gchar * uid, gint orient, gint height )
   g_signal_connect (G_OBJECT (applet), "button-press-event",
                     G_CALLBACK (on_icon_clicked), (gpointer)app);
   
-  awn_applet_simple_set_awn_icon( AWN_APPLET_SIMPLE(app->applet),
+  awn_applet_simple_set_icon_name( AWN_APPLET_SIMPLE(app->applet),
                                     APPLET_NAME,
                                     "gnome-main-menu")  ;
 

@@ -18,8 +18,9 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 
+import awn
 from awn.extras import AWNLib
-import wnck
+awn.check_dependencies(globals(), wnck=['xfce4.netk', 'wnck'])
 
 applet_name = "Show Desktop"
 applet_version = "0.3.1"

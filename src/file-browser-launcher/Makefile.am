@@ -1,4 +1,3 @@
-SUBDIRS = icons
 APPLET_NAME = file-browser-launcher
 APPLET_MAIN_FILE = file-browser-launcher.py
 
@@ -10,4 +9,9 @@ dist_applet_DATA =			\
 	file-browser-launcher.py	\
 	prefs.py			\
 	gconfwrapper.py			\
+	$(NULL)
+
+fbl_iconsdir = $(applet_datadir)/icons
+dist_fbl_icons_DATA =	\
+	icons/folder.png\
 	$(NULL)

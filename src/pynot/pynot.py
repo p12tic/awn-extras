@@ -49,13 +49,12 @@ import atexit
 #Default Values
 # Used if no config is found.
 global D_BG_COLOR, D_CUSTOM_Y, D_HIGH, D_ALLOW_COL
-global D_REFRESH, D_DIVIDEBYZERO, D_BORDER, D_ZEROPID
+global D_DIVIDEBYZERO, D_BORDER, D_ZEROPID
 global D_IMPATH, D_USEIM, D_ICONSIZE
 D_BG_COLOR="0x0070E0"
 D_CUSTOM_Y=10
 D_HIGH=2
 D_ALLOW_COL=50
-D_REFRESH=10
 D_DIVIDEBYZERO=False
 D_BORDER=True
 D_ZEROPID=True
@@ -64,12 +63,8 @@ D_USEIM = False
 D_ICONSIZE=24
 
 # And thier current value!
-global BG_COLOR, CUSTOM_Y, HIGH, ALLOW_COL, REFRESH, DIVIDEBYZERO
+global BG_COLOR, CUSTOM_Y, HIGH, ALLOW_COL, DIVIDEBYZERO
 global BORDER, ZEROPID, IMPATH, USEIM, ICONSIZE, USEGTK
-
-REFRESH=10    # Not in config yet. Wont be needed until Transparency works
-                # if <90 milliseconds then its ignored.
-                # otherwise, its the milliseconds between alpha-redraws
 
 ICONSIZE=24   # Icon size, 24 is optimal, Application has to support the
               # icon size as well as tray.
@@ -110,9 +105,6 @@ class mywidget(gtk.Widget):
         self.realized= 0                 # Is the Xwindow realized yet?
                                          # if not, can cause problems with
                                          # certain functions
-        self.needredraw=False
-                                         # Set to True when BG colour is
-                                         # changed in config
         ourmask = (X.ButtonPressMask|X.ButtonReleaseMask|X.ExposureMask)
 
         self.wind = self.root.create_window(0, 0, 1, 10,
@@ -141,7 +133,7 @@ class mywidget(gtk.Widget):
             # If someone already has the system tray... BAIL!
             extras.notify_message("PyNot Error",
                 "Another System Tray is already running",
-                "%s%s"%(path, "PyNot.png"), 10000, 0)
+                "%s%s"%(path, "pynot.svg"), 10000, 0)
 
             gtkwin.trayExists(self)
 
@@ -155,7 +147,6 @@ class mywidget(gtk.Widget):
             self.tr__setProps(self.dsp, self.wind)
             # Set a list of Properties that we'll need
 
-            self.wind.map()
             self.dsp.flush()
             # Show the window and flush the display
 
@@ -166,7 +157,6 @@ class mywidget(gtk.Widget):
             appchoice.connect("activate", self.OpenConf)
             aboutchoice.connect("activate", self.About)
             self.dockmenu.append(appchoice)
-            self.dockmenu.append(sep)
             self.dockmenu.append(aboutchoice)
             aboutchoice.show()
             sep.show() 
@@ -196,24 +186,10 @@ class mywidget(gtk.Widget):
         # First render. Grab all the icons we know about, tell them where to
         # draw, and call a resize if necessary (likely, the first time around)
 
-        gobject.timeout_add(100, self.tr__testTiming)
-        # Check for new X signals every 100 miliseconds (1/10th second)
+        gobject.io_add_watch(self.dsp.fileno(), gobject.IO_IN | gobject.IO_PRI,
+                             self.tr__testTiming)
 
-        if(REFRESH>80):
-            gobject.timeout_add(REFRESH, self.tr__updateAlpha, True)
-        else:
-            gobject.timeout_add(100, self.tr__updateAlpha, False)
-        # Either do a single render of Alpha, or cause one every REFRESH
-        # milliseconds
-        self.chbg()
-        if USEGTK == 0:
-            self.modify_bg(gtk.STATE_NORMAL,
-                           gtk.gdk.color_parse("#"+BG_COLOR[2:8]))
-                              # Change the theme for this window
-        gobject.timeout_add(1000, self.chbg)
-                              # check for BG change every second,
-                              # again, may be a good idea to do this less often
-
+        self.redraw()
 
         self.realized= 1
         # and now we can safely render alpha :D
@@ -400,7 +376,7 @@ class mywidget(gtk.Widget):
             mask = (X.SubstructureRedirectMask|X.SubstructureNotifyMask)
         self.root.send_event(ev, event_mask=mask)
 
-    def tr__testTiming(self):
+    def tr__testTiming(self,var,var2):
         # Event "loop"
         # called every 1/10th second, does all events and quits
         # quickest hack towards multi-threading i had ;)
@@ -423,8 +399,7 @@ class mywidget(gtk.Widget):
                 self.tr__updatePanel(self.root, self.wind)
             if e.type == X.Expose and e.count==0:
                 if(e.window.id==self.wind.id):
-                    self.wind.clear_area(0, 0, 0, 0)
-#                self.tr__updateAlpha(False)
+                    #self.wind.clear_area(0, 0, 0, 0)
                     self.tr__updatePanel(self.root, self.wind)
             if e.type == X.ClientMessage:
                 data = e.data[1][1]
@@ -450,20 +425,6 @@ class mywidget(gtk.Widget):
                             width=0, height=ICONSIZE, pid=pid)
                         self.tray.order.append(task)
                         self.tr__updatePanel(self.root, self.wind)
-        if(self.needredraw == True):
-            if USEGTK == 0:
-                self.modify_bg(gtk.STATE_NORMAL,
-                           gtk.gdk.color_parse("#"+BG_COLOR[2:8]))
-                              # Change the theme for this window
-            else:
-                self.modify_bg(gtk.STATE_NORMAL,None)
-            for t in self.tray.tasks.values():
-                t.obj.clear_area()
-
-            self.tr__updatePanel(self.root, self.wind)
-            self.tr__updatePanel(self.root, self.wind)
-
-            self.needredraw=False
         return True
 
     def OpenConf(self, thing):
@@ -527,32 +488,36 @@ class mywidget(gtk.Widget):
         self.dsp.flush()
         return None
 
-    def chbg(self):
-         if(USEGTK == 0):
-            if IMPATH in [None, '']:
-                image=gdk.pixbuf_new_from_file(D_IMPATH)
-            else:
-                image=gdk.pixbuf_new_from_file(IMPATH)
-                (pic, mask)=image.render_pixmap_and_mask()
-                if(USEIM==True):
-                    # If the user wants an image ...
-                    self.window.set_back_pixmap(pic, False) #Change image
-                    self.window.clear()
-                    self.window.clear_area_e(0, 0, self.curr_x*2, self.curr_y)
-                    #and cause an expose.
-         return True
-
     def About(self, var):
         this = gtk.AboutDialog()
-        this.set_name("PyNot") 
-        this.set_copyright("Copyright 2008 triggerhapp")
-        this.set_comments("A Configurable System tray applet")
-        this.set_logo(gtk.gdk.pixbuf_new_from_file_at_size(path+"PyNot.png", 48, 48))
+        this.set_name("PyNot")
+        this.set_copyright("Copyright \xc2\xa9 2008-2009 triggerhapp")
+        this.set_comments("A configurable system tray applet")
+        this.set_logo(gtk.gdk.pixbuf_new_from_file_at_size(path+"pynot.svg", 48, 48))
+        this.set_icon(gtk.gdk.pixbuf_new_from_file(path+"pynot.svg"))
         this.connect("response",self.endAbout)
         this.show()
 
     def endAbout(self, var1, var2):
         var1.destroy()
+
+    def redraw(self):
+        if USEGTK == 0 and USEIM == 0:
+            self.modify_bg(gtk.STATE_NORMAL,
+                           gtk.gdk.color_parse("#"+BG_COLOR[2:8]))
+        elif USEGTK == 1:
+            self.modify_bg(gtk.STATE_NORMAL,None)
+        else: #USE_IM == 1
+            image = None
+            if IMPATH in [None,'']:
+                image=gdk.pixbuf_new_from_file(D_IMPATH)
+            else:
+                image=gdk.pixbuf_new_from_file(IMPATH)
+            (pic, mask) = image.render_pixmap_and_mask()
+            self.window.set_back_pixmap(pic, False)
+        self.window.clear_area_e(0, 0,
+                            self.allocation.width, self.allocation.height)
+
 
 gobject.type_register(mywidget)
 # Register it as a widget
@@ -629,7 +594,7 @@ class App(awn.Applet):
         USEGTK = awn_options.get_int(awn.CONFIG_DEFAULT_GROUP, "USEGTK")
         # If BG has changed, reset it
         if(self.widg != None):
-            self.widg.needredraw=True
+            self.widg.redraw()
         return True
 
     def makeconf(self):

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Wed Jan 28 03:36:03 2009 -->
+<!--Generated with glade3 3.4.5 on Sun Feb  1 13:39:42 2009 -->
 <glade-interface>
   <widget class="GtkDialog" id="weatherDialog">
     <property name="border_width">5</property>
@@ -16,7 +16,7 @@
         <child>
           <widget class="GtkVBox" id="vbox1">
             <property name="visible">True</property>
-            <property name="spacing">8</property>
+            <property name="spacing">12</property>
             <child>
               <widget class="GtkFrame" id="frame1">
                 <property name="visible">True</property>

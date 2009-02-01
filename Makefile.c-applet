@@ -1,5 +1,5 @@
 # vim: set ft=automake ts=8 sts=8 sw=8 :
-NULL = 
+include $(top_srcdir)/Makefile.common
 include $(top_srcdir)/Makefile.desktop-files
 
 AM_CFLAGS = 			\

@@ -232,8 +232,8 @@ on_back_clicked (GtkButton *button, gpointer null)
 static gint
 _compare (GMenuTreeItem *item1, GMenuTreeItem *item2)
 {
-  const gchar *name1;
-  const gchar *name2;
+  const gchar *name1 = NULL;
+  const gchar *name2 = NULL;
 
   switch (gmenu_tree_item_get_type (item1))
   {

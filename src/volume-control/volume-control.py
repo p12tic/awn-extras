@@ -31,12 +31,14 @@ from awn.extras import AWNLib
 read_volume_interval = 0.5
 
 applet_name = "Volume Control"
-applet_version = "0.2.8"
+applet_version = "0.3.1"
 applet_description = "Applet to control your computer's volume"
 
 #theme_dir = os.path.join(os.path.dirname(__file__), "Themes")
 theme_dir = "/usr/share/icons"
 glade_file = os.path.join(os.path.dirname(__file__), "volume-control.glade")
+
+volume_control_apps = ("gnome-volume-control", "xfce4-mixer")
 
 moonbeam_theme_dir = os.path.join(os.path.dirname(__file__), "themes")
 moonbeam_ranges = [100, 93, 86, 79, 71, 64, 57, 50, 43, 36, 29, 21, 14, 1, 0]
@@ -156,18 +158,23 @@ class VolumeControlApplet:
         self.load_channel_pref(prefs)
 
     def show_volume_control_cb(self, widget):
-        subprocess.Popen("gnome-volume-control")
+        for command in volume_control_apps:
+            try:
+                subprocess.Popen(command)
+                return
+            except OSError:
+                pass
+        raise RuntimeError("No volume control found (%s)" % ", ".join(volume_control_apps))
 
     def load_theme_pref(self, prefs):
-        # Combobox in preferences window to choose a theme
-        vbox_theme = prefs.get_widget("vbox-theme")
-
         # Only use themes that are likely to provide all the files
         self.themes = filter(self.filter_themes, os.listdir(theme_dir))
         self.themes.sort()
 
+        # Combobox in preferences window to choose a theme
         combobox_theme = gtk.combo_box_new_text()
-        vbox_theme.add(combobox_theme)
+        prefs.get_widget("hbox-theme").pack_start(combobox_theme, expand=False)
+        prefs.get_widget("label-theme").set_mnemonic_widget(combobox_theme)
 
         for i in self.themes:
             combobox_theme.append_text(i)
@@ -188,15 +195,14 @@ class VolumeControlApplet:
         combobox_theme.connect("changed", self.combobox_theme_changed_cb)
 
     def load_channel_pref(self, prefs):
-        # Combobox in preferences window to choose a channel
-        vbox_channel = prefs.get_widget("vbox-mixer-channel")
-
         if "channel" not in self.applet.settings or self.applet.settings["channel"] not in self.backend.channels:
             self.applet.settings["channel"] = self.backend.channels[0]
         channel = self.applet.settings["channel"]
 
+        # Combobox in preferences window to choose a channel
         self.combobox_channel = gtk.combo_box_new_text()
-        vbox_channel.add(self.combobox_channel)
+        prefs.get_widget("hbox-mixer-channel").pack_start(self.combobox_channel, expand=False)
+        prefs.get_widget("label-mixer-channel").set_mnemonic_widget(self.combobox_channel)
 
         for i in self.backend.channels:
             self.combobox_channel.append_text(i)

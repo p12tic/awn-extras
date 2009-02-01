@@ -241,14 +241,18 @@ config_backend=`$PKG_CONFIG --variable=config_backend awn`
 dnl
 dnl Check for Vala support.
 dnl
+has_vala=no
 AWN_VAPIDIR=`$PKG_CONFIG --variable=vapidir awn`
 if test -n "$AWN_VAPIDIR" -a -f "$AWN_VAPIDIR/awn.vapi"; then
-    VALA_PROG_VALAC(0.3.4)
+    VALA_PROG_VALAC(0.5.4)
     AC_PATH_PROG(VAPIGEN, vapigen, vapigen, [])
     AC_SUBST(AWN_VAPIDIR)
+    if test -n "$VALAC"; then
+        has_vala=yes
+    fi
 fi
 AM_CONDITIONAL(GCONF_SCHEMAS, test "$config_backend" = "GConf")
-AM_CONDITIONAL(HAVE_VALA, test -n "$AWN_VAPIDIR" -a -n "$VALAC")
+AM_CONDITIONAL(HAVE_VALA, test "$has_vala" = "yes")
 AM_CONDITIONAL(LIBAWN_USE_GNOME, test -n "`echo $AWN_CFLAGS | grep LIBAWN_USE_GNOME`")
 
 dnl
@@ -317,12 +321,8 @@ src/affinity/data/scalable/Makefile
 src/affinity/data/actions/Makefile
 src/affinity/po/Makefile.in
 src/animal-farm/Makefile
-src/animal-farm/icons/Makefile
 src/arss/Makefile
-src/arss/icons/Makefile
 src/awn-meebo/Makefile
-src/awn-meebo/icons/Makefile
-src/awn-meebo/profile/Makefile
 src/awn-notification-daemon/Makefile
 src/awn-notification-daemon/data/Makefile
 src/awn-notification-daemon/po/Makefile.in
@@ -334,14 +334,7 @@ src/awnsystemmonitor/awnsystemmonitor.desktop.in
 src/awnterm/Makefile
 src/awnterm/awnterm.desktop.in
 src/battery-applet/Makefile
-src/battery-applet/themes/Makefile
-src/battery-applet/themes/gpm/Makefile
-src/battery-applet/themes/oxygen/Makefile
 src/cairo-clock/Makefile
-src/cairo-clock/themes/Makefile
-src/cairo-clock/themes/gnome/Makefile
-src/cairo-clock/themes/onox/Makefile
-src/cairo-clock/themes/tango/Makefile
 src/cairo-menu-classic/Makefile
 src/cairo-menu-classic/cairo_main_menu_classic.desktop.in
 src/cairo-menu/Makefile
@@ -360,62 +353,39 @@ src/calendar/icalendar/Makefile
 src/calendar/dateutil/Makefile
 src/calendar/dateutil/zoneinfo/Makefile
 src/comic/Makefile
-src/comic/icons/Makefile
 src/comics/Makefile
-src/comics/feed/Makefile
-src/comics/feeds/Makefile
-src/comics/glade/Makefile
 src/comics/locale/Makefile
-src/comics/icons/Makefile
 src/comics/locale/sv_SE/Makefile
 src/comics/locale/sv_SE/LC_MESSAGES/Makefile
 src/cpufreq/Makefile
-src/cpufreq/images/Makefile
 src/DesktopManager/Makefile
 src/digg/Makefile
-src/digg/icons/Makefile
-src/digg/profile/Makefile
-src/digg/profile/Cache/Makefile
 src/digitalClock/Makefile
 src/file-browser-launcher/Makefile
-src/file-browser-launcher/icons/Makefile
 src/filebrowser/Makefile
 src/filebrowser/filebrowser.desktop.in
 src/lastfm/Makefile
-src/lastfm/icons/Makefile
 src/libawn-extras/Makefile
 src/libawn-extras/awn-extras.pc
 src/libawn-extras/bindings/Makefile
 src/libawn-extras/bindings/python/Makefile
 src/libawn-extras/bindings/vala/Makefile
 src/mail/Makefile
-src/mail/Themes/Makefile
-src/mail/Themes/Tango/Makefile
-src/mail/Themes/Reserved/Makefile
-src/mail/Themes/GMail/Makefile
 src/mail/locale/Makefile
 src/mail/locale/ru/Makefile
 src/mail/locale/ru/LC_MESSAGES/Makefile
 src/main-menu/Makefile
 src/main-menu/main-menu.desktop.in
 src/media-control/Makefile
-src/media-control/icons/Makefile
 src/media-icon-back/Makefile
-src/media-icon-back/icons/Makefile
 src/media-icon-next/Makefile
-src/media-icon-next/icons/Makefile
 src/media-icon-play/Makefile
-src/media-icon-play/icons/Makefile
 src/media-player/Makefile
-src/media-player/icons/Makefile
 src/mount-applet/Makefile
-src/mount-applet/icons/Makefile
 src/MiMenu/Makefile
-src/MiMenu/icons/Makefile
 src/notification-area/Makefile
 src/notification-area/notification-area.desktop.in
 src/pandora/Makefile
-src/pandora/icons/Makefile
 src/places/Makefile
 src/places/places.desktop.in
 src/plugger/Makefile
@@ -424,9 +394,7 @@ src/pynot/Makefile
 src/pynot-rgba/Makefile
 src/python-test/Makefile
 src/quit-applet/Makefile
-src/quit-applet/icons/Makefile
 src/rtm/Makefile
-src/rtm/icons/Makefile
 src/separator/Makefile
 src/separator/separator.desktop.in
 src/shiny-switcher/Makefile
@@ -435,7 +403,6 @@ src/simple-launcher/Makefile
 src/simple-launcher/simple-launcher.desktop.in
 src/showdesktop/Makefile
 src/stacks/Makefile
-src/stacks/icons/Makefile
 src/standalone-launcher/Makefile
 src/standalone-launcher/standalone-launcher.desktop.in
 src/switcher/Makefile
@@ -445,10 +412,8 @@ src/taskmand/data/Makefile
 src/Taskmand-applet/Makefile
 src/Taskmand-applet/Taskmand-applet.desktop.in
 src/thinkhdaps/Makefile
-src/thinkhdaps/images/Makefile
 src/to-do/Makefile
 src/tomboy-applet/Makefile
-src/tomboy-applet/icons/Makefile
 src/trash/Makefile
 src/trash/trash.desktop.in
 src/trasher/Makefile
@@ -456,9 +421,6 @@ src/trasher/trasher.desktop.in
 src/vala-test/Makefile
 src/vala-test/vala-test.desktop.in
 src/volume-control/Makefile
-src/volume-control/themes/Makefile
-src/volume-control/themes/Black/Makefile
-src/volume-control/themes/Minimal/Makefile
 src/weather/Makefile
 src/weather/images/Makefile
 src/weather/locale/Makefile
@@ -476,7 +438,6 @@ src/webapplet/Makefile
 src/webapplet/webapplet.desktop.in
 src/wobblyzini/Makefile
 src/wobblyzini/wobblyzini.desktop.in
-src/wobblyzini/icons/Makefile
 ])
 
 dnl ========================================================================
@@ -489,7 +450,7 @@ echo "                   prefix:   ${prefix}"
 echo ""
 echo "    Configuration Backend:   $config_backend"
 echo ""
-echo "             Vala Support:   $HAVE_VALA"
+echo "             Vala Support:   $has_vala"
 echo ""
 echo "           WebKit Support:   $webkit_module"
 echo ""

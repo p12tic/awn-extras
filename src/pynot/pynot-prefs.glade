@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Wed Jan 28 13:57:24 2009 -->
+<!--Generated with glade3 3.4.5 on Sun Feb  1 13:48:54 2009 -->
 <glade-interface>
   <widget class="GtkDialog" id="dialog1">
     <property name="border_width">5</property>
@@ -15,7 +15,7 @@
         <child>
           <widget class="GtkVBox" id="vbox1">
             <property name="visible">True</property>
-            <property name="spacing">6</property>
+            <property name="spacing">12</property>
             <child>
               <widget class="GtkFrame" id="frame1">
                 <property name="visible">True</property>
@@ -24,54 +24,31 @@
                 <child>
                   <widget class="GtkAlignment" id="alignment1">
                     <property name="visible">True</property>
+                    <property name="top_padding">6</property>
                     <property name="left_padding">12</property>
                     <child>
                       <widget class="GtkVBox" id="vbox2">
                         <property name="visible">True</property>
+                        <property name="spacing">6</property>
                         <child>
                           <widget class="GtkCheckButton" id="roundedCheckbutton">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="label" translatable="yes">Use rounded border</property>
+                            <property name="label" translatable="yes">_Use rounded border</property>
+                            <property name="use_underline">True</property>
                             <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>
                           </widget>
                         </child>
                         <child>
-                          <widget class="GtkHBox" id="hbox2">
+                          <widget class="GtkTable" id="table1">
                             <property name="visible">True</property>
+                            <property name="n_rows">3</property>
+                            <property name="n_columns">3</property>
+                            <property name="column_spacing">13</property>
+                            <property name="row_spacing">6</property>
                             <child>
-                              <widget class="GtkLabel" id="label3">
-                                <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Size of icons:</property>
-                              </widget>
-                            </child>
-                            <child>
-                              <widget class="GtkSpinButton" id="iconSizeSpinbutton">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="adjustment">5 5 128 1 10 0</property>
-                              </widget>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="position">1</property>
-                              </packing>
-                            </child>
-                          </widget>
-                          <packing>
-                            <property name="position">1</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <widget class="GtkHBox" id="hbox1">
-                            <property name="visible">True</property>
-                            <child>
-                              <widget class="GtkLabel" id="label2">
-                                <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Distance from window border:</property>
-                              </widget>
+                              <placeholder/>
                             </child>
                             <child>
                               <widget class="GtkSpinButton" id="offsetSpinbutton">
@@ -80,24 +57,13 @@
                                 <property name="adjustment">1 0 50 1 10 0</property>
                               </widget>
                               <packing>
-                                <property name="expand">False</property>
-                                <property name="position">1</property>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">1</property>
+                                <property name="bottom_attach">2</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
                               </packing>
-                            </child>
-                          </widget>
-                          <packing>
-                            <property name="position">2</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <widget class="GtkHBox" id="hbox3">
-                            <property name="visible">True</property>
-                            <child>
-                              <widget class="GtkLabel" id="label4">
-                                <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Number of icon rows:</property>
-                              </widget>
                             </child>
                             <child>
                               <widget class="GtkSpinButton" id="iconRowsSpinbutton">
@@ -106,13 +72,91 @@
                                 <property name="adjustment">1 1 10 1 10 0</property>
                               </widget>
                               <packing>
-                                <property name="expand">False</property>
-                                <property name="position">1</property>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">2</property>
+                                <property name="bottom_attach">3</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
                               </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkSpinButton" id="iconSizeSpinbutton">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="adjustment">5 5 128 1 10 0</property>
+                              </widget>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkLabel" id="label8">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">pixels</property>
+                              </widget>
+                              <packing>
+                                <property name="left_attach">2</property>
+                                <property name="right_attach">3</property>
+                                <property name="top_attach">1</property>
+                                <property name="bottom_attach">2</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkLabel" id="label7">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">pixels</property>
+                              </widget>
+                              <packing>
+                                <property name="left_attach">2</property>
+                                <property name="right_attach">3</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkLabel" id="label4">
+                                <property name="visible">True</property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">_Number of icon rows:</property>
+                                <property name="use_underline">True</property>
+                                <property name="mnemonic_widget">iconRowsSpinbutton</property>
+                              </widget>
+                              <packing>
+                                <property name="top_attach">2</property>
+                                <property name="bottom_attach">3</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkLabel" id="label2">
+                                <property name="visible">True</property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">Distance from window _border:</property>
+                                <property name="use_underline">True</property>
+                                <property name="mnemonic_widget">offsetSpinbutton</property>
+                              </widget>
+                              <packing>
+                                <property name="top_attach">1</property>
+                                <property name="bottom_attach">2</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkLabel" id="label3">
+                                <property name="visible">True</property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">_Size of icons:</property>
+                                <property name="use_underline">True</property>
+                                <property name="mnemonic_widget">iconSizeSpinbutton</property>
+                              </widget>
                             </child>
                           </widget>
                           <packing>
-                            <property name="position">3</property>
+                            <property name="position">1</property>
                           </packing>
                         </child>
                       </widget>
@@ -122,7 +166,7 @@
                 <child>
                   <widget class="GtkLabel" id="label1">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">&lt;b&gt;Look&lt;/b&gt;</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Display&lt;/b&gt;</property>
                     <property name="use_markup">True</property>
                   </widget>
                   <packing>
@@ -130,6 +174,9 @@
                   </packing>
                 </child>
               </widget>
+              <packing>
+                <property name="expand">False</property>
+              </packing>
             </child>
             <child>
               <widget class="GtkFrame" id="frame2">
@@ -139,15 +186,18 @@
                 <child>
                   <widget class="GtkAlignment" id="alignment2">
                     <property name="visible">True</property>
+                    <property name="top_padding">6</property>
                     <property name="left_padding">12</property>
                     <child>
                       <widget class="GtkVBox" id="vbox3">
                         <property name="visible">True</property>
+                        <property name="spacing">6</property>
                         <child>
                           <widget class="GtkRadioButton" id="useGtkRadiobutton">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="label" translatable="yes">Use GTK theme</property>
+                            <property name="label" translatable="yes">Use _GTK theme</property>
+                            <property name="use_underline">True</property>
                             <property name="response_id">0</property>
                             <property name="active">True</property>
                             <property name="draw_indicator">True</property>
@@ -161,6 +211,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="label" translatable="yes">Custom color:</property>
+                                <property name="use_underline">True</property>
                                 <property name="response_id">0</property>
                                 <property name="active">True</property>
                                 <property name="draw_indicator">True</property>
@@ -193,6 +244,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="label" translatable="yes">Image:</property>
+                                <property name="use_underline">True</property>
                                 <property name="response_id">0</property>
                                 <property name="active">True</property>
                                 <property name="draw_indicator">True</property>
@@ -236,6 +288,7 @@
                 </child>
               </widget>
               <packing>
+                <property name="expand">False</property>
                 <property name="position">1</property>
               </packing>
             </child>
@@ -247,14 +300,24 @@
                 <child>
                   <widget class="GtkAlignment" id="alignment4">
                     <property name="visible">True</property>
+                    <property name="top_padding">6</property>
                     <property name="left_padding">12</property>
                     <child>
-                      <widget class="GtkCheckButton" id="pidCheckbutton">
+                      <widget class="GtkVBox" id="vbox5">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="label" translatable="yes">Do not show icons with PID 0</property>
-                        <property name="response_id">0</property>
-                        <property name="draw_indicator">True</property>
+                        <child>
+                          <widget class="GtkCheckButton" id="pidCheckbutton">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="label" translatable="yes">_Do not show icons with PID 0</property>
+                            <property name="use_underline">True</property>
+                            <property name="response_id">0</property>
+                            <property name="draw_indicator">True</property>
+                          </widget>
+                          <packing>
+                            <property name="expand">False</property>
+                          </packing>
+                        </child>
                       </widget>
                     </child>
                   </widget>
@@ -271,11 +334,13 @@
                 </child>
               </widget>
               <packing>
+                <property name="expand">False</property>
                 <property name="position">2</property>
               </packing>
             </child>
           </widget>
           <packing>
+            <property name="expand">False</property>
             <property name="position">1</property>
           </packing>
         </child>

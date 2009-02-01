@@ -232,7 +232,9 @@ class mywidget(gtk.Widget):
         # First render. Grab all the icons we know about, tell them where to
         # draw, and call a resize if necessary (likely, the first time around)
 
-        gobject.timeout_add(100,self.tr__testTiming)
+        #gobject.timeout_add(100,self.tr__testTiming)
+        gobject.io_add_watch(self.dsp.fileno(), gobject.IO_IN | gobject.IO_PRI,
+                             self.tr__testTiming)
         # Check for new X signals every 100 miliseconds (1/10th second) 
 
         gobject.timeout_add(100,self.chbg)
@@ -356,7 +358,7 @@ class mywidget(gtk.Widget):
             mask = (X.SubstructureRedirectMask|X.SubstructureNotifyMask)
         self.root.send_event(ev, event_mask=mask)
 
-    def tr__testTiming(self):
+    def tr__testTiming(self,var,var2):
         # Event "loop"
         # called every 1/10th second, does all events and quits
         # quickest hack towards multi-threading i had ;)

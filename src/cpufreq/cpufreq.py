@@ -15,6 +15,7 @@
 
 import os
 import re
+import stat
 import subprocess
 
 import pygtk
@@ -33,7 +34,7 @@ except ImportError:
     dbus = None
 
 applet_name = "CPU Frequency Monitor"
-applet_version = "0.2.8"
+applet_version = "0.3.1"
 applet_description = "An applet to monitor and control the CPU frequency"
 
 # Themed logo of the applet, used as the applet's icon and shown in the GTK About dialog
@@ -46,7 +47,6 @@ sysfs_dir = "/sys/devices/system/cpu"
 proc_cpuinfo_file = "/proc/cpuinfo"
 
 images_dir = os.path.join(os.path.dirname(__file__), "images")
-
 glade_file = os.path.join(os.path.dirname(__file__), "cpufreq.glade")
 
 dbus_bus_name = "org.awnproject.Awn.Applets.CpuFreq"
@@ -344,7 +344,12 @@ class SysFSBackend:
         return os.path.isdir(os.path.join(sysfs_dir, "cpu" + str(cpu_nr), "cpufreq"))
     
     def supports_scaling(self):
-        return True
+        get_path = lambda d: os.path.join(d, "cpufreq-selector")
+        paths = [get_path(i) for i in os.environ["PATH"].split(":") if os.access(get_path(i), os.X_OK)]
+        
+        if len(paths) == 0:
+            return False
+        return os.stat(paths[0])[stat.ST_MODE] & stat.S_ISUID == stat.S_ISUID
     
     def get_cpu_nr(self):
         return self.__cpu_nr

@@ -4,5 +4,5 @@ X-AWN-AppletType=C
 Name=Separator
 Comment=A simple separator.
 Exec=@LIBDIR@/awn/applets/separator/separator.so
-Icon=icons/separator.svg
+Icon=separator
 X-AWN-AppletCategory=Utility,Core

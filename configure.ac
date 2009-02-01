@@ -241,14 +241,18 @@ config_backend=`$PKG_CONFIG --variable=config_backend awn`
 dnl
 dnl Check for Vala support.
 dnl
+has_vala=no
 AWN_VAPIDIR=`$PKG_CONFIG --variable=vapidir awn`
 if test -n "$AWN_VAPIDIR" -a -f "$AWN_VAPIDIR/awn.vapi"; then
-    VALA_PROG_VALAC(0.3.4)
+    VALA_PROG_VALAC(0.5.4)
     AC_PATH_PROG(VAPIGEN, vapigen, vapigen, [])
     AC_SUBST(AWN_VAPIDIR)
+    if test -n "$VALAC"; then
+        has_vala=yes
+    fi
 fi
 AM_CONDITIONAL(GCONF_SCHEMAS, test "$config_backend" = "GConf")
-AM_CONDITIONAL(HAVE_VALA, test -n "$AWN_VAPIDIR" -a -n "$VALAC")
+AM_CONDITIONAL(HAVE_VALA, test "$has_vala" = "yes")
 AM_CONDITIONAL(LIBAWN_USE_GNOME, test -n "`echo $AWN_CFLAGS | grep LIBAWN_USE_GNOME`")
 
 dnl
@@ -446,7 +450,7 @@ echo "                   prefix:   ${prefix}"
 echo ""
 echo "    Configuration Backend:   $config_backend"
 echo ""
-echo "             Vala Support:   $HAVE_VALA"
+echo "             Vala Support:   $has_vala"
 echo ""
 echo "           WebKit Support:   $webkit_module"
 echo ""

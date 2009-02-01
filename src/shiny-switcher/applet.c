@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008 Rodney Cryderman <rcryderman@gmail.com>
+ * Copyright (C) 2007, 2008, 2009 Rodney Cryderman <rcryderman@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,8 +27,8 @@ awn_applet_factory_initp(gchar* uid, gint orient, gint height)
 {
   AwnApplet *applet;
   Shiny_switcher*shiny_switcher;
-  applet = awn_applet_new(uid, orient, height);
-  shiny_switcher = applet_new(applet, height * 3, height);
+  applet = awn_applet_new(uid, orient, height*0.5);
+  shiny_switcher = applet_new(applet, orient,height , height);
   return applet;
 }
 

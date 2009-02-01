@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008 Rodney Cryderman <rcryderman@gmail.com>
+ * Copyright (C) 2007, 2008, 2009 Rodney Cryderman <rcryderman@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -159,8 +159,12 @@ typedef struct
   GdkColormap  *rgb_cmap;
   GdkColormap  *rgba_cmap;
   AwnConfigClient  *config;
-
+  AwnConfigClient  *dock_config;
+	GtkWidget * align;
+	
+	gint orient;
 }Shiny_switcher;
+
 
 typedef struct
 {
@@ -169,6 +173,6 @@ typedef struct
 }Win_press_data;
 
 // Applet
-Shiny_switcher* applet_new(AwnApplet *applet, int width, int height);
+Shiny_switcher* applet_new(AwnApplet *applet, gint orient,int width, int height);
 
 #endif

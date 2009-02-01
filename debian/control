@@ -54,6 +54,13 @@ Recommends: 	avant-window-navigator-trunk,
 		python-notify, 
 		python-sqlalchemy,
 		libgweather-common,
+		python-xlib,
+		xdg-utils,
+		hal,
+		sqlite3,
+		python-dateutil,
+		gnome-applets,
+		tsclient,
 Conflict: awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 Replaces: awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 XB-Python-Version: ${python:Versions}

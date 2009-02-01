@@ -86,6 +86,7 @@ static void _changed(AwnApplet *app,  Shiny_switcher *shinyswitcher);
 static void _workspaces_changed(WnckScreen    *screen, WnckWorkspace *space, Shiny_switcher * shinyswitcher);
 static gboolean _changed_waited(Shiny_switcher *shinyswitcher);
 static void _viewports_changed(WnckScreen    *screen, Shiny_switcher * shinyswitcher);
+void init_config(Shiny_switcher *shinyswitcher);
 
 static void config_get_string(AwnConfigClient *client, const gchar *key, gchar **str)
 {
@@ -532,6 +533,22 @@ void set_background(Shiny_switcher *shinyswitcher)
   }
 }
 
+static gboolean
+_start_applet_prefs(GtkMenuItem *menuitem, gpointer null)
+{
+  GError *err = NULL;
+  g_spawn_command_line_async("awn-manager", &err);
+
+  if (err)
+  {
+    g_warning("Failed to start shinyswitcher prefs dialog: %s\n", err->message);
+    g_error_free(err);
+  }
+
+  return TRUE;
+}
+
+
 gboolean  _button_workspace(GtkWidget *widget, GdkEventButton *event, Workplace_info * ws)
 {
 
@@ -558,15 +575,24 @@ gboolean  _button_workspace(GtkWidget *widget, GdkEventButton *event, Workplace_
       GtkWidget *item;
       menu = awn_applet_create_default_menu(shinyswitcher->applet);
       gtk_menu_set_screen(GTK_MENU(menu), NULL);
+/*
       item = shared_menuitem_create_applet_prefs(APPLET_NAME, NULL, APPLET_NAME);
 
       if (item) //generic preferences is enabled
       {
         gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
       }
+*/
+      item = gtk_image_menu_item_new_with_label("Applet Preferences");
+      gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+                                gtk_image_new_from_stock(GTK_STOCK_PREFERENCES,
+                                                         GTK_ICON_SIZE_MENU));
+      gtk_widget_show_all(item);
+      g_signal_connect(G_OBJECT(item), "activate",
+                   G_CALLBACK(_start_applet_prefs), NULL);
+      gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
       item = shared_menuitem_about_applet_simple("Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
-
              AWN_APPLET_LICENSE_GPLV2,
              "Shiny Switcher",
              NULL);
@@ -629,6 +655,15 @@ gboolean  _button_win(GtkWidget *widget, GdkEventButton *event, Win_press_data *
 
       item = awn_applet_create_pref_item();
       gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), item);
+
+      item = gtk_image_menu_item_new_with_label("Applet Preferences");
+      gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+                                gtk_image_new_from_stock(GTK_STOCK_PREFERENCES,
+                                                         GTK_ICON_SIZE_MENU));
+      gtk_widget_show_all(item);
+      g_signal_connect(G_OBJECT(item), "activate",
+                   G_CALLBACK(_start_applet_prefs), NULL);
+      gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
       item = shared_menuitem_about_applet_simple("Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
              AWN_APPLET_LICENSE_GPLV2,
@@ -1799,12 +1834,21 @@ gboolean create_windows(Shiny_switcher *shinyswitcher)
           GtkWidget *item;
           menu = awn_applet_create_default_menu(shinyswitcher->applet);
           gtk_menu_set_screen(GTK_MENU(menu), NULL);
-          item = shared_menuitem_create_applet_prefs(APPLET_NAME, NULL, APPLET_NAME);
+      /*    item = shared_menuitem_create_applet_prefs(APPLET_NAME, NULL, APPLET_NAME);
 
           if (item) //generic preferences is enabled
           {
             gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
           }
+*/
+          item = gtk_image_menu_item_new_with_label("Applet Preferences");
+          gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+                                gtk_image_new_from_stock(GTK_STOCK_PREFERENCES,
+                                                         GTK_ICON_SIZE_MENU));
+          gtk_widget_show_all(item);
+          g_signal_connect(G_OBJECT(item), "activate",
+                   G_CALLBACK(_start_applet_prefs), NULL);
+          gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
           item = shared_menuitem_about_applet_simple("Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
 
@@ -1852,12 +1896,21 @@ void _window_opened(WnckScreen *screen, WnckWindow *window, Shiny_switcher *shin
     GtkWidget *item;
     menu = awn_applet_create_default_menu(shinyswitcher->applet);
     gtk_menu_set_screen(GTK_MENU(menu), NULL);
-    item = shared_menuitem_create_applet_prefs(APPLET_NAME, NULL, APPLET_NAME);
+   /* item = shared_menuitem_create_applet_prefs(APPLET_NAME, NULL, APPLET_NAME);
 
     if (item) //generic preferences is enabled
     {
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-    }
+    }*/
+
+    item = gtk_image_menu_item_new_with_label("Applet Preferences");
+    gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+                                gtk_image_new_from_stock(GTK_STOCK_PREFERENCES,
+                                                         GTK_ICON_SIZE_MENU));
+    gtk_widget_show_all(item);
+    g_signal_connect(G_OBJECT(item), "activate",
+                   G_CALLBACK(_start_applet_prefs), NULL);
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
     item = shared_menuitem_about_applet_simple("Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
 

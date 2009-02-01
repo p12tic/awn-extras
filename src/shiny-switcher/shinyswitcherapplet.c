@@ -164,6 +164,12 @@ void init_config(Shiny_switcher *shinyswitcher)
                                                    AwnConfigClientNotifyFunc cb,
                                                    gpointer     user_data);
 	*/
+		/*this will end up working*/
+		awn_config_client_notify_add (shinyswitcher->dock_config,
+																	"panel",
+																	"offset",
+																	_change_config_cb,
+																	shinyswitcher);		
 		awn_config_client_notify_add (shinyswitcher->config,
 																	AWN_CONFIG_CLIENT_DEFAULT_GROUP,
 																	"grab_wallpaper",

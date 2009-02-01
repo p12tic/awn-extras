@@ -770,7 +770,7 @@ void create_containers(Shiny_switcher *shinyswitcher)
   }
 	
   gint padding = shinyswitcher->height;
-	padding = awn_config_client_get_int (shinyswitcher->dock_config,"panel","offset", NULL);
+	padding = awn_config_client_get_int (shinyswitcher->dock_config,"bar","offset", NULL);
 
 	if (shinyswitcher->align)
 	{

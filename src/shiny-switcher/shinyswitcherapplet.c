@@ -83,6 +83,9 @@ static gboolean _button_release_event(GtkWidget *widget, GdkEventButton *event, 
 static void _height_changed(AwnApplet *app, guint height, Shiny_switcher * shinyswitcher);
 static void _orient_changed(AwnApplet *app, guint orient, Shiny_switcher * shinyswitcher);
 static void _changed (AwnApplet *app,  Shiny_switcher *shinyswitcher);
+static void _workspaces_changed(WnckScreen    *screen, WnckWorkspace *space,Shiny_switcher * shinyswitcher);
+static gboolean _changed_waited(Shiny_switcher *shinyswitcher);
+static void _viewports_changed(WnckScreen    *screen,Shiny_switcher * shinyswitcher);
 
 static void config_get_string(AwnConfigClient *client, const gchar *key, gchar **str)
 {
@@ -138,6 +141,15 @@ void _change_config_cb(AwnConfigClientNotifyEntry *entry, Shiny_switcher *shinys
 {
 	init_config(shinyswitcher);
 	_changed (shinyswitcher->applet,  shinyswitcher);
+	_changed_waited(shinyswitcher);		
+}
+
+void _change_config_ws_cb(AwnConfigClientNotifyEntry *entry, Shiny_switcher *shinyswitcher)
+{
+	init_config(shinyswitcher);
+	_changed (shinyswitcher->applet,  shinyswitcher);
+
+//	g_timeout_add(2000, (GSourceFunc)_changed_waited, shinyswitcher); //don't need to do this as seconds... happens once		
 }
 void init_config(Shiny_switcher *shinyswitcher)
 {
@@ -192,7 +204,7 @@ void init_config(Shiny_switcher *shinyswitcher)
 		awn_config_client_notify_add (shinyswitcher->config,
 																	AWN_CONFIG_CLIENT_DEFAULT_GROUP,
 																	"columns",
-																	_change_config_cb,
+																	_change_config_ws_cb,
 																	shinyswitcher);
 		awn_config_client_notify_add (shinyswitcher->config,
 																	AWN_CONFIG_CLIENT_DEFAULT_GROUP,
@@ -212,7 +224,7 @@ void init_config(Shiny_switcher *shinyswitcher)
 		awn_config_client_notify_add (shinyswitcher->config,
 																	AWN_CONFIG_CLIENT_DEFAULT_GROUP,
 																	"rows",
-																	_change_config_cb,
+																	_change_config_ws_cb,
 																	shinyswitcher);
 		awn_config_client_notify_add (shinyswitcher->config,
 																	AWN_CONFIG_CLIENT_DEFAULT_GROUP,
@@ -350,7 +362,9 @@ void calc_dimensions(Shiny_switcher *shinyswitcher)
   ws_ratio = wnck_ws_width / (double)wnck_ws_height;
   scr_ratio = wnck_scr_width / (double)wnck_scr_height;
 
-  printf("cols = %d,  rows=%d \n", shinyswitcher->cols, shinyswitcher->rows);
+  printf("cols = %d,  rows=%d,  applet height = %d, applet scale = %f\n", 
+				 shinyswitcher->cols, shinyswitcher->rows,
+				 shinyswitcher->height, shinyswitcher->applet_scale);
 	switch (shinyswitcher->orient)
 	{
 		case 2:
@@ -1921,8 +1935,12 @@ gboolean _waited(Shiny_switcher *shinyswitcher)
 
   g_signal_connect(G_OBJECT(shinyswitcher->applet), "expose_event", G_CALLBACK(_expose_event_outer), shinyswitcher);
 
+  g_signal_connect(G_OBJECT(shinyswitcher->wnck_screen), "workspace-created", G_CALLBACK(_workspaces_changed), shinyswitcher);	
 
-//  gtk_widget_set_size_request(GTK_WIDGET(shinyswitcher->applet), shinyswitcher->width + shinyswitcher->applet_border_width*2,
+  g_signal_connect(G_OBJECT(shinyswitcher->wnck_screen), "workspace-destroyed", G_CALLBACK(_workspaces_changed), shinyswitcher);		
+
+  g_signal_connect(G_OBJECT(shinyswitcher->wnck_screen), "viewports-changed", G_CALLBACK(_viewports_changed), shinyswitcher);			
+	//  gtk_widget_set_size_request(GTK_WIDGET(shinyswitcher->applet), shinyswitcher->width + shinyswitcher->applet_border_width*2,
 //                              shinyswitcher->height/2);
 
   return FALSE;
@@ -1950,7 +1968,7 @@ applet_new(AwnApplet *applet, gint orient, int width, int height)
   shinyswitcher->win_menus = g_tree_new(_cmp_ptrs);
   shinyswitcher->height = height;
   shinyswitcher->wnck_screen = wnck_screen_get_default();
-
+  wnck_screen_force_update(shinyswitcher->wnck_screen);
   shinyswitcher->got_viewport = wnck_workspace_is_virtual(wnck_screen_get_active_workspace(shinyswitcher->wnck_screen));
 
   init_config(shinyswitcher);
@@ -2015,29 +2033,21 @@ _button_release_event(GtkWidget *widget, GdkEventButton *event, gpointer *data)
 }
 
 
-static void _changed (AwnApplet *app,  Shiny_switcher *shinyswitcher)
+static gboolean
+_changed_waited(Shiny_switcher *shinyswitcher)
 {
-  GdkScreen *screen;
-
-  shinyswitcher->applet = app;
-  shinyswitcher->wnck_screen = wnck_screen_get_default();
-
-//  init_config(shinyswitcher);
-
-  screen = gtk_widget_get_screen(GTK_WIDGET(shinyswitcher->applet));
-
-  while (! gdk_screen_is_composited(screen))   //FIXME
-  {
-    printf("Shinyswitcher startup:  screen not composited.. waiting 1 second\n");
-    g_usleep(G_USEC_PER_SEC);
-  }
-  shinyswitcher->rows = wnck_workspace_get_layout_row(wnck_screen_get_workspace(shinyswitcher->wnck_screen,
-                        wnck_screen_get_workspace_count(shinyswitcher->wnck_screen) - 1)
-                                                     ) + 1;
-  shinyswitcher->cols = wnck_workspace_get_layout_column(wnck_screen_get_workspace(shinyswitcher->wnck_screen,
-                        wnck_screen_get_workspace_count(shinyswitcher->wnck_screen) - 1)
-                                                        ) + 1 ;  
-//  g_debug("calc dim \n");
+	wnck_screen_force_update(shinyswitcher->wnck_screen);			
+	
+	if (shinyswitcher->got_viewport ||  !shinyswitcher->reconfigure)
+	{
+		shinyswitcher->rows = wnck_workspace_get_layout_row(wnck_screen_get_workspace(shinyswitcher->wnck_screen,
+		                    wnck_screen_get_workspace_count(shinyswitcher->wnck_screen) - 1)
+		                                                 ) + 1;
+		shinyswitcher->cols = wnck_workspace_get_layout_column(wnck_screen_get_workspace(shinyswitcher->wnck_screen,
+		                    wnck_screen_get_workspace_count(shinyswitcher->wnck_screen) - 1)                                                    
+																									) + 1 ;  
+	}
+	//  g_debug("calc dim \n");
   calc_dimensions(shinyswitcher);
 //  g_debug("set bg \n");	
 //  g_free(shinyswitcher->wallpaper_inactive);   //FIXME
@@ -2046,14 +2056,58 @@ static void _changed (AwnApplet *app,  Shiny_switcher *shinyswitcher)
  // g_debug("create cont \n");	
   
   gtk_container_remove(GTK_CONTAINER(shinyswitcher->applet),shinyswitcher->container);
-//  gtk_widget_destroy(shinyswitcher->container);
+	
+  gtk_widget_destroy(shinyswitcher->container);
   shinyswitcher->container = NULL;
   create_containers(shinyswitcher);
 //  g_debug("create win \n");	
   create_windows(shinyswitcher);
 //  g_debug("Done... \n");
   gtk_widget_show_all( shinyswitcher->applet);
+	return FALSE;
+}
+
+static void _changed (AwnApplet *app,  Shiny_switcher *shinyswitcher)
+{
+  GdkScreen *screen;
+
+  shinyswitcher->applet = app;
+  shinyswitcher->wnck_screen = wnck_screen_get_default();
+
+  shinyswitcher->got_viewport = wnck_workspace_is_virtual(wnck_screen_get_active_workspace(shinyswitcher->wnck_screen));
+
+  shinyswitcher->reconfigure = !shinyswitcher->got_viewport;  //for the moment... will be a config option eventually
 	
+//  init_config(shinyswitcher);
+
+  screen = gtk_widget_get_screen(GTK_WIDGET(shinyswitcher->applet));
+
+	
+	if (shinyswitcher->reconfigure)
+  {
+    printf("ShinySwitcher Message:  attempting to reconfigure workspaces %dx%d\n",
+					 shinyswitcher->cols,shinyswitcher->rows);
+    wnck_screen_change_workspace_count(shinyswitcher->wnck_screen, shinyswitcher->cols*shinyswitcher->rows);
+		wnck_screen_force_update(shinyswitcher->wnck_screen);		
+		if (!shinyswitcher->wnck_token)		
+		{
+  		shinyswitcher->wnck_token = wnck_screen_try_set_workspace_layout(shinyswitcher->wnck_screen, 0,  shinyswitcher->rows,0);
+		}
+		else
+		{
+			shinyswitcher->wnck_token = wnck_screen_try_set_workspace_layout(shinyswitcher->wnck_screen, shinyswitcher->wnck_token, shinyswitcher->rows,0);
+		}
+    if (!shinyswitcher->wnck_token)
+    {
+      printf("Failed to acquire ownership of workspace layout\n");
+			shinyswitcher->reconfigure = FALSE;
+    }
+  }
+  else
+  {
+    printf("ShinySwitcher Message:  viewport/compiz detected.. using existing workspace config\n");
+	}
+//  g_timeout_add(2000, (GSourceFunc)_changed_waited, shinyswitcher); //don't need to do this as seconds... happens once	
 }
 
 static void
@@ -2062,6 +2116,7 @@ _height_changed(AwnApplet *app, guint height, Shiny_switcher *shinyswitcher)
   //doing this as a tree right now..  cause it's easy and I think I'll need a complex data structure eventually.
   shinyswitcher->height = height;
   _changed(app,shinyswitcher);
+	_changed_waited(shinyswitcher);
 }
 
 
@@ -2070,6 +2125,20 @@ _orient_changed(AwnApplet *app, guint orient, Shiny_switcher * shinyswitcher)
 {
 	shinyswitcher->orient = orient;
 	_changed(app,shinyswitcher);
+	_changed_waited(shinyswitcher);	
 }
 
+static void
+_workspaces_changed(WnckScreen    *screen, WnckWorkspace *space,Shiny_switcher * shinyswitcher)
+{
+	_changed_waited(shinyswitcher);
+//	_changed_waited(shinyswitcher);
+}
+
+static void
+_viewports_changed(WnckScreen    *screen,Shiny_switcher * shinyswitcher)
+{
+	_changed(shinyswitcher->applet,shinyswitcher);
+	_changed_waited(shinyswitcher);
+}
 

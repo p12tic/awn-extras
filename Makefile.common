@@ -1,0 +1,3 @@
+# vim: set ft=automake ts=8 sts=8 sw=8 :
+NULL = 
+applet_datadir = $(datadir)/avant-window-navigator/applets/$(APPLET_NAME)

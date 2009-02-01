@@ -1,8 +1,8 @@
-# vim: set ft=automake :
-NULL =
+# vim: set ft=automake ts=8 sts=8 sw=8:
+include $(top_srcdir)/Makefile.common
 include $(top_srcdir)/Makefile.desktop-files
 
-appletdir = $(datadir)/avant-window-navigator/applets/$(APPLET_NAME)
+appletdir = $(applet_datadir)
 
 install-exec-local:
 	test -d "$(DESTDIR)$(appletdir)" || mkdir -p "$(DESTDIR)$(appletdir)"

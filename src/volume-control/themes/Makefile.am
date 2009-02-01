@@ -1,3 +1,0 @@
-SUBDIRS = 	\
-	Black	\
-	Minimal

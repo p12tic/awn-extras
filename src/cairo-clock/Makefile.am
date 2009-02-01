@@ -1,4 +1,3 @@
-SUBDIRS = themes
 APPLET_NAME = cairo-clock
 APPLET_MAIN_FILE = cairo-clock.py
 include $(top_srcdir)/Makefile.python-applet
@@ -10,3 +9,12 @@ dist_applet_DATA =  \
     analogclock.py \
     locations.py
     $(NULL)
+
+gnome_themedir = $(applet_datadir)/themes/gnome
+dist_gnome_theme_DATA = $(wildcard themes/gnome/*.svg)
+
+onox_themedir = $(applet_datadir)/themes/onox
+dist_onox_theme_DATA = $(wildcard themes/onox/*.svg)
+
+tango_themedir = $(applet_datadir)/themes/tango
+dist_tango_theme_DATA = $(wildcard themes/tango/*.svg)

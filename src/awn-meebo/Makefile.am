@@ -1,6 +1,13 @@
-SUBDIRS = profile icons
 APPLET_NAME = awn-meebo
 APPLET_MAIN_FILE = awn-meebo.py
 include $(top_srcdir)/Makefile.python-applet
 
-dist_applet_DATA = $(NULL)
+meebo_iconsdir = $(applet_datadir)/icons
+dist_meebo_icons_DATA =	\
+	icons/meebo.png	\
+	$(NULL)
+
+meebo_profiledir = $(applet_datadir)/profile
+dist_meebo_profile_DATA =	\
+	profile/prefs.js	\
+	$(NULL)

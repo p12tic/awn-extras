@@ -1,1 +1,0 @@
-SUBDIRS = gpm oxygen

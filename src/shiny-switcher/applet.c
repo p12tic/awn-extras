@@ -28,7 +28,7 @@ awn_applet_factory_initp(gchar* uid, gint orient, gint height)
   AwnApplet *applet;
   Shiny_switcher*shiny_switcher;
   applet = awn_applet_new(uid, orient, height*0.5);
-  shiny_switcher = applet_new(applet, orient,height , height);
+  shiny_switcher = applet_new(applet, orient, height , height);
   return applet;
 }
 

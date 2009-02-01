@@ -21,6 +21,7 @@ endif
 if WITH_GNOME
 GCONF_APPLETS +=	\
 	awn-notification-daemon \
+	main-menu	\
 	$(NULL)
 endif
 if WITH_WEBKIT

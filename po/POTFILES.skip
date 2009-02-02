@@ -4,13 +4,11 @@ src/filebrowser/filebrowser.desktop.in
 src/filebrowser/filebrowser.schemas.in
 src/places/places.schemas.in
 src/shiny-switcher/shinyswitcher.schemas.in
-src/switcher/switcher.schemas.in
 src/trash/trash.schemas.in
 src/filebrowser/filebrowser.desktop.in
 src/filebrowser/filebrowser.schemas.in
 src/places/places.schemas.in
 src/shiny-switcher/shinyswitcher.schemas.in
-src/switcher/switcher.schemas.in
 src/trash/trash.schemas.in
 src/MiMenu/mimenu.desktop.in
 src/arss/arss.desktop.in
@@ -69,7 +67,6 @@ src/stacks/stacks_backend_trasher.py
 src/stacks/stacks_config.py
 src/stacks/stacks_preferences.glade
 src/stacks/stacks_vfs.py
-src/switcher/applet.c
 src/trash/trashapplet.c
 src/trash/trashapplet.glade
 src/weather/weatherconfig.py

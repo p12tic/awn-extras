@@ -78,7 +78,6 @@ SUBDIRS =			\
 	separator		\
 	shiny-switcher		\
 	showdesktop		\
-	switcher		\
 	thinkhdaps			\
 	to-do				\
 	tomboy-applet		\

@@ -75,7 +75,7 @@ AM_CONDITIONAL(WITH_WEBKIT, test "$with_webkit" != "no")
 PKG_CHECK_MODULES(AWN, [awn >= 0.3.1])
 #trash
 PKG_CHECK_MODULES(LIBGLADE, [libglade-2.0])
-# awn-notification-daemon, shiny-switcher, standalone-launcher, switcher, taskmand
+# awn-notification-daemon, shiny-switcher, standalone-launcher, taskmand
 PKG_CHECK_MODULES(LIBWNCK, [libwnck-1.0])
 # affinity, awn-notification-daemon, shiny-switcher, trash
 PKG_CHECK_MODULES(LIBX11, [x11])
@@ -405,8 +405,6 @@ src/showdesktop/Makefile
 src/stacks/Makefile
 src/standalone-launcher/Makefile
 src/standalone-launcher/standalone-launcher.desktop.in
-src/switcher/Makefile
-src/switcher/switcher.desktop.in
 src/taskmand/Makefile
 src/taskmand/data/Makefile
 src/Taskmand-applet/Makefile

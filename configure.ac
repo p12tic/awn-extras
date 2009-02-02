@@ -272,18 +272,20 @@ AC_DEFINE_UNQUOTED(DBUS_MICRO_VER, $DBUS_MICRO_VER, [D-BUS micro version.])
 
 AC_DEFINE_UNQUOTED(DBUS_API_SUBJECT_TO_CHANGE, ,DBUS API is subject to change)
 
+appletsdir="$datarootdir/avant-window-navigator/applets"
 
-AS_AC_EXPAND(ICONDIR, $icondir)
+AS_AC_EXPAND(APPLETSDIR, $appletsdir)
 AS_AC_EXPAND(SYSCONFDIR, $sysconfdir)
 AS_AC_EXPAND(LIBDIR, $libdir)
 AS_AC_EXPAND(DATADIR, $datadir)
 AS_AC_EXPAND(LIBEXECDIR, $libexecdir)
 
+AC_DEFINE_UNQUOTED(APPLETSDIR, "$APPLETSDIR",
+                   [The base directory for applet data and Python applets.])
+AC_SUBST(APPLETSDIR)
+
 DBUS_SERVICES_DIR=`$PKG_CONFIG --variable=session_bus_services_dir dbus-1`
 AC_SUBST(DBUS_SERVICES_DIR)
-
-icondir="$datarootdir/avant-window-navigator/applets/icons"
-AC_SUBST(icondir)
 
 if test "x$GCC" = "xyes"; then
         GCC_FLAGS="-g -Wall"

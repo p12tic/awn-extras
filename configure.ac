@@ -75,7 +75,7 @@ AM_CONDITIONAL(WITH_WEBKIT, test "$with_webkit" != "no")
 PKG_CHECK_MODULES(AWN, [awn >= 0.3.1])
 #trash
 PKG_CHECK_MODULES(LIBGLADE, [libglade-2.0])
-# awn-notification-daemon, shiny-switcher, standalone-launcher, switcher, taskmand
+# awn-notification-daemon, shiny-switcher, standalone-launcher, taskmand
 PKG_CHECK_MODULES(LIBWNCK, [libwnck-1.0])
 # affinity, awn-notification-daemon, shiny-switcher, trash
 PKG_CHECK_MODULES(LIBX11, [x11])
@@ -272,18 +272,20 @@ AC_DEFINE_UNQUOTED(DBUS_MICRO_VER, $DBUS_MICRO_VER, [D-BUS micro version.])
 
 AC_DEFINE_UNQUOTED(DBUS_API_SUBJECT_TO_CHANGE, ,DBUS API is subject to change)
 
+appletsdir="$datarootdir/avant-window-navigator/applets"
 
-AS_AC_EXPAND(ICONDIR, $icondir)
+AS_AC_EXPAND(APPLETSDIR, $appletsdir)
 AS_AC_EXPAND(SYSCONFDIR, $sysconfdir)
 AS_AC_EXPAND(LIBDIR, $libdir)
 AS_AC_EXPAND(DATADIR, $datadir)
 AS_AC_EXPAND(LIBEXECDIR, $libexecdir)
 
+AC_DEFINE_UNQUOTED(APPLETSDIR, "$APPLETSDIR",
+                   [The base directory for applet data and Python applets.])
+AC_SUBST(APPLETSDIR)
+
 DBUS_SERVICES_DIR=`$PKG_CONFIG --variable=session_bus_services_dir dbus-1`
 AC_SUBST(DBUS_SERVICES_DIR)
-
-icondir="$datarootdir/avant-window-navigator/applets/icons"
-AC_SUBST(icondir)
 
 if test "x$GCC" = "xyes"; then
         GCC_FLAGS="-g -Wall"
@@ -405,8 +407,6 @@ src/showdesktop/Makefile
 src/stacks/Makefile
 src/standalone-launcher/Makefile
 src/standalone-launcher/standalone-launcher.desktop.in
-src/switcher/Makefile
-src/switcher/switcher.desktop.in
 src/taskmand/Makefile
 src/taskmand/data/Makefile
 src/Taskmand-applet/Makefile

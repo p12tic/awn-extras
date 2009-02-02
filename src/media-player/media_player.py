@@ -20,6 +20,7 @@ pygst.require("0.10")
 import gst
 import pygtk
 import gtk
+import gobject
 import gconf
 import sys
 
@@ -40,6 +41,7 @@ class App(awn.AppletSimple):
         # some initialization stuff
         self.isVideo = False
         self.height = height
+        self.full_window = None
         self.title = awn.awn_title_get_default()
         self.dialog = awn.AppletDialog(self)
         self.dialog_visible = False
@@ -69,6 +71,9 @@ class App(awn.AppletSimple):
         self.vbox = gtk.VBox()
         self.da = gtk.DrawingArea()
         self.da.set_size_request(self.videoW, self.videoH)
+        self.da.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#000"))
+        self.da.set_events(gtk.gdk.ALL_EVENTS_MASK)
+        self.mouse_handler_id = self.da.connect("button-press-event", self.video_clicked)
         self.vbox.pack_start(self.da)
         # Buttons
         self.button_play = gtk.Button(stock='gtk-media-play')
@@ -76,10 +81,10 @@ class App(awn.AppletSimple):
         self.button_play.connect("clicked", self.button_play_pause_cb)
         self.button_stop.connect("clicked", self.button_stop_cb)
         # Packing Widgets
-        hbox = gtk.HBox()
-        hbox.pack_start(self.button_play)
-        hbox.add(self.button_stop)
-        self.vbox.add(hbox)
+        self.hbbox = gtk.HButtonBox()
+        self.hbbox.pack_start(self.button_play)
+        self.hbbox.pack_start(self.button_stop)
+        self.vbox.add(self.hbbox)
         self.dialog.add(self.vbox)
         # Video can't be played into RGBA widget
         rgbColormap = self.vbox.get_screen().get_rgb_colormap()
@@ -100,16 +105,66 @@ class App(awn.AppletSimple):
                            [("text/uri-list", 0, 0), ("text/plain", 0, 1)],
                            gtk.gdk.ACTION_COPY)
 
+    def keyPressed(self, widget, event):
+        if event.keyval == gtk.keysyms.Escape:
+            if self.full_window != None: self.toggleFullscreen()
+            return True
+        elif event.keyval == gtk.keysyms.space:
+            self.play_pause()
+            return True
+
+        return False
+
+    def fullscreenHide(self, widget):
+        if self.da.handler_is_connected(self.mouse_handler_id):
+            self.da.handler_disconnect(self.mouse_handler_id)
+        self.da.reparent(self.vbox)
+        self.vbox.reorder_child(self.da, 0)
+        self.mouse_handler_id = self.da.connect("button-press-event", self.video_clicked)
+
+    def fullscreenDestroy(self, widget):
+        self.full_window = None
+        return False
+
+    def toggleFullscreen(self):
+        if self.full_window == None:
+            self.full_window = gtk.Window()
+            self.full_window.connect("destroy", self.fullscreenDestroy)
+            self.full_window.connect("hide", self.fullscreenHide)
+            self.full_window.connect("key-press-event", self.keyPressed)
+            self.full_window.realize()
+            if self.da.handler_is_connected(self.mouse_handler_id):
+                self.da.handler_disconnect(self.mouse_handler_id)
+            self.da.reparent(self.full_window)
+            self.mouse_handler_id = self.da.connect("button-press-event", self.video_clicked)
+            self.set_flags(gtk.CAN_FOCUS)
+            self.full_window.show()
+            self.full_window.fullscreen()
+            self.full_window.present()
+            self.hideApplet()
+        else:
+            self.full_window.destroy()
+            self.showApplet()
+
+    def video_clicked(self, widget, event):
+        if event.type == gtk.gdk._2BUTTON_PRESS:
+            self.toggleFullscreen()
+
     def showApplet(self):
         self.dialog.stick()
         self.dialog.set_keep_above(True)
         self.dialog_visible = True
-        self.dialog.show_all()
         self.da.set_property("visible", self.isVideo)
+        self.dialog.show_all()
 
     def hideApplet(self):
         self.dialog_visible = False
         self.dialog.hide()
+
+    def windowPrepared(self):
+        self.isVideo = True
+        if not self.dialog_visible:
+            self.showApplet()
 
     def OnGstMessage(self, bus, message, data = None):
         if message.type in [gst.MESSAGE_EOS, gst.MESSAGE_ERROR]:
@@ -117,11 +172,8 @@ class App(awn.AppletSimple):
             self.button_play.set_label('gtk-media-play')
             if self.dialog_visible:
                 self.hideApplet()
-        elif message.type is gst.MESSAGE_NEW_CLOCK:
-            if self.isVideo and self.dialog_visible == False:
-                self.showApplet()
-            elif self.isVideo:
-                self.da.set_property("visible", self.isVideo)
+        #elif message.type is gst.MESSAGE_NEW_CLOCK:
+        #    pass
         #elif message.type in [gst.MESSAGE_STATE_CHANGED]:
         #    oldstate, newstate, pending = message.parse_state_changed()
         #    print "state change %s -> %s" % (str(oldstate), str(newstate))
@@ -141,6 +193,7 @@ class App(awn.AppletSimple):
             videosink = message.src
             videosink.set_property("force-aspect-ratio", True)
             videosink.set_xwindow_id(self.da.window.xid)
+            gobject.timeout_add(150, self.windowPrepared)
         return True
 
     def button_press(self, widget, event):
@@ -239,6 +292,9 @@ class App(awn.AppletSimple):
             uri2play = uri2play.split()[0]
         # I wonder why there are zeroes sometimes?
         uri2play = uri2play.strip('\000').strip()
+
+        if uri2play.startswith("udp://@"):
+          uri2play = uri2play.replace("udp://@", "udp://")
 
         self.stop()
         self.playbin.set_property("uri", uri2play)

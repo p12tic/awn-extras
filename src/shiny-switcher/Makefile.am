@@ -17,3 +17,9 @@ shinyswitcher_la_LIBADD =	\
 	$(top_builddir)/src/libawn-extras/libawn-extras.la	\
 	$(NULL)
 shinyswitcher_la_LDFLAGS = $(APPLET_LINKER_FLAGS)
+
+prefsdir = $(applet_datadir)
+dist_prefs_DATA =		\
+	shiny-prefs.glade	\
+	shiny-prefs.py		\
+	$(NULL)

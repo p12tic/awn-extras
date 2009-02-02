@@ -535,7 +535,8 @@ static gboolean
 _start_applet_prefs(GtkMenuItem *menuitem, gpointer null)
 {
   GError *err = NULL;
-  g_spawn_command_line_async("awn-manager", &err);
+  g_spawn_command_line_async ("python " APPLETSDIR G_DIR_SEPARATOR_S APPLET_NAME
+                              G_DIR_SEPARATOR_S "shiny-prefs.py", &err);
 
   if (err)
   {
@@ -573,14 +574,6 @@ gboolean  _button_workspace(GtkWidget *widget, GdkEventButton *event, Workplace_
       GtkWidget *item;
       menu = awn_applet_create_default_menu(shinyswitcher->applet);
       gtk_menu_set_screen(GTK_MENU(menu), NULL);
-/*
-      item = shared_menuitem_create_applet_prefs(APPLET_NAME, NULL, APPLET_NAME);
-
-      if (item) / * generic preferences is enabled * /
-      {
-        gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-      }
-*/
       item = gtk_image_menu_item_new_with_label("Applet Preferences");
       gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
                                 gtk_image_new_from_stock(GTK_STOCK_PREFERENCES,
@@ -1834,13 +1827,6 @@ gboolean create_windows(Shiny_switcher *shinyswitcher)
           GtkWidget *item;
           menu = awn_applet_create_default_menu(shinyswitcher->applet);
           gtk_menu_set_screen(GTK_MENU(menu), NULL);
-      /*    item = shared_menuitem_create_applet_prefs(APPLET_NAME, NULL, APPLET_NAME);
-
-          if (item) / * generic preferences is enabled * /
-          {
-            gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-          }
-*/
           item = gtk_image_menu_item_new_with_label("Applet Preferences");
           gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
                                 gtk_image_new_from_stock(GTK_STOCK_PREFERENCES,
@@ -1896,13 +1882,6 @@ void _window_opened(WnckScreen *screen, WnckWindow *window, Shiny_switcher *shin
     GtkWidget *item;
     menu = awn_applet_create_default_menu(shinyswitcher->applet);
     gtk_menu_set_screen(GTK_MENU(menu), NULL);
-   /* item = shared_menuitem_create_applet_prefs(APPLET_NAME, NULL, APPLET_NAME);
-
-    if (item) / * generic preferences is enabled * /
-    {
-      gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-    }*/
-
     item = gtk_image_menu_item_new_with_label("Applet Preferences");
     gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
                                 gtk_image_new_from_stock(GTK_STOCK_PREFERENCES,

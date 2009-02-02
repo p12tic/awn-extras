@@ -113,13 +113,13 @@ typedef struct
   double   wallpaper_alpha_inactive;
   double   applet_scale;
 
-  int    show_icon_mode;   //0...no 1...on inactive workspace onlt 2...all but active win 3..all
-  int    scale_icon_mode;  //0...none  1...on all active ws  2...on_active_win 3...all
+  int    show_icon_mode;   /* 0...no 1...on inactive workspace onlt 2...all but active win 3..all */
+  int    scale_icon_mode;  /* 0...none  1...on all active ws  2...on_active_win 3...all */
   double   scale_icon_factor;
-  int    scale_icon_pos;   //0... centre  1 NW    2 NE   3 SE  4 SW
+  int    scale_icon_pos;   /*0... centre  1 NW    2 NE   3 SE  4 SW */
 
-  int    win_grab_mode;  //0...none 1...all (grab method may override) 2..active ws (and sticky)  3...active win
-  int    win_grab_method; //0...gdk
+  int    win_grab_mode;  /* 0...none 1...all (grab method may override) 2..active ws (and sticky)  3...active win */
+  int    win_grab_method; /* 0...gdk */
 
   GTree   *ws_lookup_ev;
   GTree   *ws_changes;
@@ -132,7 +132,7 @@ typedef struct
   double   win_active_icon_alpha;
   double   win_inactive_icon_alpha;
 
-  int    active_window_on_workspace_change_method; //0... don't change. 1.. top of stack.
+  int    active_window_on_workspace_change_method; /* 0... don't change. 1.. top of stack. */
 
   int    do_queue_freq;
   gint   mousewheel;
@@ -151,7 +151,7 @@ typedef struct
   gboolean  show_right_click;
 
   gboolean  grab_wallpaper;
-  AwnColor  desktop_colour;  //used if grab_wallpaper is FALSE;
+  AwnColor  desktop_colour;  /* used if grab_wallpaper is FALSE; */
 
 
   GdkGC    *gdkgc;
@@ -172,7 +172,7 @@ typedef struct
   Shiny_switcher   *shinyswitcher;
 }Win_press_data;
 
-// Applet
+/* Applet */
 Shiny_switcher* applet_new(AwnApplet *applet, gint orient,int width, int height);
 
 #endif

@@ -154,8 +154,8 @@ class App(awn.AppletSimple):
         self.dialog.stick()
         self.dialog.set_keep_above(True)
         self.dialog_visible = True
-        self.da.set_property("visible", self.isVideo)
         self.dialog.show_all()
+        self.da.set_property("visible", self.isVideo)
 
     def hideApplet(self):
         self.dialog_visible = False

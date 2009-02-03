@@ -259,7 +259,7 @@ _compare (GMenuTreeItem *item1, GMenuTreeItem *item2)
     default:
       ;
   }
-  return strcmp (name1, name2);
+  return g_strcmp0 (name1, name2);
 }
 
 static void

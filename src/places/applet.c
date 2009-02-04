@@ -596,44 +596,36 @@ static void get_places(Places * places)
 
     while (getline(&line, &len, handle) != -1)
     {
-      char *p;
-      p = line + strlen(line);
-
-      if (p != line)
-      {
-        while (!isalpha(*p) && (p != line))
-        {
-          *p = '\0';
-          p--;
-        }
-
-        while ((*p != '/') && (p != line))
-          p--;
-
-        if (p != line)
-        {
-          char * tmp;
-          p++;
-          item = g_malloc(sizeof(Menu_Item));
-
-          for (tmp = p; *tmp && (*tmp != ' ');tmp++);
-
-          if (*tmp == ' ')
-          {
-            *tmp = '\0';
-            p = tmp + 1;
-          }
-
-          item->text = urldecode(g_strdup(p), NULL);
-
+			gchar ** tokens;
+			tokens = g_strsplit (line," ",2);
+			
+			if (tokens)
+			{
+				if (tokens[0] )
+				{
+					g_strstrip(tokens[0]);
+          item = g_malloc(sizeof(Menu_Item));					
+					if (tokens[1])
+					{
+						g_strstrip(tokens[1]);
+        		item->text = g_strdup(tokens[1]);
+					}
+					else
+					{
+						item->text = urldecode(g_path_get_basename (tokens[0]), NULL);
+					}
+					g_debug ("text = %s\nline = %s\n",item->text,line);
           item->icon = g_strdup("stock_folder");
-          item->exec = g_strdup_printf("%s %s", places->file_manager, line);
-          item->comment = g_strdup(line);
+          item->exec = g_strdup_printf("%s %s", places->file_manager, tokens[0]);
+          item->comment = g_strdup(tokens[0]);
           item->places = places;
           places->menu_list = g_slist_append(places->menu_list, item);
-        }
-      }
-
+					
+				}
+				
+			}
+			
+			g_strfreev (tokens);
       free(line);
 
       line = NULL;

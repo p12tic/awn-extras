@@ -15,8 +15,8 @@
 import os
 from datetime import datetime
 import time
-from xml.sax.handler import ContentHandler
-from xml.sax import parse
+from xml.sax.handler import ContentHandler, EntityResolver
+from xml.sax import make_parser
 
 import pygtk
 pygtk.require("2.0")
@@ -38,8 +38,9 @@ draw_clock_interval = 1.0
 
 clock_size = 48
 
-# File of libgweather
+# Files of libgweather
 locations_file = "/usr/share/libgweather/Locations.xml"
+locations_dtd_file = os.path.join(os.path.dirname(locations_file), "locations.dtd")
 
 
 def is_location(row):
@@ -93,7 +94,7 @@ class Locations:
 
     @classmethod
     def plugin_useable(self):
-        return tz is not None
+        return tz is not None and (os.path.isfile(locations_file) or os.path.isfile(locations_file + ".gz"))
 
     def get_name(self):
         return "Locations"
@@ -141,6 +142,7 @@ class Locations:
         hbox = gtk.HBox(spacing=6)
         self.__city_boxes[city_timezone] = hbox
 
+        # Image of analog clock
         image = gtk.DrawingArea()
         image.set_size_request(clock_size, clock_size)
         hbox.pack_start(image, expand=False)
@@ -165,9 +167,11 @@ class Locations:
             context.paint()
         image.connect("expose-event", update_image_cb)
 
+        # Vertical box containing city label and timezone label
         vbox = gtk.VBox()
         hbox.pack_start(vbox, expand=False)
 
+        # City label
         city_label = gtk.Label("<big><b>" + city + "</b></big>")
         city_label.set_use_markup(True)
         city_label.set_alignment(0.0, 0.5)
@@ -175,6 +179,7 @@ class Locations:
         city_label.set_max_width_chars(25)
         vbox.pack_start(city_label, expand=False)
 
+        # Timezone label
         timezone_label = gtk.Label()
         timezone_label.set_alignment(0.0, 0.5)
         vbox.pack_start(timezone_label, expand=False)
@@ -447,9 +452,24 @@ class LocationSearchWindow:
             if self.__in_tz_tag:
                 self.__tz_tag += chars
 
+    class LocationsEntityResolver(EntityResolver):
+
+        def resolveEntity(self, publicId, systemId):
+            if systemId == "locations.dtd":
+                return locations_dtd_file
+            return systemId
+
     def parse_locations(self):
+        parser = make_parser()
         handler = self.LocationsParser(self.__all_locations_store)
-        parse(locations_file, handler)
+        parser.setContentHandler(handler)
+
+        if os.path.isfile(locations_file):
+            parser.parse(locations_file)
+        elif os.path.isfile(locations_file + ".gz"):
+            import gzip
+            parser.setEntityResolver(self.LocationsEntityResolver())
+            parser.parse(gzip.open(locations_file + ".gz", "rb"))
 
     def all_locations_selection_changed_cb(self, selection):
         """Enable the 'OK' button if the user selected a valid location,

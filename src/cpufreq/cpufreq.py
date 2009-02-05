@@ -338,12 +338,16 @@ class SysFSBackend:
     
     def __init__(self, cpu_nr):
         self.__cpu_nr = cpu_nr
+        self.__supports_scaling = self.__can_support_scaling()
     
     @staticmethod
     def backend_useable(cpu_nr):
         return os.path.isdir(os.path.join(sysfs_dir, "cpu" + str(cpu_nr), "cpufreq"))
     
     def supports_scaling(self):
+        return self.__supports_scaling
+    
+    def __can_support_scaling(self):
         get_path = lambda d: os.path.join(d, "cpufreq-selector")
         paths = [get_path(i) for i in os.environ["PATH"].split(":") if os.access(get_path(i), os.X_OK)]
         

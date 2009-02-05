@@ -614,7 +614,7 @@ gboolean  _button_win(GtkWidget *widget, GdkEventButton *event, Win_press_data *
   WnckWindow*  wnck_win = data->wnck_window;
   GtkWidget *menu = NULL;
   GtkWidget *item = NULL;
-
+	Shiny_switcher * shinyswitcher = data->shinyswitcher;
   if (! WNCK_IS_WINDOW(wnck_win))
   {
     return TRUE;
@@ -623,7 +623,16 @@ gboolean  _button_win(GtkWidget *widget, GdkEventButton *event, Win_press_data *
   if (event->button == 1)
   {
     WnckWorkspace* space = wnck_window_get_workspace(wnck_win);
-
+ 
+    if (shinyswitcher->got_viewport)
+    {
+      int vp_pos_col = 1.0 / vp_hscale(shinyswitcher) * (event->x / (double)shinyswitcher->mini_work_width);
+      int vp_pos_row = 1.0 / vp_vscale(shinyswitcher) * (event->y / (double)shinyswitcher->mini_work_height);
+      wnck_screen_move_viewport(shinyswitcher->wnck_screen,
+                                vp_pos_col*wnck_screen_get_width(shinyswitcher->wnck_screen),
+                                vp_pos_row*wnck_screen_get_height(shinyswitcher->wnck_screen));
+    }
+		
     if (space)
     {
       wnck_workspace_activate(space, event->time);

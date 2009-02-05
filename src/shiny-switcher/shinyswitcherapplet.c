@@ -560,6 +560,7 @@ gboolean  _button_workspace(GtkWidget *widget, GdkEventButton *event, Workplace_
   {
     if (shinyswitcher->got_viewport)
     {
+      g_debug ("event->x = %lf,  event->y = %lf\n",event->x,event->y);
       int vp_pos_col = 1.0 / vp_hscale(shinyswitcher) * (event->x / (double)shinyswitcher->mini_work_width);
       int vp_pos_row = 1.0 / vp_vscale(shinyswitcher) * (event->y / (double)shinyswitcher->mini_work_height);
       wnck_screen_move_viewport(shinyswitcher->wnck_screen,
@@ -615,6 +616,7 @@ gboolean  _button_win(GtkWidget *widget, GdkEventButton *event, Win_press_data *
   GtkWidget *menu = NULL;
   GtkWidget *item = NULL;
   Shiny_switcher * shinyswitcher = data->shinyswitcher;
+ 
 
   if (! WNCK_IS_WINDOW(wnck_win))
   {
@@ -627,24 +629,38 @@ gboolean  _button_win(GtkWidget *widget, GdkEventButton *event, Win_press_data *
 
     if (shinyswitcher->got_viewport)
     {
-      int vp_pos_col = 1.0 / vp_hscale(shinyswitcher) * (event->x / (double)shinyswitcher->mini_work_width);
-      int vp_pos_row = 1.0 / vp_vscale(shinyswitcher) * (event->y / (double)shinyswitcher->mini_work_height);
+      int x,y,w,h;
+      int ws_x,ws_y;
+      
+      wnck_window_get_geometry (wnck_win, &x,&y,&w,&h);
+      x = x +   wnck_workspace_get_viewport_x (space);
+      y = y +   wnck_workspace_get_viewport_y (space);
+      g_debug ("Attempting to change viewports\n");
+
+
+      ws_x = x / wnck_screen_get_width(shinyswitcher->wnck_screen);
+      ws_y = y / wnck_screen_get_height(shinyswitcher->wnck_screen);
+      wnck_screen_move_viewport(shinyswitcher->wnck_screen,
+                                ws_x*wnck_screen_get_width(shinyswitcher->wnck_screen),
+                                ws_y*wnck_screen_get_height(shinyswitcher->wnck_screen));
+      g_debug ("x %d,y %d, ws x  = %d ,  ws y = %d\n",x,y,ws_x,ws_y);            
+/*      float vp_pos_col = 1.0 / vp_hscale(shinyswitcher) * (event->x / (double)shinyswitcher->mini_work_width);
+      float vp_pos_row = 1.0 / vp_vscale(shinyswitcher) * (event->y / (double)shinyswitcher->mini_work_height);
+      g_debug ("%d, %d \n",vp_pos_col*wnck_screen_get_width(shinyswitcher->wnck_screen),
+                                vp_pos_row*wnck_screen_get_height(shinyswitcher->wnck_screen));
       wnck_screen_move_viewport(shinyswitcher->wnck_screen,
                                 vp_pos_col*wnck_screen_get_width(shinyswitcher->wnck_screen),
-                                vp_pos_row*wnck_screen_get_height(shinyswitcher->wnck_screen));
+                                vp_pos_row*wnck_screen_get_height(shinyswitcher->wnck_screen));*/
+      
     }
 
     if (space)
     {
       wnck_workspace_activate(space, event->time);
-    }
-
-    if (WNCK_IS_WINDOW(wnck_win))
-    {
-      wnck_window_activate(wnck_win, event->time);
-      return TRUE;
-    }
-  }
+		}
+    wnck_window_activate_transient (wnck_win, event->time);
+		return TRUE;
+	}
   else if (event->button == 3)
   {
     Shiny_switcher *shinyswitcher = g_tree_lookup(data->shinyswitcher->win_menus, wnck_win);

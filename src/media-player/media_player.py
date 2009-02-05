@@ -214,6 +214,8 @@ class App(awn.AppletSimple):
         if message.type in [gst.MESSAGE_EOS, gst.MESSAGE_ERROR]:
             self.playbin.set_state(gst.STATE_NULL)
             self.button_play.set_label('gtk-media-play')
+            if self.full_window:
+                self.full_window.destroy()
             if self.dialog_visible:
                 self.hideApplet()
         #elif message.type is gst.MESSAGE_NEW_CLOCK:

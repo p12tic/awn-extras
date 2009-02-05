@@ -35,7 +35,6 @@ src/arss/arss.desktop.in.in
 src/awn-notification-daemon/data/awn-notification-daemon.schemas.in
 src/awnsystemmonitor/awnsystemmonitor.schemas.in
 src/awnterm/awn-terminal.schemas.in
-src/cairo-menu-classic/backend-gnome.c
 src/cairo-menu/backend-gnome.c
 src/calendar/calendarlogin.py
 src/calendar/calendarprefs.py

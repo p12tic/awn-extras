@@ -13,7 +13,6 @@ if WITH_GNOME
 GCONF_APPLETS +=		\
 	awnsystemmonitor	\
 	cairo-menu		\
-	cairo-menu-classic	\
 	calendar		\
 	filebrowser		\
 	plugger			\

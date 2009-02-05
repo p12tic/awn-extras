@@ -647,6 +647,10 @@ gboolean  _button_win(GtkWidget *widget, GdkEventButton *event, Win_press_data *
       item = awn_applet_create_pref_item();
       gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), item);
 
+      item = gtk_separator_menu_item_new();
+      gtk_widget_show(item);
+      gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+
       item = gtk_image_menu_item_new_with_label("Applet Preferences");
       gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
                                 gtk_image_new_from_stock(GTK_STOCK_PREFERENCES,

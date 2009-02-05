@@ -601,6 +601,7 @@ static void get_places(Places * places)
 			{
 				if (tokens[0] )
 				{
+          gchar * shell_quoted;
 					g_strstrip(tokens[0]);
           item = g_malloc(sizeof(Menu_Item));					
 					if (tokens[1])
@@ -614,7 +615,9 @@ static void get_places(Places * places)
 					}
 					g_debug ("text = %s\nline = %s\n",item->text,line);
           item->icon = g_strdup("stock_folder");
-          item->exec = g_strdup_printf("%s %s", places->file_manager, tokens[0]);
+          shell_quoted = g_shell_quote(tokens[0]);
+          item->exec = g_strdup_printf("%s %s", places->file_manager, shell_quoted);
+          g_free(shell_quoted);
           item->comment = g_strdup(tokens[0]);
           item->places = places;
           places->menu_list = g_slist_append(places->menu_list, item);

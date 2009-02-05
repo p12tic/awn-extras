@@ -636,9 +636,12 @@ gboolean  _button_win(GtkWidget *widget, GdkEventButton *event, Win_press_data *
     if (space)
     {
       wnck_workspace_activate(space, event->time);
-      wnck_window_activate(wnck_win, event->time);
-      return TRUE;
     }
+		if (WNCK_IS_WINDOW(wnck_win) )
+		{
+  		wnck_window_activate(wnck_win, event->time);
+  		return TRUE;
+		}
   }
   else if (event->button == 3)
   {

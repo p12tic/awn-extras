@@ -150,7 +150,7 @@ void _change_config_ws_cb(AwnConfigClientNotifyEntry *entry, Shiny_switcher *shi
   init_config(shinyswitcher);
   _changed(shinyswitcher->applet,  shinyswitcher);
 
-/* g_timeout_add(2000, (GSourceFunc)_changed_waited, shinyswitcher);*/ /* don't need to do this as seconds... happens once */
+  /* g_timeout_add(2000, (GSourceFunc)_changed_waited, shinyswitcher);*/ /* don't need to do this as seconds... happens once */
 }
 
 void init_config(Shiny_switcher *shinyswitcher)
@@ -311,8 +311,8 @@ void init_config(Shiny_switcher *shinyswitcher)
             CONFIG_GRAB_WALLPAPER, error);
   GET_VALUE(shinyswitcher->do_queue_freq, 1000, int, shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
             CONFIG_QUEUED_RENDER_FREQ , error);
-/*  GET_VALUE(shinyswitcher->show_right_click,FALSE,bool,shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, */
-/*            CONFIG_SHOW_RIGHT_CLICK , error); */
+  /*  GET_VALUE(shinyswitcher->show_right_click,FALSE,bool,shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, */
+  /*            CONFIG_SHOW_RIGHT_CLICK , error); */
   shinyswitcher->show_right_click = TRUE; /* let's enable by default and see if ther are issues. */
   config_get_color(shinyswitcher->config, CONFIG_APPLET_BORDER_COLOUR, &shinyswitcher->applet_border_colour);
   config_get_color(shinyswitcher->config, CONFIG_DESKTOP_COLOUR,       &shinyswitcher->desktop_colour);
@@ -365,8 +365,8 @@ double vp_hscale(Shiny_switcher *shinyswitcher)
 void calc_dimensions(Shiny_switcher *shinyswitcher)
 {
 
-/* wnck_screen_force_update(shinyswitcher->wnck_screen); */
-/* FIXME this is no longer screen width/height  it's workspace */
+  /* wnck_screen_force_update(shinyswitcher->wnck_screen); */
+  /* FIXME this is no longer screen width/height  it's workspace */
   int wnck_ws_width = wnck_workspace_get_width(wnck_screen_get_active_workspace(shinyswitcher->wnck_screen));
   int wnck_ws_height = wnck_workspace_get_height(wnck_screen_get_active_workspace(shinyswitcher->wnck_screen));
   int wnck_scr_width = wnck_screen_get_width(shinyswitcher->wnck_screen);
@@ -537,8 +537,8 @@ static gboolean
 _start_applet_prefs(GtkMenuItem *menuitem, gpointer null)
 {
   GError *err = NULL;
-  g_spawn_command_line_async ("python " APPLETSDIR G_DIR_SEPARATOR_S APPLET_NAME
-                              G_DIR_SEPARATOR_S "shiny-prefs.py", &err);
+  g_spawn_command_line_async("python " APPLETSDIR G_DIR_SEPARATOR_S APPLET_NAME
+                             G_DIR_SEPARATOR_S "shiny-prefs.py", &err);
 
   if (err)
   {
@@ -578,11 +578,11 @@ gboolean  _button_workspace(GtkWidget *widget, GdkEventButton *event, Workplace_
       gtk_menu_set_screen(GTK_MENU(menu), NULL);
       item = gtk_image_menu_item_new_with_label("Applet Preferences");
       gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-                                gtk_image_new_from_stock(GTK_STOCK_PREFERENCES,
-                                                         GTK_ICON_SIZE_MENU));
+                                    gtk_image_new_from_stock(GTK_STOCK_PREFERENCES,
+                                                             GTK_ICON_SIZE_MENU));
       gtk_widget_show_all(item);
       g_signal_connect(G_OBJECT(item), "activate",
-                   G_CALLBACK(_start_applet_prefs), NULL);
+                       G_CALLBACK(_start_applet_prefs), NULL);
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
       item = shared_menuitem_about_applet_simple("Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
@@ -614,7 +614,8 @@ gboolean  _button_win(GtkWidget *widget, GdkEventButton *event, Win_press_data *
   WnckWindow*  wnck_win = data->wnck_window;
   GtkWidget *menu = NULL;
   GtkWidget *item = NULL;
-	Shiny_switcher * shinyswitcher = data->shinyswitcher;
+  Shiny_switcher * shinyswitcher = data->shinyswitcher;
+
   if (! WNCK_IS_WINDOW(wnck_win))
   {
     return TRUE;
@@ -623,7 +624,7 @@ gboolean  _button_win(GtkWidget *widget, GdkEventButton *event, Win_press_data *
   if (event->button == 1)
   {
     WnckWorkspace* space = wnck_window_get_workspace(wnck_win);
- 
+
     if (shinyswitcher->got_viewport)
     {
       int vp_pos_col = 1.0 / vp_hscale(shinyswitcher) * (event->x / (double)shinyswitcher->mini_work_width);
@@ -632,16 +633,17 @@ gboolean  _button_win(GtkWidget *widget, GdkEventButton *event, Win_press_data *
                                 vp_pos_col*wnck_screen_get_width(shinyswitcher->wnck_screen),
                                 vp_pos_row*wnck_screen_get_height(shinyswitcher->wnck_screen));
     }
-		
+
     if (space)
     {
       wnck_workspace_activate(space, event->time);
     }
-		if (WNCK_IS_WINDOW(wnck_win) )
-		{
-  		wnck_window_activate(wnck_win, event->time);
-  		return TRUE;
-		}
+
+    if (WNCK_IS_WINDOW(wnck_win))
+    {
+      wnck_window_activate(wnck_win, event->time);
+      return TRUE;
+    }
   }
   else if (event->button == 3)
   {
@@ -663,11 +665,11 @@ gboolean  _button_win(GtkWidget *widget, GdkEventButton *event, Win_press_data *
 
       item = gtk_image_menu_item_new_with_label("Applet Preferences");
       gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-                                gtk_image_new_from_stock(GTK_STOCK_PREFERENCES,
-                                                         GTK_ICON_SIZE_MENU));
+                                    gtk_image_new_from_stock(GTK_STOCK_PREFERENCES,
+                                                             GTK_ICON_SIZE_MENU));
       gtk_widget_show_all(item);
       g_signal_connect(G_OBJECT(item), "activate",
-                   G_CALLBACK(_start_applet_prefs), NULL);
+                       G_CALLBACK(_start_applet_prefs), NULL);
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
       item = shared_menuitem_about_applet_simple("Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
@@ -1178,7 +1180,7 @@ void grab_window_gdk_meth(Shiny_switcher *shinyswitcher, cairo_t *destcr, WnckWi
 {
   int    w, h;
   GdkColormap  *cmap;
-/* printf("BEGIN:     grab_window_gdk_meth\n"); */
+  /* printf("BEGIN:     grab_window_gdk_meth\n"); */
 
   gint    err_code;
   cairo_surface_t* cached_srfc = NULL;
@@ -1192,15 +1194,15 @@ void grab_window_gdk_meth(Shiny_switcher *shinyswitcher, cairo_t *destcr, WnckWi
 
   cached_srfc = image_cache_lookup_key_width_height(shinyswitcher, shinyswitcher->surface_cache, win, scaled_width, scaled_height, allow_update);
 
-/* printf("xid=%ld\n",Xid); */
+  /* printf("xid=%ld\n",Xid); */
 
   if (cached_srfc)
   {
-/*  printf("Surface cache HIT\n"); */
+    /*  printf("Surface cache HIT\n"); */
   }
   else if (allow_update)
   {
-/*  printf("Surface cache MISS\n"); */
+    /*  printf("Surface cache MISS\n"); */
     gulong    Xid = wnck_window_get_xid(win);
     gdk_error_trap_push();
     GdkPixmap * pmap = gdk_pixmap_foreign_new(Xid);
@@ -1286,10 +1288,10 @@ void grab_window_gdk_meth(Shiny_switcher *shinyswitcher, cairo_t *destcr, WnckWi
   cairo_fill(destcr);
 
   return;
-/* cairo_surface_destroy(cached_srfc); */
+  /* cairo_surface_destroy(cached_srfc); */
 
 error_out:
-/* gdk_flush(); */
+  /* gdk_flush(); */
   err_code = gdk_error_trap_pop();
 
   if (err_code)
@@ -1317,7 +1319,7 @@ void do_win_grabs(Shiny_switcher *shinyswitcher, cairo_t *destcr, WnckWindow *wi
     {
 
       case 0:
-/*    if ( on_active_space || wnck_window_is_pinned(win)) */
+        /*    if ( on_active_space || wnck_window_is_pinned(win)) */
       {
         grab_window_gdk_meth(shinyswitcher, destcr, win, scaled_x, scaled_y,
                              scaled_width, scaled_height, x, y, width, height,
@@ -1841,11 +1843,11 @@ gboolean create_windows(Shiny_switcher *shinyswitcher)
           gtk_menu_set_screen(GTK_MENU(menu), NULL);
           item = gtk_image_menu_item_new_with_label("Applet Preferences");
           gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-                                gtk_image_new_from_stock(GTK_STOCK_PREFERENCES,
-                                                         GTK_ICON_SIZE_MENU));
+                                        gtk_image_new_from_stock(GTK_STOCK_PREFERENCES,
+                                                                 GTK_ICON_SIZE_MENU));
           gtk_widget_show_all(item);
           g_signal_connect(G_OBJECT(item), "activate",
-                   G_CALLBACK(_start_applet_prefs), NULL);
+                           G_CALLBACK(_start_applet_prefs), NULL);
           gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
           item = shared_menuitem_about_applet_simple("Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
@@ -1896,11 +1898,11 @@ void _window_opened(WnckScreen *screen, WnckWindow *window, Shiny_switcher *shin
     gtk_menu_set_screen(GTK_MENU(menu), NULL);
     item = gtk_image_menu_item_new_with_label("Applet Preferences");
     gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-                                gtk_image_new_from_stock(GTK_STOCK_PREFERENCES,
-                                                         GTK_ICON_SIZE_MENU));
+                                  gtk_image_new_from_stock(GTK_STOCK_PREFERENCES,
+                                                           GTK_ICON_SIZE_MENU));
     gtk_widget_show_all(item);
     g_signal_connect(G_OBJECT(item), "activate",
-                   G_CALLBACK(_start_applet_prefs), NULL);
+                     G_CALLBACK(_start_applet_prefs), NULL);
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
     item = shared_menuitem_about_applet_simple("Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
@@ -2040,7 +2042,7 @@ gboolean _waited(Shiny_switcher *shinyswitcher)
   g_signal_connect(G_OBJECT(shinyswitcher->wnck_screen), "viewports-changed", G_CALLBACK(_viewports_changed), shinyswitcher);
 
   /*  gtk_widget_set_size_request(GTK_WIDGET(shinyswitcher->applet), shinyswitcher->width + shinyswitcher->applet_border_width*2, */
-/*                              shinyswitcher->height/2); */
+  /*                              shinyswitcher->height/2); */
 
   return FALSE;
 }
@@ -2072,8 +2074,8 @@ applet_new(AwnApplet *applet, gint orient, int width, int height)
 
   init_config(shinyswitcher);
 
-/*  shinyswitcher->show_right_click = !shinyswitcher->got_viewport;*/ /* for the moment buggy in compiz.will be a config option eventually */
-/*  shinyswitcher->show_right_click = FALSE;*/  /* FIXME disabling right click menu in all a cases. appears to cause occasional crash */
+  /*  shinyswitcher->show_right_click = !shinyswitcher->got_viewport;*/ /* for the moment buggy in compiz.will be a config option eventually */
+  /*  shinyswitcher->show_right_click = FALSE;*/  /* FIXME disabling right click menu in all a cases. appears to cause occasional crash */
   shinyswitcher->reconfigure = !shinyswitcher->got_viewport;  /* for the moment... will be a config option eventually */
 
 
@@ -2150,12 +2152,12 @@ _changed_waited(Shiny_switcher *shinyswitcher)
   /*  g_debug("calc dim \n"); */
   calc_dimensions(shinyswitcher);
 
-/*  g_debug("set bg \n"); */
-/*  g_free(shinyswitcher->wallpaper_inactive);*/   /* FIXME */
-/*  g_free(shinyswitcher->wallpaper_active);*/   /* FIXME */
+  /*  g_debug("set bg \n"); */
+  /*  g_free(shinyswitcher->wallpaper_inactive);*/   /* FIXME */
+  /*  g_free(shinyswitcher->wallpaper_active);*/   /* FIXME */
   set_background(shinyswitcher);
 
-/* g_debug("create cont \n"); */
+  /* g_debug("create cont \n"); */
 
   gtk_container_remove(GTK_CONTAINER(shinyswitcher->applet), shinyswitcher->container);
 
@@ -2165,10 +2167,10 @@ _changed_waited(Shiny_switcher *shinyswitcher)
 
   create_containers(shinyswitcher);
 
-/*  g_debug("create win \n"); */
+  /*  g_debug("create win \n"); */
   create_windows(shinyswitcher);
 
-/*  g_debug("Done... \n"); */
+  /*  g_debug("Done... \n"); */
   gtk_widget_show_all(shinyswitcher->applet);
 
   return FALSE;
@@ -2185,7 +2187,7 @@ static void _changed(AwnApplet *app,  Shiny_switcher *shinyswitcher)
 
   shinyswitcher->reconfigure = !shinyswitcher->got_viewport;  /* for the moment... will be a config option eventually */
 
-/*  init_config(shinyswitcher); */
+  /*  init_config(shinyswitcher); */
 
   screen = gtk_widget_get_screen(GTK_WIDGET(shinyswitcher->applet));
 
@@ -2217,7 +2219,7 @@ static void _changed(AwnApplet *app,  Shiny_switcher *shinyswitcher)
     printf("ShinySwitcher Message:  viewport/compiz detected.. using existing workspace config\n");
   }
 
-/*  g_timeout_add(2000, (GSourceFunc)_changed_waited, shinyswitcher);*/ /* don't need to do this as seconds... happens once */
+  /*  g_timeout_add(2000, (GSourceFunc)_changed_waited, shinyswitcher);*/ /* don't need to do this as seconds... happens once */
 }
 
 static void
@@ -2242,7 +2244,7 @@ static void
 _workspaces_changed(WnckScreen    *screen, WnckWorkspace *space, Shiny_switcher * shinyswitcher)
 {
   _changed_waited(shinyswitcher);
-/* _changed_waited(shinyswitcher); */
+  /* _changed_waited(shinyswitcher); */
 }
 
 static void

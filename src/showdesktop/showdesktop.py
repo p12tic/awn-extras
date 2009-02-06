@@ -19,7 +19,7 @@ pygtk.require('2.0')
 import gtk
 
 import awn
-from awn.extras import AWNLib
+from awn.extras import awnlib
 awn.check_dependencies(globals(), wnck=['xfce4.netk', 'wnck'])
 
 applet_name = "Show Desktop"
@@ -60,7 +60,8 @@ class ShowDesktopApplet:
 
 
 if __name__ == "__main__":
-    applet = AWNLib.initiate({"name": applet_name, "short": "show-desktop",
+    awnlib.init_start(ShowDesktopApplet, {"name": applet_name,
+        "short": "show-desktop",
         "version": applet_version,
         "description": applet_description,
         "theme": applet_logo,
@@ -68,5 +69,3 @@ if __name__ == "__main__":
         "copyright-year": 2006,
         "authors": ["Mehdi Abaakouk <theli48@gmail.com>",
                     "onox <denkpadje@gmail.com>"]})
-    ShowDesktopApplet(applet)
-    AWNLib.start(applet)

@@ -25,7 +25,7 @@ import gtk
 from gtk import gdk
 from gtk import glade
 
-from awn.extras import AWNLib
+from awn.extras import awnlib
 
 # Interval in seconds between two successive reads of the current volume
 read_volume_interval = 0.5
@@ -372,7 +372,7 @@ class ALSABackend:
 
 
 if __name__ == "__main__":
-    applet = AWNLib.initiate({"name": applet_name, "short": "volume-control",
+    awnlib.init_start(VolumeControlApplet, {"name": applet_name, "short": "volume-control",
         "version": applet_version,
         "description": applet_description,
         "logo": applet_logo,
@@ -385,5 +385,3 @@ if __name__ == "__main__":
         "artists": ["Jakub Steiner"],
         "type": ["Audio", "Midi"]},
         ["settings-per-instance"])
-    VolumeControlApplet(applet)
-    AWNLib.start(applet)

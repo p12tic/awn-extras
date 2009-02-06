@@ -21,7 +21,7 @@ pygtk.require("2.0")
 import gtk
 from gtk import gdk
 
-from awn.extras import AWNLib
+from awn.extras import awnlib
 
 applet_name = "ThinkHDAPS"
 applet_version = "0.3.1"
@@ -139,7 +139,8 @@ class ThinkHDAPSApplet:
 
 
 if __name__ == "__main__":
-    applet = AWNLib.initiate({"name": applet_name, "short": "hdaps",
+    awnlib.init_start(ThinkHDAPSApplet, {"name": applet_name,
+        "short": "hdaps",
         "version": applet_version,
         "description": applet_description,
         "logo": applet_logo,
@@ -147,5 +148,3 @@ if __name__ == "__main__":
         "copyright-year": 2008,
         "authors": ["onox"],
         "artists": ["Jakub Steiner", "Lapo Calamandrei", "Rodney Dawes", "Garrett LeSage", "onox"]})
-    ThinkHDAPSApplet(applet)
-    AWNLib.start(applet)

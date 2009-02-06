@@ -24,7 +24,7 @@ import gtk
 from gtk import gdk
 from gtk import glade
 
-from awn.extras import AWNLib
+from awn.extras import awnlib
 from messagehandler import MessageHandler
 
 try:
@@ -439,7 +439,8 @@ backends = [HalBackend]
 
 
 if __name__ == "__main__":
-    applet = AWNLib.initiate({"name": applet_name, "short": "battery",
+    awnlib.init_start(BatteryStatusApplet, {"name": applet_name,
+        "short": "battery",
         "version": applet_version,
         "description": applet_description,
         "theme": applet_theme_logo,
@@ -447,5 +448,3 @@ if __name__ == "__main__":
         "copyright-year": 2008,
         "authors": ["onox <denkpadje@gmail.com>", "Randal Barlow <im.tehk at gmail.com>"]},
         ["settings-per-instance"])
-    BatteryStatusApplet(applet)
-    AWNLib.start(applet)

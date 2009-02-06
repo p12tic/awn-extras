@@ -23,7 +23,7 @@ pygtk.require('2.0')
 import gtk
 from gtk import gdk
 from gtk import glade
-from awn.extras import AWNLib
+from awn.extras import awnlib
 
 try:
     import dbus
@@ -442,7 +442,8 @@ backends = [SysFSBackend, ProcCPUInfoBackend]
 
 
 if __name__ == "__main__":
-    applet = AWNLib.initiate({"name": applet_name, "short": "cpufreq",
+    awnlib.init_start(CpuFreqApplet, {"name": applet_name,
+        "short": "cpufreq",
         "version": applet_version,
         "description": applet_description,
         "logo": applet_logo,
@@ -450,5 +451,3 @@ if __name__ == "__main__":
         "copyright-year": 2008,
         "authors": ["onox <denkpadje@gmail.com>"]},
         ["settings-per-instance"])
-    CpuFreqApplet(applet)
-    AWNLib.start(applet)

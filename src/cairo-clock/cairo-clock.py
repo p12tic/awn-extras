@@ -21,7 +21,7 @@ pygtk.require("2.0")
 import gtk
 from gtk import glade
 
-from awn.extras import AWNLib
+from awn.extras import awnlib
 import cairo
 
 from analogclock import *
@@ -354,7 +354,8 @@ class AppletAnalogClock:
 
 
 if __name__ == "__main__":
-    applet = AWNLib.initiate({"name": applet_name, "short": "cairo-clock",
+    awnlib.init_start(CairoClockApplet, {"name": applet_name,
+        "short": "cairo-clock",
         "version": applet_version,
         "description": applet_description,
         "logo": applet_logo,
@@ -363,5 +364,3 @@ if __name__ == "__main__":
         "authors": ["onox"],
         "artists": ["Lapo Calamandrei", "Rodney Dawes", "Jakub Steiner", "Artists of MacSlow's Cairo-Clock"]},
         ["settings-per-instance"])
-    CairoClockApplet(applet)
-    AWNLib.start(applet)

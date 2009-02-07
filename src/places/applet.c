@@ -615,7 +615,6 @@ static void get_places(Places * places)
 					{
 						item->text = urldecode(g_path_get_basename (tokens[0]), NULL);
 					}
-					g_debug ("text = %s\nline = %s\n",item->text,line);
           item->icon = g_strdup("stock_folder");
           shell_quoted = g_shell_quote(tokens[0]);
           item->exec = g_strdup_printf("%s %s", places->file_manager, shell_quoted);

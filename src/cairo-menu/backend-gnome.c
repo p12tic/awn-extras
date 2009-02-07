@@ -572,58 +572,58 @@ static void update_places(Menu_list_item **p, char* file_manager)
 
   sublist = g_slist_append(sublist, get_separator());
 
-//bookmarks
+/*bookmarks*/
   FILE* handle;
 
-  char *  filename = g_strdup_printf("%s/.gtk-bookmarks", homedir);
+  gchar *  filename = g_strdup_printf("%s/.gtk-bookmarks", homedir);
 
   handle = g_fopen(filename, "r");
 
   if (handle)
   {
     char * line = NULL;
-    char *  len = 0;
+    size_t  len = 0;
 
     while (getline(&line, &len, handle) != -1)
     {
-      char *p;
-      p = line + strlen(line);
+      gchar ** tokens;
+      g_debug ("%s\n",line);
+      tokens = g_strsplit(line, " ", 2);
 
-      if (p != line)
+      if (tokens)
       {
-        while (!isalpha(*p) && (p != line))
+        g_debug ("got tokens\n");
+        if (tokens[0])
         {
-          *p = '\0';
-          p--;
-        }
-
-        while ((*p != '/') && (p != line))
-          p--;
-
-        if (p != line)
-        {
-          char * tmp;
-          p++;
+          gchar * shell_quoted;
+          g_strstrip(tokens[0]);
           item = g_malloc(sizeof(Menu_list_item));
           item->item_type = MENU_ITEM_ENTRY;
 
-          for (tmp = p; *tmp && (*tmp != ' ');tmp++);
-
-          if (*tmp == ' ')
+          if (tokens[1])
           {
-            *tmp = '\0';
-            p = tmp + 1;
+            g_strstrip(tokens[1]);
+            item->name = g_strdup(tokens[1]);
+          }
+          else
+          {
+            item->name = urldecode(g_path_get_basename(tokens[0]), NULL);
           }
 
-          item->name = g_strdup(p);
-
           item->icon = g_strdup("stock_folder");
-          item->exec = g_strdup_printf("%s %s", file_manager, line);
-          item->comment = g_strdup(line);
+
+          shell_quoted = g_shell_quote(tokens[0]);
+          item->exec = g_strdup_printf("%s %s", file_manager, shell_quoted);
+          g_free(shell_quoted);
+          item->comment = g_strdup(tokens[0]);
           item->desktop = g_strdup("");
           sublist = g_slist_append(sublist, item);
+
         }
+
       }
+
+      g_strfreev(tokens);
 
       free(line);
 
@@ -638,7 +638,6 @@ static void update_places(Menu_list_item **p, char* file_manager)
   {
     printf("Unable to open bookmark file: %s/.gtk-bookmarks\n", homedir);
   }
-
   sublist = g_slist_append(sublist, get_blank());
 
   *p = sublist;

@@ -587,12 +587,10 @@ static void update_places(Menu_list_item **p, char* file_manager)
     while (getline(&line, &len, handle) != -1)
     {
       gchar ** tokens;
-      g_debug ("%s\n",line);
       tokens = g_strsplit(line, " ", 2);
 
       if (tokens)
       {
-        g_debug ("got tokens\n");
         if (tokens[0])
         {
           gchar * shell_quoted;

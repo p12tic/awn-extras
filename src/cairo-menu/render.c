@@ -37,7 +37,7 @@ gboolean  G_repression = FALSE;
 extern Win_man * G_win_man;
 gboolean G_cancel_hide_all = TRUE;
 int G_max_width = -1;
-
+extern gint G_Height;
 typedef struct
 {
   GtkWidget * subwidget;
@@ -732,7 +732,7 @@ static gboolean _enter_notify_event(GtkWidget *widget, GdkEventCrossing *event, 
   if (ypos_sub + subwidget->allocation.height > G_win_man->y + G_win_man->height
       - GTK_WIDGET(G_applet)->allocation.width / 2)
   {
-    ypos_sub = G_win_man->y + G_win_man->height - subwidget->allocation.height;
+    ypos_sub = G_win_man->y + G_win_man->height - subwidget->allocation.height-G_Height;
     gtk_window_move(GTK_WINDOW(subwidget->parent->parent), xpos_sub, ypos_sub);
   }
   else
@@ -744,8 +744,8 @@ static gboolean _enter_notify_event(GtkWidget *widget, GdkEventCrossing *event, 
   {
     //This appears to be causing the overlapping menus...
 		g_debug ("Wanting to override placment \n");
-/*    xpos_sub = tmp - subwidget->allocation.width;
-    gtk_window_move(GTK_WINDOW(subwidget->parent->parent), xpos_sub, ypos_sub);*/
+    xpos_sub = tmp - subwidget->allocation.width;
+    gtk_window_move(GTK_WINDOW(subwidget->parent->parent), xpos_sub, ypos_sub);
   }
 
   //printf("EXIT _enter_notify_event\n");

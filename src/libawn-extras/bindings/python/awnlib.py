@@ -28,8 +28,8 @@ import gtk
 import awn
 import awn.extras as extras
 import cairo
-import cPickle as cpickle # For object serialization into gconf
-import types # For type checking for gconf/settings
+import cPickle as cpickle  # For object serialization into gconf
+import types  # For type checking for gconf/settings
 import urllib
 
 ___file___ = sys.argv[0]
@@ -275,13 +275,13 @@ class Dialogs:
         """Responds to click events. Only called by GTK+.
 
         """
-        if event.button == 3 and "menu" in self.__register: # Right
+        if event.button == 3 and "menu" in self.__register:  # Right
             self.toggle("menu", once=True, time=event.time)
-        elif event.button == 2 and "secondary" in self.__register: # Middle
+        elif event.button == 2 and "secondary" in self.__register:  # Middle
             self.toggle("secondary", once=True)
         elif event.button == 1 and "main" in self.__register:
             self.toggle("main")
-        elif "program" in self.__register: # Act like launcher
+        elif "program" in self.__register:  # Act like launcher
             self.toggle("program", once=True)
 
     class AboutDialog(gtk.AboutDialog):
@@ -589,13 +589,16 @@ class Errors:
 
             awn.check_dependencies(scope, name)
 
-    def general(self, error, callback=None, traceback=None, timeout=60):
+    def general(self, error, callback=None, traceback=None):
         """Tell the user that an error has occured.
 
         @param error: the error itself.
         @type error: C{string} or C{Exception}
         @param callback: The function called when the user closes the dialog
         @type callback: C{function}
+        @param traceback: Formatted traceback, can be copied to clipboard
+        via button in dialog.
+        @type traceback: C{str}
 
         """
         assert isinstance(error, Exception) or type(error) is str
@@ -1085,7 +1088,7 @@ class Keyring:
                 type = gnomekeyring.ITEM_NETWORK_PASSWORD
             elif type == "note":
                 type = gnomekeyring.ITEM_NOTE
-            else: # Generic included
+            else:  # Generic included
                 type = gnomekeyring.ITEM_GENERIC_SECRET
 
             self.token = gnomekeyring.item_create_sync(None, type, name, \
@@ -1392,7 +1395,7 @@ class Meta:
         for i in option:
             if i not in srch or not srch[i]:
                 return False
-            elif srch[i] == True: # tuples evaluate to True
+            elif srch[i] == True:  # tuples evaluate to True
                 return True
             else:
                 srch = srch[i]
@@ -1545,7 +1548,7 @@ def start(applet):
 
     """
     applet.show_all()
-    gobject.threads_init() # Threading for Async
+    gobject.threads_init()  # Threading for Async
     gtk.main()
 
 
@@ -1578,7 +1581,7 @@ def init_start(applet_class, meta={}, options=[]):
     except Exception, e:
         import traceback
         traceback = traceback.format_exception(type(e), e, sys.exc_traceback)
-        applet.errors.general(e, traceback=traceback, timeout=5 * 60)
+        applet.errors.general(e, traceback=traceback)
 
     applet.show_all()
     gobject.threads_init()  # Threading for Async

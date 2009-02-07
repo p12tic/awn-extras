@@ -70,6 +70,7 @@ class App(awn.AppletSimple):
 	integ_text = "None"
 	graphic = "calendar.png"
 	surface = None
+	bkg_img = None
 	plainClock = False
 	show_title = False
 	clock_background = (0.4,0.5,0.4,1.0)
@@ -89,6 +90,11 @@ class App(awn.AppletSimple):
 	def __init__(self, uid, orient, height):
 		awn.AppletSimple.__init__ (self, uid, orient, height)
 		self.height = height
+		def on_height_changed(applet, height):
+			self.height = height
+			self.surface = None
+			self.repaint()
+		self.connect("height-changed", on_height_changed)
 		icon = gdk.pixbuf_new_from_file(os.path.dirname (__file__) + '/images/calendar.png')
 		scaled = icon.scale_simple(height,height,gtk.gdk.INTERP_BILINEAR)
 		self.set_temp_icon(scaled)
@@ -174,9 +180,8 @@ class App(awn.AppletSimple):
 		else:
 			self.password = None
 		self.url = self.get_string_config("url","")		
-		self.graphic = self.get_string_config("graphic","calendar-red.png")	
-		self.surface = cairo.ImageSurface.create_from_png(os.path.dirname (__file__) + '/images/' + self.graphic)	
-		self.ct = cairo.Context(self.surface)
+		self.graphic = self.get_string_config("graphic","calendar-red.png")
+		self.bkg_img = cairo.ImageSurface.create_from_png(os.path.dirname (__file__) + '/images/' + self.graphic)
 		background = self.get_string_config("clock_background","667F66FF")		
 		self.clock_background = self.hex_string_to_color(background)
 		foreground = self.get_string_config("clock_foreground","000000FF")		
@@ -269,16 +274,14 @@ class App(awn.AppletSimple):
 		current_minute = time.localtime()[4]
 		current_day = time.localtime()[2]
 		if current_day != self.previous_day:
-			self.ct = None
+			self.surface = None
 		self.init_context()			
 		if current_minute != self.previous_minute:
-			self.surface = None
-			self.ct = None
 			result=self.repaint()
 		else:		
 			if self.blinky_colon == True:
 				self.draw_colon(self.ct,123,202,30)
-				self.set_icon_context_scaled(self.ct)
+				self.set_icon_context(self.ct)
 			result=True
 		now = datetime.datetime.now()
 		self.title_text = now.strftime("%x %X")
@@ -309,11 +312,15 @@ class App(awn.AppletSimple):
 	############################################################################
 
 	def init_context(self):
+		if self.bkg_img == None:
+			self.bkg_img = cairo.ImageSurface.create_from_png(os.path.dirname (__file__) + '/images/' + self.graphic)
+
 		if self.surface == None:
-			self.surface = cairo.ImageSurface.create_from_png(os.path.dirname (__file__) + '/images/' + self.graphic)
-		if self.ct == None:	
+                	height = self.get_height()
+			self.surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, height, height)
 			self.ct = cairo.Context(self.surface)
-		self.ct.set_source_surface(self.surface)
+			self.ct.scale(float(height) / self.bkg_img.get_width(),
+                                      float(height) / self.bkg_img.get_height())
 
 	def first_paint(self):
 		self.repaint()
@@ -332,15 +339,11 @@ class App(awn.AppletSimple):
 	def repaint(self):
 		self.init_context()
 		now = datetime.datetime.now()
-		width,height=self.window.get_size()
-		#cs = cairo.ImageSurface.create_from_png(os.path.dirname (__file__) + '/images/' + self.graphic)
-		#cs = self.surface
-		#if self.ct == None:
-		#	self.ct = cairo.Context(cs)
-		self.ct.set_source_rgba(0,0,0,0)
+
+                self.ct.set_operator(cairo.OPERATOR_SOURCE)
+		self.ct.set_source_surface(self.bkg_img)
 		self.ct.paint()
-		self.ct.set_source_surface(self.surface)
-		self.ct.paint()
+                self.ct.set_operator(cairo.OPERATOR_OVER)
 		if self.clock_plain == False:		
 			red, green, blue, alpha = self.clock_background
 			self.ct.set_source_rgba(red,green,blue,alpha)		
@@ -423,7 +426,7 @@ class App(awn.AppletSimple):
 		self.ct.set_source_rgba(1.0,1.0,1.0,1.0)
 		self.ct.move_to(x,60)
 		self.ct.show_text(now.strftime("%b"))
-		self.set_icon_context_scaled(self.ct)
+		self.set_icon_context(self.ct)
 		return True
 
 	def draw_time_led(self, context, led, x0, y0, width, height):

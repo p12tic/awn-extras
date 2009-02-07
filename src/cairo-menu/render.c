@@ -743,9 +743,11 @@ static gboolean _enter_notify_event(GtkWidget *widget, GdkEventCrossing *event, 
   if (xpos_sub + subwidget->allocation.width > G_win_man->x + G_win_man->width)
   {
     //This appears to be causing the overlapping menus...
-		g_debug ("Wanting to override placment \n");
-    xpos_sub = tmp - subwidget->allocation.width;
-    gtk_window_move(GTK_WINDOW(subwidget->parent->parent), xpos_sub, ypos_sub);
+    if (subwidget->allocation.width < tmp)
+    {
+      xpos_sub = tmp - subwidget->allocation.width*0.95;
+      gtk_window_move(GTK_WINDOW(subwidget->parent->parent), xpos_sub, ypos_sub);
+    }
   }
 
   //printf("EXIT _enter_notify_event\n");

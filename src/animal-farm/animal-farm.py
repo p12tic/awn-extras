@@ -24,7 +24,7 @@ import pygtk
 pygtk.require("2.0")
 import gtk
 
-from awn.extras import AWNLib
+from awn.extras import awnlib
 import random
 
 applet_name = "Animal Farm"
@@ -85,7 +85,7 @@ class AnimalFarmApplet:
         self.iconname = files[random.randint(0, len(files) - 1)]
         
         height = self.applet.get_height()
-        self.applet.icon.set(gtk.gdk.pixbuf_new_from_file_at_size(os.path.join(images_dir, self.iconname), height, height))
+        self.applet.icon.file(os.path.join(images_dir, self.iconname), size=height)
     
     def refresh_fortune(self):
         try:
@@ -96,12 +96,11 @@ class AnimalFarmApplet:
 
 
 if __name__ == "__main__":
-    applet = AWNLib.initiate({"name": applet_name, "short": "animal-farm",
+    awnlib.init_start(AnimalFarmApplet, {"name": applet_name,
+        "short": "animal-farm",
         "version": applet_version,
         "description": applet_description,
         "logo": applet_logo,
         "author": "Arvind Ganga",
         "copyright-year": 2008,
         "authors": ["Arvind Ganga", "onox <denkpadje@gmail.com>"]})
-    AnimalFarmApplet(applet)
-    AWNLib.start(applet)

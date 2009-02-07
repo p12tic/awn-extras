@@ -1,105 +1,126 @@
 #!/usr/bin/python
+# awndbus applet for AWN Version 1.0
 #
-#       awndbus applet for AWN Version 1.0
+# Copyright 2008 Julien Lavergne <julien.lavergne@gmail.com>
 #
-#       Copyright 2008 Julien Lavergne <julien.lavergne@gmail.com>
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
 #
-#       This program is free software; you can redistribute it and/or modify
-#       it under the terms of the GNU General Public License as published by
-#       the Free Software Foundation; either version 2 of the License, or
-#       (at your option) any later version.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
-#       This program is distributed in the hope that it will be useful,
-#       but WITHOUT ANY WARRANTY; without even the implied warranty of
-#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#       GNU General Public License for more details.
-#
-#       You should have received a copy of the GNU General Public License
-#       along with this program; if not, write to the Free Software
-#       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-#       MA 02110-1301, USA.
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
 
-from awn.extras import AWNLib
-import gtk
-import dbus
 import os
 
-applet_name = "Tomboy Applet"
-applet_version = "0.2.8"
-applet_description = "Control Tomboy with D-Bus"
+import pygtk
+pygtk.require("2.0")
+import gtk
 
-bus = dbus.SessionBus()
-interface = bus.get_object('org.gnome.Tomboy','/org/gnome/Tomboy/RemoteControl')
-interface = dbus.Interface(interface,dbus_interface='org.gnome.Tomboy.RemoteControl')
-version = interface.Version()
+from awn.extras import awnlib
+
+try:
+    import dbus
+except ImportError:
+    dbus = None
+
+applet_name = "Tomboy Applet"
+applet_version = "0.3.1"
+applet_description = "Control Tomboy with D-Bus"
 
 # Logo of the applet, shown in the GTK About dialog
 applet_logo = os.path.join(os.path.dirname(__file__), "icons", "tomboy.png")
 
+bus_name = "org.gnome.Tomboy"
+object_name = "/org/gnome/Tomboy/RemoteControl"
+if_name = "org.gnome.Tomboy.RemoteControl"
+
 
 class TomboyApplet:
-	def __init__(self, awnlib):
-		self.awn=awnlib	
-		self.awn.icon.theme("tomboy")
-		self.awn.title.set("Tomboy Applet")
-		
-		self.MainDialog()
 
-	def DisplaySearch(self, widget, data=None):
-		interface.DisplaySearch()
+    __interface = None
 
-	def ListAllNotes(self):
-		return interface.ListAllNotes()
+    def __init__(self, awnlib):
+        self.awn = awnlib
 
-	def ListAllTitles(self):
-		titles =[]
-		for s in self.ListAllNotes():
-			titles.append(interface.GetNoteTitle(s))
-		return titles
+        awnlib.icon.file(applet_logo)
+        awnlib.title.set("Tomboy Applet")
 
-	def DisplayNote(self, uri=None):
-		interface.DisplayNote(uri)
+        if dbus is not None:
+            try:
+                bus = dbus.SessionBus()
+                if bus_name in bus.list_names():
+                    object = bus.get_object(bus_name, object_name)
+                    self.__interface = dbus.Interface(object, if_name)
+                    self.__version = self.__interface.Version()
+            except dbus.DBusException, e:
+                print e.message
 
-	def DicoNotes(self):
-		d = {}
-		for s in self.ListAllNotes():
-			d [interface.GetNoteTitle(s)]= s
-		return d
+        if self.__interface is not None:
+            self.MainDialog()
+        else:
+            awnlib.errors.general("Could not connect to Tomboy")
 
-	def ButtonDisplay (self,widget,label):
-		self.DisplayNote(label)
+    def DisplaySearch(self, widget, data=None):
+        self.__interface.DisplaySearch()
 
-	def CreateNote(self, data=None):
-		self.new = interface.CreateNote()
-		self.DisplayNote(self.new)
+    def ListAllNotes(self):
+        return self.__interface.ListAllNotes()
 
-	def MainDialog(self):
-		self.dlog = applet.dialog.new("main")
+    def ListAllTitles(self):
+        titles =[]
+        for s in self.ListAllNotes():
+            titles.append(self.__interface.GetNoteTitle(s))
+        return titles
 
-		li = self.ListAllNotes()
-		for s in li[:10]:
-			self.button = gtk.Button(label=interface.GetNoteTitle(s))
-			self.button.connect("clicked", self.ButtonDisplay, s)
-			self.dlog.add(self.button)
+    def DisplayNote(self, uri=None):
+        self.__interface.DisplayNote(uri)
 
-		self.label1 = gtk.Label(str="Version : "+version)
-		self.dlog.add(self.label1)
+    def DicoNotes(self):
+        d = {}
+        for s in self.ListAllNotes():
+            d[self.__interface.GetNoteTitle(s)] = s
+        return d
 
-		self.button1 = gtk.Button(label="Search")
-		self.button1.connect("clicked", self.DisplaySearch)
-		self.dlog.add(self.button1)
+    def ButtonDisplay(self, widget, label):
+        self.DisplayNote(label)
 
-		self.button2 = gtk.Button(label="New Note")
-		self.button2.connect("clicked", self.CreateNote)
-		self.dlog.add(self.button2)
+    def CreateNote(self, data=None):
+        self.DisplayNote(self.__interface.CreateNote())
+
+    def MainDialog(self):
+        dialog = self.awn.dialog.new("main")
+
+        li = self.ListAllNotes()
+        for s in li[:10]:
+            self.button = gtk.Button(label=self.__interface.GetNoteTitle(s))
+            self.button.connect("clicked", self.ButtonDisplay, s)
+            dialog.add(self.button)
+
+        self.label1 = gtk.Label(str="Version : " + self.__version)
+        dialog.add(self.label1)
+
+        self.button1 = gtk.Button(label="Search")
+        self.button1.connect("clicked", self.DisplaySearch)
+        dialog.add(self.button1)
+
+        self.button2 = gtk.Button(label="New Note")
+        self.button2.connect("clicked", self.CreateNote)
+        dialog.add(self.button2)
+
 
 if __name__ == "__main__":
-    applet = AWNLib.initiate({"name": applet_name, "short": "tomboy",
+    awnlib.init_start(TomboyApplet, {"name": applet_name, "short": "tomboy",
         "version": applet_version,
         "description": applet_description,
         "logo": applet_logo,
         "author": "Julien Lavergne",
         "copyright-year": 2008,
         "authors": ["Julien Lavergne <julien.lavergne@gmail.com>"]})
-    TomboyApplet(applet)
-    AWNLib.start(applet)

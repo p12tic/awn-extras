@@ -74,20 +74,8 @@ class TomboyApplet:
     def ListAllNotes(self):
         return self.__interface.ListAllNotes()
 
-    def ListAllTitles(self):
-        titles =[]
-        for s in self.ListAllNotes():
-            titles.append(self.__interface.GetNoteTitle(s))
-        return titles
-
     def DisplayNote(self, uri=None):
         self.__interface.DisplayNote(uri)
-
-    def DicoNotes(self):
-        d = {}
-        for s in self.ListAllNotes():
-            d[self.__interface.GetNoteTitle(s)] = s
-        return d
 
     def ButtonDisplay(self, widget, label):
         self.DisplayNote(label)
@@ -98,22 +86,20 @@ class TomboyApplet:
     def MainDialog(self):
         dialog = self.awn.dialog.new("main")
 
-        li = self.ListAllNotes()
-        for s in li[:10]:
-            self.button = gtk.Button(label=self.__interface.GetNoteTitle(s))
+        for s in self.ListAllNotes()[:10]:
+            self.button = gtk.Button(self.__interface.GetNoteTitle(s))
             self.button.connect("clicked", self.ButtonDisplay, s)
             dialog.add(self.button)
 
-        self.label1 = gtk.Label(str="Version : " + self.__version)
-        dialog.add(self.label1)
+        dialog.add(gtk.Label("Version : " + self.__version))
 
-        self.button1 = gtk.Button(label="Search")
-        self.button1.connect("clicked", self.DisplaySearch)
-        dialog.add(self.button1)
+        button1 = gtk.Button("Search")
+        button1.connect("clicked", self.DisplaySearch)
+        dialog.add(button1)
 
-        self.button2 = gtk.Button(label="New Note")
-        self.button2.connect("clicked", self.CreateNote)
-        dialog.add(self.button2)
+        button2 = gtk.Button("New Note")
+        button2.connect("clicked", self.CreateNote)
+        dialog.add(button2)
 
 
 if __name__ == "__main__":
@@ -123,4 +109,4 @@ if __name__ == "__main__":
         "logo": applet_logo,
         "author": "Julien Lavergne",
         "copyright-year": 2008,
-        "authors": ["Julien Lavergne <julien.lavergne@gmail.com>"]})
+        "authors": ["Julien Lavergne <julien.lavergne@gmail.com>", "onox <denkpadje@gmail.com>"]})

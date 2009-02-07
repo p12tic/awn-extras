@@ -68,9 +68,9 @@ class ThinkHDAPSApplet:
             # Change icon if status has changed
             if paused != self.__was_paused or self.__error_occurred:
                 if paused:
-                    self.applet.icon.set(self.icon_paused, True)
+                    self.applet.icon.set(self.icon_paused)
                 else:
-                    self.applet.icon.set(self.icon_running, True)
+                    self.applet.icon.set(self.icon_running)
 
             if self.__error_occurred:
                 self.__error_occurred = False
@@ -91,7 +91,7 @@ class ThinkHDAPSApplet:
 
         self.setup_icon()
 
-        applet.icon.set(self.icon_running, True)
+        applet.icon.set(self.icon_running)
 
         def can_unload(disk):
             file = os.path.join(sysfs_dir, disk, pm_file)
@@ -135,7 +135,7 @@ class ThinkHDAPSApplet:
         height = self.applet.get_height()
         icon_error = gdk.pixbuf_new_from_file_at_size(file_icon_error, height, height)
 
-        self.applet.icon.set(icon_error, True)
+        self.applet.icon.set(icon_error)
 
 
 if __name__ == "__main__":

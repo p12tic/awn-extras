@@ -95,7 +95,7 @@ class BatteryStatusApplet:
         
         icon = os.path.join(themes_dir, self.settings["theme"], "battery-missing.svg")
         height = self.applet.get_height()
-        applet.icon.set(gdk.pixbuf_new_from_file_at_size(icon, height, height))
+        applet.icon.file(icon, size=height)
     
     def setup_context_menu(self):
         prefs = glade.XML(glade_file)
@@ -279,7 +279,7 @@ class BatteryStatusApplet:
 
         self.__previous_state = new_state
 
-        self.applet.icon.set(gdk.pixbuf_new_from_file_at_size(icon, height, height), True)
+        self.applet.icon.file(icon, size=height)
     
     def is_battery_low(self):
         if not self.backend.is_discharging():

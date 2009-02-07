@@ -125,7 +125,7 @@ class CpuFreqApplet:
         self.applet = applet
 
         height = self.applet.get_height()
-        applet.icon.set(gdk.pixbuf_new_from_file_at_size(applet_logo, height, height))
+        applet.icon.file(applet_logo, size=height)
 
         self.setup_icon()
 
@@ -310,7 +310,7 @@ class CpuFreqApplet:
             icon = self.icons[int(round(number))]
         else:
             icon = self.icons[len(self.icons) - 1]
-        applet.icon.set(icon, True)
+        self.applet.icon.set(icon)
 
         self.update_title()
 

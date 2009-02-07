@@ -261,7 +261,7 @@ class VolumeControlApplet:
                 icon = os.path.join(theme_dir, self.theme, "scalable/status/audio-volume-%s.svg" % icon)
 
             height = self.applet.get_height()
-            self.applet.icon.set(gdk.pixbuf_new_from_file_at_size(icon, height, height), True)
+            self.applet.icon.file(icon, size=height)
 
             self.volume_scale.set_value(volume)
 

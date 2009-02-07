@@ -283,7 +283,7 @@ class WeatherApplet:
                 self.iconPixBuf = self.applet.icon.surface(surface, self.iconPixBuf, set=False)
                 height = self.applet.get_height()
                 scaledIcon = self.iconPixBuf.scale_simple(height, height, gtk.gdk.INTERP_HYPER)
-                self.applet.icon.set(scaledIcon, raw=True)
+                self.applet.icon.set(scaledIcon)
                 
     def getTextSize(self, context, text):
         """

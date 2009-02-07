@@ -13,7 +13,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import operator
 import os
+import platform
 
 import gobject
 import pygtk
@@ -30,9 +32,6 @@ applet_description = "Applet that shows the shock protection status of your disk
 # Interval in milliseconds between two successive status checks
 check_status_interval = 100
 
-sysfs_dir = "/sys/block"
-pm_file = "queue/protect_method"
-
 hdaps_short_description = "protected from shocks"
 
 image_dir = os.path.join(os.path.dirname(__file__), "images")
@@ -44,6 +43,24 @@ applet_logo = os.path.join(image_dir, "thinkhdaps-logo.svg")
 file_icon_running = os.path.join(image_dir, "thinkhdaps-logo.svg")
 file_icon_paused = os.path.join(image_dir, "thinkhdaps-paused.svg")
 file_icon_error = os.path.join(image_dir, "thinkhdaps-error.svg")
+
+
+def compare_linux_version(wanted_version, op):
+    assert callable(op)
+
+    version = map(int, platform.release().split("-")[0].split("."))
+    return all(map(lambda i: op(*i), zip(version, wanted_version)))
+
+
+version_ge_2_6_28 = compare_linux_version([2, 6, 28], operator.ge)
+
+sysfs_dir = "/sys/block"
+
+if version_ge_2_6_28:
+    protect_file = "device/unload_heads"
+else:
+    method_file = "queue/protect_method"
+    protect_file = "queue/protect"
 
 
 class ThinkHDAPSApplet:
@@ -63,7 +80,7 @@ class ThinkHDAPSApplet:
 
         """
         try:
-            paused = int(open("/sys/block/" + self.__hdaps_device + "/queue/protect").readline())
+            paused = int(open(os.path.join(sysfs_dir, self.__hdaps_device, protect_file)).readline())
 
             # Change icon if status has changed
             if paused != self.__was_paused or self.__error_occurred:
@@ -93,9 +110,20 @@ class ThinkHDAPSApplet:
 
         applet.icon.set(self.icon_running)
 
-        def can_unload(disk):
-            file = os.path.join(sysfs_dir, disk, pm_file)
-            return os.path.isfile(file) and "[unload]" in open(file).read()
+        if version_ge_2_6_28:
+            def can_unload(disk):
+                file = os.path.join(sysfs_dir, disk, protect_file)
+                if not os.path.isfile(file):
+                    return False
+                try:
+                    open(file).read()
+                    return True
+                except IOError:
+                    return False
+        else:
+            def can_unload(disk):
+                file = os.path.join(sysfs_dir, disk, method_file)
+                return os.path.isfile(file) and "[unload]" in open(file).read()
         disks = [disk for disk in os.listdir(sysfs_dir) if can_unload(disk)]
 
         if len(disks) > 0:

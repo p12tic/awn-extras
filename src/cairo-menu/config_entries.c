@@ -538,7 +538,8 @@ static gboolean _press_ok(GtkWidget *widget, GdkEventButton *event, GtkWidget * 
                     label);
   gtk_widget_show_all(dialog);
   gtk_dialog_run(dialog);
-  g_spawn_command_line_async("sh -c  'export T_STAMP=`date +\"%s\"`&& export AWN_G_ORIG=`gconftool-2 -g /apps/avant-window-navigator/applets_list | sed -e \"s/cairo_main_menu\.desktop::[0-9]*/cairo_main_menu\.desktop::$T_STAMP/\"` && export AWN_G_MOD=`echo $AWN_G_ORIG |sed -e \"s/[^,^\[]*cairo_main_menu\.desktop::[0-9]*,?//\"` && gconftool-2 --type list --list-type=string -s /apps/avant-window-navigator/applets_list \"$AWN_G_MOD\" && sleep 2 && gconftool-2 --type list --list-type=string -s /apps/avant-window-navigator/applets_list \"$AWN_G_ORIG\"'", &err);
+  g_debug("/bin/sh -c 'export T_STAMP=`date +\'\%s\'`&& export AWN_G_ORIG=`gconftool-2 -g /apps/avant-window-navigator/panel/applet_list | sed -e \"s/cairo_main_menu\.desktop::[0-9]*/cairo_main_menu\.desktop::$T_STAMP/\"` && export AWN_G_MOD=`echo $AWN_G_ORIG |sed -e \"s/[^,^\[]*cairo_main_menu\.desktop::[0-9]*,?//\"` && gconftool-2 --type list --list-type=string -s /apps/avant-window-navigator/panel/applet_list \"$AWN_G_MOD\" && sleep 2 && gconftool-2 --type list --list-type=string -s /apps/avant-window-navigator/applets_list \"$AWN_G_ORIG\"'");  
+  g_spawn_command_line_async("/bin/sh -c 'export T_STAMP=`date +\"%s\"`&& export AWN_G_ORIG=`gconftool-2 -g /apps/avant-window-navigator/panel/applet_list | sed -e \"s/cairo_main_menu\.desktop::[0-9]*/cairo_main_menu\.desktop::$T_STAMP/\"` && export AWN_G_MOD=`echo $AWN_G_ORIG |sed -e \"s/[^,^\[]*cairo_main_menu\.desktop::[0-9]*,?//\"` && gconftool-2 --type list --list-type=string -s /apps/avant-window-navigator/panel/applet_list \"$AWN_G_MOD\" && sleep 2 && gconftool-2 --type list --list-type=string -s /apps/avant-window-navigator/panel/applet_list \"$AWN_G_ORIG\"'", &err);
   exit(0);
   return FALSE;
 }

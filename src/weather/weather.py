@@ -286,8 +286,8 @@ class WeatherApplet:
         else: # otherwise, we overlay the temperature text
             surface = self.overlayTemperature(iconFile)
             if surface is not None: # None is returned on error
-                # don't use AWNLib's built in setting and resizing, it needs to be raw because
-                # in the case of a bar resize, our event is called first and AWNLib has the old size.
+                # don't use awnlib's built in setting and resizing, it needs to be raw because
+                # in the case of a bar resize, our event is called first and awnlib has the old size.
                 self.iconPixBuf = self.applet.icon.surface(surface, self.iconPixBuf, set=False)
                 height = self.applet.get_height()
                 scaledIcon = self.iconPixBuf.scale_simple(height, height, gtk.gdk.INTERP_HYPER)
@@ -392,7 +392,7 @@ class WeatherApplet:
     def createMapDialog(self):
         """
         Create a map dialog from the current already-downloaded map image.
-        Note that this does not show the dialog, it simply creates it. AWNLib handles the rest.
+        Note that this does not show the dialog, it simply creates it. awnlib handles the rest.
         """
         dlog = self.applet.dialog.new("secondary")
         if self.mapPixBuf is None: # we don't have a map yet

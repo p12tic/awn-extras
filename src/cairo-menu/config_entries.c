@@ -405,13 +405,13 @@ void read_config(void)
     G_cairo_menu_conf.normal.fg.alpha = 0.9;
 
 
-    d = top_win->style->base[GTK_STATE_PRELIGHT];
+    d = top_win->style->bg[GTK_STATE_ACTIVE];
     G_cairo_menu_conf.hover.bg.red = d.red / 65535.0;
     G_cairo_menu_conf.hover.bg.green = d.green / 65535.0;
     G_cairo_menu_conf.hover.bg.blue = d.blue / 65535.0;
     G_cairo_menu_conf.hover.bg.alpha = 0.9;
 
-    d = top_win->style->fg[GTK_STATE_PRELIGHT];
+    d = top_win->style->fg[GTK_STATE_ACTIVE];
     G_cairo_menu_conf.hover.fg.red = d.red / 65535.0;
     G_cairo_menu_conf.hover.fg.green = d.green / 65535.0;
     G_cairo_menu_conf.hover.fg.blue = d.blue / 65535.0;

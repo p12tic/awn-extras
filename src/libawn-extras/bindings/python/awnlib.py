@@ -32,11 +32,6 @@ import cPickle as cpickle # For object serialization into gconf
 import types # For type checking for gconf/settings
 import urllib
 
-try:
-    import pynotify
-except ImportError:
-    pynotify = None
-
 ___file___ = sys.argv[0]
 # Basically, __file__ = current file location
 # sys.argv[0] = file name or called file
@@ -473,15 +468,15 @@ class Icon:
             # TODO does not handle multiple icons yet
             self.theme(parent.meta["theme"])
 
-    def file(self, file, set=True, interp="bilinear"):
+    def file(self, file, set=True, size=None):
         """Get an icon from a file location.
 
         @param file: The path to the file. Can be relative or absolute.
         @type file: C{string}
         @param set: Whether to also set the icon. True by default.
         @type set: C{bool}
-        @param interp: Interpolation method.
-        @type interp: C{str}, one of "bilinear", "hyper", "nearest", "tile"
+        @param size: Width and height of icon.
+        @type size: C{int}
         @return: The resultant pixbuf or None (if C{set} is C{True})
         @rtype: C{gtk.gdk.Pixbuf} or C{None}
 
@@ -490,10 +485,13 @@ class Icon:
             file = os.path.join(os.path.abspath( \
                 os.path.dirname(___file___)), file)
 
-        icon = gtk.gdk.pixbuf_new_from_file(file)
+        if size is None:
+            icon = gtk.gdk.pixbuf_new_from_file(file)
+        else:
+            icon = gtk.gdk.pixbuf_new_from_file_at_size(file, size, size)
 
         if set:
-            self.set(icon, interp=interp)
+            self.set(icon)
         else:
             return icon
 
@@ -509,7 +507,7 @@ class Icon:
         """
         return self.__parent.set_awn_icon(self.__parent.meta["short"], name)
 
-    def surface(self, surface, pixbuf=None, set=True, interp="bilinear"):
+    def surface(self, surface, pixbuf=None, set=True):
         """Convert a C{cairo} surface to a C{gtk.gdk.Pixbuf}.
 
         @param surface: The C{cairo} surface to convert.
@@ -520,8 +518,6 @@ class Icon:
         @type pixbuf: C{gtk.gdk.Pixbuf}
         @param set: Whether to also set the icon. True by default.
         @type set: C{bool}
-        @param interp: Interpolation method.
-        @type interp: C{str}, one of "bilinear", "hyper", "nearest", "tile"
         @return: The resultant pixbuf or None (if C{set} is C{True})
         @rtype: C{gtk.gdk.Pixbuf} or C{None}
 
@@ -532,19 +528,15 @@ class Icon:
             icon = extras.surface_to_pixbuf(surface, pixbuf)
 
         if set:
-            self.set(icon, interp=interp)
+            self.set(icon)
         else:
             return icon
 
-    def set(self, icon, raw=False, interp="bilinear"):
+    def set(self, icon):
         """Set a C{gtk.gdk.pixbuf} or C{cairo.Context} as your applet icon.
 
         @param icon: The icon to set your applet icon to.
         @type icon: C{gtk.gdk.Pixbuf} or C{cairo.Context}
-        @param raw: If true, don't resize the passed pixbuf. False by default.
-        @type raw: C{bool}
-        @param interp: Interpolation method.
-        @type interp: C{str}, one of "bilinear", "hyper", "nearest", "tile"
 
         """
         if isinstance(icon, cairo.Context):
@@ -553,18 +545,8 @@ class Icon:
             if self.__previous_context != icon:
                 del self.__previous_context
                 self.__previous_context = icon
-
-            return
-
-        if not raw:
-            interp = getattr(gtk.gdk, "INTERP_"+interp.upper())
-
-            h = icon.get_height()
-            if self.__height != h:
-                new_width = int(float(self.__height) / h * icon.get_width())
-                icon = icon.scale_simple(new_width, self.__height, interp)
-        self.__parent.set_temp_icon(icon)
-        self.__parent.show()
+        else:
+            self.__parent.set_icon(icon)
 
     def hide(self):
         """Hide the applet's icon.

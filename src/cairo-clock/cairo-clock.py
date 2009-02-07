@@ -361,6 +361,6 @@ if __name__ == "__main__":
         "logo": applet_logo,
         "author": "onox",
         "copyright-year": 2008,
-        "authors": ["onox"],
+        "authors": ["onox <denkpadje@gmail.com>"],
         "artists": ["Lapo Calamandrei", "Rodney Dawes", "Jakub Steiner", "Artists of MacSlow's Cairo-Clock"]},
         ["settings-per-instance"])

@@ -146,5 +146,5 @@ if __name__ == "__main__":
         "logo": applet_logo,
         "author": "onox",
         "copyright-year": 2008,
-        "authors": ["onox"],
+        "authors": ["onox <denkpadje@gmail.com>"],
         "artists": ["Jakub Steiner", "Lapo Calamandrei", "Rodney Dawes", "Garrett LeSage", "onox"]})

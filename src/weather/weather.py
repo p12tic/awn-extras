@@ -24,7 +24,6 @@
 
 import re
 import sys
-from threading import Thread
 import time
 import traceback
 import urllib
@@ -62,6 +61,11 @@ class WeatherApplet:
         # handle the persisted settings (such as gconf)
         self.loadSettings()
         ##self.applet.settings.notify("weather", self.onSettingsChanged)
+
+        # first, get the current conditions, so we can display the icon
+        gobject.timeout_add(1500, self.fetchInitialConditions)
+        # get everything else in a few seconds, the applet icon is done, let's not hold things up
+        gobject.timeout_add(5000, self.fetchInitialData)
         
         # set default icons/titles/dialogs so the applet is informative without data
         self.setIcon() # initialize the default weather.com icon
@@ -77,15 +81,6 @@ class WeatherApplet:
         # bind to some events we are concerned about
         self.applet.connect("leave-notify-event", self.onMouseOut)
         self.applet.connect("height-changed", self.onBarHeightChange)
-
-        def fetch_cb():
-            def run_fetch():
-                self.fetchInitialConditions()
-                self.fetchInitialData()
-            # Run it in a different thread otherwise no icon will be shown
-            Thread(target=run_fetch).start()
-            return False
-        gobject.idle_add(fetch_cb)
 
     def loadSettings(self):
         """

@@ -4,11 +4,4 @@ include $(top_srcdir)/Makefile.desktop-files
 
 appletdir = $(applet_datadir)
 
-install-exec-local:
-	test -d "$(DESTDIR)$(appletdir)" || mkdir -p "$(DESTDIR)$(appletdir)"
-	$(INSTALL) -m 755 "$(APPLET_MAIN_FILE)" "$(DESTDIR)$(appletdir)/$(APPLET_MAIN_FILE)"
-
-uninstall-local:
-	rm -f "$(DESTDIR)$(appletdir)/$(APPLET_MAIN_FILE)"
-
-EXTRA_DIST += $(APPLET_MAIN_FILE)
+dist_applet_SCRIPTS = $(APPLET_MAIN_FILE)

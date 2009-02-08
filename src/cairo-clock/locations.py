@@ -12,11 +12,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import with_statement
+
 import os
 from datetime import datetime
+from threading import Lock, Thread
 import time
 from xml.sax.handler import ContentHandler, EntityResolver
-from xml.sax import make_parser
+from xml.sax import make_parser, SAXParseException
 
 import pygtk
 pygtk.require("2.0")
@@ -117,7 +120,7 @@ class Locations:
         self.__page_number = page_number
 
     def get_preferences(self, prefs):
-        self.__prefs_tab = LocationsPreferencesTab(prefs, self.__cities_timezones, self.add_city, self.remove_city, self.contains_city_timezone)
+        self.__prefs_tab = LocationsPreferencesTab(prefs, self.__applet.applet, self.__cities_timezones, self.add_city, self.remove_city, self.contains_city_timezone)
 
         return self.__prefs_tab.get_prefs_widget()
 
@@ -249,8 +252,9 @@ class LocationsPreferencesTab:
 
     __search_window = None
 
-    def __init__(self, prefs, cities_timezones, add_city, remove_city, contains_city_timezone):
+    def __init__(self, prefs, applet, cities_timezones, add_city, remove_city, contains_city_timezone):
         self.__prefs = prefs
+        self.__applet = applet
         self.add_city = add_city
         self.remove_city = remove_city
         self.contains_city_timezone = contains_city_timezone
@@ -291,18 +295,31 @@ class LocationsPreferencesTab:
         for button in self.__selection_buttons:
             button.set_sensitive(row_selected)
 
+    def init_search_window(self):
+        with self.__init_search_window_lock:
+            if self.__search_window is None:
+                def add_row(city_timezone):
+                    """Adds a row to the tree store that represents all added
+                    locations.
+
+                    """
+                    self.location_store.append(None, city_timezone)
+                # TODO maybe display message "Loading locations..."
+                try:
+                    self.__search_window = LocationSearchWindow(self.__prefs, add_row, self.contains_city_timezone)
+                    self.__search_window.show_window()
+                except SAXParseException:
+                    self.__applet.errors.general("Could not load libgweather's locations")
+
+    __init_search_window_lock = Lock()
+
     def clicked_add_location_button_cb(self, button):
         if self.__search_window is None:
-            def add_row(city_timezone):
-                """Adds a row to the tree store that represents all added
-                locations.
-
-                """
-                self.location_store.append(None, city_timezone)
-            self.__search_window = LocationSearchWindow(self.__prefs, add_row, self.contains_city_timezone)
-            # TODO maybe display message "Loading locations..."
-
-        self.__search_window.show_window()
+            if not self.__init_search_window_lock.locked():
+                with self.__init_search_window_lock:
+                    Thread(target=self.init_search_window).start()
+        else:
+            self.__search_window.show_window()
 
     def clicked_remove_location_button_cb(self, button):
         iter = self.tree_selection.get_selected()[1]
@@ -337,8 +354,12 @@ class LocationSearchWindow:
         self.__button_ok_search.set_sensitive(False)
         self.__button_ok_search.connect("clicked", self.button_ok_search_clicked_cb)
 
-        self.__prefs.get_widget("entry-location-name").connect("changed", self.entry_location_changed_cb)
-        # TODO find next entry when clicking button-find-next
+        self.__entry_location_name = self.__prefs.get_widget("entry-location-name")
+        self.__entry_location_name.connect("changed", self.entry_location_changed_cb)
+
+        self.__button_find_next = self.__prefs.get_widget("button-find-next")
+        self.__button_find_next.set_sensitive(False)
+        self.__button_find_next.connect("clicked", self.button_find_next_clicked_cb)
 
         self.__vadjustment = self.__prefs.get_widget("scroll-all-locations").get_vadjustment()
         self.__entry_location = self.__prefs.get_widget("entry-location-name")
@@ -517,22 +538,49 @@ class LocationSearchWindow:
             if self.contains_city_timezone(city_timezone):
                 self.add_row(city_timezone)
 
+    __search_cb_id = None
+    __search_lock = Lock()
+    __schedule_lock = Lock()
+
     def entry_location_changed_cb(self, entry):
         """Expand the tree and scroll to the first location that matches the
         text in the text entry.
 
         """
-        iter = self.find_location(None, entry.get_text())
-        if iter is not None:
-            path = self.__all_locations_store.get_path(iter)
-            self.__all_locations_view.expand_to_path(path)
-            self.__all_locations_selection.select_iter(iter)
-            self.__all_locations_view.scroll_to_cell(path, use_align=True, row_align=0.5)
+        def search_cb():
+            with self.__search_lock:
+                self.__search_results = []
+                self.__search_result_index = 0
 
-    def find_location(self, parent_iter, text):
+                search_text = entry.get_text()
+                self.find_location(None, search_text, self.__search_results)
+                if len(self.__search_results) > 0:
+                    self.select_next_location()
+
+                    self.__button_find_next.set_sensitive(len(search_text) > 0 and len(self.__search_results) > 1)
+        with self.__schedule_lock:
+            if self.__search_cb_id is not None:
+                gobject.source_remove(self.__search_cb_id)
+                self.__search_cb_id = None
+            self.__search_cb_id = gobject.timeout_add(100, search_cb)
+
+    def select_next_location(self):
+        iter = self.__search_results[self.__search_result_index]
+
+        path = self.__all_locations_store.get_path(iter)
+        self.__all_locations_view.expand_to_path(path)
+        self.__all_locations_selection.select_iter(iter)
+        self.__all_locations_view.scroll_to_cell(path, use_align=True, row_align=0.5)
+
+    def button_find_next_clicked_cb(self, button):
+        with self.__search_lock:
+            self.__search_result_index = (self.__search_result_index + 1) % len(self.__search_results)
+            self.select_next_location()
+
+    def find_location(self, parent_iter, text, result_list):
         """Do a depth first search to find a node whose city starts with the
-        given text. Returns a {gtk.TreeIter} that points to the found element,
-        or None if no location matched.
+        given text. Fills the result_list with instances of {gtk.TreeIter}
+        that points to the found element.
 
         """
         number_children = self.__all_locations_store.iter_n_children(parent_iter)
@@ -545,8 +593,6 @@ class LocationSearchWindow:
                 # Do case-insensitive comparison if text is lower case
                 row_text = row_text.lower()
             if row_text.startswith(text):
-                return child_iter
+                result_list.append(child_iter)
 
-            result = self.find_location(child_iter, text)
-            if result is not None:
-                return result
+            self.find_location(child_iter, text, result_list)

@@ -34,7 +34,7 @@ applet_description = "Applet that displays fortune messages"
 images_dir = os.path.join(os.path.dirname(__file__), "icons")
 
 # Logo of the applet, shown in the GTK About dialog
-applet_logo = os.path.join(images_dir, "donkey.png")
+applet_logo = os.path.join(images_dir, 'lemmling-cartoon-gnu.svg')
 
 command = "fortune"
 
@@ -79,7 +79,7 @@ class AnimalFarmApplet:
         self.refresh_fortune()
     
     def set_icon(self):
-        files = [i for i in os.listdir(images_dir) if i.endswith(".png") and i != self.iconname and i != self.previous_iconname] 
+        files = [i for i in os.listdir(images_dir) if i.endswith('.svg') and i != self.iconname and i != self.previous_iconname]
         
         self.previous_iconname = self.iconname
         self.iconname = files[random.randint(0, len(files) - 1)]

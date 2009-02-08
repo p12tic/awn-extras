@@ -47,7 +47,7 @@ default_theme = "gpm"
 
 glade_file = os.path.join(os.path.dirname(__file__), "battery-status.glade")
 
-charge_ranges = {"100": (100, 86), "080": (85, 66), "060": (65, 46), "040": (45, 21), "020": (20, 7), "000": (6, 0)}
+charge_ranges = {"100": (100, 86), "080": (85, 66), "060": (65, 46), "040": (45, 26), "020": (25, 7), "000": (6, 0)}
 low_level_units = ["Percent", "Time Remaining"]
 
 warning_percentage = 5.0

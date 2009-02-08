@@ -11,16 +11,16 @@ GCONF_APPLETS =
 if WITH_GCONF
 if WITH_GNOME
 GCONF_APPLETS +=		\
+	awnsystemmonitor	\
 	cairo-menu		\
 	$(NULL)
 endif
 GCONF_APPLETS +=		\
-	awnsystemmonitor	\
+	awn-notification-daemon \
 	$(NULL)
 endif
 if WITH_GNOME
 GCONF_APPLETS +=	\
-	awn-notification-daemon \
 	main-menu	\
 	$(NULL)
 endif

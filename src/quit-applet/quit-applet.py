@@ -25,7 +25,7 @@ import pygtk
 pygtk.require("2.0")
 import gtk
 
-from awn.extras import AWNLib
+from awn.extras import awnlib
 
 try:
     import dbus
@@ -109,7 +109,7 @@ class QuitLogOutApplet:
 
 
 if __name__ == "__main__":
-    applet = AWNLib.initiate({"name": applet_name, "short": "quit",
+    awnlib.init_start(QuitLogOutApplet, {"name": applet_name, "short": "quit",
         "version": applet_version,
         "description": applet_description,
         "theme": applet_logo,
@@ -117,5 +117,3 @@ if __name__ == "__main__":
         "copyright-year": 2008,
         "authors": ["Randal Barlow <im.tehk at gmail.com>", "onox <denkpadje@gmail.com>"]},
         ["settings-per-instance"])
-    QuitLogOutApplet(applet)
-    AWNLib.start(applet)

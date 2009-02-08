@@ -24,7 +24,7 @@ import subprocess
 import pygtk
 pygtk.require("2.0")
 import gtk
-from awn.extras import AWNLib
+from awn.extras import awnlib
 
 APP = "awn-mail-applet"
 DIR=os.path.dirname(__file__) + '/locale'
@@ -295,7 +295,7 @@ class MailApplet:
         prefs_vbox.add(vbox)
         vbox.set_border_width(5)
         
-        vbox_mail = AWNLib.create_frame(vbox, "Mail")
+        vbox_mail = awnlib.create_frame(vbox, "Mail")
         
         hbox_backend = gtk.HBox(spacing=13)
         vbox_mail.add(hbox_backend)
@@ -319,7 +319,7 @@ class MailApplet:
         email.connect("changed", self.changed_client_cb)
         hbox_client.add(email)
         
-        vbox_display = AWNLib.create_frame(vbox, "Display")
+        vbox_display = awnlib.create_frame(vbox, "Display")
         
         hbox_theme = gtk.HBox(spacing=13)
         vbox_display.add(hbox_theme)
@@ -804,7 +804,7 @@ class Backends:
                     "folder": folder}, "network")
 
 if __name__ == "__main__":
-    applet = AWNLib.initiate({
+    awnlib.init_start(MailApplet, {
         "name": _("Mail Applet"),
         "short": "mail",
 	    "version": "0.2.8",
@@ -815,5 +815,3 @@ if __name__ == "__main__":
         "email": "pavpanchekha@gmail.com",
         "type": ["Network", "Email"]},
         ["settings-per-instance", "detach"])
-    applet = MailApplet(applet)
-    AWNLib.start(applet.awn)

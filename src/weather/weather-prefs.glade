@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Sun Feb  1 13:39:42 2009 -->
+<!--Generated with glade3 3.4.5 on Sat Feb  7 16:30:55 2009 -->
 <glade-interface>
   <widget class="GtkDialog" id="weatherDialog">
     <property name="border_width">5</property>
@@ -30,25 +30,13 @@
                       <widget class="GtkHBox" id="locationHolder">
                         <property name="visible">True</property>
                         <child>
-                          <widget class="GtkLabel" id="curLocationLabel">
-                            <property name="visible">True</property>
-                            <property name="xalign">0</property>
-                            <property name="label" translatable="yes">Current location:</property>
-                          </widget>
-                          <packing>
-                            <property name="expand">False</property>
-                          </packing>
-                        </child>
-                        <child>
                           <widget class="GtkLabel" id="locationLabel">
                             <property name="visible">True</property>
                             <property name="xalign">0</property>
                             <property name="xpad">5</property>
+                            <property name="label">unset</property>
                             <property name="use_markup">True</property>
                           </widget>
-                          <packing>
-                            <property name="position">1</property>
-                          </packing>
                         </child>
                         <child>
                           <widget class="GtkButton" id="locationButton">
@@ -60,7 +48,7 @@
                           </widget>
                           <packing>
                             <property name="expand">False</property>
-                            <property name="position">2</property>
+                            <property name="position">1</property>
                           </packing>
                         </child>
                       </widget>
@@ -70,7 +58,7 @@
                 <child>
                   <widget class="GtkLabel" id="locationFrameLabel">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">&lt;b&gt;Location&lt;/b&gt;</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Current location&lt;/b&gt;</property>
                     <property name="use_markup">True</property>
                   </widget>
                   <packing>

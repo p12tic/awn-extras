@@ -89,7 +89,7 @@ PKG_CHECK_MODULES(DBUS_GLIB, [dbus-glib-1])
 # awn-terminal
 PKG_CHECK_MODULES(VTE, [vte])
 
-# awn-system-monitor, awn-notification-daemon, cairo-menu, cairo-menu-classic, filebrowser, plugger, trasher
+# awn-system-monitor, awn-notification-daemon, cairo-menu, filebrowser, plugger, trasher
 if test "$with_gconf" != "no" -a "$config_backend" != "GConf"; then
   PKG_CHECK_MODULES(GCONF, [gconf-2.0])
   gconf=gconf-2.0
@@ -337,8 +337,6 @@ src/awnterm/Makefile
 src/awnterm/awnterm.desktop.in
 src/battery-applet/Makefile
 src/cairo-clock/Makefile
-src/cairo-menu-classic/Makefile
-src/cairo-menu-classic/cairo_main_menu_classic.desktop.in
 src/cairo-menu/Makefile
 src/cairo-menu/cairo_main_menu.desktop.in
 src/calendar/Makefile

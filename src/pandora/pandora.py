@@ -22,7 +22,7 @@ URL = 'https://www.pandora.com/radio/tuner_8_5_0_1_pandora.swf'
 
 import os
 import awn
-from awn.extras import AWNLib
+from awn.extras import awnlib
 
 # workaround for weirdness with regards to Ubuntu + gtkmozembed
 if os.path.exists('/etc/issue'):
@@ -51,7 +51,7 @@ except ImportError:
 awn.check_dependencies(globals(), 'gtkmozembed')
 
 applet_name = "Pandora"
-applet_version = "0.2.8"
+applet_version = "0.3.1"
 applet_description = "Listen to Pandora from Awn"
 applet_theme_logo = "pandora"
 
@@ -71,12 +71,11 @@ class PandoraApplet:
         self.dialog.add(self.moz)
 
 if __name__ == "__main__":
-    applet = AWNLib.initiate({"name": applet_name, "short": "pandora",
+    awnlib.init_start(PandoraApplet, {"name": applet_name,
+        "short": "pandora",
         "version": applet_version,
         "description": applet_description,
         "theme": applet_theme_logo,
         "author": "Sharkbaitbobby",
         "copyright-year": 2008,
         "authors": ["Sharkbaitbobby <sharkbaitbobby+awn@gmail.com>"]})
-    PandoraApplet(applet)
-    AWNLib.start(applet)

@@ -486,7 +486,6 @@ void set_background(Shiny_switcher *shinyswitcher)
 {
   if (shinyswitcher->grab_wallpaper)
   {
-    g_debug("grabbing wallpaper\n");
     grab_wallpaper(shinyswitcher);
   }
   else
@@ -539,7 +538,6 @@ _start_applet_prefs(GtkMenuItem *menuitem, gpointer null)
   GError *err = NULL;
   g_spawn_command_line_async("python " APPLETSDIR G_DIR_SEPARATOR_S APPLET_NAME
                              G_DIR_SEPARATOR_S "shiny-prefs.py", &err);
-
   if (err)
   {
     g_warning("Failed to start shinyswitcher prefs dialog: %s\n", err->message);
@@ -615,8 +613,6 @@ gboolean  _button_win(GtkWidget *widget, GdkEventButton *event, Win_press_data *
   GtkWidget *menu = NULL;
   GtkWidget *item = NULL;
   Shiny_switcher * shinyswitcher = data->shinyswitcher;
- 
-
   if (! WNCK_IS_WINDOW(wnck_win))
   {
     return TRUE;
@@ -625,7 +621,6 @@ gboolean  _button_win(GtkWidget *widget, GdkEventButton *event, Win_press_data *
   if (event->button == 1)
   {
     WnckWorkspace* space = wnck_window_get_workspace(wnck_win);
-
     if (shinyswitcher->got_viewport)
     {
       int x,y,w,h;
@@ -640,15 +635,15 @@ gboolean  _button_win(GtkWidget *widget, GdkEventButton *event, Win_press_data *
       wnck_screen_move_viewport(shinyswitcher->wnck_screen,
                                 ws_x*wnck_screen_get_width(shinyswitcher->wnck_screen),
                                 ws_y*wnck_screen_get_height(shinyswitcher->wnck_screen));
+      
     }
-
     if (space)
     {
-      wnck_workspace_activate(space, event->time);
-		}
-    wnck_window_activate (wnck_win, event->time);
-		return TRUE;
-	}
+       wnck_workspace_activate(space, event->time);
+    }
+    wnck_window_activate(wnck_win, event->time);
+    return TRUE;
+  }
   else if (event->button == 3)
   {
     Shiny_switcher *shinyswitcher = g_tree_lookup(data->shinyswitcher->win_menus, wnck_win);
@@ -666,6 +661,10 @@ gboolean  _button_win(GtkWidget *widget, GdkEventButton *event, Win_press_data *
 
       item = awn_applet_create_pref_item();
       gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), item);
+
+      item = gtk_separator_menu_item_new();
+      gtk_widget_show(item);
+      gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
       item = gtk_image_menu_item_new_with_label("Applet Preferences");
       gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),

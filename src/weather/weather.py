@@ -22,10 +22,22 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
-from awn.extras import AWNLib
-import gtk, cairo, gobject
-import urllib2, urllib, re, time, sys, traceback
+import re
+import sys
+import time
+import traceback
+import urllib
+import urllib2
 from xml.dom import minidom
+
+import gobject
+import pygtk
+pygtk.require("2.0")
+import gtk
+from gtk import gdk
+
+from awn.extras import awnlib
+import cairo
 
 # import socket to set the default timeout, it is unlimited by default!
 TIMEOUT_RETRY = 5 # how many minutes in the future to retry, on a timeout
@@ -47,8 +59,13 @@ class WeatherApplet:
         self.onRefreshForecast = self.forecaster.onRefreshForecast # <3 python
         
         # handle the persisted settings (such as gconf)
-        self.fetchSettings()
+        self.loadSettings()
         ##self.applet.settings.notify("weather", self.onSettingsChanged)
+
+        # first, get the current conditions, so we can display the icon
+        gobject.timeout_add(1500, self.fetchInitialConditions)
+        # get everything else in a few seconds, the applet icon is done, let's not hold things up
+        gobject.timeout_add(5000, self.fetchInitialData)
         
         # set default icons/titles/dialogs so the applet is informative without data
         self.setIcon() # initialize the default weather.com icon
@@ -63,14 +80,9 @@ class WeatherApplet:
 
         # bind to some events we are concerned about
         self.applet.connect("leave-notify-event", self.onMouseOut)
-        self.applet.connect("size-changed", self.onBarHeightChange)
-        
-        # first, get the current conditions, so we can display the icon
-        gobject.timeout_add(1500, self.fetchInitialConditions)
-        # get everything else in a few seconds, the applet icon is done, let's not hold things up
-        gobject.timeout_add(5000, self.fetchInitialData)
-        
-    def fetchSettings(self, push=True):
+        self.applet.connect("height-changed", self.onBarHeightChange)
+
+    def loadSettings(self):
         """
         Synchronize the default settings with existing settings (such as gconf).
         If "push" is true, push any non-existent keys out to the system.
@@ -89,26 +101,17 @@ class WeatherApplet:
             'map_maxwidth':         450,
             'open_til_clicked':     True,
             }
-            
-        # first, tell AWNLib which applet we are
-        self.applet.settings.cd("weather")
-        
-        # now, iterate over all of our settings and update them
-        for settingKey in self.settingsDict:
-            if settingKey in self.applet.settings: # if it exists, update ours
-                self.settingsDict[settingKey] = self.applet.settings[settingKey]
-            elif push: # otherwise, push our default
-                self.applet.settings[settingKey] = self.settingsDict[settingKey]
-                
+        self.applet.settings.load(self.settingsDict)
+        self.__oldSettings = self.settingsDict.copy()
+
     def onSettingsChanged(self):
         """
         This method grabs the new settings and compares them to the old ones.
         Based on what changed, it updates no less and no more than it needs to.
         """
-        oldSettings = self.settingsDict.copy()
-        self.fetchSettings(push=False) # don't push any non-existent keys, we already did that
-        changedKeys = [key for key in oldSettings if key in self.settingsDict and self.settingsDict[key] != oldSettings[key]]
-                
+        changedKeys = [key for key in self.settingsDict if key in self.__oldSettings and self.__oldSettings[key] != self.settingsDict[key]]
+        self.__oldSettings = self.settingsDict.copy();
+        
         if 'location_code' in changedKeys: # none of our data is valid!
             # we need to get everything, all other key changes will be handled as a result
             self.onClickRefreshData()
@@ -278,12 +281,12 @@ class WeatherApplet:
         else: # otherwise, we overlay the temperature text
             surface = self.overlayTemperature(iconFile)
             if surface is not None: # None is returned on error
-                # don't use AWNLib's built in setting and resizing, it needs to be raw because
-                # in the case of a bar resize, our event is called first and AWNLib has the old size.
+                # don't use awnlib's built in setting and resizing, it needs to be raw because
+                # in the case of a bar resize, our event is called first and awnlib has the old size.
                 self.iconPixBuf = self.applet.icon.surface(surface, self.iconPixBuf, set=False)
                 height = self.applet.get_size()
                 scaledIcon = self.iconPixBuf.scale_simple(height, height, gtk.gdk.INTERP_HYPER)
-                self.applet.icon.set(scaledIcon, raw=True)
+                self.applet.icon.set(scaledIcon)
                 
     def getTextSize(self, context, text):
         """
@@ -384,7 +387,7 @@ class WeatherApplet:
     def createMapDialog(self):
         """
         Create a map dialog from the current already-downloaded map image.
-        Note that this does not show the dialog, it simply creates it. AWNLib handles the rest.
+        Note that this does not show the dialog, it simply creates it. awnlib handles the rest.
         """
         dlog = self.applet.dialog.new("secondary")
         if self.mapPixBuf is None: # we don't have a map yet
@@ -404,24 +407,18 @@ class WeatherApplet:
 
             dlog.add(map)
 
-def main():
-    appletInfo = { # used for automatic AWNLib About dialog
-        "name": _("Avant Weather Applet"), ##
+
+if __name__ == "__main__":
+    awnlib.init_start(WeatherApplet, {
+        "name": _("Avant Weather Applet"),
         "description": _("A Weather Applet for the Avant Window Navigator. Weather data provided by weather.com. Images by Wojciech Grzanka."), ##
-        "version" : "0.8.1", ##
-        "author": "Mike Desjardins, Mike Rooney", ##
-        "copyright-year": "2007-2008", ##
-        "logo": weathericons.GetIcon("44"), ##
-        "authors": ["Mike Desjardins","Mike Rooney", "Isaac J."], #
-        "artists": ["Wojciech Grzanka", "Mike Desjardins"], #
+        "version" : "0.3.1",
+        "author": "Mike Desjardins, Mike Rooney",
+        "copyright-year": "2007-2008",
+        "logo": weathericons.GetIcon("44"),
+        "authors": ["Mike Desjardins","Mike Rooney", "Isaac J."],
+        "artists": ["Wojciech Grzanka", "Mike Desjardins"],
         "email": "mrooney@gmail.com",
         "short": "weather",
         "type": ["Network", "Weather"],
-    }
-        
-    applet = AWNLib.initiate(appletInfo)
-    weather = WeatherApplet(applet)
-    AWNLib.start(applet)
-
-if __name__ == "__main__":
-    main()
+    })

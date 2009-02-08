@@ -149,6 +149,14 @@ tray_applet_refresh (TrayApplet *applet)
           col++;
         }
     }
+
+  guint elements = g_list_length(applet->icons);
+  guint n_columns, cols;
+  g_object_get(applet->table, "n-columns", &n_columns, NULL);
+  cols = elements % n_rows == 0 ? n_columns / n_rows : n_columns / n_rows + 1;
+  gtk_table_resize (GTK_TABLE (applet->table), n_rows, cols);
+
+  gtk_widget_queue_draw (GTK_WIDGET (applet->applet));
 }
 
 static void
@@ -253,7 +261,7 @@ height_changed(AwnApplet *applet, guint height, gpointer user_data)
 {
   GtkTable *table = GTK_TABLE (user_data);
 
-  icon_size = height / 2;
+  icon_size = height > 5 ? (height / 2) - 2 : 1;
 
   // foreach child call set_size_request
   gtk_container_foreach (GTK_CONTAINER (table), resize_icon, NULL);
@@ -313,7 +321,7 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
                     G_CALLBACK (tray_icon_message_cancelled), app);
 
   height = awn_applet_get_height (applet);
-  icon_size = height / 2;
+  icon_size = height > 5 ? (height / 2) - 2 : 1;
   gtk_widget_set_size_request (GTK_WIDGET (applet), -1, height* 2 );
 
   table = gtk_table_new (1, 1, FALSE);

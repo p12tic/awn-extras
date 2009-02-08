@@ -21,7 +21,7 @@
 
 # Import standard modules
 import awn
-import awn.extras.AWNLib
+import awn.extras.awnlib
 import gettext
 import gobject
 import gtk
@@ -177,7 +177,7 @@ class ComicApplet(awn.AppletSimple):
 		
 		self.height = height
 		self.set_awn_icon('comics', 'comics-icon')
-		self.notify = awn.extras.AWNLib.Notify(self)
+		self.notify = awn.extras.awnlib.Notify(self)
 		self.dialog = awn.AppletDialog(self)
 		self.dialog.connect('button-press-event', self.on_dialog_button_press)
 		

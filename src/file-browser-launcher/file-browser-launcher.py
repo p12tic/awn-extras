@@ -26,9 +26,11 @@ import os
 import pygtk
 pygtk.require('2.0')
 import gtk
-import awn
 import subprocess
 import pango
+import urllib
+
+import awn
 import gconfwrapper as awnccwrapper
 
 class App (awn.AppletSimple):
@@ -300,10 +302,10 @@ class App (awn.AppletSimple):
           if x[0]=='/': #Normal filesystem bookmark, not computer:///,burn:///,network:///,etc.
             if os.path.isdir(self.parse_bookmark(x,'path')):
               try:
-                self.liststore.append([self.theme.load_icon('folder',24,24),self.parse_bookmark(x,'name')])
+                self.liststore.append([self.theme.load_icon('folder',24,24),urllib.unquote(self.parse_bookmark(x,'name'))])
               except:
                 self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-                  .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),self.parse_bookmark(x,'name')])
+                  .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),urllib.unquote(self.parse_bookmark(x,'name'))])
               self.places_paths.append(self.parse_bookmark(x,'path'))
           else:
             y = x.split(':')[0]

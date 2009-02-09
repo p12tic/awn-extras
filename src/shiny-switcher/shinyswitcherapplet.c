@@ -40,6 +40,7 @@
 
 #include <libawn/awn-config-client.h>
 #include <libawn-extras/awn-extras.h>
+#include <libawn/awn-utils.h>
 
 #include "shinyswitcherapplet.h"
 
@@ -908,6 +909,8 @@ void create_containers(Shiny_switcher *shinyswitcher)
 
 
   }
+  g_signal_connect_after(G_OBJECT(shinyswitcher->container), "realize",
+                         G_CALLBACK(awn_utils_make_transparent), NULL);  
 
   gtk_container_add(GTK_CONTAINER(shinyswitcher->align), shinyswitcher->container);
 

@@ -18,33 +18,11 @@
 */
 
 #include <libawn/awn-applet.h>
+#include <libawn/awn-utils.h>
 #include "config.h"
 
 #include "shinyswitcherapplet.h"
 
-static gboolean
-_make_transparent (GtkWidget *widget, gpointer data)
-{
-  /*
-   * Cribbed from awn-icon.c
-   */
-  if (gtk_widget_is_composited(widget)) // FIXME: is is_composited correct here?
-  {
-    static GdkPixmap *pixmap = NULL;
-    if (pixmap == NULL)
-    {
-      pixmap = gdk_pixmap_new(widget->window, 1, 1, -1);
-      cairo_t *cr = gdk_cairo_create(pixmap);
-      cairo_set_operator(cr, CAIRO_OPERATOR_CLEAR);
-      cairo_paint(cr);
-      cairo_destroy(cr);
-    }
-    gdk_window_set_back_pixmap(widget->window, pixmap, FALSE);
-
-  }
-   
-  return FALSE;
-}
 
 
 AwnApplet*
@@ -57,8 +35,6 @@ awn_applet_factory_initp(gchar* uid, gint orient, gint height)
   shiny_switcher->orient = orient;
   gtk_widget_add_events (GTK_WIDGET (applet), GDK_ALL_EVENTS_MASK);
 
-  g_signal_connect_after(G_OBJECT(applet), "realize",
-                         G_CALLBACK(_make_transparent), NULL);  
   return applet;
 }
 

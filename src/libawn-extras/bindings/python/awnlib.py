@@ -1579,6 +1579,7 @@ def init_start(applet_class, meta={}, options=[]):
     try:
         applet_class(applet)
     except Exception, e:
+        applet.icon.theme("dialog-error")
         import traceback
         traceback = traceback.format_exception(type(e), e, sys.exc_traceback)
         applet.errors.general(e, traceback=traceback)

@@ -47,8 +47,6 @@ class MailApplet:
     def __init__(self, applet):
         self.awn = applet
         
-        self.awn.keyring.require()
-        
         default_values = {
             "backend": "GMail",
             "theme": "Tango",

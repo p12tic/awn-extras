@@ -25,6 +25,7 @@
 #include <libawn/awn-applet.h>
 #include <libawn/awn-cairo-utils.h>
 #include <libawn/awn-config-client.h>
+#include <libawn/awn-defines.h>
 
 #include <math.h>
 
@@ -45,8 +46,11 @@ typedef struct {
 static GQuark new_quark = 0;
 static GQuark del_quark = 0;
 static gint   n_rows    = 2;
-static int   height    = 0; 
-static int   icon_size = 24;
+static gint   n_cols    = 2;
+static int   size    = 0;
+static int   icon_size;
+static AwnOrientation orientation;
+static int   icon_offset;
 
 static void
 tray_icon_added (EggTrayManager *manager, 
@@ -78,17 +82,7 @@ tray_applet_refresh (TrayApplet *applet)
 {
   GList *children; GList *c;
   gint col = 0, row = 0;
-  
-  if( n_rows == 0 ) // auto-detect how much icons can on colomn
-  {
-	n_rows = ceil(height/icon_size);
-	if( floor(height/icon_size) < 1)
-		n_rows = 1;
 
-	icon_size = (height-n_rows)/n_rows;
-  }
-
-  
   /* First lets go through existing icons, adding or deleting as necessary*/
   children = gtk_container_get_children (GTK_CONTAINER (applet->table));
   for (c = children; c != NULL; c = c->next)
@@ -114,47 +108,77 @@ tray_applet_refresh (TrayApplet *applet)
                                    "left-attach", col,
                                    "right-attach", col+1,
                                    NULL);
-          row++;
-          if (row == n_rows)
-            {
-              row = 0;
-              col++;
-            }
+          switch (orientation)
+          {
+            case AWN_ORIENTATION_TOP: case AWN_ORIENTATION_BOTTOM:
+              if (++row == n_rows)
+              {
+                row = 0; col++;
+              }
+              break;
+            default:
+              if (++col == n_cols)
+              {
+                col = 0; row++;
+              }
+              break;
+          }
         }
     }
   
   /* now the new icons */
   children = applet->icons;
   for (c = children; c != NULL; c = c->next)
+  {
+    GtkWidget *icon = GTK_WIDGET (c->data);
+    gint new;
+
+    if (!GTK_IS_WIDGET (icon))
+      continue;
+    new = GPOINTER_TO_INT (g_object_get_qdata (G_OBJECT(icon),new_quark));
+
+    if (!new)
+      continue;
+
+    g_object_set_qdata (G_OBJECT (icon), new_quark,  GINT_TO_POINTER (0));
+    gtk_table_attach_defaults (GTK_TABLE (applet->table),
+                               icon,
+                               col, col+1,
+                               row, row+1);
+    switch (orientation)
     {
-      GtkWidget *icon = GTK_WIDGET (c->data);
-      gint new;
-
-      if (!GTK_IS_WIDGET (icon))
-        continue;
-      new = GPOINTER_TO_INT (g_object_get_qdata (G_OBJECT(icon),new_quark));
-
-      if (!new)
-        continue;
-
-      g_object_set_qdata (G_OBJECT (icon), new_quark,  GINT_TO_POINTER (0));
-      gtk_table_attach_defaults (GTK_TABLE (applet->table),
-                                 icon,
-                                 col, col+1,
-                                 row, row+1);
-      row++;
-      if (row == n_rows)
+      case AWN_ORIENTATION_TOP: case AWN_ORIENTATION_BOTTOM:
+        if (++row == n_rows)
         {
-          row = 0;
-          col++;
+          row = 0; col++;
         }
+        break;
+      default:
+        if (++col == n_cols)
+        {
+          col = 0; row++;
+        }
+        break;
     }
+  }
 
   guint elements = g_list_length(applet->icons);
-  guint n_columns, cols;
-  g_object_get(applet->table, "n-columns", &n_columns, NULL);
-  cols = elements % n_rows == 0 ? n_columns / n_rows : n_columns / n_rows + 1;
-  gtk_table_resize (GTK_TABLE (applet->table), n_rows, cols);
+  guint num_rows, num_columns;
+  guint rows = n_rows, cols = n_cols;
+  switch (orientation)
+  {
+    case AWN_ORIENTATION_TOP: case AWN_ORIENTATION_BOTTOM:
+      g_object_get(applet->table, "n-columns", &num_columns, NULL);
+      cols = elements % n_rows == 0 ?
+        num_columns / n_rows : num_columns / n_rows + 1;
+      break;
+    default:
+      g_object_get(applet->table, "n-rows", &num_rows, NULL);
+      rows = elements % n_cols == 0 ?
+        num_rows / n_cols : num_rows / n_cols + 1;
+      break;
+  }
+  gtk_table_resize (GTK_TABLE (applet->table), rows, cols);
 
   gtk_widget_queue_draw (GTK_WIDGET (applet->applet));
 }
@@ -241,13 +265,47 @@ applet_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
 }
 
 static void
+refresh_alignment(GtkAlignment *align, AwnOrientation orient, gint offset)
+{
+  switch (orient)
+  {
+    case AWN_ORIENTATION_TOP:
+      gtk_alignment_set (align, 0.0, 0.0, 1.0, 0.0);
+      gtk_alignment_set_padding (align, offset, 0, BORDER+1, BORDER+1);
+      break;
+    case AWN_ORIENTATION_BOTTOM:
+      gtk_alignment_set (align, 0.0, 1.0, 1.0, 0.0);
+      gtk_alignment_set_padding (align, 0, offset, BORDER+1, BORDER+1);
+      break;
+    case AWN_ORIENTATION_LEFT:
+      gtk_alignment_set (align, 0.0, 0.0, 0.0, 1.0);
+      gtk_alignment_set_padding (align, BORDER+1, BORDER+1, offset, 0);
+      break;
+    case AWN_ORIENTATION_RIGHT:
+      gtk_alignment_set (align, 1.0, 0.0, 0.0, 1.0);
+      gtk_alignment_set_padding (align, BORDER+1, BORDER+1, 0, offset);
+      break;
+  }
+}
+
+static void
 offset_changed(AwnConfigClientNotifyEntry *entry, gpointer user_data)
 {
   GtkAlignment *align = GTK_ALIGNMENT (user_data);
 
-  gtk_alignment_set_padding (align,
-                             0, entry->value.int_val,
-                             BORDER+1, BORDER+1);
+  icon_offset = entry->value.int_val;
+  refresh_alignment(align, orientation, entry->value.int_val);
+}
+
+static void
+orient_changed(AwnApplet *applet, AwnOrientation orient, gpointer user_data)
+{
+  TrayApplet *tray_applet = user_data;
+  GtkAlignment *align = GTK_ALIGNMENT (tray_applet->align);
+
+  orientation = orient;
+  refresh_alignment(align, orient, icon_offset);
+  tray_applet_refresh(tray_applet);
 }
 
 static void
@@ -257,20 +315,20 @@ resize_icon(GtkWidget *widget, gpointer user_data)
 }
 
 static void
-height_changed(AwnApplet *applet, guint height, gpointer user_data)
+size_changed(AwnApplet *applet, guint size, gpointer user_data)
 {
   GtkTable *table = GTK_TABLE (user_data);
 
-  icon_size = height > 5 ? (height / 2) - 2 : 1;
+  icon_size = size > 5 ? (size / 2) - 2 : 1;
 
   // foreach child call set_size_request
   gtk_container_foreach (GTK_CONTAINER (table), resize_icon, NULL);
 }
 
 AwnApplet*
-awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
+awn_applet_factory_initp ( gchar* uid, gint orient, gint size )
 {
-  AwnApplet *applet = awn_applet_new( uid, orient, height );
+  AwnApplet *applet = awn_applet_new( uid, orient, size );
   TrayApplet *app = g_new0 (TrayApplet, 1);
   GdkScreen  *screen;
   GtkWidget  *align, *table, *eb;
@@ -320,16 +378,15 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
   g_signal_connect (app->manager, "message_cancelled",
                     G_CALLBACK (tray_icon_message_cancelled), app);
 
-  height = awn_applet_get_height (applet);
-  icon_size = height > 5 ? (height / 2) - 2 : 1;
-  gtk_widget_set_size_request (GTK_WIDGET (applet), -1, height* 2 );
+  orientation = orient;
+  icon_size = size > 5 ? (size / 2) - 2 : 1;
+  //gtk_widget_set_size_request (GTK_WIDGET (applet), -1, height* 2 );
 
   table = gtk_table_new (1, 1, FALSE);
   app->table = table;
-  gtk_table_set_col_spacings (GTK_TABLE (table), 2);
+  gtk_table_set_col_spacings (GTK_TABLE (table), 1);
   gtk_table_set_row_spacings (GTK_TABLE (table), 1);
 
- 
   eb = gtk_event_box_new ();
   gtk_event_box_set_visible_window (GTK_EVENT_BOX (eb), TRUE);
   
@@ -337,21 +394,22 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
   app->align = align;
 
   AwnConfigClient *client = awn_config_client_new();
-  gint offset = awn_config_client_get_int(client, "bar", "icon_offset", NULL);
+  icon_offset = awn_config_client_get_int(client, "bar", "icon_offset", NULL);
   awn_config_client_notify_add(client, "bar", "icon_offset", offset_changed, align);
 
-  gtk_alignment_set_padding (GTK_ALIGNMENT (align),
-                             0, offset, BORDER+1, BORDER+1);
+  refresh_alignment (GTK_ALIGNMENT (align), orient, icon_offset);
   
   gtk_container_add (GTK_CONTAINER (applet), align);
   gtk_container_add (GTK_CONTAINER (align), eb);
   gtk_widget_set_colormap (eb, gdk_screen_get_rgb_colormap (screen));
   gtk_container_add (GTK_CONTAINER (eb), table);
 
-  g_signal_connect(GTK_WIDGET(applet), "expose-event",
-                   G_CALLBACK(applet_expose), table);
-  g_signal_connect(applet, "height-changed",
-                   G_CALLBACK (height_changed), table);
+  g_signal_connect(applet, "expose-event",
+                   G_CALLBACK (applet_expose), table);
+  g_signal_connect(applet, "size-changed",
+                   G_CALLBACK (size_changed), table);
+  g_signal_connect(applet, "orientation-changed",
+                   G_CALLBACK (orient_changed), app);
 
   return applet;
 }

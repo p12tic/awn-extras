@@ -36,6 +36,7 @@ endif
 # please keep alphabetized (except for libawn-extras)
 SUBDIRS =			\
 	libawn-extras		\
+	notification-area	\
 	shiny-switcher		\
 	places			\
 	$(WOBBLYZINI)		\

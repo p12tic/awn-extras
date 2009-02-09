@@ -96,11 +96,11 @@ class BatteryStatusApplet:
             self.set_battery_missing()
 
     def set_battery_missing(self):
-        applet.title.set("No batteries")
+        self.applet.title.set("No batteries")
 
         icon = os.path.join(themes_dir, self.settings["theme"], "battery-missing.svg")
         height = self.applet.get_height()
-        applet.icon.file(icon, size=height)
+        self.applet.icon.file(icon, size=height)
 
     def setup_context_menu(self):
         prefs = glade.XML(glade_file)

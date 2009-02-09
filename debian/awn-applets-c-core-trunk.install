@@ -1,0 +1,49 @@
+#Awn system monitor
+#
+usr/share/avant-window-navigator/applets/awnsystemmonitor.desktop
+usr/lib/awn/applets/awnsystemmonitor/*.so
+etc/gconf/schemas/awnsystemmonitor.schemas
+#
+#Cairo menu
+#
+usr/share/avant-window-navigator/applets/cairo_main_menu.desktop
+usr/lib/awn/applets/cairo_main_menu/*.so
+#
+#Notification daemon
+#
+usr/share/avant-window-navigator/applets/awnnotificationdaemon.desktop
+usr/lib/awn/applets/awnnotificationdaemon/*.so
+etc/gconf/schemas/awn-notification-daemon.schemas
+#
+#Shiny Switcher
+#
+usr/lib/awn/applets/shinyswitcher/*.so
+usr/share/avant-window-navigator/applets/shinyswitcher.desktop
+etc/gconf/schemas/shinyswitcher.schemas
+#
+# Notification area
+#
+usr/lib/awn/applets/notification-area/*.so
+usr/share/avant-window-navigator/applets/notification-area.desktop
+usr/share/icons/hicolor/scalable/apps/notification-area.svg
+#
+# Places
+#
+usr/lib/awn/applets/places/*.so 
+usr/share/avant-window-navigator/applets/places.desktop 
+etc/gconf/schemas/places.schemas
+#
+# Disabled applets
+#
+#usr/lib/awn/applets/separator/*.so
+#usr/lib/awn/applets/awnterm/*.so
+#usr/lib/awn/applets/plugger/*.so
+#usr/lib/awn/applets/trash/*.so
+#usr/lib/awn/applets/trash/trashapplet.glade usr/share/avant-window-navigator/applets/trash/
+#usr/share/avant-window-navigator/applets/separator.desktop
+#usr/share/avant-window-navigator/applets/awnterm.desktop
+#usr/share/avant-window-navigator/applets/plugger.desktop
+#usr/share/avant-window-navigator/applets/trash.desktop
+#usr/share/icons/hicolor/scalable/apps/separator.svg
+#etc/gconf/schemas/awnterm.schemas
+#etc/gconf/schemas/trash.schemas

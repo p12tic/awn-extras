@@ -2,9 +2,39 @@
 #export DH_VERBOSE=1
 #DEB_FIXPERMS_EXCLUDE := *.so
 
+DEB_DH_INSTALL_SOURCEDIR=debian/tmp
+
 include /usr/share/cdbs/1/rules/debhelper.mk
 include /usr/share/cdbs/1/class/gnome.mk
 include /usr/share/cdbs/1/rules/simple-patchsys.mk
-		
+
 DEB_CONFIGURE_SCRIPT := $(CURDIR)/$(DEB_SRCDIR)/autogen.sh
-DEB_CONFIGURE_EXTRA_FLAGS += 	--disable-pymod-checks --with-webkit
+
+DEB_CONFIGURE_EXTRA_FLAGS += 	--disable-pymod-checks \
+				--with-webkit
+
+DEB_DH_MAKESHLIBS_ARGS_libawn-extras0-trunk += -V"libawn-extras0-trunk (>= 0.3.2)"
+
+DEB_SHLIBDEPS_LIBRARY_awn-applets-c-core-trunk:= libawn-extras0-trunk
+DEB_SHLIBDEPS_INCLUDE_awn-applets-c-core-trunk:= debian/libawn-extras0-trunk/usr/
+
+DEB_SHLIBDEPS_LIBRARY_awn-applets-c-extras-trunk:= libawn-extras0-trunk
+DEB_SHLIBDEPS_INCLUDE_awn-applets-c-extras-trunk:= debian/libawn-extras0-trunk/usr/
+
+DEB_DH_MAKESHLIBS_ARGS_awn-applets-c-core-trunk += -n --exclude=*
+DEB_DH_MAKESHLIBS_ARGS_awn-applets-c-extras-trunk += -n --exclude=*
+
+binary-install/python-libawn-extras-trunk::
+	dh_pycentral -ppython-libawn-extras-trunk
+
+binary-install/python-awnlib-trunk::
+	dh_pycentral -ppython-awnlib-trunk
+
+binary-install/awn-applets-python-core-trunk::
+	dh_pycentral -pawn-applets-python-core-trunk
+
+binary-install/awn-applets-python-extras-trunk::
+	dh_pycentral -pawn-applets-python-extras-trunk
+
+binary-install/python-awn-extras-trunk::
+	dh_pycentral -ppython-awn-extras-trunk

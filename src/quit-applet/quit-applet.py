@@ -59,7 +59,7 @@ class QuitLogOutApplet:
                 names = bus.list_names()
                 if "org.gnome.SessionManager" in names and "org.freedesktop.PowerManagement" in names:
                     proxy = bus.get_object("org.freedesktop.PowerManagement", "/org/freedesktop/PowerManagement")
-                    if dbus.Interface(proxy, "org.freedesktop.PowerManagement").CanShutDown():
+                    if dbus.Interface(proxy, "org.freedesktop.PowerManagement").CanShutdown():
                         self.logout_cb = self.logout_gnome_session_manager
             except dbus.DBusException, e:
                 print e.message

@@ -136,7 +136,7 @@ class ThinkHDAPSApplet:
             gobject.timeout_add(check_status_interval, self.check_status_cb, self)
         else:
             self.set_error_icon()
-            self.applet.title.set("No hard disk found")
+            applet.title.set("No hard disk found")
 
     def height_changed_cb(self, widget, event):
         """Update the applet's icon, because the height of the panel

@@ -13,7 +13,7 @@ Build-Depends: 	debhelper (>= 5),
 		libgnome-desktop-dev, 
 		librsvg2-dev, 
 		libgtop2-dev, 
-		libawn-dev (>= 0.3~bzr489), 
+		libawn-dev (>= 0.3~bzr489) | libawn-dev-trunk (>= 0.3.0), 
 		libwnck-dev, 
 		libsexy-dev, 
 		libnotify-dev, 
@@ -23,7 +23,7 @@ Build-Depends: 	debhelper (>= 5),
 		python-gtk2-dev,
 		python-cairo-dev,
 		python-elementtree | python2.5,
-		awn-manager-trunk (>= 0.2.6),
+		awn-manager (>= 0.2.6) | awn-manager-trunk (>= 0.2.6),
 		vala-awn-trunk,
 		valac (>= 0.5.4),
 		libwebkit-dev,
@@ -44,7 +44,7 @@ Recommends: 	awn-manager-trunk (>= 0.3~bzr489),
 		awn-applets-python-core-trunk,
 		xdg-utils,
 Suggests:	awn-applets-c-extras-trunk,
-Conflict: awn-applets-c-core, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
+Conflictss: awn-applets-c-core, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 Replaces: awn-applets-c-core, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 Description: A collection of applets for avant-window-navigator
  Awn-extras-applets is a collection of applets for avant-window-navigator. It
@@ -71,7 +71,7 @@ Depends: 	${shlibs:Depends},
 		${misc:Depends}, 
 		avant-window-navigator-trunk,
 Recommends: awn-manager-trunk (>= 0.3~bzr489),
-Conflict: awn-applets-c-extras, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
+Conflicts: awn-applets-c-extras, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 Replaces: awn-applets-c-extras, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 Description: A collection of applets for avant-window-navigator
  Awn-extras-applets is a collection of applets for avant-window-navigator. It
@@ -109,7 +109,7 @@ Recommends: 	awn-manager-trunk (>= 0.3~bzr489),
 		gnome-applets
 Suggests:	awn-applets-python-extras-trunk,
 XB-Python-Version: ${python:Versions}
-Conflict: awn-applets-python-core, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
+Conflicts: awn-applets-python-core, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 Replaces: awn-applets-python-core, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 Description: A collection of applets for avant-window-navigator
  Awn-extras-applets is a collection of applets for avant-window-navigator. It
@@ -157,7 +157,7 @@ Recommends: 	awn-manager-trunk (>= 0.3~bzr489),
 		python-gnome2-desktop,
 		python-xlib,
 Suggests: 	tomboy,
-Conflict: awn-applets-python-extras, awn-applets-python-core (<< 0.3~bzr912), awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
+Conflicts: awn-applets-python-extras, awn-applets-python-core (<< 0.3~bzr912), awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 Replaces: awn-applets-python-extras, awn-applets-python-core (<< 0.3~bzr912), awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 XB-Python-Version: ${python:Versions}
 Description: A collection of applets for avant-window-navigator
@@ -181,15 +181,8 @@ Package: libawn-extras0-trunk
 Section: libs
 Architecture: any
 Depends: 	${shlibs:Depends}, 
-		${misc:Depends},
-		python-xlib,
-		xdg-utils,
-		hal,
-		sqlite3,
-		python-dateutil,
-		gnome-applets,
-		tsclient,
-Conflict: awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
+		${misc:Depends}
+Conflicts: awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 Replaces: awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 Description: A library for avant-window-navigator's applets
  This library is used by the applets of avant-window-navigator. It provides 
@@ -204,7 +197,7 @@ Depends:	libawn-extras0-trunk (= ${binary:Version}),
 		libawn-dev-trunk,
 		libgtk2.0-dev,
 		libglib2.0-dev,
-Conflict: libawn-extras-dev, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
+Conflicts: libawn-extras-dev, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 Replaces: libawn-extras-dev, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 Description: library for avant-window-navigator's applets - development files
  This package provides the include files and static library for the
@@ -218,7 +211,7 @@ Depends:	libawn-extras0-trunk (= ${binary:Version}),
 		${misc:Depends},
 		${python:Depends}
 Provides: ${python:Provides}
-Conflict: python-awn-extras, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
+Conflicts: python-awn-extras, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 Replaces: python-awn-extras, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 Description: Python bindings for avant-window-navigator's applets
  This packages provides Python bindings to create and use Python applets with
@@ -233,7 +226,7 @@ Depends:	${python:Depends},
 		python-gtk2,
 		python-gobject,
 XB-Python-Version: ${python:Versions}
-Conflict: python-awnlib, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
+Conflicts: python-awnlib, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 Replaces: python-awnlib, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 Description: Python utilities for avant-window-navigator's applets
  This packages provides AWNLib, a collection of functions to simplify the 

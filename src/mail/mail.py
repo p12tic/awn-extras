@@ -89,7 +89,7 @@ class MailApplet:
         # is no login information. We'd delete the key, but that's not
         # always supported.
 
-        key = self.awn.keyring.fromToken(token)
+        key = self.awn.keyring.from_token(token)
 
         self.submitPWD(key)
 
@@ -130,7 +130,7 @@ class MailApplet:
             self.__setIcon("error")
 
             if self.showerror:
-                self.awn.errors.general(err, lambda: ())
+                self.awn.errors.general(err)
             return
 
         diffSubjects = [i for i in self.mail.subjects if i not in oldSubjects]

@@ -230,29 +230,33 @@ tray_icon_message_cancelled (EggTrayManager *manager,
 static gboolean
 applet_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
-  GtkWidget *table = GTK_WIDGET(data);
+  TrayApplet *app = data;
+  GtkWidget *table = app->table;
 
   cairo_t *cr = gdk_cairo_create(widget->window);
   if (!cr) return FALSE;
 
-  cairo_set_operator(cr, CAIRO_OPERATOR_CLEAR);
-  cairo_paint(cr);
-
-  cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
-  gdk_cairo_set_source_color (cr, &(gtk_widget_get_style(widget)->bg[GTK_STATE_NORMAL]));
+  // don't clear the background - we already have a transparent background
+  //  pixmap if we're running in composited mode
 
   gint x,y;
   gtk_widget_translate_coordinates(table, widget, 0, 0, &x, &y);
 
-  awn_cairo_rounded_rect (cr, x-BORDER, y-BORDER,
-                          table->allocation.width + 2*BORDER,
-                          table->allocation.height + 2*BORDER,
-                          4.0*BORDER, ROUND_ALL);
-  cairo_fill_preserve(cr);
+  if (g_list_length(app->icons) > 0)
+  {
+    cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
+    gdk_cairo_set_source_color (cr, &(gtk_widget_get_style(widget)->bg[GTK_STATE_NORMAL]));
 
-  gdk_cairo_set_source_color (cr, &(gtk_widget_get_style(widget)->bg[GTK_STATE_SELECTED]));
-  cairo_set_line_width(cr, 1.5);
-  cairo_stroke(cr);
+    awn_cairo_rounded_rect (cr, x-BORDER, y-BORDER,
+                            table->allocation.width + 2*BORDER,
+                            table->allocation.height + 2*BORDER,
+                            4.0*BORDER, ROUND_ALL);
+    cairo_fill_preserve(cr);
+
+    gdk_cairo_set_source_color (cr, &(gtk_widget_get_style(widget)->bg[GTK_STATE_SELECTED]));
+    cairo_set_line_width(cr, 1.5);
+    cairo_stroke(cr);
+  }
 
   cairo_destroy(cr);
 
@@ -405,7 +409,7 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint size )
   gtk_container_add (GTK_CONTAINER (eb), table);
 
   g_signal_connect(applet, "expose-event",
-                   G_CALLBACK (applet_expose), table);
+                   G_CALLBACK (applet_expose), app);
   g_signal_connect(applet, "size-changed",
                    G_CALLBACK (size_changed), table);
   g_signal_connect(applet, "orientation-changed",

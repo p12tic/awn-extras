@@ -298,14 +298,15 @@ class App (awn.AppletSimple):
     if self.show_bookmarks==2:
       for x in self.bmarks:
         x = x.replace('file://','').replace('\n','')
+        x = urllib.unquote(x)
         if x not in self.paths and x!=os.path.expanduser('~'):
           if x[0]=='/': #Normal filesystem bookmark, not computer:///,burn:///,network:///,etc.
             if os.path.isdir(self.parse_bookmark(x,'path')):
               try:
-                self.liststore.append([self.theme.load_icon('folder',24,24),urllib.unquote(self.parse_bookmark(x,'name'))])
+                self.liststore.append([self.theme.load_icon('folder',24,24),self.parse_bookmark(x,'name')])
               except:
                 self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-                  .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),urllib.unquote(self.parse_bookmark(x,'name'))])
+                  .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),self.parse_bookmark(x,'name')])
               self.places_paths.append(self.parse_bookmark(x,'path'))
           else:
             y = x.split(':')[0]

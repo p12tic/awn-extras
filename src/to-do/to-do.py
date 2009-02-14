@@ -29,6 +29,7 @@ import gtk
 import cairo
 import gettext
 import locale
+import os
 
 #This applet stuff
 import settings
@@ -192,7 +193,9 @@ class App(awn.AppletSimple):
     
     #Prepare the applet for dragging from Awn
     self.detach.prepare_awn_drag_drop(self)
-    
+
+    gtk.window_set_default_icon_name('view-sort-descending')
+
     #Connect to events
     self.connect('enter-notify-event', self.show_title)
     self.connect('leave-notify-event',\
@@ -249,7 +252,9 @@ class App(awn.AppletSimple):
     #Connect the two items to functions when selected
     prefs_menu.connect('activate',self.show_prefs)
     about_menu.connect('activate',self.show_about)
-    
+
+    gtk.about_dialog_set_url_hook(self.do_url, None)
+
     #Now create the menu to put the items in and show it
     menu = self.create_default_menu()
     menu.append(prefs_menu)
@@ -286,13 +291,16 @@ class App(awn.AppletSimple):
     self.detached = False
     self.last_num_items = -1
     self.update_icon()
-  
+
+  #Open a URL
+  def do_url(self, about, url, data):
+    os.system('xdg-open %s &' % url)
+
   #Show the about dialog
   def show_about(self,*args):
     win = gtk.AboutDialog()
     win.set_name(_("To-Do List"))
-    win.set_copyright('Copyright 2008 sharkbaitbobby '+\
-      '<sharkbaitbobby+awn@gmail.com>')
+    win.set_copyright('Copyright 2009 sharkbaitbobby')
     win.set_authors(['sharkbaitbobby <sharkbaitbobby+awn@gmail.com>'])
     win.set_comments(_("A simple To-Do List"))
     win.set_license("This program is free software; you can redistribute it "+\
@@ -309,6 +317,9 @@ class App(awn.AppletSimple):
     win.set_wrap_license(True)
     win.set_documenters(['sharkbaitbobby <sharkbaitbobby+awn@gmail.com>'])
     win.set_artists(['Cairo'])
+    win.set_logo_icon_name('view-sort-descending')
+    win.set_website('http://wiki.awn-project.org/To-Do_List_Applet')
+    win.set_website_label('wiki.awn-project.org')
     win.run()
     win.destroy()
   
@@ -345,9 +356,7 @@ class App(awn.AppletSimple):
       #Deal with the dialog as appropriate
       if self.detached==False:
         self.dialog.show_all()
-        if self.settings['title'] in [None, _("To-Do List")]:
-          self.dialog.set_title('')
-        else:
+        if self.settings['title'] not in [None, _("To-Do List")]:
           self.dialog.set_title(self.settings['title'])
       else:
         self.dialog_widget.show_all()

@@ -29,9 +29,18 @@ import gtk
 import subprocess
 import pango
 import urllib
+import gettext
+import locale
 
 import awn
+from awn.extras import defs
+
 import gconfwrapper as awnccwrapper
+
+APP = "awn-extras-applets"
+gettext.bindtextdomain(APP, defs.GETTEXTDIR)
+gettext.textdomain(APP)
+_ = gettext.gettext
 
 class App (awn.AppletSimple):
   def __init__(self, uid, orient, height):
@@ -88,7 +97,7 @@ class App (awn.AppletSimple):
     
     #AWN applet signals
     self.connect('button-press-event', self.button_press)
-    self.connect('enter-notify-event', lambda a,b: self.title.show(self,'File Browser Launcher'))
+    self.connect('enter-notify-event', lambda a,b: self.title.show(self,_("File Browser Launcher")))
     self.connect('leave-notify-event', lambda a,b: self.title.hide(self))
     self.dialog.connect('focus-out-event', lambda a,b: self.dialog.hide())
   
@@ -116,10 +125,10 @@ class App (awn.AppletSimple):
     if self.show_home==2:
       self.icon_home = self.theme.load_icon('user-home',24,24)
       try:
-        self.liststore.append([self.icon_home,'Home Folder'])
+        self.liststore.append([self.icon_home,_("Home Folder")])
       except:
         self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-          .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),'Home Folder'])
+          .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),_("Home Folder")])
       self.places_paths.append(os.path.expanduser('~'))
     
     #Get list of mounted drives from $mount and /etc/fstab
@@ -217,27 +226,27 @@ class App (awn.AppletSimple):
       for x in self.paths:
         if x=='/':
           try:
-            self.liststore.append([self.theme.load_icon('drive-harddisk',24,24),'Filesystem'])
+            self.liststore.append([self.theme.load_icon('drive-harddisk',24,24),_("Filesystem")])
           except:
             self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-              .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),'Filesystem'])
+              .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),_("Filesystem")])
           self.places_paths.append(x)
         elif x.split('/')[1]=='media':
           if x.split('/')[2] in ['cdrom0','cdrom1','cdrom2','cdrom3','cdrom4','cdrom5']:
             #Find out if it's a CD or DVD
             if x in self.dvd_paths:
               try:
-                self.liststore.append([self.theme.load_icon('media-optical',24,24),'DVD Drive'])
+                self.liststore.append([self.theme.load_icon('media-optical',24,24),_("DVD Drive")])
               except:
                 self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-                  .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),'DVD Drive'])
+                  .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),_("DVD Drive")])
               self.places_paths.append(x)
             else:
               try:
-                self.liststore.append([self.theme.load_icon('media-optical',24,24),'CD Drive'])
+                self.liststore.append([self.theme.load_icon('media-optical',24,24),_("CD Drive")])
               except:
                 self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-                  .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),'CD Drive'])
+                  .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),_("CD Drive")])
               self.places_paths.append(x)
           elif x not in self.paths_fstab: #Means it's USB or firewire
             try:
@@ -312,53 +321,53 @@ class App (awn.AppletSimple):
             y = x.split(':')[0]
             if y=='computer':
               try:
-                self.liststore.append([self.theme.load_icon('computer',24,24),'Computer'])
+                self.liststore.append([self.theme.load_icon('computer',24,24),_("Computer")])
               except:
                 self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-                  .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),'Computer'])
+                  .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),_("Computer")])
               self.places_paths.append('%s:///' % y)
             elif y in ['network','smb','nfs','ftp','ssh']:
               try:
-                self.liststore.append([self.theme.load_icon('network-server',24,24),'Network'])
+                self.liststore.append([self.theme.load_icon('network-server',24,24),_("Network")])
               except:
                 self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-                  .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),'Network'])
+                  .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),_("Network")])
               self.places_paths.append('%s:///' % y)
             elif y=='trash':
               if self.trash_full==True:
                 try:
-                  self.liststore.append([self.theme.load_icon('user-trash-full',24,24),'Trash'])
+                  self.liststore.append([self.theme.load_icon('user-trash-full',24,24),_("Trash")])
                 except:
                   self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-                    .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),'Trash'])
+                    .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),_("Trash")])
                 self.places_paths.append('%s:///' % y)
               else:
                 try:
-                  self.liststore.append([self.theme.load_icon('user-trash',24,24),'Trash'])
+                  self.liststore.append([self.theme.load_icon('user-trash',24,24),_("Trash")])
                 except:
                   self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-                    .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),'Trash'])
+                    .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),_("Trash")])
                 self.places_paths.append('%s:///' % y)
             elif y=='x-nautilus-search':
               try:
-                self.liststore.append([self.theme.load_icon('search',24,24),'Search'])
+                self.liststore.append([self.theme.load_icon('search',24,24),_("Search")])
               except:
                 self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-                  .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),'Search'])
+                  .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),_("Search")])
               self.places_paths.append('%s:///' % y)
             elif y=='burn':
               try:
-                self.liststore.append([self.theme.load_icon('drive-optical',24,24),'CD/DVD Burner'])
+                self.liststore.append([self.theme.load_icon('drive-optical',24,24),_("CD/DVD Burner")])
               except:
                 self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-                  .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),'CD/DVD Burner'])
+                  .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),_("CD/DVD Burner")])
               self.places_paths.append('%s:///' % y)
             elif y=='fonts':
               try:
-                self.liststore.append([self.theme.load_icon('font',24,24),'Fonts'])
+                self.liststore.append([self.theme.load_icon('font',24,24),_("Fonts")])
               except:
                 self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-                  .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),'Fonts'])
+                  .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),_("Fonts")])
               self.places_paths.append('%s:///' % y)
   
   #Parses the text of a line of ~/.gtk-bookmarks after the file:/// and gets the real filepath or the name of it

@@ -20,9 +20,6 @@
 #ifndef __FILEBROWSER_DEFINES_H__
 #define __FILEBROWSER_DEFINES_H__
 
-#define FILEBROWSER_TEXT_SELECT_FOLDER "Select folder as item container"
-#define FILEBROWSER_TEXT_OPEN_FILEMANAGER "Open filemanager"
-
 #define DIALOG_CONTROLS_HEIGHT 30
 #define ICON_MARGIN_X 12
 #define ICON_MARGIN_Y ICON_MARGIN_X

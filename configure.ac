@@ -368,6 +368,7 @@ src/lastfm/Makefile
 src/libawn-extras/Makefile
 src/libawn-extras/awn-extras.pc
 src/libawn-extras/bindings/Makefile
+src/libawn-extras/bindings/python/defs.py
 src/libawn-extras/bindings/python/Makefile
 src/libawn-extras/bindings/vala/Makefile
 src/mail/Makefile

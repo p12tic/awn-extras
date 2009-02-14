@@ -178,7 +178,7 @@ fi
 
 # applet-specific libraries
 PKG_CHECK_MODULES(AFFINITY, [$affinity_pkgs])
-if test "$with_gconf" != "no" -o "$with_gnome" != "no"; then
+if test "$with_gconf" != "no" -a "$with_gnome" != "no"; then
 PKG_CHECK_MODULES(AWN_SYSTEM_MONITOR, [$gconf libgtop-2.0])
 PKG_CHECK_MODULES(FILEBROWSER, [$gconf gnome-desktop-2.0 gnome-vfs-2.0 libgnomeui-2.0])
 PKG_CHECK_MODULES(CAIRO_MENU_GNOME, [$gconf gnome-vfs-2.0 libgnome-menu libnotify libsexy])

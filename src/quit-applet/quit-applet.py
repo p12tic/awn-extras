@@ -33,7 +33,7 @@ except ImportError:
     dbus = None
 
 applet_name = "Quit-Log Out"
-applet_version = "0.2.8"
+applet_version = "0.3.3"
 applet_description = "An applet to exit or log out of your session"
 
 # Themed logo of the applet, used as the applet's icon and shown in the GTK About dialog
@@ -59,7 +59,7 @@ class QuitLogOutApplet:
                 names = bus.list_names()
                 if "org.gnome.SessionManager" in names and "org.freedesktop.PowerManagement" in names:
                     proxy = bus.get_object("org.freedesktop.PowerManagement", "/org/freedesktop/PowerManagement")
-                    if dbus.Interface(proxy, "org.freedesktop.PowerManagement").CanShutDown():
+                    if dbus.Interface(proxy, "org.freedesktop.PowerManagement").CanShutdown():
                         self.logout_cb = self.logout_gnome_session_manager
             except dbus.DBusException, e:
                 print e.message

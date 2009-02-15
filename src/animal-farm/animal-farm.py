@@ -28,7 +28,7 @@ from awn.extras import awnlib
 import random
 
 applet_name = "Animal Farm"
-applet_version = "0.2.8"
+applet_version = "0.3.3"
 applet_description = "Applet that displays fortune messages"
 
 images_dir = os.path.join(os.path.dirname(__file__), "icons")

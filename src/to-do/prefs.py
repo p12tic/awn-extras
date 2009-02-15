@@ -25,26 +25,24 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 import pango
+import gettext
+import locale
 
-def _(s):
-  return s
+from awn.extras import defs
 
-def _ize(li):
-  y = 0
-  for item in li:
-    li[y] = _(item)
-    y += 1
+APP = "awn-extras-applets"
+gettext.bindtextdomain(APP, defs.GETTEXTDIR)
+gettext.textdomain(APP)
+_ = gettext.gettext
 
 icon_colors_real = ['custom', 'gtk', 'butter', 'chameleon', 'orange', \
   'skyblue', 'plum', 'chocolate', 'scarletred', 'aluminium1', 'aluminium2']
-icon_colors_human = ['Custom', 'Current Theme', 'Butter', 'Chameleon', \
-  'Orange', 'Sky Blue', 'Plum', 'Chocolate', 'Scarlet Red', 'Aluminium 1', \
-  'Aluminium 2']
-_ize(icon_colors_human)
+icon_colors_human = [_('Custom'), _('Current Theme'), _('Butter'), \
+  _('Chameleon'), _('Orange'), _('Sky Blue'), _('Plum'), _('Chocolate'), \
+  _('Scarlet Red'), _('Aluminium 1'), _('Aluminium 2')]
 
 icon_types_real = ['items', 'progress', 'progress-items']
-icon_types_human = ['Number of Items', 'Progress', 'Both']
-_ize(icon_types_human)
+icon_types_human = [_('Number of Items'), _('Progress'), _('Both')]
 
 class Prefs:
   def __init__(self, settings):

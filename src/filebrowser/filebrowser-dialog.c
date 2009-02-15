@@ -24,6 +24,7 @@
 #include <libawn/awn-applet-dialog.h>
 #include <libgnomevfs/gnome-vfs.h>
 #include <gdk/gdkkeysyms.h>
+#include <glib/gi18n.h>
 
 #include "filebrowser-dialog.h"
 #include "filebrowser-applet.h"
@@ -186,7 +187,7 @@ void filebrowser_dialog_set_folder(
         gtk_label_set_text(GTK_LABEL(no_items_label), "");
 	gtk_widget_set_size_request(no_items_label, 1, 1);
     } else {
-        gtk_label_set_text(GTK_LABEL(no_items_label), "There are no items to display.");
+        gtk_label_set_text(GTK_LABEL(no_items_label), _("There are no items to display."));
 	gtk_widget_set_size_request(no_items_label, 192, 192);
     }
 
@@ -292,7 +293,7 @@ GtkWidget *filebrowser_dialog_new(
 		gtk_container_add(GTK_CONTAINER(upper_bin), folder_up);
 		gtk_box_pack_start(GTK_BOX(hbox1), upper_bin, TRUE, TRUE, 0);
 
-		GtkWidget *filemanager = gtk_button_new_with_label("Open filemanager");
+		GtkWidget *filemanager = gtk_button_new_with_label(_("Open filemanager"));
 		gtk_button_set_relief(GTK_BUTTON(filemanager), GTK_RELIEF_NONE);
 		g_signal_connect( filemanager, "button-release-event",
 			GTK_SIGNAL_FUNC( filebrowser_dialog_button_clicked ), GINT_TO_POINTER( FILEMANAGER ) );

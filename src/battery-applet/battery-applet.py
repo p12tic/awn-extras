@@ -36,7 +36,7 @@ except ImportError:
 check_status_interval = 5.0
 
 applet_name = "Battery Status"
-applet_version = "0.2.8"
+applet_version = "0.3.3"
 applet_description = "An applet which displays battery information"
 
 # Themed logo of the applet, used as the applet's icon and shown in the GTK About dialog
@@ -96,11 +96,11 @@ class BatteryStatusApplet:
             self.set_battery_missing()
 
     def set_battery_missing(self):
-        applet.title.set("No batteries")
+        self.applet.title.set("No batteries")
 
         icon = os.path.join(themes_dir, self.settings["theme"], "battery-missing.svg")
         height = self.applet.get_height()
-        applet.icon.file(icon, size=height)
+        self.applet.icon.file(icon, size=height)
 
     def setup_context_menu(self):
         prefs = glade.XML(glade_file)

@@ -47,8 +47,6 @@ class MailApplet:
     def __init__(self, applet):
         self.awn = applet
         
-        self.awn.keyring.require()
-        
         default_values = {
             "backend": "GMail",
             "theme": "Tango",
@@ -91,7 +89,7 @@ class MailApplet:
         # is no login information. We'd delete the key, but that's not
         # always supported.
 
-        key = self.awn.keyring.fromToken(token)
+        key = self.awn.keyring.from_token(token)
 
         self.submitPWD(key)
 
@@ -132,7 +130,7 @@ class MailApplet:
             self.__setIcon("error")
 
             if self.showerror:
-                self.awn.errors.general(err, lambda: ())
+                self.awn.errors.general(err)
             return
 
         diffSubjects = [i for i in self.mail.subjects if i not in oldSubjects]
@@ -807,7 +805,7 @@ if __name__ == "__main__":
     awnlib.init_start(MailApplet, {
         "name": _("Mail Applet"),
         "short": "mail",
-	    "version": "0.2.8",
+	    "version": "0.3.3",
         "description": _("An applet to check one's email"),
         "logo": os.path.join(os.path.dirname(__file__), "Themes/Tango/read.svg"),
         "author": "Pavel Panchekha",

@@ -27,6 +27,15 @@ import gtk
 import pango
 import os
 import gconfwrapper as awnccwrapper
+import gettext
+import locale
+
+from awn.extras import defs
+
+APP = "awn-extras-applets"
+gettext.bindtextdomain(APP, defs.GETTEXTDIR)
+gettext.textdomain(APP)
+_ = gettext.gettext
 
 class Prefs:
   def __init__(self, applet):
@@ -35,7 +44,7 @@ class Prefs:
     
     #Initiate what is needed
     self.window = gtk.Window()
-    self.window.set_title('File Browser Launcher Preferences')
+    self.window.set_title(_("File Browser Launcher Preferences"))
     self.nbook = gtk.Notebook()
     self.theme = gtk.icon_theme_get_default()
     self.initializing = True
@@ -76,12 +85,12 @@ class Prefs:
     self.window.set_icon(applet.icon)
     
     #Make the "General" tab
-    self.general_tab = gtk.Label('General')
+    self.general_tab = gtk.Label(_("General"))
     self.general_vbox = gtk.VBox()
     
     #Next section: File Browser
     #Bold text: File Browser with an HSeparator under it
-    self.general_fb_label = gtk.Label('File Browser')
+    self.general_fb_label = gtk.Label(_("File Browser"))
     self.general_fb_label.modify_font(pango.FontDescription('bold'))
     self.general_separator1 = gtk.HSeparator()
     
@@ -89,37 +98,31 @@ class Prefs:
     self.general_fb_table = gtk.Table(2,2)
     
     #First row: () xdg-open (default)
-    self.general_fb_default_radio = gtk.RadioButton()
+    self.general_fb_default_radio = gtk.RadioButton(label='xdg-open ' + _("(default)"))
     self.general_fb_default_radio.identifier = 'general.fb.default'
     self.general_fb_default_radio.connect('toggled',self.radio_changed)
-    self.general_fb_default_label = gtk.Label('xdg-open (default)')
-    self.general_fb_table.attach(self.general_fb_default_radio,0,1,0,1,yoptions=gtk.SHRINK)
-    self.general_fb_table.attach(self.general_fb_default_label,1,2,0,1,yoptions=gtk.SHRINK)
+    self.general_fb_table.attach(self.general_fb_default_radio,0,2,0,1,yoptions=gtk.SHRINK)
     
     #Go through short list of common file managers, include them in a list just like nautilus
     self.general_fb_list = ['nautilus','thunar','konqueror','dolphin']
     self.general_fb_other_radios = []
     self.general_fb_other_labels = []
     self.general_fb_y = 0
-    for self.general_fb_x in self.general_fb_list:
-      if os.path.exists('/usr/bin/'+self.general_fb_x):
-        self.general_fb_other_radios.append(gtk.RadioButton(self.general_fb_default_radio))
-        self.general_fb_other_radios[self.general_fb_y].identifier = 'general.fb.%s' % self.general_fb_x
+    for fb in self.general_fb_list:
+      if os.path.exists('/usr/bin/'+fb) or os.path.exists('/usr/local/bin/'+fb):
+        self.general_fb_other_radios.append(gtk.RadioButton(self.general_fb_default_radio, fb.capitalize()))
+        self.general_fb_other_radios[self.general_fb_y].identifier = 'general.fb.%s' % fb
         self.general_fb_other_radios[self.general_fb_y].connect('toggled',self.radio_changed)
-        if self.fb==self.general_fb_x:
+        if self.fb==fb:
           self.general_fb_other_radios[self.general_fb_y].set_active(True)
-        self.general_fb_other_labels.append(gtk.Label(self.general_fb_x.capitalize()))
-        self.general_fb_table.attach(self.general_fb_other_radios[self.general_fb_y],0,1,\
-          (self.general_fb_y+1),(self.general_fb_y+2),yoptions=gtk.SHRINK)
-        self.general_fb_table.attach(self.general_fb_other_labels[self.general_fb_y],1,2,\
+        self.general_fb_table.attach(self.general_fb_other_radios[self.general_fb_y],0,2,\
           (self.general_fb_y+1),(self.general_fb_y+2),yoptions=gtk.SHRINK)
         self.general_fb_y = self.general_fb_y+1
     
     #Last option: custom with an entry for the app name
-    self.general_fb_custom_radio = gtk.RadioButton(self.general_fb_default_radio)
+    self.general_fb_custom_radio = gtk.RadioButton(self.general_fb_default_radio, _("Custom"))
     self.general_fb_custom_radio.identifier = 'general.fb.custom'
     self.general_fb_custom_radio.connect('toggled',self.radio_changed)
-    self.general_fb_custom_label = gtk.Label('Custom')
     self.general_fb_custom_entry = gtk.Entry()
     if self.fb in ['xdg-open','nautilus','thunar','konqueror','dolphin']:
       self.general_fb_custom_entry.set_sensitive(False)
@@ -130,9 +133,7 @@ class Prefs:
     lambda w:self.client.set_string('fb',w.get_text()))
     if self.fb in ['xdg-open','nautilus','thunar','konqueror','dolphin']:
       self.general_fb_custom_entry.set_sensitive(False)
-    self.general_fb_table.attach(self.general_fb_custom_radio,0,1,\
-    (self.general_fb_y+1),(self.general_fb_y+2),yoptions=gtk.SHRINK)
-    self.general_fb_table.attach(self.general_fb_custom_label,1,2,\
+    self.general_fb_table.attach(self.general_fb_custom_radio,0,2,\
     (self.general_fb_y+1),(self.general_fb_y+2),yoptions=gtk.SHRINK)
     self.general_fb_table.attach(self.general_fb_custom_entry,0,2,\
     (self.general_fb_y+2),(self.general_fb_y+3),yoptions=gtk.SHRINK)
@@ -145,11 +146,11 @@ class Prefs:
     self.nbook.append_page(self.general_vbox,self.general_tab)
     
     #Dialog tab: options for places and basic behavior
-    self.dialog_tab = gtk.Label('Dialog')
+    self.dialog_tab = gtk.Label(_("Dialog"))
     self.dialog_vbox = gtk.VBox()
     
     #Bold text: Places with an hseparator under it
-    self.dialog_places_label = gtk.Label('Places')
+    self.dialog_places_label = gtk.Label(_("Places"))
     self.dialog_places_label.modify_font(pango.FontDescription('bold'))
     self.dialog_separator0 = gtk.HSeparator()
     
@@ -157,28 +158,28 @@ class Prefs:
     self.dialog_places_vbox = gtk.VBox()
     
     #Home Folder
-    self.dialog_places_home = gtk.CheckButton('Show Home Folder')
+    self.dialog_places_home = gtk.CheckButton(_("Show Home Folder"))
     self.dialog_places_home.identifier = 'dialog.places.home'
     self.dialog_places_home.connect('toggled',self.check_changed)
     if self.show_home==2:
       self.dialog_places_home.set_active(True)
     
     #Mounted local drives
-    self.dialog_places_local = gtk.CheckButton('Show mounted local drives')
+    self.dialog_places_local = gtk.CheckButton(_("Show mounted local drives"))
     self.dialog_places_local.identifier = 'dialog.places.local'
     self.dialog_places_local.connect('toggled',self.check_changed)
     if self.show_local==2:
       self.dialog_places_local.set_active(True)
     
     #Mounted network drives
-    self.dialog_places_network = gtk.CheckButton('Show mounted network drives')
+    self.dialog_places_network = gtk.CheckButton(_("Show mounted network drives"))
     self.dialog_places_network.identifier = 'dialog.places.network'
     self.dialog_places_network.connect('toggled',self.check_changed)
     if self.show_network==2:
       self.dialog_places_network.set_active(True)
     
     #Bookmarks
-    self.dialog_places_bookmarks = gtk.CheckButton('Show Bookmarks')
+    self.dialog_places_bookmarks = gtk.CheckButton(_("Show Bookmarks"))
     self.dialog_places_bookmarks.identifier = 'dialog.places.bookmarks'
     self.dialog_places_bookmarks.connect('toggled',self.check_changed)
     if self.show_bookmarks==2:
@@ -191,19 +192,19 @@ class Prefs:
     self.dialog_places_vbox.pack_start(self.dialog_places_bookmarks)
     
     #Bold text: Behavior with hseparator under it
-    self.dialog_behavior_label = gtk.Label('Behavior')
+    self.dialog_behavior_label = gtk.Label(_("Behavior"))
     self.dialog_behavior_label.modify_font(pango.FontDescription('bold'))
     self.dialog_separator1 = gtk.HSeparator()
     
     #[] Focus the location text box
-    self.dialog_behavior_focus = gtk.CheckButton('Focus the location text box')
+    self.dialog_behavior_focus = gtk.CheckButton(_("Focus the location text box"))
     self.dialog_behavior_focus.identifier = 'dialog.behavior.focus'
     self.dialog_behavior_focus.connect('toggled',self.check_changed)
     if self.focus_entry==2:
       self.dialog_behavior_focus.set_active(True)
     
     #[] Open the selected place when clicked
-    self.dialog_behavior_open = gtk.CheckButton('Open the selected place when clicked')
+    self.dialog_behavior_open = gtk.CheckButton(_("Open the selected place when clicked"))
     self.dialog_behavior_open.identifier = 'dialog.behavior.open'
     self.dialog_behavior_open.connect('toggled',self.check_changed)
     if self.places_open==2:
@@ -224,11 +225,11 @@ class Prefs:
     self.nbook.append_page(self.dialog_vbox,self.dialog_tab)
     
     #Left mouse button tab: two options: when clicked, do ... and the default folder (to display in entry widget or to launch)
-    self.lmb_tab = gtk.Label('Left Mouse Button')
+    self.lmb_tab = gtk.Label(_("Left Mouse Button"))
     self.lmb_vbox = gtk.VBox()
     
     #When clicked, (in bold with hseparator under it)
-    self.lmb_clicked_label = gtk.Label('When clicked, ...')
+    self.lmb_clicked_label = gtk.Label(_("When clicked, ..."))
     self.lmb_clicked_label.modify_font(pango.FontDescription('bold'))
     self.lmb_separator0 = gtk.HSeparator()
     
@@ -236,22 +237,22 @@ class Prefs:
     self.lmb_clicked_table = gtk.Table(3,2)
     
     #Row 1: () Display the dialog (default) (awncc:0)
-    self.lmb_clicked_display_radio = gtk.RadioButton(label='Display the dialog')
+    self.lmb_clicked_display_radio = gtk.RadioButton(label=_("Display the dialog"))
     self.lmb_clicked_display_radio.identifier = 'lmb.clicked.display'
     self.lmb_clicked_display_radio.connect('toggled',self.radio_changed)
     self.lmb_clicked_table.attach(self.lmb_clicked_display_radio,0,1,0,1,yoptions=gtk.SHRINK)
     
     #Row 2: () Open the folder (awncc:1)
-    self.lmb_clicked_open_radio = gtk.RadioButton(self.lmb_clicked_display_radio,'Open the folder')
+    self.lmb_clicked_open_radio = gtk.RadioButton(self.lmb_clicked_display_radio,_("Open the folder"))
     if self.lmb==2:
       self.lmb_clicked_open_radio.set_active(True)
     self.lmb_clicked_open_radio.identifier = 'lmb.clicked.open'
     self.lmb_clicked_open_radio.connect('toggled',self.radio_changed)
-    self.lmb_clicked_open_label = gtk.Label('Open the folder')
+    self.lmb_clicked_open_label = gtk.Label(_("Open the folder"))
     self.lmb_clicked_table.attach(self.lmb_clicked_open_radio,0,1,1,2,yoptions=gtk.SHRINK)
     
     #Row 3: () Do nothing (awncc:2)
-    self.lmb_clicked_nothing_radio = gtk.RadioButton(self.lmb_clicked_display_radio,'Do nothing')
+    self.lmb_clicked_nothing_radio = gtk.RadioButton(self.lmb_clicked_display_radio,_("Do nothing"))
     if self.lmb==3:
       self.lmb_clicked_nothing_radio.set_active(True)
     self.lmb_clicked_nothing_radio.identifier = 'lmb.clicked.nothing'
@@ -259,7 +260,7 @@ class Prefs:
     self.lmb_clicked_table.attach(self.lmb_clicked_nothing_radio,0,1,2,3,yoptions=gtk.SHRINK)
     
     #Bold: Default Folder & separator under it
-    self.lmb_folder_label = gtk.Label('Default Folder')
+    self.lmb_folder_label = gtk.Label(_("Default Folder"))
     self.lmb_folder_label.modify_font(pango.FontDescription('bold'))
     self.lmb_separator1 = gtk.HSeparator()
     
@@ -267,13 +268,13 @@ class Prefs:
     self.lmb_folder_table = gtk.Table(3,2)
     
     #Row 1: () Home Folder ($HOME, default)
-    self.lmb_folder_default_radio = gtk.RadioButton(label='Home Folder (%s, default)' % os.path.expanduser('~'))
+    self.lmb_folder_default_radio = gtk.RadioButton(label=_("Home Folder (%s, default)") % os.path.expanduser('~'))
     self.lmb_folder_default_radio.identifier = 'lmb.folder.default'
     self.lmb_folder_default_radio.connect('toggled',self.radio_changed)
     self.lmb_folder_table.attach(self.lmb_folder_default_radio,0,1,0,1,yoptions=gtk.SHRINK)
     
     #Row 2: () Custom
-    self.lmb_folder_custom_radio = gtk.RadioButton(self.lmb_folder_default_radio,'Custom')
+    self.lmb_folder_custom_radio = gtk.RadioButton(self.lmb_folder_default_radio,_("Custom"))
     self.lmb_folder_custom_radio.identifier = 'lmb.folder.custom'
     self.lmb_folder_custom_radio.connect('toggled',self.radio_changed)
     self.lmb_folder_table.attach(self.lmb_folder_custom_radio,0,1,1,2,yoptions=gtk.SHRINK)
@@ -281,7 +282,7 @@ class Prefs:
     #Row 3: _______________________[Browse]
     self.lmb_folder_custom_entry = gtk.Entry()
     self.lmb_folder_custom_browse = gtk.Button(stock=gtk.STOCK_OPEN)
-    self.lmb_folder_custom_browse.get_children()[0].get_children()[0].get_children()[1].set_text('Browse')
+    self.lmb_folder_custom_browse.get_children()[0].get_children()[0].get_children()[1].set_text(_("Browse"))
     self.lmb_folder_custom_browse.connect('clicked',self.browse_dir_lmb)
     self.lmb_folder_custom_hbox = gtk.HBox()
     self.lmb_folder_custom_hbox.pack_start(self.lmb_folder_custom_entry)
@@ -304,11 +305,11 @@ class Prefs:
     self.nbook.append_page(self.lmb_vbox,self.lmb_tab)
     
     #Middle mouse button tab: two options: when clicked, do ... and the default folder (to display in entry widget or to launch)
-    self.mmb_tab = gtk.Label('Middle Mouse Button')
+    self.mmb_tab = gtk.Label(_("Middle Mouse Button"))
     self.mmb_vbox = gtk.VBox()
     
     #When clicked, (in bold with hseparator under it)
-    self.mmb_clicked_label = gtk.Label('When clicked, ...')
+    self.mmb_clicked_label = gtk.Label(_("When clicked, ..."))
     self.mmb_clicked_label.modify_font(pango.FontDescription('bold'))
     self.mmb_separator0 = gtk.HSeparator()
     
@@ -316,13 +317,13 @@ class Prefs:
     self.mmb_clicked_table = gtk.Table(3,2)
     
     #Row 1: () Display the dialog (default) (awncc:1)
-    self.mmb_clicked_display_radio = gtk.RadioButton(label='Display the dialog')
+    self.mmb_clicked_display_radio = gtk.RadioButton(label=_("Display the dialog"))
     self.mmb_clicked_display_radio.identifier = 'mmb.clicked.display'
     self.mmb_clicked_display_radio.connect('toggled',self.radio_changed)
     self.mmb_clicked_table.attach(self.mmb_clicked_display_radio,0,1,0,1,yoptions=gtk.SHRINK)
     
     #Row 2: () Open the folder (awncc:2)
-    self.mmb_clicked_open_radio = gtk.RadioButton(self.mmb_clicked_display_radio,'Open the folder')
+    self.mmb_clicked_open_radio = gtk.RadioButton(self.mmb_clicked_display_radio,_("Open the folder"))
     if self.mmb==2:
       self.mmb_clicked_open_radio.set_active(True)
     self.mmb_clicked_open_radio.identifier = 'mmb.clicked.open'
@@ -330,7 +331,7 @@ class Prefs:
     self.mmb_clicked_table.attach(self.mmb_clicked_open_radio,0,1,1,2,yoptions=gtk.SHRINK)
     
     #Row 3: () Do nothing (awncc:3)
-    self.mmb_clicked_nothing_radio = gtk.RadioButton(self.mmb_clicked_display_radio,'Do nothing')
+    self.mmb_clicked_nothing_radio = gtk.RadioButton(self.mmb_clicked_display_radio,_("Do nothing"))
     if self.mmb==3:
       self.mmb_clicked_nothing_radio.set_active(True)
     self.mmb_clicked_nothing_radio.identifier = 'mmb.clicked.nothing'
@@ -338,7 +339,7 @@ class Prefs:
     self.mmb_clicked_table.attach(self.mmb_clicked_nothing_radio,0,1,2,3,yoptions=gtk.SHRINK)
     
     #Bold: Default Folder & separator under it
-    self.mmb_folder_label = gtk.Label('Default Folder')
+    self.mmb_folder_label = gtk.Label(_("Default Folder"))
     self.mmb_folder_label.modify_font(pango.FontDescription('bold'))
     self.mmb_separator1 = gtk.HSeparator()
     
@@ -346,13 +347,13 @@ class Prefs:
     self.mmb_folder_table = gtk.Table(3,2)
     
     #Row 1: () Home Folder ($HOME, default)
-    self.mmb_folder_default_radio = gtk.RadioButton(label='Home Folder (%s, default)' % os.path.expanduser('~'))
+    self.mmb_folder_default_radio = gtk.RadioButton(label=_("Home Folder (%s, default)") % os.path.expanduser('~'))
     self.mmb_folder_default_radio.identifier = 'mmb.folder.default'
     self.mmb_folder_default_radio.connect('toggled',self.radio_changed)
     self.mmb_folder_table.attach(self.mmb_folder_default_radio,0,1,0,1,yoptions=gtk.SHRINK)
     
     #Row 2: () Custom
-    self.mmb_folder_custom_radio = gtk.RadioButton(self.mmb_folder_default_radio,'Custom')
+    self.mmb_folder_custom_radio = gtk.RadioButton(self.mmb_folder_default_radio,_("Custom"))
     self.mmb_folder_custom_radio.identifier = 'mmb.folder.custom'
     self.mmb_folder_custom_radio.connect('toggled',self.radio_changed)
     self.mmb_folder_table.attach(self.mmb_folder_custom_radio,0,1,1,2,yoptions=gtk.SHRINK)
@@ -360,7 +361,7 @@ class Prefs:
     #Row 3: _______________________[Browse]
     self.mmb_folder_custom_entry = gtk.Entry()
     self.mmb_folder_custom_browse = gtk.Button(stock=gtk.STOCK_OPEN)
-    self.mmb_folder_custom_browse.get_children()[0].get_children()[0].get_children()[1].set_text('Browse')
+    self.mmb_folder_custom_browse.get_children()[0].get_children()[0].get_children()[1].set_text(_("Browse"))
     self.mmb_folder_custom_browse.connect('clicked',self.browse_dir_mmb)
     self.mmb_folder_custom_hbox = gtk.HBox()
     self.mmb_folder_custom_hbox.pack_start(self.mmb_folder_custom_entry)
@@ -398,7 +399,7 @@ class Prefs:
   
   #Browses for a directory/folder - for the left button
   def browse_dir_lmb(self,widget):
-    self.dir_chooser = gtk.FileChooserDialog('Choose a folder',buttons=(gtk.STOCK_CANCEL,gtk.RESPONSE_CANCEL,\
+    self.dir_chooser = gtk.FileChooserDialog(_("Choose a folder"),buttons=(gtk.STOCK_CANCEL,gtk.RESPONSE_CANCEL,\
     gtk.STOCK_OPEN,gtk.RESPONSE_OK),action=gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
     self.dir_chooser_response = self.dir_chooser.run()
     self.dir_chooser_dirname = self.dir_chooser.get_filename()
@@ -412,7 +413,7 @@ class Prefs:
   
   #Browses for a directory/folder - for the middle button
   def browse_dir_mmb(self,widget):
-    self.dir_chooser = gtk.FileChooserDialog('Choose a folder',buttons=(gtk.STOCK_CANCEL,gtk.RESPONSE_CANCEL,\
+    self.dir_chooser = gtk.FileChooserDialog(_("Choose a folder"),buttons=(gtk.STOCK_CANCEL,gtk.RESPONSE_CANCEL,\
     gtk.STOCK_OPEN,gtk.RESPONSE_OK),action=gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
     self.dir_chooser_response = self.dir_chooser.run()
     self.dir_chooser_dirname = self.dir_chooser.get_filename()

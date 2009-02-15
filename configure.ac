@@ -95,17 +95,20 @@ if test "$with_gconf" != "no" -a "$config_backend" != "GConf"; then
   gconf=gconf-2.0
 fi
 
-if test "$with_gconf" != "no" -o "$with_gnome" != "no"; then
+if test "$with_gconf" != "no" -a "$with_gnome" != "no"; then
 # affinity, filebrowser
 PKG_CHECK_MODULES(GNOMEUI, [libgnomeui-2.0])
 # filebrowser
 PKG_CHECK_MODULES(GNOME_DESKTOP, [gnome-desktop-2.0])
 # filebrowser, cairo-menu, plugger, trash, trasher
 PKG_CHECK_MODULES(GNOME_VFS, [gnome-vfs-2.0])
-# main-menu, cairo-menu
-PKG_CHECK_MODULES(GNOME_MENU, [libgnome-menu])
 # awn-system-monitor
 PKG_CHECK_MODULES(GTOP, [libgtop-2.0])
+fi
+
+if test "$with_gnome" != "no"; then
+# main-menu, cairo-menu
+PKG_CHECK_MODULES(GNOME_MENU, [libgnome-menu])
 fi
 
 webkit_module=no
@@ -175,7 +178,7 @@ fi
 
 # applet-specific libraries
 PKG_CHECK_MODULES(AFFINITY, [$affinity_pkgs])
-if test "$with_gconf" != "no" -o "$with_gnome" != "no"; then
+if test "$with_gconf" != "no" -a "$with_gnome" != "no"; then
 PKG_CHECK_MODULES(AWN_SYSTEM_MONITOR, [$gconf libgtop-2.0])
 PKG_CHECK_MODULES(FILEBROWSER, [$gconf gnome-desktop-2.0 gnome-vfs-2.0 libgnomeui-2.0])
 PKG_CHECK_MODULES(CAIRO_MENU_GNOME, [$gconf gnome-vfs-2.0 libgnome-menu libnotify libsexy])
@@ -368,6 +371,7 @@ src/lastfm/Makefile
 src/libawn-extras/Makefile
 src/libawn-extras/awn-extras.pc
 src/libawn-extras/bindings/Makefile
+src/libawn-extras/bindings/python/defs.py
 src/libawn-extras/bindings/python/Makefile
 src/libawn-extras/bindings/vala/Makefile
 src/mail/Makefile

@@ -26,7 +26,7 @@ from gtk import gdk
 from awn.extras import awnlib
 
 applet_name = "ThinkHDAPS"
-applet_version = "0.3.1"
+applet_version = "0.3.3"
 applet_description = "Applet that shows the shock protection status of your disks"
 
 # Interval in milliseconds between two successive status checks
@@ -136,7 +136,7 @@ class ThinkHDAPSApplet:
             gobject.timeout_add(check_status_interval, self.check_status_cb, self)
         else:
             self.set_error_icon()
-            self.applet.title.set("No hard disk found")
+            applet.title.set("No hard disk found")
 
     def height_changed_cb(self, widget, event):
         """Update the applet's icon, because the height of the panel

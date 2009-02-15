@@ -51,7 +51,7 @@ except ImportError:
 awn.check_dependencies(globals(), 'gtkmozembed')
 
 applet_name = "Pandora"
-applet_version = "0.3.1"
+applet_version = "0.3.3"
 applet_description = "Listen to Pandora from Awn"
 applet_theme_logo = "pandora"
 

@@ -27,6 +27,9 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 import cairo
+import gettext
+import locale
+import os
 
 #This applet stuff
 import settings
@@ -35,7 +38,12 @@ import icon
 #Awn stuff
 import sys
 import awn
-from awn.extras import detach, surface_to_pixbuf
+from awn.extras import defs, detach, surface_to_pixbuf
+
+APP = "awn-extras-applets"
+gettext.bindtextdomain(APP, defs.GETTEXTDIR)
+gettext.textdomain(APP)
+_ = gettext.gettext
 
 class App(awn.AppletSimple):
   last_num_items = -1
@@ -185,7 +193,9 @@ class App(awn.AppletSimple):
     
     #Prepare the applet for dragging from Awn
     self.detach.prepare_awn_drag_drop(self)
-    
+
+    gtk.window_set_default_icon_name('view-sort-descending')
+
     #Connect to events
     self.connect('enter-notify-event', self.show_title)
     self.connect('leave-notify-event',\
@@ -242,7 +252,9 @@ class App(awn.AppletSimple):
     #Connect the two items to functions when selected
     prefs_menu.connect('activate',self.show_prefs)
     about_menu.connect('activate',self.show_about)
-    
+
+    gtk.about_dialog_set_url_hook(self.do_url, None)
+
     #Now create the menu to put the items in and show it
     menu = self.create_default_menu()
     menu.append(prefs_menu)
@@ -279,15 +291,18 @@ class App(awn.AppletSimple):
     self.detached = False
     self.last_num_items = -1
     self.update_icon()
-  
+
+  #Open a URL
+  def do_url(self, about, url, data):
+    os.system('xdg-open %s &' % url)
+
   #Show the about dialog
   def show_about(self,*args):
     win = gtk.AboutDialog()
-    win.set_name("To-Do List")
-    win.set_copyright("Copyright 2008 sharkbaitbobby "+\
-      "<sharkbaitbobby+awn@gmail.com>")
-    win.set_authors(["sharkbaitbobby <sharkbaitbobby+awn@gmail.com>"])
-    win.set_comments("A simple To-Do List")
+    win.set_name(_("To-Do List"))
+    win.set_copyright('Copyright 2009 sharkbaitbobby')
+    win.set_authors(['sharkbaitbobby <sharkbaitbobby+awn@gmail.com>'])
+    win.set_comments(_("A simple To-Do List"))
     win.set_license("This program is free software; you can redistribute it "+\
       "and/or modify it under the terms of the GNU General Public License "+\
       "as published by the Free Software Foundation; either version 2 of "+\
@@ -300,8 +315,11 @@ class App(awn.AppletSimple):
       "Free Software Foundation, Inc.,"+\
       "51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA.")
     win.set_wrap_license(True)
-    win.set_documenters(["sharkbaitbobby <sharkbaitbobby+awn@gmail.com>"])
-    win.set_artists(["Cairo"])
+    win.set_documenters(['sharkbaitbobby <sharkbaitbobby+awn@gmail.com>'])
+    win.set_artists(['Cairo'])
+    win.set_logo_icon_name('view-sort-descending')
+    win.set_website('http://wiki.awn-project.org/To-Do_List_Applet')
+    win.set_website_label('wiki.awn-project.org')
     win.run()
     win.destroy()
   
@@ -338,9 +356,7 @@ class App(awn.AppletSimple):
       #Deal with the dialog as appropriate
       if self.detached==False:
         self.dialog.show_all()
-        if self.settings['title'] in [None, 'To-Do List']:
-          self.dialog.set_title('')
-        else:
+        if self.settings['title'] not in [None, _("To-Do List")]:
           self.dialog.set_title(self.settings['title'])
       else:
         self.dialog_widget.show_all()
@@ -380,7 +396,7 @@ class App(awn.AppletSimple):
         #This is a normal item
         #Make an "X" button to clear the item
         dialog_x = gtk.Button()
-        dialog_x.set_tooltip_text('Remove item')
+        dialog_x.set_tooltip_text(_("Remove item"))
         dialog_x_icon = gtk.image_new_from_pixbuf(\
           self.icon_theme.load_icon('list-remove',16,16))
         dialog_x.set_image(dialog_x_icon)
@@ -465,7 +481,7 @@ class App(awn.AppletSimple):
       else:
         #Make a normal X button
         dialog_x = gtk.Button()
-        dialog_x.set_tooltip_text('Remove category')
+        dialog_x.set_tooltip_text(_("Remove category"))
         dialog_x_icon = gtk.image_new_from_pixbuf(\
           self.icon_theme.load_icon('list-remove',16,16))
         dialog_x.set_image(dialog_x_icon)
@@ -489,7 +505,7 @@ class App(awn.AppletSimple):
         #Make a normal -> button - but different function
         #for the category
         dialog_details = gtk.Button()
-        dialog_details.set_tooltip_text('View/Edit details')
+        dialog_details.set_tooltip_text(_("View/Edit details"))
         dialog_details_icon = gtk.image_new_from_pixbuf(\
           self.icon_theme.load_icon('go-next',16,16))
         dialog_details.set_image(dialog_details_icon)
@@ -611,7 +627,7 @@ class App(awn.AppletSimple):
     
     #Make the RadioButtons for each category
     #First category: No category! (Uncategorized)
-    uncategorized = gtk.RadioButton(label='_Uncategorized')
+    uncategorized = gtk.RadioButton(label=_("_Uncategorized"))
     uncategorized.id = -1
     uncategorized.connect('toggled',self.add_radio_changed)
     self.add_vbox.pack_start(uncategorized,False)
@@ -635,14 +651,14 @@ class App(awn.AppletSimple):
     self.add_vbox.pack_start(radio_hbox,False)
     
     #First RadioButton - ( )Category
-    category_radio = gtk.RadioButton(label='_Category')
+    category_radio = gtk.RadioButton(label=_("_Category"))
     category_radio.id = 'category'
     category_radio.connect('toggled',self.add_radio_changed)
     radio_hbox.pack_start(category_radio,False)
     
     #Second RadioButton - (-)To-Do item
     #TODO: better text than "To-Do item"?
-    item_radio = gtk.RadioButton(category_radio,'_To-Do item')
+    item_radio = gtk.RadioButton(category_radio, _("_To-Do item"))
     item_radio.set_active(True)
     item_radio.id = 'to-do'
     item_radio.connect('toggled',self.add_radio_changed)
@@ -727,16 +743,16 @@ class App(awn.AppletSimple):
     priority_hbox1 = gtk.HBox()
     
     #Label: Priority: 
-    priority_label = gtk.Label('Priority: ')
+    priority_label = gtk.Label(_("Priority: "))
     
     #Neutral, Low, Medium, and High priority RadioButtons
-    priority_neutral = gtk.RadioButton(label='_Neutral')
+    priority_neutral = gtk.RadioButton(label=_("_Neutral"))
     priority_neutral.id = [0,num]
-    priority_low = gtk.RadioButton(priority_neutral,'_Low')
+    priority_low = gtk.RadioButton(priority_neutral,_("_Low"))
     priority_low.id = [1,num]
-    priority_med = gtk.RadioButton(priority_neutral,'_Medium')
+    priority_med = gtk.RadioButton(priority_neutral,_("_Medium"))
     priority_med.id = [2,num]
-    priority_high = gtk.RadioButton(priority_neutral,'_High')
+    priority_high = gtk.RadioButton(priority_neutral,_("_High"))
     priority_high.id = [3,num]
     
     #Select the right RadioButton (Neutral is selected by default)
@@ -764,7 +780,7 @@ class App(awn.AppletSimple):
     progress_hbox = gtk.HBox()
     
     #Label: Progress(%): 
-    progress_label = gtk.Label('Progress(%): ')
+    progress_label = gtk.Label(_("Progress(%): "))
     
     #SpinButton and Adjustment for the SpinButton
     progress_adj = gtk.Adjustment(float(progress),0,100,5,10,1)
@@ -1223,12 +1239,11 @@ class App(awn.AppletSimple):
       if self.settings['confirm-categories'] == True:
         
         #Make Label
-        confirm_label = gtk.Label('Are you sure you want to remove the ' + \
-          'category "%s?"\nAll of its items will be removed.' % \
-          self.settings['category_name'][itemid])
+        confirm_label = gtk.Label(_("Are you sure you want to remove the category \"%s?\"\nAll of its items will be removed." % \
+          self.settings['category_name'][itemid]))
         
         #Make CheckButton
-        confirm_check = gtk.CheckButton('Don\'t show this again.')
+        confirm_check = gtk.CheckButton(_("Don't show this again."))
         confirm_check.key = 'confirm-categories'
         confirm_check.connect('toggled', self.confirm_check)
         
@@ -1262,10 +1277,10 @@ class App(awn.AppletSimple):
       if self.settings['confirm-items'] == True:
         
         #Make Label
-        confirm_label = gtk.Label('Are you sure you want to remove this item?')
+        confirm_label = gtk.Label(_("Are you sure you want to remove this item?"))
         
         #Make CheckButton
-        confirm_check = gtk.CheckButton('Don\'t show this again.')
+        confirm_check = gtk.CheckButton(_("Don't show this again."))
         confirm_check.key = 'confirm-items'
         confirm_check.connect('toggled', self.confirm_check)
         
@@ -1411,7 +1426,7 @@ class App(awn.AppletSimple):
   #Show the title on hover
   def show_title(self, *args):
     if self.settings['title'] is None:
-      self.title.show(self, "To-Do List")
+      self.title.show(self, _("To-Do List"))
 
     else:
       self.title.show(self, self.settings['title'])
@@ -1461,7 +1476,7 @@ class ProgressButton(gtk.Button):
     self.set_image(image)
     
     #Reset the tooltip
-    self.set_tooltip_text(str(int(progress)) + '% done')
+    self.set_tooltip_text(str(int(progress)) + _("% done"))
   
   def scroll(self, widget, event):
     #Scrolling up

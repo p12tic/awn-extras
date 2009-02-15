@@ -34,7 +34,7 @@ except ImportError:
     dbus = None
 
 applet_name = "CPU Frequency Monitor"
-applet_version = "0.3.1"
+applet_version = "0.3.3"
 applet_description = "An applet to monitor and control the CPU frequency"
 
 # Themed logo of the applet, used as the applet's icon and shown in the GTK About dialog

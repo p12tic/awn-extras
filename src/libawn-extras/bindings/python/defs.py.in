@@ -1,0 +1,6 @@
+#!/usr/bin/env python
+
+import os
+
+PREFIX = "@prefix@"
+GETTEXTDIR = os.path.join(PREFIX, "share", "locale")

@@ -29,6 +29,7 @@
 #include <libawn/awn-desktop-item.h>
 #include <glib/gmacros.h>
 #include <glib/gerror.h>
+#include <glib/gi18n.h>
 
 #include <libawn/awn-applet-dialog.h>
 #include <libawn/awn-applet-simple.h>
@@ -42,6 +43,7 @@ typedef struct {
   GtkWidget *window;
   GtkWidget *box;
   GtkWidget *icons;
+  GtkWidget *menu;
   GMenuTree *tree;
   GMenuTreeDirectory *root;
   GMenuTreeDirectory *apps;
@@ -354,16 +356,38 @@ on_icon_clicked (GtkWidget *eb,
   }
   else if (event->button == 3)
   {
-    static GtkWidget * menu=NULL;
-    static GtkWidget * item;
-
-    if (!menu)
-    {
-      menu = awn_applet_create_default_menu (app->applet);
-    }
-    gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL,event->button, 
+    gtk_menu_popup(GTK_MENU(app->menu), NULL, NULL, NULL, NULL,event->button, 
                    event->time);
   }
+}
+
+static void open_url(GtkAboutDialog *about, const gchar *url, gpointer data)
+{
+    g_spawn_command_line_async(g_strdup_printf("xdg-open %s", url), NULL);
+}
+
+static void
+on_about_activated(GtkMenuItem *item, Menu *app)
+{
+    GtkAboutDialog *about;
+    const gchar *authors[] = { "Neil J. Patel", NULL };
+
+    gtk_about_dialog_set_url_hook(open_url, NULL, NULL);
+
+    about = GTK_ABOUT_DIALOG(gtk_about_dialog_new());
+    gtk_about_dialog_set_name(about, _("Awn Main Menu"));
+    gtk_about_dialog_set_comments(about, _("Displays a list of all your applications"));
+    gtk_about_dialog_set_authors(about, authors);
+    gtk_about_dialog_set_copyright(about, "Copyright 2007 Neil J. Patel");
+    gtk_about_dialog_set_license(about, "GPLv2");
+    gtk_about_dialog_set_website(about, "http://wiki.awn-project.org/Main_Menu");
+    gtk_about_dialog_set_website_label(about, "wiki.awn-project.org");
+
+    gtk_about_dialog_set_logo_icon_name(about, "start-here");
+    gtk_window_set_icon_name(GTK_WINDOW(about), "start-here");
+
+    gtk_dialog_run(GTK_DIALOG(about));
+    gtk_widget_destroy(GTK_WIDGET(about));
 }
 
 static gboolean
@@ -433,6 +457,13 @@ awn_applet_factory_initp (const gchar * uid, gint orient, gint height )
   }
   app->tree = app->apps;
 
+  app->menu = awn_applet_create_default_menu (app->applet);
+  GtkWidget *about = gtk_image_menu_item_new_from_stock(GTK_STOCK_ABOUT, NULL);
+  gtk_menu_shell_append(GTK_MENU_SHELL(app->menu), about);
+  g_signal_connect(G_OBJECT(about), "activate",
+                   G_CALLBACK(on_about_activated), (gpointer)app);
+  gtk_widget_show_all(app->menu);
+
   app->window = awn_applet_dialog_new (applet);
   gtk_window_set_focus_on_map (GTK_WINDOW (app->window), TRUE);
 
@@ -450,6 +481,8 @@ awn_applet_factory_initp (const gchar * uid, gint orient, gint height )
   awn_applet_simple_set_icon_name( AWN_APPLET_SIMPLE(app->applet),
                                     APPLET_NAME,
                                     "gnome-main-menu")  ;
+
+  awn_applet_simple_set_title(AWN_APPLET_SIMPLE(app->applet), _("Main Menu"));
 
   gtk_widget_show_all (GTK_WIDGET (applet));                              
   return applet;

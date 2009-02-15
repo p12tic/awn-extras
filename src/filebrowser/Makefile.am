@@ -1,5 +1,6 @@
 APPLET_NAME = filebrowser
-APPLET_CFLAGS =	$(FILEBROWSER_CFLAGS)
+APPLET_CFLAGS =	$(FILEBROWSER_CFLAGS) \
+	-DICONDIR=\""$(icondir)"\"
 APPLET_ICONS = filebrowser.svg
 include $(top_srcdir)/Makefile.c-applet
 include $(top_srcdir)/Makefile.schemas

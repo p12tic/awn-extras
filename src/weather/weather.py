@@ -412,7 +412,7 @@ if __name__ == "__main__":
     awnlib.init_start(WeatherApplet, {
         "name": _("Avant Weather Applet"),
         "description": _("A Weather Applet for the Avant Window Navigator. Weather data provided by weather.com. Images by Wojciech Grzanka."), ##
-        "version" : "0.3.1",
+        "version" : "0.3.3",
         "author": "Mike Desjardins, Mike Rooney",
         "copyright-year": "2007-2008",
         "logo": weathericons.GetIcon("44"),

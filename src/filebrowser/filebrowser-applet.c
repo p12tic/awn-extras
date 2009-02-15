@@ -20,6 +20,7 @@
 #include <string.h>
 #include <libawn/awn-applet-simple.h>
 #include <libgnomevfs/gnome-vfs.h>
+#include <glib/gi18n.h>
 
 #include "filebrowser-applet.h"
 #include "filebrowser-gconf.h"
@@ -46,7 +47,7 @@ static void filebrowser_applet_activate_dialog(
     GnomeVFSURI *uri = gnome_vfs_uri_new(filebrowser_gconf_get_backend_folder());
     GtkWidget *dialog;
 
-    dialog = gtk_file_chooser_dialog_new( FILEBROWSER_TEXT_SELECT_FOLDER, NULL,
+    dialog = gtk_file_chooser_dialog_new( _("Select folder as item container"), NULL,
                                           GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER,
                                           GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                                           GTK_STOCK_APPLY, GTK_RESPONSE_ACCEPT, NULL );
@@ -79,6 +80,48 @@ static void filebrowser_applet_activate_dialog(
 }
 
 /**
+ * Open a link in an about dialog
+ */
+
+static void open_url(GtkAboutDialog *about, const gchar *url, gpointer data)
+{
+    g_spawn_command_line_async(g_strdup_printf("xdg-open %s", url), NULL);
+}
+
+/**
+ * Display an about dialog
+ */
+static void filebrowser_applet_activate_about(
+    GtkMenuItem *item,
+    gpointer null ) {
+
+    GtkAboutDialog *about;
+    GdkPixbuf *logo;
+    gchar *icon_path;
+    const gchar *authors[] = { "Timon ter Braak", NULL };
+
+    icon_path = g_strdup_printf("%s/filebrowser.svg", ICONDIR);
+
+    gtk_about_dialog_set_url_hook(open_url, NULL, NULL);
+
+    about = GTK_ABOUT_DIALOG(gtk_about_dialog_new());
+    gtk_about_dialog_set_name(about, _("File Browser"));
+    gtk_about_dialog_set_comments(about, _("Browse the filesystem"));
+    gtk_about_dialog_set_authors(about, authors);
+    gtk_about_dialog_set_copyright(about, "Copyright 2008 Timon ter Braak");
+    gtk_about_dialog_set_license(about, "GPLv2");
+    gtk_about_dialog_set_website(about, "http://wiki.awn-project.org/File_Browser");
+    gtk_about_dialog_set_website_label(about, "wiki.awn-project.org");
+
+    logo = gdk_pixbuf_new_from_file_at_size(icon_path, 48, 48, NULL);
+    gtk_about_dialog_set_logo(about, logo);
+    gtk_window_set_icon_from_file(GTK_WINDOW(about), icon_path, NULL);
+
+    gtk_dialog_run(GTK_DIALOG(about));
+    gtk_widget_destroy(GTK_WIDGET(about));
+}
+
+/**
  * Create the context menu
  * -get default menu
  * -add properties item
@@ -86,15 +129,24 @@ static void filebrowser_applet_activate_dialog(
 static GtkWidget *filebrowser_applet_new_dialog(
     FileBrowserApplet * applet ) {
 
-    GtkWidget *item;
+    GtkWidget *location, *about, *image;
     GtkWidget *menu;
 
-    menu = awn_applet_create_default_menu( AWN_APPLET( applet->awn_applet ) );
-    item = gtk_image_menu_item_new_from_stock( GTK_STOCK_PROPERTIES, NULL );
-    gtk_menu_shell_prepend( GTK_MENU_SHELL( menu ), item );
 
-    g_signal_connect( G_OBJECT( item ), "activate",
+    location = gtk_image_menu_item_new_with_label(_("Set Location"));
+    image = gtk_image_new_from_stock(GTK_STOCK_OPEN, GTK_ICON_SIZE_MENU);
+    gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(location), image);
+
+    about = gtk_image_menu_item_new_from_stock(GTK_STOCK_ABOUT, NULL);
+
+    menu = awn_applet_create_default_menu( AWN_APPLET( applet->awn_applet ) );
+    gtk_menu_shell_append( GTK_MENU_SHELL( menu ), location );
+    gtk_menu_shell_append( GTK_MENU_SHELL( menu ), about );
+
+    g_signal_connect( G_OBJECT( location ), "activate",
                       G_CALLBACK( filebrowser_applet_activate_dialog ), applet );
+    g_signal_connect( G_OBJECT( about ), "activate",
+                      G_CALLBACK( filebrowser_applet_activate_about ), applet );
 
     gtk_widget_show_all( GTK_WIDGET( menu ) );
 

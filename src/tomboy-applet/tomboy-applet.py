@@ -32,7 +32,7 @@ except ImportError:
     dbus = None
 
 applet_name = "Tomboy Applet"
-applet_version = "0.3.1"
+applet_version = "0.3.3"
 applet_description = "Control Tomboy with D-Bus"
 
 # Logo of the applet, shown in the GTK About dialog

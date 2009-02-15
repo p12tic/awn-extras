@@ -31,7 +31,7 @@ from awn.extras import awnlib
 read_volume_interval = 0.5
 
 applet_name = "Volume Control"
-applet_version = "0.3.1"
+applet_version = "0.3.3"
 applet_description = "Applet to control your computer's volume"
 
 #theme_dir = os.path.join(os.path.dirname(__file__), "Themes")

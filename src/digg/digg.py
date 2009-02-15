@@ -47,7 +47,7 @@ except ImportError:
 awn.check_dependencies(globals(), 'gtkmozembed')
 
 applet_name = "Digg Applet"
-applet_version = "0.3.1"
+applet_version = "0.3.3"
 applet_description = "Browse Digg in Awn"
 applet_theme_logo = "digg"
 

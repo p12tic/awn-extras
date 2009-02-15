@@ -28,7 +28,7 @@ from analogclock import *
 import locations
 
 applet_name = "Cairo Clock"
-applet_version = "0.3.1"
+applet_version = "0.3.3"
 applet_description = "Applet that displays an analog clock using\n(optionally) MacSlow's Cairo-Clock's themes"
 
 # Logo of the applet, shown in the GTK About dialog

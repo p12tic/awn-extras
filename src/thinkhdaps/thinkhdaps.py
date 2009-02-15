@@ -26,7 +26,7 @@ from gtk import gdk
 from awn.extras import awnlib
 
 applet_name = "ThinkHDAPS"
-applet_version = "0.3.1"
+applet_version = "0.3.3"
 applet_description = "Applet that shows the shock protection status of your disks"
 
 # Interval in milliseconds between two successive status checks

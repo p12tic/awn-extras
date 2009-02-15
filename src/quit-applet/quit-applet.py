@@ -33,7 +33,7 @@ except ImportError:
     dbus = None
 
 applet_name = "Quit-Log Out"
-applet_version = "0.2.8"
+applet_version = "0.3.3"
 applet_description = "An applet to exit or log out of your session"
 
 # Themed logo of the applet, used as the applet's icon and shown in the GTK About dialog

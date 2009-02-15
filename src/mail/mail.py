@@ -805,7 +805,7 @@ if __name__ == "__main__":
     awnlib.init_start(MailApplet, {
         "name": _("Mail Applet"),
         "short": "mail",
-	    "version": "0.2.8",
+	    "version": "0.3.3",
         "description": _("An applet to check one's email"),
         "logo": os.path.join(os.path.dirname(__file__), "Themes/Tango/read.svg"),
         "author": "Pavel Panchekha",

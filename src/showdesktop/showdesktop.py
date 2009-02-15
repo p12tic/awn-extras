@@ -23,7 +23,7 @@ from awn.extras import awnlib
 awn.check_dependencies(globals(), wnck=['xfce4.netk', 'wnck'])
 
 applet_name = "Show Desktop"
-applet_version = "0.3.1"
+applet_version = "0.3.3"
 applet_description = "An applet to hide your windows and show your desktop"
 
 # Applet's themed icon, also shown in the GTK About dialog

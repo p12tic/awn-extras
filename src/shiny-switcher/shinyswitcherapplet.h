@@ -112,7 +112,6 @@ typedef struct
   double   wallpaper_alpha_active;
   double   wallpaper_alpha_inactive;
   double   applet_scale;
-  double   applet_scale_orient;
 
   int    show_icon_mode;   /* 0...no 1...on inactive workspace onlt 2...all but active win 3..all */
   int    scale_icon_mode;  /* 0...none  1...on all active ws  2...on_active_win 3...all */

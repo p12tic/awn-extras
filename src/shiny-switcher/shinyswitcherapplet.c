@@ -393,16 +393,14 @@ void calc_dimensions(Shiny_switcher *shinyswitcher)
     case 2:
     
     case 0:
-      shinyswitcher->applet_scale_orient = 1.0;
-      shinyswitcher->mini_work_height = shinyswitcher->height * shinyswitcher->applet_scale * shinyswitcher->applet_scale_orient / shinyswitcher->rows;
-      shinyswitcher->mini_work_width = shinyswitcher->mini_work_height * shinyswitcher->applet_scale * shinyswitcher->applet_scale_orient * scr_ratio *
+      shinyswitcher->mini_work_height = shinyswitcher->height * shinyswitcher->applet_scale / shinyswitcher->rows;
+      shinyswitcher->mini_work_width = shinyswitcher->mini_work_height * shinyswitcher->applet_scale * scr_ratio *
                                        (double)wnck_ws_width / (double)wnck_scr_width * vp_vscale(shinyswitcher);
       break;
 
     case 1:
 
     case 3:
-      shinyswitcher->applet_scale_orient = 1.0;    
       shinyswitcher->mini_work_width = shinyswitcher->height * shinyswitcher->applet_scale / shinyswitcher->cols;    
       shinyswitcher->mini_work_height = shinyswitcher->mini_work_width * shinyswitcher->applet_scale * (1.0/scr_ratio )
                                        *(
@@ -778,7 +776,7 @@ void create_containers(Shiny_switcher *shinyswitcher)
 
   GdkPixmap *border = gdk_pixmap_new(NULL,
                                      shinyswitcher->width + shinyswitcher->applet_border_width * 2,
-                                     (shinyswitcher->height + shinyswitcher->applet_border_width * 2) * shinyswitcher->applet_scale* shinyswitcher->applet_scale_orient ,
+                                     (shinyswitcher->height + shinyswitcher->applet_border_width * 2) * shinyswitcher->applet_scale ,
                                      32);   /* FIXME */
   GtkWidget *border_widget = gtk_image_new_from_pixmap(border, NULL);
   gtk_widget_set_app_paintable(border_widget, TRUE);
@@ -2073,7 +2071,6 @@ applet_new(AwnApplet *applet, gint orient, int width, int height)
   shinyswitcher->orient = orient;
   shinyswitcher->align  = NULL;
   shinyswitcher->config = NULL;
-  shinyswitcher->applet_scale_orient = 1.0;
   shinyswitcher->applet = applet;
   shinyswitcher->ws_lookup_ev = g_tree_new(_cmp_ptrs);
 

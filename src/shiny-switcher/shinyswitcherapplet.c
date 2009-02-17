@@ -365,7 +365,12 @@ double vp_hscale(Shiny_switcher *shinyswitcher)
 
 void calc_dimensions(Shiny_switcher *shinyswitcher)
 {
-
+  static int height = -1;
+  if (height == -1)
+  {
+    height = shinyswitcher -> height;
+  }
+  shinyswitcher->height = height;
   /* wnck_screen_force_update(shinyswitcher->wnck_screen); */
   /* FIXME this is no longer screen width/height  it's workspace */
   int wnck_ws_width = wnck_workspace_get_width(wnck_screen_get_active_workspace(shinyswitcher->wnck_screen));
@@ -386,7 +391,7 @@ void calc_dimensions(Shiny_switcher *shinyswitcher)
   {
 
     case 2:
-
+    
     case 0:
       shinyswitcher->applet_scale_orient = 1.0;
       shinyswitcher->mini_work_height = shinyswitcher->height * shinyswitcher->applet_scale * shinyswitcher->applet_scale_orient / shinyswitcher->rows;
@@ -397,21 +402,14 @@ void calc_dimensions(Shiny_switcher *shinyswitcher)
     case 1:
 
     case 3:
-      if (shinyswitcher->rows < shinyswitcher->cols)
-      {
-        shinyswitcher->applet_scale_orient = (double)shinyswitcher->rows / (double)shinyswitcher->cols;
-      }
-      else if (shinyswitcher->rows == shinyswitcher->cols)
-      {
-        shinyswitcher->applet_scale_orient = 0.8 ;
-      }
-      else
-      {
-        shinyswitcher->applet_scale_orient = (double)shinyswitcher->rows / (double)shinyswitcher->cols * 0.8 ;
-      }
-      shinyswitcher->mini_work_height = shinyswitcher->height * shinyswitcher->applet_scale * shinyswitcher->applet_scale_orient / shinyswitcher->rows;
-      shinyswitcher->mini_work_width = shinyswitcher->mini_work_height * shinyswitcher->applet_scale* shinyswitcher->applet_scale_orient  * scr_ratio *
-                                       (double)wnck_ws_width / (double)wnck_scr_width * vp_vscale(shinyswitcher);
+      shinyswitcher->applet_scale_orient = 1.0;    
+      shinyswitcher->mini_work_width = shinyswitcher->height * shinyswitcher->applet_scale / shinyswitcher->cols;    
+      shinyswitcher->mini_work_height = shinyswitcher->mini_work_width * shinyswitcher->applet_scale * (1.0/scr_ratio )
+                                       *(
+                                         ((double)wnck_ws_height / (double)wnck_scr_height)
+                                        /((double) wnck_ws_width / (double) wnck_scr_width)
+                                        );
+      shinyswitcher->height = shinyswitcher->mini_work_height * shinyswitcher->rows;
       break;
   }
 

@@ -397,7 +397,18 @@ void calc_dimensions(Shiny_switcher *shinyswitcher)
     case 1:
 
     case 3:
-      shinyswitcher->applet_scale_orient = (double)shinyswitcher->rows / (double)shinyswitcher->cols;
+      if (shinyswitcher->rows < shinyswitcher->cols)
+      {
+        shinyswitcher->applet_scale_orient = (double)shinyswitcher->rows / (double)shinyswitcher->cols;
+      }
+      else if (shinyswitcher->rows == shinyswitcher->cols)
+      {
+        shinyswitcher->applet_scale_orient = 0.8 ;
+      }
+      else
+      {
+        shinyswitcher->applet_scale_orient = (double)shinyswitcher->rows / (double)shinyswitcher->cols * 0.8 ;
+      }
       shinyswitcher->mini_work_height = shinyswitcher->height * shinyswitcher->applet_scale * shinyswitcher->applet_scale_orient / shinyswitcher->rows;
       shinyswitcher->mini_work_width = shinyswitcher->mini_work_height * shinyswitcher->applet_scale* shinyswitcher->applet_scale_orient  * scr_ratio *
                                        (double)wnck_ws_width / (double)wnck_scr_width * vp_vscale(shinyswitcher);

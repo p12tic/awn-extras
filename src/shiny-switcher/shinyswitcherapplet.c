@@ -17,6 +17,7 @@
  *
 */
 
+int gheight = -1;
 
 #define WNCK_I_KNOW_THIS_IS_UNSTABLE 1
 
@@ -365,12 +366,11 @@ double vp_hscale(Shiny_switcher *shinyswitcher)
 
 void calc_dimensions(Shiny_switcher *shinyswitcher)
 {
-  static int height = -1;
-  if (height == -1)
+  if (gheight == -1)
   {
-    height = shinyswitcher -> height;
+    gheight = shinyswitcher -> height;
   }
-  shinyswitcher->height = height;
+  shinyswitcher->height = gheight;
   /* wnck_screen_force_update(shinyswitcher->wnck_screen); */
   /* FIXME this is no longer screen width/height  it's workspace */
   int wnck_ws_width = wnck_workspace_get_width(wnck_screen_get_active_workspace(shinyswitcher->wnck_screen));
@@ -2238,7 +2238,8 @@ static void _changed(AwnApplet *app,  Shiny_switcher *shinyswitcher)
 static void
 _height_changed(AwnApplet *app, guint height, Shiny_switcher *shinyswitcher)
 {
-  g_debug("height_changed\n");
+  g_debug("height_changed %d\n",height);
+  gheight=height;
   /* doing this as a tree right now..  cause it's easy and I think I'll need a complex data structure eventually. */
   shinyswitcher->height = height;
   _changed(app, shinyswitcher);

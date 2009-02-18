@@ -329,6 +329,23 @@ size_changed(AwnApplet *applet, guint size, gpointer user_data)
   gtk_container_foreach (GTK_CONTAINER (table), resize_icon, NULL);
 }
 
+static gboolean
+schedule_redraw(gpointer user_data)
+{
+  GtkWidget *applet = GTK_WIDGET (user_data);
+  gtk_widget_queue_draw (applet);
+
+  return FALSE;
+}
+
+static gboolean
+applet_configured(GtkWidget *applet, GdkEventConfigure *event, TrayApplet *app)
+{
+  g_idle_add (schedule_redraw, applet);
+
+  return FALSE;
+}
+
 AwnApplet*
 awn_applet_factory_initp ( gchar* uid, gint orient, gint size )
 {
@@ -408,6 +425,8 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint size )
   gtk_widget_set_colormap (eb, gdk_screen_get_rgb_colormap (screen));
   gtk_container_add (GTK_CONTAINER (eb), table);
 
+  g_signal_connect (applet, "configure-event",
+                    G_CALLBACK (applet_configured), app);
   g_signal_connect(applet, "expose-event",
                    G_CALLBACK (applet_expose), app);
   g_signal_connect(applet, "size-changed",

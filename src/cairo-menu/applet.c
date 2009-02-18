@@ -155,7 +155,7 @@ AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient, gint height)
                                   G_cairo_menu_conf.applet_icon,
                                   height ,
                                   0, NULL);
-  gtk_widget_show_all(GTK_WIDGET(applet));
+ /* gtk_widget_show_all(GTK_WIDGET(applet));*/
 
   g_signal_connect_after(G_OBJECT(applet),"map" , G_CALLBACK(_map_event), NULL);
   

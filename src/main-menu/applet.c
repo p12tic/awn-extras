@@ -484,6 +484,6 @@ awn_applet_factory_initp (const gchar * uid, gint orient, gint height )
 
   awn_applet_simple_set_title(AWN_APPLET_SIMPLE(app->applet), _("Main Menu"));
 
-  gtk_widget_show_all (GTK_WIDGET (applet));                              
+ /* gtk_widget_show_all (GTK_WIDGET (applet));*/
   return applet;
 }

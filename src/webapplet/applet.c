@@ -191,7 +191,7 @@ awn_applet_factory_initp (gchar *uid, gint orient, gint height)
                                     APPLET_NAME,
                                     webapplet->applet_icon_name)  ;
  
-  gtk_widget_show_all (GTK_WIDGET (webapplet->applet));
+  /*gtk_widget_show_all (GTK_WIDGET (webapplet->applet));*/
   awn_html_dialog_new (webapplet);
   gtk_window_set_focus_on_map (GTK_WINDOW (webapplet->mainwindow), TRUE);
   g_signal_connect_after (G_OBJECT (webapplet->applet), "realize",

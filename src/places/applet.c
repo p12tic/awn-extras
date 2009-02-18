@@ -1457,7 +1457,7 @@ AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient, gint height)
   places->applet_icon_height = height - 2;
 
 
-  gtk_widget_show_all(GTK_WIDGET(applet));
+ /* gtk_widget_show_all(GTK_WIDGET(applet));*/
   places->mainwindow = menu_new(places);
   gtk_window_set_focus_on_map(GTK_WINDOW(places->mainwindow), TRUE);
   places->vbox = gtk_vbox_new(FALSE, 0);

@@ -1667,7 +1667,7 @@ AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient, gint height)
   awn_applet_simple_set_icon_name (AWN_APPLET_SIMPLE(applet),
                                     "Awn Notification Daemon",
 				    "Off");
-  gtk_widget_show_all(GTK_WIDGET(applet));
+/*  gtk_widget_show_all(GTK_WIDGET(applet));*/
 
 
   g_log_set_always_fatal(G_LOG_LEVEL_ERROR | G_LOG_LEVEL_CRITICAL);

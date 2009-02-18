@@ -2149,6 +2149,7 @@ _button_release_event(GtkWidget *widget, GdkEventButton *event, gpointer *data)
 static gboolean
 _changed_waited(Shiny_switcher *shinyswitcher)
 {
+  g_debug("_changed_waited\n");
   wnck_screen_force_update(shinyswitcher->wnck_screen);
 
   if (shinyswitcher->got_viewport ||  !shinyswitcher->reconfigure)
@@ -2191,7 +2192,7 @@ _changed_waited(Shiny_switcher *shinyswitcher)
 static void _changed(AwnApplet *app,  Shiny_switcher *shinyswitcher)
 {
   GdkScreen *screen;
-
+  g_debug("_changed\n");
   shinyswitcher->applet = app;
   shinyswitcher->wnck_screen = wnck_screen_get_default();
 
@@ -2237,6 +2238,7 @@ static void _changed(AwnApplet *app,  Shiny_switcher *shinyswitcher)
 static void
 _height_changed(AwnApplet *app, guint height, Shiny_switcher *shinyswitcher)
 {
+  g_debug("height_changed\n");
   /* doing this as a tree right now..  cause it's easy and I think I'll need a complex data structure eventually. */
   shinyswitcher->height = height;
   _changed(app, shinyswitcher);
@@ -2247,6 +2249,7 @@ _height_changed(AwnApplet *app, guint height, Shiny_switcher *shinyswitcher)
 static void
 _orient_changed(AwnApplet *app, guint orient, Shiny_switcher * shinyswitcher)
 {
+  g_debug("orientation_changed\n");
   shinyswitcher->orient = orient;
   _changed(app, shinyswitcher);
   _changed_waited(shinyswitcher);
@@ -2255,6 +2258,7 @@ _orient_changed(AwnApplet *app, guint orient, Shiny_switcher * shinyswitcher)
 static void
 _workspaces_changed(WnckScreen    *screen, WnckWorkspace *space, Shiny_switcher * shinyswitcher)
 {
+  g_debug("workspace_changed\n");
   _changed_waited(shinyswitcher);
   /* _changed_waited(shinyswitcher); */
 }
@@ -2262,6 +2266,7 @@ _workspaces_changed(WnckScreen    *screen, WnckWorkspace *space, Shiny_switcher 
 static void
 _viewports_changed(WnckScreen    *screen, Shiny_switcher * shinyswitcher)
 {
+  g_debug("viewports_changed\n");
   _changed(shinyswitcher->applet, shinyswitcher);
   _changed_waited(shinyswitcher);
 }

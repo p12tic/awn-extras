@@ -383,10 +383,11 @@ void calc_dimensions(Shiny_switcher *shinyswitcher)
   ws_ratio = wnck_ws_width / (double)wnck_ws_height;
   scr_ratio = wnck_scr_width / (double)wnck_scr_height;
 
+#if 0
   printf("cols = %d,  rows=%d,  applet height = %d, applet scale = %f\n",
          shinyswitcher->cols, shinyswitcher->rows,
          shinyswitcher->height, shinyswitcher->applet_scale);
-
+#endif
   switch (shinyswitcher->orient)
   {
 
@@ -419,8 +420,6 @@ void calc_dimensions(Shiny_switcher *shinyswitcher)
 }
 
 
-
-/* FIXME use gdk_draw_drawable() */
 GdkPixmap * copy_pixmap(Shiny_switcher *shinyswitcher, GdkPixmap * src)
 {
   GdkPixmap * copy;
@@ -953,12 +952,12 @@ void prepare_to_render_workspace(Shiny_switcher *shinyswitcher, WnckWorkspace * 
     gdk_drawable_set_colormap(copy, shinyswitcher->rgba_cmap);
 
     gdk_draw_rectangle(copy, shinyswitcher->gdkgc, TRUE, 0, 0, shinyswitcher->mini_work_width, shinyswitcher->mini_work_height);
-    int vp_active_x = 1.0 / vp_hscale(shinyswitcher) *
+    int vp_active_x = lround (1.0 / vp_hscale(shinyswitcher) *
                       wnck_workspace_get_viewport_x(wnck_screen_get_active_workspace(shinyswitcher->wnck_screen)) /
-                      wnck_workspace_get_width(wnck_screen_get_active_workspace(shinyswitcher->wnck_screen));
-    int vp_active_y = 1.0 / vp_vscale(shinyswitcher) *
+                      wnck_workspace_get_width(wnck_screen_get_active_workspace(shinyswitcher->wnck_screen)));
+    int vp_active_y = lround (1.0 / vp_vscale(shinyswitcher) *
                       wnck_workspace_get_viewport_y(wnck_screen_get_active_workspace(shinyswitcher->wnck_screen)) /
-                      wnck_workspace_get_height(wnck_screen_get_active_workspace(shinyswitcher->wnck_screen)) ;
+                      wnck_workspace_get_height(wnck_screen_get_active_workspace(shinyswitcher->wnck_screen)));
 
     for (i = 0;i < viewports_rows;i++)
     {

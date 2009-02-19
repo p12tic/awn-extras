@@ -415,8 +415,8 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint size )
   app->align = align;
 
   AwnConfigClient *client = awn_config_client_new();
-  icon_offset = awn_config_client_get_int(client, "bar", "icon_offset", NULL);
-  awn_config_client_notify_add(client, "bar", "icon_offset", offset_changed, align);
+  icon_offset = awn_config_client_get_int(client, "panel", "offset", NULL);
+  awn_config_client_notify_add(client, "panel", "offset", offset_changed, align);
 
   refresh_alignment (GTK_ALIGNMENT (align), orient, icon_offset);
   

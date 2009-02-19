@@ -55,7 +55,6 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
 	// right-click handling
 	g_signal_connect (G_OBJECT (applet), "button-press-event",
 	                  G_CALLBACK (_button_clicked_event), applet);
-	gtk_widget_show_all(GTK_WIDGET (applet));
 	return applet;
 }
 

@@ -33,7 +33,6 @@ awn_applet_factory_initp(gchar* uid, gint orient, gint height)
   applet = awn_applet_new(uid, orient, height*0.5);
   shiny_switcher = applet_new(applet, orient, height , height);
   shiny_switcher->orient = orient;
-  gtk_widget_add_events (GTK_WIDGET (applet), GDK_ALL_EVENTS_MASK);
 
   return applet;
 }

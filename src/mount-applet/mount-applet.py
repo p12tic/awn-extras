@@ -21,8 +21,16 @@ import sys
 import pygtk
 import gtk
 import awn
+from awn.extras import defs
+import gettext
+import locale
 import gconf
 import subprocess
+
+APP = "awn-extras-applets"
+gettext.bindtextdomain(APP, defs.GETTEXTDIR)
+gettext.textdomain(APP)
+_ = gettext.gettext
 
 class MountApplet(awn.AppletSimple):
     gconf_path = "/apps/avant-window-navigator/applets/mountapplet"
@@ -135,7 +143,7 @@ class MountApplet(awn.AppletSimple):
 
 
     def enter_notify (self, widget, event):
-        self.title.show (self, "Mount Applet")
+        self.title.show (self, _("Mount Applet"))
 
 
     def leave_notify (self, widget, event):
@@ -184,13 +192,13 @@ class PreferenceDialog(gtk.Window):
         super(PreferenceDialog, self).__init__(gtk.WINDOW_TOPLEVEL)
         self.applet = applet
 
-        self.set_title("Preferences")
+        self.set_title(_("Preferences"))
         self.set_icon(applet.icon)
         vbox = gtk.VBox(True, 0)
         self.add(vbox)
 
         vbox1 = gtk.VBox(True, 0)
-        label1 = gtk.Label("Space separated list of mount points not to show:")
+        label1 = gtk.Label(_("Space separated list of mount points not to show:"))
         self.hidden_list = gtk.Entry(max=0)
         hidden_mounts_value = ''
         for mountpoint in applet.hidden_mounts:
@@ -202,8 +210,8 @@ class PreferenceDialog(gtk.Window):
         vbox.pack_start(vbox1,True,False,2)
 
         vbox2 = gtk.VBox(True, 0)
-        label2 = gtk.Label("Command to execute after successful mount")
-        label3 = gtk.Label("(use %D for mounted directory):")
+        label2 = gtk.Label(_("Command to execute after successful mount"))
+        label3 = gtk.Label(_("(use %D for mounted directory):"))
         self.execute_command = gtk.Entry(max=0)
         value = self.applet.execute_command
         self.execute_command.set_text(value)

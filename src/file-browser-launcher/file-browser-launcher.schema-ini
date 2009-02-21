@@ -43,6 +43,16 @@ type = int
 default = 2
 description = Whether or not to display network drives
 
+[DEFAULT/show_filesystem]
+type = int
+default = 2
+description = Whether or not to display the Filesystem
+
+[DEFAULT/show_connect]
+type = int
+default = 2
+description = Whether or not to display Connect to server
+
 [DEFAULT/places_open]
 type = int
 default = 2

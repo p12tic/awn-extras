@@ -501,7 +501,7 @@ class App (awn.AppletSimple):
 
     #Otherwise, open the file/directory
     else:
-      os.system('%s %s &', self.awncc_fb, path.replace(' ', '\ '))
+      os.system('%s %s &' % (self.awncc_fb, path.replace(' ', '\ ')))
   
   #Right click menu - Preferences or About
   def show_menu(self,event):

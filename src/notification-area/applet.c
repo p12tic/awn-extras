@@ -47,6 +47,7 @@ static GQuark del_quark = 0;
 static gint   n_rows    = 2;
 static int   height    = 0; 
 static int   icon_size = 24;
+static int  use_alpha = 0;
 
 static void
 tray_icon_added (EggTrayManager *manager, 
@@ -215,20 +216,40 @@ applet_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
   cairo_paint(cr);
 
   cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
-  gdk_cairo_set_source_color (cr, &(gtk_widget_get_style(widget)->bg[GTK_STATE_NORMAL]));
 
-  gint x,y;
-  gtk_widget_translate_coordinates(table, widget, 0, 0, &x, &y);
+  if(use_alpha==0)
+  {
+    gdk_cairo_set_source_color (cr, &(gtk_widget_get_style(widget)->bg[GTK_STATE_NORMAL]));
 
-  awn_cairo_rounded_rect (cr, x-BORDER, y-BORDER,
-                          table->allocation.width + 2*BORDER,
-                          table->allocation.height + 2*BORDER,
-                          4.0*BORDER, ROUND_ALL);
-  cairo_fill_preserve(cr);
+    gint x,y;
+    gtk_widget_translate_coordinates(table, widget, 0, 0, &x, &y);
 
-  gdk_cairo_set_source_color (cr, &(gtk_widget_get_style(widget)->bg[GTK_STATE_SELECTED]));
-  cairo_set_line_width(cr, 1.5);
-  cairo_stroke(cr);
+    awn_cairo_rounded_rect (cr, x-BORDER, y-BORDER,
+                            table->allocation.width + 2*BORDER,
+                            table->allocation.height + 2*BORDER,
+                            4.0*BORDER, ROUND_ALL);
+    cairo_fill_preserve(cr);
+
+    gdk_cairo_set_source_color (cr, &(gtk_widget_get_style(widget)->bg[GTK_STATE_SELECTED]));
+    cairo_set_line_width(cr, 1.5);
+    cairo_stroke(cr);
+  }else{
+    cairo_set_source_rgba(cr, 0,0,0,0);
+
+    gint x,y;
+    gtk_widget_translate_coordinates(table, widget, 0, 0, &x, &y);
+
+    awn_cairo_rounded_rect (cr, x-BORDER, y-BORDER,
+                            table->allocation.width + 2*BORDER,
+                            table->allocation.height + 2*BORDER,
+                            4.0*BORDER, ROUND_ALL);
+    cairo_fill_preserve(cr);
+
+    gdk_cairo_set_source_color (cr, &(gtk_widget_get_style(widget)->bg[GTK_STATE_SELECTED]));
+    cairo_set_line_width(cr, 1.5);
+    cairo_stroke(cr);
+
+  }
 
   cairo_destroy(cr);
 
@@ -274,6 +295,12 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
   TrayApplet *app = g_new0 (TrayApplet, 1);
   GdkScreen  *screen;
   GtkWidget  *align, *table, *eb;
+
+  /* Check if we're using => 2.15.0 */
+  if(  (gtk_major_version == 2 && gtk_minor_version >= 15) ||
+       (gtk_major_version > 2)){
+    use_alpha=1;
+  }
   
   /* Er, why did I have to do this again ? */
   GtkWidget *widget = GTK_WIDGET (applet);
@@ -345,7 +372,7 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
   
   gtk_container_add (GTK_CONTAINER (applet), align);
   gtk_container_add (GTK_CONTAINER (align), eb);
-  gtk_widget_set_colormap (eb, gdk_screen_get_rgb_colormap (screen));
+  gtk_widget_set_colormap (eb, gdk_screen_get_rgba_colormap (screen));
   gtk_container_add (GTK_CONTAINER (eb), table);
 
   g_signal_connect(GTK_WIDGET(applet), "expose-event",

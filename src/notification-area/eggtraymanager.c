@@ -277,16 +277,11 @@ static gboolean
 egg_tray_manager_plug_removed (GtkSocket       *socket,
 			       EggTrayManager  *manager)
 {
-  Window *window;
+  EggTrayChild *child = EGG_TRAY_CHILD(socket);
 
-  window = g_object_get_data (G_OBJECT (socket), "egg-tray-child-window");
-
-  g_hash_table_remove (manager->socket_table, GINT_TO_POINTER (*window));
-  g_object_set_data (G_OBJECT (socket), "egg-tray-child-window",
-		     NULL);
+  g_hash_table_remove (manager->socket_table, GINT_TO_POINTER (child->icon_window));
+  g_signal_emit (manager, manager_signals[TRAY_ICON_REMOVED], 0, child);
   
-  g_signal_emit (manager, manager_signals[TRAY_ICON_REMOVED], 0, socket);
-
   /* This destroys the socket. */
   return FALSE;
 }
@@ -295,51 +290,92 @@ static void
 egg_tray_manager_handle_dock_request (EggTrayManager       *manager,
 				      XClientMessageEvent  *xevent)
 {
-  GtkWidget *socket;
-  Window *window;
-  GtkRequisition req;
-  
-  if (g_hash_table_lookup (manager->socket_table, GINT_TO_POINTER (xevent->data.l[2])))
+  Window icon_window = xevent->data.l[2];
+  GtkWidget *child;
+ 
+  if (g_hash_table_lookup (manager->socket_table, GINT_TO_POINTER (icon_window)))
     {
       /* We already got this notification earlier, ignore this one */
       return;
     }
-  socket = gtk_socket_new ();
-  
-  /* We need to set the child window here
-   * so that the client can call _get functions
-   * in the signal handler
-   */
-  window = g_new (Window, 1);
-  *window = xevent->data.l[2];
-      
-  g_object_set_data_full (G_OBJECT (socket),
-			  "egg-tray-child-window",
-			  window, g_free);
-  g_signal_emit (manager, manager_signals[TRAY_ICON_ADDED], 0, socket);
+  child = egg_tray_child_new(manager->screen, icon_window);
+  if(child == NULL)
+    return;
+  g_signal_emit (manager, manager_signals[TRAY_ICON_ADDED], 0, child);
 
-  /* Add the socket only if it's been attached */
-  if (GTK_IS_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (socket))))
+  /* If the child wasn't attached, then destroy it */
+  if (!GTK_IS_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (child))))
     {
-      g_signal_connect (socket, "plug_removed",
-			G_CALLBACK (egg_tray_manager_plug_removed), manager);
-      
-      gtk_socket_add_id (GTK_SOCKET (socket), *window);
 
-      g_hash_table_insert (manager->socket_table, GINT_TO_POINTER (*window), socket);
+      gtk_widget_destroy (child);
+      return;
+    }
 
-      /*
-       * Make sure the icons have a meaningfull size ...
-       */ 
-      req.width = req.height = 1;
-      gtk_widget_size_request (socket, &req);
+  g_signal_connect (child, "plug_removed",
+          G_CALLBACK (egg_tray_manager_plug_removed), manager);
+  gtk_socket_add_id (GTK_SOCKET (child), icon_window);
+  
+  if(!GTK_SOCKET (child)->plug_window)
+    {
+      g_signal_emit (manager, manager_signals[TRAY_ICON_REMOVED], 0 ,child);
+      gtk_widget_destroy (child);
+      return;
+    }
+  g_hash_table_insert (manager->socket_table, GINT_TO_POINTER(icon_window), 
+                       child);
+  gtk_widget_show(child);
+}
 
-      gtk_widget_show_all(socket);
-      
+static void
+egg_tray_manager_set_visual_property (EggTrayManager *manager)
+{
+#ifdef GDK_WINDOWING_X11
+  GdkDisplay *display;
+  Visual     *xvisual;
+  Atom        visual_atom;
+  gulong      data[1];
+
+  if (!manager->invisible || !manager->invisible->window)
+    return;
+
+  /* The visual property is a hint to the tray icons as to what visual they
+   * should use for their windows. If the X server has RGBA colormaps, then
+   * we tell the tray icons to use a RGBA colormap and we'll composite the
+   * icon onto its parents with real transparency. Otherwise, we just tell
+   * the icon to use our colormap, and we'll do some hacks with parent
+   * relative backgrounds to simulate transparency.
+   */
+
+  display = gtk_widget_get_display (manager->invisible);
+  visual_atom = gdk_x11_get_xatom_by_name_for_display (display,
+						       "_NET_SYSTEM_TRAY_VISUAL");
+
+  if (gdk_screen_get_rgba_visual (manager->screen) != NULL &&
+      gdk_display_supports_composite (display))
+    {
+      xvisual = GDK_VISUAL_XVISUAL (gdk_screen_get_rgba_visual (manager->screen));
     }
   else
-    gtk_widget_destroy (socket);
+    {
+      /* We actually want the visual of the tray where the icons will
+       * be embedded. In almost all cases, this will be the same as the visual
+       * of the screen
+       */
+      GdkColormap *colormap = gdk_screen_get_default_colormap (manager->screen);
+      xvisual = GDK_VISUAL_XVISUAL (gdk_colormap_get_visual (colormap));
+    }
+
+  data[0] = XVisualIDFromVisual (xvisual);
+
+  XChangeProperty (GDK_DISPLAY_XDISPLAY (display),
+		   GDK_WINDOW_XWINDOW (manager->invisible->window),
+                   visual_atom,
+		   XA_VISUALID, 32,
+		   PropModeReplace,
+		   (guchar *) &data, 1);
+#endif
 }
+
 
 static void
 pending_message_free (PendingMessage *message)
@@ -575,6 +611,7 @@ egg_tray_manager_manage_xscreen (EggTrayManager *manager, Screen *xscreen)
 #endif
   screen = gdk_display_get_screen (gdk_x11_lookup_xdisplay (DisplayOfScreen (xscreen)),
 				   XScreenNumberOfScreen (xscreen));
+  manager->screen = screen;
   
   invisible = gtk_invisible_new_for_screen (screen);
   gtk_widget_realize (invisible);
@@ -587,10 +624,15 @@ egg_tray_manager_manage_xscreen (EggTrayManager *manager, Screen *xscreen)
 
   g_free (selection_atom_name);
 
+  manager->invisible = invisible;
+  g_object_ref (G_OBJECT (manager->invisible));
+
+
   manager->orientation_atom = XInternAtom (DisplayOfScreen (xscreen),
 					   "_NET_SYSTEM_TRAY_ORIENTATION",
 					   FALSE);
   egg_tray_manager_set_orientation_property (manager);
+  egg_tray_manager_set_visual_property (manager);
   
   timestamp = gdk_x11_get_server_time (invisible->window);
   XSetSelectionOwner (DisplayOfScreen (xscreen), manager->selection_atom,
@@ -617,9 +659,6 @@ egg_tray_manager_manage_xscreen (EggTrayManager *manager, Screen *xscreen)
 		  RootWindowOfScreen (xscreen),
 		  False, StructureNotifyMask, (XEvent *)&xev);
 
-      manager->invisible = invisible;
-      g_object_ref (G_OBJECT (manager->invisible));
-      
       manager->opcode_atom = XInternAtom (DisplayOfScreen (xscreen),
 					  "_NET_SYSTEM_TRAY_OPCODE",
 					  False);
@@ -635,6 +674,10 @@ egg_tray_manager_manage_xscreen (EggTrayManager *manager, Screen *xscreen)
   else
     {
       gtk_widget_destroy (invisible);
+      g_object_unref (invisible);
+      manager->invisible = NULL;
+
+      manager->screen = NULL;
  
       return FALSE;
     }
@@ -688,64 +731,6 @@ egg_tray_manager_check_running (GdkScreen *screen)
 #else
   return FALSE;
 #endif
-}
-
-char *
-egg_tray_manager_get_child_title (EggTrayManager *manager,
-				  EggTrayManagerChild *child)
-{
-  char *retval = NULL;
-#ifdef GDK_WINDOWING_X11
-  Window *child_window;
-  Atom utf8_string, atom, type;
-  int result;
-  int format;
-  gulong nitems;
-  gulong bytes_after;
-  guchar *val = NULL;
-
-  g_return_val_if_fail (EGG_IS_TRAY_MANAGER (manager), NULL);
-  g_return_val_if_fail (GTK_IS_SOCKET (child), NULL);
-  
-  child_window = g_object_get_data (G_OBJECT (child),
-				    "egg-tray-child-window");
-
-  utf8_string = XInternAtom (GDK_DISPLAY (), "UTF8_STRING", False);
-  atom = XInternAtom (GDK_DISPLAY (), "_NET_WM_NAME", False);
-
-  gdk_error_trap_push ();
-
-  result = XGetWindowProperty (GDK_DISPLAY (),
-			       *child_window,
-			       atom,
-			       0, G_MAXLONG,
-			       False, utf8_string,
-			       &type, &format, &nitems,
-			       &bytes_after, (guchar **)&val);
-  
-  if (gdk_error_trap_pop () || result != Success)
-    return NULL;
-
-  if (type != utf8_string ||
-      format != 8 ||
-      nitems == 0)
-    {
-      if (val)
-	XFree (val);
-      return NULL;
-    }
-
-  if (!g_utf8_validate ((gchar *)val, nitems, NULL))
-    {
-      XFree (val);
-      return NULL;
-    }
-
-  retval = g_strndup ((gchar *)val, nitems);
-
-  XFree (val);
-#endif
-  return retval;
 }
 
 void

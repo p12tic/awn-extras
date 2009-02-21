@@ -26,6 +26,8 @@
 #include <gdk/gdkx.h>
 #endif
 
+#include "egg-tray-child.h"
+
 G_BEGIN_DECLS
 
 #define EGG_TYPE_TRAY_MANAGER			(egg_tray_manager_get_type ())
@@ -37,7 +39,6 @@ G_BEGIN_DECLS
 	
 typedef struct _EggTrayManager	     EggTrayManager;
 typedef struct _EggTrayManagerClass  EggTrayManagerClass;
-typedef struct _EggTrayManagerChild  EggTrayManagerChild;
 
 struct _EggTrayManager
 {
@@ -63,18 +64,18 @@ struct _EggTrayManagerClass
   GObjectClass parent_class;
 
   void (* tray_icon_added)   (EggTrayManager      *manager,
-			      EggTrayManagerChild *child);
+			      EggTrayChild *child);
   void (* tray_icon_removed) (EggTrayManager      *manager,
-			      EggTrayManagerChild *child);
+			      EggTrayChild *child);
 
   void (* message_sent)      (EggTrayManager      *manager,
-			      EggTrayManagerChild *child,
+			      EggTrayChild *child,
 			      const gchar         *message,
 			      glong                id,
 			      glong                timeout);
   
   void (* message_cancelled) (EggTrayManager      *manager,
-			      EggTrayManagerChild *child,
+			      EggTrayChild *child,
 			      glong                id);
 
   void (* lost_selection)    (EggTrayManager      *manager);
@@ -86,8 +87,6 @@ gboolean        egg_tray_manager_check_running   (GdkScreen           *screen);
 EggTrayManager *egg_tray_manager_new             (void);
 gboolean        egg_tray_manager_manage_screen   (EggTrayManager      *manager,
 						  GdkScreen           *screen);
-char           *egg_tray_manager_get_child_title (EggTrayManager      *manager,
-						  EggTrayManagerChild *child);
 void            egg_tray_manager_set_orientation (EggTrayManager      *manager,
 						  GtkOrientation       orientation);
 GtkOrientation  egg_tray_manager_get_orientation (EggTrayManager      *manager);

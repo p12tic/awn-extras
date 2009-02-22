@@ -1,0 +1,9 @@
+applet.c 
+line 219:
+
+This seems to be failing, and not drawing when composite is on,
+For this reason, composite is not on for now.
+
+it ends up as a egg_tray_child_get_type() request which
+doesnt seem to exist, even in the submitted patch...
+

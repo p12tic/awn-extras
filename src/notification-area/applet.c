@@ -178,7 +178,7 @@ tray_applet_refresh (TrayApplet *applet)
         num_rows / n_cols : num_rows / n_cols + 1;
       break;
   }
-  gtk_table_resize (GTK_TABLE (applet->table), rows, cols);
+  gtk_table_resize (GTK_TABLE (applet->table), rows ? rows:1, cols ? cols:1);
 
   gtk_widget_queue_draw (GTK_WIDGET (applet->applet));
 }

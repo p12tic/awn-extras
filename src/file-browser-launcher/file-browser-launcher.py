@@ -1,7 +1,7 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2008 sharkbaitbobby <sharkbaitbobby+awn@gmail.com>
+# Copyright (c) 2009 sharkbaitbobby <sharkbaitbobby+awn@gmail.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -43,6 +43,7 @@ gettext.textdomain(APP)
 _ = gettext.gettext
 
 class App (awn.AppletSimple):
+  icons = {}
   def __init__(self, uid, orient, height):
     self.uid = uid
     
@@ -56,9 +57,25 @@ class App (awn.AppletSimple):
     
     #Get the default icon theme
     self.theme = gtk.icon_theme_get_default()
-    
-    self.icon = self.set_awn_icon('file-browser-launcher', 'folder')
-    
+    self.theme.connect('changed', self.icon_theme_changed)
+    self.icons['stock_folder'] = self.theme.load_icon('stock_folder', 24, 24)
+
+    #Set the icon
+    self.icon = self.set_awn_icon('file-browser-launcher', 'stock_folder')
+
+    #Read fstab for mounting info
+    #(It it assumed that fstab won't change after the applet is started)
+    self.fstab2 = open('/etc/fstab', 'r')
+    self.fstab = self.fstab2.read().split('\n')
+    self.fstab2.close()
+
+    #Check if nautilus-connect-server is installed
+    if os.path.exists('/usr/bin/nautilus-connect-server') or os.path.exists\
+      ('/usr/local/bin/nautilus-connect-server'):
+      self.nautilus_connect_server = True
+    else:
+      self.nautilus_connect_server = False
+
     #Make the dialog, will only be shown when approiate
     #VBox for everything to go in
     self.vbox = gtk.VBox()
@@ -70,34 +87,35 @@ class App (awn.AppletSimple):
     self.renderer1 = gtk.CellRendererText()
     self.treeview.set_headers_visible(False)
     self.column0 = gtk.TreeViewColumn('0')
-    self.column0.pack_start(self.renderer0,True)
-    self.column0.add_attribute(self.renderer0,'pixbuf',0)
+    self.column0.pack_start(self.renderer0, True)
+    self.column0.add_attribute(self.renderer0, 'pixbuf', 0)
     self.column1 = gtk.TreeViewColumn('1')
-    self.column1.pack_start(self.renderer1,True)
-    self.column1.add_attribute(self.renderer1,'markup',1)
+    self.column1.pack_start(self.renderer1, True)
+    self.column1.add_attribute(self.renderer1, 'markup', 1)
     self.treeview.append_column(self.column0)
     self.treeview.append_column(self.column1)
-    self.treeview.connect('button-press-event',self.treeview_clicked)
+    self.treeview.connect('button-press-event', self.treeview_clicked)
     self.vbox.pack_start(self.treeview)
     
     #Entry widget for displaying the path to open
     self.entry = gtk.Entry()
-    self.entry.set_text(os.path.expanduser('~'))
-    self.entry.connect('key-release-event',self.detect_enter)
+    self.entry.set_text(os.environ['HOME'])
+    self.entry.connect('key-release-event', self.detect_enter)
     #Open button to run the file browser
     self.enter = gtk.Button(stock=gtk.STOCK_OPEN)
-    self.enter.connect('clicked',self.launch_fb)
+    self.enter.connect('clicked', self.launch_fb)
     #HBox to put the two together
     self.hbox = gtk.HBox()
     self.hbox.pack_start(self.entry)
-    self.hbox.pack_start(self.enter,False)
+    self.hbox.pack_start(self.enter, False)
     #And add the HBox to the vbox and add the vbox to the dialog
-    self.vbox.pack_start(self.hbox)
+    self.vbox.pack_end(self.hbox)
     self.dialog.add(self.vbox)
     
     #AWN applet signals
     self.connect('button-press-event', self.button_press)
-    self.connect('enter-notify-event', lambda a,b: self.title.show(self,_("File Browser Launcher")))
+    self.connect('enter-notify-event', lambda a,b: self.title.show(self, \
+      _("File Browser Launcher")))
     self.connect('leave-notify-event', lambda a,b: self.title.hide(self))
     self.dialog.connect('focus-out-event', lambda a,b: self.dialog.hide())
   
@@ -111,40 +129,39 @@ class App (awn.AppletSimple):
     self.places_paths = []
     
     #Get the needed awncc values
-    self.show_home = self.client.get_int('places_home',2)
-    self.show_local = self.client.get_int('places_local',2)
-    self.show_network = self.client.get_int('places_network',2)
-    self.show_bookmarks = self.client.get_int('places_bookmarks',2)
-    
+    self.show_home = self.client.get_int('places_home', 2)
+    self.show_local = self.client.get_int('places_local', 2)
+    self.show_network = self.client.get_int('places_network', 2)
+    self.show_connect = self.client.get_int('places_connect', 2)
+    self.show_bookmarks = self.client.get_int('places_bookmarks', 2)
+    self.show_filesystem = self.client.get_int('places_filesystem', 2)
+
     #Check to see if we should check /etc/fstab and $mount
     self.do_mounted = False
     if 2 in [self.show_local, self.show_network]:
       self.do_mounted = True
     
     #Now make the actual mounted items. First: Home Folder
-    if self.show_home==2:
-      self.icon_home = self.theme.load_icon('user-home',24,24)
-      try:
-        self.liststore.append([self.icon_home,_("Home Folder")])
-      except:
-        self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-          .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),_("Home Folder")])
-      self.places_paths.append(os.path.expanduser('~'))
-    
+    if self.show_home == 2:
+      self.place('user-home', _("Home Folder"), os.environ['HOME'])
+
+    #Filesystem
+    if self.show_filesystem == 2:
+      self.place('drive-harddisk', _("Filesystem"), '/')
+
+    #Define some variables
+    self.paths_fstab = []
+    self.network_paths = []
+    self.network_corr_hnames = []
+    self.cd_paths = []
+    self.dvd_paths = []
+
     #Get list of mounted drives from $mount and /etc/fstab
     if self.do_mounted:
       self.mount2 = os.popen('mount')
       self.mount = self.mount2.readlines()
       self.mount2.close()
-      self.fstab2 = open('/etc/fstab','r')
-      self.fstab = self.fstab2.read().split('\n')
-      self.fstab2.close()
-      self.paths_fstab = []
-      self.network_paths = []
-      self.network_corr_hnames = []
-      self.cd_paths = []
-      self.dvd_paths = []
-    
+
     #Get list of bookmarks
     self.bmarks2 = open(os.path.expanduser('~/.gtk-bookmarks'))
     self.bmarks = self.bmarks2.readlines()
@@ -152,7 +169,7 @@ class App (awn.AppletSimple):
     
     #Set list of paths, regardless of location
     self.paths = []
-    self.paths_hnames = []
+    hnames = {}
     
     #Get whether the trash is empty or not - but first find out if the Trash is in
     #~/.Trash or ~/.local/share/Trash
@@ -175,214 +192,202 @@ class App (awn.AppletSimple):
     
     #Get the mounted drives/partitions that are suitable to list (from fstab)
     if self.do_mounted:
-      for x in self.fstab:
+      for line in self.fstab:
         try:
-          if x.replace(' ','').replace('\t','')!='' and x[0]!="#":
-            y = x.split(' ')
-            for z in y[1:]:
-              if z!='':
-                if z[0]=='/':
-                  if z!='/proc':
-                    self.paths_fstab.append(z)
-            z = x.replace('  ',' ').split(' ')
+          if line.replace(' ','').replace('\t','') != '' and line[0] != "#":
+
+            words = line.split(' ')
+            for word in words[1:]:
+              if word != '':
+                if word[0] == '/':
+                  if word != '/proc':
+                    self.paths_fstab.append(word)
+
+            words = line.replace('  ',' ').split(' ')
+
+            #From this point on I'm not exactly sure what's going on
             z2 = []
             for z3 in z:
               z2.extend(z3.split('\t'))
+
             if z2[2] == 'smbfs':
-              #print "SMBFS:", z2
               self.network_paths.append('smb:'+z2[0])
               self.network_corr_hnames.append(z2[0].split(':')[-1].split('/')[-1]+\
                 ' on '+z2[0].split('/')[2])
+
             elif z2[2] in ['cifs','nfs','ftpfs','sshfs']:
               self.network_paths.append(z2[1])
               self.network_corr_hnames.append(z2[0].split(':')[-1].split('/')[-1]+\
                 ' on '+z2[0].split('/')[2])
+
         except:
           #Maybe a syntax error or something in this line of fstab?
           #Just ignore it (better than not working at all (thanks Kinap/Felix)
           pass
       
       #Get the mounted drives/partitions that are suitable to list (from mount)
-      for x in self.mount:
-        y = x.split(' ')
-        if y[0].find('/')!=-1:
-          if y[0].split('/')[1]=='dev':
-            self.paths.append(x.split(' on ')[1].split(' type ')[0])
-            if x[-1]==']':
-              self.paths_hnames.append(x.split('[')[-1][:-1])
+      for line in self.mount:
+        words = line.split(' ')
+
+        #Check if this line doesn't begin with '/'
+        if words[0].find('/') != -1:
+          #Make sure this is a device (hard drive, disk drive, etc.)
+          if words[0].split('/')[1] == 'dev':
+            #Get the filesystem location
+            path = line.split(' on ')[1].split(' type ')[0]
+            self.paths.append(path)
+
+            #Try to get the human-readable name
+            if line[-1] == ']':
+              hnames[path] = line.split('[')[-1][:-1]
             else:
-              self.paths_hnames.append(x.split(' on ')[1].split(' type ')[0]\
-                .split('/')[-1])
-            if x.split(' type ')[1].split(' ')[0]=='iso9660':
-              self.cd_paths.append(x.split(' on ')[1].split(' type ')[0])
-            elif x.split(' type ')[1].split(' ')[0]=='udf':
-              self.dvd_paths.append(x.split(' on ')[1].split(' type ')[0])
-    
+              hnames[path] = path.split('/')[-1]
+
+            #Check for CD drive
+            if line.split(' type ')[1].split(' ')[0] == 'iso9660':
+              self.cd_paths.append(path)
+
+            #Check for DVD drive
+            elif line.split(' type ')[1].split(' ')[0] == 'udf':
+              self.dvd_paths.append(path)
+
     #Go through the list and get the right icon and name for specific ones
     #ie/eg: / -> harddisk icon and "Filesystem"
     #/media/Lexar -> usb-disk icon and "Lexar"
-    #TODO: Clean this up (oh it's so ugly)
-    if self.show_local==2:
-      for x in self.paths:
-        if x=='/':
-          try:
-            self.liststore.append([self.theme.load_icon('drive-harddisk',24,24),_("Filesystem")])
-          except:
-            self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-              .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),_("Filesystem")])
-          self.places_paths.append(x)
-        elif x.split('/')[1]=='media':
-          if x.split('/')[2] in ['cdrom0','cdrom1','cdrom2','cdrom3','cdrom4','cdrom5']:
+    if self.show_local == 2:
+      for path in self.paths:
+        if path == '/':
+          pass
+
+        elif path.split('/')[1] == 'media':
+          if path.split('/')[2] in ['cdrom0','cdrom1','cdrom2','cdrom3','cdrom4','cdrom5']:
+            
             #Find out if it's a CD or DVD
-            if x in self.dvd_paths:
-              try:
-                self.liststore.append([self.theme.load_icon('media-optical',24,24),_("DVD Drive")])
-              except:
-                self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-                  .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),_("DVD Drive")])
-              self.places_paths.append(x)
+            if path in self.dvd_paths:
+              self.place('media-optical', _("DVD Drive"), path)
+
+            #CD Drive
             else:
-              try:
-                self.liststore.append([self.theme.load_icon('media-optical',24,24),_("CD Drive")])
-              except:
-                self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-                  .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),_("CD Drive")])
-              self.places_paths.append(x)
-          elif x not in self.paths_fstab: #Means it's USB or firewire
-            try:
-              self.liststore.append([self.theme.load_icon('gnome-dev-harddisk-usb',24,24),\
-                self.paths_hnames[self.paths.index(x)]])
-            except:
-              self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-                .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),\
-                  self.paths_hnames[self.paths.index(x)]])
-            self.places_paths.append(x)
-          else: #Regular mounted drive (ie/eg windows partition)
-            try:
-              self.liststore.append([self.theme.load_icon('drive-harddisk',24,24),\
-                self.paths_hnames[self.paths.index(x)]])
-            except:
-              self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-                .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),self.paths_hnames[self.paths.index(x)]])
-            self.places_paths.append(x)
-        else: #Maybe /home, /boot, /usr, etc.
-          try:
-            self.liststore.append([\
-              self.theme.load_icon('drive-harddisk',24,24),self.paths_hnames[self.paths.index(x)]])
-          except:
-            self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-              .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),self.paths_hnames[self.paths.index(x)]])
-          self.places_paths.append(x)
+              self.place('media-optical', _("CD Drive"), path)
+
+          #Flash drive, etc.
+          elif path not in self.paths_fstab:
+            self.place('gnome-dev-harddisk-usb', hnames[path], path)
+
+          #Local mounted drive (separate disk/partition)
+          else:
+            self.place('drive-harddisk', self.paths_hnames[path], path)
+
+        #Partition not mounted in /media (such as /home)
+        else:
+          self.place('drive-harddisk', self.paths_hnames[path], path)
     
     #Go through the list of network drives/etc. from /etc/fstab
-    if self.show_network==2:
-      #print self.network_paths
+    if self.show_network == 2:
       #GVFS stuff
-      if os.path.isdir(os.path.expanduser('~/.gvfs')):
-        for x in os.listdir(os.path.expanduser('~/.gvfs')):
-          try:
-            self.liststore.append([self.theme.load_icon('network-folder',24,24),\
-              x])
-          except:
-            self.liststore.append([gtk.gdk.pixbuf_new_from_file(\
-              self.default_icon_path).scale_simple(\
-              24,24,gtk.gdk.INTERP_BILINEAR),x])
-          self.places_paths.append(os.path.expanduser('~/.gvfs')+'/'+x)
+      gvfs_dir = os.path.expanduser('~/.gvfs')
+      if os.path.isdir(gvfs_dir):
+        for path in os.listdir(gvfs_dir):
+          self.place('network-folder', path, gvfs_dir + '/' + path)
+
       #Non-GVFS stuff
       y = 0
-      for x in self.network_paths:
-        try:
-          self.liststore.append([self.theme.load_icon('network-folder',24,24),\
-            self.network_corr_hnames[y]])
-        except:
-          self.liststore.append([gtk.gdk.pixbuf_new_from_file(\
-            self.default_icon_path).scale_simple(\
-            24,24,gtk.gdk.INTERP_BILINEAR),self.network_corr_hnames[y]])
-        self.places_paths.append(x)
+      for path in self.network_paths:
+        self.place('network-folder', self.network_corr_hnames[y], path)
         y+=1
-        
-      
-    
+
+    #Connect to network
+    if self.show_connect == 2 and self.nautilus_connect_server:
+      self.place('applications-internet', _("Connect to server"), \
+        'exec://nautilus-connect-server')
+
+    #Get a single list of all the paths so far
+    all_paths = self.paths
+    all_paths.extend(self.network_paths)
+    all_paths.extend(self.places_paths)
+    all_paths.extend(self.cd_paths)
+    all_paths.extend(self.dvd_paths)
+
     #Go through the list of bookmarks and add them to the list IF it's not in the mount list
-    if self.show_bookmarks==2:
-      for x in self.bmarks:
-        x = x.replace('file://','').replace('\n','')
-        x = urllib.unquote(x)
-        if x not in self.paths and x!=os.path.expanduser('~'):
-          if x[0]=='/': #Normal filesystem bookmark, not computer:///,burn:///,network:///,etc.
-            if os.path.isdir(self.parse_bookmark(x,'path')):
-              try:
-                self.liststore.append([self.theme.load_icon('folder',24,24),self.parse_bookmark(x,'name')])
-              except:
-                self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-                  .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),self.parse_bookmark(x,'name')])
-              self.places_paths.append(self.parse_bookmark(x,'path'))
-          else:
-            y = x.split(':')[0]
-            if y=='computer':
-              try:
-                self.liststore.append([self.theme.load_icon('computer',24,24),_("Computer")])
-              except:
-                self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-                  .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),_("Computer")])
-              self.places_paths.append('%s:///' % y)
-            elif y in ['network','smb','nfs','ftp','ssh']:
-              try:
-                self.liststore.append([self.theme.load_icon('network-server',24,24),_("Network")])
-              except:
-                self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-                  .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),_("Network")])
-              self.places_paths.append('%s:///' % y)
-            elif y=='trash':
-              if self.trash_full==True:
-                try:
-                  self.liststore.append([self.theme.load_icon('user-trash-full',24,24),_("Trash")])
-                except:
-                  self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-                    .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),_("Trash")])
-                self.places_paths.append('%s:///' % y)
+    if self.show_bookmarks == 2:
+      for path in self.bmarks:
+        path = path.replace('file://', '').replace('\n', '')
+        path = urllib.unquote(path)
+
+        #Get the human-readable name
+        try:
+          name = ' '.join(path.split(' ')[1:])
+          assert name.replace(' ', '') != ''
+        except:
+          name = None
+
+        path = path.split(' ')[0]
+        type = path.split(':')[0]
+
+        #Check if this path hasn't been used already
+        if path not in all_paths and path != os.environ['HOME']:
+
+          #Check if this is a path on the filesystem
+          #TODO: Check for ~/Desktop and change the icon (any others?)
+          if path[0] == '/':
+            if os.path.isdir(path):
+
+              #If the user did not rename the bookmark - get the name from
+              #the folder name (/media/Lexar -> Lexar)
+              if name is None:
+                try: name = path.split('/')[-1]
+                except: name = path
+
+              #Check if this is the Desktop directory
+              if (path == os.path.expanduser(_("~/Desktop"))):
+                self.place('desktop', name, path)
+
+              #It's not
               else:
-                try:
-                  self.liststore.append([self.theme.load_icon('user-trash',24,24),_("Trash")])
-                except:
-                  self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-                    .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),_("Trash")])
-                self.places_paths.append('%s:///' % y)
-            elif y=='x-nautilus-search':
-              try:
-                self.liststore.append([self.theme.load_icon('search',24,24),_("Search")])
-              except:
-                self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-                  .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),_("Search")])
-              self.places_paths.append('%s:///' % y)
-            elif y=='burn':
-              try:
-                self.liststore.append([self.theme.load_icon('drive-optical',24,24),_("CD/DVD Burner")])
-              except:
-                self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-                  .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),_("CD/DVD Burner")])
-              self.places_paths.append('%s:///' % y)
-            elif y=='fonts':
-              try:
-                self.liststore.append([self.theme.load_icon('font',24,24),_("Fonts")])
-              except:
-                self.liststore.append([gtk.gdk.pixbuf_new_from_file(self.default_icon_path)\
-                  .scale_simple(24,24,gtk.gdk.INTERP_BILINEAR),_("Fonts")])
-              self.places_paths.append('%s:///' % y)
-  
-  #Parses the text of a line of ~/.gtk-bookmarks after the file:/// and gets the real filepath or the name of it
-  def parse_bookmark(self,string,pathorname):
-    if pathorname=='path':
-      return string.split(' ')[0].replace('%20',' ')
-    elif pathorname=='name':
+                self.place('folder', name, path)
+
+          #computer://, trash://, network fs, etc.
+          else:
+            if type == 'computer':
+              self.place('computer', name, path, _("Computer"))
+
+            elif type in ['network','smb','nfs','ftp','ssh']:
+              self.place('network-folder', name, path, _("Network"))
+
+            elif type == 'trash':
+              if self.trash_full:
+                self.place('user-trash-full', name, path, _("Trash"))
+
+              else:
+                self.place('user-trash', name, path, _("Trash"))
+
+            elif type == 'x-nautilus-search':
+              self.place('search', name, path, _("Search"))
+
+            elif type == 'burn':
+              self.place('drive-optical', name, path, _("CD/DVD Burner"))
+
+            elif type == 'fonts':
+              self.place('font', name, path, _("Fonts"))
+
+  def place(self, icon_name, human_name, path, alt_name=None):
+    #Load the icon if it hasn't been yet
+    if not self.icons.has_key(icon_name):
       try:
-        if ' '.join(string.split(' ')[1:]).replace(' ','')=='':
-          return string.split('/')[-1].replace('%20',' ')
-        else:
-          return ' '.join(string.split(' ')[1:])
+        icon = self.theme.load_icon(icon_name, 24, 24)
+
+      #If the icon doesn't exist - load default folder icon
       except:
-        return string.split('/')[-1].replace('%20',' ')
-  
+        icon = self.icons['stock_folder']
+        self.icons[icon_name] = icon
+
+    #The icon has already been loaded
+    else:
+      icon = self.icons[icon_name]
+
+    self.liststore.append([icon, [human_name, alt_name][human_name is None]])
+    self.places_paths.append(path)
+
   #Function to do what should be done according to awncc when the treeview is clicked
   def treeview_clicked(self,widget,event):
     self.open_clicked = self.client.get_int('places_open',2)
@@ -406,84 +411,97 @@ class App (awn.AppletSimple):
       elif event.button==3:
         self.show_menu(event)
       self.title.hide(self)
-  
+
+  #The user changed the icon theme
+  def icon_theme_changed(self, icon_theme):
+    for key in self.icons.keys():
+      del self.icons[key]
+
+    #Reload the stock folder icon
+    self.icons['stock_folder'] = self.theme.load_icon('stock_folder', 24, 24)
+
   #dialog_config: 
   def dialog_config(self,button):
-    if button!=1 and button!=2:
+    if button != 1 and button != 2:
       return False
     self.curr_button = button
     
     #Get whether to focus the entry when displaying the dialog or not
     self.awncc_focus = self.client.get_int('focus_entry',2)
     
-    if button==1: #Left mouse button
-    #Get the value for the left mouse button to automatically open. Create and default to 1 the entry if it doesn't exist
+    if button == 1: #Left mouse button
+    #Get the value for the left mouse button to automatically open.
+    #Create and default to 1 the entry if it doesn't exist
     #Also get the default directory or default to ~
       self.awncc_lmb = self.client.get_int('lmb',1)
-      self.awncc_lmb_path = self.client.get_string('lmb_path',\
-      os.path.expanduser('~'))
-      self.awncc_lmb_path = self.convert_home(self.awncc_lmb_path)
+      self.awncc_lmb_path = self.client.get_string('lmb_path', os.environ['HOME'])
+      self.awncc_lmb_path = os.path.expanduser(self.awncc_lmb_path)
     
-    elif button==2: #Middle mouse button
-    #Get the value for the middle mouse button to automatically open. Create and default to 2 the entry if it doesn't exist
+    elif button == 2: #Middle mouse button
+    #Get the value for the middle mouse button to automatically open.
+    #Create and default to 2 the entry if it doesn't exist
     #Also get the default directory or default to ~
       self.awncc_mmb = self.client.get_int('mmb',2)
-      self.awncc_mmb_path = self.client.get_string('mmb_path',\
-      os.path.expanduser('~'))
-      self.awncc_mmb_path = self.convert_home(self.awncc_mmb_path)
+      self.awncc_mmb_path = self.client.get_string('mmb_path', os.environ['HOME'])
+      self.awncc_mmb_path = os.path.expanduser(self.awncc_mmb_path)
     
     #Now get the chosen program for file browsing from awncc
     self.awncc_fb = self.client.get_string('fb','xdg-open')
     
     #Left mouse button - either popup with correct path or launch correct path OR do nothing
-    if button==1:
-      if self.awncc_lmb==1:
+    if button == 1:
+      if self.awncc_lmb == 1:
         self.entry.set_text(self.awncc_lmb_path)
         self.add_places()
-        if self.awncc_focus==2:
+
+        if self.awncc_focus == 2:
           self.entry.grab_focus()
           self.entry.set_position(-1)
         self.dialog.show_all()
-      elif self.awncc_lmb==2:
+
+      elif self.awncc_lmb == 2:
         self.launch_fb(None,self.awncc_lmb_path)
     
     #Right mouse button - either popup with correct path or launch correct path OR do nothing
-    if button==2:
-      if self.awncc_mmb==1:
+    if button == 2:
+      if self.awncc_mmb == 1:
         self.entry.set_text(self.awncc_mmb_path)
         self.add_places()
-        if self.awncc_focus==2:
+
+        if self.awncc_focus == 2:
           self.entry.grab_focus()
           self.entry.set_position(-1)
+
         self.dialog.show_all()
-      elif self.awncc_mmb==2:
-        self.launch_fb(None,self.awncc_mmb_path)
-  
-  #~/etc -> [actual home path]/etc
-  def convert_home(self,tidle):
-    return os.path.expanduser(tidle)
+
+      elif self.awncc_mmb == 2:
+        self.launch_fb(None, self.awncc_mmb_path)
   
   #If the user hits the enter key on the main part OR the number pad
-  def detect_enter(self,a,event):
-    if event.keyval==65293 or event.keyval==65421:
+  def detect_enter(self, a, event):
+    if event.keyval == 65293 or event.keyval == 65421:
       self.enter.clicked()
   
   #Launces file browser to open "path". If "path" is None: use value from the entry widget
-  def launch_fb(self,widget,path=None):
+  def launch_fb(self, widget, path=None):
     self.dialog.hide()
-    if path==None:
+    if path == None:
       path = self.entry.get_text()
     
     #Get the file browser app, or set to xdg-open if it's not set
-    self.awncc_fb = self.client.get_string('fb','xdg-open')
+    self.awncc_fb = self.client.get_string('fb', 'xdg-open')
     
     #In case there is nothing but whitespace (or at all) in the entry widget
-    if path.replace(' ','')=='':
-      path = os.path.expanduser('~')
-    
-    #Launch file browser at path
-    #print "Running:", self.awncc_fb+' '+path.replace(' ','\ ')
-    subprocess.Popen(self.awncc_fb+' '+path.replace(' ','\ '),shell=True)
+    if path.replace(' ','') == '':
+      path = os.environ['HOME']
+
+    #Check if we're supposed to open nautilus-connect-server
+    if path.split(':')[0] == 'exec':
+      os.system('%s &' % path.split('://')[-1])
+
+    #Otherwise, open the file/directory
+    else:
+      os.system('%s %s &' % (self.awncc_fb, path.replace(' ', '\ ')))
   
   #Right click menu - Preferences or About
   def show_menu(self,event):
@@ -496,8 +514,8 @@ class App (awn.AppletSimple):
     self.about = gtk.ImageMenuItem(gtk.STOCK_ABOUT)
     
     #Connect the two items to functions when clicked
-    self.prefs.connect("activate",self.open_prefs)
-    self.about.connect("activate",self.open_about)
+    self.prefs.connect("activate", self.open_prefs)
+    self.about.connect("activate", self.open_about)
     
     #Now create the menu to put the items in and show it
     self.menu = self.create_default_menu()

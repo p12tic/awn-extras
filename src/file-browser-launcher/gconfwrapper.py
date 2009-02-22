@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding:utf-8 -*-
 #
-# Copyright (c) 2008 sharkbaitbobby <sharkbaitbobby+awn@gmail.com>
+# Copyright (c) 2009 sharkbaitbobby <sharkbaitbobby+awn@gmail.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public

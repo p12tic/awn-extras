@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2008 sharkbaitbobby <sharkbaitbobby+awn@gmail.com>
+# Copyright (c) 2009 sharkbaitbobby <sharkbaitbobby+awn@gmail.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -38,6 +38,8 @@ gettext.textdomain(APP)
 _ = gettext.gettext
 
 class Prefs:
+  ignore_all = False
+  no_check_all = False
   def __init__(self, applet):
     self.applet = applet
     self.uid = applet.uid
@@ -74,6 +76,8 @@ class Prefs:
     self.show_home = self.client.get_int('places_home',2)
     self.show_local = self.client.get_int('places_local',2)
     self.show_network = self.client.get_int('places_network',2)
+    self.show_connect = self.client.get_int('places_connect', 2)
+    self.show_filesystem = self.client.get_int('places_filesystem', 2)
     
     #Open the places item when clicked
     self.places_open = self.client.get_int('places_open',2)
@@ -156,39 +160,67 @@ class Prefs:
     
     #VBox for the check buttons
     self.dialog_places_vbox = gtk.VBox()
-    
+
+    #Show all places
+    self.dialog_places_all = gtk.CheckButton(_("Show all places"))
+    self.dialog_places_all.identifier = 'dialog.places.all'
+    self.dialog_places_all.connect('toggled', self.check_changed)
+    if self.show_home == 2 and self.show_filesystem == 2 and self.show_local \
+      == 2 and self.show_network == 2 and self.show_connect and \
+      self.show_bookmarks == 2:
+      self.dialog_places_all.set_active(True)
+
     #Home Folder
-    self.dialog_places_home = gtk.CheckButton(_("Show Home Folder"))
+    self.dialog_places_home = gtk.CheckButton(_("Home folder"))
     self.dialog_places_home.identifier = 'dialog.places.home'
     self.dialog_places_home.connect('toggled',self.check_changed)
     if self.show_home==2:
       self.dialog_places_home.set_active(True)
+
+    #Filesystem
+    self.dialog_places_filesystem = gtk.CheckButton(_("Filesystem"))
+    self.dialog_places_filesystem.identifier = 'dialog.places.filesystem'
+    self.dialog_places_filesystem.connect('toggled', self.check_changed)
+    if self.show_filesystem == 2:
+      self.dialog_places_filesystem.set_active(True)
     
     #Mounted local drives
-    self.dialog_places_local = gtk.CheckButton(_("Show mounted local drives"))
+    self.dialog_places_local = gtk.CheckButton(_("Mounted local drives"))
     self.dialog_places_local.identifier = 'dialog.places.local'
     self.dialog_places_local.connect('toggled',self.check_changed)
     if self.show_local==2:
       self.dialog_places_local.set_active(True)
     
     #Mounted network drives
-    self.dialog_places_network = gtk.CheckButton(_("Show mounted network drives"))
+    self.dialog_places_network = gtk.CheckButton(_("Mounted network drives"))
     self.dialog_places_network.identifier = 'dialog.places.network'
     self.dialog_places_network.connect('toggled',self.check_changed)
     if self.show_network==2:
       self.dialog_places_network.set_active(True)
-    
+
+    #Connect to server
+    self.dialog_places_connect = gtk.CheckButton(_("Connect to server"))
+    self.dialog_places_connect.identifier = 'dialog.places.connect'
+    self.dialog_places_connect.connect('toggled', self.check_changed)
+    if not applet.nautilus_connect_server:
+      self.dialog_places_connect.set_sensitive(False)
+    if self.show_connect == 2:
+      self.dialog_places_connect.set_active(True)
+
     #Bookmarks
-    self.dialog_places_bookmarks = gtk.CheckButton(_("Show Bookmarks"))
+    self.dialog_places_bookmarks = gtk.CheckButton(_("Bookmarks"))
     self.dialog_places_bookmarks.identifier = 'dialog.places.bookmarks'
     self.dialog_places_bookmarks.connect('toggled',self.check_changed)
     if self.show_bookmarks==2:
       self.dialog_places_bookmarks.set_active(True)
     
     #Put the places checkbuttons together
+    self.dialog_places_vbox.pack_start(self.dialog_places_all)
     self.dialog_places_vbox.pack_start(self.dialog_places_home)
+    self.dialog_places_vbox.pack_start(self.dialog_places_filesystem)
     self.dialog_places_vbox.pack_start(self.dialog_places_local)
     self.dialog_places_vbox.pack_start(self.dialog_places_network)
+    self.dialog_places_vbox.pack_start(self.dialog_places_connect)
     self.dialog_places_vbox.pack_start(self.dialog_places_bookmarks)
     
     #Bold text: Behavior with hseparator under it
@@ -525,39 +557,132 @@ class Prefs:
     if self.initializing==True:
       return False
     
+
+    #Tab: Dialog; Section: Places; Checkbox: Show all places
+    if check.identifier == 'dialog.places.all':
+      if check.get_active():
+        self.dialog_places_home.set_active(True)
+        self.dialog_places_filesystem.set_active(True)
+        self.dialog_places_local.set_active(True)
+        self.dialog_places_network.set_active(True)
+        self.dialog_places_connect.set_active(True)
+        self.dialog_places_bookmarks.set_active(True)
+      else:
+        if not self.ignore_all:
+          self.no_check_all = True
+          self.dialog_places_home.set_active(False)
+          self.dialog_places_filesystem.set_active(False)
+          self.dialog_places_local.set_active(False)
+          self.dialog_places_network.set_active(False)
+          self.dialog_places_connect.set_active(False)
+          self.dialog_places_bookmarks.set_active(False)
+          self.no_check_all = False
+        else:
+          if self.dialog_places_home.get_active() and \
+            self.dialog_places_filesystem.get_active() and \
+            self.dialog_places_local.get_active() and \
+            self.dialog_places_network.get_active() and \
+            self.dialog_places_connect.get_active() and \
+            self.dialog_places_bookmarks.get_active():
+
+            self.dialog_places_home.set_active(False)
+            self.dialog_places_filesystem.set_active(False)
+            self.dialog_places_local.set_active(False)
+            self.dialog_places_network.set_active(False)
+            self.dialog_places_connect.set_active(False)
+            self.dialog_places_bookmarks.set_active(False)
+          self.ignore_all = False
+
     #Tab: Dialog; Section: Places; Checkbox: Home Folder
-    if check.identifier=='dialog.places.home':
+    elif check.identifier=='dialog.places.home':
       if check.get_active()==True:
         self.client.set_int('places_home',2)
       else:
         self.client.set_int('places_home',1)
+      self.check_all()
+
+    #Tab: Dialog; Section: Places; Checkbox: Filesystem
+    elif check.identifier == 'dialog.places.filesystem':
+      if check.get_active():
+        self.client.set_int('places_filesystem', 2)
+      else:
+        self.client.set_int('places_filesystem', 1)
+      self.check_all()
+
     #Tab: Dialog; Section: Places; Checkbox: Local drives
     elif check.identifier=='dialog.places.local':
       if check.get_active()==True:
         self.client.set_int('places_local',2)
       else:
         self.client.set_int('places_local',1)
+      self.check_all()
+
     #Tab: Dialog; Section: Places; Checkbox: Network drives
     elif check.identifier=='dialog.places.network':
       if check.get_active()==True:
         self.client.set_int('places_network',2)
       else:
         self.client.set_int('places_network',1)
+      self.check_all()
+
+    #Tab: Dialog; Section: Places; Checkbox: Connect to server
+    elif check.identifier == 'dialog.places.connect':
+      if check.get_active():
+        self.client.set_int('places_connect', 2)
+      else:
+        self.client.set_int('places_connect', 1)
+      self.check_all()
+
     #Tab: Dialog; Section: Places; Checkbox: Bookmarks
     elif check.identifier=='dialog.places.bookmarks':
       if check.get_active()==True:
         self.client.set_int('places_bookmarks',2)
       else:
         self.client.set_int('places_bookmarks',1)
+      self.check_all()
+
     #Tab: Dialog; Section: Behavior; Checkbox: Focus
     elif check.identifier=='dialog.behavior.focus':
       if check.get_active()==True:
         self.client.set_int('focus_entry',2)
       else:
         self.client.set_int('focus_entry',1)
+
     #Tab: Dialog; Section: Behavior; Checkbox: Open place
     elif check.identifier=='dialog.behavior.open':
       if check.get_active()==True:
         self.client.set_int('places_open',2)
       else:
         self.client.set_int('places_open',1)
+
+  #Determine if all the places checkboxes are the same state
+  def check_all(self):
+    if self.no_check_all:
+      return
+
+    li = []
+    li.append(self.dialog_places_home.get_active())
+    li.append(self.dialog_places_filesystem.get_active())
+    li.append(self.dialog_places_local.get_active())
+    li.append(self.dialog_places_network.get_active())
+    li.append(self.dialog_places_connect.get_active())
+    li.append(self.dialog_places_bookmarks.get_active())
+
+    all_true = True
+    all_false = True
+
+    for i in li:
+      if not i:
+        all_true = False
+
+    for i in li:
+      if i:
+        all_false = False
+
+
+    if all_true:
+      self.dialog_places_all.set_active(True)
+
+    else:
+      self.ignore_all = True
+      self.dialog_places_all.set_active(False)

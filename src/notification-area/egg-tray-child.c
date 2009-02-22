@@ -56,7 +56,7 @@ egg_tray_child_realize (GtkWidget *widget)
       /* Set a transparent background */
       GdkColor transparent = { 0, 0, 0, 0 }; /* only pixel=0 matters */
       gdk_window_set_background(widget->window, &transparent);
-      //gdk_window_set_composited (widget->window, TRUE);
+      gdk_window_set_composited (widget->window, TRUE);
 
       child->is_composited = TRUE;
       child->parent_relative_bg = FALSE;

@@ -45,10 +45,9 @@ typedef struct {
 static GQuark new_quark = 0;
 static GQuark del_quark = 0;
 static gint   n_rows    = 2;
-static int   height    = 0; 
+static int   height    = 0;
 static int   icon_size = 24;
 static int  use_alpha = 0;
-static GtkWidget *eb;
 
 static void
 tray_icon_added (EggTrayManager *manager, 
@@ -217,11 +216,37 @@ applet_expose_icon (GtkWidget *widget,
   cairo_t *cr = data;
   
   if (egg_tray_child_is_composited (EGG_TRAY_CHILD(widget)))
-    {
-      gdk_cairo_set_source_pixmap (cr, widget->window,
-                                   widget->allocation.x,
-                                   widget->allocation.y);
-    }
+  {
+    gdk_cairo_set_source_pixmap (cr, widget->window,
+                                 widget->allocation.x,
+                                 widget->allocation.y);
+    cairo_paint (cr);
+  }
+}
+
+static gboolean
+on_eb_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
+{
+  cairo_t *cr = gdk_cairo_create (widget->window);
+  if (!cr) return FALSE;
+
+  cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
+  cairo_paint (cr);
+
+  cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
+
+  GtkWidget* child = gtk_bin_get_child(GTK_BIN(widget));
+
+  // paint the composited children
+  if (child)
+    gtk_container_foreach (GTK_CONTAINER (child), applet_expose_icon, cr);
+
+  cairo_destroy(cr);
+
+  if (child)
+    gtk_container_propagate_expose(GTK_CONTAINER(widget), child,  event);
+
+  return TRUE;
 }
 
 static gboolean
@@ -270,14 +295,12 @@ applet_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
     cairo_stroke(cr);
 
   }
-  gtk_container_foreach (GTK_CONTAINER (eb), applet_expose_icon, cr);
-
   cairo_destroy(cr);
 
   GtkWidget* child = gtk_bin_get_child(GTK_BIN(widget));
 
-  //if (child)
- //   gtk_container_propagate_expose(GTK_CONTAINER(widget), child,  event);
+  if (child)
+    gtk_container_propagate_expose(GTK_CONTAINER(widget), child,  event);
 
   return TRUE;
 }
@@ -315,7 +338,7 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
   AwnApplet *applet = awn_applet_new( uid, orient, height );
   TrayApplet *app = g_new0 (TrayApplet, 1);
   GdkScreen  *screen;
-  GtkWidget  *align, *table;
+  GtkWidget  *align, *table, *eb;
 
   /* Check if we're using => 2.15.0 */
   if(  (gtk_major_version == 2 && gtk_minor_version >= 15) ||
@@ -398,6 +421,8 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
 
   g_signal_connect(GTK_WIDGET(applet), "expose-event",
                    G_CALLBACK(applet_expose), table);
+  g_signal_connect(eb, "expose-event",
+                   G_CALLBACK (on_eb_expose), NULL);
   g_signal_connect(applet, "height-changed",
                    G_CALLBACK (height_changed), table);
 

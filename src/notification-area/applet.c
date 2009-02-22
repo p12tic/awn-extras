@@ -48,6 +48,7 @@ static gint   n_rows    = 2;
 static int   height    = 0; 
 static int   icon_size = 24;
 static int  use_alpha = 0;
+static GtkWidget *eb;
 
 static void
 tray_icon_added (EggTrayManager *manager, 
@@ -72,6 +73,11 @@ tray_icon_message_cancelled (EggTrayManager *manager,
                              GtkWidget      *icon,
                              glong           id,
                              TrayApplet     *applet);
+
+static void
+applet_expose_icon (GtkWidget *widget,
+                    gpointer data);
+
 
 
 static void
@@ -204,6 +210,20 @@ tray_icon_message_cancelled (EggTrayManager *manager,
   /* FIXME: Er, cancel the message :-/? */
 }
 
+static void
+applet_expose_icon (GtkWidget *widget,
+                    gpointer data)
+{
+  cairo_t *cr = data;
+  
+  if (egg_tray_child_is_composited (EGG_TRAY_CHILD(widget)))
+    {
+      gdk_cairo_set_source_pixmap (cr, widget->window,
+                                   widget->allocation.x,
+                                   widget->allocation.y);
+    }
+}
+
 static gboolean
 applet_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
@@ -250,13 +270,14 @@ applet_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
     cairo_stroke(cr);
 
   }
+  gtk_container_foreach (GTK_CONTAINER (eb), applet_expose_icon, cr);
 
   cairo_destroy(cr);
 
   GtkWidget* child = gtk_bin_get_child(GTK_BIN(widget));
 
-  if (child)
-    gtk_container_propagate_expose(GTK_CONTAINER(widget), child,  event);
+  //if (child)
+ //   gtk_container_propagate_expose(GTK_CONTAINER(widget), child,  event);
 
   return TRUE;
 }
@@ -294,7 +315,7 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
   AwnApplet *applet = awn_applet_new( uid, orient, height );
   TrayApplet *app = g_new0 (TrayApplet, 1);
   GdkScreen  *screen;
-  GtkWidget  *align, *table, *eb;
+  GtkWidget  *align, *table;
 
   /* Check if we're using => 2.15.0 */
   if(  (gtk_major_version == 2 && gtk_minor_version >= 15) ||

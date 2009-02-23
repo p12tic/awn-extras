@@ -336,23 +336,56 @@ class GStreamerBackend:
     def __init__(self, parent):
         self.__parent = parent
 
-        self.__mixer = gst.element_factory_make("alsamixer")
-        self.__mixer.set_state(gst.STATE_READY)
+        mixer = gst.element_factory_make("alsamixer")
 
-        self.__mixer.probe_property_name("device")
-        for dev in self.__mixer.probe_get_values_name("device"):
-            self.__mixer.set_property("device", dev)
-            name = self.__mixer.get_property("device-name")
-            self.__devices[name] = dev
+        if not isinstance(mixer, gst.interfaces.PropertyProbe):
+            raise RuntimeError(mixer.get_factory().get_name() + " cannot probe properties")
 
-    def set_device(self, device_label):
-        self.__mixer.set_property("device", self.__devices[device_label])
+        occurrences = {}
+
+        mixer.probe_property_name("device")
+        for device in mixer.probe_get_values_name("device"):
+            self.init_mixer_device(mixer, device)
+
+            if not isinstance(mixer, gst.interfaces.Mixer) or len(self.get_mixer_tracks(mixer)) == 0:
+                mixer.set_state(gst.STATE_NULL)
+                continue
+
+            name = mixer.get_property("device-name")
+            if name not in occurrences:
+                occurrences[name] = 1
+            else:
+                occurrences[name] += 1
+                name += " (%d)" % occurrences[name]
+
+            self.__devices[name] = device
+
+        self.__mixer = mixer
+
+    def get_mixer_tracks(self, mixer):
+        """Return those tracks of the mixer that are output tracks and have
+        at least one channel. Assumes the mixer has been initialized.
+
+        """
+        assert mixer.get_state()[1] is gst.STATE_READY
 
         def filter_track(track):
             return bool(track.flags & gst.interfaces.MIXER_TRACK_OUTPUT) and track.num_channels > 0
-        self.__tracks = filter(filter_track, self.__mixer.list_tracks())
+        return filter(filter_track, mixer.list_tracks())
 
-        self.__track_labels = [track.label for track in self.__tracks]  # TODO update in preference window
+    def init_mixer_device(self, mixer, device):
+        mixer.set_state(gst.STATE_NULL)
+        mixer.set_property("device", device)
+        mixer.set_state(gst.STATE_READY)
+
+    def set_device(self, device_label):
+        """Set the mixer to the device labeled by the given label.
+
+        """
+        self.init_mixer_device(self.__mixer, self.__devices[device_label])
+
+        self.__tracks = self.get_mixer_tracks(self.__mixer)
+        self.__track_labels = [track.label for track in self.__tracks]
 
     def get_device_labels(self):
         return self.__devices.keys()
@@ -375,7 +408,7 @@ class GStreamerBackend:
         self.__parent.refresh_mute_checkbox()
 
         # Read volume from new track
-        self.set_volume(self.get_volume())
+        self.__parent.refresh_icon(True)
 
     def get_current_track_label(self):
         return self.__current_track.label
@@ -384,6 +417,10 @@ class GStreamerBackend:
         return self.__track_labels
 
     def get_default_track(self):
+        """Return the default track of the current mixer device. This is the
+        master track or otherwise the first track of the list of known tracks.
+
+        """
         for track in self.__tracks:
             if track.flags & gst.interfaces.MIXER_TRACK_MASTER:
                 return track.label

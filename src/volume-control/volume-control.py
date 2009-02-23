@@ -31,6 +31,8 @@ import pygst
 pygst.require("0.10")
 import gst
 
+gst_message_types = (gst.interfaces.MIXER_MESSAGE_MUTE_TOGGLED.value_nick, gst.interfaces.MIXER_MESSAGE_VOLUME_CHANGED.value_nick)
+
 # Interval in seconds between two successive reads of the current volume
 read_volume_interval = 0.5
 
@@ -74,8 +76,6 @@ class VolumeControlApplet:
 
         applet.connect("scroll-event", self.scroll_event_cb)
         applet.connect("height-changed", self.height_changed_cb)
-
-        self.applet.timing.register(self.refresh_icon, read_volume_interval)
 
     def scroll_event_cb(self, widget, event):
         if event.direction == gdk.SCROLL_UP:
@@ -332,6 +332,7 @@ class GStreamerBackend:
     """
 
     __devices = {}
+    __current_track = None
 
     def __init__(self, parent):
         self.__parent = parent
@@ -361,6 +362,19 @@ class GStreamerBackend:
             self.__devices[name] = device
 
         self.__mixer = mixer
+
+        if mixer.get_mixer_flags() & gst.interfaces.MIXER_FLAG_AUTO_NOTIFICATIONS:
+            bus = gst.Bus()
+            bus.add_signal_watch()
+            bus.connect("message::element", self.message_element_cb)
+            mixer.set_bus(bus)
+        else:
+            parent.applet.timing.register(parent.refresh_icon, read_volume_interval)
+
+    def message_element_cb(self, bus, message):
+        if message.type is gst.MESSAGE_ELEMENT and message.src is self.__mixer:
+            if message.structure["type"] in gst_message_types and message.structure["track"] is self.__current_track:
+                self.__parent.refresh_icon()
 
     def get_mixer_tracks(self, mixer):
         """Return those tracks of the mixer that are output tracks and have
@@ -406,8 +420,6 @@ class GStreamerBackend:
         self.__volume_multiplier = 100.0 / (self.__current_track.max_volume - self.__current_track.min_volume)
 
         self.__parent.refresh_mute_checkbox()
-
-        # Read volume from new track
         self.__parent.refresh_icon(True)
 
     def get_current_track_label(self):

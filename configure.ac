@@ -203,8 +203,6 @@ AC_ARG_ENABLE(pymod_checks,
               enable_pymod_checks=yes)
 
 if test x${enable_pymod_checks} = xyes; then
-    # volume-control
-    AM_CHECK_PYMOD(alsaaudio,,,AC_MSG_ERROR([python module alsaaudio required (python-alsaaudio)]))
     # battery-applet
     AM_CHECK_PYMOD(pynotify,,,AC_MSG_ERROR([python module pynotify required (python-notify)]))
     # arss, mail
@@ -228,7 +226,7 @@ if test x${enable_pymod_checks} = xyes; then
     if test "$with_gconf" != "no"; then
     # calendar, media-control, media-player, mount-applet, stacks
     AM_CHECK_PYMOD(gconf,,,AC_MSG_ERROR([python module gconf required]))
-    # lastfm, media-player
+    # lastfm, media-player, volume-control
     AM_CHECK_PYMOD(gst,,,AC_MSG_ERROR([python module gstreamer required (python-gst0.10)]))
     fi
 fi

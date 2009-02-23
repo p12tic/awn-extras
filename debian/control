@@ -45,7 +45,6 @@ Depends: ${shlibs:Depends}, ${python:Depends}
 Recommends: 	avant-window-navigator-trunk, 
 		python-awn-trunk,
 		vala-awn-trunk,
-		python-alsaaudio, 
 		python-feedparser, 
 		python-gnome2, 
 		python-gnome2-desktop, 

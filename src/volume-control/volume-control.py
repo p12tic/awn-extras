@@ -456,7 +456,7 @@ class GStreamerBackend:
         return int(round(self.get_gst_volume() * self.__volume_multiplier))
 
     def set_gst_volume(self, volume):
-        self.__mixer.set_volume(self.__current_track, (volume, ) * self.__current_track.num_channels)
+        self.__mixer.set_volume(self.__current_track, (self.__current_track.min_volume + volume, ) * self.__current_track.num_channels)
 
         self.__parent.refresh_icon(True)
 
@@ -464,10 +464,10 @@ class GStreamerBackend:
         self.set_gst_volume(int(round(value / self.__volume_multiplier)))
 
     def up(self, widget=None, event=None):
-        self.set_gst_volume(min(self.__current_track.max_volume, self.get_gst_volume() + 1))
+        self.set_volume(min(100, self.get_volume() + volume_step))
 
     def down(self, widget=None, event=None):
-        self.set_gst_volume(max(self.__current_track.min_volume, self.get_gst_volume() - 1))
+        self.set_volume(max(0, self.get_volume() - volume_step))
 
     def mute_toggled_cb(self, widget):
         """ Only (un)mute if possible (this callback can be invoked because we

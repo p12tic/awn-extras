@@ -434,7 +434,6 @@ void _vfs_changed_d_c(GnomeVFSDrive  *drive, GnomeVFSVolume *volume, gpointer nu
 void _fillin_connected(GnomeVFSDrive * drive, GSList ** p)
 {
 
-// printf("drive=%s\n",gnome_vfs_drive_get_display_name(drive));
   Menu_list_item * item;
   GSList *sublist = *p;
   char * dev_path;
@@ -445,7 +444,7 @@ void _fillin_connected(GnomeVFSDrive * drive, GSList ** p)
   item->name = g_strdup(gnome_vfs_drive_get_display_name(drive));
   item->icon = g_strdup(gnome_vfs_drive_get_icon(drive));
   item->drive = drive;
-  // FIXME gnome_vfs_drive_get_mounted_volume is deprecated.
+  /* FIXME gnome_vfs_drive_get_mounted_volume is deprecated.*/
 
 
 
@@ -612,8 +611,8 @@ static void update_places(Menu_list_item **p, char* file_manager)
 
           shell_quoted = g_shell_quote(tokens[0]);
           item->exec = g_strdup_printf("%s %s", file_manager, shell_quoted);
+          item->comment = urldecode(g_strdup(shell_quoted),NULL);
           g_free(shell_quoted);
-          item->comment = g_strdup(tokens[0]);
           item->desktop = g_strdup("");
           sublist = g_slist_append(sublist, item);
 

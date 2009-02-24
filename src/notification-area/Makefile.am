@@ -9,6 +9,8 @@ notification_area_la_SOURCES =	\
 	applet.c		\
 	eggtraymanager.c	\
 	eggtraymanager.h	\
+        egg-tray-child.c        \
+        egg-tray-child.h        \
 	eggmarshalers.c		\
 	eggmarshalers.h		\
 	$(NULL)

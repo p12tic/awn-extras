@@ -51,6 +51,7 @@ static int   size    = 0;
 static int   icon_size;
 static AwnOrientation orientation;
 static int   icon_offset;
+static int  use_alpha = 0;
 
 static void
 tray_icon_added (EggTrayManager *manager, 
@@ -75,6 +76,11 @@ tray_icon_message_cancelled (EggTrayManager *manager,
                              GtkWidget      *icon,
                              glong           id,
                              TrayApplet     *applet);
+
+static void
+applet_expose_icon (GtkWidget *widget,
+                    gpointer data);
+
 
 
 static void
@@ -227,6 +233,46 @@ tray_icon_message_cancelled (EggTrayManager *manager,
   /* FIXME: Er, cancel the message :-/? */
 }
 
+static void
+applet_expose_icon (GtkWidget *widget,
+                    gpointer data)
+{
+  cairo_t *cr = data;
+  
+  if (egg_tray_child_is_composited (EGG_TRAY_CHILD(widget)))
+  {
+    gdk_cairo_set_source_pixmap (cr, widget->window,
+                                 widget->allocation.x,
+                                 widget->allocation.y);
+    cairo_paint (cr);
+  }
+}
+
+static gboolean
+on_eb_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
+{
+  cairo_t *cr = gdk_cairo_create (widget->window);
+  if (use_alpha == FALSE || cr == NULL) return FALSE;
+
+  cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
+  cairo_paint (cr);
+
+  cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
+
+  GtkWidget* child = gtk_bin_get_child(GTK_BIN(widget));
+
+  // paint the composited children
+  if (child)
+    gtk_container_foreach (GTK_CONTAINER (child), applet_expose_icon, cr);
+
+  cairo_destroy(cr);
+
+  if (child)
+    gtk_container_propagate_expose(GTK_CONTAINER(widget), child,  event);
+
+  return TRUE;
+}
+
 static gboolean
 applet_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
@@ -245,7 +291,15 @@ applet_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
   if (g_list_length(app->icons) > 0)
   {
     cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
-    gdk_cairo_set_source_color (cr, &(gtk_widget_get_style(widget)->bg[GTK_STATE_NORMAL]));
+
+    if (use_alpha == 0)
+    {
+      gdk_cairo_set_source_color (cr, &(gtk_widget_get_style(widget)->bg[GTK_STATE_NORMAL]));
+    }
+    else
+    {
+      cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 0.0);
+    }
 
     awn_cairo_rounded_rect (cr, x-BORDER, y-BORDER,
                             table->allocation.width + 2*BORDER,
@@ -353,13 +407,19 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint size )
   TrayApplet *app = g_new0 (TrayApplet, 1);
   GdkScreen  *screen;
   GtkWidget  *align, *table, *eb;
+
+  /* Check if we're using => 2.15.0 */
+  if ((gtk_major_version == 2 && gtk_minor_version >= 15) ||
+      gtk_major_version > 2)
+  {
+    use_alpha = 1;
+  }
   
   /* Er, why did I have to do this again ? */
   GtkWidget *widget = GTK_WIDGET (applet);
   while (widget->parent)
         widget = widget->parent;
   screen = gtk_widget_get_screen (GTK_WIDGET (widget));
-  
 
   if (egg_tray_manager_check_running(screen))
   {
@@ -377,7 +437,7 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint size )
     gtk_widget_destroy (dialog);
 
     g_error ("%s\n", msg);
-    return FALSE;
+    return NULL;
   }
 
   new_quark = g_quark_from_string ("awn-na-icon-new");
@@ -422,7 +482,10 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint size )
   
   gtk_container_add (GTK_CONTAINER (applet), align);
   gtk_container_add (GTK_CONTAINER (align), eb);
-  gtk_widget_set_colormap (eb, gdk_screen_get_rgb_colormap (screen));
+  if (gdk_screen_get_rgba_colormap (screen) != NULL)
+  {
+    gtk_widget_set_colormap (eb, gdk_screen_get_rgba_colormap (screen));
+  }
   gtk_container_add (GTK_CONTAINER (eb), table);
 
   g_signal_connect (applet, "configure-event",
@@ -433,6 +496,8 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint size )
                    G_CALLBACK (size_changed), table);
   g_signal_connect(applet, "orientation-changed",
                    G_CALLBACK (orient_changed), app);
+  g_signal_connect(eb, "expose-event",
+                   G_CALLBACK (on_eb_expose), NULL);
 
   return applet;
 }

@@ -93,7 +93,10 @@ class App(awn.AppletSimple):
       'color_high_text':str, \
       'use_custom_width':bool, \
       'confirm-categories':bool})
-    
+
+    if self.settings['title'] is None:
+      self.settings['title'] = _("To-Do List")
+
 #    #Get the title or default to "To-Do List"
 #    if self.settings['title'] in ['',None]:
 #      self.settings['title'] = 'To-Do List'

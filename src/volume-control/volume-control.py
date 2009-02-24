@@ -31,6 +31,8 @@ import pygst
 pygst.require("0.10")
 import gst
 
+gst_message_types = (gst.interfaces.MIXER_MESSAGE_MUTE_TOGGLED.value_nick, gst.interfaces.MIXER_MESSAGE_VOLUME_CHANGED.value_nick)
+
 # Interval in seconds between two successive reads of the current volume
 read_volume_interval = 0.5
 
@@ -74,8 +76,6 @@ class VolumeControlApplet:
 
         applet.connect("scroll-event", self.scroll_event_cb)
         applet.connect("height-changed", self.height_changed_cb)
-
-        self.applet.timing.register(self.refresh_icon, read_volume_interval)
 
     def scroll_event_cb(self, widget, event):
         if event.direction == gdk.SCROLL_UP:
@@ -142,7 +142,7 @@ class VolumeControlApplet:
         menu = self.applet.dialog.menu
 
         self.mute_item = gtk.CheckMenuItem("Mu_te")
-        self.mute_item.connect("toggled", self.backend.mute_toggled_cb)
+        self.mute_item.connect("toggled", self.mute_toggled_cb)
         menu.insert(self.mute_item, 3)
 
         volume_control_item = gtk.MenuItem("_Open Volume Control")
@@ -324,35 +324,90 @@ class VolumeControlApplet:
             # Clear checkbox (this will fire the "toggled" signal)
             self.mute_item.set_active(False)
 
+    def mute_toggled_cb(self, widget):
+        """ Only (un)mute if possible (this callback can be invoked because we
+        set the 'Mute' checkbox to False """
+        if self.backend.can_be_muted():
+            item_active = int(self.mute_item.get_active())
+            self.backend.set_mute(item_active)
+
 
 class GStreamerBackend:
 
-    """GStreamer backend. Controls the volume, mute and tracks.
+    """GStreamer backend. Controls the current device and track, and the
+    current track's volume and mute status.
 
     """
 
     __devices = {}
+    __current_track = None
 
     def __init__(self, parent):
         self.__parent = parent
 
-        self.__mixer = gst.element_factory_make("alsamixer")
-        self.__mixer.set_state(gst.STATE_READY)
+        mixer = gst.element_factory_make("alsamixer")
 
-        self.__mixer.probe_property_name("device")
-        for dev in self.__mixer.probe_get_values_name("device"):
-            self.__mixer.set_property("device", dev)
-            name = self.__mixer.get_property("device-name")
-            self.__devices[name] = dev
+        if not isinstance(mixer, gst.interfaces.PropertyProbe):
+            raise RuntimeError(mixer.get_factory().get_name() + " cannot probe properties")
 
-    def set_device(self, device_label):
-        self.__mixer.set_property("device", self.__devices[device_label])
+        occurrences = {}
+
+        mixer.probe_property_name("device")
+        for device in mixer.probe_get_values_name("device"):
+            self.init_mixer_device(mixer, device)
+
+            if not isinstance(mixer, gst.interfaces.Mixer) or len(self.get_mixer_tracks(mixer)) == 0:
+                mixer.set_state(gst.STATE_NULL)
+                continue
+
+            name = mixer.get_property("device-name")
+            if name not in occurrences:
+                occurrences[name] = 1
+            else:
+                occurrences[name] += 1
+                name += " (%d)" % occurrences[name]
+
+            self.__devices[name] = device
+
+        self.__mixer = mixer
+
+        if mixer.get_mixer_flags() & gst.interfaces.MIXER_FLAG_AUTO_NOTIFICATIONS:
+            bus = gst.Bus()
+            bus.add_signal_watch()
+            bus.connect("message::element", self.message_element_cb)
+            mixer.set_bus(bus)
+        else:
+            parent.applet.timing.register(parent.refresh_icon, read_volume_interval)
+
+    def message_element_cb(self, bus, message):
+        if message.type is gst.MESSAGE_ELEMENT and message.src is self.__mixer:
+            if message.structure["type"] in gst_message_types and message.structure["track"] is self.__current_track:
+                self.__parent.refresh_icon()
+
+    def get_mixer_tracks(self, mixer):
+        """Return those tracks of the mixer that are output tracks and have
+        at least one channel. Assumes the mixer has been initialized.
+
+        """
+        assert mixer.get_state()[1] is gst.STATE_READY
 
         def filter_track(track):
             return bool(track.flags & gst.interfaces.MIXER_TRACK_OUTPUT) and track.num_channels > 0
-        self.__tracks = filter(filter_track, self.__mixer.list_tracks())
+        return filter(filter_track, mixer.list_tracks())
 
-        self.__track_labels = [track.label for track in self.__tracks]  # TODO update in preference window
+    def init_mixer_device(self, mixer, device):
+        mixer.set_state(gst.STATE_NULL)
+        mixer.set_property("device", device)
+        mixer.set_state(gst.STATE_READY)
+
+    def set_device(self, device_label):
+        """Set the mixer to the device labeled by the given label.
+
+        """
+        self.init_mixer_device(self.__mixer, self.__devices[device_label])
+
+        self.__tracks = self.get_mixer_tracks(self.__mixer)
+        self.__track_labels = [track.label for track in self.__tracks]
 
     def get_device_labels(self):
         return self.__devices.keys()
@@ -373,9 +428,7 @@ class GStreamerBackend:
         self.__volume_multiplier = 100.0 / (self.__current_track.max_volume - self.__current_track.min_volume)
 
         self.__parent.refresh_mute_checkbox()
-
-        # Read volume from new track
-        self.set_volume(self.get_volume())
+        self.__parent.refresh_icon(True)
 
     def get_current_track_label(self):
         return self.__current_track.label
@@ -384,6 +437,10 @@ class GStreamerBackend:
         return self.__track_labels
 
     def get_default_track(self):
+        """Return the default track of the current mixer device. This is the
+        master track or otherwise the first track of the list of known tracks.
+
+        """
         for track in self.__tracks:
             if track.flags & gst.interfaces.MIXER_TRACK_MASTER:
                 return track.label
@@ -399,6 +456,12 @@ class GStreamerBackend:
         """
         return bool(self.__current_track.flags & gst.interfaces.MIXER_TRACK_MUTE)
 
+    def set_mute(self, mute):
+        self.__mixer.set_mute(self.__current_track, mute)
+
+        # Update applet's icon
+        self.__parent.refresh_icon(True)
+
     def get_gst_volume(self):
         volume_channels = self.__mixer.get_volume(self.__current_track)
         return sum(volume_channels) / len(volume_channels)
@@ -407,7 +470,7 @@ class GStreamerBackend:
         return int(round(self.get_gst_volume() * self.__volume_multiplier))
 
     def set_gst_volume(self, volume):
-        self.__mixer.set_volume(self.__current_track, (volume, ) * self.__current_track.num_channels)
+        self.__mixer.set_volume(self.__current_track, (self.__current_track.min_volume + volume, ) * self.__current_track.num_channels)
 
         self.__parent.refresh_icon(True)
 
@@ -415,110 +478,10 @@ class GStreamerBackend:
         self.set_gst_volume(int(round(value / self.__volume_multiplier)))
 
     def up(self, widget=None, event=None):
-        self.set_gst_volume(min(self.__current_track.max_volume, self.get_gst_volume() + 1))
-
-    def down(self, widget=None, event=None):
-        self.set_gst_volume(max(self.__current_track.min_volume, self.get_gst_volume() - 1))
-
-    def mute_toggled_cb(self, widget):
-        """ Only (un)mute if possible (this callback can be invoked because we
-        set the 'Mute' checkbox to False """
-        if self.can_be_muted():
-            item_active = int(self.__parent.mute_item.get_active())
-            self.__mixer.set_mute(self.__current_track, item_active)
-
-            # Update applet's icon
-            self.__parent.refresh_icon(True)
-
-
-class ALSABackend:
-
-    """ALSA backend. Controls the volume, mute and tracks.
-
-    """
-
-    def __init__(self, parent):
-        self.__parent = parent
-
-        parent.errors.module(globals(), "alsaaudio")
-
-        def filter_track(track):
-            try:
-                mixer = alsaaudio.Mixer(track)
-                return bool(mixer.getvolume()) and "Playback Volume" in mixer.volumecap()
-            except alsaaudio.ALSAAudioError:
-                return False
-        self.__track_labels = filter(filter_track, alsaaudio.mixers())
-
-    def set_track(self, track):
-        """Changes the current track and enables/disables the 'Mute'
-        checkbox.
-
-        """
-        self.track = track
-
-        self.__parent.refresh_mute_checkbox()
-
-        # Read volume from new track
-        self.set_volume(self.get_volume())
-
-    def get_current_track_label(self):
-        return self.track
-
-    def get_track_labels(self):
-        return self.__track_labels
-
-    def get_default_track(self):
-        return self.__track_labels[0]
-
-    def can_be_muted(self):
-        mixer = alsaaudio.Mixer(self.track)
-
-        if "Playback Mute" not in mixer.switchcap():
-            return False
-
-        """ Test if mute switch is really present because
-        alsaaudio is sometimes a little bit crazy """
-        try:
-            mixer.getmute()
-            return True
-        except alsaaudio.ALSAAudioError:
-            return False
-
-    def is_muted(self):
-        """Return whether all channels (left and right if there are two)
-        are muted.
-
-        """
-        return all(map(bool, alsaaudio.Mixer(self.channel).getmute()))
-
-    def get_volume(self):
-        volume_channels = alsaaudio.Mixer(self.channel).getvolume()
-        volume = sum(volume_channels) / len(volume_channels)
-
-        # Sometimes ALSA is a little bit crazy and returns -(2^32 / 2)
-        return max(0, volume)
-
-    def set_volume(self, value):
-        alsaaudio.Mixer(self.track).setvolume(int(value))
-
-        self.__parent.refresh_icon(True)
-
-    def up(self, widget=None, event=None):
         self.set_volume(min(100, self.get_volume() + volume_step))
 
     def down(self, widget=None, event=None):
         self.set_volume(max(0, self.get_volume() - volume_step))
-
-    def mute_toggled_cb(self, widget):
-        """ Only (un)mute if possible (this callback can be invoked because we
-        set the 'Mute' checkbox to False """
-        if self.can_be_muted():
-            item_active = int(self.__parent.mute_item.get_active())
-            alsaaudio.Mixer(self.track).setmute(item_active)
-
-            # Update applet's icon
-            self.__parent.refresh_icon(True)
 
 
 if __name__ == "__main__":

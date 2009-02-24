@@ -107,14 +107,14 @@ class CairoClockApplet:
 
                 button.connect("clicked", lambda w, cb: cb(), callback[1])
 
-                def toggle_edit_button_cb(widget, button):
+                def toggle_callback_button_cb(widget, button):
                     if not widget.get_expanded(): # Old state of expander
                         button.set_no_show_all(False)
                         button.show()
                     else:
                         button.hide()
                         button.set_no_show_all(True)
-                expander.connect("activate", toggle_edit_button_cb, button)
+                expander.connect("activate", toggle_callback_button_cb, button)
 
             def toggle_expander_vbox_cb(widget, vbox):
                 if not widget.get_expanded(): # Old state of expander

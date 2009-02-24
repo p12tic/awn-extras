@@ -915,7 +915,7 @@ void create_containers(Shiny_switcher *shinyswitcher)
 
   }
   g_signal_connect_after(G_OBJECT(shinyswitcher->container), "realize",
-                         G_CALLBACK(awn_utils_make_transparent), NULL);  
+                         G_CALLBACK(awn_utils_make_transparent_bg), NULL);
 
   gtk_container_add(GTK_CONTAINER(shinyswitcher->align), shinyswitcher->container);
 

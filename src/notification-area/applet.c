@@ -24,7 +24,6 @@
 #include <cairo.h>
 #include <libawn/awn-applet.h>
 #include <libawn/awn-cairo-utils.h>
-#include <libawn/awn-config-client.h>
 #include <libawn/awn-defines.h>
 
 #include <math.h>
@@ -47,11 +46,10 @@ static GQuark new_quark = 0;
 static GQuark del_quark = 0;
 static gint   n_rows    = 2;
 static gint   n_cols    = 2;
-static int   size    = 0;
-static int   icon_size;
+static int    size      = 0;
+static int    icon_size;
 static AwnOrientation orientation;
-static int   icon_offset;
-static int  use_alpha = 0;
+static int    use_alpha = FALSE;
 
 static void
 tray_icon_added (EggTrayManager *manager, 
@@ -292,7 +290,7 @@ applet_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
   {
     cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
 
-    if (use_alpha == 0)
+    if (use_alpha == FALSE)
     {
       gdk_cairo_set_source_color (cr, &(gtk_widget_get_style(widget)->bg[GTK_STATE_NORMAL]));
     }
@@ -347,12 +345,11 @@ refresh_alignment(GtkAlignment *align, AwnOrientation orient, gint offset)
 }
 
 static void
-offset_changed(AwnConfigClientNotifyEntry *entry, gpointer user_data)
+offset_changed(AwnApplet *applet, gint offset, gpointer user_data)
 {
   GtkAlignment *align = GTK_ALIGNMENT (user_data);
 
-  icon_offset = entry->value.int_val;
-  refresh_alignment(align, orientation, entry->value.int_val);
+  refresh_alignment(align, orientation, offset);
 }
 
 static void
@@ -362,7 +359,7 @@ orient_changed(AwnApplet *applet, AwnOrientation orient, gpointer user_data)
   GtkAlignment *align = GTK_ALIGNMENT (tray_applet->align);
 
   orientation = orient;
-  refresh_alignment(align, orient, icon_offset);
+  refresh_alignment(align, orient, awn_applet_get_offset(applet));
   tray_applet_refresh(tray_applet);
 }
 
@@ -401,9 +398,9 @@ applet_configured(GtkWidget *applet, GdkEventConfigure *event, TrayApplet *app)
 }
 
 AwnApplet*
-awn_applet_factory_initp ( gchar* uid, gint orient, gint size )
+awn_applet_factory_initp ( gchar* uid, gint orient, gint offset, gint size )
 {
-  AwnApplet *applet = awn_applet_new( uid, orient, size );
+  AwnApplet *applet = awn_applet_new( uid, orient, offset, size );
   TrayApplet *app = g_new0 (TrayApplet, 1);
   GdkScreen  *screen;
   GtkWidget  *align, *table, *eb;
@@ -412,7 +409,7 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint size )
   if ((gtk_major_version == 2 && gtk_minor_version >= 15) ||
       gtk_major_version > 2)
   {
-    use_alpha = 1;
+    use_alpha = TRUE;
   }
   
   /* Er, why did I have to do this again ? */
@@ -474,11 +471,7 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint size )
   align = gtk_alignment_new (0, 1, 1, 0);
   app->align = align;
 
-  AwnConfigClient *client = awn_config_client_new();
-  icon_offset = awn_config_client_get_int(client, "panel", "offset", NULL);
-  awn_config_client_notify_add(client, "panel", "offset", offset_changed, align);
-
-  refresh_alignment (GTK_ALIGNMENT (align), orient, icon_offset);
+  refresh_alignment (GTK_ALIGNMENT (align), orient, offset);
   
   gtk_container_add (GTK_CONTAINER (applet), align);
   gtk_container_add (GTK_CONTAINER (align), eb);
@@ -496,6 +489,8 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint size )
                    G_CALLBACK (size_changed), table);
   g_signal_connect(applet, "orientation-changed",
                    G_CALLBACK (orient_changed), app);
+  g_signal_connect(applet, "offset-changed",
+                   G_CALLBACK (offset_changed), align);
   g_signal_connect(eb, "expose-event",
                    G_CALLBACK (on_eb_expose), NULL);
 

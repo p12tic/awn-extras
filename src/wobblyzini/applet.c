@@ -43,13 +43,13 @@ _button_clicked_event (GtkWidget      *widget,
 
 // entry method
 AwnApplet*
-awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
+awn_applet_factory_initp ( gchar* uid, gint orient, gint offset, gint height )
 {
 	AwnApplet *applet;
 	WobblyZini *wobblyzini;
 
 	// initialize the applet
-	applet = awn_applet_new( uid, orient, height );
+	applet = awn_applet_new( uid, orient, offset,height );
 	// our initialize
 	wobblyzini = wobblyzini_applet_new(applet);
 	// right-click handling

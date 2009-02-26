@@ -1633,7 +1633,7 @@ static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, 
   return TRUE;
 }
 
-AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient, gint height)
+AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient,gint offset, gint height)
 {
   NotifyDaemon *daemon;
   DBusGConnection *connection;

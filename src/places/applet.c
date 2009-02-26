@@ -1446,7 +1446,7 @@ static void _bloody_thing_has_style(GtkWidget *widget, Places *places)
   g_signal_connect(G_OBJECT(places->mainwindow), "expose-event", G_CALLBACK(_expose_event), places);
 }
 
-AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient, gint height)
+AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient, gint offset, gint height)
 {
   GdkPixbuf *icon;
   g_on_error_stack_trace(NULL);

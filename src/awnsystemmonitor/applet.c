@@ -23,7 +23,7 @@
 #include "gconf-config.h"
 #include "awnsystemmonitor.h"
 
-AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient, gint height)
+AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient, gint offset, gint height)
 {
   AwnApplet *applet = AWN_APPLET(awn_applet_simple_new(uid, orient, height));
   CpuMeter *cpumeter;

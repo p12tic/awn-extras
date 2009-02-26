@@ -135,7 +135,7 @@ static gboolean _map_event(GtkWidget *widget, gpointer null)
   }
   return FALSE;
 }
-AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient, gint height)
+AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient,gint offset, gint height)
 {
 
   AwnApplet *applet = AWN_APPLET(awn_applet_simple_new(uid, orient, height));

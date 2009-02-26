@@ -138,7 +138,7 @@ static gboolean _map_event(GtkWidget *widget, gpointer null)
 AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient,gint offset, gint height)
 {
 
-  AwnApplet *applet = AWN_APPLET(awn_applet_simple_new(uid, orient, height));
+  AwnApplet *applet = AWN_APPLET(awn_applet_simple_new(uid, orient,offset, height));
   G_applet = applet;
   gtk_widget_set_size_request(GTK_WIDGET(applet), height, -1);
   GdkPixbuf *icon;

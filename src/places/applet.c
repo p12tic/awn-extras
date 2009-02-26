@@ -1451,7 +1451,7 @@ AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient, gint offset, gint h
   GdkPixbuf *icon;
   g_on_error_stack_trace(NULL);
   Places * places = g_malloc(sizeof(Places));
-  AwnApplet *applet = places->applet = AWN_APPLET(awn_applet_simple_new(uid, orient, height));
+  AwnApplet *applet = places->applet = AWN_APPLET(awn_applet_simple_new(uid, orient,offset, height));
   gtk_widget_set_size_request(GTK_WIDGET(applet), height, -1);
 
   places->applet_icon_height = height - 2;

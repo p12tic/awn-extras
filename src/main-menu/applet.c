@@ -436,9 +436,9 @@ awn_applet_factory_init (AwnApplet *applet)
 #endif
 
 AwnApplet *
-awn_applet_factory_initp (const gchar * uid, gint orient, gint height ) 
+awn_applet_factory_initp (const gchar * uid, gint orient, gint offset, gint height ) 
 {
-  AwnApplet *applet = AWN_APPLET (awn_applet_simple_new (uid, orient, height));
+  AwnApplet *applet = AWN_APPLET (awn_applet_simple_new (uid, orient, offset, height));
   Menu      *app = menu =  g_new0 (Menu, 1);
   app->applet = applet;
     

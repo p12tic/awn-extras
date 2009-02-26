@@ -1646,7 +1646,7 @@ AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient,gint offset, gint he
   G_daemon_config.awn_app_height = height;
   G_daemon_config.show_status = TRUE;
 
-  G_daemon_config.awn_app = applet = AWN_APPLET(awn_applet_simple_new(uid, orient, height));
+  G_daemon_config.awn_app = applet = AWN_APPLET(awn_applet_simple_new(uid, orient,offset, height));
 
   g_signal_connect(G_OBJECT(applet), "size-changed", G_CALLBACK(_height_changed), (gpointer)applet);
   gtk_widget_set_size_request(GTK_WIDGET(applet), height, height);

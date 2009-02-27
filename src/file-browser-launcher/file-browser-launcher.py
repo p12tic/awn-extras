@@ -351,7 +351,7 @@ class App (awn.AppletSimple):
             if type == 'computer':
               self.place('computer', name, path, _("Computer"))
 
-            elif type in ['network','smb','nfs','ftp','ssh']:
+            elif type in ['network', 'smb', 'nfs', 'ftp', 'sftp', 'ssh']:
               self.place('network-folder', name, path, _("Network"))
 
             elif type == 'trash':

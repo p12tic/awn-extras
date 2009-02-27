@@ -276,11 +276,11 @@ class App (awn.AppletSimple):
 
           #Local mounted drive (separate disk/partition)
           else:
-            self.place('drive-harddisk', self.paths_hnames[path], path)
+            self.place('drive-harddisk', hnames[path], path)
 
         #Partition not mounted in /media (such as /home)
         else:
-          self.place('drive-harddisk', self.paths_hnames[path], path)
+          self.place('drive-harddisk', hnames[path], path)
     
     #Go through the list of network drives/etc. from /etc/fstab
     if self.show_network == 2:

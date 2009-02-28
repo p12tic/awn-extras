@@ -31,6 +31,7 @@ static gboolean _expose_event (GtkWidget *widget, GdkEventExpose *expose, gpoint
 static gboolean _button_release_event (GtkWidget *widget, GdkEventButton *event, gpointer *data);
 static void _size_changed (AwnApplet *app, guint size, gpointer *data);
 static void _orient_changed (AwnApplet *appt, guint orient, gpointer *data);
+static void _offset_changed (AwnApplet *appt, guint offset, gpointer *data);
 
 /**
  * Create new applet
@@ -48,31 +49,34 @@ wobblyzini_applet_new (AwnApplet *applet)
 	// set the icon
 	gtk_window_set_default_icon_name ("Wobbly Zini");
 
-	wobblyzini->tooltips = gtk_tooltips_new ();
-	g_object_ref (wobblyzini->tooltips);
-	gtk_object_sink (GTK_OBJECT (wobblyzini->tooltips));
-
 	// AwnIcon supports nicely orientation, size and effects
 	GtkWidget *icon = awn_icon_new();
 	wobblyzini->icon = icon;
 	// we'll set correct orientation, so icon can be painted properly
-	awn_icon_set_orientation(AWN_ICON(icon),
-	                         awn_applet_get_orientation(applet));
+	awn_icon_set_orientation (AWN_ICON(icon),
+	                          awn_applet_get_orientation(applet));
+        // set also offset
+        awn_icon_set_offset (AWN_ICON (icon), awn_applet_get_offset (applet));
+
 	// this applet paints itself, no static icon
 	awn_icon_set_custom_paint(AWN_ICON(icon),
 	                          wobblyzini->size, wobblyzini->size);
 	// to paint the icon we'll use standard expose event
-	g_signal_connect (icon, "expose-event", G_CALLBACK (_expose_event), wobblyzini);
+	g_signal_connect (icon, "expose-event",
+                          G_CALLBACK (_expose_event), wobblyzini);
 	// add the AwnIcon to the container
         gtk_container_add(GTK_CONTAINER(applet), icon);
 
-	/*printf ("signal\n");*/
 	// connect to button events
 	g_signal_connect (G_OBJECT (wobblyzini->applet), "button-release-event", G_CALLBACK (_button_release_event), (gpointer)wobblyzini );
 
 	// connect to height and orientation changes
-	g_signal_connect (G_OBJECT (wobblyzini->applet), "size-changed", G_CALLBACK (_size_changed), (gpointer)wobblyzini);
-	g_signal_connect (G_OBJECT (wobblyzini->applet), "orientation-changed", G_CALLBACK (_orient_changed), (gpointer)wobblyzini);
+	g_signal_connect (wobblyzini->applet, "size-changed",
+                          G_CALLBACK (_size_changed), wobblyzini);
+	g_signal_connect (wobblyzini->applet, "orientation-changed",
+                          G_CALLBACK (_orient_changed), wobblyzini);
+	g_signal_connect (wobblyzini->applet, "offset-changed",
+                          G_CALLBACK (_offset_changed), wobblyzini);
 
 	// update the icon a few times per second
 	gtk_timeout_add (MS_INTERVAL, (GtkFunction) time_handler, wobblyzini);
@@ -204,4 +208,17 @@ _orient_changed (AwnApplet *app, guint orient, gpointer *data)
 
 	// update the orientation
 	awn_icon_set_orientation(icon, orient);
+}
+
+/**
+ * Called on offset change
+ */
+static void
+_offset_changed (AwnApplet *appt, guint offset, gpointer *data)
+{
+	WobblyZini *wobblyzini = (WobblyZini *)data;
+	AwnIcon *icon = AWN_ICON(wobblyzini->icon);
+
+	// update the offset
+	awn_icon_set_offset(icon, offset);
 }

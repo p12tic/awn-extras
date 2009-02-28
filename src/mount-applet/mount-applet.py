@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # Copyright (C) 2007  Arvind Ganga
-#               2008  onox <denkpadje@gmail.com>
+#               2009  onox <denkpadje@gmail.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public

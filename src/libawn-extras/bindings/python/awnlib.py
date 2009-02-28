@@ -816,10 +816,6 @@ class Settings:
         else:
             self.client.new(key, value, value_type)
 
-        # Update the value in the loaded dictionary
-        if self.__dict is not None:
-            self.__dict[key] = value
-
     def __get(self, key):
         value = self.client.get(key)
         if type(value) == types.StringType and value[:9] == "!pickle;\n":
@@ -852,12 +848,18 @@ class Settings:
         @type key: C{string}
 
         """
+        old_value = value
+
         if type(value) in self.__setting_types.keys():
             value_type = self.__setting_types[type(value)]
         else:
             value = "!pickle;\n%s" % cpickle.dumps(value)
             value_type = "string"
         self.__set(key, value, value_type)
+
+        # Update the value in the loaded dictionary
+        if self.__dict is not None:
+            self.__dict[key] = old_value
 
     def __delitem__(self, key):
         """Delete a key from the currect directory.

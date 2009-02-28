@@ -378,7 +378,7 @@ void register_Dashboard(Dashboard * dashboard, AwnApplet *applet)
   dashboard->applet = applet;
   dashboard->Dashboard_plugs = NULL;   /*there are no plugs registered yet*/
 
-  dashboard->mainwindow = awn_applet_dialog_new(applet);
+  dashboard->mainwindow = awn_dialog_new_for_widget (applet);
 
   dashboard->right_click_menu = NULL;
 

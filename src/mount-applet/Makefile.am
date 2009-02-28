@@ -8,5 +8,5 @@ dist_applet_DATA =	\
 mount_iconsdir = $(applet_datadir)/icons
 dist_mount_icons_DATA = 	\
 	icons/mount-applet.png 	\
-	icons/AUTHORS		\
+	icons/mount-applet.glade	\
 	$(NULL)

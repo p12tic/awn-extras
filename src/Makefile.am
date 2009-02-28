@@ -25,7 +25,6 @@ endif
 GCONF_APPLETS +=		\
 	awn-notification-daemon	\
 	media-control		\
-	mount-applet		\
 	$(NULL)
 endif
 # --with-gnome
@@ -71,6 +70,7 @@ SUBDIRS =			\
 	media-icon-next		\
 	media-icon-play		\
 	media-player		\
+	mount-applet       \
 	notification-area	\
 	places			\
 	pynot				\

@@ -50,7 +50,6 @@ class About:
     win.set_license('This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA.')
     win.set_wrap_license(True)
     win.set_documenters(["sharkbaitbobby <sharkbaitbobby+awn@gmail.com>"])
-    win.set_artists(["GTK Stock Icons", "Human Icon for \"folder\""])
     win.set_website('http://wiki.awn-project.org/File_Browser_Launcher')
     win.set_website_label('wiki.awn-project.org')
     win.set_logo_icon_name('stock_folder')

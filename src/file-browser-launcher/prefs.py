@@ -26,16 +26,18 @@ pygtk.require('2.0')
 import gtk
 import pango
 import os
-import gconfwrapper as awnccwrapper
 import gettext
 import locale
 
+import awn
 from awn.extras import defs
 
 APP = "awn-extras-applets"
 gettext.bindtextdomain(APP, defs.GETTEXTDIR)
 gettext.textdomain(APP)
 _ = gettext.gettext
+
+group = awn.CONFIG_DEFAULT_GROUP
 
 class Prefs:
   ignore_all = False
@@ -51,39 +53,37 @@ class Prefs:
     self.theme = gtk.icon_theme_get_default()
     self.initializing = True
     
-    #Get ALL the awncc stuff
-    self.client = awnccwrapper.AwnCCWrapper(self.uid)
+    #AwnConfigClient instance
+    self.client = awn.Config('file-browser-launcher', None)
     
     #File browser
-    self.fb = self.client.get_string('fb','xdg-open')
+    self.fb = self.client.get_string(group, 'fb')
     
     #Left mouse button action
-    self.lmb = self.client.get_int('lmb',1)
+    self.lmb = self.client.get_int(group, 'lmb')
     
     #Left mouse button path
-    self.lmb_path = self.client.get_string('lmb_path',\
-    os.path.expanduser('~'))
+    self.lmb_path = self.client.get_string(group, 'lmb_path')
     
     #Middle mouse button action
-    self.mmb = self.client.get_int('mmb',2)
+    self.mmb = self.client.get_int(group, 'mmb')
     
     #Middle mouse button path
-    self.mmb_path = self.client.get_string('mmb_path',\
-    os.path.expanduser('~'))
+    self.mmb_path = self.client.get_string(group, 'mmb_path')
     
     #Places: show bookmarks, home, local, network
-    self.show_bookmarks = self.client.get_int('places_bookmarks',2)
-    self.show_home = self.client.get_int('places_home',2)
-    self.show_local = self.client.get_int('places_local',2)
-    self.show_network = self.client.get_int('places_network',2)
-    self.show_connect = self.client.get_int('places_connect', 2)
-    self.show_filesystem = self.client.get_int('places_filesystem', 2)
+    self.show_bookmarks = self.client.get_int(group, 'places_bookmarks')
+    self.show_home = self.client.get_int(group, 'places_home')
+    self.show_local = self.client.get_int(group, 'places_local')
+    self.show_network = self.client.get_int(group, 'places_network')
+    self.show_connect = self.client.get_int(group, 'places_connect')
+    self.show_filesystem = self.client.get_int(group, 'places_filesystem')
     
     #Open the places item when clicked
-    self.places_open = self.client.get_int('places_open',2)
+    self.places_open = self.client.get_int(group, 'places_open')
     
     #Focus the location entry widget
-    self.focus_entry = self.client.get_int('focus_entry',2)
+    self.focus_entry = self.client.get_int(group, 'focus_entry')
     
     #Set the icon approiately
     self.window.set_icon(applet.icon)
@@ -124,7 +124,7 @@ class Prefs:
         self.general_fb_y = self.general_fb_y+1
     
     #Last option: custom with an entry for the app name
-    self.general_fb_custom_radio = gtk.RadioButton(self.general_fb_default_radio, _("Custom"))
+    self.general_fb_custom_radio = gtk.RadioButton(self.general_fb_default_radio, _("Other"))
     self.general_fb_custom_radio.identifier = 'general.fb.custom'
     self.general_fb_custom_radio.connect('toggled',self.radio_changed)
     self.general_fb_custom_entry = gtk.Entry()
@@ -134,7 +134,7 @@ class Prefs:
       self.general_fb_custom_radio.set_active(True)
     self.general_fb_custom_entry.set_text(self.fb)
     self.general_fb_custom_entry.connect('changed',\
-    lambda w:self.client.set_string('fb',w.get_text()))
+    lambda w:self.client.set_string(group, 'fb', w.get_text()))
     if self.fb in ['xdg-open','nautilus','thunar','konqueror','dolphin']:
       self.general_fb_custom_entry.set_sensitive(False)
     self.general_fb_table.attach(self.general_fb_custom_radio,0,2,\
@@ -143,9 +143,9 @@ class Prefs:
     (self.general_fb_y+2),(self.general_fb_y+3),yoptions=gtk.SHRINK)
     
     #Put ALL of the general tab together
-    self.general_vbox.pack_start(self.general_fb_label)
-    self.general_vbox.pack_start(self.general_separator1)
-    self.general_vbox.pack_start(self.general_fb_table)
+    self.general_vbox.pack_start(self.general_fb_label, False, False, 5)
+    self.general_vbox.pack_start(self.general_separator1, False, False, 5)
+    self.general_vbox.pack_start(self.general_fb_table, False, False, 5)
     self.general_vbox.show_all()
     self.nbook.append_page(self.general_vbox,self.general_tab)
     
@@ -306,7 +306,7 @@ class Prefs:
     self.lmb_folder_table.attach(self.lmb_folder_default_radio,0,1,0,1,yoptions=gtk.SHRINK)
     
     #Row 2: () Custom
-    self.lmb_folder_custom_radio = gtk.RadioButton(self.lmb_folder_default_radio,_("Custom"))
+    self.lmb_folder_custom_radio = gtk.RadioButton(self.lmb_folder_default_radio,_("Other"))
     self.lmb_folder_custom_radio.identifier = 'lmb.folder.custom'
     self.lmb_folder_custom_radio.connect('toggled',self.radio_changed)
     self.lmb_folder_table.attach(self.lmb_folder_custom_radio,0,1,1,2,yoptions=gtk.SHRINK)
@@ -385,7 +385,7 @@ class Prefs:
     self.mmb_folder_table.attach(self.mmb_folder_default_radio,0,1,0,1,yoptions=gtk.SHRINK)
     
     #Row 2: () Custom
-    self.mmb_folder_custom_radio = gtk.RadioButton(self.mmb_folder_default_radio,_("Custom"))
+    self.mmb_folder_custom_radio = gtk.RadioButton(self.mmb_folder_default_radio,_("Other"))
     self.mmb_folder_custom_radio.identifier = 'mmb.folder.custom'
     self.mmb_folder_custom_radio.connect('toggled',self.radio_changed)
     self.mmb_folder_table.attach(self.mmb_folder_custom_radio,0,1,1,2,yoptions=gtk.SHRINK)
@@ -416,16 +416,22 @@ class Prefs:
     self.nbook.append_page(self.mmb_vbox,self.mmb_tab)
     
     #Now for a close button - no apply button needed since everything is done instantly
-    self.close_button = gtk.Button(stock=gtk.STOCK_CLOSE)
-    self.close_button.connect('clicked',lambda a:self.window.destroy())
-    
+    close_button = gtk.Button(stock=gtk.STOCK_CLOSE)
+    close_button.connect('clicked',lambda a:self.window.destroy())
+
+    #HButtonBox
+    hbbox = gtk.HButtonBox()
+    hbbox.set_layout(gtk.BUTTONBOX_END)
+    hbbox.pack_end(close_button, False, False, 5)
+
     #Now for a main table
-    self.main_table = gtk.Table(2,1)
-    self.main_table.attach(self.nbook,0,1,0,1)
-    self.main_table.attach(self.close_button,0,1,1,2,xoptions=gtk.SHRINK,yoptions=gtk.SHRINK)
+    main_vbox = gtk.VBox(False, 6)
+    main_vbox.pack_start(self.nbook, True, True)
+    main_vbox.pack_start(hbbox, False, False)
     
     #Put it all together
-    self.window.add(self.main_table)
+    self.window.add(main_vbox)
+    self.window.set_border_width(6)
     self.window.show_all()
     self.initializing = False
   
@@ -441,7 +447,7 @@ class Prefs:
     self.lmb_folder_custom_entry.set_text(self.dir_chooser_dirname)
     self.lmb_folder_custom_entry.set_sensitive(True)
     self.lmb_folder_custom_browse.set_sensitive(True)
-    self.client.set_string('lmb_path',self.dir_chooser_dirname)
+    self.client.set_string(group, 'lmb_path', self.dir_chooser_dirname)
   
   #Browses for a directory/folder - for the middle button
   def browse_dir_mmb(self,widget):
@@ -455,7 +461,7 @@ class Prefs:
     self.mmb_folder_custom_entry.set_text(self.dir_chooser_dirname)
     self.mmb_folder_custom_entry.set_sensitive(True)
     self.mmb_folder_custom_browse.set_sensitive(True)
-    self.client.set_string('mmb_path',self.dir_chooser_dirname)
+    self.client.set_string(group, 'mmb_path', self.dir_chooser_dirname)
   
   #Determines what radio button was selected and changes awncc and other important things
   def radio_changed(self,radio):
@@ -473,44 +479,44 @@ class Prefs:
     if radio.identifier=='general.fb.default':
       self.general_fb_custom_entry.set_sensitive(False)
       self.general_fb_custom_entry.set_text('xdg-open')
-      self.client.set_string('fb','xdg-open')
+      self.client.set_string(group, 'fb','xdg-open')
     #Tab: General; Section: File Browser; Radio: Nautilus
     elif radio.identifier=='general.fb.nautilus':
       self.general_fb_custom_entry.set_sensitive(False)
       self.general_fb_custom_entry.set_text('nautilus')
-      self.client.set_string('fb','nautilus')
+      self.client.set_string(group, 'fb','nautilus')
     #Tab: General; Section: File Browser; Radio: Thunar
     elif radio.identifier=='general.fb.thunar':
       self.general_fb_custom_entry.set_sensitive(False)
       self.general_fb_custom_entry.set_text('thunar')
-      self.client.set_string('fb','thunar')
+      self.client.set_string(group, 'fb','thunar')
     #Tab: General; Section: File Browser; Radio: Konqueror
     elif radio.identifier=='general.fb.konqueror':
       self.general_fb_custom_entry.set_sensitive(False)
       self.general_fb_custom_entry.set_text('konqueror')
-      self.client.set_string('fb','konqueror')
+      self.client.set_string(group, 'fb','konqueror')
     #Tab: General; Section: File Browser; Radio: Dolphin
     elif radio.identifier=='general.fb.dolphin':
       self.general_fb_custom_entry.set_sensitive(False)
       self.general_fb_custom_entry.set_text('dolphin')
-      self.client.set_string('fb','dolphin')
+      self.client.set_string(group, 'fb','dolphin')
     #Tab: General; Section: File Browser; Radio: Custom
     elif radio.identifier=='general.fb.custom':
       self.general_fb_custom_entry.set_sensitive(True)
-      self.client.set_string('fb',\
+      self.client.set_string(group, 'fb',\
       self.general_fb_custom_entry.get_text())
     #Tab: LMB; Section: When clicked; Radio: Display
     elif radio.identifier=='lmb.clicked.display':
-      self.client.set_int('lmb',1)
+      self.client.set_int(group, 'lmb',1)
     #Tab: LMB; Section: When clicked; Radio: Open
     elif radio.identifier=='lmb.clicked.open':
-      self.client.set_int('lmb',2)
+      self.client.set_int(group, 'lmb',2)
     #Tab: LMB; Section: When clicked; Radio: Nothing
     elif radio.identifier=='lmb.clicked.nothing':
-      self.client.set_int('lmb',3)
+      self.client.set_int(group, 'lmb',3)
     #Tab: LMB; Section: Default Folder; Radio: Home Folder
     elif radio.identifier=='lmb.folder.default':
-      self.client.set_string('lmb_path',os.path.expanduser('~'))
+      self.client.set_string(group, 'lmb_path',os.path.expanduser('~'))
       self.lmb_folder_custom_entry.set_sensitive(False)
       self.lmb_folder_custom_browse.set_sensitive(False)
     #Tab: LMB; Section: Default Folder; Radio: Custom
@@ -518,7 +524,7 @@ class Prefs:
       if self.lmb_folder_custom_entry.get_text()=='':
         self.browse_dir_lmb(None)
       elif os.path.exists(self.lmb_folder_custom_entry.get_text()):
-        self.client.set_string('lmb_path',\
+        self.client.set_string(group, 'lmb_path',\
         self.lmb_folder_custom_entry.get_text())
         self.lmb_folder_custom_entry.set_sensitive(True)
         self.lmb_folder_custom_browse.set_sensitive(True)
@@ -526,16 +532,16 @@ class Prefs:
         self.browse_dir_lmb(None)
     #Tab: MMB; Section: When clicked; Radio: Display
     elif radio.identifier=='mmb.clicked.display':
-      self.client.set_int('mmb',1)
+      self.client.set_int(group, 'mmb',1)
     #Tab: MMB; Section: When clicked; Radio: Open
     elif radio.identifier=='mmb.clicked.open':
-      self.client.set_int('mmb',2)
+      self.client.set_int(group, 'mmb',2)
     #Tab: MMB; Section: When clicked; Radio: Nothing
     elif radio.identifier=='mmb.clicked.nothing':
-      self.client.set_int('mmb',3)
+      self.client.set_int(group, 'mmb',3)
     #Tab: MMB; Section: Default Folder; Radio: Home Folder
     elif radio.identifier=='mmb.folder.default':
-      self.client.set_string('mmb_path',os.path.expanduser('~'))
+      self.client.set_string(group, 'mmb_path',os.path.expanduser('~'))
       self.mmb_folder_custom_entry.set_sensitive(False)
       self.mmb_folder_custom_browse.set_sensitive(False)
     #Tab: MMB; Section: Default Folder; Radio: Custom
@@ -543,7 +549,7 @@ class Prefs:
       if self.mmb_folder_custom_entry.get_text()=='':
         self.browse_dir_mmb(None)
       elif os.path.exists(self.mmb_folder_custom_entry.get_text()):
-        self.client.set_string('mmb_path',\
+        self.client.set_string(group, 'mmb_path',\
         self.mmb_folder_custom_entry.get_text())
         self.mmb_folder_custom_entry.set_sensitive(True)
         self.mmb_folder_custom_browse.set_sensitive(True)
@@ -596,64 +602,64 @@ class Prefs:
     #Tab: Dialog; Section: Places; Checkbox: Home Folder
     elif check.identifier=='dialog.places.home':
       if check.get_active()==True:
-        self.client.set_int('places_home',2)
+        self.client.set_int(group, 'places_home',2)
       else:
-        self.client.set_int('places_home',1)
+        self.client.set_int(group, 'places_home',1)
       self.check_all()
 
     #Tab: Dialog; Section: Places; Checkbox: Filesystem
     elif check.identifier == 'dialog.places.filesystem':
       if check.get_active():
-        self.client.set_int('places_filesystem', 2)
+        self.client.set_int(group, 'places_filesystem', 2)
       else:
-        self.client.set_int('places_filesystem', 1)
+        self.client.set_int(group, 'places_filesystem', 1)
       self.check_all()
 
     #Tab: Dialog; Section: Places; Checkbox: Local drives
     elif check.identifier=='dialog.places.local':
       if check.get_active()==True:
-        self.client.set_int('places_local',2)
+        self.client.set_int(group, 'places_local',2)
       else:
-        self.client.set_int('places_local',1)
+        self.client.set_int(group, 'places_local',1)
       self.check_all()
 
     #Tab: Dialog; Section: Places; Checkbox: Network drives
     elif check.identifier=='dialog.places.network':
       if check.get_active()==True:
-        self.client.set_int('places_network',2)
+        self.client.set_int(group, 'places_network',2)
       else:
-        self.client.set_int('places_network',1)
+        self.client.set_int(group, 'places_network',1)
       self.check_all()
 
     #Tab: Dialog; Section: Places; Checkbox: Connect to server
     elif check.identifier == 'dialog.places.connect':
       if check.get_active():
-        self.client.set_int('places_connect', 2)
+        self.client.set_int(group, 'places_connect', 2)
       else:
-        self.client.set_int('places_connect', 1)
+        self.client.set_int(group, 'places_connect', 1)
       self.check_all()
 
     #Tab: Dialog; Section: Places; Checkbox: Bookmarks
     elif check.identifier=='dialog.places.bookmarks':
       if check.get_active()==True:
-        self.client.set_int('places_bookmarks',2)
+        self.client.set_int(group, 'places_bookmarks',2)
       else:
-        self.client.set_int('places_bookmarks',1)
+        self.client.set_int(group, 'places_bookmarks',1)
       self.check_all()
 
     #Tab: Dialog; Section: Behavior; Checkbox: Focus
     elif check.identifier=='dialog.behavior.focus':
       if check.get_active()==True:
-        self.client.set_int('focus_entry',2)
+        self.client.set_int(group, 'focus_entry',2)
       else:
-        self.client.set_int('focus_entry',1)
+        self.client.set_int(group, 'focus_entry',1)
 
     #Tab: Dialog; Section: Behavior; Checkbox: Open place
     elif check.identifier=='dialog.behavior.open':
       if check.get_active()==True:
-        self.client.set_int('places_open',2)
+        self.client.set_int(group, 'places_open',2)
       else:
-        self.client.set_int('places_open',1)
+        self.client.set_int(group, 'places_open',1)
 
   #Determine if all the places checkboxes are the same state
   def check_all(self):

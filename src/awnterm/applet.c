@@ -23,7 +23,7 @@
 
 #include <libawn/awn-applet.h>
 #include <libawn/awn-applet-simple.h>
-#include <libawn/awn-applet-dialog.h>
+#include <libawn/awn-dialog.h>
 #include <vte/vte.h>
 #include <gtk/gtk.h>
 
@@ -31,22 +31,24 @@
 #include "settings.h"
 
 // This function will automatically be called by awn when your applet is added to the dock.
-AwnApplet* awn_applet_factory_initp (const gchar* uid, gint orient, gint height )
+AwnApplet* awn_applet_factory_initp (const gchar* uid, gint orient,
+                                     gint offset, gint height)
 {
 	// Set up the AwnTerm and the AwnApplet. applet is global.
 	applet = g_new0 (AwnTerm, 1);
-	applet->applet = AWN_APPLET (awn_applet_simple_new (uid, orient, height));
+	applet->applet = AWN_APPLET (awn_applet_simple_new (uid, orient,
+                                                            offset, height));
 
 	// Set up the title
-	awn_applet_simple_set_title (AWN_APPLET_SIMPLE(applet->applet), "Awn Terminal");
+	awn_applet_simple_set_tooltip_text (AWN_APPLET_SIMPLE(applet->applet), "Awn Terminal");
 	
 	// Set up the icon
-	awn_applet_simple_set_awn_icon(AWN_APPLET_SIMPLE(applet->applet),
-									APPLET_NAME,
-									"terminal");
+	awn_applet_simple_set_icon_name(AWN_APPLET_SIMPLE(applet->applet),
+					APPLET_NAME,
+					"terminal");
 	
 	// Set up the dialog
-	applet->dialog = awn_applet_dialog_new (applet->applet);
+	applet->dialog = awn_dialog_new_for_widget (applet->applet);
 	applet->number_of_tabs = 0;
 	
 	// FIXME
@@ -72,16 +74,11 @@ AwnApplet* awn_applet_factory_initp (const gchar* uid, gint orient, gint height 
 	applet->menu = NULL;
 	
 	// Connect the signals
-	g_signal_connect (G_OBJECT (applet->applet), "enter-notify-event", G_CALLBACK (enter_notify_cb), NULL);
-	g_signal_connect (G_OBJECT (applet->applet), "leave-notify-event", G_CALLBACK (leave_notify_cb), NULL);
 	g_signal_connect (G_OBJECT (applet->applet), "button-press-event", G_CALLBACK (icon_clicked_cb), NULL);
 	g_signal_connect (G_OBJECT (applet->dialog), "focus-out-event", G_CALLBACK (focus_out_cb), NULL);
 	
 	// Set up the config client
 	init_settings (applet);
-	
-	//Show the applet
-	gtk_widget_show_all (GTK_WIDGET (applet->applet));
 	
 	// Return the AwnApplet
 	return applet->applet;

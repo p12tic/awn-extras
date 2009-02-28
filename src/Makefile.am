@@ -39,6 +39,7 @@ endif
 # please keep alphabetized (except for libawn-extras)
 SUBDIRS =			\
 	libawn-extras		\
+	awnterm			\
 	notification-area	\
 	shiny-switcher		\
 	places			\

@@ -30,24 +30,6 @@
 #include "awnterm.h"
 #include "settings.h"
 
-// Callback when the icon is hovered.
-gboolean enter_notify_cb (GtkWidget *widget, GdkEventCrossing *event, gpointer null)
-{
-	AwnAppletSimple *simple = AWN_APPLET_SIMPLE (widget);
-	awn_applet_simple_set_title_visibility (simple, TRUE);
-
-	return FALSE;
-}
-
-// Callback when the icon is left.
-gboolean leave_notify_cb (GtkWidget *widget, GdkEventCrossing *event, gpointer null)
-{
-	AwnAppletSimple *simple = AWN_APPLET_SIMPLE (widget);
-	awn_applet_simple_set_title_visibility (simple, FALSE);
-
-	return FALSE;
-}
-
 // Callback when the icon is clicked on.
 gboolean icon_clicked_cb (GtkWidget *widget, GdkEventButton *event, gpointer null)
 {
@@ -59,7 +41,7 @@ gboolean icon_clicked_cb (GtkWidget *widget, GdkEventButton *event, gpointer nul
 			if (!GTK_WIDGET_VISIBLE (applet->dialog))
 			{
 				gtk_widget_show_all (applet->dialog);
-				awn_applet_simple_set_title_visibility (AWN_APPLET_SIMPLE (applet->applet), FALSE);
+	//			awn_applet_simple_set_title_visibility (AWN_APPLET_SIMPLE (applet->applet), FALSE);
 			}
 			else
 			{

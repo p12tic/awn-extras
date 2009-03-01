@@ -44,6 +44,10 @@ struct _FileBrowserDialog {
 
     gboolean        active;
 
+  GtkWidget *hscroll;
+  GtkAdjustment *adj;
+  gint last_page;
+
 	GtkWidget		*viewport;
 };
 

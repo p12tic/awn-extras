@@ -98,7 +98,9 @@ static void filebrowser_applet_activate_about(
     GtkAboutDialog *about;
     GdkPixbuf *logo;
     gchar *icon_path;
-    const gchar *authors[] = { "Timon ter Braak", NULL };
+    const gchar *authors[] = { "Timon ter Braak",
+                               "Sharkbaitbobby <sharkbaitbobby+awn@gmail.com>",
+                               NULL };
 
     icon_path = g_strdup_printf("%s/filebrowser.svg", ICONDIR);
 
@@ -108,7 +110,7 @@ static void filebrowser_applet_activate_about(
     gtk_about_dialog_set_name(about, _("File Browser"));
     gtk_about_dialog_set_comments(about, _("Browse the filesystem"));
     gtk_about_dialog_set_authors(about, authors);
-    gtk_about_dialog_set_copyright(about, "Copyright 2008 Timon ter Braak");
+    gtk_about_dialog_set_copyright(about, "Copyright 2009 Sharkbaitbobby");
     gtk_about_dialog_set_license(about, "GPLv2");
     gtk_about_dialog_set_website(about, "http://wiki.awn-project.org/File_Browser");
     gtk_about_dialog_set_website_label(about, "wiki.awn-project.org");
@@ -363,7 +365,6 @@ static gboolean filebrowser_applet_button_release_event(
 
     // toggle visibility
     if ( event->button == 1 ) {
-	filebrowser_dialog_set_folder( applet->filebrowser, NULL, 0 );
         filebrowser_dialog_toggle_visiblity( applet->filebrowser );
         return FALSE;
     
@@ -523,7 +524,6 @@ AwnApplet *awn_applet_factory_initp(
                                        
 
     gtk_widget_show_all( awn_applet );
-    g_print("return\n");
     return AWN_APPLET( awn_applet );
 }
 

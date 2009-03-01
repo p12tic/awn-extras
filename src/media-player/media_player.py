@@ -30,19 +30,18 @@ class App(awn.AppletSimple):
     """Displays a dialog with controls and track/album info and art"""
 
     APPLET_NAME = "Media Player Applet"
-    def __init__(self, uid, orient, height):
+    def __init__(self, uid, orient, offset, size):
         """Creating the applets core"""
-        awn.AppletSimple.__init__(self, uid, orient, height)
+        awn.AppletSimple.__init__(self, uid, orient, offset, size)
         self.toolTip = App.APPLET_NAME
-        self.set_awn_icon('media-player', 'media-player')
+        self.set_icon_name('media-player', 'media-player')
         self.load_keys()
 
         # some initialization stuff
         self.isVideo = False
-        self.height = height
+        self.size = size
         self.full_window = None
-        self.title = awn.awn_title_get_default()
-        self.dialog = awn.AppletDialog(self)
+        self.dialog = awn.Dialog(self)
         self.dialog_visible = False
 
         # Recent items menu
@@ -110,8 +109,6 @@ class App(awn.AppletSimple):
 
         # Standard AWN Connects
         self.connect("button-press-event", self.button_press)
-        self.connect("enter-notify-event", self.enter_notify)
-        self.connect("leave-notify-event", self.leave_notify)
         self.dialog.connect("focus-out-event", self.dialog_focus_out)
         # Drag&drop support
         self.connect("drag-data-received", self.applet_drop_cb)
@@ -247,18 +244,11 @@ class App(awn.AppletSimple):
             if self.dialog_visible:
                 self.hideApplet()
             else:
-                self.title.hide(self)
                 self.showApplet()
         elif event.button == 2:
             self.button_play_pause_cb(widget)
         elif event.button == 3:
             self.popup_menu.popup(None, None, None, event.button, event.time)
-
-    def enter_notify(self, widget, event):
-        self.title.show(self, self.toolTip)
-
-    def leave_notify(self, widget, event):
-        self.title.hide(self)
 
     def dialog_focus_out(self, widget, event):
         if not self.isVideo:
@@ -423,7 +413,7 @@ class App(awn.AppletSimple):
 
 if __name__ == "__main__":
     awn.init                      (sys.argv[1:])
-    applet = App                  (awn.uid, awn.orient,awn.height)
+    applet = App                  (awn.uid, awn.orient, awn.offset, awn.size)
     awn.init_applet               (applet)
     applet.show_all               ()
     gtk.main                      ()

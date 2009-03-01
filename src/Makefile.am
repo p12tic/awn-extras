@@ -40,6 +40,7 @@ endif
 SUBDIRS =			\
 	libawn-extras		\
 	awnterm			\
+	media-player		\
 	notification-area	\
 	shiny-switcher		\
 	places			\

@@ -465,9 +465,6 @@ void toggle_Dashboard_window(Dashboard *dashboard)
   {
     if (dashboard->mainwindow)
     {
-      if (!dashboard->show_awn_dialog)
-        awn_applet_dialog_position_reset(dashboard->mainwindow);
-
       gtk_widget_show_all(dashboard->mainwindow);
     }
   }

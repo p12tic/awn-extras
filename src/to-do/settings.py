@@ -31,12 +31,13 @@ class Settings:
   
   #A function to add another value to the registered dictionary -- includes the type
   def register(self,dictionary):
-    for string,valtype in dictionary.items():
+    for string, type_default in dictionary.items():
       try:#String has been registered -- no action necessary
         self._registered[string]
       except:#String has not been registered -- register it
-        self._registered[string] = valtype
-        self.get(string)
+        self._registered[string] = type_default[0]
+        if self.get(string) is None:
+          self.set(string, type_default[1])
   
   #A function to get the value of a key -- assumes that <string> has already been registered
   def get(self,string):

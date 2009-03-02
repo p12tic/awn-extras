@@ -7,7 +7,7 @@ m4_define(pygtk_required_version,        2.10.0)
 
 
 AC_INIT(awn-extras-applets, 0.3.1, [])
-AM_INIT_AUTOMAKE()
+AM_INIT_AUTOMAKE([-Wno-portability])
 AC_CONFIG_SRCDIR(src)
 AM_CONFIG_HEADER(config.h)
 AM_MAINTAINER_MODE

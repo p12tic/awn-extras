@@ -352,8 +352,7 @@ class App(awn.AppletSimple):
         wTree = gtk.glade.XML(glade_path)
 
         window = wTree.get_widget("dialog1")
-        awn_icon = self.get_icon()
-        window.set_icon(awn_icon.get_icon_at_size(awn_icon.get_state(), 48))
+        window.set_icon(self.get_icon().get_icon_at_size(48))
 
         self.sinkChanged = False
         def sink_changed(widget):
@@ -400,8 +399,8 @@ class App(awn.AppletSimple):
     def show_about(self, widget):
         about = gtk.AboutDialog()
         awn_icon = self.get_icon()
-        about.set_logo(awn_icon.get_icon_at_size(awn_icon.get_state(), 48))
-        about.set_icon(awn_icon.get_icon_at_size(awn_icon.get_state(), 64))
+        about.set_logo(awn_icon.get_icon_at_size(48))
+        about.set_icon(awn_icon.get_icon_at_size(64))
         about.set_name("Media Player Applet")
         about.set_copyright("Copyright (c) 2008 Michal Hruby <michal.mhr at gmail.com>")
         about.set_authors(["Michal Hruby <michal.mhr at gmail.com>"])

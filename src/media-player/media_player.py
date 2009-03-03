@@ -33,7 +33,7 @@ class App(awn.AppletSimple):
     def __init__(self, uid, orient, offset, size):
         """Creating the applets core"""
         awn.AppletSimple.__init__(self, uid, orient, offset, size)
-        self.toolTip = App.APPLET_NAME
+        self.set_tooltip_text(App.APPLET_NAME)
         self.set_icon_name('media-player', 'media-player')
         self.load_keys()
 
@@ -206,6 +206,8 @@ class App(awn.AppletSimple):
         self.isVideo = True
         if not self.dialog_visible:
             self.showApplet()
+        else:
+            self.da.set_property("visible", self.isVideo)
 
     def OnGstMessage(self, bus, message, data = None):
         if message.type in [gst.MESSAGE_EOS, gst.MESSAGE_ERROR]:
@@ -350,7 +352,8 @@ class App(awn.AppletSimple):
         wTree = gtk.glade.XML(glade_path)
 
         window = wTree.get_widget("dialog1")
-        window.set_icon(self.get_awn_icons().get_icon_simple())
+        awn_icon = self.get_icon()
+        window.set_icon(awn_icon.get_icon_at_size(awn_icon.get_state(), 48))
 
         self.sinkChanged = False
         def sink_changed(widget):
@@ -396,8 +399,9 @@ class App(awn.AppletSimple):
 
     def show_about(self, widget):
         about = gtk.AboutDialog()
-        about.set_logo(self.get_awn_icons().get_icon_simple_at_height(48))
-        about.set_icon(self.get_awn_icons().get_icon_simple())
+        awn_icon = self.get_icon()
+        about.set_logo(awn_icon.get_icon_at_size(awn_icon.get_state(), 48))
+        about.set_icon(awn_icon.get_icon_at_size(awn_icon.get_state(), 64))
         about.set_name("Media Player Applet")
         about.set_copyright("Copyright (c) 2008 Michal Hruby <michal.mhr at gmail.com>")
         about.set_authors(["Michal Hruby <michal.mhr at gmail.com>"])

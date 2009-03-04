@@ -74,7 +74,7 @@ class ThinkHDAPSApplet:
     __was_paused = False
     __error_occurred = False
 
-    def check_status_cb(self, this):
+    def check_status_cb(self):
         """Check the status the hard disk monitored by HDAPS and change
         the applet's icon if necessary,
 
@@ -129,18 +129,19 @@ class ThinkHDAPSApplet:
         if len(disks) > 0:
             self.__hdaps_device = disks[0]
 
-        applet.connect("height-changed", self.height_changed_cb)
-
         if self.__hdaps_device is not None:
+            applet.connect_size_changed(self.size_changed_cb)
+
             applet.title.set(self.__hdaps_device + " " + hdaps_short_description)
-            gobject.timeout_add(check_status_interval, self.check_status_cb, self)
+            gobject.timeout_add(check_status_interval, self.check_status_cb)
         else:
+            applet.connect_size_changed(self.set_error_icon)
+
             self.set_error_icon()
             applet.title.set("No hard disk found")
 
-    def height_changed_cb(self, widget, event):
-        """Update the applet's icon, because the height of the panel
-        has changed.
+    def size_changed_cb(self):
+        """Update the applet's icon, because the size of the panel has changed.
 
         """
         self.setup_icon()
@@ -149,21 +150,17 @@ class ThinkHDAPSApplet:
         self.__error_occurred = not self.__error_occurred
 
         # Check the status to update the applet's icon
-        self.check_status_cb(self)
+        self.check_status_cb()
 
     def setup_icon(self):
         """Load the images that are going to be used as the applet's icon.
 
         """
-        height = self.applet.get_height()
-        self.icon_running = gdk.pixbuf_new_from_file_at_size(file_icon_running, height, height)
-        self.icon_paused = gdk.pixbuf_new_from_file_at_size(file_icon_paused, height, height)
+        self.icon_running = self.applet.icon.file(file_icon_running, set=False, size=awnlib.Icon.APPLET_SIZE)
+        self.icon_paused = self.applet.icon.file(file_icon_paused, set=False, size=awnlib.Icon.APPLET_SIZE)
 
     def set_error_icon(self):
-        height = self.applet.get_height()
-        icon_error = gdk.pixbuf_new_from_file_at_size(file_icon_error, height, height)
-
-        self.applet.icon.set(icon_error)
+        self.applet.icon.file(file_icon_error, size=awnlib.Icon.APPLET_SIZE)
 
 
 if __name__ == "__main__":

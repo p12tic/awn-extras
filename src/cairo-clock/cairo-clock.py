@@ -69,7 +69,7 @@ class CairoClockApplet:
         self.__clock_updater.draw_clock_cb()
 
         applet.connect("enter-notify-event", lambda w, e: self.__clock_updater.update_title())
-        applet.connect("height-changed", lambda w, e: self.__clock_updater.draw_clock_cb())
+        applet.connect_size_changed(self.__clock_updater.draw_clock_cb)
 
         applet.timing.register(self.__clock_updater.draw_clock_cb, draw_clock_interval)
 

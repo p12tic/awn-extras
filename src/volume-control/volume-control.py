@@ -75,7 +75,7 @@ class VolumeControlApplet:
         self.setup_context_menu()
 
         applet.connect("scroll-event", self.scroll_event_cb)
-        applet.connect("height-changed", self.height_changed_cb)
+        applet.connect_size_changed(self.size_changed_cb)
 
     def scroll_event_cb(self, widget, event):
         if event.direction == gdk.SCROLL_UP:
@@ -83,9 +83,8 @@ class VolumeControlApplet:
         elif event.direction == gdk.SCROLL_DOWN:
             self.backend.down()
 
-    def height_changed_cb(self, widget, event):
-        """Reload the applet's icon, because the height of the panel has
-        changed.
+    def size_changed_cb(self):
+        """Reload the applet's icon, because the size of the panel has changed.
 
         """
         self.refresh_icon(True)

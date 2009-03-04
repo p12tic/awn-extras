@@ -87,9 +87,9 @@ class BatteryStatusApplet:
         else:
             self.set_battery_missing()
 
-        applet.connect("height-changed", self.height_changed_cb)
+        applet.connect_size_changed(self.size_changed_cb)
 
-    def height_changed_cb(self, widget, event):
+    def size_changed_cb(self):
         if self.backend is not None:
             self.check_status_cb()
         else:

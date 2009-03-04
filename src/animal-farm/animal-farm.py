@@ -52,6 +52,8 @@ class AnimalFarmApplet:
         self.set_icon()
         
         self.setup_main_dialog()
+        
+        applet.connect_size_changed(self.refresh_icon)
     
     def setup_main_dialog(self):
         self.dialog = self.applet.dialog.new("fortune-dialog")
@@ -84,6 +86,9 @@ class AnimalFarmApplet:
         self.previous_iconname = self.iconname
         self.iconname = files[random.randint(0, len(files) - 1)]
         
+        self.refresh_icon()
+    
+    def refresh_icon(self):
         self.applet.icon.file(os.path.join(images_dir, self.iconname), size=awnlib.Icon.APPLET_SIZE)
     
     def refresh_fortune(self):

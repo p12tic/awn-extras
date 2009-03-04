@@ -124,8 +124,7 @@ class CpuFreqApplet:
     def __init__(self, applet):
         self.applet = applet
 
-        height = self.applet.get_height()
-        applet.icon.file(applet_logo, size=height)
+        applet.icon.file(applet_logo, size=awnlib.Icon.APPLET_SIZE)
 
         self.setup_icon()
 

@@ -582,7 +582,7 @@ class DiagButton: Gtk.Button
     
 	construct
 	{
-		weak Gdk.Pixbuf pbuf;
+		Gdk.Pixbuf pbuf;
 		if (! win.get_icon_is_fallback() )
 		{
 			pbuf=win.get_icon();

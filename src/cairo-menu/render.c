@@ -1246,7 +1246,7 @@ void render_menu_widgets(Menu_list_item * menu_item, GtkWidget * box)
       Xpos = Xpos - G_cairo_menu_conf.text_size * G_cairo_menu_conf.menu_item_text_len * 4 / 5;//FIXME
       g_signal_connect(G_OBJECT(newbox->parent->parent), "focus-out-event", G_CALLBACK(_focus_out_window), NULL);
       gtk_widget_show_all(newbox);
-      gtk_window_set_transient_for(newbox->parent->parent, box->parent->parent);
+/*      gtk_window_set_transient_for(newbox->parent->parent, box->parent->parent);*/
       gtk_widget_realize(newbox->parent->parent);
       max_width = temp_width;
     }

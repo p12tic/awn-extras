@@ -244,9 +244,9 @@ GtkWidget * menu_new(GtkWidget * parent_menu)
   g_signal_connect(G_OBJECT(fixed), "expose-event", G_CALLBACK(_expose_event), NULL);
   g_signal_connect(G_OBJECT(vbox), "expose-event", G_CALLBACK(_expose_event), NULL);
 
-  if (parent_menu)
+/*  if (parent_menu)
     gtk_window_set_transient_for(parent_menu, win);
-
+*/
   return vbox;
 
 }

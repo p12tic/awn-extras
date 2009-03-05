@@ -17,10 +17,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 
-URL = 'https://www.pandora.com/radio/tuner_8_8_0_0_pandora.swf'
-
-
 import os
+import htmllib, formatter
+import urllib2
+import gtk
+import pygtk
 import awn
 from awn.extras import awnlib
 
@@ -55,6 +56,20 @@ applet_version = "0.3.3"
 applet_description = "Listen to Pandora from Awn"
 applet_theme_logo = "pandora"
 
+class GetPandoraUrl(htmllib.HTMLParser):
+    def __init__(self, formatterinit) :
+        htmllib.HTMLParser.__init__(self, formatterinit)
+        self.values = []
+
+    def start_param(self, attrs) :
+        if len(attrs) > 0 :
+            for attr in attrs :
+                if attr[0] == "value" :
+                    self.values.append(attr[1])
+
+    def get_values(self) :
+        return self.values
+
 class PandoraApplet:
     """ Listens to Pandora from Awn """
     def __init__(self, applet):
@@ -64,11 +79,65 @@ class PandoraApplet:
         
         self.dialog = applet.dialog.new("main")
         
+        self.showing_dlog = False
         self.moz = gtkmozembed.MozEmbed()
-        self.moz.set_size_request(640, 535)
-        self.moz.load_url(URL)
-        
+        try:
+            pandurl=self.applet.settings["url"]
+        except:
+            pandurl=self.returnurl()
+            self.applet.settings["url"] = pandurl
+        self.moz.set_size_request(640, 250)
+        try:
+            site = urllib2.urlopen(pandurl)
+            meta=site.info()
+            if meta['Content-Type'] == 'application/x-shockwave-flash':
+                self.moz.load_url(pandurl)
+            else:
+                return Error
+        except:
+            pandurl=self.returnurl()
+            self.applet.settings["url"] = pandurl
+            self.moz.load_url(pandurl)
         self.dialog.add(self.moz)
+
+        self.setup_context_menu()
+
+        applet.connect("button-press-event", self.button_press_event_cb)
+
+    def setup_context_menu(self):
+        menu = self.applet.dialog.menu
+        self.play = gtk.ImageMenuItem(stock_id=gtk.STOCK_MEDIA_PLAY)
+        self.play.connect("activate", self.playMusic)
+        menu.insert(self.play, 3)
+        self.stop = gtk.ImageMenuItem(stock_id=gtk.STOCK_STOP)
+        self.stop.connect("activate", self.stopMusic)
+        menu.insert(self.stop, 4)
+
+    def stopMusic(self,inp):
+       self.moz.load_url("about:blank")
+
+    def playMusic(self,inp):
+       self.moz.go_back()
+
+    def returnurl(self):
+        page=urllib2.urlopen('http://www.pandora.com/?cmd=mini')
+        format = formatter.NullFormatter()
+        paramvalues = GetPandoraUrl(format)
+        paramvalues.feed(page.read())
+        paramvalues.close()
+        urlvalues=paramvalues.get_values()
+        panurl=urlvalues[0]
+        return panurl
+
+    def button_press_event_cb(self, widget, event):
+        if event.button == 1:  
+            if self.showing_dlog:
+                self.dialog.hide()
+            else:
+                self.dialog.show_all()
+                if self.moz.get_location() == 'about:blank':
+                    self.moz.go_back()
+            self.showing_dlog = not self.showing_dlog
 
 if __name__ == "__main__":
     awnlib.init_start(PandoraApplet, {"name": applet_name,

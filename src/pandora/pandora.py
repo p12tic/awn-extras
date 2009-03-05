@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 
-URL = 'https://www.pandora.com/radio/tuner_8_7_0_0_pandora.swf'
+URL = 'https://www.pandora.com/radio/tuner_8_8_0_0_pandora.swf'
 
 
 import os

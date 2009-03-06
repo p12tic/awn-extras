@@ -22,6 +22,10 @@
 
 #include "wobblyziniapplet.h"
 
+#ifdef X_EVENT_WATCHING
+ #include <X11/Xlib.h>
+#endif
+
 static gboolean
 _button_clicked_event (GtkWidget      *widget,
                        GdkEventButton *event,
@@ -41,6 +45,62 @@ _button_clicked_event (GtkWidget      *widget,
   return TRUE;
 }
 
+GdkFilterReturn filter_func(GdkXEvent *xevent, GdkEvent *event, gpointer data)
+{
+#ifdef X_EVENT_WATCHING
+  static const gchar* event_names[] = {
+    "undefined",
+    "undefined",
+    "KeyPress",
+    "KeyRelease",
+    "ButtonPress",
+    "ButtonRelease",
+    "MotionNotify",
+    "EnterNotify",
+    "LeaveNotify",
+    "FocusIn",
+    "FocusOut",
+    "KeymapNotify",
+    "Expose",
+    "GraphicsExpose",
+    "NoExpose",
+    "VisibilityNotify",
+    "CreateNotify",
+    "DestroyNotify",
+    "UnmapNotify",
+    "MapNotify",
+    "MapRequest",
+    "ReparentNotify",
+    "ConfigureNotify",
+    "ConfigureRequest",
+    "GravityNotify",
+    "ResizeRequest",
+    "CirculateNotify",
+    "CirculateRequest",
+    "PropertyNotify",
+    "SelectionClear",
+    "SelectionRequest",
+    "SelectionNotify",
+    "ColormapNotify",
+    "ClientMessage",
+    "MappingNotify"
+  };
+
+  XEvent *xe = (XEvent *) xevent;
+  g_debug ("%d -> %s (win: %d)", xe->type, event_names[xe->type], xe->xany.window);
+  if (xe->type == PropertyNotify) {
+    GdkAtom atom = gdk_x11_xatom_to_atom(xe->xproperty.atom);
+    g_debug (" Atom: %s (%s)", gdk_atom_name(atom), xe->xproperty.state == PropertyNewValue ? "PropertyNewValue" : "PropertyDelete");
+  } else if (xe->type == ClientMessage) {
+    GdkAtom atom = gdk_x11_xatom_to_atom(xe->xclient.message_type);
+    g_debug (" Atom: %s", gdk_atom_name(atom));
+  }
+
+#endif
+
+  return GDK_FILTER_CONTINUE;
+}
+
 // entry method
 AwnApplet*
 awn_applet_factory_initp ( gchar* uid, gint orient, gint offset, gint height )
@@ -55,6 +115,7 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint offset, gint height )
 	// right-click handling
 	g_signal_connect (G_OBJECT (applet), "button-press-event",
 	                  G_CALLBACK (_button_clicked_event), applet);
+        gdk_window_add_filter(NULL, filter_func, NULL);
 	return applet;
 }
 

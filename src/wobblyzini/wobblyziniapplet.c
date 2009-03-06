@@ -162,7 +162,9 @@ wobbly_zini_render (cairo_t *cr)
 static gboolean
 time_handler (WobblyZini *wobblyzini)
 {
+#ifndef X_EVENT_WATCHING
 	gtk_widget_queue_draw (GTK_WIDGET(wobblyzini->applet));
+#endif
 	return TRUE;
 }
 

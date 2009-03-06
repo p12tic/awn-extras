@@ -33,17 +33,20 @@ usr/lib/awn/applets/places/*.so
 usr/share/avant-window-navigator/applets/places.desktop 
 etc/gconf/schemas/places.schemas
 #
+#Awn Terminal
+#
+usr/lib/awn/applets/awnterm/*.so
+usr/share/avant-window-navigator/applets/awnterm.desktop
+etc/gconf/schemas/awnterm.schemas
+#
 # Disabled applets
 #
 #usr/lib/awn/applets/separator/*.so
-#usr/lib/awn/applets/awnterm/*.so
 #usr/lib/awn/applets/plugger/*.so
 #usr/lib/awn/applets/trash/*.so
 #usr/lib/awn/applets/trash/trashapplet.glade usr/share/avant-window-navigator/applets/trash/
 #usr/share/avant-window-navigator/applets/separator.desktop
-#usr/share/avant-window-navigator/applets/awnterm.desktop
 #usr/share/avant-window-navigator/applets/plugger.desktop
 #usr/share/avant-window-navigator/applets/trash.desktop
 #usr/share/icons/hicolor/scalable/apps/separator.svg
-#etc/gconf/schemas/awnterm.schemas
 #etc/gconf/schemas/trash.schemas

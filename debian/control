@@ -22,7 +22,7 @@ Build-Depends: 	debhelper (>= 5),
 		python-dev,
 		python-gtk2-dev,
 		python-cairo-dev,
-		python-elementtree | python2.5,
+		python-elementtree | python (>= 2.5)
 		awn-manager (>= 0.2.6) | awn-manager-trunk (>= 0.2.6),
 		vala-awn-trunk,
 		valac (>= 0.5.4),

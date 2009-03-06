@@ -1,4 +1,10 @@
 #
+# Media Player
+#
+usr/share/avant-window-navigator/applets/media-player/*.py
+usr/share/avant-window-navigator/applets/media-player/icons/*.png
+usr/share/avant-window-navigator/applets/media-player.desktop
+#
 # Disabled applets
 #
 #usr/share/avant-window-navigator/applets/animal-farm/*.py
@@ -23,8 +29,6 @@
 #usr/share/avant-window-navigator/applets/comics/locale/
 #usr/share/avant-window-navigator/applets/cpufreq/
 #usr/share/avant-window-navigator/applets/DesktopManager/
-#usr/share/avant-window-navigator/applets/media-player/*.py
-#usr/share/avant-window-navigator/applets/media-player/icons/*.png
 #usr/share/avant-window-navigator/applets/file-browser-launcher/*.py
 #usr/share/avant-window-navigator/applets/file-browser-launcher/icons/
 #usr/share/avant-window-navigator/applets/lastfm/
@@ -57,7 +61,6 @@
 #usr/share/avant-window-navigator/applets/comics.desktop
 #usr/share/avant-window-navigator/applets/cpufreq.desktop
 #usr/share/avant-window-navigator/applets/DesktopManager.desktop
-#usr/share/avant-window-navigator/applets/media-player.desktop
 #usr/share/avant-window-navigator/applets/thinkhdaps.desktop
 #usr/share/avant-window-navigator/applets/to-do.desktop
 #usr/share/avant-window-navigator/applets/cairo-clock.desktop

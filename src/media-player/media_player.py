@@ -42,7 +42,6 @@ class App(awn.AppletSimple):
         self.size = size
         self.full_window = None
         self.dialog = awn.Dialog(self)
-        self.dialog_visible = False
 
         # Recent items menu
         self.recent_items_menu = gtk.Menu()
@@ -191,20 +190,21 @@ class App(awn.AppletSimple):
         if event.type == gtk.gdk._2BUTTON_PRESS:
             self.toggleFullscreen()
 
+    def dialogVisible(self):
+        return (self.dialog.flags() & gtk.VISIBLE) != 0
+
     def showApplet(self):
         self.dialog.stick()
         self.dialog.set_keep_above(True)
-        self.dialog_visible = True
         self.dialog.show_all()
         self.da.set_property("visible", self.isVideo)
 
     def hideApplet(self):
-        self.dialog_visible = False
         self.dialog.hide()
 
     def windowPrepared(self):
         self.isVideo = True
-        if not self.dialog_visible:
+        if not self.dialogVisible():
             self.showApplet()
         else:
             self.da.set_property("visible", self.isVideo)
@@ -215,7 +215,7 @@ class App(awn.AppletSimple):
             self.button_play.set_label('gtk-media-play')
             if self.full_window:
                 self.full_window.destroy()
-            if self.dialog_visible:
+            if self.dialogVisible():
                 self.hideApplet()
         #elif message.type is gst.MESSAGE_NEW_CLOCK:
         #    pass
@@ -243,7 +243,7 @@ class App(awn.AppletSimple):
 
     def button_press(self, widget, event):
         if event.button == 1:
-            if self.dialog_visible:
+            if self.dialogVisible():
                 self.hideApplet()
             else:
                 self.showApplet()
@@ -310,7 +310,7 @@ class App(awn.AppletSimple):
         self.playbin.set_state(gst.STATE_NULL)
         self.button_play.set_label('gtk-media-play')
         self.isVideo = False
-        if self.dialog_visible:
+        if self.dialogVisible():
             self.hideApplet()
 
     def applet_drag_motion_cb(self, widget, context, x, y, time):

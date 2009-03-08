@@ -31,7 +31,7 @@
 #include <glib/gerror.h>
 #include <glib/gi18n.h>
 
-#include <libawn/awn-applet-dialog.h>
+#include <libawn/awn-dialog.h>
 #include <libawn/awn-applet-simple.h>
 #include <libawn-extras/awn-extras.h>
 
@@ -336,7 +336,6 @@ populate (Menu *app)
   app->icons = vbox;
   gtk_container_add (GTK_CONTAINER (app->box), vbox);
 
-  awn_applet_dialog_position_reset (AWN_APPLET_DIALOG (app->window));
   gtk_widget_show_all (app->window);
 }
 
@@ -464,7 +463,7 @@ awn_applet_factory_initp (const gchar * uid, gint orient, gint offset, gint heig
                    G_CALLBACK(on_about_activated), (gpointer)app);
   gtk_widget_show_all(app->menu);
 
-  app->window = awn_applet_dialog_new (applet);
+  app->window = awn_dialog_new_for_widget (applet);
   gtk_window_set_focus_on_map (GTK_WINDOW (app->window), TRUE);
 
   app->box = gtk_alignment_new (0.5, 0.5, 1, 1);                               
@@ -482,7 +481,8 @@ awn_applet_factory_initp (const gchar * uid, gint orient, gint offset, gint heig
                                     APPLET_NAME,
                                     "gnome-main-menu")  ;
 
-  awn_applet_simple_set_title(AWN_APPLET_SIMPLE(app->applet), _("Main Menu"));
+  awn_applet_simple_set_tooltip_text(AWN_APPLET_SIMPLE(app->applet),
+                                     _("Main Menu"));
 
  /* gtk_widget_show_all (GTK_WIDGET (applet));*/
   return applet;

@@ -310,11 +310,11 @@ class App(awn.AppletSimple):
             self.hideApplet()
 
     def applet_drag_motion_cb(self, widget, context, x, y, time):
-        self.get_effects().start("launching")
+        self.get_icon().get_effects().start("launching")
         return True
 
     def applet_drag_leave_cb(self, widget, context, time):
-        self.get_effects().stop("launching")
+        self.get_icon().get_effects().stop("launching")
         return True
 
     def applet_drop_cb(self, wdgt, context, x, y, selection, targetType, time):

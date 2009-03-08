@@ -249,11 +249,15 @@ applet_expose_icon (GtkWidget *widget,
 static gboolean
 on_eb_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
+  if (use_alpha == FALSE) return FALSE;
+
   cairo_t *cr = gdk_cairo_create (widget->window);
-  if (use_alpha == FALSE || cr == NULL) return FALSE;
+  if (cr == NULL) return FALSE;
 
   cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
   cairo_paint (cr);
+
+  // FIXME: clip the paint area
 
   cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
 
@@ -466,7 +470,6 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint offset, gint size )
   gtk_table_set_row_spacings (GTK_TABLE (table), 1);
 
   eb = gtk_event_box_new ();
-  gtk_event_box_set_visible_window (GTK_EVENT_BOX (eb), TRUE);
   
   align = gtk_alignment_new (0, 1, 1, 0);
   app->align = align;

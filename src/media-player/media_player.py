@@ -110,13 +110,9 @@ class App(awn.AppletSimple):
         self.connect("button-press-event", self.button_press)
         self.dialog.connect("focus-out-event", self.dialog_focus_out)
         # Drag&drop support
-        self.connect("drag-data-received", self.applet_drop_cb)
-        self.connect("drag-motion", self.applet_drag_motion_cb)
-        self.connect("drag-leave", self.applet_drag_leave_cb)
-
-        self.drag_dest_set(gtk.DEST_DEFAULT_ALL,
-                           [("text/uri-list", 0, 0), ("text/plain", 0, 1)],
-                           gtk.gdk.ACTION_COPY)
+        self.get_icon().connect("drag-data-received", self.applet_drop_cb)
+        self.get_icon().connect("drag-motion", self.applet_drag_motion_cb)
+        self.get_icon().connect("drag-leave", self.applet_drag_leave_cb)
 
     def playItem(self, widget):
         label = widget.get_child().get_label()

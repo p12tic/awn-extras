@@ -226,8 +226,8 @@ void init_config(Places * places)
   if (places->honour_gtk)
   {
     GtkWidget *top_win = GTK_WIDGET(places->applet);
-    places->normal_colours.base = gdkcolor_to_awncolor(&top_win->style->base[0]);
-    places->normal_colours.text = gdkcolor_to_awncolor(&top_win->style->fg[0]);
+    places->normal_colours.base = gdkcolor_to_awncolor(&top_win->style->bg[GTK_STATE_NORMAL]);
+    places->normal_colours.text = gdkcolor_to_awncolor(&top_win->style->fg[GTK_STATE_ACTIVE]);
     places->hover_colours.base = gdkcolor_to_awncolor(&top_win->style->bg[GTK_STATE_ACTIVE]);
     places->hover_colours.text = gdkcolor_to_awncolor(&top_win->style->fg[GTK_STATE_ACTIVE]);
     places->border_colour = gdkcolor_to_awncolor(&top_win->style->text_aa[0]);

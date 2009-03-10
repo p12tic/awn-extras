@@ -392,13 +392,13 @@ void read_config(void)
     GdkColor d;
     GtkWidget *top_win = GTK_WIDGET(G_applet);
 
-    d = top_win->style->base[0];
+    d = top_win->style->bg[GTK_STATE_NORMAL];
     G_cairo_menu_conf.normal.bg.red = d.red / 65535.0;
     G_cairo_menu_conf.normal.bg.green = d.green / 65535.0;
     G_cairo_menu_conf.normal.bg.blue = d.blue / 65535.0;
     G_cairo_menu_conf.normal.bg.alpha = 0.9;
 
-    d = top_win->style->fg[0];
+    d = top_win->style->fg[GTK_STATE_ACTIVE];
     G_cairo_menu_conf.normal.fg.red = d.red / 65535.0;
     G_cairo_menu_conf.normal.fg.green = d.green / 65535.0;
     G_cairo_menu_conf.normal.fg.blue = d.blue / 65535.0;

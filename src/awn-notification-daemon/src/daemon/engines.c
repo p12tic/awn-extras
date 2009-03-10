@@ -166,7 +166,7 @@ fill_background(GtkWidget *widget, WindowData *windata, cairo_t *cr)
 
 #if 1
   GtkStyle *style = gtk_widget_get_style(widget);
-  GdkColor *background_color = &style->base[GTK_STATE_NORMAL];
+  GdkColor *background_color = &style->bg[GTK_STATE_NORMAL];
 
   cairo_set_source_rgba(cr,
                         G_daemon_config.awn_bg.red,
@@ -781,14 +781,14 @@ create_notification(UrlClickedCb url_clicked)
   if (windata->use_gtk_style)
   {
     GtkStyle *style = gtk_widget_get_style(windata->win);
-    GdkColor *background_color = &style->base[GTK_STATE_NORMAL];
+    GdkColor *background_color = &style->bg[GTK_STATE_NORMAL];
 
     G_daemon_config.awn_bg.red = background_color->red   / 65535.0;
     G_daemon_config.awn_bg.green = background_color->green / 65535.0;
     G_daemon_config.awn_bg.blue = background_color->blue  / 65535.0;
     G_daemon_config.awn_bg.alpha = BACKGROUND_OPACITY;
 
-    GdkColor *fg_color = &style->bg[GTK_STATE_SELECTED];
+    GdkColor *fg_color = &style->fg[GTK_STATE_ACTIVE];
     G_daemon_config.awn_border.red = fg_color->red   / 65535.0;
     G_daemon_config.awn_border.green = fg_color->green / 65535.0;
     G_daemon_config.awn_border.blue = fg_color->blue  / 65535.0;

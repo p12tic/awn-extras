@@ -120,14 +120,19 @@ class PandoraApplet:
        self.moz.go_back()
 
     def returnurl(self):
-        page=urllib2.urlopen('http://www.pandora.com/?cmd=mini')
-        format = formatter.NullFormatter()
-        paramvalues = GetPandoraUrl(format)
-        paramvalues.feed(page.read())
-        paramvalues.close()
-        urlvalues=paramvalues.get_values()
-        panurl=urlvalues[0]
-        return panurl
+        try:
+            page=urllib2.urlopen('http://www.pandora.com/?cmd=mini')
+            format = formatter.NullFormatter()
+            paramvalues = GetPandoraUrl(format)
+            paramvalues.feed(page.read())
+            paramvalues.close()
+            urlvalues=paramvalues.get_values()
+            panurl=urlvalues[0]
+            return panurl
+        except urllib2.URLError:
+            print 'Pandora Applet: No network connection'
+            self.pandurl=self.applet.settings["url"]
+            return self.pandurl
 
     def button_press_event_cb(self, widget, event):
         if event.button == 1:  

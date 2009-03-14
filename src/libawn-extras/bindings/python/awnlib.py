@@ -689,33 +689,6 @@ class Errors:
                 .get_icon_simple_at_height(self.__parent.get_height()))
 
 
-class Async:
-
-    def __init__(self, parent):
-        """Create a new Async object.
-
-        @param parent: The parent applet of the settings instance.
-        @type parent: L{Applet}
-
-        """
-        self.__parent = parent
-
-    def __www_thread(self, url, callback):
-        callback(urllib.urlopen(url))
-
-    def www(self, url, callback):
-        """Get the contents of a page located on the internet.
-
-        @param url: The URL of the page to get
-        @type url: C{string}
-        @param callback: The function to call after the page is retrieved.
-                         The file object will be passed as the first argument
-        @type callback: C{function}
-
-        """
-        gobject.idle_add(self.__www_thread(url, callback))
-
-
 class Settings:
 
     def __init__(self, parent):
@@ -1506,7 +1479,6 @@ class Applet(awn.AppletSimple, object):
     keyring = __getmodule(Keyring)
     notify = __getmodule(Notify)
     effects = __getmodule(Effects)
-    async = __getmodule(Async)
 
 
 def init_start(applet_class, meta={}, options=[]):
@@ -1529,6 +1501,8 @@ def init_start(applet_class, meta={}, options=[]):
     """
     assert callable(applet_class)
 
+    gobject.threads_init()
+
     awn.init(sys.argv[1:])
     applet = Applet(awn.uid, awn.orient, awn.height, meta, options)
     awn.init_applet(applet)
@@ -1542,5 +1516,4 @@ def init_start(applet_class, meta={}, options=[]):
         applet.errors.general(e, traceback=traceback)
 
     applet.show_all()
-    gobject.threads_init()  # Threading for Async
     gtk.main()

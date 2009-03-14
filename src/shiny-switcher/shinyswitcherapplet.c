@@ -2092,12 +2092,6 @@ applet_new(AwnApplet *applet, gint orient, int width, int height)
 
   screen = gtk_widget_get_screen(GTK_WIDGET(shinyswitcher->applet));
 
-  while (! gdk_screen_is_composited(screen))   /* FIXME */
-  {
-    printf("Shinyswitcher startup:  screen not composited.. waiting 1 second\n");
-    g_usleep(G_USEC_PER_SEC);
-  }
-
   if (shinyswitcher->reconfigure)
   {
     printf("ShinySwitcher Message:  attempting to configure workspaces\n");

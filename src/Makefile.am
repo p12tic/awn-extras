@@ -46,6 +46,7 @@ SUBDIRS =			\
 	mount-applet       \
 	notification-area	\
 	shiny-switcher		\
+	showdesktop			\
 	thinkhdaps			\
 	volume-control		\
 	places			\

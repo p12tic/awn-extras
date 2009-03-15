@@ -46,6 +46,7 @@ SUBDIRS =			\
 	mount-applet       \
 	notification-area	\
 	shiny-switcher		\
+	volume-control		\
 	places			\
 	$(WOBBLYZINI)		\
 	$(GCONF_APPLETS)	\

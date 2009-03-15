@@ -295,7 +295,7 @@ class VolumeControlApplet:
                 else:
                     icon = [key for key, value in volume_ranges.iteritems() if volume <= value[0] and volume >= value[1]][0]
 
-            self.applet.title.set(self.backend.get_current_track_label() + ": " + title)
+            self.applet.tooltip.set(self.backend.get_current_track_label() + ": " + title)
 
             if this_is_moonbeam_theme:
                 icon = os.path.join(moonbeam_theme_dir, self.theme, "audio-volume-%s.svg" % icon)

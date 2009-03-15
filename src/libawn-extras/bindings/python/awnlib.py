@@ -155,7 +155,7 @@ class Dialogs:
             prefs_item.connect("activate", lambda w: self.toggle(
                "preferences", "show"))
         else:
-            dlog = awn.AppletDialog(self.__parent)
+            dlog = awn.Dialog(self.__parent)
 
         self.register(dialog, dlog, focus)
 
@@ -213,7 +213,7 @@ class Dialogs:
         assert dialog in self.__register, "Dialog must be registered"
 
         if self.__parent:
-            self.__parent.title.hide()
+            self.__parent.tooltip.hide()
 
         if dialog == "menu":
             self.__register["menu"].show_all()
@@ -229,7 +229,7 @@ class Dialogs:
                 self.__current = None
 
                 # Because the dialog is now hidden, show the title again
-                self.__parent.title.show()
+                self.__parent.tooltip.show()
             else:
                 if self.__current is not None and self.__current not in \
                         self.__special_dialogs:
@@ -303,8 +303,7 @@ class Dialogs:
             elif "theme" in parent.meta:
                 # It is assumed that the C{awn.Icons}
                 # object has been set via set_awn_icon() in C{Icon}
-                self.set_logo(parent.get_awn_icons() \
-                                  .get_icon_simple_at_height(48))
+                self.set_logo(parent.get_icon().get_icon_at_size(48))
 
                 self.update_theme_icon()
                 parent.connect_size_changed(self.update_theme_icon)
@@ -324,17 +323,16 @@ class Dialogs:
             """Set the applet's logo to be of the same height as the panel.
 
             """
-            height = self.__parent.get_height()
+            size = self.__parent.get_size()
             self.set_icon(gtk.gdk.pixbuf_new_from_file_at_size( \
-                    self.__parent.meta["logo"], height, height))
+                    self.__parent.meta["logo"], size, size))
 
         def update_theme_icon(self):
             """Set the applet's logo to be of the same height as the panel.
 
             """
-            self.set_icon(self.__parent.get_awn_icons() \
-                .get_icon_simple_at_height( \
-                self.__parent.get_height()))
+            self.set_icon(self.__parent.get_icon() \
+                .get_icon_at_size(self.__parent.get_size()))
 
     class PreferencesDialog(gtk.Dialog):
 
@@ -375,16 +373,16 @@ class Dialogs:
             """Update the logo to be of the same height as the panel.
 
             """
-            height = self.__parent.get_height()
+            size = self.__parent.get_size()
             self.set_icon(gtk.gdk.pixbuf_new_from_file_at_size( \
-                self.__parent.meta["logo"], height, height))
+                self.__parent.meta["logo"], size, size))
 
         def update_theme_icon(self):
             """Updates the logo to be of the same height as the panel.
 
             """
-            self.set_icon(self.__parent.get_awn_icons() \
-                .get_icon_simple_at_height(self.__parent.get_height()))
+            self.set_icon(self.__parent.get_icon() \
+                .get_icon_at_size(self.__parent.get_size()))
 
 
 class Title:
@@ -398,31 +396,23 @@ class Title:
         """
         self.__parent = parent
 
-        self.__is_visible = False
-
-        def set_visible(visible):
-            self.__is_visible = visible
-        parent.connect("enter-notify-event", lambda w, e: set_visible(True))
-        parent.connect("leave-notify-event", lambda w, e: set_visible(False))
-
+        self.__tooltip = parent.get_icon().get_tooltip()
         self.set(parent.meta["name"])
 
     def is_visible(self):
-        return self.__is_visible
+        return self.__tooltip.props.visible
 
     def show(self):
         """Show the applet title.
 
         """
-        self.__is_visible = True
-        self.__parent.set_title_visibility(True)
+        self.__tooltip.show_all()
 
     def hide(self):
         """Hide the applet title.
 
         """
-        self.__is_visible = False
-        self.__parent.set_title_visibility(False)
+        self.__tooltip.hide_all()
 
     def set(self, text):
         """Set the applet title.
@@ -431,7 +421,11 @@ class Title:
         @type text: C{string}
 
         """
-        self.__parent.set_title(text)
+        self.__parent.set_tooltip_text(text)
+
+    def connect_becomes_visible(self, callback):
+        assert callable(callback)
+        self.__tooltip.connect("map-event", lambda w, e: callback())
 
 
 class Icon:
@@ -475,7 +469,7 @@ class Icon:
             icon = gtk.gdk.pixbuf_new_from_file(file)
         else:
             if size is self.__class__.APPLET_SIZE:
-                size = self.__parent.get_height()
+                size = self.__parent.get_size()
             icon = gtk.gdk.pixbuf_new_from_file_at_size(file, size, size)
 
         if set:
@@ -493,7 +487,7 @@ class Icon:
         @rtype: C{gtk.gdk.Pixbuf}
 
         """
-        return self.__parent.set_awn_icon(self.__parent.meta["short"], name)
+        return self.__parent.set_icon_name(self.__parent.meta["short"], name)
 
     def surface(self, surface, pixbuf=None, set=True):
         """Convert a C{cairo} surface to a C{gtk.gdk.Pixbuf}.
@@ -510,15 +504,13 @@ class Icon:
         @rtype: C{gtk.gdk.Pixbuf} or C{None}
 
         """
-        if pixbuf is None:
-            icon = extras.surface_to_pixbuf(surface)
-        else:
-            icon = extras.surface_to_pixbuf(surface, pixbuf)
-
         if set:
-            self.set(icon)
+            self.set_icon_surface(surface)
         else:
-            return icon
+            if pixbuf is None:
+                return extras.surface_to_pixbuf(surface)
+            else:
+                return extras.surface_to_pixbuf(surface, pixbuf)
 
     def set(self, icon):
         """Set a C{gtk.gdk.pixbuf} or C{cairo.Context} as your applet icon.
@@ -534,7 +526,7 @@ class Icon:
                 del self.__previous_context
                 self.__previous_context = icon
         else:
-            self.__parent.set_icon(icon)
+            self.__parent.set_icon_pixbuf(icon)
 
     def hide(self):
         """Hide the applet's icon.
@@ -573,7 +565,7 @@ class Errors:
             scope[name] = __import__(name, scope)
         except ImportError:
             self.__parent.icon.theme("dialog-error")
-            self.__parent.title.set("Python module %s not found" % name)
+            self.__parent.tooltip.set("Python module %s not found" % name)
 
             awn.check_dependencies(scope, name)
 
@@ -679,16 +671,16 @@ class Errors:
             """Update the logo to be of the same height as the panel.
 
             """
-            height = self.__parent.get_height()
+            size = self.__parent.get_size()
             self.set_icon(gtk.gdk.pixbuf_new_from_file_at_size( \
-                self.__parent.meta["logo"], height, height))
+                self.__parent.meta["logo"], size, size))
 
         def update_theme_icon(self):
             """Updates the logo to be of the same height as the panel.
 
             """
-            self.set_icon(self.__parent.get_awn_icons() \
-                .get_icon_simple_at_height(self.__parent.get_height()))
+            self.set_icon(self.__parent.get_icon() \
+                .get_icon_at_size(self.__parent.get_size()))
 
 
 class Settings:
@@ -1285,8 +1277,7 @@ class Effects:
         @type parent: L{Applet}
 
         """
-        self.__parent = parent
-        self.__effects = self.__parent.get_effects()
+        self.__effects = parent.get_icon().get_effects()
 
     def attention(self):
         """Launch the notify effect.
@@ -1294,7 +1285,7 @@ class Effects:
         Should be used when the user's attention is required.
 
         """
-        awn.awn_effect_start_ex(self.__effects, "attention", 0, 0, 1)
+        self.__effects.start("attention")
 
     def launch(self):
         """Launch the launch effect.
@@ -1302,7 +1293,7 @@ class Effects:
         Should be used when launching another program.
 
         """
-        awn.awn_effect_start_ex(self.__effects, "launching", 0, 0, 1)
+        self.__effects.start("launching")
 
 
 class Meta:
@@ -1425,7 +1416,7 @@ class Meta:
 
 class Applet(awn.AppletSimple, object):
 
-    def __init__(self, uid, orient, height, meta={}, options=[]):
+    def __init__(self, uid, orient, offset, size, meta={}, options=[]):
         """Create a new instance of the Applet object.
 
         @param uid: The unique identifier of the applet
@@ -1439,14 +1430,14 @@ class Applet(awn.AppletSimple, object):
         @type meta: C{dict}
 
         """
-        awn.AppletSimple.__init__(self, uid, orient, height)
+        awn.AppletSimple.__init__(self, uid, orient, offset, size)
 
         self.uid = uid
 
         # Create all required child-objects, others will be lazy-loaded
         self.meta = Meta(self, meta, options)
         self.icon = Icon(self)
-        self.title = Title(self)
+        self.tooltip = Title(self)
         self.settings = Settings(self)
 
         # Dialogs depends on settings
@@ -1458,7 +1449,7 @@ class Applet(awn.AppletSimple, object):
             _globalRegister["Applet"] = [self]
 
     def connect_size_changed(self, callback):
-        self.connect("height-changed", lambda w, e: callback())
+        self.connect("size-changed", lambda w, e: callback())
 
     def __getmodule(module):
         """Return a getter that lazy-loads a module, represented by a
@@ -1506,7 +1497,7 @@ def init_start(applet_class, meta={}, options=[]):
     gobject.threads_init()
 
     awn.init(sys.argv[1:])
-    applet = Applet(awn.uid, awn.orient, awn.height, meta, options)
+    applet = Applet(awn.uid, awn.orient, awn.offset, awn.size, meta, options)
     awn.init_applet(applet)
 
     try:

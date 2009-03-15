@@ -17,20 +17,24 @@ import operator
 import os
 import platform
 
-import gobject
 import pygtk
 pygtk.require("2.0")
 import gtk
-from gtk import gdk
 
 from awn.extras import awnlib
+
+try:
+    from pyinotify import WatchManager, ThreadedNotifier, EventsCodes
+    pyinotify = True
+except ImportError:
+    pyinotify = None
 
 applet_name = "ThinkHDAPS"
 applet_version = "0.3.3"
 applet_description = "Applet that shows the shock protection status of your disks"
 
-# Interval in milliseconds between two successive status checks
-check_status_interval = 100
+# Interval in seconds between two successive status checks
+check_status_interval = 0.1
 
 hdaps_short_description = "protected from shocks"
 
@@ -62,6 +66,8 @@ else:
     method_file = "queue/protect_method"
     protect_file = "queue/protect"
 
+notifier = None
+
 
 class ThinkHDAPSApplet:
 
@@ -74,13 +80,13 @@ class ThinkHDAPSApplet:
     __was_paused = False
     __error_occurred = False
 
-    def check_status_cb(self, this):
+    def check_status_cb(self):
         """Check the status the hard disk monitored by HDAPS and change
         the applet's icon if necessary,
 
         """
         try:
-            paused = int(open(os.path.join(sysfs_dir, self.__hdaps_device, protect_file)).readline())
+            paused = bool(int(open(self.__status_file).readline()))
 
             # Change icon if status has changed
             if paused != self.__was_paused or self.__error_occurred:
@@ -101,14 +107,10 @@ class ThinkHDAPSApplet:
                 self.set_error_icon()
                 self.applet.title.set(self.__hdaps_device + " not " + hdaps_short_description)
 
-        return True
-
     def __init__(self, applet):
         self.applet = applet
 
         self.setup_icon()
-
-        applet.icon.set(self.icon_running)
 
         if version_ge_2_6_28:
             def can_unload(disk):
@@ -129,18 +131,38 @@ class ThinkHDAPSApplet:
         if len(disks) > 0:
             self.__hdaps_device = disks[0]
 
-        applet.connect("height-changed", self.height_changed_cb)
-
         if self.__hdaps_device is not None:
+            self.__status_file = os.path.join(sysfs_dir, self.__hdaps_device, protect_file)
+
+            applet.connect_size_changed(self.size_changed_cb)
+
+            applet.icon.set(self.icon_running)
             applet.title.set(self.__hdaps_device + " " + hdaps_short_description)
-            gobject.timeout_add(check_status_interval, self.check_status_cb, self)
+
+            if not self.setup_inotify():
+                applet.timing.register(self.check_status_cb, check_status_interval)
         else:
+            applet.connect_size_changed(self.set_error_icon)
+
             self.set_error_icon()
             applet.title.set("No hard disk found")
 
-    def height_changed_cb(self, widget, event):
-        """Update the applet's icon, because the height of the panel
-        has changed.
+    def setup_inotify(self):
+        if pyinotify is None:
+            return False
+
+        watch_manager = WatchManager()
+
+        result = watch_manager.add_watch(self.__status_file, EventsCodes.IN_MODIFY)[self.__status_file] > 0
+
+        if result:
+            global notifier
+            notifier = ThreadedNotifier(watch_manager, lambda e: self.check_status_cb())
+            notifier.start()
+        return result
+
+    def size_changed_cb(self):
+        """Update the applet's icon, because the size of the panel has changed.
 
         """
         self.setup_icon()
@@ -149,21 +171,17 @@ class ThinkHDAPSApplet:
         self.__error_occurred = not self.__error_occurred
 
         # Check the status to update the applet's icon
-        self.check_status_cb(self)
+        self.check_status_cb()
 
     def setup_icon(self):
         """Load the images that are going to be used as the applet's icon.
 
         """
-        height = self.applet.get_height()
-        self.icon_running = gdk.pixbuf_new_from_file_at_size(file_icon_running, height, height)
-        self.icon_paused = gdk.pixbuf_new_from_file_at_size(file_icon_paused, height, height)
+        self.icon_running = self.applet.icon.file(file_icon_running, set=False, size=awnlib.Icon.APPLET_SIZE)
+        self.icon_paused = self.applet.icon.file(file_icon_paused, set=False, size=awnlib.Icon.APPLET_SIZE)
 
     def set_error_icon(self):
-        height = self.applet.get_height()
-        icon_error = gdk.pixbuf_new_from_file_at_size(file_icon_error, height, height)
-
-        self.applet.icon.set(icon_error)
+        self.applet.icon.file(file_icon_error, size=awnlib.Icon.APPLET_SIZE)
 
 
 if __name__ == "__main__":
@@ -176,3 +194,6 @@ if __name__ == "__main__":
         "copyright-year": 2008,
         "authors": ["onox <denkpadje@gmail.com>"],
         "artists": ["Jakub Steiner", "Lapo Calamandrei", "Rodney Dawes", "Garrett LeSage", "onox"]})
+
+    if isinstance(notifier, ThreadedNotifier):
+        notifier.stop()

@@ -124,8 +124,7 @@ class CpuFreqApplet:
     def __init__(self, applet):
         self.applet = applet
 
-        height = self.applet.get_height()
-        applet.icon.file(applet_logo, size=height)
+        applet.icon.file(applet_logo, size=awnlib.Icon.APPLET_SIZE)
 
         self.setup_icon()
 
@@ -139,7 +138,7 @@ class CpuFreqApplet:
         self.setup_context_menu()
 
         applet.connect("enter-notify-event", lambda w, e: self.update_title())
-        applet.connect("height-changed", self.height_changed_cb)
+        applet.connect_size_changed(self.size_changed_cb)
 
         applet.timing.register(self.draw_freq_cb, draw_freq_interval)
 
@@ -168,7 +167,7 @@ class CpuFreqApplet:
 
         self.setup_main_dialog()
 
-    def height_changed_cb(self, widget, event):
+    def size_changed_cb(self):
         """Update the applet's icon to reflect the new height.
 
         """

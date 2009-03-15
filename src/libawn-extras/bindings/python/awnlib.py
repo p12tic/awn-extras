@@ -1,7 +1,7 @@
 # AWN Applet Library - simplified APIs for programming applets for AWN.
 #
 # Copyright (C) 2007 - 2008  Pavel Panchekha <pavpanchekha@gmail.com>
-#                      2008  onox <denkpadje@gmail.com>
+#                      2008 - 2009  onox <denkpadje@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -44,22 +44,6 @@ _globalRegister = {}
 bug_report_link = "https://launchpad.net/awn-extras/+filebug"
 
 
-if "any" not in globals():
-    def any(iterable):
-        for element in iterable:
-            if element:
-                return True
-        return False
-
-
-if "all" not in globals():
-    def all(iterable):
-        for element in iterable:
-            if not element:
-                return False
-        return True
-
-
 def create_frame(parent, label):
     vbox = gtk.VBox(spacing=6)
     parent.add(vbox)
@@ -96,7 +80,6 @@ class KeyRingError:
 
     def __str__(self):
         return self.msg
-# Stupid keyring has quite a few ways to go wrong.
 
 
 class Dialogs:
@@ -316,7 +299,7 @@ class Dialogs:
                         parent.meta["logo"], 48, 48))
 
                 self.update_logo_icon()
-                parent.connect("size-changed", self.update_logo_icon)
+                parent.connect_size_changed(self.update_logo_icon)
             elif "theme" in parent.meta:
                 # It is assumed that the C{awn.Icons}
                 # object has been set via set_awn_icon() in C{Icon}
@@ -324,7 +307,7 @@ class Dialogs:
                                   .get_icon_simple_at_height(48))
 
                 self.update_theme_icon()
-                parent.connect("size-changed", self.update_theme_icon)
+                parent.connect_size_changed(self.update_theme_icon)
 
             # Connect some signals to be able to hide the window
             self.connect("response", self.response_event)
@@ -337,7 +320,7 @@ class Dialogs:
             if response < 0:
                 self.hide()
 
-        def update_logo_icon(self, widget=None, event=None):
+        def update_logo_icon(self):
             """Set the applet's logo to be of the same height as the panel.
 
             """
@@ -345,7 +328,7 @@ class Dialogs:
             self.set_icon(gtk.gdk.pixbuf_new_from_file_at_size( \
                     self.__parent.meta["logo"], height, height))
 
-        def update_theme_icon(self, widget=None, event=None):
+        def update_theme_icon(self):
             """Set the applet's logo to be of the same height as the panel.
 
             """
@@ -373,10 +356,10 @@ class Dialogs:
 
             if "logo" in parent.meta:
                 self.update_logo_icon()
-                parent.connect("size-changed", self.update_logo_icon)
+                parent.connect_size_changed(self.update_logo_icon)
             elif "theme" in parent.meta:
                 self.update_theme_icon()
-                parent.connect("size-changed", self.update_theme_icon)
+                parent.connect_size_changed(self.update_theme_icon)
 
             self.connect("response", self.response_event)
             self.connect("delete_event", self.delete_event)
@@ -388,7 +371,7 @@ class Dialogs:
             if response < 0:
                 self.hide()
 
-        def update_logo_icon(self, widget=None, event=None):
+        def update_logo_icon(self):
             """Update the logo to be of the same height as the panel.
 
             """
@@ -396,7 +379,7 @@ class Dialogs:
             self.set_icon(gtk.gdk.pixbuf_new_from_file_at_size( \
                 self.__parent.meta["logo"], height, height))
 
-        def update_theme_icon(self, widget=None, event=None):
+        def update_theme_icon(self):
             """Updates the logo to be of the same height as the panel.
 
             """
@@ -421,6 +404,8 @@ class Title:
             self.__is_visible = visible
         parent.connect("enter-notify-event", lambda w, e: set_visible(True))
         parent.connect("leave-notify-event", lambda w, e: set_visible(False))
+
+        self.set(parent.meta["name"])
 
     def is_visible(self):
         return self.__is_visible
@@ -451,6 +436,8 @@ class Title:
 
 class Icon:
 
+    APPLET_SIZE = "applet-size"
+
     def __init__(self, parent):
         """Create a new Icon object.
 
@@ -459,7 +446,6 @@ class Icon:
 
         """
         self.__parent = parent
-        self.__height = self.__parent.height
 
         self.__previous_context = None
 
@@ -488,6 +474,8 @@ class Icon:
         if size is None:
             icon = gtk.gdk.pixbuf_new_from_file(file)
         else:
+            if size is self.__class__.APPLET_SIZE:
+                size = self.__parent.get_height()
             icon = gtk.gdk.pixbuf_new_from_file_at_size(file, size, size)
 
         if set:
@@ -671,10 +659,10 @@ class Errors:
 
             if "logo" in parent.meta:
                 self.update_logo_icon()
-                parent.connect("height-changed", self.update_logo_icon)
+                parent.connect_size_changed(self.update_logo_icon)
             elif "theme" in parent.meta:
                 self.update_theme_icon()
-                parent.connect("height-changed", self.update_theme_icon)
+                parent.connect_size_changed(self.update_theme_icon)
 
             self.connect("response", self.response_event)
             self.connect("delete_event", self.delete_event)
@@ -687,7 +675,7 @@ class Errors:
             if response < 0:
                 self.hide()
 
-        def update_logo_icon(self, widget=None, event=None):
+        def update_logo_icon(self):
             """Update the logo to be of the same height as the panel.
 
             """
@@ -695,39 +683,12 @@ class Errors:
             self.set_icon(gtk.gdk.pixbuf_new_from_file_at_size( \
                 self.__parent.meta["logo"], height, height))
 
-        def update_theme_icon(self, widget=None, event=None):
+        def update_theme_icon(self):
             """Updates the logo to be of the same height as the panel.
 
             """
             self.set_icon(self.__parent.get_awn_icons() \
                 .get_icon_simple_at_height(self.__parent.get_height()))
-
-
-class Async:
-
-    def __init__(self, parent):
-        """Create a new Async object.
-
-        @param parent: The parent applet of the settings instance.
-        @type parent: L{Applet}
-
-        """
-        self.__parent = parent
-
-    def __www_thread(self, url, callback):
-        callback(urllib.urlopen(url))
-
-    def www(self, url, callback):
-        """Get the contents of a page located on the internet.
-
-        @param url: The URL of the page to get
-        @type url: C{string}
-        @param callback: The function to call after the page is retrieved.
-                         The file object will be passed as the first argument
-        @type callback: C{function}
-
-        """
-        gobject.idle_add(self.__www_thread(url, callback))
 
 
 class Settings:
@@ -816,10 +777,6 @@ class Settings:
         else:
             self.client.new(key, value, value_type)
 
-        # Update the value in the loaded dictionary
-        if self.__dict is not None:
-            self.__dict[key] = value
-
     def __get(self, key):
         value = self.client.get(key)
         if type(value) == types.StringType and value[:9] == "!pickle;\n":
@@ -852,12 +809,18 @@ class Settings:
         @type key: C{string}
 
         """
+        old_value = value
+
         if type(value) in self.__setting_types.keys():
             value_type = self.__setting_types[type(value)]
         else:
             value = "!pickle;\n%s" % cpickle.dumps(value)
             value_type = "string"
         self.__set(key, value, value_type)
+
+        # Update the value in the loaded dictionary
+        if self.__dict is not None:
+            self.__dict[key] = old_value
 
     def __delitem__(self, key):
         """Delete a key from the currect directory.
@@ -930,7 +893,7 @@ class Settings:
             try:
                 f = getattr(self.__client, "set_%s" % self.type(key))
             except:
-                raise ValueError
+                raise ValueError("Could not set new value of '%s'" % key)
             f(self.__folder, key, value)
 
         def new(self, key, value, value_type):
@@ -959,7 +922,7 @@ class Settings:
             try:
                 f = getattr(self.__client, "get_%s" % self.type(key))
             except:
-                raise ValueError
+                raise ValueError("'%s' does not exist" % key)
             return f(self.__folder, key)
 
         def contains(self, key):
@@ -971,7 +934,7 @@ class Settings:
             @rtype: C{bool}
 
             """
-            return hasattr(self.__client, "get_%s" % self.type(key))
+            return self.__client.exists(self.__folder, key)
 
         def delete(self, key):
             """Delete an existing key. Not yet implemented; will raise the
@@ -1478,9 +1441,7 @@ class Applet(awn.AppletSimple, object):
         """
         awn.AppletSimple.__init__(self, uid, orient, height)
 
-        self.height = height
         self.uid = uid
-        self.orient = orient
 
         # Create all required child-objects, others will be lazy-loaded
         self.meta = Meta(self, meta, options)
@@ -1495,6 +1456,9 @@ class Applet(awn.AppletSimple, object):
             _globalRegister["Applet"].append(self)
         else:
             _globalRegister["Applet"] = [self]
+
+    def connect_size_changed(self, callback):
+        self.connect("height-changed", lambda w, e: callback())
 
     def __getmodule(module):
         """Return a getter that lazy-loads a module, represented by a
@@ -1517,39 +1481,6 @@ class Applet(awn.AppletSimple, object):
     keyring = __getmodule(Keyring)
     notify = __getmodule(Notify)
     effects = __getmodule(Effects)
-    async = __getmodule(Async)
-
-
-@deprecated("initiate", "init_start")
-def initiate(meta={}, options=[]):
-    """Do the work to create a new applet. This does not yet run the applet.
-
-    @param meta: The meta-information to pass to the constructor
-    @type meta: C{dict}
-    @param options: Options to set for the new applet
-    @type options: C{list} or C{tuple}
-    @return: The newly created applet.
-    @rtype: L{Applet}
-
-    """
-    awn.init(sys.argv[1:])
-    applet = Applet(awn.uid, awn.orient, awn.height, meta, options)
-    awn.init_applet(applet)
-
-    return applet
-
-
-@deprecated("start", "init_start")
-def start(applet):
-    """Start the applet. This makes the icon appear on the bar and starts GTK+.
-
-    @param applet: The applet to start.
-    @type applet: L{Applet}
-
-    """
-    applet.show_all()
-    gobject.threads_init()  # Threading for Async
-    gtk.main()
 
 
 def init_start(applet_class, meta={}, options=[]):
@@ -1572,6 +1503,8 @@ def init_start(applet_class, meta={}, options=[]):
     """
     assert callable(applet_class)
 
+    gobject.threads_init()
+
     awn.init(sys.argv[1:])
     applet = Applet(awn.uid, awn.orient, awn.height, meta, options)
     awn.init_applet(applet)
@@ -1585,5 +1518,4 @@ def init_start(applet_class, meta={}, options=[]):
         applet.errors.general(e, traceback=traceback)
 
     applet.show_all()
-    gobject.threads_init()  # Threading for Async
     gtk.main()

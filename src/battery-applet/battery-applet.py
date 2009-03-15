@@ -87,9 +87,9 @@ class BatteryStatusApplet:
         else:
             self.set_battery_missing()
 
-        applet.connect("height-changed", self.height_changed_cb)
+        applet.connect_size_changed(self.size_changed_cb)
 
-    def height_changed_cb(self, widget, event):
+    def size_changed_cb(self):
         if self.backend is not None:
             self.check_status_cb()
         else:
@@ -99,8 +99,7 @@ class BatteryStatusApplet:
         self.applet.title.set("No batteries")
 
         icon = os.path.join(themes_dir, self.settings["theme"], "battery-missing.svg")
-        height = self.applet.get_height()
-        self.applet.icon.file(icon, size=height)
+        self.applet.icon.file(icon, size=awnlib.Icon.APPLET_SIZE)
 
     def setup_context_menu(self):
         prefs = glade.XML(glade_file)
@@ -274,17 +273,17 @@ class BatteryStatusApplet:
 
         self.applet.title.set(" ".join([charge_message, "(" + str(charge_percentage) + "%)"]))
 
-        self.draw_icon(icon, self.applet.get_height())
+        self.draw_icon(icon)
         self.__message_handler.evaluate()
 
-    def draw_icon(self, icon, height):
-        new_state = (icon, height)
+    def draw_icon(self, icon):
+        new_state = (icon, self.applet.get_height())
         if self.__previous_state == new_state:
             return
 
         self.__previous_state = new_state
 
-        self.applet.icon.file(icon, size=height)
+        self.applet.icon.file(icon, size=awnlib.Icon.APPLET_SIZE)
 
     def is_battery_low(self):
         if not self.backend.is_discharging():

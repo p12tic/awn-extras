@@ -60,24 +60,31 @@ class Prefs:
     #Get the window's icon
     self.win.set_icon(icon)
     
-    #Make the main GtkNotebook along with three VBoxes and two Labels
+    #Make the main GtkNotebook along with three main widgets and two Labels
     notebook = gtk.Notebook()
-    general_vbox = gtk.VBox()
-    priority_vbox = gtk.VBox()
-    icon_vbox = gtk.VBox()
+    general_align = gtk.Alignment(xscale=1.0)
+    priority_align = gtk.Alignment(xscale=1.0)
+    icon_align = gtk.Alignment(xscale=1.0)
     general_label = gtk.Label(_('General'))
     priority_label = gtk.Label(_('Priority'))
     icon_label = gtk.Label(_('Icon'))
-    notebook.append_page(general_vbox, general_label)
-    notebook.append_page(priority_vbox, priority_label)
-    notebook.append_page(icon_vbox, icon_label)
-    main_vbox = gtk.VBox()
+
+    notebook.append_page(general_align, general_label)
+    notebook.append_page(priority_align, priority_label)
+    notebook.append_page(icon_align, icon_label)
+
+    main_vbox = gtk.VBox(False, 6)
     main_vbox.pack_start(notebook)
     
     #Label: Title (bold)
     title_label = gtk.Label(_('Title'))
     title_label.modify_font(pango.FontDescription('bold'))
-    
+    title_label.set_alignment(0.0, 0.5)
+
+    #GtkAlignment for the entry
+    title_align = gtk.Alignment(xscale=1.0)
+    title_align.set_padding(0, 0, 10, 0)
+
     #Entry for Title
     title_entry = gtk.Entry()
     title_entry.set_text(self.settings['title'])
@@ -86,7 +93,12 @@ class Prefs:
     #Label: Confirm when removing... (bold)
     confirm_label = gtk.Label(_('Confirm when removing...'))
     confirm_label.modify_font(pango.FontDescription('bold'))
-    
+    confirm_label.set_alignment(0.0, 0.5)
+
+    #GtkAlignment for the checkbuttons
+    confirm_align = gtk.Alignment()
+    confirm_align.set_padding(0, 0, 10, 0)
+
     #CheckButton: Items
     confirm_items = gtk.CheckButton(_('_Items'))
     confirm_items.key = 'confirm-items'
@@ -104,7 +116,12 @@ class Prefs:
     #Label: Width (bold)
     width_label = gtk.Label(_('Width'))
     width_label.modify_font(pango.FontDescription('bold'))
-    
+    width_label.set_alignment(0.0, 0.5)
+
+    #GtkAlignment for the widgets
+    width_align = gtk.Alignment(xscale=1.0)
+    width_align.set_padding(0, 0, 10, 0)
+
     #CheckButton: Use Custom Width
     width_check = gtk.CheckButton(_('_Use Custom Width'))
     if self.settings['use_custom_width'] == True:
@@ -112,11 +129,9 @@ class Prefs:
     width_check.key = 'use_custom_width'
     width_check.connect('toggled', self.check_toggled)
     
-    #HBox for Label and SpinButton
-    width_hbox = gtk.HBox()
-    
     #Label: Width (pixels)
     width_label2 = gtk.Label(_('Width (pixels)'))
+    width_label2.set_alignment(0.0, 0.5)
     
     #SpinButton for custom width in pixels
     width_adj = gtk.Adjustment(float(self.settings['custom_width']), 25, 500, \
@@ -126,21 +141,51 @@ class Prefs:
     width_spin.connect('focus-out-event', self.spin_focusout)
     
     #Put the General tab together
-    general_vbox.pack_start(title_label, False)
-    general_vbox.pack_start(title_entry, False)
-    general_vbox.pack_start(confirm_label, False)
-    general_vbox.pack_start(confirm_items, False)
-    general_vbox.pack_start(confirm_cats, False)
-    general_vbox.pack_start(width_label, False)
-    general_vbox.pack_start(width_check, False)
+    title_align.add(title_entry)
+
+    title_vbox = gtk.VBox()
+    title_vbox.pack_start(title_label, False)
+    title_vbox.pack_start(title_align, False)
+
+    confirm_align_vbox = gtk.VBox()
+    confirm_align_vbox.pack_start(confirm_items, False)
+    confirm_align_vbox.pack_start(confirm_cats, False)
+    confirm_align.add(confirm_align_vbox)
+
+    confirm_vbox = gtk.VBox()
+    confirm_vbox.pack_start(confirm_label, False)
+    confirm_vbox.pack_start(confirm_align, False)
+
+    width_hbox = gtk.HBox()
     width_hbox.pack_start(width_label2)
-    width_hbox.pack_start(width_spin, False)
-    general_vbox.pack_start(width_hbox, False)
+    width_hbox.pack_end(width_spin, False)
+
+    width_align_vbox = gtk.VBox()
+    width_align_vbox.pack_start(width_check)
+    width_align_vbox.pack_start(width_hbox)
+    width_align.add(width_align_vbox)
+
+    width_vbox = gtk.VBox()
+    width_vbox.pack_start(width_label, False)
+    width_vbox.pack_start(width_align, False)
+
+    general_vbox = gtk.VBox()
+    general_vbox.pack_start(title_vbox, False, False, 6)
+    general_vbox.pack_start(confirm_vbox, False, False, 6)
+    general_vbox.pack_start(width_vbox, False, False, 6)
+
+    general_align.set_padding(0, 0, 12, 12)
+    general_align.add(general_vbox)
     
     #Label: Low Priority (bold)
     priority_low_label = gtk.Label(_('Low Priority'))
     priority_low_label.modify_font(pango.FontDescription('bold'))
-    
+    priority_low_label.set_alignment(0.0, 0.5)
+
+    #GtkAlignment
+    priority_low_align = gtk.Alignment(xscale=1.0)
+    priority_low_align.set_padding(0, 0, 10, 0)
+
     #Low Priority Colors
     priority_low_background = self.color2('low')
     priority_low_text = self.color2('low', True)
@@ -148,7 +193,12 @@ class Prefs:
     #Label: Medium Priority (bold)
     priority_med_label = gtk.Label(_('Medium Priority'))
     priority_med_label.modify_font(pango.FontDescription('bold'))
-    
+    priority_med_label.set_alignment(0.0, 0.5)
+
+    #GtkAlignment
+    priority_med_align = gtk.Alignment(xscale=1.0)
+    priority_med_align.set_padding(0, 0, 10, 0)
+
     #Medium Priority Colors
     priority_med_background = self.color2('med')
     priority_med_text = self.color2('med', True)
@@ -156,26 +206,64 @@ class Prefs:
     #Label: High Priority (bold)
     priority_high_label = gtk.Label(_('High Priority'))
     priority_high_label.modify_font(pango.FontDescription('bold'))
-    
+    priority_high_label.set_alignment(0.0, 0.5)
+
+    #GtkAlignment
+    priority_high_align = gtk.Alignment(xscale=1.0)
+    priority_high_align.set_padding(0, 0, 10, 0)
+
     #High Priority Colors
     priority_high_background = self.color2('high')
     priority_high_text = self.color2('high', True)
     
     #Put the Priority tab together
-    priority_vbox.pack_start(priority_low_label, False)
-    priority_vbox.pack_start(priority_low_background, False)
-    priority_vbox.pack_start(priority_low_text, False)
-    priority_vbox.pack_start(priority_med_label, False)
-    priority_vbox.pack_start(priority_med_background, False)
-    priority_vbox.pack_start(priority_med_text, False)
-    priority_vbox.pack_start(priority_high_label, False)
-    priority_vbox.pack_start(priority_high_background, False)
-    priority_vbox.pack_start(priority_high_text, False)
-    
+    low_align_vbox = gtk.VBox()
+    low_align_vbox.pack_start(priority_low_background, False)
+    low_align_vbox.pack_start(priority_low_text, False)
+    priority_low_align.add(low_align_vbox)
+
+    low_vbox = gtk.VBox()
+    low_vbox.pack_start(priority_low_label, False)
+    low_vbox.pack_start(priority_low_align, False)
+
+    med_align_vbox = gtk.VBox()
+    med_align_vbox.pack_start(priority_med_background, False)
+    med_align_vbox.pack_start(priority_med_text, False)
+    priority_med_align.add(med_align_vbox)
+
+    med_vbox = gtk.VBox()
+    med_vbox.pack_start(priority_med_label, False)
+    med_vbox.pack_start(priority_med_align, False)
+
+    high_align_vbox = gtk.VBox()
+    high_align_vbox.pack_start(priority_high_background, False)
+    high_align_vbox.pack_start(priority_high_text, False)
+    priority_high_align.add(high_align_vbox)
+
+    high_vbox = gtk.VBox()
+    high_vbox.pack_start(priority_high_label, False)
+    high_vbox.pack_start(priority_high_align, False)
+
+    priority_vbox = gtk.VBox()
+    priority_vbox.pack_start(low_vbox, False, False, 6)
+    priority_vbox.pack_start(med_vbox, False, False, 6)
+    priority_vbox.pack_start(high_vbox, False, False, 6)
+
+    priority_align.set_padding(0, 0, 12, 12)
+    priority_align.add(priority_vbox)
+
+    #Set up the GtkAlignment for this tab
+    icon_align.set_padding(0, 0, 12, 12)
+
     #Label: Icon Color (bold)
     icon_color_label = gtk.Label(_('Icon Color'))
     icon_color_label.modify_font(pango.FontDescription('bold'))
-    
+    icon_color_label.set_alignment(0.0, 0.5)
+
+    #GtkAlignment
+    icon_color_align = gtk.Alignment(xscale=1.0)
+    icon_color_align.set_padding(0, 0, 10, 0)
+
     #ComboBox for Icon Color
     liststore = gtk.ListStore(str)
     for color in icon_colors_human:
@@ -193,7 +281,12 @@ class Prefs:
     #Label: Custom Colors (bold)
     custom_colors_label = gtk.Label(_('Custom Colors'))
     custom_colors_label.modify_font(pango.FontDescription('bold'))
-    
+    custom_colors_label.set_alignment(0.0, 0.5)
+
+    #GtkAlignment
+    custom_colors_align = gtk.Alignment(xscale=1.0)
+    custom_colors_align.set_padding(0, 0, 10, 0)
+
     #Colors: Outer Border, Inner Border, Main Color, Text Color
     outer_border = self.color(_('Outer Border'), 0)
     inner_border = self.color(_('Inner Border'), 3)
@@ -203,7 +296,12 @@ class Prefs:
     #Label: Icon Type (bold)
     icon_type_label = gtk.Label(_('Icon Type'))
     icon_type_label.modify_font(pango.FontDescription('bold'))
-    
+    icon_type_label.set_alignment(0.0, 0.5)
+
+    #GtkAlignment
+    icon_type_align = gtk.Alignment(xscale=1.0)
+    icon_type_align.set_padding(0, 0, 10, 0)
+
     #ComboBox: Icon Type: Number of Items, Progress, Both
     liststore = gtk.ListStore(str)
     for _type in icon_types_human:
@@ -219,28 +317,48 @@ class Prefs:
     _type_cb.connect('changed', self.cb_changed)
     
     #Put the Icon tab together
-    icon_vbox.pack_start(icon_color_label, False)
-    icon_vbox.pack_start(color_cb, False)
-    icon_vbox.pack_start(custom_colors_label, False)
-    icon_vbox.pack_start(outer_border, False)
-    icon_vbox.pack_start(inner_border, False)
-    icon_vbox.pack_start(main_color, False)
-    icon_vbox.pack_start(text_color, False)
-    icon_vbox.pack_start(icon_type_label, False)
-    icon_vbox.pack_start(_type_cb, False)
-    
+    icon_color_align.add(color_cb)
+
+    icon_color_vbox = gtk.VBox()
+    icon_color_vbox.pack_start(icon_color_label, False)
+    icon_color_vbox.pack_start(icon_color_align, False)
+
+    custom_colors_align_vbox = gtk.VBox()
+    custom_colors_align_vbox.pack_start(outer_border, False)
+    custom_colors_align_vbox.pack_start(inner_border, False)
+    custom_colors_align_vbox.pack_start(main_color, False)
+    custom_colors_align_vbox.pack_start(text_color, False)
+    custom_colors_align.add(custom_colors_align_vbox)
+
+    custom_colors_vbox = gtk.VBox()
+    custom_colors_vbox.pack_start(custom_colors_label, False)
+    custom_colors_vbox.pack_start(custom_colors_align, False)
+
+    icon_type_align.add(_type_cb)
+
+    icon_type_vbox = gtk.VBox()
+    icon_type_vbox.pack_start(icon_type_label, False)
+    icon_type_vbox.pack_start(icon_type_align, False)
+
+    icon_vbox = gtk.VBox()
+    icon_vbox.pack_start(icon_color_vbox, False, False, 6)
+    icon_vbox.pack_start(custom_colors_vbox, False, False, 6)
+    icon_vbox.pack_start(icon_type_vbox, False, False, 6)
+    icon_align.add(icon_vbox)
+
     #Close button
     close_button = gtk.Button(stock=gtk.STOCK_CLOSE)
     close_button.connect('clicked', self.close)
     
     #HButtonBox so the close button doesn't take the entire width
     close_hbbox = gtk.HButtonBox()
-    close_hbbox.set_layout(gtk.BUTTONBOX_SPREAD)
-    close_hbbox.pack_start(close_button, False)
+    close_hbbox.set_layout(gtk.BUTTONBOX_END)
+    close_hbbox.pack_end(close_button, False)
     
     #Show the window
     main_vbox.pack_start(close_hbbox)
     self.win.add(main_vbox)
+    self.win.set_border_width(6)
     self.win.show_all()
   
   #A value was updated
@@ -296,6 +414,7 @@ class Prefs:
     
     #Make a GtkLabel
     label = gtk.Label(human)
+    label.set_alignment(0.0, 0.5)
     
     #Get the default color
     if len(self.settings['colors']) < 12:
@@ -333,7 +452,9 @@ class Prefs:
       label = gtk.Label(_('Background'))
     else:
       label = gtk.Label(_('Text'))
-    
+
+    label.set_alignment(0.0, 0.5)
+
     #Get a GdkColor
     color = gtk.gdk.color_parse(self.settings[key])
     

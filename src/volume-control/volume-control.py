@@ -75,7 +75,7 @@ class VolumeControlApplet:
         self.setup_context_menu()
 
         applet.connect("scroll-event", self.scroll_event_cb)
-        applet.connect("height-changed", self.height_changed_cb)
+        applet.connect_size_changed(self.size_changed_cb)
 
     def scroll_event_cb(self, widget, event):
         if event.direction == gdk.SCROLL_UP:
@@ -83,9 +83,8 @@ class VolumeControlApplet:
         elif event.direction == gdk.SCROLL_DOWN:
             self.backend.down()
 
-    def height_changed_cb(self, widget, event):
-        """Reload the applet's icon, because the height of the panel has
-        changed.
+    def size_changed_cb(self):
+        """Reload the applet's icon, because the size of the panel has changed.
 
         """
         self.refresh_icon(True)
@@ -140,16 +139,17 @@ class VolumeControlApplet:
 
         """
         menu = self.applet.dialog.menu
+        menu_index = len(menu) - 1
 
         self.mute_item = gtk.CheckMenuItem("Mu_te")
         self.mute_item.connect("toggled", self.mute_toggled_cb)
-        menu.insert(self.mute_item, 3)
+        menu.insert(self.mute_item, menu_index)
 
         volume_control_item = gtk.MenuItem("_Open Volume Control")
         volume_control_item.connect("activate", self.show_volume_control_cb)
-        menu.insert(volume_control_item, 4)
+        menu.insert(volume_control_item, menu_index + 1)
 
-        menu.insert(gtk.SeparatorMenuItem(), 5)
+        menu.insert(gtk.SeparatorMenuItem(), menu_index + 2)
 
         prefs = glade.XML(glade_file)
 
@@ -301,9 +301,7 @@ class VolumeControlApplet:
                 icon = os.path.join(moonbeam_theme_dir, self.theme, "audio-volume-%s.svg" % icon)
             else:
                 icon = os.path.join(theme_dir, self.theme, "scalable/status/audio-volume-%s.svg" % icon)
-
-            height = self.applet.get_height()
-            self.applet.icon.file(icon, size=height)
+            self.applet.icon.file(icon, size=awnlib.Icon.APPLET_SIZE)
 
             self.volume_scale.set_value(volume)
 

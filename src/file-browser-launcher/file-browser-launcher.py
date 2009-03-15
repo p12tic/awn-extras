@@ -35,12 +35,12 @@ import locale
 import awn
 from awn.extras import defs
 
-import gconfwrapper as awnccwrapper
-
 APP = "awn-extras-applets"
 gettext.bindtextdomain(APP, defs.GETTEXTDIR)
 gettext.textdomain(APP)
 _ = gettext.gettext
+
+group = awn.CONFIG_DEFAULT_GROUP
 
 class App (awn.AppletSimple):
   icons = {}
@@ -51,10 +51,10 @@ class App (awn.AppletSimple):
     awn.AppletSimple.__init__(self, uid, orient, height)
     self.title = awn.awn_title_get_default()
     self.dialog = awn.AppletDialog(self)
-    
-    #Has to do with awncc
-    self.client = awnccwrapper.AwnCCWrapper(self.uid)
-    
+
+    #AwnConfigClient instance
+    self.client = awn.Config('file-browser-launcher', None)
+
     #Get the default icon theme
     self.theme = gtk.icon_theme_get_default()
     self.theme.connect('changed', self.icon_theme_changed)
@@ -129,12 +129,12 @@ class App (awn.AppletSimple):
     self.places_paths = []
     
     #Get the needed awncc values
-    self.show_home = self.client.get_int('places_home', 2)
-    self.show_local = self.client.get_int('places_local', 2)
-    self.show_network = self.client.get_int('places_network', 2)
-    self.show_connect = self.client.get_int('places_connect', 2)
-    self.show_bookmarks = self.client.get_int('places_bookmarks', 2)
-    self.show_filesystem = self.client.get_int('places_filesystem', 2)
+    self.show_home = self.client.get_int(group, 'places_home')
+    self.show_local = self.client.get_int(group, 'places_local')
+    self.show_network = self.client.get_int(group, 'places_network')
+    self.show_connect = self.client.get_int(group, 'places_connect')
+    self.show_bookmarks = self.client.get_int(group, 'places_bookmarks')
+    self.show_filesystem = self.client.get_int(group, 'places_filesystem')
 
     #Check to see if we should check /etc/fstab and $mount
     self.do_mounted = False
@@ -276,11 +276,11 @@ class App (awn.AppletSimple):
 
           #Local mounted drive (separate disk/partition)
           else:
-            self.place('drive-harddisk', self.paths_hnames[path], path)
+            self.place('drive-harddisk', hnames[path], path)
 
         #Partition not mounted in /media (such as /home)
         else:
-          self.place('drive-harddisk', self.paths_hnames[path], path)
+          self.place('drive-harddisk', hnames[path], path)
     
     #Go through the list of network drives/etc. from /etc/fstab
     if self.show_network == 2:
@@ -351,7 +351,7 @@ class App (awn.AppletSimple):
             if type == 'computer':
               self.place('computer', name, path, _("Computer"))
 
-            elif type in ['network','smb','nfs','ftp','ssh']:
+            elif type in ['network', 'smb', 'nfs', 'ftp', 'sftp', 'ssh']:
               self.place('network-folder', name, path, _("Network"))
 
             elif type == 'trash':
@@ -369,6 +369,10 @@ class App (awn.AppletSimple):
 
             elif type == 'fonts':
               self.place('font', name, path, _("Fonts"))
+
+            #Default to folder
+            else:
+              self.place('stock_folder', name, path, _("Folder"))
 
   def place(self, icon_name, human_name, path, alt_name=None):
     #Load the icon if it hasn't been yet
@@ -390,7 +394,7 @@ class App (awn.AppletSimple):
 
   #Function to do what should be done according to awncc when the treeview is clicked
   def treeview_clicked(self,widget,event):
-    self.open_clicked = self.client.get_int('places_open',2)
+    self.open_clicked = self.client.get_int(group, 'places_open')
     self.selection = self.treeview.get_selection()
     if self.open_clicked==2:
       self.dialog.hide()
@@ -427,26 +431,26 @@ class App (awn.AppletSimple):
     self.curr_button = button
     
     #Get whether to focus the entry when displaying the dialog or not
-    self.awncc_focus = self.client.get_int('focus_entry',2)
+    self.awncc_focus = self.client.get_int(group, 'focus_entry')
     
     if button == 1: #Left mouse button
     #Get the value for the left mouse button to automatically open.
     #Create and default to 1 the entry if it doesn't exist
     #Also get the default directory or default to ~
-      self.awncc_lmb = self.client.get_int('lmb',1)
-      self.awncc_lmb_path = self.client.get_string('lmb_path', os.environ['HOME'])
+      self.awncc_lmb = self.client.get_int(group, 'lmb')
+      self.awncc_lmb_path = self.client.get_string(group, 'lmb_path')
       self.awncc_lmb_path = os.path.expanduser(self.awncc_lmb_path)
     
     elif button == 2: #Middle mouse button
     #Get the value for the middle mouse button to automatically open.
     #Create and default to 2 the entry if it doesn't exist
     #Also get the default directory or default to ~
-      self.awncc_mmb = self.client.get_int('mmb',2)
-      self.awncc_mmb_path = self.client.get_string('mmb_path', os.environ['HOME'])
+      self.awncc_mmb = self.client.get_int(group, 'mmb')
+      self.awncc_mmb_path = self.client.get_string(group, 'mmb_path')
       self.awncc_mmb_path = os.path.expanduser(self.awncc_mmb_path)
     
     #Now get the chosen program for file browsing from awncc
-    self.awncc_fb = self.client.get_string('fb','xdg-open')
+    self.awncc_fb = self.client.get_string(group, 'fb')
     
     #Left mouse button - either popup with correct path or launch correct path OR do nothing
     if button == 1:
@@ -489,7 +493,7 @@ class App (awn.AppletSimple):
       path = self.entry.get_text()
     
     #Get the file browser app, or set to xdg-open if it's not set
-    self.awncc_fb = self.client.get_string('fb', 'xdg-open')
+    self.awncc_fb = self.client.get_string(group, 'fb')
     
     #In case there is nothing but whitespace (or at all) in the entry widget
     if path.replace(' ','') == '':

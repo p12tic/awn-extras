@@ -65,11 +65,13 @@ class BatteryStatusApplet:
 
     """
 
-    # State of the icon (a tuple containing the icon path and height)
+    # State of the icon (a tuple containing the icon path and size)
     __previous_state = None
 
     def __init__(self, applet):
         self.applet = applet
+
+        applet.get_icon().get_tooltip().props.toggle_on_click = False
 
         self.backend = None
         for b in backends:
@@ -96,7 +98,7 @@ class BatteryStatusApplet:
             self.set_battery_missing()
 
     def set_battery_missing(self):
-        self.applet.title.set("No batteries")
+        self.applet.tooltip.set("No batteries")
 
         icon = os.path.join(themes_dir, self.settings["theme"], "battery-missing.svg")
         self.applet.icon.file(icon, size=awnlib.Icon.APPLET_SIZE)
@@ -271,13 +273,13 @@ class BatteryStatusApplet:
             level = [key for key, value in charge_ranges.iteritems() if charge_percentage <= value[0] and charge_percentage >= value[1]][0]
             icon = os.path.join(themes_dir, self.settings["theme"], "battery-" + actoggle + "-" + level + ".svg")
 
-        self.applet.title.set(" ".join([charge_message, "(" + str(charge_percentage) + "%)"]))
+        self.applet.tooltip.set(" ".join([charge_message, "(" + str(charge_percentage) + "%)"]))
 
         self.draw_icon(icon)
         self.__message_handler.evaluate()
 
     def draw_icon(self, icon):
-        new_state = (icon, self.applet.get_height())
+        new_state = (icon, self.applet.get_size())
         if self.__previous_state == new_state:
             return
 

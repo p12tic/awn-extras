@@ -42,6 +42,7 @@ SUBDIRS =			\
 	libawn-extras		\
 	animal-farm			\
 	awnterm			\
+	battery-applet		\
 	cairo-clock			\
 	media-player		\
 	mount-applet       \

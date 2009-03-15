@@ -6,6 +6,6 @@ X-AWN-AppletType=Python
 X-AWN-AppletCategory=Game,Amusement
 Comment=Display fortune messages
 Exec=animal-farm/animal-farm.py
-Icon=animal-farm/icons/lemmling-cartoon-gnu.svg
+Icon=animal-farm/icons/lemmling-cartoon-gnu
 Name[en_US]=Animal Farm
 

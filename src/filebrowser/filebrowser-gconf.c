@@ -211,7 +211,6 @@ gchar *filebrowser_gconf_get_backend_folder() {
         folder = g_strdup_printf( "/home/%s", g_get_user_name(  ) );
         filebrowser_gconf_set_backend_folder( folder );
     }
-    printf("folder = %s\n",folder);
     return folder;
 }
 
@@ -317,7 +316,6 @@ guint filebrowser_gconf_get_max_rows(){
                      FILEBROWSER_GCONFKEY_MAX_ROWS,
                      rows, NULL );
     }
-    printf("rows = %d\n",rows);
     return rows;
 
 }
@@ -336,14 +334,12 @@ guint filebrowser_gconf_get_max_cols(){
     }
     else
     {
-        printf("BOOGER\n");
         cols =  FILEBROWSER_DEFAULT_MAX_COLS;
         awn_config_client_set_int( client,
                      AWN_CONFIG_CLIENT_DEFAULT_GROUP,
                      FILEBROWSER_GCONFKEY_MAX_COLS,
                      cols, NULL );
     }        
-    printf("cols = %d\n",cols);
     return cols;
 }
 

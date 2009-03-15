@@ -84,8 +84,7 @@ class AnimalFarmApplet:
         self.previous_iconname = self.iconname
         self.iconname = files[random.randint(0, len(files) - 1)]
         
-        height = self.applet.get_height()
-        self.applet.icon.file(os.path.join(images_dir, self.iconname), size=height)
+        self.applet.icon.file(os.path.join(images_dir, self.iconname), size=awnlib.Icon.APPLET_SIZE)
     
     def refresh_fortune(self):
         try:

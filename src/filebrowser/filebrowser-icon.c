@@ -298,7 +298,7 @@ GtkWidget *filebrowser_icon_new(
     				error = NULL;
     				icon->desktop_item = NULL;
     	}
-    	if( !gnome_desktop_item_exists( icon->desktop_item ) ){
+    	if(icon->desktop_item && !gnome_desktop_item_exists( icon->desktop_item ) ){
     		gnome_desktop_item_unref( icon->desktop_item );
 			icon->desktop_item = NULL;
     	}

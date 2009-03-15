@@ -53,6 +53,7 @@ SUBDIRS =			\
 	showdesktop			\
 	thinkhdaps			\
 	volume-control		\
+	weather				\
 	places			\
 	$(WOBBLYZINI)		\
 	$(GCONF_APPLETS)	\

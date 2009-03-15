@@ -24,9 +24,9 @@
 
 import awn, cairo
 
-class Dialog(awn.AppletDialog):
+class Dialog(awn.Dialog):
     def __init__(self, applet):
-        awn.AppletDialog.__init__(self, applet)
+        awn.Dialog.__init__(self, applet)
         self.connect("expose-event",self._expose)
 
     def _expose(self, widget, event):

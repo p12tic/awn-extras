@@ -69,7 +69,7 @@ class WeatherApplet:
         
         # set default icons/titles/dialogs so the applet is informative without data
         self.setIcon() # initialize the default weather.com icon
-        self.applet.title.set("%s %s..."%(_("Fetching conditions for"), self.settingsDict['location']))
+        self.applet.tooltip.set("%s %s..."%(_("Fetching conditions for"), self.settingsDict['location']))
         self.createMapDialog() # create the initial map dialog (no map, of course)
         self.createContextMenu() # create the right click menu
         
@@ -80,7 +80,7 @@ class WeatherApplet:
 
         # bind to some events we are concerned about
         self.applet.connect("leave-notify-event", self.onMouseOut)
-        self.applet.connect("height-changed", self.onBarHeightChange)
+        self.applet.connect_size_changed(self.onBarHeightChange)
 
     def loadSettings(self):
         """
@@ -142,15 +142,14 @@ class WeatherApplet:
                 #self.forecaster.forecastDialog.hide()
                 self.applet.dialog.hide()
 
-    def onBarHeightChange(self, widget, event):
+    def onBarHeightChange(self):
         """
         Redraw the applet icon if the bar height changes,
         so that it doesn't look bad. It is automatically
         scaled but this is not good enough to look good.
         """
         self.setIcon(self.cachedConditions['CODE'])
-        return False
-                
+ 
     def createContextMenu(self):
         """
         Build the right-click context menu for this applet.
@@ -315,7 +314,7 @@ class WeatherApplet:
                 #display the "Feels Like" temperature in parens, if it is different from the actual temperature
                 if conditions['TEMP'] != conditions['FEELSLIKE']:
                     title += " (%s)"%(conditions['FEELSLIKE']+u"\u00B0")
-                self.applet.title.set(title)
+                self.applet.tooltip.set(title)
                 self.cachedConditions = conditions
                 self.setIcon(conditions['CODE'])
         return conditions

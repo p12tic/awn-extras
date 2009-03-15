@@ -249,28 +249,34 @@ applet_expose_icon (GtkWidget *widget,
 static gboolean
 on_eb_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
-  if (use_alpha == FALSE) return FALSE;
+  GtkWidget* child = gtk_bin_get_child (GTK_BIN (widget));
 
   cairo_t *cr = gdk_cairo_create (widget->window);
-  if (cr == NULL) return FALSE;
+  g_return_val_if_fail(cr, FALSE);
 
-  cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
-  cairo_paint (cr);
+  if (use_alpha)
+  {
+    cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
+    cairo_paint (cr);
 
-  // FIXME: clip the paint area
+    // FIXME: clip the paint area
 
-  cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
+    cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
 
-  GtkWidget* child = gtk_bin_get_child(GTK_BIN(widget));
-
-  // paint the composited children
-  if (child)
-    gtk_container_foreach (GTK_CONTAINER (child), applet_expose_icon, cr);
+    // paint the composited children
+    if (child)
+      gtk_container_foreach (GTK_CONTAINER (child), applet_expose_icon, cr);
+  }
+  else
+  {
+    gdk_cairo_set_source_color (cr, &(gtk_widget_get_style(widget)->bg[GTK_STATE_NORMAL]));
+    cairo_paint (cr);
+  }
 
   cairo_destroy(cr);
 
   if (child)
-    gtk_container_propagate_expose(GTK_CONTAINER(widget), child,  event);
+    gtk_container_propagate_expose (GTK_CONTAINER (widget), child,  event);
 
   return TRUE;
 }

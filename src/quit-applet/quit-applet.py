@@ -49,7 +49,7 @@ class QuitLogOutApplet:
     def __init__(self, applet):
         self.applet = applet
         
-        applet.title.set("Log Out " + commands.getoutput("/usr/bin/whoami") + "...")
+        applet.tooltip.set("Log Out " + commands.getoutput("/usr/bin/whoami") + "...")
         
         self.logout_cb = None
         

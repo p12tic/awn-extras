@@ -48,6 +48,7 @@ SUBDIRS =			\
 	media-player		\
 	mount-applet       \
 	notification-area	\
+	quit-applet			\
 	shiny-switcher		\
 	showdesktop			\
 	thinkhdaps			\

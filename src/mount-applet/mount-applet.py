@@ -47,9 +47,7 @@ class MountApplet:
     def __init__(self, applet):
         self.applet = applet
 
-        applet.title.set(applet_name)
-        height = self.applet.get_height()
-        applet.icon.set(gtk.gdk.pixbuf_new_from_file_at_size(applet_logo, height, height))
+        applet.icon.file(applet_logo, size=awnlib.Icon.APPLET_SIZE)
 
         self.setup_context_menu()
         self.setup_main_dialog()

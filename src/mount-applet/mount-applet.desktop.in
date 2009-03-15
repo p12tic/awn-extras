@@ -5,6 +5,6 @@ Type=Application
 X-AWN-AppletType=Python
 Comment=An applet to (un)mount devices
 Exec=mount-applet/mount-applet.py
-Icon=mount-applet/icons/mount-applet.png
+Icon=mount-applet/icons/mount-applet
 Name[en_US]=Mount Applet
 X-AWN-AppletCategory=System,Filesystem

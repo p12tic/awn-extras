@@ -68,7 +68,7 @@ class CairoClockApplet:
         self.__clock_updater.load_theme()
         self.__clock_updater.draw_clock_cb()
 
-        applet.connect("enter-notify-event", lambda w, e: self.__clock_updater.update_title())
+        applet.tooltip.connect_becomes_visible(self.__clock_updater.update_title)
         applet.connect_size_changed(self.__clock_updater.draw_clock_cb)
 
         applet.timing.register(self.__clock_updater.draw_clock_cb, draw_clock_interval)
@@ -264,7 +264,7 @@ class ClockUpdater:
         format if it's not empty.
 
         """
-        if not self.applet.title.is_visible():
+        if not self.applet.tooltip.is_visible():
             return
 
         if len(self.default_values["custom-time-format"]) > 0:
@@ -292,8 +292,7 @@ class ClockUpdater:
 
             format = date + hours + ":%M" + seconds + ampm + year
 
-        self.applet.title.set(time.strftime(format))
-        self.applet.title.show()
+        self.applet.tooltip.set(time.strftime(format))
 
     def draw_clock_cb(self):
         """Draw the clock and update the title to keep it synchronized with
@@ -331,7 +330,7 @@ class AppletAnalogClock:
         local_time = time.localtime()
         hours, minutes, seconds = (local_time[3], local_time[4], local_time[5])
 
-        height = self.applet.get_height()
+        height = self.applet.get_size()
         show_seconds_hand = self.default_values["show-seconds-hand"]
 
         new_state = (show_seconds_hand, height, self.__theme.get_name(), hours, minutes)

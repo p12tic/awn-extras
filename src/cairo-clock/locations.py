@@ -154,7 +154,7 @@ class Locations:
             context = widget.window.cairo_create()
 
             context.set_operator(cairo.OPERATOR_CLEAR)
-            context.paint_with_alpha(0.1)
+            context.paint_with_alpha(0.2)
 
             city_datetime = datetime.now(tz.gettz(timezone))
             key = (city_datetime.hour % 12, city_datetime.minute)  # Modulo 12 because clock has only 12 hours

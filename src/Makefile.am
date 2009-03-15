@@ -41,6 +41,7 @@ endif
 SUBDIRS =			\
 	libawn-extras		\
 	awnterm			\
+	cairo-clock			\
 	media-player		\
 	mount-applet       \
 	notification-area	\

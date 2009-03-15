@@ -5,5 +5,5 @@ Type=Application
 X-AWN-AppletType=Python
 Comment=Displays an analog clock using Cairo-Clock's themes
 Exec=cairo-clock/cairo-clock.py
-Icon=cairo-clock/cairo-clock-logo.svg
+Icon=cairo-clock/cairo-clock-logo
 X-AWN-Applet-Category=Utility

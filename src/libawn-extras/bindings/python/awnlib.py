@@ -405,6 +405,8 @@ class Title:
         parent.connect("enter-notify-event", lambda w, e: set_visible(True))
         parent.connect("leave-notify-event", lambda w, e: set_visible(False))
 
+        self.set(parent.meta["name"])
+
     def is_visible(self):
         return self.__is_visible
 

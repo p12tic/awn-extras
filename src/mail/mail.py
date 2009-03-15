@@ -146,6 +146,9 @@ class MailApplet:
         if self.hide and len(self.mail.subjects) == 0:
             self.awn.icon.hide()
 
+        elif self.hide:
+            self.awn.show()
+
         self.awn.dialog.hide()
         self.drawMainDlog()
 

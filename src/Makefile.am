@@ -18,7 +18,8 @@ GCONF_APPLETS +=		\
 endif
 # --with-gconf
 GCONF_APPLETS +=		\
-	awn-notification-daemon \
+	awn-notification-daemon	\
+	media-control		\
 	$(NULL)
 endif
 # --with-gnome
@@ -41,6 +42,7 @@ SUBDIRS =			\
 	libawn-extras		\
 	awnterm			\
 	media-player		\
+	mount-applet       \
 	notification-area	\
 	shiny-switcher		\
 	places			\

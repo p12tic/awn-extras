@@ -8,10 +8,4 @@ dist_applet_DATA =			\
 	about.py			\
 	file-browser-launcher.py	\
 	prefs.py			\
-	gconfwrapper.py			\
-	$(NULL)
-
-fbl_iconsdir = $(applet_datadir)/icons
-dist_fbl_icons_DATA =	\
-	icons/folder.png\
 	$(NULL)

@@ -222,6 +222,9 @@ static gboolean filebrowser_folder_add(
     */
     
     folder->total++;
+
+    gtk_main_iteration_do(FALSE);
+
     return TRUE;
 }
 

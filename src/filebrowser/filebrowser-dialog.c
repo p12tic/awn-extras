@@ -25,6 +25,7 @@
 #include <libgnomevfs/gnome-vfs.h>
 #include <gdk/gdkkeysyms.h>
 #include <glib/gi18n.h>
+#include <math.h>
 
 #include "filebrowser-dialog.h"
 #include "filebrowser-applet.h"
@@ -47,10 +48,11 @@ enum {
 static AwnAppletDialogClass *parent_class = NULL;
 
 static FileBrowserFolder *current_folder = NULL;
-static GtkWidget *prev_page = NULL;
-static GtkWidget *next_page = NULL;
 static GtkWidget *folder_up = NULL;
 static GtkWidget *no_items_label = NULL;
+
+static void setup_adjustment(FileBrowserDialog *dialog);
+static void scroll_changed(GtkAdjustment *adj, FileBrowserDialog *dialog);
 
 static void filebrowser_dialog_do_folder_up(
     GtkWidget * dialog ) {
@@ -87,20 +89,6 @@ static gboolean filebrowser_dialog_button_clicked(
                      gnome_vfs_result_to_string( res ) );
         }
         break;
-    case FOLDER_LEFT:
-        if (filebrowser_folder_has_prev_page(current_folder)) {
-            filebrowser_folder_do_prev_page(current_folder);
-            gtk_widget_set_sensitive(prev_page, filebrowser_folder_has_prev_page(current_folder));
-            gtk_widget_set_sensitive(next_page, TRUE);
-        }
-        break;
-    case FOLDER_RIGHT:
-        if (filebrowser_folder_has_next_page(current_folder)) {
-            filebrowser_folder_do_next_page(current_folder);
-            gtk_widget_set_sensitive(next_page, filebrowser_folder_has_next_page(current_folder));
-            gtk_widget_set_sensitive(prev_page, TRUE);
-        }
-        break;
     case FOLDER_UP:
         filebrowser_dialog_do_folder_up( GTK_WIDGET( current_folder->dialog ) );
         break;
@@ -115,13 +103,22 @@ static gboolean filebrowser_dialog_key_press_event(
     GdkEventKey * event ) {
 
     g_return_val_if_fail( FILEBROWSER_IS_DIALOG( widget ), FALSE );
+    FileBrowserDialog *dialog = FILEBROWSER_DIALOG(widget);
 
     if ( event->keyval == GDK_Left) {
-	    filebrowser_folder_do_prev_page( current_folder);
+      if (filebrowser_folder_has_prev_page(current_folder))
+      {
+        dialog->adj->value--;
+        scroll_changed(dialog->adj, dialog);
+      }
     } else if ( event->keyval == GDK_Right) {
-        filebrowser_folder_do_next_page( current_folder );
+      if (filebrowser_folder_has_next_page(current_folder))
+      {
+        dialog->adj->value++;
+        scroll_changed(dialog->adj, dialog);
+      }
     } else if ( event->keyval == GDK_Up && filebrowser_gconf_is_browsing()) {
-        filebrowser_dialog_do_folder_up( widget );
+      filebrowser_dialog_do_folder_up( widget );
     }
 
     return FALSE;
@@ -163,6 +160,20 @@ void filebrowser_dialog_set_folder(
     GtkWidget *folder;
 
     if (!uri) uri = gnome_vfs_uri_new( filebrowser_gconf_get_backend_folder() );
+
+    /* Check if we're actually changing the folder */
+    if (current_folder)
+    {
+      gchar *new_folder = uri->text;
+      gchar *current = current_folder->uri->text;
+      if (strcmp(new_folder, current) == 0)
+      {
+        filebrowser_folder_layout(current_folder, 0);
+        setup_adjustment(dialog);
+        return;
+      }
+    }
+
     folder = filebrowser_folder_new( FILEBROWSER_DIALOG( dialog ), uri );
 
     g_return_if_fail( GTK_IS_WIDGET( folder ) );
@@ -177,9 +188,6 @@ void filebrowser_dialog_set_folder(
 	
     current_folder = FILEBROWSER_FOLDER(folder);
 
-    // refresh prev/next button
-    gtk_widget_set_sensitive(prev_page, filebrowser_folder_has_prev_page(current_folder));
-    gtk_widget_set_sensitive(next_page, filebrowser_folder_has_next_page(current_folder));
     gtk_widget_set_sensitive(folder_up, filebrowser_folder_has_parent_folder(current_folder));
 
     // no items label
@@ -191,6 +199,7 @@ void filebrowser_dialog_set_folder(
 	gtk_widget_set_size_request(no_items_label, 192, 192);
     }
 
+    setup_adjustment(dialog);
 
     gtk_widget_show_all( GTK_WIDGET( current_folder ) );
 }
@@ -225,9 +234,49 @@ void filebrowser_dialog_toggle_visiblity(
 	//gtk_window_set_title( GTK_WINDOW( dialog->awn_dialog ), FILEBROWSER_FOLDER(current_folder)->name );
 	gtk_window_set_title( GTK_WINDOW( dialog->awn_dialog ), filebrowser_gconf_get_backend_folder() );
 
+  filebrowser_dialog_set_folder( dialog, NULL, 0 );
 	// set applet icon
 	//filebrowser_applet_set_icon( dialog->applet, current_folder->applet_icon );
     }
+}
+
+/* Set up the GtkAdjustment for the HScrollBar */
+static void
+setup_adjustment(FileBrowserDialog *dialog)
+{
+  gint total, rows, cols, mult, pages, current;
+  gfloat num;
+  total = current_folder->total;
+  rows = filebrowser_gconf_get_max_rows();
+  cols = filebrowser_gconf_get_max_cols();
+  mult = rows * cols;
+  num = (gfloat)total / mult;
+  num = ceil(num);
+  pages = (int)num;
+  current = current_folder->offset / mult;
+
+  dialog->last_page = current;
+  dialog->adj->value = current;
+  dialog->adj->upper = pages;
+}
+
+/* Called when the value of the scrollbar changes */
+static void
+scroll_changed(GtkAdjustment *adj, FileBrowserDialog *dialog)
+{
+  gint page, rows, cols, new_offset;
+
+  page = round(adj->value);
+  if (page == dialog->last_page)
+    return;
+
+  rows = filebrowser_gconf_get_max_rows();
+  cols = filebrowser_gconf_get_max_cols();
+  new_offset = current_folder->offset + (page - dialog->last_page) * (rows * cols);
+  filebrowser_folder_layout(current_folder, new_offset);
+  gtk_widget_show_all(GTK_WIDGET(current_folder));
+
+  dialog->last_page = page;
 }
 
 /**
@@ -310,30 +359,23 @@ GtkWidget *filebrowser_dialog_new(
 	gtk_event_box_set_visible_window(GTK_EVENT_BOX(dialog->viewport), FALSE);
 	gtk_container_add(GTK_CONTAINER(dialog), dialog->viewport);
 	
-	GtkWidget *hbox2 = gtk_hbox_new(TRUE, 0);
-	gtk_container_add(GTK_CONTAINER(dialog), hbox2);
-	
-	GtkWidget *folder_left = gtk_button_new_from_stock(GTK_STOCK_GO_BACK);
-	prev_page = folder_left;
-	gtk_button_set_relief(GTK_BUTTON(folder_left), GTK_RELIEF_NONE);
-	g_signal_connect( folder_left, "button-release-event",
-                      GTK_SIGNAL_FUNC( filebrowser_dialog_button_clicked ), GINT_TO_POINTER( FOLDER_LEFT ) );
-        GtkWidget *left_bin = gtk_alignment_new(0, 0.5, 0, 0);
-        gtk_container_add(GTK_CONTAINER(left_bin), folder_left);
-	gtk_box_pack_start(GTK_BOX(hbox2), left_bin, TRUE, TRUE, 0);
-	
-	
-	GtkWidget *folder_right = gtk_button_new_from_stock(GTK_STOCK_GO_FORWARD);
-	next_page = folder_right;
-	gtk_button_set_relief(GTK_BUTTON(folder_right), GTK_RELIEF_NONE);
-	g_signal_connect( folder_right, "button-release-event",
-                      GTK_SIGNAL_FUNC( filebrowser_dialog_button_clicked ), GINT_TO_POINTER( FOLDER_RIGHT ) );
-        GtkWidget *right_bin = gtk_alignment_new(1, 0.5, 0, 0);
-        gtk_container_add(GTK_CONTAINER(right_bin), folder_right);
-	gtk_box_pack_start(GTK_BOX(hbox2), right_bin, TRUE, TRUE, 0);
+
+  /* HScrollBar with GtkAdjustment*/
+  dialog->adj = gtk_adjustment_new(0, 0, 0, 1, 1, 1);
+  dialog->hscroll = gtk_hscrollbar_new(NULL);
+  gtk_range_set_adjustment(GTK_RANGE(dialog->hscroll), dialog->adj);
+  g_signal_connect(G_OBJECT(dialog->adj), "value-changed",
+                   G_CALLBACK(scroll_changed), (gpointer)dialog);
+
+  /* GtkAlignment for the scroll bar */
+  GtkWidget *align = gtk_alignment_new(0.5, 1.0, 1.0, 0.0);
+  gtk_alignment_set_padding(GTK_ALIGNMENT(align), 3, 0, 0, 0);
+  gtk_container_add(GTK_CONTAINER(align), dialog->hscroll);
+  gtk_container_add(GTK_CONTAINER(dialog), align);
 
 	// Create a folder of the backend folder
 	filebrowser_dialog_set_folder( dialog, gnome_vfs_uri_new( filebrowser_gconf_get_backend_folder() ), 0 );
+
 	// Set the applet-icon
 	filebrowser_applet_set_icon( dialog->applet, current_folder->applet_icon );
 

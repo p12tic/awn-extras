@@ -301,9 +301,7 @@ class VolumeControlApplet:
                 icon = os.path.join(moonbeam_theme_dir, self.theme, "audio-volume-%s.svg" % icon)
             else:
                 icon = os.path.join(theme_dir, self.theme, "scalable/status/audio-volume-%s.svg" % icon)
-
-            height = self.applet.get_height()
-            self.applet.icon.file(icon, size=height)
+            self.applet.icon.file(icon, size=awnlib.Icon.APPLET_SIZE)
 
             self.volume_scale.set_value(volume)
 

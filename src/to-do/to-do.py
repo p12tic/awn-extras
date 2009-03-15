@@ -71,71 +71,28 @@ class App(awn.AppletSimple):
     #Set up Settings
     self.settings = settings.Settings('to-do', uid)
     self.settings.register({ \
-      'color':str, \
-      'title':str, \
-      'items':[str], \
-      'colors':[int], \
-      'icon-type':str, \
-      'details':[str], \
-      'color_low':str, \
-      'color_med':str, \
-      'color_high':str, \
-      'progress':[int], \
-      'priority':[int], \
-      'expanded':[int], \
-      'category':[int], \
-      'custom_width':int, \
-      'icon-opacity':int, \
-      'color_low_text':str, \
-      'color_med_text':str, \
-      'confirm-items':bool, \
-      'category_name':[str], \
-      'color_high_text':str, \
-      'use_custom_width':bool, \
-      'confirm-categories':bool})
-
-    if self.settings['title'] is None:
-      self.settings['title'] = _("To-Do List")
-
-#    #Get the title or default to "To-Do List"
-#    if self.settings['title'] in ['',None]:
-#      self.settings['title'] = 'To-Do List'
-#    
-#    #Set up the keys for item progress, priorities, and details
-#    #Details
-#    tmp_list = []
-#    if len(self.settings['details'])!=len(self.settings['items']):
-#      for x in self.settings['items']:
-#        tmp_list.append('')
-#      self.settings['details'] = tmp_list
-#    
-#    #Progress
-#    tmp_list = []
-#    if len(self.settings['progress'])!=len(self.settings['items']):
-#      for x in self.settings['items']:
-#        tmp_list.append(0)
-#      self.settings['progress'] = tmp_list
-#    
-#    #Priority
-#    tmp_list = []
-#    if len(self.settings['priority'])!=len(self.settings['items']):
-#      for x in self.settings['items']:
-#        tmp_list.append(0)
-#      self.settings['priority'] = tmp_list
-#    
-#    #Categories
-#    tmp_list = []
-#    if len(self.settings['category'])!=len(self.settings['items']):
-#      for x in self.settings['items']:
-#        tmp_list.append(-1)
-#      self.settings['category'] = tmp_list
-#    
-#    #Category names
-#    tmp_list = []
-#    if len(self.settings['category_name'])!=len(self.settings['items']):
-#      for x in self.settings['items']:
-#        tmp_list.append('')
-#      self.settings['category_name'] = tmp_list
+      'color':(str, 'skyblue'), \
+      'title':(str, _("To-Do List")), \
+      'items':([str], []), \
+      'colors':([int], []), \
+      'icon-type':(str, 'items'), \
+      'details':([str], []), \
+      'color_low':(str, '#009900'), \
+      'color_med':(str, '#c0c000'), \
+      'color_high':(str, '#aa0000'), \
+      'progress':([int], []), \
+      'priority':([int], []), \
+      'expanded':([int], []), \
+      'category':([int], []), \
+      'custom_width':(int, 125), \
+      'icon-opacity':(int, 100), \
+      'color_low_text':(str, '#000000'), \
+      'color_med_text':(str, '#000000'), \
+      'confirm-items':(bool, True), \
+      'category_name':([str], []), \
+      'color_high_text':(str, '#dddddd'), \
+      'use_custom_width':(bool, False), \
+      'confirm-categories':(bool, True)})
     
     #Icon Type
     if self.settings['icon-type'] not in ['progress','progress-items','items']:

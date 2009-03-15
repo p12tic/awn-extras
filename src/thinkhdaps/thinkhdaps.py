@@ -97,7 +97,7 @@ class ThinkHDAPSApplet:
 
             if self.__error_occurred:
                 self.__error_occurred = False
-                self.applet.title.set(self.__hdaps_device + " " + hdaps_short_description)
+                self.applet.tooltip.set(self.__hdaps_device + " " + hdaps_short_description)
 
             self.__was_paused = paused
         except IOError:
@@ -105,7 +105,7 @@ class ThinkHDAPSApplet:
                 self.__error_occurred = True
 
                 self.set_error_icon()
-                self.applet.title.set(self.__hdaps_device + " not " + hdaps_short_description)
+                self.applet.tooltip.set(self.__hdaps_device + " not " + hdaps_short_description)
 
     def __init__(self, applet):
         self.applet = applet
@@ -137,7 +137,7 @@ class ThinkHDAPSApplet:
             applet.connect_size_changed(self.size_changed_cb)
 
             applet.icon.set(self.icon_running)
-            applet.title.set(self.__hdaps_device + " " + hdaps_short_description)
+            applet.tooltip.set(self.__hdaps_device + " " + hdaps_short_description)
 
             if not self.setup_inotify():
                 applet.timing.register(self.check_status_cb, check_status_interval)
@@ -145,7 +145,7 @@ class ThinkHDAPSApplet:
             applet.connect_size_changed(self.set_error_icon)
 
             self.set_error_icon()
-            applet.title.set("No hard disk found")
+            applet.tooltip.set("No hard disk found")
 
     def setup_inotify(self):
         if pyinotify is None:

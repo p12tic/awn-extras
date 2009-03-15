@@ -46,6 +46,7 @@ SUBDIRS =			\
 	mount-applet       \
 	notification-area	\
 	shiny-switcher		\
+	thinkhdaps			\
 	volume-control		\
 	places			\
 	$(WOBBLYZINI)		\

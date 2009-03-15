@@ -5,5 +5,5 @@ Type=Application
 X-AWN-AppletType=Python
 Comment=Applet that shows the shock protection status of your disks
 Exec=thinkhdaps/thinkhdaps.py
-Icon=thinkhdaps/images/thinkhdaps-logo.svg
+Icon=thinkhdaps/images/thinkhdaps-logo
 X-AWN-Applet-Category=System

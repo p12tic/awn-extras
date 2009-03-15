@@ -139,16 +139,17 @@ class VolumeControlApplet:
 
         """
         menu = self.applet.dialog.menu
+        menu_index = len(menu) - 1
 
         self.mute_item = gtk.CheckMenuItem("Mu_te")
         self.mute_item.connect("toggled", self.mute_toggled_cb)
-        menu.insert(self.mute_item, 3)
+        menu.insert(self.mute_item, menu_index)
 
         volume_control_item = gtk.MenuItem("_Open Volume Control")
         volume_control_item.connect("activate", self.show_volume_control_cb)
-        menu.insert(volume_control_item, 4)
+        menu.insert(volume_control_item, menu_index + 1)
 
-        menu.insert(gtk.SeparatorMenuItem(), 5)
+        menu.insert(gtk.SeparatorMenuItem(), menu_index + 2)
 
         prefs = glade.XML(glade_file)
 

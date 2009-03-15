@@ -48,14 +48,14 @@ class App (awn.AppletSimple):
 
     APPLET_NAME = "Media Control Applet"
     APPLET_NAME_MARKUP = "<span weight=\"bold\">Media Control Applet</span>"
-    def __init__ (self, uid, orient, height):
+    def __init__(self, uid, orient, offset, size):
         """Creating the applets core"""
-        awn.AppletSimple.__init__(self, uid, orient, height)
-        self.set_title(App.APPLET_NAME)
+        awn.AppletSimple.__init__(self, uid, orient, offset, size)
+        self.set_tooltip_text(App.APPLET_NAME)
         self.MediaPlayer = None
         self.location = __file__.replace('mediacontrol.py','')
         self.keylocation = "/apps/avant-window-navigator/applets/MediaControl/"
-        self.set_awn_icon('media-control', 'media-control')
+        self.set_icon_name('media-control', 'media-control')
         self.load_keys()
         self.timer_running = False
         self.dbus_names = {}
@@ -68,8 +68,7 @@ class App (awn.AppletSimple):
 
         self.what_app()
         # The Heart
-        self.height = height
-        self.dialog = awn.AppletDialog (self)
+        self.dialog = awn.Dialog (self)
         self.dialog_visible = False
 
         #Popup menu
@@ -112,7 +111,6 @@ class App (awn.AppletSimple):
         self.connect("scroll-event", self.wheel_turn)
         self.connect("button-press-event", self.button_press)
         self.connect("enter-notify-event", self.enter_notify)
-        self.connect("leave-notify-event", self.leave_notify)
         self.dialog.connect("focus-out-event", self.dialog_focus_out)
         # Drag&drop support
         self.connect("drag-data-received", self.applet_drop_cb)
@@ -140,7 +138,6 @@ class App (awn.AppletSimple):
                 self.dialog.hide()
                 self.dialog_visible = False
             else:
-                self.set_title_visibility(False)
                 if not self.MediaPlayer: self.what_app()
                 self.dialog_visible = True
                 # update controls
@@ -171,10 +168,6 @@ class App (awn.AppletSimple):
             if (self.MediaPlayer and self.MediaPlayer.is_async() == False): self.labeler()
         except:
             self.MediaPlayer = None
-        self.set_title_visibility(True)
-
-    def leave_notify(self, widget, event):
-        self.set_title_visibility(False)
 
     def what_app(self, player_name = None):
         if not player_name: self.player_name = mediaplayers.what_app()
@@ -310,12 +303,12 @@ class App (awn.AppletSimple):
     @error_decorator
     def applet_drag_motion_cb(self, widget, context, x, y, time):
         if not self.MediaPlayer: return True
-        self.get_effects().start("launching")
+        self.get_icon().get_effects().start("launching")
         return True
 
     @error_decorator
     def applet_drag_leave_cb(self, widget, context, time):
-        self.get_effects().stop("launching")
+        self.get_icon().get_effects().stop("launching")
         return True
 
     @error_decorator
@@ -353,8 +346,9 @@ class App (awn.AppletSimple):
 
     def show_about(self, widget):
         about = gtk.AboutDialog()
-        about.set_logo(self.get_awn_icons().get_icon_simple_at_height(48))
-        about.set_icon(self.get_awn_icons().get_icon_simple())
+        awn_icon = self.get_icon()
+        about.set_logo(awn_icon.get_icon_at_size(48))
+        about.set_icon(awn_icon.get_icon_at_size(64))
         about.set_name("Media Control Applet")
         about.set_copyright("Copyright (c) 2007 Randal Barlow <im.tehk at gmail.com>")
         about.set_authors(["Randal Barlow <im.tehk at gmail.com>", "Michal Hruby <michal.mhr at gmail.com>"])
@@ -369,7 +363,7 @@ class App (awn.AppletSimple):
 
 if __name__ == "__main__":
     awn.init                      (sys.argv[1:])
-    applet = App                  (awn.uid, awn.orient,awn.height)
+    applet = App                  (awn.uid, awn.orient, awn.offset, awn.size)
     awn.init_applet               (applet)
     applet.show_all               ()
     gtk.main                      ()

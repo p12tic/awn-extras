@@ -5,5 +5,5 @@ X-AWN-AppletType=Python
 Name=CPU Frequency Monitor
 Comment=An applet to monitor and control the CPU frequency
 Exec=cpufreq/cpufreq.py
-Icon=cpufreq/cpufreq.svg
+Icon=cpufreq/cpufreq
 X-AWN-AppletCategory=Utility

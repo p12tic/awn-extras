@@ -44,6 +44,7 @@ SUBDIRS =			\
 	awnterm			\
 	battery-applet		\
 	cairo-clock			\
+	cpufreq				\
 	media-player		\
 	mount-applet       \
 	notification-area	\

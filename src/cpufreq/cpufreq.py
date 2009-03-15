@@ -137,7 +137,7 @@ class CpuFreqApplet:
 
         self.setup_context_menu()
 
-        applet.connect("enter-notify-event", lambda w, e: self.update_title())
+        applet.tooltip.connect_becomes_visible(self.update_title)
         applet.connect_size_changed(self.size_changed_cb)
 
         applet.timing.register(self.draw_freq_cb, draw_freq_interval)
@@ -179,7 +179,7 @@ class CpuFreqApplet:
         """Load the images that are going to be used as the applet's icon.
 
         """
-        height = self.applet.get_height()
+        height = self.applet.get_size()
 
         self.icons = {}
         for i in range(0, len(os.listdir(images_dir))):
@@ -288,7 +288,7 @@ class CpuFreqApplet:
             self.backend.set_frequency(frequency)
 
             self.applet.dialog.toggle("frequency-dialog", "hide")
-            self.applet.title.hide()
+            self.applet.tooltip.hide()
 
     def governor_changed_cb(self, widget, governor):
         """Change the current governor.
@@ -298,7 +298,7 @@ class CpuFreqApplet:
             self.backend.set_governor(governor)
 
             self.applet.dialog.toggle("frequency-dialog", "hide")
-            self.applet.title.hide()
+            self.applet.tooltip.hide()
 
     def draw_freq_cb(self):
         """Draw the icon and updates the title to keep it synchronized with the drawn frequency.
@@ -316,7 +316,7 @@ class CpuFreqApplet:
         return True
 
     def update_title(self):
-        if not self.applet.title.is_visible():
+        if not self.applet.tooltip.is_visible():
             return
 
         title = self.human_readable_freqency(self.backend.get_current_frequency())
@@ -324,8 +324,7 @@ class CpuFreqApplet:
         if self.backend.supports_scaling():
             title = self.backend.get_current_governor() + ": " + title
 
-        self.applet.title.set(title)
-        self.applet.title.show()
+        self.applet.tooltip.set(title)
 
 
 class SysFSBackend:

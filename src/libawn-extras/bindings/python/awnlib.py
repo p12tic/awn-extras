@@ -694,7 +694,6 @@ class Settings:
         @type parent: L{Applet}
 
         """
-        self.__parent = parent
         self.__dict = None
 
         if "short" in parent.meta:
@@ -705,7 +704,7 @@ class Settings:
         else:
             self.__folder = parent.uid
 
-        self.client = self.AWNConfigUser(self.__folder)
+        self.__client = self.ConfigClient(self.__folder)
 
     def load(self, dict, push_defaults=True):
         """Synchronize the values from the given dictionary with the stored
@@ -729,21 +728,27 @@ class Settings:
             elif push_defaults:
                 self[key] = dict[key]
 
-    def cd(self, folder=None):
+    def cd(self, folder=None, raw=False):
         """Change to another folder. Note that this will change folders to e.g.
         /apps/avant-window-navigator/applets/[folder] in the GConf
         implementation and to just /applets/[folder] in the iniKey
-        implementation.
+        implementation. If the C{raw} parameter if False, "/applets" is
+        prepended to C{folder}.
 
         @param folder: The folder to use for your applet. If not given, the
-            "short" meta information is used.
+            default folder is used.
         @type folder: C{string}
+        @param raw: If False, "/applets" is prepended to C{folder}.
+        @type raw: C{bool}
 
         """
         if not folder:
             folder = self.__folder
 
-        self.client.cd(folder)
+        if not raw:
+            folder = os.path.join("applets", folder)
+
+        self.__client.cd(folder)
 
     def notify(self, key, callback):
         """Set up a function to be executed every time a key changes. Note that
@@ -755,20 +760,20 @@ class Settings:
         @type callback: C{function}
 
         """
-        self.client.notify(key, callback)
+        self.__client.notify(key, callback)
 
     def __set(self, key, value, value_type="string"):
         if key in self:
             try:
-                self.client.set(key, value)
+                self.__client.set(key, value)
             except AttributeError:
-                self.client.new(key, value, value_type)
+                self.__client.new(key, value, value_type)
         else:
-            self.client.new(key, value, value_type)
+            self.__client.new(key, value, value_type)
 
     def __get(self, key):
-        value = self.client.get(key)
-        if type(value) == types.StringType and value[:9] == "!pickle;\n":
+        value = self.__client.get(key)
+        if type(value) is str and value[:9] == "!pickle;\n":
             value = cpickle.loads(value[9:])
         return value
 
@@ -818,7 +823,7 @@ class Settings:
         @type key: C{string}
 
         """
-        self.client.delete(key)
+        self.__client.delete(key)
 
     def __contains__(self, key):
         """Test if a key exists in the current directory.
@@ -827,35 +832,28 @@ class Settings:
         @type key: C{string}
 
         """
-        return self.client.contains(key)
+        return self.__client.contains(key)
 
-    class AWNConfigUser:
+    class ConfigClient:
 
         def __init__(self, folder):
-            """Create a new GConfUser.
+            """Create a new config client.
 
-            @param folder: Folder to start with. /applets is prepended to the
-                folder name. To change folders without that prepended, pass
-                the raw=True parameter to cd().
+            @param folder: Folder to start with.
             @type folder: C{string}
 
             """
-            self.cd(folder)
             self.__client = awn.Config()
 
-        def cd(self, folder, raw=False):
-            """Change the current directory. If the C{raw} parameter if False,
-            "/applets" is prepended to C{folder}.
+            self.cd(folder)
+
+        def cd(self, folder):
+            """Change the current directory.
 
             @param folder: The folder to change into.
             @type folder: C{string}
-            @param raw: If False, "/applets" is prepended to C{folder}.
-            @type raw: C{bool}
-
+ 
             """
-            if not raw:
-                folder = os.path.join("applets", folder)
-
             self.__folder = folder
 
         def notify(self, key, callback):

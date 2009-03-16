@@ -212,9 +212,6 @@ class Dialogs:
             "Force must be \"hide\", \"show\", or \"\""
         assert dialog in self.__register, "Dialog must be registered"
 
-        if self.__parent:
-            self.__parent.tooltip.hide()
-
         if dialog == "menu":
             self.__register["menu"].show_all()
             self.__register["menu"].popup(None, None, None, 3, time)

@@ -110,6 +110,8 @@ class ThinkHDAPSApplet:
     def __init__(self, applet):
         self.applet = applet
 
+        applet.get_icon().get_tooltip().props.toggle_on_click = False
+
         self.setup_icon()
 
         if version_ge_2_6_28:

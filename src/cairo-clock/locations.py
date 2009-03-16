@@ -146,15 +146,13 @@ class Locations:
         self.__city_boxes[city_timezone] = hbox
 
         # Image of analog clock
-        image = gtk.DrawingArea()
+        image = gtk.Image()
         image.set_size_request(clock_size, clock_size)
         hbox.pack_start(image, expand=False)
 
         def update_image_cb(widget, event):
             context = widget.window.cairo_create()
-
-            context.set_operator(cairo.OPERATOR_CLEAR)
-            context.paint_with_alpha(0.1)
+            context.translate(event.area.x, event.area.y)
 
             city_datetime = datetime.now(tz.gettz(timezone))
             key = (city_datetime.hour % 12, city_datetime.minute)  # Modulo 12 because clock has only 12 hours

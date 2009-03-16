@@ -257,9 +257,14 @@ class CpuFreqApplet:
                 governor = self.backend.get_current_governor()
 
                 if governor == "userspace":
-                    self.radio_buttons[self.backend.get_current_frequency()].set_active(True)
+                    active_item = self.radio_buttons[self.backend.get_current_frequency()]
+                    callback = self.frequency_changed_cb
                 else:
-                    self.radio_buttons[governor].set_active(True)
+                    active_item = self.radio_buttons[governor]
+                    callback = self.governor_changed_cb
+                active_item.handler_block_by_func(callback)
+                active_item.set_active(True)
+                active_item.handler_unblock_by_func(callback)
 
             self.applet.dialog.toggle("frequency-dialog")
 

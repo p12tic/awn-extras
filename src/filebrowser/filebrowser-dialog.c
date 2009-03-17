@@ -21,7 +21,7 @@
 #include <string.h>
 #include <gtk/gtk.h>
 #include <libawn/awn-applet.h>
-#include <libawn/awn-applet-dialog.h>
+#include <libawn/awn-dialog.h>
 #include <libgnomevfs/gnome-vfs.h>
 #include <gdk/gdkkeysyms.h>
 #include <glib/gi18n.h>

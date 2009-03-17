@@ -23,7 +23,7 @@
 
 #include <libawn/awn-cairo-utils.h>
 #include <libawn/awn-applet-simple.h>
-#include <libawn/awn-applet-dialog.h>
+#include <libawn/awn-dialog.h>
 #include <gtk/gtk.h>
 #include <glib.h>
 #include <glib/gi18n.h>

@@ -4,7 +4,7 @@
 #include <glib/gerror.h>
 #include <gconf/gconf-value.h>
 
-#include <libawn/awn-applet-dialog.h>
+#include <libawn/awn-dialog.h>
 #include <libawn/awn-applet-simple.h>
 #include <glib.h>
 

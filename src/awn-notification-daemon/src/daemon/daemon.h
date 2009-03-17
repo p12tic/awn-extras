@@ -35,7 +35,7 @@
 #include <glib/gerror.h>
 #include <gconf/gconf-value.h>
 
-#include <libawn/awn-applet-dialog.h>
+#include <libawn/awn-dialog.h>
 #include <libawn/awn-cairo-utils.h>
 
 #define APPLET_NAME "awn-notification-daemon"

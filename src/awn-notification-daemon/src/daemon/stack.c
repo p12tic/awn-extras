@@ -34,7 +34,7 @@
 #include <gdk/gdkx.h>
 #include <libawn/awn-applet.h>
 #include <libawn/awn-applet-simple.h>
-#include <libawn/awn-applet-dialog.h>
+#include <libawn/awn-dialog.h>
 
 struct _NotifyStack
 {

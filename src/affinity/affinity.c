@@ -29,7 +29,7 @@
 #include <gdk/gdkkeysyms.h>
 #include <string.h>
 
-#include <libawn/awn-applet-dialog.h>
+#include <libawn/awn-dialog.h>
 #include <libawn/awn-applet.h>
 
 #include "affinity.h"

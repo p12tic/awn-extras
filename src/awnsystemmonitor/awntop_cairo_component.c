@@ -48,7 +48,7 @@
 #include <glib/gerror.h>
 #include <gconf/gconf-value.h>
 
-#include <libawn/awn-applet-dialog.h>
+#include <libawn/awn-dialog.h>
 #include <libawn/awn-applet-simple.h>
 #include <glib.h>
 #include <gtk/gtk.h>
@@ -56,7 +56,6 @@
 
 #include <libawn/awn-applet.h>
 #include <libawn/awn-cairo-utils.h>
-//#include <libawn/awn-title.h>
 #include <libawn/awn-tooltip.h>
 
 #include "awntop_cairo_component.h"

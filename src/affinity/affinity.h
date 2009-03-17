@@ -27,7 +27,7 @@
 #include <gtk/gtk.h>
 
 #include <libawn/awn-applet.h>
-#include <libawn/awn-applet-dialog.h>
+#include <libawn/awn-dialog.h>
 
 #include "aff-settings.h"
 

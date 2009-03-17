@@ -21,7 +21,7 @@
 #define __FILEBROWSER_DIALOG_H__
 
 #include <gtk/gtk.h>
-#include <libawn/awn-applet-dialog.h>
+#include <libawn/awn-dialog.h>
 
 #include "filebrowser-applet.h"
 

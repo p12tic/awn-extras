@@ -21,7 +21,7 @@
 #define __FILEBROWSER_FOLDER_H__
 
 #include <gtk/gtk.h>
-#include <libawn/awn-applet-dialog.h>
+#include <libawn/awn-dialog.h>
 #include <libgnomevfs/gnome-vfs.h>
 
 #include "filebrowser-dialog.h"

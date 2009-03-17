@@ -34,7 +34,7 @@
 #endif
 #include <glib/gi18n.h>
 
-#include <libawn/awn-applet-dialog.h>
+#include <libawn/awn-dialog.h>
 
 #include "aff-window.h"
 #include "aff-settings.h"

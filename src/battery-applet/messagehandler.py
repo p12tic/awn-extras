@@ -18,7 +18,8 @@ try:
 except ImportError:
     import gobject as glib
 
-import pynotify
+from awn import check_dependencies
+check_dependencies(globals(), "pynotify")
 
 # Minutes until the a closed warning is shown again
 warning_closed_timeout = 5.0

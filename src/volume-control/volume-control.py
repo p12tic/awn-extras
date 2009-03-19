@@ -16,8 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import with_statement
+
 import os
 import subprocess
+import threading
 
 import pygtk
 pygtk.require("2.0")
@@ -36,6 +39,10 @@ gst_message_types = (gst.interfaces.MIXER_MESSAGE_MUTE_TOGGLED.value_nick, gst.i
 # Interval in seconds between two successive reads of the current volume
 read_volume_interval = 0.5
 
+# Delay in seconds to freeze the GStreamer messages. This is used by the
+# value-changed callback of the volume scale to avoid jittering
+gstreamer_freeze_messages_interval = 0.2
+
 applet_name = "Volume Control"
 applet_version = "0.3.3"
 applet_description = "Applet to control your computer's volume"
@@ -47,7 +54,7 @@ glade_file = os.path.join(os.path.dirname(__file__), "volume-control.glade")
 volume_control_apps = ("gnome-volume-control", "xfce4-mixer")
 
 moonbeam_theme_dir = os.path.join(os.path.dirname(__file__), "themes")
-moonbeam_ranges = [100, 93, 86, 79, 71, 64, 57, 50, 43, 36, 29, 21, 14, 1, 0]
+moonbeam_ranges = [100, 93, 86, 79, 71, 64, 57, 50, 43, 36, 29, 21, 14, 1]
 
 # Logo of the applet, shown in the GTK About dialog
 applet_logo = os.path.join(os.path.dirname(__file__), "volume-control.svg")
@@ -66,10 +73,13 @@ class VolumeControlApplet:
     __old_volume = None
     __was_muted = None
 
+    __volume_scale_lock = threading.Lock()
+
     def __init__(self, applet):
         self.applet = applet
 
         self.backend = GStreamerBackend(self)
+        self.message_delay_handler = applet.timing.delay(self.backend.freeze_messages.clear, gstreamer_freeze_messages_interval)
 
         self.setup_main_dialog()
         self.setup_context_menu()
@@ -87,6 +97,8 @@ class VolumeControlApplet:
         """Reload the applet's icon, because the size of the panel has changed.
 
         """
+        self.setup_icons()
+
         self.refresh_icon(True)
 
     def setup_main_dialog(self):
@@ -132,7 +144,13 @@ class VolumeControlApplet:
 
         # Don't update if the callback was invoked via refresh_icon()
         if volume != self.backend.get_volume():
-            self.backend.set_volume(volume)
+            with self.__volume_scale_lock:
+                self.message_delay_handler.stop()
+                self.backend.freeze_messages.set()
+
+                self.backend.set_volume(volume)
+
+                self.message_delay_handler.start()
 
     def setup_context_menu(self):
         """Add "Mute" and "Open Volume Control" to the context menu.
@@ -195,8 +213,9 @@ class VolumeControlApplet:
             self.applet.settings["theme"] = self.themes[0]
         self.theme = self.applet.settings["theme"]
 
-        combobox_theme.set_active(self.themes.index(self.theme))
+        self.setup_icons()
 
+        combobox_theme.set_active(self.themes.index(self.theme))
         combobox_theme.connect("changed", self.combobox_theme_changed_cb)
 
     def load_device_pref(self, prefs):
@@ -270,7 +289,12 @@ class VolumeControlApplet:
     def combobox_theme_changed_cb(self, button):
         self.theme = self.themes[button.get_active()]
         self.applet.settings["theme"] = self.theme
-        self.refresh_icon(True)
+
+        # Load icons in different thread to avoid freezing the Gtk+ preferences window
+        def reload_icon():
+            self.setup_icons()
+            self.refresh_icon(True)
+        threading.Thread(target=reload_icon).start()
 
     def refresh_icon(self, force_update=False):
         volume = self.backend.get_volume()
@@ -296,17 +320,28 @@ class VolumeControlApplet:
                     icon = [key for key, value in volume_ranges.iteritems() if volume <= value[0] and volume >= value[1]][0]
 
             self.applet.tooltip.set(self.backend.get_current_track_label() + ": " + title)
-
-            if this_is_moonbeam_theme:
-                icon = os.path.join(moonbeam_theme_dir, self.theme, "audio-volume-%s.svg" % icon)
-            else:
-                icon = os.path.join(theme_dir, self.theme, "scalable/status/audio-volume-%s.svg" % icon)
-            self.applet.icon.file(icon, size=awnlib.Icon.APPLET_SIZE)
+            self.applet.icon.set(self.theme_icons[icon])
 
             self.volume_scale.set_value(volume)
 
             self.__old_volume = volume
             self.__was_muted = muted
+
+    def setup_icons(self):
+        this_is_moonbeam_theme = os.path.isdir(os.path.join(moonbeam_theme_dir, self.theme))
+
+        self.theme_icons = {}
+
+        if this_is_moonbeam_theme:
+            keys = moonbeam_ranges
+            path = os.path.join(moonbeam_theme_dir, self.theme, "audio-volume-%s.svg")
+        else:
+            keys = volume_ranges.keys()
+            path = os.path.join(theme_dir, self.theme, "scalable/status/audio-volume-%s.svg")
+
+        keys.extend(["muted"])
+        for i in keys:
+            self.theme_icons[i] = self.applet.icon.file(path % i, set=False, size=awnlib.Icon.APPLET_SIZE)
 
     def refresh_mute_checkbox(self):
         """Update the state of the 'Mute' checkbox.
@@ -343,6 +378,8 @@ class GStreamerBackend:
     def __init__(self, parent):
         self.__parent = parent
 
+        self.freeze_messages = threading.Event()
+
         mixer = gst.element_factory_make("alsamixer")
 
         if not isinstance(mixer, gst.interfaces.PropertyProbe):
@@ -378,8 +415,10 @@ class GStreamerBackend:
             parent.applet.timing.register(parent.refresh_icon, read_volume_interval)
 
     def message_element_cb(self, bus, message):
-        if message.type is gst.MESSAGE_ELEMENT and message.src is self.__mixer:
-            if message.structure["type"] in gst_message_types and message.structure["track"] is self.__current_track:
+        if not self.freeze_messages.isSet() \
+            and message.type is gst.MESSAGE_ELEMENT and message.src is self.__mixer \
+            and message.structure["type"] in gst_message_types \
+            and message.structure["track"] is self.__current_track:
                 self.__parent.refresh_icon()
 
     def get_mixer_tracks(self, mixer):
@@ -470,10 +509,11 @@ class GStreamerBackend:
     def set_gst_volume(self, volume):
         self.__mixer.set_volume(self.__current_track, (self.__current_track.min_volume + volume, ) * self.__current_track.num_channels)
 
-        self.__parent.refresh_icon(True)
-
     def set_volume(self, value):
         self.set_gst_volume(int(round(value / self.__volume_multiplier)))
+
+        # Update applet's icon
+        self.__parent.refresh_icon(True)
 
     def up(self, widget=None, event=None):
         self.set_volume(min(100, self.get_volume() + volume_step))

@@ -1120,7 +1120,10 @@ class Timing:
         @rtype: L{Callback}
 
         """
-        cb = self.Callback(callback, seconds)
+        def callback_wrapper():
+            callback()
+            return True
+        cb = self.Callback(callback_wrapper, seconds)
         if start:
             cb.start()
         return cb
@@ -1132,13 +1135,14 @@ class Timing:
         @type callback: C{function}
         @param seconds: Number of seconds to delay function call
         @type seconds: C{float} or C{int}
+        @return: A L{Callback} object for the C{callback} parameter
+        @rtype: L{Callback}
 
         """
-        def cb():
+        def callback_wrapper():
             callback()
             return False
-
-        gobject.timeout_add(int(seconds * 1000), cb)
+        return self.Callback(callback_wrapper, seconds)
 
     class Callback:
 
@@ -1163,13 +1167,6 @@ class Timing:
             self.__seconds = seconds
             self.__timer_id = None
 
-        def __run(self):
-            """The function to be called by the timer.
-
-            """
-            self.__callback()
-            return True
-
         def is_started(self):
             """Return True if the callback has been scheduled to run after
             each interval, False if the callback is stopped.
@@ -1190,10 +1187,10 @@ class Timing:
             if self.__timer_id is None:
                 if int(self.__seconds) == self.__seconds:
                     self.__timer_id = gobject.timeout_add_seconds( \
-                        int(self.__seconds), self.__run)
+                        int(self.__seconds), self.__callback)
                 else:
                     self.__timer_id = gobject.timeout_add( \
-                        int(self.__seconds * 1000), self.__run)
+                        int(self.__seconds * 1000), self.__callback)
                 return True
             return False
 

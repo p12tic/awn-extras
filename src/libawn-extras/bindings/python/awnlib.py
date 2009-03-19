@@ -396,6 +396,9 @@ class Title:
         self.__tooltip = parent.get_icon().get_tooltip()
         self.set(parent.meta["name"])
 
+    def disable_toggle_on_click(self):
+        self.__tooltip.props.toggle_on_click = False
+
     def is_visible(self):
         return self.__tooltip.props.visible
 

@@ -31,7 +31,7 @@ awn_applet_factory_initp(gchar* uid, gint orient, gint offset, gint size)
   AwnApplet *applet;
   Shiny_switcher*shiny_switcher;
   applet = awn_applet_new(uid, orient, offset, size);
-  shiny_switcher = applet_new(applet, orient, size, size);
+  shiny_switcher = applet_new(applet, orient, offset,size);
   shiny_switcher->orient = orient;
 
   return applet;

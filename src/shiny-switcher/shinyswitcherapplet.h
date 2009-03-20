@@ -99,6 +99,7 @@ typedef struct
 
   gint    height;
   gint   width;
+  gint   padding;
   int    mini_work_width;
   int    mini_work_height;
 
@@ -173,6 +174,6 @@ typedef struct
 }Win_press_data;
 
 /* Applet */
-Shiny_switcher* applet_new(AwnApplet *applet, gint orient,int width, int height);
+Shiny_switcher* applet_new(AwnApplet *applet, gint orient,int offset, int size);
 
 #endif

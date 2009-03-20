@@ -82,6 +82,7 @@ static gboolean _expose_event_window(GtkWidget *widget, GdkEventExpose *expose, 
 static gboolean _expose_event_outer(GtkWidget *widget, GdkEventExpose *expose, Shiny_switcher *shinyswitcher);
 static gboolean _expose_event_border(GtkWidget *widget, GdkEventExpose *expose, Shiny_switcher *shinyswitcher);
 static gboolean _button_release_event(GtkWidget *widget, GdkEventButton *event, gpointer *data);
+static void _offset_changed(AwnApplet *app, guint offset, Shiny_switcher * shinyswitcher);
 static void _height_changed(AwnApplet *app, guint height, Shiny_switcher * shinyswitcher);
 static void _orient_changed(AwnApplet *app, guint orient, Shiny_switcher * shinyswitcher);
 static void _changed(AwnApplet *app,  Shiny_switcher *shinyswitcher);
@@ -170,11 +171,6 @@ void init_config(Shiny_switcher *shinyswitcher)
                                                      gpointer     user_data);
     */
     /*this will end up working*/
-    awn_config_client_notify_add(shinyswitcher->dock_config,
-                                 "panel",
-                                 "offset",
-                                 _change_config_cb,
-                                 shinyswitcher);
     awn_config_client_notify_add(shinyswitcher->config,
                                  AWN_CONFIG_CLIENT_DEFAULT_GROUP,
                                  "grab_wallpaper",
@@ -875,9 +871,6 @@ void create_containers(Shiny_switcher *shinyswitcher)
     g_signal_connect(G_OBJECT(shinyswitcher->mini_wins[win_num]), "expose_event", G_CALLBACK(_expose_event_window), NULL);
   }
 
-  gint padding = shinyswitcher->height;
-
-  padding = awn_config_client_get_int(shinyswitcher->dock_config, "panel", "offset", NULL);
 
   if (shinyswitcher->align)
   {
@@ -889,26 +882,26 @@ void create_containers(Shiny_switcher *shinyswitcher)
 
     case 0:
       shinyswitcher->align = gtk_alignment_new(0, 0, 0, 0);
-      gtk_alignment_set_padding(GTK_ALIGNMENT(shinyswitcher->align), padding, 0,
+      gtk_alignment_set_padding(GTK_ALIGNMENT(shinyswitcher->align), shinyswitcher->padding, 0,
                                 0, 0);
       break;
 
     case 1:
       shinyswitcher->align = gtk_alignment_new(1.0, 0, 0, 0);
       gtk_alignment_set_padding(GTK_ALIGNMENT(shinyswitcher->align), 0, 0,
-                                0, padding);
+                                0, shinyswitcher->padding);
       break;
 
     case 2:
       shinyswitcher->align = gtk_alignment_new(0, 1.0, 0, 0);
       gtk_alignment_set_padding(GTK_ALIGNMENT(shinyswitcher->align), 0,
-                                padding, 0, 0);
+                                shinyswitcher->padding, 0, 0);
       break;
 
     case 3:
       shinyswitcher->align = gtk_alignment_new(0.0, 0, 0, 0);
       gtk_alignment_set_padding(GTK_ALIGNMENT(shinyswitcher->align), 0, 0,
-                                padding, 0);
+                                shinyswitcher->padding, 0);
       break;
 
 
@@ -2036,6 +2029,8 @@ gboolean _waited(Shiny_switcher *shinyswitcher)
 
   g_signal_connect(G_OBJECT(shinyswitcher->applet), "orientation-changed", G_CALLBACK(_orient_changed), (gpointer)shinyswitcher);
 
+  g_signal_connect(G_OBJECT(shinyswitcher->applet), "offset-changed", G_CALLBACK(_offset_changed), shinyswitcher);
+
   gtk_widget_show_all(shinyswitcher->container);
 
   gtk_widget_show_all(GTK_WIDGET(shinyswitcher->applet));
@@ -2062,11 +2057,12 @@ gboolean _waited(Shiny_switcher *shinyswitcher)
  * Create new applet
  */
 Shiny_switcher*
-applet_new(AwnApplet *applet, gint orient, int width, int height)
+applet_new(AwnApplet *applet, gint orient, int offset, int size)
 {
   GdkScreen *screen;
 
   Shiny_switcher *shinyswitcher = g_malloc(sizeof(Shiny_switcher)) ;
+  shinyswitcher->padding = offset;
   shinyswitcher->orient = orient;
   shinyswitcher->align  = NULL;
   shinyswitcher->config = NULL;
@@ -2078,7 +2074,7 @@ applet_new(AwnApplet *applet, gint orient, int width, int height)
   shinyswitcher->pixbuf_cache = g_tree_new(_cmp_ptrs);
   shinyswitcher->surface_cache = g_tree_new(_cmp_ptrs);
   shinyswitcher->win_menus = g_tree_new(_cmp_ptrs);
-  shinyswitcher->height = height;
+  shinyswitcher->height = size;
   shinyswitcher->wnck_screen = wnck_screen_get_default();
   wnck_screen_force_update(shinyswitcher->wnck_screen);
   shinyswitcher->got_viewport = wnck_workspace_is_virtual(wnck_screen_get_active_workspace(shinyswitcher->wnck_screen));
@@ -2239,6 +2235,13 @@ _height_changed(AwnApplet *app, guint height, Shiny_switcher *shinyswitcher)
   _changed_waited(shinyswitcher);
 }
 
+
+static void _offset_changed(AwnApplet *app, guint offset, Shiny_switcher * shinyswitcher)
+{
+  shinyswitcher->padding = offset;
+  _changed(shinyswitcher->applet,  shinyswitcher);
+  _changed_waited(shinyswitcher);
+}
 
 static void
 _orient_changed(AwnApplet *app, guint orient, Shiny_switcher * shinyswitcher)

@@ -2239,8 +2239,30 @@ _height_changed(AwnApplet *app, guint height, Shiny_switcher *shinyswitcher)
 static void _offset_changed(AwnApplet *app, guint offset, Shiny_switcher * shinyswitcher)
 {
   shinyswitcher->padding = offset;
-  _changed(shinyswitcher->applet,  shinyswitcher);
-  _changed_waited(shinyswitcher);
+  switch (shinyswitcher->orient)
+  {
+
+    case 0:
+      gtk_alignment_set_padding(GTK_ALIGNMENT(shinyswitcher->align), shinyswitcher->padding, 0,
+                                0, 0);
+      break;
+
+    case 1:
+      gtk_alignment_set_padding(GTK_ALIGNMENT(shinyswitcher->align), 0, 0,
+                                0, shinyswitcher->padding);
+      break;
+
+    case 2:
+      gtk_alignment_set_padding(GTK_ALIGNMENT(shinyswitcher->align), 0,
+                                shinyswitcher->padding, 0, 0);
+      break;
+
+    case 3:
+      gtk_alignment_set_padding(GTK_ALIGNMENT(shinyswitcher->align), 0, 0,
+                                shinyswitcher->padding, 0);
+      break;
+  }
+
 }
 
 static void

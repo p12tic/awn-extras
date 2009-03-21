@@ -400,7 +400,7 @@ class Title:
         self.__tooltip.props.toggle_on_click = False
 
     def is_visible(self):
-        return self.__tooltip.props.visible
+        return (self.__tooltip.flags() & gtk.VISIBLE) != 0
 
     def show(self):
         """Show the applet title.

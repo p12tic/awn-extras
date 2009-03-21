@@ -110,6 +110,11 @@ class App(awn.AppletSimple):
         self.connect("button-press-event", self.button_press)
         self.dialog.connect("focus-out-event", self.dialog_focus_out)
         # Drag&drop support
+        self.get_icon().drag_dest_set(
+                               gtk.DEST_DEFAULT_DROP | gtk.DEST_DEFAULT_MOTION,
+                               [("text/uri-list", 0, 0), ("text/plain", 0, 1)],
+                               gtk.gdk.ACTION_COPY)
+
         self.get_icon().connect("drag-data-received", self.applet_drop_cb)
         self.get_icon().connect("drag-motion", self.applet_drag_motion_cb)
         self.get_icon().connect("drag-leave", self.applet_drag_leave_cb)

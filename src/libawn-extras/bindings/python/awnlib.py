@@ -638,7 +638,7 @@ class Errors:
             self.action_area.add(self.hbox)
 
             close_button = gtk.Button(stock=gtk.STOCK_CLOSE)
-            close_button.connect("clicked", lambda w: self.hide())
+            close_button.connect("clicked", lambda w: self.emit("response", gtk.RESPONSE_CLOSE))
             self.hbox.add(close_button)
 
             if len(message) > 0:
@@ -657,13 +657,9 @@ class Errors:
                 parent.connect_size_changed(self.update_theme_icon)
 
             self.connect("response", self.response_event)
-            self.connect("delete_event", self.delete_event)
-
-        def delete_event(self, widget, event):
-            return True
+            self.hide_on_delete()
 
         def response_event(self, widget, response):
-            print "response: ", response
             if response < 0:
                 self.hide()
 
@@ -1131,7 +1127,7 @@ class Timing:
             cb.start()
         return cb
 
-    def delay(self, callback, seconds):
+    def delay(self, callback, seconds, start=True):
         """Delay the execution of the given callback.
 
         @param callback: Function
@@ -1145,7 +1141,10 @@ class Timing:
         def callback_wrapper():
             callback()
             return False
-        return self.Callback(callback_wrapper, seconds)
+        cb = self.Callback(callback_wrapper, seconds)
+        if start:
+            cb.start()
+        return cb
 
     class Callback:
 
@@ -1501,7 +1500,10 @@ def init_start(applet_class, meta={}, options=[]):
         applet.icon.theme("dialog-error")
         import traceback
         traceback = traceback.format_exception(type(e), e, sys.exc_traceback)
-        applet.errors.general(e, traceback=traceback)
+        def crash_applet(widget=None, event=None):
+            gtk.main_quit()
+        applet.connect("button-press-event", crash_applet)
+        applet.errors.general(e, traceback=traceback, callback=crash_applet)
 
     applet.show_all()
     gtk.main()

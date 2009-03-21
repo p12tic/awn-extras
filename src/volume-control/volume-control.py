@@ -79,7 +79,7 @@ class VolumeControlApplet:
         self.applet = applet
 
         self.backend = GStreamerBackend(self)
-        self.message_delay_handler = applet.timing.delay(self.backend.freeze_messages.clear, gstreamer_freeze_messages_interval)
+        self.message_delay_handler = applet.timing.delay(self.backend.freeze_messages.clear, gstreamer_freeze_messages_interval, False)
 
         self.setup_main_dialog()
         self.setup_context_menu()

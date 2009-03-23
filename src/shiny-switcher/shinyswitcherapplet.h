@@ -29,7 +29,7 @@
 #include <glib.h>
 #include <libawn/awn-cairo-utils.h>
 #include <libawn/awn-applet.h>
-
+#include <libawn/awn-alignment.h>
 #include  <time.h>
 
 #ifdef HAVE_CONFIG_H
@@ -161,7 +161,7 @@ typedef struct
   GdkColormap  *rgba_cmap;
   AwnConfigClient  *config;
   AwnConfigClient  *dock_config;
-	GtkWidget * align;
+	AwnAlignment * align;
 	
 	gint orient;
 }Shiny_switcher;

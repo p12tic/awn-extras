@@ -871,49 +871,10 @@ void create_containers(Shiny_switcher *shinyswitcher)
     g_signal_connect(G_OBJECT(shinyswitcher->mini_wins[win_num]), "expose_event", G_CALLBACK(_expose_event_window), NULL);
   }
 
-
-  if (shinyswitcher->align)
-  {
-    gtk_container_remove(shinyswitcher->applet, shinyswitcher->align);
-  }
-
-  switch (shinyswitcher->orient)
-  {
-
-    case 0:
-      shinyswitcher->align = gtk_alignment_new(0, 0, 0, 0);
-      gtk_alignment_set_padding(GTK_ALIGNMENT(shinyswitcher->align), shinyswitcher->padding, 0,
-                                0, 0);
-      break;
-
-    case 1:
-      shinyswitcher->align = gtk_alignment_new(1.0, 0, 0, 0);
-      gtk_alignment_set_padding(GTK_ALIGNMENT(shinyswitcher->align), 0, 0,
-                                0, shinyswitcher->padding);
-      break;
-
-    case 2:
-      shinyswitcher->align = gtk_alignment_new(0, 1.0, 0, 0);
-      gtk_alignment_set_padding(GTK_ALIGNMENT(shinyswitcher->align), 0,
-                                shinyswitcher->padding, 0, 0);
-      break;
-
-    case 3:
-      shinyswitcher->align = gtk_alignment_new(0.0, 0, 0, 0);
-      gtk_alignment_set_padding(GTK_ALIGNMENT(shinyswitcher->align), 0, 0,
-                                shinyswitcher->padding, 0);
-      break;
-
-
-
-  }
   g_signal_connect_after(G_OBJECT(shinyswitcher->container), "realize",
                          G_CALLBACK(awn_utils_make_transparent_bg), NULL);
 
   gtk_container_add(GTK_CONTAINER(shinyswitcher->align), shinyswitcher->container);
-
-  gtk_container_add(GTK_CONTAINER(shinyswitcher->applet), shinyswitcher->align);
-
 
   g_signal_connect(GTK_WIDGET(shinyswitcher->applet), "scroll-event" , G_CALLBACK(_scroll_event), shinyswitcher);
 }
@@ -2064,7 +2025,8 @@ applet_new(AwnApplet *applet, gint orient, int offset, int size)
   Shiny_switcher *shinyswitcher = g_malloc(sizeof(Shiny_switcher)) ;
   shinyswitcher->padding = offset;
   shinyswitcher->orient = orient;
-  shinyswitcher->align  = NULL;
+  shinyswitcher->align  = awn_alignment_new_for_applet(applet);
+  gtk_container_add(GTK_CONTAINER(applet), shinyswitcher->align);  
   shinyswitcher->config = NULL;
   shinyswitcher->applet = applet;
   shinyswitcher->ws_lookup_ev = g_tree_new(_cmp_ptrs);
@@ -2238,31 +2200,6 @@ _height_changed(AwnApplet *app, guint height, Shiny_switcher *shinyswitcher)
 
 static void _offset_changed(AwnApplet *app, guint offset, Shiny_switcher * shinyswitcher)
 {
-  shinyswitcher->padding = offset;
-  switch (shinyswitcher->orient)
-  {
-
-    case 0:
-      gtk_alignment_set_padding(GTK_ALIGNMENT(shinyswitcher->align), shinyswitcher->padding, 0,
-                                0, 0);
-      break;
-
-    case 1:
-      gtk_alignment_set_padding(GTK_ALIGNMENT(shinyswitcher->align), 0, 0,
-                                0, shinyswitcher->padding);
-      break;
-
-    case 2:
-      gtk_alignment_set_padding(GTK_ALIGNMENT(shinyswitcher->align), 0,
-                                shinyswitcher->padding, 0, 0);
-      break;
-
-    case 3:
-      gtk_alignment_set_padding(GTK_ALIGNMENT(shinyswitcher->align), 0, 0,
-                                shinyswitcher->padding, 0);
-      break;
-  }
-
 }
 
 static void

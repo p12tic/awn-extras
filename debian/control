@@ -124,7 +124,6 @@ Description: A collection of applets for avant-window-navigator
   * cpufreq: Monitors and controls the CPU frequency. 
   * DesktopManager: Manages the desktop Wallpaper.
   * file-browser-launcher: Launches the user's file manager or opens bookmarks.
-  * lastfm: Stream any of the Last.Fm radios.
   * mail: The Mail Applet lets you check your mail from AWN.
   * media-control: This applet displays album art in a awn dialog while 
     allowing you to control your favorite media players.

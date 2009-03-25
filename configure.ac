@@ -226,7 +226,7 @@ if test x${enable_pymod_checks} = xyes; then
     if test "$with_gconf" != "no"; then
     # calendar, media-control, media-player, stacks
     AM_CHECK_PYMOD(gconf,,,AC_MSG_ERROR([python module gconf required]))
-    # lastfm, media-player, volume-control
+    # media-player, volume-control
     AM_CHECK_PYMOD(gst,,,AC_MSG_ERROR([python module gstreamer required (python-gst0.10)]))
     fi
 fi
@@ -365,7 +365,6 @@ src/digitalClock/Makefile
 src/file-browser-launcher/Makefile
 src/filebrowser/Makefile
 src/filebrowser/filebrowser.desktop.in
-src/lastfm/Makefile
 src/libawn-extras/Makefile
 src/libawn-extras/awn-extras.pc
 src/libawn-extras/bindings/Makefile

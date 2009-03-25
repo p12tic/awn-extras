@@ -1,8 +1,0 @@
-[Desktop Entry]
-Type=Application
-X-AWN-AppletType=Python
-Name=Last.fm Player Applet
-Comment=Last.fm Player for AWN
-Exec=lastfm/lastfmapplet.py
-Icon=lastfm/icons/lastfm_icon_small.png
-X-AWN-AppletCategory=AudioVideo,Audio,Network,Player

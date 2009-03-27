@@ -345,9 +345,6 @@ class LocationSearchWindow:
         self.__search_dialog.connect("delete_event", lambda w, e: True)
         self.__search_dialog.connect("response", self.response_event_cb)
 
-        prefs.get_widget("button-cancel-location-search").connect("clicked", lambda w: self.hide_window())
-        self.__search_dialog.set_skip_taskbar_hint(True)
-
         self.__button_ok_search = self.__prefs.get_widget("button-ok-location-search")
         self.__button_ok_search.set_sensitive(False)
         self.__button_ok_search.connect("clicked", self.button_ok_search_clicked_cb)

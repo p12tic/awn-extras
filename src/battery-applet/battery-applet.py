@@ -107,20 +107,22 @@ class BatteryStatusApplet:
         prefs = glade.XML(glade_file)
         prefs.get_widget("vbox-preferences").reparent(self.applet.dialog.new("preferences").vbox)
 
-        self.settings = {
+        refresh_message = lambda v: self.__message_handler.evaluate()
+
+        default_values = {
             "theme": default_theme,
-            "warn-low-level": True,
-            "notify-high-level": False,
-            "level-warn-low": 15.0,
-            "level-notify-high": 100.0,
+            "warn-low-level": (True, self.toggled_warn_low_level_cb, prefs.get_widget("checkbutton-warn-low-level")),
+            "notify-high-level": (False, self.toggled_notify_high_level_cb, prefs.get_widget("checkbutton-notify-high-level")),
+            "level-warn-low": (15.0, refresh_message, prefs.get_widget("spinbutton-low-level")),
+            "level-notify-high": (100.0, refresh_message, prefs.get_widget("spinbutton-high-level")),
             "low-level-unit": low_level_units[0]
         }
 
         if self.backend is not None:
             batteries = self.backend.get_batteries()
-            self.settings["battery-udi"] = batteries.keys()[0]
+            default_values["battery-udi"] = batteries.keys()[0]
 
-        self.applet.settings.load(self.settings)
+        self.settings = self.applet.settings.load_preferences(default_values)
 
         """ Battery """
         if self.backend is not None:
@@ -139,7 +141,9 @@ class BatteryStatusApplet:
             self.combobox_battery.set_active(batteries.values().index(batteries[udi]))
             self.combobox_battery.connect("changed", self.combobox_battery_changed_cb)
         else:
-            prefs.get_widget("frame-battery").destroy()
+            frame = prefs.get_widget("frame-battery")
+            frame.hide_all()
+            frame.set_no_show_all(True)
 
         """ Display """
         hbox = prefs.get_widget("hbox-theme")
@@ -164,52 +168,28 @@ class BatteryStatusApplet:
 
         """ Notifications """
         if self.backend is not None:
-            checkbutton_low_level = prefs.get_widget("checkbutton-warn-low-level")
-            checkbutton_low_level.set_active(self.settings["warn-low-level"])
-            checkbutton_low_level.connect("toggled", self.toggled_warn_low_level_cb)
-
             self.spinbutton_low_level = prefs.get_widget("spinbutton-low-level")
-            self.spinbutton_low_level.set_value(self.settings["level-warn-low"])
-            self.spinbutton_low_level.connect("value-changed", self.changed_value_low_level_cb)
             self.spinbutton_low_level.set_sensitive(self.settings["warn-low-level"])
 
             self.combobox_low_level = prefs.get_widget("combobox-low-level")
             self.combobox_low_level.set_active(low_level_units.index(self.settings["low-level-unit"]))
             self.combobox_low_level.connect("changed", self.combobox_low_level_unit_changed_cb)
 
-            checkbutton_high_level = prefs.get_widget("checkbutton-notify-high-level")
-            checkbutton_high_level.set_active(self.settings["notify-high-level"])
-            checkbutton_high_level.connect("toggled", self.toggled_notify_high_level_cb)
-
             self.spinbutton_high_level = prefs.get_widget("spinbutton-high-level")
-            self.spinbutton_high_level.set_value(self.settings["level-notify-high"])
-            self.spinbutton_high_level.connect("value-changed", self.changed_value_high_level_cb)
             self.spinbutton_high_level.set_sensitive(self.settings["notify-high-level"])
         else:
-            prefs.get_widget("frame-notifications").destroy()
+            frame = prefs.get_widget("frame-notifications")
+            frame.hide_all()
+            frame.set_no_show_all(True)
 
-    def toggled_warn_low_level_cb(self, button):
-        self.applet.settings["warn-low-level"] = active = button.get_active()
-
+    def toggled_warn_low_level_cb(self, active):
         self.spinbutton_low_level.set_sensitive(active)
         self.combobox_low_level.set_sensitive(active)
 
         self.__message_handler.evaluate()
 
-    def toggled_notify_high_level_cb(self, button):
-        self.applet.settings["notify-high-level"] = active = button.get_active()
-
+    def toggled_notify_high_level_cb(self, active):
         self.spinbutton_high_level.set_sensitive(active)
-
-        self.__message_handler.evaluate()
-
-    def changed_value_low_level_cb(self, button):
-        self.applet.settings["level-warn-low"] = button.get_value()
-
-        self.__message_handler.evaluate()
-
-    def changed_value_high_level_cb(self, button):
-        self.applet.settings["level-notify-high"] = button.get_value()
 
         self.__message_handler.evaluate()
 

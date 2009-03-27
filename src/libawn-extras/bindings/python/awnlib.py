@@ -1,7 +1,7 @@
 # AWN Applet Library - simplified APIs for programming applets for AWN.
 #
 # Copyright (C) 2007 - 2008  Pavel Panchekha <pavpanchekha@gmail.com>
-#                      2008 - 2009  onox <denkpadje@gmail.com>
+#               2008 - 2009  onox <denkpadje@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -694,6 +694,7 @@ class Settings:
 
         """
         self.__dict = None
+        self.__callables = {}
 
         if "short" in parent.meta:
             if parent.meta.has_option("settings-per-instance"):
@@ -717,7 +718,8 @@ class Settings:
         @type parent: L{bool}
 
         """
-        assert self.__dict is None
+        if self.__dict is not None:
+            raise RuntimeError("settings already loaded")
 
         self.__dict = dict
 
@@ -726,6 +728,70 @@ class Settings:
                 dict[key] = self[key]
             elif push_defaults:
                 self[key] = dict[key]
+
+    def load_preferences(self, dict_tuples, push_defaults=True):
+        """Synchronize the values from the tuples in the given dictionary
+        with the stored settings, use the callable to be called when the value
+        is changed, and initialize and connect the provided Gtk+ widget. 
+
+        Returns a "read-only" dictionary containing, now and in the future,
+        up-to-date values.
+
+        A callable, optionally provided at the second index in the tuple,
+        will be called when the value of the setting is changed.
+        If the tuple provides a certain Gtk+ widget at the third index,
+        then this widget will be initialized with the value of the setting,
+        and changes in the value of the widget will be reflect in the returned
+        dictionary and settings backend.
+
+        @param dict: Default values for the dictionary.
+        @type parent: L{dict}
+        @param push_defaults: Whether to store non-overridden defaults in
+        the settings backend. True by default.
+        @type parent: L{bool}
+
+        """
+        if self.__dict is not None:
+            raise RuntimeError("settings already loaded")
+
+        self.__dict = {}
+
+        for key, values in dict_tuples.iteritems():
+            is_tuple = type(values) is tuple
+            default_value = values[0] if is_tuple else values
+
+            if key in self:
+                self.__dict[key] = self[key]
+            else:
+                self.__dict[key] = default_value
+                if push_defaults:
+                    self[key] = default_value
+
+            if not is_tuple or len(values) == 1:
+                continue
+
+            self.__callables[key] = values[1]
+
+            if len(values) == 2:
+                continue
+
+            key_widget = values[2]
+            widget_type = type(key_widget)
+
+            if isinstance(key_widget, gtk.ToggleButton):
+                def toggled_cb(widget, name):
+                    self[name] = widget.get_active()
+                key_widget.set_active(self.__dict[key])
+                key_widget.connect("toggled", toggled_cb, key)
+            elif widget_type is gtk.SpinButton:
+                def value_changed_cb(widget, name):
+                    self[name] = widget.get_value_as_int()
+                key_widget.set_value(self.__dict[key])
+                key_widget.connect("value-changed", value_changed_cb, key)
+            else:
+                raise RuntimeError("%s is unsupported" % widget_type.__name__)
+
+        return self.__dict
 
     def cd(self, folder=None, raw=False):
         """Change to another folder. Note that this will change folders to e.g.
@@ -802,7 +868,7 @@ class Settings:
         @type key: C{string}
 
         """
-        old_value = value
+        unpickled_value = value
 
         if type(value) in self.__setting_types.keys():
             value_type = self.__setting_types[type(value)]
@@ -813,7 +879,10 @@ class Settings:
 
         # Update the value in the loaded dictionary
         if self.__dict is not None:
-            self.__dict[key] = old_value
+            self.__dict[key] = unpickled_value
+
+            if key in self.__callables:
+                self.__callables[key](unpickled_value)
 
     def __delitem__(self, key):
         """Delete a key from the currect directory.

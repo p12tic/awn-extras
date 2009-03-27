@@ -18,6 +18,7 @@
 
 from __future__ import with_statement
 
+from collections import defaultdict
 import os
 import subprocess
 import threading
@@ -385,7 +386,7 @@ class GStreamerBackend:
         if not isinstance(mixer, gst.interfaces.PropertyProbe):
             raise RuntimeError(mixer.get_factory().get_name() + " cannot probe properties")
 
-        occurrences = {}
+        occurrences = defaultdict(int)
 
         mixer.probe_property_name("device")
         for device in mixer.probe_get_values_name("device"):
@@ -396,10 +397,8 @@ class GStreamerBackend:
                 continue
 
             name = mixer.get_property("device-name")
-            if name not in occurrences:
-                occurrences[name] = 1
-            else:
-                occurrences[name] += 1
+            occurrences[name] += 1
+            if occurrences[name] > 1:
                 name += " (%d)" % occurrences[name]
 
             self.__devices[name] = device

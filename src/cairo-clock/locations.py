@@ -73,7 +73,7 @@ class Locations:
     def draw_clock_cb(self):
         local_time = time.localtime()
 
-        new_state = (local_time[3], local_time[4], self.__applet.default_values["theme"], self.__applet.default_values["time-24-format"])
+        new_state = (local_time[3], local_time[4], self.__applet.settings["theme"], self.__applet.settings["time-24-format"])
         if self.__previous_state == new_state:
             return
 
@@ -217,7 +217,7 @@ class Locations:
     def update_timezone_label(self, local_datetime, label, timezone):
         city_datetime = datetime.now(tz.gettz(timezone))
 
-        if self.__applet.default_values["time-24-format"]:
+        if self.__applet.settings["time-24-format"]:
             format = "%H:%M"
         else:
             # Strip leading zero for single-digit hours

@@ -150,35 +150,18 @@ class CairoClockApplet:
         prefs.get_widget("vbox-general").reparent(container)
         self.preferences_notebook.append_page(container, gtk.Label("General"))
 
-        self.default_values = {
-            "time-24-format": True, # True if the time in the title must display 24 hours, False if AM/PM
-            "time-date": True,
-            "time-seconds": True,
-            "show-seconds-hand": True, # True if the clock must display a second hand, False otherwise
+        refresh_title = lambda v: self.__clock_updater.update_title()
+        refresh_clock = lambda v: self.__clock_updater.draw_clock_cb()
+
+        default_values = {
+            "time-24-format": (True, refresh_title, prefs.get_widget("radio-24-format")),  # True if the time in the title must display 24 hours, False if AM/PM
+            "time-date": (True, refresh_title, prefs.get_widget("check-time-date")),
+            "time-seconds": (True, refresh_title, prefs.get_widget("check-time-seconds")),
+            "show-seconds-hand": (True, refresh_clock, prefs.get_widget("check-second-hand")),  # True if the clock must display a second hand, False otherwise
             "theme": default_theme,
             "custom-time-format": ""
         }
-        self.applet.settings.load(self.default_values)
-
-        # Time format
-        radio_24_format = prefs.get_widget("radio-24-format")
-        radio_24_format.set_active(self.default_values["time-24-format"])
-        radio_24_format.connect("toggled", self.radiobutton_24_format_toggled_cb)
-
-        # Showing date in title
-        check_title_date = prefs.get_widget("check-time-date")
-        check_title_date.set_active(self.default_values["time-date"])
-        check_title_date.connect("toggled", self.checkbox_title_date_toggled_cb)
-
-        # Showing seconds in title
-        check_title_seconds = prefs.get_widget("check-time-seconds")
-        check_title_seconds.set_active(self.default_values["time-seconds"])
-        check_title_seconds.connect("toggled", self.checkbox_title_seconds_toggled_cb)
-
-        # Showing the seconds hand in the applet's icon
-        checkbox_second_hand = prefs.get_widget("check-second-hand")
-        checkbox_second_hand.set_active(self.default_values["show-seconds-hand"])
-        checkbox_second_hand.connect("toggled", self.seconds_hand_toggled_cb)
+        self.settings = self.applet.settings.load_preferences(default_values)
 
         # Combobox in preferences window to choose a theme
         vbox_theme = prefs.get_widget("vbox-theme")
@@ -205,7 +188,7 @@ class CairoClockApplet:
         for i in self.themes:
             combobox_theme.append_text(i)
 
-        theme = self.default_values["theme"]
+        theme = self.settings["theme"]
         if theme not in self.themes:
             self.applet.settings["theme"] = theme = default_theme
 
@@ -228,24 +211,6 @@ class CairoClockApplet:
         self.__clock_updater.load_theme()
         self.__clock_updater.draw_clock_cb()
 
-    def checkbox_title_date_toggled_cb(self, button):
-        self.applet.settings["time-date"] = button.get_active()
-        self.__clock_updater.update_title()
-
-    def checkbox_title_seconds_toggled_cb(self, button):
-        self.applet.settings["time-seconds"] = button.get_active()
-        self.__clock_updater.update_title()
-
-    def radiobutton_24_format_toggled_cb(self, button):
-        self.applet.settings["time-24-format"] = button.get_active()
-        self.__clock_updater.update_title()
-
-    def seconds_hand_toggled_cb(self, button):
-        self.applet.settings["show-seconds-hand"] = button.get_active()
-
-        # Update clock immediately
-        self.__clock_updater.draw_clock_cb()
-
 
 class ClockUpdater:
 
@@ -255,7 +220,7 @@ class ClockUpdater:
 
     def __init__(self, clock_applet):
         self.applet = clock_applet.applet
-        self.default_values = clock_applet.default_values
+        self.settings = clock_applet.settings
 
         self.__clock = AppletAnalogClock(self)
 
@@ -267,10 +232,10 @@ class ClockUpdater:
         if not self.applet.tooltip.is_visible():
             return
 
-        if len(self.default_values["custom-time-format"]) > 0:
-            format = self.default_values["custom-time-format"]
+        if len(self.settings["custom-time-format"]) > 0:
+            format = self.settings["custom-time-format"]
         else:
-            if self.default_values["time-24-format"]:
+            if self.settings["time-24-format"]:
                 hours = "%H"
                 ampm = ""
             else:
@@ -278,12 +243,12 @@ class ClockUpdater:
                 hours = str(int(time.strftime("%I")))
                 ampm = " %p"
 
-            if self.default_values["time-seconds"]:
+            if self.settings["time-seconds"]:
                 seconds = ":%S"
             else:
                 seconds = ""
 
-            if self.default_values["time-date"]:
+            if self.settings["time-date"]:
                 date = "%a %b %d "
                 year = " %Y"
             else:
@@ -305,7 +270,7 @@ class ClockUpdater:
         return True
 
     def load_theme(self):
-        provider = AnalogClockThemeProvider(self.default_values["theme"])
+        provider = AnalogClockThemeProvider(self.settings["theme"])
         self.__clock.load_theme(provider)
 
 
@@ -317,7 +282,7 @@ class AppletAnalogClock:
 
     def __init__(self, clock_updater):
         self.applet = clock_updater.applet
-        self.default_values = clock_updater.default_values
+        self.settings = clock_updater.settings
 
     def load_theme(self, provider):
         self.__theme = provider
@@ -331,7 +296,7 @@ class AppletAnalogClock:
         hours, minutes, seconds = (local_time[3], local_time[4], local_time[5])
 
         height = self.applet.get_size()
-        show_seconds_hand = self.default_values["show-seconds-hand"]
+        show_seconds_hand = self.settings["show-seconds-hand"]
 
         new_state = (show_seconds_hand, height, self.__theme.get_name(), hours, minutes)
         if not show_seconds_hand and self.__previous_state == new_state:

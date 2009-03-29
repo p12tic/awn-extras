@@ -1,7 +1,0 @@
-affinity-preferences/affinity-preferences.desktop.in.in
-affinity-preferences/window.glade
-src/aff-search-engine-tracker.c
-src/aff-search-engine-beagle.c
-src/aff-sidebar.c
-src/aff-start.c
-src/affinity.c

@@ -51,7 +51,6 @@ endif
 # please keep alphabetized (except for libawn-extras)
 SUBDIRS =			\
 	libawn-extras		\
-	affinity		\
 	animal-farm		\
 	arss			\
 	awn-meebo		\
@@ -64,7 +63,6 @@ SUBDIRS =			\
 	DesktopManager		\
 	digitalClock		\
 	file-browser-launcher	\
-	lastfm			\
 	mail			\
 	media-icon-back		\
 	media-icon-next		\

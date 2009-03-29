@@ -30,14 +30,8 @@ import time
 import subprocess
 import gnomevfs
 import calendarprefs
-# This will allow me to distribute google data services with the calendar applet, which might (?) be a
-# non-Pythonic, bad idea.  
-#here = os.getcwd()
-sys.path.append(os.path.abspath(os.path.dirname(__file__)) + "/google")
-print sys.path
 import gdata.calendar.service
 import gdata.service
-import atom.service
 import gdata.calendar
 
 # locale stuff

@@ -421,6 +421,10 @@ GdkPixmap * copy_pixmap(Shiny_switcher *shinyswitcher, GdkPixmap * src)
   GdkPixmap * copy;
   int  w, h;
   gdk_drawable_get_size(src, &w, &h);
+  if (!w || !h)
+  {
+    return NULL;
+  }
   copy = gdk_pixmap_new(src, w, h, 32);   /* FIXME */
   gdk_draw_drawable(copy, shinyswitcher->gdkgc, src, 0, 0, 0, 0, -1, -1);
   return copy;
@@ -829,9 +833,11 @@ void create_containers(Shiny_switcher *shinyswitcher)
       }
 
       copy = copy_pixmap(shinyswitcher, copy);
-
-      gtk_container_add(ev, gtk_image_new_from_pixmap(copy, NULL));
-      g_object_unref(copy);
+      if (copy)
+      {
+        gtk_container_add(ev, gtk_image_new_from_pixmap(copy, NULL));
+        g_object_unref(copy);
+      }
     }
     else
     {
@@ -848,9 +854,11 @@ void create_containers(Shiny_switcher *shinyswitcher)
       }
 
       copy = copy_pixmap(shinyswitcher, copy);
-
-      gtk_container_add(ev, gtk_image_new_from_pixmap(copy, NULL));
-      g_object_unref(copy);
+      if (copy)
+      {
+        gtk_container_add(ev, gtk_image_new_from_pixmap(copy, NULL));
+        g_object_unref(copy);
+      }
     }
 
     gtk_fixed_put(GTK_CONTAINER(shinyswitcher->mini_wins[win_num]), ev, 0, 0);
@@ -1530,6 +1538,10 @@ void render_windows_to_wallpaper(Shiny_switcher *shinyswitcher,  WnckWorkspace *
             GdkPixmap *pixmap;
             gtk_image_get_pixmap(gtk_bin_get_child(ws->wallpaper_ev), &pixmap, NULL);
             cairo_t * destcr = gdk_cairo_create(pixmap);
+            if (!destcr)
+            {
+              continue;
+            }
             cairo_set_operator(destcr, CAIRO_OPERATOR_CLEAR);
             cairo_fill(destcr);
 

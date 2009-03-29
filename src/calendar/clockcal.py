@@ -571,9 +571,10 @@ class App(awn.AppletSimple):
 		sign = (key > 0) * 2 - 1
 		random.seed (abs (key * sign))
 		s = ''
-		for i in xrange (len (sequence)):
-			r = random.randint(0, 255)
-			s += chr ((ord (sequence [i]) + r * sign) % 128)
+		if sequence is not None:
+			for i in xrange (len (sequence)):
+				r = random.randint(0, 255)
+				s += chr ((ord (sequence [i]) + r * sign) % 128)
 		return s
 
 	def draw_rounded_rect(self,context,x,y,w,h,r = 10):

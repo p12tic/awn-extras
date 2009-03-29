@@ -180,6 +180,8 @@ if test x${enable_pymod_checks} = xyes; then
     AM_CHECK_PYMOD(feedparser,,,AC_MSG_ERROR([python module feedparser required (python-feedparser)]))
     # cairo-clock
     AM_CHECK_PYMOD(rsvg,,,AC_MSG_ERROR([python module rsvg required (gnome-python-desktop)]))
+    # cairo-clock, calendar
+    AM_CHECK_PYMOD(dateutil,,,AC_MSG_ERROR([python module dateutil required (python-dateutil)]))
     if test "$with_gnome" != "no"; then
     # MiMenu
     AM_CHECK_PYMOD(gmenu,,,AC_MSG_ERROR([python module gmenu required]))
@@ -304,8 +306,6 @@ src/cairo-menu/cairo_main_menu.desktop.in
 src/calendar/Makefile
 src/calendar/images/Makefile
 src/calendar/icalendar/Makefile
-src/calendar/dateutil/Makefile
-src/calendar/dateutil/zoneinfo/Makefile
 src/comic/Makefile
 src/comics/Makefile
 src/comics/locale/Makefile

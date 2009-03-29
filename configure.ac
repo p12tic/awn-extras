@@ -180,6 +180,8 @@ if test x${enable_pymod_checks} = xyes; then
     AM_CHECK_PYMOD(feedparser,,,AC_MSG_ERROR([python module feedparser required (python-feedparser)]))
     # cairo-clock
     AM_CHECK_PYMOD(rsvg,,,AC_MSG_ERROR([python module rsvg required (gnome-python-desktop)]))
+    # cairo-clock, calendar
+    AM_CHECK_PYMOD(dateutil,,,AC_MSG_ERROR([python module dateutil required (python-dateutil)]))
     if test "$with_gnome" != "no"; then
     # MiMenu
     AM_CHECK_PYMOD(gmenu,,,AC_MSG_ERROR([python module gmenu required]))
@@ -197,6 +199,8 @@ if test x${enable_pymod_checks} = xyes; then
     if test "$with_gconf" != "no"; then
     # calendar, media-control, media-player, stacks
     AM_CHECK_PYMOD(gconf,,,AC_MSG_ERROR([python module gconf required]))
+    # calendar
+    AM_CHECK_PYMOD(gdata,,,AC_MSG_ERROR([python module gdata required (python-gdata)]))
     # media-player, volume-control
     AM_CHECK_PYMOD(gst,,,AC_MSG_ERROR([python module gstreamer required (python-gst0.10)]))
     fi
@@ -300,18 +304,8 @@ src/cairo-clock/Makefile
 src/cairo-menu/Makefile
 src/cairo-menu/cairo_main_menu.desktop.in
 src/calendar/Makefile
-src/calendar/google/Makefile
-src/calendar/google/atom/Makefile
-src/calendar/google/gdata/Makefile
-src/calendar/google/gdata/apps/Makefile
-src/calendar/google/gdata/base/Makefile
-src/calendar/google/gdata/calendar/Makefile
-src/calendar/google/gdata/docs/Makefile
-src/calendar/google/gdata/spreadsheet/Makefile
 src/calendar/images/Makefile
 src/calendar/icalendar/Makefile
-src/calendar/dateutil/Makefile
-src/calendar/dateutil/zoneinfo/Makefile
 src/comic/Makefile
 src/comics/Makefile
 src/comics/locale/Makefile

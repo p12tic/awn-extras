@@ -32,12 +32,9 @@ import calendarprefs
 import fileinput
 import re
 import string
-# This will allow me to distribute google data services with the calendar applet, which might (?) be a
-# non-Pythonic, bad idea.  
 from datetime import datetime
 sys.path.append(os.path.abspath(os.path.dirname(__file__)) + "/icalendar")
 from icalendar import Calendar, Event, UTC, vDatetime
-sys.path.append(os.path.abspath(os.path.dirname(__file__)) + "/dateutil")
 from dateutil.rrule import *
 # locale stuff
 APP="awn-calendar"

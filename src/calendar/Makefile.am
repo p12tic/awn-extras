@@ -1,4 +1,4 @@
-SUBDIRS = google images icalendar dateutil
+SUBDIRS = images icalendar
 
 APPLET_NAME = calendar
 APPLET_MAIN_FILE = clockcal.py

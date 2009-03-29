@@ -1,7 +1,5 @@
 SAC_PREREQ(2.53)
 
-m4_define(affinity_beagle_min_version,   0.0.12)
-m4_define(affinity_tracker_min_version,  0.0.1)
 m4_define(pycairo_required_version,      1.0.2) dnl or 1.1.7
 m4_define(pygtk_required_version,        2.10.0)
 
@@ -77,7 +75,7 @@ PKG_CHECK_MODULES(AWN, [awn >= 0.3.1])
 PKG_CHECK_MODULES(LIBGLADE, [libglade-2.0])
 # awn-notification-daemon, shiny-switcher, standalone-launcher, taskmand
 PKG_CHECK_MODULES(LIBWNCK, [libwnck-1.0])
-# affinity, awn-notification-daemon, shiny-switcher, trash
+# awn-notification-daemon, shiny-switcher, trash
 PKG_CHECK_MODULES(LIBX11, [x11])
 PKG_CHECK_MODULES(COMPOSITE, [xcomposite])
 PKG_CHECK_MODULES(XRENDER, [xrender])
@@ -96,7 +94,7 @@ if test "$with_gconf" != "no" -a "$config_backend" != "GConf"; then
 fi
 
 if test "$with_gconf" != "no" -a "$with_gnome" != "no"; then
-# affinity, filebrowser
+# filebrowser
 PKG_CHECK_MODULES(GNOMEUI, [libgnomeui-2.0])
 # filebrowser
 PKG_CHECK_MODULES(GNOME_DESKTOP, [gnome-desktop-2.0])
@@ -150,34 +148,7 @@ if test x$enable_sound != xno; then
 	fi
 fi
 
-
-# affinity
-affinity_pkgs="x11"
-affinity_beagle_pkg="libbeagle-0.0 >= affinity_beagle_min_version"
-AC_MSG_CHECKING([for optional Beagle support (Affinity)])
-PKG_CHECK_EXISTS([$affinity_beagle_pkg], [
-    AC_DEFINE(HAVE_BEAGLE, 1, [Define to enable beagle support])
-    have_beagle=yes
-    affinity_pkgs="$affinity_pkgs $affinity_beagle_pkg"
-], [have_beagle=no])
-AC_MSG_RESULT([$have_beagle])
-AM_CONDITIONAL(HAVE_BEAGLE, test "$have_beagle" = "yes")
-
-affinity_tracker_pkg="tracker >= affinity_tracker_min_version"
-AC_MSG_CHECKING([for optional Tracker support (Affinity)])
-PKG_CHECK_EXISTS([$affinity_tracker_pkg], [
-    AC_DEFINE(HAVE_TRACKER, 1, [Define to enable tracker support])
-    have_tracker=yes
-    affinity_pkgs="$affinity_pkgs $affinity_tracker_pkg"
-], [have_tracker=no])
-AC_MSG_RESULT([$have_tracker])
-AM_CONDITIONAL(HAVE_TRACKER, test "$have_tracker" = "yes")
-if test -n "`echo $AWN_CFLAGS | grep LIBAWN_USE_GNOME`"; then
-    affinity_pkgs="$affinity_pkgs libgnomeui-2.0"
-fi
-
 # applet-specific libraries
-PKG_CHECK_MODULES(AFFINITY, [$affinity_pkgs])
 if test "$with_gconf" != "no" -a "$with_gnome" != "no"; then
 PKG_CHECK_MODULES(AWN_SYSTEM_MONITOR, [$gconf libgtop-2.0])
 PKG_CHECK_MODULES(FILEBROWSER, [$gconf gnome-desktop-2.0 gnome-vfs-2.0 libgnomeui-2.0])
@@ -311,18 +282,6 @@ AC_OUTPUT([
 Makefile
 po/Makefile.in
 src/Makefile
-src/affinity/Makefile
-src/affinity/affinity.desktop.in
-src/affinity/affinity-preferences/Makefile
-src/affinity/affinity-preferences/affinity-preferences
-src/affinity/data/Makefile
-src/affinity/data/16x16/Makefile
-src/affinity/data/22x22/Makefile
-src/affinity/data/24x24/Makefile
-src/affinity/data/48x48/Makefile
-src/affinity/data/scalable/Makefile
-src/affinity/data/actions/Makefile
-src/affinity/po/Makefile.in
 src/animal-farm/Makefile
 src/arss/Makefile
 src/awn-meebo/Makefile

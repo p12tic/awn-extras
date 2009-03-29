@@ -21,15 +21,6 @@ src/pandora/awn-pandora.desktop.in
 src/quit-applet/quit-applet.desktop.in
 src/MiMenu/mimenu.desktop.in
 src/MiMenu/mimenu.desktop.in.in
-src/affinity/aff-results.c
-src/affinity/aff-search-engine-beagle.c
-src/affinity/aff-search-engine-tracker.c
-src/affinity/aff-settings.c
-src/affinity/aff-sidebar.c
-src/affinity/aff-start.c
-src/affinity/aff-window.c
-src/affinity/affinity-preferences/window.glade
-src/affinity/egg-pixbuf-thumbnail.c
 src/arss/arss.desktop.in
 src/arss/arss.desktop.in.in
 src/awn-notification-daemon/data/awn-notification-daemon.schemas.in

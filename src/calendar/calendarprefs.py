@@ -66,8 +66,7 @@ class CalendarPrefs(gtk.Window):
 		return s
 
 	def __init__(self,applet):
-		gtk.Window.__init__(self)
-		super(CalendarPrefs, self).__init__(gtk.WINDOW_TOPLEVEL)
+		super(CalendarPrefs, self).__init__()
 		self.applet = applet
 		self.set_title(_("Preferences"))
 		vbox = gtk.VBox(True, 0)

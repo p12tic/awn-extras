@@ -306,7 +306,6 @@ src/cairo-clock/Makefile
 src/cairo-menu/Makefile
 src/cairo-menu/cairo_main_menu.desktop.in
 src/calendar/Makefile
-src/calendar/images/Makefile
 src/comic/Makefile
 src/comics/Makefile
 src/comics/locale/Makefile

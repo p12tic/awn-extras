@@ -48,7 +48,6 @@ class CalendarLogin(gtk.Window):
         self.set_title(_("Login to ") + self.integ_text)
 
     def __init__(self, applet):
-        gtk.Window.__init__(self)
         super(CalendarLogin, self).__init__()
         self.applet = applet
         self.update_integ_text(_("Online Calendar"))

@@ -61,7 +61,7 @@ class IcsCal:
         self.events = []
         for filename in self.files:
             cal = vobject.readOne(open(filename, 'rb'))
-            for component in cal.components:
+            for component in cal.components():
                 if component.name == 'VEVENT':
                     dtstart = component.dtstart.value
                     dtend = component.dtend.value

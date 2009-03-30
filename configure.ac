@@ -189,7 +189,7 @@ if test x${enable_pymod_checks} = xyes; then
     if test "$with_gconf" != "no" -o "$with_gnome" != "no"; then
     # stacks
     AM_CHECK_PYMOD(gnomedesktop,,,AC_MSG_ERROR([python module gnomedesktop required]))
-    # calendar, stacks
+    # stacks
     AM_CHECK_PYMOD(gnomevfs,,,AC_MSG_ERROR([python module gnomevfs required]))
     # stacks
     AM_CHECK_PYMOD(gnome.ui,,,AC_MSG_ERROR([python module gnome.ui required]))

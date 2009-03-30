@@ -23,11 +23,10 @@
 #
 import sys
 import datetime
-import subprocess
-import gnomevfs
 import gdata.calendar.service
 import gdata.service
 import gdata.calendar
+import webbrowser
 
 # locale stuff
 APP = "awn-calendar"
@@ -99,9 +98,7 @@ class GoogleCal:
     def open_integrated_calendar(self, when, url):
         dat = "%02d%02d%02d" % (when[0], (when[1] + 1), when[2])
         url ="http://www.google.com/calendar/render?pli=1\&date=" + dat
-        app = gnomevfs.mime_get_default_application("text/html")[2]
-        apptext = app + " " + url
-        subprocess.Popen(apptext, shell=True)
+        webbrowser.open_new_tab(url)
 
     def convert_time_to_text(self, when):
         hour = int(when[11:13])

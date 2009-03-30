@@ -14,7 +14,6 @@ if WITH_GNOME
 GCONF_APPLETS +=		\
 	awnsystemmonitor	\
 	cairo-menu		\
-	calendar		\
 	filebrowser		\
 	plugger			\
 	stacks			\
@@ -24,6 +23,7 @@ endif
 # --with-gconf
 GCONF_APPLETS +=		\
 	awn-notification-daemon	\
+	calendar		\
 	media-control		\
 	$(NULL)
 endif

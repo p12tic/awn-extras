@@ -61,6 +61,7 @@ Recommends: 	avant-window-navigator-trunk,
 		gnome-applets,
 		tsclient,
 		python-gdata,
+		python-vobject,
 Conflict: awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 Replaces: awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 XB-Python-Version: ${python:Versions}

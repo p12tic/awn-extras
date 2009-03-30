@@ -1,4 +1,4 @@
-SUBDIRS = images icalendar
+SUBDIRS = images
 
 APPLET_NAME = calendar
 APPLET_MAIN_FILE = clockcal.py

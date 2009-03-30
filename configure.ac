@@ -203,6 +203,8 @@ if test x${enable_pymod_checks} = xyes; then
     AM_CHECK_PYMOD(gdata,,,AC_MSG_ERROR([python module gdata required (python-gdata)]))
     # media-player, volume-control
     AM_CHECK_PYMOD(gst,,,AC_MSG_ERROR([python module gstreamer required (python-gst0.10)]))
+    # calendar
+    AM_CHECK_PYMOD(vobject,,,AC_MSG_ERROR([python module gdata required (python-vobject)]))
     fi
 fi
 
@@ -305,7 +307,6 @@ src/cairo-menu/Makefile
 src/cairo-menu/cairo_main_menu.desktop.in
 src/calendar/Makefile
 src/calendar/images/Makefile
-src/calendar/icalendar/Makefile
 src/comic/Makefile
 src/comics/Makefile
 src/comics/locale/Makefile

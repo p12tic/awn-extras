@@ -21,11 +21,8 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 #
-import sys
-import os
-import fileinput
-sys.path.append(os.path.abspath(os.path.dirname(__file__)) + "/icalendar")
-from icalendar import Calendar
+import datetime
+import vobject
 from dateutil.rrule import rrulestr
 # locale stuff
 APP = "awn-calendar"
@@ -52,41 +49,34 @@ class IcsCal:
         self.applet = applet
         self.files = files
 
-    def get_appointments(self, day, url):
+    def add_event(self, start, end, summary):
+        text = '%s-%s %s' % (start.strftime("%I:%M%p"),
+                             end.strftime("%I:%M%p"),
+                             summary)
+        self.events.append([start.strftime("%H:%M"), text])
+
+    def get_appointments(self, date, url):
+        dtdate = datetime.date(date[0], date[1], date[2])
         self.events = []
-        year, month, x = day
-        for file in self.files:
-            cal = Calendar.from_string(open(file, 'rb').read())
-            for component in cal.walk():
-                if component.name == "VEVENT":
+        for filename in self.files:
+            cal = vobject.readOne(open(filename, 'rb'))
+            for component in cal.components:
+                if component.name == 'VEVENT':
+                    dtstart = component.dtstart.value
+                    dtend = component.dtend.value
+                    summary = component.summary.value
                     # See if this is a recurring appointment
-                    #rrule = None
-                    dtstart = component.decoded('dtstart')
-                    dtend = component.decoded('dtend')
-                    summary = str(component['summary'])
-                    try:
-                        rrule = component.decoded('RRULE')
-                        daylist = list(rrulestr(component['RRULE'].ical()))
-                        # See if an instance happens to be today.
-                        for appt in daylist:
-                            if appt.year == year and appt.month == month \
-                               and appt.day == x:
-                                text = dtstart.strftime("%I:%M%p") + "-" + \
-                                       dtend.strftime("%I:%M%p") + " " + \
-                                       summary
-                                self.events.append([dtstart.strftime("%H:%M"),
-                                                    text])
-                    except KeyError:
-                        text = dtstart.strftime("%I:%M%p") + "-" + \
-                               dtend.strftime("%I:%M%p") + " " + summary
-                        if dtstart.year == year and dtstart.month == month \
-                           and dtstart.day == x:
-                            self.events.append([dtstart.strftime("%H:%M"),
-                                                text])
-        self.events.sort()
+                    if hasattr(component, 'rrule'):
+                        # Add only if an instance happens to be today.
+                        [self.add_event(dtstart, dtend, summary)
+                         for appt in rrulestr(str(component.rrule.value))
+                         if appt.date() == dtdate]
+                    elif dtstart.date == dtdate:
+                        self.add_event(dtstart, dtend, summary)
         if len(self.events) == 0:
             self.events.append([None, _("No appointments")])
-        fileinput.close()
+        else:
+            self.events.sort()
         return self.events
 
     def convert_time_to_text(self, when):

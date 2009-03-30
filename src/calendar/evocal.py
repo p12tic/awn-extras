@@ -3,7 +3,7 @@
 #
 # Copyright (c) 2007 Mike (mosburger) Desjardins <desjardinsmike@gmail.com>
 #
-# This is an implementation of the google plugin for a calendar applet for 
+# This is an implementation of the google plugin for a calendar applet for
 # Avant Window Navigator.
 #
 # This library is free software; you can redistribute it and/or
@@ -21,35 +21,30 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 #
-import sys, os
-from StringIO import StringIO
-import datetime
-import time
+import os
 import subprocess
-import calendarprefs
-import fileinput
-import re
-import string
 import icscal
+
 
 class EvoCal:
 
-	requires_login = False
+    requires_login = False
 
-	def __init__(self, applet):
-		self.applet = applet
-		
-	def get_appointments(self, day, url):
-		filelist = []
-		cmd = 'find ~/.evolution/calendar/local/* -name "*.ics" -print' # Assumes UNIX.
-		for file in os.popen(cmd).readlines():     # run find command
-			name = file[:-1]                       # strip '\n'
-			filelist.append(name)
-		calendar = icscal.IcsCal(self.applet,filelist)
-		return calendar.get_appointments(day,url)
-			
-	def open_integrated_calendar(self, when, url):
-		dat = "%02d%02d%02d" % (when[0], (when[1]+1), when[2])
-		subprocess.Popen('evolution calendar:///?startdate='+dat+'T120000', shell=True)
-		return
+    def __init__(self, applet):
+        self.applet = applet
 
+    def get_appointments(self, day, url):
+        filelist = []
+        # Assumes UNIX.
+        cmd = 'find ~/.evolution/calendar/local/* -name "*.ics" -print'
+        for file in os.popen(cmd).readlines():     # run find command
+            name = file[:-1]                       # strip '\n'
+            filelist.append(name)
+        calendar = icscal.IcsCal(self.applet, filelist)
+        return calendar.get_appointments(day, url)
+
+    def open_integrated_calendar(self, when, url):
+        dat = "%02d%02d%02d" % (when[0], (when[1] + 1), when[2])
+        subprocess.Popen('evolution calendar:///?startdate=%sT120000' % dat,
+                         shell=True)
+        return

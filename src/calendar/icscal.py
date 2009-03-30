@@ -3,7 +3,7 @@
 #
 # Copyright (c) 2007 Mike (mosburger) Desjardins <desjardinsmike@gmail.com>
 #
-# This is an implementation of the google plugin for a calendar applet for 
+# This is an implementation of the google plugin for a calendar applet for
 # Avant Window Navigator.
 #
 # This library is free software; you can redistribute it and/or
@@ -21,91 +21,86 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 #
-import sys, os
-import gobject
-from StringIO import StringIO
-import datetime
-import time
-from datetime import date
-import subprocess
-import calendarprefs
+import sys
+import os
 import fileinput
-import re
-import string
-from datetime import datetime
 sys.path.append(os.path.abspath(os.path.dirname(__file__)) + "/icalendar")
-from icalendar import Calendar, Event, UTC, vDatetime
-from dateutil.rrule import *
+from icalendar import Calendar
+from dateutil.rrule import rrulestr
 # locale stuff
-APP="awn-calendar"
-DIR="locale"
-import locale
+APP = "awn-calendar"
+DIR = "locale"
 import gettext
 #locale.setlocale(locale.LC_ALL, '')
 gettext.bindtextdomain(APP, DIR)
 gettext.textdomain(APP)
 _ = gettext.gettext
 
+
 class IcsCal:
 
-	events = []
-	get_start = False
-	get_end = False
-	in_event = False
-	summary = None
-	start = None
-	end = None
-	requires_login = False
+    events = []
+    get_start = False
+    get_end = False
+    in_event = False
+    summary = None
+    start = None
+    end = None
+    requires_login = False
 
-	#def __init__(self,applet,files):
-	def __init__(self,applet,files):
-		self.applet = applet
-		self.files = files
+    def __init__(self, applet, files):
+        self.applet = applet
+        self.files = files
 
-	def get_appointments(self, day, url):
-		self.events = []
-		year,month,x=day
-		for file in self.files:
-			cal = Calendar.from_string(open(file,'rb').read())
-			for component in cal.walk():
-				if component.name == "VEVENT":
-					# See if this is a recurring appointment
-					#rrule = None
-					dtstart = component.decoded('dtstart')
-					dtend = component.decoded('dtend')
-					summary = str(component['summary'])
-					try:
-						rrule = component.decoded('RRULE')
-						daylist=list(rrulestr(component['RRULE'].ical()))
-						# See if an instance happens to be today.
-						for appt in daylist:
-							if appt.year == year and appt.month == month and appt.day == x:
-								text = dtstart.strftime("%I:%M%p") + "-" + dtend.strftime("%I:%M%p") + " " + summary
-								self.events.append([dtstart.strftime("%H:%M"),text])
-					except KeyError:
-						text = dtstart.strftime("%I:%M%p") + "-" + dtend.strftime("%I:%M%p") + " " + summary
-						if dtstart.year == year and dtstart.month == month and dtstart.day == x:
-							self.events.append([dtstart.strftime("%H:%M"),text])
-		self.events.sort()
-		if len(self.events) == 0:
-			self.events.append([None,_("No appointments")])
-		fileinput.close()		
-		return self.events
-		
-	def convert_time_to_text(self, when):
-		hour = int(when[9:11])
-		mins = when[11:13]
-		text = ""						
-		if self.applet.twelve_hour_clock == True:														
-			trail = "am"
-			if hour >= 12:
-				trail = "pm"
-			hour = hour % 12
-			if hour == 0:
-				hour = 12
-			text = str(hour) + ":" + mins + trail
-		else:
-			text = when[9:11] + ":" + when[11:13]
-		return text
+    def get_appointments(self, day, url):
+        self.events = []
+        year, month, x = day
+        for file in self.files:
+            cal = Calendar.from_string(open(file, 'rb').read())
+            for component in cal.walk():
+                if component.name == "VEVENT":
+                    # See if this is a recurring appointment
+                    #rrule = None
+                    dtstart = component.decoded('dtstart')
+                    dtend = component.decoded('dtend')
+                    summary = str(component['summary'])
+                    try:
+                        rrule = component.decoded('RRULE')
+                        daylist = list(rrulestr(component['RRULE'].ical()))
+                        # See if an instance happens to be today.
+                        for appt in daylist:
+                            if appt.year == year and appt.month == month \
+                               and appt.day == x:
+                                text = dtstart.strftime("%I:%M%p") + "-" + \
+                                       dtend.strftime("%I:%M%p") + " " + \
+                                       summary
+                                self.events.append([dtstart.strftime("%H:%M"),
+                                                    text])
+                    except KeyError:
+                        text = dtstart.strftime("%I:%M%p") + "-" + \
+                               dtend.strftime("%I:%M%p") + " " + summary
+                        if dtstart.year == year and dtstart.month == month \
+                           and dtstart.day == x:
+                            self.events.append([dtstart.strftime("%H:%M"),
+                                                text])
+        self.events.sort()
+        if len(self.events) == 0:
+            self.events.append([None, _("No appointments")])
+        fileinput.close()
+        return self.events
 
-					
+    def convert_time_to_text(self, when):
+        hour = int(when[9:11])
+        mins = when[11:13]
+        text = ""
+        if self.applet.twelve_hour_clock == True:
+            trail = "am"
+            if hour >= 12:
+                trail = "pm"
+            hour = hour % 12
+            if hour == 0:
+                hour = 12
+            text = str(hour) + ":" + mins + trail
+        else:
+            text = when[9:11] + ":" + when[11:13]
+        return text

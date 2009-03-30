@@ -23,6 +23,8 @@
 #
 import sys
 import datetime
+import awn
+awn.check_dependencies(globals(), 'gdata')
 import gdata.calendar.service
 import gdata.service
 import gdata.calendar

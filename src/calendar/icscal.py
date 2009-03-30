@@ -22,7 +22,8 @@
 # Boston, MA 02111-1307, USA.
 #
 import datetime
-import vobject
+import awn
+awn.check_dependencies(globals(), 'dateutil', 'vobject')
 from dateutil.rrule import rrulestr
 # locale stuff
 APP = "awn-calendar"

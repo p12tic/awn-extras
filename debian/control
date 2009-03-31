@@ -154,6 +154,8 @@ Depends: 	${shlibs:Depends},
 Recommends: 	awn-manager-trunk (>= 0.3~bzr489),
 		python-gnome2-desktop,
 		python-xlib,
+		python-gdata,
+		python-vobject,
 Suggests: 	tomboy,
 Conflicts: awn-applets-python-extras, awn-applets-python-core (<< 0.3~bzr912), awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 Replaces: awn-applets-python-extras, awn-applets-python-core (<< 0.3~bzr912), awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing

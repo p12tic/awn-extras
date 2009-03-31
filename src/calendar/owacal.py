@@ -3,7 +3,7 @@
 #
 # Copyright (c) 2007 Mike (mosburger) Desjardins <desjardinsmike@gmail.com>
 #
-# This is an implementation of the OWA plugin for a calendar applet for 
+# This is an implementation of the OWA plugin for a calendar applet for
 # Avant Window Navigator.
 #
 # This library is free software; you can redistribute it and/or
@@ -21,29 +21,21 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 #
-import sys, os
-import gobject
-from StringIO import StringIO
-import datetime
-import gc
-import time
-import subprocess
-import gnomevfs
-import calendarprefs
+import re
+import socket
+import urllib
+import urlparse
+import urllib2
+import webbrowser
 
 # locale stuff
-APP="awn-calendar"
-DIR="locale"
-import locale
+APP = "awn-calendar"
+DIR = "locale"
 import gettext
 #locale.setlocale(locale.LC_ALL, '')
 gettext.bindtextdomain(APP, DIR)
 gettext.textdomain(APP)
 _ = gettext.gettext
-
-import re, socket, urllib, urlparse
-from Cookie import SimpleCookie
-import urllib2, sys, re, base64
 
 __version__ = '0.1'
 __author__ = 'Adrian Holovaty <holovaty@gmail.com>'
@@ -51,63 +43,65 @@ __author__ = 'Adrian Holovaty <holovaty@gmail.com>'
 socket.setdefaulttimeout(15)
 
 
-
 class OwaCal:
 
-	requires_login = True
+    requires_login = True
 
-	def __init__(self, applet):
-		self.applet = applet
-		self.domain = self.applet.url
+    def __init__(self, applet):
+        self.applet = applet
+        self.domain = self.applet.url
 
-	def get_appointments(self, day, url):
-		(year,month,date) = day
-		passman = urllib2.HTTPPasswordMgrWithDefaultRealm()      # this creates a password manager
-		theurl = url + "/exchange/" + self.applet.username + "/calendar/?Cmd=contents&view=daily&d=" + str(date) + "&m=" + str(month) + "&y=" + str(year)		
-		passman.add_password(None, theurl, self.applet.username, self.applet.crypt(self.applet.password,-17760704))      # because we have put None at the start it will always use this username/password combination
-		authhandler = urllib2.HTTPBasicAuthHandler(passman)                 # create the AuthHandler
-		theurl = theurl.replace('\n','')
-		opener = urllib2.build_opener(authhandler)                                  # build an 'opener' using the handler we've created
-		# you can use the opener directly to open URLs
-		# *or* you can install it as the default opener so that all calls to urllib2.urlopen use this opener
-		urllib2.install_opener(opener)
-		post_data = urllib.urlencode({
-			'destination': urlparse.urljoin(self.domain, 'exchange'),
-			'flags': '0',
-			'username': self.applet.username,
-			'password': self.applet.crypt(self.applet.password,-17760704),
-			'SubmitCreds': 'Log On',
-			'forcedownlevel': '0',
-			'trusted': '4',
-		})
-		f = opener.open(theurl, post_data)
-		html = f.read()
-		# I'm terrible at regular expressions, so I'm sure that there is a far better way to do this:
-		tableexp = re.compile("<TABLE class=\"calDayVwTbl\".*</TABLE>")
-		tablehtml = tableexp.search(html)
-		htmlsplitter = re.compile('(<.*?>)')
-		splitted = htmlsplitter.split(tablehtml.group()) 
-		result = []
-		for token in splitted:
-			titles = re.compile("<TD TITLE=\"[0-9]")  #"
-			titlehtml = titles.match(token)		
-			textre = re.compile("\".*\"")
-			if titlehtml != None:
-				text = textre.search(token)
-				result.append(["",text.group().replace("\"","")])  #"
-		if len(result) == 0:
-			result.append([None,_("No appointments")])
-		return result
-		
-	def open_integrated_calendar(self,when,url):
-		dat = "&d=%02d&m=%02d&y=%04d" % (when[2], (when[1]+1), when[0])
-		url = url + "/exchange/calendar/?Cmd=contents&view=daily" + dat
-		app = gnomevfs.mime_get_default_application("text/html")[2]
-		apptext = app + " " + url
-		subprocess.Popen(apptext, shell=True)
+    def get_appointments(self, day, url):
+        (year, month, date) = day
+        # this creates a password manager
+        passman = urllib2.HTTPPasswordMgrWithDefaultRealm()
+        theurl = '%s/exchange/%s/calendar/' % (url, self.applet.username) + \
+                 '?Cmd=contents&view=daily&d=%s&m=%s&y=%s' % \
+                 (date, month, year)
+        # because we have put None at the start it will always use this
+        # username/password combination
+        passman.add_password(None, theurl, self.applet.username,
+                             self.applet.crypt(self.applet.password,
+                                               -17760704))
+        # create the AuthHandler
+        authhandler = urllib2.HTTPBasicAuthHandler(passman)
+        theurl = theurl.replace('\n', '')
+        # build an 'opener' using the handler we've created
+        opener = urllib2.build_opener(authhandler)
+        # you can use the opener directly to open URLs
+        # *or* you can install it as the default opener so that all calls to
+        # urllib2.urlopen use this opener
+        urllib2.install_opener(opener)
+        post_data = urllib.urlencode({
+            'destination': urlparse.urljoin(self.domain, 'exchange'),
+            'flags': '0',
+            'username': self.applet.username,
+            'password': self.applet.crypt(self.applet.password, -17760704),
+            'SubmitCreds': 'Log On',
+            'forcedownlevel': '0',
+            'trusted': '4',
+        })
+        f = opener.open(theurl, post_data)
+        html = f.read()
+        # I'm terrible at regular expressions, so I'm sure that there is a far
+        # better way to do this:
+        tableexp = re.compile("<TABLE class=\"calDayVwTbl\".*</TABLE>")
+        tablehtml = tableexp.search(html)
+        htmlsplitter = re.compile('(<.*?>)')
+        splitted = htmlsplitter.split(tablehtml.group())
+        result = []
+        for token in splitted:
+            titles = re.compile("<TD TITLE=\"[0-9]")  #"
+            titlehtml = titles.match(token)
+            textre = re.compile("\".*\"")
+            if titlehtml != None:
+                text = textre.search(token)
+                result.append(["", text.group().replace("\"", "")])  #"
+        if len(result) == 0:
+            result.append([None, _("No appointments")])
+        return result
 
-		
-
-
-		
-					
+    def open_integrated_calendar(self, when, url):
+        dat = "&d=%02d&m=%02d&y=%04d" % (when[2], (when[1] + 1), when[0])
+        url = url + "/exchange/calendar/?Cmd=contents&view=daily" + dat
+        webbrowser.open_new_tab(url)

@@ -23,6 +23,7 @@ import os
 import pygtk
 pygtk.require("2.0")
 import gtk
+import threading
 
 from awn.extras import awnlib
 
@@ -34,6 +35,8 @@ except ImportError:
 applet_name = "Tomboy Applet"
 applet_version = "0.3.3"
 applet_description = "Control Tomboy with D-Bus"
+applet_system_notebook = "system:notebook:"
+applet_system_template = "system:template"
 
 # Logo of the applet, shown in the GTK About dialog
 applet_logo = os.path.join(os.path.dirname(__file__), "icons", "tomboy.png")
@@ -42,10 +45,35 @@ bus_name = "org.gnome.Tomboy"
 object_name = "/org/gnome/Tomboy/RemoteControl"
 if_name = "org.gnome.Tomboy.RemoteControl"
 
+class StartService(threading.Thread):
+
+    def __init__(self, applet, bus):
+        threading.Thread.__init__(self)
+        self.bus = bus
+        self.applet = applet
+
+    def run(self):
+        try:
+            self.bus.start_service_by_name(bus_name)
+            self.applet.connect(self.bus)
+        except dbus.DBusException, e:
+            awnlib.errors.general("Could not connect to Tomboy: " + e.message)
+        
 
 class TomboyApplet:
 
     __interface = None
+    tags = None
+
+    def connect(self, bus):
+        try:
+            object = bus.get_object(bus_name, object_name)
+            self.__interface = dbus.Interface(object, if_name)
+            self.__version = self.__interface.Version()
+            if self.__interface is not None:
+                self.MainDialog()
+        except dbus.DBusException, e:
+            awnlib.errors.general("Could not connect to Tomboy: " + e.message)
 
     def __init__(self, awnlib):
         self.awn = awnlib
@@ -57,16 +85,12 @@ class TomboyApplet:
             try:
                 bus = dbus.SessionBus()
                 if bus_name in bus.list_names():
-                    object = bus.get_object(bus_name, object_name)
-                    self.__interface = dbus.Interface(object, if_name)
-                    self.__version = self.__interface.Version()
+                    self.connect(bus)
+                else:
+                    thread = StartService(self, bus)
+                    thread.start()
             except dbus.DBusException, e:
-                print e.message
-
-        if self.__interface is not None:
-            self.MainDialog()
-        else:
-            awnlib.errors.general("Could not connect to Tomboy")
+                awnlib.errors.general("Could not connect to Tomboy: " + e.message)
 
     def DisplaySearch(self, widget, data=None):
         self.__interface.DisplaySearch()
@@ -80,8 +104,54 @@ class TomboyApplet:
     def ButtonDisplay(self, widget, label):
         self.DisplayNote(label)
 
-    def CreateNote(self, data=None):
+    def CreateNote(self, widget):
         self.DisplayNote(self.__interface.CreateNote())
+
+    def CreateFromTag(self, widget, tag):
+        note = self.__interface.CreateNote()
+        self.__interface.AddTagToNote(note, applet_system_notebook + tag)
+        self.DisplayNote(note)
+
+    def CollectTags(self):
+        if self.tags is None:
+            self.tags = []
+            for s in self.ListAllNotes():
+                for tag in self.__interface.GetTagsForNote(s):
+                    if tag.startswith(applet_system_notebook):
+                        atag = tag[len(applet_system_notebook):]
+                        if atag not in self.tags:
+                            self.tags.append(atag)
+            self.tags.sort()
+        return self.tags
+
+    def CreateFromTagDialog(self, data=None):
+        dialog = self.awn.dialog.new("create_from_tag")
+        dialog.add(gtk.Label("Select a tag:"))
+        for tag in self.CollectTags():
+            button = gtk.Button(tag)
+            button.connect("clicked", self.CreateFromTag, tag)
+            dialog.add(button)
+        dialog.show_all()
+
+    def ViewFromTag(self, widget, tag):
+        dialog = self.awn.dialog.new("view_from_tag")
+        dialog.add(gtk.Label("Select a note:"))
+        for note in self.__interface.GetAllNotesWithTag(applet_system_notebook + tag):
+            if applet_system_template not in self.__interface.GetTagsForNote(note):
+                button = gtk.Button(self.__interface.GetNoteTitle(note))
+                button.connect("clicked", self.ButtonDisplay, note)
+                dialog.add(button)
+        dialog.show_all()
+
+    def ViewFromTagDialog(self, widget):
+        dialog = self.awn.dialog.new("view_from_tag_select")
+        dialog.add(gtk.Label("Select a tag:"))
+        for tag in self.CollectTags():
+            button = gtk.Button(tag)
+            button.connect("clicked", self.ViewFromTag, tag)
+            dialog.add(button)
+        dialog.show_all()
+        
 
     def MainDialog(self):
         dialog = self.awn.dialog.new("main")
@@ -101,6 +171,14 @@ class TomboyApplet:
         button2.connect("clicked", self.CreateNote)
         dialog.add(button2)
 
+        button3 = gtk.Button("New Tagged Note")
+        button3.connect("clicked", self.CreateFromTagDialog)
+        dialog.add(button3)
+
+        button4 = gtk.Button("View Tagged Note")
+        button4.connect("clicked", self.ViewFromTagDialog)
+        dialog.add(button4)
+
 
 if __name__ == "__main__":
     awnlib.init_start(TomboyApplet, {"name": applet_name, "short": "tomboy",
@@ -109,4 +187,4 @@ if __name__ == "__main__":
         "logo": applet_logo,
         "author": "Julien Lavergne",
         "copyright-year": 2008,
-        "authors": ["Julien Lavergne <julien.lavergne@gmail.com>", "onox <denkpadje@gmail.com>"]})
+        "authors": ["Julien Lavergne <julien.lavergne@gmail.com>", "onox <denkpadje@gmail.com>", "Hugues Casse <casse@irit.fr>"]})

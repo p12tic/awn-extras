@@ -21,6 +21,7 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 #
+import calendar
 import threading
 import time
 
@@ -37,17 +38,6 @@ class CalThread(threading.Thread):
         super(CalThread, self).__init__()
         self.applet = applet
         self.die = False
-
-    def days_in_month(self, month, year):
-        days = 31
-        if month in (4, 6, 9, 11):
-            days = 30
-        elif month == 2:
-            if year % 4 == 0:
-                days = 29
-            else:
-                days = 28
-        return days
 
     def kill(self):
         self.die = True
@@ -71,7 +61,7 @@ class CalThread(threading.Thread):
         return self.list[cal_date]
 
     def get_days(self, year, month):
-        days = self.days_in_month(month, year)
+        days = calendar.monthrange(year, month)[1]
         x = 1
         busy_day = []
         while x <= days:
@@ -99,7 +89,7 @@ class CalThread(threading.Thread):
                 (next_year, next_month)]
             temp_list = dict()
             for y, m in scan:
-                days = self.days_in_month(m, y)
+                days = calendar.monthrange(year, month)[1]
                 x = 1
                 integration = self.applet.integration
                 while x <= days:

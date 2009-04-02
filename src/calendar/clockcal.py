@@ -51,7 +51,7 @@ gettext.textdomain(APP)
 _ = gettext.gettext
 
 
-class App(awn.AppletSimple):
+class Calendar(awn.AppletSimple):
 
     # default title/tooltip to show on startup.
     title_text = _("Calendar")
@@ -69,7 +69,6 @@ class App(awn.AppletSimple):
     surface = None
     bkg_img = None
     plainClock = False
-    show_title = False
     clock_background = (0.4, 0.5, 0.4, 1.0)
     clock_text = (0.0, 0.0, 0.0, 0.0)
     clock_border = (0.0, 0.0, 0.0, 0.0)
@@ -84,47 +83,15 @@ class App(awn.AppletSimple):
     thread = None
     days = []
 
-    def __init__(self, uid, orient, height):
-        awn.AppletSimple.__init__(self, uid, orient, height)
-        self.height = height
+    def __init__(self, size):
+        self.size = size
 
-        def on_height_changed(applet, height):
-            self.height = height
-            self.surface = None
-            self.repaint()
-
-        self.connect("height-changed", on_height_changed)
-        icon = gdk.pixbuf_new_from_file(self.get_image_path('calendar.png'))
-        scaled = icon.scale_simple(height, height, gtk.gdk.INTERP_BILINEAR)
-        self.set_temp_icon(scaled)
-        self.title = awn.awn_title_get_default()
-        self.dialog = awn.AppletDialog(self)
         self.connect("button-press-event", self.button_press_callback)
-        self.connect("enter-notify-event", self.enter_notify_callback)
-        self.connect("leave-notify-event", self.leave_notify_callback)
-        self.dialog.connect("focus-out-event", self.dialog_focus_out_callback)
         gobject.timeout_add(100, self.first_paint)
         self.timer = gobject.timeout_add(1000, self.timer_callback)
         #self.timer = gobject.timeout_add(1000, self.subsequent_paint)
-        self.popup_menu = self.create_default_menu()
-        pref_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
-        forget_item = gtk.MenuItem("Forget Password")
-        about_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_ABOUT)
-        self.popup_menu.append(pref_item)
-        self.popup_menu.append(forget_item)
-        self.popup_menu.append(about_item)
-        pref_item.connect_object("activate", self.pref_callback, self)
-        forget_item.connect_object("activate", self.forget_callback, self)
-        about_item.connect_object("activate", self.about_callback, self)
-        pref_item.show()
-        forget_item.show()
-        about_item.show()
-        # Build a login window.
-        self.login_window = calendarlogin.CalendarLogin(self)
-        self.login_window.set_size_request(350, 150)
-        self.login_window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
-        self.login_window.set_modal(True)
-        self.login_window.set_destroy_with_parent(True)
+        self.build_popup_menu()
+        self.build_login_window()
         # Get config params
         self.gconf_client = gconf.client_get_default()
         self.gconf_client.notify_add(self.gconf_path,
@@ -140,6 +107,33 @@ class App(awn.AppletSimple):
             #print "locale not set"
         self.connect("destroy", self.quit_callback)
         gtk.gdk.threads_init()
+
+    def build_popup_menu(self):
+        self.popup_menu = self.create_default_menu()
+        pref_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
+        forget_item = gtk.MenuItem("Forget Password")
+        about_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_ABOUT)
+        self.popup_menu.append(pref_item)
+        self.popup_menu.append(forget_item)
+        self.popup_menu.append(about_item)
+        pref_item.connect_object("activate", self.pref_callback, self)
+        forget_item.connect_object("activate", self.forget_callback, self)
+        about_item.connect_object("activate", self.about_callback, self)
+        pref_item.show()
+        forget_item.show()
+        about_item.show()
+
+    def build_login_window(self):
+        self.login_window = calendarlogin.CalendarLogin(self)
+        self.login_window.set_size_request(350, 150)
+        self.login_window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
+        self.login_window.set_modal(True)
+        self.login_window.set_destroy_with_parent(True)
+
+    def on_size_changed(self, applet, size):
+        self.size = size
+        self.surface = None
+        self.repaint()
 
     def get_image_path(self, basename):
         return os.path.join(os.path.dirname(__file__), 'images', basename)
@@ -278,19 +272,10 @@ class App(awn.AppletSimple):
         self.get_config(key)
 
     def dialog_focus_out_callback(self, widget, event):
-        self.show_title = False
         self.dialog.hide()
         self.dialog_visible = False
 
-    def enter_notify_callback(self, widget, event):
-        self.show_title = True
-        self.title.show(self, self.title_text)
-
-    def leave_notify_callback(self, widget, event):
-        self.show_title = False
-
     def button_press_callback(self, widget, event):
-        self.show_title = False
         if self.dialog_visible:
             self.dialog.hide()
             self.dialog_visible = False
@@ -318,11 +303,7 @@ class App(awn.AppletSimple):
                 self.set_icon_context(self.ct)
             result = True
         now = datetime.datetime.now()
-        self.title_text = now.strftime("%x %X")
-        if self.show_title == True:
-            self.title.show(self, self.title_text)
-        else:
-            self.title.hide(self)
+        self.update_title(now.strftime('%x %X'))
         self.previous_minute = current_minute
         self.previous_day = current_day
         return result
@@ -350,12 +331,11 @@ class App(awn.AppletSimple):
             self.bkg_img = cairo.ImageSurface.create_from_png(self.graphic)
 
         if self.surface == None:
-            height = self.get_height()
-            self.surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, height,
-                                              height)
+            self.surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.size,
+                                              self.size)
             self.ct = cairo.Context(self.surface)
-            self.ct.scale(float(height) / self.bkg_img.get_width(),
-                          float(height) / self.bkg_img.get_height())
+            self.ct.scale(float(self.size) / self.bkg_img.get_width(),
+                          float(self.size) / self.bkg_img.get_height())
 
     def first_paint(self):
         self.repaint()
@@ -521,7 +501,7 @@ class App(awn.AppletSimple):
     def build_calendar_dialog(self):
         self.cal = gtk.Calendar()
         self.cal.connect("day-selected", self.update_tree_view)
-        self.dialog = awn.AppletDialog(self)
+        self.dialog = self.create_dialog()
         self.dialog.connect("focus-out-event", self.dialog_focus_out_callback)
         self.dialog.set_title(_("Calendar"))
         self.vbox = gtk.VBox()
@@ -651,6 +631,62 @@ class App(awn.AppletSimple):
         alpha = int(hex[6:8], 16)
         return (red / 255.0, green / 255.0, blue / 255.0, alpha / 255.0)
 
+
+class Applet02(Calendar):
+
+    show_title = False
+
+    def __init__(self, uid, orient, height):
+        awn.AppletSimple.__init__(self, uid, orient, height)
+        self.title = awn.awn_title_get_default()
+        self.connect('enter-notify-event', self.show_title)
+        self.connect('leave-notify-event', self.hide_title)
+        self.connect('button-press-event', self.hide_title)
+        icon = gdk.pixbuf_new_from_file(self.get_image_path('calendar.png'))
+        scaled = icon.scale_simple(height, height, gtk.gdk.INTERP_BILINEAR)
+        self.set_temp_icon(scaled)
+        Calendar.__init__(self, height)
+        self.connect('height-changed', self.on_size_changed)
+
+    def create_dialog(self):
+        dialog = awn.AppletDialog(self)
+        dialog.connect('focus-out-event', self.hide_title)
+        return dialog
+
+    def show_title(self, widget, event):
+        self.show_title = True
+        self.title.show(self, self.title_text)
+
+    def hide_title(self, widget, event):
+        self.title.hide(self)
+        self.show_title = False
+
+    def update_title(self, text):
+        self.title_text = text
+        if self.show_title:
+            self.title.show(self, self.title_text)
+        else:
+            self.title.hide(self)
+
+
+class Applet04(Calendar):
+
+    def __init__(self, uid, orient, offset, size):
+        awn.AppletSimple.__init__(self, uid, orient, offset, size)
+        icon = gdk.pixbuf_new_from_file(self.get_image_path('calendar.png'))
+        scaled = icon.scale_simple(size, size, gtk.gdk.INTERP_BILINEAR)
+        self.set_icon_pixbuf(scaled)
+        Calendar.__init__(self, size)
+        self.set_tooltip_text(self.title_text)
+        self.connect('size-changed', self.on_size_changed)
+
+    def create_dialog(self):
+        return awn.Dialog(self)
+
+    def update_title(self, text):
+        self.title_text = text
+        self.set_tooltip_text(self.title_text)
+
 ############################################################################
 # Applet Initialization.
 ############################################################################
@@ -658,8 +694,10 @@ class App(awn.AppletSimple):
 if __name__ == "__main__":
     awn.init(sys.argv[1:])
     os.nice(19)
-    #print "main %s %d %d" % (awn.uid, awn.orient, awn.height)
-    applet = App(awn.uid, awn.orient, awn.height)
+    if hasattr(awn, 'Dialog'):
+        applet = Applet04(awn.uid, awn.orient, awn.offset, awn.size)
+    else:
+        applet = Applet02(awn.uid, awn.orient, awn.height)
     awn.init_applet(applet)
     applet.show_all()
     gtk.main()

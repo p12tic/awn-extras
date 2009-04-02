@@ -326,7 +326,7 @@ class WeatherApplet:
         iconFile = weathericons.get_icon(hint, self.settings["theme"])
 
         if hint == 'twc':
-            self.applet.icon.file(iconFile)
+            self.applet.icon.file(iconFile, size=awnlib.Icon.APPLET_SIZE)
         else:
             self.applet.icon.set(self.overlay_temperature(iconFile))
 

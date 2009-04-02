@@ -18,7 +18,6 @@
 # License along with this librarym.  If not, see <http://www.gnu.org/licenses/>
 
 import os
-import time
 import urllib
 from xml.dom import minidom
 
@@ -293,7 +292,7 @@ class NormalDialog(gtk.Image):
             self.drawDays(cache_context)
             cache_context.set_source_rgb(0.0, 0.0, 0.0)
             # approximate the location of this string
-            descStr = _("Weather data provided by weather.com") + str(time.time())
+            descStr = _("Weather data provided by weather.com")
             length = len(descStr)
             xpos = 200 - (length * 10 / 4)
             cache_context.move_to(xpos, 145)

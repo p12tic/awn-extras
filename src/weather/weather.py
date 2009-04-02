@@ -162,7 +162,7 @@ class WeatherApplet:
             theme_combobox.append_text(i)
         if self.settings["theme"] not in self.themes:
             self.applet.settings["theme"] = self.themes[0]
-        theme_combobox.set_active(self.themes.index(self.settings["theme"]))  # FIXME what if no index for current theme?
+        theme_combobox.set_active(self.themes.index(self.settings["theme"]))
         theme_combobox.connect("changed", self.theme_changed_cb)
 
         fontsize_combobox = prefs.get_widget("combobox-font-size")
@@ -170,8 +170,9 @@ class WeatherApplet:
         fontsize_combobox.connect("changed", self.fontsize_changed_cb)
 
         tempicon_checkbutton = prefs.get_widget("checkbutton-temperature-icon")
-        fontsize_combobox.set_sensitive(tempicon_checkbutton.get_active())
-        tempicon_checkbutton.connect("toggled", lambda w: fontsize_combobox.set_sensitive(w.get_active()))
+        fontsize_hbox = prefs.get_widget("hbox-font-size")
+        fontsize_hbox.set_sensitive(tempicon_checkbutton.get_active())
+        tempicon_checkbutton.connect("toggled", lambda w: fontsize_hbox.set_sensitive(w.get_active()))
 
         self.location_label = prefs.get_widget("locationLabel")
         self.location_label.set_markup("<b>%s</b>" % self.settings["location"])
@@ -184,8 +185,10 @@ class WeatherApplet:
         self.treeview.append_column(gtk.TreeViewColumn("Location", gtk.CellRendererText(), text=0))
 
         self.ok_button = prefs.get_widget("location-ok-button")
-        self.treeview.connect("cursor-changed", lambda w: self.ok_button.set_sensitive(True))
         self.ok_button.connect("clicked", self.ok_button_clicked_cb)
+
+        self.treeview.connect("cursor-changed", lambda w: self.ok_button.set_sensitive(True))
+        self.treeview.connect("row-activated", lambda v, p, c: self.ok_button_clicked_cb())
 
         find_button = prefs.get_widget("location-find-button")
 
@@ -244,7 +247,7 @@ class WeatherApplet:
 
                 xmldoc.unlink()
 
-    def ok_button_clicked_cb(self, widget):
+    def ok_button_clicked_cb(self, widget=None):
         (model, iter) = self.treeview.get_selection().get_selected()
         self.applet.settings["location_code"] = model.get_value(iter, 1)
         self.applet.settings["location"] = model.get_value(iter, 0)
@@ -457,10 +460,10 @@ if __name__ == "__main__":
         "name": applet_name, "short": "weather",
         "description": applet_description,
         "version": applet_version,
-        "author": "Mike Desjardins, Mike Rooney",
+        "author": "onox, Mike Desjardins, Mike Rooney",
         "copyright-year": "2007 - 2008",
         "logo": weathericons.get_icon("44", "Tango"),
-        "authors": ["Mike Desjardins", "Mike Rooney", "Isaac J."],
+        "authors": ["Mike Desjardins", "Mike Rooney", "Isaac J.", "onox <denkpadje@gmail.com>"],
         "artists": ["Wojciech Grzanka", "Mike Desjardins"],
         "type": ["Network", "Weather"]},
         ["settings-per-instance"])

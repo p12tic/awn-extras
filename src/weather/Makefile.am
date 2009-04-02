@@ -1,4 +1,4 @@
-SUBDIRS = images locale
+SUBDIRS = locale
 APPLET_NAME = weather
 APPLET_MAIN_FILE = weather.py
 include $(top_srcdir)/Makefile.python-applet

@@ -19,6 +19,7 @@ endif
 # --with-gconf
 GCONF_APPLETS +=		\
 	awn-notification-daemon	\
+	calendar		\
 	media-control		\
 	$(NULL)
 endif

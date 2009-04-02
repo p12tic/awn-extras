@@ -374,7 +374,6 @@ src/vala-test/Makefile
 src/vala-test/vala-test.desktop.in
 src/volume-control/Makefile
 src/weather/Makefile
-src/weather/images/Makefile
 src/weather/locale/Makefile
 src/weather/locale/es/Makefile
 src/weather/locale/es/LC_MESSAGES/Makefile

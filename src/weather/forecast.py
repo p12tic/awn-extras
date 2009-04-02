@@ -1,12 +1,8 @@
 #!/usr/bin/python
-# -*- coding: iso-8859-15 -*-
-#
-# Copyright (c) 2007, 2008:
+# Copyright (C) 2007, 2008:
 #   Mike Rooney (launchpad.net/~michael) <mrooney@gmail.com>
 #   Mike (mosburger) Desjardins <desjardinsmike@gmail.com>
-#
-# This handles forecasts for the weather applet for Avant Window
-# Navigator.
+# Copyright (C) 2009  onox <denkpadje@gmail.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -19,50 +15,71 @@
 # Lesser General Public License for more details.
 #
 # You should have received a copy of the GNU Lesser General Public
-# License along with this library; if not, write to the
-# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-# Boston, MA 02111-1307, USA.
+# License along with this librarym.  If not, see <http://www.gnu.org/licenses/>
 
-import gtk, cairo, awn
-import urllib2, urllib, re, time, sys, traceback
+import os
+import time
+import urllib
 from xml.dom import minidom
-import forecastdialogs, override
-from helpers import debug
+
+import gtk
+from gtk import gdk
+
+import awn
+import cairo
+
+import weathericons
+from weather import _
+
 
 class Forecast:
+
     def __init__(self, parent):
         self.parent = parent
         self.applet = parent.applet
         self.cachedForecast = None
-        self.createForecastDialog()
-        
+
+        self.forecastDialog = None
+        self.forecastArea = None
+
     def onRefreshForecast(self):
+        """Download the current 5-day forecast. If this fails, or the
+        forecast is unchanged, don't do anything. If we get a new forecast,
+        update the cached information and create an updated dialog.
+
         """
-        Download the current 5-day forecast. If this fails, or the forecast
-        is unchanged, don't do anything. If we get a new forecast, update
-        the cached information and create an updated dialog.
-        """
-        #debug("Refreshing FORECAST @ %s"%time.asctime())
+        print "fetching forecast..."
         forecast = self.fetchForecast()
+        print "finished fetching"
+        print forecast
         if forecast is not None and forecast != self.cachedForecast:
             self.cachedForecast = forecast
-            self.createForecastDialog()
-        
+
+            if self.forecastDialog is None:
+                self.setup_forecast_dialog()
+            elif not self.parent.settings['curved_dialog']:
+                self.forecastDialog.set_title("%s %s %s"%(_("Forecast"), _("for"), self.cachedForecast['CITY']))
+            self.forecastArea.set_forecast(self.cachedForecast)
+            print "updated"
+
+    def refresh_unit(self):
+        self.forecastArea.set_forecast(self.cachedForecast)
+
     def fetchForecast(self):
+        """Use weather.com's XML service to download the latest 5-day
+        forecast.
+
         """
-         Use weather.com's XML service to download the latest 5-day forecast.
-        """
-        locationCode, metric, cachedConditions = self.parent.getAttributes()
+        locationCode, unit, cachedConditions = self.parent.getAttributes()
         url = 'http://xoap.weather.com/weather/local/' + locationCode + '?dayf=5&prod=xoap&par=1048871467&key=12daac2f3a67cb39&link=xoap'
-        if metric:
-            url = url + '&unit=m'
-            
+
+        xmldoc = None
         try:
             usock = urllib.urlopen(url)
             xmldoc = minidom.parse(usock)
             usock.close()
-            
-            forecast = {'DAYS':[]}#, 'CITY': cachedConditions['CITY']}
+
+            forecast = {'DAYS': []}#, 'CITY': cachedConditions['CITY']}
             cityNode = xmldoc.getElementsByTagName('loc')[0].getElementsByTagName('dnam')[0]
             forecast['CITY'] = ''.join([node.data for node in cityNode.childNodes if node.nodeType == node.TEXT_NODE])
 
@@ -73,56 +90,240 @@ class Forecast:
                 day = self.parent.dictFromXML(dayNode, names, paths)
                 day.update({'WEEKDAY': dayNode.getAttribute('t'), 'YEARDAY': dayNode.getAttribute('dt')})
                 forecast['DAYS'].append(day)
-                
+            return forecast
         except:
-            debug("Unexpected error while fetching forecast:"); traceback.print_exc()
-            forecast = None
-            
-        return forecast
-        
-    def createForecastDialog(self):
+            print "Weather Applet: Unexpected error while fetching forecast:"
+        finally:
+            if xmldoc is not None:
+                xmldoc.unlink()
+
+    def setup_forecast_dialog(self):
+        """Update the forecast dialog, either a placeholder if no forecast
+        data exists, or the desired dialog (curved or normal). Note that
+        this does not show the dialog, the dialog themselves handle that.
+
         """
-        Create the forecast dialog, either a placeholder if no forecast data exists,
-        or the desired dialog (curved or normal).
-        Note that this does not show the dialog, the dialog themselves handle that.
-        """
-        if hasattr(self, 'forecastDialog'):
+        if self.forecastDialog is not None:
             del self.forecastDialog
-        
-        if self.cachedForecast is None:
-            self.forecastDialog = self.applet.dialog.new("main")
-            self.forecastDialog.set_title(_("Fetching forecast..."))
+        if self.forecastArea is not None:
+            del self.forecastArea
+
+        print "create!"
+        if self.parent.settings['curved_dialog']:
+            self.forecastDialog = self.CurvedDialogWrapper(self.applet)
+            self.applet.dialog.register("main", self.forecastDialog)
+            self.forecastArea = CurvedDialog(self.cachedForecast, self.parent)
         else:
-            try:
-                if self.parent.settingsDict['curved_dialog'] == True:
-                    #self.forecastDialog = self.applet.dialog.new("main", dialogConstructor=override.Dialog)
-                    self.forecastDialog = override.Dialog(self.applet)
-                    self.applet.dialog.register("main", self.forecastDialog)
-                    forecastArea = forecastdialogs.CurvedDialog(self.cachedForecast)
-                else:
-                    self.forecastDialog = self.applet.dialog.new("main")
-                    self.forecastDialog.set_title("%s %s %s"%(_("Forecast"), _("for"), self.cachedForecast['CITY']))
-                    forecastArea = forecastdialogs.NormalDialog(self.cachedForecast)
-                
-                box = gtk.VBox()
-                forecastArea.set_size_request(450,160)
-                box.pack_start(forecastArea, False, False, 0)
-                box.show_all()
-                self.forecastDialog.add(box)
-            except:
-                self.forecastDialog = self.applet.dialog.new("main")
-                self.forecastDialog.set_title(_("Dialog Error"))
-        
-    def cropText(self, context, text, maxwidth):
-        """
-        Given a maximum width, this will crop and ellipsize
-        a string as necessary.
-        """
+            self.forecastDialog = self.applet.dialog.new("main")
+            self.forecastDialog.set_title("%s %s %s"%(_("Forecast"), _("for"), self.cachedForecast['CITY']))
+            self.forecastArea = NormalDialog(self.cachedForecast, self.parent)
+
+        box = gtk.VBox()
+        self.forecastArea.set_size_request(450, 160)
+        box.pack_start(self.forecastArea, False, False, 0)
+        box.show_all()
+        self.forecastDialog.add(box)
+
+    class CurvedDialogWrapper(awn.Dialog):
+
+        def __init__(self, applet):
+            awn.Dialog.__init__(self, applet)
+
+            self.connect("expose-event", self.expose_event_cb)
+
+        def expose_event_cb(self, widget, event):
+            context = widget.window.cairo_create()
+
+            context.set_operator(cairo.OPERATOR_CLEAR)
+            context.paint()
+            context.set_operator(cairo.OPERATOR_OVER)
+
+            for c in self.get_children():
+                self.propagate_expose(c, event)
+
+            return True
+
+
+class NormalDialog(gtk.Image):
+
+    def __init__(self, forecast, parent_weather):
+        gtk.Image.__init__(self)
+
+        self.__parent_weather = parent_weather
+        self.set_forecast(forecast)
+        self.xPositions = [16, 101, 189, 277, 362]
+        self.yPositions = [30, 30, 30, 30, 30]
+        self.whiteDayText = False
+
+        self.connect("expose_event", self.expose_event_cb)
+
+    def set_forecast(self, forecast):
+        self.forecast = forecast
+        self.__cache_surface = None
+
+    def drawRoundedRect(self, ct, x, y, w, h, r=10):
+        #   A****BQ
+        #  H      C
+        #  *      *
+        #  G      D
+        #   F****E
+        ct.move_to(x+r, y)                      # Move to A
+        ct.line_to(x+w-r, y)                    # Straight line to B
+        ct.curve_to(x+w, y, x+w, y, x+w, y+r)       # Curve to C, Control points are both at Q
+        ct.line_to(x+w, y+h-r)                  # Move to D
+        ct.curve_to(x+w, y+h, x+w, y+h, x+w-r, y+h) # Curve to E
+        ct.line_to(x+r, y+h)                    # Line to F
+        ct.curve_to(x, y+h, x, y+h, x, y+h-r)       # Curve to G
+        ct.line_to(x, y+r)                      # Line to H
+        ct.curve_to(x, y, x, y, x+r, y)             # Curve to A
+
+    def getTextWidth(self, context, text, maxwidth):
         potential_text = text
-        text_width = self.getTextSize(context, potential_text)[1]
+        text_width = context.text_extents(potential_text.encode('ascii', 'replace'))[2]
         end = -1
         while text_width > maxwidth:
             end -= 1
-            potential_text = text[:end] + '...'
-            text_width = self.getTextSize(context, potential_text)[1]
+            potential_text = text.encode('ascii', 'replace')[:end] + '...'
+            text_width = context.text_extents(potential_text.encode('ascii', 'replace'))[2]
         return potential_text, text_width
+
+    def drawSingleDay(self, context, x, y, day):
+        high_temp_x = x + 5
+        high_temp_y = y + 84
+        rect_x = x - 3
+        rect_y = y + 5
+        rect_width = 74
+        rect_height = 86
+        icon_x = x + 4
+        icon_y = y + 7
+        context.select_font_face("Sans", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+        context.save()
+
+        ## Rectangle with outline
+        context.set_source_rgba(0, 0, 0, 0.85)
+        self.drawRoundedRect(context, rect_x, rect_y, rect_width, rect_height)
+        context.fill()
+        context.set_line_width(2)
+        context.set_source_rgba(0, 0, 0, 0.55)
+        self.drawRoundedRect(context, rect_x, rect_y, rect_width, rect_height)
+        context.stroke()
+
+        ## Days of the week
+        context.set_font_size(12.0)
+        context.set_line_width(1)
+
+        day_name = _(day['WEEKDAY'])
+        if day == self.forecast['DAYS'][0]:
+            day_name = _("Today")
+        elif day == self.forecast['DAYS'][1]:
+            day_name = _("Tomorrow")
+
+        day_name, day_width = self.getTextWidth(context, day_name, 999)
+        text_x = rect_x + (rect_width - day_width)/2
+
+        # for the curved dialog, we want the text closer to the days
+        text_y = rect_y if self.whiteDayText else rect_y - 10
+
+        ## Black Day Text
+        context.move_to(text_x, text_y)
+        context.set_source_rgba(0.0, 0.0, 0.0, 1.0)
+        context.show_text(_(day_name))
+
+        ## White Day Text
+        if self.whiteDayText: # draw white text over its "shadow"
+            context.move_to(text_x-1, text_y-1)
+            context.set_source_rgba(1, 1, 1)
+            context.show_text(_(day_name))
+
+        ## Icon of condition
+        icon_name=weathericons.get_icon(day['CODE'], self.__parent_weather.settings["theme"])
+        icon = gdk.pixbuf_new_from_file(icon_name)
+        scaled = icon.scale_simple(60, 60, gdk.INTERP_BILINEAR)
+        context.set_source_pixbuf(scaled, icon_x, icon_y)
+        context.fill()
+        context.paint()
+
+        ## Weather condition
+        condition_text = _(day["DESCRIPTION"])
+        context.select_font_face("Sans", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
+        context.set_font_size(9.0)
+        context.set_line_width(1)
+        condition_text, text_width = self.getTextWidth(context, condition_text, rect_width-5)
+        startx = (rect_width - text_width) / 2
+
+        ## Text Shadow
+        context.set_source_rgba(0.0, 0.0, 0.0)
+        context.move_to(rect_x + startx - 1, high_temp_y-15)
+        context.show_text(condition_text)
+
+        # Foreground Text
+        context.set_source_rgba(1.0, 1.0, 1.0)
+        context.move_to(rect_x + startx - 2, high_temp_y-16)
+        context.show_text(condition_text)
+
+        ## High and Low
+        context.select_font_face("Sans", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+        context.set_font_size(14.0)
+        context.set_line_width(1)
+
+        temp_high = self.__parent_weather.convert_temperature(day['HIGH']) + u"\u00B0" if day['HIGH'] != "N/A" else "N/A"
+        context.move_to(high_temp_x-3, high_temp_y)
+        context.set_source_rgba(1.0, 0.25, 0.25, 1.0)
+        context.show_text(temp_high)
+
+        temp_low = self.__parent_weather.convert_temperature(day['LOW']) + u"\u00B0" if day['LOW'] != "N/A" else "N/A"
+        context.move_to(high_temp_x+36, high_temp_y)
+        context.set_source_rgba(0.5, 0.75, 1.0, 1.0)
+        context.show_text(temp_low)
+
+        context.restore()
+
+    def drawDays(self, context):
+        for xpos, ypos, day in zip(self.xPositions, self.yPositions, self.forecast['DAYS']):
+            self.drawSingleDay(context, xpos, ypos, day)
+
+    def expose_event_cb(self, widget, event):
+        context = widget.window.cairo_create()
+        context.translate(event.area.x, event.area.y)
+
+        if self.__cache_surface is None:
+            self.__cache_surface = context.get_target().create_similar(cairo.CONTENT_COLOR_ALPHA, event.area.width, event.area.height)
+            cache_context = gdk.CairoContext(cairo.Context(self.__cache_surface))
+
+            self.drawDays(cache_context)
+            cache_context.set_source_rgb(0.0, 0.0, 0.0)
+            # approximate the location of this string
+            descStr = _("Weather data provided by weather.com") + str(time.time())
+            length = len(descStr)
+            xpos = 200 - (length * 10 / 4)
+            cache_context.move_to(xpos, 145)
+            cache_context.show_text(descStr)
+
+        context.set_operator(cairo.OPERATOR_OVER)
+        context.set_source_surface(self.__cache_surface)
+        context.paint()
+
+        return False
+
+
+class CurvedDialog(NormalDialog):
+
+    def __init__(self, forecast, parent_weather):
+        NormalDialog.__init__(self, forecast, parent_weather)
+
+        self.yPositions = [60, 30, 14, 30, 60]
+        self.whiteDayText = True
+
+    def expose_event_cb(self, widget, event):
+        context = widget.window.cairo_create()
+
+        # first, create a transparent cairo context
+        context.set_operator(cairo.OPERATOR_CLEAR)
+        context.paint()
+
+        context.set_operator(cairo.OPERATOR_OVER)
+
+        # then draw the days onto it
+        self.drawDays(context)
+        #self.bottom_text(self.context)
+        return True

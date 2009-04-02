@@ -5,11 +5,9 @@ include $(top_srcdir)/Makefile.python-applet
 dist_applet_DATA = 		\
 	messages.pot		\
 	forecast.py          \
-	forecastdialogs.py  \
-	helpers.py          \
-	weatherprefs.py     \
 	weathericons.py		\
-	weathertext.py		\
-	override.py 		\
 	weather-prefs.glade	\
 	$(NULL)
+
+moonbeam_themedir = $(applet_datadir)/themes/moonbeam
+dist_moonbeam_theme_DATA = $(wildcard themes/moonbeam/*.png)

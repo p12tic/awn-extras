@@ -186,19 +186,19 @@ class NormalDialog(gtk.Image):
             text_width = context.text_extents(potential_text.encode('ascii', 'replace'))[2]
         return potential_text, text_width
 
-    def drawSingleDay(self, context, x, y, day):
+    def drawSingleDay(self, context, x, y, day, text_color):
         high_temp_x = x + 5
-        high_temp_y = y + 84
         rect_x = x - 3
-        rect_y = y + 5
+        rect_y = y + 10
         rect_width = 74
-        rect_height = 86
+        rect_height = 90
+        high_temp_y = rect_y + rect_height - 6
         icon_x = x + 4
-        icon_y = y + 7
+        icon_y = rect_y + 2
         context.select_font_face("Sans", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
         context.save()
 
-        ## Rectangle with outline
+        # Rectangle with outline
         context.set_source_rgba(0, 0, 0, 0.85)
         self.drawRoundedRect(context, rect_x, rect_y, rect_width, rect_height)
         context.fill()
@@ -207,7 +207,7 @@ class NormalDialog(gtk.Image):
         self.drawRoundedRect(context, rect_x, rect_y, rect_width, rect_height)
         context.stroke()
 
-        ## Days of the week
+        # Days of the week
         context.set_font_size(12.0)
         context.set_line_width(1)
 
@@ -217,24 +217,21 @@ class NormalDialog(gtk.Image):
         elif day == self.forecast['DAYS'][1]:
             day_name = _("Tomorrow")
 
-        day_name, day_width = self.getTextWidth(context, day_name, 999)
+        day_name, day_width = self.getTextWidth(context, _(day_name), 999)
         text_x = rect_x + (rect_width - day_width)/2
+        text_y = rect_y - 10
 
-        # for the curved dialog, we want the text closer to the days
-        text_y = rect_y if self.whiteDayText else rect_y - 10
+        # Background Day Text
+        context.set_source_rgba(0, 0, 0, 0.85)
+        self.drawRoundedRect(context, text_x - 4, text_y - 12, day_width + 8, 16)
+        context.fill()
 
-        ## Black Day Text
+        # White Day Text
         context.move_to(text_x, text_y)
-        context.set_source_rgba(0.0, 0.0, 0.0, 1.0)
-        context.show_text(_(day_name))
+        context.set_source_rgba(1, 1, 1)
+        context.show_text(day_name)
 
-        ## White Day Text
-        if self.whiteDayText: # draw white text over its "shadow"
-            context.move_to(text_x-1, text_y-1)
-            context.set_source_rgba(1, 1, 1)
-            context.show_text(_(day_name))
-
-        ## Icon of condition
+        # Icon of condition
         icon_name=weathericons.get_icon(day['CODE'], self.__parent_weather.settings["theme"])
         icon = gdk.pixbuf_new_from_file(icon_name)
         scaled = icon.scale_simple(60, 60, gdk.INTERP_BILINEAR)
@@ -242,7 +239,7 @@ class NormalDialog(gtk.Image):
         context.fill()
         context.paint()
 
-        ## Weather condition
+        # Weather condition
         condition_text = _(day["DESCRIPTION"])
         context.select_font_face("Sans", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
         context.set_font_size(9.0)
@@ -250,7 +247,7 @@ class NormalDialog(gtk.Image):
         condition_text, text_width = self.getTextWidth(context, condition_text, rect_width-5)
         startx = (rect_width - text_width) / 2
 
-        ## Text Shadow
+        # Text Shadow
         context.set_source_rgba(0.0, 0.0, 0.0)
         context.move_to(rect_x + startx - 1, high_temp_y-15)
         context.show_text(condition_text)
@@ -260,7 +257,7 @@ class NormalDialog(gtk.Image):
         context.move_to(rect_x + startx - 2, high_temp_y-16)
         context.show_text(condition_text)
 
-        ## High and Low
+        # High and Low
         context.select_font_face("Sans", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
         context.set_font_size(14.0)
         context.set_line_width(1)
@@ -277,32 +274,33 @@ class NormalDialog(gtk.Image):
 
         context.restore()
 
-    def drawDays(self, context):
-        for xpos, ypos, day in zip(self.xPositions, self.yPositions, self.forecast['DAYS']):
-            self.drawSingleDay(context, xpos, ypos, day)
-
     def expose_event_cb(self, widget, event):
         context = widget.window.cairo_create()
         context.translate(event.area.x, event.area.y)
 
+        self.draw_days(widget, event, context)
+        return False
+
+    def draw_days(self, widget, event, context):
         if self.__cache_surface is None:
             self.__cache_surface = context.get_target().create_similar(cairo.CONTENT_COLOR_ALPHA, event.area.width, event.area.height)
             cache_context = gdk.CairoContext(cairo.Context(self.__cache_surface))
+            text_color = widget.get_style().fg[gtk.STATE_PRELIGHT]
 
-            self.drawDays(cache_context)
-            cache_context.set_source_rgb(0.0, 0.0, 0.0)
-            # approximate the location of this string
+            # Draw days
+            for xpos, ypos, day in zip(self.xPositions, self.yPositions, self.forecast["DAYS"]):
+                self.drawSingleDay(cache_context, xpos, ypos, day, text_color)
+
+            cache_context.set_source_rgb(text_color.red / 65535.0, text_color.green / 65535.0, text_color.blue / 65535.0)
             descStr = _("Weather data provided by weather.com")
-            length = len(descStr)
-            xpos = 200 - (length * 10 / 4)
+            width = cache_context.text_extents(descStr)[2:4][0]
+            xpos = event.area.width/2.0 - width/2.0 
             cache_context.move_to(xpos, 145)
             cache_context.show_text(descStr)
 
         context.set_operator(cairo.OPERATOR_OVER)
         context.set_source_surface(self.__cache_surface)
         context.paint()
-
-        return False
 
 
 class CurvedDialog(NormalDialog):
@@ -319,10 +317,8 @@ class CurvedDialog(NormalDialog):
         # first, create a transparent cairo context
         context.set_operator(cairo.OPERATOR_CLEAR)
         context.paint()
-
         context.set_operator(cairo.OPERATOR_OVER)
 
         # then draw the days onto it
-        self.drawDays(context)
-        #self.bottom_text(self.context)
+        self.draw_days(widget, event, context)
         return True

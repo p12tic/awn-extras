@@ -177,6 +177,13 @@ class WeatherApplet:
         self.location_label = prefs.get_widget("locationLabel")
         self.location_label.set_markup("<b>%s</b>" % self.settings["location"])
 
+        size_group = gtk.SizeGroup(gtk.SIZE_GROUP_HORIZONTAL)
+        size_group.add_widget(prefs.get_widget("label-location"))
+        size_group.add_widget(prefs.get_widget("label-temperature-unit"))
+        size_group.add_widget(prefs.get_widget("label-theme"))
+        size_group.add_widget(prefs.get_widget("label-map-width"))
+        size_group.add_widget(prefs.get_widget("label-font-size"))
+
         """ Location search window """
         self.search_list = gtk.ListStore(str, str)
 
@@ -274,7 +281,7 @@ class WeatherApplet:
         return the resulting context.
 
         """
-        size = float(self.applet.get_size())
+        size = self.applet.get_size()
 
         surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, size, size)
         context = gtk.gdk.CairoContext(cairo.Context(surface))
@@ -283,6 +290,7 @@ class WeatherApplet:
 
         pixbuf = self.applet.icon.file(iconFile, set=False)
         # Scale paint operations because the pixbuf size is not always equal to the applet size
+        size = float(size)
         context.scale(size / pixbuf.get_width(), size / pixbuf.get_height())
         context.set_source_pixbuf(pixbuf, 0, 0)
 

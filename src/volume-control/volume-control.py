@@ -179,6 +179,11 @@ class VolumeControlApplet:
         self.load_device_pref(prefs)
         self.load_track_pref(prefs)
 
+        size_group = gtk.SizeGroup(gtk.SIZE_GROUP_HORIZONTAL)
+        size_group.add_widget(prefs.get_widget("label-device"))
+        size_group.add_widget(prefs.get_widget("alignment-mixer-track"))
+        size_group.add_widget(prefs.get_widget("label-theme"))
+
     def show_volume_control_cb(self, widget):
         for command in volume_control_apps:
             try:
@@ -195,11 +200,7 @@ class VolumeControlApplet:
         self.themes = filter(filter_theme, os.listdir(theme_dir))
         self.themes.sort()
 
-        # Combobox in preferences window to choose a theme
-        combobox_theme = gtk.combo_box_new_text()
-        prefs.get_widget("hbox-theme").pack_start(combobox_theme, expand=False)
-        prefs.get_widget("label-theme").set_mnemonic_widget(combobox_theme)
-
+        combobox_theme = prefs.get_widget("combobox-theme")
         for i in self.themes:
             combobox_theme.append_text(i)
 
@@ -226,11 +227,7 @@ class VolumeControlApplet:
             self.applet.settings["device"] = self.backend.get_default_device()
         device = self.applet.settings["device"]
 
-        # Combobox in preferences window to choose a device
-        self.combobox_device = gtk.combo_box_new_text()
-        prefs.get_widget("hbox-device").pack_start(self.combobox_device, expand=False)
-        prefs.get_widget("label-device").set_mnemonic_widget(self.combobox_device)
-
+        self.combobox_device = prefs.get_widget("combobox-device")
         for i in device_labels:
             self.combobox_device.append_text(i)
 
@@ -246,11 +243,7 @@ class VolumeControlApplet:
             self.applet.settings["track"] = self.backend.get_default_track()
         track = self.applet.settings["track"]
 
-        # Combobox in preferences window to choose a track
-        self.combobox_track = gtk.combo_box_new_text()
-        prefs.get_widget("hbox-mixer-track").pack_start(self.combobox_track, expand=False)
-        prefs.get_widget("label-mixer-track").set_mnemonic_widget(self.combobox_track)
-
+        self.combobox_track = prefs.get_widget("combobox-mixer-track")
         for i in track_labels:
             self.combobox_track.append_text(i)
 

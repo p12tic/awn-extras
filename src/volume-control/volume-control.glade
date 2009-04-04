@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Thu Feb 19 01:56:35 2009 -->
+<!--Generated with glade3 3.4.5 on Sat Apr  4 02:30:24 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window1">
     <child>
@@ -29,44 +29,69 @@
                         <child>
                           <widget class="GtkHBox" id="hbox-device">
                             <property name="visible">True</property>
-                            <property name="spacing">6</property>
+                            <property name="spacing">12</property>
                             <child>
                               <widget class="GtkLabel" id="label-device">
                                 <property name="visible">True</property>
+                                <property name="xalign">0</property>
                                 <property name="label" translatable="yes">_Device:</property>
                                 <property name="use_underline">True</property>
+                                <property name="mnemonic_widget">combobox-device</property>
+                                <accessibility>
+                                  <atkrelation target="combobox-device" type="label-for"/>
+                                </accessibility>
                               </widget>
                               <packing>
                                 <property name="expand">False</property>
                               </packing>
                             </child>
                             <child>
-                              <placeholder/>
+                              <widget class="GtkComboBox" id="combobox-device">
+                                <property name="visible">True</property>
+                                <property name="items" translatable="yes"></property>
+                                <accessibility>
+                                  <atkrelation target="label-device" type="labelled-by"/>
+                                </accessibility>
+                              </widget>
+                              <packing>
+                                <property name="position">1</property>
+                              </packing>
                             </child>
                           </widget>
                         </child>
                         <child>
-                          <widget class="GtkAlignment" id="alignment1">
+                          <widget class="GtkHBox" id="hbox1">
                             <property name="visible">True</property>
-                            <property name="left_padding">6</property>
+                            <property name="spacing">12</property>
                             <child>
-                              <widget class="GtkHBox" id="hbox-mixer-track">
+                              <widget class="GtkAlignment" id="alignment-mixer-track">
                                 <property name="visible">True</property>
-                                <property name="spacing">13</property>
+                                <property name="left_padding">6</property>
                                 <child>
                                   <widget class="GtkLabel" id="label-mixer-track">
                                     <property name="visible">True</property>
+                                    <property name="xalign">0</property>
                                     <property name="label" translatable="yes">_Mixer track:</property>
                                     <property name="use_underline">True</property>
+                                    <property name="mnemonic_widget">combobox-mixer-track</property>
                                   </widget>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <placeholder/>
                                 </child>
                               </widget>
+                              <packing>
+                                <property name="expand">False</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkComboBox" id="combobox-mixer-track">
+                                <property name="visible">True</property>
+                                <property name="items" translatable="yes"></property>
+                                <accessibility>
+                                  <atkrelation target="label-mixer-track" type="labelled-by"/>
+                                </accessibility>
+                              </widget>
+                              <packing>
+                                <property name="position">1</property>
+                              </packing>
                             </child>
                           </widget>
                           <packing>
@@ -88,6 +113,9 @@
                   </packing>
                 </child>
               </widget>
+              <packing>
+                <property name="expand">False</property>
+              </packing>
             </child>
           </widget>
           <packing>
@@ -115,19 +143,33 @@
                         <child>
                           <widget class="GtkHBox" id="hbox-theme">
                             <property name="visible">True</property>
-                            <property name="spacing">13</property>
+                            <property name="spacing">12</property>
                             <child>
                               <widget class="GtkLabel" id="label-theme">
                                 <property name="visible">True</property>
+                                <property name="xalign">0</property>
                                 <property name="label" translatable="yes">_Theme:</property>
                                 <property name="use_underline">True</property>
+                                <property name="mnemonic_widget">combobox-theme</property>
+                                <accessibility>
+                                  <atkrelation target="combobox-theme" type="label-for"/>
+                                </accessibility>
                               </widget>
                               <packing>
                                 <property name="expand">False</property>
                               </packing>
                             </child>
                             <child>
-                              <placeholder/>
+                              <widget class="GtkComboBox" id="combobox-theme">
+                                <property name="visible">True</property>
+                                <property name="items" translatable="yes"></property>
+                                <accessibility>
+                                  <atkrelation target="label-theme" type="labelled-by"/>
+                                </accessibility>
+                              </widget>
+                              <packing>
+                                <property name="position">1</property>
+                              </packing>
                             </child>
                           </widget>
                         </child>
@@ -146,6 +188,9 @@
                   </packing>
                 </child>
               </widget>
+              <packing>
+                <property name="expand">False</property>
+              </packing>
             </child>
           </widget>
           <packing>

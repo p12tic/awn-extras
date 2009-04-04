@@ -126,11 +126,7 @@ class BatteryStatusApplet:
 
         """ Battery """
         if self.backend is not None:
-            vbox = prefs.get_widget("vbox-battery")
-
-            self.combobox_battery = gtk.combo_box_new_text()
-            vbox.add(self.combobox_battery)
-
+            self.combobox_battery = prefs.get_widget("combobox-battery")
             for model in batteries.values():
                 self.combobox_battery.append_text(model)
 
@@ -146,15 +142,11 @@ class BatteryStatusApplet:
             frame.set_no_show_all(True)
 
         """ Display """
-        hbox = prefs.get_widget("hbox-theme")
-
-        combobox_theme = gtk.combo_box_new_text()
-        hbox.add(combobox_theme)
-
         # Only use themes that are likely to provide all the files
         self.themes = os.listdir(themes_dir)
         self.themes.sort()
 
+        combobox_theme = prefs.get_widget("combobox-theme")
         for i in self.themes:
             combobox_theme.append_text(i)
 
@@ -164,32 +156,34 @@ class BatteryStatusApplet:
 
         combobox_theme.set_active(self.themes.index(self.theme))
         combobox_theme.connect("changed", self.combobox_theme_changed_cb)
-        prefs.get_widget("label-theme").set_mnemonic_widget(combobox_theme)
+
+        size_group = gtk.SizeGroup(gtk.SIZE_GROUP_HORIZONTAL)
+        size_group.add_widget(prefs.get_widget("label-battery"))
+        size_group.add_widget(prefs.get_widget("label-theme"))
 
         """ Notifications """
         if self.backend is not None:
-            self.spinbutton_low_level = prefs.get_widget("spinbutton-low-level")
-            self.spinbutton_low_level.set_sensitive(self.settings["warn-low-level"])
+            self.hbox_low_level = prefs.get_widget("hbox-low-level")
+            self.hbox_low_level.set_sensitive(self.settings["warn-low-level"])
 
             self.combobox_low_level = prefs.get_widget("combobox-low-level")
             self.combobox_low_level.set_active(low_level_units.index(self.settings["low-level-unit"]))
             self.combobox_low_level.connect("changed", self.combobox_low_level_unit_changed_cb)
 
-            self.spinbutton_high_level = prefs.get_widget("spinbutton-high-level")
-            self.spinbutton_high_level.set_sensitive(self.settings["notify-high-level"])
+            self.hbox_high_level = prefs.get_widget("hbox-high-level")
+            self.hbox_high_level.set_sensitive(self.settings["notify-high-level"])
         else:
             frame = prefs.get_widget("frame-notifications")
             frame.hide_all()
             frame.set_no_show_all(True)
 
     def toggled_warn_low_level_cb(self, active):
-        self.spinbutton_low_level.set_sensitive(active)
-        self.combobox_low_level.set_sensitive(active)
+        self.hbox_low_level.set_sensitive(active)
 
         self.__message_handler.evaluate()
 
     def toggled_notify_high_level_cb(self, active):
-        self.spinbutton_high_level.set_sensitive(active)
+        self.hbox_high_level.set_sensitive(active)
 
         self.__message_handler.evaluate()
 

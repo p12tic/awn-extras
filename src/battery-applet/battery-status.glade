@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Sun Dec 21 06:46:29 2008 -->
+<!--Generated with glade3 3.4.5 on Thu Apr  2 22:31:58 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window1">
     <child>
@@ -18,11 +18,41 @@
                 <property name="top_padding">6</property>
                 <property name="left_padding">12</property>
                 <child>
-                  <widget class="GtkVBox" id="vbox-battery">
+                  <widget class="GtkVBox" id="vbox1">
                     <property name="visible">True</property>
                     <property name="spacing">6</property>
                     <child>
-                      <placeholder/>
+                      <widget class="GtkHBox" id="hbox1">
+                        <property name="visible">True</property>
+                        <property name="spacing">12</property>
+                        <child>
+                          <widget class="GtkLabel" id="label-battery">
+                            <property name="visible">True</property>
+                            <property name="xalign">0</property>
+                            <property name="label" translatable="yes">_Battery:</property>
+                            <property name="use_underline">True</property>
+                            <property name="mnemonic_widget">combobox-battery</property>
+                            <accessibility>
+                              <atkrelation target="combobox-battery" type="label-for"/>
+                            </accessibility>
+                          </widget>
+                          <packing>
+                            <property name="expand">False</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkComboBox" id="combobox-battery">
+                            <property name="visible">True</property>
+                            <property name="items" translatable="yes"></property>
+                            <accessibility>
+                              <atkrelation target="label-battery" type="labelled-by"/>
+                            </accessibility>
+                          </widget>
+                          <packing>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                      </widget>
                     </child>
                   </widget>
                 </child>
@@ -31,7 +61,7 @@
             <child>
               <widget class="GtkLabel" id="label1">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">&lt;b&gt;Battery&lt;/b&gt;</property>
+                <property name="label" translatable="yes">&lt;b&gt;General Options&lt;/b&gt;</property>
                 <property name="use_markup">True</property>
               </widget>
               <packing>
@@ -60,19 +90,33 @@
                     <child>
                       <widget class="GtkHBox" id="hbox-theme">
                         <property name="visible">True</property>
-                        <property name="spacing">13</property>
+                        <property name="spacing">12</property>
                         <child>
                           <widget class="GtkLabel" id="label-theme">
                             <property name="visible">True</property>
+                            <property name="xalign">0</property>
                             <property name="label" translatable="yes">_Theme:</property>
                             <property name="use_underline">True</property>
+                            <property name="mnemonic_widget">combobox-theme</property>
+                            <accessibility>
+                              <atkrelation target="combobox-theme" type="label-for"/>
+                            </accessibility>
                           </widget>
                           <packing>
                             <property name="expand">False</property>
                           </packing>
                         </child>
                         <child>
-                          <placeholder/>
+                          <widget class="GtkComboBox" id="combobox-theme">
+                            <property name="visible">True</property>
+                            <property name="items" translatable="yes"></property>
+                            <accessibility>
+                              <atkrelation target="label-theme" type="labelled-by"/>
+                            </accessibility>
+                          </widget>
+                          <packing>
+                            <property name="position">1</property>
+                          </packing>
                         </child>
                       </widget>
                     </child>
@@ -114,6 +158,7 @@
                       <widget class="GtkCheckButton" id="checkbutton-warn-low-level">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="tooltip" translatable="yes">If enabled, shows a notification when the charge levels drops too low</property>
                         <property name="label" translatable="yes">_Warn when charge level drops to:</property>
                         <property name="use_underline">True</property>
                         <property name="response_id">0</property>
@@ -125,9 +170,9 @@
                         <property name="visible">True</property>
                         <property name="left_padding">18</property>
                         <child>
-                          <widget class="GtkHBox" id="hbox1">
+                          <widget class="GtkHBox" id="hbox-low-level">
                             <property name="visible">True</property>
-                            <property name="spacing">13</property>
+                            <property name="spacing">12</property>
                             <child>
                               <widget class="GtkSpinButton" id="spinbutton-low-level">
                                 <property name="visible">True</property>
@@ -161,6 +206,7 @@ Time Remaining</property>
                       <widget class="GtkCheckButton" id="checkbutton-notify-high-level">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="tooltip" translatable="yes">If enabled, shows a notification when the charge level reaches a certain percentage</property>
                         <property name="label" translatable="yes">_Notify when charge level reaches:</property>
                         <property name="use_underline">True</property>
                         <property name="response_id">0</property>
@@ -175,9 +221,9 @@ Time Remaining</property>
                         <property name="visible">True</property>
                         <property name="left_padding">18</property>
                         <child>
-                          <widget class="GtkHBox" id="hbox2">
+                          <widget class="GtkHBox" id="hbox-high-level">
                             <property name="visible">True</property>
-                            <property name="spacing">13</property>
+                            <property name="spacing">12</property>
                             <child>
                               <widget class="GtkSpinButton" id="spinbutton-high-level">
                                 <property name="visible">True</property>

@@ -182,7 +182,7 @@ class WeatherApplet:
         size_group.add_widget(prefs.get_widget("label-temperature-unit"))
         size_group.add_widget(prefs.get_widget("label-theme"))
         size_group.add_widget(prefs.get_widget("label-map-width"))
-        size_group.add_widget(prefs.get_widget("label-font-size"))
+        size_group.add_widget(prefs.get_widget("alignment-font-size"))
 
         """ Location search window """
         self.search_list = gtk.ListStore(str, str)

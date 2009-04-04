@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Sat Apr  4 01:32:13 2009 -->
+<!--Generated with glade3 3.4.5 on Sat Apr  4 05:22:07 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="general-preferences">
     <child>
@@ -272,13 +272,13 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkAlignment" id="alignment4">
+                      <widget class="GtkHBox" id="hbox-font-size">
                         <property name="visible">True</property>
-                        <property name="left_padding">6</property>
+                        <property name="spacing">12</property>
                         <child>
-                          <widget class="GtkHBox" id="hbox-font-size">
+                          <widget class="GtkAlignment" id="alignment-font-size">
                             <property name="visible">True</property>
-                            <property name="spacing">12</property>
+                            <property name="left_padding">12</property>
                             <child>
                               <widget class="GtkLabel" id="label-font-size">
                                 <property name="visible">True</property>
@@ -287,22 +287,22 @@
                                 <property name="use_underline">True</property>
                                 <property name="mnemonic_widget">combobox-font-size</property>
                               </widget>
-                              <packing>
-                                <property name="expand">False</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkComboBox" id="combobox-font-size">
-                                <property name="visible">True</property>
-                                <property name="items" translatable="yes">Small
-Medium
-Large</property>
-                              </widget>
-                              <packing>
-                                <property name="position">1</property>
-                              </packing>
                             </child>
                           </widget>
+                          <packing>
+                            <property name="expand">False</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkComboBox" id="combobox-font-size">
+                            <property name="visible">True</property>
+                            <property name="items" translatable="yes">Small
+Medium
+Large</property>
+                          </widget>
+                          <packing>
+                            <property name="position">1</property>
+                          </packing>
                         </child>
                       </widget>
                       <packing>

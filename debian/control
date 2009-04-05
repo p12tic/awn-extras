@@ -59,7 +59,6 @@ Recommends: 	avant-window-navigator-trunk,
 		sqlite3,
 		python-dateutil,
 		gnome-applets,
-		tsclient,
 		python-gdata,
 		python-vobject,
 Conflicts: awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing

@@ -84,11 +84,17 @@ class WeatherApplet:
         self.set_icon()
         self.applet.tooltip.set("%s %s..."%(_("Fetching conditions for"), self.settings['location']))
 
-        applet.connect_size_changed(self.refresh_icon)
+        applet.connect_size_changed(self.size_changed_cb)
 
         # Set up the timer which will refresh the conditions, forecast, and weather map
         applet.timing.register(self.activate_refresh_cb, update_interval * 60)
         applet.timing.delay(self.activate_refresh_cb, 1.0)
+
+    def size_changed_cb(self):
+        if self.cachedConditions is None:
+            self.set_icon()
+        else:
+            self.refresh_icon();
 
     def setup_context_menu(self):
         """Add "refresh" to the context menu and setup the preferences.

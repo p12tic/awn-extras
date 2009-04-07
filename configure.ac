@@ -252,6 +252,7 @@ AC_DEFINE_UNQUOTED(DBUS_API_SUBJECT_TO_CHANGE, ,DBUS API is subject to change)
 
 appletsdir="$datarootdir/avant-window-navigator/applets"
 
+AS_AC_EXPAND([PYTHON_PLATFORM_PKG], [$PYTHON_PLATFORM_PKG])
 AS_AC_EXPAND(APPLETSDIR, $appletsdir)
 AS_AC_EXPAND(SYSCONFDIR, $sysconfdir)
 AS_AC_EXPAND(LIBDIR, $libdir)

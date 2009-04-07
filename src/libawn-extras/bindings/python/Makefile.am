@@ -1,7 +1,7 @@
 NULL =
 
 # awn python scripts
-pyawn_extrasdir = $(PYTHON_SITE_PKG)/awn/extras
+pyawn_extrasdir = $(PYTHON_PLATFORM_PKG)/awn/extras
 pyawn_extras_PYTHON =	\
 	__init__.py	\
 	awnlib.py	\
@@ -19,7 +19,7 @@ AM_CFLAGS = \
 	$(NULL)
 
 # libawn-extras python extensions
-pyawn_extrasexecdir = $(PYTHON_SITE_PKG)/awn/extras
+pyawn_extrasexecdir = $(PYTHON_PLATFORM_PKG)/awn/extras
 pyawn_extrasexec_LTLIBRARIES = _extras.la
 
 common_ldflags = -module -avoid-version

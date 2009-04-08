@@ -1304,15 +1304,23 @@ static void read_config(void)
         printf("The following is an informational message only: \n");
         fflush(stdout);
 
-        if (system("killall notification-daemon") == -1)
+        if (system("killall notification-daemon 2> /dev/null") == -1)
         {
           printf("Failed to execute killall command: disable kill notication daemon and configure to kill daemon before loading applet\n");
         }
         else
         {
-          printf("First attempt failed:  The following is an informational message only: \n");
           fflush(stdout);
-          system("killall -9 notification-daemon");
+          system("killall -9 notification-daemon 2> /dev/null");
+        }
+        if (system("killall notify-osd 2> /dev/null") == -1)
+        {
+          printf("Failed to execute killall command: disable kill notication daemon and configure to kill daemon before loading applet\n");
+        }
+        else
+        {
+          fflush(stdout);
+          system("killall -9 notify-osd 2> /dev/null");
         }
       }
     }

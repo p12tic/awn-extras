@@ -176,7 +176,7 @@ class App (awn.AppletSimple):
             self.players_frame.set_no_show_all(False)
             self.controls.set_no_show_all(True)
             self.controls.hide()
-            self.set_title(App.APPLET_NAME)
+            self.set_tooltip_text(App.APPLET_NAME)
             self.label.set_markup(App.APPLET_NAME_MARKUP)
             self.MediaPlayer = None
         else:
@@ -267,7 +267,7 @@ class App (awn.AppletSimple):
             self.titleOrder,
             self.titleLen,
             self.titleBoldFont)
-        self.set_title(resultToolTip)
+        self.set_tooltip_text(resultToolTip)
         if self.dialog_visible == False: return False
         self.label.set_markup(markup)
         try:

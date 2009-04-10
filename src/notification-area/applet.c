@@ -41,7 +41,7 @@ typedef struct {
 
 } TrayApplet;
 
-#define BORDER 3
+#define BORDER 2
 
 static GQuark new_quark = 0;
 static GQuark del_quark = 0;
@@ -79,7 +79,6 @@ tray_icon_message_cancelled (EggTrayManager *manager,
 static void
 applet_expose_icon (GtkWidget *widget,
                     gpointer data);
-
 
 
 static void
@@ -198,6 +197,7 @@ tray_icon_added (EggTrayManager *manager,
 
   applet->icons = g_list_append (applet->icons, icon);
   gtk_widget_set_size_request (icon, icon_size, icon_size);
+
   tray_applet_refresh (applet);
 }
 
@@ -312,13 +312,25 @@ applet_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
     cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 0.0);
   }
 
-  cairo_set_line_width (cr, 2.0);
+  cairo_set_line_width (cr, 1.0);
 
   awn_cairo_rounded_rect (cr, x+0.5, y+0.5, w-1.0, h-1.0,
                           4.0*BORDER, ROUND_ALL);
   cairo_fill_preserve(cr);
 
-  gdk_cairo_set_source_color (cr, &(gtk_widget_get_style(widget)->bg[GTK_STATE_SELECTED]));
+  GdkColor c = gtk_widget_get_style(widget)->dark[GTK_STATE_SELECTED];
+
+  cairo_set_source_rgba (cr, c.red / 65535.0, c.green / 65535.0,
+                         c.blue / 65535.0, 0.625);
+
+  cairo_set_operator (cr, CAIRO_OPERATOR_DEST_OUT);
+  cairo_set_line_width (cr, 1.5);
+
+  cairo_stroke_preserve(cr);
+
+  cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
+  cairo_set_line_width (cr, 1.0);
+
   cairo_stroke(cr);
 
   cairo_destroy(cr);
@@ -351,7 +363,7 @@ size_changed(AwnApplet *applet, guint size, gpointer user_data)
    * " -1 " spacing in the table
    * "size % 2" compensates the table spacing
    */
-  icon_size = size > 8 ? (size / 2) - BORDER - 1 + (size % 2) : 1;
+  icon_size = size > 5 ? (size / 2) - 1 + (size % 2) : 1;
 
   // foreach child call set_size_request
   gtk_container_foreach (GTK_CONTAINER (table), resize_icon, NULL);
@@ -419,7 +431,7 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint offset, gint size )
                     G_CALLBACK (tray_icon_message_cancelled), app);
 
   orientation = orient;
-  icon_size = size > 8 ? (size / 2) - BORDER - 1 + (size % 2) : 1;
+  icon_size = size > 5 ? (size / 2) - 1 + (size % 2) : 1;
   //gtk_widget_set_size_request (GTK_WIDGET (applet), -1, height* 2 );
 
   table = gtk_table_new (1, 1, FALSE);
@@ -433,6 +445,7 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint offset, gint size )
                             G_CALLBACK (gtk_widget_queue_draw), applet);
 
   align = awn_alignment_new_for_applet (applet);
+  awn_alignment_set_offset_modifier (AWN_ALIGNMENT (align), -BORDER);
   app->align = gtk_alignment_new (0.0, 0.0, 1.0, 1.0);
   gtk_alignment_set_padding (GTK_ALIGNMENT (app->align),
                              BORDER, BORDER, BORDER, BORDER);

@@ -416,6 +416,7 @@ GdkPixmap * copy_pixmap(Shiny_switcher *shinyswitcher, GdkPixmap * src)
 {
   GdkPixmap * copy;
   int  w, h;
+  g_return_val_if_fail(src,NULL);
   gdk_drawable_get_size(src, &w, &h);
   if (!w || !h)
   {
@@ -2078,6 +2079,8 @@ applet_new(AwnApplet *applet, gint orient, int width, int height)
   shinyswitcher->align  = NULL;
   shinyswitcher->config = NULL;
   shinyswitcher->applet = applet;
+  shinyswitcher->wallpaper_active = NULL;
+  shinyswitcher->wallpaper_inactive = NULL;
   shinyswitcher->ws_lookup_ev = g_tree_new(_cmp_ptrs);
 
   /* doing this as a tree right now..  cause it's easy and I think I'll need a complex data structure eventually. */

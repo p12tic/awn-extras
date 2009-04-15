@@ -46,6 +46,7 @@ SUBDIRS =			\
 	battery-applet		\
 	cairo-clock			\
 	cpufreq				\
+	gwibfawn		\
 	media-player		\
 	mount-applet       \
 	notification-area	\

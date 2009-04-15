@@ -318,6 +318,7 @@ src/digitalClock/Makefile
 src/file-browser-launcher/Makefile
 src/filebrowser/Makefile
 src/filebrowser/filebrowser.desktop.in
+src/gwibfawn/Makefile
 src/libawn-extras/Makefile
 src/libawn-extras/awn-extras.pc
 src/libawn-extras/bindings/Makefile

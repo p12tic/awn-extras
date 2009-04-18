@@ -183,7 +183,7 @@ if test x${enable_pymod_checks} = xyes; then
     # cairo-clock, calendar
     AM_CHECK_PYMOD(dateutil,,,AC_MSG_ERROR([python module dateutil required (python-dateutil)]))
     if test "$with_gnome" != "no"; then
-    # MiMenu
+    # MiMenu, YAMA
     AM_CHECK_PYMOD(gmenu,,,AC_MSG_ERROR([python module gmenu required]))
     fi
     if test "$with_gconf" != "no" -o "$with_gnome" != "no"; then
@@ -390,6 +390,7 @@ src/webapplet/Makefile
 src/webapplet/webapplet.desktop.in
 src/wobblyzini/Makefile
 src/wobblyzini/wobblyzini.desktop.in
+src/yama/Makefile
 ])
 
 dnl ========================================================================

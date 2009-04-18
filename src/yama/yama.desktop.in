@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+X-AWN-AppletType=Python
+Name=Yet Another Menu Applet
+Comment=Main menu with places and recent documents
+Exec=yama/yama.py
+Icon=gnome-main-menu
+X-AWN-AppletCategory=Utility

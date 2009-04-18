@@ -1,0 +1,299 @@
+#!/usr/bin/python
+# Copyright (C) 2009  onox <denkpadje@gmail.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, version 2 of the License.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+import commands
+import os
+import re
+import subprocess
+
+import pygtk
+pygtk.require('2.0')
+import gtk
+
+import awn
+from awn.extras import awnlib
+
+import gio
+import gmenu
+from xdg import DesktopEntry
+
+applet_name = "YAMA"
+applet_version = "0.3.3"
+applet_description = "Main menu with places and recent documents"
+
+# Applet's themed icon, also shown in the GTK About dialog
+applet_logo = "gnome-main-menu"
+
+file_manager_apps = ("nautilus", "thunar", "xdg-open")
+
+data_dirs = os.environ["XDG_DATA_DIRS"] if "XDG_DATA_DIRS" in os.environ else "/usr/local/share/:/usr/share/"
+
+# TODO handle updates in removed/new and included/excluded apps and bookmarks
+# TODO add devices to places
+
+
+class YamaApplet:
+
+    """Applet to show Yet Another Menu Applet.
+
+    """
+
+    def __init__(self, applet):
+        self.applet = applet
+
+        self.setup_context_menu()
+
+        self.menu = gtk.Menu()
+        self.icon_theme = gtk.icon_theme_get_default()
+
+        # Applications
+        tree = gmenu.lookup_tree("applications.menu")
+        self.append_directory(tree.root, self.menu)
+        tree.add_monitor(self.applications_menu_changed_cb)
+        # TODO remove monitor when destroy signal of menu is fired?
+
+        self.menu.append(gtk.SeparatorMenuItem())
+
+        # Places
+        self.create_places_submenu(self.menu)
+
+        # System
+        tree = gmenu.lookup_tree("settings.menu")
+        self.append_directory(tree.root, self.menu)
+        tree.add_monitor(self.settings_menu_changed_cb)
+        # TODO remove monitor when destroy signal of menu is fired?
+
+        self.menu.append(gtk.SeparatorMenuItem())
+
+        # TODO test wheter we can lock the screen and also try xscreensaver-command
+        lock_item = self.append_menu_item(self.menu, "Lock Screen", "lock", "Protect your computer from unauthorized use")
+        lock_item.connect("activate", self.start_subprocess_cb, "gnome-screensaver-command --lock", True)
+
+        self.menu.show_all()
+
+        applet.connect("button-press-event", self.button_press_event_cb)
+
+    def button_press_event_cb(self, widget, event):
+        if event.button == 1:
+            def get_position(menu):
+                icon_x, icon_y = self.applet.get_icon().window.get_origin()
+
+                menu_size = self.menu.size_request()
+                # Make sure the bottom of the menu doesn't get below the bottom of the screen
+                icon_y = min(icon_y, self.menu.get_screen().get_height() - menu_size[1])
+
+                padding = 6
+                orientation = int(self.applet.get_orientation())
+                if orientation == 2:
+                    icon_y = self.menu.get_screen().get_height() - self.applet.get_size() - self.applet.props.offset - menu_size[1] - padding  # bottom
+                elif orientation == 0:
+                    icon_y = self.applet.get_size() + self.applet.props.offset + padding  # top
+                elif orientation == 1:
+                    icon_x = self.menu.get_screen().get_width() - self.applet.get_size() - self.applet.props.offset - menu_size[0] - padding  # right
+                else:
+                    icon_x = self.applet.get_size() + self.applet.props.offset + padding  # left
+
+                return (icon_x, icon_y, False)
+            self.menu.popup(None, None, get_position, event.button, event.time)
+
+    def setup_context_menu(self):
+        """Add "Edit Menus" to the context menu.
+
+        """
+        menu = self.applet.dialog.menu
+        menu_index = len(menu) - 1
+
+        edit_menus_item = gtk.MenuItem("_Edit Menus")
+        edit_menus_item.connect("activate", self.start_subprocess_cb, "gmenu-simple-editor", False)
+        menu.insert(edit_menus_item, menu_index)
+
+        menu.insert(gtk.SeparatorMenuItem(), menu_index + 1)
+
+    def applications_menu_changed_cb(self, tree):
+        print "applications menu changed!"
+
+    def settings_menu_changed_cb(self, tree):
+        print "settings menu changed!"
+
+    def start_subprocess_cb(self, widget, command, use_shell):
+        try:
+            subprocess.Popen(command, shell=use_shell)
+        except OSError:
+            pass
+
+    def open_folder_cb(self, widget, path):
+        for command in file_manager_apps:
+            if len(commands.getoutput("%s %s" % (command, path))) == 0:
+                return
+        raise RuntimeError("No file manager found (%s) for %s" % (", ".join(file_manager_apps), path))
+
+    def create_places_submenu(self, parent_menu):
+        item = self.append_menu_item(parent_menu, "Places", "folder", None)
+
+        menu = gtk.Menu()
+        item.set_submenu(menu)
+
+        user_path = os.path.expanduser("~/")
+
+        home_item = self.append_menu_item(menu, "Home Folder", "user-home", "Open your personal folder")
+        home_item.connect("activate", self.open_folder_cb, user_path)
+        desktop_item = self.append_menu_item(menu, "Desktop", "user-desktop", "Open the contents of your desktop in a folder")
+        desktop_item.connect("activate", self.open_folder_cb, os.path.join(user_path, "Desktop"))
+
+        self.places_menu = menu
+        self.bookmarks_items = []
+        self.append_bookmarks()
+
+        bookmarks_file = os.path.join(user_path, ".gtk-bookmarks")
+        bookmarks_monitor = gio.File(bookmarks_file).monitor_file()
+        def bookmarks_changed_cb(monitor, file, other_file, event):
+            if event is gio.FileMonitorEvent.__enum_values__[0]:
+                self.append_bookmarks()
+        bookmarks_monitor.connect("changed", bookmarks_changed_cb)
+        # FIXME boehoehoe doesn't seem to work atm :'( need glib.MainLoop().run()
+
+        menu.append(gtk.SeparatorMenuItem())
+
+        added = False
+        added |= self.append_awn_desktop(menu, "nautilus-computer")
+        added |= self.append_awn_desktop(menu, "nautilus-cd-burner")
+
+        # TODO add devices here
+
+        if added:
+            menu.append(gtk.SeparatorMenuItem())
+
+        added = False
+        added |= self.append_awn_desktop(menu, "network-scheme")
+
+        ncs_exists = os.path.exists(commands.getoutput("which nautilus-connect-server"))
+        if ncs_exists:
+            connect_item = self.append_menu_item(menu, "Connect to Server...", "stock_internet", "Connect to a remote computer or shared disk")
+            connect_item.connect("activate", self.start_subprocess_cb, "nautilus-connect-server", False)
+        added |= ncs_exists
+
+        if added:
+            menu.append(gtk.SeparatorMenuItem())
+
+        self.append_awn_desktop(menu, "gnome-search-tool")
+
+        # Recent Documents
+        recent_manager = gtk.recent_manager_get_default()
+
+        chooser_menu = gtk.RecentChooserMenu(recent_manager)
+        recent_item = self.append_menu_item(menu, "Recent Documents", "document-open-recent", None)
+        recent_item.set_submenu(chooser_menu)
+
+        def set_sensitivity_recent_menu(widget):
+            recent_item.set_sensitive(recent_manager.props.size > 0)
+        recent_manager.connect("changed", set_sensitivity_recent_menu)
+        set_sensitivity_recent_menu(None)
+
+        def open_recent_document(widget):
+            self.start_subprocess_cb(None, "xdg-open %s" % chooser_menu.get_current_uri(), True)
+        chooser_menu.connect("item-activated", open_recent_document)
+
+        chooser_menu.append(gtk.SeparatorMenuItem())
+        item = self.append_menu_item(chooser_menu, "Clear Recent Documents", "gtk-clear", "Clear all items from the recent documents list")
+        item.connect("activate", lambda w: recent_manager.purge_items())
+
+    def append_bookmarks(self):
+        for item in self.bookmarks_items:
+            item.destroy()
+        self.bookmarks_items = []
+        index = 2
+        bookmarks_file = os.path.expanduser("~/.gtk-bookmarks")
+        for url, name in (i.rstrip().split(" ", 1) for i in open(bookmarks_file)):
+            icon = "folder" if url.startswith("file://") else "folder-remote"
+            display_url = url[7:] if url.startswith("file://") else url
+
+            item = self.create_menu_item(name, icon, "Open '%s'" % display_url)
+            self.places_menu.insert(item, index)
+            item.connect("activate", self.open_folder_cb, url)
+            index += 1
+            self.bookmarks_items.append(item)
+
+    def create_menu_item(self, label, icon_name, comment):
+        item = gtk.ImageMenuItem(label)
+        icon_pixbuf = self.get_pixbuf_icon(icon_name)
+        item.set_image(gtk.image_new_from_pixbuf(icon_pixbuf))
+        if comment is not None:
+            item.set_tooltip_text(comment)
+        return item
+
+    def append_menu_item(self, menu, label, icon_name, comment):
+        item = self.create_menu_item(label, icon_name, comment)
+        menu.append(item)
+        return item
+
+    def launch_app(self, widget, path):
+        if os.path.exists(path):
+            self.start_subprocess_cb(None, DesktopEntry.DesktopEntry(path).getExec(), True)
+
+    def append_directory(self, tree, menu):
+        for node in tree.contents:
+            # Don't set comment yet because we don't want it for submenu's
+            item = self.append_menu_item(menu, node.name, node.icon, None)
+            if isinstance(node, gmenu.Entry):
+                item.set_tooltip_text(node.comment)
+                item.connect("activate", self.launch_app, node.desktop_file_path)
+            if isinstance(node, gmenu.Directory):
+                sub_menu = gtk.Menu()
+                item.set_submenu(sub_menu)
+                self.append_directory(node, sub_menu)
+
+    def append_awn_desktop(self, menu, desktop_name):
+        for dir in data_dirs.split(":"):
+            path = os.path.join(dir, "applications", desktop_name + ".desktop")
+            if os.path.isfile(path):
+                desktop_entry = DesktopEntry.DesktopEntry(path)
+                item = self.append_menu_item(menu, desktop_entry.getName(), desktop_entry.getIcon(), desktop_entry.getComment())
+                item.connect("activate", self.launch_app, desktop_entry.getFileName())
+                return True
+        return False
+
+    def get_pixbuf_icon(self, icon_value):
+        if not icon_value:
+            return None
+
+        if os.path.isabs(icon_value):
+            if os.path.isfile(icon_value):
+                return gtk.gdk.pixbuf_new_from_file_at_size(icon_value, 24, 24)
+            icon_name = os.path.basename(icon_value)
+        else:
+            icon_name = icon_value
+
+        if re.match(".*\.(png|xpm|svg)$", icon_name) is not None:
+            icon_name = icon_name[:-4]
+        try:
+            return self.icon_theme.load_icon(icon_name, 24, 0)
+        except:
+            for dir in data_dirs.split(":"):
+                for i in ("pixmaps", "icons"):
+                    path = os.path.join(dir, i, icon_value)
+                    if os.path.isfile(path):
+                        return gtk.gdk.pixbuf_new_from_file_at_size(path, 24, 24)
+
+
+if __name__ == "__main__":
+    awnlib.init_start(YamaApplet, {"name": applet_name,
+        "short": "yama",
+        "version": applet_version,
+        "description": applet_description,
+        "theme": applet_logo,
+        "author": "onox",
+        "copyright-year": 2009,
+        "authors": ["onox <denkpadje@gmail.com>"]},
+        ["no-tooltip"])

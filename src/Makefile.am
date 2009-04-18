@@ -27,6 +27,7 @@ endif
 if WITH_GNOME
 GCONF_APPLETS +=	\
 	main-menu	\
+	yama       \
 	$(NULL)
 endif
 if WITH_WEBKIT

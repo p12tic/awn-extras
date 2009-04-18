@@ -110,7 +110,7 @@ typedef struct
   gchar    *desktop_dir;
 
   AwnConfigClient  *config;
-  
+
   gchar * uid;
 }Places;
 
@@ -193,16 +193,17 @@ static void config_get_string(AwnConfigClient *client, const gchar *key, gchar *
 static void config_get_color(AwnConfigClient *client, const gchar *key, AwnColor *color)
 {
   gchar *value = awn_config_client_get_string(client, AWN_CONFIG_CLIENT_DEFAULT_GROUP, key, NULL);
-   if (value)
-   {
-    awn_cairo_string_to_color (value, color);
-    g_free (value);
-   }
-   else
-   {
-    g_warning("Failed to read config key: %s\n",key);
-    awn_cairo_string_to_color ("000000", color); 
-   }
+
+  if (value)
+  {
+    awn_cairo_string_to_color(value, color);
+    g_free(value);
+  }
+  else
+  {
+    g_warning("Failed to read config key: %s\n", key);
+    awn_cairo_string_to_color("000000", color);
+  }
 }
 
 void init_config(Places * places)
@@ -594,38 +595,42 @@ static void get_places(Places * places)
 
     while (getline(&line, &len, handle) != -1)
     {
-			gchar ** tokens;
-			tokens = g_strsplit (line," ",2);
-			
-			if (tokens)
-			{
-				if (tokens[0] )
-				{
+      gchar ** tokens;
+      tokens = g_strsplit(line, " ", 2);
+
+      if (tokens)
+      {
+        if (tokens[0])
+        {
           gchar * shell_quoted;
-					g_strstrip(tokens[0]);
-          item = g_malloc(sizeof(Menu_Item));					
-					if (tokens[1])
-					{
-						g_strstrip(tokens[1]);
-        		item->text = g_strdup(tokens[1]);
-					}
-					else
-					{
-						item->text = urldecode(g_path_get_basename (tokens[0]), NULL);
-					}
+          g_strstrip(tokens[0]);
+          item = g_malloc(sizeof(Menu_Item));
+
+          if (tokens[1])
+          {
+            g_strstrip(tokens[1]);
+            item->text = g_strdup(tokens[1]);
+          }
+          else
+          {
+            item->text = urldecode(g_path_get_basename(tokens[0]), NULL);
+          }
+
           item->icon = g_strdup("stock_folder");
+
           shell_quoted = g_shell_quote(tokens[0]);
           item->exec = g_strdup_printf("%s %s", places->file_manager, shell_quoted);
           g_free(shell_quoted);
-          item->comment = urldecode(g_strdup(tokens[0]),NULL);
+          item->comment = urldecode(g_strdup(tokens[0]), NULL);
           item->places = places;
           places->menu_list = g_slist_append(places->menu_list, item);
-					
-				}
-				
-			}
-			
-			g_strfreev (tokens);
+
+        }
+
+      }
+
+      g_strfreev(tokens);
+
       free(line);
 
       line = NULL;
@@ -1395,7 +1400,7 @@ static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, 
   }
   else if (event->button == 3)
   {
-    static GtkWidget * menu=NULL;
+    static GtkWidget * menu = NULL;
     static GtkWidget * item;
 
     if (!menu)
@@ -1406,14 +1411,15 @@ static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, 
       gtk_menu_set_screen(GTK_MENU(menu), NULL);
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
       g_signal_connect(G_OBJECT(item), "button-press-event", G_CALLBACK(_show_prefs), places);
-      item=shared_menuitem_about_applet_simple("Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>\n"
-                                               "Copyright 2007,2008 Mark Lee <avant-wn@lazymalevolence.com>\n",
-                                    AWN_APPLET_LICENSE_GPLV2,
-                                    "Places",
-                                    NULL);
-      gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);         
+      item = shared_menuitem_about_applet_simple("Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>\n"
+             "Copyright 2007,2008 Mark Lee <avant-wn@lazymalevolence.com>\n",
+             AWN_APPLET_LICENSE_GPLV2,
+             "Places",
+             NULL);
+      gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
     }
-    gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL,event_button->button, event_button->time);
+
+    gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL, event_button->button, event_button->time);
   }
 
   return TRUE;
@@ -1436,9 +1442,9 @@ static void _bloody_thing_has_style(GtkWidget *widget, Places *places)
 
   //The EASY way to use awn icons.
   awn_applet_simple_set_icon_name(AWN_APPLET_SIMPLE(places->applet),
-                                    APPLET_NAME,
-                                    places->applet_icon_name)  ;
-  awn_applet_simple_set_tooltip_text(AWN_APPLET_SIMPLE(places->applet),"Places");
+                                  APPLET_NAME,
+                                  places->applet_icon_name)  ;
+  awn_applet_simple_set_tooltip_text(AWN_APPLET_SIMPLE(places->applet), "Places");
 
   render_places(places);
   g_signal_connect(G_OBJECT(places->applet), "button-press-event", G_CALLBACK(_button_clicked_event), places);
@@ -1451,19 +1457,19 @@ AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient, gint offset, gint h
   GdkPixbuf *icon;
   g_on_error_stack_trace(NULL);
   Places * places = g_malloc(sizeof(Places));
-  AwnApplet *applet = places->applet = AWN_APPLET(awn_applet_simple_new(uid, orient,offset, height));
+  AwnApplet *applet = places->applet = AWN_APPLET(awn_applet_simple_new(uid, orient, offset, height));
   gtk_widget_set_size_request(GTK_WIDGET(applet), height, -1);
 
   places->applet_icon_height = height - 2;
 
 
- /* gtk_widget_show_all(GTK_WIDGET(applet));*/
+  /* gtk_widget_show_all(GTK_WIDGET(applet));*/
   places->mainwindow = menu_new(places);
   gtk_window_set_focus_on_map(GTK_WINDOW(places->mainwindow), TRUE);
   places->vbox = gtk_vbox_new(FALSE, 0);
   gtk_container_add(GTK_CONTAINER(places->mainwindow), places->vbox);
   g_signal_connect_after(G_OBJECT(places->applet), "map", G_CALLBACK(_bloody_thing_has_style), places);
-  
+
   places->uid = g_strdup(uid);
   return applet;
 

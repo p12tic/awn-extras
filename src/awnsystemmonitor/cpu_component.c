@@ -476,7 +476,7 @@ static gboolean render(GtkWidget ** pwidget, gint interval, CPU_plug_data **p)
   CPU_plug_data * data = *p;
   char buf[256];
   glibtop_cpu         cpu;
-
+  static gdouble old_time = -1;
   float old_user, old_sys, old_idle, old_iowait;
   dashboard_cairo_widget c_widge;
   char * content[2][4];
@@ -484,12 +484,24 @@ static gboolean render(GtkWidget ** pwidget, gint interval, CPU_plug_data **p)
   cairo_text_extents_t    extents;
   double x, y;
   float cpu_mult;
+  float tot = 0;
+  GTimeVal  timeval;
 
+  if (old_time < 0)
+  {
+    old_time = time(NULL);
+    return FALSE;
+  }
+    
   data->timer = data->timer - interval;
-
   if (data->timer <= 0)
   {
-    cpu_mult = (1000.0 / data->refresh);
+    gdouble elapsed;
+    gdouble newtime;
+    g_get_current_time (&timeval);
+    newtime = timeval.tv_sec + timeval.tv_usec / 1000000.0;
+    cpu_mult = (1.0 / (newtime - old_time) );
+    old_time = newtime;
     glibtop_get_cpu(&cpu);      //could as easily do this in render icon.  seems more appropriate here.     FIXME
 
     old_user = data->user;
@@ -513,12 +525,13 @@ static gboolean render(GtkWidget ** pwidget, gint interval, CPU_plug_data **p)
     data->idle = (data->idle > 100) ? (100 + old_idle) / 2 : (data->idle + old_idle) / 2;
     data->iowait = (data->iowait > 100) ? (100 + old_iowait) / 2 : (data->iowait + old_iowait) / 2;
 
-    if (data->user + data->sys + data->idle + data->iowait > 102)
+    tot = data->user + data->sys + data->idle + data->iowait;
+    if (data->user + data->sys + data->idle + data->iowait > 100)
     {
-      data->idle = old_idle;
-      data->sys = old_sys;
-      data->user = old_user;
-      data->iowait = old_iowait;
+      data->idle = data->idle * 100.0 / tot;
+      data->sys = data->sys  * 100.0 / tot;
+      data->user = data->user* 100.0 / tot;
+      data->iowait = data->iowait * 100.0 / tot;
     }
 
     content[0][0] = strdup("User");

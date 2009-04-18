@@ -264,98 +264,24 @@ class Dialogs:
         elif "program" in self.__register:  # Act like launcher
             self.toggle("program", once=True)
 
-    class AboutDialog(gtk.AboutDialog):
+    class BaseDialog:
 
-        """Applet's About dialog.
+        """Base class for dialogs. Sets and updates the icon and hides
+        the dialog instead of letting it being destroyed.
 
         """
 
         def __init__(self, parent):
-            gtk.AboutDialog.__init__(self)
-
             self.__parent = parent
 
-            self.set_name(parent.meta["name"])
-
-            if "version" in parent.meta:
-                self.set_version(parent.meta["version"])
-            if "description" in parent.meta:
-                self.set_comments(parent.meta["description"])
-
-            copyright_info = (parent.meta["copyright-year"], \
-                                  parent.meta["author"])
-            self.set_copyright("Copyright \xc2\xa9 %s %s" % copyright_info)
-
-            if "authors" in parent.meta:
-                self.set_authors(parent.meta["authors"])
-            if "artists" in parent.meta:
-                self.set_artists(parent.meta["artists"])
-
             if "logo" in parent.meta:
-                self.set_logo(gtk.gdk.pixbuf_new_from_file_at_size( \
-                        parent.meta["logo"], 48, 48))
-
                 self.update_logo_icon()
                 parent.connect_size_changed(self.update_logo_icon)
             elif "theme" in parent.meta:
-                # It is assumed that the C{awn.Icons}
-                # object has been set via set_awn_icon() in C{Icon}
-                self.set_logo(parent.get_icon().get_icon_at_size(48))
-
                 self.update_theme_icon()
                 parent.connect_size_changed(self.update_theme_icon)
 
             # Connect some signals to be able to hide the window
-            self.connect("response", self.response_event)
-            self.connect("delete_event", self.delete_event)
-
-        def delete_event(self, widget, event):
-            return True
-
-        def response_event(self, widget, response):
-            if response < 0:
-                self.hide()
-
-        def update_logo_icon(self):
-            """Set the applet's logo to be of the same height as the panel.
-
-            """
-            size = self.__parent.get_size()
-            self.set_icon(gtk.gdk.pixbuf_new_from_file_at_size( \
-                    self.__parent.meta["logo"], size, size))
-
-        def update_theme_icon(self):
-            """Set the applet's logo to be of the same height as the panel.
-
-            """
-            self.set_icon(self.__parent.get_icon() \
-                .get_icon_at_size(self.__parent.get_size()))
-
-    class PreferencesDialog(gtk.Dialog):
-
-        """A Dialog window that has the title "<applet's name> Preferences",
-        uses the applet's logo as its icon and has a Close button.
-
-        """
-
-        def __init__(self, parent):
-            gtk.Dialog.__init__(self, flags=gtk.DIALOG_NO_SEPARATOR)
-
-            self.__parent = parent
-
-            self.set_resizable(False)
-            self.set_border_width(5)
-
-            self.set_title(parent.meta["name"] + " Preferences")
-            self.add_button(gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE)
-
-            if "logo" in parent.meta:
-                self.update_logo_icon()
-                parent.connect_size_changed(self.update_logo_icon)
-            elif "theme" in parent.meta:
-                self.update_theme_icon()
-                parent.connect_size_changed(self.update_theme_icon)
-
             self.connect("response", self.response_event)
             self.connect("delete_event", self.delete_event)
 
@@ -380,6 +306,61 @@ class Dialogs:
             """
             self.set_icon(self.__parent.get_icon() \
                 .get_icon_at_size(self.__parent.get_size()))
+
+    class AboutDialog(BaseDialog, gtk.AboutDialog):
+
+        """Applet's About dialog.
+
+        """
+
+        def __init__(self, parent):
+            gtk.AboutDialog.__init__(self)
+            Dialogs.BaseDialog.__init__(self, parent)
+
+            self.__parent = parent
+
+            self.set_name(parent.meta["name"])
+
+            if "version" in parent.meta:
+                self.set_version(parent.meta["version"])
+            if "description" in parent.meta:
+                self.set_comments(parent.meta["description"])
+
+            copyright_info = (parent.meta["copyright-year"], \
+                                  parent.meta["author"])
+            self.set_copyright("Copyright \xc2\xa9 %s %s" % copyright_info)
+
+            if "authors" in parent.meta:
+                self.set_authors(parent.meta["authors"])
+            if "artists" in parent.meta:
+                self.set_artists(parent.meta["artists"])
+
+            if "logo" in parent.meta:
+                self.set_logo(gtk.gdk.pixbuf_new_from_file_at_size( \
+                        parent.meta["logo"], 48, 48))
+            elif "theme" in parent.meta:
+                # It is assumed that the C{awn.Icons}
+                # object has been set via set_awn_icon() in C{Icon}
+                self.set_logo(parent.get_icon().get_icon_at_size(48))
+
+    class PreferencesDialog(BaseDialog, gtk.Dialog):
+
+        """A Dialog window that has the title "<applet's name> Preferences",
+        uses the applet's logo as its icon and has a Close button.
+
+        """
+
+        def __init__(self, parent):
+            gtk.Dialog.__init__(self, flags=gtk.DIALOG_NO_SEPARATOR)
+            Dialogs.BaseDialog.__init__(self, parent)
+
+            self.__parent = parent
+
+            self.set_resizable(False)
+            self.set_border_width(5)
+
+            self.set_title(parent.meta["name"] + " Preferences")
+            self.add_button(gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE)
 
 
 class Title:
@@ -622,7 +603,7 @@ class Errors:
 
         dialog.show_all()
 
-    class ErrorDialog(gtk.MessageDialog):
+    class ErrorDialog(Dialogs.BaseDialog, gtk.MessageDialog):
 
         """A MessageDialog window that shows an error.
 
@@ -630,19 +611,18 @@ class Errors:
 
         def __init__(self, parent, error_type, title, message="", url=None):
             gtk.MessageDialog.__init__(self, type=gtk.MESSAGE_ERROR, message_format=title)
+            Dialogs.BaseDialog.__init__(self, parent)
 
             self.__parent = parent
 
-            self.set_resizable(False)
-            self.set_border_width(5)
-
+            self.set_skip_taskbar_hint(False)
             self.set_title("%s in %s" % (error_type, parent.meta["name"]))
 
             self.hbox = gtk.HBox(spacing=6)
             self.action_area.add(self.hbox)
 
             close_button = gtk.Button(stock=gtk.STOCK_CLOSE)
-            close_button.connect("clicked", lambda w: self.emit("response", gtk.RESPONSE_CLOSE))
+            close_button.connect("clicked", lambda w: self.response(gtk.RESPONSE_CLOSE))
             self.hbox.add(close_button)
 
             if len(message) > 0:
@@ -652,35 +632,6 @@ class Errors:
                 alignment = gtk.Alignment(xalign=0.5, xscale=0.0)
                 alignment.add(gtk.LinkButton(url))
                 self.vbox.pack_start(alignment, expand=False)
-
-            if "logo" in parent.meta:
-                self.update_logo_icon()
-                parent.connect_size_changed(self.update_logo_icon)
-            elif "theme" in parent.meta:
-                self.update_theme_icon()
-                parent.connect_size_changed(self.update_theme_icon)
-
-            self.connect("response", self.response_event)
-            self.hide_on_delete()
-
-        def response_event(self, widget, response):
-            if response < 0:
-                self.hide()
-
-        def update_logo_icon(self):
-            """Update the logo to be of the same height as the panel.
-
-            """
-            size = self.__parent.get_size()
-            self.set_icon(gtk.gdk.pixbuf_new_from_file_at_size( \
-                self.__parent.meta["logo"], size, size))
-
-        def update_theme_icon(self):
-            """Updates the logo to be of the same height as the panel.
-
-            """
-            self.set_icon(self.__parent.get_icon() \
-                .get_icon_at_size(self.__parent.get_size()))
 
 
 class Settings:
@@ -736,7 +687,7 @@ class Settings:
     def load_preferences(self, dict_tuples, push_defaults=True):
         """Synchronize the values from the tuples in the given dictionary
         with the stored settings, use the callable to be called when the value
-        is changed, and initialize and connect the provided Gtk+ widget. 
+        is changed, and initialize and connect the provided Gtk+ widget.
 
         Returns a "read-only" dictionary containing, now and in the future,
         up-to-date values.
@@ -924,7 +875,7 @@ class Settings:
 
             @param folder: The folder to change into.
             @type folder: C{string}
- 
+
             """
             self.__folder = folder
 

@@ -22,10 +22,10 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 
-import awn
 from awn.extras import awnlib
 
 import gio
+from glib import filename_display_basename
 import gmenu
 from xdg import DesktopEntry
 
@@ -39,6 +39,9 @@ applet_logo = "gnome-main-menu"
 file_manager_apps = ("nautilus", "thunar", "xdg-open")
 
 data_dirs = os.environ["XDG_DATA_DIRS"] if "XDG_DATA_DIRS" in os.environ else "/usr/local/share/:/usr/share/"
+
+# Describes the pattern used to try to decode URLs
+url_pattern = re.compile("^[a-z]+://(?:[^@]+@)?([^/]+)/(.*)$")
 
 # TODO handle updates in removed/new and included/excluded apps and bookmarks
 # TODO add devices to places
@@ -215,7 +218,15 @@ class YamaApplet:
         self.bookmarks_items = []
         index = 2
         bookmarks_file = os.path.expanduser("~/.gtk-bookmarks")
-        for url, name in (i.rstrip().split(" ", 1) for i in open(bookmarks_file)):
+        for url_name in (i.rstrip().split(" ", 1) for i in open(bookmarks_file)):
+            if len(url_name) == 1:
+                match = url_pattern.match(url_name[0])
+                if match is not None:
+                    url_name.append("/%s on %s" % (match.group(2), match.group(1)))
+                else:
+                    url_name.append(filename_display_basename(url_name[0]))
+            url, name = (url_name[0], url_name[1])
+
             icon = "folder" if url.startswith("file://") else "folder-remote"
             display_url = url[7:] if url.startswith("file://") else url
 

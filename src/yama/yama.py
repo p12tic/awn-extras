@@ -210,7 +210,11 @@ class YamaApplet:
 
         chooser_menu.append(gtk.SeparatorMenuItem())
         item = self.append_menu_item(chooser_menu, "Clear Recent Documents", "gtk-clear", "Clear all items from the recent documents list")
-        item.connect("activate", lambda w: recent_manager.purge_items())
+        clear_dialog = self.WarningDialog(self.applet, recent_manager.purge_items)
+        def purge_items_cb(widget):
+            clear_dialog.show_all()
+            clear_dialog.deiconify()
+        item.connect("activate", purge_items_cb)
 
     def append_bookmarks(self):
         for item in self.bookmarks_items:
@@ -298,6 +302,34 @@ class YamaApplet:
                     path = os.path.join(dir, i, icon_value)
                     if os.path.isfile(path):
                         return gtk.gdk.pixbuf_new_from_file_at_size(path, 24, 24)
+
+    class WarningDialog(awnlib.Dialogs.BaseDialog, gtk.MessageDialog):
+
+        def __init__(self, parent, clear_cb):
+            gtk.MessageDialog.__init__(self, type=gtk.MESSAGE_WARNING, message_format="Clear the Recent Documents list?")
+            awnlib.Dialogs.BaseDialog.__init__(self, parent)
+
+            self.set_skip_taskbar_hint(False)
+
+            self.set_title("Clear Recent Documents")
+            self.format_secondary_markup("Clearing the Recent Documents list will clear the following:\n\
+* All items from the Places > Recent Documents menu item.\n\
+* All items from the recent documents list in all applications.")
+
+            self.hbox = gtk.HBox(spacing=6)
+            self.action_area.add(self.hbox)
+
+            cancel_button = gtk.Button(stock=gtk.STOCK_CANCEL)
+            cancel_button.connect("clicked", lambda w: self.response(gtk.RESPONSE_CANCEL))
+            self.hbox.add(cancel_button)
+
+            clear_button = gtk.Button("C_lear")
+            clear_button.set_image(gtk.image_new_from_stock(gtk.STOCK_CLEAR, gtk.ICON_SIZE_MENU))
+            def clear_and_hide(widget):
+                self.response(gtk.RESPONSE_CANCEL)
+                clear_cb()
+            clear_button.connect("clicked", clear_and_hide)
+            self.hbox.add(clear_button)
 
 
 if __name__ == "__main__":

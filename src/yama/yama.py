@@ -244,12 +244,14 @@ class YamaApplet:
 
     def append_directory(self, tree, menu):
         for node in tree.contents:
+            if not isinstance(node, gmenu.Entry) and not isinstance(node, gmenu.Directory):
+                continue
             # Don't set comment yet because we don't want it for submenu's
             item = self.append_menu_item(menu, node.name, node.icon, None)
             if isinstance(node, gmenu.Entry):
                 item.set_tooltip_text(node.comment)
                 item.connect("activate", self.launch_app, node.desktop_file_path)
-            if isinstance(node, gmenu.Directory):
+            else:
                 sub_menu = gtk.Menu()
                 item.set_submenu(sub_menu)
                 self.append_directory(node, sub_menu)

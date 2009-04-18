@@ -396,6 +396,10 @@ class Title:
         self.__tooltip = parent.get_icon().get_tooltip()
         self.set(parent.meta["name"])
 
+        if parent.meta.has_option("no-tooltip"):
+            self.disable_toggle_on_click()
+            self.__tooltip.props.smart_behavior = False
+
     def disable_toggle_on_click(self):
         self.__tooltip.props.toggle_on_click = False
 

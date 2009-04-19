@@ -39,6 +39,7 @@ int gheight = -1;
 #include <X11/extensions/Xrender.h>
 #include <X11/extensions/Xfixes.h>
 
+#include <libawn/awn-cairo-utils.h>
 #include <libawn/awn-config-client.h>
 #include <libawn-extras/awn-extras.h>
 #include <libawn/awn-utils.h>
@@ -103,27 +104,32 @@ static void config_get_string(AwnConfigClient *client, const gchar *key, gchar *
   }
 }
 
-static void config_get_color(AwnConfigClient *client, const gchar *key, AwnColor *color)
+static void config_get_color(AwnConfigClient *client, const gchar *key, DesktopAgnosticColor **color)
 {
   GError *error = NULL;
   gchar *value = awn_config_client_get_string(client, AWN_CONFIG_CLIENT_DEFAULT_GROUP, key, &error);
 
   if (value)
   {
-    awn_cairo_string_to_color(value, color);
+    *color = desktop_agnostic_color_new_from_string(value, &error);
+    if (error)
+    {
+      g_warning("shinyswitcher: error parsing config string (%s = '%s'): %s", key, value, error->message);
+      g_error_free(error);
+    }
     g_free(value);
   }
   else
   {
     if (error)
     {
-      g_warning("shinyswitcher: error reading config string (%s):", key, error->message);
+      g_warning("shinyswitcher: error reading config string (%s): %s", key, error->message);
       g_error_free(error);
     }
 
-    g_warning("shinyswitcher: Failed to read config key: %s.  Setting  to 0x000000\n", key);
+    g_warning("shinyswitcher: Failed to read config key: %s.  Setting  to #000000\n", key);
 
-    awn_cairo_string_to_color("000000", color);
+    *color = desktop_agnostic_color_new_from_string("#000", NULL);
   }
 
 }
@@ -510,8 +516,7 @@ void set_background(Shiny_switcher *shinyswitcher)
       cairo_set_operator(cr, CAIRO_OPERATOR_CLEAR);
       cairo_paint(cr);
       cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
-      cairo_set_source_rgba(cr, shinyswitcher->desktop_colour.red, shinyswitcher->desktop_colour.green,
-                            shinyswitcher->desktop_colour.blue, shinyswitcher->desktop_colour.alpha);
+      awn_cairo_set_source_color(cr, shinyswitcher->desktop_colour);
       cairo_paint_with_alpha(cr, shinyswitcher->wallpaper_alpha_inactive);
       gtk_widget_destroy(widget);
       cairo_destroy(cr);
@@ -529,8 +534,7 @@ void set_background(Shiny_switcher *shinyswitcher)
       cairo_set_operator(cr, CAIRO_OPERATOR_CLEAR);
       cairo_paint(cr);
       cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
-      cairo_set_source_rgba(cr, shinyswitcher->desktop_colour.red, shinyswitcher->desktop_colour.green,
-                            shinyswitcher->desktop_colour.blue, shinyswitcher->desktop_colour.alpha);
+      awn_cairo_set_source_color(cr, shinyswitcher->desktop_colour);
       cairo_paint_with_alpha(cr, shinyswitcher->wallpaper_alpha_active);
       cairo_destroy(cr);
     }
@@ -785,8 +789,7 @@ void create_containers(Shiny_switcher *shinyswitcher)
   cairo_set_operator(cr, CAIRO_OPERATOR_CLEAR);
   cairo_paint(cr);
   cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
-  cairo_set_source_rgba(cr, shinyswitcher->applet_border_colour.red, shinyswitcher->applet_border_colour.green,
-                        shinyswitcher->applet_border_colour.blue, shinyswitcher->applet_border_colour.alpha);
+  awn_cairo_set_source_color(cr, shinyswitcher->applet_border_colour);
 
   cairo_paint(cr);
   cairo_destroy(cr);

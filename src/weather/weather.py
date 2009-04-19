@@ -148,7 +148,8 @@ class WeatherApplet:
         so that it doesn't look bad. It is automatically
         scaled but this is not good enough to look good.
         """
-        self.setIcon(self.cachedConditions['CODE'])
+        if self.cachedConditions is not None and 'CODE' in self.cachedConditions:
+            self.setIcon(self.cachedConditions['CODE'])
         return False
                 
     def createContextMenu(self):

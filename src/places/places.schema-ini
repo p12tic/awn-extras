@@ -1,24 +1,24 @@
 [DEFAULT/bg_normal_colour]
 type = string
-default = DDDDDDEE
+default = #DDDDDDEE
 description = The background color (RGBA) of the menu.
 description[en_CA] = The background colour (RGBA) of the menu.
 
 [DEFAULT/text_normal_colour]
 type = string
-default = 000000FF
+default = #000000FF
 description = The color (RGBA) of the text in the menu.
 description[en_CA] = The colour (RGBA) of the text in the menu.
 
 [DEFAULT/bg_hover_colour]
 type = string
-default = 0022DDF0
+default = #0022DDF0
 description = The background color (RGBA) of an entry in the menu when it is selected or the mouse hovers over it.
 description[en_CA] = The background colour (RGBA) of an entry in the menu when it is selected or the mouse hovers over it.
 
 [DEFAULT/text_hover_colour]
 type = string
-default = 000000FF
+default = #000000FF
 description = The color (RGBA) of the text when a place is selected or the mouse hovers over it.
 description[en_CA] = The colour (RGBA) of the text when a place is selected or the mouse hovers over it.
 
@@ -54,7 +54,7 @@ description = The width of the menu's border.
 
 [DEFAULT/border_colour]
 type = string
-default = 11111133
+default = #11111133
 description = The color (RGBA) of the menu's border, if the border width is greater than zero.
 description[en_CA] = The colour (RGBA) of the menu's border, if the border width is greater than zero.
 

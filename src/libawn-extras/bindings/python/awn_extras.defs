@@ -41,23 +41,6 @@
   )
 )
 
-(define-function dict_to_rgba_string
-  (c-name "awncolor_to_string")
-  (return-type "gchar*")
-  (parameters
-    '("AwnColor*" "color")
-  )
-)
-
-(define-function gdkcolor_to_dict
-  (c-name "gdkcolor_to_awncolor")
-  (return-type "AwnColor")
-  (parameters
-    '("GdkColor*" "color")
-    '("double" "alpha")
-  )
-)
-
 (define-function notify_message
   (c-name "notify_message")
   (return-type "gboolean")

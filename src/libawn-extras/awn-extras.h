@@ -23,7 +23,6 @@
 #ifndef _AWN_EXTRS_UTIL
 #define _AWN_EXTRS_UTIL
 
-#include <libawn/awn-cairo-utils.h>
 #include <libawn/awn-applet.h>
 #include <libawn/awn-applet-simple.h>
 #include <gtk/gtk.h>
@@ -42,14 +41,6 @@ surface_2_pixbuf
 */
 GdkPixbuf * surface_2_pixbuf( GdkPixbuf * pixbuf, cairo_surface_t * surface);
 GdkPixbuf * get_pixbuf_from_surface(cairo_surface_t * surface);
-
-/* 
-awncolor_to_string
-	Given an AwnColor argument returns an allocated string in the form of RRGGBBAA
-*/
-gchar * awncolor_to_string(AwnColor * colour);
-AwnColor gdkcolor_to_awncolor_with_alpha( GdkColor * gdk_color,double alpha);
-AwnColor gdkcolor_to_awncolor( GdkColor * gdk_colour);
 
 /*
 void notify_message

@@ -295,7 +295,7 @@ static void construct(Sysmem_plug_data **p)
   }
   else
   {
-    data->size_mult = 1.0;
+    data->size_mult = 1.4;
   }
 }
 

@@ -125,13 +125,13 @@ cpumeter_applet_new(AwnApplet *applet)
   width = height * 5 / 3;
 
 
-  register_Dashboard_plug(&cpumeter->dashboard, date_time_plug_lookup, width / 2, 21*2, 0x01, &cpumeter->date_time_plug);
-  register_Dashboard_plug(&cpumeter->dashboard, cpu_plug_lookup, 0, 2, 0x01, &cpumeter->cpu_plug);
-  register_Dashboard_plug(&cpumeter->dashboard, uptime_plug_lookup, width / 2, 21, 0x01, &cpumeter->uptime_plug);
-  register_Dashboard_plug(&cpumeter->dashboard, loadavg_plug_lookup, width / 2, 21*2.5, 0x01, &cpumeter->loadavg_plug);
-  register_Dashboard_plug(&cpumeter->dashboard, sysmem_plug_lookup, width / 2, 21*3.5, 0x01, &cpumeter->sysmem_plug);
-//    register_Dashboard_plug(&cpumeter->dashboard,awntop_plug_lookup,0,height/5,0x00,&cpumeter->awntop);
-  register_Dashboard_plug(&cpumeter->dashboard, awntop_cairo_plug_lookup, 40, height / 4.4, 0x01, &cpumeter->awntop_cairo_plug);
+  register_Dashboard_plug(&cpumeter->dashboard, date_time_plug_lookup,    width / 2, 21*2, 0x00, &cpumeter->date_time_plug);
+  register_Dashboard_plug(&cpumeter->dashboard, cpu_plug_lookup,          0,         2, 0x01, &cpumeter->cpu_plug);
+  register_Dashboard_plug(&cpumeter->dashboard, uptime_plug_lookup,       width / 2, 21, 0x00, &cpumeter->uptime_plug);
+  register_Dashboard_plug(&cpumeter->dashboard, loadavg_plug_lookup,      width / 2, 21*2.5, 0x00, &cpumeter->loadavg_plug);
+  register_Dashboard_plug(&cpumeter->dashboard, sysmem_plug_lookup,       width / 2, 2, 0x01, &cpumeter->sysmem_plug);
+//    register_Dashboard_plug(&cpumeter->dashboard,awntop_plug_lookup,    0,         height/5,0x00,&cpumeter->awntop);
+  register_Dashboard_plug(&cpumeter->dashboard, awntop_cairo_plug_lookup, 10,        width / 6, 0x01, &cpumeter->awntop_cairo_plug);
 
 
 

@@ -1011,9 +1011,16 @@ static void draw_main_window(Dashboard *dashboard)
 {
   if (!dashboard->ignore_gtk)
   {
+    static gboolean doneonce = FALSE;
     set_bg_rbg(&dashboard->mainwindow->style->base[0]);
     set_fg_rbg(&dashboard->mainwindow->style->fg[0]);
-
+    get_fg_rgba_colour(&dashboard->fg);
+    get_bg_rgba_colour(&dashboard->bg);
+    if (!doneonce)
+    {
+      _apply_dash_colours(NULL, NULL, dashboard);
+      doneonce = TRUE;
+    }
     /*FIXME - decide if forcing propagation of gtk colours is good.
     right no choosing no */
 //        g_slist_foreach(dashboard->Dashboard_plugs,_apply_c_ ,dashboard);

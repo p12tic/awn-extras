@@ -1294,7 +1294,7 @@ class Effects:
         Should be used when the user's attention is required.
 
         """
-        awn.awn_effect_start_ex(self.__effects, "attention", 0, 0, 1)
+        self.__effects.start_ex("attention", 0, 0, 1)
 
     def launch(self):
         """Launch the launch effect.
@@ -1302,7 +1302,7 @@ class Effects:
         Should be used when launching another program.
 
         """
-        awn.awn_effect_start_ex(self.__effects, "launching", 0, 0, 1)
+        self.__effects.start_ex("launching", 0, 0, 1)
 
 
 class Meta:

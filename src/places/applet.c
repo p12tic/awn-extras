@@ -675,8 +675,6 @@ GtkWidget * build_menu_widget(Places * places, Menu_item_color * mic,  char * te
   GdkPixmap * pixmap;
   GdkColormap* cmap;
   cairo_pattern_t *gradient = NULL;
-  GdkColor *mic_base_color;
-  DesktopAgnosticColor *mic_base_gradient;
   cairo_text_extents_t    extents;
   gint pixmap_width = max_width;
   gint pixmap_height = places->text_size * 1.6;
@@ -726,19 +724,13 @@ GtkWidget * build_menu_widget(Places * places, Menu_item_color * mic,  char * te
 
   gradient = cairo_pattern_create_linear(0, 0, 0, places->text_size * 1.6);
 
-  desktop_agnostic_color_get_color(mic->base, mic_base_color);
-  mic_base_gradient = desktop_agnostic_color_new(mic_base_color,
-                                                 (gushort)lround(mic->base->alpha * places->menu_item_gradient_factor));
-
-  awn_cairo_pattern_add_color_stop_color(gradient, 0, mic_base_gradient);
+  awn_cairo_pattern_add_color_stop_color_with_alpha_multiplier(gradient, 0, mic->base, places->menu_item_gradient_factor);
 
   awn_cairo_pattern_add_color_stop_color(gradient, 0.2, mic->base);
 
   awn_cairo_pattern_add_color_stop_color(gradient, 0.8, mic->base);
 
-  awn_cairo_pattern_add_color_stop_color(gradient, 1, mic_base_gradient);
-
-  g_object_unref (mic_base_gradient);
+  awn_cairo_pattern_add_color_stop_color_with_alpha_multiplier(gradient, 1, mic->base, places->menu_item_gradient_factor);
 
   cairo_set_source(cr, gradient);
 

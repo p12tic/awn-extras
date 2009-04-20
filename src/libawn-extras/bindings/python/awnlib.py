@@ -574,7 +574,7 @@ class Errors:
         args = {"message": "", "url": None}
         if isinstance(error, Exception):
             error_type = type(error).__name__
-            error = error.message
+            error = str(error)
             if traceback is not None:
                 print "\n".join(["-"*80, traceback, "-"*80])
                 args["message"] = "Visit Launchpad and paste the traceback" \

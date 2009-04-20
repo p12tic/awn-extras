@@ -150,15 +150,15 @@ class Preferences:
     self.client.set_int(awn.CONFIG_DEFAULT_GROUP, tuple[0], tuple[1])
 
   def stringToColorButton(self, widget, string):
-    if string == None or len(string) != 8: return
-    color = "#" + string[:6]
+    if string == None or len(string) != 9: return
+    color = string[:7]
     widget.set_color(gtk.gdk.color_parse(color))
-    widget.set_alpha(int(string[6:], 16) * 256)
+    widget.set_alpha(int(string[7:], 16) * 256)
 
   def colorButtonToString(self, widget):
     c = widget.get_color()
-    c = map(lambda x: int(x/256), [c.red, c.green, c.blue, widget.get_alpha()])
-    return "%02X%02X%02X%02X" % (c[0], c[1], c[2], c[3])
+    return '#' +  ''.join(['%02X' % int(x / 256)
+                           for x in [c.red, c.green, c.blue, widget.get_alpha()])
 
   # callbacks from the glade file
   def appletSizeScale_value_changed_cb(self, widget):

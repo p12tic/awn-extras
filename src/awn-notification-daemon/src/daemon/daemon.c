@@ -1612,12 +1612,12 @@ static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, 
     if (G_daemon_config.show_status)
     {
 //      gdk_pixbuf_fill(G_daemon_config.awn_icon, 0xdddddd33);
-      awn_applet_simple_set_awn_icon_state(AWN_APPLET_SIMPLE(G_daemon_config.awn_app),"On");
+      awn_applet_simple_set_icon_state(AWN_APPLET_SIMPLE(G_daemon_config.awn_app),"On");
     }
     else
     {
 //      gdk_pixbuf_fill(G_daemon_config.awn_icon, 0x00000033);
-      awn_applet_simple_set_awn_icon_state(AWN_APPLET_SIMPLE(G_daemon_config.awn_app),"Off");      
+      awn_applet_simple_set_icon_state(AWN_APPLET_SIMPLE(G_daemon_config.awn_app),"Off");      
     }
 
 //    awn_applet_simple_set_icon(AWN_APPLET_SIMPLE(G_daemon_config.awn_app), G_daemon_config.awn_icon);

@@ -43,6 +43,8 @@ data_dirs = os.environ["XDG_DATA_DIRS"] if "XDG_DATA_DIRS" in os.environ else "/
 # Describes the pattern used to try to decode URLs
 url_pattern = re.compile("^[a-z]+://(?:[^@]+@)?([^/]+)/(.*)$")
 
+logout_command = "gnome-session-save --kill --silent"
+
 # TODO handle updates in removed/new and included/excluded apps and bookmarks
 # TODO add devices to places
 
@@ -83,6 +85,14 @@ class YamaApplet:
         # TODO test wheter we can lock the screen and also try xscreensaver-command
         lock_item = self.append_menu_item(self.menu, "Lock Screen", "lock", "Protect your computer from unauthorized use")
         lock_item.connect("activate", self.start_subprocess_cb, "gnome-screensaver-command --lock", True)
+
+        user_name = commands.getoutput("/usr/bin/whoami")
+        logout_item = self.append_menu_item(self.menu, "Log Out %s..." % user_name, "application-exit", "Log out %s of this session to log in as a different user" % user_name)
+        logout_dialog = self.LogoutDialog(self.applet, lambda: self.start_subprocess_cb(None, logout_command, True))
+        def logout_cb(widget):
+            logout_dialog.show_all()
+            logout_dialog.deiconify()
+        logout_item.connect("activate", logout_cb)
 
         self.menu.show_all()
 
@@ -210,7 +220,7 @@ class YamaApplet:
 
         chooser_menu.append(gtk.SeparatorMenuItem())
         item = self.append_menu_item(chooser_menu, "Clear Recent Documents", "gtk-clear", "Clear all items from the recent documents list")
-        clear_dialog = self.WarningDialog(self.applet, recent_manager.purge_items)
+        clear_dialog = self.ClearRecentDocumentsDialog(self.applet, recent_manager.purge_items)
         def purge_items_cb(widget):
             clear_dialog.show_all()
             clear_dialog.deiconify()
@@ -303,10 +313,10 @@ class YamaApplet:
                     if os.path.isfile(path):
                         return gtk.gdk.pixbuf_new_from_file_at_size(path, 24, 24)
 
-    class WarningDialog(awnlib.Dialogs.BaseDialog, gtk.MessageDialog):
+    class ClearRecentDocumentsDialog(awnlib.Dialogs.BaseDialog, gtk.MessageDialog):
 
         def __init__(self, parent, clear_cb):
-            gtk.MessageDialog.__init__(self, type=gtk.MESSAGE_WARNING, message_format="Clear the Recent Documents list?")
+            gtk.MessageDialog.__init__(self, type=gtk.MESSAGE_WARNING, message_format="Clear the Recent Documents list?", buttons=gtk.BUTTONS_CANCEL)
             awnlib.Dialogs.BaseDialog.__init__(self, parent)
 
             self.set_skip_taskbar_hint(False)
@@ -316,20 +326,29 @@ class YamaApplet:
 * All items from the Places > Recent Documents menu item.\n\
 * All items from the recent documents list in all applications.")
 
-            self.hbox = gtk.HBox(spacing=6)
-            self.action_area.add(self.hbox)
-
-            cancel_button = gtk.Button(stock=gtk.STOCK_CANCEL)
-            cancel_button.connect("clicked", lambda w: self.response(gtk.RESPONSE_CANCEL))
-            self.hbox.add(cancel_button)
-
             clear_button = gtk.Button("C_lear")
             clear_button.set_image(gtk.image_new_from_stock(gtk.STOCK_CLEAR, gtk.ICON_SIZE_MENU))
             def clear_and_hide(widget):
                 self.response(gtk.RESPONSE_CANCEL)
                 clear_cb()
             clear_button.connect("clicked", clear_and_hide)
-            self.hbox.add(clear_button)
+            self.action_area.add(clear_button)
+
+    class LogoutDialog(awnlib.Dialogs.BaseDialog, gtk.MessageDialog):
+
+        def __init__(self, parent, clear_cb):
+            gtk.MessageDialog.__init__(self, type=gtk.MESSAGE_QUESTION, message_format="Log out of this system now?", buttons=gtk.BUTTONS_CANCEL)
+            awnlib.Dialogs.BaseDialog.__init__(self, parent)
+
+            self.set_image(gtk.image_new_from_stock(gtk.STOCK_QUIT, gtk.ICON_SIZE_DIALOG))
+            user_name = commands.getoutput("/usr/bin/whoami")
+            real_name = commands.getoutput("grep %s /etc/passwd" % user_name).split(":")[4].rstrip(",")
+            name = "\"%s\"" % real_name if len(real_name) > 0 else user_name
+            self.format_secondary_markup("You are currently logged in as %s.\nDo you want to log out?" % name)
+
+            logout_button = gtk.Button("_Log Out")
+            logout_button.connect("clicked", lambda w: clear_cb())
+            self.action_area.add(logout_button)
 
 
 if __name__ == "__main__":

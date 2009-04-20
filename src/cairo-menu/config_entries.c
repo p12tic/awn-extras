@@ -66,10 +66,10 @@ void read_config(void)
 
   if (!svalue)
   {
-    gconf_client_set_string(gconf_client , GCONF_NORMAL_BG, svalue = g_strdup("DDDDDDEE"), NULL);
+    gconf_client_set_string(gconf_client , GCONF_NORMAL_BG, svalue = g_strdup("#DDDDDDEE"), NULL);
   }
 
-  awn_cairo_string_to_color(svalue, &G_cairo_menu_conf.normal.bg);
+  G_cairo_menu_conf.normal.bg = desktop_agnostic_color_new_from_string(svalue, NULL);
 
   g_free(svalue);
 
@@ -77,10 +77,10 @@ void read_config(void)
 
   if (!svalue)
   {
-    gconf_client_set_string(gconf_client , GCONF_NORMAL_FG, svalue = g_strdup("000000FF"), NULL);
+    gconf_client_set_string(gconf_client , GCONF_NORMAL_FG, svalue = g_strdup("#000000FF"), NULL);
   }
 
-  awn_cairo_string_to_color(svalue, &G_cairo_menu_conf.normal.fg);
+  G_cairo_menu_conf.normal.fg = desktop_agnostic_color_new_from_string(svalue, NULL);
 
   g_free(svalue);
 
@@ -88,10 +88,10 @@ void read_config(void)
 
   if (!svalue)
   {
-    gconf_client_set_string(gconf_client , GCONF_HOVER_BG, svalue = g_strdup("0022DDf0"), NULL);
+    gconf_client_set_string(gconf_client , GCONF_HOVER_BG, svalue = g_strdup("#0022DDf0"), NULL);
   }
 
-  awn_cairo_string_to_color(svalue, &G_cairo_menu_conf.hover.bg);
+  G_cairo_menu_conf.hover.bg = desktop_agnostic_color_new_from_string(svalue, NULL);
 
   g_free(svalue);
 
@@ -99,10 +99,10 @@ void read_config(void)
 
   if (!svalue)
   {
-    gconf_client_set_string(gconf_client , GCONF_HOVER_FG, svalue = g_strdup("000000FF"), NULL);
+    gconf_client_set_string(gconf_client , GCONF_HOVER_FG, svalue = g_strdup("#000000FF"), NULL);
   }
 
-  awn_cairo_string_to_color(svalue, &G_cairo_menu_conf.hover.fg);
+  G_cairo_menu_conf.hover.fg = desktop_agnostic_color_new_from_string(svalue, NULL);
 
   g_free(svalue);
 
@@ -365,10 +365,10 @@ void read_config(void)
 
   if (!svalue)
   {
-    gconf_client_set_string(gconf_client , GCONF_BORDER_COLOUR, svalue = g_strdup("11111133"), NULL);
+    gconf_client_set_string(gconf_client , GCONF_BORDER_COLOUR, svalue = g_strdup("#11111133"), NULL);
   }
 
-  awn_cairo_string_to_color(svalue, &G_cairo_menu_conf.border_colour);
+  G_cairo_menu_conf.border_colour = desktop_agnostic_color_new_from_string(svalue, NULL);
 
   g_free(svalue);
 
@@ -389,40 +389,18 @@ void read_config(void)
 
   if (G_cairo_menu_conf.honour_gtk)
   {
-    GdkColor d;
     GtkWidget *top_win = GTK_WIDGET(G_applet);
 
-    d = top_win->style->bg[GTK_STATE_NORMAL];
-    G_cairo_menu_conf.normal.bg.red = d.red / 65535.0;
-    G_cairo_menu_conf.normal.bg.green = d.green / 65535.0;
-    G_cairo_menu_conf.normal.bg.blue = d.blue / 65535.0;
-    G_cairo_menu_conf.normal.bg.alpha = 0.9;
+    G_cairo_menu_conf.normal.bg = desktop_agnostic_color_new(&top_win->style->bg[GTK_STATE_NORMAL], 0.9);
 
-    d = top_win->style->fg[GTK_STATE_ACTIVE];
-    G_cairo_menu_conf.normal.fg.red = d.red / 65535.0;
-    G_cairo_menu_conf.normal.fg.green = d.green / 65535.0;
-    G_cairo_menu_conf.normal.fg.blue = d.blue / 65535.0;
-    G_cairo_menu_conf.normal.fg.alpha = 0.9;
+    G_cairo_menu_conf.normal.fg = desktop_agnostic_color_new(&top_win->style->fg[GTK_STATE_ACTIVE], 0.9);
 
 
-    d = top_win->style->bg[GTK_STATE_ACTIVE];
-    G_cairo_menu_conf.hover.bg.red = d.red / 65535.0;
-    G_cairo_menu_conf.hover.bg.green = d.green / 65535.0;
-    G_cairo_menu_conf.hover.bg.blue = d.blue / 65535.0;
-    G_cairo_menu_conf.hover.bg.alpha = 0.9;
+    G_cairo_menu_conf.hover.bg = desktop_agnostic_color_new(&top_win->style->bg[GTK_STATE_ACTIVE], 0.9);
 
-    d = top_win->style->fg[GTK_STATE_ACTIVE];
-    G_cairo_menu_conf.hover.fg.red = d.red / 65535.0;
-    G_cairo_menu_conf.hover.fg.green = d.green / 65535.0;
-    G_cairo_menu_conf.hover.fg.blue = d.blue / 65535.0;
-    G_cairo_menu_conf.hover.fg.alpha = 0.9;
+    G_cairo_menu_conf.hover.fg = desktop_agnostic_color_new(&top_win->style->fg[GTK_STATE_ACTIVE], 0.9);
 
-
-    d = top_win->style->text_aa[0];
-    G_cairo_menu_conf.border_colour.red = d.red / 65535.0;
-    G_cairo_menu_conf.border_colour.green = d.green / 65535.0;
-    G_cairo_menu_conf.border_colour.blue = d.blue / 65535.0;
-    G_cairo_menu_conf.border_colour.alpha = 0.4;
+    G_cairo_menu_conf.border_colour = desktop_agnostic_color_new(&top_win->style->text_aa[0], 0.4);
 
     G_cairo_menu_conf.menu_item_gradient_factor = 1.0;
   }
@@ -440,37 +418,25 @@ void read_config(void)
 
 */
 
-char * awncolor_to_string(AwnColor * colour)
-{
-
-  return g_strdup_printf("%02x%02x%02x%02x",
-                         (unsigned int) round((colour->red*255)),
-                         (unsigned int) round((colour->green*255)),
-                         (unsigned int) round((colour->blue*255)),
-                         (unsigned int) round((colour->alpha*255))
-                        );
-}
-
-
 static void _save_config(void)
 {
   gchar * svalue;
 
   gconf_client = gconf_client_get_default();
 
-  svalue = awncolor_to_string(&G_cairo_menu_conf.normal.bg);
+  svalue = desktop_agnostic_color_to_string(G_cairo_menu_conf.normal.bg);
   gconf_client_set_string(gconf_client , GCONF_NORMAL_BG, svalue, NULL);
   g_free(svalue);
 
-  svalue = awncolor_to_string(&G_cairo_menu_conf.normal.fg);
+  svalue = desktop_agnostic_color_to_string(G_cairo_menu_conf.normal.fg);
   gconf_client_set_string(gconf_client , GCONF_NORMAL_FG, svalue, NULL);
   g_free(svalue);
 
-  svalue = awncolor_to_string(&G_cairo_menu_conf.hover.bg);
+  svalue = desktop_agnostic_color_to_string(G_cairo_menu_conf.hover.bg);
   gconf_client_set_string(gconf_client , GCONF_HOVER_BG, svalue, NULL);
   g_free(svalue);
 
-  svalue = awncolor_to_string(&G_cairo_menu_conf.hover.fg);
+  svalue = desktop_agnostic_color_to_string(G_cairo_menu_conf.hover.fg);
   gconf_client_set_string(gconf_client, GCONF_HOVER_FG, svalue, NULL);
   g_free(svalue);
 
@@ -506,7 +472,7 @@ static void _save_config(void)
 
   gconf_client_set_int(gconf_client, GCONF_BORDER_WIDTH, G_cairo_menu_conf.border_width, NULL);
 
-  svalue = awncolor_to_string(&G_cairo_menu_conf.border_colour);
+  svalue = desktop_agnostic_color_to_string(G_cairo_menu_conf.border_colour);
   gconf_client_set_string(gconf_client , GCONF_BORDER_COLOUR, svalue, NULL);
   g_free(svalue);
 
@@ -582,14 +548,12 @@ GtkWidget *gtk_off_table;
 GtkWidget * hover_ex;
 GtkWidget * normal_ex;
 
-void _mod_colour(GtkColorButton *widget, AwnColor * user_data)
+void _mod_colour(GtkColorButton *widget, DesktopAgnosticColor * user_data)
 {
-  GdkColor colr;
-  gtk_color_button_get_color(widget, &colr);
-  user_data->red = colr.red / 65535.0;
-  user_data->green = colr.green / 65535.0;
-  user_data->blue = colr.blue / 65535.0;
-  user_data->alpha = gtk_color_button_get_alpha(widget) / 65535.0;
+  GdkColor *color;
+  gtk_color_button_get_color(widget, color);
+  desktop_agnostic_color_set_color(user_data, color);
+  user_data->alpha = gtk_color_button_get_alpha(widget);
   gtk_widget_destroy(hover_ex);
   gtk_widget_destroy(normal_ex);
   hover_ex = build_menu_widget(&G_cairo_menu_conf.hover, "Hover", NULL, NULL, 200);
@@ -660,53 +624,43 @@ void show_prefs(void)
   gtk_off_table = gtk_table_new(2, 4, FALSE);
 
   GtkWidget *normal_label = gtk_label_new("Normal");
-  GdkColor  colr;
+  GdkColor  *color;
 
-  colr.red = G_cairo_menu_conf.normal.bg.red * 65535;
-  colr.green = G_cairo_menu_conf.normal.bg.green * 65535;
-  colr.blue = G_cairo_menu_conf.normal.bg.blue * 65535;
-  GtkWidget *normal_bg = gtk_color_button_new_with_color(&colr);
+  desktop_agnostic_color_get_color (G_cairo_menu_conf.normal.bg, color);
+  GtkWidget *normal_bg = gtk_color_button_new_with_color(color);
   gtk_color_button_set_use_alpha(normal_bg, TRUE);
-  gtk_color_button_set_alpha(normal_bg, G_cairo_menu_conf.normal.bg.alpha*65535);
+  gtk_color_button_set_alpha(normal_bg, G_cairo_menu_conf.normal.bg->alpha);
   g_signal_connect(G_OBJECT(normal_bg), "color-set", G_CALLBACK(_mod_colour), &G_cairo_menu_conf.normal.bg);
 
-  colr.red = G_cairo_menu_conf.normal.fg.red * 65535;
-  colr.green = G_cairo_menu_conf.normal.fg.green * 65535;
-  colr.blue = G_cairo_menu_conf.normal.fg.blue * 65535;
-  GtkWidget *normal_fg = gtk_color_button_new_with_color(&colr);
+  desktop_agnostic_color_get_color (G_cairo_menu_conf.normal.fg, color);
+  GtkWidget *normal_fg = gtk_color_button_new_with_color(color);
   gtk_color_button_set_use_alpha(normal_fg, TRUE);
-  gtk_color_button_set_alpha(normal_fg, G_cairo_menu_conf.normal.fg.alpha*65535);
+  gtk_color_button_set_alpha(normal_fg, G_cairo_menu_conf.normal.fg->alpha);
   g_signal_connect(G_OBJECT(normal_fg), "color-set", G_CALLBACK(_mod_colour), &G_cairo_menu_conf.normal.fg);
 
   GtkWidget *hover_label = gtk_label_new("Hover");
 // GtkWidget *hover_bg=gtk_button_new_with_label("Background");
 
-  colr.red = G_cairo_menu_conf.hover.bg.red * 65535;
-  colr.green = G_cairo_menu_conf.hover.bg.green * 65535;
-  colr.blue = G_cairo_menu_conf.hover.bg.blue * 65535;
-  GtkWidget *hover_bg = gtk_color_button_new_with_color(&colr);
+  desktop_agnostic_color_get_color (G_cairo_menu_conf.hover.bg, color);
+  GtkWidget *hover_bg = gtk_color_button_new_with_color(color);
   gtk_color_button_set_use_alpha(hover_bg, TRUE);
-  gtk_color_button_set_alpha(hover_bg, G_cairo_menu_conf.hover.bg.alpha*65535);
+  gtk_color_button_set_alpha(hover_bg, G_cairo_menu_conf.hover.bg->alpha);
   g_signal_connect(G_OBJECT(hover_bg), "color-set", G_CALLBACK(_mod_colour), &G_cairo_menu_conf.hover.bg);
 
 // GtkWidget *hover_fg=gtk_button_new_with_label("Foreground");
-  colr.red = G_cairo_menu_conf.hover.fg.red * 65535;
-  colr.green = G_cairo_menu_conf.hover.fg.green * 65535;
-  colr.blue = G_cairo_menu_conf.hover.fg.blue * 65535;
-  GtkWidget *hover_fg = gtk_color_button_new_with_color(&colr);
+  desktop_agnostic_color_get_color (G_cairo_menu_conf.hover.fg, color);
+  GtkWidget *hover_fg = gtk_color_button_new_with_color(color);
   gtk_color_button_set_use_alpha(hover_fg, TRUE);
-  gtk_color_button_set_alpha(hover_fg, G_cairo_menu_conf.hover.fg.alpha*65535);
+  gtk_color_button_set_alpha(hover_fg, G_cairo_menu_conf.hover.fg->alpha);
   g_signal_connect(G_OBJECT(hover_fg), "color-set", G_CALLBACK(_mod_colour), &G_cairo_menu_conf.hover.fg);
 
 
   GtkWidget *border_label = gtk_label_new("Border");
 
-  colr.red = G_cairo_menu_conf.border_colour.red * 65535;
-  colr.green = G_cairo_menu_conf.border_colour.green * 65535;
-  colr.blue = G_cairo_menu_conf.border_colour.blue * 65535;
-  GtkWidget *border_colour = gtk_color_button_new_with_color(&colr);
+  desktop_agnostic_color_get_color (G_cairo_menu_conf.border_colour, color);
+  GtkWidget *border_colour = gtk_color_button_new_with_color(&color);
   gtk_color_button_set_use_alpha(border_colour, TRUE);
-  gtk_color_button_set_alpha(border_colour, G_cairo_menu_conf.border_colour.alpha*65535);
+  gtk_color_button_set_alpha(border_colour, G_cairo_menu_conf.border_colour->alpha);
   g_signal_connect(G_OBJECT(border_colour), "color-set", G_CALLBACK(_mod_colour), &G_cairo_menu_conf.border_colour);
 
 

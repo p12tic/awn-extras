@@ -22,6 +22,7 @@
 #include <libawn/awn-cairo-utils.h>
 #include <libsexy/sexy-icon-entry.h>
 #include <string.h>
+#include <math.h>
 
 #include "menu.h"
 #include "menu_list_item.h"
@@ -113,17 +114,13 @@ GtkWidget * build_menu_widget(Menu_item_color * mic, char * text, GdkPixbuf *pbu
   gradient = cairo_pattern_create_linear(0, 0, 0,
                                          G_cairo_menu_conf.text_size * 1.6);
 
-  cairo_pattern_add_color_stop_rgba(gradient, 0,  mic->bg.red, mic->bg.green, mic->bg.blue,
-                                    mic->bg.alpha*G_cairo_menu_conf.menu_item_gradient_factor);
+  awn_cairo_pattern_add_color_stop_color_with_alpha_multiplier(gradient, 0,  mic->bg, G_cairo_menu_conf.menu_item_gradient_factor);
 
-  cairo_pattern_add_color_stop_rgba(gradient, 0.2, mic->bg.red, mic->bg.green, mic->bg.blue,
-                                    mic->bg.alpha);
+  awn_cairo_pattern_add_color_stop_color(gradient, 0.2, mic->bg);
 
-  cairo_pattern_add_color_stop_rgba(gradient, 0.8, mic->bg.red, mic->bg.green, mic->bg.blue,
-                                    mic->bg.alpha);
+  awn_cairo_pattern_add_color_stop_color(gradient, 0.8, mic->bg);
 
-  cairo_pattern_add_color_stop_rgba(gradient, 1, mic->bg.red, mic->bg.green, mic->bg.blue,
-                                    mic->bg.alpha*G_cairo_menu_conf.menu_item_gradient_factor);
+  awn_cairo_pattern_add_color_stop_color_with_alpha_multiplier(gradient, 1, mic->bg, G_cairo_menu_conf.menu_item_gradient_factor);
 
   cairo_set_source(cr, gradient);
 
@@ -155,10 +152,7 @@ GtkWidget * build_menu_widget(Menu_item_color * mic, char * text, GdkPixbuf *pbu
 
   if (G_cairo_menu_conf.border_width > 0)
   {
-    cairo_set_source_rgba(cr, G_cairo_menu_conf.border_colour.red,
-                          G_cairo_menu_conf.border_colour.green,
-                          G_cairo_menu_conf.border_colour.blue,
-                          G_cairo_menu_conf.border_colour.alpha);
+    awn_cairo_set_source_color(cr, G_cairo_menu_conf.border_colour);
     cairo_set_line_width(cr, G_cairo_menu_conf.border_width);
     cairo_move_to(cr, G_cairo_menu_conf.border_width / 2, 0);
     cairo_line_to(cr, G_cairo_menu_conf.border_width / 2, pixmap_height);
@@ -168,7 +162,7 @@ GtkWidget * build_menu_widget(Menu_item_color * mic, char * text, GdkPixbuf *pbu
     cairo_stroke(cr);
   }
 
-  cairo_set_source_rgba(cr, mic->fg.red, mic->fg.green, mic->fg.blue, mic->fg.alpha);
+  awn_cairo_set_source_color(cr, mic->fg);
 
   cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
   cairo_move_to(cr, G_cairo_menu_conf.text_size*1.4 , G_cairo_menu_conf.text_size*1.1);
@@ -245,17 +239,11 @@ void render_blank(Menu_list_item *entry, int max_width)
 
   if (G_cairo_menu_conf.border_width > 0)
   {
-    cairo_set_source_rgba(cr, G_cairo_menu_conf.border_colour.red,
-                          G_cairo_menu_conf.border_colour.green,
-                          G_cairo_menu_conf.border_colour.blue,
-                          G_cairo_menu_conf.border_colour.alpha);
+    awn_cairo_set_source_color(cr, G_cairo_menu_conf.border_colour);
   }
   else
   {
-    cairo_set_source_rgba(cr, G_cairo_menu_conf.normal.bg.red,
-                          G_cairo_menu_conf.normal.bg.green,
-                          G_cairo_menu_conf.normal.bg.blue,
-                          G_cairo_menu_conf.normal.bg.alpha);
+    awn_cairo_set_source_color(cr, G_cairo_menu_conf.normal.bg);
   }
 
   cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
@@ -288,10 +276,7 @@ void render_separator(Menu_list_item *entry, int max_width)
 
   cr = gdk_cairo_create(pixmap);
 
-  cairo_set_source_rgba(cr, G_cairo_menu_conf.border_colour.red,
-                        G_cairo_menu_conf.border_colour.green,
-                        G_cairo_menu_conf.border_colour.blue,
-                        G_cairo_menu_conf.border_colour.alpha);
+  awn_cairo_set_source_color(cr, G_cairo_menu_conf.border_colour);
 
   cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
 

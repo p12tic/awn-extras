@@ -390,17 +390,18 @@ void read_config(void)
   if (G_cairo_menu_conf.honour_gtk)
   {
     GtkWidget *top_win = GTK_WIDGET(G_applet);
+    gushort alpha = (gushort)(0.9 * G_MAXUSHORT);
 
-    G_cairo_menu_conf.normal.bg = desktop_agnostic_color_new(&top_win->style->bg[GTK_STATE_NORMAL], 0.9);
+    G_cairo_menu_conf.normal.bg = desktop_agnostic_color_new(&top_win->style->bg[GTK_STATE_NORMAL], alpha);
 
-    G_cairo_menu_conf.normal.fg = desktop_agnostic_color_new(&top_win->style->fg[GTK_STATE_ACTIVE], 0.9);
+    G_cairo_menu_conf.normal.fg = desktop_agnostic_color_new(&top_win->style->fg[GTK_STATE_ACTIVE], alpha);
 
 
-    G_cairo_menu_conf.hover.bg = desktop_agnostic_color_new(&top_win->style->bg[GTK_STATE_ACTIVE], 0.9);
+    G_cairo_menu_conf.hover.bg = desktop_agnostic_color_new(&top_win->style->bg[GTK_STATE_ACTIVE], alpha);
 
-    G_cairo_menu_conf.hover.fg = desktop_agnostic_color_new(&top_win->style->fg[GTK_STATE_ACTIVE], 0.9);
+    G_cairo_menu_conf.hover.fg = desktop_agnostic_color_new(&top_win->style->fg[GTK_STATE_ACTIVE], alpha);
 
-    G_cairo_menu_conf.border_colour = desktop_agnostic_color_new(&top_win->style->text_aa[0], 0.4);
+    G_cairo_menu_conf.border_colour = desktop_agnostic_color_new(&top_win->style->text_aa[0], (gushort)(0.4 * G_MAXUSHORT));
 
     G_cairo_menu_conf.menu_item_gradient_factor = 1.0;
   }

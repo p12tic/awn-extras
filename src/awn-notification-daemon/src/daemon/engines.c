@@ -143,7 +143,7 @@ GtkWidget * build_dialog(WindowData *windata, long flags, DesktopAgnosticColor *
 #define DEFAULT_ARROW_OFFSET  (SPACER_LEFT + 2)
 #define DEFAULT_ARROW_HEIGHT  14
 #define DEFAULT_ARROW_WIDTH   28
-#define BACKGROUND_OPACITY    0.92
+#define BACKGROUND_OPACITY    (gushort)(0.92 * G_MAXUSHORT)
 #define BOTTOM_GRADIENT_HEIGHT 30
 
 #if GTK_CHECK_VERSION(2, 8, 0)
@@ -778,7 +778,7 @@ create_notification(UrlClickedCb url_clicked)
     GtkStyle *style = gtk_widget_get_style(windata->win);
 
     G_daemon_config.awn_bg = desktop_agnostic_color_new(&style->bg[GTK_STATE_NORMAL], BACKGROUND_OPACITY);
-    G_daemon_config.awn_border = desktop_agnostic_color_new(&style->fg[GTK_STATE_ACTIVE], 1.0);
+    G_daemon_config.awn_border = desktop_agnostic_color_new(&style->fg[GTK_STATE_ACTIVE], G_MAXUSHORT);
   }
 
   return GTK_WINDOW(win);

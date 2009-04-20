@@ -1372,10 +1372,10 @@ static void read_config(void)
 
   if (!svalue)
   {
-    gconf_client_set_string(gconf_client , GCONF_KEY_AWN_BG, svalue = g_strdup("0a0a0abb"), NULL);
+    gconf_client_set_string(gconf_client , GCONF_KEY_AWN_BG, svalue = g_strdup("#0a0a0abb"), NULL);
   }
 
-  awn_cairo_string_to_color(svalue, &G_daemon_config.awn_bg);
+  G_daemon_config.awn_bg = desktop_agnostic_color_new_from_string(svalue, NULL);
 
   g_free(svalue);
 
@@ -1383,10 +1383,10 @@ static void read_config(void)
 
   if (!svalue)
   {
-    gconf_client_set_string(gconf_client , GCONF_KEY_AWN_TEXT_COLOUR, svalue = g_strdup("eeeeeebb"), NULL);
+    gconf_client_set_string(gconf_client , GCONF_KEY_AWN_TEXT_COLOUR, svalue = g_strdup("#eeeeeebb"), NULL);
   }
 
-  awn_cairo_string_to_color(svalue, &G_daemon_config.awn_text);
+  G_daemon_config.awn_text = desktop_agnostic_color_new_from_string(svalue, NULL);
 
   G_daemon_config.awn_text_str = g_strdup(svalue);
 
@@ -1399,10 +1399,10 @@ static void read_config(void)
 
   if (!svalue)
   {
-    gconf_client_set_string(gconf_client , GCONF_KEY_AWN_BORDER, svalue = g_strdup("ffffffaa"), NULL);
+    gconf_client_set_string(gconf_client , GCONF_KEY_AWN_BORDER, svalue = g_strdup("#ffffffaa"), NULL);
   }
 
-  awn_cairo_string_to_color(svalue, &G_daemon_config.awn_border);
+  G_daemon_config.awn_border = desktop_agnostic_color_new_from_string(svalue, NULL);
 
   g_free(svalue);
 
@@ -1539,7 +1539,7 @@ config_changed(GConfClient *client, guint cnxn_id,
 
   if (svalue)
   {
-    awn_cairo_string_to_color(svalue, &G_daemon_config.awn_bg);
+    G_daemon_config.awn_bg = desktop_agnostic_color_new_from_string(svalue, NULL);
     g_free(svalue);
   }
 
@@ -1547,7 +1547,7 @@ config_changed(GConfClient *client, guint cnxn_id,
 
   if (svalue)
   {
-    awn_cairo_string_to_color(svalue, &G_daemon_config.awn_text);
+    G_daemon_config.awn_text = desktop_agnostic_color_new_from_string(svalue, NULL);
     G_daemon_config.awn_text_str = g_strdup(svalue);
 
     if (strlen(G_daemon_config.awn_text_str) > 6)
@@ -1560,7 +1560,7 @@ config_changed(GConfClient *client, guint cnxn_id,
 
   if (svalue)
   {
-    awn_cairo_string_to_color(svalue, &G_daemon_config.awn_border);
+    G_daemon_config.awn_border = desktop_agnostic_color_new_from_string(svalue, NULL);
     g_free(svalue);
   }
 

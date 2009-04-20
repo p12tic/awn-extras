@@ -146,9 +146,9 @@ typedef struct
 {
   AwnApplet *awn_app;  //NULL
   int awn_app_height;  //0
-  AwnColor awn_border;
-  AwnColor awn_bg;
-  AwnColor awn_text;
+  DesktopAgnosticColor *awn_border;
+  DesktopAgnosticColor *awn_bg;
+  DesktopAgnosticColor *awn_text;
   gchar * awn_text_str;
   gboolean awn_client_pos;
   gboolean awn_honour_gtk;

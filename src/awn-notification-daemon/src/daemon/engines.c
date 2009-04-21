@@ -123,7 +123,7 @@ typedef struct
 } WindowData;
 
 
-GtkWidget * build_dialog(WindowData *windata, long flags, AwnColor *base, AwnColor * border);
+GtkWidget * build_dialog(WindowData *windata, long flags, DesktopAgnosticColor *base, DesktopAgnosticColor * border);
 //#define ENABLE_GRADIENT_LOOK
 
 #ifdef ENABLE_GRADIENT_LOOK
@@ -143,7 +143,7 @@ GtkWidget * build_dialog(WindowData *windata, long flags, AwnColor *base, AwnCol
 #define DEFAULT_ARROW_OFFSET  (SPACER_LEFT + 2)
 #define DEFAULT_ARROW_HEIGHT  14
 #define DEFAULT_ARROW_WIDTH   28
-#define BACKGROUND_OPACITY    0.92
+#define BACKGROUND_OPACITY    (gushort)(0.92 * G_MAXUSHORT)
 #define BOTTOM_GRADIENT_HEIGHT 30
 
 #if GTK_CHECK_VERSION(2, 8, 0)
@@ -167,11 +167,7 @@ fill_background(GtkWidget *widget, WindowData *windata, cairo_t *cr)
   GtkStyle *style = gtk_widget_get_style(widget);
   GdkColor *background_color = &style->bg[GTK_STATE_NORMAL];
 
-  cairo_set_source_rgba(cr,
-                        G_daemon_config.awn_bg.red,
-                        G_daemon_config.awn_bg.green,
-                        G_daemon_config.awn_bg.blue,
-                        G_daemon_config.awn_bg.alpha*windata->gradient_factor);
+  awn_cairo_set_source_color_with_alpha_multiplier(cr, G_daemon_config.awn_bg, windata->gradient_factor);
   cairo_rectangle(cr, 0, 0,
                   widget->allocation.width,
                   widget->allocation.height);
@@ -458,7 +454,7 @@ create_border_with_arrow(GtkWidget *nw, WindowData *windata)
 static void
 draw_border(GtkWidget *widget, WindowData *windata, cairo_t *cr)
 {
-  cairo_set_source_rgba(cr, G_daemon_config.awn_border.red, G_daemon_config.awn_border.green, G_daemon_config.awn_border.blue, G_daemon_config.awn_border.alpha);
+  awn_cairo_set_source_color(cr, G_daemon_config.awn_border);
   cairo_set_line_width(cr, 1.0);
 
   if (windata->has_arrow)
@@ -610,9 +606,9 @@ create_notification(UrlClickedCb url_clicked)
 
   windata->url_clicked = url_clicked;
 
-  AwnColor bg;
-  AwnColor base;
-  main_vbox = build_dialog(windata, 0, &base, &bg);
+  DesktopAgnosticColor *bg;
+  DesktopAgnosticColor *base;
+  main_vbox = build_dialog(windata, 0, base, bg);
   win = windata->win;
 
   if (!G_daemon_config.show_status)
@@ -780,19 +776,9 @@ create_notification(UrlClickedCb url_clicked)
   if (windata->use_gtk_style)
   {
     GtkStyle *style = gtk_widget_get_style(windata->win);
-    GdkColor *background_color = &style->bg[GTK_STATE_NORMAL];
 
-    G_daemon_config.awn_bg.red = background_color->red   / 65535.0;
-    G_daemon_config.awn_bg.green = background_color->green / 65535.0;
-    G_daemon_config.awn_bg.blue = background_color->blue  / 65535.0;
-    G_daemon_config.awn_bg.alpha = BACKGROUND_OPACITY;
-
-    GdkColor *fg_color = &style->fg[GTK_STATE_ACTIVE];
-    G_daemon_config.awn_border.red = fg_color->red   / 65535.0;
-    G_daemon_config.awn_border.green = fg_color->green / 65535.0;
-    G_daemon_config.awn_border.blue = fg_color->blue  / 65535.0;
-    G_daemon_config.awn_border.alpha = 1.0;
-
+    G_daemon_config.awn_bg = desktop_agnostic_color_new(&style->bg[GTK_STATE_NORMAL], BACKGROUND_OPACITY);
+    G_daemon_config.awn_border = desktop_agnostic_color_new(&style->fg[GTK_STATE_ACTIVE], G_MAXUSHORT);
   }
 
   return GTK_WINDOW(win);
@@ -983,13 +969,12 @@ countdown_expose_cb(GtkWidget *pie, GdkEventExpose *event,
   if (windata->timeout > 0)
   {
     gdouble pct = (gdouble)windata->remaining / (gdouble)windata->timeout;
+    gushort old_alpha = G_daemon_config.awn_border->alpha;
 
+    G_daemon_config.awn_border->alpha = G_MAXUSHORT;
 //  gdk_cairo_set_source_color(cr, &style->bg[GTK_STATE_ACTIVE]);
-    cairo_set_source_rgba(cr,
-                          G_daemon_config.awn_border.red,
-                          G_daemon_config.awn_border.green,
-                          G_daemon_config.awn_border.blue,
-                          1);
+    awn_cairo_set_source_color(cr, G_daemon_config.awn_border);
+    G_daemon_config.awn_border->alpha = old_alpha;
     cairo_move_to(cr, PIE_RADIUS, PIE_RADIUS);
     cairo_arc_negative(cr, PIE_RADIUS, PIE_RADIUS, PIE_RADIUS,
                        -G_PI_2, -(pct * G_PI * 2) - G_PI_2);
@@ -1250,28 +1235,22 @@ void draw_curved_cairo_rect(cairo_t *cr, double x0, double y0, double rect_width
     /* Add a very subtle gradient to the bottom of the notification */
     gradient = cairo_pattern_create_linear(0, y0/*gradient_y*/, 0,
                                            y0 + rect_height);
-    cairo_pattern_add_color_stop_rgba(gradient, 0,  G_daemon_config.awn_bg.red, G_daemon_config.awn_bg.green,
-                                      G_daemon_config.awn_bg.blue, G_daemon_config.awn_bg.alpha);
-    cairo_pattern_add_color_stop_rgba(gradient, 0.2, G_daemon_config.awn_bg.red, G_daemon_config.awn_bg.green,
-                                      G_daemon_config.awn_bg.blue, G_daemon_config.awn_bg.alpha*gradient_factor);
-    cairo_pattern_add_color_stop_rgba(gradient, 0.8, G_daemon_config.awn_bg.red, G_daemon_config.awn_bg.green,
-                                      G_daemon_config.awn_bg.blue, G_daemon_config.awn_bg.alpha*gradient_factor);
-    cairo_pattern_add_color_stop_rgba(gradient, 1, G_daemon_config.awn_bg.red, G_daemon_config.awn_bg.green,
-                                      G_daemon_config.awn_bg.blue, G_daemon_config.awn_bg.alpha);
+    awn_cairo_pattern_add_color_stop_color(gradient, 0,  G_daemon_config.awn_bg);
+    awn_cairo_pattern_add_color_stop_color_with_alpha_multiplier(gradient, 0.2, G_daemon_config.awn_bg, gradient_factor);
+    awn_cairo_pattern_add_color_stop_color_with_alpha_multiplier(gradient, 0.8, G_daemon_config.awn_bg, gradient_factor);
+    awn_cairo_pattern_add_color_stop_color(gradient, 1, G_daemon_config.awn_bg);
     cairo_set_source(cr, gradient);
     cairo_fill_preserve(cr);
   }
   else
   {
-    cairo_set_source_rgba(cr, G_daemon_config.awn_bg.red, G_daemon_config.awn_bg.green,
-                          G_daemon_config.awn_bg.blue, G_daemon_config.awn_bg.alpha);
+    awn_cairo_set_source_color(cr, G_daemon_config.awn_bg);
     cairo_fill_preserve(cr);
   }
 
   if (border_width)
   {
-    cairo_set_source_rgba(cr, G_daemon_config.awn_border.red, G_daemon_config.awn_border.green,
-                          G_daemon_config.awn_border.blue, G_daemon_config.awn_border.alpha);
+    awn_cairo_set_source_color(cr, G_daemon_config.awn_border);
     cairo_set_line_width(cr, border_width);
 
   }
@@ -1304,7 +1283,7 @@ static void dialog_fill_background(GtkWidget *widget, WindowData *windata, cairo
 
   cairo_move_to(cr, 3, sum_h + 10 + 5);
   cairo_line_to(cr, widget->allocation.width - 3, sum_h + 10 + 5);
-  cairo_set_source_rgba(cr, G_daemon_config.awn_border.red, G_daemon_config.awn_border.green, G_daemon_config.awn_border.blue, G_daemon_config.awn_border.alpha);
+  awn_cairo_set_source_color(cr, G_daemon_config.awn_border);
   cairo_set_line_width(cr, windata->border_width);
   cairo_stroke(cr);
 
@@ -1312,7 +1291,7 @@ static void dialog_fill_background(GtkWidget *widget, WindowData *windata, cairo
   {
     cairo_move_to(cr, 3, sum_h + 10 + 5);
     cairo_line_to(cr, widget->allocation.width - 3, sum_h + 10 + 5);
-    cairo_set_source_rgba(cr, G_daemon_config.awn_border.red*0.8, G_daemon_config.awn_border.green*0.8, G_daemon_config.awn_border.blue*0.8, G_daemon_config.awn_border.alpha*(windata->gradient_factor + 1) / 2);
+    awn_cairo_set_source_color_with_multipliers(cr, G_daemon_config.awn_border, 0.8, (windata->gradient_factor + 1) / 2);
     cairo_set_line_width(cr, windata->border_width*0.5);
     cairo_stroke(cr);
   }
@@ -1372,7 +1351,7 @@ static gboolean _paint_dialog(GtkWidget *widget, GdkEventExpose *event, WindowDa
 
 
 
-GtkWidget * build_dialog(WindowData *windata, long flags, AwnColor *base, AwnColor * border)
+GtkWidget * build_dialog(WindowData *windata, long flags, DesktopAgnosticColor *base, DesktopAgnosticColor * border)
 {
 
   GdkColormap *colormap;

@@ -27,7 +27,7 @@
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
 #include <glib.h>
-#include <libawn/awn-cairo-utils.h>
+#include <libdesktop-agnostic/color.h>
 #include <libawn/awn-applet.h>
 #include <libawn/awn-alignment.h>
 #include  <time.h>
@@ -142,8 +142,8 @@ typedef struct
 
   gboolean  override_composite_check;
 
-  AwnColor  applet_border_colour;
-  AwnColor  background_colour;
+  DesktopAgnosticColor  *applet_border_colour;
+  DesktopAgnosticColor  *background_colour;
 
   int    applet_border_width;
   gboolean  reconfigure;
@@ -152,7 +152,7 @@ typedef struct
   gboolean  show_right_click;
 
   gboolean  grab_wallpaper;
-  AwnColor  desktop_colour;  /* used if grab_wallpaper is FALSE; */
+  DesktopAgnosticColor  *desktop_colour;  /* used if grab_wallpaper is FALSE; */
 
 
   GdkGC    *gdkgc;

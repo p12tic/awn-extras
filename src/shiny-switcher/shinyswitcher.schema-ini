@@ -80,7 +80,7 @@ description = Applet border width.  0 indicates no border.
 
 [DEFAULT/applet_border_colour]
 type = string
-default = 00000088
+default = #00000088
 description = The colour (RGBA) of the applet border.
 description[en_US] = The color (RGBA) applet border.
 
@@ -91,7 +91,7 @@ description = whether to grab wallpaper.
 
 [DEFAULT/desktop_colour]
 type = string
-default = 00000088
+default = #00000088
 description = The colour of the desktop (RGBA) if grab_wallpaper is FALSE.
 description[en_US] = The color of the desktop (RGBA) if grab_wallpaper is FALSE.
 

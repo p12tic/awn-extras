@@ -14,7 +14,6 @@ source_h =	\
 	awn-extras.h
 	
 source_c =	\
-	colour.c	\
 	pixbufs.c	\
 	url.c		\
 	notify.c    \

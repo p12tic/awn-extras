@@ -42,7 +42,7 @@
    <applyto>/apps/avant-window-navigator/applets/awn-notification-daemon/bg_colour</applyto>
    <owner>awn-notification-daemon</owner>
    <type>string</type>
-   <default>0a0a0aa0</default>
+   <default>#0a0a0aa0</default>
    <locale name="C">
     <short>Background Colour</short>
     <long>Background colour in the form (Hex) rrggbbaa.</long>
@@ -54,7 +54,7 @@
    <applyto>/apps/avant-window-navigator/applets/awn-notification-daemon/text_colour</applyto>
    <owner>awn-notification-daemon</owner>
    <type>string</type>
-   <default>ddddddff</default>
+   <default>#ddddddff</default>
    <locale name="C">
     <short>Text Colour</short>
     <long>Text colour in the form (Hex) rrggbbaa. Currently the alpha component is ignored</long>
@@ -66,7 +66,7 @@
    <applyto>/apps/avant-window-navigator/applets/awn-notification-daemon/border_colour</applyto>
    <owner>awn-notification-daemon</owner>
    <type>string</type>
-   <default>f0f0f0ee</default>
+   <default>#f0f0f0ee</default>
    <locale name="C">
     <short>Border Colour</short>
     <long>Border colour in the form (Hex) rrggbbaa.  Also use for the timer widget</long>

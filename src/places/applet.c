@@ -75,8 +75,8 @@
 
 typedef struct
 {
-  AwnColor base;
-  AwnColor text;
+  DesktopAgnosticColor *base;
+  DesktopAgnosticColor *text;
 
 }Menu_item_color;
 
@@ -94,7 +94,7 @@ typedef struct
 
   gboolean   honour_gtk;
 
-  AwnColor   border_colour;
+  DesktopAgnosticColor   *border_colour;
   gint    border_width;
 
   gint    text_size;
@@ -138,7 +138,6 @@ static gboolean _show_prefs(GtkWidget *widget, GdkEventButton *event, Places * p
 
 static void get_places(Places * places);
 static void render_places(Places * places);
-//static char * awncolor_to_string(AwnColor * colour);
 static void free_menu_list_item(Menu_Item * item);
 static GtkWidget * menu_new(Places *places);
 static gboolean _focus_out_event(GtkWidget *widget, GdkEventButton *event, Places * places);
@@ -190,19 +189,32 @@ static void config_get_string(AwnConfigClient *client, const gchar *key, gchar *
   *str = awn_config_client_get_string(client, AWN_CONFIG_CLIENT_DEFAULT_GROUP, key, NULL);
 }
 
-static void config_get_color(AwnConfigClient *client, const gchar *key, AwnColor *color)
+static void config_get_color(AwnConfigClient *client, const gchar *key, DesktopAgnosticColor **color)
 {
-  gchar *value = awn_config_client_get_string(client, AWN_CONFIG_CLIENT_DEFAULT_GROUP, key, NULL);
+  GError *error = NULL;
+  gchar *value = awn_config_client_get_string(client, AWN_CONFIG_CLIENT_DEFAULT_GROUP, key, &error);
 
   if (value)
   {
-    awn_cairo_string_to_color(value, color);
+    *color = desktop_agnostic_color_new_from_string(value, &error);
+    if (error)
+    {
+      g_warning("places: error parsing config string (%s = '%s'): %s", key, value, error->message);
+      g_error_free(error);
+    }
     g_free(value);
   }
   else
   {
+    if (error)
+    {
+      g_warning("shinyswitcher: error reading config string (%s): %s", key, error->message);
+      g_error_free(error);
+    }
+
     g_warning("Failed to read config key: %s\n", key);
-    awn_cairo_string_to_color("000000", color);
+
+    *color = desktop_agnostic_color_new_from_string("#000", NULL);
   }
 }
 
@@ -227,11 +239,11 @@ void init_config(Places * places)
   if (places->honour_gtk)
   {
     GtkWidget *top_win = GTK_WIDGET(places->applet);
-    places->normal_colours.base = gdkcolor_to_awncolor(&top_win->style->bg[GTK_STATE_NORMAL]);
-    places->normal_colours.text = gdkcolor_to_awncolor(&top_win->style->fg[GTK_STATE_ACTIVE]);
-    places->hover_colours.base = gdkcolor_to_awncolor(&top_win->style->bg[GTK_STATE_ACTIVE]);
-    places->hover_colours.text = gdkcolor_to_awncolor(&top_win->style->fg[GTK_STATE_ACTIVE]);
-    places->border_colour = gdkcolor_to_awncolor(&top_win->style->text_aa[0]);
+    places->normal_colours.base = desktop_agnostic_color_new(&top_win->style->bg[GTK_STATE_NORMAL], G_MAXUSHORT);
+    places->normal_colours.text = desktop_agnostic_color_new(&top_win->style->fg[GTK_STATE_ACTIVE], G_MAXUSHORT);
+    places->hover_colours.base = desktop_agnostic_color_new(&top_win->style->bg[GTK_STATE_ACTIVE], G_MAXUSHORT);
+    places->hover_colours.text = desktop_agnostic_color_new(&top_win->style->fg[GTK_STATE_ACTIVE], G_MAXUSHORT);
+    places->border_colour = desktop_agnostic_color_new(&top_win->style->text_aa[0], G_MAXUSHORT);
     places->menu_item_gradient_factor = 1.0;
   }
 
@@ -239,20 +251,20 @@ void init_config(Places * places)
 }
 
 #define SET_CONFIG_OPTION(type, key, value) awn_config_client_set_##type (places->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, key, value, NULL)
-static void set_config_colour(Places *places, const gchar *key, AwnColor *color)
+static void set_config_colour(Places *places, const gchar *key, DesktopAgnosticColor *color)
 {
   gchar *str;
-  str = awncolor_to_string(color);
+  str = desktop_agnostic_color_to_string(color);
   SET_CONFIG_OPTION(string, key, str);
   g_free(str);
 }
 
 static void save_config(Places * places)
 {
-  set_config_colour(places, CONFIG_NORMAL_BG,     &places->normal_colours.base);
-  set_config_colour(places, CONFIG_NORMAL_FG,     &places->normal_colours.text);
-  set_config_colour(places, CONFIG_HOVER_BG,      &places->hover_colours.base);
-  set_config_colour(places, CONFIG_HOVER_FG,      &places->hover_colours.text);
+  set_config_colour(places, CONFIG_NORMAL_BG,     places->normal_colours.base);
+  set_config_colour(places, CONFIG_NORMAL_FG,     places->normal_colours.text);
+  set_config_colour(places, CONFIG_HOVER_BG,      places->hover_colours.base);
+  set_config_colour(places, CONFIG_HOVER_FG,      places->hover_colours.text);
   SET_CONFIG_OPTION(int,    CONFIG_TEXT_SIZE,     places->text_size);
   SET_CONFIG_OPTION(float,  CONFIG_MENU_GRADIENT, places->menu_item_gradient_factor);
   SET_CONFIG_OPTION(string, CONFIG_FILEMANAGER,   places->file_manager);
@@ -260,7 +272,7 @@ static void save_config(Places * places)
   SET_CONFIG_OPTION(bool,   CONFIG_HONOUR_GTK,    places->honour_gtk);
   SET_CONFIG_OPTION(bool,   CONFIG_SHOW_TOOLTIPS, places->show_tooltips);
   SET_CONFIG_OPTION(int,    CONFIG_BORDER_WIDTH,  places->border_width);
-  set_config_colour(places, CONFIG_BORDER_COLOUR, &places->border_colour);
+  set_config_colour(places, CONFIG_BORDER_COLOUR, places->border_colour);
 }
 
 static void _do_update_places(Places * places)
@@ -712,17 +724,13 @@ GtkWidget * build_menu_widget(Places * places, Menu_item_color * mic,  char * te
 
   gradient = cairo_pattern_create_linear(0, 0, 0, places->text_size * 1.6);
 
-  cairo_pattern_add_color_stop_rgba(gradient, 0,  mic->base.red, mic->base.green, mic->base.blue,
-                                    mic->base.alpha*places->menu_item_gradient_factor);
+  awn_cairo_pattern_add_color_stop_color_with_alpha_multiplier(gradient, 0, mic->base, places->menu_item_gradient_factor);
 
-  cairo_pattern_add_color_stop_rgba(gradient, 0.2, mic->base.red, mic->base.green, mic->base.blue,
-                                    mic->base.alpha);
+  awn_cairo_pattern_add_color_stop_color(gradient, 0.2, mic->base);
 
-  cairo_pattern_add_color_stop_rgba(gradient, 0.8, mic->base.red, mic->base.green, mic->base.blue,
-                                    mic->base.alpha);
+  awn_cairo_pattern_add_color_stop_color(gradient, 0.8, mic->base);
 
-  cairo_pattern_add_color_stop_rgba(gradient, 1, mic->base.red, mic->base.green, mic->base.blue,
-                                    mic->base.alpha*places->menu_item_gradient_factor);
+  awn_cairo_pattern_add_color_stop_color_with_alpha_multiplier(gradient, 1, mic->base, places->menu_item_gradient_factor);
 
   cairo_set_source(cr, gradient);
 
@@ -752,8 +760,7 @@ GtkWidget * build_menu_widget(Places * places, Menu_item_color * mic,  char * te
 
   if (places->border_width > 0)
   {
-    cairo_set_source_rgba(cr, places->border_colour.red,  places->border_colour.green,
-                          places->border_colour.blue, places->border_colour.alpha);
+    awn_cairo_set_source_color(cr, places->border_colour);
     cairo_set_line_width(cr, places->border_width);
     cairo_move_to(cr, places->border_width / 2, 0);
     cairo_line_to(cr, places->border_width / 2, pixmap_height);
@@ -763,7 +770,7 @@ GtkWidget * build_menu_widget(Places * places, Menu_item_color * mic,  char * te
     cairo_stroke(cr);
   }
 
-  cairo_set_source_rgba(cr, mic->text.red, mic->text.green, mic->text.blue, mic->text.alpha);
+  awn_cairo_set_source_color(cr, mic->text);
 
   cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
   cairo_move_to(cr, places->text_size*1.4 , places->text_size*1.1);
@@ -913,15 +920,16 @@ GtkWidget * get_blank(Places * places)
 
   if (places->border_width > 0)
   {
-    cairo_set_source_rgba(cr, places->border_colour.red, places->border_colour.green,
-                          places->border_colour.blue, places->border_colour.alpha);
+    awn_cairo_set_source_color(cr, places->border_colour);
     cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
   }
   else
   {
 
-    cairo_set_source_rgba(cr, places->border_colour.red, places->border_colour.green,
-                          places->border_colour.blue, 0);
+    cairo_set_source_rgba(cr, desktop_agnostic_color_get_red(places->border_colour) / AWN_RGBA_SCALE_FACTOR,
+                          desktop_agnostic_color_get_green(places->border_colour) / AWN_RGBA_SCALE_FACTOR,
+                          desktop_agnostic_color_get_blue(places->border_colour) / AWN_RGBA_SCALE_FACTOR,
+                          0);
   }
 
   cairo_paint(cr);
@@ -1102,14 +1110,12 @@ int activate(GtkWidget *w, gchar **p)
   return FALSE;
 }
 
-void _mod_colour(GtkColorButton *widget, AwnColor * user_data)
+void _mod_colour(GtkColorButton *widget, DesktopAgnosticColor * user_data)
 {
-  GdkColor colr;
-  gtk_color_button_get_color(widget, &colr);
-  user_data->red = colr.red / 65535.0;
-  user_data->green = colr.green / 65535.0;
-  user_data->blue = colr.blue / 65535.0;
-  user_data->alpha = gtk_color_button_get_alpha(widget) / 65535.0;
+  GdkColor *color;
+  gtk_color_button_get_color(widget, color);
+  desktop_agnostic_color_set_color(user_data, color);
+  user_data->alpha = gtk_color_button_get_alpha(widget);
   gtk_widget_destroy(pref_menu->hover_ex);
   gtk_widget_destroy(pref_menu->normal_ex);
   pref_menu->hover_ex = build_menu_widget(pref_menu->places, &pref_menu->places->hover_colours, "Hover", NULL, NULL, 200);
@@ -1170,46 +1176,36 @@ void show_prefs(Places * places)
 
   pref_menu->normal_label = gtk_label_new("Normal");
 
-  pref_menu->colr.red = places->normal_colours.base.red * 65535;
-  pref_menu->colr.green = places->normal_colours.base.green * 65535;
-  pref_menu->colr.blue = places->normal_colours.base.blue * 65535;
+  desktop_agnostic_color_get_color(places->normal_colours.base, &pref_menu->colr);
   pref_menu->normal_bg = gtk_color_button_new_with_color(&pref_menu->colr);
   gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(pref_menu->normal_bg), TRUE);
-  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(pref_menu->normal_bg), places->normal_colours.base.alpha * 65535);
+  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(pref_menu->normal_bg), places->normal_colours.base->alpha);
   g_signal_connect(G_OBJECT(pref_menu->normal_bg), "color-set", G_CALLBACK(_mod_colour), &places->normal_colours.base);
-  pref_menu->colr.red = places->normal_colours.text.red * 65535;
-  pref_menu->colr.green = places->normal_colours.text.green * 65535;
-  pref_menu->colr.blue = places->normal_colours.text.blue * 65535;
+  desktop_agnostic_color_get_color(places->normal_colours.text, &pref_menu->colr);
   pref_menu->normal_fg = gtk_color_button_new_with_color(&pref_menu->colr);
   gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(pref_menu->normal_fg), TRUE);
-  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(pref_menu->normal_fg), places->normal_colours.text.alpha * 65535);
+  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(pref_menu->normal_fg), places->normal_colours.text->alpha);
   g_signal_connect(G_OBJECT(pref_menu->normal_fg), "color-set", G_CALLBACK(_mod_colour), &places->normal_colours.text);
 
   pref_menu->hover_label = gtk_label_new("Hover");
-  pref_menu->colr.red = places->hover_colours.base.red * 65535;
-  pref_menu->colr.green = places->hover_colours.base.green * 65535;
-  pref_menu->colr.blue = places->hover_colours.base.blue * 65535;
+  desktop_agnostic_color_get_color(places->hover_colours.base, &pref_menu->colr);
   pref_menu->hover_bg = gtk_color_button_new_with_color(&pref_menu->colr);
   gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(pref_menu->hover_bg), TRUE);
-  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(pref_menu->hover_bg), places->hover_colours.base.alpha * 65535);
+  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(pref_menu->hover_bg), places->hover_colours.base->alpha);
   g_signal_connect(G_OBJECT(pref_menu->hover_bg), "color-set", G_CALLBACK(_mod_colour), &places->hover_colours.base);
 
-  pref_menu->colr.red = places->hover_colours.text.red * 65535;
-  pref_menu->colr.green = places->hover_colours.text.green * 65535;
-  pref_menu->colr.blue = places->hover_colours.text.blue * 65535;
+  desktop_agnostic_color_get_color(places->hover_colours.text, &pref_menu->colr);
   pref_menu->hover_fg = gtk_color_button_new_with_color(&pref_menu->colr);
   gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(pref_menu->hover_fg), TRUE);
-  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(pref_menu->hover_fg), places->hover_colours.text.alpha * 65535);
+  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(pref_menu->hover_fg), places->hover_colours.text->alpha);
   g_signal_connect(G_OBJECT(pref_menu->hover_fg), "color-set", G_CALLBACK(_mod_colour), &places->hover_colours.text);
 
   pref_menu->border_label = gtk_label_new("Border");
 
-  pref_menu->colr.red = places->border_colour.red * 65535;
-  pref_menu->colr.green = places->border_colour.green * 65535;
-  pref_menu->colr.blue = places->border_colour.blue * 65535;
+  desktop_agnostic_color_get_color(places->border_colour, &pref_menu->colr);
   pref_menu->border_colour = gtk_color_button_new_with_color(&pref_menu->colr);
   gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(pref_menu->border_colour), TRUE);
-  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(pref_menu->border_colour), places->border_colour.alpha * 65535);
+  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(pref_menu->border_colour), places->border_colour->alpha);
   g_signal_connect(G_OBJECT(pref_menu->border_colour), "color-set", G_CALLBACK(_mod_colour), &places->border_colour);
 
 

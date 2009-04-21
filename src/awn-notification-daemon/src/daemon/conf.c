@@ -70,9 +70,9 @@ popup_location_changed_cb(GConfClient *client, guint cnxn_id,
 
 extern AwnApplet *G_awn_app;
 extern int G_awn_app_height;
-extern AwnColor G_awn_border;
-extern AwnColor G_awn_bg;
-extern AwnColor G_awn_text;
+extern DesktopAgnosticColor *G_awn_border;
+extern DesktopAgnosticColor *G_awn_bg;
+extern DesktopAgnosticColor *G_awn_text;
 extern gchar * G_awn_text_str;
 extern gboolean G_awn_client_pos;
 extern gboolean G_awn_honour_gtk;
@@ -166,10 +166,10 @@ void read_configuration(NotifyDaemon *daemon)
 
   if (!svalue)
   {
-    gconf_client_set_string(gconf_client , GCONF_KEY_AWN_BG, svalue = g_strdup("0a0a0abb"), NULL);
+    gconf_client_set_string(gconf_client , GCONF_KEY_AWN_BG, svalue = g_strdup("#0a0a0abb"), NULL);
   }
 
-  awn_cairo_string_to_color(svalue, &G_awn_bg);
+  G_awn_bg = desktop_agnostic_color_new_from_string(svalue, NULL);
 
   g_free(svalue);
 
@@ -177,10 +177,10 @@ void read_configuration(NotifyDaemon *daemon)
 
   if (!svalue)
   {
-    gconf_client_set_string(gconf_client , GCONF_KEY_AWN_TEXT_COLOUR, svalue = g_strdup("eeeeeebb"), NULL);
+    gconf_client_set_string(gconf_client , GCONF_KEY_AWN_TEXT_COLOUR, svalue = g_strdup("#eeeeeebb"), NULL);
   }
 
-  awn_cairo_string_to_color(svalue, &G_awn_text);
+  G_awn_text = desktop_agnostic_color_new_from_string(svalue, NULL);
 
   G_awn_text_str = g_strdup(svalue);
 
@@ -193,10 +193,10 @@ void read_configuration(NotifyDaemon *daemon)
 
   if (!svalue)
   {
-    gconf_client_set_string(gconf_client , GCONF_KEY_AWN_BORDER, svalue = g_strdup("ffffffaa"), NULL);
+    gconf_client_set_string(gconf_client , GCONF_KEY_AWN_BORDER, svalue = g_strdup("#ffffffaa"), NULL);
   }
 
-  awn_cairo_string_to_color(svalue, &G_awn_border);
+  G_awn_border = desktop_agnostic_color_new_from_string(svalue, NULL);
 
   g_free(svalue);
 

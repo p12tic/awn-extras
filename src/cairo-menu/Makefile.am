@@ -1,6 +1,7 @@
 APPLET_NAME = cairo_main_menu
 APPLET_CFLAGS =				\
-	$(CAIRO_MENU_GNOME_CFLAGS)
+	$(CAIRO_MENU_GNOME_CFLAGS) \
+	-D_GNU_SOURCE
 
 include $(top_srcdir)/Makefile.c-applet
 

@@ -21,6 +21,8 @@
 #ifndef __CAIRO_MENU_CONFIG_
 #define __CAIRO_MENU_CONFIG_
 
+#include <libdesktop-agnostic/color.h>
+
 #define GCONF_MENU "/apps/avant-window-navigator/applets/cairo-menu"
 
 #define GCONF_NORMAL_BG GCONF_MENU "/bg_normal_colour"
@@ -57,8 +59,8 @@
 
 typedef struct
 {
-  AwnColor bg;
-  AwnColor fg;
+  DesktopAgnosticColor *bg;
+  DesktopAgnosticColor *fg;
 
 }Menu_item_color;
 
@@ -67,7 +69,7 @@ typedef struct
   Menu_item_color normal;
   Menu_item_color hover;
   Menu_item_color selected;
-  AwnColor border_colour;
+  DesktopAgnosticColor *border_colour;
   int   border_width;
   int   text_size;
   GTree *  submenu_deps;

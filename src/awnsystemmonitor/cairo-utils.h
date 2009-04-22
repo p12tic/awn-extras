@@ -1,8 +1,5 @@
 /*
- * Copyright (c) 2007 Mike (mosburger) Desjardins <desjardinsmike@gmail.com>
- *
- * This is a CPU Load Applet for the Avant Window Navigator.  This module is
- * for managing the gconf settings.
+ *  Copyright (C) 2007 Anthony Arobone <aarobone@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,20 +15,29 @@
  * License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
- */
+ *
+ *  Author : Anthony Arobone <aarobone@gmail.com>
+*/
 
-#ifndef __CPUMETER_GCONF_H__
-#define __CPUMETER_GCONF_H__
+
+#ifndef __ASM_CAIRO_UTILS_H__
+#define __ASM_CAIRO_UTILS_H__
+
+#include <gtk/gtk.h>
+#include <libawn/awn-cairo-utils.h>
+
+typedef struct
+{
+        gfloat red;
+        gfloat green;
+        gfloat blue;
+        gfloat alpha;
+} AwnColor;
 
 
-#include <libawn/awn-applet.h>
-#include "cairo-utils.h"
+/* takes a string of RRGGBBAA and converts to AwnColor */
+void
+awn_cairo_string_to_color (const gchar *string, AwnColor *color);
 
-void cpumeter_gconf_init(CpuMeter* cpumeter);
-void cpumeter_gconf_get_color(AwnApplet* applet, AwnColor* color, gchar* key, gchar* def);
-gfloat cpumeter_gconf_get_border_width(AwnApplet* applet);
-gboolean cpumeter_gconf_use_gradient(AwnApplet* applet);
-gboolean cpumeter_gconf_do_subtitle(CpuMeter* cpumeter);
-guint cpumeter_gconf_get_update_frequency(AwnApplet* applet);
+#endif
 
-#endif  /* __CPUMETER_GCONF_H__ */

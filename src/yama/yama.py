@@ -263,9 +263,13 @@ class YamaApplet:
         menu.append(item)
         return item
 
-    def launch_app(self, widget, path):
-        if os.path.exists(path):
-            self.start_subprocess_cb(None, DesktopEntry.DesktopEntry(path).getExec(), True)
+    def launch_app(self, widget, desktop_path, use_args):
+        if os.path.exists(desktop_path):
+            path = DesktopEntry.DesktopEntry(desktop_path).getExec()
+            if not use_args:
+                # don't use args until we can use awn.DesktopItem.launch()
+                path = path.split(" ", 1)[0]
+            self.start_subprocess_cb(None, path, True)
 
     def append_directory(self, tree, menu):
         for node in tree.contents:
@@ -275,7 +279,7 @@ class YamaApplet:
             item = self.append_menu_item(menu, node.name, node.icon, None)
             if isinstance(node, gmenu.Entry):
                 item.set_tooltip_text(node.comment)
-                item.connect("activate", self.launch_app, node.desktop_file_path)
+                item.connect("activate", self.launch_app, node.desktop_file_path, False)
             else:
                 sub_menu = gtk.Menu()
                 item.set_submenu(sub_menu)
@@ -287,7 +291,7 @@ class YamaApplet:
             if os.path.isfile(path):
                 desktop_entry = DesktopEntry.DesktopEntry(path)
                 item = self.append_menu_item(menu, desktop_entry.getName(), desktop_entry.getIcon(), desktop_entry.getComment())
-                item.connect("activate", self.launch_app, desktop_entry.getFileName())
+                item.connect("activate", self.launch_app, desktop_entry.getFileName(), True)
                 return True
         return False
 

@@ -13,6 +13,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import with_statement
+
 import commands
 import os
 import re
@@ -232,23 +234,25 @@ class YamaApplet:
         self.bookmarks_items = []
         index = 2
         bookmarks_file = os.path.expanduser("~/.gtk-bookmarks")
-        for url_name in (i.rstrip().split(" ", 1) for i in open(bookmarks_file)):
-            if len(url_name) == 1:
-                match = url_pattern.match(url_name[0])
-                if match is not None:
-                    url_name.append("/%s on %s" % (match.group(2), match.group(1)))
-                else:
-                    url_name.append(filename_display_basename(url_name[0]))
-            url, name = (url_name[0], url_name[1])
-
-            icon = "folder" if url.startswith("file://") else "folder-remote"
-            display_url = url[7:] if url.startswith("file://") else url
-
-            item = self.create_menu_item(name, icon, "Open '%s'" % display_url)
-            self.places_menu.insert(item, index)
-            item.connect("activate", self.open_folder_cb, url)
-            index += 1
-            self.bookmarks_items.append(item)
+        if os.path.isfile(bookmarks_file):
+            with open(bookmarks_file) as f:
+                for url_name in (i.rstrip().split(" ", 1) for i in f):
+                    if len(url_name) == 1:
+                        match = url_pattern.match(url_name[0])
+                        if match is not None:
+                            url_name.append("/%s on %s" % (match.group(2), match.group(1)))
+                        else:
+                            url_name.append(filename_display_basename(url_name[0]))
+                    url, name = (url_name[0], url_name[1])
+        
+                    icon = "folder" if url.startswith("file://") else "folder-remote"
+                    display_url = url[7:] if url.startswith("file://") else url
+        
+                    item = self.create_menu_item(name, icon, "Open '%s'" % display_url)
+                    self.places_menu.insert(item, index)
+                    item.connect("activate", self.open_folder_cb, url)
+                    index += 1
+                    self.bookmarks_items.append(item)
 
     def create_menu_item(self, label, icon_name, comment):
         item = gtk.ImageMenuItem(label)

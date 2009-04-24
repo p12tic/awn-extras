@@ -1,8 +1,0 @@
-[Desktop Entry]
-Type=Application
-X-AWN-AppletType=Vala
-Name=Simple Launcher
-Comment=A simple launcher.  That is all it does.
-Exec=@LIBDIR@/awn/applets/simple-launcher/simple-launcher.so
-Icon=binary
-X-AWN-AppletCategory=Utility

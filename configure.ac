@@ -354,16 +354,8 @@ src/separator/Makefile
 src/separator/separator.desktop.in
 src/shiny-switcher/Makefile
 src/shiny-switcher/shinyswitcher.desktop.in
-src/simple-launcher/Makefile
-src/simple-launcher/simple-launcher.desktop.in
 src/showdesktop/Makefile
 src/stacks/Makefile
-src/standalone-launcher/Makefile
-src/standalone-launcher/standalone-launcher.desktop.in
-src/taskmand/Makefile
-src/taskmand/data/Makefile
-src/Taskmand-applet/Makefile
-src/Taskmand-applet/Taskmand-applet.desktop.in
 src/thinkhdaps/Makefile
 src/to-do/Makefile
 src/tomboy-applet/Makefile

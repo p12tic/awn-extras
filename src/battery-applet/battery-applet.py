@@ -366,7 +366,8 @@ class HalBackend(AbstractBackend):
 
             for udi in list(interface.FindDeviceByCapability("battery")):
                 # TODO use dbus
-                udi_models[str(udi)] = commands.getoutput("hal-get-property --udi " + str(udi) + " --key battery.model")
+                if commands.getoutput("hal-get-property --udi " + str(udi) + " --key battery.type") == "primary":
+                    udi_models[str(udi)] = commands.getoutput("hal-get-property --udi " + str(udi) + " --key battery.model")
             return udi_models
         except dbus.DBusException, e:
             print e.message

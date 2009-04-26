@@ -123,7 +123,8 @@ class App (awn.AppletSimple):
 
   #Dialog loses focus
   def focus_out(self, dialog, event):
-    if self.shared_config.get_bool('dialog_focus_loss_behavior'):
+    if self.shared_config.get_bool(awn.CONFIG_DEFAULT_GROUP,
+      'dialog_focus_loss_behavior'):
       dialog.hide()
 
   #Function to show the home folder, mounted drives/partitions, and bookmarks according to awncc

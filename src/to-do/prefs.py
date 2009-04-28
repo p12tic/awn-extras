@@ -51,14 +51,7 @@ class Prefs:
     #Make the main window
     self.win = gtk.Window()
     self.win.set_title(_('To-Do List Preferences'))
-    
-    #Get the default icon [theme]
-    self.icon_theme = gtk.icon_theme_get_default()
-    self.icon_theme.connect('changed', self.icon_theme_changed)
-    icon = self.icon_theme.load_icon('view-sort-descending', 48, 48)
-    
-    #Get the window's icon
-    self.win.set_icon(icon)
+    self.win.set_icon_name('view-sort-descending')
     
     #Make the main GtkNotebook along with three main widgets and two Labels
     notebook = gtk.Notebook()
@@ -382,11 +375,6 @@ class Prefs:
   def color_set2(self, button):
     #Get the color from the button
     self.settings[button.key] = self.convert_color(button)
-  
-  #The icon theme has changed
-  def icon_theme_changed(self, *args):
-    icon = self.icon_theme.load_icon('view-sort-descending', 48, 48)
-    self.win.set_icon(icon)
   
   #A color or icon type was selected from the ComboBox
   def cb_changed(self, widget):

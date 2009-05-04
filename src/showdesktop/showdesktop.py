@@ -41,6 +41,8 @@ class ShowDesktopApplet:
     def __init__(self, applet):
         self.applet = applet
 
+        applet.tooltip.disable_toggle_on_click()
+
         showing_desktop = wnck.screen_get_default().get_showing_desktop()
         applet.tooltip.set(titles[showing_desktop])
 

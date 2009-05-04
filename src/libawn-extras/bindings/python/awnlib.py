@@ -219,6 +219,7 @@ class Dialogs:
             self.__register["program"]()
         elif dialog == "about":
             self.__register["about"].show()
+            self.__register["about"].deiconify()
         else:
             if force == "hide" or (self.__register[dialog].is_active() and \
                                        force != "show"):
@@ -231,7 +232,6 @@ class Dialogs:
                 if self.__current is not None and self.__current not in \
                         self.__special_dialogs:
                     current = self.__register[self.__current]
-
                     current_was_active = current.is_active()
 
                     current.hide()
@@ -242,6 +242,8 @@ class Dialogs:
 
                 self.__register[dialog].show_all()
                 self.__current = dialog
+                if dialog == "preferences":
+                    self.__register[dialog].deiconify()
 
     def hide(self):
         """Hide the currently visible dialog.

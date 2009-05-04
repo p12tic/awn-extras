@@ -412,11 +412,11 @@ class LocationSearchWindow:
 
         def startElement(self, name, attrs):
             if name in self.__names:
-                self.__no_lang = not bool(attrs)
+                self.__no_lang = "xml:lang" not in attrs 
                 self.__in_name_tag = self.__no_lang
             elif name == "tz-hint":
                 self.__in_tz_tag = True
-            else:
+            elif name in self.__locations:
                 self.__node_type = name
                 if name == "timezone":
                     self.__tz_tag = attrs["id"]
@@ -573,8 +573,8 @@ class LocationSearchWindow:
             self.select_next_location()
 
     def find_location(self, parent_iter, text, result_list):
-        """Do a depth first search to find a node whose city starts with the
-        given text. Fills the result_list with instances of {gtk.TreeIter}
+        """Do a depth-first search to find a node whose city starts with the
+        given text. Fills the C{result_list} with instances of C{gtk.TreeIter}
         that points to the found element.
 
         """

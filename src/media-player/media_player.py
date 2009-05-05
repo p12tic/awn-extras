@@ -286,8 +286,16 @@ class App(awn.AppletSimple):
           "videosink")
         self.videoW = self.client.get_int(awn.CONFIG_DEFAULT_GROUP, 
           "videoWidth")
+        if self.videoW == 0:
+            self.videoW = 100
+            self.client.set_int(awn.CONFIG_DEFAULT_GROUP,
+                                "videoWidth", self.videoW)
         self.videoH = self.client.get_int(awn.CONFIG_DEFAULT_GROUP,
           "videoHeight")
+        if self.videoH == 0:
+            self.videoH = 100
+            self.client.set_int(awn.CONFIG_DEFAULT_GROUP,
+                                "videoHeight", self.videoH)
         self.recentItems = self.client.get_list(awn.CONFIG_DEFAULT_GROUP,
           "recentItems", awn.CONFIG_LIST_STRING)
 

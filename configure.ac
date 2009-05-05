@@ -356,6 +356,8 @@ src/shiny-switcher/Makefile
 src/shiny-switcher/shinyswitcher.desktop.in
 src/showdesktop/Makefile
 src/stacks/Makefile
+src/sysmon/Makefile
+src/sysmon/sysmon.desktop.in
 src/thinkhdaps/Makefile
 src/to-do/Makefile
 src/tomboy-applet/Makefile

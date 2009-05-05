@@ -51,13 +51,15 @@ SUBDIRS =			\
 	media-player		\
 	mount-applet       \
 	notification-area	\
+	places			\
 	quit-applet			\
 	shiny-switcher		\
 	showdesktop			\
+	sysmon			\
 	thinkhdaps			\
 	volume-control		\
 	weather				\
-	places			\
+	sysmon			\
 	$(WOBBLYZINI)		\
 	$(GCONF_APPLETS)	\
 	$(VALA_APPLETS)		\

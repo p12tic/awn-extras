@@ -59,7 +59,6 @@ SUBDIRS =			\
 	thinkhdaps			\
 	volume-control		\
 	weather				\
-	sysmon			\
 	$(WOBBLYZINI)		\
 	$(GCONF_APPLETS)	\
 	$(VALA_APPLETS)		\

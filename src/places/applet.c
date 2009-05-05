@@ -457,7 +457,11 @@ static void get_places(Places * places)
 {
 
   Menu_Item *item = NULL;
+#if GLIB_CHECK_VERSION(2,14,0)
   const gchar *desktop_dir = g_get_user_special_dir (G_USER_DIRECTORY_DESKTOP);
+#else
+  const gchar *desktop_dir = g_getenv("XDG_DESKTOP_DIR");
+#endif
 
   item = g_malloc(sizeof(Menu_Item));
   item->text = g_strdup("Home");

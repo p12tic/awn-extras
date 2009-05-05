@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+X-AWN-AppletType=C
+Name=System Monitor
+Comment=Manage system activity
+Exec=@LIBDIR@/awn/applets/sysmon/sysmon.so
+Icon=utilities-system-monitor
+X-AWN-AppletCategory=System,Monitor

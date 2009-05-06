@@ -8,6 +8,8 @@ sysmon_la_SOURCES =		\
   applet.c  \
   sysmon.c  \
   sysmon.h  \
+  sysmonicon.c \
+  sysmonicon.h \
   $(NULL)
 sysmon_la_LIBADD =					\
 	$(AWN_LIBS)						\

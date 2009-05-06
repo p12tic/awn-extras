@@ -71,7 +71,7 @@ awn_sysmon_init (AwnSysmon *sysmon)
   priv->box = awn_icon_box_new_for_applet (AWN_APPLET (sysmon));
   gtk_container_add (GTK_CONTAINER (sysmon), priv->box);
   gtk_widget_show (priv->box);
-  icon = awn_icon_new ();
+  icon = awn_sysmonicon_new ();
   pixbuf = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), 
                                      "gnome-system-monitor",
                                      40, 

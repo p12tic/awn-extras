@@ -1,11 +1,11 @@
-/* Awn-sysmonicon.c */
+/* awn-sysmonicon.c */
 
-#include "Awn-sysmonicon.h"
+#include "sysmonicon.h"
 
-G_DEFINE_TYPE (AwnSysmonicon, Awn_sysmonicon, AWN_TYPE_ICON)
+G_DEFINE_TYPE (AwnSysmonicon, awn_sysmonicon, AWN_TYPE_ICON)
 
 #define GET_PRIVATE(o) \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((o), AWN_TYPE_sysmonicon, AwnSysmoniconPrivate))
+  (G_TYPE_INSTANCE_GET_PRIVATE ((o), AWN_TYPE_SYSMONICON, AwnSysmoniconPrivate))
 
 typedef struct _AwnSysmoniconPrivate AwnSysmoniconPrivate;
 
@@ -14,7 +14,7 @@ struct _AwnSysmoniconPrivate {
 };
 
 static void
-Awn_sysmonicon_get_property (GObject *object, guint property_id,
+awn_sysmonicon_get_property (GObject *object, guint property_id,
                               GValue *value, GParamSpec *pspec)
 {
   switch (property_id) {
@@ -24,7 +24,7 @@ Awn_sysmonicon_get_property (GObject *object, guint property_id,
 }
 
 static void
-Awn_sysmonicon_set_property (GObject *object, guint property_id,
+awn_sysmonicon_set_property (GObject *object, guint property_id,
                               const GValue *value, GParamSpec *pspec)
 {
   switch (property_id) {
@@ -34,38 +34,38 @@ Awn_sysmonicon_set_property (GObject *object, guint property_id,
 }
 
 static void
-Awn_sysmonicon_dispose (GObject *object)
+awn_sysmonicon_dispose (GObject *object)
 {
-  G_OBJECT_CLASS (Awn_sysmonicon_parent_class)->dispose (object);
+  G_OBJECT_CLASS (awn_sysmonicon_parent_class)->dispose (object);
 }
 
 static void
-Awn_sysmonicon_finalize (GObject *object)
+awn_sysmonicon_finalize (GObject *object)
 {
-  G_OBJECT_CLASS (Awn_sysmonicon_parent_class)->finalize (object);
+  G_OBJECT_CLASS (awn_sysmonicon_parent_class)->finalize (object);
 }
 
 static void
-Awn_sysmonicon_class_init (AwnSysmoniconClass *klass)
+awn_sysmonicon_class_init (AwnSysmoniconClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
   g_type_class_add_private (klass, sizeof (AwnSysmoniconPrivate));
 
-  object_class->get_property = Awn_sysmonicon_get_property;
-  object_class->set_property = Awn_sysmonicon_set_property;
-  object_class->dispose = Awn_sysmonicon_dispose;
-  object_class->finalize = Awn_sysmonicon_finalize;
+  object_class->get_property = awn_sysmonicon_get_property;
+  object_class->set_property = awn_sysmonicon_set_property;
+  object_class->dispose = awn_sysmonicon_dispose;
+  object_class->finalize = awn_sysmonicon_finalize;
 }
 
 static void
-Awn_sysmonicon_init (AwnSysmonicon *self)
+awn_sysmonicon_init (AwnSysmonicon *self)
 {
 }
 
-AwnSysmonicon*
-Awn_sysmonicon_new (void)
+GtkWidget*
+awn_sysmonicon_new (void)
 {
-  return g_object_new (AWN_TYPE_sysmonicon, NULL);
+  return g_object_new (AWN_TYPE_SYSMONICON, NULL);
 }
 

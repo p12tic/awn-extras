@@ -26,6 +26,7 @@ import gtk
 
 from awn.extras import awnlib
 
+import dbus
 import gio
 from glib import filename_display_basename
 import gmenu
@@ -44,8 +45,6 @@ data_dirs = os.environ["XDG_DATA_DIRS"] if "XDG_DATA_DIRS" in os.environ else "/
 
 # Describes the pattern used to try to decode URLs
 url_pattern = re.compile("^[a-z]+://(?:[^@]+@)?([^/]+)/(.*)$")
-
-logout_command = "gnome-session-save --kill --silent"
 
 # TODO handle updates in removed/new and included/excluded apps and bookmarks
 # TODO add devices to places
@@ -82,19 +81,32 @@ class YamaApplet:
         tree.add_monitor(self.settings_menu_changed_cb)
         # TODO remove monitor when destroy signal of menu is fired?
 
-        self.menu.append(gtk.SeparatorMenuItem())
+        session_bus = dbus.SessionBus()
 
-        # TODO test wheter we can lock the screen and also try xscreensaver-command
-        lock_item = self.append_menu_item(self.menu, "Lock Screen", "lock", "Protect your computer from unauthorized use")
-        lock_item.connect("activate", self.start_subprocess_cb, "gnome-screensaver-command --lock", True)
+        dbus_services = session_bus.list_names()
+        can_lock_screen = "org.gnome.ScreenSaver" in dbus_services
+        can_manage_session = "org.gnome.SessionManager" in dbus_services
 
-        user_name = commands.getoutput("/usr/bin/whoami")
-        logout_item = self.append_menu_item(self.menu, "Log Out %s..." % user_name, "application-exit", "Log out %s of this session to log in as a different user" % user_name)
-        logout_dialog = self.LogoutDialog(self.applet, lambda: self.start_subprocess_cb(None, logout_command, True))
-        def logout_cb(widget):
-            logout_dialog.show_all()
-            logout_dialog.deiconify()
-        logout_item.connect("activate", logout_cb)
+        if can_lock_screen or can_manage_session:
+            self.menu.append(gtk.SeparatorMenuItem())
+
+        if can_lock_screen:
+            lock_item = self.append_menu_item(self.menu, "Lock Screen", "system-lock-screen", "Protect your computer from unauthorized use")
+            def lock_screen_cb(widget):
+                ss_proxy = session_bus.get_object("org.gnome.ScreenSaver", "/")
+                dbus.Interface(ss_proxy, "org.gnome.ScreenSaver").Lock()
+            lock_item.connect("activate", lock_screen_cb)
+
+        if can_manage_session:
+            sm_proxy = session_bus.get_object("org.gnome.SessionManager", "/org/gnome/SessionManager")
+            sm_if = dbus.Interface(sm_proxy, "org.gnome.SessionManager")
+
+            user_name = commands.getoutput("/usr/bin/whoami")
+            logout_item = self.append_menu_item(self.menu, "Log Out %s..." % user_name, "system-log-out", "Log out %s of this session to log in as a different user" % user_name)
+            logout_item.connect("activate", lambda w: sm_if.Logout(0))
+
+            shutdown_item = self.append_menu_item(self.menu, "Shut Down...", "system-shutdown", "Shut down the system")
+            shutdown_item.connect("activate", lambda w: sm_if.Shutdown())
 
         self.menu.show_all()
 
@@ -341,22 +353,6 @@ class YamaApplet:
                 clear_cb()
             clear_button.connect("clicked", clear_and_hide)
             self.action_area.add(clear_button)
-
-    class LogoutDialog(awnlib.Dialogs.BaseDialog, gtk.MessageDialog):
-
-        def __init__(self, parent, clear_cb):
-            gtk.MessageDialog.__init__(self, type=gtk.MESSAGE_QUESTION, message_format="Log out of this system now?", buttons=gtk.BUTTONS_CANCEL)
-            awnlib.Dialogs.BaseDialog.__init__(self, parent)
-
-            self.set_image(gtk.image_new_from_stock(gtk.STOCK_QUIT, gtk.ICON_SIZE_DIALOG))
-            user_name = commands.getoutput("/usr/bin/whoami")
-            real_name = commands.getoutput("grep %s /etc/passwd" % user_name).split(":")[4].rstrip(",")
-            name = "\"%s\"" % real_name if len(real_name) > 0 else user_name
-            self.format_secondary_markup("You are currently logged in as %s.\nDo you want to log out?" % name)
-
-            logout_button = gtk.Button("_Log Out")
-            logout_button.connect("clicked", lambda w: clear_cb())
-            self.action_area.add(logout_button)
 
 
 if __name__ == "__main__":

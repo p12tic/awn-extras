@@ -10,6 +10,8 @@ sysmon_la_SOURCES =		\
   sysmon.h  \
   sysmonicon.c \
   sysmonicon.h \
+  cpuicon.c \
+  cupicon.h \
   $(NULL)
 sysmon_la_LIBADD =					\
 	$(AWN_LIBS)						\

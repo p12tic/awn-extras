@@ -11,25 +11,8 @@ Package: awn-extras-applets-trunk
 Section: gnome
 Architecture: any
 Depends: ${shlibs:Depends}, ${python:Depends}
-Recommends: 	avant-window-navigator-trunk, 
-		python-awn-trunk,
-		vala-awn-trunk,
-		python-feedparser, 
-		python-gnome2, 
-		python-gnome2-desktop, 
-		python-gnome2-extras, 
-		python-gst0.10, 
-		python-notify, 
-		python-sqlalchemy,
-		libgweather-common,
-		python-xlib,
-		xdg-utils,
-		hal,
-		sqlite3,
-		python-dateutil,
-		gnome-applets,
-		python-gdata,
-		python-vobject,
+AUTOPPA_INCLUDE(gutsy,hardy,intrepid,jaunty):Recommends: 	avant-window-navigator-trunk, python-awn-trunk, vala-awn-trunk, python-feedparser, python-gnome2, python-gnome2-desktop, python-gnome2-extras, python-gst0.10, python-notify, python-sqlalchemy, libgweather-common, python-xlib, xdg-utils, hal, sqlite3, python-dateutil, gnome-applets, python-gdata, python-vobject, libwebkit-1.0-1 | libwebkitgtk1d
+AUTOPPA_INCLUDE(feisty):Recommends: 	avant-window-navigator-trunk, python-awn-trunk, vala-awn-trunk, python-feedparser, python-gnome2, python-gnome2-desktop, python-gnome2-extras, python-gst0.10, python-notify, python-sqlalchemy, libgweather-common, python-xlib, xdg-utils, hal, sqlite3, python-dateutil, gnome-applets, python-gdata, python-vobject
 Conflicts: awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 Replaces: awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 XB-Python-Version: ${python:Versions}

@@ -1,8 +1,15 @@
+#
 #Awn system monitor
 #
 usr/share/avant-window-navigator/applets/awnsystemmonitor.desktop
 usr/lib/awn/applets/awnsystemmonitor/*.so
 etc/gconf/schemas/awnsystemmonitor.schemas
+#
+#Awn Terminal
+#
+usr/lib/awn/applets/awnterm/*.so
+usr/share/avant-window-navigator/applets/awnterm.desktop
+etc/gconf/schemas/awnterm.schemas
 #
 #Cairo menu
 #
@@ -33,13 +40,9 @@ usr/lib/awn/applets/places/*.so
 usr/share/avant-window-navigator/applets/places.desktop 
 etc/gconf/schemas/places.schemas
 #
-#Awn Terminal
-#
-usr/lib/awn/applets/awnterm/*.so
-usr/share/avant-window-navigator/applets/awnterm.desktop
-etc/gconf/schemas/awnterm.schemas
-#
-# Disabled applets
+####################
+# Disabled applets #
+####################
 #
 #usr/lib/awn/applets/separator/*.so
 #usr/lib/awn/applets/plugger/*.so

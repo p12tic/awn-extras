@@ -2,7 +2,7 @@ Source: awn-extras-applets-trunk
 Section: gnome
 Priority: optional
 Maintainer: Julien Lavergne <julien.lavergne@gmail.com>
-AUTOPPA_INCLUDE(gutsy,hardy,intrepid, jaunty):Build-Depends: 	debhelper (>= 5), cdbs, intltool, gnome-pkg-tools, autotools-dev, automake1.8 | automake1.9 | automake1.10 | automake, libgnome-menu-dev, libgconf2-dev, libgnome-desktop-dev, gnome-common, librsvg2-dev, libgtop2-dev, libawn-dev-trunk, libwnck-dev, python-central (>= 0.5.6), python-all-dev, python-cairo-dev, python-gtk2-dev, libvte-dev, libsexy-dev, libnotify-dev, vala-awn-trunk, valac, libglade2-dev, libxcomposite-dev, libxdamage-dev, librsvg2-dev, libsexy-dev, libnotify-dev, libtrackerclient-dev, libwebkit-dev | libwebkitgtk-dev, awn-manager-trunk, libgnomeui-dev
+AUTOPPA_INCLUDE(gutsy,hardy,intrepid,jaunty,karmic):Build-Depends: 	debhelper (>= 5), cdbs, intltool, gnome-pkg-tools, autotools-dev, automake1.8 | automake1.9 | automake1.10 | automake, libgnome-menu-dev, libgconf2-dev, libgnome-desktop-dev, gnome-common, librsvg2-dev, libgtop2-dev, libawn-dev-trunk, libwnck-dev, python-central (>= 0.5.6), python-all-dev, python-cairo-dev, python-gtk2-dev, libvte-dev, libsexy-dev, libnotify-dev, vala-awn-trunk, valac, libglade2-dev, libxcomposite-dev, libxdamage-dev, librsvg2-dev, libsexy-dev, libnotify-dev, libtrackerclient-dev, libwebkit-dev | libwebkitgtk-dev, awn-manager-trunk, libgnomeui-dev
 AUTOPPA_INCLUDE(feisty):Build-Depends: 	debhelper (>= 5), cdbs, intltool, gnome-pkg-tools, autotools-dev, automake1.8,libgnome-menu-dev, libgconf2-dev, libgnome-desktop-dev, gnome-common, librsvg2-dev, libgtop2-dev, libawn-dev-trunk, libwnck-dev, python-central (>= 0.5.6), python-all-dev, python-cairo-dev, python-gtk2-dev, libvte-dev, libsexy-dev, libnotify-dev, vala-awn-trunk, valac, libglade2-dev, libxcomposite-dev, libxdamage-dev, librsvg2-dev, libsexy-dev, libnotify-dev, libtrackerclient-dev, awn-manager-trunk
 Standards-Version: 3.7.2
 XS-Python-Version: current
@@ -11,7 +11,7 @@ Package: awn-extras-applets-trunk
 Section: gnome
 Architecture: any
 Depends: ${shlibs:Depends}, ${python:Depends}
-AUTOPPA_INCLUDE(gutsy,hardy,intrepid,jaunty):Recommends: 	avant-window-navigator-trunk, python-awn-trunk, vala-awn-trunk, python-feedparser, python-gnome2, python-gnome2-desktop, python-gnome2-extras, python-gst0.10, python-notify, python-sqlalchemy, libgweather-common, python-xlib, xdg-utils, hal, sqlite3, python-dateutil, gnome-applets, python-gdata, python-vobject, libwebkit-1.0-1 | libwebkitgtk1d
+AUTOPPA_INCLUDE(gutsy,hardy,intrepid,jaunty,karmic):Recommends: 	avant-window-navigator-trunk, python-awn-trunk, vala-awn-trunk, python-feedparser, python-gnome2, python-gnome2-desktop, python-gnome2-extras, python-gst0.10, python-notify, python-sqlalchemy, libgweather-common, python-xlib, xdg-utils, hal, sqlite3, python-dateutil, gnome-applets, python-gdata, python-vobject, libwebkit-1.0-1 | libwebkitgtk1d
 AUTOPPA_INCLUDE(feisty):Recommends: 	avant-window-navigator-trunk, python-awn-trunk, vala-awn-trunk, python-feedparser, python-gnome2, python-gnome2-desktop, python-gnome2-extras, python-gst0.10, python-notify, python-sqlalchemy, libgweather-common, python-xlib, xdg-utils, hal, sqlite3, python-dateutil, gnome-applets, python-gdata, python-vobject
 Conflicts: awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 Replaces: awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing

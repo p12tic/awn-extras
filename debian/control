@@ -61,7 +61,7 @@ Recommends: 	avant-window-navigator-trunk,
 		gnome-applets,
 		python-gdata,
 		python-vobject,
-		libwebkit-1.0-1 | libwebkitgtk1d
+		libwebkit-1.0-2 | libwebkit-1.0-1 | libwebkitgtk1d
 Conflicts: awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 Replaces: awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 XB-Python-Version: ${python:Versions}

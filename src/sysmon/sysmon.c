@@ -17,6 +17,7 @@
 /* awn-sysmon.c */
 
 #include "sysmon.h"
+#include "cpuicon.h"
 
 G_DEFINE_TYPE (AwnSysmon, awn_sysmon, AWN_TYPE_APPLET)
 
@@ -74,30 +75,39 @@ awn_sysmon_class_init (AwnSysmonClass *klass)
   object_class->finalize = awn_sysmon_finalize;
 }
 
-static void
-awn_sysmon_init (AwnSysmon *sysmon)
+static void _bloody_thing_has_style(GtkWidget *sysmon, gpointer null)
 {
-  AwnSysmonPrivate *priv;
   GtkWidget *icon;
   GdkPixbuf * pixbuf;
-        
+  AwnSysmonPrivate *priv;
   priv = AWN_SYSMON_GET_PRIVATE (sysmon);
-  
-  /* Create the icon box */
-  priv->box = awn_icon_box_new_for_applet (AWN_APPLET (sysmon));
-  gtk_container_add (GTK_CONTAINER (sysmon), priv->box);
-  gtk_widget_show (priv->box);
+        
   icon = awn_CPUicon_new ();
   pixbuf = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), 
                                      "gnome-system-monitor",
-                                     40, 
+                                     awn_applet_get_size (AWN_APPLET(sysmon)), 
                                      GTK_ICON_LOOKUP_FORCE_SVG, NULL);
   g_assert (pixbuf);
   g_debug ("SIZE = %u \n",awn_applet_get_size (AWN_APPLET(sysmon)));
   awn_icon_set_from_pixbuf (AWN_ICON(icon),pixbuf);
   gtk_container_add (GTK_CONTAINER (priv->box), icon);
   gtk_widget_show (icon);
+
+
+}
+
+
+static void
+awn_sysmon_init (AwnSysmon *sysmon)
+{
+  AwnSysmonPrivate *priv;
+  priv = AWN_SYSMON_GET_PRIVATE (sysmon);
   
+  /* Create the icon box */
+  priv->box = awn_icon_box_new_for_applet (AWN_APPLET (sysmon));
+  gtk_container_add (GTK_CONTAINER (sysmon), priv->box);
+  gtk_widget_show (priv->box);
+  g_signal_connect_after(G_OBJECT(sysmon), "map", G_CALLBACK(_bloody_thing_has_style), NULL);  
   
 }
 

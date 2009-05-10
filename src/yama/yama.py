@@ -46,7 +46,7 @@ data_dirs = os.environ["XDG_DATA_DIRS"] if "XDG_DATA_DIRS" in os.environ else "/
 # Describes the pattern used to try to decode URLs
 url_pattern = re.compile("^[a-z]+://(?:[^@]+@)?([^/]+)/(.*)$")
 
-# TODO handle updates in removed/new and included/excluded apps and bookmarks
+# TODO handle updates in removed/new and included/excluded apps
 # TODO add devices to places
 
 
@@ -64,7 +64,7 @@ class YamaApplet:
         self.menu = gtk.Menu()
         self.icon_theme = gtk.icon_theme_get_default()
 
-        # Applications
+        """ Applications """
         tree = gmenu.lookup_tree("applications.menu")
         self.append_directory(tree.root, self.menu)
         tree.add_monitor(self.applications_menu_changed_cb)
@@ -72,15 +72,16 @@ class YamaApplet:
 
         self.menu.append(gtk.SeparatorMenuItem())
 
-        # Places
+        """ Places """
         self.create_places_submenu(self.menu)
 
-        # System
+        """ System """
         tree = gmenu.lookup_tree("settings.menu")
         self.append_directory(tree.root, self.menu)
         tree.add_monitor(self.settings_menu_changed_cb)
         # TODO remove monitor when destroy signal of menu is fired?
 
+        """ Session actions """
         session_bus = dbus.SessionBus()
 
         dbus_services = session_bus.list_names()
@@ -183,13 +184,14 @@ class YamaApplet:
         self.bookmarks_items = []
         self.append_bookmarks()
 
-        bookmarks_file = os.path.join(user_path, ".gtk-bookmarks")
-        bookmarks_monitor = gio.File(bookmarks_file).monitor_file()
+        # Monitor bookmarks file for changes
+        bookmarks_file = os.path.expanduser("~/.gtk-bookmarks")
+        self.__bookmarks_monitor = gio.File(bookmarks_file).monitor_file()  # keep a reference to avoid getting it garbage collected
         def bookmarks_changed_cb(monitor, file, other_file, event):
-            if event is gio.FileMonitorEvent.__enum_values__[0]:
+            if event == gio.FILE_MONITOR_EVENT_CHANGES_DONE_HINT:
                 self.append_bookmarks()
-        bookmarks_monitor.connect("changed", bookmarks_changed_cb)
-        # FIXME boehoehoe doesn't seem to work atm :'( need glib.MainLoop().run()
+                self.places_menu.show_all()  # refresh menu
+        self.__bookmarks_monitor.connect("changed", bookmarks_changed_cb)
 
         menu.append(gtk.SeparatorMenuItem())
 
@@ -216,7 +218,7 @@ class YamaApplet:
 
         self.append_awn_desktop(menu, "gnome-search-tool")
 
-        # Recent Documents
+        """ Recent Documents """
         recent_manager = gtk.recent_manager_get_default()
 
         chooser_menu = gtk.RecentChooserMenu(recent_manager)
@@ -256,10 +258,10 @@ class YamaApplet:
                         else:
                             url_name.append(filename_display_basename(url_name[0]))
                     url, name = (url_name[0], url_name[1])
-        
+
                     icon = "folder" if url.startswith("file://") else "folder-remote"
                     display_url = url[7:] if url.startswith("file://") else url
-        
+
                     item = self.create_menu_item(name, icon, "Open '%s'" % display_url)
                     self.places_menu.insert(item, index)
                     item.connect("activate", self.open_folder_cb, url)

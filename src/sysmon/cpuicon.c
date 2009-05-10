@@ -21,7 +21,7 @@
 
 G_DEFINE_TYPE (AwnCPUicon, awn_CPUicon, AWN_TYPE_SYSMONICON)
 
-#define GET_PRIVATE(o) \
+#define AWN_CPUICON_GET_PRIVATE(o) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), AWN_TYPE_CPUICON, AwnCPUiconPrivate))
 
 typedef struct _AwnCPUiconPrivate AwnCPUiconPrivate;
@@ -75,14 +75,23 @@ awn_CPUicon_class_init (AwnCPUiconClass *klass)
   object_class->finalize = awn_CPUicon_finalize;
 }
 
+
 static void
 awn_CPUicon_init (AwnCPUicon *self)
 {
+  GdkPixbuf * pixbuf;  
+  AwnCPUiconPrivate *priv;
+  	
+  priv = AWN_CPUICON_GET_PRIVATE (self);
 }
 
 GtkWidget*
-awn_CPUicon_new (void)
+awn_CPUicon_new (AwnApplet * applet)
 {
-  return g_object_new (AWN_TYPE_CPUICON, NULL);
+  GtkWidget * cpuicon = NULL;
+  cpuicon = g_object_new (AWN_TYPE_CPUICON,
+                          "applet",applet,
+                          NULL);
+  return cpuicon;
 }
 

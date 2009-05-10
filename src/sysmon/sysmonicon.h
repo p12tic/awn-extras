@@ -22,6 +22,7 @@
 #include <gtk/gtk.h>
 #include <glib-object.h>
 #include <libawn/awn-icon.h>
+#include <libawn/awn-applet.h>
 
 G_BEGIN_DECLS
 
@@ -48,11 +49,15 @@ typedef struct {
 
 typedef struct {
   AwnIconClass parent_class;
+
+  /*< vtable >*/
+  void          (*set_applet)         (AwnApplet * applet);
+
 } AwnSysmoniconClass;
 
 GType awn_sysmonicon_get_type (void);
 
-GtkWidget* awn_sysmonicon_new (void);
+GtkWidget* awn_sysmonicon_new (AwnApplet *);
 
 G_END_DECLS
 

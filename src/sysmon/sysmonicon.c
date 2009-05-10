@@ -20,21 +20,40 @@
 
 G_DEFINE_TYPE (AwnSysmonicon, awn_sysmonicon, AWN_TYPE_ICON)
 
-#define GET_PRIVATE(o) \
+#define AWN_SYSMONICON_GET_PRIVATE(o) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), AWN_TYPE_SYSMONICON, AwnSysmoniconPrivate))
 
 typedef struct _AwnSysmoniconPrivate AwnSysmoniconPrivate;
 
-struct _AwnSysmoniconPrivate {
-    int dummy;
+struct _AwnSysmoniconPrivate 
+{
+  AwnApplet * applet;
+  cairo_surface_t *surface;
+  cairo_t *cr;
+    
 };
+
+enum
+{
+  PROP_0,
+  PROP_APPLET
+};
+
+static void create_surface (AwnSysmonicon * sysmonicon);
+
 
 static void
 awn_sysmonicon_get_property (GObject *object, guint property_id,
                               GValue *value, GParamSpec *pspec)
 {
+  AwnSysmoniconPrivate * priv;
+  AwnSysmonicon * sysmonicon = AWN_SYSMONICON(object);
+  priv = AWN_SYSMONICON_GET_PRIVATE (sysmonicon);
   switch (property_id) {
-  default:
+    case PROP_APPLET:
+      g_value_set_object (value, priv->applet); 
+      break;    
+    default:
     G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
   }
 }
@@ -43,7 +62,13 @@ static void
 awn_sysmonicon_set_property (GObject *object, guint property_id,
                               const GValue *value, GParamSpec *pspec)
 {
+  AwnSysmoniconPrivate * priv;
+  AwnSysmonicon * sysmonicon = AWN_SYSMONICON(object);
+  priv = AWN_SYSMONICON_GET_PRIVATE (sysmonicon);
   switch (property_id) {
+    case PROP_APPLET:
+      priv->applet = g_value_get_object (value);
+      break;    
   default:
     G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
   }
@@ -64,24 +89,76 @@ awn_sysmonicon_finalize (GObject *object)
 static void
 awn_sysmonicon_class_init (AwnSysmoniconClass *klass)
 {
+  GParamSpec   *pspec;  
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
-  g_type_class_add_private (klass, sizeof (AwnSysmoniconPrivate));
 
   object_class->get_property = awn_sysmonicon_get_property;
   object_class->set_property = awn_sysmonicon_set_property;
   object_class->dispose = awn_sysmonicon_dispose;
   object_class->finalize = awn_sysmonicon_finalize;
+  
+  pspec = g_param_spec_object ("applet",
+                               "Applet",
+                               "AwnApplet",
+                               AWN_TYPE_APPLET,
+                               G_PARAM_READWRITE);
+  g_object_class_install_property (object_class, PROP_APPLET, pspec);  
+  g_type_class_add_private (object_class, sizeof (AwnSysmoniconPrivate));
+  
+}
+
+static void 
+_bloody_thing_has_style(GtkWidget *self, gpointer null)
+{
+  AwnSysmoniconPrivate * priv;
+  priv = AWN_SYSMONICON_GET_PRIVATE (self);
+  
+  create_surface(AWN_SYSMONICON(self));
+  awn_icon_set_from_context (AWN_ICON(self),priv->cr);
 }
 
 static void
 awn_sysmonicon_init (AwnSysmonicon *self)
 {
+  g_signal_connect_after(G_OBJECT(self), "map", G_CALLBACK(_bloody_thing_has_style), NULL);      
 }
 
 GtkWidget*
-awn_sysmonicon_new (void)
+awn_sysmonicon_new (AwnApplet *applet)
 {
-  return g_object_new (AWN_TYPE_SYSMONICON, NULL);
+  return g_object_new (AWN_TYPE_SYSMONICON, 
+                       "Applet",applet,
+                       NULL);
 }
 
+static void
+create_surface (AwnSysmonicon * sysmonicon)
+{
+  
+  cairo_t * temp_cr =NULL;
+  AwnSysmoniconPrivate * priv;
+  gint size;
+  
+  priv = AWN_SYSMONICON_GET_PRIVATE (sysmonicon);
+  
+  size = awn_applet_get_size (AWN_APPLET(priv->applet));
+  
+  if (priv->cr)
+  {
+    cairo_destroy(priv->cr);
+    priv->cr = NULL;
+  }
+
+  if (priv->surface)
+  {
+    cairo_surface_destroy(priv->surface);
+    priv->surface = NULL;
+  }
+
+  temp_cr = gdk_cairo_create(GTK_WIDGET(priv->applet)->window);
+  priv->surface = cairo_surface_create_similar (cairo_get_target(temp_cr),CAIRO_CONTENT_COLOR_ALPHA, size,size);
+  cairo_destroy(temp_cr);
+  priv->cr = cairo_create(priv->surface);
+  cairo_scale(priv->cr,(double)size/96.0,(double)size/96.0);
+
+}

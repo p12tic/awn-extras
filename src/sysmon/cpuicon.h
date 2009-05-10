@@ -21,7 +21,9 @@
 #define _AWN_CPUICON
 
 #include <glib-object.h>
+#include <gtk/gtk.h>
 #include <sysmonicon.h>
+
 
 G_BEGIN_DECLS
 
@@ -52,7 +54,7 @@ typedef struct {
 
 GType awn_CPUicon_get_type (void);
 
-GtkWidget* awn_CPUicon_new (void);
+GtkWidget* awn_CPUicon_new (AwnApplet * applet);
 
 G_END_DECLS
 

@@ -48,14 +48,16 @@ typedef struct {
 
 typedef struct {
   GObjectClass parent_class;
-  void (*render_to_context) (AwnGraph * graph,cairo_t * ctx, gpointer data);
+  void (*render_to_context) (AwnGraph * graph,cairo_t * ctx);
+  void (*add_data) (AwnGraph * graph, gpointer data);
 } AwnGraphClass;
 
 GType awn_graph_get_type (void);
 
 AwnGraph* awn_graph_new (void);
 
-void render_to_surface (AwnGraph * graph, cairo_t *ctx,gpointer data);
+void awn_graph_render_to_context (AwnGraph * graph, cairo_t *ctx);
+void awn_graph_add_data (AwnGraph * graph, gpointer data);
 
 G_END_DECLS
 

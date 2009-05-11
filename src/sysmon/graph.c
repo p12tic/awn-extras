@@ -20,17 +20,18 @@
 
 G_DEFINE_TYPE (AwnGraph, awn_graph, G_TYPE_OBJECT)
 
-#define GET_PRIVATE(o) \
+#define AWN_GRAPH_GET_PRIVATE(o) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), AWN_TYPE_GRAPH, AwnGraphPrivate))
 
 typedef struct _AwnGraphPrivate AwnGraphPrivate;
 
 struct _AwnGraphPrivate {
-    int dummy;
+  gpointer data;
 };
 
 static void _awn_graph_render_to_context(AwnGraph * graph,
-                                        cairo_t *ctx,
+                                        cairo_t *ctx);
+static void _awn_graph_add_data(AwnGraph * graph,
                                         gpointer data);
 
 static void
@@ -78,6 +79,7 @@ awn_graph_class_init (AwnGraphClass *klass)
   object_class->finalize = awn_graph_finalize;
   
   klass->render_to_context = _awn_graph_render_to_context;
+  klass->add_data = awn_graph_add_data;
 }
 
 static void
@@ -92,20 +94,40 @@ awn_graph_new (void)
 }
 
 static void _awn_graph_render_to_context(AwnGraph * graph,
-                                        cairo_t *cr,
-                                        gpointer data)
+                                        cairo_t *cr)
 {
+  AwnGraphPrivate * priv;
+  
+  priv = AWN_GRAPH_GET_PRIVATE(graph);
+  
   cairo_set_source_rgba(cr, 0.3, 0.4, 0.1, 0.4);
   cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
   cairo_paint(cr);
      
 }
 
-void render_to_context (AwnGraph * graph, cairo_t *ctx,gpointer data)
+static void _awn_graph_add_data(AwnGraph * graph,
+                                        gpointer data)
+{
+  AwnGraphPrivate * priv;
+  
+  priv = AWN_GRAPH_GET_PRIVATE(graph);
+}
+
+void awn_graph_render_to_context (AwnGraph * graph, cairo_t *ctx)
 {
   AwnGraphClass *klass;
 
   klass = AWN_GRAPH_GET_CLASS (graph);
 
-  return klass->render_to_context (graph, ctx,data);
+  return klass->render_to_context (graph, ctx);
+}
+
+void awn_graph_add_data (AwnGraph * graph, gpointer data)
+{
+  AwnGraphClass *klass;
+
+  klass = AWN_GRAPH_GET_CLASS (graph);
+
+  return klass->add_data (graph, data);
 }

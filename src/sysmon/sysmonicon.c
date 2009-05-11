@@ -119,7 +119,7 @@ static gboolean _expose(GtkWidget *self,
   {
     create_surface (AWN_SYSMONICON(self));
   }
-  render_to_context (priv->graph,priv->cr,NULL);
+  awn_graph_render_to_context (priv->graph,priv->cr);
   awn_icon_set_from_context (AWN_ICON(self),priv->cr);
   return TRUE;
 }

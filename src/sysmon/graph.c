@@ -79,7 +79,7 @@ awn_graph_class_init (AwnGraphClass *klass)
   object_class->finalize = awn_graph_finalize;
   
   klass->render_to_context = _awn_graph_render_to_context;
-  klass->add_data = awn_graph_add_data;
+  klass->add_data = _awn_graph_add_data;
 }
 
 static void
@@ -98,6 +98,7 @@ static void _awn_graph_render_to_context(AwnGraph * graph,
 {
   AwnGraphPrivate * priv;
   
+  g_debug ("graph render! \n");  
   priv = AWN_GRAPH_GET_PRIVATE(graph);
   
   cairo_set_source_rgba(cr, 0.3, 0.4, 0.1, 0.4);

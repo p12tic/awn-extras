@@ -118,12 +118,11 @@ static gboolean _expose(GtkWidget *self,
   if (!priv->cr)
   {
     create_surface (AWN_SYSMONICON(self));
-  }
-  awn_graph_render_to_context (priv->graph,priv->cr);
-  awn_icon_set_from_context (AWN_ICON(self),priv->cr);
+    awn_graph_render_to_context (priv->graph,priv->cr);
+    awn_icon_set_from_context (AWN_ICON(self),priv->cr);
+  }  
   return TRUE;
 }
-
 
 static void
 awn_sysmonicon_init (AwnSysmonicon *self)
@@ -131,7 +130,7 @@ awn_sysmonicon_init (AwnSysmonicon *self)
   AwnSysmoniconPrivate * priv;
   priv = AWN_SYSMONICON_GET_PRIVATE (self);
 
-  priv->graph = awn_graph_new ();
+  priv->graph = awn_areagraph_new ();
   g_signal_connect_after (G_OBJECT(self), "expose-event", G_CALLBACK(_expose), NULL);       
 }
 

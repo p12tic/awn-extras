@@ -21,14 +21,20 @@
 
 G_DEFINE_TYPE (Awn_Areagraph, awn_areagraph, AWN_TYPE_GRAPH)
 
-#define GET_PRIVATE(o) \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((o), AWN_TYPE_AREAGRAPH, Awn_AreagraphPrivate))
+#define AWN_AREAGRAPH_GET_PRIVATE(o) \
+  (G_TYPE_INSTANCE_GET_PRIVATE ((o), AWN_TYPE_AREAGRAPH, AwnAreagraphPrivate))
 
-typedef struct _Awn_AreagraphPrivate Awn_AreagraphPrivate;
+typedef struct _Awn_AreagraphPrivate AwnAreagraphPrivate;
 
 struct _Awn_AreagraphPrivate {
     int dummy;
 };
+
+
+static void _awn_areagraph_render_to_context(AwnGraph * graph,
+                                        cairo_t *ctx);
+static void _awn_areagraph_add_data(AwnGraph * graph,
+                                        gpointer data);
 
 static void
 awn_areagraph_get_property (GObject *object, guint property_id,
@@ -67,12 +73,38 @@ awn_areagraph_class_init (Awn_AreagraphClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-  g_type_class_add_private (klass, sizeof (Awn_AreagraphPrivate));
+  g_type_class_add_private (klass, sizeof (AwnAreagraphPrivate));
 
   object_class->get_property = awn_areagraph_get_property;
   object_class->set_property = awn_areagraph_set_property;
   object_class->dispose = awn_areagraph_dispose;
   object_class->finalize = awn_areagraph_finalize;
+  
+  AWN_GRAPH_CLASS(klass)->render_to_context = _awn_areagraph_render_to_context;
+  AWN_GRAPH_CLASS(klass)->add_data = _awn_areagraph_add_data;
+  
+}
+
+static void _awn_areagraph_render_to_context(AwnGraph * graph,
+                                        cairo_t *cr)
+{
+  AwnAreagraphPrivate * priv;
+  
+  g_debug ("area graph render! \n");
+  priv = AWN_AREAGRAPH_GET_PRIVATE(graph);
+  
+  cairo_set_source_rgba(cr, 0.3, 0.4, 0.1, 0.4);
+  cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
+  cairo_paint(cr);
+     
+}
+
+static void _awn_areagraph_add_data(AwnGraph * graph,
+                                        gpointer data)
+{
+  AwnAreagraphPrivate * priv;
+  
+  priv = AWN_AREAGRAPH_GET_PRIVATE(graph);
 }
 
 static void

@@ -27,7 +27,8 @@ G_DEFINE_TYPE (AwnCPUicon, awn_CPUicon, AWN_TYPE_SYSMONICON)
 typedef struct _AwnCPUiconPrivate AwnCPUiconPrivate;
 
 struct _AwnCPUiconPrivate {
-    int dummy;
+    guint timer_id;
+    guint update_timeout;
 };
 
 static void
@@ -62,6 +63,21 @@ awn_CPUicon_finalize (GObject *object)
   G_OBJECT_CLASS (awn_CPUicon_parent_class)->finalize (object);
 }
 
+static gboolean 
+_awn_CPUicon_update_icon(gpointer icon)
+{
+  g_debug ("Fire!\n");
+  return TRUE;
+}
+
+static void
+awn_CPUicon_constructed (GObject *object)
+{
+  AwnCPUiconPrivate * priv;
+  priv = AWN_CPUICON_GET_PRIVATE (object);
+  priv->timer_id = g_timeout_add(priv->update_timeout, _awn_CPUicon_update_icon, object);  
+}
+
 static void
 awn_CPUicon_class_init (AwnCPUiconClass *klass)
 {
@@ -73,6 +89,7 @@ awn_CPUicon_class_init (AwnCPUiconClass *klass)
   object_class->set_property = awn_CPUicon_set_property;
   object_class->dispose = awn_CPUicon_dispose;
   object_class->finalize = awn_CPUicon_finalize;
+  object_class->constructed = awn_CPUicon_constructed;
 }
 
 
@@ -83,6 +100,7 @@ awn_CPUicon_init (AwnCPUicon *self)
   AwnCPUiconPrivate *priv;
   	
   priv = AWN_CPUICON_GET_PRIVATE (self);
+  priv->update_timeout = 1000;
 }
 
 GtkWidget*

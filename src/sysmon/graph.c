@@ -29,6 +29,10 @@ struct _AwnGraphPrivate {
     int dummy;
 };
 
+static void _awn_graph_render_to_context(AwnGraph * graph,
+                                        cairo_t *ctx,
+                                        gpointer data);
+
 static void
 awn_graph_get_property (GObject *object, guint property_id,
                               GValue *value, GParamSpec *pspec)
@@ -72,6 +76,8 @@ awn_graph_class_init (AwnGraphClass *klass)
   object_class->set_property = awn_graph_set_property;
   object_class->dispose = awn_graph_dispose;
   object_class->finalize = awn_graph_finalize;
+  
+  klass->render_to_context = _awn_graph_render_to_context;
 }
 
 static void
@@ -85,3 +91,21 @@ awn_graph_new (void)
   return g_object_new (AWN_TYPE_GRAPH, NULL);
 }
 
+static void _awn_graph_render_to_context(AwnGraph * graph,
+                                        cairo_t *cr,
+                                        gpointer data)
+{
+  cairo_set_source_rgba(cr, 0.3, 0.4, 0.1, 0.4);
+  cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
+  cairo_paint(cr);
+     
+}
+
+void render_to_context (AwnGraph * graph, cairo_t *ctx,gpointer data)
+{
+  AwnGraphClass *klass;
+
+  klass = AWN_GRAPH_GET_CLASS (graph);
+
+  return klass->render_to_context (graph, ctx,data);
+}

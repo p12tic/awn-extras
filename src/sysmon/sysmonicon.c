@@ -17,6 +17,7 @@
 /* awn-sysmonicon.c */
 
 #include "sysmonicon.h"
+#include "graph.h"
 
 G_DEFINE_TYPE (AwnSysmonicon, awn_sysmonicon, AWN_TYPE_ICON)
 
@@ -30,7 +31,7 @@ struct _AwnSysmoniconPrivate
   AwnApplet * applet;
   cairo_surface_t *surface;
   cairo_t *cr;
-    
+  AwnGraph * graph;    
 };
 
 enum
@@ -107,20 +108,31 @@ awn_sysmonicon_class_init (AwnSysmoniconClass *klass)
   
 }
 
-static void 
-_bloody_thing_has_style(GtkWidget *self, gpointer null)
+static gboolean _expose(GtkWidget *self,
+                        GdkEventExpose *event,
+                        gpointer null)
 {
   AwnSysmoniconPrivate * priv;
   priv = AWN_SYSMONICON_GET_PRIVATE (self);
   
-  create_surface(AWN_SYSMONICON(self));
+  if (!priv->cr)
+  {
+    create_surface (AWN_SYSMONICON(self));
+  }
+  render_to_context (priv->graph,priv->cr,NULL);
   awn_icon_set_from_context (AWN_ICON(self),priv->cr);
+  return TRUE;
 }
+
 
 static void
 awn_sysmonicon_init (AwnSysmonicon *self)
 {
-  g_signal_connect_after(G_OBJECT(self), "map", G_CALLBACK(_bloody_thing_has_style), NULL);      
+  AwnSysmoniconPrivate * priv;
+  priv = AWN_SYSMONICON_GET_PRIVATE (self);
+
+  priv->graph = awn_graph_new ();
+  g_signal_connect_after (G_OBJECT(self), "expose-event", G_CALLBACK(_expose), NULL);       
 }
 
 GtkWidget*
@@ -159,6 +171,6 @@ create_surface (AwnSysmonicon * sysmonicon)
   priv->surface = cairo_surface_create_similar (cairo_get_target(temp_cr),CAIRO_CONTENT_COLOR_ALPHA, size,size);
   cairo_destroy(temp_cr);
   priv->cr = cairo_create(priv->surface);
-  cairo_scale(priv->cr,(double)size/96.0,(double)size/96.0);
+  cairo_scale(priv->cr,(double)size/48.0,(double)size/48.0);
 
 }

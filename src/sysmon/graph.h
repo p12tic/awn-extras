@@ -20,6 +20,8 @@
 #define _AWN_GRAPH
 
 #include <glib-object.h>
+#include <cairo.h>
+#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 
@@ -46,11 +48,14 @@ typedef struct {
 
 typedef struct {
   GObjectClass parent_class;
+  void (*render_to_context) (AwnGraph * graph,cairo_t * ctx, gpointer data);
 } AwnGraphClass;
 
 GType awn_graph_get_type (void);
 
 AwnGraph* awn_graph_new (void);
+
+void render_to_surface (AwnGraph * graph, cairo_t *ctx,gpointer data);
 
 G_END_DECLS
 

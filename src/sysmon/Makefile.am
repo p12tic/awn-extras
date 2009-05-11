@@ -10,6 +10,8 @@ sysmon_la_SOURCES =		\
   areagraph.h \
   cpuicon.c \
   cupicon.h \
+  graph.c \
+  graph.h \
   sysmon.c  \
   sysmon.h  \
   sysmonicon.c \

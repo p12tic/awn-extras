@@ -26,8 +26,14 @@ G_DEFINE_TYPE (Awn_Areagraph, awn_areagraph, AWN_TYPE_GRAPH)
 
 typedef struct _Awn_AreagraphPrivate AwnAreagraphPrivate;
 
-struct _Awn_AreagraphPrivate {
-    int dummy;
+struct _Awn_AreagraphPrivate 
+{
+  gdouble max_val;
+  gdouble min_val;
+  gdouble num_points;
+  gdouble cur_point;
+  gdouble * values;
+  
 };
 
 
@@ -110,6 +116,16 @@ static void _awn_areagraph_add_data(AwnGraph * graph,
 static void
 awn_areagraph_init (Awn_Areagraph *self)
 {
+  AwnAreagraphPrivate * priv;
+  
+  priv = AWN_AREAGRAPH_GET_PRIVATE(self);
+
+  priv->min_val = 0.0;
+  priv->max_val = 100.0;
+  priv->num_points = 48;
+  priv->cur_point = 0;
+  priv->values =g_new0(gdouble, priv->num_points);
+  
 }
 
 Awn_Areagraph*

@@ -22,7 +22,8 @@
 
 #include <glib-object.h>
 #include <gtk/gtk.h>
-#include <sysmonicon.h>
+
+#include "sysmonicon.h"
 
 
 G_BEGIN_DECLS

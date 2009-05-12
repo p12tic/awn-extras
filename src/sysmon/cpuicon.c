@@ -20,6 +20,7 @@
 #include <glibtop/cpu.h>
 
 #include "cpuicon.h"
+#include "areagraph.h"
 
 G_DEFINE_TYPE (AwnCPUicon, awn_CPUicon, AWN_TYPE_SYSMONICON)
 
@@ -148,6 +149,7 @@ get_load(AwnCPUicon *self)
   AwnCPUiconPrivate *priv;
   float  total, used;
   gdouble load;
+  Awn_AreagraphPoint point;
   
   priv = AWN_CPUICON_GET_PRIVATE (self);
 
@@ -180,9 +182,11 @@ get_load(AwnCPUicon *self)
     used  = used + NOW[i][CPU_USED]  - LAST[i][CPU_USED];
   }
 
-    load = used / MAX(total, (float)priv->num_cpus * 1.0f);
+  load = used / MAX(total, (float)priv->num_cpus * 1.0f);
 
-  
+  point.value = load;
+  point.points = 1.0;   /*FIXME... do a proper calc... timeouts are NOT exact*/
+  awn_graph_add_data (awn_sysmonicon_get_graph(AWN_SYSMONICON(self)),&point);
   // toggle the buffer index.
   priv->now ^= 1;
 

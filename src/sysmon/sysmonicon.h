@@ -24,6 +24,7 @@
 #include <libawn/awn-icon.h>
 #include <libawn/awn-applet.h>
 
+#include "graph.h"
 G_BEGIN_DECLS
 
 #define AWN_TYPE_SYSMONICON awn_sysmonicon_get_type()
@@ -58,6 +59,8 @@ typedef struct {
 GType awn_sysmonicon_get_type (void);
 
 GtkWidget* awn_sysmonicon_new (AwnApplet *);
+
+AwnGraph * awn_sysmonicon_get_graph(AwnSysmonicon * icon);
 
 G_END_DECLS
 

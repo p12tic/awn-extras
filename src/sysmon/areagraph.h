@@ -41,13 +41,21 @@ G_BEGIN_DECLS
 #define AWN_AREAGRAPH_GET_CLASS(obj) \
   (G_TYPE_INSTANCE_GET_CLASS ((obj), AWN_TYPE_AREAGRAPH, Awn_AreagraphClass))
 
-typedef struct {
+typedef struct 
+{
   AwnGraph parent;
 } Awn_Areagraph;
 
-typedef struct {
+typedef struct 
+{
   AwnGraphClass parent_class;
 } Awn_AreagraphClass;
+
+typedef struct
+{
+  gdouble value;
+  gdouble points;
+}Awn_AreagraphPoint;
 
 GType awn_areagraph_get_type (void);
 

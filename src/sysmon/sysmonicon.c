@@ -142,6 +142,14 @@ awn_sysmonicon_new (AwnApplet *applet)
                        NULL);
 }
 
+AwnGraph *
+awn_sysmonicon_get_graph(AwnSysmonicon * self)
+{
+  AwnSysmoniconPrivate * priv;
+  priv = AWN_SYSMONICON_GET_PRIVATE (self);
+  return priv->graph;
+}
+
 static void
 create_surface (AwnSysmonicon * sysmonicon)
 {

@@ -81,10 +81,18 @@ awn_CPUicon_finalize (GObject *object)
 
 static gboolean 
 _awn_CPUicon_update_icon(gpointer object)
-{
+{  
+  AwnCPUiconPrivate * priv;  
+  AwnSysmoniconPrivate * sysmonicon_priv=NULL;  
   AwnCPUicon * icon = object;
-  g_debug ("Fire!\n");
   
+  priv = AWN_CPUICON_GET_PRIVATE (object);
+  sysmonicon_priv = AWN_SYSMONICON_GET_PRIVATE (object);
+  
+  g_debug ("Fire!\n");
+
+  //  awn_graph_add_data (awn_sysmonicon_get_graph(AWN_SYSMONICON(self)),&point);
+  awn_graph_add_data (sysmonicon_priv->graph,NULL);
   awn_sysmonicon_update_icon (icon);
   return TRUE;
 }
@@ -198,7 +206,7 @@ get_load(AwnCPUicon *self)
 
   point.value = load;
   point.points = 1.0;   /*FIXME... do a proper calc... timeouts are NOT exact*/
-  awn_graph_add_data (awn_sysmonicon_get_graph(AWN_SYSMONICON(self)),&point);
+
   // toggle the buffer index.
   priv->now ^= 1;
 

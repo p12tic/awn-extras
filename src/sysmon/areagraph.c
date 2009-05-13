@@ -156,22 +156,63 @@ static void _awn_areagraph_render_to_context(AwnGraph * graph,
                                         cairo_t *cr)
 {
   AwnAreagraphPrivate * priv;
+  AwnGraphPrivate * graph_priv;  
+  gint  srfc_height;
+  gint  srfc_width;
+  gint  i;
+  gint  end_point;
+  gint  x=0;
+  gdouble * values = NULL;
   
   g_debug ("area graph render! \n");
-  priv = AWN_AREAGRAPH_GET_PRIVATE(graph);
+  priv = AWN_AREAGRAPH_GET_PRIVATE (graph);
+  graph_priv = AWN_GRAPH_GET_PRIVATE (graph);
+  values = graph_priv->data;
   
-  cairo_set_source_rgba(cr, 0.3, 0.4, 0.1, 0.4);
-  cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
-  cairo_paint(cr);
-     
+  cairo_save (cr);
+  cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
+  cairo_paint (cr);
+  
+  srfc_height = cairo_xlib_surface_get_height (cairo_get_target(cr));
+  srfc_width = cairo_xlib_surface_get_width (cairo_get_target(cr));
+  
+  cairo_scale (cr,1.0, 0.5);//srfc_height / (double) (priv->max_val - priv->min_val));
+  cairo_set_source_rgba (cr, 0.3, 0.4, 0.1, 0.4);
+
+  cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
+
+  if ( (gint) priv->cur_point)
+  {
+    end_point = ( (gint)priv->cur_point) -1 ;
+  }
+  else
+  {
+    end_point = ((gint) priv->cur_point) ;
+  }
+    
+  for (i=priv->cur_point; x < priv->num_points;i++)
+  {
+    cairo_move_to (cr, x,priv->max_val - priv->min_val);
+    cairo_line_to (cr, x, priv->max_val - priv->min_val - values[i]);
+    cairo_stroke (cr);
+    if (i >= priv->num_points )
+    {
+      i = -1;
+    }    
+    x++;    
+  }
+  cairo_restore (cr);
 }
 
 static void _awn_areagraph_add_data(AwnGraph * graph,
                                         gpointer data)
 {
-  AwnAreagraphPrivate * priv;
+  AwnGraphPrivate * graph_priv;
   
-  priv = AWN_AREAGRAPH_GET_PRIVATE(graph);
+  graph_priv = AWN_GRAPH_GET_PRIVATE(graph);
+  g_debug ("areagraph add data \n");
+  awn_areagraph_clear (AWN_AREAGRAPH(graph),50.0);
+
 }
 
 static void
@@ -184,7 +225,7 @@ awn_areagraph_init (Awn_Areagraph *self)
   graph_priv = AWN_GRAPH_GET_PRIVATE (self);
 
   priv->min_val = 0.0;
-  priv->max_val = 100.0;
+  priv->max_val = 100.0;      /*FIXME*/
   priv->num_points = 48;
   priv->cur_point = 0;
   

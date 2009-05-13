@@ -13,12 +13,16 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
+
+#include <gdk/gdk.h>
 #include "sysmon.h"
 
 
 
 AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient, gint offset, gint height)
 {
+/*  gdk_threads_init ();
+  gdk_threads_enter();  */
   AwnApplet *applet = AWN_APPLET(awn_sysmon_new(uid, orient, offset, height));
 
   return applet;

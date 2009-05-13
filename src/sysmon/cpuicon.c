@@ -100,6 +100,7 @@ awn_CPUicon_finalize (GObject *object)
 static gboolean 
 _awn_CPUicon_update_icon(gpointer object)
 {  
+
   AwnCPUiconPrivate * priv;  
   AwnSysmoniconPrivate * sysmonicon_priv=NULL;  
   AwnCPUicon * icon = object;
@@ -107,8 +108,6 @@ _awn_CPUicon_update_icon(gpointer object)
   
   priv = AWN_CPUICON_GET_PRIVATE (object);
   sysmonicon_priv = AWN_SYSMONICON_GET_PRIVATE (object);
-  
-  g_debug ("Fire!\n");
 
   //  awn_graph_add_data (awn_sysmonicon_get_graph(AWN_SYSMONICON(self)),&point);
   point = awn_CPUicon_get_load(object);
@@ -122,13 +121,29 @@ _awn_CPUicon_update_icon(gpointer object)
 static void
 awn_CPUicon_constructed (GObject *object)
 {
+  /*FIXME*/
   AwnCPUiconPrivate * priv;
   AwnSysmoniconPrivate * sysmonicon_priv=NULL;  
   glibtop_cpu cpu;
   int i = 0;
     
-  priv = AWN_CPUICON_GET_PRIVATE (object);
-  priv->timer_id = g_timeout_add(priv->update_timeout, _awn_CPUicon_update_icon, object);  
+  priv = AWN_CPUICON_GET_PRIVATE (object); 
+
+  /*
+   this will choose add_seconds in a relatively conservative manner.  Note that
+   the timer is assumed to be incorrect and time elapsed is actually measured 
+   accurately when the timer fires.  Area graph can be informed that the 
+   measurement contains a partial point and it will average things out.
+   */
+  if ( (priv->update_timeout > 750) && 
+      ( (priv->update_timeout %1000 <25) || (priv->update_timeout %1000 >975)))
+  {
+    priv->timer_id = g_timeout_add_seconds(priv->update_timeout/ 1000, _awn_CPUicon_update_icon, object);  
+  }
+  else
+  {
+    priv->timer_id = g_timeout_add(priv->update_timeout, _awn_CPUicon_update_icon, object);  
+  }
   
   priv->num_cpus = 0;
   priv->prev_time = get_double_time();
@@ -171,7 +186,7 @@ awn_CPUicon_init (AwnCPUicon *self)
   AwnCPUiconPrivate *priv;
   	
   priv = AWN_CPUICON_GET_PRIVATE (self);
-  priv->update_timeout = 1000;
+  priv->update_timeout = 1000;  /*FIXME*/
 }
 
 GtkWidget*
@@ -230,7 +245,7 @@ awn_CPUicon_get_load(AwnCPUicon *self)
   load = used / MAX(total, (float)priv->num_cpus * 1.0f);
 
   point.value = load * 100.0;
-  point.points = new_time - priv->prev_time;   /*FIXME... do a proper calc... timeouts are NOT exact*/
+  point.points = (new_time - priv->prev_time) * 1000.0 / priv->update_timeout; 
 
   priv->prev_time = new_time;
   // toggle the buffer index.

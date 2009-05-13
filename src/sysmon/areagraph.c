@@ -224,7 +224,6 @@ static void _awn_areagraph_add_data(AwnGraph * graph,
   graph_priv = AWN_GRAPH_GET_PRIVATE(graph);
   
   priv->partial = area_graph_point->points - floor (area_graph_point->points);
-  g_debug ("partial = %lf\n",priv->partial);
   values = graph_priv->data;
   i=priv->cur_point;
 
@@ -233,7 +232,7 @@ static void _awn_areagraph_add_data(AwnGraph * graph,
   {
 
     count = lround ( total );    
-    g_debug (" i = %d, count = %ld \n",i,count);    
+    g_debug ("count = %ld\n",count);
     /*special case the first bit */
     values[i] =  priv->prev_value * priv->partial +
                   area_graph_point->value * (1.0 - priv->partial);
@@ -243,13 +242,13 @@ static void _awn_areagraph_add_data(AwnGraph * graph,
                   
     while (count)
     {
-      i++;      
-      values[i] = area_graph_point->value;
-      count--;
+      i++; 
       if (i >= priv->num_points)
       {
         i = 0;
-      } 
+      }       
+      values[i] = area_graph_point->value;
+      count--;
     }
     if (i >= priv->num_points)
     {
@@ -257,7 +256,6 @@ static void _awn_areagraph_add_data(AwnGraph * graph,
     }    
   }
   priv->cur_point = i +1;
-  
 }
 
 static void

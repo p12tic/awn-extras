@@ -34,7 +34,7 @@ struct _Awn_AreagraphPrivate
   gdouble min_val;
   guint num_points;
   gdouble cur_point;
-  
+  gdouble partial;  
 };
 
 enum
@@ -215,11 +215,15 @@ static void _awn_areagraph_add_data(AwnGraph * graph,
   gdouble * values;
   gint i;
   glong count;
-  const Awn_AreagraphPoint *area_graph_point = data;
   
+  
+  const Awn_AreagraphPoint *area_graph_point = data;
+
   priv = AWN_AREAGRAPH_GET_PRIVATE (graph);  
   graph_priv = AWN_GRAPH_GET_PRIVATE(graph);
   
+  priv->partial = area_graph_point->points - floor (area_graph_point->points);
+  g_debug ("partial = %lf\n",priv->partial);
   values = graph_priv->data;
   i=priv->cur_point;
   count = lround ( area_graph_point->points);
@@ -254,7 +258,7 @@ awn_areagraph_init (Awn_Areagraph *self)
   priv->max_val = 100.0;      /*FIXME*/
   priv->num_points = 48;
   priv->cur_point = 0;
-  
+  priv->partial = 0.0;
   graph_priv->data =g_new0(gdouble, priv->num_points);
   
 }

@@ -24,6 +24,19 @@
 
 #include "sysmoniconprivate.h"
 
+
+/* 
+ put this in a util.c  FIXME
+*/
+gdouble 
+get_double_time(void)
+{
+  GTimeVal  timeval;
+  g_get_current_time (&timeval);
+  return  timeval.tv_sec + timeval.tv_usec / 1000000.0;
+}
+
+
 G_DEFINE_TYPE (AwnCPUicon, awn_CPUicon, AWN_TYPE_SYSMONICON)
 
 #define AWN_CPUICON_GET_PRIVATE(o) \
@@ -45,6 +58,8 @@ struct _AwnCPUiconPrivate
     guint num_cpus;
     guint now; /*toggle used for the times*/
     guint64 times[2][GLIBTOP_NCPU][N_CPU_STATES];
+  
+    gdouble   prev_time;
 };
 
 static Awn_AreagraphPoint awn_CPUicon_get_load(AwnCPUicon *self);
@@ -116,6 +131,7 @@ awn_CPUicon_constructed (GObject *object)
   priv->timer_id = g_timeout_add(priv->update_timeout, _awn_CPUicon_update_icon, object);  
   
   priv->num_cpus = 0;
+  priv->prev_time = get_double_time();
   glibtop_get_cpu(&cpu);
 
   while (i < GLIBTOP_NCPU && cpu.xcpu_total[i] != 0)
@@ -129,7 +145,6 @@ awn_CPUicon_constructed (GObject *object)
   sysmonicon_priv = AWN_SYSMONICON_GET_PRIVATE (object);
 
   sysmonicon_priv->graph = AWN_GRAPH(awn_areagraph_new (48,0.0,100.0));
-  
   
 }
 
@@ -145,6 +160,7 @@ awn_CPUicon_class_init (AwnCPUiconClass *klass)
   object_class->dispose = awn_CPUicon_dispose;
   object_class->finalize = awn_CPUicon_finalize;
   object_class->constructed = awn_CPUicon_constructed;
+  
 }
 
 
@@ -177,9 +193,11 @@ awn_CPUicon_get_load(AwnCPUicon *self)
   float  total, used;
   gdouble load;
   Awn_AreagraphPoint point;
+  gdouble new_time;
   
   priv = AWN_CPUICON_GET_PRIVATE (self);
 
+  new_time = get_double_time ();
   glibtop_get_cpu(&cpu);
 
 #undef NOW
@@ -212,8 +230,9 @@ awn_CPUicon_get_load(AwnCPUicon *self)
   load = used / MAX(total, (float)priv->num_cpus * 1.0f);
 
   point.value = load * 100.0;
-  point.points = 1.0;   /*FIXME... do a proper calc... timeouts are NOT exact*/
+  point.points = new_time - priv->prev_time;   /*FIXME... do a proper calc... timeouts are NOT exact*/
 
+  priv->prev_time = new_time;
   // toggle the buffer index.
   priv->now ^= 1;
 

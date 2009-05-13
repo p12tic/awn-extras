@@ -21,8 +21,6 @@
 
 AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient, gint offset, gint height)
 {
-/*  gdk_threads_init ();
-  gdk_threads_enter();  */
   AwnApplet *applet = AWN_APPLET(awn_sysmon_new(uid, orient, offset, height));
 
   return applet;

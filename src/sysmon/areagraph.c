@@ -16,6 +16,7 @@
 
 
 /* awn-areagraph.c */
+#include <math.h>
 
 #include "areagraph.h"
 #include "graphprivate.h"
@@ -155,6 +156,8 @@ awn_areagraph_class_init (Awn_AreagraphClass *klass)
 static void _awn_areagraph_render_to_context(AwnGraph * graph,
                                         cairo_t *cr)
 {
+  /*Can be optimized.  FIXME
+   */
   AwnAreagraphPrivate * priv;
   AwnGraphPrivate * graph_priv;  
   gint  srfc_height;
@@ -164,7 +167,6 @@ static void _awn_areagraph_render_to_context(AwnGraph * graph,
   gint  x=0;
   gdouble * values = NULL;
   
-  g_debug ("area graph render! \n");
   priv = AWN_AREAGRAPH_GET_PRIVATE (graph);
   graph_priv = AWN_GRAPH_GET_PRIVATE (graph);
   values = graph_priv->data;
@@ -177,7 +179,7 @@ static void _awn_areagraph_render_to_context(AwnGraph * graph,
   srfc_width = cairo_xlib_surface_get_width (cairo_get_target(cr));
   
   cairo_scale (cr,1.0, 0.5);//srfc_height / (double) (priv->max_val - priv->min_val));
-  cairo_set_source_rgba (cr, 0.3, 0.4, 0.1, 0.4);
+  cairo_set_source_rgba (cr, 0.8, 0.0, 0.6, 0.6);
 
   cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
 
@@ -207,12 +209,36 @@ static void _awn_areagraph_render_to_context(AwnGraph * graph,
 static void _awn_areagraph_add_data(AwnGraph * graph,
                                         gpointer data)
 {
+  /*deal with partial later FIXME */
   AwnGraphPrivate * graph_priv;
+  AwnAreagraphPrivate * priv;
+  gdouble * values;
+  gint i;
+  glong count;
+  const Awn_AreagraphPoint *area_graph_point = data;
   
+  priv = AWN_AREAGRAPH_GET_PRIVATE (graph);  
   graph_priv = AWN_GRAPH_GET_PRIVATE(graph);
-  g_debug ("areagraph add data \n");
-  awn_areagraph_clear (AWN_AREAGRAPH(graph),50.0);
-
+  
+  values = graph_priv->data;
+  i=priv->cur_point;
+  count = lround ( area_graph_point->points);
+  
+  if (count)
+  {
+    while (count)
+    {
+      values[i] = area_graph_point->value;
+      i++;
+      count--;
+      if (i >= priv->num_points)
+      {
+        i = 0;
+      }
+    }
+  }
+  priv->cur_point = i +1;
+  
 }
 
 static void

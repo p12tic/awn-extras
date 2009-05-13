@@ -47,6 +47,9 @@ struct _AwnCPUiconPrivate
     guint64 times[2][GLIBTOP_NCPU][N_CPU_STATES];
 };
 
+static Awn_AreagraphPoint awn_CPUicon_get_load(AwnCPUicon *self);
+
+
 static void
 awn_CPUicon_get_property (GObject *object, guint property_id,
                               GValue *value, GParamSpec *pspec)
@@ -85,6 +88,7 @@ _awn_CPUicon_update_icon(gpointer object)
   AwnCPUiconPrivate * priv;  
   AwnSysmoniconPrivate * sysmonicon_priv=NULL;  
   AwnCPUicon * icon = object;
+  Awn_AreagraphPoint point;
   
   priv = AWN_CPUICON_GET_PRIVATE (object);
   sysmonicon_priv = AWN_SYSMONICON_GET_PRIVATE (object);
@@ -92,7 +96,10 @@ _awn_CPUicon_update_icon(gpointer object)
   g_debug ("Fire!\n");
 
   //  awn_graph_add_data (awn_sysmonicon_get_graph(AWN_SYSMONICON(self)),&point);
-  awn_graph_add_data (sysmonicon_priv->graph,NULL);
+  point = awn_CPUicon_get_load(object);
+
+    
+  awn_graph_add_data (sysmonicon_priv->graph,&point);
   awn_sysmonicon_update_icon (icon);
   return TRUE;
 }
@@ -161,8 +168,8 @@ awn_CPUicon_new (AwnApplet * applet)
   return cpuicon;
 }
 
-static void
-get_load(AwnCPUicon *self)
+static Awn_AreagraphPoint
+awn_CPUicon_get_load(AwnCPUicon *self)
 {
   guint i;
   glibtop_cpu cpu;
@@ -204,7 +211,7 @@ get_load(AwnCPUicon *self)
 
   load = used / MAX(total, (float)priv->num_cpus * 1.0f);
 
-  point.value = load;
+  point.value = load * 100.0;
   point.points = 1.0;   /*FIXME... do a proper calc... timeouts are NOT exact*/
 
   // toggle the buffer index.
@@ -212,6 +219,7 @@ get_load(AwnCPUicon *self)
 
 #undef NOW
 #undef LAST
+  return point;
 }
 
 

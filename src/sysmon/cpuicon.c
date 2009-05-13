@@ -186,7 +186,7 @@ awn_CPUicon_init (AwnCPUicon *self)
   AwnCPUiconPrivate *priv;
   	
   priv = AWN_CPUICON_GET_PRIVATE (self);
-  priv->update_timeout = 10;  /*FIXME*/
+  priv->update_timeout = 500;  /*FIXME*/
 }
 
 GtkWidget*

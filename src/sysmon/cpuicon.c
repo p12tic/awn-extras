@@ -22,6 +22,8 @@
 #include "cpuicon.h"
 #include "areagraph.h"
 
+#include "sysmoniconprivate.h"
+
 G_DEFINE_TYPE (AwnCPUicon, awn_CPUicon, AWN_TYPE_SYSMONICON)
 
 #define AWN_CPUICON_GET_PRIVATE(o) \
@@ -78,9 +80,12 @@ awn_CPUicon_finalize (GObject *object)
 }
 
 static gboolean 
-_awn_CPUicon_update_icon(gpointer icon)
+_awn_CPUicon_update_icon(gpointer object)
 {
+  AwnCPUicon * icon = object;
   g_debug ("Fire!\n");
+  
+  awn_sysmonicon_update_icon (icon);
   return TRUE;
 }
 
@@ -88,6 +93,7 @@ static void
 awn_CPUicon_constructed (GObject *object)
 {
   AwnCPUiconPrivate * priv;
+  AwnSysmoniconPrivate * sysmonicon_priv=NULL;  
   glibtop_cpu cpu;
   int i = 0;
     
@@ -103,6 +109,12 @@ awn_CPUicon_constructed (GObject *object)
     i++;
   }
   priv->now = 0;
+  
+
+  sysmonicon_priv = AWN_SYSMONICON_GET_PRIVATE (object);
+
+  sysmonicon_priv->graph = AWN_GRAPH(awn_areagraph_new (48,0.0,100.0));
+  
   
 }
 

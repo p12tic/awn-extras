@@ -21,19 +21,7 @@
 
 G_DEFINE_TYPE (AwnSysmonicon, awn_sysmonicon, AWN_TYPE_ICON)
 
-#define AWN_SYSMONICON_GET_PRIVATE(o) \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((o), AWN_TYPE_SYSMONICON, AwnSysmoniconPrivate))
-
-typedef struct _AwnSysmoniconPrivate AwnSysmoniconPrivate;
-
-struct _AwnSysmoniconPrivate 
-{
-  AwnApplet * applet;
-  cairo_surface_t *surface;
-  cairo_t *cr;
-  AwnGraph * graph;    
-};
-
+#include "sysmoniconprivate.h"
 enum
 {
   PROP_0,
@@ -130,7 +118,7 @@ awn_sysmonicon_init (AwnSysmonicon *self)
   AwnSysmoniconPrivate * priv;
   priv = AWN_SYSMONICON_GET_PRIVATE (self);
 
-  priv->graph = awn_areagraph_new ();
+  priv->graph = NULL;
   g_signal_connect_after (G_OBJECT(self), "expose-event", G_CALLBACK(_expose), NULL);       
 }
 
@@ -180,4 +168,14 @@ create_surface (AwnSysmonicon * sysmonicon)
   priv->cr = cairo_create(priv->surface);
   cairo_scale(priv->cr,(double)size/48.0,(double)size/48.0);
 
+}
+
+void
+awn_sysmonicon_update_icon (AwnSysmonicon * icon)
+{
+  AwnSysmoniconPrivate * priv;
+  priv = AWN_SYSMONICON_GET_PRIVATE (icon);
+   
+  awn_graph_render_to_context (priv->graph,priv->cr);
+  awn_icon_set_from_context (AWN_ICON(icon),priv->cr); 
 }

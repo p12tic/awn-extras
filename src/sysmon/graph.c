@@ -20,14 +20,7 @@
 
 G_DEFINE_TYPE (AwnGraph, awn_graph, G_TYPE_OBJECT)
 
-#define AWN_GRAPH_GET_PRIVATE(o) \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((o), AWN_TYPE_GRAPH, AwnGraphPrivate))
-
-typedef struct _AwnGraphPrivate AwnGraphPrivate;
-
-struct _AwnGraphPrivate {
-  gpointer data;
-};
+#include "graphprivate.h"
 
 static void _awn_graph_render_to_context(AwnGraph * graph,
                                         cairo_t *ctx);

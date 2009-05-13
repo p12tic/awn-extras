@@ -18,6 +18,7 @@
 /* awn-areagraph.c */
 
 #include "areagraph.h"
+#include "graphprivate.h"
 
 G_DEFINE_TYPE (Awn_Areagraph, awn_areagraph, AWN_TYPE_GRAPH)
 
@@ -30,12 +31,18 @@ struct _Awn_AreagraphPrivate
 {
   gdouble max_val;
   gdouble min_val;
-  gdouble num_points;
+  guint num_points;
   gdouble cur_point;
-  gdouble * values;
   
 };
 
+enum
+{
+  PROP_0,
+  PROP_NUM_POINTS,
+  PROP_MIN_VAL,
+  PROP_MAX_VAL
+};
 
 static void _awn_areagraph_render_to_context(AwnGraph * graph,
                                         cairo_t *ctx);
@@ -46,9 +53,22 @@ static void
 awn_areagraph_get_property (GObject *object, guint property_id,
                               GValue *value, GParamSpec *pspec)
 {
-  switch (property_id) {
-  default:
-    G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+  AwnAreagraphPrivate * priv;
+  priv = AWN_AREAGRAPH_GET_PRIVATE (object);
+  
+  switch (property_id) 
+  {
+    case PROP_NUM_POINTS:
+      g_value_set_object (value, &priv->num_points); 
+      break;     
+    case PROP_MIN_VAL:
+      g_value_set_object (value, &priv->min_val); 
+      break;     
+    case PROP_MAX_VAL:
+      g_value_set_object (value, &priv->max_val); 
+      break;           
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
   }
 }
 
@@ -56,9 +76,22 @@ static void
 awn_areagraph_set_property (GObject *object, guint property_id,
                               const GValue *value, GParamSpec *pspec)
 {
-  switch (property_id) {
-  default:
-    G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+  AwnAreagraphPrivate * priv;
+  priv = AWN_AREAGRAPH_GET_PRIVATE (object);
+  
+  switch (property_id) 
+  {
+    case PROP_NUM_POINTS:
+      priv->num_points = g_value_get_uint (value);
+      break;     
+    case PROP_MIN_VAL:
+      priv->min_val = g_value_get_double (value);
+      break;     
+    case PROP_MAX_VAL:
+      priv->max_val = g_value_get_double (value);
+      break;           
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
   }
 }
 
@@ -77,9 +110,8 @@ awn_areagraph_finalize (GObject *object)
 static void
 awn_areagraph_class_init (Awn_AreagraphClass *klass)
 {
+  GParamSpec   *pspec;    
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
-  g_type_class_add_private (klass, sizeof (AwnAreagraphPrivate));
 
   object_class->get_property = awn_areagraph_get_property;
   object_class->set_property = awn_areagraph_set_property;
@@ -88,6 +120,35 @@ awn_areagraph_class_init (Awn_AreagraphClass *klass)
   
   AWN_GRAPH_CLASS(klass)->render_to_context = _awn_areagraph_render_to_context;
   AWN_GRAPH_CLASS(klass)->add_data = _awn_areagraph_add_data;
+  
+  pspec = g_param_spec_uint (   "num_points",
+                                "NumPoints",
+                                "Number of points on graph",
+                                1,
+                                G_MAXUINT,
+                                48,
+                                G_PARAM_READWRITE);
+  g_object_class_install_property (object_class, PROP_NUM_POINTS, pspec);      
+  pspec = g_param_spec_double (   "min_val",
+                                "MinVal",
+                                "Minimum Value",
+                                -1000000.0,         /*was using G_MAXDOUBLE, G_MINDOUBLE... but it was not happy*/
+                                +1000000.0,
+                                0,
+                                G_PARAM_READWRITE);
+  g_object_class_install_property (object_class, PROP_MIN_VAL, pspec);      
+  pspec = g_param_spec_double (   "max_val",
+                                "MaxVal",
+                                "Maximum Value",
+                                -1000000.0,
+                                +1000000.0,
+                                0,
+                                G_PARAM_READWRITE);
+  
+  g_object_class_install_property (object_class, PROP_MAX_VAL, pspec);    
+
+  
+  g_type_class_add_private (klass, sizeof (AwnAreagraphPrivate));
   
 }
 
@@ -117,20 +178,43 @@ static void
 awn_areagraph_init (Awn_Areagraph *self)
 {
   AwnAreagraphPrivate * priv;
+  AwnGraphPrivate * graph_priv;
   
-  priv = AWN_AREAGRAPH_GET_PRIVATE(self);
+  priv = AWN_AREAGRAPH_GET_PRIVATE (self);
+  graph_priv = AWN_GRAPH_GET_PRIVATE (self);
 
   priv->min_val = 0.0;
   priv->max_val = 100.0;
   priv->num_points = 48;
   priv->cur_point = 0;
-  priv->values =g_new0(gdouble, priv->num_points);
+  
+  graph_priv->data =g_new0(gdouble, priv->num_points);
   
 }
 
-Awn_Areagraph*
-awn_areagraph_new (void)
+GtkWidget*
+awn_areagraph_new (guint num_points, gdouble min_val, gdouble max_val)
 {
-  return g_object_new (AWN_TYPE_AREAGRAPH, NULL);
+  return g_object_new (AWN_TYPE_AREAGRAPH, 
+                       "num_points",num_points,
+                       "min_val", min_val,
+                       "max_val", max_val,
+                       NULL);
 }
 
+void 
+awn_areagraph_clear (Awn_Areagraph *self, gdouble val)
+{
+  int i;
+  AwnGraphPrivate * graph_priv;
+  AwnAreagraphPrivate * priv;
+
+  graph_priv = AWN_GRAPH_GET_PRIVATE (self);
+  priv = AWN_AREAGRAPH_GET_PRIVATE (self);  
+  graph_priv->data =g_new0(gdouble, priv->num_points);
+  
+  for (i=0; i<priv->num_points;i++)
+  {
+    ((gdouble *)graph_priv->data)[i]=val;
+  }
+}

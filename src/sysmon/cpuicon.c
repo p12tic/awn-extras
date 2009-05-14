@@ -24,18 +24,7 @@
 
 #include "sysmoniconprivate.h"
 
-
-/* 
- put this in a util.c  FIXME
-*/
-gdouble 
-get_double_time(void)
-{
-  GTimeVal  timeval;
-  g_get_current_time (&timeval);
-  return  timeval.tv_sec + timeval.tv_usec / 1000000.0;
-}
-
+#include "util.h"
 
 G_DEFINE_TYPE (AwnCPUicon, awn_CPUicon, AWN_TYPE_SYSMONICON)
 

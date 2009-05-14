@@ -23,6 +23,8 @@
 #include <cairo.h>
 #include <gtk/gtk.h>
 
+#include "defines.h"
+
 G_BEGIN_DECLS
 
 #define AWN_TYPE_GRAPH awn_graph_get_type()

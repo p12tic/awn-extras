@@ -16,6 +16,8 @@ sysmon_la_SOURCES =		\
   sysmon.h  \
   sysmonicon.c \
   sysmonicon.h \
+  util.c  \
+  util.h  \
   $(NULL)
 sysmon_la_LIBADD =					\
 	$(AWN_LIBS)						\

@@ -34,8 +34,10 @@ struct _Awn_AreagraphPrivate
   gdouble min_val;
   guint num_points;
   gint cur_point;
+  gint num_shift;
   gdouble partial;  
   gdouble prev_value;
+  gboolean filled;
 };
 
 enum
@@ -155,7 +157,7 @@ awn_areagraph_class_init (Awn_AreagraphClass *klass)
 }
 
 static void _awn_areagraph_render_to_context(AwnGraph * graph,
-                                        cairo_t *cr)
+                                        cairo_t *orig_cr)
 {
   /*Can be optimized.  FIXME
    */
@@ -167,22 +169,24 @@ static void _awn_areagraph_render_to_context(AwnGraph * graph,
   gint  end_point;
   gint  x=0;
   gdouble * values = NULL;
+  gdouble vert_scale = 1.0;
+  cairo_t * cr = cairo_create (cairo_get_target(orig_cr) );
   
   priv = AWN_AREAGRAPH_GET_PRIVATE (graph);
   graph_priv = AWN_GRAPH_GET_PRIVATE (graph);
+  
   values = graph_priv->data;
-  
-  cairo_save (cr);
-  cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
-  cairo_paint (cr);
-  
+    
   srfc_height = cairo_xlib_surface_get_height (cairo_get_target(cr));
   srfc_width = cairo_xlib_surface_get_width (cairo_get_target(cr));
-  
-  cairo_scale (cr,1.0, 0.5);//srfc_height / (double) (priv->max_val - priv->min_val));
-  cairo_set_source_rgba (cr, 0.8, 0.0, 0.6, 0.6);
 
-  cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
+  if (priv->num_points != srfc_width)
+  {
+    g_free (graph_priv->data);
+    priv->num_points = srfc_width;
+    graph_priv->data =g_new0(gdouble, priv->num_points);
+    awn_areagraph_clear (AWN_AREAGRAPH(graph),0.0);
+  }
 
   if ( (gint) priv->cur_point)
   {
@@ -191,12 +195,22 @@ static void _awn_areagraph_render_to_context(AwnGraph * graph,
   else
   {
     end_point = ((gint) priv->cur_point) ;
-  }
-    
+  }  
+
+  cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
+  cairo_paint (cr);
+  
+  cairo_paint (cr);
+  vert_scale = srfc_height / (double) (priv->max_val - priv->min_val);
+  g_debug ("vert scale = %lf\n",vert_scale);
+  cairo_scale (cr, srfc_width / (double)priv->num_points, vert_scale);
+  cairo_set_source_rgba (cr, 0.8, 0.0, 0.6, 0.6);
+
+  cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
   for (i=priv->cur_point; x < priv->num_points;i++)
   {
-    cairo_move_to (cr, x,priv->max_val - priv->min_val);
-    cairo_line_to (cr, x, priv->max_val - priv->min_val - values[i]);
+    cairo_move_to (cr, x- 0.5,priv->max_val - priv->min_val);
+    cairo_line_to (cr, x- 0.5, priv->max_val - priv->min_val - values[i]);
     cairo_stroke (cr);
     if (i >= priv->num_points )
     {
@@ -204,7 +218,6 @@ static void _awn_areagraph_render_to_context(AwnGraph * graph,
     }    
     x++;    
   }
-  cairo_restore (cr);
 }
 
 static void _awn_areagraph_add_data(AwnGraph * graph,
@@ -226,13 +239,12 @@ static void _awn_areagraph_add_data(AwnGraph * graph,
   priv->partial = area_graph_point->points - floor (area_graph_point->points);
   values = graph_priv->data;
   i=priv->cur_point;
-
   total = priv->partial + area_graph_point->points;
+  count = lround ( total );      
+  priv->num_shift = (gint)count;  /*FIXME*/
+  
   if ( total >= 1.0)
   {
-
-    count = lround ( total );    
-    g_debug ("count = %ld\n",count);
     /*special case the first bit */
     values[i] =  priv->prev_value * priv->partial +
                   area_graph_point->value * (1.0 - priv->partial);
@@ -245,6 +257,7 @@ static void _awn_areagraph_add_data(AwnGraph * graph,
       i++; 
       if (i >= priv->num_points)
       {
+        priv->filled = TRUE;
         i = 0;
       }       
       values[i] = area_graph_point->value;
@@ -252,6 +265,7 @@ static void _awn_areagraph_add_data(AwnGraph * graph,
     }
     if (i >= priv->num_points)
     {
+      priv->filled = TRUE;      
       i = 0;
     }    
   }
@@ -273,6 +287,8 @@ awn_areagraph_init (Awn_Areagraph *self)
   priv->cur_point = 0;
   priv->partial = 0.0;
   priv->prev_value = 0.0;
+  priv->filled = FALSE;
+  
   graph_priv->data =g_new0(gdouble, priv->num_points);
   
 }
@@ -296,10 +312,11 @@ awn_areagraph_clear (Awn_Areagraph *self, gdouble val)
 
   graph_priv = AWN_GRAPH_GET_PRIVATE (self);
   priv = AWN_AREAGRAPH_GET_PRIVATE (self);  
-  graph_priv->data =g_new0(gdouble, priv->num_points);
-  
+    
   for (i=0; i<priv->num_points;i++)
   {
     ((gdouble *)graph_priv->data)[i]=val;
   }
+  priv->filled = FALSE;
+  priv->cur_point = 0;
 }

@@ -126,6 +126,7 @@ awn_CPUicon_constructed (GObject *object)
   AwnSysmoniconPrivate * sysmonicon_priv=NULL;  
   glibtop_cpu cpu;
   int i = 0;
+  gint size;
     
   priv = AWN_CPUICON_GET_PRIVATE (object); 
 
@@ -158,8 +159,8 @@ awn_CPUicon_constructed (GObject *object)
   
 
   sysmonicon_priv = AWN_SYSMONICON_GET_PRIVATE (object);
-
-  sysmonicon_priv->graph = AWN_GRAPH(awn_areagraph_new (48,0.0,100.0));
+  size = awn_applet_get_size (sysmonicon_priv->applet);
+  sysmonicon_priv->graph = AWN_GRAPH(awn_areagraph_new (size,0.0,100.0));
   
 }
 
@@ -186,7 +187,7 @@ awn_CPUicon_init (AwnCPUicon *self)
   AwnCPUiconPrivate *priv;
   	
   priv = AWN_CPUICON_GET_PRIVATE (self);
-  priv->update_timeout = 500;  /*FIXME*/
+  priv->update_timeout = 100;  /*FIXME*/
 }
 
 GtkWidget*

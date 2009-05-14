@@ -23,6 +23,10 @@ enum
   GRAPH_POINT_SINGLE
 }AwnGraphPointType;  
   
-  
+typedef struct
+{
+  gdouble value;
+  gdouble points;
+}AwnGraphSinglePoint;  
 
 #endif

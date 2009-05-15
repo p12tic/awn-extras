@@ -145,6 +145,7 @@ static void _awn_circlegraph_render_to_context(AwnGraph * graph,
   cairo_t * cr = cairo_create (cairo_get_target(orig_cr) ); /* FIXME This should not be necessary*/
   gint srfc_width;
   gint srfc_height;
+  gdouble usage;
   
   priv = AWN_CIRCLEGRAPH_GET_PRIVATE (graph);    
   
@@ -163,12 +164,14 @@ static void _awn_circlegraph_render_to_context(AwnGraph * graph,
   cairo_fill (cr);
   cairo_pattern_destroy (pat);
 */
-  pat = cairo_pattern_create_radial (115.2, 102.4, 25.6,
+  g_debug ("cpu = %lf\n",priv->current_val);
+  usage = priv->current_val / 100.0;
+  pat = cairo_pattern_create_radial (125.2, 130.4, 2,
                                      102.4,  102.4, 128.0);
-  cairo_pattern_add_color_stop_rgba (pat, 0, 1, 1, 1, 1);
-  cairo_pattern_add_color_stop_rgba (pat, 1, 0, 0, 0, 1);
+  cairo_pattern_add_color_stop_rgba (pat, 0, 1*usage, 0, 0, 1);
+  cairo_pattern_add_color_stop_rgba (pat, 1, 0, 1 *(1-usage), 0, 1);
   cairo_set_source (cr, pat);
-  cairo_arc (cr, 128.0, 128.0, 76.8, 0, 2 * M_PI);
+  cairo_arc (cr, 128.0, 128.0, 120, 0, 2 * M_PI);
   cairo_fill (cr);
   cairo_pattern_destroy (pat);
   

@@ -180,10 +180,11 @@ awn_CPUicon_init (AwnCPUicon *self)
 }
 
 GtkWidget*
-awn_CPUicon_new (AwnApplet * applet)
+awn_CPUicon_new (AwnGraphType graph_type,AwnApplet * applet)
 {
   GtkWidget * cpuicon = NULL;
   cpuicon = g_object_new (AWN_TYPE_CPUICON,
+                          "graph_type",graph_type,                          
                           "applet",applet,
                           NULL);
   return cpuicon;

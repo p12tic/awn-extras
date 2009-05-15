@@ -63,13 +63,13 @@ awn_areagraph_get_property (GObject *object, guint property_id,
   switch (property_id) 
   {
     case PROP_NUM_POINTS:
-      g_value_set_object (value, &priv->num_points); 
+      g_value_set_uint (value, priv->num_points); 
       break;     
     case PROP_MIN_VAL:
-      g_value_set_object (value, &priv->min_val); 
+      g_value_set_double (value, priv->min_val); 
       break;     
     case PROP_MAX_VAL:
-      g_value_set_object (value, &priv->max_val); 
+      g_value_set_double (value, priv->max_val); 
       break;           
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -202,7 +202,6 @@ static void _awn_areagraph_render_to_context(AwnGraph * graph,
   
   cairo_paint (cr);
   vert_scale = srfc_height / (double) (priv->max_val - priv->min_val);
-  g_debug ("vert scale = %lf\n",vert_scale);
   cairo_scale (cr, srfc_width / (double)priv->num_points, vert_scale);
   cairo_set_source_rgba (cr, 0.8, 0.0, 0.6, 0.6);
 

@@ -18,6 +18,7 @@
 #define _AWN_SYSMONICON_PRIV
 
 #include "sysmonicon.h"
+#include "defines.h"
 
 #define AWN_SYSMONICON_GET_PRIVATE(o) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), AWN_TYPE_SYSMONICON, AwnSysmoniconPrivate))
@@ -29,7 +30,8 @@ struct _AwnSysmoniconPrivate
   AwnApplet * applet;
   cairo_surface_t *surface;
   cairo_t *cr;
-  AwnGraph * graph;    
+  AwnGraph * graph; 
+  AwnGraphType graph_type;   
 };
 
 #endif

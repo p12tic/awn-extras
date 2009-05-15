@@ -18,10 +18,18 @@
 #ifndef _AWN_SYSMON_DEFINES
 #define _AWN_SYSMON_DEFINES
 
-enum
+typedef enum
 {
   GRAPH_POINT_SINGLE
 }AwnGraphPointType;  
+
+typedef enum
+{
+  GRAPH_DEFAULT,
+  GRAPH_AREA,
+  GRAPH_CIRCLE,
+  GRAPH_LAST
+}AwnGraphType;
   
 typedef struct
 {

@@ -25,7 +25,8 @@ G_DEFINE_TYPE (AwnSysmonicon, awn_sysmonicon, AWN_TYPE_ICON)
 enum
 {
   PROP_0,
-  PROP_APPLET
+  PROP_APPLET,
+  PROP_GRAPHTYPE
 };
 
 static void create_surface (AwnSysmonicon * sysmonicon);
@@ -41,6 +42,9 @@ awn_sysmonicon_get_property (GObject *object, guint property_id,
   switch (property_id) {
     case PROP_APPLET:
       g_value_set_object (value, priv->applet); 
+      break;    
+    case PROP_GRAPHTYPE:
+      g_value_set_int (value, priv->graph_type); 
       break;    
     default:
     G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -58,6 +62,9 @@ awn_sysmonicon_set_property (GObject *object, guint property_id,
     case PROP_APPLET:
       priv->applet = g_value_get_object (value);
       break;    
+    case PROP_GRAPHTYPE:
+      priv->graph_type = g_value_get_int (value);
+      break;          
   default:
     G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
   }
@@ -92,6 +99,16 @@ awn_sysmonicon_class_init (AwnSysmoniconClass *klass)
                                AWN_TYPE_APPLET,
                                G_PARAM_READWRITE);
   g_object_class_install_property (object_class, PROP_APPLET, pspec);  
+  
+  pspec = g_param_spec_int ("graph_type",
+                               "Graph_type",
+                               "Graph Type",
+                               GRAPH_DEFAULT,
+                               GRAPH_LAST,
+                               GRAPH_DEFAULT,
+                               G_PARAM_READWRITE);
+  g_object_class_install_property (object_class, PROP_GRAPHTYPE, pspec);  
+  
   g_type_class_add_private (object_class, sizeof (AwnSysmoniconPrivate));
   
 }

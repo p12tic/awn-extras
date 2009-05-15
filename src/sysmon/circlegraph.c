@@ -57,10 +57,10 @@ awn_circlegraph_get_property (GObject *object, guint property_id,
   switch (property_id) 
   {
     case PROP_MIN_VAL:
-      g_value_set_object (value, &priv->min_val); 
+      g_value_set_double (value, priv->min_val); 
       break;     
     case PROP_MAX_VAL:
-      g_value_set_object (value, &priv->max_val); 
+      g_value_set_double (value, priv->max_val); 
       break;               
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);

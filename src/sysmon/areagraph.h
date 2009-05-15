@@ -51,11 +51,6 @@ typedef struct
   AwnGraphClass parent_class;
 } Awn_AreagraphClass;
 
-typedef struct
-{
-  gdouble value;
-  gdouble points;
-}Awn_AreagraphPoint;
 
 GType awn_areagraph_get_type (void);
 

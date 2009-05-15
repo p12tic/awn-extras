@@ -51,7 +51,7 @@ struct _AwnCPUiconPrivate
     gdouble   prev_time;
 };
 
-static Awn_AreagraphPoint awn_CPUicon_get_load(AwnCPUicon *self);
+static AwnGraphSinglePoint awn_CPUicon_get_load(AwnCPUicon *self);
 
 
 static void
@@ -93,7 +93,7 @@ _awn_CPUicon_update_icon(gpointer object)
   AwnCPUiconPrivate * priv;  
   AwnSysmoniconPrivate * sysmonicon_priv=NULL;  
   AwnCPUicon * icon = object;
-  Awn_AreagraphPoint point;
+  AwnGraphSinglePoint point;
   
   priv = AWN_CPUICON_GET_PRIVATE (object);
   sysmonicon_priv = AWN_SYSMONICON_GET_PRIVATE (object);
@@ -189,7 +189,7 @@ awn_CPUicon_new (AwnApplet * applet)
   return cpuicon;
 }
 
-static Awn_AreagraphPoint
+static AwnGraphSinglePoint
 awn_CPUicon_get_load(AwnCPUicon *self)
 {
   guint i;
@@ -197,7 +197,7 @@ awn_CPUicon_get_load(AwnCPUicon *self)
   AwnCPUiconPrivate *priv;
   float  total, used;
   gdouble load;
-  Awn_AreagraphPoint point;
+  AwnGraphSinglePoint point;
   gdouble new_time;
   
   priv = AWN_CPUICON_GET_PRIVATE (self);

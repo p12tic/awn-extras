@@ -223,7 +223,6 @@ static void _awn_areagraph_render_to_context(AwnGraph * graph,
 static void _awn_areagraph_add_data(AwnGraph * graph,
                                         gpointer data)
 {
-  /*deal with partial later FIXME */
   AwnGraphPrivate * graph_priv;
   AwnAreagraphPrivate * priv;
   gdouble * values;
@@ -231,7 +230,7 @@ static void _awn_areagraph_add_data(AwnGraph * graph,
   glong count;
   gdouble total=0.0;
   
-  const Awn_AreagraphPoint *area_graph_point = data;
+  const AwnGraphSinglePoint *area_graph_point = data;
 
   priv = AWN_AREAGRAPH_GET_PRIVATE (graph);  
   graph_priv = AWN_GRAPH_GET_PRIVATE(graph);

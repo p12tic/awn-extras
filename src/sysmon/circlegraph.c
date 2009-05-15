@@ -14,6 +14,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
  
+/*
+ TODO
+
+ */
 
 
 /* awn-circlegraph.c */
@@ -164,7 +168,7 @@ static void _awn_circlegraph_render_to_context(AwnGraph * graph,
   cairo_fill (cr);
   cairo_pattern_destroy (pat);
 */
-  g_debug ("cpu = %lf\n",priv->current_val);
+
   usage = (priv->current_val + priv->prev_val) / 200.0;
   pat = cairo_pattern_create_radial (128,  128, 0,
                                      128,  128, 128.0);

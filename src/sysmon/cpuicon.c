@@ -14,6 +14,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
  
+/*
+ TODO
+ Per CPU option.
+ Config
+ 
+ */
+
  
  /* awn-CPUicon.c */
 
@@ -147,7 +154,6 @@ awn_CPUicon_constructed (GObject *object)
   priv->now = 0;
   
 
-  g_debug (">>>>>>>>>>>>>>>>>>>>>>>>>>\n");
   sysmonicon_priv = AWN_SYSMONICON_GET_PRIVATE (object);
   size = awn_applet_get_size (sysmonicon_priv->applet);
   switch (sysmonicon_priv->graph_type)
@@ -162,8 +168,6 @@ awn_CPUicon_constructed (GObject *object)
     default:
       g_assert_not_reached();
   }
-  g_debug ("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n");
-   
 }
 
 static void

@@ -97,7 +97,7 @@ awn_sysmonicon_class_init (AwnSysmoniconClass *klass)
                                "Applet",
                                "AwnApplet",
                                AWN_TYPE_APPLET,
-                               G_PARAM_READWRITE);
+                               G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
   g_object_class_install_property (object_class, PROP_APPLET, pspec);  
   
   pspec = g_param_spec_int ("graph_type",
@@ -106,7 +106,7 @@ awn_sysmonicon_class_init (AwnSysmoniconClass *klass)
                                GRAPH_DEFAULT,
                                GRAPH_LAST,
                                GRAPH_DEFAULT,
-                               G_PARAM_READWRITE);
+                               G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
   g_object_class_install_property (object_class, PROP_GRAPHTYPE, pspec);  
   
   g_type_class_add_private (object_class, sizeof (AwnSysmoniconPrivate));
@@ -124,7 +124,9 @@ static gboolean _expose(GtkWidget *self,
   {
     create_surface (AWN_SYSMONICON(self));
     awn_graph_render_to_context (priv->graph,priv->cr);
+    cairo_save (priv->cr);
     awn_icon_set_from_context (AWN_ICON(self),priv->cr);
+    cairo_restore (priv->cr);
   }  
   return TRUE;
 }
@@ -196,5 +198,7 @@ awn_sysmonicon_update_icon (AwnSysmonicon * icon)
   g_return_if_fail (priv->cr);
   
   awn_graph_render_to_context (priv->graph,priv->cr);
+  cairo_save (priv->cr);
   awn_icon_set_from_context (AWN_ICON(icon),priv->cr); 
+  cairo_restore (priv->cr);
 }

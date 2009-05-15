@@ -170,7 +170,7 @@ static void _awn_areagraph_render_to_context(AwnGraph * graph,
   gint  x=0;
   gdouble * values = NULL;
   gdouble vert_scale = 1.0;
-  cairo_t * cr = cairo_create (cairo_get_target(orig_cr) );
+  cairo_t * cr = cairo_create (cairo_get_target(orig_cr) ); /* FIXME This should not be necessary*/
   
   priv = AWN_AREAGRAPH_GET_PRIVATE (graph);
   graph_priv = AWN_GRAPH_GET_PRIVATE (graph);

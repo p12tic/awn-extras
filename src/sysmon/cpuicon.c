@@ -147,10 +147,23 @@ awn_CPUicon_constructed (GObject *object)
   priv->now = 0;
   
 
+  g_debug (">>>>>>>>>>>>>>>>>>>>>>>>>>\n");
   sysmonicon_priv = AWN_SYSMONICON_GET_PRIVATE (object);
   size = awn_applet_get_size (sysmonicon_priv->applet);
-  sysmonicon_priv->graph = AWN_GRAPH(awn_areagraph_new (size,0.0,100.0));
-  
+  switch (sysmonicon_priv->graph_type)
+  {
+    case GRAPH_DEFAULT:
+    case GRAPH_AREA:
+      sysmonicon_priv->graph = AWN_GRAPH(awn_areagraph_new (size,0.0,100.0));
+      break;
+    case GRAPH_CIRCLE:
+      sysmonicon_priv->graph = AWN_GRAPH(awn_circlegraph_new (size,0.0,100.0));
+      break;
+    default:
+      g_assert_not_reached();
+  }
+  g_debug ("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n");
+   
 }
 
 static void

@@ -18,6 +18,7 @@
 
 /* awn-circlegraph.c */
 
+#include <math.h>
 #include "circlegraph.h"
 #include "graphprivate.h"
 
@@ -32,6 +33,8 @@ struct _AwnCirclegraphPrivate
 {
   gdouble max_val;
   gdouble min_val;
+  gdouble prev_val;
+  gdouble current_val;
 };
 
 enum
@@ -119,7 +122,7 @@ awn_circlegraph_class_init (AwnCirclegraphClass *klass)
                                 -1000000.0,         /*was using G_MAXDOUBLE, G_MINDOUBLE... but it was not happy*/
                                 +1000000.0,
                                 0,
-                                G_PARAM_READWRITE);
+                                G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
   g_object_class_install_property (object_class, PROP_MIN_VAL, pspec);      
   pspec = g_param_spec_double (   "max_val",
                                 "MaxVal",
@@ -127,7 +130,8 @@ awn_circlegraph_class_init (AwnCirclegraphClass *klass)
                                 -1000000.0,
                                 +1000000.0,
                                 0,
-                                G_PARAM_READWRITE);
+                                G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
+  g_object_class_install_property (object_class, PROP_MAX_VAL, pspec);        
   g_type_class_add_private (klass, sizeof (AwnCirclegraphPrivate));  
   
 }
@@ -135,11 +139,56 @@ awn_circlegraph_class_init (AwnCirclegraphClass *klass)
 static void _awn_circlegraph_render_to_context(AwnGraph * graph,
                                         cairo_t *orig_cr)
 {
+  AwnCirclegraphPrivate * priv;  
+  cairo_pattern_t *pat;
+//  cairo_t * cr = orig_cr;
+  cairo_t * cr = cairo_create (cairo_get_target(orig_cr) ); /* FIXME This should not be necessary*/
+  gint srfc_width;
+  gint srfc_height;
+  
+  priv = AWN_CIRCLEGRAPH_GET_PRIVATE (graph);    
+  
+  cairo_save (cr);
+  srfc_height = cairo_xlib_surface_get_height (cairo_get_target(cr));
+  srfc_width = cairo_xlib_surface_get_width (cairo_get_target(cr));
+
+  cairo_scale (cr, srfc_width / 256.0, srfc_height / 256.0);
+  
+  
+/*  pat = cairo_pattern_create_linear (0.0, 0.0,  0.0, 256.0);
+  cairo_pattern_add_color_stop_rgba (pat, 1, 0, 0, 0, 1);
+  cairo_pattern_add_color_stop_rgba (pat, 0, 1, 1, 1, 1);
+  cairo_rectangle (cr, 0, 0, 256, 256);
+  cairo_set_source (cr, pat);
+  cairo_fill (cr);
+  cairo_pattern_destroy (pat);
+*/
+  pat = cairo_pattern_create_radial (115.2, 102.4, 25.6,
+                                     102.4,  102.4, 128.0);
+  cairo_pattern_add_color_stop_rgba (pat, 0, 1, 1, 1, 1);
+  cairo_pattern_add_color_stop_rgba (pat, 1, 0, 0, 0, 1);
+  cairo_set_source (cr, pat);
+  cairo_arc (cr, 128.0, 128.0, 76.8, 0, 2 * M_PI);
+  cairo_fill (cr);
+  cairo_pattern_destroy (pat);
+  
+  cairo_restore (cr);
 }
 
 static void _awn_circlegraph_add_data(AwnGraph * graph,
                                         gpointer data)
 {
+  AwnGraphPrivate * graph_priv;
+  AwnCirclegraphPrivate * priv;
+
+  const AwnGraphSinglePoint *area_graph_point = data;
+
+  priv = AWN_CIRCLEGRAPH_GET_PRIVATE (graph);  
+  graph_priv = AWN_GRAPH_GET_PRIVATE(graph);
+  
+  priv->prev_val = priv->current_val;
+  priv->current_val = area_graph_point->value;
+  
 }
 
 static void
@@ -154,7 +203,8 @@ awn_circlegraph_init (AwnCirclegraph *self)
 
   priv->min_val = 0.0;
   priv->max_val = 100.0;      /*FIXME*/
-  
+  priv->prev_val = 0;
+  priv->current_val = 0;
 }
 
 AwnCirclegraph*

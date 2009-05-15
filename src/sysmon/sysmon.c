@@ -69,10 +69,15 @@ awn_sysmon_constructed (GObject *object)
   AwnSysmon * sysmon = AWN_SYSMON(object);
   AwnSysmonPrivate *priv;
   priv = AWN_SYSMON_GET_PRIVATE (sysmon);        
+  
   icon = awn_CPUicon_new (GRAPH_DEFAULT,AWN_APPLET(sysmon));
   gtk_container_add (GTK_CONTAINER (priv->box), icon);  
   gtk_widget_show (icon);
 
+  icon = awn_CPUicon_new (GRAPH_CIRCLE,AWN_APPLET(sysmon));
+  gtk_container_add (GTK_CONTAINER (priv->box), icon);  
+  gtk_widget_show (icon);
+  
 }
 
 static void

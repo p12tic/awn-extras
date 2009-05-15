@@ -217,6 +217,7 @@ static void _awn_areagraph_render_to_context(AwnGraph * graph,
     }    
     x++;    
   }
+  cairo_destroy (cr);  /*see FIXME above */
 }
 
 static void _awn_areagraph_add_data(AwnGraph * graph,

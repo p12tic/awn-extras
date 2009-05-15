@@ -180,6 +180,7 @@ static void _awn_circlegraph_render_to_context(AwnGraph * graph,
   cairo_pattern_destroy (pat);
   
   cairo_restore (cr);
+  cairo_destroy (cr);  /*see FIXME above */  
 }
 
 static void _awn_circlegraph_add_data(AwnGraph * graph,

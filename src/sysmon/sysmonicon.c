@@ -194,7 +194,11 @@ awn_sysmonicon_update_icon (AwnSysmonicon * icon)
   AwnSysmoniconPrivate * priv;
   priv = AWN_SYSMONICON_GET_PRIVATE (icon);
   g_return_if_fail (priv->cr);
-  
   awn_graph_render_to_context (priv->graph,priv->cr);
+  /*FIXME
+   Have a background, rendered graph, and foregrond and slap them together.
+   */
+
   awn_icon_set_from_context (AWN_ICON(icon),priv->cr); 
 }
+

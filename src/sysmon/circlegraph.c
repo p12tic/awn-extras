@@ -165,7 +165,7 @@ static void _awn_circlegraph_render_to_context(AwnGraph * graph,
   cairo_pattern_destroy (pat);
 */
   g_debug ("cpu = %lf\n",priv->current_val);
-  usage = priv->current_val / 100.0;
+  usage = (priv->current_val + priv->prev_val) / 200.0;
   pat = cairo_pattern_create_radial (125.2, 130.4, 2,
                                      102.4,  102.4, 128.0);
   cairo_pattern_add_color_stop_rgba (pat, 0, 1*usage, 0, 0, 1);

@@ -94,8 +94,13 @@ class YamaApplet:
         if can_lock_screen:
             lock_item = self.append_menu_item(self.menu, "Lock Screen", "system-lock-screen", "Protect your computer from unauthorized use")
             def lock_screen_cb(widget):
-                ss_proxy = session_bus.get_object("org.gnome.ScreenSaver", "/")
-                dbus.Interface(ss_proxy, "org.gnome.ScreenSaver").Lock()
+                try:
+                    ss_proxy = session_bus.get_object("org.gnome.ScreenSaver", "/")
+                    dbus.Interface(ss_proxy, "org.gnome.ScreenSaver").Lock()
+                except dbus.DBusException, e:
+                    # NoReply exception may occur even while the screensaver did lock the screen
+                    if e.get_dbus_name() != "org.freedesktop.DBus.Error.NoReply":
+                        raise
             lock_item.connect("activate", lock_screen_cb)
 
         if can_manage_session:

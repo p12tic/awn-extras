@@ -124,9 +124,7 @@ static gboolean _expose(GtkWidget *self,
   {
     create_surface (AWN_SYSMONICON(self));
     awn_graph_render_to_context (priv->graph,priv->cr);
-    cairo_save (priv->cr);
     awn_icon_set_from_context (AWN_ICON(self),priv->cr);
-    cairo_restore (priv->cr);
   }  
   return TRUE;
 }
@@ -198,7 +196,5 @@ awn_sysmonicon_update_icon (AwnSysmonicon * icon)
   g_return_if_fail (priv->cr);
   
   awn_graph_render_to_context (priv->graph,priv->cr);
-  cairo_save (priv->cr);
   awn_icon_set_from_context (AWN_ICON(icon),priv->cr); 
-  cairo_restore (priv->cr);
 }

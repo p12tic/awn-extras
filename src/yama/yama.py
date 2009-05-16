@@ -46,9 +46,7 @@ data_dirs = os.environ["XDG_DATA_DIRS"] if "XDG_DATA_DIRS" in os.environ else "/
 # Describes the pattern used to try to decode URLs
 url_pattern = re.compile("^[a-z]+://(?:[^@]+@)?([^/]+)/(.*)$")
 
-# TODO handle updates in removed/new and included/excluded apps
 # TODO add devices to places
-
 
 class YamaApplet:
 
@@ -64,11 +62,13 @@ class YamaApplet:
         self.menu = gtk.Menu()
         self.icon_theme = gtk.icon_theme_get_default()
 
+        self.applications_items = []
+        self.settings_items = []
+
         """ Applications """
         tree = gmenu.lookup_tree("applications.menu")
-        self.append_directory(tree.root, self.menu)
-        tree.add_monitor(self.applications_menu_changed_cb)
-        # TODO remove monitor when destroy signal of menu is fired?
+        self.append_directory(tree.root, self.menu, item_list=self.applications_items)
+        tree.add_monitor(self.menu_changed_cb, self.applications_items)
 
         self.menu.append(gtk.SeparatorMenuItem())
 
@@ -77,9 +77,8 @@ class YamaApplet:
 
         """ System """
         tree = gmenu.lookup_tree("settings.menu")
-        self.append_directory(tree.root, self.menu)
-        tree.add_monitor(self.settings_menu_changed_cb)
-        # TODO remove monitor when destroy signal of menu is fired?
+        self.append_directory(tree.root, self.menu, item_list=self.settings_items)
+        tree.add_monitor(self.menu_changed_cb, self.settings_items)
 
         """ Session actions """
         session_bus = dbus.SessionBus()
@@ -154,11 +153,15 @@ class YamaApplet:
 
         menu.insert(gtk.SeparatorMenuItem(), menu_index + 1)
 
-    def applications_menu_changed_cb(self, tree):
-        print "applications menu changed!"
+    def menu_changed_cb(self, tree, items):
+        # Delete old items
+        for i in xrange(len(items)):
+            items.pop().destroy()
 
-    def settings_menu_changed_cb(self, tree):
-        print "settings menu changed!"
+        index = len(self.applications_items) + 2 if items is self.settings_items else 0  # + 2 = separator + Places
+        self.append_directory(tree.root, self.menu, index=index, item_list=items)
+        # Refresh menu to re-initialize the widget
+        self.menu.show_all()
 
     def start_subprocess_cb(self, widget, command, use_shell):
         try:
@@ -195,7 +198,8 @@ class YamaApplet:
         def bookmarks_changed_cb(monitor, file, other_file, event):
             if event == gio.FILE_MONITOR_EVENT_CHANGES_DONE_HINT:
                 self.append_bookmarks()
-                self.places_menu.show_all()  # refresh menu
+                # Refresh menu to re-initialize the widget
+                self.places_menu.show_all()
         self.__bookmarks_monitor.connect("changed", bookmarks_changed_cb)
 
         menu.append(gtk.SeparatorMenuItem())
@@ -224,22 +228,26 @@ class YamaApplet:
         self.append_awn_desktop(menu, "gnome-search-tool")
 
         """ Recent Documents """
+        self.create_documents_submenu(menu)
+
+    def create_documents_submenu(self, menu):
         recent_manager = gtk.recent_manager_get_default()
 
         chooser_menu = gtk.RecentChooserMenu(recent_manager)
         recent_item = self.append_menu_item(menu, "Recent Documents", "document-open-recent", None)
         recent_item.set_submenu(chooser_menu)
 
-        def set_sensitivity_recent_menu(widget):
+        def set_sensitivity_recent_menu(widget=None):
             recent_item.set_sensitive(recent_manager.props.size > 0)
         recent_manager.connect("changed", set_sensitivity_recent_menu)
-        set_sensitivity_recent_menu(None)
+        set_sensitivity_recent_menu()
 
         def open_recent_document(widget):
             self.start_subprocess_cb(None, "xdg-open %s" % chooser_menu.get_current_uri(), True)
         chooser_menu.connect("item-activated", open_recent_document)
 
         chooser_menu.append(gtk.SeparatorMenuItem())
+
         item = self.append_menu_item(chooser_menu, "Clear Recent Documents", "gtk-clear", "Clear all items from the recent documents list")
         clear_dialog = self.ClearRecentDocumentsDialog(self.applet, recent_manager.purge_items)
         def purge_items_cb(widget):
@@ -248,9 +256,11 @@ class YamaApplet:
         item.connect("activate", purge_items_cb)
 
     def append_bookmarks(self):
+        # Delete old items
         for item in self.bookmarks_items:
             item.destroy()
         self.bookmarks_items = []
+
         index = 2
         bookmarks_file = os.path.expanduser("~/.gtk-bookmarks")
         if os.path.isfile(bookmarks_file):
@@ -294,12 +304,17 @@ class YamaApplet:
                 path = path.split(" ", 1)[0]
             self.start_subprocess_cb(None, path, True)
 
-    def append_directory(self, tree, menu):
+    def append_directory(self, tree, menu, index=None, item_list=None):
         for node in tree.contents:
             if not isinstance(node, gmenu.Entry) and not isinstance(node, gmenu.Directory):
                 continue
             # Don't set comment yet because we don't want it for submenu's
-            item = self.append_menu_item(menu, node.name, node.icon, None)
+            item = self.create_menu_item(node.name, node.icon, None)
+
+            menu.append(item) if index is None else menu.insert(item, index)
+            if item_list is not None:
+                item_list.append(item)
+
             if isinstance(node, gmenu.Entry):
                 item.set_tooltip_text(node.comment)
                 item.connect("activate", self.launch_app, node.desktop_file_path, False)
@@ -307,6 +322,8 @@ class YamaApplet:
                 sub_menu = gtk.Menu()
                 item.set_submenu(sub_menu)
                 self.append_directory(node, sub_menu)
+            if index is not None:
+                index += 1
 
     def append_awn_desktop(self, menu, desktop_name):
         for dir in data_dirs.split(":"):

@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # Copyright (c) 2007 - 2008  Randal Barlow <im.tehk at gmail.com>
-#                      2008  onox <denkpadje@gmail.com>
+#                      2008 - 2009  onox <denkpadje@gmail.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -426,6 +426,6 @@ if __name__ == "__main__":
         "description": applet_description,
         "theme": applet_theme_logo,
         "author": "onox, Randal Barlow",
-        "copyright-year": 2008,
+        "copyright-year": "2008 - 2009",
         "authors": ["onox <denkpadje@gmail.com>", "Randal Barlow <im.tehk at gmail.com>"]},
         ["settings-per-instance"])

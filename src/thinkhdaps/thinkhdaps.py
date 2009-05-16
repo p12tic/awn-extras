@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# Copyright (C) 2008  onox <denkpadje@gmail.com>
+# Copyright (C) 2008 - 2009  onox <denkpadje@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -193,7 +193,7 @@ if __name__ == "__main__":
         "description": applet_description,
         "logo": applet_logo,
         "author": "onox",
-        "copyright-year": 2008,
+        "copyright-year": "2008 - 2009",
         "authors": ["onox <denkpadje@gmail.com>"],
         "artists": ["Jakub Steiner", "Lapo Calamandrei", "Rodney Dawes", "Garrett LeSage", "onox"]})
 

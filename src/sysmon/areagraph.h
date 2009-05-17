@@ -54,7 +54,7 @@ typedef struct
 
 GType awn_areagraph_get_type (void);
 
-GtkWidget* awn_areagraph_new (guint num_points, gdouble min_val, gdouble max_val);
+GtkWidget* awn_areagraph_new (gint num_points, gdouble min_val, gdouble max_val);
 
 void awn_areagraph_clear (Awn_Areagraph *self,gdouble val);
 

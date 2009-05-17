@@ -117,7 +117,7 @@ void awn_graph_render_to_context (AwnGraph * graph, cairo_t *ctx)
   return klass->render_to_context (graph, ctx);
 }
 
-void awn_graph_add_data (AwnGraph * graph, gpointer data)
+void awn_graph_add_data (AwnGraph * graph, GList * data)
 {
   AwnGraphClass *klass;
 

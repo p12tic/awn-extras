@@ -51,7 +51,7 @@ enum
 static void _awn_circlegraph_render_to_context(AwnGraph * graph,
                                         cairo_t *ctx);
 static void _awn_circlegraph_add_data(AwnGraph * graph,
-                                        gpointer data);
+                                        GList * data);
 
 
 
@@ -181,12 +181,13 @@ static void _awn_circlegraph_render_to_context(AwnGraph * graph,
 }
 
 static void _awn_circlegraph_add_data(AwnGraph * graph,
-                                        gpointer data)
+                                        GList * list)
 {
   AwnGraphPrivate * graph_priv;
   AwnCirclegraphPrivate * priv;
 
-  const AwnGraphSinglePoint *area_graph_point = data;
+  g_return_if_fail (list);
+  const AwnGraphSinglePoint *area_graph_point = g_list_first (list)->data;
 
   priv = AWN_CIRCLEGRAPH_GET_PRIVATE (graph);  
   graph_priv = AWN_GRAPH_GET_PRIVATE(graph);

@@ -51,7 +51,7 @@ enum
 static void _awn_areagraph_render_to_context(AwnGraph * graph,
                                         cairo_t *ctx);
 static void _awn_areagraph_add_data(AwnGraph * graph,
-                                        gpointer data);
+                                        GList * data);
 
 static void
 awn_areagraph_get_property (GObject *object, guint property_id,
@@ -221,7 +221,7 @@ static void _awn_areagraph_render_to_context(AwnGraph * graph,
 }
 
 static void _awn_areagraph_add_data(AwnGraph * graph,
-                                        gpointer data)
+                                        GList * list)
 {
   AwnGraphPrivate * graph_priv;
   AwnAreagraphPrivate * priv;
@@ -230,7 +230,8 @@ static void _awn_areagraph_add_data(AwnGraph * graph,
   glong count;
   gdouble total=0.0;
   
-  const AwnGraphSinglePoint *area_graph_point = data;
+  g_return_if_fail (list);
+  const AwnGraphSinglePoint *area_graph_point = g_list_first (list)->data;
 
   priv = AWN_AREAGRAPH_GET_PRIVATE (graph);  
   graph_priv = AWN_GRAPH_GET_PRIVATE(graph);
@@ -293,7 +294,7 @@ awn_areagraph_init (Awn_Areagraph *self)
 }
 
 GtkWidget*
-awn_areagraph_new (guint num_points, gdouble min_val, gdouble max_val)
+awn_areagraph_new (gint num_points, gdouble min_val, gdouble max_val)
 {
   return g_object_new (AWN_TYPE_AREAGRAPH, 
                        "num_points",num_points,

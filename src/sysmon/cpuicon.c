@@ -28,6 +28,7 @@
 
 #include "cpuicon.h"
 #include "areagraph.h"
+#include "circlegraph.h"
 
 #include "sysmoniconprivate.h"
 
@@ -100,17 +101,20 @@ _awn_CPUicon_update_icon(gpointer object)
   AwnCPUiconPrivate * priv;  
   AwnSysmoniconPrivate * sysmonicon_priv=NULL;  
   AwnCPUicon * icon = object;
-  AwnGraphSinglePoint point;
+  AwnGraphSinglePoint *point = g_new0 (AwnGraphSinglePoint,1);
+  GList * list = NULL;
   
   priv = AWN_CPUICON_GET_PRIVATE (object);
   sysmonicon_priv = AWN_SYSMONICON_GET_PRIVATE (object);
 
   //  awn_graph_add_data (awn_sysmonicon_get_graph(AWN_SYSMONICON(self)),&point);
-  point = awn_CPUicon_get_load(object);
-
-    
-  awn_graph_add_data (sysmonicon_priv->graph,&point);
+  *point = awn_CPUicon_get_load(object);
+  list = g_list_prepend (list,point);
+ 
+  awn_graph_add_data (sysmonicon_priv->graph,list);
   awn_sysmonicon_update_icon (icon);
+  g_free (point);
+  g_list_free (list);
   return TRUE;
 }
 
@@ -163,7 +167,7 @@ awn_CPUicon_constructed (GObject *object)
       sysmonicon_priv->graph = AWN_GRAPH(awn_areagraph_new (size,0.0,100.0));
       break;
     case GRAPH_CIRCLE:
-      sysmonicon_priv->graph = AWN_GRAPH(awn_circlegraph_new (size,0.0,100.0));
+      sysmonicon_priv->graph = AWN_GRAPH(awn_circlegraph_new (0.0,100.0));
       break;
     default:
       g_assert_not_reached();

@@ -29,7 +29,10 @@ struct _AwnSysmoniconPrivate
 {
   AwnApplet * applet;
   cairo_surface_t *surface;
-  cairo_t *cr;
+  cairo_t *graph_cr;
+  cairo_t *bg_cr;
+  cairo_t *fg_cr;
+  cairo_t *icon_cr;
   AwnGraph * graph; 
   AwnGraphType graph_type;   
 };

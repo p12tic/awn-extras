@@ -120,11 +120,11 @@ static gboolean _expose(GtkWidget *self,
   AwnSysmoniconPrivate * priv;
   priv = AWN_SYSMONICON_GET_PRIVATE (self);
   
-  if (!priv->cr)
+  if (!priv->graph_cr)
   {
     create_surface (AWN_SYSMONICON(self));
-    awn_graph_render_to_context (priv->graph,priv->cr);
-    awn_icon_set_from_context (AWN_ICON(self),priv->cr);
+    awn_graph_render_to_context (priv->graph,priv->graph_cr);
+    awn_icon_set_from_context (AWN_ICON(self),priv->graph_cr);
   }  
   return TRUE;
 }
@@ -136,7 +136,7 @@ awn_sysmonicon_init (AwnSysmonicon *self)
   priv = AWN_SYSMONICON_GET_PRIVATE (self);
 
   priv->graph = NULL;
-  priv->cr = NULL;
+  priv->graph_cr = NULL;
   g_signal_connect_after (G_OBJECT(self), "expose-event", G_CALLBACK(_expose), NULL);       
 }
 
@@ -168,10 +168,10 @@ create_surface (AwnSysmonicon * sysmonicon)
   
   size = awn_applet_get_size (AWN_APPLET(priv->applet));
   
-  if (priv->cr)
+  if (priv->graph_cr)
   {
-    cairo_destroy(priv->cr);
-    priv->cr = NULL;
+    cairo_destroy(priv->graph_cr);
+    priv->graph_cr = NULL;
   }
 
   if (priv->surface)
@@ -183,8 +183,8 @@ create_surface (AwnSysmonicon * sysmonicon)
   temp_cr = gdk_cairo_create(GTK_WIDGET(priv->applet)->window);
   priv->surface = cairo_surface_create_similar (cairo_get_target(temp_cr),CAIRO_CONTENT_COLOR_ALPHA, size,size);
   cairo_destroy(temp_cr);
-  priv->cr = cairo_create(priv->surface);
-  cairo_scale(priv->cr,(double)size/48.0,(double)size/48.0);
+  priv->graph_cr = cairo_create(priv->surface);
+  cairo_scale(priv->graph_cr,(double)size/48.0,(double)size/48.0);
 
 }
 
@@ -193,12 +193,12 @@ awn_sysmonicon_update_icon (AwnSysmonicon * icon)
 {
   AwnSysmoniconPrivate * priv;
   priv = AWN_SYSMONICON_GET_PRIVATE (icon);
-  g_return_if_fail (priv->cr);
-  awn_graph_render_to_context (priv->graph,priv->cr);
+  g_return_if_fail (priv->graph_cr);
+  awn_graph_render_to_context (priv->graph,priv->graph_cr);
   /*FIXME
    Have a background, rendered graph, and foregrond and slap them together.
    */
 
-  awn_icon_set_from_context (AWN_ICON(icon),priv->cr); 
+  awn_icon_set_from_context (AWN_ICON(icon),priv->graph_cr); 
 }
 

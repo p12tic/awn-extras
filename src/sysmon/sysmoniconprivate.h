@@ -28,7 +28,10 @@ typedef struct _AwnSysmoniconPrivate AwnSysmoniconPrivate;
 struct _AwnSysmoniconPrivate 
 {
   AwnApplet * applet;
-  cairo_surface_t *surface;
+  cairo_surface_t *graph_surface;
+  cairo_surface_t *bg_surface;
+  cairo_surface_t *fg_surface;
+  cairo_surface_t *icon_surface;
   cairo_t *graph_cr;
   cairo_t *bg_cr;
   cairo_t *fg_cr;

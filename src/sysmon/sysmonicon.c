@@ -174,18 +174,69 @@ create_surfaces (AwnSysmonicon * sysmonicon)
     priv->graph_cr = NULL;
   }
 
-  if (priv->surface)
+  if (priv->graph_surface)
   {
-    cairo_surface_destroy(priv->surface);
-    priv->surface = NULL;
+    cairo_surface_destroy(priv->graph_surface);
+    priv->graph_surface = NULL;
   }
 
+  if (priv->bg_cr)
+  {
+    cairo_destroy(priv->bg_cr);
+    priv->bg_cr = NULL;
+  }
+
+  if (priv->bg_surface)
+  {
+    cairo_surface_destroy(priv->bg_surface);
+    priv->bg_surface = NULL;
+  }
+
+  if (priv->fg_cr)
+  {
+    cairo_destroy(priv->fg_cr);
+    priv->fg_cr = NULL;
+  }
+
+  if (priv->fg_surface)
+  {
+    cairo_surface_destroy(priv->fg_surface);
+    priv->fg_surface = NULL;
+  }
+
+  if (priv->icon_cr)
+  {
+    cairo_destroy(priv->icon_cr);
+    priv->icon_cr = NULL;
+  }
+
+  if (priv->icon_surface)
+  {
+    cairo_surface_destroy(priv->icon_surface);
+    priv->icon_surface = NULL;
+  }
+  
   temp_cr = gdk_cairo_create(GTK_WIDGET(priv->applet)->window);
-  priv->surface = cairo_surface_create_similar (cairo_get_target(temp_cr),CAIRO_CONTENT_COLOR_ALPHA, size,size);
+  priv->graph_surface = cairo_surface_create_similar (cairo_get_target(temp_cr),CAIRO_CONTENT_COLOR_ALPHA, size,size);
+  priv->graph_cr = cairo_create(priv->graph_surface);
+  priv->bg_surface = cairo_surface_create_similar (cairo_get_target(temp_cr),CAIRO_CONTENT_COLOR_ALPHA, size,size);
+  priv->bg_cr = cairo_create(priv->bg_surface);
+  priv->fg_surface = cairo_surface_create_similar (cairo_get_target(temp_cr),CAIRO_CONTENT_COLOR_ALPHA, size,size);
+  priv->fg_cr = cairo_create(priv->fg_surface);
+  priv->icon_surface = cairo_surface_create_similar (cairo_get_target(temp_cr),CAIRO_CONTENT_COLOR_ALPHA, size,size);
+  priv->icon_cr = cairo_create(priv->icon_surface);
+
+  /*FIXME should be in vtable ->set_bg() or something similar
+    in most cases would set the surface once.... then just let it be 
+   reused
+   
+   fg_* will probably end up being removed (see comment in update_icon()
+   */
+  cairo_set_source_rgba (priv->bg_cr,0.2,0.2,0.2,0.05);
+  cairo_set_operator (priv->bg_cr,CAIRO_OPERATOR_SOURCE);
+  cairo_paint (priv->bg_cr);
+  
   cairo_destroy(temp_cr);
-  priv->graph_cr = cairo_create(priv->surface);
-
-
 }
 
 void
@@ -194,14 +245,38 @@ awn_sysmonicon_update_icon (AwnSysmonicon * icon)
   AwnSysmoniconPrivate * priv;
   priv = AWN_SYSMONICON_GET_PRIVATE (icon);
   g_return_if_fail (priv->graph_cr);
-/*  g_return_if_fail (priv->bg_cr);
+  g_return_if_fail (priv->bg_cr);
   g_return_if_fail (priv->fg_cr);
-  */
+  g_return_if_fail (priv->icon_cr);
+  
   awn_graph_render_to_context (priv->graph,priv->graph_cr);
   /*FIXME
    Have a background, rendered graph, and foregrond and slap them together.
+   
+   The graph surface is just layered on top of bg. fg will be handled differently.  
+   Not rendering the graph on top of the surface to allow the graph render to be
+   optimized by moving chunks of the graph surface around instead of rerendering 
+   the whole thing... 
+   
+   fg probably needs to be rendered on top on every pass instead of creating a 
+   (potentially) reusable surface.
+   */
+  
+  /*FIXME call (for the moment just setting it create_surfaces) ->set_bg ()
+   */
+  
+  /* === */
+  cairo_set_operator (priv->icon_cr,CAIRO_OPERATOR_SOURCE);
+  cairo_set_source_surface (priv->icon_cr, priv->bg_surface,0.0,0.0);
+  cairo_paint (priv->icon_cr);
+  cairo_set_operator (priv->icon_cr,CAIRO_OPERATOR_OVER);
+  cairo_set_source_surface (priv->icon_cr, priv->graph_surface,0.0,0.0);
+  cairo_paint (priv->icon_cr);
+  
+  /*should call something along the lines of render_fg() which will be in 
+   vtable
    */
 
-  awn_icon_set_from_context (AWN_ICON(icon),priv->graph_cr); 
+  awn_icon_set_from_context (AWN_ICON(icon),priv->icon_cr);  
 }
 

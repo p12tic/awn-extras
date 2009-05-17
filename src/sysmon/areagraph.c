@@ -196,26 +196,55 @@ static void _awn_areagraph_render_to_context(AwnGraph * graph,
   {
     end_point = ((gint) priv->cur_point) ;
   }  
-
-  cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
-  cairo_paint (cr);
   
-  cairo_paint (cr);
-  vert_scale = srfc_height / (double) (priv->max_val - priv->min_val);
-  cairo_scale (cr, srfc_width / (double)priv->num_points, vert_scale);
-  cairo_set_source_rgba (cr, 0.8, 0.0, 0.6, 0.6);
-
-  cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
-  for (i=priv->cur_point; x < priv->num_points;i++)
+  if (priv->filled)
   {
-    cairo_move_to (cr, x- 0.5,priv->max_val - priv->min_val);
-    cairo_line_to (cr, x- 0.5, priv->max_val - priv->min_val - values[i]);
-    cairo_stroke (cr);
-    if (i >= priv->num_points )
+    gint start_here;
+    
+    cairo_set_source_surface (cr,cairo_get_target (cr),-1.0 * priv->num_shift ,0.0);
+    cairo_set_operator (cr,CAIRO_OPERATOR_SOURCE);
+    cairo_paint (cr);
+    
+    vert_scale = srfc_height / (double) (priv->max_val - priv->min_val);
+    cairo_scale (cr, srfc_width / (double)priv->num_points, vert_scale);
+    cairo_set_source_rgba (cr, 0.8, 0.0, 0.6, 0.6);
+    cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
+    start_here = priv->cur_point - priv->num_shift;
+    x = priv->num_points-priv->num_shift;                                      
+    for (i=start_here ; x < priv->num_points;i++)
     {
-      i = -1;
+      cairo_move_to (cr, x- 0.5,priv->max_val - priv->min_val);
+      cairo_line_to (cr, x- 0.5, priv->max_val - priv->min_val - values[i]);
+      cairo_stroke (cr);
+      if (i >= priv->num_points )
+      {
+        i = -1;
+      }    
+      x++;    
     }    
-    x++;    
+  }
+  else
+  {
+    cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
+    cairo_paint (cr);
+    
+    cairo_paint (cr);
+    vert_scale = srfc_height / (double) (priv->max_val - priv->min_val);
+    cairo_scale (cr, srfc_width / (double)priv->num_points, vert_scale);
+    cairo_set_source_rgba (cr, 0.8, 0.0, 0.6, 0.6);
+
+    cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
+    for (i=priv->cur_point; x < priv->num_points;i++)
+    {
+      cairo_move_to (cr, x- 0.5,priv->max_val - priv->min_val);
+      cairo_line_to (cr, x- 0.5, priv->max_val - priv->min_val - values[i]);
+      cairo_stroke (cr);
+      if (i >= priv->num_points )
+      {
+        i = -1;
+      }    
+      x++;    
+    }
   }
   cairo_restore (cr);
 }

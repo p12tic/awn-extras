@@ -29,7 +29,7 @@ enum
   PROP_GRAPHTYPE
 };
 
-static void create_surface (AwnSysmonicon * sysmonicon);
+static void create_surfaces (AwnSysmonicon * sysmonicon);
 
 
 static void
@@ -122,7 +122,7 @@ static gboolean _expose(GtkWidget *self,
   
   if (!priv->graph_cr)
   {
-    create_surface (AWN_SYSMONICON(self));
+    create_surfaces (AWN_SYSMONICON(self));
     awn_graph_render_to_context (priv->graph,priv->graph_cr);
     awn_icon_set_from_context (AWN_ICON(self),priv->graph_cr);
   }  
@@ -157,7 +157,7 @@ awn_sysmonicon_get_graph(AwnSysmonicon * self)
 }
 
 static void
-create_surface (AwnSysmonicon * sysmonicon)
+create_surfaces (AwnSysmonicon * sysmonicon)
 {
   
   cairo_t * temp_cr =NULL;
@@ -184,7 +184,7 @@ create_surface (AwnSysmonicon * sysmonicon)
   priv->surface = cairo_surface_create_similar (cairo_get_target(temp_cr),CAIRO_CONTENT_COLOR_ALPHA, size,size);
   cairo_destroy(temp_cr);
   priv->graph_cr = cairo_create(priv->surface);
-  cairo_scale(priv->graph_cr,(double)size/48.0,(double)size/48.0);
+
 
 }
 
@@ -194,6 +194,9 @@ awn_sysmonicon_update_icon (AwnSysmonicon * icon)
   AwnSysmoniconPrivate * priv;
   priv = AWN_SYSMONICON_GET_PRIVATE (icon);
   g_return_if_fail (priv->graph_cr);
+/*  g_return_if_fail (priv->bg_cr);
+  g_return_if_fail (priv->fg_cr);
+  */
   awn_graph_render_to_context (priv->graph,priv->graph_cr);
   /*FIXME
    Have a background, rendered graph, and foregrond and slap them together.

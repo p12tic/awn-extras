@@ -141,12 +141,10 @@ awn_circlegraph_class_init (AwnCirclegraphClass *klass)
 }
 
 static void _awn_circlegraph_render_to_context(AwnGraph * graph,
-                                        cairo_t *orig_cr)
+                                        cairo_t *cr)
 {
   AwnCirclegraphPrivate * priv;  
   cairo_pattern_t *pat;
-//  cairo_t * cr = orig_cr;
-  cairo_t * cr = cairo_create (cairo_get_target(orig_cr) ); /* FIXME This should not be necessary*/
   gint srfc_width;
   gint srfc_height;
   gdouble usage;
@@ -177,7 +175,6 @@ static void _awn_circlegraph_render_to_context(AwnGraph * graph,
   cairo_pattern_destroy (pat);
   
   cairo_restore (cr);
-  cairo_destroy (cr);  /*see FIXME above */  
 }
 
 static void _awn_circlegraph_add_data(AwnGraph * graph,

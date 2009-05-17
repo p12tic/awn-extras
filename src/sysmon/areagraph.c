@@ -157,7 +157,7 @@ awn_areagraph_class_init (Awn_AreagraphClass *klass)
 }
 
 static void _awn_areagraph_render_to_context(AwnGraph * graph,
-                                        cairo_t *orig_cr)
+                                        cairo_t *cr)
 {
   /*Can be optimized.  FIXME
    */
@@ -170,11 +170,11 @@ static void _awn_areagraph_render_to_context(AwnGraph * graph,
   gint  x=0;
   gdouble * values = NULL;
   gdouble vert_scale = 1.0;
-  cairo_t * cr = cairo_create (cairo_get_target(orig_cr) ); /* FIXME This should not be necessary*/
   
   priv = AWN_AREAGRAPH_GET_PRIVATE (graph);
   graph_priv = AWN_GRAPH_GET_PRIVATE (graph);
   
+  cairo_save (cr);
   values = graph_priv->data;
     
   srfc_height = cairo_xlib_surface_get_height (cairo_get_target(cr));
@@ -217,7 +217,7 @@ static void _awn_areagraph_render_to_context(AwnGraph * graph,
     }    
     x++;    
   }
-  cairo_destroy (cr);  /*see FIXME above */
+  cairo_restore (cr);
 }
 
 static void _awn_areagraph_add_data(AwnGraph * graph,

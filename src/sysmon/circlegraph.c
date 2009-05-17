@@ -160,19 +160,16 @@ static void _awn_circlegraph_render_to_context(AwnGraph * graph,
   cairo_scale (cr, srfc_width / 256.0, srfc_height / 256.0);
   
   
-/*  pat = cairo_pattern_create_linear (0.0, 0.0,  0.0, 256.0);
-  cairo_pattern_add_color_stop_rgba (pat, 1, 0, 0, 0, 1);
-  cairo_pattern_add_color_stop_rgba (pat, 0, 1, 1, 1, 1);
-  cairo_rectangle (cr, 0, 0, 256, 256);
-  cairo_set_source (cr, pat);
-  cairo_fill (cr);
-  cairo_pattern_destroy (pat);
-*/
-
   usage = (priv->current_val + priv->prev_val) / 200.0;
   pat = cairo_pattern_create_radial (128,  128, 0,
                                      128,  128, 128.0);
-  cairo_pattern_add_color_stop_rgba (pat, 0, sin (M_PI/2 *usage), (1-sin (M_PI/2 *usage))/3, 0, 1 );
+  cairo_pattern_add_color_stop_rgba (pat, 0, 0.2+sin (M_PI/2 *usage)*0.8, 
+                                          cos (M_PI/2 *usage) /2, 0, 1 );
+  
+  cairo_pattern_add_color_stop_rgba (pat, 0.55, 0+sin (M_PI/2 *usage),
+                                                0+cos (M_PI/2 *usage), 
+                                                0, 1 );  
+  
   cairo_pattern_add_color_stop_rgba (pat, 1, usage/2, 1 *(1-usage), 0, 1);
   cairo_set_source (cr, pat);
   cairo_arc (cr, 128.0, 128.0, 120, 0, 2 * M_PI);

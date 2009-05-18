@@ -128,8 +128,12 @@ awn_CPUicon_constructed (GObject *object)
   int i = 0;
   gint size;
     
-  priv = AWN_CPUICON_GET_PRIVATE (object); 
 
+  g_assert (G_OBJECT_CLASS ( awn_CPUicon_parent_class) );
+  G_OBJECT_CLASS ( awn_CPUicon_parent_class)->constructed(object);
+  
+  priv = AWN_CPUICON_GET_PRIVATE (object); 
+  sysmonicon_priv = AWN_SYSMONICON_GET_PRIVATE (object);  
   /*
    this will choose add_seconds in a relatively conservative manner.  Note that
    the timer is assumed to be incorrect and time elapsed is actually measured 
@@ -158,7 +162,7 @@ awn_CPUicon_constructed (GObject *object)
   priv->now = 0;
   
 
-  sysmonicon_priv = AWN_SYSMONICON_GET_PRIVATE (object);
+
   size = awn_applet_get_size (sysmonicon_priv->applet);
   switch (sysmonicon_priv->graph_type)
   {

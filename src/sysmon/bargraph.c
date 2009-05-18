@@ -20,7 +20,7 @@
 
 G_DEFINE_TYPE (AwnBarGraph, awn_bargraph, AWN_TYPE_BARGRAPH)
 
-#define GET_PRIVATE(o) \
+#define AWN_BARGRAPH_GET_PRIVATE(o) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), AWN_TYPE_BARGRAPH, AwnBarGraphPrivate))
 
 typedef struct _AwnBarGraphPrivate AwnBarGraphPrivate;

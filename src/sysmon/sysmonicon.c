@@ -30,6 +30,7 @@ enum
 };
 
 static void create_surfaces (AwnSysmonicon * sysmonicon);
+static void _size_changed(AwnApplet *app, guint size, AwnSysmonicon *object);
 
 
 static void
@@ -82,6 +83,20 @@ awn_sysmonicon_finalize (GObject *object)
   G_OBJECT_CLASS (awn_sysmonicon_parent_class)->finalize (object);
 }
 
+
+void
+awn_sysmonicon_constructed (GObject *object)
+{
+  AwnSysmoniconPrivate * priv;
+  priv = AWN_SYSMONICON_GET_PRIVATE (object);
+  
+  
+  g_debug ("In awn_sysm;onicon_constructed\n");
+  g_signal_connect(G_OBJECT(priv->applet), "size-changed", 
+                   G_CALLBACK(_size_changed), object);
+  
+}
+
 static void
 awn_sysmonicon_class_init (AwnSysmoniconClass *klass)
 {
@@ -92,6 +107,7 @@ awn_sysmonicon_class_init (AwnSysmoniconClass *klass)
   object_class->set_property = awn_sysmonicon_set_property;
   object_class->dispose = awn_sysmonicon_dispose;
   object_class->finalize = awn_sysmonicon_finalize;
+  object_class->constructed = awn_sysmonicon_constructed;
   
   pspec = g_param_spec_object ("applet",
                                "Applet",
@@ -280,3 +296,9 @@ awn_sysmonicon_update_icon (AwnSysmonicon * icon)
   awn_icon_set_from_context (AWN_ICON(icon),priv->icon_cr);  
 }
 
+static 
+void _size_changed(AwnApplet *app, guint size, AwnSysmonicon *icon)
+{
+  g_debug ("Resizing\n");
+  create_surfaces (icon);  
+}

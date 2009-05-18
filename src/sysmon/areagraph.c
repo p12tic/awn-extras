@@ -208,7 +208,6 @@ static void _awn_areagraph_render_to_context(AwnGraph * graph,
     vert_scale = srfc_height / (double) (priv->max_val - priv->min_val);
     cairo_scale (cr, srfc_width / (double)priv->num_points, vert_scale);
     cairo_set_source_rgba (cr, 0.8, 0.0, 0.6, 0.6);
-    cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
     start_here = priv->cur_point - priv->num_shift;
     x = priv->num_points-priv->num_shift;                                      
     for (i=start_here ; x < priv->num_points;i++)

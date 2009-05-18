@@ -90,8 +90,7 @@ awn_sysmonicon_constructed (GObject *object)
   AwnSysmoniconPrivate * priv;
   priv = AWN_SYSMONICON_GET_PRIVATE (object);
   
-  
-  g_debug ("In awn_sysm;onicon_constructed\n");
+  priv->tooltip = awn_tooltip_new_for_widget (GTK_WIDGET(object));
   g_signal_connect(G_OBJECT(priv->applet), "size-changed", 
                    G_CALLBACK(_size_changed), object);
   

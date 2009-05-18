@@ -103,12 +103,16 @@ _awn_CPUicon_update_icon(gpointer object)
   AwnCPUicon * icon = object;
   AwnGraphSinglePoint *point = g_new0 (AwnGraphSinglePoint,1);
   GList * list = NULL;
+  gchar *text;
   
   priv = AWN_CPUICON_GET_PRIVATE (object);
   sysmonicon_priv = AWN_SYSMONICON_GET_PRIVATE (object);
 
   //  awn_graph_add_data (awn_sysmonicon_get_graph(AWN_SYSMONICON(self)),&point);
-  *point = awn_CPUicon_get_load(object);
+  *point = awn_CPUicon_get_load (object);
+  text = g_strdup_printf ("CPU: %.0lf%%",point->value);
+  awn_tooltip_set_text (sysmonicon_priv->tooltip,text);
+  g_free (text);
   list = g_list_prepend (list,point);
  
   awn_graph_add_data (sysmonicon_priv->graph,list);
@@ -161,8 +165,6 @@ awn_CPUicon_constructed (GObject *object)
   }
   priv->now = 0;
   
-
-
   size = awn_applet_get_size (sysmonicon_priv->applet);
   switch (sysmonicon_priv->graph_type)
   {

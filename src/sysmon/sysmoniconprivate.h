@@ -17,6 +17,7 @@
 #ifndef _AWN_SYSMONICON_PRIV
 #define _AWN_SYSMONICON_PRIV
 
+#include <gtk/gtk.h>
 #include "sysmonicon.h"
 #include "defines.h"
 
@@ -28,6 +29,7 @@ typedef struct _AwnSysmoniconPrivate AwnSysmoniconPrivate;
 struct _AwnSysmoniconPrivate 
 {
   AwnApplet * applet;
+  GtkWidget * tooltip;
   cairo_surface_t *graph_surface;
   cairo_surface_t *bg_surface;
   cairo_surface_t *fg_surface;

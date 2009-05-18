@@ -8,6 +8,8 @@ sysmon_la_SOURCES =		\
   applet.c  \
   areagraph.c \
   areagraph.h \
+  bargraph.c \
+  bargraph.h \
   circlegraph.c \
   circlegraph.h \
   cpuicon.c \

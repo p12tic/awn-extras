@@ -17,6 +17,8 @@ sysmon_la_SOURCES =		\
   defines.h \
   graph.c \
   graph.h \
+  loadicon.c \
+  loadicon.h \
   piegraph.c \
   piegraph.h \
   sysmon.c  \

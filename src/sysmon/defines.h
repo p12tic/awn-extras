@@ -28,6 +28,7 @@ typedef enum
   GRAPH_DEFAULT,
   GRAPH_AREA,
   GRAPH_CIRCLE,
+  GRAPH_BAR,
   GRAPH_LAST
 }AwnGraphType;
   

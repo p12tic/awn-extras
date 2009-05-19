@@ -114,7 +114,7 @@ awn_areagraph_finalize (GObject *object)
 static void
 awn_areagraph_class_init (Awn_AreagraphClass *klass)
 {
-  GParamSpec   *pspec;    
+  GParamSpec   *pspec;
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
   object_class->get_property = awn_areagraph_get_property;

@@ -51,7 +51,7 @@ typedef struct {
 
 GType awn_bargraph_get_type (void);
 
-AwnBarGraph* awn_bargraph_new (void);
+AwnBarGraph* awn_bargraph_new (gdouble min_val, gdouble max_val);
 
 G_END_DECLS
 

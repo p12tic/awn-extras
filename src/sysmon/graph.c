@@ -122,7 +122,7 @@ void awn_graph_add_data (AwnGraph * graph, GList * data)
   AwnGraphClass *klass;
 
   klass = AWN_GRAPH_GET_CLASS (graph);
-
   g_return_if_fail (klass->add_data);
+  g_return_if_fail (data);
   return klass->add_data (graph, data);
 }

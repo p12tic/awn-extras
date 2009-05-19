@@ -198,8 +198,7 @@ awn_CPUicon_class_init (AwnCPUiconClass *klass)
 
 static void
 awn_CPUicon_init (AwnCPUicon *self)
-{
-  GdkPixbuf * pixbuf;  
+{ 
   AwnCPUiconPrivate *priv;
   	
   priv = AWN_CPUICON_GET_PRIVATE (self);

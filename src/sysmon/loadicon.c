@@ -17,16 +17,20 @@
  /* awn-loadicon.c */
 
 #include "loadicon.h"
+#include "sysmoniconprivate.h"
+#include "defines.h"
+#include "bargraph.h"
 
 G_DEFINE_TYPE (AwnLoadicon, awn_loadicon, AWN_TYPE_SYSMONICON)
 
-#define GET_PRIVATE(o) \
+#define AWN_LOADICON_GET_PRIVATE(o) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), AWN_TYPE_LOADICON, AwnLoadiconPrivate))
 
 typedef struct _AwnLoadiconPrivate AwnLoadiconPrivate;
 
 struct _AwnLoadiconPrivate {
-    int dummy;
+    guint timer_id;
+    guint update_timeout;
 };
 
 static void
@@ -61,6 +65,66 @@ awn_loadicon_finalize (GObject *object)
   G_OBJECT_CLASS (awn_loadicon_parent_class)->finalize (object);
 }
 
+static gboolean 
+_awn_loadicon_update_icon(gpointer object)
+{  
+  AwnLoadiconPrivate * priv;  
+  AwnSysmoniconPrivate * sysmonicon_priv=NULL;  
+  AwnLoadicon * icon = AWN_LOADICON(object);
+  
+  priv = AWN_LOADICON_GET_PRIVATE (object);
+  sysmonicon_priv = AWN_SYSMONICON_GET_PRIVATE (object);
+
+  g_debug ("BOOGER\n");
+  //  awn_graph_add_data (awn_sysmonicon_get_graph(AWN_SYSMONICON(self)),&point);
+ 
+//  awn_graph_add_data (sysmonicon_priv->graph,list);
+  awn_sysmonicon_update_icon (icon);
+  return TRUE;
+  
+}
+
+static void
+awn_loadicon_constructed (GObject *object)
+{
+  AwnLoadiconPrivate * priv;
+  AwnSysmoniconPrivate * sysmonicon_priv=NULL;  
+  gint size;
+
+  g_assert (G_OBJECT_CLASS ( awn_loadicon_parent_class) );
+  G_OBJECT_CLASS ( awn_loadicon_parent_class)->constructed(object);
+  
+  priv = AWN_LOADICON_GET_PRIVATE (object); 
+  sysmonicon_priv = AWN_SYSMONICON_GET_PRIVATE (object);  
+  
+  if ( (priv->update_timeout > 750) && 
+      ( (priv->update_timeout %1000 <25) || (priv->update_timeout %1000 >975)))
+  {
+    priv->timer_id = g_timeout_add_seconds(priv->update_timeout/ 1000, 
+                                           _awn_loadicon_update_icon, 
+                                           object);  
+  }
+  else
+  {
+    priv->timer_id = g_timeout_add(priv->update_timeout, _awn_loadicon_update_icon, object);  
+  }
+  size = awn_applet_get_size (sysmonicon_priv->applet);
+
+  switch (sysmonicon_priv->graph_type)
+  {
+    case GRAPH_DEFAULT:
+    case GRAPH_BAR:    
+      g_debug ("creating new bar graph\n");
+      sysmonicon_priv->graph = AWN_GRAPH(awn_bargraph_new (0.0,100.0));      
+      break;
+    case GRAPH_CIRCLE:
+    case GRAPH_AREA:      
+    default:
+      g_assert_not_reached();
+  }
+  
+}
+
 static void
 awn_loadicon_class_init (AwnLoadiconClass *klass)
 {
@@ -72,16 +136,25 @@ awn_loadicon_class_init (AwnLoadiconClass *klass)
   object_class->set_property = awn_loadicon_set_property;
   object_class->dispose = awn_loadicon_dispose;
   object_class->finalize = awn_loadicon_finalize;
+  object_class->constructed = awn_loadicon_constructed;  
 }
 
 static void
 awn_loadicon_init (AwnLoadicon *self)
 {
+  AwnLoadiconPrivate *priv;
+  	
+  priv = AWN_LOADICON_GET_PRIVATE (self);
+  priv->update_timeout = 250;  /*FIXME*/
+  
 }
 
-AwnLoadicon*
-awn_loadicon_new (void)
+GtkWidget*
+awn_loadicon_new (AwnGraphType graph_type,AwnApplet * applet)
 {
-  return g_object_new (AWN_TYPE_LOADICON, NULL);
+  return g_object_new (AWN_TYPE_LOADICON, 
+                          "graph_type",graph_type,                          
+                          "applet",applet,
+                          NULL);  
 }
 

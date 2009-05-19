@@ -52,7 +52,7 @@ typedef struct {
 
 GType awn_loadicon_get_type (void);
 
-AwnLoadicon* awn_loadicon_new (void);
+GtkWidget* awn_loadicon_new (AwnGraphType graph_type,AwnApplet * applet);
 
 G_END_DECLS
 

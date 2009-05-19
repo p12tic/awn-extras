@@ -29,6 +29,10 @@ struct _AwnBarGraphPrivate {
     int dummy;
 };
 
+static void _awn_bargraph_render_to_context(AwnGraph * graph,cairo_t *cr);
+static void _awn_bargraph_add_data(AwnGraph * graph,GList * list);
+
+
 static void
 awn_bargraph_get_property (GObject *object, guint property_id,
                               GValue *value, GParamSpec *pspec)
@@ -66,12 +70,28 @@ awn_bargraph_class_init (AwnBarGraphClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-  g_type_class_add_private (klass, sizeof (AwnBarGraphPrivate));
-
+  AWN_GRAPH_CLASS(klass)->render_to_context = _awn_bargraph_render_to_context;
+  AWN_GRAPH_CLASS(klass)->add_data = _awn_bargraph_add_data;
+  
   object_class->get_property = awn_bargraph_get_property;
   object_class->set_property = awn_bargraph_set_property;
   object_class->dispose = awn_bargraph_dispose;
   object_class->finalize = awn_bargraph_finalize;
+  
+  g_type_class_add_private (klass, sizeof (AwnBarGraphPrivate));
+  
+}
+
+static void _awn_bargraph_render_to_context(AwnGraph * graph,
+                                        cairo_t *cr)
+{
+  
+}
+
+static void _awn_bargraph_add_data(AwnGraph * graph,
+                                        GList * list)
+{
+  
 }
 
 static void
@@ -84,4 +104,5 @@ awn_bargraph_new (void)
 {
   return g_object_new (AWN_TYPE_BARGRAPH, NULL);
 }
+
 

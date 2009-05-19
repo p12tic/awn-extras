@@ -25,7 +25,7 @@ G_DEFINE_TYPE (AwnGraph, awn_graph, G_TYPE_OBJECT)
 static void _awn_graph_render_to_context(AwnGraph * graph,
                                         cairo_t *ctx);
 static void _awn_graph_add_data(AwnGraph * graph,
-                                        gpointer data);
+                                        GList * data);
 
 static void
 awn_graph_get_property (GObject *object, guint property_id,
@@ -101,7 +101,7 @@ static void _awn_graph_render_to_context(AwnGraph * graph,
 }
 
 static void _awn_graph_add_data(AwnGraph * graph,
-                                        gpointer data)
+                                        GList * data)
 {
   AwnGraphPrivate * priv;
   

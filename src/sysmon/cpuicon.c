@@ -111,7 +111,7 @@ _awn_CPUicon_update_icon(gpointer object)
   //  awn_graph_add_data (awn_sysmonicon_get_graph(AWN_SYSMONICON(self)),&point);
   *point = awn_CPUicon_get_load (object);
   text = g_strdup_printf ("CPU: %.0lf%%",point->value);
-  awn_tooltip_set_text (sysmonicon_priv->tooltip,text);
+  awn_tooltip_set_text (AWN_TOOLTIP(sysmonicon_priv->tooltip),text);
   g_free (text);
   list = g_list_prepend (list,point);
  

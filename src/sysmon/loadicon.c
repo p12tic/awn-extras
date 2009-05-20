@@ -75,7 +75,6 @@ _awn_loadicon_update_icon(gpointer object)
   priv = AWN_LOADICON_GET_PRIVATE (object);
   sysmonicon_priv = AWN_SYSMONICON_GET_PRIVATE (object);
 
-  g_debug ("BOOGER\n");
   //  awn_graph_add_data (awn_sysmonicon_get_graph(AWN_SYSMONICON(self)),&point);
  
 //  awn_graph_add_data (sysmonicon_priv->graph,list);

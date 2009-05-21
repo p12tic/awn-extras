@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2007,2008  Rodney Cryderman    <rcryderman@gmail.com>
- # Copyright (c) 2007,2008  Mark Lee          <avant-wn@lazymalevolence.com>
+ * Copyright (c) 2007,2008,2009 Rodney Cryderman <rcryderman@gmail.com>
+ * Copyright (c) 2007,2008,2009 Mark Lee         <avant-wn@lazymalevolence.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,21 +33,13 @@
 #include <libawn/awn-applet-simple.h>
 #include <libawn/awn-cairo-utils.h>
 #include <libawn/awn-config-client.h>
-#include <libawn/awn-vfs.h>
 
 #include <gtk/gtk.h>
-#ifndef LIBAWN_USE_XFCE
-#include <glib/gi18n.h>
-#endif
+#include <libdesktop-agnostic/desktop-agnostic.h>
 #include <glib/gstdio.h>
 #include <string.h>
 
 #include <libawn-extras/awn-extras.h>
-
-#ifdef LIBAWN_USE_GNOME
-#include <libgnomevfs/gnome-vfs.h>
-#include <libgnomevfs/gnome-vfs-utils.h>
-#endif
 
 
 #define APPLET_NAME "places"
@@ -300,10 +292,10 @@ static gboolean _do_update_places_wrapper(Places * places)
 //===========================================================================
 
 
-static void monitor_places_callback(AwnVfsMonitor *monitor,
-                                    gchar *monitor_path,
-                                    gchar *event_path,
-                                    AwnVfsMonitorEvent event,
+static void monitor_places_callback(DesktopAgnosticVFSFileMonitor *monitor,
+                                    DesktopAgnosticVFSFileBackend *monitor_path,
+                                    DesktopAgnosticVFSFileBackend *event_path,
+                                    DesktopAgnosticVFSFileMonitorEvent event,
                                     Places *places)
 {
   _do_update_places(places);
@@ -311,7 +303,23 @@ static void monitor_places_callback(AwnVfsMonitor *monitor,
 
 static void monitor_places(Places *places)
 {
-  AwnVfsMonitor *monitor;
+  GError *error = NULL;
+  DesktopAgnosticVFSImplementation *vfs;
+  DesktopAgnosticVFSFileBackend *file;
+  DesktopAgnosticVFSFileMonitor *monitor;
+
+  vfs = desktop_agnostic_vfs_get_default (&error);
+  if (error)
+  {
+    g_critical("Could not get the VFS implementation: %s", error->message);
+    g_error_free(error);
+    return;
+  }
+  else if (!vfs)
+  {
+    g_critical("Could not get the VFS implementation.");
+    return;
+  }
 
   const gchar *home_dir = g_getenv("HOME");
 
@@ -322,34 +330,33 @@ static void monitor_places(Places *places)
 
   gchar *filename = g_build_filename(home_dir, ".gtk-bookmarks", NULL);
 
-  monitor = awn_vfs_monitor_add(filename, AWN_VFS_MONITOR_FILE, (AwnVfsMonitorFunc)monitor_places_callback, places);
-
-  if (!monitor)
-  {
-    g_warning("Attempt to monitor '%s' failed!\n", filename);
-  }
+  file = g_object_new(desktop_agnostic_vfs_implementation_get_file_type(vfs),
+                      "path", filename, NULL);
 
   g_free(filename);
+
+  monitor = desktop_agnostic_vfs_file_backend_monitor(file);
+  g_signal_connect(monitor, "changed", G_CALLBACK(monitor_places_callback), places);
 }
 
-
-#ifdef LIBAWN_USE_GNOME
-static void _vfs_changed(GnomeVFSDrive  *drive, GnomeVFSVolume *volume, Places * places)
+static void _vfs_changed(DesktopAgnosticVFSVolumeMonitor *monitor,
+                         DesktopAgnosticVFSVolumeBackend *volume,
+                         Places                          *places)
 {
   g_timeout_add(500, (GSourceFunc)_do_update_places_wrapper, places);
 }
 
-static void _fillin_connected(GnomeVFSDrive * drive, Places * places)
+static void _fillin_connected(DesktopAgnosticVFSVolumeBackend *volume,
+                              Places                          *places)
 {
+  Menu_Item *item;
+  DesktopAgnosticVFSFileBackend *uri;
+  const gchar *uri_str;
 
-  Menu_Item * item;
-  gchar * dev_path;
-  gchar * mount_point;
-  GnomeVFSVolume* volume;
+  g_message("Attempting to add %s...", desktop_agnostic_vfs_volume_backend_get_name(volume));
 
-  volume = gnome_vfs_drive_get_mounted_volume(drive);
-
-  if (!volume)
+  /* don't use g_return_if_fail because it runs g_critical */
+  if (!desktop_agnostic_vfs_volume_backend_is_mounted(volume))
   {
     return;
   }
@@ -357,117 +364,21 @@ static void _fillin_connected(GnomeVFSDrive * drive, Places * places)
   item = g_malloc(sizeof(Menu_Item));
 
   item->places = places;
-  item->text = gnome_vfs_drive_get_display_name(drive);
-  item->text = urldecode(item->text, NULL);
-  item->icon = gnome_vfs_drive_get_icon(drive);
-  // FIXME gnome_vfs_drive_get_mounted_volume is deprecated.
-
-  mount_point = gnome_vfs_volume_get_activation_uri(volume);
-  item->exec = g_strdup_printf("%s %s", places->file_manager, mount_point);
-
-  dev_path = gnome_vfs_drive_get_device_path(gnome_vfs_volume_get_drive(volume));
-  item->comment = g_strdup_printf("%s\n%s\n%s", item->text, mount_point, dev_path) ;
+  item->text = g_strdup(desktop_agnostic_vfs_volume_backend_get_name(volume));
+  item->icon = g_strdup(desktop_agnostic_vfs_volume_backend_get_icon(volume));
+  uri = desktop_agnostic_vfs_volume_backend_get_uri(volume);
+  uri_str = desktop_agnostic_vfs_file_backend_get_uri(uri);
+  item->exec = g_strdup_printf("%s %s", places->file_manager, uri_str);
+  item->comment = g_strdup_printf("%s\n%s", item->text, uri_str);
+  g_object_unref(uri);
   places->menu_list = g_slist_append(places->menu_list, item);
-
-  g_free(mount_point);
-  g_free(dev_path);
-  gnome_vfs_volume_unref(volume) ;
 }
-
-#elif defined(LIBAWN_USE_XFCE)
-static void _vfs_changed(ThunarVfsVolumeManager *volume_manager, ThunarVfsVolume *volume, Places *places)
-{
-  g_timeout_add(500, (GSourceFunc)_do_update_places_wrapper, places);
-}
-
-static void _fillin_connected(ThunarVfsVolume *volume, Places *places)
-{
-  Menu_Item *item;
-  gchar *mount_point;
-
-  if (thunar_vfs_volume_get_status(volume) != THUNAR_VFS_VOLUME_STATUS_MOUNTED)
-  {
-    return;
-  }
-
-  mount_point = thunar_vfs_path_dup_string(thunar_vfs_volume_get_mount_point(volume));
-
-  item = g_malloc(sizeof(Menu_Item));
-  item->places = places;
-  item->text = urldecode(g_strdup(thunar_vfs_volume_get_name(volume)), NULL);
-  item->icon = g_strdup(thunar_vfs_volume_lookup_icon_name(volume, gtk_icon_theme_get_default()));
-  item->exec = g_strdup_printf("%s %s", places->file_manager, mount_point);
-  item->comment = g_strdup_printf("%s\n%s", item->text, mount_point);
-  places->menu_list = g_slist_append(places->menu_list, item);
-  g_free(mount_point);
-}
-
-#else
-static void _vfs_volume_changed(GVolumeMonitor *monitor, GVolume *volume, Places *places)
-{
-  g_timeout_add(500, (GSourceFunc)_do_update_places_wrapper, places);
-}
-
-static void _vfs_drive_changed(GVolumeMonitor *monitor, GDrive *drive, Places *places)
-{
-  g_timeout_add(500, (GSourceFunc)_do_update_places_wrapper, places);
-}
-
-#if GLIB_CHECK_VERSION(2,15,0)
-static void _fillin_connected(GMount *mount, Places *places)
-#else
-static void _fillin_connected(GVolume *volume, Places *places)
-#endif
-{
-  Menu_Item *item;
-  GIcon *icon;
-#if GLIB_CHECK_VERSION(2,15,0)
-  gchar *mount_point = g_file_get_path(g_mount_get_root(mount));
-#else
-  gchar *mount_point = g_file_get_path(g_volume_get_root(volume));
-#endif
-  item = g_malloc(sizeof(Menu_Item));
-  item->places = places;
-#if GLIB_CHECK_VERSION(2,15,0)
-  item->text = urldecode(g_mount_get_name(mount), NULL);
-  icon = g_mount_get_icon(mount);
-#else
-  item->text = urldecode(g_volume_get_name(volume), NULL);
-  icon = g_volume_get_icon(volume);
-#endif
-
-  if (G_IS_THEMED_ICON(icon))
-  {
-    /* assume that this shouldn't be free()d manually */
-    const gchar * const *icon_names = g_themed_icon_get_names(G_THEMED_ICON(icon));
-
-    if (g_strv_length((gchar**)icon_names) > 0)
-    {
-      item->icon = g_strdup(icon_names[0]);
-    }
-  }
-  else if (G_IS_FILE_ICON(icon))
-  {
-    item->icon = g_file_get_path(g_file_icon_get_file(G_FILE_ICON(icon)));
-  }
-  else
-  {
-    g_warning("The GIcon implementation returned by g_volume_get_icon() is unsupported!");
-  }
-
-  item->exec = g_strdup_printf("%s %s", places->file_manager, mount_point);
-
-  item->comment = g_strdup_printf("%s\n%s", item->text, mount_point);
-  places->menu_list = g_slist_append(places->menu_list, item);
-
-  g_free(mount_point);
-}
-#endif
 
 static void get_places(Places * places)
 {
-
+  DesktopAgnosticVFSImplementation *vfs;
   Menu_Item *item = NULL;
+  GError *error = NULL;
   const gchar *desktop_dir = g_get_user_special_dir (G_USER_DIRECTORY_DESKTOP);
 
   item = g_malloc(sizeof(Menu_Item));
@@ -520,88 +431,43 @@ static void get_places(Places * places)
   item->comment = g_strdup("Root File System");
   item->places = places;
   places->menu_list = g_slist_append(places->menu_list, item);
+  
+  vfs = desktop_agnostic_vfs_get_default (&error);
+  if (error)
+  {
+    g_critical("Could not get the VFS implementation: %s", error->message);
+    g_error_free(error);
+    return;
+  }
+  else if (!vfs)
+  {
+    g_critical("Could not get the VFS implementation.");
+    return;
+  }
 
-#ifdef LIBAWN_USE_GNOME
-  gnome_vfs_init();
-  static GnomeVFSVolumeMonitor* vfsvolumes = NULL;
+  static DesktopAgnosticVFSVolumeMonitor* vol_monitor = NULL;
 
-  if (!vfsvolumes)
+  if (!vol_monitor)
   {
     /*this is structured like this because get_places() is
     invoked any time there is a change in places... only want perform
     these actions once.*/
-    vfsvolumes = gnome_vfs_get_volume_monitor();
-    g_signal_connect(G_OBJECT(vfsvolumes), "volume-mounted", G_CALLBACK(_vfs_changed), places);
-    g_signal_connect(G_OBJECT(vfsvolumes), "volume-unmounted", G_CALLBACK(_vfs_changed), places);
-    g_signal_connect(G_OBJECT(vfsvolumes), "drive-disconnected" , G_CALLBACK(_vfs_changed), places);
-    g_signal_connect(G_OBJECT(vfsvolumes), "drive-connected", G_CALLBACK(_vfs_changed), places);
+    vol_monitor = desktop_agnostic_vfs_implementation_volume_monitor_get_default (vfs);
+    g_signal_connect(vol_monitor, "volume-mounted", G_CALLBACK(_vfs_changed), places);
+    g_signal_connect(vol_monitor, "volume-unmounted", G_CALLBACK(_vfs_changed), places);
 
-    monitor_places(places); //Monitor bookmark file
+    monitor_places(places); /* monitor bookmark file */
   }
 
-  GList *connected = gnome_vfs_volume_monitor_get_connected_drives(vfsvolumes);
-
-  if (connected)
-  {
-    g_list_foreach(connected, (GFunc)_fillin_connected, places);
-  }
-
-  g_list_free(connected);
-
-#elif defined(LIBAWN_USE_XFCE)
-  /* monitor volumes */
-  static ThunarVfsVolumeManager *volume_manager = NULL;
-
-  if (!volume_manager)
-  {
-    volume_manager = thunar_vfs_volume_manager_get_default();
-    g_signal_connect(G_OBJECT(volume_manager), "volume-mounted",   G_CALLBACK(_vfs_changed), places);
-    g_signal_connect(G_OBJECT(volume_manager), "volume-unmounted", G_CALLBACK(_vfs_changed), places);
-    monitor_places(places);  /* monitor bookmark file */
-  }
-
-  GList *volumes = thunar_vfs_volume_manager_get_volumes(volume_manager);
+  GList *volumes = desktop_agnostic_vfs_volume_monitor_get_volumes(vol_monitor);
 
   if (volumes)
   {
+    g_message("Number of volumes: %d", g_list_length(volumes));
     g_list_foreach(volumes, (GFunc)_fillin_connected, places);
   }
 
-  /* thunar-vfs docs say: "The returned list is owned by manager and should therefore considered constant in the caller." */
-#else
-  /* monitor volumes */
-  static GVolumeMonitor *volume_monitor = NULL;
-
-  if (!volume_monitor)
-  {
-    volume_monitor = g_volume_monitor_get();
-#if GLIB_CHECK_VERSION(2,15,0)
-    g_signal_connect(G_OBJECT(volume_monitor), "volume-added",     G_CALLBACK(_vfs_volume_changed), places);
-    g_signal_connect(G_OBJECT(volume_monitor), "volume-removed",   G_CALLBACK(_vfs_volume_changed), places);
-#else
-    g_signal_connect(G_OBJECT(volume_monitor), "volume-mounted",     G_CALLBACK(_vfs_volume_changed), places);
-    g_signal_connect(G_OBJECT(volume_monitor), "volume-unmounted",   G_CALLBACK(_vfs_volume_changed), places);
-#endif
-    g_signal_connect(G_OBJECT(volume_monitor), "drive-disconnected", G_CALLBACK(_vfs_drive_changed), places);
-    g_signal_connect(G_OBJECT(volume_monitor), "drive-connected",    G_CALLBACK(_vfs_drive_changed), places);
-    monitor_places(places);
-  }
-
-#if GLIB_CHECK_VERSION(2,15,0)
-  GList *volumes = g_volume_monitor_get_mounts(volume_monitor);
-
-#else
-  GList *volumes = g_volume_monitor_get_mounted_volumes(volume_monitor);
-
-#endif
-  if (volumes)
-  {
-    g_list_foreach(volumes, (GFunc)_fillin_connected, places);
-  }
-
-  g_list_free(volumes);
-
-#endif
+  g_list_free (volumes);
 //bookmarks
   FILE* handle;
   gchar *  filename = g_strdup_printf("%s/.gtk-bookmarks", homedir);

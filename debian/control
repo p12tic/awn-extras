@@ -211,6 +211,7 @@ Depends:	libawn-extras0-trunk (= ${binary:Version}),
 		${misc:Depends},
 		${python:Depends}
 Provides: ${python:Provides}
+XB-Python-Version: ${python:Versions}
 Conflicts: python-awn-extras, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 Replaces: python-awn-extras, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 Description: Python bindings for avant-window-navigator's applets

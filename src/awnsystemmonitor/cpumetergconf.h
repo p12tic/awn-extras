@@ -25,7 +25,7 @@
 
 
 #include <libawn/awn-applet.h>
-#include <libawn/awn-cairo-utils.h>
+#include "cairo-utils.h"
 
 void cpumeter_gconf_init(CpuMeter* cpumeter);
 void cpumeter_gconf_get_color(AwnApplet* applet, AwnColor* color, gchar* key, gchar* def);

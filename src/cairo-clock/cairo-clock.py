@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# Copyright (C) 2008  onox <denkpadje@gmail.com>
+# Copyright (C) 2008 - 2009  onox <denkpadje@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ import locations
 
 applet_name = "Cairo Clock"
 applet_version = "0.3.3"
-applet_description = "Applet that displays an analog clock using\n(optionally) MacSlow's Cairo-Clock's themes"
+applet_description = "Applet that displays an analog clock and supports additional clocks for different locations"
 
 # Logo of the applet, shown in the GTK About dialog
 applet_logo = os.path.join(os.path.dirname(__file__), "cairo-clock-logo.svg")
@@ -40,9 +40,6 @@ draw_clock_interval = 1.0
 default_theme = "gnome"
 
 glade_file = os.path.join(os.path.dirname(__file__), "cairo-clock.glade")
-
-# Notice displayed in the preferences window
-themes_notice = "you can choose more themes by installing MacSlow's Cairo-Clock's themes"
 
 # List of all available plugins
 plugin_classes = frozenset([locations.Locations])
@@ -174,12 +171,6 @@ class CairoClockApplet:
 
         if os.path.isdir(cairo_clock_themes_dir):
             self.themes.extend(os.listdir(cairo_clock_themes_dir))
-        else:
-            label = gtk.Label()
-            label.set_markup("<i><b>Note:</b> %s</i>" % themes_notice)
-            label.set_alignment(0.0, 0.5)
-            label.set_line_wrap(True)
-            prefs.get_widget("theme-vbox").add(label)
 
         # Remove duplicates and sort the list
         self.themes = list(set(self.themes))
@@ -324,7 +315,7 @@ if __name__ == "__main__":
         "description": applet_description,
         "logo": applet_logo,
         "author": "onox",
-        "copyright-year": 2008,
+        "copyright-year": "2008 - 2009",
         "authors": ["onox <denkpadje@gmail.com>"],
         "artists": ["Lapo Calamandrei", "Rodney Dawes", "Jakub Steiner", "Artists of MacSlow's Cairo-Clock"]},
         ["settings-per-instance"])

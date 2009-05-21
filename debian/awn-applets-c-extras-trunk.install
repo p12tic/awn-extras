@@ -1,15 +1,30 @@
+#
+# Main menu
+#
+usr/lib/awn/applets/main-menu/*.so
+usr/share/avant-window-navigator/applets/main-menu.desktop
+#
+# Sysmon
+#
+usr/share/avant-window-navigator/applets/sysmon.desktop
+usr/lib/awn/applets/sysmon/*.so
+etc/gconf/schemas/sysmon.schemas
+#
+# Webapplet
+#
 usr/lib/awn/applets/webapplet/*.so
 usr/share/avant-window-navigator/applets/webapplet.desktop
 etc/gconf/schemas/webapplet.schemas
 #
-# Disabled applets
+####################
+# Disabled applets #
+####################
 #
 #usr/lib/awn/applets/trasher/*.so
 #usr/lib/awn/applets/filebrowser/*.so
-#usr/lib/awn/applets/main-menu/*.so
 #usr/share/avant-window-navigator/applets/trasher.desktop
 #usr/share/avant-window-navigator/applets/filebrowser.desktop
-#usr/share/avant-window-navigator/applets/main-menu.desktop
+
 #usr/share/icons/hicolor/scalable/apps/filebrowser.svg
 #etc/gconf/schemas/filebrowser.schemas
 

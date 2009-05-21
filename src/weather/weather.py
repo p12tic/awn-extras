@@ -475,7 +475,7 @@ if __name__ == "__main__":
         "description": applet_description,
         "version": applet_version,
         "author": "onox, Mike Desjardins, Mike Rooney",
-        "copyright-year": "2007 - 2008",
+        "copyright-year": "2007 - 2009",
         "logo": weathericons.get_icon("44", "Tango"),
         "authors": ["Mike Desjardins", "Mike Rooney", "Isaac J.", "onox <denkpadje@gmail.com>"],
         "artists": ["Wojciech Grzanka", "Mike Desjardins"],

@@ -1,4 +1,4 @@
-# Copyright (C) 2008  onox <denkpadje@gmail.com>
+# Copyright (C) 2008 - 2009  onox <denkpadje@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,8 +18,6 @@ import os
 from datetime import datetime
 from threading import Lock, Thread
 import time
-from xml.sax.handler import ContentHandler, EntityResolver
-from xml.sax import make_parser, SAXParseException
 
 import pygtk
 pygtk.require("2.0")
@@ -34,16 +32,17 @@ try:
 except ImportError:
     tz = None
 
+try:
+    from gweather.I_KNOW_THIS_IS_UNSTABLE import gweather
+except ImportError:
+    gweather = None
+
 from analogclock import AnalogClock, AnalogClockThemeProvider
 
 # Interval in seconds between two successive draws of the clocks
 draw_clock_interval = 1.0
 
 clock_size = 48
-
-# Files of libgweather
-locations_file = "/usr/share/libgweather/Locations.xml"
-locations_dtd_file = os.path.join(os.path.dirname(locations_file), "locations.dtd")
 
 
 def is_location(row):
@@ -97,7 +96,7 @@ class Locations:
 
     @classmethod
     def plugin_useable(self):
-        return tz is not None and (os.path.isfile(locations_file) or os.path.isfile(locations_file + ".gz"))
+        return tz is not None and gweather is not None
 
     def get_name(self):
         return "Locations"
@@ -232,7 +231,7 @@ class Locations:
             time_diff = self.get_offset_minutes(city_datetime) - self.get_offset_minutes(local_datetime)
 
             hours, minutes = divmod(abs(time_diff), 60)
-            format += [" -", " +"][time_diff > 0] + str(hours)
+            format += (" +" if time_diff > 0 else " -") + str(hours)
             if minutes != 0:
                 format += ":" + str(minutes)
 
@@ -302,12 +301,8 @@ class LocationsPreferencesTab:
 
                     """
                     self.location_store.append(None, city_timezone)
-                # TODO maybe display message "Loading locations..."
-                try:
-                    self.__search_window = LocationSearchWindow(self.__prefs, add_row, self.contains_city_timezone)
-                    self.__search_window.show_window()
-                except SAXParseException:
-                    self.__applet.errors.general("Could not load libgweather's locations")
+                self.__search_window = LocationSearchWindow(self.__prefs, add_row, self.contains_city_timezone)
+                self.__search_window.show_window()
 
     __init_search_window_lock = Lock()
 
@@ -357,7 +352,6 @@ class LocationSearchWindow:
         self.__button_find_next.connect("clicked", self.button_find_next_clicked_cb)
 
         self.__vadjustment = self.__prefs.get_widget("scroll-all-locations").get_vadjustment()
-        self.__entry_location = self.__prefs.get_widget("entry-location-name")
 
         self.__all_locations_store = gtk.TreeStore(str, str, bool)
 
@@ -388,104 +382,34 @@ class LocationSearchWindow:
     def show_window(self):
         self.__all_locations_view.collapse_all()
         self.__vadjustment.set_value(0)
-        self.__entry_location.set_text("")
-        self.__entry_location.grab_focus()
+
+        # Clear text but block callable connected to "changed" to avoid expanding selected node
+        self.__entry_location_name.handler_block_by_func(self.entry_location_changed_cb)
+        self.__entry_location_name.set_text("")
+        self.__entry_location_name.handler_unblock_by_func(self.entry_location_changed_cb)
+
+        self.__entry_location_name.grab_focus()
 
         self.__search_dialog.show_all()
 
-    class LocationsParser(ContentHandler):
+    def parse_gweather_locations(self, node, parent):
+        children = node.get_children()
+        if len(children) > 0:
+            for i in children:
+                timezone = i.get_timezone().get_tzid() if i.get_timezone() is not None else None
+                is_city = i.get_level() is gweather.LOCATION_CITY
+                node_iter = self.__all_locations_store.append(parent, (i.get_name(), timezone, is_city))
 
-        __in_name_tag= False
-        __name_tag = ""
-        __in_tz_tag = False
-        __tz_tag = ""
-
-        __node_type = None  # An element from __locations
-        __node_stack = []  # [node_type, TreeIter, has_tz_hint]
-        __tz_stack = []  # Contains tz-hints
-
-        __locations = ("region", "state", "country", "city", "location", "timezone")
-        __names = ("_name", "name")
-
-        def __init__(self, store):
-            self.__loc_store = store
-
-        def startElement(self, name, attrs):
-            if name in self.__names:
-                self.__no_lang = not bool(attrs)
-                self.__in_name_tag = self.__no_lang
-            elif name == "tz-hint":
-                self.__in_tz_tag = True
-            else:
-                self.__node_type = name
-                if name == "timezone":
-                    self.__tz_tag = attrs["id"]
-
-        def endElement(self, name):
-            if self.__no_lang and name in self.__names:
-                parent = self.__node_stack[-1][1] if len(self.__node_stack) > 0 else None
-
-                if self.__node_type in self.__locations:
-                    tz = self.__tz_stack[-1] if len(self.__tz_stack) > 0 else None
-
-                    if self.__node_type == "timezone":
-                        self.__tz_stack.append(self.__tz_tag)
-                        tz = self.__tz_tag
-                        self.__tz_tag = ""
-
-                    # tz-hint may get updated later
-                    row = (self.__name_tag, tz, self.__node_type == "city")
-                    current_node = self.__loc_store.append(parent, row)
-
-                    self.__node_stack.append([self.__node_type, current_node, parent == "timezone"])
-
-                self.__in_name_tag = False
-                self.__name_tag = ""
-            elif name == "tz-hint":
-                assert self.__node_type != "timezone"
-
-                node = self.__node_stack[-1]
-                node[2] = True
-                self.__tz_stack.append(self.__tz_tag)
-                if self.__node_type == "location":
-                    self.__loc_store.set_value(node[1], 1, self.__tz_tag)
-
-                self.__in_tz_tag = False
-                self.__tz_tag = ""
-            elif name in self.__locations:
-                if name == "timezone":
-                    self.__tz_tag = ""
-                self.__node_type = ""
-
-                if self.__node_stack[-1][0] == name:
-                    node = self.__node_stack.pop()
-                    if node[2]:
-                        self.__tz_stack.pop()
-
-        def characters(self, chars):
-            if self.__in_name_tag:
-                self.__name_tag += chars
-            if self.__in_tz_tag:
-                self.__tz_tag += chars
-
-    class LocationsEntityResolver(EntityResolver):
-
-        def resolveEntity(self, publicId, systemId):
-            if systemId == "locations.dtd":
-                return locations_dtd_file
-            return systemId
+                # Iterate through children
+                self.parse_gweather_locations(i, node_iter)
+        elif node.get_level() is gweather.LOCATION_COUNTRY:
+            for i in node.get_timezones():
+                if i.get_name() is not None:
+                    self.__all_locations_store.append(parent, (i.get_name(), i.get_tzid(), False))
 
     def parse_locations(self):
-        parser = make_parser()
-        handler = self.LocationsParser(self.__all_locations_store)
-        parser.setContentHandler(handler)
-
-        if os.path.isfile(locations_file):
-            parser.parse(locations_file)
-        elif os.path.isfile(locations_file + ".gz"):
-            import gzip
-            parser.setEntityResolver(self.LocationsEntityResolver())
-            parser.parse(gzip.open(locations_file + ".gz", "rb"))
+        node = gweather.location_new_world(True)
+        self.parse_gweather_locations(node, None)
 
     def all_locations_selection_changed_cb(self, selection):
         """Enable the 'OK' button if the user selected a valid location,
@@ -497,15 +421,18 @@ class LocationSearchWindow:
 
         select_iter = selection.get_selected()[1]
         if select_iter is not None:
-            row = self.__all_locations_store[select_iter]
-            is_leaf_node = not self.__all_locations_store.iter_has_child(select_iter)
-            self.__button_ok_search.set_sensitive(is_location(row) and is_leaf_node)
+            self.__button_ok_search.set_sensitive(self.is_location_and_leaf_node(select_iter))
 
     def all_locations_row_activated_cb(self, view, path, column):
         self.add_new_location()
 
     def button_ok_search_clicked_cb(self, button):
         self.add_new_location()
+
+    def is_location_and_leaf_node(self, iter):
+        row = self.__all_locations_store[iter]
+        is_leaf_node = not self.__all_locations_store.iter_has_child(iter)
+        return is_location(row) and is_leaf_node
 
     def add_new_location(self):
         """Add the selected location to the list of locations in the
@@ -517,9 +444,9 @@ class LocationSearchWindow:
 
         """
         select_iter = self.__all_locations_selection.get_selected()[1]
-        row = self.__all_locations_store[select_iter]
 
-        if is_location(row):
+        if self.is_location_and_leaf_node(select_iter):
+            row = self.__all_locations_store[select_iter]
             parent_row = self.__all_locations_store[self.__all_locations_store.iter_parent(select_iter)]
 
             # Use name of city if the row is a location in a city
@@ -573,8 +500,8 @@ class LocationSearchWindow:
             self.select_next_location()
 
     def find_location(self, parent_iter, text, result_list):
-        """Do a depth first search to find a node whose city starts with the
-        given text. Fills the result_list with instances of {gtk.TreeIter}
+        """Do a depth-first search to find a node whose city starts with the
+        given text. Fills the C{result_list} with instances of C{gtk.TreeIter}
         that points to the found element.
 
         """

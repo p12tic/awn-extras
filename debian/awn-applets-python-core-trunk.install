@@ -1,24 +1,88 @@
 #
+# Animal farm
+#
+usr/share/avant-window-navigator/applets/animal-farm/*.py
+usr/share/avant-window-navigator/applets/animal-farm/icons/*.svg
+usr/share/avant-window-navigator/applets/animal-farm.desktop
+#
+# Battery
+#
+usr/share/avant-window-navigator/applets/battery-applet/*.py
+usr/share/avant-window-navigator/applets/battery-applet/*.glade
+usr/share/avant-window-navigator/applets/battery-applet/themes/*/*.svg
+usr/share/avant-window-navigator/applets/battery-applet.desktop
+#
+# Cairo-clock
+#
+usr/share/avant-window-navigator/applets/cairo-clock/
+usr/share/avant-window-navigator/applets/cairo-clock/themes/*/*.svg
+usr/share/avant-window-navigator/applets/cairo-clock.desktop
+#
+# CPU Freq
+#
+usr/share/avant-window-navigator/applets/cpufreq/
+usr/share/avant-window-navigator/applets/cpufreq.desktop
+#
+# Gwibfawn
+#
+usr/share/avant-window-navigator/applets/gwibfawn/
+usr/share/avant-window-navigator/applets/gwibfawn.desktop
+#
 # Media Player
 #
 usr/share/avant-window-navigator/applets/media-player/*.py
 usr/share/avant-window-navigator/applets/media-player/icons/*.png
 usr/share/avant-window-navigator/applets/media-player.desktop
 #
-# Disabled applets
+# Media-control
 #
-#usr/share/avant-window-navigator/applets/animal-farm/*.py
-#usr/share/avant-window-navigator/applets/animal-farm/icons/*.svg
+usr/share/avant-window-navigator/applets/media-control/*.py
+usr/share/avant-window-navigator/applets/media-control/icons/*.svg
+usr/share/avant-window-navigator/applets/media-control.desktop
+#
+# Mount
+#
+usr/share/avant-window-navigator/applets/mount-applet/*.py
+usr/share/avant-window-navigator/applets/mount-applet/*.glade
+usr/share/avant-window-navigator/applets/mount-applet/icons/*.png
+usr/share/avant-window-navigator/applets/mount-applet.desktop
+#
+# Showdesktop
+#
+usr/share/avant-window-navigator/applets/showdesktop/
+usr/share/avant-window-navigator/applets/showdesktop.desktop
+#
+# Thinkhdaps
+#
+usr/share/avant-window-navigator/applets/thinkhdaps/
+usr/share/avant-window-navigator/applets/thinkhdaps.desktop
+#
+# Volume-control
+#
+usr/share/avant-window-navigator/applets/volume-control/
+usr/share/avant-window-navigator/applets/volume-control.desktop
+#
+# Weather
+#
+usr/share/avant-window-navigator/applets/weather/
+usr/share/avant-window-navigator/applets/weather.desktop
+#
+####################
+# Disabled applets #
+####################
+#
+# Arss
+#
+#etc/gconf/schemas/arss.schemas
 #usr/share/avant-window-navigator/applets/arss/*.py
 #usr/share/avant-window-navigator/applets/arss/icons/*.png
 #usr/share/avant-window-navigator/applets/arss/icons/*.svg
 #usr/share/avant-window-navigator/applets/arss/*.py
 #usr/share/avant-window-navigator/applets/arss/*.glade
-#usr/share/avant-window-navigator/applets/battery-applet/*.py
-#usr/share/avant-window-navigator/applets/battery-applet/*.glade
-#usr/share/avant-window-navigator/applets/battery-applet/themes/*/*.svg
-#usr/share/avant-window-navigator/applets/cairo-clock/
-#usr/share/avant-window-navigator/applets/cairo-clock/themes/*/*.svg
+#usr/share/avant-window-navigator/applets/arss.desktop
+#
+# Comics
+#
 #usr/share/avant-window-navigator/applets/comics/*.py
 #usr/share/avant-window-navigator/applets/comics/*.pot
 #usr/share/avant-window-navigator/applets/comics/*.po
@@ -27,43 +91,38 @@ usr/share/avant-window-navigator/applets/media-player.desktop
 #usr/share/avant-window-navigator/applets/comics/glade/
 #usr/share/avant-window-navigator/applets/comics/icons/
 #usr/share/avant-window-navigator/applets/comics/locale/
-#usr/share/avant-window-navigator/applets/cpufreq/
+#usr/share/avant-window-navigator/applets/comics.desktop
+#
+# DesktopManager
+#
+#etc/gconf/schemas/DesktopManager.schemas
 #usr/share/avant-window-navigator/applets/DesktopManager/
+#usr/share/avant-window-navigator/applets/DesktopManager.desktop
+#
+# File-browser-launcher
+#
+#etc/gconf/schemas/file-browser-launcher.schemas
 #usr/share/avant-window-navigator/applets/file-browser-launcher/*.py
 #usr/share/avant-window-navigator/applets/file-browser-launcher/icons/
-#usr/share/avant-window-navigator/applets/lastfm/
+#usr/share/avant-window-navigator/applets/file-browser-launcher.desktop
+#
+# Mail
+#
 #usr/share/avant-window-navigator/applets/mail/
-#usr/share/avant-window-navigator/applets/media-control/*.py
-#usr/share/avant-window-navigator/applets/media-control/icons/*.svg
-#usr/share/avant-window-navigator/applets/mount-applet/*.py
-#usr/share/avant-window-navigator/applets/mount-applet/icons/*.png
+#usr/share/avant-window-navigator/applets/mail.desktop
+#
+# Quit applet
+#
 #usr/share/avant-window-navigator/applets/quit-applet/*.py
 #usr/share/avant-window-navigator/applets/quit-applet/icons/scalable/apps/*.svg
-#usr/share/avant-window-navigator/applets/showdesktop/
-#usr/share/avant-window-navigator/applets/stacks/
-#usr/share/avant-window-navigator/applets/thinkhdaps/
-#usr/share/avant-window-navigator/applets/to-do/
-#usr/share/avant-window-navigator/applets/volume-control/
-#usr/share/avant-window-navigator/applets/weather/
-#usr/share/avant-window-navigator/applets/animal-farm.desktop
-#usr/share/avant-window-navigator/applets/arss.desktop
-#usr/share/avant-window-navigator/applets/battery-applet.desktop
-#usr/share/avant-window-navigator/applets/file-browser-launcher.desktop
-#usr/share/avant-window-navigator/applets/lastfm.desktop
-#usr/share/avant-window-navigator/applets/mail.desktop
-#usr/share/avant-window-navigator/applets/media-control.desktop
-#usr/share/avant-window-navigator/applets/mount-applet.desktop
 #usr/share/avant-window-navigator/applets/quit-applet.desktop
-#usr/share/avant-window-navigator/applets/showdesktop.desktop
+#
+# Stack
+#
+#usr/share/avant-window-navigator/applets/stacks/
 #usr/share/avant-window-navigator/applets/stacks.desktop
-#usr/share/avant-window-navigator/applets/volume-control.desktop
-#usr/share/avant-window-navigator/applets/weather.desktop
-#usr/share/avant-window-navigator/applets/comics.desktop
-#usr/share/avant-window-navigator/applets/cpufreq.desktop
-#usr/share/avant-window-navigator/applets/DesktopManager.desktop
-#usr/share/avant-window-navigator/applets/thinkhdaps.desktop
+#
+# Todo
+#
+#usr/share/avant-window-navigator/applets/to-do/
 #usr/share/avant-window-navigator/applets/to-do.desktop
-#usr/share/avant-window-navigator/applets/cairo-clock.desktop
-#etc/gconf/schemas/arss.schemas
-#etc/gconf/schemas/DesktopManager.schemas
-#etc/gconf/schemas/file-browser-launcher.schemas

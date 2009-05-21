@@ -12,9 +12,9 @@ if WITH_GCONF
 if WITH_GNOME
 # --with-gnome --with-gconf
 GCONF_APPLETS +=		\
+	awnsystemmonitor	\
 	cairo-menu		\
 	$(NULL)
-#	awnsystemmonitor
 endif
 # --with-gconf
 GCONF_APPLETS +=		\
@@ -51,13 +51,14 @@ SUBDIRS =			\
 	media-player		\
 	mount-applet       \
 	notification-area	\
+	places			\
 	quit-applet			\
 	shiny-switcher		\
 	showdesktop			\
+	sysmon			\
 	thinkhdaps			\
 	volume-control		\
 	weather				\
-	places			\
 	$(WOBBLYZINI)		\
 	$(GCONF_APPLETS)	\
 	$(VALA_APPLETS)		\

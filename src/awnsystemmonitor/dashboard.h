@@ -35,7 +35,7 @@
 #include <glibtop/mem.h>
 
 #include <libawn/awn-applet.h>
-#include <libawn/awn-cairo-utils.h>
+#include "cairo-utils.h"
 //#include <libawn/awn-title.h>
 #include <libawn/awn-tooltip.h>
 #include "dashboard_util.h"

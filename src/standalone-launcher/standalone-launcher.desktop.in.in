@@ -1,8 +1,0 @@
-[Desktop Entry]
-Type=Application
-X-AWN-AppletType=Vala
-Name=Standalone Launcher
-Comment=An EXPERIMENTAL, PROOF-OF-CONCEPT, single, standalone launcher
-Exec=@LIBDIR@/awn/applets/standalone-launcher/standalone-launcher.so
-Icon=binary
-X-AWN-AppletCategory=Utility

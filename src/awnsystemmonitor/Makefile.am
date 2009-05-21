@@ -10,6 +10,8 @@ awnsystemmonitor_la_SOURCES =		\
 	awntop.h			\
 	awntop_cairo_component.c	\
 	awntop_cairo_component.h	\
+	cairo-utils.c \
+	cairo-utils.h \
 	cpumetergconf.c			\
 	cpumetergconf.h			\
 	cpu_component.c			\

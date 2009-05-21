@@ -13,6 +13,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import with_statement
+
 import commands
 import os
 import re
@@ -24,6 +26,7 @@ import gtk
 
 from awn.extras import awnlib
 
+import dbus
 import gio
 from glib import filename_display_basename
 import gmenu
@@ -43,11 +46,7 @@ data_dirs = os.environ["XDG_DATA_DIRS"] if "XDG_DATA_DIRS" in os.environ else "/
 # Describes the pattern used to try to decode URLs
 url_pattern = re.compile("^[a-z]+://(?:[^@]+@)?([^/]+)/(.*)$")
 
-logout_command = "gnome-session-save --kill --silent"
-
-# TODO handle updates in removed/new and included/excluded apps and bookmarks
 # TODO add devices to places
-
 
 class YamaApplet:
 
@@ -63,36 +62,56 @@ class YamaApplet:
         self.menu = gtk.Menu()
         self.icon_theme = gtk.icon_theme_get_default()
 
-        # Applications
+        self.applications_items = []
+        self.settings_items = []
+
+        """ Applications """
         tree = gmenu.lookup_tree("applications.menu")
-        self.append_directory(tree.root, self.menu)
-        tree.add_monitor(self.applications_menu_changed_cb)
-        # TODO remove monitor when destroy signal of menu is fired?
+        self.append_directory(tree.root, self.menu, item_list=self.applications_items)
+        tree.add_monitor(self.menu_changed_cb, self.applications_items)
 
         self.menu.append(gtk.SeparatorMenuItem())
 
-        # Places
+        """ Places """
         self.create_places_submenu(self.menu)
 
-        # System
+        """ System """
         tree = gmenu.lookup_tree("settings.menu")
-        self.append_directory(tree.root, self.menu)
-        tree.add_monitor(self.settings_menu_changed_cb)
-        # TODO remove monitor when destroy signal of menu is fired?
+        self.append_directory(tree.root, self.menu, item_list=self.settings_items)
+        tree.add_monitor(self.menu_changed_cb, self.settings_items)
 
-        self.menu.append(gtk.SeparatorMenuItem())
+        """ Session actions """
+        session_bus = dbus.SessionBus()
 
-        # TODO test wheter we can lock the screen and also try xscreensaver-command
-        lock_item = self.append_menu_item(self.menu, "Lock Screen", "lock", "Protect your computer from unauthorized use")
-        lock_item.connect("activate", self.start_subprocess_cb, "gnome-screensaver-command --lock", True)
+        dbus_services = session_bus.list_names()
+        can_lock_screen = "org.gnome.ScreenSaver" in dbus_services
+        can_manage_session = "org.gnome.SessionManager" in dbus_services
 
-        user_name = commands.getoutput("/usr/bin/whoami")
-        logout_item = self.append_menu_item(self.menu, "Log Out %s..." % user_name, "application-exit", "Log out %s of this session to log in as a different user" % user_name)
-        logout_dialog = self.LogoutDialog(self.applet, lambda: self.start_subprocess_cb(None, logout_command, True))
-        def logout_cb(widget):
-            logout_dialog.show_all()
-            logout_dialog.deiconify()
-        logout_item.connect("activate", logout_cb)
+        if can_lock_screen or can_manage_session:
+            self.menu.append(gtk.SeparatorMenuItem())
+
+        if can_lock_screen:
+            lock_item = self.append_menu_item(self.menu, "Lock Screen", "system-lock-screen", "Protect your computer from unauthorized use")
+            def lock_screen_cb(widget):
+                try:
+                    ss_proxy = session_bus.get_object("org.gnome.ScreenSaver", "/")
+                    dbus.Interface(ss_proxy, "org.gnome.ScreenSaver").Lock()
+                except dbus.DBusException, e:
+                    # NoReply exception may occur even while the screensaver did lock the screen
+                    if e.get_dbus_name() != "org.freedesktop.DBus.Error.NoReply":
+                        raise
+            lock_item.connect("activate", lock_screen_cb)
+
+        if can_manage_session:
+            sm_proxy = session_bus.get_object("org.gnome.SessionManager", "/org/gnome/SessionManager")
+            sm_if = dbus.Interface(sm_proxy, "org.gnome.SessionManager")
+
+            user_name = commands.getoutput("/usr/bin/whoami")
+            logout_item = self.append_menu_item(self.menu, "Log Out %s..." % user_name, "system-log-out", "Log out %s of this session to log in as a different user" % user_name)
+            logout_item.connect("activate", lambda w: sm_if.Logout(0))
+
+            shutdown_item = self.append_menu_item(self.menu, "Shut Down...", "system-shutdown", "Shut down the system")
+            shutdown_item.connect("activate", lambda w: sm_if.Shutdown())
 
         self.menu.show_all()
 
@@ -134,11 +153,15 @@ class YamaApplet:
 
         menu.insert(gtk.SeparatorMenuItem(), menu_index + 1)
 
-    def applications_menu_changed_cb(self, tree):
-        print "applications menu changed!"
+    def menu_changed_cb(self, tree, items):
+        # Delete old items
+        for i in xrange(len(items)):
+            items.pop().destroy()
 
-    def settings_menu_changed_cb(self, tree):
-        print "settings menu changed!"
+        index = len(self.applications_items) + 2 if items is self.settings_items else 0  # + 2 = separator + Places
+        self.append_directory(tree.root, self.menu, index=index, item_list=items)
+        # Refresh menu to re-initialize the widget
+        self.menu.show_all()
 
     def start_subprocess_cb(self, widget, command, use_shell):
         try:
@@ -169,13 +192,15 @@ class YamaApplet:
         self.bookmarks_items = []
         self.append_bookmarks()
 
-        bookmarks_file = os.path.join(user_path, ".gtk-bookmarks")
-        bookmarks_monitor = gio.File(bookmarks_file).monitor_file()
+        # Monitor bookmarks file for changes
+        bookmarks_file = os.path.expanduser("~/.gtk-bookmarks")
+        self.__bookmarks_monitor = gio.File(bookmarks_file).monitor_file()  # keep a reference to avoid getting it garbage collected
         def bookmarks_changed_cb(monitor, file, other_file, event):
-            if event is gio.FileMonitorEvent.__enum_values__[0]:
+            if event == gio.FILE_MONITOR_EVENT_CHANGES_DONE_HINT:
                 self.append_bookmarks()
-        bookmarks_monitor.connect("changed", bookmarks_changed_cb)
-        # FIXME boehoehoe doesn't seem to work atm :'( need glib.MainLoop().run()
+                # Refresh menu to re-initialize the widget
+                self.places_menu.show_all()
+        self.__bookmarks_monitor.connect("changed", bookmarks_changed_cb)
 
         menu.append(gtk.SeparatorMenuItem())
 
@@ -202,23 +227,27 @@ class YamaApplet:
 
         self.append_awn_desktop(menu, "gnome-search-tool")
 
-        # Recent Documents
+        """ Recent Documents """
+        self.create_documents_submenu(menu)
+
+    def create_documents_submenu(self, menu):
         recent_manager = gtk.recent_manager_get_default()
 
         chooser_menu = gtk.RecentChooserMenu(recent_manager)
         recent_item = self.append_menu_item(menu, "Recent Documents", "document-open-recent", None)
         recent_item.set_submenu(chooser_menu)
 
-        def set_sensitivity_recent_menu(widget):
+        def set_sensitivity_recent_menu(widget=None):
             recent_item.set_sensitive(recent_manager.props.size > 0)
         recent_manager.connect("changed", set_sensitivity_recent_menu)
-        set_sensitivity_recent_menu(None)
+        set_sensitivity_recent_menu()
 
         def open_recent_document(widget):
             self.start_subprocess_cb(None, "xdg-open %s" % chooser_menu.get_current_uri(), True)
         chooser_menu.connect("item-activated", open_recent_document)
 
         chooser_menu.append(gtk.SeparatorMenuItem())
+
         item = self.append_menu_item(chooser_menu, "Clear Recent Documents", "gtk-clear", "Clear all items from the recent documents list")
         clear_dialog = self.ClearRecentDocumentsDialog(self.applet, recent_manager.purge_items)
         def purge_items_cb(widget):
@@ -227,28 +256,32 @@ class YamaApplet:
         item.connect("activate", purge_items_cb)
 
     def append_bookmarks(self):
+        # Delete old items
         for item in self.bookmarks_items:
             item.destroy()
         self.bookmarks_items = []
+
         index = 2
         bookmarks_file = os.path.expanduser("~/.gtk-bookmarks")
-        for url_name in (i.rstrip().split(" ", 1) for i in open(bookmarks_file)):
-            if len(url_name) == 1:
-                match = url_pattern.match(url_name[0])
-                if match is not None:
-                    url_name.append("/%s on %s" % (match.group(2), match.group(1)))
-                else:
-                    url_name.append(filename_display_basename(url_name[0]))
-            url, name = (url_name[0], url_name[1])
+        if os.path.isfile(bookmarks_file):
+            with open(bookmarks_file) as f:
+                for url_name in (i.rstrip().split(" ", 1) for i in f):
+                    if len(url_name) == 1:
+                        match = url_pattern.match(url_name[0])
+                        if match is not None:
+                            url_name.append("/%s on %s" % (match.group(2), match.group(1)))
+                        else:
+                            url_name.append(filename_display_basename(url_name[0]))
+                    url, name = (url_name[0], url_name[1])
 
-            icon = "folder" if url.startswith("file://") else "folder-remote"
-            display_url = url[7:] if url.startswith("file://") else url
+                    icon = "folder" if url.startswith("file://") else "folder-remote"
+                    display_url = url[7:] if url.startswith("file://") else url
 
-            item = self.create_menu_item(name, icon, "Open '%s'" % display_url)
-            self.places_menu.insert(item, index)
-            item.connect("activate", self.open_folder_cb, url)
-            index += 1
-            self.bookmarks_items.append(item)
+                    item = self.create_menu_item(name, icon, "Open '%s'" % display_url)
+                    self.places_menu.insert(item, index)
+                    item.connect("activate", self.open_folder_cb, url)
+                    index += 1
+                    self.bookmarks_items.append(item)
 
     def create_menu_item(self, label, icon_name, comment):
         item = gtk.ImageMenuItem(label)
@@ -263,23 +296,34 @@ class YamaApplet:
         menu.append(item)
         return item
 
-    def launch_app(self, widget, path):
-        if os.path.exists(path):
-            self.start_subprocess_cb(None, DesktopEntry.DesktopEntry(path).getExec(), True)
+    def launch_app(self, widget, desktop_path, use_args):
+        if os.path.exists(desktop_path):
+            path = DesktopEntry.DesktopEntry(desktop_path).getExec()
+            if not use_args:
+                # don't use args until we can use awn.DesktopItem.launch()
+                path = path.split(" ", 1)[0]
+            self.start_subprocess_cb(None, path, True)
 
-    def append_directory(self, tree, menu):
+    def append_directory(self, tree, menu, index=None, item_list=None):
         for node in tree.contents:
             if not isinstance(node, gmenu.Entry) and not isinstance(node, gmenu.Directory):
                 continue
             # Don't set comment yet because we don't want it for submenu's
-            item = self.append_menu_item(menu, node.name, node.icon, None)
+            item = self.create_menu_item(node.name, node.icon, None)
+
+            menu.append(item) if index is None else menu.insert(item, index)
+            if item_list is not None:
+                item_list.append(item)
+
             if isinstance(node, gmenu.Entry):
                 item.set_tooltip_text(node.comment)
-                item.connect("activate", self.launch_app, node.desktop_file_path)
+                item.connect("activate", self.launch_app, node.desktop_file_path, False)
             else:
                 sub_menu = gtk.Menu()
                 item.set_submenu(sub_menu)
                 self.append_directory(node, sub_menu)
+            if index is not None:
+                index += 1
 
     def append_awn_desktop(self, menu, desktop_name):
         for dir in data_dirs.split(":"):
@@ -287,7 +331,7 @@ class YamaApplet:
             if os.path.isfile(path):
                 desktop_entry = DesktopEntry.DesktopEntry(path)
                 item = self.append_menu_item(menu, desktop_entry.getName(), desktop_entry.getIcon(), desktop_entry.getComment())
-                item.connect("activate", self.launch_app, desktop_entry.getFileName())
+                item.connect("activate", self.launch_app, desktop_entry.getFileName(), True)
                 return True
         return False
 
@@ -333,22 +377,6 @@ class YamaApplet:
                 clear_cb()
             clear_button.connect("clicked", clear_and_hide)
             self.action_area.add(clear_button)
-
-    class LogoutDialog(awnlib.Dialogs.BaseDialog, gtk.MessageDialog):
-
-        def __init__(self, parent, clear_cb):
-            gtk.MessageDialog.__init__(self, type=gtk.MESSAGE_QUESTION, message_format="Log out of this system now?", buttons=gtk.BUTTONS_CANCEL)
-            awnlib.Dialogs.BaseDialog.__init__(self, parent)
-
-            self.set_image(gtk.image_new_from_stock(gtk.STOCK_QUIT, gtk.ICON_SIZE_DIALOG))
-            user_name = commands.getoutput("/usr/bin/whoami")
-            real_name = commands.getoutput("grep %s /etc/passwd" % user_name).split(":")[4].rstrip(",")
-            name = "\"%s\"" % real_name if len(real_name) > 0 else user_name
-            self.format_secondary_markup("You are currently logged in as %s.\nDo you want to log out?" % name)
-
-            logout_button = gtk.Button("_Log Out")
-            logout_button.connect("clicked", lambda w: clear_cb())
-            self.action_area.add(logout_button)
 
 
 if __name__ == "__main__":

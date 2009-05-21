@@ -29,7 +29,7 @@
 #include <glib/gerror.h>
 #include <gconf/gconf-value.h>
 
-#include <libawn/awn-cairo-utils.h>
+#include "cairo-utils.h"
 
 #include "awnsystemmonitor.h"
 #include "config.h"

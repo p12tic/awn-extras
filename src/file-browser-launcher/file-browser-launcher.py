@@ -44,13 +44,13 @@ group = awn.CONFIG_DEFAULT_GROUP
 
 class App (awn.AppletSimple):
   icons = {}
-  def __init__(self, uid, orient, height):
+  def __init__(self, uid, orient, offset, size):
     self.uid = uid
     
     #AWN Applet Configuration
-    awn.AppletSimple.__init__(self, uid, orient, height)
-    self.title = awn.awn_title_get_default()
-    self.dialog = awn.AppletDialog(self)
+    awn.AppletSimple.__init__(self, uid, orient, offset, size)
+    self.set_tooltip_text(_("File Browser Launcher"))
+    self.dialog = awn.Dialog(self)
 
     #AwnConfigClient instance
     self.client = awn.Config('file-browser-launcher', None)
@@ -61,7 +61,8 @@ class App (awn.AppletSimple):
     self.icons['stock_folder'] = self.theme.load_icon('stock_folder', 24, 24)
 
     #Set the icon
-    self.icon = self.set_awn_icon('file-browser-launcher', 'stock_folder')
+    self.set_icon_name('file-browser-launcher', 'stock_folder')
+    self.icon = self.get_icon().get_icon_at_size(48, None)
 
     #Read fstab for mounting info
     #(It it assumed that fstab won't change after the applet is started)
@@ -114,9 +115,6 @@ class App (awn.AppletSimple):
     
     #AWN applet signals
     self.connect('button-press-event', self.button_press)
-    self.connect('enter-notify-event', lambda a,b: self.title.show(self, \
-      _("File Browser Launcher")))
-    self.connect('leave-notify-event', lambda a,b: self.title.hide(self))
     self.dialog.connect('focus-out-event', lambda a,b: self.dialog.hide())
   
   #Function to show the home folder, mounted drives/partitions, and bookmarks according to awncc
@@ -408,13 +406,11 @@ class App (awn.AppletSimple):
   def button_press(self, widget, event):
     if self.dialog.flags() & gtk.VISIBLE:
       self.dialog.hide()
-      self.title.hide(self)
     else:
       if event.button==1 or event.button==2:
         self.dialog_config(event.button)
       elif event.button==3:
         self.show_menu(event)
-      self.title.hide(self)
 
   #The user changed the icon theme
   def icon_theme_changed(self, icon_theme):
@@ -548,7 +544,7 @@ class App (awn.AppletSimple):
     
 if __name__ == '__main__':
   awn.init(sys.argv[1:])
-  applet = App(awn.uid, awn.orient,awn.height)
+  applet = App(awn.uid, awn.orient, awn.offset, awn.size)
   awn.init_applet(applet)
   applet.show_all()
   gtk.main()

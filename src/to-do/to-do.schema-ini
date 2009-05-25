@@ -28,7 +28,7 @@ type = string
 default = To-Do List
 description = The title to display
 
-[DEFAULT/icon-type]
+[DEFAULT/icon_type]
 type = string
 default = items
 description = What type of icon to display (progress, progress-items, items)
@@ -53,17 +53,17 @@ type = list-string
 default = 
 description = The list of categories that are expanded
 
-[DEFAULT/icon-opacity]
+[DEFAULT/icon_opacity]
 type = int
 default = 100
 description = The icon's opacity (10-100)
 
-[DEFAULT/confirm-items]
+[DEFAULT/confirm_items]
 type = bool
 default = True
 description = Whether or not to confirm the deletion of items
 
-[DEFAULT/confirm-categories]
+[DEFAULT/confirm_categories]
 type = bool
 default = True
 description = Whether or not to confirm the deletion of categories

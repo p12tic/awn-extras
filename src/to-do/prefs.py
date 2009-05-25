@@ -101,15 +101,15 @@ class Prefs:
 
     #CheckButton: Items
     confirm_items = gtk.CheckButton(_('_Items'))
-    confirm_items.key = 'confirm-items'
-    if self.settings['confirm-items']:
+    confirm_items.key = 'confirm_items'
+    if self.settings['confirm_items']:
       confirm_items.set_active(True)
     confirm_items.connect('toggled', self.check_toggled)
     
     #CheckButton: Categories
     confirm_cats = gtk.CheckButton(_('C_ategories'))
-    confirm_cats.key = 'confirm-categories'
-    if self.settings['confirm-categories']:
+    confirm_cats.key = 'confirm_categories'
+    if self.settings['confirm_categories']:
       confirm_cats.set_active(True)
     confirm_cats.connect('toggled', self.check_toggled)
     
@@ -306,14 +306,14 @@ class Prefs:
     liststore = gtk.ListStore(str)
     for _type in icon_types_human:
       liststore.append([_type])
-    index = icon_types_real.index(self.settings['icon-type'])
+    index = icon_types_real.index(self.settings['icon_type'])
     
     _type_cb = gtk.ComboBox(liststore)
     _type_cb.set_active(index)
     cell = gtk.CellRendererText()
     _type_cb.pack_start(cell, True)
     _type_cb.add_attribute(cell, 'text', 0)
-    _type_cb.key = 'icon-type'
+    _type_cb.key = 'icon_type'
     _type_cb.connect('changed', self.cb_changed)
     
     #Put the Icon tab together
@@ -394,7 +394,7 @@ class Prefs:
     if widget.key == 'color':
       self.settings['color'] = icon_colors_real[index]
     else:
-      self.settings['icon-type'] = icon_types_real[index]
+      self.settings['icon_type'] = icon_types_real[index]
   
   #A CheckButton was toggled
   def check_toggled(self, widget):

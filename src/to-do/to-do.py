@@ -48,21 +48,21 @@ _ = gettext.gettext
 class App(awn.AppletSimple):
   last_num_items = -1
   surface = None
-  last_height = -1
+  last_size = -1
   progress_buttons = []
   
-  def __init__(self, uid, orient, height):
+  def __init__(self, uid, orient, offset, size):
     self.uid = uid
-    self.height = height
+    self.size = size
     
     #Values that will be referenced later
     self.displayed = False
     self.detached = False
     
     #AWN Applet Configuration
-    awn.AppletSimple.__init__(self,uid,orient,height)
-    self.title = awn.awn_title_get_default()
-    self.dialog = awn.AppletDialog(self)
+    awn.AppletSimple.__init__(self, uid, orient, offset, size)
+    self.dialog = awn.Dialog(self)
+    #self.set_icon_name('terminal', 'terminal')
     
     #Give the dialog an AccelGroup (is this all that necessary)
     self.accel = gtk.AccelGroup()
@@ -75,7 +75,7 @@ class App(awn.AppletSimple):
       'title':(str, _("To-Do List")), \
       'items':([str], []), \
       'colors':([int], []), \
-      'icon-type':(str, 'items'), \
+      'icon_type':(str, 'items'), \
       'details':([str], []), \
       'color_low':(str, '#009900'), \
       'color_med':(str, '#c0c000'), \
@@ -85,23 +85,23 @@ class App(awn.AppletSimple):
       'expanded':([int], []), \
       'category':([int], []), \
       'custom_width':(int, 125), \
-      'icon-opacity':(int, 100), \
+      'icon_opacity':(int, 100), \
       'color_low_text':(str, '#000000'), \
       'color_med_text':(str, '#000000'), \
-      'confirm-items':(bool, True), \
+      'confirm_items':(bool, True), \
       'category_name':([str], []), \
       'color_high_text':(str, '#dddddd'), \
       'use_custom_width':(bool, False), \
-      'confirm-categories':(bool, True)})
+      'confirm_categories':(bool, True)})
     
     #Icon Type
-    if self.settings['icon-type'] not in ['progress','progress-items','items']:
-      self.settings['icon-type'] = 'items'
+    if self.settings['icon_type'] not in ['progress','progress_items','items']:
+      self.settings['icon_type'] = 'items'
     
     #Icon opacity
-    if self.settings['icon-opacity'] < 10 or \
-      self.settings['icon-opacity'] > 100:
-      self.settings['icon-opacity'] = 90
+    if self.settings['icon_opacity'] < 10 or \
+      self.settings['icon_opacity'] > 100:
+      self.settings['icon_opacity'] = 90
     
     #Get the Icon Theme - used for the "X" to remove an item
     #and the > arrow to edit details of an item
@@ -157,16 +157,14 @@ class App(awn.AppletSimple):
     gtk.window_set_default_icon_name('view-sort-descending')
 
     #Connect to events
-    self.connect('enter-notify-event', self.show_title)
-    self.connect('leave-notify-event',\
-      lambda *a: self.title.hide(self))
-    self.connect('height-changed', self.height_changed)
+    self.connect('size-changed', self.size_changed)
     self.dialog.connect('focus-out-event',self.hide_dialog)
     self.settings.connect('items',self.update_icon)
     self.settings.connect('progress',self.update_icon)
     self.settings.connect('color', self.update_icon)
     self.settings.connect('colors', self.update_icon)
-    self.settings.connect('icon-type', self.update_icon)
+    self.settings.connect('icon_type', self.update_icon)
+    self.settings.connect('title', self.update_title)
   
   #Remove anything shown in the dialog - does not hide the dialog
   def clear_dialog(self,*args):
@@ -193,9 +191,9 @@ class App(awn.AppletSimple):
     else:
       self.dialog.add(self.dialog_widget)
   
-  #The height of Awn has changed
-  def height_changed(self, applet, new_height):
-    self.height = new_height
+  #The size of Awn has changed
+  def size_changed(self, applet, new_size):
+    self.size = new_size
     self.last_num_items = -1
     self.update_icon()
   
@@ -206,7 +204,7 @@ class App(awn.AppletSimple):
     
     #Create the items for Preferences, Detach, and About
     prefs_menu = gtk.ImageMenuItem(gtk.STOCK_PREFERENCES)
-    detach_menu = self.detach.menu_item(self.do_detach,self.do_attach)
+    #detach_menu = self.detach.menu_item(self.do_detach,self.do_attach)
     about_menu = gtk.ImageMenuItem(gtk.STOCK_ABOUT)
     
     #Connect the two items to functions when selected
@@ -218,7 +216,7 @@ class App(awn.AppletSimple):
     #Now create the menu to put the items in and show it
     menu = self.create_default_menu()
     menu.append(prefs_menu)
-    menu.append(detach_menu)
+    #menu.append(detach_menu)
     menu.append(about_menu)
     menu.show_all()
     menu.popup(None, None, None, event.button, event.time)
@@ -877,9 +875,8 @@ class App(awn.AppletSimple):
   #Called when the list of items has been changed - change the icon
   def update_icon(self,*args):
     if self.last_num_items!=len(self.settings['items']) or \
-      self.settings['icon-type'] in ['progress','progress-items'] or \
-      (len(args) > 0 and args[0] in ['color', 'colors', 'icon-type']):
-      
+      self.settings['icon_type'] in ['progress','progress_items'] or \
+      (len(args) > 0 and args[0] in ['color', 'colors', 'icon_type', 'progress']):
       #Update the icon colors
       if self.settings['color'] in ['butter','chameleon','orange','skyblue',\
         'plum','chocolate','scarletred','aluminium1','aluminium2']:
@@ -891,7 +888,7 @@ class App(awn.AppletSimple):
       else:
         self.settings['color'] = 'skyblue'
         self.color = icon.colors['skyblue']
-      
+
       #Get the number of items, excluding categories
       tmp_items = []
       for item in self.settings['items']:
@@ -902,30 +899,27 @@ class App(awn.AppletSimple):
       try:
         assert len(tmp_items) == 0
         self.detach['icon-mode'] = 'pixbuf'
-        self.detach.set_pixbuf(self.icon_theme.load_icon(\
-          'view-sort-descending',self.height,self.height))
+        self.detach.set_pixbuf(self.icon_theme.load_icon( \
+          'view-sort-descending', self.size, 0))
       except:
         self.detach['icon-mode'] = 'surface'
         self.detach.set_surface(icon.icon(48, self.settings, self.color, \
-          self.surface, self.last_height))
-      
+          self.surface, self.last_size))
+
       #Change the attached applet icon second
       if self.detached == False:
-        self.show_all()
-      
-        try:
-          assert len(tmp_items) == 0
-          self.set_icon(self.icon_theme.load_icon(\
-            'view-sort-descending',self.height,self.height))
-        except:
-          
+        if len(tmp_items) == 0:
+          self.set_icon_pixbuf(self.icon_theme.load_icon( \
+            'view-sort-descending', self.size, 0))
+
+        else:
           #If Awn supports setting the icon as a cairo context
-          self.surface = icon.icon(self.height, self.settings, self.color, \
-            self.surface, self.last_height)
+          self.surface = icon.icon(self.size, self.settings, self.color, \
+            self.surface, self.last_size)
           self.context = cairo.Context(self.surface)
           self.set_icon_context(self.context)
       
-      self.last_height = self.height
+      self.last_size = self.size
       self.last_num_items = len(self.settings['items'])
   
   #Update the colors for the icon if the current icon theme
@@ -982,10 +976,18 @@ class App(awn.AppletSimple):
     #Text color - reg, green, blue
     self.color.append([self.settings['colors'][9],self.settings['colors'][10],\
       self.settings['colors'][11]])
-  
+
+  #Update the title
+  def update_title(self, *args):
+    if self.settings['title'] is None:
+      self.set_tooltip_text(_("To-Do List"))
+
+    else:
+      self.set_tooltip_text(self.settings['title'])
+
   #Change the opacity of the icon by 5%
   def opacity(self,event,more):
-    old_opacity = self.settings['icon-opacity']
+    old_opacity = self.settings['icon_opacity']
     new_opacity = False
     
     #Increase opacity
@@ -1010,7 +1012,7 @@ class App(awn.AppletSimple):
     
     #Update the icon if necessary
     if old_opacity != new_opacity:
-      self.settings['icon-opacity'] = new_opacity
+      self.settings['icon_opacity'] = new_opacity
       self.last_num_items = -1
       self.update_icon()
   
@@ -1196,7 +1198,7 @@ class App(awn.AppletSimple):
     #If the 'item' is a category
     if self.settings['items'][itemid] == '':
       #If user wants to be warned
-      if self.settings['confirm-categories'] == True:
+      if self.settings['confirm_categories'] == True:
         
         #Make Label
         confirm_label = gtk.Label(_("Are you sure you want to remove the category \"%s?\"\nAll of its items will be removed." % \
@@ -1204,7 +1206,7 @@ class App(awn.AppletSimple):
         
         #Make CheckButton
         confirm_check = gtk.CheckButton(_("Don't show this again."))
-        confirm_check.key = 'confirm-categories'
+        confirm_check.key = 'confirm_categories'
         confirm_check.connect('toggled', self.confirm_check)
         
         #Cancel and OK buttons
@@ -1234,14 +1236,14 @@ class App(awn.AppletSimple):
     #deletion-prone item is deletion-prone
     else:
       #If user wants to be warned
-      if self.settings['confirm-items'] == True:
+      if self.settings['confirm_items'] == True:
         
         #Make Label
         confirm_label = gtk.Label(_("Are you sure you want to remove this item?"))
         
         #Make CheckButton
         confirm_check = gtk.CheckButton(_("Don't show this again."))
-        confirm_check.key = 'confirm-items'
+        confirm_check.key = 'confirm_items'
         confirm_check.connect('toggled', self.confirm_check)
         
         #Cancel and OK buttons
@@ -1383,14 +1385,6 @@ class App(awn.AppletSimple):
   def confirm_check(self, button):
     self.settings[button.key] = not button.get_active()
 
-  #Show the title on hover
-  def show_title(self, *args):
-    if self.settings['title'] is None:
-      self.title.show(self, _("To-Do List"))
-
-    else:
-      self.title.show(self, self.settings['title'])
-
 #A gtk.Button that displays and changes an item's progress
 class ProgressButton(gtk.Button):
   def __init__(self, applet, Id):
@@ -1437,6 +1431,9 @@ class ProgressButton(gtk.Button):
     
     #Reset the tooltip
     self.set_tooltip_text(str(int(progress)) + _("% done"))
+
+    #Update the applet's icon
+    self.applet.update_icon('progress')
   
   def scroll(self, widget, event):
     #Scrolling up
@@ -1486,7 +1483,7 @@ class ProgressButton(gtk.Button):
 
 if __name__ == '__main__':
   awn.init(sys.argv[1:])
-  applet = App(awn.uid,awn.orient,awn.height)
+  applet = App(awn.uid, awn.orient, awn.offset, awn.size)
   awn.init_applet(applet)
   applet.show_all()
   gtk.main()

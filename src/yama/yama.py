@@ -243,7 +243,7 @@ class YamaApplet:
         set_sensitivity_recent_menu()
 
         def open_recent_document(widget):
-            self.start_subprocess_cb(None, "xdg-open %s" % chooser_menu.get_current_uri(), True)
+            self.start_subprocess_cb(None, "xdg-open %s" % widget.get_current_uri(), True)
         chooser_menu.connect("item-activated", open_recent_document)
 
         chooser_menu.append(gtk.SeparatorMenuItem())

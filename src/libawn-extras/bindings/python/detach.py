@@ -602,13 +602,13 @@ class Detach:
     #These will be referenced later
     self.applet_button_pressed = True
     self.applet_button_press_event = None
-    self.applet_height = applet.get_height()
+    self.applet_size = applet.get_size()
     
     #Connect to the right signals/events
     applet.connect('button-press-event',self.applet_button_press)
     applet.connect('button-release-event',self.applet_button_release)
     applet.connect('motion-notify-event',self.applet_motion)
-    applet.connect('height-changed',self.applet_height_changed)
+    applet.connect('size-changed',self.applet_size_changed)
     applet.connect('scroll-event',self.scroll)
     
     #Applet is ready to be dragged and dropped to and from Awn
@@ -732,7 +732,7 @@ class Detach:
       
       try:
         if int(self.applet_button_press_event.y_root-event.y_root) >= \
-          int(self.applet_height/3.0):
+          int(self.applet_size/3.0):
           #print "APPLET DRAGGED FROM AWN"
           
           #It did; detach the applet!
@@ -757,10 +757,10 @@ class Detach:
         #but it still works fine...
         pass
   
-  #The height of the applet (/ Awn bar) has changed - remember it
-  def applet_height_changed(self,applet,height):
+  #The size of the applet (/ Awn bar) has changed - remember it
+  def applet_size_changed(self,applet,size):
     #Save the applet height
-    self.applet_height = height
+    self.applet_size = size
   
   #Find out if the applet should be "dropped" on Awn
   def should_drop_on_awn(self,posy,height):

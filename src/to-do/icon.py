@@ -59,7 +59,7 @@ def icon(size2, settings, color, surface, last_height):
   #Get the needed data based on the icon type
   
   #progress: border shows progress, number shows percent completed
-  if settings['icon-type']=='progress':
+  if settings['icon_type']=='progress':
     if len(settings['progress'])==0:
       progress = 100
       number = '100%'
@@ -70,7 +70,7 @@ def icon(size2, settings, color, surface, last_height):
       number = str(progress)+'%'
   
   #progress-items: border shows progress, number shows # items
-  elif settings['icon-type']=='progress-items':
+  elif settings['icon_type']=='progress-items':
     if len(settings['progress'])==0:
       progress = 100
       number = '100%'
@@ -81,12 +81,12 @@ def icon(size2, settings, color, surface, last_height):
       number = str(num_items)
   
   #items: number shows # items
-  elif settings['icon-type']=='items':
+  elif settings['icon_type']=='items':
     number = str(num_items)
   
   #Draw the outer circle
   cr.set_source_rgba(float(color[2][0])/255.0,float(color[2][1])/255.0,\
-    float(color[2][2])/255.0,settings['icon-opacity']/100.0)
+    float(color[2][2])/255.0,settings['icon_opacity']/100.0)
   cr.arc(size/2.0,size/2.0,size/2.08,0,2*pi)
   cr.stroke()
   cr.close_path()
@@ -94,17 +94,17 @@ def icon(size2, settings, color, surface, last_height):
   cr.set_line_width(2)
   
   #Draw the inner border - either showing progress or not
-  if settings['icon-type'] in ['progress','progress-items']:
+  if settings['icon_type'] in ['progress','progress-items']:
     #(Probably) medium background
     cr.set_source_rgba(float(color[1][0])/255.0,float(color[1][1])/255.0,\
-      float(color[1][2])/255.0,settings['icon-opacity']/100.0)
+      float(color[1][2])/255.0,settings['icon_opacity']/100.0)
     cr.arc(size/2.0,size/2.0,size/2.18,0,2*pi)
     cr.stroke()
     cr.close_path()
     
     #(Probably) lightest foreground to indicate progress
     cr.set_source_rgba(float(color[0][0])/255.0,float(color[0][1])/255.0,\
-      float(color[0][2])/255.0,settings['icon-opacity']/100.0)
+      float(color[0][2])/255.0,settings['icon_opacity']/100.0)
     #Crazy maths here
     #http://en.wikipedia.org/wiki/Radians saved my life here :)
     cr.arc(size/2.0,size/2.0,size/2.18,((3.0*pi)/2.0), \
@@ -116,14 +116,14 @@ def icon(size2, settings, color, surface, last_height):
   #Draw the middle circle normally
   else:
     cr.set_source_rgba(float(color[0][0])/255.0,float(color[0][1])/255.0,\
-      float(color[0][2])/255.0,settings['icon-opacity']/100.0)
+      float(color[0][2])/255.0,settings['icon_opacity']/100.0)
     cr.arc(size/2.0,size/2.0,size/2.18,0,2*pi)
     cr.stroke()
     cr.close_path()
   
   #Draw the inside circle and fill it
   cr.set_source_rgba(float(color[1][0])/255.0,float(color[1][1])/255.0,\
-    float(color[1][2])/255.0,settings['icon-opacity']/100.0)
+    float(color[1][2])/255.0,settings['icon_opacity']/100.0)
   cr.arc(size/2.0,size/2.0,size/2.235,0,2*pi)
   cr.clip()
   cr.paint()
@@ -133,7 +133,7 @@ def icon(size2, settings, color, surface, last_height):
   cr.select_font_face("monospace",cairo.FONT_SLANT_NORMAL,\
     cairo.FONT_WEIGHT_BOLD)
   cr.set_source_rgba(float(color[3][0])/255.0,float(color[3][1])/255.0,\
-    float(color[3][2])/255.0,settings['icon-opacity']/100.0)
+    float(color[3][2])/255.0,settings['icon_opacity']/100.0)
   #Actually draw the number
   #determine the size and position of the number based on its digits
   #Note that the number of "digits" includes any % sign

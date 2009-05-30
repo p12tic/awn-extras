@@ -315,7 +315,7 @@ applet_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
   cairo_set_line_width (cr, 1.0);
 
   awn_cairo_rounded_rect (cr, x+0.5, y+0.5, w-1.0, h-1.0,
-                          4.0*BORDER, ROUND_ALL);
+                          2.0*BORDER, ROUND_ALL);
   cairo_fill_preserve(cr);
 
   GdkColor c = gtk_widget_get_style(widget)->dark[GTK_STATE_SELECTED];

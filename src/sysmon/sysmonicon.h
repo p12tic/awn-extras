@@ -21,7 +21,7 @@
 
 #include <gtk/gtk.h>
 #include <glib-object.h>
-#include <libawn/awn-icon.h>
+#include <libawn/awn-overlaid-icon.h>
 #include <libawn/awn-applet.h>
 
 #include "graph.h"
@@ -45,11 +45,11 @@ G_BEGIN_DECLS
   (G_TYPE_INSTANCE_GET_CLASS ((obj), AWN_TYPE_SYSMONICON, AwnSysmoniconClass))
 
 typedef struct {
-  AwnIcon parent;
+  AwnOverlaidIcon parent;
 } AwnSysmonicon;
 
 typedef struct {
-  AwnIconClass parent_class;
+  AwnOverlaidIconClass parent_class;
 
   /*< vtable >*/
   void          (*set_applet)         (AwnApplet * applet);

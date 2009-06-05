@@ -25,6 +25,8 @@
  /* awn-CPUicon.c */
 
 #include <glibtop/cpu.h>
+#include <libawn/awn-overlay-text.h>
+#include <libawn/awn-overlay-icon.h>
 
 #include "cpuicon.h"
 #include "areagraph.h"
@@ -33,6 +35,7 @@
 #include "sysmoniconprivate.h"
 
 #include "util.h"
+
 
 G_DEFINE_TYPE (AwnCPUicon, awn_CPUicon, AWN_TYPE_SYSMONICON)
 
@@ -50,6 +53,7 @@ enum
 
 struct _AwnCPUiconPrivate 
 {
+    AwnOverlay *text_overlay;
     guint timer_id;
     guint update_timeout;
     guint num_cpus;
@@ -110,9 +114,15 @@ _awn_CPUicon_update_icon(gpointer object)
 
   //  awn_graph_add_data (awn_sysmonicon_get_graph(AWN_SYSMONICON(self)),&point);
   *point = awn_CPUicon_get_load (object);
-  text = g_strdup_printf ("CPU: %.0lf%%",point->value);
+  text = g_strdup_printf ("CPU: %2.0lf%%",point->value);
   awn_tooltip_set_text (AWN_TOOLTIP(sysmonicon_priv->tooltip),text);
   g_free (text);
+  text = g_strdup_printf("%.0lf%%",point->value);  
+  g_object_set (priv->text_overlay,
+                "text", text,
+               NULL);  
+  g_free (text);
+  
   list = g_list_prepend (list,point);
  
   awn_graph_add_data (sysmonicon_priv->graph,list);
@@ -178,6 +188,23 @@ awn_CPUicon_constructed (GObject *object)
     default:
       g_assert_not_reached();
   }
+
+  priv->text_overlay = AWN_OVERLAY(awn_overlay_text_new());
+
+  g_object_set (priv->text_overlay,
+               "align", AWN_OVERLAY_ALIGN_RIGHT,
+               "gravity", GDK_GRAVITY_SOUTH,
+                "x_adj", 0.3,
+                "y_adj", 0.0,
+                "text", "0.0",
+                "font_sizing", AWN_FONT_SIZE_MEDIUM,
+               NULL);
+  awn_overlaid_icon_append_overlay (AWN_OVERLAID_ICON(object),
+                                                         priv->text_overlay);
+
+  AwnOverlay *icon_overlay = AWN_OVERLAY(awn_overlay_icon_new(AWN_THEMED_ICON(object),"stock_up",NULL));
+
+  awn_overlaid_icon_append_overlay (AWN_OVERLAID_ICON(object),icon_overlay);
 }
 
 static void

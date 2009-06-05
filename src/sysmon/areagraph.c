@@ -37,7 +37,6 @@ struct _Awn_AreagraphPrivate
   gint num_shift;
   gdouble partial;  
   gdouble prev_value;
-  gboolean filled;
 };
 
 enum
@@ -197,54 +196,59 @@ static void _awn_areagraph_render_to_context(AwnGraph * graph,
     end_point = ((gint) priv->cur_point) ;
   }  
   
-  if (priv->filled)
-  {
-    gint start_here;
-    
-    cairo_set_source_surface (cr,cairo_get_target (cr),-1.0 * priv->num_shift ,0.0);
-    cairo_set_operator (cr,CAIRO_OPERATOR_SOURCE);
-    cairo_paint (cr);
-    
-    vert_scale = srfc_height / (double) (priv->max_val - priv->min_val);
-    cairo_scale (cr, srfc_width / (double)priv->num_points, vert_scale);
-    cairo_set_source_rgba (cr, 0.8, 0.0, 0.6, 0.6);
-    start_here = priv->cur_point - priv->num_shift;
-    x = priv->num_points-priv->num_shift;                                      
-    for (i=start_here ; x < priv->num_points;i++)
-    {
-      cairo_move_to (cr, x- 0.5,priv->max_val - priv->min_val);
-      cairo_line_to (cr, x- 0.5, priv->max_val - priv->min_val - values[i]);
-      cairo_stroke (cr);
-      if (i >= priv->num_points )
-      {
-        i = -1;
-      }    
-      x++;    
-    }    
-  }
-  else
-  {
-    cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
-    cairo_paint (cr);
-    
-    cairo_paint (cr);
-    vert_scale = srfc_height / (double) (priv->max_val - priv->min_val);
-    cairo_scale (cr, srfc_width / (double)priv->num_points, vert_scale);
-    cairo_set_source_rgba (cr, 0.8, 0.0, 0.6, 0.6);
+  cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
+  cairo_paint (cr);
+  
+  cairo_paint (cr);
+  vert_scale = srfc_height / (double) (priv->max_val - priv->min_val);
+  cairo_scale (cr, srfc_width / (double)priv->num_points, vert_scale);
+  cairo_set_source_rgba (cr, 0.8, 0.0, 0.6, 0.6);
 
-    cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
-    for (i=priv->cur_point; x < priv->num_points;i++)
+  cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
+#if 1
+  for (i=priv->cur_point; x < priv->num_points;i++)
+  {
+    cairo_move_to (cr, x- 0.5,priv->max_val - priv->min_val);
+    cairo_line_to (cr, x- 0.5, priv->max_val - priv->min_val - values[i]);
+    cairo_stroke (cr);
+    if (i >= priv->num_points )
     {
-      cairo_move_to (cr, x- 0.5,priv->max_val - priv->min_val);
-      cairo_line_to (cr, x- 0.5, priv->max_val - priv->min_val - values[i]);
-      cairo_stroke (cr);
+      i = -1;
+    }    
+    x++;    
+  }
+#else
+  cairo_move_to (cr, x- 0.5,priv->max_val - priv->min_val);
+  for (i=priv->cur_point; x < priv->num_points;i++)
+  {
+    gdouble prev_val = values[i];
+//    cairo_move_to (cr, x- 0.5,priv->max_val - priv->min_val);
+    cairo_line_to (cr, x- 0.5, priv->max_val - priv->min_val - values[i]);
+//    cairo_stroke (cr);
+    x++;
+    if ( x < priv->num_points)
+    {
+      gint old_i = i; /* in case the next condition is true. */
       if (i >= priv->num_points )
       {
         i = -1;
       }    
-      x++;    
+      
+      if (values[i+1] >= prev_val)
+      {
+        cairo_line_to (cr, x- 0.5, priv->max_val - priv->min_val - values[old_i]);
+      }
+      else
+      {
+        cairo_line_to (cr, x - 1 - 0.5, priv->max_val - priv->min_val - values[i+1]);
+      }
     }
   }
+  cairo_line_to (cr, x- 0.5,priv->max_val - priv->min_val);  
+  cairo_close_path (cr);
+  cairo_fill (cr);
+  
+#endif
   cairo_restore (cr);
 }
 
@@ -285,7 +289,6 @@ static void _awn_areagraph_add_data(AwnGraph * graph,
       i++; 
       if (i >= priv->num_points)
       {
-        priv->filled = TRUE;
         i = 0;
       }       
       values[i] = area_graph_point->value;
@@ -293,7 +296,6 @@ static void _awn_areagraph_add_data(AwnGraph * graph,
     }
     if (i >= priv->num_points)
     {
-      priv->filled = TRUE;      
       i = 0;
     }    
   }
@@ -315,7 +317,6 @@ awn_areagraph_init (Awn_Areagraph *self)
   priv->cur_point = 0;
   priv->partial = 0.0;
   priv->prev_value = 0.0;
-  priv->filled = FALSE;
   
   graph_priv->data =g_new0(gdouble, priv->num_points);
   
@@ -345,6 +346,5 @@ awn_areagraph_clear (Awn_Areagraph *self, gdouble val)
   {
     ((gdouble *)graph_priv->data)[i]=val;
   }
-  priv->filled = FALSE;
   priv->cur_point = 0;
 }

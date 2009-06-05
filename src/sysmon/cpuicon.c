@@ -204,6 +204,12 @@ awn_CPUicon_constructed (GObject *object)
 
   AwnOverlay *icon_overlay = AWN_OVERLAY(awn_overlay_icon_new(AWN_THEMED_ICON(object),"stock_up",NULL));
 
+  /*demonstrate changing the gravity and scale. default for icon overlay is SE and 0.3*/
+  g_object_set (icon_overlay,
+                "gravity", GDK_GRAVITY_NORTH_EAST,
+                "scale",0.25,
+                NULL);
+
   awn_overlaid_icon_append_overlay (AWN_OVERLAID_ICON(object),icon_overlay);
 }
 

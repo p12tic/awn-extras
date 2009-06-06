@@ -23,6 +23,7 @@ import urllib2
 import hashlib
 import sexy
 import re
+import pynotify
 from threading import Thread
 from microblog import twitter
 
@@ -116,9 +117,12 @@ class GwibberApplet (awn.AppletSimple):
       self.set_tooltip_text(GwibberApplet.APPLET_NAME)
       self.set_icon_name('gwibber', 'gwibber')
 
+      pynotify.init(GwibberApplet.APPLET_NAME)
+
       self.dialog = awn.Dialog(self)
 
       self.msg_ids = []
+      self.first_update = True
 
       self.timeline = gtk.VBox()
       self.timeline.set_spacing(6)
@@ -148,11 +152,9 @@ class GwibberApplet (awn.AppletSimple):
        if event.button == 1:
           if self.dialog.flags() & gtk.VISIBLE != 0:
               self.dialog.hide()
-              self.get_icon().set_is_active(False)
           else:
               self.unread_msgs = 0
               self.get_icon().set_indicator_count(0)
-              self.get_icon().set_is_active(True)
               self.dialog.show_all()
 
    def update_messages (self):
@@ -173,7 +175,7 @@ class GwibberApplet (awn.AppletSimple):
       Thread(target=worker).start()
       return True
 
-   def create_message_widget (self, msg):
+   def create_message_widget (self, msg, do_notify = False):
       # TODO: wrap all in Event box and paint custom background?
       message = gtk.HBox()
       message.set_spacing (6)
@@ -204,6 +206,11 @@ class GwibberApplet (awn.AppletSimple):
       content.add(text_align)
 
       message.add(content)
+
+      if do_notify:
+         n = pynotify.Notification (msg.sender_nick, msg.text)
+         n.set_icon_from_pixbuf (image_pixbuf)
+         n.show ()
 
       return message
 
@@ -237,7 +244,7 @@ class GwibberApplet (awn.AppletSimple):
       msg_sorted = []
 
       for msg in msgs:
-         msg.widget = self.create_message_widget (msg)
+         msg.widget = self.create_message_widget (msg, not self.first_update)
          msg_sorted.append(msg)
 
       msg_sorted.reverse()
@@ -245,6 +252,8 @@ class GwibberApplet (awn.AppletSimple):
          self.msg_ids.insert (0, msg.id)
          self.timeline.pack_end (msg.widget)
       self.timeline.show_all ()
+
+      self.first_update = False
 
       gtk.gdk.threads_leave()
 

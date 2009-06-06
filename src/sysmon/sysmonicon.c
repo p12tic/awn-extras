@@ -284,10 +284,12 @@ create_surfaces (AwnSysmonicon * sysmonicon)
    
    fg_* will probably end up being removed (see comment in update_icon()
    */
+
+/*  remove so glow effect looks ok.
   cairo_set_source_rgba (priv->bg_cr,0.2,0.2,0.2,0.05);
   cairo_set_operator (priv->bg_cr,CAIRO_OPERATOR_SOURCE);
   cairo_paint (priv->bg_cr);
-  
+  */
   cairo_destroy(temp_cr);
 }
 

@@ -12,6 +12,8 @@ sysmon_la_SOURCES =		\
   bargraph.h \
   circlegraph.c \
   circlegraph.h \
+  cpu-dialog.c \
+  cpu-dialog.h \
   cpuicon.c \
   cupicon.h \
   defines.h \

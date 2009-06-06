@@ -27,6 +27,7 @@
 #include <glibtop/cpu.h>
 #include <libawn/awn-overlay-text.h>
 #include <libawn/awn-overlay-icon.h>
+#include <libawn/awn-dialog.h>
 
 #include "cpuicon.h"
 #include "areagraph.h"

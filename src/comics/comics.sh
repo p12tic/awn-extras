@@ -16,7 +16,7 @@ fi
 if [ -p "$COMMAND_PIPE" ]; then
 	# If the command pipe exists, we write to it
 	echo $@ >>"$COMMAND_PIPE"
-elif [ -n "x$1" = "x$EXIT_COMMAND" ]; then
+elif [ ! "x$1" = "x$EXIT_COMMAND" ]; then
 	# Otherwise we start the application in the background
 	python main.py $@ &
 fi

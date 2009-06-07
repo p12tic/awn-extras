@@ -87,6 +87,7 @@ class VolumeControlApplet:
 
         applet.connect("scroll-event", self.scroll_event_cb)
         applet.connect_size_changed(self.size_changed_cb)
+        applet.connect("orientation-changed", self.orientation_changed_cb)
 
     def scroll_event_cb(self, widget, event):
         if event.direction == gdk.SCROLL_UP:
@@ -327,7 +328,7 @@ class VolumeControlApplet:
         self.theme_icons = {}
 
         if this_is_moonbeam_theme:
-            keys = moonbeam_ranges
+            keys = list(moonbeam_ranges)
             path = os.path.join(moonbeam_theme_dir, self.theme, "audio-volume-%s.svg")
         else:
             keys = volume_ranges.keys()
@@ -336,6 +337,14 @@ class VolumeControlApplet:
         keys.extend(["muted"])
         for i in keys:
             self.theme_icons[i] = self.applet.icon.file(path % i, set=False, size=awnlib.Icon.APPLET_SIZE)
+        if self.theme == "Minimal" and self.applet.get_orientation() in (1, 3):
+            for i in keys:
+                self.theme_icons[i] = self.theme_icons[i].rotate_simple(gtk.gdk.PIXBUF_ROTATE_CLOCKWISE)
+
+    def orientation_changed_cb(self, applet, orientation):
+        if self.theme == "Minimal":
+            self.setup_icons()
+            self.refresh_icon(True)
 
     def refresh_mute_checkbox(self):
         """Update the state of the 'Mute' checkbox.

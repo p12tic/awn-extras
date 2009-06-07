@@ -25,6 +25,7 @@ import gobject
 import gtk
 import locale
 import os
+import pynotify
 import re
 import sys
 import tempfile
@@ -49,9 +50,8 @@ COMMAND_PIPE = os.path.join(STRIPS_DIR, 'commands')
 executed."""
 DEFAULT_COMMAND = 'toggle_visibility'
 
-"""When this command is passed to the application, the command pipe will be
-removed."""
-CLEAN_COMMAND = 'clean'
+"""The command that terminates the application."""
+EXIT_COMMAND = 'exit'
 
 
 class Command(object):
@@ -77,13 +77,9 @@ class Command(object):
 	value False."""
 	FALSE_VALUES = ['false', 'no', 'off']
 	
-	def __init__(self, command = None):
+	def __init__(self, command):
 		self.command = ''
 		self.parameters = []
-		
-		# Do not parse empty command lines
-		if command is None:
-			return
 		
 		# Extract the command verb and its parameters
 		line = self.LINE_RE.match(command)
@@ -140,8 +136,10 @@ class Application(object):
 			while True:
 				command = Command(stream.readline())
 				gobject.idle_add(self.execute_command, command)
-				if command.command == 'exit':
+				if command.command == EXIT_COMMAND:
 					break
+		except IOError:
+			gobject.idle_add(self.execute_command, Command(EXIT_COMMAND))
 		finally:
 			stream.close()
 	
@@ -173,17 +171,31 @@ class Application(object):
 			filename = os.path.join(cache, filename)
 			settings = Settings(filename)
 			settings['cache-file'] = filename.rsplit('.', 1)[0] + '.cache'
-			self.comics.append(comics_view.ComicsViewer(self, settings, False))
+			comic = comics_view.ComicsViewer(self, settings, False)
+			comic.connect('removed', self.on_comic_removed)
+			comic.connect('updated', self.on_comic_updated)
+			self.comics.append(comic)
 		
 		# The comics are initially hidden
-		self.do_hide()
+		for comic in self.comics:
+			comic.set_visibility(False)
+		self.visible = False
 		
 		# Start listening for commands
 		self.command_thread = threading.Thread(target = self.command_listener)
 		self.command_thread.start()
+		
+		self.feeds.update()
 	
-	def show_message(self, message, icon):
-		print message
+	def show_message(self, message, icon, body = None):
+		pynotify.Notification(message, body, icon).show()
+	
+	def on_comic_updated(self, widget, title):
+		self.show_message(_('There is a new strip of %s!') % widget.feed_name,
+			os.path.join(ICONS_DIR, 'comics-icon.svg'))
+	
+	def on_comic_removed(self, widget):
+		self.comics.remove(widget)
 	
 	def do_exit(self):
 		"""Causes the application to terminate."""
@@ -208,36 +220,76 @@ class Application(object):
 		"""Shows or hides all comic strips."""
 		self.do_set_visibility(not self.visible)
 	
-	def do_manage(self):
+	def do_manage_comics(self):
 		"""Shows the configuration interface."""
 		manager = comics_manage.ComicsManager(self.feeds)
 		manager.show()
-
+	
+	def do_include_comic(self, feed_name):
+		"""Adds a window for a specific comic if not already shown."""
+		# Do not add an unknown comic
+		if not feed_name in self.feeds.feeds:
+			return
+		
+		# Do not add an already present comic
+		for comic in self.comics:
+			if comic.feed_name == feed_name:
+				return
+		
+		# Create a temporary filename for the configuration file
+		f, filename = tempfile.mkstemp('.strip', '', STRIPS_DIR, True)
+		os.close(f)
+		
+		settings = Settings(filename)
+		settings['feed_name'] = feed_name
+		settings['cache-file'] = filename.rsplit('.', 1)[0] + '.cache'
+		comic = comics_view.ComicsViewer(self, settings, self.visible)
+		self.comics.append(comic)
+		comic.connect('removed', self.on_comic_removed)
+		comic.connect('updated', self.on_comic_updated)
+		settings.save()
+	
+	def do_exclude_comic(self, feed_name):
+		"""Removes a window for a specific comic if shown."""
+		# Do not remove an unknown comic
+		if not feed_name in self.feeds.feeds:
+			return
+		
+		comics = filter(lambda w: w.feed_name == feed_name, self.comics)
+		if not comics:
+			return
+		
+		for comic in comics:
+			comic.close()
+			comic.destroy()
+	
+	def do_toggle_comic(self, feed_name):
+		"""Includes or excludes a comic depending on whether it is included."""
+		if feed_name in self.feeds.feeds:
+			self.exclude_comic(feed_name)
+		else:
+			self.include_comic(feed_name)
 
 if __name__ == '__main__':
 	# Read the command
-	command = Command()
 	if len(sys.argv) > 1:
-		command.command = sys.argv[1]
+		command = Command(' '.join(sys.argv[1:]))
 	else:
-		command.command = DEFAULT_COMMAND
-	if len(sys.argv) > 2:
-		command.parameters = sys.argv[2:]
+		command = Command(DEFAULT_COMMAND)
 	
 	# If the named pipe exists, another instance is running and we just pass the
 	# command line on
 	if os.access(COMMAND_PIPE, os.F_OK):
-		# If we receive the clean command, we have to remove the command pipe
-		if command.command == CLEAN_COMMAND:
-			os.unlink(COMMAND_PIPE)
-			sys.exit(0)
-		else:
-			out = open(COMMAND_PIPE, 'w+')
-			try:
-				out.write(str(command) + '\n')
-			finally:
-				out.close()
-			sys.exit(0)
+		out = open(COMMAND_PIPE, 'w+')
+		try:
+			out.write(str(command) + '\n')
+		finally:
+			out.close()
+		sys.exit(0)
+	
+	# We do not start the application if the command to execute is exit
+	if command.command == EXIT_COMMAND:
+		sys.exit(0)
 	
 	# Initialise internationalisation
 	locale.setlocale(locale.LC_ALL, '')
@@ -250,6 +302,9 @@ if __name__ == '__main__':
 	gtk.gdk.threads_init()
 	gtk.window_set_default_icon_from_file(os.path.join(ICONS_DIR,
 		'comics-icon.svg'))
+	
+	# Initialise notifications
+	pynotify.init(_("Comics!"))
 	
 	# Initialize user agent string
 	import urllib
@@ -268,12 +323,12 @@ if __name__ == '__main__':
 	
 	# Create the command pipe
 	os.mkfifo(COMMAND_PIPE)
-	
-	# Create the application and start the main loop
-	application = Application([SYS_FEEDS_DIR, USER_FEEDS_DIR], STRIPS_DIR)
-	application.execute_command(command)
-	gtk.main()
-	
-	# Remove the command pipe
-	os.unlink(COMMAND_PIPE)
+	try:
+		# Create the application and start the main loop
+		application = Application([SYS_FEEDS_DIR, USER_FEEDS_DIR], STRIPS_DIR)
+		application.execute_command(command)
+		gtk.main()
+	finally:
+		# Remove the command pipe
+		os.unlink(COMMAND_PIPE)
 

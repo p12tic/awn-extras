@@ -51,7 +51,7 @@ typedef struct {
 
 GType awn_cpu_dialog_get_type (void);
 
-AwnCPUDialog* awn_cpu_dialog_new (void);
+AwnCPUDialog* awn_cpu_dialog_new (GtkWidget *widget);
 
 G_END_DECLS
 

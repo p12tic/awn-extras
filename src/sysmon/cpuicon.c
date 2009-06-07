@@ -27,11 +27,13 @@
 #include <glibtop/cpu.h>
 #include <libawn/awn-overlay-text.h>
 #include <libawn/awn-overlay-icon.h>
+#include <libawn/awn-overlay-throbber.h>
 #include <libawn/awn-dialog.h>
 
 #include "cpuicon.h"
 #include "areagraph.h"
 #include "circlegraph.h"
+#include "cpu-dialog.h"
 
 #include "sysmoniconprivate.h"
 
@@ -54,6 +56,8 @@ enum
 
 struct _AwnCPUiconPrivate 
 {
+    AwnCPUDialog  * dialog;
+  
     AwnOverlay *text_overlay;
     guint timer_id;
     guint update_timeout;
@@ -133,6 +137,24 @@ _awn_CPUicon_update_icon(gpointer object)
   return TRUE;
 }
 
+
+static gboolean
+_awn_cpu_icon_clicked (GtkWidget *widget,
+                       GdkEventButton *event,
+                       AwnCPUDialog * dialog)
+{
+  if (GTK_WIDGET_VISIBLE (dialog) )
+  {
+    gtk_widget_hide (GTK_WIDGET(dialog));
+  }
+  else
+  {
+    gtk_widget_show_all (GTK_WIDGET (dialog));
+  }
+ 
+  return TRUE;
+}
+
 static void
 awn_CPUicon_constructed (GObject *object)
 {
@@ -155,6 +177,12 @@ awn_CPUicon_constructed (GObject *object)
    accurately when the timer fires.  Area graph can be informed that the 
    measurement contains a partial point and it will average things out.
    */
+  priv->dialog = awn_cpu_dialog_new(GTK_WIDGET(object));
+  gtk_window_set_title (GTK_WINDOW (priv->dialog),"CPU");
+  g_signal_connect(object, "button-press-event", 
+                   G_CALLBACK(_awn_cpu_icon_clicked), 
+                   priv->dialog);
+  
   if ( (priv->update_timeout > 750) && 
       ( (priv->update_timeout %1000 <25) || (priv->update_timeout %1000 >975)))
   {
@@ -212,6 +240,13 @@ awn_CPUicon_constructed (GObject *object)
                 NULL);
 
   awn_overlaid_icon_append_overlay (AWN_OVERLAID_ICON(object),icon_overlay);
+/*  
+  AwnOverlay * throbber_overlay = AWN_OVERLAY (awn_overlay_throbber_new (object));
+  g_object_set ( throbber_overlay,
+                "active",TRUE,
+                NULL);
+  awn_overlaid_icon_append_overlay (AWN_OVERLAID_ICON(object),throbber_overlay);
+   */
 }
 
 static void

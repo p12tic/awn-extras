@@ -80,8 +80,10 @@ awn_cpu_dialog_init (AwnCPUDialog *self)
 }
 
 AwnCPUDialog*
-awn_cpu_dialog_new (void)
+awn_cpu_dialog_new (GtkWidget *widget)
 {
-  return g_object_new (AWN_TYPE_CPU_DIALOG, NULL);
+  return g_object_new (AWN_TYPE_CPU_DIALOG, 
+                       "anchor", widget,
+                       NULL);
 }
 

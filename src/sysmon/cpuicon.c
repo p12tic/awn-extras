@@ -223,10 +223,9 @@ awn_CPUicon_constructed (GObject *object)
   g_object_set (priv->text_overlay,
                "align", AWN_OVERLAY_ALIGN_RIGHT,
                "gravity", GDK_GRAVITY_SOUTH,
-                "x_adj", 0.3,
-                "y_adj", 0.0,
+                "x-adj", 0.3,
+                "y-adj", 0.0,
                 "text", "0.0",
-                "font_sizing", AWN_FONT_SIZE_MEDIUM,
                NULL);
   awn_overlaid_icon_append_overlay (AWN_OVERLAID_ICON(object),
                                                          priv->text_overlay);
@@ -240,7 +239,7 @@ awn_CPUicon_constructed (GObject *object)
                 NULL);
 
   awn_overlaid_icon_append_overlay (AWN_OVERLAID_ICON(object),icon_overlay);
-/*  
+ /*
   AwnOverlay * throbber_overlay = AWN_OVERLAY (awn_overlay_throbber_new (object));
   g_object_set ( throbber_overlay,
                 "active",TRUE,

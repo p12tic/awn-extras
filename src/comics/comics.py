@@ -213,7 +213,7 @@ class ComicApplet(awn.AppletSimple):
 	def on_window_updated(self, widget, title):
 		self.notify.send(title,
 			_('There is a new strip of %s!') % widget.feed_name,
-			os.path.join(ICONS_DIR, 'icon.svg'))
+			os.path.join(ICONS_DIR, 'comics-icon.svg'))
 	
 	def on_window_removed(self, widget):
 		self.windows.remove(widget)

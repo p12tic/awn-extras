@@ -25,10 +25,8 @@
  /* awn-CPUicon.c */
 
 #include <glibtop/cpu.h>
-#include <libawn/awn-overlay-text.h>
+#include <libawn/libawn.h>
 #include <libawn/awn-overlay-icon.h>
-#include <libawn/awn-overlay-throbber.h>
-#include <libawn/awn-dialog.h>
 
 #include "cpuicon.h"
 #include "areagraph.h"
@@ -230,7 +228,7 @@ awn_CPUicon_constructed (GObject *object)
   awn_overlaid_icon_append_overlay (AWN_OVERLAID_ICON(object),
                                                          priv->text_overlay);
 
-  AwnOverlay *icon_overlay = AWN_OVERLAY(awn_overlay_icon_new(AWN_THEMED_ICON(object),"stock_up",NULL));
+  AwnOverlayIcon *icon_overlay = awn_overlay_themed_icon_new(AWN_THEMED_ICON(object),"stock_up",NULL);
 
   /*demonstrate changing the gravity and scale. default for icon overlay is SE and 0.3*/
   g_object_set (icon_overlay,
@@ -243,9 +241,10 @@ awn_CPUicon_constructed (GObject *object)
   AwnOverlay * throbber_overlay = AWN_OVERLAY (awn_overlay_throbber_new (object));
   g_object_set ( throbber_overlay,
                 "active",TRUE,
+                "timeout", 1000,
                 NULL);
   awn_overlaid_icon_append_overlay (AWN_OVERLAID_ICON(object),throbber_overlay);
-   */
+*/
 }
 
 static void
@@ -270,7 +269,7 @@ awn_CPUicon_init (AwnCPUicon *self)
   AwnCPUiconPrivate *priv;
   	
   priv = AWN_CPUICON_GET_PRIVATE (self);
-  priv->update_timeout = 250;  /*FIXME*/
+  priv->update_timeout = 1000;  /*FIXME*/
 }
 
 GtkWidget*

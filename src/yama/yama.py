@@ -26,7 +26,11 @@ import gtk
 
 from awn.extras import awnlib
 
-import dbus
+try:
+    import dbus
+except ImportError:
+    dbus = None
+
 import gio
 from glib import filename_display_basename
 import gmenu
@@ -81,6 +85,14 @@ class YamaApplet:
         tree.add_monitor(self.menu_changed_cb, self.settings_items)
 
         """ Session actions """
+        if dbus is not None:
+            self.append_session_actions(self.menu)
+
+        self.menu.show_all()
+
+        applet.connect("button-press-event", self.button_press_event_cb)
+
+    def append_session_actions(self, menu):
         session_bus = dbus.SessionBus()
 
         dbus_services = session_bus.list_names()
@@ -88,10 +100,10 @@ class YamaApplet:
         can_manage_session = "org.gnome.SessionManager" in dbus_services
 
         if can_lock_screen or can_manage_session:
-            self.menu.append(gtk.SeparatorMenuItem())
+            menu.append(gtk.SeparatorMenuItem())
 
         if can_lock_screen:
-            lock_item = self.append_menu_item(self.menu, "Lock Screen", "system-lock-screen", "Protect your computer from unauthorized use")
+            lock_item = self.append_menu_item(menu, "Lock Screen", "system-lock-screen", "Protect your computer from unauthorized use")
             def lock_screen_cb(widget):
                 try:
                     ss_proxy = session_bus.get_object("org.gnome.ScreenSaver", "/")
@@ -107,15 +119,11 @@ class YamaApplet:
             sm_if = dbus.Interface(sm_proxy, "org.gnome.SessionManager")
 
             user_name = commands.getoutput("/usr/bin/whoami")
-            logout_item = self.append_menu_item(self.menu, "Log Out %s..." % user_name, "system-log-out", "Log out %s of this session to log in as a different user" % user_name)
+            logout_item = self.append_menu_item(menu, "Log Out %s..." % user_name, "system-log-out", "Log out %s of this session to log in as a different user" % user_name)
             logout_item.connect("activate", lambda w: sm_if.Logout(0))
 
-            shutdown_item = self.append_menu_item(self.menu, "Shut Down...", "system-shutdown", "Shut down the system")
+            shutdown_item = self.append_menu_item(menu, "Shut Down...", "system-shutdown", "Shut down the system")
             shutdown_item.connect("activate", lambda w: sm_if.Shutdown())
-
-        self.menu.show_all()
-
-        applet.connect("button-press-event", self.button_press_event_cb)
 
     def button_press_event_cb(self, widget, event):
         if event.button == 1:

@@ -45,7 +45,7 @@ enum {
     FOLDER_UP = 4
 };
 
-static AwnAppletDialogClass *parent_class = NULL;
+static GtkVBoxClass *parent_class = NULL;
 
 static FileBrowserFolder *current_folder = NULL;
 static GtkWidget *folder_up = NULL;
@@ -218,8 +218,6 @@ void filebrowser_dialog_toggle_visiblity(
     // toggle visibility
     dialog->active = !dialog->active;
     if ( dialog->active ) {
-    	// hide title
-        awn_title_hide (dialog->applet->title, GTK_WIDGET(dialog->applet->awn_applet));
 	// set icon
         filebrowser_applet_set_icon( dialog->applet, NULL ); 
 	// show the dialog
@@ -322,7 +320,7 @@ GtkWidget *filebrowser_dialog_new(
     
 	FileBrowserDialog *dialog = g_object_new( FILEBROWSER_TYPE_DIALOG, NULL );
 
-	dialog->awn_dialog = awn_applet_dialog_new (AWN_APPLET(applet->awn_applet));
+	dialog->awn_dialog = awn_dialog_new_for_widget (applet->awn_applet);
 	dialog->applet = applet;
 
 	gtk_container_add( GTK_CONTAINER(dialog->awn_dialog), GTK_WIDGET( dialog ) );

@@ -41,7 +41,6 @@ struct _FileBrowserApplet {
     GtkWidget     	*context_menu;
     GtkWidget     	*filebrowser;
     
-	AwnTitle		*title;
 	gchar			*title_text;
 };
 

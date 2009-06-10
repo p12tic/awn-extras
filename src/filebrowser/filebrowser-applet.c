@@ -72,8 +72,9 @@ static void filebrowser_applet_activate_dialog(
         }
         g_free( filename );
 
-	applet->title = AWN_TITLE(awn_title_get_default ());
         applet->title_text = g_strdup (filebrowser_gconf_get_backend_folder());
+        awn_applet_simple_set_tooltip_text (AWN_APPLET_SIMPLE (applet->awn_applet),
+                                            applet->title_text);
     }
 
     gtk_widget_destroy( dialog );
@@ -163,11 +164,6 @@ static void filebrowser_applet_destroy(
     GtkObject * object ) {
 
     FileBrowserApplet *applet = FILEBROWSER_APPLET( object );
-
-	if (applet->title){
-		g_object_unref (applet->title);
-	}
-	applet->title = NULL;
 
     if ( applet->context_menu ) {
         gtk_widget_destroy( applet->context_menu );
@@ -383,28 +379,6 @@ static gboolean filebrowser_applet_button_release_event(
 }
 
 /**
- * Only show the Awn title when the dialog is not visible
- */
-static gboolean filebrowser_applet_enter_notify_event (GtkWidget *window, GdkEventButton *event, FileBrowserApplet *applet){
-
-	if( !FILEBROWSER_DIALOG(applet->filebrowser )->active ){
-		awn_title_show (applet->title, GTK_WIDGET(applet->awn_applet), applet->title_text);
-	}
-	
-	return TRUE;
-}
-
-/**
- * Hide the awn title
- */
-static gboolean filebrowser_applet_leave_notify_event (GtkWidget *window, GdkEventButton *event, FileBrowserApplet *applet){
-
-	awn_title_hide (applet->title, GTK_WIDGET(applet->awn_applet));
-	
-	return TRUE;
-}
-
-/**
  * Set the applet-icon
  */
 void filebrowser_applet_set_icon(
@@ -415,13 +389,13 @@ void filebrowser_applet_set_icon(
     	GtkIconTheme *theme = gtk_icon_theme_get_default(  );
 	    gchar *applet_icon = filebrowser_gconf_get_applet_icon(  );
     	icon = gtk_icon_theme_load_icon( theme, applet_icon,
-                       awn_applet_get_height
+                       awn_applet_get_size
                        ( AWN_APPLET( applet->awn_applet ) ), 0, NULL );
     }else{
 		icon = gdk_pixbuf_copy( icon );
     }
 
-    awn_applet_simple_set_icon (AWN_APPLET_SIMPLE(applet->awn_applet), icon);
+    awn_applet_simple_set_icon_pixbuf (AWN_APPLET_SIMPLE(applet->awn_applet), icon);
     gtk_widget_queue_draw( GTK_WIDGET(applet->awn_applet));
 }
 
@@ -467,11 +441,12 @@ static void filebrowser_applet_init(
 AwnApplet *awn_applet_factory_initp(
     gchar * uid,
     gint orient,
-    gint height ) {
+    gint offset,
+    gint size ) {
 
     gnome_vfs_init ();
 
-	GtkWidget *awn_applet = awn_applet_simple_new( uid, orient, height );
+	GtkWidget *awn_applet = awn_applet_simple_new( uid, orient, offset, size );
     FileBrowserApplet *applet = g_object_new( FILEBROWSER_TYPE_APPLET, NULL );
 	applet->awn_applet = awn_applet;
 
@@ -479,18 +454,12 @@ AwnApplet *awn_applet_factory_initp(
     filebrowser_applet_set_icon( applet, NULL );
 
     applet->filebrowser = filebrowser_dialog_new( applet );
-   	applet->title = AWN_TITLE(awn_title_get_default ());
 	applet->title_text = g_strdup (filebrowser_gconf_get_backend_folder());
-
+	awn_applet_simple_set_tooltip_text (AWN_APPLET_SIMPLE (applet->awn_applet),
+                                      applet->title_text);
 	gtk_widget_add_events( GTK_WIDGET( applet->awn_applet ), GDK_ALL_EVENTS_MASK );
 	
-	/* connect to mouse enter/leave events */
-	g_signal_connect (G_OBJECT (applet->awn_applet), "enter-notify-event",
-			  G_CALLBACK (filebrowser_applet_enter_notify_event),
-			  applet);
-	g_signal_connect (G_OBJECT (applet->awn_applet), "leave-notify-event",
-			  G_CALLBACK (filebrowser_applet_leave_notify_event),
-			  applet);
+	/* connect to mouse release event */
 	g_signal_connect (G_OBJECT (applet->awn_applet), "button-release-event",
               G_CALLBACK (filebrowser_applet_button_release_event), 
               applet);
@@ -523,7 +492,6 @@ AwnApplet *awn_applet_factory_initp(
               applet);                   
                                        
 
-    gtk_widget_show_all( awn_applet );
     return AWN_APPLET( awn_applet );
 }
 

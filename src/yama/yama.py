@@ -19,6 +19,7 @@ import commands
 import os
 import re
 import subprocess
+from urllib import unquote
 
 import pygtk
 pygtk.require('2.0')
@@ -279,7 +280,8 @@ class YamaApplet:
                         if match is not None:
                             url_name.append("/%s on %s" % (match.group(2), match.group(1)))
                         else:
-                            url_name.append(filename_display_basename(url_name[0]))
+                            basename = filename_display_basename(url_name[0])
+                            url_name.append(unquote(str(basename)))
                     url, name = (url_name[0], url_name[1])
 
                     icon = "folder" if url.startswith("file://") else "folder-remote"

@@ -63,7 +63,7 @@ class MailApplet:
         self.showerror = self.awn.settings["show-network-errors"]
         
         self.__setIcon("login")
-        self.awn.title.set(_("Mail Applet (Click to Log In)"))
+        self.awn.tooltip.set(_("Mail Applet (Click to Log In)"))
         
         self.setup_context_menu()
         
@@ -139,7 +139,7 @@ class MailApplet:
             msg = strMailMessages(len(diffSubjects)) + "\n" + "\n".join(diffSubjects)
             self.awn.notify.send(_("New Mail - Mail Applet"), msg, self.__getIconPath("unread", full=True))
 
-        self.awn.title.set(strMessages(len(self.mail.subjects)))
+        self.awn.tooltip.set(strMessages(len(self.mail.subjects)))
         
         self.__setIcon(len(self.mail.subjects) > 0 and "unread" or "read")
         

@@ -161,10 +161,18 @@ awn_CPUicon_constructed (GObject *object)
   glibtop_cpu cpu;
   int i = 0;
   gint size;
-    
+  AwnApplet * applet;
+
+  AwnEffects * effects = awn_icon_get_effects (object);
 
   g_assert (G_OBJECT_CLASS ( awn_CPUicon_parent_class) );
   G_OBJECT_CLASS ( awn_CPUicon_parent_class)->constructed(object);
+  
+  g_object_get (object,
+                "applet",&applet,
+                NULL);
+  g_assert (applet);
+  g_assert (AWN_IS_APPLET (applet));
   
   priv = AWN_CPUICON_GET_PRIVATE (object); 
   sysmonicon_priv = AWN_SYSMONICON_GET_PRIVATE (object);  
@@ -174,7 +182,7 @@ awn_CPUicon_constructed (GObject *object)
    accurately when the timer fires.  Area graph can be informed that the 
    measurement contains a partial point and it will average things out.
    */
-  priv->dialog = awn_cpu_dialog_new(GTK_WIDGET(object));
+  priv->dialog = awn_dialog_new_for_widget_with_applet(GTK_WIDGET(object),applet);
   gtk_window_set_title (GTK_WINDOW (priv->dialog),"CPU");
   g_signal_connect(object, "button-press-event", 
                    G_CALLBACK(_awn_cpu_icon_clicked), 
@@ -224,26 +232,44 @@ awn_CPUicon_constructed (GObject *object)
                 "y-adj", 0.0,
                 "text", "0.0",
                NULL);
-  awn_overlaid_icon_append_overlay (AWN_OVERLAID_ICON(object),
-                                                         priv->text_overlay);
+  awn_effects_add_overlay (effects,priv->text_overlay);
 
-  AwnOverlayThemedIcon *icon_overlay = awn_overlay_themed_icon_new(AWN_THEMED_ICON(object),"stock_up",NULL);
-
-  /*demonstrate changing the gravity and scale. default for icon overlay is SE and 0.3*/
+  /*
+  AwnOverlayThemedIcon *icon_overlay = awn_overlay_themed_icon_new(AWN_THEMED_ICON(object),"stock_up","up");
   g_object_set (icon_overlay,
                 "gravity", GDK_GRAVITY_NORTH_EAST,
                 "scale",0.25,
                 NULL);
 
-  awn_overlaid_icon_append_overlay (AWN_OVERLAID_ICON(object),icon_overlay);
- /*
+  awn_effects_add_overlay (effects,icon_overlay);
+  */
+  
+  /*
+  GdkPixbuf *pixbuf = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(),
+                                  "stock_up",
+                                  30 ,
+                                  0, NULL);
+   
+  AwnOverlay * pbuf_overlay = AWN_OVERLAY (awn_overlay_pixbuf_new_with_pixbuf (pixbuf));  
+  g_object_set ( pbuf_overlay,
+                "gravity",GDK_GRAVITY_SOUTH_EAST,
+                "scale", 0.5,
+                "alpha", 1.0,
+                NULL);  
+  add_overlay (AWN_OVERLAID_ICON(object),pbuf_overlay);
+   */
+  
+/*
+  AwnOverlay * pbuf_overlay = AWN_OVERLAY (awn_overlay_pixbuf_file_new ("/usr/local/share/avant-window-navigator/applets/cairo_main_menu/icons/bbb.svg"));  
+  awn_effects_add_overlay (effects,pbuf_overlay);
+  
   AwnOverlay * throbber_overlay = AWN_OVERLAY (awn_overlay_throbber_new (object));
   g_object_set ( throbber_overlay,
                 "active",TRUE,
-                "timeout", 1000,
+                "gravity", GDK_GRAVITY_NORTH_WEST,
                 NULL);
-  awn_overlaid_icon_append_overlay (AWN_OVERLAID_ICON(object),throbber_overlay);
-*/
+  awn_effects_add_overlay (effects,throbber_overlay);
+  */
 }
 
 static void

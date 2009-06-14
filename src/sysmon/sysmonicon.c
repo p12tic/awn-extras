@@ -19,7 +19,7 @@
 #include "sysmonicon.h"
 #include "graph.h"
 
-G_DEFINE_TYPE (AwnSysmonicon, awn_sysmonicon, AWN_TYPE_OVERLAID_ICON)
+G_DEFINE_TYPE (AwnSysmonicon, awn_sysmonicon, AWN_TYPE_THEMED_ICON)
 
 #include "sysmoniconprivate.h"
 enum

@@ -244,7 +244,7 @@ awn_CPUicon_constructed (GObject *object)
   awn_effects_add_overlay (effects,icon_overlay);
   */
   
-  /*
+/*  
   GdkPixbuf *pixbuf = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(),
                                   "stock_up",
                                   30 ,
@@ -255,14 +255,16 @@ awn_CPUicon_constructed (GObject *object)
                 "gravity",GDK_GRAVITY_SOUTH_EAST,
                 "scale", 0.5,
                 "alpha", 1.0,
+                "apply-effects",FALSE,
                 NULL);  
-  add_overlay (AWN_OVERLAID_ICON(object),pbuf_overlay);
-   */
+  awn_effects_add_overlay (effects,pbuf_overlay);
+  */ 
   
 /*
   AwnOverlay * pbuf_overlay = AWN_OVERLAY (awn_overlay_pixbuf_file_new ("/usr/local/share/avant-window-navigator/applets/cairo_main_menu/icons/bbb.svg"));  
   awn_effects_add_overlay (effects,pbuf_overlay);
-  
+   */
+/*  
   AwnOverlay * throbber_overlay = AWN_OVERLAY (awn_overlay_throbber_new (object));
   g_object_set ( throbber_overlay,
                 "active",TRUE,
@@ -354,6 +356,10 @@ awn_CPUicon_get_load(AwnCPUicon *self)
   load = used / MAX(total, (float)priv->num_cpus * 1.0f);
 
   point.value = load * 100.0;
+  if (point.value>100.0)
+  {
+    point.value = 100.0;
+  }
   point.points = (new_time - priv->prev_time) * 1000.0 / priv->update_timeout; 
 
   priv->prev_time = new_time;

@@ -16,6 +16,7 @@
  
  /* awn-bargraph.c */
 
+#include "graphprivate.h"
 #include "bargraph.h"
 
 G_DEFINE_TYPE (AwnBarGraph, awn_bargraph, AWN_TYPE_GRAPH)
@@ -28,7 +29,7 @@ typedef struct _AwnBarGraphPrivate AwnBarGraphPrivate;
 struct _AwnBarGraphPrivate {
   gdouble max_val;
   gdouble min_val;
-
+  gdouble num_vals;
 };
 
 enum
@@ -108,21 +109,21 @@ awn_bargraph_class_init (AwnBarGraphClass *klass)
   AWN_GRAPH_CLASS(klass)->render_to_context = _awn_bargraph_render_to_context;
   AWN_GRAPH_CLASS(klass)->add_data = _awn_bargraph_add_data;
 
-  pspec = g_param_spec_double (   "min_val",
+  pspec = g_param_spec_double (   "min-val",
                                 "MinVal",
                                 "Minimum Value",
                                 -1000000.0,         /*was using G_MAXDOUBLE, G_MINDOUBLE... but it was not happy*/
                                 +1000000.0,
                                 0,
-                                G_PARAM_READWRITE);
+                                G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
   g_object_class_install_property (object_class, PROP_MIN_VAL, pspec);      
-  pspec = g_param_spec_double (   "max_val",
+  pspec = g_param_spec_double (   "max-val",
                                 "MaxVal",
                                 "Maximum Value",
                                 -1000000.0,
                                 +1000000.0,
-                                0,
-                                G_PARAM_READWRITE);
+                                100.0,
+                                G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
   
   g_object_class_install_property (object_class, PROP_MAX_VAL, pspec);    
   
@@ -133,28 +134,89 @@ awn_bargraph_class_init (AwnBarGraphClass *klass)
 static void _awn_bargraph_render_to_context(AwnGraph * graph,
                                         cairo_t *cr)
 {
+  AwnGraphPrivate * graph_priv;
+  AwnBarGraphPrivate * priv;  
+  gdouble bar_width;
+  int srfc_height;
+  int srfc_width;
+  gdouble x = 0;
+  int i;
+  gdouble * values;
 
-  cairo_set_source_rgba (cr,0.0,0.2,0.9,0.45);
-  cairo_set_operator (cr,CAIRO_OPERATOR_SOURCE);
+  priv = AWN_BARGRAPH_GET_PRIVATE (graph);  
+  graph_priv = AWN_GRAPH_GET_PRIVATE(graph);
+
+  cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
   cairo_paint (cr);
+  cairo_set_operator (cr, CAIRO_OPERATOR_OVER);  
+
+  srfc_height = cairo_xlib_surface_get_height (cairo_get_target(cr));
+  srfc_width = cairo_xlib_surface_get_width (cairo_get_target(cr));  
+  values = graph_priv->data;
+  cairo_save (cr);
+  cairo_scale (cr,srfc_width,srfc_height);
+  cairo_set_source_rgba (cr,0.0,0.2,0.9,0.95);
+  
+  bar_width = 1.0 / (gdouble) priv->num_vals;
+  for (i=0; i<priv->num_vals; i++)
+  {
+    gdouble bar_height =  1.0 * ( values[i] / (priv->max_val-priv->min_val));
+    g_debug ("bar height = %lf\n",bar_height);
+    cairo_rectangle (cr, x, 
+                         1.0 - bar_height ,
+                         bar_width,
+                         bar_height);
+    cairo_fill (cr);
+    x = x + bar_width;
+  }
+  cairo_restore (cr);
   
 }
 
 static void _awn_bargraph_add_data(AwnGraph * graph,
                                         GList * list)
 {
+  AwnGraphPrivate * graph_priv;
+  AwnBarGraphPrivate * priv;  
+  GList * iter;  
+  gdouble * values;
+  
+  priv = AWN_BARGRAPH_GET_PRIVATE (graph);  
+  graph_priv = AWN_GRAPH_GET_PRIVATE(graph);
+  
+  if (graph_priv->data)
+  {
+    g_free (graph_priv->data);
+  }
 
+  priv->num_vals = g_list_length (list);
+  values = g_new0( gdouble, priv->num_vals);
+  graph_priv->data = values;  
+  
+  for (iter = g_list_first (list); iter; iter = g_list_next (iter) )
+  {
+    AwnGraphSinglePoint *bar_graph_point = iter->data;    
+    *values = bar_graph_point->value;
+    values++;
+  }
+ 
 }
 
 static void
 awn_bargraph_init (AwnBarGraph *self)
 {
+  AwnGraphPrivate * graph_priv;
+  AwnBarGraphPrivate * priv;  
+  GList * iter;  
+  gint num_items;
 }
 
 AwnBarGraph*
 awn_bargraph_new (gdouble min_val, gdouble max_val)
 {
   AwnBarGraph * result = g_object_new (AWN_TYPE_BARGRAPH,
+                         "min-val", min_val,
+                         "max-val",max_val,
                        NULL);
   return result;
 }

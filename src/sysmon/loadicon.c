@@ -16,6 +16,8 @@
  
  /* awn-loadicon.c */
 
+#include <glibtop/loadavg.h>
+
 #include "loadicon.h"
 #include "sysmoniconprivate.h"
 #include "defines.h"
@@ -71,13 +73,23 @@ _awn_loadicon_update_icon(gpointer object)
   AwnLoadiconPrivate * priv;  
   AwnSysmoniconPrivate * sysmonicon_priv=NULL;  
   AwnLoadicon * icon = AWN_LOADICON(object);
+  glibtop_loadavg load;  
+  GList * list = NULL;
+  int i;
   
   priv = AWN_LOADICON_GET_PRIVATE (object);
   sysmonicon_priv = AWN_SYSMONICON_GET_PRIVATE (object);
 
-  //  awn_graph_add_data (awn_sysmonicon_get_graph(AWN_SYSMONICON(self)),&point);
- 
-//  awn_graph_add_data (sysmonicon_priv->graph,list);
+  glibtop_get_loadavg(&load);
+  
+  for (i =0; i<3;i++)
+  {
+    AwnGraphSinglePoint *point = g_new0 (AwnGraphSinglePoint,1);
+    point->value = load.loadavg[i];
+    point->points = 1.0;  /*ignored by bargraph*/
+    list = g_list_append (list,point);
+  }
+  awn_graph_add_data (sysmonicon_priv->graph,list);
   awn_sysmonicon_update_icon (icon);
   return TRUE;
   
@@ -113,8 +125,7 @@ awn_loadicon_constructed (GObject *object)
   {
     case GRAPH_DEFAULT:
     case GRAPH_BAR:    
-      g_debug ("creating new bar graph\n");
-      sysmonicon_priv->graph = AWN_GRAPH(awn_bargraph_new (0.0,100.0));      
+      sysmonicon_priv->graph = AWN_GRAPH(awn_bargraph_new (0.0,10.0));      
       break;
     case GRAPH_CIRCLE:
     case GRAPH_AREA:      
@@ -144,7 +155,7 @@ awn_loadicon_init (AwnLoadicon *self)
   AwnLoadiconPrivate *priv;
   	
   priv = AWN_LOADICON_GET_PRIVATE (self);
-  priv->update_timeout = 250;  /*FIXME*/
+  priv->update_timeout = 1000;  /*FIXME*/
   
 }
 

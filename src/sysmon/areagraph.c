@@ -130,7 +130,7 @@ awn_areagraph_class_init (Awn_AreagraphClass *klass)
                                 1,
                                 G_MAXUINT,
                                 48,
-                                G_PARAM_READWRITE);
+                                G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
   g_object_class_install_property (object_class, PROP_NUM_POINTS, pspec);      
   pspec = g_param_spec_double (   "min_val",
                                 "MinVal",
@@ -138,7 +138,7 @@ awn_areagraph_class_init (Awn_AreagraphClass *klass)
                                 -1000000.0,         /*was using G_MAXDOUBLE, G_MINDOUBLE... but it was not happy*/
                                 +1000000.0,
                                 0,
-                                G_PARAM_READWRITE);
+                                G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
   g_object_class_install_property (object_class, PROP_MIN_VAL, pspec);      
   pspec = g_param_spec_double (   "max_val",
                                 "MaxVal",
@@ -146,7 +146,7 @@ awn_areagraph_class_init (Awn_AreagraphClass *klass)
                                 -1000000.0,
                                 +1000000.0,
                                 0,
-                                G_PARAM_READWRITE);
+                                G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
   
   g_object_class_install_property (object_class, PROP_MAX_VAL, pspec);    
 

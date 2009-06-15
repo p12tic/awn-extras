@@ -26,10 +26,12 @@
 
 #include <glibtop/cpu.h>
 #include <libawn/libawn.h>
+#include <math.h>
 
 #include "cpuicon.h"
 #include "areagraph.h"
 #include "circlegraph.h"
+#include "bargraph.h"
 #include "cpu-dialog.h"
 
 #include "sysmoniconprivate.h"
@@ -63,6 +65,7 @@ struct _AwnCPUiconPrivate
     guint64 times[2][GLIBTOP_NCPU][N_CPU_STATES];
   
     gdouble   prev_time;
+    
 };
 
 static AwnGraphSinglePoint awn_CPUicon_get_load(AwnCPUicon *self);
@@ -107,30 +110,82 @@ _awn_CPUicon_update_icon(gpointer object)
   AwnCPUiconPrivate * priv;  
   AwnSysmoniconPrivate * sysmonicon_priv=NULL;  
   AwnCPUicon * icon = object;
-  AwnGraphSinglePoint *point = g_new0 (AwnGraphSinglePoint,1);
+  AwnGraphSinglePoint *point;
   GList * list = NULL;
   gchar *text;
-  
   priv = AWN_CPUICON_GET_PRIVATE (object);
   sysmonicon_priv = AWN_SYSMONICON_GET_PRIVATE (object);
 
-  //  awn_graph_add_data (awn_sysmonicon_get_graph(AWN_SYSMONICON(self)),&point);
-  *point = awn_CPUicon_get_load (object);
-  text = g_strdup_printf ("CPU: %2.0lf%%",point->value);
-  awn_tooltip_set_text (AWN_TOOLTIP(sysmonicon_priv->tooltip),text);
-  g_free (text);
-  text = g_strdup_printf("%.0lf%%",point->value);  
-  g_object_set (priv->text_overlay,
-                "text", text,
-               NULL);  
-  g_free (text);
-  
-  list = g_list_prepend (list,point);
- 
-  awn_graph_add_data (sysmonicon_priv->graph,list);
-  awn_sysmonicon_update_icon (icon);
-  g_free (point);
-  g_list_free (list);
+  /*FIXME change this to some type of graph_type thing */
+  if ( (AWN_IS_AREAGRAPH(sysmonicon_priv->graph)) ||
+        (AWN_IS_CIRCLEGRAPH(sysmonicon_priv->graph) ))
+  {   
+    point = g_new0 (AwnGraphSinglePoint,1);    
+    *point = awn_CPUicon_get_load (object);
+    text = g_strdup_printf ("CPU: %2.0lf%%",point->value);
+    awn_tooltip_set_text (AWN_TOOLTIP(sysmonicon_priv->tooltip),text);
+    g_free (text);
+    text = g_strdup_printf("%.0lf%%",point->value);  
+    g_object_set (priv->text_overlay,
+                  "text", text,
+                 NULL);  
+    g_free (text);
+    
+    list = g_list_prepend (list,point);
+   
+    awn_graph_add_data (sysmonicon_priv->graph,list);
+    awn_sysmonicon_update_icon (icon);
+    g_free (point);
+    g_list_free (list);
+  }
+  else if ( AWN_IS_BARGRAPH(sysmonicon_priv->graph))
+  {
+    
+#undef NOW
+#undef LAST
+#define LAST (priv->times[priv->now])
+#define NOW (priv->times[priv->now ^ 1])
+    
+    AwnGraphSinglePoint avg_point = awn_CPUicon_get_load (object);      
+    gint i;
+    GList * iter;    
+    glibtop_cpu cpu;
+    glibtop_get_cpu(&cpu);
+    
+    for (i = 0; i < priv->num_cpus; i++)
+    {
+      gint64 total;
+      gint64 total_used;
+      gdouble percent_used;
+      total = NOW[i][CPU_TOTAL] - LAST[i][CPU_TOTAL];
+      total_used = NOW[i][CPU_USED] - LAST[i][CPU_USED];
+      percent_used = total_used / (gdouble) total * 100.0;
+      point = g_new0 (AwnGraphSinglePoint,1);      
+      point->value = percent_used;
+      list = g_list_prepend (list,point); 
+    }
+    text = g_strdup_printf ("CPU: %2.0lf%%",
+                            avg_point.value
+                            );
+    awn_tooltip_set_text (AWN_TOOLTIP(sysmonicon_priv->tooltip),text);
+    g_free (text);
+    text = g_strdup_printf("%.0lf%%",avg_point.value); guint64 total_cpu;
+    g_object_set (priv->text_overlay,
+                  "text", text,
+                 NULL);  
+    g_free (text);
+    
+    awn_graph_add_data (sysmonicon_priv->graph,list);
+    awn_sysmonicon_update_icon (icon);
+    for (iter = list; iter; iter=g_list_next(iter))
+    {
+      g_free(iter->data);
+    }
+    g_list_free (list);    
+#undef NOW
+#undef LAST
+      
+  }
   return TRUE;
 }
 
@@ -219,6 +274,9 @@ awn_CPUicon_constructed (GObject *object)
     case GRAPH_CIRCLE:
       sysmonicon_priv->graph = AWN_GRAPH(awn_circlegraph_new (0.0,100.0));
       break;
+    case GRAPH_BAR:
+      sysmonicon_priv->graph = AWN_GRAPH(awn_bargraph_new (0.0,100.0));
+      break;      
     default:
       g_assert_not_reached();
   }
@@ -296,7 +354,7 @@ awn_CPUicon_init (AwnCPUicon *self)
   AwnCPUiconPrivate *priv;
   	
   priv = AWN_CPUICON_GET_PRIVATE (self);
-  priv->update_timeout = 1000;  /*FIXME*/
+  priv->update_timeout = 250;  /*FIXME*/
 }
 
 GtkWidget*

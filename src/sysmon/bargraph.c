@@ -161,7 +161,6 @@ static void _awn_bargraph_render_to_context(AwnGraph * graph,
   for (i=0; i<priv->num_vals; i++)
   {
     gdouble bar_height =  1.0 * ( values[i] / (priv->max_val-priv->min_val));
-    g_debug ("bar height = %lf\n",bar_height);
     cairo_rectangle (cr, x, 
                          1.0 - bar_height ,
                          bar_width,

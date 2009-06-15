@@ -79,7 +79,11 @@ awn_sysmon_constructed (GObject *object)
   gtk_container_add (GTK_CONTAINER (priv->box), icon);  
   gtk_widget_show (icon);
 
+  icon = awn_CPUicon_new (GRAPH_BAR,AWN_APPLET(sysmon));
+  gtk_container_add (GTK_CONTAINER (priv->box), icon);  
+  gtk_widget_show (icon);  
 
+  
   icon = awn_loadicon_new (GRAPH_BAR,AWN_APPLET(sysmon));
   gtk_container_add (GTK_CONTAINER (priv->box), icon); 
   gtk_widget_show (icon);

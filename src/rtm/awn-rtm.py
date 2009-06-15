@@ -33,6 +33,7 @@
 
 # import modules
 import sys, os
+import shutil
 import pygtk
 import gtk
 # import gtkmozembed
@@ -70,7 +71,7 @@ class App (awn.AppletSimple):
   def __init__ (self, uid, orient, height):
     awn.AppletSimple.__init__ (self, uid, orient, height)
     
-    #self.pref_path = os.path.join(os.path.expanduser('~'), ".config/awn/applets/rtm")
+
     self.icon = self.set_awn_icon('rtm', 'awn-rtm')
     self.title = awn.awn_title_get_default ()
     self.dialog = awn.AppletDialog (self)
@@ -78,7 +79,14 @@ class App (awn.AppletSimple):
 # set up gtkmozembed widget
 
     self.mo  = gtkmozembed;
-    #gtkmozembed.set_profile_path(self.pref_path, "profile")
+    self.pref_path = os.path.join(os.path.expanduser('~'), ".config/awn/applets/rtm")
+    self.prefs = self.pref_path + "/profile/prefs.js"
+    if os.path.exists(self.prefs) == True:
+        self.mo.set_profile_path(self.pref_path, "profile")
+    else:
+        self.mo.set_profile_path(self.pref_path, "profile")
+        shutil.copy(os.path.abspath(os.path.dirname(__file__)) + "/prefs.js", self.prefs)
+
     self.moz = self.mo.MozEmbed()
     pad = gtk.Alignment()
     pad.add(self.moz)

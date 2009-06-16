@@ -64,6 +64,7 @@ class App (awn.AppletSimple):
         self.controls = gtk.VBox()
         self.controls.set_spacing(5)
         self.label = gtk.Label()
+        self.label.set_padding(4, 0)
         self.label.set_markup(App.APPLET_NAME_MARKUP)
 
         self.what_app()

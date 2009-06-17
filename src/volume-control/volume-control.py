@@ -63,6 +63,8 @@ applet_logo = os.path.join(os.path.dirname(__file__), "volume-control.svg")
 volume_ranges = {"high": (100, 66), "medium": (65, 36), "low": (35, 1)}
 volume_step = 4
 
+mixer_names = ("pulsemixer", "oss4mixer", "alsamixer")
+
 
 class VolumeControlApplet:
 
@@ -383,7 +385,15 @@ class GStreamerBackend:
 
         self.freeze_messages = threading.Event()
 
-        mixer = gst.element_factory_make("alsamixer")
+        # Collect a set of possible mixers to use
+        found_mixers = set()
+        for f in gst.registry_get_default().get_feature_list(gst.ElementFactory):
+            if f.get_name().endswith("mixer") and f.get_klass() == "Generic/Audio":
+                found_mixers.add(f.get_name())
+
+        # Only keep certain names and sort it in order of mixer_names' order
+        mixer_name = [i for i in mixer_names if i in found_mixers][0]
+        mixer = gst.element_factory_make(mixer_name)
 
         if not isinstance(mixer, gst.interfaces.PropertyProbe):
             raise RuntimeError(mixer.get_factory().get_name() + " cannot probe properties")

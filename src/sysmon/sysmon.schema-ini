@@ -1,8 +1,7 @@
 
-[DEFAULT/honour_gtk]
+[DEFAULT/dummy]
 type = bool
 default = True
-description = Determines whether to use the current Gtk+ theme's color/font settings, or the applet-specific style settings.
-description[en_CA] = Determines whether to use the current Gtk+ theme's colour/font settings, or the applet-specific style settings.
+description = Just a dummy key.. this will be removed later.
 
 ; vim: set ft=dosini :

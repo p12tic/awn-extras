@@ -26,7 +26,8 @@ enum
 {
   PROP_0,
   PROP_APPLET,
-  PROP_GRAPHTYPE
+  PROP_GRAPH_TYPE,
+  PROP_ID
 };
 
 static void create_surfaces (AwnSysmonicon * sysmonicon);
@@ -44,9 +45,12 @@ awn_sysmonicon_get_property (GObject *object, guint property_id,
     case PROP_APPLET:
       g_value_set_object (value, priv->applet); 
       break;    
-    case PROP_GRAPHTYPE:
+    case PROP_GRAPH_TYPE:
       g_value_set_int (value, priv->graph_type); 
       break;    
+    case PROP_ID:
+      g_value_set_string (value, priv->id); 
+      break;          
     default:
     G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
   }
@@ -63,9 +67,16 @@ awn_sysmonicon_set_property (GObject *object, guint property_id,
     case PROP_APPLET:
       priv->applet = g_value_get_object (value);
       break;    
-    case PROP_GRAPHTYPE:
+    case PROP_GRAPH_TYPE:
       priv->graph_type = g_value_get_int (value);
       break;          
+    case PROP_ID:
+      if (priv->id)
+      {
+        g_free (priv->id);
+      }
+      priv->id = g_value_dup_string (value);
+      break;                
   default:
     G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
   }
@@ -88,9 +99,40 @@ void
 awn_sysmonicon_constructed (GObject *object)
 {
   AwnSysmoniconPrivate * priv;
+  AwnConfigClient * client;
+  AwnConfigBridge * bridge;
+  AwnApplet * applet;
+  GTimeVal cur_time;  
+  
   priv = AWN_SYSMONICON_GET_PRIVATE (object);
   
+  if (G_OBJECT_CLASS (awn_sysmonicon_parent_class)->constructed )
+  {
+    G_OBJECT_CLASS (awn_sysmonicon_parent_class)->constructed (object);
+  }
+  
   priv->tooltip = awn_tooltip_new_for_widget (GTK_WIDGET(object));
+  
+  g_object_get (object,
+                "applet", &applet,
+                NULL);
+  g_assert (applet);
+  g_object_get (applet,
+                "client", &client,
+                "bridge", &bridge,
+                NULL);              
+
+  awn_config_bridge_bind (bridge, client,
+                          priv->id, "graph_type",
+                          G_OBJECT(object), "graph-type");
+
+  g_get_current_time ( &cur_time);
+  awn_config_client_set_int (client,
+                             priv->id,
+                             "time_stamp",
+                             cur_time.tv_sec,
+                             NULL);
+  
   g_signal_connect(G_OBJECT(priv->applet), "size-changed", 
                    G_CALLBACK(_size_changed), object);
   
@@ -122,8 +164,15 @@ awn_sysmonicon_class_init (AwnSysmoniconClass *klass)
                                GRAPH_LAST,
                                GRAPH_DEFAULT,
                                G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
-  g_object_class_install_property (object_class, PROP_GRAPHTYPE, pspec);  
+  g_object_class_install_property (object_class, PROP_GRAPH_TYPE, pspec);  
   
+  pspec = g_param_spec_string ("id",
+                               "ID",
+                               "ID",
+                               "default",
+                               G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
+  g_object_class_install_property (object_class, PROP_ID, pspec);  
+
   g_type_class_add_private (object_class, sizeof (AwnSysmoniconPrivate));
   
 }
@@ -174,7 +223,6 @@ static gboolean _expose(GtkWidget *self,
     /*FIXME call (for the moment just setting it create_surfaces) ->set_bg ()
      */
     
-    /* === */
     cairo_set_operator (ctx,CAIRO_OPERATOR_SOURCE);
     cairo_set_source_surface (ctx, priv->bg_surface,0.0,0.0);
     cairo_paint (ctx);

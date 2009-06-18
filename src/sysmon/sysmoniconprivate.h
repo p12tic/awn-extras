@@ -37,6 +37,8 @@ struct _AwnSysmoniconPrivate
   cairo_t *bg_cr;
   cairo_t *fg_cr;
   AwnGraph * graph; 
+  
+  gchar * id;
   AwnGraphType graph_type; 
 
 };

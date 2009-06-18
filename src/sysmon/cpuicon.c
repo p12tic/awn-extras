@@ -221,7 +221,11 @@ awn_CPUicon_constructed (GObject *object)
   AwnEffects * effects = awn_icon_get_effects (object);
 
   g_assert (G_OBJECT_CLASS ( awn_CPUicon_parent_class) );
-  G_OBJECT_CLASS ( awn_CPUicon_parent_class)->constructed(object);
+  
+  if (G_OBJECT_CLASS ( awn_CPUicon_parent_class)->constructed)
+  {
+    G_OBJECT_CLASS ( awn_CPUicon_parent_class)->constructed(object);
+  }
   
   g_object_get (object,
                 "applet",&applet,
@@ -237,7 +241,7 @@ awn_CPUicon_constructed (GObject *object)
    accurately when the timer fires.  Area graph can be informed that the 
    measurement contains a partial point and it will average things out.
    */
-  priv->dialog = awn_dialog_new_for_widget_with_applet(GTK_WIDGET(object),applet);
+  priv->dialog = awn_cpu_dialog_new_with_applet(GTK_WIDGET(object),applet);
   gtk_window_set_title (GTK_WINDOW (priv->dialog),"CPU");
   g_signal_connect(object, "button-press-event", 
                    G_CALLBACK(_awn_cpu_icon_clicked), 
@@ -265,6 +269,8 @@ awn_CPUicon_constructed (GObject *object)
   priv->now = 0;
   
   size = awn_applet_get_size (sysmonicon_priv->applet);
+  
+  g_debug ("Graph type is %d",sysmonicon_priv->graph_type);
   switch (sysmonicon_priv->graph_type)
   {
     case GRAPH_DEFAULT:
@@ -330,6 +336,13 @@ awn_CPUicon_constructed (GObject *object)
                 NULL);
   awn_effects_add_overlay (effects,throbber_overlay);
   */
+  /*
+  AwnOverlay * progress_overlay = AWN_OVERLAY (awn_overlay_progress_circle_new ());
+  g_object_set (progress_overlay,
+                "percent-complete", 25.0,
+                NULL);
+  
+  awn_effects_add_overlay (effects,progress_overlay);  */
 }
 
 static void
@@ -358,12 +371,12 @@ awn_CPUicon_init (AwnCPUicon *self)
 }
 
 GtkWidget*
-awn_CPUicon_new (AwnGraphType graph_type,AwnApplet * applet)
+awn_CPUicon_new (AwnApplet * applet,gchar * id)
 {
   GtkWidget * cpuicon = NULL;
   cpuicon = g_object_new (AWN_TYPE_CPUICON,
-                          "graph_type",graph_type,                          
                           "applet",applet,
+                          "id",id,
                           NULL);
   return cpuicon;
 }

@@ -53,6 +53,8 @@ GType awn_cpu_dialog_get_type (void);
 
 AwnCPUDialog* awn_cpu_dialog_new (GtkWidget *widget);
 
+AwnCPUDialog* awn_cpu_dialog_new_with_applet (GtkWidget *widget, AwnApplet * applet);
+
 G_END_DECLS
 
 #endif /* _AWN_CPU_DIALOG */

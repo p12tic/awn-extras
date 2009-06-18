@@ -20,13 +20,21 @@
 
 G_DEFINE_TYPE (AwnCPUDialog, awn_cpu_dialog, AWN_TYPE_DIALOG)
 
-#define GET_PRIVATE(o) \
+#define AWN_CPU_DIALOG_GET_PRIVATE(o) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), AWN_TYPE_CPU_DIALOG, AwnCPUDialogPrivate))
 
 typedef struct _AwnCPUDialogPrivate AwnCPUDialogPrivate;
 
-struct _AwnCPUDialogPrivate {
-    int dummy;
+struct _AwnCPUDialogPrivate 
+{
+  GtkWidget * table;
+  
+  guint     num_entries;
+  
+  gboolean  show_root;
+  gboolean  show_other;
+  
+    
 };
 
 static void
@@ -77,12 +85,51 @@ awn_cpu_dialog_class_init (AwnCPUDialogClass *klass)
 static void
 awn_cpu_dialog_init (AwnCPUDialog *self)
 {
+  AwnCPUDialogPrivate * priv = AWN_CPU_DIALOG_GET_PRIVATE (self);
+  priv->num_entries = 20;
+  priv->table = gtk_table_new (9,priv->num_entries,FALSE);
+  /*
+   FIXME
+   */
+  
+  gtk_table_attach_defaults (GTK_TABLE(priv->table),
+                             gtk_label_new ("PID"),
+                                            0,
+                                            1,
+                                            0,
+                                            1);
+  gtk_table_attach_defaults (GTK_TABLE(priv->table),
+                             gtk_label_new ("Process Name"),
+                                            1,
+                                            2,
+                                            0,
+                                            1);
+  gtk_table_attach_defaults (GTK_TABLE(priv->table),
+                             gtk_label_new ("CPU"),
+                                            2,
+                                            3,
+                                            0,
+                                            1);
+  
+  gtk_container_add (GTK_CONTAINER(self),GTK_TABLE(priv->table));
+  gtk_widget_show_all (priv->table);
+
 }
 
 AwnCPUDialog*
 awn_cpu_dialog_new (GtkWidget *widget)
 {
   return g_object_new (AWN_TYPE_CPU_DIALOG, 
+                       "anchor", widget,
+                       NULL);
+}
+
+
+AwnCPUDialog*
+awn_cpu_dialog_new_with_applet (GtkWidget *widget, AwnApplet * applet)
+{
+  return g_object_new (AWN_TYPE_CPU_DIALOG, 
+                       "anchor-applet", applet,
                        "anchor", widget,
                        NULL);
 }

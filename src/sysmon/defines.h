@@ -18,6 +18,8 @@
 #ifndef _AWN_SYSMON_DEFINES
 #define _AWN_SYSMON_DEFINES
 
+#define APPLET_NAME "sysmon"
+
 typedef enum
 {
   GRAPH_POINT_SINGLE

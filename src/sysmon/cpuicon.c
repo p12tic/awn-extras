@@ -270,12 +270,8 @@ awn_CPUicon_constructed (GObject *object)
   priv->now = 0;
   
   size = awn_applet_get_size (sysmonicon_priv->applet);
-  
-  /*CONDITIONAL operator*/
-  graph_type = sysmonicon_priv->graph_type[CONF_STATE_INSTANCE]?
-               sysmonicon_priv->graph_type[CONF_STATE_INSTANCE]:
-               sysmonicon_priv->graph_type[CONF_STATE_BASE];
-  /*FIXME add in default fallback */
+  graph_type = get_conf_value_int(object,"graph-type");
+
   switch (graph_type)
   {
     default:

@@ -106,11 +106,11 @@ void
 awn_sysmonicon_constructed (GObject *object)
 {
   AwnSysmoniconPrivate * priv;
-  AwnConfigClient * client;
+/*  AwnConfigClient * client;
   AwnConfigBridge * bridge;
   AwnConfigClient * client_baseconf;
   AwnConfigBridge * bridge_baseconf;
-  
+  */
   AwnApplet * applet;
   GTimeVal cur_time;  
   
@@ -127,27 +127,11 @@ awn_sysmonicon_constructed (GObject *object)
                 "applet", &applet,
                 NULL);
   g_assert (applet);
-  g_object_get (applet,
-                "client", &client,
-                "bridge", &bridge,
-                "client-baseconf", &client_baseconf,
-                NULL);              
-
-  awn_config_bridge_bind (bridge, client,
-                          priv->id, "graph_type",
-                          G_OBJECT(object), "graph-type");
   
-  
-  awn_config_bridge_bind (bridge, client_baseconf,
-                          ICONS_BASECONF, "graph_type",
-                          G_OBJECT(object), "graph-type-base");
-  g_get_current_time ( &cur_time);
-  awn_config_client_set_int (client,
-                             priv->id,
-                             "time_stamp",
-                             cur_time.tv_sec,
-                             NULL);
-  
+  do_bridge ( applet,object,
+             priv->id,ICONS_BASECONF,
+             "graph_type","graph-type");
+    
   g_signal_connect(G_OBJECT(priv->applet), "size-changed", 
                    G_CALLBACK(_size_changed), object);
   

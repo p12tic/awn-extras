@@ -106,11 +106,6 @@ void
 awn_sysmonicon_constructed (GObject *object)
 {
   AwnSysmoniconPrivate * priv;
-/*  AwnConfigClient * client;
-  AwnConfigBridge * bridge;
-  AwnConfigClient * client_baseconf;
-  AwnConfigBridge * bridge_baseconf;
-  */
   AwnApplet * applet;
   GTimeVal cur_time;  
   

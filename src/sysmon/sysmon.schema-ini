@@ -4,6 +4,11 @@ type = bool
 default = True
 description = Just a dummy key.. this will be removed later.
 
+[DEFAULT/applet/dummy]
+type = bool
+default = True
+description = Just a dummy key.. this will be removed later.
+
 [DEFAULT/icons_baseconf/graph_type]
 type = int
 default = 0

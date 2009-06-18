@@ -42,6 +42,9 @@ struct _AwnSysmonPrivate
    */
   AwnConfigClient * client;
   AwnConfigBridge * bridge;
+  AwnConfigClient * client_baseconf;
+  AwnConfigBridge * bridge_baseconf;
+  
   
   GSList    * icon_list;
 };
@@ -51,7 +54,9 @@ enum
   PROP_0,
   PROP_ICON_LIST,
   PROP_CLIENT,
-  PROP_BRIDGE
+  PROP_BRIDGE,
+  PROP_CLIENT_BASECONF,
+  PROP_BRIDGE_BASECONF
 };
 
 static void
@@ -70,6 +75,12 @@ awn_sysmon_get_property (GObject *object, guint property_id,
     case PROP_CLIENT:
       g_value_set_pointer (value,priv->client);
       break;          
+    case PROP_BRIDGE_BASECONF:
+      g_value_set_pointer (value,priv->bridge_baseconf);
+      break;    
+    case PROP_CLIENT_BASECONF:
+      g_value_set_pointer (value,priv->client_baseconf);
+      break;                
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
   }
@@ -111,6 +122,14 @@ awn_sysmon_set_property (GObject *object, guint property_id,
       g_assert (!priv->bridge); /*this should not be set more than once!*/
       priv->bridge = g_value_get_pointer (value);
       break;      
+    case PROP_CLIENT_BASECONF:
+      g_assert (!priv->client_baseconf); /*this should not be set more than once!*/
+      priv->client_baseconf = g_value_get_pointer (value);
+      break;
+    case PROP_BRIDGE_BASECONF:
+      g_assert (!priv->bridge_baseconf); /*this should not be set more than once!*/
+      priv->bridge_baseconf = g_value_get_pointer (value);
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
   }
@@ -151,6 +170,10 @@ awn_sysmon_constructed (GObject *object)
   folder = g_strdup_printf("%s-%s",APPLET_NAME,uid);
   priv->client = awn_config_client_new_for_applet (APPLET_NAME,folder);
   priv->bridge = awn_config_bridge_get_default ();
+  
+  priv->client_baseconf = awn_config_client_new_for_applet (APPLET_NAME,NULL);
+//  priv->bridge_conf = awn_config_bridge_get_default ();
+  
   g_free (folder);
   awn_config_bridge_bind_list (priv->bridge, priv->client,
                           "applet", "icon_list",
@@ -162,7 +185,7 @@ awn_sysmon_constructed (GObject *object)
                              "time_stamp",
                              cur_time.tv_sec,
                              NULL);
-                             
+
   if (!priv->icon_list)
   {
     icon = awn_CPUicon_new (AWN_APPLET(sysmon),"default1");
@@ -235,6 +258,12 @@ awn_sysmon_class_init (AwnSysmonClass *klass)
                                "config client",
                                G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
   g_object_class_install_property (object_class, PROP_CLIENT, pspec);   
+
+  pspec = g_param_spec_pointer ("client-baseconf",
+                               "client baseconf",
+                               "config client baseconf",
+                               G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
+  g_object_class_install_property (object_class, PROP_CLIENT_BASECONF, pspec);   
   
   g_type_class_add_private (klass, sizeof (AwnSysmonPrivate));
 }

@@ -4,4 +4,9 @@ type = bool
 default = True
 description = Just a dummy key.. this will be removed later.
 
+[DEFAULT/icons_baseconf/graph_typea]
+type = int
+default = 0
+description = CPU graph type to use.  Note that some Icons do not support all graph types.  If this occurs an icon will revert to it's own default (value of 0).
+
 ; vim: set ft=dosini :

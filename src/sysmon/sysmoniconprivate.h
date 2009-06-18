@@ -39,7 +39,7 @@ struct _AwnSysmoniconPrivate
   AwnGraph * graph; 
   
   gchar * id;
-  AwnGraphType graph_type; 
+  AwnGraphType graph_type[NUM_CONF_STATES]; 
 
 };
 

@@ -27,6 +27,7 @@ enum
   PROP_0,
   PROP_APPLET,
   PROP_GRAPH_TYPE,
+  PROP_GRAPH_TYPE_DEFAULT,
   PROP_ID
 };
 
@@ -46,8 +47,11 @@ awn_sysmonicon_get_property (GObject *object, guint property_id,
       g_value_set_object (value, priv->applet); 
       break;    
     case PROP_GRAPH_TYPE:
-      g_value_set_int (value, priv->graph_type); 
+      g_value_set_int (value, priv->graph_type[CONF_STATE_INSTANCE]); 
       break;    
+    case PROP_GRAPH_TYPE_DEFAULT:
+      g_value_set_int (value, priv->graph_type[CONF_STATE_BASE]); 
+      break;          
     case PROP_ID:
       g_value_set_string (value, priv->id); 
       break;          
@@ -68,8 +72,11 @@ awn_sysmonicon_set_property (GObject *object, guint property_id,
       priv->applet = g_value_get_object (value);
       break;    
     case PROP_GRAPH_TYPE:
-      priv->graph_type = g_value_get_int (value);
+      priv->graph_type[CONF_STATE_INSTANCE] = g_value_get_int (value);
       break;          
+    case PROP_GRAPH_TYPE_DEFAULT:
+      priv->graph_type[CONF_STATE_BASE] = g_value_get_int (value);
+      break;                
     case PROP_ID:
       if (priv->id)
       {
@@ -101,6 +108,9 @@ awn_sysmonicon_constructed (GObject *object)
   AwnSysmoniconPrivate * priv;
   AwnConfigClient * client;
   AwnConfigBridge * bridge;
+  AwnConfigClient * client_baseconf;
+  AwnConfigBridge * bridge_baseconf;
+  
   AwnApplet * applet;
   GTimeVal cur_time;  
   
@@ -120,12 +130,17 @@ awn_sysmonicon_constructed (GObject *object)
   g_object_get (applet,
                 "client", &client,
                 "bridge", &bridge,
+                "client-baseconf", &client_baseconf,
                 NULL);              
 
   awn_config_bridge_bind (bridge, client,
                           priv->id, "graph_type",
                           G_OBJECT(object), "graph-type");
-
+  
+  
+  awn_config_bridge_bind (bridge, client_baseconf,
+                          ICONS_BASECONF, "graph_type",
+                          G_OBJECT(object), "graph-type-base");
   g_get_current_time ( &cur_time);
   awn_config_client_set_int (client,
                              priv->id,
@@ -157,7 +172,7 @@ awn_sysmonicon_class_init (AwnSysmoniconClass *klass)
                                G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
   g_object_class_install_property (object_class, PROP_APPLET, pspec);  
   
-  pspec = g_param_spec_int ("graph_type",
+  pspec = g_param_spec_int ("graph-type",
                                "Graph_type",
                                "Graph Type",
                                GRAPH_DEFAULT,
@@ -165,6 +180,16 @@ awn_sysmonicon_class_init (AwnSysmoniconClass *klass)
                                GRAPH_DEFAULT,
                                G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
   g_object_class_install_property (object_class, PROP_GRAPH_TYPE, pspec);  
+
+  pspec = g_param_spec_int ("graph-type-base",
+                               "Graph_type default",
+                               "Graph Type default",
+                               GRAPH_DEFAULT,
+                               GRAPH_LAST,
+                               GRAPH_DEFAULT,
+                               G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
+  g_object_class_install_property (object_class, PROP_GRAPH_TYPE_DEFAULT, pspec);  
+  
   
   pspec = g_param_spec_string ("id",
                                "ID",

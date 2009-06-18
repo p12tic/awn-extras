@@ -101,6 +101,7 @@ awn_loadicon_constructed (GObject *object)
   AwnLoadiconPrivate * priv;
   AwnSysmoniconPrivate * sysmonicon_priv=NULL;  
   gint size;
+  AwnGraphType graph_type;
 
   g_assert (G_OBJECT_CLASS ( awn_loadicon_parent_class) );
   G_OBJECT_CLASS ( awn_loadicon_parent_class)->constructed(object);
@@ -121,7 +122,11 @@ awn_loadicon_constructed (GObject *object)
   }
   size = awn_applet_get_size (sysmonicon_priv->applet);
 
-  switch (sysmonicon_priv->graph_type)
+  /*CONDITIONAL*/
+  graph_type = sysmonicon_priv->graph_type[CONF_STATE_INSTANCE];
+  /*FIXME add in default fallback */
+  
+  switch (graph_type)
   {
     case GRAPH_DEFAULT:
     case GRAPH_BAR:    

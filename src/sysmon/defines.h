@@ -19,6 +19,7 @@
 #define _AWN_SYSMON_DEFINES
 
 #define APPLET_NAME "sysmon"
+#define ICONS_BASECONF "icons_baseconf"
 
 typedef enum
 {
@@ -39,5 +40,12 @@ typedef struct
   gdouble value;
   gdouble points;
 }AwnGraphSinglePoint;  
+
+typedef enum
+{
+  CONF_STATE_INSTANCE,
+  CONF_STATE_BASE,
+  NUM_CONF_STATES
+}AwnConfStates;
 
 #endif

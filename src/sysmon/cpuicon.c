@@ -217,7 +217,8 @@ awn_CPUicon_constructed (GObject *object)
   int i = 0;
   gint size;
   AwnApplet * applet;
-
+  AwnGraphType graph_type;
+  
   AwnEffects * effects = awn_icon_get_effects (object);
 
   g_assert (G_OBJECT_CLASS ( awn_CPUicon_parent_class) );
@@ -270,9 +271,15 @@ awn_CPUicon_constructed (GObject *object)
   
   size = awn_applet_get_size (sysmonicon_priv->applet);
   
-  g_debug ("Graph type is %d",sysmonicon_priv->graph_type);
-  switch (sysmonicon_priv->graph_type)
+  /*CONDITIONAL operator*/
+  graph_type = sysmonicon_priv->graph_type[CONF_STATE_INSTANCE]?
+               sysmonicon_priv->graph_type[CONF_STATE_INSTANCE]:
+               sysmonicon_priv->graph_type[CONF_STATE_BASE];
+  /*FIXME add in default fallback */
+  switch (graph_type)
   {
+    default:
+      g_warning ("Invalid graph type");
     case GRAPH_DEFAULT:
     case GRAPH_AREA:
       sysmonicon_priv->graph = AWN_GRAPH(awn_areagraph_new (size,0.0,100.0));
@@ -283,8 +290,6 @@ awn_CPUicon_constructed (GObject *object)
     case GRAPH_BAR:
       sysmonicon_priv->graph = AWN_GRAPH(awn_bargraph_new (0.0,100.0));
       break;      
-    default:
-      g_assert_not_reached();
   }
 
   priv->text_overlay = AWN_OVERLAY(awn_overlay_text_new());

@@ -93,6 +93,14 @@ class YamaApplet:
 
         applet.connect("button-press-event", self.button_press_event_cb)
 
+        # Inhibit autohide while main menu is visible
+        def show_menu_cb(widget):
+            self.__autohide_cookie = applet.inhibit_autohide("showing main menu")
+        self.menu.connect("show", show_menu_cb)
+        def hide_menu_cb(widget):
+            applet.uninhibit_autohide(self.__autohide_cookie)
+        self.menu.connect("hide", hide_menu_cb)
+
     def append_session_actions(self, menu):
         session_bus = dbus.SessionBus()
 

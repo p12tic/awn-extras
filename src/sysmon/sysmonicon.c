@@ -224,7 +224,7 @@ static gboolean _expose(GtkWidget *self,
     g_return_if_fail (priv->bg_cr);
     g_return_if_fail (priv->fg_cr);
   
-    effects = awn_icon_get_effects (AWN_ICON(self));
+    effects = awn_overlayable_get_effects (AWN_ICON(self));
     g_return_val_if_fail (effects,FALSE);
     ctx = awn_effects_cairo_create(effects);
     g_return_val_if_fail (ctx,FALSE);

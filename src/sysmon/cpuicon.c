@@ -252,8 +252,6 @@ awn_CPUicon_constructed (GObject *object)
   gint size;
   AwnApplet * applet;
   
-  AwnEffects * effects = awn_icon_get_effects (object);
-
   g_assert (G_OBJECT_CLASS ( awn_CPUicon_parent_class) );
   
   if (G_OBJECT_CLASS ( awn_CPUicon_parent_class)->constructed)
@@ -313,7 +311,7 @@ awn_CPUicon_constructed (GObject *object)
                 "y-adj", 0.0,
                 "text", "0.0",
                NULL);
-  awn_effects_add_overlay (effects,priv->text_overlay);
+  awn_overlayable_add_overlay (object,priv->text_overlay);
 
   /*
   AwnOverlayThemedIcon *icon_overlay = awn_overlay_themed_icon_new(AWN_THEMED_ICON(object),"stock_up","up");

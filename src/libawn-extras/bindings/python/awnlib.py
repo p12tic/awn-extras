@@ -556,6 +556,12 @@ class Errors:
 
             awn.check_dependencies(scope, name)
 
+    def set_error_icon_and_click_to_restart(self):
+        self.__parent.icon.theme("dialog-error")
+        def crash_applet(widget=None, event=None):
+            gtk.main_quit()
+        self.__parent.connect("button-press-event", crash_applet)
+
     def general(self, error, callback=None, traceback=None):
         """Tell the user that an error has occured.
 
@@ -568,7 +574,7 @@ class Errors:
         @type traceback: C{str}
 
         """
-        assert isinstance(error, Exception) or type(error) is str
+        assert isinstance(error, Exception) or type(error) in (str, tuple)
 
         if traceback is not None:
             traceback = "".join(traceback)[:-1]
@@ -584,6 +590,9 @@ class Errors:
                 args["url"] = bug_report_link
         else:
             error_type = "Error"
+            if isinstance(error, tuple):
+                args["message"] = error[1]
+                error = error[0]
 
         dialog = self.ErrorDialog(self.__parent, error_type, error, **args)
 
@@ -1523,13 +1532,10 @@ def init_start(applet_class, meta={}, options=[]):
     try:
         applet_class(applet)
     except Exception, e:
-        applet.icon.theme("dialog-error")
+        applet.errors.set_error_icon_and_click_to_restart()
         import traceback
         traceback = traceback.format_exception(type(e), e, sys.exc_traceback)
-        def crash_applet(widget=None, event=None):
-            gtk.main_quit()
-        applet.connect("button-press-event", crash_applet)
-        applet.errors.general(e, traceback=traceback, callback=crash_applet)
+        applet.errors.general(e, traceback=traceback, callback=gtk.main_quit)
 
     applet.show_all()
     gtk.main()

@@ -46,7 +46,7 @@ class App(awn.AppletSimple):
                                                "media-playback-start")
         self.play_icon.props.scale = 0.4
         self.play_icon.props.active = False
-        self.get_icon().get_effects().add_overlay(self.play_icon)
+        self.add_overlay(self.play_icon)
 
         # Recent items menu
         self.recent_items_menu = gtk.Menu()
@@ -332,11 +332,11 @@ class App(awn.AppletSimple):
             self.hideApplet()
 
     def applet_drag_motion_cb(self, widget, context, x, y, time):
-        self.get_icon().get_effects().start(awn.EFFECT_LAUNCHING)
+        self.get_effects().start(awn.EFFECT_LAUNCHING)
         return True
 
     def applet_drag_leave_cb(self, widget, context, time):
-        self.get_icon().get_effects().stop(awn.EFFECT_LAUNCHING)
+        self.get_effects().stop(awn.EFFECT_LAUNCHING)
         return True
 
     def applet_drop_cb(self, wdgt, context, x, y, selection, targetType, time):

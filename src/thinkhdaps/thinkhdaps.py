@@ -125,22 +125,25 @@ class ThinkHDAPSApplet:
         if len(disks) > 0:
             self.__hdaps_device = disks[0]
 
-        self.icon_running = OverlayThemedIcon(applet.get_icon(), "thinkhdaps-running", "running")
+        icon = applet.get_icon()
+
+        self.icon_running = OverlayThemedIcon(icon, "thinkhdaps-running", "running")
         self.icon_running.props.scale = 0.6
 
-        self.icon_paused = OverlayThemedIcon(applet.get_icon(), "thinkhdaps-paused", "paused")
+        self.icon_paused = OverlayThemedIcon(icon, "thinkhdaps-paused", "paused")
         self.icon_paused.props.scale = 0.5
-        self.icon_paused.props.active = False
 
-        self.icon_error = OverlayThemedIcon(applet.get_icon(), "dialog-error", "error")
+        self.icon_error = OverlayThemedIcon(icon, "dialog-error", "error")
         self.icon_error.props.scale = 0.6
-        self.icon_error.props.active = False
 
         for overlay in (self.icon_running, self.icon_paused, self.icon_error):
             overlay.props.gravity = gtk.gdk.GRAVITY_NORTH_WEST
-            applet.get_icon().append_overlay(overlay)
+            overlay.props.active = False
+            applet.add_overlay(overlay)
 
         if self.__hdaps_device is not None:
+            self.icon_running.props.active = True
+
             self.__status_file = os.path.join(sysfs_dir, self.__hdaps_device, protect_file)
 
             applet.tooltip.set(self.__hdaps_device + " " + hdaps_short_description)

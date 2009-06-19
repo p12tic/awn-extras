@@ -67,3 +67,16 @@ do_bridge ( AwnApplet * applet,GObject *object,
   
   g_free (base_prop_name);
 }
+
+void
+connect_notify (GObject * object,gchar * prop_name,GCallback cb,gpointer data)
+{
+  gchar * sig_name;
+  
+  sig_name = g_strdup_printf( "notify::%s",prop_name);  
+  g_signal_connect (object, sig_name,cb,data);
+  g_free (sig_name);
+  sig_name = g_strdup_printf( "notify::%s-base",prop_name);  
+  g_signal_connect (object, sig_name,cb,data);
+  g_free(sig_name);
+}

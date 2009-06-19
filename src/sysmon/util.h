@@ -31,4 +31,8 @@ void do_bridge ( AwnApplet * applet,GObject *object,
            gchar * instance_group,gchar * base_group,
            gchar * key_name,gchar * prop_name );
 
+void connect_notify (GObject * object,gchar * prop_name,GCallback cb,gpointer data);
+
+
+
 #endif

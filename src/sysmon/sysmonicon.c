@@ -26,6 +26,7 @@ enum
 {
   PROP_0,
   PROP_APPLET,
+  PROP_GRAPH,
   PROP_GRAPH_TYPE,
   PROP_GRAPH_TYPE_DEFAULT,
   PROP_ID
@@ -46,6 +47,9 @@ awn_sysmonicon_get_property (GObject *object, guint property_id,
     case PROP_APPLET:
       g_value_set_object (value, priv->applet); 
       break;    
+    case PROP_GRAPH:
+      g_value_set_object (value, priv->graph); 
+      break;          
     case PROP_GRAPH_TYPE:
       g_value_set_int (value, priv->graph_type[CONF_STATE_INSTANCE]); 
       break;    
@@ -71,6 +75,13 @@ awn_sysmonicon_set_property (GObject *object, guint property_id,
     case PROP_APPLET:
       priv->applet = g_value_get_object (value);
       break;    
+    case PROP_GRAPH:
+      if (priv->graph)
+      {
+        g_object_unref (priv->graph);
+      }
+      priv->graph = g_value_get_object (value);
+      break;          
     case PROP_GRAPH_TYPE:
       priv->graph_type[CONF_STATE_INSTANCE] = g_value_get_int (value);
       break;          
@@ -150,6 +161,13 @@ awn_sysmonicon_class_init (AwnSysmoniconClass *klass)
                                AWN_TYPE_APPLET,
                                G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
   g_object_class_install_property (object_class, PROP_APPLET, pspec);  
+
+  pspec = g_param_spec_object ("graph",
+                               "Graph",
+                               "Graph",
+                               AWN_TYPE_GRAPH,
+                               G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
+  g_object_class_install_property (object_class, PROP_GRAPH, pspec);  
   
   pspec = g_param_spec_int ("graph-type",
                                "Graph_type",

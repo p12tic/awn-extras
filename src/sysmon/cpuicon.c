@@ -208,16 +208,49 @@ _awn_cpu_icon_clicked (GtkWidget *widget,
 }
 
 static void
+_graph_type_change(GObject *pspec, GParamSpec *gobject, AwnApplet *applet)
+{
+  AwnGraphType graph_type;  
+  static old_graph = -1; 
+  AwnGraph  *graph = NULL;
+  gint size = awn_applet_get_size (applet);
+  
+  graph_type = get_conf_value_int(G_OBJECT(pspec),"graph-type");
+  
+  if (old_graph != graph_type)
+  {      
+    switch (graph_type)
+    {
+      default:
+        g_warning ("Invalid graph type");
+      case GRAPH_DEFAULT:
+      case GRAPH_AREA:
+        graph = AWN_GRAPH(awn_areagraph_new (size,0.0,100.0));
+        break;
+      case GRAPH_CIRCLE:
+        graph = AWN_GRAPH(awn_circlegraph_new (0.0,100.0));
+        break;
+      case GRAPH_BAR:
+        graph = AWN_GRAPH(awn_bargraph_new (0.0,100.0));
+        break;      
+    }
+    g_object_set (G_OBJECT (pspec),
+                  "graph",graph,
+                  NULL);
+    old_graph = graph_type;
+  }  
+}
+
+static void
 awn_CPUicon_constructed (GObject *object)
 {
   /*FIXME*/
   AwnCPUiconPrivate * priv;
-  AwnSysmoniconPrivate * sysmonicon_priv=NULL;  
+
   glibtop_cpu cpu;
   int i = 0;
   gint size;
   AwnApplet * applet;
-  AwnGraphType graph_type;
   
   AwnEffects * effects = awn_icon_get_effects (object);
 
@@ -235,7 +268,6 @@ awn_CPUicon_constructed (GObject *object)
   g_assert (AWN_IS_APPLET (applet));
   
   priv = AWN_CPUICON_GET_PRIVATE (object); 
-  sysmonicon_priv = AWN_SYSMONICON_GET_PRIVATE (object);  
   /*
    this will choose add_seconds in a relatively conservative manner.  Note that
    the timer is assumed to be incorrect and time elapsed is actually measured 
@@ -269,25 +301,9 @@ awn_CPUicon_constructed (GObject *object)
   }
   priv->now = 0;
   
-  size = awn_applet_get_size (sysmonicon_priv->applet);
-  graph_type = get_conf_value_int(object,"graph-type");
-
-  switch (graph_type)
-  {
-    default:
-      g_warning ("Invalid graph type");
-    case GRAPH_DEFAULT:
-    case GRAPH_AREA:
-      sysmonicon_priv->graph = AWN_GRAPH(awn_areagraph_new (size,0.0,100.0));
-      break;
-    case GRAPH_CIRCLE:
-      sysmonicon_priv->graph = AWN_GRAPH(awn_circlegraph_new (0.0,100.0));
-      break;
-    case GRAPH_BAR:
-      sysmonicon_priv->graph = AWN_GRAPH(awn_bargraph_new (0.0,100.0));
-      break;      
-  }
-
+  connect_notify (object, "graph-type",
+                    G_CALLBACK (_graph_type_change),applet);
+    
   priv->text_overlay = AWN_OVERLAY(awn_overlay_text_new());
 
   g_object_set (priv->text_overlay,

@@ -501,9 +501,9 @@ void render_directory(Menu_list_item *directory, int max_width)
 
 }
 
-void render_drive(Menu_list_item *entry, int max_width)
+void render_volume(Menu_list_item *entry, int max_width)
 {
-  //printf("render_drive\n");
+  //printf("render_volume\n");
   GtkIconTheme*  g;
   GdkPixbuf *pbuf = NULL;
   GdkPixbuf *pbuf_over = NULL;
@@ -568,7 +568,7 @@ void render_drive(Menu_list_item *entry, int max_width)
     pbuf = gtk_icon_theme_load_icon(g, "application-x-executable", G_cairo_menu_conf.text_size, 0, NULL);
   }
 
-  if (entry->drive_mount)
+  if (entry->volume_mount)
     pbuf_over = gtk_icon_theme_load_icon(g, "important", G_cairo_menu_conf.text_size, 0, NULL);
 
   entry->widget = gtk_event_box_new();
@@ -1028,9 +1028,9 @@ int activate_run(GtkWidget *w, Menu_list_item * menu_item)
   return FALSE;
 }
 
-static gboolean _button_do_drive_event(GtkWidget *widget, GdkEventButton *event, Menu_list_item * menu_item)
+static gboolean _button_do_volume_event(GtkWidget *widget, GdkEventButton *event, Menu_list_item * menu_item)
 {
-  //printf("_button_do_drive_event\n");
+  //printf("_button_do_volume_event\n");
   GError *err = NULL;
   gchar * cmd;
 
@@ -1038,11 +1038,11 @@ static gboolean _button_do_drive_event(GtkWidget *widget, GdkEventButton *event,
   {
     hide_all_menus();
 
-    if (menu_item->drive_prep)
+    if (menu_item->volume_prep)
     {
-      if (!menu_item->drive_prep(menu_item, G_cairo_menu_conf.filemanager))
+      if (!menu_item->volume_prep(menu_item, G_cairo_menu_conf.filemanager))
       {
-        //drive_prep failed. or it has taken care of opening file (if mount async op)
+        //volume_prep failed. or it has taken care of opening file (if mount async op)
         return TRUE;
       }
     }
@@ -1067,7 +1067,7 @@ static gboolean _button_do_drive_event(GtkWidget *widget, GdkEventButton *event,
 
     menu = gtk_menu_new();
 
-    if (!menu_item->drive_prep)
+    if (!menu_item->volume_prep)
     {
       item = gtk_menu_item_new_with_label("Unmount");
       gtk_widget_show(item);
@@ -1308,9 +1308,9 @@ void render_menu_widgets(Menu_list_item * menu_item, GtkWidget * box)
 
     break;
 
-    case MENU_ITEM_DRIVE:
+    case MENU_ITEM_VOLUME:
     {
-      render_drive(menu_item, max_width);
+      render_volume(menu_item, max_width);
 #if GTK_CHECK_VERSION(2,12,0)
 
       if (G_cairo_menu_conf.show_tooltips && menu_item->comment)
@@ -1339,11 +1339,11 @@ void render_menu_widgets(Menu_list_item * menu_item, GtkWidget * box)
       if (G_cairo_menu_conf.on_button_release)
       {
         g_signal_connect(G_OBJECT(menu_item->widget), "button-press-event", G_CALLBACK(_button_clicked_ignore), data);
-        g_signal_connect(G_OBJECT(menu_item->widget), "button-release-event", G_CALLBACK(_button_do_drive_event), menu_item);
+        g_signal_connect(G_OBJECT(menu_item->widget), "button-release-event", G_CALLBACK(_button_do_volume_event), menu_item);
       }
       else
       {
-        g_signal_connect(G_OBJECT(menu_item->widget), "button-press-event", G_CALLBACK(_button_do_drive_event), menu_item);
+        g_signal_connect(G_OBJECT(menu_item->widget), "button-press-event", G_CALLBACK(_button_do_volume_event), menu_item);
       }
 
 #endif

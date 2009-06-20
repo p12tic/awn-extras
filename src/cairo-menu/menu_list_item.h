@@ -37,7 +37,7 @@ enum
   MENU_ITEM_SEARCH,
   MENU_ITEM_RUN,
   MENU_ITEM_BLANK,
-  MENU_ITEM_DRIVE
+  MENU_ITEM_VOLUME
 };
 
 typedef struct
@@ -58,7 +58,7 @@ typedef struct
   GtkWidget *normal;
   GtkWidget *hover;
   GtkWidget *click;
-  gpointer  *drive;
+  gpointer  *volume;
   union
   {
     GSList   *sublist;
@@ -70,8 +70,8 @@ typedef struct
     GtkWidget *search_entry;
     GtkWidget *run_entry;
     void (*monitor)(gpointer callback, gpointer data, gpointer box);
-    gboolean(*drive_prep)(gpointer menu_item, gchar * filemanager);
-    gboolean(*drive_mount)(gpointer menu_item, gchar * filemanager);
+    gboolean(*volume_prep)(gpointer menu_item, gchar * filemanager);
+    gboolean(*volume_mount)(gpointer menu_item, gchar * filemanager);
     gpointer null;
 
   } ;

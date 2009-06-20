@@ -20,8 +20,8 @@
 
 #define GMENU_I_KNOW_THIS_IS_UNSTABLE
 
-#include <libgnomevfs/gnome-vfs.h>
-#include <libgnomevfs/gnome-vfs-utils.h>
+#include <libdesktop-agnostic/desktop-agnostic.h>
+
 #include <gnome-menus/gmenu-tree.h>
 
 #include <libawn/awn-applet.h>
@@ -338,13 +338,24 @@ fill_er_up(GMenuTreeDirectory *directory, GSList**p)
 
 
 
-void _mount_result(gboolean succeeded, char *error, char *detailed_error, char* comment)
+void _mount_result(DesktopAgnosticVFSVolumeBackend *volume, char *comment)
 {
+  gboolean succeeded;
+  GError *err = NULL;
   gchar * mess;
 
-  if (!succeeded)
+  succeeded = desktop_agnostic_vfs_volume_backend_mount_finish (volume, &err);
+
+  if (err)
   {
-    mess = g_strdup_printf("Mount Failed\n%s\nError:  %s\n", comment, detailed_error);
+    mess = g_strdup_printf("Mount Failed\n%s\nError: %s\n", comment, err->message);
+    display_message("Cairo Menu", mess, 0);
+    g_error_free(err);
+    g_free(mess);
+  }
+  else if (!succeeded)
+  {
+    mess = g_strdup_printf("Mount Failed\n%s\n", comment);
     display_message("Cairo Menu", mess, 0);
     g_free(mess);
   }
@@ -361,18 +372,29 @@ gboolean _mount_connected(Menu_list_item * p, char * filemanager)
 
   mess = g_strdup_printf("%s is not mounted. \nAttempting to mount", p->name);
   display_message("Cairo Menu", mess, 4000);
-  gnome_vfs_drive_mount(p->drive, _mount_result, g_strdup(p->comment));
+  desktop_agnostic_vfs_volume_backend_mount(p->volume, _mount_result, g_strdup(p->comment));
   g_free(mess);
   return FALSE;
 }
 
-void _unmount_result(gboolean succeeded, char *error, char *detailed_error, char* comment)
+void _unmount_result(DesktopAgnosticVFSVolumeBackend *volume, char* comment)
 {
+  gboolean succeeded;
+  GError *err = NULL;
   gchar * mess;
 
-  if (!succeeded)
+  succeeded = desktop_agnostic_vfs_volume_backend_unmount_finish (volume, &err);
+
+  if (err)
   {
-    mess = g_strdup_printf("Unmount Failed\n%s\nError:  %s\n", comment, detailed_error);
+    mess = g_strdup_printf("Unmount Failed\n%s\nError: %s\n", comment, err->message);
+    display_message("Cairo Menu", mess, 0);
+    g_error_free(err);
+    g_free(mess);
+  }
+  else if (!succeeded)
+  {
+    mess = g_strdup_printf("Unmount Failed\n%s\n", comment);
     display_message("Cairo Menu", mess, 0);
     g_free(mess);
   }
@@ -380,13 +402,24 @@ void _unmount_result(gboolean succeeded, char *error, char *detailed_error, char
   g_free(comment);
 }
 
-void _eject_result(gboolean succeeded, char *error, char *detailed_error, char* comment)
+void _eject_result(DesktopAgnosticVFSVolumeBackend *volume, char* comment)
 {
+  gboolean succeeded;
+  GError *err = NULL;
   gchar * mess;
 
-  if (!succeeded)
+  succeeded = desktop_agnostic_vfs_volume_backend_eject_finish (volume, &err);
+
+  if (err)
   {
-    mess = g_strdup_printf("Eject Failed\n%s\nError:  %s\n", comment, detailed_error);
+    mess = g_strdup_printf("Eject Failed\n%s\nError: %s\n", comment, err->message);
+    display_message("Cairo Menu", mess, 0);
+    g_error_free(err);
+    g_free(mess);
+  }
+  else if (!succeeded)
+  {
+    mess = g_strdup_printf("Eject Failed\n%s\n", comment);
     display_message("Cairo Menu", mess, 0);
     g_free(mess);
   }
@@ -403,35 +436,27 @@ gboolean _do_update_places_wrapper(Monitor_places * p)
 
 void backend_unmount(Menu_list_item * menu_item)
 {
-  gnome_vfs_drive_unmount(menu_item->drive, _unmount_result, g_strdup(menu_item->comment));
+  desktop_agnostic_vfs_volume_backend_unmount(menu_item->volume, _unmount_result, g_strdup(menu_item->comment));
 }
 
 void backend_eject(Menu_list_item * menu_item)
 {
-  gnome_vfs_drive_eject(menu_item->drive, _eject_result, g_strdup(menu_item->comment));
+  desktop_agnostic_vfs_volume_backend_eject(menu_item->volume, _eject_result, g_strdup(menu_item->comment));
 }
 
-void _vfs_changed_v_u(GnomeVFSDrive  *drive, GnomeVFSVolume *volume, gpointer null)
+void _vfs_changed_v_u(DesktopAgnosticVFSVolumeMonitor *monitor,
+                      DesktopAgnosticVFSVolumeBackend *volume)
 {
   g_timeout_add(500, _do_update_places_wrapper, Monitor_place);
 }
 
-void _vfs_changed_v_m(GnomeVFSDrive  *drive, GnomeVFSVolume *volume, gpointer null)
+void _vfs_changed_v_m(DesktopAgnosticVFSVolumeMonitor *monitor,
+                      DesktopAgnosticVFSVolumeBackend *volume)
 {
   g_timeout_add(500, _do_update_places_wrapper, Monitor_place);
 }
 
-void _vfs_changed_d_d(GnomeVFSDrive  *drive, GnomeVFSVolume *volume, gpointer null)
-{
-  _do_update_places(Monitor_place);
-}
-
-void _vfs_changed_d_c(GnomeVFSDrive  *drive, GnomeVFSVolume *volume, gpointer null)
-{
-  _do_update_places(Monitor_place);
-}
-
-void _fillin_connected(GnomeVFSDrive * drive, GSList ** p)
+void _fillin_connected(DesktopAgnosticVFSVolumeBackend *volume, GSList ** p)
 {
 
   Menu_list_item * item;
@@ -440,32 +465,26 @@ void _fillin_connected(GnomeVFSDrive * drive, GSList ** p)
 
   item = g_malloc(sizeof(Menu_list_item));
 
-  item->item_type = MENU_ITEM_DRIVE;
-  item->name = g_strdup(gnome_vfs_drive_get_display_name(drive));
-  item->icon = g_strdup(gnome_vfs_drive_get_icon(drive));
-  item->drive = drive;
-  /* FIXME gnome_vfs_drive_get_mounted_volume is deprecated.*/
+  item->item_type = MENU_ITEM_VOLUME;
+  item->name = g_strdup(desktop_agnostic_vfs_volume_backend_get_name(volume));
+  item->icon = g_strdup(desktop_agnostic_vfs_volume_backend_get_icon(volume));
+  item->volume = volume;
 
-
-
-  if (gnome_vfs_drive_get_mounted_volume(drive))
+  if (desktop_agnostic_vfs_volume_backend_is_mounted(volume))
   {
-
-    GnomeVFSVolume* volume;
-    volume = gnome_vfs_drive_get_mounted_volume(drive);
-    item->mount_point = gnome_vfs_volume_get_activation_uri(volume);
-    item->drive_prep = NULL;
-    gnome_vfs_volume_unref(volume) ;
+    DesktopAgnosticVFSFileBackend *uri;
+    
+    uri = desktop_agnostic_vfs_volume_backend_get_uri(volume);
+    item->mount_point = desktop_agnostic_vfs_file_backend_get_uri(uri);
+    item->volume_prep = NULL;
   }
   else
   {
     item->mount_point = g_strdup("Unmounted");
-    item->drive_prep = _mount_connected;
+    item->volume_prep = _mount_connected;
   }
 
-  dev_path = gnome_vfs_drive_get_device_path(drive);
-
-  item->comment = g_strdup_printf("%s\n%s\n%s", item->name, item->mount_point, dev_path) ;
+  item->comment = g_strdup_printf("%s\n%s", item->name, item->mount_point);
   item->desktop = g_strdup("");
   sublist = g_slist_append(sublist, item);
   g_free(dev_path);
@@ -510,7 +529,7 @@ static Menu_list_item *get_blank(void)
 
 static void update_places(Menu_list_item **p, char* file_manager)
 {
-  static GnomeVFSVolumeMonitor* vfsvolumes = NULL;
+  static DesktopAgnosticVFSVolumeMonitor* vfsvolumes = NULL;
   Menu_list_item * sublist = *p;
   Menu_list_item * item;
 
@@ -554,14 +573,30 @@ static void update_places(Menu_list_item **p, char* file_manager)
 //mount monitor
   if (!vfsvolumes)
   {
-    vfsvolumes = gnome_vfs_get_volume_monitor();
+    DesktopAgnosticVFSImplementation* vfs = NULL;
+    GError *err = NULL;
+
+    vfs = desktop_agnostic_vfs_get_default (&err);
+
+    if (err)
+    {
+      g_critical ("Could not retrieve VFS implementation: %s", err->message);
+      g_error_free (err);
+      return;
+    }
+
+    if (!vfs)
+    {
+      g_warning ("Could not retrieve VFS implementation.");
+      return;
+    }
+
+    vfsvolumes = desktop_agnostic_vfs_implementation_volume_monitor_get_default(vfs);
     g_signal_connect(G_OBJECT(vfsvolumes), "volume-mounted", G_CALLBACK(_vfs_changed_v_m), NULL);
     g_signal_connect(G_OBJECT(vfsvolumes), "volume-unmounted", G_CALLBACK(_vfs_changed_v_u), NULL);
-    g_signal_connect(G_OBJECT(vfsvolumes), "drive-disconnected" , G_CALLBACK(_vfs_changed_d_d), NULL);
-    g_signal_connect(G_OBJECT(vfsvolumes), "drive-connected", G_CALLBACK(_vfs_changed_d_c), NULL);
   }
 
-  GList *connected = gnome_vfs_volume_monitor_get_connected_drives(vfsvolumes);
+  GList *connected = desktop_agnostic_vfs_volume_monitor_get_volumes(vfsvolumes);
 
   if (connected)
     g_list_foreach(connected, _fillin_connected, &sublist);
@@ -642,10 +677,6 @@ static void update_places(Menu_list_item **p, char* file_manager)
 
 void free_menu_list_item(Menu_list_item * item, gpointer null)
 {
-  /* if (item->item_type==MENU_ITEM_DRIVE)
-   {
-    gnome_vfs_drive_unref(item->drive);
-   }*/
   if (item->name)
     g_free(item->name);
 
@@ -700,11 +731,11 @@ static void _do_update_places(Monitor_places * user_data)
 }
 
 
-static void monitor_places_callback(GnomeVFSMonitorHandle *handle,
-                                    const gchar *monitor_uri,
-                                    const gchar *info_uri,
-                                    GnomeVFSMonitorEventType event_type,
-                                    Monitor_places * user_data)
+static void monitor_places_callback(DesktopAgnosticVFSFileMonitor      *monitor,
+                                    DesktopAgnosticVFSFileBackend      *file,
+                                    DesktopAgnosticVFSFileBackend      *other,
+                                    DesktopAgnosticVFSFileMonitorEvent  event,
+                                    Monitor_places                     *user_data)
 {
 // gtk_widget_destroy(user_data->box);
   _do_update_places(user_data);
@@ -714,7 +745,9 @@ static void monitor_places_callback(GnomeVFSMonitorHandle *handle,
 
 static void monitor_places(gpointer callback, gpointer data, gpointer box)
 {
-  GnomeVFSMonitorHandle * handle;
+  DesktopAgnosticVFSFileBackend *file = NULL;
+  DesktopAgnosticVFSFileMonitor *monitor = NULL;
+  GError *err = NULL;
 
   Monitor_place = g_malloc(sizeof(Monitor_places));
   Monitor_place->data = data;
@@ -727,13 +760,32 @@ static void monitor_places(gpointer callback, gpointer data, gpointer box)
 
   char *  filename = g_strdup_printf("%s/.gtk-bookmarks", homedir);
 
-  if (gnome_vfs_monitor_add(&handle, filename, GNOME_VFS_MONITOR_FILE,
-                            monitor_places_callback, Monitor_place) != GNOME_VFS_OK)
+  file = desktop_agnostic_vfs_file_new_for_path (filename, &err);
+
+  if (err)
   {
-    printf("attempt to monitor '%s' failed \n", filename);
+    g_critical ("Could not retrieve the VFS implementation: %s", err->message);
+    g_error_free (err);
+    return;
+  }
+
+  if (!file)
+  {
+    g_warning ("Could not create a new file object.");
+    return;
+  }
+
+  monitor = desktop_agnostic_vfs_file_backend_monitor (file);
+
+  if (!monitor)
+  {
+    g_warning ("Could not create a file monitor.");
+    return;
   }
 
   g_free(filename);
+
+  g_signal_connect (monitor, "changed", monitor_places_callback, Monitor_place);
 }
 
 GSList* get_menu_data(gboolean show_search, gboolean show_run, gboolean show_places, gboolean show_logout, char* file_manager, char*logout)
@@ -746,9 +798,6 @@ GSList* get_menu_data(gboolean show_search, gboolean show_run, gboolean show_pla
   const char * menu_file[] = {"gnomecc.menu", "preferences.menu", "settings.menu", NULL};//
   GMenuTreeDirectory *root;
   int i;
-
-  if (!gnome_vfs_initialized())
-    gnome_vfs_init();
 
   G_file_manager = file_manager;
 

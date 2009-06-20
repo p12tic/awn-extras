@@ -305,22 +305,8 @@ static void monitor_places_callback(DesktopAgnosticVFSFileMonitor *monitor,
 static void monitor_places(Places *places)
 {
   GError *error = NULL;
-  DesktopAgnosticVFSImplementation *vfs;
   DesktopAgnosticVFSFileBackend *file;
   DesktopAgnosticVFSFileMonitor *monitor;
-
-  vfs = desktop_agnostic_vfs_get_default (&error);
-  if (error)
-  {
-    g_critical("Could not get the VFS implementation: %s", error->message);
-    g_error_free(error);
-    return;
-  }
-  else if (!vfs)
-  {
-    g_critical("Could not get the VFS implementation.");
-    return;
-  }
 
   const gchar *home_dir = g_getenv("HOME");
 
@@ -331,10 +317,22 @@ static void monitor_places(Places *places)
 
   gchar *filename = g_build_filename(home_dir, ".gtk-bookmarks", NULL);
 
-  file = g_object_new(desktop_agnostic_vfs_implementation_get_file_type(vfs),
-                      "path", filename, NULL);
+  file = desktop_agnostic_vfs_file_new_for_path(filename, &error);
 
   g_free(filename);
+
+  if (error)
+  {
+    g_critical("Could not create the gtk-bookmarks file object: %s", error->message);
+    g_error_free(error);
+    return;
+  }
+  else if (!file)
+  {
+    g_critical("Could not create the gtk-bookmarks file object.");
+    return;
+  }
+
 
   monitor = desktop_agnostic_vfs_file_backend_monitor(file);
   g_signal_connect(monitor, "changed", G_CALLBACK(monitor_places_callback), places);

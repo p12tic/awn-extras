@@ -25,6 +25,7 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 
+from awn import ORIENTATION_TOP, ORIENTATION_BOTTOM, ORIENTATION_LEFT, ORIENTATION_RIGHT
 from awn.extras import awnlib
 
 try:
@@ -145,14 +146,14 @@ class YamaApplet:
 
                 padding = 6
                 orientation = int(self.applet.get_orientation())
-                if orientation == 2:
-                    icon_y = self.menu.get_screen().get_height() - self.applet.get_size() - self.applet.props.offset - menu_size[1] - padding  # bottom
-                elif orientation == 0:
-                    icon_y = self.applet.get_size() + self.applet.props.offset + padding  # top
-                elif orientation == 1:
-                    icon_x = self.menu.get_screen().get_width() - self.applet.get_size() - self.applet.props.offset - menu_size[0] - padding  # right
-                else:
-                    icon_x = self.applet.get_size() + self.applet.props.offset + padding  # left
+                if orientation == ORIENTATION_BOTTOM:
+                    icon_y = self.menu.get_screen().get_height() - self.applet.get_size() - self.applet.props.offset - menu_size[1] - padding
+                elif orientation == ORIENTATION_TOP:
+                    icon_y = self.applet.get_size() + self.applet.props.offset + padding
+                elif orientation == ORIENTATION_RIGHT:
+                    icon_x = self.menu.get_screen().get_width() - self.applet.get_size() - self.applet.props.offset - menu_size[0] - padding
+                elif orientation == ORIENTATION_LEFT:
+                    icon_x = self.applet.get_size() + self.applet.props.offset + padding
 
                 return (icon_x, icon_y, False)
             self.menu.popup(None, None, get_position, event.button, event.time)

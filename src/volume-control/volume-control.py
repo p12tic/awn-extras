@@ -29,6 +29,7 @@ import gtk
 from gtk import gdk
 from gtk import glade
 
+from awn import ORIENTATION_LEFT, ORIENTATION_RIGHT
 from awn.extras import awnlib
 
 import pygst
@@ -344,7 +345,7 @@ class VolumeControlApplet:
         keys.extend(["muted"])
         for i in keys:
             self.theme_icons[i] = self.applet.icon.file(path % i, set=False, size=awnlib.Icon.APPLET_SIZE)
-        if self.theme == "Minimal" and self.applet.get_orientation() in (1, 3):
+        if self.theme == "Minimal" and self.applet.get_orientation() in (ORIENTATION_LEFT, ORIENTATION_RIGHT):
             for i in keys:
                 self.theme_icons[i] = self.theme_icons[i].rotate_simple(gtk.gdk.PIXBUF_ROTATE_CLOCKWISE)
 

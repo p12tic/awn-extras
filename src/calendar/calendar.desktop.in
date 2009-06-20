@@ -1,5 +1,6 @@
 [Desktop Entry]
 Type=Application
+X-AWN-Type=Applet
 X-AWN-AppletType=Python
 Name=Clock/Calendar Applet
 Comment=Watch appointments on your dock

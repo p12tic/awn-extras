@@ -2,6 +2,7 @@
 Version=1.0
 Name=PyNot RGBA
 Type=Application
+X-AWN-Type=Applet
 X-AWN-AppletType=Python
 Comment=A System tray with Alpha support.
 Exec=pynot-rgba/pynot.py

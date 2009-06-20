@@ -1,5 +1,6 @@
 [Desktop Entry]
 Type=Application
+X-AWN-Type=Applet
 X-AWN-AppletType=Python
 Name=Python Test Applet
 Comment=A test python applet for demo purposes

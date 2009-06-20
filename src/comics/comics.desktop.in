@@ -3,6 +3,7 @@ Version=1.0
 Name=Comics!
 Name[sv]=Serier!
 Type=Application
+X-AWN-Type=Applet
 X-AWN-AppletType=Python
 Comment=View your favourite comics on your desktop
 Comment[sv]=Visa dina favoritserier på skrivbordet

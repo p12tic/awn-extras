@@ -2,6 +2,7 @@
 Version=1.0
 Name=Dilbert Applet
 Type=Application
+X-AWN-Type=Applet
 X-AWN-AppletType=Python
 Comment=Read Dilbert and other comics
 Exec=comic/comic.py

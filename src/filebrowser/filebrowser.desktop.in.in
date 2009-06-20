@@ -2,6 +2,7 @@
 Version=1.0
 Name=File Browser
 Type=Application
+X-AWN-Type=Applet
 X-AWN-AppletType=C
 Comment=Browse the filesystem
 Exec=@LIBDIR@/awn/applets/filebrowser/filebrowser.so

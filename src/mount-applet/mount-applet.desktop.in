@@ -2,6 +2,7 @@
 Version=1.0
 Name=Mount Applet
 Type=Application
+X-AWN-Type=Applet
 X-AWN-AppletType=Python
 Comment=An applet to (un)mount devices
 Exec=mount-applet/mount-applet.py

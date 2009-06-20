@@ -1,5 +1,6 @@
 [Desktop Entry]
 Type=Application
+X-AWN-Type=Applet
 X-AWN-AppletType=C
 Name=Awn Terminal Applet
 Comment=A simple popup terminal

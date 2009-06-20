@@ -2,6 +2,7 @@
 Version=1.0
 Name=Media Player
 Type=Application
+X-AWN-Type=Applet
 X-AWN-AppletType=Python
 Comment=Plays any media files you drop on the applet
 Exec=media-player/media_player.py

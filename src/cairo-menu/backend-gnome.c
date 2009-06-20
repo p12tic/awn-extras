@@ -604,14 +604,14 @@ static void update_places(Menu_list_item **p, char* file_manager)
           }
           else
           {
-            item->name = urldecode(g_path_get_basename(tokens[0]), NULL);
+            item->name = g_uri_unescape_string(g_path_get_basename(tokens[0]), NULL);
           }
 
           item->icon = g_strdup("stock_folder");
 
           shell_quoted = g_shell_quote(tokens[0]);
           item->exec = g_strdup_printf("%s %s", file_manager, shell_quoted);
-          item->comment = urldecode(g_strdup(shell_quoted),NULL);
+          item->comment = g_uri_unescape_string(g_strdup(shell_quoted),NULL);
           g_free(shell_quoted);
           item->desktop = g_strdup("");
           sublist = g_slist_append(sublist, item);

@@ -358,7 +358,7 @@ static void _fillin_connected(GnomeVFSDrive * drive, Places * places)
 
   item->places = places;
   item->text = gnome_vfs_drive_get_display_name(drive);
-  item->text = urldecode(item->text, NULL);
+  item->text = g_uri_unescape_string(item->text, NULL);
   item->icon = gnome_vfs_drive_get_icon(drive);
   // FIXME gnome_vfs_drive_get_mounted_volume is deprecated.
 
@@ -394,7 +394,7 @@ static void _fillin_connected(ThunarVfsVolume *volume, Places *places)
 
   item = g_malloc(sizeof(Menu_Item));
   item->places = places;
-  item->text = urldecode(g_strdup(thunar_vfs_volume_get_name(volume)), NULL);
+  item->text = g_uri_unescape_string(g_strdup(thunar_vfs_volume_get_name(volume)), NULL);
   item->icon = g_strdup(thunar_vfs_volume_lookup_icon_name(volume, gtk_icon_theme_get_default()));
   item->exec = g_strdup_printf("%s %s", places->file_manager, mount_point);
   item->comment = g_strdup_printf("%s\n%s", item->text, mount_point);
@@ -429,10 +429,10 @@ static void _fillin_connected(GVolume *volume, Places *places)
   item = g_malloc(sizeof(Menu_Item));
   item->places = places;
 #if GLIB_CHECK_VERSION(2,15,0)
-  item->text = urldecode(g_mount_get_name(mount), NULL);
+  item->text = g_uri_unescape_string(g_mount_get_name(mount), NULL);
   icon = g_mount_get_icon(mount);
 #else
-  item->text = urldecode(g_volume_get_name(volume), NULL);
+  item->text = g_uri_unescape_string(g_volume_get_name(volume), NULL);
   icon = g_volume_get_icon(volume);
 #endif
 
@@ -632,7 +632,7 @@ static void get_places(Places * places)
           }
           else
           {
-            item->text = urldecode(g_path_get_basename(tokens[0]), NULL);
+            item->text = g_uri_unescape_string(g_path_get_basename(tokens[0]), NULL);
           }
 
           item->icon = g_strdup("stock_folder");
@@ -640,7 +640,7 @@ static void get_places(Places * places)
           shell_quoted = g_shell_quote(tokens[0]);
           item->exec = g_strdup_printf("%s %s", places->file_manager, shell_quoted);
           g_free(shell_quoted);
-          item->comment = urldecode(g_strdup(tokens[0]), NULL);
+          item->comment = g_uri_unescape_string(g_strdup(tokens[0]), NULL);
           item->places = places;
           places->menu_list = g_slist_append(places->menu_list, item);
 

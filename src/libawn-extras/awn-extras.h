@@ -1,8 +1,6 @@
 /*
  * Copyright (c) 2007   Rodney (moonbeam) Cryderman <rcryderman@gmail.com>
  *
- * urlencdoe and urldecode Copyright (C) 2001-2002 Open Source Telecom Corporation.
- *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -30,9 +28,6 @@
 #include <gdk/gdk.h>
 #include <glib.h>
 #include <libnotify/notify.h>
-
-char *urlencode(const char *source, char *dest, unsigned max);
-char *urldecode(char *source, char *dest);
 
 /*
 surface_2_pixbuf

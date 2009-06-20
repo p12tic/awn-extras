@@ -476,29 +476,6 @@ class Icon:
         """
         return self.__parent.set_icon_name(self.__parent.meta["short"], name)
 
-    def surface(self, surface, pixbuf=None, set=True):
-        """Convert a C{cairo} surface to a C{gtk.gdk.Pixbuf}.
-
-        @param surface: The C{cairo} surface to convert.
-        @type surface: C{cairo.Surface}
-        @param pixbuf: The reference to the pixbuf created from the surface.
-        If you use this method multiple times, please keep a reference to
-        this variable, or else your applet will leak memory.
-        @type pixbuf: C{gtk.gdk.Pixbuf}
-        @param set: Whether to also set the icon. True by default.
-        @type set: C{bool}
-        @return: The resultant pixbuf or None (if C{set} is C{True})
-        @rtype: C{gtk.gdk.Pixbuf} or C{None}
-
-        """
-        if set:
-            self.set_icon_surface(surface)
-        else:
-            if pixbuf is None:
-                return extras.surface_to_pixbuf(surface)
-            else:
-                return extras.surface_to_pixbuf(surface, pixbuf)
-
     def set(self, icon):
         """Set a C{gtk.gdk.pixbuf} or C{cairo.Context} as your applet icon.
 

@@ -497,7 +497,7 @@ static void get_places(Places * places)
           }
           else
           {
-            item->text = urldecode(g_path_get_basename(tokens[0]), NULL);
+            item->text = g_uri_unescape_string(g_path_get_basename(tokens[0]), NULL);
           }
 
           item->icon = g_strdup("stock_folder");
@@ -505,7 +505,7 @@ static void get_places(Places * places)
           shell_quoted = g_shell_quote(tokens[0]);
           item->exec = g_strdup_printf("%s %s", places->file_manager, shell_quoted);
           g_free(shell_quoted);
-          item->comment = urldecode(g_strdup(tokens[0]), NULL);
+          item->comment = g_uri_unescape_string(g_strdup(tokens[0]), NULL);
           item->places = places;
           places->menu_list = g_slist_append(places->menu_list, item);
 

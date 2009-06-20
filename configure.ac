@@ -80,8 +80,23 @@ PKG_CHECK_MODULES(LIBX11, [x11])
 PKG_CHECK_MODULES(COMPOSITE, [xcomposite])
 PKG_CHECK_MODULES(XRENDER, [xrender])
 # awn-notification-daemon, cairo-menu
-PKG_CHECK_MODULES(LIBSEXY, [libsexy])
 PKG_CHECK_MODULES(LIBNOTIFY, [libnotify])
+libsexy_required=no
+url_label_module="gtk+-2.0 >= 2.17.1"
+icon_entry_module="gtk+-2.0 >= 2.15.0"
+# awn-notification-daemon (UrlLabel)
+PKG_CHECK_EXISTS([$url_label_module],
+                 [AC_DEFINE([HAVE_GTK_URL_LABEL], 1,
+                            [Defined if GTK+ has support for hyperlinks in GtkLabels])],
+                 [libsexy_required=yes;url_label_module="libsexy"])
+# cairo-menu (IconEntry)
+PKG_CHECK_EXISTS([$icon_entry_module],
+                 [AC_DEFINE([HAVE_GTK_ICON_ENTRY], 1,
+                            [Defined if GTK+ has support for icons in GtkEntrys])],
+                 [libsexy_required=yes;icon_entry_module="libsexy"])
+if test "$libsexy_required" != "no"; then
+    PKG_CHECK_MODULES(LIBSEXY, [libsexy])
+fi
 # standalone-launcher, taskmand, taskmand-applet
 PKG_CHECK_MODULES(DBUS_GLIB, [dbus-glib-1])
 # awn-terminal
@@ -152,13 +167,13 @@ fi
 if test "$with_gconf" != "no" -a "$with_gnome" != "no"; then
 PKG_CHECK_MODULES(AWN_SYSTEM_MONITOR, [$gconf libgtop-2.0])
 PKG_CHECK_MODULES(FILEBROWSER, [$gconf gnome-desktop-2.0 gnome-vfs-2.0 libgnomeui-2.0])
-PKG_CHECK_MODULES(CAIRO_MENU_GNOME, [$gconf gnome-vfs-2.0 libgnome-menu libnotify libsexy])
+PKG_CHECK_MODULES(CAIRO_MENU_GNOME, [$gconf gnome-vfs-2.0 libgnome-menu libnotify $icon_entry_module])
 PKG_CHECK_MODULES(PLUGGER, [$gconf gnome-vfs-2.0])
 PKG_CHECK_MODULES(TRASH, [gnome-vfs-2.0 libglade-2.0 x11])
 PKG_CHECK_MODULES(TRASHER, [$gconf gnome-vfs-2.0])
 fi
 if test "$with_gconf" != "no"; then
-PKG_CHECK_MODULES(NOTIFICATION_DAEMON, [$gconf $gstreampkg libnotify libsexy libwnck-1.0 x11])
+PKG_CHECK_MODULES(NOTIFICATION_DAEMON, [$gconf $gstreampkg libnotify $url_label_module libwnck-1.0 x11])
 fi
 PKG_CHECK_MODULES(SHINY_SWITCHER, [libwnck-1.0 x11 xcomposite xrender])
 PKG_CHECK_MODULES(STANDALONE_LAUNCHER, [dbus-glib-1 libwnck-1.0])

@@ -2,6 +2,7 @@
 Version=1.0
 Name=Pandora Radio
 Type=Application
+X-AWN-Type=Applet
 X-AWN-AppletType=Python
 Comment=Listen to Pandora Internet Radio
 Exec=pandora/pandora.py

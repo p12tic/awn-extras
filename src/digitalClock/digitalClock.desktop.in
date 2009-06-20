@@ -1,5 +1,6 @@
 [Desktop Entry]
 Type=Application
+X-AWN-Type=Applet
 X-AWN-AppletType=Python
 Name=Digital Clock
 Comment=A clock and calendar in one.

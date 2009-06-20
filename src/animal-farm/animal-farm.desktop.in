@@ -2,10 +2,10 @@
 Version=1.0
 Name=Animal Farm
 Type=Application
+X-AWN-Type=Applet
 X-AWN-AppletType=Python
 X-AWN-AppletCategory=Game,Amusement
 Comment=Display fortune messages
 Exec=animal-farm/animal-farm.py
 Icon=animal-farm/icons/lemmling-cartoon-gnu
 Name[en_US]=Animal Farm
-

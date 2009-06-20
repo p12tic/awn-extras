@@ -4,5 +4,6 @@ Name=Stacks Applet
 Comment=Quick access to a file folder
 Exec=stacks/stacks_applet.py
 Icon=stacks/icons/stacks-drop.svg
+X-AWN-Type=Applet
 X-AWN-AppletType=Python
 X-AWN-AppletCategory=Utility,FileManager

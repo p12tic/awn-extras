@@ -1,5 +1,6 @@
 [Desktop Entry]
 Type=Application
+X-AWN-Type=Applet
 X-AWN-AppletType=C
 Name=Stacks Trasher
 Comment=Trash applet in Stacks style

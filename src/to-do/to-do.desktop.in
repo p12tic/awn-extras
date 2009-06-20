@@ -4,5 +4,6 @@ Exec=to-do/to-do.py
 Icon=view-sort-descending
 Name=To-Do List
 Type=Application
+X-AWN-Type=Applet
 X-AWN-AppletCategory=Utility
 X-AWN-AppletType=Python

@@ -2,6 +2,7 @@
 Version=1.0
 Name=Cairo Clock
 Type=Application
+X-AWN-Type=Applet
 X-AWN-AppletType=Python
 Comment=Displays an analog clock and supports additional clocks for different locations
 Exec=cairo-clock/cairo-clock.py

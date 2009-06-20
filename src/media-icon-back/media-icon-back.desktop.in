@@ -2,6 +2,7 @@
 Version=1.0
 Name=Media Icons Back
 Type=Application
+X-AWN-Type=Applet
 X-AWN-AppletType=Python
 Comment=A media-control applet (Last Track)
 Exec=media-icon-back/mediaicon.py

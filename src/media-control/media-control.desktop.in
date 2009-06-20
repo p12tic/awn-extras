@@ -2,6 +2,7 @@
 Version=1.0
 Name=Media Control
 Type=Application
+X-AWN-Type=Applet
 X-AWN-AppletType=Python
 Comment=Control your music player
 Exec=media-control/mediacontrol.py

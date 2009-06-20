@@ -21,7 +21,7 @@
 #ifndef __CAIRO_MENU_CONFIG_
 #define __CAIRO_MENU_CONFIG_
 
-#include <libdesktop-agnostic/color.h>
+#include <libdesktop-agnostic/desktop-agnostic.h>
 
 #define GCONF_MENU "/apps/avant-window-navigator/applets/cairo-menu"
 

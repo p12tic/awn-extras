@@ -27,7 +27,7 @@
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
 #include <glib.h>
-#include <libdesktop-agnostic/color.h>
+#include <libdesktop-agnostic/desktop-agnostic.h>
 #include <libawn/awn-applet.h>
 #include <libawn/awn-alignment.h>
 #include  <time.h>

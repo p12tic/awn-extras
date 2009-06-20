@@ -10,7 +10,6 @@ dist_applet_DATA =	\
 	googlecal.py	\
 	icscal.py	\
 	owacal.py	\
-	calthread.py	\
 	sevensegled.py	\
 	$(NULL)
 

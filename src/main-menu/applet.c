@@ -398,42 +398,6 @@ on_focus_out (GtkWidget *window, GdkEventFocus *event, gpointer null)
     }        
 }
 
-
-#if 0
-gboolean 
-awn_applet_factory_init (AwnApplet *applet)
-{
-  Menu      *app = menu =  g_new0 (Menu, 1);
- 
-  app->tree = gmenu_tree_lookup ("applications.menu", GMENU_TREE_FLAGS_NONE);
-  if (!app->tree)
-  {
-    g_warning ("Unable to find applications.menu");
-    return FALSE;
-  }
-  app->window = awn_applet_dialog_new (applet);
-  gtk_window_set_focus_on_map (GTK_WINDOW (app->window), TRUE);
-
-  app->box = gtk_alignment_new (0.5, 0.5, 1, 1);
-
-  gtk_container_add (GTK_CONTAINER (app->window), app->box);
-  g_signal_connect (G_OBJECT (app->window), "focus-out-event",
-                    G_CALLBACK (on_focus_out), NULL);
-
-  //gtk_window_set_policy (GTK_WINDOW (app->window), FALSE, FALSE, TRUE);
-  //gtk_window_set_title (GTK_WINDOW (app->window), "Hello there stranger");
-  gtk_widget_show_all (app->window);
-  app->root = gmenu_tree_get_root_directory (app->tree);
- 
-  gtk_widget_set_size_request (GTK_WIDGET (applet), 60, -1);
- 
-  g_signal_connect (G_OBJECT (applet), "button-press-event",
-                    G_CALLBACK (on_icon_clicked), (gpointer)app);
-  gtk_widget_show_all (GTK_WIDGET (applet));
-  return TRUE;
-}
-#endif
-
 AwnApplet *
 awn_applet_factory_initp (const gchar * uid, gint orient, gint offset, gint height ) 
 {
@@ -471,8 +435,6 @@ awn_applet_factory_initp (const gchar * uid, gint orient, gint offset, gint heig
   g_signal_connect (G_OBJECT (app->window), "focus-out-event",
                     G_CALLBACK (on_focus_out), NULL);      
   app->root = gmenu_tree_get_root_directory (app->tree);
-                       
-  gtk_widget_set_size_request (GTK_WIDGET (applet), 60, -1);
                        
   g_signal_connect (G_OBJECT (applet), "button-press-event",
                     G_CALLBACK (on_icon_clicked), (gpointer)app);

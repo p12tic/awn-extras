@@ -17,6 +17,22 @@
 #ifndef _AWN_SYSMON_UTIL
 #define _AWN_SYSMON_UTIL
 
-gdouble get_double_time(void);
+
+
+#include <gtk/gtk.h>
+#include <libawn/libawn.h>
+#include "defines.h"
+
+gdouble get_double_time (void);
+
+gint get_conf_value_int (GObject * object, gchar * prop_name);
+
+void do_bridge ( AwnApplet * applet,GObject *object,
+           gchar * instance_group,gchar * base_group,
+           gchar * key_name,gchar * prop_name );
+
+void connect_notify (GObject * object,gchar * prop_name,GCallback cb,gpointer data);
+
+
 
 #endif

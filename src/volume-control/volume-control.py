@@ -48,7 +48,6 @@ applet_name = "Volume Control"
 applet_version = "0.3.3"
 applet_description = "Applet to control your computer's volume"
 
-#theme_dir = os.path.join(os.path.dirname(__file__), "Themes")
 theme_dir = "/usr/share/icons"
 glade_file = os.path.join(os.path.dirname(__file__), "volume-control.glade")
 
@@ -62,6 +61,10 @@ applet_logo = os.path.join(os.path.dirname(__file__), "volume-control.svg")
 
 volume_ranges = {"high": (100, 66), "medium": (65, 36), "low": (35, 1)}
 volume_step = 4
+
+mixer_names = ("pulsemixer", "oss4mixer", "alsamixer")
+no_mixer_message = "Install one or more of the following GStreamer elements: %s."
+no_devices_message = "Could not find any devices."
 
 
 class VolumeControlApplet:
@@ -79,14 +82,19 @@ class VolumeControlApplet:
     def __init__(self, applet):
         self.applet = applet
 
-        self.backend = GStreamerBackend(self)
-        self.message_delay_handler = applet.timing.delay(self.backend.freeze_messages.clear, gstreamer_freeze_messages_interval, False)
+        try:
+            self.backend = GStreamerBackend(self)
+        except Exception:
+            applet.errors.set_error_icon_and_click_to_restart()
+        else:
+            self.message_delay_handler = applet.timing.delay(self.backend.freeze_messages.clear, gstreamer_freeze_messages_interval, False)
 
-        self.setup_main_dialog()
-        self.setup_context_menu()
+            self.setup_main_dialog()
+            self.setup_context_menu()
 
-        applet.connect("scroll-event", self.scroll_event_cb)
-        applet.connect_size_changed(self.size_changed_cb)
+            applet.connect("scroll-event", self.scroll_event_cb)
+            applet.connect_size_changed(self.size_changed_cb)
+            applet.connect("orientation-changed", self.orientation_changed_cb)
 
     def scroll_event_cb(self, widget, event):
         if event.direction == gdk.SCROLL_UP:
@@ -327,7 +335,7 @@ class VolumeControlApplet:
         self.theme_icons = {}
 
         if this_is_moonbeam_theme:
-            keys = moonbeam_ranges
+            keys = list(moonbeam_ranges)
             path = os.path.join(moonbeam_theme_dir, self.theme, "audio-volume-%s.svg")
         else:
             keys = volume_ranges.keys()
@@ -336,6 +344,14 @@ class VolumeControlApplet:
         keys.extend(["muted"])
         for i in keys:
             self.theme_icons[i] = self.applet.icon.file(path % i, set=False, size=awnlib.Icon.APPLET_SIZE)
+        if self.theme == "Minimal" and self.applet.get_orientation() in (1, 3):
+            for i in keys:
+                self.theme_icons[i] = self.theme_icons[i].rotate_simple(gtk.gdk.PIXBUF_ROTATE_CLOCKWISE)
+
+    def orientation_changed_cb(self, applet, orientation):
+        if self.theme == "Minimal":
+            self.setup_icons()
+            self.refresh_icon(True)
 
     def refresh_mute_checkbox(self):
         """Update the state of the 'Mute' checkbox.
@@ -374,12 +390,49 @@ class GStreamerBackend:
 
         self.freeze_messages = threading.Event()
 
-        mixer = gst.element_factory_make("alsamixer")
+        # Collect a set of possible mixers to use
+        found_mixers = set()
+        for f in gst.registry_get_default().get_feature_list(gst.ElementFactory):
+            if f.get_name().endswith("mixer") and f.get_klass() == "Generic/Audio":
+                found_mixers.add(f.get_name())
 
+        # Only keep certain names and sort it in order of mixer_names' order
+        useable_mixers = [i for i in mixer_names if i in found_mixers]
+
+        if len(useable_mixers) == 0:
+            parent.applet.errors.general(("No mixer found", no_mixer_message % ", ".join(mixer_names)))
+            raise Exception("No mixer found")
+
+        mixer_devices = self.find_mixer_and_devices(useable_mixers)
+
+        if mixer_devices is None:
+            parent.applet.errors.general(("No devices found", no_devices_message))
+            raise Exception("No devices found")
+
+        self.__mixer, self.__devices = mixer_devices
+
+        if self.__mixer.get_mixer_flags() & gst.interfaces.MIXER_FLAG_AUTO_NOTIFICATIONS:
+            bus = gst.Bus()
+            bus.add_signal_watch()
+            bus.connect("message::element", self.message_element_cb)
+            self.__mixer.set_bus(bus)
+        else:
+            parent.applet.timing.register(parent.refresh_icon, read_volume_interval)
+
+    def find_mixer_and_devices(self, names):
+        for mixer_name in names:
+            mixer = gst.element_factory_make(mixer_name)
+            devices = self.find_devices(mixer)
+
+            if len(devices) > 0:
+                return (mixer, devices)
+
+    def find_devices(self, mixer):
         if not isinstance(mixer, gst.interfaces.PropertyProbe):
             raise RuntimeError(mixer.get_factory().get_name() + " cannot probe properties")
 
         occurrences = defaultdict(int)
+        devices = {}
 
         mixer.probe_property_name("device")
         for device in mixer.probe_get_values_name("device"):
@@ -394,17 +447,9 @@ class GStreamerBackend:
             if occurrences[name] > 1:
                 name += " (%d)" % occurrences[name]
 
-            self.__devices[name] = device
+            devices[name] = device
 
-        self.__mixer = mixer
-
-        if mixer.get_mixer_flags() & gst.interfaces.MIXER_FLAG_AUTO_NOTIFICATIONS:
-            bus = gst.Bus()
-            bus.add_signal_watch()
-            bus.connect("message::element", self.message_element_cb)
-            mixer.set_bus(bus)
-        else:
-            parent.applet.timing.register(parent.refresh_icon, read_volume_interval)
+        return devices
 
     def message_element_cb(self, bus, message):
         if not self.freeze_messages.isSet() \

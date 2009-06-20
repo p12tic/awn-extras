@@ -152,6 +152,9 @@ static void _awn_circlegraph_render_to_context(AwnGraph * graph,
   priv = AWN_CIRCLEGRAPH_GET_PRIVATE (graph);    
   
   cairo_save (cr);
+  cairo_set_operator (cr,  CAIRO_OPERATOR_CLEAR);
+  cairo_paint (cr);
+  cairo_set_operator (cr,  CAIRO_OPERATOR_OVER);
   srfc_height = cairo_xlib_surface_get_height (cairo_get_target(cr));
   srfc_width = cairo_xlib_surface_get_width (cairo_get_target(cr));
 

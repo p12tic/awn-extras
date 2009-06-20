@@ -1,8 +1,17 @@
 
-[DEFAULT/honour_gtk]
+[DEFAULT/dummy]
 type = bool
 default = True
-description = Determines whether to use the current Gtk+ theme's color/font settings, or the applet-specific style settings.
-description[en_CA] = Determines whether to use the current Gtk+ theme's colour/font settings, or the applet-specific style settings.
+description = Just a dummy key.. this will be removed later.
+
+[DEFAULT/applet/dummy]
+type = bool
+default = True
+description = Just a dummy key.. this will be removed later.
+
+[DEFAULT/icons_baseconf/graph_type]
+type = int
+default = 0
+description = CPU graph type to use.  Note that some Icons do not support all graph types.  If this occurs an icon will revert to it's own default (value of 0).
 
 ; vim: set ft=dosini :

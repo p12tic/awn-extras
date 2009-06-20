@@ -17,10 +17,19 @@
  *
 */
 #undef NDEBUG
+
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include <assert.h>
 #include <gdk/gdk.h>
 #include <libawn/awn-cairo-utils.h>
+#ifdef HAVE_GTK_ICON_ENTRY
+#include <gtk/gtk.h>
+#else
 #include <libsexy/sexy-icon-entry.h>
+#endif
 #include <string.h>
 #include <math.h>
 
@@ -288,6 +297,18 @@ void render_separator(Menu_list_item *entry, int max_width)
 
 }
 
+#ifdef HAVE_GTK_ICON_ENTRY
+static void on_clear_text_entry(GtkEntry             *entry,
+                                GtkEntryIconPosition  position,
+                                GdkEvent             *event)
+{
+  if (position == GTK_ENTRY_ICON_SECONDARY)
+  {
+    gtk_entry_set_text(entry, "");
+  }
+}
+#endif
+
 void render_textentry(Menu_list_item *entry, int max_width)
 {
   //printf("render_textentry\n");
@@ -310,10 +331,19 @@ void render_textentry(Menu_list_item *entry, int max_width)
   gtk_event_box_set_above_child(GTK_EVENT_BOX(entry->widget), TRUE);
   entry->normal = build_menu_widget(&G_cairo_menu_conf.normal, entry->name, pbuf, NULL, max_width);
   entry->hover = build_menu_widget(&G_cairo_menu_conf.hover, entry->name, pbuf, NULL, max_width);
+#ifdef HAVE_GTK_ICON_ENTRY
+  entry->text_entry = gtk_entry_new();
+  gtk_entry_set_icon_from_pixbuf(GTK_ENTRY(entry->text_entry),
+                                 GTK_ENTRY_ICON_PRIMARY, pbuf);
+  gtk_entry_set_icon_from_stock(GTK_ENTRY(entry->text_entry),
+                                GTK_ENTRY_ICON_SECONDARY, GTK_STOCK_CLEAR);
+  g_signal_connect(entry->text_entry, "icon-press", G_CALLBACK(on_clear_text_entry), NULL);
+#else
   entry->text_entry = sexy_icon_entry_new();
   sexy_icon_entry_set_icon((SexyIconEntry *)entry->search_entry, SEXY_ICON_ENTRY_PRIMARY,
                            GTK_IMAGE(gtk_image_new_from_pixbuf(pbuf)));
   sexy_icon_entry_add_clear_button((SexyIconEntry *)entry->search_entry);
+#endif
   g_object_ref(entry->normal);
   gtk_container_add(GTK_CONTAINER(entry->widget), entry->normal);
 

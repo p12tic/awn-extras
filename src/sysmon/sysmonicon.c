@@ -19,14 +19,17 @@
 #include "sysmonicon.h"
 #include "graph.h"
 
-G_DEFINE_TYPE (AwnSysmonicon, awn_sysmonicon, AWN_TYPE_ICON)
+G_DEFINE_TYPE (AwnSysmonicon, awn_sysmonicon, AWN_TYPE_THEMED_ICON)
 
 #include "sysmoniconprivate.h"
 enum
 {
   PROP_0,
   PROP_APPLET,
-  PROP_GRAPHTYPE
+  PROP_GRAPH,
+  PROP_GRAPH_TYPE,
+  PROP_GRAPH_TYPE_DEFAULT,
+  PROP_ID
 };
 
 static void create_surfaces (AwnSysmonicon * sysmonicon);
@@ -44,9 +47,18 @@ awn_sysmonicon_get_property (GObject *object, guint property_id,
     case PROP_APPLET:
       g_value_set_object (value, priv->applet); 
       break;    
-    case PROP_GRAPHTYPE:
-      g_value_set_int (value, priv->graph_type); 
+    case PROP_GRAPH:
+      g_value_set_object (value, priv->graph); 
+      break;          
+    case PROP_GRAPH_TYPE:
+      g_value_set_int (value, priv->graph_type[CONF_STATE_INSTANCE]); 
       break;    
+    case PROP_GRAPH_TYPE_DEFAULT:
+      g_value_set_int (value, priv->graph_type[CONF_STATE_BASE]); 
+      break;          
+    case PROP_ID:
+      g_value_set_string (value, priv->id); 
+      break;          
     default:
     G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
   }
@@ -63,9 +75,26 @@ awn_sysmonicon_set_property (GObject *object, guint property_id,
     case PROP_APPLET:
       priv->applet = g_value_get_object (value);
       break;    
-    case PROP_GRAPHTYPE:
-      priv->graph_type = g_value_get_int (value);
+    case PROP_GRAPH:
+      if (priv->graph)
+      {
+        g_object_unref (priv->graph);
+      }
+      priv->graph = g_value_get_object (value);
       break;          
+    case PROP_GRAPH_TYPE:
+      priv->graph_type[CONF_STATE_INSTANCE] = g_value_get_int (value);
+      break;          
+    case PROP_GRAPH_TYPE_DEFAULT:
+      priv->graph_type[CONF_STATE_BASE] = g_value_get_int (value);
+      break;                
+    case PROP_ID:
+      if (priv->id)
+      {
+        g_free (priv->id);
+      }
+      priv->id = g_value_dup_string (value);
+      break;                
   default:
     G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
   }
@@ -88,9 +117,27 @@ void
 awn_sysmonicon_constructed (GObject *object)
 {
   AwnSysmoniconPrivate * priv;
+  AwnApplet * applet;
+  GTimeVal cur_time;  
+  
   priv = AWN_SYSMONICON_GET_PRIVATE (object);
   
+  if (G_OBJECT_CLASS (awn_sysmonicon_parent_class)->constructed )
+  {
+    G_OBJECT_CLASS (awn_sysmonicon_parent_class)->constructed (object);
+  }
+  
   priv->tooltip = awn_tooltip_new_for_widget (GTK_WIDGET(object));
+  
+  g_object_get (object,
+                "applet", &applet,
+                NULL);
+  g_assert (applet);
+  
+  do_bridge ( applet,object,
+             priv->id,ICONS_BASECONF,
+             "graph_type","graph-type");
+    
   g_signal_connect(G_OBJECT(priv->applet), "size-changed", 
                    G_CALLBACK(_size_changed), object);
   
@@ -114,16 +161,40 @@ awn_sysmonicon_class_init (AwnSysmoniconClass *klass)
                                AWN_TYPE_APPLET,
                                G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
   g_object_class_install_property (object_class, PROP_APPLET, pspec);  
+
+  pspec = g_param_spec_object ("graph",
+                               "Graph",
+                               "Graph",
+                               AWN_TYPE_GRAPH,
+                               G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
+  g_object_class_install_property (object_class, PROP_GRAPH, pspec);  
   
-  pspec = g_param_spec_int ("graph_type",
+  pspec = g_param_spec_int ("graph-type",
                                "Graph_type",
                                "Graph Type",
                                GRAPH_DEFAULT,
                                GRAPH_LAST,
                                GRAPH_DEFAULT,
                                G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
-  g_object_class_install_property (object_class, PROP_GRAPHTYPE, pspec);  
+  g_object_class_install_property (object_class, PROP_GRAPH_TYPE, pspec);  
+
+  pspec = g_param_spec_int ("graph-type-base",
+                               "Graph_type default",
+                               "Graph Type default",
+                               GRAPH_DEFAULT,
+                               GRAPH_LAST,
+                               GRAPH_DEFAULT,
+                               G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
+  g_object_class_install_property (object_class, PROP_GRAPH_TYPE_DEFAULT, pspec);  
   
+  
+  pspec = g_param_spec_string ("id",
+                               "ID",
+                               "ID",
+                               "default",
+                               G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
+  g_object_class_install_property (object_class, PROP_ID, pspec);  
+
   g_type_class_add_private (object_class, sizeof (AwnSysmoniconPrivate));
   
 }
@@ -133,15 +204,60 @@ static gboolean _expose(GtkWidget *self,
                         gpointer null)
 {
   AwnSysmoniconPrivate * priv;
+  cairo_t * ctx;
+  AwnEffects * effects;
+  
   priv = AWN_SYSMONICON_GET_PRIVATE (self);
   
   if (!priv->graph_cr)
   {
+    cairo_surface_t * new_surface;
+    gint size = awn_applet_get_size (AWN_APPLET(priv->applet));
     create_surfaces (AWN_SYSMONICON(self));
-    awn_graph_render_to_context (priv->graph,priv->graph_cr);
-    awn_icon_set_from_context (AWN_ICON(self),priv->graph_cr);
+    new_surface = cairo_surface_create_similar (priv->graph_surface,CAIRO_CONTENT_COLOR_ALPHA, size,size);
+    awn_icon_set_from_surface (AWN_ICON(self),new_surface);  
+    cairo_surface_destroy (new_surface);    
   }  
-  return TRUE;
+  else
+  {
+    g_return_if_fail (priv->graph_cr);
+    g_return_if_fail (priv->bg_cr);
+    g_return_if_fail (priv->fg_cr);
+  
+    effects = awn_overlayable_get_effects (AWN_ICON(self));
+    g_return_val_if_fail (effects,FALSE);
+    ctx = awn_effects_cairo_create(effects);
+    g_return_val_if_fail (ctx,FALSE);
+    
+    awn_graph_render_to_context (priv->graph,priv->graph_cr);
+    /*FIXME
+     Have a background, rendered graph, and foregrond and slap them together.
+     
+     The graph surface is just layered on top of bg. fg will be handled differently.  
+     Not rendering the graph on top of the surface to allow the graph render to be
+     optimized by moving chunks of the graph surface around instead of rerendering 
+     the whole thing... 
+     
+     fg probably needs to be rendered on top on every pass instead of creating a 
+     (potentially) reusable surface.
+     */
+    
+    /*FIXME call (for the moment just setting it create_surfaces) ->set_bg ()
+     */
+    
+    cairo_set_operator (ctx,CAIRO_OPERATOR_SOURCE);
+    cairo_set_source_surface (ctx, priv->bg_surface,0.0,0.0);
+    cairo_paint (ctx);
+    cairo_set_operator (ctx,CAIRO_OPERATOR_OVER);
+    cairo_set_source_surface (ctx, priv->graph_surface,0.0,0.0);
+    cairo_paint (ctx);
+    
+    /*should call something along the lines of render_fg() which will be in 
+     vtable
+     */
+    awn_effects_cairo_destroy (effects);
+  }    
+  return FALSE;
 }
 
 static void
@@ -152,7 +268,12 @@ awn_sysmonicon_init (AwnSysmonicon *self)
 
   priv->graph = NULL;
   priv->graph_cr = NULL;
-  g_signal_connect_after (G_OBJECT(self), "expose-event", G_CALLBACK(_expose), NULL);       
+  priv->fg_cr = NULL;
+  priv->bg_cr = NULL;
+  priv->graph_surface = NULL;
+  priv->fg_surface = NULL;
+  priv->bg_surface = NULL;
+  g_signal_connect (G_OBJECT(self), "expose-event", G_CALLBACK(_expose), NULL);       
 }
 
 GtkWidget*
@@ -217,19 +338,7 @@ create_surfaces (AwnSysmonicon * sysmonicon)
   {
     cairo_surface_destroy(priv->fg_surface);
     priv->fg_surface = NULL;
-  }
-
-  if (priv->icon_cr)
-  {
-    cairo_destroy(priv->icon_cr);
-    priv->icon_cr = NULL;
-  }
-
-  if (priv->icon_surface)
-  {
-    cairo_surface_destroy(priv->icon_surface);
-    priv->icon_surface = NULL;
-  }
+  }  
   
   temp_cr = gdk_cairo_create(GTK_WIDGET(priv->applet)->window);
   priv->graph_surface = cairo_surface_create_similar (cairo_get_target(temp_cr),CAIRO_CONTENT_COLOR_ALPHA, size,size);
@@ -238,8 +347,6 @@ create_surfaces (AwnSysmonicon * sysmonicon)
   priv->bg_cr = cairo_create(priv->bg_surface);
   priv->fg_surface = cairo_surface_create_similar (cairo_get_target(temp_cr),CAIRO_CONTENT_COLOR_ALPHA, size,size);
   priv->fg_cr = cairo_create(priv->fg_surface);
-  priv->icon_surface = cairo_surface_create_similar (cairo_get_target(temp_cr),CAIRO_CONTENT_COLOR_ALPHA, size,size);
-  priv->icon_cr = cairo_create(priv->icon_surface);
 
   /*FIXME should be in vtable ->set_bg() or something similar
     in most cases would set the surface once.... then just let it be 
@@ -247,10 +354,12 @@ create_surfaces (AwnSysmonicon * sysmonicon)
    
    fg_* will probably end up being removed (see comment in update_icon()
    */
+
+/*  remove so glow effect looks ok.
   cairo_set_source_rgba (priv->bg_cr,0.2,0.2,0.2,0.05);
   cairo_set_operator (priv->bg_cr,CAIRO_OPERATOR_SOURCE);
   cairo_paint (priv->bg_cr);
-  
+  */
   cairo_destroy(temp_cr);
 }
 
@@ -259,45 +368,21 @@ awn_sysmonicon_update_icon (AwnSysmonicon * icon)
 {
   AwnSysmoniconPrivate * priv;
   priv = AWN_SYSMONICON_GET_PRIVATE (icon);
-  g_return_if_fail (priv->graph_cr);
-  g_return_if_fail (priv->bg_cr);
-  g_return_if_fail (priv->fg_cr);
-  g_return_if_fail (priv->icon_cr);
-  
-  awn_graph_render_to_context (priv->graph,priv->graph_cr);
-  /*FIXME
-   Have a background, rendered graph, and foregrond and slap them together.
-   
-   The graph surface is just layered on top of bg. fg will be handled differently.  
-   Not rendering the graph on top of the surface to allow the graph render to be
-   optimized by moving chunks of the graph surface around instead of rerendering 
-   the whole thing... 
-   
-   fg probably needs to be rendered on top on every pass instead of creating a 
-   (potentially) reusable surface.
-   */
-  
-  /*FIXME call (for the moment just setting it create_surfaces) ->set_bg ()
-   */
-  
-  /* === */
-  cairo_set_operator (priv->icon_cr,CAIRO_OPERATOR_SOURCE);
-  cairo_set_source_surface (priv->icon_cr, priv->bg_surface,0.0,0.0);
-  cairo_paint (priv->icon_cr);
-  cairo_set_operator (priv->icon_cr,CAIRO_OPERATOR_OVER);
-  cairo_set_source_surface (priv->icon_cr, priv->graph_surface,0.0,0.0);
-  cairo_paint (priv->icon_cr);
-  
-  /*should call something along the lines of render_fg() which will be in 
-   vtable
-   */
 
-  awn_icon_set_from_context (AWN_ICON(icon),priv->icon_cr);  
+  gtk_widget_queue_draw (GTK_WIDGET(icon));
 }
 
 static 
 void _size_changed(AwnApplet *app, guint size, AwnSysmonicon *icon)
 {
+  AwnSysmoniconPrivate * priv;
+  cairo_surface_t * new_surface;
+  
+  priv = AWN_SYSMONICON_GET_PRIVATE (icon);
+  
   g_debug ("Resizing\n");
   create_surfaces (icon);  
+  new_surface = cairo_surface_create_similar (priv->graph_surface,CAIRO_CONTENT_COLOR_ALPHA, size,size);  
+  awn_icon_set_from_surface (AWN_ICON(icon),new_surface);  
+  cairo_surface_destroy (new_surface);
 }

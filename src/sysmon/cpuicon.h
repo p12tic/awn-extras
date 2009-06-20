@@ -55,7 +55,7 @@ typedef struct {
 
 GType awn_CPUicon_get_type (void);
 
-GtkWidget* awn_CPUicon_new (AwnGraphType graph_type,AwnApplet * applet);
+GtkWidget* awn_CPUicon_new (AwnApplet * applet, gchar * id);
 
 G_END_DECLS
 

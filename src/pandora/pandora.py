@@ -75,11 +75,10 @@ class PandoraApplet:
     def __init__(self, applet):
         self.applet = applet
         
-        applet.title.set("Pandora")
+        applet.tooltip.set("Pandora")
         
         self.dialog = applet.dialog.new("main")
         
-        self.showing_dlog = False
         self.moz = gtkmozembed.MozEmbed()
         try:
             pandurl=self.applet.settings["url"]
@@ -135,14 +134,9 @@ class PandoraApplet:
             return self.pandurl
 
     def button_press_event_cb(self, widget, event):
-        if event.button == 1:  
-            if self.showing_dlog:
-                self.dialog.hide()
-            else:
-                self.dialog.show_all()
-                if self.moz.get_location() == 'about:blank':
-                    self.moz.go_back()
-            self.showing_dlog = not self.showing_dlog
+        if event.button == 1:
+            if self.moz.get_location() == 'about:blank':
+                self.moz.go_back()
 
 if __name__ == "__main__":
     awnlib.init_start(PandoraApplet, {"name": applet_name,
@@ -151,5 +145,5 @@ if __name__ == "__main__":
         "description": applet_description,
         "theme": applet_theme_logo,
         "author": "Sharkbaitbobby",
-        "copyright-year": 2008,
+        "copyright-year": "2008, 2009",
         "authors": ["Sharkbaitbobby <sharkbaitbobby+awn@gmail.com>"]})

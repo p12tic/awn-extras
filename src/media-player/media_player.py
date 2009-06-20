@@ -42,6 +42,11 @@ class App(awn.AppletSimple):
         self.size = size
         self.full_window = None
         self.dialog = awn.Dialog(self)
+        self.play_icon = awn.OverlayThemedIcon(self.get_icon(),
+                                               "media-playback-start")
+        self.play_icon.props.scale = 0.4
+        self.play_icon.props.active = False
+        self.add_overlay(self.play_icon)
 
         # Recent items menu
         self.recent_items_menu = gtk.Menu()
@@ -214,6 +219,7 @@ class App(awn.AppletSimple):
         if message.type in [gst.MESSAGE_EOS, gst.MESSAGE_ERROR]:
             self.playbin.set_state(gst.STATE_NULL)
             self.button_play.set_label('gtk-media-play')
+            self.play_icon.props.active = False
             if self.full_window:
                 self.full_window.destroy()
             if self.dialogVisible():
@@ -310,24 +316,27 @@ class App(awn.AppletSimple):
         oldstate, currentstate, pending = self.playbin.get_state()
         if currentstate != gst.STATE_PLAYING:
             self.playbin.set_state(gst.STATE_PLAYING)
+            self.play_icon.props.active = True
             self.button_play.set_label('gtk-media-pause')
         else:
             self.playbin.set_state(gst.STATE_PAUSED)
+            self.play_icon.props.active = False
             self.button_play.set_label('gtk-media-play')
 
     def stop(self):
         self.playbin.set_state(gst.STATE_NULL)
+        self.play_icon.props.active = False
         self.button_play.set_label('gtk-media-play')
         self.isVideo = False
         if self.dialogVisible():
             self.hideApplet()
 
     def applet_drag_motion_cb(self, widget, context, x, y, time):
-        self.get_icon().get_effects().start("launching")
+        self.get_effects().start(awn.EFFECT_LAUNCHING)
         return True
 
     def applet_drag_leave_cb(self, widget, context, time):
-        self.get_icon().get_effects().stop("launching")
+        self.get_effects().stop(awn.EFFECT_LAUNCHING)
         return True
 
     def applet_drop_cb(self, wdgt, context, x, y, selection, targetType, time):

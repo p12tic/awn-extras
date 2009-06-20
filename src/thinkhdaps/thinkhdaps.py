@@ -22,6 +22,7 @@ pygtk.require("2.0")
 import gtk
 
 from awn.extras import awnlib
+from awn import OverlayThemedIcon
 
 try:
     from pyinotify import WatchManager, ThreadedNotifier, EventsCodes
@@ -38,15 +39,8 @@ check_status_interval = 0.1
 
 hdaps_short_description = "protected from shocks"
 
-image_dir = os.path.join(os.path.dirname(__file__), "images")
-
 # Logo of the applet, shown in the GTK+ About dialog
-applet_logo = os.path.join(image_dir, "thinkhdaps-logo.svg")
-
-# Images used as the applet's icon to reflect the current status of HDAPS
-file_icon_running = os.path.join(image_dir, "thinkhdaps-logo.svg")
-file_icon_paused = os.path.join(image_dir, "thinkhdaps-paused.svg")
-file_icon_error = os.path.join(image_dir, "thinkhdaps-error.svg")
+applet_logo = os.path.join(os.path.dirname(__file__), "images/thinkhdaps-logo.svg")
 
 
 def compare_linux_version(wanted_version, op):
@@ -90,10 +84,9 @@ class ThinkHDAPSApplet:
 
             # Change icon if status has changed
             if paused != self.__was_paused or self.__error_occurred:
-                if paused:
-                    self.applet.icon.set(self.icon_paused)
-                else:
-                    self.applet.icon.set(self.icon_running)
+                self.icon_paused.props.active = paused
+                self.icon_running.props.active = not paused
+                self.applet.get_icon().queue_draw()
 
             if self.__error_occurred:
                 self.__error_occurred = False
@@ -111,8 +104,7 @@ class ThinkHDAPSApplet:
         self.applet = applet
 
         applet.tooltip.disable_toggle_on_click()
-
-        self.setup_icon()
+        applet.icon.theme("harddrive")
 
         if version_ge_2_6_28:
             def can_unload(disk):
@@ -133,19 +125,32 @@ class ThinkHDAPSApplet:
         if len(disks) > 0:
             self.__hdaps_device = disks[0]
 
+        icon = applet.get_icon()
+
+        self.icon_running = OverlayThemedIcon(icon, "thinkhdaps-running", "running")
+        self.icon_running.props.scale = 0.6
+
+        self.icon_paused = OverlayThemedIcon(icon, "thinkhdaps-paused", "paused")
+        self.icon_paused.props.scale = 0.5
+
+        self.icon_error = OverlayThemedIcon(icon, "dialog-error", "error")
+        self.icon_error.props.scale = 0.6
+
+        for overlay in (self.icon_running, self.icon_paused, self.icon_error):
+            overlay.props.gravity = gtk.gdk.GRAVITY_NORTH_WEST
+            overlay.props.active = False
+            applet.add_overlay(overlay)
+
         if self.__hdaps_device is not None:
+            self.icon_running.props.active = True
+
             self.__status_file = os.path.join(sysfs_dir, self.__hdaps_device, protect_file)
 
-            applet.connect_size_changed(self.size_changed_cb)
-
-            applet.icon.set(self.icon_running)
             applet.tooltip.set(self.__hdaps_device + " " + hdaps_short_description)
 
             if not self.setup_inotify():
                 applet.timing.register(self.check_status_cb, check_status_interval)
         else:
-            applet.connect_size_changed(self.set_error_icon)
-
             self.set_error_icon()
             applet.tooltip.set("No hard disk found")
 
@@ -163,32 +168,16 @@ class ThinkHDAPSApplet:
             notifier.start()
         return result
 
-    def size_changed_cb(self):
-        """Update the applet's icon, because the size of the panel has changed.
-
-        """
-        self.setup_icon()
-
-        # Toggle the flag to the wrong state to trigger the update of the icon
-        self.__error_occurred = not self.__error_occurred
-
-        # Check the status to update the applet's icon
-        self.check_status_cb()
-
-    def setup_icon(self):
-        """Load the images that are going to be used as the applet's icon.
-
-        """
-        self.icon_running = self.applet.icon.file(file_icon_running, set=False, size=awnlib.Icon.APPLET_SIZE)
-        self.icon_paused = self.applet.icon.file(file_icon_paused, set=False, size=awnlib.Icon.APPLET_SIZE)
-
     def set_error_icon(self):
-        self.applet.icon.file(file_icon_error, size=awnlib.Icon.APPLET_SIZE)
+        self.icon_paused.props.active = False
+        self.icon_running.props.active = False
+        self.icon_error.props.active = True
+        self.applet.get_icon().queue_draw()
 
 
 if __name__ == "__main__":
     awnlib.init_start(ThinkHDAPSApplet, {"name": applet_name,
-        "short": "hdaps",
+        "short": "thinkhdaps",
         "version": applet_version,
         "description": applet_description,
         "logo": applet_logo,

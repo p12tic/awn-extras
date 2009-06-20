@@ -53,7 +53,9 @@
 #include <string.h>
 #include <gtk/gtk.h>
 #include <glib.h>
+#ifndef HAVE_GTK_URL_LABEL
 #include <libsexy/sexy-url-label.h>
+#endif
 
 #include <libawn/awn-applet.h>
 #include <libawn/awn-applet-simple.h>
@@ -748,7 +750,11 @@ create_notification(UrlClickedCb url_clicked)
 
   gtk_box_pack_start(GTK_BOX(windata->content_hbox), vbox, TRUE, TRUE, 0);
 
+#ifdef HAVE_GTK_URL_LABEL
+  windata->body_label = gtk_label_new(NULL);
+#else
   windata->body_label = sexy_url_label_new();
+#endif
 
   gtk_box_pack_start(GTK_BOX(vbox), windata->body_label, TRUE, TRUE, 0);
 
@@ -872,7 +878,11 @@ set_notification_text(GtkWindow *nw, const char *summary, const char *body)
                           G_daemon_config.awn_text_str, body, endchar, G_daemon_config.bold_text_body ? "</b>" : "");
   }
 
+#ifdef HAVE_GTK_URL_LABEL
+  gtk_entry_set_markup(GTK_LABEL(windata->body_label), str);
+#else
   sexy_url_label_set_markup(SEXY_URL_LABEL(windata->body_label), str);
+#endif
 
   if (!strlen(gtk_label_get_label(GTK_LABEL(windata->body_label))))
   {
@@ -881,7 +891,11 @@ set_notification_text(GtkWindow *nw, const char *summary, const char *body)
     str = g_strdup_printf("%s<small><span foreground=\"#%s\"> %s%c\n</span></small>%s", G_daemon_config.bold_text_body ? "<b>" : "",
                           G_daemon_config.awn_text_str, tmp, endchar, G_daemon_config.bold_text_body ? "</b>" : "");
 
+#ifdef HAVE_GTK_URL_LABEL
+    gtk_entry_set_markup(GTK_LABEL(windata->body_label), str);
+#else
     sexy_url_label_set_markup(SEXY_URL_LABEL(windata->body_label), str);
+#endif
     g_free(tmp);
   }
 

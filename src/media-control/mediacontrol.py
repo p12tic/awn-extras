@@ -64,6 +64,7 @@ class App (awn.AppletSimple):
         self.controls = gtk.VBox()
         self.controls.set_spacing(5)
         self.label = gtk.Label()
+        self.label.set_padding(4, 0)
         self.label.set_markup(App.APPLET_NAME_MARKUP)
 
         self.what_app()
@@ -92,6 +93,11 @@ class App (awn.AppletSimple):
         button_pause = gtk.ToolButton ("gtk-media-pause")
         button_next = gtk.ToolButton ("gtk-media-next")
         self.image = gtk.Image()
+        self.album_overlay = awn.OverlayPixbufFile()
+        self.album_overlay.props.gravity = gtk.gdk.GRAVITY_SOUTH_EAST
+        self.album_overlay.props.alpha = 0.85
+        self.album_overlay.props.active = False
+        self.add_overlay(self.album_overlay)
         # Packing Widgets
         hbox = gtk.HBox()
         hbox.pack_start(button_previous)
@@ -268,7 +274,18 @@ class App (awn.AppletSimple):
             self.titleLen,
             self.titleBoldFont)
         self.set_tooltip_text(resultToolTip)
+        try:
+            if self.artOnOff == 'on' and artExact != '':
+                self.album_overlay.props.file_name = artExact
+                self.album_overlay.props.active = True
+            else:
+                self.album_overlay.props.active = False
+        except GError:
+            self.album_overlay.props.active = False
+        
+        # no need to set dialog elements if it's not visible
         if self.dialog_visible == False: return False
+
         self.label.set_markup(markup)
         try:
             if self.artOnOff == 'on':
@@ -303,12 +320,12 @@ class App (awn.AppletSimple):
     @error_decorator
     def applet_drag_motion_cb(self, widget, context, x, y, time):
         if not self.MediaPlayer: return True
-        self.get_icon().get_effects().start("launching")
+        self.get_effects().start(awn.EFFECT_LAUNCHING)
         return True
 
     @error_decorator
     def applet_drag_leave_cb(self, widget, context, time):
-        self.get_icon().get_effects().stop("launching")
+        self.get_effects().stop(awn.EFFECT_LAUNCHING)
         return True
 
     @error_decorator

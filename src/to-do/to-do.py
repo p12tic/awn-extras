@@ -38,7 +38,7 @@ import icon
 #Awn stuff
 import sys
 import awn
-from awn.extras import defs, detach, surface_to_pixbuf
+from awn.extras import defs, detach
 
 APP = "awn-extras-applets"
 gettext.bindtextdomain(APP, defs.GETTEXTDIR)
@@ -1394,17 +1394,24 @@ class ProgressButton(gtk.Button):
     gtk.Button.__init__(self)
     
     self.surface = None
-    self.pixbuf = None
     self.conn = None
     self.conn2 = None
   
     #Set up the icon
     progress = self.settings['progress'][self.Id]
-    self.surface = icon.icon2(self.settings, applet.color, self.surface, \
-      progress)
-    self.pixbuf = surface_to_pixbuf(self.surface)
-    image = gtk.image_new_from_pixbuf(self.pixbuf)
-    self.set_image(image)
+    
+    self.surface = icon.icon2(self.settings, applet.color, self.surface, progress)
+
+    self.image = gtk.Image()
+    self.image.set_size_request(self.surface.get_width(), self.surface.get_height())
+    def expose_event_cb(widget, event):
+      context = widget.window.cairo_create()
+      context.translate(event.area.x, event.area.y)
+      context.set_operator(cairo.OPERATOR_OVER)
+      context.set_source_surface(self.surface)
+      context.paint()
+    self.image.connect("expose-event", expose_event_cb)
+    self.set_image(self.image)
     
     #For looks
     self.set_relief(gtk.RELIEF_NONE)
@@ -1419,15 +1426,11 @@ class ProgressButton(gtk.Button):
     
     #Set the tooltip: X% done
     self.set_tooltip_text(str(int(progress)) + '% done')
-  
+
   def update(self, *args):
-    #Reset up the icon
     progress = self.settings['progress'][self.Id]
-    self.surface = icon.icon2(self.settings, applet.color, self.surface, \
-      progress)
-    self.pixbuf = surface_to_pixbuf(self.surface)
-    image = gtk.image_new_from_pixbuf(self.pixbuf)
-    self.set_image(image)
+    #Reset up the icon
+    self.image.queue_draw()
     
     #Reset the tooltip
     self.set_tooltip_text(str(int(progress)) + _("% done"))

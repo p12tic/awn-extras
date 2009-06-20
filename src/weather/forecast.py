@@ -15,7 +15,7 @@
 # Lesser General Public License for more details.
 #
 # You should have received a copy of the GNU Lesser General Public
-# License along with this librarym.  If not, see <http://www.gnu.org/licenses/>
+# License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
 import urllib
@@ -24,7 +24,7 @@ from xml.dom import minidom
 import gtk
 from gtk import gdk
 
-import awn
+from awn import Dialog, awn_cairo_rounded_rect, ROUND_ALL
 import cairo
 
 import weathericons
@@ -123,10 +123,10 @@ class Forecast:
         box.show_all()
         self.forecastDialog.add(box)
 
-    class CurvedDialogWrapper(awn.Dialog):
+    class CurvedDialogWrapper(Dialog):
 
         def __init__(self, applet):
-            awn.Dialog.__init__(self, applet)
+            Dialog.__init__(self, applet)
 
             self.connect("expose-event", self.expose_event_cb)
 
@@ -160,21 +160,8 @@ class NormalDialog(gtk.Image):
         self.forecast = forecast
         self.__cache_surface = None
 
-    def drawRoundedRect(self, ct, x, y, w, h, r=10):
-        #   A****BQ
-        #  H      C
-        #  *      *
-        #  G      D
-        #   F****E
-        ct.move_to(x+r, y)                      # Move to A
-        ct.line_to(x+w-r, y)                    # Straight line to B
-        ct.curve_to(x+w, y, x+w, y, x+w, y+r)       # Curve to C, Control points are both at Q
-        ct.line_to(x+w, y+h-r)                  # Move to D
-        ct.curve_to(x+w, y+h, x+w, y+h, x+w-r, y+h) # Curve to E
-        ct.line_to(x+r, y+h)                    # Line to F
-        ct.curve_to(x, y+h, x, y+h, x, y+h-r)       # Curve to G
-        ct.line_to(x, y+r)                      # Line to H
-        ct.curve_to(x, y, x, y, x+r, y)             # Curve to A
+    def draw_rounded_rect(self, ct, x, y, w, h):
+        awn_cairo_rounded_rect(ct, x, y, w, h, 4, ROUND_ALL)
 
     def getTextWidth(self, context, text, maxwidth):
         potential_text = text
@@ -200,11 +187,11 @@ class NormalDialog(gtk.Image):
 
         # Rectangle with outline
         context.set_source_rgba(0, 0, 0, 0.85)
-        self.drawRoundedRect(context, rect_x, rect_y, rect_width, rect_height)
+        self.draw_rounded_rect(context, rect_x, rect_y, rect_width, rect_height)
         context.fill()
         context.set_line_width(2)
         context.set_source_rgba(0, 0, 0, 0.55)
-        self.drawRoundedRect(context, rect_x, rect_y, rect_width, rect_height)
+        self.draw_rounded_rect(context, rect_x, rect_y, rect_width, rect_height)
         context.stroke()
 
         # Days of the week
@@ -223,7 +210,7 @@ class NormalDialog(gtk.Image):
 
         # Background Day Text
         context.set_source_rgba(0, 0, 0, 0.85)
-        self.drawRoundedRect(context, text_x - 4, text_y - 12, day_width + 8, 16)
+        self.draw_rounded_rect(context, text_x - 4, text_y - 12, day_width + 8, 16)
         context.fill()
 
         # White Day Text

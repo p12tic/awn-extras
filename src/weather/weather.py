@@ -15,7 +15,7 @@
 # Lesser General Public License for more details.
 #
 # You should have received a copy of the GNU Lesser General Public
-# License along with this librarym.  If not, see <http://www.gnu.org/licenses/>
+# License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
 import re
@@ -252,8 +252,8 @@ class WeatherApplet:
                 if len(locations) > 0:
                     self.treeview.set_sensitive(True)
                     for loc in locations:
-                        code = loc.getAttribute("id")
                         city = loc.childNodes[0].data
+                        code = loc.getAttribute("id")
                         self.search_list.append([city, code])
                 else:
                     self.search_list.append([_("No records found"), None])
@@ -273,7 +273,7 @@ class WeatherApplet:
 
         """
         def refresh():
-            self.onRefreshConditions()
+            self.refresh_conditions()
             self.onRefreshForecast()
             if map:
                 self.onRefreshMap()
@@ -344,21 +344,32 @@ class WeatherApplet:
         else:
             self.applet.icon.set(self.overlay_temperature(iconFile))
 
-    def onRefreshConditions(self):
+    def refresh_conditions(self):
         """Download the current weather conditions. If this fails, or the
-        conditions are unchanged, don't do anything. If we get new
-        conditions, update the cached conditions and update the applet
-        title and icon.
+        conditions are unchanged, don't do anything. Refresh the applet's
+        title and icon if the conditions have changed.
 
         """
-        conditions = self.fetchConditions()
-        if conditions is not None and conditions != self.cachedConditions:
-            self.cachedConditions = conditions
-            self.refresh_icon()
-        return conditions
+        url = 'http://xoap.weather.com/weather/local/' + self.settings['location_code'] + '?cc=*&prod=xoap&par=1048871467&key=12daac2f3a67cb39&link=xoap'
+        try:
+            usock = urllib2.urlopen(url)
+        except:
+            print "Weather Applet: Unexpected error while fetching conditions"
+        else:
+            xmldoc = minidom.parse(usock)
+            usock.close()
+
+            names=['CITY', 'SUNRISE', 'SUNSET', 'DESCRIPTION', 'CODE', 'TEMP', 'FEELSLIKE', 'BAR', 'BARDESC', 'WINDSPEED', 'WINDGUST', 'WINDDIR', 'HUMIDITY', 'MOONPHASE']
+            paths=['weather/loc/dnam', 'sunr', 'suns', 'cc/t', 'cc/icon', 'cc/tmp', 'cc/flik', 'cc/bar/r', 'cc/bar/d', 'cc/wind/s', 'cc/wind/gust', 'cc/wind/d', 'cc/hmid', 'cc/moon/t']
+            conditions = self.dictFromXML(xmldoc, names, paths)
+            xmldoc.unlink()
+
+            if conditions != self.cachedConditions:
+                self.cachedConditions = conditions
+                self.refresh_icon()
+            return conditions
 
     def refresh_icon(self, dummy_value=None):
-        #TODO: figure out where the gettext wrapping belongs, should we use weathertext?
         unit = self.get_temperature_unit()
         temp = self.convert_temperature(self.cachedConditions['TEMP'])
         title = "%s: %s, %s" % (self.cachedConditions['CITY'], _(self.cachedConditions['DESCRIPTION']), temp + u" \u00B0" + unit)
@@ -383,27 +394,6 @@ class WeatherApplet:
                 cnode = cnode.getElementsByTagName(item)[0]
             returnDict[key] = ''.join([node.data for node in cnode.childNodes if node.nodeType == node.TEXT_NODE])
         return returnDict
-
-    def fetchConditions(self):
-        """Use weather.com's XML service to fetch the current conditions
-        and return them.
-
-        """
-        url = 'http://xoap.weather.com/weather/local/' + self.settings['location_code'] + '?cc=*&prod=xoap&par=1048871467&key=12daac2f3a67cb39&link=xoap'
-
-        try:
-            usock = urllib2.urlopen(url)
-        except:
-            print "Weather Applet: Unexpected error while fetching conditions"
-        else:
-            xmldoc = minidom.parse(usock)
-            usock.close()
-
-            names=['CITY', 'SUNRISE', 'SUNSET', 'DESCRIPTION', 'CODE', 'TEMP', 'FEELSLIKE', 'BAR', 'BARDESC', 'WINDSPEED', 'WINDGUST', 'WINDDIR', 'HUMIDITY', 'MOONPHASE']
-            paths=['weather/loc/dnam', 'sunr', 'suns', 'cc/t', 'cc/icon', 'cc/tmp', 'cc/flik', 'cc/bar/r', 'cc/bar/d', 'cc/wind/s', 'cc/wind/gust', 'cc/wind/d', 'cc/hmid', 'cc/moon/t']
-            conditions = self.dictFromXML(xmldoc, names, paths)
-            xmldoc.unlink()
-            return conditions
 
     def onRefreshMap(self):
         """Download the latest weather map from weather.com, storing it

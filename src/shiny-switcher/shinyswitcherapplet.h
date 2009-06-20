@@ -37,7 +37,6 @@
 #endif
 
 #include <libawn/awn-config-client.h>
-#include <libawn/awn-vfs.h>
 
 #define CONFIG_KEY(key) key
 

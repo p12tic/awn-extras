@@ -37,6 +37,7 @@
 #include <gtk/gtk.h>
 #include <libdesktop-agnostic/desktop-agnostic.h>
 #include <glib/gstdio.h>
+#include <glib/gi18n-lib.h>
 #include <string.h>
 
 #include <libawn-extras/awn-extras.h>

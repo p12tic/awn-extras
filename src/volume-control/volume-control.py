@@ -93,8 +93,9 @@ class VolumeControlApplet:
         else:
             self.message_delay_handler = applet.timing.delay(self.backend.freeze_messages.clear, gstreamer_freeze_messages_interval, False)
 
-            self.setup_main_dialog()
-            self.setup_context_menu()
+            prefs = glade.XML(glade_file)
+            self.setup_main_dialog(prefs)
+            self.setup_context_menu(prefs)
 
             applet.connect("scroll-event", self.scroll_event_cb)
             applet.connect("orientation-changed", self.orientation_changed_cb)
@@ -105,36 +106,18 @@ class VolumeControlApplet:
         elif event.direction == gdk.SCROLL_DOWN:
             self.backend.down()
 
-    def setup_main_dialog(self):
+    def setup_main_dialog(self, prefs):
         dialog = self.applet.dialog.new("main")
         dialog.set_geometry_hints(min_width=50, min_height=200)
+        prefs.get_widget("vbox-volume").reparent(dialog)
 
-        vbox = gtk.VBox()
-
-        adjustment = gtk.Adjustment(lower=0, upper=100, step_incr=volume_step, page_incr=10)
-        self.volume_scale = gtk.VScale(adjustment)
-
-        self.volume_scale.set_digits(0)
-        self.volume_scale.set_inverted(True)
-
-        inc_button = gtk.Button("+")
-        inc_button.set_relief(gtk.RELIEF_NONE)
-        inc_button.props.can_focus = False
-        vbox.pack_start(inc_button, expand=False)
-
-        vbox.add(self.volume_scale)
+        self.volume_scale = prefs.get_widget("vscale-volume")
         self.volume_scale.props.can_focus = False
-
-        dec_button = gtk.Button("-")
-        dec_button.set_relief(gtk.RELIEF_NONE)
-        dec_button.props.can_focus = False
-        vbox.pack_start(dec_button, expand=False)
-
-        dialog.add(vbox)
+        self.volume_scale.set_increments(volume_step, 10)
 
         self.volume_scale.connect("value-changed", self.volume_scale_changed_cb)
-        inc_button.connect("button-press-event", self.backend.up)
-        dec_button.connect("button-press-event", self.backend.down)
+        prefs.get_widget("button-inc-volume").connect("button-press-event", self.backend.up)
+        prefs.get_widget("button-dec-volume").connect("button-press-event", self.backend.down)
 
         self.applet.connect("button-press-event", self.button_press_event_cb)
 
@@ -156,7 +139,7 @@ class VolumeControlApplet:
 
                 self.message_delay_handler.start()
 
-    def setup_context_menu(self):
+    def setup_context_menu(self, prefs):
         """Add "Mute" and "Open Volume Control" to the context menu.
 
         """
@@ -172,8 +155,6 @@ class VolumeControlApplet:
         menu.insert(volume_control_item, menu_index + 1)
 
         menu.insert(gtk.SeparatorMenuItem(), menu_index + 2)
-
-        prefs = glade.XML(glade_file)
 
         preferences_vbox = self.applet.dialog.new("preferences").vbox
         prefs.get_widget("dialog-vbox").reparent(preferences_vbox)

@@ -52,6 +52,8 @@ applet_description = "Applet to control your computer's volume"
 theme_dir = "/usr/share/icons"
 glade_file = os.path.join(os.path.dirname(__file__), "volume-control.glade")
 
+system_theme_name = "System theme"
+
 volume_control_apps = ("gnome-volume-control", "xfce4-mixer")
 
 moonbeam_theme_dir = os.path.join(os.path.dirname(__file__), "themes")
@@ -64,6 +66,7 @@ volume_ranges = {"high": (100, 66), "medium": (65, 36), "low": (35, 1)}
 volume_step = 4
 
 mixer_names = ("pulsemixer", "oss4mixer", "alsamixer")
+
 no_mixer_message = "Install one or more of the following GStreamer elements: %s."
 no_devices_message = "Could not find any devices."
 
@@ -94,7 +97,6 @@ class VolumeControlApplet:
             self.setup_context_menu()
 
             applet.connect("scroll-event", self.scroll_event_cb)
-            applet.connect_size_changed(self.size_changed_cb)
             applet.connect("orientation-changed", self.orientation_changed_cb)
 
     def scroll_event_cb(self, widget, event):
@@ -102,14 +104,6 @@ class VolumeControlApplet:
             self.backend.up()
         elif event.direction == gdk.SCROLL_DOWN:
             self.backend.down()
-
-    def size_changed_cb(self):
-        """Reload the applet's icon, because the size of the panel has changed.
-
-        """
-        self.setup_icons()
-
-        self.refresh_icon(True)
 
     def setup_main_dialog(self):
         dialog = self.applet.dialog.new("main")
@@ -206,7 +200,7 @@ class VolumeControlApplet:
         # Only use themes that are likely to provide all the files
         def filter_theme(theme):
             return os.path.isfile(os.path.join(theme_dir, theme, "scalable/status/audio-volume-high.svg"))
-        self.themes = filter(filter_theme, os.listdir(theme_dir))
+        self.themes = [system_theme_name] + filter(filter_theme, os.listdir(theme_dir))
         self.themes.sort()
 
         combobox_theme = prefs.get_widget("combobox-theme")
@@ -221,7 +215,7 @@ class VolumeControlApplet:
             combobox_theme.append_text(i)
 
         if "theme" not in self.applet.settings or self.applet.settings["theme"] not in self.themes:
-            self.applet.settings["theme"] = self.themes[0]
+            self.applet.settings["theme"] = system_theme_name
         self.theme = self.applet.settings["theme"]
 
         self.setup_icons()
@@ -310,20 +304,18 @@ class VolumeControlApplet:
             if mute_changed:
                 self.refresh_mute_checkbox()
 
-            this_is_moonbeam_theme = os.path.isdir(os.path.join(moonbeam_theme_dir, self.theme))
-
             if muted or volume == 0:
                 icon = title = "muted"
             else:
                 title = str(volume) + "%"
 
-                if this_is_moonbeam_theme:
-                    icon = filter(lambda i: volume >= i, moonbeam_ranges)[0]
+                if os.path.isdir(os.path.join(moonbeam_theme_dir, self.theme)):
+                    icon = str(filter(lambda i: volume >= i, moonbeam_ranges)[0])
                 else:
                     icon = [key for key, value in volume_ranges.iteritems() if volume <= value[0] and volume >= value[1]][0]
 
             self.applet.tooltip.set(self.backend.get_current_track_label() + ": " + title)
-            self.applet.icon.set(self.theme_icons[icon])
+            self.applet.theme.icon(icon)
 
             self.volume_scale.set_value(volume)
 
@@ -331,23 +323,19 @@ class VolumeControlApplet:
             self.__was_muted = muted
 
     def setup_icons(self):
-        this_is_moonbeam_theme = os.path.isdir(os.path.join(moonbeam_theme_dir, self.theme))
+        theme = self.theme if self.theme != system_theme_name else None
+        self.applet.theme.theme(theme)
 
-        self.theme_icons = {}
+        is_moonbeam_theme = os.path.isdir(os.path.join(moonbeam_theme_dir, self.theme))
+        keys = list(moonbeam_ranges) if is_moonbeam_theme else volume_ranges.keys()
 
-        if this_is_moonbeam_theme:
-            keys = list(moonbeam_ranges)
-            path = os.path.join(moonbeam_theme_dir, self.theme, "audio-volume-%s.svg")
-        else:
-            keys = volume_ranges.keys()
-            path = os.path.join(theme_dir, self.theme, "scalable/status/audio-volume-%s.svg")
-
-        keys.extend(["muted"])
-        for i in keys:
-            self.theme_icons[i] = self.applet.icon.file(path % i, set=False, size=awnlib.Icon.APPLET_SIZE)
-        if self.theme == "Minimal" and self.applet.get_orientation() in (ORIENTATION_LEFT, ORIENTATION_RIGHT):
-            for i in keys:
-                self.theme_icons[i] = self.theme_icons[i].rotate_simple(gtk.gdk.PIXBUF_ROTATE_CLOCKWISE)
+        states = { "muted": "audio-volume-muted" }
+        for i in map(str, keys):
+            states[i] = "audio-volume-%s" % i
+        self.applet.theme.set_states(states)
+#        if self.theme == "Minimal" and self.applet.get_orientation() in (ORIENTATION_LEFT, ORIENTATION_RIGHT):
+#            for i in keys:
+#                self.theme_icons[i] = self.theme_icons[i].rotate_simple(gtk.gdk.PIXBUF_ROTATE_CLOCKWISE)
 
     def orientation_changed_cb(self, applet, orientation):
         if self.theme == "Minimal":

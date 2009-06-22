@@ -499,6 +499,38 @@ class Icon:
         self.__parent.hide()
 
 
+class Theme:
+
+    def __init__(self, parent):
+        """Create a new Theme object.
+
+        @param parent: The parent applet of the theme instance.
+        @type parent: L{Applet}
+
+        """
+        self.__parent = parent
+
+        self.__states = None
+        self.__icon_state = None
+
+    def set_states(self, states_icons):
+        self.__states, icons = zip(*states_icons.items())
+        self.__icon_state = None
+        self.__parent.get_icon().set_info(self.__parent.meta["short"], \
+            self.__parent.uid, self.__states, icons)
+
+    def icon(self, state):
+        if self.__states is None or state not in self.__states:
+            raise RuntimeError("invalid state")
+
+        if state != self.__icon_state:
+            self.__icon_state = state
+            self.__parent.get_icon().set_state(state)
+
+    def theme(self, theme):
+        self.__parent.get_icon().override_gtk_theme(theme)
+
+
 class Errors:
 
     def __init__(self, parent):
@@ -1473,6 +1505,7 @@ class Applet(awn.AppletSimple, object):
             return instance[module]
         return property(getter)
 
+    theme = __getmodule(Theme)
     timing = __getmodule(Timing)
     errors = __getmodule(Errors)
     keyring = __getmodule(Keyring)

@@ -7,8 +7,12 @@ dist_applet_DATA =  \
     $(NULL)
 
 theme_blackdir = $(applet_datadir)/themes/Black
-dist_theme_black_DATA =				\
+dist_theme_black_DATA =             \
     themes/Black/index.theme \
+    $(NULL)
+
+theme_scalable_blackdir = $(applet_datadir)/themes/Black/scalable
+dist_theme_scalable_black_DATA =				\
 	themes/Black/scalable/audio-volume-muted.svg	\
 	themes/Black/scalable/audio-volume-1.svg		\
 	themes/Black/scalable/audio-volume-14.svg	\
@@ -27,8 +31,12 @@ dist_theme_black_DATA =				\
 	$(NULL)
 
 theme_minimaldir = $(applet_datadir)/themes/Minimal
-dist_theme_minimal_DATA =			\
+dist_theme_minimal_DATA =           \
     themes/Minimal/index.theme \
+    $(NULL)
+
+theme_scalable_minimaldir = $(applet_datadir)/themes/Minimal/scalable
+dist_theme_scalable_minimal_DATA =			\
 	themes/Minimal/scalable/audio-volume-muted.svg	\
 	themes/Minimal/scalable/audio-volume-1.svg	\
 	themes/Minimal/scalable/audio-volume-14.svg	\

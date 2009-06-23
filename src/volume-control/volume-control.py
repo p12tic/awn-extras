@@ -98,7 +98,7 @@ class VolumeControlApplet:
             self.setup_context_menu(prefs)
 
             applet.connect("scroll-event", self.scroll_event_cb)
-            applet.connect("orientation-changed", self.orientation_changed_cb)
+            applet.connect("orientation-changed", lambda a, o: self.refresh_orientation())
 
     def scroll_event_cb(self, widget, event):
         if event.direction == gdk.SCROLL_UP:
@@ -268,11 +268,8 @@ class VolumeControlApplet:
         self.theme = self.themes[button.get_active()]
         self.applet.settings["theme"] = self.theme
 
-        # Load icons in different thread to avoid freezing the Gtk+ preferences window
-        def reload_icon():
-            self.setup_icons()
-            self.refresh_icon(True)
-        threading.Thread(target=reload_icon).start()
+        self.setup_icons()
+        self.refresh_icon(True)
 
     def refresh_icon(self, force_update=False):
         volume = self.backend.get_volume()
@@ -314,14 +311,12 @@ class VolumeControlApplet:
         for i in map(str, keys):
             states[i] = "audio-volume-%s" % i
         self.applet.theme.set_states(states)
-#        if self.theme == "Minimal" and self.applet.get_orientation() in (ORIENTATION_LEFT, ORIENTATION_RIGHT):
-#            for i in keys:
-#                self.theme_icons[i] = self.theme_icons[i].rotate_simple(gtk.gdk.PIXBUF_ROTATE_CLOCKWISE)
 
-    def orientation_changed_cb(self, applet, orientation):
-        if self.theme == "Minimal":
-            self.setup_icons()
-            self.refresh_icon(True)
+        self.refresh_orientation()
+
+    def refresh_orientation(self):
+        rotate = self.theme == "Minimal" and self.applet.get_orientation() in (ORIENTATION_LEFT, ORIENTATION_RIGHT)
+        self.applet.get_icon().props.rotate = gdk.PIXBUF_ROTATE_CLOCKWISE if rotate else gdk.PIXBUF_ROTATE_NONE
 
     def refresh_mute_checkbox(self):
         """Update the state of the 'Mute' checkbox.

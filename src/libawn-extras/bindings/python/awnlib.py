@@ -516,8 +516,8 @@ class Theme:
     def set_states(self, states_icons):
         self.__states, icons = zip(*states_icons.items())
         self.__icon_state = None
-        self.__parent.get_icon().set_info(self.__parent.meta["short"], \
-            self.__parent.uid, self.__states, icons)
+        self.__parent.set_icon_info(self.__parent.meta["short"], \
+            self.__states, icons)
 
     def icon(self, state):
         if self.__states is None or state not in self.__states:
@@ -525,7 +525,7 @@ class Theme:
 
         if state != self.__icon_state:
             self.__icon_state = state
-            self.__parent.get_icon().set_state(state)
+            self.__parent.set_icon_state(state)
 
     def theme(self, theme):
         self.__parent.get_icon().override_gtk_theme(theme)

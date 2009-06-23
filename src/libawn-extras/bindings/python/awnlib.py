@@ -1537,10 +1537,10 @@ def init_start(applet_class, meta={}, options=[]):
 
     awn.init(sys.argv[1:])
     applet = Applet(awn.uid, awn.orient, awn.offset, awn.size, meta, options)
-    awn.init_applet(applet)
 
     try:
         applet_class(applet)
+        awn.init_applet(applet)
     except Exception, e:
         applet.errors.set_error_icon_and_click_to_restart()
         import traceback

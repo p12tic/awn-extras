@@ -202,7 +202,6 @@ class ComicsAdder:
 		if code != Downloader.OK:
 			self.model.remove(iterator)
 		else:
-			print 'downloaded', o.url
 			pixbuf = gtk.gdk.pixbuf_new_from_file(o.filename)
 			os.remove(o.filename)
 			

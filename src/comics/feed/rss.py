@@ -140,8 +140,6 @@ class RSSFeed(Feed):
 			img_index = self.img_index
 		if len(item[IMAGES]) > img_index:
 			item[URL] = item[IMAGES][img_index]
-		else:
-			print self.name, len(item[IMAGES]), img_index
 		
 		time_stamp = self.get_time_stamp(index, entry)
 		if time_stamp > self.newest or self.newest == 0.0:

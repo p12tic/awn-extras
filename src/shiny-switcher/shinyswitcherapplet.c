@@ -594,7 +594,7 @@ gboolean  _button_workspace(GtkWidget *widget, GdkEventButton *event, Workplace_
                        G_CALLBACK(_start_applet_prefs), NULL);
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
-      item = shared_menuitem_about_applet_simple("Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
+      item = awn_applet_simple_create_about_item("Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
              AWN_APPLET_LICENSE_GPLV2,
              "Shiny Switcher",
              NULL);
@@ -686,7 +686,7 @@ gboolean  _button_win(GtkWidget *widget, GdkEventButton *event, Win_press_data *
                        G_CALLBACK(_start_applet_prefs), NULL);
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
-      item = shared_menuitem_about_applet_simple("Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
+      item = awn_applet_simple_create_about_item("Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
              AWN_APPLET_LICENSE_GPLV2,
              "Shiny Switcher",
              NULL);
@@ -1831,7 +1831,7 @@ gboolean create_windows(Shiny_switcher *shinyswitcher)
                            G_CALLBACK(_start_applet_prefs), NULL);
           gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
-          item = shared_menuitem_about_applet_simple("Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
+          item = awn_applet_simple_create_about_item("Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
 
                  AWN_APPLET_LICENSE_GPLV2,
                  "Shiny Switcher",
@@ -1886,7 +1886,7 @@ void _window_opened(WnckScreen *screen, WnckWindow *window, Shiny_switcher *shin
                      G_CALLBACK(_start_applet_prefs), NULL);
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
-    item = shared_menuitem_about_applet_simple("Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
+    item = awn_applet_simple_create_about_item("Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
 
            AWN_APPLET_LICENSE_GPLV2,
            "Shiny Switcher",

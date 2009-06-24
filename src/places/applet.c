@@ -1414,7 +1414,7 @@ static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, 
       gtk_menu_set_screen(GTK_MENU(menu), NULL);
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
       g_signal_connect(G_OBJECT(item), "button-press-event", G_CALLBACK(_show_prefs), places);
-      item = shared_menuitem_about_applet_simple("Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>\n"
+      item = awn_applet_simple_create_about_item ("Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>\n"
              "Copyright 2007,2008 Mark Lee <avant-wn@lazymalevolence.com>\n",
              AWN_APPLET_LICENSE_GPLV2,
              "Places",

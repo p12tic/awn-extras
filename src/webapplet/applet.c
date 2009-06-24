@@ -141,7 +141,7 @@ _button_clicked_event (GtkWidget      *widget,
       {
         gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);          
       }        
-      item = shared_menuitem_about_applet_simple("2008 Rodney Cryderman <rcryderman@gmail.com>\n2008 Mark Lee <avant-wn@lazymalevolence.com>\n",
+      item = awn_applet_simple_create_about_item("2008 Rodney Cryderman <rcryderman@gmail.com>\n2008 Mark Lee <avant-wn@lazymalevolence.com>\n",
                                                  AWN_APPLET_LICENSE_GPLV2,
                                                  "WebApplet",
                                                  NULL);

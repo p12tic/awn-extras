@@ -21,10 +21,7 @@
 #ifndef _AWN_EXTRS_UTIL
 #define _AWN_EXTRS_UTIL
 
-#include <libawn/awn-applet.h>
-#include <libawn/awn-applet-simple.h>
 #include <gtk/gtk.h>
-#include <string.h>
 #include <glib.h>
 #include <libnotify/notify.h>
 
@@ -93,42 +90,5 @@ gboolean share_config_bool(const gchar * key);
 */
 GtkWidget *shared_menuitem_create_applet_prefs(gchar *instance,gchar *baseconf,
                                               gchar * applet_name);
-
-
-/*Setting the acceptable values starting at 10... makes it rather unlikely
-that someone can specify a license type by accident.*/
-typedef enum
-{
-  AWN_APPLET_LICENSE_GPLV2=10,
-  AWN_APPLET_LICENSE_GPLV3=11,
-  AWN_APPLET_LICENSE_LGPLV2_1=12,
-  AWN_APPLET_LICENSE_LGPLV3=13
-}AwnAppletLicense;
-
-/* 
-*  see GtkAboutDialog() for a description of args other than license.
-*   license must be one of the values enumerated in AwnAppletLicense.
-*   copyright,license and program_name are mandatory.
-*  Returns:
-*    A about applet gtk_menu_item 
-*/
-GtkWidget *shared_menuitem_about_applet_simple(const gchar * copyright,
-                                        AwnAppletLicense license,
-                                        const gchar * program_name,
-                                        const gchar * version);
-
-GtkWidget *shared_menuitem_about_applet(const gchar * copyright,
-                                        AwnAppletLicense license,
-                                        const gchar * program_name,
-                                        const gchar * version,                                        
-                                        const gchar * comments,
-                                        const gchar * website,
-                                        const gchar * website_label,
-                                        const gchar * icon_name,                                        
-                                        const gchar * translator_credits,                                        
-                                        const gchar **authors,
-                                        const gchar **artists,
-                                        const gchar **documenters);
-
 
 #endif

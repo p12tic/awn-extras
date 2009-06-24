@@ -163,7 +163,7 @@ cpumeter_applet_new(AwnApplet *applet)
                                       G_CALLBACK(_set_icon_text), "Icon Text", (gpointer)cpumeter
                                      );
   GtkWidget * item;
-  item=shared_menuitem_about_applet_simple("Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>\n"
+  item=awn_applet_simple_create_about_item("Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>\n"
                                            "Copyright 2007 Mike (mosburger) Desjardins <desjardinsmike@gmail.com>\n",
                                 AWN_APPLET_LICENSE_GPLV2,
                                 "Awn System Monitor",

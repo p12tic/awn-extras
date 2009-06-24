@@ -1454,7 +1454,7 @@ class Meta:
 
 class Applet(awn.AppletSimple, object):
 
-    def __init__(self, uid, orient, offset, size, meta={}, options=[]):
+    def __init__(self, uid, panel_id, meta={}, options=[]):
         """Create a new instance of the Applet object.
 
         @param uid: The unique identifier of the applet
@@ -1468,7 +1468,7 @@ class Applet(awn.AppletSimple, object):
         @type meta: C{dict}
 
         """
-        awn.AppletSimple.__init__(self, uid, orient, offset, size)
+        awn.AppletSimple.__init__(self, uid, panel_id)
 
         self.uid = uid
 
@@ -1536,7 +1536,7 @@ def init_start(applet_class, meta={}, options=[]):
     gobject.threads_init()
 
     awn.init(sys.argv[1:])
-    applet = Applet(awn.uid, awn.orient, awn.offset, awn.size, meta, options)
+    applet = Applet(awn.uid, awn.panel_id, meta, options)
 
     try:
         applet_class(applet)

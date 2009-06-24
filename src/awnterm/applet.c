@@ -31,13 +31,11 @@
 #include "settings.h"
 
 // This function will automatically be called by awn when your applet is added to the dock.
-AwnApplet* awn_applet_factory_initp (const gchar* uid, gint orient,
-                                     gint offset, gint height)
+AwnApplet* awn_applet_factory_initp (const gchar* uid, gint panel_id)
 {
 	// Set up the AwnTerm and the AwnApplet. applet is global.
 	applet = g_new0 (AwnTerm, 1);
-	applet->applet = AWN_APPLET (awn_applet_simple_new (uid, orient,
-                                                            offset, height));
+	applet->applet = AWN_APPLET (awn_applet_simple_new (uid, panel_id));
 
 	// Set up the title
 	awn_applet_simple_set_tooltip_text (AWN_APPLET_SIMPLE(applet->applet), "Awn Terminal");

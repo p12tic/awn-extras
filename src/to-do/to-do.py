@@ -52,18 +52,17 @@ class App(awn.AppletSimple):
     last_size = -1
     progress_buttons = []
 
-    def __init__(self, uid, orient, offset, size):
+    def __init__(self, uid, panel_id):
+        #AWN Applet Configuration
+        awn.AppletSimple.__init__(self, uid, panel_id)
+        self.dialog = awn.Dialog(self)
+
         self.uid = uid
-        self.size = size
+        self.size = self.get_size()
 
         #Values that will be referenced later
         self.displayed = False
         self.detached = False
-
-        #AWN Applet Configuration
-        awn.AppletSimple.__init__(self, uid, orient, offset, size)
-        self.dialog = awn.Dialog(self)
-        #self.set_icon_name('terminal', 'terminal')
 
         #Give the dialog an AccelGroup (is this all that necessary)
         self.accel = gtk.AccelGroup()
@@ -1470,7 +1469,7 @@ class ProgressButton(gtk.Button):
 
 if __name__ == '__main__':
     awn.init(sys.argv[1:])
-    applet = App(awn.uid, awn.orient, awn.offset, awn.size)
+    applet = App(awn.uid, awn.panel_id)
     awn.init_applet(applet)
     applet.show_all()
     gtk.main()

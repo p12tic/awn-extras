@@ -26,13 +26,13 @@
 
 
 AwnApplet*
-awn_applet_factory_initp(gchar* uid, gint orient, gint offset, gint size)
+awn_applet_factory_initp(gchar* uid, gint panel_id)
 {
   AwnApplet *applet;
   Shiny_switcher*shiny_switcher;
-  applet = awn_applet_new(uid, orient, offset, size);
-  shiny_switcher = applet_new(applet, orient, offset,size);
-  shiny_switcher->orient = orient;
+  applet = awn_applet_new(uid, panel_id);
+  shiny_switcher = applet_new(applet, panel_id);
+  shiny_switcher->orient = awn_applet_get_orientation(applet);
 
   return applet;
 }

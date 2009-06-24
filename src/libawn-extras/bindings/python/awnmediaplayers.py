@@ -164,7 +164,7 @@ class GenericPlayer(object):
     def get_title_and_tooltip (self, text):
         # titleLen and titleBoldFont should be declared
         # here and not just in subclasses
-        if text.__class__ not in [str, unicode]:return '',''
+        if not isinstance(text, (str, unicode)): return '',''
         if len(text) > self.titleLen:
             text = text[:self.titleLen]
             text = text + '..'
@@ -229,6 +229,8 @@ class Rhythmbox(GenericPlayer):
             else:
                try:result = result['rb:stream-song-title']
                except:SyntaxError
+        elif 'title' in result:
+            result = result['title']
 
         markup, tooltip = self.get_title_and_tooltip(result)
         return albumart_exact, markup, tooltip

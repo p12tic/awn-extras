@@ -343,9 +343,9 @@ src/mail/locale/ru/LC_MESSAGES/Makefile
 src/main-menu/Makefile
 src/main-menu/main-menu.desktop.in
 src/media-control/Makefile
-src/media-icon-back/Makefile
-src/media-icon-next/Makefile
-src/media-icon-play/Makefile
+src/media-icons/Makefile
+src/media-icons/media-icon-next.desktop.in
+src/media-icons/media-icon-previous.desktop.in
 src/media-player/Makefile
 src/mount-applet/Makefile
 src/MiMenu/Makefile

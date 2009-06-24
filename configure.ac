@@ -4,7 +4,7 @@ m4_define(pycairo_required_version,      1.0.2) dnl or 1.1.7
 m4_define(pygtk_required_version,        2.10.0)
 
 
-AC_INIT(awn-extras-applets, 0.3.3, [])
+AC_INIT(awn-extras-applets, 0.3.9, [])
 AM_INIT_AUTOMAKE([-Wno-portability])
 AC_CONFIG_SRCDIR(src)
 AM_CONFIG_HEADER(config.h)
@@ -70,7 +70,7 @@ AM_CONDITIONAL(WITH_GNOME, test "$with_gnome" != "no")
 AM_CONDITIONAL(WITH_WEBKIT, test "$with_webkit" != "no")
 
 # all
-PKG_CHECK_MODULES(AWN, [awn >= 0.3.1])
+PKG_CHECK_MODULES(AWN, [awn >= 0.3.9])
 #trash
 PKG_CHECK_MODULES(LIBGLADE, [libglade-2.0])
 # awn-notification-daemon, shiny-switcher, standalone-launcher, taskmand

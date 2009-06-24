@@ -20,8 +20,7 @@
 #ifndef WOBBLYZINIAPPLET_H_
 #define WOBBLYZINIAPPLET_H_
 
-#include <libawn/awn-applet.h>
-#include <libawn/awn-icon.h>
+#include <libawn/libawn.h>
 
 #include <math.h>
 #include <sys/time.h>

@@ -99,8 +99,8 @@ _expose_event (GtkWidget *widget, GdkEventExpose *expose, gpointer data)
 	cairo_t *cr = NULL;
 	gint width, height;
 
-        AwnIcon *icon = AWN_ICON(widget);
-        AwnEffects *fx = awn_icon_get_effects(icon);
+        AwnOverlayable *overlayable = AWN_OVERLAYABLE(widget);
+        AwnEffects *fx = awn_overlayable_get_effects(overlayable);
 
 	cr = awn_effects_cairo_create_clipped (fx, expose->region);
 	if (!cr)

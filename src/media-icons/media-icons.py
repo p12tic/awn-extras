@@ -46,11 +46,11 @@ def error_decorator(fn):
 class App (awn.AppletSimple):
     """
     """
-    def __init__ (self, uid, orient, offset, size, media_button_type):
+    def __init__ (self, uid, panel_id, media_button_type):
         """
         Creating the applet's core
         """
-        awn.AppletSimple.__init__(self, uid, orient, offset, size)
+        awn.AppletSimple.__init__(self, uid, panel_id)
 
         self.icon_names = {}
         self.icon_names["--next"] = "media-skip-forward"
@@ -157,7 +157,7 @@ class App (awn.AppletSimple):
 
 if __name__ == "__main__":
     awn.init(sys.argv[2:])
-    applet = App(awn.uid, awn.orient, awn.orient, awn.size, sys.argv[1])
+    applet = App(awn.uid, awn.panel_id, sys.argv[1])
     awn.init_applet(applet)
     applet.show_all()
     gtk.main()

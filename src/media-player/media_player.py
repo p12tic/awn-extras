@@ -43,7 +43,7 @@ class App(awn.AppletSimple):
         self.full_window = None
         self.dialog = awn.Dialog(self)
         self.play_icon = awn.OverlayThemedIcon(self.get_icon(),
-                                               "media-playback-start")
+                                               "media-playback-start", None)
         self.play_icon.props.scale = 0.4
         self.play_icon.props.active = False
         self.add_overlay(self.play_icon)

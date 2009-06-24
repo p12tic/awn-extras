@@ -160,10 +160,16 @@ awn_sysmon_constructed (GObject *object)
   GtkWidget *icon;
   AwnSysmon * sysmon = AWN_SYSMON(object);
   AwnSysmonPrivate *priv;
+  if (G_OBJECT_CLASS (awn_sysmon_parent_class)->constructed )
+  {
+    G_OBJECT_CLASS (awn_sysmon_parent_class)->constructed (object);
+  }  
+  
   priv = AWN_SYSMON_GET_PRIVATE (sysmon);        
   gchar * folder;
   GTimeVal cur_time;
-    
+
+  
   g_object_get (object,
                 "uid", &uid,
                 NULL);
@@ -283,10 +289,11 @@ awn_sysmon_init (AwnSysmon *sysmon)
 }
 
 AwnSysmon*
-awn_sysmon_new (const gchar *uid)
+awn_sysmon_new (const gchar *uid,gint panel_id)
 {
   return g_object_new (AWN_TYPE_SYSMON,
                             "uid", uid,
+                            "panel-id", panel_id,
                             NULL);
 }
 

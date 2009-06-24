@@ -50,7 +50,7 @@ typedef struct {
 
 GType awn_sysmon_get_type (void);
 
-AwnSysmon* awn_sysmon_new (const gchar *uid);
+AwnSysmon* awn_sysmon_new (const gchar *uid,gint panel_id);
 
 G_END_DECLS
 

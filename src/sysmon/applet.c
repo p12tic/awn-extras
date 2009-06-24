@@ -20,7 +20,7 @@
 
 AwnApplet* awn_applet_factory_initp(gchar* uid, gint panel_id)
 {
-  AwnApplet *applet = AWN_APPLET(awn_sysmon_new(uid));
+  AwnApplet *applet = AWN_APPLET(awn_sysmon_new(uid,panel_id));
 
   return applet;
 }

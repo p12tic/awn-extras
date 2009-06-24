@@ -872,44 +872,6 @@ class Detach:
     
     return menu
   
-  #Helper function to do a surface to pixbuf conversion
-  #Note that the applet shouldn't have to worry about whether or not
-  #Awn Extras' surface to pixbuf function is installed
-  def surface_to_pixbuf(self,surface,pixbuf=None):
-    #Try using Awn Extras' way
-    try:
-      from awn.extras import surface_to_pixbuf
-      
-      #Start a new pixbuf. Applet should save it, 
-      #since pixbufs are horrible with memory
-      if pixbuf is None:
-        pixbuf = surface_to_pixbuf(surface)
-        return pixbuf
-      
-      #Good, the applet saved the pixbuf. Convert surface->pixbuf
-      else:
-        surface_to_pixbuf(surface,pixbuf)
-    
-    #Use the ugly "PNG" hack
-    except:
-      from cStringIO import StringIO
-      stringio = StringIO()
-      pixbuf_loader = gtk.gdk.PixbufLoader()
-      surface.write_to_png(stringio)
-      stringio.seek(0)
-      pixbuf_loader.write(stringio.getvalue())
-      pixbuf_loader.close()
-      stringio.close()
-      
-      #Applet did not pass a pixbuf; t should expect a returned pixbuf
-      if pixbuf is None:
-        return pixbuf_loader.get_pixbuf()
-      
-      #Applet passed a pixbuf; no return value (modify the original pixbuf)
-      #Note that this doesn't really help memory usage
-      else:
-        pixbuf = pixbuf_loader.get_pixbuf()
-  
   #"Emit" a signal, such as 'attach'
   #Any connected functions will be called
   def emit(self,strid,*args):

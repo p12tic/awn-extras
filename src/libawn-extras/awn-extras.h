@@ -25,17 +25,8 @@
 #include <libawn/awn-applet-simple.h>
 #include <gtk/gtk.h>
 #include <string.h>
-#include <gdk/gdk.h>
 #include <glib.h>
 #include <libnotify/notify.h>
-
-/*
-surface_2_pixbuf
-	-copies a cairo image surface to an allocated pixbuf of the same dimensions.
-	-the heights and width must match.  Both must be ARGB.
-*/
-GdkPixbuf * surface_2_pixbuf( GdkPixbuf * pixbuf, cairo_surface_t * surface);
-GdkPixbuf * get_pixbuf_from_surface(cairo_surface_t * surface);
 
 /*
 void notify_message

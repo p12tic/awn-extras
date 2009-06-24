@@ -14,7 +14,6 @@ source_h =	\
 	awn-extras.h
 	
 source_c =	\
-	pixbufs.c	\
 	notify.c    \
 	config_shared.c \
 	shared_menuitems.c

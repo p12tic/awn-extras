@@ -39,6 +39,7 @@ AC_PYTHON_DEVEL()
 PKG_CHECK_MODULES(PYCAIRO, pycairo >= pycairo_required_version)
 PYGTK_CODEGEN_DEFINES="-DHAVE_PYCAIRO $PYGTK_CODEGEN_DEFINES";
 
+# shiny-switcher
 PKG_CHECK_EXISTS([libwnck-1.0 >= 2.21.99.9], [AC_DEFINE(HAVE_LIBWNCK_222, 1, [Have libwnck 2.22.x])])
 
 PKG_CHECK_MODULES(PYGTK, pygtk-2.0 >= pygtk_required_version)
@@ -59,6 +60,15 @@ dnl
 AC_CHECK_LIB(m, round)
 
 dnl
+dnl Check if desktop-agnostic is installed.
+dnl
+
+AWN_BINDIR=`$PKG_CONFIG --variable=exec_prefix awn`/bin
+AC_SUBST(AWN_BINDIR)
+
+config_backend=`$PKG_CONFIG --variable=config_backend awn`
+
+dnl
 dnl package support
 dnl
 
@@ -72,7 +82,7 @@ AM_CONDITIONAL(WITH_WEBKIT, test "$with_webkit" != "no")
 # all
 PKG_CHECK_MODULES(AWN, [awn >= 0.3.9])
 #trash
-PKG_CHECK_MODULES(LIBGLADE, [libglade-2.0])
+#PKG_CHECK_MODULES(LIBGLADE, [libglade-2.0])
 # awn-notification-daemon, shiny-switcher, standalone-launcher, taskmand
 PKG_CHECK_MODULES(LIBWNCK, [libwnck-1.0])
 # awn-notification-daemon, shiny-switcher, trash
@@ -97,8 +107,6 @@ PKG_CHECK_EXISTS([$icon_entry_module],
 if test "$libsexy_required" != "no"; then
     PKG_CHECK_MODULES(LIBSEXY, [libsexy])
 fi
-# standalone-launcher, taskmand, taskmand-applet
-PKG_CHECK_MODULES(DBUS_GLIB, [dbus-glib-1])
 # awn-terminal
 PKG_CHECK_MODULES(VTE, [vte])
 
@@ -110,9 +118,9 @@ fi
 
 if test "$with_gconf" != "no" -a "$with_gnome" != "no"; then
 # filebrowser
-PKG_CHECK_MODULES(GNOMEUI, [libgnomeui-2.0])
+#PKG_CHECK_MODULES(GNOMEUI, [libgnomeui-2.0])
 # filebrowser
-PKG_CHECK_MODULES(GNOME_DESKTOP, [gnome-desktop-2.0])
+#PKG_CHECK_MODULES(GNOME_DESKTOP, [gnome-desktop-2.0])
 # filebrowser, cairo-menu, plugger, trash, trasher
 PKG_CHECK_MODULES(GNOME_VFS, [gnome-vfs-2.0])
 fi
@@ -166,19 +174,16 @@ fi
 # applet-specific libraries
 if test "$with_gconf" != "no" -a "$with_gnome" != "no"; then
 PKG_CHECK_MODULES(AWN_SYSTEM_MONITOR, [$gconf libgtop-2.0])
-PKG_CHECK_MODULES(FILEBROWSER, [$gconf gnome-desktop-2.0 gnome-vfs-2.0 libgnomeui-2.0])
+#PKG_CHECK_MODULES(FILEBROWSER, [$gconf gnome-desktop-2.0 gnome-vfs-2.0 libgnomeui-2.0])
 PKG_CHECK_MODULES(CAIRO_MENU_GNOME, [$gconf gnome-vfs-2.0 libgnome-menu libnotify $icon_entry_module])
-PKG_CHECK_MODULES(PLUGGER, [$gconf gnome-vfs-2.0])
-PKG_CHECK_MODULES(TRASH, [gnome-vfs-2.0 libglade-2.0 x11])
-PKG_CHECK_MODULES(TRASHER, [$gconf gnome-vfs-2.0])
+#PKG_CHECK_MODULES(PLUGGER, [$gconf gnome-vfs-2.0])
+#PKG_CHECK_MODULES(TRASH, [gnome-vfs-2.0 libglade-2.0 x11])
+#PKG_CHECK_MODULES(TRASHER, [$gconf gnome-vfs-2.0])
 fi
 if test "$with_gconf" != "no"; then
 PKG_CHECK_MODULES(NOTIFICATION_DAEMON, [$gconf $gstreampkg libnotify $url_label_module libwnck-1.0 x11])
 fi
 PKG_CHECK_MODULES(SHINY_SWITCHER, [libwnck-1.0 x11 xcomposite xrender])
-PKG_CHECK_MODULES(STANDALONE_LAUNCHER, [dbus-glib-1 libwnck-1.0])
-PKG_CHECK_MODULES(TASKMAND, [dbus-glib-1 libwnck-1.0])
-PKG_CHECK_MODULES(TASKMAND_APPLET, [dbus-glib-1])
 
 dnl
 dnl Check python modules
@@ -192,45 +197,37 @@ if test x${enable_pymod_checks} = xyes; then
     # battery-applet
     AM_CHECK_PYMOD(pynotify,,,AC_MSG_ERROR([python module pynotify required (python-notify)]))
     # arss, mail
-    AM_CHECK_PYMOD(feedparser,,,AC_MSG_ERROR([python module feedparser required (python-feedparser)]))
+#    AM_CHECK_PYMOD(feedparser,,,AC_MSG_ERROR([python module feedparser required (python-feedparser)]))
     # cairo-clock
     AM_CHECK_PYMOD(rsvg,,,AC_MSG_ERROR([python module rsvg required (gnome-python-desktop)]))
     # cairo-clock, calendar
     AM_CHECK_PYMOD(dateutil,,,AC_MSG_ERROR([python module dateutil required (python-dateutil)]))
+    # media-player, volume-control
+    AM_CHECK_PYMOD(gst,,,AC_MSG_ERROR([python module gstreamer required (python-gst0.10)]))
     if test "$with_gnome" != "no"; then
     # MiMenu, YAMA
     AM_CHECK_PYMOD(gmenu,,,AC_MSG_ERROR([python module gmenu required]))
     fi
-    if test "$with_gconf" != "no" -o "$with_gnome" != "no"; then
+    #if test "$with_gconf" != "no" -o "$with_gnome" != "no"; then
     # stacks
-    AM_CHECK_PYMOD(gnomedesktop,,,AC_MSG_ERROR([python module gnomedesktop required]))
+#    AM_CHECK_PYMOD(gnomedesktop,,,AC_MSG_ERROR([python module gnomedesktop required]))
     # stacks
-    AM_CHECK_PYMOD(gnomevfs,,,AC_MSG_ERROR([python module gnomevfs required]))
+#    AM_CHECK_PYMOD(gnomevfs,,,AC_MSG_ERROR([python module gnomevfs required]))
     # stacks
-    AM_CHECK_PYMOD(gnome.ui,,,AC_MSG_ERROR([python module gnome.ui required]))
+#    AM_CHECK_PYMOD(gnome.ui,,,AC_MSG_ERROR([python module gnome.ui required]))
     # awn-meebo, digg, pandora
-    AM_CHECK_PYMOD(gtkmozembed,,,AC_MSG_ERROR([python module gtkmozembed required (python-gnome2-extras)]))
-    fi
+#    AM_CHECK_PYMOD(gtkmozembed,,,AC_MSG_ERROR([python module gtkmozembed required (python-gnome2-extras)]))
+    #fi
     if test "$with_gconf" != "no"; then
     # calendar, media-control, media-player, stacks
     AM_CHECK_PYMOD(gconf,,,AC_MSG_ERROR([python module gconf required]))
     # calendar
     AM_CHECK_PYMOD(gdata,,,AC_MSG_ERROR([python module gdata required (python-gdata)]))
-    # media-player, volume-control
-    AM_CHECK_PYMOD(gst,,,AC_MSG_ERROR([python module gstreamer required (python-gst0.10)]))
     # calendar
     AM_CHECK_PYMOD(vobject,,,AC_MSG_ERROR([python module gdata required (python-vobject)]))
     fi
 fi
 
-dnl
-dnl Check if desktop-agnostic is installed.
-dnl
-
-AWN_BINDIR=`$PKG_CONFIG --variable=exec_prefix awn`/bin
-AC_SUBST(AWN_BINDIR)
-
-config_backend=`$PKG_CONFIG --variable=config_backend awn`
 dnl
 dnl Check for Vala support.
 dnl
@@ -246,7 +243,6 @@ if test -n "$AWN_VAPIDIR" -a -f "$AWN_VAPIDIR/awn.vapi"; then
 fi
 AM_CONDITIONAL(GCONF_SCHEMAS, test "$config_backend" = "GConf")
 AM_CONDITIONAL(HAVE_VALA, test "$has_vala" = "yes")
-AM_CONDITIONAL(LIBAWN_USE_GNOME, test -n "`echo $AWN_CFLAGS | grep LIBAWN_USE_GNOME`")
 
 dnl
 dnl Check the D-BUS version.

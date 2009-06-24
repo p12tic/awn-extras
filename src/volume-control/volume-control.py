@@ -301,9 +301,6 @@ class VolumeControlApplet:
             self.__was_muted = muted
 
     def setup_icons(self):
-        theme = self.theme if self.theme != system_theme_name else None
-        self.applet.theme.theme(theme)
-
         is_moonbeam_theme = os.path.isdir(os.path.join(moonbeam_theme_dir, self.theme))
         keys = list(moonbeam_ranges) if is_moonbeam_theme else volume_ranges.keys()
 
@@ -311,6 +308,9 @@ class VolumeControlApplet:
         for i in map(str, keys):
             states[i] = "audio-volume-%s" % i
         self.applet.theme.set_states(states)
+
+        theme = self.theme if self.theme != system_theme_name else None
+        self.applet.theme.theme(theme)
 
         self.refresh_orientation()
 

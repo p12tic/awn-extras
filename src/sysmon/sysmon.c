@@ -279,20 +279,14 @@ awn_sysmon_init (AwnSysmon *sysmon)
   priv->box = awn_icon_box_new_for_applet (AWN_APPLET (sysmon));
   gtk_container_add (GTK_CONTAINER (sysmon), priv->box);
   gtk_widget_show (priv->box);
-  
+
 }
 
 AwnSysmon*
-awn_sysmon_new (const gchar *uid,
-                  gint         orient,
-                  gint         offset,
-                  gint         size)
+awn_sysmon_new (const gchar *uid)
 {
   return g_object_new (AWN_TYPE_SYSMON,
                             "uid", uid,
-                            "orient", orient,
-                            "offset", offset,
-                            "size", size,
                             NULL);
 }
 

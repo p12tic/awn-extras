@@ -209,6 +209,7 @@ static gboolean _expose(GtkWidget *self,
   
   priv = AWN_SYSMONICON_GET_PRIVATE (self);
   
+  g_debug ("Size is %u",awn_applet_get_size (AWN_APPLET(priv->applet)));
   if (!priv->graph_cr)
   {
     cairo_surface_t * new_surface;
@@ -217,6 +218,7 @@ static gboolean _expose(GtkWidget *self,
     new_surface = cairo_surface_create_similar (priv->graph_surface,CAIRO_CONTENT_COLOR_ALPHA, size,size);
     awn_icon_set_from_surface (AWN_ICON(self),new_surface);  
     cairo_surface_destroy (new_surface);    
+    g_debug ("size = %u",size);
   }  
   else
   {

@@ -103,13 +103,13 @@ GdkFilterReturn filter_func(GdkXEvent *xevent, GdkEvent *event, gpointer data)
 
 // entry method
 AwnApplet*
-awn_applet_factory_initp ( gchar* uid, gint orient, gint offset, gint height )
+awn_applet_factory_initp ( gchar* uid, gint panel_id )
 {
 	AwnApplet *applet;
 	WobblyZini *wobblyzini;
 
 	// initialize the applet
-	applet = awn_applet_new( uid, orient, offset,height );
+	applet = awn_applet_new (uid, panel_id);
 	// our initialize
 	wobblyzini = wobblyzini_applet_new(applet);
 	// right-click handling

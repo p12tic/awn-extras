@@ -48,9 +48,9 @@ class App (awn.AppletSimple):
 
     APPLET_NAME = "Media Control Applet"
     APPLET_NAME_MARKUP = "<span weight=\"bold\">Media Control Applet</span>"
-    def __init__(self, uid, orient, offset, size):
+    def __init__(self, uid, panel_id):
         """Creating the applets core"""
-        awn.AppletSimple.__init__(self, uid, orient, offset, size)
+        awn.AppletSimple.__init__(self, uid, panel_id)
         self.set_tooltip_text(App.APPLET_NAME)
         self.MediaPlayer = None
         self.location = __file__.replace('mediacontrol.py','')
@@ -380,7 +380,7 @@ class App (awn.AppletSimple):
 
 if __name__ == "__main__":
     awn.init                      (sys.argv[1:])
-    applet = App                  (awn.uid, awn.orient, awn.offset, awn.size)
+    applet = App                  (awn.uid, awn.panel_id)
     awn.init_applet               (applet)
     applet.show_all               ()
     gtk.main                      ()

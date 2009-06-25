@@ -26,6 +26,7 @@
 #include <gdk/gdkkeysyms.h>
 #include <vte/vte.h>
 #include <string.h>
+#include <glib/gi18n.h>
 
 #include "awnterm.h"
 #include "settings.h"
@@ -159,7 +160,7 @@ gboolean create_new_tab()
 
 	// New Label
 	applet->number_of_tabs += 1;
-	sprintf(buffer, "Term #%d", applet->number_of_tabs);
+	sprintf(buffer, _("Term #%d"), applet->number_of_tabs);
 	applet->label = gtk_label_new(buffer);
 
 	// New Page

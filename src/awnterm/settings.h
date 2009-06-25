@@ -53,10 +53,6 @@ void save_opacity (GtkWidget *scale, AwnConfigClient *config);
 void save_bg_img (GtkWidget *fc, AwnConfigClient *config);
 void save_hide_on_unfocus (GtkWidget *check, AwnConfigClient *config);
 
-/* The following function is called when the main terminal option is changed from the preferences window
- * By design, there is no load_main_terminal () because that setting is loaded on an as need basis. */
-void save_main_terminal (GtkWidget *entry, AwnConfigClient *config);
-
 // Show the preference window
 void show_settings_window ();
 

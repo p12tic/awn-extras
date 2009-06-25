@@ -26,6 +26,7 @@
 #include <libawn/awn-dialog.h>
 #include <vte/vte.h>
 #include <gtk/gtk.h>
+#include <glib/gi18n.h>
 
 #include "awnterm.h"
 #include "settings.h"
@@ -38,7 +39,7 @@ AwnApplet* awn_applet_factory_initp (const gchar* uid, gint panel_id)
 	applet->applet = AWN_APPLET (awn_applet_simple_new (uid, panel_id));
 
 	// Set up the title
-	awn_applet_simple_set_tooltip_text (AWN_APPLET_SIMPLE(applet->applet), "Awn Terminal");
+	awn_applet_simple_set_tooltip_text (AWN_APPLET_SIMPLE(applet->applet), _("Awn Terminal"));
 	
 	// Set up the icon
 	awn_applet_simple_set_icon_name(AWN_APPLET_SIMPLE(applet->applet),

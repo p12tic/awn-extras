@@ -44,11 +44,11 @@ group = awn.CONFIG_DEFAULT_GROUP
 
 class App (awn.AppletSimple):
   icons = {}
-  def __init__(self, uid, orient, offset, size):
+  def __init__(self, uid, panel_id):
     self.uid = uid
     
     #AWN Applet Configuration
-    awn.AppletSimple.__init__(self, uid, orient, offset, size)
+    awn.AppletSimple.__init__(self, uid, panel_id)
     self.set_tooltip_text(_("File Browser Launcher"))
     self.dialog = awn.Dialog(self)
 
@@ -544,7 +544,7 @@ class App (awn.AppletSimple):
     
 if __name__ == '__main__':
   awn.init(sys.argv[1:])
-  applet = App(awn.uid, awn.orient, awn.offset, awn.size)
+  applet = App(awn.uid, awn.panel_id)
   awn.init_applet(applet)
   applet.show_all()
   gtk.main()

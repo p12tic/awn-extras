@@ -138,6 +138,72 @@ class App (awn.AppletSimple):
         proxy = dbus.SessionBus().get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
         proxy.connect_to_signal('NameOwnerChanged', self.name_owner_changed_cb)
 
+    def init_docklet(self, window_id):
+        docklet = awn.Applet(self.props.uid, self.props.panel_id)
+        docklet.props.quit_on_delete = False
+
+        align = awn.Alignment(docklet)
+        box = None
+        if (docklet.props.orient in [awn.ORIENTATION_TOP,
+                                     awn.ORIENTATION_BOTTOM]):
+            box = gtk.HBox()
+            align.add(box)
+        else:
+            box = gtk.VBox()
+            align.add(box)
+
+        # TODO: not really for side orient yet
+        pixbuf = self.image.get_pixbuf()
+        dest_width = int(pixbuf.get_width() * 
+                         (docklet.props.max_size - docklet.props.offset)
+                         / pixbuf.get_height())
+        pixbuf = pixbuf.scale_simple(dest_width, docklet.props.max_size,
+                                     gtk.gdk.INTERP_BILINEAR)
+        image = gtk.image_new_from_pixbuf(pixbuf)
+        image.set_padding(6, 0)
+        box.add(image)
+
+        label_align = gtk.Alignment(0.5, 1.0, 1.0, 0.0) # for BOTTOM
+        label = gtk.Label()
+        label.set_markup(self.label.get_label())
+        label.set_size_request(-1, docklet.props.size)
+        label_align.add(label)
+
+        box.add(label_align)
+
+        play_button_size = (docklet.props.max_size + docklet.props.size) / 2
+        play_pause = awn.ThemedIcon(bind_effects = False)
+        play_pause.set_orientation(docklet.props.orient)
+        play_pause.set_size(play_button_size)
+        play_pause.set_info_simple("media-control-docklet",
+                                   docklet.props.uid,
+                                   "media-playback-start")
+        play_pause.connect("button-press-event", self.button_pp_press)
+        box.pack_start(play_pause, False)
+
+        prev_button = awn.ThemedIcon(bind_effects = False)
+        prev_button.set_orientation(docklet.props.orient)
+        prev_button.set_size(docklet.props.size)
+        prev_button.set_info_simple("media-control-docklet",
+                                   docklet.props.uid,
+                                   "media-skip-backward")
+        prev_button.connect("button-press-event", self.button_previous_press)
+        box.pack_start(prev_button, False)
+
+        next_button = awn.ThemedIcon(bind_effects = False)
+        next_button.set_orientation(docklet.props.orient)
+        next_button.set_size(docklet.props.size)
+        next_button.set_info_simple("media-control-docklet",
+                                   docklet.props.uid,
+                                   "media-skip-forward")
+        next_button.connect("button-press-event", self.button_next_press)
+        box.pack_start(next_button, False)
+
+        docklet.add(align)
+
+        docklet.applet_construct(window_id)
+        docklet.show_all()
+
     def button_press(self, widget, event):
         if event.button == 1:
             if self.dialog_visible:
@@ -145,10 +211,18 @@ class App (awn.AppletSimple):
                 self.dialog_visible = False
             else:
                 if not self.MediaPlayer: self.what_app()
-                self.dialog_visible = True
-                # update controls
-                if self.MediaPlayer: self.labeler()
-                self.dialog.show_all()
+                docklet_win = self.docklet_request (400, False)
+                if docklet_win != 0:
+                    self.dialog_visible = True
+                    # update controls
+                    if self.MediaPlayer: self.labeler()
+                    self.dialog_visible = False
+                    self.init_docklet(docklet_win)
+                else:
+                    self.dialog_visible = True
+                    # update controls
+                    if self.MediaPlayer: self.labeler()
+                    self.dialog.show_all()
         elif event.button == 2:
             self.button_pp_press(widget)
         elif event.button == 3:
@@ -303,17 +377,17 @@ class App (awn.AppletSimple):
         return False
 
     @error_decorator
-    def button_previous_press(self, widget):
+    def button_previous_press(self, widget, *args):
         self.MediaPlayer.previous()
         if (self.MediaPlayer and self.MediaPlayer.is_async() == False): self.labeler()
 
     @error_decorator
-    def button_pp_press(self, widget):
+    def button_pp_press(self, widget, *args):
         self.MediaPlayer.play_pause()
         if (self.MediaPlayer and self.MediaPlayer.is_async() == False): self.labeler()
 
     @error_decorator
-    def button_next_press(self, widget):
+    def button_next_press(self, widget, *args):
         self.MediaPlayer.next()
         if (self.MediaPlayer and self.MediaPlayer.is_async() == False): self.labeler()
 

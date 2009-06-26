@@ -1674,9 +1674,10 @@ AwnApplet* awn_applet_factory_initp(gchar* uid, gint panel_id)
                                     states,
                                     icon_names
                                     );
-  awn_applet_simple_set_icon_name (AWN_APPLET_SIMPLE(applet),
+  awn_applet_simple_set_icon_state (AWN_APPLET_SIMPLE(applet),"On");
+/*  awn_applet_simple_set_icon_name (AWN_APPLET_SIMPLE(applet),
                                     "Awn Notification Daemon",
-				    "Off");
+				    "Off");*/
 /*  gtk_widget_show_all(GTK_WIDGET(applet));*/
 
 

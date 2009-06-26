@@ -72,12 +72,12 @@ class Prefs:
     self.mmb_path = self.client.get_string(group, 'mmb_path')
     
     #Places: show bookmarks, home, local, network
-    self.show_bookmarks = self.client.get_int(group, 'places_bookmarks')
-    self.show_home = self.client.get_int(group, 'places_home')
-    self.show_local = self.client.get_int(group, 'places_local')
-    self.show_network = self.client.get_int(group, 'places_network')
-    self.show_connect = self.client.get_int(group, 'places_connect')
-    self.show_filesystem = self.client.get_int(group, 'places_filesystem')
+    self.show_bookmarks = self.client.get_int(group, 'show_bookmarks')
+    self.show_home = self.client.get_int(group, 'show_home')
+    self.show_local = self.client.get_int(group, 'show_local')
+    self.show_network = self.client.get_int(group, 'show_network')
+    self.show_connect = self.client.get_int(group, 'show_connect')
+    self.show_filesystem = self.client.get_int(group, 'show_filesystem')
     
     #Open the places item when clicked
     self.places_open = self.client.get_int(group, 'places_open')
@@ -602,49 +602,49 @@ class Prefs:
     #Tab: Dialog; Section: Places; Checkbox: Home Folder
     elif check.identifier=='dialog.places.home':
       if check.get_active()==True:
-        self.client.set_int(group, 'places_home',2)
+        self.client.set_int(group, 'show_home',2)
       else:
-        self.client.set_int(group, 'places_home',1)
+        self.client.set_int(group, 'show_home',1)
       self.check_all()
 
     #Tab: Dialog; Section: Places; Checkbox: Filesystem
     elif check.identifier == 'dialog.places.filesystem':
       if check.get_active():
-        self.client.set_int(group, 'places_filesystem', 2)
+        self.client.set_int(group, 'show_filesystem', 2)
       else:
-        self.client.set_int(group, 'places_filesystem', 1)
+        self.client.set_int(group, 'show_filesystem', 1)
       self.check_all()
 
     #Tab: Dialog; Section: Places; Checkbox: Local drives
     elif check.identifier=='dialog.places.local':
       if check.get_active()==True:
-        self.client.set_int(group, 'places_local',2)
+        self.client.set_int(group, 'show_local',2)
       else:
-        self.client.set_int(group, 'places_local',1)
+        self.client.set_int(group, 'show_local',1)
       self.check_all()
 
     #Tab: Dialog; Section: Places; Checkbox: Network drives
     elif check.identifier=='dialog.places.network':
       if check.get_active()==True:
-        self.client.set_int(group, 'places_network',2)
+        self.client.set_int(group, 'show_network',2)
       else:
-        self.client.set_int(group, 'places_network',1)
+        self.client.set_int(group, 'show_network',1)
       self.check_all()
 
     #Tab: Dialog; Section: Places; Checkbox: Connect to server
     elif check.identifier == 'dialog.places.connect':
       if check.get_active():
-        self.client.set_int(group, 'places_connect', 2)
+        self.client.set_int(group, 'show_connect', 2)
       else:
-        self.client.set_int(group, 'places_connect', 1)
+        self.client.set_int(group, 'show_connect', 1)
       self.check_all()
 
     #Tab: Dialog; Section: Places; Checkbox: Bookmarks
     elif check.identifier=='dialog.places.bookmarks':
       if check.get_active()==True:
-        self.client.set_int(group, 'places_bookmarks',2)
+        self.client.set_int(group, 'show_bookmarks',2)
       else:
-        self.client.set_int(group, 'places_bookmarks',1)
+        self.client.set_int(group, 'show_bookmarks',1)
       self.check_all()
 
     #Tab: Dialog; Section: Behavior; Checkbox: Focus

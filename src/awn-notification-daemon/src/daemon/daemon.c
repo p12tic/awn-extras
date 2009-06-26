@@ -1629,7 +1629,7 @@ static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, 
       GtkWidget *item;
       menu = awn_applet_create_default_menu (G_daemon_config.awn_app);
       gtk_menu_set_screen (GTK_MENU (menu), NULL);
-      item = shared_menuitem_create_applet_prefs(APPLET_NAME,NULL,APPLET_NAME);
+      item = awn_applet_create_preferences(APPLET_NAME,NULL,APPLET_NAME);
       if (item) //generic preferences is enabled
       {
         gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);          

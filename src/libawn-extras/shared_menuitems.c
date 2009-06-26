@@ -70,40 +70,44 @@ _cleanup_applet_prefs_item(GtkWidget *widget, GdkEvent *event,
   return FALSE;
 }
 
-/*
-* Create a menu item that invokes a generic applet preferences dialog.
-* instance - The folder name containing the configuration key within the applets
-* configuration folder.
-* baseconf - If there is a default configuration location that is different than
-* the instance provided.  Otherwise NULL.
-* applet_name - applet name used to reference the associated schema-ini
-*
-*  Returns:
-*    A gtk_menu_item or NULL if the generic applet preferences configuration is
-*    disabled
-*
-*  Notes:
-*    There is no need to attach the returned item to a
-*  signal as this is handled by the function.
-*/
-GtkWidget * shared_menuitem_create_applet_prefs(gchar * instance, 
-                                          gchar * baseconf,gchar * applet_name)
+/**
+ * awn_applet_create_preferences:
+ *
+ * @instance: The folder name containing the configuration key within the
+ * applets configuration folder.
+ * @baseconf: If there is a default configuration location that is different
+ * than the instance provided.  Otherwise %NULL.
+ * @applet_name: applet name used to reference the associated schema-ini
+ *
+ * Create a menu item that invokes a generic applet preferences dialog.
+ * Notes:
+ * * There is no need to attach the returned item to a signal, as this is
+ *   handled by the function.
+ *
+ * Returns: A #GtkMenuItem or %NULL if the generic applet preferences
+ * configuration is disabled.
+ *
+ */
+GtkWidget *
+awn_applet_create_preferences (gchar *instance,
+                               gchar *baseconf,
+                               gchar *applet_name)
 {
   g_return_val_if_fail(instance,NULL);
-  g_return_val_if_fail(applet_name,NULL);    
-  
+  g_return_val_if_fail(applet_name,NULL);
+
   GtkWidget * item = NULL;
   gchar * keysdir_copy = NULL;
   PrefsLocation  * prefs_location = g_malloc(sizeof(PrefsLocation));
-  
+
   prefs_location->instance = g_strdup(instance);
-  prefs_location->base = baseconf?g_strdup(baseconf):NULL; 
+  prefs_location->base = baseconf?g_strdup(baseconf):NULL;
   prefs_location->applet_name = g_strdup(applet_name);
   if (share_config_bool(SHR_KEY_GENERIC_PREFS))
   {
     item = gtk_image_menu_item_new_with_label("Applet Preferences");
     gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),
-          gtk_image_new_from_stock (GTK_STOCK_PREFERENCES,GTK_ICON_SIZE_MENU));    
+          gtk_image_new_from_stock (GTK_STOCK_PREFERENCES,GTK_ICON_SIZE_MENU));
     gtk_widget_show_all(item);
     g_signal_connect(G_OBJECT(item), "activate",
                      G_CALLBACK(_start_applet_prefs), prefs_location);
@@ -114,7 +118,7 @@ GtkWidget * shared_menuitem_create_applet_prefs(gchar * instance,
   {
       g_warning("Generic Preferences Requested but support is not enabled in configuration\n");
   }
- 
+
   return item;
 }
 

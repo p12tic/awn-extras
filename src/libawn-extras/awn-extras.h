@@ -72,23 +72,8 @@ share_config_bool
 
 gboolean share_config_bool(const gchar * key);
 
-/*
-* Create a menu item that invokes a generic applet preferences dialog.
-* instance - The folder name containing the configuration key within the applets
-* configuration folder.
-* baseconf - If there is a default configuration location that is different than
-* the instance provided.  Otherwise NULL.
-* applet_name - applet name used to reference the associated schema-ini
-*
-*  Returns:
-*    A gtk_menu_item or NULL if the generic applet preferences configuration is
-*    disabled
-*
-*  Notes:
-*    There is no need to attach the returned item to a
-*  signal as this is handled by the function.
-*/
-GtkWidget *shared_menuitem_create_applet_prefs(gchar *instance,gchar *baseconf,
-                                              gchar * applet_name);
+GtkWidget *awn_applet_create_preferences (gchar *instance,
+                                          gchar *baseconf,
+                                          gchar *applet_name);
 
 #endif

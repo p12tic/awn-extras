@@ -67,10 +67,21 @@ class App (awn.AppletSimple):
         self.label.set_padding(4, 0)
         self.label.set_markup(App.APPLET_NAME_MARKUP)
 
-        self.what_app()
+        self.album_overlay = awn.OverlayPixbufFile()
+        self.album_overlay.props.gravity = gtk.gdk.GRAVITY_SOUTH_EAST
+        self.album_overlay.props.alpha = 0.85
+        self.album_overlay.props.active = False
+        self.add_overlay(self.album_overlay)
+
         # The Heart
         self.dialog = awn.Dialog (self)
         self.dialog_visible = False
+
+        # Docklet related stuff
+        self.docklet = None
+        self.docklet_visible = False
+        self.docklet_image = None
+        self.docklet_label = None
 
         #Popup menu
         self.about = gtk.ImageMenuItem(gtk.STOCK_ABOUT)
@@ -79,6 +90,8 @@ class App (awn.AppletSimple):
         self.popup_menu = self.create_default_menu()
         self.popup_menu.append(self.about)
         self.popup_menu.show_all()
+
+        self.what_app()
 
         # Defining Widgets
         vbox = gtk.VBox()
@@ -93,11 +106,6 @@ class App (awn.AppletSimple):
         button_pause = gtk.ToolButton ("gtk-media-pause")
         button_next = gtk.ToolButton ("gtk-media-next")
         self.image = gtk.Image()
-        self.album_overlay = awn.OverlayPixbufFile()
-        self.album_overlay.props.gravity = gtk.gdk.GRAVITY_SOUTH_EAST
-        self.album_overlay.props.alpha = 0.85
-        self.album_overlay.props.active = False
-        self.add_overlay(self.album_overlay)
         # Packing Widgets
         hbox = gtk.HBox()
         hbox.pack_start(button_previous)
@@ -138,9 +146,30 @@ class App (awn.AppletSimple):
         proxy = dbus.SessionBus().get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
         proxy.connect_to_signal('NameOwnerChanged', self.name_owner_changed_cb)
 
+    def docklet_image_from_dialog_image(self):
+        pixbuf = self.image.get_pixbuf()
+        if pixbuf == None: return None
+        # TODO: orient support
+        max_size = self.docklet.props.max_size
+        offset = self.docklet.props.offset
+
+        dest_width = int(pixbuf.get_width() * (max_size - offset)
+                         / pixbuf.get_height())
+        pixbuf = pixbuf.scale_simple(dest_width, max_size - offset,
+                                     gtk.gdk.INTERP_BILINEAR)
+
+        return pixbuf
+
     def init_docklet(self, window_id):
+        self.docklet_visible = True
         docklet = awn.Applet(self.props.uid, self.props.panel_id)
+        self.docklet = docklet
         docklet.props.quit_on_delete = False
+
+        def invalidate_docklet(widget, applet):
+            applet.docklet_visible = False
+            applet.docklet = None
+        docklet.connect("destroy", invalidate_docklet, self)
 
         align = awn.Alignment(docklet)
         box = None
@@ -153,21 +182,19 @@ class App (awn.AppletSimple):
             align.add(box)
 
         # TODO: not really for side orient yet
-        pixbuf = self.image.get_pixbuf()
-        dest_width = int(pixbuf.get_width() * 
-                         (docklet.props.max_size - docklet.props.offset)
-                         / pixbuf.get_height())
-        pixbuf = pixbuf.scale_simple(dest_width, docklet.props.max_size,
-                                     gtk.gdk.INTERP_BILINEAR)
-        image = gtk.image_new_from_pixbuf(pixbuf)
-        image.set_padding(6, 0)
-        box.add(image)
+        pixbuf = self.docklet_image_from_dialog_image()
+        if pixbuf:
+            self.docklet_image = gtk.image_new_from_pixbuf(pixbuf)
+        else:
+            self.docklet_image = gtk.Image()
+        self.docklet_image.set_padding(6, 0)
+        box.add(self.docklet_image)
 
         label_align = gtk.Alignment(0.5, 1.0, 1.0, 0.0) # for BOTTOM
-        label = gtk.Label()
-        label.set_markup(self.label.get_label())
-        label.set_size_request(-1, docklet.props.size)
-        label_align.add(label)
+        self.docklet_label = gtk.Label()
+        self.docklet_label.set_markup(self.label.get_label())
+        self.docklet_label.set_size_request(-1, docklet.props.size)
+        label_align.add(self.docklet_label)
 
         box.add(label_align)
 
@@ -211,17 +238,18 @@ class App (awn.AppletSimple):
                 self.dialog_visible = False
             else:
                 if not self.MediaPlayer: self.what_app()
-                docklet_win = self.docklet_request (400, False)
-                if docklet_win != 0:
-                    self.dialog_visible = True
-                    # update controls
-                    if self.MediaPlayer: self.labeler()
-                    self.dialog_visible = False
-                    self.init_docklet(docklet_win)
+                # update controls
+                self.dialog_visible = True
+                if self.MediaPlayer:
+                    self.labeler()
+                    docklet_win = self.docklet_request (400, False) if self.MediaPlayer.is_async() else 0
+                    if docklet_win != 0:
+                        self.dialog_visible = False
+                        self.init_docklet(docklet_win)
+                    else:
+                        self.dialog.show_all()
                 else:
-                    self.dialog_visible = True
-                    # update controls
-                    if self.MediaPlayer: self.labeler()
+                    # show the media-players menu
                     self.dialog.show_all()
         elif event.button == 2:
             self.button_pp_press(widget)
@@ -259,6 +287,8 @@ class App (awn.AppletSimple):
             self.set_tooltip_text(App.APPLET_NAME)
             self.label.set_markup(App.APPLET_NAME_MARKUP)
             self.MediaPlayer = None
+            self.album_overlay.props.active = False
+            if self.docklet_visible: self.docklet.destroy()
         else:
             self.MediaPlayer = mediaplayers.__dict__[self.player_name]()
             self.MediaPlayer.set_callback(self.song_changed)
@@ -358,7 +388,8 @@ class App (awn.AppletSimple):
             self.album_overlay.props.active = False
         
         # no need to set dialog elements if it's not visible
-        if self.dialog_visible == False: return False
+        if (not self.dialog_visible) and (not self.docklet_visible):
+            return False
 
         self.label.set_markup(markup)
         try:
@@ -374,6 +405,13 @@ class App (awn.AppletSimple):
                     self.albumArtSize,
                     gtk.gdk.INTERP_BILINEAR))
             except GError: pass
+
+        # update docklet
+        if self.docklet_visible:
+            pixbuf = self.docklet_image_from_dialog_image()
+            if pixbuf: self.docklet_image.set_from_pixbuf(pixbuf)
+            self.docklet_label.set_markup(markup)
+
         return False
 
     @error_decorator

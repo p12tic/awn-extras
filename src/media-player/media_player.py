@@ -46,6 +46,7 @@ class App(awn.AppletSimple):
                                                "media-playback-start", None)
         self.play_icon.props.scale = 0.4
         self.play_icon.props.active = False
+        self.play_icon.props.gravity = gtk.gdk.GRAVITY_SOUTH_EAST
         self.add_overlay(self.play_icon)
 
         # Recent items menu

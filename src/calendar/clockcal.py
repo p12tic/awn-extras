@@ -671,8 +671,9 @@ class Applet02(Calendar):
 
 class Applet04(Calendar):
 
-    def __init__(self, uid, orient, offset, size):
-        awn.AppletSimple.__init__(self, uid, orient, offset, size)
+    def __init__(self, uid, panel_id):
+        awn.AppletSimple.__init__(self, uid, panel_id)
+        size = self.get_size()
         icon = gdk.pixbuf_new_from_file(self.get_image_path('calendar.png'))
         scaled = icon.scale_simple(size, size, gtk.gdk.INTERP_BILINEAR)
         self.set_icon_pixbuf(scaled)
@@ -695,7 +696,7 @@ if __name__ == "__main__":
     awn.init(sys.argv[1:])
     os.nice(19)
     if hasattr(awn, 'Dialog'):
-        applet = Applet04(awn.uid, awn.orient, awn.offset, awn.size)
+        applet = Applet04(awn.uid, awn.panel_id)
     else:
         applet = Applet02(awn.uid, awn.orient, awn.height)
     awn.init_applet(applet)

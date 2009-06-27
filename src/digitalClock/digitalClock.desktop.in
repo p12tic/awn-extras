@@ -2,8 +2,8 @@
 Type=Application
 X-AWN-Type=Applet
 X-AWN-AppletType=Python
-Name=Digital Clock
-Comment=A clock and calendar in one.
+_Name=Digital Clock
+_Comment=A clock and calendar in one.
 Exec=digitalClock/digitalClock.py
 Icon=awn-applet-digital-clock
 X-AWN-AppletCategory=Utility,Clock

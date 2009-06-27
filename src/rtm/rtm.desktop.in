@@ -1,11 +1,11 @@
 [Desktop Entry]
 Version=1.0
-Name=RTM Applet
+_Name=RTM Applet
 Type=Application
 X-AWN-Type=Applet
 X-AWN-AppletType=Python 
 X-AWN-AppletCategory=Network,Office
-Comment=Use Remember The Milk from AWN.
+_Comment=Use Remember The Milk from AWN.
 Exec=rtm/awn-rtm.py
 Icon=rtm/icons/awn-rtm.png
 

@@ -1,11 +1,10 @@
 [Desktop Entry]
 Version=1.0
-Name=Media Control
+_Name=Media Control
 Type=Application
 X-AWN-Type=Applet
 X-AWN-AppletType=Python
-Comment=Control your music player
+_Comment=Control your music player
 Exec=media-control/mediacontrol.py
 Icon=media-control/icons/media-control
-Name[en_US]=Media Control
 X-AWN-AppletCategory=AudioVideo,Audio,Player

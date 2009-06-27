@@ -2,8 +2,8 @@
 Type=Application
 X-AWN-Type=Applet
 X-AWN-AppletType=C
-Name=Awn Main Menu
-Comment=A main menu for Awn
+_Name=Awn Main Menu
+_Comment=A main menu for Awn
 Exec=@LIBDIR@/awn/applets/main-menu/main-menu.so
 Icon=gnome-main-menu
 X-AWN-AppletCategory=Utility

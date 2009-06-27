@@ -2,8 +2,8 @@
 Type=Application
 X-AWN-Type=Applet
 X-AWN-AppletType=C
-Name=Awn Terminal Applet
-Comment=A simple popup terminal
+_Name=Awn Terminal Applet
+_Comment=A simple popup terminal
 Exec=@LIBDIR@/awn/applets/awnterm/awnterm.so
 Icon=terminal
 X-AWN-AppletCategory=System,TerminalEmulator

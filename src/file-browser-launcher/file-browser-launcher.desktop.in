@@ -2,8 +2,8 @@
 Type=Application
 X-AWN-Type=Applet
 X-AWN-AppletType=Python
-Name=File Browser Launcher
-Comment=A launcher for your file manager
+_Name=File Browser Launcher
+_Comment=A launcher for your file manager
 Exec=file-browser-launcher/file-browser-launcher.py
 Icon=folder
 X-Ubuntu-Gettext-Domain=awn-extras-applets

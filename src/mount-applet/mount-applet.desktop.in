@@ -1,11 +1,10 @@
 [Desktop Entry]
 Version=1.0
-Name=Mount Applet
+_Name=Mount Applet
 Type=Application
 X-AWN-Type=Applet
 X-AWN-AppletType=Python
-Comment=An applet to (un)mount devices
+_Comment=An applet to (un)mount devices
 Exec=mount-applet/mount-applet.py
 Icon=mount-applet/icons/mount-applet
-Name[en_US]=Mount Applet
 X-AWN-AppletCategory=System,Filesystem

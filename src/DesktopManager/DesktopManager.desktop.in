@@ -1,8 +1,8 @@
 [Desktop Entry]
 Version=1.0
-Name=DesktopManager
+_Name=DesktopManager
 Type=Application
-Comment=Switches the Desktop Image
+_Comment=Switches the Desktop Image
 Exec=DesktopManager/Manager.py
 Icon=desktop
 X-AWN-Type=Applet

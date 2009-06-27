@@ -1,10 +1,10 @@
 [Desktop Entry]
 Version=1.0
-Name=PyNot
+_Name=PyNot
 Type=Application
 X-AWN-Type=Applet
 X-AWN-AppletType=Python
-Comment=A Configurable Notification tray
+_Comment=A Configurable Notification tray
 Exec=pynot/pynot.py
 Icon=pynot/pynot.svg
 Name[pt_BR]=PyNot

@@ -2,8 +2,8 @@
 Type=Application
 X-AWN-Type=Applet
 X-AWN-AppletType=C
-Name=Notification Area
-Comment=A Notification Area (systray)
+_Name=Notification Area
+_Comment=A Notification Area (systray)
 Exec=@LIBDIR@/awn/applets/notification-area/notification-area.so
 Icon=notification-area
 X-AWN-AppletCategory=System,Monitor

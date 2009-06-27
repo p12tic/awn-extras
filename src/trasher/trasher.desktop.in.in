@@ -2,8 +2,8 @@
 Type=Application
 X-AWN-Type=Applet
 X-AWN-AppletType=C
-Name=Stacks Trasher
-Comment=Trash applet in Stacks style
+_Name=Stacks Trasher
+_Comment=Trash applet in Stacks style
 Exec=@LIBDIR@/awn/applets/trasher/trasher.so
 Icon=gnome-stock-trash
 X-AWN-AppletCategory=Utility,FileManager

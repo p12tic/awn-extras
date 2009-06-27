@@ -1,10 +1,9 @@
 [Desktop Entry]
 Version=0.1
-Name=Gwibfawn
+_Name=Gwibfawn
 Type=Application
 X-AWN-Type=Applet
 X-AWN-AppletType=Python
-Comment=Displays tweets
+_Comment=Displays tweets
 Exec=gwibfawn/gwibfawn.py
 #Icon=gwibfawn/icons/media-player
-Name[en_US]=Gwibfawn

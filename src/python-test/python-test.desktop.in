@@ -2,8 +2,8 @@
 Type=Application
 X-AWN-Type=Applet
 X-AWN-AppletType=Python
-Name=Python Test Applet
-Comment=A test python applet for demo purposes
+_Name=Python Test Applet
+_Comment=A test python applet for demo purposes
 Exec=python-test/python-test.py
 Icon=binary
 X-AWN-AppletCategory=Development,Debugging

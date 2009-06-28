@@ -32,6 +32,7 @@ from awn.extras import awnlib
 from awn import OverlayText
 
 import cairo
+import glib
 
 applet_name = "Weather"
 applet_version = "0.3.3"
@@ -294,9 +295,11 @@ class WeatherApplet:
         self.applet.icon.file(icon_file, size=awnlib.Icon.APPLET_SIZE)
 
         if hint != 'twc':
-            self.__temp_overlay.props.font_sizing = font_sizes[self.settings['temperature-font-size']]
-            self.__temp_overlay.props.text = tempText = self.convert_temperature(self.cachedConditions['TEMP']) + u"\u00B0"
-            self.__temp_overlay.props.active = bool(self.settings["show-temperature-icon"])
+            def refresh_overlay():
+                self.__temp_overlay.props.font_sizing = font_sizes[self.settings['temperature-font-size']]
+                self.__temp_overlay.props.text = tempText = self.convert_temperature(self.cachedConditions['TEMP']) + u"\u00B0"
+                self.__temp_overlay.props.active = bool(self.settings["show-temperature-icon"])
+            glib.idle_add(refresh_overlay)
 
     def refresh_conditions(self):
         """Download the current weather conditions. If this fails, or the

@@ -29,6 +29,7 @@ import gtk
 from gtk import glade
 
 from awn.extras import awnlib
+from awn import OverlayText
 
 import cairo
 
@@ -49,8 +50,7 @@ socket.setdefaulttimeout(socket_timeout)
 glade_file = os.path.join(os.path.dirname(__file__), "weather-prefs.glade")
 
 temperature_units = ["Celcius", "Fahrenheit"]
-
-font_sizes = [32, 40, 48]
+font_sizes = (15.0, 18.0, 23.0)
 
 APP = "awn-weather-applet"
 import gettext
@@ -83,6 +83,10 @@ class WeatherApplet:
         # Set default icons/titles/dialogs so the applet is informative without data
         self.set_icon()
         self.applet.tooltip.set("%s %s..."%(_("Fetching conditions for"), self.settings['location']))
+
+        self.__temp_overlay = OverlayText()
+        self.__temp_overlay.props.gravity = gtk.gdk.GRAVITY_SOUTH
+        applet.add_overlay(self.__temp_overlay)
 
         applet.connect_size_changed(self.size_changed_cb)
 
@@ -282,67 +286,17 @@ class WeatherApplet:
     def getAttributes(self):
         return self.settings['location_code'], self.settings['temperature-unit'], self.cachedConditions
 
-    def overlay_temperature(self, iconFile):
-        """Given an icon, overlay the temperature onto it, and
-        return the resulting context.
-
-        """
-        size = self.applet.get_size()
-
-        surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, size, size)
-        context = gtk.gdk.CairoContext(cairo.Context(surface))
-
-        context.save()
-
-        pixbuf = self.applet.icon.file(iconFile, set=False)
-        # Scale paint operations because the pixbuf size is not always equal to the applet size
-        size = float(size)
-        context.scale(size / pixbuf.get_width(), size / pixbuf.get_height())
-        context.set_source_pixbuf(pixbuf, 0, 0)
-
-        context.paint()
-
-        context.restore()
-
-        if not self.settings["show-temperature-icon"]:
-            return context
-
-        tempText = self.convert_temperature(self.cachedConditions['TEMP'])
-
-        texthPad, textvPad = 11, 3 # distance from sides
-        context.select_font_face("Deja Vu", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
-
-        size_factor = 100.0 / font_sizes[self.settings['temperature-font-size']]
-        context.set_font_size(round(size / size_factor))
-
-        # Note temp_y is the y pos of the BOTTOM of the text
-        temp_y = size - textvPad
-        # Ignore the degree symbol when centering, or it looks wrong
-        temp_x = size / 2.0 - context.text_extents(tempText)[2:4][0] / 2.0
-
-        context.set_line_width(2)
-
-        context.move_to(temp_x, temp_y)
-        context.set_source_rgba(0.2, 0.2, 0.2, 0.8)
-        context.text_path(tempText + u"\u00B0")
-        context.stroke_preserve()
-
-        context.move_to(temp_x, temp_y)
-        context.set_source_rgb(1, 1, 1)
-        context.fill()
-
-        return context
-
     def set_icon(self, hint="twc"):
         """Given a hint this method will grab an image and set it as the icon.
 
         """
-        iconFile = weathericons.get_icon(hint, self.settings["theme"])
+        icon_file = weathericons.get_icon(hint, self.settings["theme"])
+        self.applet.icon.file(icon_file, size=awnlib.Icon.APPLET_SIZE)
 
-        if hint == 'twc':
-            self.applet.icon.file(iconFile, size=awnlib.Icon.APPLET_SIZE)
-        else:
-            self.applet.icon.set(self.overlay_temperature(iconFile))
+        if hint != 'twc':
+            self.__temp_overlay.props.font_sizing = font_sizes[self.settings['temperature-font-size']]
+            self.__temp_overlay.props.text = tempText = self.convert_temperature(self.cachedConditions['TEMP']) + u"\u00B0"
+            self.__temp_overlay.props.active = bool(self.settings["show-temperature-icon"])
 
     def refresh_conditions(self):
         """Download the current weather conditions. If this fails, or the
@@ -377,6 +331,7 @@ class WeatherApplet:
         if self.cachedConditions['TEMP'] != self.cachedConditions['FEELSLIKE']:
             feels_like = self.convert_temperature(self.cachedConditions['FEELSLIKE'])
             title += " (%s)" % (feels_like + u" \u00B0" + unit)
+
         self.applet.tooltip.set(title)
         self.set_icon(self.cachedConditions["CODE"])
 

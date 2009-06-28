@@ -4,6 +4,25 @@
 usr/share/avant-window-navigator/applets/calendar/
 usr/share/avant-window-navigator/applets/calendar.desktop
 #
+# Media-icons
+#
+usr/share/avant-window-navigator/applets/media-icons/*.py
+usr/share/avant-window-navigator/applets/media-icons/icons/*.svg
+usr/share/avant-window-navigator/applets/media-icon-previous.desktop
+usr/share/avant-window-navigator/applets/media-icon-next.desktop
+usr/share/avant-window-navigator/applets/media-icons.desktop
+#
+# Mimenu
+#
+usr/share/avant-window-navigator/applets/mimenu/*.py
+usr/share/avant-window-navigator/applets/mimenu/icons/*.svg
+usr/share/avant-window-navigator/applets/mimenu.desktop
+#
+# Pandora
+#
+usr/share/avant-window-navigator/applets/pandora/
+usr/share/avant-window-navigator/applets/pandora.desktop
+#
 # YAMA
 #
 usr/share/avant-window-navigator/applets/yama/
@@ -34,29 +53,6 @@ usr/share/avant-window-navigator/applets/yama.desktop
 #usr/share/avant-window-navigator/applets/digitalClock/
 #usr/share/avant-window-navigator/applets/digitalClock.desktop
 #usr/share/icons/hicolor/scalable/apps/awn-applet-digital-clock.svg
-#
-# Mimenu
-#
-#usr/share/avant-window-navigator/applets/mimenu/*.py
-#usr/share/avant-window-navigator/applets/mimenu/icons/*.svg
-#usr/share/avant-window-navigator/applets/mimenu.desktop
-#
-# Media-icons
-#
-#usr/share/avant-window-navigator/applets/media-icon-back/*.py
-#usr/share/avant-window-navigator/applets/media-icon-back/icons/*.svg
-#usr/share/avant-window-navigator/applets/media-icon-next/*.py
-#usr/share/avant-window-navigator/applets/media-icon-next/icons/*.svg
-#usr/share/avant-window-navigator/applets/media-icon-play/*.py
-#usr/share/avant-window-navigator/applets/media-icon-play/icons/*.svg
-#usr/share/avant-window-navigator/applets/media-icon-back.desktop
-#usr/share/avant-window-navigator/applets/media-icon-next.desktop
-#usr/share/avant-window-navigator/applets/media-icon-play.desktop
-#
-# Pandora
-#
-#usr/share/avant-window-navigator/applets/pandora/
-#usr/share/avant-window-navigator/applets/pandora.desktop
 #
 # Pynot
 #

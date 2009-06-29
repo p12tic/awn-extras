@@ -33,7 +33,7 @@ applet_description = "An applet to lock your screen, log out of your session, or
 # Themed logo of the applet, shown in the GTK About dialog
 applet_logo = "application-exit"
 
-left_click_actions = ("Show Docklet", "Lock Screen", "Log Out", "Shut Down")
+left_click_actions = ["Show Docklet", "Lock Screen", "Log Out", "Shut Down"]
 
 user_name = commands.getoutput("/usr/bin/whoami")
 log_out_label = "Log Out %s..." % user_name

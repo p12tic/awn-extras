@@ -1,4 +1,4 @@
-# AWN Applet Library - simplified APIs for programming applets for AWN.
+# Awn Applet Library - Simplified APIs for programming applets for Awn.
 #
 # Copyright (C) 2007 - 2008  Pavel Panchekha <pavpanchekha@gmail.com>
 #               2008 - 2009  onox <denkpadje@gmail.com>
@@ -17,7 +17,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import subprocess
 import sys
 
 import gobject
@@ -27,10 +26,10 @@ import gtk
 
 import awn
 import awn.extras as extras
+
 import cairo
 import cPickle as cpickle  # For object serialization into gconf
 import types  # For type checking for gconf/settings
-import urllib
 
 ___file___ = sys.argv[0]
 # Basically, __file__ = current file location
@@ -38,8 +37,6 @@ ___file___ = sys.argv[0]
 # Since awnlib is in site-packages, __file__ refers to something there
 # For relative paths to work, we need a way of determining where the
 # User applet is. So this bit of magic works.
-
-_globalRegister = {}
 
 bug_report_link = "https://launchpad.net/awn-extras/+filebug"
 
@@ -1480,11 +1477,6 @@ class Applet(awn.AppletSimple, object):
 
         # Dialogs depends on settings
         self.dialog = Dialogs(self)
-
-        if "Applet" in _globalRegister:
-            _globalRegister["Applet"].append(self)
-        else:
-            _globalRegister["Applet"] = [self]
 
     def connect_size_changed(self, callback):
         self.connect("size-changed", lambda w, e: callback())

@@ -21,6 +21,7 @@ import pygtk
 pygtk.require("2.0")
 import gtk
 
+import awn
 from awn.extras import awnlib
 
 import dbus
@@ -32,7 +33,21 @@ applet_description = "An applet to lock your screen, log out of your session, or
 # Themed logo of the applet, shown in the GTK About dialog
 applet_logo = "application-exit"
 
-left_click_actions = ("Lock Screen", "Log Out", "Shut Down")
+left_click_actions = ("Show Docklet", "Lock Screen", "Log Out", "Shut Down")
+
+user_name = commands.getoutput("/usr/bin/whoami")
+log_out_label = "Log Out %s..." % user_name
+
+docklet_actions_label_icon = {
+"Lock Screen": ("Lock Screen", "system-lock-screen"),
+"Log Out":     (log_out_label, "system-log-out"),
+"Shut Down":   ("Shut Down...", "system-shutdown")
+}
+
+actions_label_icon = {
+"Show Docklet": ("Show Docklet", "application-exit")
+}
+actions_label_icon.update(docklet_actions_label_icon)
 
 
 class QuitLogOutApplet:
@@ -62,25 +77,42 @@ class QuitLogOutApplet:
 
     def button_press_event_cb(self, widget, event):
         if event.button == 1:
-            self.left_click_cb()
+            action = left_click_actions[self.settings["left-click-action"]]
+            if action == "Show Docklet":
+                docklet_xid = self.applet.docklet_request(self.applet.get_size() * 3, True)
+                if docklet_xid != 0:
+                    self.setup_docklet(docklet_xid)
+            else:
+                self.execute_action(action)
 
     def setup_context_menu(self):
         pref_dialog = self.applet.dialog.new("preferences")
         self.setup_dialog_settings(pref_dialog.vbox)
+    
+    def setup_docklet(self, window_id):
+        docklet = awn.Applet(self.applet.props.uid, self.applet.props.panel_id)
+        docklet.props.quit_on_delete = False
+
+        box = awn.IconBox(docklet)
+
+        for i in docklet_actions_label_icon:
+            label, icon = docklet_actions_label_icon[i]
+
+            button = awn.ThemedIcon(bind_effects=False)
+            button.set_info_simple(self.applet.meta["short"], docklet.props.uid, icon)
+            button.connect("button-press-event", self.apply_action_cb, i, docklet) 
+            box.pack_start(button, False)
+
+        docklet.add(box)
+        docklet.applet_construct(window_id)
+        docklet.show_all()
 
     def refresh_tooltip_icon_cb(self, action_index):
         action = left_click_actions[action_index]
 
-        if action == "Lock Screen":
-            self.applet.tooltip.set("Lock Screen")
-            self.applet.icon.theme("system-lock-screen")
-        elif action == "Log Out":
-            user_name = commands.getoutput("/usr/bin/whoami")
-            self.applet.tooltip.set("Log Out %s..." % user_name)
-            self.applet.icon.theme("system-log-out")
-        elif action == "Shut Down":
-            self.applet.tooltip.set("Shut Down...")
-            self.applet.icon.theme("system-shutdown")
+        label, icon = actions_label_icon[action]
+        self.applet.tooltip.set(label)
+        self.applet.icon.theme(icon)
 
     def setup_dialog_settings(self, vbox):
         defaults = {
@@ -109,8 +141,12 @@ class QuitLogOutApplet:
     def action_changed_cb(self, widget):
         self.applet.settings["left-click-action"] = widget.get_active()
 
-    def left_click_cb(self):
-        action = left_click_actions[self.settings["left-click-action"]]
+    def apply_action_cb(self, widget, event, action, docklet):
+        self.execute_action(action)
+        docklet.destroy()
+
+    def execute_action(self, action):
+        assert action != "Show Docklet"
 
         if action == "Lock Screen":
             try:

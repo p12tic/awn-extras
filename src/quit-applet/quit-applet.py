@@ -95,33 +95,58 @@ class QuitLogOutApplet:
         if event.button == 1:
             action = self.settings["left-click-action"]
             if action == "Show Docklet":
-                docklet_xid = self.applet.docklet_request(self.applet.get_size() * 3, True)
-                if docklet_xid != 0:
-                    self.setup_docklet(docklet_xid)
+                self.show_docklet()
             else:
                 self.execute_action(action)
 
     def setup_context_menu(self):
         pref_dialog = self.applet.dialog.new("preferences")
         self.setup_dialog_settings(pref_dialog.vbox)
-    
+
     def setup_docklet(self, window_id):
         docklet = awn.Applet(self.applet.props.uid, self.applet.props.panel_id)
         docklet.props.quit_on_delete = False
 
-        box = awn.IconBox(docklet)
+        top_bottom = docklet.get_orientation() in (awn.ORIENTATION_TOP, awn.ORIENTATION_BOTTOM)
 
+        align = awn.Alignment(docklet)
+        if top_bottom:
+            box = gtk.HBox()
+        else:
+            box = gtk.VBox()
+        align.add(box)
+
+        docklet_orientation = docklet.get_orientation()
         for i in docklet_actions_label_icon:
             label, icon = docklet_actions_label_icon[i]
 
+            label_label = gtk.Label(label)
+
+            # Label left/right
+            if not top_bottom:
+                box.pack_start(label_label, False)
+                label_label.props.angle = 90
+
+            # Icon
             button = awn.ThemedIcon(bind_effects=False)
+            button.set_orientation(docklet_orientation)
             button.set_info_simple(self.applet.meta["short"], docklet.props.uid, icon)
+            button.set_tooltip_text(label)
             button.connect("button-press-event", self.apply_action_cb, i, docklet) 
             box.pack_start(button, False)
 
-        docklet.add(box)
+            # Label top/bottom
+            if top_bottom:
+                box.pack_start(label_label, False)
+
+        docklet.add(align)
         docklet.applet_construct(window_id)
         docklet.show_all()
+
+    def show_docklet(self):
+        docklet_xid = self.applet.docklet_request(self.applet.get_size() * 3, True)
+        if docklet_xid != 0:
+            self.setup_docklet(docklet_xid)
 
     def refresh_tooltip_icon_cb(self, action):
         label, icon = actions_label_icon[action]

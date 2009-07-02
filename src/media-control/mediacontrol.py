@@ -50,7 +50,7 @@ class App (awn.AppletSimple):
     APPLET_NAME_MARKUP = "<span weight=\"bold\">Media Control Applet</span>"
     def __init__(self, uid, panel_id):
         """Creating the applets core"""
-        awn.AppletSimple.__init__(self, uid, panel_id)
+        awn.AppletSimple.__init__(self, "media-control", uid, panel_id)
         self.set_tooltip_text(App.APPLET_NAME)
         self.MediaPlayer = None
         self.location = __file__.replace('mediacontrol.py','')
@@ -162,7 +162,8 @@ class App (awn.AppletSimple):
 
     def init_docklet(self, window_id):
         self.docklet_visible = True
-        docklet = awn.Applet(self.props.uid, self.props.panel_id)
+        docklet = awn.Applet(self.get_canonical_name(),
+                             self.props.uid, self.props.panel_id)
         self.docklet = docklet
         docklet.props.quit_on_delete = False
 

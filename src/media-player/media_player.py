@@ -32,7 +32,7 @@ class App(awn.AppletSimple):
     APPLET_NAME = "Media Player Applet"
     def __init__(self, uid, panel_id):
         """Creating the applets core"""
-        awn.AppletSimple.__init__(self, uid, panel_id)
+        awn.AppletSimple.__init__(self, "media-player", uid, panel_id)
         self.set_tooltip_text(App.APPLET_NAME)
         self.set_icon_name('media-player', 'media-player')
         self.load_keys()

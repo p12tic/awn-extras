@@ -372,9 +372,9 @@ size_changed(AwnApplet *applet, guint size, gpointer user_data)
 }
 
 AwnApplet*
-awn_applet_factory_initp (gchar* uid, gint panel_id)
+awn_applet_factory_initp (gchar *name, gchar* uid, gint panel_id)
 {
-  AwnApplet *applet = awn_applet_new (uid, panel_id);
+  AwnApplet *applet = awn_applet_new (name, uid, panel_id);
   TrayApplet *app = g_new0 (TrayApplet, 1);
   GdkScreen  *screen;
   GtkWidget  *align, *table, *eb;

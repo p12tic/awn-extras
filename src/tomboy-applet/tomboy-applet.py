@@ -79,7 +79,7 @@ class TomboyApplet:
         self.awn = awnlib
 
         awnlib.icon.file(applet_logo)
-        awnlib.title.set("Tomboy Applet")
+        awnlib.tooltip.set("Tomboy Applet")
 
         if dbus is not None:
             try:

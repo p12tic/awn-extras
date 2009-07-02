@@ -23,6 +23,11 @@ usr/share/avant-window-navigator/applets/mimenu.desktop
 usr/share/avant-window-navigator/applets/pandora/
 usr/share/avant-window-navigator/applets/pandora.desktop
 #
+# Tomboy
+#
+usr/share/avant-window-navigator/applets/tomboy-applet/
+usr/share/avant-window-navigator/applets/tomboy-applet.desktop
+#
 # YAMA
 #
 usr/share/avant-window-navigator/applets/yama/
@@ -77,8 +82,3 @@ usr/share/avant-window-navigator/applets/yama.desktop
 #
 #usr/share/avant-window-navigator/applets/rtm/
 #usr/share/avant-window-navigator/applets/rtm.desktop
-#
-# Tomboy
-#
-#usr/share/avant-window-navigator/applets/tomboy-applet/
-#usr/share/avant-window-navigator/applets/tomboy-applet.desktop

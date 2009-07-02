@@ -63,6 +63,7 @@ SUBDIRS =			\
 	sysmon			\
 	thinkhdaps			\
 	to-do			\
+	tomboy-applet			\
 	volume-control		\
 	weather				\
 	$(WOBBLYZINI)		\

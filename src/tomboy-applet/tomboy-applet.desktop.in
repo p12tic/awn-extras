@@ -5,5 +5,5 @@ X-AWN-AppletType=Python
 _Name=Tomboy Applet
 _Comment=Control Tomboy with D-Bus
 Exec=tomboy-applet/tomboy-applet.py
-Icon=tomboy-applet/icons/tomboy.png
+Icon=tomboy
 X-AWN-AppletCategory=Notes

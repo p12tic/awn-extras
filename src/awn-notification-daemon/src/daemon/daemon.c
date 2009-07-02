@@ -1641,7 +1641,8 @@ static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, 
   return TRUE;
 }
 
-AwnApplet* awn_applet_factory_initp(gchar* uid, gint panel_id)
+AwnApplet* awn_applet_factory_initp(const gchar *name,
+                                    const gchar *uid, gint panel_id)
 {
   NotifyDaemon *daemon;
   DBusGConnection *connection;
@@ -1651,7 +1652,7 @@ AwnApplet* awn_applet_factory_initp(gchar* uid, gint panel_id)
   AwnApplet *applet;
 
 
-  G_daemon_config.awn_app = applet = AWN_APPLET(awn_applet_simple_new(uid, panel_id));
+  G_daemon_config.awn_app = applet = AWN_APPLET(awn_applet_simple_new(name, uid, panel_id));
 
   gint height = awn_applet_get_size(applet);
 

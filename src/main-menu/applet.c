@@ -399,9 +399,9 @@ on_focus_out (GtkWidget *window, GdkEventFocus *event, gpointer null)
 }
 
 AwnApplet *
-awn_applet_factory_initp (const gchar * uid, gint panel_id )
+awn_applet_factory_initp (const gchar *name, const gchar *uid, gint panel_id)
 {
-  AwnApplet *applet = AWN_APPLET (awn_applet_simple_new (uid, panel_id));
+  AwnApplet *applet = AWN_APPLET (awn_applet_simple_new (name, uid, panel_id));
   Menu      *app = menu =  g_new0 (Menu, 1);
   app->applet = applet;
     

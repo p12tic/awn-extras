@@ -103,19 +103,22 @@ GdkFilterReturn filter_func(GdkXEvent *xevent, GdkEvent *event, gpointer data)
 
 // entry method
 AwnApplet*
-awn_applet_factory_initp ( gchar* uid, gint panel_id )
+awn_applet_factory_initp (const gchar *name, const gchar *uid, gint panel_id)
 {
 	AwnApplet *applet;
 	WobblyZini *wobblyzini;
 
 	// initialize the applet
-	applet = awn_applet_new (uid, panel_id);
+	applet = awn_applet_new (name, uid, panel_id);
 	// our initialize
 	wobblyzini = wobblyzini_applet_new(applet);
 	// right-click handling
 	g_signal_connect (G_OBJECT (applet), "button-press-event",
 	                  G_CALLBACK (_button_clicked_event), applet);
-        gdk_window_add_filter(NULL, filter_func, NULL);
+
+  // just for debugging X stuff
+  gdk_window_add_filter(NULL, filter_func, NULL);
+
 	return applet;
 }
 

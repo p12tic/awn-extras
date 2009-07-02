@@ -1465,7 +1465,7 @@ class Applet(awn.AppletSimple, object):
         @type meta: C{dict}
 
         """
-        awn.AppletSimple.__init__(self, uid, panel_id)
+        awn.AppletSimple.__init__(self, meta["short"], uid, panel_id)
 
         self.uid = uid
 

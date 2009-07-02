@@ -23,9 +23,10 @@
 #include "gconf-config.h"
 #include "awnsystemmonitor.h"
 
-AwnApplet* awn_applet_factory_initp(gchar* uid, gint panel_id)
+AwnApplet* awn_applet_factory_initp(const gchar *name,
+                                    const gchar* uid, gint panel_id)
 {
-  AwnApplet *applet = AWN_APPLET(awn_applet_simple_new(uid, panel_id));
+  AwnApplet *applet = AWN_APPLET(awn_applet_simple_new(name, uid, panel_id));
   CpuMeter *cpumeter;
 
   gint height = awn_applet_get_size(applet);

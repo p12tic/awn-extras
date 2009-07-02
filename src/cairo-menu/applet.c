@@ -135,10 +135,11 @@ static gboolean _map_event(GtkWidget *widget, gpointer null)
   }
   return FALSE;
 }
-AwnApplet* awn_applet_factory_initp(gchar* uid, gint panel_id)
+AwnApplet* awn_applet_factory_initp(const gchar *name,
+                                    const gchar* uid, gint panel_id)
 {
 
-  AwnApplet *applet = AWN_APPLET(awn_applet_simple_new(uid, panel_id));
+  AwnApplet *applet = AWN_APPLET(awn_applet_simple_new(name, uid, panel_id));
   G_applet = applet;
   G_Height = awn_applet_get_size(applet);
   gtk_widget_set_size_request(GTK_WIDGET(applet), G_Height, -1);

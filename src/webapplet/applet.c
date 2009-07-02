@@ -175,14 +175,14 @@ _bloody_thing_has_style (GtkWidget *widget,WebApplet *webapplet)
 }
 
 AwnApplet *
-awn_applet_factory_initp (gchar* uid, gint panel_id)
+awn_applet_factory_initp (const gchar *name, gchar* uid, gint panel_id)
 {
   g_on_error_stack_trace (NULL);
   html_init ();
   WebApplet *webapplet = g_malloc (sizeof (WebApplet));
   webapplet->uid=g_strdup(uid);
   init_config (webapplet, uid);
-  webapplet->applet = AWN_APPLET (awn_applet_simple_new (uid, panel_id));
+  webapplet->applet = AWN_APPLET (awn_applet_simple_new (name, uid, panel_id));
   gint height = awn_applet_get_size(webapplet->applet);
   gtk_widget_set_size_request (GTK_WIDGET (webapplet->applet), height, -1);
 

@@ -104,7 +104,9 @@ class QuitLogOutApplet:
         self.setup_dialog_settings(pref_dialog.vbox)
 
     def setup_docklet(self, window_id):
-        docklet = awn.Applet(self.applet.props.uid, self.applet.props.panel_id)
+        docklet = awn.Applet(self.applet.get_canonical_name(),
+                             self.applet.props.uid,
+                             self.applet.props.panel_id)
         docklet.props.quit_on_delete = False
 
         docklet_orientation = docklet.get_orientation()

@@ -111,9 +111,9 @@ class GwibberApplet (awn.AppletSimple):
 
    APPLET_NAME = "Gwibfawn"
 
-   def __init__ (self, uid, orient, offset, size):
+   def __init__ (self, uid, panel_id):
 
-      awn.AppletSimple.__init__ (self, uid, orient, offset, size)
+      awn.AppletSimple.__init__ (self, "gwibfawn", uid, panel_id)
       self.set_tooltip_text(GwibberApplet.APPLET_NAME)
       self.set_icon_name('gwibber', 'gwibber')
 
@@ -262,7 +262,7 @@ if __name__ == "__main__":
    gtk.gdk.threads_init   ()
    gtk.gdk.threads_enter  ()
    awn.init               (sys.argv[1:])
-   applet = GwibberApplet (awn.uid, awn.orient, awn.offset, awn.size)
+   applet = GwibberApplet (awn.uid, awn.panel_id)
    awn.init_applet        (applet)
    applet.show_all        ()
    gtk.main               ()

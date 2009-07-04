@@ -54,7 +54,7 @@ class App (awn.AppletSimple):
     self.uid = uid
 
     #AWN Applet Configuration
-    awn.AppletSimple.__init__(self, uid, panel_id)
+    awn.AppletSimple.__init__(self, 'file-browser-launcher', uid, panel_id)
     self.set_tooltip_text(_("File Browser Launcher"))
     self.dialog = awn.Dialog(self)
 

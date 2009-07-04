@@ -54,7 +54,7 @@ class App(awn.AppletSimple):
 
     def __init__(self, uid, panel_id):
         #AWN Applet Configuration
-        awn.AppletSimple.__init__(self, uid, panel_id)
+        awn.AppletSimple.__init__(self, 'to-do', uid, panel_id)
         self.dialog = awn.Dialog(self)
 
         self.uid = uid

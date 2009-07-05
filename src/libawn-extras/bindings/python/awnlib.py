@@ -471,7 +471,7 @@ class Icon:
         @rtype: C{gtk.gdk.Pixbuf}
 
         """
-        return self.__parent.set_icon_name(self.__parent.meta["short"], name)
+        return self.__parent.set_icon_name(name)
 
     def set(self, icon):
         """Set a C{gtk.gdk.pixbuf} or C{cairo.Context} as your applet icon.

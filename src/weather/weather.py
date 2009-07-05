@@ -38,6 +38,9 @@ applet_name = "Weather"
 applet_version = "0.3.3"
 applet_description = "Applet to display current weather and forecast"
 
+# Applet's themed icon, also shown in the GTK About dialog
+applet_logo = "weather-few-clouds"
+
 # Interval in minutes between updating conditions, forecast, and map
 update_interval = 30
 
@@ -53,6 +56,15 @@ glade_file = os.path.join(os.path.dirname(__file__), "weather-prefs.glade")
 temperature_units = ["Celcius", "Fahrenheit"]
 font_sizes = (15.0, 18.0, 23.0)
 
+system_theme_name = "System theme"
+
+theme_dir = "/usr/share/icons"
+
+icon_states = ["twc-logo", "weather-clear", "weather-few-clouds", "weather-overcast",
+"weather-snow-and-rain", "weather-showers", "weather-showers-scattered",
+"weather-snow", "weather-fog", "weather-storm", "weather-severe-alert",
+"weather-clear-night", "weather-few-clouds-night"]
+
 APP = "awn-weather-applet"
 import gettext
 import locale
@@ -61,7 +73,6 @@ gettext.bindtextdomain(APP, DIR)
 gettext.textdomain(APP)
 _ = gettext.gettext
 
-import weathericons
 import forecast
 
 
@@ -89,17 +100,9 @@ class WeatherApplet:
         self.__temp_overlay.props.gravity = gtk.gdk.GRAVITY_SOUTH
         applet.add_overlay(self.__temp_overlay)
 
-        applet.connect_size_changed(self.size_changed_cb)
-
         # Set up the timer which will refresh the conditions, forecast, and weather map
         applet.timing.register(self.activate_refresh_cb, update_interval * 60)
         applet.timing.delay(self.activate_refresh_cb, 1.0)
-
-    def size_changed_cb(self):
-        if self.cachedConditions is None:
-            self.set_icon()
-        else:
-            self.refresh_icon();
 
     def setup_context_menu(self):
         """Add "refresh" to the context menu and setup the preferences.
@@ -132,22 +135,28 @@ class WeatherApplet:
 
         # Only use themes that are likely to provide all the files
         def filter_theme(theme):
-            return os.path.isfile(os.path.join(weathericons.theme_dir, theme, "scalable/status/weather-clear.svg"))
-        self.themes = filter(filter_theme, os.listdir(weathericons.theme_dir))
+            return os.path.isfile(os.path.join(theme_dir, theme, "scalable/status/weather-clear.svg"))
+        self.themes = [system_theme_name] + filter(filter_theme, os.listdir(theme_dir))
         self.themes.sort()
         self.themes.extend(["moonbeam"])
+
+        def refresh_theme_and_dialog(value):
+            self.setup_theme()
+            refresh_dialog(None)
 
         defaults = {
             "show-temperature-icon": (True, self.refresh_icon, prefs.get_widget("checkbutton-temperature-icon")),
             "temperature-font-size": (1, self.refresh_icon),
             "temperature-unit": (0, refresh_dialog),
-            "theme": (self.themes[0], refresh_dialog),  # TODO for default, use gtk theme
+            "theme": (system_theme_name, refresh_theme_and_dialog),
             "curved_dialog": (False, refresh_curved_dialog, prefs.get_widget("curvedCheckbutton")),
             "location": ("Portland, ME", refresh_location_label),
             "location_code": ("USME0328", refresh_location),
             "map_maxwidth": (450, refresh_map, prefs.get_widget("mapWidthSpinbutton"))
         }
         self.settings = self.applet.settings.load_preferences(defaults)
+
+        self.setup_theme()
 
         """ General preferences """
         self.search_window = prefs.get_widget("locations-search-dialog")
@@ -284,22 +293,30 @@ class WeatherApplet:
                 self.onRefreshMap()
         threading.Thread(target=refresh).start()
 
+    def setup_theme(self):
+        def refresh_theme():
+            states_names = {}
+            for i in icon_states:
+                states_names[i] = i
+            self.applet.theme.set_states(states_names)
+
+            theme = self.settings["theme"] if self.settings["theme"] != system_theme_name else None
+            self.applet.theme.theme(theme)
+        glib.idle_add(refresh_theme)
+
     def getAttributes(self):
         return self.settings['location_code'], self.settings['temperature-unit'], self.cachedConditions
 
     def set_icon(self, hint="twc"):
-        """Given a hint this method will grab an image and set it as the icon.
+        def refresh_overlay():
+            state = self.get_icon_name(hint, self.settings["theme"])
+            self.applet.theme.icon(state)
 
-        """
-        icon_file = weathericons.get_icon(hint, self.settings["theme"])
-        self.applet.icon.file(icon_file, size=awnlib.Icon.APPLET_SIZE)
-
-        if hint != 'twc':
-            def refresh_overlay():
+            if hint != 'twc':
                 self.__temp_overlay.props.font_sizing = font_sizes[self.settings['temperature-font-size']]
                 self.__temp_overlay.props.text = tempText = self.convert_temperature(self.cachedConditions['TEMP']) + u"\u00B0"
                 self.__temp_overlay.props.active = bool(self.settings["show-temperature-icon"])
-            glib.idle_add(refresh_overlay)
+        glib.idle_add(refresh_overlay)
 
     def refresh_conditions(self):
         """Download the current weather conditions. If this fails, or the
@@ -416,6 +433,38 @@ class WeatherApplet:
     def get_temperature_unit(self):
         return temperature_units[self.settings["temperature-unit"]][0]
 
+    def get_icon_name(self, hint, theme):
+        if hint == "twc":
+            return "twc-logo"
+
+        hint = int(hint)
+
+        if hint in (32, 34, 36):
+            return "weather-clear"
+        elif hint in (23, 24, 25, 28, 30, 44):
+            return "weather-few-clouds"
+        elif hint in (26, ):
+            return "weather-overcast"
+        elif hint in (5, 6, 7, 8, 9, 10, 11, 12, 45):
+            # Special conditional for the extreme weather in moonbeam's Ottawa
+            if theme == "moonbeam" and hint in (5, 6, 7):
+                return "weather-snow-and-rain"
+            return "weather-showers"
+        elif hint in (40, ):
+            return "weather-showers-scattered"
+        elif hint in (13, 14, 15, 16, 17, 18, 41, 42, 43, 46):
+            return "weather-snow"
+        elif hint in (19, 20, 21, 22):
+            return "weather-fog"
+        elif hint in (4, 35, 37, 38, 39, 47):
+            return "weather-storm"
+        elif hint in (0, 1, 2, 3):
+            return "weather-severe-alert"
+        elif hint in (31, 33):
+            return "weather-clear-night"
+        elif hint in (27, 29):
+            return "weather-few-clouds-night"
+
 
 if __name__ == "__main__":
     awnlib.init_start(WeatherApplet, {
@@ -424,7 +473,7 @@ if __name__ == "__main__":
         "version": applet_version,
         "author": "onox, Mike Desjardins, Mike Rooney",
         "copyright-year": "2007 - 2009",
-        "logo": weathericons.get_icon("44", "Tango"),
+        "theme": applet_logo,
         "authors": ["Mike Desjardins", "Mike Rooney", "Isaac J.", "onox <denkpadje@gmail.com>"],
         "artists": ["Wojciech Grzanka", "Mike Desjardins"],
         "type": ["Network", "Weather"]},

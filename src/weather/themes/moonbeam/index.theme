@@ -1,0 +1,11 @@
+[Icon Theme]
+Name=moonbeam
+
+Directories=status
+
+[status]
+Size=48
+MaxSize=256
+Context=Apps
+Type=Fixed
+

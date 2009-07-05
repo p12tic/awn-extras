@@ -5,5 +5,5 @@ X-AWN-AppletType=Python
 _Name=Weather Applet
 _Comment=Display the local weather
 Exec=weather/weather.py
-Icon=weather-clear
+Icon=weather-few-clouds
 X-AWN-AppletCategory=Network,News

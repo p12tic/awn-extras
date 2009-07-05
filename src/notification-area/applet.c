@@ -430,7 +430,7 @@ awn_applet_factory_initp (gchar *name, gchar* uid, gint panel_id)
   g_signal_connect (app->manager, "message_cancelled",
                     G_CALLBACK (tray_icon_message_cancelled), app);
 
-  gint orientation = awn_applet_get_orientation (applet);
+  orientation = awn_applet_get_orientation (applet);
   gint size = awn_applet_get_size (applet);
   icon_size = size > 5 ? (size / 2) - 1 + (size % 2) : 1;
   //gtk_widget_set_size_request (GTK_WIDGET (applet), -1, height* 2 );

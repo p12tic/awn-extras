@@ -124,6 +124,7 @@ class App (awn.AppletSimple):
         # Standard AWN Connects
         self.connect("scroll-event", self.wheel_turn)
         self.connect("button-press-event", self.button_press)
+        self.connect("clicked", self.icon_clicked)
         self.connect("enter-notify-event", self.enter_notify)
         self.dialog.connect("focus-out-event", self.dialog_focus_out)
         # Drag&drop support
@@ -206,25 +207,25 @@ class App (awn.AppletSimple):
         play_pause.set_info_simple("media-control-docklet",
                                    docklet.props.uid,
                                    "media-playback-start")
-        play_pause.connect("button-press-event", self.button_pp_press)
+        play_pause.connect("clicked", self.button_pp_press)
         box.pack_start(play_pause, False)
 
         prev_button = awn.ThemedIcon(bind_effects = False)
         prev_button.set_orientation(docklet.props.orient)
         prev_button.set_size(docklet.props.size)
         prev_button.set_info_simple("media-control-docklet",
-                                   docklet.props.uid,
-                                   "media-skip-backward")
-        prev_button.connect("button-press-event", self.button_previous_press)
+                                    docklet.props.uid,
+                                    "media-skip-backward")
+        prev_button.connect("clicked", self.button_previous_press)
         box.pack_start(prev_button, False)
 
         next_button = awn.ThemedIcon(bind_effects = False)
         next_button.set_orientation(docklet.props.orient)
         next_button.set_size(docklet.props.size)
         next_button.set_info_simple("media-control-docklet",
-                                   docklet.props.uid,
-                                   "media-skip-forward")
-        next_button.connect("button-press-event", self.button_next_press)
+                                    docklet.props.uid,
+                                    "media-skip-forward")
+        next_button.connect("clicked", self.button_next_press)
         box.pack_start(next_button, False)
 
         docklet.add(align)
@@ -232,27 +233,28 @@ class App (awn.AppletSimple):
         docklet.applet_construct(window_id)
         docklet.show_all()
 
-    def button_press(self, widget, event):
-        if event.button == 1:
-            if self.dialog_visible:
-                self.dialog.hide()
-                self.dialog_visible = False
-            else:
-                if not self.MediaPlayer: self.what_app()
-                # update controls
-                self.dialog_visible = True
-                if self.MediaPlayer:
-                    self.labeler()
-                    docklet_win = self.docklet_request (400, False) if self.MediaPlayer.is_async() else 0
-                    if docklet_win != 0:
-                        self.dialog_visible = False
-                        self.init_docklet(docklet_win)
-                    else:
-                        self.dialog.show_all()
+    def icon_clicked(self, widget):
+        if self.dialog_visible:
+            self.dialog.hide()
+            self.dialog_visible = False
+        else:
+            if not self.MediaPlayer: self.what_app()
+            # update controls
+            self.dialog_visible = True
+            if self.MediaPlayer:
+                self.labeler()
+                docklet_win = self.docklet_request (400, False) if self.MediaPlayer.is_async() else 0
+                if docklet_win != 0:
+                    self.dialog_visible = False
+                    self.init_docklet(docklet_win)
                 else:
-                    # show the media-players menu
                     self.dialog.show_all()
-        elif event.button == 2:
+            else:
+                # show the media-players menu
+                self.dialog.show_all()
+
+    def button_press(self, widget, event):
+        if event.button == 2:
             self.button_pp_press(widget)
         elif event.button == 3:
             self.popup_menu.popup(None, None, None, event.button, event.time)

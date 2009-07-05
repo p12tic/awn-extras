@@ -52,7 +52,6 @@ data_dirs = os.environ["XDG_DATA_DIRS"] if "XDG_DATA_DIRS" in os.environ else "/
 # Describes the pattern used to try to decode URLs
 url_pattern = re.compile("^[a-z]+://(?:[^@]+@)?([^/]+)/(.*)$")
 
-# TODO add devices to places
 
 class YamaApplet:
 
@@ -228,24 +227,28 @@ class YamaApplet:
         added |= self.append_awn_desktop(menu, "nautilus-computer")
         added |= self.append_awn_desktop(menu, "nautilus-cd-burner")
 
-        self.__volume_mounts_index = len(self.places_menu) - len(self.bookmarks_items)
-        self.volumes_mounts_items = []
+        # Set up volumes and mounts monitor
+        self.__volumes_mounts_monitor = gio.volume_monitor_get()
 
-        # Set up volume monitor
-        self.__volume_monitor = gio.volume_monitor_get()
-
-        signals = ("volume-added", "volume-changed", "volume-removed", "mount-added", "mount-changed", "mount-removed")
-        for signal in signals:
-            self.__volume_monitor.connect(signal, self.refresh_volumes_mounts_cb)
-
-        self.append_volumes_mounts()
-        # TODO add: added |=
+        self.__volumes_index = len(self.places_menu) - len(self.bookmarks_items)
+        self.volume_items = []
+        self.append_volumes()
+        # TODO if added is False and no volumes, then their are two separators
 
         if added:
             menu.append(gtk.SeparatorMenuItem())
 
         added = False
         added |= self.append_awn_desktop(menu, "network-scheme")
+
+        self.__mounts_index = len(self.places_menu) - len(self.volume_items) - len(self.bookmarks_items)
+        self.mount_items = []
+        self.append_mounts()
+        # TODO if added is False and no mounts, then their are two separators
+
+        # Connect signals after having initialized volumes and mounts
+        for signal in ("volume-added", "volume-changed", "volume-removed", "mount-added", "mount-changed", "mount-removed"):
+            self.__volumes_mounts_monitor.connect(signal, self.refresh_volumes_mounts_cb)
 
         ncs_exists = os.path.exists(commands.getoutput("which nautilus-connect-server"))
         if ncs_exists:
@@ -316,19 +319,20 @@ class YamaApplet:
                     self.bookmarks_items.append(item)
 
     def refresh_volumes_mounts_cb(self, monitor, volume_mount):
-        self.append_volumes_mounts()
+        self.append_volumes()
+        self.append_mounts()
 
         # Refresh menu to re-initialize the widget
         self.places_menu.show_all()
 
-    def append_volumes_mounts(self):
+    def append_volumes(self):
         # Delete old items
-        for item in self.volumes_mounts_items:
+        for item in self.volume_items:
             item.destroy()
-        self.volumes_mounts_items = []
+        self.volume_items = []
 
-        index = self.__volume_mounts_index + len(self.bookmarks_items)
-        for volume in self.__volume_monitor.get_volumes():
+        index = self.__volumes_index + len(self.bookmarks_items)
+        for volume in self.__volumes_mounts_monitor.get_volumes():
             name = volume.get_name()
 
             mount = volume.get_mount()
@@ -342,7 +346,7 @@ class YamaApplet:
             item = self.create_menu_item(name, icons[1], tooltip)
             self.places_menu.insert(item, index)
             index += 1
-            self.volumes_mounts_items.append(item)
+            self.volume_items.append(item)
 
             if mount is not None:
                 url = mount.get_root().get_uri()
@@ -355,6 +359,26 @@ class YamaApplet:
                             self.open_folder_cb(None, url)
                     volume.mount(gio.MountOperation(), mount_result)
                 item.connect("activate", mount_volume, volume)
+
+    def append_mounts(self):
+        # Delete old items
+        for item in self.mount_items:
+            item.destroy()
+        self.mount_items = []
+
+        index = self.__mounts_index + len(self.volume_items) + len(self.bookmarks_items)
+        for mount in self.__volumes_mounts_monitor.get_mounts():
+            if mount.get_volume() is None:
+                name = mount.get_name()
+                icons = mount.get_icon().get_names()
+
+                item = self.create_menu_item(name, icons[1], name)
+                self.places_menu.insert(item, index)
+                index += 1
+                self.mount_items.append(item)
+
+                url = mount.get_root().get_uri()
+                item.connect("activate", self.open_folder_cb, url)
 
     def create_menu_item(self, label, icon_name, comment):
         item = gtk.ImageMenuItem(label)

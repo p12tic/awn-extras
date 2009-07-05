@@ -38,13 +38,16 @@ AwnApplet* awn_applet_factory_initp (const gchar *name,
 	// Set up the AwnTerm and the AwnApplet. applet is global.
 	applet = g_new0 (AwnTerm, 1);
 	applet->applet = AWN_APPLET (awn_applet_simple_new (name, uid, panel_id));
+  
+  g_object_set (applet->applet,
+                "display-name",_("Awn Terminal Applet"),
+                NULL);
 
 	// Set up the title
 	awn_applet_simple_set_tooltip_text (AWN_APPLET_SIMPLE(applet->applet), _("Awn Terminal"));
 	
 	// Set up the icon
 	awn_applet_simple_set_icon_name(AWN_APPLET_SIMPLE(applet->applet),
-					APPLET_NAME,
 					"terminal");
 	
 	// Set up the dialog

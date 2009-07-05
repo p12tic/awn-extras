@@ -86,9 +86,9 @@ static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, 
       gtk_menu_set_screen(GTK_MENU(menu), NULL);
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
       g_signal_connect(G_OBJECT(item), "button-press-event", G_CALLBACK(_show_prefs), NULL);
-      item=awn_applet_simple_create_about_item("Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
+      item=awn_applet_simple_create_about_item(AWN_APPLET_SIMPLE(G_applet),
+                                        "Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
                                         AWN_APPLET_LICENSE_GPLV2,
-                                        "Cairo Menu",
                                         NULL);
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);      
       
@@ -145,11 +145,14 @@ AwnApplet* awn_applet_factory_initp(const gchar *name,
   gtk_widget_set_size_request(GTK_WIDGET(applet), G_Height, -1);
   GdkPixbuf *icon;
   
+  g_object_set (applet,
+                "display-name","Awn System Monitor",
+                NULL);
+  
   read_config();
   
   
-   awn_applet_simple_set_icon_name ( applet,
-                                    APPLET_NAME,
+   awn_applet_simple_set_icon_name ( AWN_APPLET_SIMPLE(applet),
                                     G_cairo_menu_conf.applet_icon)  ;
   
   icon = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(),

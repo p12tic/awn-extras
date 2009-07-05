@@ -18,9 +18,9 @@
 #include "sysmon.h"
 
 
-AwnApplet* awn_applet_factory_initp(gchar* uid, gint panel_id)
+AwnApplet* awn_applet_factory_initp(const gchar * name, gchar* uid, gint panel_id)
 {
-  AwnApplet *applet = AWN_APPLET(awn_sysmon_new(uid,panel_id));
+  AwnApplet *applet = AWN_APPLET(awn_sysmon_new(name,uid,panel_id));
 
   return applet;
 }

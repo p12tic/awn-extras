@@ -29,6 +29,9 @@ AwnApplet* awn_applet_factory_initp(const gchar *name,
   AwnApplet *applet = AWN_APPLET(awn_applet_simple_new(name, uid, panel_id));
   CpuMeter *cpumeter;
 
+  g_object_set (applet,
+                "display-name","Awn System Monitor",
+                NULL);
   gint height = awn_applet_get_size(applet);
 
   gtk_widget_set_size_request(GTK_WIDGET(applet), height*1.25, -1);

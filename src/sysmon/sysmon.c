@@ -289,9 +289,10 @@ awn_sysmon_init (AwnSysmon *sysmon)
 }
 
 AwnSysmon*
-awn_sysmon_new (const gchar *uid,gint panel_id)
+awn_sysmon_new (const gchar * name,const gchar *uid,gint panel_id)
 {
   return g_object_new (AWN_TYPE_SYSMON,
+			    "name", name,
                             "uid", uid,
                             "panel-id", panel_id,
                             NULL);

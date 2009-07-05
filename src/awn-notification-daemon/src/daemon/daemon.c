@@ -1653,11 +1653,14 @@ AwnApplet* awn_applet_factory_initp(const gchar *name,
 
 
   G_daemon_config.awn_app = applet = AWN_APPLET(awn_applet_simple_new(name, uid, panel_id));
-
   gint height = awn_applet_get_size(applet);
 
   G_daemon_config.awn_app_height = height;
   G_daemon_config.show_status = TRUE;
+  
+  g_object_set (applet,
+                "display-name","Awn Notification Daemon",
+                NULL);
 
   g_signal_connect(G_OBJECT(applet), "size-changed", G_CALLBACK(_height_changed), (gpointer)applet);
   gtk_widget_set_size_request(GTK_WIDGET(applet), height, height);
@@ -1671,7 +1674,6 @@ AwnApplet* awn_applet_factory_initp(const gchar *name,
   gchar * states[]={"On","Off",NULL};
   gchar * icon_names[]={"stock_up","stock_down",NULL};
   awn_applet_simple_set_icon_info(AWN_APPLET_SIMPLE(applet),
-                                    "Awn Notification Daemon",
                                     states,
                                     icon_names
                                     );

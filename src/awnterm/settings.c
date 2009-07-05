@@ -56,9 +56,9 @@ GtkWidget* create_popup_menu (AwnTerm *applet)
 
   const gchar **authors[] = { "Natan Yellin (aantn)", NULL };
 
-  menuitem = awn_applet_create_about_item("Copyright 2007, 2008, 2009 Natan Yellin",
+  menuitem = awn_applet_create_about_item(applet->applet,
+                                          "Copyright 2007, 2008, 2009 Natan Yellin",
                                           AWN_APPLET_LICENSE_GPLV2,
-                                          _("Awn Terminal Applet"),
                                           NULL,
                                           _("A simple popup terminal"),
                                           "http://wiki.awn-project.org/AWN_Terminal_Applet",

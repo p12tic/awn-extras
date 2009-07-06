@@ -15,7 +15,6 @@ source_h =	\
 	
 source_c =	\
 	notify.c    \
-	config_shared.c \
 	shared_menuitems.c
 	
 libawn_extrasinc_HEADERS = \

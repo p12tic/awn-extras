@@ -60,18 +60,6 @@ void notify_message
 */
 void notify_message_extended(gchar * summary, gchar * body,gchar * icon_str,NotifyUrgency urgency,glong timeout,GError **perror);
 
-
-#define SHR_KEY_CONFIG_KEY(key) key
-#define SHR_KEY_FOCUS_LOSS      SHR_KEY_CONFIG_KEY("dialog_focus_loss_behavior")
-#define SHR_KEY_GENERIC_PREFS   SHR_KEY_CONFIG_KEY("allow_generic_config_edit")
-
-/* 
-share_config_bool
-	returns a boolean shared configuration key.
-*/
-
-gboolean share_config_bool(const gchar * key);
-
 GtkWidget *awn_applet_create_preferences (gchar *instance,
                                           gchar *baseconf,
                                           gchar *applet_name);

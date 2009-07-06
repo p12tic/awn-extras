@@ -39,8 +39,6 @@
 #include <libgen.h>
 #include <gdk/gdk.h>
 
-#include <libawn-extras/awn-extras.h>
-
 #include "dashboard.h"
 #include "dashboard_util.h"
 #include "config.h"
@@ -986,7 +984,8 @@ static gboolean _focus_out_event(GtkWidget *widget, GdkEventButton *event,
   {
     if (gdk_window_get_window_type(event->window) != GDK_WINDOW_TEMP)
     {
-      if (share_config_bool(SHR_KEY_FOCUS_LOSS))
+      AwnConfigClient *client = awn_config_client_new();
+      if (awn_config_client_get_bool(client, "shared", "dialog_focus_loss_behavior", NULL))
       {
         gtk_widget_hide(dashboard->mainwindow);
       }

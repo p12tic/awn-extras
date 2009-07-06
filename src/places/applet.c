@@ -42,8 +42,6 @@
 #include <glib/gstdio.h>
 #include <string.h>
 
-#include <libawn-extras/awn-extras.h>
-
 #ifdef LIBAWN_USE_GNOME
 #include <libgnomevfs/gnome-vfs.h>
 #include <libgnomevfs/gnome-vfs-utils.h>
@@ -1430,7 +1428,9 @@ static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, 
 
 static gboolean _focus_out_event(GtkWidget *widget, GdkEventButton *event, Places * places)
 {
-  if (share_config_bool(SHR_KEY_FOCUS_LOSS))
+
+  AwnConfigClient *client = awn_config_client_new();
+  if (awn_config_client_get_bool(client, "shared", "dialog_focus_loss_behavior", NULL))
   {
     gtk_widget_hide(places->mainwindow);
   }

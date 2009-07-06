@@ -32,7 +32,6 @@ awnsystemmonitor_la_SOURCES =		\
 	$(NULL)
 awnsystemmonitor_la_LIBADD =					\
 	$(AWN_LIBS)						\
-	$(top_builddir)/src/libawn-extras/libawn-extras.la	\
 	$(AWN_SYSTEM_MONITOR_LIBS)				\
 	$(NULL)
 awnsystemmonitor_la_LDFLAGS = $(APPLET_LINKER_FLAGS)

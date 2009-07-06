@@ -17,6 +17,7 @@
  */
 
 #include <gtk/gtk.h>
+#include <libawn/libawn.h>
 #include "awn-extras.h"
 
 typedef struct
@@ -99,11 +100,12 @@ awn_applet_create_preferences (gchar *instance,
   GtkWidget * item = NULL;
   gchar * keysdir_copy = NULL;
   PrefsLocation  * prefs_location = g_malloc(sizeof(PrefsLocation));
+  AwnConfigClient *client = awn_config_client_new ();
 
   prefs_location->instance = g_strdup(instance);
   prefs_location->base = baseconf?g_strdup(baseconf):NULL;
   prefs_location->applet_name = g_strdup(applet_name);
-  if (share_config_bool(SHR_KEY_GENERIC_PREFS))
+  if (awn_config_client_get_bool(client, "shared", "allow_generic_config_edit", NULL))
   {
     item = gtk_image_menu_item_new_with_label("Applet Preferences");
     gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),

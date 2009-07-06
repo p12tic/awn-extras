@@ -33,7 +33,6 @@
 
 #include <libawn/awn-dialog.h>
 #include <libawn/awn-applet-simple.h>
-#include <libawn-extras/awn-extras.h>
 
 #define APPLET_NAME "main-menu"
 
@@ -392,7 +391,8 @@ on_about_activated(GtkMenuItem *item, Menu *app)
 static gboolean
 on_focus_out (GtkWidget *window, GdkEventFocus *event, gpointer null)
 {
-    if (share_config_bool(SHR_KEY_FOCUS_LOSS) )
+    AwnConfigClient *client = awn_config_client_new ();
+    if (awn_config_client_get_bool (client, "shared", "dialog_focus_loss_behavior", NULL))
     {    
         gtk_widget_hide (window);
     }        

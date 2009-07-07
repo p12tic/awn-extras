@@ -796,10 +796,7 @@ GtkWidget * get_blank(Places * places)
   else
   {
 
-    cairo_set_source_rgba(cr, desktop_agnostic_color_get_red(places->border_colour) / AWN_RGBA_SCALE_FACTOR,
-                          desktop_agnostic_color_get_green(places->border_colour) / AWN_RGBA_SCALE_FACTOR,
-                          desktop_agnostic_color_get_blue(places->border_colour) / AWN_RGBA_SCALE_FACTOR,
-                          0);
+    awn_cairo_set_source_color_with_alpha_multiplier(cr, places->border_colour, 0);
   }
 
   cairo_paint(cr);

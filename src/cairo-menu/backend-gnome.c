@@ -306,7 +306,7 @@ gboolean _mount_connected(Menu_list_item * p, char * filemanager)
 
   mess = g_strdup_printf("%s is not mounted. \nAttempting to mount", p->name);
   display_message("Cairo Menu", mess, 4000);
-  desktop_agnostic_vfs_volume_backend_mount(p->volume, _mount_result, g_strdup(p->comment));
+  desktop_agnostic_vfs_volume_backend_mount(p->volume, (DesktopAgnosticVFSVolumeCallback)_mount_result, g_strdup(p->comment));
   g_free(mess);
   return FALSE;
 }
@@ -370,24 +370,24 @@ gboolean _do_update_places_wrapper(Monitor_places * p)
 
 void backend_unmount(Menu_list_item * menu_item)
 {
-  desktop_agnostic_vfs_volume_backend_unmount(menu_item->volume, _unmount_result, g_strdup(menu_item->comment));
+  desktop_agnostic_vfs_volume_backend_unmount(menu_item->volume, (DesktopAgnosticVFSVolumeCallback)_unmount_result, g_strdup(menu_item->comment));
 }
 
 void backend_eject(Menu_list_item * menu_item)
 {
-  desktop_agnostic_vfs_volume_backend_eject(menu_item->volume, _eject_result, g_strdup(menu_item->comment));
+  desktop_agnostic_vfs_volume_backend_eject(menu_item->volume, (DesktopAgnosticVFSVolumeCallback)_eject_result, g_strdup(menu_item->comment));
 }
 
 void _vfs_changed_v_u(DesktopAgnosticVFSVolumeMonitor *monitor,
                       DesktopAgnosticVFSVolumeBackend *volume)
 {
-  g_timeout_add(500, _do_update_places_wrapper, Monitor_place);
+  g_timeout_add(500, (GSourceFunc)_do_update_places_wrapper, Monitor_place);
 }
 
 void _vfs_changed_v_m(DesktopAgnosticVFSVolumeMonitor *monitor,
                       DesktopAgnosticVFSVolumeBackend *volume)
 {
-  g_timeout_add(500, _do_update_places_wrapper, Monitor_place);
+  g_timeout_add(500, (GSourceFunc)_do_update_places_wrapper, Monitor_place);
 }
 
 void _fillin_connected(DesktopAgnosticVFSVolumeBackend *volume, GSList ** p)
@@ -415,7 +415,7 @@ void _fillin_connected(DesktopAgnosticVFSVolumeBackend *volume, GSList ** p)
   else
   {
     item->mount_point = g_strdup("Unmounted");
-    item->volume_prep = _mount_connected;
+    item->volume_prep = (MenuVolumePrepFunc)_mount_connected;
   }
 
   item->comment = g_strdup_printf("%s\n%s", item->name, item->mount_point);
@@ -719,7 +719,7 @@ static void monitor_places(gpointer callback, gpointer data, gpointer box)
 
   g_free(filename);
 
-  g_signal_connect (monitor, "changed", monitor_places_callback, Monitor_place);
+  g_signal_connect (monitor, "changed", G_CALLBACK (monitor_places_callback), Monitor_place);
 }
 
 GSList* get_menu_data(gboolean show_search, gboolean show_run, gboolean show_places, gboolean show_logout, char* file_manager, char*logout)

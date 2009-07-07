@@ -60,7 +60,7 @@ typedef struct
   GtkWidget *normal;
   GtkWidget *hover;
   GtkWidget *click;
-  gpointer  *volume;
+  DesktopAgnosticVFSVolumeBackend *volume;
   union
   {
     GSList   *sublist;

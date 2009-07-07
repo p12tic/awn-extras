@@ -88,7 +88,7 @@ static void
 awn_html_dialog_new (WebApplet *webapplet)
 {
   /* create viewer */
-  webapplet->mainwindow = awn_dialog_new_for_widget (webapplet->applet);
+  webapplet->mainwindow = awn_dialog_new_for_widget (GTK_WIDGET(webapplet->applet));
   webapplet->box = gtk_vbox_new (FALSE, 1);
   gtk_widget_set_size_request (GTK_WIDGET (webapplet->box), config_get_width(webapplet),
                                config_get_height(webapplet) );

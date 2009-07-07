@@ -21,7 +21,6 @@
 #ifndef _AWN_EXTRS_UTIL
 #define _AWN_EXTRS_UTIL
 
-#include <gtk/gtk.h>
 #include <glib.h>
 #include <libnotify/notify.h>
 
@@ -59,9 +58,5 @@ void notify_message
 	returns	TRUE on success, FALSE on failure	
 */
 void notify_message_extended(gchar * summary, gchar * body,gchar * icon_str,NotifyUrgency urgency,glong timeout,GError **perror);
-
-GtkWidget *awn_applet_create_preferences (gchar *instance,
-                                          gchar *baseconf,
-                                          gchar *applet_name);
 
 #endif

@@ -1626,14 +1626,8 @@ static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, 
   {
     if (!menu)
     {
-      GtkWidget *item;
       menu = awn_applet_create_default_menu (G_daemon_config.awn_app);
       gtk_menu_set_screen (GTK_MENU (menu), NULL);
-      item = awn_applet_create_preferences(APPLET_NAME,NULL,APPLET_NAME);
-      if (item) //generic preferences is enabled
-      {
-        gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);          
-      }    
     }
     gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL,
                     event->button, event->time);    

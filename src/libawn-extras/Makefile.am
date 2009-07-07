@@ -15,8 +15,8 @@ source_h =	\
 	
 source_c =	\
 	notify.c    \
-	shared_menuitems.c
-	
+	$(NULL)
+
 libawn_extrasinc_HEADERS = \
 	$(source_h)
 	

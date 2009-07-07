@@ -1629,7 +1629,7 @@ static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, 
       GtkWidget *item;
       menu = awn_applet_create_default_menu (G_daemon_config.awn_app);
       gtk_menu_set_screen (GTK_MENU (menu), NULL);
-      item = shared_menuitem_create_applet_prefs(APPLET_NAME,NULL,APPLET_NAME);
+      item = awn_applet_create_preferences(APPLET_NAME,NULL,APPLET_NAME);
       if (item) //generic preferences is enabled
       {
         gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);          
@@ -1641,7 +1641,8 @@ static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, 
   return TRUE;
 }
 
-AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient,gint offset, gint height)
+AwnApplet* awn_applet_factory_initp(const gchar *name,
+                                    const gchar *uid, gint panel_id)
 {
   NotifyDaemon *daemon;
   DBusGConnection *connection;
@@ -1651,10 +1652,15 @@ AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient,gint offset, gint he
   AwnApplet *applet;
 
 
+  G_daemon_config.awn_app = applet = AWN_APPLET(awn_applet_simple_new(name, uid, panel_id));
+  gint height = awn_applet_get_size(applet);
+
   G_daemon_config.awn_app_height = height;
   G_daemon_config.show_status = TRUE;
-
-  G_daemon_config.awn_app = applet = AWN_APPLET(awn_applet_simple_new(uid, orient,offset, height));
+  
+  g_object_set (applet,
+                "display-name","Awn Notification Daemon",
+                NULL);
 
   g_signal_connect(G_OBJECT(applet), "size-changed", G_CALLBACK(_height_changed), (gpointer)applet);
   gtk_widget_set_size_request(GTK_WIDGET(applet), height, height);
@@ -1668,13 +1674,13 @@ AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient,gint offset, gint he
   gchar * states[]={"On","Off",NULL};
   gchar * icon_names[]={"stock_up","stock_down",NULL};
   awn_applet_simple_set_icon_info(AWN_APPLET_SIMPLE(applet),
-                                    "Awn Notification Daemon",
                                     states,
                                     icon_names
                                     );
-  awn_applet_simple_set_icon_name (AWN_APPLET_SIMPLE(applet),
+  awn_applet_simple_set_icon_state (AWN_APPLET_SIMPLE(applet),"On");
+/*  awn_applet_simple_set_icon_name (AWN_APPLET_SIMPLE(applet),
                                     "Awn Notification Daemon",
-				    "Off");
+				    "Off");*/
 /*  gtk_widget_show_all(GTK_WIDGET(applet));*/
 
 

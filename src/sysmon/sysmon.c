@@ -160,10 +160,16 @@ awn_sysmon_constructed (GObject *object)
   GtkWidget *icon;
   AwnSysmon * sysmon = AWN_SYSMON(object);
   AwnSysmonPrivate *priv;
+  if (G_OBJECT_CLASS (awn_sysmon_parent_class)->constructed )
+  {
+    G_OBJECT_CLASS (awn_sysmon_parent_class)->constructed (object);
+  }  
+  
   priv = AWN_SYSMON_GET_PRIVATE (sysmon);        
   gchar * folder;
   GTimeVal cur_time;
-    
+
+  
   g_object_get (object,
                 "uid", &uid,
                 NULL);
@@ -279,20 +285,16 @@ awn_sysmon_init (AwnSysmon *sysmon)
   priv->box = awn_icon_box_new_for_applet (AWN_APPLET (sysmon));
   gtk_container_add (GTK_CONTAINER (sysmon), priv->box);
   gtk_widget_show (priv->box);
-  
+
 }
 
 AwnSysmon*
-awn_sysmon_new (const gchar *uid,
-                  gint         orient,
-                  gint         offset,
-                  gint         size)
+awn_sysmon_new (const gchar * name,const gchar *uid,gint panel_id)
 {
   return g_object_new (AWN_TYPE_SYSMON,
+			    "name", name,
                             "uid", uid,
-                            "orient", orient,
-                            "offset", offset,
-                            "size", size,
+                            "panel-id", panel_id,
                             NULL);
 }
 

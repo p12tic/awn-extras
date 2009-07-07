@@ -32,6 +32,12 @@ import urllib
 import gettext
 import locale
 
+try:
+  import gio
+
+except:
+  gio = False
+
 import awn
 from awn.extras import defs
 
@@ -44,11 +50,11 @@ group = awn.CONFIG_DEFAULT_GROUP
 
 class App (awn.AppletSimple):
   icons = {}
-  def __init__(self, uid, orient, offset, size):
+  def __init__(self, uid, panel_id):
     self.uid = uid
-    
+
     #AWN Applet Configuration
-    awn.AppletSimple.__init__(self, uid, orient, offset, size)
+    awn.AppletSimple.__init__(self, 'file-browser-launcher', uid, panel_id)
     self.set_tooltip_text(_("File Browser Launcher"))
     self.dialog = awn.Dialog(self)
 
@@ -57,18 +63,18 @@ class App (awn.AppletSimple):
 
     #Get the default icon theme
     self.theme = gtk.icon_theme_get_default()
-    self.theme.connect('changed', self.icon_theme_changed)
     self.icons['stock_folder'] = self.theme.load_icon('stock_folder', 24, 24)
 
     #Set the icon
     self.set_icon_name('file-browser-launcher', 'stock_folder')
     self.icon = self.get_icon().get_icon_at_size(48, None)
 
-    #Read fstab for mounting info
-    #(It it assumed that fstab won't change after the applet is started)
-    self.fstab2 = open('/etc/fstab', 'r')
-    self.fstab = self.fstab2.read().split('\n')
-    self.fstab2.close()
+    if not gio:
+      #Read fstab for mounting info
+      #(It it assumed that fstab won't change after the applet is started)
+      self.fstab2 = open('/etc/fstab', 'r')
+      self.fstab = self.fstab2.read().split('\n')
+      self.fstab2.close()
 
     #Check if nautilus-connect-server is installed
     if os.path.exists('/usr/bin/nautilus-connect-server') or os.path.exists\
@@ -78,26 +84,66 @@ class App (awn.AppletSimple):
       self.nautilus_connect_server = False
 
     #Make the dialog, will only be shown when approiate
-    #VBox for everything to go in
-    self.vbox = gtk.VBox()
     #Make all the things needed for a treeview for the homefolder, root dir, bookmarks, and mounted drives
-    self.liststore = gtk.ListStore(gtk.gdk.Pixbuf,str)
+    self.liststore = gtk.ListStore(gtk.gdk.Pixbuf, str, gtk.gdk.Pixbuf, str, int)
+
+    #Renderers
+    renderer0 = gtk.CellRendererPixbuf()
+    renderer1 = gtk.CellRendererText()
+    self.eject_render = gtk.CellRendererPixbuf()
+    self.eject_render.set_property("mode", gtk.CELL_RENDERER_MODE_ACTIVATABLE)
+
+    #Add renderers to column
+    column = gtk.TreeViewColumn('0')
+    column.pack_start(renderer0, False)
+    column.add_attribute(renderer0, 'pixbuf', 0)
+    column.pack_start(renderer1, True)
+    column.add_attribute(renderer1, 'markup', 1)
+    column.pack_start(self.eject_render, False)
+    column.add_attribute(self.eject_render, 'pixbuf', 2)
+
+    #TreeView
     self.treeview = gtk.TreeView(self.liststore)
     self.treeview.set_hover_selection(True)
-    self.renderer0 = gtk.CellRendererPixbuf()
-    self.renderer1 = gtk.CellRendererText()
     self.treeview.set_headers_visible(False)
-    self.column0 = gtk.TreeViewColumn('0')
-    self.column0.pack_start(self.renderer0, True)
-    self.column0.add_attribute(self.renderer0, 'pixbuf', 0)
-    self.column1 = gtk.TreeViewColumn('1')
-    self.column1.pack_start(self.renderer1, True)
-    self.column1.add_attribute(self.renderer1, 'markup', 1)
-    self.treeview.append_column(self.column0)
-    self.treeview.append_column(self.column1)
+    self.treeview.append_column(column)
     self.treeview.connect('button-press-event', self.treeview_clicked)
+
+    self.vbox = gtk.VBox()
     self.vbox.pack_start(self.treeview)
-    
+
+    if gio:
+      self.monitor = gio.volume_monitor_get()
+      self.monitor.connect('volume-added', self.do_gio_places)
+      self.monitor.connect('volume-changed', self.do_gio_places)
+      self.monitor.connect('volume-removed', self.do_gio_places)
+      self.monitor.connect('mount-added', self.do_gio_places)
+      self.monitor.connect('mount-changed', self.do_gio_places)
+      self.monitor.connect('mount-removed', self.do_gio_places)
+
+      self.client.notify_add(group, 'show_home', self.do_gio_places)
+      self.client.notify_add(group, 'show_local', self.do_gio_places)
+      self.client.notify_add(group, 'show_network', self.do_gio_places)
+      self.client.notify_add(group, 'show_connect', self.do_gio_places)
+      self.client.notify_add(group, 'show_bookmarks', self.do_gio_places)
+      self.client.notify_add(group, 'show_filesystem', self.do_gio_places)
+
+      self.do_gio_places()
+
+      #(From YAMA by Onox)
+      #Monitor bookmarks file for changes
+      bookmarks_file = os.path.expanduser("~/.gtk-bookmarks")
+
+      #keep a reference to avoid getting it garbage collected
+      self.__bookmarks_monitor = gio.File(bookmarks_file).monitor_file()
+
+      def bookmarks_changed_cb(monitor, file, other_file, event):
+        if event == gio.FILE_MONITOR_EVENT_CHANGES_DONE_HINT:
+          #Refresh menu to re-initialize the widget
+          self.do_gio_places()
+
+      self.__bookmarks_monitor.connect("changed", bookmarks_changed_cb)
+
     #Entry widget for displaying the path to open
     self.entry = gtk.Entry()
     self.entry.set_text(os.environ['HOME'])
@@ -112,34 +158,26 @@ class App (awn.AppletSimple):
     #And add the HBox to the vbox and add the vbox to the dialog
     self.vbox.pack_end(self.hbox)
     self.dialog.add(self.vbox)
-    
-    #AWN applet signals
+
+    #Connect to signals
     self.connect('button-press-event', self.button_press)
     self.dialog.connect('focus-out-event', lambda a,b: self.dialog.hide())
-  
-  #Function to show the home folder, mounted drives/partitions, and bookmarks according to awncc
-  #This also refreshes in case a CD was inserted, MP3 player unplugged, bookmark added, etc.
-  def add_places(self):
-    #This function adds items to the liststore. The TreeView was already made in __init__()
-    
-    #Empty the liststore if it isn't
+    self.theme.connect('changed', self.icon_theme_changed)
+
+  #Certain places, regardless of GIO/not GIO
+  def do_places(self):
     self.liststore.clear()
     self.places_paths = []
-    
-    #Get the needed awncc values
-    self.show_home = self.client.get_int(group, 'places_home')
-    self.show_local = self.client.get_int(group, 'places_local')
-    self.show_network = self.client.get_int(group, 'places_network')
-    self.show_connect = self.client.get_int(group, 'places_connect')
-    self.show_bookmarks = self.client.get_int(group, 'places_bookmarks')
-    self.show_filesystem = self.client.get_int(group, 'places_filesystem')
 
-    #Check to see if we should check /etc/fstab and $mount
-    self.do_mounted = False
-    if 2 in [self.show_local, self.show_network]:
-      self.do_mounted = True
-    
-    #Now make the actual mounted items. First: Home Folder
+    #Get the needed config values
+    self.show_home = self.client.get_int(group, 'show_home')
+    self.show_local = self.client.get_int(group, 'show_local')
+    self.show_network = self.client.get_int(group, 'show_network')
+    self.show_connect = self.client.get_int(group, 'show_connect')
+    self.show_bookmarks = self.client.get_int(group, 'show_bookmarks')
+    self.show_filesystem = self.client.get_int(group, 'show_filesystem')
+
+    #Home folder
     if self.show_home == 2:
       self.place('user-home', _("Home Folder"), os.environ['HOME'])
 
@@ -147,7 +185,195 @@ class App (awn.AppletSimple):
     if self.show_filesystem == 2:
       self.place('drive-harddisk', _("Filesystem"), '/')
 
+  def do_gio_places(self, *args):
+    i = 0
+
+    self.do_places()
+
+    if self.show_local == 2:
+      for vol in self.monitor.get_volumes():
+        #Get the icon
+        icon = vol.get_icon()
+        eject = None
+
+        if type(icon) == gio.ThemedIcon:
+          icons = icon.get_names()
+
+        else:
+          icons = ('drive-harddisk', 'drive')
+
+        #Get the human-readable name
+        name = vol.get_name()
+
+        #Get the path
+        if vol.get_mount():
+          path = vol.get_mount().get_root().get_uri()
+          icons = vol.get_mount().get_icon().get_names()
+
+          #Get the eject icon if this volume can be unmounted
+          if vol.get_mount().can_unmount():
+            eject = self.load_pixbuf(('media-eject', ))
+
+        else:
+          path = 'mount://%s' % i
+
+        icon = self.load_pixbuf(icons)
+
+        self.liststore.append((icon, name, eject, path, i))
+
+        i += 1
+
+    if self.show_network == 2:
+      for mount in self.monitor.get_mounts():
+        if mount.get_volume() is None:
+          #Get the icon
+          icon = mount.get_icon()
+
+          if type(icon) == gio.ThemedIcon:
+            icons = icon.get_names()
+
+          else:
+            icons = ('applications-internet', )
+
+          #Human-readable name
+          name = mount.get_name()
+
+          #Path
+          path = mount.get_root().get_uri()
+
+          #Load the icon
+          icon = self.load_pixbuf(icons)
+
+          #Eject icon
+          eject = None
+          if mount.can_unmount():
+            eject = self.load_pixbuf(('media-eject', ))
+
+          self.liststore.append((icon, name, path, i))
+
+          i += 1
+
+    self.do_ncs()
+    self.do_bookmarks()
+
+  #A volume was mounted through file-browser-launcher; open the file manager to the path
+  def gio_mounted(self, vol, blah):
+    self.launch_fb(None, vol.get_mount().get_root().get_uri())
+
+  #If nautilus-connect-server is installed, offer to start it "Connect to server..."
+  def do_ncs(self):
+    if self.nautilus_connect_server and self.show_connect == 2:
+      self.place('applications-internet', _("Connect to Server..."),
+        'exec://nautilus-connect-server')
+
+  #Go through the list of bookmarks and add them to the list IF it's not in the mount list
+  def do_bookmarks(self):
+    if self.show_bookmarks == 2:
+      #Get list of bookmarks
+      self.bmarks2 = open(os.path.expanduser('~/.gtk-bookmarks'))
+      self.bmarks = self.bmarks2.readlines()
+      self.bmarks2.close()
+
+      if gio:
+        self.paths = []
+
+      for path in self.bmarks:
+        path = path.replace('file://', '').replace('\n', '')
+        path = urllib.unquote(path)
+
+        #Get the human-readable name
+        try:
+          name = ' '.join(path.split(' ')[1:])
+          assert name.replace(' ', '') != ''
+        except:
+          name = None
+
+        path = path.split(' ')[0]
+        type = path.split(':')[0]
+
+        #Check if this path hasn't been used already
+        if path not in self.paths and path != os.environ['HOME']:
+
+          #Check if this is a path on the filesystem
+          if path[0] == '/':
+            if os.path.isdir(path):
+
+              #If the user did not rename the bookmark - get the name from
+              #the folder name (/media/Lexar -> Lexar)
+              if name is None:
+                try: name = path.split('/')[-1]
+                except: name = path
+
+              #Check if this is the Desktop directory
+              if (path == os.path.expanduser(_("~/Desktop"))):
+                self.place('desktop', name, path)
+
+              #It's not
+              else:
+                self.place('folder', name, path)
+
+          #computer://, trash://, network fs, etc.
+          else:
+            if type == 'computer':
+              self.place('computer', name, path, _("Computer"))
+
+            elif type in ['network', 'smb', 'nfs', 'ftp', 'sftp', 'ssh']:
+              self.place('network-folder', name, path, _("Network"))
+
+            elif type == 'trash':
+              #Get whether the trash is empty or not - but first find out if the Trash is in
+              #~/.Trash or ~/.local/share/Trash
+              try:
+                #Get trash dir
+                if os.path.isdir(os.path.expanduser('~/.local/share/Trash/files')):
+                  self.trash_path = os.path.expanduser('~/.local/share/Trash/files')
+                else:
+                  self.trash_path = os.path.expanduser('~/.Trash')
+                
+                #Get number of items in trash
+                if len(os.listdir(self.trash_path)) > 0:
+                  self.trash_full = True
+                else:
+                  self.trash_full = False
+              
+              except:
+                #Maybe the trash is in a different location? Just put false
+                self.trash_full = False
+
+              if self.trash_full:
+                self.place('user-trash-full', name, path, _("Trash"))
+
+              else:
+                self.place('user-trash', name, path, _("Trash"))
+
+            elif type == 'x-nautilus-search':
+              self.place('search', name, path, _("Search"))
+
+            elif type == 'burn':
+              self.place('drive-optical', name, path, _("CD/DVD Burner"))
+
+            elif type == 'fonts':
+              self.place('font', name, path, _("Fonts"))
+
+            #Default to folder
+            else:
+              self.place('stock_folder', name, path, _("Folder"))
+
+  #Function to show the home folder, mounted drives/partitions, and bookmarks according to awncc
+  #This also refreshes in case a CD was inserted, MP3 player unplugged, bookmark added, etc.
+  #Note: this function is not called if Python bindings for GIO are installed
+  def add_places(self):
+    #This function adds items to the liststore. The TreeView was already made in __init__()
+    
+    self.do_places()
+
+    #Check to see if we should check /etc/fstab and $mount
+    self.do_mounted = False
+    if 2 in [self.show_local, self.show_network]:
+      self.do_mounted = True
+
     #Define some variables
+    self.paths = []
     self.paths_fstab = []
     self.network_paths = []
     self.network_corr_hnames = []
@@ -160,34 +386,9 @@ class App (awn.AppletSimple):
       self.mount = self.mount2.readlines()
       self.mount2.close()
 
-    #Get list of bookmarks
-    self.bmarks2 = open(os.path.expanduser('~/.gtk-bookmarks'))
-    self.bmarks = self.bmarks2.readlines()
-    self.bmarks2.close()
-    
     #Set list of paths, regardless of location
-    self.paths = []
     hnames = {}
-    
-    #Get whether the trash is empty or not - but first find out if the Trash is in
-    #~/.Trash or ~/.local/share/Trash
-    try:
-      #Get trash dir
-      if os.path.isdir(os.path.expanduser('~/.local/share/Trash/files')):
-        self.trash_path = os.path.expanduser('~/.local/share/Trash/files')
-      else:
-        self.trash_path = os.path.expanduser('~/.Trash')
-      
-      #Get number of items in trash
-      if len(os.listdir(self.trash_path)) > 0:
-        self.trash_full = True
-      else:
-        self.trash_full = False
-    
-    except:
-      #Maybe the trash is in a different location? Just put false
-      self.trash_full = False
-    
+
     #Get the mounted drives/partitions that are suitable to list (from fstab)
     if self.do_mounted:
       for line in self.fstab:
@@ -294,134 +495,135 @@ class App (awn.AppletSimple):
         self.place('network-folder', self.network_corr_hnames[y], path)
         y+=1
 
-    #Connect to network
-    if self.show_connect == 2 and self.nautilus_connect_server:
-      self.place('applications-internet', _("Connect to server"), \
-        'exec://nautilus-connect-server')
-
     #Get a single list of all the paths so far
-    all_paths = self.paths
-    all_paths.extend(self.network_paths)
-    all_paths.extend(self.places_paths)
-    all_paths.extend(self.cd_paths)
-    all_paths.extend(self.dvd_paths)
+    self.paths.extend(self.network_paths)
+    self.paths.extend(self.places_paths)
+    self.paths.extend(self.cd_paths)
+    self.paths.extend(self.dvd_paths)
 
-    #Go through the list of bookmarks and add them to the list IF it's not in the mount list
-    if self.show_bookmarks == 2:
-      for path in self.bmarks:
-        path = path.replace('file://', '').replace('\n', '')
-        path = urllib.unquote(path)
+    self.do_ncs()
 
-        #Get the human-readable name
+    self.do_bookmarks()
+
+  def load_pixbuf(self, names):
+    if type(names) == str:
+      names = (names, )
+
+    worked = False
+    for name in names:
+      #Load the icon if it hasn't been yet
+      if not self.icons.has_key(name):
         try:
-          name = ' '.join(path.split(' ')[1:])
-          assert name.replace(' ', '') != ''
+          icon = self.theme.load_icon(name, 24, 0)
+          worked = True
+          break
+
         except:
-          name = None
+          pass
 
-        path = path.split(' ')[0]
-        type = path.split(':')[0]
+      #Icon has already been loaded
+      else:
+        worked = True
+        icon = self.icons[name]
+        break
 
-        #Check if this path hasn't been used already
-        if path not in all_paths and path != os.environ['HOME']:
+    #If no icon does exists - load default folder icon
+    if not worked:
+      icon = self.icons['stock_folder']
+      self.icons[name] = icon
 
-          #Check if this is a path on the filesystem
-          #TODO: Check for ~/Desktop and change the icon (any others?)
-          if path[0] == '/':
-            if os.path.isdir(path):
-
-              #If the user did not rename the bookmark - get the name from
-              #the folder name (/media/Lexar -> Lexar)
-              if name is None:
-                try: name = path.split('/')[-1]
-                except: name = path
-
-              #Check if this is the Desktop directory
-              if (path == os.path.expanduser(_("~/Desktop"))):
-                self.place('desktop', name, path)
-
-              #It's not
-              else:
-                self.place('folder', name, path)
-
-          #computer://, trash://, network fs, etc.
-          else:
-            if type == 'computer':
-              self.place('computer', name, path, _("Computer"))
-
-            elif type in ['network', 'smb', 'nfs', 'ftp', 'sftp', 'ssh']:
-              self.place('network-folder', name, path, _("Network"))
-
-            elif type == 'trash':
-              if self.trash_full:
-                self.place('user-trash-full', name, path, _("Trash"))
-
-              else:
-                self.place('user-trash', name, path, _("Trash"))
-
-            elif type == 'x-nautilus-search':
-              self.place('search', name, path, _("Search"))
-
-            elif type == 'burn':
-              self.place('drive-optical', name, path, _("CD/DVD Burner"))
-
-            elif type == 'fonts':
-              self.place('font', name, path, _("Fonts"))
-
-            #Default to folder
-            else:
-              self.place('stock_folder', name, path, _("Folder"))
-
-  def place(self, icon_name, human_name, path, alt_name=None):
-    #Load the icon if it hasn't been yet
-    if not self.icons.has_key(icon_name):
-      try:
-        icon = self.theme.load_icon(icon_name, 24, 24)
-
-      #If the icon doesn't exist - load default folder icon
-      except:
-        icon = self.icons['stock_folder']
-        self.icons[icon_name] = icon
-
-    #The icon has already been loaded
     else:
-      icon = self.icons[icon_name]
+      self.icons[name] = icon
 
-    self.liststore.append([icon, [human_name, alt_name][human_name is None]])
-    self.places_paths.append(path)
+    return icon
+
+  def place(self, icon_names, human_name, path, alt_name=None):
+    icon = self.load_pixbuf(icon_names)
+    self.liststore.append([icon, [human_name, alt_name][human_name is None], None, path, -1])
+
+  def ejected_or_unmounted(self, *a):
+    pass
 
   #Function to do what should be done according to awncc when the treeview is clicked
-  def treeview_clicked(self,widget,event):
+  def treeview_clicked(self, widget, event):
     self.open_clicked = self.client.get_int(group, 'places_open')
     self.selection = self.treeview.get_selection()
-    if self.open_clicked==2:
+
+    if gio:
+      #Get some data
+      path, column = widget.get_path_at_pos(int(event.x), int(event.y))[0:2]
+      posx, posy = column.cell_get_position(self.eject_render)
+
+      #Check if the eject column was clicked
+      if posx + 24 > event.x and posx <= event.x:
+        #Check if this is a volume or a mount
+        num = self.liststore[path][4]
+        if num != -1:
+          li = self.monitor.get_volumes()
+          li.extend(self.monitor.get_mounts())
+
+          #If it's a volume
+          if isinstance(li[num], gio.Volume):
+            if li[num].get_mount():
+              #If the volume can eject
+              if li[num].get_mount().can_eject():
+                li[num].get_mount().eject(self.ejected_or_unmounted)
+                return False
+
+              #If the volume can unmount
+              if li[num].get_mount().can_unmount():
+                li[num].get_mount().unmount(self.ejected_or_unmounted)
+                return False
+
+          #It's a mount
+          else:
+            #If the mount can eject
+            if li[num].can_eject():
+              li[num].eject(self.ejected_or_unmounted)
+              return False
+
+            #If the mount can unmount
+            elif li[num].can_unmount():
+              li[num].unmount(self.ejected_or_unmounted)
+              return False
+
+          #Otherwise, just open it
+
+    if self.open_clicked == 2:
       self.dialog.hide()
-      self.launch_fb(None,self.places_paths[self.liststore[self.selection.get_selected()[1]].path[0]])
+      self.launch_fb(None, self.liststore[self.selection.get_selected()[1]][3])
+
     else:
-      self.entry.set_text(self.places_paths[self.liststore[self.selection.get_selected()[1]].path[0]])
+      self.entry.set_text(self.liststore[self.selection.get_selected()[1]][3])
       self.entry.grab_focus()
   
   #Applet show/hide methods - copied from MiMenu (and edited)
   #When a button is pressed
   def button_press(self, widget, event):
-    if self.dialog.flags() & gtk.VISIBLE:
-      self.dialog.hide()
-    else:
-      if event.button==1 or event.button==2:
+    if event.button in (1, 2):
+      if self.dialog.flags() & gtk.VISIBLE:
+        self.dialog.hide()
+
+      else:
         self.dialog_config(event.button)
-      elif event.button==3:
-        self.show_menu(event)
+
+    elif event.button == 3:
+      self.dialog.hide()
+      self.show_menu(event)
 
   #The user changed the icon theme
   def icon_theme_changed(self, icon_theme):
     for key in self.icons.keys():
       del self.icons[key]
 
+    if gio:
+      self.do_gio_places()
+
     #Reload the stock folder icon
     self.icons['stock_folder'] = self.theme.load_icon('stock_folder', 24, 24)
 
   #dialog_config: 
-  def dialog_config(self,button):
+  def dialog_config(self, button):
     if button != 1 and button != 2:
       return False
     self.curr_button = button
@@ -445,18 +647,18 @@ class App (awn.AppletSimple):
       self.awncc_mmb_path = self.client.get_string(group, 'mmb_path')
       self.awncc_mmb_path = os.path.expanduser(self.awncc_mmb_path)
     
-    #Now get the chosen program for file browsing from awncc
-    self.awncc_fb = self.client.get_string(group, 'fb')
-    
     #Left mouse button - either popup with correct path or launch correct path OR do nothing
     if button == 1:
       if self.awncc_lmb == 1:
         self.entry.set_text(self.awncc_lmb_path)
-        self.add_places()
+
+        if not gio:
+          self.add_places()
 
         if self.awncc_focus == 2:
           self.entry.grab_focus()
           self.entry.set_position(-1)
+
         self.dialog.show_all()
 
       elif self.awncc_lmb == 2:
@@ -466,7 +668,9 @@ class App (awn.AppletSimple):
     if button == 2:
       if self.awncc_mmb == 1:
         self.entry.set_text(self.awncc_mmb_path)
-        self.add_places()
+
+        if not gio:
+          self.add_places()
 
         if self.awncc_focus == 2:
           self.entry.grab_focus()
@@ -487,10 +691,10 @@ class App (awn.AppletSimple):
     self.dialog.hide()
     if path == None:
       path = self.entry.get_text()
-    
+
     #Get the file browser app, or set to xdg-open if it's not set
     self.awncc_fb = self.client.get_string(group, 'fb')
-    
+
     #In case there is nothing but whitespace (or at all) in the entry widget
     if path.replace(' ','') == '':
       path = os.environ['HOME']
@@ -499,31 +703,36 @@ class App (awn.AppletSimple):
     if path.split(':')[0] == 'exec':
       os.system('%s &' % path.split('://')[-1])
 
+    #Or mount a specified location
+    elif path.split(':')[0] == 'mount':
+      mo = gio.MountOperation()
+      num = int(path.split('://')[-1])
+      self.monitor.get_volumes()[num].mount(mo, self.gio_mounted)
+
     #Otherwise, open the file/directory
     else:
       os.system('%s %s &' % (self.awncc_fb, path.replace(' ', '\ ')))
   
   #Right click menu - Preferences or About
   def show_menu(self,event):
-    
     #Hide the dialog if it's shown
     self.dialog.hide()
-    
+
     #Create the items for Preferences and About
     self.prefs = gtk.ImageMenuItem(gtk.STOCK_PREFERENCES)
     self.about = gtk.ImageMenuItem(gtk.STOCK_ABOUT)
-    
+
     #Connect the two items to functions when clicked
     self.prefs.connect("activate", self.open_prefs)
     self.about.connect("activate", self.open_about)
-    
+
     #Now create the menu to put the items in and show it
     self.menu = self.create_default_menu()
     self.menu.append(self.prefs)
     self.menu.append(self.about)
     self.menu.show_all()
     self.menu.popup(None, None, None, event.button, event.time)
-  
+
   #Show the preferences window
   def open_prefs(self,widget):
     #Import the prefs file from the same directory
@@ -532,7 +741,7 @@ class App (awn.AppletSimple):
     #Show the prefs window - see prefs.py
     prefs.Prefs(self)
     gtk.main()
-  
+
   #Show the about window
   def open_about(self,widget):
     #Import the about file from the same directory
@@ -540,11 +749,10 @@ class App (awn.AppletSimple):
     
     #Show the about window - see about.py
     about.About()
-  
-    
+
 if __name__ == '__main__':
   awn.init(sys.argv[1:])
-  applet = App(awn.uid, awn.orient, awn.offset, awn.size)
+  applet = App(awn.uid, awn.panel_id)
   awn.init_applet(applet)
   applet.show_all()
   gtk.main()

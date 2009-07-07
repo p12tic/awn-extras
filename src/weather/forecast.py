@@ -27,7 +27,6 @@ from gtk import gdk
 from awn import Dialog, awn_cairo_rounded_rect, ROUND_ALL
 import cairo
 
-import weathericons
 from weather import _
 
 
@@ -219,10 +218,11 @@ class NormalDialog(gtk.Image):
         context.show_text(day_name)
 
         # Icon of condition
-        icon_name=weathericons.get_icon(day['CODE'], self.__parent_weather.settings["theme"])
-        icon = gdk.pixbuf_new_from_file(icon_name)
-        scaled = icon.scale_simple(60, 60, gdk.INTERP_BILINEAR)
-        context.set_source_pixbuf(scaled, icon_x, icon_y)
+        icon_name = self.__parent_weather.get_icon_name(day['CODE'], self.__parent_weather.settings["theme"])
+        icon = self.__parent_weather.applet.get_icon().get_icon_at_size(60, icon_name)
+        start_x = (rect_width - icon.get_width()) / 2
+        start_y = ((high_temp_y - rect_y - 15) - icon.get_height()) / 2
+        context.set_source_pixbuf(icon, rect_x + start_x, rect_y + start_y)
         context.fill()
         context.paint()
 

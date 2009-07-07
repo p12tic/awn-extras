@@ -48,9 +48,9 @@ class App (awn.AppletSimple):
 
     APPLET_NAME = "Media Control Applet"
     APPLET_NAME_MARKUP = "<span weight=\"bold\">Media Control Applet</span>"
-    def __init__(self, uid, orient, offset, size):
+    def __init__(self, uid, panel_id):
         """Creating the applets core"""
-        awn.AppletSimple.__init__(self, uid, orient, offset, size)
+        awn.AppletSimple.__init__(self, "media-control", uid, panel_id)
         self.set_tooltip_text(App.APPLET_NAME)
         self.MediaPlayer = None
         self.location = __file__.replace('mediacontrol.py','')
@@ -67,10 +67,21 @@ class App (awn.AppletSimple):
         self.label.set_padding(4, 0)
         self.label.set_markup(App.APPLET_NAME_MARKUP)
 
-        self.what_app()
+        self.album_overlay = awn.OverlayPixbufFile()
+        self.album_overlay.props.gravity = gtk.gdk.GRAVITY_SOUTH_EAST
+        self.album_overlay.props.alpha = 0.85
+        self.album_overlay.props.active = False
+        self.add_overlay(self.album_overlay)
+
         # The Heart
         self.dialog = awn.Dialog (self)
         self.dialog_visible = False
+
+        # Docklet related stuff
+        self.docklet = None
+        self.docklet_visible = False
+        self.docklet_image = None
+        self.docklet_label = None
 
         #Popup menu
         self.about = gtk.ImageMenuItem(gtk.STOCK_ABOUT)
@@ -79,6 +90,8 @@ class App (awn.AppletSimple):
         self.popup_menu = self.create_default_menu()
         self.popup_menu.append(self.about)
         self.popup_menu.show_all()
+
+        self.what_app()
 
         # Defining Widgets
         vbox = gtk.VBox()
@@ -93,11 +106,6 @@ class App (awn.AppletSimple):
         button_pause = gtk.ToolButton ("gtk-media-pause")
         button_next = gtk.ToolButton ("gtk-media-next")
         self.image = gtk.Image()
-        self.album_overlay = awn.OverlayPixbufFile()
-        self.album_overlay.props.gravity = gtk.gdk.GRAVITY_SOUTH_EAST
-        self.album_overlay.props.alpha = 0.85
-        self.album_overlay.props.active = False
-        self.add_overlay(self.album_overlay)
         # Packing Widgets
         hbox = gtk.HBox()
         hbox.pack_start(button_previous)
@@ -116,6 +124,7 @@ class App (awn.AppletSimple):
         # Standard AWN Connects
         self.connect("scroll-event", self.wheel_turn)
         self.connect("button-press-event", self.button_press)
+        self.connect("clicked", self.icon_clicked)
         self.connect("enter-notify-event", self.enter_notify)
         self.dialog.connect("focus-out-event", self.dialog_focus_out)
         # Drag&drop support
@@ -138,18 +147,114 @@ class App (awn.AppletSimple):
         proxy = dbus.SessionBus().get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
         proxy.connect_to_signal('NameOwnerChanged', self.name_owner_changed_cb)
 
-    def button_press(self, widget, event):
-        if event.button == 1:
-            if self.dialog_visible:
-                self.dialog.hide()
-                self.dialog_visible = False
+    def docklet_image_from_dialog_image(self):
+        pixbuf = self.image.get_pixbuf()
+        if pixbuf == None: return None
+        # TODO: orient support
+        max_size = self.docklet.props.max_size
+        offset = self.docklet.props.offset
+
+        dest_width = int(pixbuf.get_width() * (max_size - offset)
+                         / pixbuf.get_height())
+        pixbuf = pixbuf.scale_simple(dest_width, max_size - offset,
+                                     gtk.gdk.INTERP_BILINEAR)
+
+        return pixbuf
+
+    def init_docklet(self, window_id):
+        self.docklet_visible = True
+        docklet = awn.Applet(self.get_canonical_name(),
+                             self.props.uid, self.props.panel_id)
+        self.docklet = docklet
+        docklet.props.quit_on_delete = False
+
+        def invalidate_docklet(widget, applet):
+            applet.docklet_visible = False
+            applet.docklet = None
+        docklet.connect("destroy", invalidate_docklet, self)
+
+        align = awn.Alignment(docklet)
+        box = None
+        if (docklet.props.orient in [awn.ORIENTATION_TOP,
+                                     awn.ORIENTATION_BOTTOM]):
+            box = gtk.HBox()
+            align.add(box)
+        else:
+            box = gtk.VBox()
+            align.add(box)
+
+        # TODO: not really for side orient yet
+        pixbuf = self.docklet_image_from_dialog_image()
+        if pixbuf:
+            self.docklet_image = gtk.image_new_from_pixbuf(pixbuf)
+        else:
+            self.docklet_image = gtk.Image()
+        self.docklet_image.set_padding(6, 0)
+        box.add(self.docklet_image)
+
+        label_align = gtk.Alignment(0.5, 1.0, 1.0, 0.0) # for BOTTOM
+        self.docklet_label = gtk.Label()
+        self.docklet_label.set_markup(self.label.get_label())
+        self.docklet_label.set_size_request(-1, docklet.props.size)
+        label_align.add(self.docklet_label)
+
+        box.add(label_align)
+
+        play_button_size = (docklet.props.max_size + docklet.props.size) / 2
+        play_pause = awn.ThemedIcon(bind_effects = False)
+        play_pause.set_orientation(docklet.props.orient)
+        play_pause.set_size(play_button_size)
+        play_pause.set_info_simple("media-control-docklet",
+                                   docklet.props.uid,
+                                   "media-playback-start")
+        play_pause.connect("clicked", self.button_pp_press)
+        box.pack_start(play_pause, False)
+
+        prev_button = awn.ThemedIcon(bind_effects = False)
+        prev_button.set_orientation(docklet.props.orient)
+        prev_button.set_size(docklet.props.size)
+        prev_button.set_info_simple("media-control-docklet",
+                                    docklet.props.uid,
+                                    "media-skip-backward")
+        prev_button.connect("clicked", self.button_previous_press)
+        box.pack_start(prev_button, False)
+
+        next_button = awn.ThemedIcon(bind_effects = False)
+        next_button.set_orientation(docklet.props.orient)
+        next_button.set_size(docklet.props.size)
+        next_button.set_info_simple("media-control-docklet",
+                                    docklet.props.uid,
+                                    "media-skip-forward")
+        next_button.connect("clicked", self.button_next_press)
+        box.pack_start(next_button, False)
+
+        docklet.add(align)
+
+        docklet.applet_construct(window_id)
+        docklet.show_all()
+
+    def icon_clicked(self, widget):
+        if self.dialog_visible:
+            self.dialog.hide()
+            self.dialog_visible = False
+        else:
+            if not self.MediaPlayer: self.what_app()
+            # update controls
+            self.dialog_visible = True
+            if self.MediaPlayer:
+                self.labeler()
+                docklet_win = self.docklet_request (400, False) if self.MediaPlayer.is_async() else 0
+                if docklet_win != 0:
+                    self.dialog_visible = False
+                    self.init_docklet(docklet_win)
+                else:
+                    self.dialog.show_all()
             else:
-                if not self.MediaPlayer: self.what_app()
-                self.dialog_visible = True
-                # update controls
-                if self.MediaPlayer: self.labeler()
+                # show the media-players menu
                 self.dialog.show_all()
-        elif event.button == 2:
+
+    def button_press(self, widget, event):
+        if event.button == 2:
             self.button_pp_press(widget)
         elif event.button == 3:
             self.popup_menu.popup(None, None, None, event.button, event.time)
@@ -185,6 +290,8 @@ class App (awn.AppletSimple):
             self.set_tooltip_text(App.APPLET_NAME)
             self.label.set_markup(App.APPLET_NAME_MARKUP)
             self.MediaPlayer = None
+            self.album_overlay.props.active = False
+            if self.docklet_visible: self.docklet.destroy()
         else:
             self.MediaPlayer = mediaplayers.__dict__[self.player_name]()
             self.MediaPlayer.set_callback(self.song_changed)
@@ -284,7 +391,8 @@ class App (awn.AppletSimple):
             self.album_overlay.props.active = False
         
         # no need to set dialog elements if it's not visible
-        if self.dialog_visible == False: return False
+        if (not self.dialog_visible) and (not self.docklet_visible):
+            return False
 
         self.label.set_markup(markup)
         try:
@@ -300,20 +408,27 @@ class App (awn.AppletSimple):
                     self.albumArtSize,
                     gtk.gdk.INTERP_BILINEAR))
             except GError: pass
+
+        # update docklet
+        if self.docklet_visible:
+            pixbuf = self.docklet_image_from_dialog_image()
+            if pixbuf: self.docklet_image.set_from_pixbuf(pixbuf)
+            self.docklet_label.set_markup(markup)
+
         return False
 
     @error_decorator
-    def button_previous_press(self, widget):
+    def button_previous_press(self, widget, *args):
         self.MediaPlayer.previous()
         if (self.MediaPlayer and self.MediaPlayer.is_async() == False): self.labeler()
 
     @error_decorator
-    def button_pp_press(self, widget):
+    def button_pp_press(self, widget, *args):
         self.MediaPlayer.play_pause()
         if (self.MediaPlayer and self.MediaPlayer.is_async() == False): self.labeler()
 
     @error_decorator
-    def button_next_press(self, widget):
+    def button_next_press(self, widget, *args):
         self.MediaPlayer.next()
         if (self.MediaPlayer and self.MediaPlayer.is_async() == False): self.labeler()
 
@@ -380,7 +495,7 @@ class App (awn.AppletSimple):
 
 if __name__ == "__main__":
     awn.init                      (sys.argv[1:])
-    applet = App                  (awn.uid, awn.orient, awn.offset, awn.size)
+    applet = App                  (awn.uid, awn.panel_id)
     awn.init_applet               (applet)
     applet.show_all               ()
     gtk.main                      ()

@@ -2,8 +2,8 @@
 Type=Application
 X-AWN-Type=Applet
 X-AWNApplet-Type=Vala
-Name=Test Vala Applet
-Comment=A simple applet to test vala support
+_Name=Test Vala Applet
+_Comment=A simple applet to test vala support
 Exec=@LIBDIR@/awn/applets/vala-test/vala-test.so
 Icon=binary
 X-AWN-AppletCategory=Development,Debugging.

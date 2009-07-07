@@ -173,6 +173,6 @@ typedef struct
 }Win_press_data;
 
 /* Applet */
-Shiny_switcher* applet_new(AwnApplet *applet, gint orient,int offset, int size);
+Shiny_switcher* applet_new(AwnApplet *applet, gint panel_id);
 
 #endif

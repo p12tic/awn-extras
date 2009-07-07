@@ -20,11 +20,14 @@ etc/gconf/schemas/webapplet.schemas
 # Disabled applets #
 ####################
 #
-#usr/lib/awn/applets/trasher/*.so
+# Filebrowser
+#
 #usr/lib/awn/applets/filebrowser/*.so
-#usr/share/avant-window-navigator/applets/trasher.desktop
 #usr/share/avant-window-navigator/applets/filebrowser.desktop
-
 #usr/share/icons/hicolor/scalable/apps/filebrowser.svg
 #etc/gconf/schemas/filebrowser.schemas
+#
+#
+#usr/lib/awn/applets/trasher/*.so
 
+#usr/share/avant-window-navigator/applets/trasher.desktop

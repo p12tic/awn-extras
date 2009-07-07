@@ -2,8 +2,8 @@
 Type=Application
 X-AWN-Type=Applet
 X-AWN-AppletType=Python
-Name=Show Desktop
-Comment=Hide your windows and show your desktop
+_Name=Show Desktop
+_Comment=Hide your windows and show your desktop
 Exec=showdesktop/showdesktop.py
 Icon=desktop
 X-AWN-AppletCategory=Utility

@@ -1,11 +1,10 @@
 [Desktop Entry]
 Version=1.0
-Name=Digg
+_Name=Digg
 Type=Application
 X-AWN-Type=Applet
 X-AWN-AppletType=Python
-Comment=Browse Digg from Awn
+_Comment=Browse Digg from Awn
 Exec=digg/digg.py
 Icon=digg/icons/digg.png
-Name[en_US]=Digg
 X-AWN-AppletCategory=Network,News

@@ -1,5 +1,5 @@
 APPLET_NAME = sysmon
-APPLET_CFLAGS = $(AWN_SYSTEM_MONITOR_CFLAGS)
+APPLET_CFLAGS = $(GTOP_CFLAGS)
 include $(top_srcdir)/Makefile.c-applet
 include $(top_srcdir)/Makefile.schemas
 
@@ -33,7 +33,7 @@ sysmon_la_SOURCES =		\
 sysmon_la_LIBADD =					\
 	$(AWN_LIBS)						\
 	$(top_builddir)/src/libawn-extras/libawn-extras.la	\
-	$(AWN_SYSTEM_MONITOR_LIBS)				\
+	$(GTOP_LIBS)						\
 	$(NULL)
 
 sysmon_la_LDFLAGS = $(APPLET_LINKER_FLAGS)

@@ -34,9 +34,9 @@ import keyboard
 class App (awn.AppletSimple):
     """
     """
-    def __init__ (self, uid, orient, height):
+    def __init__ (self, uid, panel_id):
         """
-        Creating the applets core
+        Creating the applet's core
         """
         self.visible = False
         screen_hieght = gtk.gdk.screen_height()
@@ -49,12 +49,12 @@ class App (awn.AppletSimple):
         location =  __file__
         self.location = location.replace('mimenu.py','')
         self.location_icon = self.location + '/icons/icon.svg'
-        awn.AppletSimple.__init__ (self, uid, orient, height)
-        self.height = height
-        self.set_awn_icon('MiMenu', 'gnome-main-menu')
-        self.title = awn.awn_title_get_default ()
-        self.resultToolTip = "Main Menu Applet"
-        self.dialog = awn.AppletDialog (self)
+        awn.AppletSimple.__init__ (self, uid, panel_id)
+        self.height = self.get_size()
+        self.set_icon_name('MiMenu', 'gnome-main-menu')
+        #TODO: i18n
+        self.set_tooltip_text("Main Menu Applet")
+        self.dialog = awn.Dialog (self)
         self.theme = gtk.icon_theme_get_default()
         self.popup_menu = self.create_default_menu()
         render = gtk.CellRendererPixbuf()
@@ -112,8 +112,6 @@ class App (awn.AppletSimple):
         hbox.show_all()
         self.dialog.add(hbox)
         self.connect("button-press-event", self.button_press)
-        self.connect("enter-notify-event", self.enter_notify)
-        self.connect("leave-notify-event", self.leave_notify)
         self.dialog.connect("focus-out-event", self.dialog_focus_out)
         entry.connect("activate",self.search)
         search_button.connect("clicked",self.search)
@@ -148,11 +146,9 @@ class App (awn.AppletSimple):
         if event.button == 1:
             if self.dialog.flags() & gtk.VISIBLE:
                 self.dialog.hide()
-                self.title.hide(self)
             else:
                 self.tree1.set_cursor((self.objlist1.__len__()-1,0),None,False)
                 self.dialog.show_all()
-                self.title.hide(self)
                 if "placesmodel" in self.__dict__:pass
                 else:self.placesmodel,self.objlist3 = menus.get_places(self.theme)
                 self.tree2.set_model(self.placesmodel)
@@ -162,12 +158,6 @@ class App (awn.AppletSimple):
 
     def dialog_focus_out(self, widget, event):
         self.dialog.hide()
-
-    def enter_notify(self, widget, event):
-        self.title.show(self, self.resultToolTip)
-
-    def leave_notify(self, widget, event):
-        self.title.hide(self)
 
     def treeclick(self,widget,tree,obj,toggle,t2act=False):
         """
@@ -219,7 +209,7 @@ class App (awn.AppletSimple):
 
 if __name__ == "__main__":
     awn.init                      (sys.argv[1:])
-    applet = App                  (awn.uid, awn.orient,awn.height)
+    applet = App                  (awn.uid, awn.panel_id)
     awn.init_applet               (applet)
     applet.show_all               ()
     gtk.main                      ()

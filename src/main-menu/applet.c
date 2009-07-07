@@ -33,7 +33,6 @@
 
 #include <libawn/awn-dialog.h>
 #include <libawn/awn-applet-simple.h>
-#include <libawn-extras/awn-extras.h>
 
 #define APPLET_NAME "main-menu"
 
@@ -392,16 +391,17 @@ on_about_activated(GtkMenuItem *item, Menu *app)
 static gboolean
 on_focus_out (GtkWidget *window, GdkEventFocus *event, gpointer null)
 {
-    if (share_config_bool(SHR_KEY_FOCUS_LOSS) )
+    AwnConfigClient *client = awn_config_client_new ();
+    if (awn_config_client_get_bool (client, "shared", "dialog_focus_loss_behavior", NULL))
     {    
         gtk_widget_hide (window);
     }        
 }
 
 AwnApplet *
-awn_applet_factory_initp (const gchar * uid, gint orient, gint offset, gint height ) 
+awn_applet_factory_initp (const gchar *name, const gchar *uid, gint panel_id)
 {
-  AwnApplet *applet = AWN_APPLET (awn_applet_simple_new (uid, orient, offset, height));
+  AwnApplet *applet = AWN_APPLET (awn_applet_simple_new (name, uid, panel_id));
   Menu      *app = menu =  g_new0 (Menu, 1);
   app->applet = applet;
     
@@ -440,7 +440,6 @@ awn_applet_factory_initp (const gchar * uid, gint orient, gint offset, gint heig
                     G_CALLBACK (on_icon_clicked), (gpointer)app);
   
   awn_applet_simple_set_icon_name( AWN_APPLET_SIMPLE(app->applet),
-                                    APPLET_NAME,
                                     "gnome-main-menu")  ;
 
   awn_applet_simple_set_tooltip_text(AWN_APPLET_SIMPLE(app->applet),

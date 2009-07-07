@@ -136,14 +136,15 @@ _button_clicked_event (GtkWidget      *widget,
         g_signal_connect (G_OBJECT (item), "activate",
                           G_CALLBACK (_show_location_dialog), webapplet);                  
       }           
-      item = shared_menuitem_create_applet_prefs(webapplet->uid,APPLET_NAME,APPLET_NAME);
+      item = awn_applet_create_preferences(webapplet->uid,APPLET_NAME,APPLET_NAME);
       if (item) //generic preferences is enabled
       {
         gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);          
       }        
-      item = shared_menuitem_about_applet_simple("2008 Rodney Cryderman <rcryderman@gmail.com>\n2008 Mark Lee <avant-wn@lazymalevolence.com>\n",
+      item = awn_applet_create_about_item_simple(webapplet->applet,
+                                                 "2008 Rodney Cryderman <rcryderman@gmail.com>\n"
+                                                 "2008 Mark Lee <avant-wn@lazymalevolence.com>\n",
                                                  AWN_APPLET_LICENSE_GPLV2,
-                                                 "WebApplet",
                                                  NULL);
       gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);                
     }
@@ -175,21 +176,21 @@ _bloody_thing_has_style (GtkWidget *widget,WebApplet *webapplet)
 }
 
 AwnApplet *
-awn_applet_factory_initp (gchar *uid, gint orient, gint offset, gint height)
+awn_applet_factory_initp (const gchar *name, gchar* uid, gint panel_id)
 {
   g_on_error_stack_trace (NULL);
   html_init ();
   WebApplet *webapplet = g_malloc (sizeof (WebApplet));
   webapplet->uid=g_strdup(uid);
   init_config (webapplet, uid);
-  webapplet->applet = AWN_APPLET (awn_applet_simple_new (uid, orient, offset, height));
+  webapplet->applet = AWN_APPLET (awn_applet_simple_new (name, uid, panel_id));
+  gint height = awn_applet_get_size(webapplet->applet);
   gtk_widget_set_size_request (GTK_WIDGET (webapplet->applet), height, -1);
 
   webapplet->applet_icon_name = g_strdup ("apple-green");  
 
   awn_applet_simple_set_icon_name(AWN_APPLET_SIMPLE(webapplet->applet),
-                                    APPLET_NAME,
-                                    webapplet->applet_icon_name)  ;
+                                  webapplet->applet_icon_name);
  
   /*gtk_widget_show_all (GTK_WIDGET (webapplet->applet));*/
   awn_html_dialog_new (webapplet);

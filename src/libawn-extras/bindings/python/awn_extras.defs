@@ -33,14 +33,6 @@
 
 ;; From awn-extras.h
 
-(define-function surface_to_pixbuf
-  (c-name "get_pixbuf_from_surface")
-  (return-type "GdkPixbuf*")
-  (parameters
-    '("cairo_surface_t*" "surface")
-  )
-)
-
 (define-function notify_message
   (c-name "notify_message")
   (return-type "gboolean")

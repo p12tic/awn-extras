@@ -5,7 +5,6 @@ include $(top_srcdir)/Makefile.python-applet
 dist_applet_DATA = 		\
 	messages.pot		\
 	forecast.py          \
-	weathericons.py		\
 	weather-prefs.glade	\
 	$(NULL)
 

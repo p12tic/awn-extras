@@ -30,22 +30,23 @@ class App(awn.AppletSimple):
     """Displays a dialog with controls and track/album info and art"""
 
     APPLET_NAME = "Media Player Applet"
-    def __init__(self, uid, orient, offset, size):
+    def __init__(self, uid, panel_id):
         """Creating the applets core"""
-        awn.AppletSimple.__init__(self, uid, orient, offset, size)
+        awn.AppletSimple.__init__(self, "media-player", uid, panel_id)
         self.set_tooltip_text(App.APPLET_NAME)
         self.set_icon_name('media-player', 'media-player')
         self.load_keys()
 
         # some initialization stuff
         self.isVideo = False
-        self.size = size
+        self.size = self.get_size()
         self.full_window = None
         self.dialog = awn.Dialog(self)
         self.play_icon = awn.OverlayThemedIcon(self.get_icon(),
-                                               "media-playback-start")
+                                               "media-playback-start", None)
         self.play_icon.props.scale = 0.4
         self.play_icon.props.active = False
+        self.play_icon.props.gravity = gtk.gdk.GRAVITY_SOUTH_EAST
         self.add_overlay(self.play_icon)
 
         # Recent items menu
@@ -434,7 +435,7 @@ class App(awn.AppletSimple):
 
 if __name__ == "__main__":
     awn.init                      (sys.argv[1:])
-    applet = App                  (awn.uid, awn.orient, awn.offset, awn.size)
+    applet = App                  (awn.uid, awn.panel_id)
     awn.init_applet               (applet)
     applet.show_all               ()
     gtk.main                      ()

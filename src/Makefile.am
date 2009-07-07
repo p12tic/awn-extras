@@ -27,6 +27,8 @@ endif
 if WITH_GNOME
 GCONF_APPLETS +=	\
 	main-menu	\
+	MiMenu		\
+	pandora		\
 	yama       \
 	$(NULL)
 endif
@@ -47,7 +49,10 @@ SUBDIRS =			\
 	battery-applet		\
 	cairo-clock			\
 	cpufreq				\
+	file-browser-launcher	\
 	gwibfawn		\
+	mail			\
+	media-icons		\
 	media-player		\
 	mount-applet       \
 	notification-area	\
@@ -57,6 +62,8 @@ SUBDIRS =			\
 	showdesktop			\
 	sysmon			\
 	thinkhdaps			\
+	to-do			\
+	tomboy-applet			\
 	volume-control		\
 	weather				\
 	$(WOBBLYZINI)		\

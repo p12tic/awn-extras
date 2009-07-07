@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
-Name=Stacks Applet
-Comment=Quick access to a file folder
+_Name=Stacks Applet
+_Comment=Quick access to a file folder
 Exec=stacks/stacks_applet.py
 Icon=stacks/icons/stacks-drop.svg
 X-AWN-Type=Applet

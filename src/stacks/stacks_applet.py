@@ -64,7 +64,7 @@ class StacksApplet (awn.AppletSimple):
     # Awn applet
     uid = None
     orient = None
-    height = None
+    size = None
     title = None
     effects = None
     drag_timer = None
@@ -91,9 +91,9 @@ class StacksApplet (awn.AppletSimple):
     # Default configuration values, are overruled while reading config
     config = {}
 
-    def __init__ (self, uid, orient, height):
+    def __init__ (self, uid, panel_id):
         self.awn = awn
-        awn.AppletSimple.__init__(self, uid, orient, height)
+        awn.AppletSimple.__init__(self, uid, panel_id)
 
         gobject.signal_new("stacks-gui-hide", StacksApplet, gobject.SIGNAL_RUN_LAST,
                 gobject.TYPE_NONE, ())
@@ -117,9 +117,8 @@ class StacksApplet (awn.AppletSimple):
 
         # initalize variables
         self.uid = uid
-        self.orient = orient
-        self.height = height
-        self.title = awn.awn_title_get_default()
+        self.orient = self.get_orient()
+        self.size = self.get_size()
         self.effects = self.get_effects()
 
         # get GConf client and read configuration
@@ -135,7 +134,7 @@ class StacksApplet (awn.AppletSimple):
         self.connect("drag-motion", self.applet_drag_motion_cb)
         self.connect("drag-leave", self.applet_drag_leave_cb)
         self.connect("orientation-changed", self.applet_orient_changed_cb)
-        self.connect("height-changed", self.applet_height_changed_cb)
+        self.connect("size-changed", self.applet_size_changed_cb)
 
         self.config = get_config_from_gconf(self.gconf_client, self.gconf_path, self.uid)
         self.set_gui(self.config['gui_type'])
@@ -160,9 +159,9 @@ class StacksApplet (awn.AppletSimple):
         return
 
 
-    # Bar height changed
-    def applet_height_changed_cb(self, widget, height):
-        self.height = height
+    # Bar size changed
+    def applet_size_changed_cb(self, widget, size):
+        self.size = size
 
 
     # On enter -> show the title of the stack
@@ -398,10 +397,11 @@ class StacksApplet (awn.AppletSimple):
         self.applet_set_icon(None)
 
 if __name__ == "__main__":
+    print sys.argv[1:]
     awn.init (sys.argv[1:])
     # might needed to request passwords from user
     gnome.ui.authentication_manager_init()
-    applet = StacksApplet (awn.uid, awn.orient, awn.height)
+    applet = StacksApplet (awn.uid, awn.panel_id)
     awn.init_applet (applet)
     applet.show_all()
     gtk.main()

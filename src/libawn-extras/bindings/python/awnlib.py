@@ -1,4 +1,4 @@
-# AWN Applet Library - simplified APIs for programming applets for AWN.
+# Awn Applet Library - Simplified APIs for programming applets for Awn.
 #
 # Copyright (C) 2007 - 2008  Pavel Panchekha <pavpanchekha@gmail.com>
 #               2008 - 2009  onox <denkpadje@gmail.com>
@@ -17,7 +17,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import subprocess
 import sys
 
 import gobject
@@ -27,10 +26,10 @@ import gtk
 
 import awn
 import awn.extras as extras
+
 import cairo
 import cPickle as cpickle  # For object serialization into gconf
 import types  # For type checking for gconf/settings
-import urllib
 
 ___file___ = sys.argv[0]
 # Basically, __file__ = current file location
@@ -38,8 +37,6 @@ ___file___ = sys.argv[0]
 # Since awnlib is in site-packages, __file__ refers to something there
 # For relative paths to work, we need a way of determining where the
 # User applet is. So this bit of magic works.
-
-_globalRegister = {}
 
 bug_report_link = "https://launchpad.net/awn-extras/+filebug"
 
@@ -474,30 +471,7 @@ class Icon:
         @rtype: C{gtk.gdk.Pixbuf}
 
         """
-        return self.__parent.set_icon_name(self.__parent.meta["short"], name)
-
-    def surface(self, surface, pixbuf=None, set=True):
-        """Convert a C{cairo} surface to a C{gtk.gdk.Pixbuf}.
-
-        @param surface: The C{cairo} surface to convert.
-        @type surface: C{cairo.Surface}
-        @param pixbuf: The reference to the pixbuf created from the surface.
-        If you use this method multiple times, please keep a reference to
-        this variable, or else your applet will leak memory.
-        @type pixbuf: C{gtk.gdk.Pixbuf}
-        @param set: Whether to also set the icon. True by default.
-        @type set: C{bool}
-        @return: The resultant pixbuf or None (if C{set} is C{True})
-        @rtype: C{gtk.gdk.Pixbuf} or C{None}
-
-        """
-        if set:
-            self.set_icon_surface(surface)
-        else:
-            if pixbuf is None:
-                return extras.surface_to_pixbuf(surface)
-            else:
-                return extras.surface_to_pixbuf(surface, pixbuf)
+        return self.__parent.set_icon_name(name)
 
     def set(self, icon):
         """Set a C{gtk.gdk.pixbuf} or C{cairo.Context} as your applet icon.
@@ -520,6 +494,38 @@ class Icon:
 
         """
         self.__parent.hide()
+
+
+class Theme:
+
+    def __init__(self, parent):
+        """Create a new Theme object.
+
+        @param parent: The parent applet of the theme instance.
+        @type parent: L{Applet}
+
+        """
+        self.__parent = parent
+
+        self.__states = None
+        self.__icon_state = None
+
+    def set_states(self, states_icons):
+        self.__states, icons = zip(*states_icons.items())
+        self.__icon_state = None
+        self.__parent.set_icon_info(self.__parent.meta["short"], \
+            self.__states, icons)
+
+    def icon(self, state):
+        if self.__states is None or state not in self.__states:
+            raise RuntimeError("invalid state")
+
+        if state != self.__icon_state:
+            self.__icon_state = state
+            self.__parent.set_icon_state(state)
+
+    def theme(self, theme):
+        self.__parent.get_icon().override_gtk_theme(theme)
 
 
 class Errors:
@@ -1445,7 +1451,7 @@ class Meta:
 
 class Applet(awn.AppletSimple, object):
 
-    def __init__(self, uid, orient, offset, size, meta={}, options=[]):
+    def __init__(self, uid, panel_id, meta={}, options=[]):
         """Create a new instance of the Applet object.
 
         @param uid: The unique identifier of the applet
@@ -1459,7 +1465,7 @@ class Applet(awn.AppletSimple, object):
         @type meta: C{dict}
 
         """
-        awn.AppletSimple.__init__(self, uid, orient, offset, size)
+        awn.AppletSimple.__init__(self, meta["short"], uid, panel_id)
 
         self.uid = uid
 
@@ -1471,11 +1477,6 @@ class Applet(awn.AppletSimple, object):
 
         # Dialogs depends on settings
         self.dialog = Dialogs(self)
-
-        if "Applet" in _globalRegister:
-            _globalRegister["Applet"].append(self)
-        else:
-            _globalRegister["Applet"] = [self]
 
     def connect_size_changed(self, callback):
         self.connect("size-changed", lambda w, e: callback())
@@ -1496,6 +1497,7 @@ class Applet(awn.AppletSimple, object):
             return instance[module]
         return property(getter)
 
+    theme = __getmodule(Theme)
     timing = __getmodule(Timing)
     errors = __getmodule(Errors)
     keyring = __getmodule(Keyring)
@@ -1526,8 +1528,7 @@ def init_start(applet_class, meta={}, options=[]):
     gobject.threads_init()
 
     awn.init(sys.argv[1:])
-    applet = Applet(awn.uid, awn.orient, awn.offset, awn.size, meta, options)
-    awn.init_applet(applet)
+    applet = Applet(awn.uid, awn.panel_id, meta, options)
 
     try:
         applet_class(applet)
@@ -1537,5 +1538,5 @@ def init_start(applet_class, meta={}, options=[]):
         traceback = traceback.format_exception(type(e), e, sys.exc_traceback)
         applet.errors.general(e, traceback=traceback, callback=gtk.main_quit)
 
-    applet.show_all()
+    awn.init_applet(applet)
     gtk.main()

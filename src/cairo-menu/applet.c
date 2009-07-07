@@ -86,10 +86,10 @@ static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, 
       gtk_menu_set_screen(GTK_MENU(menu), NULL);
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
       g_signal_connect(G_OBJECT(item), "button-press-event", G_CALLBACK(_show_prefs), NULL);
-      item=shared_menuitem_about_applet_simple("Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
-                                        AWN_APPLET_LICENSE_GPLV2,
-                                        "Cairo Menu",
-                                        NULL);
+      item=awn_applet_create_about_item_simple(G_applet,
+                                               "Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
+                                               AWN_APPLET_LICENSE_GPLV2,
+                                               NULL);
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);      
       
     }
@@ -135,25 +135,29 @@ static gboolean _map_event(GtkWidget *widget, gpointer null)
   }
   return FALSE;
 }
-AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient,gint offset, gint height)
+AwnApplet* awn_applet_factory_initp(const gchar *name,
+                                    const gchar* uid, gint panel_id)
 {
 
-  AwnApplet *applet = AWN_APPLET(awn_applet_simple_new(uid, orient,offset, height));
+  AwnApplet *applet = AWN_APPLET(awn_applet_simple_new(name, uid, panel_id));
   G_applet = applet;
-  gtk_widget_set_size_request(GTK_WIDGET(applet), height, -1);
+  G_Height = awn_applet_get_size(applet);
+  gtk_widget_set_size_request(GTK_WIDGET(applet), G_Height, -1);
   GdkPixbuf *icon;
-  G_Height = height;
+  
+  g_object_set (applet,
+                "display-name","Awn System Monitor",
+                NULL);
   
   read_config();
   
   
-   awn_applet_simple_set_icon_name ( applet,
-                                    APPLET_NAME,
+   awn_applet_simple_set_icon_name ( AWN_APPLET_SIMPLE(applet),
                                     G_cairo_menu_conf.applet_icon)  ;
   
   icon = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(),
                                   G_cairo_menu_conf.applet_icon,
-                                  height ,
+                                  G_Height ,
                                   0, NULL);
  /* gtk_widget_show_all(GTK_WIDGET(applet));*/
 

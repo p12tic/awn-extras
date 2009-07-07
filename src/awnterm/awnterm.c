@@ -21,11 +21,11 @@
 
 #include <libawn/awn-applet.h>
 #include <libawn/awn-applet-simple.h>
-#include <libawn-extras/awn-extras.h>
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 #include <vte/vte.h>
 #include <string.h>
+#include <glib/gi18n.h>
 
 #include "awnterm.h"
 #include "settings.h"
@@ -69,7 +69,8 @@ gboolean icon_clicked_cb (GtkWidget *widget, GdkEventButton *event, gpointer nul
 // Callback when the applet's dialog box loses focus
 gboolean focus_out_cb (GtkWidget *window, GdkEventFocus *event, gpointer null)
 {
-    if (share_config_bool(SHR_KEY_FOCUS_LOSS) )
+  AwnConfigClient *client = awn_config_client_new ();
+  if (awn_config_client_get_bool (client, "shared", "dialog_focus_loss_behavior", NULL))
     {
     	gtk_widget_hide (window);
     }        
@@ -159,7 +160,7 @@ gboolean create_new_tab()
 
 	// New Label
 	applet->number_of_tabs += 1;
-	sprintf(buffer, "Term #%d", applet->number_of_tabs);
+	sprintf(buffer, _("Term #%d"), applet->number_of_tabs);
 	applet->label = gtk_label_new(buffer);
 
 	// New Page

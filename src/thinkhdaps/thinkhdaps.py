@@ -86,7 +86,6 @@ class ThinkHDAPSApplet:
             if paused != self.__was_paused or self.__error_occurred:
                 self.icon_paused.props.active = paused
                 self.icon_running.props.active = not paused
-                self.applet.get_icon().queue_draw()
 
             if self.__error_occurred:
                 self.__error_occurred = False
@@ -172,7 +171,6 @@ class ThinkHDAPSApplet:
         self.icon_paused.props.active = False
         self.icon_running.props.active = False
         self.icon_error.props.active = True
-        self.applet.get_icon().queue_draw()
 
 
 if __name__ == "__main__":

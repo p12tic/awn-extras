@@ -164,7 +164,7 @@ class GenericPlayer(object):
     def get_title_and_tooltip (self, text):
         # titleLen and titleBoldFont should be declared
         # here and not just in subclasses
-        if text.__class__ not in [str, unicode]:return '',''
+        if not isinstance(text, (str, unicode)): return '',''
         if len(text) > self.titleLen:
             text = text[:self.titleLen]
             text = text + '..'
@@ -229,6 +229,8 @@ class Rhythmbox(GenericPlayer):
             else:
                try:result = result['rb:stream-song-title']
                except:SyntaxError
+        elif 'title' in result:
+            result = result['title']
 
         markup, tooltip = self.get_title_and_tooltip(result)
         return albumart_exact, markup, tooltip
@@ -381,6 +383,7 @@ class BansheeOne(GenericPlayer):
 
     def __init__(self):
         GenericPlayer.__init__(self, 'org.bansheeproject.Banshee')
+        self.signalling_supported = True
 
     def dbus_driver(self):
         """
@@ -393,6 +396,7 @@ class BansheeOne(GenericPlayer):
             self.proxy_obj1 = self.session_bus.get_object('org.bansheeproject.Banshee',"/org/bansheeproject/Banshee/PlaybackController")
             self.player = dbus.Interface(self.proxy_obj, "org.bansheeproject.Banshee.PlayerEngine")
             self.player1 = dbus.Interface(self.proxy_obj1, "org.bansheeproject.Banshee.PlaybackController")
+            self.player.connect_to_signal('EventChanged', self.callback_fn, member_keyword='member')
 
     def labeler(self,artOnOff,titleOrder,titleLen,titleBoldFont):
         """
@@ -416,7 +420,9 @@ class BansheeOne(GenericPlayer):
         else:
             result['artist'] = ""
         if self.artOnOff == 'on':
-            if 'album' in info:
+            if 'artwork-id' in info:
+                albumart_exact = self.albumart_general + info['artwork-id'] + ".jpg"
+            elif 'album' in info:
                 albumart_exact = self.albumart_general + result['artist'] + '-' + info['album'] + ".jpg"
                 albumart_exact = albumart_exact.replace(' ','').lower()
             else:

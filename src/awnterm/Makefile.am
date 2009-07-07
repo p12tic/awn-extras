@@ -13,6 +13,5 @@ awnterm_la_SOURCES =	\
 awnterm_la_LIBADD =	\
 	$(AWN_LIBS)	\
 	$(VTE_LIBS)	\
-	$(top_builddir)/src/libawn-extras/libawn-extras.la	\
 	$(NULL)
 awnterm_la_LDFLAGS = $(APPLET_LINKER_FLAGS)

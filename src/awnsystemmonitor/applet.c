@@ -23,10 +23,16 @@
 #include "gconf-config.h"
 #include "awnsystemmonitor.h"
 
-AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient, gint offset, gint height)
+AwnApplet* awn_applet_factory_initp(const gchar *name,
+                                    const gchar* uid, gint panel_id)
 {
-  AwnApplet *applet = AWN_APPLET(awn_applet_simple_new(uid, orient, offset, height));
+  AwnApplet *applet = AWN_APPLET(awn_applet_simple_new(name, uid, panel_id));
   CpuMeter *cpumeter;
+
+  g_object_set (applet,
+                "display-name","Awn System Monitor",
+                NULL);
+  gint height = awn_applet_get_size(applet);
 
   gtk_widget_set_size_request(GTK_WIDGET(applet), height*1.25, -1);
 

@@ -7,39 +7,49 @@ dist_applet_DATA =  \
     $(NULL)
 
 theme_blackdir = $(applet_datadir)/themes/Black
-dist_theme_black_DATA =				\
-	themes/Black/audio-volume-muted.svg	\
-	themes/Black/audio-volume-1.svg		\
-	themes/Black/audio-volume-14.svg	\
-	themes/Black/audio-volume-21.svg	\
-	themes/Black/audio-volume-29.svg	\
-	themes/Black/audio-volume-36.svg	\
-	themes/Black/audio-volume-43.svg	\
-	themes/Black/audio-volume-50.svg	\
-	themes/Black/audio-volume-57.svg	\
-	themes/Black/audio-volume-64.svg	\
-	themes/Black/audio-volume-71.svg	\
-	themes/Black/audio-volume-79.svg	\
-	themes/Black/audio-volume-86.svg	\
-	themes/Black/audio-volume-93.svg	\
-	themes/Black/audio-volume-100.svg	\
+dist_theme_black_DATA =             \
+    themes/Black/index.theme \
+    $(NULL)
+
+theme_scalable_blackdir = $(applet_datadir)/themes/Black/scalable
+dist_theme_scalable_black_DATA =				\
+	themes/Black/scalable/audio-volume-muted.svg	\
+	themes/Black/scalable/audio-volume-1.svg		\
+	themes/Black/scalable/audio-volume-14.svg	\
+	themes/Black/scalable/audio-volume-21.svg	\
+	themes/Black/scalable/audio-volume-29.svg	\
+	themes/Black/scalable/audio-volume-36.svg	\
+	themes/Black/scalable/audio-volume-43.svg	\
+	themes/Black/scalable/audio-volume-50.svg	\
+	themes/Black/scalable/audio-volume-57.svg	\
+	themes/Black/scalable/audio-volume-64.svg	\
+	themes/Black/scalable/audio-volume-71.svg	\
+	themes/Black/scalable/audio-volume-79.svg	\
+	themes/Black/scalable/audio-volume-86.svg	\
+	themes/Black/scalable/audio-volume-93.svg	\
+	themes/Black/scalable/audio-volume-100.svg	\
 	$(NULL)
 
 theme_minimaldir = $(applet_datadir)/themes/Minimal
-dist_theme_minimal_DATA =			\
-	themes/Minimal/audio-volume-muted.svg	\
-	themes/Minimal/audio-volume-1.svg	\
-	themes/Minimal/audio-volume-14.svg	\
-	themes/Minimal/audio-volume-21.svg	\
-	themes/Minimal/audio-volume-29.svg	\
-	themes/Minimal/audio-volume-36.svg	\
-	themes/Minimal/audio-volume-43.svg	\
-	themes/Minimal/audio-volume-50.svg	\
-	themes/Minimal/audio-volume-57.svg	\
-	themes/Minimal/audio-volume-64.svg	\
-	themes/Minimal/audio-volume-71.svg	\
-	themes/Minimal/audio-volume-79.svg	\
-	themes/Minimal/audio-volume-86.svg	\
-	themes/Minimal/audio-volume-93.svg	\
-	themes/Minimal/audio-volume-100.svg	\
+dist_theme_minimal_DATA =           \
+    themes/Minimal/index.theme \
+    $(NULL)
+
+theme_scalable_minimaldir = $(applet_datadir)/themes/Minimal/scalable
+dist_theme_scalable_minimal_DATA =			\
+	themes/Minimal/scalable/audio-volume-muted.svg	\
+	themes/Minimal/scalable/audio-volume-1.svg	\
+	themes/Minimal/scalable/audio-volume-14.svg	\
+	themes/Minimal/scalable/audio-volume-21.svg	\
+	themes/Minimal/scalable/audio-volume-29.svg	\
+	themes/Minimal/scalable/audio-volume-36.svg	\
+	themes/Minimal/scalable/audio-volume-43.svg	\
+	themes/Minimal/scalable/audio-volume-50.svg	\
+	themes/Minimal/scalable/audio-volume-57.svg	\
+	themes/Minimal/scalable/audio-volume-64.svg	\
+	themes/Minimal/scalable/audio-volume-71.svg	\
+	themes/Minimal/scalable/audio-volume-79.svg	\
+	themes/Minimal/scalable/audio-volume-86.svg	\
+	themes/Minimal/scalable/audio-volume-93.svg	\
+	themes/Minimal/scalable/audio-volume-100.svg	\
 	$(NULL)

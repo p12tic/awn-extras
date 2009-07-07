@@ -40,8 +40,6 @@
 #include <glib/gi18n-lib.h>
 #include <string.h>
 
-#include <libawn-extras/awn-extras.h>
-
 
 #define APPLET_NAME "places"
 
@@ -75,7 +73,7 @@ typedef struct
 
 typedef struct
 {
-  AwnApplet    *applet;
+  GtkWidget  *applet;
   GdkPixbuf    *icon;
   int     applet_icon_height;
   GtkWidget   *mainwindow;
@@ -1273,17 +1271,17 @@ static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, 
 
     if (!menu)
     {
-      menu = awn_applet_create_default_menu(places->applet);
+      menu = awn_applet_create_default_menu(AWN_APPLET(places->applet));
       item = gtk_menu_item_new_with_label("Preferences");
       gtk_widget_show(item);
       gtk_menu_set_screen(GTK_MENU(menu), NULL);
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
       g_signal_connect(G_OBJECT(item), "button-press-event", G_CALLBACK(_show_prefs), places);
-      item = shared_menuitem_about_applet_simple("Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>\n"
-             "Copyright 2007,2008 Mark Lee <avant-wn@lazymalevolence.com>\n",
-             AWN_APPLET_LICENSE_GPLV2,
-             "Places",
-             NULL);
+      item = awn_applet_create_about_item_simple (AWN_APPLET(places->applet),
+                                                  "Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>\n"
+                                                  "Copyright 2007,2008 Mark Lee <avant-wn@lazymalevolence.com>\n",
+                                                  AWN_APPLET_LICENSE_GPLV2,
+                                                  NULL);
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
     }
 
@@ -1295,7 +1293,9 @@ static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, 
 
 static gboolean _focus_out_event(GtkWidget *widget, GdkEventButton *event, Places * places)
 {
-  if (share_config_bool(SHR_KEY_FOCUS_LOSS))
+
+  AwnConfigClient *client = awn_config_client_new();
+  if (awn_config_client_get_bool(client, "shared", "dialog_focus_loss_behavior", NULL))
   {
     gtk_widget_hide(places->mainwindow);
   }
@@ -1310,7 +1310,6 @@ static void _bloody_thing_has_style(GtkWidget *widget, Places *places)
 
   //The EASY way to use awn icons.
   awn_applet_simple_set_icon_name(AWN_APPLET_SIMPLE(places->applet),
-                                  APPLET_NAME,
                                   places->applet_icon_name)  ;
   awn_applet_simple_set_tooltip_text(AWN_APPLET_SIMPLE(places->applet), "Places");
 
@@ -1320,15 +1319,19 @@ static void _bloody_thing_has_style(GtkWidget *widget, Places *places)
   g_signal_connect(G_OBJECT(places->mainwindow), "expose-event", G_CALLBACK(_expose_event), places);
 }
 
-AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient, gint offset, gint height)
+AwnApplet* awn_applet_factory_initp(const gchar *name,
+                                    const gchar *uid, gint panel_id)
 {
   GdkPixbuf *icon;
   g_on_error_stack_trace(NULL);
   Places * places = g_malloc(sizeof(Places));
-  AwnApplet *applet = places->applet = AWN_APPLET(awn_applet_simple_new(uid, orient, offset, height));
-  gtk_widget_set_size_request(GTK_WIDGET(applet), height, -1);
+  GtkWidget *applet = places->applet = awn_applet_simple_new(name, uid, panel_id);
+  g_object_set (applet,
+                "display-name","Places",
+                NULL);
+  gtk_widget_set_size_request(GTK_WIDGET(applet), awn_applet_get_size(AWN_APPLET(applet)), -1);
 
-  places->applet_icon_height = height - 2;
+  places->applet_icon_height = awn_applet_get_size(AWN_APPLET(applet)) - 2;
 
 
   /* gtk_widget_show_all(GTK_WIDGET(applet));*/
@@ -1339,7 +1342,7 @@ AwnApplet* awn_applet_factory_initp(gchar* uid, gint orient, gint offset, gint h
   g_signal_connect_after(G_OBJECT(places->applet), "map", G_CALLBACK(_bloody_thing_has_style), places);
 
   places->uid = g_strdup(uid);
-  return applet;
+  return AWN_APPLET(applet);
 
 }
 

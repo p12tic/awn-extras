@@ -47,3 +47,17 @@ stamp-h1
 .pydevproject
 .project
 .settings
+config.guess.cdbs-orig
+config.sub.cdbs-orig
+debian/*.debhelper.log
+debian/*.postinst.debhelper
+debian/*.postrm.debhelper
+debian/*.preinst.debhelper
+debian/*.prerm.debhelper
+debian/*.substvars
+debian/*-trunk/
+debian/files
+debian/stamp-autotools-files
+debian/stamp-makefile-build
+debian/stamp-patched
+debian/tmp/

@@ -23,10 +23,21 @@ usr/share/avant-window-navigator/applets/cairo-clock.desktop
 usr/share/avant-window-navigator/applets/cpufreq/
 usr/share/avant-window-navigator/applets/cpufreq.desktop
 #
+# File-browser-launcher
+#
+etc/gconf/schemas/file-browser-launcher.schemas
+usr/share/avant-window-navigator/applets/file-browser-launcher/*.py
+usr/share/avant-window-navigator/applets/file-browser-launcher.desktop
+#
 # Gwibfawn
 #
 usr/share/avant-window-navigator/applets/gwibfawn/
 usr/share/avant-window-navigator/applets/gwibfawn.desktop
+#
+# Mail
+#
+usr/share/avant-window-navigator/applets/mail/
+usr/share/avant-window-navigator/applets/mail.desktop
 #
 # Media Player
 #
@@ -47,6 +58,11 @@ usr/share/avant-window-navigator/applets/mount-applet/*.glade
 usr/share/avant-window-navigator/applets/mount-applet/icons/*.png
 usr/share/avant-window-navigator/applets/mount-applet.desktop
 #
+# Quit applet
+#
+usr/share/avant-window-navigator/applets/quit-applet/*.py
+usr/share/avant-window-navigator/applets/quit-applet.desktop
+#
 # Showdesktop
 #
 usr/share/avant-window-navigator/applets/showdesktop/
@@ -56,6 +72,11 @@ usr/share/avant-window-navigator/applets/showdesktop.desktop
 #
 usr/share/avant-window-navigator/applets/thinkhdaps/
 usr/share/avant-window-navigator/applets/thinkhdaps.desktop
+#
+# Todo
+#
+usr/share/avant-window-navigator/applets/to-do/
+usr/share/avant-window-navigator/applets/to-do.desktop
 #
 # Volume-control
 #
@@ -99,30 +120,7 @@ usr/share/avant-window-navigator/applets/weather.desktop
 #usr/share/avant-window-navigator/applets/DesktopManager/
 #usr/share/avant-window-navigator/applets/DesktopManager.desktop
 #
-# File-browser-launcher
-#
-#etc/gconf/schemas/file-browser-launcher.schemas
-#usr/share/avant-window-navigator/applets/file-browser-launcher/*.py
-#usr/share/avant-window-navigator/applets/file-browser-launcher/icons/
-#usr/share/avant-window-navigator/applets/file-browser-launcher.desktop
-#
-# Mail
-#
-#usr/share/avant-window-navigator/applets/mail/
-#usr/share/avant-window-navigator/applets/mail.desktop
-#
-# Quit applet
-#
-#usr/share/avant-window-navigator/applets/quit-applet/*.py
-#usr/share/avant-window-navigator/applets/quit-applet/icons/scalable/apps/*.svg
-#usr/share/avant-window-navigator/applets/quit-applet.desktop
-#
 # Stack
 #
 #usr/share/avant-window-navigator/applets/stacks/
 #usr/share/avant-window-navigator/applets/stacks.desktop
-#
-# Todo
-#
-#usr/share/avant-window-navigator/applets/to-do/
-#usr/share/avant-window-navigator/applets/to-do.desktop

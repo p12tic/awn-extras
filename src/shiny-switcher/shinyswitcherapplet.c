@@ -594,10 +594,10 @@ gboolean  _button_workspace(GtkWidget *widget, GdkEventButton *event, Workplace_
                        G_CALLBACK(_start_applet_prefs), NULL);
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
-      item = shared_menuitem_about_applet_simple("Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
+      item = awn_applet_create_about_item (shinyswitcher->applet,
+             "Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
              AWN_APPLET_LICENSE_GPLV2,
-             "Shiny Switcher",
-             NULL);
+             NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
     }
 
@@ -686,10 +686,11 @@ gboolean  _button_win(GtkWidget *widget, GdkEventButton *event, Win_press_data *
                        G_CALLBACK(_start_applet_prefs), NULL);
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
-      item = shared_menuitem_about_applet_simple("Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
+      item = awn_applet_create_about_item (shinyswitcher->applet,
+             "Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
              AWN_APPLET_LICENSE_GPLV2,
-             "Shiny Switcher",
-             NULL);
+             NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
       gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL, event->button, event->time);
@@ -1831,11 +1832,11 @@ gboolean create_windows(Shiny_switcher *shinyswitcher)
                            G_CALLBACK(_start_applet_prefs), NULL);
           gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
-          item = shared_menuitem_about_applet_simple("Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
+          item = awn_applet_create_about_item (shinyswitcher->applet,
+             "Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
+             AWN_APPLET_LICENSE_GPLV2,
+             NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 
-                 AWN_APPLET_LICENSE_GPLV2,
-                 "Shiny Switcher",
-                 NULL);
           gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
           g_tree_insert(shinyswitcher->win_menus, G_OBJECT(win_iter->data), menu);
@@ -1886,11 +1887,11 @@ void _window_opened(WnckScreen *screen, WnckWindow *window, Shiny_switcher *shin
                      G_CALLBACK(_start_applet_prefs), NULL);
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
-    item = shared_menuitem_about_applet_simple("Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
+    item = awn_applet_create_about_item (shinyswitcher->applet,
+             "Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
+             AWN_APPLET_LICENSE_GPLV2,
+             NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 
-           AWN_APPLET_LICENSE_GPLV2,
-           "Shiny Switcher",
-           NULL);
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
     g_tree_insert(shinyswitcher->win_menus, G_OBJECT(window), menu);
   }
@@ -2034,13 +2035,13 @@ gboolean _waited(Shiny_switcher *shinyswitcher)
  * Create new applet
  */
 Shiny_switcher*
-applet_new(AwnApplet *applet, gint orient, int offset, int size)
+applet_new(AwnApplet *applet, gint panel_id)
 {
   GdkScreen *screen;
 
   Shiny_switcher *shinyswitcher = g_malloc(sizeof(Shiny_switcher)) ;
-  shinyswitcher->padding = offset;
-  shinyswitcher->orient = orient;
+  shinyswitcher->padding = awn_applet_get_offset(applet);;
+  shinyswitcher->orient = awn_applet_get_orientation(applet);
   shinyswitcher->align  = awn_alignment_new_for_applet(applet);
   gtk_container_add(GTK_CONTAINER(applet), shinyswitcher->align);  
   shinyswitcher->config = NULL;
@@ -2054,7 +2055,7 @@ applet_new(AwnApplet *applet, gint orient, int offset, int size)
   shinyswitcher->pixbuf_cache = g_tree_new(_cmp_ptrs);
   shinyswitcher->surface_cache = g_tree_new(_cmp_ptrs);
   shinyswitcher->win_menus = g_tree_new(_cmp_ptrs);
-  shinyswitcher->height = size;
+  shinyswitcher->height = awn_applet_get_size(applet);
   shinyswitcher->wnck_screen = wnck_screen_get_default();
   wnck_screen_force_update(shinyswitcher->wnck_screen);
   shinyswitcher->got_viewport = wnck_workspace_is_virtual(wnck_screen_get_active_workspace(shinyswitcher->wnck_screen));

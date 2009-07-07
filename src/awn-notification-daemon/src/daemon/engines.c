@@ -166,9 +166,6 @@ fill_background(GtkWidget *widget, WindowData *windata, cairo_t *cr)
 {
 
 #if 1
-  GtkStyle *style = gtk_widget_get_style(widget);
-  GdkColor *background_color = &style->bg[GTK_STATE_NORMAL];
-
   awn_cairo_set_source_color_with_alpha_multiplier(cr, G_daemon_config.awn_bg, windata->gradient_factor);
   cairo_rectangle(cr, 0, 0,
                   widget->allocation.width,
@@ -178,7 +175,7 @@ fill_background(GtkWidget *widget, WindowData *windata, cairo_t *cr)
 
 }
 
-
+#if 0
 static void
 draw_stripe(GtkWidget *widget, WindowData *windata, cairo_t *cr)
 {
@@ -211,7 +208,9 @@ draw_stripe(GtkWidget *widget, WindowData *windata, cairo_t *cr)
   gdk_cairo_set_source_color(cr, &color);
   cairo_fill(cr);
 }
+#endif
 
+#if SHOW_SPACERS
 static GtkArrowType
 get_notification_arrow_type(GtkWidget *nw)
 {
@@ -231,6 +230,7 @@ get_notification_arrow_type(GtkWidget *nw)
     return GTK_ARROW_UP;
   }
 }
+#endif
 
 #define ADD_POINT(_x, _y, shapeoffset_x, shapeoffset_y) \
   G_STMT_START { \
@@ -241,6 +241,7 @@ get_notification_arrow_type(GtkWidget *nw)
     i++;\
   } G_STMT_END
 
+#if 0
 static void
 create_border_with_arrow(GtkWidget *nw, WindowData *windata)
 {
@@ -452,7 +453,9 @@ create_border_with_arrow(GtkWidget *nw, WindowData *windata)
                        GDK_EVEN_ODD_RULE);
   g_free(shape_points);
 }
+#endif
 
+#if 0
 static void
 draw_border(GtkWidget *widget, WindowData *windata, cairo_t *cr)
 {
@@ -491,6 +494,7 @@ draw_border(GtkWidget *widget, WindowData *windata, cairo_t *cr)
 
   cairo_stroke(cr);
 }
+#endif
 
 static void
 destroy_windata(WindowData *windata)
@@ -504,6 +508,7 @@ destroy_windata(WindowData *windata)
   g_free(windata);
 }
 
+#ifdef SHOW_SPACERS
 static void
 update_spacers(GtkWidget *nw)
 {
@@ -534,6 +539,7 @@ update_spacers(GtkWidget *nw)
     gtk_widget_hide(windata->bottom_spacer);
   }
 }
+#endif
 
 static void
 update_content_hbox_visibility(WindowData *windata)
@@ -964,8 +970,6 @@ countdown_expose_cb(GtkWidget *pie, GdkEventExpose *event,
     return TRUE;
   }
 
-  GtkStyle *style = gtk_widget_get_style(windata->win);
-
   cairo_t *context;
   cairo_surface_t *surface;
   cairo_t *cr;
@@ -1029,7 +1033,6 @@ void add_notification_action(GtkWindow *nw, const char *text,
   GtkWidget *hbox;
   GdkPixbuf *pixbuf;
   char *buf;
-  cairo_t *cr;
   g_assert(windata != NULL);
 
   if ((!G_daemon_config.show_status) && (G_daemon_config.hide_opacity <= 0.01))

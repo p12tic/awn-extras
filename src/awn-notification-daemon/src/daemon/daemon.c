@@ -1247,7 +1247,6 @@ gboolean send_message(gchar *body)
   gchar *icon_str = NULL;
   glong expire_timeout = NOTIFY_EXPIRES_DEFAULT;
   NotifyUrgency urgency = NOTIFY_URGENCY_NORMAL;
-  GError *error = NULL;
 
   if (fork() == 0)
   {
@@ -1512,7 +1511,6 @@ static void
 config_changed(GConfClient *client, guint cnxn_id,
                GConfEntry *entry, gpointer user_data)
 {
-  static gboolean done_once = FALSE;
   GConfValue*  value;
   gchar * svalue;
 

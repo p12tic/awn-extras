@@ -14,6 +14,7 @@ AC_ISC_POSIX
 AC_PROG_CC
 AC_STDC_HEADERS
 AC_PROG_LIBTOOL
+DOLT
 
 dnl ==============================================
 dnl translation support

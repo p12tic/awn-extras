@@ -86,10 +86,10 @@ static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, 
       gtk_menu_set_screen(GTK_MENU(menu), NULL);
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
       g_signal_connect(G_OBJECT(item), "button-press-event", G_CALLBACK(_show_prefs), NULL);
-      item=awn_applet_simple_create_about_item(AWN_APPLET_SIMPLE(G_applet),
-                                        "Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
-                                        AWN_APPLET_LICENSE_GPLV2,
-                                        NULL);
+      item=awn_applet_create_about_item_simple(G_applet,
+                                               "Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
+                                               AWN_APPLET_LICENSE_GPLV2,
+                                               NULL);
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);      
       
     }

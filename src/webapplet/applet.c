@@ -141,9 +141,10 @@ _button_clicked_event (GtkWidget      *widget,
       {
         gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);          
       }        
-      item = awn_applet_simple_create_about_item("2008 Rodney Cryderman <rcryderman@gmail.com>\n2008 Mark Lee <avant-wn@lazymalevolence.com>\n",
+      item = awn_applet_create_about_item_simple(webapplet->applet,
+                                                 "2008 Rodney Cryderman <rcryderman@gmail.com>\n"
+                                                 "2008 Mark Lee <avant-wn@lazymalevolence.com>\n",
                                                  AWN_APPLET_LICENSE_GPLV2,
-                                                 "WebApplet",
                                                  NULL);
       gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);                
     }
@@ -189,8 +190,7 @@ awn_applet_factory_initp (const gchar *name, gchar* uid, gint panel_id)
   webapplet->applet_icon_name = g_strdup ("apple-green");  
 
   awn_applet_simple_set_icon_name(AWN_APPLET_SIMPLE(webapplet->applet),
-                                    APPLET_NAME,
-                                    webapplet->applet_icon_name)  ;
+                                  webapplet->applet_icon_name);
  
   /*gtk_widget_show_all (GTK_WIDGET (webapplet->applet));*/
   awn_html_dialog_new (webapplet);

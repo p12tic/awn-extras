@@ -40,6 +40,8 @@ enum
   MENU_ITEM_DRIVE
 };
 
+typedef gboolean(*MenuDrivePrepFunc)(gpointer menu_item, gchar * filemanager);
+
 typedef struct
 {
   int   item_type;
@@ -70,7 +72,7 @@ typedef struct
     GtkWidget *search_entry;
     GtkWidget *run_entry;
     void (*monitor)(gpointer callback, gpointer data, gpointer box);
-    gboolean(*drive_prep)(gpointer menu_item, gchar * filemanager);
+    MenuDrivePrepFunc drive_prep;
     gboolean(*drive_mount)(gpointer menu_item, gchar * filemanager);
     gpointer null;
 

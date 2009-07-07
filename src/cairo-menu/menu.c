@@ -65,13 +65,13 @@ void init_win_man(void)
 
 void fixed_move(GtkWidget *widget, gint x, gint y)
 {
-  gtk_window_move(widget->parent->parent, G_win_man->x + x, G_win_man->y + y);
+  gtk_window_move(GTK_WINDOW(widget->parent->parent), G_win_man->x + x, G_win_man->y + y);
 }
 
 void fixed_put(GtkWidget *widget, gint x, gint y)
 {
   G_win_man->children = g_list_append(G_win_man->children, widget);
-  gtk_window_move(widget->parent->parent, G_win_man->x + x, G_win_man->y + y);
+  gtk_window_move(GTK_WINDOW(widget->parent->parent), G_win_man->x + x, G_win_man->y + y);
 }
 
 
@@ -160,7 +160,7 @@ gboolean _focus_out_menu(GtkWidget *widget, GdkEventButton *event, GtkWidget * p
 
   if (!G_entered)
   {
-    g_timeout_add(250, _check_if_really_done, parent_menu);
+    g_timeout_add(250, (GSourceFunc)_check_if_really_done, parent_menu);
   }
 
   if (parent_menu)
@@ -193,7 +193,6 @@ static gboolean _expose_event(GtkWidget *widget, GdkEventExpose *expose, gpointe
 
 GtkWidget * menu_new(GtkWidget * parent_menu)
 {
-  int scrwidth;
   GdkColormap *colormap;
   GdkScreen *screen;
   GtkWidget *win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -228,9 +227,9 @@ GtkWidget * menu_new(GtkWidget * parent_menu)
   gtk_widget_set_app_paintable(vbox, TRUE);
   GtkWidget * fixed = gtk_fixed_new();
   gtk_widget_set_app_paintable(fixed, TRUE);
-  gtk_fixed_set_has_window(fixed, TRUE);
+  gtk_fixed_set_has_window(GTK_FIXED(fixed), TRUE);
 
-  gtk_fixed_put(fixed, vbox, 0, 0);
+  gtk_fixed_put(GTK_FIXED(fixed), vbox, 0, 0);
   gtk_container_add(GTK_CONTAINER(win), fixed);
   g_signal_connect(G_OBJECT(win), "focus-in-event", G_CALLBACK(_focus_in_menu), parent_menu);
   //g_signal_connect (G_OBJECT (win), "move-focus",G_CALLBACK (_focus_in_menu), parent_menu);
@@ -275,8 +274,8 @@ Cairo_main_menu * dialog_new(AwnApplet *applet)
   menu->applet = applet;
   G_toplevel = menu_new(NULL);
   gtk_widget_set_size_request(G_toplevel->parent, -1, -1);
-  g_slist_foreach(menu->menu_data, measure_width, &G_max_width);
-  g_slist_foreach(menu->menu_data, render_menu_widgets, G_toplevel);
+  g_slist_foreach(menu->menu_data, (GFunc)measure_width, &G_max_width);
+  g_slist_foreach(menu->menu_data, (GFunc)render_menu_widgets, G_toplevel);
   g_signal_connect(G_OBJECT(G_toplevel->parent->parent), "map", G_CALLBACK(_map_window), menu);
 
   return menu;

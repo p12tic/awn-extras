@@ -106,11 +106,10 @@ static gboolean _icon_done(gpointer null)
 
   if (!done_once)
   {
-    GdkPixbuf *icon;
     Cairo_main_menu * menu;
     menu = dialog_new(G_applet);
     gtk_widget_show_all(G_toplevel);
-    g_list_foreach(G_win_man->children, _fixup_menus, NULL);
+    g_list_foreach(G_win_man->children, (GFunc)_fixup_menus, NULL);
     gtk_widget_hide(G_toplevel);
     g_signal_connect(G_OBJECT(menu->applet), "button-press-event", G_CALLBACK(_button_clicked_event), menu);
 

@@ -111,7 +111,7 @@ awn_cpu_dialog_init (AwnCPUDialog *self)
                                             0,
                                             1);
   
-  gtk_container_add (GTK_CONTAINER(self),GTK_TABLE(priv->table));
+  gtk_container_add (GTK_CONTAINER(self), priv->table);
   gtk_widget_show_all (priv->table);
 
 }

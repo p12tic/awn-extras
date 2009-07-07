@@ -23,6 +23,8 @@
 /* awn-circlegraph.c */
 
 #include <math.h>
+#include <cairo-xlib.h>
+
 #include "circlegraph.h"
 #include "graphprivate.h"
 

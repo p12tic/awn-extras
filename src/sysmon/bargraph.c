@@ -15,6 +15,7 @@
  */
  
  /* awn-bargraph.c */
+#include <cairo-xlib.h>
 
 #include "graphprivate.h"
 #include "bargraph.h"
@@ -204,10 +205,6 @@ static void _awn_bargraph_add_data(AwnGraph * graph,
 static void
 awn_bargraph_init (AwnBarGraph *self)
 {
-  AwnGraphPrivate * graph_priv;
-  AwnBarGraphPrivate * priv;  
-  GList * iter;  
-  gint num_items;
 }
 
 AwnBarGraph*

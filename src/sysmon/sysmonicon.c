@@ -18,6 +18,7 @@
 
 #include "sysmonicon.h"
 #include "graph.h"
+#include "util.h"
 
 G_DEFINE_TYPE (AwnSysmonicon, awn_sysmonicon, AWN_TYPE_THEMED_ICON)
 
@@ -118,7 +119,6 @@ awn_sysmonicon_constructed (GObject *object)
 {
   AwnSysmoniconPrivate * priv;
   AwnApplet * applet;
-  GTimeVal cur_time;  
   
   priv = AWN_SYSMONICON_GET_PRIVATE (object);
   
@@ -220,11 +220,11 @@ static gboolean _expose(GtkWidget *self,
   }  
   else
   {
-    g_return_if_fail (priv->graph_cr);
-    g_return_if_fail (priv->bg_cr);
-    g_return_if_fail (priv->fg_cr);
+    g_return_val_if_fail (priv->graph_cr, FALSE);
+    g_return_val_if_fail (priv->bg_cr, FALSE);
+    g_return_val_if_fail (priv->fg_cr, FALSE);
   
-    effects = awn_overlayable_get_effects (AWN_ICON(self));
+    effects = awn_overlayable_get_effects (AWN_OVERLAYABLE(self));
     g_return_val_if_fail (effects,FALSE);
     ctx = awn_effects_cairo_create(effects);
     g_return_val_if_fail (ctx,FALSE);

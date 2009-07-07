@@ -17,6 +17,7 @@
 
 /* awn-areagraph.c */
 #include <math.h>
+#include <cairo-xlib.h>
 
 #include "areagraph.h"
 #include "graphprivate.h"

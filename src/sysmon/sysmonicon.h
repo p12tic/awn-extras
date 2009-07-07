@@ -61,6 +61,8 @@ GtkWidget* awn_sysmonicon_new (AwnApplet *);
 
 AwnGraph * awn_sysmonicon_get_graph(AwnSysmonicon * icon);
 
+void awn_sysmonicon_update_icon (AwnSysmonicon * icon);
+
 G_END_DECLS
 
 #endif /* _AWN_SYSMONICON */

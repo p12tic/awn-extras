@@ -51,7 +51,7 @@ wobblyzini_applet_new (AwnApplet *applet)
 
 	// AwnIcon supports nicely orientation, size and effects
 	GtkWidget *icon = awn_icon_new();
-	wobblyzini->icon = icon;
+	wobblyzini->icon = AWN_ICON (icon);
 	// we'll set correct orientation, so icon can be painted properly
 	awn_icon_set_orientation (AWN_ICON(icon),
 	                          awn_applet_get_orientation(applet));
@@ -97,12 +97,11 @@ _expose_event (GtkWidget *widget, GdkEventExpose *expose, gpointer data)
 
 	WobblyZini *wobblyzini = (WobblyZini *)data;
 	cairo_t *cr = NULL;
-	gint width, height;
 
         AwnOverlayable *overlayable = AWN_OVERLAYABLE(widget);
         AwnEffects *fx = awn_overlayable_get_effects(overlayable);
 
-	cr = awn_effects_cairo_create_clipped (fx, expose->region);
+	cr = awn_effects_cairo_create_clipped (fx, expose);
 	if (!cr)
 	{
 		/*printf( "eee\n");*/

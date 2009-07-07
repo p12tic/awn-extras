@@ -19,9 +19,6 @@
  
 #include "config.h"
 
-#include <libawn/awn-applet.h>
-#include <libawn/awn-applet-simple.h>
-#include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 #include <vte/vte.h>
 #include <string.h>
@@ -49,7 +46,7 @@ gboolean icon_clicked_cb (GtkWidget *widget, GdkEventButton *event, gpointer nul
 			}
 			break;
 		case 2:
-			main_terminal = awn_config_client_get_string (applet->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, MAIN_TERMINAL, NULL);
+			main_terminal = desktop_agnostic_config_client_get_string (applet->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, MAIN_TERMINAL, NULL);
 			if (!main_terminal) main_terminal = g_strdup ("gnome-terminal");
 			gdk_spawn_command_line_on_screen (gtk_widget_get_screen (widget), main_terminal, NULL);
 			g_free (main_terminal);
@@ -69,8 +66,8 @@ gboolean icon_clicked_cb (GtkWidget *widget, GdkEventButton *event, gpointer nul
 // Callback when the applet's dialog box loses focus
 gboolean focus_out_cb (GtkWidget *window, GdkEventFocus *event, gpointer null)
 {
-  AwnConfigClient *client = awn_config_client_new ();
-  if (awn_config_client_get_bool (client, "shared", "dialog_focus_loss_behavior", NULL))
+  DesktopAgnosticConfigClient *client = awn_config_get_default (AWN_PANEL_ID_DEFAULT, NULL);
+  if (desktop_agnostic_config_client_get_bool (client, "shared", "dialog_focus_loss_behavior", NULL))
     {
     	gtk_widget_hide (window);
     }        

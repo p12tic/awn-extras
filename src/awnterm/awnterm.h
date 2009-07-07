@@ -20,9 +20,9 @@
 #ifndef AWNTERM_H_
 #define AWNTERM_H_
 
-#include <libawn/awn-applet.h>
-#include <libawn/awn-config-client.h>
 #include <gtk/gtk.h>
+#include <libdesktop-agnostic/desktop-agnostic.h>
+#include <libawn/libawn.h>
 
 typedef struct
 {
@@ -34,7 +34,7 @@ typedef struct
 	GtkWidget *label;
 	GtkWidget *menu;
 	guint32 number_of_tabs;
-	AwnConfigClient *config;
+	DesktopAgnosticConfigClient *config;
 }AwnTerm;
 
 // The applet instance. We need to make it global so that we can access it in a bunch of callbacks.

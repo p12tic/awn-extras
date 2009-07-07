@@ -1440,7 +1440,6 @@ static gboolean _focus_out_event(GtkWidget *widget, GdkEventButton *event, Place
 
 static void _bloody_thing_has_style(GtkWidget *widget, Places *places)
 {
-  GdkPixbuf *newicon;
   init_config(places);
 
   //The EASY way to use awn icons.
@@ -1457,7 +1456,6 @@ static void _bloody_thing_has_style(GtkWidget *widget, Places *places)
 AwnApplet* awn_applet_factory_initp(const gchar *name,
                                     const gchar *uid, gint panel_id)
 {
-  GdkPixbuf *icon;
   g_on_error_stack_trace(NULL);
   Places * places = g_malloc(sizeof(Places));
   GtkWidget *applet = places->applet = awn_applet_simple_new(name, uid, panel_id);

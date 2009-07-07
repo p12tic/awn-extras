@@ -39,7 +39,6 @@ typedef struct
 
 // The applet instance. We need to make it global so that we can access it in a bunch of callbacks.
 AwnTerm *applet;
-static unsigned int numTabs = 1;
 
 // Create new tab
 gboolean create_new_tab();

@@ -110,7 +110,6 @@ static void _fn_set_fg(AwnColor * new_fg,  Uptime_plug_data **p)
 static GtkWidget* attach_right_click_menu(Uptime_plug_data **p)
 {
   Uptime_plug_data * plug_data = *p;
-  GtkWidget * menu_items;
   GtkWidget *menu = gtk_menu_new();
 
   dashboard_build_clickable_menu_item(menu, G_CALLBACK(_set_fg),
@@ -142,7 +141,7 @@ static void _notify_color_change(Uptime_plug_data *p)
 static void set_colour(Uptime_plug_data *p, AwnColor* colour, const char * mess, const char * gconf_key)
 {
   char *svalue;
-  pick_awn_color(colour, mess, p, _notify_color_change);
+  pick_awn_color(colour, mess, p, (DashboardNotifyColorChange)_notify_color_change);
   svalue = dashboard_cairo_colour_to_string(colour);
   gconf_client_set_string(get_dashboard_gconf(), gconf_key, svalue , NULL);
   free(svalue);
@@ -182,6 +181,7 @@ static gboolean decrease_step(Uptime_plug_data **p)
   data->size_mult = data->size_mult * 5.0 / 6.0;
   gconf_client_set_float(get_dashboard_gconf(), GCONF_UPTIME_SIZE_MULT, data->size_mult, NULL);
   data->forceupdate = TRUE;
+  return TRUE;
 }
 
 static gboolean increase_step(Uptime_plug_data **p)
@@ -190,6 +190,7 @@ static gboolean increase_step(Uptime_plug_data **p)
   data->size_mult = data->size_mult * 1.2;
   gconf_client_set_float(get_dashboard_gconf(), GCONF_UPTIME_SIZE_MULT, data->size_mult, NULL);
   data->forceupdate = TRUE;
+  return TRUE;
 }
 
 static gboolean query_support_multiple(void)
@@ -291,13 +292,13 @@ static gboolean render(GtkWidget ** pwidget, gint interval, Uptime_plug_data **p
 
     if (data->show_seconds)
     {
-      snprintf(buf, sizeof(buf), "Up Time:%ld:%02ld:%02ld:%02ld", data->days,
+      snprintf(buf, sizeof(buf), "Up Time:%d:%02d:%02d:%02d", data->days,
                data->hours, data->minutes,
                data->seconds);
     }
     else
     {
-      snprintf(buf, sizeof(buf), "Up Time:%ld:%02ld:%02ld", data->days,
+      snprintf(buf, sizeof(buf), "Up Time:%d:%02d:%02d", data->days,
                data->hours, data->minutes);
     }
 
@@ -315,7 +316,7 @@ static gboolean render(GtkWidget ** pwidget, gint interval, Uptime_plug_data **p
     and that way give it time to shrink before adjusting to a large scale */
     if (width < 0)
     {
-      snprintf(buf, sizeof(buf), "Up Time:%ld:%02ld:%02ld:%02ld", data->days,
+      snprintf(buf, sizeof(buf), "Up Time:%d:%02d:%02d:%02d", data->days,
                data->hours, data->minutes,
                data->seconds);
       *pwidget = get_cairo_widget(&c_widge, 200, 30);
@@ -348,7 +349,7 @@ static gboolean render(GtkWidget ** pwidget, gint interval, Uptime_plug_data **p
       cairo_text_extents(c_widge.cr, buf, &extents);
       height = extents.height + 2;
       width = extents.width + 10;
-      return;
+      return TRUE;
     }
 
     cairo_show_text(c_widge.cr, buf);

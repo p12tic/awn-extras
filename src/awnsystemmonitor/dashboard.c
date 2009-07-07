@@ -21,7 +21,6 @@
 #include <glibtop/uptime.h>
 #include <glibtop/cpu.h>
 
-#define _GNU_SOURCE
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -62,10 +61,7 @@ static void draw_main_window(Dashboard *Dashboard);
 static gboolean _Dashboard_time_handler(Dashboard *);
 
 static void Dashboard_plugs_construct(gpointer data, gpointer user_data);
-static void Dashboard_plugs_destruct(gpointer data, gpointer user_data);
 
-static gboolean _visibility_notify_event(GtkWidget *widget,
-    GdkEventButton *event, Dashboard * dashboard);
 static gboolean _focus_out_event(GtkWidget *widget, GdkEventButton *event,
                                  Dashboard * dashboard);
 static gboolean _increase_step(GtkWidget *widget, GdkEventButton *event,
@@ -74,14 +70,6 @@ static gboolean _decrease_step(GtkWidget *widget, GdkEventButton *event,
                                Dashboard_plugs_callbacks * node);
 static gboolean _remove(GtkWidget *widget, GdkEventButton *event,
                         Dashboard_plugs_callbacks * node);
-static gboolean _move_left(GtkWidget *widget, GdkEventButton *event,
-                           Dashboard_plugs_callbacks * node);
-static gboolean _move_right(GtkWidget *widget, GdkEventButton *event,
-                            Dashboard_plugs_callbacks * node);
-static gboolean _move_up(GtkWidget *widget, GdkEventButton *event,
-                         Dashboard_plugs_callbacks * node);
-static gboolean _move_down(GtkWidget *widget, GdkEventButton *event,
-                           Dashboard_plugs_callbacks * node);
 
 static gboolean _move_(GtkWidget *widget, GdkEventButton *event,
                        Dashboard_plugs_callbacks * node);
@@ -89,34 +77,29 @@ static gboolean _move_(GtkWidget *widget, GdkEventButton *event,
 static void _check_enabled(gpointer data, gpointer user_data);
 static gboolean _dashboard_button_clicked_event(GtkWidget *widget,
     GdkEventButton *event, Dashboard  * dashboard);
-static gboolean _button_released_event(GtkWidget *widget, GdkEventButton *event,
-                                       Dashboard_plugs_callbacks * node);
 
 static void update_pos(Dashboard_plugs_callbacks * node);
 static void build_dashboard_right_click(Dashboard  * dashboard);
 static gboolean _toggle_component(Dashboard_plugs_callbacks *p);
 
 
-static void set_colour(Dashboard *p, AwnColor* colour, const char * mess, const char * gconf_key);
 static gboolean _set_fg(GtkWidget *widget, GdkEventButton *event, Dashboard *p);
 static gboolean _set_bg(GtkWidget *widget, GdkEventButton *event, Dashboard *p);
 void _all_fixed_children(GtkFixedChild *node, Dashboard *p);
 static gboolean _toggle_gtk(GtkWidget *widget, GdkEventButton *event, Dashboard *p);
 static gboolean _apply_dash_colours(GtkWidget *widget, GdkEventButton *event, Dashboard *p);
 
-/*FIXME  --- */
+/*FIXME  --- 
 static void show_main_window(Dashboard *Dashboard);
 static void hide_main_window(Dashboard *Dashboard);
 
-static void set_background(Dashboard * data);
+static void set_background(Dashboard * data);*/
 static void _notify_color_change_bg(Dashboard *p);
 static gboolean _expose_event(GtkWidget *widget, GdkEventExpose *expose, gpointer data);
 
 
 gboolean  _moving(GtkWidget *widget, GdkEventMotion *event, Dashboard_plugs_callbacks * node);
 static void _apply_c_(gpointer data, gpointer user_data);
-
-static int numticks = 0;
 
 Dashboard_plugs_callbacks* register_Dashboard_plug(Dashboard * Dashboard,
     void * (*lookup_fn)(int),
@@ -248,7 +231,7 @@ Dashboard_plugs_callbacks* register_Dashboard_plug(Dashboard * Dashboard,
   node->widge_wrap = NULL;
 
   node->right_click_menu = gtk_menu_new();
-  gtk_menu_set_screen(node->right_click_menu, NULL);
+  gtk_menu_set_screen(GTK_MENU(node->right_click_menu), NULL);
 
   if (lookup_fn(DASHBOARD_CALLBACK_INCREASE_STEP_FN))
     dashboard_build_clickable_menu_item(node->right_click_menu,
@@ -268,7 +251,7 @@ Dashboard_plugs_callbacks* register_Dashboard_plug(Dashboard * Dashboard,
                                       G_CALLBACK(_remove), "Remove", node
                                      );
 
-  if (attach_right_fn = lookup_fn(DASHBOARD_CALLBACK_ATTACH_RIGHT_CLICK_MENU_FN))
+  if ((attach_right_fn = lookup_fn(DASHBOARD_CALLBACK_ATTACH_RIGHT_CLICK_MENU_FN)))
   {
 
     component_menu_items = attach_right_fn(node->data);
@@ -291,11 +274,8 @@ Dashboard_plugs_callbacks* register_Dashboard_plug(Dashboard * Dashboard,
 
 void register_Dashboard(Dashboard * dashboard, AwnApplet *applet)
 {
-  int i;
-  GdkColor color;
   GdkScreen* pScreen;
 //    int width,height;
-  cairo_t * cr;
   gchar *svalue;
   GConfValue *value;
 
@@ -340,7 +320,7 @@ void register_Dashboard(Dashboard * dashboard, AwnApplet *applet)
 
     if (ver != 1)
     {
-      quick_message("This message will only appear once.\nIt appears that this may be an upgrade from an older version.\n  If there are any display issues please run\n 'gconftool-2 --recursive-unset /apps/avant-window-navigator/applets/awn-system-monitor'\n  and then restart the applet.", applet);
+      quick_message("This message will only appear once.\nIt appears that this may be an upgrade from an older version.\n  If there are any display issues please run\n 'gconftool-2 --recursive-unset /apps/avant-window-navigator/applets/awn-system-monitor'\n  and then restart the applet.", GTK_WIDGET(applet));
 
     }
   }
@@ -376,14 +356,14 @@ void register_Dashboard(Dashboard * dashboard, AwnApplet *applet)
   dashboard->applet = applet;
   dashboard->Dashboard_plugs = NULL;   /*there are no plugs registered yet*/
 
-  dashboard->mainwindow = awn_dialog_new_for_widget (applet);
+  dashboard->mainwindow = awn_dialog_new_for_widget (GTK_WIDGET(applet));
 
   dashboard->right_click_menu = NULL;
 
   gtk_window_set_focus_on_map(GTK_WINDOW(dashboard->mainwindow), TRUE);
   dashboard->mainfixed =  gtk_fixed_new();
   gtk_container_add(GTK_CONTAINER(dashboard->mainwindow), dashboard->mainfixed);
-  gtk_fixed_set_has_window(dashboard->mainfixed, FALSE);
+  gtk_fixed_set_has_window(GTK_FIXED(dashboard->mainfixed), FALSE);
   pScreen = gtk_widget_get_screen(dashboard->mainwindow);
   g_signal_connect(G_OBJECT(dashboard->mainwindow), "focus-out-event",
                    G_CALLBACK(_focus_out_event), (gpointer)dashboard);
@@ -435,7 +415,7 @@ static gboolean _expose_event(GtkWidget *widget, GdkEventExpose *expose, gpointe
 
     cairo_destroy(cr);
 
-    gtk_widget_send_expose(dashboard->mainfixed, expose);
+    gtk_widget_send_expose(dashboard->mainfixed, (GdkEvent*)expose);
     return TRUE;
   }
   else
@@ -472,7 +452,6 @@ static gboolean _toggle_component(Dashboard_plugs_callbacks *p)
 {
   get_component_name_fn   get_component_name;
   char * comp_name = NULL;
-  GConfValue *value;
   char * keyname;
   int tmp;
 
@@ -508,22 +487,13 @@ static gboolean _toggle_component(Dashboard_plugs_callbacks *p)
 
   g_free(comp_name);
 
+  return TRUE; /* FIXME?! */
 }
 
 static void _notify_color_change_fg(Dashboard *p)
 {
   /*FIXME */
 
-}
-
-
-static void set_colour(Dashboard *p, AwnColor* colour, const char * mess, const char * gconf_key)
-{
-  char *svalue;
-  pick_awn_color(colour, mess, p, NULL);
-  svalue = dashboard_cairo_colour_to_string(colour);
-  gconf_client_set_string(get_dashboard_gconf(), gconf_key, svalue , NULL);
-  free(svalue);
 }
 
 
@@ -551,7 +521,7 @@ static gboolean _set_fg(GtkWidget *widget, GdkEventButton *event, Dashboard *p)
 
   if (p->ignore_gtk)
   {
-    pick_awn_color(&p->fg, "Foreground Colour" , p, _notify_color_change_fg);
+    pick_awn_color(&p->fg, "Foreground Colour" , p, (DashboardNotifyColorChange)_notify_color_change_fg);
     svalue = dashboard_cairo_colour_to_string(&p->fg);
     gconf_client_set_string(get_dashboard_gconf(), GCONF_DASHBOARD_NO_GTK_FG, svalue , NULL);
 
@@ -576,7 +546,7 @@ static gboolean _set_bg(GtkWidget *widget, GdkEventButton *event, Dashboard *p)
 
   if (p->ignore_gtk)
   {
-    pick_awn_color(&p->bg, "Background Colour" , p, _notify_color_change_bg);
+    pick_awn_color(&p->bg, "Background Colour" , p, (DashboardNotifyColorChange)_notify_color_change_bg);
     svalue = dashboard_cairo_colour_to_string(&p->bg);
     gconf_client_set_string(get_dashboard_gconf(), GCONF_DASHBOARD_NO_GTK_BG, svalue , NULL);
     free(svalue);
@@ -646,8 +616,6 @@ static void _check_enabled(gpointer data, gpointer user_data)
 
 static gboolean _toggle_awn_diag(GtkWidget *widget, GdkEventButton *event, Dashboard *p)
 {
-  char *svalue;
-
 //    p->show_awn_dialog=!p->show_awn_dialog;
   gtk_widget_hide(p->mainwindow);
 #if 0
@@ -677,10 +645,6 @@ static gboolean _toggle_awn_diag(GtkWidget *widget, GdkEventButton *event, Dashb
 
 static void build_dashboard_right_click(Dashboard  * dashboard)
 {
-  GtkWidget * menu_items;
-  gboolean found = FALSE;
-  GtkWidget* tmp;
-
   if (dashboard->right_click_menu)
     gtk_widget_destroy(dashboard->right_click_menu);
 
@@ -712,7 +676,7 @@ static gboolean _dashboard_button_clicked_event(GtkWidget *widget,
 
   if (event->button == 3)
   {
-    gtk_menu_popup(dashboard->right_click_menu, NULL, NULL, NULL, NULL,
+    gtk_menu_popup(GTK_MENU(dashboard->right_click_menu), NULL, NULL, NULL, NULL,
                    event_button->button, event_button->time);
     return TRUE;
   }
@@ -743,7 +707,7 @@ static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event,
 
   if (event->button == 3)
   {
-    gtk_menu_popup(node->right_click_menu, NULL, NULL, NULL, NULL,
+    gtk_menu_popup(GTK_MENU(node->right_click_menu), NULL, NULL, NULL, NULL,
                    event_button->button, event_button->time);
     return TRUE;
   }
@@ -784,7 +748,6 @@ static void update_pos(Dashboard_plugs_callbacks * node)
 {
   get_component_name_fn   get_component_name;
   char * comp_name = NULL;
-  GConfValue *value;
   char * keyname;
   int tmp;
 
@@ -841,7 +804,6 @@ static void Dashboard_plugs_construct(gpointer data, gpointer user_data)
 
   Dashboard_plugs_callbacks * node = data;
   Dashboard *dashboard = user_data;
-  int i, j;
   GtkWidget *old_widget = NULL;
 
   if (!node->enabled)
@@ -865,11 +827,10 @@ static void Dashboard_plugs_construct(gpointer data, gpointer user_data)
 
   if (render)
   {
-    if (dashboard->need_win_update = render(&node->widget,
+    if ((dashboard->need_win_update = render(&node->widget,
                                             dashboard->updateinterval, node->data
-                                           ))
+                                           )))
     {
-      int j;
 
       if (node->widge_wrap)
       {
@@ -882,13 +843,13 @@ static void Dashboard_plugs_construct(gpointer data, gpointer user_data)
 
       node->widge_wrap = gtk_event_box_new();
 
-      gtk_event_box_set_visible_window(node->widge_wrap, FALSE);
+      gtk_event_box_set_visible_window(GTK_EVENT_BOX(node->widge_wrap), FALSE);
       gtk_container_add(GTK_CONTAINER(node->widge_wrap), node->widget);
       g_signal_connect(G_OBJECT(node->widge_wrap), "button-press-event",
                        G_CALLBACK(_button_clicked_event), (gpointer)node
                       );
 
-      gtk_fixed_put(dashboard->mainfixed, node->widge_wrap, node->x1, node->y1);
+      gtk_fixed_put(GTK_FIXED(dashboard->mainfixed), node->widge_wrap, node->x1, node->y1);
 
       if (old_widget)
       {
@@ -902,20 +863,7 @@ static void Dashboard_plugs_construct(gpointer data, gpointer user_data)
     }
 
     if (node->updatepos)
-      gtk_fixed_move(dashboard->mainfixed, node->widge_wrap, node->x1, node->y1);
-  }
-}
-
-static void Dashboard_plugs_destruct(gpointer data, gpointer user_data)
-{
-
-  Dashboard_plugs_callbacks * node = data;
-  Dashboard *Dashboard = user_data;
-  destruct_fn destruct = node->lookup_fn(DASHBOARD_CALLBACK_DESTRUCT);
-
-  if (destruct)
-  {
-    destruct(node->data);
+      gtk_fixed_move(GTK_FIXED(dashboard->mainfixed), node->widge_wrap, node->x1, node->y1);
   }
 }
 
@@ -941,8 +889,6 @@ static void dashboard_ticks(gpointer data, gpointer user_data)
 
 static gboolean _Dashboard_time_handler(Dashboard * Dashboard)
 {
-
-  long tmp;
   static gboolean    in_handler = FALSE;
 
   if (in_handler)
@@ -964,18 +910,6 @@ static gboolean _Dashboard_time_handler(Dashboard * Dashboard)
 
 
 /************Section:  main window events-------------*/
-
-static gboolean _button_clicked_test_event(GtkWidget *widget,
-    GdkEventButton *event, Dashboard * dashboard)
-{
-  return TRUE;
-}
-
-static gboolean _visibility_notify_event(GtkWidget *widget,
-    GdkEventButton *event, Dashboard * dashboard)
-{
-  return TRUE;
-}
 
 static gboolean _focus_out_event(GtkWidget *widget, GdkEventButton *event,
                                  Dashboard * dashboard)

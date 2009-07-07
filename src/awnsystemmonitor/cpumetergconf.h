@@ -33,5 +33,6 @@ gfloat cpumeter_gconf_get_border_width(AwnApplet* applet);
 gboolean cpumeter_gconf_use_gradient(AwnApplet* applet);
 gboolean cpumeter_gconf_do_subtitle(CpuMeter* cpumeter);
 guint cpumeter_gconf_get_update_frequency(AwnApplet* applet);
+void cpumeter_gconf_event(GConfClient* client, guint cxnid, GConfEntry* entry, gpointer user_data);
 
 #endif  /* __CPUMETER_GCONF_H__ */

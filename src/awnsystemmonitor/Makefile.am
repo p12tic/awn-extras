@@ -1,5 +1,9 @@
 APPLET_NAME = awnsystemmonitor
-APPLET_CFLAGS = $(AWN_SYSTEM_MONITOR_CFLAGS)
+APPLET_CFLAGS = \
+	$(AWN_SYSTEM_MONITOR_CFLAGS) \
+	-std=c99 \
+	-D_GNU_SOURCE \
+	$(NULL)
 include $(top_srcdir)/Makefile.c-applet
 applet_LTLIBRARIES = awnsystemmonitor.la
 awnsystemmonitor_la_SOURCES =		\

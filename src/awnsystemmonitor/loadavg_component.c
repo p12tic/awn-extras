@@ -134,7 +134,6 @@ static GtkWidget* attach_right_click_menu(Loadavg_plug_data **p)
 {
   assert(check_ptr == *p);
   Loadavg_plug_data * plug_data = *p;
-  GtkWidget * menu_items;
   GtkWidget *menu = gtk_menu_new();
 
   dashboard_build_clickable_menu_item(menu, G_CALLBACK(_set_fg), "Foreground",
@@ -238,6 +237,7 @@ static gboolean decrease_step(Loadavg_plug_data **p)
   data->size_mult = data->size_mult * 5.0 / 6.0;
 
   gconf_client_set_float(get_dashboard_gconf(), GCONF_LOADAVG_SIZE_MULT, data->size_mult, NULL);
+  return TRUE;
 }
 
 static gboolean increase_step(Loadavg_plug_data **p)
@@ -246,6 +246,7 @@ static gboolean increase_step(Loadavg_plug_data **p)
   Loadavg_plug_data *data = *p;
   data->size_mult = data->size_mult * 1.2;
   gconf_client_set_float(get_dashboard_gconf(), GCONF_LOADAVG_SIZE_MULT, data->size_mult, NULL);
+  return TRUE;
 }
 
 static const char* get_component_name(Loadavg_plug_data **p)
@@ -265,9 +266,6 @@ static const char* get_component_friendly_name(Loadavg_plug_data **p)
 static gboolean render(GtkWidget ** pwidget, gint interval, Loadavg_plug_data **p)
 {
   char buf[200];
-  time_t t;
-
-  struct tm *tmp;
   static int width = -1;
   static int height = -1;
   Loadavg_plug_data * data = *p;

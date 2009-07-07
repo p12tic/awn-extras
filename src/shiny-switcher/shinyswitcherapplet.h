@@ -69,25 +69,6 @@ typedef struct
 
 typedef struct
 {
-  GtkWidget     *min_win;
-  WnckWindow    *wnck_window;
-  void     *shinyswitcher;
-
-}Window_info;
-
-typedef struct
-{
-  WnckWorkspace    *space;
-
-  struct Shiny_switcher *shinyswitcher;
-  GtkWidget    *wallpaper_ev;
-  int      mini_win_index;
-  GList     *event_boxes;
-}Workplace_info;
-
-
-typedef struct
-{
   AwnApplet   *applet;
 
   GdkPixbuf   *icon;
@@ -165,6 +146,25 @@ typedef struct
 	
 	gint orient;
 }Shiny_switcher;
+
+
+typedef struct
+{
+  GtkWidget     *min_win;
+  WnckWindow    *wnck_window;
+  Shiny_switcher *shinyswitcher;
+
+}Window_info;
+
+typedef struct
+{
+  WnckWorkspace    *space;
+
+  Shiny_switcher *shinyswitcher;
+  GtkWidget    *wallpaper_ev;
+  int      mini_win_index;
+  GList     *event_boxes;
+}Workplace_info;
 
 
 typedef struct

@@ -1,5 +1,5 @@
 APPLET_NAME = shinyswitcher
-APPLET_CFLAGS = $(SHINY_SWITCHER_CFLAGS)
+APPLET_CFLAGS = $(SHINY_SWITCHER_CFLAGS) -std=c99
 
 include $(top_srcdir)/Makefile.c-applet
 include $(top_srcdir)/Makefile.schemas

@@ -28,7 +28,6 @@
 #include <glibtop/mem.h>
 #include <glibtop/procargs.h>
 
-#define _GNU_SOURCE
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -69,9 +68,7 @@ typedef struct
 static GtkWidget * get_event_box_label(const char * t, gfloat halign);
 static GtkWidget * get_label_ld(const long t);
 static GtkWidget * get_label_sz(const char * t, gfloat halign);
-static GtkWidget * get_icon_button(Awntop * Awntop, char *name, const gchar *stock_id, GtkIconSize size);
 static GtkWidget * get_icon_event_box(Awntop * Awntop, char *name, const gchar *stock_id, GtkIconSize size);
-static GtkWidget * get_button_sz(const char * t);
 
 static void build_top_table(Awntop *awntop, GtkWidget *);
 static void build_top_table_headings(Awntop *awntop, GtkWidget *);
@@ -105,14 +102,14 @@ static gboolean _click_cpu(GtkWidget *widget, GdkEventButton *event, Awntop *);
 static gboolean _click_mem(GtkWidget *widget, GdkEventButton *event, Awntop *);
 static gboolean _click_command(GtkWidget *widget, GdkEventButton *event, Awntop *);
 static gboolean _time_to_kill(GtkWidget *widget, GdkEventButton *event, long *);
-static gboolean _time_to_kill_I_mean_it(GtkWidget *widget, GdkEventButton *event, long * pid);
+//static gboolean _time_to_kill_I_mean_it(GtkWidget *widget, GdkEventButton *event, long * pid);
 static gboolean _toggle_display_freeze(GtkWidget *widget, GdkEventButton *event, Awntop *awntop);
-static gboolean _change_Awntop_filter_state(GtkWidget *widget, GdkEventButton *event, Awntop *awntop);
+//static gboolean _change_Awntop_filter_state(GtkWidget *widget, GdkEventButton *event, Awntop *awntop);
 static gboolean _increase_awntop_rows(GtkWidget *widget, GdkEventButton *event, Awntop *);
 static gboolean _decrease_awntop_rows(GtkWidget *widget, GdkEventButton *event, Awntop *);
 static gboolean _click_set_term(GtkWidget *widget, GdkEventButton *event, Awntop *awntop);
 static gboolean _click_set_kill(GtkWidget *widget, GdkEventButton *event, Awntop *awntop);
-static gboolean _click_set_term_kill(GtkWidget *widget, GdkEventButton *event, Awntop *awntop);
+//static gboolean _click_set_term_kill(GtkWidget *widget, GdkEventButton *event, Awntop *awntop);
 
 static void parse_desktop_entries(Awntop * Awntop);
 static GtkWidget * lookup_icon(Awntop * Awntop, Topentry **topentries, int i);
@@ -252,7 +249,7 @@ static GtkWidget* attach_right_click_menu(void * data)
 #endif
   menu_items = gtk_menu_item_new_with_label("Kill Signal");
   gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_items);
-  gtk_menu_item_set_submenu(menu_items, kill_menu);
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(menu_items), kill_menu);
   gtk_widget_show(menu_items);
 
   dashboard_build_clickable_menu_item(menu, G_CALLBACK(_toggle_user_filter), "Toggle User filter", data);
@@ -339,8 +336,6 @@ static gboolean draw_top(GtkWidget ** pwidget, gint interval, void * data)
 
   Awntop * awntop = data;
   static GtkWidget *toptable;
-  const char * states[3] = { "User", "!System", "All"};
-  GtkWidget *tempwidg    ;
   GSList* removelist;
   static gboolean firstcall = TRUE;
 
@@ -474,12 +469,14 @@ static gboolean _click_set_kill(GtkWidget *widget, GdkEventButton *event, Awntop
   return TRUE;
 }
 
+#if 0
 static gboolean _click_set_term_kill(GtkWidget *widget, GdkEventButton *event, Awntop *awntop)
 {
   G_kill_signal_method = 3;
   gconf_client_set_int(get_dashboard_gconf(), GCONF_AWNTOP_KILL_SIG_METH, G_kill_signal_method, NULL);
   return TRUE;
 }
+#endif
 
 static gboolean _click_pid(GtkWidget *widget, GdkEventButton *event, Awntop *awntop)
 {
@@ -707,7 +704,6 @@ static gboolean _decrease_awntop_rows(GtkWidget *widget, GdkEventButton *event, 
 /************Section:  qsort compare functions-------------*/
 static int cmppid(const void * p1 , const void * p2)
 {
-  int result = 0;
   Topentry ** l = (Topentry **) p1;
   Topentry ** r = (Topentry **) p2;
 
@@ -717,7 +713,6 @@ static int cmppid(const void * p1 , const void * p2)
 /*FIXME ???  currently sort on uid not user name */
 static int cmpuser(const void * p1 , const void * p2)
 {
-  int result = 0;
   Topentry ** l = (Topentry **) p1;
   Topentry ** r = (Topentry **) p2;
 
@@ -726,7 +721,6 @@ static int cmpuser(const void * p1 , const void * p2)
 
 static int cmpvirt(const void * p1 , const void * p2)
 {
-  int result = 0;
   Topentry ** l = (Topentry **) p1;
   Topentry ** r = (Topentry **) p2;
 
@@ -735,7 +729,6 @@ static int cmpvirt(const void * p1 , const void * p2)
 
 static int cmpres(const void * p1 , const void * p2)
 {
-  int result = 0;
   Topentry ** l = (Topentry **) p1;
   Topentry ** r = (Topentry **) p2;
 
@@ -744,7 +737,6 @@ static int cmpres(const void * p1 , const void * p2)
 
 static int cmpcpu(const void * p1 , const void * p2)
 {
-  int result = 0;
   Topentry ** l = (Topentry **) p1;
   Topentry ** r = (Topentry **) p2;
 
@@ -753,7 +745,6 @@ static int cmpcpu(const void * p1 , const void * p2)
 
 static int cmpmem(const void * p1 , const void * p2)
 {
-  int result = 0;
   Topentry ** l = (Topentry **) p1;
   Topentry ** r = (Topentry **) p2;
 
@@ -762,7 +753,6 @@ static int cmpmem(const void * p1 , const void * p2)
 
 static int cmpcommand(const void * p1 , const void * p2)
 {
-  int result = 0;
   Topentry ** l = (Topentry **) p1;
   Topentry ** r = (Topentry **) p2;
 
@@ -782,8 +772,7 @@ static Topentry ** fill_topentries(Awntop *awntop, int *numel)
   glibtop_proc_time  proc_time;
   glibtop_proc_uid   proc_uid;
   glibtop_proc_mem   proc_mem;
-  guint64 tmp;
-  unsigned * p;
+  pid_t * p;
   long percent;
   int i;
   Topentry **topentries;
@@ -936,7 +925,6 @@ static void build_top_table_headings(Awntop *awntop, GtkWidget * table)
 static GtkWidget * lookup_icon(Awntop * awntop, Topentry **topentries, int i)
 {
   GtkIconTheme*  g;
-  GtkIconInfo*  iconinfo;
   GdkPixbuf* pbuf = NULL;
   char* parg;
   glibtop_proc_args     procargs;
@@ -1064,7 +1052,7 @@ static GtkWidget * lookup_icon(Awntop * awntop, Topentry **topentries, int i)
   else
   {
     image = gtk_image_new_from_pixbuf(pbuf);
-    g_tree_insert(awntop->pixbufs, strdup(parg), pbuf);
+    g_tree_insert(awntop->pixbufs, g_strdup(parg), pbuf);
 //        g_object_unref (pbuf);
   }
 
@@ -1078,7 +1066,6 @@ static void build_top_table(Awntop *awntop, GtkWidget * table)
 {
   GtkWidget *tempwidg;
   int i;
-  GtkWidget *image;
   Topentry **topentries = awntop->topentries;
   int num_top_entries = awntop->num_top_entries;
 
@@ -1109,11 +1096,11 @@ static void build_top_table(Awntop *awntop, GtkWidget * table)
     if (tmp >= 10000)
     {
       tmp = tmp / 1024;   //convert K into M
-      snprintf(buf, sizeof(buf), "%dM", tmp);
+      snprintf(buf, sizeof(buf), "%ldM", tmp);
     }
     else
     {
-      snprintf(buf, sizeof(buf), "%d", tmp);
+      snprintf(buf, sizeof(buf), "%ld", tmp);
     }
 
     gtk_table_attach_defaults(GTK_TABLE(table), get_label_sz(buf, 1),
@@ -1125,11 +1112,11 @@ static void build_top_table(Awntop *awntop, GtkWidget * table)
     if (tmp >= 10000)
     {
       tmp = tmp / 1024;   //convert K into M
-      snprintf(buf, sizeof(buf), "%dM", tmp);
+      snprintf(buf, sizeof(buf), "%ldM", tmp);
     }
     else
     {
-      snprintf(buf, sizeof(buf), "%d", tmp);
+      snprintf(buf, sizeof(buf), "%ld", tmp);
     }
 
     gtk_table_attach_defaults(GTK_TABLE(table), get_label_sz(buf, 1),
@@ -1169,61 +1156,6 @@ static void build_top_table(Awntop *awntop, GtkWidget * table)
   }
 }
 
-static GtkWidget * get_icon_button(Awntop * awntop, char *name, const gchar *stock_id, GtkIconSize size)
-{
-  GtkIconTheme*  g;
-  GdkPixbuf* pbuf;
-  GtkWidget *image = NULL;
-  GtkWidget *button;
-
-  pbuf = g_tree_lookup(awntop->pixbufs, name);
-
-  if (!pbuf)
-  {
-    g = gtk_icon_theme_get_default();
-    pbuf = gtk_icon_theme_load_icon(g, name, 16, 0, NULL);
-
-    if (!pbuf)
-    {
-      image = gtk_image_new_from_stock(stock_id, size);  /* pbuf could be NULL after this*/
-      g_tree_insert(awntop->pixbufs, strdup(name), Stock_Image_Used);
-
-    }
-
-    /*        if (image)
-            {
-
-                pbuf=gtk_image_get_pixbuf(image);           //doesn't work if it's  GTK_IMAGE_STOCK
-
-            }*/
-    if (pbuf)
-    {
-      g_object_ref(pbuf);
-      g_tree_insert(awntop->pixbufs, strdup(name), pbuf);
-    }
-
-  }
-
-//    assert(pbuf);
-  if (!image)
-  {
-    if (pbuf == Stock_Image_Used)
-    {
-      image = gtk_image_new_from_stock(stock_id, size);
-    }
-    else
-    {
-      image = gtk_image_new_from_pixbuf(pbuf);
-    }
-  }
-
-  button = gtk_button_new();
-
-  gtk_button_set_image(button, image);
-  return button;
-}
-
-
 static GtkWidget * get_icon_event_box(Awntop * awntop, char *name, const gchar *stock_id, GtkIconSize size)
 {
   GtkIconTheme*  g;
@@ -1252,7 +1184,7 @@ static GtkWidget * get_icon_event_box(Awntop * awntop, char *name, const gchar *
       {
         image = gtk_image_new_from_stock(stock_id, size);
         assert(image);
-        g_tree_insert(awntop->pixbufs, strdup(name), Stock_Image_Used);
+        g_tree_insert(awntop->pixbufs, g_strdup(name), Stock_Image_Used);
 
         //doesn't work if it's  GTK_IMAGE_STOCK
         /*                pbuf=gtk_image_get_pixbuf(image);
@@ -1262,7 +1194,7 @@ static GtkWidget * get_icon_event_box(Awntop * awntop, char *name, const gchar *
 
     if (pbuf)
     {
-      g_tree_insert(awntop->pixbufs, strdup(name), pbuf);
+      g_tree_insert(awntop->pixbufs, g_strdup(name), pbuf);
     }
   }
 
@@ -1319,14 +1251,6 @@ static GtkWidget * get_label_sz(const char * t, gfloat halign)
   return label;
 }
 
-static GtkWidget * get_button_sz(const char * t)
-{
-  GtkWidget *button;
-  button = gtk_button_new_with_label(t);
-  gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
-  return button;
-}
-
 static void parse_desktop_entries(Awntop * awntop)
 {
 
@@ -1340,9 +1264,9 @@ static void parse_desktop_entries(Awntop * awntop)
   GKeyFile*   keyfile;
   char *pvalue;
 
-  pXDG_desktop_dir = strdup(ptmp = getenv("XDG_DATA_DIRS") ? ptmp : "/usr/share");   /*FIXME if strdup return NULL...  I guess it could happen*/
+  pXDG_desktop_dir = g_strdup(ptmp = getenv("XDG_DATA_DIRS") ? ptmp : "/usr/share");   /*FIXME if g_strdup return NULL...  I guess it could happen*/
 
-  pXDG_desktop_dir_home = strdup(ptmp = getenv("XDG_DATA_HOME") ? ptmp : "/usr/local/share");
+  pXDG_desktop_dir_home = g_strdup(ptmp = getenv("XDG_DATA_HOME") ? ptmp : "/usr/local/share");
 
   pXDG_alldirs = malloc(strlen(pXDG_desktop_dir) + strlen(pXDG_desktop_dir_home) + 2);
 
@@ -1384,11 +1308,11 @@ static void parse_desktop_entries(Awntop * awntop)
             {
               char *iconname;
 
-              if (iconname = g_key_file_get_string(keyfile, "Desktop Entry", "Icon", NULL))
+              if ((iconname = g_key_file_get_string(keyfile, "Desktop Entry", "Icon", NULL)) != NULL)
               {
                 char * execname;
 
-                if (execname = g_key_file_get_string(keyfile, "Desktop Entry", "Exec", NULL))
+                if ((execname = g_key_file_get_string(keyfile, "Desktop Entry", "Exec", NULL)) != NULL)
                 {
                   ptmp = strchr(execname, ' ');
 
@@ -1399,7 +1323,7 @@ static void parse_desktop_entries(Awntop * awntop)
 
                   if (!pvalue)
                   {
-                    g_tree_insert(awntop->icons, execname, strdup(iconname)); /*FIXME*/
+                    g_tree_insert(awntop->icons, execname, g_strdup(iconname)); /*FIXME*/
                   }
                   else
                   {
@@ -1440,32 +1364,32 @@ static void parse_desktop_entries(Awntop * awntop)
 
   if (!g_tree_lookup(awntop->icons, "firefox-bin"))
   {
-    g_tree_insert(awntop->icons, "firefox-bin", strdup("firefox-icon.png"));
+    g_tree_insert(awntop->icons, "firefox-bin", g_strdup("firefox-icon.png"));
   }
 
   if (!g_tree_lookup(awntop->icons, "bash"))
   {
-    g_tree_insert(awntop->icons, "bash", strdup("terminal"));
+    g_tree_insert(awntop->icons, "bash", g_strdup("terminal"));
   }
 
   if (!g_tree_lookup(awntop->icons, "sh"))
   {
-    g_tree_insert(awntop->icons, "sh", strdup("terminal"));
+    g_tree_insert(awntop->icons, "sh", g_strdup("terminal"));
   }
 
   if (!g_tree_lookup(awntop->icons, "dash"))
   {
-    g_tree_insert(awntop->icons, "dash", strdup("terminal"));
+    g_tree_insert(awntop->icons, "dash", g_strdup("terminal"));
   }
 
   if (!g_tree_lookup(awntop->icons, "ash"))
   {
-    g_tree_insert(awntop->icons, "ash", strdup("terminal"));
+    g_tree_insert(awntop->icons, "ash", g_strdup("terminal"));
   }
 
   if (!g_tree_lookup(awntop->icons, "csh"))
   {
-    g_tree_insert(awntop->icons, "csh", strdup("terminal"));
+    g_tree_insert(awntop->icons, "csh", g_strdup("terminal"));
   }
 
 //    free(ptmp);

@@ -51,7 +51,7 @@ AwnApplet* awn_applet_factory_initp (const gchar *name,
 					"terminal");
 	
 	// Set up the dialog
-	applet->dialog = awn_dialog_new_for_widget (applet->applet);
+	applet->dialog = awn_dialog_new_for_widget (GTK_WIDGET (applet->applet));
 	applet->number_of_tabs = 0;
 	
 	// FIXME
@@ -67,7 +67,7 @@ AwnApplet* awn_applet_factory_initp (const gchar *name,
 	gtk_box_pack_start(GTK_BOX(applet->box), applet->notebook, FALSE, FALSE, 0);
 	
 	// Hide tabs bar
-	gtk_notebook_set_show_tabs (applet->notebook, FALSE);
+	gtk_notebook_set_show_tabs (GTK_NOTEBOOK (applet->notebook), FALSE);
 	
 	// Set up a tab with a vte terminal inside of it
 	create_new_tab();

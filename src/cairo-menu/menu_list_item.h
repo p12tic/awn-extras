@@ -40,6 +40,8 @@ enum
   MENU_ITEM_VOLUME
 };
 
+typedef gboolean(*MenuVolumePrepFunc)(gpointer menu_item, gchar * filemanager);
+
 typedef struct
 {
   int   item_type;
@@ -70,7 +72,7 @@ typedef struct
     GtkWidget *search_entry;
     GtkWidget *run_entry;
     void (*monitor)(gpointer callback, gpointer data, gpointer box);
-    gboolean(*volume_prep)(gpointer menu_item, gchar * filemanager);
+    MenuVolumePrepFunc volume_prep;
     gboolean(*volume_mount)(gpointer menu_item, gchar * filemanager);
     gpointer null;
 

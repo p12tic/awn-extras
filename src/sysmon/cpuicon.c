@@ -134,7 +134,7 @@ _awn_CPUicon_update_icon(gpointer object)
     list = g_list_prepend (list,point);
    
     awn_graph_add_data (sysmonicon_priv->graph,list);
-    awn_sysmonicon_update_icon (icon);
+    awn_sysmonicon_update_icon (AWN_SYSMONICON (icon));
     g_free (point);
     g_list_free (list);
   }
@@ -169,14 +169,14 @@ _awn_CPUicon_update_icon(gpointer object)
                             );
     awn_tooltip_set_text (AWN_TOOLTIP(sysmonicon_priv->tooltip),text);
     g_free (text);
-    text = g_strdup_printf("%.0lf%%",avg_point.value); guint64 total_cpu;
+    text = g_strdup_printf("%.0lf%%",avg_point.value);
     g_object_set (priv->text_overlay,
                   "text", text,
                  NULL);  
     g_free (text);
     
     awn_graph_add_data (sysmonicon_priv->graph,list);
-    awn_sysmonicon_update_icon (icon);
+    awn_sysmonicon_update_icon (AWN_SYSMONICON (icon));
     for (iter = list; iter; iter=g_list_next(iter))
     {
       g_free(iter->data);
@@ -211,7 +211,7 @@ static void
 _graph_type_change(GObject *pspec, GParamSpec *gobject, AwnApplet *applet)
 {
   AwnGraphType graph_type;  
-  static old_graph = -1; 
+  static int old_graph = -1;
   AwnGraph  *graph = NULL;
   gint size = awn_applet_get_size (applet);
   
@@ -249,7 +249,6 @@ awn_CPUicon_constructed (GObject *object)
 
   glibtop_cpu cpu;
   int i = 0;
-  gint size;
   AwnApplet * applet;
   
   g_assert (G_OBJECT_CLASS ( awn_CPUicon_parent_class) );
@@ -311,7 +310,7 @@ awn_CPUicon_constructed (GObject *object)
                 "y-adj", 0.0,
                 "text", "0.0",
                NULL);
-  awn_overlayable_add_overlay (object,priv->text_overlay);
+  awn_overlayable_add_overlay (AWN_OVERLAYABLE(object), priv->text_overlay);
 
   /*
   AwnOverlayThemedIcon *icon_overlay = awn_overlay_themed_icon_new(AWN_THEMED_ICON(object),"stock_up","up");

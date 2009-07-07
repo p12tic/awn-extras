@@ -47,8 +47,8 @@ typedef struct
 
 }Colour_changer_info;
 
-static rgba_colour g_fg;
-static rgba_colour g_bg;
+static AwnColor g_fg;
+static AwnColor g_bg;
 static GConfClient* g_gconf_client = NULL;
 static gboolean suppress_hide = FALSE;
 
@@ -98,7 +98,7 @@ void quick_message(gchar *message, GtkWidget * mainwin)
   /* Create the widgets */
 
   dialog = gtk_dialog_new_with_buttons("Awn System Monitor Message",
-                                       mainwin,
+                                       GTK_WINDOW(mainwin),
                                        GTK_DIALOG_DESTROY_WITH_PARENT,
                                        GTK_STOCK_OK,
                                        GTK_RESPONSE_NONE,
@@ -119,7 +119,7 @@ void quick_message(gchar *message, GtkWidget * mainwin)
   gtk_widget_show_all(dialog);
 }
 
-gboolean toggle_boolean_menu(GtkWidget *widget, GdkEventButton *event, gboolean *val)
+void toggle_boolean_menu(GtkWidget *widget, GdkEventButton *event, gboolean *val)
 {
   *val = !(*val);
 }
@@ -165,7 +165,7 @@ GtkWidget * dashboard_build_clickable_check_menu_item(GtkWidget * menu, GCallbac
                    G_CALLBACK(fn),
                    data
                   );
-  gtk_check_menu_item_set_active(menu_items, state);
+  gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_items), state);
   gtk_widget_show(menu_items);
   return menu_items;
 }
@@ -188,25 +188,25 @@ char * dashboard_cairo_colour_to_string(AwnColor * colour)
 }
 
 
-void pick_awn_color(AwnColor * awncolour, const char *mess, void * arb_data, void (*notify_color_change)(void *))
+void pick_awn_color(AwnColor * awncolour, const char *mess, void * arb_data, DashboardNotifyColorChange notify_color_change)
 {
   GtkColorSelectionDialog* dialog;
   GdkColor c;
   Colour_changer_info colour_change_data;
   enable_suppress_hide_main();
-  dialog = gtk_color_selection_dialog_new(mess);
-  gtk_color_selection_set_has_opacity_control(dialog->colorsel, TRUE);
+  dialog = GTK_COLOR_SELECTION_DIALOG(gtk_color_selection_dialog_new(mess));
+  gtk_color_selection_set_has_opacity_control(GTK_COLOR_SELECTION(dialog->colorsel), TRUE);
 
-  gtk_color_selection_set_current_alpha(dialog->colorsel,
+  gtk_color_selection_set_current_alpha(GTK_COLOR_SELECTION(dialog->colorsel),
                                         65535*awncolour->alpha);
   c.red = 65535 * awncolour->red;
   c.blue = 65535 * awncolour->blue;
   c.green = 65535 * awncolour->green;
-  gtk_color_selection_set_current_color(dialog->colorsel, &c);
+  gtk_color_selection_set_current_color(GTK_COLOR_SELECTION(dialog->colorsel), &c);
   colour_change_data.colour = awncolour;
   colour_change_data.arb_data = arb_data;
   colour_change_data.notify_color_change = notify_color_change;
-  colour_change_data.colorsel = dialog->colorsel;
+  colour_change_data.colorsel = GTK_COLOR_SELECTION(dialog->colorsel);
 
   g_signal_connect(G_OBJECT(dialog->colorsel),
                    "color-changed",
@@ -221,13 +221,13 @@ void pick_awn_color(AwnColor * awncolour, const char *mess, void * arb_data, voi
 
   gtk_dialog_run(GTK_DIALOG(dialog));
   enable_suppress_hide_main();
-  gtk_widget_destroy(dialog);
+  gtk_widget_destroy(GTK_WIDGET(dialog));
   enable_suppress_hide_main();
 }
 
 static gboolean _cancel_colour_change(GtkWidget *widget, GdkEventButton *event, gpointer *p)
 {
-  Colour_changer_info * data = p;
+  Colour_changer_info * data = (Colour_changer_info *)p;
   GdkColor c;
   void (*fn)(void *);
 
@@ -300,7 +300,7 @@ void get_fg_rgb_colour(rgb_colour *d)
 }
 
 
-void get_fg_rgba_colour(rgba_colour *d)
+void get_fg_rgba_colour(AwnColor *d)
 {
   d->red = g_fg.red;
   d->green = g_fg.green;
@@ -316,7 +316,7 @@ void get_bg_rgb_colour(rgb_colour *d)
 
 }
 
-void get_bg_rgba_colour(rgba_colour *d)
+void get_bg_rgba_colour(AwnColor *d)
 {
   d->red = g_bg.red;
   d->green = g_bg.green;
@@ -378,7 +378,7 @@ void use_bg_rgb_colour(cairo_t * cr)
 
 void use_bg_rgba_colour(cairo_t * cr)
 {
-  rgba_colour c;
+  AwnColor c;
   get_bg_rgba_colour(&c);
   cairo_set_source_rgba(cr, c.red, c.green, c.blue, c.alpha);
 }
@@ -392,7 +392,7 @@ void use_fg_rgb_colour(cairo_t * cr)
 
 void use_fg_rgba_colour(cairo_t * cr)
 {
-  rgba_colour c;
+  AwnColor c;
   get_fg_rgba_colour(&c);
   cairo_set_source_rgba(cr, c.red, c.green, c.blue, c.alpha);
 }

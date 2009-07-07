@@ -90,7 +90,7 @@ _awn_loadicon_update_icon(gpointer object)
     list = g_list_append (list,point);
   }
   awn_graph_add_data (sysmonicon_priv->graph,list);
-  awn_sysmonicon_update_icon (icon);
+  awn_sysmonicon_update_icon (AWN_SYSMONICON (icon));
   return TRUE;
   
 }

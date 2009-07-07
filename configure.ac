@@ -14,6 +14,7 @@ AC_ISC_POSIX
 AC_PROG_CC
 AC_STDC_HEADERS
 AC_PROG_LIBTOOL
+DOLT
 
 dnl ==============================================
 dnl translation support
@@ -294,10 +295,18 @@ fi
 
 AM_GCONF_SOURCE_2
 
+dnl ==========================
+dnl Shave (quiet build output)
+dnl ==========================
+
+SHAVE_INIT([shave], [enable])
+
 dnl Please keep in alphabetical order
 AC_OUTPUT([
 Makefile
 po/Makefile.in
+shave/shave
+shave/shave-libtool
 src/Makefile
 src/animal-farm/Makefile
 src/arss/Makefile

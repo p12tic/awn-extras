@@ -54,7 +54,7 @@ GtkWidget* create_popup_menu (AwnTerm *applet)
 	g_signal_connect (G_OBJECT (menuitem), "activate", G_CALLBACK (show_settings_window), NULL);
 	gtk_widget_show (menuitem);
 
-  const gchar **authors[] = { "Natan Yellin (aantn)", NULL };
+  const gchar *authors[] = { "Natan Yellin (aantn)", NULL };
 
   menuitem = awn_applet_create_about_item(applet->applet,
                                           "Copyright 2007, 2008, 2009 Natan Yellin",

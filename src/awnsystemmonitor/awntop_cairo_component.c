@@ -28,7 +28,6 @@
 #include <glibtop/mem.h>
 #include <glibtop/procargs.h>
 
-#define _GNU_SOURCE
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -104,6 +103,7 @@ typedef struct
   char    cmd[40];
 }Topentry;
 
+typedef int (*AwnTopCompareFunc)(const void *, const void *);
 
 typedef struct
 {
@@ -114,7 +114,7 @@ typedef struct
   GtkWidget   *table;
 
   int maxtopentries;
-  int (*compar)(const void *, const void *);
+  AwnTopCompareFunc compar;
   long    *   displayed_pid_list;
   GTree*  proctimes;
   GTree*  icons;
@@ -181,8 +181,8 @@ static gboolean _click_set_term(GtkWidget *widget, GdkEventButton *event,
                                 Awntop_cairo_plug_data*awntop);
 static gboolean _click_set_kill(GtkWidget *widget, GdkEventButton *event,
                                 Awntop_cairo_plug_data *awntop);
-static gboolean _click_set_term_kill(GtkWidget *widget, GdkEventButton *event,
-                                     Awntop_cairo_plug_data*awntop);
+//static gboolean _click_set_term_kill(GtkWidget *widget, GdkEventButton *event,
+//                                     Awntop_cairo_plug_data*awntop);
 static gboolean _toggle_user_filter(GtkWidget *widget, GdkEventButton *event,
                                     Awntop_cairo_plug_data *awntop);
 
@@ -346,7 +346,7 @@ static GtkWidget* attach_right_click_menu(Awntop_cairo_plug_data **p)
 #endif
   menu_items = gtk_menu_item_new_with_label("Kill Signal");
   gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_items);
-  gtk_menu_item_set_submenu(menu_items, kill_menu);
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(menu_items), kill_menu);
   gtk_widget_show(menu_items);
 
   dashboard_build_clickable_menu_item(menu, G_CALLBACK(_toggle_user_filter),
@@ -358,19 +358,12 @@ static GtkWidget* attach_right_click_menu(Awntop_cairo_plug_data **p)
   return menu;
 }
 
-static void _notify_color_change(void *p)
-{
-  assert(check_ptr == p);
-  Awntop_cairo_plug_data *data = p;
-  assert(p);
-}
-
 static void set_colour(Awntop_cairo_plug_data *p, AwnColor* colour,
                        const char * mess, const char * gconf_key)
 {
   assert(check_ptr == p);
   char *svalue;
-  pick_awn_color(colour, mess, p, invalidate_all_pixmap_caches);
+  pick_awn_color(colour, mess, p, (DashboardNotifyColorChange)invalidate_all_pixmap_caches);
   svalue = dashboard_cairo_colour_to_string(colour);
   gconf_client_set_string(get_dashboard_gconf(), gconf_key, svalue , NULL);
   p->invalidate_pixmaps = TRUE;
@@ -421,6 +414,7 @@ static gboolean decrease_step(Awntop_cairo_plug_data **p)
                          data->size_mult, NULL);
   data->invalidate_pixmaps = TRUE;
   build_top_table_headings(data);
+  return TRUE;
 }
 
 static gboolean increase_step(Awntop_cairo_plug_data **p)
@@ -432,6 +426,7 @@ static gboolean increase_step(Awntop_cairo_plug_data **p)
                          data->size_mult, NULL);
   data->invalidate_pixmaps = TRUE;
   build_top_table_headings(data);
+  return TRUE;
 }
 
 static gboolean query_support_multiple(void)
@@ -561,8 +556,8 @@ static void construct(Awntop_cairo_plug_data **p)
   data->accum_interval = data->updateinterval;
 
   data->table = gtk_table_new(9, data->maxtopentries, FALSE); /*FIXME*/
-  gtk_table_set_col_spacings(data->table, 0);
-  gtk_table_set_row_spacings(data->table, 0);
+  gtk_table_set_col_spacings(GTK_TABLE(data->table), 0);
+  gtk_table_set_row_spacings(GTK_TABLE(data->table), 0);
 
 }
 
@@ -733,7 +728,6 @@ static void build_top_table(Awntop_cairo_plug_data * data)
   gboolean force;
   dashboard_cairo_widget c_widge;
   g_free(data->displayed_pid_list);
-  int tmp2;
   gboolean samepid;
   cairo_text_extents_t     te;
 
@@ -753,7 +747,6 @@ static void build_top_table(Awntop_cairo_plug_data * data)
     char buf[100];
 
     struct passwd * userinfo;
-    long tmp;
     assert(i <= data->maxtopentries);
     data->displayed_pid_list[i] = topentries[i]->pid; /*array of pids that show in top.  Used for kill events*/
 #if 0
@@ -960,7 +953,7 @@ static void build_top_table(Awntop_cairo_plug_data * data)
       }
       else
       {
-        snprintf(buf, sizeof(buf), "%0.0lf", tmp_virt);
+        snprintf(buf, sizeof(buf), "%0.0lf", (double)tmp_virt);
       }
 
       widget = get_cairo_widget(&c_widge,
@@ -1256,11 +1249,6 @@ static gboolean render(GtkWidget ** pwidget, gint interval, Awntop_cairo_plug_da
 {
   assert(check_ptr == *p);
   Awntop_cairo_plug_data * data = *p;
-  static int width = -1;
-  static int height = -1;
-  cairo_text_extents_t    extents;
-  dashboard_cairo_widget c_widge;
-  float mult;
   GSList* removelist;
 
   if (! *pwidget)
@@ -1320,8 +1308,7 @@ static Topentry ** fill_topentries(Awntop_cairo_plug_data *awntop, int *numel)
   glibtop_cpu         cpu;
   static guint64 old_total_jiffies = 0;
   guint64 total_jiffies;
-  guint64 tmp;
-  unsigned * p;
+  pid_t * p;
   long percent;
   int i;
   Topentry **topentries;
@@ -1590,11 +1577,11 @@ static void parse_desktop_entries(Awntop_cairo_plug_data * awntop)
             {
               char *iconname;
 
-              if (iconname = g_key_file_get_string(keyfile, "Desktop Entry", "Icon", NULL))
+              if ((iconname = g_key_file_get_string(keyfile, "Desktop Entry", "Icon", NULL)) != NULL)
               {
                 char * execname;
 
-                if (execname = g_key_file_get_string(keyfile, "Desktop Entry", "Exec", NULL))
+                if ((execname = g_key_file_get_string(keyfile, "Desktop Entry", "Exec", NULL)) != NULL)
                 {
                   ptmp = strchr(execname, ' ');
 
@@ -1681,7 +1668,6 @@ static void parse_desktop_entries(Awntop_cairo_plug_data * awntop)
 static GtkWidget * lookup_icon(Awntop_cairo_plug_data * awntop, Topentry **topentries, int i)
 {
   GtkIconTheme*  g;
-  GtkIconInfo*  iconinfo;
   GdkPixbuf* pbuf = NULL;
   char* parg;
   glibtop_proc_args     procargs;
@@ -1981,12 +1967,14 @@ static gboolean _click_set_kill(GtkWidget *widget, GdkEventButton *event, Awntop
   return TRUE;
 }
 
+#if 0
 static gboolean _click_set_term_kill(GtkWidget *widget, GdkEventButton *event, Awntop_cairo_plug_data*awntop)
 {
   G_kill_signal_method = 3;
   gconf_client_set_int(get_dashboard_gconf(), GCONF_AWNTOP_CAIRO_KILL_SIG_METH, G_kill_signal_method, NULL);
   return TRUE;
 }
+#endif
 
 static gboolean _click_pid(GtkWidget *widget, GdkEventButton *event, Awntop_cairo_plug_data*awntop)
 {
@@ -2030,13 +2018,13 @@ static gboolean _click_virt(GtkWidget *widget, GdkEventButton *event, Awntop_cai
 {
   top_state = 1;
 
-  if (awntop->compar == cmpvirt)
+  if (awntop->compar == (AwnTopCompareFunc)cmpvirt)
   {
     gcomparedir = gcomparedir * -1;
   }
   else
   {
-    awntop->compar = cmpvirt;
+    awntop->compar = (AwnTopCompareFunc)cmpvirt;
     gcomparedir = -1;
   }
 
@@ -2049,13 +2037,13 @@ static gboolean _click_res(GtkWidget *widget, GdkEventButton *event, Awntop_cair
 {
   top_state = 1;
 
-  if (awntop->compar == cmpres)
+  if (awntop->compar == (AwnTopCompareFunc)cmpres)
   {
     gcomparedir = gcomparedir * -1;
   }
   else
   {
-    awntop->compar = cmpres;
+    awntop->compar = (AwnTopCompareFunc)cmpres;
     gcomparedir = -1;
   }
 
@@ -2087,13 +2075,13 @@ static gboolean _click_mem(GtkWidget *widget, GdkEventButton *event, Awntop_cair
 {
   top_state = 1;
 
-  if (awntop->compar == cmpmem)
+  if (awntop->compar == (AwnTopCompareFunc)cmpmem)
   {
     gcomparedir = gcomparedir * -1;
   }
   else
   {
-    awntop->compar = cmpmem;
+    awntop->compar = (AwnTopCompareFunc)cmpmem;
     gcomparedir = -1;
   }
 

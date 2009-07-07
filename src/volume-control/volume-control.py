@@ -27,7 +27,6 @@ import pygtk
 pygtk.require("2.0")
 import gtk
 from gtk import gdk
-from gtk import glade
 
 from awn import ORIENTATION_LEFT, ORIENTATION_RIGHT
 from awn.extras import awnlib
@@ -50,7 +49,7 @@ applet_version = "0.3.3"
 applet_description = "Applet to control your computer's volume"
 
 theme_dir = "/usr/share/icons"
-glade_file = os.path.join(os.path.dirname(__file__), "volume-control.glade")
+ui_file = os.path.join(os.path.dirname(__file__), "volume-control.ui")
 
 system_theme_name = "System theme"
 
@@ -93,7 +92,8 @@ class VolumeControlApplet:
         else:
             self.message_delay_handler = applet.timing.delay(self.backend.freeze_messages.clear, gstreamer_freeze_messages_interval, False)
 
-            prefs = glade.XML(glade_file)
+            prefs = gtk.Builder()
+            prefs.add_from_file(ui_file)
             self.setup_main_dialog(prefs)
             self.setup_context_menu(prefs)
 
@@ -109,15 +109,15 @@ class VolumeControlApplet:
     def setup_main_dialog(self, prefs):
         dialog = self.applet.dialog.new("main")
         dialog.set_geometry_hints(min_width=50, min_height=200)
-        prefs.get_widget("vbox-volume").reparent(dialog)
+        prefs.get_object("vbox-volume").reparent(dialog)
 
-        self.volume_scale = prefs.get_widget("vscale-volume")
+        self.volume_scale = prefs.get_object("vscale-volume")
         self.volume_scale.props.can_focus = False
         self.volume_scale.set_increments(volume_step, 10)
 
         self.volume_scale.connect("value-changed", self.volume_scale_changed_cb)
-        prefs.get_widget("button-inc-volume").connect("button-press-event", self.backend.up)
-        prefs.get_widget("button-dec-volume").connect("button-press-event", self.backend.down)
+        prefs.get_object("button-inc-volume").connect("button-press-event", self.backend.up)
+        prefs.get_object("button-dec-volume").connect("button-press-event", self.backend.down)
 
         self.applet.connect("button-press-event", self.button_press_event_cb)
 
@@ -157,16 +157,11 @@ class VolumeControlApplet:
         menu.insert(gtk.SeparatorMenuItem(), menu_index + 2)
 
         preferences_vbox = self.applet.dialog.new("preferences").vbox
-        prefs.get_widget("dialog-vbox").reparent(preferences_vbox)
+        prefs.get_object("dialog-vbox").reparent(preferences_vbox)
 
         self.load_theme_pref(prefs)
         self.load_device_pref(prefs)
         self.load_track_pref(prefs)
-
-        size_group = gtk.SizeGroup(gtk.SIZE_GROUP_HORIZONTAL)
-        size_group.add_widget(prefs.get_widget("label-device"))
-        size_group.add_widget(prefs.get_widget("alignment-mixer-track"))
-        size_group.add_widget(prefs.get_widget("label-theme"))
 
     def show_volume_control_cb(self, widget):
         for command in volume_control_apps:
@@ -184,7 +179,8 @@ class VolumeControlApplet:
         self.themes = [system_theme_name] + filter(filter_theme, os.listdir(theme_dir))
         self.themes.sort()
 
-        combobox_theme = prefs.get_widget("combobox-theme")
+        combobox_theme = prefs.get_object("combobox-theme")
+        awnlib.add_cell_renderer_text(combobox_theme)
         for i in self.themes:
             combobox_theme.append_text(i)
 
@@ -211,7 +207,8 @@ class VolumeControlApplet:
             self.applet.settings["device"] = self.backend.get_default_device()
         device = self.applet.settings["device"]
 
-        self.combobox_device = prefs.get_widget("combobox-device")
+        self.combobox_device = prefs.get_object("combobox-device")
+        awnlib.add_cell_renderer_text(self.combobox_device)
         for i in device_labels:
             self.combobox_device.append_text(i)
 
@@ -227,7 +224,8 @@ class VolumeControlApplet:
             self.applet.settings["track"] = self.backend.get_default_track()
         track = self.applet.settings["track"]
 
-        self.combobox_track = prefs.get_widget("combobox-mixer-track")
+        self.combobox_track = prefs.get_object("combobox-mixer-track")
+        awnlib.add_cell_renderer_text(self.combobox_track)
         for i in track_labels:
             self.combobox_track.append_text(i)
 

@@ -1,5 +1,9 @@
 APPLET_NAME = sysmon
-APPLET_CFLAGS = $(GTOP_CFLAGS)
+APPLET_CFLAGS = \
+	$(GTOP_CFLAGS) \
+	-std=c99 \
+	-D_GNU_SOURCE \
+	$(NULL)
 include $(top_srcdir)/Makefile.c-applet
 include $(top_srcdir)/Makefile.schemas
 

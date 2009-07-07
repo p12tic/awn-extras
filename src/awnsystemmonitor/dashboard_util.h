@@ -41,14 +41,6 @@ typedef struct
 
 typedef struct
 {
-  float red;
-  float green;
-  float blue;
-  float alpha;
-}rgba_colour;
-
-typedef struct
-{
   GdkPixmap *pixmap;
   cairo_t *cr;
   GdkColormap* cmap;
@@ -57,7 +49,9 @@ typedef struct
 
 void draw_pie_graph(cairo_t *cr, double x, double y, double radius, double start, double * values, AwnColor * colours, int numel);
 
-void pick_awn_color(AwnColor * awncolour, const char *mess, void * arb_data, void (*notify_color_change)(void *));
+typedef void (*DashboardNotifyColorChange)(void *);
+
+void pick_awn_color(AwnColor * awncolour, const char *mess, void * arb_data, DashboardNotifyColorChange notify_color_change);
 
 void set_dashboard_gconf(GConfClient* p);
 GConfClient* get_dashboard_gconf(void);
@@ -66,9 +60,9 @@ void set_fg_rbg(GdkColor *);
 void set_bg_rbg(GdkColor *);
 
 void get_fg_rgb_colour(rgb_colour *);
-void get_fg_rgba_colour(rgba_colour *);
+void get_fg_rgba_colour(AwnColor *);
 void get_bg_rgb_colour(rgb_colour *);
-void get_bg_rgba_colour(rgba_colour *);
+void get_bg_rgba_colour(AwnColor *);
 
 void use_bg_rgb_colour(cairo_t * cr);
 void use_bg_rgba_colour(cairo_t * cr);
@@ -89,8 +83,9 @@ GtkWidget * dashboard_build_clickable_check_menu_item(GtkWidget * menu, GCallbac
 void enable_suppress_hide_main(void);
 void disable_suppress_hide_main(void);
 gboolean get_hide_main(void);
+gboolean get_suppress_hide_main(void);
 
-gboolean toggle_boolean_menu(GtkWidget *widget, GdkEventButton *event, gboolean *p);
+void toggle_boolean_menu(GtkWidget *widget, GdkEventButton *event, gboolean *p);
 
 void quick_message(gchar *message, GtkWidget * mainwin);
 

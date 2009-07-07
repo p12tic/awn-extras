@@ -504,8 +504,8 @@ static gboolean _press_ok(GtkWidget *widget, GdkEventButton *event, GtkWidget * 
   gtk_container_add(GTK_CONTAINER(GTK_DIALOG(dialog)->vbox),
                     label);
   gtk_widget_show_all(dialog);
-  gtk_dialog_run(dialog);
-  g_spawn_command_line_async("/bin/sh -c 'export T_STAMP=`date +\"%s\"`&& export AWN_G_ORIG=`gconftool-2 -g /apps/avant-window-navigator/panel/applet_list | sed -e \"s/cairo_main_menu\.desktop::[0-9]*/cairo_main_menu\.desktop::$T_STAMP/\"` && export AWN_G_MOD=`echo $AWN_G_ORIG |sed -e \"s/[^,^\[]*cairo_main_menu\.desktop::[0-9]*,?//\"` && gconftool-2 --type list --list-type=string -s /apps/avant-window-navigator/panel/applet_list \"$AWN_G_MOD\" && sleep 2 && gconftool-2 --type list --list-type=string -s /apps/avant-window-navigator/panel/applet_list \"$AWN_G_ORIG\"'", &err);
+  gtk_dialog_run(GTK_DIALOG(dialog));
+  g_spawn_command_line_async("/bin/sh -c 'export T_STAMP=`date +\"%s\"`&& export AWN_G_ORIG=`gconftool-2 -g /apps/avant-window-navigator/panel/applet_list | sed -e \"s/cairo_main_menu\\.desktop::[0-9]*/cairo_main_menu\\.desktop::$T_STAMP/\"` && export AWN_G_MOD=`echo $AWN_G_ORIG |sed -e \"s/[^,^\[]*cairo_main_menu\\.desktop::[0-9]*,?//\"` && gconftool-2 --type list --list-type=string -s /apps/avant-window-navigator/panel/applet_list \"$AWN_G_MOD\" && sleep 2 && gconftool-2 --type list --list-type=string -s /apps/avant-window-navigator/panel/applet_list \"$AWN_G_ORIG\"'", &err);
   exit(0);
   return FALSE;
 }
@@ -521,7 +521,7 @@ static gboolean _toggle_(GtkWidget *widget, gboolean * value)
 static gboolean _toggle_gtk(GtkWidget *widget, GtkWidget * gtk_off_section)
 {
 // gtk_toggle_button_set_active(widget,G_cairo_menu_conf.honour_gtk);
-  G_cairo_menu_conf.honour_gtk = gtk_toggle_button_get_active(widget);
+  G_cairo_menu_conf.honour_gtk = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));
 
   if (G_cairo_menu_conf.honour_gtk)
   {
@@ -539,13 +539,13 @@ int activate(GtkWidget *w, gchar **p)
 {
   gchar * svalue = *p;
   g_free(svalue);
-  svalue = g_filename_to_utf8(gtk_entry_get_text(w) , -1, NULL, NULL, NULL);
+  svalue = g_filename_to_utf8(gtk_entry_get_text(GTK_ENTRY(w)) , -1, NULL, NULL, NULL);
   *p = svalue;
   return FALSE;
 }
 
 /*I'm lazy.. and I do not like doing pref dialogs....*/
-GtkWidget *gtk_off_table;
+GtkTable *gtk_off_table;
 GtkWidget * hover_ex;
 GtkWidget * normal_ex;
 
@@ -608,7 +608,7 @@ void show_prefs(void)
     gtk_widget_set_colormap(prefs_win, colormap);
   }
 
-  gtk_window_set_title(prefs_win, "Cairo Menu Preferences");
+  gtk_window_set_title(GTK_WINDOW(prefs_win), "Cairo Menu Preferences");
 
   GtkWidget* vbox = gtk_vbox_new(FALSE, 0);
   GtkWidget * gtk = gtk_check_button_new_with_label("Use Gtk");
@@ -622,21 +622,21 @@ void show_prefs(void)
 
 
   GtkWidget* gtk_off_section = gtk_vbox_new(FALSE, 0);
-  gtk_off_table = gtk_table_new(2, 4, FALSE);
+  gtk_off_table = GTK_TABLE(gtk_table_new(2, 4, FALSE));
 
   GtkWidget *normal_label = gtk_label_new("Normal");
   GdkColor  *color;
 
   desktop_agnostic_color_get_color (G_cairo_menu_conf.normal.bg, color);
   GtkWidget *normal_bg = gtk_color_button_new_with_color(color);
-  gtk_color_button_set_use_alpha(normal_bg, TRUE);
-  gtk_color_button_set_alpha(normal_bg, G_cairo_menu_conf.normal.bg->alpha);
+  gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(normal_bg), TRUE);
+  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(normal_bg), G_cairo_menu_conf.normal.bg->alpha);
   g_signal_connect(G_OBJECT(normal_bg), "color-set", G_CALLBACK(_mod_colour), &G_cairo_menu_conf.normal.bg);
 
   desktop_agnostic_color_get_color (G_cairo_menu_conf.normal.fg, color);
   GtkWidget *normal_fg = gtk_color_button_new_with_color(color);
-  gtk_color_button_set_use_alpha(normal_fg, TRUE);
-  gtk_color_button_set_alpha(normal_fg, G_cairo_menu_conf.normal.fg->alpha);
+  gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(normal_fg), TRUE);
+  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(normal_fg), G_cairo_menu_conf.normal.fg->alpha);
   g_signal_connect(G_OBJECT(normal_fg), "color-set", G_CALLBACK(_mod_colour), &G_cairo_menu_conf.normal.fg);
 
   GtkWidget *hover_label = gtk_label_new("Hover");
@@ -644,28 +644,28 @@ void show_prefs(void)
 
   desktop_agnostic_color_get_color (G_cairo_menu_conf.hover.bg, color);
   GtkWidget *hover_bg = gtk_color_button_new_with_color(color);
-  gtk_color_button_set_use_alpha(hover_bg, TRUE);
-  gtk_color_button_set_alpha(hover_bg, G_cairo_menu_conf.hover.bg->alpha);
+  gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(hover_bg), TRUE);
+  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(hover_bg), G_cairo_menu_conf.hover.bg->alpha);
   g_signal_connect(G_OBJECT(hover_bg), "color-set", G_CALLBACK(_mod_colour), &G_cairo_menu_conf.hover.bg);
 
 // GtkWidget *hover_fg=gtk_button_new_with_label("Foreground");
   desktop_agnostic_color_get_color (G_cairo_menu_conf.hover.fg, color);
   GtkWidget *hover_fg = gtk_color_button_new_with_color(color);
-  gtk_color_button_set_use_alpha(hover_fg, TRUE);
-  gtk_color_button_set_alpha(hover_fg, G_cairo_menu_conf.hover.fg->alpha);
+  gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(hover_fg), TRUE);
+  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(hover_fg), G_cairo_menu_conf.hover.fg->alpha);
   g_signal_connect(G_OBJECT(hover_fg), "color-set", G_CALLBACK(_mod_colour), &G_cairo_menu_conf.hover.fg);
 
 
   GtkWidget *border_label = gtk_label_new("Border");
 
   desktop_agnostic_color_get_color (G_cairo_menu_conf.border_colour, color);
-  GtkWidget *border_colour = gtk_color_button_new_with_color(&color);
-  gtk_color_button_set_use_alpha(border_colour, TRUE);
-  gtk_color_button_set_alpha(border_colour, G_cairo_menu_conf.border_colour->alpha);
+  GtkWidget *border_colour = gtk_color_button_new_with_color(color);
+  gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(border_colour), TRUE);
+  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(border_colour), G_cairo_menu_conf.border_colour->alpha);
   g_signal_connect(G_OBJECT(border_colour), "color-set", G_CALLBACK(_mod_colour), &G_cairo_menu_conf.border_colour);
 
 
-  GtkWidget * text_table = gtk_table_new(2, 4, FALSE);
+  GtkTable * text_table = GTK_TABLE(gtk_table_new(2, 4, FALSE));
 // GtkWidget * search_cmd=gtk_entry_new();
   GtkWidget * search_cmd = gtk_file_chooser_button_new("Search Util", GTK_FILE_CHOOSER_ACTION_OPEN);
 // GtkWidget * filemanager=gtk_entry_new();
@@ -704,10 +704,10 @@ void show_prefs(void)
   gtk_window_set_accept_focus(GTK_WINDOW(prefs_win), TRUE);
   gtk_window_set_focus_on_map(GTK_WINDOW(prefs_win), TRUE);
 
-  gtk_spin_button_set_value(adjust_gradient, G_cairo_menu_conf.menu_item_gradient_factor);
-  gtk_spin_button_set_value(adjust_textlen, G_cairo_menu_conf.menu_item_text_len);
-  gtk_spin_button_set_value(adjust_textsize, G_cairo_menu_conf.text_size);
-  gtk_spin_button_set_value(adjust_borderwidth, G_cairo_menu_conf.border_width);
+  gtk_spin_button_set_value(GTK_SPIN_BUTTON(adjust_gradient), G_cairo_menu_conf.menu_item_gradient_factor);
+  gtk_spin_button_set_value(GTK_SPIN_BUTTON(adjust_textlen), G_cairo_menu_conf.menu_item_text_len);
+  gtk_spin_button_set_value(GTK_SPIN_BUTTON(adjust_textsize), G_cairo_menu_conf.text_size);
+  gtk_spin_button_set_value(GTK_SPIN_BUTTON(adjust_borderwidth), G_cairo_menu_conf.border_width);
   g_signal_connect(G_OBJECT(adjust_gradient), "value-changed", G_CALLBACK(spin_change),
                    &G_cairo_menu_conf.menu_item_gradient_factor);
   g_signal_connect(G_OBJECT(adjust_textlen), "value-changed", G_CALLBACK(spin_int_change),
@@ -720,23 +720,23 @@ void show_prefs(void)
   g_signal_connect(G_OBJECT(search_cmd), "file-set", G_CALLBACK(_file_set), &G_cairo_menu_conf.search_cmd);
   g_signal_connect(G_OBJECT(filemanager), "file-set", G_CALLBACK(_file_set), &G_cairo_menu_conf.filemanager);
 
-  gtk_toggle_button_set_active(gtk, G_cairo_menu_conf.honour_gtk);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(gtk), G_cairo_menu_conf.honour_gtk);
 
-  gtk_toggle_button_set_active(search, G_cairo_menu_conf.show_search);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(search), G_cairo_menu_conf.show_search);
   g_signal_connect(G_OBJECT(search), "toggled", G_CALLBACK(_toggle_), &G_cairo_menu_conf.show_search);
-  gtk_toggle_button_set_active(places, G_cairo_menu_conf.show_places);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(places), G_cairo_menu_conf.show_places);
   g_signal_connect(G_OBJECT(places), "toggled", G_CALLBACK(_toggle_), &G_cairo_menu_conf.show_places);
-  gtk_toggle_button_set_active(release, G_cairo_menu_conf.on_button_release);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(release), G_cairo_menu_conf.on_button_release);
   g_signal_connect(G_OBJECT(release), "toggled", G_CALLBACK(_toggle_), &G_cairo_menu_conf.on_button_release);
-  gtk_toggle_button_set_active(tooltips, G_cairo_menu_conf.show_tooltips);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tooltips), G_cairo_menu_conf.show_tooltips);
   g_signal_connect(G_OBJECT(tooltips), "toggled", G_CALLBACK(_toggle_), &G_cairo_menu_conf.show_tooltips);
 
-  gtk_toggle_button_set_active(run, G_cairo_menu_conf.show_run);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(run), G_cairo_menu_conf.show_run);
   g_signal_connect(G_OBJECT(run), "toggled", G_CALLBACK(_toggle_), &G_cairo_menu_conf.show_run);
-  gtk_toggle_button_set_active(logout, G_cairo_menu_conf.show_logout);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(logout), G_cairo_menu_conf.show_logout);
   g_signal_connect(G_OBJECT(logout), "toggled", G_CALLBACK(_toggle_), &G_cairo_menu_conf.show_logout);
 
-  gtk_toggle_button_set_active(fade_in, G_cairo_menu_conf.do_fade);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(fade_in), G_cairo_menu_conf.do_fade);
   g_signal_connect(G_OBJECT(fade_in), "toggled", G_CALLBACK(_toggle_), &G_cairo_menu_conf.do_fade);
 
 
@@ -746,15 +746,15 @@ void show_prefs(void)
 
   g_signal_connect(G_OBJECT(gtk), "toggled", G_CALLBACK(_toggle_gtk), gtk_off_section);
 
-  gtk_box_pack_start(GTK_CONTAINER(vbox), search, FALSE, FALSE, 0);
-  gtk_box_pack_start(GTK_CONTAINER(vbox), places, FALSE, FALSE, 0);
-  gtk_box_pack_start(GTK_CONTAINER(vbox), run, FALSE, FALSE, 0);
-  gtk_box_pack_start(GTK_CONTAINER(vbox), logout, FALSE, FALSE, 0);
-  gtk_box_pack_start(GTK_CONTAINER(vbox), fade_in, FALSE, FALSE, 0);
-  gtk_box_pack_start(GTK_CONTAINER(vbox), release, FALSE, FALSE, 0);
-  gtk_box_pack_start(GTK_CONTAINER(vbox), tooltips, FALSE, FALSE, 0);
+  gtk_box_pack_start(GTK_BOX(vbox), search, FALSE, FALSE, 0);
+  gtk_box_pack_start(GTK_BOX(vbox), places, FALSE, FALSE, 0);
+  gtk_box_pack_start(GTK_BOX(vbox), run, FALSE, FALSE, 0);
+  gtk_box_pack_start(GTK_BOX(vbox), logout, FALSE, FALSE, 0);
+  gtk_box_pack_start(GTK_BOX(vbox), fade_in, FALSE, FALSE, 0);
+  gtk_box_pack_start(GTK_BOX(vbox), release, FALSE, FALSE, 0);
+  gtk_box_pack_start(GTK_BOX(vbox), tooltips, FALSE, FALSE, 0);
 
-  gtk_box_pack_start(GTK_CONTAINER(vbox), text_table, FALSE, FALSE, 0);
+  gtk_box_pack_start(GTK_BOX(vbox), GTK_WIDGET(text_table), FALSE, FALSE, 0);
   gtk_table_attach_defaults(text_table, gtk_label_new("Search command"), 0, 1, 0, 1);
   gtk_table_attach_defaults(text_table, search_cmd, 1, 2, 0, 1);
   gtk_table_attach_defaults(text_table, gtk_label_new("File Manager"), 0, 1, 1, 2);
@@ -766,10 +766,10 @@ void show_prefs(void)
   gtk_table_attach_defaults(text_table, gtk_label_new("Border Width"), 0, 1, 4, 5);
   gtk_table_attach_defaults(text_table, adjust_borderwidth, 1, 2, 4, 5);
 
-  gtk_box_pack_start(GTK_CONTAINER(vbox), gtk, FALSE, FALSE, 0);
+  gtk_box_pack_start(GTK_BOX(vbox), gtk, FALSE, FALSE, 0);
 
-  gtk_box_pack_start(GTK_CONTAINER(vbox), gtk_off_section, FALSE, FALSE, 0);
-  gtk_box_pack_start(GTK_CONTAINER(gtk_off_section), gtk_off_table, FALSE, FALSE, 0);
+  gtk_box_pack_start(GTK_BOX(vbox), gtk_off_section, FALSE, FALSE, 0);
+  gtk_box_pack_start(GTK_BOX(gtk_off_section), GTK_WIDGET(gtk_off_table), FALSE, FALSE, 0);
 
   gtk_table_attach_defaults(gtk_off_table, normal_label, 0, 1, 0, 1);
   gtk_table_attach_defaults(gtk_off_table, normal_bg, 1, 2, 0, 1);
@@ -789,8 +789,8 @@ void show_prefs(void)
 
 
 
-  gtk_box_pack_start(GTK_CONTAINER(vbox), buttons, FALSE, FALSE, 0);
-  gtk_box_pack_start(GTK_CONTAINER(buttons), ok, FALSE, FALSE, 0);
+  gtk_box_pack_start(GTK_BOX(vbox), buttons, FALSE, FALSE, 0);
+  gtk_box_pack_start(GTK_BOX(buttons), ok, FALSE, FALSE, 0);
   gtk_widget_show_all(prefs_win);
 
   if (G_cairo_menu_conf.honour_gtk)

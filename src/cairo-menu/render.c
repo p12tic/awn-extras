@@ -61,6 +61,8 @@ typedef struct
 Mouseover_data * G_Search = NULL;
 Mouseover_data * G_Run = NULL;
 
+extern void backend_unmount(Menu_list_item * menu_item);
+
 /*
 At some point in time it might be good to cache cr and gradient.
 At this point it's a bit inefficient on initial startup... but that's the only
@@ -80,6 +82,7 @@ GtkWidget * build_menu_widget(Menu_item_color * mic, char * text, GdkPixbuf *pbu
   gint pixmap_height = G_cairo_menu_conf.text_size * 1.6;
 
   if (pbuf)
+  {
     if (gdk_pixbuf_get_height(pbuf) != G_cairo_menu_conf.text_size)
     {
       pbuf = gdk_pixbuf_scale_simple(pbuf, G_cairo_menu_conf.text_size, G_cairo_menu_conf.text_size, GDK_INTERP_HYPER);
@@ -88,8 +91,10 @@ GtkWidget * build_menu_widget(Menu_item_color * mic, char * text, GdkPixbuf *pbu
     {
       gdk_pixbuf_ref(pbuf);
     }
+  }
 
   if (pover)
+  {
     if (gdk_pixbuf_get_height(pover) != G_cairo_menu_conf.text_size*0.7)
     {
       pover = gdk_pixbuf_scale_simple(pover, G_cairo_menu_conf.text_size * 0.7, G_cairo_menu_conf.text_size * 0.7, GDK_INTERP_HYPER);
@@ -98,6 +103,7 @@ GtkWidget * build_menu_widget(Menu_item_color * mic, char * text, GdkPixbuf *pbu
     {
       gdk_pixbuf_ref(pover);
     }
+  }
 
 
   pixmap = gdk_pixmap_new(NULL, pixmap_width,
@@ -216,7 +222,6 @@ GtkWidget * build_menu_widget(Menu_item_color * mic, char * text, GdkPixbuf *pbu
 void render_blank(Menu_list_item *entry, int max_width)
 {
   //printf("render_blank\n");
-  GtkIconTheme*  g;
   static cairo_t *cr = NULL;
   GdkScreen* pScreen;
   GdkPixmap * pixmap;
@@ -266,7 +271,6 @@ void render_blank(Menu_list_item *entry, int max_width)
 void render_separator(Menu_list_item *entry, int max_width)
 {
   //printf("render_separator\n");
-  GtkIconTheme*  g;
   static cairo_t *cr = NULL;
   GdkScreen* pScreen;
   GdkPixmap * pixmap;
@@ -907,25 +911,16 @@ void hide_search(void)
 }
 
 
-static gboolean _focus_out_search(GtkWidget *widget, GdkEventButton *event, Mouseover_data *data)
-{
-  //printf("_focus_out_search\n");
-  hide_search();
-  G_repression = FALSE;
-// printf(" _focus_out_search\n");
-  return FALSE;
-}
-
 int activate_search(GtkWidget *w, Menu_list_item * menu_item)
 {
   GError *err = NULL;
   char  *cmd;
 //printf("activate_search\n");
   G_repression = FALSE;
-  cmd = g_malloc(strlen(G_cairo_menu_conf.search_cmd) + strlen(gtk_entry_get_text(w)) + 4);
+  cmd = g_malloc(strlen(G_cairo_menu_conf.search_cmd) + strlen(gtk_entry_get_text(GTK_ENTRY(w))) + 4);
   strcpy(cmd, G_cairo_menu_conf.search_cmd);
   strcat(cmd, " '");
-  strcat(cmd, gtk_entry_get_text(w));
+  strcat(cmd, gtk_entry_get_text(GTK_ENTRY(w)));
   strcat(cmd, "'");
   g_spawn_command_line_async(cmd, &err);
   g_free(cmd);
@@ -933,7 +928,7 @@ int activate_search(GtkWidget *w, Menu_list_item * menu_item)
   return FALSE;
 }
 
-static _eject(GtkWidget *widget, GdkEventButton *event, Menu_list_item * menu_item)
+static gboolean _eject(GtkWidget *widget, GdkEventButton *event, Menu_list_item * menu_item)
 {
   //printf("_eject\n");
   backend_unmount(menu_item);
@@ -942,7 +937,7 @@ static _eject(GtkWidget *widget, GdkEventButton *event, Menu_list_item * menu_it
   return FALSE;
 }
 
-static _unmount(GtkWidget *widget, GdkEventButton *event, Menu_list_item * menu_item)
+static gboolean _unmount(GtkWidget *widget, GdkEventButton *event, Menu_list_item * menu_item)
 {
   //printf("_unmount\n");
   backend_unmount(menu_item);
@@ -962,20 +957,20 @@ static void hide_textentries(void)
 
   if (G_Search)
   {
-    if (gtk_bin_get_child(G_Search->aux) == G_Search->misc)
+    if (gtk_bin_get_child(GTK_BIN(G_Search->aux)) == G_Search->misc)
     {
-      gtk_container_remove(G_Search->aux, gtk_bin_get_child(G_Search->aux));
-      gtk_container_add(G_Search->aux, G_Search->normal);
+      gtk_container_remove(GTK_CONTAINER(G_Search->aux), gtk_bin_get_child(GTK_BIN(G_Search->aux)));
+      gtk_container_add(GTK_CONTAINER(G_Search->aux), G_Search->normal);
       gtk_widget_show_all(G_Search->normal);
     }
   }
 
   if (G_Run)
   {
-    if (gtk_bin_get_child(G_Run->aux) == G_Run->misc)
+    if (gtk_bin_get_child(GTK_BIN(G_Run->aux)) == G_Run->misc)
     {
-      gtk_container_remove(G_Run->aux, gtk_bin_get_child(G_Run->aux));
-      gtk_container_add(G_Run->aux, G_Run->normal);
+      gtk_container_remove(GTK_CONTAINER(G_Run->aux), gtk_bin_get_child(GTK_BIN(G_Run->aux)));
+      gtk_container_add(GTK_CONTAINER(G_Run->aux), G_Run->normal);
       gtk_widget_show_all(G_Run->normal);
     }
   }
@@ -995,11 +990,11 @@ static gboolean _button_do_event_textentry(GtkWidget *widget, GdkEventButton *ev
 {
   //printf("_button_do_event_textentry\n");
   hide_textentries();
-  g_list_foreach(G_win_man->children, _fixup_menus, NULL);
+  g_list_foreach(G_win_man->children, (GFunc)_fixup_menus, NULL);
   gtk_widget_show(data->misc);
   g_object_ref(data->misc);
-  gtk_container_remove(widget, gtk_bin_get_child(widget));
-  gtk_container_add(widget, data->misc);
+  gtk_container_remove(GTK_CONTAINER(widget), gtk_bin_get_child(GTK_BIN(widget)));
+  gtk_container_add(GTK_CONTAINER(widget), data->misc);
   G_repression = TRUE;
   gtk_widget_show_all(widget);
 // printf("_button_do_event_textentry\n");
@@ -1022,8 +1017,8 @@ int activate_run(GtkWidget *w, Menu_list_item * menu_item)
   //printf("activate_run\n");
   GError *err = NULL;
   G_repression = FALSE;
-  g_spawn_command_line_async(gtk_entry_get_text(w), &err);
-  gtk_entry_set_text(w, "") ;
+  g_spawn_command_line_async(gtk_entry_get_text(GTK_ENTRY(w)), &err);
+  gtk_entry_set_text(GTK_ENTRY(w), "") ;
   hide_all_menus();
   return FALSE;
 }
@@ -1055,7 +1050,6 @@ static gboolean _button_do_volume_event(GtkWidget *widget, GdkEventButton *event
   }
   else if (event->button == 3)
   {
-    static gboolean done_once = FALSE;
     static GtkWidget * menu = NULL;
     static GtkWidget * item;
     G_repression = TRUE;
@@ -1071,17 +1065,17 @@ static gboolean _button_do_volume_event(GtkWidget *widget, GdkEventButton *event
     {
       item = gtk_menu_item_new_with_label("Unmount");
       gtk_widget_show(item);
-      gtk_menu_shell_append(menu, item);
+      gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
       g_signal_connect(G_OBJECT(item), "button-press-event", G_CALLBACK(_unmount), menu_item);
     }
 
     item = gtk_menu_item_new_with_label("Eject");
 
     gtk_widget_show(item);
-    gtk_menu_shell_append(menu, item);
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
     g_signal_connect(G_OBJECT(item), "button-press-event", G_CALLBACK(_eject), menu_item);
-    gtk_menu_set_screen(menu, NULL);
-    gtk_menu_popup(menu, NULL, NULL, NULL, NULL,
+    gtk_menu_set_screen(GTK_MENU(menu), NULL);
+    gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL,
                    event->button, event->time);
     return FALSE;
   }
@@ -1098,7 +1092,6 @@ static gboolean _scroll_event(GtkWidget *widget, GdkEventMotion *event, GtkWidge
 
   if (event->type == GDK_SCROLL)
   {
-    GList*  node;
     gint first = 1;
     gint last = g_list_length(GTK_BOX(box)->children) - 2;
 
@@ -1146,7 +1139,7 @@ static gboolean _scroll_event(GtkWidget *widget, GdkEventMotion *event, GtkWidge
 gboolean _hide_all_windows(gpointer null)
 {
   //printf("_hide_all_windows\n");
-  g_list_foreach(G_win_man->children, _fixup_menus, NULL);
+  g_list_foreach(G_win_man->children, (GFunc)_fixup_menus, NULL);
   return FALSE;
 }
 
@@ -1161,8 +1154,8 @@ static gboolean _focus_out_window(GtkWidget *widget, GdkEventButton *event, Mous
 void rerender(Menu_list_item ** menu_items, GtkWidget *box)
 {
   //printf("rerender\n");
-  gtk_container_foreach(box, gtk_widget_destroy, NULL);
-  g_slist_foreach(*menu_items, render_menu_widgets, box);
+  gtk_container_foreach(GTK_CONTAINER(box), (GtkCallback)gtk_widget_destroy, NULL);
+  g_slist_foreach((*menu_items)->sublist, (GFunc)render_menu_widgets, box);
   gtk_widget_show_all(box);
 
 }
@@ -1203,7 +1196,7 @@ void render_menu_widgets(Menu_list_item * menu_item, GtkWidget * box)
 {
   //printf("render_menu_widgets\n");
   static int max_width = -1;
-  static Xpos = 0;
+  static int Xpos = 0;
 
   if (max_width == -1)
   {
@@ -1219,7 +1212,7 @@ void render_menu_widgets(Menu_list_item * menu_item, GtkWidget * box)
       GtkWidget *newbox;
       render_directory(menu_item, max_width);
       max_width = -1;
-      g_slist_foreach(menu_item->sublist, measure_width, &max_width);
+      g_slist_foreach(menu_item->sublist, (GFunc)measure_width, &max_width);
 #if GTK_CHECK_VERSION(2,12,0)
 
       if (G_cairo_menu_conf.show_tooltips && menu_item->comment)
@@ -1234,7 +1227,7 @@ void render_menu_widgets(Menu_list_item * menu_item, GtkWidget * box)
 
       fixed_put(newbox, Xpos, 0);
 
-      g_slist_foreach(menu_item->sublist, render_menu_widgets, newbox);
+      g_slist_foreach(menu_item->sublist, (GFunc)render_menu_widgets, newbox);
 
       /*if monitor is set then we call it to initialize callbacks.
       whenever there is a change to the contents of this dir
@@ -1466,7 +1459,7 @@ void render_menu_widgets(Menu_list_item * menu_item, GtkWidget * box)
 
   if (menu_item->widget)
   {
-    gtk_box_pack_start(box, menu_item->widget, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(box), menu_item->widget, FALSE, FALSE, 0);
     gtk_widget_show_all(menu_item->widget);
   }
 }

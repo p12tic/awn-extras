@@ -19,6 +19,8 @@ config.status
 config.sub
 configure
 depcomp
+doltcompile
+doltlibtool
 install-sh
 intltool-*
 libtool
@@ -29,6 +31,8 @@ po/Makefile.in.in
 po/POTFILES
 po/stamp-it
 py-compile
+shave/shave
+shave/shave-libtool
 src/Taskmand-applet/client-bindings.h
 src/Taskmand-applet/server-bindings.h
 src/awn-notification-daemon/src/daemon/notificationdaemon-dbus-glue.h

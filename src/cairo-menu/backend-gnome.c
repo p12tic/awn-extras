@@ -59,14 +59,14 @@ Monitor_places  * Monitor_place = NULL;
 
 
 
-static void print_directory(GMenuTreeDirectory *directory);
-static void print_entry(GMenuTreeEntry *entry, const char *path);
+//static void print_entry(GMenuTreeEntry *entry, const char *path);
 static char *make_path(GMenuTreeDirectory *directory);
 static void append_directory_path(GMenuTreeDirectory *directory, GString *path);
 static void update_places(Menu_list_item **p, char* file_manager);
 static Menu_list_item *get_separator(void);
 static void _do_update_places(Monitor_places * user_data);
 static Menu_list_item *get_blank(void);
+gboolean display_message(gchar * summary, gchar * body, glong timeout);
 
 static void
 append_directory_path(GMenuTreeDirectory *directory,
@@ -104,6 +104,7 @@ make_path(GMenuTreeDirectory *directory)
   return g_string_free(path, FALSE);
 }
 
+#if 0
 static void
 print_entry(GMenuTreeEntry *entry,
             const char     *path)
@@ -126,72 +127,7 @@ print_entry(GMenuTreeEntry *entry,
   g_free(utf8_file_id);
   g_free(utf8_path);
 }
-
-static void
-print_directory(GMenuTreeDirectory *directory)
-{
-  GSList     *items;
-  GSList     *tmp;
-  const char *path;
-  char       *freeme;
-
-  freeme = make_path(directory);
-
-  if (!strcmp(freeme, "/"))
-    path = freeme;
-  else
-    path = freeme + 1;
-
-  items = gmenu_tree_directory_get_contents(directory);
-
-  tmp = items;
-
-  while (tmp != NULL)
-  {
-    GMenuTreeItem *item = tmp->data;
-
-    switch (gmenu_tree_item_get_type(item))
-    {
-
-      case GMENU_TREE_ITEM_ENTRY:
-        print_entry(GMENU_TREE_ENTRY(item), path);
-        break;
-
-      case GMENU_TREE_ITEM_DIRECTORY:
-        print_directory(GMENU_TREE_DIRECTORY(item));
-        break;
-
-      case GMENU_TREE_ITEM_HEADER:
-
-      case GMENU_TREE_ITEM_SEPARATOR:
-        break;
-
-      case GMENU_TREE_ITEM_ALIAS:
-      {
-        GMenuTreeItem *aliased_item;
-
-        aliased_item = gmenu_tree_alias_get_item(GMENU_TREE_ALIAS(item));
-
-        if (gmenu_tree_item_get_type(aliased_item) == GMENU_TREE_ITEM_ENTRY)
-          print_entry(GMENU_TREE_ENTRY(aliased_item), path);
-      }
-
-      break;
-
-      default:
-        g_assert_not_reached();
-        break;
-    }
-
-    gmenu_tree_item_unref(tmp->data);
-
-    tmp = tmp->next;
-  }
-
-  g_slist_free(items);
-
-  g_free(freeme);
-}
+#endif
 
 static void
 add_entry(GMenuTreeEntry *entry,
@@ -211,9 +147,9 @@ add_entry(GMenuTreeEntry *entry,
   file_name = utf8_path ? utf8_path : _("[Invalid Filename]");
   item = g_malloc(sizeof(Menu_list_item));
   item->item_type = MENU_ITEM_ENTRY;
-  item->name = gmenu_tree_entry_get_name(entry);
-  item->icon = gmenu_tree_entry_get_icon(entry);
-  item->exec = gmenu_tree_entry_get_exec(entry);
+  item->name = (gchar*)gmenu_tree_entry_get_name(entry);
+  item->icon = (gchar*)gmenu_tree_entry_get_icon(entry);
+  item->exec = (gchar*)gmenu_tree_entry_get_exec(entry);
   char *str = item->exec;
 
   while (*str)
@@ -232,7 +168,7 @@ add_entry(GMenuTreeEntry *entry,
     str++;
   }
 
-  item->comment = gmenu_tree_entry_get_comment(entry);
+  item->comment = (gchar*)gmenu_tree_entry_get_comment(entry);
 
   item->launch_in_terminal = gmenu_tree_entry_get_launch_in_terminal(entry);
   item->desktop = g_strdup(file_name);
@@ -281,12 +217,12 @@ fill_er_up(GMenuTreeDirectory *directory, GSList**p)
         Menu_list_item * dir_item;
         dir_item = g_malloc(sizeof(Menu_list_item));
         dir_item->item_type = MENU_ITEM_DIRECTORY;
-        dir_item->name = gmenu_tree_directory_get_name(item);
-        dir_item->desktop = gmenu_tree_directory_get_desktop_file_path(item);
+        dir_item->name = (gchar*)gmenu_tree_directory_get_name(GMENU_TREE_DIRECTORY(item));
+        dir_item->desktop = (gchar*)gmenu_tree_directory_get_desktop_file_path(GMENU_TREE_DIRECTORY(item));
         dir_item->comment = NULL;
         dir_item->null = NULL;
-        dir_item->comment = gmenu_tree_directory_get_comment(item);
-        dir_item->icon = gmenu_tree_directory_get_icon(item);
+        dir_item->comment = (gchar*)gmenu_tree_directory_get_comment(GMENU_TREE_DIRECTORY(item));
+        dir_item->icon = (gchar*)gmenu_tree_directory_get_icon(GMENU_TREE_DIRECTORY(item));
         dir_item->sublist = NULL;
         data = g_slist_append(data, dir_item);
         fill_er_up(GMENU_TREE_DIRECTORY(item), &dir_item->sublist);
@@ -365,8 +301,6 @@ void _mount_result(DesktopAgnosticVFSVolumeBackend *volume, char *comment)
 
 gboolean _mount_connected(Menu_list_item * p, char * filemanager)
 {
-
-  char * cmd;
   char * mess;
   _G_mount_result_filemanager = filemanager;
 
@@ -530,7 +464,7 @@ static Menu_list_item *get_blank(void)
 static void update_places(Menu_list_item **p, char* file_manager)
 {
   static DesktopAgnosticVFSVolumeMonitor* vfsvolumes = NULL;
-  Menu_list_item * sublist = *p;
+  GSList * sublist = (*p)->sublist;
   Menu_list_item * item;
 
 
@@ -599,7 +533,7 @@ static void update_places(Menu_list_item **p, char* file_manager)
   GList *connected = desktop_agnostic_vfs_volume_monitor_get_volumes(vfsvolumes);
 
   if (connected)
-    g_list_foreach(connected, _fillin_connected, &sublist);
+    g_list_foreach(connected, (GFunc)_fillin_connected, &sublist);
 
   g_list_free(connected);
 
@@ -672,7 +606,7 @@ static void update_places(Menu_list_item **p, char* file_manager)
   }
   sublist = g_slist_append(sublist, get_blank());
 
-  *p = sublist;
+  (*p)->sublist = sublist;
 }
 
 void free_menu_list_item(Menu_list_item * item, gpointer null)
@@ -723,8 +657,8 @@ void free_menu_list_item(Menu_list_item * item, gpointer null)
 
 static void _do_update_places(Monitor_places * user_data)
 {
-  g_slist_foreach(*(user_data->data), free_menu_list_item, NULL);
-  g_slist_free(*(user_data->data));
+  g_slist_foreach((*user_data->data)->sublist, (GFunc)free_menu_list_item, NULL);
+  g_slist_free((*user_data->data)->sublist);
   *(user_data->data) = NULL;
   update_places(user_data->data, G_file_manager); //FIXME
   user_data->callback(user_data->data, user_data->box);
@@ -795,9 +729,7 @@ GSList* get_menu_data(gboolean show_search, gboolean show_run, gboolean show_pla
   Menu_list_item * dir_item;
   GSList*  data = NULL;
   GMenuTree *  menu_tree;
-  const char * menu_file[] = {"gnomecc.menu", "preferences.menu", "settings.menu", NULL};//
   GMenuTreeDirectory *root;
-  int i;
 
   G_file_manager = file_manager;
 
@@ -880,7 +812,7 @@ GSList* get_menu_data(gboolean show_search, gboolean show_run, gboolean show_pla
     dir_item->sublist = NULL;
     dir_item->monitor = monitor_places;
     data = g_slist_append(data, dir_item);
-    update_places(&dir_item->sublist, file_manager);
+    update_places(&dir_item, file_manager);
   }
 
   if (show_search)

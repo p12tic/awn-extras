@@ -42,6 +42,9 @@ bug_report_link = "https://launchpad.net/awn-extras/+filebug"
 
 
 def create_frame(parent, label):
+    """Create a frame with a bold title. To be used in a preferences window.
+
+    """
     vbox = gtk.VBox(spacing=6)
     parent.add(vbox)
 
@@ -58,6 +61,16 @@ def create_frame(parent, label):
     alignment.add(frame_vbox)
 
     return frame_vbox
+
+
+def add_cell_renderer_text(combobox):
+    """Add a gtk.CellRendererText to the combobox. To be used if the combobox
+    has a gtk.ListStore model with a string as the first column.
+
+    """
+    text = gtk.CellRendererText()
+    combobox.pack_start(text, True)
+    combobox.add_attribute(text, "text", 0)
 
 
 def deprecated(old, new):

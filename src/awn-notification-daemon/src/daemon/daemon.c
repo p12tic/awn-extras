@@ -1247,7 +1247,6 @@ gboolean send_message(gchar *body)
   gchar *icon_str = NULL;
   glong expire_timeout = NOTIFY_EXPIRES_DEFAULT;
   NotifyUrgency urgency = NOTIFY_URGENCY_NORMAL;
-  GError *error = NULL;
 
   if (fork() == 0)
   {
@@ -1512,7 +1511,6 @@ static void
 config_changed(GConfClient *client, guint cnxn_id,
                GConfEntry *entry, gpointer user_data)
 {
-  static gboolean done_once = FALSE;
   GConfValue*  value;
   gchar * svalue;
 
@@ -1626,14 +1624,8 @@ static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, 
   {
     if (!menu)
     {
-      GtkWidget *item;
       menu = awn_applet_create_default_menu (G_daemon_config.awn_app);
       gtk_menu_set_screen (GTK_MENU (menu), NULL);
-      item = awn_applet_create_preferences(APPLET_NAME,NULL,APPLET_NAME);
-      if (item) //generic preferences is enabled
-      {
-        gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);          
-      }    
     }
     gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL,
                     event->button, event->time);    

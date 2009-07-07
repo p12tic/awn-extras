@@ -36,6 +36,7 @@ int gheight = -1;
 #include <libwnck/libwnck.h>
 #include <time.h>
 #include <X11/Xlib.h>
+#include <X11/extensions/Xcomposite.h>
 #include <X11/extensions/Xrender.h>
 #include <X11/extensions/Xfixes.h>
 
@@ -74,15 +75,11 @@ int gheight = -1;
 /*
  * STATIC FUNCTION DEFINITIONS
  */
-static void shiny_switcher_render(cairo_t *cr, int width, int height);
-static gboolean time_handler(Shiny_switcher *shinyswitcher);
 static void queue_all_render(Shiny_switcher *shinyswitcher);
 
 /* Events */
 static gboolean _expose_event_window(GtkWidget *widget, GdkEventExpose *expose, gpointer data);
 static gboolean _expose_event_outer(GtkWidget *widget, GdkEventExpose *expose, Shiny_switcher *shinyswitcher);
-static gboolean _expose_event_border(GtkWidget *widget, GdkEventExpose *expose, Shiny_switcher *shinyswitcher);
-static gboolean _button_release_event(GtkWidget *widget, GdkEventButton *event, gpointer *data);
 static void _offset_changed(AwnApplet *app, guint offset, Shiny_switcher * shinyswitcher);
 static void _height_changed(AwnApplet *app, guint height, Shiny_switcher * shinyswitcher);
 static void _orient_changed(AwnApplet *app, guint orient, Shiny_switcher * shinyswitcher);
@@ -91,18 +88,6 @@ static void _workspaces_changed(WnckScreen    *screen, WnckWorkspace *space, Shi
 static gboolean _changed_waited(Shiny_switcher *shinyswitcher);
 static void _viewports_changed(WnckScreen    *screen, Shiny_switcher * shinyswitcher);
 void init_config(Shiny_switcher *shinyswitcher);
-
-static void config_get_string(AwnConfigClient *client, const gchar *key, gchar **str)
-{
-  GError *error = NULL;
-  *str = awn_config_client_get_string(client, AWN_CONFIG_CLIENT_DEFAULT_GROUP, key, &error);
-
-  if (error)
-  {
-    g_warning("shinyswitcher: error reading config string (%s):", key, error->message);
-    g_error_free(error);
-  }
-}
 
 static void config_get_color(AwnConfigClient *client, const gchar *key, DesktopAgnosticColor **color)
 {
@@ -147,15 +132,17 @@ static void config_get_color(AwnConfigClient *client, const gchar *key, DesktopA
     }                       \
   }while(0)
 
-void _change_config_cb(AwnConfigClientNotifyEntry *entry, Shiny_switcher *shinyswitcher)
+void _change_config_cb(AwnConfigClientNotifyEntry *entry, gpointer user_data)
 {
+  Shiny_switcher *shinyswitcher = (Shiny_switcher *)user_data;
   init_config(shinyswitcher);
   _changed(shinyswitcher->applet,  shinyswitcher);
   _changed_waited(shinyswitcher);
 }
 
-void _change_config_ws_cb(AwnConfigClientNotifyEntry *entry, Shiny_switcher *shinyswitcher)
+void _change_config_ws_cb(AwnConfigClientNotifyEntry *entry, gpointer user_data)
 {
+  Shiny_switcher *shinyswitcher = (Shiny_switcher *)user_data;
   init_config(shinyswitcher);
   _changed(shinyswitcher->applet,  shinyswitcher);
 
@@ -326,12 +313,6 @@ void init_config(Shiny_switcher *shinyswitcher)
   shinyswitcher->override_composite_check = FALSE;
   shinyswitcher->show_tooltips = FALSE;    /* buggy at the moment will be a config option eventually */
 
-}
-
-static void save_config(Shiny_switcher *shinyswitcher)
-{
-  awn_config_client_set_int(shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, CONFIG_ROWS, shinyswitcher->rows, NULL);
-  awn_config_client_set_int(shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, CONFIG_COLUMNS, shinyswitcher->cols, NULL);
 }
 
 double vp_vscale(Shiny_switcher *shinyswitcher)
@@ -767,11 +748,9 @@ static gboolean _scroll_event(GtkWidget *widget, GdkEventMotion *event, Shiny_sw
 void create_containers(Shiny_switcher *shinyswitcher)
 {
   int  num_workspaces = shinyswitcher->rows * shinyswitcher->cols;
-  int  x, y;
   GList*  wnck_spaces;
   GList * iter;
   int  win_num;
-  GtkFixed *new_mini;
   cairo_t  *cr;
   int   y_offset, x_offset;
 
@@ -798,7 +777,7 @@ void create_containers(Shiny_switcher *shinyswitcher)
 
   y_offset = (shinyswitcher->height - (shinyswitcher->mini_work_height * shinyswitcher->rows)) / 2;
 
-  gtk_fixed_put(GTK_CONTAINER(shinyswitcher->container), border_widget, 0, y_offset);
+  gtk_fixed_put(GTK_FIXED(shinyswitcher->container), border_widget, 0, y_offset);
   gtk_widget_show(border_widget);
   y_offset = y_offset + shinyswitcher->applet_border_width;
   x_offset = shinyswitcher->applet_border_width;
@@ -806,7 +785,6 @@ void create_containers(Shiny_switcher *shinyswitcher)
 
   for (iter = g_list_first(wnck_spaces);iter;iter = g_list_next(iter))
   {
-    GtkWidget * background;
     GtkWidget * ev;
     Workplace_info * ws;
     win_num = wnck_workspace_get_number(iter->data);
@@ -818,9 +796,6 @@ void create_containers(Shiny_switcher *shinyswitcher)
     {
       int viewports_cols;
       int viewports_rows;
-      int x, y;
-      int i, j;
-      GtkWidget  *vp_bg;
       viewports_cols = wnck_workspace_get_width(wnck_screen_get_active_workspace(shinyswitcher->wnck_screen)) /
                        wnck_screen_get_width(shinyswitcher->wnck_screen) ;
       viewports_rows = wnck_workspace_get_height(wnck_screen_get_active_workspace(shinyswitcher->wnck_screen)) /
@@ -840,7 +815,7 @@ void create_containers(Shiny_switcher *shinyswitcher)
       copy = copy_pixmap(shinyswitcher, copy);
       if (copy)
       {
-        gtk_container_add(ev, gtk_image_new_from_pixmap(copy, NULL));
+        gtk_container_add(GTK_CONTAINER(ev), gtk_image_new_from_pixmap(copy, NULL));
         g_object_unref(copy);
       }
     }
@@ -861,12 +836,12 @@ void create_containers(Shiny_switcher *shinyswitcher)
       copy = copy_pixmap(shinyswitcher, copy);
       if (copy)
       {
-        gtk_container_add(ev, gtk_image_new_from_pixmap(copy, NULL));
+        gtk_container_add(GTK_CONTAINER(ev), gtk_image_new_from_pixmap(copy, NULL));
         g_object_unref(copy);
       }
     }
 
-    gtk_fixed_put(GTK_CONTAINER(shinyswitcher->mini_wins[win_num]), ev, 0, 0);
+    gtk_fixed_put(GTK_FIXED(shinyswitcher->mini_wins[win_num]), ev, 0, 0);
 
     gtk_fixed_put(GTK_FIXED(shinyswitcher->container), shinyswitcher->mini_wins[win_num],
                   shinyswitcher->mini_work_width*wnck_workspace_get_layout_column(iter->data) + x_offset,
@@ -908,9 +883,7 @@ void prepare_to_render_workspace(Shiny_switcher *shinyswitcher, WnckWorkspace * 
   {
     int viewports_cols;
     int viewports_rows;
-    int x, y;
     int i, j;
-    GtkWidget  *vp_bg;
     viewports_cols = wnck_workspace_get_width(wnck_screen_get_active_workspace(shinyswitcher->wnck_screen)) /
                      wnck_screen_get_width(shinyswitcher->wnck_screen) ;
     viewports_rows = wnck_workspace_get_height(wnck_screen_get_active_workspace(shinyswitcher->wnck_screen)) /
@@ -954,10 +927,10 @@ void prepare_to_render_workspace(Shiny_switcher *shinyswitcher, WnckWorkspace * 
   if (copy)
   {
     GtkWidget *new_pixmap;
-    gtk_widget_destroy(gtk_bin_get_child(ws2->wallpaper_ev));
+    gtk_widget_destroy(gtk_bin_get_child(GTK_BIN(ws2->wallpaper_ev)));
     new_pixmap = gtk_image_new_from_pixmap(copy, NULL);
     gtk_widget_set_app_paintable(new_pixmap, TRUE);
-    gtk_container_add(ws2->wallpaper_ev, new_pixmap);
+    gtk_container_add(GTK_CONTAINER(ws2->wallpaper_ev), new_pixmap);
     g_object_unref(copy);
     gtk_widget_show_all(ws2->wallpaper_ev);
   }
@@ -1115,11 +1088,8 @@ void grab_window_xrender_meth(Shiny_switcher *shinyswitcher, cairo_t *destcr, Wn
   {
 
     XRenderPictFormat *format = XRenderFindVisualFormat(dpy, attr.visual);
-    gboolean hasAlpha          = (format->type == PictTypeDirect && format->direct.alphaMask);
     int x                     = attr.x;
     int y                     = attr.y;
-    int width                 = attr.width;
-    int height                = attr.height;
 
     /* Create a Render picture so we can reference the window contents. */
     /* We need to set the subwindow mode to IncludeInferiors, otherwise child widgets */
@@ -1453,9 +1423,9 @@ void do_event_boxes(Shiny_switcher *shinyswitcher, WnckWindow *win, Workplace_in
   {
     GtkWidget *ev = gtk_event_box_new();
     gtk_widget_set_app_paintable(ev, TRUE);
-    gtk_event_box_set_visible_window(ev, FALSE);
+    gtk_event_box_set_visible_window(GTK_EVENT_BOX(ev), FALSE);
     gtk_widget_set_size_request(ev, scaled_width, scaled_height);
-    gtk_fixed_put(ws->wallpaper_ev->parent, ev, scaled_x, scaled_y);
+    gtk_fixed_put(GTK_FIXED(ws->wallpaper_ev->parent), ev, scaled_x, scaled_y);
 
     ws->event_boxes = g_list_append(ws->event_boxes, ev);
     gtk_widget_show(ev);
@@ -1541,7 +1511,7 @@ void render_windows_to_wallpaper(Shiny_switcher *shinyswitcher,  WnckWorkspace *
                        ;
             ws = g_tree_lookup(shinyswitcher->ws_lookup_ev, iter->data);
             GdkPixmap *pixmap;
-            gtk_image_get_pixmap(gtk_bin_get_child(ws->wallpaper_ev), &pixmap, NULL);
+            gtk_image_get_pixmap(GTK_IMAGE(gtk_bin_get_child(GTK_BIN(ws->wallpaper_ev))), &pixmap, NULL);
             cairo_t * destcr = gdk_cairo_create(pixmap);
             if (!destcr)
             {
@@ -1585,7 +1555,7 @@ void render_windows_to_wallpaper(Shiny_switcher *shinyswitcher,  WnckWorkspace *
     {
       if (ws)
       {
-        GtkFixed * container = ws->wallpaper_ev->parent;
+        GtkWidget * container = ws->wallpaper_ev->parent;
         gtk_widget_hide(container);
         gtk_widget_show(container);
       }
@@ -1596,8 +1566,7 @@ void render_windows_to_wallpaper(Shiny_switcher *shinyswitcher,  WnckWorkspace *
   {
     if (top_win)
     {
-      GtkFixed * container = ws->wallpaper_ev->parent;
-      GtkFixedChild * child = container->children->data;
+      GtkWidget * container = ws->wallpaper_ev->parent;
       gtk_widget_hide(container);
       gtk_widget_show(container);
     }
@@ -1800,7 +1769,6 @@ gboolean create_windows(Shiny_switcher *shinyswitcher)
 
   for (iter = g_list_first(wnck_spaces);iter;iter = g_list_next(iter))
   {
-    int workspace_num = wnck_workspace_get_number(iter->data);
     GList*  wnck_windows = wnck_screen_get_windows_stacked(shinyswitcher->wnck_screen);
     GList* win_iter;
 
@@ -2042,8 +2010,8 @@ applet_new(AwnApplet *applet, gint panel_id)
   Shiny_switcher *shinyswitcher = g_malloc(sizeof(Shiny_switcher)) ;
   shinyswitcher->padding = awn_applet_get_offset(applet);;
   shinyswitcher->orient = awn_applet_get_orientation(applet);
-  shinyswitcher->align  = awn_alignment_new_for_applet(applet);
-  gtk_container_add(GTK_CONTAINER(applet), shinyswitcher->align);  
+  shinyswitcher->align  = AWN_ALIGNMENT(awn_alignment_new_for_applet(applet));
+  gtk_container_add(GTK_CONTAINER(applet), GTK_WIDGET(shinyswitcher->align));
   shinyswitcher->config = NULL;
   shinyswitcher->applet = applet;
   shinyswitcher->wallpaper_active = NULL;
@@ -2096,23 +2064,11 @@ static gboolean _expose_event_window(GtkWidget *widget, GdkEventExpose *expose, 
 }
 
 
-static gboolean _expose_event_border(GtkWidget *widget, GdkEventExpose *expose, Shiny_switcher *shinyswitcher)
-{
-  return FALSE;
-
-}
-
 static gboolean _expose_event_outer(GtkWidget *widget, GdkEventExpose *expose, Shiny_switcher *shinyswitcher)
 {
 
   return FALSE;
 
-}
-
-static gboolean
-_button_release_event(GtkWidget *widget, GdkEventButton *event, gpointer *data)
-{
-  return TRUE;
 }
 
 
@@ -2154,7 +2110,7 @@ _changed_waited(Shiny_switcher *shinyswitcher)
   create_windows(shinyswitcher);
 
   /*  g_debug("Done... \n"); */
-  gtk_widget_show_all(shinyswitcher->applet);
+  gtk_widget_show_all(GTK_WIDGET(shinyswitcher->applet));
 
   return FALSE;
 }

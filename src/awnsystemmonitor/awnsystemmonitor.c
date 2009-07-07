@@ -53,14 +53,13 @@
  * FUNCTION DEFINITIONS
  */
 gboolean cpu_meter_render(gpointer cpumeter);
-static gboolean time_handler(gpointer cpumeter);
+//static gboolean time_handler(gpointer cpumeter);
 static void get_load(LoadGraph *g);
 static void init_load_graph(LoadGraph *g);
-static void emit_data(LoadGraph *g);
 
 
 // Events
-static gboolean _expose_event(GtkWidget *widget, GdkEventExpose *expose, gpointer data);
+//static gboolean _expose_event(GtkWidget *widget, GdkEventExpose *expose, gpointer data);
 static gboolean _button_release_event(GtkWidget *widget, GdkEventButton *event, gpointer *data);
 static void _height_changed(AwnApplet *app, guint height, gpointer *data);
 static void _orient_changed(AwnApplet *appt, guint orient, gpointer *data);
@@ -120,7 +119,7 @@ cpumeter_applet_new(AwnApplet *applet)
   register_Dashboard(&cpumeter->dashboard, cpumeter->applet);
 
 
-  pScreen = gtk_widget_get_screen(cpumeter->applet);
+  pScreen = gtk_widget_get_screen(GTK_WIDGET(cpumeter->applet));
   height = gdk_screen_get_height(pScreen) / 2;        /*FIXME*/
   width = height * 5 / 3;
 
@@ -169,7 +168,7 @@ cpumeter_applet_new(AwnApplet *applet)
                                            AWN_APPLET_LICENSE_GPLV2,
                                            NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(cpumeter->right_click_menu), item);    
-  cpumeter->timer_id = g_timeout_add(cpumeter->update_freq, (GSourceFunc*)cpu_meter_render, cpumeter);
+  cpumeter->timer_id = g_timeout_add(cpumeter->update_freq, (GSourceFunc)cpu_meter_render, cpumeter);
   return cpumeter;
 }
 
@@ -224,17 +223,16 @@ gboolean cpu_meter_render(gpointer data)
   char text[20];
 
   static cairo_surface_t *surface;
-  static GdkPixbuf * apixbuf;
   CpuMeter* cpumeter = (CpuMeter *)data;
   static cairo_t *cr = NULL;
 
+#if 0
   GtkWidget* widget = GTK_WIDGET(cpumeter->applet);
 
 
   AwnApplet* applet = cpumeter->applet;
 
 
-#if 0
   /*me trying to trigger something in awn  Please ignore :-) */
   static GdkPixbuf * icon;
   gtk_widget_get_size_request(widget, &width, &height);
@@ -391,7 +389,7 @@ void render_graph(cairo_t * cr, LoadGraph * g, char* text, int width, int height
     cairo_fill(cr);
   }
 
-  bzero(text, sizeof(text));
+  memset(text, '\0', sizeof(text));
 
   snprintf(text, 20, "CPU %d%%", percent_now);
 
@@ -551,7 +549,7 @@ _height_changed(AwnApplet *app, guint height, gpointer *data)
   /*applet->height = height;
     gtk_widget_queue_draw (GTK_WIDGET (applet));
     update_icons (applet);*/
-  CpuMeter* cpumeter = data;
+  CpuMeter* cpumeter = (CpuMeter*)data;
 //  gtk_widget_set_size_request(GTK_WIDGET(cpumeter->applet), height*1.25, height*2);
   cpumeter->doneonce = FALSE;
   cpumeter->height = height;
@@ -573,6 +571,7 @@ _enter_notify_event(GtkWidget *window, GdkEventButton *event, gpointer *data)
 {
   CpuMeter *cpumeter = (CpuMeter *)data;
   cpumeter->show_title = TRUE;
+  return FALSE;
 }
 
 static gboolean
@@ -581,6 +580,7 @@ _leave_notify_event(GtkWidget *window, GdkEvent *event, gpointer *data)
   CpuMeter *cpumeter = (CpuMeter *)data;
   cpumeter->show_title = FALSE;
   //awn_title_hide (clock->title, GTK_WIDGET(clock->applet));
+  return FALSE;
 }
 
 static gboolean
@@ -596,7 +596,7 @@ _button_clicked_event(GtkWidget *widget, GdkEventButton *event, CpuMeter * cpume
   else if (event->button == 3)
   {
     enable_suppress_hide_main();
-    gtk_menu_popup(cpumeter->right_click_menu, NULL, NULL, NULL, NULL,
+    gtk_menu_popup(GTK_MENU(cpumeter->right_click_menu), NULL, NULL, NULL, NULL,
                    event_button->button, event_button->time);
   }
 

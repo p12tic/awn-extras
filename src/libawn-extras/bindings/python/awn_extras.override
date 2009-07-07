@@ -23,8 +23,6 @@ headers
 #include <libawn/awn-cairo-utils.h>
 #include <gtk/gtk.h>
 #include <libawn-extras/awn-extras.h>
-
-static Pycairo_CAPI_t *Pycairo_CAPI;
 %%
 modulename _extras
 %%

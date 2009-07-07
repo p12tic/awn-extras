@@ -88,7 +88,7 @@ static void
 awn_html_dialog_new (WebApplet *webapplet)
 {
   /* create viewer */
-  webapplet->mainwindow = awn_dialog_new_for_widget (webapplet->applet);
+  webapplet->mainwindow = awn_dialog_new_for_widget (GTK_WIDGET(webapplet->applet));
   webapplet->box = gtk_vbox_new (FALSE, 1);
   gtk_widget_set_size_request (GTK_WIDGET (webapplet->box), config_get_width(webapplet),
                                config_get_height(webapplet) );
@@ -136,11 +136,6 @@ _button_clicked_event (GtkWidget      *widget,
         g_signal_connect (G_OBJECT (item), "activate",
                           G_CALLBACK (_show_location_dialog), webapplet);                  
       }           
-      item = awn_applet_create_preferences(webapplet->uid,APPLET_NAME,APPLET_NAME);
-      if (item) //generic preferences is enabled
-      {
-        gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);          
-      }        
       item = awn_applet_create_about_item_simple(webapplet->applet,
                                                  "2008 Rodney Cryderman <rcryderman@gmail.com>\n"
                                                  "2008 Mark Lee <avant-wn@lazymalevolence.com>\n",

@@ -149,7 +149,6 @@ static GtkWidget* attach_right_click_menu(Sysmem_plug_data **p)
 {
   assert(check_ptr == *p);
   Sysmem_plug_data * plug_data = *p;
-  GtkWidget * menu_items;
   GtkWidget *menu = gtk_menu_new();
 
   dashboard_build_clickable_menu_item(menu, G_CALLBACK(_set_fg), "Foreground",
@@ -306,6 +305,7 @@ static gboolean decrease_step(Sysmem_plug_data **p)
   data->size_mult = data->size_mult * 5.0 / 6.0;
 
   gconf_client_set_float(get_dashboard_gconf(), GCONF_SYSMEM_SIZE_MULT, data->size_mult, NULL);
+  return TRUE;
 }
 
 static gboolean increase_step(Sysmem_plug_data **p)
@@ -314,6 +314,7 @@ static gboolean increase_step(Sysmem_plug_data **p)
   Sysmem_plug_data *data = *p;
   data->size_mult = data->size_mult * 1.2;
   gconf_client_set_float(get_dashboard_gconf(), GCONF_SYSMEM_SIZE_MULT, data->size_mult, NULL);
+  return TRUE;
 }
 
 static const char* get_component_name(Sysmem_plug_data **p)
@@ -333,9 +334,6 @@ static const char* get_component_friendly_name(Sysmem_plug_data **p)
 static gboolean render(GtkWidget ** pwidget, gint interval, Sysmem_plug_data **p)
 {
   char buf[200];
-  time_t t;
-
-  struct tm *tmp;
   static int width = -1;
   static int col_width = -1;
   static int height = -1;
@@ -345,7 +343,6 @@ static gboolean render(GtkWidget ** pwidget, gint interval, Sysmem_plug_data **p
   float mult;
   cairo_text_extents_t    extents;
   glibtop_mem  mem;
-  int i;
   double values[5];
 
   assert(check_ptr == *p);

@@ -47,7 +47,6 @@ static GQuark new_quark = 0;
 static GQuark del_quark = 0;
 static gint   n_rows    = 2;
 static gint   n_cols    = 2;
-static int    size      = 0;
 static int    icon_size;
 static AwnOrientation orientation;
 static int    use_alpha = FALSE;
@@ -285,8 +284,6 @@ on_eb_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
 static gboolean
 applet_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
-  TrayApplet *app = data;
-
   cairo_t *cr = gdk_cairo_create(widget->window);
   if (!cr) return FALSE;
 

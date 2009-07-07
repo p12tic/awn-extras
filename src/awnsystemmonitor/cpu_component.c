@@ -198,7 +198,7 @@ static GtkWidget* attach_right_click_menu(CPU_plug_data **p)
   dashboard_build_clickable_menu_item(graphs_refresh_menu, G_CALLBACK(_set_5000), "5000ms", plug_data);
   menu_items = gtk_menu_item_new_with_label("Refresh");
   gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_items);
-  gtk_menu_item_set_submenu(menu_items, graphs_refresh_menu);
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(menu_items), graphs_refresh_menu);
   gtk_widget_show(menu_items);
   dashboard_build_clickable_menu_item(graphs_colour_menu, G_CALLBACK(_set_good), "Good", plug_data);
   dashboard_build_clickable_menu_item(graphs_colour_menu, G_CALLBACK(_set_middling), "Middling", plug_data);
@@ -206,7 +206,7 @@ static GtkWidget* attach_right_click_menu(CPU_plug_data **p)
   gtk_widget_show(menu_items);
   menu_items = gtk_menu_item_new_with_label("Meter Colours");
   gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_items);
-  gtk_menu_item_set_submenu(menu_items, graphs_colour_menu);
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(menu_items), graphs_colour_menu);
   gtk_widget_show(menu_items);
   return menu;
 
@@ -396,7 +396,7 @@ static void construct(CPU_plug_data **p)
   else
   {
     data->refresh = 500;
-    set_refresh(p, data->refresh);
+    set_refresh(*p, data->refresh);
   }
 
   value = gconf_client_get(get_dashboard_gconf(), GCONF_CPU_METER, NULL);
@@ -496,7 +496,6 @@ static gboolean render(GtkWidget ** pwidget, gint interval, CPU_plug_data **p)
   data->timer = data->timer - interval;
   if (data->timer <= 0)
   {
-    gdouble elapsed;
     gdouble newtime;
     g_get_current_time (&timeval);
     newtime = timeval.tv_sec + timeval.tv_usec / 1000000.0;

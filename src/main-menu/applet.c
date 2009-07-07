@@ -51,7 +51,6 @@ typedef struct {
 } Menu;
 
 static Menu *menu;
-static GQuark item_quark = 0;
 
 static void populate (Menu *app);
 
@@ -144,7 +143,7 @@ static void
 launch (GMenuTreeEntry *entry)
 {
   AwnDesktopItem *item;
-  gchar *path = gmenu_tree_entry_get_desktop_file_path (entry);
+  const gchar *path = gmenu_tree_entry_get_desktop_file_path (entry);
   if (!g_file_test (path, G_FILE_TEST_IS_REGULAR))
   {
     return;
@@ -184,7 +183,6 @@ make_item (GMenuTreeItem *item)
   GtkWidget *button;
   GtkWidget *vbox;
   GtkWidget *image;
-  GdkPixbuf *pixbuf;
   GtkWidget *label;
   const gchar *name;
   const gchar *icon;
@@ -266,7 +264,6 @@ _compare (GMenuTreeItem *item1, GMenuTreeItem *item2)
 static void
 populate (Menu *app)
 {
-  GtkSizeGroup *group;
   GtkWidget *vbox, *hbox, *label, *table;
   const gchar *name;
   GSList *list, *apps, *sets, *l;
@@ -279,7 +276,7 @@ populate (Menu *app)
   gtk_box_pack_start (GTK_BOX (vbox), table, TRUE, TRUE, 0);
 
   apps = gmenu_tree_directory_get_contents (app->root);
-  if (app->root == gmenu_tree_get_root_directory (app->apps))
+  if (app->root == GMENU_TREE_DIRECTORY(gmenu_tree_get_root_directory ((GMenuTree*)app->apps)))
   {
     list = g_slist_copy (apps);
     sets = g_slist_copy (gmenu_tree_directory_get_contents (app->settings));
@@ -357,6 +354,7 @@ on_icon_clicked (GtkWidget *eb,
     gtk_menu_popup(GTK_MENU(app->menu), NULL, NULL, NULL, NULL,event->button, 
                    event->time);
   }
+  return TRUE;
 }
 
 static void open_url(GtkAboutDialog *about, const gchar *url, gpointer data)
@@ -395,7 +393,8 @@ on_focus_out (GtkWidget *window, GdkEventFocus *event, gpointer null)
     if (awn_config_client_get_bool (client, "shared", "dialog_focus_loss_behavior", NULL))
     {    
         gtk_widget_hide (window);
-    }        
+    }
+    return FALSE;
 }
 
 AwnApplet *
@@ -405,7 +404,7 @@ awn_applet_factory_initp (const gchar *name, const gchar *uid, gint panel_id)
   Menu      *app = menu =  g_new0 (Menu, 1);
   app->applet = applet;
     
-  app->apps = gmenu_tree_lookup ("applications.menu", GMENU_TREE_FLAGS_NONE);
+  app->apps = GMENU_TREE_DIRECTORY(gmenu_tree_lookup ("applications.menu", GMENU_TREE_FLAGS_NONE));
   if (!app->apps)
   {
     g_warning ("Unable to find applications.menu");
@@ -418,7 +417,7 @@ awn_applet_factory_initp (const gchar *name, const gchar *uid, gint panel_id)
     g_warning ("Unable to find settings.menu");
     return FALSE;
   }
-  app->tree = app->apps;
+  app->tree =  (GMenuTree*)app->apps;
 
   app->menu = awn_applet_create_default_menu (app->applet);
   GtkWidget *about = gtk_image_menu_item_new_from_stock(GTK_STOCK_ABOUT, NULL);
@@ -427,7 +426,7 @@ awn_applet_factory_initp (const gchar *name, const gchar *uid, gint panel_id)
                    G_CALLBACK(on_about_activated), (gpointer)app);
   gtk_widget_show_all(app->menu);
 
-  app->window = awn_dialog_new_for_widget (applet);
+  app->window = awn_dialog_new_for_widget (GTK_WIDGET (applet));
   gtk_window_set_focus_on_map (GTK_WINDOW (app->window), TRUE);
 
   app->box = gtk_alignment_new (0.5, 0.5, 1, 1);                               

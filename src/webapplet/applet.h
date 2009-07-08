@@ -20,8 +20,7 @@
 #ifndef __WEBAPPLET_APPLET
 #define __WEBAPPLET_APPLET
 
-#include <libawn/awn-applet.h>
-#include <libawn/awn-config-client.h>
+#include <libawn/libawn.h>
 
 typedef struct
 {
@@ -31,8 +30,7 @@ typedef struct
   GtkWidget       *box;
   GtkWidget       *viewer;
 
-  AwnConfigClient *instance_config;
-  AwnConfigClient *default_config;
+  DesktopAgnosticConfigClient *config;
 
   gint             applet_icon_height;
   gchar           *applet_icon_name;

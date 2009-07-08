@@ -29,7 +29,7 @@
 #define CONFIG_WIDTH                  "width"
 #define CONFIG_ENABLE_LOCATION_CONFIG "enable_location_dialog"
 
-void init_config (WebApplet *webapplet, gchar *uid);
+void init_config (WebApplet *webapplet);
 
 const gchar * config_get_uri(WebApplet *webapplet);
 gint  config_get_width(WebApplet *webapplet);

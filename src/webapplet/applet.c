@@ -21,14 +21,11 @@
 #include <config.h>
 #endif
 
-#include <libawn/awn-cairo-utils.h>
-#include <libawn/awn-applet-simple.h>
-#include <libawn/awn-dialog.h>
-#include <gtk/gtk.h>
 #include <glib.h>
 #include <glib/gi18n.h>
+#include <gtk/gtk.h>
 
-#include <libawn-extras/awn-extras.h>
+#include <libawn/libawn.h>
 
 #include "engine_html.h"
 #include "applet.h"
@@ -177,7 +174,7 @@ awn_applet_factory_initp (const gchar *name, gchar* uid, gint panel_id)
   html_init ();
   WebApplet *webapplet = g_malloc (sizeof (WebApplet));
   webapplet->uid=g_strdup(uid);
-  init_config (webapplet, uid);
+  init_config (webapplet);
   webapplet->applet = AWN_APPLET (awn_applet_simple_new (name, uid, panel_id));
   gint height = awn_applet_get_size(webapplet->applet);
   gtk_widget_set_size_request (GTK_WIDGET (webapplet->applet), height, -1);

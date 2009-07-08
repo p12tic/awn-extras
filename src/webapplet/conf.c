@@ -20,5 +20,4 @@
 
 #include "conf.h"
 #include "applet.h"
-#include <libawn/awn-config-client.h>
 

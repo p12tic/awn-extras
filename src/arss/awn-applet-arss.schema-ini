@@ -4,6 +4,6 @@ default = http://planet.gnome.org/rss20.xml,http://planet.ubuntu.com/rss20.xml
 description = The list of rss feeds to parse
 
 [DEFAULT/text_size]
-type = int
+type = integer
 default = 14
 description = The size of the text in the menu, in pixels.

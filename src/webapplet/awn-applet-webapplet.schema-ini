@@ -19,7 +19,7 @@ default = 33%%
 description = height in %% or px.
 
 [DEFAULT/enable_location_dialog]
-type = bool
+type = boolean
 default = false
 description = Flag that enables usage of the "Open Location" dialog in the applet.
 

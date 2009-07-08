@@ -1,20 +1,20 @@
 [DEFAULT/time-24-format]
-type = bool
+type = boolean
 default = True
 description = Show time in 24 hour format if enabled, or 12 hour format when disabled.
 
 [DEFAULT/time-date]
-type = bool
+type = boolean
 default = True
 description = If enabled, the date will be shown in the title.
 
 [DEFAULT/time-seconds]
-type = bool
+type = boolean
 default = True
 description = If enabled, besides hours and minutes, the seconds will be visible too.
 
 [DEFAULT/show-seconds-hand]
-type = bool
+type = boolean
 default = True
 description = If enabled, the seconds hand will be visible in the clock.
 

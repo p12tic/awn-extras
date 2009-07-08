@@ -61,13 +61,11 @@ dnl
 AC_CHECK_LIB(m, round)
 
 dnl
-dnl Check if desktop-agnostic is installed.
+dnl Determine the location of awn-schema-to-gconf
 dnl
 
 AWN_BINDIR=`$PKG_CONFIG --variable=exec_prefix awn`/bin
 AC_SUBST(AWN_BINDIR)
-
-config_backend=`$PKG_CONFIG --variable=config_backend awn`
 
 dnl
 dnl package support
@@ -112,7 +110,7 @@ fi
 PKG_CHECK_MODULES(VTE, [vte])
 
 # awn-system-monitor, awn-notification-daemon, cairo-menu, filebrowser, plugger, trasher
-if test "$with_gconf" != "no" -a "$config_backend" != "GConf"; then
+if test "$with_gconf" != "no"; then
   PKG_CHECK_MODULES(GCONF, [gconf-2.0])
   gconf=gconf-2.0
 fi
@@ -242,7 +240,6 @@ if test -n "$AWN_VAPIDIR" -a -f "$AWN_VAPIDIR/awn.vapi"; then
         has_vala=yes
     fi
 fi
-AM_CONDITIONAL(GCONF_SCHEMAS, test "$config_backend" = "GConf")
 AM_CONDITIONAL(HAVE_VALA, test "$has_vala" = "yes")
 
 dnl
@@ -286,14 +283,15 @@ AC_SUBST(GCC_FLAGS)
 dnl ==============================================
 dnl GConf
 dnl ==============================================
-if test "$config_backend" = "GConf" -o "$with_gconf" != "no"; then
-AC_PATH_PROG(GCONFTOOL, gconftool-2, no)
+
+AM_GCONF_SOURCE_2
+if test "$enable_schemas_install" != "no"; then
+  AC_PATH_PROG(GCONFTOOL, gconftool-2, no)
   if test x"$GCONFTOOL" = xno; then
     AC_MSG_ERROR([gconftool-2 executable not found in your path - should be installed with GConf])
   fi
 fi
 
-AM_GCONF_SOURCE_2
 
 dnl ==========================
 dnl Shave (quiet build output)
@@ -414,8 +412,6 @@ echo "         Avant Window Navigator Extras $VERSION"
 echo "         ==================================="
 echo ""
 echo "                   prefix:   ${prefix}"
-echo ""
-echo "    Configuration Backend:   $config_backend"
 echo ""
 echo "             Vala Support:   $has_vala"
 echo ""

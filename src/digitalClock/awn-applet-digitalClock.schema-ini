@@ -11,11 +11,11 @@ type = string
 default = 0,0,0
 description = The shadow color of the clock text, as a three-part tuple of integers between 0 and 255 inclusive.
 [DEFAULT/hour12]
-type = bool
+type = boolean
 default = TRUE
 description = Toggle 12-hour mode.
 [DEFAULT/dbt]
-type = bool
+type = boolean
 default = TRUE
 description = Show the date before the time.
 

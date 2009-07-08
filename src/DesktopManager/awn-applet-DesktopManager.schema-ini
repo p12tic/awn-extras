@@ -1,5 +1,5 @@
 [DEFAULT/attention]
-type = bool
+type = boolean
 default = False
 description = Play attention effect on change
 [DEFAULT/button1_action]
@@ -23,11 +23,11 @@ type = string
 default = Random
 description = Method of choosing the wallpaper
 [DEFAULT/play]
-type = bool
+type = boolean
 default = False
 description = Change the wallpaper on a regular basis
 [DEFAULT/secs]
-type = int
+type = integer
 default = 60000
 description = How often to change the wallpaper (in random mode)
 [DEFAULT/show_desktop]

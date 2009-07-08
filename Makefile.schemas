@@ -1,25 +1,27 @@
-# vim: set ft=automake :
+# vim: set ft=automake ts=8 sts=8 sw=8 :
 
-APPLET_SCHEMA = $(APPLET_NAME).schema-ini
+# shave-related
+V         = @
+Q         = $(V:1=)
+QUIET_GEN = $(Q:@=@echo '  GEN   '$@;)
 
-if GCONF_SCHEMAS
-schemasdir   = @GCONF_SCHEMA_FILE_DIR@
-schemas_FILE = $(APPLET_NAME).schemas
-schemas_in_files = $(schemas_FILE).in
-schemas_DATA = $(schemas_in_files:.schemas.in=.schemas)
+schemadir = $(datadir)/avant-window-navigator/schemas
+schema_DATA = awn-applet-$(APPLET_NAME).schema-ini
 
-$(schemas_FILE).in: $(APPLET_SCHEMA)
-	$(AWN_BINDIR)/awn-schema-to-gconf $< $@ "$(APPLET_NAME)"
+if GCONF_SCHEMAS_INSTALL
+gconfschemasdir   = @GCONF_SCHEMA_FILE_DIR@
+gconfschemas_in_files =$(schema_DATA:.schema-ini=.schemas.in)
+gconfschemas_DATA = $(gconfschemas_in_files:.schemas.in=.schemas)
+
+%.schemas.in: %.schema-ini
+	$(QUIET_GEN)$(AWN_BINDIR)/awn-schema-to-gconf $< $@ $*
 
 @INTLTOOL_SCHEMAS_RULE@
 
-if GCONF_SCHEMAS_INSTALL
-install-data-local: $(schemas_DATA)
-	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(schemas_DATA)
-endif
-else
-schemasdir = $(datadir)/avant-window-navigator/schemas
-schemas_DATA = $(APPLET_SCHEMA)
+install-data-local: $(gconfschemas_DATA)
+	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(gconfschemas_DATA)
+
+CLEANFILES += $(gconfschemas_in_files) $(gconfschemas_DATA)
 endif
 
-EXTRA_DIST += $(APPLET_SCHEMA)
+EXTRA_DIST += $(schema_DATA)

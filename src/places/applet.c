@@ -181,7 +181,7 @@ static void config_get_color(DesktopAgnosticConfigClient *client, const gchar *k
 
 	if (error)
 	{
-		g_warning("shinyswitcher: error reading config string (%s): %s", key, error->message);
+		g_warning("places: error reading config string (%s): %s", key, error->message);
 		g_error_free(error);
     *color = desktop_agnostic_color_new_from_string("#000", NULL);
 	}

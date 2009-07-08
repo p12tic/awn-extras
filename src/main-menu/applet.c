@@ -23,16 +23,12 @@
 
 #include <string.h>
 
-#include <gtk/gtk.h>
-#include <libawn/awn-applet.h>
-#include <libawn/awn-config-client.h>
-#include <libawn/awn-desktop-item.h>
 #include <glib/gmacros.h>
 #include <glib/gerror.h>
 #include <glib/gi18n.h>
+#include <gtk/gtk.h>
+#include <libawn/libawn.h>
 
-#include <libawn/awn-dialog.h>
-#include <libawn/awn-applet-simple.h>
 
 #define APPLET_NAME "main-menu"
 
@@ -140,24 +136,47 @@ get_icon (const gchar *name, gint size)
 }
 
 static void
-launch (GMenuTreeEntry *entry)
+launch (GMenuTreeEntry *tree_entry)
 {
-  AwnDesktopItem *item;
-  const gchar *path = gmenu_tree_entry_get_desktop_file_path (entry);
-  if (!g_file_test (path, G_FILE_TEST_IS_REGULAR))
+  const gchar *path;
+  GError *error = NULL;
+  DesktopAgnosticVFSFileBackend *file;
+  DesktopAgnosticDesktopEntryBackend *entry;
+  
+  path = gmenu_tree_entry_get_desktop_file_path (tree_entry);
+  file = desktop_agnostic_vfs_file_new_for_path (path, &error);
+  if (error)
   {
+    g_warning ("An error occurred: %s", error->message);
+    g_error_free (error);
+    return;
+  }
+  if (!desktop_agnostic_vfs_file_backend_get_exists (file) ||
+      desktop_agnostic_vfs_file_backend_get_file_type (file) != DESKTOP_AGNOSTIC_VFS_FILE_FILE_TYPE_REGULAR)
+  {
+    g_object_unref (file);
     return;
   }
 
-  item = awn_desktop_item_new (path);
-  if (!item)
+  entry = desktop_agnostic_desktop_entry_new_for_file (file, &error);
+  if (error)
   {
+    g_warning ("An error occurred: %s", error->message);
+    g_error_free (error);
+    g_object_unref (file);
     return;
   }
 
-  awn_desktop_item_launch (item, NULL, NULL);
+  desktop_agnostic_desktop_entry_backend_launch (entry, 0, NULL, &error);
+  if (error)
+  {
+    g_warning ("An error occurred while launching: %s", error->message);
+    g_error_free (error);
+  }
+
   gtk_widget_hide(menu->window);
-  awn_desktop_item_free (item);
+  g_object_unref (entry);
+  g_object_unref (file);
 } 
 
 static void

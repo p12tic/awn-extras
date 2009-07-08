@@ -76,7 +76,7 @@ awn_sysmon_get_property (GObject *object, guint property_id,
         array = g_value_array_append (array, &val);
         g_value_unset (&val);
       }
-      g_value_take_boxed (value,priv->icon_list);
+      g_value_take_boxed (value, array);
       break;
     }
     case PROP_CLIENT:

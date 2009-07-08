@@ -38,6 +38,8 @@
 #include <libgen.h>
 #include <gdk/gdk.h>
 
+#include <libawn/libawn.h>
+
 #include "dashboard.h"
 #include "dashboard_util.h"
 #include "config.h"
@@ -918,8 +920,8 @@ static gboolean _focus_out_event(GtkWidget *widget, GdkEventButton *event,
   {
     if (gdk_window_get_window_type(event->window) != GDK_WINDOW_TEMP)
     {
-      AwnConfigClient *client = awn_config_client_new();
-      if (awn_config_client_get_bool(client, "shared", "dialog_focus_loss_behavior", NULL))
+      DesktopAgnosticConfigClient *client = awn_config_get_default(AWN_PANEL_ID_DEFAULT, NULL);
+      if (desktop_agnostic_config_client_get_bool(client, "shared", "dialog_focus_loss_behavior", NULL))
       {
         gtk_widget_hide(dashboard->mainwindow);
       }

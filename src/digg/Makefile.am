@@ -4,7 +4,7 @@ include $(top_srcdir)/Makefile.python-applet
 
 digg_iconsdir = $(applet_datadir)/icons
 dist_digg_icons_DATA =	\
-	icons/digg.png	\
+	icons/digg.svg	\
 	$(NULL)
 
 digg_profiledir = $(applet_datadir)/profile

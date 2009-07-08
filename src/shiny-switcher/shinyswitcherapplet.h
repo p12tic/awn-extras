@@ -21,24 +21,14 @@
 #ifndef SHINYSWITCHER_H_
 #define SHINYSWITCHER_H_
 
+#include <time.h>
+#include <glib.h>
 #define WNCK_I_KNOW_THIS_IS_UNSTABLE 1
 #include <libwnck/libwnck.h>
-#include <libawn/awn-applet.h>
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
-#include <glib.h>
 #include <libdesktop-agnostic/desktop-agnostic.h>
-#include <libawn/awn-applet.h>
-#include <libawn/awn-alignment.h>
-#include  <time.h>
-
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-#include <libawn/awn-config-client.h>
-
-#define CONFIG_KEY(key) key
+#include <libawn/libawn.h>
 
 enum
 {
@@ -139,8 +129,8 @@ typedef struct
   GdkScreen  *pScreen;
   GdkColormap  *rgb_cmap;
   GdkColormap  *rgba_cmap;
-  AwnConfigClient  *config;
-  AwnConfigClient  *dock_config;
+  DesktopAgnosticConfigClient *config;
+  DesktopAgnosticConfigClient *dock_config;
 	AwnAlignment * align;
 	
 	gint orient;

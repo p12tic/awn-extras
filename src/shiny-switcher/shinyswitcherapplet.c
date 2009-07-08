@@ -29,46 +29,39 @@ int gheight = -1;
 #define NDEBUG 1
 #include <assert.h>
 
-#include <gdk/gdk.h>
-#include <gtk/gtk.h>
 #include <gdk/gdkx.h>
 #include <glib.h>
-#include <libwnck/libwnck.h>
-#include <time.h>
 #include <X11/Xlib.h>
 #include <X11/extensions/Xcomposite.h>
 #include <X11/extensions/Xrender.h>
 #include <X11/extensions/Xfixes.h>
 
-#include <libawn/awn-cairo-utils.h>
-#include <libawn/awn-config-client.h>
-#include <libawn-extras/awn-extras.h>
 #include <libawn/awn-utils.h>
 
 #include "shinyswitcherapplet.h"
 
 
-#define CONFIG_ROWS  CONFIG_KEY("rows")
-#define CONFIG_COLUMNS  CONFIG_KEY("columns")
-#define CONFIG_WALLPAPER_ALPHA_ACTIVE  CONFIG_KEY("background_alpha_active")
-#define CONFIG_WALLPAPER_ALPHA_INACTIVE   CONFIG_KEY("background_alpha_inactive")
-#define CONFIG_APPLET_SCALE   CONFIG_KEY("applet_scale")
-#define CONFIG_SHOW_ICON_MODE CONFIG_KEY("show_icon_mode")
-#define CONFIG_SCALE_ICON_MODE CONFIG_KEY("scale_icon_mode")
-#define CONFIG_SCALE_ICON_FACTOR CONFIG_KEY("scale_icon_factor")
-#define CONFIG_WIN_GRAB_MODE CONFIG_KEY("win_grab_mode")
-#define CONFIG_WIN_GRAB_METHOD CONFIG_KEY("win_grab_method")
-#define CONFIG_WIN_ACTIVE_ICON_ALPHA CONFIG_KEY("win_active_icon_alpha")
-#define CONFIG_WIN_INACTIVE_ICON_ALPHA CONFIG_KEY("win_inactive_icon_alpha")
-#define CONFIG_MOUSEWHEEL CONFIG_KEY("mousewheel")
-#define CONFIG_CACHE_EXPIRY CONFIG_KEY("cache_expiry")
-#define CONFIG_SCALE_ICON_POSITION CONFIG_KEY("scale_icon_position")
-#define CONFIG_APPLET_BORDER_WIDTH CONFIG_KEY("applet_border_width")
-#define CONFIG_APPLET_BORDER_COLOUR CONFIG_KEY("applet_border_colour")
-#define CONFIG_GRAB_WALLPAPER CONFIG_KEY("grab_wallpaper")
-#define CONFIG_DESKTOP_COLOUR CONFIG_KEY("desktop_colour")
-#define CONFIG_QUEUED_RENDER_FREQ CONFIG_KEY("queued_render_timer")
-/* #define CONFIG_SHOW_RIGHT_CLICK CONFIG_KEY("show_right_click") */
+#define CONFIG_ROWS  "rows"
+#define CONFIG_COLUMNS  "columns"
+#define CONFIG_WALLPAPER_ALPHA_ACTIVE  "background_alpha_active"
+#define CONFIG_WALLPAPER_ALPHA_INACTIVE   "background_alpha_inactive"
+#define CONFIG_APPLET_SCALE   "applet_scale"
+#define CONFIG_SHOW_ICON_MODE "show_icon_mode"
+#define CONFIG_SCALE_ICON_MODE "scale_icon_mode"
+#define CONFIG_SCALE_ICON_FACTOR "scale_icon_factor"
+#define CONFIG_WIN_GRAB_MODE "win_grab_mode"
+#define CONFIG_WIN_GRAB_METHOD "win_grab_method"
+#define CONFIG_WIN_ACTIVE_ICON_ALPHA "win_active_icon_alpha"
+#define CONFIG_WIN_INACTIVE_ICON_ALPHA "win_inactive_icon_alpha"
+#define CONFIG_MOUSEWHEEL "mousewheel"
+#define CONFIG_CACHE_EXPIRY "cache_expiry"
+#define CONFIG_SCALE_ICON_POSITION "scale_icon_position"
+#define CONFIG_APPLET_BORDER_WIDTH "applet_border_width"
+#define CONFIG_APPLET_BORDER_COLOUR "applet_border_colour"
+#define CONFIG_GRAB_WALLPAPER "grab_wallpaper"
+#define CONFIG_DESKTOP_COLOUR "desktop_colour"
+#define CONFIG_QUEUED_RENDER_FREQ "queued_render_timer"
+/* #define CONFIG_SHOW_RIGHT_CLICK "show_right_click" */
 
 #define APPLET_NAME "shinyswitcher"
 
@@ -89,40 +82,28 @@ static gboolean _changed_waited(Shiny_switcher *shinyswitcher);
 static void _viewports_changed(WnckScreen    *screen, Shiny_switcher * shinyswitcher);
 void init_config(Shiny_switcher *shinyswitcher);
 
-static void config_get_color(AwnConfigClient *client, const gchar *key, DesktopAgnosticColor **color)
+static void config_get_color(DesktopAgnosticConfigClient *client, const gchar *key, DesktopAgnosticColor **color)
 {
   GError *error = NULL;
-  gchar *value = awn_config_client_get_string(client, AWN_CONFIG_CLIENT_DEFAULT_GROUP, key, &error);
+  GValue value = desktop_agnostic_config_client_get_value(client, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, key, &error);
 
-  if (value)
-  {
-    *color = desktop_agnostic_color_new_from_string(value, &error);
-    if (error)
-    {
-      g_warning("shinyswitcher: error parsing config string (%s = '%s'): %s", key, value, error->message);
-      g_error_free(error);
-    }
-    g_free(value);
-  }
-  else
-  {
-    if (error)
-    {
-      g_warning("shinyswitcher: error reading config string (%s): %s", key, error->message);
-      g_error_free(error);
-    }
-
-    g_warning("shinyswitcher: Failed to read config key: %s.  Setting  to #000000\n", key);
-
+	if (error)
+	{
+		g_warning("shinyswitcher: error reading config string (%s): %s", key, error->message);
+		g_error_free(error);
     *color = desktop_agnostic_color_new_from_string("#000", NULL);
-  }
-
+	}
+	else
+	{
+		*color = (DesktopAgnosticColor*)g_value_dup_object(&value);
+		g_value_unset(&value);
+	}
 }
 
 #define GET_VALUE(val,default,type,conf,group,key,err)                    \
   \
   do {            \
-    val=awn_config_client_get_##type(conf,group,key,&err);  \
+    val=desktop_agnostic_config_client_get_##type(conf,group,key,&err);  \
     if (err)                \
     {                       \
       g_warning("Shinyswitcher: error retrieving key (%s). error = %s\n",key,err->message);   \
@@ -132,7 +113,7 @@ static void config_get_color(AwnConfigClient *client, const gchar *key, DesktopA
     }                       \
   }while(0)
 
-void _change_config_cb(AwnConfigClientNotifyEntry *entry, gpointer user_data)
+void _change_config_cb(const gchar *group, const gchar *key, const GValue *value, gpointer user_data)
 {
   Shiny_switcher *shinyswitcher = (Shiny_switcher *)user_data;
   init_config(shinyswitcher);
@@ -140,7 +121,7 @@ void _change_config_cb(AwnConfigClientNotifyEntry *entry, gpointer user_data)
   _changed_waited(shinyswitcher);
 }
 
-void _change_config_ws_cb(AwnConfigClientNotifyEntry *entry, gpointer user_data)
+void _change_config_ws_cb(const gchar *group, const gchar *key, const GValue *value, gpointer user_data)
 {
   Shiny_switcher *shinyswitcher = (Shiny_switcher *)user_data;
   init_config(shinyswitcher);
@@ -155,109 +136,103 @@ void init_config(Shiny_switcher *shinyswitcher)
 
   if (!shinyswitcher->config)
   {
-    shinyswitcher->config                   = awn_config_client_new_for_applet("shinyswitcher", NULL);
-    shinyswitcher->dock_config = awn_config_client_new();
-    /*awn_config_client_notify_add     (AwnConfigClient *client,
-                                                     const gchar *group,
-                                                     const gchar *key,
-                                                     AwnConfigClientNotifyFunc cb,
-                                                     gpointer     user_data);
-    */
+    shinyswitcher->config = awn_config_get_default_for_applet(shinyswitcher->applet, NULL);
+    shinyswitcher->dock_config = awn_config_get_default(AWN_PANEL_ID_DEFAULT, NULL);
     /*this will end up working*/
-    awn_config_client_notify_add(shinyswitcher->config,
-                                 AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+    desktop_agnostic_config_client_notify_add(shinyswitcher->config,
+                                 DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                  "grab_wallpaper",
                                  _change_config_cb,
                                  shinyswitcher);
-    awn_config_client_notify_add(shinyswitcher->config,
-                                 AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+    desktop_agnostic_config_client_notify_add(shinyswitcher->config,
+                                 DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                  "applet_border_colour",
                                  _change_config_cb,
                                  shinyswitcher);
 
-    awn_config_client_notify_add(shinyswitcher->config,
-                                 AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+    desktop_agnostic_config_client_notify_add(shinyswitcher->config,
+                                 DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                  "applet_border_width",
                                  _change_config_cb,
                                  shinyswitcher);
-    awn_config_client_notify_add(shinyswitcher->config,
-                                 AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+    desktop_agnostic_config_client_notify_add(shinyswitcher->config,
+                                 DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                  "applet_scale",
                                  _change_config_cb,
                                  shinyswitcher);
-    awn_config_client_notify_add(shinyswitcher->config,
-                                 AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+    desktop_agnostic_config_client_notify_add(shinyswitcher->config,
+                                 DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                  "background_alpha_active",
                                  _change_config_cb,
                                  shinyswitcher);
-    awn_config_client_notify_add(shinyswitcher->config,
-                                 AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+    desktop_agnostic_config_client_notify_add(shinyswitcher->config,
+                                 DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                  "background_alpha_inactive",
                                  _change_config_cb,
                                  shinyswitcher);
-    awn_config_client_notify_add(shinyswitcher->config,
-                                 AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+    desktop_agnostic_config_client_notify_add(shinyswitcher->config,
+                                 DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                  "cache_expiry",
                                  _change_config_cb,
                                  shinyswitcher);
 
-    awn_config_client_notify_add(shinyswitcher->config,
-                                 AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+    desktop_agnostic_config_client_notify_add(shinyswitcher->config,
+                                 DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                  "columns",
                                  _change_config_ws_cb,
                                  shinyswitcher);
-    awn_config_client_notify_add(shinyswitcher->config,
-                                 AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+    desktop_agnostic_config_client_notify_add(shinyswitcher->config,
+                                 DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                  "desktop_colour",
                                  _change_config_cb,
                                  shinyswitcher);
-    awn_config_client_notify_add(shinyswitcher->config,
-                                 AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+    desktop_agnostic_config_client_notify_add(shinyswitcher->config,
+                                 DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                  "mousewheel",
                                  _change_config_cb,
                                  shinyswitcher);
-    awn_config_client_notify_add(shinyswitcher->config,
-                                 AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+    desktop_agnostic_config_client_notify_add(shinyswitcher->config,
+                                 DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                  "queued_render_timer",
                                  _change_config_cb,
                                  shinyswitcher);
-    awn_config_client_notify_add(shinyswitcher->config,
-                                 AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+    desktop_agnostic_config_client_notify_add(shinyswitcher->config,
+                                 DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                  "rows",
                                  _change_config_ws_cb,
                                  shinyswitcher);
-    awn_config_client_notify_add(shinyswitcher->config,
-                                 AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+    desktop_agnostic_config_client_notify_add(shinyswitcher->config,
+                                 DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                  "scale_icon_factor",
                                  _change_config_cb,
                                  shinyswitcher);
-    awn_config_client_notify_add(shinyswitcher->config,
-                                 AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+    desktop_agnostic_config_client_notify_add(shinyswitcher->config,
+                                 DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                  "scale_icon_mode",
                                  _change_config_cb,
                                  shinyswitcher);
-    awn_config_client_notify_add(shinyswitcher->config,
-                                 AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+    desktop_agnostic_config_client_notify_add(shinyswitcher->config,
+                                 DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                  "scale_icon_position",
                                  _change_config_cb,
                                  shinyswitcher);
-    awn_config_client_notify_add(shinyswitcher->config,
-                                 AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+    desktop_agnostic_config_client_notify_add(shinyswitcher->config,
+                                 DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                  "show_icon_mode",
                                  _change_config_cb,
                                  shinyswitcher);
-    awn_config_client_notify_add(shinyswitcher->config,
-                                 AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+    desktop_agnostic_config_client_notify_add(shinyswitcher->config,
+                                 DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                  "win_active_icon_alpha",
                                  _change_config_cb,
                                  shinyswitcher);
-    awn_config_client_notify_add(shinyswitcher->config,
-                                 AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+    desktop_agnostic_config_client_notify_add(shinyswitcher->config,
+                                 DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                  "win_grab_mode",
                                  _change_config_cb,
                                  shinyswitcher);
-    awn_config_client_notify_add(shinyswitcher->config,
-                                 AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+    desktop_agnostic_config_client_notify_add(shinyswitcher->config,
+                                 DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                  "win_inactive_icon_alpha",
                                  _change_config_cb,
                                  shinyswitcher);
@@ -265,44 +240,44 @@ void init_config(Shiny_switcher *shinyswitcher)
 
   }
 
-  GET_VALUE(shinyswitcher->rows, 2, int, shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+  GET_VALUE(shinyswitcher->rows, 2, int, shinyswitcher->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
 
             CONFIG_ROWS, error);
-  GET_VALUE(shinyswitcher->cols, 3, int, shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+  GET_VALUE(shinyswitcher->cols, 3, int, shinyswitcher->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
             CONFIG_COLUMNS, error);
-  GET_VALUE(shinyswitcher->wallpaper_alpha_active, 0.9, float, shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+  GET_VALUE(shinyswitcher->wallpaper_alpha_active, 0.9, float, shinyswitcher->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
             CONFIG_WALLPAPER_ALPHA_ACTIVE, error);
-  GET_VALUE(shinyswitcher->wallpaper_alpha_inactive, 0.6, float, shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+  GET_VALUE(shinyswitcher->wallpaper_alpha_inactive, 0.6, float, shinyswitcher->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
             CONFIG_WALLPAPER_ALPHA_INACTIVE, error);
-  GET_VALUE(shinyswitcher->applet_scale, 0.95, float, shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+  GET_VALUE(shinyswitcher->applet_scale, 0.95, float, shinyswitcher->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
             CONFIG_APPLET_SCALE, error);
-  GET_VALUE(shinyswitcher->scale_icon_mode, 2, int, shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+  GET_VALUE(shinyswitcher->scale_icon_mode, 2, int, shinyswitcher->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
             CONFIG_SCALE_ICON_MODE, error);
-  GET_VALUE(shinyswitcher->scale_icon_factor, 0.8, float, shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+  GET_VALUE(shinyswitcher->scale_icon_factor, 0.8, float, shinyswitcher->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
             CONFIG_SCALE_ICON_FACTOR, error);
-  GET_VALUE(shinyswitcher->show_icon_mode, 3, int, shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+  GET_VALUE(shinyswitcher->show_icon_mode, 3, int, shinyswitcher->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
             CONFIG_SHOW_ICON_MODE, error);
-  GET_VALUE(shinyswitcher->win_grab_mode, 3, int, shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+  GET_VALUE(shinyswitcher->win_grab_mode, 3, int, shinyswitcher->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
             CONFIG_WIN_GRAB_MODE, error);
-  GET_VALUE(shinyswitcher->win_grab_method, 0, int, shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+  GET_VALUE(shinyswitcher->win_grab_method, 0, int, shinyswitcher->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
             CONFIG_WIN_GRAB_METHOD, error);
-  GET_VALUE(shinyswitcher->win_active_icon_alpha, 0.65, float, shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+  GET_VALUE(shinyswitcher->win_active_icon_alpha, 0.65, float, shinyswitcher->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
             CONFIG_WIN_ACTIVE_ICON_ALPHA, error);
-  GET_VALUE(shinyswitcher->win_inactive_icon_alpha, 1.0, float, shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+  GET_VALUE(shinyswitcher->win_inactive_icon_alpha, 1.0, float, shinyswitcher->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
             CONFIG_WIN_INACTIVE_ICON_ALPHA, error);
-  GET_VALUE(shinyswitcher->mousewheel, 1, int, shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+  GET_VALUE(shinyswitcher->mousewheel, 1, int, shinyswitcher->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
             CONFIG_MOUSEWHEEL, error);
-  GET_VALUE(shinyswitcher->cache_expiry, 7, int, shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+  GET_VALUE(shinyswitcher->cache_expiry, 7, int, shinyswitcher->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
             CONFIG_CACHE_EXPIRY, error);
-  GET_VALUE(shinyswitcher->scale_icon_pos, 3, int, shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+  GET_VALUE(shinyswitcher->scale_icon_pos, 3, int, shinyswitcher->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
             CONFIG_SCALE_ICON_POSITION, error);
-  GET_VALUE(shinyswitcher->applet_border_width, 1, int, shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+  GET_VALUE(shinyswitcher->applet_border_width, 1, int, shinyswitcher->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
             CONFIG_APPLET_BORDER_WIDTH , error);
-  GET_VALUE(shinyswitcher->grab_wallpaper, TRUE, bool, shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+  GET_VALUE(shinyswitcher->grab_wallpaper, TRUE, bool, shinyswitcher->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
             CONFIG_GRAB_WALLPAPER, error);
-  GET_VALUE(shinyswitcher->do_queue_freq, 1000, int, shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+  GET_VALUE(shinyswitcher->do_queue_freq, 1000, int, shinyswitcher->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
             CONFIG_QUEUED_RENDER_FREQ , error);
-  /*  GET_VALUE(shinyswitcher->show_right_click,FALSE,bool,shinyswitcher->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, */
+  /*  GET_VALUE(shinyswitcher->show_right_click,FALSE,bool,shinyswitcher->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, */
   /*            CONFIG_SHOW_RIGHT_CLICK , error); */
   shinyswitcher->show_right_click = TRUE; /* let's enable by default and see if ther are issues. */
   config_get_color(shinyswitcher->config, CONFIG_APPLET_BORDER_COLOUR, &shinyswitcher->applet_border_colour);

@@ -29,40 +29,34 @@
 /* isalpha() */
 #include <ctype.h>
 
-#include <libawn/awn-applet.h>
-#include <libawn/awn-applet-simple.h>
-#include <libawn/awn-cairo-utils.h>
-#include <libawn/awn-config-client.h>
-
 #include <gtk/gtk.h>
 #include <libdesktop-agnostic/desktop-agnostic.h>
 #include <glib/gstdio.h>
 #include <glib/gi18n-lib.h>
 #include <string.h>
 
+#include <libawn/libawn.h>
 
 #define APPLET_NAME "places"
 
-#define CONFIG_KEY(key) key
+#define CONFIG_NORMAL_BG     "bg_normal_colour"
+#define CONFIG_NORMAL_FG     "text_normal_colour"
+#define CONFIG_HOVER_BG      "bg_hover_colour"
+#define CONFIG_HOVER_FG      "text_hover_colour"
 
-#define CONFIG_NORMAL_BG     CONFIG_KEY("bg_normal_colour")
-#define CONFIG_NORMAL_FG     CONFIG_KEY("text_normal_colour")
-#define CONFIG_HOVER_BG      CONFIG_KEY("bg_hover_colour")
-#define CONFIG_HOVER_FG      CONFIG_KEY("text_hover_colour")
+#define CONFIG_TEXT_SIZE     "text_size"
 
-#define CONFIG_TEXT_SIZE     CONFIG_KEY("text_size")
+#define CONFIG_MENU_GRADIENT "menu_item_gradient_factor"
 
-#define CONFIG_MENU_GRADIENT CONFIG_KEY("menu_item_gradient_factor")
-
-#define CONFIG_FILEMANAGER   CONFIG_KEY("filemanager")
-#define CONFIG_APPLET_ICON   CONFIG_KEY("applet_icon")
+#define CONFIG_FILEMANAGER   "filemanager"
+#define CONFIG_APPLET_ICON   "applet_icon"
 
 
-#define CONFIG_SHOW_TOOLTIPS CONFIG_KEY("show_tooltips")
-#define CONFIG_BORDER_COLOUR CONFIG_KEY("border_colour")
-#define CONFIG_BORDER_WIDTH  CONFIG_KEY("border_width")
+#define CONFIG_SHOW_TOOLTIPS "show_tooltips"
+#define CONFIG_BORDER_COLOUR "border_colour"
+#define CONFIG_BORDER_WIDTH  "border_width"
 
-#define CONFIG_HONOUR_GTK    CONFIG_KEY("honour_gtk")
+#define CONFIG_HONOUR_GTK    "honour_gtk"
 
 typedef struct
 {
@@ -100,7 +94,7 @@ typedef struct
   gchar    *file_manager;
   gchar    *desktop_dir;
 
-  AwnConfigClient  *config;
+  DesktopAgnosticConfigClient  *config;
 
   gchar * uid;
 }Places;
@@ -175,43 +169,32 @@ static void free_menu_list_item(Menu_Item * item)
 
 //CONF STUFF
 
-static void config_get_string(AwnConfigClient *client, const gchar *key, gchar **str)
+static void config_get_string(DesktopAgnosticConfigClient *client, const gchar *key, gchar **str)
 {
-  *str = awn_config_client_get_string(client, AWN_CONFIG_CLIENT_DEFAULT_GROUP, key, NULL);
+  *str = desktop_agnostic_config_client_get_string(client, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, key, NULL);
 }
 
-static void config_get_color(AwnConfigClient *client, const gchar *key, DesktopAgnosticColor **color)
+static void config_get_color(DesktopAgnosticConfigClient *client, const gchar *key, DesktopAgnosticColor **color)
 {
   GError *error = NULL;
-  gchar *value = awn_config_client_get_string(client, AWN_CONFIG_CLIENT_DEFAULT_GROUP, key, &error);
+  GValue value = desktop_agnostic_config_client_get_value(client, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, key, &error);
 
-  if (value)
-  {
-    *color = desktop_agnostic_color_new_from_string(value, &error);
-    if (error)
-    {
-      g_warning("places: error parsing config string (%s = '%s'): %s", key, value, error->message);
-      g_error_free(error);
-    }
-    g_free(value);
-  }
-  else
-  {
-    if (error)
-    {
-      g_warning("shinyswitcher: error reading config string (%s): %s", key, error->message);
-      g_error_free(error);
-    }
-
-    g_warning("Failed to read config key: %s\n", key);
-
+	if (error)
+	{
+		g_warning("shinyswitcher: error reading config string (%s): %s", key, error->message);
+		g_error_free(error);
     *color = desktop_agnostic_color_new_from_string("#000", NULL);
-  }
+	}
+	else
+	{
+		*color = (DesktopAgnosticColor*)g_value_dup_object(&value);
+		g_value_unset(&value);
+	}
 }
 
 void init_config(Places * places)
 {
-  places->config = awn_config_client_new_for_applet("places", NULL);
+  places->config = awn_config_get_default_for_applet(AWN_APPLET(places->applet), NULL);
 
   config_get_color(places->config, CONFIG_NORMAL_BG,     &places->normal_colours.base);
   config_get_color(places->config, CONFIG_NORMAL_FG,     &places->normal_colours.text);
@@ -219,11 +202,11 @@ void init_config(Places * places)
   config_get_color(places->config, CONFIG_HOVER_FG,      &places->hover_colours.text);
   config_get_color(places->config, CONFIG_BORDER_COLOUR, &places->border_colour);
 
-  places->border_width              = awn_config_client_get_int(places->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, CONFIG_BORDER_WIDTH,  NULL);
-  places->text_size                 = awn_config_client_get_int(places->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, CONFIG_TEXT_SIZE,     NULL);
-  places->menu_item_gradient_factor = awn_config_client_get_float(places->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, CONFIG_MENU_GRADIENT, NULL);
-  places->show_tooltips             = awn_config_client_get_bool(places->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, CONFIG_SHOW_TOOLTIPS, NULL);
-  places->honour_gtk                = awn_config_client_get_bool(places->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, CONFIG_HONOUR_GTK,    NULL);
+  places->border_width              = desktop_agnostic_config_client_get_int(places->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, CONFIG_BORDER_WIDTH,  NULL);
+  places->text_size                 = desktop_agnostic_config_client_get_int(places->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, CONFIG_TEXT_SIZE,     NULL);
+  places->menu_item_gradient_factor = desktop_agnostic_config_client_get_float(places->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, CONFIG_MENU_GRADIENT, NULL);
+  places->show_tooltips             = desktop_agnostic_config_client_get_bool(places->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, CONFIG_SHOW_TOOLTIPS, NULL);
+  places->honour_gtk                = desktop_agnostic_config_client_get_bool(places->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, CONFIG_HONOUR_GTK,    NULL);
   config_get_string(places->config, CONFIG_FILEMANAGER, &(places->file_manager));
   config_get_string(places->config, CONFIG_APPLET_ICON, &(places->applet_icon_name));
 
@@ -241,7 +224,7 @@ void init_config(Places * places)
   places->menu_list = NULL;
 }
 
-#define SET_CONFIG_OPTION(type, key, value) awn_config_client_set_##type (places->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, key, value, NULL)
+#define SET_CONFIG_OPTION(type, key, value) desktop_agnostic_config_client_set_##type (places->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, key, value, NULL)
 static void set_config_colour(Places *places, const gchar *key, DesktopAgnosticColor *color)
 {
   gchar *str;
@@ -1291,8 +1274,8 @@ static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, 
 static gboolean _focus_out_event(GtkWidget *widget, GdkEventButton *event, Places * places)
 {
 
-  AwnConfigClient *client = awn_config_client_new();
-  if (awn_config_client_get_bool(client, "shared", "dialog_focus_loss_behavior", NULL))
+  DesktopAgnosticConfigClient *client = awn_config_get_default(AWN_PANEL_ID_DEFAULT, NULL);
+  if (desktop_agnostic_config_client_get_bool(client, "shared", "dialog_focus_loss_behavior", NULL))
   {
     gtk_widget_hide(places->mainwindow);
   }

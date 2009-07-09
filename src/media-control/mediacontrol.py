@@ -55,7 +55,7 @@ class App (awn.AppletSimple):
         self.MediaPlayer = None
         self.location = __file__.replace('mediacontrol.py','')
         self.keylocation = "/apps/avant-window-navigator/applets/MediaControl/"
-        self.set_icon_name('media-control', 'media-control')
+        self.set_icon_name('media-control')
         self.load_keys()
         self.timer_running = False
         self.dbus_names = {}

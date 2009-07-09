@@ -5,7 +5,7 @@ include $(top_srcdir)/Makefile.python-applet
 dist_applet_DATA = 		\
 	messages.pot		\
 	forecast.py          \
-	weather-prefs.glade	\
+	weather.ui	\
 	$(NULL)
 
 moonbeam_themedir = $(applet_datadir)/themes/moonbeam

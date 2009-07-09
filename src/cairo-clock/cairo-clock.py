@@ -19,7 +19,6 @@ import time
 import pygtk
 pygtk.require("2.0")
 import gtk
-from gtk import glade
 
 from awn.extras import awnlib
 import cairo
@@ -39,7 +38,7 @@ draw_clock_interval = 1.0
 
 default_theme = "gnome"
 
-glade_file = os.path.join(os.path.dirname(__file__), "cairo-clock.glade")
+ui_file = os.path.join(os.path.dirname(__file__), "cairo-clock.ui")
 
 # List of all available plugins
 plugin_classes = frozenset([locations.Locations])
@@ -137,35 +136,29 @@ class CairoClockApplet:
         self.preferences_notebook.props.border_width = 6
         self.applet.dialog.new("preferences").vbox.add(self.preferences_notebook)
 
-        prefs = glade.XML(glade_file)
+        prefs = gtk.Builder()
+        prefs.add_from_file(ui_file)
 
         self.setup_general_preferences(prefs)
         self.setup_plugins_preferens(prefs)
 
     def setup_general_preferences(self, prefs):
         container = gtk.VBox()
-        prefs.get_widget("vbox-general").reparent(container)
+        prefs.get_object("vbox-general").reparent(container)
         self.preferences_notebook.append_page(container, gtk.Label("General"))
 
         refresh_title = lambda v: self.__clock_updater.update_title()
         refresh_clock = lambda v: self.__clock_updater.draw_clock_cb()
 
         default_values = {
-            "time-24-format": (True, refresh_title, prefs.get_widget("radio-24-format")),  # True if the time in the title must display 24 hours, False if AM/PM
-            "time-date": (True, refresh_title, prefs.get_widget("check-time-date")),
-            "time-seconds": (True, refresh_title, prefs.get_widget("check-time-seconds")),
-            "show-seconds-hand": (True, refresh_clock, prefs.get_widget("check-second-hand")),  # True if the clock must display a second hand, False otherwise
+            "time-24-format": (True, refresh_title, prefs.get_object("radio-24-format")),  # True if the time in the title must display 24 hours, False if AM/PM
+            "time-date": (True, refresh_title, prefs.get_object("check-time-date")),
+            "time-seconds": (True, refresh_title, prefs.get_object("check-time-seconds")),
+            "show-seconds-hand": (True, refresh_clock, prefs.get_object("check-second-hand")),  # True if the clock must display a second hand, False otherwise
             "theme": default_theme,
             "custom-time-format": ""
         }
         self.settings = self.applet.settings.load_preferences(default_values)
-
-        # Combobox in preferences window to choose a theme
-        vbox_theme = prefs.get_widget("vbox-theme")
-
-        combobox_theme = gtk.combo_box_new_text()
-        vbox_theme.add(combobox_theme)
-        prefs.get_widget("label-vbox-theme").set_mnemonic_widget(combobox_theme)
 
         self.themes = os.listdir(default_themes_dir)
 
@@ -176,6 +169,8 @@ class CairoClockApplet:
         self.themes = list(set(self.themes))
         self.themes.sort()
 
+        combobox_theme = prefs.get_object("combobox-theme")
+        awnlib.add_cell_renderer_text(combobox_theme)
         for i in self.themes:
             combobox_theme.append_text(i)
 

@@ -274,49 +274,11 @@ static gboolean _do_update_places_wrapper(Places * places)
 //===========================================================================
 
 
-static void monitor_places_callback(DesktopAgnosticVFSFileMonitor *monitor,
-                                    DesktopAgnosticVFSFileBackend *monitor_path,
-                                    DesktopAgnosticVFSFileBackend *event_path,
-                                    DesktopAgnosticVFSFileMonitorEvent event,
-                                    Places *places)
+static void
+_on_bookmarks_changed(DesktopAgnosticVFSBookmarksGtkParser *parser,
+                      Places *places)
 {
   _do_update_places(places);
-}
-
-static void monitor_places(Places *places)
-{
-  GError *error = NULL;
-  DesktopAgnosticVFSFileBackend *file;
-  DesktopAgnosticVFSFileMonitor *monitor;
-
-  const gchar *home_dir = g_getenv("HOME");
-
-  if (!home_dir)
-  {
-    home_dir = g_get_home_dir();
-  }
-
-  gchar *filename = g_build_filename(home_dir, ".gtk-bookmarks", NULL);
-
-  file = desktop_agnostic_vfs_file_new_for_path(filename, &error);
-
-  g_free(filename);
-
-  if (error)
-  {
-    g_critical("Could not create the gtk-bookmarks file object: %s", error->message);
-    g_error_free(error);
-    return;
-  }
-  else if (!file)
-  {
-    g_critical("Could not create the gtk-bookmarks file object.");
-    return;
-  }
-
-
-  monitor = desktop_agnostic_vfs_file_backend_monitor(file);
-  g_signal_connect(monitor, "changed", G_CALLBACK(monitor_places_callback), places);
 }
 
 static void _vfs_changed(DesktopAgnosticVFSVolumeMonitor *monitor,
@@ -426,6 +388,7 @@ static void get_places(Places * places)
   }
 
   static DesktopAgnosticVFSVolumeMonitor* vol_monitor = NULL;
+  static DesktopAgnosticVFSBookmarksGtkParser *bookmarks_parser = NULL;
 
   if (!vol_monitor)
   {
@@ -436,7 +399,9 @@ static void get_places(Places * places)
     g_signal_connect(vol_monitor, "volume-mounted", G_CALLBACK(_vfs_changed), places);
     g_signal_connect(vol_monitor, "volume-unmounted", G_CALLBACK(_vfs_changed), places);
 
-    monitor_places(places); /* monitor bookmark file */
+    bookmarks_parser = desktop_agnostic_vfs_bookmarks_gtk_parser_new (NULL, TRUE);
+    g_signal_connect (G_OBJECT (bookmarks_parser), "changed",
+                      G_CALLBACK (_on_bookmarks_changed), places);
   }
 
   GList *volumes = desktop_agnostic_vfs_volume_monitor_get_volumes(vol_monitor);
@@ -448,66 +413,45 @@ static void get_places(Places * places)
   }
 
   g_list_free (volumes);
-//bookmarks
-  FILE* handle;
-  gchar *  filename = g_strdup_printf("%s/.gtk-bookmarks", homedir);
-  handle = g_fopen(filename, "r");
+  // bookmarks
+  GSList *bookmarks;
+  GSList *node;
 
-  if (handle)
+  bookmarks = desktop_agnostic_vfs_bookmarks_gtk_parser_get_bookmarks (bookmarks_parser);
+  for (node = bookmarks; node != NULL; node = node->next)
   {
-    char * line = NULL;
-    size_t  len = 0;
+    DesktopAgnosticVFSBookmarksBookmark *bookmark;
+    DesktopAgnosticVFSFileBackend *b_file;
+    const gchar *b_alias;
+    gchar *b_path;
+    gchar *shell_quoted;
 
-    while (getline(&line, &len, handle) != -1)
+    item = g_new0 (Menu_Item, 1);
+    item->icon = g_strdup ("stock_folder");
+    bookmark = (DesktopAgnosticVFSBookmarksBookmark*)node->data;
+    b_file = desktop_agnostic_vfs_bookmarks_bookmark_get_file (bookmark);
+    b_alias = desktop_agnostic_vfs_bookmarks_bookmark_get_alias (bookmark);
+    b_path = desktop_agnostic_vfs_file_backend_get_path (b_file);
+    shell_quoted = g_shell_quote (b_path);
+
+    item->exec = g_strdup_printf("%s %s", places->file_manager, shell_quoted);
+    item->comment = desktop_agnostic_vfs_file_backend_get_uri (b_file);
+
+    g_free (shell_quoted);
+
+    if (b_alias)
     {
-      gchar ** tokens;
-      tokens = g_strsplit(line, " ", 2);
-
-      if (tokens)
-      {
-        if (tokens[0])
-        {
-          gchar * shell_quoted;
-          g_strstrip(tokens[0]);
-          item = g_malloc(sizeof(Menu_Item));
-
-          if (tokens[1])
-          {
-            g_strstrip(tokens[1]);
-            item->text = g_strdup(tokens[1]);
-          }
-          else
-          {
-            item->text = g_uri_unescape_string(g_path_get_basename(tokens[0]), NULL);
-          }
-
-          item->icon = g_strdup("stock_folder");
-
-          shell_quoted = g_shell_quote(tokens[0]);
-          item->exec = g_strdup_printf("%s %s", places->file_manager, shell_quoted);
-          g_free(shell_quoted);
-          item->comment = g_uri_unescape_string(g_strdup(tokens[0]), NULL);
-          item->places = places;
-          places->menu_list = g_slist_append(places->menu_list, item);
-
-        }
-
-      }
-
-      g_strfreev(tokens);
-
-      free(line);
-
-      line = NULL;
+      item->text = g_strdup (b_alias);
+    }
+    else
+    {
+      item->text = g_path_get_basename (b_path);
     }
 
-    fclose(handle);
+    item->places = places;
+    places->menu_list = g_slist_append(places->menu_list, item);
 
-    g_free(filename);
-  }
-  else
-  {
-    printf("Unable to open bookmark file: %s/.gtk-bookmarks\n", homedir);
+    g_free (b_path);
   }
 }
 

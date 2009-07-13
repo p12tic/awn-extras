@@ -3,7 +3,7 @@ APPLET_MAIN_FILE = battery-applet.py
 include $(top_srcdir)/Makefile.python-applet
 
 dist_applet_DATA =		\
-	battery-status.glade	\
+	battery-status.ui	\
 	messagehandler.py	\
 	$(NULL)
 

@@ -179,17 +179,17 @@ static void config_get_color(DesktopAgnosticConfigClient *client, const gchar *k
   GError *error = NULL;
   GValue value = desktop_agnostic_config_client_get_value(client, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, key, &error);
 
-	if (error)
-	{
-		g_warning("places: error reading config string (%s): %s", key, error->message);
-		g_error_free(error);
+  if (error)
+  {
+    g_warning("places: error reading config string (%s): %s", key, error->message);
+    g_error_free(error);
     *color = desktop_agnostic_color_new_from_string("#000", NULL);
-	}
-	else
-	{
-		*color = (DesktopAgnosticColor*)g_value_dup_object(&value);
-		g_value_unset(&value);
-	}
+  }
+  else
+  {
+    *color = (DesktopAgnosticColor*)g_value_dup_object(&value);
+    g_value_unset(&value);
+  }
 }
 
 void init_config(Places * places)

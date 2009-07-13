@@ -23,18 +23,12 @@
 #include <config.h>
 #endif
 
-/* getline() */
-#define _GNU_SOURCE
-#include <stdio.h>
-/* isalpha() */
-#include <ctype.h>
-
 #include <gtk/gtk.h>
-#include <libdesktop-agnostic/desktop-agnostic.h>
 #include <glib/gstdio.h>
 #include <glib/gi18n-lib.h>
 #include <string.h>
 
+#include <libdesktop-agnostic/vfs.h>
 #include <libawn/libawn.h>
 
 #define APPLET_NAME "places"

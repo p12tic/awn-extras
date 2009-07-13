@@ -20,8 +20,11 @@
 
 #ifndef __MENU_LIST_ITEM_
 #define __MENU_LIST_ITEM_
-#include <gtk/gtk.h>
+
 #include <glib.h>
+#include <gtk/gtk.h>
+#include <libdesktop-agnostic/vfs.h>
+
 #include "menu.h"
 
 

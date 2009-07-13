@@ -25,7 +25,7 @@
 #define HIDE_ON_UNFOCUS "hide_on_unfocus"
 #define MAIN_TERMINAL "main_terminal"
 
-#include <libdesktop-agnostic/desktop-agnostic.h>
+#include <libdesktop-agnostic/config.h>
 #include <gtk/gtk.h>
 
 #include "awnterm.h"

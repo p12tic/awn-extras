@@ -27,6 +27,7 @@
 #include <glib/gerror.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
+#include <libdesktop-agnostic/desktop-entry.h>
 #include <libawn/libawn.h>
 
 

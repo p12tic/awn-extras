@@ -21,7 +21,7 @@
 #define AWNTERM_H_
 
 #include <gtk/gtk.h>
-#include <libdesktop-agnostic/desktop-agnostic.h>
+#include <libdesktop-agnostic/config.h>
 #include <libawn/libawn.h>
 
 typedef struct

@@ -95,7 +95,7 @@ Depends: 	${shlibs:Depends},
 		${python:Depends},
 		avant-window-navigator-trunk,
 		python-awn-trunk,
-		python-awnlib-trunk (>= 0.3.2),
+		python-awn-extras-trunk (>= 0.3.8),
 Recommends: 	awn-manager-trunk (>= 0.3~bzr489),
 		python-feedparser,
 		python-gst0.10,
@@ -149,8 +149,8 @@ Depends: 	${shlibs:Depends},
 		${python:Depends},
 		avant-window-navigator-trunk,
 		python-awn-trunk,
-		python-awnlib-trunk (>= 0.3.2),
-		fortune
+		fortune,
+		python-awn-extras-trunk (>= 0.3.8)
 Recommends: 	awn-manager-trunk (>= 0.3~bzr489),
 		python-gnome2-desktop,
 		python-xlib,
@@ -185,8 +185,8 @@ Depends:	${shlibs:Depends},
 		${python:Depends}
 Provides: ${python:Provides}
 XB-Python-Version: ${python:Versions}
-Conflicts: python-awn-extras, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
-Replaces: python-awn-extras, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
+Conflicts: python-awn-extras, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing, python-awnlib, python-awnlib-trunk
+Replaces: python-awn-extras, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing, python-awnlib, python-awnlib-trunk
 Description: Python functions used by avant-window-navigator's applets
  This package provides a set of convenience functions used by Python applets
  for Avant Window Navigator, including AWNLib, an applet wrapper which

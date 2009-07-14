@@ -1,11 +1,5 @@
 APPLET_NAME = webapplet
-if WITH_MOZILLA
-APPLET_CFLAGS = $(MOZILLA_CFLAGS)
-endif
-
-if WITH_WEBKIT
-APPLET_CFLAGS = $(WEBKIT_CFLAGS)
-endif
+APPLET_CFLAGS = $(WEBAPPLET_CFLAGS)
 
 include $(top_srcdir)/Makefile.c-applet
 include $(top_srcdir)/Makefile.schemas
@@ -36,22 +30,11 @@ webapplet_la_SOURCES +=	\
 endif
 
 webapplet_la_LIBADD =						\
+	$(WEBAPPLET_LIBS)					\
 	$(AWN_LIBS)						\
 	$(top_builddir)/src/libawn-extras/libawn-extras.la	\
 	$(NULL)
 webapplet_la_LDFLAGS = $(APPLET_LINKER_FLAGS)
-
-if WITH_MOZILLA
-webapplet_la_LIBADD +=	\
-	$(MOZILLA_LIBS)	\
-	$(NULL)
-endif
-
-if WITH_WEBKIT
-webapplet_la_LIBADD +=	\
-	$(WEBKIT_LIBS)	\
-	$(NULL)
-endif
 
 inifile_DATA = webapplet-websites.ini
 inifiledir = $(applet_datadir)

@@ -32,14 +32,10 @@ GCONF_APPLETS +=	\
 	yama       \
 	$(NULL)
 endif
-# --with-mozilla
-if WITH_MOZILLA
-MOZILLA_APPLETS = webapplet \
-	$(NULL)
-endif
-# --with-webkit
-if WITH_WEBKIT
-WEBKIT_APPLETS = webapplet \
+# --with-webkit and/or --with-mozilla
+if BUILD_WEBAPPLET
+WEBAPPLET =		\
+	webapplet	\
 	$(NULL)
 endif
 if MAINTAINER_MODE
@@ -75,6 +71,5 @@ SUBDIRS =			\
 	$(WOBBLYZINI)		\
 	$(GCONF_APPLETS)	\
 	$(VALA_APPLETS)		\
-	$(MOZILLA_APPLETS)	\
-	$(WEBKIT_APPLETS)	\
+	$(WEBAPPLET)		\
 	$(NULL)

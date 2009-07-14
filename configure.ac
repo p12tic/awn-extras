@@ -75,12 +75,13 @@ dnl
 
 AC_ARG_WITH([gconf], AS_HELP_STRING([--without-gconf],[Disable building/installing applets that need GConf]),,[with_gconf=yes])
 AC_ARG_WITH([gnome], AS_HELP_STRING([--without-gnome],[Disable building/installing applets that require Gnome-specific libraries]),,[with_gnome=yes])
-AC_ARG_WITH([mozilla], AS_HELP_STRING([--with-mozilla],[Enable building/installing applets that require GtkMozEmbed]),,[with_mozilla=no])
+AC_ARG_WITH([mozilla], AS_HELP_STRING([--with-mozilla],[Enable building/installing applets that require Gecko (Mozilla)]),,[with_mozilla=no])
 AC_ARG_WITH([webkit], AS_HELP_STRING([--with-webkit],[Enable building/installing applets that require webkitgtk]),,[with_webkit=no])
 AM_CONDITIONAL(WITH_GCONF, test "$with_gconf" != "no")
 AM_CONDITIONAL(WITH_GNOME, test "$with_gnome" != "no")
 AM_CONDITIONAL(WITH_MOZILLA, test "$with_mozilla" != "no")
 AM_CONDITIONAL(WITH_WEBKIT, test "$with_webkit" != "no")
+AM_CONDITIONAL(BUILD_WEBAPPLET, test "$with_mozilla" != "no" -o "$with_webkit" != "no")
 
 # all
 PKG_CHECK_MODULES(AWN, [awn >= 0.3.9])
@@ -135,25 +136,35 @@ PKG_CHECK_MODULES(GNOME_MENU, [libgnome-menu])
 PKG_CHECK_MODULES(GTOP, [libgtop-2.0])
 fi
 
+# webapplet
+webapplet_modules=""
+mozilla_module=no
 if test "$with_mozilla" != "no"; then
-PKG_CHECK_MODULES(MOZILLA, [xulrunner-gtkmozembed])
-AC_SUBST(MOZILLA_CFLAGS)
-AC_SUBST(MOZILLA_LIBS)
-AC_DEFINE([HAVE_MOZILLA],[1],[Define if GtkMozEmbed is available.])
+    found_mozilla=no
+    for p in mozilla firefox xulrunner seamonkey; do
+        mozilla_module="${p}-gtkmozembed"
+        PKG_CHECK_EXISTS([$mozilla_module],[found_mozilla=yes])
+        if test "$found_mozilla" = "yes"; then
+            break
+        fi
+    done
+    if test "$found_mozilla" = "yes"; then
+        AC_DEFINE([HAVE_MOZILLA],[1],[Define if Gecko (Mozilla) is available.])
+        webapplet_modules="$webapplet_modules $mozilla_module"
+    else
+        AC_MSG_ERROR([Could not find Gecko's gtkmozembed (needed for Mozilla support)])
+    fi
 fi
 
 webkit_module=no
 if test "$with_webkit" != "no"; then
-# webapplet
 PKG_CHECK_EXISTS([webkit-1.0],[webkit_module="webkit-1.0"],
     [PKG_CHECK_EXISTS([WebKitGtk],[
         webkit_module="WebKitGtk"
         AC_DEFINE([HAVE_OLD_WEBKITGTK],[1],[Define if the installed WebKit uses the old pkgconfig file and header structure.])
         ],[AC_MSG_ERROR([Could not find packages webkit-1.0 or WebKitGtk.  Either one is required for webkit support to be enabled.])])])
-PKG_CHECK_MODULES(WEBKIT, [$webkit_module])
-AC_SUBST(WEBKIT_CFLAGS)
-AC_SUBST(WEBKIT_LIBS)
 AC_DEFINE([HAVE_WEBKIT],[1],[Define if WebKit is available.])
+webapplet_modules="$webapplet_modules $webkit_module"
 fi
 
 #awn-notification-daemon
@@ -195,6 +206,7 @@ if test "$with_gconf" != "no"; then
 PKG_CHECK_MODULES(NOTIFICATION_DAEMON, [$gconf $gstreampkg libnotify $url_label_module libwnck-1.0 x11])
 fi
 PKG_CHECK_MODULES(SHINY_SWITCHER, [libwnck-1.0 x11 xcomposite xrender])
+PKG_CHECK_MODULES(WEBAPPLET, [$webapplet_modules])
 
 dnl
 dnl Check python modules
@@ -431,5 +443,5 @@ echo "             Vala Support:   $has_vala"
 echo ""
 echo "           WebKit Support:   $webkit_module"
 echo ""
-echo "      GtkMozEmbed Support:   $with_mozilla"
+echo "            Gecko Support:   $mozilla_module"
 echo ""

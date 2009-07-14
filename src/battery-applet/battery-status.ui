@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <interface>
-  <requires lib="gtk+" version="2.16"/>
+  <!-- interface-requires gtk+ 2.12 -->
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkAdjustment" id="adjustment1">
     <property name="value">5</property>
@@ -302,8 +302,8 @@
   </object>
   <object class="GtkSizeGroup" id="sizegroup1">
     <widgets>
-      <widget name="label-theme"/>
       <widget name="label-battery"/>
+      <widget name="label-theme"/>
     </widgets>
   </object>
   <object class="GtkListStore" id="liststore-battery">

@@ -30,8 +30,6 @@ import cairo
 import cPickle as cpickle  # For object serialization into gconf
 import types  # For type checking for gconf/settings
 
-check_dependencies(globals(), 'pynotify')
-
 ___file___ = sys.argv[0]
 # Basically, __file__ = current file location
 # sys.argv[0] = file name or called file
@@ -1293,6 +1291,8 @@ class Notify:
         """
         self.__parent = parent
 
+        check_dependencies(globals(), "pynotify")
+
     def send(self, subject=None, body="", icon="", timeout=0, attention=True):
         """Show a new notification via libnotify.
 
@@ -1311,7 +1311,7 @@ class Notify:
 
         """
         if not subject:
-            subject = '"' + "Message From " + self.__parent.meta["name"] + '"'
+            subject = '"Message From %s"' % self.__parent.meta["name"]
 
         pynotify.init(self.__parent.meta["name"])
         notification = pynotify.Notification(subject, body, icon)

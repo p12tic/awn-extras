@@ -18,7 +18,12 @@
  */
 
 
-#ifndef __CONF_H
-#define __CONF_H
+#ifndef __ENGINE_MOZILLA_H
+#define __ENGINE_MOZILLA_H
+
+#include "engine_html.h"
+
+void wrapper_mozilla_init_engine(FunctionList *function_list);
 
 #endif
+/* vim: set et ts=2 sts=2 sw=2 : */

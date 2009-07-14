@@ -28,13 +28,23 @@
 #define CONFIG_HEIGHT                 "height"
 #define CONFIG_WIDTH                  "width"
 #define CONFIG_ENABLE_LOCATION_CONFIG "enable_location_dialog"
+#define CONFIG_FIRST_START            "first_start"
+#define CONFIG_SITE                   "site"
 
-void init_config (WebApplet *webapplet, gchar *uid);
+void init_config(WebApplet *webapplet, gchar *uid);
 
-const gchar * config_get_uri(WebApplet *webapplet);
-gint  config_get_width(WebApplet *webapplet);
-gint  config_get_height(WebApplet *webapplet);
-gboolean  config_get_enable_location_dialog(WebApplet *webapplet);
+const gchar *config_get_uri(WebApplet *webapplet);
+void config_set_uri(WebApplet *webapplet, gchar *uri);
+
+const gchar *config_get_site(WebApplet *webapplet);
+void config_set_site(WebApplet *webapplet, gchar *site);
+
+gint config_get_width(WebApplet *webapplet);
+gint config_get_height(WebApplet *webapplet);
+gboolean config_get_enable_location_dialog(WebApplet *webapplet);
+
+gboolean config_get_first_start(WebApplet *webapplet);
+void config_set_first_start(WebApplet *webapplet, gboolean val);
 
 #endif
 /* vim: set et ts=2 sts=2 sw=2 : */

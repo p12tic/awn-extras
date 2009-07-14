@@ -17,8 +17,19 @@
  *
  */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
-#include "conf.h"
-#include "applet.h"
-#include <libawn/awn-config-client.h>
+#include <gtkmozembed.h>
 
+#include "engine_mozilla.h"
+#include "engine_html.h"
+
+void
+wrapper_mozilla_init_engine(FunctionList *function_list)
+{
+  function_list->_html_web_view_open = (html_web_view_open_fn)gtk_moz_embed_load_url;
+  function_list->_html_web_view_new = gtk_moz_embed_new;
+}
+/* vim: set et ts=2 sts=2 sw=2 : */

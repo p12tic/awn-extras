@@ -17,10 +17,15 @@
  *
  */
 
-#define HAVE_WEBKIT
-#undef  HAVE_MOZ
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
 #include <gtk/gtk.h>
+
+#ifdef HAVE_MOZILLA
+#include "engine_mozilla.h"
+#endif
 
 #ifdef HAVE_WEBKIT
 #include "engine_webkit.h"
@@ -28,22 +33,18 @@
 
 #include "engine_html.h"
 
-static int engine = ENGINE_WEBKIT;
-
 static FunctionList function_list;
 
 void
 html_init ()
 {
-  switch (engine)
-  {
-#ifdef HAVE_WEBKIT
-
-    case ENGINE_WEBKIT:
-      wrapper_webkit_init_engine (&function_list);
-      break;
+#ifdef HAVE_MOZILLA
+  wrapper_mozilla_init_engine(&function_list);
 #endif
-  }
+
+#ifdef HAVE_WEBKIT
+  wrapper_webkit_init_engine(&function_list);
+#endif
 }
 
 void

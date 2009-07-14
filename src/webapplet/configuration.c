@@ -43,6 +43,14 @@ get_string (WebApplet *webapplet, const gchar *key)
   return str;
 }
 
+static void
+set_string(WebApplet *webapplet, const gchar *key, gchar *val)
+{
+  awn_config_client_set_string(webapplet->instance_config,
+                               AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+                               key, val, NULL);
+}
+
 static gboolean
 get_bool (WebApplet *webapplet, const gchar *key)
 {
@@ -61,6 +69,14 @@ get_bool (WebApplet *webapplet, const gchar *key)
                                         key, NULL);
   }
   return value;
+}
+
+static void
+set_bool(WebApplet *webapplet, const gchar *key, gboolean val)
+{
+  awn_config_client_set_bool(webapplet->instance_config,
+                             AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+                             key, val, NULL);
 }
 
 gint
@@ -108,14 +124,38 @@ get_height (WebApplet *webapplet)
 const gchar * 
 config_get_uri(WebApplet *webapplet)
 {
-    static gchar * str=NULL;
-    if (str)
-    {
-        g_free(str);
-    }
-    str=get_string (webapplet, CONFIG_URI);
-    return str;
-}  
+  static gchar * str=NULL;
+  if (str)
+  {
+    g_free(str);
+  }
+  str=get_string (webapplet, CONFIG_URI);
+  return str;
+}
+
+void
+config_set_uri(WebApplet *webapplet, gchar *uri)
+{
+  set_string(webapplet, CONFIG_URI, uri);
+}
+
+const gchar *
+config_get_site(WebApplet *webapplet)
+{
+  static gchar *str = NULL;
+  if (str)
+    g_free(str);
+
+  str = get_string(webapplet, CONFIG_SITE);
+
+  return str;
+}
+
+void
+config_set_site(WebApplet *webapplet, gchar *site)
+{
+  set_string(webapplet, CONFIG_SITE, site);
+}
 
 gint 
 config_get_width(WebApplet *webapplet)
@@ -133,7 +173,19 @@ gboolean
 config_get_enable_location_dialog(WebApplet *webapplet)
 {
   return get_bool (webapplet, CONFIG_ENABLE_LOCATION_CONFIG);
-}  
+}
+
+gboolean
+config_get_first_start(WebApplet *webapplet)
+{
+  return get_bool(webapplet, CONFIG_FIRST_START);
+}
+
+void
+config_set_first_start(WebApplet *webapplet, gboolean val)
+{
+  set_bool(webapplet, CONFIG_FIRST_START, val);
+}
 
 void
 init_config(WebApplet *webapplet, gchar *uid)

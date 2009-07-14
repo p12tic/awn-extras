@@ -2,7 +2,7 @@
 Type=Application
 X-AWN-Type=Applet
 X-AWN-AppletType=C
-_Name=WebApplet
-_Comment=Applet for HTML applets
+_Name=Web Applet
+_Comment=Applet for Websites
 Exec=@LIBDIR@/awn/applets/webapplet/webapplet.so
-Icon=apple-green
+Icon=applications-internet

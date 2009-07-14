@@ -30,9 +30,15 @@ typedef struct
   GdkPixbuf       *icon;
   GtkWidget       *box;
   GtkWidget       *viewer;
+  GtkWidget       *entry;
+  GtkWidget       *start;
+  GtkWidget       *check_home;
+  GtkWidget       *location_dialog;
 
   AwnConfigClient *instance_config;
   AwnConfigClient *default_config;
+
+  GKeyFile        *sites_file;
 
   gint             applet_icon_height;
   gchar           *applet_icon_name;

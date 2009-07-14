@@ -1291,7 +1291,7 @@ class Notify:
         """
         self.__parent = parent
 
-        check_dependencies(globals(), "pynotify")
+        awn.check_dependencies(globals(), "pynotify")
 
     def send(self, subject=None, body="", icon="", timeout=0, attention=True):
         """Show a new notification via libnotify.

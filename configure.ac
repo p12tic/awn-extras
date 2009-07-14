@@ -206,7 +206,9 @@ if test "$with_gconf" != "no"; then
 PKG_CHECK_MODULES(NOTIFICATION_DAEMON, [$gconf $gstreampkg libnotify $url_label_module libwnck-1.0 x11])
 fi
 PKG_CHECK_MODULES(SHINY_SWITCHER, [libwnck-1.0 x11 xcomposite xrender])
-PKG_CHECK_MODULES(WEBAPPLET, [$webapplet_modules])
+if test -n "$webapplet_modules"; then
+    PKG_CHECK_MODULES(WEBAPPLET, [$webapplet_modules])
+fi
 
 dnl
 dnl Check python modules

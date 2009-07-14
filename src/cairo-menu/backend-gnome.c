@@ -27,8 +27,6 @@
 #include <libawn/awn-applet.h>
 #include <libawn/awn-applet-simple.h>
 
-#include <libawn-extras/awn-extras.h>
-
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
 #include <string.h>
@@ -815,8 +813,42 @@ GSList* get_menu_data(gboolean show_search, gboolean show_run, gboolean show_pla
 
 gboolean display_message(gchar * summary, gchar * body, glong timeout)
 {
+  NotifyNotification *notify;
 
-  notify_message(summary, body, NULL, -1);
+  notify_init("notify-send");
+
+  notify = notify_notification_new(summary, body, NULL, NULL);
+
+  if (notify)
+  {
+    glong real_timeout;
+    GError *error;
+
+    if (timeout > 0)
+    {
+      real_timeout = timeout;
+    }
+    else
+    {
+      real_timeout = NOTIFY_EXPIRES_DEFAULT;
+    }
+
+    notify_notification_set_timeout(notify, real_timeout);
+    notify_notification_show(notify, &error);
+    if (error)
+    {
+      g_warning("Notification error:", error->message);
+      g_error_free(error);
+    }
+    g_object_unref(G_OBJECT(notify));
+  }
+  else
+  {
+    g_warning("Failed to send notification.");
+  }
+
+  notify_uninit();
+
   return FALSE;
 }
 

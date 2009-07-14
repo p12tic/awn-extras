@@ -71,8 +71,6 @@
 #include "sound.h"
 #include "notificationdaemon-dbus-glue.h"
 
-#include <libawn-extras/awn-extras.h>
-
 #define IMAGE_SIZE 48
 
 #define NW_GET_NOTIFY_ID(nw) \

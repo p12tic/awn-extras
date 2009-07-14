@@ -32,33 +32,19 @@ slicelocaledir='${prefix}/${DATADIRNAME}/locale'
 AC_SUBST(slicelocaledir)
 
 dnl
-dnl Python bindings support
+dnl Python script installation
 dnl
 
-AC_PYTHON_DEVEL()
-
-PKG_CHECK_MODULES(PYCAIRO, pycairo >= pycairo_required_version)
-PYGTK_CODEGEN_DEFINES="-DHAVE_PYCAIRO $PYGTK_CODEGEN_DEFINES";
-
-# shiny-switcher
-PKG_CHECK_EXISTS([libwnck-1.0 >= 2.21.99.9], [AC_DEFINE(HAVE_LIBWNCK_222, 1, [Have libwnck 2.22.x])])
-
-PKG_CHECK_MODULES(PYGTK, pygtk-2.0 >= pygtk_required_version)
-AC_PATH_PROG(PYGTK_CODEGEN, pygtk-codegen-2.0, no)
-if test "x$PYGTK_CODEGEN" = "xno"; then
-  AC_MSG_ERROR([could not find pygtk-codegen-2.0 script])
-fi
-
-AC_MSG_CHECKING(for pygtk defs)
-PYGTK_DEFSDIR=`$PKG_CONFIG --variable=defsdir pygtk-2.0`
-AC_SUBST(PYGTK_DEFSDIR)
-AC_MSG_RESULT($PYGTK_DEFSDIR)
+AC_PYTHON_DEVEL
 
 dnl
 dnl library support
 dnl
 
 AC_CHECK_LIB(m, round)
+# shiny-switcher
+PKG_CHECK_EXISTS([libwnck-1.0 >= 2.21.99.9], [AC_DEFINE(HAVE_LIBWNCK_222, 1, [Have libwnck 2.22.x])])
+
 
 dnl
 dnl Check if desktop-agnostic is installed.
@@ -219,7 +205,7 @@ AC_ARG_ENABLE(pymod_checks,
               enable_pymod_checks=yes)
 
 if test x${enable_pymod_checks} = xyes; then
-    # battery-applet
+    # awnlib, battery-applet, DesktopManager, pynot, pynot-rgba
     AM_CHECK_PYMOD(pynotify,,,AC_MSG_ERROR([python module pynotify required (python-notify)]))
     # arss, mail
 #    AM_CHECK_PYMOD(feedparser,,,AC_MSG_ERROR([python module feedparser required (python-feedparser)]))
@@ -329,6 +315,8 @@ dnl Please keep in alphabetical order
 AC_OUTPUT([
 Makefile
 po/Makefile.in
+shared/python/defs.py
+shared/python/Makefile
 shave/shave
 shave/shave-libtool
 src/Makefile
@@ -363,12 +351,6 @@ src/file-browser-launcher/Makefile
 src/filebrowser/Makefile
 src/filebrowser/filebrowser.desktop.in
 src/gwibfawn/Makefile
-src/libawn-extras/Makefile
-src/libawn-extras/awn-extras.pc
-src/libawn-extras/bindings/Makefile
-src/libawn-extras/bindings/python/defs.py
-src/libawn-extras/bindings/python/Makefile
-src/libawn-extras/bindings/vala/Makefile
 src/mail/Makefile
 src/mail/locale/Makefile
 src/mail/locale/ru/Makefile

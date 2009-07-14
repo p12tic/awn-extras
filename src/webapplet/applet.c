@@ -30,8 +30,6 @@
 #include <libawn/awn-applet-simple.h>
 #include <libawn/awn-dialog.h>
 
-#include <libawn-extras/awn-extras.h>
-
 #include "engine_html.h"
 #include "applet.h"
 #include "configuration.h"

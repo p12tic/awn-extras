@@ -1,3 +1,4 @@
-usr/lib/python2.*/*-packages/awn/extras/_extras.so
 usr/lib/python2.*/*-packages/awn/extras/__init__.py
-usr/share/avant-window-navigator/defs/awn_extras.defs
+usr/lib/python2.*/*-packages/awn/extras/awnlib.py
+usr/lib/python2.*/*-packages/awn/extras/awnmediaplayers.py
+usr/lib/python2.*/*-packages/awn/extras/detach.py

@@ -21,6 +21,5 @@ cairo_main_menu_la_SOURCES =	\
 cairo_main_menu_la_LIBADD =	\
 	$(AWN_LIBS)				\
 	$(CAIRO_MENU_GNOME_LIBS)		\
-    $(top_builddir)/src/libawn-extras/libawn-extras.la	\
         $(NULL)
 cairo_main_menu_la_LDFLAGS = $(APPLET_LINKER_FLAGS)

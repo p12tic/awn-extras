@@ -29,10 +29,9 @@ webapplet_la_SOURCES +=	\
 	$(NULL)
 endif
 
-webapplet_la_LIBADD =						\
-	$(WEBAPPLET_LIBS)					\
-	$(AWN_LIBS)						\
-	$(top_builddir)/src/libawn-extras/libawn-extras.la	\
+webapplet_la_LIBADD =		\
+	$(WEBAPPLET_LIBS)	\
+	$(AWN_LIBS)		\
 	$(NULL)
 webapplet_la_LDFLAGS = $(APPLET_LINKER_FLAGS)
 

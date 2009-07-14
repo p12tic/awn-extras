@@ -34,10 +34,9 @@ sysmon_la_SOURCES =		\
   util.c  \
   util.h  \
   $(NULL)
-sysmon_la_LIBADD =					\
-	$(AWN_LIBS)						\
-	$(top_builddir)/src/libawn-extras/libawn-extras.la	\
-	$(GTOP_LIBS)						\
+sysmon_la_LIBADD = \
+	$(AWN_LIBS) \
+	$(GTOP_LIBS) \
 	$(NULL)
 
 sysmon_la_LDFLAGS = $(APPLET_LINKER_FLAGS)

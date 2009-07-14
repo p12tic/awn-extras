@@ -20,7 +20,6 @@ awnnotificationdaemon_la_SOURCES =	\
 awnnotificationdaemon_la_LIBADD =	\
 	$(AWN_LIBS)			\
 	$(NOTIFICATION_DAEMON_LIBS)	\
-	$(top_builddir)/src/libawn-extras/libawn-extras.la	\
 	$(NULL)
 awnnotificationdaemon_la_LDFLAGS = $(APPLET_LINKER_FLAGS)
 

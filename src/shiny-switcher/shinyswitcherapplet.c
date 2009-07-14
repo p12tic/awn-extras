@@ -42,7 +42,6 @@ int gheight = -1;
 
 #include <libawn/awn-cairo-utils.h>
 #include <libawn/awn-config-client.h>
-#include <libawn-extras/awn-extras.h>
 #include <libawn/awn-utils.h>
 
 #include "shinyswitcherapplet.h"

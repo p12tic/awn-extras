@@ -43,9 +43,8 @@ PYTHON_TEST =
 WOBBLYZINI = wobblyzini
 endif
 
-# please keep alphabetized (except for libawn-extras)
+# please keep alphabetized
 SUBDIRS =			\
-	libawn-extras		\
 	animal-farm			\
 	awnterm			\
 	battery-applet		\

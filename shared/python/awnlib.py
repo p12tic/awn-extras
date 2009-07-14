@@ -25,11 +25,12 @@ pygtk.require("2.0")
 import gtk
 
 import awn
-import awn.extras as extras
 
 import cairo
 import cPickle as cpickle  # For object serialization into gconf
 import types  # For type checking for gconf/settings
+
+check_dependencies(globals(), 'pynotify')
 
 ___file___ = sys.argv[0]
 # Basically, __file__ = current file location
@@ -1312,8 +1313,12 @@ class Notify:
         if not subject:
             subject = '"' + "Message From " + self.__parent.meta["name"] + '"'
 
-        timeout *= 1000
-        return extras.notify_message(subject, body, icon, timeout, False)
+        pynotify.init(self.__parent.meta["name"])
+        notification = pynotify.Notification(subject, body, icon)
+        notification.set_timeout(timeout * 1000)
+        notification.show()
+        pynotify.uninit()
+        return True
 
 
 class Effects:

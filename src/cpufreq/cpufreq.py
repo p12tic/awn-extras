@@ -22,7 +22,7 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 from gtk import gdk
-from gtk import glade
+
 from awn.extras import awnlib
 
 try:
@@ -47,7 +47,7 @@ sysfs_dir = "/sys/devices/system/cpu"
 proc_cpuinfo_file = "/proc/cpuinfo"
 
 images_dir = os.path.join(os.path.dirname(__file__), "images")
-glade_file = os.path.join(os.path.dirname(__file__), "cpufreq.glade")
+ui_file = os.path.join(os.path.dirname(__file__), "cpufreq.ui")
 
 dbus_bus_name = "org.awnproject.Awn.Applets.CpuFreq"
 dbus_object_path = "/org/awnproject/Awn/Applets/CpuFreq"
@@ -186,16 +186,15 @@ class CpuFreqApplet:
             self.icons[i] = gdk.pixbuf_new_from_file_at_size(os.path.join(images_dir, "cpufreq-" + str(i) + ".svg"), height, height)
 
     def setup_context_menu(self):
-        number_of_cpus = self.backend.get_number_of_cpus() # called only once: assumes that every backend returns the same number
+        number_of_cpus = self.backend.get_number_of_cpus()  # called only once: assumes that every backend returns the same number
 
         if number_of_cpus > 1:
-            prefs = glade.XML(glade_file)
-            prefs.get_widget("preferences-vbox").reparent(self.applet.dialog.new("preferences").vbox)
+            prefs = gtk.Builder()
+            prefs.add_from_file(ui_file)
+            prefs.get_object("preferences-vbox").reparent(self.applet.dialog.new("preferences").vbox)
 
-            combobox = gtk.combo_box_new_text()
-            prefs.get_widget("hbox-cpu").add(combobox)
-            prefs.get_widget("label-cpu").set_mnemonic_widget(combobox)
-
+            combobox = prefs.get_object("combobox-cpu")
+            awnlib.add_cell_renderer_text(combobox)
             for i in range(0, number_of_cpus):
                 combobox.append_text(str(i))
 

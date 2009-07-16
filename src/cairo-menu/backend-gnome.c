@@ -272,13 +272,13 @@ fill_er_up(GMenuTreeDirectory *directory, GSList**p)
 
 
 
-void _mount_result(DesktopAgnosticVFSVolumeBackend *volume, char *comment)
+void _mount_result(DesktopAgnosticVFSVolume *volume, char *comment)
 {
   gboolean succeeded;
   GError *err = NULL;
   gchar * mess;
 
-  succeeded = desktop_agnostic_vfs_volume_backend_mount_finish (volume, &err);
+  succeeded = desktop_agnostic_vfs_volume_mount_finish (volume, &err);
 
   if (err)
   {
@@ -304,18 +304,18 @@ gboolean _mount_connected(Menu_list_item * p, char * filemanager)
 
   mess = g_strdup_printf("%s is not mounted. \nAttempting to mount", p->name);
   display_message("Cairo Menu", mess, 4000);
-  desktop_agnostic_vfs_volume_backend_mount(p->volume, (DesktopAgnosticVFSVolumeCallback)_mount_result, g_strdup(p->comment));
+  desktop_agnostic_vfs_volume_mount(p->volume, (DesktopAgnosticVFSVolumeCallback)_mount_result, g_strdup(p->comment));
   g_free(mess);
   return FALSE;
 }
 
-void _unmount_result(DesktopAgnosticVFSVolumeBackend *volume, char* comment)
+void _unmount_result(DesktopAgnosticVFSVolume *volume, char* comment)
 {
   gboolean succeeded;
   GError *err = NULL;
   gchar * mess;
 
-  succeeded = desktop_agnostic_vfs_volume_backend_unmount_finish (volume, &err);
+  succeeded = desktop_agnostic_vfs_volume_unmount_finish (volume, &err);
 
   if (err)
   {
@@ -334,13 +334,13 @@ void _unmount_result(DesktopAgnosticVFSVolumeBackend *volume, char* comment)
   g_free(comment);
 }
 
-void _eject_result(DesktopAgnosticVFSVolumeBackend *volume, char* comment)
+void _eject_result(DesktopAgnosticVFSVolume *volume, char* comment)
 {
   gboolean succeeded;
   GError *err = NULL;
   gchar * mess;
 
-  succeeded = desktop_agnostic_vfs_volume_backend_eject_finish (volume, &err);
+  succeeded = desktop_agnostic_vfs_volume_eject_finish (volume, &err);
 
   if (err)
   {
@@ -368,27 +368,27 @@ gboolean _do_update_places_wrapper(Monitor_places * p)
 
 void backend_unmount(Menu_list_item * menu_item)
 {
-  desktop_agnostic_vfs_volume_backend_unmount(menu_item->volume, (DesktopAgnosticVFSVolumeCallback)_unmount_result, g_strdup(menu_item->comment));
+  desktop_agnostic_vfs_volume_unmount(menu_item->volume, (DesktopAgnosticVFSVolumeCallback)_unmount_result, g_strdup(menu_item->comment));
 }
 
 void backend_eject(Menu_list_item * menu_item)
 {
-  desktop_agnostic_vfs_volume_backend_eject(menu_item->volume, (DesktopAgnosticVFSVolumeCallback)_eject_result, g_strdup(menu_item->comment));
+  desktop_agnostic_vfs_volume_eject(menu_item->volume, (DesktopAgnosticVFSVolumeCallback)_eject_result, g_strdup(menu_item->comment));
 }
 
 void _vfs_changed_v_u(DesktopAgnosticVFSVolumeMonitor *monitor,
-                      DesktopAgnosticVFSVolumeBackend *volume)
+                      DesktopAgnosticVFSVolume        *volume)
 {
   g_timeout_add(500, (GSourceFunc)_do_update_places_wrapper, Monitor_place);
 }
 
 void _vfs_changed_v_m(DesktopAgnosticVFSVolumeMonitor *monitor,
-                      DesktopAgnosticVFSVolumeBackend *volume)
+                      DesktopAgnosticVFSVolume        *volume)
 {
   g_timeout_add(500, (GSourceFunc)_do_update_places_wrapper, Monitor_place);
 }
 
-void _fillin_connected(DesktopAgnosticVFSVolumeBackend *volume, GSList ** p)
+void _fillin_connected(DesktopAgnosticVFSVolume *volume, GSList ** p)
 {
 
   Menu_list_item * item;
@@ -398,15 +398,15 @@ void _fillin_connected(DesktopAgnosticVFSVolumeBackend *volume, GSList ** p)
   item = g_malloc(sizeof(Menu_list_item));
 
   item->item_type = MENU_ITEM_VOLUME;
-  item->name = g_strdup(desktop_agnostic_vfs_volume_backend_get_name(volume));
-  item->icon = g_strdup(desktop_agnostic_vfs_volume_backend_get_icon(volume));
+  item->name = g_strdup(desktop_agnostic_vfs_volume_get_name(volume));
+  item->icon = g_strdup(desktop_agnostic_vfs_volume_get_icon(volume));
   item->volume = volume;
 
-  if (desktop_agnostic_vfs_volume_backend_is_mounted(volume))
+  if (desktop_agnostic_vfs_volume_is_mounted(volume))
   {
     DesktopAgnosticVFSFileBackend *uri;
     
-    uri = desktop_agnostic_vfs_volume_backend_get_uri(volume);
+    uri = desktop_agnostic_vfs_volume_get_uri(volume);
     item->mount_point = desktop_agnostic_vfs_file_backend_get_uri(uri);
     item->volume_prep = NULL;
   }

@@ -269,30 +269,30 @@ static gboolean _do_update_places_wrapper(Places * places)
 
 
 static void
-_on_bookmarks_changed(DesktopAgnosticVFSBookmarksGtkParser *parser,
+_on_bookmarks_changed(DesktopAgnosticVFSGtkBookmarks *parser,
                       Places *places)
 {
   _do_update_places(places);
 }
 
 static void _vfs_changed(DesktopAgnosticVFSVolumeMonitor *monitor,
-                         DesktopAgnosticVFSVolumeBackend *volume,
-                         Places                          *places)
+                         DesktopAgnosticVFSVolume *volume,
+                         Places                   *places)
 {
   g_timeout_add(500, (GSourceFunc)_do_update_places_wrapper, places);
 }
 
-static void _fillin_connected(DesktopAgnosticVFSVolumeBackend *volume,
-                              Places                          *places)
+static void _fillin_connected(DesktopAgnosticVFSVolume *volume,
+                              Places                   *places)
 {
   Menu_Item *item;
   DesktopAgnosticVFSFileBackend *uri;
   const gchar *uri_str;
 
-  g_message("Attempting to add %s...", desktop_agnostic_vfs_volume_backend_get_name(volume));
+  g_message("Attempting to add %s...", desktop_agnostic_vfs_volume_get_name(volume));
 
   /* don't use g_return_if_fail because it runs g_critical */
-  if (!desktop_agnostic_vfs_volume_backend_is_mounted(volume))
+  if (!desktop_agnostic_vfs_volume_is_mounted(volume))
   {
     return;
   }
@@ -300,9 +300,9 @@ static void _fillin_connected(DesktopAgnosticVFSVolumeBackend *volume,
   item = g_malloc(sizeof(Menu_Item));
 
   item->places = places;
-  item->text = g_strdup(desktop_agnostic_vfs_volume_backend_get_name(volume));
-  item->icon = g_strdup(desktop_agnostic_vfs_volume_backend_get_icon(volume));
-  uri = desktop_agnostic_vfs_volume_backend_get_uri(volume);
+  item->text = g_strdup(desktop_agnostic_vfs_volume_get_name(volume));
+  item->icon = g_strdup(desktop_agnostic_vfs_volume_get_icon(volume));
+  uri = desktop_agnostic_vfs_volume_get_uri(volume);
   uri_str = desktop_agnostic_vfs_file_backend_get_uri(uri);
   item->exec = g_strdup_printf("%s %s", places->file_manager, uri_str);
   item->comment = g_strdup_printf("%s\n%s", item->text, uri_str);
@@ -382,7 +382,7 @@ static void get_places(Places * places)
   }
 
   static DesktopAgnosticVFSVolumeMonitor* vol_monitor = NULL;
-  static DesktopAgnosticVFSBookmarksGtkParser *bookmarks_parser = NULL;
+  static DesktopAgnosticVFSGtkBookmarks *bookmarks_parser = NULL;
 
   if (!vol_monitor)
   {
@@ -393,7 +393,7 @@ static void get_places(Places * places)
     g_signal_connect(vol_monitor, "volume-mounted", G_CALLBACK(_vfs_changed), places);
     g_signal_connect(vol_monitor, "volume-unmounted", G_CALLBACK(_vfs_changed), places);
 
-    bookmarks_parser = desktop_agnostic_vfs_bookmarks_gtk_parser_new (NULL, TRUE);
+    bookmarks_parser = desktop_agnostic_vfs_gtk_bookmarks_new (NULL, TRUE);
     g_signal_connect (G_OBJECT (bookmarks_parser), "changed",
                       G_CALLBACK (_on_bookmarks_changed), places);
   }
@@ -411,10 +411,10 @@ static void get_places(Places * places)
   GSList *bookmarks;
   GSList *node;
 
-  bookmarks = desktop_agnostic_vfs_bookmarks_gtk_parser_get_bookmarks (bookmarks_parser);
+  bookmarks = desktop_agnostic_vfs_gtk_bookmarks_get_bookmarks (bookmarks_parser);
   for (node = bookmarks; node != NULL; node = node->next)
   {
-    DesktopAgnosticVFSBookmarksBookmark *bookmark;
+    DesktopAgnosticVFSBookmark *bookmark;
     DesktopAgnosticVFSFileBackend *b_file;
     const gchar *b_alias;
     gchar *b_path;
@@ -422,9 +422,9 @@ static void get_places(Places * places)
 
     item = g_new0 (Menu_Item, 1);
     item->icon = g_strdup ("stock_folder");
-    bookmark = (DesktopAgnosticVFSBookmarksBookmark*)node->data;
-    b_file = desktop_agnostic_vfs_bookmarks_bookmark_get_file (bookmark);
-    b_alias = desktop_agnostic_vfs_bookmarks_bookmark_get_alias (bookmark);
+    bookmark = (DesktopAgnosticVFSBookmark*)node->data;
+    b_file = desktop_agnostic_vfs_bookmark_get_file (bookmark);
+    b_alias = desktop_agnostic_vfs_bookmark_get_alias (bookmark);
     b_path = desktop_agnostic_vfs_file_backend_get_path (b_file);
     shell_quoted = g_shell_quote (b_path);
 

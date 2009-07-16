@@ -503,7 +503,7 @@ awn_applet_factory_initp (const gchar *name, gchar* uid, gint panel_id)
   html_init ();
   WebApplet *webapplet = g_malloc (sizeof (WebApplet));
   webapplet->uid=g_strdup(uid);
-  init_config (webapplet, uid);
+  init_config (webapplet);
   webapplet->check_home = NULL;
   webapplet->location_dialog = NULL;
   webapplet->start = NULL;

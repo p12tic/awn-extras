@@ -32,9 +32,9 @@ get_string (WebApplet *webapplet, const gchar *key)
 static void
 set_string(WebApplet *webapplet, const gchar *key, gchar *val)
 {
-  awn_config_client_set_string(webapplet->instance_config,
-                               AWN_CONFIG_CLIENT_DEFAULT_GROUP,
-                               key, val, NULL);
+  desktop_agnostic_config_client_set_string (webapplet->config,
+                                             DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
+                                             key, val, NULL);
 }
 
 static gboolean
@@ -48,9 +48,9 @@ get_bool (WebApplet *webapplet, const gchar *key)
 static void
 set_bool(WebApplet *webapplet, const gchar *key, gboolean val)
 {
-  awn_config_client_set_bool(webapplet->instance_config,
-                             AWN_CONFIG_CLIENT_DEFAULT_GROUP,
-                             key, val, NULL);
+  desktop_agnostic_config_client_set_bool (webapplet->config,
+                                           DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
+                                           key, val, NULL);
 }
 
 gint

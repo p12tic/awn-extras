@@ -30,7 +30,6 @@ import gtk
 from gtk import gdk
 import gobject      #Gtk/Gdk/GObj for interfacing with the applet
 import awn
-from awn import extras
 import cairo        # Awn and cairo drawing
 awn.check_dependencies(globals(), "Xlib")
 from Xlib import X, display, error, Xatom, Xutil
@@ -131,9 +130,13 @@ class mywidget(gtk.Widget):
         owner = self.dsp.get_selection_owner(self.selection)
         if(owner!=X.NONE):
             # If someone already has the system tray... BAIL!
-            extras.notify_message("PyNot Error",
-                "Another System Tray is already running",
-                "%s%s"%(path, "pynot.svg"), 10000, 0)
+            pynotify.init('PyNot')
+            notification = pynotify.Notification("PyNot Error",
+                                                 "Another System Tray is already running",
+                                                 "%s%s" % (path, "pynot.svg"))
+            notification.set_timeout(10000)
+            notification.show()
+            pynotify.uninit()
 
             gtkwin.trayExists(self)
 

@@ -1,279 +1,335 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Sat Apr  4 05:26:33 2009 -->
-<glade-interface>
-  <widget class="GtkWindow" id="window1">
+<?xml version="1.0"?>
+<interface>
+  <!-- interface-requires gtk+ 2.12 -->
+  <!-- interface-naming-policy toplevel-contextual -->
+  <object class="GtkAdjustment" id="adjustment1">
+    <property name="value">5</property>
+    <property name="lower">5</property>
+    <property name="upper">25</property>
+    <property name="step_increment">5</property>
+    <property name="page_increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="adjustment2">
+    <property name="value">100</property>
+    <property name="lower">85</property>
+    <property name="upper">100</property>
+    <property name="step_increment">5</property>
+    <property name="page_increment">10</property>
+  </object>
+  <object class="GtkWindow" id="window1">
     <child>
-      <widget class="GtkVBox" id="vbox-preferences">
+      <object class="GtkVBox" id="vbox-preferences">
         <property name="visible">True</property>
         <property name="spacing">18</property>
         <child>
-          <widget class="GtkFrame" id="frame-battery">
+          <object class="GtkFrame" id="frame-battery">
             <property name="visible">True</property>
             <property name="label_xalign">0</property>
-            <property name="shadow_type">GTK_SHADOW_NONE</property>
+            <property name="shadow_type">none</property>
             <child>
-              <widget class="GtkAlignment" id="alignment1">
+              <object class="GtkAlignment" id="alignment1">
                 <property name="visible">True</property>
                 <property name="top_padding">6</property>
                 <property name="left_padding">12</property>
                 <child>
-                  <widget class="GtkVBox" id="vbox1">
+                  <object class="GtkVBox" id="vbox1">
                     <property name="visible">True</property>
                     <property name="spacing">6</property>
                     <child>
-                      <widget class="GtkHBox" id="hbox1">
+                      <object class="GtkHBox" id="hbox1">
                         <property name="visible">True</property>
                         <property name="spacing">12</property>
                         <child>
-                          <widget class="GtkLabel" id="label-battery">
+                          <object class="GtkLabel" id="label-battery">
                             <property name="visible">True</property>
                             <property name="xalign">0</property>
                             <property name="label" translatable="yes">_Battery:</property>
                             <property name="use_underline">True</property>
                             <property name="mnemonic_widget">combobox-battery</property>
                             <accessibility>
-                              <atkrelation target="combobox-battery" type="label-for"/>
+                              <relation type="label-for" target="combobox-battery"/>
                             </accessibility>
-                          </widget>
+                          </object>
                           <packing>
                             <property name="expand">False</property>
+                            <property name="position">0</property>
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkComboBox" id="combobox-battery">
+                          <object class="GtkComboBox" id="combobox-battery">
                             <property name="visible">True</property>
-                            <property name="items" translatable="yes"></property>
+                            <property name="model">liststore-battery</property>
                             <accessibility>
-                              <atkrelation target="label-battery" type="labelled-by"/>
+                              <relation type="labelled-by" target="label-battery"/>
                             </accessibility>
-                          </widget>
+                          </object>
                           <packing>
                             <property name="position">1</property>
                           </packing>
                         </child>
-                      </widget>
+                      </object>
+                      <packing>
+                        <property name="position">0</property>
+                      </packing>
                     </child>
-                  </widget>
+                  </object>
                 </child>
-              </widget>
+              </object>
             </child>
-            <child>
-              <widget class="GtkLabel" id="label1">
+            <child type="label">
+              <object class="GtkLabel" id="label1">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">&lt;b&gt;General Options&lt;/b&gt;</property>
                 <property name="use_markup">True</property>
-              </widget>
-              <packing>
-                <property name="type">label_item</property>
-              </packing>
+              </object>
             </child>
-          </widget>
+          </object>
           <packing>
             <property name="expand">False</property>
+            <property name="position">0</property>
           </packing>
         </child>
         <child>
-          <widget class="GtkFrame" id="frame-display">
+          <object class="GtkFrame" id="frame-display">
             <property name="visible">True</property>
             <property name="label_xalign">0</property>
-            <property name="shadow_type">GTK_SHADOW_NONE</property>
+            <property name="shadow_type">none</property>
             <child>
-              <widget class="GtkAlignment" id="alignment2">
+              <object class="GtkAlignment" id="alignment2">
                 <property name="visible">True</property>
                 <property name="top_padding">6</property>
                 <property name="left_padding">12</property>
                 <child>
-                  <widget class="GtkVBox" id="vbox2">
+                  <object class="GtkVBox" id="vbox2">
                     <property name="visible">True</property>
                     <property name="spacing">6</property>
                     <child>
-                      <widget class="GtkHBox" id="hbox-theme">
+                      <object class="GtkHBox" id="hbox-theme">
                         <property name="visible">True</property>
                         <property name="spacing">12</property>
                         <child>
-                          <widget class="GtkLabel" id="label-theme">
+                          <object class="GtkLabel" id="label-theme">
                             <property name="visible">True</property>
                             <property name="xalign">0</property>
                             <property name="label" translatable="yes">_Theme:</property>
                             <property name="use_underline">True</property>
                             <property name="mnemonic_widget">combobox-theme</property>
                             <accessibility>
-                              <atkrelation target="combobox-theme" type="label-for"/>
+                              <relation type="label-for" target="combobox-theme"/>
                             </accessibility>
-                          </widget>
+                          </object>
                           <packing>
                             <property name="expand">False</property>
+                            <property name="position">0</property>
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkComboBox" id="combobox-theme">
+                          <object class="GtkComboBox" id="combobox-theme">
                             <property name="visible">True</property>
-                            <property name="items" translatable="yes"></property>
+                            <property name="model">liststore-theme</property>
                             <accessibility>
-                              <atkrelation target="label-theme" type="labelled-by"/>
+                              <relation type="labelled-by" target="label-theme"/>
                             </accessibility>
-                          </widget>
+                          </object>
                           <packing>
                             <property name="position">1</property>
                           </packing>
                         </child>
-                      </widget>
+                      </object>
+                      <packing>
+                        <property name="position">0</property>
+                      </packing>
                     </child>
-                  </widget>
+                  </object>
                 </child>
-              </widget>
+              </object>
             </child>
-            <child>
-              <widget class="GtkLabel" id="label2">
+            <child type="label">
+              <object class="GtkLabel" id="label2">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">&lt;b&gt;Display&lt;/b&gt;</property>
                 <property name="use_markup">True</property>
-              </widget>
-              <packing>
-                <property name="type">label_item</property>
-              </packing>
+              </object>
             </child>
-          </widget>
+          </object>
           <packing>
             <property name="expand">False</property>
             <property name="position">1</property>
           </packing>
         </child>
         <child>
-          <widget class="GtkFrame" id="frame-notifications">
+          <object class="GtkFrame" id="frame-notifications">
             <property name="visible">True</property>
             <property name="label_xalign">0</property>
-            <property name="shadow_type">GTK_SHADOW_NONE</property>
+            <property name="shadow_type">none</property>
             <child>
-              <widget class="GtkAlignment" id="alignment3">
+              <object class="GtkAlignment" id="alignment3">
                 <property name="visible">True</property>
                 <property name="top_padding">6</property>
                 <property name="left_padding">12</property>
                 <child>
-                  <widget class="GtkVBox" id="vbox3">
+                  <object class="GtkVBox" id="vbox3">
                     <property name="visible">True</property>
                     <property name="spacing">6</property>
                     <child>
-                      <widget class="GtkCheckButton" id="checkbutton-warn-low-level">
+                      <object class="GtkCheckButton" id="checkbutton-warn-low-level">
+                        <property name="label" translatable="yes">_Warn when charge level drops to:</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="tooltip" translatable="yes">If enabled, shows a notification when the charge levels drops too low</property>
-                        <property name="label" translatable="yes">_Warn when charge level drops to:</property>
+                        <property name="receives_default">False</property>
+                        <property name="tooltip_text" translatable="yes">If enabled, shows a notification when the charge levels drops too low</property>
                         <property name="use_underline">True</property>
-                        <property name="response_id">0</property>
                         <property name="draw_indicator">True</property>
-                      </widget>
+                      </object>
+                      <packing>
+                        <property name="position">0</property>
+                      </packing>
                     </child>
                     <child>
-                      <widget class="GtkAlignment" id="alignment5">
+                      <object class="GtkAlignment" id="alignment5">
                         <property name="visible">True</property>
                         <property name="left_padding">12</property>
                         <child>
-                          <widget class="GtkHBox" id="hbox-low-level">
+                          <object class="GtkHBox" id="hbox-low-level">
                             <property name="visible">True</property>
                             <property name="spacing">12</property>
                             <child>
-                              <widget class="GtkSpinButton" id="spinbutton-low-level">
+                              <object class="GtkSpinButton" id="spinbutton-low-level">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
-                                <property name="adjustment">5 5 25 5 10 0</property>
+                                <property name="adjustment">adjustment1</property>
                                 <property name="climb_rate">5</property>
-                                <property name="update_policy">GTK_UPDATE_IF_VALID</property>
-                              </widget>
+                                <property name="update_policy">if-valid</property>
+                              </object>
                               <packing>
                                 <property name="expand">False</property>
+                                <property name="position">0</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkComboBox" id="combobox-low-level">
+                              <object class="GtkComboBox" id="combobox-low-level">
                                 <property name="visible">True</property>
-                                <property name="items" translatable="yes">Percent
-Time Remaining</property>
-                              </widget>
+                                <property name="model">liststore-low-level</property>
+                                <child>
+                                  <object class="GtkCellRendererText" id="renderer1"/>
+                                  <attributes>
+                                    <attribute name="text">0</attribute>
+                                  </attributes>
+                                </child>
+                              </object>
                               <packing>
                                 <property name="position">1</property>
                               </packing>
                             </child>
-                          </widget>
+                          </object>
                         </child>
-                      </widget>
+                      </object>
                       <packing>
                         <property name="position">1</property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkCheckButton" id="checkbutton-notify-high-level">
+                      <object class="GtkCheckButton" id="checkbutton-notify-high-level">
+                        <property name="label" translatable="yes">_Notify when charge level reaches:</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="tooltip" translatable="yes">If enabled, shows a notification when the charge level reaches a certain percentage</property>
-                        <property name="label" translatable="yes">_Notify when charge level reaches:</property>
+                        <property name="receives_default">False</property>
+                        <property name="tooltip_text" translatable="yes">If enabled, shows a notification when the charge level reaches a certain percentage</property>
                         <property name="use_underline">True</property>
-                        <property name="response_id">0</property>
                         <property name="draw_indicator">True</property>
-                      </widget>
+                      </object>
                       <packing>
                         <property name="position">2</property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkAlignment" id="alignment4">
+                      <object class="GtkAlignment" id="alignment4">
                         <property name="visible">True</property>
                         <property name="left_padding">12</property>
                         <child>
-                          <widget class="GtkHBox" id="hbox-high-level">
+                          <object class="GtkHBox" id="hbox-high-level">
                             <property name="visible">True</property>
                             <property name="spacing">12</property>
                             <child>
-                              <widget class="GtkSpinButton" id="spinbutton-high-level">
+                              <object class="GtkSpinButton" id="spinbutton-high-level">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
-                                <property name="adjustment">100 85 100 5 10 0</property>
+                                <property name="adjustment">adjustment2</property>
                                 <property name="climb_rate">5</property>
-                                <property name="update_policy">GTK_UPDATE_IF_VALID</property>
-                              </widget>
+                                <property name="update_policy">if-valid</property>
+                              </object>
                               <packing>
                                 <property name="expand">False</property>
+                                <property name="position">0</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkLabel" id="label4">
+                              <object class="GtkLabel" id="label4">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Percent</property>
-                              </widget>
+                              </object>
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="position">1</property>
                               </packing>
                             </child>
-                          </widget>
+                          </object>
                         </child>
-                      </widget>
+                      </object>
                       <packing>
                         <property name="position">3</property>
                       </packing>
                     </child>
-                  </widget>
+                  </object>
                 </child>
-              </widget>
+              </object>
             </child>
-            <child>
-              <widget class="GtkLabel" id="label3">
+            <child type="label">
+              <object class="GtkLabel" id="label3">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">&lt;b&gt;Notifications&lt;/b&gt;</property>
                 <property name="use_markup">True</property>
-              </widget>
-              <packing>
-                <property name="type">label_item</property>
-              </packing>
+              </object>
             </child>
-          </widget>
+          </object>
           <packing>
             <property name="expand">False</property>
             <property name="position">2</property>
           </packing>
         </child>
-      </widget>
+      </object>
     </child>
-  </widget>
-</glade-interface>
+  </object>
+  <object class="GtkSizeGroup" id="sizegroup1">
+    <widgets>
+      <widget name="label-battery"/>
+      <widget name="label-theme"/>
+    </widgets>
+  </object>
+  <object class="GtkListStore" id="liststore-battery">
+    <columns>
+      <!-- column-name name -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
+  <object class="GtkListStore" id="liststore-theme">
+    <columns>
+      <!-- column-name name -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
+  <object class="GtkListStore" id="liststore-low-level">
+    <columns>
+      <!-- column-name name -->
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes">Percent</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Time Remaining</col>
+      </row>
+    </data>
+  </object>
+</interface>

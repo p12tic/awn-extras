@@ -31,7 +31,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <libawn-extras/awn-extras.h>
 
 #include <math.h>
 #include "awnsystemmonitor.h"

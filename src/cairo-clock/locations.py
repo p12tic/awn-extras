@@ -258,7 +258,7 @@ class LocationsPreferencesTab:
 
         self.location_store = gtk.TreeStore(str, str)
 
-        tree_view = prefs.get_widget("treeview-locations")
+        tree_view = prefs.get_object("treeview-locations")
         # TODO use ellepsis to handle large names of certain cities
         city_column = gtk.TreeViewColumn("City", gtk.CellRendererText(), text=0)
         city_column.set_min_width(100)
@@ -266,7 +266,7 @@ class LocationsPreferencesTab:
         tree_view.append_column(city_column)
         tree_view.append_column(gtk.TreeViewColumn("Timezone", gtk.CellRendererText(), text=1))
 
-        self.__selection_buttons = (prefs.get_widget("button-edit-location"), prefs.get_widget("button-remove-location"))
+        self.__selection_buttons = (prefs.get_object("button-edit-location"), prefs.get_object("button-remove-location"))
         for button in self.__selection_buttons:
             button.set_sensitive(False)
         self.tree_selection = tree_view.get_selection()
@@ -274,8 +274,8 @@ class LocationsPreferencesTab:
         self.tree_selection.connect("changed", self.selection_changed_cb)
         self.location_store.connect("row-changed", self.row_changed_cb)
 
-        prefs.get_widget("button-add-location").connect("clicked", self.clicked_add_location_button_cb)
-        prefs.get_widget("button-remove-location").connect("clicked", self.clicked_remove_location_button_cb)
+        prefs.get_object("button-add-location").connect("clicked", self.clicked_add_location_button_cb)
+        prefs.get_object("button-remove-location").connect("clicked", self.clicked_remove_location_button_cb)
 
         for city_and_timezone in cities_timezones:
             self.location_store.append(None, city_and_timezone)
@@ -284,7 +284,7 @@ class LocationsPreferencesTab:
         self.location_store.set_sort_column_id(0, gtk.SORT_ASCENDING)
 
     def get_prefs_widget(self):
-        return self.__prefs.get_widget("vbox-locations")
+        return self.__prefs.get_object("vbox-locations")
 
     def selection_changed_cb(self, selection):
         row_selected = selection.count_selected_rows() > 0
@@ -336,26 +336,26 @@ class LocationSearchWindow:
         self.add_row = add_row
         self.contains_city_timezone = contains_city_timezone
 
-        self.__search_dialog = prefs.get_widget("locations-search-dialog")
+        self.__search_dialog = prefs.get_object("locations-search-dialog")
         self.__search_dialog.connect("delete_event", lambda w, e: True)
         self.__search_dialog.connect("response", self.response_event_cb)
 
-        self.__button_ok_search = self.__prefs.get_widget("button-ok-location-search")
+        self.__button_ok_search = self.__prefs.get_object("button-ok-location-search")
         self.__button_ok_search.set_sensitive(False)
         self.__button_ok_search.connect("clicked", self.button_ok_search_clicked_cb)
 
-        self.__entry_location_name = self.__prefs.get_widget("entry-location-name")
+        self.__entry_location_name = self.__prefs.get_object("entry-location-name")
         self.__entry_location_name.connect("changed", self.entry_location_changed_cb)
 
-        self.__button_find_next = self.__prefs.get_widget("button-find-next")
+        self.__button_find_next = self.__prefs.get_object("button-find-next")
         self.__button_find_next.set_sensitive(False)
         self.__button_find_next.connect("clicked", self.button_find_next_clicked_cb)
 
-        self.__vadjustment = self.__prefs.get_widget("scroll-all-locations").get_vadjustment()
+        self.__vadjustment = self.__prefs.get_object("scroll-all-locations").get_vadjustment()
 
         self.__all_locations_store = gtk.TreeStore(str, str, bool)
 
-        self.__all_locations_view = self.__prefs.get_widget("treeview-all-locations")
+        self.__all_locations_view = self.__prefs.get_object("treeview-all-locations")
         self.__all_locations_view.connect("row-activated", self.all_locations_row_activated_cb)
 
         self.__all_locations_selection = self.__all_locations_view.get_selection()

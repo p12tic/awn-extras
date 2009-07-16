@@ -1,4 +1,0 @@
-if HAVE_VALA
-VALA_BINDINGS = vala
-endif
-SUBDIRS = python $(VALA_BINDINGS)

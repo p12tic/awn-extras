@@ -23,7 +23,6 @@ from gtk import gdk
 import time
 import subprocess
 import awn
-from awn import extras
 
 class dgClockPref:
 
@@ -51,13 +50,13 @@ class dgClockPref:
         popup_menu = self.applet.create_default_menu()
         pref = gtk.ImageMenuItem(gtk.STOCK_PREFERENCES)
 
-        timeadj = extras.image_menu_item_new_with_label('Adjust Date & Time')
+        timeadj = awn.image_menu_item_new_with_label('Adjust Date & Time')
         timeadj.set_image(gtk.image_new_from_stock(gtk.STOCK_EDIT, gtk.ICON_SIZE_MENU))
 
-        ctime = extras.image_menu_item_new_with_label('Copy Time')
+        ctime = awn.image_menu_item_new_with_label('Copy Time')
         ctime.set_image(gtk.image_new_from_stock(gtk.STOCK_COPY, gtk.ICON_SIZE_MENU))
 
-        cdate = extras.image_menu_item_new_with_label('Copy Date')
+        cdate = awn.image_menu_item_new_with_label('Copy Date')
         cdate.set_image(gtk.image_new_from_stock(gtk.STOCK_COPY, gtk.ICON_SIZE_MENU))
 
         popup_menu.append(ctime)

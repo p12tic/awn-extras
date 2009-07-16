@@ -24,8 +24,8 @@ import random
 import gobject
 import gtk
 import awn
-from awn import extras
 import wnck
+check_dependencies(globals(), 'pynotify')
 
 from config import ConfigManager
 from getlist import GetList
@@ -105,7 +105,13 @@ class DesktopManager(awn.AppletSimple):
 			try :
 				currentfile = random.sample(self.files, 1)[0]
 			except (ValueError, AttributeError) :
-				error = extras.notify_message("Error","Either there are no images in the selected folder, or DesktopManager has not had enough time to scan the folder yet.", "desktop",3000,True)
+				pynotify.init('DesktopManager')
+				notification = pynotify.Notification("DesktopManager Error",
+								     "Either there are no images in the selected folder, or DesktopManager has not had enough time to scan the folder yet.",
+								     "desktop")
+				notification.set_timeout(5000)
+				notification.show()
+				pynotify.uninit()
 				return False
 			if (self.config_manager.get_attention() == True) :
 				awn.awn_effect_start_ex(self.get_effects(), "attention", 0, 0, 1)

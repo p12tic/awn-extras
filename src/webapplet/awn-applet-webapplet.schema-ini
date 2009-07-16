@@ -23,4 +23,14 @@ type = boolean
 default = false
 description = Flag that enables usage of the "Open Location" dialog in the applet.
 
+[DEFAULT/first_start]
+type = bool
+default = true
+description = If true display location entry and website buttons
+
+[DEFAULT/site]
+type = string
+default = ;
+description = Name of specialized website to use
+
 ; vim: set ft=dosini :

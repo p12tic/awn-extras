@@ -25,7 +25,6 @@ pygtk.require("2.0")
 import gtk
 
 import awn
-import awn.extras as extras
 
 import cairo
 import cPickle as cpickle  # For object serialization into gconf
@@ -1292,6 +1291,8 @@ class Notify:
         """
         self.__parent = parent
 
+        awn.check_dependencies(globals(), "pynotify")
+
     def send(self, subject=None, body="", icon="", timeout=0, attention=True):
         """Show a new notification via libnotify.
 
@@ -1310,10 +1311,14 @@ class Notify:
 
         """
         if not subject:
-            subject = '"' + "Message From " + self.__parent.meta["name"] + '"'
+            subject = '"Message From %s"' % self.__parent.meta["name"]
 
-        timeout *= 1000
-        return extras.notify_message(subject, body, icon, timeout, False)
+        pynotify.init(self.__parent.meta["name"])
+        notification = pynotify.Notification(subject, body, icon)
+        notification.set_timeout(timeout * 1000)
+        notification.show()
+        pynotify.uninit()
+        return True
 
 
 class Effects:

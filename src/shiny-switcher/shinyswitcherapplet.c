@@ -2,7 +2,7 @@
  * Copyright (C) 2007, 2008, 2009 Rodney Cryderman <rcryderman@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published bshinyswitcher->y
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, orign
  * (at your option) any later version.
  *
@@ -36,6 +36,7 @@ int gheight = -1;
 #include <X11/extensions/Xrender.h>
 #include <X11/extensions/Xfixes.h>
 
+#include <libawn/awn-cairo-utils.h>
 #include <libawn/awn-utils.h>
 
 #include "shinyswitcherapplet.h"

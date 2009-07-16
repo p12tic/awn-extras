@@ -1,4 +1,5 @@
 SUBDIRS =				\
+	shared/python			\
 	src						\
 	po
 	

@@ -22,7 +22,6 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 from gtk import gdk
-from gtk import glade
 
 from awn.extras import awnlib
 from messagehandler import MessageHandler
@@ -45,7 +44,7 @@ applet_theme_logo = "battery"
 themes_dir = os.path.join(os.path.dirname(__file__), "themes")
 default_theme = "gpm"
 
-glade_file = os.path.join(os.path.dirname(__file__), "battery-status.glade")
+ui_file = os.path.join(os.path.dirname(__file__), "battery-status.ui")
 
 charge_ranges = {"100": (100, 86), "080": (85, 66), "060": (65, 46), "040": (45, 26), "020": (25, 7), "000": (6, 0)}
 low_level_units = ["Percent", "Time Remaining"]
@@ -104,17 +103,18 @@ class BatteryStatusApplet:
         self.applet.icon.file(icon, size=awnlib.Icon.APPLET_SIZE)
 
     def setup_context_menu(self):
-        prefs = glade.XML(glade_file)
-        prefs.get_widget("vbox-preferences").reparent(self.applet.dialog.new("preferences").vbox)
+        prefs = gtk.Builder()
+        prefs.add_from_file(ui_file)
+        prefs.get_object("vbox-preferences").reparent(self.applet.dialog.new("preferences").vbox)
 
         refresh_message = lambda v: self.__message_handler.evaluate()
 
         default_values = {
             "theme": default_theme,
-            "warn-low-level": (True, self.toggled_warn_low_level_cb, prefs.get_widget("checkbutton-warn-low-level")),
-            "notify-high-level": (False, self.toggled_notify_high_level_cb, prefs.get_widget("checkbutton-notify-high-level")),
-            "level-warn-low": (15.0, refresh_message, prefs.get_widget("spinbutton-low-level")),
-            "level-notify-high": (100.0, refresh_message, prefs.get_widget("spinbutton-high-level")),
+            "warn-low-level": (True, self.toggled_warn_low_level_cb, prefs.get_object("checkbutton-warn-low-level")),
+            "notify-high-level": (False, self.toggled_notify_high_level_cb, prefs.get_object("checkbutton-notify-high-level")),
+            "level-warn-low": (15.0, refresh_message, prefs.get_object("spinbutton-low-level")),
+            "level-notify-high": (100.0, refresh_message, prefs.get_object("spinbutton-high-level")),
             "low-level-unit": low_level_units[0]
         }
 
@@ -126,7 +126,8 @@ class BatteryStatusApplet:
 
         """ Battery """
         if self.backend is not None:
-            self.combobox_battery = prefs.get_widget("combobox-battery")
+            self.combobox_battery = prefs.get_object("combobox-battery")
+            awnlib.add_cell_renderer_text(self.combobox_battery)
             for model in batteries.values():
                 self.combobox_battery.append_text(model)
 
@@ -137,7 +138,7 @@ class BatteryStatusApplet:
             self.combobox_battery.set_active(batteries.values().index(batteries[udi]))
             self.combobox_battery.connect("changed", self.combobox_battery_changed_cb)
         else:
-            frame = prefs.get_widget("frame-battery")
+            frame = prefs.get_object("frame-battery")
             frame.hide_all()
             frame.set_no_show_all(True)
 
@@ -146,7 +147,8 @@ class BatteryStatusApplet:
         self.themes = os.listdir(themes_dir)
         self.themes.sort()
 
-        combobox_theme = prefs.get_widget("combobox-theme")
+        combobox_theme = prefs.get_object("combobox-theme")
+        awnlib.add_cell_renderer_text(combobox_theme)
         for i in self.themes:
             combobox_theme.append_text(i)
 
@@ -157,23 +159,19 @@ class BatteryStatusApplet:
         combobox_theme.set_active(self.themes.index(self.theme))
         combobox_theme.connect("changed", self.combobox_theme_changed_cb)
 
-        size_group = gtk.SizeGroup(gtk.SIZE_GROUP_HORIZONTAL)
-        size_group.add_widget(prefs.get_widget("label-battery"))
-        size_group.add_widget(prefs.get_widget("label-theme"))
-
         """ Notifications """
         if self.backend is not None:
-            self.hbox_low_level = prefs.get_widget("hbox-low-level")
+            self.hbox_low_level = prefs.get_object("hbox-low-level")
             self.hbox_low_level.set_sensitive(self.settings["warn-low-level"])
 
-            self.combobox_low_level = prefs.get_widget("combobox-low-level")
+            self.combobox_low_level = prefs.get_object("combobox-low-level")
             self.combobox_low_level.set_active(low_level_units.index(self.settings["low-level-unit"]))
             self.combobox_low_level.connect("changed", self.combobox_low_level_unit_changed_cb)
 
-            self.hbox_high_level = prefs.get_widget("hbox-high-level")
+            self.hbox_high_level = prefs.get_object("hbox-high-level")
             self.hbox_high_level.set_sensitive(self.settings["notify-high-level"])
         else:
-            frame = prefs.get_widget("frame-notifications")
+            frame = prefs.get_object("frame-notifications")
             frame.hide_all()
             frame.set_no_show_all(True)
 

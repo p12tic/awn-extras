@@ -32,33 +32,19 @@ slicelocaledir='${prefix}/${DATADIRNAME}/locale'
 AC_SUBST(slicelocaledir)
 
 dnl
-dnl Python bindings support
+dnl Python script installation
 dnl
 
-AC_PYTHON_DEVEL()
-
-PKG_CHECK_MODULES(PYCAIRO, pycairo >= pycairo_required_version)
-PYGTK_CODEGEN_DEFINES="-DHAVE_PYCAIRO $PYGTK_CODEGEN_DEFINES";
-
-# shiny-switcher
-PKG_CHECK_EXISTS([libwnck-1.0 >= 2.21.99.9], [AC_DEFINE(HAVE_LIBWNCK_222, 1, [Have libwnck 2.22.x])])
-
-PKG_CHECK_MODULES(PYGTK, pygtk-2.0 >= pygtk_required_version)
-AC_PATH_PROG(PYGTK_CODEGEN, pygtk-codegen-2.0, no)
-if test "x$PYGTK_CODEGEN" = "xno"; then
-  AC_MSG_ERROR([could not find pygtk-codegen-2.0 script])
-fi
-
-AC_MSG_CHECKING(for pygtk defs)
-PYGTK_DEFSDIR=`$PKG_CONFIG --variable=defsdir pygtk-2.0`
-AC_SUBST(PYGTK_DEFSDIR)
-AC_MSG_RESULT($PYGTK_DEFSDIR)
+AC_PYTHON_DEVEL
 
 dnl
 dnl library support
 dnl
 
 AC_CHECK_LIB(m, round)
+# shiny-switcher
+PKG_CHECK_EXISTS([libwnck-1.0 >= 2.21.99.9], [AC_DEFINE(HAVE_LIBWNCK_222, 1, [Have libwnck 2.22.x])])
+
 
 dnl
 dnl Determine the location of awn-schema-to-gconf
@@ -73,10 +59,13 @@ dnl
 
 AC_ARG_WITH([gconf], AS_HELP_STRING([--without-gconf],[Disable building/installing applets that need GConf]),,[with_gconf=yes])
 AC_ARG_WITH([gnome], AS_HELP_STRING([--without-gnome],[Disable building/installing applets that require Gnome-specific libraries]),,[with_gnome=yes])
+AC_ARG_WITH([mozilla], AS_HELP_STRING([--with-mozilla],[Enable building/installing applets that require Gecko (Mozilla)]),,[with_mozilla=no])
 AC_ARG_WITH([webkit], AS_HELP_STRING([--with-webkit],[Enable building/installing applets that require webkitgtk]),,[with_webkit=no])
 AM_CONDITIONAL(WITH_GCONF, test "$with_gconf" != "no")
 AM_CONDITIONAL(WITH_GNOME, test "$with_gnome" != "no")
+AM_CONDITIONAL(WITH_MOZILLA, test "$with_mozilla" != "no")
 AM_CONDITIONAL(WITH_WEBKIT, test "$with_webkit" != "no")
+AM_CONDITIONAL(BUILD_WEBAPPLET, test "$with_mozilla" != "no" -o "$with_webkit" != "no")
 
 # all
 PKG_CHECK_MODULES(AWN, [awn >= 0.3.9])
@@ -131,17 +120,35 @@ PKG_CHECK_MODULES(GNOME_MENU, [libgnome-menu])
 PKG_CHECK_MODULES(GTOP, [libgtop-2.0])
 fi
 
+# webapplet
+webapplet_modules=""
+mozilla_module=no
+if test "$with_mozilla" != "no"; then
+    found_mozilla=no
+    for p in mozilla firefox xulrunner seamonkey; do
+        mozilla_module="${p}-gtkmozembed"
+        PKG_CHECK_EXISTS([$mozilla_module],[found_mozilla=yes])
+        if test "$found_mozilla" = "yes"; then
+            break
+        fi
+    done
+    if test "$found_mozilla" = "yes"; then
+        AC_DEFINE([HAVE_MOZILLA],[1],[Define if Gecko (Mozilla) is available.])
+        webapplet_modules="$webapplet_modules $mozilla_module"
+    else
+        AC_MSG_ERROR([Could not find Gecko's gtkmozembed (needed for Mozilla support)])
+    fi
+fi
+
 webkit_module=no
 if test "$with_webkit" != "no"; then
-# webapplet
 PKG_CHECK_EXISTS([webkit-1.0],[webkit_module="webkit-1.0"],
     [PKG_CHECK_EXISTS([WebKitGtk],[
         webkit_module="WebKitGtk"
         AC_DEFINE([HAVE_OLD_WEBKITGTK],[1],[Define if the installed WebKit uses the old pkgconfig file and header structure.])
         ],[AC_MSG_ERROR([Could not find packages webkit-1.0 or WebKitGtk.  Either one is required for webkit support to be enabled.])])])
-PKG_CHECK_MODULES(WEBKIT, [$webkit_module])
-AC_SUBST(WEBKIT_CFLAGS)
-AC_SUBST(WEBKIT_LIBS)
+AC_DEFINE([HAVE_WEBKIT],[1],[Define if WebKit is available.])
+webapplet_modules="$webapplet_modules $webkit_module"
 fi
 
 #awn-notification-daemon
@@ -183,6 +190,9 @@ if test "$with_gconf" != "no"; then
 PKG_CHECK_MODULES(NOTIFICATION_DAEMON, [$gconf $gstreampkg libnotify $url_label_module libwnck-1.0 x11])
 fi
 PKG_CHECK_MODULES(SHINY_SWITCHER, [libwnck-1.0 x11 xcomposite xrender])
+if test -n "$webapplet_modules"; then
+    PKG_CHECK_MODULES(WEBAPPLET, [$webapplet_modules])
+fi
 
 dnl
 dnl Check python modules
@@ -193,7 +203,7 @@ AC_ARG_ENABLE(pymod_checks,
               enable_pymod_checks=yes)
 
 if test x${enable_pymod_checks} = xyes; then
-    # battery-applet
+    # awnlib, battery-applet, DesktopManager, pynot, pynot-rgba
     AM_CHECK_PYMOD(pynotify,,,AC_MSG_ERROR([python module pynotify required (python-notify)]))
     # arss, mail
 #    AM_CHECK_PYMOD(feedparser,,,AC_MSG_ERROR([python module feedparser required (python-feedparser)]))
@@ -303,6 +313,8 @@ dnl Please keep in alphabetical order
 AC_OUTPUT([
 Makefile
 po/Makefile.in
+shared/python/defs.py
+shared/python/Makefile
 shave/shave
 shave/shave-libtool
 src/Makefile
@@ -337,12 +349,6 @@ src/file-browser-launcher/Makefile
 src/filebrowser/Makefile
 src/filebrowser/filebrowser.desktop.in
 src/gwibfawn/Makefile
-src/libawn-extras/Makefile
-src/libawn-extras/awn-extras.pc
-src/libawn-extras/bindings/Makefile
-src/libawn-extras/bindings/python/defs.py
-src/libawn-extras/bindings/python/Makefile
-src/libawn-extras/bindings/vala/Makefile
 src/mail/Makefile
 src/mail/locale/Makefile
 src/mail/locale/ru/Makefile
@@ -416,4 +422,6 @@ echo ""
 echo "             Vala Support:   $has_vala"
 echo ""
 echo "           WebKit Support:   $webkit_module"
+echo ""
+echo "            Gecko Support:   $mozilla_module"
 echo ""

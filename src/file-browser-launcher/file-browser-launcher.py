@@ -66,7 +66,7 @@ class App (awn.AppletSimple):
     self.icons['stock_folder'] = self.theme.load_icon('stock_folder', 24, 24)
 
     #Set the icon
-    self.set_icon_name('file-browser-launcher', 'stock_folder')
+    self.set_icon_name('stock_folder')
     self.icon = self.get_icon().get_icon_at_size(48, None)
 
     if not gio:

@@ -115,7 +115,7 @@ class GwibberApplet (awn.AppletSimple):
 
       awn.AppletSimple.__init__ (self, "gwibfawn", uid, panel_id)
       self.set_tooltip_text(GwibberApplet.APPLET_NAME)
-      self.set_icon_name('gwibber', 'gwibber')
+      self.set_icon_name('gwibber')
 
       pynotify.init(GwibberApplet.APPLET_NAME)
 

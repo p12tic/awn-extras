@@ -21,7 +21,6 @@ import subprocess
 import pygtk
 pygtk.require('2.0')
 import gtk
-from gtk import glade
 
 from awn.extras import awnlib
 
@@ -29,7 +28,7 @@ applet_name = "Mount Applet"
 applet_version = "0.3.3"
 applet_description = "An applet to (un)mount devices"
 
-glade_file = os.path.join(os.path.dirname(__file__), "mount-applet.glade")
+ui_file = os.path.join(os.path.dirname(__file__), "mount-applet.ui")
 image_dir = os.path.join(os.path.dirname(__file__), "icons")
 
 # Logo of the applet, shown in the GTK+ About dialog
@@ -71,13 +70,14 @@ class MountApplet:
         }
         self.applet.settings.load(self.settings)
 
-        prefs = glade.XML(glade_file)
-        prefs.get_widget("dialog-vbox").reparent(pref_dialog.vbox)
+        prefs = gtk.Builder()
+        prefs.add_from_file(ui_file)
+        prefs.get_object("dialog-vbox").reparent(pref_dialog.vbox)
 
-        self.__entry_hidden_mountpoints = prefs.get_widget("entry-hidden-mountpoints")
+        self.__entry_hidden_mountpoints = prefs.get_object("entry-hidden-mountpoints")
         self.__entry_hidden_mountpoints.set_text(" ".join(self.settings["hidden-mountpoints"]))
 
-        self.__entry_execute_command = prefs.get_widget("entry-execute-command")
+        self.__entry_execute_command = prefs.get_object("entry-execute-command")
         self.__entry_execute_command.set_text(self.settings["execute-command"])
 
         pref_dialog.connect("response", self.pref_dialog_response_cb)

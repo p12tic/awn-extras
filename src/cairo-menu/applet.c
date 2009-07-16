@@ -24,7 +24,6 @@
 
 #include <libawn/awn-applet.h>
 #include <libawn/awn-applet-simple.h>
-#include <libawn-extras/awn-extras.h>
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
 #include <string.h>

@@ -95,7 +95,7 @@ Depends: 	${shlibs:Depends},
 		${python:Depends},
 		avant-window-navigator-trunk,
 		python-awn-trunk,
-		python-awnlib-trunk (>= 0.3.2),
+		python-awn-extras-trunk (>= 0.3.8),
 Recommends: 	awn-manager-trunk (>= 0.3~bzr489),
 		python-feedparser,
 		python-gst0.10,
@@ -149,8 +149,8 @@ Depends: 	${shlibs:Depends},
 		${python:Depends},
 		avant-window-navigator-trunk,
 		python-awn-trunk,
-		python-awnlib-trunk (>= 0.3.2),
-		fortune
+		fortune,
+		python-awn-extras-trunk (>= 0.3.8)
 Recommends: 	awn-manager-trunk (>= 0.3~bzr489),
 		python-gnome2-desktop,
 		python-xlib,
@@ -177,58 +177,17 @@ Description: A collection of applets for avant-window-navigator
   * rtm: Use Remember The Milk from AWN. 
   * tomboy-applet: Control Tomboy with D-Bus.
 
-Package: libawn-extras0-trunk
-Section: libs
-Architecture: any
-Depends: 	${shlibs:Depends}, 
-		${misc:Depends}
-Conflicts: awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
-Replaces: awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
-Description: A library for avant-window-navigator's applets
- This library is used by the applets of avant-window-navigator. It provides 
- functions to easily create new applets.
-
-Package: libawn-extras-dev-trunk
-Section: libdevel
-Architecture: any
-Depends:	libawn-extras0-trunk (= ${binary:Version}),
-		${shlibs:Depends},
-		${misc:Depends},
-		libawn-dev-trunk,
-		libgtk2.0-dev,
-		libglib2.0-dev,
-Conflicts: libawn-extras-dev, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
-Replaces: libawn-extras-dev, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
-Description: library for avant-window-navigator's applets - development files
- This package provides the include files and static library for the
- libawn-extras library functions.
-
 Package: python-awn-extras-trunk
 Section: python
 Architecture: any
-Depends:	libawn-extras0-trunk (= ${binary:Version}),
-		${shlibs:Depends},
+Depends:	${shlibs:Depends},
 		${misc:Depends},
 		${python:Depends}
 Provides: ${python:Provides}
 XB-Python-Version: ${python:Versions}
-Conflicts: python-awn-extras, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
-Replaces: python-awn-extras, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
-Description: Python bindings for avant-window-navigator's applets
- This packages provides Python bindings to create and use Python applets with
- functions of libawn-extras. It also include AWNLib, a collection of
- functions to simplify the creation of applets with Python.
-
-Package: python-awnlib-trunk
-Section: python
-Architecture: any
-Depends:	${python:Depends},
-		python-awn-extras-trunk,
-		python-gtk2,
-		python-gobject,
-XB-Python-Version: ${python:Versions}
-Conflicts: python-awnlib, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
-Replaces: python-awnlib, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
-Description: Python utilities for avant-window-navigator's applets
- This packages provides AWNLib, a collection of functions to simplify the 
- creation of applets with Python.
+Conflicts: python-awn-extras, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing, python-awnlib, python-awnlib-trunk
+Replaces: python-awn-extras, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing, python-awnlib, python-awnlib-trunk
+Description: Python functions used by avant-window-navigator's applets
+ This package provides a set of convenience functions used by Python applets
+ for Avant Window Navigator, including AWNLib, an applet wrapper which
+ simplifies applet creation.

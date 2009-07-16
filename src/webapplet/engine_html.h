@@ -23,6 +23,7 @@
 
 enum
 {
+  ENGINE_MOZILLA,
   ENGINE_WEBKIT
 };
 

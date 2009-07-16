@@ -22,6 +22,9 @@ import gtk
 import os
 from getlist import GetList
 import gobject
+check_dependencies(globals(), 'pynotify')
+
+
 class Menu(gtk.Menu) :
 	def __init__(self, switcher, config) :
 		self.switcher = switcher
@@ -72,7 +75,13 @@ class Menu(gtk.Menu) :
 							activated = 1
 						folderscount += 1
 			except OSError:
-				error = extras.notify_message("Error","A problem occured when trying to read the selected directory.", "desktop",15000,True)
+				pynotify.init('DesktopManager')
+				notification = pynotify.Notification("DesktopManager Error",
+								     "A problem occured when trying to read the selected directory.",
+								     "desktop")
+				notification.set_timeout(15000)
+				notification.show()
+				pynotify.uninit()
 				self.All = gtk.MenuItem("Could not read directory")
 				self.All.set_sensitive(False)
 			else :
@@ -112,8 +121,14 @@ class Menu(gtk.Menu) :
 						if (root+"/"+file == self.config.get_desktop()) :
 							temp.set_active(True)
 						imagescount += 1
-			except OSError:
-				error = extras.notify_message("Error","A problem occured when trying to read the selected directory.", "desktop",15000,True)
+			except OS
+				pynotify.init('DesktopManager')
+				notification = pynotify.Notification("DesktopManager Error",
+								     "A problem occured when trying to read the selected directory.",
+								     "desktop")
+				notification.set_timeout(15000)
+				notification.show()
+				pynotify.uninit()
 				images = gtk.MenuItem("Could not read directory")
 				images.set_sensitive(False)
 			else :

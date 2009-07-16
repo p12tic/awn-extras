@@ -26,7 +26,6 @@ from xml.dom import minidom
 import pygtk
 pygtk.require("2.0")
 import gtk
-from gtk import glade
 
 from awn.extras import awnlib
 from awn import OverlayText
@@ -51,7 +50,7 @@ socket_timeout = 20
 import socket
 socket.setdefaulttimeout(socket_timeout)
 
-glade_file = os.path.join(os.path.dirname(__file__), "weather-prefs.glade")
+ui_file = os.path.join(os.path.dirname(__file__), "weather.ui")
 
 temperature_units = ["Celcius", "Fahrenheit"]
 font_sizes = (15.0, 18.0, 23.0)
@@ -117,10 +116,11 @@ class WeatherApplet:
 
         menu.insert(gtk.SeparatorMenuItem(), menu_index + 1)
 
-        prefs = glade.XML(glade_file)
+        prefs = gtk.Builder()
+        prefs.add_from_file(ui_file)
 
         preferences_vbox = self.applet.dialog.new("preferences").vbox
-        prefs.get_widget("dialog-vbox").reparent(preferences_vbox)
+        prefs.get_object("dialog-vbox").reparent(preferences_vbox)
 
         self.setup_preferences(prefs)
 
@@ -145,21 +145,21 @@ class WeatherApplet:
             refresh_dialog(None)
 
         defaults = {
-            "show-temperature-icon": (True, self.refresh_icon, prefs.get_widget("checkbutton-temperature-icon")),
+            "show-temperature-icon": (True, self.refresh_icon, prefs.get_object("checkbutton-temperature-icon")),
             "temperature-font-size": (1, self.refresh_icon),
             "temperature-unit": (0, refresh_dialog),
             "theme": (system_theme_name, refresh_theme_and_dialog),
-            "curved_dialog": (False, refresh_curved_dialog, prefs.get_widget("curvedCheckbutton")),
+            "curved_dialog": (False, refresh_curved_dialog, prefs.get_object("curvedCheckbutton")),
             "location": ("Portland, ME", refresh_location_label),
             "location_code": ("USME0328", refresh_location),
-            "map_maxwidth": (450, refresh_map, prefs.get_widget("mapWidthSpinbutton"))
+            "map_maxwidth": (450, refresh_map, prefs.get_object("mapWidthSpinbutton"))
         }
         self.settings = self.applet.settings.load_preferences(defaults)
 
         self.setup_theme()
 
         """ General preferences """
-        self.search_window = prefs.get_widget("locations-search-dialog")
+        self.search_window = prefs.get_object("locations-search-dialog")
         def response_event_cb(widget, response):
             if response < 0:
                 self.search_window.hide()
@@ -169,15 +169,17 @@ class WeatherApplet:
             self.init_search_window()
             self.search_list.append([_("No records found"), None])
             self.search_window.show_all()
-        prefs.get_widget("button-location").connect("clicked", location_button_clicked_cb)
+        prefs.get_object("button-location").connect("clicked", location_button_clicked_cb)
 
-        unit_combobox = prefs.get_widget("combobox-temperature-unit")
+        unit_combobox = prefs.get_object("combobox-temperature-unit")
+        awnlib.add_cell_renderer_text(unit_combobox)
         for i in temperature_units:
             unit_combobox.append_text(i)
         unit_combobox.set_active(self.settings["temperature-unit"])
         unit_combobox.connect("changed", self.unit_changed_cb)
 
-        theme_combobox = prefs.get_widget("combobox-theme")
+        theme_combobox = prefs.get_object("combobox-theme")
+        awnlib.add_cell_renderer_text(theme_combobox)
         for i in self.themes:
             theme_combobox.append_text(i)
         if self.settings["theme"] not in self.themes:
@@ -185,41 +187,35 @@ class WeatherApplet:
         theme_combobox.set_active(self.themes.index(self.settings["theme"]))
         theme_combobox.connect("changed", self.theme_changed_cb)
 
-        fontsize_combobox = prefs.get_widget("combobox-font-size")
+        fontsize_combobox = prefs.get_object("combobox-font-size")
+        awnlib.add_cell_renderer_text(fontsize_combobox)
         fontsize_combobox.set_active(self.settings["temperature-font-size"])
         fontsize_combobox.connect("changed", self.fontsize_changed_cb)
 
-        tempicon_checkbutton = prefs.get_widget("checkbutton-temperature-icon")
-        fontsize_hbox = prefs.get_widget("hbox-font-size")
+        tempicon_checkbutton = prefs.get_object("checkbutton-temperature-icon")
+        fontsize_hbox = prefs.get_object("hbox-font-size")
         fontsize_hbox.set_sensitive(tempicon_checkbutton.get_active())
         tempicon_checkbutton.connect("toggled", lambda w: fontsize_hbox.set_sensitive(w.get_active()))
 
-        self.location_label = prefs.get_widget("locationLabel")
+        self.location_label = prefs.get_object("locationLabel")
         self.location_label.set_markup("<b>%s</b>" % self.settings["location"])
-
-        size_group = gtk.SizeGroup(gtk.SIZE_GROUP_HORIZONTAL)
-        size_group.add_widget(prefs.get_widget("label-location"))
-        size_group.add_widget(prefs.get_widget("label-temperature-unit"))
-        size_group.add_widget(prefs.get_widget("label-theme"))
-        size_group.add_widget(prefs.get_widget("label-map-width"))
-        size_group.add_widget(prefs.get_widget("alignment-font-size"))
 
         """ Location search window """
         self.search_list = gtk.ListStore(str, str)
 
-        self.treeview = prefs.get_widget("location-treeview")
+        self.treeview = prefs.get_object("location-treeview")
         self.treeview.set_model(self.search_list)
         self.treeview.append_column(gtk.TreeViewColumn("Location", gtk.CellRendererText(), text=0))
 
-        self.ok_button = prefs.get_widget("location-ok-button")
+        self.ok_button = prefs.get_object("location-ok-button")
         self.ok_button.connect("clicked", self.ok_button_clicked_cb)
 
         self.treeview.connect("cursor-changed", lambda w: self.ok_button.set_sensitive(True))
         self.treeview.connect("row-activated", lambda v, p, c: self.ok_button_clicked_cb())
 
-        find_button = prefs.get_widget("location-find-button")
+        find_button = prefs.get_object("location-find-button")
 
-        self.location_entry = prefs.get_widget("location-entry")
+        self.location_entry = prefs.get_object("location-entry")
         def location_entry_changed_cb(widget):
             find_button.set_sensitive(len(self.location_entry.get_text()) > 0)
         self.location_entry.connect("changed", location_entry_changed_cb)

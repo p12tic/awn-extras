@@ -1,24 +1,25 @@
 #!/usr/bin/python
-"""
-Copyright 2008 Sharkbaitbobby <sharkbaitbobby+awn@gmail.com>
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-"""
+#
+#Copyright 2008, 2009 Sharkbaitbobby <sharkbaitbobby+awn@gmail.com>
+#
+#This program is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 2 of the License, or
+#(at your option) any later version.
+#
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
 import awn
-from awn.extras import awnlib
+from awn.extras import awnlib, defs
+import gettext
+import locale
 
 # workaround for weirdness with regards to Ubuntu + gtkmozembed
 if os.path.exists('/etc/issue'):
@@ -46,9 +47,14 @@ except ImportError:
 # Add pop up if gtkmozembed isn't found
 awn.check_dependencies(globals(), 'gtkmozembed')
 
-applet_name = "Digg Applet"
+APP = "awn-extras-applets"
+gettext.bindtextdomain(APP, defs.GETTEXTDIR)
+gettext.textdomain(APP)
+_ = gettext.gettext
+
+applet_name = _("Digg Applet")
 applet_version = "0.3.3"
-applet_description = "Browse Digg in Awn"
+applet_description = _("Browse Digg from Awn")
 applet_theme_logo = "digg"
 
 
@@ -61,7 +67,7 @@ class DiggApplet:
     def __init__(self, applet):
         self.applet = applet
 
-        applet.title.set("Digg")
+        applet.tooltip.set(_("Digg"))
 
         self.dialog = applet.dialog.new("main")
 
@@ -79,5 +85,6 @@ if __name__ == "__main__":
         "description": applet_description,
         "theme": applet_theme_logo,
         "author": "Sharkbaitbobby",
-        "copyright-year": 2008,
+        "artists": ["Jakub Szypulka"],
+        "copyright-year": "2008, 2009",
         "authors": ["Sharkbaitbobby <sharkbaitbobby+awn@gmail.com>"]})

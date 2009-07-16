@@ -32,8 +32,10 @@ GCONF_APPLETS +=	\
 	yama       \
 	$(NULL)
 endif
-if WITH_WEBKIT
-WEBKIT_APPLETS = webapplet \
+# --with-webkit and/or --with-mozilla
+if BUILD_WEBAPPLET
+WEBAPPLET =		\
+	webapplet	\
 	$(NULL)
 endif
 if MAINTAINER_MODE
@@ -41,9 +43,8 @@ PYTHON_TEST =
 WOBBLYZINI = wobblyzini
 endif
 
-# please keep alphabetized (except for libawn-extras)
+# please keep alphabetized
 SUBDIRS =			\
-	libawn-extras		\
 	animal-farm			\
 	awnterm			\
 	battery-applet		\
@@ -69,5 +70,5 @@ SUBDIRS =			\
 	$(WOBBLYZINI)		\
 	$(GCONF_APPLETS)	\
 	$(VALA_APPLETS)		\
-	$(WEBKIT_APPLETS)	\
+	$(WEBAPPLET)		\
 	$(NULL)

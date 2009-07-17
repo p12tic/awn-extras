@@ -505,25 +505,22 @@ static void update_places(Menu_list_item **p, char* file_manager)
 //mount monitor
   if (!vfsvolumes)
   {
-    DesktopAgnosticVFSImplementation* vfs = NULL;
     GError *err = NULL;
 
-    vfs = desktop_agnostic_vfs_get_default (&err);
+    vfsvolumes = desktop_agnostic_vfs_volume_monitor_get_default(&err);
 
     if (err)
     {
-      g_critical ("Could not retrieve VFS implementation: %s", err->message);
+      g_critical ("Could not retrieve volume monitor: %s", err->message);
       g_error_free (err);
       return;
     }
 
-    if (!vfs)
+    if (!vfsvolumes)
     {
-      g_warning ("Could not retrieve VFS implementation.");
+      g_warning ("Could not retrieve volume monitor.");
       return;
     }
-
-    vfsvolumes = desktop_agnostic_vfs_implementation_volume_monitor_get_default(vfs);
     g_signal_connect(G_OBJECT(vfsvolumes), "volume-mounted", G_CALLBACK(_vfs_changed_v_m), NULL);
     g_signal_connect(G_OBJECT(vfsvolumes), "volume-unmounted", G_CALLBACK(_vfs_changed_v_u), NULL);
   }

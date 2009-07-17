@@ -312,7 +312,6 @@ static void _fillin_connected(DesktopAgnosticVFSVolume *volume,
 
 static void get_places(Places * places)
 {
-  DesktopAgnosticVFSImplementation *vfs;
   Menu_Item *item = NULL;
   GError *error = NULL;
   const gchar *desktop_dir = g_get_user_special_dir (G_USER_DIRECTORY_DESKTOP);
@@ -367,19 +366,6 @@ static void get_places(Places * places)
   item->comment = g_strdup("Root File System");
   item->places = places;
   places->menu_list = g_slist_append(places->menu_list, item);
-  
-  vfs = desktop_agnostic_vfs_get_default (&error);
-  if (error)
-  {
-    g_critical("Could not get the VFS implementation: %s", error->message);
-    g_error_free(error);
-    return;
-  }
-  else if (!vfs)
-  {
-    g_critical("Could not get the VFS implementation.");
-    return;
-  }
 
   static DesktopAgnosticVFSVolumeMonitor* vol_monitor = NULL;
   static DesktopAgnosticVFSGtkBookmarks *bookmarks_parser = NULL;
@@ -389,7 +375,18 @@ static void get_places(Places * places)
     /*this is structured like this because get_places() is
     invoked any time there is a change in places... only want perform
     these actions once.*/
-    vol_monitor = desktop_agnostic_vfs_implementation_volume_monitor_get_default (vfs);
+    vol_monitor = desktop_agnostic_vfs_volume_monitor_get_default(&error);
+    if (error)
+    {
+      g_critical("Could not get the volume monitor: %s", error->message);
+      g_error_free(error);
+      return;
+    }
+    else if (!vol_monitor)
+    {
+      g_critical("Could not get the volume monitor.");
+      return;
+    }
     g_signal_connect(vol_monitor, "volume-mounted", G_CALLBACK(_vfs_changed), places);
     g_signal_connect(vol_monitor, "volume-unmounted", G_CALLBACK(_vfs_changed), places);
 

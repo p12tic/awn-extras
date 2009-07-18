@@ -286,7 +286,7 @@ static void _fillin_connected(DesktopAgnosticVFSVolume *volume,
                               Places                   *places)
 {
   Menu_Item *item;
-  DesktopAgnosticVFSFileBackend *uri;
+  DesktopAgnosticVFSFile *uri;
   const gchar *uri_str;
 
   g_message("Attempting to add %s...", desktop_agnostic_vfs_volume_get_name(volume));
@@ -303,7 +303,7 @@ static void _fillin_connected(DesktopAgnosticVFSVolume *volume,
   item->text = g_strdup(desktop_agnostic_vfs_volume_get_name(volume));
   item->icon = g_strdup(desktop_agnostic_vfs_volume_get_icon(volume));
   uri = desktop_agnostic_vfs_volume_get_uri(volume);
-  uri_str = desktop_agnostic_vfs_file_backend_get_uri(uri);
+  uri_str = desktop_agnostic_vfs_file_get_uri(uri);
   item->exec = g_strdup_printf("%s %s", places->file_manager, uri_str);
   item->comment = g_strdup_printf("%s\n%s", item->text, uri_str);
   g_object_unref(uri);
@@ -412,7 +412,7 @@ static void get_places(Places * places)
   for (node = bookmarks; node != NULL; node = node->next)
   {
     DesktopAgnosticVFSBookmark *bookmark;
-    DesktopAgnosticVFSFileBackend *b_file;
+    DesktopAgnosticVFSFile *b_file;
     const gchar *b_alias;
     gchar *b_path;
     gchar *shell_quoted;
@@ -422,11 +422,11 @@ static void get_places(Places * places)
     bookmark = (DesktopAgnosticVFSBookmark*)node->data;
     b_file = desktop_agnostic_vfs_bookmark_get_file (bookmark);
     b_alias = desktop_agnostic_vfs_bookmark_get_alias (bookmark);
-    b_path = desktop_agnostic_vfs_file_backend_get_path (b_file);
+    b_path = desktop_agnostic_vfs_file_get_path (b_file);
     shell_quoted = g_shell_quote (b_path);
 
     item->exec = g_strdup_printf("%s %s", places->file_manager, shell_quoted);
-    item->comment = desktop_agnostic_vfs_file_backend_get_uri (b_file);
+    item->comment = desktop_agnostic_vfs_file_get_uri (b_file);
 
     g_free (shell_quoted);
 

@@ -404,10 +404,10 @@ void _fillin_connected(DesktopAgnosticVFSVolume *volume, GSList ** p)
 
   if (desktop_agnostic_vfs_volume_is_mounted(volume))
   {
-    DesktopAgnosticVFSFileBackend *uri;
+    DesktopAgnosticVFSFile *uri;
     
     uri = desktop_agnostic_vfs_volume_get_uri(volume);
-    item->mount_point = desktop_agnostic_vfs_file_backend_get_uri(uri);
+    item->mount_point = desktop_agnostic_vfs_file_get_uri(uri);
     item->volume_prep = NULL;
   }
   else
@@ -661,8 +661,8 @@ static void _do_update_places(Monitor_places * user_data)
 
 
 static void monitor_places_callback(DesktopAgnosticVFSFileMonitor      *monitor,
-                                    DesktopAgnosticVFSFileBackend      *file,
-                                    DesktopAgnosticVFSFileBackend      *other,
+                                    DesktopAgnosticVFSFile             *file,
+                                    DesktopAgnosticVFSFile             *other,
                                     DesktopAgnosticVFSFileMonitorEvent  event,
                                     Monitor_places                     *user_data)
 {
@@ -674,7 +674,7 @@ static void monitor_places_callback(DesktopAgnosticVFSFileMonitor      *monitor,
 
 static void monitor_places(gpointer callback, gpointer data, gpointer box)
 {
-  DesktopAgnosticVFSFileBackend *file = NULL;
+  DesktopAgnosticVFSFile *file = NULL;
   DesktopAgnosticVFSFileMonitor *monitor = NULL;
   GError *err = NULL;
 
@@ -704,7 +704,7 @@ static void monitor_places(gpointer callback, gpointer data, gpointer box)
     return;
   }
 
-  monitor = desktop_agnostic_vfs_file_backend_monitor (file);
+  monitor = desktop_agnostic_vfs_file_monitor (file);
 
   if (!monitor)
   {

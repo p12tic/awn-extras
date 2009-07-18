@@ -141,7 +141,7 @@ launch (GMenuTreeEntry *tree_entry)
 {
   const gchar *path;
   GError *error = NULL;
-  DesktopAgnosticVFSFileBackend *file;
+  DesktopAgnosticVFSFile *file;
   DesktopAgnosticDesktopEntryBackend *entry;
   
   path = gmenu_tree_entry_get_desktop_file_path (tree_entry);
@@ -152,8 +152,8 @@ launch (GMenuTreeEntry *tree_entry)
     g_error_free (error);
     return;
   }
-  if (!desktop_agnostic_vfs_file_backend_get_exists (file) ||
-      desktop_agnostic_vfs_file_backend_get_file_type (file) != DESKTOP_AGNOSTIC_VFS_FILE_FILE_TYPE_REGULAR)
+  if (!desktop_agnostic_vfs_file_exists (file) ||
+      desktop_agnostic_vfs_file_get_file_type (file) != DESKTOP_AGNOSTIC_VFS_FILE_TYPE_REGULAR)
   {
     g_object_unref (file);
     return;

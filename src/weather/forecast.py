@@ -17,7 +17,6 @@
 # You should have received a copy of the GNU Lesser General Public
 # License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
 import urllib
 from xml.dom import minidom
 
@@ -49,7 +48,6 @@ class Forecast:
         print "fetching forecast..."
         forecast = self.fetchForecast()
         print "finished fetching"
-        print forecast
         if forecast is not None and forecast != self.cachedForecast:
             self.cachedForecast = forecast
 
@@ -58,7 +56,7 @@ class Forecast:
             elif not self.parent.settings['curved_dialog']:
                 self.forecastDialog.set_title("%s %s %s"%(_("Forecast"), _("for"), self.cachedForecast['CITY']))
             self.forecastArea.set_forecast(self.cachedForecast)
-            print "updated"
+            print "updated forecast"
 
     def refresh_unit(self):
         self.forecastArea.set_forecast(self.cachedForecast)

@@ -19,7 +19,6 @@
 
 import os
 import re
-import threading
 import urllib2
 from xml.dom import minidom
 
@@ -89,7 +88,6 @@ class WeatherApplet:
         self.setup_context_menu()
 
         self.forecaster = forecast.Forecast(self)
-        self.onRefreshForecast = self.forecaster.onRefreshForecast # <3 python
 
         # Set default icons/titles/dialogs so the applet is informative without data
         self.set_icon()
@@ -282,12 +280,10 @@ class WeatherApplet:
         "Refresh" option in the context menu.
 
         """
-        def refresh():
-            self.refresh_conditions()
-            self.onRefreshForecast()
-            if map:
-                self.onRefreshMap()
-        threading.Thread(target=refresh).start()
+        self.refresh_conditions()
+        self.forecaster.onRefreshForecast()
+        if map:
+            self.onRefreshMap()
 
     def setup_theme(self):
         def refresh_theme():
@@ -405,7 +401,6 @@ class WeatherApplet:
 
         self.map_pixbuf = pixbuf
 
-        print "creating new map..."
         mapSize = pixbuf.get_width(), pixbuf.get_height()
 
         # resize if necessary as defined by map_maxwidth

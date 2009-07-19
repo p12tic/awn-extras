@@ -50,7 +50,8 @@ class App (awn.AppletSimple):
         """
         Creating the applet's core
         """
-        awn.AppletSimple.__init__(self, uid, panel_id)
+        awn.AppletSimple.__init__(self, 'media-icon' + media_button_type[1:], \
+          uid, panel_id)
 
         self.icon_names = {}
         self.icon_names["--next"] = "media-skip-forward"
@@ -82,8 +83,7 @@ class App (awn.AppletSimple):
         gtk.window_set_default_icon_name(self.icon_names[media_button_type])
 
         self.media_button_type = media_button_type
-        self.set_icon_name('media-icon' + media_button_type[1:], \
-            self.icon_names[media_button_type])
+        self.set_icon_name(self.icon_names[media_button_type])
 
         self.what_app()
         self.set_tooltip_text(self.tooltips[media_button_type])

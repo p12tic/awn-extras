@@ -999,7 +999,7 @@ class Settings:
 
 class Keyring:
 
-    def __init__(self, parent):
+    def __init__(self, parent=None):
         """Create a new Keyring object. This includes importing the keyring
         module and connecting to the daemon.
 
@@ -1007,9 +1007,12 @@ class Keyring:
         @type parent: L{Applet}
 
         """
-        self.__parent = parent
+        if parent is not None:
+            self.__parent = parent
 
-        self.__parent.errors.module(globals(), "gnomekeyring")
+            self.__parent.errors.module(globals(), "gnomekeyring")
+        else:
+            awn.check_dependencies(globals(), "gnomekeyring")
 
         if not gnomekeyring.is_available():
             raise KeyRingError("Keyring not available")

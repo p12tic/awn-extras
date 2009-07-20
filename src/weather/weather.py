@@ -186,7 +186,6 @@ class WeatherApplet:
         theme_combobox.connect("changed", self.theme_changed_cb)
 
         fontsize_combobox = prefs.get_object("combobox-font-size")
-        awnlib.add_cell_renderer_text(fontsize_combobox)
         fontsize_combobox.set_active(self.settings["temperature-font-size"])
         fontsize_combobox.connect("changed", self.fontsize_changed_cb)
 

@@ -1315,7 +1315,8 @@ class Notify:
 
         pynotify.init(self.__parent.meta["name"])
         notification = pynotify.Notification(subject, body, icon)
-        notification.set_timeout(timeout * 1000)
+        if timeout > 0:
+            notification.set_timeout(timeout * 1000)
         notification.show()
         pynotify.uninit()
 

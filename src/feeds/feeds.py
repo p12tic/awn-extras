@@ -169,9 +169,10 @@ class App(awn.AppletSimple):
 
                     feed = feedparser.parse(f)
 
+                    self.simplify(feed)
+
             #Deal with the feed...
             if feed is not None:
-                self.simplify(feed)
                 if url in self.newest.keys() and (self.newest[url] != feed.entries[0]):
                     #Find out how many items are new
                     if self.newest[url] in feed.entries:

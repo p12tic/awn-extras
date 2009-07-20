@@ -1296,11 +1296,11 @@ class Notify:
 
         awn.check_dependencies(globals(), "pynotify")
 
-    def send(self, subject=None, body="", icon="", timeout=0, attention=True):
+    def send(self, subject=None, body="", icon="", timeout=0):
         """Show a new notification via libnotify.
 
         @param subject: The subject of your message. If blank, "Message from
-            [applet - full name]" is used.
+            [applet name]" is used.
         @type subject: C{string}
         @param body: The main body of your message. Blank by default.
         @type body: C{string}
@@ -1308,9 +1308,6 @@ class Notify:
         @type icon: C{string}
         @param timeout: Timeout in seconds after which the message closes
         @type timeout: C{int}
-        @param attention: Whether or not to call the attention effect after
-            sending the message. True by default.
-        @type attention: C{bool}
 
         """
         if not subject:
@@ -1321,7 +1318,6 @@ class Notify:
         notification.set_timeout(timeout * 1000)
         notification.show()
         pynotify.uninit()
-        return True
 
 
 class Effects:

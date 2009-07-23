@@ -140,7 +140,6 @@ AwnApplet* awn_applet_factory_initp(const gchar *name,
   AwnApplet *applet = AWN_APPLET(awn_applet_simple_new(name, uid, panel_id));
   G_applet = applet;
   G_Height = awn_applet_get_size(applet);
-  gtk_widget_set_size_request(GTK_WIDGET(applet), G_Height, -1);
   GdkPixbuf *icon;
   
   g_object_set (applet,

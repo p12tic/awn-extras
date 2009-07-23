@@ -5,6 +5,7 @@ include $(top_srcdir)/Makefile.python-applet
 dist_applet_DATA = 		\
     messages.pot \
     mail.py \
+    mail.ui \
     $(NULL)
 
 theme_gmaildir = $(applet_datadir)/Themes/GMail

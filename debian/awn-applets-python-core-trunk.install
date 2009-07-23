@@ -8,7 +8,7 @@ usr/share/avant-window-navigator/applets/animal-farm.desktop
 # Battery
 #
 usr/share/avant-window-navigator/applets/battery-applet/*.py
-usr/share/avant-window-navigator/applets/battery-applet/*.glade
+usr/share/avant-window-navigator/applets/battery-applet/*.ui
 usr/share/avant-window-navigator/applets/battery-applet/themes/*/*.svg
 usr/share/avant-window-navigator/applets/battery-applet.desktop
 #
@@ -22,6 +22,14 @@ usr/share/avant-window-navigator/applets/cairo-clock.desktop
 #
 usr/share/avant-window-navigator/applets/cpufreq/
 usr/share/avant-window-navigator/applets/cpufreq.desktop
+#
+# Feeds
+#
+etc/gconf/schemas/feeds.schemas
+usr/share/avant-window-navigator/applets/feeds/
+usr/share/avant-window-navigator/applets/feeds/*.py
+usr/share/avant-window-navigator/applets/feeds/icons/*.svg
+usr/share/avant-window-navigator/applets/feeds.desktop
 #
 # File-browser-launcher
 #
@@ -54,7 +62,7 @@ usr/share/avant-window-navigator/applets/media-control.desktop
 # Mount
 #
 usr/share/avant-window-navigator/applets/mount-applet/*.py
-usr/share/avant-window-navigator/applets/mount-applet/*.glade
+usr/share/avant-window-navigator/applets/mount-applet/*.ui
 usr/share/avant-window-navigator/applets/mount-applet/icons/*.png
 usr/share/avant-window-navigator/applets/mount-applet.desktop
 #

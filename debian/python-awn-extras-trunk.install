@@ -1,4 +1,1 @@
-usr/lib/python2.*/*-packages/awn/extras/__init__.py
-usr/lib/python2.*/*-packages/awn/extras/awnlib.py
-usr/lib/python2.*/*-packages/awn/extras/awnmediaplayers.py
-usr/lib/python2.*/*-packages/awn/extras/detach.py
+usr/lib/python2.*/*-packages/awn/extras/*.py

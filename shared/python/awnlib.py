@@ -754,7 +754,8 @@ class Settings:
             if not is_tuple or len(values) == 1:
                 continue
 
-            self.__callables[key] = values[1]
+            if values[1] is not None:
+                self.__callables[key] = values[1]
 
             if len(values) == 2:
                 continue

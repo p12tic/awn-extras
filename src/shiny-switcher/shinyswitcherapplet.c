@@ -1511,7 +1511,11 @@ void render_windows_to_wallpaper(Shiny_switcher *shinyswitcher,  WnckWorkspace *
             ws = g_tree_lookup(shinyswitcher->ws_lookup_ev, iter->data);
             GdkPixmap *pixmap;
             gtk_image_get_pixmap(GTK_IMAGE(gtk_bin_get_child(GTK_BIN(ws->wallpaper_ev))), &pixmap, NULL);
-            cairo_t * destcr = gdk_cairo_create(pixmap);
+            cairo_t * destcr = NULL;
+            if (pixmap && GDK_IS_PIXMAP (pixmap) )
+            {
+              destcr = gdk_cairo_create(pixmap);
+            }
             if (!destcr)
             {
               continue;

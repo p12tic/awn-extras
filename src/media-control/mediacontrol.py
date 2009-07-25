@@ -125,6 +125,7 @@ class App (awn.AppletSimple):
         self.connect("scroll-event", self.wheel_turn)
         self.connect("button-press-event", self.button_press)
         self.connect("clicked", self.icon_clicked)
+        self.connect("context-menu-popup", self.menu_popup)
         self.connect("enter-notify-event", self.enter_notify)
         self.dialog.connect("focus-out-event", self.dialog_focus_out)
         # Drag&drop support
@@ -193,7 +194,7 @@ class App (awn.AppletSimple):
         box.add(self.docklet_image)
 
         label_align = gtk.Alignment(0.5, 1.0, 1.0, 0.0) # for BOTTOM
-        self.docklet_label = gtk.Label()
+        self.docklet_label = awn.Label()
         self.docklet_label.set_markup(self.label.get_label())
         self.docklet_label.set_size_request(-1, docklet.props.size)
         label_align.add(self.docklet_label)
@@ -253,11 +254,12 @@ class App (awn.AppletSimple):
                 # show the media-players menu
                 self.dialog.show_all()
 
+    def menu_popup(self, widget, event):
+        self.popup_menu.popup(None, None, None, event.button, event.time)
+
     def button_press(self, widget, event):
         if event.button == 2:
             self.button_pp_press(widget)
-        elif event.button == 3:
-            self.popup_menu.popup(None, None, None, event.button, event.time)
 
     def wheel_turn (self, widget, event):
         if event.direction == gtk.gdk.SCROLL_UP:

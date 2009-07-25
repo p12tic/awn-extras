@@ -113,6 +113,8 @@ class App(awn.AppletSimple):
         self.da.realize()
 
         # Standard AWN Connects
+        self.connect("clicked", self.icon_clicked)
+        self.connect("context-menu-popup", self.menu_popup)
         self.connect("button-press-event", self.button_press)
         self.dialog.connect("focus-out-event", self.dialog_focus_out)
         # Drag&drop support
@@ -249,16 +251,20 @@ class App(awn.AppletSimple):
             gobject.timeout_add(150, self.windowPrepared)
         return True
 
-    def button_press(self, widget, event):
-        if event.button == 1:
-            if self.dialogVisible():
-                self.hideApplet()
-            else:
-                self.showApplet()
-        elif event.button == 2:
-            self.button_play_pause_cb(widget)
-        elif event.button == 3:
+    def icon_clicked(self, widget):
+        if self.dialogVisible():
+            self.hideApplet()
+        else:
+            self.showApplet()
+
+    def menu_popup(self, widget, event):
             self.popup_menu.popup(None, None, None, event.button, event.time)
+
+    def button_press(self, widget, event):
+        if event.button == 2:
+            self.button_play_pause_cb(widget)
+            return True
+        return False
 
     def dialog_focus_out(self, widget, event):
         if not self.isVideo:

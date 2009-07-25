@@ -124,9 +124,9 @@ class MailApplet:
             self.awn.settings["login-token"] = key.token
 
             self.timer = self.awn.timing.register(self.refresh, 300)
-            self.refresh()
+            self.refresh(show=False)
 
-    def refresh(self):
+    def refresh(self, show=True):
         oldSubjects = self.mail.subjects
 
         try:
@@ -151,7 +151,7 @@ class MailApplet:
         if self.settings["hide"] and len(self.mail.subjects) == 0:
             self.awn.icon.hide()
             self.awn.dialog.hide()
-        else:
+        elif show:
             self.awn.show()
 
         self.draw_main_dialog()
@@ -362,9 +362,9 @@ class MailApplet:
     def setup_preferences(self, prefs):
         default_values = {
             "backend": ("GMail", ),
-            "theme": ("Tango", self.refresh_icon),
+            "theme": ("Tango", self.refresh_icon_theme),
             "email-client": ("evolution -c mail", ),
-            "hide": (False, self.refresh_icon, prefs.get_object("checkbutton-hide-applet")),
+            "hide": (False, self.refresh_hide_applet, prefs.get_object("checkbutton-hide-applet")),
             "show-network-errors": (True, None, prefs.get_object("checkbutton-alert-errors"))
         }
         self.settings = self.awn.settings.load_preferences(default_values)
@@ -384,11 +384,18 @@ class MailApplet:
     def changed_theme_cb(self, combobox):
         self.awn.settings["theme"] = combobox.get_active_text()
 
-    def refresh_icon(self, value):
+    def refresh_icon_theme(self, value):
         if hasattr(self, "mail"):
-            self.refresh()
+            self.__setIcon(len(self.mail.subjects) > 0 and "unread" or "read")
         else:
             self.__setIcon("login")
+
+    def refresh_hide_applet(self, value):
+        if hasattr(self, "mail") and self.settings["hide"] and len(self.mail.subjects) == 0:
+            self.awn.icon.hide()
+            self.awn.dialog.hide()
+        else:
+            self.awn.show()
 
     def changed_client_cb(self, entry):
         self.awn.settings["email-client"] = entry.get_text()

@@ -554,7 +554,7 @@ void _mod_colour(GtkColorButton *widget, DesktopAgnosticColor * user_data)
   GdkColor *color;
   gtk_color_button_get_color(widget, color);
   desktop_agnostic_color_set_color(user_data, color);
-  user_data->alpha = gtk_color_button_get_alpha(widget);
+  desktop_agnostic_color_set_alpha(user_data, gtk_color_button_get_alpha(widget));
   gtk_widget_destroy(hover_ex);
   gtk_widget_destroy(normal_ex);
   hover_ex = build_menu_widget(&G_cairo_menu_conf.hover, "Hover", NULL, NULL, 200);
@@ -630,13 +630,13 @@ void show_prefs(void)
   desktop_agnostic_color_get_color (G_cairo_menu_conf.normal.bg, color);
   GtkWidget *normal_bg = gtk_color_button_new_with_color(color);
   gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(normal_bg), TRUE);
-  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(normal_bg), G_cairo_menu_conf.normal.bg->alpha);
+  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(normal_bg), desktop_agnostic_color_get_alpha(G_cairo_menu_conf.normal.bg));
   g_signal_connect(G_OBJECT(normal_bg), "color-set", G_CALLBACK(_mod_colour), &G_cairo_menu_conf.normal.bg);
 
   desktop_agnostic_color_get_color (G_cairo_menu_conf.normal.fg, color);
   GtkWidget *normal_fg = gtk_color_button_new_with_color(color);
   gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(normal_fg), TRUE);
-  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(normal_fg), G_cairo_menu_conf.normal.fg->alpha);
+  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(normal_fg), desktop_agnostic_color_get_alpha(G_cairo_menu_conf.normal.fg));
   g_signal_connect(G_OBJECT(normal_fg), "color-set", G_CALLBACK(_mod_colour), &G_cairo_menu_conf.normal.fg);
 
   GtkWidget *hover_label = gtk_label_new("Hover");
@@ -645,14 +645,14 @@ void show_prefs(void)
   desktop_agnostic_color_get_color (G_cairo_menu_conf.hover.bg, color);
   GtkWidget *hover_bg = gtk_color_button_new_with_color(color);
   gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(hover_bg), TRUE);
-  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(hover_bg), G_cairo_menu_conf.hover.bg->alpha);
+  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(hover_bg), desktop_agnostic_color_get_alpha(G_cairo_menu_conf.hover.bg));
   g_signal_connect(G_OBJECT(hover_bg), "color-set", G_CALLBACK(_mod_colour), &G_cairo_menu_conf.hover.bg);
 
 // GtkWidget *hover_fg=gtk_button_new_with_label("Foreground");
   desktop_agnostic_color_get_color (G_cairo_menu_conf.hover.fg, color);
   GtkWidget *hover_fg = gtk_color_button_new_with_color(color);
   gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(hover_fg), TRUE);
-  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(hover_fg), G_cairo_menu_conf.hover.fg->alpha);
+  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(hover_fg), desktop_agnostic_color_get_alpha(G_cairo_menu_conf.hover.fg));
   g_signal_connect(G_OBJECT(hover_fg), "color-set", G_CALLBACK(_mod_colour), &G_cairo_menu_conf.hover.fg);
 
 
@@ -661,7 +661,7 @@ void show_prefs(void)
   desktop_agnostic_color_get_color (G_cairo_menu_conf.border_colour, color);
   GtkWidget *border_colour = gtk_color_button_new_with_color(color);
   gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(border_colour), TRUE);
-  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(border_colour), G_cairo_menu_conf.border_colour->alpha);
+  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(border_colour), desktop_agnostic_color_get_alpha(G_cairo_menu_conf.border_colour));
   g_signal_connect(G_OBJECT(border_colour), "color-set", G_CALLBACK(_mod_colour), &G_cairo_menu_conf.border_colour);
 
 

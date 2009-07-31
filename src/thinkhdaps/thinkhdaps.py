@@ -24,6 +24,8 @@ import gtk
 from awn.extras import awnlib
 from awn import OverlayThemedIcon
 
+import glib
+
 try:
     from pyinotify import WatchManager, ThreadedNotifier, EventsCodes
     pyinotify = True
@@ -37,7 +39,8 @@ applet_description = "Applet that shows the shock protection status of your disk
 # Interval in seconds between two successive status checks
 check_status_interval = 0.1
 
-hdaps_short_description = "protected from shocks"
+hdaps_short_description = "%s protected from shocks"
+no_hdaps_short_description = "%s not protected from shocks"
 
 # Logo of the applet, shown in the GTK+ About dialog
 applet_logo = os.path.join(os.path.dirname(__file__), "images/thinkhdaps-logo.svg")
@@ -89,7 +92,7 @@ class ThinkHDAPSApplet:
 
             if self.__error_occurred:
                 self.__error_occurred = False
-                self.applet.tooltip.set(self.__hdaps_device + " " + hdaps_short_description)
+                self.applet.tooltip.set(hdaps_short_description % self.__hdaps_device)
 
             self.__was_paused = paused
         except IOError:
@@ -97,7 +100,7 @@ class ThinkHDAPSApplet:
                 self.__error_occurred = True
 
                 self.set_error_icon()
-                self.applet.tooltip.set(self.__hdaps_device + " not " + hdaps_short_description)
+                self.applet.tooltip.set(no_hdaps_short_description % self.__hdaps_device)
 
     def __init__(self, applet):
         self.applet = applet
@@ -145,7 +148,7 @@ class ThinkHDAPSApplet:
 
             self.__status_file = os.path.join(sysfs_dir, self.__hdaps_device, protect_file)
 
-            applet.tooltip.set(self.__hdaps_device + " " + hdaps_short_description)
+            applet.tooltip.set(hdaps_short_description % self.__hdaps_device)
 
             if not self.setup_inotify():
                 applet.timing.register(self.check_status_cb, check_status_interval)
@@ -158,12 +161,13 @@ class ThinkHDAPSApplet:
             return False
 
         watch_manager = WatchManager()
-
         result = watch_manager.add_watch(self.__status_file, EventsCodes.IN_MODIFY)[self.__status_file] > 0
 
         if result:
             global notifier
-            notifier = ThreadedNotifier(watch_manager, lambda e: self.check_status_cb())
+            def notify_cb(event):
+                glib.idle_add(self.check_status_cb)
+            notifier = ThreadedNotifier(watch_manager, notify_cb)
             notifier.start()
         return result
 

@@ -96,9 +96,13 @@ class YamaApplet:
         # Inhibit autohide while main menu is visible
         def show_menu_cb(widget):
             self.__autohide_cookie = applet.inhibit_autohide("showing main menu")
+            applet.get_icon().set_is_active(True)
+            applet.get_icon().get_effects().props.depressed = False
         self.menu.connect("show", show_menu_cb)
         def hide_menu_cb(widget):
             applet.uninhibit_autohide(self.__autohide_cookie)
+            applet.get_icon().set_is_active(False)
+            applet.get_icon().get_effects().props.depressed = False
         self.menu.connect("hide", hide_menu_cb)
 
     def append_session_actions(self, menu):

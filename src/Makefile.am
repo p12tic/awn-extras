@@ -50,6 +50,7 @@ SUBDIRS =			\
 	battery-applet		\
 	cairo-clock			\
 	cpufreq				\
+	feeds			\
 	file-browser-launcher	\
 	gwibfawn		\
 	mail			\

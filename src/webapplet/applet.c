@@ -509,7 +509,6 @@ awn_applet_factory_initp (const gchar *name, gchar* uid, gint panel_id)
   webapplet->start = NULL;
   webapplet->applet = AWN_APPLET (awn_applet_simple_new (name, uid, panel_id));
   gint height = awn_applet_get_size(webapplet->applet);
-  gtk_widget_set_size_request (GTK_WIDGET (webapplet->applet), height, -1);
 
   awn_applet_simple_set_icon_name(AWN_APPLET_SIMPLE(webapplet->applet),
                                   ICON_NAME);

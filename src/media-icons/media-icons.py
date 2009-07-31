@@ -23,6 +23,7 @@ import pygtk
 import gtk
 import gettext
 import os
+import dbus
 
 import awn
 
@@ -50,7 +51,8 @@ class App (awn.AppletSimple):
         """
         Creating the applet's core
         """
-        awn.AppletSimple.__init__(self, uid, panel_id)
+        awn.AppletSimple.__init__(self, 'media-icon' + media_button_type[1:], \
+          uid, panel_id)
 
         self.icon_names = {}
         self.icon_names["--next"] = "media-skip-forward"
@@ -82,8 +84,7 @@ class App (awn.AppletSimple):
         gtk.window_set_default_icon_name(self.icon_names[media_button_type])
 
         self.media_button_type = media_button_type
-        self.set_icon_name('media-icon' + media_button_type[1:], \
-            self.icon_names[media_button_type])
+        self.set_icon_name(self.icon_names[media_button_type])
 
         self.what_app()
         self.set_tooltip_text(self.tooltips[media_button_type])
@@ -95,14 +96,12 @@ class App (awn.AppletSimple):
         gtk.about_dialog_set_url_hook(self.do_url, None)
 
         about.connect("activate", self.show_about)
-        self.connect("button-press-event", self.button_press)
+        self.connect("clicked", lambda w: self.funcs[self.media_button_type]())
+        self.connect("context-menu-popup", self.menu_popup)
 
-    def button_press(self, widget, event):
-        if event.button == 1:
-            self.funcs[self.media_button_type]()
-        elif event.button == 3:
-            self.popup_menu.show_all()
-            self.popup_menu.popup(None, None, None, event.button, event.time)
+    def menu_popup(self, widget, event):
+        self.popup_menu.show_all()
+        self.popup_menu.popup(None, None, None, event.button, event.time)
 
     def what_app(self):
         self.player_name = mediaplayers.what_app()

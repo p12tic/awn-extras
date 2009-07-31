@@ -345,6 +345,7 @@ src/cpufreq/Makefile
 src/DesktopManager/Makefile
 src/digg/Makefile
 src/digitalClock/Makefile
+src/feeds/Makefile
 src/file-browser-launcher/Makefile
 src/filebrowser/Makefile
 src/filebrowser/filebrowser.desktop.in

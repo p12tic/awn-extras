@@ -158,7 +158,7 @@ class Preferences:
   def colorButtonToString(self, widget):
     c = widget.get_color()
     return '#' +  ''.join(['%02X' % int(x / 256)
-                           for x in [c.red, c.green, c.blue, widget.get_alpha()])
+                           for x in [c.red, c.green, c.blue, widget.get_alpha()]])
 
   # callbacks from the glade file
   def appletSizeScale_value_changed_cb(self, widget):

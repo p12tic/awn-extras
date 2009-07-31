@@ -1242,7 +1242,6 @@ AwnApplet* awn_applet_factory_initp(const gchar *name,
   g_object_set (applet,
                 "display-name","Places",
                 NULL);
-  gtk_widget_set_size_request(GTK_WIDGET(applet), awn_applet_get_size(AWN_APPLET(applet)), -1);
 
   places->applet_icon_height = awn_applet_get_size(AWN_APPLET(applet)) - 2;
 

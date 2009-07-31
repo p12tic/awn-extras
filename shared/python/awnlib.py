@@ -754,7 +754,8 @@ class Settings:
             if not is_tuple or len(values) == 1:
                 continue
 
-            self.__callables[key] = values[1]
+            if values[1] is not None:
+                self.__callables[key] = values[1]
 
             if len(values) == 2:
                 continue
@@ -999,7 +1000,7 @@ class Settings:
 
 class Keyring:
 
-    def __init__(self, parent):
+    def __init__(self, parent=None):
         """Create a new Keyring object. This includes importing the keyring
         module and connecting to the daemon.
 
@@ -1007,9 +1008,12 @@ class Keyring:
         @type parent: L{Applet}
 
         """
-        self.__parent = parent
+        if parent is not None:
+            self.__parent = parent
 
-        self.__parent.errors.module(globals(), "gnomekeyring")
+            self.__parent.errors.module(globals(), "gnomekeyring")
+        else:
+            awn.check_dependencies(globals(), "gnomekeyring")
 
         if not gnomekeyring.is_available():
             raise KeyRingError("Keyring not available")
@@ -1293,11 +1297,11 @@ class Notify:
 
         awn.check_dependencies(globals(), "pynotify")
 
-    def send(self, subject=None, body="", icon="", timeout=0, attention=True):
+    def send(self, subject=None, body="", icon="", timeout=0):
         """Show a new notification via libnotify.
 
         @param subject: The subject of your message. If blank, "Message from
-            [applet - full name]" is used.
+            [applet name]" is used.
         @type subject: C{string}
         @param body: The main body of your message. Blank by default.
         @type body: C{string}
@@ -1305,9 +1309,6 @@ class Notify:
         @type icon: C{string}
         @param timeout: Timeout in seconds after which the message closes
         @type timeout: C{int}
-        @param attention: Whether or not to call the attention effect after
-            sending the message. True by default.
-        @type attention: C{bool}
 
         """
         if not subject:
@@ -1315,10 +1316,10 @@ class Notify:
 
         pynotify.init(self.__parent.meta["name"])
         notification = pynotify.Notification(subject, body, icon)
-        notification.set_timeout(timeout * 1000)
+        if timeout > 0:
+            notification.set_timeout(timeout * 1000)
         notification.show()
         pynotify.uninit()
-        return True
 
 
 class Effects:

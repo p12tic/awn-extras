@@ -814,9 +814,14 @@ class Settings:
                 key_widget.set_active(self.__dict[key])
                 key_widget.connect("toggled", toggled_cb, key)
             elif widget_type is gtk.SpinButton:
-                def value_changed_cb(widget, name, conv):
-                    self[name] = conv(widget.get_value_as_int())
-                key_widget.set_value(from_s_to_w(self.__dict[key]))
+                init_value = from_s_to_w(self.__dict[key])
+                if isinstance(init_value, int):
+                    def value_changed_cb(widget, name, conv):
+                        self[name] = conv(widget.get_value_as_int())
+                else:
+                    def value_changed_cb(widget, name, conv):
+                        self[name] = conv(widget.get_value())
+                key_widget.set_value(init_value)
                 key_widget.connect("value-changed", value_changed_cb, key, from_w_to_s)
             elif widget_type is gtk.ComboBox:
                 if type(key_widget.get_model()) is not gtk.ListStore:

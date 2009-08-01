@@ -34,8 +34,8 @@ class Preferences:
         prefs = gtk.Builder()
         prefs.add_from_file(ui_file)
 
-        s2w_1000 = lambda v: v/1000
-        w2s_1000 = lambda v: v*1000
+        s2w_1000 = lambda v: v/1000.0
+        w2s_1000 = lambda v: int(v*1000)
 
         s2w_100 = lambda v: v*100
         w2s_100 = lambda v: v/100

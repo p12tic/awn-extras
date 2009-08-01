@@ -20,8 +20,8 @@
     <property name="value">1</property>
     <property name="lower">1</property>
     <property name="upper">120</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
+    <property name="step_increment">0.10000000000000001</property>
+    <property name="page_increment">1</property>
   </object>
   <object class="GtkAdjustment" id="adjustment2">
     <property name="upper">10</property>
@@ -1077,6 +1077,7 @@
                                         <property name="can_focus">True</property>
                                         <property name="invisible_char">&#x2022;</property>
                                         <property name="adjustment">adjustment11</property>
+                                        <property name="digits">1</property>
                                         <signal name="value_changed" handler="renderSpin_value_changed_cb"/>
                                       </object>
                                       <packing>

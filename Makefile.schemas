@@ -14,7 +14,7 @@ gconfschemas_in_files =$(schema_DATA:.schema-ini=.schemas.in)
 gconfschemas_DATA = $(gconfschemas_in_files:.schemas.in=.schemas)
 
 %.schemas.in: %.schema-ini
-	$(QUIET_GEN)$(AWN_BINDIR)/awn-schema-to-gconf $< $@ $*
+	$(QUIET_GEN)$(LDA_BINDIR)/lda-schema-to-gconf $< $@
 
 @INTLTOOL_SCHEMAS_RULE@
 

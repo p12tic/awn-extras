@@ -60,17 +60,17 @@ description = The icon's opacity (10-100)
 
 [DEFAULT/confirm_items]
 type = boolean
-default = True
+default = true
 description = Whether or not to confirm the deletion of items
 
 [DEFAULT/confirm_categories]
 type = boolean
-default = True
+default = true
 description = Whether or not to confirm the deletion of categories
 
 [DEFAULT/use_custom_width]
 type = boolean
-default = False
+default = false
 description = Whether or not to use a custom width for the entries
 
 [DEFAULT/custom_width]

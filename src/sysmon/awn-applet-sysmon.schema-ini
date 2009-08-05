@@ -1,12 +1,12 @@
 
 [DEFAULT/dummy]
 type = boolean
-default = True
+default = true
 description = Just a dummy key.. this will be removed later.
 
 [DEFAULT/applet/dummy]
 type = boolean
-default = True
+default = true
 description = Just a dummy key.. this will be removed later.
 
 [DEFAULT/icons_baseconf/graph_type]

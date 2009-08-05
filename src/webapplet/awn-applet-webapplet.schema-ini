@@ -24,7 +24,7 @@ default = false
 description = Flag that enables usage of the "Open Location" dialog in the applet.
 
 [DEFAULT/first_start]
-type = bool
+type = boolean
 default = true
 description = If true display location entry and website buttons
 

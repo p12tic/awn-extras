@@ -47,11 +47,11 @@ PKG_CHECK_EXISTS([libwnck-1.0 >= 2.21.99.9], [AC_DEFINE(HAVE_LIBWNCK_222, 1, [Ha
 
 
 dnl
-dnl Determine the location of awn-schema-to-gconf
+dnl Determine the location of lda-schema-to-gconf
 dnl
 
-AWN_BINDIR=`$PKG_CONFIG --variable=exec_prefix awn`/bin
-AC_SUBST(AWN_BINDIR)
+LDA_BINDIR=`$PKG_CONFIG --variable=exec_prefix desktop-agnostic`/bin
+AC_SUBST(LDA_BINDIR)
 
 dnl
 dnl package support

@@ -665,7 +665,7 @@ class Errors:
 
 class Settings:
 
-    def __init__(self, parent):
+    def __init__(self, parent=None, folder=None):
         """Create a new Settings object. Note that the Settings object
         should be used as a dictionary. The default folder: the short
         name, and if the applet has requested the settings-per-instance
@@ -680,13 +680,18 @@ class Settings:
         self.__dict = None
         self.__callables = {}
 
-        if "short" in parent.meta:
-            if parent.meta.has_option("settings-per-instance"):
-                self.__folder = "%s-%s" % (parent.meta["short"], parent.uid)
+        if parent is not None:
+            if "short" in parent.meta:
+                if parent.meta.has_option("settings-per-instance"):
+                    self.__folder = "%s-%s" % (parent.meta["short"], parent.uid)
+                else:
+                    self.__folder = parent.meta["short"]
             else:
-                self.__folder = parent.meta["short"]
+                self.__folder = parent.uid
+        elif folder is not None:
+            self.__folder = folder
         else:
-            self.__folder = parent.uid
+            raise RuntimeError("Parameter 'parent' or 'folder' must be set")
 
         self.__client = self.ConfigClient(self.__folder)
 
@@ -713,6 +718,32 @@ class Settings:
             elif push_defaults:
                 self[key] = dict[key]
 
+    def load_via_gtk_builder(self, builder, widget_names):
+        """Initialize and connect Gtk+ widgets from the gtk.Builder. The
+        given dictionary at the second index contains entries where the
+        setting name is mapped to the name of the Gtk+ widget (retrieved via
+        the builder). Optionally the value can be a tuple instead. The tuple
+        must then contain the name of the Gtk+ widget and two conversion
+        functions.
+
+        It basically prepares a new dictionary that contains no default
+        values and callables, and then calls load_preferences().
+
+        This function does not handle default values and callables (that are
+        executed when the value of a setting changes), and thus should not
+        be used by applets, unless it's used in a different OS process than
+        the rest of the applet.
+
+        """
+        dict_tuples = {}
+        for key, values in widget_names.iteritems():
+            is_tuple = type(values) is tuple
+            if is_tuple and len(values) == 3:
+                dict_tuples[key] = (None, None, builder.get_object(values[0]), values[1], values[2])
+            else:
+                dict_tuples[key] = (None, None, builder.get_object(values))
+        return self.load_preferences(dict_tuples)
+
     def load_preferences(self, dict_tuples, push_defaults=True):
         """Synchronize the values from the tuples in the given dictionary
         with the stored settings, use the callable to be called when the value
@@ -728,6 +759,10 @@ class Settings:
         and changes in the value of the widget will be reflect in the returned
         dictionary and settings backend.
 
+        The fourth and fifth index can optionally provide conversion functions
+        for gtk.SpinButton and gtk.Range to convert a value from setting to
+        widget, and from widget to setting, respectively.
+
         @param dict: Default values for the dictionary.
         @type parent: L{dict}
         @param push_defaults: Whether to store non-overridden defaults in
@@ -739,6 +774,7 @@ class Settings:
             raise RuntimeError("settings already loaded")
 
         self.__dict = {}
+        identity_converter = lambda v: v
 
         for key, values in dict_tuples.iteritems():
             is_tuple = type(values) is tuple
@@ -747,6 +783,8 @@ class Settings:
             if key in self:
                 self.__dict[key] = self[key]
             else:
+                if is_tuple and len(values) > 2 and default_value is None:
+                    raise RuntimeError("%s has no value and non-None default required to construct widget" % key)
                 self.__dict[key] = default_value
                 if push_defaults:
                     self[key] = default_value
@@ -763,16 +801,51 @@ class Settings:
             key_widget = values[2]
             widget_type = type(key_widget)
 
+            # Conversion functions only used with gtk.SpinButton and gtk.Range
+            if len(values) == 5:
+                from_s_to_w = values[3]
+                from_w_to_s = values[4]
+            else:
+                from_w_to_s = from_s_to_w = identity_converter
+
             if isinstance(key_widget, gtk.ToggleButton):
                 def toggled_cb(widget, name):
                     self[name] = widget.get_active()
                 key_widget.set_active(self.__dict[key])
                 key_widget.connect("toggled", toggled_cb, key)
             elif widget_type is gtk.SpinButton:
-                def value_changed_cb(widget, name):
-                    self[name] = widget.get_value_as_int()
-                key_widget.set_value(self.__dict[key])
-                key_widget.connect("value-changed", value_changed_cb, key)
+                init_value = from_s_to_w(self.__dict[key])
+                if isinstance(init_value, int):
+                    def value_changed_cb(widget, name, conv):
+                        self[name] = conv(widget.get_value_as_int())
+                else:
+                    def value_changed_cb(widget, name, conv):
+                        self[name] = conv(widget.get_value())
+                key_widget.set_value(init_value)
+                key_widget.connect("value-changed", value_changed_cb, key, from_w_to_s)
+            elif widget_type is gtk.ComboBox:
+                if type(key_widget.get_model()) is not gtk.ListStore:
+                    raise RuntimeError("Model of ComboBox %s must be gtk.ListStore" % widget_type.__name__)
+                # TODO assumes atm that type of key is int
+                def changed_cb(widget):
+                    self[key] = widget.get_active()
+                key_widget.set_active(self.__dict[key])
+                key_widget.connect("changed", changed_cb)
+            elif isinstance(key_widget, gtk.Range):
+                def value_changed_cb(widget, name, conv):
+                    self[name] = conv(widget.get_value())
+                key_widget.set_value(from_s_to_w(self.__dict[key]))
+                key_widget.connect("value-changed", value_changed_cb, key, from_w_to_s)
+            elif widget_type is gtk.ColorButton:
+                def color_set_cb(widget, name):
+                    color = widget.get_color()
+                    color_data = [color.red, color.green, color.blue, widget.get_alpha()]
+                    self[name] = "#" + "".join(["%02X" % int(x / 256) for x in color_data])
+                # TODO assumes length 9
+                value = self.__dict[key]
+                key_widget.set_color(gtk.gdk.color_parse(value[:7]))
+                key_widget.set_alpha(int(value[7:], 16) * 256)
+                key_widget.connect("color-set", color_set_cb, key)
             else:
                 raise RuntimeError("%s is unsupported" % widget_type.__name__)
 

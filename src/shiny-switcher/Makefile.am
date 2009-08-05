@@ -19,6 +19,6 @@ shinyswitcher_la_LDFLAGS = $(APPLET_LINKER_FLAGS)
 
 prefsdir = $(applet_datadir)
 dist_prefs_DATA =		\
-	shiny-prefs.glade	\
+	shiny-prefs.ui	\
 	shiny-prefs.py		\
 	$(NULL)

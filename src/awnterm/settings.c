@@ -83,17 +83,17 @@ void init_settings (AwnTerm *applet)
 		DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
 		OPACITY,
 		(DesktopAgnosticConfigNotifyFunc)load_opacity,
-		applet);
+		applet, NULL);
 	opacity = desktop_agnostic_config_client_get_float (applet->config,
 			DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
 			OPACITY,
 			NULL);
 	set_opacity (applet, opacity);
 	
-	desktop_agnostic_config_client_notify_add (applet->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, BG_IMG, (DesktopAgnosticConfigNotifyFunc)load_bg_img, applet);
+	desktop_agnostic_config_client_notify_add (applet->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, BG_IMG, (DesktopAgnosticConfigNotifyFunc)load_bg_img, applet, NULL);
 	set_bg_img (applet, desktop_agnostic_config_client_get_string (applet->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, BG_IMG, NULL));
 	
-	desktop_agnostic_config_client_notify_add (applet->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, HIDE_ON_UNFOCUS, (DesktopAgnosticConfigNotifyFunc)load_hide_on_unfocus, applet);
+	desktop_agnostic_config_client_notify_add (applet->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, HIDE_ON_UNFOCUS, (DesktopAgnosticConfigNotifyFunc)load_hide_on_unfocus, applet, NULL);
 	set_hide_on_unfocus (applet, desktop_agnostic_config_client_get_bool (applet->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, HIDE_ON_UNFOCUS, NULL));
 }
 

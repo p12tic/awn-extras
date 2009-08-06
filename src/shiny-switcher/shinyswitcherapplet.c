@@ -144,99 +144,99 @@ void init_config(Shiny_switcher *shinyswitcher)
                                  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                  "grab_wallpaper",
                                  _change_config_cb,
-                                 shinyswitcher);
+                                 shinyswitcher, NULL);
     desktop_agnostic_config_client_notify_add(shinyswitcher->config,
                                  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                  "applet_border_colour",
                                  _change_config_cb,
-                                 shinyswitcher);
+                                 shinyswitcher, NULL);
 
     desktop_agnostic_config_client_notify_add(shinyswitcher->config,
                                  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                  "applet_border_width",
                                  _change_config_cb,
-                                 shinyswitcher);
+                                 shinyswitcher, NULL);
     desktop_agnostic_config_client_notify_add(shinyswitcher->config,
                                  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                  "applet_scale",
                                  _change_config_cb,
-                                 shinyswitcher);
+                                 shinyswitcher, NULL);
     desktop_agnostic_config_client_notify_add(shinyswitcher->config,
                                  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                  "background_alpha_active",
                                  _change_config_cb,
-                                 shinyswitcher);
+                                 shinyswitcher, NULL);
     desktop_agnostic_config_client_notify_add(shinyswitcher->config,
                                  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                  "background_alpha_inactive",
                                  _change_config_cb,
-                                 shinyswitcher);
+                                 shinyswitcher, NULL);
     desktop_agnostic_config_client_notify_add(shinyswitcher->config,
                                  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                  "cache_expiry",
                                  _change_config_cb,
-                                 shinyswitcher);
+                                 shinyswitcher, NULL);
 
     desktop_agnostic_config_client_notify_add(shinyswitcher->config,
                                  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                  "columns",
                                  _change_config_ws_cb,
-                                 shinyswitcher);
+                                 shinyswitcher, NULL);
     desktop_agnostic_config_client_notify_add(shinyswitcher->config,
                                  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                  "desktop_colour",
                                  _change_config_cb,
-                                 shinyswitcher);
+                                 shinyswitcher, NULL);
     desktop_agnostic_config_client_notify_add(shinyswitcher->config,
                                  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                  "mousewheel",
                                  _change_config_cb,
-                                 shinyswitcher);
+                                 shinyswitcher, NULL);
     desktop_agnostic_config_client_notify_add(shinyswitcher->config,
                                  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                  "queued_render_timer",
                                  _change_config_cb,
-                                 shinyswitcher);
+                                 shinyswitcher, NULL);
     desktop_agnostic_config_client_notify_add(shinyswitcher->config,
                                  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                  "rows",
                                  _change_config_ws_cb,
-                                 shinyswitcher);
+                                 shinyswitcher, NULL);
     desktop_agnostic_config_client_notify_add(shinyswitcher->config,
                                  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                  "scale_icon_factor",
                                  _change_config_cb,
-                                 shinyswitcher);
+                                 shinyswitcher, NULL);
     desktop_agnostic_config_client_notify_add(shinyswitcher->config,
                                  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                  "scale_icon_mode",
                                  _change_config_cb,
-                                 shinyswitcher);
+                                 shinyswitcher, NULL);
     desktop_agnostic_config_client_notify_add(shinyswitcher->config,
                                  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                  "scale_icon_position",
                                  _change_config_cb,
-                                 shinyswitcher);
+                                 shinyswitcher, NULL);
     desktop_agnostic_config_client_notify_add(shinyswitcher->config,
                                  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                  "show_icon_mode",
                                  _change_config_cb,
-                                 shinyswitcher);
+                                 shinyswitcher, NULL);
     desktop_agnostic_config_client_notify_add(shinyswitcher->config,
                                  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                  "win_active_icon_alpha",
                                  _change_config_cb,
-                                 shinyswitcher);
+                                 shinyswitcher, NULL);
     desktop_agnostic_config_client_notify_add(shinyswitcher->config,
                                  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                  "win_grab_mode",
                                  _change_config_cb,
-                                 shinyswitcher);
+                                 shinyswitcher, NULL);
     desktop_agnostic_config_client_notify_add(shinyswitcher->config,
                                  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                  "win_inactive_icon_alpha",
                                  _change_config_cb,
-                                 shinyswitcher);
+                                 shinyswitcher, NULL);
 
 
   }

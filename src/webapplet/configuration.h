@@ -31,7 +31,7 @@
 #define CONFIG_FIRST_START            "first_start"
 #define CONFIG_SITE                   "site"
 
-void init_config(WebApplet *webapplet, gchar *uid);
+void init_config(WebApplet *webapplet);
 
 const gchar *config_get_uri(WebApplet *webapplet);
 void config_set_uri(WebApplet *webapplet, gchar *uri);

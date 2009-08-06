@@ -54,27 +54,27 @@ default =
 description = The list of categories that are expanded
 
 [DEFAULT/icon_opacity]
-type = int
+type = integer
 default = 100
 description = The icon's opacity (10-100)
 
 [DEFAULT/confirm_items]
-type = bool
-default = True
+type = boolean
+default = true
 description = Whether or not to confirm the deletion of items
 
 [DEFAULT/confirm_categories]
-type = bool
-default = True
+type = boolean
+default = true
 description = Whether or not to confirm the deletion of categories
 
 [DEFAULT/use_custom_width]
-type = bool
-default = False
+type = boolean
+default = false
 description = Whether or not to use a custom width for the entries
 
 [DEFAULT/custom_width]
-type = int
+type = integer
 default = 125
 description = The custom width for the item entries
 

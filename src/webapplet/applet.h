@@ -20,8 +20,7 @@
 #ifndef __WEBAPPLET_APPLET
 #define __WEBAPPLET_APPLET
 
-#include <libawn/awn-applet.h>
-#include <libawn/awn-config-client.h>
+#include <libawn/libawn.h>
 
 typedef struct
 {
@@ -35,8 +34,7 @@ typedef struct
   GtkWidget       *check_home;
   GtkWidget       *location_dialog;
 
-  AwnConfigClient *instance_config;
-  AwnConfigClient *default_config;
+  DesktopAgnosticConfigClient *config;
 
   GKeyFile        *sites_file;
 

@@ -20,8 +20,11 @@
 
 #ifndef __MENU_LIST_ITEM_
 #define __MENU_LIST_ITEM_
-#include <gtk/gtk.h>
+
 #include <glib.h>
+#include <gtk/gtk.h>
+#include <libdesktop-agnostic/vfs.h>
+
 #include "menu.h"
 
 
@@ -37,10 +40,10 @@ enum
   MENU_ITEM_SEARCH,
   MENU_ITEM_RUN,
   MENU_ITEM_BLANK,
-  MENU_ITEM_DRIVE
+  MENU_ITEM_VOLUME
 };
 
-typedef gboolean(*MenuDrivePrepFunc)(gpointer menu_item, gchar * filemanager);
+typedef gboolean(*MenuVolumePrepFunc)(gpointer menu_item, gchar * filemanager);
 
 typedef struct
 {
@@ -60,7 +63,7 @@ typedef struct
   GtkWidget *normal;
   GtkWidget *hover;
   GtkWidget *click;
-  gpointer  *drive;
+  DesktopAgnosticVFSVolume *volume;
   union
   {
     GSList   *sublist;
@@ -72,8 +75,8 @@ typedef struct
     GtkWidget *search_entry;
     GtkWidget *run_entry;
     void (*monitor)(gpointer callback, gpointer data, gpointer box);
-    MenuDrivePrepFunc drive_prep;
-    gboolean(*drive_mount)(gpointer menu_item, gchar * filemanager);
+    MenuVolumePrepFunc volume_prep;
+    gboolean(*volume_mount)(gpointer menu_item, gchar * filemanager);
     gpointer null;
 
   } ;

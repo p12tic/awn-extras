@@ -5,7 +5,7 @@ description = The applet's opacity level.
 description[en_CA] = The applet's opacity level.
 
 [DEFAULT/hide_on_unfocus]
-type = bool
+type = boolean
 default = true
 description = Set whether the applet should hide itself when it loses focus.
 description[en_CA] = Set whether the applet should hide itself when it loses focus.

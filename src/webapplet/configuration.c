@@ -18,65 +18,39 @@
  */
 
 
-#include <libawn/awn-config-client.h>
-
 #include "applet.h"
 #include "configuration.h"
 
 static gchar *
 get_string (WebApplet *webapplet, const gchar *key)
 {
-  gchar *str=NULL;
-  if (awn_config_client_entry_exists (webapplet->instance_config,
-                                      AWN_CONFIG_CLIENT_DEFAULT_GROUP,key) )
-  {        
-    str = awn_config_client_get_string (webapplet->instance_config,
-                                      AWN_CONFIG_CLIENT_DEFAULT_GROUP,
-                                      key, NULL);
-  }    
-  if (!str)
-  {
-    str = awn_config_client_get_string (webapplet->default_config,
-                                        AWN_CONFIG_CLIENT_DEFAULT_GROUP,
-                                        key, NULL);
-  }
-  return str;
+  return desktop_agnostic_config_client_get_string (webapplet->config,
+                                                    DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
+                                                    key, NULL);
 }
 
 static void
 set_string(WebApplet *webapplet, const gchar *key, gchar *val)
 {
-  awn_config_client_set_string(webapplet->instance_config,
-                               AWN_CONFIG_CLIENT_DEFAULT_GROUP,
-                               key, val, NULL);
+  desktop_agnostic_config_client_set_string (webapplet->config,
+                                             DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
+                                             key, val, NULL);
 }
 
 static gboolean
 get_bool (WebApplet *webapplet, const gchar *key)
 {
-  gboolean value;
-  if (awn_config_client_entry_exists (webapplet->instance_config,
-                                      AWN_CONFIG_CLIENT_DEFAULT_GROUP,
-                                      key)) {
-    value = awn_config_client_get_bool (webapplet->instance_config,
-                                        AWN_CONFIG_CLIENT_DEFAULT_GROUP,
-                                        key, NULL);
-  }
-  else
-  {
-    value = awn_config_client_get_bool (webapplet->default_config,
-                                        AWN_CONFIG_CLIENT_DEFAULT_GROUP,
-                                        key, NULL);
-  }
-  return value;
+  return desktop_agnostic_config_client_get_bool (webapplet->config,
+                                                  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
+                                                  key, NULL);
 }
 
 static void
 set_bool(WebApplet *webapplet, const gchar *key, gboolean val)
 {
-  awn_config_client_set_bool(webapplet->instance_config,
-                             AWN_CONFIG_CLIENT_DEFAULT_GROUP,
-                             key, val, NULL);
+  desktop_agnostic_config_client_set_bool (webapplet->config,
+                                           DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
+                                           key, val, NULL);
 }
 
 gint
@@ -188,19 +162,17 @@ config_set_first_start(WebApplet *webapplet, gboolean val)
 }
 
 void
-init_config(WebApplet *webapplet, gchar *uid)
+init_config(WebApplet *webapplet)
 {
   GTimeVal time_val;
   g_get_current_time (&time_val);
   gchar* date_time = g_time_val_to_iso8601 (&time_val);
-  webapplet->default_config = awn_config_client_new_for_applet (APPLET_NAME,
-                                                                NULL);
-  webapplet->instance_config = awn_config_client_new_for_applet (APPLET_NAME,
-                                                                 uid);
+  webapplet->config = awn_config_get_default_for_applet (webapplet->applet,
+                                                         NULL);
 
-  awn_config_client_set_string(webapplet->instance_config,
-                               AWN_CONFIG_CLIENT_DEFAULT_GROUP,
-                               CONFIG_LAST_ACCESS, date_time, NULL);
+  desktop_agnostic_config_client_set_string(webapplet->config,
+                                            DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
+                                            CONFIG_LAST_ACCESS, date_time, NULL);
   g_free (date_time);
 }
 /* vim: set et ts=2 sts=2 sw=2 : */

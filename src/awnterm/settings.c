@@ -31,7 +31,7 @@
 // GnuStep is both the past and the future. Unfortunately, it's not the present. ;)
 
 static void set_opacity (AwnTerm *applet, gfloat opacity);
-static void set_bg_img (AwnTerm *applet, gchar *path);
+static void set_bg_img (AwnTerm *applet, const gchar *path);
 static void set_hide_on_unfocus (AwnTerm *applet, gboolean value);
 
 static gchar*
@@ -77,26 +77,24 @@ GtkWidget* create_popup_menu (AwnTerm *applet)
 void init_settings (AwnTerm *applet)
 {
 	gfloat opacity = 1.0;
-	applet->config = awn_config_client_new_for_applet ("awnterm", NULL);
+	applet->config = awn_config_get_default_for_applet (applet->applet, NULL);
 	
-	awn_config_client_notify_add (applet->config, 
-		AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+	desktop_agnostic_config_client_notify_add (applet->config, 
+		DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
 		OPACITY,
-		(AwnConfigClientNotifyFunc)load_opacity,
+		(DesktopAgnosticConfigNotifyFunc)load_opacity,
 		applet);
-	if (awn_config_client_entry_exists (applet->config,
-			AWN_CONFIG_CLIENT_DEFAULT_GROUP, OPACITY))
-		opacity = awn_config_client_get_float (applet->config,
-				AWN_CONFIG_CLIENT_DEFAULT_GROUP,
-				OPACITY,
-				NULL);
+	opacity = desktop_agnostic_config_client_get_float (applet->config,
+			DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
+			OPACITY,
+			NULL);
 	set_opacity (applet, opacity);
 	
-	awn_config_client_notify_add (applet->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, BG_IMG, (AwnConfigClientNotifyFunc)load_bg_img, applet);
-	set_bg_img (applet, awn_config_client_get_string (applet->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, BG_IMG, NULL));
+	desktop_agnostic_config_client_notify_add (applet->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, BG_IMG, (DesktopAgnosticConfigNotifyFunc)load_bg_img, applet);
+	set_bg_img (applet, desktop_agnostic_config_client_get_string (applet->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, BG_IMG, NULL));
 	
-	awn_config_client_notify_add (applet->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, HIDE_ON_UNFOCUS, (AwnConfigClientNotifyFunc)load_hide_on_unfocus, applet);
-	set_hide_on_unfocus (applet, awn_config_client_get_bool (applet->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, HIDE_ON_UNFOCUS, NULL));
+	desktop_agnostic_config_client_notify_add (applet->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, HIDE_ON_UNFOCUS, (DesktopAgnosticConfigNotifyFunc)load_hide_on_unfocus, applet);
+	set_hide_on_unfocus (applet, desktop_agnostic_config_client_get_bool (applet->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, HIDE_ON_UNFOCUS, NULL));
 }
 
 static void set_opacity (AwnTerm *applet, gfloat opacity)
@@ -104,17 +102,18 @@ static void set_opacity (AwnTerm *applet, gfloat opacity)
 	gtk_window_set_opacity (GTK_WINDOW (applet->dialog), opacity);
 }
 
-void load_opacity (AwnConfigClientNotifyEntry *entry, AwnTerm *applet)
+void load_opacity (const gchar *group, const gchar *key, const GValue *value, gpointer user_data)
 {
-	set_opacity (applet, entry->value.float_val);
+	AwnTerm *applet = (AwnTerm*)applet;
+	set_opacity (applet, g_value_get_float (value));
 }
 
-void save_opacity (GtkWidget *scale, AwnConfigClient *config)
+void save_opacity (GtkWidget *scale, DesktopAgnosticConfigClient *config)
 {
-	awn_config_client_set_float (config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, OPACITY, gtk_range_get_value (GTK_RANGE (scale)), NULL);
+	desktop_agnostic_config_client_set_float (config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, OPACITY, gtk_range_get_value (GTK_RANGE (scale)), NULL);
 }
 
-static void set_bg_img (AwnTerm *applet, gchar *path)
+static void set_bg_img (AwnTerm *applet, const gchar *path)
 {
 	GtkWidget *terminal;
 	int i;
@@ -127,14 +126,15 @@ static void set_bg_img (AwnTerm *applet, gchar *path)
 	}
 }
 
-void load_bg_img (AwnConfigClientNotifyEntry *entry, AwnTerm *applet)
+void load_bg_img (const gchar *group, const gchar *key, const GValue *value, gpointer user_data)
 {
-	set_bg_img (applet, entry->value.str_val);
+	AwnTerm *applet = (AwnTerm*)applet;
+	set_bg_img (applet, g_value_get_string (value));
 }
 
-void save_bg_img (GtkWidget *fc, AwnConfigClient *config)
+void save_bg_img (GtkWidget *fc, DesktopAgnosticConfigClient *config)
 {
-	awn_config_client_set_string (config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, BG_IMG, gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (fc)), NULL);
+	desktop_agnostic_config_client_set_string (config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, BG_IMG, gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (fc)), NULL);
 }
 
 /* update_preview_cb copied completely from gtk documentation */
@@ -168,21 +168,22 @@ static void set_hide_on_unfocus (AwnTerm *applet, gboolean value)
 	}
 }
 
-void load_hide_on_unfocus (AwnConfigClientNotifyEntry *entry, AwnTerm *applet)
+void load_hide_on_unfocus (const gchar *group, const gchar *key, const GValue *value, gpointer user_data)
 {
-	set_hide_on_unfocus (applet, entry->value.bool_val);
+	AwnTerm *applet = (AwnTerm*)applet;
+	set_hide_on_unfocus (applet, g_value_get_boolean (value));
 }
 
-void save_hide_on_unfocus (GtkWidget *check, AwnConfigClient *config)
+void save_hide_on_unfocus (GtkWidget *check, DesktopAgnosticConfigClient *config)
 {
-	awn_config_client_set_bool (config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, HIDE_ON_UNFOCUS, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check)), NULL);
+	desktop_agnostic_config_client_set_bool (config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, HIDE_ON_UNFOCUS, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check)), NULL);
 }
 
 static gboolean save_main_terminal (GtkWidget *entry,
 								GdkEventFocus *event,
-								AwnConfigClient *config)
+								DesktopAgnosticConfigClient *config)
 {
-	awn_config_client_set_string (config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, MAIN_TERMINAL, (gchar*)gtk_entry_get_text (GTK_ENTRY (entry)), NULL);
+	desktop_agnostic_config_client_set_string (config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, MAIN_TERMINAL, (gchar*)gtk_entry_get_text (GTK_ENTRY (entry)), NULL);
 
 	return FALSE;
 }
@@ -194,7 +195,7 @@ clear_bg(GtkButton *button, GtkWidget *chooser)
 
 	/* I don't think there is a signal to connect to a change by the above
 	 * function, so save the non-image manually. */
-	awn_config_client_set_string (applet->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, BG_IMG, "", NULL);
+	desktop_agnostic_config_client_set_string (applet->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, BG_IMG, "", NULL);
 }
 
 void show_settings_window ()
@@ -213,7 +214,7 @@ void show_settings_window ()
 
 	widget = gtk_check_button_new_with_label (_("Hide when focus is lost"));
 	g_signal_connect (G_OBJECT (widget), "toggled", G_CALLBACK (save_hide_on_unfocus), applet->config);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget), awn_config_client_get_bool (applet->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, HIDE_ON_UNFOCUS, NULL));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget), desktop_agnostic_config_client_get_bool (applet->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, HIDE_ON_UNFOCUS, NULL));
 	gtk_box_pack_start (GTK_BOX (box), widget, FALSE, FALSE, 0);
 
 	section_box = gtk_vbox_new (FALSE, 0);
@@ -235,7 +236,7 @@ void show_settings_window ()
 	widget2 = gtk_image_new();
 
 	widget = gtk_file_chooser_button_new (_("Select a file"), GTK_FILE_CHOOSER_ACTION_OPEN);
-	gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (widget), awn_config_client_get_string (applet->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, BG_IMG, NULL));
+	gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (widget), desktop_agnostic_config_client_get_string (applet->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, BG_IMG, NULL));
 	gtk_file_chooser_set_preview_widget (GTK_FILE_CHOOSER(widget), widget2);
 	gtk_widget_set_size_request(widget, 200, -1);
 	g_signal_connect (G_OBJECT (widget), "file-set", G_CALLBACK (save_bg_img), applet->config);
@@ -260,8 +261,8 @@ void show_settings_window ()
 	gtk_alignment_set_padding(GTK_ALIGNMENT(align), 0, 0, 10, 0);
 	gtk_box_pack_start(GTK_BOX(section_box), align, FALSE, FALSE, 0);
 
-	val = awn_config_client_get_float (applet->config,
-									   AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+	val = desktop_agnostic_config_client_get_float (applet->config,
+									   DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
 									   OPACITY, NULL);
 
 	widget = gtk_hscale_new_with_range (0.1, 1.0, 0.1);
@@ -285,8 +286,8 @@ void show_settings_window ()
 	gtk_alignment_set_padding(GTK_ALIGNMENT(align), 0, 0, 10, 0);
 	gtk_box_pack_start(GTK_BOX(section_box), align, FALSE, FALSE, 0);
 
-	ext_term = awn_config_client_get_string (applet->config,
-											 AWN_CONFIG_CLIENT_DEFAULT_GROUP,
+	ext_term = desktop_agnostic_config_client_get_string (applet->config,
+											 DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
 											 MAIN_TERMINAL, NULL);
 	if (!ext_term) ext_term = g_strdup ("gnome-terminal");
 

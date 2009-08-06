@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2007,2008  Rodney Cryderman    <rcryderman@gmail.com>
- # Copyright (c) 2007,2008  Mark Lee          <avant-wn@lazymalevolence.com>
+ * Copyright (c) 2007,2008,2009 Rodney Cryderman <rcryderman@gmail.com>
+ * Copyright (c) 2007,2008,2009 Mark Lee         <avant-wn@lazymalevolence.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,53 +23,34 @@
 #include <config.h>
 #endif
 
-/* getline() */
-#define _GNU_SOURCE
-#include <stdio.h>
-/* isalpha() */
-#include <ctype.h>
-
-#include <libawn/awn-applet.h>
-#include <libawn/awn-applet-simple.h>
-#include <libawn/awn-cairo-utils.h>
-#include <libawn/awn-config-client.h>
-#include <libawn/awn-vfs.h>
-
 #include <gtk/gtk.h>
-#ifndef LIBAWN_USE_XFCE
-#include <glib/gi18n.h>
-#endif
 #include <glib/gstdio.h>
+#include <glib/gi18n-lib.h>
 #include <string.h>
 
-#ifdef LIBAWN_USE_GNOME
-#include <libgnomevfs/gnome-vfs.h>
-#include <libgnomevfs/gnome-vfs-utils.h>
-#endif
-
+#include <libdesktop-agnostic/vfs.h>
+#include <libawn/libawn.h>
 
 #define APPLET_NAME "places"
 
-#define CONFIG_KEY(key) key
+#define CONFIG_NORMAL_BG     "bg_normal_colour"
+#define CONFIG_NORMAL_FG     "text_normal_colour"
+#define CONFIG_HOVER_BG      "bg_hover_colour"
+#define CONFIG_HOVER_FG      "text_hover_colour"
 
-#define CONFIG_NORMAL_BG     CONFIG_KEY("bg_normal_colour")
-#define CONFIG_NORMAL_FG     CONFIG_KEY("text_normal_colour")
-#define CONFIG_HOVER_BG      CONFIG_KEY("bg_hover_colour")
-#define CONFIG_HOVER_FG      CONFIG_KEY("text_hover_colour")
+#define CONFIG_TEXT_SIZE     "text_size"
 
-#define CONFIG_TEXT_SIZE     CONFIG_KEY("text_size")
+#define CONFIG_MENU_GRADIENT "menu_item_gradient_factor"
 
-#define CONFIG_MENU_GRADIENT CONFIG_KEY("menu_item_gradient_factor")
-
-#define CONFIG_FILEMANAGER   CONFIG_KEY("filemanager")
-#define CONFIG_APPLET_ICON   CONFIG_KEY("applet_icon")
+#define CONFIG_FILEMANAGER   "filemanager"
+#define CONFIG_APPLET_ICON   "applet_icon"
 
 
-#define CONFIG_SHOW_TOOLTIPS CONFIG_KEY("show_tooltips")
-#define CONFIG_BORDER_COLOUR CONFIG_KEY("border_colour")
-#define CONFIG_BORDER_WIDTH  CONFIG_KEY("border_width")
+#define CONFIG_SHOW_TOOLTIPS "show_tooltips"
+#define CONFIG_BORDER_COLOUR "border_colour"
+#define CONFIG_BORDER_WIDTH  "border_width"
 
-#define CONFIG_HONOUR_GTK    CONFIG_KEY("honour_gtk")
+#define CONFIG_HONOUR_GTK    "honour_gtk"
 
 typedef struct
 {
@@ -107,7 +88,7 @@ typedef struct
   gchar    *file_manager;
   gchar    *desktop_dir;
 
-  AwnConfigClient  *config;
+  DesktopAgnosticConfigClient  *config;
 
   gchar * uid;
 }Places;
@@ -182,43 +163,32 @@ static void free_menu_list_item(Menu_Item * item)
 
 //CONF STUFF
 
-static void config_get_string(AwnConfigClient *client, const gchar *key, gchar **str)
+static void config_get_string(DesktopAgnosticConfigClient *client, const gchar *key, gchar **str)
 {
-  *str = awn_config_client_get_string(client, AWN_CONFIG_CLIENT_DEFAULT_GROUP, key, NULL);
+  *str = desktop_agnostic_config_client_get_string(client, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, key, NULL);
 }
 
-static void config_get_color(AwnConfigClient *client, const gchar *key, DesktopAgnosticColor **color)
+static void config_get_color(DesktopAgnosticConfigClient *client, const gchar *key, DesktopAgnosticColor **color)
 {
   GError *error = NULL;
-  gchar *value = awn_config_client_get_string(client, AWN_CONFIG_CLIENT_DEFAULT_GROUP, key, &error);
+  GValue value = desktop_agnostic_config_client_get_value(client, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, key, &error);
 
-  if (value)
+  if (error)
   {
-    *color = desktop_agnostic_color_new_from_string(value, &error);
-    if (error)
-    {
-      g_warning("places: error parsing config string (%s = '%s'): %s", key, value, error->message);
-      g_error_free(error);
-    }
-    g_free(value);
+    g_warning("places: error reading config string (%s): %s", key, error->message);
+    g_error_free(error);
+    *color = desktop_agnostic_color_new_from_string("#000", NULL);
   }
   else
   {
-    if (error)
-    {
-      g_warning("shinyswitcher: error reading config string (%s): %s", key, error->message);
-      g_error_free(error);
-    }
-
-    g_warning("Failed to read config key: %s\n", key);
-
-    *color = desktop_agnostic_color_new_from_string("#000", NULL);
+    *color = (DesktopAgnosticColor*)g_value_dup_object(&value);
+    g_value_unset(&value);
   }
 }
 
 void init_config(Places * places)
 {
-  places->config = awn_config_client_new_for_applet("places", NULL);
+  places->config = awn_config_get_default_for_applet(AWN_APPLET(places->applet), NULL);
 
   config_get_color(places->config, CONFIG_NORMAL_BG,     &places->normal_colours.base);
   config_get_color(places->config, CONFIG_NORMAL_FG,     &places->normal_colours.text);
@@ -226,11 +196,11 @@ void init_config(Places * places)
   config_get_color(places->config, CONFIG_HOVER_FG,      &places->hover_colours.text);
   config_get_color(places->config, CONFIG_BORDER_COLOUR, &places->border_colour);
 
-  places->border_width              = awn_config_client_get_int(places->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, CONFIG_BORDER_WIDTH,  NULL);
-  places->text_size                 = awn_config_client_get_int(places->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, CONFIG_TEXT_SIZE,     NULL);
-  places->menu_item_gradient_factor = awn_config_client_get_float(places->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, CONFIG_MENU_GRADIENT, NULL);
-  places->show_tooltips             = awn_config_client_get_bool(places->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, CONFIG_SHOW_TOOLTIPS, NULL);
-  places->honour_gtk                = awn_config_client_get_bool(places->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, CONFIG_HONOUR_GTK,    NULL);
+  places->border_width              = desktop_agnostic_config_client_get_int(places->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, CONFIG_BORDER_WIDTH,  NULL);
+  places->text_size                 = desktop_agnostic_config_client_get_int(places->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, CONFIG_TEXT_SIZE,     NULL);
+  places->menu_item_gradient_factor = desktop_agnostic_config_client_get_float(places->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, CONFIG_MENU_GRADIENT, NULL);
+  places->show_tooltips             = desktop_agnostic_config_client_get_bool(places->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, CONFIG_SHOW_TOOLTIPS, NULL);
+  places->honour_gtk                = desktop_agnostic_config_client_get_bool(places->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, CONFIG_HONOUR_GTK,    NULL);
   config_get_string(places->config, CONFIG_FILEMANAGER, &(places->file_manager));
   config_get_string(places->config, CONFIG_APPLET_ICON, &(places->applet_icon_name));
 
@@ -248,7 +218,7 @@ void init_config(Places * places)
   places->menu_list = NULL;
 }
 
-#define SET_CONFIG_OPTION(type, key, value) awn_config_client_set_##type (places->config, AWN_CONFIG_CLIENT_DEFAULT_GROUP, key, value, NULL)
+#define SET_CONFIG_OPTION(type, key, value) desktop_agnostic_config_client_set_##type (places->config, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, key, value, NULL)
 static void set_config_colour(Places *places, const gchar *key, DesktopAgnosticColor *color)
 {
   gchar *str;
@@ -298,56 +268,31 @@ static gboolean _do_update_places_wrapper(Places * places)
 //===========================================================================
 
 
-static void monitor_places_callback(AwnVfsMonitor *monitor,
-                                    gchar *monitor_path,
-                                    gchar *event_path,
-                                    AwnVfsMonitorEvent event,
-                                    Places *places)
+static void
+_on_bookmarks_changed(DesktopAgnosticVFSGtkBookmarks *parser,
+                      Places *places)
 {
   _do_update_places(places);
 }
 
-static void monitor_places(Places *places)
-{
-  AwnVfsMonitor *monitor;
-
-  const gchar *home_dir = g_getenv("HOME");
-
-  if (!home_dir)
-  {
-    home_dir = g_get_home_dir();
-  }
-
-  gchar *filename = g_build_filename(home_dir, ".gtk-bookmarks", NULL);
-
-  monitor = awn_vfs_monitor_add(filename, AWN_VFS_MONITOR_FILE, (AwnVfsMonitorFunc)monitor_places_callback, places);
-
-  if (!monitor)
-  {
-    g_warning("Attempt to monitor '%s' failed!\n", filename);
-  }
-
-  g_free(filename);
-}
-
-
-#ifdef LIBAWN_USE_GNOME
-static void _vfs_changed(GnomeVFSDrive  *drive, GnomeVFSVolume *volume, Places * places)
+static void _vfs_changed(DesktopAgnosticVFSVolumeMonitor *monitor,
+                         DesktopAgnosticVFSVolume *volume,
+                         Places                   *places)
 {
   g_timeout_add(500, (GSourceFunc)_do_update_places_wrapper, places);
 }
 
-static void _fillin_connected(GnomeVFSDrive * drive, Places * places)
+static void _fillin_connected(DesktopAgnosticVFSVolume *volume,
+                              Places                   *places)
 {
+  Menu_Item *item;
+  DesktopAgnosticVFSFile *uri;
+  const gchar *uri_str;
 
-  Menu_Item * item;
-  gchar * dev_path;
-  gchar * mount_point;
-  GnomeVFSVolume* volume;
+  g_message("Attempting to add %s...", desktop_agnostic_vfs_volume_get_name(volume));
 
-  volume = gnome_vfs_drive_get_mounted_volume(drive);
-
-  if (!volume)
+  /* don't use g_return_if_fail because it runs g_critical */
+  if (!desktop_agnostic_vfs_volume_is_mounted(volume))
   {
     return;
   }
@@ -355,117 +300,20 @@ static void _fillin_connected(GnomeVFSDrive * drive, Places * places)
   item = g_malloc(sizeof(Menu_Item));
 
   item->places = places;
-  item->text = gnome_vfs_drive_get_display_name(drive);
-  item->text = g_uri_unescape_string(item->text, NULL);
-  item->icon = gnome_vfs_drive_get_icon(drive);
-  // FIXME gnome_vfs_drive_get_mounted_volume is deprecated.
-
-  mount_point = gnome_vfs_volume_get_activation_uri(volume);
-  item->exec = g_strdup_printf("%s %s", places->file_manager, mount_point);
-
-  dev_path = gnome_vfs_drive_get_device_path(gnome_vfs_volume_get_drive(volume));
-  item->comment = g_strdup_printf("%s\n%s\n%s", item->text, mount_point, dev_path) ;
+  item->text = g_strdup(desktop_agnostic_vfs_volume_get_name(volume));
+  item->icon = g_strdup(desktop_agnostic_vfs_volume_get_icon(volume));
+  uri = desktop_agnostic_vfs_volume_get_uri(volume);
+  uri_str = desktop_agnostic_vfs_file_get_uri(uri);
+  item->exec = g_strdup_printf("%s %s", places->file_manager, uri_str);
+  item->comment = g_strdup_printf("%s\n%s", item->text, uri_str);
+  g_object_unref(uri);
   places->menu_list = g_slist_append(places->menu_list, item);
-
-  g_free(mount_point);
-  g_free(dev_path);
-  gnome_vfs_volume_unref(volume) ;
 }
-
-#elif defined(LIBAWN_USE_XFCE)
-static void _vfs_changed(ThunarVfsVolumeManager *volume_manager, ThunarVfsVolume *volume, Places *places)
-{
-  g_timeout_add(500, (GSourceFunc)_do_update_places_wrapper, places);
-}
-
-static void _fillin_connected(ThunarVfsVolume *volume, Places *places)
-{
-  Menu_Item *item;
-  gchar *mount_point;
-
-  if (thunar_vfs_volume_get_status(volume) != THUNAR_VFS_VOLUME_STATUS_MOUNTED)
-  {
-    return;
-  }
-
-  mount_point = thunar_vfs_path_dup_string(thunar_vfs_volume_get_mount_point(volume));
-
-  item = g_malloc(sizeof(Menu_Item));
-  item->places = places;
-  item->text = g_uri_unescape_string(g_strdup(thunar_vfs_volume_get_name(volume)), NULL);
-  item->icon = g_strdup(thunar_vfs_volume_lookup_icon_name(volume, gtk_icon_theme_get_default()));
-  item->exec = g_strdup_printf("%s %s", places->file_manager, mount_point);
-  item->comment = g_strdup_printf("%s\n%s", item->text, mount_point);
-  places->menu_list = g_slist_append(places->menu_list, item);
-  g_free(mount_point);
-}
-
-#else
-static void _vfs_volume_changed(GVolumeMonitor *monitor, GVolume *volume, Places *places)
-{
-  g_timeout_add(500, (GSourceFunc)_do_update_places_wrapper, places);
-}
-
-static void _vfs_drive_changed(GVolumeMonitor *monitor, GDrive *drive, Places *places)
-{
-  g_timeout_add(500, (GSourceFunc)_do_update_places_wrapper, places);
-}
-
-#if GLIB_CHECK_VERSION(2,15,0)
-static void _fillin_connected(GMount *mount, Places *places)
-#else
-static void _fillin_connected(GVolume *volume, Places *places)
-#endif
-{
-  Menu_Item *item;
-  GIcon *icon;
-#if GLIB_CHECK_VERSION(2,15,0)
-  gchar *mount_point = g_file_get_path(g_mount_get_root(mount));
-#else
-  gchar *mount_point = g_file_get_path(g_volume_get_root(volume));
-#endif
-  item = g_malloc(sizeof(Menu_Item));
-  item->places = places;
-#if GLIB_CHECK_VERSION(2,15,0)
-  item->text = g_uri_unescape_string(g_mount_get_name(mount), NULL);
-  icon = g_mount_get_icon(mount);
-#else
-  item->text = g_uri_unescape_string(g_volume_get_name(volume), NULL);
-  icon = g_volume_get_icon(volume);
-#endif
-
-  if (G_IS_THEMED_ICON(icon))
-  {
-    /* assume that this shouldn't be free()d manually */
-    const gchar * const *icon_names = g_themed_icon_get_names(G_THEMED_ICON(icon));
-
-    if (g_strv_length((gchar**)icon_names) > 0)
-    {
-      item->icon = g_strdup(icon_names[0]);
-    }
-  }
-  else if (G_IS_FILE_ICON(icon))
-  {
-    item->icon = g_file_get_path(g_file_icon_get_file(G_FILE_ICON(icon)));
-  }
-  else
-  {
-    g_warning("The GIcon implementation returned by g_volume_get_icon() is unsupported!");
-  }
-
-  item->exec = g_strdup_printf("%s %s", places->file_manager, mount_point);
-
-  item->comment = g_strdup_printf("%s\n%s", item->text, mount_point);
-  places->menu_list = g_slist_append(places->menu_list, item);
-
-  g_free(mount_point);
-}
-#endif
 
 static void get_places(Places * places)
 {
-
   Menu_Item *item = NULL;
+  GError *error = NULL;
   const gchar *desktop_dir = g_get_user_special_dir (G_USER_DIRECTORY_DESKTOP);
 
   item = g_malloc(sizeof(Menu_Item));
@@ -519,147 +367,82 @@ static void get_places(Places * places)
   item->places = places;
   places->menu_list = g_slist_append(places->menu_list, item);
 
-#ifdef LIBAWN_USE_GNOME
-  gnome_vfs_init();
-  static GnomeVFSVolumeMonitor* vfsvolumes = NULL;
+  static DesktopAgnosticVFSVolumeMonitor* vol_monitor = NULL;
+  static DesktopAgnosticVFSGtkBookmarks *bookmarks_parser = NULL;
 
-  if (!vfsvolumes)
+  if (!vol_monitor)
   {
     /*this is structured like this because get_places() is
     invoked any time there is a change in places... only want perform
     these actions once.*/
-    vfsvolumes = gnome_vfs_get_volume_monitor();
-    g_signal_connect(G_OBJECT(vfsvolumes), "volume-mounted", G_CALLBACK(_vfs_changed), places);
-    g_signal_connect(G_OBJECT(vfsvolumes), "volume-unmounted", G_CALLBACK(_vfs_changed), places);
-    g_signal_connect(G_OBJECT(vfsvolumes), "drive-disconnected" , G_CALLBACK(_vfs_changed), places);
-    g_signal_connect(G_OBJECT(vfsvolumes), "drive-connected", G_CALLBACK(_vfs_changed), places);
-
-    monitor_places(places); //Monitor bookmark file
-  }
-
-  GList *connected = gnome_vfs_volume_monitor_get_connected_drives(vfsvolumes);
-
-  if (connected)
-  {
-    g_list_foreach(connected, (GFunc)_fillin_connected, places);
-  }
-
-  g_list_free(connected);
-
-#elif defined(LIBAWN_USE_XFCE)
-  /* monitor volumes */
-  static ThunarVfsVolumeManager *volume_manager = NULL;
-
-  if (!volume_manager)
-  {
-    volume_manager = thunar_vfs_volume_manager_get_default();
-    g_signal_connect(G_OBJECT(volume_manager), "volume-mounted",   G_CALLBACK(_vfs_changed), places);
-    g_signal_connect(G_OBJECT(volume_manager), "volume-unmounted", G_CALLBACK(_vfs_changed), places);
-    monitor_places(places);  /* monitor bookmark file */
-  }
-
-  GList *volumes = thunar_vfs_volume_manager_get_volumes(volume_manager);
-
-  if (volumes)
-  {
-    g_list_foreach(volumes, (GFunc)_fillin_connected, places);
-  }
-
-  /* thunar-vfs docs say: "The returned list is owned by manager and should therefore considered constant in the caller." */
-#else
-  /* monitor volumes */
-  static GVolumeMonitor *volume_monitor = NULL;
-
-  if (!volume_monitor)
-  {
-    volume_monitor = g_volume_monitor_get();
-#if GLIB_CHECK_VERSION(2,15,0)
-    g_signal_connect(G_OBJECT(volume_monitor), "volume-added",     G_CALLBACK(_vfs_volume_changed), places);
-    g_signal_connect(G_OBJECT(volume_monitor), "volume-removed",   G_CALLBACK(_vfs_volume_changed), places);
-#else
-    g_signal_connect(G_OBJECT(volume_monitor), "volume-mounted",     G_CALLBACK(_vfs_volume_changed), places);
-    g_signal_connect(G_OBJECT(volume_monitor), "volume-unmounted",   G_CALLBACK(_vfs_volume_changed), places);
-#endif
-    g_signal_connect(G_OBJECT(volume_monitor), "drive-disconnected", G_CALLBACK(_vfs_drive_changed), places);
-    g_signal_connect(G_OBJECT(volume_monitor), "drive-connected",    G_CALLBACK(_vfs_drive_changed), places);
-    monitor_places(places);
-  }
-
-#if GLIB_CHECK_VERSION(2,15,0)
-  GList *volumes = g_volume_monitor_get_mounts(volume_monitor);
-
-#else
-  GList *volumes = g_volume_monitor_get_mounted_volumes(volume_monitor);
-
-#endif
-  if (volumes)
-  {
-    g_list_foreach(volumes, (GFunc)_fillin_connected, places);
-  }
-
-  g_list_free(volumes);
-
-#endif
-//bookmarks
-  FILE* handle;
-  gchar *  filename = g_strdup_printf("%s/.gtk-bookmarks", homedir);
-  handle = g_fopen(filename, "r");
-
-  if (handle)
-  {
-    char * line = NULL;
-    size_t  len = 0;
-
-    while (getline(&line, &len, handle) != -1)
+    vol_monitor = desktop_agnostic_vfs_volume_monitor_get_default(&error);
+    if (error)
     {
-      gchar ** tokens;
-      tokens = g_strsplit(line, " ", 2);
+      g_critical("Could not get the volume monitor: %s", error->message);
+      g_error_free(error);
+      return;
+    }
+    else if (!vol_monitor)
+    {
+      g_critical("Could not get the volume monitor.");
+      return;
+    }
+    g_signal_connect(vol_monitor, "volume-mounted", G_CALLBACK(_vfs_changed), places);
+    g_signal_connect(vol_monitor, "volume-unmounted", G_CALLBACK(_vfs_changed), places);
 
-      if (tokens)
-      {
-        if (tokens[0])
-        {
-          gchar * shell_quoted;
-          g_strstrip(tokens[0]);
-          item = g_malloc(sizeof(Menu_Item));
+    bookmarks_parser = desktop_agnostic_vfs_gtk_bookmarks_new (NULL, TRUE);
+    g_signal_connect (G_OBJECT (bookmarks_parser), "changed",
+                      G_CALLBACK (_on_bookmarks_changed), places);
+  }
 
-          if (tokens[1])
-          {
-            g_strstrip(tokens[1]);
-            item->text = g_strdup(tokens[1]);
-          }
-          else
-          {
-            item->text = g_uri_unescape_string(g_path_get_basename(tokens[0]), NULL);
-          }
+  GList *volumes = desktop_agnostic_vfs_volume_monitor_get_volumes(vol_monitor);
 
-          item->icon = g_strdup("stock_folder");
+  if (volumes)
+  {
+    g_message("Number of volumes: %d", g_list_length(volumes));
+    g_list_foreach(volumes, (GFunc)_fillin_connected, places);
+  }
 
-          shell_quoted = g_shell_quote(tokens[0]);
-          item->exec = g_strdup_printf("%s %s", places->file_manager, shell_quoted);
-          g_free(shell_quoted);
-          item->comment = g_uri_unescape_string(g_strdup(tokens[0]), NULL);
-          item->places = places;
-          places->menu_list = g_slist_append(places->menu_list, item);
+  g_list_free (volumes);
+  // bookmarks
+  GSList *bookmarks;
+  GSList *node;
 
-        }
+  bookmarks = desktop_agnostic_vfs_gtk_bookmarks_get_bookmarks (bookmarks_parser);
+  for (node = bookmarks; node != NULL; node = node->next)
+  {
+    DesktopAgnosticVFSBookmark *bookmark;
+    DesktopAgnosticVFSFile *b_file;
+    const gchar *b_alias;
+    gchar *b_path;
+    gchar *shell_quoted;
 
-      }
+    item = g_new0 (Menu_Item, 1);
+    item->icon = g_strdup ("stock_folder");
+    bookmark = (DesktopAgnosticVFSBookmark*)node->data;
+    b_file = desktop_agnostic_vfs_bookmark_get_file (bookmark);
+    b_alias = desktop_agnostic_vfs_bookmark_get_alias (bookmark);
+    b_path = desktop_agnostic_vfs_file_get_path (b_file);
+    shell_quoted = g_shell_quote (b_path);
 
-      g_strfreev(tokens);
+    item->exec = g_strdup_printf("%s %s", places->file_manager, shell_quoted);
+    item->comment = desktop_agnostic_vfs_file_get_uri (b_file);
 
-      free(line);
+    g_free (shell_quoted);
 
-      line = NULL;
+    if (b_alias)
+    {
+      item->text = g_strdup (b_alias);
+    }
+    else
+    {
+      item->text = g_path_get_basename (b_path);
     }
 
-    fclose(handle);
+    item->places = places;
+    places->menu_list = g_slist_append(places->menu_list, item);
 
-    g_free(filename);
-  }
-  else
-  {
-    printf("Unable to open bookmark file: %s/.gtk-bookmarks\n", homedir);
+    g_free (b_path);
   }
 }
 
@@ -931,10 +714,7 @@ GtkWidget * get_blank(Places * places)
   else
   {
 
-    cairo_set_source_rgba(cr, desktop_agnostic_color_get_red(places->border_colour) / AWN_RGBA_SCALE_FACTOR,
-                          desktop_agnostic_color_get_green(places->border_colour) / AWN_RGBA_SCALE_FACTOR,
-                          desktop_agnostic_color_get_blue(places->border_colour) / AWN_RGBA_SCALE_FACTOR,
-                          0);
+    awn_cairo_set_source_color_with_alpha_multiplier(cr, places->border_colour, 0);
   }
 
   cairo_paint(cr);
@@ -1120,7 +900,7 @@ void _mod_colour(GtkColorButton *widget, DesktopAgnosticColor * user_data)
   GdkColor *color;
   gtk_color_button_get_color(widget, color);
   desktop_agnostic_color_set_color(user_data, color);
-  user_data->alpha = gtk_color_button_get_alpha(widget);
+  desktop_agnostic_color_set_alpha(user_data, gtk_color_button_get_alpha(widget));
   gtk_widget_destroy(pref_menu->hover_ex);
   gtk_widget_destroy(pref_menu->normal_ex);
   pref_menu->hover_ex = build_menu_widget(pref_menu->places, &pref_menu->places->hover_colours, "Hover", NULL, NULL, 200);
@@ -1184,25 +964,25 @@ void show_prefs(Places * places)
   desktop_agnostic_color_get_color(places->normal_colours.base, &pref_menu->colr);
   pref_menu->normal_bg = gtk_color_button_new_with_color(&pref_menu->colr);
   gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(pref_menu->normal_bg), TRUE);
-  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(pref_menu->normal_bg), places->normal_colours.base->alpha);
+  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(pref_menu->normal_bg), desktop_agnostic_color_get_alpha(places->normal_colours.base));
   g_signal_connect(G_OBJECT(pref_menu->normal_bg), "color-set", G_CALLBACK(_mod_colour), &places->normal_colours.base);
   desktop_agnostic_color_get_color(places->normal_colours.text, &pref_menu->colr);
   pref_menu->normal_fg = gtk_color_button_new_with_color(&pref_menu->colr);
   gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(pref_menu->normal_fg), TRUE);
-  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(pref_menu->normal_fg), places->normal_colours.text->alpha);
+  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(pref_menu->normal_fg), desktop_agnostic_color_get_alpha(places->normal_colours.text));
   g_signal_connect(G_OBJECT(pref_menu->normal_fg), "color-set", G_CALLBACK(_mod_colour), &places->normal_colours.text);
 
   pref_menu->hover_label = gtk_label_new("Hover");
   desktop_agnostic_color_get_color(places->hover_colours.base, &pref_menu->colr);
   pref_menu->hover_bg = gtk_color_button_new_with_color(&pref_menu->colr);
   gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(pref_menu->hover_bg), TRUE);
-  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(pref_menu->hover_bg), places->hover_colours.base->alpha);
+  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(pref_menu->hover_bg), desktop_agnostic_color_get_alpha(places->hover_colours.base));
   g_signal_connect(G_OBJECT(pref_menu->hover_bg), "color-set", G_CALLBACK(_mod_colour), &places->hover_colours.base);
 
   desktop_agnostic_color_get_color(places->hover_colours.text, &pref_menu->colr);
   pref_menu->hover_fg = gtk_color_button_new_with_color(&pref_menu->colr);
   gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(pref_menu->hover_fg), TRUE);
-  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(pref_menu->hover_fg), places->hover_colours.text->alpha);
+  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(pref_menu->hover_fg), desktop_agnostic_color_get_alpha(places->hover_colours.text));
   g_signal_connect(G_OBJECT(pref_menu->hover_fg), "color-set", G_CALLBACK(_mod_colour), &places->hover_colours.text);
 
   pref_menu->border_label = gtk_label_new("Border");
@@ -1210,7 +990,7 @@ void show_prefs(Places * places)
   desktop_agnostic_color_get_color(places->border_colour, &pref_menu->colr);
   pref_menu->border_colour = gtk_color_button_new_with_color(&pref_menu->colr);
   gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(pref_menu->border_colour), TRUE);
-  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(pref_menu->border_colour), places->border_colour->alpha);
+  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(pref_menu->border_colour), desktop_agnostic_color_get_alpha(places->border_colour));
   g_signal_connect(G_OBJECT(pref_menu->border_colour), "color-set", G_CALLBACK(_mod_colour), &places->border_colour);
 
 
@@ -1429,8 +1209,8 @@ static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, 
 static gboolean _focus_out_event(GtkWidget *widget, GdkEventButton *event, Places * places)
 {
 
-  AwnConfigClient *client = awn_config_client_new();
-  if (awn_config_client_get_bool(client, "shared", "dialog_focus_loss_behavior", NULL))
+  DesktopAgnosticConfigClient *client = awn_config_get_default(AWN_PANEL_ID_DEFAULT, NULL);
+  if (desktop_agnostic_config_client_get_bool(client, "shared", "dialog_focus_loss_behavior", NULL))
   {
     gtk_widget_hide(places->mainwindow);
   }

@@ -987,12 +987,12 @@ countdown_expose_cb(GtkWidget *pie, GdkEventExpose *event,
   if (windata->timeout > 0)
   {
     gdouble pct = (gdouble)windata->remaining / (gdouble)windata->timeout;
-    gushort old_alpha = G_daemon_config.awn_border->alpha;
+    gushort old_alpha = desktop_agnostic_color_get_alpha(G_daemon_config.awn_border);
 
-    G_daemon_config.awn_border->alpha = G_MAXUSHORT;
+    desktop_agnostic_color_set_alpha(G_daemon_config.awn_border, G_MAXUSHORT);
 //  gdk_cairo_set_source_color(cr, &style->bg[GTK_STATE_ACTIVE]);
     awn_cairo_set_source_color(cr, G_daemon_config.awn_border);
-    G_daemon_config.awn_border->alpha = old_alpha;
+    desktop_agnostic_color_set_alpha(G_daemon_config.awn_border, old_alpha);
     cairo_move_to(cr, PIE_RADIUS, PIE_RADIUS);
     cairo_arc_negative(cr, PIE_RADIUS, PIE_RADIUS, PIE_RADIUS,
                        -G_PI_2, -(pct * G_PI * 2) - G_PI_2);

@@ -25,6 +25,7 @@
 #define HIDE_ON_UNFOCUS "hide_on_unfocus"
 #define MAIN_TERMINAL "main_terminal"
 
+#include <libdesktop-agnostic/config.h>
 #include <gtk/gtk.h>
 
 #include "awnterm.h"
@@ -38,20 +39,18 @@ void show_about ();
 // Set up the config client when the applet starts up
 void init_settings (AwnTerm *applet);
 
-//void add_key (AwnTerm *applet, gchar *key, (GConfClientNotifyFunc) func)
-
 /* Each of the following functions is called once on startup, and whenever a setting is changed.
  * They each read a key from config and set a property by wrapping a gtk_window_set or vte_terminal_set function.
  * Its done this way because gtk is too stupid to handle things otherwise. */
-void load_opacity (AwnConfigClientNotifyEntry *entry, AwnTerm *applet);
-void load_bg_img (AwnConfigClientNotifyEntry *entry, AwnTerm *applet);
-void load_hide_on_unfocus (AwnConfigClientNotifyEntry *entry, AwnTerm *applet);
+void load_opacity (const gchar *group, const gchar *key, const GValue *value, gpointer user_data);
+void load_bg_img (const gchar *group, const gchar *key, const GValue *value, gpointer user_data);
+void load_hide_on_unfocus (const gchar *group, const gchar *key, const GValue *value, gpointer user_data);
 
 /* Each of the following functions is called whenever a setting is changed from the settings window
  * For ever load_* function, there exists a save_* function. */
-void save_opacity (GtkWidget *scale, AwnConfigClient *config);
-void save_bg_img (GtkWidget *fc, AwnConfigClient *config);
-void save_hide_on_unfocus (GtkWidget *check, AwnConfigClient *config);
+void save_opacity (GtkWidget *scale, DesktopAgnosticConfigClient *config);
+void save_bg_img (GtkWidget *fc, DesktopAgnosticConfigClient *config);
+void save_hide_on_unfocus (GtkWidget *check, DesktopAgnosticConfigClient *config);
 
 // Show the preference window
 void show_settings_window ();

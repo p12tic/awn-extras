@@ -47,13 +47,11 @@ PKG_CHECK_EXISTS([libwnck-1.0 >= 2.21.99.9], [AC_DEFINE(HAVE_LIBWNCK_222, 1, [Ha
 
 
 dnl
-dnl Check if desktop-agnostic is installed.
+dnl Determine the location of lda-schema-to-gconf
 dnl
 
-AWN_BINDIR=`$PKG_CONFIG --variable=exec_prefix awn`/bin
-AC_SUBST(AWN_BINDIR)
-
-config_backend=`$PKG_CONFIG --variable=config_backend awn`
+LDA_BINDIR=`$PKG_CONFIG --variable=exec_prefix desktop-agnostic`/bin
+AC_SUBST(LDA_BINDIR)
 
 dnl
 dnl package support
@@ -101,7 +99,7 @@ fi
 PKG_CHECK_MODULES(VTE, [vte])
 
 # awn-system-monitor, awn-notification-daemon, cairo-menu, filebrowser, plugger, trasher
-if test "$with_gconf" != "no" -a "$config_backend" != "GConf"; then
+if test "$with_gconf" != "no"; then
   PKG_CHECK_MODULES(GCONF, [gconf-2.0])
   gconf=gconf-2.0
 fi
@@ -183,7 +181,7 @@ fi
 if test "$with_gconf" != "no" -a "$with_gnome" != "no"; then
 PKG_CHECK_MODULES(AWN_SYSTEM_MONITOR, [$gconf libgtop-2.0])
 #PKG_CHECK_MODULES(FILEBROWSER, [$gconf gnome-desktop-2.0 gnome-vfs-2.0 libgnomeui-2.0])
-PKG_CHECK_MODULES(CAIRO_MENU_GNOME, [$gconf gnome-vfs-2.0 libgnome-menu libnotify $icon_entry_module])
+PKG_CHECK_MODULES(CAIRO_MENU_GNOME, [$gconf libgnome-menu libnotify $icon_entry_module])
 #PKG_CHECK_MODULES(PLUGGER, [$gconf gnome-vfs-2.0])
 #PKG_CHECK_MODULES(TRASH, [gnome-vfs-2.0 libglade-2.0 x11])
 #PKG_CHECK_MODULES(TRASHER, [$gconf gnome-vfs-2.0])
@@ -252,7 +250,6 @@ if test -n "$AWN_VAPIDIR" -a -f "$AWN_VAPIDIR/awn.vapi"; then
         has_vala=yes
     fi
 fi
-AM_CONDITIONAL(GCONF_SCHEMAS, test "$config_backend" = "GConf")
 AM_CONDITIONAL(HAVE_VALA, test "$has_vala" = "yes")
 
 dnl
@@ -296,14 +293,15 @@ AC_SUBST(GCC_FLAGS)
 dnl ==============================================
 dnl GConf
 dnl ==============================================
-if test "$config_backend" = "GConf" -o "$with_gconf" != "no"; then
-AC_PATH_PROG(GCONFTOOL, gconftool-2, no)
+
+AM_GCONF_SOURCE_2
+if test "$enable_schemas_install" != "no"; then
+  AC_PATH_PROG(GCONFTOOL, gconftool-2, no)
   if test x"$GCONFTOOL" = xno; then
     AC_MSG_ERROR([gconftool-2 executable not found in your path - should be installed with GConf])
   fi
 fi
 
-AM_GCONF_SOURCE_2
 
 dnl ==========================
 dnl Shave (quiet build output)
@@ -421,8 +419,6 @@ echo "         Avant Window Navigator Extras $VERSION"
 echo "         ==================================="
 echo ""
 echo "                   prefix:   ${prefix}"
-echo ""
-echo "    Configuration Backend:   $config_backend"
 echo ""
 echo "             Vala Support:   $has_vala"
 echo ""

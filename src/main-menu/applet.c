@@ -27,7 +27,7 @@
 #include <glib/gerror.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include <libdesktop-agnostic/desktop-entry.h>
+#include <libdesktop-agnostic/fdo.h>
 #include <libawn/libawn.h>
 
 
@@ -142,7 +142,7 @@ launch (GMenuTreeEntry *tree_entry)
   const gchar *path;
   GError *error = NULL;
   DesktopAgnosticVFSFile *file;
-  DesktopAgnosticDesktopEntryBackend *entry;
+  DesktopAgnosticFDODesktopEntry *entry;
   
   path = gmenu_tree_entry_get_desktop_file_path (tree_entry);
   file = desktop_agnostic_vfs_file_new_for_path (path, &error);
@@ -159,7 +159,7 @@ launch (GMenuTreeEntry *tree_entry)
     return;
   }
 
-  entry = desktop_agnostic_desktop_entry_new_for_file (file, &error);
+  entry = desktop_agnostic_fdo_desktop_entry_new_for_file (file, &error);
   if (error)
   {
     g_warning ("An error occurred: %s", error->message);
@@ -168,7 +168,7 @@ launch (GMenuTreeEntry *tree_entry)
     return;
   }
 
-  desktop_agnostic_desktop_entry_backend_launch (entry, 0, NULL, &error);
+  desktop_agnostic_fdo_desktop_entry_launch (entry, 0, NULL, &error);
   if (error)
   {
     g_warning ("An error occurred while launching: %s", error->message);

@@ -19,9 +19,9 @@ CONDITIONAL_APPLETS += \
 endif
 # --with-gconf
 CONDITIONAL_APPLETS += \
-	maintained/awn-notification-daemon \
 	maintained/calendar \
 	maintained/media-control \
+	maintained/notification-daemon \
 	$(NULL)
 endif
 # --with-gnome

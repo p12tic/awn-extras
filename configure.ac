@@ -313,12 +313,6 @@ dnl Please keep in alphabetical order
 AC_OUTPUT([
 Makefile
 applets/Makefile
-applets/maintained/awn-notification-daemon/Makefile
-applets/maintained/awn-notification-daemon/data/Makefile
-applets/maintained/awn-notification-daemon/po/Makefile.in
-applets/maintained/awn-notification-daemon/src/Makefile
-applets/maintained/awn-notification-daemon/src/daemon/Makefile
-applets/maintained/awn-notification-daemon/src/daemon/awnnotificationdaemon.desktop.in
 applets/maintained/awnsystemmonitor/Makefile
 applets/maintained/awnsystemmonitor/awnsystemmonitor.desktop.in
 applets/maintained/awnterm/Makefile
@@ -344,6 +338,8 @@ applets/maintained/media-icons/media-icon-previous.desktop.in
 applets/maintained/media-player/Makefile
 applets/maintained/notification-area/Makefile
 applets/maintained/notification-area/notification-area.desktop.in
+applets/maintained/notification-daemon/Makefile
+applets/maintained/notification-daemon/awnnotificationdaemon.desktop.in
 applets/maintained/places/Makefile
 applets/maintained/places/places.desktop.in
 applets/maintained/quit-applet/Makefile

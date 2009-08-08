@@ -33,7 +33,7 @@ ltmain.sh
 missing
 py-compile
 stamp-h1
-applets/maintained/awn-notification-daemon/src/daemon/notificationdaemon-dbus-glue.h
+applets/maintained/notification-daemon/notificationdaemon-dbus-glue.h
 applets/maintained/vala-test/applet.[ch]
 debian/*.debhelper.log
 debian/*.postinst.debhelper

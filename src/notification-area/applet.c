@@ -49,7 +49,7 @@ static gint   n_rows    = 2;
 static gint   n_cols    = 2;
 static int    icon_size;
 static AwnOrientation orientation;
-static int    use_alpha = FALSE;
+static int    use_alpha = TRUE;
 
 static void
 tray_icon_added (EggTrayManager *manager, 
@@ -241,17 +241,31 @@ applet_expose_icon (GtkWidget *widget,
   {
     if (EGG_TRAY_CHILD(widget)->fake_transparency)
     {
-      cairo_surface_t *img_srfc;
+      cairo_surface_t *img_srfc, *similar;
       int width, height, i, j;
 
       width = widget->allocation.width;
       height = widget->allocation.height;
 
+      /* 
+       * If GDK wasn't bugged on intrepid, we wouldn't have to use
+       * two temporary surfaces.
+       */
+      similar = cairo_surface_create_similar (cairo_get_target (cr),
+                                              CAIRO_CONTENT_COLOR_ALPHA,
+                                              width, height);
+      cairo_t *ctx = cairo_create (similar);
+      cairo_set_operator (ctx, CAIRO_OPERATOR_SOURCE);
+      gdk_cairo_set_source_pixmap (ctx, widget->window, 0.0, 0.0);
+      cairo_paint (ctx);
+
+      cairo_destroy (ctx);
+
       img_srfc = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,
                                              width, height);
-      cairo_t *ctx = cairo_create (img_srfc);
+      ctx = cairo_create (img_srfc);
       cairo_set_operator (ctx, CAIRO_OPERATOR_SOURCE);
-      gdk_cairo_set_source_pixmap (ctx, widget->window, 0, 0);
+      cairo_set_source_surface (ctx, similar, 0.0, 0.0);
       cairo_paint (ctx);
 
       cairo_surface_flush (img_srfc);
@@ -297,11 +311,13 @@ applet_expose_icon (GtkWidget *widget,
       cairo_surface_mark_dirty (img_srfc);
       cairo_destroy (ctx);
 
+      cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
       cairo_set_source_surface (cr, img_srfc,
                                 widget->allocation.x, widget->allocation.y);
       cairo_paint (cr);
 
-      // destroy the temp surface
+      // destroy the temp surfaces
+      cairo_surface_destroy (similar);
       cairo_surface_destroy (img_srfc);
     }
     else

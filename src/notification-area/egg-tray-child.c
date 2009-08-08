@@ -183,7 +183,7 @@ egg_tray_child_expose_event (GtkWidget      *widget,
 {
   EggTrayChild *child = EGG_TRAY_CHILD (widget);
 
-  if (egg_tray_child_is_composited (child))
+  if (egg_tray_child_is_composited (child) && !child->fake_transparency)
     {
       /* Clear to transparent */
       cairo_t *cr = gdk_cairo_create (widget->window);

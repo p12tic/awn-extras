@@ -44,6 +44,7 @@ struct _EggTrayChild
   Window icon_window;
   guint is_composited : 1;
   guint parent_relative_bg : 1;
+  guint fake_transparency : 1;
 };
 
 struct _EggTrayChildClass

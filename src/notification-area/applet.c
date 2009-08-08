@@ -239,10 +239,78 @@ applet_expose_icon (GtkWidget *widget,
   
   if (egg_tray_child_is_composited (EGG_TRAY_CHILD(widget)))
   {
-    gdk_cairo_set_source_pixmap (cr, widget->window,
-                                 widget->allocation.x,
-                                 widget->allocation.y);
-    cairo_paint (cr);
+    if (EGG_TRAY_CHILD(widget)->fake_transparency)
+    {
+      cairo_surface_t *img_srfc;
+      int width, height, i, j;
+
+      width = widget->allocation.width;
+      height = widget->allocation.height;
+
+      img_srfc = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,
+                                             width, height);
+      cairo_t *ctx = cairo_create (img_srfc);
+      cairo_set_operator (ctx, CAIRO_OPERATOR_SOURCE);
+      gdk_cairo_set_source_pixmap (ctx, widget->window, 0, 0);
+      cairo_paint (ctx);
+
+      cairo_surface_flush (img_srfc);
+
+      int row_stride = cairo_image_surface_get_stride (img_srfc);
+      guchar *pixsrc, *target_pixels;
+      
+      target_pixels = cairo_image_surface_get_data (img_srfc);
+
+      pixsrc = target_pixels;
+      guint32 top_left = *(guint32*)(pixsrc);
+
+      pixsrc = target_pixels + (4 * (width-1));
+      guint32 top_right = *(guint32*)(pixsrc);
+
+      pixsrc = target_pixels + (height-1) * row_stride;
+      guint32 bottom_left = *(guint32*)(pixsrc);
+      
+      pixsrc = target_pixels + (height-1) * row_stride + (4 * (width-1));
+      guint32 bottom_right = *(guint32*)(pixsrc);
+
+      g_debug ("colors: %08x, %08x, %08x, %08x", top_left, top_right, bottom_left, bottom_right);
+
+      // FIXME: some heuristic to pick the color;
+      guint32 background_color = top_left;
+
+      // replace the background color with transparent
+      for (i = 0; i < height; i++)
+      {
+        pixsrc = target_pixels + i * row_stride;
+
+        for (j = 0; j < width; j++)
+        {
+          guint32 pixel_color = *(guint32*)(pixsrc);
+          if (pixel_color == background_color)
+          {
+            *(guint32*)(pixsrc) = 0;
+          }
+          pixsrc += 4;
+        }
+      }
+
+      cairo_surface_mark_dirty (img_srfc);
+      cairo_destroy (ctx);
+
+      cairo_set_source_surface (cr, img_srfc,
+                                widget->allocation.x, widget->allocation.y);
+      cairo_paint (cr);
+
+      // destroy the temp surface
+      cairo_surface_destroy (img_srfc);
+    }
+    else
+    {
+      gdk_cairo_set_source_pixmap (cr, widget->window,
+                                   widget->allocation.x,
+                                   widget->allocation.y);
+      cairo_paint (cr);
+    }
   }
 }
 

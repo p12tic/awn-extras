@@ -231,6 +231,15 @@ tray_icon_message_cancelled (EggTrayManager *manager,
   /* FIXME: Er, cancel the message :-/? */
 }
 
+static int
+compare_colors (gconstpointer a, gconstpointer b)
+{
+  const guint32 *aa = a;
+  const guint32 *bb = b;
+
+  return (*aa & 0x00ffffff) - (*bb & 0x00ffffff);
+}
+
 static void
 applet_expose_icon (GtkWidget *widget,
                     gpointer data)
@@ -239,8 +248,22 @@ applet_expose_icon (GtkWidget *widget,
   
   if (egg_tray_child_is_composited (EGG_TRAY_CHILD(widget)))
   {
+    double x1, x2, y1, y2;
+    cairo_save (cr);
+
+    // we can do this, GtkAllocation and GdkRectangle are fully compatible
+    gdk_cairo_rectangle (cr, (GdkRectangle*)&widget->allocation);
+    cairo_clip (cr);
+    cairo_clip_extents (cr, &x1, &y1, &x2, &y2);
+
+    cairo_restore (cr);
+
+    // check for the actual widget that needs repaint
+    if (x2-x1 <= 0.0 && y2-y1 <= 0.0) return;
+    
     if (EGG_TRAY_CHILD(widget)->fake_transparency)
     {
+      GArray *array;
       cairo_surface_t *img_srfc, *similar;
       int width, height, i, j;
 
@@ -275,22 +298,30 @@ applet_expose_icon (GtkWidget *widget,
       
       target_pixels = cairo_image_surface_get_data (img_srfc);
 
+      array = g_array_sized_new (FALSE, FALSE, sizeof (guint32), 4);
+
       pixsrc = target_pixels;
-      guint32 top_left = *(guint32*)(pixsrc);
+      g_array_append_val (array, *(guint32*)(pixsrc)); // top left
 
       pixsrc = target_pixels + (4 * (width-1));
-      guint32 top_right = *(guint32*)(pixsrc);
+      g_array_append_val (array, *(guint32*)(pixsrc)); // top right
+      g_array_append_val (array, *(guint32*)(pixsrc)); // top right
 
       pixsrc = target_pixels + (height-1) * row_stride;
-      guint32 bottom_left = *(guint32*)(pixsrc);
+      g_array_append_val (array, *(guint32*)(pixsrc)); // bottom left
       
       pixsrc = target_pixels + (height-1) * row_stride + (4 * (width-1));
-      guint32 bottom_right = *(guint32*)(pixsrc);
+      g_array_append_val (array, *(guint32*)(pixsrc)); // bottom right
 
-      g_debug ("colors: %08x, %08x, %08x, %08x", top_left, top_right, bottom_left, bottom_right);
+      g_array_sort (array, compare_colors);
 
-      // FIXME: some heuristic to pick the color;
-      guint32 background_color = top_left;
+      // pick the color with a simple rule - most occurrences 
+      //  (plus we use increased weight for the top right pixel)
+      // if corner pixels are all different then we'll pick the "middle" one
+      //  (black, gray, white -> gray)
+      guint32 background_color = g_array_index (array, guint32, 2);
+
+      g_array_free (array, TRUE);
 
       // replace the background color with transparent
       for (i = 0; i < height; i++)
@@ -340,10 +371,12 @@ on_eb_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
 
   if (use_alpha)
   {
+    // clip the paint area
+    gdk_cairo_region (cr, event->region);
+    cairo_clip (cr);
+
     cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
     cairo_paint (cr);
-
-    // FIXME: clip the paint area
 
     cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
 

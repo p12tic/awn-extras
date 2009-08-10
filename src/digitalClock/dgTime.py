@@ -14,13 +14,12 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
 
-
-
 import os
-import gtk
-import gtk.glade
 import time
+
 import cairo
+import gtk
+
 
 class dgTime:
 
@@ -34,7 +33,8 @@ class dgTime:
         self.context = None
         self.surface = None
         self.time_string = None
-        self.height = 48 # doesn't matter what the height is because it will be scaled
+        # doesn't matter what the height is because it will be scaled
+        self.height = 48
 
         def on_map_event(widget, event):
             self.update_clock()
@@ -59,7 +59,9 @@ class dgTime:
             self.width = int(self.height * 1.3)
 
     def fallback(self):
-        icon = gtk.icon_theme_get_default().load_icon('awn-applet-digital-clock', self.height, 0)
+        icon_theme = gtk.icon_theme_get_default()
+        icon = icon_theme.load_icon('awn-applet-digital-clock',
+                                    self.height, 0)
         self.awn.set_icon(icon)
 
     def create_context(self):
@@ -69,11 +71,12 @@ class dgTime:
         if gdk_surface is None:
             self.fallback()
             return
-        self.surface = gdk_surface.create_similar(cairo.CONTENT_COLOR_ALPHA, self.width, self.height)
+        self.surface = gdk_surface.create_similar(cairo.CONTENT_COLOR_ALPHA,
+                                                  self.width, self.height)
         self.context = cairo.Context(self.surface)
         del gdk_surface
 
-    def draw_clock (self):
+    def draw_clock(self):
         self.curY = 0
         self.reset_width()
 
@@ -88,17 +91,21 @@ class dgTime:
             self.fallback()
             return
         # clear context
-        self.context.set_operator (cairo.OPERATOR_CLEAR)
+        self.context.set_operator(cairo.OPERATOR_CLEAR)
         self.context.paint()
-        self.context.set_operator (cairo.OPERATOR_SOURCE)
+        self.context.set_operator(cairo.OPERATOR_SOURCE)
         self.context.set_source_surface(self.surface)
         self.context.paint()
-        self.context.select_font_face(self.prefs['fontFace'], cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+        self.context.select_font_face(self.prefs['fontFace'],
+                                      cairo.FONT_SLANT_NORMAL,
+                                      cairo.FONT_WEIGHT_BOLD)
 
         if self.prefs['dateBeforeTime']:
             self.draw_text_beside(self.time_string[1], 8, 'd') #Day
             self.draw_text_beside(self.time_string[2], 9.5, 'm') #Month
-            self.draw_text_beside(self.time_string[0], 4.4 - increase_size, 't') #Time
+            # Time
+            self.draw_text_beside(self.time_string[0], 4.4 - increase_size,
+                                  't')
         else:
             self.draw_text(self.time_string[0], 5 - increase_size) #Time
             self.draw_text(self.time_string[1], 4) #Day
@@ -110,23 +117,30 @@ class dgTime:
         size = self.width/size
         self.context.set_font_size(size)
         font_dim = self.get_font_size(text)
-        x = (self.width/2) - (font_dim['width']/2)
-        v_space = ((self.height/2.4)-font_dim["height"])/2.5 #adjust vert spacing
-        y = self.curY+font_dim["height"]+(v_space)
+        x = (self.width / 2) - (font_dim['width'] / 2)
+        # adjust vertical spacing
+        v_space = ((self.height / 2.4) - font_dim['height']) / 2.5
+        y = self.curY+font_dim['height']+(v_space)
         #Shadow
-        self.context.move_to(x+self.shadow_offset,y+self.shadow_offset)
-        self.context.set_source_rgba(self.prefs['fontShadowColor'].red/65535.0, self.prefs['fontShadowColor'].green/65535.0, self.prefs['fontShadowColor'].blue/65535.0, 0.8)
+        self.context.move_to(x + self.shadow_offset, y + self.shadow_offset)
+        font_shadow_color = self.prefs['fontShadowColor']
+        self.context.set_source_rgba(font_shadow_color.red / 65535.0,
+                                     font_shadow_color.green / 65535.0,
+                                     font_shadow_color.blue / 65535.0,
+                                     0.8)
         self.context.show_text(text)
         #Text
-        self.context.move_to(x,y)
-        self.context.set_source_rgb(self.prefs['fontColor'].red/65535.0, self.prefs['fontColor'].green/65535.0, self.prefs['fontColor'].blue/65535.0)
+        self.context.move_to(x, y)
+        self.context.set_source_rgb(self.prefs['fontColor'].red / 65535.0,
+                                    self.prefs['fontColor'].green / 65535.0,
+                                    self.prefs['fontColor'].blue / 65535.0)
         self.context.show_text(text)
         self.curY = y
 
     def draw_text_beside(self, text, size, type):
         if self.curY == 0:
             self.curY = self.height/5
-        if type == "t":
+        if type == 't':
             self.width -= (self.curX + 5)
             size = self.width / size
             if self.prefs['hour12']:
@@ -136,30 +150,38 @@ class dgTime:
         self.context.set_font_size(size)
         font_dim = self.get_font_size(text)
         x = 0
-        v_space = ((self.height/2.4)-font_dim["height"])/1.5 #adjust vert spacing
-        y = self.curY+font_dim["height"]+(v_space)
+        # adjust vertical spacing
+        v_space = ((self.height / 2.4) - font_dim['height']) / 1.5
+        y = self.curY + font_dim['height'] + v_space
         if type == 't':
             x = self.curX + 5
-            y = (self.height/2)+(font_dim['height']/2)
+            y = (self.height / 2) + (font_dim['height'] / 2)
         self.curX = font_dim['width']
 
-        #Shadow
-        self.context.move_to(x+self.shadow_offset,y+self.shadow_offset)
-        self.context.set_source_rgba(self.prefs['fontShadowColor'].red/65535.0, self.prefs['fontShadowColor'].green/65535.0, self.prefs['fontShadowColor'].blue/65535.0, 0.8)
+        # Shadow
+        self.context.move_to(x + self.shadow_offset, y + self.shadow_offset)
+        font_shadow_color = self.prefs['fontShadowColor']
+        self.context.set_source_rgba(font_shadow_color.red / 65535.0,
+                                     font_shadow_color.green / 65535.0,
+                                     font_shadow_color.blue / 65535.0,
+                                     0.8)
         self.context.show_text(text)
-        #Text
-        self.context.move_to(x,y)
-        self.context.set_source_rgb(self.prefs['fontColor'].red/65535.0, self.prefs['fontColor'].green/65535.0, self.prefs['fontColor'].blue/65535.0)
+        # Text
+        self.context.move_to(x, y)
+        self.context.set_source_rgb(self.prefs['fontColor'].red / 65535.0,
+                                    self.prefs['fontColor'].green / 65535.0,
+                                    self.prefs['fontColor'].blue / 65535.0)
         self.context.show_text(text)
         self.curY = y
 
     def get_font_size(self, text):
-        xbearing, ybearing, width, height, xadvance, yadvance = (self.context.text_extents(text))
+        xbearing, ybearing, width, height, xadvance, yadvance = \
+            self.context.text_extents(text)
         if xadvance > width:
             fwidth = xadvance
         else:
             fwidth = width
-        return {'width':fwidth, 'height':height}
+        return {'width': fwidth, 'height': height}
 
     def get_time_string(self):
         fullDate = []
@@ -168,6 +190,6 @@ class dgTime:
             fullDate.append(time.strftime('%I:%M %p'))
         else:
             fullDate.append(time.strftime('%H:%M'))
-        fullDate.append(time.strftime("%a"))
+        fullDate.append(time.strftime('%a'))
         fullDate.append(time.strftime('%b %d'))
         return fullDate

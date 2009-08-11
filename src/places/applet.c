@@ -415,33 +415,39 @@ static void get_places(Places * places)
     DesktopAgnosticVFSFile *b_file;
     const gchar *b_alias;
     gchar *b_path;
-    gchar *shell_quoted;
+    gchar *shell_quoted = NULL;
 
     item = g_new0 (Menu_Item, 1);
-    item->icon = g_strdup ("stock_folder");
     bookmark = (DesktopAgnosticVFSBookmark*)node->data;
     b_file = desktop_agnostic_vfs_bookmark_get_file (bookmark);
     b_alias = desktop_agnostic_vfs_bookmark_get_alias (bookmark);
     b_path = desktop_agnostic_vfs_file_get_path (b_file);
-    shell_quoted = g_shell_quote (b_path);
-
-    item->exec = g_strdup_printf("%s %s", places->file_manager, shell_quoted);
-    item->comment = desktop_agnostic_vfs_file_get_uri (b_file);
-
-    g_free (shell_quoted);
-
-    if (b_alias)
+    item->icon = g_strdup ("stock_folder");    
+    
+    if (b_path)
     {
-      item->text = g_strdup (b_alias);
+      shell_quoted = g_shell_quote (b_path);
+      item->exec = g_strdup_printf("%s %s", places->file_manager, shell_quoted);
+      item->comment = desktop_agnostic_vfs_file_get_uri (b_file);
+
+      g_free (shell_quoted);
+
+      if (b_alias)
+      {
+        item->text = g_strdup (b_alias);
+      }
+      else
+      {
+        item->text = g_path_get_basename (b_path);
+      }
+
+      item->places = places;
+      places->menu_list = g_slist_append(places->menu_list, item);
     }
     else
     {
-      item->text = g_path_get_basename (b_path);
+      g_free (item);
     }
-
-    item->places = places;
-    places->menu_list = g_slist_append(places->menu_list, item);
-
     g_free (b_path);
   }
 }
@@ -1238,7 +1244,9 @@ AwnApplet* awn_applet_factory_initp(const gchar *name,
 {
   g_on_error_stack_trace(NULL);
   Places * places = g_malloc(sizeof(Places));
-  GtkWidget *applet = places->applet = awn_applet_simple_new(name, uid, panel_id);
+  
+  places->uid = g_strdup_printf ("single-%s",uid);
+  GtkWidget *applet = places->applet = awn_applet_simple_new(name, places->uid, panel_id);
   g_object_set (applet,
                 "display-name","Places",
                 NULL);
@@ -1252,8 +1260,6 @@ AwnApplet* awn_applet_factory_initp(const gchar *name,
   places->vbox = gtk_vbox_new(FALSE, 0);
   gtk_container_add(GTK_CONTAINER(places->mainwindow), places->vbox);
   g_signal_connect_after(G_OBJECT(places->applet), "map", G_CALLBACK(_bloody_thing_has_style), places);
-
-  places->uid = g_strdup(uid);
   return AWN_APPLET(applet);
 
 }

@@ -28,8 +28,8 @@ from desktopagnostic import config
 import awn
 
 import cairo
-import cPickle as cpickle  # For object serialization into gconf
-import types  # For type checking for gconf/settings
+import cPickle as cpickle
+import types
 
 ___file___ = sys.argv[0]
 # Basically, __file__ = current file location

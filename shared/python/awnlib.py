@@ -24,6 +24,7 @@ import pygtk
 pygtk.require("2.0")
 import gtk
 
+from desktopagnostic import config
 import awn
 
 import cairo
@@ -969,7 +970,7 @@ class Settings:
             @type folder: C{string}
 
             """
-            self.__client = awn.Config()
+            self.__client = awn.config_get_default(1)
 
             self.cd(folder)
 
@@ -1047,7 +1048,12 @@ class Settings:
             @rtype: C{bool}
 
             """
-            return self.__client.exists(self.__folder, key)
+            try:
+                self.__client.get_value(self.__folder, key)
+            except Exception, e:
+                if str(e).split(":", 1)[0] == "Could not find the key specified":
+                    return False
+            return True
 
         def delete(self, key):
             """Delete an existing key. Not yet implemented; will raise the
@@ -1068,7 +1074,16 @@ class Settings:
             @rtype: C{object}
 
             """
-            return self.__client.get_value_type(self.__folder, key).value_nick
+            if not self.contains(key):
+                return None
+            try:
+                self.__client.get_int(self.__folder, key)
+                try:
+                    self.__client.get_bool(self.__folder, key)
+                except Exception, e:
+                    return str(e).split("'", 2)[1].split("`", 1)[1]
+            except Exception, e:
+                return str(e).split("'", 2)[1].split("`", 1)[1]
 
 
 class Keyring:

@@ -28,14 +28,13 @@ import dgTime
 
 class App(awn.AppletSimple):
 
-    def __init__(self, uid, orient, height):
-        awn.AppletSimple.__init__(self, uid, orient, height)
+    def __init__(self, canonical_name, uid, panel_id):
+        super(App, self).__init__(canonical_name, 'single-' + uid, panel_id)
 
         self.dialog_visible = False
 
-        cfg = awn.Config('digitalClock', None)
-        self.pf = dgClockPref.dgClockPref(cfg, self)
-        self.clock = dgTime.dgTime(self.pf.prefs, self)
+        self.prefs = dgClockPref.ClockPrefs(self)
+        self.clock = dgTime.dgTime(self.prefs, self)
         self.timer = self.timeout_add_seconds(1, self.clock.update_clock)
         self.connect('button-press-event', self.button_press)
 
@@ -49,7 +48,7 @@ class App(awn.AppletSimple):
 
     def button_press(self, widget, event):
         if event.button == 3: # right click
-            self.pf.menu.popup(None, None, None, event.button, event.time)
+            self.prefs.menu.popup(None, None, None, event.button, event.time)
         elif self.dialog_visible:
             self.dialog.hide()
             self.dialog_visible = False
@@ -67,7 +66,7 @@ class App(awn.AppletSimple):
             cal.connect('day-selected-double-click',
                         self.startEvolution)
 
-            self.dialog = awn.AppletDialog(self)
+            self.dialog = awn.Dialog(self)
             # for focus-follows-mouse
             #self.dialog.connect('focus-out-event',
             #                    self.dialog_focus_out)
@@ -86,7 +85,7 @@ class App(awn.AppletSimple):
 
 if __name__ == '__main__':
     awn.init(sys.argv[1:])
-    applet = App(awn.uid, awn.orient, awn.height)
+    applet = App('digitalClock', awn.uid, awn.panel_id)
     awn.init_applet(applet)
     applet.show_all()
     gtk.main()

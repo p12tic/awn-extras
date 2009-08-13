@@ -122,15 +122,8 @@ class Dialogs:
             self.menu.append(about_item)
             about_item.connect("activate", lambda w: self.toggle("about"))
 
-        self.__parent.settings.cd("shared")
-
-        if "dialog_focus_loss_behavior" in self.__parent.settings:
-            self.__loseFocus = self.__parent.settings[
-                "dialog_focus_loss_behavior"]
-        else:
-            self.__loseFocus = True
-
-        self.__parent.settings.cd()
+        settings_shared = Settings(folder="shared")
+        self.__lose_focus = settings_shared["dialog_focus_loss_behavior"]
 
         parent.connect("button-press-event", self.button_press_event_cb)
 
@@ -186,7 +179,7 @@ class Dialogs:
         @type focus: C{bool}
 
         """
-        if focus and dialog not in self.__special_dialogs and self.__loseFocus:
+        if focus and dialog not in self.__special_dialogs and self.__lose_focus:
             def dialog_focus_out_cb(widget, event):
                 try:
                     parent = dlog.get_focus().get_parent()
@@ -682,19 +675,13 @@ class Settings:
         self.__callables = {}
 
         if parent is not None:
-            if "short" in parent.meta:
-                if parent.meta.has_option("settings-per-instance"):
-                    self.__folder = "%s-%s" % (parent.meta["short"], parent.uid)
-                else:
-                    self.__folder = parent.meta["short"]
-            else:
-                self.__folder = parent.uid
+            self.__folder = "DEFAULT"
         elif folder is not None:
             self.__folder = folder
         else:
             raise RuntimeError("Parameter 'parent' or 'folder' must be set")
 
-        self.__client = self.ConfigClient(self.__folder)
+        self.__client = self.ConfigClient(self.__folder, parent)
 
     def load(self, dict, push_defaults=True):
         """Synchronize the values from the given dictionary with the stored
@@ -852,28 +839,6 @@ class Settings:
 
         return self.__dict
 
-    def cd(self, folder=None, raw=False):
-        """Change to another folder. Note that this will change folders to e.g.
-        /apps/avant-window-navigator/applets/[folder] in the GConf
-        implementation and to just /applets/[folder] in the iniKey
-        implementation. If the C{raw} parameter if False, "/applets" is
-        prepended to C{folder}.
-
-        @param folder: The folder to use for your applet. If not given, the
-            default folder is used.
-        @type folder: C{string}
-        @param raw: If False, "/applets" is prepended to C{folder}.
-        @type raw: C{bool}
-
-        """
-        if not folder:
-            folder = self.__folder
-
-        if not raw:
-            folder = os.path.join("applets", folder)
-
-        self.__client.cd(folder)
-
     def notify(self, key, callback):
         """Set up a function to be executed every time a key changes. Note that
         this works best (if at all) on whole folders, not individual keys.
@@ -963,24 +928,19 @@ class Settings:
 
     class ConfigClient:
 
-        def __init__(self, folder):
+        def __init__(self, folder, applet=None):
             """Create a new config client.
 
             @param folder: Folder to start with.
             @type folder: C{string}
 
             """
-            self.__client = awn.config_get_default(1)
+            if applet is None:
+                #self.__client = awn.config_get_default(awn.PANEL_ID_DEFAULT)
+                self.__client = awn.config_get_default(1)
+            else:
+                self.__client = awn.config_get_default_for_applet(applet)
 
-            self.cd(folder)
-
-        def cd(self, folder):
-            """Change the current directory.
-
-            @param folder: The folder to change into.
-            @type folder: C{string}
-
-            """
             self.__folder = folder
 
         def notify(self, key, callback):
@@ -1572,6 +1532,8 @@ class Applet(awn.AppletSimple, object):
         @type meta: C{dict}
 
         """
+        if "settings-per-instance" not in options:
+            uid = "single-%s" % uid
         awn.AppletSimple.__init__(self, meta["short"], uid, panel_id)
 
         self.uid = uid
@@ -1580,7 +1542,6 @@ class Applet(awn.AppletSimple, object):
         self.meta = Meta(self, meta, options)
         self.icon = Icon(self)
         self.tooltip = Title(self)
-        self.settings = Settings(self)
 
         # Dialogs depends on settings
         self.dialog = Dialogs(self)
@@ -1604,6 +1565,7 @@ class Applet(awn.AppletSimple, object):
             return instance[module]
         return property(getter)
 
+    settings = __getmodule(Settings)
     theme = __getmodule(Theme)
     timing = __getmodule(Timing)
     errors = __getmodule(Errors)

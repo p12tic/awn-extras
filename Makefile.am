@@ -1,7 +1,9 @@
-SUBDIRS =				\
-	shared/python			\
-	src						\
-	po
+NULL =
+SUBDIRS = \
+	applets \
+	shared/python \
+	po \
+	$(NULL)
 	
 EXTRA_DIST =				\
 	intltool-extract.in		\

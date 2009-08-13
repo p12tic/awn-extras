@@ -48,14 +48,24 @@ egg_tray_child_realize (GtkWidget *widget)
   /* We have alpha if the visual has something other than red, green, and blue */
   visual_has_alpha = visual->red_prec + visual->blue_prec + visual->green_prec < visual->depth;
 
-  if (visual_has_alpha && gdk_display_supports_composite (gtk_widget_get_display (widget)))
-    {
-      /* We have real transparency with an ARGB visual and the Composite extension.
-       */
+  child->fake_transparency = FALSE;
 
-      /* Set a transparent background */
-      GdkColor transparent = { 0, 0, 0, 0 }; /* only pixel=0 matters */
-      gdk_window_set_background(widget->window, &transparent);
+  if (gdk_display_supports_composite (gtk_widget_get_display (widget)))
+    {
+      if (visual_has_alpha)
+        {
+          /* We have real transparency with an ARGB visual and the Composite extension.
+           */
+
+          /* Set a transparent background */
+          GdkColor transparent = { 0, 0, 0, 0 }; /* only pixel=0 matters */
+          gdk_window_set_background(widget->window, &transparent);
+        }
+      else
+        {
+          child->fake_transparency = TRUE;
+        }
+
       gdk_window_set_composited (widget->window, TRUE);
 
       child->is_composited = TRUE;
@@ -173,7 +183,7 @@ egg_tray_child_expose_event (GtkWidget      *widget,
 {
   EggTrayChild *child = EGG_TRAY_CHILD (widget);
 
-  if (egg_tray_child_is_composited (child))
+  if (egg_tray_child_is_composited (child) && !child->fake_transparency)
     {
       /* Clear to transparent */
       cairo_t *cr = gdk_cairo_create (widget->window);

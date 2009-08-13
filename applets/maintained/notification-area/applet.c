@@ -49,7 +49,7 @@ static gint   n_rows    = 2;
 static gint   n_cols    = 2;
 static int    icon_size;
 static AwnOrientation orientation;
-static int    use_alpha = FALSE;
+static int    use_alpha = TRUE;
 
 static void
 tray_icon_added (EggTrayManager *manager, 
@@ -231,6 +231,15 @@ tray_icon_message_cancelled (EggTrayManager *manager,
   /* FIXME: Er, cancel the message :-/? */
 }
 
+static int
+compare_colors (gconstpointer a, gconstpointer b)
+{
+  const guint32 *aa = a;
+  const guint32 *bb = b;
+
+  return (*aa & 0x00ffffff) - (*bb & 0x00ffffff);
+}
+
 static void
 applet_expose_icon (GtkWidget *widget,
                     gpointer data)
@@ -239,10 +248,116 @@ applet_expose_icon (GtkWidget *widget,
   
   if (egg_tray_child_is_composited (EGG_TRAY_CHILD(widget)))
   {
-    gdk_cairo_set_source_pixmap (cr, widget->window,
-                                 widget->allocation.x,
-                                 widget->allocation.y);
-    cairo_paint (cr);
+    double x1, x2, y1, y2;
+    cairo_save (cr);
+
+    // we can do this, GtkAllocation and GdkRectangle are fully compatible
+    gdk_cairo_rectangle (cr, (GdkRectangle*)&widget->allocation);
+    cairo_clip (cr);
+    cairo_clip_extents (cr, &x1, &y1, &x2, &y2);
+
+    cairo_restore (cr);
+
+    // check for the actual widget that needs repaint
+    if (x2-x1 <= 0.0 && y2-y1 <= 0.0) return;
+    
+    if (EGG_TRAY_CHILD(widget)->fake_transparency)
+    {
+      GArray *array;
+      cairo_surface_t *img_srfc, *similar;
+      int width, height, i, j;
+
+      width = widget->allocation.width;
+      height = widget->allocation.height;
+
+      /* 
+       * If GDK wasn't bugged on intrepid, we wouldn't have to use
+       * two temporary surfaces.
+       */
+      similar = cairo_surface_create_similar (cairo_get_target (cr),
+                                              CAIRO_CONTENT_COLOR_ALPHA,
+                                              width, height);
+      cairo_t *ctx = cairo_create (similar);
+      cairo_set_operator (ctx, CAIRO_OPERATOR_SOURCE);
+      gdk_cairo_set_source_pixmap (ctx, widget->window, 0.0, 0.0);
+      cairo_paint (ctx);
+
+      cairo_destroy (ctx);
+
+      img_srfc = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,
+                                             width, height);
+      ctx = cairo_create (img_srfc);
+      cairo_set_operator (ctx, CAIRO_OPERATOR_SOURCE);
+      cairo_set_source_surface (ctx, similar, 0.0, 0.0);
+      cairo_paint (ctx);
+
+      cairo_surface_flush (img_srfc);
+
+      int row_stride = cairo_image_surface_get_stride (img_srfc);
+      guchar *pixsrc, *target_pixels;
+      
+      target_pixels = cairo_image_surface_get_data (img_srfc);
+
+      array = g_array_sized_new (FALSE, FALSE, sizeof (guint32), 4);
+
+      pixsrc = target_pixels;
+      g_array_append_val (array, *(guint32*)(pixsrc)); // top left
+
+      pixsrc = target_pixels + (4 * (width-1));
+      g_array_append_val (array, *(guint32*)(pixsrc)); // top right
+      g_array_append_val (array, *(guint32*)(pixsrc)); // top right
+
+      pixsrc = target_pixels + (height-1) * row_stride;
+      g_array_append_val (array, *(guint32*)(pixsrc)); // bottom left
+      
+      pixsrc = target_pixels + (height-1) * row_stride + (4 * (width-1));
+      g_array_append_val (array, *(guint32*)(pixsrc)); // bottom right
+
+      g_array_sort (array, compare_colors);
+
+      // pick the color with a simple rule - most occurrences 
+      //  (plus we use increased weight for the top right pixel)
+      // if corner pixels are all different then we'll pick the "middle" one
+      //  (black, gray, white -> gray)
+      guint32 background_color = g_array_index (array, guint32, 2);
+
+      g_array_free (array, TRUE);
+
+      // replace the background color with transparent
+      for (i = 0; i < height; i++)
+      {
+        pixsrc = target_pixels + i * row_stride;
+
+        for (j = 0; j < width; j++)
+        {
+          guint32 pixel_color = *(guint32*)(pixsrc);
+          if (pixel_color == background_color)
+          {
+            *(guint32*)(pixsrc) = 0;
+          }
+          pixsrc += 4;
+        }
+      }
+
+      cairo_surface_mark_dirty (img_srfc);
+      cairo_destroy (ctx);
+
+      cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
+      cairo_set_source_surface (cr, img_srfc,
+                                widget->allocation.x, widget->allocation.y);
+      cairo_paint (cr);
+
+      // destroy the temp surfaces
+      cairo_surface_destroy (similar);
+      cairo_surface_destroy (img_srfc);
+    }
+    else
+    {
+      gdk_cairo_set_source_pixmap (cr, widget->window,
+                                   widget->allocation.x,
+                                   widget->allocation.y);
+      cairo_paint (cr);
+    }
   }
 }
 
@@ -256,10 +371,12 @@ on_eb_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
 
   if (use_alpha)
   {
+    // clip the paint area
+    gdk_cairo_region (cr, event->region);
+    cairo_clip (cr);
+
     cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
     cairo_paint (cr);
-
-    // FIXME: clip the paint area
 
     cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
 

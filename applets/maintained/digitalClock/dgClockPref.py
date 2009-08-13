@@ -14,122 +14,151 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
 
-
-
 import os
-import gtk
-import gtk.glade
-from gtk import gdk
-import time
 import subprocess
+import time
+
+import gobject
+from desktopagnostic import Color, config
+import gtk
+from gtk import glade
 import awn
 
-class dgClockPref:
 
-    #glade path
-    glade_path = os.path.join((os.path.dirname(__file__)), "pref.glade")
+class ClockPrefs(gobject.GObject):
+
+    __gproperties__ = {
+        'date_before_time': (bool, 'date before time',
+                             'Whether to show the date next to the time, instead of below it.',
+                             False,
+                             gobject.PARAM_READWRITE),
+        'twelve_hour': (bool, '12 hour mode',
+                        'Whether to show the time in 12 hour mode (as opposed to 24 hour mode).',
+                        False,
+                        gobject.PARAM_READWRITE),
+        'font_face': (str, 'Font face',
+                      'The font face for the date and time text.',
+                      'Sans 10',
+                      gobject.PARAM_READWRITE),
+        'font_color': (Color, 'Font color',
+                       'The text color of the date and time.',
+                       gobject.PARAM_READWRITE),
+        'font_shadow_color': (Color, 'Font shadow color',
+                              'The font shadow color of the date and time.',
+                              gobject.PARAM_READWRITE),
+        'panel_size': (int, 'Panel size',
+                       'The size of the panel (needed for rendering the date/time).',
+                       0, 1000, 48, # FIXME use realistic min/max values
+                       gobject.PARAM_READWRITE)}
+
+    __alpha = {
+        'font_color': 0,
+        'font_shadow_color': 0xcccc
+        }
+
+    # glade path
+    glade_path = os.path.join((os.path.dirname(__file__)), 'pref.glade')
 
     pref_map = {
-      'dbt': ('bool', 'dateBeforeTime'),
-      'hour12': ('bool', 'hour12'),
-      'font_face': ('string', 'fontFace'),
-      'font_color': ('color', 'fontColor'),
-      'font_shadow_color': ('color', 'fontShadowColor')
-      }
-    prefs = {}
+      'dbt': 'date-before-time',
+      'hour12': 'twelve-hour',
+      'font_face': 'font-face',
+      'font_color': 'font-color',
+      'font_shadow_color': 'font-shadow-color'}
 
-    def __init__(self, config, applet):
-        self.config = config
+    def do_get_property(self, param):
+        attr = '__%s' % param.name.replace('-', '_')
+        return getattr(self, attr, None)
+
+    def do_set_property(self, param, value):
+        attr = '__%s' % param.name.replace('-', '_')
+        setattr(self, attr, value)
+
+    def __init__(self, applet):
+        super(ClockPrefs, self).__init__()
         self.applet = applet
-        for key, details in self.pref_map.iteritems():
-            self.config.notify_add(awn.CONFIG_DEFAULT_GROUP, key, self.config_notify, details)
-        self.menu = self.buildMenu()
-        self.get_prefs()
+        self.config = awn.config_get_default_for_applet(self.applet)
+        for key, prop in self.pref_map.iteritems():
+            self.config.bind(awn.CONFIG_GROUP_DEFAULT, key,
+                             self, prop, False, config.BIND_METHOD_FALLBACK)
+        self.panel_config = awn.config_get_default(awn.PANEL_ID_DEFAULT)
+        self.panel_config.bind('panel', 'size', self, 'panel_size', True,
+                               config.BIND_METHOD_FALLBACK)
+        self.menu = self.build_menu()
 
-    def buildMenu(self):
+    def build_image_menu_item(self, menu, icon_name, activate_callback, label=None):
+        if label is None:
+            item = gtk.ImageMenuItem(icon_name)
+        else:
+            item = awn.image_menu_item_new_with_label(label)
+            item.set_image(gtk.image_new_from_stock(icon_name, gtk.ICON_SIZE_MENU))
+        item.connect('activate', activate_callback)
+        menu.append(item)
+
+    def build_menu(self):
         popup_menu = self.applet.create_default_menu()
-        pref = gtk.ImageMenuItem(gtk.STOCK_PREFERENCES)
 
-        timeadj = awn.image_menu_item_new_with_label('Adjust Date & Time')
-        timeadj.set_image(gtk.image_new_from_stock(gtk.STOCK_EDIT, gtk.ICON_SIZE_MENU))
+        self.build_image_menu_item(popup_menu, gtk.STOCK_COPY,
+                                   self.copy_time,
+                                   'Copy Time')
+        self.build_image_menu_item(popup_menu, gtk.STOCK_COPY,
+                                   self.copy_date,
+                                   'Copy Date')
+        self.build_image_menu_item(popup_menu, gtk.STOCK_PREFERENCES,
+                                   self.show_prefs)
+        self.build_image_menu_item(popup_menu, gtk.STOCK_EDIT,
+                                   self.time_admin,
+                                   'Adjust Date & Time')
 
-        ctime = awn.image_menu_item_new_with_label('Copy Time')
-        ctime.set_image(gtk.image_new_from_stock(gtk.STOCK_COPY, gtk.ICON_SIZE_MENU))
-
-        cdate = awn.image_menu_item_new_with_label('Copy Date')
-        cdate.set_image(gtk.image_new_from_stock(gtk.STOCK_COPY, gtk.ICON_SIZE_MENU))
-
-        popup_menu.append(ctime)
-        popup_menu.append(cdate)
-        popup_menu.append(pref)
-        popup_menu.append(timeadj)
-
-        pref.connect_object("activate",self.show_prefs, self)
-        timeadj.connect_object("activate",self.time_admin, self)
-        ctime.connect_object("activate",self.copy_time, self)
-        cdate.connect_object("activate",self.copy_date, self)
         popup_menu.show_all()
         return popup_menu
 
-    def update_pref(self, key, ptype, pkey):
-        if ptype == 'bool':
-            value = self.config.get_bool(awn.CONFIG_DEFAULT_GROUP, key)
-        else:
-            value = self.config.get_string(awn.CONFIG_DEFAULT_GROUP, key)
-            if ptype == 'color':
-                value = self.parseColors(value)
-        self.prefs[pkey] = value
-
-    def config_notify(self, entry, pref):
-        self.update_pref(entry['key'], pref[0], pref[1])
-
-    def get_prefs(self):
-        for key, details in self.pref_map.iteritems():
-            self.update_pref(key, details[0], details[1])
-
     def show_prefs(self, widget):
         if not hasattr(self, 'wTree'):
-            self.wTree = gtk.glade.XML(self.glade_path)
-            self.window = self.wTree.get_widget("main_window")
-
-            close = self.wTree.get_widget("close_button")
-            close.connect("clicked", self.close_prefs)
-
-            font_btn = self.wTree.get_widget("fontface")
-            font_btn.set_font_name(self.prefs['fontFace'])
-            font_btn.connect("font-set", self.font_changed, 'font_face')
-
-            color_btn = self.wTree.get_widget("fontcolor")
-            color_btn.set_color(self.prefs['fontColor'])
-            color_btn.connect("color-set", self.color_changed, 'font_color', self.prefs['fontColor'])
-
-            scolor_btn = self.wTree.get_widget("shadowcolor")
-            scolor_btn.set_color(self.prefs['fontShadowColor'])
-            scolor_btn.set_use_alpha(False) #Not used yet
-            scolor_btn.connect("color-set", self.color_changed, 'font_shadow_color', self.prefs['fontShadowColor'])
-
-            h12 = self.wTree.get_widget("hour12")
-            h12.set_active(self.prefs['hour12'])
-            h12.connect("toggled", self.set_bool, 'hour12')
-
-            tbd = self.wTree.get_widget("timebesidedate")
-            tbd.set_active(self.prefs['dateBeforeTime'])
-            tbd.connect("toggled", self.set_bool, 'dbt')
-
+            self.create_prefs_dialog()
         self.window.show_all()
+
+    def create_prefs_dialog(self):
+        self.wTree = glade.XML(self.glade_path)
+        self.window = self.wTree.get_widget('main_window')
+
+        close = self.wTree.get_widget('close_button')
+        close.connect('clicked', self.close_prefs)
+
+        font_btn = self.wTree.get_widget('fontface')
+        font_btn.set_font_name(self.prefs['fontFace'])
+        font_btn.connect('font-set', self.font_changed, 'font_face')
+
+        color_btn = self.wTree.get_widget('fontcolor')
+        color_btn.set_color(self.prefs['fontColor'])
+        color_btn.connect('color-set', self.color_changed, 'font_color')
+
+        scolor_btn = self.wTree.get_widget('shadowcolor')
+        scolor_btn.set_color(self.prefs['fontShadowColor'])
+        scolor_btn.set_use_alpha(False) # Not used yet
+        scolor_btn.connect('color-set', self.color_changed,
+                           'font_shadow_color')
+
+        h12 = self.wTree.get_widget('hour12')
+        h12.set_active(self.props.twelve_hour)
+        h12.connect('toggled', self.set_bool, 'hour12')
+
+        tbd = self.wTree.get_widget('timebesidedate')
+        tbd.set_active(self.prefs['dateBeforeTime'])
+        tbd.connect('toggled', self.set_bool, 'dbt')
 
     def copy_date(self, widget):
         cb = gtk.Clipboard()
-        txt = time.strftime("%A, %B %d, %Y")
+        txt = time.strftime('%A, %B %d, %Y')
         cb.set_text(txt)
 
     def copy_time(self, widget):
         cb = gtk.Clipboard()
-        if self.prefs['hour12']:
-            h = time.strftime("%I").lstrip('0')
-            txt = h + time.strftime(":%M:%S %p")
+        if self.props.twelve_hour:
+            h = time.strftime('%I').lstrip('0')
+            txt = h + time.strftime(':%M:%S %p')
         else:
-            txt = time.strftime("%H:%M:%S")
+            txt = time.strftime('%H:%M:%S')
         cb.set_text(txt)
 
     def time_admin(self, widget):
@@ -138,26 +167,23 @@ class dgClockPref:
     def close_prefs(self, btn):
         self.window.hide_all()
 
-    def set_bool(self, check, key):
-        self.config.set_bool(awn.CONFIG_DEFAULT_GROUP, key, check.get_active())
+    def set_bool(self, check, prop):
+        setattr(self.props, prop, check.get_active())
 
-    def font_changed(self, font_btn, key):
-        self.clean_font_name(font_btn.get_font_name())
-        self.config.set_string(awn.CONFIG_DEFAULT_GROUP, key, self.prefs['fontFace'])
+    def font_changed(self, font_btn, prop):
+        font = self.clean_font_name(font_btn.get_font_name())
+        setattr(self.props, prop, font)
 
-    def color_changed(self, color_btn, key, var):
-        var = color_btn.get_color()
-        if color_btn.get_use_alpha():
-            alpha = color_btn.get_alpha() #Not used yet
-        self.config.set_string(awn.CONFIG_DEFAULT_GROUP, key, '%s,%s,%s' % (var.red, var.green, var.blue))
+    def color_changed(self, color_btn, prop):
+        # alpha is not used yet
+        #clr = Color(color_btn.get_color(), color_btn.get_alpha())
+        clr = Color(color_btn.get_color(), self.__alpha[prop])
+        setattr(self.props, prop, clr)
 
     def clean_font_name(self, fontface):
-        rem = ["Condensed", "Book", "Oblique", "Bold", "Italic", "Regular", "Medium", "Light"]
+        rem = ['Condensed', 'Book', 'Oblique', 'Bold', 'Italic', 'Regular',
+               'Medium', 'Light']
         for r in rem:
             fontface = fontface.replace(r, '')
             fontface = fontface.rstrip('0123456789 ')
-        self.prefs['fontFace'] = fontface
-
-    def parseColors(self, color):
-        colors = [int(p) for p in color.split(',')]
-        return gdk.Color(*colors[:3])
+        return fontface

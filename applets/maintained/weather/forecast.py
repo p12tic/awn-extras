@@ -23,7 +23,7 @@ from xml.dom import minidom
 import gtk
 from gtk import gdk
 
-from awn import Dialog, awn_cairo_rounded_rect, ROUND_ALL
+from awn import Dialog, cairo_rounded_rect, ROUND_ALL
 import cairo
 
 from weather import _
@@ -158,7 +158,7 @@ class NormalDialog(gtk.Image):
         self.__cache_surface = None
 
     def draw_rounded_rect(self, ct, x, y, w, h):
-        awn_cairo_rounded_rect(ct, x, y, w, h, 4, ROUND_ALL)
+        cairo_rounded_rect(ct, x, y, w, h, 4, ROUND_ALL)
 
     def getTextWidth(self, context, text, maxwidth):
         potential_text = text

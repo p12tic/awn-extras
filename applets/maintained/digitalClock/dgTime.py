@@ -14,13 +14,15 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
 
-
-
-import os
-import gtk
-import gtk.glade
 import time
+
+import awn
 import cairo
+import gtk
+
+# the height of the original context
+HEIGHT = 48.0
+
 
 class dgTime:
 
@@ -28,22 +30,18 @@ class dgTime:
     curX = 0
     shadow_offset = 1
 
-    def __init__(self, prefs, awn):
-        self.awn = awn
+    def __init__(self, prefs, applet):
+        self.applet = applet
         self.prefs = prefs
         self.context = None
         self.surface = None
         self.time_string = None
-        self.height = 48 # doesn't matter what the height is because it will be scaled
 
         def on_map_event(widget, event):
             self.update_clock()
             return True
-        self.awn.connect('map-event', on_map_event)
+        self.applet.connect('map-event', on_map_event)
         self.fallback()
-
-    def update_prefs(self, prefs):
-        self.prefs = prefs
 
     def update_clock(self):
         time_string = self.get_time_string()
@@ -53,31 +51,41 @@ class dgTime:
         return True
 
     def reset_width(self):
-        if self.prefs['dateBeforeTime']:
-            self.width = int(self.height * 2.5)
+        if self.prefs.props.date_before_time:
+            self.surface_width = int(self.prefs.props.panel_size * 2.5)
+            self.width = int(HEIGHT * 2.5)
         else:
-            self.width = int(self.height * 1.3)
+            self.surface_width = int(self.prefs.props.panel_size * 1.3)
+            self.width = int(HEIGHT * 1.3)
 
     def fallback(self):
-        icon = gtk.icon_theme_get_default().load_icon('awn-applet-digital-clock', self.height, 0)
-        self.awn.set_icon(icon)
+        icon_theme = gtk.icon_theme_get_default()
+        icon = icon_theme.load_icon('gtk-yes',#'awn-applet-digital-clock',
+                                    self.prefs.props.panel_size, 0)
+        self.applet.set_icon(icon)
 
     def create_context(self):
         self.reset_width()
 
-        gdk_surface = self.awn.window.cairo_create().get_target()
+        gdk_surface = self.applet.window.cairo_create().get_target()
         if gdk_surface is None:
             self.fallback()
             return
-        self.surface = gdk_surface.create_similar(cairo.CONTENT_COLOR_ALPHA, self.width, self.height)
+        print self.surface_width, self.prefs.props.panel_size
+        self.surface = gdk_surface.create_similar(cairo.CONTENT_COLOR_ALPHA,
+                                                  self.surface_width,
+                                                  self.prefs.props.panel_size)
         self.context = cairo.Context(self.surface)
+        scale = self.prefs.props.panel_size / HEIGHT
+        self.context.scale(scale, scale)
+
         del gdk_surface
 
-    def draw_clock (self):
+    def draw_clock(self):
         self.curY = 0
         self.reset_width()
 
-        if self.prefs['hour12']:
+        if self.prefs.props.twelve_hour:
             increase_size = 0
         else:
             increase_size = 1
@@ -88,86 +96,107 @@ class dgTime:
             self.fallback()
             return
         # clear context
-        self.context.set_operator (cairo.OPERATOR_CLEAR)
+        self.context.set_operator(cairo.OPERATOR_CLEAR)
         self.context.paint()
-        self.context.set_operator (cairo.OPERATOR_SOURCE)
+        self.context.set_operator(cairo.OPERATOR_SOURCE)
         self.context.set_source_surface(self.surface)
         self.context.paint()
-        self.context.select_font_face(self.prefs['fontFace'], cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+        self.context.select_font_face(self.prefs.props.font_face,
+                                      cairo.FONT_SLANT_NORMAL,
+                                      cairo.FONT_WEIGHT_BOLD)
 
-        if self.prefs['dateBeforeTime']:
-            self.draw_text_beside(self.time_string[1], 8, 'd') #Day
-            self.draw_text_beside(self.time_string[2], 9.5, 'm') #Month
-            self.draw_text_beside(self.time_string[0], 4.4 - increase_size, 't') #Time
+        if self.prefs.props.date_before_time:
+            self.draw_text_beside(self.time_string[1], 8, 'd') # Day
+            self.draw_text_beside(self.time_string[2], 9.5, 'm') # Month
+            # Time
+            self.draw_text_beside(self.time_string[0], 4.4 - increase_size,
+                                  't')
         else:
-            self.draw_text(self.time_string[0], 5 - increase_size) #Time
-            self.draw_text(self.time_string[1], 4) #Day
-            self.draw_text(self.time_string[2], 4.4) #Month
+            self.draw_text(self.time_string[0], 5 - increase_size) # Time
+            self.draw_text(self.time_string[1], 4) # Day
+            self.draw_text(self.time_string[2], 4.4) # Month
 
-        self.awn.set_icon_context_scaled(self.context)
+        self.applet.set_icon_context(self.context)
 
     def draw_text(self, text, size):
         size = self.width/size
         self.context.set_font_size(size)
         font_dim = self.get_font_size(text)
-        x = (self.width/2) - (font_dim['width']/2)
-        v_space = ((self.height/2.4)-font_dim["height"])/2.5 #adjust vert spacing
-        y = self.curY+font_dim["height"]+(v_space)
-        #Shadow
-        self.context.move_to(x+self.shadow_offset,y+self.shadow_offset)
-        self.context.set_source_rgba(self.prefs['fontShadowColor'].red/65535.0, self.prefs['fontShadowColor'].green/65535.0, self.prefs['fontShadowColor'].blue/65535.0, 0.8)
+        x = (self.width / 2) - (font_dim['width'] / 2)
+        # adjust vertical spacing
+        v_space = ((HEIGHT / 2.4) - font_dim['height']) / 2.5
+        y = self.curY + font_dim['height'] + v_space
+        # Shadow
+        self.context.move_to(x + self.shadow_offset, y + self.shadow_offset)
+        # binding currently doesn't work
+        #awn.cairo_set_source_color(self.context,
+        #                           self.prefs.props.font_shadow_color)
+        red, green, blue, alpha = self.prefs.props.font_shadow_color.get_cairo_color()
+        self.context.set_source_rgba(red, green, blue, alpha)
         self.context.show_text(text)
         #Text
-        self.context.move_to(x,y)
-        self.context.set_source_rgb(self.prefs['fontColor'].red/65535.0, self.prefs['fontColor'].green/65535.0, self.prefs['fontColor'].blue/65535.0)
+        self.context.move_to(x, y)
+        # binding currently doesn't work
+        #awn.cairo_set_source_color(self.context, self.prefs.props.font_color)
+        red, green, blue, alpha = self.prefs.props.font_color.get_cairo_color()
+        self.context.set_source_rgb(red, green, blue)
         self.context.show_text(text)
         self.curY = y
 
     def draw_text_beside(self, text, size, type):
         if self.curY == 0:
-            self.curY = self.height/5
-        if type == "t":
+            self.curY = HEIGHT / 5
+        if type == 't':
             self.width -= (self.curX + 5)
             size = self.width / size
-            if self.prefs['hour12']:
+            if self.prefs.props.twelve_hour:
                 size -= 2
         else:
             size = self.width/size
         self.context.set_font_size(size)
         font_dim = self.get_font_size(text)
         x = 0
-        v_space = ((self.height/2.4)-font_dim["height"])/1.5 #adjust vert spacing
-        y = self.curY+font_dim["height"]+(v_space)
+        # adjust vertical spacing
+        v_space = ((HEIGHT / 2.4) - font_dim['height']) / 1.5
+        y = self.curY + font_dim['height'] + v_space
         if type == 't':
             x = self.curX + 5
-            y = (self.height/2)+(font_dim['height']/2)
+            y = (HEIGHT / 2) + (font_dim['height'] / 2)
         self.curX = font_dim['width']
 
-        #Shadow
-        self.context.move_to(x+self.shadow_offset,y+self.shadow_offset)
-        self.context.set_source_rgba(self.prefs['fontShadowColor'].red/65535.0, self.prefs['fontShadowColor'].green/65535.0, self.prefs['fontShadowColor'].blue/65535.0, 0.8)
+        # Shadow
+        self.context.move_to(x + self.shadow_offset, y + self.shadow_offset)
+        # binding currently doesn't work
+        #awn.cairo_set_source_color(self.context,
+        #                           self.prefs.props.font_shadow_color)
+        red, green, blue, alpha = self.prefs.props.font_shadow_color.get_cairo_color()
+        self.context.set_source_rgba(red, green, blue, alpha)
         self.context.show_text(text)
-        #Text
-        self.context.move_to(x,y)
-        self.context.set_source_rgb(self.prefs['fontColor'].red/65535.0, self.prefs['fontColor'].green/65535.0, self.prefs['fontColor'].blue/65535.0)
+        # Text
+        self.context.move_to(x, y)
+        # binding currently doesn't work
+        #awn.cairo_set_source_color(self.context, self.prefs.props.font_color)
+        red, green, blue, alpha = self.prefs.props.font_color.get_cairo_color()
+        self.context.set_source_rgb(red, green, blue)
         self.context.show_text(text)
         self.curY = y
 
     def get_font_size(self, text):
-        xbearing, ybearing, width, height, xadvance, yadvance = (self.context.text_extents(text))
+        xbearing, ybearing, width, height, xadvance, yadvance = \
+            self.context.text_extents(text)
         if xadvance > width:
             fwidth = xadvance
         else:
             fwidth = width
-        return {'width':fwidth, 'height':height}
+        return {'width': fwidth, 'height': height}
 
     def get_time_string(self):
         fullDate = []
 
-        if self.prefs['hour12']:
+        if self.prefs.props.twelve_hour:
             fullDate.append(time.strftime('%I:%M %p'))
         else:
             fullDate.append(time.strftime('%H:%M'))
-        fullDate.append(time.strftime("%a"))
+        fullDate.append(time.strftime('%a'))
         fullDate.append(time.strftime('%b %d'))
         return fullDate

@@ -47,13 +47,6 @@ PKG_CHECK_EXISTS([libwnck-1.0 >= 2.21.99.9], [AC_DEFINE(HAVE_LIBWNCK_222, 1, [Ha
 
 
 dnl
-dnl Determine the location of lda-schema-to-gconf
-dnl
-
-LDA_BINDIR=`$PKG_CONFIG --variable=exec_prefix desktop-agnostic`/bin
-AC_SUBST(LDA_BINDIR)
-
-dnl
 dnl package support
 dnl
 
@@ -236,6 +229,13 @@ if test x${enable_pymod_checks} = xyes; then
     AM_CHECK_PYMOD(vobject,,,AC_MSG_ERROR([python module gdata required (python-vobject)]))
     fi
 fi
+
+dnl
+dnl Determine the location of lda-schema-to-gconf
+dnl
+
+LDA_BINDIR=`$PKG_CONFIG --variable=exec_prefix desktop-agnostic`/bin
+AC_SUBST(LDA_BINDIR)
 
 dnl
 dnl Check for Vala support.

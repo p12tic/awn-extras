@@ -244,7 +244,6 @@ has_vala=no
 AWN_VAPIDIR=`$PKG_CONFIG --variable=vapidir awn`
 if test -n "$AWN_VAPIDIR" -a -f "$AWN_VAPIDIR/awn.vapi"; then
     VALA_PROG_VALAC(0.5.4)
-    AC_PATH_PROG(VAPIGEN, vapigen, vapigen, [])
     AC_SUBST(AWN_VAPIDIR)
     if test -n "$VALAC"; then
         has_vala=yes

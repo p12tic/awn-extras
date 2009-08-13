@@ -1,3 +1,6 @@
+[DEFAULT]
+single_instance = false
+
 [DEFAULT/time-24-format]
 type = boolean
 default = true

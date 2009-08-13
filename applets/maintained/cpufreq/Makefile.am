@@ -1,6 +1,8 @@
 APPLET_NAME = cpufreq
 APPLET_MAIN_FILE = cpufreq.py
 include $(top_srcdir)/Makefile.python-applet
+include $(top_srcdir)/Makefile.schemas
+
 dist_applet_DATA =	\
 	cpufreq.svg	\
 	cpufreq.ui	\

@@ -1,6 +1,8 @@
 APPLET_NAME = volume-control
 APPLET_MAIN_FILE = volume-control.py
 include $(top_srcdir)/Makefile.python-applet
+include $(top_srcdir)/Makefile.schemas
+
 dist_applet_DATA =  \
     volume-control.ui \
     volume-control.svg \

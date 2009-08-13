@@ -198,8 +198,8 @@ AC_ARG_ENABLE(pymod_checks,
 if test x${enable_pymod_checks} = xyes; then
     # awnlib, battery-applet, DesktopManager, pynot, pynot-rgba
     AM_CHECK_PYMOD(pynotify,,,AC_MSG_ERROR([python module pynotify required (python-notify)]))
-    # arss, mail
-#    AM_CHECK_PYMOD(feedparser,,,AC_MSG_ERROR([python module feedparser required (python-feedparser)]))
+    # arss, feeds, mail
+    AM_CHECK_PYMOD(feedparser,,,AC_MSG_ERROR([python module feedparser required (python-feedparser)]))
     # cairo-clock
     AM_CHECK_PYMOD(rsvg,,,AC_MSG_ERROR([python module rsvg required (gnome-python-desktop)]))
     # cairo-clock, calendar

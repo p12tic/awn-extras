@@ -313,6 +313,7 @@ dnl Please keep in alphabetical order
 AC_OUTPUT([
 Makefile
 applets/Makefile
+applets/maintained/animal-farm/Makefile
 applets/maintained/awnsystemmonitor/Makefile
 applets/maintained/awnsystemmonitor/awnsystemmonitor.desktop.in
 applets/maintained/awnterm/Makefile
@@ -336,6 +337,7 @@ applets/maintained/media-icons/Makefile
 applets/maintained/media-icons/media-icon-next.desktop.in
 applets/maintained/media-icons/media-icon-previous.desktop.in
 applets/maintained/media-player/Makefile
+applets/maintained/mount-applet/Makefile
 applets/maintained/notification-area/Makefile
 applets/maintained/notification-area/notification-area.desktop.in
 applets/maintained/notification-daemon/Makefile
@@ -372,7 +374,6 @@ applets/maintained/webapplet/webapplet.desktop.in
 applets/maintained/wobblyzini/Makefile
 applets/maintained/wobblyzini/wobblyzini.desktop.in
 applets/maintained/yama/Makefile
-applets/unmaintained/animal-farm/Makefile
 applets/unmaintained/arss/Makefile
 applets/unmaintained/awn-meebo/Makefile
 applets/unmaintained/comic/Makefile
@@ -386,7 +387,6 @@ applets/unmaintained/mail/locale/ru/Makefile
 applets/unmaintained/mail/locale/ru/LC_MESSAGES/Makefile
 applets/unmaintained/main-menu/Makefile
 applets/unmaintained/main-menu/main-menu.desktop.in
-applets/unmaintained/mount-applet/Makefile
 applets/unmaintained/MiMenu/Makefile
 applets/unmaintained/pandora/Makefile
 applets/unmaintained/plugger/Makefile

@@ -46,7 +46,7 @@ endif
 
 # please keep alphabetized
 SUBDIRS = \
-	unmaintained/animal-farm \
+	maintained/animal-farm \
 	maintained/awnterm \
 	maintained/battery-applet \
 	maintained/cairo-clock \
@@ -57,7 +57,7 @@ SUBDIRS = \
 	unmaintained/mail \
 	maintained/media-icons \
 	maintained/media-player \
-	unmaintained/mount-applet \
+	maintained/mount-applet \
 	maintained/notification-area \
 	maintained/places \
 	maintained/quit-applet \

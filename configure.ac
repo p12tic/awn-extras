@@ -346,6 +346,7 @@ applets/maintained/notification-daemon/Makefile
 applets/maintained/notification-daemon/awnnotificationdaemon.desktop.in
 applets/maintained/places/Makefile
 applets/maintained/places/places.desktop.in
+applets/maintained/python-test/Makefile
 applets/maintained/quit-applet/Makefile
 applets/maintained/rtm/Makefile
 applets/maintained/shiny-switcher/Makefile
@@ -395,7 +396,6 @@ applets/unmaintained/plugger/Makefile
 applets/unmaintained/plugger/plugger.desktop.in
 applets/unmaintained/pynot/Makefile
 applets/unmaintained/pynot-rgba/Makefile
-applets/unmaintained/python-test/Makefile
 applets/unmaintained/separator/Makefile
 applets/unmaintained/separator/separator.desktop.in
 applets/unmaintained/stacks/Makefile

@@ -1,7 +1,7 @@
 /*
  * A simple applet written in Vala that shows a stock icon.
  *
- * Copyright (C) 2007 Mark Lee <avant-wn@lazymalevolence.com>
+ * Copyright (C) 2007, 2008, 2009 Mark Lee <avant-wn@lazymalevolence.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,27 +20,16 @@
  * Author : Mark Lee <avant-wn@lazymalevolence.com>
  */
 
-using GLib;
-using Gdk;
-using Gtk;
 using Awn;
 
-public Applet awn_applet_factory_initp (string uid, int orient, int height) {
-	AppletSimple applet;
-	IconTheme theme;
-	Pixbuf icon = null;
-	applet = new AppletSimple (uid, orient, height);
-	applet.set_size_request (height, -1);
-	theme = IconTheme.get_default ();
-	try {
-		icon = theme.load_icon ("gtk-yes", (int)(applet.get_height () - 2),
-		                        IconLookupFlags.USE_BUILTIN);
-	} catch (Error e) {
-		warning ("Could not load the icon. Something's probably wrong with Gtk+.");
-	}
-	applet.set_temp_icon (icon);
-	applet.show_all ();
-	return applet;
+public Applet
+awn_applet_factory_initp (string canonical_name, string uid, int panel_id)
+{
+  AppletSimple applet;
+
+  applet = new AppletSimple (canonical_name, uid, panel_id);
+  applet.set_icon_name ("gtk-yes");
+  return applet;
 }
 
-/* vim: set ft=cs noet ts=8 sts=8 sw=8 : */
+// vim:et:ai:cindent:ts=2 sts=2 sw=2:

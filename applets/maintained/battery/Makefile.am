@@ -1,10 +1,10 @@
-APPLET_NAME = battery-applet
-APPLET_MAIN_FILE = battery-applet.py
+APPLET_NAME = battery
+APPLET_MAIN_FILE = battery.py
 include $(top_srcdir)/Makefile.python-applet
 include $(top_srcdir)/Makefile.schemas
 
 dist_applet_DATA =		\
-	battery-status.ui	\
+	battery.ui	\
 	messagehandler.py	\
 	$(NULL)
 

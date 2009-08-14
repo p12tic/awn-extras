@@ -4,7 +4,6 @@ include $(top_srcdir)/Makefile.desktop-files
 
 AM_CFLAGS = 			\
 	-I$(srcdir)		\
-	-I$(top_srcdir)/src	\
 	$(AWN_CFLAGS)		\
 	$(APPLET_CFLAGS)	\
 	$(NULL)

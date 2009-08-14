@@ -49,7 +49,6 @@ static gint   n_rows    = 2;
 static gint   n_cols    = 2;
 static int    icon_size;
 static AwnOrientation orientation;
-static int    use_alpha = TRUE;
 
 static void
 tray_icon_added (EggTrayManager *manager, 
@@ -369,31 +368,32 @@ on_eb_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
   cairo_t *cr = gdk_cairo_create (widget->window);
   g_return_val_if_fail(cr, FALSE);
 
-  if (use_alpha)
+  // clip the paint area
+  gdk_cairo_region (cr, event->region);
+  cairo_clip (cr);
+
+  cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
+  cairo_paint (cr);
+
+  cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
+  if (!gtk_widget_is_composited (widget))
   {
-    // clip the paint area
-    gdk_cairo_region (cr, event->region);
-    cairo_clip (cr);
-
-    cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
+    gdk_cairo_set_source_color (cr, &(widget->style->bg[GTK_STATE_NORMAL]));
     cairo_paint (cr);
-
-    cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
-
-    // paint the composited children
-    if (child)
-      gtk_container_foreach (GTK_CONTAINER (child), applet_expose_icon, cr);
   }
-  else
+
+  // paint the composited children
+  if (child)
   {
-    gdk_cairo_set_source_color (cr, &(gtk_widget_get_style(widget)->bg[GTK_STATE_NORMAL]));
-    cairo_paint (cr);
+    gtk_container_foreach (GTK_CONTAINER (child), applet_expose_icon, cr);
   }
 
   cairo_destroy(cr);
 
   if (child)
+  {
     gtk_container_propagate_expose (GTK_CONTAINER (widget), child,  event);
+  }
 
   return TRUE;
 }
@@ -417,13 +417,13 @@ applet_expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
 
   cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
 
-  if (use_alpha == FALSE)
+  if (gtk_widget_is_composited (widget))
   {
-    gdk_cairo_set_source_color (cr, &(gtk_widget_get_style(widget)->bg[GTK_STATE_NORMAL]));
+    cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 0.0);
   }
   else
   {
-    cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 0.0);
+    gdk_cairo_set_source_color (cr, &(widget->style->bg[GTK_STATE_NORMAL]));
   }
 
   cairo_set_line_width (cr, 1.0);
@@ -497,7 +497,7 @@ awn_applet_factory_initp (gchar *name, gchar* uid, gint panel_id)
   if ((gtk_major_version == 2 && gtk_minor_version >= 15) ||
       gtk_major_version > 2)
   {
-    use_alpha = TRUE;
+    // real alpha supported, do something about it?
   }
   
   /* Er, why did I have to do this again ? */

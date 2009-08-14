@@ -98,14 +98,14 @@ if test "$with_gconf" != "no"; then
   gconf=gconf-2.0
 fi
 
-if test "$with_gconf" != "no" -a "$with_gnome" != "no"; then
+#if test "$with_gconf" != "no" -a "$with_gnome" != "no"; then
 # filebrowser
 #PKG_CHECK_MODULES(GNOMEUI, [libgnomeui-2.0])
 # filebrowser
 #PKG_CHECK_MODULES(GNOME_DESKTOP, [gnome-desktop-2.0])
 # filebrowser, cairo-menu, plugger, trash, trasher
-PKG_CHECK_MODULES(GNOME_VFS, [gnome-vfs-2.0])
-fi
+#PKG_CHECK_MODULES(GNOME_VFS, [gnome-vfs-2.0])
+#fi
 
 if test "$with_gnome" != "no"; then
 # main-menu, cairo-menu

@@ -197,7 +197,7 @@ AC_ARG_ENABLE(pymod_checks,
               enable_pymod_checks=yes)
 
 if test x${enable_pymod_checks} = xyes; then
-    # awnlib, battery-applet, DesktopManager, pynot, pynot-rgba
+    # awnlib, battery, DesktopManager, pynot, pynot-rgba
     AM_CHECK_PYMOD(pynotify,,,AC_MSG_ERROR([python module pynotify required (python-notify)]))
     # arss, feeds, mail
     AM_CHECK_PYMOD(feedparser,,,AC_MSG_ERROR([python module feedparser required (python-feedparser)]))
@@ -320,7 +320,7 @@ applets/maintained/awnsystemmonitor/Makefile
 applets/maintained/awnsystemmonitor/awnsystemmonitor.desktop.in
 applets/maintained/awnterm/Makefile
 applets/maintained/awnterm/awnterm.desktop.in
-applets/maintained/battery-applet/Makefile
+applets/maintained/battery/Makefile
 applets/maintained/cairo-clock/Makefile
 applets/maintained/cairo-menu/Makefile
 applets/maintained/cairo-menu/cairo_main_menu.desktop.in

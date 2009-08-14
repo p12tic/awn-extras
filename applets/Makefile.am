@@ -40,7 +40,7 @@ CONDITIONAL_APPLETS += \
 	$(NULL)
 endif
 if MAINTAINER_MODE
-#CONDITIONAL_APPLETS += unmaintained/python-test
+CONDITIONAL_APPLETS += maintained/python-test
 CONDITIONAL_APPLETS += maintained/wobblyzini
 endif
 

@@ -120,7 +120,7 @@ Description: A collection of applets for avant-window-navigator
   * media-player: Plays any media files you drop on it.
   * mount-applet: Displays mounts from /etc/fstab and allows one to 
     mount/unmount them.
-  * quit-applet: A simple gnome-quit launcher.
+  * quit: A simple gnome-quit launcher.
   * showdesktop: Hides/shows all of the windows of the current viewport, 
     similar to the showdesktop icon of gnome-panel.
   * stack: Provides a convenient location to place commonly used files.

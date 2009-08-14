@@ -60,7 +60,7 @@ SUBDIRS = \
 	maintained/mount-applet \
 	maintained/notification-area \
 	maintained/places \
-	maintained/quit-applet \
+	maintained/quit \
 	maintained/shiny-switcher \
 	maintained/showdesktop \
 	maintained/sysmon \

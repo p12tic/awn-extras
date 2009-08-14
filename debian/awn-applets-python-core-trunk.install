@@ -69,8 +69,8 @@ usr/share/avant-window-navigator/applets/mount-applet.desktop
 #
 # Quit applet
 #
-usr/share/avant-window-navigator/applets/quit-applet/*.py
-usr/share/avant-window-navigator/applets/quit-applet.desktop
+usr/share/avant-window-navigator/applets/quit/*.py
+usr/share/avant-window-navigator/applets/quit.desktop
 #
 # Showdesktop
 #

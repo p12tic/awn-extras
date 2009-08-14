@@ -347,7 +347,7 @@ applets/maintained/notification-daemon/awnnotificationdaemon.desktop.in
 applets/maintained/places/Makefile
 applets/maintained/places/places.desktop.in
 applets/maintained/python-test/Makefile
-applets/maintained/quit-applet/Makefile
+applets/maintained/quit/Makefile
 applets/maintained/rtm/Makefile
 applets/maintained/shiny-switcher/Makefile
 applets/maintained/shiny-switcher/shinyswitcher.desktop.in

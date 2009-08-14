@@ -25,7 +25,7 @@ usr/share/avant-window-navigator/applets/cpufreq.desktop
 #
 # Feeds
 #
-etc/gconf/schemas/feeds.schemas
+etc/gconf/schemas/awn-applet-feeds.schemas
 usr/share/avant-window-navigator/applets/feeds/
 usr/share/avant-window-navigator/applets/feeds/*.py
 usr/share/avant-window-navigator/applets/feeds/icons/*.svg
@@ -33,9 +33,10 @@ usr/share/avant-window-navigator/applets/feeds.desktop
 #
 # File-browser-launcher
 #
-etc/gconf/schemas/file-browser-launcher.schemas
+etc/gconf/schemas/awn-applet-file-browser-launcher.schemas
 usr/share/avant-window-navigator/applets/file-browser-launcher/*.py
 usr/share/avant-window-navigator/applets/file-browser-launcher.desktop
+usr/share/avant-window-navigator/schemas/awn-applet-file-browser-launcher.schema-ini
 #
 # Gwibfawn
 #

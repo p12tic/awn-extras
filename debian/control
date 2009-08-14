@@ -5,30 +5,21 @@ Maintainer: Julien Lavergne <julien.lavergne@gmail.com>
 Build-Depends: 	debhelper (>= 5), 
 		cdbs, 
 		intltool, 
-		gnome-pkg-tools, 
+		gnome-common, 
 		autotools-dev, 
-		automake1.8 | automake1.9 | automake1.10 | automake,
+		automake1.8 | automake1.9 | automake1.10 | automake1.11 | automake,
 		libgnome-menu-dev, 
 		libgconf2-dev, 
-		libgnome-desktop-dev, 
 		librsvg2-dev, 
 		libgtop2-dev, 
-		libawn-dev (>= 0.3~bzr489) | libawn-dev-trunk (>= 0.3.0), 
+		libawn-dev (>> 0.3.3) | libawn-dev-trunk (>> 0.3.3), 
 		libwnck-dev, 
 		libsexy-dev, 
 		libnotify-dev, 
 		libvte-dev,
-		python-central (>= 0.6.0), 
-		python-dev,
-		python-gtk2-dev,
-		python-cairo-dev,
-		python-elementtree | python (>= 2.5)
-		awn-manager (>= 0.2.6) | awn-manager-trunk (>= 0.2.6),
-		vala-awn-trunk,
+#		libwebkit-dev,
 		valac (>= 0.5.4),
-		libwebkit-dev,
-		libglade2-dev,
-		libgnomeui-dev
+		vala-awn-trunk (>> 0.3.3)
 Standards-Version: 3.8.0
 XS-Python-Version: >= 2.4
 Homepage: https://launchpad.net/awn-extras
@@ -40,11 +31,10 @@ Depends: 	${shlibs:Depends},
 		${misc:Depends}, 
 		avant-window-navigator-trunk,
 Recommends: 	awn-manager-trunk (>= 0.3~bzr489),
-		gconf-editor,
 		awn-applets-python-core-trunk,
 		xdg-utils,
 Suggests:	awn-applets-c-extras-trunk,
-Conflictss: awn-applets-c-core, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
+Conflicts: awn-applets-c-core, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 Replaces: awn-applets-c-core, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 Description: A collection of applets for avant-window-navigator
  Awn-extras-applets is a collection of applets for avant-window-navigator. It

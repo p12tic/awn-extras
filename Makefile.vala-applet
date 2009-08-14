@@ -1,13 +1,24 @@
 # vim: set ft=automake ts=8 sts=8 sw=8 :
 include $(top_srcdir)/Makefile.c-applet
 
-VALA_CC = $(CC) -shared -fPIC $(APPLET_CFLAGS) $(CFLAGS)
-VALA_EXTRALDFLAGS = $(foreach flag,$(LDFLAGS),--Xcc="$(flag)") $(foreach flag,$(AM_LDFLAGS),--Xcc="$(flag)")
+QUIET_INSTALL = $(Q:@=@echo '  INSTALL '$@;)
+QUIET_VALA = $(Q:@=@echo '  VALAC '$@;)
+
+VALA_CC = $(CC) -shared -fPIC $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+VALA_EXTRALDFLAGS = \
+	$(foreach flag,$(AWN_LIBS),--Xcc="$(flag)") \
+	$(foreach flag,$(APPLET_LIBS),--Xcc="$(flag)") \
+	$(foreach flag,$(AM_LDFLAGS),--Xcc="$(flag)") \
+	$(foreach flag,$(LDFLAGS),--Xcc="$(flag)") \
+	$(NULL)
 
 BUILT_SOURCES = $(APPLET_NAME).so
 
 $(APPLET_NAME).so: $(VALA_FILES)
-	$(VALAC) --cc="$(VALA_CC)" -o $@ $^ --vapidir=$(AWN_VAPIDIR) --pkg=awn $(AM_VALAFLAGS) $(VALAFLAGS) $(VALA_EXTRALDFLAGS)
+	$(QUIET_VALA)$(VALAC) --cc="$(VALA_CC)" -o $@ $^ \
+		--vapidir=$(LDA_VAPIDIR) \
+		--vapidir=$(AWN_VAPIDIR) --pkg=awn \
+		$(AM_VALAFLAGS) $(VALAFLAGS) $(VALA_EXTRALDFLAGS)
 
 install-exec-hook:
 	test -d "$(DESTDIR)$(appletdir)" || mkdir -p "$(DESTDIR)$(appletdir)"

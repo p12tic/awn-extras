@@ -122,7 +122,7 @@ class Dialogs:
             self.menu.append(about_item)
             about_item.connect("activate", lambda w: self.toggle("about"))
 
-        settings_shared = Settings(folder="shared")
+        settings_shared = Settings("shared")
         self.__lose_focus = settings_shared["dialog_focus_loss_behavior"]
 
         parent.connect("button-press-event", self.button_press_event_cb)
@@ -659,7 +659,7 @@ class Errors:
 
 class Settings:
 
-    def __init__(self, parent=None, folder=None):
+    def __init__(self, parent):
         """Create a new Settings object. Note that the Settings object
         should be used as a dictionary. The default folder: the short
         name, and if the applet has requested the settings-per-instance
@@ -674,12 +674,12 @@ class Settings:
         self.__dict = None
         self.__callables = {}
 
-        if parent is not None:
+        type_parent = type(parent)
+        if type_parent in (Applet, config.Client):
             self.__folder = "DEFAULT"
-        elif folder is not None:
-            self.__folder = folder
-        else:
-            raise RuntimeError("Parameter 'parent' or 'folder' must be set")
+        elif type_parent is str:
+            self.__folder = parent
+            parent = None
 
         self.__client = self.ConfigClient(self.__folder, parent)
 
@@ -928,18 +928,25 @@ class Settings:
 
     class ConfigClient:
 
-        def __init__(self, folder, applet=None):
+        def __init__(self, folder, client=None):
             """Create a new config client.
 
             @param folder: Folder to start with.
             @type folder: C{string}
+            @param client: Applet used to construct a corresponding
+            config.Client or a preconstructed config.Client
+            @type client: C{None,Applet,config.Client}
 
             """
-            if applet is None:
-                #self.__client = awn.config_get_default(awn.PANEL_ID_DEFAULT)
-                self.__client = awn.config_get_default(1)
+            type_client = type(client)
+            if client is None:
+                self.__client = awn.config_get_default(awn.PANEL_ID_DEFAULT)
+            elif type_client is Applet:
+                self.__client = awn.config_get_default_for_applet(client)
+            elif type_client is config.Client:
+                self.__client = client
             else:
-                self.__client = awn.config_get_default_for_applet(applet)
+                raise RuntimeError("Parameter 'client' must be None, an Applet, or a config.Client")
 
             self.__folder = folder
 

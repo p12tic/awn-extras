@@ -7,10 +7,10 @@ usr/share/avant-window-navigator/applets/animal-farm.desktop
 #
 # Battery
 #
-usr/share/avant-window-navigator/applets/battery-applet/*.py
-usr/share/avant-window-navigator/applets/battery-applet/*.ui
-usr/share/avant-window-navigator/applets/battery-applet/themes/*/*.svg
-usr/share/avant-window-navigator/applets/battery-applet.desktop
+usr/share/avant-window-navigator/applets/battery/*.py
+usr/share/avant-window-navigator/applets/battery/*.ui
+usr/share/avant-window-navigator/applets/battery/themes/*/*.svg
+usr/share/avant-window-navigator/applets/battery.desktop
 #
 # Cairo-clock
 #

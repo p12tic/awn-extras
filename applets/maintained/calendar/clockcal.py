@@ -697,9 +697,10 @@ if __name__ == "__main__":
     os.nice(19)
     if hasattr(awn, 'Dialog'):
         applet = Applet04(awn.uid, awn.panel_id)
+        awn.embed_applet(applet)
     else:
         applet = Applet02(awn.uid, awn.orient, awn.height)
-    awn.init_applet(applet)
+        awn.init_applet(applet)
     applet.show_all()
     gtk.main()
     applet.quit_callback()

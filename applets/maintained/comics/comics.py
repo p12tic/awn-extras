@@ -299,7 +299,7 @@ if __name__ == '__main__':
 	#Initialise AWN and create the applet
 	awn.init(sys.argv[1:])
 	applet = ComicApplet(awn.uid, awn.orient, awn.height, feeds, configuration)
-	awn.init_applet(applet)
+	awn.embed_applet(applet)
 	applet.show_all()
 	
 	gtk.main()

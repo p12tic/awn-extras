@@ -124,7 +124,7 @@ if __name__ == "__main__":
     awn.init                      (sys.argv[1:])
     gtk.gdk.threads_init()
     applet = App                  (awn.uid, awn.orient,awn.height)
-    awn.init_applet               (applet)
+    awn.embed_applet              (applet)
     applet.show_all               ()
     if 'AWNDEV' in os.environ.keys() and os.environ['AWNDEV'] == 'TRUE':
         IPythonWindow({'applet': applet})

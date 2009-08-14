@@ -221,6 +221,6 @@ if __name__ == "__main__":
     awn.init (sys.argv[1:])
     #print "main %s %d %d" % (awn.uid, awn.orient, awn.height)
     applet = App(awn.uid, awn.orient, awn.height)
-    awn.init_applet(applet)
+    awn.embed_applet(applet)
     applet.show_all()
     gtk.main()

@@ -1607,5 +1607,5 @@ def init_start(applet_class, meta={}, options=[]):
         traceback = traceback.format_exception(type(e), e, sys.exc_traceback)
         applet.errors.general(e, traceback=traceback, callback=gtk.main_quit)
 
-    awn.init_applet(applet)
+    awn.embed_applet(applet)
     gtk.main()

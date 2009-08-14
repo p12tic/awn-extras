@@ -687,7 +687,7 @@ awn.init(sys.argv[1:])
 awn_options=awn.Config('pynot-rgba',None)
 
 a = App(awn.uid, awn.orient, awn.height)
-awn.init_applet(a)
+awn.embed_applet(a)
 a.show_all()
 atexit.register(a.widg.cleanup)
 try:

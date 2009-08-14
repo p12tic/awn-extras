@@ -263,7 +263,7 @@ if __name__ == "__main__":
    gtk.gdk.threads_enter  ()
    awn.init               (sys.argv[1:])
    applet = GwibberApplet (awn.uid, awn.panel_id)
-   awn.init_applet        (applet)
+   awn.embed_applet       (applet)
    applet.show_all        ()
    gtk.main               ()
    gtk.gdk.threads_leave  ()

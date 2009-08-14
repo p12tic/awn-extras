@@ -160,6 +160,6 @@ You should have received a copy of the GNU General Public License along with thi
 if __name__ == "__main__":
     awn.init(sys.argv[1:])
     applet = DesktopManager(awn.uid, awn.orient, awn.height)
-    awn.init_applet(applet)
+    awn.embed_applet(applet)
     applet.show_all()
     gtk.main()

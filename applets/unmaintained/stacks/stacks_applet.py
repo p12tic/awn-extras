@@ -402,6 +402,6 @@ if __name__ == "__main__":
     # might needed to request passwords from user
     gnome.ui.authentication_manager_init()
     applet = StacksApplet (awn.uid, awn.panel_id)
-    awn.init_applet (applet)
+    awn.embed_applet (applet)
     applet.show_all()
     gtk.main()

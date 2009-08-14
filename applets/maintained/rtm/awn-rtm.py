@@ -157,6 +157,6 @@ class App (awn.AppletSimple):
 if __name__ == "__main__":
   awn.init (sys.argv[1:])
   applet = App (awn.uid, awn.orient, awn.height)
-  awn.init_applet (applet)
+  awn.embed_applet (applet)
   applet.show_all ()
   gtk.main ()

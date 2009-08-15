@@ -864,7 +864,7 @@ class Settings:
             value = cpickle.loads(value[9:])
         return value
 
-    __setting_types = (bool, int, long, float, str)
+    __setting_types = (bool, int, long, float, str, list)
 
     def __setitem__(self, key, value):
         """Set or create a key from the currect directory.
@@ -877,6 +877,8 @@ class Settings:
 
         if type(value) not in self.__setting_types:
             value = "!pickle;\n%s" % cpickle.dumps(value)
+        elif type(value) is long:
+            value = int(value)
         self.__client.set(key, value)
 
         # Update the value in the loaded dictionary
@@ -950,7 +952,10 @@ class Settings:
 
             """
             try:
-                self.__client.set_value(self.__folder, key, value)
+                if type(value) is list:
+                    self.__client.set_list(self.__folder, key, value)
+                else:
+                    self.__client.set_value(self.__folder, key, value)
             except:
                 raise ValueError("Could not set new value of '%s'" % key)
 

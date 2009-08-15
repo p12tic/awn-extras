@@ -113,8 +113,8 @@ class BatteryStatusApplet:
             "theme": default_theme,
             "warn-low-level": (True, self.toggled_warn_low_level_cb, prefs.get_object("checkbutton-warn-low-level")),
             "notify-high-level": (False, self.toggled_notify_high_level_cb, prefs.get_object("checkbutton-notify-high-level")),
-            "level-warn-low": (15.0, refresh_message, prefs.get_object("spinbutton-low-level")),
-            "level-notify-high": (100.0, refresh_message, prefs.get_object("spinbutton-high-level")),
+            "level-warn-low": (15, refresh_message, prefs.get_object("spinbutton-low-level")),
+            "level-notify-high": (100, refresh_message, prefs.get_object("spinbutton-high-level")),
             "low-level-unit": low_level_units[0]
         }
 

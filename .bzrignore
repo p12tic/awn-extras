@@ -47,6 +47,7 @@ debian/stamp-autotools-files
 debian/stamp-makefile-build
 debian/stamp-patched
 debian/tmp/
+m4/intltool.m4
 m4/libtool.m4
 m4/lt*.m4
 po/.intltool-merge-cache

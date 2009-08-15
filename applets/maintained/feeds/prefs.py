@@ -30,6 +30,7 @@ import gobject
 import gettext
 import locale
 
+from desktopagnostic.config import GROUP_DEFAULT
 import awn
 from awn.extras import defs
 from awn.extras import awnlib
@@ -38,8 +39,6 @@ APP = "awn-extras-applets"
 gettext.bindtextdomain(APP, defs.GETTEXTDIR)
 gettext.textdomain(APP)
 _ = gettext.gettext
-
-group = awn.CONFIG_DEFAULT_GROUP
 
 icon_path = '%s/share/avant-window-navigator/applets/feeds/icons/awn-feeds.svg'
 icon_path = icon_path % defs.PREFIX
@@ -124,13 +123,13 @@ class Prefs(gtk.Window):
 
         #Checkbox: Notify for updated feeds
         check_notify = gtk.CheckButton(_("_Notify for updated feeds"))
-        if self.applet.client.get_bool(group, 'notify'):
+        if self.applet.client.get_bool(GROUP_DEFAULT, 'notify'):
             check_notify.set_active(True)
         check_notify.connect('toggled', self.check_toggled, 'notify')
 
         #Checkbox: Update automatically
         check_auto = gtk.CheckButton(_("_Update automatically"))
-        if self.applet.client.get_bool(group, 'auto_update'):
+        if self.applet.client.get_bool(GROUP_DEFAULT, 'auto_update'):
             check_auto.set_active(True)
         check_notify.connect('toggled', self.check_toggled, 'auto_update')
 
@@ -138,7 +137,7 @@ class Prefs(gtk.Window):
         label_auto1 = gtk.Label(_("Update every "))
         label_auto2 = gtk.Label(_(" minutes"))
 
-        interval = self.applet.client.get_int(group, 'update_interval')
+        interval = self.applet.client.get_int(GROUP_DEFAULT, 'update_interval')
         auto_adj = gtk.Adjustment(interval, 3, 60, 1, 5, 1)
         auto_spin = gtk.SpinButton(auto_adj, 1)
         auto_spin.connect('focus-out-event', self.spin_focusout)
@@ -196,7 +195,7 @@ class Prefs(gtk.Window):
 
     #Updating section
     def check_toggled(self, check, key):
-        self.applet.client.set_bool(group, key, check.get_active())
+        self.applet.client.set_value(GROUP_DEFAULT, key, check.get_active())
 
         #If user had disabled automatically updating and just turned it on now,
         #start the timeout to update
@@ -204,7 +203,7 @@ class Prefs(gtk.Window):
             self.applet.do_timer()
 
     def spin_focusout(self, spin, event):
-        self.client.set_int(group, 'update_interval', spin.get_value())
+        self.client.set_value(GROUP_DEFAULT, 'update_interval', spin.get_value())
 
     #Etc...
     def close_clicked(self, button):

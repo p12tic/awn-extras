@@ -30,6 +30,7 @@ import gobject
 import gettext
 import locale
 
+from desktopagnostic.config import GROUP_DEFAULT
 import awn
 from awn.extras import defs
 from awn.extras import awnlib
@@ -40,8 +41,6 @@ APP = "awn-extras-applets"
 gettext.bindtextdomain(APP, defs.GETTEXTDIR)
 gettext.textdomain(APP)
 _ = gettext.gettext
-
-group = awn.CONFIG_DEFAULT_GROUP
 
 icon_path = '%s/share/avant-window-navigator/applets/feeds/icons/awn-feeds.svg'
 icon_path = icon_path % defs.PREFIX
@@ -81,7 +80,7 @@ class App(awn.AppletSimple):
         self.dialog = awn.Dialog(self)
 
         #AwnConfigClient instance
-        self.client = awn.Config('feeds', None)
+        self.client = awn.config_get_default_for_applet(self)
 
         #Set the icon
         self.set_icon_name('awn-feeds')
@@ -193,7 +192,7 @@ class App(awn.AppletSimple):
             self.set_icon_name('awn-feeds')
 
         #Notifications - only show if there are any new items and if the user wants them shown
-        if total_new > 0 and self.client.get_bool(group, 'notify') == True:
+        if total_new > 0 and self.client.get_value(GROUP_DEFAULT, 'notify') == True:
             msg = ""
             for url, num in num_new.items():
                 if url == 'google-reader':
@@ -272,8 +271,8 @@ class App(awn.AppletSimple):
             gobject.source_remove(self.timer)
 
         #Update the feeds automatically
-        if self.client.get_bool(group, 'auto_update'):
-            interval = self.client.get_int(group, 'update_interval')
+        if self.client.get_value(GROUP_DEFAULT, 'auto_update'):
+            interval = self.client.get_value(GROUP_DEFAULT, 'update_interval')
 
             #Range of 3 to 60
             if interval < 3:
@@ -653,7 +652,7 @@ class App(awn.AppletSimple):
 
         #Sign out of Google Reader, if we're removing it
         if url == 'google-reader':
-            self.client.set_int(group, 'google_token', 0)
+            self.client.set_value(GROUP_DEFAULT, 'google_token', 0)
             self.SID = ''
             self.google_key = None
 
@@ -692,7 +691,7 @@ class App(awn.AppletSimple):
             if not self.keyring:
                 self.keyring = awnlib.Keyring()
 
-            token = self.client.get_int(group, 'google_token')
+            token = self.client.get_value(GROUP_DEFAULT, 'google_token')
 
             #Username and password provided, e.g. from the add feed dialog
             if username and password:
@@ -702,7 +701,7 @@ class App(awn.AppletSimple):
                         {'username': username, 'network': 'google-reader'},
                         'network')
 
-                    self.client.set_int(group, 'google_token', self.google_key.token)
+                    self.client.set_value(GROUP_DEFAULT, 'google_token', self.google_key.token)
 
                 else:
                     self.google_key = self.keyring.from_token(token)

@@ -138,7 +138,7 @@ class Locations:
         return city_timezone not in self.__city_boxes
 
     def add_city(self, city, timezone):
-        city_timezone = (city, timezone)
+        city_timezone = "%s#%s" % (city, timezone)
         assert city_timezone not in self.__city_boxes
 
         hbox = gtk.HBox(spacing=6)
@@ -194,7 +194,9 @@ class Locations:
             self.__cities_timezones.append(city_timezone)
 
             # Sort the list based on its UTC offset or city name
-            key_compare = lambda obj: (self.city_compare_key(obj[1]), obj[0])
+            def key_compare(object):
+                obj = object.split("#", 1)
+                return (self.city_compare_key(obj[1]), obj[0])
             self.__cities_timezones.sort(reverse=True, key=key_compare)
 
             self.__applet.applet.settings["cities-timezones"] = self.__cities_timezones
@@ -242,7 +244,7 @@ class Locations:
 
         for city_timezone, image_label in self.__images_labels.iteritems():
             image_label[0].queue_draw()
-            self.update_timezone_label(local_datetime, image_label[1], city_timezone[1])
+            self.update_timezone_label(local_datetime, image_label[1], city_timezone.split("#", 1)[1])
 
 
 class LocationsPreferencesTab:
@@ -278,7 +280,7 @@ class LocationsPreferencesTab:
         prefs.get_object("button-remove-location").connect("clicked", self.clicked_remove_location_button_cb)
 
         for city_and_timezone in cities_timezones:
-            self.location_store.append(None, city_and_timezone)
+            self.location_store.append(None, city_and_timezone.split("#", 1))
 
         tree_view.set_model(self.location_store)
         self.location_store.set_sort_column_id(0, gtk.SORT_ASCENDING)
@@ -300,7 +302,7 @@ class LocationsPreferencesTab:
                     locations.
 
                     """
-                    self.location_store.append(None, city_timezone)
+                    self.location_store.append(None, city_timezone.split("#", 1))
                 self.__search_window = LocationSearchWindow(self.__prefs, add_row, self.contains_city_timezone)
                 self.__search_window.show_window()
 
@@ -317,7 +319,7 @@ class LocationsPreferencesTab:
     def clicked_remove_location_button_cb(self, button):
         iter = self.tree_selection.get_selected()[1]
         row = self.location_store[iter]
-        city_timezone = (row[0], row[1])
+        city_timezone = "%s#%s" % (row[0], row[1])
         self.location_store.remove(iter)
 
         self.remove_city(city_timezone)
@@ -456,7 +458,7 @@ class LocationSearchWindow:
                 city = row[0]
 
             self.hide_window()
-            city_timezone = (city, row[1])
+            city_timezone = "%s#%s" % (city, row[1])
             if self.contains_city_timezone(city_timezone):
                 self.add_row(city_timezone)
 

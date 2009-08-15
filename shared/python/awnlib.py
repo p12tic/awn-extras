@@ -29,7 +29,6 @@ import awn
 
 import cairo
 import cPickle as cpickle
-import types
 
 ___file___ = sys.argv[0]
 # Basically, __file__ = current file location
@@ -851,21 +850,6 @@ class Settings:
         """
         self.__client.notify(key, callback)
 
-    def __set(self, key, value, value_type="string"):
-        if key in self:
-            try:
-                self.__client.set(key, value)
-            except AttributeError:
-                self.__client.new(key, value, value_type)
-        else:
-            self.__client.new(key, value, value_type)
-
-    def __get(self, key):
-        value = self.__client.get(key)
-        if type(value) is str and value[:9] == "!pickle;\n":
-            value = cpickle.loads(value[9:])
-        return value
-
     def __getitem__(self, key):
         """Get a key from the currect directory.
 
@@ -875,15 +859,12 @@ class Settings:
         @rtype: C{object}
 
         """
-        return self.__get(key)
+        value = self.__client.get(key)
+        if type(value) is str and value[:9] == "!pickle;\n":
+            value = cpickle.loads(value[9:])
+        return value
 
-    __setting_types = {
-        types.BooleanType: "bool",
-        types.IntType: "int",
-        types.LongType: "int",
-        types.FloatType: "float",
-        types.StringType: "string"
-    }
+    __setting_types = (bool, int, long, float, str)
 
     def __setitem__(self, key, value):
         """Set or create a key from the currect directory.
@@ -894,12 +875,9 @@ class Settings:
         """
         unpickled_value = value
 
-        if type(value) in self.__setting_types.keys():
-            value_type = self.__setting_types[type(value)]
-        else:
+        if type(value) not in self.__setting_types:
             value = "!pickle;\n%s" % cpickle.dumps(value)
-            value_type = "string"
-        self.__set(key, value, value_type)
+        self.__client.set(key, value)
 
         # Update the value in the loaded dictionary
         if self.__dict is not None:
@@ -972,24 +950,9 @@ class Settings:
 
             """
             try:
-                f = getattr(self.__client, "set_%s" % self.type(key))
+                self.__client.set_value(self.__folder, key, value)
             except:
                 raise ValueError("Could not set new value of '%s'" % key)
-            f(self.__folder, key, value)
-
-        def new(self, key, value, value_type):
-            """Create a new key and set its value.
-
-            @param key: The name of the key, relative to the current folder.
-            @type key: C{string}
-            @param value: The value to set the key to.
-            @type value: C{bool}, C{int}, C{float}, or C{string}
-            @param type: The type to make the new key.
-            @type type: C{string}; "bool", "int", "float", or "string"
-
-            """
-            f = getattr(self.__client, "set_%s" % value_type)
-            f(self.__folder, key, value)
 
         def get(self, key):
             """Get an existing key's value.
@@ -1001,10 +964,9 @@ class Settings:
 
             """
             try:
-                f = getattr(self.__client, "get_%s" % self.type(key))
+                return self.__client.get_value(self.__folder, key)
             except:
                 raise ValueError("'%s' does not exist" % key)
-            return f(self.__folder, key)
 
         def contains(self, key):
             """Test if the key maps to a value.
@@ -1030,27 +992,7 @@ class Settings:
             @type key: C{string}
 
             """
-            raise NotImplementedError("AWNConfig does not support deleting")
-
-        def type(self, key):
-            """Get an existing key's type.
-
-            @param key: The name of the key, relative to the current folder.
-            @type key: C{string}
-            @return: The type of the key
-            @rtype: C{object}
-
-            """
-            if not self.contains(key):
-                return None
-            try:
-                self.__client.get_int(self.__folder, key)
-                try:
-                    self.__client.get_bool(self.__folder, key)
-                except Exception, e:
-                    return str(e).split("'", 2)[1].split("`", 1)[1]
-            except Exception, e:
-                return str(e).split("'", 2)[1].split("`", 1)[1]
+            raise NotImplementedError("Deleting not supported")
 
 
 class Keyring:
@@ -1462,20 +1404,18 @@ class Meta:
                 return True
             else:
                 srch = srch[i]
-
         return True
 
     def __parse_options(self, options):
         t = {}
         for i in options:
-            if type(i) == types.StringType:
+            if type(i) is str:
                 t[i] = True
-            elif type(i) in (types.TupleType, types.ListType):
-                if type(i[1]) == types.BooleanType:
+            elif type(i) in (tuple, list):
+                if type(i[1]) is bool:
                     t[i[0]] = i[1]
-                elif type(i[1]) in (types.TupleType, types.ListType):
+                elif type(i[1]) in (tuple, list):
                     t[i[0]] = f(i[1])
-
         return t
 
     def __getitem__(self, key):

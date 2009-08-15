@@ -234,14 +234,10 @@ class ClockUpdater:
             else:
                 seconds = ""
 
-            if self.settings["time-date"]:
-                date = "%a %b %d "
-                year = " %Y"
-            else:
-                date = ""
-                year = ""
+            format = hours + ":%M" + seconds + ampm
 
-            format = date + hours + ":%M" + seconds + ampm + year
+            if self.settings["time-date"]:
+                format = "%a %b %d " + format + " %Y"
 
         self.applet.tooltip.set(time.strftime(format))
 

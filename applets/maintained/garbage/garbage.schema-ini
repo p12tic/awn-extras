@@ -1,0 +1,6 @@
+[DEFAULT/confirm_empty]
+type = boolean
+default = true
+description = Enable the confirmation dialog form when one wishes to empty the trash.
+
+# vim: set ft=dosini :

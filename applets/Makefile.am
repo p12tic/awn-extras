@@ -6,8 +6,10 @@ if HAVE_VALA
 if MAINTAINER_MODE
 CONDITIONAL_APPLETS += maintained/vala-test
 endif
-#uncomment once lda's vapi files have fixed header definitions
-#CONDITIONAL_APPLETS += maintained/notification-area
+CONDITIONAL_APPLETS += \
+	maintained/garbage \
+	maintained/notification-area \
+	$(NULL)
 endif
 
 if WITH_GCONF

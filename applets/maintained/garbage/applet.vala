@@ -1,7 +1,7 @@
-/* 
- * Trash applet written in vala.
+/*
+ * Trash applet written in Vala.
  *
- * Copyright (C) 2008 Mark Lee <avant-wn@lazymalevolence.com>
+ * Copyright (C) 2008, 2009 Mark Lee <avant-wn@lazymalevolence.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,21 +21,18 @@
  */
 
 using Cairo;
-using GLib;
 using Gdk;
 using Gtk;
 using Awn;
 using DesktopAgnostic;
+using DesktopAgnostic.Config;
 
 public class GarbageApplet : AppletSimple
 {
-  private VFS.Implementation vfs;
-  public VFS.Trash.Backend trash;
-  protected ConfigClient config;
-  protected string app_name;
-  protected Context ctx;
-  protected Surface sfc;
-  protected Widget menu;
+  public VFS.Trash trash;
+  private Client config;
+  private string app_name;
+  private Menu menu;
 
   /*const TargetEntry[] targets = {
     { "text/uri-list", 0, 0 },
@@ -45,20 +42,21 @@ public class GarbageApplet : AppletSimple
 
   construct
   {
-    this.vfs = vfs_get_default ();
-    this.trash = (VFS.Trash.Backend)GLib.Object.new (this.vfs.trash_type);
-    this.trash.file_count_changed += this.trash_changed;
-    this.config = new ConfigClient.for_applet ("garbage", null);
-    this.app_name = "Garbage";
-    this.map_event += this.on_map_event;
-    this.button_press_event += this.on_click;
+    this.trash = VFS.trash_get_default ();
+    this.trash.file_count_changed.connect (this.trash_changed);
+    this.app_name = _ ("Garbage");
+    this.map_event.connect (this.on_map_event);
+    this.button_press_event.connect (this.on_click);
   }
 
-  public GarbageApplet (string uid, int orient, int height)
+  public GarbageApplet (string canonical_name, string uid, int panel_id)
   {
+    this.canonical_name = canonical_name;
     this.uid = uid;
-    this.orient = orient;
-    this.height = height;
+    this.panel_id = panel_id;
+    this.single_instance = true;
+    this.config = Awn.Config.get_default_for_applet (this);
+    this.render_applet_icon ();
   }
 
   private bool initialize_dragdrop ()
@@ -72,28 +70,19 @@ public class GarbageApplet : AppletSimple
     targets[1].info =  0;
     drag_source_set (this, ModifierType.BUTTON1_MASK, targets, DragAction.COPY);
     drag_dest_set (this, DestDefaults.ALL, targets, DragAction.COPY);
-    this.drag_data_received += this.on_drag_data_received;
+    this.drag_data_received.connect (this.on_drag_data_received);
     return false;
   }
 
-  private bool on_map_event (GarbageApplet applet, Event evt)
+  private bool on_map_event (Event evt)
   {
-    this.render_icon ();
     Timeout.add (200, this.initialize_dragdrop);
     return true;
   }
-  private void render_icon ()
+  private void render_applet_icon ()
   {
-    Surface gdk_sfc;
-    IconTheme theme;
-    string icon_name;
-    Pixbuf icon = null;
-    int icon_height, widget_height;
     uint file_count;
 
-    theme = IconTheme.get_default ();
-    widget_height = (int)this.get_height ();
-    icon_height = (int)(widget_height - 2);
     file_count = this.trash.file_count;
     if (file_count > 0)
     {
@@ -103,42 +92,20 @@ public class GarbageApplet : AppletSimple
     {
       icon_name = "user-trash";
     }
+    // set icon
+    this.set_icon_name (icon_name);
+    // if requested, draw trash count when count > 0
     try
     {
-      icon = theme.load_icon (icon_name, icon_height, 0);
-    }
-    catch (Error e)
-    {
-      warning ("Could not load icon: %s", e.message);
-      return;
-    }
-
-    if (this.ctx == null)
-    {
-      gdk_sfc = cairo_create (this.window).get_target ();
-      this.sfc = new Surface.similar (gdk_sfc, Content.COLOR_ALPHA,
-                                      widget_height, widget_height);
-      this.ctx = new Context (this.sfc);
-    }
-    // clear context
-    this.ctx.set_operator (Operator.SOURCE);
-    // draw icon
-    cairo_set_source_pixbuf (this.ctx, icon, 0, 0);
-    // TODO if requested, draw trash count when count > 0
-    try
-    {
-      if (this.config.get_bool ("DEFAULT", "show_count"))
+      if (this.config.get_bool (GROUP_DEFAULT, "show_count"))
       {
-        // cairo/pango text drawing
+        // TODO add text overlay here
       }
     }
-    catch (Error e)
+    catch (GLib.Error e)
     {
       // do nothing
     }
-    // finish with the context
-    this.ctx.paint ();
-    this.set_icon_context (this.ctx);
     // set the title as well
     string plural;
     if (file_count == 1)
@@ -151,25 +118,25 @@ public class GarbageApplet : AppletSimple
     }
     this.set_title ("%s: %u %s".printf (this.app_name, file_count, plural));
   }
-  private bool on_click (GarbageApplet widget, EventButton evt)
+  private bool on_click (EventButton evt)
   {
     switch (evt.button)
     {
       case 1: /* left mouse click */
         try
         {
-          //Process.spawn_command_line_async("xdg-open trash:");
           string[] argv = new string[] { "xdg-open", "trash:" };
-          spawn_on_screen (widget.get_screen (),
+          spawn_on_screen (this.get_screen (),
                            null,
                            argv,
                            null,
                            SpawnFlags.SEARCH_PATH,
                            null,
-                           0);
+                           null);
         }
-        catch (Error e)
+        catch (GLib.Error e)
         {
+          // FIXME: Show the user the error somehow.
           warning ("Could not open the trash folder in your file manager: %s",
                    e.message);
         }
@@ -181,11 +148,11 @@ public class GarbageApplet : AppletSimple
         if (this.menu == null)
         {
           MenuItem item;
-          this.menu = this.create_default_menu ();
-          item = new MenuItem.with_mnemonic (_("_Empty Trash"));
-          item.activate += this.on_menu_empty_activate;
+          this.menu = this.create_default_menu () as Menu;
+          item = new MenuItem.with_mnemonic (_ ("_Empty Trash"));
+          item.activate.connect (this.on_menu_empty_activate);
           item.show ();
-          ((MenuShell)this.menu).append (item);
+          this.menu.append (item);
         }
         ctx_menu = (Menu)this.menu;
         ctx_menu.set_screen (null);
@@ -220,39 +187,38 @@ public class GarbageApplet : AppletSimple
         this.trash.empty ();
       }
     }
-    catch (Error ex)
+    catch (GLib.Error ex)
     {
       warning ("Error occurred when trying to retrieve 'confirm_empty' config option: %s",
                ex.message);
-      /* show error dialog */
+      /* FIXME show error dialog */
     }
   }
   private void trash_changed ()
   {
-    this.render_icon ();
+    this.render_applet_icon ();
   }
-  private void on_drag_data_received (GarbageApplet applet,
-                                      DragContext context,
+  private void on_drag_data_received (DragContext context,
                                       int x,
                                       int y,
                                       SelectionData data,
                                       uint info,
                                       uint time)
   {
-    SList<VFS.File.Backend> file_uris;
+    SList<VFS.File> file_uris;
 
     try
     {
-      file_uris = vfs.files_from_uri_list ((string)data.data);
-      foreach (weak VFS.File.Backend file in file_uris)
+      file_uris = VFS.files_from_uri_list ((string)data.data);
+      foreach (weak VFS.File file in file_uris)
       {
-        if (file.exists)
+        if (file.exists ())
         {
           this.trash.send_to_trash (file);
         }
       }
     }
-    catch (Error err)
+    catch (GLib.Error err)
     {
       string msg = _ ("Could not send the dragged file(s) to the trash: %s")
         .printf (err.message);
@@ -265,14 +231,9 @@ public class GarbageApplet : AppletSimple
   }
 }
 
-public Applet awn_applet_factory_initp (string uid, int orient, int height)
+public Applet awn_applet_factory_initp (string canonical_name, string uid, int panel_id)
 {
-  GarbageApplet applet;
-
-  applet = new GarbageApplet (uid, orient, height);
-  applet.set_size_request (height, -1);
-  applet.show_all ();
-  return applet;
+  return new GarbageApplet (canonical_name, uid, panel_id);
 }
 
 // vim: set ft=vala et ts=2 sts=2 sw=2 ai :

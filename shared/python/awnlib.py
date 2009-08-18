@@ -571,7 +571,7 @@ class Errors:
         self.__parent.icon.theme("dialog-error")
         def crash_applet(widget=None, event=None):
             gtk.main_quit()
-        self.__parent.connect("button-press-event", crash_applet)
+        self.__parent.connect("clicked", crash_applet)
 
     def general(self, error, callback=None, traceback=None):
         """Tell the user that an error has occured.
@@ -675,7 +675,7 @@ class Settings:
 
         type_parent = type(parent)
         if type_parent in (Applet, config.Client):
-            self.__folder = "DEFAULT"
+            self.__folder = config.GROUP_DEFAULT
         elif type_parent is str:
             self.__folder = parent
             parent = None
@@ -780,7 +780,7 @@ class Settings:
                 continue
 
             if values[1] is not None:
-                self.__callables[key] = values[1]
+                self.register_value_changed(key, values[1])
 
             if len(values) == 2:
                 continue
@@ -814,10 +814,10 @@ class Settings:
                 if type(key_widget.get_model()) is not gtk.ListStore:
                     raise RuntimeError("Model of ComboBox %s must be gtk.ListStore" % widget_type.__name__)
                 # TODO assumes atm that type of key is int
-                def changed_cb(widget):
-                    self[key] = widget.get_active()
+                def changed_cb(widget, name):
+                    self[name] = widget.get_active()
                 key_widget.set_active(self.__dict[key])
-                key_widget.connect("changed", changed_cb)
+                key_widget.connect("changed", changed_cb, key)
             elif isinstance(key_widget, gtk.Range):
                 def value_changed_cb(widget, name, conv):
                     self[name] = conv(widget.get_value())
@@ -837,6 +837,20 @@ class Settings:
                 raise RuntimeError("%s is unsupported" % widget_type.__name__)
 
         return self.__dict
+
+    def register_value_changed(self, key, callback):
+        """Register the given function to be called when the value of
+        the specified key changes.
+
+        @param key: The key to monitor
+        @type key: C{string}
+        @param callback: The function to call when the value of the key
+        changes.
+        @type callback: C{function}
+
+        """
+        assert callable(callback)
+        self.__callables[key] = callback
 
     def notify(self, key, callback):
         """Set up a function to be executed every time a key changes. Note that

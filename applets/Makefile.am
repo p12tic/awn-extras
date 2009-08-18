@@ -6,7 +6,8 @@ if HAVE_VALA
 if MAINTAINER_MODE
 CONDITIONAL_APPLETS += maintained/vala-test
 endif
-#CONDITIONAL_APPLETS +=
+#uncomment once lda's vapi files have fixed header definitions
+#CONDITIONAL_APPLETS += maintained/notification-area
 endif
 
 if WITH_GCONF
@@ -58,7 +59,6 @@ SUBDIRS = \
 	maintained/media-icons \
 	maintained/media-player \
 	maintained/mount-applet \
-	maintained/notification-area \
 	maintained/places \
 	maintained/quit \
 	maintained/shiny-switcher \

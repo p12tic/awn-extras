@@ -36,7 +36,6 @@ G_BEGIN_DECLS
 
 typedef struct _EggTrayChild	    EggTrayChild;
 typedef struct _EggTrayChildClass  EggTrayChildClass;
-typedef struct _EggTrayChildChild  EggTrayChildChild;
 
 struct _EggTrayChild
 {
@@ -52,13 +51,15 @@ struct _EggTrayChildClass
   GtkSocketClass parent_class;
 };
 
-GType           egg_tray_child_get_type        (void);
+GType            egg_tray_child_get_type          (void);
 
-GtkWidget      *egg_tray_child_new           (GdkScreen   *screen,
-					     Window       icon_window);
-char           *egg_tray_child_get_title     (EggTrayChild *child);
-gboolean        egg_tray_child_is_composited (EggTrayChild *child);
-void            egg_tray_child_force_redraw  (EggTrayChild *child);
+GtkWidget       *egg_tray_child_new               (GdkScreen    *screen,
+                                                   Window        icon_window);
+char            *egg_tray_child_get_title         (EggTrayChild *child);
+gboolean         egg_tray_child_is_alpha_capable  (EggTrayChild *child);
+cairo_surface_t *egg_tray_child_get_image_surface (EggTrayChild *child);
+
+void             egg_tray_child_force_redraw      (EggTrayChild *child);
 
 G_END_DECLS
 

@@ -1,21 +1,29 @@
 APPLET_NAME = notification-area
 APPLET_ICONS = notification-area.svg
-APPLET_CFLAGS = $(LIBX11_CFLAGS)
+APPLET_CFLAGS = $(DEFS) -I$(top_builddir) -DAPPLET_NAME='\"$(APPLET_NAME)\"'
+#$(LIBX11_CFLAGS)
 
-include $(top_srcdir)/Makefile.c-applet
-
-applet_LTLIBRARIES = notification-area.la
-notification_area_la_SOURCES =	\
-	applet.c		\
+VALA_FILES = \
+	notification-area.vala	\
+	na-prefs.vala		\
 	eggtraymanager.c	\
-	eggtraymanager.h	\
         egg-tray-child.c        \
-        egg-tray-child.h        \
 	eggmarshalers.c		\
-	eggmarshalers.h		\
+	egg-tray.vapi		\
+	build.vapi		\
 	$(NULL)
-notification_area_la_LIBADD =	\
+
+VALAFLAGS = --pkg x11 --pkg desktop-agnostic
+
+APPLET_LIBS = \
 	$(AWN_LIBS)		\
 	$(LIBX11_LIBS)		\
 	$(NULL)
-notification_area_la_LDFLAGS = $(APPLET_LINKER_FLAGS)
+
+include $(top_srcdir)/Makefile.vala-applet
+include $(top_srcdir)/Makefile.schemas
+
+prefsdir = $(applet_datadir)
+dist_prefs_DATA =	\
+	na-prefs.xml	\
+	$(NULL)

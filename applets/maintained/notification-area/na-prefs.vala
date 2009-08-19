@@ -160,6 +160,11 @@ public class NotificationAreaPrefs : GLib.Object
                       false, DesktopAgnostic.Config.BindMethod.FALLBACK);
   }
 
+  ~NotificationAreaPrefs ()
+  {
+    this.client.unbind_all_for_object (this);
+  }
+
   private DesktopAgnostic.Color get_color_from_colorbutton (Gtk.ColorButton c)
   {
     Gdk.Color gdk_color;

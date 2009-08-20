@@ -25,17 +25,35 @@ import gobject
 import sys
 
 import awn
+from desktopagnostic import config
+from desktopagnostic.config import GROUP_DEFAULT
 
-class App(awn.AppletSimple):
+class MediaPlayerApplet(awn.AppletSimple):
     """Displays a dialog with controls and track/album info and art"""
+
+    audio_sink = gobject.property(type=str, nick='Audio Sink', 
+                                  blurb='Name of audio sink to use',
+                                  default='autoaudiosink')
+    video_sink = gobject.property(type=str, nick='Video Sink',
+                                  blurb='Name of video sink to use',
+                                  default='autovideosink')
+    video_width = gobject.property(type=int, nick='Video Width',
+                                   blurb='Width of the video window',
+                                   default=240)
+    video_height = gobject.property(type=int, nick='Video Height',
+                                    blurb='Height of the video window',
+                                    default=120)
+    # PyGObject doesn't have BOXED support implemented
+    #recent_items = gobject.property(type=gobject.TYPE_BOXED, 
+    #                                nick='Recent Items')
 
     APPLET_NAME = "Media Player Applet"
     def __init__(self, uid, panel_id):
         """Creating the applets core"""
         awn.AppletSimple.__init__(self, "media-player", uid, panel_id)
-        self.set_tooltip_text(App.APPLET_NAME)
+        self.set_tooltip_text(MediaPlayerApplet.APPLET_NAME)
         self.set_icon_name('media-player')
-        self.load_keys()
+        self.bind_keys()
 
         # some initialization stuff
         self.isVideo = False
@@ -76,8 +94,8 @@ class App(awn.AppletSimple):
         self.popup_menu.show_all()
 
         # gstreamer stuff
-        self.viSink = gst.element_factory_make(self.videosink, "viSink")
-        self.auSink = gst.element_factory_make(self.audiosink, "auSink")
+        self.viSink = gst.element_factory_make(self.video_sink, "viSink")
+        self.auSink = gst.element_factory_make(self.audio_sink, "auSink")
         # Set up our playbin
         self.playbin = gst.element_factory_make("playbin", "pbin")
         self.playbin.set_property("video-sink", self.viSink)
@@ -91,7 +109,7 @@ class App(awn.AppletSimple):
         # Defining Widgets
         self.vbox = gtk.VBox()
         self.da = gtk.DrawingArea()
-        self.da.set_size_request(self.videoW, self.videoH)
+        self.da.set_size_request(self.video_width, self.video_height)
         self.da.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#000"))
         self.da.set_events(gtk.gdk.ALL_EVENTS_MASK)
         self.mouse_handler_id = self.da.connect("button-press-event", self.video_clicked)
@@ -151,8 +169,7 @@ class App(awn.AppletSimple):
         self.recent_items_menu.show_all()
         self.recent.set_submenu(self.recent_items_menu)
 
-        self.client.set_list(awn.CONFIG_DEFAULT_GROUP, "recentItems",
-                             awn.CONFIG_LIST_STRING, self.recentItems)
+        self.client.set_list(GROUP_DEFAULT, "recent_items", self.recentItems)
 
     def keyPressed(self, widget, event):
         if event.keyval == gtk.keysyms.Escape:
@@ -270,54 +287,31 @@ class App(awn.AppletSimple):
         if not self.isVideo:
             self.hideApplet()
 
-    def resize_video_widget(self, entry, extra = None):
-        if entry['key'] == "videoWidth":
-          if entry['value'] > 1: self.videoW = entry['value']
-        elif entry['key'] == "videoHeight":
-          if entry['value'] > 1: self.videoH = entry['value']
-        else:
-          return
+    def resize_video_widget(self, *args):
+        self.da.set_size_request(self.video_width, self.video_height)
 
-        self.da.set_size_request(self.videoW, self.videoH)
-
-    def load_keys(self):
+    def bind_keys(self):
         """
         Loads all the config variables
         """
-        self.client = awn.Config("media-player", None)
+        self.props.single_instance = True
+        self.client = awn.config_get_default_for_applet(self)
 
-        self.audiosink = self.client.get_string(awn.CONFIG_DEFAULT_GROUP, 
-          "audiosink")
-        self.videosink = self.client.get_string(awn.CONFIG_DEFAULT_GROUP,
-          "videosink")
-        self.videoW = self.client.get_int(awn.CONFIG_DEFAULT_GROUP, 
-          "videoWidth")
-        if self.videoW == 0:
-            self.videoW = 100
-            self.client.set_int(awn.CONFIG_DEFAULT_GROUP,
-                                "videoWidth", self.videoW)
-        self.videoH = self.client.get_int(awn.CONFIG_DEFAULT_GROUP,
-          "videoHeight")
-        if self.videoH == 0:
-            self.videoH = 100
-            self.client.set_int(awn.CONFIG_DEFAULT_GROUP,
-                                "videoHeight", self.videoH)
-        self.recentItems = self.client.get_list(awn.CONFIG_DEFAULT_GROUP,
-          "recentItems", awn.CONFIG_LIST_STRING)
+        config_map = {
+            'audiosink': 'audio_sink',
+            'videosink': 'video_sink',
+            'video_width': 'video_width',
+            'video_height': 'video_height',
+        }
 
-        self.client.notify_add(awn.CONFIG_DEFAULT_GROUP,
-          "videoWidth", self.resize_video_widget)
-        self.client.notify_add(awn.CONFIG_DEFAULT_GROUP,
-          "videoHeight", self.resize_video_widget)
+        for key, prop_name in config_map.iteritems():
+            self.client.bind(GROUP_DEFAULT, key, self, prop_name, False,
+                             config.BIND_METHOD_FALLBACK)
 
-        if self.videosink in [None, "", "default"] or self.audiosink in [None, "", "default"]:
-            self.videosink = "autovideosink"
-            self.audiosink = "autoaudiosink"
+        self.recentItems = self.client.get_list(GROUP_DEFAULT, "recent_items")
 
-            self.client.set_string(awn.CONFIG_DEFAULT_GROUP, "videosink",
-              self.videosink)
-            self.client.set_string(awn.CONFIG_DEFAULT_GROUP, "audiosink",
-              self.audiosink)
+        self.connect("notify::video-width", self.resize_video_widget)
+        self.connect("notify::video-height", self.resize_video_widget)
 
     def play_pause(self):
         oldstate, currentstate, pending = self.playbin.get_state()
@@ -384,24 +378,21 @@ class App(awn.AppletSimple):
             self.sinkChanged = True
 
         vidEntry = wTree.get_widget("videoSinkEntry")
-        vidEntry.set_text(self.videosink)
+        vidEntry.set_text(self.video_sink)
         vidEntry.connect("changed", sink_changed)
         auEntry = wTree.get_widget("audioSinkEntry")
-        auEntry.set_text(self.audiosink)
+        auEntry.set_text(self.audio_sink)
         auEntry.connect("changed", sink_changed)
 
         def size_changed(widget, isWidth):
-            prop = "videoHeight"
-            if isWidth: prop = "videoWidth"
-
-            self.client.set_int(awn.CONFIG_DEFAULT_GROUP, prop,
-                                widget.get_value())
+            if isWidth: self.video_width = widget.get_value()
+            else: self.video_height = widget.get_value()
 
         wSpin = wTree.get_widget("widthSpin")
-        wSpin.set_value(self.videoW)
+        wSpin.set_value(self.video_width)
         wSpin.connect("value-changed", size_changed, True)
         hSpin = wTree.get_widget("heightSpin")
-        hSpin.set_value(self.videoH)
+        hSpin.set_value(self.video_height)
         hSpin.connect("value-changed", size_changed, False)
 
         def prefs_closed(closeButton, tuple):
@@ -410,10 +401,8 @@ class App(awn.AppletSimple):
                 dialog = gtk.MessageDialog(win, buttons=gtk.BUTTONS_OK, message_format="Please restart the applet to apply changes to sinks.")
                 dialog.run()
                 dialog.destroy()
-                self.client.set_string(awn.CONFIG_DEFAULT_GROUP,
-                                       "videosink", tuple[1].get_text())
-                self.client.set_string(awn.CONFIG_DEFAULT_GROUP,
-                                       "audiosink", tuple[2].get_text())
+                self.video_sink = tuple[1].get_text()
+                self.audio_sink = tuple[2].get_text()
             win.destroy()
 
         close = wTree.get_widget("closeButton")
@@ -427,7 +416,7 @@ class App(awn.AppletSimple):
         about.set_logo(awn_icon.get_icon_at_size(48))
         about.set_icon(awn_icon.get_icon_at_size(64))
         about.set_name("Media Player Applet")
-        about.set_copyright("Copyright (c) 2008 Michal Hruby <michal.mhr at gmail.com>")
+        about.set_copyright("Copyright (c) 2008-2009 Michal Hruby <michal.mhr at gmail.com>")
         about.set_authors(["Michal Hruby <michal.mhr at gmail.com>"])
         about.set_comments("Plays any media files you drop on the applet.")
         about.set_license("This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA.")
@@ -441,7 +430,7 @@ class App(awn.AppletSimple):
 
 if __name__ == "__main__":
     awn.init                      (sys.argv[1:])
-    applet = App                  (awn.uid, awn.panel_id)
+    applet = MediaPlayerApplet    (awn.uid, awn.panel_id)
     awn.embed_applet              (applet)
     applet.show_all               ()
     gtk.main                      ()

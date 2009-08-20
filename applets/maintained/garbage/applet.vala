@@ -116,7 +116,7 @@ public class GarbageApplet : AppletSimple
     {
       plural = _("items");
     }
-    this.set_title ("%s: %u %s".printf (this.app_name, file_count, plural));
+    this.set_tooltip_text ("%s: %u %s".printf (this.app_name, file_count, plural));
   }
   private bool on_click (EventButton evt)
   {

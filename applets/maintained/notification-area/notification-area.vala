@@ -41,10 +41,11 @@ public class NotificationArea : GLib.Object
   private Quark addition_quark;
   private Quark deletion_quark;
 
-  private Gtk.Table table;
   private Gtk.EventBox eb;
   private Awn.Alignment align;
   private Gtk.Alignment inner_align;
+  private Gtk.EventBox icon_painter;
+  private Gtk.Table table;
 
   private DesktopAgnostic.Config.Client client;
 
@@ -102,8 +103,8 @@ public class NotificationArea : GLib.Object
     set
     {
       _background_color = value;
-      this.applet.queue_draw ();
       this.eb.queue_draw ();
+      this.icon_painter.queue_draw ();
     }
   }
 
@@ -118,7 +119,7 @@ public class NotificationArea : GLib.Object
     set
     {
       _border_color = value;
-      this.applet.queue_draw ();
+      this.eb.queue_draw ();
     }
   }
 
@@ -151,14 +152,10 @@ public class NotificationArea : GLib.Object
                             (GLib.Callback)this.table_refresh, this);
     Signal.connect_swapped (this.applet, "size-changed",
                             (GLib.Callback)this.update_icon_sizes, this);
-    Signal.connect_swapped (this.applet, "button-press-event",
-                            (GLib.Callback)this.button_press, this);
 
-    this.table = new Gtk.Table (1, 1, false);
-    this.table.set_row_spacings (1);
-    this.table.set_col_spacings (1);
-
+    // this EventBox is needed to capture mouse clicks
     this.eb = new Gtk.EventBox ();
+    Awn.Utils.ensure_transparent_bg (this.eb);
 
     this.align = new Awn.Alignment.for_applet (applet);
     this.align.set_offset_modifier (-BORDER);
@@ -166,24 +163,33 @@ public class NotificationArea : GLib.Object
     this.inner_align = new Gtk.Alignment (0f, 0f, 1f, 1f);
     this.inner_align.set_padding (BORDER, BORDER, BORDER, BORDER);
 
-    applet.add (this.align);
+    this.icon_painter = new Gtk.EventBox ();
+
+    this.table = new Gtk.Table (1, 1, false);
+    this.table.set_row_spacings (1);
+    this.table.set_col_spacings (1);
+
+    applet.add (this.eb);
+    this.eb.add (this.align);
     this.align.add (this.inner_align);
-    this.inner_align.add (this.eb);
+    this.inner_align.add (this.icon_painter);
 
     if (screen.get_rgba_colormap () != null)
     {
       this.eb.set_colormap (screen.get_rgba_colormap ());
+      this.icon_painter.set_colormap (screen.get_rgba_colormap ());
     }
-    this.eb.add (this.table);
-
-    Signal.connect_swapped (this.applet, "expose-event",
-                            (GLib.Callback)this.on_applet_expose, this);
+    this.icon_painter.add (this.table);
 
     Signal.connect_swapped (this.eb, "expose-event",
-                            (GLib.Callback)this.on_eb_expose, this);
+                            (GLib.Callback)this.on_applet_expose, this);
+    Signal.connect_swapped (this.eb, "button-press-event",
+                            (GLib.Callback)this.button_press, this);
 
-    Signal.connect_swapped (this.eb, "size-allocate",
-                            (GLib.Callback)Gtk.Widget.queue_draw, applet);
+    Signal.connect_swapped (this.icon_painter, "expose-event",
+                            (GLib.Callback)this.on_painter_expose, this);
+    Signal.connect_swapped (this.icon_painter, "size-allocate",
+                            (GLib.Callback)Gtk.Widget.queue_draw, this.eb);
 
     // bind our config keys
     this.client = Awn.Config.get_default_for_applet (applet);
@@ -250,7 +256,7 @@ public class NotificationArea : GLib.Object
     }
   }
 
-  private bool on_eb_expose (Gdk.Event event, Gtk.Bin eb)
+  private bool on_painter_expose (Gdk.Event event, Gtk.Bin eb)
   {
     Cairo.Context? cr = Gdk.cairo_create (eb.window);
     Gdk.cairo_region (cr, event.expose.region);
@@ -295,9 +301,9 @@ public class NotificationArea : GLib.Object
     return true;
   }
 
-  private bool on_applet_expose (Gdk.Event event, Gtk.Widget applet)
+  private bool on_applet_expose (Gdk.Event event, Gtk.Widget eb)
   {
-    Cairo.Context? cr = Gdk.cairo_create (applet.window);
+    Cairo.Context? cr = Gdk.cairo_create (eb.window);
     if (cr == null) return false;
 
     int x = this.inner_align.allocation.x;
@@ -316,13 +322,13 @@ public class NotificationArea : GLib.Object
     }
     else
     {
-      if (applet.is_composited ())
+      if (this.applet.is_composited ())
       {
         cr.set_source_rgba (0.0, 0.0, 0.0, 0.0);
       }
       else
       {
-        Gdk.cairo_set_source_color (cr, applet.style.bg[Gtk.StateType.NORMAL]);
+        Gdk.cairo_set_source_color (cr, eb.style.bg[Gtk.StateType.NORMAL]);
       }
     }
     cr.set_line_width (1.0);
@@ -336,7 +342,7 @@ public class NotificationArea : GLib.Object
     }
     else
     {
-      Gdk.Color c = applet.style.dark[Gtk.StateType.SELECTED];
+      Gdk.Color c = eb.style.dark[Gtk.StateType.SELECTED];
       cr.set_source_rgba (c.red / 65535.0, c.green / 65535.0, c.blue / 65535.0,
                           0.625);
     }
@@ -348,7 +354,7 @@ public class NotificationArea : GLib.Object
     cr.set_line_width (1.0);
     cr.stroke ();
 
-    return false;
+    return true;
   }
 
   private bool button_press (Gdk.Event event, Gtk.Widget widget)
@@ -359,8 +365,6 @@ public class NotificationArea : GLib.Object
       unowned Gtk.Dialog dialog = prefs.get_dialog ();
 
       dialog.run ();
-      // hmm, isn't vala supposed to do this?
-      dialog.destroy ();
       return true;
     }
 
@@ -374,6 +378,8 @@ public class NotificationArea : GLib.Object
     int row = 0, col = 0;
     Awn.Orientation orient = this.applet.get_orientation ();
 
+    // stop displaying tray icons which were removed and update positions of
+    // those which should still be displayed
     foreach (weak Widget icon in this.table.get_children ())
     {
       int del;
@@ -409,6 +415,7 @@ public class NotificationArea : GLib.Object
       }
     }
 
+    // display tray icons which were added
     foreach (weak EggTray.Child icon in this.tray_icons)
     {
       int added;
@@ -461,11 +468,9 @@ public class NotificationArea : GLib.Object
 
   private int get_tray_icon_size ()
   {
-    /*
-     * " -1 " spacing in the table
-     */
+    // we need to take care of the spacing in the table
     int size = (int)this.applet.get_size ();
-    int icon_size = (size / this.max_rows) - 1 + (size % this.max_rows);
+    int icon_size = (size - (this.max_rows - 1)) / this.max_rows;
     icon_size = icon_size * this._icon_size / 100;
     return icon_size < 1 ? 1 : icon_size;
   }
@@ -505,7 +510,6 @@ public class NotificationArea : GLib.Object
 public Applet?
 awn_applet_factory_initp (string canonical_name, string uid, int panel_id)
 {
-  debug ("%s", Build.APPLETSDIR);
   if (EggTray.Manager.check_running (Gdk.Screen.get_default ()))
   {
     string msg = "There is already another notification area running" +

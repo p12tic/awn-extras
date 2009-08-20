@@ -33,6 +33,7 @@ public class GarbageApplet : AppletSimple
   private Client config;
   private string app_name;
   private Menu menu;
+  private MenuItem empty_menu_item;
   private OverlayText? text_overlay;
 
   /*const TargetEntry[] targets = {
@@ -90,10 +91,18 @@ public class GarbageApplet : AppletSimple
     if (file_count > 0)
     {
       icon_name = "user-trash-full";
+      if (this.empty_menu_item != null && !this.empty_menu_item.sensitive)
+      {
+        this.empty_menu_item.sensitive = true;
+      }
     }
     else
     {
       icon_name = "user-trash";
+      if (this.empty_menu_item != null && this.empty_menu_item.sensitive)
+      {
+        this.empty_menu_item.sensitive = false;
+      }
     }
     // set icon
     this.set_icon_name (icon_name);
@@ -172,12 +181,13 @@ public class GarbageApplet : AppletSimple
         weak Menu ctx_menu;
         if (this.menu == null)
         {
-          MenuItem item;
           this.menu = this.create_default_menu () as Menu;
-          item = new MenuItem.with_mnemonic (_ ("_Empty Trash"));
-          item.activate.connect (this.on_menu_empty_activate);
-          item.show ();
-          this.menu.append (item);
+          this.empty_menu_item =
+            new MenuItem.with_mnemonic (_ ("_Empty Trash"));
+          this.empty_menu_item.activate.connect (this.on_menu_empty_activate);
+          this.empty_menu_item.set_sensitive (this.trash.file_count > 0);
+          this.empty_menu_item.show ();
+          this.menu.append (this.empty_menu_item);
         }
         ctx_menu = (Menu)this.menu;
         ctx_menu.set_screen (null);

@@ -33,6 +33,7 @@ public class GarbageApplet : AppletSimple
   private Client config;
   private string app_name;
   private Menu menu;
+  private OverlayText? text_overlay;
 
   /*const TargetEntry[] targets = {
     { "text/uri-list", 0, 0 },
@@ -47,6 +48,7 @@ public class GarbageApplet : AppletSimple
     this.app_name = _ ("Garbage");
     this.map_event.connect (this.on_map_event);
     this.button_press_event.connect (this.on_click);
+    this.text_overlay = null;
   }
 
   public GarbageApplet (string canonical_name, string uid, int panel_id)
@@ -79,6 +81,7 @@ public class GarbageApplet : AppletSimple
     Timeout.add (200, this.initialize_dragdrop);
     return true;
   }
+
   private void render_applet_icon ()
   {
     uint file_count;
@@ -97,14 +100,36 @@ public class GarbageApplet : AppletSimple
     // if requested, draw trash count when count > 0
     try
     {
-      if (this.config.get_bool (GROUP_DEFAULT, "show_count"))
+      if (this.config.get_bool (GROUP_DEFAULT, "show_count") && file_count > 0)
       {
-        // TODO add text overlay here
+        if (this.text_overlay == null)
+        {
+          unowned Overlayable overlayable;
+
+          // moonbeam says get_icon generally returns Awn.ThemedIcon
+          overlayable = this.get_icon () as Overlayable;
+          this.text_overlay = new OverlayText ();
+          overlayable.add_overlay (this.text_overlay);
+        }
+
+        if (!this.text_overlay.active)
+        {
+          this.text_overlay.active = true;
+        }
+
+        this.text_overlay.text = "%u".printf (file_count);
+      }
+      else if (this.text_overlay != null)
+      {
+        if (this.text_overlay.active)
+        {
+          this.text_overlay.active = false;
+        }
       }
     }
-    catch (GLib.Error e)
+    catch (GLib.Error err)
     {
-      // do nothing
+      warning ("Rendering error: %s", err.message);
     }
     // set the title as well
     string plural;

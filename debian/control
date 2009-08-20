@@ -47,12 +47,12 @@ Description: A collection of applets for avant-window-navigator
   * awnterm: A pop-up terminal that lives in AWN. 
   * cairo_main_menu: Displays a list of all the applications on your 
     computer in a standard menu format.
+  * garbage: Manages your desktop's trash can.
   * notification-area : Replaces the gnome-panel notification area and shows
     it right on your dock 
   * plugger: Displays mounted volumes and allows you to browse them.
   * separator: Display a white line to separate applets.
   * shinyswitcher: A workspace switcher supporting compiz and other WMs.
-  * trash: A trash applet, like the one from gnome-panel.
 
 Package: awn-applets-c-extras-trunk
 Section: gnome
@@ -73,6 +73,7 @@ Description: A collection of applets for avant-window-navigator
     navigate folders.
   * main-menu: Display a list of all the applications on your computer.
   * places: Displays shortcuts in buttons.
+  * trash: A trash applet, like the one from gnome-panel.
   * trasher: Like the trash applet, but uses stacks to allow you to preview 
     your trash.
   * webapplet: Displays a web page.

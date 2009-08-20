@@ -30,6 +30,14 @@ etc/gconf/schemas/awn-applet-sysmon.schemas
 #etc/gconf/schemas/filebrowser.schemas
 #
 #
+# Trash
+#
+#etc/gconf/schemas/trash.schemas
+#usr/lib/awn/applets/trash/*.so
+#usr/lib/awn/applets/trash/trashapplet.glade usr/share/avant-window-navigator/applets/trash/
+#usr/share/avant-window-navigator/applets/trash.desktop
+#
+# Trasher
+#
 #usr/lib/awn/applets/trasher/*.so
-
 #usr/share/avant-window-navigator/applets/trasher.desktop

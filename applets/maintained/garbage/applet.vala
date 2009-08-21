@@ -36,12 +36,12 @@ public class GarbageApplet : AppletSimple
   private MenuItem empty_menu_item;
   private OverlayText? text_overlay;
   private OverlayThrobber? throbber_overlay;
+  private OverlayProgress? progress_overlay;
 
-  /*const TargetEntry[] targets = {
+  const TargetEntry[] targets = {
     { "text/uri-list", 0, 0 },
-    { "text/plain",    0, 0 },
-    { null }
-  };*/
+    { "text/plain",    0, 0 }
+  };
 
   construct
   {
@@ -51,6 +51,8 @@ public class GarbageApplet : AppletSimple
     this.map_event.connect (this.on_map_event);
     this.button_press_event.connect (this.on_click);
     this.text_overlay = null;
+    this.throbber_overlay = null;
+    this.progress_overlay = null;
   }
 
   public GarbageApplet (string canonical_name, string uid, int panel_id)
@@ -65,15 +67,10 @@ public class GarbageApplet : AppletSimple
 
   private bool initialize_dragdrop ()
   {
-    TargetEntry[] targets = new TargetEntry[2];
-    targets[0].target = "text/uri-list";
-    targets[0].flags = 0;
-    targets[0].info =  0;
-    targets[1].target = "text/plain";
-    targets[1].flags = 0;
-    targets[1].info =  0;
-    drag_source_set (this, ModifierType.BUTTON1_MASK, targets, DragAction.COPY);
-    drag_dest_set (this, DestDefaults.ALL, targets, DragAction.COPY);
+    // disable icon changing, interferes with sending files to trash
+    drag_dest_unset (this.get_icon ());
+
+    drag_dest_set (this, DestDefaults.ALL, targets, DragAction.MOVE);
     this.drag_data_received.connect (this.on_drag_data_received);
     return false;
   }
@@ -256,15 +253,38 @@ public class GarbageApplet : AppletSimple
   {
     SList<VFS.File> file_uris;
 
+    if (data == null || data.get_length () == 0)
+    {
+      drag_finish (context, false, false, time);
+      return;
+    }
+
+    if (this.progress_overlay == null)
+    {
+      unowned Overlayable overlayable;
+
+      // moonbeam says get_icon generally returns Awn.ThemedIcon
+      overlayable = this.get_icon () as Overlayable;
+      this.progress_overlay = new OverlayProgressCircle ();
+      overlayable.add_overlay (this.progress_overlay);
+    }
+    this.progress_overlay.percent_complete = 0.0;
+    this.progress_overlay.active = true;
+
     try
     {
+      double total;
+      uint pos = 0;
+
       file_uris = VFS.files_from_uri_list ((string)data.data);
-      foreach (weak VFS.File file in file_uris)
+      total = (double)file_uris.length ();
+      foreach (unowned VFS.File file in file_uris)
       {
         if (file.exists ())
         {
           this.trash.send_to_trash (file);
         }
+        this.progress_overlay.percent_complete = (++pos) / total;
       }
     }
     catch (GLib.Error err)
@@ -277,6 +297,9 @@ public class GarbageApplet : AppletSimple
       dialog.run ();
       dialog.destroy ();
     }
+
+    this.progress_overlay.active = false;
+    drag_finish (context, true, true, time);
   }
 }
 

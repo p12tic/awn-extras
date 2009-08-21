@@ -48,6 +48,23 @@ egg_tray_child_realize (GtkWidget *widget)
 
   GTK_WIDGET_CLASS (egg_tray_child_parent_class)->realize (widget);
 
+  // we really don't want any gradients, make sure they're gone
+  GtkStyle *style = gtk_widget_get_style (widget);
+  if (style)
+  {
+    GdkPixmap *pixmap = style->bg_pixmap[GTK_STATE_NORMAL];
+    if (pixmap)
+    {
+      g_object_unref (pixmap);
+      style->bg_pixmap[GTK_STATE_NORMAL] = NULL;
+    }
+    if (widget->window)
+    {
+      gdk_window_set_background (widget->window,
+                                 &style->bg[GTK_STATE_NORMAL]);
+    }
+  }
+
   /* We have alpha if the visual has something other than red, green, and blue */
   visual_has_alpha = visual->red_prec + visual->blue_prec + visual->green_prec < visual->depth;
 

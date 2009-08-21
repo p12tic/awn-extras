@@ -35,6 +35,7 @@ public class GarbageApplet : AppletSimple
   private Menu menu;
   private MenuItem empty_menu_item;
   private OverlayText? text_overlay;
+  private OverlayThrobber? throbber_overlay;
 
   /*const TargetEntry[] targets = {
     { "text/uri-list", 0, 0 },
@@ -219,7 +220,20 @@ public class GarbageApplet : AppletSimple
       }
       if (do_empty)
       {
+        if (this.throbber_overlay == null)
+        {
+          unowned Widget widget;
+          unowned Overlayable overlayable;
+
+          widget = this.get_icon ();
+          // moonbeam says get_icon generally returns Awn.ThemedIcon
+          overlayable = widget as Overlayable;
+          this.throbber_overlay = new OverlayThrobber (widget);
+          overlayable.add_overlay (this.throbber_overlay);
+        }
+        this.throbber_overlay.active = true;
         this.trash.empty ();
+        this.throbber_overlay.active = false;
       }
     }
     catch (GLib.Error ex)

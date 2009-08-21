@@ -1,0 +1,22 @@
+[DEFAULT/audiosink]
+type = string
+default = autoaudiosink
+description = Audio sink to use.
+[DEFAULT/videosink]
+type = string
+default = autovideosink
+description = Video sink to use.
+[DEFAULT/video_width]
+type = integer
+default = 240
+description = Width of the video window.
+[DEFAULT/video_height]
+type = integer
+default = 120
+description = Height of the video window.
+[DEFAULT/recent_items]
+type = list-string
+default =
+description = List of recently played URLs.
+
+; vim: set ft=dosini :

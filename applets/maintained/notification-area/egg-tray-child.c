@@ -107,9 +107,29 @@ egg_tray_child_style_set (GtkWidget *widget,
 			 GtkStyle  *previous_style)
 {
   /* The default handler resets the background according to the new
-   * style.  We either use a transparent background or a parent-relative background
-   * and ignore the style background. So, just don't chain up.
+   * style.  We either use a transparent background or a parent-relative
+   * background and ignore the style background.
    */
+  EggTrayChild *child = EGG_TRAY_CHILD (widget);
+  if (child->is_composited || widget->window == NULL)
+  {
+    // we don't care about the background as long as it's not pixmap
+    GTK_WIDGET_CLASS(egg_tray_child_parent_class)->style_set(widget,
+                                                            previous_style);
+    GtkStyle *style = gtk_widget_get_style (widget);
+    if (style && style->bg_pixmap[GTK_STATE_NORMAL] != NULL)
+    {
+      GdkPixmap *pixmap = style->bg_pixmap[GTK_STATE_NORMAL];
+      g_object_unref (pixmap);
+      style->bg_pixmap[GTK_STATE_NORMAL] = NULL;
+      if (widget->window)
+      {
+        gdk_window_set_background (widget->window,
+                                   &style->bg[GTK_STATE_NORMAL]);
+        gdk_window_invalidate_rect (widget->window, NULL, TRUE);
+      }
+    }
+  }
 }
 
 #if 0

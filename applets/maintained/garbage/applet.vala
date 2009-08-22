@@ -67,11 +67,13 @@ public class GarbageApplet : AppletSimple
 
   private bool initialize_dragdrop ()
   {
-    // disable icon changing, interferes with sending files to trash
-    drag_dest_unset (this.get_icon ());
+    unowned Gtk.Widget icon = this.get_icon ();
 
-    drag_dest_set (this, DestDefaults.ALL, targets, DragAction.MOVE);
-    this.drag_data_received.connect (this.on_drag_data_received);
+    // disable icon changing, interferes with sending files to trash
+    drag_dest_unset (icon);
+
+    drag_dest_set (icon, DestDefaults.ALL, targets, DragAction.MOVE);
+    icon.drag_data_received.connect (this.on_drag_data_received);
     return false;
   }
 

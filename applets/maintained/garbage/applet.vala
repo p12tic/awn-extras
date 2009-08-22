@@ -37,6 +37,7 @@ public class GarbageApplet : AppletSimple
   private OverlayText? text_overlay;
   private OverlayThrobber? throbber_overlay;
   private OverlayProgress? progress_overlay;
+  private bool highlighted;
 
   const TargetEntry[] targets = {
     { "text/uri-list", 0, 0 },
@@ -53,6 +54,7 @@ public class GarbageApplet : AppletSimple
     this.text_overlay = null;
     this.throbber_overlay = null;
     this.progress_overlay = null;
+    this.highlighted = false;
   }
 
   public GarbageApplet (string canonical_name, string uid, int panel_id)
@@ -72,7 +74,9 @@ public class GarbageApplet : AppletSimple
     // disable icon changing, interferes with sending files to trash
     drag_dest_unset (icon);
 
-    drag_dest_set (icon, DestDefaults.ALL, targets, DragAction.MOVE);
+    drag_dest_set (icon, DestDefaults.DROP, targets, DragAction.MOVE);
+    icon.drag_motion.connect (this.on_drag_motion);
+    icon.drag_leave.connect (this.on_drag_leave);
     icon.drag_data_received.connect (this.on_drag_data_received);
     return true;
   }
@@ -240,6 +244,28 @@ public class GarbageApplet : AppletSimple
   {
     this.render_applet_icon ();
   }
+
+  private bool
+  on_drag_motion (DragContext context, int x, int y, uint time)
+  {
+    if (!this.highlighted)
+    {
+      (this.get_icon () as Overlayable).get_effects ().start (Effect.HOVER);
+      this.highlighted = true;
+    }
+    return true;
+  }
+
+  private void
+  on_drag_leave (DragContext context, uint time)
+  {
+    if (this.highlighted)
+    {
+      (this.get_icon () as Overlayable).get_effects ().stop (Effect.HOVER);
+      this.highlighted = false;
+    }
+  }
+
   private void on_drag_data_received (DragContext context,
                                       int x,
                                       int y,

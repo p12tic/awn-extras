@@ -67,7 +67,8 @@ public class GarbageApplet : AppletSimple
     this.render_applet_icon ();
   }
 
-  private bool on_map_event (Event evt)
+  private bool
+  on_map_event (Event evt)
   {
     unowned Gtk.Widget icon = this.get_icon ();
 
@@ -81,9 +82,11 @@ public class GarbageApplet : AppletSimple
     return true;
   }
 
-  private void render_applet_icon ()
+  private void
+  render_applet_icon ()
   {
     uint file_count;
+    string plural;
 
     file_count = this.trash.file_count;
     if (file_count > 0)
@@ -139,18 +142,19 @@ public class GarbageApplet : AppletSimple
       warning ("Rendering error: %s", err.message);
     }
     // set the title as well
-    string plural;
     if (file_count == 1)
     {
-      plural = _("item");
+      plural = _ ("item");
     }
     else
     {
-      plural = _("items");
+      plural = _ ("items");
     }
-    this.set_tooltip_text ("%s: %u %s".printf (this.app_name, file_count, plural));
+    this.set_tooltip_text ("%s: %u %s".printf (this.app_name, file_count,
+                                               plural));
   }
-  private bool on_click (EventButton evt)
+  private bool
+  on_click (EventButton evt)
   {
     switch (evt.button)
     {
@@ -194,7 +198,8 @@ public class GarbageApplet : AppletSimple
     }
     return true;
   }
-  private void on_menu_empty_activate ()
+  private void
+  on_menu_empty_activate ()
   {
     bool do_empty;
     try
@@ -240,7 +245,8 @@ public class GarbageApplet : AppletSimple
       /* FIXME show error dialog */
     }
   }
-  private void trash_changed ()
+  private void
+  trash_changed ()
   {
     this.render_applet_icon ();
   }
@@ -266,12 +272,9 @@ public class GarbageApplet : AppletSimple
     }
   }
 
-  private void on_drag_data_received (DragContext context,
-                                      int x,
-                                      int y,
-                                      SelectionData data,
-                                      uint info,
-                                      uint time)
+  private void
+  on_drag_data_received (DragContext context, int x, int y, SelectionData data,
+                         uint info, uint time)
   {
     SList<VFS.File> file_uris;
 
@@ -325,7 +328,8 @@ public class GarbageApplet : AppletSimple
   }
 }
 
-public Applet awn_applet_factory_initp (string canonical_name, string uid, int panel_id)
+public Applet
+awn_applet_factory_initp (string canonical_name, string uid, int panel_id)
 {
   return new GarbageApplet (canonical_name, uid, panel_id);
 }

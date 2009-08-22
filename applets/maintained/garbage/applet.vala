@@ -65,7 +65,7 @@ public class GarbageApplet : AppletSimple
     this.render_applet_icon ();
   }
 
-  private bool initialize_dragdrop ()
+  private bool on_map_event (Event evt)
   {
     unowned Gtk.Widget icon = this.get_icon ();
 
@@ -74,12 +74,6 @@ public class GarbageApplet : AppletSimple
 
     drag_dest_set (icon, DestDefaults.ALL, targets, DragAction.MOVE);
     icon.drag_data_received.connect (this.on_drag_data_received);
-    return false;
-  }
-
-  private bool on_map_event (Event evt)
-  {
-    Timeout.add (200, this.initialize_dragdrop);
     return true;
   }
 

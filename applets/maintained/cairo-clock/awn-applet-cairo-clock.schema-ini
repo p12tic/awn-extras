@@ -32,6 +32,6 @@ default =
 description = A custom time format (strftime()), used if not empty.
 
 [DEFAULT/cities-timezones]
-type = string
+type = list-string
 default =
-description = Serialized Python data structures that contains a list of cities and timezones.
+description = List of cities and timezones separated by a '#' character.

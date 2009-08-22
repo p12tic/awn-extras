@@ -966,10 +966,7 @@ class Settings:
 
             """
             try:
-                if type(value) is list:
-                    self.__client.set_list(self.__folder, key, value)
-                else:
-                    self.__client.set_value(self.__folder, key, value)
+                self.__client.set_value(self.__folder, key, value)
             except:
                 raise ValueError("Could not set new value of '%s'" % key)
 

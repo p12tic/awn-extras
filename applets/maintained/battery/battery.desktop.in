@@ -4,6 +4,6 @@ X-AWN-Type=Applet
 X-AWN-AppletType=Python
 _Name=Battery
 _Comment=Display battery state
-Exec=battery-applet/battery.py
+Exec=battery/battery.py
 Icon=battery
 X-AWN-AppletCategory=System,Monitor

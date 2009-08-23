@@ -170,7 +170,6 @@ static void set_hide_on_unfocus (AwnTerm *applet, gboolean value)
 
 void load_hide_on_unfocus (const gchar *group, const gchar *key, const GValue *value, gpointer user_data)
 {
-	AwnTerm *applet = (AwnTerm*)applet;
 	set_hide_on_unfocus (applet, g_value_get_boolean (value));
 }
 

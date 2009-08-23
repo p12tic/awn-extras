@@ -203,7 +203,7 @@ class Prefs(gtk.Window):
             self.applet.do_timer()
 
     def spin_focusout(self, spin, event):
-        self.client.set_value(GROUP_DEFAULT, 'update_interval', spin.get_value())
+        self.applet.client.set_value(GROUP_DEFAULT, 'update_interval', int(spin.get_value()))
 
     #Etc...
     def close_clicked(self, button):
@@ -387,7 +387,7 @@ class AddFeed(gtk.Window):
         self.widget.pack_start(self.pass_hbox, False, False)
         self.widget.pack_start(self.search_msg, False, False)
         self.widget.pack_start(self.results_sw)
-        self.widget.pack_start(button_hbox, False, False)
+        self.widget.pack_end(button_hbox, False, False)
         self.widget.show_all()
 
         self.add(self.widget)

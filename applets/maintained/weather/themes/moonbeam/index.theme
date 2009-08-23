@@ -1,9 +1,9 @@
 [Icon Theme]
 Name=moonbeam
 
-Directories=status
+Directories=scalable
 
-[status]
+[scalables]
 Size=48
 MaxSize=256
 Context=Apps

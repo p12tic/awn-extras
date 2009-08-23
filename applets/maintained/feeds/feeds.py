@@ -200,19 +200,31 @@ class App(awn.AppletSimple):
                 else:
                     title = self.feeds[url].feed.title
 
+                if url == 'google-reader':
+                    title = "<a href='%s'>%s</a>" % (reader_url, title)
+
+                else:
+                    title = "<a href='%s'>%s</a>" % (self.feeds[url].feed.link, title)
+
                 if num > 2:
-                    msg += _("%s\n  %s\n  %s\n(%s More)\n") % (title,
+                    msg += _("%s\n  <a href='%s'>%s</a>\n  <a href='%s'>%s</a>\n(%s More)\n") % \
+                        (title,
+                        self.feeds[url].entries[0]['link'],
                         shortify(self.feeds[url].entries[0]['title']),
+                        self.feeds[url].entries[1]['link'],
                         shortify(self.feeds[url].entries[1]['title']),
                         (num - 2))
 
                 elif num == 2:
                     msg += '%s\n  %s\n  %s\n' % (title,
+                        self.feeds[url].entries[0]['link'],
                         shortify(self.feeds[url].entries[0]['title']),
+                        self.feeds[url].entries[1]['link'],
                         shortify(self.feeds[url].entries[1]['title']))
 
                 elif num == 1:
                     msg += '%s\n  %s\n' % (title,
+                        self.feeds[url].entries[0]['link'],
                         shortify(self.feeds[url].entries[0]['title']))
 
             pynotify.init(_("Feeds Applet"))
@@ -701,7 +713,7 @@ class App(awn.AppletSimple):
                         {'username': username, 'network': 'google-reader'},
                         'network')
 
-                    self.client.set_value(GROUP_DEFAULT, 'google_token', self.google_key.token)
+                    self.client.set_value(GROUP_DEFAULT, 'google_token', int(self.google_key.token))
 
                 else:
                     self.google_key = self.keyring.from_token(token)

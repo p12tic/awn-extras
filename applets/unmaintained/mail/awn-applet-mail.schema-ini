@@ -1,0 +1,32 @@
+[DEFAULT]
+single_instance = false
+
+[DEFAULT/backend]
+type = string
+default = GMail
+description = The Email backend to use
+
+[DEFAULT/theme]
+type = string
+default = Tango
+description = The theme to use for the icon
+
+[DEFAULT/email-client]
+type = string
+default = evolution -c mail
+description = The Desktop Email client to use
+
+[DEFAULT/hide]
+type = boolean
+default = false
+description = Hide the icon if there is no new mail
+
+[DEFAULT/show-network-errors]
+type = boolean
+default = true
+description = Display any network errors
+
+[DEFAULT/login-token]
+type = integer
+default = 0
+description = Used for logging in; do not touch

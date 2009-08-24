@@ -63,6 +63,7 @@ public class GarbageApplet : AppletSimple
     this.uid = uid;
     this.panel_id = panel_id;
     this.single_instance = true;
+    (this.get_icon () as Awn.ThemedIcon).set ("drag-and-drop", false);
     this.config = Awn.Config.get_default_for_applet (this);
     this.render_applet_icon ();
   }
@@ -71,9 +72,6 @@ public class GarbageApplet : AppletSimple
   on_map_event (Event evt)
   {
     unowned Gtk.Widget icon = this.get_icon ();
-
-    // disable icon changing, interferes with sending files to trash
-    drag_dest_unset (icon);
 
     drag_dest_set (icon, DestDefaults.DROP, targets, DragAction.MOVE);
     icon.drag_motion.connect (this.on_drag_motion);

@@ -365,6 +365,7 @@ public class NotificationArea : GLib.Object
       unowned Gtk.Dialog dialog = prefs.get_dialog ();
 
       dialog.run ();
+      dialog.destroy ();
       return true;
     }
 

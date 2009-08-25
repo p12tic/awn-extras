@@ -294,7 +294,6 @@ class MediaPlayerApplet(awn.AppletSimple):
         """
         Loads all the config variables
         """
-        self.props.single_instance = True
         self.client = awn.config_get_default_for_applet(self)
 
         config_map = {

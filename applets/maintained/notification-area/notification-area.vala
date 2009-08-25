@@ -132,8 +132,6 @@ public class NotificationArea : GLib.Object
     this.max_rows = 2;
     this.max_cols = 2;
 
-    this.applet.set_property ("single-instance", true);
-
     this.addition_quark = Quark.from_string ("na-tray-icon-added");
     this.deletion_quark = Quark.from_string ("na-tray-icon-deleted");
 

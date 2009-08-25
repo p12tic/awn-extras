@@ -27,6 +27,7 @@ import awn
 from awn.extras import awnlib
 
 import dbus
+import pango
 
 applet_name = "Quit-Log Out"
 applet_version = "0.3.3"
@@ -130,7 +131,8 @@ class QuitLogOutApplet:
                 label_align = gtk.Alignment()
 
             # Label
-            label_label = gtk.Label(label)
+            label_label = awn.Label("<span font_family='sans' weight='bold' stretch='condensed' size='%s'>%s</span>" % (12 * pango.SCALE, label))
+            label_label.set_use_markup(True)
             label_align.add(label_label)
             if top_bottom:
                 label_label.set_size_request(-1, docklet.get_size())

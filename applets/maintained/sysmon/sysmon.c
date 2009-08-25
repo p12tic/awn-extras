@@ -182,7 +182,7 @@ awn_sysmon_constructed (GObject *object)
    */
   folder = g_strdup_printf("%s-%s",APPLET_NAME,uid);
   priv->client = awn_config_get_default_for_applet (AWN_APPLET(object), NULL);
-  priv->client_baseconf = awn_config_get_default_for_applet_by_info (APPLET_NAME, uid, TRUE, NULL);
+  priv->client_baseconf = awn_config_get_default_for_applet_by_info (APPLET_NAME, uid,NULL);
   
   g_free (folder);
   desktop_agnostic_config_client_bind (priv->client,

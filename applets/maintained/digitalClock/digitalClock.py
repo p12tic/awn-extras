@@ -29,7 +29,7 @@ import dgTime
 class App(awn.AppletSimple):
 
     def __init__(self, canonical_name, uid, panel_id):
-        super(App, self).__init__(canonical_name, 'single-' + uid, panel_id)
+        super(App, self).__init__(canonical_name, uid, panel_id)
 
         self.dialog_visible = False
 

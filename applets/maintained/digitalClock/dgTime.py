@@ -15,10 +15,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
 
 import time
-
-import awn
 import cairo
-import gtk
 
 # the height of the original context
 HEIGHT = 48.0
@@ -59,10 +56,7 @@ class dgTime:
             self.width = int(HEIGHT * 1.3)
 
     def fallback(self):
-        icon_theme = gtk.icon_theme_get_default()
-        icon = icon_theme.load_icon('gtk-yes',#'awn-applet-digital-clock',
-                                    self.prefs.props.panel_size, 0)
-        self.applet.set_icon(icon)
+        self.applet.set_icon_name('awn-applet-digital-clock')
 
     def create_context(self):
         self.reset_width()

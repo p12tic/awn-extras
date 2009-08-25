@@ -79,7 +79,7 @@ class ClockPrefs(gobject.GObject):
         self.applet = applet
         self.config = awn.config_get_default_for_applet(self.applet)
         for key, prop in self.pref_map.iteritems():
-            self.config.bind(awn.CONFIG_GROUP_DEFAULT, key,
+            self.config.bind(config.GROUP_DEFAULT, key,
                              self, prop, False, config.BIND_METHOD_FALLBACK)
         self.panel_config = awn.config_get_default(awn.PANEL_ID_DEFAULT)
         self.panel_config.bind('panel', 'size', self, 'panel_size', True,

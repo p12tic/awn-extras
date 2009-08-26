@@ -139,7 +139,6 @@ class YamaApplet:
             shutdown_item.connect("activate", lambda w: sm_if.Shutdown())
 
     def clicked_cb(self, widget):
-        print "button"
         def get_position(menu):
             icon_x, icon_y = self.applet.get_icon().window.get_origin()
 

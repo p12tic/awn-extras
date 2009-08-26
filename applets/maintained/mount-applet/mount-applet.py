@@ -51,7 +51,7 @@ class MountApplet:
         self.setup_context_menu()
         self.setup_main_dialog()
 
-        def clicked_cb(self, widget):
+        def clicked_cb(widget):
             self.refresh_dialog()
         applet.connect("clicked", clicked_cb)
 

@@ -1,0 +1,12 @@
+[DEFAULT]
+single_instance = false
+
+[DEFAULT/hidden-mountpoints]
+type = list-string
+default = 
+description = List of mountpoints that should remain hidden in the UI.
+
+[DEFAULT/execute-command]
+type = string
+default = 
+description = Command to execute after mounting a mountpoint.

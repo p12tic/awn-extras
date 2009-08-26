@@ -1,6 +1,8 @@
 APPLET_NAME = mount-applet
 APPLET_MAIN_FILE = mount-applet.py
 include $(top_srcdir)/Makefile.python-applet
+include $(top_srcdir)/Makefile.schemas
+
 dist_applet_DATA =	\
 	mount-applet.ui		\
 	$(NULL)

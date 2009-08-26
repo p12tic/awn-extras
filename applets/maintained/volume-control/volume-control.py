@@ -116,12 +116,12 @@ class VolumeControlApplet:
         self.volume_scale.set_increments(volume_step, 10)
 
         self.volume_scale.connect("value-changed", self.volume_scale_changed_cb)
-        prefs.get_object("button-inc-volume").connect("button-press-event", self.backend.up)
-        prefs.get_object("button-dec-volume").connect("button-press-event", self.backend.down)
+        prefs.get_object("button-inc-volume").connect("button-release-event", self.backend.up)
+        prefs.get_object("button-dec-volume").connect("button-release-event", self.backend.down)
 
-        self.applet.connect("button-press-event", self.button_press_event_cb)
+        self.applet.connect("button-release-event", self.button_release_event_cb)
 
-    def button_press_event_cb(self, widget, event):
+    def button_release_event_cb(self, widget, event):
         if event.button == 2:
             # Toggle 'Mute' checkbutton
             self.mute_item.set_active(not self.mute_item.get_active())

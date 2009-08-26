@@ -90,15 +90,14 @@ class QuitLogOutApplet:
         # Initialize tooltip and icon
         self.refresh_tooltip_icon_cb(self.settings["left-click-action"])
 
-        applet.connect("button-press-event", self.button_press_event_cb)
+        applet.connect("clicked", self.clicked_cb)
 
-    def button_press_event_cb(self, widget, event):
-        if event.button == 1:
-            action = self.settings["left-click-action"]
-            if action == "Show Docklet":
-                self.show_docklet()
-            else:
-                self.execute_action(action)
+    def clicked_cb(self, widget):
+        action = self.settings["left-click-action"]
+        if action == "Show Docklet":
+            self.show_docklet()
+        else:
+            self.execute_action(action)
 
     def setup_context_menu(self):
         pref_dialog = self.applet.dialog.new("preferences")
@@ -150,7 +149,7 @@ class QuitLogOutApplet:
             button.set_orientation(docklet_orientation)
             button.set_info_simple(self.applet.meta["short"], docklet.props.uid, icon)
             button.set_tooltip_text(label)
-            button.connect("button-press-event", self.apply_action_cb, i, docklet) 
+            button.connect("button-release-event", self.apply_action_cb, i, docklet) 
             box.add(button)
 
             # Label top/bottom

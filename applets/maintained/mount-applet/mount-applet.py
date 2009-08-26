@@ -51,7 +51,9 @@ class MountApplet:
         self.setup_context_menu()
         self.setup_main_dialog()
 
-        applet.connect("button-press-event", self.button_press_event_cb)
+        def clicked_cb(self, widget):
+            self.refresh_dialog()
+        applet.connect("clicked", clicked_cb)
 
     def setup_main_dialog(self):
         dialog = self.applet.dialog.new("main")
@@ -88,10 +90,6 @@ class MountApplet:
             self.applet.settings["hidden-mountpoints"] = hidden_mountspoints
             self.init_dialog()
         self.applet.settings["execute-command"] = self.__entry_execute_command.get_text()
-
-    def button_press_event_cb(self, widget, event):
-        if event.button == 1:
-            self.refresh_dialog()
 
     def init_dialog(self):
         for mountpoint in self.__mountpoints_vbox.get_children():

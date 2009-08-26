@@ -91,7 +91,7 @@ class YamaApplet:
 
         self.menu.show_all()
 
-        applet.connect("button-press-event", self.button_press_event_cb)
+        applet.connect("clicked", self.clicked_cb)
 
         # Inhibit autohide while main menu is visible
         def show_menu_cb(widget):
@@ -138,28 +138,28 @@ class YamaApplet:
             shutdown_item = self.append_menu_item(menu, "Shut Down...", "system-shutdown", "Shut down the system")
             shutdown_item.connect("activate", lambda w: sm_if.Shutdown())
 
-    def button_press_event_cb(self, widget, event):
-        if event.button == 1:
-            def get_position(menu):
-                icon_x, icon_y = self.applet.get_icon().window.get_origin()
+    def clicked_cb(self, widget):
+        print "button"
+        def get_position(menu):
+            icon_x, icon_y = self.applet.get_icon().window.get_origin()
 
-                menu_size = self.menu.size_request()
-                # Make sure the bottom of the menu doesn't get below the bottom of the screen
-                icon_y = min(icon_y, self.menu.get_screen().get_height() - menu_size[1])
+            menu_size = self.menu.size_request()
+            # Make sure the bottom of the menu doesn't get below the bottom of the screen
+            icon_y = min(icon_y, self.menu.get_screen().get_height() - menu_size[1])
 
-                padding = 6
-                orientation = int(self.applet.get_orientation())
-                if orientation == ORIENTATION_BOTTOM:
-                    icon_y = self.menu.get_screen().get_height() - self.applet.get_size() - self.applet.props.offset - menu_size[1] - padding
-                elif orientation == ORIENTATION_TOP:
-                    icon_y = self.applet.get_size() + self.applet.props.offset + padding
-                elif orientation == ORIENTATION_RIGHT:
-                    icon_x = self.menu.get_screen().get_width() - self.applet.get_size() - self.applet.props.offset - menu_size[0] - padding
-                elif orientation == ORIENTATION_LEFT:
-                    icon_x = self.applet.get_size() + self.applet.props.offset + padding
+            padding = 6
+            orientation = int(self.applet.get_orientation())
+            if orientation == ORIENTATION_BOTTOM:
+                icon_y = self.menu.get_screen().get_height() - self.applet.get_size() - self.applet.props.offset - menu_size[1] - padding
+            elif orientation == ORIENTATION_TOP:
+                icon_y = self.applet.get_size() + self.applet.props.offset + padding
+            elif orientation == ORIENTATION_RIGHT:
+                icon_x = self.menu.get_screen().get_width() - self.applet.get_size() - self.applet.props.offset - menu_size[0] - padding
+            elif orientation == ORIENTATION_LEFT:
+                icon_x = self.applet.get_size() + self.applet.props.offset + padding
 
-                return (icon_x, icon_y, False)
-            self.menu.popup(None, None, get_position, event.button, event.time)
+            return (icon_x, icon_y, False)
+        self.menu.popup(None, None, get_position, 1, 0)
 
     def setup_context_menu(self):
         """Add "Edit Menus" to the context menu.

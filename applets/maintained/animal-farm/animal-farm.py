@@ -67,16 +67,18 @@ class AnimalFarmApplet:
         alignment.add(self.label)
         self.refresh_fortune()
 
-        self.applet.connect("button-press-event", self.button_press_event_cb)
+        self.applet.connect("clicked", self.clicked_cb)
+        self.applet.connect("button-release-event", self.button_release_event_cb)
         self.dialog.connect("focus-out-event", self.dialog_focus_out_cb)
 
-    def button_press_event_cb(self, widget, event):
-        if event.button == 1:
-            if self.dialog.is_active():
-                self.set_icon()
-                self.refresh_fortune()
-            self.applet.dialog.toggle("fortune-dialog")
-        elif event.button == 2:
+    def clicked_cb(self, widget):
+        if self.dialog.is_active():
+            self.set_icon()
+            self.refresh_fortune()
+        self.applet.dialog.toggle("fortune-dialog")
+
+    def button_release_event_cb(self, widget, event):
+        if event.button == 2:
             self.refresh_fortune()
             if not self.dialog.is_active():
                 self.applet.dialog.toggle("fortune-dialog", "show")

@@ -124,7 +124,15 @@ class Dialogs:
         settings_shared = Settings("shared")
         self.__lose_focus = settings_shared["dialog_focus_loss_behavior"]
 
-        parent.connect("button-press-event", self.button_press_event_cb)
+        def clicked_cb(widget):
+            if "main" in self.__register:
+                self.toggle("main")
+        parent.connect("clicked", clicked_cb)
+        def popup_menu_cb(widget, event):
+            self.toggle("menu", once=True, event=event)
+        parent.connect("context-menu-popup", popup_menu_cb)
+
+        parent.connect("button-release-event", self.__button_release_event_cb)
 
     def new(self, dialog, title=None, focus=True):
         """Create a new AWN dialog.
@@ -169,6 +177,8 @@ class Dialogs:
     def register(self, dialog, dlog, focus=True):
         """Register a dialog.
 
+        Once a name has been registered, it cannot be registered again.
+
         @param dialog: The name to use for the dialog. The predefined values
                        are main, secondary, menu, and program.
         @type dialog: C{string}
@@ -178,6 +188,9 @@ class Dialogs:
         @type focus: C{bool}
 
         """
+        if dialog in self.__register:
+            raise RuntimeError("Dialog '%s' already registered" % dialog)
+
         if focus and dialog not in self.__special_dialogs and self.__lose_focus:
             def dialog_focus_out_cb(widget, event):
                 try:
@@ -192,7 +205,7 @@ class Dialogs:
 
         self.__register[dialog] = dlog
 
-    def toggle(self, dialog, force="", once=False, time=0):
+    def toggle(self, dialog, force="", once=False, event=None):
         """Show or hide a dialog.
 
         @param dialog: The dialog that should be shown.
@@ -204,8 +217,8 @@ class Dialogs:
             opened, and you request that another dialog be toggled, only the
             open one is hidden. False by default.
         @type once: C{bool}
-        @param time: The time of the toggle. Usually taken from gtkEvent.time
-        @type time: C{int}
+        @param event: The event that triggered the toggle.
+        @type event: C{gdk.Event}
 
         """
         force = force.lower()
@@ -216,7 +229,7 @@ class Dialogs:
 
         if dialog == "menu":
             self.__register["menu"].show_all()
-            self.__register["menu"].popup(None, None, None, 3, time)
+            self.__register["menu"].popup(None, None, None, event.button, event.time)
         elif dialog == "program":
             self.__register["program"]()
         elif dialog == "about":
@@ -255,16 +268,12 @@ class Dialogs:
             self.__register[self.__current].hide()
             self.__current = None
 
-    def button_press_event_cb(self, widget, event):
+    def __button_release_event_cb(self, widget, event):
         """Responds to click events. Only called by GTK+.
 
         """
-        if event.button == 3 and "menu" in self.__register:  # Right
-            self.toggle("menu", once=True, time=event.time)
-        elif event.button == 2 and "secondary" in self.__register:  # Middle
+        if event.button == 2 and "secondary" in self.__register:  # Middle
             self.toggle("secondary", once=True)
-        elif event.button == 1 and "main" in self.__register:
-            self.toggle("main")
         elif "program" in self.__register:  # Act like launcher
             self.toggle("program", once=True)
 

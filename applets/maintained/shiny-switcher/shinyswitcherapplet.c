@@ -2177,8 +2177,8 @@ _workspaces_changed(WnckScreen    *screen, WnckWorkspace *space, Shiny_switcher 
 static void
 _viewports_changed(WnckScreen    *screen, Shiny_switcher * shinyswitcher)
 {
-  g_debug("viewports_changed\n");
+/*  g_debug("viewports_changed\n");
   _changed(shinyswitcher->applet, shinyswitcher);
-  _changed_waited(shinyswitcher);
+  _changed_waited(shinyswitcher);*/
 }
 

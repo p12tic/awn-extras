@@ -133,7 +133,7 @@ class StacksApplet (awn.AppletSimple):
         self.connect("drag-data-received", self.applet_drop_cb)
         self.connect("drag-motion", self.applet_drag_motion_cb)
         self.connect("drag-leave", self.applet_drag_leave_cb)
-        self.connect("orientation-changed", self.applet_orient_changed_cb)
+        self.connect("position-changed", self.applet_orient_changed_cb)
         self.connect("size-changed", self.applet_size_changed_cb)
 
         self.config = get_config_from_gconf(self.gconf_client, self.gconf_path, self.uid)

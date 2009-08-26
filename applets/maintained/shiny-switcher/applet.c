@@ -32,7 +32,7 @@ awn_applet_factory_initp(const gchar *name, const gchar *uid, gint panel_id)
   Shiny_switcher*shiny_switcher;
   applet = awn_applet_new(name, uid, panel_id);
   shiny_switcher = applet_new(applet, panel_id);
-  shiny_switcher->orient = awn_applet_get_orientation(applet);
+  shiny_switcher->orient = awn_applet_get_pos_type(applet);
 
   return applet;
 }

@@ -30,7 +30,7 @@ static gboolean time_handler (WobblyZini *wobblyzini);
 static gboolean _expose_event (GtkWidget *widget, GdkEventExpose *expose, gpointer data);
 static gboolean _button_release_event (GtkWidget *widget, GdkEventButton *event, gpointer *data);
 static void _size_changed (AwnApplet *app, guint size, gpointer *data);
-static void _orient_changed (AwnApplet *appt, guint orient, gpointer *data);
+static void _orient_changed (AwnApplet *appt, GtkPositionType orient, gpointer *data);
 static void _offset_changed (AwnApplet *appt, guint offset, gpointer *data);
 
 /**
@@ -53,8 +53,7 @@ wobblyzini_applet_new (AwnApplet *applet)
 	GtkWidget *icon = awn_icon_new();
 	wobblyzini->icon = AWN_ICON (icon);
 	// we'll set correct orientation, so icon can be painted properly
-	awn_icon_set_orientation (AWN_ICON(icon),
-	                          awn_applet_get_orientation(applet));
+	awn_icon_set_pos_type (AWN_ICON(icon), awn_applet_get_pos_type(applet));
         // set also offset
         awn_icon_set_offset (AWN_ICON (icon), awn_applet_get_offset (applet));
 
@@ -73,7 +72,7 @@ wobblyzini_applet_new (AwnApplet *applet)
 	// connect to height and orientation changes
 	g_signal_connect (wobblyzini->applet, "size-changed",
                           G_CALLBACK (_size_changed), wobblyzini);
-	g_signal_connect (wobblyzini->applet, "orientation-changed",
+	g_signal_connect (wobblyzini->applet, "position-changed",
                           G_CALLBACK (_orient_changed), wobblyzini);
 	g_signal_connect (wobblyzini->applet, "offset-changed",
                           G_CALLBACK (_offset_changed), wobblyzini);
@@ -202,13 +201,13 @@ _size_changed (AwnApplet *app, guint size, gpointer *data)
  * -set orientation and redraw applet
  */
 static void
-_orient_changed (AwnApplet *app, guint orient, gpointer *data)
+_orient_changed (AwnApplet *app, GtkPositionType orient, gpointer *data)
 {
 	WobblyZini *wobblyzini = (WobblyZini *)data;
 	AwnIcon *icon = AWN_ICON(wobblyzini->icon);
 
 	// update the orientation
-	awn_icon_set_orientation(icon, orient);
+	awn_icon_set_pos_type(icon, orient);
 }
 
 /**

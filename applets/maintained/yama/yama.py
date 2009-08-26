@@ -25,7 +25,6 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 
-from awn import ORIENTATION_TOP, ORIENTATION_BOTTOM, ORIENTATION_LEFT, ORIENTATION_RIGHT
 from awn.extras import awnlib
 
 try:
@@ -147,14 +146,14 @@ class YamaApplet:
             icon_y = min(icon_y, self.menu.get_screen().get_height() - menu_size[1])
 
             padding = 6
-            orientation = int(self.applet.get_orientation())
-            if orientation == ORIENTATION_BOTTOM:
+            orientation = self.applet.get_pos_type()
+            if orientation == gtk.POS_BOTTOM:
                 icon_y = self.menu.get_screen().get_height() - self.applet.get_size() - self.applet.props.offset - menu_size[1] - padding
-            elif orientation == ORIENTATION_TOP:
+            elif orientation == gtk.POS_TOP:
                 icon_y = self.applet.get_size() + self.applet.props.offset + padding
-            elif orientation == ORIENTATION_RIGHT:
+            elif orientation == gtk.POS_RIGHT:
                 icon_x = self.menu.get_screen().get_width() - self.applet.get_size() - self.applet.props.offset - menu_size[0] - padding
-            elif orientation == ORIENTATION_LEFT:
+            elif orientation == gtk.POS_LEFT:
                 icon_x = self.applet.get_size() + self.applet.props.offset + padding
 
             return (icon_x, icon_y, False)

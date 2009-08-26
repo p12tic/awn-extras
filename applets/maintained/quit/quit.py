@@ -109,8 +109,8 @@ class QuitLogOutApplet:
                              self.applet.props.panel_id)
         docklet.props.quit_on_delete = False
 
-        docklet_orientation = docklet.get_orientation()
-        top_bottom = docklet_orientation in (awn.ORIENTATION_TOP, awn.ORIENTATION_BOTTOM)
+        docklet_orientation = docklet.get_pos_type()
+        top_bottom = docklet_orientation in (gtk.POS_TOP, gtk.POS_BOTTOM)
 
         align = awn.Alignment(docklet)
         if top_bottom:
@@ -122,9 +122,9 @@ class QuitLogOutApplet:
         for i in docklet_actions_label_icon:
             label, icon = docklet_actions_label_icon[i]
 
-            if docklet_orientation == awn.ORIENTATION_RIGHT:
+            if docklet_orientation == gtk.POS_RIGHT:
                 label_align = gtk.Alignment(xalign=1.0)
-            elif docklet_orientation == awn.ORIENTATION_BOTTOM:
+            elif docklet_orientation == gtk.POS_BOTTOM:
                 label_align = gtk.Alignment(yalign=1.0)
             else:
                 label_align = gtk.Alignment()
@@ -139,23 +139,23 @@ class QuitLogOutApplet:
                 label_label.set_size_request(docklet.get_size(), -1)
 
             # Label left/right
-            if docklet_orientation == awn.ORIENTATION_LEFT:
+            if docklet_orientation == gtk.POS_LEFT:
                 box.add(label_align)
                 label_label.props.angle = 90
 
             # Icon
             button = awn.ThemedIcon(bind_effects=False)
             button.set_size((docklet.get_size() + docklet.props.max_size) / 2)
-            button.set_orientation(docklet_orientation)
+            button.set_pos_type(docklet_orientation)
             button.set_info_simple(self.applet.meta["short"], docklet.props.uid, icon)
             button.set_tooltip_text(label)
             button.connect("button-release-event", self.apply_action_cb, i, docklet) 
             box.add(button)
 
             # Label top/bottom
-            if docklet_orientation != awn.ORIENTATION_LEFT:
+            if docklet_orientation != gtk.POS_LEFT:
                 box.add(label_align)
-                if docklet_orientation == awn.ORIENTATION_RIGHT:
+                if docklet_orientation == gtk.POS_RIGHT:
                     label_label.props.angle = 270
 
         docklet.add(align)

@@ -146,7 +146,7 @@ public class NotificationArea : GLib.Object
     Signal.connect_swapped (this.manager, "tray_icon_removed",
                             (GLib.Callback)this.on_icon_removed, this);
     // connect to applet signals
-    Signal.connect_swapped (this.applet, "orientation-changed",
+    Signal.connect_swapped (this.applet, "position-changed",
                             (GLib.Callback)this.table_refresh, this);
     Signal.connect_swapped (this.applet, "size-changed",
                             (GLib.Callback)this.update_icon_sizes, this);
@@ -375,7 +375,7 @@ public class NotificationArea : GLib.Object
     if (this.applet == null || this.table == null) return;
     
     int row = 0, col = 0;
-    Awn.Orientation orient = this.applet.get_orientation ();
+    Gtk.PositionType position = this.applet.get_pos_type ();
 
     // stop displaying tray icons which were removed and update positions of
     // those which should still be displayed
@@ -393,7 +393,8 @@ public class NotificationArea : GLib.Object
         this.table.child_set (icon, 
                               "left-attach", col, "right-attach", col+1,
                               "top-attach", row, "bottom-attach", row+1);
-        if (orient == Awn.Orientation.TOP || orient == Awn.Orientation.BOTTOM)
+        if (position == Gtk.PositionType.TOP ||
+            position == Gtk.PositionType.BOTTOM)
         {
           row++;
           if (row == this.max_rows)
@@ -425,7 +426,8 @@ public class NotificationArea : GLib.Object
       icon.set_qdata (this.addition_quark, 0.to_pointer());
       this.table.attach_defaults (icon, col, col+1, row, row+1);
 
-      if (orient == Awn.Orientation.TOP || orient == Awn.Orientation.BOTTOM)
+      if (position == Gtk.PositionType.TOP ||
+          position == Gtk.PositionType.BOTTOM)
       {
         row++;
         if (row == this.max_rows)
@@ -449,7 +451,8 @@ public class NotificationArea : GLib.Object
     uint num_rows, num_cols;
     uint rows = max_rows, cols = max_cols;
 
-    if (orient == Awn.Orientation.TOP || orient == Awn.Orientation.BOTTOM)
+    if (position == Gtk.PositionType.TOP ||
+        position == Gtk.PositionType.BOTTOM)
     {
       num_cols = this.table.n_columns;
       cols = elements % max_rows == 0 ? 

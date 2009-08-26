@@ -176,8 +176,7 @@ class App (awn.AppletSimple):
 
         align = awn.Alignment(docklet)
         box = None
-        if (docklet.props.orient in [awn.ORIENTATION_TOP,
-                                     awn.ORIENTATION_BOTTOM]):
+        if (docklet.props.position in [gtk.POS_TOP, gtk.POS_BOTTOM]):
             box = gtk.HBox()
             align.add(box)
         else:
@@ -203,7 +202,7 @@ class App (awn.AppletSimple):
 
         play_button_size = (docklet.props.max_size + docklet.props.size) / 2
         play_pause = awn.ThemedIcon(bind_effects = False)
-        play_pause.set_orientation(docklet.props.orient)
+        play_pause.set_pos_type(docklet.props.position)
         play_pause.set_size(play_button_size)
         play_pause.set_info_simple("media-control-docklet",
                                    docklet.props.uid,
@@ -212,7 +211,7 @@ class App (awn.AppletSimple):
         box.pack_start(play_pause, False)
 
         prev_button = awn.ThemedIcon(bind_effects = False)
-        prev_button.set_orientation(docklet.props.orient)
+        prev_button.set_pos_type(docklet.props.position)
         prev_button.set_size(docklet.props.size)
         prev_button.set_info_simple("media-control-docklet",
                                     docklet.props.uid,
@@ -221,7 +220,7 @@ class App (awn.AppletSimple):
         box.pack_start(prev_button, False)
 
         next_button = awn.ThemedIcon(bind_effects = False)
-        next_button.set_orientation(docklet.props.orient)
+        next_button.set_pos_type(docklet.props.position)
         next_button.set_size(docklet.props.size)
         next_button.set_info_simple("media-control-docklet",
                                     docklet.props.uid,

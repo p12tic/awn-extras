@@ -28,11 +28,11 @@ applet_name = "Mount Applet"
 applet_version = "0.3.3"
 applet_description = "An applet to (un)mount devices"
 
-ui_file = os.path.join(os.path.dirname(__file__), "mount-applet.ui")
+ui_file = os.path.join(os.path.dirname(__file__), "mount.ui")
 image_dir = os.path.join(os.path.dirname(__file__), "icons")
 
 # Logo of the applet, shown in the GTK+ About dialog
-applet_logo = os.path.join(image_dir, "mount-applet.png")
+applet_logo = os.path.join(image_dir, "mount.png")
 
 
 class MountApplet:

@@ -336,8 +336,6 @@ applets/maintained/file-browser-launcher/Makefile
 applets/maintained/gwibfawn/Makefile
 applets/maintained/media-control/Makefile
 applets/maintained/media-icons/Makefile
-applets/maintained/media-icons/media-icon-next.desktop.in
-applets/maintained/media-icons/media-icon-previous.desktop.in
 applets/maintained/media-player/Makefile
 applets/maintained/mount/Makefile
 applets/maintained/notification-area/Makefile

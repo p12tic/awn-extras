@@ -45,7 +45,6 @@ awn_sysmonicon_get_property (GObject *object, guint property_id,
   AwnSysmoniconPrivate * priv;
   AwnSysmonicon * sysmonicon = AWN_SYSMONICON(object);
   priv = AWN_SYSMONICON_GET_PRIVATE (sysmonicon);
-  g_debug ("%s: prop id = %u",__func__,property_id);
   switch (property_id) {
     case PROP_APPLET:
       g_value_set_object (value, priv->applet); 
@@ -90,11 +89,9 @@ awn_sysmonicon_set_property (GObject *object, guint property_id,
       priv->graph = g_value_get_object (value);
       break;          
     case PROP_GRAPH_TYPE:
-      g_debug ("%s instance",__func__);      
       priv->graph_type[CONF_STATE_INSTANCE] = g_value_get_int (value);
       break;          
     case PROP_GRAPH_TYPE_DEFAULT:
-      g_debug ("%s base",__func__);
       priv->graph_type[CONF_STATE_BASE] = g_value_get_int (value);
       break;                
     case PROP_ID:

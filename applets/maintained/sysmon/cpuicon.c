@@ -65,11 +65,12 @@ struct _AwnCPUiconPrivate
     guint64 times[2][GLIBTOP_NCPU][N_CPU_STATES];
   
     gdouble   prev_time;
-    
+    GtkWidget   *context_menu;
 };
 
 static AwnGraphSinglePoint awn_CPUicon_get_load(AwnCPUicon *self);
 
+static void awn_CPUicon_show_context_menu(AwnCPUicon *self);
 
 static void
 awn_CPUicon_get_property (GObject *object, guint property_id,
@@ -195,15 +196,24 @@ _awn_cpu_icon_clicked (GtkWidget *widget,
                        GdkEventButton *event,
                        AwnCPUDialog * dialog)
 {
-  if (GTK_WIDGET_VISIBLE (dialog) )
+  switch (event->button)
   {
-    gtk_widget_hide (GTK_WIDGET(dialog));
+    case 1:
+      if (GTK_WIDGET_VISIBLE (dialog) )
+      {
+        gtk_widget_hide (GTK_WIDGET(dialog));
+      }
+      else
+      {
+        gtk_widget_show_all (GTK_WIDGET (dialog));
+      }
+      break;
+    case 2:
+      break;
+    case 3:
+      awn_CPUicon_show_context_menu(AWN_CPUICON(widget));
+      break;
   }
-  else
-  {
-    gtk_widget_show_all (GTK_WIDGET (dialog));
-  }
- 
   return TRUE;
 }
 
@@ -456,4 +466,73 @@ awn_CPUicon_get_load(AwnCPUicon *self)
   return point;
 }
 
+static void
+change_to_area (AwnCPUicon *self)
+{
+  g_object_set (self,
+                "graph-type",GRAPH_AREA,
+                NULL);
+}
+
+static void
+change_to_circle (AwnCPUicon *self)
+{
+  g_object_set (self,
+                "graph-type",GRAPH_CIRCLE,
+                NULL);  
+}
+
+static void
+change_to_bars (AwnCPUicon *self)
+{
+  g_object_set (self,
+                "graph-type",GRAPH_BAR,
+                NULL);
+}
+
+static void 
+awn_CPUicon_show_context_menu(AwnCPUicon *self)
+{
+  AwnCPUiconPrivate *priv;
+  AwnApplet         *applet;
+  GtkWidget         *item;
+  GtkWidget         *submenu;
+  	
+  priv = AWN_CPUICON_GET_PRIVATE (self);
+  if (priv->context_menu)
+  {
+    gtk_widget_destroy (priv->context_menu);
+  }
+  g_object_get (self,
+                "applet",&applet,
+                NULL);
+  
+  priv->context_menu = awn_applet_create_default_menu(applet);
+  item = gtk_menu_item_new_with_label ("Graph Type");
+  gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);
+  
+  submenu = gtk_menu_new ();
+  gtk_menu_item_set_submenu (GTK_MENU_ITEM(item),submenu);
+  
+  item = gtk_menu_item_new_with_label ("Area");
+  gtk_menu_shell_append(GTK_MENU_SHELL(submenu), item);
+  g_signal_connect_swapped (item, "activate", G_CALLBACK(change_to_area), self);
+  item = gtk_menu_item_new_with_label ("Circle");
+  gtk_menu_shell_append(GTK_MENU_SHELL(submenu), item);
+  g_signal_connect_swapped (item, "activate", G_CALLBACK(change_to_circle), self);  
+  item = gtk_menu_item_new_with_label ("Bars");
+  gtk_menu_shell_append(GTK_MENU_SHELL(submenu), item);
+  g_signal_connect_swapped (item, "activate", G_CALLBACK(change_to_bars), self);  
+  
+  item = awn_applet_create_about_item_simple (applet,
+                                              "Copyright 2009 Rodney Cryderman <rcryderman@gmail.com>\n",
+                                              AWN_APPLET_LICENSE_GPLV2,
+                                              NULL);
+  gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);
+  
+  gtk_widget_show_all (priv->context_menu);
+  
+  gtk_menu_popup(GTK_MENU(priv->context_menu), NULL, NULL, NULL, NULL, 0, gtk_get_current_event_time() );  
+  
+}
 

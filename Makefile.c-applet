@@ -11,3 +11,7 @@ AM_CFLAGS = 			\
 APPLET_LINKER_FLAGS = -module -avoid-version
 
 appletdir = $(libdir)/awn/applets/$(APPLET_NAME)
+
+EXTRA_DIST += \
+	$(desktop_DATA:.desktop=.desktop.in.in) \
+	$(NULL)

@@ -51,16 +51,18 @@ do_bridge ( AwnApplet * applet,GObject *object,
   gchar * base_prop_name = g_strdup_printf( "%s-base",prop_name);  
   
   g_object_get (applet,
-                "client", &client,
                 "client-baseconf", &client_baseconf,
                 NULL);              
-
+  g_object_get (object,
+                "client", &client,
+                NULL);
+//  g_assert (client);
   desktop_agnostic_config_client_bind (client,
                                        instance_group, key_name,
                                        G_OBJECT(object), prop_name, FALSE,
                                        DESKTOP_AGNOSTIC_CONFIG_BIND_METHOD_BOTH,
                                        NULL);
-  
+//  g_assert (client_baseconf);  
   desktop_agnostic_config_client_bind (client_baseconf,
                                        base_group, key_name,
                                        G_OBJECT(object),base_prop_name, FALSE,

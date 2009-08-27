@@ -30,6 +30,7 @@ enum
   PROP_GRAPH,
   PROP_GRAPH_TYPE,
   PROP_GRAPH_TYPE_DEFAULT,
+  PROP_CLIENT,
   PROP_ID
 };
 
@@ -59,7 +60,10 @@ awn_sysmonicon_get_property (GObject *object, guint property_id,
       break;          
     case PROP_ID:
       g_value_set_string (value, priv->id); 
-      break;          
+      break;
+    case PROP_CLIENT:
+      g_value_set_object (value,priv->client);
+      break;                
     default:
     G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
   }
@@ -95,15 +99,26 @@ awn_sysmonicon_set_property (GObject *object, guint property_id,
         g_free (priv->id);
       }
       priv->id = g_value_dup_string (value);
-      break;                
-  default:
-    G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+      break;        
+    case PROP_CLIENT:
+      g_assert (!priv->client); /*this should not be set more than once!*/
+      priv->client = g_value_dup_object (value);
+      break;      
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
   }
 }
 
 static void
 awn_sysmonicon_dispose (GObject *object)
 {
+  AwnSysmoniconPrivate * priv = AWN_SYSMONICON_GET_PRIVATE (object); 
+  
+  if (priv->client)
+  {
+    g_object_unref (priv->client);
+  }
+  
   G_OBJECT_CLASS (awn_sysmonicon_parent_class)->dispose (object);
 }
 
@@ -119,6 +134,7 @@ awn_sysmonicon_constructed (GObject *object)
 {
   AwnSysmoniconPrivate * priv;
   AwnApplet * applet;
+  gchar * name;
   
   priv = AWN_SYSMONICON_GET_PRIVATE (object);
   
@@ -134,13 +150,19 @@ awn_sysmonicon_constructed (GObject *object)
                 NULL);
   g_assert (applet);
   
+  g_object_get (applet,
+                "canonical-name",&name,
+                NULL);
+  
+  priv->client = awn_config_get_default_for_applet_by_info (name, priv->id,NULL);
+  
   do_bridge ( applet,object,
              priv->id,ICONS_BASECONF,
              "graph_type","graph-type");
     
   g_signal_connect(G_OBJECT(priv->applet), "size-changed", 
                    G_CALLBACK(_size_changed), object);
-  
+  g_free (name);
 }
 
 static void
@@ -194,6 +216,13 @@ awn_sysmonicon_class_init (AwnSysmoniconClass *klass)
                                "default",
                                G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
   g_object_class_install_property (object_class, PROP_ID, pspec);  
+  
+  pspec = g_param_spec_pointer ("client",
+                               "client",
+                               "config client",
+                               G_PARAM_READWRITE);
+  g_object_class_install_property (object_class, PROP_CLIENT, pspec);   
+  
 
   g_type_class_add_private (object_class, sizeof (AwnSysmoniconPrivate));
   

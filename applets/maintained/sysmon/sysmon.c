@@ -76,7 +76,7 @@ awn_sysmon_get_property (GObject *object, guint property_id,
       break;
     }
     case PROP_CLIENT_BASECONF:
-      g_value_set_object (value,priv->client_baseconf);
+      g_value_set_pointer (value,priv->client_baseconf);
       break;                
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -124,7 +124,7 @@ awn_sysmon_set_property (GObject *object, guint property_id,
       break;
     case PROP_CLIENT_BASECONF:
       g_assert (!priv->client_baseconf); /*this should not be set more than once!*/
-      priv->client_baseconf = g_value_dup_object (value);
+      priv->client_baseconf = g_value_get_pointer (value);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -207,11 +207,9 @@ awn_sysmon_constructed (GObject *object)
       if ( g_strcmp0 ("CPU",tokens[0])==0)
       {
         gchar *icon_id = g_strdup_printf ("%s-%s-%s",uid,tokens[0],tokens[1]);
-        g_debug ("create cpu icon");
         icon = awn_CPUicon_new (AWN_APPLET(sysmon),icon_id);
         gtk_container_add (GTK_CONTAINER (priv->box), icon);  
         gtk_widget_show (icon);
-        g_debug ("done create cpu icon");        
         g_free (icon_id);
       }
       else

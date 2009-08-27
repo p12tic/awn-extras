@@ -62,7 +62,7 @@ awn_sysmonicon_get_property (GObject *object, guint property_id,
       g_value_set_string (value, priv->id); 
       break;
     case PROP_CLIENT:
-      g_value_set_object (value,priv->client);
+      g_value_set_pointer (value,priv->client);
       break;                
     default:
     G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -102,7 +102,7 @@ awn_sysmonicon_set_property (GObject *object, guint property_id,
       break;        
     case PROP_CLIENT:
       g_assert (!priv->client); /*this should not be set more than once!*/
-      priv->client = g_value_dup_object (value);
+      priv->client = g_value_get_pointer (value);
       break;      
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -153,13 +153,11 @@ awn_sysmonicon_constructed (GObject *object)
   g_object_get (applet,
                 "canonical-name",&name,
                 NULL);
-  
   priv->client = awn_config_get_default_for_applet_by_info (name, priv->id,NULL);
+  g_assert (priv->client);
   
   do_bridge ( applet,object,
-             priv->id,ICONS_BASECONF,
-             "graph_type","graph-type");
-    
+             "icon","graph_type","graph-type");
   g_signal_connect(G_OBJECT(priv->applet), "size-changed", 
                    G_CALLBACK(_size_changed), object);
   g_free (name);

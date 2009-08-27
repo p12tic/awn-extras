@@ -26,12 +26,12 @@ type = integer
 default = 0
 description = Just a dummy key.. this will be removed later.
 
-[/icons/CPU/graph_type]
+[icon/graph_type]
 type = integer
 default = 0
 description = CPU graph type to use.  Note that some Icons do not support all graph types.  If this occurs an icon will revert to it's own default (value of 0).
 
-[/icons/CPU/time_stamp]
+[icon/time_stamp]
 type = integer
 default = 0
 description = Just a dummy key.. this will be removed later.

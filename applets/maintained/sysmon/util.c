@@ -43,33 +43,30 @@ get_conf_value_int ( GObject * object, gchar * prop_name)
 
 void
 do_bridge ( AwnApplet * applet,GObject *object,
-           gchar * instance_group,gchar * base_group,
-           gchar * key_name,gchar * prop_name )
+           gchar * group, gchar * key_name,gchar * prop_name )
 {
   DesktopAgnosticConfigClient * client;
   DesktopAgnosticConfigClient * client_baseconf;  
-  gchar * base_prop_name = g_strdup_printf( "%s-base",prop_name);  
   
   g_object_get (applet,
                 "client-baseconf", &client_baseconf,
-                NULL);              
+                NULL);
   g_object_get (object,
                 "client", &client,
                 NULL);
-//  g_assert (client);
+
   desktop_agnostic_config_client_bind (client,
-                                       instance_group, key_name,
+                                       group, key_name,
                                        G_OBJECT(object), prop_name, FALSE,
-                                       DESKTOP_AGNOSTIC_CONFIG_BIND_METHOD_BOTH,
+                                       DESKTOP_AGNOSTIC_CONFIG_BIND_METHOD_INSTANCE,
                                        NULL);
-//  g_assert (client_baseconf);  
+
   desktop_agnostic_config_client_bind (client_baseconf,
-                                       base_group, key_name,
-                                       G_OBJECT(object),base_prop_name, FALSE,
+                                       group, key_name,
+                                       G_OBJECT(object),prop_name, FALSE,
                                        DESKTOP_AGNOSTIC_CONFIG_BIND_METHOD_GLOBAL,
                                        NULL);
   
-  g_free (base_prop_name);
 }
 
 void

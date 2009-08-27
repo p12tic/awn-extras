@@ -45,7 +45,7 @@ Description: A collection of applets for avant-window-navigator
   * awn-notification-daemon: Libnotify notification daemon implementation.
   * awn-system-monitor: Display CPU activity and system stats on click.
   * awnterm: A pop-up terminal that lives in AWN. 
-  * cairo_main_menu: Displays a list of all the applications on your 
+  * cairo-menu: Displays a list of all the applications on your 
     computer in a standard menu format.
   * notification-area : Replaces the gnome-panel notification area and shows
     it right on your dock 

@@ -14,8 +14,8 @@ etc/gconf/schemas/awn-applet-awnterm.schemas
 #
 #Cairo menu
 #
-usr/share/avant-window-navigator/applets/cairo_main_menu.desktop
-usr/lib/awn/applets/cairo_main_menu/*.so
+usr/share/avant-window-navigator/applets/cairo-menu.desktop
+usr/lib/awn/applets/cairo-menu/*.so
 #
 #Notification daemon
 #

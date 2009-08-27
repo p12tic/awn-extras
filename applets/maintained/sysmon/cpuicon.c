@@ -208,14 +208,14 @@ _awn_cpu_icon_clicked (GtkWidget *widget,
 }
 
 static void
-_graph_type_change(GObject *pspec, GParamSpec *gobject, AwnApplet *applet)
+_graph_type_change(GObject *object, GParamSpec *pspec, AwnApplet *applet)
 {
   AwnGraphType graph_type;  
   static int old_graph = -1;
   AwnGraph  *graph = NULL;
   gint size = awn_applet_get_size (applet);
   
-  graph_type = get_conf_value_int(G_OBJECT(pspec),"graph-type");
+  graph_type = get_conf_value_int(G_OBJECT(object),"graph-type");
   
   if (old_graph != graph_type)
   {      
@@ -234,7 +234,7 @@ _graph_type_change(GObject *pspec, GParamSpec *gobject, AwnApplet *applet)
         graph = AWN_GRAPH(awn_bargraph_new (0.0,100.0));
         break;      
     }
-    g_object_set (G_OBJECT (pspec),
+    g_object_set (G_OBJECT (object),
                   "graph",graph,
                   NULL);
     old_graph = graph_type;
@@ -300,7 +300,7 @@ awn_CPUicon_constructed (GObject *object)
   
   connect_notify (object, "graph-type",
                     G_CALLBACK (_graph_type_change),applet);
-    
+
   priv->text_overlay = AWN_OVERLAY(awn_overlay_text_new());
 
   g_object_set (priv->text_overlay,

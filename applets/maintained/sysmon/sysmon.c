@@ -177,7 +177,9 @@ awn_sysmon_constructed (GObject *object)
   /* XXX moonbeam has a good reason that he's doing config this way.
    * DO NOT EMULATE UNLESS YOU HAVE A VERY GOOD REASON. Or you're insane
    */
+  g_debug ("%s:  %s, %s",__func__,name,uid);
   priv->client_baseconf = awn_config_get_default_for_applet_by_info (name, uid,NULL);
+  g_debug ("client_baseconf = %p",priv->client_baseconf);
   
   desktop_agnostic_config_client_bind (priv->client_baseconf,
                                        "applet", "icon_list",

@@ -14,10 +14,10 @@ Build-Depends: 	debhelper (>= 5),
 		libgtop2-dev, 
 		libawn-dev (>> 0.3.3) | libawn-dev-trunk (>> 0.3.3), 
 		libwnck-dev, 
-		libsexy-dev, 
-		libnotify-dev, 
 		libvte-dev,
-#		libwebkit-dev,
+		libsexy-dev, 
+		libnotify-dev,
+		libwebkit-dev,
 		valac (>= 0.5.4),
 		vala-awn-trunk (>> 0.3.3)
 Standards-Version: 3.8.0

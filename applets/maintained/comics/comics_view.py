@@ -456,9 +456,9 @@ class ComicsViewer(ScalableWindow):
 			self.feed_name = new_feed_name
 			self.__update_id = self.feeds.feeds[self.feed_name] \
 				.connect('updated', self.on_feed_updated)
-			if self.feeds.feeds[self.feed_name].ready:
+			if self.feeds.feeds[self.feed_name].status == Feed.DOWNLOAD_OK:
 				self.on_feed_updated(self.feeds.feeds[self.feed_name],
-					Feed.OK)
+					Feed.DOWNLOAD_OK)
 			self.__settings['feed_name'] = str(new_feed_name)
 		elif len(self.feeds.feeds) > 0:
 			self.set_feed_name(self.feeds.feeds.keys()[0])

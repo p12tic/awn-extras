@@ -83,7 +83,6 @@ class Feed(gobject.GObject):
 		self.timeout = settings.get_int('timeout', 20)
 		self.items = {}
 		self.newest = 0.0
-		self.ready = False
 		self.status = None
 		self.__lock = threading.Lock()
 		self.__timeout = gobject.timeout_add(self.timeout * 60 * 1000,

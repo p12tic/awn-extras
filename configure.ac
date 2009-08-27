@@ -227,7 +227,7 @@ if test x${enable_pymod_checks} = xyes; then
     # calendar
     AM_CHECK_PYMOD(gdata,,,AC_MSG_ERROR([python module gdata required (python-gdata)]))
     # calendar
-    AM_CHECK_PYMOD(vobject,,,AC_MSG_ERROR([python module gdata required (python-vobject)]))
+    AM_CHECK_PYMOD(vobject,,,AC_MSG_ERROR([python module vobject required (python-vobject)]))
     fi
 fi
 

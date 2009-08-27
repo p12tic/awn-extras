@@ -6,12 +6,14 @@ APPLET_MAIN_FILE = comics.py
 include $(top_srcdir)/Makefile.python-applet
 
 dist_applet_DATA =	\
+	comics.sh       \
 	comics.pot	\
 	comics_add.py	\
 	comics_manage.py\
 	comics_view.py	\
 	COPYING		\
 	downloader.py	\
+	main.py	        \
 	shared.py	\
 	sv_SE.po	\
 	widgets.py	\

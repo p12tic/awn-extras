@@ -114,7 +114,7 @@ class DesktopManager(awn.AppletSimple):
 				pynotify.uninit()
 				return False
 			if (self.config_manager.get_attention() == True) :
-				awn.awn_effect_start_ex(self.get_effects(), "attention", 0, 0, 1)
+				self.get_effects().start_ex("attention", 0, 0, 1)
 			self.config_manager.set_desktop(currentfile)
 			self.make_icon()
 			return True

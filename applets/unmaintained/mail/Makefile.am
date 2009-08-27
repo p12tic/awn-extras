@@ -5,7 +5,6 @@ include $(top_srcdir)/Makefile.python-applet
 include $(top_srcdir)/Makefile.schemas
 dist_applet_DATA = 		\
     messages.pot \
-    mail.py \
     mail.ui \
     $(NULL)
 

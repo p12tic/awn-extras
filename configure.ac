@@ -323,7 +323,7 @@ applets/maintained/awnterm/awnterm.desktop.in
 applets/maintained/battery/Makefile
 applets/maintained/cairo-clock/Makefile
 applets/maintained/cairo-menu/Makefile
-applets/maintained/cairo-menu/cairo_main_menu.desktop.in
+applets/maintained/cairo-menu/cairo-menu.desktop.in
 applets/maintained/calendar/Makefile
 applets/maintained/comics/Makefile
 applets/maintained/comics/locale/Makefile

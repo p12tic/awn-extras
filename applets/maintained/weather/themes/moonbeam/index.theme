@@ -3,7 +3,7 @@ Name=moonbeam
 
 Directories=scalable
 
-[scalables]
+[scalable]
 Size=48
 MaxSize=256
 Context=Apps

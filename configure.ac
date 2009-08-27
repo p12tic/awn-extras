@@ -339,7 +339,7 @@ applets/maintained/media-icons/Makefile
 applets/maintained/media-icons/media-icon-next.desktop.in
 applets/maintained/media-icons/media-icon-previous.desktop.in
 applets/maintained/media-player/Makefile
-applets/maintained/mount-applet/Makefile
+applets/maintained/mount/Makefile
 applets/maintained/notification-area/Makefile
 applets/maintained/notification-area/notification-area.desktop.in
 applets/maintained/notification-daemon/Makefile

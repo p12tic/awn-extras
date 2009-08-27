@@ -58,7 +58,7 @@ SUBDIRS = \
 	unmaintained/mail \
 	maintained/media-icons \
 	maintained/media-player \
-	maintained/mount-applet \
+	maintained/mount \
 	maintained/places \
 	maintained/quit \
 	maintained/shiny-switcher \

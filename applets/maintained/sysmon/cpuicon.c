@@ -59,7 +59,7 @@ struct _AwnCPUiconPrivate
   
     AwnOverlay *text_overlay;
     guint timer_id;
-    guint update_timeout;
+    guint update_timeout[NUM_CONF_STATES];
     guint num_cpus;
     guint now; /*toggle used for the times*/
     guint64 times[2][GLIBTOP_NCPU][N_CPU_STATES];
@@ -68,17 +68,36 @@ struct _AwnCPUiconPrivate
     GtkWidget   *context_menu;
 };
 
+
+enum
+{
+  PROP_0,
+  PROP_UPDATE_TIMEOUT,
+  PROP_UPDATE_TIMEOUT_DEFAULT  
+};
+
 static AwnGraphSinglePoint awn_CPUicon_get_load(AwnCPUicon *self);
 
 static void awn_CPUicon_show_context_menu(AwnCPUicon *self);
+
+static void set_timeout (AwnCPUicon * object);
 
 static void
 awn_CPUicon_get_property (GObject *object, guint property_id,
                               GValue *value, GParamSpec *pspec)
 {
+  AwnCPUiconPrivate * priv;  
+  priv = AWN_CPUICON_GET_PRIVATE (object);
+
   switch (property_id) {
-  default:
-    G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+    case PROP_UPDATE_TIMEOUT:
+      g_value_set_int (value, priv->update_timeout[CONF_STATE_INSTANCE]); 
+      break;    
+    case PROP_UPDATE_TIMEOUT_DEFAULT:
+      g_value_set_int (value, priv->update_timeout[CONF_STATE_BASE]);
+      break;        
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
   }
 }
 
@@ -86,9 +105,18 @@ static void
 awn_CPUicon_set_property (GObject *object, guint property_id,
                               const GValue *value, GParamSpec *pspec)
 {
+  AwnCPUiconPrivate * priv;  
+  priv = AWN_CPUICON_GET_PRIVATE (object);
+  
   switch (property_id) {
-  default:
-    G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+    case PROP_UPDATE_TIMEOUT:
+      priv->update_timeout[CONF_STATE_INSTANCE] = g_value_get_int (value);
+      break;
+    case PROP_UPDATE_TIMEOUT_DEFAULT:
+      priv->update_timeout[CONF_STATE_BASE] = g_value_get_int (value);
+      break;      
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
   }
 }
 
@@ -252,11 +280,40 @@ _graph_type_change(GObject *object, GParamSpec *pspec, AwnApplet *applet)
 }
 
 static void
+set_timeout (AwnCPUicon * object)
+{
+  AwnCPUiconPrivate * priv;  
+  gint update_timeout = get_conf_value_int ( G_OBJECT(object), "update-timeout");
+
+  priv = AWN_CPUICON_GET_PRIVATE (object);   
+  if (priv->timer_id)
+  {
+    g_source_remove (priv->timer_id);
+  }
+  
+  if ( (update_timeout > 750) && 
+      ( (update_timeout %1000 <25) || (update_timeout %1000 >975)))
+  {
+    priv->timer_id = g_timeout_add_seconds(update_timeout/ 1000, _awn_CPUicon_update_icon, object);  
+  }
+  else
+  {
+    priv->timer_id = g_timeout_add(update_timeout, _awn_CPUicon_update_icon, object);  
+  }
+}
+
+static void
+_update_timeout_change(GObject *object, GParamSpec *pspec, AwnApplet *applet)
+{
+  set_timeout(AWN_CPUICON(object));
+}
+
+static void
 awn_CPUicon_constructed (GObject *object)
 {
   /*FIXME*/
   AwnCPUiconPrivate * priv;
-
+  
   glibtop_cpu cpu;
   int i = 0;
   AwnApplet * applet;
@@ -287,15 +344,6 @@ awn_CPUicon_constructed (GObject *object)
                    G_CALLBACK(_awn_cpu_icon_clicked), 
                    priv->dialog);
   
-  if ( (priv->update_timeout > 750) && 
-      ( (priv->update_timeout %1000 <25) || (priv->update_timeout %1000 >975)))
-  {
-    priv->timer_id = g_timeout_add_seconds(priv->update_timeout/ 1000, _awn_CPUicon_update_icon, object);  
-  }
-  else
-  {
-    priv->timer_id = g_timeout_add(priv->update_timeout, _awn_CPUicon_update_icon, object);  
-  }
   
   priv->num_cpus = 0;
   priv->prev_time = get_double_time();
@@ -310,7 +358,10 @@ awn_CPUicon_constructed (GObject *object)
   
   connect_notify (object, "graph-type",
                     G_CALLBACK (_graph_type_change),applet);
-
+  connect_notify (object, "update-timeout",
+                    G_CALLBACK (_update_timeout_change),object);
+  
+  set_timeout (AWN_CPUICON(object));
   priv->text_overlay = AWN_OVERLAY(awn_overlay_text_new());
 
   g_object_set (priv->text_overlay,
@@ -322,59 +373,16 @@ awn_CPUicon_constructed (GObject *object)
                NULL);
   awn_overlayable_add_overlay (AWN_OVERLAYABLE(object), priv->text_overlay);
 
-  /*
-  AwnOverlayThemedIcon *icon_overlay = awn_overlay_themed_icon_new(AWN_THEMED_ICON(object),"stock_up","up");
-  g_object_set (icon_overlay,
-                "gravity", GDK_GRAVITY_NORTH_EAST,
-                "scale",0.25,
-                NULL);
+  do_bridge ( applet,object,
+             "icon","update_timeout","update-timeout");
 
-  awn_effects_add_overlay (effects,icon_overlay);
-  */
-  
-/*  
-  GdkPixbuf *pixbuf = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(),
-                                  "stock_up",
-                                  30 ,
-                                  0, NULL);
-   
-  AwnOverlay * pbuf_overlay = AWN_OVERLAY (awn_overlay_pixbuf_new_with_pixbuf (pixbuf));  
-  g_object_set ( pbuf_overlay,
-                "gravity",GDK_GRAVITY_SOUTH_EAST,
-                "scale", 0.5,
-                "alpha", 1.0,
-                "apply-effects",FALSE,
-                NULL);  
-  awn_effects_add_overlay (effects,pbuf_overlay);
-  */ 
-  
-/*
-  AwnOverlay * pbuf_overlay = AWN_OVERLAY (awn_overlay_pixbuf_file_new ("/usr/local/share/avant-window-navigator/applets/cairo_main_menu/icons/bbb.svg"));  
-  awn_effects_add_overlay (effects,pbuf_overlay);
-   */
-/*  
-  AwnOverlay * throbber_overlay = AWN_OVERLAY (awn_overlay_throbber_new (object));
-  g_object_set ( throbber_overlay,
-                "active",TRUE,
-                "gravity", GDK_GRAVITY_NORTH_WEST,
-                NULL);
-  awn_effects_add_overlay (effects,throbber_overlay);
-  */
-  /*
-  AwnOverlay * progress_overlay = AWN_OVERLAY (awn_overlay_progress_circle_new ());
-  g_object_set (progress_overlay,
-                "percent-complete", 25.0,
-                NULL);
-  
-  awn_effects_add_overlay (effects,progress_overlay);  */
 }
 
 static void
 awn_CPUicon_class_init (AwnCPUiconClass *klass)
 {
+  GParamSpec   *pspec;   
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
-  g_type_class_add_private (klass, sizeof (AwnCPUiconPrivate));
 
   object_class->get_property = awn_CPUicon_get_property;
   object_class->set_property = awn_CPUicon_set_property;
@@ -382,6 +390,26 @@ awn_CPUicon_class_init (AwnCPUiconClass *klass)
   object_class->finalize = awn_CPUicon_finalize;
   object_class->constructed = awn_CPUicon_constructed;
   
+  
+  pspec = g_param_spec_int ("update-timeout",
+                               "update_timeout",
+                               "how often to update`",
+                               100,
+                               100000,
+                               1000,
+                               G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
+  g_object_class_install_property (object_class, PROP_UPDATE_TIMEOUT, pspec);  
+
+  pspec = g_param_spec_int ("update-timeout-base",
+                               "update_timeout base",
+                               "how often to update`",
+                               100,
+                               100000,
+                               1000,
+                               G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
+  g_object_class_install_property (object_class, PROP_UPDATE_TIMEOUT_DEFAULT, pspec);  
+  
+  g_type_class_add_private (klass, sizeof (AwnCPUiconPrivate));
 }
 
 
@@ -391,7 +419,6 @@ awn_CPUicon_init (AwnCPUicon *self)
   AwnCPUiconPrivate *priv;
   	
   priv = AWN_CPUICON_GET_PRIVATE (self);
-  priv->update_timeout = 250;  /*FIXME*/
 }
 
 GtkWidget*
@@ -455,7 +482,8 @@ awn_CPUicon_get_load(AwnCPUicon *self)
   {
     point.value = 100.0;
   }
-  point.points = (new_time - priv->prev_time) * 1000.0 / priv->update_timeout; 
+  point.points = (new_time - priv->prev_time) * 1000.0 / 
+    get_conf_value_int (G_OBJECT(self), "update-timeout"); 
 
   priv->prev_time = new_time;
   // toggle the buffer index.

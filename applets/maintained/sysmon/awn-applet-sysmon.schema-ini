@@ -36,4 +36,9 @@ type = integer
 default = 0
 description = Just a dummy key.. this will be removed later.
 
+[icon/update_timeout]
+type = integer
+default = 1000
+description = If the updates are time based then how frequently to update in ms.
+
 ; vim: set ft=dosini :

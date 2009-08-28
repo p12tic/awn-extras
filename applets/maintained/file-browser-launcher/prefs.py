@@ -30,10 +30,10 @@ import gettext
 import locale
 
 import awn
-from awn.extras import defs
+from awn import extras
 
 APP = "awn-extras-applets"
-gettext.bindtextdomain(APP, defs.GETTEXTDIR)
+gettext.bindtextdomain(APP, extras.GETTEXTDIR)
 gettext.textdomain(APP)
 _ = gettext.gettext
 

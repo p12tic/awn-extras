@@ -38,10 +38,11 @@ import icon
 #Awn stuff
 import sys
 import awn
-from awn.extras import defs, detach
+from awn import extras
+from awn.extras import detach
 
 APP = "awn-extras-applets"
-gettext.bindtextdomain(APP, defs.GETTEXTDIR)
+gettext.bindtextdomain(APP, extras.GETTEXTDIR)
 gettext.textdomain(APP)
 _ = gettext.gettext
 

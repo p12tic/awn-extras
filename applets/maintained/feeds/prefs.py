@@ -32,19 +32,19 @@ import locale
 
 from desktopagnostic.config import GROUP_DEFAULT
 import awn
-from awn.extras import defs
+from awn import extras
 from awn.extras import awnlib
 
 APP = "awn-extras-applets"
-gettext.bindtextdomain(APP, defs.GETTEXTDIR)
+gettext.bindtextdomain(APP, extras.GETTEXTDIR)
 gettext.textdomain(APP)
 _ = gettext.gettext
 
 icon_path = '%s/share/avant-window-navigator/applets/feeds/icons/awn-feeds.svg'
-icon_path = icon_path % defs.PREFIX
+icon_path = icon_path % extras.PREFIX
 
 greader_path = '%s/share/avant-window-navigator/applets/feeds/icons/awn-feeds-greader.svg'
-greader_path = greader_path % defs.PREFIX
+greader_path = greader_path % extras.PREFIX
 
 config_path = '%s/.config/awn/applets/feeds.txt' % os.environ['HOME']
 

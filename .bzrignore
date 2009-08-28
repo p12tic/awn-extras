@@ -54,6 +54,6 @@ po/.intltool-merge-cache
 po/Makefile.in.in
 po/POTFILES
 po/stamp-it
-shared/python/defs.py
+shared/python/__init__.py
 shave/shave
 shave/shave-libtool

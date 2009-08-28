@@ -25,11 +25,11 @@ import pygtk
 pygtk.require("2.0")
 import gtk
 
+from awn import extras
 from awn.extras import awnlib
-from awn.extras import defs
 
 APP = "awn-extras-applets"
-gettext.bindtextdomain(APP, defs.GETTEXTDIR)
+gettext.bindtextdomain(APP, extras.GETTEXTDIR)
 gettext.textdomain(APP)
 _ = gettext.gettext
 
@@ -800,7 +800,7 @@ if __name__ == "__main__":
     awnlib.init_start(MailApplet, {
         "name": _("Mail Applet"),
         "short": "mail",
-        "version": defs.VERSION,
+        "version": extras.VERSION,
         "description": _("An applet to check one's email"),
         "logo": os.path.join(themes_dir, "Tango/read.svg"),
         "author": "Pavel Panchekha",

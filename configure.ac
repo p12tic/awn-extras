@@ -402,7 +402,7 @@ applets/unmaintained/trash/trash.desktop.in
 applets/unmaintained/trasher/Makefile
 applets/unmaintained/trasher/trasher.desktop.in
 po/Makefile.in
-shared/python/defs.py
+shared/python/__init__.py
 shared/python/Makefile
 shave/shave
 shave/shave-libtool

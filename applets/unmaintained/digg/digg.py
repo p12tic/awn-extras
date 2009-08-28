@@ -17,7 +17,8 @@
 
 import os
 import awn
-from awn.extras import awnlib, defs
+from awn import extras
+from awn.extras import awnlib
 import gettext
 import locale
 
@@ -48,7 +49,7 @@ except ImportError:
 awn.check_dependencies(globals(), 'gtkmozembed')
 
 APP = "awn-extras-applets"
-gettext.bindtextdomain(APP, defs.GETTEXTDIR)
+gettext.bindtextdomain(APP, extras.GETTEXTDIR)
 gettext.textdomain(APP)
 _ = gettext.gettext
 

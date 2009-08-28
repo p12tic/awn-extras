@@ -15,378 +15,262 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA.
  *
-*/
-#include <libawn/awn-cairo-utils.h>
-#include <glib/gmacros.h>
-#include <glib/gerror.h>
-#include <gconf/gconf-value.h>
+ */
 
-//#include <awn-applet.h>
-#include "config_entries.h"
-#include <gconf/gconf-client.h>
-#include <glib.h>
 #include <string.h>
-#include <unistd.h>
 #include <stdlib.h>
+#include <unistd.h>
 
+#include <glib.h>
+#include <libawn/libawn.h>
 
+#include "config_entries.h"
 #include "render.h"
 
 Cairo_menu_config G_cairo_menu_conf;
 
 static Cairo_menu_config G_cairo_menu_conf_copy;
 
-static GConfClient *gconf_client;
+static DesktopAgnosticConfigClient *config = NULL;
 
 extern AwnApplet *G_applet;
 
+/* FIXME does not support multiple taskmanagers */
 void append_to_launchers(gchar * launcher)
 {
-  GSList* launcher_list = gconf_client_get_list(gconf_client, "/apps/avant-window-navigator/window_manager/launchers",
-                          GCONF_VALUE_STRING, NULL);
+  GError *err = NULL;
+  DesktopAgnosticConfigClient *taskmanager;
+  GValueArray *launchers;
 
-  if (launcher_list)
+  taskmanager = awn_config_get_default_for_applet_by_info ("taskmanager",
+                                                                  "1", &err);
+  if (err)
   {
-    launcher_list = g_slist_append(launcher_list, launcher);
-    gconf_client_set_list(gconf_client, "/apps/avant-window-navigator/window_manager/launchers",
-                          GCONF_VALUE_STRING, launcher_list, NULL);
+    goto add_to_launchers_error;
+  }
+  launchers = desktop_agnostic_config_client_get_list (config,
+                                                       DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
+                                                       "launcher_paths", &err);
+  if (err)
+  {
+    goto add_to_launchers_error;
+  }
+  else if (launchers)
+  {
+    GValue val;
+
+    g_value_init (&val, G_TYPE_STRING);
+    g_value_set_string (&val, launcher);
+    g_value_array_append(launchers, &val);
+    g_value_unset (&val);
+    desktop_agnostic_config_client_set_list (config,
+                                             DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
+                                             "launcher_paths", launchers, &err);
+    g_value_array_free (launchers);
+    if (err)
+    {
+      goto add_to_launchers_error;
+    }
   }
 
-
+add_to_launchers_error:
+  if (err)
+  {
+    g_critical ("Could not add launcher: %s", err->message);
+    g_error_free (err);
+  }
+  return;
 }
+
+/* returns a new reference */
+static DesktopAgnosticColor*
+config_get_color (DesktopAgnosticConfigClient *cfg, const gchar *key,
+                  GError **error)
+{
+  GValue value;
+  DesktopAgnosticColor *color;
+
+  value = desktop_agnostic_config_client_get_value (cfg,
+                                                    DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
+                                                    key, error);
+  if (!G_VALUE_HOLDS_OBJECT (&value) || (error && *error))
+  {
+    return NULL;
+  }
+  else
+  {
+    color = (DesktopAgnosticColor*)g_value_dup_object (&value);
+    g_value_unset (&value);
+    return color;
+  }
+}
+
+#define config_get_value(prop, type, key) \
+  G_cairo_menu_conf.prop = desktop_agnostic_config_client_get_##type (config, \
+                                                                        DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, \
+                                                                        key, \
+                                                                        &err); \
+  if (err) \
+  { \
+    goto read_config_error; \
+  }
 
 void read_config(void)
 {
-  gchar * svalue;
-  gchar  * tmp;
-  GConfValue*  value;
-  gconf_client = gconf_client_get_default();
-
-  svalue = gconf_client_get_string(gconf_client, GCONF_NORMAL_BG, NULL);
-
-  if (!svalue)
+  GError *err = NULL;
+  GValue *value;
+  config = awn_config_get_default_for_applet (G_applet, &err);
+  if (err)
   {
-    gconf_client_set_string(gconf_client , GCONF_NORMAL_BG, svalue = g_strdup("#DDDDDDEE"), NULL);
+    goto read_config_error;
   }
 
-  G_cairo_menu_conf.normal.bg = desktop_agnostic_color_new_from_string(svalue, NULL);
-
-  g_free(svalue);
-
-  svalue = gconf_client_get_string(gconf_client, GCONF_NORMAL_FG, NULL);
-
-  if (!svalue)
+  G_cairo_menu_conf.normal.bg = config_get_color (config, CONF_NORMAL_BG, &err);
+  if (err)
   {
-    gconf_client_set_string(gconf_client , GCONF_NORMAL_FG, svalue = g_strdup("#000000FF"), NULL);
+    goto read_config_error;
   }
 
-  G_cairo_menu_conf.normal.fg = desktop_agnostic_color_new_from_string(svalue, NULL);
-
-  g_free(svalue);
-
-  svalue = gconf_client_get_string(gconf_client, GCONF_HOVER_BG, NULL);
-
-  if (!svalue)
+  G_cairo_menu_conf.normal.fg = config_get_color (config, CONF_NORMAL_FG, &err);
+  if (err)
   {
-    gconf_client_set_string(gconf_client , GCONF_HOVER_BG, svalue = g_strdup("#0022DDf0"), NULL);
+    goto read_config_error;
   }
 
-  G_cairo_menu_conf.hover.bg = desktop_agnostic_color_new_from_string(svalue, NULL);
-
-  g_free(svalue);
-
-  svalue = gconf_client_get_string(gconf_client, GCONF_HOVER_FG, NULL);
-
-  if (!svalue)
+  G_cairo_menu_conf.hover.bg = config_get_color (config, CONF_HOVER_BG, &err);
+  if (err)
   {
-    gconf_client_set_string(gconf_client , GCONF_HOVER_FG, svalue = g_strdup("#000000FF"), NULL);
+    goto read_config_error;
   }
 
-  G_cairo_menu_conf.hover.fg = desktop_agnostic_color_new_from_string(svalue, NULL);
-
-  g_free(svalue);
-
-  value = gconf_client_get(gconf_client, GCONF_TEXT_SIZE, NULL);
-
-  if (value)
+  G_cairo_menu_conf.hover.fg = config_get_color (config, CONF_HOVER_FG, &err);
+  if (err)
   {
-    G_cairo_menu_conf.text_size = gconf_client_get_int(gconf_client, GCONF_TEXT_SIZE, NULL) ;
-  }
-  else
-  {
-    G_cairo_menu_conf.text_size = 14;
-    gconf_client_set_int(gconf_client, GCONF_TEXT_SIZE, G_cairo_menu_conf.text_size , NULL);
+    goto read_config_error;
   }
 
-  value = gconf_client_get(gconf_client, GCONF_SHOW_SEARCH, NULL);
+  config_get_value (text_size, int, CONF_TEXT_SIZE);
+  config_get_value (show_search, bool, CONF_SHOW_SEARCH);
+  config_get_value (search_cmd, string, CONF_SEARCH_CMD);
 
-  if (value)
+  if (!G_cairo_menu_conf.search_cmd ||
+      g_strcmp0 (G_cairo_menu_conf.search_cmd, "") == 0)
   {
-    G_cairo_menu_conf.show_search = gconf_client_get_bool(gconf_client, GCONF_SHOW_SEARCH, NULL) ;
-  }
-  else
-  {
-    G_cairo_menu_conf.show_search = TRUE;
-    gconf_client_set_bool(gconf_client, GCONF_SHOW_SEARCH, G_cairo_menu_conf.show_search, NULL);
-  }
+    gchar *search_cmd;
 
-  svalue = gconf_client_get_string(gconf_client, GCONF_SEARCH_CMD, NULL);
+    search_cmd = g_find_program_in_path("tracker-search-tool");
 
-  if (!svalue)
-  {
-    svalue = g_find_program_in_path("tracker-search-tool");
-
-    if (!svalue)
+    if (!search_cmd)
     {
-      svalue = g_find_program_in_path("beagle-search");
+      search_cmd = g_find_program_in_path("beagle-search");
     }
 
-    if (!svalue)
+    if (!search_cmd)
     {
-      svalue = g_strdup("terminal -x locate");
-      //gconf_client_set_bool(gconf_client,GCONF_SHOW_SEARCH,FALSE,NULL);
+      search_cmd = g_strdup("terminal -x locate");
     }
 
-    gconf_client_set_string(gconf_client , GCONF_SEARCH_CMD, svalue, NULL);
-
-//    svalue==g_strdup("tracker-search-tool");
-  }
-  else
-  {
-    tmp = svalue;
-    svalue = g_filename_from_utf8(svalue, -1, NULL, NULL, NULL);
-    g_free(tmp);
-  }
-
-  G_cairo_menu_conf.search_cmd = g_strdup(svalue);
-
-  g_free(svalue);
-
-
-  value = gconf_client_get(gconf_client, GCONF_MENU_GRADIENT, NULL);
-
-  if (value)
-  {
-    G_cairo_menu_conf.menu_item_gradient_factor = gconf_client_get_float(gconf_client, GCONF_MENU_GRADIENT, NULL) ;
-  }
-  else
-  {
-    G_cairo_menu_conf.menu_item_gradient_factor = 0.8;
-    gconf_client_set_float(gconf_client, GCONF_MENU_GRADIENT, G_cairo_menu_conf.menu_item_gradient_factor, NULL);
-  }
-
-
-  value = gconf_client_get(gconf_client, GCONF_MENU_ITEM_TEXT_LEN, NULL);
-
-  if (value)
-  {
-    G_cairo_menu_conf.menu_item_text_len = gconf_client_get_int(gconf_client, GCONF_MENU_ITEM_TEXT_LEN, NULL) ;
-  }
-  else
-  {
-    G_cairo_menu_conf.menu_item_text_len = 28;
-    gconf_client_set_int(gconf_client, GCONF_MENU_ITEM_TEXT_LEN, G_cairo_menu_conf.menu_item_text_len, NULL);
-  }
-
-
-  value = gconf_client_get(gconf_client, GCONF_SHOW_RUN, NULL);
-
-  if (value)
-  {
-    G_cairo_menu_conf.show_run = gconf_client_get_bool(gconf_client, GCONF_SHOW_RUN, NULL) ;
-  }
-  else
-  {
-    G_cairo_menu_conf.show_run = TRUE;
-    gconf_client_set_bool(gconf_client, GCONF_SHOW_RUN, G_cairo_menu_conf.show_run, NULL);
-  }
-
-
-  value = gconf_client_get(gconf_client, GCONF_DO_FADE, NULL);
-
-  if (value)
-  {
-    G_cairo_menu_conf.do_fade = gconf_client_get_bool(gconf_client, GCONF_DO_FADE, NULL) ;
-  }
-  else
-  {
-    G_cairo_menu_conf.do_fade = FALSE;
-    gconf_client_set_bool(gconf_client, GCONF_DO_FADE, G_cairo_menu_conf.do_fade, NULL);
-  }
-
-  value = gconf_client_get(gconf_client, GCONF_SHOW_PLACES, NULL);
-
-  if (value)
-  {
-    G_cairo_menu_conf.show_places = gconf_client_get_bool(gconf_client, GCONF_SHOW_PLACES, NULL) ;
-  }
-  else
-  {
-    G_cairo_menu_conf.show_places = TRUE;
-    gconf_client_set_bool(gconf_client, GCONF_SHOW_PLACES, G_cairo_menu_conf.show_places, NULL);
-  }
-
-  svalue = gconf_client_get_string(gconf_client, GCONF_FILEMANAGER, NULL);
-
-  if (!svalue)
-  {
-    svalue = g_find_program_in_path("xdg-open");
-
-    if (!svalue)
+    desktop_agnostic_config_client_set_string (config,
+                                               DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
+                                               CONF_SEARCH_CMD, search_cmd, &err);
+    if (err)
     {
-      svalue = g_find_program_in_path("nautilus");
+      g_free (search_cmd);
+      goto read_config_error;
+    }
+    G_cairo_menu_conf.search_cmd = search_cmd;
+  }
+
+  config_get_value (menu_item_gradient_factor, float, CONF_MENU_GRADIENT);
+  config_get_value (menu_item_text_len, int, CONF_MENU_ITEM_TEXT_LEN);
+  config_get_value (show_run, bool, CONF_SHOW_RUN);
+  config_get_value (do_fade, bool, CONF_DO_FADE);
+  config_get_value (show_places, bool, CONF_SHOW_PLACES);
+  config_get_value (filemanager, string, CONF_FILEMANAGER);
+
+  if (!G_cairo_menu_conf.filemanager ||
+      g_strcmp0 (G_cairo_menu_conf.filemanager, "") == 0)
+  {
+    gchar *filemanager;
+
+    filemanager = g_find_program_in_path("xdg-open");
+
+    if (!filemanager)
+    {
+      filemanager = g_find_program_in_path("nautilus");
     }
 
-    if (!svalue)
+    if (!filemanager)
     {
-      svalue = g_strdup("thunar");
-      //gconf_client_set_bool(gconf_client,GCONF_SHOW_SEARCH,FALSE,NULL);
-    }
-    else
-    {
-      svalue = g_strdup("xdg-open");
+      filemanager = g_find_program_in_path ("thunar");
     }
 
-    gconf_client_set_string(gconf_client , GCONF_FILEMANAGER, svalue, NULL);
-  }
-  else
-  {
-    tmp = svalue;
-    svalue = g_filename_from_utf8(svalue, -1, NULL, NULL, NULL);
-    g_free(tmp);
-  }
+    if (!filemanager)
+    {
+      /* give up, they need xdg-open. */
+      filemanager = g_strdup ("xdg-open");
+    }
 
-  G_cairo_menu_conf.filemanager = strdup(svalue);
-
-  g_free(svalue);
-
-
-  svalue = gconf_client_get_string(gconf_client, GCONF_APPLET_ICON, NULL);
-
-  if (!svalue)
-  {
-    gconf_client_set_string(gconf_client , GCONF_APPLET_ICON, svalue = g_strdup("gnome-main-menu"), NULL);
+    desktop_agnostic_config_client_set_string (config,
+                                               DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
+                                               CONF_FILEMANAGER, filemanager,
+                                               &err);
+    if (err)
+    {
+      g_free (filemanager);
+      goto read_config_error;
+    }
+    G_cairo_menu_conf.filemanager = filemanager;
   }
 
-  G_cairo_menu_conf.applet_icon = strdup(svalue);
+  config_get_value (applet_icon, string, CONF_APPLET_ICON);
+  config_get_value (on_button_release, bool, CONF_ON_BUTTON_RELEASE);
+  config_get_value (show_tooltips, bool, CONF_SHOW_TOOLTIPS);
+  config_get_value (logout, string, CONF_LOGOUT);
 
-  g_free(svalue);
-
-
-  value = gconf_client_get(gconf_client, GCONF_ON_BUTTON_RELEASE, NULL);
-
-  if (value)
+  if (!G_cairo_menu_conf.logout ||
+      g_strcmp0 (G_cairo_menu_conf.logout, "") == 0)
   {
-    G_cairo_menu_conf.on_button_release = gconf_client_get_bool(gconf_client, GCONF_ON_BUTTON_RELEASE, NULL) ;
-  }
-  else
-  {
-    G_cairo_menu_conf.on_button_release = TRUE;
-    gconf_client_set_bool(gconf_client, GCONF_ON_BUTTON_RELEASE, G_cairo_menu_conf.on_button_release, NULL);
-  }
+    gchar *logout;
 
-  value = gconf_client_get(gconf_client, GCONF_SHOW_TOOLTIPS, NULL);
+    logout = g_find_program_in_path("closure");
 
-  if (value)
-  {
-    G_cairo_menu_conf.show_tooltips = gconf_client_get_bool(gconf_client, GCONF_SHOW_TOOLTIPS, NULL) ;
-  }
-  else
-  {
-    G_cairo_menu_conf.show_tooltips = TRUE;
-    gconf_client_set_bool(gconf_client, GCONF_SHOW_TOOLTIPS, G_cairo_menu_conf.show_tooltips, NULL);
-  }
-
-  svalue = gconf_client_get_string(gconf_client, GCONF_LOGOUT, NULL);
-
-  if (!svalue)
-  {
-
-    svalue = g_find_program_in_path("closure");
-
-    if (!svalue)
+    if (!logout)
     {
 
-      svalue = g_find_program_in_path("gnome-session-save");
+      logout = g_find_program_in_path("gnome-session-save");
 
-      if (svalue)
+      if (logout)
       {
-        tmp = svalue;
-        svalue = g_strdup("gnome-session-save --kill");
-        g_free(tmp);
+        g_free (logout);
+        logout = g_strdup("gnome-session-save --kill");
       }
-
-      if (!svalue)
+      else
       {
-        svalue = g_strdup("closure");
+        logout = g_strdup("closure");
       }
     }
 
-    gconf_client_set_string(gconf_client , GCONF_LOGOUT, svalue, NULL);
+    desktop_agnostic_config_client_set_string(config,
+                                              DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
+                                              CONF_LOGOUT, logout, &err);
+    if (err)
+    {
+      g_free (logout);
+      goto read_config_error;
+    }
+    G_cairo_menu_conf.logout = logout;
   }
-  else
+
+  config_get_value (show_logout, bool, CONF_SHOW_LOGOUT);
+  config_get_value (border_width, int, CONF_BORDER_WIDTH);
+  G_cairo_menu_conf.border_colour = config_get_color (config, CONF_BORDER_COLOUR, &err);
+  if (err)
   {
-    tmp = svalue;
-    svalue = g_filename_from_utf8(svalue, -1, NULL, NULL, NULL);
-    g_free(tmp);
+    goto read_config_error;
   }
 
-  G_cairo_menu_conf.logout = g_strdup(svalue);
-
-  g_free(svalue);
-
-
-  value = gconf_client_get(gconf_client, GCONF_SHOW_LOGOUT, NULL);
-
-  if (value)
-  {
-    G_cairo_menu_conf.show_logout = gconf_client_get_bool(gconf_client, GCONF_SHOW_LOGOUT, NULL) ;
-  }
-  else
-  {
-    G_cairo_menu_conf.show_logout = FALSE;
-    gconf_client_set_bool(gconf_client, GCONF_SHOW_LOGOUT, G_cairo_menu_conf.show_logout, NULL);
-  }
-
-
-  value = gconf_client_get(gconf_client, GCONF_BORDER_WIDTH, NULL);
-
-  if (value)
-  {
-    G_cairo_menu_conf.border_width = gconf_client_get_int(gconf_client, GCONF_BORDER_WIDTH, NULL) ;
-  }
-  else
-  {
-    G_cairo_menu_conf.border_width = 1;
-    gconf_client_set_int(gconf_client, GCONF_BORDER_WIDTH, G_cairo_menu_conf.border_width, NULL);
-  }
-
-  svalue = gconf_client_get_string(gconf_client, GCONF_BORDER_COLOUR, NULL);
-
-  if (!svalue)
-  {
-    gconf_client_set_string(gconf_client , GCONF_BORDER_COLOUR, svalue = g_strdup("#11111133"), NULL);
-  }
-
-  G_cairo_menu_conf.border_colour = desktop_agnostic_color_new_from_string(svalue, NULL);
-
-  g_free(svalue);
-
-
-  value = gconf_client_get(gconf_client, GCONF_HONOUR_GTK, NULL);
-
-  if (value)
-  {
-    G_cairo_menu_conf.honour_gtk = gconf_client_get_bool(gconf_client, GCONF_HONOUR_GTK, NULL) ;
-  }
-  else
-  {
-    G_cairo_menu_conf.honour_gtk = TRUE;
-    gconf_client_set_bool(gconf_client, GCONF_HONOUR_GTK, G_cairo_menu_conf.honour_gtk, NULL);
-  }
-
-
-
+  config_get_value (honour_gtk, bool, CONF_HONOUR_GTK);
   if (G_cairo_menu_conf.honour_gtk)
   {
     GtkWidget *top_win = GTK_WIDGET(G_applet);
@@ -406,84 +290,121 @@ void read_config(void)
     G_cairo_menu_conf.menu_item_gradient_factor = 1.0;
   }
 
+read_config_error:
+  if (err)
+  {
+    g_critical ("Could not read the configuration in its entirety: %s",
+                err->message);
+    g_error_free (err);
+  }
+  return;
 }
 
+static void
+config_set_color (DesktopAgnosticConfigClient *cfg, const gchar *key,
+                  DesktopAgnosticColor *color, GError **error)
+{
+  GValue value;
 
-/*
+  g_value_init (&value, DESKTOP_AGNOSTIC_TYPE_COLOR);
+  g_value_set_object (&value, color);
 
+  desktop_agnostic_config_client_set_value (cfg,
+                                            DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
+                                            key, &value, error);
+  g_value_unset (&value);
+}
 
-
-#define GCONF_APPLET_ICON GCONF_MENU "/applet_icon"
-
-#define GCONF_ON_BUTTON_RELEASE GCONF_MENU "/activate_on_release"
-
-*/
+#define config_set_value(prop, type, key) \
+  desktop_agnostic_config_client_set_##type (config, \
+                                             DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, \
+                                             key, G_cairo_menu_conf.prop, \
+                                             &err); \
+  if (err) \
+  { \
+    goto _save_config_error; \
+  }
 
 static void _save_config(void)
 {
-  gchar * svalue;
+  GError *err = NULL;
 
-  gconf_client = gconf_client_get_default();
+  config_set_color (config, CONF_NORMAL_BG, G_cairo_menu_conf.normal.bg, &err);
+  if (err)
+  {
+    goto _save_config_error;
+  }
 
-  svalue = desktop_agnostic_color_to_string(G_cairo_menu_conf.normal.bg);
-  gconf_client_set_string(gconf_client , GCONF_NORMAL_BG, svalue, NULL);
-  g_free(svalue);
+  config_set_color (config, CONF_NORMAL_FG, G_cairo_menu_conf.normal.fg, &err);
+  if (err)
+  {
+    goto _save_config_error;
+  }
 
-  svalue = desktop_agnostic_color_to_string(G_cairo_menu_conf.normal.fg);
-  gconf_client_set_string(gconf_client , GCONF_NORMAL_FG, svalue, NULL);
-  g_free(svalue);
+  config_set_color (config, CONF_HOVER_BG, G_cairo_menu_conf.hover.bg, &err);
+  if (err)
+  {
+    goto _save_config_error;
+  }
 
-  svalue = desktop_agnostic_color_to_string(G_cairo_menu_conf.hover.bg);
-  gconf_client_set_string(gconf_client , GCONF_HOVER_BG, svalue, NULL);
-  g_free(svalue);
+  config_set_color (config, CONF_HOVER_FG, G_cairo_menu_conf.hover.fg, &err);
+  if (err)
+  {
+    goto _save_config_error;
+  }
 
-  svalue = desktop_agnostic_color_to_string(G_cairo_menu_conf.hover.fg);
-  gconf_client_set_string(gconf_client, GCONF_HOVER_FG, svalue, NULL);
-  g_free(svalue);
+  config_set_value (text_size, int, CONF_TEXT_SIZE);
 
-  gconf_client_set_int(gconf_client, GCONF_TEXT_SIZE, G_cairo_menu_conf.text_size , NULL);
+  config_set_value (show_search, bool, CONF_SHOW_SEARCH);
 
-  gconf_client_set_bool(gconf_client, GCONF_SHOW_SEARCH, G_cairo_menu_conf.show_search, NULL);
+  config_set_value (search_cmd, string, CONF_SEARCH_CMD);
 
-  gconf_client_set_string(gconf_client ,  G_cairo_menu_conf.search_cmd, svalue, NULL);
+  config_set_value (menu_item_gradient_factor, float, CONF_MENU_GRADIENT);
 
-  gconf_client_set_float(gconf_client, GCONF_MENU_GRADIENT, G_cairo_menu_conf.menu_item_gradient_factor, NULL);
+  config_set_value (menu_item_text_len, int, CONF_MENU_ITEM_TEXT_LEN);
 
-  gconf_client_set_int(gconf_client, GCONF_MENU_ITEM_TEXT_LEN, G_cairo_menu_conf.menu_item_text_len, NULL);
+  config_set_value (show_run, bool, CONF_SHOW_RUN);
 
-  gconf_client_set_bool(gconf_client, GCONF_SHOW_RUN, G_cairo_menu_conf.show_run, NULL);
+  config_set_value (do_fade, bool, CONF_DO_FADE);
 
-  gconf_client_set_bool(gconf_client, GCONF_DO_FADE, G_cairo_menu_conf.do_fade, NULL);
+  config_set_value (show_places, bool, CONF_SHOW_PLACES);
 
-  gconf_client_set_bool(gconf_client, GCONF_SHOW_PLACES, G_cairo_menu_conf.show_places, NULL);
+  config_set_value (filemanager, string, CONF_FILEMANAGER);
 
-  gconf_client_set_string(gconf_client , GCONF_FILEMANAGER, G_cairo_menu_conf.filemanager, NULL);
+  config_set_value (applet_icon, string, CONF_APPLET_ICON);
 
-  gconf_client_set_string(gconf_client , GCONF_APPLET_ICON, G_cairo_menu_conf.applet_icon, NULL);
+  config_set_value (on_button_release, bool, CONF_ON_BUTTON_RELEASE);
 
-  gconf_client_set_bool(gconf_client, GCONF_ON_BUTTON_RELEASE, G_cairo_menu_conf.on_button_release, NULL);
+  config_set_value (honour_gtk, bool, CONF_HONOUR_GTK);
 
-  gconf_client_set_bool(gconf_client, GCONF_HONOUR_GTK, G_cairo_menu_conf.honour_gtk, NULL);
+  config_set_value (show_tooltips, bool, CONF_SHOW_TOOLTIPS);
 
-  gconf_client_set_bool(gconf_client, GCONF_SHOW_TOOLTIPS, G_cairo_menu_conf.show_tooltips, NULL);
+  config_set_value (show_logout, bool, CONF_SHOW_LOGOUT);
 
-  gconf_client_set_bool(gconf_client, GCONF_SHOW_LOGOUT, G_cairo_menu_conf.show_logout, NULL);
+  config_set_value (logout, string, CONF_LOGOUT);
 
-  gconf_client_set_string(gconf_client , GCONF_LOGOUT, G_cairo_menu_conf.logout, NULL);
+  config_set_value (border_width, int, CONF_BORDER_WIDTH);
 
-  gconf_client_set_int(gconf_client, GCONF_BORDER_WIDTH, G_cairo_menu_conf.border_width, NULL);
+  config_set_color (config, CONF_BORDER_COLOUR, G_cairo_menu_conf.border_colour,
+                    &err);
+  if (err)
+  {
+    goto _save_config_error;
+  }
 
-  svalue = desktop_agnostic_color_to_string(G_cairo_menu_conf.border_colour);
-  gconf_client_set_string(gconf_client , GCONF_BORDER_COLOUR, svalue, NULL);
-  g_free(svalue);
-
+_save_config_error:
+  if (err)
+  {
+    g_critical ("Could not save the configuration in its entirety: %s",
+                err->message);
+    g_error_free (err);
+  }
 }
 
 static gboolean _press_ok(GtkWidget *widget, GdkEventButton *event, GtkWidget * win)
 {
   _save_config();
   gtk_widget_destroy(win);
-  g_object_unref(gconf_client) ;
   GError *err = NULL;
   GtkWidget *dialog, *label;
 
@@ -800,3 +721,4 @@ void show_prefs(void)
 
 }
 
+// vim:ts=2:sts=2:sw=2:et:ai:cindent

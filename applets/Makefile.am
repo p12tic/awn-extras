@@ -15,7 +15,6 @@ if WITH_GNOME
 # --with-gnome --with-gconf
 CONDITIONAL_APPLETS += \
 	maintained/awnsystemmonitor \
-	maintained/cairo-menu \
 	$(NULL)
 endif
 # --with-gconf
@@ -28,6 +27,7 @@ endif
 # --with-gnome
 if WITH_GNOME
 CONDITIONAL_APPLETS += \
+	maintained/cairo-menu \
 	unmaintained/main-menu \
 	unmaintained/MiMenu \
 	unmaintained/pandora \

@@ -30,12 +30,6 @@ usr/share/avant-window-navigator/applets/shinyswitcher.desktop
 usr/share/avant-window-navigator/schemas/awn-applet-shinyswitcher.schema-ini
 etc/gconf/schemas/awn-applet-shinyswitcher.schemas
 #
-# Notification area
-#
-usr/lib/awn/applets/notification-area/*.so
-usr/share/avant-window-navigator/applets/notification-area.desktop
-usr/share/icons/hicolor/scalable/apps/notification-area.svg
-#
 # Places
 #
 usr/lib/awn/applets/places/*.so 
@@ -47,6 +41,12 @@ etc/gconf/schemas/awn-applet-places.schemas
 # Disabled applets #
 ####################
 #
+#
+# Notification area
+#
+#usr/lib/awn/applets/notification-area/*.so
+#usr/share/avant-window-navigator/applets/notification-area.desktop
+#usr/share/icons/hicolor/scalable/apps/notification-area.svg
 #usr/lib/awn/applets/separator/*.so
 #usr/lib/awn/applets/plugger/*.so
 #usr/lib/awn/applets/trash/*.so

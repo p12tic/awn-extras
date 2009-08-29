@@ -63,10 +63,10 @@ usr/share/avant-window-navigator/applets/media-control.desktop
 #
 # Mount
 #
-usr/share/avant-window-navigator/applets/mount-applet/*.py
-usr/share/avant-window-navigator/applets/mount-applet/*.ui
-usr/share/avant-window-navigator/applets/mount-applet/icons/*.png
-usr/share/avant-window-navigator/applets/mount-applet.desktop
+usr/share/avant-window-navigator/applets/mount/*.py
+usr/share/avant-window-navigator/applets/mount/*.ui
+usr/share/avant-window-navigator/applets/mount/icons/*.png
+usr/share/avant-window-navigator/applets/mount.desktop
 #
 # Quit applet
 #

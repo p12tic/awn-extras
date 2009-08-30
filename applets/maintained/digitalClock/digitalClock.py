@@ -80,7 +80,7 @@ class App(awn.AppletSimple):
     def startEvolution(self, cal):
         date = cal.get_date()
         cmd = 'evolution calendar:///?startdate=%02d%02d%02dT120000' % \
-              (da[0], da[1] + 1, da[2])
+              (date[0], date[1] + 1, date[2])
         subprocess.Popen(cmd, shell=True)
 
 if __name__ == '__main__':

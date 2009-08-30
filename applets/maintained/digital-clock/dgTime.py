@@ -38,6 +38,16 @@ class dgTime:
             self.update_clock()
             return True
         self.applet.connect('map-event', on_map_event)
+        self.prefs.connect('notify', self.on_prefs_changed)
+
+    def on_prefs_changed(self, prefs, pspec):
+        if pspec.name == 'date-before-time':
+            if self.surface is not None:
+                self.surface.finish()
+                self.surface = None
+            if self.context is not None:
+                self.context = None
+        self.draw_clock()
 
     def update_clock(self):
         time_string = self.get_time_string()

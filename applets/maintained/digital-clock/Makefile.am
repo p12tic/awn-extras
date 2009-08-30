@@ -7,5 +7,4 @@ include $(top_srcdir)/Makefile.schemas
 dist_applet_DATA =	\
 	dgClockPref.py	\
 	dgTime.py	\
-	pref.glade	\
 	$(NULL)

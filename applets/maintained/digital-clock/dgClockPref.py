@@ -15,13 +15,13 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
 
 import os
+import re
 import subprocess
 import time
 
 import gobject
 from desktopagnostic import Color, config
 import gtk
-from gtk import glade
 import awn
 
 
@@ -58,9 +58,6 @@ class ClockPrefs(gobject.GObject):
         'font_shadow_color': 0xcccc
         }
 
-    # glade path
-    glade_path = os.path.join((os.path.dirname(__file__)), 'pref.glade')
-
     pref_map = {
       'dbt': 'date-before-time',
       'hour12': 'twelve-hour',
@@ -87,6 +84,7 @@ class ClockPrefs(gobject.GObject):
         self.panel_config.bind('panel', 'size', self, 'panel_size', True,
                                config.BIND_METHOD_FALLBACK)
         self.menu = self.build_menu()
+        self.window = None
 
     def build_image_menu_item(self, menu, icon_name, activate_callback, label=None):
         if label is None:
@@ -116,38 +114,15 @@ class ClockPrefs(gobject.GObject):
         return popup_menu
 
     def show_prefs(self, widget):
-        if not hasattr(self, 'wTree'):
-            self.create_prefs_dialog()
+        if self.window is None:
+            self.window = PrefsDialog(self)
         self.window.show_all()
 
-    def create_prefs_dialog(self):
-        self.wTree = glade.XML(self.glade_path)
-        self.window = self.wTree.get_widget('main_window')
-
-        close = self.wTree.get_widget('close_button')
-        close.connect('clicked', self.close_prefs)
-
-        font_btn = self.wTree.get_widget('fontface')
-        font_btn.set_font_name(self.prefs['fontFace'])
-        font_btn.connect('font-set', self.font_changed, 'font_face')
-
-        color_btn = self.wTree.get_widget('fontcolor')
-        color_btn.set_color(self.prefs['fontColor'])
-        color_btn.connect('color-set', self.color_changed, 'font_color')
-
-        scolor_btn = self.wTree.get_widget('shadowcolor')
-        scolor_btn.set_color(self.prefs['fontShadowColor'])
-        scolor_btn.set_use_alpha(False) # Not used yet
-        scolor_btn.connect('color-set', self.color_changed,
-                           'font_shadow_color')
-
-        h12 = self.wTree.get_widget('hour12')
-        h12.set_active(self.props.twelve_hour)
-        h12.connect('toggled', self.set_bool, 'hour12')
-
-        tbd = self.wTree.get_widget('timebesidedate')
-        tbd.set_active(self.prefs['dateBeforeTime'])
-        tbd.connect('toggled', self.set_bool, 'dbt')
+    def color_changed(self, color_btn, prop):
+        # alpha is not used yet
+        #clr = Color(color_btn.get_color(), color_btn.get_alpha())
+        clr = Color(color_btn.get_color(), self.__alpha[prop])
+        setattr(self.props, prop, clr)
 
     def copy_date(self, widget):
         cb = gtk.Clipboard()
@@ -166,26 +141,98 @@ class ClockPrefs(gobject.GObject):
     def time_admin(self, widget):
         subprocess.Popen('gksudo time-admin', shell=True)
 
-    def close_prefs(self, btn):
-        self.window.hide_all()
 
-    def set_bool(self, check, prop):
-        setattr(self.props, prop, check.get_active())
+class HFrame(gtk.Frame):
+    def __init__(self, label=None):
+        super(HFrame, self).__init__(label)
+        self.hbox = gtk.HBox(5, False)
+        super(HFrame, self).add(self.hbox)
+
+    def add(self, child):
+        self.hbox.add(child)
+
+
+def mnemonic_label(mnemonic, widget):
+    label = gtk.Label()
+    label.set_text_with_mnemonic(mnemonic)
+    label.set_mnemonic_widget(widget)
+    return label
+
+
+class PrefsDialog(gtk.Dialog):
+    def __init__(self, prefs):
+        title = '%s Preferences' % prefs.applet.props.display_name
+        super(PrefsDialog, self).__init__(title, prefs.applet)
+        self.prefs = prefs
+        self.font_replace = None
+        self.create_ui()
+        # action button
+        self.add_button(gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE)
+        self.connect('response', lambda dialog, response: dialog.hide())
+
+    def create_ui(self):
+        table = gtk.Table(5, 2)
+        table.props.row_spacing = 5
+        table.props.column_spacing = 5
+        # * font face
+        text_font_button = gtk.FontButton(self.prefs.props.font_face)
+        text_font_button.connect('font-set', self.font_changed, 'font_face')
+        text_font_label = mnemonic_label('Font _Face:', text_font_button)
+        table.attach(text_font_label, 0, 1, 0, 1)
+        table.attach(text_font_button, 1, 2, 0, 1)
+        # * font color
+        text_color = gtk.gdk.Color()
+        self.prefs.props.font_color.get_color(text_color)
+        text_color_button = gtk.ColorButton(text_color)
+        text_color_button.connect('color-set', self.prefs.color_changed,
+                                  'font_color')
+        # TODO enable alpha support
+        text_color_label = mnemonic_label('Font _Color:', text_color_button)
+        table.attach(text_color_label, 0, 1, 1, 2)
+        table.attach(text_color_button, 1, 2, 1, 2)
+        # * font shadow color
+        text_shadow_color = gtk.gdk.Color()
+        self.prefs.props.font_shadow_color.get_color(text_shadow_color)
+        text_shadow_color_button = gtk.ColorButton(text_shadow_color)
+        text_shadow_color_button.connect('color-set', self.prefs.color_changed,
+                                         'font_shadow_color')
+        # TODO enable alpha support
+        text_shadow_color_label = mnemonic_label('Font _Shadow Color:',
+                                                 text_color_button)
+        table.attach(text_shadow_color_label, 0, 1, 2, 3)
+        table.attach(text_shadow_color_button, 1, 2, 2, 3)
+        # * clock type: 12/24 hour
+        clock_type_frame = HFrame('Clock Type')
+        clock_type_12 = gtk.RadioButton(label='_12 Hour')
+        clock_type_frame.add(clock_type_12)
+        clock_type_12.connect('toggled', self.radiobutton_changed,
+                              'twelve_hour')
+        clock_type_24 = gtk.RadioButton(clock_type_12, '_24 Hour')
+        clock_type_frame.add(clock_type_24)
+        clock_type_24.props.active = not self.prefs.props.twelve_hour
+        table.attach(clock_type_frame, 0, 2, 3, 4)
+        # * clock style: time beside date
+        clock_style_frame = HFrame('Date Position')
+        clock_style_side = gtk.RadioButton(label='_Left')
+        clock_style_frame.add(clock_style_side)
+        clock_style_side.connect('toggled', self.radiobutton_changed,
+                                 'date_before_time')
+        clock_style_bottom = gtk.RadioButton(clock_style_side, '_Bottom')
+        clock_style_frame.add(clock_style_bottom)
+        clock_style_bottom.props.active = not self.prefs.props.date_before_time
+        table.attach(clock_style_frame, 0, 2, 4, 5)
+        self.vbox.add(table)
+
+    def radiobutton_changed(self, check, prop):
+        setattr(self.prefs.props, prop, check.get_active())
 
     def font_changed(self, font_btn, prop):
         font = self.clean_font_name(font_btn.get_font_name())
-        setattr(self.props, prop, font)
+        setattr(self.prefs.props, prop, font)
 
-    def color_changed(self, color_btn, prop):
-        # alpha is not used yet
-        #clr = Color(color_btn.get_color(), color_btn.get_alpha())
-        clr = Color(color_btn.get_color(), self.__alpha[prop])
-        setattr(self.props, prop, clr)
-
-    def clean_font_name(self, fontface):
-        rem = ['Condensed', 'Book', 'Oblique', 'Bold', 'Italic', 'Regular',
-               'Medium', 'Light']
-        for r in rem:
-            fontface = fontface.replace(r, '')
-            fontface = fontface.rstrip('0123456789 ')
-        return fontface
+    def clean_font_name(self, font_face):
+        if self.font_replace is None:
+            attrs = ['Condensed', 'Book', 'Oblique', 'Bold', 'Italic',
+                     'Regular', 'Medium', 'Light']
+            self.font_replace = re.compile('(?:%s ?)*[\d ]*$' % '|'.join(attrs))
+        return self.font_replace.sub('', font_face)

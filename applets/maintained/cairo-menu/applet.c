@@ -29,8 +29,6 @@
 #include <string.h>
 #include "render.h"
 
-#define APPLET_NAME "cairo_main_menu"
-
 #include "backend-gnome.h"
 #include "menu.h"
 

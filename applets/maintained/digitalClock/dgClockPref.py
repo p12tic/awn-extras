@@ -27,6 +27,8 @@ import awn
 
 class ClockPrefs(gobject.GObject):
 
+    # not using gobject.property because of
+    # http://bugzilla.gnome.org/show_bug.cgi?id=593241
     __gproperties__ = {
         'date_before_time': (bool, 'date before time',
                              'Whether to show the date next to the time, instead of below it.',

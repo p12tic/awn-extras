@@ -15,18 +15,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+import sys
+
 import pygst
 pygst.require("0.10")
 import gst
 import gtk
-import gtk.glade
-import os
 import gobject
-import sys
 
 import awn
 from desktopagnostic import config
-from desktopagnostic.config import GROUP_DEFAULT
 
 class MediaPlayerApplet(awn.AppletSimple):
     """Displays a dialog with controls and track/album info and art"""
@@ -107,7 +106,7 @@ class MediaPlayerApplet(awn.AppletSimple):
         bus.connect("sync-message::element", self.OnGstSyncMessage)
 
         # Defining Widgets
-        self.vbox = gtk.VBox()
+        self.vbox = gtk.VBox(spacing=6)
         self.da = gtk.DrawingArea()
         self.da.set_size_request(self.video_width, self.video_height)
         self.da.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#000"))
@@ -121,6 +120,7 @@ class MediaPlayerApplet(awn.AppletSimple):
         self.button_stop.connect("clicked", self.button_stop_cb)
         # Packing Widgets
         self.hbbox = gtk.HButtonBox()
+        self.hbbox.set_spacing(2)
         self.hbbox.pack_start(self.button_play)
         self.hbbox.pack_start(self.button_stop)
         self.vbox.add(self.hbbox)
@@ -169,11 +169,11 @@ class MediaPlayerApplet(awn.AppletSimple):
         self.recent_items_menu.show_all()
         self.recent.set_submenu(self.recent_items_menu)
 
-        self.client.set_list(GROUP_DEFAULT, "recent_items", self.recentItems)
+        self.client.set_list(config.GROUP_DEFAULT, "recent_items", self.recentItems)
 
     def keyPressed(self, widget, event):
         if event.keyval == gtk.keysyms.Escape:
-            if self.full_window != None: self.toggleFullscreen()
+            if self.full_window is not None: self.toggleFullscreen()
             return True
         elif event.keyval == gtk.keysyms.space:
             self.play_pause()
@@ -193,7 +193,7 @@ class MediaPlayerApplet(awn.AppletSimple):
         return False
 
     def toggleFullscreen(self):
-        if self.full_window == None:
+        if self.full_window is None:
             self.full_window = gtk.Window()
             self.full_window.connect("destroy", self.fullscreenDestroy)
             self.full_window.connect("hide", self.fullscreenHide)
@@ -275,7 +275,7 @@ class MediaPlayerApplet(awn.AppletSimple):
             self.showApplet()
 
     def menu_popup(self, widget, event):
-            self.popup_menu.popup(None, None, None, event.button, event.time)
+        self.popup_menu.popup(None, None, None, event.button, event.time)
 
     def button_press(self, widget, event):
         if event.button == 2:
@@ -304,10 +304,10 @@ class MediaPlayerApplet(awn.AppletSimple):
         }
 
         for key, prop_name in config_map.iteritems():
-            self.client.bind(GROUP_DEFAULT, key, self, prop_name, False,
+            self.client.bind(config.GROUP_DEFAULT, key, self, prop_name, False,
                              config.BIND_METHOD_FALLBACK)
 
-        self.recentItems = self.client.get_list(GROUP_DEFAULT, "recent_items")
+        self.recentItems = self.client.get_list(config.GROUP_DEFAULT, "recent_items")
 
         self.connect("notify::video-width", self.resize_video_widget)
         self.connect("notify::video-height", self.resize_video_widget)
@@ -365,21 +365,22 @@ class MediaPlayerApplet(awn.AppletSimple):
         self.stop()
 
     def show_prefs(self, widget):
-        glade_path =  os.path.join(os.path.dirname(__file__),
-                                   "media-player-prefs.glade")
-        wTree = gtk.glade.XML(glade_path)
+        ui_path =  os.path.join(os.path.dirname(__file__),
+                                   "media-player-prefs.ui")
+        wTree = gtk.Builder()
+        wTree.add_from_file(ui_path)
 
-        window = wTree.get_widget("dialog1")
+        window = wTree.get_object("dialog1")
         window.set_icon(self.get_icon().get_icon_at_size(48))
 
         self.sinkChanged = False
         def sink_changed(widget):
             self.sinkChanged = True
 
-        vidEntry = wTree.get_widget("videoSinkEntry")
+        vidEntry = wTree.get_object("videoSinkEntry")
         vidEntry.set_text(self.video_sink)
         vidEntry.connect("changed", sink_changed)
-        auEntry = wTree.get_widget("audioSinkEntry")
+        auEntry = wTree.get_object("audioSinkEntry")
         auEntry.set_text(self.audio_sink)
         auEntry.connect("changed", sink_changed)
 
@@ -387,10 +388,10 @@ class MediaPlayerApplet(awn.AppletSimple):
             if isWidth: self.video_width = widget.get_value()
             else: self.video_height = widget.get_value()
 
-        wSpin = wTree.get_widget("widthSpin")
+        wSpin = wTree.get_object("widthSpin")
         wSpin.set_value(self.video_width)
         wSpin.connect("value-changed", size_changed, True)
-        hSpin = wTree.get_widget("heightSpin")
+        hSpin = wTree.get_object("heightSpin")
         hSpin.set_value(self.video_height)
         hSpin.connect("value-changed", size_changed, False)
 
@@ -404,7 +405,7 @@ class MediaPlayerApplet(awn.AppletSimple):
                 self.audio_sink = tuple[2].get_text()
             win.destroy()
 
-        close = wTree.get_widget("closeButton")
+        close = wTree.get_object("closeButton")
         close.connect("clicked", prefs_closed, (window, vidEntry, auEntry))
 
         window.show()

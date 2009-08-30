@@ -4,7 +4,7 @@ include $(top_srcdir)/Makefile.python-applet
 include $(top_srcdir)/Makefile.schemas
 
 dist_applet_DATA =			\
-	media-player-prefs.glade	\
+	media-player-prefs.ui	\
 	COPYING				\
 	$(NULL)
 

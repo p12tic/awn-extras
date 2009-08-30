@@ -1,17 +1,16 @@
 #!/usr/bin/python
-
-# Copyright (c) 2008 Michal Hruby <michal.mhr at gmail.com>
+# Copyright (c)  2008 - 2009 Michal Hruby <michal.mhr at gmail.com>
 # Thanks for inspiration from media-control appplet by im-tehk.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, version 2 of the License.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -27,10 +26,11 @@ import gobject
 import awn
 from desktopagnostic import config
 
+
 class MediaPlayerApplet(awn.AppletSimple):
     """Displays a dialog with controls and track/album info and art"""
 
-    audio_sink = gobject.property(type=str, nick='Audio Sink', 
+    audio_sink = gobject.property(type=str, nick='Audio Sink',
                                   blurb='Name of audio sink to use',
                                   default='autoaudiosink')
     video_sink = gobject.property(type=str, nick='Video Sink',
@@ -43,10 +43,11 @@ class MediaPlayerApplet(awn.AppletSimple):
                                     blurb='Height of the video window',
                                     default=120)
     # PyGObject doesn't have BOXED support implemented
-    #recent_items = gobject.property(type=gobject.TYPE_BOXED, 
-    #                                nick='Recent Items')
+    # recent_items = gobject.property(type=gobject.TYPE_BOXED,
+    #                                 nick='Recent Items')
 
     APPLET_NAME = "Media Player Applet"
+
     def __init__(self, uid, panel_id):
         """Creating the applets core"""
         awn.AppletSimple.__init__(self, "media-player", uid, panel_id)
@@ -152,7 +153,8 @@ class MediaPlayerApplet(awn.AppletSimple):
         self.play_pause()
 
     def updateRecent(self, uri):
-        if self.recentItems.count(uri) > 0: return
+        if self.recentItems.count(uri) > 0:
+            return
 
         if len(self.recentItems) < 5:
             self.recentItems.insert(0, uri)
@@ -161,7 +163,8 @@ class MediaPlayerApplet(awn.AppletSimple):
             self.recentItems.insert(0, uri)
 
         menu_items = self.recent_items_menu.get_children()
-        for item in menu_items: self.recent_items_menu.remove(item)
+        for item in menu_items:
+            self.recent_items_menu.remove(item)
         for item in self.recentItems:
             menu_item = gtk.MenuItem(item)
             menu_item.connect("activate", self.playItem)
@@ -173,7 +176,8 @@ class MediaPlayerApplet(awn.AppletSimple):
 
     def keyPressed(self, widget, event):
         if event.keyval == gtk.keysyms.Escape:
-            if self.full_window is not None: self.toggleFullscreen()
+            if self.full_window is not None:
+                self.toggleFullscreen()
             return True
         elif event.keyval == gtk.keysyms.space:
             self.play_pause()
@@ -258,7 +262,9 @@ class MediaPlayerApplet(awn.AppletSimple):
 
     def OnGstSyncMessage(self, bus, message, data = None):
         # careful here it's different thread
-        if message.structure is None: return
+        if message.structure is None:
+            return
+
         message_name = message.structure.get_name()
         if message_name == "prepare-xwindow-id":
             self.isVideo = True
@@ -348,7 +354,7 @@ class MediaPlayerApplet(awn.AppletSimple):
         uri2play = uri2play.strip('\000').strip()
 
         if uri2play.startswith("udp://@"):
-          uri2play = uri2play.replace("udp://@", "udp://")
+            uri2play = uri2play.replace("udp://@", "udp://")
 
         self.stop()
         self.playbin.set_property("uri", uri2play)
@@ -365,8 +371,7 @@ class MediaPlayerApplet(awn.AppletSimple):
         self.stop()
 
     def show_prefs(self, widget):
-        ui_path =  os.path.join(os.path.dirname(__file__),
-                                   "media-player-prefs.ui")
+        ui_path = os.path.join(os.path.dirname(__file__), "media-player-prefs.ui")
         wTree = gtk.Builder()
         wTree.add_from_file(ui_path)
 
@@ -385,8 +390,10 @@ class MediaPlayerApplet(awn.AppletSimple):
         auEntry.connect("changed", sink_changed)
 
         def size_changed(widget, isWidth):
-            if isWidth: self.video_width = widget.get_value()
-            else: self.video_height = widget.get_value()
+            if isWidth:
+                self.video_width = widget.get_value()
+            else:
+                self.video_height = widget.get_value()
 
         wSpin = wTree.get_object("widthSpin")
         wSpin.set_value(self.video_width)
@@ -427,10 +434,9 @@ class MediaPlayerApplet(awn.AppletSimple):
         about.destroy()
 
 
-
 if __name__ == "__main__":
-    awn.init                      (sys.argv[1:])
-    applet = MediaPlayerApplet    (awn.uid, awn.panel_id)
-    awn.embed_applet              (applet)
-    applet.show_all               ()
-    gtk.main                      ()
+    awn.init(sys.argv[1:])
+    applet = MediaPlayerApplet(awn.uid, awn.panel_id)
+    awn.embed_applet(applet)
+    applet.show_all()
+    gtk.main()

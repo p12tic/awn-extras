@@ -38,7 +38,6 @@ class dgTime:
             self.update_clock()
             return True
         self.applet.connect('map-event', on_map_event)
-        self.fallback()
 
     def update_clock(self):
         time_string = self.get_time_string()
@@ -55,15 +54,11 @@ class dgTime:
             self.surface_width = int(self.prefs.props.panel_size * 1.3)
             self.width = int(HEIGHT * 1.3)
 
-    def fallback(self):
-        self.applet.set_icon_name('awn-applet-digital-clock')
-
     def create_context(self):
         self.reset_width()
 
         gdk_surface = self.applet.window.cairo_create().get_target()
         if gdk_surface is None:
-            self.fallback()
             return
         self.surface = gdk_surface.create_similar(cairo.CONTENT_COLOR_ALPHA,
                                                   self.surface_width,
@@ -86,7 +81,6 @@ class dgTime:
         if self.context is None:
             self.create_context()
         if self.surface is None or self.context is None:
-            self.fallback()
             return
         # clear context
         self.context.set_operator(cairo.OPERATOR_CLEAR)

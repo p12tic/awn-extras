@@ -65,7 +65,6 @@ class dgTime:
         if gdk_surface is None:
             self.fallback()
             return
-        print self.surface_width, self.prefs.props.panel_size
         self.surface = gdk_surface.create_similar(cairo.CONTENT_COLOR_ALPHA,
                                                   self.surface_width,
                                                   self.prefs.props.panel_size)

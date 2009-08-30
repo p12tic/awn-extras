@@ -143,7 +143,7 @@ AwnApplet* awn_applet_factory_initp(const gchar *name,
   GdkPixbuf *icon;
   
   g_object_set (applet,
-                "display-name","Awn System Monitor",
+                "display-name","Cairo Menu",
                 NULL);
   
   read_config();

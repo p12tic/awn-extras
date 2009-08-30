@@ -58,17 +58,29 @@ do_bridge ( AwnApplet * applet,GObject *object,
                 NULL);
   desktop_agnostic_config_client_bind (client,
                                        group, key_name,
-                                       G_OBJECT(object), prop_name, FALSE,
+                                       object, prop_name, FALSE,
                                        DESKTOP_AGNOSTIC_CONFIG_BIND_METHOD_INSTANCE,
-                                       NULL);
+                                       &error);
+
+  if (error)
+  {
+    goto do_bridge_error;
+  }
 
   desktop_agnostic_config_client_bind (client_baseconf,
                                        group, key_name,
-                                       G_OBJECT(object),base_prop_name, FALSE,
+                                       object, base_prop_name, FALSE,
                                        DESKTOP_AGNOSTIC_CONFIG_BIND_METHOD_INSTANCE,
                                        &error);
-  g_assert (!error);
+do_bridge_error:
+
   g_free (base_prop_name);
+
+  if (error)
+  {
+    g_critical ("Config Bridge Error: %s", error->message);
+    g_error_free (error);
+  }
   
 }
 

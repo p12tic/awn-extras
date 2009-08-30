@@ -52,6 +52,7 @@ SUBDIRS = \
 	maintained/battery \
 	maintained/cairo-clock \
 	maintained/cpufreq \
+	maintained/digital-clock \
 	maintained/feeds \
 	maintained/file-browser-launcher \
 	maintained/gwibfawn \

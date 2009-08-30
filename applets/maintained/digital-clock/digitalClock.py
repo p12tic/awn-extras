@@ -85,7 +85,7 @@ class App(awn.AppletSimple):
 
 if __name__ == '__main__':
     awn.init(sys.argv[1:])
-    applet = App('digitalClock', awn.uid, awn.panel_id)
+    applet = App('digital-clock', awn.uid, awn.panel_id)
     awn.embed_applet(applet)
     applet.show_all()
     gtk.main()

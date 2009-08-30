@@ -332,7 +332,7 @@ applets/maintained/comics/locale/Makefile
 applets/maintained/comics/locale/sv_SE/Makefile
 applets/maintained/comics/locale/sv_SE/LC_MESSAGES/Makefile
 applets/maintained/cpufreq/Makefile
-applets/maintained/digitalClock/Makefile
+applets/maintained/digital-clock/Makefile
 applets/maintained/feeds/Makefile
 applets/maintained/file-browser-launcher/Makefile
 applets/maintained/gwibfawn/Makefile

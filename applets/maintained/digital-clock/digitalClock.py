@@ -31,6 +31,8 @@ class App(awn.AppletSimple):
     def __init__(self, canonical_name, uid, panel_id):
         super(App, self).__init__(canonical_name, uid, panel_id)
 
+        self.props.display_name = 'Digital Clock'
+
         self.dialog_visible = False
 
         self.prefs = dgClockPref.ClockPrefs(self)

@@ -19,6 +19,7 @@ import gettext
 
 PREFIX = '@prefix@'
 VERSION = '@VERSION@'
+APPLET_BASEDIR = '@APPLETSDIR@'
 
 # gettext (internationalization/i18n) support
 LOCALEDIR = '@LOCALEDIR@'

@@ -34,12 +34,11 @@ from awn.extras import _, awnlib
 
 awn.check_dependencies(globals(), 'feedparser', 'pynotify')
 
-icon_path = '%s/share/avant-window-navigator/applets/feeds/icons/awn-feeds.svg'
-icon_path = icon_path % extras.PREFIX
+icondir = os.path.join(extras.APPLET_BASEDIR, 'feeds', 'icons')
 
-greader_path = '%s/share/avant-window-navigator/applets/feeds/icons/' + \
-    'awn-feeds-greader.svg'
-greader_path = greader_path % extras.PREFIX
+icon_path = os.path.join(icondir, 'awn-feeds.svg')
+
+greader_path = os.path.join(icondir, 'awn-feeds-greader.svg')
 
 config_path = '%s/.config/awn/applets/feeds.txt' % os.environ['HOME']
 

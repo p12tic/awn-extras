@@ -188,6 +188,7 @@ class PrefsDialog(gtk.Dialog):
     def __init__(self, prefs):
         title = _('%s Preferences') % prefs.applet.props.display_name
         super(PrefsDialog, self).__init__(title, prefs.applet)
+        self.props.icon_name = 'gtk-preferences'
         self.prefs = prefs
         self.font_replace = None
         self.create_ui()

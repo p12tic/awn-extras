@@ -275,9 +275,11 @@ appletsdir="$datarootdir/avant-window-navigator/applets"
 AS_AC_EXPAND(APPLETSDIR, $appletsdir)
 AS_AC_EXPAND(SYSCONFDIR, $sysconfdir)
 AS_AC_EXPAND(LIBDIR, $libdir)
-AS_AC_EXPAND(DATADIR, $datadir)
+AS_AC_EXPAND(datadir_intermediate, $datadir)
+AS_AC_EXPAND(DATADIR, $datadir_intermediate)
 AS_AC_EXPAND(LIBEXECDIR, $libexecdir)
-AS_AC_EXPAND(LOCALEDIR, $localedir)
+AS_AC_EXPAND(localedir_intermediate, $localedir)
+AS_AC_EXPAND(LOCALEDIR, $localedir_intermediate)
 
 AC_DEFINE_UNQUOTED(APPLETSDIR, "$APPLETSDIR",
                    [The base directory for applet data and Python applets.])

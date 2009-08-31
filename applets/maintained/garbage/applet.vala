@@ -139,6 +139,7 @@ public class GarbageApplet : AppletSimple
       warning ("Rendering error: %s", err.message);
     }
     // set the title as well
+    // TODO change to ngettext(msg, plural, num) when Vala 0.7.6 is released.
     if (file_count == 1)
     {
       plural = _ ("item");

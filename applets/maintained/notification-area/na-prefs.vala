@@ -23,8 +23,7 @@ using Cairo;
 using Awn;
 using DesktopAgnostic;
 
-// defines
-using Build;
+public const string APPLET_NAME = "notification-area";
 
 public class NotificationAreaPrefs : GLib.Object
 {
@@ -130,7 +129,7 @@ public class NotificationAreaPrefs : GLib.Object
     this.applet = applet;
 
     string ui_path = GLib.Path.build_filename (Build.APPLETSDIR,
-                                               Build.APPLET_NAME,
+                                               APPLET_NAME,
                                                "na-prefs.xml");
 
     Gtk.Builder builder = new Gtk.Builder();

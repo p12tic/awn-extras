@@ -20,6 +20,12 @@ DISTCLEANFILES =			\
 
 ACLOCAL_AMFLAGS = -I m4
 
+i18n-update: po/POTFILES.in po/POTFILES.skip
+	(cd po && for lang in `grep ALL_LINGUAS ../configure.ac | cut -d'"' -f2`; do \
+		echo -n "Updating $$lang:"; \
+		intltool-update $$lang; \
+	done)
+
 gtk_update_icon_cache = gtk-update-icon-cache -f -t ${datadir}/icons/hicolor
 
 install-data-hook: update-icon-cache

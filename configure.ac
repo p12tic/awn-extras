@@ -24,7 +24,7 @@ dnl ==============================================
 GETTEXT_PACKAGE=awn-extras-applets
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [Gettext package])
-ALL_LINGUAS=""
+ALL_LINGUAS="de en_US@piglatin es fr nb nl nn ru sv sv_SE"
 
 IT_PROG_INTLTOOL([0.34])
 AM_GLIB_GNU_GETTEXT
@@ -328,9 +328,6 @@ applets/maintained/cairo-menu/Makefile
 applets/maintained/cairo-menu/cairo-menu.desktop.in
 applets/maintained/calendar/Makefile
 applets/maintained/comics/Makefile
-applets/maintained/comics/locale/Makefile
-applets/maintained/comics/locale/sv_SE/Makefile
-applets/maintained/comics/locale/sv_SE/LC_MESSAGES/Makefile
 applets/maintained/cpufreq/Makefile
 applets/maintained/digital-clock/Makefile
 applets/maintained/feeds/Makefile
@@ -361,17 +358,6 @@ applets/maintained/vala-test/Makefile
 applets/maintained/vala-test/vala-test.desktop.in
 applets/maintained/volume-control/Makefile
 applets/maintained/weather/Makefile
-applets/maintained/weather/locale/Makefile
-applets/maintained/weather/locale/es/Makefile
-applets/maintained/weather/locale/es/LC_MESSAGES/Makefile
-applets/maintained/weather/locale/fr/Makefile
-applets/maintained/weather/locale/fr/LC_MESSAGES/Makefile
-applets/maintained/weather/locale/nb/Makefile
-applets/maintained/weather/locale/nb/LC_MESSAGES/Makefile
-applets/maintained/weather/locale/nn/Makefile
-applets/maintained/weather/locale/nn/LC_MESSAGES/Makefile
-applets/maintained/weather/locale/pt/Makefile
-applets/maintained/weather/locale/pt/LC_MESSAGES/Makefile
 applets/maintained/webapplet/Makefile
 applets/maintained/webapplet/webapplet.desktop.in
 applets/maintained/wobblyzini/Makefile
@@ -385,9 +371,6 @@ applets/unmaintained/digg/Makefile
 applets/unmaintained/filebrowser/Makefile
 applets/unmaintained/filebrowser/filebrowser.desktop.in
 applets/unmaintained/mail/Makefile
-applets/unmaintained/mail/locale/Makefile
-applets/unmaintained/mail/locale/ru/Makefile
-applets/unmaintained/mail/locale/ru/LC_MESSAGES/Makefile
 applets/unmaintained/main-menu/Makefile
 applets/unmaintained/main-menu/main-menu.desktop.in
 applets/unmaintained/MiMenu/Makefile

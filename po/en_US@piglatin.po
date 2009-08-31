@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Awn Extras 0.3.9\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-30 18:37-0700\n"
-"PO-Revision-Date: 2009-08-30 15:49-0800\n"
+"POT-Creation-Date: 2009-08-31 13:26-0700\n"
+"PO-Revision-Date: 2009-08-31 13:32-0800\n"
 "Last-Translator: Mark Lee <avant-wn@lazymalevolence.com>\n"
 "Language-Team: English (United States Pig Latin)\n"
 "MIME-Version: 1.0\n"
@@ -124,12 +124,8 @@ msgid "Cairo Clock"
 msgstr "Airo-cay Ock-clay"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.desktop.in.h:2
-msgid ""
-"Displays an analog clock and supports additional clocks for different "
-"locations"
-msgstr ""
-"Isplays-day an analog-way ock-clay and upports-say additional-way ocks for "
-"ifferent-day ocations-lay"
+msgid "Displays an analog clock and supports additional clocks for different locations"
+msgstr "Isplays-day an analog-way ock-clay and upports-say additional-way ocks-clay for ifferent-day ocations-lay"
 
 #: ../applets/maintained/cairo-menu/backend-gnome.c:121
 msgid "Invalid desktop file ID"
@@ -173,11 +169,7 @@ msgid "Save Password"
 msgstr ""
 
 #: ../applets/maintained/calendar/calendarlogin.py:87
-msgid ""
-"You have chosen to save your password.  Although the password will be stored "
-"in an encrypted format, there is always a remote possibility that your "
-"password can be stolen and decrypted if your computer's security is "
-"breached.  Are you still sure you want to save your password?"
+msgid "You have chosen to save your password.  Although the password will be stored in an encrypted format, there is always a remote possibility that your password can be stolen and decrypted if your computer's security is breached.  Are you still sure you want to save your password?"
 msgstr ""
 
 #: ../applets/maintained/calendar/calendarprefs.py:44
@@ -273,16 +265,17 @@ msgid "Calendar URL"
 msgstr ""
 
 #. default title/tooltip to show on startup.
+#. for focus-follows-mouse
+#. self.dialog.connect('focus-out-event',
+#. self.dialog_focus_out)
 #: ../applets/maintained/calendar/clockcal.py:48
 #: ../applets/maintained/calendar/clockcal.py:497
+#: ../applets/maintained/digital-clock/digitalClock.py:76
 msgid "Calendar"
-msgstr ""
+msgstr "Alendar-clay"
 
 #: ../applets/maintained/calendar/clockcal.py:218
-msgid ""
-"Do you want to erase your calendar password from the calendar applet?  If "
-"you choose to clear your password, you will be prompted again for your "
-"calendar login credentials."
+msgid "Do you want to erase your calendar password from the calendar applet?  If you choose to clear your password, you will be prompted again for your calendar login credentials."
 msgstr ""
 
 #: ../applets/maintained/calendar/clockcal.py:503
@@ -418,8 +411,7 @@ msgstr ""
 msgid ""
 "This guide will help you to add a new comic.\n"
 "\n"
-"To find comics suitable for adding, you may search the Internet for \"comics "
-"rss\".\n"
+"To find comics suitable for adding, you may search the Internet for \"comics rss\".\n"
 "\n"
 "Press \"next\" to proceed."
 msgstr ""
@@ -473,30 +465,135 @@ msgid "A clock and calendar in one."
 msgstr "A ock-clay and alendar-cay in one."
 
 #: ../applets/maintained/digital-clock/digital-clock.desktop.in.h:2
+#: ../applets/maintained/digital-clock/digitalClock.py:35
 msgid "Digital Clock"
 msgstr "Igital-day Ock-clay"
 
+#: ../applets/maintained/digital-clock/dgClockPref.py:33
+msgid "Date before time"
+msgstr "Ate-day efore-bay ime-tay"
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:34
+msgid "Whether to show the date next to the time, instead of below it."
+msgstr "Ether-whay to ow-shay the ate-day next to the ime-tay, instead of elow-bay it."
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:37
+#, fuzzy
+msgid "12 hour mode"
+msgstr "_12 Hour-way"
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:38
+msgid "Whether to show the time in 12 hour mode (as opposed to 24 hour mode)."
+msgstr "Ether-whay to ow-shay the ime-tay in 12 hour-way ode-may (as opposed-way to 24 hour-way ode-may)."
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:41
+msgid "Font face"
+msgstr "Ont-fay ace-fay"
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:42
+msgid "The font face for the date and time text."
+msgstr "The ont-fay ace-fay for the ate-day and ime-tay ext-tay."
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:45
+#, fuzzy
+msgid "Font color"
+msgstr "Ont-fay Olor-_cay:"
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:46
+msgid "The text color of the date and time."
+msgstr "The ext-tay olor-cay of the ate-day and ime-tay."
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:48
+#, fuzzy
+msgid "Font shadow color"
+msgstr "Ont-fay Adow-_shay Olor-cay:"
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:49
+msgid "The font shadow color of the date and time."
+msgstr "The ont-fay adow-shay olor-cay of the ate-day and ime-tay."
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:51
+msgid "dock orientation"
+msgstr "ock-day orientation-way"
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:52
+msgid "The orientation of the dock (horizontal/vertical)"
+msgstr "The orientation-way of the ock-day (orizontal-hay/ertical-vay)"
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:112
+msgid "Copy Time"
+msgstr "Opy-cay Ime-tay"
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:115
+msgid "Copy Date"
+msgstr "Opy-cay Ate-day"
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:120
+msgid "Adjust Date & Time"
+msgstr "Adjust-way Ate-day & Ime-tay"
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:189
+#, fuzzy, python-format
+msgid "%s Preferences"
+msgstr "Eferences-pray"
+
+#. TODO enable alpha support
+#: ../applets/maintained/digital-clock/dgClockPref.py:216
+msgid "Font _Color:"
+msgstr "Ont-fay Olor-_cay:"
+
+#. TODO enable alpha support
+#: ../applets/maintained/digital-clock/dgClockPref.py:226
+msgid "Font _Shadow Color:"
+msgstr "Ont-fay Adow-_shay Olor-cay:"
+
+#. * clock type: 12/24 hour
+#: ../applets/maintained/digital-clock/dgClockPref.py:231
+msgid "Clock Type"
+msgstr "Ock-clay Ype-tay"
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:232
+msgid "_12 Hour"
+msgstr "_12 Hour-way"
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:235
+msgid "_24 Hour"
+msgstr "_24 Hour-way"
+
+#. * clock style: time beside date
+#: ../applets/maintained/digital-clock/dgClockPref.py:239
+msgid "Date Position"
+msgstr "Ate-day Osition-pay"
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:240
+msgid "_Left"
+msgstr "Eft-_lay"
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:243
+msgid "_Bottom"
+msgstr "Ottom-_bay"
+
 #: ../applets/maintained/feeds/feeds.desktop.in.h:1
-#: ../applets/maintained/feeds/feeds.py:71
-#: ../applets/maintained/feeds/feeds.py:222
-#: ../applets/maintained/feeds/feeds.py:780
+#: ../applets/maintained/feeds/feeds.py:70
+#: ../applets/maintained/feeds/feeds.py:221
+#: ../applets/maintained/feeds/feeds.py:779
 msgid "Feeds Applet"
 msgstr "Eeds-fay Applet-way"
 
 #: ../applets/maintained/feeds/feeds.desktop.in.h:2
-#: ../applets/maintained/feeds/feeds.py:784
+#: ../applets/maintained/feeds/feeds.py:783
 msgid "Monitor Web Feeds"
 msgstr "Onitor-may Eb-way Eeds-fay"
 
-#: ../applets/maintained/feeds/feeds.py:191
-#: ../applets/maintained/feeds/feeds.py:432
+#: ../applets/maintained/feeds/feeds.py:190
+#: ../applets/maintained/feeds/feeds.py:431
 #: ../applets/maintained/feeds/prefs.py:209
 #: ../applets/maintained/feeds/prefs.py:246
 #: ../applets/maintained/feeds/prefs.py:316
 msgid "Google Reader"
 msgstr "Oogle-gay Eader-ray"
 
-#: ../applets/maintained/feeds/feeds.py:202
+#: ../applets/maintained/feeds/feeds.py:201
 #, python-format
 msgid ""
 "%s\n"
@@ -509,52 +606,52 @@ msgstr ""
 "  <a href='%s'>%s</a>\n"
 "(%s Ore-may)\n"
 
-#: ../applets/maintained/feeds/feeds.py:223
+#: ../applets/maintained/feeds/feeds.py:222
 #, python-format
 msgid "%s New Items - Feeds Applet"
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:316
+#: ../applets/maintained/feeds/feeds.py:315
 msgid ""
 "Feeds Applet could not load all of your feeds.\n"
 "Check your Internet connection and\n"
 "click Refresh to try again."
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:335
+#: ../applets/maintained/feeds/feeds.py:334
 msgid "Hide Error"
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:341
+#: ../applets/maintained/feeds/feeds.py:340
 msgid ""
 "Feeds Applet could not login to Google Reader.\n"
 "Check your username and password."
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:351
+#: ../applets/maintained/feeds/feeds.py:350
 msgid "You don't have any feeds."
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:353
-#: ../applets/maintained/feeds/feeds.py:473
+#: ../applets/maintained/feeds/feeds.py:352
+#: ../applets/maintained/feeds/feeds.py:472
 msgid "_Add Feed"
 msgstr "_Add-way Eed-fay"
 
-#: ../applets/maintained/feeds/feeds.py:415
+#: ../applets/maintained/feeds/feeds.py:414
 msgid "Open this feed's website"
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:467
-#: ../applets/maintained/feeds/feeds.py:616
+#: ../applets/maintained/feeds/feeds.py:466
+#: ../applets/maintained/feeds/feeds.py:615
 msgid "Show this feed's items"
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:606
+#: ../applets/maintained/feeds/feeds.py:605
 msgid "Hide this feed's items"
 msgstr ""
 
 #. Create the items
-#: ../applets/maintained/feeds/feeds.py:744
+#: ../applets/maintained/feeds/feeds.py:743
 #: ../applets/maintained/feeds/prefs.py:232
 msgid "Add Feed"
 msgstr "Add-way Eed-fay"
@@ -1101,9 +1198,7 @@ msgid "Border colour in the form (Hex) rrggbbaa. Also use for the timer widget"
 msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:7
-msgid ""
-"Display icon for awn notification daemon. Allows toggling of notification "
-"display"
+msgid "Display icon for awn notification daemon. Allows toggling of notification display"
 msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:8
@@ -1111,9 +1206,7 @@ msgid "Gradient Factor"
 msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:9
-msgid ""
-"Gradient Factor applied to the notification window. Range of 0 to 1. The "
-"lower the number the more noticeable the effect."
+msgid "Gradient Factor applied to the notification window. Range of 0 to 1. The lower the number the more noticeable the effect."
 msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:10
@@ -1125,9 +1218,7 @@ msgid "Honour gtk theme colours"
 msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:12
-msgid ""
-"If the value is >0.0 then this opacity value will be applied to window "
-"instead of hiding."
+msgid "If the value is >0.0 then this opacity value will be applied to window instead of hiding."
 msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:13
@@ -1139,19 +1230,11 @@ msgid "Kill notification-daemon"
 msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:15
-msgid ""
-"NOTE: This key should not be considered stable... it is likely to change. "
-"Arbitrary X position for notification window. Default is -1 which signifies "
-"awn-notification-daemon should place windows relative to its position in the "
-"bar."
+msgid "NOTE: This key should not be considered stable... it is likely to change. Arbitrary X position for notification window. Default is -1 which signifies awn-notification-daemon should place windows relative to its position in the bar."
 msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:16
-msgid ""
-"NOTE: This key should not be considered stable... it is likely to change. "
-"Arbitrary Y position for notification window. Default is -1 which signifies "
-"awn-notification-daemon should place windows relative to its position in the "
-"bar."
+msgid "NOTE: This key should not be considered stable... it is likely to change. Arbitrary Y position for notification window. Default is -1 which signifies awn-notification-daemon should place windows relative to its position in the bar."
 msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:17
@@ -1163,16 +1246,11 @@ msgid "Text Colour"
 msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:19
-msgid ""
-"Text colour in the form (Hex) rrggbbaa. Currently the alpha component is "
-"ignored"
+msgid "Text colour in the form (Hex) rrggbbaa. Currently the alpha component is ignored"
 msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:20
-msgid ""
-"This will override the client and default timeout periods for all "
-"notification windows with a timeout. Value is in ms. A value less than or "
-"equal to 0 indicates that client and default values should be honoured."
+msgid "This will override the client and default timeout periods for all notification windows with a timeout. Value is in ms. A value less than or equal to 0 indicates that client and default values should be honoured."
 msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:21
@@ -1778,10 +1856,7 @@ msgstr ""
 
 #: ../applets/unmaintained/mail/mail.py:423
 #: ../applets/unmaintained/mail/mail.py:482
-msgid ""
-"There seem to be problems with our                     connection to your "
-"account. Your best bet is probably                     to log out and try "
-"again."
+msgid "There seem to be problems with our                     connection to your account. Your best bet is probably                     to log out and try again."
 msgstr ""
 
 #: ../applets/unmaintained/mail/mail.py:445
@@ -2081,9 +2156,7 @@ msgid "Confirm removal"
 msgstr ""
 
 #: ../applets/unmaintained/stacks/stacks_backend_folder.py:120
-msgid ""
-"This stack has a <b>folder backend</b>. Do you really want to <b>delete</b> "
-"the files from that folder?"
+msgid "This stack has a <b>folder backend</b>. Do you really want to <b>delete</b> the files from that folder?"
 msgstr ""
 
 #: ../applets/unmaintained/stacks/stacks_backend_plugger.py:51
@@ -2104,9 +2177,7 @@ msgid "Empty all of the items from the trash?"
 msgstr ""
 
 #: ../applets/unmaintained/stacks/stacks_backend_trasher.py:102
-msgid ""
-"If you choose to empty the trash, all items in it will be permanently lost.  "
-"Please note that you can also delete them separately."
+msgid "If you choose to empty the trash, all items in it will be permanently lost.  Please note that you can also delete them separately."
 msgstr ""
 
 #: ../applets/unmaintained/stacks/stacks_backend_trasher.py:107
@@ -2130,8 +2201,7 @@ msgstr ""
 
 #: ../applets/unmaintained/stacks/stacks_backend_trasher.py:172
 #: ../applets/unmaintained/trash/trashapplet.c:979
-msgid ""
-"Cannot move some items to trash, do you want to delete these immediately?"
+msgid "Cannot move some items to trash, do you want to delete these immediately?"
 msgstr ""
 
 #: ../applets/unmaintained/stacks/stacks_backend_trasher.py:173
@@ -2264,10 +2334,7 @@ msgstr ""
 
 #: ../applets/unmaintained/stacks/stacks_preferences.glade.h:34
 msgid ""
-"Inspired by Mac OS Leopard's \"Stack\", this applet is created. It combines "
-"functionality of Apple's Stack with it's own ideas. The <b>Stacks</b> applet "
-"also functions as a framework for the <b>Plugger</b> and <b>Trasher</b> "
-"applet.\n"
+"Inspired by Mac OS Leopard's \"Stack\", this applet is created. It combines functionality of Apple's Stack with it's own ideas. The <b>Stacks</b> applet also functions as a framework for the <b>Plugger</b> and <b>Trasher</b> applet.\n"
 "\n"
 "\n"
 "In one sentence:\n"
@@ -2328,9 +2395,7 @@ msgstr ""
 
 #: ../applets/unmaintained/stacks/stacks_vfs.py:114
 #, python-format
-msgid ""
-"Cannot move \"%s\" to the trash because you do not have permissions to "
-"change it or its parent folder."
+msgid "Cannot move \"%s\" to the trash because you do not have permissions to change it or its parent folder."
 msgstr ""
 
 #: ../applets/unmaintained/stacks/stacks_vfs.py:116
@@ -2339,9 +2404,7 @@ msgstr ""
 
 #: ../applets/unmaintained/stacks/stacks_vfs.py:117
 #, python-format
-msgid ""
-"\"%s\" cannot be deleted because you do not have permissions to modify its "
-"parent folder."
+msgid "\"%s\" cannot be deleted because you do not have permissions to modify its parent folder."
 msgstr ""
 
 #: ../applets/unmaintained/stacks/stacks_vfs.py:119
@@ -2404,9 +2467,7 @@ msgid "Removing:"
 msgstr ""
 
 #: ../applets/unmaintained/trash/trashapplet.c:776
-msgid ""
-"If you choose to empty the trash, all items in it will be permanently lost. "
-"Please note that you can also delete them separately."
+msgid "If you choose to empty the trash, all items in it will be permanently lost. Please note that you can also delete them separately."
 msgstr ""
 
 #: ../applets/unmaintained/trash/trashapplet.c:884
@@ -2423,9 +2484,7 @@ msgid "There was an error displaying help: %s"
 msgstr ""
 
 #: ../applets/unmaintained/trash/trashapplet.c:919
-msgid ""
-"A GNOME trash bin that lives in your panel. You can use it to view the trash "
-"or drag and drop items into the trash."
+msgid "A GNOME trash bin that lives in your panel. You can use it to view the trash or drag and drop items into the trash."
 msgstr ""
 
 #: ../applets/unmaintained/trash/trashapplet.c:944
@@ -2478,3 +2537,4 @@ msgstr ""
 #: ../plugins/unmaintained/rhythmbox/artdisplay-awn/CoverArtDatabase.py:123
 msgid "Unknown"
 msgstr ""
+

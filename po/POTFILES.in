@@ -33,6 +33,8 @@ applets/maintained/comics/main.py
 applets/maintained/cpufreq/cpufreq.desktop.in
 applets/maintained/cpufreq/cpufreq.ui
 applets/maintained/digital-clock/digital-clock.desktop.in
+applets/maintained/digital-clock/dgClockPref.py
+applets/maintained/digital-clock/digitalClock.py
 applets/maintained/feeds/feeds.desktop.in
 applets/maintained/feeds/feeds.py
 applets/maintained/feeds/prefs.py

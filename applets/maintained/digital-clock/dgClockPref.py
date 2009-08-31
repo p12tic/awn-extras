@@ -22,6 +22,7 @@ import gobject
 from desktopagnostic import Color, config
 import gtk
 import awn
+from awn.extras import _
 
 
 class ClockPrefs(gobject.GObject):
@@ -29,26 +30,26 @@ class ClockPrefs(gobject.GObject):
     # not using gobject.property because of
     # http://bugzilla.gnome.org/show_bug.cgi?id=593241
     __gproperties__ = {
-        'date_before_time': (bool, 'date before time',
-                             'Whether to show the date next to the time, instead of below it.',
+        'date_before_time': (bool, _('Date before time'),
+                             _('Whether to show the date next to the time, instead of below it.'),
                              False,
                              gobject.PARAM_READWRITE),
-        'twelve_hour': (bool, '12 hour mode',
-                        'Whether to show the time in 12 hour mode (as opposed to 24 hour mode).',
+        'twelve_hour': (bool, _('12 hour mode'),
+                        _('Whether to show the time in 12 hour mode (as opposed to 24 hour mode).'),
                         False,
                         gobject.PARAM_READWRITE),
-        'font_face': (str, 'Font face',
-                      'The font face for the date and time text.',
+        'font_face': (str, _('Font face'),
+                      _('The font face for the date and time text.'),
                       'Sans 10',
                       gobject.PARAM_READWRITE),
-        'font_color': (Color, 'Font color',
-                       'The text color of the date and time.',
+        'font_color': (Color, _('Font color'),
+                       _('The text color of the date and time.'),
                        gobject.PARAM_READWRITE),
-        'font_shadow_color': (Color, 'Font shadow color',
-                              'The font shadow color of the date and time.',
+        'font_shadow_color': (Color, _('Font shadow color'),
+                              _('The font shadow color of the date and time.'),
                               gobject.PARAM_READWRITE),
-        'orientation': (gtk.Orientation, 'dock orientation',
-                        'The orientation of the dock (horizontal/vertical)',
+        'orientation': (gtk.Orientation, _('dock orientation'),
+                        _('The orientation of the dock (horizontal/vertical)'),
                         gtk.ORIENTATION_HORIZONTAL,
                         gobject.PARAM_READWRITE)}
 
@@ -108,15 +109,15 @@ class ClockPrefs(gobject.GObject):
 
         self.build_image_menu_item(popup_menu, gtk.STOCK_COPY,
                                    self.copy_time,
-                                   'Copy Time')
+                                   _('Copy Time'))
         self.build_image_menu_item(popup_menu, gtk.STOCK_COPY,
                                    self.copy_date,
-                                   'Copy Date')
+                                   _('Copy Date'))
         self.build_image_menu_item(popup_menu, gtk.STOCK_PREFERENCES,
                                    self.show_prefs)
         self.build_image_menu_item(popup_menu, gtk.STOCK_EDIT,
                                    self.time_admin,
-                                   'Adjust Date & Time')
+                                   _('Adjust Date & Time'))
 
         popup_menu.show_all()
         return popup_menu
@@ -185,7 +186,7 @@ def mnemonic_label(mnemonic, widget):
 
 class PrefsDialog(gtk.Dialog):
     def __init__(self, prefs):
-        title = '%s Preferences' % prefs.applet.props.display_name
+        title = _('%s Preferences') % prefs.applet.props.display_name
         super(PrefsDialog, self).__init__(title, prefs.applet)
         self.prefs = prefs
         self.font_replace = None
@@ -212,7 +213,7 @@ class PrefsDialog(gtk.Dialog):
         text_color_button.connect('color-set', self.prefs.color_changed,
                                   'font_color')
         # TODO enable alpha support
-        text_color_label = mnemonic_label('Font _Color:', text_color_button)
+        text_color_label = mnemonic_label(_('Font _Color:'), text_color_button)
         table.attach(text_color_label, 0, 1, 1, 2)
         table.attach(text_color_button, 1, 2, 1, 2)
         # * font shadow color
@@ -222,24 +223,24 @@ class PrefsDialog(gtk.Dialog):
         text_shadow_color_button.connect('color-set', self.prefs.color_changed,
                                          'font_shadow_color')
         # TODO enable alpha support
-        text_shadow_color_label = mnemonic_label('Font _Shadow Color:',
+        text_shadow_color_label = mnemonic_label(_('Font _Shadow Color:'),
                                                  text_color_button)
         table.attach(text_shadow_color_label, 0, 1, 2, 3)
         table.attach(text_shadow_color_button, 1, 2, 2, 3)
         # * clock type: 12/24 hour
-        clock_type = HRadioGroup('Clock Type')
-        clock_type.add_radio('_12 Hour',
+        clock_type = HRadioGroup(_('Clock Type'))
+        clock_type.add_radio(_('_12 Hour'),
                 signals={'toggled': (self.radiobutton_changed,
                                      'twelve_hour')})
-        clock_type.add_radio('_24 Hour',
+        clock_type.add_radio(_('_24 Hour'),
                 active=not self.prefs.props.twelve_hour)
         table.attach(clock_type, 0, 2, 3, 4)
         # * clock style: time beside date
-        self.clock_style = HRadioGroup('Date Position')
-        self.clock_style.add_radio('_Left',
+        self.clock_style = HRadioGroup(_('Date Position'))
+        self.clock_style.add_radio(_('_Left'),
                signals={'toggled': (self.radiobutton_changed,
                                     'date_before_time')})
-        self.clock_style.add_radio('_Bottom',
+        self.clock_style.add_radio(_('_Bottom'),
                active=not self.prefs.props.date_before_time)
         table.attach(self.clock_style, 0, 2, 4, 5)
         self.vbox.add(table)
@@ -262,4 +263,4 @@ class PrefsDialog(gtk.Dialog):
         self.clock_style.props.sensitive = \
                 (prefs.props.orientation == gtk.ORIENTATION_HORIZONTAL)
 
-# vim:ts=4:sts=4:sw=4:et:ai:cindent
+# vim: set ts=4 sts=4 sw=4 et ai cindent :

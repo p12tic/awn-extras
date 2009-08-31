@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: awn-core-applets 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-30 18:37-0700\n"
+"POT-Creation-Date: 2009-08-31 13:27-0700\n"
 "PO-Revision-Date: 2007-10-10 06:52+0200\n"
 "Last-Translator: Florent Martin <flo.mart@orange.fr>\n"
 "Language-Team: French\n"
@@ -271,8 +271,12 @@ msgid "Calendar URL"
 msgstr ""
 
 #. default title/tooltip to show on startup.
+#. for focus-follows-mouse
+#. self.dialog.connect('focus-out-event',
+#. self.dialog_focus_out)
 #: ../applets/maintained/calendar/clockcal.py:48
 #: ../applets/maintained/calendar/clockcal.py:497
+#: ../applets/maintained/digital-clock/digitalClock.py:76
 #, fuzzy
 msgid "Calendar"
 msgstr "Dégagé"
@@ -473,30 +477,135 @@ msgid "A clock and calendar in one."
 msgstr ""
 
 #: ../applets/maintained/digital-clock/digital-clock.desktop.in.h:2
+#: ../applets/maintained/digital-clock/digitalClock.py:35
 msgid "Digital Clock"
 msgstr ""
 
+#: ../applets/maintained/digital-clock/dgClockPref.py:33
+msgid "Date before time"
+msgstr ""
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:34
+msgid "Whether to show the date next to the time, instead of below it."
+msgstr ""
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:37
+msgid "12 hour mode"
+msgstr ""
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:38
+msgid "Whether to show the time in 12 hour mode (as opposed to 24 hour mode)."
+msgstr ""
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:41
+msgid "Font face"
+msgstr ""
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:42
+msgid "The font face for the date and time text."
+msgstr ""
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:45
+msgid "Font color"
+msgstr ""
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:46
+msgid "The text color of the date and time."
+msgstr ""
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:48
+msgid "Font shadow color"
+msgstr ""
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:49
+msgid "The font shadow color of the date and time."
+msgstr ""
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:51
+#, fuzzy
+msgid "dock orientation"
+msgstr "Lieu Actuel:"
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:52
+msgid "The orientation of the dock (horizontal/vertical)"
+msgstr ""
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:112
+#, fuzzy
+msgid "Copy Time"
+msgstr "Nuageux"
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:115
+#, fuzzy
+msgid "Copy Date"
+msgstr "Nuageux"
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:120
+msgid "Adjust Date & Time"
+msgstr ""
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:189
+#, fuzzy, python-format
+msgid "%s Preferences"
+msgstr "Preferences"
+
+#. TODO enable alpha support
+#: ../applets/maintained/digital-clock/dgClockPref.py:216
+msgid "Font _Color:"
+msgstr ""
+
+#. TODO enable alpha support
+#: ../applets/maintained/digital-clock/dgClockPref.py:226
+msgid "Font _Shadow Color:"
+msgstr ""
+
+#. * clock type: 12/24 hour
+#: ../applets/maintained/digital-clock/dgClockPref.py:231
+msgid "Clock Type"
+msgstr ""
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:232
+msgid "_12 Hour"
+msgstr ""
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:235
+msgid "_24 Hour"
+msgstr ""
+
+#. * clock style: time beside date
+#: ../applets/maintained/digital-clock/dgClockPref.py:239
+msgid "Date Position"
+msgstr ""
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:240
+msgid "_Left"
+msgstr ""
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:243
+msgid "_Bottom"
+msgstr ""
+
 #: ../applets/maintained/feeds/feeds.desktop.in.h:1
-#: ../applets/maintained/feeds/feeds.py:71
-#: ../applets/maintained/feeds/feeds.py:222
-#: ../applets/maintained/feeds/feeds.py:780
+#: ../applets/maintained/feeds/feeds.py:70
+#: ../applets/maintained/feeds/feeds.py:221
+#: ../applets/maintained/feeds/feeds.py:779
 msgid "Feeds Applet"
 msgstr ""
 
 #: ../applets/maintained/feeds/feeds.desktop.in.h:2
-#: ../applets/maintained/feeds/feeds.py:784
+#: ../applets/maintained/feeds/feeds.py:783
 msgid "Monitor Web Feeds"
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:191
-#: ../applets/maintained/feeds/feeds.py:432
+#: ../applets/maintained/feeds/feeds.py:190
+#: ../applets/maintained/feeds/feeds.py:431
 #: ../applets/maintained/feeds/prefs.py:209
 #: ../applets/maintained/feeds/prefs.py:246
 #: ../applets/maintained/feeds/prefs.py:316
 msgid "Google Reader"
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:202
+#: ../applets/maintained/feeds/feeds.py:201
 #, python-format
 msgid ""
 "%s\n"
@@ -505,52 +614,52 @@ msgid ""
 "(%s More)\n"
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:223
+#: ../applets/maintained/feeds/feeds.py:222
 #, python-format
 msgid "%s New Items - Feeds Applet"
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:316
+#: ../applets/maintained/feeds/feeds.py:315
 msgid ""
 "Feeds Applet could not load all of your feeds.\n"
 "Check your Internet connection and\n"
 "click Refresh to try again."
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:335
+#: ../applets/maintained/feeds/feeds.py:334
 msgid "Hide Error"
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:341
+#: ../applets/maintained/feeds/feeds.py:340
 msgid ""
 "Feeds Applet could not login to Google Reader.\n"
 "Check your username and password."
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:351
+#: ../applets/maintained/feeds/feeds.py:350
 msgid "You don't have any feeds."
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:353
-#: ../applets/maintained/feeds/feeds.py:473
+#: ../applets/maintained/feeds/feeds.py:352
+#: ../applets/maintained/feeds/feeds.py:472
 msgid "_Add Feed"
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:415
+#: ../applets/maintained/feeds/feeds.py:414
 msgid "Open this feed's website"
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:467
-#: ../applets/maintained/feeds/feeds.py:616
+#: ../applets/maintained/feeds/feeds.py:466
+#: ../applets/maintained/feeds/feeds.py:615
 msgid "Show this feed's items"
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:606
+#: ../applets/maintained/feeds/feeds.py:605
 msgid "Hide this feed's items"
 msgstr ""
 
 #. Create the items
-#: ../applets/maintained/feeds/feeds.py:744
+#: ../applets/maintained/feeds/feeds.py:743
 #: ../applets/maintained/feeds/prefs.py:232
 msgid "Add Feed"
 msgstr ""

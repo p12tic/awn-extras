@@ -21,6 +21,7 @@ import subprocess
 import gobject
 import gtk
 import awn
+from awn.extras import _
 
 import dgClockPref
 import dgTime
@@ -31,7 +32,7 @@ class App(awn.AppletSimple):
     def __init__(self, canonical_name, uid, panel_id):
         super(App, self).__init__(canonical_name, uid, panel_id)
 
-        self.props.display_name = 'Digital Clock'
+        self.props.display_name = _('Digital Clock')
 
         self.dialog_visible = False
 
@@ -72,7 +73,7 @@ class App(awn.AppletSimple):
             # for focus-follows-mouse
             #self.dialog.connect('focus-out-event',
             #                    self.dialog_focus_out)
-            self.dialog.set_title('Calendar')
+            self.dialog.set_title(_('Calendar'))
             self.dialog.add(cal)
 
 #    def dialog_focus_out(self, widget, event):

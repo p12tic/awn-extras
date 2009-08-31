@@ -27,20 +27,12 @@ pygtk.require('2.0')
 import gtk
 import gobject
 
-import gettext
-import locale
-
 from desktopagnostic.config import GROUP_DEFAULT
 import awn
 from awn import extras
-from awn.extras import awnlib
+from awn.extras import _, awnlib
 
 awn.check_dependencies(globals(), 'feedparser', 'pynotify')
-
-APP = "awn-extras-applets"
-gettext.bindtextdomain(APP, extras.GETTEXTDIR)
-gettext.textdomain(APP)
-_ = gettext.gettext
 
 icon_path = '%s/share/avant-window-navigator/applets/feeds/icons/awn-feeds.svg'
 icon_path = icon_path % extras.PREFIX

@@ -29,8 +29,6 @@ import cairo
 import gnome.ui
 import gnomedesktop
 import time
-import locale
-import gettext
 
 from stacks_backend import *
 from stacks_backend_file import *
@@ -41,14 +39,6 @@ from stacks_config import StacksConfig
 from stacks_launcher import LaunchManager
 from stacks_icons import IconFactory
 from stacks_vfs import *
-
-APP="Stacks"
-DIR="locale"
-locale.setlocale(locale.LC_ALL, '')
-gettext.bindtextdomain(APP, DIR)
-gettext.textdomain(APP)
-_ = gettext.gettext
-
 
 """
 Main Applet class

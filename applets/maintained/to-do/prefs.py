@@ -25,15 +25,7 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 import pango
-import gettext
-import locale
-
-from awn import extras
-
-APP = "awn-extras-applets"
-gettext.bindtextdomain(APP, extras.GETTEXTDIR)
-gettext.textdomain(APP)
-_ = gettext.gettext
+from awn.extras import _
 
 icon_colors_real = ['custom', 'gtk', 'butter', 'chameleon', 'orange', \
   'skyblue', 'plum', 'chocolate', 'scarletred', 'aluminium1', 'aluminium2']

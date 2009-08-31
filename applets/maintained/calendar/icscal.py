@@ -25,14 +25,7 @@ import datetime
 import awn
 awn.check_dependencies(globals(), 'dateutil', 'vobject')
 from dateutil.rrule import rrulestr
-# locale stuff
-APP = "awn-calendar"
-DIR = "locale"
-import gettext
-#locale.setlocale(locale.LC_ALL, '')
-gettext.bindtextdomain(APP, DIR)
-gettext.textdomain(APP)
-_ = gettext.gettext
+from awn.extras import _
 
 
 class IcsCal:

@@ -20,17 +20,15 @@
 
 
 # Import standard modules
-import gettext
 import gobject
 import gtk
-import locale
 import os
 import pynotify
 import re
 import sys
 import tempfile
 import threading
-from locale import gettext as _
+from awn.extras import _
 from os.path import join
 
 # Import Comics! modules
@@ -290,11 +288,6 @@ if __name__ == '__main__':
 	# We do not start the application if the command to execute is exit
 	if command.command == EXIT_COMMAND:
 		sys.exit(0)
-	
-	# Initialise internationalisation
-	locale.setlocale(locale.LC_ALL, '')
-	locale.bindtextdomain('comics', LOCALE_DIR)
-	locale.textdomain('comics')
 	
 	# Initialise GObject and GTK
 	gobject.threads_init()

@@ -5,20 +5,12 @@ import gtk
 from gtk.glade import *
 from gtk import gdk
 import os
-import locale
-import gettext
+from awn.extras import _
         
 #from stacks_applet import StacksApplet
 from stacks_backend import *
 from stacks_glade import GladeWindow
 from stacks_icons import IconFactory
-
-APP="Stacks"
-DIR="locale"
-locale.setlocale(locale.LC_ALL, '')
-gettext.bindtextdomain(APP, DIR)
-gettext.textdomain(APP)
-_ = gettext.gettext
 
 PREF_BACKEND_FOLDER = 1
 PREF_APPLET_ICON = 2

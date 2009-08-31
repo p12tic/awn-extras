@@ -26,7 +26,7 @@ import pygtk
 pygtk.require("2.0")
 import gtk
 
-from awn.extras import awnlib
+from awn.extras import _, awnlib
 from awn import OverlayText
 
 import cairo
@@ -62,14 +62,6 @@ icon_states = ["twc-logo", "weather-clear", "weather-few-clouds", "weather-overc
 "weather-snow-and-rain", "weather-showers", "weather-showers-scattered",
 "weather-snow", "weather-fog", "weather-storm", "weather-severe-alert",
 "weather-clear-night", "weather-few-clouds-night"]
-
-APP = "awn-weather-applet"
-import gettext
-import locale
-DIR = os.path.dirname(__file__) + '/locale'
-gettext.bindtextdomain(APP, DIR)
-gettext.textdomain(APP)
-_ = gettext.gettext
 
 import forecast
 

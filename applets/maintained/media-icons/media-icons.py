@@ -21,19 +21,13 @@
 import sys
 import pygtk
 import gtk
-import gettext
 import os
 import dbus
 
 import awn
 
 import awn.extras.awnmediaplayers as mediaplayers
-from awn import extras
-
-APP = "awn-extras-applets"
-gettext.bindtextdomain(APP, extras.GETTEXTDIR)
-gettext.textdomain(APP)
-_ = gettext.gettext
+from awn.extras import _
 
 def error_decorator(fn):
     """Handles errors caused by dbus"""

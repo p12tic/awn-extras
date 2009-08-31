@@ -29,8 +29,6 @@ import cairo
 import gnome.ui
 import gnomedesktop
 import time
-import locale
-import gettext
 
 from stacks_backend import *
 from stacks_backend_file import *
@@ -44,12 +42,6 @@ from stacks_vfs import VfsUri
 
 from stacks_gui_dialog import StacksGuiDialog
 
-APP="Stacks"
-DIR="locale"
-locale.setlocale(locale.LC_ALL, '')
-gettext.bindtextdomain(APP, DIR)
-gettext.textdomain(APP)
-_ = gettext.gettext
 
 class StacksGuiTrasher(StacksGuiDialog):
 

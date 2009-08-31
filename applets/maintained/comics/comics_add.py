@@ -27,7 +27,7 @@ import re
 import tempfile
 
 # Symbols used
-from locale import gettext as _
+from awn.extras import _
 
 # Local
 from downloader import Downloader

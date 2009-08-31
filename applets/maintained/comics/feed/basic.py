@@ -19,7 +19,6 @@
 
 
 import gobject
-import locale
 import os
 import re
 import time

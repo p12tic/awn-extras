@@ -19,16 +19,10 @@
 
 import gtk
 import gnomevfs
-import gettext
+from awn.extras import _
 from stacks_backend import *
 from stacks_vfs import *
 
-APP="Stacks"
-DIR="locale"
-locale.setlocale(locale.LC_ALL, '')
-gettext.bindtextdomain(APP, DIR)
-gettext.textdomain(APP)
-_ = gettext.gettext
 
 class FolderBackend(Backend):
 

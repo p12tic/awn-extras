@@ -22,15 +22,13 @@
 # Import standard modules
 import awn
 import awn.extras.awnlib
-import gettext
 import gobject
 import gtk
 import gtk.glade
-import locale
 import os
 import sys
 import tempfile
-from locale import gettext as _
+from awn.extras import _
 from os.path import join
 
 # Import Comics! modules, but check dependencies first
@@ -262,11 +260,6 @@ class ComicApplet(awn.AppletSimple):
 
 
 if __name__ == '__main__':
-	# Initialise internationalisation
-	locale.setlocale(locale.LC_ALL, '')
-	locale.bindtextdomain('comics', LOCALE_DIR)
-	locale.textdomain('comics')
-	
 	# Initialise threading
 	gobject.threads_init()
 	gtk.gdk.threads_init()

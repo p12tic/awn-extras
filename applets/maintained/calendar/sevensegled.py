@@ -21,15 +21,6 @@
 # Boston, MA 02111-1307, USA.
 #
 
-# locale stuff
-APP = "awn-calendar"
-DIR = "locale"
-import gettext
-#locale.setlocale(locale.LC_ALL, '')
-gettext.bindtextdomain(APP, DIR)
-gettext.textdomain(APP)
-_ = gettext.gettext
-
 
 class SevenSegLed:
 

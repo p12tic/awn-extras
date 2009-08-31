@@ -30,7 +30,7 @@ import tempfile
 import time
 
 # Symbols used
-from locale import gettext as _
+from awn.extras import _
 from math import pi
 
 # Local

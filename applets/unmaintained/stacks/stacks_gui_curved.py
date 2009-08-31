@@ -82,16 +82,6 @@ except ImportError:
 	if not detected_errors: detected_errors = ""
 	detected_errors = detected_errors + " * Error importing time \n"
 try:
-	import locale
-except ImportError:
-	if not detected_errors: detected_errors = ""
-	detected_errors = detected_errors + " * Error importing locale \n"
-try:
-	import gettext
-except ImportError:
-	if not detected_errors: detected_errors = ""
-	detected_errors = detected_errors + " * Error importing gettext \n"
-try:
 	import math
 except ImportError:
 	if not detected_errors: detected_errors = ""
@@ -102,6 +92,7 @@ except ImportError:
 	if not detected_errors: detected_errors = ""
 	detected_errors = detected_errors + " * Error importing pangocairo \n"	
 
+from awn.extras import _
 
 from stacks_backend import *
 from stacks_backend_file import *
@@ -113,15 +104,6 @@ from stacks_launcher import LaunchManager
 from stacks_icons import IconFactory
 from stacks_vfs import VfsUri
 from stacks_glade import GladeWindow
-
-APP="Stacks"
-DIR="locale"
-locale.setlocale(locale.LC_ALL, '')
-gettext.bindtextdomain(APP, DIR)
-gettext.textdomain(APP)
-_ = gettext.gettext
-
-
 
 #constants
 stack_item_x = 1

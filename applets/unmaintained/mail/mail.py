@@ -16,7 +16,6 @@
 
 import email
 import gettext
-import locale
 import os
 import re
 import subprocess
@@ -26,12 +25,7 @@ pygtk.require("2.0")
 import gtk
 
 from awn import extras
-from awn.extras import awnlib
-
-APP = "awn-extras-applets"
-gettext.bindtextdomain(APP, extras.GETTEXTDIR)
-gettext.textdomain(APP)
-_ = gettext.gettext
+from awn.extras import _, awnlib
 
 themes_dir = os.path.join(os.path.dirname(__file__), "Themes")
 ui_file = os.path.join(os.path.dirname(__file__), "mail.ui")

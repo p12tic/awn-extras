@@ -26,19 +26,11 @@ import random
 import gnome.ui
 import gnomevfs
 import gnomedesktop
-import locale
-import gettext
+from awn.extras import _
 
 from stacks_vfs import VfsUri, Monitor
 from stacks_icons import IconFactory, Thumbnailer
 from stacks_launcher import LaunchManager
-
-APP="Stacks"
-DIR="locale"
-locale.setlocale(locale.LC_ALL, '')
-gettext.bindtextdomain(APP, DIR)
-gettext.textdomain(APP)
-_ = gettext.gettext
 
 # Backend types
 BACKEND_TYPE_INVALID = -1

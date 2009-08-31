@@ -27,8 +27,6 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 import cairo
-import gettext
-import locale
 import os
 
 #This applet stuff
@@ -39,12 +37,7 @@ import icon
 import sys
 import awn
 from awn import extras
-from awn.extras import detach
-
-APP = "awn-extras-applets"
-gettext.bindtextdomain(APP, extras.GETTEXTDIR)
-gettext.textdomain(APP)
-_ = gettext.gettext
+from awn.extras import _, detach
 
 
 class App(awn.AppletSimple):

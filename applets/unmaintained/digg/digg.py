@@ -17,10 +17,7 @@
 
 import os
 import awn
-from awn import extras
-from awn.extras import awnlib
-import gettext
-import locale
+from awn.extras import _, awnlib
 
 # workaround for weirdness with regards to Ubuntu + gtkmozembed
 if os.path.exists('/etc/issue'):
@@ -47,11 +44,6 @@ except ImportError:
 
 # Add pop up if gtkmozembed isn't found
 awn.check_dependencies(globals(), 'gtkmozembed')
-
-APP = "awn-extras-applets"
-gettext.bindtextdomain(APP, extras.GETTEXTDIR)
-gettext.textdomain(APP)
-_ = gettext.gettext
 
 applet_name = _("Digg Applet")
 applet_version = "0.3.3"

@@ -21,16 +21,13 @@ dnl ==============================================
 dnl translation support
 dnl ==============================================
 
-GETTEXT_PACKAGE=awn-extras-applets
+GETTEXT_PACKAGE=awn-extras
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [Gettext package])
 ALL_LINGUAS="de en_US@piglatin es fr nb nl nn ru sv sv_SE"
 
 IT_PROG_INTLTOOL([0.34])
 AM_GLIB_GNU_GETTEXT
-
-slicelocaledir='${prefix}/${DATADIRNAME}/locale'
-AC_SUBST(slicelocaledir)
 
 dnl
 dnl Python script installation
@@ -280,6 +277,7 @@ AS_AC_EXPAND(SYSCONFDIR, $sysconfdir)
 AS_AC_EXPAND(LIBDIR, $libdir)
 AS_AC_EXPAND(DATADIR, $datadir)
 AS_AC_EXPAND(LIBEXECDIR, $libexecdir)
+AS_AC_EXPAND(LOCALEDIR, $localedir)
 
 AC_DEFINE_UNQUOTED(APPLETSDIR, "$APPLETSDIR",
                    [The base directory for applet data and Python applets.])

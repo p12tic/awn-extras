@@ -16,14 +16,13 @@
 # Boston, MA 02111-1307, USA.
 
 import gettext
-import os
 
 PREFIX = '@prefix@'
-GETTEXTDIR = os.path.join(PREFIX, 'share', 'locale')
 VERSION = '@VERSION@'
 
 # gettext (internationalization/i18n) support
-TEXTDOMAIN = 'awn-extras-applets'
-gettext.bindtextdomain(TEXTDOMAIN, GETTEXTDIR)
+LOCALEDIR = '@LOCALEDIR@'
+TEXTDOMAIN = '@GETTEXT_PACKAGE@'
+gettext.bindtextdomain(TEXTDOMAIN, LOCALEDIR)
 gettext.textdomain(TEXTDOMAIN)
 _ = gettext.gettext

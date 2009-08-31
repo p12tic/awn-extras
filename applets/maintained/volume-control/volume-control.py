@@ -28,7 +28,6 @@ pygtk.require("2.0")
 import gtk
 from gtk import gdk
 
-from awn import ORIENTATION_LEFT, ORIENTATION_RIGHT
 from awn.extras import awnlib
 
 import pygst
@@ -98,7 +97,7 @@ class VolumeControlApplet:
             self.setup_context_menu(prefs)
 
             applet.connect("scroll-event", self.scroll_event_cb)
-            applet.connect("orientation-changed", lambda a, o: self.refresh_orientation())
+            applet.connect("position-changed", lambda a, o: self.refresh_orientation())
 
     def scroll_event_cb(self, widget, event):
         if event.direction == gdk.SCROLL_UP:
@@ -116,12 +115,12 @@ class VolumeControlApplet:
         self.volume_scale.set_increments(volume_step, 10)
 
         self.volume_scale.connect("value-changed", self.volume_scale_changed_cb)
-        prefs.get_object("button-inc-volume").connect("button-press-event", self.backend.up)
-        prefs.get_object("button-dec-volume").connect("button-press-event", self.backend.down)
+        prefs.get_object("button-inc-volume").connect("button-release-event", self.backend.up)
+        prefs.get_object("button-dec-volume").connect("button-release-event", self.backend.down)
 
-        self.applet.connect("button-press-event", self.button_press_event_cb)
+        self.applet.connect("button-release-event", self.button_release_event_cb)
 
-    def button_press_event_cb(self, widget, event):
+    def button_release_event_cb(self, widget, event):
         if event.button == 2:
             # Toggle 'Mute' checkbutton
             self.mute_item.set_active(not self.mute_item.get_active())
@@ -313,7 +312,7 @@ class VolumeControlApplet:
         self.refresh_orientation()
 
     def refresh_orientation(self):
-        rotate = self.theme == "Minimal" and self.applet.get_orientation() in (ORIENTATION_LEFT, ORIENTATION_RIGHT)
+        rotate = self.theme == "Minimal" and self.applet.get_pos_type() in (gtk.POS_LEFT, gtk.POS_RIGHT)
         self.applet.get_icon().props.rotate = gdk.PIXBUF_ROTATE_CLOCKWISE if rotate else gdk.PIXBUF_ROTATE_NONE
 
     def refresh_mute_checkbox(self):

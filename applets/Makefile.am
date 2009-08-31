@@ -16,12 +16,11 @@ if WITH_GCONF
 if WITH_GNOME
 # --with-gnome --with-gconf
 CONDITIONAL_APPLETS += \
-	maintained/awnsystemmonitor \
-	maintained/cairo-menu \
 	$(NULL)
 endif
 # --with-gconf
 CONDITIONAL_APPLETS += \
+	maintained/awnsystemmonitor \
 	maintained/calendar \
 	maintained/media-control \
 	maintained/notification-daemon \
@@ -30,6 +29,7 @@ endif
 # --with-gnome
 if WITH_GNOME
 CONDITIONAL_APPLETS += \
+	maintained/cairo-menu \
 	unmaintained/main-menu \
 	unmaintained/MiMenu \
 	unmaintained/pandora \
@@ -54,13 +54,14 @@ SUBDIRS = \
 	maintained/battery \
 	maintained/cairo-clock \
 	maintained/cpufreq \
+	maintained/digital-clock \
 	maintained/feeds \
 	maintained/file-browser-launcher \
 	maintained/gwibfawn \
 	unmaintained/mail \
 	maintained/media-icons \
 	maintained/media-player \
-	maintained/mount-applet \
+	maintained/mount \
 	maintained/places \
 	maintained/quit \
 	maintained/shiny-switcher \

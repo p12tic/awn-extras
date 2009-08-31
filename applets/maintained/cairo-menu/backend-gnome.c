@@ -393,7 +393,6 @@ void _fillin_connected(DesktopAgnosticVFSVolume *volume, GSList ** p)
 
   Menu_list_item * item;
   GSList *sublist = *p;
-  char * dev_path;
 
   item = g_malloc(sizeof(Menu_list_item));
 
@@ -419,7 +418,6 @@ void _fillin_connected(DesktopAgnosticVFSVolume *volume, GSList ** p)
   item->comment = g_strdup_printf("%s\n%s", item->name, item->mount_point);
   item->desktop = g_strdup("");
   sublist = g_slist_append(sublist, item);
-  g_free(dev_path);
 
   *p = sublist;
 }

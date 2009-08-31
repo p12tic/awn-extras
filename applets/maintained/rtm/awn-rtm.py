@@ -26,16 +26,15 @@
 #  And of course NJPatel for Avant Window Navigator and the AWN Test Python Applet.
 #
 #
-# TODO: Figure out mozembed profile so that the remember me check box functions.
-#       Eventually use Remember The Milk's open API and ditch mozembed alltogether.
+# TODO: Eventually use Remember The Milk's open API and ditch mozembed alltogether.
 #
 #
 
-# import modules
+
 import sys, os
+import shutil
 import pygtk
 import gtk
-# import gtkmozembed
 import webbrowser
 import awn
 import re
@@ -65,20 +64,25 @@ except ImportError:
 # Add pop up if gtkmozembed isn't found
 awn.check_dependencies(globals(), 'gtkmozembed')
 
-# set up applet
+
 class App (awn.AppletSimple):
   def __init__ (self, uid, orient, height):
     awn.AppletSimple.__init__ (self, uid, orient, height)
-    
-    #self.pref_path = os.path.join(os.path.expanduser('~'), ".config/awn/applets/rtm")
     self.icon = self.set_awn_icon('rtm', 'awn-rtm')
     self.title = awn.awn_title_get_default ()
     self.dialog = awn.AppletDialog (self)
 
-# set up gtkmozembed widget
-
+    # set up mozilla profile
     self.mo  = gtkmozembed;
-    #gtkmozembed.set_profile_path(self.pref_path, "profile")
+    self.pref_path = os.path.join(os.path.expanduser('~'), ".config/awn/applets/rtm")
+    self.prefs = self.pref_path + "/profile/prefs.js"
+    if os.path.exists(self.prefs) == True:
+        self.mo.set_profile_path(self.pref_path, "profile")
+    else:
+        self.mo.set_profile_path(self.pref_path, "profile")
+        shutil.copy(os.path.abspath(os.path.dirname(__file__)) + "/prefs.js", self.prefs)
+
+    # set up gtkmozembed widget
     self.moz = self.mo.MozEmbed()
     pad = gtk.Alignment()
     pad.add(self.moz)
@@ -94,9 +98,9 @@ class App (awn.AppletSimple):
     self.connect ("leave-notify-event", self.leave_notify)
     self.dialog.connect ("focus-out-event", self.dialog_focus_out)
 
-# create context menu
 
-  def context_menu(self, widget, event):
+
+  def context_menu(self, widget, event):        # create context menu
     menu = self.create_default_menu()
     about_icon = gtk.ImageMenuItem(stock_id=gtk.STOCK_ABOUT)
     menu.append(about_icon)
@@ -105,9 +109,9 @@ class App (awn.AppletSimple):
     about_icon.connect_object("activate",self.about,self)
     return True
 
-# button press actions
 
-  def button_press(self, widget, event):
+
+  def button_press(self, widget, event):        # button press actions
     if event.button == 2:
       url = "http://www.rememberthemilk.com"
       webbrowser.open(url)
@@ -122,34 +126,24 @@ class App (awn.AppletSimple):
 
       self.title.hide(self)
       self.showing_dlog = not self.showing_dlog
-    # show dialog 
+
 
   def dialog_focus_out (self, widget, event):
     self.dialog.hide ()
-  # print "hide dialog"
 
-# cursor hover over
-
-  def enter_notify (self, widget, event):
+  def enter_notify (self, widget, event):        # cursor hover over
     self.title.show (self, "Remember The Milk")
-  # print "show title"
 
   def leave_notify (self, widget, event):
     self.title.hide (self)
-  # print "hide title"
 
-# create gtk about dialog
-
-  def about(self, applet):
+  def about(self, applet):                      # create gtk about dialog
     about_dialog = gtk.AboutDialog()
     about_dialog.set_logo(applet.icon)
     about_dialog.set_name("RTM Applet")
     about_dialog.set_version("0.2")
     about_dialog.set_copyright("Copyright 2008 LGPL")
-  # about_dialog.set_license("LGPL")
     about_dialog.set_comments("RememberTheMilk is an on-line based prodcutivity application, and the RTM Applet brings it to your desktop. RTM Applet is not endorsed or certified by RememberTheMilk.")
-  # about_dialog.set_authors(["Andrew Starr-Bochicchio"])
-  # about_dialog.set_artists(["Andrew Starr-Bochicchio"])
     about_dialog.set_website("http://www.wiki.awn-project.org")
     about_dialog.connect("response", lambda d, r: d.destroy())
     about_dialog.show() 

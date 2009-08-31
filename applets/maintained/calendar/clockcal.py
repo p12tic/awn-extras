@@ -27,8 +27,9 @@ import gtk
 from gtk import gdk
 import gconf
 import awn
-import awn.extras
+from awn.extras import _
 import cairo
+import locale
 import datetime
 import time
 import sevensegled
@@ -39,16 +40,6 @@ import googlecal
 import owacal
 import evocal
 import calthread
-
-# locale stuff
-APP = "awn-calendar"
-DIR = "locale"
-import locale
-import gettext
-#locale.setlocale(locale.LC_ALL, '')
-gettext.bindtextdomain(APP, DIR)
-gettext.textdomain(APP)
-_ = gettext.gettext
 
 
 class Calendar(awn.AppletSimple):

@@ -4,6 +4,14 @@
 usr/share/avant-window-navigator/applets/calendar/
 usr/share/avant-window-navigator/applets/calendar.desktop
 #
+# Digital Clock
+#
+etc/gconf/schemas/awn-applet-digital-clock.schemas
+usr/share/avant-window-navigator/applets/digital-clock/
+usr/share/avant-window-navigator/applets/digital-clock.desktop
+usr/share/avant-window-navigator/schemas/awn-applet-digital-clock.schema-ini
+usr/share/icons/hicolor/scalable/apps/awn-applet-digital-clock.svg
+#
 # Media-icons
 #
 usr/share/avant-window-navigator/applets/media-icons/*.py
@@ -51,13 +59,6 @@ usr/share/avant-window-navigator/applets/yama.desktop
 #
 #usr/share/avant-window-navigator/applets/digg/
 #usr/share/avant-window-navigator/applets/digg.desktop
-#
-# Digital Clock
-#
-#etc/gconf/schemas/digitalClock.schemas
-#usr/share/avant-window-navigator/applets/digitalClock/
-#usr/share/avant-window-navigator/applets/digitalClock.desktop
-#usr/share/icons/hicolor/scalable/apps/awn-applet-digital-clock.svg
 #
 # Pynot
 #

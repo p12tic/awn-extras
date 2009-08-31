@@ -14,8 +14,8 @@ etc/gconf/schemas/awn-applet-awnterm.schemas
 #
 #Cairo menu
 #
-usr/share/avant-window-navigator/applets/cairo_main_menu.desktop
-usr/lib/awn/applets/cairo_main_menu/*.so
+usr/share/avant-window-navigator/applets/cairo-menu.desktop
+usr/lib/awn/applets/cairo-menu/*.so
 #
 #Notification daemon
 #
@@ -29,12 +29,6 @@ usr/lib/awn/applets/shinyswitcher/*.so
 usr/share/avant-window-navigator/applets/shinyswitcher.desktop
 usr/share/avant-window-navigator/schemas/awn-applet-shinyswitcher.schema-ini
 etc/gconf/schemas/awn-applet-shinyswitcher.schemas
-#
-# Notification area
-#
-usr/lib/awn/applets/notification-area/*.so
-usr/share/avant-window-navigator/applets/notification-area.desktop
-usr/share/icons/hicolor/scalable/apps/notification-area.svg
 #
 # Places
 #
@@ -54,6 +48,12 @@ etc/gconf/schemas/awn-applet-garbage.schemas
 # Disabled applets #
 ####################
 #
+#
+# Notification area
+#
+#usr/lib/awn/applets/notification-area/*.so
+#usr/share/avant-window-navigator/applets/notification-area.desktop
+#usr/share/icons/hicolor/scalable/apps/notification-area.svg
 #usr/lib/awn/applets/separator/*.so
 #usr/lib/awn/applets/plugger/*.so
 #usr/share/avant-window-navigator/applets/separator.desktop

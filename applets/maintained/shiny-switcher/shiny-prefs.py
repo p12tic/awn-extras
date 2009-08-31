@@ -23,6 +23,7 @@ import pygtk
 pygtk.require("2.0")
 import gtk
 
+from awn import config_get_default_for_applet_by_info
 from awn.extras import awnlib
 
 ui_file = os.path.join(os.path.dirname(__file__), "shiny-prefs.ui")
@@ -40,7 +41,8 @@ class Preferences:
         s2w_100 = lambda v: v*100
         w2s_100 = lambda v: v/100
 
-        shiny_settings = awnlib.Settings(folder="applets/shinyswitcher")
+        shiny_config = config_get_default_for_applet_by_info("shinyswitcher", "")
+        shiny_settings = awnlib.Settings(shiny_config)
         default_values = {
             "applet_scale":                 ("appletSizeScale", s2w_100, w2s_100),
             "grab_wallpaper":               "grabWallpaperRadio",

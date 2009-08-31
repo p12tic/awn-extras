@@ -76,7 +76,7 @@ static gboolean _expose_event_window(GtkWidget *widget, GdkEventExpose *expose, 
 static gboolean _expose_event_outer(GtkWidget *widget, GdkEventExpose *expose, Shiny_switcher *shinyswitcher);
 static void _offset_changed(AwnApplet *app, guint offset, Shiny_switcher * shinyswitcher);
 static void _height_changed(AwnApplet *app, guint height, Shiny_switcher * shinyswitcher);
-static void _orient_changed(AwnApplet *app, guint orient, Shiny_switcher * shinyswitcher);
+static void _orient_changed(AwnApplet *app, GtkPositionType orient, Shiny_switcher * shinyswitcher);
 static void _changed(AwnApplet *app,  Shiny_switcher *shinyswitcher);
 static void _workspaces_changed(WnckScreen    *screen, WnckWorkspace *space, Shiny_switcher * shinyswitcher);
 static gboolean _changed_waited(Shiny_switcher *shinyswitcher);
@@ -350,17 +350,17 @@ void calc_dimensions(Shiny_switcher *shinyswitcher)
   switch (shinyswitcher->orient)
   {
 
-    case 2:
+    case GTK_POS_BOTTOM:
     
-    case 0:
+    case GTK_POS_TOP:
       shinyswitcher->mini_work_height = shinyswitcher->height * shinyswitcher->applet_scale / shinyswitcher->rows;
       shinyswitcher->mini_work_width = shinyswitcher->mini_work_height * shinyswitcher->applet_scale * scr_ratio *
                                        (double)wnck_ws_width / (double)wnck_scr_width * vp_vscale(shinyswitcher);
       break;
 
-    case 1:
+    case GTK_POS_LEFT:
 
-    case 3:
+    case GTK_POS_RIGHT:
       shinyswitcher->mini_work_width = shinyswitcher->height * shinyswitcher->applet_scale / shinyswitcher->cols;    
       shinyswitcher->mini_work_height = shinyswitcher->mini_work_width * shinyswitcher->applet_scale * (1.0/scr_ratio )
                                        *(
@@ -1953,7 +1953,7 @@ gboolean _waited(Shiny_switcher *shinyswitcher)
 #endif
   g_signal_connect(G_OBJECT(shinyswitcher->applet), "size-changed", G_CALLBACK(_height_changed), (gpointer)shinyswitcher);
 
-  g_signal_connect(G_OBJECT(shinyswitcher->applet), "orientation-changed", G_CALLBACK(_orient_changed), (gpointer)shinyswitcher);
+  g_signal_connect(G_OBJECT(shinyswitcher->applet), "position-changed", G_CALLBACK(_orient_changed), (gpointer)shinyswitcher);
 
   g_signal_connect(G_OBJECT(shinyswitcher->applet), "offset-changed", G_CALLBACK(_offset_changed), shinyswitcher);
 
@@ -1989,7 +1989,7 @@ applet_new(AwnApplet *applet, gint panel_id)
 
   Shiny_switcher *shinyswitcher = g_malloc(sizeof(Shiny_switcher)) ;
   shinyswitcher->padding = awn_applet_get_offset(applet);;
-  shinyswitcher->orient = awn_applet_get_orientation(applet);
+  shinyswitcher->orient = awn_applet_get_pos_type(applet);
   shinyswitcher->align  = AWN_ALIGNMENT(awn_alignment_new_for_applet(applet));
   gtk_container_add(GTK_CONTAINER(applet), GTK_WIDGET(shinyswitcher->align));
   shinyswitcher->config = NULL;
@@ -2158,9 +2158,10 @@ static void _offset_changed(AwnApplet *app, guint offset, Shiny_switcher * shiny
 }
 
 static void
-_orient_changed(AwnApplet *app, guint orient, Shiny_switcher * shinyswitcher)
+_orient_changed(AwnApplet *app, GtkPositionType orient,
+                Shiny_switcher * shinyswitcher)
 {
-  g_debug("orientation_changed\n");
+  g_debug("position-changed\n");
   shinyswitcher->orient = orient;
   _changed(app, shinyswitcher);
   _changed_waited(shinyswitcher);
@@ -2177,8 +2178,8 @@ _workspaces_changed(WnckScreen    *screen, WnckWorkspace *space, Shiny_switcher 
 static void
 _viewports_changed(WnckScreen    *screen, Shiny_switcher * shinyswitcher)
 {
-  g_debug("viewports_changed\n");
+/*  g_debug("viewports_changed\n");
   _changed(shinyswitcher->applet, shinyswitcher);
-  _changed_waited(shinyswitcher);
+  _changed_waited(shinyswitcher);*/
 }
 

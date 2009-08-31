@@ -24,16 +24,9 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
-import gettext
-import locale
 import os
 
-from awn.extras import defs
-
-APP = "awn-extras-applets"
-gettext.bindtextdomain(APP, defs.GETTEXTDIR)
-gettext.textdomain(APP)
-_ = gettext.gettext
+from awn.extras import _
 
 def url_hook(about, url):
   os.system('xdg-open %s &' % url)

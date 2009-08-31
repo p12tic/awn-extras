@@ -21,16 +21,13 @@ dnl ==============================================
 dnl translation support
 dnl ==============================================
 
-GETTEXT_PACKAGE=awn-extras-applets
+GETTEXT_PACKAGE=awn-extras
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [Gettext package])
-ALL_LINGUAS=""
+ALL_LINGUAS="de en_US@piglatin es fr nb nl nn ru sv sv_SE"
 
 IT_PROG_INTLTOOL([0.34])
 AM_GLIB_GNU_GETTEXT
-
-slicelocaledir='${prefix}/${DATADIRNAME}/locale'
-AC_SUBST(slicelocaledir)
 
 dnl
 dnl Python script installation
@@ -63,6 +60,8 @@ AM_CONDITIONAL(BUILD_WEBAPPLET, test "$with_mozilla" != "no" -o "$with_webkit" !
 
 # all
 PKG_CHECK_MODULES(AWN, [awn >= 0.3.9])
+# awn-system-monitor, sysmon
+PKG_CHECK_MODULES(GTOP, [libgtop-2.0])
 #trash
 #PKG_CHECK_MODULES(LIBGLADE, [libglade-2.0])
 # awn-notification-daemon, shiny-switcher, standalone-launcher, taskmand
@@ -92,7 +91,7 @@ fi
 # awn-terminal
 PKG_CHECK_MODULES(VTE, [vte])
 
-# awn-system-monitor, awn-notification-daemon, cairo-menu, filebrowser, plugger, trasher
+# awn-system-monitor, awn-notification-daemon, filebrowser, plugger, trasher
 if test "$with_gconf" != "no"; then
   PKG_CHECK_MODULES(GCONF, [gconf-2.0])
   gconf=gconf-2.0
@@ -103,15 +102,13 @@ fi
 #PKG_CHECK_MODULES(GNOMEUI, [libgnomeui-2.0])
 # filebrowser
 #PKG_CHECK_MODULES(GNOME_DESKTOP, [gnome-desktop-2.0])
-# filebrowser, cairo-menu, plugger, trash, trasher
+# filebrowser, plugger, trash, trasher
 #PKG_CHECK_MODULES(GNOME_VFS, [gnome-vfs-2.0])
 #fi
 
 if test "$with_gnome" != "no"; then
 # main-menu, cairo-menu
 PKG_CHECK_MODULES(GNOME_MENU, [libgnome-menu])
-# awn-system-monitor, sysmon
-PKG_CHECK_MODULES(GTOP, [libgtop-2.0])
 fi
 
 # webapplet
@@ -172,16 +169,18 @@ if test x$enable_sound != xno; then
 fi
 
 # applet-specific libraries
-if test "$with_gconf" != "no" -a "$with_gnome" != "no"; then
-PKG_CHECK_MODULES(AWN_SYSTEM_MONITOR, [$gconf libgtop-2.0])
+#if test "$with_gconf" != "no" -a "$with_gnome" != "no"; then
 #PKG_CHECK_MODULES(FILEBROWSER, [$gconf gnome-desktop-2.0 gnome-vfs-2.0 libgnomeui-2.0])
-PKG_CHECK_MODULES(CAIRO_MENU_GNOME, [$gconf libgnome-menu libnotify $icon_entry_module])
 #PKG_CHECK_MODULES(PLUGGER, [$gconf gnome-vfs-2.0])
 #PKG_CHECK_MODULES(TRASH, [gnome-vfs-2.0 libglade-2.0 x11])
 #PKG_CHECK_MODULES(TRASHER, [$gconf gnome-vfs-2.0])
-fi
+#fi
 if test "$with_gconf" != "no"; then
+PKG_CHECK_MODULES(AWN_SYSTEM_MONITOR, [$gconf libgtop-2.0])
 PKG_CHECK_MODULES(NOTIFICATION_DAEMON, [$gconf $gstreampkg libnotify $url_label_module libwnck-1.0 x11])
+fi
+if test "$with_gnome" != "no"; then
+PKG_CHECK_MODULES(CAIRO_MENU_GNOME, [libgnome-menu libnotify $icon_entry_module])
 fi
 PKG_CHECK_MODULES(SHINY_SWITCHER, [libwnck-1.0 x11 xcomposite xrender])
 if test -n "$webapplet_modules"; then
@@ -227,7 +226,7 @@ if test x${enable_pymod_checks} = xyes; then
     # calendar
     AM_CHECK_PYMOD(gdata,,,AC_MSG_ERROR([python module gdata required (python-gdata)]))
     # calendar
-    AM_CHECK_PYMOD(vobject,,,AC_MSG_ERROR([python module gdata required (python-vobject)]))
+    AM_CHECK_PYMOD(vobject,,,AC_MSG_ERROR([python module vobject required (python-vobject)]))
     fi
 fi
 
@@ -276,8 +275,11 @@ appletsdir="$datarootdir/avant-window-navigator/applets"
 AS_AC_EXPAND(APPLETSDIR, $appletsdir)
 AS_AC_EXPAND(SYSCONFDIR, $sysconfdir)
 AS_AC_EXPAND(LIBDIR, $libdir)
-AS_AC_EXPAND(DATADIR, $datadir)
+AS_AC_EXPAND(datadir_intermediate, $datadir)
+AS_AC_EXPAND(DATADIR, $datadir_intermediate)
 AS_AC_EXPAND(LIBEXECDIR, $libexecdir)
+AS_AC_EXPAND(localedir_intermediate, $localedir)
+AS_AC_EXPAND(LOCALEDIR, $localedir_intermediate)
 
 AC_DEFINE_UNQUOTED(APPLETSDIR, "$APPLETSDIR",
                    [The base directory for applet data and Python applets.])
@@ -323,14 +325,11 @@ applets/maintained/awnterm/awnterm.desktop.in
 applets/maintained/battery/Makefile
 applets/maintained/cairo-clock/Makefile
 applets/maintained/cairo-menu/Makefile
-applets/maintained/cairo-menu/cairo_main_menu.desktop.in
+applets/maintained/cairo-menu/cairo-menu.desktop.in
 applets/maintained/calendar/Makefile
 applets/maintained/comics/Makefile
-applets/maintained/comics/locale/Makefile
-applets/maintained/comics/locale/sv_SE/Makefile
-applets/maintained/comics/locale/sv_SE/LC_MESSAGES/Makefile
 applets/maintained/cpufreq/Makefile
-applets/maintained/digitalClock/Makefile
+applets/maintained/digital-clock/Makefile
 applets/maintained/feeds/Makefile
 applets/maintained/file-browser-launcher/Makefile
 applets/maintained/garbage/Makefile
@@ -338,10 +337,8 @@ applets/maintained/garbage/garbage.desktop.in
 applets/maintained/gwibfawn/Makefile
 applets/maintained/media-control/Makefile
 applets/maintained/media-icons/Makefile
-applets/maintained/media-icons/media-icon-next.desktop.in
-applets/maintained/media-icons/media-icon-previous.desktop.in
 applets/maintained/media-player/Makefile
-applets/maintained/mount-applet/Makefile
+applets/maintained/mount/Makefile
 applets/maintained/notification-area/Makefile
 applets/maintained/notification-area/notification-area.desktop.in
 applets/maintained/notification-daemon/Makefile
@@ -363,17 +360,6 @@ applets/maintained/vala-test/Makefile
 applets/maintained/vala-test/vala-test.desktop.in
 applets/maintained/volume-control/Makefile
 applets/maintained/weather/Makefile
-applets/maintained/weather/locale/Makefile
-applets/maintained/weather/locale/es/Makefile
-applets/maintained/weather/locale/es/LC_MESSAGES/Makefile
-applets/maintained/weather/locale/fr/Makefile
-applets/maintained/weather/locale/fr/LC_MESSAGES/Makefile
-applets/maintained/weather/locale/nb/Makefile
-applets/maintained/weather/locale/nb/LC_MESSAGES/Makefile
-applets/maintained/weather/locale/nn/Makefile
-applets/maintained/weather/locale/nn/LC_MESSAGES/Makefile
-applets/maintained/weather/locale/pt/Makefile
-applets/maintained/weather/locale/pt/LC_MESSAGES/Makefile
 applets/maintained/webapplet/Makefile
 applets/maintained/webapplet/webapplet.desktop.in
 applets/maintained/wobblyzini/Makefile
@@ -387,9 +373,6 @@ applets/unmaintained/digg/Makefile
 applets/unmaintained/filebrowser/Makefile
 applets/unmaintained/filebrowser/filebrowser.desktop.in
 applets/unmaintained/mail/Makefile
-applets/unmaintained/mail/locale/Makefile
-applets/unmaintained/mail/locale/ru/Makefile
-applets/unmaintained/mail/locale/ru/LC_MESSAGES/Makefile
 applets/unmaintained/main-menu/Makefile
 applets/unmaintained/main-menu/main-menu.desktop.in
 applets/unmaintained/MiMenu/Makefile
@@ -406,7 +389,7 @@ applets/unmaintained/trash/trash.desktop.in
 applets/unmaintained/trasher/Makefile
 applets/unmaintained/trasher/trasher.desktop.in
 po/Makefile.in
-shared/python/defs.py
+shared/python/__init__.py
 shared/python/Makefile
 shave/shave
 shave/shave-libtool

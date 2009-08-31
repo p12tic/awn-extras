@@ -21,15 +21,8 @@
 # Boston, MA 02111-1307, USA.
 #
 import gtk
-import gettext
 import random
-
-APP = "awn-calendar-applet"
-DIR = "locale"
-#locale.setlocale(locale.LC_ALL, '')
-gettext.bindtextdomain(APP, DIR)
-gettext.textdomain(APP)
-_ = gettext.gettext
+from awn.extras import _
 
 
 class CalendarLogin(gtk.Window):

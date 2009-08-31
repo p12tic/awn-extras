@@ -133,7 +133,7 @@ typedef struct
   DesktopAgnosticConfigClient *dock_config;
 	AwnAlignment * align;
 	
-	gint orient;
+	GtkPositionType orient;
 }Shiny_switcher;
 
 

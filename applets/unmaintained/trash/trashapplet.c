@@ -268,7 +268,7 @@ trash_applet_new(AwnApplet *applet)
   app->height = awn_applet_get_height(applet);
   g_signal_connect(G_OBJECT(applet), "height-changed",
                    G_CALLBACK(on_awn_height_changed), (gpointer)app);
-  g_signal_connect(G_OBJECT(applet), "orientation-changed",
+  g_signal_connect(G_OBJECT(applet), "position-changed",
                    G_CALLBACK(on_awn_orient_changed), (gpointer)app);
 
   /* effects */

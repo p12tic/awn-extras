@@ -34,7 +34,6 @@ USER_FEEDS_DIR	= join(USER_DIR, 'feeds')
 PLUGINS_DIR		= join(SHARE_DIR, 'feed', 'plugins')
 GLADE_DIR		= join(SHARE_DIR, 'glade')
 ICONS_DIR		= join(SHARE_DIR, 'icons')
-LOCALE_DIR		= join(SHARE_DIR, 'locale')
 
 STRIPS_DIR		= USER_DIR
 CACHE_FILE		= join(USER_DIR, '%s.cache')

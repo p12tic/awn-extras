@@ -26,16 +26,9 @@ pygtk.require('2.0')
 import gtk
 import pango
 import os
-import gettext
-import locale
 
 import awn
-from awn.extras import defs
-
-APP = "awn-extras-applets"
-gettext.bindtextdomain(APP, defs.GETTEXTDIR)
-gettext.textdomain(APP)
-_ = gettext.gettext
+from awn.extras import _
 
 group = awn.CONFIG_DEFAULT_GROUP
 

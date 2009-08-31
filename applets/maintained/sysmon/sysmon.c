@@ -38,10 +38,7 @@ struct _AwnSysmonPrivate
    treating them as pointers for now ...  because I'm not really
    sure of certain behaviours/interactions
    */
-  DesktopAgnosticConfigClient * client;
-  DesktopAgnosticConfigClient * client_baseconf;
-  
-  
+  DesktopAgnosticConfigClient * client_baseconf; 
   GSList    * icon_list;
 };
 
@@ -49,10 +46,9 @@ enum
 {
   PROP_0,
   PROP_ICON_LIST,
-  PROP_CLIENT,
-  PROP_BRIDGE,
   PROP_CLIENT_BASECONF,
-  PROP_BRIDGE_BASECONF
+  PROP_BRIDGE_BASECONF,
+  PROP_BRIDGE  
 };
 
 static void
@@ -79,11 +75,8 @@ awn_sysmon_get_property (GObject *object, guint property_id,
       g_value_take_boxed (value, array);
       break;
     }
-    case PROP_CLIENT:
-      g_value_set_object (value,priv->client);
-      break;          
     case PROP_CLIENT_BASECONF:
-      g_value_set_object (value,priv->client_baseconf);
+      g_value_set_pointer (value,priv->client_baseconf);
       break;                
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -111,20 +104,27 @@ static void
 awn_sysmon_set_property (GObject *object, guint property_id,
                               const GValue *value, GParamSpec *pspec)
 {
+  GValueArray *array;
+  gint i;
+
   AwnSysmonPrivate * priv = AWN_SYSMON_GET_PRIVATE (object);  
   switch (property_id) 
   {
     case PROP_ICON_LIST:
-      priv->icon_list = free_string_slist (priv->icon_list);
-      priv->icon_list = g_value_get_pointer (value);
-      break;
-    case PROP_CLIENT:
-      g_assert (!priv->client); /*this should not be set more than once!*/
-      priv->client = g_value_dup_object (value);
+      if (priv->icon_list)
+      {  
+        priv->icon_list = free_string_slist (priv->icon_list);
+      }
+      array = g_value_get_boxed (value);
+      for (i = 0; i < array->n_values; i++)
+      {
+        gchar * str;
+        priv->icon_list = g_slist_append (priv->icon_list,str = g_value_dup_string(g_value_array_get_nth(array,i)));
+      }
       break;
     case PROP_CLIENT_BASECONF:
       g_assert (!priv->client_baseconf); /*this should not be set more than once!*/
-      priv->client_baseconf = g_value_dup_object (value);
+      priv->client_baseconf = g_value_get_pointer (value);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -136,10 +136,6 @@ awn_sysmon_dispose (GObject *object)
 {
   AwnSysmonPrivate * priv = AWN_SYSMON_GET_PRIVATE (object);  
 
-  if (priv->client)
-  {
-    g_object_unref (priv->client);
-  }
   if (priv->client_baseconf)
   {
     g_object_unref (priv->client_baseconf);
@@ -160,6 +156,7 @@ awn_sysmon_finalize (GObject *object)
 static void
 awn_sysmon_constructed (GObject *object)
 {
+  gchar * name;
   gchar * uid;
   GtkWidget *icon;
   AwnSysmon * sysmon = AWN_SYSMON(object);
@@ -170,28 +167,27 @@ awn_sysmon_constructed (GObject *object)
   }  
   
   priv = AWN_SYSMON_GET_PRIVATE (sysmon);        
-  gchar * folder;
   GTimeVal cur_time;
 
   
   g_object_get (object,
+                "canonical-name",&name,
                 "uid", &uid,
                 NULL);
   /* XXX moonbeam has a good reason that he's doing config this way.
-   * DO NOT EMULATE UNLESS YOU HAVE A VERY GOOD REASON.
+   * DO NOT EMULATE UNLESS YOU HAVE A VERY GOOD REASON. Or you're insane
    */
-  folder = g_strdup_printf("%s-%s",APPLET_NAME,uid);
-  priv->client = awn_config_get_default_for_applet (AWN_APPLET(object), NULL);
-  priv->client_baseconf = awn_config_get_default_for_applet_by_info (APPLET_NAME, uid, TRUE, NULL);
+  g_debug ("%s:  %s, %s",__func__,name,uid);
+  priv->client_baseconf = awn_config_get_default_for_applet_by_info (name, uid,NULL);
+  g_debug ("client_baseconf = %p",priv->client_baseconf);
   
-  g_free (folder);
-  desktop_agnostic_config_client_bind (priv->client,
+  desktop_agnostic_config_client_bind (priv->client_baseconf,
                                        "applet", "icon_list",
-                                       G_OBJECT(object), "icon-list", FALSE,
-                                       DESKTOP_AGNOSTIC_CONFIG_BIND_METHOD_BOTH,
+                                       G_OBJECT(object), "icon_list", FALSE,
+                                       DESKTOP_AGNOSTIC_CONFIG_BIND_METHOD_GLOBAL,
                                        NULL);
   g_get_current_time ( &cur_time);
-  desktop_agnostic_config_client_set_int (priv->client,
+  desktop_agnostic_config_client_set_int (priv->client_baseconf,
                                           "applet",
                                           "time_stamp",
                                           cur_time.tv_sec,
@@ -212,9 +208,11 @@ awn_sysmon_constructed (GObject *object)
       GStrv tokens = g_strsplit (iter->data,"::",-1);
       if ( g_strcmp0 ("CPU",tokens[0])==0)
       {
-        icon = awn_CPUicon_new (AWN_APPLET(sysmon),tokens[1]);
+        gchar *icon_id = g_strdup_printf ("%s-%s-%s",uid,tokens[0],tokens[1]);
+        icon = awn_CPUicon_new (AWN_APPLET(sysmon),icon_id);
         gtk_container_add (GTK_CONTAINER (priv->box), icon);  
         gtk_widget_show (icon);
+        g_free (icon_id);
       }
       else
       {
@@ -237,6 +235,7 @@ awn_sysmon_constructed (GObject *object)
   gtk_widget_show (icon);
 */
   
+  g_free (name);
   g_free (uid);
 }
 
@@ -256,25 +255,19 @@ awn_sysmon_class_init (AwnSysmonClass *klass)
                               "Icon list",
                               "The list of icons for this applet instance",
                               G_TYPE_VALUE_ARRAY,
-                              G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
+                              G_PARAM_READWRITE);
   g_object_class_install_property (object_class, PROP_ICON_LIST, pspec);   
 
   pspec = g_param_spec_pointer ("bridge",
                                "bridge",
                                "Config client bridge",
-                               G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
+                               G_PARAM_READWRITE);
   g_object_class_install_property (object_class, PROP_BRIDGE, pspec);   
-
-  pspec = g_param_spec_pointer ("client",
-                               "client",
-                               "config client",
-                               G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
-  g_object_class_install_property (object_class, PROP_CLIENT, pspec);   
 
   pspec = g_param_spec_pointer ("client-baseconf",
                                "client baseconf",
                                "config client baseconf",
-                               G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
+                               G_PARAM_READWRITE);
   g_object_class_install_property (object_class, PROP_CLIENT_BASECONF, pspec);   
   
   g_type_class_add_private (klass, sizeof (AwnSysmonPrivate));
@@ -298,7 +291,7 @@ AwnSysmon*
 awn_sysmon_new (const gchar * name,const gchar *uid,gint panel_id)
 {
   return g_object_new (AWN_TYPE_SYSMON,
-			    "name", name,
+                            "canonical-name", name,
                             "uid", uid,
                             "panel-id", panel_id,
                             NULL);

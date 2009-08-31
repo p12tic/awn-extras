@@ -19,17 +19,11 @@
 
 import gtk
 import gnomevfs
-import gettext
+from awn.extras import _
 from stacks_backend_folder import *
 from stacks_launcher import LaunchManager
 from stacks_vfs import *
 
-APP="Stacks"
-DIR="locale"
-locale.setlocale(locale.LC_ALL, '')
-gettext.bindtextdomain(APP, DIR)
-gettext.textdomain(APP)
-_ = gettext.gettext
 
 class TrashBackend(Backend):
     vol_monitor = None

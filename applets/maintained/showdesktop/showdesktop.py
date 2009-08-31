@@ -46,19 +46,18 @@ class ShowDesktopApplet:
         showing_desktop = wnck.screen_get_default().get_showing_desktop()
         applet.tooltip.set(titles[showing_desktop])
 
-        applet.connect("button-press-event", self.button_press_event_cb)
+        applet.connect("clicked", self.clicked_cb)
 
-    def button_press_event_cb(self, widget, event):
-        if event.button == 1:
-            screen = wnck.screen_get_default()
+    def clicked_cb(self, widget):
+        screen = wnck.screen_get_default()
 
-            # showing windows = not showing desktop
-            showing_windows = not screen.get_showing_desktop()
-            screen.toggle_showing_desktop(showing_windows)
+        # showing windows = not showing desktop
+        showing_windows = not screen.get_showing_desktop()
+        screen.toggle_showing_desktop(showing_windows)
 
-            """ If windows were shown, they are now hidden, and next switch
-            will make them visible again """
-            self.applet.tooltip.set(titles[showing_windows])
+        """ If windows were shown, they are now hidden, and next switch
+        will make them visible again """
+        self.applet.tooltip.set(titles[showing_windows])
 
 
 if __name__ == "__main__":

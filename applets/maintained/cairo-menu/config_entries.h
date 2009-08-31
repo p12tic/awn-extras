@@ -23,39 +23,37 @@
 
 #include <libdesktop-agnostic/desktop-agnostic.h>
 
-#define GCONF_MENU "/apps/avant-window-navigator/applets/cairo-menu"
+#define CONF_NORMAL_BG "bg_normal_colour"
+#define CONF_NORMAL_FG "text_normal_colour"
+#define CONF_HOVER_BG "bg_hover_colour"
+#define CONF_HOVER_FG "text_hover_colour"
 
-#define GCONF_NORMAL_BG GCONF_MENU "/bg_normal_colour"
-#define GCONF_NORMAL_FG GCONF_MENU "/text_normal_colour"
-#define GCONF_HOVER_BG GCONF_MENU "/bg_hover_colour"
-#define GCONF_HOVER_FG GCONF_MENU "/text_hover_colour"
+#define CONF_TEXT_SIZE "text_size"
 
-#define GCONF_TEXT_SIZE GCONF_MENU "/text_size"
+#define CONF_SEARCH_CMD "search_cmd"
+#define CONF_SHOW_SEARCH "search_show"
+#define CONF_SHOW_RUN "run_show"
 
-#define GCONF_SEARCH_CMD GCONF_MENU "/search_cmd"
-#define GCONF_SHOW_SEARCH GCONF_MENU "/search_show"
-#define GCONF_SHOW_RUN GCONF_MENU "/run_show"
+#define CONF_DO_FADE "fade_in"
 
-#define GCONF_DO_FADE GCONF_MENU "/fade_in"
+#define CONF_MENU_GRADIENT "menu_item_gradient_factor"
+#define CONF_MENU_ITEM_TEXT_LEN "menu_item_text_len"
 
-#define GCONF_MENU_GRADIENT GCONF_MENU "/menu_item_gradient_factor"
-#define GCONF_MENU_ITEM_TEXT_LEN GCONF_MENU "/menu_item_text_len"
+#define CONF_SHOW_PLACES "places_show"
 
-#define GCONF_SHOW_PLACES GCONF_MENU "/places_show"
+#define CONF_FILEMANAGER "filemanager"
+#define CONF_APPLET_ICON "applet_icon"
 
-#define GCONF_FILEMANAGER GCONF_MENU "/filemanager"
-#define GCONF_APPLET_ICON GCONF_MENU "/applet_icon"
+#define CONF_ON_BUTTON_RELEASE "activate_on_release"
+#define CONF_SHOW_TOOLTIPS "show_tooltips"
 
-#define GCONF_ON_BUTTON_RELEASE GCONF_MENU "/activate_on_release"
-#define GCONF_SHOW_TOOLTIPS GCONF_MENU "/show_tooltips"
+#define CONF_SHOW_LOGOUT "show_logout"
+#define CONF_LOGOUT "logout"
 
-#define GCONF_SHOW_LOGOUT GCONF_MENU "/show_logout"
-#define GCONF_LOGOUT GCONF_MENU "/logout"
+#define CONF_BORDER_COLOUR "border_colour"
+#define CONF_BORDER_WIDTH "border_width"
 
-#define GCONF_BORDER_COLOUR GCONF_MENU "/border_colour"
-#define GCONF_BORDER_WIDTH GCONF_MENU "/border_width"
-
-#define GCONF_HONOUR_GTK GCONF_MENU "/honour_gtk"
+#define CONF_HONOUR_GTK "honour_gtk"
 
 typedef struct
 {

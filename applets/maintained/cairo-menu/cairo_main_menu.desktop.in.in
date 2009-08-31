@@ -1,9 +1,0 @@
-[Desktop Entry]
-Type=Application
-X-AWN-Type=Applet
-X-AWN-AppletType=C
-Name=Cairo Main Menu
-Comment=A Main Menu.
-Exec=@LIBDIR@/awn/applets/cairo_main_menu/cairo_main_menu.so
-Icon=gnome-main-menu
-X-AWN-AppletCategory=Utility

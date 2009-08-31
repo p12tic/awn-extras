@@ -27,15 +27,7 @@ import urllib
 import urlparse
 import urllib2
 import webbrowser
-
-# locale stuff
-APP = "awn-calendar"
-DIR = "locale"
-import gettext
-#locale.setlocale(locale.LC_ALL, '')
-gettext.bindtextdomain(APP, DIR)
-gettext.textdomain(APP)
-_ = gettext.gettext
+from awn.extras import _
 
 __version__ = '0.1'
 __author__ = 'Adrian Holovaty <holovaty@gmail.com>'

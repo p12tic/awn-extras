@@ -29,15 +29,7 @@ import gdata.calendar.service
 import gdata.service
 import gdata.calendar
 import webbrowser
-
-# locale stuff
-APP = "awn-calendar"
-DIR = "locale"
-import gettext
-#locale.setlocale(locale.LC_ALL, '')
-gettext.bindtextdomain(APP, DIR)
-gettext.textdomain(APP)
-_ = gettext.gettext
+from awn.extras import _
 
 CAPTCHA_URI = 'https://www.google.com/accounts/DisplayUnlockCaptcha' + \
               '?service=calendar'

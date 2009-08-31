@@ -37,7 +37,8 @@ struct _AwnSysmoniconPrivate
   cairo_t *bg_cr;
   cairo_t *fg_cr;
   AwnGraph * graph; 
-  
+  DesktopAgnosticConfigClient * client;
+
   gchar * id;
   AwnGraphType graph_type[NUM_CONF_STATES]; 
 

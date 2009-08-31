@@ -1,0 +1,2768 @@
+# French translations for PACKAGE package.
+# Copyright (C) 2007 ORGANIZATION
+# Florent <flo.mart@orange.fr>, 2007.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: awn-core-applets 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-08-31 13:27-0700\n"
+"PO-Revision-Date: 2007-10-10 06:52+0200\n"
+"Last-Translator: Florent Martin <flo.mart@orange.fr>\n"
+"Language-Team: French\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
+msgid "Animal Farm"
+msgstr ""
+
+#: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:2
+msgid "Display fortune messages"
+msgstr ""
+
+#: ../applets/maintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in.h:1
+msgid "Awn System Monitor"
+msgstr ""
+
+#: ../applets/maintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in.h:2
+#: ../applets/maintained/sysmon/sysmon.desktop.in.in.h:1
+msgid "Manage system activity"
+msgstr ""
+
+#: ../applets/maintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:1
+msgid "Graph update frequency, in milliseconds."
+msgstr ""
+
+#: ../applets/maintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:2
+msgid "Set to 1 (true) to draw the gradient overlay on the graph."
+msgstr ""
+
+#: ../applets/maintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:3
+msgid "The color used in the applet border."
+msgstr ""
+
+#: ../applets/maintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:4
+msgid "The color used in the graph lines."
+msgstr ""
+
+#: ../applets/maintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:5
+msgid "The color used in the graph lines. Valid values are 0.0 through 1.0."
+msgstr ""
+
+#: ../applets/maintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:6
+msgid "The pixel width of the applet border."
+msgstr ""
+
+#: ../applets/maintained/awnterm/applet.c:43
+#: ../applets/maintained/awnterm/awnterm.desktop.in.in.h:2
+msgid "Awn Terminal Applet"
+msgstr ""
+
+#. Set up the title
+#: ../applets/maintained/awnterm/applet.c:47
+msgid "Awn Terminal"
+msgstr ""
+
+#: ../applets/maintained/awnterm/awnterm.c:160
+#, c-format
+msgid "Term #%d"
+msgstr ""
+
+#: ../applets/maintained/awnterm/awnterm.desktop.in.in.h:1
+#: ../applets/maintained/awnterm/settings.c:63
+msgid "A simple popup terminal"
+msgstr ""
+
+#: ../applets/maintained/awnterm/settings.c:67
+#: ../applets/unmaintained/trash/trashapplet.c:924
+msgid "translator-credits"
+msgstr ""
+
+#: ../applets/maintained/awnterm/settings.c:207
+#: ../applets/maintained/calendar/calendarprefs.py:73
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:44
+msgid "Preferences"
+msgstr "Preferences"
+
+#: ../applets/maintained/awnterm/settings.c:214
+msgid "Hide when focus is lost"
+msgstr ""
+
+#: ../applets/maintained/awnterm/settings.c:224
+msgid "Background image"
+msgstr ""
+
+#: ../applets/maintained/awnterm/settings.c:237
+msgid "Select a file"
+msgstr ""
+
+#: ../applets/maintained/awnterm/settings.c:255
+msgid "Terminal Opacity"
+msgstr ""
+
+#: ../applets/maintained/awnterm/settings.c:280
+msgid "External Terminal"
+msgstr ""
+
+#: ../applets/maintained/battery/battery.desktop.in.h:1
+#, fuzzy
+msgid "Battery"
+msgstr "Bourrasques"
+
+#: ../applets/maintained/battery/battery.desktop.in.h:2
+msgid "Display battery state"
+msgstr ""
+
+#: ../applets/maintained/cairo-clock/cairo-clock.desktop.in.h:1
+msgid "Cairo Clock"
+msgstr ""
+
+#: ../applets/maintained/cairo-clock/cairo-clock.desktop.in.h:2
+msgid ""
+"Displays an analog clock and supports additional clocks for different "
+"locations"
+msgstr ""
+
+#: ../applets/maintained/cairo-menu/backend-gnome.c:121
+msgid "Invalid desktop file ID"
+msgstr ""
+
+#: ../applets/maintained/cairo-menu/backend-gnome.c:122
+#: ../applets/maintained/cairo-menu/backend-gnome.c:145
+msgid "[Invalid Filename]"
+msgstr ""
+
+#: ../applets/maintained/cairo-menu/backend-gnome.c:123
+msgid " <excluded>"
+msgstr ""
+
+#: ../applets/maintained/calendar/calendar.desktop.in.h:1
+msgid "Clock/Calendar Applet"
+msgstr ""
+
+#: ../applets/maintained/calendar/calendar.desktop.in.h:2
+msgid "Watch appointments on your dock"
+msgstr ""
+
+#: ../applets/maintained/calendar/calendarlogin.py:41
+msgid "Login to "
+msgstr ""
+
+#: ../applets/maintained/calendar/calendarlogin.py:46
+msgid "Online Calendar"
+msgstr ""
+
+#: ../applets/maintained/calendar/calendarlogin.py:51
+msgid "Calendar Username"
+msgstr ""
+
+#: ../applets/maintained/calendar/calendarlogin.py:59
+msgid "Calendar Password"
+msgstr ""
+
+#: ../applets/maintained/calendar/calendarlogin.py:69
+msgid "Save Password"
+msgstr ""
+
+#: ../applets/maintained/calendar/calendarlogin.py:87
+msgid ""
+"You have chosen to save your password.  Although the password will be stored "
+"in an encrypted format, there is always a remote possibility that your "
+"password can be stolen and decrypted if your computer's security is "
+"breached.  Are you still sure you want to save your password?"
+msgstr ""
+
+#: ../applets/maintained/calendar/calendarprefs.py:44
+msgid "Classic LCD"
+msgstr ""
+
+#: ../applets/maintained/calendar/calendarprefs.py:45
+msgid "Indy Glow LCD"
+msgstr ""
+
+#: ../applets/maintained/calendar/calendarprefs.py:46
+msgid "Backlit Amber LCD"
+msgstr ""
+
+#: ../applets/maintained/calendar/calendarprefs.py:47
+msgid "Backlit Green LCD"
+msgstr ""
+
+#: ../applets/maintained/calendar/calendarprefs.py:48
+msgid "Green LED"
+msgstr ""
+
+#: ../applets/maintained/calendar/calendarprefs.py:49
+msgid "Red LED"
+msgstr ""
+
+#: ../applets/maintained/calendar/calendarprefs.py:50
+msgid "Blue LED"
+msgstr ""
+
+#: ../applets/maintained/calendar/calendarprefs.py:51
+msgid "Plain White"
+msgstr ""
+
+#: ../applets/maintained/calendar/calendarprefs.py:52
+msgid "Plain Black"
+msgstr ""
+
+#: ../applets/maintained/calendar/calendarprefs.py:55
+msgid "Red"
+msgstr ""
+
+#: ../applets/maintained/calendar/calendarprefs.py:56
+msgid "Green"
+msgstr ""
+
+#: ../applets/maintained/calendar/calendarprefs.py:57
+#, fuzzy
+msgid "Blue"
+msgstr "Bourrasques"
+
+#: ../applets/maintained/calendar/calendarprefs.py:58
+#, fuzzy
+msgid "Gray"
+msgstr "Vendredi"
+
+#: ../applets/maintained/calendar/calendarprefs.py:59
+msgid "Black"
+msgstr ""
+
+#: ../applets/maintained/calendar/calendarprefs.py:82
+msgid "Twelve Hour Clock"
+msgstr ""
+
+#: ../applets/maintained/calendar/calendarprefs.py:105
+msgid "Clock Appearance"
+msgstr ""
+
+#: ../applets/maintained/calendar/calendarprefs.py:115
+msgid "Calendar Appearance"
+msgstr ""
+
+#: ../applets/maintained/calendar/calendarprefs.py:122
+msgid "None"
+msgstr ""
+
+#: ../applets/maintained/calendar/calendarprefs.py:123
+msgid "Evolution"
+msgstr ""
+
+#: ../applets/maintained/calendar/calendarprefs.py:124
+msgid "Google Calendar"
+msgstr ""
+
+#: ../applets/maintained/calendar/calendarprefs.py:125
+msgid "Outlook Web Access"
+msgstr ""
+
+#: ../applets/maintained/calendar/calendarprefs.py:128
+msgid "Calendar Integration"
+msgstr ""
+
+#: ../applets/maintained/calendar/calendarprefs.py:151
+msgid "Calendar URL"
+msgstr ""
+
+#. default title/tooltip to show on startup.
+#. for focus-follows-mouse
+#. self.dialog.connect('focus-out-event',
+#. self.dialog_focus_out)
+#: ../applets/maintained/calendar/clockcal.py:48
+#: ../applets/maintained/calendar/clockcal.py:497
+#: ../applets/maintained/digital-clock/digitalClock.py:76
+#, fuzzy
+msgid "Calendar"
+msgstr "Dégagé"
+
+#: ../applets/maintained/calendar/clockcal.py:218
+msgid ""
+"Do you want to erase your calendar password from the calendar applet?  If "
+"you choose to clear your password, you will be prompted again for your "
+"calendar login credentials."
+msgstr ""
+
+#: ../applets/maintained/calendar/clockcal.py:503
+msgid "Open in "
+msgstr ""
+
+#: ../applets/maintained/calendar/clockcal.py:507
+#: ../applets/maintained/weather/forecast.py:200
+msgid "Today"
+msgstr "Aujourd'hui"
+
+#. print "Login error: ", sys.exc_info()[0], sys.exc_info()[1]
+#: ../applets/maintained/calendar/clockcal.py:555
+msgid "Unable to read calendar data from external source."
+msgstr ""
+
+#: ../applets/maintained/calendar/googlecal.py:88
+msgid "No appointments."
+msgstr ""
+
+#: ../applets/maintained/calendar/icscal.py:71
+#: ../applets/maintained/calendar/owacal.py:93
+msgid "No appointments"
+msgstr ""
+
+#. Initialise notifications
+#: ../applets/maintained/comics/comics.desktop.in.h:1
+#: ../applets/maintained/comics/main.py:294
+#: ../applets/maintained/comics/main.py:300
+msgid "Comics!"
+msgstr ""
+
+#: ../applets/maintained/comics/comics.desktop.in.h:2
+msgid "View your favourite comics on your desktop"
+msgstr ""
+
+#: ../applets/maintained/comics/comics.py:153
+#: ../applets/maintained/comics/glade/main.glade.h:1
+msgid "Comics"
+msgstr ""
+
+#: ../applets/maintained/comics/comics.py:213
+#: ../applets/maintained/comics/main.py:192
+#, python-format
+msgid "There is a new strip of %s!"
+msgstr ""
+
+#: ../applets/maintained/comics/comics_add.py:58
+#, python-format
+msgid "Failed to download %s. Press \"next\" to try again."
+msgstr ""
+
+#: ../applets/maintained/comics/comics_add.py:65
+msgid "The URL is not a valid comic feed. Press \"next\" to try again"
+msgstr ""
+
+#: ../applets/maintained/comics/comics_add.py:140
+#, python-format
+msgid "Connecting to <i>%s</i>..."
+msgstr ""
+
+#: ../applets/maintained/comics/comics_add.py:174
+#, python-format
+msgid ""
+"This guide has finished.\n"
+"\n"
+"Press \"apply\" to add <i>%s</i>."
+msgstr ""
+
+#: ../applets/maintained/comics/comics_add.py:196
+#, python-format
+msgid ""
+"Found <b>%(name)s</b>!\n"
+"\n"
+"<i>%(description)s</i>"
+msgstr ""
+
+#: ../applets/maintained/comics/comics_manage.py:52
+msgid "Shared comics"
+msgstr ""
+
+#: ../applets/maintained/comics/comics_manage.py:53
+msgid "Your comics"
+msgstr ""
+
+#: ../applets/maintained/comics/comics_manage.py:124
+#, python-format
+msgid "Failed to remove <i>%s</i>."
+msgstr ""
+
+#: ../applets/maintained/comics/comics_manage.py:125
+msgid "Error"
+msgstr ""
+
+#: ../applets/maintained/comics/comics_view.py:164
+msgid "%A %d %B"
+msgstr ""
+
+#: ../applets/maintained/comics/comics_view.py:530
+#, python-format
+msgid "Failed to save <i>%s</i>."
+msgstr ""
+
+#: ../applets/maintained/comics/glade/add.glade.h:1
+msgid "Add Comic"
+msgstr ""
+
+#: ../applets/maintained/comics/glade/add.glade.h:2
+msgid "Downloading Comic"
+msgstr ""
+
+#: ../applets/maintained/comics/glade/add.glade.h:3
+msgid "Enter the URL of the RSS feed:"
+msgstr ""
+
+#: ../applets/maintained/comics/glade/add.glade.h:4
+msgid "Ready to add comic!"
+msgstr ""
+
+#: ../applets/maintained/comics/glade/add.glade.h:5
+msgid "Select Comic"
+msgstr ""
+
+#: ../applets/maintained/comics/glade/add.glade.h:6
+msgid "Select Image"
+msgstr ""
+
+#: ../applets/maintained/comics/glade/add.glade.h:7
+msgid "The guide found more than one image. Please select which one to use."
+msgstr ""
+
+#: ../applets/maintained/comics/glade/add.glade.h:8
+msgid ""
+"This guide will help you to add a new comic.\n"
+"\n"
+"To find comics suitable for adding, you may search the Internet for \"comics "
+"rss\".\n"
+"\n"
+"Press \"next\" to proceed."
+msgstr ""
+
+#: ../applets/maintained/comics/glade/main.glade.h:2
+#: ../applets/maintained/comics/glade/manage.glade.h:1
+msgid "Manage comics"
+msgstr ""
+
+#: ../applets/maintained/comics/glade/manage.glade.h:2
+msgid "The following comics are installed:"
+msgstr ""
+
+#: ../applets/maintained/comics/glade/view.glade.h:1
+msgid "Show link"
+msgstr ""
+
+#: ../applets/maintained/comics/glade/view.glade.h:2
+msgid "Size"
+msgstr ""
+
+#: ../applets/maintained/comics/glade/view.glade.h:3
+#: ../applets/unmaintained/arss/adddialog.glade.h:2
+#: ../applets/unmaintained/pynot/pynot-prefs.glade.h:13
+msgid "gtk-cancel"
+msgstr ""
+
+#: ../applets/maintained/comics/glade/view.glade.h:4
+msgid "gtk-save"
+msgstr ""
+
+#: ../applets/maintained/comics/glade/view.glade.h:5
+msgid "gtk-save-as"
+msgstr ""
+
+#: ../applets/maintained/comics/main.py:151
+#, python-format
+msgid "Unknown command sent: %s"
+msgstr ""
+
+#: ../applets/maintained/cpufreq/cpufreq.desktop.in.h:1
+msgid "An applet to monitor and control the CPU frequency"
+msgstr ""
+
+#: ../applets/maintained/cpufreq/cpufreq.desktop.in.h:2
+#, fuzzy
+msgid "CPU Frequency Monitor"
+msgstr "Frequence de vérification (Minutes)"
+
+#: ../applets/maintained/digital-clock/digital-clock.desktop.in.h:1
+msgid "A clock and calendar in one."
+msgstr ""
+
+#: ../applets/maintained/digital-clock/digital-clock.desktop.in.h:2
+#: ../applets/maintained/digital-clock/digitalClock.py:35
+msgid "Digital Clock"
+msgstr ""
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:33
+msgid "Date before time"
+msgstr ""
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:34
+msgid "Whether to show the date next to the time, instead of below it."
+msgstr ""
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:37
+msgid "12 hour mode"
+msgstr ""
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:38
+msgid "Whether to show the time in 12 hour mode (as opposed to 24 hour mode)."
+msgstr ""
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:41
+msgid "Font face"
+msgstr ""
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:42
+msgid "The font face for the date and time text."
+msgstr ""
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:45
+msgid "Font color"
+msgstr ""
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:46
+msgid "The text color of the date and time."
+msgstr ""
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:48
+msgid "Font shadow color"
+msgstr ""
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:49
+msgid "The font shadow color of the date and time."
+msgstr ""
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:51
+#, fuzzy
+msgid "dock orientation"
+msgstr "Lieu Actuel:"
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:52
+msgid "The orientation of the dock (horizontal/vertical)"
+msgstr ""
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:112
+#, fuzzy
+msgid "Copy Time"
+msgstr "Nuageux"
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:115
+#, fuzzy
+msgid "Copy Date"
+msgstr "Nuageux"
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:120
+msgid "Adjust Date & Time"
+msgstr ""
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:189
+#, fuzzy, python-format
+msgid "%s Preferences"
+msgstr "Preferences"
+
+#. TODO enable alpha support
+#: ../applets/maintained/digital-clock/dgClockPref.py:216
+msgid "Font _Color:"
+msgstr ""
+
+#. TODO enable alpha support
+#: ../applets/maintained/digital-clock/dgClockPref.py:226
+msgid "Font _Shadow Color:"
+msgstr ""
+
+#. * clock type: 12/24 hour
+#: ../applets/maintained/digital-clock/dgClockPref.py:231
+msgid "Clock Type"
+msgstr ""
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:232
+msgid "_12 Hour"
+msgstr ""
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:235
+msgid "_24 Hour"
+msgstr ""
+
+#. * clock style: time beside date
+#: ../applets/maintained/digital-clock/dgClockPref.py:239
+msgid "Date Position"
+msgstr ""
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:240
+msgid "_Left"
+msgstr ""
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:243
+msgid "_Bottom"
+msgstr ""
+
+#: ../applets/maintained/feeds/feeds.desktop.in.h:1
+#: ../applets/maintained/feeds/feeds.py:70
+#: ../applets/maintained/feeds/feeds.py:221
+#: ../applets/maintained/feeds/feeds.py:779
+msgid "Feeds Applet"
+msgstr ""
+
+#: ../applets/maintained/feeds/feeds.desktop.in.h:2
+#: ../applets/maintained/feeds/feeds.py:783
+msgid "Monitor Web Feeds"
+msgstr ""
+
+#: ../applets/maintained/feeds/feeds.py:190
+#: ../applets/maintained/feeds/feeds.py:431
+#: ../applets/maintained/feeds/prefs.py:209
+#: ../applets/maintained/feeds/prefs.py:246
+#: ../applets/maintained/feeds/prefs.py:316
+msgid "Google Reader"
+msgstr ""
+
+#: ../applets/maintained/feeds/feeds.py:201
+#, python-format
+msgid ""
+"%s\n"
+"  <a href='%s'>%s</a>\n"
+"  <a href='%s'>%s</a>\n"
+"(%s More)\n"
+msgstr ""
+
+#: ../applets/maintained/feeds/feeds.py:222
+#, python-format
+msgid "%s New Items - Feeds Applet"
+msgstr ""
+
+#: ../applets/maintained/feeds/feeds.py:315
+msgid ""
+"Feeds Applet could not load all of your feeds.\n"
+"Check your Internet connection and\n"
+"click Refresh to try again."
+msgstr ""
+
+#: ../applets/maintained/feeds/feeds.py:334
+msgid "Hide Error"
+msgstr ""
+
+#: ../applets/maintained/feeds/feeds.py:340
+msgid ""
+"Feeds Applet could not login to Google Reader.\n"
+"Check your username and password."
+msgstr ""
+
+#: ../applets/maintained/feeds/feeds.py:350
+msgid "You don't have any feeds."
+msgstr ""
+
+#: ../applets/maintained/feeds/feeds.py:352
+#: ../applets/maintained/feeds/feeds.py:472
+msgid "_Add Feed"
+msgstr ""
+
+#: ../applets/maintained/feeds/feeds.py:414
+msgid "Open this feed's website"
+msgstr ""
+
+#: ../applets/maintained/feeds/feeds.py:466
+#: ../applets/maintained/feeds/feeds.py:615
+msgid "Show this feed's items"
+msgstr ""
+
+#: ../applets/maintained/feeds/feeds.py:605
+msgid "Hide this feed's items"
+msgstr ""
+
+#. Create the items
+#: ../applets/maintained/feeds/feeds.py:743
+#: ../applets/maintained/feeds/prefs.py:232
+msgid "Add Feed"
+msgstr ""
+
+#: ../applets/maintained/feeds/prefs.py:53
+#, fuzzy
+msgid "Feeds Applet Preferences"
+msgstr "Preferences"
+
+#: ../applets/maintained/feeds/prefs.py:61
+msgid "Feeds"
+msgstr ""
+
+#: ../applets/maintained/feeds/prefs.py:111
+msgid "Updating"
+msgstr ""
+
+#. Checkbox: Notify for updated feeds
+#: ../applets/maintained/feeds/prefs.py:117
+msgid "_Notify for updated feeds"
+msgstr ""
+
+#. Checkbox: Update automatically
+#: ../applets/maintained/feeds/prefs.py:123
+msgid "_Update automatically"
+msgstr ""
+
+#. Update every [SpinButton] minutes
+#: ../applets/maintained/feeds/prefs.py:129
+msgid "Update every "
+msgstr ""
+
+#: ../applets/maintained/feeds/prefs.py:130
+msgid " minutes"
+msgstr ""
+
+#. Source: label and combo box
+#: ../applets/maintained/feeds/prefs.py:236
+msgid "Source:"
+msgstr ""
+
+#: ../applets/maintained/feeds/prefs.py:243
+#, fuzzy
+msgid "Feed Search"
+msgstr "Rechercher"
+
+#: ../applets/maintained/feeds/prefs.py:244
+msgid "RSS/Atom"
+msgstr ""
+
+#. "Search for" label and entry
+#: ../applets/maintained/feeds/prefs.py:256
+#, fuzzy
+msgid "Search for"
+msgstr "Rechercher"
+
+#. URL: label and entry
+#: ../applets/maintained/feeds/prefs.py:270
+#: ../applets/maintained/webapplet/applet.c:276
+msgid "URL:"
+msgstr ""
+
+#. Username: label and entry
+#: ../applets/maintained/feeds/prefs.py:284
+#: ../applets/unmaintained/mail/mail.py:253
+#: ../applets/unmaintained/mail/mail.py:528
+#: ../applets/unmaintained/mail/mail.py:650
+#: ../applets/unmaintained/mail/mail.py:743
+msgid "Username:"
+msgstr ""
+
+#. Password: label and entry
+#: ../applets/maintained/feeds/prefs.py:298
+#: ../applets/unmaintained/mail/mail.py:257
+#: ../applets/unmaintained/mail/mail.py:531
+#: ../applets/unmaintained/mail/mail.py:653
+#: ../applets/unmaintained/mail/mail.py:746
+#: ../applets/unmaintained/mail/mail.py:763
+msgid "Password:"
+msgstr ""
+
+#: ../applets/maintained/feeds/prefs.py:315
+msgid "Feed search by "
+msgstr ""
+
+#. If signed in to Google Reader
+#: ../applets/maintained/feeds/prefs.py:352
+#, fuzzy
+msgid "_Search"
+msgstr "Rechercher"
+
+#: ../applets/maintained/feeds/prefs.py:532
+#: ../applets/maintained/feeds/prefs.py:558
+msgid ""
+"There was an error while searching.\n"
+"Make sure you have added the Google Reader feed."
+msgstr ""
+
+#: ../applets/maintained/feeds/prefs.py:621
+msgid ""
+"No results found.\n"
+"Try checking your spelling or using different search terms."
+msgstr ""
+
+#: ../applets/maintained/file-browser-launcher/about.py:39
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.desktop.in.h:2
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:51
+msgid "File Browser Launcher"
+msgstr ""
+
+#: ../applets/maintained/file-browser-launcher/about.py:42
+msgid "A customizable launcher for browsing your files."
+msgstr ""
+
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.desktop.in.h:1
+msgid "A launcher for your file manager"
+msgstr ""
+
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:175
+msgid "Home Folder"
+msgstr ""
+
+#. Filesystem
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:179
+#: ../applets/maintained/file-browser-launcher/prefs.py:174
+msgid "Filesystem"
+msgstr ""
+
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:259
+msgid "Connect to Server..."
+msgstr ""
+
+#. Check if this is the Desktop directory
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:301
+msgid "~/Desktop"
+msgstr ""
+
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:311
+msgid "Computer"
+msgstr ""
+
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:314
+msgid "Network"
+msgstr ""
+
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:337
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:340
+#: ../applets/unmaintained/stacks/stacks_backend_trasher.py:128
+msgid "Trash"
+msgstr ""
+
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:343
+msgid "Search"
+msgstr "Rechercher"
+
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:346
+msgid "CD/DVD Burner"
+msgstr ""
+
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:349
+msgid "Fonts"
+msgstr ""
+
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:353
+#, fuzzy
+msgid "Folder"
+msgstr "Froid"
+
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:459
+msgid "DVD Drive"
+msgstr ""
+
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:463
+msgid "CD Drive"
+msgstr ""
+
+#: ../applets/maintained/file-browser-launcher/prefs.py:44
+msgid "File Browser Launcher Preferences"
+msgstr ""
+
+#. Make the "General" tab
+#: ../applets/maintained/file-browser-launcher/prefs.py:85
+#: ../applets/maintained/to-do/prefs.py:60
+msgid "General"
+msgstr ""
+
+#. Next section: File Browser
+#. Bold text: File Browser with an HSeparator under it
+#: ../applets/maintained/file-browser-launcher/prefs.py:90
+#: ../applets/unmaintained/filebrowser/filebrowser.desktop.in.in.h:2
+#: ../applets/unmaintained/filebrowser/filebrowser-applet.c:111
+msgid "File Browser"
+msgstr ""
+
+#. First row: () xdg-open (default)
+#: ../applets/maintained/file-browser-launcher/prefs.py:98
+msgid "(default)"
+msgstr ""
+
+#. Last option: custom with an entry for the app name
+#. Row 2: () Custom
+#: ../applets/maintained/file-browser-launcher/prefs.py:120
+#: ../applets/maintained/file-browser-launcher/prefs.py:302
+#: ../applets/maintained/file-browser-launcher/prefs.py:381
+msgid "Other"
+msgstr ""
+
+#. Dialog tab: options for places and basic behavior
+#: ../applets/maintained/file-browser-launcher/prefs.py:146
+msgid "Dialog"
+msgstr ""
+
+#. Bold text: Places with an hseparator under it
+#: ../applets/maintained/file-browser-launcher/prefs.py:150
+#: ../applets/maintained/places/places.desktop.in.in.h:2
+msgid "Places"
+msgstr ""
+
+#. Show all places
+#: ../applets/maintained/file-browser-launcher/prefs.py:158
+msgid "Show all places"
+msgstr ""
+
+#. Home Folder
+#: ../applets/maintained/file-browser-launcher/prefs.py:167
+msgid "Home folder"
+msgstr ""
+
+#. Mounted local drives
+#: ../applets/maintained/file-browser-launcher/prefs.py:181
+msgid "Mounted local drives"
+msgstr ""
+
+#. Mounted network drives
+#: ../applets/maintained/file-browser-launcher/prefs.py:188
+msgid "Mounted network drives"
+msgstr ""
+
+#. Connect to server
+#: ../applets/maintained/file-browser-launcher/prefs.py:195
+msgid "Connect to server"
+msgstr ""
+
+#. Bookmarks
+#: ../applets/maintained/file-browser-launcher/prefs.py:204
+msgid "Bookmarks"
+msgstr ""
+
+#. Bold text: Behavior with hseparator under it
+#: ../applets/maintained/file-browser-launcher/prefs.py:220
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:19
+msgid "Behavior"
+msgstr ""
+
+#. [] Focus the location text box
+#: ../applets/maintained/file-browser-launcher/prefs.py:225
+msgid "Focus the location text box"
+msgstr ""
+
+#. [] Open the selected place when clicked
+#: ../applets/maintained/file-browser-launcher/prefs.py:232
+msgid "Open the selected place when clicked"
+msgstr ""
+
+#. Left mouse button tab: two options: when clicked, do ... and the default folder (to display in entry widget or to launch)
+#: ../applets/maintained/file-browser-launcher/prefs.py:253
+msgid "Left Mouse Button"
+msgstr ""
+
+#. When clicked, (in bold with hseparator under it)
+#: ../applets/maintained/file-browser-launcher/prefs.py:257
+#: ../applets/maintained/file-browser-launcher/prefs.py:337
+msgid "When clicked, ..."
+msgstr ""
+
+#. Row 1: () Display the dialog (default) (awncc:0)
+#. Row 1: () Display the dialog (default) (awncc:1)
+#: ../applets/maintained/file-browser-launcher/prefs.py:265
+#: ../applets/maintained/file-browser-launcher/prefs.py:345
+msgid "Display the dialog"
+msgstr ""
+
+#. Row 2: () Open the folder (awncc:1)
+#. Row 2: () Open the folder (awncc:2)
+#: ../applets/maintained/file-browser-launcher/prefs.py:271
+#: ../applets/maintained/file-browser-launcher/prefs.py:276
+#: ../applets/maintained/file-browser-launcher/prefs.py:351
+msgid "Open the folder"
+msgstr ""
+
+#. Row 3: () Do nothing (awncc:2)
+#. Row 3: () Do nothing (awncc:3)
+#: ../applets/maintained/file-browser-launcher/prefs.py:280
+#: ../applets/maintained/file-browser-launcher/prefs.py:359
+msgid "Do nothing"
+msgstr ""
+
+#. Bold: Default Folder & separator under it
+#: ../applets/maintained/file-browser-launcher/prefs.py:288
+#: ../applets/maintained/file-browser-launcher/prefs.py:367
+msgid "Default Folder"
+msgstr ""
+
+#. Row 1: () Home Folder ($HOME, default)
+#: ../applets/maintained/file-browser-launcher/prefs.py:296
+#: ../applets/maintained/file-browser-launcher/prefs.py:375
+#, python-format
+msgid "Home Folder (%s, default)"
+msgstr ""
+
+#: ../applets/maintained/file-browser-launcher/prefs.py:310
+#: ../applets/maintained/file-browser-launcher/prefs.py:389
+msgid "Browse"
+msgstr ""
+
+#. Middle mouse button tab: two options: when clicked, do ... and the default folder (to display in entry widget or to launch)
+#: ../applets/maintained/file-browser-launcher/prefs.py:333
+msgid "Middle Mouse Button"
+msgstr ""
+
+#: ../applets/maintained/file-browser-launcher/prefs.py:433
+#: ../applets/maintained/file-browser-launcher/prefs.py:447
+msgid "Choose a folder"
+msgstr ""
+
+#: ../applets/maintained/gwibfawn/gwibfawn.desktop.in.h:1
+msgid "Displays tweets"
+msgstr ""
+
+#: ../applets/maintained/gwibfawn/gwibfawn.desktop.in.h:2
+msgid "Gwibfawn"
+msgstr ""
+
+#. Translators: this message appears in the Errors dialog
+#. Indicates with wich action the error happened
+#: ../applets/maintained/gwibfawn/microblog/__init__.py:66
+#: ../applets/maintained/gwibfawn/microblog/__init__.py:73
+#: ../applets/maintained/gwibfawn/microblog/__init__.py:80
+msgid "send message"
+msgstr ""
+
+#. Translators: this message appears in the Errors dialog
+#. Indicates with wich action the error happened
+#: ../applets/maintained/gwibfawn/microblog/__init__.py:88
+msgid "retrieve thread"
+msgstr ""
+
+#. Translators: this message appears in the Errors dialog
+#. Indicates with wich action the error happened
+#: ../applets/maintained/gwibfawn/microblog/__init__.py:95
+msgid "retrieve responses"
+msgstr ""
+
+#. Translators: this message appears in the Errors dialog
+#. Indicates with wich action the error happened
+#: ../applets/maintained/gwibfawn/microblog/__init__.py:102
+msgid "retrieve messages"
+msgstr ""
+
+#. Translators: this message appears in the Errors dialog
+#. Indicates with wich action the error happened
+#: ../applets/maintained/gwibfawn/microblog/__init__.py:109
+msgid "retrieve positions"
+msgstr ""
+
+#. Translators: this message appears in the Errors dialog
+#. Indicates with wich action the error happened
+#: ../applets/maintained/gwibfawn/microblog/__init__.py:116
+#: ../applets/maintained/gwibfawn/microblog/__init__.py:123
+msgid "perform search query"
+msgstr ""
+
+#. Translators: this message appears in the Errors dialog
+#. Indicates with wich action the error happened
+#: ../applets/maintained/gwibfawn/microblog/__init__.py:130
+msgid "perform tag query"
+msgstr ""
+
+#. Translators: this message appears in the Errors dialog
+#. Indicates with wich action the error happened
+#: ../applets/maintained/gwibfawn/microblog/__init__.py:143
+msgid "perform group query"
+msgstr ""
+
+#: ../applets/maintained/gwibfawn/microblog/support/__init__.py:60
+#, python-format
+msgid "%(year)d year ago"
+msgid_plural "%(year)d years ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../applets/maintained/gwibfawn/microblog/support/__init__.py:63
+#, python-format
+msgid "%(day)d day ago"
+msgid_plural "%(day)d days ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../applets/maintained/gwibfawn/microblog/support/__init__.py:66
+#, python-format
+msgid "%(hour)d hour ago"
+msgid_plural "%(hour)d hours ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../applets/maintained/gwibfawn/microblog/support/__init__.py:69
+#, python-format
+msgid "%(minute)d minute ago"
+msgid_plural "%(minute)d minutes ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../applets/maintained/gwibfawn/microblog/support/__init__.py:72
+#, python-format
+msgid "%(sec)d second ago"
+msgid_plural "%(sec)d seconds ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../applets/maintained/gwibfawn/microblog/support/__init__.py:74
+#, python-format
+msgid "BUG: %s"
+msgstr ""
+
+#: ../applets/maintained/gwibfawn/microblog/twitter.py:95
+#: ../applets/maintained/gwibfawn/microblog/twitter.py:96
+msgid "This user has protected their updates."
+msgstr ""
+
+#: ../applets/maintained/gwibfawn/microblog/twitter.py:95
+#: ../applets/maintained/gwibfawn/microblog/twitter.py:96
+msgid "You need to send a request before you can view this person's timeline."
+msgstr ""
+
+#: ../applets/maintained/gwibfawn/microblog/twitter.py:95
+#: ../applets/maintained/gwibfawn/microblog/twitter.py:96
+msgid "Send request..."
+msgstr ""
+
+#: ../applets/maintained/media-control/media-control.desktop.in.h:1
+msgid "Control your music player"
+msgstr ""
+
+#: ../applets/maintained/media-control/media-control.desktop.in.h:2
+msgid "Media Control"
+msgstr ""
+
+#: ../applets/maintained/media-icons/media-icon-next.desktop.in.h:1
+#: ../applets/maintained/media-icons/media-icons.py:68
+msgid "A media-control applet (Next Track)"
+msgstr ""
+
+#: ../applets/maintained/media-icons/media-icon-next.desktop.in.h:2
+#: ../applets/maintained/media-icons/media-icons.py:74
+msgid "Media Icons Next"
+msgstr ""
+
+#: ../applets/maintained/media-icons/media-icon-previous.desktop.in.h:1
+#: ../applets/maintained/media-icons/media-icons.py:69
+msgid "A media-control applet (Previous Track)"
+msgstr ""
+
+#: ../applets/maintained/media-icons/media-icon-previous.desktop.in.h:2
+#: ../applets/maintained/media-icons/media-icons.py:75
+msgid "Media Icons Previous"
+msgstr ""
+
+#: ../applets/maintained/media-icons/media-icons.desktop.in.h:1
+#: ../applets/maintained/media-icons/media-icons.py:70
+msgid "A media-control applet (Play/Pause)"
+msgstr ""
+
+#: ../applets/maintained/media-icons/media-icons.desktop.in.h:2
+#: ../applets/maintained/media-icons/media-icons.py:76
+msgid "Media Icons Play/Pause"
+msgstr ""
+
+#: ../applets/maintained/media-icons/media-icons.py:57
+msgid "Next"
+msgstr ""
+
+#: ../applets/maintained/media-icons/media-icons.py:58
+msgid "Previous"
+msgstr ""
+
+#: ../applets/maintained/media-icons/media-icons.py:59
+msgid "Play/Pause"
+msgstr ""
+
+#: ../applets/maintained/media-player/media-player.desktop.in.h:1
+msgid "Media Player"
+msgstr ""
+
+#: ../applets/maintained/media-player/media-player.desktop.in.h:2
+msgid "Plays any media files you drop on the applet"
+msgstr ""
+
+#: ../applets/maintained/mount/mount.desktop.in.h:1
+msgid "An applet to (un)mount devices"
+msgstr ""
+
+#: ../applets/maintained/mount/mount.desktop.in.h:2
+msgid "Mount Applet"
+msgstr ""
+
+#: ../applets/maintained/notification-area/notification-area.desktop.in.in.h:1
+msgid "A Notification Area (systray)"
+msgstr ""
+
+#: ../applets/maintained/notification-area/notification-area.desktop.in.in.h:2
+#, fuzzy
+msgid "Notification Area"
+msgstr "Nom du lieu"
+
+#: ../applets/maintained/notification-area/egg-tray-child.c:170
+#, c-format
+msgid "tray icon has requested a size of (%i x %i), resizing to (%i x %i)"
+msgstr ""
+
+#: ../applets/maintained/notification-area/eggtraymanager.c:148
+#, fuzzy
+msgid "Orientation"
+msgstr "Lieu Actuel:"
+
+#: ../applets/maintained/notification-area/eggtraymanager.c:149
+msgid "The orientation of the tray."
+msgstr ""
+
+#: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:1
+msgid "Background Colour"
+msgstr ""
+
+#: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:2
+msgid "Background colour in the form (Hex) rrggbbaa."
+msgstr ""
+
+#: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:3
+msgid "Boder Width"
+msgstr ""
+
+#: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:4
+msgid "Border Colour"
+msgstr ""
+
+#: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:5
+msgid "Border Width. A value of 0 indicates that is should not be drawn."
+msgstr ""
+
+#: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:6
+msgid "Border colour in the form (Hex) rrggbbaa. Also use for the timer widget"
+msgstr ""
+
+#: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:7
+msgid ""
+"Display icon for awn notification daemon. Allows toggling of notification "
+"display"
+msgstr ""
+
+#: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:8
+msgid "Gradient Factor"
+msgstr ""
+
+#: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:9
+msgid ""
+"Gradient Factor applied to the notification window. Range of 0 to 1. The "
+"lower the number the more noticeable the effect."
+msgstr ""
+
+#: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:10
+msgid "Honour Client positioning requests"
+msgstr ""
+
+#: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:11
+msgid "Honour gtk theme colours"
+msgstr ""
+
+#: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:12
+msgid ""
+"If the value is >0.0 then this opacity value will be applied to window "
+"instead of hiding."
+msgstr ""
+
+#: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:13
+msgid "Increased opacity instead of Hiding"
+msgstr ""
+
+#: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:14
+msgid "Kill notification-daemon"
+msgstr ""
+
+#: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:15
+msgid ""
+"NOTE: This key should not be considered stable... it is likely to change. "
+"Arbitrary X position for notification window. Default is -1 which signifies "
+"awn-notification-daemon should place windows relative to its position in the "
+"bar."
+msgstr ""
+
+#: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:16
+msgid ""
+"NOTE: This key should not be considered stable... it is likely to change. "
+"Arbitrary Y position for notification window. Default is -1 which signifies "
+"awn-notification-daemon should place windows relative to its position in the "
+"bar."
+msgstr ""
+
+#: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:17
+msgid "Show icon"
+msgstr ""
+
+#: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:18
+msgid "Text Colour"
+msgstr ""
+
+#: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:19
+msgid ""
+"Text colour in the form (Hex) rrggbbaa. Currently the alpha component is "
+"ignored"
+msgstr ""
+
+#: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:20
+msgid ""
+"This will override the client and default timeout periods for all "
+"notification windows with a timeout. Value is in ms. A value less than or "
+"equal to 0 indicates that client and default values should be honoured."
+msgstr ""
+
+#: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:21
+msgid "Timeout Overide"
+msgstr ""
+
+#: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:22
+msgid "Whether to attempt to kill any running notification-daemons."
+msgstr ""
+
+#: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:23
+msgid "Whether to gtk colour scheme."
+msgstr ""
+
+#: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:24
+msgid "Whether to honour client notification window positioning requests."
+msgstr ""
+
+#: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:25
+msgid "X Position"
+msgstr ""
+
+#: ../applets/maintained/notification-daemon/daemon.c:1183
+#, c-format
+msgid "%u is not a valid notification ID"
+msgstr ""
+
+#: ../applets/maintained/places/applet.c:337
+msgid "Desktop"
+msgstr ""
+
+#: ../applets/maintained/places/places.desktop.in.in.h:1
+msgid "Launch your folder bookmarks"
+msgstr ""
+
+#: ../applets/maintained/python-test/python-test.desktop.in.h:1
+msgid "A test python applet for demo purposes"
+msgstr ""
+
+#: ../applets/maintained/python-test/python-test.desktop.in.h:2
+msgid "Python Test Applet"
+msgstr ""
+
+#: ../applets/maintained/quit/quit.desktop.in.h:1
+msgid "An applet to exit or log out of your session"
+msgstr ""
+
+#: ../applets/maintained/quit/quit.desktop.in.h:2
+msgid "Quit-Log Out applet"
+msgstr ""
+
+#: ../applets/maintained/rtm/rtm.desktop.in.h:1
+msgid "RTM Applet"
+msgstr ""
+
+#: ../applets/maintained/rtm/rtm.desktop.in.h:2
+msgid "Use Remember The Milk from AWN."
+msgstr ""
+
+#: ../applets/maintained/showdesktop/showdesktop.desktop.in.h:1
+msgid "Hide your windows and show your desktop"
+msgstr ""
+
+#: ../applets/maintained/showdesktop/showdesktop.desktop.in.h:2
+#, fuzzy
+msgid "Show Desktop"
+msgstr "Averse"
+
+#: ../applets/maintained/sysmon/sysmon.desktop.in.in.h:2
+msgid "System Monitor"
+msgstr ""
+
+#: ../applets/maintained/thinkhdaps/thinkhdaps.desktop.in.h:1
+msgid "Applet that shows the shock protection status of your disks"
+msgstr ""
+
+#: ../applets/maintained/thinkhdaps/thinkhdaps.desktop.in.h:2
+msgid "ThinkHDAPS"
+msgstr ""
+
+#: ../applets/maintained/to-do/prefs.py:32
+#, fuzzy
+msgid "Custom"
+msgstr "Poussières"
+
+#: ../applets/maintained/to-do/prefs.py:32
+msgid "Current Theme"
+msgstr ""
+
+#: ../applets/maintained/to-do/prefs.py:32
+#, fuzzy
+msgid "Butter"
+msgstr "Bourrasques"
+
+#: ../applets/maintained/to-do/prefs.py:33
+msgid "Chameleon"
+msgstr ""
+
+#: ../applets/maintained/to-do/prefs.py:33
+msgid "Orange"
+msgstr ""
+
+#: ../applets/maintained/to-do/prefs.py:33
+msgid "Sky Blue"
+msgstr ""
+
+#: ../applets/maintained/to-do/prefs.py:33
+msgid "Plum"
+msgstr ""
+
+#: ../applets/maintained/to-do/prefs.py:33
+msgid "Chocolate"
+msgstr ""
+
+#: ../applets/maintained/to-do/prefs.py:34
+msgid "Scarlet Red"
+msgstr ""
+
+#: ../applets/maintained/to-do/prefs.py:34
+msgid "Aluminium 1"
+msgstr ""
+
+#: ../applets/maintained/to-do/prefs.py:34
+msgid "Aluminium 2"
+msgstr ""
+
+#: ../applets/maintained/to-do/prefs.py:37
+msgid "Number of Items"
+msgstr ""
+
+#: ../applets/maintained/to-do/prefs.py:37
+msgid "Progress"
+msgstr ""
+
+#: ../applets/maintained/to-do/prefs.py:37
+msgid "Both"
+msgstr ""
+
+#: ../applets/maintained/to-do/prefs.py:45
+#, fuzzy
+msgid "To-Do List Preferences"
+msgstr "Preferences"
+
+#: ../applets/maintained/to-do/prefs.py:61
+msgid "Priority"
+msgstr ""
+
+#: ../applets/maintained/to-do/prefs.py:62
+msgid "Icon"
+msgstr ""
+
+#. Label: Title (bold)
+#: ../applets/maintained/to-do/prefs.py:72
+msgid "Title"
+msgstr ""
+
+#. Label: Confirm when removing... (bold)
+#: ../applets/maintained/to-do/prefs.py:86
+msgid "Confirm when removing..."
+msgstr ""
+
+#. CheckButton: Items
+#: ../applets/maintained/to-do/prefs.py:95
+msgid "_Items"
+msgstr ""
+
+#. CheckButton: Categories
+#: ../applets/maintained/to-do/prefs.py:102
+msgid "C_ategories"
+msgstr ""
+
+#. Label: Width (bold)
+#: ../applets/maintained/to-do/prefs.py:109
+#, fuzzy
+msgid "Width"
+msgstr "Vent"
+
+#. CheckButton: Use Custom Width
+#: ../applets/maintained/to-do/prefs.py:118
+msgid "_Use Custom Width"
+msgstr ""
+
+#. Label: Width (pixels)
+#: ../applets/maintained/to-do/prefs.py:125
+msgid "Width (pixels)"
+msgstr ""
+
+#. Label: Low Priority (bold)
+#: ../applets/maintained/to-do/prefs.py:173
+msgid "Low Priority"
+msgstr ""
+
+#. Label: Medium Priority (bold)
+#: ../applets/maintained/to-do/prefs.py:186
+msgid "Medium Priority"
+msgstr ""
+
+#. Label: High Priority (bold)
+#: ../applets/maintained/to-do/prefs.py:199
+msgid "High Priority"
+msgstr ""
+
+#. Label: Icon Color (bold)
+#: ../applets/maintained/to-do/prefs.py:251
+msgid "Icon Color"
+msgstr ""
+
+#. Label: Custom Colors (bold)
+#: ../applets/maintained/to-do/prefs.py:274
+msgid "Custom Colors"
+msgstr ""
+
+#. Colors: Outer Border, Inner Border, Main Color, Text Color
+#: ../applets/maintained/to-do/prefs.py:283
+msgid "Outer Border"
+msgstr ""
+
+#: ../applets/maintained/to-do/prefs.py:284
+msgid "Inner Border"
+msgstr ""
+
+#: ../applets/maintained/to-do/prefs.py:285
+msgid "Main"
+msgstr ""
+
+#: ../applets/maintained/to-do/prefs.py:286
+#: ../applets/maintained/to-do/prefs.py:446
+msgid "Text"
+msgstr ""
+
+#. Label: Icon Type (bold)
+#: ../applets/maintained/to-do/prefs.py:289
+msgid "Icon Type"
+msgstr ""
+
+#: ../applets/maintained/to-do/prefs.py:444
+msgid "Background"
+msgstr ""
+
+#: ../applets/maintained/to-do/to-do.desktop.in.h:1
+msgid "Manage a simple To-Do list"
+msgstr ""
+
+#: ../applets/maintained/to-do/to-do.desktop.in.h:2
+#: ../applets/maintained/to-do/to-do.py:69
+#: ../applets/maintained/to-do/to-do.py:254
+#: ../applets/maintained/to-do/to-do.py:309
+#: ../applets/maintained/to-do/to-do.py:967
+msgid "To-Do List"
+msgstr ""
+
+#: ../applets/maintained/to-do/to-do.py:257
+msgid "A simple To-Do List"
+msgstr ""
+
+#: ../applets/maintained/to-do/to-do.py:347
+msgid "Remove item"
+msgstr ""
+
+#: ../applets/maintained/to-do/to-do.py:429
+msgid "Remove category"
+msgstr ""
+
+#: ../applets/maintained/to-do/to-do.py:453
+msgid "View/Edit details"
+msgstr ""
+
+#. Make the RadioButtons for each category
+#. First category: No category! (Uncategorized)
+#: ../applets/maintained/to-do/to-do.py:573
+msgid "_Uncategorized"
+msgstr ""
+
+#. First RadioButton - ( )Category
+#: ../applets/maintained/to-do/to-do.py:597
+msgid "_Category"
+msgstr ""
+
+#. Second RadioButton - (-)To-Do item
+#. TODO: better text than "To-Do item"?
+#: ../applets/maintained/to-do/to-do.py:604
+msgid "_To-Do item"
+msgstr ""
+
+#. Label: Priority:
+#: ../applets/maintained/to-do/to-do.py:689
+msgid "Priority: "
+msgstr ""
+
+#. Neutral, Low, Medium, and High priority RadioButtons
+#: ../applets/maintained/to-do/to-do.py:692
+msgid "_Neutral"
+msgstr ""
+
+#: ../applets/maintained/to-do/to-do.py:694
+msgid "_Low"
+msgstr ""
+
+#: ../applets/maintained/to-do/to-do.py:696
+msgid "_Medium"
+msgstr ""
+
+#: ../applets/maintained/to-do/to-do.py:698
+msgid "_High"
+msgstr ""
+
+#. Label: Progress(%):
+#: ../applets/maintained/to-do/to-do.py:726
+msgid "Progress(%): "
+msgstr ""
+
+#. Make Label
+#: ../applets/maintained/to-do/to-do.py:1180
+#, python-format
+msgid ""
+"Are you sure you want to remove the category \"%s?\"\n"
+"All of its items will be removed."
+msgstr ""
+
+#. Make CheckButton
+#: ../applets/maintained/to-do/to-do.py:1184
+#: ../applets/maintained/to-do/to-do.py:1220
+msgid "Don't show this again."
+msgstr ""
+
+#. Make Label
+#: ../applets/maintained/to-do/to-do.py:1217
+msgid "Are you sure you want to remove this item?"
+msgstr ""
+
+#. Reset the tooltip
+#: ../applets/maintained/to-do/to-do.py:1416
+#, python-format
+msgid "% done"
+msgstr ""
+
+#: ../applets/maintained/tomboy-applet/tomboy-applet.desktop.in.h:1
+msgid "Control Tomboy with D-Bus"
+msgstr ""
+
+#: ../applets/maintained/tomboy-applet/tomboy-applet.desktop.in.h:2
+msgid "Tomboy Applet"
+msgstr ""
+
+#: ../applets/maintained/vala-test/vala-test.desktop.in.in.h:1
+msgid "A simple applet to test vala support"
+msgstr ""
+
+#: ../applets/maintained/vala-test/vala-test.desktop.in.in.h:2
+msgid "Test Vala Applet"
+msgstr ""
+
+#: ../applets/maintained/volume-control/volume-control.desktop.in.h:1
+msgid "Control your computer's volume"
+msgstr ""
+
+#: ../applets/maintained/volume-control/volume-control.desktop.in.h:2
+msgid "Volume Control"
+msgstr ""
+
+#: ../applets/maintained/weather/forecast.py:57
+#: ../applets/maintained/weather/forecast.py:114
+msgid "Forecast"
+msgstr "Prévisions"
+
+#: ../applets/maintained/weather/forecast.py:57
+#: ../applets/maintained/weather/forecast.py:114
+msgid "for"
+msgstr ""
+
+#: ../applets/maintained/weather/forecast.py:198
+msgid "WEEKDAY"
+msgstr ""
+
+#: ../applets/maintained/weather/forecast.py:202
+msgid "Tomorrow"
+msgstr "Demain"
+
+#. Weather condition
+#: ../applets/maintained/weather/forecast.py:228
+#: ../applets/maintained/weather/weather.py:332
+msgid "DESCRIPTION"
+msgstr ""
+
+#: ../applets/maintained/weather/forecast.py:280
+msgid "Weather data provided by weather.com"
+msgstr "Données météorologiques fournies par weather.com"
+
+#: ../applets/maintained/weather/weather.desktop.in.h:1
+msgid "Display the local weather"
+msgstr ""
+
+#: ../applets/maintained/weather/weather.desktop.in.h:2
+#, fuzzy
+msgid "Weather Applet"
+msgstr "Carte météo"
+
+#: ../applets/maintained/weather/weather.py:86
+msgid "Fetching conditions for"
+msgstr ""
+
+#: ../applets/maintained/weather/weather.py:160
+#: ../applets/maintained/weather/weather.py:258
+#, fuzzy
+msgid "No records found"
+msgstr "Aucun résultat trouvé."
+
+#: ../applets/maintained/weather/weather.py:237
+msgid "Searching..."
+msgstr "Recherche en cours..."
+
+#. Make the dialog
+#: ../applets/maintained/webapplet/applet.c:262
+#: ../applets/maintained/webapplet/applet.c:460
+#, fuzzy
+msgid "Open Location"
+msgstr "Lieu Actuel:"
+
+#: ../applets/maintained/webapplet/applet.c:281
+msgid "Set as new _Home Page"
+msgstr ""
+
+#: ../applets/maintained/webapplet/applet.c:399
+#: ../applets/maintained/webapplet/webapplet.desktop.in.in.h:2
+msgid "Web Applet"
+msgstr ""
+
+#. vim: set et ts=2 sts=2 sw=2 :
+#: ../applets/maintained/webapplet/webapplet.desktop.in.in.h:1
+msgid "Applet for Websites"
+msgstr ""
+
+#: ../applets/maintained/wobblyzini/wobblyzini.desktop.in.in.h:1
+msgid "A simple test animation"
+msgstr ""
+
+#: ../applets/maintained/wobblyzini/wobblyzini.desktop.in.in.h:2
+msgid "Wobbly Zini"
+msgstr ""
+
+#: ../applets/maintained/yama/yama.desktop.in.h:1
+msgid "Main menu with places and recent documents"
+msgstr ""
+
+#: ../applets/maintained/yama/yama.desktop.in.h:2
+msgid "Yet Another Menu Applet"
+msgstr ""
+
+#: ../applets/unmaintained/arss/adddialog.glade.h:1
+msgid "Enter the path to a RSS/Atom feed"
+msgstr ""
+
+#: ../applets/unmaintained/arss/adddialog.glade.h:3
+#: ../applets/unmaintained/pynot/pynot-prefs.glade.h:14
+msgid "gtk-ok"
+msgstr ""
+
+#: ../applets/unmaintained/arss/arss.desktop.in.h:1
+msgid "Watch your feeds"
+msgstr ""
+
+#: ../applets/unmaintained/arss/arss.desktop.in.h:2
+msgid "aRSS"
+msgstr ""
+
+#: ../applets/unmaintained/arss/configwindow.glade.h:1
+msgid "gtk-add"
+msgstr ""
+
+#: ../applets/unmaintained/arss/configwindow.glade.h:2
+msgid "gtk-close"
+msgstr ""
+
+#: ../applets/unmaintained/arss/configwindow.glade.h:3
+msgid "gtk-remove"
+msgstr ""
+
+#: ../applets/unmaintained/awn-meebo/awn-meebo.desktop.in.h:1
+msgid "Access to the Meebo Instant Messenger"
+msgstr ""
+
+#: ../applets/unmaintained/awn-meebo/awn-meebo.desktop.in.h:2
+msgid "Mobile Meebo"
+msgstr ""
+
+#: ../applets/unmaintained/comic/comic.desktop.in.h:1
+msgid "Dilbert Applet"
+msgstr ""
+
+#: ../applets/unmaintained/comic/comic.desktop.in.h:2
+msgid "Read Dilbert and other comics"
+msgstr ""
+
+#: ../applets/unmaintained/DesktopManager/DesktopManager.desktop.in.h:1
+msgid "DesktopManager"
+msgstr ""
+
+#: ../applets/unmaintained/DesktopManager/DesktopManager.desktop.in.h:2
+msgid "Switches the Desktop Image"
+msgstr ""
+
+#: ../applets/unmaintained/digg/digg.desktop.in.h:1
+#: ../applets/unmaintained/digg/digg.py:50
+msgid "Browse Digg from Awn"
+msgstr ""
+
+#: ../applets/unmaintained/digg/digg.desktop.in.h:2
+#: ../applets/unmaintained/digg/digg.py:48
+msgid "Digg Applet"
+msgstr ""
+
+#: ../applets/unmaintained/digg/digg.py:63
+msgid "Digg"
+msgstr ""
+
+#: ../applets/unmaintained/filebrowser/filebrowser.desktop.in.in.h:1
+#: ../applets/unmaintained/filebrowser/filebrowser-applet.c:112
+msgid "Browse the filesystem"
+msgstr ""
+
+#: ../applets/unmaintained/filebrowser/filebrowser-applet.c:50
+msgid "Select folder as item container"
+msgstr ""
+
+#: ../applets/unmaintained/filebrowser/filebrowser-applet.c:139
+#, fuzzy
+msgid "Set Location"
+msgstr "Lieu Actuel:"
+
+#: ../applets/unmaintained/filebrowser/filebrowser-dialog.c:198
+msgid "There are no items to display."
+msgstr ""
+
+#: ../applets/unmaintained/filebrowser/filebrowser-dialog.c:343
+msgid "Open filemanager"
+msgstr ""
+
+#: ../applets/unmaintained/mail/mail.desktop.in.h:1
+msgid "Check Your Email from AWN"
+msgstr ""
+
+#: ../applets/unmaintained/mail/mail.desktop.in.h:2
+#: ../applets/unmaintained/mail/mail.py:111
+#: ../applets/unmaintained/mail/mail.py:795
+msgid "Mail Applet"
+msgstr ""
+
+#: ../applets/unmaintained/mail/mail.py:35
+#, python-format
+msgid "You have %d new message"
+msgid_plural "You have %d new messages"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../applets/unmaintained/mail/mail.py:39
+#, python-format
+msgid "%d unread message"
+msgid_plural "%d unread messages"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../applets/unmaintained/mail/mail.py:70
+msgid "Mail Applet (Click to Log In)"
+msgstr ""
+
+#: ../applets/unmaintained/mail/mail.py:112
+#, python-format
+msgid "Logging in as %s"
+msgstr ""
+
+#: ../applets/unmaintained/mail/mail.py:139
+msgid "New Mail - Mail Applet"
+msgstr ""
+
+#: ../applets/unmaintained/mail/mail.py:197
+msgid "Hmmm, nothing here"
+msgstr ""
+
+#: ../applets/unmaintained/mail/mail.py:210
+msgid "Open Web Mail"
+msgstr ""
+
+#: ../applets/unmaintained/mail/mail.py:218
+msgid "Open Desktop Client"
+msgstr ""
+
+#: ../applets/unmaintained/mail/mail.py:226
+msgid "Refresh"
+msgstr ""
+
+#: ../applets/unmaintained/mail/mail.py:234
+msgid "Log Out"
+msgstr ""
+
+#: ../applets/unmaintained/mail/mail.py:277
+#: ../applets/unmaintained/mail/mail.py:334
+msgid "Log In"
+msgstr ""
+
+#: ../applets/unmaintained/mail/mail.py:288
+msgid "Wrong username or password"
+msgstr ""
+
+#: ../applets/unmaintained/mail/mail.py:312
+msgid "Type:"
+msgstr ""
+
+#: ../applets/unmaintained/mail/mail.py:317
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:18
+msgid "Backend"
+msgstr ""
+
+#: ../applets/unmaintained/mail/mail.py:423
+#: ../applets/unmaintained/mail/mail.py:482
+msgid ""
+"There seem to be problems with our                     connection to your "
+"account. Your best bet is probably                     to log out and try "
+"again."
+msgstr ""
+
+#: ../applets/unmaintained/mail/mail.py:445
+#: ../applets/unmaintained/mail/mail.py:504
+msgid "[No Subject]"
+msgstr ""
+
+#: ../applets/unmaintained/mail/mail.py:467
+msgid "Google Apps"
+msgstr ""
+
+#: ../applets/unmaintained/mail/mail.py:535
+msgid "Domain:"
+msgstr ""
+
+#: ../applets/unmaintained/mail/mail.py:557
+msgid "Unix Spool"
+msgstr ""
+
+#: ../applets/unmaintained/mail/mail.py:579
+msgid "Spool Path:"
+msgstr ""
+
+#: ../applets/unmaintained/mail/mail.py:615
+#: ../applets/unmaintained/mail/mail.py:696
+msgid "Could not log in"
+msgstr ""
+
+#: ../applets/unmaintained/mail/mail.py:657
+#: ../applets/unmaintained/mail/mail.py:750
+#, fuzzy
+msgid "Server:"
+msgstr "Jamais"
+
+#: ../applets/unmaintained/mail/mail.py:660
+#: ../applets/unmaintained/mail/mail.py:753
+msgid "Use SSL encryption"
+msgstr ""
+
+#: ../applets/unmaintained/mail/mail.py:702
+msgid "Folder does not exst"
+msgstr ""
+
+#: ../applets/unmaintained/mail/mail.py:756
+msgid "Get messages from only one folder"
+msgstr ""
+
+#: ../applets/unmaintained/mail/mail.py:798
+msgid "An applet to check one's email"
+msgstr ""
+
+#: ../applets/unmaintained/main-menu/applet.c:394
+#: ../applets/unmaintained/main-menu/main-menu.desktop.in.in.h:2
+msgid "Awn Main Menu"
+msgstr ""
+
+#: ../applets/unmaintained/main-menu/applet.c:395
+msgid "Displays a list of all your applications"
+msgstr ""
+
+#: ../applets/unmaintained/main-menu/applet.c:465
+msgid "Main Menu"
+msgstr ""
+
+#: ../applets/unmaintained/main-menu/main-menu.desktop.in.in.h:1
+msgid "A main menu for Awn"
+msgstr ""
+
+#: ../applets/unmaintained/pandora/pandora.desktop.in.h:1
+msgid "Listen to Pandora Internet Radio"
+msgstr ""
+
+#: ../applets/unmaintained/pandora/pandora.desktop.in.h:2
+msgid "Pandora Radio"
+msgstr ""
+
+#: ../applets/unmaintained/plugger/plugger.desktop.in.in.h:1
+msgid "Monitors removable media devices"
+msgstr ""
+
+#: ../applets/unmaintained/plugger/plugger.desktop.in.in.h:2
+msgid "Stacks Plugger"
+msgstr ""
+
+#: ../applets/unmaintained/pynot/pynot.desktop.in.h:1
+msgid "A Configurable Notification tray"
+msgstr ""
+
+#: ../applets/unmaintained/pynot/pynot.desktop.in.h:2
+msgid "PyNot"
+msgstr ""
+
+#: ../applets/unmaintained/pynot/pynot-prefs.glade.h:1
+msgid "<b>Advanced</b>"
+msgstr ""
+
+#: ../applets/unmaintained/pynot/pynot-prefs.glade.h:2
+msgid "<b>Background</b>"
+msgstr ""
+
+#: ../applets/unmaintained/pynot/pynot-prefs.glade.h:3
+#: ../applets/unmaintained/pynot-rgba/pynot-rgba.glade.h:1
+msgid "<b>Display</b>"
+msgstr ""
+
+#: ../applets/unmaintained/pynot/pynot-prefs.glade.h:4
+msgid "Custom color:"
+msgstr ""
+
+#: ../applets/unmaintained/pynot/pynot-prefs.glade.h:5
+msgid "Distance from window _border:"
+msgstr ""
+
+#: ../applets/unmaintained/pynot/pynot-prefs.glade.h:6
+msgid "Image:"
+msgstr ""
+
+#: ../applets/unmaintained/pynot/pynot-prefs.glade.h:7
+#, fuzzy
+msgid "PyNot Preferences"
+msgstr "Preferences"
+
+#: ../applets/unmaintained/pynot/pynot-prefs.glade.h:8
+msgid "Use _GTK theme"
+msgstr ""
+
+#: ../applets/unmaintained/pynot/pynot-prefs.glade.h:9
+msgid "_Do not show icons with PID 0"
+msgstr ""
+
+#: ../applets/unmaintained/pynot/pynot-prefs.glade.h:10
+msgid "_Number of icon rows:"
+msgstr ""
+
+#: ../applets/unmaintained/pynot/pynot-prefs.glade.h:11
+#: ../applets/unmaintained/pynot-rgba/pynot-rgba.glade.h:4
+msgid "_Size of icons:"
+msgstr ""
+
+#: ../applets/unmaintained/pynot/pynot-prefs.glade.h:12
+msgid "_Use rounded border"
+msgstr ""
+
+#: ../applets/unmaintained/pynot/pynot-prefs.glade.h:15
+#: ../applets/unmaintained/pynot-rgba/pynot-rgba.glade.h:5
+msgid "pixels"
+msgstr ""
+
+#: ../applets/unmaintained/pynot-rgba/pynot-rgba.desktop.in.h:1
+msgid "A System tray with Alpha support."
+msgstr ""
+
+#: ../applets/unmaintained/pynot-rgba/pynot-rgba.desktop.in.h:2
+msgid "PyNot RGBA"
+msgstr ""
+
+#: ../applets/unmaintained/pynot-rgba/pynot-rgba.glade.h:2
+msgid "_Icons per column:"
+msgstr ""
+
+#: ../applets/unmaintained/pynot-rgba/pynot-rgba.glade.h:3
+msgid "_Offset from bottom:"
+msgstr ""
+
+#: ../applets/unmaintained/separator/separator.desktop.in.in.h:1
+msgid "A simple separator."
+msgstr ""
+
+#: ../applets/unmaintained/separator/separator.desktop.in.in.h:2
+msgid "Separator"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:1
+msgid "<b>Colors</b>"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:2
+msgid "<b>Font</b>"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:3
+msgid "<b>General</b>"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:4
+msgid "<b>Labels</b>"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:5
+msgid ""
+"Auto\n"
+"Force curve to the left \n"
+"Force curve to the right\n"
+"Invert auto"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:9
+msgid "Background color 1:"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:10
+msgid "Background color 2:"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:11
+msgid "Border color:"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:12
+#, fuzzy
+msgid "Curved Stack Preferences"
+msgstr "Preferences"
+
+#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:13
+msgid "Direction:"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:14
+msgid "Enable tooltips"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:15
+msgid "Hoverbox"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:16
+msgid "Include label in hover box"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:17
+msgid "Interval:"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:18
+msgid "Label font:"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:19
+msgid "Label length:"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:20
+msgid "Labels"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:21
+msgid "Layout"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:22
+msgid "Radius:"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:23
+msgid "Text color:"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:24
+msgid "Text hover color:"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:25
+msgid "Tooltips"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:26
+msgid "Use the title font of AWN"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:27
+msgid "background color:"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:28
+msgid "background hover color:"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:29
+msgid "border color:"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:30
+msgid "border hover color:"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks.desktop.in.h:1
+msgid "Quick access to a file folder"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks.desktop.in.h:2
+msgid "Stacks Applet"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_backend.py:301
+msgid "Stacks"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_backend_folder.py:110
+msgid "Confirm removal"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_backend_folder.py:120
+msgid ""
+"This stack has a <b>folder backend</b>. Do you really want to <b>delete</b> "
+"the files from that folder?"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_backend_plugger.py:51
+msgid "Mounted Volume"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_backend_plugger.py:55
+msgid "Unmount Volume"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_backend_plugger.py:58
+msgid "Hide Volume"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_backend_trasher.py:101
+#: ../applets/unmaintained/trash/trashapplet.c:773
+msgid "Empty all of the items from the trash?"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_backend_trasher.py:102
+msgid ""
+"If you choose to empty the trash, all items in it will be permanently lost.  "
+"Please note that you can also delete them separately."
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_backend_trasher.py:107
+#: ../applets/unmaintained/trash/trashapplet.c:796
+msgid "_Empty Trash"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_backend_trasher.py:138
+msgid "Empty Trash"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_backend_trasher.py:169
+#: ../applets/unmaintained/trash/trashapplet.c:974
+msgid "Cannot move items to trash, do you want to delete them immediately?"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_backend_trasher.py:170
+#, python-format
+msgid "None of the %d selected items can be moved to the Trash"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_backend_trasher.py:172
+#: ../applets/unmaintained/trash/trashapplet.c:979
+msgid ""
+"Cannot move some items to trash, do you want to delete these immediately?"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_backend_trasher.py:173
+#, python-format
+msgid "%d of the selected items cannot be moved to the Trash"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_backend_trasher.py:180
+msgid "_Delete"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_config.py:241
+msgid "Select backend destination:"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_config.py:269
+msgid "Supported image types"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:1
+msgid "4"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:2
+msgid "5"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:3
+msgid "<b>Folder-operations:</b>"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:4
+msgid "<b>General:</b>"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:5
+msgid "<b>Icon:</b>"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:6
+msgid "<b>Layout:</b>"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:7
+msgid "<b>Paging:</b>"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:8
+msgid "<b>Title:</b>"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:9
+msgid "<big><b>Stacks applet for Avant Window Navigator</b></big>"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:10
+msgid "<i>(Use CTRL, ALT and SHIFT to select drag and drop operation)</i>"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:11
+msgid "About"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:12
+msgid "Applet Layout"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:13
+msgid "Applet title:"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:14
+msgid "Arrange items: "
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:15
+msgid ""
+"Ascending\n"
+"Descending"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:17
+msgid "Author: Timon ter Braak"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:20
+msgid ""
+"By Name\n"
+"By Date"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:22
+msgid "Close stack on focus out "
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:23
+msgid "Columns"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:24
+msgid "Composite applet icon"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:25
+#, fuzzy
+msgid "Copy"
+msgstr "Nuageux"
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:26
+msgid ""
+"Default dialog\n"
+"Curved gui\n"
+"Trasher gui\n"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:30
+msgid "Empty icon:"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:31
+msgid "File backend"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:32
+msgid "Folder backend"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:33
+msgid "Full icon:"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:34
+msgid ""
+"Inspired by Mac OS Leopard's \"Stack\", this applet is created. It combines "
+"functionality of Apple's Stack with it's own ideas. The <b>Stacks</b> applet "
+"also functions as a framework for the <b>Plugger</b> and <b>Trasher</b> "
+"applet.\n"
+"\n"
+"\n"
+"In one sentence:\n"
+"<u><i>Stacks provides quick and easy access to your files</i></u>."
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:39
+msgid "Layout settings"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:40
+msgid "Link"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:41
+#, fuzzy
+msgid "Location:"
+msgstr "Nom du lieu"
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:42
+msgid "Maximum dimension:"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:43
+msgid "Move"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:45
+msgid "Rows"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:46
+msgid "Show item count in title"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:47
+msgid "Size of stacks icons:"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:48
+msgid "Sort folders before files"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:49
+msgid "Stack Layout"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:50
+msgid "Use multiple pages when there are to many items"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:51
+msgid "x"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_vfs.py:113
+msgid "Error while moving."
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_vfs.py:114
+#, python-format
+msgid ""
+"Cannot move \"%s\" to the trash because you do not have permissions to "
+"change it or its parent folder."
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_vfs.py:116
+msgid "Error while deleting."
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_vfs.py:117
+#, python-format
+msgid ""
+"\"%s\" cannot be deleted because you do not have permissions to modify its "
+"parent folder."
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_vfs.py:119
+msgid "Error while performing file operation."
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_vfs.py:120
+#, python-format
+msgid "Cannot perform file operation %d on \"%s\"."
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_vfs.py:125
+msgid "_Skip"
+msgstr ""
+
+#: ../applets/unmaintained/stacks/stacks_vfs.py:130
+msgid "_Retry"
+msgstr ""
+
+#: ../applets/unmaintained/trasher/trasher.desktop.in.in.h:1
+msgid "Stacks Trasher"
+msgstr ""
+
+#: ../applets/unmaintained/trasher/trasher.desktop.in.in.h:2
+msgid "Trash applet in Stacks style"
+msgstr ""
+
+#: ../applets/unmaintained/trash/trash.desktop.in.in.h:1
+msgid "A lightweight trash applet"
+msgstr ""
+
+#: ../applets/unmaintained/trash/trash.desktop.in.in.h:2
+#: ../applets/unmaintained/trash/trashapplet.c:916
+msgid "Trash Applet"
+msgstr ""
+
+#: ../applets/unmaintained/trash/trashapplet.c:165
+#, c-format
+msgid "Unable to find the Trash directory: %s"
+msgstr ""
+
+#: ../applets/unmaintained/trash/trashapplet.c:555
+msgid "No Items in Trash"
+msgstr ""
+
+#: ../applets/unmaintained/trash/trashapplet.c:560
+#, c-format
+msgid "%d Item in Trash"
+msgid_plural "%d Items in Trash"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../applets/unmaintained/trash/trashapplet.c:698
+#, c-format
+msgid "Removing item %lu of %lu"
+msgstr ""
+
+#: ../applets/unmaintained/trash/trashapplet.c:732
+msgid "Removing:"
+msgstr ""
+
+#: ../applets/unmaintained/trash/trashapplet.c:776
+msgid ""
+"If you choose to empty the trash, all items in it will be permanently lost. "
+"Please note that you can also delete them separately."
+msgstr ""
+
+#: ../applets/unmaintained/trash/trashapplet.c:884
+#, c-format
+msgid ""
+"Error while spawning file manager:\n"
+"%s"
+msgstr ""
+
+#. FIXME - Actually, we need a user guide
+#: ../applets/unmaintained/trash/trashapplet.c:893
+#, c-format
+msgid "There was an error displaying help: %s"
+msgstr ""
+
+#: ../applets/unmaintained/trash/trashapplet.c:919
+msgid ""
+"A GNOME trash bin that lives in your panel. You can use it to view the trash "
+"or drag and drop items into the trash."
+msgstr ""
+
+#: ../applets/unmaintained/trash/trashapplet.c:944
+msgid "Delete Immediately?"
+msgstr ""
+
+#: ../applets/unmaintained/trash/trashapplet.c:1088
+#: ../applets/unmaintained/trash/trashapplet.c:1113
+#, c-format
+msgid ""
+"Unable to move to trash:\n"
+"%s"
+msgstr ""
+
+#: ../applets/unmaintained/trash/trashapplet.glade.h:1
+msgid "<b>From:</b>"
+msgstr ""
+
+#: ../applets/unmaintained/trash/trashapplet.glade.h:2
+msgid "<big><b>Emptying the Trash</b></big>"
+msgstr ""
+
+#: ../applets/unmaintained/trash/trashapplet.glade.h:3
+msgid "Emptying the Trash"
+msgstr ""
+
+#: ../plugins/unmaintained/deluge/__init__.py:1
+msgid "Awn Deluge"
+msgstr ""
+
+#: ../plugins/unmaintained/deluge/__init__.py:4
+msgid "This plugin prints the download rate and the upload rate on AWN dock"
+msgstr ""
+
+#: ../plugins/unmaintained/quodlibet/quod_dbus_cover.py:42
+msgid "Album Art Display"
+msgstr ""
+
+#. TODO: Improve to decrease wrong cover downloads, maybe add severity?
+#. Assemble list of search keywords (and thus search queries)
+#. If we still have no definite hit, use first result where artist matches
+#: ../plugins/unmaintained/rhythmbox/artdisplay-awn/AmazonCoverArtSearch.py:67
+#: ../plugins/unmaintained/rhythmbox/artdisplay-awn/AmazonCoverArtSearch.py:68
+#: ../plugins/unmaintained/rhythmbox/artdisplay-awn/AmazonCoverArtSearch.py:101
+#: ../plugins/unmaintained/rhythmbox/artdisplay-awn/AmazonCoverArtSearch.py:107
+#: ../plugins/unmaintained/rhythmbox/artdisplay-awn/AmazonCoverArtSearch.py:117
+#: ../plugins/unmaintained/rhythmbox/artdisplay-awn/AmazonCoverArtSearch.py:233
+#: ../plugins/unmaintained/rhythmbox/artdisplay-awn/AmazonCoverArtSearch.py:249
+#: ../plugins/unmaintained/rhythmbox/artdisplay-awn/CoverArtDatabase.py:122
+#: ../plugins/unmaintained/rhythmbox/artdisplay-awn/CoverArtDatabase.py:123
+msgid "Unknown"
+msgstr ""
+
+#~ msgid "Fetching weather data."
+#~ msgstr "Acquisition des données météo."
+
+#~ msgid "Search for Location Code"
+#~ msgstr "Recherche le code du lieu"
+
+#~ msgid ""
+#~ "Enter the location you want to search for above.  For example: <i>Boston</"
+#~ "i>; <i>Portland, ME</i>; <i>Paris</i>; or <i>Osaka, Japan</i>."
+#~ msgstr ""
+#~ "Entrez ici le lieu que vous désirez chercher. Par exemple: <i>Boston</i>; "
+#~ "<i>Portland, ME</i>; <i>Paris</i>; ou <i>Osaka, Japan</i>."
+
+#~ msgid "Metric Units"
+#~ msgstr "Unités Métriques"
+
+#~ msgid "Keep Forecast window opened until clicked"
+#~ msgstr ""
+#~ "Garder la fenêtre de prévisions ouverte tant que vous n'avez pas cliqué"
+
+# fuzzy
+#~ msgid "Use Curved Dialog look"
+#~ msgstr "Courbes de style"
+
+#~ msgid "Lower Center"
+#~ msgstr "Centrées en bas"
+
+#~ msgid "Lower Left"
+#~ msgstr "En bas a gauche"
+
+#~ msgid "Lower Right"
+#~ msgstr "En bas a droite"
+
+#~ msgid "Upper Center"
+#~ msgstr "Centrées en haut"
+
+#~ msgid "Upper Left"
+#~ msgstr "En haut a gauche"
+
+#~ msgid "Upper Right"
+#~ msgstr "En haut a droite"
+
+#~ msgid "Show Temperature"
+#~ msgstr "Afficher les températures"
+
+#~ msgid "Change Location"
+#~ msgstr "Changer le lieu"
+
+#~ msgid "Tornado"
+#~ msgstr "Tornade"
+
+#~ msgid "Tropical Storm"
+#~ msgstr "Tempête tropicale"
+
+#~ msgid "Hurricane"
+#~ msgstr "Ouragan"
+
+#~ msgid "Severe Thunderstorms"
+#~ msgstr "Orages violents"
+
+#~ msgid "Thunderstorms"
+#~ msgstr "Orages"
+
+#~ msgid "Mixed Rain and Snow"
+#~ msgstr "Pluie et neige"
+
+#~ msgid "Mixed Rain and Sleet"
+#~ msgstr "Pluie et neige fondue"
+
+#~ msgid "Mixed Precipitation"
+#~ msgstr "Précipitations"
+
+#~ msgid "Freezing Drizzle"
+#~ msgstr "Bruine givrante"
+
+#~ msgid "Drizzle"
+#~ msgstr "Bruine"
+
+#~ msgid "Freezing Rain"
+#~ msgstr "Pluie givrante"
+
+#~ msgid "Snow Flurries"
+#~ msgstr "Bourrasque de neige"
+
+#~ msgid "Light Snow Showers"
+#~ msgstr "Légères averses de neige"
+
+#~ msgid "Blowing Snow"
+#~ msgstr "Tempête de neige"
+
+#~ msgid "Snow"
+#~ msgstr "Neige"
+
+#~ msgid "Hail"
+#~ msgstr "Grêle"
+
+#~ msgid "Sleet"
+#~ msgstr "Neige fondue"
+
+#~ msgid "Fog"
+#~ msgstr "Brouillard"
+
+#~ msgid "Haze"
+#~ msgstr "Brume"
+
+#~ msgid "Smoke"
+#~ msgstr "Fumée"
+
+#~ msgid "Mostly Cloudy"
+#~ msgstr "Très nuageux"
+
+#~ msgid "Partly Cloudy"
+#~ msgstr "Peu nuageux"
+
+#~ msgid "Fair"
+#~ msgstr "Beau temps"
+
+#~ msgid "Mixed Rain and Hail"
+#~ msgstr "Pluie et grêle"
+
+#~ msgid "Hot"
+#~ msgstr "Chaud"
+
+#~ msgid "Isolated Thunderstorms"
+#~ msgstr "Orages isolés"
+
+#~ msgid "Scattered Thunderstorms"
+#~ msgstr "Orages clairesemés"
+
+#~ msgid "Scattered Showers"
+#~ msgstr "Averses clairsemées"
+
+#~ msgid "Heavy Snow"
+#~ msgstr "Fortes chutes de neige"
+
+#~ msgid "Scattered Snow Showers"
+#~ msgstr "Averses de neige clairsemées"
+
+#~ msgid "Thunder Showers"
+#~ msgstr "Pluie orageuse"
+
+#~ msgid "Snow Showers"
+#~ msgstr "Averses de neige"
+
+#~ msgid "Monday"
+#~ msgstr "Lundi"
+
+#~ msgid "Tuesday"
+#~ msgstr "Mardi"
+
+#~ msgid "Wednesday"
+#~ msgstr "Mercredi"
+
+#~ msgid "Thursday"
+#~ msgstr "Jeudi"
+
+#~ msgid "Saturday"
+#~ msgstr "Samedi"
+
+#~ msgid "Sunday"
+#~ msgstr "Dimanche"

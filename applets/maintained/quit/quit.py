@@ -27,6 +27,7 @@ import awn
 from awn.extras import awnlib
 
 import dbus
+import pango
 
 applet_name = "Quit-Log Out"
 applet_version = "0.3.3"
@@ -89,15 +90,14 @@ class QuitLogOutApplet:
         # Initialize tooltip and icon
         self.refresh_tooltip_icon_cb(self.settings["left-click-action"])
 
-        applet.connect("button-press-event", self.button_press_event_cb)
+        applet.connect("clicked", self.clicked_cb)
 
-    def button_press_event_cb(self, widget, event):
-        if event.button == 1:
-            action = self.settings["left-click-action"]
-            if action == "Show Docklet":
-                self.show_docklet()
-            else:
-                self.execute_action(action)
+    def clicked_cb(self, widget):
+        action = self.settings["left-click-action"]
+        if action == "Show Docklet":
+            self.show_docklet()
+        else:
+            self.execute_action(action)
 
     def setup_context_menu(self):
         pref_dialog = self.applet.dialog.new("preferences")
@@ -109,8 +109,8 @@ class QuitLogOutApplet:
                              self.applet.props.panel_id)
         docklet.props.quit_on_delete = False
 
-        docklet_orientation = docklet.get_orientation()
-        top_bottom = docklet_orientation in (awn.ORIENTATION_TOP, awn.ORIENTATION_BOTTOM)
+        docklet_orientation = docklet.get_pos_type()
+        top_bottom = docklet_orientation in (gtk.POS_TOP, gtk.POS_BOTTOM)
 
         align = awn.Alignment(docklet)
         if top_bottom:
@@ -122,15 +122,16 @@ class QuitLogOutApplet:
         for i in docklet_actions_label_icon:
             label, icon = docklet_actions_label_icon[i]
 
-            if docklet_orientation == awn.ORIENTATION_RIGHT:
+            if docklet_orientation == gtk.POS_RIGHT:
                 label_align = gtk.Alignment(xalign=1.0)
-            elif docklet_orientation == awn.ORIENTATION_BOTTOM:
+            elif docklet_orientation == gtk.POS_BOTTOM:
                 label_align = gtk.Alignment(yalign=1.0)
             else:
                 label_align = gtk.Alignment()
 
             # Label
-            label_label = gtk.Label(label)
+            label_label = awn.Label("<span font_family='sans' weight='bold' stretch='condensed' size='%s'>%s</span>" % (12 * pango.SCALE, label))
+            label_label.set_use_markup(True)
             label_align.add(label_label)
             if top_bottom:
                 label_label.set_size_request(-1, docklet.get_size())
@@ -138,23 +139,23 @@ class QuitLogOutApplet:
                 label_label.set_size_request(docklet.get_size(), -1)
 
             # Label left/right
-            if docklet_orientation == awn.ORIENTATION_LEFT:
+            if docklet_orientation == gtk.POS_LEFT:
                 box.add(label_align)
                 label_label.props.angle = 90
 
             # Icon
             button = awn.ThemedIcon(bind_effects=False)
             button.set_size((docklet.get_size() + docklet.props.max_size) / 2)
-            button.set_orientation(docklet_orientation)
+            button.set_pos_type(docklet_orientation)
             button.set_info_simple(self.applet.meta["short"], docklet.props.uid, icon)
             button.set_tooltip_text(label)
-            button.connect("button-press-event", self.apply_action_cb, i, docklet) 
+            button.connect("button-release-event", self.apply_action_cb, i, docklet) 
             box.add(button)
 
             # Label top/bottom
-            if docklet_orientation != awn.ORIENTATION_LEFT:
+            if docklet_orientation != gtk.POS_LEFT:
                 box.add(label_align)
-                if docklet_orientation == awn.ORIENTATION_RIGHT:
+                if docklet_orientation == gtk.POS_RIGHT:
                     label_label.props.angle = 270
 
         docklet.add(align)

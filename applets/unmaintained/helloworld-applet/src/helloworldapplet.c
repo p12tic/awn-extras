@@ -29,7 +29,7 @@ static gboolean time_handler (HelloWorld *helloworld);
 static gboolean _expose_event (GtkWidget *widget, GdkEventExpose *expose, gpointer data);
 static gboolean _button_release_event (GtkWidget *widget, GdkEventButton *event, gpointer *data);
 static void _height_changed (AwnApplet *app, guint height, gpointer *data);
-static void _orient_changed (AwnApplet *appt, guint orient, gpointer *data);
+static void _orient_changed (AwnApplet *appt, GtkPositionType orient, gpointer *data);
 
 /**
  * Create new applet
@@ -59,7 +59,7 @@ helloworld_applet_new (AwnApplet *applet)
 
 	// connect to height and orientation changes
 	g_signal_connect (G_OBJECT (helloworld->applet), "height-changed", G_CALLBACK (_height_changed), (gpointer)helloworld);
-	g_signal_connect (G_OBJECT (helloworld->applet), "orientation-changed", G_CALLBACK (_orient_changed), (gpointer)helloworld);
+	g_signal_connect (G_OBJECT (helloworld->applet), "position-changed", G_CALLBACK (_orient_changed), (gpointer)helloworld);
 
 	// return widget
 	return helloworld;
@@ -161,7 +161,7 @@ _height_changed (AwnApplet *app, guint height, gpointer *data)
  * -set orientation and redraw applet
  */
 static void
-_orient_changed (AwnApplet *app, guint orient, gpointer *data)
+_orient_changed (AwnApplet *app, GtkPositionType orient, gpointer *data)
 {
   /*applet->orient = orient;
   gtk_widget_queue_draw (GTK_WIDGET (applet));*/

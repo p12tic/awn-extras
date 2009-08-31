@@ -14,6 +14,7 @@ dist_mip_icons_DATA =	\
 	icons/forward.svg	\
 	$(NULL)
 
-desktop_DATA += media-icon-next.desktop	\
+desktop_DATA += \
+	media-icon-next.desktop	\
 	media-icon-previous.desktop	\
 	$(NULL)

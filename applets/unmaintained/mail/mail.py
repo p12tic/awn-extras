@@ -16,7 +16,6 @@
 
 import email
 import gettext
-import locale
 import os
 import re
 import subprocess
@@ -25,13 +24,8 @@ import pygtk
 pygtk.require("2.0")
 import gtk
 
-from awn.extras import awnlib
-from awn.extras import defs
-
-APP = "awn-extras-applets"
-gettext.bindtextdomain(APP, defs.GETTEXTDIR)
-gettext.textdomain(APP)
-_ = gettext.gettext
+from awn import extras
+from awn.extras import _, awnlib
 
 themes_dir = os.path.join(os.path.dirname(__file__), "Themes")
 ui_file = os.path.join(os.path.dirname(__file__), "mail.ui")
@@ -800,7 +794,7 @@ if __name__ == "__main__":
     awnlib.init_start(MailApplet, {
         "name": _("Mail Applet"),
         "short": "mail",
-        "version": defs.VERSION,
+        "version": extras.VERSION,
         "description": _("An applet to check one's email"),
         "logo": os.path.join(themes_dir, "Tango/read.svg"),
         "author": "Pavel Panchekha",

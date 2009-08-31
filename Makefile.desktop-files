@@ -11,6 +11,6 @@ desktop_DATA = $(APPLET_NAME).desktop
 
 EXTRA_DIST = \
 	$(icon_DATA) \
-	$(desktop_DATA).in
+	$(NULL)
 
 CLEANFILES = $(desktop_DATA)

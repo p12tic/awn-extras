@@ -1,19 +1,17 @@
 # vim: set ts=8 sts=8 sw=8 :
-SUBDIRS = locale
-		
 APPLET_NAME = comics
 APPLET_MAIN_FILE = comics.py
 include $(top_srcdir)/Makefile.python-applet
 
 dist_applet_DATA =	\
-	comics.pot	\
+	comics.sh       \
 	comics_add.py	\
 	comics_manage.py\
 	comics_view.py	\
 	COPYING		\
 	downloader.py	\
+	main.py	        \
 	shared.py	\
-	sv_SE.po	\
 	widgets.py	\
 	$(NULL)
 

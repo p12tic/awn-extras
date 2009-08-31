@@ -14,10 +14,10 @@ Build-Depends: 	debhelper (>= 5),
 		libgtop2-dev, 
 		libawn-dev (>> 0.3.3) | libawn-dev-trunk (>> 0.3.3), 
 		libwnck-dev, 
-		libsexy-dev, 
-		libnotify-dev, 
 		libvte-dev,
-#		libwebkit-dev,
+		libsexy-dev, 
+		libnotify-dev,
+		libwebkit-dev,
 		valac (>= 0.5.4),
 		vala-awn-trunk (>> 0.3.3)
 Standards-Version: 3.8.0
@@ -45,7 +45,7 @@ Description: A collection of applets for avant-window-navigator
   * awn-notification-daemon: Libnotify notification daemon implementation.
   * awn-system-monitor: Display CPU activity and system stats on click.
   * awnterm: A pop-up terminal that lives in AWN. 
-  * cairo_main_menu: Displays a list of all the applications on your 
+  * cairo-menu: Displays a list of all the applications on your 
     computer in a standard menu format.
   * garbage: Manages your desktop's trash can.
   * notification-area : Replaces the gnome-panel notification area and shows
@@ -158,7 +158,7 @@ Description: A collection of applets for avant-window-navigator
   * awn-meebo: Access to the Meebo Instant Messenger.
   * calendar: Displays a clock and calendar on the bar, and integrates with 
     several external calendar applications to display appointments.
-  * digitalClock: A digital clock and calendar applet.
+  * digital-clock: A digital clock and calendar applet.
   * digg: Access to Digg.
   * media-icon-applet: This applet allows you to add media icons like play,
     pause, and next/back to your awn bar, and control a list of media players.

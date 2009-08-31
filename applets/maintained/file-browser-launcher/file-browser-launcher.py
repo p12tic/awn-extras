@@ -29,8 +29,6 @@ import gtk
 import subprocess
 import pango
 import urllib
-import gettext
-import locale
 
 try:
   import gio
@@ -39,12 +37,7 @@ except:
   gio = False
 
 import awn
-from awn.extras import defs
-
-APP = "awn-extras-applets"
-gettext.bindtextdomain(APP, defs.GETTEXTDIR)
-gettext.textdomain(APP)
-_ = gettext.gettext
+from awn.extras import _
 
 group = awn.CONFIG_DEFAULT_GROUP
 

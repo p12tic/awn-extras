@@ -29,8 +29,6 @@ import cairo
 import gnome.ui
 import gnomedesktop
 import time
-import locale
-import gettext
 
 from stacks_backend import *
 from stacks_backend_file import *
@@ -45,16 +43,6 @@ from stacks_vfs import VfsUri
 import stacks_gui_trasher
 import stacks_gui_curved
 import stacks_gui_dialog
-
-
-
-APP="Stacks"
-DIR="locale"
-locale.setlocale(locale.LC_ALL, '')
-gettext.bindtextdomain(APP, DIR)
-gettext.textdomain(APP)
-_ = gettext.gettext
-
 
 """
 Main Applet class
@@ -133,7 +121,7 @@ class StacksApplet (awn.AppletSimple):
         self.connect("drag-data-received", self.applet_drop_cb)
         self.connect("drag-motion", self.applet_drag_motion_cb)
         self.connect("drag-leave", self.applet_drag_leave_cb)
-        self.connect("orientation-changed", self.applet_orient_changed_cb)
+        self.connect("position-changed", self.applet_orient_changed_cb)
         self.connect("size-changed", self.applet_size_changed_cb)
 
         self.config = get_config_from_gconf(self.gconf_client, self.gconf_path, self.uid)

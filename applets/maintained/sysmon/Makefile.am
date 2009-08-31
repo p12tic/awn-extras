@@ -19,7 +19,7 @@ sysmon_la_SOURCES =		\
   cpu-dialog.c \
   cpu-dialog.h \
   cpuicon.c \
-  cupicon.h \
+  cpuicon.h \
   defines.h \
   graph.c \
   graph.h \

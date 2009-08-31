@@ -11,11 +11,8 @@ VALA_FILES = \
 	egg-tray.vapi		\
 	$(NULL)
 
-VALAFLAGS = \
+AM_VALAFLAGS = \
 	--pkg x11 \
-	--pkg desktop-agnostic \
-	--vapidir=$(top_srcdir)/shared/vala \
-	--pkg build \
 	$(NULL)
 
 APPLET_LIBS = \

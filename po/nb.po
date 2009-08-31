@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-31 13:27-0700\n"
+"POT-Creation-Date: 2009-08-31 15:09-0700\n"
 "PO-Revision-Date: 2007-11-02 HO:MI+ZONE\n"
 "Last-Translator: Ketil Wendelbo Aanensen <ketil.w.aanensen@gmail.com>\n"
 "Language-Team: Norwegian Bokmaal <ketil.w.aanensen@gmail.com>\n"
@@ -550,38 +550,38 @@ msgid "%s Preferences"
 msgstr "Innstillinger"
 
 #. TODO enable alpha support
-#: ../applets/maintained/digital-clock/dgClockPref.py:216
+#: ../applets/maintained/digital-clock/dgClockPref.py:217
 msgid "Font _Color:"
 msgstr ""
 
 #. TODO enable alpha support
-#: ../applets/maintained/digital-clock/dgClockPref.py:226
+#: ../applets/maintained/digital-clock/dgClockPref.py:227
 msgid "Font _Shadow Color:"
 msgstr ""
 
 #. * clock type: 12/24 hour
-#: ../applets/maintained/digital-clock/dgClockPref.py:231
+#: ../applets/maintained/digital-clock/dgClockPref.py:232
 msgid "Clock Type"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:232
+#: ../applets/maintained/digital-clock/dgClockPref.py:233
 msgid "_12 Hour"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:235
+#: ../applets/maintained/digital-clock/dgClockPref.py:236
 msgid "_24 Hour"
 msgstr ""
 
 #. * clock style: time beside date
-#: ../applets/maintained/digital-clock/dgClockPref.py:239
+#: ../applets/maintained/digital-clock/dgClockPref.py:240
 msgid "Date Position"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:240
+#: ../applets/maintained/digital-clock/dgClockPref.py:241
 msgid "_Left"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:243
+#: ../applets/maintained/digital-clock/dgClockPref.py:244
 msgid "_Bottom"
 msgstr ""
 
@@ -983,6 +983,41 @@ msgstr ""
 #: ../applets/maintained/file-browser-launcher/prefs.py:433
 #: ../applets/maintained/file-browser-launcher/prefs.py:447
 msgid "Choose a folder"
+msgstr ""
+
+#: ../applets/maintained/garbage/applet.vala:51
+#: ../applets/maintained/garbage/garbage.desktop.in.in.h:2
+msgid "Garbage"
+msgstr ""
+
+#: ../applets/maintained/garbage/applet.vala:145
+msgid "item"
+msgstr ""
+
+#: ../applets/maintained/garbage/applet.vala:149
+msgid "items"
+msgstr ""
+
+#: ../applets/maintained/garbage/applet.vala:186
+#: ../applets/unmaintained/stacks/stacks_backend_trasher.py:107
+#: ../applets/unmaintained/trash/trashapplet.c:796
+msgid "_Empty Trash"
+msgstr ""
+
+#: ../applets/maintained/garbage/applet.vala:207
+#, c-format
+msgid ""
+"Are you sure you want to empty your trash? It currently contains %u item(s)."
+msgstr ""
+
+#: ../applets/maintained/garbage/applet.vala:314
+#, c-format
+msgid "Could not send the dragged file(s) to the trash: %s"
+msgstr ""
+
+#. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
+#: ../applets/maintained/garbage/garbage.desktop.in.in.h:1
+msgid "A lightweight, cross-desktop trash applet"
 msgstr ""
 
 #: ../applets/maintained/gwibfawn/gwibfawn.desktop.in.h:1
@@ -2231,11 +2266,6 @@ msgstr ""
 msgid ""
 "If you choose to empty the trash, all items in it will be permanently lost.  "
 "Please note that you can also delete them separately."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_backend_trasher.py:107
-#: ../applets/unmaintained/trash/trashapplet.c:796
-msgid "_Empty Trash"
 msgstr ""
 
 #: ../applets/unmaintained/stacks/stacks_backend_trasher.py:138

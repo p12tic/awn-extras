@@ -42,6 +42,8 @@ applets/maintained/file-browser-launcher/about.py
 applets/maintained/file-browser-launcher/file-browser-launcher.desktop.in
 applets/maintained/file-browser-launcher/file-browser-launcher.py
 applets/maintained/file-browser-launcher/prefs.py
+applets/maintained/garbage/applet.vala
+applets/maintained/garbage/garbage.desktop.in.in
 applets/maintained/gwibfawn/gwibfawn.desktop.in
 applets/maintained/gwibfawn/microblog/__init__.py
 applets/maintained/gwibfawn/microblog/support/__init__.py

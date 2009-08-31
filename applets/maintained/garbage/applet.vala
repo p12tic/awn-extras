@@ -204,8 +204,7 @@ public class GarbageApplet : AppletSimple
     {
       if (config.get_bool("DEFAULT", "confirm_empty"))
       {
-        string msg = _ ("Are you sure you want to empty your trash? It " +
-                        "currently contains %u item(s).")
+        string msg = _ ("Are you sure you want to empty your trash? It currently contains %u item(s).")
                      .printf (this.trash.file_count);
         MessageDialog dialog = new MessageDialog ((Gtk.Window)this, 0,
                                                   MessageType.QUESTION,

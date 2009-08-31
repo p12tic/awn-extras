@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Awn Extras 0.3.9\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-31 13:26-0700\n"
-"PO-Revision-Date: 2009-08-31 13:32-0800\n"
+"POT-Creation-Date: 2009-08-31 15:08-0700\n"
+"PO-Revision-Date: 2009-08-31 15:12-0800\n"
 "Last-Translator: Mark Lee <avant-wn@lazymalevolence.com>\n"
 "Language-Team: English (United States Pig Latin)\n"
 "MIME-Version: 1.0\n"
@@ -538,38 +538,38 @@ msgid "%s Preferences"
 msgstr "Eferences-pray"
 
 #. TODO enable alpha support
-#: ../applets/maintained/digital-clock/dgClockPref.py:216
+#: ../applets/maintained/digital-clock/dgClockPref.py:217
 msgid "Font _Color:"
 msgstr "Ont-fay Olor-_cay:"
 
 #. TODO enable alpha support
-#: ../applets/maintained/digital-clock/dgClockPref.py:226
+#: ../applets/maintained/digital-clock/dgClockPref.py:227
 msgid "Font _Shadow Color:"
 msgstr "Ont-fay Adow-_shay Olor-cay:"
 
 #. * clock type: 12/24 hour
-#: ../applets/maintained/digital-clock/dgClockPref.py:231
+#: ../applets/maintained/digital-clock/dgClockPref.py:232
 msgid "Clock Type"
 msgstr "Ock-clay Ype-tay"
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:232
+#: ../applets/maintained/digital-clock/dgClockPref.py:233
 msgid "_12 Hour"
 msgstr "_12 Hour-way"
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:235
+#: ../applets/maintained/digital-clock/dgClockPref.py:236
 msgid "_24 Hour"
 msgstr "_24 Hour-way"
 
 #. * clock style: time beside date
-#: ../applets/maintained/digital-clock/dgClockPref.py:239
+#: ../applets/maintained/digital-clock/dgClockPref.py:240
 msgid "Date Position"
 msgstr "Ate-day Osition-pay"
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:240
+#: ../applets/maintained/digital-clock/dgClockPref.py:241
 msgid "_Left"
 msgstr "Eft-_lay"
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:243
+#: ../applets/maintained/digital-clock/dgClockPref.py:244
 msgid "_Bottom"
 msgstr "Ottom-_bay"
 
@@ -971,6 +971,40 @@ msgstr ""
 #: ../applets/maintained/file-browser-launcher/prefs.py:447
 msgid "Choose a folder"
 msgstr ""
+
+#: ../applets/maintained/garbage/applet.vala:51
+#: ../applets/maintained/garbage/garbage.desktop.in.in.h:2
+msgid "Garbage"
+msgstr "Arbage-gay"
+
+#: ../applets/maintained/garbage/applet.vala:145
+msgid "item"
+msgstr "item-way"
+
+#: ../applets/maintained/garbage/applet.vala:149
+msgid "items"
+msgstr "items-way"
+
+#: ../applets/maintained/garbage/applet.vala:186
+#: ../applets/unmaintained/stacks/stacks_backend_trasher.py:107
+#: ../applets/unmaintained/trash/trashapplet.c:796
+msgid "_Empty Trash"
+msgstr "_Empty-way Ash-tray"
+
+#: ../applets/maintained/garbage/applet.vala:207
+#, c-format
+msgid "Are you sure you want to empty your trash? It currently contains %u item(s)."
+msgstr "Are you ure-say you want to empty-way your ash-tray? It urrently-cay ontains-cay %u item(s)-way."
+
+#: ../applets/maintained/garbage/applet.vala:314
+#, c-format
+msgid "Could not send the dragged file(s) to the trash: %s"
+msgstr "Ould-cay not end-say the agged-dray ile(s)-fay to the ash-tray: %s"
+
+#. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
+#: ../applets/maintained/garbage/garbage.desktop.in.in.h:1
+msgid "A lightweight, cross-desktop trash applet"
+msgstr "An ightweight-lay, oss-cray-esktop-day ash-tray applet-way"
 
 #: ../applets/maintained/gwibfawn/gwibfawn.desktop.in.h:1
 msgid "Displays tweets"
@@ -2178,11 +2212,6 @@ msgstr ""
 
 #: ../applets/unmaintained/stacks/stacks_backend_trasher.py:102
 msgid "If you choose to empty the trash, all items in it will be permanently lost.  Please note that you can also delete them separately."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_backend_trasher.py:107
-#: ../applets/unmaintained/trash/trashapplet.c:796
-msgid "_Empty Trash"
 msgstr ""
 
 #: ../applets/unmaintained/stacks/stacks_backend_trasher.py:138

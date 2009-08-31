@@ -38,15 +38,24 @@ class dgTime:
             self.update_clock()
             return True
         self.applet.connect('map-event', on_map_event)
+        self.applet.connect('size-changed', self.on_applet_prop_changed)
+        self.applet.connect('position-changed', self.on_applet_prop_changed)
         self.prefs.connect('notify', self.on_prefs_changed)
+
+    def reset_context(self):
+        if self.surface is not None:
+            self.surface.finish()
+            self.surface = None
+        if self.context is not None:
+            self.context = None
+
+    def on_applet_prop_changed(self, applet, prop):
+        self.reset_context()
+        self.draw_clock()
 
     def on_prefs_changed(self, prefs, pspec):
         if pspec.name == 'date-before-time':
-            if self.surface is not None:
-                self.surface.finish()
-                self.surface = None
-            if self.context is not None:
-                self.context = None
+            self.reset_context()
         self.draw_clock()
 
     def update_clock(self):
@@ -57,11 +66,11 @@ class dgTime:
         return True
 
     def reset_width(self):
-        if self.prefs.props.date_before_time:
-            self.surface_width = int(self.prefs.props.panel_size * 2.5)
+        if self.prefs.date_before_time_enabled():
+            self.surface_width = int(self.applet.props.size * 2.5)
             self.width = int(HEIGHT * 2.5)
         else:
-            self.surface_width = int(self.prefs.props.panel_size * 1.3)
+            self.surface_width = int(self.applet.props.size * 1.3)
             self.width = int(HEIGHT * 1.3)
 
     def create_context(self):
@@ -72,9 +81,9 @@ class dgTime:
             return
         self.surface = gdk_surface.create_similar(cairo.CONTENT_COLOR_ALPHA,
                                                   self.surface_width,
-                                                  self.prefs.props.panel_size)
+                                                  self.applet.props.size)
         self.context = cairo.Context(self.surface)
-        scale = self.prefs.props.panel_size / HEIGHT
+        scale = self.applet.props.size / HEIGHT
         self.context.scale(scale, scale)
 
         del gdk_surface
@@ -102,7 +111,7 @@ class dgTime:
                                       cairo.FONT_SLANT_NORMAL,
                                       cairo.FONT_WEIGHT_BOLD)
 
-        if self.prefs.props.date_before_time:
+        if self.prefs.date_before_time_enabled():
             self.draw_text_beside(self.time_string[1], 8, 'd') # Day
             self.draw_text_beside(self.time_string[2], 9.5, 'm') # Month
             # Time
@@ -197,3 +206,5 @@ class dgTime:
         fullDate.append(time.strftime('%a'))
         fullDate.append(time.strftime('%b %d'))
         return fullDate
+
+# vim:ts=4:sts=4:sw=4:et:ai:cindent:

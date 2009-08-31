@@ -48,10 +48,10 @@ class ClockPrefs(gobject.GObject):
         'font_shadow_color': (Color, 'Font shadow color',
                               'The font shadow color of the date and time.',
                               gobject.PARAM_READWRITE),
-        'panel_size': (int, 'Panel size',
-                       'The size of the panel (needed for rendering the date/time).',
-                       0, 1000, 48, # FIXME use realistic min/max values
-                       gobject.PARAM_READWRITE)}
+        'orientation': (gtk.Orientation, 'dock orientation',
+                        'The orientation of the dock (horizontal/vertical)',
+                        gtk.ORIENTATION_HORIZONTAL,
+                        gobject.PARAM_READWRITE)}
 
     __alpha = {
         'font_color': 0,
@@ -80,11 +80,20 @@ class ClockPrefs(gobject.GObject):
         for key, prop in self.pref_map.iteritems():
             self.config.bind(config.GROUP_DEFAULT, key,
                              self, prop, False, config.BIND_METHOD_FALLBACK)
-        self.panel_config = awn.config_get_default(awn.PANEL_ID_DEFAULT)
-        self.panel_config.bind('panel', 'size', self, 'panel_size', True,
-                               config.BIND_METHOD_FALLBACK)
+        self.on_applet_pos_changed(self.applet, self.applet.props.position)
+        self.applet.connect('position-changed', self.on_applet_pos_changed)
         self.menu = self.build_menu()
         self.window = None
+
+    def on_applet_pos_changed(self, applet, pos):
+        if pos in (gtk.POS_TOP, gtk.POS_BOTTOM):
+           self.props.orientation = gtk.ORIENTATION_HORIZONTAL
+        else:
+           self.props.orientation = gtk.ORIENTATION_VERTICAL
+
+    def date_before_time_enabled(self):
+        return self.props.date_before_time and \
+               self.props.orientation == gtk.ORIENTATION_HORIZONTAL
 
     def build_image_menu_item(self, menu, icon_name, activate_callback, label=None):
         if label is None:
@@ -142,14 +151,30 @@ class ClockPrefs(gobject.GObject):
         subprocess.Popen('gksudo time-admin', shell=True)
 
 
-class HFrame(gtk.Frame):
-    def __init__(self, label=None):
-        super(HFrame, self).__init__(label)
-        self.hbox = gtk.HBox(5, False)
-        super(HFrame, self).add(self.hbox)
+class HRadioGroup(gtk.Frame):
 
-    def add(self, child):
-        self.hbox.add(child)
+    def __init__(self, label=None):
+        super(HRadioGroup, self).__init__(label)
+        self.hbox = gtk.HBox(5, False)
+        super(HRadioGroup, self).add(self.hbox)
+        self.buttons = []
+        self.connect('notify::sensitive', self.on_sensitive_changed)
+
+    def add_radio(self, label=None, use_underline=True, signals={},
+                  active=None):
+        group = None
+        if len(self.buttons) > 0:
+            group = self.buttons[0]
+        radio = gtk.RadioButton(group=group, label=label, use_underline=use_underline)
+        for signal, args in signals.iteritems():
+            radio.connect(signal, *args)
+        self.hbox.add(radio)
+        self.buttons.append(radio)
+        return radio
+
+    def on_sensitive_changed(self, pspec):
+        for button in self.buttons:
+            button.props.sensitive = self.props.sensitive
 
 
 def mnemonic_label(mnemonic, widget):
@@ -169,6 +194,7 @@ class PrefsDialog(gtk.Dialog):
         # action button
         self.add_button(gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE)
         self.connect('response', lambda dialog, response: dialog.hide())
+        self.prefs.connect('notify::orientation', self.on_orient_changed)
 
     def create_ui(self):
         table = gtk.Table(5, 2)
@@ -202,25 +228,21 @@ class PrefsDialog(gtk.Dialog):
         table.attach(text_shadow_color_label, 0, 1, 2, 3)
         table.attach(text_shadow_color_button, 1, 2, 2, 3)
         # * clock type: 12/24 hour
-        clock_type_frame = HFrame('Clock Type')
-        clock_type_12 = gtk.RadioButton(label='_12 Hour')
-        clock_type_frame.add(clock_type_12)
-        clock_type_12.connect('toggled', self.radiobutton_changed,
-                              'twelve_hour')
-        clock_type_24 = gtk.RadioButton(clock_type_12, '_24 Hour')
-        clock_type_frame.add(clock_type_24)
-        clock_type_24.props.active = not self.prefs.props.twelve_hour
-        table.attach(clock_type_frame, 0, 2, 3, 4)
+        clock_type = HRadioGroup('Clock Type')
+        clock_type.add_radio('_12 Hour',
+                signals={'toggled': (self.radiobutton_changed,
+                                     'twelve_hour')})
+        clock_type.add_radio('_24 Hour',
+                active=not self.prefs.props.twelve_hour)
+        table.attach(clock_type, 0, 2, 3, 4)
         # * clock style: time beside date
-        clock_style_frame = HFrame('Date Position')
-        clock_style_side = gtk.RadioButton(label='_Left')
-        clock_style_frame.add(clock_style_side)
-        clock_style_side.connect('toggled', self.radiobutton_changed,
-                                 'date_before_time')
-        clock_style_bottom = gtk.RadioButton(clock_style_side, '_Bottom')
-        clock_style_frame.add(clock_style_bottom)
-        clock_style_bottom.props.active = not self.prefs.props.date_before_time
-        table.attach(clock_style_frame, 0, 2, 4, 5)
+        self.clock_style = HRadioGroup('Date Position')
+        self.clock_style.add_radio('_Left',
+               signals={'toggled': (self.radiobutton_changed,
+                                    'date_before_time')})
+        self.clock_style.add_radio('_Bottom',
+               active=not self.prefs.props.date_before_time)
+        table.attach(self.clock_style, 0, 2, 4, 5)
         self.vbox.add(table)
 
     def radiobutton_changed(self, check, prop):
@@ -236,3 +258,9 @@ class PrefsDialog(gtk.Dialog):
                      'Regular', 'Medium', 'Light']
             self.font_replace = re.compile('(?:%s ?)*[\d ]*$' % '|'.join(attrs))
         return self.font_replace.sub('', font_face)
+
+    def on_orient_changed(self, prefs, pspec):
+        self.clock_style.props.sensitive = \
+                (prefs.props.orientation == gtk.ORIENTATION_HORIZONTAL)
+
+# vim:ts=4:sts=4:sw=4:et:ai:cindent

@@ -14,11 +14,11 @@ if WITH_GCONF
 if WITH_GNOME
 # --with-gnome --with-gconf
 CONDITIONAL_APPLETS += \
-	maintained/awnsystemmonitor \
 	$(NULL)
 endif
 # --with-gconf
 CONDITIONAL_APPLETS += \
+	maintained/awnsystemmonitor \
 	maintained/calendar \
 	maintained/media-control \
 	maintained/notification-daemon \

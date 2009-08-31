@@ -60,6 +60,8 @@ AM_CONDITIONAL(BUILD_WEBAPPLET, test "$with_mozilla" != "no" -o "$with_webkit" !
 
 # all
 PKG_CHECK_MODULES(AWN, [awn >= 0.3.9])
+# awn-system-monitor, sysmon
+PKG_CHECK_MODULES(GTOP, [libgtop-2.0])
 #trash
 #PKG_CHECK_MODULES(LIBGLADE, [libglade-2.0])
 # awn-notification-daemon, shiny-switcher, standalone-launcher, taskmand
@@ -107,8 +109,6 @@ fi
 if test "$with_gnome" != "no"; then
 # main-menu, cairo-menu
 PKG_CHECK_MODULES(GNOME_MENU, [libgnome-menu])
-# awn-system-monitor, sysmon
-PKG_CHECK_MODULES(GTOP, [libgtop-2.0])
 fi
 
 # webapplet
@@ -169,14 +169,14 @@ if test x$enable_sound != xno; then
 fi
 
 # applet-specific libraries
-if test "$with_gconf" != "no" -a "$with_gnome" != "no"; then
-PKG_CHECK_MODULES(AWN_SYSTEM_MONITOR, [$gconf libgtop-2.0])
+#if test "$with_gconf" != "no" -a "$with_gnome" != "no"; then
 #PKG_CHECK_MODULES(FILEBROWSER, [$gconf gnome-desktop-2.0 gnome-vfs-2.0 libgnomeui-2.0])
 #PKG_CHECK_MODULES(PLUGGER, [$gconf gnome-vfs-2.0])
 #PKG_CHECK_MODULES(TRASH, [gnome-vfs-2.0 libglade-2.0 x11])
 #PKG_CHECK_MODULES(TRASHER, [$gconf gnome-vfs-2.0])
-fi
+#fi
 if test "$with_gconf" != "no"; then
+PKG_CHECK_MODULES(AWN_SYSTEM_MONITOR, [$gconf libgtop-2.0])
 PKG_CHECK_MODULES(NOTIFICATION_DAEMON, [$gconf $gstreampkg libnotify $url_label_module libwnck-1.0 x11])
 fi
 if test "$with_gnome" != "no"; then

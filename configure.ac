@@ -284,6 +284,8 @@ AS_AC_EXPAND(LOCALEDIR, $localedir_intermediate)
 AC_DEFINE_UNQUOTED(APPLETSDIR, "$APPLETSDIR",
                    [The base directory for applet data and Python applets.])
 AC_SUBST(APPLETSDIR)
+AC_DEFINE_UNQUOTED(LOCALEDIR, "$LOCALEDIR", [Locale directory])
+AC_SUBST(LOCALEDIR)
 
 DBUS_SERVICES_DIR=`$PKG_CONFIG --variable=session_bus_services_dir dbus-1`
 AC_SUBST(DBUS_SERVICES_DIR)

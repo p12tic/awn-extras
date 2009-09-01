@@ -27,6 +27,9 @@ using Awn;
 using DesktopAgnostic;
 using DesktopAgnostic.Config;
 
+// only here so that config.h is before gi18n-lib.h
+private const string not_used = Build.APPLETSDIR;
+
 public class GarbageApplet : AppletSimple
 {
   public VFS.Trash trash;
@@ -48,7 +51,7 @@ public class GarbageApplet : AppletSimple
   {
     this.trash = VFS.trash_get_default ();
     this.trash.file_count_changed.connect (this.trash_changed);
-    this.app_name = _ ("Garbage");
+    this.app_name = Gettext._ ("Garbage");
     this.map_event.connect (this.on_map_event);
     this.button_press_event.connect (this.on_click);
     this.text_overlay = null;
@@ -142,11 +145,11 @@ public class GarbageApplet : AppletSimple
     // TODO change to ngettext(msg, plural, num) when Vala 0.7.6 is released.
     if (file_count == 1)
     {
-      plural = _ ("item");
+      plural = Gettext._ ("item");
     }
     else
     {
-      plural = _ ("items");
+      plural = Gettext._ ("items");
     }
     this.set_tooltip_text ("%s: %u %s".printf (this.app_name, file_count,
                                                plural));
@@ -204,7 +207,7 @@ public class GarbageApplet : AppletSimple
     {
       if (config.get_bool("DEFAULT", "confirm_empty"))
       {
-        string msg = _ ("Are you sure you want to empty your trash? It currently contains %u item(s).")
+        string msg = Gettext._ ("Are you sure you want to empty your trash? It currently contains %u item(s).")
                      .printf (this.trash.file_count);
         MessageDialog dialog = new MessageDialog ((Gtk.Window)this, 0,
                                                   MessageType.QUESTION,
@@ -311,8 +314,8 @@ public class GarbageApplet : AppletSimple
     }
     catch (GLib.Error err)
     {
-      string msg = _ ("Could not send the dragged file(s) to the trash: %s")
-        .printf (err.message);
+      string msg = Gettext._ ("Could not send the dragged file(s) to the trash: %s")
+                   .printf (err.message);
       MessageDialog dialog = new MessageDialog ((Gtk.Window)this, 0,
                                                 MessageType.ERROR,
                                                 ButtonsType.OK, msg);
@@ -328,6 +331,9 @@ public class GarbageApplet : AppletSimple
 public Applet
 awn_applet_factory_initp (string canonical_name, string uid, int panel_id)
 {
+  Intl.setlocale (LocaleCategory.ALL, "");
+  Gettext.bindtextdomain (Build.GETTEXT_PACKAGE, Build.LOCALEDIR);
+  Gettext.textdomain (Build.GETTEXT_PACKAGE);
   return new GarbageApplet (canonical_name, uid, panel_id);
 }
 

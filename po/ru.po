@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: awn-extras-applets 0.2.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-31 15:10-0700\n"
+"POT-Creation-Date: 2009-08-31 19:09-0700\n"
 "PO-Revision-Date: 2008-04-02 17:33-0400\n"
 "Last-Translator: Pavel Panchekha <pavpanchekha@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -973,32 +973,34 @@ msgstr ""
 msgid "Choose a folder"
 msgstr ""
 
-#: ../applets/maintained/garbage/applet.vala:51
+#: ../applets/maintained/garbage/applet.vala:54
 #: ../applets/maintained/garbage/garbage.desktop.in.in.h:2
 msgid "Garbage"
 msgstr ""
 
-#: ../applets/maintained/garbage/applet.vala:145
-msgid "item"
-msgstr ""
+#. set the title as well
+#. $app_name: $count item(s)
+#: ../applets/maintained/garbage/applet.vala:146
+#, c-format
+msgid "%s: %u item"
+msgid_plural "%s: %u items"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
-#: ../applets/maintained/garbage/applet.vala:149
-msgid "items"
-msgstr ""
-
-#: ../applets/maintained/garbage/applet.vala:186
+#: ../applets/maintained/garbage/applet.vala:181
 #: ../applets/unmaintained/stacks/stacks_backend_trasher.py:107
 #: ../applets/unmaintained/trash/trashapplet.c:796
 msgid "_Empty Trash"
 msgstr ""
 
-#: ../applets/maintained/garbage/applet.vala:207
+#: ../applets/maintained/garbage/applet.vala:202
 #, c-format
 msgid ""
 "Are you sure you want to empty your trash? It currently contains %u item(s)."
 msgstr ""
 
-#: ../applets/maintained/garbage/applet.vala:314
+#: ../applets/maintained/garbage/applet.vala:309
 #, c-format
 msgid "Could not send the dragged file(s) to the trash: %s"
 msgstr ""

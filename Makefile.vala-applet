@@ -10,7 +10,7 @@ include $(top_srcdir)/Makefile.c-applet
 QUIET_INSTALL = $(Q:@=@echo '  INSTALL '$@;)
 QUIET_VALA = $(Q:@=@echo '  VALAC '$@;)
 
-VALA_CC = $(CC) -shared -fPIC $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+VALA_CC = $(CC) -shared -fPIC $(AM_CPPFLAGS) -I$(top_builddir) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 VALA_EXTRALDFLAGS = \
 	$(foreach flag,$(AWN_LIBS),--Xcc="$(flag)") \
 	$(foreach flag,$(APPLET_LIBS),--Xcc="$(flag)") \
@@ -22,9 +22,9 @@ BUILT_SOURCES = $(APPLET_NAME).so
 
 $(APPLET_NAME).so: $(VALA_FILES)
 	$(QUIET_VALA)$(VALAC) --cc="$(VALA_CC)" -o $@ $^ \
+		--vapidir=$(top_srcdir)/shared/vala --pkg=build \
 		--vapidir=$(LDA_VAPIDIR) \
 		--vapidir=$(AWN_VAPIDIR) --pkg=awn \
-		--vapidir=$(top_srcdir)/shared/vala --pkg=build \
 		$(AM_VALAFLAGS) $(VALAFLAGS) $(VALA_EXTRALDFLAGS)
 
 install-exec-hook:

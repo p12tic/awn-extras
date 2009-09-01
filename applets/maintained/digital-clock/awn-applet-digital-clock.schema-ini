@@ -2,18 +2,22 @@
 type = string
 default = Sans 10
 description = The font face of the clock text.
+
 [DEFAULT/font_color]
 type = color
 default = white
 description = The color of the clock text.
+
 [DEFAULT/font_shadow_color]
 type = color
 default = black
 description = The shadow color of the clock text.
+
 [DEFAULT/hour12]
 type = boolean
 default = true
 description = Toggle 12-hour mode.
+
 [DEFAULT/dbt]
 type = boolean
 default = true

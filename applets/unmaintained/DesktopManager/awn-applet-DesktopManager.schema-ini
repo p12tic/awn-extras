@@ -2,42 +2,52 @@
 type = boolean
 default = False
 description = Play attention effect on change
+
 [DEFAULT/button1_action]
 type = string
 default = Switch Desktop Image
 description = Applet action on left click
+
 [DEFAULT/button2_action]
 type = string
 default = None
 description = Applet action on middle click
+
 [DEFAULT/environment]
 type = string
 default = tba
 description = What mode to use
+
 [DEFAULT/folder]
 type = string
 default = tba
 description = Base Folder
+
 [DEFAULT/method]
 type = string
 default = Random
 description = Method of choosing the wallpaper
+
 [DEFAULT/play]
 type = boolean
 default = False
 description = Change the wallpaper on a regular basis
+
 [DEFAULT/secs]
 type = integer
 default = 60000
 description = How often to change the wallpaper (in random mode)
+
 [DEFAULT/show_desktop]
 type = string
 default = Toggle showing the desktop
 description = What to do when showing the desktop
+
 [DEFAULT/subfolder]
 type = string
 default = 
 description = The sub-folder
+
 [DEFAULT/scale]
 type = float
 default = 95

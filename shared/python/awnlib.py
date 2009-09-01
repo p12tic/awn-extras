@@ -24,7 +24,7 @@ import pygtk
 pygtk.require("2.0")
 import gtk
 
-from desktopagnostic import config
+from desktopagnostic import config, Color
 import awn
 
 import cairo
@@ -834,13 +834,12 @@ class Settings:
                 key_widget.connect("value-changed", value_changed_cb, key, from_w_to_s)
             elif widget_type is gtk.ColorButton:
                 def color_set_cb(widget, name):
-                    color = widget.get_color()
-                    color_data = [color.red, color.green, color.blue, widget.get_alpha()]
-                    self[name] = "#" + "".join(["%02X" % int(x / 256) for x in color_data])
-                # TODO assumes length 9
+                    self[name] = Color(widget.get_color(), widget.get_alpha())
                 value = self.__dict[key]
-                key_widget.set_color(gtk.gdk.color_parse(value[:7]))
-                key_widget.set_alpha(int(value[7:], 16) * 256)
+                color = gtk.gdk.Color()
+                value.get_color(color)
+                key_widget.set_color(color)
+                key_widget.set_alpha(value.get_alpha())
                 key_widget.connect("color-set", color_set_cb, key)
             else:
                 raise RuntimeError("%s is unsupported" % widget_type.__name__)
@@ -887,7 +886,7 @@ class Settings:
             value = cpickle.loads(value[9:])
         return value
 
-    __setting_types = (bool, int, long, float, str, list)
+    __setting_types = (bool, int, long, float, str, list, Color)
 
     def __setitem__(self, key, value):
         """Set or create a key from the currect directory.

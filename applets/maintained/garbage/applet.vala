@@ -186,7 +186,7 @@ public class GarbageApplet : AppletSimple
         {
           this.menu = this.create_default_menu () as Menu;
           this.empty_menu_item =
-            new MenuItem.with_mnemonic (_ ("_Empty Trash"));
+            new MenuItem.with_mnemonic (Gettext._ ("_Empty Trash"));
           this.empty_menu_item.activate.connect (this.on_menu_empty_activate);
           this.empty_menu_item.set_sensitive (this.trash.file_count > 0);
           this.empty_menu_item.show ();

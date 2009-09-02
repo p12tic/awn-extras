@@ -38,10 +38,10 @@ public class NotificationAreaPrefs : GLib.Object
 
   private weak Gtk.RadioButton auto_backround_radio;
   private weak Gtk.RadioButton custom_background_radio;
-  private weak Gtk.ColorButton background_color_button;
+  private weak GTK.ColorButton background_color_button;
   private weak Gtk.RadioButton auto_border_radio;
   private weak Gtk.RadioButton custom_border_radio;
-  private weak Gtk.ColorButton border_color_button;
+  private weak GTK.ColorButton border_color_button;
 
   public int icons_per_cell
   {
@@ -92,12 +92,11 @@ public class NotificationAreaPrefs : GLib.Object
     set
     {
       if (value == null) this.auto_backround_radio.set_active (true);
-      else if (this._background_color == null || 
+      else if (this._background_color == null ||
                this._background_color.to_string () != value.to_string ())
       {
         this.custom_background_radio.set_active (true);
-        this.background_color_button.set_color (value.color);
-        this.background_color_button.set_alpha ((uint16)value.alpha);
+        this.background_color_button.da_color = value;
       }
       this._background_color = value;
     }
@@ -113,12 +112,11 @@ public class NotificationAreaPrefs : GLib.Object
     set
     {
       if (value == null) this.auto_border_radio.set_active (true);
-      else if (this._border_color == null || 
+      else if (this._border_color == null ||
                this._border_color.to_string () != value.to_string ())
       {
         this.custom_border_radio.set_active (true);
-        this.border_color_button.set_color (value.color);
-        this.border_color_button.set_alpha ((uint16)value.alpha);
+        this.border_color_button.da_color = value;
       }
       this._border_color = value;
     }
@@ -164,15 +162,6 @@ public class NotificationAreaPrefs : GLib.Object
     this.client.unbind_all_for_object (this);
   }
 
-  private DesktopAgnostic.Color get_color_from_colorbutton (Gtk.ColorButton c)
-  {
-    Gdk.Color gdk_color;
-    c.get_color (out gdk_color);
-    DesktopAgnostic.Color color = new DesktopAgnostic.Color(gdk_color,
-                                                            c.get_alpha ());
-    return color;
-  }
-
   private void init_components (Gtk.Builder builder)
   {
     this.dialog = (Gtk.Dialog)builder.get_object ("dialog1");
@@ -199,13 +188,16 @@ public class NotificationAreaPrefs : GLib.Object
 
     this.custom_background_radio = (Gtk.RadioButton)builder.get_object ("customBackgroundRadio");
     this.custom_background_radio.toggled.connect ((obj) => {
-      if (obj.get_active ()) 
-        this.background_color = this.get_color_from_colorbutton (this.background_color_button);
+      if (obj.get_active ())
+      {
+        this.background_color = this.background_color_button.da_color;
+      }
     });
 
-    this.background_color_button = (Gtk.ColorButton)builder.get_object ("backgroundColorbutton");
+    this.background_color_button = (GTK.ColorButton)builder.get_object ("backgroundColorbutton");
     this.background_color_button.color_set.connect ((obj) => {
-      this.background_color = this.get_color_from_colorbutton (obj);
+      GTK.ColorButton button = obj as GTK.ColorButton;
+      this.background_color = button.da_color;
     });
 
     this.auto_border_radio = (Gtk.RadioButton)builder.get_object ("autoBorderRadio");
@@ -215,13 +207,16 @@ public class NotificationAreaPrefs : GLib.Object
 
     this.custom_border_radio = (Gtk.RadioButton)builder.get_object ("customBorderRadio");
     this.custom_border_radio.toggled.connect ((obj) => {
-      if (obj.get_active ()) 
-        this.border_color = this.get_color_from_colorbutton (this.border_color_button);
+      if (obj.get_active ())
+      {
+        this.border_color = this.border_color_button.da_color;
+      }
     });
 
-    this.border_color_button = (Gtk.ColorButton)builder.get_object ("borderColorbutton");
+    this.border_color_button = (GTK.ColorButton)builder.get_object ("borderColorbutton");
     this.border_color_button.color_set.connect ((obj) => {
-      this.border_color = this.get_color_from_colorbutton (obj);
+      GTK.ColorButton button = obj as GTK.ColorButton;
+      this.border_color = button.da_color;
     });
   }
 

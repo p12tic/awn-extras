@@ -20,6 +20,7 @@ import time
 
 import gobject
 from desktopagnostic import Color, config
+from desktopagnostic.gtk import ColorButton
 import gtk
 import awn
 from awn.extras import _
@@ -127,12 +128,6 @@ class ClockPrefs(gobject.GObject):
             self.window = PrefsDialog(self)
         self.window.show_all()
 
-    def color_changed(self, color_btn, prop):
-        # alpha is not used yet
-        #clr = Color(color_btn.get_color(), color_btn.get_alpha())
-        clr = Color(color_btn.get_color(), self.__alpha[prop])
-        setattr(self.props, prop, clr)
-
     def copy_date(self, widget):
         cb = gtk.Clipboard()
         txt = time.strftime('%A, %B %d, %Y')
@@ -208,22 +203,17 @@ class PrefsDialog(gtk.Dialog):
         table.attach(text_font_label, 0, 1, 0, 1)
         table.attach(text_font_button, 1, 2, 0, 1)
         # * font color
-        text_color = gtk.gdk.Color()
-        self.prefs.props.font_color.get_color(text_color)
-        text_color_button = gtk.ColorButton(text_color)
-        text_color_button.connect('color-set', self.prefs.color_changed,
+        text_color_button = ColorButton.with_color(self.prefs.props.font_color)
+        text_color_button.connect('color-set', self.color_changed,
                                   'font_color')
-        # TODO enable alpha support
         text_color_label = mnemonic_label(_('Font _Color:'), text_color_button)
         table.attach(text_color_label, 0, 1, 1, 2)
         table.attach(text_color_button, 1, 2, 1, 2)
         # * font shadow color
-        text_shadow_color = gtk.gdk.Color()
-        self.prefs.props.font_shadow_color.get_color(text_shadow_color)
-        text_shadow_color_button = gtk.ColorButton(text_shadow_color)
-        text_shadow_color_button.connect('color-set', self.prefs.color_changed,
+        text_shadow_color_button = \
+                ColorButton.with_color(self.prefs.props.font_shadow_color)
+        text_shadow_color_button.connect('color-set', self.color_changed,
                                          'font_shadow_color')
-        # TODO enable alpha support
         text_shadow_color_label = mnemonic_label(_('Font _Shadow Color:'),
                                                  text_color_button)
         table.attach(text_shadow_color_label, 0, 1, 2, 3)
@@ -259,6 +249,9 @@ class PrefsDialog(gtk.Dialog):
                      'Regular', 'Medium', 'Light']
             self.font_replace = re.compile('(?:%s ?)*[\d ]*$' % '|'.join(attrs))
         return self.font_replace.sub('', font_face)
+
+    def color_changed(self, color_btn, prop):
+        setattr(self.prefs.props, prop, color_btn.props.da_color)
 
     def on_orient_changed(self, prefs, pspec):
         self.clock_style.props.sensitive = \

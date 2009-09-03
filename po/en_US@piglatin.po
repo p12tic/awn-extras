@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Awn Extras 0.3.9\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-09-03 11:45-0700\n"
-"PO-Revision-Date: 2009-09-03 11:49-0800\n"
+"POT-Creation-Date: 2009-09-03 12:14-0700\n"
+"PO-Revision-Date: 2009-09-03 12:17-0800\n"
 "Last-Translator: Mark Lee <avant-wn@lazymalevolence.com>\n"
 "Language-Team: English (United States Pig Latin)\n"
 "MIME-Version: 1.0\n"
@@ -477,9 +477,8 @@ msgid "Whether to show the date next to the time, instead of below it."
 msgstr "Ether-whay to ow-shay the ate-day next to the ime-tay, instead of elow-bay it."
 
 #: ../applets/maintained/digital-clock/dgClockPref.py:38
-#, fuzzy
 msgid "12 hour mode"
-msgstr "_12 Hour-way"
+msgstr "12 hour-way ode-may"
 
 #: ../applets/maintained/digital-clock/dgClockPref.py:39
 msgid "Whether to show the time in 12 hour mode (as opposed to 24 hour mode)."
@@ -494,18 +493,16 @@ msgid "The font face for the date and time text."
 msgstr "The ont-fay ace-fay for the ate-day and ime-tay ext-tay."
 
 #: ../applets/maintained/digital-clock/dgClockPref.py:46
-#, fuzzy
 msgid "Font color"
-msgstr "Ont-fay Olor-_cay:"
+msgstr "Ont-fay olor-_cay"
 
 #: ../applets/maintained/digital-clock/dgClockPref.py:47
 msgid "The text color of the date and time."
 msgstr "The ext-tay olor-cay of the ate-day and ime-tay."
 
 #: ../applets/maintained/digital-clock/dgClockPref.py:49
-#, fuzzy
 msgid "Font shadow color"
-msgstr "Ont-fay Adow-_shay Olor-cay:"
+msgstr "Ont-fay adow-shay olor-cay"
 
 #: ../applets/maintained/digital-clock/dgClockPref.py:50
 msgid "The font shadow color of the date and time."
@@ -532,9 +529,9 @@ msgid "Adjust Date & Time"
 msgstr "Adjust-way Ate-day & Ime-tay"
 
 #: ../applets/maintained/digital-clock/dgClockPref.py:184
-#, fuzzy, python-format
+#, python-format
 msgid "%s Preferences"
-msgstr "Eferences-pray"
+msgstr "%s Eferences-pray"
 
 #: ../applets/maintained/digital-clock/dgClockPref.py:209
 msgid "Font _Color:"

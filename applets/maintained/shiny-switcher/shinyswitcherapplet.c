@@ -732,6 +732,7 @@ void create_containers(Shiny_switcher *shinyswitcher)
 
   shinyswitcher->mini_wins = g_malloc(sizeof(GtkWidget*) * num_workspaces);
   shinyswitcher->container = gtk_fixed_new();
+  awn_utils_make_transparent_bg (shinyswitcher->container);
   gtk_widget_set_app_paintable(shinyswitcher->container, TRUE);
 
   GdkPixmap *border = gdk_pixmap_new(NULL,
@@ -765,6 +766,8 @@ void create_containers(Shiny_switcher *shinyswitcher)
     Workplace_info * ws;
     win_num = wnck_workspace_get_number(iter->data);
     shinyswitcher->mini_wins[win_num] = gtk_fixed_new();
+    awn_utils_make_transparent_bg (shinyswitcher->mini_wins[win_num]);
+    
     gtk_widget_set_app_paintable(shinyswitcher->mini_wins[win_num], TRUE);
     GdkPixmap *copy;
 

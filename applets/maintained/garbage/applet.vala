@@ -202,7 +202,7 @@ public class GarbageApplet : AppletSimple
     bool do_empty;
     try
     {
-      if (config.get_bool("DEFAULT", "confirm_empty"))
+      if (config.get_bool ("DEFAULT", "confirm_empty"))
       {
         string msg = Gettext._ ("Are you sure you want to empty your trash? It currently contains %u item(s).")
                      .printf (this.trash.file_count);

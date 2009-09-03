@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-31 19:08-0700\n"
+"POT-Creation-Date: 2009-09-03 10:19-0700\n"
 "PO-Revision-Date: 2007-11-02 HO:MI+ZONE\n"
 "Last-Translator: Ketil Wendelbo Aanensen <ketil.w.aanensen@gmail.com>\n"
 "Language-Team: Norwegian Bokmaal <ketil.w.aanensen@gmail.com>\n"
@@ -78,7 +78,6 @@ msgid "A simple popup terminal"
 msgstr ""
 
 #: ../applets/maintained/awnterm/settings.c:67
-#: ../applets/unmaintained/trash/trashapplet.c:924
 msgid "translator-credits"
 msgstr "Ketil Wendelbo Aanensen"
 
@@ -274,31 +273,31 @@ msgstr ""
 #. for focus-follows-mouse
 #. self.dialog.connect('focus-out-event',
 #. self.dialog_focus_out)
-#: ../applets/maintained/calendar/clockcal.py:48
-#: ../applets/maintained/calendar/clockcal.py:497
+#: ../applets/maintained/calendar/clockcal.py:47
+#: ../applets/maintained/calendar/clockcal.py:500
 #: ../applets/maintained/digital-clock/digitalClock.py:76
 #, fuzzy
 msgid "Calendar"
 msgstr "Klart"
 
-#: ../applets/maintained/calendar/clockcal.py:218
+#: ../applets/maintained/calendar/clockcal.py:220
 msgid ""
 "Do you want to erase your calendar password from the calendar applet?  If "
 "you choose to clear your password, you will be prompted again for your "
 "calendar login credentials."
 msgstr ""
 
-#: ../applets/maintained/calendar/clockcal.py:503
+#: ../applets/maintained/calendar/clockcal.py:506
 msgid "Open in "
 msgstr ""
 
-#: ../applets/maintained/calendar/clockcal.py:507
+#: ../applets/maintained/calendar/clockcal.py:510
 #: ../applets/maintained/weather/forecast.py:200
 msgid "Today"
 msgstr "I dag"
 
 #. print "Login error: ", sys.exc_info()[0], sys.exc_info()[1]
-#: ../applets/maintained/calendar/clockcal.py:555
+#: ../applets/maintained/calendar/clockcal.py:558
 msgid "Unable to read calendar data from external source."
 msgstr ""
 
@@ -481,107 +480,105 @@ msgstr ""
 msgid "Digital Clock"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:33
+#: ../applets/maintained/digital-clock/dgClockPref.py:34
 msgid "Date before time"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:34
+#: ../applets/maintained/digital-clock/dgClockPref.py:35
 msgid "Whether to show the date next to the time, instead of below it."
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:37
+#: ../applets/maintained/digital-clock/dgClockPref.py:38
 msgid "12 hour mode"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:38
+#: ../applets/maintained/digital-clock/dgClockPref.py:39
 msgid "Whether to show the time in 12 hour mode (as opposed to 24 hour mode)."
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:41
+#: ../applets/maintained/digital-clock/dgClockPref.py:42
 msgid "Font face"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:42
+#: ../applets/maintained/digital-clock/dgClockPref.py:43
 msgid "The font face for the date and time text."
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:45
+#: ../applets/maintained/digital-clock/dgClockPref.py:46
 msgid "Font color"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:46
+#: ../applets/maintained/digital-clock/dgClockPref.py:47
 msgid "The text color of the date and time."
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:48
+#: ../applets/maintained/digital-clock/dgClockPref.py:49
 msgid "Font shadow color"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:49
+#: ../applets/maintained/digital-clock/dgClockPref.py:50
 msgid "The font shadow color of the date and time."
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:51
+#: ../applets/maintained/digital-clock/dgClockPref.py:52
 #, fuzzy
 msgid "dock orientation"
 msgstr "Nåværende sted:"
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:52
+#: ../applets/maintained/digital-clock/dgClockPref.py:53
 msgid "The orientation of the dock (horizontal/vertical)"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:112
+#: ../applets/maintained/digital-clock/dgClockPref.py:113
 #, fuzzy
 msgid "Copy Time"
 msgstr "Skyet"
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:115
+#: ../applets/maintained/digital-clock/dgClockPref.py:116
 #, fuzzy
 msgid "Copy Date"
 msgstr "Skyet"
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:120
+#: ../applets/maintained/digital-clock/dgClockPref.py:121
 msgid "Adjust Date & Time"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:189
+#: ../applets/maintained/digital-clock/dgClockPref.py:184
 #, fuzzy, python-format
 msgid "%s Preferences"
 msgstr "Innstillinger"
 
-#. TODO enable alpha support
-#: ../applets/maintained/digital-clock/dgClockPref.py:217
+#: ../applets/maintained/digital-clock/dgClockPref.py:209
 msgid "Font _Color:"
 msgstr ""
 
-#. TODO enable alpha support
-#: ../applets/maintained/digital-clock/dgClockPref.py:227
+#: ../applets/maintained/digital-clock/dgClockPref.py:217
 msgid "Font _Shadow Color:"
 msgstr ""
 
 #. * clock type: 12/24 hour
-#: ../applets/maintained/digital-clock/dgClockPref.py:232
+#: ../applets/maintained/digital-clock/dgClockPref.py:222
 msgid "Clock Type"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:233
+#: ../applets/maintained/digital-clock/dgClockPref.py:223
 msgid "_12 Hour"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:236
+#: ../applets/maintained/digital-clock/dgClockPref.py:226
 msgid "_24 Hour"
 msgstr ""
 
 #. * clock style: time beside date
-#: ../applets/maintained/digital-clock/dgClockPref.py:240
+#: ../applets/maintained/digital-clock/dgClockPref.py:230
 msgid "Date Position"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:241
+#: ../applets/maintained/digital-clock/dgClockPref.py:231
 msgid "_Left"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:244
+#: ../applets/maintained/digital-clock/dgClockPref.py:234
 msgid "_Bottom"
 msgstr ""
 
@@ -1001,7 +998,6 @@ msgstr[1] ""
 
 #: ../applets/maintained/garbage/applet.vala:181
 #: ../applets/unmaintained/stacks/stacks_backend_trasher.py:107
-#: ../applets/unmaintained/trash/trashapplet.c:796
 msgid "_Empty Trash"
 msgstr ""
 
@@ -1348,7 +1344,7 @@ msgstr ""
 msgid "%u is not a valid notification ID"
 msgstr ""
 
-#: ../applets/maintained/places/applet.c:337
+#: ../applets/maintained/places/applet.c:338
 msgid "Desktop"
 msgstr ""
 
@@ -2259,7 +2255,6 @@ msgid "Hide Volume"
 msgstr ""
 
 #: ../applets/unmaintained/stacks/stacks_backend_trasher.py:101
-#: ../applets/unmaintained/trash/trashapplet.c:773
 msgid "Empty all of the items from the trash?"
 msgstr ""
 
@@ -2274,7 +2269,6 @@ msgid "Empty Trash"
 msgstr ""
 
 #: ../applets/unmaintained/stacks/stacks_backend_trasher.py:169
-#: ../applets/unmaintained/trash/trashapplet.c:974
 msgid "Cannot move items to trash, do you want to delete them immediately?"
 msgstr ""
 
@@ -2284,7 +2278,6 @@ msgid "None of the %d selected items can be moved to the Trash"
 msgstr ""
 
 #: ../applets/unmaintained/stacks/stacks_backend_trasher.py:172
-#: ../applets/unmaintained/trash/trashapplet.c:979
 msgid ""
 "Cannot move some items to trash, do you want to delete these immediately?"
 msgstr ""
@@ -2524,89 +2517,6 @@ msgstr ""
 
 #: ../applets/unmaintained/trasher/trasher.desktop.in.in.h:2
 msgid "Trash applet in Stacks style"
-msgstr ""
-
-#: ../applets/unmaintained/trash/trash.desktop.in.in.h:1
-msgid "A lightweight trash applet"
-msgstr ""
-
-#: ../applets/unmaintained/trash/trash.desktop.in.in.h:2
-#: ../applets/unmaintained/trash/trashapplet.c:916
-msgid "Trash Applet"
-msgstr ""
-
-#: ../applets/unmaintained/trash/trashapplet.c:165
-#, c-format
-msgid "Unable to find the Trash directory: %s"
-msgstr ""
-
-#: ../applets/unmaintained/trash/trashapplet.c:555
-msgid "No Items in Trash"
-msgstr ""
-
-#: ../applets/unmaintained/trash/trashapplet.c:560
-#, c-format
-msgid "%d Item in Trash"
-msgid_plural "%d Items in Trash"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../applets/unmaintained/trash/trashapplet.c:698
-#, c-format
-msgid "Removing item %lu of %lu"
-msgstr ""
-
-#: ../applets/unmaintained/trash/trashapplet.c:732
-msgid "Removing:"
-msgstr ""
-
-#: ../applets/unmaintained/trash/trashapplet.c:776
-msgid ""
-"If you choose to empty the trash, all items in it will be permanently lost. "
-"Please note that you can also delete them separately."
-msgstr ""
-
-#: ../applets/unmaintained/trash/trashapplet.c:884
-#, c-format
-msgid ""
-"Error while spawning file manager:\n"
-"%s"
-msgstr ""
-
-#. FIXME - Actually, we need a user guide
-#: ../applets/unmaintained/trash/trashapplet.c:893
-#, c-format
-msgid "There was an error displaying help: %s"
-msgstr ""
-
-#: ../applets/unmaintained/trash/trashapplet.c:919
-msgid ""
-"A GNOME trash bin that lives in your panel. You can use it to view the trash "
-"or drag and drop items into the trash."
-msgstr ""
-
-#: ../applets/unmaintained/trash/trashapplet.c:944
-msgid "Delete Immediately?"
-msgstr ""
-
-#: ../applets/unmaintained/trash/trashapplet.c:1088
-#: ../applets/unmaintained/trash/trashapplet.c:1113
-#, c-format
-msgid ""
-"Unable to move to trash:\n"
-"%s"
-msgstr ""
-
-#: ../applets/unmaintained/trash/trashapplet.glade.h:1
-msgid "<b>From:</b>"
-msgstr ""
-
-#: ../applets/unmaintained/trash/trashapplet.glade.h:2
-msgid "<big><b>Emptying the Trash</b></big>"
-msgstr ""
-
-#: ../applets/unmaintained/trash/trashapplet.glade.h:3
-msgid "Emptying the Trash"
 msgstr ""
 
 #: ../plugins/unmaintained/deluge/__init__.py:1

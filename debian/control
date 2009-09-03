@@ -73,7 +73,6 @@ Description: A collection of applets for avant-window-navigator
     navigate folders.
   * main-menu: Display a list of all the applications on your computer.
   * places: Displays shortcuts in buttons.
-  * trash: A trash applet, like the one from gnome-panel.
   * trasher: Like the trash applet, but uses stacks to allow you to preview 
     your trash.
   * webapplet: Displays a web page.

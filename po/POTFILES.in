@@ -124,9 +124,6 @@ applets/unmaintained/stacks/stacks_config.py
 applets/unmaintained/stacks/stacks_preferences.glade
 applets/unmaintained/stacks/stacks_vfs.py
 applets/unmaintained/trasher/trasher.desktop.in.in
-applets/unmaintained/trash/trash.desktop.in.in
-applets/unmaintained/trash/trashapplet.c
-applets/unmaintained/trash/trashapplet.glade
 plugins/unmaintained/deluge/__init__.py
 plugins/unmaintained/quodlibet/quod_dbus_cover.py
 plugins/unmaintained/rhythmbox/artdisplay-awn/AmazonCoverArtSearch.py

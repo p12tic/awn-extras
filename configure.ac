@@ -62,11 +62,9 @@ AM_CONDITIONAL(BUILD_WEBAPPLET, test "$with_mozilla" != "no" -o "$with_webkit" !
 PKG_CHECK_MODULES(AWN, [awn >= 0.3.9])
 # awn-system-monitor, sysmon
 PKG_CHECK_MODULES(GTOP, [libgtop-2.0])
-#trash
-#PKG_CHECK_MODULES(LIBGLADE, [libglade-2.0])
 # awn-notification-daemon, shiny-switcher, standalone-launcher, taskmand
 PKG_CHECK_MODULES(LIBWNCK, [libwnck-1.0])
-# awn-notification-daemon, shiny-switcher, trash
+# awn-notification-daemon, shiny-switcher
 PKG_CHECK_MODULES(LIBX11, [x11])
 PKG_CHECK_MODULES(COMPOSITE, [xcomposite])
 PKG_CHECK_MODULES(XRENDER, [xrender])
@@ -102,7 +100,7 @@ fi
 #PKG_CHECK_MODULES(GNOMEUI, [libgnomeui-2.0])
 # filebrowser
 #PKG_CHECK_MODULES(GNOME_DESKTOP, [gnome-desktop-2.0])
-# filebrowser, plugger, trash, trasher
+# filebrowser, plugger, trasher
 #PKG_CHECK_MODULES(GNOME_VFS, [gnome-vfs-2.0])
 #fi
 
@@ -386,8 +384,6 @@ applets/unmaintained/pynot-rgba/Makefile
 applets/unmaintained/separator/Makefile
 applets/unmaintained/separator/separator.desktop.in
 applets/unmaintained/stacks/Makefile
-applets/unmaintained/trash/Makefile
-applets/unmaintained/trash/trash.desktop.in
 applets/unmaintained/trasher/Makefile
 applets/unmaintained/trasher/trasher.desktop.in
 po/Makefile.in

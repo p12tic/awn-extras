@@ -175,6 +175,7 @@ public class GarbageApplet : AppletSimple
         weak Menu ctx_menu;
         if (this.menu == null)
         {
+          Widget about_item;
           this.menu = this.create_default_menu () as Menu;
           this.empty_menu_item =
             new MenuItem.with_mnemonic (Gettext._ ("_Empty Trash"));
@@ -182,6 +183,11 @@ public class GarbageApplet : AppletSimple
           this.empty_menu_item.set_sensitive (this.trash.file_count > 0);
           this.empty_menu_item.show ();
           this.menu.append (this.empty_menu_item);
+          about_item = this.create_about_item_simple ("Copyright © 2009 Mark Lee <avant-wn@lazymalevolence.com>",
+                                                      AppletLicense.GPLV2,
+                                                      Build.VERSION);
+          about_item.show ();
+          this.menu.append (about_item as MenuItem);
         }
         ctx_menu = (Menu)this.menu;
         ctx_menu.set_screen (null);

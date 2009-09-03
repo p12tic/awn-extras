@@ -24,7 +24,6 @@ import sys
 import os
 import gobject
 import gtk
-from gtk import gdk
 import gconf
 import awn
 from awn.extras import _

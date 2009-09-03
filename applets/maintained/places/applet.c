@@ -28,6 +28,7 @@
 #include <glib/gi18n-lib.h>
 #include <string.h>
 
+#include <libdesktop-agnostic/gtk.h>
 #include <libdesktop-agnostic/vfs.h>
 #include <libawn/libawn.h>
 
@@ -834,7 +835,6 @@ typedef struct
   GtkWidget * tooltips;
   GtkWidget* gtk_off_section;
   GtkWidget *normal_label;
-  GdkColor  colr;
   GtkWidget *normal_bg;
   GtkWidget *normal_fg;
   Places  *places;
@@ -901,12 +901,13 @@ int activate(GtkWidget *w, gchar **p)
   return FALSE;
 }
 
-void _mod_colour(GtkColorButton *widget, DesktopAgnosticColor * user_data)
+void _mod_colour(GtkColorButton *widget, DesktopAgnosticColor **color)
 {
-  GdkColor *color;
-  gtk_color_button_get_color(widget, color);
-  desktop_agnostic_color_set_color(user_data, color);
-  desktop_agnostic_color_set_alpha(user_data, gtk_color_button_get_alpha(widget));
+  DesktopAgnosticGTKColorButton *button;
+
+  button = DESKTOP_AGNOSTIC_GTK_COLOR_BUTTON (widget);
+  *color = g_object_ref (desktop_agnostic_gtk_color_button_get_da_color (button));
+
   gtk_widget_destroy(pref_menu->hover_ex);
   gtk_widget_destroy(pref_menu->normal_ex);
   pref_menu->hover_ex = build_menu_widget(pref_menu->places, &pref_menu->places->hover_colours, "Hover", NULL, NULL, 200);
@@ -967,36 +968,21 @@ void show_prefs(Places * places)
 
   pref_menu->normal_label = gtk_label_new("Normal");
 
-  desktop_agnostic_color_get_color(places->normal_colours.base, &pref_menu->colr);
-  pref_menu->normal_bg = gtk_color_button_new_with_color(&pref_menu->colr);
-  gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(pref_menu->normal_bg), TRUE);
-  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(pref_menu->normal_bg), desktop_agnostic_color_get_alpha(places->normal_colours.base));
+  pref_menu->normal_bg = GTK_WIDGET (desktop_agnostic_gtk_color_button_new_with_color(places->normal_colours.base));
   g_signal_connect(G_OBJECT(pref_menu->normal_bg), "color-set", G_CALLBACK(_mod_colour), &places->normal_colours.base);
-  desktop_agnostic_color_get_color(places->normal_colours.text, &pref_menu->colr);
-  pref_menu->normal_fg = gtk_color_button_new_with_color(&pref_menu->colr);
-  gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(pref_menu->normal_fg), TRUE);
-  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(pref_menu->normal_fg), desktop_agnostic_color_get_alpha(places->normal_colours.text));
+  pref_menu->normal_fg = GTK_WIDGET (desktop_agnostic_gtk_color_button_new_with_color(places->normal_colours.text));
   g_signal_connect(G_OBJECT(pref_menu->normal_fg), "color-set", G_CALLBACK(_mod_colour), &places->normal_colours.text);
 
   pref_menu->hover_label = gtk_label_new("Hover");
-  desktop_agnostic_color_get_color(places->hover_colours.base, &pref_menu->colr);
-  pref_menu->hover_bg = gtk_color_button_new_with_color(&pref_menu->colr);
-  gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(pref_menu->hover_bg), TRUE);
-  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(pref_menu->hover_bg), desktop_agnostic_color_get_alpha(places->hover_colours.base));
+  pref_menu->hover_bg = GTK_WIDGET (desktop_agnostic_gtk_color_button_new_with_color(places->hover_colours.base));
   g_signal_connect(G_OBJECT(pref_menu->hover_bg), "color-set", G_CALLBACK(_mod_colour), &places->hover_colours.base);
 
-  desktop_agnostic_color_get_color(places->hover_colours.text, &pref_menu->colr);
-  pref_menu->hover_fg = gtk_color_button_new_with_color(&pref_menu->colr);
-  gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(pref_menu->hover_fg), TRUE);
-  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(pref_menu->hover_fg), desktop_agnostic_color_get_alpha(places->hover_colours.text));
+  pref_menu->hover_fg = GTK_WIDGET (desktop_agnostic_gtk_color_button_new_with_color(places->hover_colours.text));
   g_signal_connect(G_OBJECT(pref_menu->hover_fg), "color-set", G_CALLBACK(_mod_colour), &places->hover_colours.text);
 
   pref_menu->border_label = gtk_label_new("Border");
 
-  desktop_agnostic_color_get_color(places->border_colour, &pref_menu->colr);
-  pref_menu->border_colour = gtk_color_button_new_with_color(&pref_menu->colr);
-  gtk_color_button_set_use_alpha(GTK_COLOR_BUTTON(pref_menu->border_colour), TRUE);
-  gtk_color_button_set_alpha(GTK_COLOR_BUTTON(pref_menu->border_colour), desktop_agnostic_color_get_alpha(places->border_colour));
+  pref_menu->border_colour = GTK_WIDGET (desktop_agnostic_gtk_color_button_new_with_color(places->border_colour));
   g_signal_connect(G_OBJECT(pref_menu->border_colour), "color-set", G_CALLBACK(_mod_colour), &places->border_colour);
 
 

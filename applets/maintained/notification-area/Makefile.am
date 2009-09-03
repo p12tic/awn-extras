@@ -12,6 +12,7 @@ VALA_FILES = \
 	$(NULL)
 
 AM_VALAFLAGS = \
+	--pkg desktop-agnostic-gtk \
 	--pkg x11 \
 	$(NULL)
 

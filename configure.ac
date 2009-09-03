@@ -4,7 +4,7 @@ m4_define(pycairo_required_version,      1.0.2) dnl or 1.1.7
 m4_define(pygtk_required_version,        2.10.0)
 
 
-AC_INIT(awn-extras-applets, 0.3.9, [])
+AC_INIT(awn-extras, 0.3.9, [])
 AM_INIT_AUTOMAKE([-Wno-portability])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR(applets)

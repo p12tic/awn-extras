@@ -213,7 +213,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkColorButton" id="backgroundColorbutton">
+                              <object class="DesktopAgnosticGTKColorButton" id="backgroundColorbutton">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
@@ -293,7 +293,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkColorButton" id="borderColorbutton">
+                              <object class="DesktopAgnosticGTKColorButton" id="borderColorbutton">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>

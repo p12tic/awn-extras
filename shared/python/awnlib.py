@@ -25,6 +25,7 @@ pygtk.require("2.0")
 import gtk
 
 from desktopagnostic import config, Color
+from desktopagnostic.gtk import ColorButton
 import awn
 
 import cairo
@@ -832,9 +833,9 @@ class Settings:
                     self[name] = conv(widget.get_value())
                 key_widget.set_value(from_s_to_w(self.__dict[key]))
                 key_widget.connect("value-changed", value_changed_cb, key, from_w_to_s)
-            elif widget_type is gtk.ColorButton:
+            elif widget_type is ColorButton:
                 def color_set_cb(widget, name):
-                    self[name] = Color(widget.get_color(), widget.get_alpha())
+                    self[name] = widget.props.da_color
                 value = self.__dict[key]
                 color = gtk.gdk.Color()
                 value.get_color(color)

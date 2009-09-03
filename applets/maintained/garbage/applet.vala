@@ -34,7 +34,6 @@ public class GarbageApplet : AppletSimple
 {
   public VFS.Trash trash;
   private Client config;
-  private string app_name;
   private Menu menu;
   private MenuItem empty_menu_item;
   private OverlayText? text_overlay;
@@ -51,7 +50,7 @@ public class GarbageApplet : AppletSimple
   {
     this.trash = VFS.trash_get_default ();
     this.trash.file_count_changed.connect (this.trash_changed);
-    this.app_name = Gettext._ ("Garbage");
+    this.display_name = Gettext._ ("Garbage");
     this.map_event.connect (this.on_map_event);
     this.button_press_event.connect (this.on_click);
     this.text_overlay = null;
@@ -142,9 +141,9 @@ public class GarbageApplet : AppletSimple
       warning ("Rendering error: %s", err.message);
     }
     // set the title as well
-    // $app_name: $count item(s)
+    // $display_name: $count item(s)
     plural = Gettext.ngettext ("%s: %u item", "%s: %u items", file_count);
-    this.set_tooltip_text (plural.printf (this.app_name, file_count));
+    this.set_tooltip_text (plural.printf (this.display_name, file_count));
   }
   private bool
   on_click (EventButton evt)

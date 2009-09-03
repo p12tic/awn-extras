@@ -82,6 +82,18 @@ public class GarbageApplet : AppletSimple
   }
 
   private void
+  show_error_message (string msg)
+  {
+    // FIXME use libnotify?
+    MessageDialog dialog;
+
+    dialog = new MessageDialog (this, DialogFlags.MODAL, MessageType.ERROR,
+                                ButtonsType.OK, msg);
+    dialog.run ();
+    dialog.destroy ();
+  }
+
+  private void
   render_applet_icon ()
   {
     uint file_count;
@@ -162,11 +174,11 @@ public class GarbageApplet : AppletSimple
                            null,
                            null);
         }
-        catch (GLib.Error e)
+        catch (GLib.Error err)
         {
-          // FIXME: Show the user the error somehow.
-          warning ("Could not open the trash folder in your file manager: %s",
-                   e.message);
+          string msg;
+          msg = Gettext._ ("Could not open the trash folder with your file manager: %s")
+                .printf (err.message);
         }
         break;
       case 2: /* middle mouse click */
@@ -235,11 +247,13 @@ public class GarbageApplet : AppletSimple
         this.throbber_overlay.active = false;
       }
     }
-    catch (GLib.Error ex)
+    catch (GLib.Error err)
     {
-      warning ("Error occurred when trying to retrieve 'confirm_empty' config option: %s",
-               ex.message);
-      /* FIXME show error dialog */
+      string msg;
+
+      msg = Gettext._ ("An error occurred when trying to retrieve the 'confirm_empty' config option: %s")
+            .printf (err.message);
+      this.show_error_message (msg);
     }
   }
   private void
@@ -313,11 +327,7 @@ public class GarbageApplet : AppletSimple
     {
       string msg = Gettext._ ("Could not send the dragged file(s) to the trash: %s")
                    .printf (err.message);
-      MessageDialog dialog = new MessageDialog ((Gtk.Window)this, 0,
-                                                MessageType.ERROR,
-                                                ButtonsType.OK, msg);
-      dialog.run ();
-      dialog.destroy ();
+      this.show_error_message (msg);
     }
 
     this.progress_overlay.active = false;

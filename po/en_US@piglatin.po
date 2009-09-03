@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Awn Extras 0.3.9\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-09-03 10:17-0700\n"
-"PO-Revision-Date: 2009-09-03 10:21-0800\n"
+"POT-Creation-Date: 2009-09-03 11:45-0700\n"
+"PO-Revision-Date: 2009-09-03 11:49-0800\n"
 "Last-Translator: Mark Lee <avant-wn@lazymalevolence.com>\n"
 "Language-Team: English (United States Pig Latin)\n"
 "MIME-Version: 1.0\n"
@@ -969,31 +969,41 @@ msgstr ""
 msgid "Choose a folder"
 msgstr ""
 
-#: ../applets/maintained/garbage/applet.vala:54
+#: ../applets/maintained/garbage/applet.vala:53
 #: ../applets/maintained/garbage/garbage.desktop.in.in.h:2
 msgid "Garbage"
 msgstr "Arbage-gay"
 
 #. set the title as well
-#. $app_name: $count item(s)
-#: ../applets/maintained/garbage/applet.vala:146
+#. $display_name: $count item(s)
+#: ../applets/maintained/garbage/applet.vala:157
 #, c-format
 msgid "%s: %u item"
 msgid_plural "%s: %u items"
 msgstr[0] "%s: %u item-way"
 msgstr[1] "%s: %u items-way"
 
-#: ../applets/maintained/garbage/applet.vala:181
+#: ../applets/maintained/garbage/applet.vala:180
+#, c-format
+msgid "Could not open the trash folder with your file manager: %s"
+msgstr "Ould-cay not open-way the ash-tray older-fay with your ile-fay anager-may: %s"
+
+#: ../applets/maintained/garbage/applet.vala:193
 #: ../applets/unmaintained/stacks/stacks_backend_trasher.py:107
 msgid "_Empty Trash"
 msgstr "_Empty-way Ash-tray"
 
-#: ../applets/maintained/garbage/applet.vala:202
+#: ../applets/maintained/garbage/applet.vala:219
 #, c-format
 msgid "Are you sure you want to empty your trash? It currently contains %u item(s)."
 msgstr "Are you ure-say you want to empty-way your ash-tray? It urrently-cay ontains-cay %u item(s)-way."
 
-#: ../applets/maintained/garbage/applet.vala:309
+#: ../applets/maintained/garbage/applet.vala:254
+#, c-format
+msgid "An error occurred when trying to retrieve the 'confirm_empty' config option: %s"
+msgstr "An error-way occurred-way when ying-tray to etrieve-ray the 'confirm_empty' onfig-cay option-way: %s"
+
+#: ../applets/maintained/garbage/applet.vala:328
 #, c-format
 msgid "Could not send the dragged file(s) to the trash: %s"
 msgstr "Ould-cay not end-say the agged-dray ile(s)-fay to the ash-tray: %s"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: notification-daemon trunk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-31 13:26-0700\n"
+"POT-Creation-Date: 2009-09-03 12:14-0700\n"
 "PO-Revision-Date: 2007-01-04 12:51+0100\n"
 "Last-Translator: Florian Steinel <steinel@pootle.wordforge.org.flonet.net>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
@@ -270,30 +270,30 @@ msgstr ""
 #. for focus-follows-mouse
 #. self.dialog.connect('focus-out-event',
 #. self.dialog_focus_out)
-#: ../applets/maintained/calendar/clockcal.py:48
-#: ../applets/maintained/calendar/clockcal.py:497
+#: ../applets/maintained/calendar/clockcal.py:47
+#: ../applets/maintained/calendar/clockcal.py:500
 #: ../applets/maintained/digital-clock/digitalClock.py:76
 msgid "Calendar"
 msgstr ""
 
-#: ../applets/maintained/calendar/clockcal.py:218
+#: ../applets/maintained/calendar/clockcal.py:220
 msgid ""
 "Do you want to erase your calendar password from the calendar applet?  If "
 "you choose to clear your password, you will be prompted again for your "
 "calendar login credentials."
 msgstr ""
 
-#: ../applets/maintained/calendar/clockcal.py:503
+#: ../applets/maintained/calendar/clockcal.py:506
 msgid "Open in "
 msgstr ""
 
-#: ../applets/maintained/calendar/clockcal.py:507
+#: ../applets/maintained/calendar/clockcal.py:510
 #: ../applets/maintained/weather/forecast.py:200
 msgid "Today"
 msgstr ""
 
 #. print "Login error: ", sys.exc_info()[0], sys.exc_info()[1]
-#: ../applets/maintained/calendar/clockcal.py:555
+#: ../applets/maintained/calendar/clockcal.py:558
 msgid "Unable to read calendar data from external source."
 msgstr ""
 
@@ -475,104 +475,102 @@ msgstr ""
 msgid "Digital Clock"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:33
+#: ../applets/maintained/digital-clock/dgClockPref.py:34
 msgid "Date before time"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:34
+#: ../applets/maintained/digital-clock/dgClockPref.py:35
 msgid "Whether to show the date next to the time, instead of below it."
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:37
+#: ../applets/maintained/digital-clock/dgClockPref.py:38
 msgid "12 hour mode"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:38
+#: ../applets/maintained/digital-clock/dgClockPref.py:39
 msgid "Whether to show the time in 12 hour mode (as opposed to 24 hour mode)."
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:41
+#: ../applets/maintained/digital-clock/dgClockPref.py:42
 msgid "Font face"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:42
+#: ../applets/maintained/digital-clock/dgClockPref.py:43
 msgid "The font face for the date and time text."
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:45
+#: ../applets/maintained/digital-clock/dgClockPref.py:46
 msgid "Font color"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:46
+#: ../applets/maintained/digital-clock/dgClockPref.py:47
 msgid "The text color of the date and time."
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:48
+#: ../applets/maintained/digital-clock/dgClockPref.py:49
 msgid "Font shadow color"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:49
+#: ../applets/maintained/digital-clock/dgClockPref.py:50
 msgid "The font shadow color of the date and time."
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:51
+#: ../applets/maintained/digital-clock/dgClockPref.py:52
 msgid "dock orientation"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:52
+#: ../applets/maintained/digital-clock/dgClockPref.py:53
 msgid "The orientation of the dock (horizontal/vertical)"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:112
+#: ../applets/maintained/digital-clock/dgClockPref.py:113
 msgid "Copy Time"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:115
+#: ../applets/maintained/digital-clock/dgClockPref.py:116
 msgid "Copy Date"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:120
+#: ../applets/maintained/digital-clock/dgClockPref.py:121
 msgid "Adjust Date & Time"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:189
+#: ../applets/maintained/digital-clock/dgClockPref.py:184
 #, python-format
 msgid "%s Preferences"
 msgstr ""
 
-#. TODO enable alpha support
-#: ../applets/maintained/digital-clock/dgClockPref.py:216
+#: ../applets/maintained/digital-clock/dgClockPref.py:209
 msgid "Font _Color:"
 msgstr ""
 
-#. TODO enable alpha support
-#: ../applets/maintained/digital-clock/dgClockPref.py:226
+#: ../applets/maintained/digital-clock/dgClockPref.py:217
 msgid "Font _Shadow Color:"
 msgstr ""
 
 #. * clock type: 12/24 hour
-#: ../applets/maintained/digital-clock/dgClockPref.py:231
+#: ../applets/maintained/digital-clock/dgClockPref.py:222
 msgid "Clock Type"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:232
+#: ../applets/maintained/digital-clock/dgClockPref.py:223
 msgid "_12 Hour"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:235
+#: ../applets/maintained/digital-clock/dgClockPref.py:226
 msgid "_24 Hour"
 msgstr ""
 
 #. * clock style: time beside date
-#: ../applets/maintained/digital-clock/dgClockPref.py:239
+#: ../applets/maintained/digital-clock/dgClockPref.py:230
 msgid "Date Position"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:240
+#: ../applets/maintained/digital-clock/dgClockPref.py:231
 msgid "_Left"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:243
+#: ../applets/maintained/digital-clock/dgClockPref.py:234
 msgid "_Bottom"
 msgstr ""
 
@@ -1297,7 +1295,7 @@ msgstr ""
 msgid "%u is not a valid notification ID"
 msgstr ""
 
-#: ../applets/maintained/places/applet.c:337
+#: ../applets/maintained/places/applet.c:338
 msgid "Desktop"
 msgstr ""
 

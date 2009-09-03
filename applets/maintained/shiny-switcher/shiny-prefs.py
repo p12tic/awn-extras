@@ -23,9 +23,11 @@ import pygtk
 pygtk.require("2.0")
 import gtk
 
+import desktopagnostic.gtk
 from awn import config_get_default_for_applet_by_info
 from awn.extras import awnlib
 
+assert hasattr(desktopagnostic.gtk, 'ColorButton')
 ui_file = os.path.join(os.path.dirname(__file__), "shiny-prefs.ui")
 
 

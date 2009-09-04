@@ -5,7 +5,7 @@ Maintainer: Julien Lavergne <julien.lavergne@gmail.com>
 Build-Depends: 	debhelper (>= 5), 
 		cdbs, 
 		intltool, 
-		automake1.11 | automake1.10 | automake1.9 | automake1.8 | automake,
+		automake1.11 | automake1.10 | automake1.9 | automake1.8 | automake (>= 1.8),
 		gnome-common, 
 		autotools-dev, 
 		libgnome-menu-dev, 

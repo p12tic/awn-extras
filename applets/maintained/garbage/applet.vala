@@ -41,6 +41,9 @@ public class GarbageApplet : AppletSimple
   private OverlayProgress? progress_overlay;
   private bool highlighted;
 
+  public bool show_count { get; set; }
+  public bool confirm_empty { get; set; }
+
   const TargetEntry[] targets = {
     { "text/uri-list", 0, 0 },
     { "text/plain",    0, 0 }
@@ -66,6 +69,17 @@ public class GarbageApplet : AppletSimple
     this.panel_id = panel_id;
     (this.get_icon () as Awn.ThemedIcon).set ("drag-and-drop", false);
     this.config = Awn.Config.get_default_for_applet (this);
+    this.config.bind (GROUP_DEFAULT, "show_count", this, "show-count",
+                      false, BindMethod.FALLBACK);
+    this.config.bind (GROUP_DEFAULT, "confirm_empty", this, "confirm-empty",
+                      false, BindMethod.FALLBACK);
+    this.notify["show-count"].connect (this.on_prop_changed);
+    this.render_applet_icon ();
+  }
+
+  private void
+  on_prop_changed (ParamSpec pspec)
+  {
     this.render_applet_icon ();
   }
 
@@ -119,38 +133,31 @@ public class GarbageApplet : AppletSimple
     // set icon
     this.set_icon_name (icon_name);
     // if requested, draw trash count when count > 0
-    try
+    if (this.show_count && file_count > 0)
     {
-      if (this.config.get_bool (GROUP_DEFAULT, "show_count") && file_count > 0)
+      if (this.text_overlay == null)
       {
-        if (this.text_overlay == null)
-        {
-          unowned Overlayable overlayable;
+        unowned Overlayable overlayable;
 
-          // moonbeam says get_icon generally returns Awn.ThemedIcon
-          overlayable = this.get_icon () as Overlayable;
-          this.text_overlay = new OverlayText ();
-          overlayable.add_overlay (this.text_overlay);
-        }
-
-        if (!this.text_overlay.active)
-        {
-          this.text_overlay.active = true;
-        }
-
-        this.text_overlay.text = "%u".printf (file_count);
+        // moonbeam says get_icon generally returns Awn.ThemedIcon
+        overlayable = this.get_icon () as Overlayable;
+        this.text_overlay = new OverlayText ();
+        overlayable.add_overlay (this.text_overlay);
       }
-      else if (this.text_overlay != null)
+
+      if (!this.text_overlay.active)
       {
-        if (this.text_overlay.active)
-        {
-          this.text_overlay.active = false;
-        }
+        this.text_overlay.active = true;
       }
+
+      this.text_overlay.text = "%u".printf (file_count);
     }
-    catch (GLib.Error err)
+    else if (this.text_overlay != null)
     {
-      warning ("Rendering error: %s", err.message);
+      if (this.text_overlay.active)
+      {
+        this.text_overlay.active = false;
+      }
     }
     // set the title as well
     // $display_name: $count item(s)
@@ -187,7 +194,9 @@ public class GarbageApplet : AppletSimple
         weak Menu ctx_menu;
         if (this.menu == null)
         {
+          ImageMenuItem prefs_item;
           Widget about_item;
+
           this.menu = this.create_default_menu () as Menu;
           this.empty_menu_item =
             new MenuItem.with_mnemonic (Gettext._ ("_Empty Trash"));
@@ -195,6 +204,10 @@ public class GarbageApplet : AppletSimple
           this.empty_menu_item.set_sensitive (this.trash.file_count > 0);
           this.empty_menu_item.show ();
           this.menu.append (this.empty_menu_item);
+          prefs_item = new ImageMenuItem.from_stock (STOCK_PREFERENCES, null);
+          prefs_item.activate.connect (this.on_menu_prefs_activate);
+          prefs_item.show ();
+          this.menu.append (prefs_item);
           about_item = this.create_about_item_simple ("Copyright © 2009 Mark Lee <avant-wn@lazymalevolence.com>",
                                                       AppletLicense.GPLV2,
                                                       Build.VERSION);
@@ -212,49 +225,47 @@ public class GarbageApplet : AppletSimple
   on_menu_empty_activate ()
   {
     bool do_empty;
-    try
-    {
-      if (config.get_bool ("DEFAULT", "confirm_empty"))
-      {
-        string msg = Gettext._ ("Are you sure you want to empty your trash? It currently contains %u item(s).")
-                     .printf (this.trash.file_count);
-        MessageDialog dialog = new MessageDialog ((Gtk.Window)this, 0,
-                                                  MessageType.QUESTION,
-                                                  ButtonsType.YES_NO, msg);
-        int response = dialog.run ();
-        dialog.destroy ();
-        do_empty = (response == ResponseType.YES);
-      }
-      else
-      {
-        do_empty = true;
-      }
-      if (do_empty)
-      {
-        if (this.throbber_overlay == null)
-        {
-          unowned Widget widget;
-          unowned Overlayable overlayable;
 
-          widget = this.get_icon ();
-          // moonbeam says get_icon generally returns Awn.ThemedIcon
-          overlayable = widget as Overlayable;
-          this.throbber_overlay = new OverlayThrobber (widget);
-          overlayable.add_overlay (this.throbber_overlay);
-        }
-        this.throbber_overlay.active = true;
-        this.trash.empty ();
-        this.throbber_overlay.active = false;
-      }
-    }
-    catch (GLib.Error err)
+    if (this.confirm_empty)
     {
-      string msg;
-
-      msg = Gettext._ ("An error occurred when trying to retrieve the 'confirm_empty' config option: %s")
-            .printf (err.message);
-      this.show_error_message (msg);
+      string msg = Gettext._ ("Are you sure you want to empty your trash? It currently contains %u item(s).")
+                   .printf (this.trash.file_count);
+      MessageDialog dialog = new MessageDialog ((Gtk.Window)this, 0,
+                                                MessageType.QUESTION,
+                                                ButtonsType.YES_NO, msg);
+      int response = dialog.run ();
+      dialog.destroy ();
+      do_empty = (response == ResponseType.YES);
     }
+    else
+    {
+      do_empty = true;
+    }
+    if (do_empty)
+    {
+      if (this.throbber_overlay == null)
+      {
+        unowned Widget widget;
+        unowned Overlayable overlayable;
+
+        widget = this.get_icon ();
+        // moonbeam says get_icon generally returns Awn.ThemedIcon
+        overlayable = widget as Overlayable;
+        this.throbber_overlay = new OverlayThrobber (widget);
+        overlayable.add_overlay (this.throbber_overlay);
+      }
+      this.throbber_overlay.active = true;
+      this.trash.empty ();
+      this.throbber_overlay.active = false;
+    }
+  }
+  private void
+  on_menu_prefs_activate ()
+  {
+    GarbagePrefs dialog;
+
+    dialog = new GarbagePrefs (this);
+    dialog.show_all ();
   }
   private void
   trash_changed ()

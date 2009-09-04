@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Awn Extras 0.3.9\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-09-03 12:14-0700\n"
-"PO-Revision-Date: 2009-09-03 12:17-0800\n"
+"POT-Creation-Date: 2009-09-03 13:32-0700\n"
+"PO-Revision-Date: 2009-09-03 13:33-0800\n"
 "Last-Translator: Mark Lee <avant-wn@lazymalevolence.com>\n"
 "Language-Team: English (United States Pig Latin)\n"
 "MIME-Version: 1.0\n"
@@ -529,7 +529,8 @@ msgid "Adjust Date & Time"
 msgstr "Adjust-way Ate-day & Ime-tay"
 
 #: ../applets/maintained/digital-clock/dgClockPref.py:184
-#, python-format
+#: ../applets/maintained/garbage/prefs.vala:32
+#, c-format, python-format
 msgid "%s Preferences"
 msgstr "%s Eferences-pray"
 
@@ -966,41 +967,36 @@ msgstr ""
 msgid "Choose a folder"
 msgstr ""
 
-#: ../applets/maintained/garbage/applet.vala:53
+#: ../applets/maintained/garbage/applet.vala:56
 #: ../applets/maintained/garbage/garbage.desktop.in.in.h:2
 msgid "Garbage"
 msgstr "Arbage-gay"
 
 #. set the title as well
 #. $display_name: $count item(s)
-#: ../applets/maintained/garbage/applet.vala:157
+#: ../applets/maintained/garbage/applet.vala:164
 #, c-format
 msgid "%s: %u item"
 msgid_plural "%s: %u items"
 msgstr[0] "%s: %u item-way"
 msgstr[1] "%s: %u items-way"
 
-#: ../applets/maintained/garbage/applet.vala:180
+#: ../applets/maintained/garbage/applet.vala:187
 #, c-format
 msgid "Could not open the trash folder with your file manager: %s"
 msgstr "Ould-cay not open-way the ash-tray older-fay with your ile-fay anager-may: %s"
 
-#: ../applets/maintained/garbage/applet.vala:193
+#: ../applets/maintained/garbage/applet.vala:202
 #: ../applets/unmaintained/stacks/stacks_backend_trasher.py:107
 msgid "_Empty Trash"
 msgstr "_Empty-way Ash-tray"
 
-#: ../applets/maintained/garbage/applet.vala:219
+#: ../applets/maintained/garbage/applet.vala:231
 #, c-format
 msgid "Are you sure you want to empty your trash? It currently contains %u item(s)."
 msgstr "Are you ure-say you want to empty-way your ash-tray? It urrently-cay ontains-cay %u item(s)-way."
 
-#: ../applets/maintained/garbage/applet.vala:254
-#, c-format
-msgid "An error occurred when trying to retrieve the 'confirm_empty' config option: %s"
-msgstr "An error-way occurred-way when ying-tray to etrieve-ray the 'confirm_empty' onfig-cay option-way: %s"
-
-#: ../applets/maintained/garbage/applet.vala:328
+#: ../applets/maintained/garbage/applet.vala:339
 #, c-format
 msgid "Could not send the dragged file(s) to the trash: %s"
 msgstr "Ould-cay not end-say the agged-dray ile(s)-fay to the ash-tray: %s"
@@ -1010,6 +1006,15 @@ msgstr "Ould-cay not end-say the agged-dray ile(s)-fay to the ash-tray: %s"
 msgid "A lightweight, cross-desktop trash applet"
 msgstr "An ightweight-lay, oss-cray-esktop-day ash-tray applet-way"
 
+#: ../applets/maintained/garbage/prefs.vala:45
+msgid "Confirm when emptying the trash"
+msgstr "Onfirm-cay when emptying-way the ash-tray"
+
+#: ../applets/maintained/garbage/prefs.vala:50
+msgid "Show the item count on the icon"
+msgstr "Ow-shay the item-way ount-cay on the icon-way"
+
+#. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/gwibfawn/gwibfawn.desktop.in.h:1
 msgid "Displays tweets"
 msgstr ""
@@ -2489,6 +2494,12 @@ msgstr ""
 msgid "Unknown"
 msgstr ""
 
+#~ msgid ""
+#~ "An error occurred when trying to retrieve the 'confirm_empty' config "
+#~ "option: %s"
+#~ msgstr ""
+#~ "An error-way occurred-way when ying-tray to etrieve-ray the "
+#~ "'confirm_empty' onfig-cay option-way: %s"
 #~ msgid "item"
 #~ msgstr "item-way"
 #~ msgid "items"

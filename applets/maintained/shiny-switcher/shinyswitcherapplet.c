@@ -618,11 +618,7 @@ gboolean  _button_win(GtkWidget *widget, GdkEventButton *event, Win_press_data *
 
     if (WNCK_IS_WINDOW(wnck_win) && shinyswitcher)
     {
-#ifdef HAVE_LIBWNCK_222
       menu = wnck_action_menu_new(wnck_win);
-#else
-      menu = wnck_create_window_action_menu(wnck_win);
-#endif
       item = gtk_separator_menu_item_new();
       gtk_widget_show_all(item);
       gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), item);

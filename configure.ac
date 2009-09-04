@@ -40,9 +40,6 @@ dnl library support
 dnl
 
 AC_CHECK_LIB(m, round)
-# shiny-switcher
-PKG_CHECK_EXISTS([libwnck-1.0 >= 2.21.99.9], [AC_DEFINE(HAVE_LIBWNCK_222, 1, [Have libwnck 2.22.x])])
-
 
 dnl
 dnl package support
@@ -65,7 +62,7 @@ PKG_CHECK_MODULES(GTOP, [libgtop-2.0])
 #trash
 #PKG_CHECK_MODULES(LIBGLADE, [libglade-2.0])
 # awn-notification-daemon, shiny-switcher, standalone-launcher, taskmand
-PKG_CHECK_MODULES(LIBWNCK, [libwnck-1.0])
+PKG_CHECK_MODULES(LIBWNCK, [libwnck-1.0 >= 2.21.99.9])
 # awn-notification-daemon, shiny-switcher, trash
 PKG_CHECK_MODULES(LIBX11, [x11])
 PKG_CHECK_MODULES(COMPOSITE, [xcomposite])

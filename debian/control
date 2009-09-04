@@ -19,6 +19,7 @@ Build-Depends: 	debhelper (>= 5),
 		libsexy-dev, 
 		libnotify-dev,
 		libwebkit-dev,
+		python-central (>= 0.5.6),
 		valac (>= 0.5.4),
 		vala-awn-trunk (>> 0.3.3)
 Standards-Version: 3.8.0

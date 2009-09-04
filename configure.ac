@@ -33,7 +33,7 @@ dnl
 dnl Python script installation
 dnl
 
-AC_PYTHON_DEVEL
+AM_PATH_PYTHON(2.5)
 
 dnl
 dnl library support

@@ -618,11 +618,7 @@ gboolean  _button_win(GtkWidget *widget, GdkEventButton *event, Win_press_data *
 
     if (WNCK_IS_WINDOW(wnck_win) && shinyswitcher)
     {
-#ifdef HAVE_LIBWNCK_222
       menu = wnck_action_menu_new(wnck_win);
-#else
-      menu = wnck_create_window_action_menu(wnck_win);
-#endif
       item = gtk_separator_menu_item_new();
       gtk_widget_show_all(item);
       gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), item);
@@ -732,6 +728,7 @@ void create_containers(Shiny_switcher *shinyswitcher)
 
   shinyswitcher->mini_wins = g_malloc(sizeof(GtkWidget*) * num_workspaces);
   shinyswitcher->container = gtk_fixed_new();
+  awn_utils_make_transparent_bg (shinyswitcher->container);
   gtk_widget_set_app_paintable(shinyswitcher->container, TRUE);
 
   GdkPixmap *border = gdk_pixmap_new(NULL,
@@ -765,6 +762,8 @@ void create_containers(Shiny_switcher *shinyswitcher)
     Workplace_info * ws;
     win_num = wnck_workspace_get_number(iter->data);
     shinyswitcher->mini_wins[win_num] = gtk_fixed_new();
+    awn_utils_make_transparent_bg (shinyswitcher->mini_wins[win_num]);
+    
     gtk_widget_set_app_paintable(shinyswitcher->mini_wins[win_num], TRUE);
     GdkPixmap *copy;
 

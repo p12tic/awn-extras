@@ -33,16 +33,13 @@ dnl
 dnl Python script installation
 dnl
 
-AC_PYTHON_DEVEL
+AM_PATH_PYTHON(2.5)
 
 dnl
 dnl library support
 dnl
 
 AC_CHECK_LIB(m, round)
-# shiny-switcher
-PKG_CHECK_EXISTS([libwnck-1.0 >= 2.21.99.9], [AC_DEFINE(HAVE_LIBWNCK_222, 1, [Have libwnck 2.22.x])])
-
 
 dnl
 dnl package support
@@ -63,7 +60,7 @@ PKG_CHECK_MODULES(AWN, [awn >= 0.3.9])
 # awn-system-monitor, sysmon
 PKG_CHECK_MODULES(GTOP, [libgtop-2.0])
 # awn-notification-daemon, shiny-switcher, standalone-launcher, taskmand
-PKG_CHECK_MODULES(LIBWNCK, [libwnck-1.0])
+PKG_CHECK_MODULES(LIBWNCK, [libwnck-1.0 >= 2.21.99.9])
 # awn-notification-daemon, shiny-switcher
 PKG_CHECK_MODULES(LIBX11, [x11])
 PKG_CHECK_MODULES(COMPOSITE, [xcomposite])

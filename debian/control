@@ -11,13 +11,15 @@ Build-Depends: 	debhelper (>= 5),
 		libgnome-menu-dev, 
 		libgconf2-dev, 
 		librsvg2-dev, 
-		libgtop2-dev, 
-		libawn-dev (>> 0.3.3) | libawn-dev-trunk (>> 0.3.3), 
+		libgtop2-dev,
+		libdesktop-agnostic-bin,
+		libawn-dev-trunk (>> 0.3.3) | libawn-dev (>> 0.3.3),
 		libwnck-dev, 
 		libvte-dev,
 		libsexy-dev, 
 		libnotify-dev,
 		libwebkit-dev,
+		python-central (>= 0.5.6),
 		valac (>= 0.5.4),
 		vala-awn-trunk (>> 0.3.3)
 Standards-Version: 3.8.0
@@ -30,7 +32,7 @@ Architecture: any
 Depends: 	${shlibs:Depends}, 
 		${misc:Depends}, 
 		avant-window-navigator-trunk,
-Recommends: 	awn-manager-trunk (>= 0.3~bzr489),
+Recommends: 	awn-settings-trunk (>= 0.3.8),
 		awn-applets-python-core-trunk,
 		xdg-utils,
 Suggests:	awn-applets-c-extras-trunk,
@@ -60,7 +62,7 @@ Architecture: any
 Depends: 	${shlibs:Depends}, 
 		${misc:Depends}, 
 		avant-window-navigator-trunk,
-Recommends: awn-manager-trunk (>= 0.3~bzr489),
+Recommends: awn-settings-trunk (>= 0.3.8),
 Conflicts: awn-applets-c-extras, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 Replaces: awn-applets-c-extras, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
 Description: A collection of applets for avant-window-navigator
@@ -86,11 +88,13 @@ Depends: 	${shlibs:Depends},
 		avant-window-navigator-trunk,
 		python-awn-trunk,
 		python-awn-extras-trunk (>= 0.3.8),
-Recommends: 	awn-manager-trunk (>= 0.3~bzr489),
+Recommends: 	awn-settings-trunk (>= 0.3.8),
 		python-feedparser,
 		python-gst0.10,
 		python-dbus,
 		hal,
+		python-rsvg | python-gnome2-desktop,
+		python-wnck | python-gnome2-desktop,
 		python-sqlalchemy,
 		sqlite3,
 		python-dateutil,
@@ -141,8 +145,7 @@ Depends: 	${shlibs:Depends},
 		python-awn-trunk,
 		fortune,
 		python-awn-extras-trunk (>= 0.3.8)
-Recommends: 	awn-manager-trunk (>= 0.3~bzr489),
-		python-gnome2-desktop,
+Recommends: 	awn-settings-trunk (>= 0.3.8),
 		python-xlib,
 		python-gdata,
 		python-vobject,
@@ -173,6 +176,7 @@ Architecture: any
 Depends:	${shlibs:Depends},
 		${misc:Depends},
 		${python:Depends}
+Suggests:	python-gnomekeyring | python-gnome2-desktop,
 Provides: ${python:Provides}
 XB-Python-Version: ${python:Versions}
 Conflicts: python-awn-extras, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing, python-awnlib, python-awnlib-trunk

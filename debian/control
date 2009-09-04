@@ -91,6 +91,8 @@ Recommends: 	awn-manager-trunk (>= 0.3~bzr489),
 		python-gst0.10,
 		python-dbus,
 		hal,
+		python-rsvg | python-gnome2-desktop,
+		python-wnck | python-gnome2-desktop,
 		python-sqlalchemy,
 		sqlite3,
 		python-dateutil,
@@ -142,7 +144,6 @@ Depends: 	${shlibs:Depends},
 		fortune,
 		python-awn-extras-trunk (>= 0.3.8)
 Recommends: 	awn-manager-trunk (>= 0.3~bzr489),
-		python-gnome2-desktop,
 		python-xlib,
 		python-gdata,
 		python-vobject,
@@ -173,6 +174,7 @@ Architecture: any
 Depends:	${shlibs:Depends},
 		${misc:Depends},
 		${python:Depends}
+Suggests:	python-gnomekeyring | python-gnome2-desktop,
 Provides: ${python:Provides}
 XB-Python-Version: ${python:Versions}
 Conflicts: python-awn-extras, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing, python-awnlib, python-awnlib-trunk

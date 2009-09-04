@@ -167,7 +167,6 @@ fi
 #if test "$with_gconf" != "no" -a "$with_gnome" != "no"; then
 #PKG_CHECK_MODULES(FILEBROWSER, [$gconf gnome-desktop-2.0 gnome-vfs-2.0 libgnomeui-2.0])
 #PKG_CHECK_MODULES(PLUGGER, [$gconf gnome-vfs-2.0])
-#PKG_CHECK_MODULES(TRASH, [gnome-vfs-2.0 libglade-2.0 x11])
 #PKG_CHECK_MODULES(TRASHER, [$gconf gnome-vfs-2.0])
 #fi
 if test "$with_gconf" != "no"; then

@@ -5,9 +5,9 @@ Maintainer: Julien Lavergne <julien.lavergne@gmail.com>
 Build-Depends: 	debhelper (>= 5), 
 		cdbs, 
 		intltool, 
+		automake1.11 | automake1.10 | automake1.9 | automake1.8 | automake (>= 1.8),
 		gnome-common, 
 		autotools-dev, 
-		automake1.8 | automake1.9 | automake1.10 | automake1.11 | automake,
 		libgnome-menu-dev, 
 		libgconf2-dev, 
 		librsvg2-dev, 
@@ -36,8 +36,8 @@ Recommends: 	awn-settings-trunk (>= 0.3.8),
 		awn-applets-python-core-trunk,
 		xdg-utils,
 Suggests:	awn-applets-c-extras-trunk,
-Conflicts: awn-applets-c-core, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
-Replaces: awn-applets-c-core, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
+Conflicts: awn-applets-c-core, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing, awn-extras-applets-trunk
+Replaces: awn-applets-c-core, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing, awn-extras-applets-trunk
 Description: A collection of applets for avant-window-navigator
  Awn-extras-applets is a collection of applets for avant-window-navigator. It
  provides some extensions to the bar and some new features (like 
@@ -63,8 +63,8 @@ Depends: 	${shlibs:Depends},
 		${misc:Depends}, 
 		avant-window-navigator-trunk,
 Recommends: awn-settings-trunk (>= 0.3.8),
-Conflicts: awn-applets-c-extras, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
-Replaces: awn-applets-c-extras, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
+Conflicts: awn-applets-c-extras, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing, awn-extras-applets-trunk
+Replaces: awn-applets-c-extras, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing, awn-extras-applets-trunk
 Description: A collection of applets for avant-window-navigator
  Awn-extras-applets is a collection of applets for avant-window-navigator. It
  provides some extensions to the bar and some new features (like 
@@ -102,8 +102,8 @@ Recommends: 	awn-settings-trunk (>= 0.3.8),
 		gnome-applets
 Suggests:	awn-applets-python-extras-trunk,
 XB-Python-Version: ${python:Versions}
-Conflicts: awn-applets-python-core, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
-Replaces: awn-applets-python-core, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
+Conflicts: awn-applets-python-core, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing, awn-extras-applets-trunk
+Replaces: awn-applets-python-core, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing, awn-extras-applets-trunk
 Description: A collection of applets for avant-window-navigator
  Awn-extras-applets is a collection of applets for avant-window-navigator. It
  provides some extensions to the bar and some new features (like 
@@ -150,8 +150,8 @@ Recommends: 	awn-settings-trunk (>= 0.3.8),
 		python-gdata,
 		python-vobject,
 Suggests: 	tomboy,
-Conflicts: awn-applets-python-extras, awn-applets-python-core (<< 0.3~bzr912), awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
-Replaces: awn-applets-python-extras, awn-applets-python-core (<< 0.3~bzr912), awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing
+Conflicts: awn-applets-python-extras, awn-applets-python-core (<< 0.3~bzr912), awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing, awn-extras-applets-trunk
+Replaces: awn-applets-python-extras, awn-applets-python-core (<< 0.3~bzr912), awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing, awn-extras-applets-trunk
 XB-Python-Version: ${python:Versions}
 Description: A collection of applets for avant-window-navigator
  Awn-extras-applets is a collection of applets for avant-window-navigator. It
@@ -179,8 +179,8 @@ Depends:	${shlibs:Depends},
 Suggests:	python-gnomekeyring | python-gnome2-desktop,
 Provides: ${python:Provides}
 XB-Python-Version: ${python:Versions}
-Conflicts: python-awn-extras, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing, python-awnlib, python-awnlib-trunk
-Replaces: python-awn-extras, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing, python-awnlib, python-awnlib-trunk
+Conflicts: python-awn-extras, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing, python-awnlib, python-awnlib-trunk, awn-extras-applets-trunk
+Replaces: python-awn-extras, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing, python-awnlib, python-awnlib-trunk, awn-extras-applets-trunk
 Description: Python functions used by avant-window-navigator's applets
  This package provides a set of convenience functions used by Python applets
  for Avant Window Navigator, including AWNLib, an applet wrapper which

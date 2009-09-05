@@ -7,21 +7,27 @@ usr/share/avant-window-navigator/applets/animal-farm.desktop
 #
 # Battery
 #
+etc/gconf/schemas/awn-applet-battery.schemas
 usr/share/avant-window-navigator/applets/battery/*.py
 usr/share/avant-window-navigator/applets/battery/*.ui
 usr/share/avant-window-navigator/applets/battery/themes/*/*.svg
 usr/share/avant-window-navigator/applets/battery.desktop
+usr/share/avant-window-navigator/schemas/awn-applet-battery.schema-ini
 #
 # Cairo-clock
 #
+etc/gconf/schemas/awn-applet-cairo-clock.schemas
 usr/share/avant-window-navigator/applets/cairo-clock/
 usr/share/avant-window-navigator/applets/cairo-clock/themes/*/*.svg
 usr/share/avant-window-navigator/applets/cairo-clock.desktop
+usr/share/avant-window-navigator/schemas/awn-applet-cairo-clock.schema-ini
 #
 # CPU Freq
 #
+etc/gconf/schemas/awn-applet-cpufreq.schemas
 usr/share/avant-window-navigator/applets/cpufreq/
 usr/share/avant-window-navigator/applets/cpufreq.desktop
+usr/share/avant-window-navigator/schemas/awn-applet-cpufreq.schema-ini
 #
 # Feeds
 #
@@ -51,9 +57,11 @@ usr/share/avant-window-navigator/applets/mail.desktop
 #
 # Media Player
 #
+etc/gconf/schemas/awn-applet-media-player.schemas
 usr/share/avant-window-navigator/applets/media-player/*.py
 usr/share/avant-window-navigator/applets/media-player/icons/*.png
 usr/share/avant-window-navigator/applets/media-player.desktop
+usr/share/avant-window-navigator/schemas/awn-applet-media-player.schema-ini
 #
 # Media-control
 #
@@ -63,15 +71,19 @@ usr/share/avant-window-navigator/applets/media-control.desktop
 #
 # Mount
 #
+etc/gconf/schemas/awn-applet-mount.schemas
 usr/share/avant-window-navigator/applets/mount/*.py
 usr/share/avant-window-navigator/applets/mount/*.ui
 usr/share/avant-window-navigator/applets/mount/icons/*.png
 usr/share/avant-window-navigator/applets/mount.desktop
+usr/share/avant-window-navigator/schemas/awn-applet-mount.schema-ini
 #
-# Quit applet
+# Quit
 #
+etc/gconf/schemas/awn-applet-quit.schemas
 usr/share/avant-window-navigator/applets/quit/*.py
 usr/share/avant-window-navigator/applets/quit.desktop
+usr/share/avant-window-navigator/schemas/awn-applet-quit.schema-ini
 #
 # Showdesktop
 #
@@ -85,18 +97,24 @@ usr/share/avant-window-navigator/applets/thinkhdaps.desktop
 #
 # Todo
 #
+etc/gconf/schemas/awn-applet-to-do.schemas
 usr/share/avant-window-navigator/applets/to-do/
 usr/share/avant-window-navigator/applets/to-do.desktop
+usr/share/avant-window-navigator/schemas/awn-applet-to-do.schema-ini
 #
 # Volume-control
 #
+etc/gconf/schemas/awn-applet-volume-control.schemas
 usr/share/avant-window-navigator/applets/volume-control/
 usr/share/avant-window-navigator/applets/volume-control.desktop
+usr/share/avant-window-navigator/schemas/awn-applet-volume-control.schema-ini
 #
 # Weather
 #
+etc/gconf/schemas/awn-applet-weather.schemas
 usr/share/avant-window-navigator/applets/weather/
 usr/share/avant-window-navigator/applets/weather.desktop
+usr/share/avant-window-navigator/schemas/awn-applet-weather.schema-ini
 #
 ####################
 # Disabled applets #

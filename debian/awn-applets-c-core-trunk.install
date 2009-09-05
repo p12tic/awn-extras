@@ -17,6 +17,14 @@ etc/gconf/schemas/awn-applet-awnterm.schemas
 usr/share/avant-window-navigator/applets/cairo-menu.desktop
 usr/lib/awn/applets/cairo-menu/*.so
 #
+# Notification area
+#
+etc/gconf/schemas/awn-applet-notification-area.schemas
+usr/lib/awn/applets/notification-area/*.so
+usr/share/avant-window-navigator/applets/notification-area.desktop
+usr/share/icons/hicolor/scalable/apps/notification-area.svg
+usr/share/avant-window-navigator/schemas/awn-applet-notification-area.schema-ini
+#
 #Notification daemon
 #
 usr/share/avant-window-navigator/applets/awnnotificationdaemon.desktop
@@ -48,12 +56,6 @@ etc/gconf/schemas/awn-applet-garbage.schemas
 # Disabled applets #
 ####################
 #
-#
-# Notification area
-#
-#usr/lib/awn/applets/notification-area/*.so
-#usr/share/avant-window-navigator/applets/notification-area.desktop
-#usr/share/icons/hicolor/scalable/apps/notification-area.svg
 #usr/lib/awn/applets/separator/*.so
 #usr/lib/awn/applets/plugger/*.so
 #usr/share/avant-window-navigator/applets/separator.desktop

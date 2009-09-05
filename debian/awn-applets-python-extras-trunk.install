@@ -30,6 +30,8 @@ usr/share/avant-window-navigator/applets/mimenu.desktop
 #
 usr/share/avant-window-navigator/applets/pandora/
 usr/share/avant-window-navigator/applets/pandora.desktop
+etc/gconf/schemas/awn-applet-pandora.schemas
+usr/share/avant-window-navigator/schemas/awn-applet-pandora.schema-ini
 #
 # Tomboy
 #

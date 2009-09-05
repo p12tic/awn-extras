@@ -16,6 +16,8 @@ etc/gconf/schemas/awn-applet-awnterm.schemas
 #
 usr/share/avant-window-navigator/applets/cairo-menu.desktop
 usr/lib/awn/applets/cairo-menu/*.so
+etc/gconf/schemas/awn-applet-cairo-menu.schemas
+usr/share/avant-window-navigator/schemas/awn-applet-cairo-menu.schema-ini
 #
 # Notification area
 #

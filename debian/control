@@ -87,7 +87,7 @@ Depends: 	${shlibs:Depends},
 		${python:Depends},
 		avant-window-navigator-trunk,
 		python-awn-trunk,
-		python-awn-extras-trunk (>= 0.3.8),
+		python-awn-extras-trunk (>= 0.3.8)
 Recommends: 	awn-settings-trunk (>= 0.3.8),
 		python-feedparser,
 		python-gst0.10,
@@ -148,7 +148,7 @@ Depends: 	${shlibs:Depends},
 Recommends: 	awn-settings-trunk (>= 0.3.8),
 		python-xlib,
 		python-gdata,
-		python-vobject,
+		python-vobject
 Suggests: 	tomboy,
 Conflicts: awn-applets-python-extras, awn-applets-python-core (<< 0.3~bzr912), awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing, awn-extras-applets-trunk
 Replaces: awn-applets-python-extras, awn-applets-python-core (<< 0.3~bzr912), awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing, awn-extras-applets-trunk

@@ -10,14 +10,6 @@ usr/share/avant-window-navigator/applets/sysmon.desktop
 usr/share/avant-window-navigator/schemas/awn-applet-sysmon.schema-ini
 usr/lib/awn/applets/sysmon/*.so
 etc/gconf/schemas/awn-applet-sysmon.schemas
-#
-# Webapplet
-#
-#usr/lib/awn/applets/webapplet/*.so
-#usr/share/avant-window-navigator/applets/webapplet.desktop
-#usr/share/avant-window-navigator/schemas/awn-applet-webapplet.schema-ini
-#etc/gconf/schemas/awn-applet-webapplet.schemas
-#
 ####################
 # Disabled applets #
 ####################
@@ -29,6 +21,14 @@ etc/gconf/schemas/awn-applet-sysmon.schemas
 #usr/share/icons/hicolor/scalable/apps/filebrowser.svg
 #etc/gconf/schemas/filebrowser.schemas
 #
+#
+#
+# Webapplet
+#
+#usr/lib/awn/applets/webapplet/*.so
+#usr/share/avant-window-navigator/applets/webapplet.desktop
+#usr/share/avant-window-navigator/schemas/awn-applet-webapplet.schema-ini
+#etc/gconf/schemas/awn-applet-webapplet.schemas
 #
 #usr/lib/awn/applets/trasher/*.so
 

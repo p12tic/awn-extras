@@ -59,11 +59,9 @@ AM_CONDITIONAL(BUILD_WEBAPPLET, test "$with_mozilla" != "no" -o "$with_webkit" !
 PKG_CHECK_MODULES(AWN, [awn >= 0.3.9])
 # awn-system-monitor, sysmon
 PKG_CHECK_MODULES(GTOP, [libgtop-2.0])
-#trash
-#PKG_CHECK_MODULES(LIBGLADE, [libglade-2.0])
 # awn-notification-daemon, shiny-switcher, standalone-launcher, taskmand
 PKG_CHECK_MODULES(LIBWNCK, [libwnck-1.0 >= 2.21.99.9])
-# awn-notification-daemon, shiny-switcher, trash
+# awn-notification-daemon, shiny-switcher
 PKG_CHECK_MODULES(LIBX11, [x11])
 PKG_CHECK_MODULES(COMPOSITE, [xcomposite])
 PKG_CHECK_MODULES(XRENDER, [xrender])
@@ -99,7 +97,7 @@ fi
 #PKG_CHECK_MODULES(GNOMEUI, [libgnomeui-2.0])
 # filebrowser
 #PKG_CHECK_MODULES(GNOME_DESKTOP, [gnome-desktop-2.0])
-# filebrowser, plugger, trash, trasher
+# filebrowser, plugger, trasher
 #PKG_CHECK_MODULES(GNOME_VFS, [gnome-vfs-2.0])
 #fi
 
@@ -169,7 +167,6 @@ fi
 #if test "$with_gconf" != "no" -a "$with_gnome" != "no"; then
 #PKG_CHECK_MODULES(FILEBROWSER, [$gconf gnome-desktop-2.0 gnome-vfs-2.0 libgnomeui-2.0])
 #PKG_CHECK_MODULES(PLUGGER, [$gconf gnome-vfs-2.0])
-#PKG_CHECK_MODULES(TRASH, [gnome-vfs-2.0 libglade-2.0 x11])
 #PKG_CHECK_MODULES(TRASHER, [$gconf gnome-vfs-2.0])
 #fi
 if test "$with_gconf" != "no"; then
@@ -281,6 +278,8 @@ AS_AC_EXPAND(LOCALEDIR, $localedir_intermediate)
 AC_DEFINE_UNQUOTED(APPLETSDIR, "$APPLETSDIR",
                    [The base directory for applet data and Python applets.])
 AC_SUBST(APPLETSDIR)
+AC_DEFINE_UNQUOTED(LOCALEDIR, "$LOCALEDIR", [Locale directory])
+AC_SUBST(LOCALEDIR)
 
 DBUS_SERVICES_DIR=`$PKG_CONFIG --variable=session_bus_services_dir dbus-1`
 AC_SUBST(DBUS_SERVICES_DIR)
@@ -329,6 +328,8 @@ applets/maintained/cpufreq/Makefile
 applets/maintained/digital-clock/Makefile
 applets/maintained/feeds/Makefile
 applets/maintained/file-browser-launcher/Makefile
+applets/maintained/garbage/Makefile
+applets/maintained/garbage/garbage.desktop.in
 applets/maintained/gwibfawn/Makefile
 applets/maintained/media-control/Makefile
 applets/maintained/media-icons/Makefile
@@ -379,8 +380,6 @@ applets/unmaintained/pynot-rgba/Makefile
 applets/unmaintained/separator/Makefile
 applets/unmaintained/separator/separator.desktop.in
 applets/unmaintained/stacks/Makefile
-applets/unmaintained/trash/Makefile
-applets/unmaintained/trash/trash.desktop.in
 applets/unmaintained/trasher/Makefile
 applets/unmaintained/trasher/trasher.desktop.in
 po/Makefile.in

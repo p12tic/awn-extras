@@ -1,9 +1,0 @@
-[Desktop Entry]
-Type=Application
-X-AWN-Type=Applet
-X-AWN-AppletType=C
-_Name=Trash Applet
-_Comment=A lightweight trash applet
-Exec=@LIBDIR@/awn/applets/trash/trash.so
-Icon=gnome-stock-trash
-X-AWN-AppletCategory=Utility,FileTools

@@ -47,16 +47,19 @@ usr/share/avant-window-navigator/applets/places.desktop
 usr/share/avant-window-navigator/schemas/awn-applet-places.schema-ini
 etc/gconf/schemas/awn-applet-places.schemas
 #
+# Garbage
+#
+usr/lib/awn/applets/garbage/*.so 
+usr/share/avant-window-navigator/applets/garbage.desktop 
+usr/share/avant-window-navigator/schemas/awn-applet-garbage.schema-ini
+etc/gconf/schemas/awn-applet-garbage.schemas
+#
 ####################
 # Disabled applets #
 ####################
 #
 #usr/lib/awn/applets/separator/*.so
 #usr/lib/awn/applets/plugger/*.so
-#usr/lib/awn/applets/trash/*.so
-#usr/lib/awn/applets/trash/trashapplet.glade usr/share/avant-window-navigator/applets/trash/
 #usr/share/avant-window-navigator/applets/separator.desktop
 #usr/share/avant-window-navigator/applets/plugger.desktop
-#usr/share/avant-window-navigator/applets/trash.desktop
 #usr/share/icons/hicolor/scalable/apps/separator.svg
-#etc/gconf/schemas/trash.schemas

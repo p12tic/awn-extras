@@ -98,14 +98,10 @@ Licence for applets and folders	arss
 				stack
 				switcher
 				to-do
-				trash
 				trasher
 				weather
 				wobblyzini
 and files:
-			trash/applet.c
-			src/affinity/eggaccelerators.*
-			src/affinity/egg-pixbuf-thumbnail.*
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

@@ -21,6 +21,7 @@ etc/gconf/schemas/awn-applet-sysmon.schemas
 #usr/share/icons/hicolor/scalable/apps/filebrowser.svg
 #etc/gconf/schemas/filebrowser.schemas
 #
+# Trasher
 #
 #
 # Webapplet
@@ -31,5 +32,4 @@ etc/gconf/schemas/awn-applet-sysmon.schemas
 #etc/gconf/schemas/awn-applet-webapplet.schemas
 #
 #usr/lib/awn/applets/trasher/*.so
-
 #usr/share/avant-window-navigator/applets/trasher.desktop

@@ -1,0 +1,11 @@
+[DEFAULT/confirm_empty]
+type = boolean
+default = true
+description = Enable the confirmation dialog form when one wishes to empty the trash.
+
+[DEFAULT/show_count]
+type = boolean
+default = true
+description = Show the number of items in the trash on top of the icon.
+
+# vim: set ft=cfg :

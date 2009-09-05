@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: notification-daemon\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-09-03 12:16-0700\n"
+"POT-Creation-Date: 2009-09-03 13:33-0700\n"
 "PO-Revision-Date: 2006-11-27 14:08+0100\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
@@ -77,7 +77,6 @@ msgid "A simple popup terminal"
 msgstr ""
 
 #: ../applets/maintained/awnterm/settings.c:67
-#: ../applets/unmaintained/trash/trashapplet.c:924
 msgid "translator-credits"
 msgstr ""
 
@@ -536,7 +535,8 @@ msgid "Adjust Date & Time"
 msgstr ""
 
 #: ../applets/maintained/digital-clock/dgClockPref.py:184
-#, python-format
+#: ../applets/maintained/garbage/prefs.vala:32
+#, c-format, python-format
 msgid "%s Preferences"
 msgstr ""
 
@@ -969,6 +969,55 @@ msgstr ""
 msgid "Choose a folder"
 msgstr ""
 
+#: ../applets/maintained/garbage/applet.vala:56
+#: ../applets/maintained/garbage/garbage.desktop.in.in.h:2
+msgid "Garbage"
+msgstr ""
+
+#. set the title as well
+#. $display_name: $count item(s)
+#: ../applets/maintained/garbage/applet.vala:164
+#, c-format
+msgid "%s: %u item"
+msgid_plural "%s: %u items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../applets/maintained/garbage/applet.vala:187
+#, c-format
+msgid "Could not open the trash folder with your file manager: %s"
+msgstr ""
+
+#: ../applets/maintained/garbage/applet.vala:202
+#: ../applets/unmaintained/stacks/stacks_backend_trasher.py:107
+msgid "_Empty Trash"
+msgstr ""
+
+#: ../applets/maintained/garbage/applet.vala:231
+#, c-format
+msgid ""
+"Are you sure you want to empty your trash? It currently contains %u item(s)."
+msgstr ""
+
+#: ../applets/maintained/garbage/applet.vala:339
+#, c-format
+msgid "Could not send the dragged file(s) to the trash: %s"
+msgstr ""
+
+#. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
+#: ../applets/maintained/garbage/garbage.desktop.in.in.h:1
+msgid "A lightweight, cross-desktop trash applet"
+msgstr ""
+
+#: ../applets/maintained/garbage/prefs.vala:45
+msgid "Confirm when emptying the trash"
+msgstr ""
+
+#: ../applets/maintained/garbage/prefs.vala:50
+msgid "Show the item count on the icon"
+msgstr ""
+
+#. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/gwibfawn/gwibfawn.desktop.in.h:1
 msgid "Displays tweets"
 msgstr ""
@@ -2197,7 +2246,6 @@ msgid "Hide Volume"
 msgstr ""
 
 #: ../applets/unmaintained/stacks/stacks_backend_trasher.py:101
-#: ../applets/unmaintained/trash/trashapplet.c:773
 msgid "Empty all of the items from the trash?"
 msgstr ""
 
@@ -2207,17 +2255,11 @@ msgid ""
 "Please note that you can also delete them separately."
 msgstr ""
 
-#: ../applets/unmaintained/stacks/stacks_backend_trasher.py:107
-#: ../applets/unmaintained/trash/trashapplet.c:796
-msgid "_Empty Trash"
-msgstr ""
-
 #: ../applets/unmaintained/stacks/stacks_backend_trasher.py:138
 msgid "Empty Trash"
 msgstr ""
 
 #: ../applets/unmaintained/stacks/stacks_backend_trasher.py:169
-#: ../applets/unmaintained/trash/trashapplet.c:974
 msgid "Cannot move items to trash, do you want to delete them immediately?"
 msgstr ""
 
@@ -2227,7 +2269,6 @@ msgid "None of the %d selected items can be moved to the Trash"
 msgstr ""
 
 #: ../applets/unmaintained/stacks/stacks_backend_trasher.py:172
-#: ../applets/unmaintained/trash/trashapplet.c:979
 msgid ""
 "Cannot move some items to trash, do you want to delete these immediately?"
 msgstr ""
@@ -2466,89 +2507,6 @@ msgstr ""
 
 #: ../applets/unmaintained/trasher/trasher.desktop.in.in.h:2
 msgid "Trash applet in Stacks style"
-msgstr ""
-
-#: ../applets/unmaintained/trash/trash.desktop.in.in.h:1
-msgid "A lightweight trash applet"
-msgstr ""
-
-#: ../applets/unmaintained/trash/trash.desktop.in.in.h:2
-#: ../applets/unmaintained/trash/trashapplet.c:916
-msgid "Trash Applet"
-msgstr ""
-
-#: ../applets/unmaintained/trash/trashapplet.c:165
-#, c-format
-msgid "Unable to find the Trash directory: %s"
-msgstr ""
-
-#: ../applets/unmaintained/trash/trashapplet.c:555
-msgid "No Items in Trash"
-msgstr ""
-
-#: ../applets/unmaintained/trash/trashapplet.c:560
-#, c-format
-msgid "%d Item in Trash"
-msgid_plural "%d Items in Trash"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../applets/unmaintained/trash/trashapplet.c:698
-#, c-format
-msgid "Removing item %lu of %lu"
-msgstr ""
-
-#: ../applets/unmaintained/trash/trashapplet.c:732
-msgid "Removing:"
-msgstr ""
-
-#: ../applets/unmaintained/trash/trashapplet.c:776
-msgid ""
-"If you choose to empty the trash, all items in it will be permanently lost. "
-"Please note that you can also delete them separately."
-msgstr ""
-
-#: ../applets/unmaintained/trash/trashapplet.c:884
-#, c-format
-msgid ""
-"Error while spawning file manager:\n"
-"%s"
-msgstr ""
-
-#. FIXME - Actually, we need a user guide
-#: ../applets/unmaintained/trash/trashapplet.c:893
-#, c-format
-msgid "There was an error displaying help: %s"
-msgstr ""
-
-#: ../applets/unmaintained/trash/trashapplet.c:919
-msgid ""
-"A GNOME trash bin that lives in your panel. You can use it to view the trash "
-"or drag and drop items into the trash."
-msgstr ""
-
-#: ../applets/unmaintained/trash/trashapplet.c:944
-msgid "Delete Immediately?"
-msgstr ""
-
-#: ../applets/unmaintained/trash/trashapplet.c:1088
-#: ../applets/unmaintained/trash/trashapplet.c:1113
-#, c-format
-msgid ""
-"Unable to move to trash:\n"
-"%s"
-msgstr ""
-
-#: ../applets/unmaintained/trash/trashapplet.glade.h:1
-msgid "<b>From:</b>"
-msgstr ""
-
-#: ../applets/unmaintained/trash/trashapplet.glade.h:2
-msgid "<big><b>Emptying the Trash</b></big>"
-msgstr ""
-
-#: ../applets/unmaintained/trash/trashapplet.glade.h:3
-msgid "Emptying the Trash"
 msgstr ""
 
 #: ../plugins/unmaintained/deluge/__init__.py:1

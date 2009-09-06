@@ -69,12 +69,19 @@ public class GarbageApplet : AppletSimple
     this.panel_id = panel_id;
     (this.get_icon () as Awn.ThemedIcon).set ("drag-and-drop", false);
     this.config = Awn.Config.get_default_for_applet (this);
-    this.config.bind (GROUP_DEFAULT, "show_count", this, "show-count",
-                      false, BindMethod.FALLBACK);
-    this.config.bind (GROUP_DEFAULT, "confirm_empty", this, "confirm-empty",
-                      false, BindMethod.FALLBACK);
-    this.notify["show-count"].connect (this.on_prop_changed);
-    this.render_applet_icon ();
+    try
+    {
+      this.config.bind (GROUP_DEFAULT, "show_count", this, "show-count",
+                        false, BindMethod.FALLBACK);
+      this.config.bind (GROUP_DEFAULT, "confirm_empty", this, "confirm-empty",
+                        false, BindMethod.FALLBACK);
+      this.notify["show-count"].connect (this.on_prop_changed);
+      this.render_applet_icon ();
+    }
+    catch (DesktopAgnostic.Config.Error err)
+    {
+      critical ("Config Error: %s", err.message);
+    }
   }
 
   private void

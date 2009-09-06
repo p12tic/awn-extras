@@ -885,7 +885,7 @@ set_notification_text(GtkWindow *nw, const char *summary, const char *body)
   }
 
 #ifdef HAVE_GTK_URL_LABEL
-  gtk_entry_set_markup(GTK_LABEL(windata->body_label), str);
+  gtk_label_set_markup(GTK_LABEL(windata->body_label), str);
 #else
   sexy_url_label_set_markup(SEXY_URL_LABEL(windata->body_label), str);
 #endif
@@ -898,7 +898,7 @@ set_notification_text(GtkWindow *nw, const char *summary, const char *body)
                           G_daemon_config.awn_text_str, tmp, endchar, G_daemon_config.bold_text_body ? "</b>" : "");
 
 #ifdef HAVE_GTK_URL_LABEL
-    gtk_entry_set_markup(GTK_LABEL(windata->body_label), str);
+    gtk_label_set_markup(GTK_LABEL(windata->body_label), str);
 #else
     sexy_url_label_set_markup(SEXY_URL_LABEL(windata->body_label), str);
 #endif

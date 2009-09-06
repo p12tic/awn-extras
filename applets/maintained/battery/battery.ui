@@ -20,6 +20,7 @@
     <child>
       <object class="GtkVBox" id="vbox-preferences">
         <property name="visible">True</property>
+        <property name="border_width">3</property>
         <property name="spacing">18</property>
         <child>
           <object class="GtkFrame" id="frame-battery">
@@ -302,8 +303,8 @@
   </object>
   <object class="GtkSizeGroup" id="sizegroup1">
     <widgets>
-      <widget name="label-battery"/>
       <widget name="label-theme"/>
+      <widget name="label-battery"/>
     </widgets>
   </object>
   <object class="GtkListStore" id="liststore-battery">

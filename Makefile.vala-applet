@@ -21,7 +21,7 @@ VALA_EXTRALDFLAGS = \
 BUILT_SOURCES = $(APPLET_NAME).so
 
 $(APPLET_NAME).so: $(VALA_FILES)
-	$(QUIET_VALA)$(VALAC) --cc="$(VALA_CC)" -o $@ $^ \
+	$(QUIET_VALA)$(VALAC) --library=$(*F) --cc="$(VALA_CC)" -o $@ $^ \
 		--vapidir=$(top_srcdir)/shared/vala --pkg=build \
 		--vapidir=$(LDA_VAPIDIR) \
 		--vapidir=$(AWN_VAPIDIR) --pkg=awn \
@@ -34,4 +34,4 @@ install-exec-hook:
 uninstall-hook:
 	rm -f "$(appletdir)/$(APPLET_NAME).so"
 
-CLEANFILES += $(APPLET_NAME).so
+CLEANFILES += $(APPLET_NAME).so $(APPLET_NAME).vapi

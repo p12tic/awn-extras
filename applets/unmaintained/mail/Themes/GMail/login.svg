@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 <svg
-   xmlns:ns="http://creativecommons.org/ns#"
    xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:cc="http://creativecommons.org/ns#"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
@@ -14,7 +13,7 @@
    height="48px"
    id="svg2332"
    sodipodi:version="0.32"
-   inkscape:version="0.45.1"
+   inkscape:version="0.46"
    sodipodi:docname="login.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    inkscape:export-filename="/home/owner/Pictures/icons/checkgmail/checkgmail.png"
@@ -360,32 +359,6 @@
          style="stop-color:#000000;stop-opacity:0;" />
     </linearGradient>
     <linearGradient
-       id="linearGradient3303">
-      <stop
-         style="stop-color:#000000;stop-opacity:0.19607843;"
-         offset="0"
-         id="stop3305" />
-      <stop
-         id="stop3311"
-         offset="0.56016898"
-         style="stop-color:#000000;stop-opacity:0.09803922;" />
-      <stop
-         style="stop-color:#000000;stop-opacity:0;"
-         offset="1"
-         id="stop3307" />
-    </linearGradient>
-    <linearGradient
-       id="linearGradient3257">
-      <stop
-         style="stop-color:#000000;stop-opacity:0.52549022;"
-         offset="0"
-         id="stop3259" />
-      <stop
-         style="stop-color:#000000;stop-opacity:0;"
-         offset="1"
-         id="stop3261" />
-    </linearGradient>
-    <linearGradient
        id="linearGradient3171">
       <stop
          id="stop3173"
@@ -407,21 +380,6 @@
          id="stop3181"
          offset="1"
          style="stop-color:#b11000;stop-opacity:0.58823532;" />
-    </linearGradient>
-    <linearGradient
-       id="linearGradient3135">
-      <stop
-         style="stop-color:#ffffff;stop-opacity:1;"
-         offset="0"
-         id="stop3137" />
-      <stop
-         id="stop3143"
-         offset="0.65339679"
-         style="stop-color:#f3f4f4;stop-opacity:1;" />
-      <stop
-         style="stop-color:#c9c8c8;stop-opacity:1;"
-         offset="1"
-         id="stop3139" />
     </linearGradient>
     <linearGradient
        id="linearGradient3052">
@@ -446,20 +404,6 @@
          offset="1"
          id="stop3056" />
     </linearGradient>
-    <inkscape:perspective
-       sodipodi:type="inkscape:persp3d"
-       id="perspective2340"
-       inkscape:vp_x="-50 : 600 : 1"
-       inkscape:vp_y="0 : 1000 : 0"
-       inkscape:vp_z="700 : 600 : 1"
-       inkscape:persp3d-origin="300 : 400 : 1" />
-    <inkscape:perspective
-       inkscape:persp3d-origin="300 : 400 : 1"
-       inkscape:vp_z="700 : 600 : 1"
-       inkscape:vp_y="0 : 1000 : 0"
-       inkscape:vp_x="-50 : 600 : 1"
-       id="perspective2440"
-       sodipodi:type="inkscape:persp3d" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient3171"
@@ -527,7 +471,7 @@
      inkscape:window-width="1024"
      inkscape:window-height="748"
      inkscape:window-x="0"
-     inkscape:window-y="20"
+     inkscape:window-y="152"
      showguides="true"
      inkscape:guide-bbox="true">
     <inkscape:grid
@@ -537,12 +481,12 @@
   <metadata
      id="metadata2337">
     <rdf:RDF>
-      <ns:Work
+      <cc:Work
          rdf:about="">
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-      </ns:Work>
+      </cc:Work>
       <cc:Work
          rdf:about="">
         <dc:format>image/svg+xml</dc:format>

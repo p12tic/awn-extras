@@ -27,10 +27,10 @@ import gtk
 import pango
 import os
 
+from desktopagnostic.config import GROUP_DEFAULT as group
 import awn
 from awn.extras import _
 
-group = awn.CONFIG_DEFAULT_GROUP
 
 class Prefs:
   ignore_all = False
@@ -47,7 +47,7 @@ class Prefs:
     self.initializing = True
     
     #AwnConfigClient instance
-    self.client = awn.Config('file-browser-launcher', None)
+    self.client = awn.config_get_default_for_applet(applet)
     
     #File browser
     self.fb = self.client.get_string(group, 'fb')

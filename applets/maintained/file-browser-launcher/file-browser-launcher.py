@@ -36,10 +36,10 @@ try:
 except:
   gio = False
 
+from desktopagnostic.config import GROUP_DEFAULT as group
 import awn
 from awn.extras import _
 
-group = awn.CONFIG_DEFAULT_GROUP
 
 class App (awn.AppletSimple):
   icons = {}
@@ -52,7 +52,7 @@ class App (awn.AppletSimple):
     self.dialog = awn.Dialog(self)
 
     #AwnConfigClient instance
-    self.client = awn.Config('file-browser-launcher', None)
+    self.client = awn.config_get_default_for_applet(self)
 
     #Get the default icon theme
     self.theme = gtk.icon_theme_get_default()

@@ -76,6 +76,9 @@ class App(awn.AppletSimple):
         #Set the icon
         self.set_icon_name('awn-feeds')
 
+        #Need icon theme
+        self.icon_theme = gtk.icon_theme_get_default()
+
         #Connect to signals
         self.connect('button-release-event', self.button_release)
         self.dialog.connect('focus-out-event', self.dialog_focus_out)
@@ -382,8 +385,7 @@ class App(awn.AppletSimple):
                         weburl = url
 
                 for entry in self.feeds[url].entries[:5]:
-                    image = gtk.image_new_from_icon_name('applications-internet', \
-                        gtk.ICON_SIZE_MENU)
+                    image = self.web_image()
                     label = gtk.Label(shortify(entry['title']))
 
                     hbox = gtk.HBox(False, 6)
@@ -406,8 +408,7 @@ class App(awn.AppletSimple):
                 self.widget.pack_start(feed_vbox)
 
                 #Button for opening the feed's website
-                image = gtk.image_new_from_icon_name('applications-internet', \
-                    gtk.ICON_SIZE_MENU)
+                image = self.web_image()
                 button = gtk.Button()
                 button.set_image(image)
                 button.set_relief(gtk.RELIEF_NONE)
@@ -833,6 +834,19 @@ class App(awn.AppletSimple):
         except:
             self.io_error = True
 
+    #Returns a 16x16 applications-internet GtkImage
+    def web_image(self):
+        pixbuf = self.icon_theme.load_icon('applications-internet', 16, 0)
+
+        #Force a size of 16x16
+        if pixbuf.get_width() != 16 or pixbuf.get_height() != 16:
+            pixbuf = pixbuf.scale_simple(16, 16, gtk.gdk.INTERP_BILINEAR)
+
+        image = gtk.image_new_from_pixbuf(pixbuf)
+
+        return image
+
+
 #Utility functions...
 
 #Shorten and ellipsize long strings
@@ -842,7 +856,6 @@ def shortify(string):
 
     else:
         return string
-
 
 if __name__ == '__main__':
     awn.init(sys.argv[1:])

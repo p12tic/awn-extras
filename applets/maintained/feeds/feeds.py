@@ -207,14 +207,14 @@ class App(awn.AppletSimple):
                         (num - 2))
 
                 elif num == 2:
-                    msg += '%s\n  %s\n  %s\n' % (title,
+                    msg += "%s\n  <a href='%s'>%s</a>\n  <a href='%s'>%s</a>\n" % (title,
                         self.feeds[url].entries[0]['link'],
                         shortify(self.feeds[url].entries[0]['title']),
                         self.feeds[url].entries[1]['link'],
                         shortify(self.feeds[url].entries[1]['title']))
 
                 elif num == 1:
-                    msg += '%s\n  %s\n' % (title,
+                    msg += "%s\n  <a href='%s'>%s</a>\n" % (title,
                         self.feeds[url].entries[0]['link'],
                         shortify(self.feeds[url].entries[0]['title']))
 

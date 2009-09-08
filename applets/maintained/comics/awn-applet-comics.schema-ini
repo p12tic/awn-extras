@@ -1,0 +1,6 @@
+[DEFAULT/user_agent]
+type = string
+default = Mozilla/3.0
+description = The user agent to send when retrieving comics.
+
+# vim:ft=cfg

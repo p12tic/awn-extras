@@ -20,6 +20,8 @@ DISTCLEANFILES =			\
 
 ACLOCAL_AMFLAGS = -I m4
 
+DISTCHECK_CONFIGURE_FLAGS = --disable-pymod-checks
+
 i18n-update: po/POTFILES.in po/POTFILES.skip
 	(cd po && for lang in `grep ALL_LINGUAS ../configure.ac | cut -d'"' -f2`; do \
 		echo -n "Updating $$lang:"; \

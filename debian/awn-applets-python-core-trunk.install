@@ -22,6 +22,15 @@ usr/share/avant-window-navigator/applets/cairo-clock/themes/*/*.svg
 usr/share/avant-window-navigator/applets/cairo-clock.desktop
 usr/share/avant-window-navigator/schemas/awn-applet-cairo-clock.schema-ini
 #
+# Comics
+#
+usr/share/avant-window-navigator/applets/comics/*.py
+usr/share/avant-window-navigator/applets/comics/feeds/
+usr/share/avant-window-navigator/applets/comics/feed/
+usr/share/avant-window-navigator/applets/comics/glade/
+usr/share/avant-window-navigator/applets/comics/icons/
+usr/share/avant-window-navigator/applets/comics.desktop
+#
 # CPU Freq
 #
 etc/gconf/schemas/awn-applet-cpufreq.schemas
@@ -131,18 +140,6 @@ usr/share/avant-window-navigator/schemas/awn-applet-weather.schema-ini
 #usr/share/avant-window-navigator/applets/arss/*.py
 #usr/share/avant-window-navigator/applets/arss/*.glade
 #usr/share/avant-window-navigator/applets/arss.desktop
-#
-# Comics
-#
-#usr/share/avant-window-navigator/applets/comics/*.py
-#usr/share/avant-window-navigator/applets/comics/*.pot
-#usr/share/avant-window-navigator/applets/comics/*.po
-#usr/share/avant-window-navigator/applets/comics/feeds/
-#usr/share/avant-window-navigator/applets/comics/feed/
-#usr/share/avant-window-navigator/applets/comics/glade/
-#usr/share/avant-window-navigator/applets/comics/icons/
-#usr/share/avant-window-navigator/applets/comics/locale/
-#usr/share/avant-window-navigator/applets/comics.desktop
 #
 # DesktopManager
 #

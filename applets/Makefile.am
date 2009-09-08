@@ -53,6 +53,7 @@ SUBDIRS = \
 	maintained/awnterm \
 	maintained/battery \
 	maintained/cairo-clock \
+	maintained/comics \
 	maintained/cpufreq \
 	maintained/digital-clock \
 	maintained/feeds \

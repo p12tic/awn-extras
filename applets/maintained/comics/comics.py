@@ -23,6 +23,7 @@
 import gobject
 import gtk
 from gtk import glade
+from desktopagnostic import config
 import awn
 import os
 import sys
@@ -38,6 +39,7 @@ from feed.settings import Settings
 from feed import FeedContainer
 from shared import *
 
+APPLET_NAME = 'comics'
 GLADE_FILE = join(GLADE_DIR, 'main.glade')
 
 
@@ -165,17 +167,16 @@ class ComicApplet(awn.AppletSimple):
         self.dialog.show_all()
         gobject.timeout_add(self.DIALOG_DURATION, self.on_dialog_timer)
 
-    def __init__(self, uid, orient, height, feeds, configuration):
-        awn.AppletSimple.__init__(self, uid, orient, height)
+    def __init__(self, uid, panel_id, feeds):
+        super(awn.AppletSimple, self).__init__(APPLET_NAME, uid, panel_id)
 
         self.feeds = feeds
-        self.configuration = configuration
+        self.configuration = awn.config_get_default_for_applet(self)
 
-        self.height = height
-        self.set_awn_icon('comics', 'comics-icon')
+        self.set_icon_name('comics-icon')
         self.notify = awnlib.Notify(self)
-        self.dialog = awn.AppletDialog(self)
-        self.dialog.connect('button-press-event', self.on_dialog_button_press)
+        self.dialog = awn.Dialog(self)
+        self.dialog.connect('button-release-event', self.on_dialog_button_press)
 
         hbox = gtk.HBox(False)
         self.message_icon = gtk.Image()
@@ -261,18 +262,6 @@ if __name__ == '__main__':
     # Initialise threading
     gobject.threads_init()
     gtk.gdk.threads_init()
-
-    # Initialize user agent string
-    import urllib
-    configuration = awn.Config('comics', None)
-    user_agent = configuration.get_string(awn.CONFIG_DEFAULT_GROUP,
-        'user_agent')
-    if user_agent is None:
-        user_agent = 'Mozilla/3.0'
-    class ComicURLOpener(urllib.FancyURLopener):
-        version = user_agent
-    urllib._urlopener = ComicURLOpener()
-
     # Make sure that all required directories exist
     if not os.access(USER_DIR, os.W_OK):
         if os.access(ALT_USER_DIR, os.W_OK):
@@ -289,7 +278,19 @@ if __name__ == '__main__':
 
     #Initialise AWN and create the applet
     awn.init(sys.argv[1:])
-    applet = ComicApplet(awn.uid, awn.orient, awn.height, feeds, configuration)
+    applet = ComicApplet(awn.uid, awn.panel_id, feeds)
+
+
+    # Initialize user agent string
+    import urllib
+
+    user_agent = applet.configuration.get_string(config.GROUP_DEFAULT,
+                                                 'user_agent')
+    class ComicURLOpener(urllib.FancyURLopener):
+        version = user_agent
+    urllib._urlopener = ComicURLOpener()
+
+    # Run
     awn.embed_applet(applet)
     applet.show_all()
 

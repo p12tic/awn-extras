@@ -306,6 +306,7 @@ class PrefsDialog(gtk.Dialog):
                                     'date_before_time')})
         self.clock_style.add_radio(_('_Bottom'),
                active=not self.prefs.props.date_before_time)
+        self.set_clock_style_sensitivity()
         table.attach(self.clock_style, 0, 2, 4, 5)
         appearance_label = mnemonic_label(_('_Appearance'), table)
         notebook.append_page(table, appearance_label)
@@ -345,7 +346,10 @@ class PrefsDialog(gtk.Dialog):
         setattr(self.prefs.props, prop, color_btn.props.da_color)
 
     def on_orient_changed(self, prefs, pspec):
+        self.set_clock_style_sensitivity()
+
+    def set_clock_style_sensitivity(self):
         self.clock_style.props.sensitive = \
-                (prefs.props.orientation == gtk.ORIENTATION_HORIZONTAL)
+                (self.prefs.props.orientation == gtk.ORIENTATION_HORIZONTAL)
 
 # vim: set ts=4 sts=4 sw=4 et ai cindent :

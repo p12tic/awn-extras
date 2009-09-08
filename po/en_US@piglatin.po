@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Awn Extras 0.3.9\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-09-03 13:32-0700\n"
-"PO-Revision-Date: 2009-09-03 13:33-0800\n"
+"POT-Creation-Date: 2009-09-08 10:53-0700\n"
+"PO-Revision-Date: 2009-09-08 10:57-0800\n"
 "Last-Translator: Mark Lee <avant-wn@lazymalevolence.com>\n"
 "Language-Team: English (United States Pig Latin)\n"
 "MIME-Version: 1.0\n"
@@ -509,86 +509,133 @@ msgid "The font shadow color of the date and time."
 msgstr "The ont-fay adow-shay olor-cay of the ate-day and ime-tay."
 
 #: ../applets/maintained/digital-clock/dgClockPref.py:52
+msgid "Calendar command"
+msgstr "Alendar-clay ommand-cay"
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:53
+msgid "Command to execute when a calendar day is double-clicked."
+msgstr "Ommand-cay to execute-way when an alendar-cay ay-day is ouble-day-icked-clay."
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:55
+msgid "Adjust date/time command"
+msgstr "Adjust-way ate-day/ime-tay ommand-cay"
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:56
+msgid "Command to execute when the user wishes to adjust the date/time."
+msgstr "Ommand-cay to execute-way when the user-way ishes-way to adjust-way the ate-day/ime-tay."
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:58
 msgid "dock orientation"
 msgstr "ock-day orientation-way"
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:53
+#: ../applets/maintained/digital-clock/dgClockPref.py:59
 msgid "The orientation of the dock (horizontal/vertical)"
 msgstr "The orientation-way of the ock-day (orizontal-hay/ertical-vay)"
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:113
+#: ../applets/maintained/digital-clock/dgClockPref.py:127
 msgid "Copy Time"
 msgstr "Opy-cay Ime-tay"
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:116
+#: ../applets/maintained/digital-clock/dgClockPref.py:130
 msgid "Copy Date"
 msgstr "Opy-cay Ate-day"
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:121
+#: ../applets/maintained/digital-clock/dgClockPref.py:135
 msgid "Adjust Date & Time"
 msgstr "Adjust-way Ate-day & Ime-tay"
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:184
+#: ../applets/maintained/digital-clock/dgClockPref.py:210
+#: ../applets/maintained/to-do/prefs.py:32
+msgid "Custom"
+msgstr "Ustom-cay"
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:255
 #: ../applets/maintained/garbage/prefs.vala:32
 #, c-format, python-format
 msgid "%s Preferences"
 msgstr "%s Eferences-pray"
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:209
+#: ../applets/maintained/digital-clock/dgClockPref.py:282
 msgid "Font _Color:"
 msgstr "Ont-fay Olor-_cay:"
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:217
+#: ../applets/maintained/digital-clock/dgClockPref.py:290
 msgid "Font _Shadow Color:"
 msgstr "Ont-fay Adow-_shay Olor-cay:"
 
 #. * clock type: 12/24 hour
-#: ../applets/maintained/digital-clock/dgClockPref.py:222
+#: ../applets/maintained/digital-clock/dgClockPref.py:295
 msgid "Clock Type"
 msgstr "Ock-clay Ype-tay"
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:223
+#: ../applets/maintained/digital-clock/dgClockPref.py:296
 msgid "_12 Hour"
 msgstr "_12 Hour-way"
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:226
+#: ../applets/maintained/digital-clock/dgClockPref.py:299
 msgid "_24 Hour"
 msgstr "_24 Hour-way"
 
 #. * clock style: time beside date
-#: ../applets/maintained/digital-clock/dgClockPref.py:230
+#: ../applets/maintained/digital-clock/dgClockPref.py:303
 msgid "Date Position"
 msgstr "Ate-day Osition-pay"
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:231
+#: ../applets/maintained/digital-clock/dgClockPref.py:304
 msgid "_Left"
 msgstr "Eft-_lay"
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:234
+#: ../applets/maintained/digital-clock/dgClockPref.py:307
 msgid "_Bottom"
 msgstr "Ottom-_bay"
 
+#: ../applets/maintained/digital-clock/dgClockPref.py:310
+msgid "_Appearance"
+msgstr "_Appearance-way"
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:316
+msgid "C_ommands"
+msgstr "_Ommands-cay"
+
+#. * calendar
+#: ../applets/maintained/digital-clock/dgClockPref.py:318
+msgid "Evolution (default)"
+msgstr "Evolution-way (efault-day)"
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:319
+msgid "Run Cal_endar:"
+msgstr "Un-ray Alendar-clay:"
+
+#. * time admin
+#: ../applets/maintained/digital-clock/dgClockPref.py:323
+msgid "GNOME System Tools (default)"
+msgstr "GNOME Ystem-say Ools-tay (efault-day)"
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:324
+msgid "Run _Time Admin:"
+msgstr "Un-ray Ime-_tay Admin-way:"
+
 #: ../applets/maintained/feeds/feeds.desktop.in.h:1
 #: ../applets/maintained/feeds/feeds.py:70
-#: ../applets/maintained/feeds/feeds.py:221
-#: ../applets/maintained/feeds/feeds.py:779
+#: ../applets/maintained/feeds/feeds.py:224
+#: ../applets/maintained/feeds/feeds.py:780
 msgid "Feeds Applet"
 msgstr "Eeds-fay Applet-way"
 
 #: ../applets/maintained/feeds/feeds.desktop.in.h:2
-#: ../applets/maintained/feeds/feeds.py:783
+#: ../applets/maintained/feeds/feeds.py:784
 msgid "Monitor Web Feeds"
 msgstr "Onitor-may Eb-way Eeds-fay"
 
-#: ../applets/maintained/feeds/feeds.py:190
-#: ../applets/maintained/feeds/feeds.py:431
+#: ../applets/maintained/feeds/feeds.py:193
+#: ../applets/maintained/feeds/feeds.py:432
 #: ../applets/maintained/feeds/prefs.py:209
 #: ../applets/maintained/feeds/prefs.py:246
 #: ../applets/maintained/feeds/prefs.py:316
 msgid "Google Reader"
 msgstr "Oogle-gay Eader-ray"
 
-#: ../applets/maintained/feeds/feeds.py:201
+#: ../applets/maintained/feeds/feeds.py:204
 #, python-format
 msgid ""
 "%s\n"
@@ -601,52 +648,52 @@ msgstr ""
 "  <a href='%s'>%s</a>\n"
 "(%s Ore-may)\n"
 
-#: ../applets/maintained/feeds/feeds.py:222
+#: ../applets/maintained/feeds/feeds.py:225
 #, python-format
 msgid "%s New Items - Feeds Applet"
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:315
+#: ../applets/maintained/feeds/feeds.py:318
 msgid ""
 "Feeds Applet could not load all of your feeds.\n"
 "Check your Internet connection and\n"
 "click Refresh to try again."
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:334
+#: ../applets/maintained/feeds/feeds.py:337
 msgid "Hide Error"
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:340
+#: ../applets/maintained/feeds/feeds.py:343
 msgid ""
 "Feeds Applet could not login to Google Reader.\n"
 "Check your username and password."
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:350
+#: ../applets/maintained/feeds/feeds.py:353
 msgid "You don't have any feeds."
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:352
-#: ../applets/maintained/feeds/feeds.py:472
+#: ../applets/maintained/feeds/feeds.py:355
+#: ../applets/maintained/feeds/feeds.py:473
 msgid "_Add Feed"
 msgstr "_Add-way Eed-fay"
 
-#: ../applets/maintained/feeds/feeds.py:414
+#: ../applets/maintained/feeds/feeds.py:415
 msgid "Open this feed's website"
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:466
-#: ../applets/maintained/feeds/feeds.py:615
+#: ../applets/maintained/feeds/feeds.py:467
+#: ../applets/maintained/feeds/feeds.py:616
 msgid "Show this feed's items"
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:605
+#: ../applets/maintained/feeds/feeds.py:606
 msgid "Hide this feed's items"
 msgstr ""
 
 #. Create the items
-#: ../applets/maintained/feeds/feeds.py:743
+#: ../applets/maintained/feeds/feeds.py:744
 #: ../applets/maintained/feeds/prefs.py:232
 msgid "Add Feed"
 msgstr "Add-way Eed-fay"
@@ -974,29 +1021,29 @@ msgstr "Arbage-gay"
 
 #. set the title as well
 #. $display_name: $count item(s)
-#: ../applets/maintained/garbage/applet.vala:164
+#: ../applets/maintained/garbage/applet.vala:171
 #, c-format
 msgid "%s: %u item"
 msgid_plural "%s: %u items"
 msgstr[0] "%s: %u item-way"
 msgstr[1] "%s: %u items-way"
 
-#: ../applets/maintained/garbage/applet.vala:187
+#: ../applets/maintained/garbage/applet.vala:194
 #, c-format
 msgid "Could not open the trash folder with your file manager: %s"
 msgstr "Ould-cay not open-way the ash-tray older-fay with your ile-fay anager-may: %s"
 
-#: ../applets/maintained/garbage/applet.vala:202
+#: ../applets/maintained/garbage/applet.vala:209
 #: ../applets/unmaintained/stacks/stacks_backend_trasher.py:107
 msgid "_Empty Trash"
 msgstr "_Empty-way Ash-tray"
 
-#: ../applets/maintained/garbage/applet.vala:231
+#: ../applets/maintained/garbage/applet.vala:238
 #, c-format
 msgid "Are you sure you want to empty your trash? It currently contains %u item(s)."
 msgstr "Are you ure-say you want to empty-way your ash-tray? It urrently-cay ontains-cay %u item(s)-way."
 
-#: ../applets/maintained/garbage/applet.vala:339
+#: ../applets/maintained/garbage/applet.vala:346
 #, c-format
 msgid "Could not send the dragged file(s) to the trash: %s"
 msgstr "Ould-cay not end-say the agged-dray ile(s)-fay to the ash-tray: %s"
@@ -1371,10 +1418,6 @@ msgstr ""
 
 #: ../applets/maintained/thinkhdaps/thinkhdaps.desktop.in.h:2
 msgid "ThinkHDAPS"
-msgstr ""
-
-#: ../applets/maintained/to-do/prefs.py:32
-msgid "Custom"
 msgstr ""
 
 #: ../applets/maintained/to-do/prefs.py:32

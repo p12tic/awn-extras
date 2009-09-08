@@ -49,6 +49,12 @@ class ClockPrefs(gobject.GObject):
         'font_shadow_color': (Color, _('Font shadow color'),
                               _('The font shadow color of the date and time.'),
                               gobject.PARAM_READWRITE),
+        'calendar_command': (str, _('Calendar command'),
+                             _('Command to execute when a calendar day is double-clicked.'),
+                             '', gobject.PARAM_READWRITE),
+        'adjust_datetime_command': (str, _('Adjust date/time command'),
+                                    _('Command to execute when the user wishes to adjust the date/time.'),
+                                    '', gobject.PARAM_READWRITE),
         'orientation': (gtk.Orientation, _('dock orientation'),
                         _('The orientation of the dock (horizontal/vertical)'),
                         gtk.ORIENTATION_HORIZONTAL,
@@ -66,6 +72,11 @@ class ClockPrefs(gobject.GObject):
       'font_color': 'font-color',
       'font_shadow_color': 'font-shadow-color'}
 
+    cmd_pref_map = {
+        'calendar': 'calendar_command',
+        'adjust_datetime': 'adjust_datetime_command'
+        }
+
     def do_get_property(self, param):
         attr = '__%s' % param.name.replace('-', '_')
         return getattr(self, attr, None)
@@ -81,6 +92,9 @@ class ClockPrefs(gobject.GObject):
         for key, prop in self.pref_map.iteritems():
             self.config.bind(config.GROUP_DEFAULT, key,
                              self, prop, False, config.BIND_METHOD_FALLBACK)
+        for key, prop in self.cmd_pref_map.iteritems():
+            self.config.bind('commands', key, self, prop, False,
+                             config.BIND_METHOD_FALLBACK)
         self.on_applet_pos_changed(self.applet, self.applet.props.position)
         self.applet.connect('position-changed', self.on_applet_pos_changed)
         self.menu = self.build_menu()
@@ -143,7 +157,7 @@ class ClockPrefs(gobject.GObject):
         cb.set_text(txt)
 
     def time_admin(self, widget):
-        subprocess.Popen('gksudo time-admin', shell=True)
+        subprocess.Popen(self.props.adjust_datetime_command, shell=True)
 
 
 class HRadioGroup(gtk.Frame):
@@ -172,6 +186,63 @@ class HRadioGroup(gtk.Frame):
             button.props.sensitive = self.props.sensitive
 
 
+class CommandSelector:
+    def __init__(self, label, prefs, options, property_name):
+        model = gtk.ListStore(str, str)
+        self.prefs = prefs
+        self.prop = property_name
+        self.dropdown = gtk.ComboBox(model)
+        cell = gtk.CellRendererText()
+        self.dropdown.pack_start(cell, True)
+        self.dropdown.add_attribute(cell, 'text', 0)
+        self.options = options
+        self.option_map = {}
+        value = getattr(prefs.props, self.prop)
+        active_set = False
+        idx = 0
+        for option in options:
+            model.append(option)
+            self.option_map[option[1]] = idx
+            if option[1] == value:
+                self.dropdown.props.active = idx
+                active_set = True
+            idx += 1
+        model.append([_('Custom'), None])
+        self.custom = gtk.Entry()
+        self.custom.props.sensitive = not active_set
+        if not active_set:
+            self.dropdown.props.active = len(self.options)
+            self.custom.props.text = value
+        self.label = mnemonic_label(label, self.dropdown)
+        prefs.connect('notify::%s' % self.prop, self.on_prop_changed)
+        self.dropdown.connect('changed', self.on_dropdown_changed)
+        self.custom.connect('changed', self.on_custom_changed)
+
+    def on_prop_changed(self, obj, pspec):
+        value = getattr(self.prefs.props, self.prop)
+        self.dropdown.active = self.option_map.get(value, len(self.options))
+
+    def on_dropdown_changed(self, dropdown):
+        idx = dropdown.props.active
+        self.custom.props.sensitive = (idx == len(self.options))
+        if self.custom.props.sensitive:
+            if self.custom.props.text == '':
+                self.custom.props.text = getattr(self.prefs.props, self.prop)
+            self.custom.select_region(0, len(self.custom.props.text))
+        else:
+            active_iter = self.dropdown.get_active_iter()
+            value = self.dropdown.props.model.get_value(active_iter, 1)
+            setattr(self.prefs.props, self.prop, value)
+
+    def on_custom_changed(self, entry):
+        setattr(self.prefs.props, self.prop, entry.props.text)
+
+    def attach_to_table(self, table, row):
+        table.attach(self.label, 0, 1, row, row + 1, yoptions=gtk.SHRINK)
+        table.attach(self.dropdown, 1, 2, row, row + 1, yoptions=gtk.SHRINK)
+        table.attach(self.custom, 1, 2, row + 1, row + 2, yoptions=gtk.SHRINK)
+
+
 def mnemonic_label(mnemonic, widget):
     label = gtk.Label()
     label.set_text_with_mnemonic(mnemonic)
@@ -193,6 +264,8 @@ class PrefsDialog(gtk.Dialog):
         self.prefs.connect('notify::orientation', self.on_orient_changed)
 
     def create_ui(self):
+        notebook = gtk.Notebook()
+        # appearance
         table = gtk.Table(5, 2)
         table.props.row_spacing = 5
         table.props.column_spacing = 5
@@ -234,7 +307,25 @@ class PrefsDialog(gtk.Dialog):
         self.clock_style.add_radio(_('_Bottom'),
                active=not self.prefs.props.date_before_time)
         table.attach(self.clock_style, 0, 2, 4, 5)
-        self.vbox.add(table)
+        appearance_label = mnemonic_label(_('_Appearance'), table)
+        notebook.append_page(table, appearance_label)
+        # commands
+        cmd_table = gtk.Table(4, 2)
+        cmd_table.props.row_spacing = 5
+        cmd_table.props.column_spacing = 5
+        cmd_label = mnemonic_label(_('C_ommands'), cmd_table)
+        # * calendar
+        cal_options = [[_('Evolution (default)'), 'evolution calendar:///?startdate=%02(year)d%02(month)d%02(day)dT120000']]
+        calendar_cmd = CommandSelector(_('Run Cal_endar:'), self.prefs,
+                                       cal_options, 'calendar-command')
+        calendar_cmd.attach_to_table(cmd_table, 0)
+        # * time admin
+        time_options = [[_('GNOME System Tools (default)'), 'gksudo time-admin']]
+        time_cmd = CommandSelector(_('Run _Time Admin:'), self.prefs,
+                                   time_options, 'adjust-datetime-command')
+        time_cmd.attach_to_table(cmd_table, 2)
+        notebook.append_page(cmd_table, cmd_label)
+        self.vbox.add(notebook)
 
     def radiobutton_changed(self, check, prop):
         setattr(self.prefs.props, prop, check.get_active())

@@ -24,33 +24,33 @@ import urllib
 
 
 class Downloader(gobject.GObject, threading.Thread):
-	__gsignals__ = dict(
-		completed = (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-			(gobject.TYPE_INT,)))
-	
-	OK = 0
-	TRANSFER_ERROR = 1
-	OTHER_ERROR = 2
-	
-	def __init__(self, url, filename = None):
-		"""Create a new downloader for the specified URL."""
-		threading.Thread.__init__(self)
-		gobject.GObject.__init__(self)
-		
-		self.url = url
-		self.filename = filename
-	
-	def emit(self, *args):
-		gobject.idle_add(gobject.GObject.emit, self, *args)
-	
-	def run(self):
-		try:
-			self.filename, headers = urllib.urlretrieve(self.url, self.filename)
-			self.emit('completed', Downloader.OK)
-		except:
-			self.emit('completed', Downloader.TRANSFER_ERROR)
-		
-	def download(self):
-		self.setDaemon(True)
-		self.start()
+    __gsignals__ = dict(
+        completed = (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+            (gobject.TYPE_INT,)))
+
+    OK = 0
+    TRANSFER_ERROR = 1
+    OTHER_ERROR = 2
+
+    def __init__(self, url, filename = None):
+        """Create a new downloader for the specified URL."""
+        threading.Thread.__init__(self)
+        gobject.GObject.__init__(self)
+
+        self.url = url
+        self.filename = filename
+
+    def emit(self, *args):
+        gobject.idle_add(gobject.GObject.emit, self, *args)
+
+    def run(self):
+        try:
+            self.filename, headers = urllib.urlretrieve(self.url, self.filename)
+            self.emit('completed', Downloader.OK)
+        except:
+            self.emit('completed', Downloader.TRANSFER_ERROR)
+
+    def download(self):
+        self.setDaemon(True)
+        self.start()
 

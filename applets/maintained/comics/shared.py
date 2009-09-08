@@ -23,17 +23,17 @@ from os.path import join, split
 from xdg import BaseDirectory
 
 # Data locations
-SHARE_DIR		= join(split(__file__)[0])
-ALT_USER_DIR	= join(getenv('HOME'), '.comics')
-USER_DIR		= join(BaseDirectory.xdg_config_home, 'awn', 'applets',
-	'comics')
+SHARE_DIR        = join(split(__file__)[0])
+ALT_USER_DIR    = join(getenv('HOME'), '.comics')
+USER_DIR        = join(BaseDirectory.xdg_config_home, 'awn', 'applets',
+    'comics')
 
-SYS_FEEDS_DIR	= join(SHARE_DIR, 'feeds')
-USER_FEEDS_DIR	= join(USER_DIR, 'feeds')
-PLUGINS_DIR		= join(SHARE_DIR, 'feed', 'plugins')
-GLADE_DIR		= join(SHARE_DIR, 'glade')
-ICONS_DIR		= join(SHARE_DIR, 'icons')
+SYS_FEEDS_DIR    = join(SHARE_DIR, 'feeds')
+USER_FEEDS_DIR    = join(USER_DIR, 'feeds')
+PLUGINS_DIR        = join(SHARE_DIR, 'feed', 'plugins')
+GLADE_DIR        = join(SHARE_DIR, 'glade')
+ICONS_DIR        = join(SHARE_DIR, 'icons')
 
-STRIPS_DIR		= USER_DIR
-CACHE_FILE		= join(USER_DIR, '%s.cache')
+STRIPS_DIR        = USER_DIR
+CACHE_FILE        = join(USER_DIR, '%s.cache')
 

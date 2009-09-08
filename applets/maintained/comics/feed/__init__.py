@@ -21,7 +21,7 @@
 import gobject
 import os
 
-from basic import NAME, URL, Feed
+from basic import NAME, URL
 from rss import RSSFeed
 from settings import Settings
 from shared import PLUGINS_DIR

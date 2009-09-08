@@ -19,15 +19,11 @@
 
 
 import feedparser
-import os
-import re
 import threading
 import time
 import urllib
-import urlparse
 
 from basic import URL, TITLE, LINK, DATE, Feed
-from settings import Settings
 
 IMAGES = 'images'
 

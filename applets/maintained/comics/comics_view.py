@@ -23,10 +23,9 @@ import cairo
 import dbus
 import gobject
 import gtk
-import gtk.glade
+from gtk import glade
 import os
 import rsvg
-import tempfile
 import time
 
 # Symbols used
@@ -37,7 +36,6 @@ from math import pi
 from feed import FeedContainer
 from feed.basic import URL, TITLE, LINK, DATE, Feed
 from downloader import Downloader
-from feed.settings import Settings
 
 from widgets import ScalableWindow, WWWLink, Ticker
 from shared import *
@@ -74,7 +72,7 @@ def compiz_widget_set(widget, value):
 	if widget.window:
 		if value:
 			widget.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_UTILITY)
-			widget.window.property_change(COMPIZ_WIDGET, 
+			widget.window.property_change(COMPIZ_WIDGET,
 				gtk.gdk.SELECTION_TYPE_WINDOW, 32, gtk.gdk.PROP_MODE_REPLACE,
 					(True,))
 		else:
@@ -83,7 +81,7 @@ def compiz_widget_set(widget, value):
 
 def compiz_widget_get(widget):
 	if widget.window:
-		return widget.window.property_get(COMPIZ_WIDGET, 
+		return widget.window.property_get(COMPIZ_WIDGET,
 			gtk.gdk.SELECTION_TYPE_WINDOW)
 
 def has_widget_layer():
@@ -398,7 +396,7 @@ class ComicsViewer(ScalableWindow):
 		except:
 			self.__pixbuf = None
 		self.__is_error = False
-		self.__xml = gtk.glade.XML(GLADE_FILE)
+		self.__xml = glade.XML(GLADE_FILE)
 		self.make_file_type_chooser()
 		self.__link = WWWLink('', '', LINK_FONTSIZE)
 		self.__link.connect('size-allocate', self.on_link_size_allocate)

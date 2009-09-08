@@ -40,7 +40,7 @@ class Settings(dict):
 	
 	def make_comment(self, s):
 		"""Turn s into a single line comment."""
-		return ' '.join([COMMENT_CHAR, self.trim(s)])
+		return ' '.join([self.COMMENT_CHAR, self.trim(s)])
 	
 	def make_comment_span(self, s):
 		"""Return a list of lines."""

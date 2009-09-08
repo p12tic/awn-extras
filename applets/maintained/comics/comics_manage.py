@@ -21,7 +21,7 @@
 # Libraries used
 import gobject
 import gtk
-import gtk.glade
+from gtk import glade
 import os
 
 # Symbols used
@@ -69,7 +69,7 @@ class ComicsManager:
 	def __init__(self, feeds):
 		"""Create a new ComicsManage instance."""
 		# Connect dialogue events
-		self.xml = gtk.glade.XML(GLADE_FILE)
+		self.xml = glade.XML(GLADE_FILE)
 		self.xml.signal_autoconnect(self)
 		
 		self.feeds = feeds

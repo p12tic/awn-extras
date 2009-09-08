@@ -20,7 +20,6 @@
 
 from os import getenv
 from os.path import join, split
-import urllib
 from xdg import BaseDirectory
 
 # Data locations

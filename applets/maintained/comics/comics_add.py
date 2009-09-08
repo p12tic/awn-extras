@@ -21,7 +21,7 @@
 # Libraries used
 import gobject
 import gtk
-import gtk.glade
+from gtk import glade
 import os
 import re
 import tempfile
@@ -33,7 +33,7 @@ from awn.extras import _
 from downloader import Downloader
 from feed.basic import Feed, NAME, URL
 from feed.settings import Settings
-from feed.rss import RSSFeed, TYPE, IMG_INDEX
+from feed.rss import IMG_INDEX
 from shared import *
 
 GLADE_FILE = os.path.join(GLADE_DIR, 'add.glade')
@@ -81,7 +81,7 @@ class ComicsAdder:
 		self.__update = None
 		
 		# Connect dialogue events
-		self.xml = gtk.glade.XML(GLADE_FILE)
+		self.xml = glade.XML(GLADE_FILE)
 		self.xml.signal_autoconnect(self)
 		self.assistant = self.xml.get_widget('add_assistant')
 		self.image_list = self.xml.get_widget('image_list')
@@ -142,7 +142,7 @@ class ComicsAdder:
 			# Download feed
 			self.feed = self.feeds.get_feed_for_url(self.url)
 			self.__update = self.feed.connect('updated', self.on_feed_updated)
-			self.feed.update()		
+			self.feed.update()
 	
 	def on_url_entry_changed(self, widget):
 		text = widget.get_text()

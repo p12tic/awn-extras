@@ -22,7 +22,7 @@ import cairo
 import gobject
 import gtk
 
-from math import cos, ceil, pi, sin, sqrt
+from math import cos, ceil, pi, sin
 
 class Scalable:
 	"""An abstract scalable widget."""

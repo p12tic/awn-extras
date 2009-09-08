@@ -29,10 +29,8 @@ import sys
 import tempfile
 import threading
 from awn.extras import _
-from os.path import join
 
 # Import Comics! modules
-import comics_add
 import comics_manage
 import comics_view
 from feed.settings import Settings

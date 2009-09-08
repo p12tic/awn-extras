@@ -20,20 +20,18 @@
 
 
 # Import standard modules
-import awn
-import awn.extras.awnlib
 import gobject
 import gtk
-import gtk.glade
+from gtk import glade
+import awn
 import os
 import sys
 import tempfile
-from awn.extras import _
+from awn.extras import _, awnlib
 from os.path import join
 
 # Import Comics! modules, but check dependencies first
 awn.check_dependencies(globals(), 'feedparser')
-import comics_add
 import comics_manage
 import comics_view
 from feed.settings import Settings
@@ -175,7 +173,7 @@ class ComicApplet(awn.AppletSimple):
 		
 		self.height = height
 		self.set_awn_icon('comics', 'comics-icon')
-		self.notify = awn.extras.awnlib.Notify(self)
+		self.notify = awnlib.Notify(self)
 		self.dialog = awn.AppletDialog(self)
 		self.dialog.connect('button-press-event', self.on_dialog_button_press)
 		
@@ -191,7 +189,7 @@ class ComicApplet(awn.AppletSimple):
 		self.connect('button-press-event', self.on_button_press)
 		self.connect('scroll-event', self.on_scroll)
 		
-		self.__xml = gtk.glade.XML(GLADE_FILE)
+		self.__xml = glade.XML(GLADE_FILE)
 		self.__xml.signal_autoconnect(self)
 		
 		self.visible = False
@@ -201,7 +199,7 @@ class ComicApplet(awn.AppletSimple):
 		
 		try:
 			for filename in filter(lambda f: f.endswith('.strip'),
-					os.listdir(STRIPS_DIR)):		
+					os.listdir(STRIPS_DIR)):
 				strip = self.create_window(os.path.join(STRIPS_DIR, filename))
 		except OSError:
 			return

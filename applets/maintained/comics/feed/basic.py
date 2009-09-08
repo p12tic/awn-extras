@@ -19,14 +19,11 @@
 
 
 import gobject
-import os
 import re
-import time
 import urllib
 import urlparse
 import threading
 
-from downloader import Downloader
 from settings import Settings
 
 NAME = 'name'

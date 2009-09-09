@@ -4,8 +4,10 @@ applets/maintained/awnterm/awnterm.schemas.in
 applets/maintained/cairo-clock/cairo-clock.schemas.in
 applets/maintained/cairo-menu/cairo-menu.desktop.in
 applets/maintained/file-browser-launcher/file-browser-launcher.schemas.in
+applets/maintained/garbage/applet.c
 applets/maintained/garbage/garbage.desktop.in
 applets/maintained/garbage/garbage.schemas.in
+applets/maintained/garbage/prefs.c
 applets/maintained/notification-area/notification-area.desktop.in
 applets/maintained/notification-daemon/awnnotificationdaemon.desktop.in
 applets/maintained/places/places.desktop.in

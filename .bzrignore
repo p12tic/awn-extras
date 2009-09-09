@@ -14,6 +14,7 @@ Makefile.in
 *.loT
 *.schemas
 *.schemas.in
+*.vala.stamp
 *.vapi
 aclocal.m4
 autom4te.cache
@@ -34,8 +35,11 @@ ltmain.sh
 missing
 py-compile
 stamp-h1
+applets/maintained/garbage/*.c
+applets/maintained/notification-area/na-prefs.c
+applets/maintained/notification-area/notification-area.c
 applets/maintained/notification-daemon/notificationdaemon-dbus-glue.h
-applets/maintained/vala-test/applet.[ch]
+applets/maintained/vala-test/*.c
 debian/*.debhelper.log
 debian/*.postinst.debhelper
 debian/*.postrm.debhelper

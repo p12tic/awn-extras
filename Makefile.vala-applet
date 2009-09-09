@@ -10,29 +10,17 @@ include $(top_srcdir)/Makefile.c-applet
 QUIET_INSTALL = $(Q:@=@echo '  INSTALL '$@;)
 QUIET_VALA = $(Q:@=@echo '  VALAC '$@;)
 
-VALA_CC = $(CC) -shared -fPIC $(AM_CPPFLAGS) -I$(top_builddir) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
-VALA_EXTRALDFLAGS = \
-	$(foreach flag,$(AWN_LIBS),--Xcc="$(flag)") \
-	$(foreach flag,$(APPLET_LIBS),--Xcc="$(flag)") \
-	$(foreach flag,$(AM_LDFLAGS),--Xcc="$(flag)") \
-	$(foreach flag,$(LDFLAGS),--Xcc="$(flag)") \
-	$(NULL)
+BUILT_SOURCES = $(APPLET_NAME).vala.stamp
 
-BUILT_SOURCES = $(APPLET_NAME).so
+VALA_C_FILES = $(VALA_FILES:.vala=.c)
 
-$(APPLET_NAME).so: $(VALA_FILES)
-	$(QUIET_VALA)$(VALAC) --library=$(*F) --cc="$(VALA_CC)" -o $@ $^ \
+$(APPLET_NAME).vala.stamp: $(VALA_FILES)
+	$(QUIET_VALA)$(VALAC) -C $^ \
 		--vapidir=$(top_srcdir)/shared/vala --pkg=build \
 		--vapidir=$(LDA_VAPIDIR) \
 		--vapidir=$(AWN_VAPIDIR) --pkg=awn \
-		$(AM_VALAFLAGS) $(VALAFLAGS) $(VALA_EXTRALDFLAGS)
-
-install-exec-hook:
-	test -d "$(DESTDIR)$(appletdir)" || mkdir -p "$(DESTDIR)$(appletdir)"
-	$(INSTALL) -m 755 $(APPLET_NAME).so "$(DESTDIR)$(appletdir)"
-
-uninstall-hook:
-	rm -f "$(appletdir)/$(APPLET_NAME).so"
+		$(AM_VALAFLAGS) $(VALAFLAGS)
+	touch "$@"
 
 EXTRA_DIST += $(VALA_FILES)
-CLEANFILES += $(APPLET_NAME).so $(APPLET_NAME).vapi
+CLEANFILES += $(APPLET_NAME).vala.stamp

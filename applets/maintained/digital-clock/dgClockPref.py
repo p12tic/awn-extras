@@ -1,3 +1,4 @@
+# encoding: utf-8
 #
 # Copyright Ryan Rushton  ryan@rrdesign.ca
 # This program is free software; you can redistribute it and/or modify
@@ -23,6 +24,7 @@ from desktopagnostic import Color, config
 from desktopagnostic.gtk import ColorButton
 import gtk
 import awn
+from awn import extras
 from awn.extras import _
 
 
@@ -133,6 +135,15 @@ class ClockPrefs(gobject.GObject):
         self.build_image_menu_item(popup_menu, gtk.STOCK_EDIT,
                                    self.time_admin,
                                    _('Adjust Date & Time'))
+        about_item = self.applet.create_about_item('Copyright © 2007 Ryan Rushton',
+                                                   awn.APPLET_LICENSE_GPLV2,
+                                                   extras.__version__, None,
+                                                   'http://wiki.awn-project.org/Digital_Clock',
+                                                   _('Wiki'),
+                                                   'awn-applet-digital-clock',
+                                                   None, ['Ryan Rushton', 'Mark Lee'],
+                                                   None, None)
+        popup_menu.append(about_item)
 
         popup_menu.show_all()
         return popup_menu

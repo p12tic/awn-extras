@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-09-08 10:53-0700\n"
+"POT-Creation-Date: 2009-09-09 00:23-0700\n"
 "PO-Revision-Date: 2007-11-02 HO:MI+ZONE\n"
 "Last-Translator: Ketil Wendelbo Aanensen <ketil.w.aanensen@gmail.com>\n"
 "Language-Team: Norwegian Bokmaal <ketil.w.aanensen@gmail.com>\n"
@@ -83,7 +83,6 @@ msgstr "Ketil Wendelbo Aanensen"
 
 #: ../applets/maintained/awnterm/settings.c:207
 #: ../applets/maintained/calendar/calendarprefs.py:73
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:44
 msgid "Preferences"
 msgstr "Innstillinger"
 
@@ -312,8 +311,8 @@ msgstr ""
 
 #. Initialise notifications
 #: ../applets/maintained/comics/comics.desktop.in.h:1
-#: ../applets/maintained/comics/main.py:294
-#: ../applets/maintained/comics/main.py:300
+#: ../applets/maintained/comics/main.py:292
+#: ../applets/maintained/comics/main.py:298
 msgid "Comics!"
 msgstr ""
 
@@ -326,8 +325,8 @@ msgstr ""
 msgid "Comics"
 msgstr ""
 
-#: ../applets/maintained/comics/comics.py:213
-#: ../applets/maintained/comics/main.py:192
+#: ../applets/maintained/comics/comics.py:212
+#: ../applets/maintained/comics/main.py:190
 #, python-format
 msgid "There is a new strip of %s!"
 msgstr ""
@@ -379,11 +378,11 @@ msgstr ""
 msgid "Error"
 msgstr ""
 
-#: ../applets/maintained/comics/comics_view.py:164
+#: ../applets/maintained/comics/comics_view.py:162
 msgid "%A %d %B"
 msgstr ""
 
-#: ../applets/maintained/comics/comics_view.py:530
+#: ../applets/maintained/comics/comics_view.py:528
 #, python-format
 msgid "Failed to save <i>%s</i>."
 msgstr ""
@@ -444,8 +443,6 @@ msgid "Size"
 msgstr ""
 
 #: ../applets/maintained/comics/glade/view.glade.h:3
-#: ../applets/unmaintained/arss/adddialog.glade.h:2
-#: ../applets/unmaintained/pynot/pynot-prefs.glade.h:13
 msgid "gtk-cancel"
 msgstr ""
 
@@ -457,7 +454,7 @@ msgstr ""
 msgid "gtk-save-as"
 msgstr ""
 
-#: ../applets/maintained/comics/main.py:151
+#: ../applets/maintained/comics/main.py:149
 #, python-format
 msgid "Unknown command sent: %s"
 msgstr ""
@@ -480,156 +477,160 @@ msgstr ""
 msgid "Digital Clock"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:34
+#: ../applets/maintained/digital-clock/dgClockPref.py:36
 msgid "Date before time"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:35
+#: ../applets/maintained/digital-clock/dgClockPref.py:37
 msgid "Whether to show the date next to the time, instead of below it."
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:38
+#: ../applets/maintained/digital-clock/dgClockPref.py:40
 msgid "12 hour mode"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:39
+#: ../applets/maintained/digital-clock/dgClockPref.py:41
 msgid "Whether to show the time in 12 hour mode (as opposed to 24 hour mode)."
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:42
+#: ../applets/maintained/digital-clock/dgClockPref.py:44
 msgid "Font face"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:43
+#: ../applets/maintained/digital-clock/dgClockPref.py:45
 msgid "The font face for the date and time text."
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:46
+#: ../applets/maintained/digital-clock/dgClockPref.py:48
 msgid "Font color"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:47
+#: ../applets/maintained/digital-clock/dgClockPref.py:49
 msgid "The text color of the date and time."
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:49
+#: ../applets/maintained/digital-clock/dgClockPref.py:51
 msgid "Font shadow color"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:50
+#: ../applets/maintained/digital-clock/dgClockPref.py:52
 msgid "The font shadow color of the date and time."
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:52
+#: ../applets/maintained/digital-clock/dgClockPref.py:54
 #, fuzzy
 msgid "Calendar command"
 msgstr "Klart"
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:53
+#: ../applets/maintained/digital-clock/dgClockPref.py:55
 msgid "Command to execute when a calendar day is double-clicked."
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:55
+#: ../applets/maintained/digital-clock/dgClockPref.py:57
 msgid "Adjust date/time command"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:56
+#: ../applets/maintained/digital-clock/dgClockPref.py:58
 msgid "Command to execute when the user wishes to adjust the date/time."
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:58
+#: ../applets/maintained/digital-clock/dgClockPref.py:60
 #, fuzzy
 msgid "dock orientation"
 msgstr "Nåværende sted:"
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:59
+#: ../applets/maintained/digital-clock/dgClockPref.py:61
 msgid "The orientation of the dock (horizontal/vertical)"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:127
+#: ../applets/maintained/digital-clock/dgClockPref.py:129
 #, fuzzy
 msgid "Copy Time"
 msgstr "Skyet"
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:130
+#: ../applets/maintained/digital-clock/dgClockPref.py:132
 #, fuzzy
 msgid "Copy Date"
 msgstr "Skyet"
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:135
+#: ../applets/maintained/digital-clock/dgClockPref.py:137
 msgid "Adjust Date & Time"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:210
+#: ../applets/maintained/digital-clock/dgClockPref.py:142
+msgid "Wiki"
+msgstr ""
+
+#: ../applets/maintained/digital-clock/dgClockPref.py:221
 #: ../applets/maintained/to-do/prefs.py:32
 #, fuzzy
 msgid "Custom"
 msgstr "Støv"
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:255
+#: ../applets/maintained/digital-clock/dgClockPref.py:266
 #: ../applets/maintained/garbage/prefs.vala:32
 #, fuzzy, c-format, python-format
 msgid "%s Preferences"
 msgstr "Innstillinger"
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:282
+#: ../applets/maintained/digital-clock/dgClockPref.py:293
 msgid "Font _Color:"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:290
+#: ../applets/maintained/digital-clock/dgClockPref.py:301
 msgid "Font _Shadow Color:"
 msgstr ""
 
 #. * clock type: 12/24 hour
-#: ../applets/maintained/digital-clock/dgClockPref.py:295
+#: ../applets/maintained/digital-clock/dgClockPref.py:306
 msgid "Clock Type"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:296
+#: ../applets/maintained/digital-clock/dgClockPref.py:307
 msgid "_12 Hour"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:299
+#: ../applets/maintained/digital-clock/dgClockPref.py:310
 msgid "_24 Hour"
 msgstr ""
 
 #. * clock style: time beside date
-#: ../applets/maintained/digital-clock/dgClockPref.py:303
+#: ../applets/maintained/digital-clock/dgClockPref.py:314
 msgid "Date Position"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:304
+#: ../applets/maintained/digital-clock/dgClockPref.py:315
 msgid "_Left"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:307
+#: ../applets/maintained/digital-clock/dgClockPref.py:318
 msgid "_Bottom"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:310
+#: ../applets/maintained/digital-clock/dgClockPref.py:322
 msgid "_Appearance"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:316
+#: ../applets/maintained/digital-clock/dgClockPref.py:328
 msgid "C_ommands"
 msgstr ""
 
 #. * calendar
-#: ../applets/maintained/digital-clock/dgClockPref.py:318
+#: ../applets/maintained/digital-clock/dgClockPref.py:330
 msgid "Evolution (default)"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:319
+#: ../applets/maintained/digital-clock/dgClockPref.py:331
 #, fuzzy
 msgid "Run Cal_endar:"
 msgstr "Klart"
 
 #. * time admin
-#: ../applets/maintained/digital-clock/dgClockPref.py:323
+#: ../applets/maintained/digital-clock/dgClockPref.py:335
 msgid "GNOME System Tools (default)"
 msgstr ""
 
-#: ../applets/maintained/digital-clock/dgClockPref.py:324
+#: ../applets/maintained/digital-clock/dgClockPref.py:336
 msgid "Run _Time Admin:"
 msgstr ""
 
@@ -855,7 +856,6 @@ msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:337
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:340
-#: ../applets/unmaintained/stacks/stacks_backend_trasher.py:128
 msgid "Trash"
 msgstr ""
 
@@ -897,8 +897,6 @@ msgstr ""
 #. Next section: File Browser
 #. Bold text: File Browser with an HSeparator under it
 #: ../applets/maintained/file-browser-launcher/prefs.py:90
-#: ../applets/unmaintained/filebrowser/filebrowser.desktop.in.in.h:2
-#: ../applets/unmaintained/filebrowser/filebrowser-applet.c:111
 msgid "File Browser"
 msgstr ""
 
@@ -958,7 +956,6 @@ msgstr ""
 
 #. Bold text: Behavior with hseparator under it
 #: ../applets/maintained/file-browser-launcher/prefs.py:220
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:19
 msgid "Behavior"
 msgstr ""
 
@@ -1053,7 +1050,6 @@ msgid "Could not open the trash folder with your file manager: %s"
 msgstr ""
 
 #: ../applets/maintained/garbage/applet.vala:209
-#: ../applets/unmaintained/stacks/stacks_backend_trasher.py:107
 msgid "_Empty Trash"
 msgstr ""
 
@@ -1409,7 +1405,7 @@ msgstr ""
 msgid "%u is not a valid notification ID"
 msgstr ""
 
-#: ../applets/maintained/places/applet.c:338
+#: ../applets/maintained/places/applet.c:339
 msgid "Desktop"
 msgstr ""
 
@@ -1431,14 +1427,6 @@ msgstr ""
 
 #: ../applets/maintained/quit/quit.desktop.in.h:2
 msgid "Quit-Log Out applet"
-msgstr ""
-
-#: ../applets/maintained/rtm/rtm.desktop.in.h:1
-msgid "RTM Applet"
-msgstr ""
-
-#: ../applets/maintained/rtm/rtm.desktop.in.h:2
-msgid "Use Remember The Milk from AWN."
 msgstr ""
 
 #: ../applets/maintained/showdesktop/showdesktop.desktop.in.h:1
@@ -1757,7 +1745,7 @@ msgstr "I morgen"
 
 #. Weather condition
 #: ../applets/maintained/weather/forecast.py:228
-#: ../applets/maintained/weather/weather.py:332
+#: ../applets/maintained/weather/weather.py:331
 msgid "DESCRIPTION"
 msgstr ""
 
@@ -1774,17 +1762,17 @@ msgstr ""
 msgid "Weather Applet"
 msgstr "Værkart"
 
-#: ../applets/maintained/weather/weather.py:86
+#: ../applets/maintained/weather/weather.py:85
 msgid "Fetching conditions for"
 msgstr ""
 
-#: ../applets/maintained/weather/weather.py:160
-#: ../applets/maintained/weather/weather.py:258
+#: ../applets/maintained/weather/weather.py:159
+#: ../applets/maintained/weather/weather.py:257
 #, fuzzy
 msgid "No records found"
 msgstr "Ingen data funnet"
 
-#: ../applets/maintained/weather/weather.py:237
+#: ../applets/maintained/weather/weather.py:236
 msgid "Searching..."
 msgstr "Søker..."
 
@@ -1823,95 +1811,6 @@ msgstr ""
 
 #: ../applets/maintained/yama/yama.desktop.in.h:2
 msgid "Yet Another Menu Applet"
-msgstr ""
-
-#: ../applets/unmaintained/arss/adddialog.glade.h:1
-msgid "Enter the path to a RSS/Atom feed"
-msgstr ""
-
-#: ../applets/unmaintained/arss/adddialog.glade.h:3
-#: ../applets/unmaintained/pynot/pynot-prefs.glade.h:14
-msgid "gtk-ok"
-msgstr ""
-
-#: ../applets/unmaintained/arss/arss.desktop.in.h:1
-msgid "Watch your feeds"
-msgstr ""
-
-#: ../applets/unmaintained/arss/arss.desktop.in.h:2
-msgid "aRSS"
-msgstr ""
-
-#: ../applets/unmaintained/arss/configwindow.glade.h:1
-msgid "gtk-add"
-msgstr ""
-
-#: ../applets/unmaintained/arss/configwindow.glade.h:2
-msgid "gtk-close"
-msgstr ""
-
-#: ../applets/unmaintained/arss/configwindow.glade.h:3
-msgid "gtk-remove"
-msgstr ""
-
-#: ../applets/unmaintained/awn-meebo/awn-meebo.desktop.in.h:1
-msgid "Access to the Meebo Instant Messenger"
-msgstr ""
-
-#: ../applets/unmaintained/awn-meebo/awn-meebo.desktop.in.h:2
-msgid "Mobile Meebo"
-msgstr ""
-
-#: ../applets/unmaintained/comic/comic.desktop.in.h:1
-msgid "Dilbert Applet"
-msgstr ""
-
-#: ../applets/unmaintained/comic/comic.desktop.in.h:2
-msgid "Read Dilbert and other comics"
-msgstr ""
-
-#: ../applets/unmaintained/DesktopManager/DesktopManager.desktop.in.h:1
-msgid "DesktopManager"
-msgstr ""
-
-#: ../applets/unmaintained/DesktopManager/DesktopManager.desktop.in.h:2
-msgid "Switches the Desktop Image"
-msgstr ""
-
-#: ../applets/unmaintained/digg/digg.desktop.in.h:1
-#: ../applets/unmaintained/digg/digg.py:50
-msgid "Browse Digg from Awn"
-msgstr ""
-
-#: ../applets/unmaintained/digg/digg.desktop.in.h:2
-#: ../applets/unmaintained/digg/digg.py:48
-msgid "Digg Applet"
-msgstr ""
-
-#: ../applets/unmaintained/digg/digg.py:63
-msgid "Digg"
-msgstr ""
-
-#: ../applets/unmaintained/filebrowser/filebrowser.desktop.in.in.h:1
-#: ../applets/unmaintained/filebrowser/filebrowser-applet.c:112
-msgid "Browse the filesystem"
-msgstr ""
-
-#: ../applets/unmaintained/filebrowser/filebrowser-applet.c:50
-msgid "Select folder as item container"
-msgstr ""
-
-#: ../applets/unmaintained/filebrowser/filebrowser-applet.c:139
-#, fuzzy
-msgid "Set Location"
-msgstr "Nåværende sted:"
-
-#: ../applets/unmaintained/filebrowser/filebrowser-dialog.c:198
-msgid "There are no items to display."
-msgstr ""
-
-#: ../applets/unmaintained/filebrowser/filebrowser-dialog.c:343
-msgid "Open filemanager"
 msgstr ""
 
 #: ../applets/unmaintained/mail/mail.desktop.in.h:1
@@ -1985,7 +1884,6 @@ msgid "Type:"
 msgstr ""
 
 #: ../applets/unmaintained/mail/mail.py:317
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:18
 msgid "Backend"
 msgstr ""
 
@@ -2071,540 +1969,25 @@ msgstr ""
 msgid "Pandora Radio"
 msgstr ""
 
-#: ../applets/unmaintained/plugger/plugger.desktop.in.in.h:1
-msgid "Monitors removable media devices"
-msgstr ""
-
-#: ../applets/unmaintained/plugger/plugger.desktop.in.in.h:2
-msgid "Stacks Plugger"
-msgstr ""
-
-#: ../applets/unmaintained/pynot/pynot.desktop.in.h:1
-msgid "A Configurable Notification tray"
-msgstr ""
-
-#: ../applets/unmaintained/pynot/pynot.desktop.in.h:2
-msgid "PyNot"
-msgstr ""
-
-#: ../applets/unmaintained/pynot/pynot-prefs.glade.h:1
-msgid "<b>Advanced</b>"
-msgstr ""
-
-#: ../applets/unmaintained/pynot/pynot-prefs.glade.h:2
-msgid "<b>Background</b>"
-msgstr ""
-
-#: ../applets/unmaintained/pynot/pynot-prefs.glade.h:3
-#: ../applets/unmaintained/pynot-rgba/pynot-rgba.glade.h:1
-msgid "<b>Display</b>"
-msgstr ""
-
-#: ../applets/unmaintained/pynot/pynot-prefs.glade.h:4
-msgid "Custom color:"
-msgstr ""
-
-#: ../applets/unmaintained/pynot/pynot-prefs.glade.h:5
-msgid "Distance from window _border:"
-msgstr ""
-
-#: ../applets/unmaintained/pynot/pynot-prefs.glade.h:6
-msgid "Image:"
-msgstr ""
-
-#: ../applets/unmaintained/pynot/pynot-prefs.glade.h:7
 #, fuzzy
-msgid "PyNot Preferences"
-msgstr "Innstillinger"
+#~ msgid "Set Location"
+#~ msgstr "Nåværende sted:"
 
-#: ../applets/unmaintained/pynot/pynot-prefs.glade.h:8
-msgid "Use _GTK theme"
-msgstr ""
-
-#: ../applets/unmaintained/pynot/pynot-prefs.glade.h:9
-msgid "_Do not show icons with PID 0"
-msgstr ""
-
-#: ../applets/unmaintained/pynot/pynot-prefs.glade.h:10
-msgid "_Number of icon rows:"
-msgstr ""
-
-#: ../applets/unmaintained/pynot/pynot-prefs.glade.h:11
-#: ../applets/unmaintained/pynot-rgba/pynot-rgba.glade.h:4
-msgid "_Size of icons:"
-msgstr ""
-
-#: ../applets/unmaintained/pynot/pynot-prefs.glade.h:12
-msgid "_Use rounded border"
-msgstr ""
-
-#: ../applets/unmaintained/pynot/pynot-prefs.glade.h:15
-#: ../applets/unmaintained/pynot-rgba/pynot-rgba.glade.h:5
-msgid "pixels"
-msgstr ""
-
-#: ../applets/unmaintained/pynot-rgba/pynot-rgba.desktop.in.h:1
-msgid "A System tray with Alpha support."
-msgstr ""
-
-#: ../applets/unmaintained/pynot-rgba/pynot-rgba.desktop.in.h:2
-msgid "PyNot RGBA"
-msgstr ""
-
-#: ../applets/unmaintained/pynot-rgba/pynot-rgba.glade.h:2
-msgid "_Icons per column:"
-msgstr ""
-
-#: ../applets/unmaintained/pynot-rgba/pynot-rgba.glade.h:3
-msgid "_Offset from bottom:"
-msgstr ""
-
-#: ../applets/unmaintained/separator/separator.desktop.in.in.h:1
-msgid "A simple separator."
-msgstr ""
-
-#: ../applets/unmaintained/separator/separator.desktop.in.in.h:2
-msgid "Separator"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:1
-msgid "<b>Colors</b>"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:2
-msgid "<b>Font</b>"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:3
-msgid "<b>General</b>"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:4
-msgid "<b>Labels</b>"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:5
-msgid ""
-"Auto\n"
-"Force curve to the left \n"
-"Force curve to the right\n"
-"Invert auto"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:9
-msgid "Background color 1:"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:10
-msgid "Background color 2:"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:11
-msgid "Border color:"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:12
 #, fuzzy
-msgid "Curved Stack Preferences"
-msgstr "Innstillinger"
+#~ msgid "PyNot Preferences"
+#~ msgstr "Innstillinger"
 
-#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:13
-msgid "Direction:"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:14
-msgid "Enable tooltips"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:15
-msgid "Hoverbox"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:16
-msgid "Include label in hover box"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:17
-msgid "Interval:"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:18
-msgid "Label font:"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:19
-msgid "Label length:"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:20
-msgid "Labels"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:21
-msgid "Layout"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:22
-msgid "Radius:"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:23
-msgid "Text color:"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:24
-msgid "Text hover color:"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:25
-msgid "Tooltips"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:26
-msgid "Use the title font of AWN"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:27
-msgid "background color:"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:28
-msgid "background hover color:"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:29
-msgid "border color:"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:30
-msgid "border hover color:"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks.desktop.in.h:1
-msgid "Quick access to a file folder"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks.desktop.in.h:2
-msgid "Stacks Applet"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_backend.py:301
-msgid "Stacks"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_backend_folder.py:110
-msgid "Confirm removal"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_backend_folder.py:120
-msgid ""
-"This stack has a <b>folder backend</b>. Do you really want to <b>delete</b> "
-"the files from that folder?"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_backend_plugger.py:51
-msgid "Mounted Volume"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_backend_plugger.py:55
-msgid "Unmount Volume"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_backend_plugger.py:58
-msgid "Hide Volume"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_backend_trasher.py:101
-msgid "Empty all of the items from the trash?"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_backend_trasher.py:102
-msgid ""
-"If you choose to empty the trash, all items in it will be permanently lost.  "
-"Please note that you can also delete them separately."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_backend_trasher.py:138
-msgid "Empty Trash"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_backend_trasher.py:169
-msgid "Cannot move items to trash, do you want to delete them immediately?"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_backend_trasher.py:170
-#, python-format
-msgid "None of the %d selected items can be moved to the Trash"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_backend_trasher.py:172
-msgid ""
-"Cannot move some items to trash, do you want to delete these immediately?"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_backend_trasher.py:173
-#, python-format
-msgid "%d of the selected items cannot be moved to the Trash"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_backend_trasher.py:180
-msgid "_Delete"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_config.py:241
-msgid "Select backend destination:"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_config.py:269
-msgid "Supported image types"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:1
-msgid "4"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:2
-msgid "5"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:3
-msgid "<b>Folder-operations:</b>"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:4
-msgid "<b>General:</b>"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:5
-msgid "<b>Icon:</b>"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:6
-msgid "<b>Layout:</b>"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:7
-msgid "<b>Paging:</b>"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:8
-msgid "<b>Title:</b>"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:9
-msgid "<big><b>Stacks applet for Avant Window Navigator</b></big>"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:10
-msgid "<i>(Use CTRL, ALT and SHIFT to select drag and drop operation)</i>"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:11
-msgid "About"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:12
-msgid "Applet Layout"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:13
-msgid "Applet title:"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:14
-msgid "Arrange items: "
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:15
-msgid ""
-"Ascending\n"
-"Descending"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:17
-msgid "Author: Timon ter Braak"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:20
-msgid ""
-"By Name\n"
-"By Date"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:22
-msgid "Close stack on focus out "
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:23
-msgid "Columns"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:24
-msgid "Composite applet icon"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:25
 #, fuzzy
-msgid "Copy"
-msgstr "Skyet"
+#~ msgid "Curved Stack Preferences"
+#~ msgstr "Innstillinger"
 
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:26
-msgid ""
-"Default dialog\n"
-"Curved gui\n"
-"Trasher gui\n"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:30
-msgid "Empty icon:"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:31
-msgid "File backend"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:32
-msgid "Folder backend"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:33
-msgid "Full icon:"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:34
-msgid ""
-"Inspired by Mac OS Leopard's \"Stack\", this applet is created. It combines "
-"functionality of Apple's Stack with it's own ideas. The <b>Stacks</b> applet "
-"also functions as a framework for the <b>Plugger</b> and <b>Trasher</b> "
-"applet.\n"
-"\n"
-"\n"
-"In one sentence:\n"
-"<u><i>Stacks provides quick and easy access to your files</i></u>."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:39
-msgid "Layout settings"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:40
-msgid "Link"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:41
 #, fuzzy
-msgid "Location:"
-msgstr "Stedsnavn"
+#~ msgid "Copy"
+#~ msgstr "Skyet"
 
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:42
-msgid "Maximum dimension:"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:43
-msgid "Move"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:45
-msgid "Rows"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:46
-msgid "Show item count in title"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:47
-msgid "Size of stacks icons:"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:48
-msgid "Sort folders before files"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:49
-msgid "Stack Layout"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:50
-msgid "Use multiple pages when there are to many items"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_preferences.glade.h:51
-msgid "x"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_vfs.py:113
-msgid "Error while moving."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_vfs.py:114
-#, python-format
-msgid ""
-"Cannot move \"%s\" to the trash because you do not have permissions to "
-"change it or its parent folder."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_vfs.py:116
-msgid "Error while deleting."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_vfs.py:117
-#, python-format
-msgid ""
-"\"%s\" cannot be deleted because you do not have permissions to modify its "
-"parent folder."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_vfs.py:119
-msgid "Error while performing file operation."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_vfs.py:120
-#, python-format
-msgid "Cannot perform file operation %d on \"%s\"."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_vfs.py:125
-msgid "_Skip"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/stacks_vfs.py:130
-msgid "_Retry"
-msgstr ""
-
-#: ../applets/unmaintained/trasher/trasher.desktop.in.in.h:1
-msgid "Stacks Trasher"
-msgstr ""
-
-#: ../applets/unmaintained/trasher/trasher.desktop.in.in.h:2
-msgid "Trash applet in Stacks style"
-msgstr ""
-
-#: ../plugins/unmaintained/deluge/__init__.py:1
-msgid "Awn Deluge"
-msgstr ""
-
-#: ../plugins/unmaintained/deluge/__init__.py:4
-msgid "This plugin prints the download rate and the upload rate on AWN dock"
-msgstr ""
-
-#: ../plugins/unmaintained/quodlibet/quod_dbus_cover.py:42
-msgid "Album Art Display"
-msgstr ""
-
-#. TODO: Improve to decrease wrong cover downloads, maybe add severity?
-#. Assemble list of search keywords (and thus search queries)
-#. If we still have no definite hit, use first result where artist matches
-#: ../plugins/unmaintained/rhythmbox/artdisplay-awn/AmazonCoverArtSearch.py:67
-#: ../plugins/unmaintained/rhythmbox/artdisplay-awn/AmazonCoverArtSearch.py:68
-#: ../plugins/unmaintained/rhythmbox/artdisplay-awn/AmazonCoverArtSearch.py:101
-#: ../plugins/unmaintained/rhythmbox/artdisplay-awn/AmazonCoverArtSearch.py:107
-#: ../plugins/unmaintained/rhythmbox/artdisplay-awn/AmazonCoverArtSearch.py:117
-#: ../plugins/unmaintained/rhythmbox/artdisplay-awn/AmazonCoverArtSearch.py:233
-#: ../plugins/unmaintained/rhythmbox/artdisplay-awn/AmazonCoverArtSearch.py:249
-#: ../plugins/unmaintained/rhythmbox/artdisplay-awn/CoverArtDatabase.py:122
-#: ../plugins/unmaintained/rhythmbox/artdisplay-awn/CoverArtDatabase.py:123
-msgid "Unknown"
-msgstr ""
+#, fuzzy
+#~ msgid "Location:"
+#~ msgstr "Stedsnavn"
 
 #~ msgid "Search for Location Code"
 #~ msgstr "Søk etter kode for sted"

@@ -20,14 +20,13 @@ import pygtk
 pygtk.require("2.0")
 import gtk
 
-from awn.extras import awnlib
+from awn.extras import awnlib, __version__
 import cairo
 
 from analogclock import *
 import locations
 
 applet_name = "Cairo Clock"
-applet_version = "0.3.3"
 applet_description = "Applet that displays an analog clock and supports additional clocks for different locations"
 
 # Logo of the applet, shown in the GTK About dialog
@@ -302,7 +301,7 @@ class AppletAnalogClock:
 if __name__ == "__main__":
     awnlib.init_start(CairoClockApplet, {"name": applet_name,
         "short": "cairo-clock",
-        "version": applet_version,
+        "version": __version__,
         "description": applet_description,
         "logo": applet_logo,
         "author": "onox",

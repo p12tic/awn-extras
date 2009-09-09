@@ -21,7 +21,7 @@ import pygtk
 pygtk.require("2.0")
 import gtk
 
-from awn.extras import awnlib
+from awn.extras import awnlib, __version__
 from awn import OverlayThemedIcon
 
 import glib
@@ -33,7 +33,6 @@ except ImportError:
     pyinotify = None
 
 applet_name = "ThinkHDAPS"
-applet_version = "0.3.3"
 applet_description = "Applet that shows the shock protection status of your disks"
 
 # Interval in seconds between two successive status checks
@@ -180,7 +179,7 @@ class ThinkHDAPSApplet:
 if __name__ == "__main__":
     awnlib.init_start(ThinkHDAPSApplet, {"name": applet_name,
         "short": "thinkhdaps",
-        "version": applet_version,
+        "version": __version__,
         "description": applet_description,
         "logo": applet_logo,
         "author": "onox",

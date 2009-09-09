@@ -21,7 +21,7 @@ import pygtk
 pygtk.require("2.0")
 import gtk
 
-from awn.extras import awnlib
+from awn.extras import awnlib, __version__
 
 try:
     import dbus
@@ -29,7 +29,6 @@ except ImportError:
     dbus = None
 
 applet_name = "Tomboy Applet"
-applet_version = "0.3.3"
 applet_description = "Control Tomboy with D-Bus"
 applet_system_notebook = "system:notebook:"
 applet_system_template = "system:template"
@@ -160,7 +159,7 @@ class TomboyApplet:
 
 if __name__ == "__main__":
     awnlib.init_start(TomboyApplet, {"name": applet_name, "short": "tomboy",
-        "version": applet_version,
+        "version": __version__,
         "description": applet_description,
         "logo": applet_logo,
         "author": "Julien Lavergne",

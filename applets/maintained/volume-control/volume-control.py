@@ -28,7 +28,7 @@ pygtk.require("2.0")
 import gtk
 from gtk import gdk
 
-from awn.extras import awnlib
+from awn.extras import awnlib, __version__
 
 import pygst
 pygst.require("0.10")
@@ -44,7 +44,6 @@ read_volume_interval = 0.5
 gstreamer_freeze_messages_interval = 0.2
 
 applet_name = "Volume Control"
-applet_version = "0.3.3"
 applet_description = "Applet to control your computer's volume"
 
 theme_dir = "/usr/share/icons"
@@ -523,7 +522,7 @@ class GStreamerBackend:
 
 if __name__ == "__main__":
     awnlib.init_start(VolumeControlApplet, {"name": applet_name, "short": "volume-control",
-        "version": applet_version,
+        "version": __version__,
         "description": applet_description,
         "logo": applet_logo,
         "author": "onox",

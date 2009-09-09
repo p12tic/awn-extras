@@ -26,14 +26,13 @@ import pygtk
 pygtk.require("2.0")
 import gtk
 
-from awn.extras import _, awnlib
+from awn.extras import _, awnlib, __version__
 from awn import OverlayText
 
 import cairo
 import glib
 
 applet_name = "Weather"
-applet_version = "0.3.3"
 applet_description = "Applet to display current weather and forecast"
 
 # Applet's themed icon, also shown in the GTK About dialog
@@ -452,7 +451,7 @@ if __name__ == "__main__":
     awnlib.init_start(WeatherApplet, {
         "name": applet_name, "short": "weather",
         "description": applet_description,
-        "version": applet_version,
+        "version": __version__,
         "author": "onox, Mike Desjardins, Mike Rooney",
         "copyright-year": "2007 - 2009",
         "theme": applet_logo,

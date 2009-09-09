@@ -145,7 +145,7 @@ class VisibleNotificationState:
 
         self.handler.message.set_property("summary", "Battery is charged")
         self.handler.message.set_property("icon-name", "dialog-information")
-        self.handler.message.set_timeout(0)
+        self.handler.message.set_timeout(3 * 3600 * 1000)
         self.handler.message.set_urgency(pynotify.URGENCY_NORMAL)
         self.__closed_id = self.handler.message.connect("closed", self.__closed_cb)
         self.__update_message()

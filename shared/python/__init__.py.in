@@ -18,7 +18,8 @@
 import gettext
 
 PREFIX = '@prefix@'
-VERSION = '@VERSION@'
+__version__ = '@VERSION@'
+__version_info__ = tuple([int(i) for i in __version__.split('.')])
 APPLET_BASEDIR = '@APPLETSDIR@'
 
 # gettext (internationalization/i18n) support

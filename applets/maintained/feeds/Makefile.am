@@ -5,8 +5,10 @@ dist_applet_DATA =			\
 	prefs.py	\
 	$(NULL)
 
-icons_DATA = icons/awn-feeds.svg	\
-	icons/awn-feeds-greader.svg
+icons_DATA = \
+	$(srcdir)/icons/awn-feeds.svg \
+	$(srcdir)/icons/awn-feeds-greader.svg \
+	$(NULL)
 iconsdir = $(appletdir)/icons
 
 include $(top_srcdir)/Makefile.python-applet

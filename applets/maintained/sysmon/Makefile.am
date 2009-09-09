@@ -23,6 +23,7 @@ sysmon_la_SOURCES =		\
   defines.h \
   graph.c \
   graph.h \
+  graphprivate.h \
   loadicon.c \
   loadicon.h \
   piegraph.c \
@@ -31,6 +32,7 @@ sysmon_la_SOURCES =		\
   sysmon.h  \
   sysmonicon.c \
   sysmonicon.h \
+  sysmoniconprivate.h \
   util.c  \
   util.h  \
   $(NULL)

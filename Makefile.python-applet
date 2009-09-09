@@ -7,5 +7,5 @@ appletdir = $(applet_datadir)
 dist_applet_SCRIPTS = $(APPLET_MAIN_FILE)
 
 EXTRA_DIST += \
-	$(desktop_DATA:.desktop:=.desktop.in) \
+	$(desktop_DATA:.desktop=.desktop.in) \
 	$(NULL)

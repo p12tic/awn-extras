@@ -34,4 +34,5 @@ install-exec-hook:
 uninstall-hook:
 	rm -f "$(appletdir)/$(APPLET_NAME).so"
 
+EXTRA_DIST += $(VALA_FILES)
 CLEANFILES += $(APPLET_NAME).so $(APPLET_NAME).vapi

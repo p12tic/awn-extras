@@ -28,4 +28,7 @@ prefsdir = $(applet_datadir)
 dist_prefs_DATA =	\
 	na-prefs.xml	\
 	$(NULL)
+
+EXTRA_DIST += $(wildcard *.h)
+
 # vim: set ts=8 sts=8 sw=8 :

@@ -5,13 +5,15 @@ SUBDIRS = \
 	po \
 	$(NULL)
 	
-EXTRA_DIST =				\
-	intltool-extract.in		\
-	intltool-merge.in		\
-	intltool-update.in		\
+EXTRA_DIST = \
+	autogen.sh \
+	intltool-extract.in \
+	intltool-merge.in \
+	intltool-update.in \
 	po/Makefile.in.in \
 	po/POTFILES.skip \
-	autogen.sh
+	$(wildcard shared/vala/*.vapi) \
+	$(NULL)
 
 DISTCLEANFILES =			\
 	intltool-extract		\

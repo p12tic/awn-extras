@@ -1,20 +1,23 @@
-# Norwegian Bokmaal translation.
-# Copyright (C) 2007 THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# Ketil Wendelbo Aanensen <ketil.w.aanensen@gmail.com>, 2007.
+# Slovenian translations for awn-extras-applets package.
+# Copyright (C) 2009 The respective copyright holders of the Awn Extras applets.
+# This file is distributed under the BSD license.
+# Mark Lee <avant-wn@lazymalevolence.com>, 2009.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: Awn Extras 0.3.9\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-09-11 00:43+0200\n"
-"PO-Revision-Date: 2007-11-02 HO:MI+ZONE\n"
-"Last-Translator: Ketil Wendelbo Aanensen <ketil.w.aanensen@gmail.com>\n"
-"Language-Team: Norwegian Bokmaal <ketil.w.aanensen@gmail.com>\n"
+"POT-Creation-Date: 2009-09-11 00:44+0200\n"
+"PO-Revision-Date: 2009-09-11 00:42+0100\n"
+"Last-Translator: Grega Podlesek <grega.podlesek@gmail.com>\n"
+"Language-Team: Slovenian\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Language: Slovenian\n"
+"X-Poedit-Country: SLOVENIA\n"
+"X-Poedit-SourceCharset: utf-8\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
 msgid "Animal Farm"
@@ -137,13 +140,13 @@ msgstr ""
 
 #: ../applets/maintained/awnterm/settings.c:67
 msgid "translator-credits"
-msgstr "Ketil Wendelbo Aanensen"
+msgstr ""
 
 #: ../applets/maintained/awnterm/settings.c:207
 #: ../applets/maintained/calendar/calendarprefs.py:73
 #: ../applets/unmaintained/stacks/stacks_preferences.glade.h:44
 msgid "Preferences"
-msgstr "Innstillinger"
+msgstr ""
 
 #: ../applets/maintained/awnterm/settings.c:214
 msgid "Hide when focus is lost"
@@ -166,9 +169,8 @@ msgid "External Terminal"
 msgstr ""
 
 #: ../applets/maintained/battery/battery.desktop.in.h:1
-#, fuzzy
 msgid "Battery"
-msgstr "Kastevind"
+msgstr ""
 
 #: ../applets/maintained/battery/battery.desktop.in.h:2
 msgid "Display battery state"
@@ -278,14 +280,12 @@ msgid "Green"
 msgstr ""
 
 #: ../applets/maintained/calendar/calendarprefs.py:57
-#, fuzzy
 msgid "Blue"
-msgstr "Kastevind"
+msgstr ""
 
 #: ../applets/maintained/calendar/calendarprefs.py:58
-#, fuzzy
 msgid "Gray"
-msgstr "Fredag"
+msgstr ""
 
 #: ../applets/maintained/calendar/calendarprefs.py:59
 msgid "Black"
@@ -334,9 +334,8 @@ msgstr ""
 #: ../applets/maintained/calendar/clockcal.py:47
 #: ../applets/maintained/calendar/clockcal.py:500
 #: ../applets/maintained/digital-clock/digitalClock.py:76
-#, fuzzy
 msgid "Calendar"
-msgstr "Klart"
+msgstr ""
 
 #: ../applets/maintained/calendar/clockcal.py:220
 msgid ""
@@ -352,7 +351,7 @@ msgstr ""
 #: ../applets/maintained/calendar/clockcal.py:510
 #: ../applets/maintained/weather/forecast.py:200
 msgid "Today"
-msgstr "I dag"
+msgstr ""
 
 #. print "Login error: ", sys.exc_info()[0], sys.exc_info()[1]
 #: ../applets/maintained/calendar/clockcal.py:558
@@ -525,9 +524,8 @@ msgid "An applet to monitor and control the CPU frequency"
 msgstr ""
 
 #: ../applets/maintained/cpufreq/cpufreq.desktop.in.h:2
-#, fuzzy
 msgid "CPU Frequency Monitor"
-msgstr "Prøvefrekvens (minutter)"
+msgstr ""
 
 #: ../applets/maintained/digital-clock/digital-clock.desktop.in.h:1
 msgid "A clock and calendar in one."
@@ -579,23 +577,20 @@ msgid "The font shadow color of the date and time."
 msgstr ""
 
 #: ../applets/maintained/digital-clock/dgClockPref.py:52
-#, fuzzy
 msgid "dock orientation"
-msgstr "Nåværende sted:"
+msgstr ""
 
 #: ../applets/maintained/digital-clock/dgClockPref.py:53
 msgid "The orientation of the dock (horizontal/vertical)"
 msgstr ""
 
 #: ../applets/maintained/digital-clock/dgClockPref.py:113
-#, fuzzy
 msgid "Copy Time"
-msgstr "Skyet"
+msgstr ""
 
 #: ../applets/maintained/digital-clock/dgClockPref.py:116
-#, fuzzy
 msgid "Copy Date"
-msgstr "Skyet"
+msgstr ""
 
 #: ../applets/maintained/digital-clock/dgClockPref.py:121
 msgid "Adjust Date & Time"
@@ -603,9 +598,9 @@ msgstr ""
 
 #: ../applets/maintained/digital-clock/dgClockPref.py:184
 #: ../applets/maintained/garbage/prefs.vala:32
-#, fuzzy, c-format, python-format
+#, c-format, python-format
 msgid "%s Preferences"
-msgstr "Innstillinger"
+msgstr ""
 
 #: ../applets/maintained/digital-clock/dgClockPref.py:209
 msgid "Font _Color:"
@@ -721,9 +716,8 @@ msgid "Add Feed"
 msgstr ""
 
 #: ../applets/maintained/feeds/prefs.py:53
-#, fuzzy
 msgid "Feeds Applet Preferences"
-msgstr "Innstillinger"
+msgstr ""
 
 #: ../applets/maintained/feeds/prefs.py:61
 msgid "Feeds"
@@ -758,9 +752,8 @@ msgid "Source:"
 msgstr ""
 
 #: ../applets/maintained/feeds/prefs.py:243
-#, fuzzy
 msgid "Feed Search"
-msgstr "Søk"
+msgstr ""
 
 #: ../applets/maintained/feeds/prefs.py:244
 msgid "RSS/Atom"
@@ -768,9 +761,8 @@ msgstr ""
 
 #. "Search for" label and entry
 #: ../applets/maintained/feeds/prefs.py:256
-#, fuzzy
 msgid "Search for"
-msgstr "Søk"
+msgstr ""
 
 #. URL: label and entry
 #: ../applets/maintained/feeds/prefs.py:270
@@ -803,9 +795,8 @@ msgstr ""
 
 #. If signed in to Google Reader
 #: ../applets/maintained/feeds/prefs.py:352
-#, fuzzy
 msgid "_Search"
-msgstr "Søk"
+msgstr ""
 
 #: ../applets/maintained/feeds/prefs.py:532
 #: ../applets/maintained/feeds/prefs.py:558
@@ -869,7 +860,7 @@ msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:343
 msgid "Search"
-msgstr "Søk"
+msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:346
 msgid "CD/DVD Burner"
@@ -880,9 +871,8 @@ msgid "Fonts"
 msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:353
-#, fuzzy
 msgid "Folder"
-msgstr "Kaldt"
+msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:459
 msgid "DVD Drive"
@@ -1275,9 +1265,8 @@ msgid "A Notification Area (systray)"
 msgstr ""
 
 #: ../applets/maintained/notification-area/notification-area.desktop.in.in.h:2
-#, fuzzy
 msgid "Notification Area"
-msgstr "Stedsnavn"
+msgstr ""
 
 #: ../applets/maintained/notification-area/egg-tray-child.c:170
 #, c-format
@@ -1285,9 +1274,8 @@ msgid "tray icon has requested a size of (%i x %i), resizing to (%i x %i)"
 msgstr ""
 
 #: ../applets/maintained/notification-area/eggtraymanager.c:148
-#, fuzzy
 msgid "Orientation"
-msgstr "Nåværende sted:"
+msgstr ""
 
 #: ../applets/maintained/notification-area/eggtraymanager.c:149
 msgid "The orientation of the tray."
@@ -1454,9 +1442,8 @@ msgid "Hide your windows and show your desktop"
 msgstr ""
 
 #: ../applets/maintained/showdesktop/showdesktop.desktop.in.h:2
-#, fuzzy
 msgid "Show Desktop"
-msgstr "Byger"
+msgstr ""
 
 #: ../applets/maintained/sysmon/sysmon.desktop.in.in.h:2
 msgid "System Monitor"
@@ -1471,18 +1458,16 @@ msgid "ThinkHDAPS"
 msgstr ""
 
 #: ../applets/maintained/to-do/prefs.py:32
-#, fuzzy
 msgid "Custom"
-msgstr "Støv"
+msgstr ""
 
 #: ../applets/maintained/to-do/prefs.py:32
 msgid "Current Theme"
 msgstr ""
 
 #: ../applets/maintained/to-do/prefs.py:32
-#, fuzzy
 msgid "Butter"
-msgstr "Kastevind"
+msgstr ""
 
 #: ../applets/maintained/to-do/prefs.py:33
 msgid "Chameleon"
@@ -1529,9 +1514,8 @@ msgid "Both"
 msgstr ""
 
 #: ../applets/maintained/to-do/prefs.py:45
-#, fuzzy
 msgid "To-Do List Preferences"
-msgstr "Innstillinger"
+msgstr ""
 
 #: ../applets/maintained/to-do/prefs.py:61
 msgid "Priority"
@@ -1563,9 +1547,8 @@ msgstr ""
 
 #. Label: Width (bold)
 #: ../applets/maintained/to-do/prefs.py:109
-#, fuzzy
 msgid "Width"
-msgstr "Vind"
+msgstr ""
 
 #. CheckButton: Use Custom Width
 #: ../applets/maintained/to-do/prefs.py:118
@@ -1753,7 +1736,7 @@ msgstr ""
 #: ../applets/maintained/weather/forecast.py:57
 #: ../applets/maintained/weather/forecast.py:114
 msgid "Forecast"
-msgstr "Værvarsel"
+msgstr ""
 
 #: ../applets/maintained/weather/forecast.py:57
 #: ../applets/maintained/weather/forecast.py:114
@@ -1766,7 +1749,7 @@ msgstr ""
 
 #: ../applets/maintained/weather/forecast.py:202
 msgid "Tomorrow"
-msgstr "I morgen"
+msgstr ""
 
 #. Weather condition
 #: ../applets/maintained/weather/forecast.py:228
@@ -1776,16 +1759,15 @@ msgstr ""
 
 #: ../applets/maintained/weather/forecast.py:280
 msgid "Weather data provided by weather.com"
-msgstr "Værdata fremskaffet av weather.com"
+msgstr ""
 
 #: ../applets/maintained/weather/weather.desktop.in.h:1
 msgid "Display the local weather"
 msgstr ""
 
 #: ../applets/maintained/weather/weather.desktop.in.h:2
-#, fuzzy
 msgid "Weather Applet"
-msgstr "Værkart"
+msgstr ""
 
 #: ../applets/maintained/weather/weather.py:86
 msgid "Fetching conditions for"
@@ -1793,20 +1775,18 @@ msgstr ""
 
 #: ../applets/maintained/weather/weather.py:160
 #: ../applets/maintained/weather/weather.py:258
-#, fuzzy
 msgid "No records found"
-msgstr "Ingen data funnet"
+msgstr ""
 
 #: ../applets/maintained/weather/weather.py:237
 msgid "Searching..."
-msgstr "Søker..."
+msgstr ""
 
 #. Make the dialog
 #: ../applets/maintained/webapplet/applet.c:262
 #: ../applets/maintained/webapplet/applet.c:460
-#, fuzzy
 msgid "Open Location"
-msgstr "Nåværende sted:"
+msgstr ""
 
 #: ../applets/maintained/webapplet/applet.c:281
 msgid "Set as new _Home Page"
@@ -1915,9 +1895,8 @@ msgid "Select folder as item container"
 msgstr ""
 
 #: ../applets/unmaintained/filebrowser/filebrowser-applet.c:139
-#, fuzzy
 msgid "Set Location"
-msgstr "Nåværende sted:"
+msgstr ""
 
 #: ../applets/unmaintained/filebrowser/filebrowser-dialog.c:198
 msgid "There are no items to display."
@@ -2038,9 +2017,8 @@ msgstr ""
 
 #: ../applets/unmaintained/mail/mail.py:657
 #: ../applets/unmaintained/mail/mail.py:750
-#, fuzzy
 msgid "Server:"
-msgstr "Aldri"
+msgstr ""
 
 #: ../applets/unmaintained/mail/mail.py:660
 #: ../applets/unmaintained/mail/mail.py:753
@@ -2126,9 +2104,8 @@ msgid "Image:"
 msgstr ""
 
 #: ../applets/unmaintained/pynot/pynot-prefs.glade.h:7
-#, fuzzy
 msgid "PyNot Preferences"
-msgstr "Innstillinger"
+msgstr ""
 
 #: ../applets/unmaintained/pynot/pynot-prefs.glade.h:8
 msgid "Use _GTK theme"
@@ -2217,9 +2194,8 @@ msgid "Border color:"
 msgstr ""
 
 #: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:12
-#, fuzzy
 msgid "Curved Stack Preferences"
-msgstr "Innstillinger"
+msgstr ""
 
 #: ../applets/unmaintained/stacks/curved_stacks_preferences.glade.h:13
 msgid "Direction:"
@@ -2457,9 +2433,8 @@ msgid "Composite applet icon"
 msgstr ""
 
 #: ../applets/unmaintained/stacks/stacks_preferences.glade.h:25
-#, fuzzy
 msgid "Copy"
-msgstr "Skyet"
+msgstr ""
 
 #: ../applets/unmaintained/stacks/stacks_preferences.glade.h:26
 msgid ""
@@ -2505,9 +2480,8 @@ msgid "Link"
 msgstr ""
 
 #: ../applets/unmaintained/stacks/stacks_preferences.glade.h:41
-#, fuzzy
 msgid "Location:"
-msgstr "Stedsnavn"
+msgstr ""
 
 #: ../applets/unmaintained/stacks/stacks_preferences.glade.h:42
 msgid "Maximum dimension:"
@@ -2618,166 +2592,3 @@ msgstr ""
 #: ../plugins/unmaintained/rhythmbox/artdisplay-awn/CoverArtDatabase.py:123
 msgid "Unknown"
 msgstr ""
-
-#~ msgid "Search for Location Code"
-#~ msgstr "Søk etter kode for sted"
-
-#~ msgid ""
-#~ "Enter the location you want to search for above.  For example: <i>Boston</"
-#~ "i>; <i>Portland, ME</i>; <i>Paris</i>; or <i>Osaka, Japan</i>."
-#~ msgstr ""
-#~ "Tast inn stedet du ønsker å søke etter over.  For eksempel: <i>Oslo</i>; "
-#~ "<i>Portland, ME</i>; <i>Haugesund</i>; or <i>Osaka, Japan</i>."
-
-#~ msgid "Metric Units"
-#~ msgstr "Metrisk måleenhet"
-
-#~ msgid "Keep Forecast window opened until clicked"
-#~ msgstr "Hold værvarslingsvinduet åpent til det klikkes"
-
-#~ msgid "Use Curved Dialog look"
-#~ msgstr "Buet dialogboks"
-
-#~ msgid "Lower Center"
-#~ msgstr "Nedre senter"
-
-#~ msgid "Lower Left"
-#~ msgstr "Nedre venstre"
-
-#~ msgid "Lower Right"
-#~ msgstr "Nedre høyre"
-
-#~ msgid "Upper Center"
-#~ msgstr "Øvre senter"
-
-#~ msgid "Upper Left"
-#~ msgstr "Øvre venstre"
-
-#~ msgid "Upper Right"
-#~ msgstr "Øvre høyre"
-
-#~ msgid "Show Temperature"
-#~ msgstr "Vis temperatur"
-
-#~ msgid "Change Location"
-#~ msgstr "Bytt sted"
-
-#~ msgid "Fetching weather data."
-#~ msgstr "Henter værdata"
-
-#~ msgid "Tornado"
-#~ msgstr "Tornado"
-
-#~ msgid "Tropical Storm"
-#~ msgstr "Tropisk storm"
-
-#~ msgid "Hurricane"
-#~ msgstr "Orkan"
-
-#~ msgid "Severe Thunderstorms"
-#~ msgstr "Voldsom torden"
-
-#~ msgid "Thunderstorms"
-#~ msgstr "Torden"
-
-#~ msgid "Mixed Rain and Snow"
-#~ msgstr "Blandet regn og snø"
-
-#~ msgid "Mixed Rain and Sleet"
-#~ msgstr "Blandet regn og sludd"
-
-#~ msgid "Mixed Precipitation"
-#~ msgstr "Blandet nedbør"
-
-#~ msgid "Freezing Drizzle"
-#~ msgstr "Frysende duskregn"
-
-#~ msgid "Drizzle"
-#~ msgstr "Duskregn"
-
-#~ msgid "Freezing Rain"
-#~ msgstr "Frysende regn"
-
-#~ msgid "Snow Flurries"
-#~ msgstr "Snøfokk"
-
-#~ msgid "Light Snow Showers"
-#~ msgstr "Lette snøbyger"
-
-#~ msgid "Blowing Snow"
-#~ msgstr "Blåsende snø"
-
-#~ msgid "Snow"
-#~ msgstr "Snø"
-
-#~ msgid "Hail"
-#~ msgstr "Hagl"
-
-#~ msgid "Sleet"
-#~ msgstr "Sludd"
-
-#~ msgid "Fog"
-#~ msgstr "Tåke"
-
-#~ msgid "Haze"
-#~ msgstr "Dis"
-
-#~ msgid "Smoke"
-#~ msgstr "Røyk"
-
-#~ msgid "Mostly Cloudy"
-#~ msgstr "For det meste skyet"
-
-#~ msgid "Partly Cloudy"
-#~ msgstr "Delvis skyet"
-
-#~ msgid "Fair"
-#~ msgstr "Pent"
-
-#~ msgid "Mixed Rain and Hail"
-#~ msgstr "Blandet regn og hagl"
-
-#~ msgid "Hot"
-#~ msgstr "Varmt"
-
-#~ msgid "Isolated Thunderstorms"
-#~ msgstr "Lokal torden"
-
-#~ msgid "Scattered Thunderstorms"
-#~ msgstr "Spredt torden"
-
-#~ msgid "Scattered Showers"
-#~ msgstr "Spredt nedbør"
-
-#~ msgid "Heavy Snow"
-#~ msgstr "Kraftig snø"
-
-#~ msgid "Scattered Snow Showers"
-#~ msgstr "Spredte snøbyger"
-
-#~ msgid "Thunder Showers"
-#~ msgstr "Tordenbyger"
-
-#~ msgid "Snow Showers"
-#~ msgstr "Snøbyger"
-
-#~ msgid "N/A"
-#~ msgstr "Ikke tilgjengelig"
-
-#~ msgid "Monday"
-#~ msgstr "Mandag"
-
-#~ msgid "Tuesday"
-#~ msgstr "Tirsdag"
-
-#~ msgid "Wednesday"
-#~ msgstr "Onsdag"
-
-#~ msgid "Thursday"
-#~ msgstr "Torsdag"
-
-#~ msgid "Saturday"
-#~ msgstr "Lørdag"
-
-#~ msgid "Sunday"
-#~ msgstr "Søndag"

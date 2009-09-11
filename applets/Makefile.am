@@ -50,6 +50,7 @@ endif
 # please keep alphabetized
 SUBDIRS = \
 	maintained/animal-farm \
+	maintained/awn-sensors \
 	maintained/awnterm \
 	maintained/battery \
 	maintained/cairo-clock \

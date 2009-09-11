@@ -1,5 +1,8 @@
 # PLEASE KEEP THIS FILE ALPHABETIZED (case-insensitive)!
 applets/maintained/animal-farm/animal-farm.desktop.in
+applets/maintained/awn-sensors/awn-sensors.py
+applets/maintained/awn-sensors/awn-sensors.ui
+applets/maintained/awn-sensors/awn-sensors.desktop.in
 applets/maintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in
 applets/maintained/awnsystemmonitor/awnsystemmonitor.schemas.in
 applets/maintained/awnterm/applet.c

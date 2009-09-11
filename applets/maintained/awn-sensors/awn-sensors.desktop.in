@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+X-AWN-Type=Applet
+X-AWN-AppletType=Python
+X-AWN-AppletCategory=System
+Encoding=UTF-8
+_Name=Awn Sensors
+_Comment=Applet to show the hw sensors readouts
+Exec=awn-sensors/awn-sensors.py
+Icon=awn-sensors/images/thermometer.svg

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: awn-extras-applets 0.2.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-09-03 13:33-0700\n"
+"POT-Creation-Date: 2009-09-11 00:44+0200\n"
 "PO-Revision-Date: 2008-04-02 17:33-0400\n"
 "Last-Translator: Pavel Panchekha <pavpanchekha@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -23,6 +23,64 @@ msgstr ""
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:2
 msgid "Display fortune messages"
+msgstr ""
+
+#: ../applets/maintained/awn-sensors/awn-sensors.py:66
+msgid "Applet to show the hardware sensors readouts"
+msgstr ""
+
+#: ../applets/maintained/awn-sensors/awn-sensors.py:97
+msgid ""
+"Warning: No sensors found. Install one or more of ACPI, HDDTemp, LM-Sensors "
+"and restart the applet."
+msgstr ""
+
+#: ../applets/maintained/awn-sensors/awn-sensors.py:222
+msgid "Sensors"
+msgstr ""
+
+#: ../applets/maintained/awn-sensors/awn-sensors.py:281
+#: ../applets/maintained/awn-sensors/awn-sensors.py:287
+msgid "Error:"
+msgstr ""
+
+#: ../applets/maintained/awn-sensors/awn-sensors.py:281
+msgid "Directory"
+msgstr ""
+
+#: ../applets/maintained/awn-sensors/awn-sensors.py:281
+msgid "does not exist."
+msgstr ""
+
+#: ../applets/maintained/awn-sensors/awn-sensors.py:287
+msgid "No .svg images found in directory:"
+msgstr ""
+
+#: ../applets/maintained/awn-sensors/awn-sensors.py:518
+msgid "Interface"
+msgstr ""
+
+#: ../applets/maintained/awn-sensors/awn-sensors.py:520
+msgid "Name"
+msgstr ""
+
+#: ../applets/maintained/awn-sensors/awn-sensors.py:522
+msgid "Label"
+msgstr ""
+
+#. Set the cell "active" attribute to column_show - retrieve the state
+#. of the toggle button from that column in liststore
+#: ../applets/maintained/awn-sensors/awn-sensors.py:526
+msgid "In dialog"
+msgstr ""
+
+#. Add treeview-column to treeview
+#: ../applets/maintained/awn-sensors/awn-sensors.py:563
+msgid "Sensors displayed in icon"
+msgstr ""
+
+#: ../applets/maintained/awn-sensors/awn-sensors.py:581
+msgid "properties"
 msgstr ""
 
 #: ../applets/maintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in.h:1
@@ -578,25 +636,25 @@ msgstr ""
 
 #: ../applets/maintained/feeds/feeds.desktop.in.h:1
 #: ../applets/maintained/feeds/feeds.py:70
-#: ../applets/maintained/feeds/feeds.py:221
-#: ../applets/maintained/feeds/feeds.py:779
+#: ../applets/maintained/feeds/feeds.py:224
+#: ../applets/maintained/feeds/feeds.py:780
 msgid "Feeds Applet"
 msgstr ""
 
 #: ../applets/maintained/feeds/feeds.desktop.in.h:2
-#: ../applets/maintained/feeds/feeds.py:783
+#: ../applets/maintained/feeds/feeds.py:784
 msgid "Monitor Web Feeds"
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:190
-#: ../applets/maintained/feeds/feeds.py:431
+#: ../applets/maintained/feeds/feeds.py:193
+#: ../applets/maintained/feeds/feeds.py:432
 #: ../applets/maintained/feeds/prefs.py:209
 #: ../applets/maintained/feeds/prefs.py:246
 #: ../applets/maintained/feeds/prefs.py:316
 msgid "Google Reader"
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:201
+#: ../applets/maintained/feeds/feeds.py:204
 #, python-format
 msgid ""
 "%s\n"
@@ -605,52 +663,52 @@ msgid ""
 "(%s More)\n"
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:222
+#: ../applets/maintained/feeds/feeds.py:225
 #, python-format
 msgid "%s New Items - Feeds Applet"
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:315
+#: ../applets/maintained/feeds/feeds.py:318
 msgid ""
 "Feeds Applet could not load all of your feeds.\n"
 "Check your Internet connection and\n"
 "click Refresh to try again."
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:334
+#: ../applets/maintained/feeds/feeds.py:337
 msgid "Hide Error"
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:340
+#: ../applets/maintained/feeds/feeds.py:343
 msgid ""
 "Feeds Applet could not login to Google Reader.\n"
 "Check your username and password."
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:350
+#: ../applets/maintained/feeds/feeds.py:353
 msgid "You don't have any feeds."
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:352
-#: ../applets/maintained/feeds/feeds.py:472
+#: ../applets/maintained/feeds/feeds.py:355
+#: ../applets/maintained/feeds/feeds.py:473
 msgid "_Add Feed"
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:414
+#: ../applets/maintained/feeds/feeds.py:415
 msgid "Open this feed's website"
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:466
-#: ../applets/maintained/feeds/feeds.py:615
+#: ../applets/maintained/feeds/feeds.py:467
+#: ../applets/maintained/feeds/feeds.py:616
 msgid "Show this feed's items"
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:605
+#: ../applets/maintained/feeds/feeds.py:606
 msgid "Hide this feed's items"
 msgstr ""
 
 #. Create the items
-#: ../applets/maintained/feeds/feeds.py:743
+#: ../applets/maintained/feeds/feeds.py:744
 #: ../applets/maintained/feeds/prefs.py:232
 msgid "Add Feed"
 msgstr ""
@@ -978,7 +1036,7 @@ msgstr ""
 
 #. set the title as well
 #. $display_name: $count item(s)
-#: ../applets/maintained/garbage/applet.vala:164
+#: ../applets/maintained/garbage/applet.vala:171
 #, c-format
 msgid "%s: %u item"
 msgid_plural "%s: %u items"
@@ -986,23 +1044,23 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: ../applets/maintained/garbage/applet.vala:187
+#: ../applets/maintained/garbage/applet.vala:194
 #, c-format
 msgid "Could not open the trash folder with your file manager: %s"
 msgstr ""
 
-#: ../applets/maintained/garbage/applet.vala:202
+#: ../applets/maintained/garbage/applet.vala:209
 #: ../applets/unmaintained/stacks/stacks_backend_trasher.py:107
 msgid "_Empty Trash"
 msgstr ""
 
-#: ../applets/maintained/garbage/applet.vala:231
+#: ../applets/maintained/garbage/applet.vala:238
 #, c-format
 msgid ""
 "Are you sure you want to empty your trash? It currently contains %u item(s)."
 msgstr ""
 
-#: ../applets/maintained/garbage/applet.vala:339
+#: ../applets/maintained/garbage/applet.vala:346
 #, c-format
 msgid "Could not send the dragged file(s) to the trash: %s"
 msgstr ""

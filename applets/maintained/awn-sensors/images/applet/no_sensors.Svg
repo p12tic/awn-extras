@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.0"
+   width="128"
+   height="128"
+   id="svg2">
+  <defs
+     id="defs4" />
+  <g
+     id="layer1">
+    <path
+       d="M 127.14286,63 A 63.57143,63.57143 0 1 1 0,63 A 63.57143,63.57143 0 1 1 127.14286,63 z"
+       transform="matrix(1.0067415,0,0,1.0067415,0,0.5752825)"
+       id="path2383"
+       style="fill:#0000ff" />
+    <text
+       x="64.019997"
+       y="45.859661"
+       id="text2385"
+       xml:space="preserve"
+       style="font-size:20.47473907px;font-style:normal;font-weight:normal;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"><tspan
+         x="64.019997"
+         y="45.859661"
+         id="tspan2387"
+         style="font-weight:bold;fill:#ffffff;-inkscape-font-specification:Bitstream Vera Sans Bold">NO</tspan><tspan
+         x="64.019997"
+         y="71.453087"
+         id="tspan2389"
+         style="font-weight:bold;fill:#ffffff;-inkscape-font-specification:Bitstream Vera Sans Bold">SENSORS</tspan><tspan
+         x="64.019997"
+         y="97.046509"
+         id="tspan2391"
+         style="font-weight:bold;fill:#ffffff;-inkscape-font-specification:Bitstream Vera Sans Bold">FOUND</tspan></text>
+  </g>
+</svg>

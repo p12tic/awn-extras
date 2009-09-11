@@ -47,7 +47,7 @@ static gchar *_G_mount_result_filemanager = NULL;
 
 typedef struct
 {
-  Menu_list_item ** data;
+  GSList ** data;
   void(* callback)(gpointer, gpointer);
   GtkWidget * box;
 
@@ -60,7 +60,7 @@ Monitor_places  * Monitor_place = NULL;
 //static void print_entry(GMenuTreeEntry *entry, const char *path);
 static char *make_path(GMenuTreeDirectory *directory);
 static void append_directory_path(GMenuTreeDirectory *directory, GString *path);
-static void update_places(Menu_list_item **p, char* file_manager);
+static void update_places(GSList **p, char* file_manager);
 static Menu_list_item *get_separator(void);
 static void _do_update_places(Monitor_places * user_data);
 static Menu_list_item *get_blank(void);
@@ -457,10 +457,10 @@ static Menu_list_item *get_blank(void)
   return item;
 }
 
-static void update_places(Menu_list_item **p, char* file_manager)
+static void update_places(GSList **p, char* file_manager)
 {
   static DesktopAgnosticVFSVolumeMonitor* vfsvolumes = NULL;
-  GSList * sublist = (*p)->sublist;
+  GSList * sublist = *p;
   Menu_list_item * item;
 
 
@@ -519,8 +519,8 @@ static void update_places(Menu_list_item **p, char* file_manager)
       g_warning ("Could not retrieve volume monitor.");
       return;
     }
-    g_signal_connect(G_OBJECT(vfsvolumes), "volume-mounted", G_CALLBACK(_vfs_changed_v_m), NULL);
-    g_signal_connect(G_OBJECT(vfsvolumes), "volume-unmounted", G_CALLBACK(_vfs_changed_v_u), NULL);
+    g_signal_connect(G_OBJECT(vfsvolumes), "volume-mounted", G_CALLBACK(_vfs_changed_v_m), Monitor_place);
+    g_signal_connect(G_OBJECT(vfsvolumes), "volume-unmounted", G_CALLBACK(_vfs_changed_v_u), Monitor_place);
   }
 
   GList *connected = desktop_agnostic_vfs_volume_monitor_get_volumes(vfsvolumes);
@@ -599,7 +599,7 @@ static void update_places(Menu_list_item **p, char* file_manager)
   }
   sublist = g_slist_append(sublist, get_blank());
 
-  (*p)->sublist = sublist;
+  *p = sublist;
 }
 
 void free_menu_list_item(Menu_list_item * item, gpointer null)
@@ -623,8 +623,8 @@ void free_menu_list_item(Menu_list_item * item, gpointer null)
   if (item->widget)
     gtk_widget_destroy(item->widget);
 
-  if (item->normal)
-    gtk_widget_destroy(item->normal);
+  //if (item->normal)
+   // gtk_widget_destroy(item->normal);
 
   if (item->hover)
     gtk_widget_destroy(item->hover);
@@ -650,8 +650,9 @@ void free_menu_list_item(Menu_list_item * item, gpointer null)
 
 static void _do_update_places(Monitor_places * user_data)
 {
-  g_slist_foreach((*user_data->data)->sublist, (GFunc)free_menu_list_item, NULL);
-  g_slist_free((*user_data->data)->sublist);
+  g_slist_foreach(*(user_data->data), (GFunc)free_menu_list_item, NULL);
+  g_slist_free(*(user_data->data));
+  g_debug ("%s: user_data->data %p",__func__,user_data->data);
   *(user_data->data) = NULL;
   update_places(user_data->data, G_file_manager); //FIXME
   user_data->callback(user_data->data, user_data->box);
@@ -665,6 +666,7 @@ static void monitor_places_callback(DesktopAgnosticVFSFileMonitor      *monitor,
                                     Monitor_places                     *user_data)
 {
 // gtk_widget_destroy(user_data->box);
+  g_debug ("%s: user->data = %p",__func__,user_data->data);
   _do_update_places(user_data);
 }
 
@@ -678,6 +680,8 @@ static void monitor_places(gpointer callback, gpointer data, gpointer box)
 
   Monitor_place = g_malloc(sizeof(Monitor_places));
   Monitor_place->data = data;
+  g_debug ("%s: data = %p",__func__,data);
+  g_debug ("%s: Monitor_place = %p",__func__,Monitor_place);
   Monitor_place->callback = callback;
   Monitor_place->box = box;
   const char *homedir = g_getenv("HOME");
@@ -712,6 +716,7 @@ static void monitor_places(gpointer callback, gpointer data, gpointer box)
 
   g_free(filename);
 
+  g_debug ("%s: %p",Monitor_place);
   g_signal_connect (monitor, "changed", G_CALLBACK (monitor_places_callback), Monitor_place);
 }
 
@@ -805,7 +810,7 @@ GSList* get_menu_data(gboolean show_search, gboolean show_run, gboolean show_pla
     dir_item->sublist = NULL;
     dir_item->monitor = monitor_places;
     data = g_slist_append(data, dir_item);
-    update_places(&dir_item, file_manager);
+    update_places(&dir_item->sublist, file_manager);
   }
 
   if (show_search)

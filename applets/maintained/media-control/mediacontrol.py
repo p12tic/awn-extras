@@ -230,7 +230,7 @@ class App (awn.AppletSimple):
 
         docklet.add(align)
 
-        docklet.applet_construct(window_id)
+        gtk.Plug.__init__(docklet, long(window_id))
         docklet.show_all()
 
     def icon_clicked(self, widget):

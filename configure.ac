@@ -5,7 +5,7 @@ m4_define(pygtk_required_version,        2.10.0)
 
 
 AC_INIT(awn-extras, 0.3.9, [])
-AM_INIT_AUTOMAKE([-Wno-portability 1.8])
+AM_INIT_AUTOMAKE([-Wno-portability 1.8 tar-ustar])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR(applets)
 AM_CONFIG_HEADER(config.h)
@@ -344,7 +344,6 @@ applets/maintained/places/Makefile
 applets/maintained/places/places.desktop.in
 applets/maintained/python-test/Makefile
 applets/maintained/quit/Makefile
-applets/maintained/rtm/Makefile
 applets/maintained/shiny-switcher/Makefile
 applets/maintained/shiny-switcher/shinyswitcher.desktop.in
 applets/maintained/showdesktop/Makefile
@@ -362,27 +361,11 @@ applets/maintained/webapplet/webapplet.desktop.in
 applets/maintained/wobblyzini/Makefile
 applets/maintained/wobblyzini/wobblyzini.desktop.in
 applets/maintained/yama/Makefile
-applets/unmaintained/arss/Makefile
-applets/unmaintained/awn-meebo/Makefile
-applets/unmaintained/comic/Makefile
-applets/unmaintained/DesktopManager/Makefile
-applets/unmaintained/digg/Makefile
-applets/unmaintained/filebrowser/Makefile
-applets/unmaintained/filebrowser/filebrowser.desktop.in
 applets/unmaintained/mail/Makefile
 applets/unmaintained/main-menu/Makefile
 applets/unmaintained/main-menu/main-menu.desktop.in
 applets/unmaintained/MiMenu/Makefile
 applets/unmaintained/pandora/Makefile
-applets/unmaintained/plugger/Makefile
-applets/unmaintained/plugger/plugger.desktop.in
-applets/unmaintained/pynot/Makefile
-applets/unmaintained/pynot-rgba/Makefile
-applets/unmaintained/separator/Makefile
-applets/unmaintained/separator/separator.desktop.in
-applets/unmaintained/stacks/Makefile
-applets/unmaintained/trasher/Makefile
-applets/unmaintained/trasher/trasher.desktop.in
 po/Makefile.in
 shared/python/__init__.py
 shared/python/Makefile

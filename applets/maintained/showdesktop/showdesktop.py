@@ -19,11 +19,10 @@ pygtk.require('2.0')
 import gtk
 
 import awn
-from awn.extras import awnlib
+from awn.extras import awnlib, __version__
 awn.check_dependencies(globals(), wnck=['xfce4.netk', 'wnck'])
 
 applet_name = "Show Desktop"
-applet_version = "0.3.3"
 applet_description = "An applet to hide your windows and show your desktop"
 
 # Applet's themed icon, also shown in the GTK About dialog
@@ -63,7 +62,7 @@ class ShowDesktopApplet:
 if __name__ == "__main__":
     awnlib.init_start(ShowDesktopApplet, {"name": applet_name,
         "short": "show-desktop",
-        "version": applet_version,
+        "version": __version__,
         "description": applet_description,
         "theme": applet_logo,
         "author": "Mehdi Abaakouk, onox",

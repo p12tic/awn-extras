@@ -1151,11 +1151,11 @@ static gboolean _focus_out_window(GtkWidget *widget, GdkEventButton *event, Mous
   return FALSE;
 }
 
-void rerender(Menu_list_item ** menu_items, GtkWidget *box)
+void rerender(GSList ** sublist, GtkWidget *box)
 {
   //printf("rerender\n");
   gtk_container_foreach(GTK_CONTAINER(box), (GtkCallback)gtk_widget_destroy, NULL);
-  g_slist_foreach((*menu_items)->sublist, (GFunc)render_menu_widgets, box);
+  g_slist_foreach(*sublist, (GFunc)render_menu_widgets, box);
   gtk_widget_show_all(box);
 
 }
@@ -1235,6 +1235,9 @@ void render_menu_widgets(Menu_list_item * menu_item, GtkWidget * box)
       of menu items and the vbox they are to be in*/
       if (menu_item->monitor)
       {
+        g_assert (GTK_IS_WIDGET(newbox));
+        g_debug ("%s: newbox = %p",newbox);
+        g_debug ("%s: &menu_item->sublist = %p",__func__,&menu_item->sublist);
         menu_item->monitor(rerender, &menu_item->sublist, newbox);
       }
 

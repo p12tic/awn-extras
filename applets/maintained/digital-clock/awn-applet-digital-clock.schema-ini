@@ -23,4 +23,14 @@ type = boolean
 default = true
 description = Show the date before the time.
 
+[commands/calendar]
+type = string
+default = evolution calendar:///?startdate=%02(year)d%02(month)d%02(day)dT120000
+description = Command to execute when a calendar day is double-clicked.
+
+[commands/adjust_datetime]
+type = string
+default = gksudo time-admin
+description = Command to execute when the user wishes to adjust the date/time.
+
 ; vim: set ft=dosini :

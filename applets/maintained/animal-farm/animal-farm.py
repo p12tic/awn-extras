@@ -24,11 +24,10 @@ import pygtk
 pygtk.require("2.0")
 import gtk
 
-from awn.extras import awnlib
+from awn.extras import awnlib, __version__
 import random
 
 applet_name = "Animal Farm"
-applet_version = "0.3.3"
 applet_description = "Applet that displays fortune messages"
 
 images_dir = os.path.join(os.path.dirname(__file__), "icons")
@@ -109,7 +108,7 @@ class AnimalFarmApplet:
 if __name__ == "__main__":
     awnlib.init_start(AnimalFarmApplet, {"name": applet_name,
         "short": "animal-farm",
-        "version": applet_version,
+        "version": __version__,
         "description": applet_description,
         "logo": applet_logo,
         "author": "Arvind Ganga",

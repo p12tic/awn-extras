@@ -53,6 +53,5 @@ EXTRA_DIST += \
 	AUTHORS NEWS INSTALL COPYING README \
 	ChangeLog \
 	notificationdaemon.xml \
-	po/Makefile.in.in \
 	$(schemas_in_files) \
 	$(NULL)

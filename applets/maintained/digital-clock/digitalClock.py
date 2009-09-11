@@ -67,7 +67,7 @@ class App(awn.AppletSimple):
                                     gtk.CALENDAR_SHOW_DAY_NAMES |
                                     gtk.CALENDAR_SHOW_WEEK_NUMBERS)
             cal.connect('day-selected-double-click',
-                        self.startEvolution)
+                        self.startExternalCalendar)
 
             self.dialog = awn.Dialog(self)
             # for focus-follows-mouse
@@ -80,11 +80,13 @@ class App(awn.AppletSimple):
 #        self.dialog.hide()
 #        self.dialog_visible = False
 
-    def startEvolution(self, cal):
-        date = cal.get_date()
-        cmd = 'evolution calendar:///?startdate=%02d%02d%02dT120000' % \
-              (date[0], date[1] + 1, date[2])
-        subprocess.Popen(cmd, shell=True)
+    def startExternalCalendar(self, calendar):
+        year, month, day = calendar.get_date()
+        data = {
+            'year': year,
+            'month': month + 1,
+            'day': day}
+        subprocess.Popen(self.prefs.props.calendar_command % data, shell=True)
 
 if __name__ == '__main__':
     awn.init(sys.argv[1:])

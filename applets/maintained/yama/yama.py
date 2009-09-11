@@ -25,7 +25,7 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 
-from awn.extras import awnlib
+from awn.extras import awnlib, __version__
 
 try:
     import dbus
@@ -38,7 +38,6 @@ import gmenu
 from xdg import DesktopEntry
 
 applet_name = "YAMA"
-applet_version = "0.3.3"
 applet_description = "Main menu with places and recent documents"
 
 # Applet's themed icon, also shown in the GTK About dialog
@@ -481,7 +480,7 @@ class YamaApplet:
 if __name__ == "__main__":
     awnlib.init_start(YamaApplet, {"name": applet_name,
         "short": "yama",
-        "version": applet_version,
+        "version": __version__,
         "description": applet_description,
         "theme": applet_logo,
         "author": "onox",

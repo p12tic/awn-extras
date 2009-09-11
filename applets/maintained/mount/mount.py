@@ -22,10 +22,9 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 
-from awn.extras import awnlib
+from awn.extras import awnlib, __version__
 
 applet_name = "Mount Applet"
-applet_version = "0.3.3"
 applet_description = "An applet to (un)mount devices"
 
 ui_file = os.path.join(os.path.dirname(__file__), "mount.ui")
@@ -142,7 +141,7 @@ class MountApplet:
 if __name__ == "__main__":
     awnlib.init_start(MountApplet, {"name": applet_name,
         "short": "mount",
-        "version": applet_version,
+        "version": __version__,
         "description": applet_description,
         "logo": applet_logo,
         "author": "onox",

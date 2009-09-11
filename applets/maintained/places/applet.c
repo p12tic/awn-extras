@@ -92,6 +92,7 @@ typedef struct
   DesktopAgnosticConfigClient  *config;
 
   gchar * uid;
+  guint   cookie;  
 }Places;
 
 
@@ -1163,11 +1164,17 @@ static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, 
     if (GTK_WIDGET_VISIBLE(places->mainwindow))
     {
       gtk_widget_hide(places->mainwindow);
+      if (places->cookie)
+      {
+        awn_applet_uninhibit_autohide (AWN_APPLET(places->applet), places->cookie);
+        places->cookie=0;
+      }
     }
     else
     {
       gtk_widget_show_all(places->mainwindow);
       pos_dialog(places->mainwindow, places);
+      places->cookie = awn_applet_inhibit_autohide (AWN_APPLET(places->applet), "PlacesMenuActive");
 //      awn_applet_simple_set_title_visibility(AWN_APPLET_SIMPLE(places->applet),FALSE);
     }
   }
@@ -1191,7 +1198,6 @@ static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, 
                                                   NULL);
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
     }
-
     gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL, event_button->button, event_button->time);
   }
 
@@ -1205,6 +1211,11 @@ static gboolean _focus_out_event(GtkWidget *widget, GdkEventButton *event, Place
   if (desktop_agnostic_config_client_get_bool(client, "shared", "dialog_focus_loss_behavior", NULL))
   {
     gtk_widget_hide(places->mainwindow);
+    if (places->cookie)
+    {
+      awn_applet_uninhibit_autohide (AWN_APPLET(places->applet), places->cookie);
+      places->cookie=0;
+    }    
   }
 
   return TRUE;

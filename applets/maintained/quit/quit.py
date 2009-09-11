@@ -17,6 +17,7 @@
 
 import commands
 import subprocess
+import sys
 from threading import Thread
 
 import pygtk
@@ -24,13 +25,13 @@ pygtk.require("2.0")
 import gtk
 
 import awn
-from awn.extras import awnlib
+from awn.extras import awnlib, __version__
 
 import dbus
 import pango
 
 applet_name = "Quit-Log Out"
-applet_version = "0.3.3"
+#applet_version = "0.3.3"
 applet_description = "An applet to lock your screen, log out of your session, or shut down the system"
 
 # Themed logo of the applet, shown in the GTK About dialog
@@ -51,6 +52,17 @@ actions_label_icon = {
 "Show Docklet": ("Show Docklet", "application-exit")
 }
 actions_label_icon.update(docklet_actions_label_icon)
+
+action_args = {
+"--lockscreen": "Lock Screen",
+"--logout": "Log Out",
+"--shutdown": "Shut Down"
+}
+
+action = sys.argv[1] if sys.argv[1] in action_args.keys() else None
+if action is not None:
+    del sys.argv[1]
+    applet_logo = docklet_actions_label_icon[action_args[action]][1]
 
 
 class QuitLogOutApplet:
@@ -85,7 +97,12 @@ class QuitLogOutApplet:
         else:
             self.lock_screen_cb = self.other_lock_screen
 
-        self.setup_context_menu()
+        self.load_settings()
+        if action is None:
+            self.setup_context_menu()
+        else:
+            left_click_actions.remove("Show Docklet")
+            applet.settings["left-click-action"] = action_args[action]
 
         # Initialize tooltip and icon
         self.refresh_tooltip_icon_cb(self.settings["left-click-action"])
@@ -159,7 +176,7 @@ class QuitLogOutApplet:
                     label_label.props.angle = 270
 
         docklet.add(align)
-        docklet.applet_construct(window_id)
+        gtk.Plug.__init__(docklet, long(window_id))
         docklet.show_all()
 
     def show_docklet(self):
@@ -172,23 +189,24 @@ class QuitLogOutApplet:
         self.applet.tooltip.set(label)
         self.applet.icon.theme(icon)
 
-    def setup_dialog_settings(self, vbox):
+    def load_settings(self):
         defaults = {
-            "left-click-action": ("Log Out", self.refresh_tooltip_icon_cb),
+            "left-click-action": ("Show Docklet", self.refresh_tooltip_icon_cb),
             "log-out-command": "xfce4-session-logout",
             "lock-screen-command": "xscreensaver-command"
         }
         self.settings = self.applet.settings.load_preferences(defaults)
 
         if self.settings["left-click-action"] not in left_click_actions:
-            self.applet.settings["left-click-action"] = "Log Out"
+            self.applet.settings["left-click-action"] = "Show Docklet"
 
+        assert self.log_out_cb == self.gnome_log_out or "Shut Down" not in left_click_actions
+
+    def setup_dialog_settings(self, vbox):
         hbox = gtk.HBox(spacing=12)
         # Use non-zero border width to align the entry with the close button
         hbox.set_border_width(5)
         vbox.add(hbox)
-
-        assert self.log_out_cb == self.gnome_log_out or "Shut Down" not in left_click_actions
 
         combobox = gtk.combo_box_new_text()
         for i in left_click_actions:
@@ -257,7 +275,7 @@ class QuitLogOutApplet:
 
 if __name__ == "__main__":
     awnlib.init_start(QuitLogOutApplet, {"name": applet_name, "short": "quit",
-        "version": applet_version,
+        "version": __version__,
         "description": applet_description,
         "theme": applet_logo,
         "author": "onox",

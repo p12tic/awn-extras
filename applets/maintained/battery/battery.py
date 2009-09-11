@@ -23,7 +23,7 @@ pygtk.require('2.0')
 import gtk
 from gtk import gdk
 
-from awn.extras import awnlib
+from awn.extras import awnlib, __version__
 from messagehandler import MessageHandler
 
 try:
@@ -35,7 +35,6 @@ except ImportError:
 check_status_interval = 5.0
 
 applet_name = "Battery Status"
-applet_version = "0.3.3"
 applet_description = "An applet which displays battery information"
 
 # Themed logo of the applet, used as the applet's icon and shown in the GTK About dialog
@@ -420,7 +419,7 @@ backends = [HalBackend]
 if __name__ == "__main__":
     awnlib.init_start(BatteryStatusApplet, {"name": applet_name,
         "short": "battery",
-        "version": applet_version,
+        "version": __version__,
         "description": applet_description,
         "theme": applet_theme_logo,
         "author": "onox, Randal Barlow",

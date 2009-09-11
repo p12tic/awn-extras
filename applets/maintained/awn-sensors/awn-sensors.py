@@ -31,17 +31,6 @@ except:
     import sys
     sys.exit(1)
 
-# == i18n stuff == #
-# Initialize localization
-#import gettext
-
-#app_name = "awn-sensors"
-#locale_dir = os.path.dirname(__file__) + '/locale'
-#gettext.install(app_name, locale_dir, unicode=1)
-# Init localization for glade widgets
-#gtk.glade.bindtextdomain(app_name, locale_dir)
-#gtk.glade.textdomain(app_name)
-
 from awn.extras import awnlib
 from awn.extras import _
 
@@ -87,22 +76,25 @@ class SensorsApplet:
         self.applet = applet
         
         # Icon path
-        self.applet_icon_dir = os.path.dirname(__file__) + "/images/applet/"
+        images_dir = os.path.dirname(__file__) + "/images/"
+        self.applet_icon_dir = images_dir + "applet/"
         
         # Init sensors
         no_sensors = not self.create_all_sensors()
         
         # If no sensors were found, display warning massage and icon, then exit
         if no_sensors:
-            massage = _("Warning: No sensors found. Install one or more of \
+            message = _("Warning: No sensors found. Install one or more of \
 ACPI, HDDTemp, LM-Sensors and restart the applet.")
             
-            print massage
+            print message
             
             # Show massage with awn notify
-            self.applet.notify.send(subject=None, body=massage, icon="")
+            self.applet.notify.send(subject=None, body=message, icon="")
             # Show "no sensors found" icon
-            self.applet.icon.file(self.applet_icon_dir + "no_sensors.Svg")
+            self.applet.icon.file(images_dir + "no_sensors.svg",
+                                                        size=applet.get_size())
+            self.applet.tooltip.set(message)
             return
         
         self.update_all_sensors()
@@ -129,6 +121,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         """
         Initialize sensors for all interfaces. Return False if no sensors are
         found.
+        
         """
         self.interfaces = []
         self.interfaces.append(acpisensors.interface_name)

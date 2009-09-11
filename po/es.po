@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: awn-core-applets 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-09-11 00:43+0200\n"
+"POT-Creation-Date: 2009-09-11 16:07+0200\n"
 "PO-Revision-Date: 2007-10-07 22:29-0400\n"
 "Last-Translator: Mike Desjardins <desjardinsmike@gmail.com>\n"
 "Language-Team: Spanish\n"
@@ -55,31 +55,39 @@ msgstr ""
 msgid "No .svg images found in directory:"
 msgstr ""
 
-#: ../applets/maintained/awn-sensors/awn-sensors.py:518
+#: ../applets/maintained/awn-sensors/awn-sensors.py:519
 msgid "Interface"
 msgstr ""
 
-#: ../applets/maintained/awn-sensors/awn-sensors.py:520
+#: ../applets/maintained/awn-sensors/awn-sensors.py:521
 msgid "Name"
 msgstr ""
 
-#: ../applets/maintained/awn-sensors/awn-sensors.py:522
+#: ../applets/maintained/awn-sensors/awn-sensors.py:523
 msgid "Label"
 msgstr ""
 
 #. Set the cell "active" attribute to column_show - retrieve the state
 #. of the toggle button from that column in liststore
-#: ../applets/maintained/awn-sensors/awn-sensors.py:526
+#: ../applets/maintained/awn-sensors/awn-sensors.py:527
 msgid "In dialog"
 msgstr ""
 
 #. Add treeview-column to treeview
-#: ../applets/maintained/awn-sensors/awn-sensors.py:563
+#: ../applets/maintained/awn-sensors/awn-sensors.py:564
 msgid "Sensors displayed in icon"
 msgstr ""
 
-#: ../applets/maintained/awn-sensors/awn-sensors.py:581
+#: ../applets/maintained/awn-sensors/awn-sensors.py:582
 msgid "properties"
+msgstr ""
+
+#: ../applets/maintained/awn-sensors/awn-sensors.desktop.in.h:1
+msgid "Applet to show the hw sensors readouts"
+msgstr ""
+
+#: ../applets/maintained/awn-sensors/awn-sensors.desktop.in.h:2
+msgid "Awn Sensors"
 msgstr ""
 
 #: ../applets/maintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in.h:1

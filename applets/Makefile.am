@@ -56,6 +56,7 @@ SUBDIRS = \
 	maintained/comics \
 	maintained/cpufreq \
 	maintained/digital-clock \
+	unmaintained/dropper \
 	maintained/feeds \
 	maintained/file-browser-launcher \
 	maintained/gwibfawn \

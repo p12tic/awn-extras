@@ -37,22 +37,27 @@ class SensorIcon():
             height: icon height in pixels
         
         """
+        self.filename = filename
         self.sensors = sensors
         self.height = height
         
-        self.set_icon_file(filename)
+        self.create_background()
     
     def set_height(self, height):
         """Set icon height."""
         self.height = height
+        self.create_background()
     
     def set_sensors(self, sensors):
         """Set sensors who's values are shown in this icon."""
         self.sensors = sensors
     
     def set_icon_file(self, filename):
-        background = rsvg.Handle(filename)
-        
+        self.filename = filename
+        self.create_background()
+    
+    def create_background(self):
+        background = rsvg.Handle(self.filename)
         self.background_surface = cairo.ImageSurface(
                                  cairo.FORMAT_ARGB32, self.height, self.height)
         background_context = cairo.Context(self.background_surface)
@@ -107,54 +112,5 @@ class SensorIcon():
             # Turn the mask back to the originale state (before translation and
             # rotation)
             context.restore()
-        
-        # == Show text == #
-        text_y = height * 6/7
-        # Set font
-        context.set_font_size(11.0)
-        context.select_font_face("Deja Vu",
-                                 cairo.FONT_SLANT_NORMAL,
-                                 cairo.FONT_WEIGHT_NORMAL)
-        
-        # Only one or two values ca be displayed
-        text_x_prim, text_x_sec = None, None
-        if len(values) == 1:
-            value = values[0]
-            text_x_prim = width/2 - len(str(value)) * 3.5
-        elif len(values) > 1:
-            value_prim = values[0]
-            value_sec = values[1]
-            delta = (len(str(value_prim)) + len(str(value_sec))) * 3.5 + 2
-            text_x_prim = width/2 - delta
-            delta = delta - len(str(value_prim)) * 7 - 4
-            text_x_sec = width/2 - delta
-        
-        # Show first value
-        if (text_x_prim != None):
-            # Text Shadow
-#                context.move_to(text_x+2,text_y+2)
-#                context.set_source_rgba(0,0,0,.8)
-#                context.show_text(text)
-    
-            # Text
-            context.move_to(text_x_prim, text_y)
-            (red, green, blue, alpha) = self.sensors[0].text_color
-            context.set_source_rgba(float(red) / 65535, float(green) / 65535,
-                                    float(blue) / 65535, float(alpha) / 65535)
-            context.show_text(str(values[0]))
-        
-        # Show secon value
-        if (text_x_sec != None):
-            # Text Shadow
-#                context.move_to(text_x+2,text_y+2)
-#                context.set_source_rgba(0,0,0,.8)
-#                context.show_text(text)
-    
-            # Text
-            context.move_to(text_x_sec, text_y)
-            (red, green, blue, alpha) = self.sensors[1].text_color
-            context.set_source_rgba(float(red) / 65535, float(green) / 65535,
-                                    float(blue) / 65535, float(alpha) / 65535)
-            context.show_text(str(values[1]))
         
         return context

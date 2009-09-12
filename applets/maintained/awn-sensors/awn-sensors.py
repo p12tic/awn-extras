@@ -22,17 +22,11 @@
 
 import os
 
-import gobject
-try:
-    import pygtk
-    pygtk.require('2.0')
-    import gtk
-except:
-    import sys
-    sys.exit(1)
+import gtk
 
-from awn.extras import awnlib
-from awn.extras import _
+from awn.extras import _, awnlib
+from awn.extras import VERSION
+from awn import OverlayText
 
 from interfaces import sensorinterface
 from interfaces import acpisensors
@@ -108,7 +102,13 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         self.setup_preferences()
         
         # == Icon == #
+        self.__temp_overlay = OverlayText()
+        self.__temp_overlay.props.font_sizing = 12
+        self.__temp_overlay.props.y_override = 31
+        applet.add_overlay(self.__temp_overlay)
+        
         self.create_icon()
+        
         # Recreate upon awn height change
         self.applet.connect_size_changed(self.height_changed_cb)
         
@@ -200,13 +200,18 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
             # Set updated icon
             self.applet.icon.set(context)
             
+            # Update overlay
+            if len(values) is 1:
+                overlay_text = str(values[0])
+            else:
+                overlay_text = str(values[0]) + " " + str(values[1])
+            
+            self.__temp_overlay.props.text = overlay_text
+            
             # Update title
-            title = ""
-            for main_sensor in self.main_sensors:
-                title += "%s: %d %s   " % (main_sensor.label,
-                                           main_sensor.value,
-                                           main_sensor.unit_str)
-            self.applet.tooltip.set(title[:-3])
+            title = "   ".join(["%s: %d %s" % (s.label, s.value, s.unit_str)
+                                                   for s in self.main_sensors])
+            self.applet.tooltip.set(title)
     
     
     # == Applet dialog == envoked by cliking the applet with left mouse button
@@ -649,9 +654,9 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         """Show alarm message with awn notify."""
         self.applet.notify.send(subject=None, body=message, icon="")
     
-    def height_changed_cb(self, widget, event):
+    def height_changed_cb(self):
         """Update the applet's icon to reflect the new height."""
-        self.icon.set_height(self.applet.get_height())
+        self.icon.set_height(self.applet.get_size())
         # Force icon update
         self.update_icon(True)
     

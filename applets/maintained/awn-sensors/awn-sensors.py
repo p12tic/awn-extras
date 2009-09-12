@@ -24,8 +24,7 @@ import os
 
 import gtk
 
-from awn.extras import _, awnlib
-from awn.extras import VERSION
+from awn.extras import _, awnlib, __version__
 from awn import OverlayText
 
 from interfaces import sensorinterface
@@ -45,7 +44,6 @@ from sensorvalues import units
 import sensoricon
 
 applet_name = "Awn Sensors"
-applet_version = "0.3.9"
 applet_description = _("Applet to show the hardware sensors readouts")
 
 # Applet's logo, used as the applet's icon and shown in the GTK About dialog
@@ -965,7 +963,7 @@ if __name__ == "__main__":
     awnlib.init_start(SensorsApplet, {
         "name": applet_name,
         "short": "awn-sensors",
-        "version": applet_version,
+        "version": __version__,
         "description": applet_description,
         "logo": applet_logo,
         "author": "Grega Podlesek",

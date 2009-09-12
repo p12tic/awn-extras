@@ -33,13 +33,13 @@ dist_sensorvalues_DATA =		\
 
 imagesdir = $(applet_datadir)/images
 dist_images_DATA =			\
+	images/no_sensors.svg	\
 	images/thermometer.png	\
 	images/thermometer.svg	\
 	$(NULL)
 
 applet_imagesdir = $(applet_datadir)/images/applet
 dist_applet_images_DATA =					\
-	images/applet/no_sensors.Svg			\
 	images/applet/dark_shiny_boarder.svg	\
 	images/applet/dark_shiny.svg			\
 	images/applet/dark.svg					\

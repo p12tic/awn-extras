@@ -1,4 +1,5 @@
-- use is / is not when comparing to None
+- rename all private variables to __varible_name__ format
+- use is/is not when comparing to None
 - and you can do from awn.extras import awnlib, _, __version__
  and then use __version__ instead of applet_version
  that :)

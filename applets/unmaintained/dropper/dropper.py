@@ -26,10 +26,23 @@ from desktopagnostic import config
 
 class ActionItem(gtk.EventBox):
     __gtype_name__ = 'ActionItem'
+    __gsignals__ = {
+        'drag-finished':
+            (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ()),
+        'drag-data-received-simple':
+            (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+                [gobject.TYPE_STRING])
+    }
 
     def __init__(self, pixbuf, label):
         gtk.EventBox.__init__(self)
 
+        self.hovering = False
+
+        pad = gtk.Alignment()
+        self.pad_size = pixbuf.get_width() / 10
+        pad.set_padding(self.pad_size, self.pad_size,
+                        self.pad_size, self.pad_size)
         vbox = gtk.VBox()
         vbox.set_spacing(12)
 
@@ -40,7 +53,8 @@ class ActionItem(gtk.EventBox):
 
         vbox.add(self.img)
         vbox.add(self.text)
-        self.add(vbox)
+        pad.add(vbox)
+        self.add(pad)
 
         # Init transparent colormap
         cm = self.get_screen().get_rgba_colormap()
@@ -58,6 +72,19 @@ class ActionItem(gtk.EventBox):
         cr.set_source_rgba(0, 0, 0, 0.5)
         cr.paint()
 
+        if self.hovering:
+            line_width = self.pad_size / 3
+            awn.cairo_rounded_rect(cr, line_width, line_width,
+                                   self.allocation.width - line_width*2,
+                                   self.allocation.height - line_width*2,
+                                   10, awn.ROUND_ALL)
+            cr.set_source_rgba(0.2, 0.2, 0.2, 0.5)
+            cr.fill_preserve()
+            cr.set_operator(cairo.OPERATOR_SOURCE)
+            cr.set_source_rgba(0.8, 0.8, 0.8, 0.75)
+            cr.set_line_width(line_width)
+            cr.stroke()
+
         del cr
 
         # propagate expose
@@ -73,29 +100,35 @@ class ActionItem(gtk.EventBox):
                            gtk.gdk.ACTION_MOVE)
 
         self.connect("drag-data-received", self.do_data_received)
+        self.connect("drag-data-received-simple", self.do_data_received_simple)
         self.connect("drag-motion", self.drag_motion_cb)
         self.connect("drag-leave", self.drag_leave_cb)
 
     def drag_motion_cb(self, widget, context, x, y, time):
         self.img.get_effects().start(awn.EFFECT_HOVER)
+        if not self.hovering:
+            self.hovering = True
+            self.queue_draw()
         return True
 
     def drag_leave_cb(self, widget, context, time):
         self.img.get_effects().stop(awn.EFFECT_HOVER)
+        self.hovering = False
+        self.queue_draw()
         return True
 
-    # this method should be overriden
-    def do_data_received_simple(self, data):
-        print "received_simple was called"
-        return False
+    # this method can be overriden
+    def do_data_received_simple(self, widget, data):
+        print "received_simple was called, data:", data
 
     # this method can be also overriden if simple is not enough
     def do_data_received(self, wdgt, context, x, y, selection,
                          targetType, time):
         # stop the effect
         self.img.get_effects().stop(awn.EFFECT_HOVER)
+        self.hovering = False
 
-        self.do_data_received_simple(selection.data)
+        self.emit('drag-data-received-simple', selection.data)
 
         context.finish(True, False, time)
         self.emit("drag-finished")
@@ -104,6 +137,9 @@ class ActionItem(gtk.EventBox):
 
 class OverlayWindow(gtk.Window):
     __gtype_name__ = 'OverlayWindow'
+    __gsignals__ = {
+        'drag-finished': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ())
+    }
 
     def __init__(self, uid):
         gtk.Window.__init__(self, gtk.WINDOW_POPUP)
@@ -135,6 +171,7 @@ class OverlayWindow(gtk.Window):
         self.icon_cache = awn.ThemedIcon()
         self.icon_cache.set_applet_info("dropper", uid)
         self.icon_cache.set_info_append("icon-1", "stock_internet")
+        self.icon_cache.set_info_append("icon-2", "stock_open")
 
         self.init_components()
 
@@ -186,20 +223,20 @@ class OverlayWindow(gtk.Window):
     def get_action_widgets(self):
         widgets = []
 
-        pixbuf = self.icon_cache.get_icon_at_size(128, "icon-1")
+        pixbuf_size = 96
+
+        pixbuf = self.icon_cache.get_icon_at_size(pixbuf_size, "icon-2")
+        widgets.append(ActionItem(pixbuf, 'Open'))
+
+        pixbuf = self.icon_cache.get_icon_at_size(pixbuf_size, "icon-1")
         widgets.append(ActionItem(pixbuf, 'Send to Pastebin'))
-        
+
         return widgets
 
     def no_target_drop(self, wdgt, context, x, y, selection, targetType, time):
         context.finish(True, False, time)
         self.emit("drag-finished")
         return True
-
-gobject.signal_new("drag-finished", OverlayWindow, gobject.SIGNAL_RUN_FIRST,
-                   gobject.TYPE_NONE, ())
-gobject.signal_new("drag-finished", ActionItem, gobject.SIGNAL_RUN_FIRST,
-                   gobject.TYPE_NONE, ())
 
 class DropperApplet(awn.AppletSimple):
 
@@ -233,6 +270,7 @@ class DropperApplet(awn.AppletSimple):
 
         self.timer_overlay = awn.OverlayProgressCircle()
         self.timer_overlay.props.active = False
+        self.timer_overlay.props.apply_effects = False
         self.get_icon().add_overlay(self.timer_overlay)
 
         # Standard AWN Connects

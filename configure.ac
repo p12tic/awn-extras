@@ -326,7 +326,7 @@ applets/maintained/calendar/Makefile
 applets/maintained/comics/Makefile
 applets/maintained/cpufreq/Makefile
 applets/maintained/digital-clock/Makefile
-applets/maintained/dropper/Makefile
+applets/unmaintained/dropper/Makefile
 applets/maintained/feeds/Makefile
 applets/maintained/file-browser-launcher/Makefile
 applets/maintained/garbage/Makefile

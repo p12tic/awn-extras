@@ -63,61 +63,85 @@ class Sensor(object):
         
         self.alarm_cb = None
     
-    @property
-    def value(self):
-        """Sensor's current value"""
-        return self.__value.value
+    def value():
+        doc = """Sensor's current value"""
+       
+        def fget(self):
+            return self.__value.value
+           
+        def fset(self, value):
+            self.__value.raw_value = float(value)
+            self.check_alarms()
+           
+        return locals()
+       
+    value = property(**value())
     
-    @value.setter
-    def value(self, value):
-        self.__value.raw_value = float(value)
-        self.check_alarms()
+    def low_value():
+        doc = """Low value bound"""
+       
+        def fget(self):
+            return self.__value.low_value
+           
+        def fset(self, value):
+            self.__value.low_value = value
+           
+        return locals()
+       
+    low_value = property(**low_value())
     
-    @property
-    def low_value(self):
-        """Low value bound"""
-        return self.__value.low_value
+    def raw_low_value():
+        doc = """Low value bound (in default unit)"""
+       
+        def fget(self):
+            return self.__value.raw_low_value
+           
+        def fset(self, value):
+            self.__value.raw_low_value = value
+           
+        return locals()
+       
+    raw_low_value = property(**raw_low_value())
     
-    @low_value.setter
-    def low_value(self, value):
-        self.__value.low_value = value
+    def high_value():
+        doc = """High value bound"""
+       
+        def fget(self):
+            return self.__value.high_value
+           
+        def fset(self, value):
+            self.__value.high_value = value
+           
+        return locals()
+       
+    high_value = property(**high_value())
     
-    @property
-    def raw_low_value(self):
-        """Low value bound (in default unit)"""
-        return self.__value.raw_low_value
+    def raw_high_value():
+        doc = """High value bound (in default unit)"""
+       
+        def fget(self):
+            return self.__value.raw_high_value
+           
+        def fset(self, value):
+            self.__value.raw_high_value = value
+           
+        return locals()
+       
+    raw_high_value = property(**raw_high_value())
     
-    @raw_low_value.setter
-    def raw_low_value(self, value):
-        self.__value.raw_low_value = value
-    
-    @property
-    def high_value(self):
-        """High value bound"""
-        return self.__value.high_value
-    
-    @high_value.setter
-    def high_value(self, value):
-        self.__value.high_value = value
-    
-    @property
-    def raw_high_value(self):
-        """High value bound (in default unit)"""
-        return self.__value.raw_high_value
-    
-    @raw_high_value.setter
-    def raw_high_value(self, value):
-        self.__value.raw_high_value = value
-    
-    @property
-    def unit(self):
-        """Unit in which the sensor's value is presented"""
-        return self.__value.unit
-    
-    @unit.setter
-    def unit(self, unit):
-        if self.__value.__class__ is TempValue:
-            self.__value.unit = unit
+    def unit():
+        doc = """Unit in which the sensor's value is presented"""
+        
+        def fget(self):
+            return self.__value.unit
+        
+        def fset(self, unit):
+            if self.__value.__class__ is TempValue:
+                self.__value.unit = unit
+        
+        return locals()
+       
+    unit = property(**unit())
     
     @property
     def unit_str(self):

@@ -37,22 +37,34 @@ class TempValue(SensorValue):
         """Current value"""
         return self.to_unit(int(self.raw_value))
     
-    @property
-    def low_value(self):
-        return self.to_unit(self.raw_low_value)
+    def low_value():
+        doc = """Low value limit (at which alarm triggers). Also used for
+        minimum needle angle in applet icon."""
+       
+        def fget(self):
+            return self.to_unit(self.raw_low_value)
+           
+        def fset(self, value):
+            self.raw_low_value = self.from_unit(int(low_value))
+           
+        return locals()
+       
+    low_value = property(**low_value())
     
-    @low_value.setter
-    def low_value(self, low_value):
-        self.raw_low_value = self.from_unit(int(low_value))
+    def high_value():
+        doc = """High value limit (at which alarm triggers). Also used for
+        maximum needle angle in applet icon."""
+       
+        def fget(self):
+            return self.to_unit(self.raw_high_value)
+           
+        def fset(self, value):
+            self.raw_high_value = self.from_unit(int(high_value))
+           
+        return locals()
+       
+    high_value = property(**high_value())
     
-    @property
-    def high_value(self):
-        return self.to_unit(self.raw_high_value)
-    
-    @high_value.setter
-    def high_value(self, high_value):
-        self.raw_high_value = self.from_unit(int(high_value))
-
     def to_unit(self, value):
         if self.unit is UNIT_FAHRENHEIT:
             return int(value * 9/5 + 32)

@@ -41,6 +41,8 @@ public class GarbagePrefs : Dialog
   {
     CheckButton empty_button, count_button;
 
+    this.vbox.spacing = 5;
+
     empty_button =
       new CheckButton.with_mnemonic (Gettext._ ("Confirm when emptying the trash"));
     empty_button.active = this._applet.confirm_empty;
@@ -51,6 +53,9 @@ public class GarbagePrefs : Dialog
     count_button.active = this._applet.show_count;
     count_button.toggled.connect (this.on_count_toggled);
     this.vbox.add (count_button);
+
+    this.add_button (STOCK_CLOSE, ResponseType.CLOSE);
+    this.response.connect (this.on_response);
   }
 
   private void
@@ -63,6 +68,12 @@ public class GarbagePrefs : Dialog
   on_count_toggled (ToggleButton button)
   {
     this._applet.show_count = button.active;
+  }
+
+  private void
+  on_response (int response_id)
+  {
+    this.hide ();
   }
 }
 

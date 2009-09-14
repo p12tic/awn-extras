@@ -36,6 +36,7 @@ public class GarbageApplet : AppletSimple
   private Client config;
   private Menu menu;
   private MenuItem empty_menu_item;
+  private GarbagePrefs? prefs;
   private OverlayText? text_overlay;
   private OverlayThrobber? throbber_overlay;
   private OverlayProgress? progress_overlay;
@@ -269,10 +270,11 @@ public class GarbageApplet : AppletSimple
   private void
   on_menu_prefs_activate ()
   {
-    GarbagePrefs dialog;
-
-    dialog = new GarbagePrefs (this);
-    dialog.show_all ();
+    if (this.prefs == null)
+    {
+      this.prefs = new GarbagePrefs (this);
+    }
+    this.prefs.show_all ();
   }
   private void
   trash_changed ()

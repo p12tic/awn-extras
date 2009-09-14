@@ -35,13 +35,6 @@
          stop-color="#ff0000"
          id="stop2875" />
     </linearGradient>
-    <inkscape:perspective
-       sodipodi:type="inkscape:persp3d"
-       inkscape:vp_x="0 : 32 : 1"
-       inkscape:vp_y="0 : 1000 : 0"
-       inkscape:vp_z="64 : 32 : 1"
-       inkscape:persp3d-origin="32 : 21.333333 : 1"
-       id="perspective2951" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#LinearGradient"
@@ -69,8 +62,8 @@
      inkscape:grid-bbox="true"
      inkscape:window-width="642"
      inkscape:window-height="721"
-     inkscape:window-x="4"
-     inkscape:window-y="117" />
+     inkscape:window-x="1425"
+     inkscape:window-y="273" />
   <metadata
      id="metadata2948">
     <rdf:RDF>

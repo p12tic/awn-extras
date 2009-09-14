@@ -1236,7 +1236,7 @@ void render_menu_widgets(Menu_list_item * menu_item, GtkWidget * box)
       if (menu_item->monitor)
       {
         g_assert (GTK_IS_WIDGET(newbox));
-        g_debug ("%s: newbox = %p",newbox);
+        g_debug ("%s: newbox = %p",__func__,newbox);
         g_debug ("%s: &menu_item->sublist = %p",__func__,&menu_item->sublist);
         menu_item->monitor(rerender, &menu_item->sublist, newbox);
       }

@@ -314,7 +314,6 @@ AC_OUTPUT([
 Makefile
 applets/Makefile
 applets/maintained/animal-farm/Makefile
-applets/maintained/awn-sensors/Makefile
 applets/maintained/awnsystemmonitor/Makefile
 applets/maintained/awnsystemmonitor/awnsystemmonitor.desktop.in
 applets/maintained/awnterm/Makefile
@@ -332,6 +331,7 @@ applets/maintained/file-browser-launcher/Makefile
 applets/maintained/garbage/Makefile
 applets/maintained/garbage/garbage.desktop.in
 applets/maintained/gwibfawn/Makefile
+applets/maintained/hardware-sensors/Makefile
 applets/maintained/media-control/Makefile
 applets/maintained/media-icons/Makefile
 applets/maintained/media-player/Makefile

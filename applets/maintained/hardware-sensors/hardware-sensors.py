@@ -43,12 +43,13 @@ from sensorvalues import units
 
 import sensoricon
 
-applet_name = "Awn Sensors"
+applet_name = "Hardware Sensors"
+short_name = "hardware-sensors"
 applet_description = _("Applet to show the hardware sensors readouts")
 
 # Applet's logo, used as the applet's icon and shown in the GTK About dialog
 applet_logo = os.path.join(os.path.dirname(__file__), "images/thermometer.svg")
-ui_file = os.path.join(os.path.dirname(__file__), "awn-sensors.ui")
+ui_file = os.path.join(os.path.dirname(__file__), "hardware-sensors.ui")
 
 
 class SensorsApplet:
@@ -962,7 +963,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
 if __name__ == "__main__":
     awnlib.init_start(SensorsApplet, {
         "name": applet_name,
-        "short": "awn-sensors",
+        "short": short_name,
         "version": __version__,
         "description": applet_description,
         "logo": applet_logo,

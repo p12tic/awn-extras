@@ -50,7 +50,6 @@ endif
 # please keep alphabetized
 SUBDIRS = \
 	maintained/animal-farm \
-	maintained/awn-sensors \
 	maintained/awnterm \
 	maintained/battery \
 	maintained/cairo-clock \
@@ -60,6 +59,7 @@ SUBDIRS = \
 	maintained/feeds \
 	maintained/file-browser-launcher \
 	maintained/gwibfawn \
+	maintained/hardware-sensors \
 	unmaintained/mail \
 	maintained/media-icons \
 	maintained/media-player \

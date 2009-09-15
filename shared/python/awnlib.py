@@ -836,11 +836,7 @@ class Settings:
             elif widget_type is ColorButton:
                 def color_set_cb(widget, name):
                     self[name] = widget.props.da_color
-                value = self.__dict[key]
-                color = gtk.gdk.Color()
-                value.get_color(color)
-                key_widget.set_color(color)
-                key_widget.set_alpha(value.get_alpha())
+                key_widget.props.da_color = self.__dict[key]
                 key_widget.connect("color-set", color_set_cb, key)
             else:
                 raise RuntimeError("%s is unsupported" % widget_type.__name__)

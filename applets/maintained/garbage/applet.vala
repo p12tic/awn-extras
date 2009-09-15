@@ -36,6 +36,7 @@ public class GarbageApplet : AppletSimple
   private Client config;
   private Menu menu;
   private MenuItem empty_menu_item;
+  private GarbagePrefs? prefs;
   private OverlayText? text_overlay;
   private OverlayThrobber? throbber_overlay;
   private OverlayProgress? progress_overlay;
@@ -55,7 +56,8 @@ public class GarbageApplet : AppletSimple
     this.trash.file_count_changed.connect (this.trash_changed);
     this.display_name = Gettext._ ("Garbage");
     this.map_event.connect (this.on_map_event);
-    this.button_press_event.connect (this.on_click);
+    this.clicked.connect (this.on_clicked);
+    this.context_menu_popup.connect (this.on_context_menu_popup);
     this.text_overlay = null;
     this.throbber_overlay = null;
     this.progress_overlay = null;
@@ -95,7 +97,8 @@ public class GarbageApplet : AppletSimple
   {
     unowned Gtk.Widget icon = this.get_icon ();
 
-    drag_dest_set (icon, DestDefaults.DROP, targets, DragAction.MOVE);
+    drag_dest_set (icon, DestDefaults.DROP | DestDefaults.MOTION,
+                   targets, DragAction.MOVE);
     icon.drag_motion.connect (this.on_drag_motion);
     icon.drag_leave.connect (this.on_drag_leave);
     icon.drag_data_received.connect (this.on_drag_data_received);
@@ -171,62 +174,56 @@ public class GarbageApplet : AppletSimple
     plural = Gettext.ngettext ("%s: %u item", "%s: %u items", file_count);
     this.set_tooltip_text (plural.printf (this.display_name, file_count));
   }
-  private bool
-  on_click (EventButton evt)
+  private void
+  on_clicked ()
   {
-    switch (evt.button)
+    try
     {
-      case 1: /* left mouse click */
-        try
-        {
-          string[] argv = new string[] { "xdg-open", "trash:" };
-          spawn_on_screen (this.get_screen (),
-                           null,
-                           argv,
-                           null,
-                           SpawnFlags.SEARCH_PATH,
-                           null,
-                           null);
-        }
-        catch (GLib.Error err)
-        {
-          string msg;
-          msg = Gettext._ ("Could not open the trash folder with your file manager: %s")
-                .printf (err.message);
-        }
-        break;
-      case 2: /* middle mouse click */
-        break;
-      case 3: /* right mouse click */
-        weak Menu ctx_menu;
-        if (this.menu == null)
-        {
-          ImageMenuItem prefs_item;
-          Widget about_item;
-
-          this.menu = this.create_default_menu () as Menu;
-          this.empty_menu_item =
-            new MenuItem.with_mnemonic (Gettext._ ("_Empty Trash"));
-          this.empty_menu_item.activate.connect (this.on_menu_empty_activate);
-          this.empty_menu_item.set_sensitive (this.trash.file_count > 0);
-          this.empty_menu_item.show ();
-          this.menu.append (this.empty_menu_item);
-          prefs_item = new ImageMenuItem.from_stock (STOCK_PREFERENCES, null);
-          prefs_item.activate.connect (this.on_menu_prefs_activate);
-          prefs_item.show ();
-          this.menu.append (prefs_item);
-          about_item = this.create_about_item_simple ("Copyright © 2009 Mark Lee <avant-wn@lazymalevolence.com>",
-                                                      AppletLicense.GPLV2,
-                                                      Build.VERSION);
-          about_item.show ();
-          this.menu.append (about_item as MenuItem);
-        }
-        ctx_menu = (Menu)this.menu;
-        ctx_menu.set_screen (null);
-        ctx_menu.popup (null, null, null, evt.button, evt.time);
-        break;
+      string[] argv = new string[] { "xdg-open", "trash:" };
+      spawn_on_screen (this.get_screen (),
+                       null,
+                       argv,
+                       null,
+                       SpawnFlags.SEARCH_PATH,
+                       null,
+                       null);
     }
-    return true;
+    catch (GLib.Error err)
+    {
+      string msg;
+      msg = Gettext._ ("Could not open the trash folder with your file manager: %s")
+            .printf (err.message);
+    }
+  }
+  private void
+  on_context_menu_popup (EventButton evt)
+  {
+    weak Menu ctx_menu;
+    if (this.menu == null)
+    {
+      ImageMenuItem prefs_item;
+      Widget about_item;
+
+      this.menu = this.create_default_menu () as Menu;
+      this.empty_menu_item =
+        new MenuItem.with_mnemonic (Gettext._ ("_Empty Trash"));
+      this.empty_menu_item.activate.connect (this.on_menu_empty_activate);
+      this.empty_menu_item.set_sensitive (this.trash.file_count > 0);
+      this.empty_menu_item.show ();
+      this.menu.append (this.empty_menu_item);
+      prefs_item = new ImageMenuItem.from_stock (STOCK_PREFERENCES, null);
+      prefs_item.activate.connect (this.on_menu_prefs_activate);
+      prefs_item.show ();
+      this.menu.append (prefs_item);
+      about_item = this.create_about_item_simple ("Copyright © 2009 Mark Lee <avant-wn@lazymalevolence.com>",
+                                                  AppletLicense.GPLV2,
+                                                  Build.VERSION);
+      about_item.show ();
+      this.menu.append (about_item as MenuItem);
+    }
+    ctx_menu = (Menu)this.menu;
+    ctx_menu.set_screen (null);
+    ctx_menu.popup (null, null, null, evt.button, evt.time);
   }
   private void
   on_menu_empty_activate ()
@@ -269,10 +266,11 @@ public class GarbageApplet : AppletSimple
   private void
   on_menu_prefs_activate ()
   {
-    GarbagePrefs dialog;
-
-    dialog = new GarbagePrefs (this);
-    dialog.show_all ();
+    if (this.prefs == null)
+    {
+      this.prefs = new GarbagePrefs (this);
+    }
+    this.prefs.show_all ();
   }
   private void
   trash_changed ()

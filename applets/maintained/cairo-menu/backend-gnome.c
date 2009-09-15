@@ -716,7 +716,7 @@ static void monitor_places(gpointer callback, gpointer data, gpointer box)
 
   g_free(filename);
 
-  g_debug ("%s: %p",Monitor_place);
+  g_debug ("%s: %p",__func__,Monitor_place);
   g_signal_connect (monitor, "changed", G_CALLBACK (monitor_places_callback), Monitor_place);
 }
 

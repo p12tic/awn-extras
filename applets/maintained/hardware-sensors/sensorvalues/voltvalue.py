@@ -26,7 +26,7 @@ class VoltValue(SensorValue):
 
     def __init__(self):
         SensorValue.__init__(self)
-        
+
         self.raw_value = 0
         self.raw_high_value = 12
         self.raw_low_value = -12

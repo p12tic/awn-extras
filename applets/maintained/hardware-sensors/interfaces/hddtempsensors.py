@@ -33,13 +33,13 @@ hddtemp_address = ("127.0.0.1", 7634)
 
 
 class HDDTempSensor(Sensor):
-    
+
     def __init__(self, name, seq_num, updater):
         Sensor.__init__(self, name, name, TempValue())
         self.seq_num = seq_num
         self.updater = updater
         self.interface = interface_name
-        
+
     def read_sensor(self):
         input = self.updater.get_update()
         if input is None:
@@ -74,7 +74,7 @@ def get_sensors():
     if not input:
         return htsensors
     # Number of hdd sensors
-    n = (len(input)-1) / 5
+    n = (len(input) - 1) / 5
     for i in xrange(0, n):
         new_sensor = HDDTempSensor(input[1 + 5 * i], i, updater)
         new_sensor.label = input[2 + 5 * i]

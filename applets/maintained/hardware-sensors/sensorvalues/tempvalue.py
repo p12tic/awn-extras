@@ -23,58 +23,58 @@ from units import *
 
 
 class TempValue(SensorValue):
-    
+
     def __init__(self):
         SensorValue.__init__(self)
-        
+
         self.raw_value = -273
         self.raw_high_value = 60
         self.raw_low_value = 20
         self.unit = UNIT_CELSIUS
-    
+
     @property
     def value(self):
         """Current value"""
         return self.to_unit(int(self.raw_value))
-    
+
     def low_value():
         doc = """Low value limit (at which alarm triggers). Also used for
         minimum needle angle in applet icon."""
-       
+
         def fget(self):
             return self.to_unit(self.raw_low_value)
-           
+
         def fset(self, value):
             self.raw_low_value = self.from_unit(int(low_value))
-           
+
         return locals()
-       
+
     low_value = property(**low_value())
-    
+
     def high_value():
         doc = """High value limit (at which alarm triggers). Also used for
         maximum needle angle in applet icon."""
-       
+
         def fget(self):
             return self.to_unit(self.raw_high_value)
-           
+
         def fset(self, value):
             self.raw_high_value = self.from_unit(int(high_value))
-           
+
         return locals()
-       
+
     high_value = property(**high_value())
-    
+
     def to_unit(self, value):
         if self.unit is UNIT_FAHRENHEIT:
-            return int(value * 9/5 + 32)
+            return int(value * 9 / 5 + 32)
         elif self.unit is UNIT_KELVIN:
             return value + 273
         return value
-    
+
     def from_unit(self, value):
         if self.unit is UNIT_FAHRENHEIT:
-            return int((value - 32) * 5/9)
+            return int((value - 32) * 5 / 9)
         elif self.unit is UNIT_KELVIN:
             return value - 273
         return value

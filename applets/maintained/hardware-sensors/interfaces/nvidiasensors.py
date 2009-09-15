@@ -40,21 +40,21 @@ except re.error:
 
 
 class NvSensor(Sensor):
-    
+
     def __init__(self, idx, updater):
         Sensor.__init__(self, idx, "GPUCoreTemp", TempValue())
         self.updater = updater
         self.interface = interface_name
-        
+
     def get_updater(self):
         return self.updater
-        
+
     def read_sensor(self):
         nv_output = self.updater.get_update()
         if not nv_output or self.id >= len(nv_output):
             self.value = -273
             return False
-        
+
         line = nv_output[self.id]
         nv_sensor = regexc.match(line)
         if nv_sensor:
@@ -62,7 +62,7 @@ class NvSensor(Sensor):
         else:
             self.value = -273
             return False
-        
+
         return True
 
 
@@ -71,14 +71,14 @@ def get_sensors(timeout=1):
     if not nv_output:
         return []
     updater = Updater(timeout, get_nvidia_output)
-    
+
     nvsensors = []
     for idx, line in enumerate(nv_output):
         nv_sensor = regexc.match(line)
         if nv_sensor:
             new_sensor = NvSensor(idx, updater)
             nvsensors.append(new_sensor)
-     
+
     return nvsensors
 
 nvidia_path = '/usr/bin/nvidia-settings'
@@ -95,11 +95,11 @@ def get_nvidia_output():
             print "Problem running", nvidia_cmd, ", please make sure that", \
                                    "nvidia-settings is istalled on you system."
             return None
-        
+
         if not nv_output or "ERROR" in nv_output:
             return None
-        
+
         return filter(lambda line: "Attribute" in line, nv_output)
-    
+
     else:
         return None

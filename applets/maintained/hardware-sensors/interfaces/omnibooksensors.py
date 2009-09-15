@@ -27,7 +27,7 @@ filenames = ["temperature"]
 
 
 def get_sensors():
-    
+
     omnisensors = []
     for folder in folders:
         omnisensors += fileinterface.get_sensors_in_path(folder, filenames)

@@ -18,6 +18,8 @@
 #   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #   MA 02110-1301, USA.
 
+from awn.extras import _
+
 # Units
 UNIT_CELSIUS = 0
 UNIT_FAHRENHEIT = 1
@@ -29,4 +31,5 @@ UNIT_RPM = 4
 UNIT_STR = [u"˚C", u"˚F", u"˚K", "V", "rpm"]
 
 # Unit long strings
-UNIT_STR_LONG = ["Celsius", "Fahrenheit", "Kelvin", "Volt", "rpm"]
+UNIT_STR_LONG = [_("Celsius"), _("Fahrenheit"),
+                 _("Kelvin"), _("Volt"), _("rpm")]

@@ -52,16 +52,16 @@ lmsensors_cmd = lmsensors_path + " -A"
 
 
 class LmSensor(Sensor):
-    
+
     def __init__(self, ln, name, sensor_value, updater):
         Sensor.__init__(self, str(ln) + "_" + name, name, sensor_value)
         self.ln = ln
         self.updater = updater
         self.interface = interface_name
-        
+
     def get_updater(self):
         return self.updater
-        
+
     def read_sensor(self):
         lm_output = self.updater.get_update()
         if self.ln >= len(lm_output):
@@ -77,7 +77,7 @@ class LmSensor(Sensor):
         else:
             self.value = -273
             return False
-        
+
         return True
 
 
@@ -87,7 +87,7 @@ def get_sensors(timeout=1):
     if lm_output == None:
         return []
     updater = Updater(timeout, get_lmsensors_output)
-    
+
     previous_line = None
     for ln, line in enumerate(lm_output):
         double_line = False
@@ -101,7 +101,7 @@ def get_sensors(timeout=1):
         elif line[-2:] == ":\n" and len(line) > 11:
             previous_line = line
             continue
-        
+
         volt_sensor = regexc_voltage.match(line)
         if volt_sensor != None:
             name, value = volt_sensor.group("label", "value")
@@ -109,7 +109,7 @@ def get_sensors(timeout=1):
             new_sensor.double_line = double_line
             lmsensors.append(new_sensor)
             continue
-        
+
         temp_sensor = regexc_temp.match(line)
         if temp_sensor != None:
             name, value = temp_sensor.group("label", "value")
@@ -117,14 +117,14 @@ def get_sensors(timeout=1):
             new_sensor.double_line = double_line
             lmsensors.append(new_sensor)
             continue
-        
+
         fan_sensor = regexc_fan.match(line)
         if fan_sensor != None:
             name, value = fan_sensor.group("label", "value")
             new_sensor = LmSensor(ln, name, RPMValue(), updater)
             new_sensor.double_line = double_line
             lmsensors.append(new_sensor)
-        
+
     return lmsensors
 
 
@@ -139,6 +139,6 @@ def get_lmsensors_output():
                 ", please make sure that lm-sensors is istalled on you system."
             return None
         return lm_output
-    
+
     else:
         return None

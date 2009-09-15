@@ -49,22 +49,22 @@ nvclock_cmd = nvclock_path + " -i"
 
 
 class NVCoreSensor (Sensor):
-    
+
     def __init__(self, ln, name, sensor_value, updater):
         Sensor.__init__(self, str(ln) + "_" + name, name, sensor_value)
         self.ln = ln
         self.updater = updater
         self.interface = interface_name
-    
+
     def get_updater(self):
         return self.updater
-        
+
     def read_sensor(self):
         nv_output = self.updater.get_update()
         if not nv_output or self.ln >= len(nv_output):
             self.value = -273
             return False
-        
+
         line = nv_output[self.ln]
         sensor = regexc[self.type].match(line)
         if sensor:
@@ -72,7 +72,7 @@ class NVCoreSensor (Sensor):
         else:
             self.value = -273
             return False
-        
+
         return True
 
 
@@ -81,31 +81,31 @@ def get_sensors(timeout=1):
     if not nv_output:
         return []
     updater = Updater(timeout, get_nvclock_output)
-    
+
     nvsensors = []
     for ln, line in enumerate(nv_output):
-        
+
         volt_sensor = regexc[VoltValue].match(line)
         if volt_sensor != None:
             name, value = volt_sensor.group("label", "value")
             new_sensor = NVCoreSensor(ln, name, VoltValue(), updater)
             nvsensors.append(new_sensor)
             continue
-        
+
         temp_sensor = regexc[TempValue].match(line)
         if temp_sensor != None:
             name, value = temp_sensor.group("label", "value")
             new_sensor = NVCoreSensor(ln, name, TempValue(), updater)
             nvsensors.append(new_sensor)
             continue
-        
+
         fan_sensor = regexc[RPMValue].match(line)
         if fan_sensor != None:
             name, value = fan_sensor.group("label", "value")
             new_sensor = NVCoreSensor(ln, name, RPMValue(), updater)
             nvsensors.append(new_sensor)
             continue
-    
+
     return nvsensors
 
 

@@ -24,36 +24,36 @@ class SensorValue(object):
         self.raw_value = None
         self.raw_high_value = None
         self.raw_low_value = None
-    
+
     @property
     def value(self):
         """Current value"""
         return self.raw_value
-    
+
     def low_value():
         doc = """Low value limit (at which alarm triggers). Also used for
         minimum needle angle in applet icon."""
-       
+
         def fget(self):
             return self.raw_low_value
-           
+
         def fset(self, value):
             self.raw_low_value = value
-           
+
         return locals()
-       
+
     low_value = property(**low_value())
-    
+
     def high_value():
         doc = """High value limit (at which alarm triggers). Also used for
         maximum needle angle in applet icon."""
-       
+
         def fget(self):
             return self.raw_high_value
-           
+
         def fset(self, value):
             self.raw_high_value = value
-           
+
         return locals()
-       
+
     high_value = property(**high_value())

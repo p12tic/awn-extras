@@ -26,12 +26,12 @@ class RPMValue(SensorValue):
 
     def __init__(self):
         SensorValue.__init__(self)
-        
+
         self.raw_value = -1
         self.raw_high_value = 5000
         self.raw_low_value = 500
         self.unit = UNIT_RPM
-    
+
     @property
     def value(self):
         """Current value"""

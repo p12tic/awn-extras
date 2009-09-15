@@ -28,7 +28,7 @@ interface_name = "FileInterface"
 
 
 class FileSensor (Sensor):
-    
+
     def __init__(self, name, filename):
         Sensor.__init__(self, filename, name, TempValue())
         self.interface = interface_name
@@ -40,7 +40,7 @@ class FileSensor (Sensor):
             return False
         self.value = float(input[-2])
         return True
-    
+
     def get_sensor_data(self):
         try:
             sensorfile = open(self.filename, 'r')

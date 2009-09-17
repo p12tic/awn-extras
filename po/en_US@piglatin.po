@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Awn Extras 0.3.9\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-09-17 10:26-0700\n"
-"PO-Revision-Date: 2009-09-17 10:34-0800\n"
+"POT-Creation-Date: 2009-09-17 14:54-0700\n"
+"PO-Revision-Date: 2009-09-17 14:57-0800\n"
 "Last-Translator: Mark Lee <avant-wn@lazymalevolence.com>\n"
 "Language-Team: English (United States Pig Latin)\n"
 "MIME-Version: 1.0\n"
@@ -1413,14 +1413,18 @@ msgid "Shut down the system"
 msgstr ""
 
 #: ../applets/maintained/showdesktop/applet.vala:37
-#: ../applets/maintained/showdesktop/applet.vala:84
 #: ../applets/maintained/showdesktop/showdesktop.desktop.in.in.h:2
 msgid "Show Desktop"
 msgstr "Ow-shay Esktop-day"
 
-#: ../applets/maintained/showdesktop/applet.vala:79
-msgid "Hide Desktop"
-msgstr "Ide-hay Esktop-day"
+#: ../applets/maintained/showdesktop/applet.vala:91
+msgid "Show hidden windows"
+msgstr ""
+
+#: ../applets/maintained/showdesktop/applet.vala:96
+#, fuzzy
+msgid "Hide windows and show desktop"
+msgstr "Ide-hay your indows-way and ow-shay your esktop-day"
 
 #. vim:ft=vala:et:ts=2 sts=2 sw=2:ai:cindent
 #: ../applets/maintained/showdesktop/showdesktop.desktop.in.in.h:1
@@ -1956,6 +1960,8 @@ msgstr ""
 msgid "Pandora Radio"
 msgstr ""
 
+#~ msgid "Hide Desktop"
+#~ msgstr "Ide-hay Esktop-day"
 #~ msgid ""
 #~ "An error occurred when trying to retrieve the 'confirm_empty' config "
 #~ "option: %s"

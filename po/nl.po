@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: svn trunk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-09-17 10:26-0700\n"
+"POT-Creation-Date: 2009-09-17 14:55-0700\n"
 "PO-Revision-Date: 2006-04-27 10:57+0200\n"
 "Last-Translator: Wouter Bolsterlee <uws+gnome@xs4all.nl>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
@@ -1436,13 +1436,16 @@ msgid "Shut down the system"
 msgstr ""
 
 #: ../applets/maintained/showdesktop/applet.vala:37
-#: ../applets/maintained/showdesktop/applet.vala:84
 #: ../applets/maintained/showdesktop/showdesktop.desktop.in.in.h:2
 msgid "Show Desktop"
 msgstr ""
 
-#: ../applets/maintained/showdesktop/applet.vala:79
-msgid "Hide Desktop"
+#: ../applets/maintained/showdesktop/applet.vala:91
+msgid "Show hidden windows"
+msgstr ""
+
+#: ../applets/maintained/showdesktop/applet.vala:96
+msgid "Hide windows and show desktop"
 msgstr ""
 
 #. vim:ft=vala:et:ts=2 sts=2 sw=2:ai:cindent

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-09-17 10:26-0700\n"
+"POT-Creation-Date: 2009-09-17 14:55-0700\n"
 "PO-Revision-Date: 2007-11-02 HO:MI+ZONE\n"
 "Last-Translator: Ketil Wendelbo Aanensen <ketil.w.aanensen@gmail.com>\n"
 "Language-Team: Norwegian Bokmaal <ketil.w.aanensen@gmail.com>\n"
@@ -1454,16 +1454,18 @@ msgid "Shut down the system"
 msgstr ""
 
 #: ../applets/maintained/showdesktop/applet.vala:37
-#: ../applets/maintained/showdesktop/applet.vala:84
 #: ../applets/maintained/showdesktop/showdesktop.desktop.in.in.h:2
 #, fuzzy
 msgid "Show Desktop"
 msgstr "Byger"
 
-#: ../applets/maintained/showdesktop/applet.vala:79
-#, fuzzy
-msgid "Hide Desktop"
-msgstr "Byger"
+#: ../applets/maintained/showdesktop/applet.vala:91
+msgid "Show hidden windows"
+msgstr ""
+
+#: ../applets/maintained/showdesktop/applet.vala:96
+msgid "Hide windows and show desktop"
+msgstr ""
 
 #. vim:ft=vala:et:ts=2 sts=2 sw=2:ai:cindent
 #: ../applets/maintained/showdesktop/showdesktop.desktop.in.in.h:1
@@ -2008,6 +2010,10 @@ msgstr ""
 #: ../applets/unmaintained/pandora/pandora.desktop.in.h:2
 msgid "Pandora Radio"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Hide Desktop"
+#~ msgstr "Byger"
 
 #, fuzzy
 #~ msgid "Set Location"

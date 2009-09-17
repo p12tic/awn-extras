@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-09-09 00:23-0700\n"
+"POT-Creation-Date: 2009-09-17 10:27-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1034,14 +1034,14 @@ msgstr ""
 msgid "Choose a folder"
 msgstr ""
 
-#: ../applets/maintained/garbage/applet.vala:56
+#: ../applets/maintained/garbage/applet.vala:57
 #: ../applets/maintained/garbage/garbage.desktop.in.in.h:2
 msgid "Garbage"
 msgstr ""
 
 #. set the title as well
 #. $display_name: $count item(s)
-#: ../applets/maintained/garbage/applet.vala:171
+#: ../applets/maintained/garbage/applet.vala:174
 #, c-format
 msgid "%s: %u item"
 msgid_plural "%s: %u items"
@@ -1057,13 +1057,13 @@ msgstr ""
 msgid "_Empty Trash"
 msgstr ""
 
-#: ../applets/maintained/garbage/applet.vala:238
+#: ../applets/maintained/garbage/applet.vala:235
 #, c-format
 msgid ""
 "Are you sure you want to empty your trash? It currently contains %u item(s)."
 msgstr ""
 
-#: ../applets/maintained/garbage/applet.vala:346
+#: ../applets/maintained/garbage/applet.vala:344
 #, c-format
 msgid "Could not send the dragged file(s) to the trash: %s"
 msgstr ""
@@ -1073,11 +1073,11 @@ msgstr ""
 msgid "A lightweight, cross-desktop trash applet"
 msgstr ""
 
-#: ../applets/maintained/garbage/prefs.vala:45
+#: ../applets/maintained/garbage/prefs.vala:47
 msgid "Confirm when emptying the trash"
 msgstr ""
 
-#: ../applets/maintained/garbage/prefs.vala:50
+#: ../applets/maintained/garbage/prefs.vala:52
 msgid "Show the item count on the icon"
 msgstr ""
 
@@ -1432,12 +1432,43 @@ msgstr ""
 msgid "Quit-Log Out applet"
 msgstr ""
 
-#: ../applets/maintained/showdesktop/showdesktop.desktop.in.h:1
-msgid "Hide your windows and show your desktop"
+#: ../applets/maintained/quit/quit-lock-screen.desktop.in.h:1
+msgid "Lock Screen"
 msgstr ""
 
-#: ../applets/maintained/showdesktop/showdesktop.desktop.in.h:2
+#: ../applets/maintained/quit/quit-lock-screen.desktop.in.h:2
+msgid "Protect your computer from unauthorized use"
+msgstr ""
+
+#: ../applets/maintained/quit/quit-log-out.desktop.in.h:1
+msgid "Log Out..."
+msgstr ""
+
+#: ../applets/maintained/quit/quit-log-out.desktop.in.h:2
+msgid "Log out of this session to log in as a different user"
+msgstr ""
+
+#: ../applets/maintained/quit/quit-shut-down.desktop.in.h:1
+msgid "Shut Down..."
+msgstr ""
+
+#: ../applets/maintained/quit/quit-shut-down.desktop.in.h:2
+msgid "Shut down the system"
+msgstr ""
+
+#: ../applets/maintained/showdesktop/applet.vala:37
+#: ../applets/maintained/showdesktop/applet.vala:84
+#: ../applets/maintained/showdesktop/showdesktop.desktop.in.in.h:2
 msgid "Show Desktop"
+msgstr ""
+
+#: ../applets/maintained/showdesktop/applet.vala:79
+msgid "Hide Desktop"
+msgstr ""
+
+#. vim:ft=vala:et:ts=2 sts=2 sw=2:ai:cindent
+#: ../applets/maintained/showdesktop/showdesktop.desktop.in.in.h:1
+msgid "Hide your windows and show your desktop"
 msgstr ""
 
 #: ../applets/maintained/sysmon/sysmon.desktop.in.in.h:2
@@ -1807,6 +1838,14 @@ msgstr ""
 
 #: ../applets/maintained/yama/yama.desktop.in.h:2
 msgid "Yet Another Menu Applet"
+msgstr ""
+
+#: ../applets/unmaintained/dropper/dropper.desktop.in.h:1
+msgid "Dropper"
+msgstr ""
+
+#: ../applets/unmaintained/dropper/dropper.desktop.in.h:2
+msgid "Shows actions overlay when you drag something over the applet."
 msgstr ""
 
 #: ../applets/unmaintained/mail/mail.desktop.in.h:1

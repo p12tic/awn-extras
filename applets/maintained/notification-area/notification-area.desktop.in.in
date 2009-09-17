@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
 X-AWN-Type=Applet
-X-AWN-AppletType=C
+X-AWN-AppletType=Vala
 _Name=Notification Area
 _Comment=A Notification Area (systray)
 Exec=@LIBDIR@/awn/applets/notification-area/notification-area.so

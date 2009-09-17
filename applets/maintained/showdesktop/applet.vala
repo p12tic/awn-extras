@@ -34,6 +34,9 @@ class ShowDesktop : AppletSimple
     this.uid = uid;
     this.panel_id = panel_id;
 
+    Awn.Tooltip tooltip = (this.get_icon () as Awn.Icon).get_tooltip ();
+    tooltip.set ("toggle-on-click", false);
+
     this.display_name = Gettext._ ("Show Desktop");
     this.clicked.connect (this.on_clicked);
     this.context_menu_popup.connect (this.on_context_menu_popup);
@@ -59,11 +62,13 @@ class ShowDesktop : AppletSimple
     {
       Gtk.Widget about_item;
 
+      string[] authors = new string[] { "Mark Lee <avant-wn@lazymalevolence.com>" };
+
       this._menu = this.create_default_menu () as Gtk.Menu;
-      about_item = this.create_about_item ("Copyright © 2009 Mark Lee <avant-wn@lazymalevolence.com>",
+      about_item = this.create_about_item ("Copyright © 2009 Mark Lee",
                                            AppletLicense.GPLV2, Build.VERSION,
-                                           null, null, null, "user-desktop",
-                                           null, null, null, null);
+                                           "An applet to hide your windows and show your desktop", null, null, "user-desktop",
+                                           null, authors, null, null);
       about_item.show ();
       this._menu.append (about_item as Gtk.MenuItem);
     }
@@ -76,12 +81,12 @@ class ShowDesktop : AppletSimple
   {
     if (screen.get_showing_desktop ())
     {
-      this.set_tooltip_text (Gettext._ ("Hide Desktop"));
+      this.set_tooltip_text (Gettext._ ("Show hidden windows"));
       this.set_icon_name ("view-restore");
     }
     else
     {
-      this.set_tooltip_text (Gettext._ ("Show Desktop"));
+      this.set_tooltip_text (Gettext._ ("Hide windows and show desktop"));
       this.set_icon_name ("user-desktop");
     }
   }

@@ -34,9 +34,6 @@ class ShowDesktop : AppletSimple
     this.uid = uid;
     this.panel_id = panel_id;
 
-    Awn.Tooltip tooltip = (this.get_icon () as Awn.Icon).get_tooltip ();
-    tooltip.set ("toggle-on-click", false);
-
     this.display_name = Gettext._ ("Show Desktop");
     this.clicked.connect (this.on_clicked);
     this.context_menu_popup.connect (this.on_context_menu_popup);
@@ -44,6 +41,16 @@ class ShowDesktop : AppletSimple
     screen = Wnck.Screen.get_default ();
     screen.showing_desktop_changed.connect (this.on_show_desktop_changed);
     this.on_show_desktop_changed (screen);
+
+    this.map_event.connect (this.on_map_event);
+  }
+
+  private bool
+  on_map_event (Gdk.Event event)
+  {
+    Awn.Tooltip tooltip = (this.get_icon () as Awn.Icon).get_tooltip ();
+    tooltip.toggle_on_click = false;
+    return true;
   }
 
   private void

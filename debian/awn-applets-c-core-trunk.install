@@ -40,6 +40,11 @@ usr/share/avant-window-navigator/applets/shinyswitcher.desktop
 usr/share/avant-window-navigator/schemas/awn-applet-shinyswitcher.schema-ini
 etc/gconf/schemas/awn-applet-shinyswitcher.schemas
 #
+# Show Desktop
+#
+usr/lib/awn/applets/showdesktop/*.so
+usr/share/avant-window-navigator/applets/showdesktop.desktop
+#
 # Places
 #
 usr/lib/awn/applets/places/*.so 

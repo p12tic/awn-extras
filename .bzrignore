@@ -39,6 +39,7 @@ applets/maintained/garbage/*.c
 applets/maintained/notification-area/na-prefs.c
 applets/maintained/notification-area/notification-area.c
 applets/maintained/notification-daemon/notificationdaemon-dbus-glue.h
+applets/maintained/showdesktop/*.c
 applets/maintained/vala-test/*.c
 debian/*.debhelper.log
 debian/*.postinst.debhelper

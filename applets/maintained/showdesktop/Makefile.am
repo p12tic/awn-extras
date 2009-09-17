@@ -1,7 +1,10 @@
 APPLET_NAME = showdesktop
-APPLET_CFLAGS = $(LIBWNCK_CFLAGS) -I$(top_builddir) -DWNCK_I_KNOW_THIS_IS_UNSTABLE
+APPLET_CFLAGS = \
+	$(LIBWNCK_CFLAGS) \
+	-DWNCK_I_KNOW_THIS_IS_UNSTABLE \
+	$(NULL)
 VALA_FILES = \
-	showdesktop.vala	\
+	applet.vala \
 	$(NULL)
 AM_VALAFLAGS = \
 	--pkg libwnck-1.0 \

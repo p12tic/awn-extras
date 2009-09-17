@@ -9,6 +9,7 @@ endif
 CONDITIONAL_APPLETS += \
 	maintained/garbage \
 	maintained/notification-area \
+	maintained/showdesktop \
 	$(NULL)
 endif
 
@@ -67,7 +68,6 @@ SUBDIRS = \
 	maintained/places \
 	maintained/quit \
 	maintained/shiny-switcher \
-	maintained/showdesktop \
 	maintained/sysmon \
 	maintained/thinkhdaps \
 	maintained/to-do \

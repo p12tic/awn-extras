@@ -72,7 +72,7 @@ class LmSensor(Sensor):
         else:
             line = lm_output[self.ln]
         sensor = regexc[self.type].match(line)
-        if sensor != None:
+        if sensor is not None:
             self.value = float(sensor.group("value"))
         else:
             self.value = -273
@@ -84,7 +84,7 @@ class LmSensor(Sensor):
 def get_sensors(timeout=1):
     lmsensors = []
     lm_output = get_lmsensors_output()
-    if lm_output == None:
+    if lm_output is None:
         return []
     updater = Updater(timeout, get_lmsensors_output)
 
@@ -103,7 +103,7 @@ def get_sensors(timeout=1):
             continue
 
         volt_sensor = regexc_voltage.match(line)
-        if volt_sensor != None:
+        if volt_sensor is not None:
             name, value = volt_sensor.group("label", "value")
             new_sensor = LmSensor(ln, name, VoltValue(), updater)
             new_sensor.double_line = double_line
@@ -111,7 +111,7 @@ def get_sensors(timeout=1):
             continue
 
         temp_sensor = regexc_temp.match(line)
-        if temp_sensor != None:
+        if temp_sensor is not None:
             name, value = temp_sensor.group("label", "value")
             new_sensor = LmSensor(ln, name, TempValue(), updater)
             new_sensor.double_line = double_line
@@ -119,7 +119,7 @@ def get_sensors(timeout=1):
             continue
 
         fan_sensor = regexc_fan.match(line)
-        if fan_sensor != None:
+        if fan_sensor is not None:
             name, value = fan_sensor.group("label", "value")
             new_sensor = LmSensor(ln, name, RPMValue(), updater)
             new_sensor.double_line = double_line

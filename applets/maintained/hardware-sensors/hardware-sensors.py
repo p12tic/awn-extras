@@ -822,7 +822,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         selection = treeview.get_selection()
         (model_filter, iter) = selection.get_selected()
         # Something must be selected
-        if iter != None:
+        if iter is not None:
             child_iter = model_filter.convert_iter_to_child_iter(iter)
             sensor = self.sensors[self.liststore[child_iter][self.column_idx]]
             self.selected_sensor = sensor
@@ -851,7 +851,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         treeselection = treeview.get_selection()
         (model, iter) = treeselection.get_selected()
         # Something must be selected
-        if iter != None:
+        if iter is not None:
             # Sensor index
             idx = model[iter][self.column_idx]
             self.create_properties_dialog(self.sensors[idx])
@@ -865,7 +865,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         selection = treeview_all.get_selection()
         (model, iter) = selection.get_selected()
         # Something must be selected
-        if iter != None:
+        if iter is not None:
             # Sensor index
             idx = self.liststore[iter][self.column_idx]
             # Apply setting
@@ -883,7 +883,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         selection = treeview_main.get_selection()
         (model_filter, iter) = selection.get_selected()
         # Something must be selected
-        if iter != None:
+        if iter is not None:
             child_iter = model_filter.convert_iter_to_child_iter(iter)
             # Sensor index
             idx = self.liststore[child_iter][self.column_idx]
@@ -906,7 +906,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         (model, iter) = selection.get_selected()
 
         # Something must be selected
-        if iter != None:
+        if iter is not None:
             dialog_row = model[iter][self.column_row]
             if dialog_row > 1:
                 # Iterator pointing to predecessor (sensor/row that has
@@ -916,7 +916,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
                     if row[self.column_row] == dialog_row - 1:
                         row_pred = row
                         break
-                if row_pred != None:
+                if row_pred is not None:
                     # Switch model_row-s
                     model[iter][self.column_row] = dialog_row - 1
                     row_pred[self.column_row] = dialog_row
@@ -937,7 +937,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         selection = treeview.get_selection()
         (model, iter) = selection.get_selected()
         # Something must be selected
-        if iter != None:
+        if iter is not None:
             dialog_row = model[iter][self.column_row]
             if dialog_row < len(self.sensors):
                 # Iter pointing to predecessor (sensor/row that has dialog_row
@@ -947,7 +947,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
                     if row[self.column_row] == dialog_row + 1:
                         row_pred = row
                         break
-                if row_pred != None:
+                if row_pred is not None:
                 # Switch model_row-s
                     model[iter][self.column_row] = dialog_row + 1
                     row_pred[self.column_row] = dialog_row

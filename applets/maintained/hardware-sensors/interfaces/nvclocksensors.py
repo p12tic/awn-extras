@@ -86,21 +86,21 @@ def get_sensors(timeout=1):
     for ln, line in enumerate(nv_output):
 
         volt_sensor = regexc[VoltValue].match(line)
-        if volt_sensor != None:
+        if volt_sensor is not None:
             name, value = volt_sensor.group("label", "value")
             new_sensor = NVCoreSensor(ln, name, VoltValue(), updater)
             nvsensors.append(new_sensor)
             continue
 
         temp_sensor = regexc[TempValue].match(line)
-        if temp_sensor != None:
+        if temp_sensor is not None:
             name, value = temp_sensor.group("label", "value")
             new_sensor = NVCoreSensor(ln, name, TempValue(), updater)
             nvsensors.append(new_sensor)
             continue
 
         fan_sensor = regexc[RPMValue].match(line)
-        if fan_sensor != None:
+        if fan_sensor is not None:
             name, value = fan_sensor.group("label", "value")
             new_sensor = NVCoreSensor(ln, name, RPMValue(), updater)
             nvsensors.append(new_sensor)

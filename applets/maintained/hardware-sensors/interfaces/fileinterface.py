@@ -36,7 +36,7 @@ class FileSensor (Sensor):
 
     def read_sensor(self):
         input = self.get_sensor_data()
-        if input == None or len(input) < 2:
+        if input is None or len(input) < 2:
             return False
         self.value = float(input[-2])
         return True
@@ -60,7 +60,7 @@ def get_sensors_in_path(path, filenames):
             filename = os.path.join(root, file)
             new_sensor = FileSensor("CPU", filename)
 #            input = new_sensor.get_sensor_data()
-#            if input != None:
+#            if input is not None:
 #                # sensor name string w/o the ':'
 #                new_sensor.label = input[0][0:-1]
 #                new_sensor.unit = input[2]

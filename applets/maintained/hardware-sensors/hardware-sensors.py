@@ -70,7 +70,7 @@ class SensorsApplet:
 
         # Icon path
         images_dir = os.path.dirname(__file__) + "/images/"
-        self.applet_icon_dir = images_dir + "applet/"
+        self.__applet_icon_dir = images_dir + "applet/"
 
         # Init sensors
         no_sensors = not self.create_all_sensors()
@@ -112,7 +112,9 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         self.applet.connect_size_changed(self.height_changed_cb)
 
         # == Dialog == #
-        self.create_dialog()
+        # Create main applet dialog showing selected sensors.
+        main_dialog = self.applet.dialog.new("main", _("Sensors"))
+        self.__main_dialog = self.MainDialog(self, main_dialog)
 
 
     # == Sensors == #
@@ -122,13 +124,6 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         found.
         
         """
-        self.interfaces = []
-        self.interfaces.append(acpisensors.interface_name)
-        self.interfaces.append(omnibooksensors.interface_name)
-        self.interfaces.append(hddtempsensors.interface_name)
-        self.interfaces.append(lmsensors.interface_name)
-        self.interfaces.append(nvidiasensors.interface_name)
-        self.interfaces.append(nvclocksensors.interface_name)
         self.sensors = []
         self.sensors += acpisensors.get_sensors()
         self.sensors += omnibooksensors.get_sensors()
@@ -172,7 +167,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         method.
         
         """
-        file = self.applet_icon_dir + self.settings["icon_file"]
+        file = self.__applet_icon_dir + self.settings["icon_file"]
         self.icon = sensoricon.SensorIcon(file,
                                           self.main_sensors,
                                           self.applet.get_size())
@@ -212,67 +207,13 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
                                                    for s in self.main_sensors])
             self.applet.tooltip.set(title)
 
-
-    # == Applet dialog == envoked by cliking the applet with left mouse button
-    def create_dialog(self):
-        """Create main applet dialog showing selected sensors."""
-        self.dialog = self.applet.dialog.new("main", _("Sensors"))
-
-        self.__dialog_vbox = None
-        self.create_dialog_content()
-
-        # Create a timer, but do not start it
-        self.dialog_timer = self.applet.timing.register(
-                    self.update_dialog, self.settings["timeout"], False)
-
-        self.dialog.connect('show', self.dialog_shown_cb)
-        self.dialog.connect('hide', self.dialog_hidden_cb)
-
-    def create_dialog_content(self):
-        """
-        (Re)creates sensor labels and values for main applet dialog
-        
-        """
-        # Destroy current dialog vbox
-        if self.__dialog_vbox:
-            self.__dialog_vbox.destroy()
-
-        shown_sensors = dict()
-        for sensor in self.sensors:
-            if sensor.show:
-                shown_sensors[sensor.dialog_row] = sensor
-
-        rows = shown_sensors.keys()
-        rows.sort()
-
-        self.__dialog_vbox = gtk.VBox(False, 10)
-        self.__dialog_values = dict()
-        for row in rows:
-            sensor = shown_sensors[row]
-            hbox = gtk.HBox()
-            label = gtk.Label(sensor.label + ':\t')
-            self.__dialog_values[sensor] = gtk.Label(
-                    str(sensor.value) + ' ' + sensor.unit_str)
-            hbox.pack_start(label, False, False)
-            hbox.pack_end(self.__dialog_values[sensor], False, False)
-            self.__dialog_vbox.pack_start(hbox, False, False)
-
-        self.__dialog_vbox.show_all()
-        self.dialog.add(self.__dialog_vbox)
-
-    def update_dialog(self):
-        """Update main applet dialog with new values."""
-        for sensor, label in self.__dialog_values.iteritems():
-            sensor.read_sensor()
-            label.set_text(str(sensor.value) + ' ' + sensor.unit_str)
-
     def load_icons(self):
         """
         Load backgrounds for applet icon from ./images/applet folder.
         Return False in an event of an error.
         """
         # Read icon names in ./images/applet folder
-        path = self.applet_icon_dir
+        path = self.__applet_icon_dir
         # Check if the path exists
         if not os.path.exists(path):
             print _("Error:"), _("Directory"), path, _("does not exist.")
@@ -659,15 +600,6 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         # Force icon update
         self.update_icon(True)
 
-    def dialog_shown_cb(self, dialog):
-        """Update main applet dialog with new data and start update timer."""
-        self.dialog_timer.start()
-        self.update_dialog()
-
-    def dialog_hidden_cb(self, dialog):
-        """Stop update timer for main applet dialog."""
-        self.dialog_timer.stop()
-
 
     # === Change setting methods === #
     def unit_changed_cb(self, widget):
@@ -688,14 +620,14 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         # Save setting
         self.applet.settings["icon_file"] = filename
         # Apply icon change
-        self.icon.set_icon_file(self.applet_icon_dir + filename)
+        self.icon.set_icon_file(self.__applet_icon_dir + filename)
         self.update_icon(True)
 
     def change_timeout(self, timeout):
         """Save timeout setting and change timer to new timeout."""
         self.update_icon(True)
         self.icon_timer.change_interval(timeout)
-        self.dialog_timer.change_interval(timeout)
+        self.__main_dialog.change_interval(timeout)
         for sensor in self.sensors:
             # Set timeout for updaters
             if sensor.interface in [lmsensors.interface_name,
@@ -766,7 +698,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         self.applet.settings["dialog_row"] = \
                                 [sensor.dialog_row for sensor in self.sensors]
         # Recreate dialog
-        self.create_dialog_content()
+        self.__main_dialog.recreate()
 
     def toggle_high_alarm(self, sensor):
         """Toggle high alarm for a specific sensor and save it."""
@@ -796,7 +728,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         self.applet.settings["labels"] = \
                                     [sensor.label for sensor in self.sensors]
         # Recreate dialog
-        self.create_dialog_content()
+        self.__main_dialog.recreate()
 
     def show_toggled_cb(self, cell_renderer, path):
         """
@@ -814,7 +746,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         # Save show property
         self.applet.settings["show"] = [sensor.show for sensor in self.sensors]
         # Recreate dialog
-        self.create_dialog_content()
+        self.__main_dialog.recreate()
 
     def selection_changed_cb(self, treeview, cb_hand, cb_text):
         """Handle selection change in treeview."""
@@ -958,6 +890,80 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
                     sensor.dialog_row = dialog_row + 1
                     sensor_pred.dialog_row = dialog_row
                     self.update_dialog_rows()
+
+
+    class MainDialog:
+
+        def __init__(self, parent, main_dialog):
+
+            self.__parent = parent
+            self.__dialog = main_dialog
+
+            self.create_content()
+
+            # Create a timer, but do not start it
+            self.__timer = parent.applet.timing.register(
+                         self.update_values, parent.settings["timeout"], False)
+
+            self.__dialog.connect('show', self.dialog_shown_cb)
+            self.__dialog.connect('hide', self.dialog_hidden_cb)
+
+        def create_content(self):
+            """
+            (Re)creates sensor labels and values for main applet dialog
+            
+            """
+            # List of sensors to be shown in dialog
+            shown_sensors = dict()
+            for sensor in self.__parent.sensors:
+                if sensor.show:
+                    shown_sensors[sensor.dialog_row] = sensor
+
+            rows = shown_sensors.keys()
+            rows.sort()
+
+            # List of gtkLabel-s that contain the sensor value
+            self.__value_labels = dict()
+
+            new_vbox = gtk.VBox(False, 10)
+
+            for row in rows:
+                sensor = shown_sensors[row]
+                hbox = gtk.HBox()
+                label = gtk.Label(sensor.label + ':\t')
+                self.__value_labels[sensor] = gtk.Label(
+                                     str(sensor.value) + ' ' + sensor.unit_str)
+                hbox.pack_start(label, False, False)
+                hbox.pack_end(self.__value_labels[sensor], False, False)
+                new_vbox.pack_start(hbox, False, False)
+
+            new_vbox.show_all()
+            self.__dialog.add(new_vbox)
+
+        def recreate(self):
+            # Destroy current dialog vbox
+            self.__dialog.child.child.get_children()[-1].destroy()
+            # Create new content
+            self.create_content()
+
+        def update_values(self):
+            """Update main applet dialog with new values."""
+            for sensor, label in self.__value_labels.iteritems():
+                sensor.read_sensor()
+                label.set_text(str(sensor.value) + ' ' + sensor.unit_str)
+
+        def change_interval(self, timeout):
+            self.__timer.change_interval(timeout)
+
+        def dialog_shown_cb(self, dialog):
+            """Start updating sensor values in main applet dialog."""
+            self.__timer.start()
+            # Force update
+            self.update_values()
+
+        def dialog_hidden_cb(self, dialog):
+            """Stop update timer for main applet dialog."""
+            self.__timer.stop()
 
 
 if __name__ == "__main__":

@@ -36,7 +36,7 @@ class HDDTempSensor(Sensor):
 
     def __init__(self, name, seq_num, updater):
         Sensor.__init__(self, name, name, TempValue())
-        self.seq_num = seq_num
+        self.__seq_num = seq_num
         self.updater = updater
         self.interface = interface_name
 
@@ -44,7 +44,7 @@ class HDDTempSensor(Sensor):
         input = self.updater.get_update()
         if input is None:
             return False
-        self.value = float(input[3 + 5 * self.seq_num])
+        self.value = float(input[3 + 5 * self.__seq_num])
         return True
 
 

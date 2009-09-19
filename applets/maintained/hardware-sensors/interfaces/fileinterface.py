@@ -32,7 +32,7 @@ class FileSensor (Sensor):
     def __init__(self, name, filename):
         Sensor.__init__(self, filename, name, TempValue())
         self.interface = interface_name
-        self.filename = filename
+        self.__filename = filename
 
     def read_sensor(self):
         input = self.get_sensor_data()
@@ -43,7 +43,7 @@ class FileSensor (Sensor):
 
     def get_sensor_data(self):
         try:
-            sensorfile = open(self.filename, 'r')
+            sensorfile = open(self.__filename, 'r')
         except IOError, (errno, errorstr):
             print "File sensor interface:", \
                                         "I/O error(%s): %s" % (errno, errorstr)

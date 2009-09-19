@@ -53,24 +53,22 @@ lmsensors_cmd = lmsensors_path + " -A"
 
 class LmSensor(Sensor):
 
-    def __init__(self, ln, name, sensor_value, updater):
+    def __init__(self, ln, name, sensor_value, updater, double_line):
         Sensor.__init__(self, str(ln) + "_" + name, name, sensor_value)
-        self.ln = ln
+        self.__line_num = ln
+        self.__double_line = double_line
         self.updater = updater
         self.interface = interface_name
 
-    def get_updater(self):
-        return self.updater
-
     def read_sensor(self):
         lm_output = self.updater.get_update()
-        if self.ln >= len(lm_output):
+        if self.__line_num >= len(lm_output):
             self.value = -273
             return False
-        if self.double_line:
-            line = lm_output[self.ln - 1] + lm_output[self.ln]
+        if self.__double_line:
+            line = lm_output[self.__line_num - 1] + lm_output[self.__line_num]
         else:
-            line = lm_output[self.ln]
+            line = lm_output[self.__line_num]
         sensor = regexc[self.type].match(line)
         if sensor is not None:
             self.value = float(sensor.group("value"))
@@ -105,24 +103,21 @@ def get_sensors(timeout=1):
         volt_sensor = regexc_voltage.match(line)
         if volt_sensor is not None:
             name, value = volt_sensor.group("label", "value")
-            new_sensor = LmSensor(ln, name, VoltValue(), updater)
-            new_sensor.double_line = double_line
+            new_sensor = LmSensor(ln, name, VoltValue(), updater, double_line)
             lmsensors.append(new_sensor)
             continue
 
         temp_sensor = regexc_temp.match(line)
         if temp_sensor is not None:
             name, value = temp_sensor.group("label", "value")
-            new_sensor = LmSensor(ln, name, TempValue(), updater)
-            new_sensor.double_line = double_line
+            new_sensor = LmSensor(ln, name, TempValue(), updater, double_line)
             lmsensors.append(new_sensor)
             continue
 
         fan_sensor = regexc_fan.match(line)
         if fan_sensor is not None:
             name, value = fan_sensor.group("label", "value")
-            new_sensor = LmSensor(ln, name, RPMValue(), updater)
-            new_sensor.double_line = double_line
+            new_sensor = LmSensor(ln, name, RPMValue(), updater, double_line)
             lmsensors.append(new_sensor)
 
     return lmsensors

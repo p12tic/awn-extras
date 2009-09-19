@@ -41,7 +41,7 @@ from sensorvalues.voltvalue import VoltValue
 
 from sensorvalues import units
 from desktopagnostic import Color
-import sensoricon
+from sensoricon import SensorIcon
 
 applet_name = "Hardware Sensors"
 short_name = "hardware-sensors"
@@ -152,7 +152,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         for sensor in self.sensors:
             if sensor.in_icon:
                 self.main_sensors.append(sensor)
-        self.icon.set_sensors(self.main_sensors)
+        self.__icon.set_sensors(self.main_sensors)
 
     def update_all_sensors(self):
         """Update all of the sensor values."""
@@ -168,13 +168,12 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         
         """
         file = self.__applet_icon_dir + self.settings["icon_file"]
-        self.icon = sensoricon.SensorIcon(file,
-                                          self.main_sensors,
-                                          self.applet.get_size())
-        self.old_values = None
+        self.__icon = SensorIcon(file, self.main_sensors,
+                                                        self.applet.get_size())
+        self.__old_values = None
         # Call the first update and start the updater
         self.update_icon()
-        self.icon_timer = self.applet.timing.register(
+        self.__icon_timer = self.applet.timing.register(
                             self.update_icon, self.settings["timeout"])
 
     def update_icon(self, force=False):
@@ -186,11 +185,11 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
             main_sensor.read_sensor()
         values = [sensor.value for sensor in self.main_sensors]
         # Check if values have changed
-        if values != self.old_values or force:
-            self.old_values = values
+        if values != self.__old_values or force:
+            self.__old_values = values
 
             # Get updated icon
-            context = self.icon.get_icon()
+            context = self.__icon.get_icon()
             # Set updated icon
             self.applet.icon.set(context)
 
@@ -219,13 +218,13 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
             print _("Error:"), _("Directory"), path, _("does not exist.")
             return False
 
-        self.icon_files = filter(
+        self.__icon_files = filter(
           lambda file: file.endswith((".svg", ".SVG")), os.listdir(path))
-        if len(self.icon_files) == 0:
+        if len(self.__icon_files) == 0:
             print _("Error:"), _("No .svg images found in directory:"), path
             return False
 
-        self.icon_files.sort()
+        self.__icon_files.sort()
         return True
 
 
@@ -237,12 +236,12 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         
         """
         # Setup the rightclick context menu.
-        self.pref_dialog = self.applet.dialog.new("preferences")
-        self.pref_dialog.set_resizable(True)
+        self.__pref_dialog = self.applet.dialog.new("preferences")
+        self.__pref_dialog.set_resizable(True)
 
         prefs = gtk.Builder()
         prefs.add_from_file(ui_file)
-        prefs.get_object("notebook").reparent(self.pref_dialog.vbox)
+        prefs.get_object("notebook").reparent(self.__pref_dialog.vbox)
 
         # Default settings
         default_settings = {
@@ -250,7 +249,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
             "unit": (units.UNIT_CELSIUS, self.change_unit),
             "timeout": (2, self.change_timeout,
                                              prefs.get_object("spin_timeout")),
-            "icon_file": (self.icon_files[0]),
+            "icon_file": (self.__icon_files[0]),
             # Sensor settings
             "ids": [str(sensor.id) for sensor in self.sensors],
             "labels": [sensor.label for sensor in self.sensors],
@@ -294,7 +293,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
             # Set timeout for updaters.
             if sensor.interface in [lmsensors.interface_name,
                                     nvidiasensors.interface_name]:
-                sensor.get_updater().set_timeout(settings["timeout"])
+                sensor.updater.set_timeout(settings["timeout"])
 
         # If a sensor was lost, a new one found or if order was changed
         if new_sensors or \
@@ -332,8 +331,8 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
             self.applet.settings["in_icon"] = \
                                     [sensor.in_icon for sensor in self.sensors]
 
-        if self.settings["icon_file"] not in self.icon_files:
-            self.applet.settings["icon_file"] = self.icon_files[0]
+        if self.settings["icon_file"] not in self.__icon_files:
+            self.applet.settings["icon_file"] = self.__icon_files[0]
 
         self.setup_general_preferences(prefs)
         self.setup_sensor_preferences(prefs)
@@ -351,11 +350,11 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         # Icon combobox
         icon_combobox = prefs.get_object("combobox_icon")
         awnlib.add_cell_renderer_text(icon_combobox)
-        for icon in self.icon_files:
+        for icon in self.__icon_files:
             # Add filename without the extension and '_' replaced width space
             icon_combobox.append_text(icon[:-4].replace('_', ' '))
         icon_combobox.set_active(
-                             self.icon_files.index(self.settings["icon_file"]))
+                           self.__icon_files.index(self.settings["icon_file"]))
         icon_combobox.connect('changed', self.icon_changed_cb)
 
     def setup_sensor_preferences(self, prefs):
@@ -407,20 +406,20 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
 
     def setup_sensors_treeview(self, treeview):
         """Create treeview with list of all sensors and their settings."""
-        self.liststore = gtk.ListStore(
+        self.__liststore = gtk.ListStore(
                             int, int, str, str, str, 'gboolean', 'gboolean')
-        self.column_idx = 0
-        self.column_row = 1
-        self.column_interface = 2
-        self.column_name = 3
-        self.column_label = 4
-        self.column_show = 5
-        self.column_in_icon = 6
+        self.__column_idx = 0
+        self.__column_row = 1
+        self.__column_interface = 2
+        self.__column_name = 3
+        self.__column_label = 4
+        self.__column_show = 5
+        self.__column_in_icon = 6
 
         # Fill liststore with data
         for idx, sensor in enumerate(self.sensors):
             # Add a row to liststore
-            last = self.liststore.append([idx,
+            last = self.__liststore.append([idx,
                                           sensor.dialog_row,
                                           sensor.interface,
                                           sensor.name,
@@ -429,7 +428,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
                                           sensor.in_icon])
 
         # Set TreeView's liststore
-        treeview.set_model(self.liststore)
+        treeview.set_model(self.__liststore)
 
         # Create a CellRendererText to render the data
         cell_row = gtk.CellRendererText()
@@ -452,18 +451,18 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         # and set the cell "text" attribute to correct column (treeview
         # retrieves text from that column in liststore)
         tvcolumn_row = gtk.TreeViewColumn("#", cell_row,
-                                          text=self.column_row,
-                                          visible=self.column_show)
+                                          text=self.__column_row,
+                                          visible=self.__column_show)
         tvcolumn_interface = gtk.TreeViewColumn(_("Interface"), cell_interface,
-                                                text=self.column_interface)
+                                                  text=self.__column_interface)
         tvcolumn_name = gtk.TreeViewColumn(_("Name"), cell_name,
-                                           text=self.column_name)
+                                                       text=self.__column_name)
         tvcolumn_label = gtk.TreeViewColumn(_("Label"), cell_label,
-                                            text=self.column_label)
+                                                      text=self.__column_label)
         # Set the cell "active" attribute to column_show - retrieve the state
         # of the toggle button from that column in liststore
         tvcolumn_show = gtk.TreeViewColumn(_("In dialog"), cell_show,
-                                           active=self.column_show)
+                                                     active=self.__column_show)
 
         # Add treeview columns to treeview
         treeview.append_column(tvcolumn_row)
@@ -473,24 +472,25 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         treeview.append_column(tvcolumn_show)
 
         # Make name and label searchable
-        treeview.set_search_column(self.column_name)
-        treeview.set_search_column(self.column_label)
+        treeview.set_search_column(self.__column_name)
+        treeview.set_search_column(self.__column_label)
 
         # Allow sorting on the column
-        tvcolumn_row.set_sort_column_id(self.column_row)
-        tvcolumn_interface.set_sort_column_id(self.column_interface)
-        tvcolumn_name.set_sort_column_id(self.column_name)
-        tvcolumn_label.set_sort_column_id(self.column_label)
-        tvcolumn_show.set_sort_column_id(self.column_show)
+        tvcolumn_row.set_sort_column_id(self.__column_row)
+        tvcolumn_interface.set_sort_column_id(self.__column_interface)
+        tvcolumn_name.set_sort_column_id(self.__column_name)
+        tvcolumn_label.set_sort_column_id(self.__column_label)
+        tvcolumn_show.set_sort_column_id(self.__column_show)
 
         # Sort by dialog_row
-        self.liststore.set_sort_column_id(self.column_row, gtk.SORT_ASCENDING)
+        self.__liststore.set_sort_column_id(self.__column_row,
+                                          gtk.SORT_ASCENDING)
 
     def setup_main_sensors_treeview(self, treeview):
         """Create treeview with list of sensors to be shown in applet icon."""
         # List store for main sensors
-        model_filter = self.liststore.filter_new()
-        model_filter.set_visible_column(self.column_in_icon)
+        model_filter = self.__liststore.filter_new()
+        model_filter.set_visible_column(self.__column_in_icon)
 
         # Set main sensor treeview's liststore
         treeview.set_model(model_filter)
@@ -500,7 +500,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
 
         # Add treeview-column to treeview
         tvcolumn_label = gtk.TreeViewColumn(_("Sensors displayed in icon"),
-                                            cell_label, text=self.column_label)
+                                          cell_label, text=self.__column_label)
         treeview.append_column(tvcolumn_label)
 
     def create_properties_dialog(self, sensor):
@@ -518,10 +518,9 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
 
         prop_dialog = prefs.get_object("sensor_properties_dialog")
         prop_dialog.set_title(sensor.label + " - " + _("properties"))
-        prop_dialog.set_parent(self.pref_dialog)
-        prop_dialog.set_icon(self.pref_dialog.get_icon())
+        prop_dialog.set_icon(self.__pref_dialog.get_icon())
         # Properties window should be on top of settings window
-        prop_dialog.set_transient_for(self.pref_dialog)
+        prop_dialog.set_transient_for(self.__pref_dialog)
 
         # Get sensor value's type
         value_type = sensor.type
@@ -596,7 +595,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
 
     def height_changed_cb(self):
         """Update the applet's icon to reflect the new height."""
-        self.icon.set_height(self.applet.get_size())
+        self.__icon.set_height(self.applet.get_size())
         # Force icon update
         self.update_icon(True)
 
@@ -616,23 +615,23 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
 
     def icon_changed_cb(self, widget):
         """Save icon file setting and update icon."""
-        filename = self.icon_files[widget.get_active()]
+        filename = self.__icon_files[widget.get_active()]
         # Save setting
         self.applet.settings["icon_file"] = filename
         # Apply icon change
-        self.icon.set_icon_file(self.__applet_icon_dir + filename)
+        self.__icon.set_icon_file(self.__applet_icon_dir + filename)
         self.update_icon(True)
 
     def change_timeout(self, timeout):
         """Save timeout setting and change timer to new timeout."""
         self.update_icon(True)
-        self.icon_timer.change_interval(timeout)
+        self.__icon_timer.change_interval(timeout)
         self.__main_dialog.change_interval(timeout)
         for sensor in self.sensors:
             # Set timeout for updaters
             if sensor.interface in [lmsensors.interface_name,
                                     nvidiasensors.interface_name]:
-                sensor.get_updater().set_timeout(timeout)
+                sensor.updater.set_timeout(timeout)
 
     def change_high_value(self, sensor, value):
         """Save high value setting for a specific sensor and update icon."""
@@ -669,7 +668,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
 
     def change_hand_color(self, color, alpha):
         """Save hand color setting for a specific sensor and update icon."""
-        sensor = self.selected_sensor
+        sensor = self.__selected_sensor
         # Apply hand color change
         sensor.hand_color = (color.red, color.green, color.blue, alpha)
         # Save hand_color values
@@ -680,7 +679,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
 
     def change_text_color(self, color, alpha):
         """Save text color setting for a specific sensor and update icon."""
-        sensor = self.selected_sensor
+        sensor = self.__selected_sensor
         # Apply text color change
         sensor.text_color = (color.red, color.green, color.blue, alpha)
         # Save text_color values
@@ -720,8 +719,8 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         
         """
         # Change label value in liststore
-        self.liststore[path][self.column_label] = new_text
-        sensor = self.sensors[self.liststore[path][self.column_idx]]
+        self.__liststore[path][self.__column_label] = new_text
+        sensor = self.sensors[self.__liststore[path][self.__column_idx]]
         # Apply change to sensor
         sensor.label = new_text
         # Save labels
@@ -736,13 +735,13 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         dialog.
         
         """
-        store = self.liststore
-        sensor = self.sensors[store[path][self.column_idx]]
+        store = self.__liststore
+        sensor = self.sensors[store[path][self.__column_idx]]
 
         # Toggle value in liststore
-        store[path][self.column_show] = not store[path][self.column_show]
+        store[path][self.__column_show] = not store[path][self.__column_show]
         # Apply change to sensor
-        sensor.show = store[path][self.column_show]
+        sensor.show = store[path][self.__column_show]
         # Save show property
         self.applet.settings["show"] = [sensor.show for sensor in self.sensors]
         # Recreate dialog
@@ -756,8 +755,9 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         # Something must be selected
         if iter is not None:
             child_iter = model_filter.convert_iter_to_child_iter(iter)
-            sensor = self.sensors[self.liststore[child_iter][self.column_idx]]
-            self.selected_sensor = sensor
+            sensor = self.sensors[
+                               self.__liststore[child_iter][self.__column_idx]]
+            self.__selected_sensor = sensor
 
             cb_hand.set_sensitive(True)
             cb_text.set_sensitive(True)
@@ -785,7 +785,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         # Something must be selected
         if iter is not None:
             # Sensor index
-            idx = model[iter][self.column_idx]
+            idx = model[iter][self.__column_idx]
             self.create_properties_dialog(self.sensors[idx])
 
     def add_cb(self, widget, treeview_all):
@@ -799,11 +799,11 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         # Something must be selected
         if iter is not None:
             # Sensor index
-            idx = self.liststore[iter][self.column_idx]
+            idx = self.__liststore[iter][self.__column_idx]
             # Apply setting
             self.change_in_icon(self.sensors[idx], True)
             # Change value in model
-            model[iter][self.column_in_icon] = True
+            model[iter][self.__column_in_icon] = True
 
     def remove_cb(self, widget, treeview_main, cb_hand, cb_text):
         """
@@ -818,11 +818,11 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         if iter is not None:
             child_iter = model_filter.convert_iter_to_child_iter(iter)
             # Sensor index
-            idx = self.liststore[child_iter][self.column_idx]
+            idx = self.__liststore[child_iter][self.__column_idx]
             # Apply setting
             self.change_in_icon(self.sensors[idx], False)
             # Change value in model
-            self.liststore[child_iter][self.column_in_icon] = False
+            self.__liststore[child_iter][self.__column_in_icon] = False
             # If row is removed, no row remains selected, so gray out the color
             # buttons
             cb_hand.set_sensitive(False)
@@ -839,23 +839,23 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
 
         # Something must be selected
         if iter is not None:
-            dialog_row = model[iter][self.column_row]
+            dialog_row = model[iter][self.__column_row]
             if dialog_row > 1:
                 # Iterator pointing to predecessor (sensor/row that has
                 # dialog_row one less than this one)
                 row_pred = None
                 for row in model:
-                    if row[self.column_row] == dialog_row - 1:
+                    if row[self.__column_row] == dialog_row - 1:
                         row_pred = row
                         break
                 if row_pred is not None:
                     # Switch model_row-s
-                    model[iter][self.column_row] = dialog_row - 1
-                    row_pred[self.column_row] = dialog_row
+                    model[iter][self.__column_row] = dialog_row - 1
+                    row_pred[self.__column_row] = dialog_row
 
                     # Apply setting
-                    sensor = self.sensors[model[iter][self.column_idx]]
-                    sensor_pred = self.sensors[row_pred[self.column_idx]]
+                    sensor = self.sensors[model[iter][self.__column_idx]]
+                    sensor_pred = self.sensors[row_pred[self.__column_idx]]
                     sensor.dialog_row = dialog_row - 1
                     sensor_pred.dialog_row = dialog_row
                     self.update_dialog_rows()
@@ -870,27 +870,26 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         (model, iter) = selection.get_selected()
         # Something must be selected
         if iter is not None:
-            dialog_row = model[iter][self.column_row]
+            dialog_row = model[iter][self.__column_row]
             if dialog_row < len(self.sensors):
                 # Iter pointing to predecessor (sensor/row that has dialog_row
                 # one less than this one)
                 row_pred = None
                 for row in model:
-                    if row[self.column_row] == dialog_row + 1:
+                    if row[self.__column_row] == dialog_row + 1:
                         row_pred = row
                         break
                 if row_pred is not None:
                 # Switch model_row-s
-                    model[iter][self.column_row] = dialog_row + 1
-                    row_pred[self.column_row] = dialog_row
+                    model[iter][self.__column_row] = dialog_row + 1
+                    row_pred[self.__column_row] = dialog_row
 
                     # Apply setting
-                    sensor = self.sensors[model[iter][self.column_idx]]
-                    sensor_pred = self.sensors[row_pred[self.column_idx]]
+                    sensor = self.sensors[model[iter][self.__column_idx]]
+                    sensor_pred = self.sensors[row_pred[self.__column_idx]]
                     sensor.dialog_row = dialog_row + 1
                     sensor_pred.dialog_row = dialog_row
                     self.update_dialog_rows()
-
 
     class MainDialog:
 

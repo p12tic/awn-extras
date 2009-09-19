@@ -61,7 +61,7 @@ class Sensor(object):
         self.__high_alarm_triggered = False
         self.__low_alarm_triggered = False
 
-        self.alarm_cb = None
+        self.__alarm_cb = None
 
     def value():
         doc = """Sensor's current value"""
@@ -160,7 +160,7 @@ class Sensor(object):
         self.under_low = False
 
     def connect_to_alarm(self, alarm_cb):
-        self.alarm_cb = alarm_cb
+        self.__alarm_cb = alarm_cb
 
     def check_alarms(self):
         # Get value in proper unit
@@ -172,12 +172,12 @@ class Sensor(object):
             if value > self.high_value and not self.__high_alarm_triggered:
                 self.__high_alarm_triggered = True
                 message = "Warning, %s very high: %i %s" % \
-                        (self.label, value, self.get_unit_str())
+                        (self.label, value, self.unit_str)
 
                 # Trigger alarm - call alarm_cb, if it has been set, otherwise
                 # print the alarm
-                if self.alarm_cb:
-                    self.alarm_cb(self, message)
+                if self.__alarm_cb:
+                    self.__alarm_cb(self, message)
                 else:
                     print messages
 
@@ -191,12 +191,12 @@ class Sensor(object):
             if value < self.low_value and not self.__low_alarm_triggered:
                 self.__low_alarm_triggered = True
                 message = "Warning, %s very low: %i %s" % \
-                        (self.label, value, self.get_unit_str())
+                        (self.label, value, self.unit_str)
 
                 # Trigger alarm - call alarm_cb, if it has been set, otherwise
                 # print the alarm
-                if self.alarm_cb:
-                    self.alarm_cb(self, message)
+                if self.__alarm_cb:
+                    self.__alarm_cb(self, message)
                 else:
                     print message
 
@@ -209,17 +209,17 @@ class Updater():
     """An updater that calls 'callback' function every 'timeout' seconds"""
 
     def __init__(self, timeout, callback):
-        self.timeout = timeout - 0.01
+        self.__timeout = timeout - 0.01
         self.get_ouput = callback
         # Time of the last update
-        self.last_update = 0
+        self.__last_update = 0
 
     def set_timeout(self, timeout):
-        self.timeout = timeout - 0.01
+        self.__timeout = timeout - 0.01
 
     def get_update(self):
-        if self.last_update + self.timeout > time.time():
-            return self.output
-        self.last_update = time.time()
-        self.output = self.get_ouput()
-        return self.output
+        if self.__last_update + self.__timeout > time.time():
+            return self.__output
+        self.__last_update = time.time()
+        self.__output = self.get_ouput()
+        return self.__output

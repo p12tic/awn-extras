@@ -44,7 +44,7 @@ class TempValue(SensorValue):
         def fget(self):
             return self.to_unit(self.raw_low_value)
 
-        def fset(self, value):
+        def fset(self, low_value):
             self.raw_low_value = self.from_unit(int(low_value))
 
         return locals()
@@ -58,7 +58,7 @@ class TempValue(SensorValue):
         def fget(self):
             return self.to_unit(self.raw_high_value)
 
-        def fset(self, value):
+        def fset(self, high_value):
             self.raw_high_value = self.from_unit(int(high_value))
 
         return locals()

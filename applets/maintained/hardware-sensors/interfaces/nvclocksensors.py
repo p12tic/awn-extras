@@ -52,20 +52,17 @@ class NVCoreSensor (Sensor):
 
     def __init__(self, ln, name, sensor_value, updater):
         Sensor.__init__(self, str(ln) + "_" + name, name, sensor_value)
-        self.ln = ln
+        self.__line_number = ln
         self.updater = updater
         self.interface = interface_name
 
-    def get_updater(self):
-        return self.updater
-
     def read_sensor(self):
         nv_output = self.updater.get_update()
-        if not nv_output or self.ln >= len(nv_output):
+        if not nv_output or self.__line_number >= len(nv_output):
             self.value = -273
             return False
 
-        line = nv_output[self.ln]
+        line = nv_output[self.__line_number]
         sensor = regexc[self.type].match(line)
         if sensor:
             self.value = float(sensor.group("value"))

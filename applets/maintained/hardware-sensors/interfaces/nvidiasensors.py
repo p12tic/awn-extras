@@ -46,9 +46,6 @@ class NvSensor(Sensor):
         self.updater = updater
         self.interface = interface_name
 
-    def get_updater(self):
-        return self.updater
-
     def read_sensor(self):
         nv_output = self.updater.get_update()
         if not nv_output or self.id >= len(nv_output):

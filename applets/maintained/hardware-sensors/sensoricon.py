@@ -37,53 +37,53 @@ class SensorIcon():
             height: icon height in pixels
         
         """
-        self.filename = filename
-        self.sensors = sensors
-        self.height = height
+        self.__filename = filename
+        self.__sensors = sensors
+        self.__height = height
 
         self.create_background()
 
     def set_height(self, height):
         """Set icon height."""
-        self.height = height
+        self.__height = height
         self.create_background()
 
     def set_sensors(self, sensors):
         """Set sensors who's values are shown in this icon."""
-        self.sensors = sensors
+        self.__sensors = sensors
 
     def set_icon_file(self, filename):
-        self.filename = filename
+        self.__filename = filename
         self.create_background()
 
     def create_background(self):
-        background = rsvg.Handle(self.filename)
-        self.background_surface = cairo.ImageSurface(
-                                 cairo.FORMAT_ARGB32, self.height, self.height)
-        background_context = cairo.Context(self.background_surface)
+        background = rsvg.Handle(self.__filename)
+        self.__background_surface = cairo.ImageSurface(
+                             cairo.FORMAT_ARGB32, self.__height, self.__height)
+        background_context = cairo.Context(self.__background_surface)
 
         svg_width, svg_height = map(float, background.get_dimension_data()[:2])
         background_context.scale(
-                             self.height / svg_width, self.height / svg_height)
+                         self.__height / svg_width, self.__height / svg_height)
 
         background.render_cairo(background_context)
 
     def get_icon(self):
         """Return the applet icon as Cairo context."""
 
-        values = [sensor.value for sensor in self.sensors]
+        values = [sensor.value for sensor in self.__sensors]
 
-        height = width = self.height
+        height = width = self.__height
 
         surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, height, height)
         context = cairo.Context(surface)
 
         context.set_operator(cairo.OPERATOR_OVER)
         # Draw the background image
-        context.set_source_surface(self.background_surface)
+        context.set_source_surface(self.__background_surface)
         context.paint()
 
-        for idx, sensor in enumerate(self.sensors):
+        for idx, sensor in enumerate(self.__sensors):
 
             low_value = sensor.low_value
             high_value = sensor.high_value

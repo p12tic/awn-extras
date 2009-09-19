@@ -1,4 +1,4 @@
-- remove text_color settings
+- enable/remove text_color settings
 - extend Overlay class for use with cairo surface - to draw the needle
 - graphical value display in main dialog
 - translation

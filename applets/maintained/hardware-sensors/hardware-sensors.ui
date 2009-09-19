@@ -552,7 +552,7 @@
                     <property name="visible">True</property>
                     <property name="spacing">4</property>
                     <child>
-                      <object class="GtkHBox" id="hbox7">
+                      <object class="GtkHBox" id="hbox17">
                         <property name="visible">True</property>
                         <child>
                           <object class="GtkLabel" id="label11">
@@ -584,7 +584,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkHBox" id="hbox8">
+                      <object class="GtkHBox" id="hbox18">
                         <property name="visible">True</property>
                         <child>
                           <object class="GtkLabel" id="label12">
@@ -689,7 +689,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkHBox" id="hbox9">
+          <object class="GtkHBox" id="hbox19">
             <property name="visible">True</property>
             <child>
               <object class="GtkButton" id="close_properties">

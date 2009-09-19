@@ -1,9 +1,9 @@
 [Desktop Entry]
 Type=Application
 X-AWN-Type=Applet
-X-AWN-AppletType=Python
+X-AWN-AppletType=Vala
 _Name=Show Desktop
 _Comment=Hide your windows and show your desktop
-Exec=showdesktop/showdesktop.py
+Exec=@LIBDIR@/awn/applets/showdesktop/showdesktop.so
 Icon=desktop
 X-AWN-AppletCategory=Utility

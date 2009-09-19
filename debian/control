@@ -55,6 +55,7 @@ Description: A collection of applets for avant-window-navigator
   * plugger: Displays mounted volumes and allows you to browse them.
   * separator: Display a white line to separate applets.
   * shinyswitcher: A workspace switcher supporting compiz and other WMs.
+  * showdesktop: Hides/shows all of the windows of the current viewport, 
 
 Package: awn-applets-c-extras-trunk
 Section: gnome
@@ -125,7 +126,6 @@ Description: A collection of applets for avant-window-navigator
   * mount-applet: Displays mounts from /etc/fstab and allows one to 
     mount/unmount them.
   * quit: A simple gnome-quit launcher.
-  * showdesktop: Hides/shows all of the windows of the current viewport, 
     similar to the showdesktop icon of gnome-panel.
   * stack: Provides a convenient location to place commonly used files.
   * thinkhdaps: Displays the status of HDAPS. 

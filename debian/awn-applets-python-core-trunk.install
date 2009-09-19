@@ -96,11 +96,6 @@ usr/share/avant-window-navigator/applets/quit/*.py
 usr/share/avant-window-navigator/applets/quit.desktop
 usr/share/avant-window-navigator/schemas/awn-applet-quit.schema-ini
 #
-# Showdesktop
-#
-usr/share/avant-window-navigator/applets/showdesktop/
-usr/share/avant-window-navigator/applets/showdesktop.desktop
-#
 # Thinkhdaps
 #
 usr/share/avant-window-navigator/applets/thinkhdaps/

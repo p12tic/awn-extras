@@ -72,9 +72,13 @@ applets/maintained/places/applet.c
 applets/maintained/places/places.desktop.in.in
 applets/maintained/python-test/python-test.desktop.in
 applets/maintained/quit/quit.desktop.in
+applets/maintained/quit/quit-lock-screen.desktop.in
+applets/maintained/quit/quit-log-out.desktop.in
+applets/maintained/quit/quit-shut-down.desktop.in
 applets/maintained/shiny-switcher/shiny-prefs.ui
 applets/maintained/shiny-switcher/shinyswitcher.desktop.in.in
-applets/maintained/showdesktop/showdesktop.desktop.in
+applets/maintained/showdesktop/applet.vala
+applets/maintained/showdesktop/showdesktop.desktop.in.in
 applets/maintained/sysmon/sysmon.desktop.in.in
 applets/maintained/thinkhdaps/thinkhdaps.desktop.in
 applets/maintained/to-do/prefs.py
@@ -92,6 +96,8 @@ applets/maintained/webapplet/applet.c
 applets/maintained/webapplet/webapplet.desktop.in.in
 applets/maintained/wobblyzini/wobblyzini.desktop.in.in
 applets/maintained/yama/yama.desktop.in
+applets/unmaintained/dropper/dropper.desktop.in
+applets/unmaintained/dropper/dropper-prefs.ui
 applets/unmaintained/mail/mail.desktop.in
 applets/unmaintained/mail/mail.py
 applets/unmaintained/mail/mail.ui

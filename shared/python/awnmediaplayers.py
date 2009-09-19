@@ -37,7 +37,7 @@ try:
 except ImportError:
     pass
 
-def what_app():
+def get_app_name():
     player_name = None
     bus_obj = dbus.SessionBus().get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
     if bus_obj.NameHasOwner('org.gnome.Rhythmbox') == True:
@@ -117,28 +117,20 @@ class GenericPlayer(object):
         """
         Defining the dbus location for GenericPlayer
 
-        Provides self.player and any other interfaces needed by labeler and
-        the button methods
+        Provides self.player and any other interfaces needed by get_media_info
+        and the button methods
         """
         pass
 
-    def labeler(self, artOnOff, titleOrder, titleLen, titleBoldFont):
+    def get_media_info(self):
         """
-        This method changes the application titles and album art
-
-        Arguments
-        * bool artOnOff = should the labeler return art locations? True or False
-        * str titleOrder = 'artist - title' or 'title - artist'
-        * int titleLen = length of the title
-        * bool titleBoldFont = should the labeler use bold fonts via pango?
+        This method tries to get information about currently playing media
 
         Returns
-        * str albumart_exact = the location of album art on the file system
-        * str result = the title/album string
-        * str result_tooltip = a result with no bolding and less len
+        * dict result = dictionary of various information about media
+            (should always have at least the 'title' key)
         """
-        #return albumart_exact, result, result_tooltip
-        pass
+        return {}
 
     def previous (self):
         pass
@@ -161,19 +153,6 @@ class GenericPlayer(object):
         """
         return False
 
-    def get_title_and_tooltip (self, text):
-        # titleLen and titleBoldFont should be declared
-        # here and not just in subclasses
-        if not isinstance(text, (str, unicode)): return '',''
-        if len(text) > self.titleLen:
-            text = text[:self.titleLen]
-            text = text + '..'
-        tooltip = text
-        if self.titleBoldFont == 'on':
-            text = """<span weight="bold">""" + gobject.markup_escape_text(text) + """</span>"""
-
-        return text, tooltip
-
 
 class Rhythmbox(GenericPlayer):
     """Full Support with signals"""
@@ -195,45 +174,32 @@ class Rhythmbox(GenericPlayer):
             self.player.connect_to_signal('playingSongPropertyChanged', self.callback_fn, member_keyword='member')
             self.rbShell = self.session_bus.get_object(self.dbus_base_name, '/org/gnome/Rhythmbox/Shell')
 
-    def labeler(self,artOnOff,titleOrder,titleLen,titleBoldFont):
-        """
-        This method changes the application titles and album art
-        """
-        self.artOnOff = artOnOff
-        self.titleOrder = titleOrder
-        self.titleLen = titleLen
-        self.titleBoldFont = titleBoldFont
+    def get_media_info(self):
         self.dbus_driver()
+        ret_dict = {}
         result = self.rbShell.getSongProperties(self.player.getPlayingUri())
 
-        if self.artOnOff == 'on' and 'rb:coverArt-uri' in result:
+        if 'rb:coverArt-uri' in result:
             albumart_exact = result['rb:coverArt-uri']
             # bug in rhythmbox 0.11.6 - returns uri, but not properly encoded,
-            # so it's enough to remove the file:// prefix
+            # but it's enough to remove the file:// prefix
             albumart_exact = albumart_exact.replace('file://', '', 1)
-        else:
-            albumart_exact = ''
+            ret_dict['album-art'] = albumart_exact
 
         # Currently Playing Title
         if result['artist'] != '':
-            if self.titleOrder == 'artist - title':
-                try:result = result['artist'] + ' - ' + result['title']
-                except:SyntaxError
-            elif self.titleOrder == 'title - artist':
-                try:result = result['title'] + ' - ' + result['artist']
-                except:SyntaxError
+            ret_dict['artist'] = result['artist']
+            ret_dict['title'] = result['title']
+            if 'album' in result: ret_dict['album'] = result['album']
         elif 'rb:stream-song-title' in result:
             if result['title'] != '':
-                try:result = result['rb:stream-song-title'] + ' (' + result['title'] + ')'
-                except:SyntaxError
+                ret_dict['title'] = result['rb:stream-song-title'] + ' (' + result['title'] + ')'
             else:
-               try:result = result['rb:stream-song-title']
-               except:SyntaxError
+               ret_dict['title'] = result['rb:stream-song-title']
         elif 'title' in result:
-            result = result['title']
+            ret_dict['title'] = result['title']
 
-        markup, tooltip = self.get_title_and_tooltip(result)
-        return albumart_exact, markup, tooltip
+        return ret_dict
 
     def previous (self):
         self.player.previous ()
@@ -276,29 +242,17 @@ class Exaile(GenericPlayer):
             self.proxy_obj = self.session_bus.get_object('org.exaile.DBusInterface', '/DBusInterfaceObject')
             self.player = dbus.Interface(self.proxy_obj, "org.exaile.DBusInterface")
 
-    def labeler(self,artOnOff,titleOrder,titleLen,titleBoldFont):
-        """
-        This method changes the application titles and album art
-        """
-        self.artOnOff = artOnOff
-        self.titleOrder = titleOrder
-        self.titleLen = titleLen
-        self.titleBoldFont = titleBoldFont
+    def get_media_info(self):
         self.dbus_driver()
 
         # Currently Playing Title
         result = {}
         result['title'] = self.player.get_title()
         result['artist'] = self.player.get_artist()
-        if self.titleOrder == 'artist - title':
-            try:result = result['artist'] + ' - ' + result['title']
-            except:SyntaxError
-        elif self.titleOrder == 'title - artist':
-            try:result = result['title'] + ' - ' + result['artist']
-            except:SyntaxError
+        result['album'] = self.player.get_album()
+        result['album-art'] = self.player.get_cover_path()
 
-        markup, tooltip = self.get_title_and_tooltip(result)
-        return self.player.get_cover_path(), markup, tooltip
+        return result
 
     def previous (self):
         self.player.prev_track()
@@ -336,29 +290,17 @@ class Banshee(GenericPlayer):
             self.proxy_obj = self.session_bus.get_object('org.gnome.Banshee',"/org/gnome/Banshee/Player")
             self.player = dbus.Interface(self.proxy_obj, "org.gnome.Banshee.Core")
 
-    def labeler(self,artOnOff,titleOrder,titleLen,titleBoldFont):
-        """
-        This method changes the application titles and album art
-        """
-        self.artOnOff = artOnOff
-        self.titleOrder = titleOrder
-        self.titleLen = titleLen
-        self.titleBoldFont = titleBoldFont
+    def get_media_info(self):
         self.dbus_driver()
 
         # Currently Playing Title
         result = {}
         result['title'] = self.player.GetPlayingTitle()
         result['artist'] = self.player.GetPlayingArtist()
-        if self.titleOrder == 'artist - title':
-            try:result = result['artist'] + ' - ' + result['title']
-            except:SyntaxError
-        elif self.titleOrder == 'title - artist':
-            try:result = result['title'] + ' - ' + result['artist']
-            except:SyntaxError
+        #result['album'] = self.player.GetPlayingAlbum() #FIXME: does it exist?
+        result['album-art'] = self.player.GetPlayingCoverUri()
 
-        markup, tooltip = self.get_title_and_tooltip(result)
-        return self.player.GetPlayingCoverUri(), markup, tooltip
+        return result
 
     def previous (self):
         self.player.Previous()
@@ -398,44 +340,33 @@ class BansheeOne(GenericPlayer):
             self.player1 = dbus.Interface(self.proxy_obj1, "org.bansheeproject.Banshee.PlaybackController")
             self.player.connect_to_signal('EventChanged', self.callback_fn, member_keyword='member')
 
-    def labeler(self,artOnOff,titleOrder,titleLen,titleBoldFont):
-        """
-        This method changes the application titles and album art
-        """
-        self.artOnOff = artOnOff
-        self.titleOrder = titleOrder
-        self.titleLen = titleLen
-        self.titleBoldFont = titleBoldFont
+    def get_media_info(self):
         self.dbus_driver()
+        result = {}
+        
         self.albumart_general = ".cache/album-art/"
+
         # Currently Playing Title
         info = self.player.GetCurrentTrack()
-        result = {}
-        if "name" in info.keys():
+
+        if 'name' in info.keys():
             result['title'] = str(info['name'])
         else:
-            result['title'] = ""
+            result['title'] = ''
+
         if 'artist' in info.keys():
             result['artist'] = str(info['artist'])
-        else:
-            result['artist'] = ""
-        if self.artOnOff == 'on':
-            if 'artwork-id' in info:
-                albumart_exact = self.albumart_general + info['artwork-id'] + ".jpg"
-            elif 'album' in info:
-                albumart_exact = self.albumart_general + result['artist'] + '-' + info['album'] + ".jpg"
-                albumart_exact = albumart_exact.replace(' ','').lower()
-            else:
-                albumart_exact = ""
-        if self.titleOrder == 'artist - title':
-            try:result = result['artist'] + ' - ' + result['title']
-            except:SyntaxError
-        elif self.titleOrder == 'title - artist':
-            try:result = result['title'] + ' - ' + result['artist']
-            except:SyntaxError
 
-        markup, tooltip = self.get_title_and_tooltip(result)
-        return albumart_exact, markup, tooltip
+        if 'album' in info.keys():
+            result['album'] = str(info['album'])
+
+        if 'artwork-id' in info:
+            result['album-art'] = self.albumart_general + info['artwork-id'] + ".jpg"
+        elif 'album' in info:
+            albumart_exact = self.albumart_general + result['artist'] + '-' + info['album'] + ".jpg"
+            result['album-art'] = albumart_exact.replace(' ','').lower()
+
+        return result
 
     def previous (self):
         self.player1.Previous(False)
@@ -463,14 +394,7 @@ class Listen(GenericPlayer):
             self.proxy_obj = self.session_bus.get_object('org.gnome.Listen',"/org/gnome/listen")
             self.player = dbus.Interface(self.proxy_obj, "org.gnome.Listen")
 
-    def labeler(self,artOnOff,titleOrder,titleLen,titleBoldFont):
-        """
-        This method changes the application titles and album art
-        """
-        self.artOnOff = artOnOff
-        self.titleOrder = titleOrder
-        self.titleLen = titleLen
-        self.titleBoldFont = titleBoldFont
+    def get_media_info(self):
         self.dbus_driver()
 
         # Currently Playing Title
@@ -478,16 +402,9 @@ class Listen(GenericPlayer):
         result['title'] = self.player.current_playing().split(" - ",3)[0]
         result['artist'] = self.player.current_playing().split(" - ",3)[2]
         result['album'] = self.player.current_playing().split(" - ",3)[1][1:]
-        albumart = os.environ['HOME'] + "/.listen/cover/" + result['artist'].lower() + "+" + result['album'].lower() + ".jpg"
-        if self.titleOrder == 'artist - title':
-            try:result = result['artist'] + ' - ' + result['title']
-            except:SyntaxError
-        elif self.titleOrder == 'title - artist':
-            try:result = result['title'] + ' - ' + result['artist']
-            except:SyntaxError
+        result['album-art'] = os.environ['HOME'] + "/.listen/cover/" + result['artist'].lower() + "+" + result['album'].lower() + ".jpg"
 
-        markup, tooltip = self.get_title_and_tooltip(result)
-        return albumart, markup, tooltip
+        return result
 
     def previous (self):
         self.player.previous()
@@ -520,14 +437,7 @@ class Amarok(GenericPlayer):
         if 'pydcop' not in globals() or pydcop.anyAppCalled("amarok") == None:pass
         else:self.player = pydcop.anyAppCalled("amarok").player
 
-    def labeler(self,artOnOff,titleOrder,titleLen,titleBoldFont):
-        """
-        This method changes the application titles and album art
-        """
-        self.artOnOff = artOnOff
-        self.titleOrder = titleOrder
-        self.titleLen = titleLen
-        self.titleBoldFont = titleBoldFont
+    def get_media_info(self):
         self.dbus_driver()
 
         # Currently Playing Title
@@ -535,16 +445,9 @@ class Amarok(GenericPlayer):
         result['title'] = self.player.title ()
         result['artist'] = self.player.artist ()
         result['album'] = self.player.album ()
-        albumart = self.player.coverImage()
-        if self.titleOrder == 'artist - title':
-            try:result = result['artist'] + ' - ' + result['title']
-            except:SyntaxError
-        elif self.titleOrder == 'title - artist':
-            try:result = result['title'] + ' - ' + result['artist']
-            except:SyntaxError
+        result['album-art'] = self.player.coverImage()
 
-        markup, tooltip = self.get_title_and_tooltip(result)
-        return albumart, markup, tooltip
+        return result
 
     def previous (self):
         self.player.prev()
@@ -572,28 +475,16 @@ class QuodLibet(GenericPlayer):
             self.proxy_obj = self.session_bus.get_object('net.sacredchao.QuodLibet', '/net/sacredchao/QuodLibet')
             self.player = dbus.Interface(self.proxy_obj, 'net.sacredchao.QuodLibet')
 
-    def labeler(self,artOnOff,titleOrder,titleLen,titleBoldFont):
-        """
-        This method changes the application titles and album art
-        """
-        self.artOnOff = artOnOff
-        self.titleOrder = titleOrder
-        self.titleLen = titleLen
-        self.titleBoldFont = titleBoldFont
+    def get_media_info(self):
         # You need to activate the "Picture Saver" plugin in QuodLibet
         albumart_exact = os.environ["HOME"] + "/.quodlibet/current.cover"
         self.dbus_driver()
-        result = self.player.CurrentSong()
 
         # Currently Playing Title
-        if self.titleOrder == 'artist - title':
-            try:result = result['artist'] + ' - ' + result['title']
-            except:SyntaxError
-        elif self.titleOrder == 'title - artist':
-            try:result = result['title'] + ' - ' + result['artist']
-            except:SyntaxError
+        result = self.player.CurrentSong()
 
-        markup, tooltip = self.get_title_and_tooltip(result)
+        result['album-art'] = albumart_exact
+
         return albumart_exact, markup, tooltip
 
     def previous (self):

@@ -14,6 +14,8 @@ applets/maintained/places/places.desktop.in
 applets/maintained/places/places.schemas.in
 applets/maintained/shiny-switcher/shinyswitcher.desktop.in
 applets/maintained/shiny-switcher/shinyswitcher.schemas.in
+applets/maintained/showdesktop/applet.c
+applets/maintained/showdesktop/showdesktop.desktop.in
 applets/maintained/sysmon/sysmon.desktop.in
 applets/maintained/sysmon/sysmon.schemas.in
 applets/maintained/to-do/to-do.schemas.in

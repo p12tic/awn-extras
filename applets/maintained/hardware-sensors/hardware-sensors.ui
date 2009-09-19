@@ -724,6 +724,5 @@
     <property name="upper">60</property>
     <property name="step_increment">1</property>
     <property name="page_increment">5</property>
-    <property name="page_size">10</property>
   </object>
 </interface>

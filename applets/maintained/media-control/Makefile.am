@@ -1,5 +1,5 @@
 APPLET_NAME = media-control
-APPLET_MAIN_FILE = mediacontrol.py
+APPLET_MAIN_FILE = media_control.py
 include $(top_srcdir)/Makefile.python-applet
 
 dist_applet_DATA =	\

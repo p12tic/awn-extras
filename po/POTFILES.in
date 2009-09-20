@@ -1,8 +1,5 @@
 # PLEASE KEEP THIS FILE ALPHABETIZED (case-insensitive)!
 applets/maintained/animal-farm/animal-farm.desktop.in
-applets/maintained/awn-sensors/awn-sensors.py
-applets/maintained/awn-sensors/awn-sensors.ui
-applets/maintained/awn-sensors/awn-sensors.desktop.in
 applets/maintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in
 applets/maintained/awnsystemmonitor/awnsystemmonitor.schemas.in
 applets/maintained/awnterm/applet.c
@@ -52,6 +49,10 @@ applets/maintained/gwibfawn/gwibfawn.desktop.in
 applets/maintained/gwibfawn/microblog/__init__.py
 applets/maintained/gwibfawn/microblog/support/__init__.py
 applets/maintained/gwibfawn/microblog/twitter.py
+applets/maintained/hardware-sensors/hardware-sensors.desktop.in
+applets/maintained/hardware-sensors/hardware-sensors.py
+applets/maintained/hardware-sensors/hardware-sensors.ui
+applets/maintained/hardware-sensors/sensorvalues/units.py
 applets/maintained/media-control/media-control.desktop.in
 applets/maintained/media-icons/media-icon-next.desktop.in
 applets/maintained/media-icons/media-icon-previous.desktop.in

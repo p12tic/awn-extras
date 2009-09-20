@@ -612,7 +612,7 @@ class Errors:
                     args["message"] = "Visit Launchpad and report the bug by following these steps:\n\n" \
                                     + "1) Paste the following text in the 'summary' field:\n'%s'\n" % summary \
                                     + "2) Press Continue and then check whether the bug has already been reported or not\n" \
-                                    + "3) If you continue and report the bug, paste the following in the big text area:\n" \
+                                    + "3) If you continue and report the bug, paste the following in the big textarea:\n" \
                                     + "    - the traceback\n" \
                                     + "    - applet version: '%s'\n" % self.__parent.meta["version"] \
                                     + "    - other info requested by the guidelines found below the big textarea"

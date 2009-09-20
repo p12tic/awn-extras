@@ -619,6 +619,8 @@ class Errors:
                     args["url"] = bug_report_link
                 else:
                     args["message"] = "Report this bug at the bug tracker of the %s applet." % self.__parent.meta["name"]
+                    if "bug-report-url" in self.__parent.meta:
+                        args["url"] = self.__parent.meta["bug-report-url"]
         else:
             error_type = "Error"
             if isinstance(error, tuple):

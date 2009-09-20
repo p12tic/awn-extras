@@ -3,9 +3,9 @@ APPLET_MAIN_FILE = hardware-sensors.py
 include $(top_srcdir)/Makefile.python-applet
 include $(top_srcdir)/Makefile.schemas
 
-dist_applet_DATA =	\
-	sensoricon.py	\
-	hardware-sensors.ui		\
+dist_applet_DATA =		\
+	sensoricon.py		\
+	hardware-sensors.ui	\
 	$(NULL)
 
 interfacesdir = $(applet_datadir)/interfaces

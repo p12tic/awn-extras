@@ -98,7 +98,7 @@ class App (awn.AppletSimple):
         self.popup_menu.popup(None, None, None, event.button, event.time)
 
     def what_app(self):
-        self.player_name = mediaplayers.what_app()
+        self.player_name = mediaplayers.get_app_name()
         if self.player_name == None:pass
         else:
             self.MediaPlayer = mediaplayers.__dict__[self.player_name]()

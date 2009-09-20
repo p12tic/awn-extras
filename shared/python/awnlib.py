@@ -27,6 +27,7 @@ import gtk
 from desktopagnostic import config, Color
 from desktopagnostic.gtk import ColorButton
 import awn
+from awn.extras import __version__
 
 import cairo
 import cPickle as cpickle
@@ -606,9 +607,18 @@ class Errors:
             error = str(error)
             if traceback is not None:
                 print "\n".join(["-"*80, traceback, "-"*80])
-                args["message"] = "Visit Launchpad and paste the traceback" \
-                                    + " when reporting the bug."
-                args["url"] = bug_report_link
+                if self.__parent.meta["version"] == __version__:
+                    summary = "%s in %s: %s" % (error_type, self.__parent.meta["name"], error)
+                    args["message"] = "Visit Launchpad and report the bug by following these steps:\n\n" \
+                                    + "1) Paste the following text in the 'summary' field:\n'%s'\n" % summary \
+                                    + "2) Press Continue and then check whether the bug has already been reported or not\n" \
+                                    + "3) If you continue and report the bug, paste the following in the big text area:\n" \
+                                    + "    - the traceback\n" \
+                                    + "    - applet version: '%s'\n" % self.__parent.meta["version"] \
+                                    + "    - other info requested by the guidelines found below the big textarea"
+                    args["url"] = bug_report_link
+                else:
+                    args["message"] = "Report this bug at the bug tracker of the %s applet." % self.__parent.meta["name"]
         else:
             error_type = "Error"
             if isinstance(error, tuple):

@@ -3,9 +3,9 @@ APPLET_MAIN_FILE = hardware-sensors.py
 include $(top_srcdir)/Makefile.python-applet
 include $(top_srcdir)/Makefile.schemas
 
-dist_applet_DATA =	\
-	sensoricon.py	\
-	hardware-sensors.ui		\
+dist_applet_DATA =		\
+	sensoricon.py		\
+	hardware-sensors.ui	\
 	$(NULL)
 
 interfacesdir = $(applet_datadir)/interfaces
@@ -40,7 +40,9 @@ dist_images_DATA =			\
 
 applet_imagesdir = $(applet_datadir)/images/applet
 dist_applet_images_DATA =					\
-	images/applet/dark_shiny_border.svg	\
+	images/applet/dark-bg.png				\
+	images/applet/light-bg.png				\
+	images/applet/dark_shiny_border.svg		\
 	images/applet/dark_shiny.svg			\
 	images/applet/dark.svg					\
 	images/applet/light_shiny_border.svg	\

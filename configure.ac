@@ -24,7 +24,7 @@ dnl ==============================================
 GETTEXT_PACKAGE=awn-extras
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [Gettext package])
-ALL_LINGUAS="de en_US@piglatin es fr nb nl nn ru sl sv sv_SE"
+ALL_LINGUAS="de en_US@piglatin es fr nb nl nn ru sv sv_SE"
 
 IT_PROG_INTLTOOL([0.34])
 AM_GLIB_GNU_GETTEXT

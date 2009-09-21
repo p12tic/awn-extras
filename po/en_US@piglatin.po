@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Awn Extras 0.3.9\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-09-17 14:54-0700\n"
-"PO-Revision-Date: 2009-09-17 14:57-0800\n"
+"POT-Creation-Date: 2009-09-20 20:29-0700\n"
+"PO-Revision-Date: 2009-09-20 20:33-0800\n"
 "Last-Translator: Mark Lee <avant-wn@lazymalevolence.com>\n"
 "Language-Team: English (United States Pig Latin)\n"
 "MIME-Version: 1.0\n"
@@ -1412,23 +1412,24 @@ msgstr ""
 msgid "Shut down the system"
 msgstr ""
 
-#: ../applets/maintained/showdesktop/applet.vala:37
+#: ../applets/maintained/showdesktop/applet.vala:40
 #: ../applets/maintained/showdesktop/showdesktop.desktop.in.in.h:2
 msgid "Show Desktop"
 msgstr "Ow-shay Esktop-day"
 
-#: ../applets/maintained/showdesktop/applet.vala:91
+#. vim:ft=vala:et:ts=2 sts=2 sw=2:ai:cindent
+#: ../applets/maintained/showdesktop/applet.vala:78
+#: ../applets/maintained/showdesktop/showdesktop.desktop.in.in.h:1
+msgid "Hides your windows and shows your desktop."
+msgstr "Ides-hay your indows-way and ows-shay your esktop-day."
+
+#: ../applets/maintained/showdesktop/applet.vala:93
 msgid "Show hidden windows"
 msgstr ""
 
-#: ../applets/maintained/showdesktop/applet.vala:96
+#: ../applets/maintained/showdesktop/applet.vala:98
 #, fuzzy
 msgid "Hide windows and show desktop"
-msgstr "Ide-hay your indows-way and ow-shay your esktop-day"
-
-#. vim:ft=vala:et:ts=2 sts=2 sw=2:ai:cindent
-#: ../applets/maintained/showdesktop/showdesktop.desktop.in.in.h:1
-msgid "Hide your windows and show your desktop"
 msgstr "Ide-hay your indows-way and ow-shay your esktop-day"
 
 #: ../applets/maintained/sysmon/sysmon.desktop.in.in.h:2
@@ -1960,6 +1961,9 @@ msgstr ""
 msgid "Pandora Radio"
 msgstr ""
 
+#, fuzzy
+#~ msgid "An applet to hide your windows and show your desktop"
+#~ msgstr "Ide-hay your indows-way and ow-shay your esktop-day"
 #~ msgid "Hide Desktop"
 #~ msgstr "Ide-hay Esktop-day"
 #~ msgid ""

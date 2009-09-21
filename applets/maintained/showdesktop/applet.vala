@@ -75,7 +75,8 @@ class ShowDesktop : AppletSimple
       this._menu = this.create_default_menu () as Gtk.Menu;
       about_item = this.create_about_item ("Copyright © 2009 Mark Lee",
                                            AppletLicense.GPLV2, Build.VERSION,
-                                           "An applet to hide your windows and show your desktop", null, null, "user-desktop",
+                                           Gettext._ ("Hides your windows and shows your desktop."),
+                                           null, null, "user-desktop",
                                            null, authors, null, null);
       about_item.show ();
       this._menu.append (about_item as Gtk.MenuItem);

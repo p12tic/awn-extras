@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-09-17 14:55-0700\n"
+"POT-Creation-Date: 2009-09-20 20:31-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1456,22 +1456,23 @@ msgstr ""
 msgid "Shut down the system"
 msgstr ""
 
-#: ../applets/maintained/showdesktop/applet.vala:37
+#: ../applets/maintained/showdesktop/applet.vala:40
 #: ../applets/maintained/showdesktop/showdesktop.desktop.in.in.h:2
 msgid "Show Desktop"
 msgstr ""
 
-#: ../applets/maintained/showdesktop/applet.vala:91
+#. vim:ft=vala:et:ts=2 sts=2 sw=2:ai:cindent
+#: ../applets/maintained/showdesktop/applet.vala:78
+#: ../applets/maintained/showdesktop/showdesktop.desktop.in.in.h:1
+msgid "Hides your windows and shows your desktop."
+msgstr ""
+
+#: ../applets/maintained/showdesktop/applet.vala:93
 msgid "Show hidden windows"
 msgstr ""
 
-#: ../applets/maintained/showdesktop/applet.vala:96
+#: ../applets/maintained/showdesktop/applet.vala:98
 msgid "Hide windows and show desktop"
-msgstr ""
-
-#. vim:ft=vala:et:ts=2 sts=2 sw=2:ai:cindent
-#: ../applets/maintained/showdesktop/showdesktop.desktop.in.in.h:1
-msgid "Hide your windows and show your desktop"
 msgstr ""
 
 #: ../applets/maintained/sysmon/sysmon.desktop.in.in.h:2

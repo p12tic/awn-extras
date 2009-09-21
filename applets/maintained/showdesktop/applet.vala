@@ -24,6 +24,9 @@ using Awn;
 
 class ShowDesktop : AppletSimple
 {
+  private const string[] authors = {
+    "Mark Lee <avant-wn@lazymalevolence.com>"
+  };
   private Gtk.Menu _menu;
 
   public ShowDesktop (string canonical_name, string uid, int panel_id)
@@ -68,8 +71,6 @@ class ShowDesktop : AppletSimple
     if (this._menu == null)
     {
       Gtk.Widget about_item;
-
-      string[] authors = new string[] { "Mark Lee <avant-wn@lazymalevolence.com>" };
 
       this._menu = this.create_default_menu () as Gtk.Menu;
       about_item = this.create_about_item ("Copyright © 2009 Mark Lee",

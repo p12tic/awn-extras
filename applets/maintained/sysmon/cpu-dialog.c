@@ -187,7 +187,7 @@ static void awn_cpu_dialog_populate_table (AwnCPUDialog *dialog)
                                             0,
                                             1);
   gtk_table_attach_defaults (GTK_TABLE(new_table),
-                             gtk_button_new_with_label ("Process Name"),
+                             gtk_button_new_with_label ("Process Name "),
                                             1,
                                             2,
                                             0,
@@ -203,24 +203,31 @@ static void awn_cpu_dialog_populate_table (AwnCPUDialog *dialog)
   {
     AwnProcInfo * data = iter->data;
     gchar *text = g_strdup_printf ("%d",data->pid);
+    GtkWidget *align;
+    align = gtk_alignment_new (1.0,0.5,0,0);
+    gtk_container_add (GTK_CONTAINER(align),gtk_label_new(text));
     gtk_table_attach_defaults (GTK_TABLE(new_table),
-                                gtk_label_new (text),
+                                align,
                                 0,
                                 1,
                                 1+y,
                                 2+y);
     g_free (text);
     text = g_strdup_printf ("%s",data->proc_state.cmd);
+    align = gtk_alignment_new (1.0,0.5,0,0);
+    gtk_container_add (GTK_CONTAINER(align),gtk_label_new(text));
     gtk_table_attach_defaults (GTK_TABLE(new_table),
-                                gtk_label_new (text),
+                                align,
                                 1,
                                 2,  
                                 1+y,
                                 2+y);
     g_free (text);    
     text = g_strdup_printf ("%0.1lf",data->percent_cpu);
+    align = gtk_alignment_new (1.0,0.5,0,0);
+    gtk_container_add (GTK_CONTAINER(align),gtk_label_new(text));    
     gtk_table_attach_defaults (GTK_TABLE(new_table),
-                                gtk_label_new (text),
+                                align,
                                 2,
                                 3,  
                                 1+y,

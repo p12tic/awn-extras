@@ -163,12 +163,10 @@ void
 update_process_info (void)
 {
   static guint64 old_total_jiffies = 0;
-
-
-  g_debug ("%s",__func__);
+  
   if (!awn_proc_users)
   {
-    g_debug ("%s: no users");
+    g_debug ("%s: no users",__func__);
     return;
   }
   pid_t * p;

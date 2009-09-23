@@ -229,10 +229,12 @@ _awn_cpu_icon_clicked (GtkWidget *widget,
     case 1:
       if (GTK_WIDGET_VISIBLE (dialog) )
       {
+        dec_process_info_users ();
         gtk_widget_hide (GTK_WIDGET(dialog));
       }
       else
       {
+        inc_process_info_users ();
         gtk_widget_show_all (GTK_WIDGET (dialog));
       }
       break;

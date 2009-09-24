@@ -11,6 +11,11 @@ type = integer
 default = 2
 description = Timeout between two value updates (in seconds).
 
+[DEFAULT/font_size]
+type = integer
+default = 1
+description = Size of value overlay in the icon (0=small, 1=medium, 2=large).
+
 [DEFAULT/icon_file]
 type = string
 default = 

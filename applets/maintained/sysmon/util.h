@@ -21,7 +21,21 @@
 
 #include <gtk/gtk.h>
 #include <libawn/libawn.h>
+
+#include <glibtop/proclist.h>
+#include <glibtop/procstate.h>
+#include <glibtop/proctime.h>
+
 #include "defines.h"
+
+typedef struct
+{
+  pid_t   pid;
+  gdouble percent_cpu;
+  glibtop_proc_state  proc_state;
+  glibtop_proc_time  proc_time;
+}AwnProcInfo;
+
 
 gdouble get_double_time (void);
 
@@ -32,6 +46,13 @@ void do_bridge ( AwnApplet * applet,GObject *object,
 
 void connect_notify (GObject * object,gchar * prop_name,GCallback cb,gpointer data);
 
+void update_process_info (void);
 
+GList * get_process_info (void);
+
+void  inc_process_info_users(void);
+
+void dec_process_info_users(void);
 
 #endif
+

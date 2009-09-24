@@ -24,6 +24,9 @@ using Awn;
 
 class ShowDesktop : AppletSimple
 {
+  private const string[] authors = {
+    "Mark Lee <avant-wn@lazymalevolence.com>"
+  };
   private Gtk.Menu _menu;
 
   public ShowDesktop (string canonical_name, string uid, int panel_id)
@@ -69,12 +72,11 @@ class ShowDesktop : AppletSimple
     {
       Gtk.Widget about_item;
 
-      string[] authors = new string[] { "Mark Lee <avant-wn@lazymalevolence.com>" };
-
       this._menu = this.create_default_menu () as Gtk.Menu;
       about_item = this.create_about_item ("Copyright © 2009 Mark Lee",
                                            AppletLicense.GPLV2, Build.VERSION,
-                                           "An applet to hide your windows and show your desktop", null, null, "user-desktop",
+                                           Gettext._ ("Hides your windows and shows your desktop."),
+                                           null, null, "user-desktop",
                                            null, authors, null, null);
       about_item.show ();
       this._menu.append (about_item as Gtk.MenuItem);

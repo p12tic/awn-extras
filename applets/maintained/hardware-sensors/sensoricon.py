@@ -90,18 +90,27 @@ class SensorIcon():
 
             context.save()
 
-            # draw the meter hand
+            # Draw the meter hand
             context.set_line_width(0.2)
             (red, green, blue, alpha) = sensor.hand_color
             context.set_source_rgba(float(red) / 65535, float(green) / 65535,
                                     float(blue) / 65535, float(alpha) / 65535)
-            # rotate the hand
-            angle = math.pi * (-0.25 + 0.5 /
+
+            # prevent division by zero
+            if (values[idx] - low_value) == 0:
+                angle = -math.pi / 4
+            elif (high_value - low_value) == 0:
+                angle = 0
+            else:
+                angle = math.pi * (-0.25 + 0.5 /
                           (high_value - low_value) * (values[idx] - low_value))
+
+            # Move hand to center
             context.translate(width / 2, height / 2)
+            # Rotate the hand
             context.rotate(angle)
 
-            # draw hand
+            # Draw hand
             context.move_to(0, -height / 2)
             context.line_to(-2, 0)
             context.line_to(0, 5)

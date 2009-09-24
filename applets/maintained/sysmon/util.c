@@ -96,3 +96,135 @@ connect_notify (GObject * object,gchar * prop_name,GCallback cb,gpointer data)
   g_signal_connect (object, sig_name,cb,data);
   g_free(sig_name);
 }
+
+
+static GList * awn_proc_info=NULL;
+static guint   awn_proc_timeout_id = 0;
+static guint   awn_proc_users = 0;
+
+static gint
+_cmp_find_pid (AwnProcInfo *info, gpointer * pid_as_ptr)
+{
+  return (info->pid - GPOINTER_TO_INT(pid_as_ptr) );
+}
+
+static gint
+_cmp_proc_info_percent (AwnProcInfo *left, AwnProcInfo *right)
+{
+  if (left->percent_cpu < right->percent_cpu  )
+  {
+    return -1;
+  }
+  else if (left->percent_cpu > right->percent_cpu )
+  {
+    return 1;
+  }
+  else
+  {
+    return 0;
+  }
+}
+
+static gint
+_cmp_proc_info_reversed_percent (AwnProcInfo *left, AwnProcInfo *right)
+{
+  return _cmp_proc_info_percent (right,left);
+} 
+
+GList *
+get_process_info (void)
+{
+ return awn_proc_info; 
+}
+
+void
+inc_process_info_users(void)
+{
+  awn_proc_users++;
+
+  if (!awn_proc_timeout_id)
+ {
+   awn_proc_timeout_id = g_timeout_add_seconds ( 1,(GSourceFunc)update_process_info,NULL);
+ }
+}
+
+void
+dec_process_info_users(void)
+{
+  awn_proc_users--;
+  if (!awn_proc_users)
+  {
+    g_source_remove (awn_proc_timeout_id);
+    awn_proc_timeout_id = 0;
+  }
+}
+
+void
+update_process_info (void)
+{
+  static guint64 old_total_jiffies = 0;
+  
+  if (!awn_proc_users)
+  {
+    g_debug ("%s: no users",__func__);
+    return;
+  }
+  pid_t * p;
+  gint y ;
+  glibtop_proclist proclist;
+  GList * old_awn_proc_info=awn_proc_info;  
+  guint64  total_jiffies;
+  glibtop_cpu cpu;
+  gdouble percent;
+  gdouble total_per = 0;
+
+  glibtop_get_cpu (&cpu);
+  total_jiffies = cpu.total;
+  
+  awn_proc_info = NULL;
+
+/*  p = glibtop_get_proclist(&proclist, GLIBTOP_KERN_PROC_RUID, getuid());*/
+  p = glibtop_get_proclist(&proclist, GLIBTOP_KERN_PROC_ALL, -1);
+
+//  g_debug ("number of entries = %d",proclist.number);
+  for (y = 0;y < proclist.number;y++)
+  {
+    AwnProcInfo * data = g_malloc (sizeof(AwnProcInfo));
+    GList       * search;    
+
+    data->pid = p[y];
+    glibtop_get_proc_state(&data->proc_state, p[y]);
+    glibtop_get_proc_time(&data->proc_time, p[y]);
+
+    search = g_list_find_custom (old_awn_proc_info,GINT_TO_POINTER(p[y]),
+                                 (GCompareFunc)_cmp_find_pid);
+    
+    if (search)
+    {
+      AwnProcInfo * search_data = search->data;
+      long time_diff;
+      double jiffies;      
+      
+      jiffies = total_jiffies - old_total_jiffies;
+//      g_debug ("%d  jiffies = %lf",p[y],jiffies);
+      time_diff = (data->proc_time.utime + data->proc_time.stime) - (search_data->proc_time.utime+search_data->proc_time.stime);
+//      g_debug ("%d  time diff = %ld",p[y],time_diff);
+      percent = time_diff / (jiffies / cpu.frequency) ;
+//      g_debug ("percent for %d = %lf",p[y],percent);
+    }
+    else
+    {
+      percent = 0;
+    }
+    data->percent_cpu = percent;
+    total_per = total_per + percent;
+    awn_proc_info = g_list_prepend (awn_proc_info,data);
+  }
+  g_list_foreach (old_awn_proc_info,(GFunc)g_free,NULL);  
+  g_list_free (old_awn_proc_info);  
+  g_free (p);
+  old_total_jiffies = total_jiffies;
+
+  awn_proc_info = g_list_sort(awn_proc_info, (GCompareFunc) _cmp_proc_info_reversed_percent);
+//  g_debug ("total_per = %lf",total_per);
+}

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+X-AWN-Type=Applet
+X-AWN-AppletType=Python
+X-AWN-AppletCategory=System
+Encoding=UTF-8
+_Name=Hardware Sensors
+_Comment=Applet to show the hw sensors readouts
+Exec=hardware-sensors/hardware-sensors.py
+Icon=hardware-sensors/images/thermometer

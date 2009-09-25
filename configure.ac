@@ -331,6 +331,7 @@ applets/maintained/feeds/Makefile
 applets/maintained/file-browser-launcher/Makefile
 applets/maintained/garbage/Makefile
 applets/maintained/garbage/garbage.desktop.in
+applets/maintained/hardware-sensors/Makefile
 applets/maintained/media-control/Makefile
 applets/maintained/media-icons/Makefile
 applets/maintained/media-player/Makefile

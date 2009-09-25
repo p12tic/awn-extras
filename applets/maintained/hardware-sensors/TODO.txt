@@ -1,0 +1,5 @@
+- make fontsize and text on/off configurable
+- enable/remove text_color settings
+- extend Overlay class for use with cairo surface - to draw the needle
+- graphical value display in main dialog
+- translation

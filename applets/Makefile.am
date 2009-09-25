@@ -60,6 +60,7 @@ SUBDIRS = \
 	unmaintained/dropper \
 	maintained/feeds \
 	maintained/file-browser-launcher \
+	maintained/hardware-sensors \
 	unmaintained/mail \
 	maintained/media-icons \
 	maintained/media-player \

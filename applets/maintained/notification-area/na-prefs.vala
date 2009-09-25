@@ -126,6 +126,7 @@ public class NotificationAreaPrefs : GLib.Object
   {
     this.applet = applet;
 
+    Type workaround = typeof (GTK.ColorButton);
     string ui_path = GLib.Path.build_filename (Build.APPLETSDIR,
                                                APPLET_NAME,
                                                "na-prefs.xml");

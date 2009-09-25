@@ -60,7 +60,6 @@ SUBDIRS = \
 	unmaintained/dropper \
 	maintained/feeds \
 	maintained/file-browser-launcher \
-	maintained/gwibfawn \
 	unmaintained/mail \
 	maintained/media-icons \
 	maintained/media-player \

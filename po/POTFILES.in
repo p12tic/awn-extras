@@ -45,10 +45,6 @@ applets/maintained/file-browser-launcher/prefs.py
 applets/maintained/garbage/applet.vala
 applets/maintained/garbage/garbage.desktop.in.in
 applets/maintained/garbage/prefs.vala
-applets/maintained/gwibfawn/gwibfawn.desktop.in
-applets/maintained/gwibfawn/microblog/__init__.py
-applets/maintained/gwibfawn/microblog/support/__init__.py
-applets/maintained/gwibfawn/microblog/twitter.py
 applets/maintained/hardware-sensors/hardware-sensors.desktop.in
 applets/maintained/hardware-sensors/hardware-sensors.py
 applets/maintained/hardware-sensors/hardware-sensors.ui
@@ -65,7 +61,7 @@ applets/maintained/mount/mount.ui
 applets/maintained/notification-area/notification-area.desktop.in.in
 applets/maintained/notification-area/egg-tray-child.c
 applets/maintained/notification-area/eggtraymanager.c
-applets/maintained/notification-area/na-prefs.xml
+applets/maintained/notification-area/na-prefs.ui
 applets/maintained/notification-daemon/awn-notification-daemon.schemas.in
 applets/maintained/notification-daemon/awnnotificationdaemon.desktop.in.in
 applets/maintained/notification-daemon/daemon.c

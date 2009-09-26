@@ -29,6 +29,7 @@ import gtk
 import subprocess
 import pango
 import urllib
+import gettext
 
 try:
   import gio
@@ -39,7 +40,7 @@ except:
 from desktopagnostic.config import GROUP_DEFAULT as group
 import awn
 from awn.extras import _
-
+gettext.bindtextdomain('xdg-user-dirs', '/usr/share/locale')
 
 class App (awn.AppletSimple):
   icons = {}
@@ -242,7 +243,7 @@ class App (awn.AppletSimple):
           if mount.can_unmount():
             eject = self.load_pixbuf(('media-eject', ))
 
-          self.liststore.append((icon, name, path, i))
+          self.liststore.append((icon, name, eject, path, i))
 
           i += 1
 
@@ -297,13 +298,56 @@ class App (awn.AppletSimple):
                 try: name = path.split('/')[-1]
                 except: name = path
 
-              #Check if this is the Desktop directory
-              if (path == os.path.expanduser(_("~/Desktop"))):
-                self.place('desktop', name, path)
+              if path.replace('/', '') != '/':
+                print path
+                path2 = path
+                while path2[-1] == '/':
+                  path2 = path2[:-1]
 
-              #It's not
-              else:
-                self.place('folder', name, path)
+                print path2
+                if path2.split('/')[:-1] == os.environ['HOME'].split('/'):
+                  print path, path2
+                  dir = path2.split('/')[-1]
+    
+                  #Check if this is the Desktop directory
+                  if dir == gettext.dgettext('xdg-user-dirs', 'Desktop'):
+                    self.place('desktop', name, path)
+    
+                  #Documents
+                  elif dir == gettext.dgettext('xdg-user-dirs', 'Documents'):
+                    self.place(('folder-documents', 'stock_folder'), name, path)
+    
+                  #Downloads
+                  elif dir == gettext.dgettext('xdg-user-dirs', 'Downloads'):
+                    self.place(('folder-downloads', 'stock_folder'), name, path)
+    
+                  #Music
+                  elif dir == gettext.dgettext('xdg-user-dirs', 'Music'):
+                    self.place(('folder-music', 'stock_folder'), name, path)
+    
+                  #Pictures
+                  elif dir == gettext.dgettext('xdg-user-dirs', 'Pictures'):
+                    self.place(('folder-pictures', 'stock_folder'), name, path)
+    
+                  #Public
+                  elif dir == gettext.dgettext('xdg-user-dirs', 'Public'):
+                    self.place(('folder-publicshare', 'stock_folder'), name, path)
+    
+                  #Templates
+                  elif dir == gettext.dgettext('xdg-user-dirs', 'Templates'):
+                    self.place(('folder-templates', 'stock_folder'), name, path)
+    
+                  #Videos
+                  elif dir == gettext.dgettext('xdg-user-dirs', 'Videos'):
+                    self.place(('folder-videos', 'stock_folder'), name, path)
+
+                  #Other
+                  else:
+                    self.place('stock_folder', name, path)
+    
+                #It's not
+                else:
+                  self.place('stock_folder', name, path)
 
           #computer://, trash://, network fs, etc.
           else:

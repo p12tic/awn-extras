@@ -51,6 +51,8 @@ applet_description = _("Applet to show the hardware sensors readouts")
 applet_logo = os.path.join(os.path.dirname(__file__), "images/thermometer.svg")
 ui_file = os.path.join(os.path.dirname(__file__), "hardware-sensors.ui")
 
+font_sizes = [14, 18, 22]
+font_size_names = ["Small", "Medium", "Large"]
 
 class SensorsApplet:
     """
@@ -102,8 +104,8 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
 
         # == Icon == #
         self.__temp_overlay = OverlayText()
-        self.__temp_overlay.props.font_sizing = 12
-        self.__temp_overlay.props.y_override = 31
+        self.change_font_size(self.settings["font_size"])
+        self.__temp_overlay.props.active = self.settings["show_value_overlay"]
         applet.add_overlay(self.__temp_overlay)
 
         self.create_icon()
@@ -243,13 +245,19 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         prefs.add_from_file(ui_file)
         prefs.get_object("notebook").reparent(self.__pref_dialog.vbox)
 
+        def change_show_value_overlay(show_value_overlay):
+            self.__temp_overlay.props.active = show_value_overlay
+
         # Default settings
         default_settings = {
             # Global
             "unit": (units.UNIT_CELSIUS, self.change_unit),
             "timeout": (2, self.change_timeout,
                                              prefs.get_object("spin_timeout")),
-            "icon_file": (self.__icon_files[0]),
+            "icon_file": self.__icon_files[0],
+            "show_value_overlay": (True, change_show_value_overlay,
+                           prefs.get_object("checkbutton_show_value_overlay")),
+            "font_size": (0, self.change_font_size),
             # Sensor settings
             "ids": [str(sensor.id) for sensor in self.sensors],
             "labels": [sensor.label for sensor in self.sensors],
@@ -356,6 +364,22 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         icon_combobox.set_active(
                            self.__icon_files.index(self.settings["icon_file"]))
         icon_combobox.connect('changed', self.icon_changed_cb)
+
+        # Font size combobox
+        font_combobox = prefs.get_object("combobox_font_size")
+        awnlib.add_cell_renderer_text(font_combobox)
+        for font_size in font_size_names:
+            font_combobox.append_text(font_size)
+        font_combobox.set_active(self.settings["font_size"])
+        font_combobox.connect('changed', self.font_size_changed_cb)
+
+        # Font size combobox should be grayed out when value overlay is
+        # disabled
+        show_checkbutton = prefs.get_object("checkbutton_show_value_overlay")
+        fontsize_hbox = prefs.get_object("hbox_font_size")
+        fontsize_hbox.set_sensitive(show_checkbutton.get_active())
+        show_checkbutton.connect("toggled", lambda w:
+                                   fontsize_hbox.set_sensitive(w.get_active()))
 
     def setup_sensor_preferences(self, prefs):
         """Setup the sensor settings tab part of window."""
@@ -612,6 +636,17 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         for sensor in self.sensors:
             sensor.unit = unit
         self.update_icon(True)
+
+    def font_size_changed_cb(self, widget):
+        """Save font size setting and update icon."""
+        font_size = widget.get_active()
+        self.applet.settings["font_size"] = font_size
+        self.change_font_size(font_size)
+
+    def change_font_size(self, font_size):
+        """Change font size for overlay."""
+        self.__temp_overlay.props.font_sizing = font_sizes[font_size]
+        self.__temp_overlay.props.y_override = 30 - font_size * 2
 
     def icon_changed_cb(self, widget):
         """Save icon file setting and update icon."""

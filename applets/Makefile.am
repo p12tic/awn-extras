@@ -23,7 +23,6 @@ endif
 CONDITIONAL_APPLETS += \
 	maintained/awnsystemmonitor \
 	maintained/calendar \
-	maintained/media-control \
 	maintained/notification-daemon \
 	$(NULL)
 endif
@@ -62,6 +61,7 @@ SUBDIRS = \
 	maintained/file-browser-launcher \
 	maintained/hardware-sensors \
 	unmaintained/mail \
+	maintained/media-control \
 	maintained/media-icons \
 	maintained/media-player \
 	maintained/mount \

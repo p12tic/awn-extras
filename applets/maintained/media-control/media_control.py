@@ -30,8 +30,9 @@ import dbus
 import pango
 
 import awn
-from desktopagnostic.config import Client
+from desktopagnostic.config import Client, GROUP_DEFAULT, BIND_METHOD_FALLBACK
 
+from awn.extras import _
 import awn.extras.awnmediaplayers as mediaplayers
 
 def error_decorator(fn):
@@ -61,12 +62,7 @@ class MediaControlApplet (awn.AppletSimple):
     tooltip_order = gobject.property(type=int, nick='Tooltip order',
                                      blurb='Tooltip text order',
                                      default=0)
-    """
-        self.artOnOff = self.key_control("Album_Art",'on')
-        self.titleBoldFont = self.key_control("titleBoldFont","on")
-        self.titleLen = self.key_control("TitleLen","33")
-        self.titleLen = eval(self.titleLen)
-    """
+
     def __init__(self, uid, panel_id):
         """Creating the applets core"""
         awn.AppletSimple.__init__(self, "media-control", uid, panel_id)
@@ -115,8 +111,12 @@ class MediaControlApplet (awn.AppletSimple):
         #Popup menu
         self.about = gtk.ImageMenuItem(gtk.STOCK_ABOUT)
         self.about.connect("activate", self.show_about)
+        self.prefs = gtk.ImageMenuItem(gtk.STOCK_PREFERENCES)
+        self.prefs.connect("activate", self.show_prefs)
 
         self.popup_menu = self.create_default_menu()
+        self.popup_menu.append(self.prefs)
+        self.popup_menu.append(gtk.SeparatorMenuItem())
         self.popup_menu.append(self.about)
         self.popup_menu.show_all()
 
@@ -158,8 +158,8 @@ class MediaControlApplet (awn.AppletSimple):
 
         # Standard AWN Connects
         self.connect("scroll-event", self.wheel_turn)
-        self.connect("button-press-event", self.button_press) # for middle-click
         self.connect("clicked", self.icon_clicked)
+        self.connect("middle-clicked", self.button_pp_press)
         self.connect("context-menu-popup", self.menu_popup)
         self.connect("enter-notify-event", self.enter_notify)
         self.dialog.connect("focus-out-event", self.dialog_focus_out)
@@ -171,6 +171,18 @@ class MediaControlApplet (awn.AppletSimple):
         self.drag_dest_set(gtk.DEST_DEFAULT_ALL,
                            [("text/uri-list", 0, 0), ("text/plain", 0, 1)],
                            gtk.gdk.ACTION_COPY)
+
+        
+        self.client = awn.config_get_default_for_applet(self)
+
+        self.client.bind(GROUP_DEFAULT, "use_docklet",
+                         self, "use-docklet", True, BIND_METHOD_FALLBACK)
+        self.client.bind(GROUP_DEFAULT, "show_album_art",
+                         self, "album-art-enabled", True, BIND_METHOD_FALLBACK)
+        self.client.bind(GROUP_DEFAULT, "album_art_size",
+                         self, "album-art-size", True, BIND_METHOD_FALLBACK)
+        self.client.bind(GROUP_DEFAULT, "tooltip_format",
+                         self, "tooltip-order", True, BIND_METHOD_FALLBACK)
 
         try:
             if self.MediaPlayer: self.update_song_info()
@@ -267,7 +279,8 @@ class MediaControlApplet (awn.AppletSimple):
                                    docklet.props.uid,
                                    "media-playback-start")
         play_pause.connect("clicked", self.button_pp_press)
-        # we need to add the child in two steps
+        # we need to add the child in two steps, because IconBox overrides 
+        # add() method and it must be called to set proper size/orient etc.
         icon_box.add(play_pause)
         icon_box.set_child_packing(play_pause, False, True, 0, gtk.PACK_START)
 
@@ -317,12 +330,6 @@ class MediaControlApplet (awn.AppletSimple):
 
     def menu_popup(self, widget, event):
         self.popup_menu.popup(None, None, None, event.button, event.time)
-
-    def button_press(self, widget, event):
-        if event.button == 2:
-            self.button_pp_press(widget)
-            return True
-        return False
 
     def wheel_turn (self, widget, event):
         if event.direction == gtk.gdk.SCROLL_UP:
@@ -542,6 +549,50 @@ class MediaControlApplet (awn.AppletSimple):
             result = self.MediaPlayer.play_uri(uris[0])
         context.finish(result, False, time)
         return True
+
+    def show_prefs(self, widget):
+        ui_path = os.path.join(os.path.dirname(__file__), "media-control.ui")
+
+        wTree = gtk.Builder()
+        wTree.add_from_file(ui_path)
+
+        window = wTree.get_object("dialog1")
+        window.set_icon(self.get_icon().get_icon_at_size(48))
+
+        client = awn.config_get_default_for_applet(self)
+
+        combo = wTree.get_object("tooltip_format_combo")
+        formats = gtk.ListStore(str)
+        for item in [_("Title - Artist"), _("Artist - Title")]:
+            formats.append([item])
+        combo.set_model(formats)
+        ren = gtk.CellRendererText()
+        combo.pack_start(ren)
+        combo.add_attribute(ren, "text", 0)
+
+        docklet_check = wTree.get_object("docklet_checkbox")
+        album_art_check = wTree.get_object("album_art_checkbox")
+        size_spin = wTree.get_object("album_art_size_spin")
+
+        client.bind(GROUP_DEFAULT, "tooltip_format",
+                    combo, "active", False, BIND_METHOD_FALLBACK)
+        client.bind(GROUP_DEFAULT, "use_docklet",
+                    docklet_check, "active", False, BIND_METHOD_FALLBACK)
+        client.bind(GROUP_DEFAULT, "show_album_art",
+                    album_art_check, "active", False, BIND_METHOD_FALLBACK)
+        client.bind(GROUP_DEFAULT, "album_art_size",
+                    size_spin, "value", False, BIND_METHOD_FALLBACK)
+
+        close_button = wTree.get_object("close_button")
+        close_button.connect("clicked", lambda x: window.destroy())
+
+        def unbind_all():
+            client.unbind_all_for_object(combo)
+            client.unbind_all_for_object(docklet_check)
+            client.unbind_all_for_object(album_art_check)
+            client.unbind_all_for_object(size_spin)
+        window.connect("destroy", lambda x: unbind_all())
+        window.show()
 
     def show_about(self, widget):
         about = gtk.AboutDialog()

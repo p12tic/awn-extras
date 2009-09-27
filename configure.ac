@@ -190,7 +190,7 @@ AC_ARG_ENABLE(pymod_checks,
               enable_pymod_checks=yes)
 
 if test x${enable_pymod_checks} = xyes; then
-    # awnlib, battery, DesktopManager, pynot, pynot-rgba
+    # awnlib, battery, DesktopManager
     AM_CHECK_PYMOD(pynotify,,,AC_MSG_ERROR([python module pynotify required (python-notify)]))
     # arss, feeds, mail
     AM_CHECK_PYMOD(feedparser,,,AC_MSG_ERROR([python module feedparser required (python-feedparser)]))
@@ -215,7 +215,7 @@ if test x${enable_pymod_checks} = xyes; then
 #    AM_CHECK_PYMOD(gtkmozembed,,,AC_MSG_ERROR([python module gtkmozembed required (python-gnome2-extras)]))
     #fi
     if test "$with_gconf" != "no"; then
-    # calendar, media-control, media-player, stacks
+    # calendar, stacks
     AM_CHECK_PYMOD(gconf,,,AC_MSG_ERROR([python module gconf required]))
     # calendar
     AM_CHECK_PYMOD(gdata,,,AC_MSG_ERROR([python module gdata required (python-gdata)]))

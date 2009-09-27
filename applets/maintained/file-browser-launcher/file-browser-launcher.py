@@ -299,14 +299,11 @@ class App (awn.AppletSimple):
                 except: name = path
 
               if path.replace('/', '') != '/':
-                print path
                 path2 = path
                 while path2[-1] == '/':
                   path2 = path2[:-1]
 
-                print path2
                 if path2.split('/')[:-1] == os.environ['HOME'].split('/'):
-                  print path, path2
                   dir = path2.split('/')[-1]
     
                   #Check if this is the Desktop directory

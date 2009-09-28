@@ -13,6 +13,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
+
+/*
+ TODO:  move this back into sysmonicon.c
+ */
  
 #ifndef _AWN_SYSMONICON_PRIV
 #define _AWN_SYSMONICON_PRIV
@@ -42,6 +46,7 @@ struct _AwnSysmoniconPrivate
   gchar * id;
   AwnGraphType graph_type[NUM_CONF_STATES]; 
 
+  gboolean invalidate;
 };
 
 #endif

@@ -24,7 +24,7 @@ usr/share/avant-window-navigator/schemas/awn-applet-cairo-menu.schema-ini
 etc/gconf/schemas/awn-applet-notification-area.schemas
 usr/lib/awn/applets/notification-area/*.so
 usr/share/avant-window-navigator/applets/notification-area.desktop
-usr/share/avant-window-navigator/notification-area/
+usr/share/avant-window-navigator/applets/notification-area/
 usr/share/avant-window-navigator/schemas/awn-applet-notification-area.schema-ini
 usr/share/icons/hicolor/scalable/apps/notification-area.svg
 #

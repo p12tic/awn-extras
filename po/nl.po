@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: svn trunk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-09-26 15:08-0700\n"
+"POT-Creation-Date: 2009-09-27 20:59-0700\n"
 "PO-Revision-Date: 2006-04-27 10:57+0200\n"
 "Last-Translator: Wouter Bolsterlee <uws+gnome@xs4all.nl>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
@@ -626,12 +626,12 @@ msgstr ""
 #: ../applets/maintained/feeds/feeds.desktop.in.h:1
 #: ../applets/maintained/feeds/feeds.py:70
 #: ../applets/maintained/feeds/feeds.py:224
-#: ../applets/maintained/feeds/feeds.py:780
+#: ../applets/maintained/feeds/feeds.py:791
 msgid "Feeds Applet"
 msgstr ""
 
 #: ../applets/maintained/feeds/feeds.desktop.in.h:2
-#: ../applets/maintained/feeds/feeds.py:784
+#: ../applets/maintained/feeds/feeds.py:795
 msgid "Monitor Web Feeds"
 msgstr ""
 
@@ -697,7 +697,7 @@ msgid "Hide this feed's items"
 msgstr ""
 
 #. Create the items
-#: ../applets/maintained/feeds/feeds.py:744
+#: ../applets/maintained/feeds/feeds.py:755
 #: ../applets/maintained/feeds/prefs.py:232
 msgid "Add Feed"
 msgstr ""
@@ -827,80 +827,80 @@ msgid "Connect to Server..."
 msgstr ""
 
 #. Check if this is the Desktop directory
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:313
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:310
 #: ../applets/maintained/places/applet.c:339
 msgid "Desktop"
 msgstr ""
 
 #. Documents
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:317
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:314
 msgid "Documents"
 msgstr ""
 
 #. Downloads
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:321
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:318
 msgid "Downloads"
 msgstr ""
 
 #. Music
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:325
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:322
 msgid "Music"
 msgstr ""
 
 #. Pictures
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:329
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:326
 msgid "Pictures"
 msgstr ""
 
 #. Public
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:333
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:330
 msgid "Public"
 msgstr ""
 
 #. Templates
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:337
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:334
 msgid "Templates"
 msgstr ""
 
 #. Videos
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:341
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:338
 msgid "Videos"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:355
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:352
 msgid "Computer"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:358
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:355
 msgid "Network"
 msgstr ""
 
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:378
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:381
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:384
 msgid "Trash"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:387
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:384
 msgid "Search"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:390
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:387
 msgid "CD/DVD Burner"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:393
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:390
 msgid "Fonts"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:397
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:394
 msgid "Folder"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:503
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:500
 msgid "DVD Drive"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:507
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:504
 msgid "CD Drive"
 msgstr ""
 
@@ -1193,6 +1193,14 @@ msgstr ""
 
 #: ../applets/maintained/media-control/media-control.desktop.in.h:2
 msgid "Media Control"
+msgstr ""
+
+#: ../applets/maintained/media-control/media_control.py:566
+msgid "Title - Artist"
+msgstr ""
+
+#: ../applets/maintained/media-control/media_control.py:566
+msgid "Artist - Title"
 msgstr ""
 
 #: ../applets/maintained/media-icons/media-icon-next.desktop.in.h:1

@@ -50,6 +50,8 @@ applets/maintained/hardware-sensors/hardware-sensors.py
 applets/maintained/hardware-sensors/hardware-sensors.ui
 applets/maintained/hardware-sensors/sensorvalues/units.py
 applets/maintained/media-control/media-control.desktop.in
+applets/maintained/media-control/media-control.ui
+applets/maintained/media-control/media_control.py
 applets/maintained/media-icons/media-icon-next.desktop.in
 applets/maintained/media-icons/media-icon-previous.desktop.in
 applets/maintained/media-icons/media-icons.desktop.in

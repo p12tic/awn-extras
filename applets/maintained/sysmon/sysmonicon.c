@@ -31,7 +31,8 @@ enum
   PROP_GRAPH_TYPE,
   PROP_GRAPH_TYPE_DEFAULT,
   PROP_CLIENT,
-  PROP_ID
+  PROP_ID,
+  PROP_INVALIDATE
 };
 
 static void create_surfaces (AwnSysmonicon * sysmonicon);
@@ -51,7 +52,7 @@ awn_sysmonicon_get_property (GObject *object, guint property_id,
       break;    
     case PROP_GRAPH:
       g_value_set_object (value, priv->graph); 
-      break;          
+      break;
     case PROP_GRAPH_TYPE:
       g_value_set_int (value, priv->graph_type[CONF_STATE_INSTANCE]); 
       break;    
@@ -63,7 +64,10 @@ awn_sysmonicon_get_property (GObject *object, guint property_id,
       break;
     case PROP_CLIENT:
       g_value_set_pointer (value,priv->client);
-      break;                
+      break;
+    case PROP_INVALIDATE:
+      g_value_set_boolean (value,priv->invalidate);
+      break;      
     default:
     G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
   }
@@ -104,6 +108,9 @@ awn_sysmonicon_set_property (GObject *object, guint property_id,
     case PROP_CLIENT:
       g_assert (!priv->client); /*this should not be set more than once!*/
       priv->client = g_value_get_pointer (value);
+      break;
+    case PROP_INVALIDATE:
+      priv->invalidate = g_value_get_boolean (value);
       break;      
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -136,6 +143,7 @@ awn_sysmonicon_constructed (GObject *object)
   AwnSysmoniconPrivate * priv;
   AwnApplet * applet;
   gchar * name;
+  gint size;  
   
   priv = AWN_SYSMONICON_GET_PRIVATE (object);
   
@@ -155,6 +163,10 @@ awn_sysmonicon_constructed (GObject *object)
                 "canonical-name",&name,
                 NULL);
   priv->client = awn_config_get_default_for_applet_by_info (name, priv->id,NULL);
+
+  size = awn_applet_get_size (AWN_APPLET(applet));
+  awn_icon_set_custom_paint ( AWN_ICON (object), size,size);
+  
   g_assert (priv->client);
   
   do_bridge ( applet,object,
@@ -222,6 +234,12 @@ awn_sysmonicon_class_init (AwnSysmoniconClass *klass)
                                G_PARAM_READWRITE);
   g_object_class_install_property (object_class, PROP_CLIENT, pspec);   
   
+  pspec = g_param_spec_boolean ("invalidate",
+                               "invalidate surface",
+                               "invalidate surface",
+                               TRUE,
+                               G_PARAM_READWRITE);
+  g_object_class_install_property (object_class, PROP_INVALIDATE, pspec);   
 
   g_type_class_add_private (object_class, sizeof (AwnSysmoniconPrivate));
   
@@ -239,12 +257,7 @@ static gboolean _expose(GtkWidget *self,
   
   if (!priv->graph_cr)
   {
-    cairo_surface_t * new_surface;
-    gint size = awn_applet_get_size (AWN_APPLET(priv->applet));
     create_surfaces (AWN_SYSMONICON(self));
-    new_surface = cairo_surface_create_similar (priv->graph_surface,CAIRO_CONTENT_COLOR_ALPHA, size,size);
-    awn_icon_set_from_surface (AWN_ICON(self),new_surface);  
-    cairo_surface_destroy (new_surface);    
   }  
   else
   {
@@ -256,8 +269,12 @@ static gboolean _expose(GtkWidget *self,
     g_return_val_if_fail (effects,FALSE);
     ctx = awn_effects_cairo_create(effects);
     g_return_val_if_fail (ctx,FALSE);
-    
-    awn_graph_render_to_context (priv->graph,priv->graph_cr);
+
+    if (priv->invalidate)
+    {
+      awn_graph_render_to_context (priv->graph,priv->graph_cr);
+      priv->invalidate = FALSE;
+    }
     /*FIXME
      Have a background, rendered graph, and foregrond and slap them together.
      
@@ -272,20 +289,20 @@ static gboolean _expose(GtkWidget *self,
     
     /*FIXME call (for the moment just setting it create_surfaces) ->set_bg ()
      */
-    
+
     cairo_set_operator (ctx,CAIRO_OPERATOR_SOURCE);
     cairo_set_source_surface (ctx, priv->bg_surface,0.0,0.0);
     cairo_paint (ctx);
     cairo_set_operator (ctx,CAIRO_OPERATOR_OVER);
     cairo_set_source_surface (ctx, priv->graph_surface,0.0,0.0);
     cairo_paint (ctx);
-    
+
     /*should call something along the lines of render_fg() which will be in 
      vtable
      */
     awn_effects_cairo_destroy (effects);
   }    
-  return FALSE;
+  return TRUE;
 }
 
 static void
@@ -410,7 +427,6 @@ void _size_changed(AwnApplet *app, guint size, AwnSysmonicon *icon)
   
   g_debug ("Resizing\n");
   create_surfaces (icon);  
-  new_surface = cairo_surface_create_similar (priv->graph_surface,CAIRO_CONTENT_COLOR_ALPHA, size,size);  
-  awn_icon_set_from_surface (AWN_ICON(icon),new_surface);  
+  awn_icon_set_custom_paint (AWN_ICON(icon),size,size);  
   cairo_surface_destroy (new_surface);
 }

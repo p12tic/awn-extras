@@ -54,11 +54,6 @@ usr/share/avant-window-navigator/applets/file-browser-launcher/*.py
 usr/share/avant-window-navigator/applets/file-browser-launcher.desktop
 usr/share/avant-window-navigator/schemas/awn-applet-file-browser-launcher.schema-ini
 #
-# Gwibfawn
-#
-usr/share/avant-window-navigator/applets/gwibfawn/
-usr/share/avant-window-navigator/applets/gwibfawn.desktop
-#
 # Mail
 #
 usr/share/avant-window-navigator/applets/mail/

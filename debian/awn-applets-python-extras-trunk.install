@@ -62,25 +62,6 @@ usr/share/avant-window-navigator/applets/yama.desktop
 #usr/share/avant-window-navigator/applets/digg/
 #usr/share/avant-window-navigator/applets/digg.desktop
 #
-# Pynot
-#
-#etc/gconf/schemas/pynot.schemas
-#usr/share/avant-window-navigator/applets/pynot/*.py
-#usr/share/avant-window-navigator/applets/pynot/*.glade
-#usr/share/avant-window-navigator/applets/pynot/*.png
-#usr/share/avant-window-navigator/applets/pynot/*.svg
-#usr/share/avant-window-navigator/applets/pynot.desktop
-#
-# Pynot-rgba
-#
-#etc/gconf/schemas/pynot-rgba.schemas
-#usr/share/avant-window-navigator/applets/pynot-rgba/*.py
-#usr/share/avant-window-navigator/applets/pynot-rgba/*.glade
-#usr/share/avant-window-navigator/applets/pynot-rgba/*.xcf
-#usr/share/avant-window-navigator/applets/pynot-rgba/*.png
-#usr/share/avant-window-navigator/applets/pynot-rgba/*.svg
-#usr/share/avant-window-navigator/applets/pynot-rgba.desktop
-#
 # Rtm
 #
 #usr/share/avant-window-navigator/applets/rtm/

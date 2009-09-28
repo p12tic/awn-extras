@@ -166,7 +166,6 @@ Description: A collection of applets for avant-window-navigator
     pause, and next/back to your awn bar, and control a list of media players.
   * mimenu: Another applet for the Menu.
   * pandora: Plays Pandora internet radio.
-  * pynot: A Simple Python System tray. 
   * rtm: Use Remember The Milk from AWN. 
   * tomboy-applet: Control Tomboy with D-Bus.
 

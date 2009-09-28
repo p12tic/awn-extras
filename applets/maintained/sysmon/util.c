@@ -108,8 +108,8 @@ _cmp_find_pid (AwnProcInfo *info, gpointer * pid_as_ptr)
   return (info->pid - GPOINTER_TO_INT(pid_as_ptr) );
 }
 
-static gint
-_cmp_proc_info_percent (AwnProcInfo *left, AwnProcInfo *right)
+gint
+cmp_proc_info_percent_ascending (AwnProcInfo *left, AwnProcInfo *right)
 {
   if (left->percent_cpu < right->percent_cpu  )
   {
@@ -125,11 +125,35 @@ _cmp_proc_info_percent (AwnProcInfo *left, AwnProcInfo *right)
   }
 }
 
-static gint
-_cmp_proc_info_reversed_percent (AwnProcInfo *left, AwnProcInfo *right)
+gint
+cmp_proc_info_percent_descending (AwnProcInfo *left, AwnProcInfo *right)
 {
-  return _cmp_proc_info_percent (right,left);
+  return cmp_proc_info_percent_ascending (right,left);
 } 
+
+gint
+cmp_proc_state_cmd_ascending (AwnProcInfo *left, AwnProcInfo *right)
+{
+  return g_strcmp0( left->proc_state.cmd,right->proc_state.cmd);
+}
+
+gint
+cmp_proc_state_cmd_descending (AwnProcInfo *left, AwnProcInfo *right)
+{
+  return cmp_proc_state_cmd_ascending (right,left);
+}
+
+gint
+cmp_pid_ascending (AwnProcInfo *left, AwnProcInfo *right)
+{
+  return left->pid - right->pid;
+}
+
+gint
+cmp_pid_descending (AwnProcInfo *left, AwnProcInfo *right)
+{
+  return cmp_pid_ascending (right,left);
+}
 
 GList *
 get_process_info (void)
@@ -224,7 +248,10 @@ update_process_info (void)
   g_list_free (old_awn_proc_info);  
   g_free (p);
   old_total_jiffies = total_jiffies;
+}
 
-  awn_proc_info = g_list_sort(awn_proc_info, (GCompareFunc) _cmp_proc_info_reversed_percent);
-//  g_debug ("total_per = %lf",total_per);
+GList *
+get_sorted_proc_list (GCompareFunc cmp_func)
+{
+  return g_list_sort (g_list_copy ( awn_proc_info),cmp_func);
 }

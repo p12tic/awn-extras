@@ -145,6 +145,10 @@ _awn_CPUicon_update_icon(gpointer object)
   priv = AWN_CPUICON_GET_PRIVATE (object);
   sysmonicon_priv = AWN_SYSMONICON_GET_PRIVATE (object);
 
+  g_object_set (object,
+                "invalidate",TRUE,
+                NULL);
+  
   /*FIXME change this to some type of graph_type thing */
   if ( (AWN_IS_AREAGRAPH(sysmonicon_priv->graph)) ||
         (AWN_IS_CIRCLEGRAPH(sysmonicon_priv->graph) ))

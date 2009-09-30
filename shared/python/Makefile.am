@@ -6,7 +6,6 @@ pyawn_extras_PYTHON =	\
 	__init__.py	\
 	awnlib.py	\
 	awnmediaplayers.py	\
-	detach.py	\
 	$(NULL)
 
 EXTRA_DIST = __init__.py.in

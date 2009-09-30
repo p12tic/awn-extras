@@ -1,3 +1,6 @@
+[DEFAULT]
+single_instance = false
+
 [DEFAULT/items]
 type = list-string
 default = 
@@ -9,12 +12,12 @@ default =
 description = List of items' details
 
 [DEFAULT/progress]
-type = list-string
+type = list-integer
 default = 
 description = List of items' progresses in percent (0-100)
 
 [DEFAULT/priority]
-type = list-string
+type = list-integer
 default = 
 description = List of items' priorities (0-3)
 
@@ -34,12 +37,12 @@ default = items
 description = What type of icon to display (progress, progress-items, items)
 
 [DEFAULT/colors]
-type = list-string
+type = list-integer
 default = 
 description = List of colors to use for the custom color
 
 [DEFAULT/category]
-type = list-string
+type = list-integer
 default = 
 description = The list of items' categories
 
@@ -49,7 +52,7 @@ default =
 description = The list of categories' names
 
 [DEFAULT/expanded]
-type = list-string
+type = list-integer
 default = 
 description = The list of categories that are expanded
 

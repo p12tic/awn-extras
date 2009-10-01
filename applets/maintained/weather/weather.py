@@ -99,11 +99,15 @@ class WeatherApplet:
         menu = self.applet.dialog.menu
         menu_index = len(menu) - 1
 
+        map_item = gtk.MenuItem(_("Show _Map"))
+        map_item.connect("activate", self.activate_map_cb)
+        menu.insert(map_item, menu_index)
+
         refresh_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_REFRESH)
         refresh_item.connect("activate", self.activate_refresh_cb)
-        menu.insert(refresh_item, menu_index)
+        menu.insert(refresh_item, menu_index + 1)
 
-        menu.insert(gtk.SeparatorMenuItem(), menu_index + 1)
+        menu.insert(gtk.SeparatorMenuItem(), menu_index + 2)
 
         prefs = gtk.Builder()
         prefs.add_from_file(ui_file)
@@ -264,6 +268,9 @@ class WeatherApplet:
         self.applet.settings["location"] = model.get_value(iter, 0)
 
         self.search_window.hide()
+
+    def activate_map_cb(self, widget):
+        self.map_dialog.show_all()
 
     def activate_refresh_cb(self, widget=None, map=True):
         """Refresh the icon, forecast, and map data. Called by the

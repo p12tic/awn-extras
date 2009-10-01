@@ -88,12 +88,12 @@ static DesktopAgnosticColor*
 config_get_color (DesktopAgnosticConfigClient *cfg, const gchar *key,
                   GError **error)
 {
-  GValue value;
+  GValue value = {0,};
   DesktopAgnosticColor *color;
 
-  value = desktop_agnostic_config_client_get_value (cfg,
-                                                    DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
-                                                    key, error);
+  desktop_agnostic_config_client_get_value (cfg,
+                                            DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
+                                            key, &value, error);
   if (!G_VALUE_HOLDS_OBJECT (&value) || (error && *error))
   {
     return NULL;

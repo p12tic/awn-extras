@@ -173,7 +173,9 @@ static void config_get_string(DesktopAgnosticConfigClient *client, const gchar *
 static void config_get_color(DesktopAgnosticConfigClient *client, const gchar *key, DesktopAgnosticColor **color)
 {
   GError *error = NULL;
-  GValue value = desktop_agnostic_config_client_get_value(client, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, key, &error);
+  GValue value = {0,};
+
+  desktop_agnostic_config_client_get_value(client, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, key, &value, &error);
 
   if (error)
   {

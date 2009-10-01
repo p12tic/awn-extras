@@ -51,7 +51,7 @@ applet_description = _("Applet to show the hardware sensors readouts")
 applet_logo = os.path.join(os.path.dirname(__file__), "images/thermometer.svg")
 ui_file = os.path.join(os.path.dirname(__file__), "hardware-sensors.ui")
 
-font_sizes = [14, 18, 22]
+font_sizes = [10, 16, 22]
 font_size_names = ["Small", "Medium", "Large"]
 
 class SensorsApplet:
@@ -248,6 +248,8 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         def change_show_value_overlay(show_value_overlay):
             self.__temp_overlay.props.active = show_value_overlay
 
+        sensors = self.sensors
+
         # Default settings
         default_settings = {
             # Global
@@ -259,17 +261,17 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
                            prefs.get_object("checkbutton_show_value_overlay")),
             "font_size": (0, self.change_font_size),
             # Sensor settings
-            "ids": [str(sensor.id) for sensor in self.sensors],
-            "labels": [sensor.label for sensor in self.sensors],
-            "show": [sensor.show for sensor in self.sensors],
-            "dialog_row": range(1, len(self.sensors) + 1),
-            "in_icon": [sensor.in_icon for sensor in self.sensors],
-            "hand_colors": [str(sensor.hand_color) for sensor in self.sensors],
-            "text_colors": [str(sensor.text_color) for sensor in self.sensors],
-            "high_values": [sensor.high_value for sensor in self.sensors],
-            "low_values": [sensor.low_value for sensor in self.sensors],
-            "high_alarms": [sensor.alarm_on_high for sensor in self.sensors],
-            "low_alarms": [sensor.alarm_on_low for sensor in self.sensors]
+            "ids": [str(sensor.id) for sensor in sensors],
+            "labels": [sensor.label for sensor in sensors],
+            "show": [sensor.show for sensor in sensors],
+            "dialog_row": range(1, len(sensors) + 1),
+            "in_icon": [sensor.in_icon for sensor in sensors],
+            "hand_colors": [str(sensor.hand_color) for sensor in sensors],
+            "text_colors": [str(sensor.text_color) for sensor in sensors],
+            "high_values": [sensor.high_value for sensor in sensors],
+            "low_values": [sensor.low_value for sensor in sensors],
+            "high_alarms": [sensor.alarm_on_high for sensor in sensors],
+            "low_alarms": [sensor.alarm_on_low for sensor in sensors]
         }
 
         # Load settings and replace with defaults if not set.
@@ -305,13 +307,13 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
 
         # If a sensor was lost, a new one found or if order was changed
         if new_sensors or \
-          len(self.sensors) != len(settings["ids"]) or \
-          [str(sensor.id) for sensor in self.sensors] != settings["ids"]:
+          len(sensors) != len(settings["ids"]) or \
+          [str(sensor.id) for sensor in sensors] != settings["ids"]:
 
             # Sort sensors by dialog_row and renumber them in that order (to
             # eliminate any 'holes' in row order left by lost sensors and to
             # put the new sensors to the end).
-            sorted_sensors = [sensor for sensor in self.sensors]
+            sorted_sensors = [sensor for sensor in sensors]
             sorted_sensors.sort(key=lambda s: s.dialog_row)
             # Renumber rows
             for row, sensor in enumerate(sorted_sensors):
@@ -319,25 +321,25 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
 
             # Save all sensor settings.
             settings = self.applet.settings
-            settings["ids"] = [str(sensor.id) for sensor in self.sensors]
-            settings["labels"] = [sensor.label for sensor in self.sensors]
-            settings["show"] = [sensor.show for sensor in self.sensors]
-            settings["dialog_row"] = [s.dialog_row for s in self.sensors]
-            settings["in_icon"] = [s.in_icon for s in self.sensors]
-            settings["hand_colors"] = [str(s.hand_color) for s in self.sensors]
-            settings["text_colors"] = [str(s.text_color) for s in self.sensors]
-            settings["high_values"] = [s.high_value for s in self.sensors]
-            settings["low_values"] = [s.low_value for s in self.sensors]
-            settings["high_alarms"] = [s.alarm_on_high for s in self.sensors]
-            settings["low_alarms"] = [s.alarm_on_low for s in self.sensors]
+            settings["ids"] = [str(sensor.id) for sensor in sensors]
+            settings["labels"] = [sensor.label for sensor in sensors]
+            settings["show"] = [sensor.show for sensor in sensors]
+            settings["dialog_row"] = [sensor.dialog_row for sensor in sensors]
+            settings["in_icon"] = [sensor.in_icon for sensor in sensors]
+            settings["hand_colors"] = [str(s.hand_color) for s in sensors]
+            settings["text_colors"] = [str(s.text_color) for s in sensors]
+            settings["high_values"] = [s.high_value for s in sensors]
+            settings["low_values"] = [s.low_value for s in sensors]
+            settings["high_alarms"] = [s.alarm_on_high for s in sensors]
+            settings["low_alarms"] = [s.alarm_on_low for s in sensors]
 
         # If none of the saved sensors has been selected as main, set default.
         if not self.main_sensors:
             # The default for the main sensor is the first sensor.
-            self.sensors[0].in_icon = True
-            self.main_sensors.append(self.sensors[0])
+            sensors[0].in_icon = True
+            self.main_sensors.append(sensors[0])
             self.applet.settings["in_icon"] = \
-                                    [sensor.in_icon for sensor in self.sensors]
+                                         [sensor.in_icon for sensor in sensors]
 
         if self.settings["icon_file"] not in self.__icon_files:
             self.applet.settings["icon_file"] = self.__icon_files[0]
@@ -646,7 +648,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
     def change_font_size(self, font_size):
         """Change font size for overlay."""
         self.__temp_overlay.props.font_sizing = font_sizes[font_size]
-        self.__temp_overlay.props.y_override = 30 - font_size * 2
+        self.__temp_overlay.props.y_override = 30 - font_size
 
     def icon_changed_cb(self, widget):
         """Save icon file setting and update icon."""
@@ -674,7 +676,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         sensor.high_value = value
         # Save high values
         self.applet.settings["high_values"] = \
-                             [sensor.raw_high_value for sensor in self.sensors]
+                                       [s.raw_high_value for s in self.sensors]
         if sensor in self.main_sensors:
             # Force icon update
             self.update_icon(True)
@@ -685,7 +687,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         sensor.low_value = value
         # Save low values
         self.applet.settings["low_values"] = \
-                              [sensor.raw_low_value for sensor in self.sensors]
+                                        [s.raw_low_value for s in self.sensors]
         if sensor in self.main_sensors:
             # Force icon update
             self.update_icon(True)
@@ -849,8 +851,8 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         # Get selected sensor
         selection = treeview_main.get_selection()
         (model_filter, iter) = selection.get_selected()
-        # Something must be selected
-        if iter is not None:
+        # Something must be selected and at least one sensor must remain
+        if iter is not None and len(treeview_main.get_model()) > 1:
             child_iter = model_filter.convert_iter_to_child_iter(iter)
             # Sensor index
             idx = self.__liststore[child_iter][self.__column_idx]

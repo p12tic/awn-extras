@@ -40,7 +40,6 @@ from sensorvalues.rpmvalue import RPMValue
 from sensorvalues.voltvalue import VoltValue
 
 from sensorvalues import units
-from desktopagnostic import Color
 from sensoricon import SensorIcon
 
 applet_name = "Hardware Sensors"

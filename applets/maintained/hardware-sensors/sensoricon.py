@@ -94,8 +94,9 @@ class SensorIcon():
         context.set_source_surface(self.__background_surface)
         context.paint()
 
-        if len(self.__sensors) is 1:
-            sensor = self.__sensors[0]
+        single = len(self.__sensors) is 1
+
+        for idx, sensor in enumerate(self.__sensors):
             low_value = sensor.low_value
             high_value = sensor.high_value
 
@@ -103,69 +104,42 @@ class SensorIcon():
 
             # Draw the meter hand
             (red, green, blue, alpha) = sensor.hand_color
-            context.set_source_rgba(float(red) / 65535, float(green) / 65535,
-                                    float(blue) / 65535, float(alpha) / 65535)
+            context.set_source_rgba(
+                                 float(red) / 65535, float(green) / 65535,
+                                 float(blue) / 65535, float(alpha) / 65535)
 
             # prevent division by zero
             if (high_value - low_value) == 0:
                 angle = 0
             else:
-                angle = math.pi * (-0.25 + 0.5 *
-                         (sensor.value - low_value) / (high_value - low_value))
+                if single:
+                    angle = math.pi * (-0.25 + 0.5 *
+                     (sensor.value - low_value) / (high_value - low_value))
+                else:
+                    angle = math.pi * (-0.15 + 0.3 *
+                     (sensor.value - low_value) / (high_value - low_value))
 
             # Move hand to center
-            context.translate(width / 2, height / 2)
+            if single:
+                context.translate(width / 2, height / 2)
+            else:
+                context.translate((0.297 + idx * 0.406) * width,
+                                  0.539 * height)
             # Rotate the hand
             context.rotate(angle)
 
             # Draw hand
-            context.move_to(0, -height / 2 + 5)
+            y = -height / 2 + 5 if single else (-0.406) * height
+
+            context.move_to(0, y)
             context.line_to(-2, 0)
             context.line_to(0, 5)
             context.line_to(2, 0)
-            context.line_to(0, -height / 2 + 5)
+            context.line_to(0, y)
             context.fill()
 
-            # Turn the mask back to the originale state (before translation and
-            # rotation)
+            # Turn the mask back to the originale state (before translation
+            # and rotation)
             context.restore()
-
-        else:
-            for idx, sensor in enumerate(self.__sensors):
-                low_value = sensor.low_value
-                high_value = sensor.high_value
-
-                context.save()
-
-                # Draw the meter hand
-                (red, green, blue, alpha) = sensor.hand_color
-                context.set_source_rgba(
-                                     float(red) / 65535, float(green) / 65535,
-                                     float(blue) / 65535, float(alpha) / 65535)
-
-                # prevent division by zero
-                if (high_value - low_value) == 0:
-                    angle = 0
-                else:
-                    angle = math.pi * (-0.15 + 0.3 *
-                         (sensor.value - low_value) / (high_value - low_value))
-
-                # Move hand to center
-                context.translate((0.297 + idx * 0.406) * width,
-                                  0.539 * height)
-                # Rotate the hand
-                context.rotate(angle)
-
-                # Draw hand
-                context.move_to(0, -0.406 * height)
-                context.line_to(-2, 0)
-                context.line_to(0, 5)
-                context.line_to(2, 0)
-                context.line_to(0, -0.406 * height)
-                context.fill()
-
-                # Turn the mask back to the originale state (before translation
-                # and rotation)
-                context.restore()
 
         return context

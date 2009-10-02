@@ -403,7 +403,7 @@ class MediaControlApplet (awn.AppletSimple):
         if not self.timer_running:
             def timer_callback():
                 self.timer_running = False
-                self.update_song_info()
+                self.update_song_info(True)
                 return False
  
             self.timer_running = True

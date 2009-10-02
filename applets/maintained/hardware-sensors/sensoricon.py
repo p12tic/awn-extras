@@ -24,23 +24,37 @@ import math
 import cairo
 import rsvg
 
+theme_dir = os.path.join(os.path.dirname(__file__), "themes")
 
 class SensorIcon():
 
-    def __init__(self, filename, sensors, height):
+    def __init__(self, theme, sensors, height):
         """
         Initialize icon.
         
         Load icon background, create cairo context and render background.
-            filename: path to background image
+            theme: icon theme
             sensors: list of sensors who's values are shown in this icon
-            height: icon height in pixels
+            height: applet height in pixels
         
         """
-        self.__filename = filename
-        self.__sensors = sensors
+        if len(sensors) is 1:
+            self.__type = "single"
+        else:
+            self.__type = "double"
+
+        self.__theme = theme
+        self.__sensors = sensors[:2]
         self.__height = height
 
+        self.create_background()
+
+    def theme(self, theme):
+        self.__theme = theme
+        self.create_background()
+
+    def type(self, type):
+        self.__type = type
         self.create_background()
 
     def set_height(self, height):
@@ -50,14 +64,13 @@ class SensorIcon():
 
     def set_sensors(self, sensors):
         """Set sensors who's values are shown in this icon."""
-        self.__sensors = sensors
-
-    def set_icon_file(self, filename):
-        self.__filename = filename
-        self.create_background()
+        self.__sensors = sensors[:2]
 
     def create_background(self):
-        background = rsvg.Handle(self.__filename)
+        filename = os.path.join(
+                    theme_dir, self.__theme, "background_%s.svg" % self.__type)
+
+        background = rsvg.Handle(filename)
         self.__background_surface = cairo.ImageSurface(
                              cairo.FORMAT_ARGB32, self.__height, self.__height)
         background_context = cairo.Context(self.__background_surface)
@@ -118,7 +131,7 @@ class SensorIcon():
             context.restore()
 
         else:
-            for idx, sensor in enumerate(self.__sensors[:2]):
+            for idx, sensor in enumerate(self.__sensors):
                 low_value = sensor.low_value
                 high_value = sensor.high_value
 

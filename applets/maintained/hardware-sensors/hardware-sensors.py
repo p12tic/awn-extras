@@ -57,8 +57,6 @@ ui_file = os.path.join(os.path.dirname(__file__), "hardware-sensors.ui")
 font_sizes = [10, 16, 22]
 font_size_names = ["Small", "Medium", "Large"]
 
-background_types = ["single", "double"]
-
 class SensorsApplet:
     """
     Applet to show the hardware sensors readouts.
@@ -96,7 +94,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
 
         # Get a list of themes
         def is_dir(path):
-            return os.path.isdir(os.path.join(os.path.dirname(__file__), path))
+            return os.path.isdir(os.path.join(theme_dir, path))
 
         self.__themes = filter(is_dir, os.listdir(theme_dir))
         self.__themes.sort()
@@ -106,7 +104,10 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         self.setup_preferences()
 
         # == Icon == #
-        self.setup_theme()
+        self.setup_icon()
+
+        # Recreate upon awn height change
+        self.applet.connect_size_changed(self.height_changed_cb)
 
         # == Dialog == #
         # Create main applet dialog showing selected sensors.
@@ -149,7 +150,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         for sensor in self.sensors:
             if sensor.in_icon:
                 self.main_sensors.append(sensor)
-#        self.__icon.set_sensors(self.main_sensors)
+        self.__icon.set_sensors(self.main_sensors)
 
     def update_all_sensors(self):
         """Update all of the sensor values."""
@@ -157,22 +158,18 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
             sensor.read_sensor()
 
 
-    # == Applet theme and icon == #
-    def setup_theme(self):
+    # == Applet icon == #
+    def setup_icon(self):
         """
-        Create theme states and set the initial theme. Create overlay, run the
-        first icon update and start icon timer.
+        Create icon, create overlay, run the first icon update and start icon
+        timer.
         
         """
-        states = {}
-        for type in background_types:
-            states[type] = "background_%s" % type
+        self.__icon = SensorIcon(self.settings["theme"],
+                                 self.main_sensors,
+                                 self.applet.get_size())
 
-        self.applet.theme.set_states(states)
-        self.applet.theme.theme(self.settings["theme"])
-        self.update_icon_state()
-
-        # Create overlay
+        # Create text overlay
         self.__temp_overlay = OverlayText()
         self.change_font_size(self.settings["font_size"])
         self.__temp_overlay.props.active = self.settings["show_value_overlay"]
@@ -187,9 +184,10 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
     def update_icon_state(self):
         """Updates icon type/state"""
         if len(self.main_sensors) is 1:
-            self.applet.theme.icon("single")
+            self.__icon.type("single")
         else:
-            self.applet.theme.icon("double")
+            self.__icon.type("double")
+        self.update_icon(True)
 
     def update_icon(self, force=False):
         """
@@ -204,9 +202,10 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
             self.__old_values = values
 
             # Get updated icon
-#            context = self.__icon.get_icon()
+            context = self.__icon.get_icon()
             # Set updated icon
-#            self.applet.icon.set(context)
+            self.applet.icon.set(context)
+
             # Update overlay
             if len(values) is 1:
                 overlay_text = str(values[0])
@@ -609,6 +608,11 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         """Show alarm message with awn notify."""
         self.applet.notify.send(subject=None, body=message, icon="")
 
+    def height_changed_cb(self):
+        """Update the applet's icon to reflect the new height."""
+        self.__icon.set_height(self.applet.get_size())
+        # Force icon update
+        self.update_icon(True)
 
     # === Change setting methods === #
     def unit_changed_cb(self, widget):
@@ -640,7 +644,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
 
     def change_theme(self, theme):
         """Save theme setting and update icon."""
-        self.applet.theme.theme(theme)
+        self.__icon.theme(theme)
         # Force icon change
         self.update_icon(True)
 

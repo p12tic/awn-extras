@@ -48,11 +48,16 @@ short_name = "hardware-sensors"
 applet_description = _("Applet to show the hardware sensors readouts")
 
 # Applet's logo, used as the applet's icon and shown in the GTK About dialog
+theme_dir = os.path.join(os.path.dirname(__file__), "themes")
 applet_logo = os.path.join(os.path.dirname(__file__), "images/thermometer.svg")
+no_sensors_icon = os.path.join(os.path.dirname(__file__),
+                                                       "images/no_sensors.svg")
 ui_file = os.path.join(os.path.dirname(__file__), "hardware-sensors.ui")
 
 font_sizes = [10, 16, 22]
 font_size_names = ["Small", "Medium", "Large"]
+
+background_types = ["single", "double"]
 
 class SensorsApplet:
     """
@@ -70,10 +75,6 @@ class SensorsApplet:
         """
         self.applet = applet
 
-        # Icon path
-        images_dir = os.path.dirname(__file__) + "/images/"
-        self.__applet_icon_dir = images_dir + "applet/"
-
         # Init sensors
         no_sensors = not self.create_all_sensors()
 
@@ -87,31 +88,25 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
             # Show massage with awn notify
             self.applet.notify.send(subject=None, body=message, icon="")
             # Show "no sensors found" icon
-            self.applet.icon.file(images_dir + "no_sensors.svg",
-                                                        size=applet.get_size())
+            self.applet.icon.file(no_sensors_icon, size=applet.get_size())
             self.applet.tooltip.set(message)
             return
 
         self.update_all_sensors()
 
-        # Load icons, if none are found, finish
-        if not self.load_icons():
-            return
+        # Get a list of themes
+        def is_dir(path):
+            return os.path.isdir(os.path.join(os.path.dirname(__file__), path))
+
+        self.__themes = filter(is_dir, os.listdir(theme_dir))
+        self.__themes.sort()
 
         # == Settings == #
         # Load settings, setup rightclick menu and create settings dialog
         self.setup_preferences()
 
         # == Icon == #
-        self.__temp_overlay = OverlayText()
-        self.change_font_size(self.settings["font_size"])
-        self.__temp_overlay.props.active = self.settings["show_value_overlay"]
-        applet.add_overlay(self.__temp_overlay)
-
-        self.create_icon()
-
-        # Recreate upon awn height change
-        self.applet.connect_size_changed(self.height_changed_cb)
+        self.setup_theme()
 
         # == Dialog == #
         # Create main applet dialog showing selected sensors.
@@ -154,7 +149,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         for sensor in self.sensors:
             if sensor.in_icon:
                 self.main_sensors.append(sensor)
-        self.__icon.set_sensors(self.main_sensors)
+#        self.__icon.set_sensors(self.main_sensors)
 
     def update_all_sensors(self):
         """Update all of the sensor values."""
@@ -162,21 +157,39 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
             sensor.read_sensor()
 
 
-    # == Applet icon == #
-    def create_icon(self):
+    # == Applet theme and icon == #
+    def setup_theme(self):
         """
-        Create applet icon and start the update timer that calls update_icon
-        method.
+        Create theme states and set the initial theme. Create overlay, run the
+        first icon update and start icon timer.
         
         """
-        file = self.__applet_icon_dir + self.settings["icon_file"]
-        self.__icon = SensorIcon(file, self.main_sensors,
-                                                        self.applet.get_size())
+        states = {}
+        for type in background_types:
+            states[type] = "background_%s" % type
+
+        self.applet.theme.set_states(states)
+        self.applet.theme.theme(self.settings["theme"])
+        self.update_icon_state()
+
+        # Create overlay
+        self.__temp_overlay = OverlayText()
+        self.change_font_size(self.settings["font_size"])
+        self.__temp_overlay.props.active = self.settings["show_value_overlay"]
+        self.applet.add_overlay(self.__temp_overlay)
+
         self.__old_values = None
         # Call the first update and start the updater
         self.update_icon()
         self.__icon_timer = self.applet.timing.register(
-                            self.update_icon, self.settings["timeout"])
+                                    self.update_icon, self.settings["timeout"])
+
+    def update_icon_state(self):
+        """Updates icon type/state"""
+        if len(self.main_sensors) is 1:
+            self.applet.theme.icon("single")
+        else:
+            self.applet.theme.icon("double")
 
     def update_icon(self, force=False):
         """
@@ -191,10 +204,9 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
             self.__old_values = values
 
             # Get updated icon
-            context = self.__icon.get_icon()
+#            context = self.__icon.get_icon()
             # Set updated icon
-            self.applet.icon.set(context)
-
+#            self.applet.icon.set(context)
             # Update overlay
             if len(values) is 1:
                 overlay_text = str(values[0])
@@ -207,27 +219,6 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
             title = "   ".join(["%s: %d %s" % (s.label, s.value, s.unit_str)
                                                    for s in self.main_sensors])
             self.applet.tooltip.set(title)
-
-    def load_icons(self):
-        """
-        Load backgrounds for applet icon from ./images/applet folder.
-        Return False in an event of an error.
-        """
-        # Read icon names in ./images/applet folder
-        path = self.__applet_icon_dir
-        # Check if the path exists
-        if not os.path.exists(path):
-            print _("Error:"), _("Directory"), path, _("does not exist.")
-            return False
-
-        self.__icon_files = filter(
-          lambda file: file.endswith((".svg", ".SVG")), os.listdir(path))
-        if len(self.__icon_files) == 0:
-            print _("Error:"), _("No .svg images found in directory:"), path
-            return False
-
-        self.__icon_files.sort()
-        return True
 
 
     # == Settings == #
@@ -256,7 +247,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
             "unit": (units.UNIT_CELSIUS, self.change_unit),
             "timeout": (2, self.change_timeout,
                                              prefs.get_object("spin_timeout")),
-            "icon_file": self.__icon_files[0],
+            "theme": (self.__themes[0], self.change_theme),
             "show_value_overlay": (True, change_show_value_overlay,
                            prefs.get_object("checkbutton_show_value_overlay")),
             "font_size": (0, self.change_font_size),
@@ -341,8 +332,8 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
             self.applet.settings["in_icon"] = \
                                          [sensor.in_icon for sensor in sensors]
 
-        if self.settings["icon_file"] not in self.__icon_files:
-            self.applet.settings["icon_file"] = self.__icon_files[0]
+        if self.settings["theme"] not in self.__themes:
+            self.applet.settings["theme"] = self.__themes[0]
 
         self.setup_general_preferences(prefs)
         self.setup_sensor_preferences(prefs)
@@ -357,15 +348,14 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         unit_combobox.set_active(self.settings["unit"])
         unit_combobox.connect('changed', self.unit_changed_cb)
 
-        # Icon combobox
-        icon_combobox = prefs.get_object("combobox_icon")
-        awnlib.add_cell_renderer_text(icon_combobox)
-        for icon in self.__icon_files:
-            # Add filename without the extension and '_' replaced width space
-            icon_combobox.append_text(icon[:-4].replace('_', ' '))
-        icon_combobox.set_active(
-                           self.__icon_files.index(self.settings["icon_file"]))
-        icon_combobox.connect('changed', self.icon_changed_cb)
+        # Theme combobox
+        theme_combobox = prefs.get_object("combobox_theme")
+        awnlib.add_cell_renderer_text(theme_combobox)
+        for theme in self.__themes:
+            # Add filename with '_' replaced width space
+            theme_combobox.append_text(theme.replace('_', ' '))
+        theme_combobox.set_active(self.__themes.index(self.settings["theme"]))
+        theme_combobox.connect('changed', self.theme_changed_cb)
 
         # Font size combobox
         font_combobox = prefs.get_object("combobox_font_size")
@@ -619,12 +609,6 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         """Show alarm message with awn notify."""
         self.applet.notify.send(subject=None, body=message, icon="")
 
-    def height_changed_cb(self):
-        """Update the applet's icon to reflect the new height."""
-        self.__icon.set_height(self.applet.get_size())
-        # Force icon update
-        self.update_icon(True)
-
 
     # === Change setting methods === #
     def unit_changed_cb(self, widget):
@@ -650,13 +634,14 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         self.__temp_overlay.props.font_sizing = font_sizes[font_size]
         self.__temp_overlay.props.y_override = 30 - font_size
 
-    def icon_changed_cb(self, widget):
-        """Save icon file setting and update icon."""
-        filename = self.__icon_files[widget.get_active()]
+    def theme_changed_cb(self, widget):
         # Save setting
-        self.applet.settings["icon_file"] = filename
-        # Apply icon change
-        self.__icon.set_icon_file(self.__applet_icon_dir + filename)
+        self.applet.settings["theme"] = theme
+
+    def change_theme(self, theme):
+        """Save theme setting and update icon."""
+        self.applet.theme.theme(theme)
+        # Force icon change
         self.update_icon(True)
 
     def change_timeout(self, timeout):
@@ -841,6 +826,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
             self.change_in_icon(self.sensors[idx], True)
             # Change value in model
             model[iter][self.__column_in_icon] = True
+        self.update_icon_state()
 
     def remove_cb(self, widget, treeview_main, cb_hand, cb_text):
         """
@@ -864,6 +850,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
             # buttons
             cb_hand.set_sensitive(False)
             cb_text.set_sensitive(False)
+        self.update_icon_state()
 
     def up_cb(self, widget, treeview):
         """

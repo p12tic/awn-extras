@@ -8,7 +8,7 @@
       <column type="gchararray"/>
     </columns>
   </object>
-  <object class="GtkListStore" id="liststore_icon">
+  <object class="GtkListStore" id="liststore_theme">
     <columns>
       <!-- column-name icon_filename -->
       <column type="gchararray"/>
@@ -50,7 +50,7 @@
                             <child>
                               <object class="GtkLabel" id="label3">
                                 <property name="visible">True</property>
-                                <property name="label" translatable="yes">Applet icon:</property>
+                                <property name="label" translatable="yes">Theme:</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -58,18 +58,10 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkVBox" id="vbox_icon">
+                              <object class="GtkComboBox" id="combobox_theme">
+                                <property name="width_request">200</property>
                                 <property name="visible">True</property>
-                                <child>
-                                  <object class="GtkComboBox" id="combobox_icon">
-                                    <property name="width_request">200</property>
-                                    <property name="visible">True</property>
-                                    <property name="model">liststore_icon</property>
-                                  </object>
-                                  <packing>
-                                    <property name="position">0</property>
-                                  </packing>
-                                </child>
+                                <property name="model">liststore_theme</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -96,19 +88,10 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkVBox" id="vbox_unit">
+                              <object class="GtkComboBox" id="combobox_unit">
+                                <property name="width_request">200</property>
                                 <property name="visible">True</property>
-                                <property name="spacing">6</property>
-                                <child>
-                                  <object class="GtkComboBox" id="combobox_unit">
-                                    <property name="width_request">200</property>
-                                    <property name="visible">True</property>
-                                    <property name="model">liststore_unit</property>
-                                  </object>
-                                  <packing>
-                                    <property name="position">0</property>
-                                  </packing>
-                                </child>
+                                <property name="model">liststore_unit</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>

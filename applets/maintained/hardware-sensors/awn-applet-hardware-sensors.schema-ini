@@ -21,10 +21,10 @@ type = integer
 default = 1
 description = Size of value overlay in the icon (0=small, 1=medium, 2=large).
 
-[DEFAULT/icon_file]
+[DEFAULT/theme]
 type = string
 default = 
-description = Applet icon.
+description = Applet theme.
 
 [DEFAULT/ids]
 type = list-string

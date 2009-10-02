@@ -40,8 +40,17 @@ dist_images_DATA =			\
 
 applet_imagesdir = $(applet_datadir)/images/applet
 dist_applet_images_DATA =					\
-	images/applet/dark_new.svg				\
 	images/applet/transparent_border.svg	\
 	images/applet/transparent.svg			\
 	$(NULL)
 
+theme_darkdir = $(applet_datadir)/themes/dark
+dist_theme_dark_DATA =		\
+	themes/dark/index.theme	\
+	$(NULL)
+
+theme_dark_scalabledir = $(applet_datadir)/themes/dark
+dist_theme_dark_scalable_DATA =					\
+	themes/dark/scalable/background_double.svg	\
+	themes/dark/scalable/background_single.svg	\
+	$(NULL)

@@ -36,7 +36,7 @@ notification_area_la_LDFLAGS = $(APPLET_LINKER_FLAGS)
 
 prefsdir = $(applet_datadir)
 dist_prefs_DATA =	\
-	na-prefs.xml	\
+	na-prefs.ui	\
 	$(NULL)
 
 EXTRA_DIST += $(wildcard *.h)

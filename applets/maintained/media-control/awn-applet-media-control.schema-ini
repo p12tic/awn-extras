@@ -1,0 +1,21 @@
+[DEFAULT/tooltip_format]
+type = integer
+default = 0
+description = Tooltip format to use.
+
+[DEFAULT/use_docklet]
+type = boolean
+default = false
+description = Display docklet instead of standard applet dialog.
+
+[DEFAULT/show_album_art]
+type = boolean
+default = true
+description = Display album art if available.
+
+[DEFAULT/album_art_size]
+type = integer
+default = 150
+description = Size of the album art.
+
+; vim: set ft=dosini :

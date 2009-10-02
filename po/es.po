@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: awn-core-applets 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-09-20 20:30-0700\n"
+"POT-Creation-Date: 2009-09-27 20:58-0700\n"
 "PO-Revision-Date: 2007-10-07 22:29-0400\n"
 "Last-Translator: Mike Desjardins <desjardinsmike@gmail.com>\n"
 "Language-Team: Spanish\n"
@@ -638,12 +638,12 @@ msgstr ""
 #: ../applets/maintained/feeds/feeds.desktop.in.h:1
 #: ../applets/maintained/feeds/feeds.py:70
 #: ../applets/maintained/feeds/feeds.py:224
-#: ../applets/maintained/feeds/feeds.py:780
+#: ../applets/maintained/feeds/feeds.py:791
 msgid "Feeds Applet"
 msgstr ""
 
 #: ../applets/maintained/feeds/feeds.desktop.in.h:2
-#: ../applets/maintained/feeds/feeds.py:784
+#: ../applets/maintained/feeds/feeds.py:795
 msgid "Monitor Web Feeds"
 msgstr ""
 
@@ -709,7 +709,7 @@ msgid "Hide this feed's items"
 msgstr ""
 
 #. Create the items
-#: ../applets/maintained/feeds/feeds.py:744
+#: ../applets/maintained/feeds/feeds.py:755
 #: ../applets/maintained/feeds/prefs.py:232
 msgid "Add Feed"
 msgstr ""
@@ -816,7 +816,7 @@ msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/about.py:39
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.desktop.in.h:2
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:51
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:52
 msgid "File Browser Launcher"
 msgstr ""
 
@@ -828,60 +828,96 @@ msgstr ""
 msgid "A launcher for your file manager"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:175
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:176
 msgid "Home Folder"
 msgstr ""
 
 #. Filesystem
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:179
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:180
 #: ../applets/maintained/file-browser-launcher/prefs.py:174
 msgid "Filesystem"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:259
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:260
 msgid "Connect to Server..."
 msgstr ""
 
 #. Check if this is the Desktop directory
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:301
-msgid "~/Desktop"
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:310
+#: ../applets/maintained/places/applet.c:339
+msgid "Desktop"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:311
+#. Documents
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:314
+msgid "Documents"
+msgstr ""
+
+#. Downloads
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:318
+msgid "Downloads"
+msgstr ""
+
+#. Music
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:322
+msgid "Music"
+msgstr ""
+
+#. Pictures
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:326
+msgid "Pictures"
+msgstr ""
+
+#. Public
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:330
+msgid "Public"
+msgstr ""
+
+#. Templates
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:334
+msgid "Templates"
+msgstr ""
+
+#. Videos
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:338
+msgid "Videos"
+msgstr ""
+
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:352
 msgid "Computer"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:314
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:355
 msgid "Network"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:337
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:340
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:378
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:381
 msgid "Trash"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:343
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:384
 msgid "Search"
 msgstr "Buscar para codigo"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:346
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:387
 msgid "CD/DVD Burner"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:349
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:390
 msgid "Fonts"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:353
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:394
 #, fuzzy
 msgid "Folder"
 msgstr "Frio"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:459
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:500
 msgid "DVD Drive"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:463
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:504
 msgid "CD Drive"
 msgstr ""
 
@@ -1079,118 +1115,93 @@ msgid "Show the item count on the icon"
 msgstr ""
 
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
-#: ../applets/maintained/gwibfawn/gwibfawn.desktop.in.h:1
-msgid "Displays tweets"
+#: ../applets/maintained/hardware-sensors/hardware-sensors.desktop.in.h:1
+msgid "Applet to show the hw sensors readouts"
 msgstr ""
 
-#: ../applets/maintained/gwibfawn/gwibfawn.desktop.in.h:2
-msgid "Gwibfawn"
+#: ../applets/maintained/hardware-sensors/hardware-sensors.desktop.in.h:2
+msgid "Hardware Sensors"
 msgstr ""
 
-#. Translators: this message appears in the Errors dialog
-#. Indicates with wich action the error happened
-#: ../applets/maintained/gwibfawn/microblog/__init__.py:66
-#: ../applets/maintained/gwibfawn/microblog/__init__.py:73
-#: ../applets/maintained/gwibfawn/microblog/__init__.py:80
-msgid "send message"
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:48
+msgid "Applet to show the hardware sensors readouts"
 msgstr ""
 
-#. Translators: this message appears in the Errors dialog
-#. Indicates with wich action the error happened
-#: ../applets/maintained/gwibfawn/microblog/__init__.py:88
-msgid "retrieve thread"
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:82
+msgid ""
+"Warning: No sensors found. Install one or more of ACPI, HDDTemp, LM-Sensors "
+"and restart the applet."
 msgstr ""
 
-#. Translators: this message appears in the Errors dialog
-#. Indicates with wich action the error happened
-#: ../applets/maintained/gwibfawn/microblog/__init__.py:95
-msgid "retrieve responses"
+#. == Dialog == #
+#. Create main applet dialog showing selected sensors.
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:118
+msgid "Sensors"
 msgstr ""
 
-#. Translators: this message appears in the Errors dialog
-#. Indicates with wich action the error happened
-#: ../applets/maintained/gwibfawn/microblog/__init__.py:102
-msgid "retrieve messages"
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:220
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:226
+msgid "Error:"
 msgstr ""
 
-#. Translators: this message appears in the Errors dialog
-#. Indicates with wich action the error happened
-#: ../applets/maintained/gwibfawn/microblog/__init__.py:109
-msgid "retrieve positions"
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:220
+msgid "Directory"
 msgstr ""
 
-#. Translators: this message appears in the Errors dialog
-#. Indicates with wich action the error happened
-#: ../applets/maintained/gwibfawn/microblog/__init__.py:116
-#: ../applets/maintained/gwibfawn/microblog/__init__.py:123
-msgid "perform search query"
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:220
+msgid "does not exist."
 msgstr ""
 
-#. Translators: this message appears in the Errors dialog
-#. Indicates with wich action the error happened
-#: ../applets/maintained/gwibfawn/microblog/__init__.py:130
-msgid "perform tag query"
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:226
+msgid "No .svg images found in directory:"
 msgstr ""
 
-#. Translators: this message appears in the Errors dialog
-#. Indicates with wich action the error happened
-#: ../applets/maintained/gwibfawn/microblog/__init__.py:143
-msgid "perform group query"
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:480
+msgid "Interface"
 msgstr ""
 
-#: ../applets/maintained/gwibfawn/microblog/support/__init__.py:60
-#, python-format
-msgid "%(year)d year ago"
-msgid_plural "%(year)d years ago"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../applets/maintained/gwibfawn/microblog/support/__init__.py:63
-#, python-format
-msgid "%(day)d day ago"
-msgid_plural "%(day)d days ago"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../applets/maintained/gwibfawn/microblog/support/__init__.py:66
-#, python-format
-msgid "%(hour)d hour ago"
-msgid_plural "%(hour)d hours ago"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../applets/maintained/gwibfawn/microblog/support/__init__.py:69
-#, python-format
-msgid "%(minute)d minute ago"
-msgid_plural "%(minute)d minutes ago"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../applets/maintained/gwibfawn/microblog/support/__init__.py:72
-#, python-format
-msgid "%(sec)d second ago"
-msgid_plural "%(sec)d seconds ago"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../applets/maintained/gwibfawn/microblog/support/__init__.py:74
-#, python-format
-msgid "BUG: %s"
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:482
+msgid "Name"
 msgstr ""
 
-#: ../applets/maintained/gwibfawn/microblog/twitter.py:95
-#: ../applets/maintained/gwibfawn/microblog/twitter.py:96
-msgid "This user has protected their updates."
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:484
+msgid "Label"
 msgstr ""
 
-#: ../applets/maintained/gwibfawn/microblog/twitter.py:95
-#: ../applets/maintained/gwibfawn/microblog/twitter.py:96
-msgid "You need to send a request before you can view this person's timeline."
+#. Set the cell "active" attribute to column_show - retrieve the state
+#. of the toggle button from that column in liststore
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:488
+msgid "In dialog"
 msgstr ""
 
-#: ../applets/maintained/gwibfawn/microblog/twitter.py:95
-#: ../applets/maintained/gwibfawn/microblog/twitter.py:96
-msgid "Send request..."
+#. Add treeview-column to treeview
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:526
+msgid "Sensors displayed in icon"
+msgstr ""
+
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:544
+msgid "properties"
+msgstr ""
+
+#. Unit long strings
+#: ../applets/maintained/hardware-sensors/sensorvalues/units.py:34
+msgid "Celsius"
+msgstr ""
+
+#: ../applets/maintained/hardware-sensors/sensorvalues/units.py:34
+msgid "Fahrenheit"
+msgstr ""
+
+#: ../applets/maintained/hardware-sensors/sensorvalues/units.py:35
+msgid "Kelvin"
+msgstr ""
+
+#: ../applets/maintained/hardware-sensors/sensorvalues/units.py:35
+msgid "Volt"
+msgstr ""
+
+#: ../applets/maintained/hardware-sensors/sensorvalues/units.py:35
+msgid "rpm"
 msgstr ""
 
 #: ../applets/maintained/media-control/media-control.desktop.in.h:1
@@ -1199,6 +1210,14 @@ msgstr ""
 
 #: ../applets/maintained/media-control/media-control.desktop.in.h:2
 msgid "Media Control"
+msgstr ""
+
+#: ../applets/maintained/media-control/media_control.py:566
+msgid "Title - Artist"
+msgstr ""
+
+#: ../applets/maintained/media-control/media_control.py:566
+msgid "Artist - Title"
 msgstr ""
 
 #: ../applets/maintained/media-icons/media-icon-next.desktop.in.h:1
@@ -1404,10 +1423,6 @@ msgstr ""
 #: ../applets/maintained/notification-daemon/daemon.c:1183
 #, c-format
 msgid "%u is not a valid notification ID"
-msgstr ""
-
-#: ../applets/maintained/places/applet.c:339
-msgid "Desktop"
 msgstr ""
 
 #: ../applets/maintained/places/places.desktop.in.in.h:1

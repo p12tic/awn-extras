@@ -54,5 +54,17 @@ void  inc_process_info_users(void);
 
 void dec_process_info_users(void);
 
+
+gint cmp_proc_info_percent_ascending (AwnProcInfo *left, AwnProcInfo *right);
+gint cmp_proc_info_percent_descending (AwnProcInfo *left, AwnProcInfo *right);
+
+gint cmp_proc_state_cmd_ascending (AwnProcInfo *left, AwnProcInfo *right);
+gint cmp_proc_state_cmd_descending (AwnProcInfo *left, AwnProcInfo *right);
+
+gint cmp_pid_ascending (AwnProcInfo *left, AwnProcInfo *right);
+gint cmp_pid_descending (AwnProcInfo *left, AwnProcInfo *right);
+
+GList * get_sorted_proc_list (GCompareFunc cmp_func);
+
 #endif
 

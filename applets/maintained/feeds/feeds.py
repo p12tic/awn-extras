@@ -725,12 +725,23 @@ class App(awn.AppletSimple):
 
     #When a button is released on the applet
     def button_release(self, widget, event):
-        if event.button in (1, 2):
+        if event.button == 1:
             if self.dialog.flags() & gtk.VISIBLE:
                 self.dialog.hide()
 
             else:
                 self.dialog.show_all()
+
+        elif event.button == 2:
+            if len(self.urls) > 0:
+                if self.urls[0] in self.feeds:
+                    if self.urls[0] == 'google-reader':
+                        weburl = reader_url
+
+                    else:
+                        weburl = self.feeds[self.urls[0]].feed.link
+
+                    self.open_url(None, weburl)
 
         elif event.button == 3:
             self.dialog.hide()

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2008 sharkbaitbobby <sharkbaitbobby+awn@gmail.com>
+# Copyright (c) 2009 Sharkbaitbobby <sharkbaitbobby+awn@gmail.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -36,8 +36,8 @@ import icon
 #Awn stuff
 import sys
 import awn
-from awn import extras
-from awn.extras import _, detach
+import awn.extras
+from awn.extras import _
 
 
 class App(awn.AppletSimple):
@@ -56,14 +56,13 @@ class App(awn.AppletSimple):
 
         #Values that will be referenced later
         self.displayed = False
-        self.detached = False
 
         #Give the dialog an AccelGroup (is this all that necessary)
         self.accel = gtk.AccelGroup()
         self.dialog.add_accel_group(self.accel)
 
         #Set up Settings
-        self.settings = settings.Settings('to-do', uid)
+        self.settings = settings.Settings(self)
         self.settings.register({ \
           'color': (str, 'skyblue'), \
           'title': (str, _("To-Do List")), \
@@ -87,6 +86,8 @@ class App(awn.AppletSimple):
           'color_high_text': (str, '#dddddd'), \
           'use_custom_width': (bool, False), \
           'confirm_categories': (bool, True)})
+
+        self.set_tooltip_text(self.settings['title'])
 
         #Icon Type
         if self.settings['icon_type'] not in ['progress', 'progress_items', 'items']:
@@ -123,35 +124,16 @@ class App(awn.AppletSimple):
             self.settings['color'] = 'skyblue'
             self.color = icon.colors['skyblue']
 
-        #Set up detach (settings, etc. is done a little later)
-        self.detach = detach.Detach()
-
         #Setup the icon
         self.update_icon()
-
-        #Set some settings
-        self.detach['applet-right-click'] = 'signal'
-        self.detach['right-click'] = 'signal'
-
-        #Connect to some signals
-        self.detach.connect('hide-awn-icon', self.hide_icon)
-        self.detach.connect('attach', self.was_attached)
-        self.detach.connect('detach', self.was_detached)
-        self.detach.connect('applet-toggle-dialog', self.toggle_dialog)
-        self.detach.connect('show-dialog', self.show_dialog)
-        self.detach.connect('hide-dialog', self.hide_dialog)
-        self.detach.connect('applet-right-click', self.show_menu)
-        self.detach.connect('right-click', self.show_menu)
-        self.detach.connect(['scroll-up', 'scroll-right'], self.opacity, True)
-        self.detach.connect(['scroll-down', 'scroll-left'], self.opacity, False)
-
-        #Prepare the applet for dragging from Awn
-        self.detach.prepare_awn_drag_drop(self)
 
         gtk.window_set_default_icon_name('view-sort-descending')
 
         #Connect to events
         self.connect('size-changed', self.size_changed)
+        self.connect('clicked', self.toggle_dialog)
+        self.connect('context-menu-popup', self.show_menu)
+        self.connect('scroll-event', self.opacity)
         self.dialog.connect('focus-out-event', self.hide_dialog)
         self.settings.connect('items', self.update_icon)
         self.settings.connect('progress', self.update_icon)
@@ -177,13 +159,10 @@ class App(awn.AppletSimple):
         except:
             pass
 
-    #Add a widget to the dialog - detached or not
+    #Add a widget to the dialog
     def add_to_dialog(self, widget):
         self.dialog_widget = widget
-        if self.detached == True:
-            self.detach.add(self.dialog_widget)
-        else:
-            self.dialog.add(self.dialog_widget)
+        self.dialog.add(self.dialog_widget)
 
     #The size of Awn has changed
     def size_changed(self, applet, new_size):
@@ -192,13 +171,12 @@ class App(awn.AppletSimple):
         self.update_icon()
 
     #Display a right-click context menu
-    def show_menu(self, event):
+    def show_menu(self, applet, event):
         #Hide the dialog if it's shown
         self.hide_dialog()
 
-        #Create the items for Preferences, Detach, and About
+        #Create the items for Preferences and About
         prefs_menu = gtk.ImageMenuItem(gtk.STOCK_PREFERENCES)
-        #detach_menu = self.detach.menu_item(self.do_detach,self.do_attach)
         about_menu = gtk.ImageMenuItem(gtk.STOCK_ABOUT)
 
         #Connect the two items to functions when selected
@@ -210,39 +188,14 @@ class App(awn.AppletSimple):
         #Now create the menu to put the items in and show it
         menu = self.create_default_menu()
         menu.append(prefs_menu)
-        #menu.append(detach_menu)
         menu.append(about_menu)
         menu.show_all()
         menu.popup(None, None, None, event.button, event.time)
-
-    #Detach the applet
-    def do_detach(self, *args):
-        self.detach.detach()
-        self.displayed = False
-        self.detached = True
-
-    #The applet was detached
-    #Do NOT hide the icon; hide the dialog (just in case)
-    def was_detached(self):
-        self.detached = True
-        self.update_icon()
-        self.hide_dialog()
 
     #Show the preferences menu
     def show_prefs(self, *args):
         import prefs
         prefs.Prefs(self.settings)
-
-    #Attach the applet
-    def do_attach(self, *args):
-        self.detach.attach()
-
-    #The applet was attached
-    def was_attached(self, *args):
-        #Show the regular icon
-        self.detached = False
-        self.last_num_items = -1
-        self.update_icon()
 
     #Open a URL
     def do_url(self, about, url, data):
@@ -272,6 +225,7 @@ class App(awn.AppletSimple):
         win.set_logo_icon_name('view-sort-descending')
         win.set_website('http://wiki.awn-project.org/To-Do_List_Applet')
         win.set_website_label('wiki.awn-project.org')
+        win.set_version(awn.extras.__version__)
         win.run()
         win.destroy()
 
@@ -290,26 +244,20 @@ class App(awn.AppletSimple):
         #Hide the Awn Dialog if necessary
         self.dialog.hide()
 
-    #Attached:
-    #  Displayed: Hide
-    #  Otherwide: Show
-    #Detached:
-    #  Not displayed: Show
-    #  Displayed: This won't be called
+    #Toggle the showing of the dialog
     def toggle_dialog(self, *args):
-        if not self.detached and self.displayed:
-            self.hide_dialog()
-        elif (self.detached and not self.displayed) or not self.detached:
+        if self.dialog.flags() & gtk.VISIBLE:
+            self.clear_dialog()
+            self.dialog.hide()
+
+        else:
             #Make the dialog
             self.make_dialog()
 
             #Deal with the dialog as appropriate
-            if not self.detached:
-                self.dialog.show_all()
-                if self.settings['title'] not in [None, _("To-Do List")]:
-                    self.dialog.set_title(self.settings['title'])
-            else:
-                self.dialog_widget.show_all()
+            self.dialog.show_all()
+            if self.settings['title'] not in [None, _("To-Do List")]:
+                self.dialog.set_title(self.settings['title'])
 
         #Fix the first item selected bug (?)
         try:
@@ -320,13 +268,7 @@ class App(awn.AppletSimple):
 
         #Give the Add button focus
         self.dialog_add.grab_focus()
-        self.displayed = True
-
-    #Show the dialog - detached only
-    def show_dialog(self, *args):
-        if self.detached==True and self.detach['displayed']==False:
-            self.make_dialog()
-            self.dialog_widget.show_all()
+        self.displayed = not self.displayed
 
     #Make the dialog - don't show it
     def make_dialog(self, *args):
@@ -405,7 +347,7 @@ class App(awn.AppletSimple):
                 else:
                     dialog_table.attach(dialog_x, 0, 1, y, (y+1), \
                       xoptions=gtk.SHRINK, yoptions=gtk.SHRINK)
-                    dialog_table.attach(dialog_entry, 2, 3, y, (y+1), \
+                    dialog_table.attach(dialog_entry, 1, 3, y, (y+1), \
                       yoptions=gtk.SHRINK)
                     dialog_table.attach(dialog_progress, 3, 4, y, (y+1), \
                       xoptions=gtk.SHRINK, yoptions=gtk.SHRINK)
@@ -726,7 +668,7 @@ class App(awn.AppletSimple):
         progress_label = gtk.Label(_("Progress(%): "))
 
         #SpinButton and Adjustment for the SpinButton
-        progress_adj = gtk.Adjustment(float(progress), 0, 100, 5, 10, 1)
+        progress_adj = gtk.Adjustment(float(progress), 0, 100, 5, 10, 0)
         progress_spin = gtk.SpinButton(progress_adj, 1, 0)
         progress_spin.iterator = num
         progress_spin.connect('focus-out-event', self.spin_focusout)
@@ -880,28 +822,16 @@ class App(awn.AppletSimple):
             if item != '':
                 tmp_items.append(item)
 
-        #Change the detached icon first
-        try:
-            assert len(tmp_items) == 0
-            self.detach['icon-mode'] = 'pixbuf'
-            self.detach.set_pixbuf(self.icon_theme.load_icon( \
-              'view-sort-descending', self.size, 0))
-        except:
-            self.detach['icon-mode'] = 'surface'
-            self.detach.set_surface(icon.icon(48, self.settings, self.color, \
-              self.surface, self.last_size))
-
-        #Change the attached applet icon second
-        if not self.detached:
-            if len(tmp_items) == 0:
-                self.set_icon_pixbuf(self.icon_theme.load_icon( \
-                'view-sort-descending', self.size, 0))
-            else:
-                #If Awn supports setting the icon as a cairo context
-                self.surface = icon.icon(self.size, self.settings, self.color, \
-                  self.surface, self.last_size)
-                self.context = cairo.Context(self.surface)
-                self.set_icon_context(self.context)
+        #Change the icon
+        if len(tmp_items) == 0:
+            self.set_icon_pixbuf(self.icon_theme.load_icon( \
+            'view-sort-descending', self.size, 0))
+        else:
+            #If Awn supports setting the icon as a cairo context
+            self.surface = icon.icon(self.size, self.settings, self.color, \
+              self.surface, self.last_size)
+            self.context = cairo.Context(self.surface)
+            self.set_icon_context(self.context)
 
         self.last_size = self.size
         self.last_num_items = len(self.settings['items'])
@@ -969,12 +899,12 @@ class App(awn.AppletSimple):
             self.set_tooltip_text(self.settings['title'])
 
     #Change the opacity of the icon by 5%
-    def opacity(self, event, more):
+    def opacity(self, widget, event):
         old_opacity = self.settings['icon_opacity']
         new_opacity = False
 
         #Increase opacity
-        if more:
+        if event.direction in (gtk.gdk.SCROLL_UP, gtk.gdk.SCROLL_RIGHT):
             #Make sure it won't go too far
             if old_opacity + 5 >= 100:
                 new_opacity = 100
@@ -1352,8 +1282,7 @@ class App(awn.AppletSimple):
         self.settings['expanded'] = tmp_list_expanded
 
         #The icon is automatically changed, but the dialog is not
-        self.displayed = False
-        self.toggle_dialog()
+        self.make_dialog()
 
     #When a CheckButton for "Don't show this again." is toggled
     def confirm_check(self, button):
@@ -1410,6 +1339,7 @@ class ProgressButton(gtk.Button):
     def update(self, *args):
         progress = self.settings['progress'][self.Id]
         #Reset up the icon
+        self.surface = icon.icon2(self.settings, applet.color, self.surface, progress)
         self.image.queue_draw()
 
         #Reset the tooltip
@@ -1436,6 +1366,7 @@ class ProgressButton(gtk.Button):
 
             self.settings['progress'] = list_of_progress
             self.update()
+
         #Scrolling down
         elif event.direction == gtk.gdk.SCROLL_DOWN:
             #Decrease percentage

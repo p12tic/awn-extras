@@ -47,10 +47,6 @@ applets/unmaintained/filebrowser/filebrowser-applet.c
 applets/unmaintained/filebrowser/filebrowser-dialog.c
 applets/unmaintained/helloworld-applet/src/helloworld.desktop.in.in
 applets/unmaintained/plugger/plugger.desktop.in.in
-applets/unmaintained/pynot/pynot.desktop.in
-applets/unmaintained/pynot/pynot-prefs.glade
-applets/unmaintained/pynot-rgba/pynot-rgba.desktop.in
-applets/unmaintained/pynot-rgba/pynot-rgba.glade
 applets/unmaintained/separator/separator.desktop.in.in
 applets/unmaintained/stacks/curved_stacks_preferences.glade
 applets/unmaintained/stacks/stacks.desktop.in

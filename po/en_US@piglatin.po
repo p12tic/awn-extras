@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Awn Extras 0.3.9\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-09-20 20:29-0700\n"
-"PO-Revision-Date: 2009-09-20 20:33-0800\n"
+"POT-Creation-Date: 2009-09-27 20:58-0700\n"
+"PO-Revision-Date: 2009-09-26 15:10-0800\n"
 "Last-Translator: Mark Lee <avant-wn@lazymalevolence.com>\n"
 "Language-Team: English (United States Pig Latin)\n"
 "MIME-Version: 1.0\n"
@@ -122,8 +122,12 @@ msgid "Cairo Clock"
 msgstr "Airo-cay Ock-clay"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.desktop.in.h:2
-msgid "Displays an analog clock and supports additional clocks for different locations"
-msgstr "Isplays-day an analog-way ock-clay and upports-say additional-way ocks-clay for ifferent-day ocations-lay"
+msgid ""
+"Displays an analog clock and supports additional clocks for different "
+"locations"
+msgstr ""
+"Isplays-day an analog-way ock-clay and upports-say additional-way ocks-clay "
+"for ifferent-day ocations-lay"
 
 #: ../applets/maintained/cairo-menu/backend-gnome.c:121
 msgid "Invalid desktop file ID"
@@ -167,7 +171,11 @@ msgid "Save Password"
 msgstr ""
 
 #: ../applets/maintained/calendar/calendarlogin.py:87
-msgid "You have chosen to save your password.  Although the password will be stored in an encrypted format, there is always a remote possibility that your password can be stolen and decrypted if your computer's security is breached.  Are you still sure you want to save your password?"
+msgid ""
+"You have chosen to save your password.  Although the password will be stored "
+"in an encrypted format, there is always a remote possibility that your "
+"password can be stolen and decrypted if your computer's security is "
+"breached.  Are you still sure you want to save your password?"
 msgstr ""
 
 #: ../applets/maintained/calendar/calendarprefs.py:44
@@ -273,7 +281,10 @@ msgid "Calendar"
 msgstr "Alendar-clay"
 
 #: ../applets/maintained/calendar/clockcal.py:220
-msgid "Do you want to erase your calendar password from the calendar applet?  If you choose to clear your password, you will be prompted again for your calendar login credentials."
+msgid ""
+"Do you want to erase your calendar password from the calendar applet?  If "
+"you choose to clear your password, you will be prompted again for your "
+"calendar login credentials."
 msgstr ""
 
 #: ../applets/maintained/calendar/clockcal.py:506
@@ -409,7 +420,8 @@ msgstr ""
 msgid ""
 "This guide will help you to add a new comic.\n"
 "\n"
-"To find comics suitable for adding, you may search the Internet for \"comics rss\".\n"
+"To find comics suitable for adding, you may search the Internet for \"comics "
+"rss\".\n"
 "\n"
 "Press \"next\" to proceed."
 msgstr ""
@@ -471,7 +483,9 @@ msgstr "Ate-day efore-bay ime-tay"
 
 #: ../applets/maintained/digital-clock/dgClockPref.py:37
 msgid "Whether to show the date next to the time, instead of below it."
-msgstr "Ether-whay to ow-shay the ate-day next to the ime-tay, instead of elow-bay it."
+msgstr ""
+"Ether-whay to ow-shay the ate-day next to the ime-tay, instead of elow-bay "
+"it."
 
 #: ../applets/maintained/digital-clock/dgClockPref.py:40
 msgid "12 hour mode"
@@ -479,7 +493,9 @@ msgstr "12 hour-way ode-may"
 
 #: ../applets/maintained/digital-clock/dgClockPref.py:41
 msgid "Whether to show the time in 12 hour mode (as opposed to 24 hour mode)."
-msgstr "Ether-whay to ow-shay the ime-tay in 12 hour-way ode-may (as opposed-way to 24 hour-way ode-may)."
+msgstr ""
+"Ether-whay to ow-shay the ime-tay in 12 hour-way ode-may (as opposed-way to "
+"24 hour-way ode-may)."
 
 #: ../applets/maintained/digital-clock/dgClockPref.py:44
 msgid "Font face"
@@ -511,7 +527,8 @@ msgstr "Alendar-clay ommand-cay"
 
 #: ../applets/maintained/digital-clock/dgClockPref.py:55
 msgid "Command to execute when a calendar day is double-clicked."
-msgstr "Ommand-cay to execute-way when an alendar-cay ay-day is ouble-day-icked-clay."
+msgstr ""
+"Ommand-cay to execute-way when an alendar-cay ay-day is ouble-day-icked-clay."
 
 #: ../applets/maintained/digital-clock/dgClockPref.py:57
 msgid "Adjust date/time command"
@@ -519,7 +536,9 @@ msgstr "Adjust-way ate-day/ime-tay ommand-cay"
 
 #: ../applets/maintained/digital-clock/dgClockPref.py:58
 msgid "Command to execute when the user wishes to adjust the date/time."
-msgstr "Ommand-cay to execute-way when the user-way ishes-way to adjust-way the ate-day/ime-tay."
+msgstr ""
+"Ommand-cay to execute-way when the user-way ishes-way to adjust-way the ate-"
+"day/ime-tay."
 
 #: ../applets/maintained/digital-clock/dgClockPref.py:60
 msgid "dock orientation"
@@ -619,12 +638,12 @@ msgstr "Un-ray Ime-_tay Admin-way:"
 #: ../applets/maintained/feeds/feeds.desktop.in.h:1
 #: ../applets/maintained/feeds/feeds.py:70
 #: ../applets/maintained/feeds/feeds.py:224
-#: ../applets/maintained/feeds/feeds.py:780
+#: ../applets/maintained/feeds/feeds.py:791
 msgid "Feeds Applet"
 msgstr "Eeds-fay Applet-way"
 
 #: ../applets/maintained/feeds/feeds.desktop.in.h:2
-#: ../applets/maintained/feeds/feeds.py:784
+#: ../applets/maintained/feeds/feeds.py:795
 msgid "Monitor Web Feeds"
 msgstr "Onitor-may Eb-way Eeds-fay"
 
@@ -694,7 +713,7 @@ msgid "Hide this feed's items"
 msgstr ""
 
 #. Create the items
-#: ../applets/maintained/feeds/feeds.py:744
+#: ../applets/maintained/feeds/feeds.py:755
 #: ../applets/maintained/feeds/prefs.py:232
 msgid "Add Feed"
 msgstr "Add-way Eed-fay"
@@ -797,7 +816,7 @@ msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/about.py:39
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.desktop.in.h:2
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:51
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:52
 msgid "File Browser Launcher"
 msgstr ""
 
@@ -809,59 +828,95 @@ msgstr ""
 msgid "A launcher for your file manager"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:175
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:176
 msgid "Home Folder"
 msgstr ""
 
 #. Filesystem
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:179
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:180
 #: ../applets/maintained/file-browser-launcher/prefs.py:174
 msgid "Filesystem"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:259
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:260
 msgid "Connect to Server..."
 msgstr ""
 
 #. Check if this is the Desktop directory
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:301
-msgid "~/Desktop"
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:310
+#: ../applets/maintained/places/applet.c:339
+msgid "Desktop"
+msgstr "Esktop-day"
+
+#. Documents
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:314
+msgid "Documents"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:311
+#. Downloads
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:318
+msgid "Downloads"
+msgstr ""
+
+#. Music
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:322
+msgid "Music"
+msgstr ""
+
+#. Pictures
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:326
+msgid "Pictures"
+msgstr "Ictures-pay"
+
+#. Public
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:330
+msgid "Public"
+msgstr ""
+
+#. Templates
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:334
+msgid "Templates"
+msgstr ""
+
+#. Videos
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:338
+msgid "Videos"
+msgstr ""
+
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:352
 msgid "Computer"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:314
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:355
 msgid "Network"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:337
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:340
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:378
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:381
 msgid "Trash"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:343
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:384
 msgid "Search"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:346
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:387
 msgid "CD/DVD Burner"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:349
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:390
 msgid "Fonts"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:353
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:394
 msgid "Folder"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:459
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:500
 msgid "DVD Drive"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:463
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:504
 msgid "CD Drive"
 msgstr ""
 
@@ -1028,7 +1083,8 @@ msgstr[1] "%s: %u items-way"
 #: ../applets/maintained/garbage/applet.vala:194
 #, c-format
 msgid "Could not open the trash folder with your file manager: %s"
-msgstr "Ould-cay not open-way the ash-tray older-fay with your ile-fay anager-may: %s"
+msgstr ""
+"Ould-cay not open-way the ash-tray older-fay with your ile-fay anager-may: %s"
 
 #: ../applets/maintained/garbage/applet.vala:209
 msgid "_Empty Trash"
@@ -1036,8 +1092,11 @@ msgstr "_Empty-way Ash-tray"
 
 #: ../applets/maintained/garbage/applet.vala:235
 #, c-format
-msgid "Are you sure you want to empty your trash? It currently contains %u item(s)."
-msgstr "Are you ure-say you want to empty-way your ash-tray? It urrently-cay ontains-cay %u item(s)-way."
+msgid ""
+"Are you sure you want to empty your trash? It currently contains %u item(s)."
+msgstr ""
+"Are you ure-say you want to empty-way your ash-tray? It urrently-cay ontains-"
+"cay %u item(s)-way."
 
 #: ../applets/maintained/garbage/applet.vala:344
 #, c-format
@@ -1058,118 +1117,93 @@ msgid "Show the item count on the icon"
 msgstr "Ow-shay the item-way ount-cay on the icon-way"
 
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
-#: ../applets/maintained/gwibfawn/gwibfawn.desktop.in.h:1
-msgid "Displays tweets"
+#: ../applets/maintained/hardware-sensors/hardware-sensors.desktop.in.h:1
+msgid "Applet to show the hw sensors readouts"
 msgstr ""
 
-#: ../applets/maintained/gwibfawn/gwibfawn.desktop.in.h:2
-msgid "Gwibfawn"
+#: ../applets/maintained/hardware-sensors/hardware-sensors.desktop.in.h:2
+msgid "Hardware Sensors"
 msgstr ""
 
-#. Translators: this message appears in the Errors dialog
-#. Indicates with wich action the error happened
-#: ../applets/maintained/gwibfawn/microblog/__init__.py:66
-#: ../applets/maintained/gwibfawn/microblog/__init__.py:73
-#: ../applets/maintained/gwibfawn/microblog/__init__.py:80
-msgid "send message"
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:48
+msgid "Applet to show the hardware sensors readouts"
 msgstr ""
 
-#. Translators: this message appears in the Errors dialog
-#. Indicates with wich action the error happened
-#: ../applets/maintained/gwibfawn/microblog/__init__.py:88
-msgid "retrieve thread"
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:82
+msgid ""
+"Warning: No sensors found. Install one or more of ACPI, HDDTemp, LM-Sensors "
+"and restart the applet."
 msgstr ""
 
-#. Translators: this message appears in the Errors dialog
-#. Indicates with wich action the error happened
-#: ../applets/maintained/gwibfawn/microblog/__init__.py:95
-msgid "retrieve responses"
+#. == Dialog == #
+#. Create main applet dialog showing selected sensors.
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:118
+msgid "Sensors"
 msgstr ""
 
-#. Translators: this message appears in the Errors dialog
-#. Indicates with wich action the error happened
-#: ../applets/maintained/gwibfawn/microblog/__init__.py:102
-msgid "retrieve messages"
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:220
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:226
+msgid "Error:"
 msgstr ""
 
-#. Translators: this message appears in the Errors dialog
-#. Indicates with wich action the error happened
-#: ../applets/maintained/gwibfawn/microblog/__init__.py:109
-msgid "retrieve positions"
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:220
+msgid "Directory"
 msgstr ""
 
-#. Translators: this message appears in the Errors dialog
-#. Indicates with wich action the error happened
-#: ../applets/maintained/gwibfawn/microblog/__init__.py:116
-#: ../applets/maintained/gwibfawn/microblog/__init__.py:123
-msgid "perform search query"
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:220
+msgid "does not exist."
 msgstr ""
 
-#. Translators: this message appears in the Errors dialog
-#. Indicates with wich action the error happened
-#: ../applets/maintained/gwibfawn/microblog/__init__.py:130
-msgid "perform tag query"
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:226
+msgid "No .svg images found in directory:"
 msgstr ""
 
-#. Translators: this message appears in the Errors dialog
-#. Indicates with wich action the error happened
-#: ../applets/maintained/gwibfawn/microblog/__init__.py:143
-msgid "perform group query"
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:480
+msgid "Interface"
+msgstr "Interface-way"
+
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:482
+msgid "Name"
 msgstr ""
 
-#: ../applets/maintained/gwibfawn/microblog/support/__init__.py:60
-#, python-format
-msgid "%(year)d year ago"
-msgid_plural "%(year)d years ago"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../applets/maintained/gwibfawn/microblog/support/__init__.py:63
-#, python-format
-msgid "%(day)d day ago"
-msgid_plural "%(day)d days ago"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../applets/maintained/gwibfawn/microblog/support/__init__.py:66
-#, python-format
-msgid "%(hour)d hour ago"
-msgid_plural "%(hour)d hours ago"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../applets/maintained/gwibfawn/microblog/support/__init__.py:69
-#, python-format
-msgid "%(minute)d minute ago"
-msgid_plural "%(minute)d minutes ago"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../applets/maintained/gwibfawn/microblog/support/__init__.py:72
-#, python-format
-msgid "%(sec)d second ago"
-msgid_plural "%(sec)d seconds ago"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../applets/maintained/gwibfawn/microblog/support/__init__.py:74
-#, python-format
-msgid "BUG: %s"
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:484
+msgid "Label"
 msgstr ""
 
-#: ../applets/maintained/gwibfawn/microblog/twitter.py:95
-#: ../applets/maintained/gwibfawn/microblog/twitter.py:96
-msgid "This user has protected their updates."
+#. Set the cell "active" attribute to column_show - retrieve the state
+#. of the toggle button from that column in liststore
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:488
+msgid "In dialog"
 msgstr ""
 
-#: ../applets/maintained/gwibfawn/microblog/twitter.py:95
-#: ../applets/maintained/gwibfawn/microblog/twitter.py:96
-msgid "You need to send a request before you can view this person's timeline."
+#. Add treeview-column to treeview
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:526
+msgid "Sensors displayed in icon"
 msgstr ""
 
-#: ../applets/maintained/gwibfawn/microblog/twitter.py:95
-#: ../applets/maintained/gwibfawn/microblog/twitter.py:96
-msgid "Send request..."
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:544
+msgid "properties"
+msgstr ""
+
+#. Unit long strings
+#: ../applets/maintained/hardware-sensors/sensorvalues/units.py:34
+msgid "Celsius"
+msgstr ""
+
+#: ../applets/maintained/hardware-sensors/sensorvalues/units.py:34
+msgid "Fahrenheit"
+msgstr ""
+
+#: ../applets/maintained/hardware-sensors/sensorvalues/units.py:35
+msgid "Kelvin"
+msgstr ""
+
+#: ../applets/maintained/hardware-sensors/sensorvalues/units.py:35
+msgid "Volt"
+msgstr ""
+
+#: ../applets/maintained/hardware-sensors/sensorvalues/units.py:35
+msgid "rpm"
 msgstr ""
 
 #: ../applets/maintained/media-control/media-control.desktop.in.h:1
@@ -1178,6 +1212,14 @@ msgstr ""
 
 #: ../applets/maintained/media-control/media-control.desktop.in.h:2
 msgid "Media Control"
+msgstr ""
+
+#: ../applets/maintained/media-control/media_control.py:566
+msgid "Title - Artist"
+msgstr ""
+
+#: ../applets/maintained/media-control/media_control.py:566
+msgid "Artist - Title"
 msgstr ""
 
 #: ../applets/maintained/media-icons/media-icon-next.desktop.in.h:1
@@ -1284,7 +1326,9 @@ msgid "Border colour in the form (Hex) rrggbbaa. Also use for the timer widget"
 msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:7
-msgid "Display icon for awn notification daemon. Allows toggling of notification display"
+msgid ""
+"Display icon for awn notification daemon. Allows toggling of notification "
+"display"
 msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:8
@@ -1292,7 +1336,9 @@ msgid "Gradient Factor"
 msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:9
-msgid "Gradient Factor applied to the notification window. Range of 0 to 1. The lower the number the more noticeable the effect."
+msgid ""
+"Gradient Factor applied to the notification window. Range of 0 to 1. The "
+"lower the number the more noticeable the effect."
 msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:10
@@ -1304,7 +1350,9 @@ msgid "Honour gtk theme colours"
 msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:12
-msgid "If the value is >0.0 then this opacity value will be applied to window instead of hiding."
+msgid ""
+"If the value is >0.0 then this opacity value will be applied to window "
+"instead of hiding."
 msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:13
@@ -1316,11 +1364,19 @@ msgid "Kill notification-daemon"
 msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:15
-msgid "NOTE: This key should not be considered stable... it is likely to change. Arbitrary X position for notification window. Default is -1 which signifies awn-notification-daemon should place windows relative to its position in the bar."
+msgid ""
+"NOTE: This key should not be considered stable... it is likely to change. "
+"Arbitrary X position for notification window. Default is -1 which signifies "
+"awn-notification-daemon should place windows relative to its position in the "
+"bar."
 msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:16
-msgid "NOTE: This key should not be considered stable... it is likely to change. Arbitrary Y position for notification window. Default is -1 which signifies awn-notification-daemon should place windows relative to its position in the bar."
+msgid ""
+"NOTE: This key should not be considered stable... it is likely to change. "
+"Arbitrary Y position for notification window. Default is -1 which signifies "
+"awn-notification-daemon should place windows relative to its position in the "
+"bar."
 msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:17
@@ -1332,11 +1388,16 @@ msgid "Text Colour"
 msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:19
-msgid "Text colour in the form (Hex) rrggbbaa. Currently the alpha component is ignored"
+msgid ""
+"Text colour in the form (Hex) rrggbbaa. Currently the alpha component is "
+"ignored"
 msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:20
-msgid "This will override the client and default timeout periods for all notification windows with a timeout. Value is in ms. A value less than or equal to 0 indicates that client and default values should be honoured."
+msgid ""
+"This will override the client and default timeout periods for all "
+"notification windows with a timeout. Value is in ms. A value less than or "
+"equal to 0 indicates that client and default values should be honoured."
 msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-notification-daemon.schemas.in.h:21
@@ -1363,10 +1424,6 @@ msgstr ""
 #, c-format
 msgid "%u is not a valid notification ID"
 msgstr ""
-
-#: ../applets/maintained/places/applet.c:339
-msgid "Desktop"
-msgstr "Esktop-day"
 
 #: ../applets/maintained/places/places.desktop.in.in.h:1
 msgid "Launch your folder bookmarks"
@@ -1428,9 +1485,8 @@ msgid "Show hidden windows"
 msgstr ""
 
 #: ../applets/maintained/showdesktop/applet.vala:98
-#, fuzzy
 msgid "Hide windows and show desktop"
-msgstr "Ide-hay your indows-way and ow-shay your esktop-day"
+msgstr "Ide-hay indows-way and ow-shay esktop-day"
 
 #: ../applets/maintained/sysmon/sysmon.desktop.in.in.h:2
 msgid "System Monitor"
@@ -1885,7 +1941,10 @@ msgstr ""
 
 #: ../applets/unmaintained/mail/mail.py:423
 #: ../applets/unmaintained/mail/mail.py:482
-msgid "There seem to be problems with our                     connection to your account. Your best bet is probably                     to log out and try again."
+msgid ""
+"There seem to be problems with our                     connection to your "
+"account. Your best bet is probably                     to log out and try "
+"again."
 msgstr ""
 
 #: ../applets/unmaintained/mail/mail.py:445
@@ -1964,16 +2023,16 @@ msgstr ""
 #, fuzzy
 #~ msgid "An applet to hide your windows and show your desktop"
 #~ msgstr "Ide-hay your indows-way and ow-shay your esktop-day"
+
 #~ msgid "Hide Desktop"
 #~ msgstr "Ide-hay Esktop-day"
+
 #~ msgid ""
 #~ "An error occurred when trying to retrieve the 'confirm_empty' config "
 #~ "option: %s"
 #~ msgstr ""
 #~ "An error-way occurred-way when ying-tray to etrieve-ray the "
 #~ "'confirm_empty' onfig-cay option-way: %s"
+
 #~ msgid "item"
 #~ msgstr "item-way"
-#~ msgid "items"
-#~ msgstr "items-way"
-

@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2008 sharkbaitbobby <sharkbaitbobby+awn@gmail.com>
+# Copyright (c) 2009 Sharkbaitbobby <sharkbaitbobby+awn@gmail.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -127,7 +127,7 @@ class Prefs:
     
     #SpinButton for custom width in pixels
     width_adj = gtk.Adjustment(float(self.settings['custom_width']), 25, 500, \
-      1, 5, 1)
+      1, 5, 0)
     width_spin = gtk.SpinButton(width_adj, 1, 0)
     width_spin.key = 'custom_width'
     width_spin.connect('focus-out-event', self.spin_focusout)

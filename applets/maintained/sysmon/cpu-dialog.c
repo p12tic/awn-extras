@@ -38,7 +38,8 @@ struct _AwnCPUDialogPrivate
   gboolean  show_root;
   gboolean  show_other;
   guint     timeout_id;
-  
+
+  GCompareFunc  cmp_func;
 };
 
 
@@ -145,6 +146,7 @@ awn_cpu_dialog_init (AwnCPUDialog *self)
 {
   AwnCPUDialogPrivate * priv = AWN_CPU_DIALOG_GET_PRIVATE (self);
   priv->num_entries = 20;
+  priv->cmp_func = (GCompareFunc) cmp_proc_info_percent_descending;
 
 }
 
@@ -156,7 +158,6 @@ awn_cpu_dialog_new (GtkWidget *widget)
                        NULL);
 }
 
-
 AwnCPUDialog*
 awn_cpu_dialog_new_with_applet (GtkWidget *widget, AwnApplet * applet)
 {
@@ -166,40 +167,95 @@ awn_cpu_dialog_new_with_applet (GtkWidget *widget, AwnApplet * applet)
                        NULL);
 }
 
+static void
+_cpu_button_click (GtkButton * button, AwnCPUDialog *dialog)
+{
+  AwnCPUDialogPrivate * priv = AWN_CPU_DIALOG_GET_PRIVATE (dialog);
+  
+  if (priv->cmp_func == (GCompareFunc)cmp_proc_info_percent_descending)
+  {
+    priv->cmp_func = (GCompareFunc)cmp_proc_info_percent_ascending;
+  }
+  else
+  {
+    priv->cmp_func = (GCompareFunc)cmp_proc_info_percent_descending;
+  }
+}
+
+static void
+_proc_name_button_click (GtkButton * button, AwnCPUDialog *dialog)
+{
+  AwnCPUDialogPrivate * priv = AWN_CPU_DIALOG_GET_PRIVATE (dialog);
+  
+  if (priv->cmp_func == (GCompareFunc)cmp_proc_state_cmd_ascending)
+  {
+    priv->cmp_func = (GCompareFunc)cmp_proc_state_cmd_descending;
+  }
+  else
+  {
+    priv->cmp_func = (GCompareFunc)cmp_proc_state_cmd_ascending;
+  }
+}
+
+static void
+_pid_button_click (GtkButton * button, AwnCPUDialog *dialog)
+{
+  AwnCPUDialogPrivate * priv = AWN_CPU_DIALOG_GET_PRIVATE (dialog);
+  
+  if (priv->cmp_func == (GCompareFunc)cmp_pid_ascending)
+  {
+    priv->cmp_func = (GCompareFunc)cmp_pid_descending;
+  }
+  else
+  {
+    priv->cmp_func = (GCompareFunc)cmp_pid_ascending;
+  }
+}
+
+
 static void awn_cpu_dialog_populate_table (AwnCPUDialog *dialog)
 {
   AwnCPUDialogPrivate * priv = AWN_CPU_DIALOG_GET_PRIVATE (dialog);
   GList * iter;
   gint    y=0;
   GtkWidget * new_table;
+  GList * sorted_list;
+  GtkWidget * button;
 
   if (!GTK_WIDGET_VISIBLE(dialog))
   {
     g_debug ("%s: not visible.  bailing",__func__);
     return;
   }
+
+  sorted_list = get_sorted_proc_list (priv->cmp_func);
   new_table = gtk_table_new (9,priv->num_entries,FALSE);    
 
   gtk_table_attach_defaults (GTK_TABLE(new_table),
-                             gtk_button_new_with_label ("PID"),
+                             button = gtk_button_new_with_label ("PID"),
                                             0,
                                             1,
                                             0,
                                             1);
+  g_signal_connect (button,"clicked",G_CALLBACK(_pid_button_click),dialog);
+  
   gtk_table_attach_defaults (GTK_TABLE(new_table),
-                             gtk_button_new_with_label ("Process Name "),
+                             button = gtk_button_new_with_label ("Process Name "),
                                             1,
                                             2,
                                             0,
                                             1);
+  g_signal_connect (button,"clicked",G_CALLBACK(_proc_name_button_click),dialog);
+  
   gtk_table_attach_defaults (GTK_TABLE(new_table),
-                             gtk_button_new_with_label ("CPU"),
+                             button = gtk_button_new_with_label ("CPU"),
                                             2,
                                             3,
                                             0,
                                             1);
+  g_signal_connect (button,"clicked",G_CALLBACK(_cpu_button_click),dialog);
   
-  for (iter = get_process_info(); iter&& y<20; iter=iter->next)
+  for (iter = sorted_list; iter&& y<20; iter=iter->next)
   {
     AwnProcInfo * data = iter->data;
     gchar *text = g_strdup_printf ("%d",data->pid);
@@ -241,5 +297,5 @@ static void awn_cpu_dialog_populate_table (AwnCPUDialog *dialog)
   gtk_widget_show_all (priv->table);
   gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (priv->scroll),
                                          priv->table);  
-  
+  g_list_free (sorted_list);  
 }

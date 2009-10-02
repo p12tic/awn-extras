@@ -23,15 +23,16 @@
   <object class="GtkWindow" id="Preferences">
     <child>
       <object class="GtkNotebook" id="notebook">
-        <property name="width_request">600</property>
-        <property name="height_request">500</property>
+        <property name="width_request">400</property>
+        <property name="height_request">400</property>
         <property name="visible">True</property>
         <property name="can_focus">True</property>
+        <property name="border_width">6</property>
         <child>
           <object class="GtkVBox" id="vbox1">
             <property name="visible">True</property>
-            <property name="border_width">8</property>
-            <property name="spacing">8</property>
+            <property name="border_width">12</property>
+            <property name="spacing">18</property>
             <child>
               <object class="GtkFrame" id="frame1">
                 <property name="visible">True</property>
@@ -40,16 +41,20 @@
                 <child>
                   <object class="GtkAlignment" id="alignment1">
                     <property name="visible">True</property>
+                    <property name="top_padding">6</property>
                     <property name="left_padding">12</property>
                     <child>
                       <object class="GtkVBox" id="vbox2">
                         <property name="visible">True</property>
+                        <property name="spacing">6</property>
                         <child>
                           <object class="GtkHBox" id="hbox3">
                             <property name="visible">True</property>
+                            <property name="spacing">12</property>
                             <child>
                               <object class="GtkLabel" id="label3">
                                 <property name="visible">True</property>
+                                <property name="xalign">0</property>
                                 <property name="label" translatable="yes">Applet icon:</property>
                               </object>
                               <packing>
@@ -72,8 +77,6 @@
                                 </child>
                               </object>
                               <packing>
-                                <property name="expand">False</property>
-                                <property name="pack_type">end</property>
                                 <property name="position">1</property>
                               </packing>
                             </child>
@@ -85,9 +88,11 @@
                         <child>
                           <object class="GtkHBox" id="hbox1">
                             <property name="visible">True</property>
+                            <property name="spacing">12</property>
                             <child>
                               <object class="GtkLabel" id="label2">
                                 <property name="visible">True</property>
+                                <property name="xalign">0</property>
                                 <property name="label" translatable="yes">Temperature unit:</property>
                               </object>
                               <packing>
@@ -111,8 +116,6 @@
                                 </child>
                               </object>
                               <packing>
-                                <property name="expand">False</property>
-                                <property name="pack_type">end</property>
                                 <property name="position">1</property>
                               </packing>
                             </child>
@@ -136,6 +139,7 @@
                         <child>
                           <object class="GtkHBox" id="hbox_font_size">
                             <property name="visible">True</property>
+                            <property name="spacing">12</property>
                             <child>
                               <object class="GtkAlignment" id="alignment3">
                                 <property name="visible">True</property>
@@ -143,6 +147,7 @@
                                 <child>
                                   <object class="GtkLabel" id="label8">
                                     <property name="visible">True</property>
+                                    <property name="xalign">0</property>
                                     <property name="label" translatable="yes">Font size:</property>
                                   </object>
                                 </child>
@@ -159,8 +164,6 @@
                                 <property name="model">liststore_font_size</property>
                               </object>
                               <packing>
-                                <property name="expand">False</property>
-                                <property name="pack_type">end</property>
                                 <property name="position">1</property>
                               </packing>
                             </child>
@@ -194,17 +197,21 @@
                 <child>
                   <object class="GtkAlignment" id="alignment2">
                     <property name="visible">True</property>
+                    <property name="top_padding">6</property>
                     <property name="left_padding">12</property>
                     <child>
                       <object class="GtkVBox" id="vbox3">
                         <property name="visible">True</property>
+                        <property name="spacing">6</property>
                         <child>
                           <object class="GtkHBox" id="hbox2">
                             <property name="visible">True</property>
+                            <property name="spacing">12</property>
                             <child>
                               <object class="GtkLabel" id="label4">
                                 <property name="visible">True</property>
-                                <property name="label" translatable="yes">Update interval (secs):</property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">Update interval:</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -212,16 +219,35 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkSpinButton" id="spin_timeout">
+                              <object class="GtkHBox" id="hbox8">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="adjustment">adjustment_timeout</property>
-                                <property name="climb_rate">1</property>
-                                <property name="numeric">True</property>
+                                <property name="spacing">6</property>
+                                <child>
+                                  <object class="GtkSpinButton" id="spin_timeout">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="invisible_char">&#x2022;</property>
+                                    <property name="adjustment">adjustment_timeout</property>
+                                    <property name="climb_rate">1</property>
+                                    <property name="numeric">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="label9">
+                                    <property name="visible">True</property>
+                                    <property name="label" translatable="yes">seconds</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
                               </object>
                               <packing>
-                                <property name="expand">False</property>
-                                <property name="pack_type">end</property>
                                 <property name="position">1</property>
                               </packing>
                             </child>
@@ -261,8 +287,8 @@
         <child>
           <object class="GtkVBox" id="vbox5">
             <property name="visible">True</property>
-            <property name="border_width">8</property>
-            <property name="spacing">8</property>
+            <property name="border_width">12</property>
+            <property name="spacing">6</property>
             <child>
               <object class="GtkHBox" id="hbox6">
                 <property name="visible">True</property>
@@ -271,8 +297,9 @@
                   <object class="GtkScrolledWindow" id="scrolledwindow1">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="hscrollbar_policy">automatic</property>
+                    <property name="hscrollbar_policy">never</property>
                     <property name="vscrollbar_policy">automatic</property>
+                    <property name="shadow_type">in</property>
                     <child>
                       <object class="GtkTreeView" id="treeview_sensors">
                         <property name="visible">True</property>
@@ -463,13 +490,14 @@
             <child>
               <object class="GtkHBox" id="hbox11">
                 <property name="visible">True</property>
-                <property name="spacing">8</property>
+                <property name="spacing">12</property>
                 <child>
                   <object class="GtkScrolledWindow" id="scrolledwindow2">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="hscrollbar_policy">automatic</property>
+                    <property name="hscrollbar_policy">never</property>
                     <property name="vscrollbar_policy">automatic</property>
+                    <property name="shadow_type">in</property>
                     <child>
                       <object class="GtkTreeView" id="treeview_main_sensors">
                         <property name="visible">True</property>
@@ -485,10 +513,11 @@
                   <object class="GtkVBox" id="vbox6">
                     <property name="height_request">100</property>
                     <property name="visible">True</property>
+                    <property name="spacing">6</property>
                     <child>
                       <object class="GtkHBox" id="hbox12">
                         <property name="visible">True</property>
-                        <property name="spacing">8</property>
+                        <property name="spacing">12</property>
                         <child>
                           <object class="GtkLabel" id="label14">
                             <property name="visible">True</property>
@@ -521,7 +550,7 @@
                     <child>
                       <object class="GtkHBox" id="hbox13">
                         <property name="visible">True</property>
-                        <property name="spacing">8</property>
+                        <property name="spacing">12</property>
                         <child>
                           <object class="GtkLabel" id="label15">
                             <property name="visible">True</property>
@@ -778,5 +807,13 @@
     <property name="upper">60</property>
     <property name="step_increment">1</property>
     <property name="page_increment">5</property>
+  </object>
+  <object class="GtkSizeGroup" id="sizegroup1">
+    <widgets>
+      <widget name="label4"/>
+      <widget name="alignment3"/>
+      <widget name="label2"/>
+      <widget name="label3"/>
+    </widgets>
   </object>
 </interface>

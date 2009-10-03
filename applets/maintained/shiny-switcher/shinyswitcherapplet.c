@@ -475,10 +475,14 @@ grab_wallpaper(AwnShinySwitcher *shinyswitcher)
 {
   int w, h;
   GtkWidget * widget;
+  static GdkPixmap* wallpaper = NULL;
   AwnShinySwitcherPrivate * priv = GET_PRIVATE (shinyswitcher);
   
   gulong wallpaper_xid = wnck_screen_get_background_pixmap(priv->wnck_screen);
-  GdkPixmap* wallpaper = gdk_pixmap_foreign_new(wallpaper_xid);
+  if (!wallpaper)
+  {
+    wallpaper = gdk_pixmap_foreign_new(wallpaper_xid);
+  }
 
   if (!wallpaper)
   {
@@ -2130,7 +2134,7 @@ static gboolean
 _changed_waited(AwnShinySwitcher *shinyswitcher)
 {
   AwnShinySwitcherPrivate * priv = GET_PRIVATE(shinyswitcher);  
-  g_debug("_changed_waited\n");
+
   wnck_screen_force_update(priv->wnck_screen);
 
   if (priv->got_viewport ||  !priv->reconfigure)
@@ -2153,7 +2157,7 @@ _changed_waited(AwnShinySwitcher *shinyswitcher)
 
   /* g_debug("create cont \n"); */
 
-  gtk_container_remove(GTK_CONTAINER(shinyswitcher), priv->container);
+//  gtk_container_remove(GTK_CONTAINER(shinyswitcher), priv->container);
 
   gtk_widget_destroy(priv->container);
 
@@ -2175,7 +2179,6 @@ _changed(AwnShinySwitcher *shinyswitcher)
 {
   AwnShinySwitcherPrivate * priv = GET_PRIVATE (shinyswitcher);  
   GdkScreen *screen;
-  g_debug("_changed\n");
   priv->wnck_screen = wnck_screen_get_default();
 
   priv->got_viewport = wnck_workspace_is_virtual(wnck_screen_get_active_workspace(priv->wnck_screen));
@@ -2189,8 +2192,6 @@ _changed(AwnShinySwitcher *shinyswitcher)
 
   if (priv->reconfigure)
   {
-    printf("ShinySwitcher Message:  attempting to reconfigure workspaces %dx%d\n",
-           priv->cols, priv->rows);
     wnck_screen_change_workspace_count(priv->wnck_screen, priv->cols*priv->rows);
     wnck_screen_force_update(priv->wnck_screen);
 
@@ -2221,7 +2222,7 @@ static void
 _height_changed(AwnShinySwitcher *app, guint height, AwnShinySwitcher *shinyswitcher)
 {
   AwnShinySwitcherPrivate * priv = GET_PRIVATE (shinyswitcher);  
-  g_debug("height_changed %d\n",height);
+
   /* doing this as a tree right now..  cause it's easy and I think I'll need a complex data structure eventually. */
   priv->height = height;
   _changed(shinyswitcher);
@@ -2336,18 +2337,17 @@ awn_shiny_switcher_constructed (GObject *object)
 
   if (priv->reconfigure)
   {
-    printf("ShinySwitcher Message:  attempting to configure workspaces\n");
     wnck_screen_change_workspace_count(priv->wnck_screen, priv->cols*priv->rows);
     priv->wnck_token = wnck_screen_try_set_workspace_layout(priv->wnck_screen, 0, priv->rows, 0);
 
     if (!priv->wnck_token)
     {
-      printf("Failed to acquire ownership of workspace layout\n");
+      g_debug("Shinyswitcher (%s) Failed to acquire ownership of workspace layout",__func__);
     }
   }
   else
   {
-    printf("ShinySwitcher Message:  viewport/compiz detected.. using existing workspace config\n");
+    g_debug("ShinySwitcher Message (%s):  viewport/compiz detected.. using existing workspace config",__func__);
   }
 
   g_timeout_add(1000, (GSourceFunc)_waited, object); /* don't need to do this as seconds... happens once. */

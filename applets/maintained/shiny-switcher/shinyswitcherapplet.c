@@ -478,12 +478,14 @@ grab_wallpaper(AwnShinySwitcher *shinyswitcher)
   static GdkPixmap* wallpaper = NULL;
   AwnShinySwitcherPrivate * priv = GET_PRIVATE (shinyswitcher);
   
+  static gulong old_xid = -1;
   gulong wallpaper_xid = wnck_screen_get_background_pixmap(priv->wnck_screen);
-  if (!wallpaper)
+  if (!wallpaper || (old_xid != wallpaper_xid))
   {
     wallpaper = gdk_pixmap_foreign_new(wallpaper_xid);
   }
 
+  old_xid = wallpaper_xid;
   if (!wallpaper)
   {
     return;

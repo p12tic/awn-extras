@@ -189,7 +189,7 @@ class YamaApplet:
 
     def open_folder_cb(self, widget, path):
         for command in file_manager_apps:
-            if len(commands.getoutput("%s %s" % (command, path))) == 0:
+            if len(commands.getoutput("%s '%s'" % (command, path))) == 0:
                 return
         raise RuntimeError("No file manager found (%s) for %s" % (", ".join(file_manager_apps), path))
 

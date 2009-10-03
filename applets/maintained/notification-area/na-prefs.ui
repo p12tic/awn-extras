@@ -5,7 +5,8 @@
   <!-- interface-naming-policy project-wide -->
   <object class="GtkDialog" id="dialog1">
     <property name="border_width">5</property>
-    <property name="title" translatable="yes">Notification area Preferences</property>
+    <property name="title" translatable="yes">Notification Area Preferences</property>
+    <property name="resizable">False</property>
     <property name="window_position">center-on-parent</property>
     <property name="type_hint">dialog</property>
     <property name="has_separator">False</property>
@@ -16,7 +17,8 @@
         <child>
           <object class="GtkVBox" id="vbox1">
             <property name="visible">True</property>
-            <property name="spacing">12</property>
+            <property name="border_width">3</property>
+            <property name="spacing">18</property>
             <child>
               <object class="GtkFrame" id="frame1">
                 <property name="visible">True</property>
@@ -63,6 +65,7 @@
                             </child>
                           </object>
                           <packing>
+                            <property name="expand">False</property>
                             <property name="position">0</property>
                           </packing>
                         </child>
@@ -74,7 +77,9 @@
                               <object class="GtkLabel" id="label6">
                                 <property name="visible">True</property>
                                 <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Extra offset:</property>
+                                <property name="label" translatable="yes">Extra _offset:</property>
+                                <property name="use_underline">True</property>
+                                <property name="mnemonic_widget">offsetSpinbutton</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -84,7 +89,7 @@
                             <child>
                               <object class="GtkHBox" id="hbox6">
                                 <property name="visible">True</property>
-                                <property name="spacing">4</property>
+                                <property name="spacing">6</property>
                                 <child>
                                   <object class="GtkSpinButton" id="offsetSpinbutton">
                                     <property name="visible">True</property>
@@ -114,6 +119,7 @@
                             </child>
                           </object>
                           <packing>
+                            <property name="expand">False</property>
                             <property name="position">1</property>
                           </packing>
                         </child>
@@ -125,8 +131,9 @@
                               <object class="GtkLabel" id="label3">
                                 <property name="visible">True</property>
                                 <property name="xalign">0</property>
-                                <property name="label" translatable="yes">_Size of icons (%):</property>
+                                <property name="label" translatable="yes">Icon _size:</property>
                                 <property name="use_underline">True</property>
+                                <property name="mnemonic_widget">sizeScale</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -134,12 +141,31 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkHScale" id="sizeScale">
+                              <object class="GtkHBox" id="hbox7">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="adjustment">adjustment3</property>
-                                <property name="digits">0</property>
-                                <property name="value_pos">right</property>
+                                <property name="spacing">6</property>
+                                <child>
+                                  <object class="GtkHScale" id="sizeScale">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="adjustment">adjustment3</property>
+                                    <property name="digits">0</property>
+                                    <property name="value_pos">right</property>
+                                  </object>
+                                  <packing>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="label8">
+                                    <property name="visible">True</property>
+                                    <property name="label" translatable="yes">%</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
                               </object>
                               <packing>
                                 <property name="position">1</property>
@@ -147,6 +173,7 @@
                             </child>
                           </object>
                           <packing>
+                            <property name="expand">False</property>
                             <property name="position">2</property>
                           </packing>
                         </child>
@@ -192,12 +219,14 @@
                             <property name="draw_indicator">True</property>
                           </object>
                           <packing>
+                            <property name="expand">False</property>
                             <property name="position">0</property>
                           </packing>
                         </child>
                         <child>
                           <object class="GtkHBox" id="hbox4">
                             <property name="visible">True</property>
+                            <property name="spacing">12</property>
                             <child>
                               <object class="GtkRadioButton" id="customBackgroundRadio">
                                 <property name="label" translatable="yes">Custom:</property>
@@ -210,6 +239,7 @@
                                 <property name="group">autoBackgroundRadio</property>
                               </object>
                               <packing>
+                                <property name="expand">False</property>
                                 <property name="position">0</property>
                               </packing>
                             </child>
@@ -228,6 +258,7 @@
                             </child>
                           </object>
                           <packing>
+                            <property name="expand">False</property>
                             <property name="position">1</property>
                           </packing>
                         </child>
@@ -238,7 +269,7 @@
                 <child type="label">
                   <object class="GtkLabel" id="label5">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">&lt;b&gt;Background color&lt;/b&gt;</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Background Color&lt;/b&gt;</property>
                     <property name="use_markup">True</property>
                   </object>
                 </child>
@@ -256,6 +287,7 @@
                 <child>
                   <object class="GtkAlignment" id="alignment3">
                     <property name="visible">True</property>
+                    <property name="top_padding">6</property>
                     <property name="left_padding">12</property>
                     <child>
                       <object class="GtkVBox" id="vbox4">
@@ -273,12 +305,14 @@
                             <property name="draw_indicator">True</property>
                           </object>
                           <packing>
+                            <property name="expand">False</property>
                             <property name="position">0</property>
                           </packing>
                         </child>
                         <child>
                           <object class="GtkHBox" id="hbox1">
                             <property name="visible">True</property>
+                            <property name="spacing">12</property>
                             <child>
                               <object class="GtkRadioButton" id="customBorderRadio">
                                 <property name="label" translatable="yes">Custom:</property>
@@ -290,6 +324,7 @@
                                 <property name="group">autoBorderRadio</property>
                               </object>
                               <packing>
+                                <property name="expand">False</property>
                                 <property name="position">0</property>
                               </packing>
                             </child>
@@ -308,6 +343,7 @@
                             </child>
                           </object>
                           <packing>
+                            <property name="expand">False</property>
                             <property name="position">1</property>
                           </packing>
                         </child>
@@ -318,12 +354,13 @@
                 <child type="label">
                   <object class="GtkLabel" id="label2">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">&lt;b&gt;Border color&lt;/b&gt;</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Border Color&lt;/b&gt;</property>
                     <property name="use_markup">True</property>
                   </object>
                 </child>
               </object>
               <packing>
+                <property name="expand">False</property>
                 <property name="position">2</property>
               </packing>
             </child>
@@ -366,9 +403,11 @@
   </object>
   <object class="GtkSizeGroup" id="sizegroup1">
     <widgets>
-      <widget name="label6"/>
-      <widget name="label3"/>
       <widget name="label4"/>
+      <widget name="label3"/>
+      <widget name="label6"/>
+      <widget name="customBackgroundRadio"/>
+      <widget name="customBorderRadio"/>
     </widgets>
   </object>
   <object class="GtkAdjustment" id="adjustment1">

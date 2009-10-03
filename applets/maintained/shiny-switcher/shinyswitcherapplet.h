@@ -17,18 +17,33 @@
  *
 */
 
+/* shiny-switcher.h */
 
-#ifndef SHINYSWITCHER_H_
-#define SHINYSWITCHER_H_
+/* awn-shiny-switcher.h */
 
+#ifndef _AWN_SHINY_SWITCHER
+#define _AWN_SHINY_SWITCHER
+
+#include <glib-object.h>
 #include <time.h>
 #include <glib.h>
 #define WNCK_I_KNOW_THIS_IS_UNSTABLE 1
 #include <libwnck/libwnck.h>
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
+#include <gdk/gdkx.h>
+#include <X11/Xlib.h>
+#include <X11/extensions/Xcomposite.h>
+#include <X11/extensions/Xrender.h>
+#include <X11/extensions/Xfixes.h>
+#include <math.h>
+
 #include <libdesktop-agnostic/desktop-agnostic.h>
 #include <libawn/libawn.h>
+#include <libawn/awn-utils.h>
+
+
+G_BEGIN_DECLS
 
 enum
 {
@@ -58,90 +73,9 @@ typedef struct
 
 typedef struct
 {
-  AwnApplet   *applet;
-
-  GdkPixbuf   *icon;
-  GtkWidget  *container;
-  GtkWidget  **mini_wins;
-
-  GdkPixmap  *wallpaper_active;
-  GdkPixmap  *wallpaper_inactive;
-
-  gint    height;
-  gint   width;
-  gint   padding;
-  int    mini_work_width;
-  int    mini_work_height;
-
-  gint    rows;
-  gint    cols;
-
-
-  WnckScreen  *wnck_screen;
-  int    wnck_token;
-
-  double   wallpaper_alpha_active;
-  double   wallpaper_alpha_inactive;
-  double   applet_scale;
-
-  int    show_icon_mode;   /* 0...no 1...on inactive workspace onlt 2...all but active win 3..all */
-  int    scale_icon_mode;  /* 0...none  1...on all active ws  2...on_active_win 3...all */
-  double   scale_icon_factor;
-  int    scale_icon_pos;   /*0... centre  1 NW    2 NE   3 SE  4 SW */
-
-  int    win_grab_mode;  /* 0...none 1...all (grab method may override) 2..active ws (and sticky)  3...active win */
-  int    win_grab_method; /* 0...gdk */
-
-  GTree   *ws_lookup_ev;
-  GTree   *ws_changes;
-
-  GTree   *pixbuf_cache;
-  GTree   *surface_cache;
-
-  GTree   *win_menus;
-
-  double   win_active_icon_alpha;
-  double   win_inactive_icon_alpha;
-
-  int    active_window_on_workspace_change_method; /* 0... don't change. 1.. top of stack. */
-
-  int    do_queue_freq;
-  gint   mousewheel;
-
-  int    cache_expiry;
-
-  gboolean  override_composite_check;
-
-  DesktopAgnosticColor  *applet_border_colour;
-  DesktopAgnosticColor  *background_colour;
-
-  int    applet_border_width;
-  gboolean  reconfigure;
-  gboolean  got_viewport;
-  gboolean  show_tooltips;
-  gboolean  show_right_click;
-
-  gboolean  grab_wallpaper;
-  DesktopAgnosticColor  *desktop_colour;  /* used if grab_wallpaper is FALSE; */
-
-
-  GdkGC    *gdkgc;
-  GdkScreen  *pScreen;
-  GdkColormap  *rgb_cmap;
-  GdkColormap  *rgba_cmap;
-  DesktopAgnosticConfigClient *config;
-  DesktopAgnosticConfigClient *dock_config;
-	AwnAlignment * align;
-	
-	GtkPositionType orient;
-}Shiny_switcher;
-
-
-typedef struct
-{
   GtkWidget     *min_win;
   WnckWindow    *wnck_window;
-  Shiny_switcher *shinyswitcher;
+  AwnApplet     *shinyswitcher;
 
 }Window_info;
 
@@ -149,7 +83,7 @@ typedef struct
 {
   WnckWorkspace    *space;
 
-  Shiny_switcher *shinyswitcher;
+  AwnApplet  *shinyswitcher;
   GtkWidget    *wallpaper_ev;
   int      mini_win_index;
   GList     *event_boxes;
@@ -159,10 +93,42 @@ typedef struct
 typedef struct
 {
   WnckWindow    *wnck_window;
-  Shiny_switcher   *shinyswitcher;
+  AwnApplet   *shinyswitcher;
 }Win_press_data;
 
-/* Applet */
-Shiny_switcher* applet_new(AwnApplet *applet, gint panel_id);
 
-#endif
+#define AWN_TYPE_SHINY_SWITCHER awn_shiny_switcher_get_type()
+
+#define AWN_SHINY_SWITCHER(obj) \
+  (G_TYPE_CHECK_INSTANCE_CAST ((obj), AWN_TYPE_SHINY_SWITCHER, AwnShinySwitcher))
+
+#define AWN_SHINY_SWITCHER_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_CAST ((klass), AWN_TYPE_SHINY_SWITCHER, AwnShinySwitcherClass))
+
+#define AWN_IS_SHINY_SWITCHER(obj) \
+  (G_TYPE_CHECK_INSTANCE_TYPE ((obj), AWN_TYPE_SHINY_SWITCHER))
+
+#define AWN_IS_SHINY_SWITCHER_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_TYPE ((klass), AWN_TYPE_SHINY_SWITCHER))
+
+#define AWN_SHINY_SWITCHER_GET_CLASS(obj) \
+  (G_TYPE_INSTANCE_GET_CLASS ((obj), AWN_TYPE_SHINY_SWITCHER, AwnShinySwitcherClass))
+
+typedef struct {
+  AwnApplet parent;
+} AwnShinySwitcher;
+
+typedef struct {
+  AwnAppletClass parent_class;
+} AwnShinySwitcherClass;
+
+GType awn_shiny_switcher_get_type (void);
+
+AwnShinySwitcher* awn_shiny_switcher_new (const gchar *name, const gchar *uid, 
+                                          gint panel_id);
+
+G_END_DECLS
+
+#endif /* _AWN_SHINY_SWITCHER */
+
+

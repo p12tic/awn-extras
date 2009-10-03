@@ -53,7 +53,8 @@ no_sensors_icon = os.path.join(os.path.dirname(__file__),
                                                        "images/no_sensors.svg")
 ui_file = os.path.join(os.path.dirname(__file__), "hardware-sensors.ui")
 
-font_sizes = [10, 16, 22]
+single_font_sizes = [11, 17, 22]
+double_font_sizes = [12, 16, 20]
 font_size_names = ["Small", "Medium", "Large"]
 
 class SensorsApplet:
@@ -180,12 +181,13 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         self.__icon_timer = self.applet.timing.register(
                                     self.update_icon, self.settings["timeout"])
 
-    def update_icon_state(self):
-        """Updates icon type/state"""
+    def update_icon_type(self):
+        """Updates icon type"""
         if len(self.main_sensors) is 1:
             self.__icon.type("single")
         else:
             self.__icon.type("double")
+        self.change_font_size(self.settings["font_size"])
         self.update_icon(True)
 
     def update_icon(self, force=False):
@@ -248,7 +250,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
             "theme": (self.__themes[0], self.change_theme),
             "show_value_overlay": (True, change_show_value_overlay,
                            prefs.get_object("checkbutton_show_value_overlay")),
-            "font_size": (0, self.change_font_size),
+            "font_size": (1, self.change_font_size),
             # Sensor settings
             "ids": [str(sensor.id) for sensor in sensors],
             "labels": [sensor.label for sensor in sensors],
@@ -633,10 +635,16 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         self.applet.settings["font_size"] = font_size
         self.change_font_size(font_size)
 
-    def change_font_size(self, font_size):
+    def change_font_size(self, size_idx):
         """Change font size for overlay."""
-        self.__temp_overlay.props.font_sizing = font_sizes[font_size]
-        self.__temp_overlay.props.y_override = 30 - font_size
+        if len(self.main_sensors) is 1:
+            self.__temp_overlay.props.font_sizing = single_font_sizes[size_idx]
+            self.__temp_overlay.props.y_override = \
+                                          30 + size_idx if size_idx < 2 else 28
+        else:
+            self.__temp_overlay.props.font_sizing = double_font_sizes[size_idx]
+            self.__temp_overlay.props.y_override = \
+                                          30 + size_idx if size_idx < 2 else 29
 
     def theme_changed_cb(self, widget):
         # Save setting
@@ -832,7 +840,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
             self.change_in_icon(self.sensors[idx], True)
             # Change value in model
             model[iter][self.__column_in_icon] = True
-        self.update_icon_state()
+        self.update_icon_type()
 
     def remove_cb(self, widget, treeview_main, cb_hand, cb_text):
         """
@@ -856,7 +864,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
             # buttons
             cb_hand.set_sensitive(False)
             cb_text.set_sensitive(False)
-        self.update_icon_state()
+        self.update_icon_type()
 
     def up_cb(self, widget, treeview):
         """

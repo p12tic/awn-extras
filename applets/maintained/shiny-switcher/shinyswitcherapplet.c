@@ -24,8 +24,6 @@
 #include "config.h"
 #endif
 
-static int gheight = -1;
-
 G_DEFINE_TYPE (AwnShinySwitcher, awn_shiny_switcher, AWN_TYPE_APPLET)
 
 #define GET_PRIVATE(o) \
@@ -406,11 +404,6 @@ double vp_hscale(AwnShinySwitcher *shinyswitcher)
 void calc_dimensions(AwnShinySwitcher *shinyswitcher)
 {
   AwnShinySwitcherPrivate * priv = GET_PRIVATE (shinyswitcher);  
-  if (gheight == -1)
-  {
-    gheight = priv-> height;
-  }
-  priv->height = gheight;
   /* wnck_screen_force_update(priv->wnck_screen); */
   /* FIXME this is no longer screen width/height  it's workspace */
   int wnck_ws_width = wnck_workspace_get_width(wnck_screen_get_active_workspace(priv->wnck_screen));
@@ -2199,7 +2192,6 @@ _height_changed(AwnShinySwitcher *app, guint height, AwnShinySwitcher *shinyswit
 {
   AwnShinySwitcherPrivate * priv = GET_PRIVATE (shinyswitcher);  
   g_debug("height_changed %d\n",height);
-  gheight=height;
   /* doing this as a tree right now..  cause it's easy and I think I'll need a complex data structure eventually. */
   priv->height = height;
   _changed(shinyswitcher);

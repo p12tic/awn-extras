@@ -37,8 +37,6 @@ class Sensor(object):
         label: a descriptive label
         show: whether to show sensor in main applet dialog or not
         in_icon: whether to show sensor in applet icon or not
-        hand_color: color of the hand in applet icon for this sensor
-        text_color: color of the text in applet icon for this sensor
     
     """
 
@@ -51,8 +49,6 @@ class Sensor(object):
 
         self.show = True
         self.in_icon = False
-        self.hand_color = (65535, 0, 0, 65535)
-        self.text_color = (65535, 65535, 65535, 65535)
         self.dialog_row = 1024 # Or some other large number :)
 
         self.alarm_on_high = False

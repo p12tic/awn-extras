@@ -809,6 +809,7 @@ class App(awn.AppletSimple):
         win.set_icon_from_file(icon_path)
         win.set_website('http://wiki.awn-project.org/Feeds_Applet')
         win.set_website_label('wiki.awn-project.org')
+        win.set_version(awn.extras.__version__)
         win.run()
         win.destroy()
 

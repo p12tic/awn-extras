@@ -123,14 +123,14 @@ class Prefs(gtk.Window):
         check_auto = gtk.CheckButton(_("_Update automatically"))
         if self.applet.client.get_bool(GROUP_DEFAULT, 'auto_update'):
             check_auto.set_active(True)
-        check_notify.connect('toggled', self.check_toggled, 'auto_update')
+        check_auto.connect('toggled', self.check_toggled, 'auto_update')
 
         #Update every [SpinButton] minutes
         label_auto1 = gtk.Label(_("Update every "))
         label_auto2 = gtk.Label(_(" minutes"))
 
         interval = self.applet.client.get_int(GROUP_DEFAULT, 'update_interval')
-        auto_adj = gtk.Adjustment(interval, 3, 60, 1, 5, 1)
+        auto_adj = gtk.Adjustment(interval, 3, 60, 1, 5, 0)
         auto_spin = gtk.SpinButton(auto_adj, 1)
         auto_spin.connect('focus-out-event', self.spin_focusout)
 

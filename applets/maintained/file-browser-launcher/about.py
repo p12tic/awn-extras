@@ -26,7 +26,7 @@ pygtk.require('2.0')
 import gtk
 import os
 
-from awn.extras import _
+from awn.extras import _, __version__
 
 def url_hook(about, url):
   os.system('xdg-open %s &' % url)
@@ -47,5 +47,6 @@ class About:
     win.set_website_label('wiki.awn-project.org')
     win.set_logo_icon_name('stock_folder')
     win.set_icon_name('stock_folder')
+    win.set_version(__version__)
     win.run()
     win.destroy()

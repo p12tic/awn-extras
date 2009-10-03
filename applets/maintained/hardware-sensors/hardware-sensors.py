@@ -331,6 +331,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
                                          [sensor.in_icon for sensor in sensors]
 
         if self.settings["theme"] not in self.__themes:
+            self.__icon = None
             self.applet.settings["theme"] = self.__themes[0]
 
         self.setup_general_preferences(prefs)
@@ -639,10 +640,12 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
 
     def theme_changed_cb(self, widget):
         # Save setting
-        self.applet.settings["theme"] = theme
+        self.applet.settings["theme"] = self.__themes[widget.get_active()]
 
     def change_theme(self, theme):
         """Save theme setting and update icon."""
+        if self.__icon is None:
+            return
         self.__icon.theme(theme)
         # Force icon change
         self.update_icon(True)

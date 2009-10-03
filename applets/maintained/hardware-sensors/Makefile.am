@@ -39,7 +39,20 @@ dist_images_DATA =			\
 	$(NULL)
 
 theme_darkdir = $(applet_datadir)/themes/dark
-dist_theme_dark_DATA =					\
-	themes/dark/background_double.svg	\
-	themes/dark/background_single.svg	\
+dist_theme_dark_DATA =		\
+	themes/dark/double.svg	\
+	themes/dark/single.svg	\
 	$(NULL)
+
+theme_transparentdir = $(applet_datadir)/themes/transparent
+dist_theme_transparent_DATA =		\
+	themes/transparent/double.svg	\
+	themes/transparent/single.svg	\
+	$(NULL)
+
+theme_transparent_with_borderdir = $(applet_datadir)/themes/transparent
+dist_theme_transparent_with_border_DATA =		\
+	themes/transparent_with_border/double.svg	\
+	themes/transparent_with_border/single.svg	\
+	$(NULL)
+	

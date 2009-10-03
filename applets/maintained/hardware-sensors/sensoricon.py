@@ -67,10 +67,9 @@ class SensorIcon():
         self.__sensors = sensors[:2]
 
     def create_background(self):
-        filename = os.path.join(
-                    theme_dir, self.__theme, "background_%s.svg" % self.__type)
-
+        filename = os.path.join(theme_dir, self.__theme, self.__type + ".svg")
         background = rsvg.Handle(filename)
+
         self.__background_surface = cairo.ImageSurface(
                              cairo.FORMAT_ARGB32, self.__height, self.__height)
         background_context = cairo.Context(self.__background_surface)

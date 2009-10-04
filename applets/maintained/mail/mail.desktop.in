@@ -5,5 +5,5 @@ X-AWN-AppletType=Python
 _Name=Mail Applet
 _Comment=Check Your Email from AWN
 Exec=mail/mail.py
-Icon=mail/Themes/Tango/read
+Icon=mail/icons/read
 X-AWN-AppletCategory=Network,Email

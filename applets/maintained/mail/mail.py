@@ -27,7 +27,8 @@ import gtk
 from awn import extras
 from awn.extras import _, awnlib
 
-themes_dir = os.path.join(os.path.dirname(__file__), "Themes")
+icon_dir = os.path.join(os.path.dirname(__file__), "icons")
+theme_dir = os.path.join(os.path.dirname(__file__), "themes")
 ui_file = os.path.join(os.path.dirname(__file__), "mail.ui")
 
 
@@ -66,7 +67,9 @@ class MailApplet:
 
         self.back = getattr(Backends(), self.settings["backend"])
 
-        self.__setIcon("login")
+        self.setup_themes()
+
+        self.awn.theme.icon("login")
         self.awn.tooltip.set(_("Mail Applet (Click to Log In)"))
 
         self.__dialog = MainDialog(self)
@@ -79,12 +82,14 @@ class MailApplet:
         force is True, show login dialog
         
         """
-        self.__setIcon("login")
+        self.awn.theme.icon("login")
 
         # If we're forcing initiation, just draw the dialog.
         # We wouldn't be forcing if we want to use the saved login token.
         if force:
-            return self.__dialog.login_form()
+            self.__dialog.login_form()
+            self.awn.dialog.toggle("main", "show")
+            return
 
         try:
             token = self.awn.settings["login-token"]
@@ -104,7 +109,7 @@ class MailApplet:
     def logout(self):
         if hasattr(self, "timer"):
             self.timer.stop()
-        self.__setIcon("login")
+        self.awn.theme.icon("login")
         self.awn.settings["login-token"] = 0
 
     def perform_login(self, key):
@@ -114,17 +119,16 @@ class MailApplet:
             self.mail.update()  # Update
         except RuntimeError:
             self.__dialog.login_form(True)
-            self.__parent.awn.dialog.toggle("main", "show")
 
         else:
             self.awn.dialog.toggle("main", "hide")
 
             self.awn.notify.send(_("Mail Applet"),
                 _("Logging in as %s") % key.attrs["username"],
-                self.__getIconPath("login", full=True))
+                self.__getIconPath("login"))
 
             # Login successful
-            self.__setIcon("read")
+            self.awn.theme.icon("read")
 
             self.awn.settings["login-token"] = key.token
 
@@ -137,7 +141,7 @@ class MailApplet:
         try:
             self.mail.update()
         except RuntimeError, e:
-            self.__setIcon("error")
+            self.awn.theme.icon("error")
 
             if self.settings["show-network-errors"]:
                 self.awn.errors.general(e)
@@ -147,11 +151,12 @@ class MailApplet:
 
         if len(diffSubjects) > 0:
             msg = strMailMessages(len(diffSubjects)) + "\n" + "\n".join(diffSubjects)
-            self.awn.notify.send(_("New Mail - Mail Applet"), msg, self.__getIconPath("unread", full=True))
+            self.awn.notify.send(_("New Mail - Mail Applet"), msg,
+                                 self.__getIconPath("unread"))
 
         self.awn.tooltip.set(strMessages(len(self.mail.subjects)))
 
-        self.__setIcon(len(self.mail.subjects) > 0 and "unread" or "read")
+        self.awn.theme.icon("unread" if len(self.mail.subjects) > 0 else "read")
 
         if self.settings["hide"] and len(self.mail.subjects) == 0:
             self.awn.icon.hide()
@@ -161,12 +166,13 @@ class MailApplet:
 
         self.__dialog.update_email_list()
 
-    def __setIcon(self, name):
-        self.awn.icon.file(self.__getIconPath(name))
-
-    def __getIconPath(self, name, full=False):
-        dir = themes_dir if full else "Themes"
-        return os.path.join(dir, self.settings["theme"], name + ".svg")
+    def __getIconPath(self, name):
+        path = os.path.join(theme_dir, self.settings["theme"], "scalable",
+                            name + ".svg")
+        if os.path.isfile(path):
+            return path
+        else:
+            return os.path.join(icon_dir, name + ".svg")
 
     def __showWeb(self):
         if hasattr(self.mail, "showWeb"):
@@ -185,6 +191,14 @@ class MailApplet:
             else:
                 subprocess.Popen(self.settings["email-client"])
 
+    def setup_themes(self):
+        """Loads themes and states"""
+        states = {}
+        for state in ["error", "login", "read", "unread"]:
+            states[state] = state
+        self.awn.theme.set_states(states)
+        self.awn.theme.theme(self.settings["theme"])
+
     def setup_context_menu(self):
         prefs = gtk.Builder()
         prefs.add_from_file(ui_file)
@@ -197,10 +211,12 @@ class MailApplet:
     def setup_preferences(self, prefs):
         default_values = {
             "backend": "GMail",
-            "theme": ("Tango", self.refresh_icon_theme),
+            "theme": ("Tango", self.awn.theme.theme),
             "email-client": "evolution -c mail",
-            "hide": (False, self.refresh_hide_applet, prefs.get_object("checkbutton-hide-applet")),
-            "show-network-errors": (True, None, prefs.get_object("checkbutton-alert-errors"))
+            "hide": (False, self.refresh_hide_applet,
+                     prefs.get_object("checkbutton-hide-applet")),
+            "show-network-errors": (True, None,
+                                  prefs.get_object("checkbutton-alert-errors"))
         }
         self.settings = self.awn.settings.load_preferences(default_values)
 
@@ -208,25 +224,27 @@ class MailApplet:
         entry_client.set_text(self.settings["email-client"])
         entry_client.connect("changed", self.changed_client_cb)
 
+
+        # Get a list of themes
+        def is_dir(path):
+            return os.path.isdir(os.path.join(theme_dir, path))
+        themes = filter(is_dir, os.listdir(theme_dir))
+        themes.append("Tango")
+        themes.sort()
+
         combobox_theme = prefs.get_object("combobox-theme")
         awnlib.add_cell_renderer_text(combobox_theme)
-        themes = [i for i in os.listdir(themes_dir)]
-        for i in themes:
-            combobox_theme.append_text(i)
+        for theme in themes:
+            combobox_theme.append_text(theme.replace('_', ' '))
         combobox_theme.set_active(themes.index(self.settings["theme"]))
         combobox_theme.connect("changed", self.changed_theme_cb)
 
     def changed_theme_cb(self, combobox):
-        self.awn.settings["theme"] = combobox.get_active_text()
-
-    def refresh_icon_theme(self, value):
-        if hasattr(self, "mail"):
-            self.__setIcon(len(self.mail.subjects) > 0 and "unread" or "read")
-        else:
-            self.__setIcon("login")
+        self.awn.settings["theme"] = combobox.get_active_text().replace(' ', '_')
 
     def refresh_hide_applet(self, value):
-        if hasattr(self, "mail") and self.settings["hide"] and len(self.mail.subjects) == 0:
+        if hasattr(self, "mail") and self.settings["hide"] and \
+                                                  len(self.mail.subjects) == 0:
             self.awn.icon.hide()
             self.awn.dialog.hide()
         else:
@@ -852,7 +870,7 @@ if __name__ == "__main__":
         "short": "mail",
         "version": extras.__version__,
         "description": _("An applet to check one's email"),
-        "logo": os.path.join(themes_dir, "Tango/read.svg"),
+        "logo": os.path.join(icon_dir, "read.svg"),
         "author": "Pavel Panchekha",
         "copyright-year": "2008",
         "email": "pavpanchekha@gmail.com",

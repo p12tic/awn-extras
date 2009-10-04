@@ -6,26 +6,36 @@ dist_applet_DATA = 		\
     mail.ui \
     $(NULL)
 
-theme_gmaildir = $(applet_datadir)/Themes/GMail
-dist_theme_gmail_DATA =		\
-	Themes/GMail/error.svg	\
-	Themes/GMail/login.svg	\
-	Themes/GMail/read.svg	\
-	Themes/GMail/unread.svg	\
+theme_gmaildir = $(applet_datadir)/themes/GMail
+dist_theme_gmail_DATA =			\
+	themes/GMail/index.theme	\
+	$(NULL)
+	
+iconsdir = $(applet_datadir)/icons
+icons_DATA =		\
+	icons/error.svg	\
+	icons/login.svg	\
+	icons/read.svg		\
+	icons/unread.svg	\
 	$(NULL)
 
-theme_reserveddir = $(applet_datadir)/Themes/Reserved
+theme_gmail_scalabledir = $(applet_datadir)/themes/GMail/scalable
+dist_theme_gmail_scalable_DATA =		\
+	themes/GMail/scalable/error.svg		\
+	themes/GMail/scalable/login.svg		\
+	themes/GMail/scalable/read.svg		\
+	themes/GMail/scalable/unread.svg	\
+	$(NULL)
+
+theme_reserveddir = $(applet_datadir)/themes/Reserved
 dist_theme_reserved_DATA =		\
-	Themes/Reserved/error.svg	\
-	Themes/Reserved/login.svg	\
-	Themes/Reserved/read.svg	\
-	Themes/Reserved/unread.svg	\
+	themes/Reserved/index.theme	\
 	$(NULL)
 
-theme_tangodir = $(applet_datadir)/Themes/Tango
-dist_theme_tango_DATA =		\
-	Themes/Tango/error.svg	\
-	Themes/Tango/login.svg	\
-	Themes/Tango/read.svg	\
-	Themes/Tango/unread.svg	\
+theme_reserved_scalabledir = $(applet_datadir)/themes/Reserved/scalable
+dist_theme_reserved_scalable_DATA =		\
+	themes/Reserved/scalable/error.svg	\
+	themes/Reserved/scalable/login.svg	\
+	themes/Reserved/scalable/read.svg	\
+	themes/Reserved/scalable/unread.svg	\
 	$(NULL)

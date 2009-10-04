@@ -332,6 +332,7 @@ applets/maintained/file-browser-launcher/Makefile
 applets/maintained/garbage/Makefile
 applets/maintained/garbage/garbage.desktop.in
 applets/maintained/hardware-sensors/Makefile
+applets/maintained/mail/Makefile
 applets/maintained/media-control/Makefile
 applets/maintained/media-icons/Makefile
 applets/maintained/media-player/Makefile
@@ -362,7 +363,6 @@ applets/maintained/webapplet/webapplet.desktop.in
 applets/maintained/wobblyzini/Makefile
 applets/maintained/wobblyzini/wobblyzini.desktop.in
 applets/maintained/yama/Makefile
-applets/unmaintained/mail/Makefile
 applets/unmaintained/main-menu/Makefile
 applets/unmaintained/main-menu/main-menu.desktop.in
 applets/unmaintained/MiMenu/Makefile

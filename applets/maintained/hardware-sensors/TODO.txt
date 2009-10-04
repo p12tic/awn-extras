@@ -1,4 +1,3 @@
-- enable/remove text_color settings
-* extend Overlay class for use with cairo surface - to draw the needle
+- do not allow more than 2 main sensors
 - graphical value display in main dialog
 - translation

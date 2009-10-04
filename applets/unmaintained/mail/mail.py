@@ -69,25 +69,33 @@ class MailApplet:
         self.__setIcon("login")
         self.awn.tooltip.set(_("Mail Applet (Click to Log In)"))
 
+        self.__dialog = MainDialog(self)
+
         self.login()
 
     def login(self, force=False):
+        """
+        Login. Try to login from saved key, if this does not exist or
+        force is True, show login dialog
+        
+        """
         self.__setIcon("login")
+
+        # If we're forcing initiation, just draw the dialog.
+        # We wouldn't be forcing if we want to use the saved login token.
         if force:
-            return self.setup_login_dialog()
-        # If we're forcing initiation, just draw the dialog
-        # We wouldn't be forcing if we want to use the saved login token
+            return self.__dialog.login_form()
 
         try:
             token = self.awn.settings["login-token"]
         except:  # You know what? too bad. No get_null, no exception handling
             token = 0
 
+        # Force login if the token is 0, which we take to mean that there is no
+        # login information. We'd delete the key, but that's not always
+        # supported.
         if token == 0:
             return self.login(True)
-        # Force login if the token is 0, which we take to mean that there
-        # is no login information. We'd delete the key, but that's not
-        # always supported.
 
         key = self.awn.keyring.from_token(token)
 
@@ -105,11 +113,11 @@ class MailApplet:
         try:
             self.mail.update()  # Update
         except RuntimeError:
-            self.setup_login_dialog(True)
+            self.__dialog.login_form(True)
 
         else:
-            self.awn.notify.send(_("Mail Applet"), \
-                _("Logging in as %s") % key.attrs["username"], \
+            self.awn.notify.send(_("Mail Applet"),
+                _("Logging in as %s") % key.attrs["username"],
                 self.__getIconPath("login", full=True))
 
             # Login successful
@@ -148,7 +156,7 @@ class MailApplet:
         elif show:
             self.awn.show()
 
-        self.draw_main_dialog()
+        self.__dialog.update_email_list()
 
     def __setIcon(self, name):
         self.awn.icon.file(self.__getIconPath(name))
@@ -174,176 +182,6 @@ class MailApplet:
             else:
                 subprocess.Popen(self.settings["email-client"])
 
-    def draw_main_dialog(self):
-        dialog = self.awn.dialog.new("main", strMessages(len(self.mail.subjects)))
-
-        vbox = gtk.VBox()
-        dialog.add(vbox)
-
-        if len(self.mail.subjects) > 0:
-            tbl = gtk.Table(len(self.mail.subjects), 2)
-            tbl.set_col_spacings(10)
-            for i in xrange(len(self.mail.subjects)):
-                label = gtk.Label("<b>"+str(i+1)+"</b>")
-                label.set_use_markup(True)
-                tbl.attach(label, 0, 1, i, i+1)
-
-                label = gtk.Label(self.mail.subjects[i])
-                label.set_use_markup(True)
-                tbl.attach(label, 1, 2, i, i+1)
-                #print "%d: %s" % (i+1, self.mail.subjects[i])
-            vbox.add(tbl)
-        else:
-            label = gtk.Label("<i>" + _("Hmmm, nothing here") + "</i>")
-            label.set_use_markup(True)
-            vbox.add(label)
-
-        buttons = []
-
-        if hasattr(self.mail, "url") or hasattr(self.mail, "showWeb"):
-            # Don't show the button if it doesn't do anything
-
-            # This'll be the "show web interface" button
-            b = gtk.Button()
-            b.set_relief(gtk.RELIEF_NONE) # Found it; that's a relief
-            b.set_image(gtk.image_new_from_stock(gtk.STOCK_NETWORK, gtk.ICON_SIZE_BUTTON))
-            b.set_tooltip_text(_("Open Web Mail"))
-            b.connect("clicked", lambda x: self.__showWeb())
-            buttons.append(b)
-
-        # This is the "show desktop client" button
-        b = gtk.Button()
-        b.set_relief(gtk.RELIEF_NONE)
-        b.set_image(gtk.image_new_from_stock(gtk.STOCK_DISCONNECT, gtk.ICON_SIZE_BUTTON))
-        b.set_tooltip_text(_("Open Desktop Client"))
-        b.connect("clicked", lambda x: self.__showDesk())
-        buttons.append(b)
-
-        # Refresh button
-        b = gtk.Button()
-        b.set_relief(gtk.RELIEF_NONE)
-        b.set_image(gtk.image_new_from_stock(gtk.STOCK_REFRESH, gtk.ICON_SIZE_BUTTON))
-        b.set_tooltip_text(_("Refresh"))
-        b.connect("clicked", lambda x: self.refresh())
-        buttons.append(b)
-
-        # Log out
-        b = gtk.Button()
-        b.set_relief(gtk.RELIEF_NONE)
-        b.set_image(gtk.image_new_from_stock(gtk.STOCK_STOP, gtk.ICON_SIZE_BUTTON))
-        b.set_tooltip_text(_("Log Out"))
-        b.connect("clicked", lambda x: self.logout())
-        b.connect("clicked", lambda x: self.setup_login_dialog())
-
-        buttons.append(b)
-        hbox_buttons = gtk.HBox()
-        for i in buttons:
-            hbox_buttons.add(i)
-        vbox.add(hbox_buttons)
-
-    def login_get_widgets(self, vbox, *groups):
-        for widget in self.login_widgets:
-            widget.destroy()
-
-        if hasattr(self.back, "drawLoginWindow"):
-            t = self.back.drawLoginWindow(*groups)
-            self.login_widgets.append(t["layout"])
-            vbox.add(t["layout"])
-        else:
-            usrE, box = get_label_entry(_("Username:"), *groups)
-            vbox.add(box)
-            self.login_widgets.append(box)
-
-            pwdE, box = get_label_entry(_("Password:"), *groups)
-            pwdE.set_visibility(False)
-            vbox.add(box)
-            self.login_widgets.append(box)
-
-            t = {}
-
-            t["callback"] = \
-                lambda widgets, awn: awn.keyring.new("Mail Applet - %s(%s)" \
-                % (widgets[0].get_text(), self.awn.settings["backend"]), \
-                widgets[1].get_text(), \
-                {"username": widgets[0].get_text()}, "network")
-
-            t["widgets"] = [usrE, pwdE]
-
-        vbox.show_all()
-
-        return t
-
-    def setup_login_dialog(self, error=False):
-        dialog = self.awn.dialog.new("main", _("Log In"))
-        vbox = gtk.VBox(spacing=12)
-        vbox.set_border_width(6)
-        dialog.add(vbox)
-
-        # Make all the labels the same size
-        label_group = gtk.SizeGroup(gtk.SIZE_GROUP_HORIZONTAL)
-
-        # Display an error message if there is one
-        if error:
-            image = gtk.image_new_from_stock(gtk.STOCK_DIALOG_ERROR, gtk.ICON_SIZE_MENU)
-            label = gtk.Label("<b>" + _("Wrong username or password") + "</b>")
-            label.set_use_markup(True)
-
-            hbox = gtk.HBox(False, 6)
-            hbox.pack_start(image, False)
-            hbox.pack_start(label)
-
-            # Align the image and label in the center, with the image
-            # right next to the label
-            hboxbox = gtk.HBox(False)
-            hboxbox.pack_start(hbox, True, False)
-
-            vbox.add(hboxbox)
-
-        # Allow user to change the backend in the login dialog
-        def changed_backend_cb(combobox, label_group):
-            backend = combobox.get_active()
-
-            if backend != -1:
-                backends = [i for i in dir(Backends) if i[:2] != "__"]
-                self.awn.settings["backend"] = backends[backend]
-                self.back = getattr(Backends(), backends[backend])
-                self.login_get_widgets(vbox, label_group)
-
-        label_backend = gtk.Label(_("Type:"))
-        label_backend.set_alignment(0.0, 0.5)
-        label_group.add_widget(label_backend)
-
-        combobox_backend = gtk.combo_box_new_text()
-        combobox_backend.set_title(_("Backend"))
-        backends = [i for i in dir(Backends) if i[:2] != "__"]
-        for i in backends:
-            combobox_backend.append_text(getattr(Backends(), i).title)
-        combobox_backend.set_active(backends.index(self.settings["backend"]))
-        combobox_backend.connect("changed", changed_backend_cb, label_group)
-
-        hbox_backend = gtk.HBox(False, 12)
-        hbox_backend.pack_start(label_backend, expand=False)
-        hbox_backend.pack_start(combobox_backend)
-
-        vbox.add(hbox_backend)
-
-        self.login_widgets = []
-        t = self.login_get_widgets(vbox, label_group)
-
-        image_login = gtk.image_new_from_stock(gtk.STOCK_NETWORK, gtk.ICON_SIZE_BUTTON)
-        submit_button = gtk.Button(label=_("Log In"), use_underline=False)
-        submit_button.set_image(image_login)
-        def onsubmit(widget):
-            self.awn.dialog.toggle("main", "hide")
-            self.perform_login(t["callback"](t["widgets"], self.awn))
-        submit_button.connect("clicked", onsubmit)
-
-        hbox_login = gtk.HBox(False, 0)
-        hbox_login.pack_start(submit_button, True, False)
-        vbox.pack_end(hbox_login)
-
-        self.awn.dialog.toggle("main", "show")
-
     def setup_context_menu(self):
         prefs = gtk.Builder()
         prefs.add_from_file(ui_file)
@@ -355,9 +193,9 @@ class MailApplet:
 
     def setup_preferences(self, prefs):
         default_values = {
-            "backend": ("GMail", ),
+            "backend": ("GMail",),
             "theme": ("Tango", self.refresh_icon_theme),
-            "email-client": ("evolution -c mail", ),
+            "email-client": ("evolution -c mail",),
             "hide": (False, self.refresh_hide_applet, prefs.get_object("checkbutton-hide-applet")),
             "show-network-errors": (True, None, prefs.get_object("checkbutton-alert-errors"))
         }
@@ -395,6 +233,222 @@ class MailApplet:
         self.awn.settings["email-client"] = entry.get_text()
 
 
+class MainDialog:
+
+    def __init__(self, parent):
+
+        self.__parent = parent
+        self.__dialog = parent.awn.dialog.new("main", _("Mail"))
+        self.__current_type = None
+
+    def __remove_current(self):
+        """Checks if dialog already has some content and removes it"""
+        if (len(self.__dialog.child.child.get_children()) > 1):
+            # Destroy current dialog vbox
+            self.__dialog.child.child.get_children()[-1].destroy()
+
+    def email_list(self):
+        """
+        Creates a dialog with mail subjects and 3-4 buttons
+        
+        """
+        self.__remove_current()
+        self.__current_type = "email_list"
+
+        self.__dialog.set_title(strMessages(len(self.__parent.mail.subjects)))
+
+        vbox = gtk.VBox()
+        self.__dialog.add(vbox)
+
+        # Create table of new e-mails
+        self.__email_list = gtk.Label()
+        vbox.add(self.__email_list)
+
+        # Fill the table
+        self.update_email_list()
+
+        # Buttons
+        hbox_buttons = gtk.HBox()
+
+        if hasattr(self.__parent.mail, "url") or hasattr(self.__parent.mail, "showWeb"):
+            # Don't show the button if it doesn't do anything
+
+            # This'll be the "show web interface" button
+            b = gtk.Button()
+            b.set_relief(gtk.RELIEF_NONE) # Found it; that's a relief
+            b.set_image(gtk.image_new_from_stock(gtk.STOCK_NETWORK, gtk.ICON_SIZE_BUTTON))
+            b.set_tooltip_text(_("Open Web Mail"))
+            b.connect("clicked", lambda x: self.__parent.__showWeb())
+            hbox_buttons.add(b)
+
+        # This is the "show desktop client" button
+        b = gtk.Button()
+        b.set_relief(gtk.RELIEF_NONE)
+        b.set_image(gtk.image_new_from_stock(gtk.STOCK_DISCONNECT, gtk.ICON_SIZE_BUTTON))
+        b.set_tooltip_text(_("Open Desktop Client"))
+        b.connect("clicked", lambda x: self.__parent.__showDesk())
+        hbox_buttons.add(b)
+
+        # Refresh button
+        b = gtk.Button()
+        b.set_relief(gtk.RELIEF_NONE)
+        b.set_image(gtk.image_new_from_stock(gtk.STOCK_REFRESH, gtk.ICON_SIZE_BUTTON))
+        b.set_tooltip_text(_("Refresh"))
+        b.connect("clicked", lambda x: self.__parent.refresh())
+        hbox_buttons.add(b)
+
+        # Log out
+        b = gtk.Button()
+        b.set_relief(gtk.RELIEF_NONE)
+        b.set_image(gtk.image_new_from_stock(gtk.STOCK_STOP, gtk.ICON_SIZE_BUTTON))
+        b.set_tooltip_text(_("Log Out"))
+        b.connect("clicked", lambda x: self.__parent.logout())
+        b.connect("clicked", lambda x: self.login_form())
+        hbox_buttons.add(b)
+
+        vbox.pack_end(hbox_buttons)
+
+    def update_email_list(self):
+        if self.__current_type is not "email_list":
+            self.email_list()
+
+        parent = self.__email_list.get_parent()
+        parent.remove(self.__email_list)
+
+        mail = self.__parent.mail
+        if len(mail.subjects) > 0:
+            self.__email_list = gtk.Table(len(self.__parent.mail.subjects), 2)
+            self.__email_list.set_col_spacings(10)
+            for i in xrange(len(mail.subjects)):
+                label = gtk.Label("<b>" + str(i + 1) + "</b>")
+                label.set_use_markup(True)
+                self.__email_list.attach(label, 0, 1, i, i + 1)
+
+                label = gtk.Label(mail.subjects[i])
+                label.set_use_markup(True)
+                self.__email_list.attach(label, 1, 2, i, i + 1)
+#                print "%d: %s" % (i+1, self.mail.subjects[i])
+        else:
+            self.__email_list = gtk.Label("<i>" + _("Hmmm, nothing here") + "</i>")
+            label.set_use_markup(True)
+
+        self.__email_list.show_all()
+        parent.pack_start(self.__email_list)
+
+    def __login_get_widgets(self, vbox, *groups):
+        for widget in self.login_widgets:
+            widget.destroy()
+
+        if hasattr(self.__parent.back, "drawLoginWindow"):
+            t = self.__parent.back.drawLoginWindow(*groups)
+            self.login_widgets.append(t["layout"])
+            vbox.add(t["layout"])
+        else:
+            usrE, box = get_label_entry(_("Username:"), *groups)
+            vbox.add(box)
+            self.login_widgets.append(box)
+
+            pwdE, box = get_label_entry(_("Password:"), *groups)
+            pwdE.set_visibility(False)
+            vbox.add(box)
+            self.login_widgets.append(box)
+
+            t = {}
+
+            t["callback"] = \
+                lambda widgets, awn: awn.keyring.new(
+                    "Mail Applet - %s(%s)" % (widgets[0].get_text(),
+                                        self.__parent.awn.settings["backend"]),
+                    widgets[1].get_text(),
+                    {"username": widgets[0].get_text()}, "network")
+
+            t["widgets"] = [usrE, pwdE]
+
+        vbox.show_all()
+
+        return t
+
+    def login_form(self, error=False):
+        """
+        Creates a dialog the login form
+        
+        """
+        self.__remove_current()
+        self.__current_type = "login_form"
+
+        self.__dialog.set_title(_("Log In"))
+
+        vbox = gtk.VBox(spacing=12)
+        vbox.set_border_width(6)
+        self.__dialog.add(vbox)
+
+        # Make all the labels the same size
+        label_group = gtk.SizeGroup(gtk.SIZE_GROUP_HORIZONTAL)
+
+        # Display an error message if there is an error
+        if error:
+            image = gtk.image_new_from_stock(gtk.STOCK_DIALOG_ERROR, gtk.ICON_SIZE_MENU)
+            label = gtk.Label("<b>" + _("Wrong username or password") + "</b>")
+            label.set_use_markup(True)
+
+            hbox = gtk.HBox(False, 6)
+            hbox.pack_start(image, False)
+            hbox.pack_start(label)
+
+            # Align the image and label in the center, with the image
+            # right next to the label
+            hboxbox = gtk.HBox(False)
+            hboxbox.pack_start(hbox, True, False)
+
+            vbox.add(hboxbox)
+
+        # Allow user to change the backend in the login dialog
+        def changed_backend_cb(combobox, label_group):
+            backend = combobox.get_active()
+
+            if backend != -1:
+                backends = [i for i in dir(Backends) if i[:2] != "__"]
+                self.__parent.awn.settings["backend"] = backends[backend]
+                self.__parent.back = getattr(Backends(), backends[backend])
+                self.__login_get_widgets(vbox, label_group)
+
+        label_backend = gtk.Label(_("Type:"))
+        label_backend.set_alignment(0.0, 0.5)
+        label_group.add_widget(label_backend)
+
+        combobox_backend = gtk.combo_box_new_text()
+        combobox_backend.set_title(_("Backend"))
+        backends = [i for i in dir(Backends) if i[:2] != "__"]
+        for i in backends:
+            combobox_backend.append_text(getattr(Backends(), i).title)
+        combobox_backend.set_active(backends.index(self.__parent.settings["backend"]))
+        combobox_backend.connect("changed", changed_backend_cb, label_group)
+
+        hbox_backend = gtk.HBox(False, 12)
+        hbox_backend.pack_start(label_backend, expand=False)
+        hbox_backend.pack_start(combobox_backend)
+
+        vbox.add(hbox_backend)
+
+        self.login_widgets = []
+        t = self.__login_get_widgets(vbox, label_group)
+
+        image_login = gtk.image_new_from_stock(gtk.STOCK_NETWORK, gtk.ICON_SIZE_BUTTON)
+        submit_button = gtk.Button(label=_("Log In"), use_underline=False)
+        submit_button.set_image(image_login)
+        def onsubmit(widget):
+            self.__parent.awn.dialog.toggle("main", "hide")
+            self.__parent.perform_login(t["callback"](t["widgets"], self.__parent.awn))
+        submit_button.connect("clicked", onsubmit)
+
+        hbox_login = gtk.HBox(False, 0)
+        hbox_login.pack_start(submit_button, True, False)
+        vbox.pack_end(hbox_login)
+
+        self.__parent.awn.dialog.toggle("main", "show")
+
+
+
 class MailItem:
 
     def __init__(self, subject, author):
@@ -415,7 +469,7 @@ class Backends:
             return "http://mail.google.com/mail/"
 
         def update(self):
-            f = feedparser.parse( \
+            f = feedparser.parse(\
                 "https://%s:%s@mail.google.com/gmail/feed/atom" \
                  % (self.key.attrs["username"], self.key.password))
 
@@ -473,7 +527,7 @@ class Backends:
             return "http://mail.google.com/a/%s" % self.key.attrs["username"]
 
         def update(self):
-            f = feedparser.parse( \
+            f = feedparser.parse(\
                 "https://%s%%40%s:%s@mail.google.com/a/%s/feed/atom" \
                  % (self.key.attrs["username"], self.key.attrs["domain"], \
                  self.key.password, self.key.attrs["domain"]))

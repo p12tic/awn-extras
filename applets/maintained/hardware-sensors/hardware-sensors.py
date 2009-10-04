@@ -254,9 +254,8 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
             "show_value_overlay": (True, change_show_value_overlay,
                            prefs.get_object("checkbutton_show_value_overlay")),
             "font_size": (1, self.change_font_size),
-            "hand_color": (Color.from_string("#FF8800FF"),
-                           self.change_hand_color,
-                           prefs.get_object("colorbutton_hand")),
+            "hand_color": ("#FFFF88880000FFFF",
+                           self.change_hand_color),
             # Sensor settings
             "ids": [str(sensor.id) for sensor in sensors],
             "labels": [sensor.label for sensor in sensors],
@@ -358,6 +357,16 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         theme_combobox.set_active(self.__themes.index(self.settings["theme"]))
         theme_combobox.connect('changed', self.theme_changed_cb)
 
+        # Hand color colorbutton
+        cb_hand = prefs.get_object("colorbutton_hand")
+        # This conversion from desktopagnostic.Color is neccesery because
+        # cb_hand.set_da_color() does not work 
+        color = gtk.gdk.Color()
+        self.settings["hand_color"].get_color(color)
+        cb_hand.set_color(color)
+        cb_hand.set_alpha(self.settings["hand_color"].get_alpha())
+        cb_hand.connect('color-set', self.hand_color_changed_cb)
+
         # Font size combobox
         font_combobox = prefs.get_object("combobox_font_size")
         awnlib.add_cell_renderer_text(font_combobox)
@@ -394,8 +403,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
 
         # Remove button
         button_remove = prefs.get_object("button_remove")
-        button_remove.connect('clicked',
-                              self.remove_cb, treeview_main, cb_hand)
+        button_remove.connect('clicked', self.remove_cb, treeview_main)
 
         # Up button
         button_up = prefs.get_object("button_up")
@@ -686,6 +694,15 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         # Force icon update
         self.update_icon(True)
 
+    def hand_color_changed_cb(self, cb_hand):
+        """Save hand color"""
+        # This conversion from GdkColor to desktopagnostic.Color is neccesery
+        # because cb_hand.get_da_color() does not work
+        color = self.settings["hand_color"]
+        color.set_color(cb_hand.get_color())
+        color.set_alpha(cb_hand.get_alpha())
+        self.applet.settings["hand_color"] = color
+
     def change_hand_color(self, color):
         """Apply hand color setting and update icon."""
         self.__icon.set_hand_color(color)
@@ -781,7 +798,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
             model[iter][self.__column_in_icon] = True
         self.update_icon_type()
 
-    def remove_cb(self, widget, treeview_main, cb_hand):
+    def remove_cb(self, widget, treeview_main):
         """
         Remove selected sensors from main sensors (i.e. do not shown them in
         applet icon).
@@ -799,9 +816,6 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
             self.change_in_icon(self.sensors[idx], False)
             # Change value in model
             self.__liststore[child_iter][self.__column_in_icon] = False
-            # If row is removed, no row remains selected, so gray out the color
-            # buttons
-            cb_hand.set_sensitive(False)
         self.update_icon_type()
 
     def up_cb(self, widget, treeview):

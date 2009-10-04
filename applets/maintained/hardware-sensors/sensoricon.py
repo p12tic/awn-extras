@@ -107,7 +107,7 @@ class SensorIcon():
             context.save()
 
             # Set meter hand color
-            context.set_source_rgba(*color.get_cairo_color())
+            context.set_source_rgba(*self.__color.get_cairo_color())
 
             # prevent division by zero
             if (high_value - low_value) == 0:

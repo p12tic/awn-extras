@@ -128,6 +128,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
+                                <property name="use_alpha">True</property>
                                 <property name="color">#000000000000</property>
                               </object>
                               <packing>
@@ -505,6 +506,7 @@
             </child>
             <child>
               <object class="GtkScrolledWindow" id="scrolledwindow2">
+                <property name="height_request">80</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="hscrollbar_policy">never</property>
@@ -518,6 +520,7 @@
                 </child>
               </object>
               <packing>
+                <property name="expand">False</property>
                 <property name="position">2</property>
               </packing>
             </child>
@@ -739,10 +742,10 @@
   </object>
   <object class="GtkSizeGroup" id="sizegroup1">
     <widgets>
-      <widget name="label3"/>
-      <widget name="label2"/>
-      <widget name="alignment3"/>
       <widget name="label4"/>
+      <widget name="alignment3"/>
+      <widget name="label2"/>
+      <widget name="label3"/>
     </widgets>
   </object>
 </interface>

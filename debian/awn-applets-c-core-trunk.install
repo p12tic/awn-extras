@@ -40,6 +40,7 @@ usr/lib/awn/applets/shinyswitcher/*.so
 usr/share/avant-window-navigator/applets/shinyswitcher.desktop
 usr/share/avant-window-navigator/schemas/awn-applet-shinyswitcher.schema-ini
 etc/gconf/schemas/awn-applet-shinyswitcher.schemas
+usr/share/avant-window-navigator/applets/shinyswitcher/shiny-prefs.py
 #
 # Show Desktop
 #

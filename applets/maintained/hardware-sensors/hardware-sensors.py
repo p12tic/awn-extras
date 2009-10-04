@@ -27,6 +27,8 @@ import gtk
 from awn.extras import _, awnlib, __version__
 from awn import OverlayText
 
+from desktopagnostic import Color
+
 from interfaces import sensorinterface
 from interfaces import acpisensors
 from interfaces import omnibooksensors
@@ -167,7 +169,8 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         """
         self.__icon = SensorIcon(self.settings["theme"],
                                  self.main_sensors,
-                                 self.applet.get_size())
+                                 self.applet.get_size(),
+                                 self.settings["hand_color"])
 
         # Create text overlay
         self.__temp_overlay = OverlayText()
@@ -246,19 +249,19 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
             # Global
             "unit": (units.UNIT_CELSIUS, self.change_unit),
             "timeout": (2, self.change_timeout,
-                                             prefs.get_object("spin_timeout")),
+                        prefs.get_object("spin_timeout")),
             "theme": (self.__themes[0], self.change_theme),
             "show_value_overlay": (True, change_show_value_overlay,
                            prefs.get_object("checkbutton_show_value_overlay")),
             "font_size": (1, self.change_font_size),
+            "hand_color": ("#FFFF88880000FFFF",
+                           self.change_hand_color),
             # Sensor settings
             "ids": [str(sensor.id) for sensor in sensors],
             "labels": [sensor.label for sensor in sensors],
             "show": [sensor.show for sensor in sensors],
             "dialog_row": range(1, len(sensors) + 1),
             "in_icon": [sensor.in_icon for sensor in sensors],
-            "hand_colors": [str(sensor.hand_color) for sensor in sensors],
-            "text_colors": [str(sensor.text_color) for sensor in sensors],
             "high_values": [sensor.high_value for sensor in sensors],
             "low_values": [sensor.low_value for sensor in sensors],
             "high_alarms": [sensor.alarm_on_high for sensor in sensors],
@@ -281,8 +284,6 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
                 sensor.show = settings["show"][idx]
                 sensor.dialog_row = settings["dialog_row"][idx]
                 sensor.in_icon = settings["in_icon"][idx]
-                sensor.hand_color = eval(settings["hand_colors"][idx])
-                sensor.text_color = eval(settings["text_colors"][idx])
                 sensor.raw_high_value = settings["high_values"][idx]
                 sensor.raw_low_value = settings["low_values"][idx]
                 sensor.alarm_on_high = settings["high_alarms"][idx]
@@ -317,8 +318,6 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
             settings["show"] = [sensor.show for sensor in sensors]
             settings["dialog_row"] = [sensor.dialog_row for sensor in sensors]
             settings["in_icon"] = [sensor.in_icon for sensor in sensors]
-            settings["hand_colors"] = [str(s.hand_color) for s in sensors]
-            settings["text_colors"] = [str(s.text_color) for s in sensors]
             settings["high_values"] = [s.high_value for s in sensors]
             settings["low_values"] = [s.low_value for s in sensors]
             settings["high_alarms"] = [s.alarm_on_high for s in sensors]
@@ -358,6 +357,16 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         theme_combobox.set_active(self.__themes.index(self.settings["theme"]))
         theme_combobox.connect('changed', self.theme_changed_cb)
 
+        # Hand color colorbutton
+        cb_hand = prefs.get_object("colorbutton_hand")
+        # This conversion from desktopagnostic.Color is neccesery because
+        # cb_hand.set_da_color() does not work 
+        color = gtk.gdk.Color()
+        self.settings["hand_color"].get_color(color)
+        cb_hand.set_color(color)
+        cb_hand.set_alpha(self.settings["hand_color"].get_alpha())
+        cb_hand.connect('color-set', self.hand_color_changed_cb)
+
         # Font size combobox
         font_combobox = prefs.get_object("combobox_font_size")
         awnlib.add_cell_renderer_text(font_combobox)
@@ -384,22 +393,6 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         self.setup_sensors_treeview(treeview_all)
         self.setup_main_sensors_treeview(treeview_main)
 
-        # Color buttons
-        cb_hand = prefs.get_object("color_hand")
-        cb_text = prefs.get_object("color_text")
-        cb_hand.set_sensitive(False)
-        cb_text.set_sensitive(False)
-
-        # Connect 'color-set' event to change_*_color functions
-        cb_hand.connect('color-set', lambda cb:
-                        self.change_hand_color(cb.get_color(), cb.get_alpha()))
-        cb_text.connect('color-set', lambda cb:
-                        self.change_text_color(cb.get_color(), cb.get_alpha()))
-        # When user selects a sensor in treeview_main, color buttons must
-        # reflect that sensor's colors
-        treeview_main.connect('cursor-changed', self.selection_changed_cb,
-                         cb_hand, cb_text)
-
         # Properties button
         button_properties = prefs.get_object("button_properties")
         button_properties.connect('clicked', self.properties_cb, treeview_all)
@@ -410,8 +403,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
 
         # Remove button
         button_remove = prefs.get_object("button_remove")
-        button_remove.connect('clicked',
-                              self.remove_cb, treeview_main, cb_hand, cb_text)
+        button_remove.connect('clicked', self.remove_cb, treeview_main)
 
         # Up button
         button_up = prefs.get_object("button_up")
@@ -702,25 +694,18 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         # Force icon update
         self.update_icon(True)
 
-    def change_hand_color(self, color, alpha):
-        """Save hand color setting for a specific sensor and update icon."""
-        sensor = self.__selected_sensor
-        # Apply hand color change
-        sensor.hand_color = (color.red, color.green, color.blue, alpha)
-        # Save hand_color values
-        self.applet.settings["hand_colors"] = \
-                            [str(sensor.hand_color) for sensor in self.sensors]
-        # Force icon update
-        self.update_icon(True)
+    def hand_color_changed_cb(self, cb_hand):
+        """Save hand color"""
+        # This conversion from GdkColor to desktopagnostic.Color is neccesery
+        # because cb_hand.get_da_color() does not work
+        color = self.settings["hand_color"]
+        color.set_color(cb_hand.get_color())
+        color.set_alpha(cb_hand.get_alpha())
+        self.applet.settings["hand_color"] = color
 
-    def change_text_color(self, color, alpha):
-        """Save text color setting for a specific sensor and update icon."""
-        sensor = self.__selected_sensor
-        # Apply text color change
-        sensor.text_color = (color.red, color.green, color.blue, alpha)
-        # Save text_color values
-        self.applet.settings["text_colors"] = \
-                            [str(sensor.text_color) for sensor in self.sensors]
+    def change_hand_color(self, color):
+        """Apply hand color setting and update icon."""
+        self.__icon.set_hand_color(color)
         # Force icon update
         self.update_icon(True)
 
@@ -783,35 +768,6 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         # Recreate dialog
         self.__main_dialog.recreate()
 
-    def selection_changed_cb(self, treeview, cb_hand, cb_text):
-        """Handle selection change in treeview."""
-        # Get selected sensor
-        selection = treeview.get_selection()
-        (model_filter, iter) = selection.get_selected()
-        # Something must be selected
-        if iter is not None:
-            child_iter = model_filter.convert_iter_to_child_iter(iter)
-            sensor = self.sensors[
-                               self.__liststore[child_iter][self.__column_idx]]
-            self.__selected_sensor = sensor
-
-            cb_hand.set_sensitive(True)
-            cb_text.set_sensitive(True)
-
-            (red, green, blue, alpha) = sensor.hand_color
-            cb_hand.set_alpha(alpha)
-            cb_hand.set_color(gtk.gdk.Color(red, green, blue))
-
-            (red, green, blue, alpha) = sensor.text_color
-            cb_text.set_alpha(alpha)
-            cb_text.set_color(gtk.gdk.Color(red, green, blue))
-
-        # If all unselected, gray out the buttons
-        else:
-            cb_hand.set_sensitive(False)
-            cb_text.set_sensitive(False)
-
-
     # === Button callbacks === #
     def properties_cb(self, widget, treeview):
         """Open properties dialog for selected sensor."""
@@ -842,7 +798,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
             model[iter][self.__column_in_icon] = True
         self.update_icon_type()
 
-    def remove_cb(self, widget, treeview_main, cb_hand, cb_text):
+    def remove_cb(self, widget, treeview_main):
         """
         Remove selected sensors from main sensors (i.e. do not shown them in
         applet icon).
@@ -860,10 +816,6 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
             self.change_in_icon(self.sensors[idx], False)
             # Change value in model
             self.__liststore[child_iter][self.__column_in_icon] = False
-            # If row is removed, no row remains selected, so gray out the color
-            # buttons
-            cb_hand.set_sensitive(False)
-            cb_text.set_sensitive(False)
         self.update_icon_type()
 
     def up_cb(self, widget, treeview):

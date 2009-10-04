@@ -26,6 +26,11 @@ type = string
 default = 
 description = Applet theme.
 
+[DEFAULT/hand_color]
+type = color
+default = #FF8800FF
+description = The color (RGBA) of the meter hand/needle.
+
 [DEFAULT/ids]
 type = list-string
 default =
@@ -50,16 +55,6 @@ description = In what row of dialog is the sensor shown.
 type = list-boolean
 default = 
 description = Whether to show a sensor in applet icon or not.
-
-[DEFAULT/hand_colors]
-type = list-string
-default = 
-description = Color of the hand (needle) for each sensor.
-
-[DEFAULT/text_colors]
-type = list-string
-default = 
-description = Color of the text for each sensor.
 
 [DEFAULT/high_values]
 type = list-float

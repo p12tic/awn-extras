@@ -28,7 +28,7 @@ theme_dir = os.path.join(os.path.dirname(__file__), "themes")
 
 class SensorIcon():
 
-    def __init__(self, theme, sensors, height):
+    def __init__(self, theme, sensors, height, hand_color):
         """
         Initialize icon.
         
@@ -46,6 +46,7 @@ class SensorIcon():
         self.__theme = theme
         self.__sensors = sensors[:2]
         self.__height = height
+        self.__color = hand_color
 
         self.create_background()
 
@@ -65,6 +66,10 @@ class SensorIcon():
     def set_sensors(self, sensors):
         """Set sensors who's values are shown in this icon."""
         self.__sensors = sensors[:2]
+
+    def set_hand_color(self, hand_color):
+        """Set hand/needle color."""
+        self.__color = hand_color
 
     def create_background(self):
         filename = os.path.join(theme_dir, self.__theme, self.__type + ".svg")
@@ -101,11 +106,8 @@ class SensorIcon():
 
             context.save()
 
-            # Draw the meter hand
-            (red, green, blue, alpha) = sensor.hand_color
-            context.set_source_rgba(
-                                 float(red) / 65535, float(green) / 65535,
-                                 float(blue) / 65535, float(alpha) / 65535)
+            # Set meter hand color
+            context.set_source_rgba(*self.__color.get_cairo_color())
 
             # prevent division by zero
             if (high_value - low_value) == 0:

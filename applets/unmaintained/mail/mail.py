@@ -114,8 +114,11 @@ class MailApplet:
             self.mail.update()  # Update
         except RuntimeError:
             self.__dialog.login_form(True)
+            self.__parent.awn.dialog.toggle("main", "show")
 
         else:
+            self.awn.dialog.toggle("main", "hide")
+
             self.awn.notify.send(_("Mail Applet"),
                 _("Logging in as %s") % key.attrs["username"],
                 self.__getIconPath("login", full=True))
@@ -193,9 +196,9 @@ class MailApplet:
 
     def setup_preferences(self, prefs):
         default_values = {
-            "backend": ("GMail",),
+            "backend": "GMail",
             "theme": ("Tango", self.refresh_icon_theme),
-            "email-client": ("evolution -c mail",),
+            "email-client": "evolution -c mail",
             "hide": (False, self.refresh_hide_applet, prefs.get_object("checkbutton-hide-applet")),
             "show-network-errors": (True, None, prefs.get_object("checkbutton-alert-errors"))
         }
@@ -307,6 +310,7 @@ class MainDialog:
         hbox_buttons.add(b)
 
         vbox.pack_end(hbox_buttons)
+        vbox.show_all()
 
     def update_email_list(self):
         if self.__current_type is not "email_list":
@@ -437,7 +441,6 @@ class MainDialog:
         submit_button = gtk.Button(label=_("Log In"), use_underline=False)
         submit_button.set_image(image_login)
         def onsubmit(widget):
-            self.__parent.awn.dialog.toggle("main", "hide")
             self.__parent.perform_login(t["callback"](t["widgets"], self.__parent.awn))
         submit_button.connect("clicked", onsubmit)
 
@@ -445,8 +448,7 @@ class MainDialog:
         hbox_login.pack_start(submit_button, True, False)
         vbox.pack_end(hbox_login)
 
-        self.__parent.awn.dialog.toggle("main", "show")
-
+        vbox.show_all()
 
 
 class MailItem:

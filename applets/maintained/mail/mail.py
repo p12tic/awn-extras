@@ -286,17 +286,12 @@ class MainDialog:
         self.__remove_current()
         self.__current_type = "email_list"
 
-        self.__dialog.set_title(strMessages(len(self.__parent.mail.subjects)))
-
         vbox = gtk.VBox()
         self.__dialog.add(vbox)
 
         # Create table of new e-mails
         self.__email_list = gtk.Label()
         vbox.add(self.__email_list)
-
-        # Fill the table
-        self.update_email_list()
 
         # Buttons
         hbox_buttons = gtk.HBox()
@@ -354,6 +349,8 @@ class MainDialog:
 
         mail = self.__parent.mail
         if len(mail.subjects) > 0:
+            self.__dialog.set_title(strMessages(len(self.__parent.mail.subjects)))
+
             self.__email_list = gtk.Table(len(self.__parent.mail.subjects), 2)
             self.__email_list.set_col_spacings(10)
             for i in xrange(len(mail.subjects)):
@@ -366,6 +363,8 @@ class MainDialog:
                 self.__email_list.attach(label, 1, 2, i, i + 1)
 #                print "%d: %s" % (i+1, self.mail.subjects[i])
         else:
+            self.__dialog.set_title(_("No unread messages"))
+
             self.__email_list = gtk.Label("<i>%s</i>" % _("No new messages"))
             self.__email_list.set_use_markup(True)
 

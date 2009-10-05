@@ -132,7 +132,8 @@ class MailApplet:
 
             self.awn.settings["login-token"] = key.token
 
-            self.timer = self.awn.timing.register(self.refresh, 300)
+            self.timer = self.awn.timing.register(self.refresh,
+                                                 self.settings["timeout"] * 60)
             self.refresh(show=False)
 
     def refresh(self, show=True):
@@ -150,7 +151,9 @@ class MailApplet:
         diffSubjects = [i for i in self.mail.subjects if i not in oldSubjects]
 
         if len(diffSubjects) > 0:
-            msg = strMailMessages(len(diffSubjects)) + "\n" + "\n".join(diffSubjects)
+            msg = strMailMessages(len(diffSubjects)) + ":\n" + \
+                                                        "\n".join(diffSubjects)
+
             self.awn.notify.send(_("New Mail - Mail Applet"), msg,
                                  self.__getIconPath("unread"))
 
@@ -209,6 +212,10 @@ class MailApplet:
         self.setup_preferences(prefs)
 
     def setup_preferences(self, prefs):
+        def change_timeout(timeout):
+            if hasattr(self, "timer"):
+                self.timer.change_interval(timeout * 60)
+
         default_values = {
             "backend": "GMail",
             "theme": ("Tango", self.awn.theme.theme),
@@ -216,7 +223,9 @@ class MailApplet:
             "hide": (False, self.refresh_hide_applet,
                      prefs.get_object("checkbutton-hide-applet")),
             "show-network-errors": (True, None,
-                                  prefs.get_object("checkbutton-alert-errors"))
+                                 prefs.get_object("checkbutton-alert-errors")),
+            "timeout": (2, change_timeout,
+                        prefs.get_object("spinbutton-timeout"))
         }
         self.settings = self.awn.settings.load_preferences(default_values)
 
@@ -240,7 +249,8 @@ class MailApplet:
         combobox_theme.connect("changed", self.changed_theme_cb)
 
     def changed_theme_cb(self, combobox):
-        self.awn.settings["theme"] = combobox.get_active_text().replace(' ', '_')
+        self.awn.settings["theme"] = \
+                                   combobox.get_active_text().replace(' ', '_')
 
     def refresh_hide_applet(self, value):
         if hasattr(self, "mail") and self.settings["hide"] and \
@@ -291,13 +301,15 @@ class MainDialog:
         # Buttons
         hbox_buttons = gtk.HBox()
 
-        if hasattr(self.__parent.mail, "url") or hasattr(self.__parent.mail, "showWeb"):
+        if hasattr(self.__parent.mail, "url") or \
+                                        hasattr(self.__parent.mail, "showWeb"):
             # Don't show the button if it doesn't do anything
 
             # This'll be the "show web interface" button
             b = gtk.Button()
             b.set_relief(gtk.RELIEF_NONE) # Found it; that's a relief
-            b.set_image(gtk.image_new_from_stock(gtk.STOCK_NETWORK, gtk.ICON_SIZE_BUTTON))
+            b.set_image(gtk.image_new_from_stock(gtk.STOCK_NETWORK,
+                                                 gtk.ICON_SIZE_BUTTON))
             b.set_tooltip_text(_("Open Web Mail"))
             b.connect("clicked", lambda x: self.__parent.__showWeb())
             hbox_buttons.add(b)
@@ -305,7 +317,8 @@ class MainDialog:
         # This is the "show desktop client" button
         b = gtk.Button()
         b.set_relief(gtk.RELIEF_NONE)
-        b.set_image(gtk.image_new_from_stock(gtk.STOCK_DISCONNECT, gtk.ICON_SIZE_BUTTON))
+        b.set_image(gtk.image_new_from_stock(gtk.STOCK_DISCONNECT,
+                                             gtk.ICON_SIZE_BUTTON))
         b.set_tooltip_text(_("Open Desktop Client"))
         b.connect("clicked", lambda x: self.__parent.__showDesk())
         hbox_buttons.add(b)
@@ -313,7 +326,8 @@ class MainDialog:
         # Refresh button
         b = gtk.Button()
         b.set_relief(gtk.RELIEF_NONE)
-        b.set_image(gtk.image_new_from_stock(gtk.STOCK_REFRESH, gtk.ICON_SIZE_BUTTON))
+        b.set_image(gtk.image_new_from_stock(gtk.STOCK_REFRESH,
+                                             gtk.ICON_SIZE_BUTTON))
         b.set_tooltip_text(_("Refresh"))
         b.connect("clicked", lambda x: self.__parent.refresh())
         hbox_buttons.add(b)
@@ -321,7 +335,8 @@ class MainDialog:
         # Log out
         b = gtk.Button()
         b.set_relief(gtk.RELIEF_NONE)
-        b.set_image(gtk.image_new_from_stock(gtk.STOCK_STOP, gtk.ICON_SIZE_BUTTON))
+        b.set_image(gtk.image_new_from_stock(gtk.STOCK_STOP,
+                                             gtk.ICON_SIZE_BUTTON))
         b.set_tooltip_text(_("Log Out"))
         b.connect("clicked", lambda x: self.__parent.logout())
         b.connect("clicked", lambda x: self.login_form())
@@ -351,7 +366,7 @@ class MainDialog:
                 self.__email_list.attach(label, 1, 2, i, i + 1)
 #                print "%d: %s" % (i+1, self.mail.subjects[i])
         else:
-            self.__email_list = gtk.Label("<i>" + _("Hmmm, nothing here") + "</i>")
+            self.__email_list = gtk.Label("<i>%s</i>" % _("No new messages"))
             label.set_use_markup(True)
 
         self.__email_list.show_all()
@@ -409,7 +424,8 @@ class MainDialog:
 
         # Display an error message if there is an error
         if error:
-            image = gtk.image_new_from_stock(gtk.STOCK_DIALOG_ERROR, gtk.ICON_SIZE_MENU)
+            image = gtk.image_new_from_stock(gtk.STOCK_DIALOG_ERROR,
+                                             gtk.ICON_SIZE_MENU)
             label = gtk.Label("<b>" + _("Wrong username or password") + "</b>")
             label.set_use_markup(True)
 
@@ -443,7 +459,8 @@ class MainDialog:
         backends = [i for i in dir(Backends) if i[:2] != "__"]
         for i in backends:
             combobox_backend.append_text(getattr(Backends(), i).title)
-        combobox_backend.set_active(backends.index(self.__parent.settings["backend"]))
+        combobox_backend.set_active(
+                             backends.index(self.__parent.settings["backend"]))
         combobox_backend.connect("changed", changed_backend_cb, label_group)
 
         hbox_backend = gtk.HBox(False, 12)
@@ -455,11 +472,13 @@ class MainDialog:
         self.login_widgets = []
         t = self.__login_get_widgets(vbox, label_group)
 
-        image_login = gtk.image_new_from_stock(gtk.STOCK_NETWORK, gtk.ICON_SIZE_BUTTON)
+        image_login = gtk.image_new_from_stock(gtk.STOCK_NETWORK,
+                                               gtk.ICON_SIZE_BUTTON)
         submit_button = gtk.Button(label=_("Log In"), use_underline=False)
         submit_button.set_image(image_login)
         def onsubmit(widget):
-            self.__parent.perform_login(t["callback"](t["widgets"], self.__parent.awn))
+            self.__parent.perform_login(
+                                t["callback"](t["widgets"], self.__parent.awn))
         submit_button.connect("clicked", onsubmit)
 
         hbox_login = gtk.HBox(False, 0)

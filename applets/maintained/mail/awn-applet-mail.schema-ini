@@ -30,3 +30,8 @@ description = Display any network errors
 type = integer
 default = 0
 description = Used for logging in; do not touch
+
+[DEFAULT/timeout]
+type = integer
+default = 2
+description = Timeout between two value updates (in minutes).

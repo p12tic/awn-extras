@@ -367,7 +367,7 @@ class MainDialog:
 #                print "%d: %s" % (i+1, self.mail.subjects[i])
         else:
             self.__email_list = gtk.Label("<i>%s</i>" % _("No new messages"))
-            label.set_use_markup(True)
+            self.__email_list.set_use_markup(True)
 
         self.__email_list.show_all()
         parent.pack_start(self.__email_list)

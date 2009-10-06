@@ -4,5 +4,6 @@ X-AWN-Type=Applet
 X-AWN-AppletType=Python
 _Name=Mobile Meebo
 _Comment=Access to the Meebo Instant Messenger
-Exec=awn-meebo/awn-meebo.py
+Exec=awn-applet -p %k
+X-AWN-AppletExec=awn-meebo/awn-meebo.py
 Icon=awn-meebo/icons/meebo.png

@@ -4,5 +4,6 @@ X-AWN-Type=Applet
 X-AWN-AppletType=C
 _Name=Web Applet
 _Comment=Applet for Websites
-Exec=@LIBDIR@/awn/applets/webapplet/webapplet.so
+Exec=awn-applet -p %k
+X-AWN-AppletExec=@LIBDIR@/awn/applets/webapplet/webapplet.so
 Icon=applications-internet

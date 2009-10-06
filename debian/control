@@ -99,7 +99,7 @@ Recommends: 	awn-settings-trunk (>= 0.3.8),
 		python-sqlalchemy,
 		sqlite3,
 		python-dateutil,
-		libgweather-common,
+		python-gweather,
 		gnome-applets
 Suggests:	awn-applets-python-extras-trunk,
 XB-Python-Version: ${python:Versions}

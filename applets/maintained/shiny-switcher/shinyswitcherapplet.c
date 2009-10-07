@@ -110,6 +110,8 @@ struct _AwnShinySwitcherPrivate
 	
 	GtkPositionType orient;
 
+  gboolean reloading;
+
 };
 
 
@@ -150,11 +152,13 @@ static gboolean _expose_event_outer(GtkWidget *widget, GdkEventExpose *expose, A
 static void _offset_changed(AwnShinySwitcher *app, guint offset, AwnShinySwitcher * shinyswitcher);
 static void _height_changed(AwnShinySwitcher *app, guint height, AwnShinySwitcher * shinyswitcher);
 static void _orient_changed(AwnShinySwitcher *app, GtkPositionType orient, AwnShinySwitcher * shinyswitcher);
-static void _changed(AwnShinySwitcher *shinyswitcher);
+
 static void _workspaces_changed(WnckScreen    *screen, WnckWorkspace *space, AwnShinySwitcher * shinyswitcher);
 static gboolean _changed_waited(AwnShinySwitcher *shinyswitcher);
 static void _viewports_changed(WnckScreen    *screen, AwnShinySwitcher * shinyswitcher);
 static void init_config(AwnShinySwitcher *shinyswitcher);
+static gboolean awn_shiny_switcher_setup (AwnShinySwitcher * object);
+
 
 static void 
 config_get_color(DesktopAgnosticConfigClient *client, const gchar *key, DesktopAgnosticColor **color)
@@ -194,19 +198,28 @@ static void
 _change_config_cb(const gchar *group, const gchar *key, const GValue *value, gpointer user_data)
 {
   AwnShinySwitcher *shinyswitcher = (AwnShinySwitcher *)user_data;
-  init_config(shinyswitcher);
-  _changed(shinyswitcher);
-  _changed_waited(shinyswitcher);
+  AwnShinySwitcherPrivate * priv = GET_PRIVATE (shinyswitcher);
+  
+  if (!priv->reloading)
+  {
+    priv->reloading = TRUE;
+    gtk_widget_destroy (GTK_WIDGET(priv->align));
+    awn_shiny_switcher_setup (AWN_SHINY_SWITCHER (shinyswitcher));
+  }
 }
 
 static void 
 _change_config_ws_cb(const gchar *group, const gchar *key, const GValue *value, gpointer user_data)
 {
   AwnShinySwitcher *shinyswitcher = (AwnShinySwitcher *)user_data;
-  init_config(shinyswitcher);
-  _changed(shinyswitcher);
-
-  /* g_timeout_add(2000, (GSourceFunc)_changed_waited, shinyswitcher);*/ /* don't need to do this as seconds... happens once */
+  AwnShinySwitcherPrivate * priv = GET_PRIVATE (shinyswitcher);
+  
+  if (!priv->reloading)
+  {
+    priv->reloading = TRUE;
+    gtk_widget_destroy (GTK_WIDGET(priv->align));
+    awn_shiny_switcher_setup (AWN_SHINY_SWITCHER (shinyswitcher));
+  }
 }
 
 static void 
@@ -942,7 +955,11 @@ prepare_to_render_workspace(AwnShinySwitcher *shinyswitcher, WnckWorkspace * spa
   GdkPixmap * copy;
   Workplace_info * ws2;
   ws2 = g_tree_lookup(priv->ws_lookup_ev, space);
-  g_assert(ws2);
+//  g_assert(ws2);
+  if (!ws2)
+  {
+    return;
+  }
 
   if (priv->got_viewport)
   {
@@ -1555,6 +1572,7 @@ render_windows_to_wallpaper(AwnShinySwitcher *shinyswitcher,  WnckWorkspace * sp
   WnckWindow * top_win = NULL;
   Workplace_info * ws = NULL;
 
+
   for (iter = g_list_first(wnck_spaces);iter;iter = g_list_next(iter))
   {
     if ((!space) || (space == iter->data))
@@ -1598,6 +1616,8 @@ render_windows_to_wallpaper(AwnShinySwitcher *shinyswitcher,  WnckWorkspace * sp
                        (double)wnck_workspace_get_height(wnck_screen_get_active_workspace(priv->wnck_screen))
                        ;
             ws = g_tree_lookup(priv->ws_lookup_ev, iter->data);
+            if (!ws)
+              break;
             GdkPixmap *pixmap;
             gtk_image_get_pixmap(GTK_IMAGE(gtk_bin_get_child(GTK_BIN(ws->wallpaper_ev))), &pixmap, NULL);
             cairo_t * destcr = NULL;
@@ -1656,7 +1676,7 @@ render_windows_to_wallpaper(AwnShinySwitcher *shinyswitcher,  WnckWorkspace * sp
 
   if (space)
   {
-    if (top_win)
+    if (top_win && ws)
     {
       GtkWidget * container = ws->wallpaper_ev->parent;
       gtk_widget_hide(container);
@@ -1672,6 +1692,11 @@ do_queued_renders(AwnShinySwitcher *shinyswitcher)
   GList* wnck_spaces = wnck_screen_get_workspaces(priv->wnck_screen);
   GList * iter;
 
+  if (priv->reloading)
+  {
+    return TRUE;
+  }
+  
   for (iter = g_list_first(wnck_spaces);iter;iter = g_list_next(iter))
   {
     if (g_tree_lookup(priv->ws_changes, iter->data))
@@ -1718,6 +1743,10 @@ _activewin_change(WnckScreen *screen, WnckWindow *previously_active_window, AwnS
   WnckWindow * act_win = NULL;
   WnckWorkspace * act_space = NULL;
 
+  if (priv->reloading)
+  {
+    return;
+  }
   act_space = wnck_screen_get_active_workspace(priv->wnck_screen) ;
 
   if (previously_active_window)
@@ -1775,10 +1804,14 @@ _workspace_change(WnckScreen *screen, WnckWorkspace *previously_active_space, Aw
   AwnShinySwitcherPrivate * priv = GET_PRIVATE(shinyswitcher);  
   WnckWorkspace *act_space = wnck_screen_get_active_workspace(priv->wnck_screen);
 
+  if (priv->reloading)
+  {
+    return;
+  }
   if (act_space && previously_active_space)
   {
     render_windows_to_wallpaper(shinyswitcher, act_space);
-
+    
     if (act_space != previously_active_space)
     {
       if (priv->got_viewport)
@@ -1808,7 +1841,10 @@ _window_stacking_change(WnckScreen *screen, AwnShinySwitcher *shinyswitcher)
 {
   AwnShinySwitcherPrivate * priv = GET_PRIVATE(shinyswitcher);  
   WnckWorkspace *space = wnck_screen_get_active_workspace(priv->wnck_screen);
-
+  if (priv->reloading)
+  {
+    return;
+  }
   if (space)
   {
     render_windows_to_wallpaper(shinyswitcher, space);
@@ -1823,6 +1859,10 @@ static void
 _win_geom_change(WnckWindow *window, AwnShinySwitcher *shinyswitcher)
 {
   AwnShinySwitcherPrivate * priv = GET_PRIVATE(shinyswitcher);  
+  if (priv->reloading)
+  {
+    return;
+  }
   if (! WNCK_IS_WINDOW(window))
   {
     return ;
@@ -1927,6 +1967,10 @@ static void
 _wallpaper_change(WnckScreen *screen, AwnShinySwitcher *shinyswitcher)
 {
   AwnShinySwitcherPrivate * priv = GET_PRIVATE(shinyswitcher);  
+  if (priv->reloading)
+  {
+    return;
+  }
   g_object_unref(priv->wallpaper_inactive);
   g_object_unref(priv->wallpaper_active);
   set_background(shinyswitcher);
@@ -1937,6 +1981,10 @@ static void
 _window_opened(WnckScreen *screen, WnckWindow *window, AwnShinySwitcher *shinyswitcher)
 {
   AwnShinySwitcherPrivate * priv = GET_PRIVATE(shinyswitcher);
+  if (priv->reloading)
+  {
+    return;
+  }
   if (! WNCK_IS_WINDOW(window))
   {
     return ;
@@ -1980,6 +2028,10 @@ static void
 _window_closed(WnckScreen *screen, WnckWindow *window, AwnShinySwitcher *shinyswitcher)
 {
   AwnShinySwitcherPrivate * priv = GET_PRIVATE(shinyswitcher);  
+  if (priv->reloading)
+  {
+    return;
+  }  
   image_cache_remove(priv->pixbuf_cache, window);
   image_cache_remove(priv->surface_cache, window);
 
@@ -2005,25 +2057,45 @@ _composited_changed(GdkScreen *screen, AwnShinySwitcher *shinyswitcher)
 
   if (gdk_screen_is_composited(screen))
   {
-    printf("screen is now composited... maybe we should do something\n");
+//    printf("screen is now composited... maybe we should do something\n");
   }
   else
   {
-    printf("screen is now not composited... maybe we should do something\n");
+//    printf("screen is now not composited... maybe we should do something\n");
   }
+  if (!priv->reloading)
+  {
+    priv->reloading = TRUE;
+    gtk_widget_destroy (GTK_WIDGET(priv->align));
+    awn_shiny_switcher_setup (AWN_SHINY_SWITCHER (shinyswitcher));
+  }  
 }
 
 static void  
-_wm_changed(GdkScreen *screen, AwnShinySwitcher *shinyswitcher)
+_wm_changed(WnckScreen *screen, AwnShinySwitcher *shinyswitcher)
 {
-  g_debug(" WM Changed \n");
+  AwnShinySwitcherPrivate * priv = GET_PRIVATE(shinyswitcher);    
+//  g_debug(" Window Manager Changed: %s",  wnck_screen_get_window_manager_name(screen));
+
+  /*
+    Can't detect compiz here...
+   */
+  if (wnck_screen_get_window_manager_name (screen) && !priv->reloading)
+  {
+    priv->reloading = TRUE;
+    gtk_widget_destroy (GTK_WIDGET(priv->align));
+//    awn_shiny_switcher_setup (AWN_SHINY_SWITCHER (shinyswitcher));
+    /*we need to exit from this signal handler before calling some of the 
+     functions in _setup*/
+    g_idle_add ( (GSourceFunc)awn_shiny_switcher_setup,shinyswitcher);
+  }
 }
 
 
 static void 
-_screen_size_changed(GdkScreen *screen, AwnShinySwitcher *shinyswitcher)
+_screen_size_changed(WnckScreen *screen, AwnShinySwitcher *shinyswitcher)
 {
-  AwnShinySwitcherPrivate * priv = GET_PRIVATE(shinyswitcher);  
+  AwnShinySwitcherPrivate * priv = GET_PRIVATE(shinyswitcher);
   calc_dimensions(shinyswitcher);
 }
 
@@ -2047,6 +2119,8 @@ do_queue_act_ws(AwnShinySwitcher *shinyswitcher)
 static gboolean 
 _waited(AwnShinySwitcher *shinyswitcher)
 {
+  static gboolean done_once = FALSE;
+  
   AwnShinySwitcherPrivate * priv = GET_PRIVATE(shinyswitcher);
   priv->pScreen = gtk_widget_get_screen(GTK_WIDGET(AWN_APPLET(shinyswitcher)));
   wnck_screen_force_update(priv->wnck_screen);
@@ -2065,53 +2139,62 @@ _waited(AwnShinySwitcher *shinyswitcher)
   create_containers(shinyswitcher);
   create_windows(shinyswitcher);
 
-  g_signal_connect(G_OBJECT(priv->wnck_screen), "active-workspace-changed", G_CALLBACK(_workspace_change), shinyswitcher);
-  g_signal_connect(G_OBJECT(priv->wnck_screen), "active-window-changed", G_CALLBACK(_activewin_change), shinyswitcher);
-  g_signal_connect(G_OBJECT(priv->wnck_screen), "background-changed", G_CALLBACK(_wallpaper_change), shinyswitcher);
-  g_signal_connect(G_OBJECT(priv->wnck_screen), "window-stacking-changed", G_CALLBACK(_window_stacking_change), shinyswitcher);
-  g_signal_connect(G_OBJECT(priv->wnck_screen), "window-closed", G_CALLBACK(_window_closed), shinyswitcher);
-  g_signal_connect(G_OBJECT(priv->wnck_screen), "window-opened", G_CALLBACK(_window_opened), shinyswitcher);
-  g_signal_connect(G_OBJECT(priv->wnck_screen), "window-manager-changed", G_CALLBACK(_wm_changed), shinyswitcher);
+  if (!done_once)
+  {
+    g_signal_connect(G_OBJECT(priv->wnck_screen), "active-workspace-changed", G_CALLBACK(_workspace_change), shinyswitcher);
+    g_signal_connect(G_OBJECT(priv->wnck_screen), "active-window-changed", G_CALLBACK(_activewin_change), shinyswitcher);
+    g_signal_connect(G_OBJECT(priv->wnck_screen), "background-changed", G_CALLBACK(_wallpaper_change), shinyswitcher);
+    g_signal_connect(G_OBJECT(priv->wnck_screen), "window-stacking-changed", G_CALLBACK(_window_stacking_change), shinyswitcher);
+    g_signal_connect(G_OBJECT(priv->wnck_screen), "window-closed", G_CALLBACK(_window_closed), shinyswitcher);
+    g_signal_connect(G_OBJECT(priv->wnck_screen), "window-opened", G_CALLBACK(_window_opened), shinyswitcher);
+    g_signal_connect(G_OBJECT(priv->wnck_screen), "window-manager-changed", G_CALLBACK(_wm_changed), shinyswitcher);
+    
 #if GLIB_CHECK_VERSION(2,14,0)
 
-  if (priv->do_queue_freq % 1000 == 0)
-  {
-    g_timeout_add_seconds(priv->do_queue_freq / 1000, (GSourceFunc)do_queued_renders, shinyswitcher);
-    g_timeout_add_seconds((priv->do_queue_freq + 1000) / 1000, (GSourceFunc)do_queue_act_ws, shinyswitcher); /* FIXME */
-  }
-  else
-  {
-    g_timeout_add(priv->do_queue_freq, (GSourceFunc)do_queued_renders, shinyswitcher);
-    g_timeout_add(priv->do_queue_freq + 1000, (GSourceFunc)do_queue_act_ws, shinyswitcher); /* FIXME */
-  }
+    if (priv->do_queue_freq % 1000 == 0)
+    {
+      g_timeout_add_seconds(priv->do_queue_freq / 1000, (GSourceFunc)do_queued_renders, shinyswitcher);
+      g_timeout_add_seconds((priv->do_queue_freq + 1000) / 1000, (GSourceFunc)do_queue_act_ws, shinyswitcher); /* FIXME */
+    }
+    else
+    {
+      g_timeout_add(priv->do_queue_freq, (GSourceFunc)do_queued_renders, shinyswitcher);
+      g_timeout_add(priv->do_queue_freq + 1000, (GSourceFunc)do_queue_act_ws, shinyswitcher); /* FIXME */
+    }
 
 #else
-  g_timeout_add(priv->do_queue_freq, (GSourceFunc)do_queued_renders, shinyswitcher);
+    g_timeout_add(priv->do_queue_freq, (GSourceFunc)do_queued_renders, shinyswitcher);
 
-  g_timeout_add(priv->do_queue_freq + 1000, (GSourceFunc)do_queue_act_ws, shinyswitcher); /* FIXME */
+    g_timeout_add(priv->do_queue_freq + 1000, (GSourceFunc)do_queue_act_ws, shinyswitcher); /* FIXME */
 
 #endif
-  g_signal_connect(G_OBJECT(shinyswitcher), "size-changed", G_CALLBACK(_height_changed), (gpointer)shinyswitcher);
+    g_signal_connect(G_OBJECT(shinyswitcher), "size-changed", G_CALLBACK(_height_changed), (gpointer)shinyswitcher);
 
-  g_signal_connect(G_OBJECT(shinyswitcher), "position-changed", G_CALLBACK(_orient_changed), (gpointer)shinyswitcher);
+    g_signal_connect(G_OBJECT(shinyswitcher), "position-changed", G_CALLBACK(_orient_changed), (gpointer)shinyswitcher);
 
-  g_signal_connect(G_OBJECT(shinyswitcher), "offset-changed", G_CALLBACK(_offset_changed), shinyswitcher);
+    g_signal_connect(G_OBJECT(shinyswitcher), "offset-changed", G_CALLBACK(_offset_changed), shinyswitcher);
+  }
 
   gtk_widget_show_all(priv->container);
 
   gtk_widget_show_all(GTK_WIDGET(shinyswitcher));
 
-  g_signal_connect(G_OBJECT(priv->pScreen), "composited-changed", G_CALLBACK(_composited_changed), shinyswitcher);
+  if (!done_once)
+  {
+    g_signal_connect(G_OBJECT(priv->pScreen), "composited-changed", G_CALLBACK(_composited_changed), shinyswitcher);
 
-  g_signal_connect(G_OBJECT(priv->pScreen), "size-changed", G_CALLBACK(_screen_size_changed), shinyswitcher);
+    g_signal_connect(G_OBJECT(priv->pScreen), "size-changed", G_CALLBACK(_screen_size_changed), shinyswitcher);
 
-  g_signal_connect(G_OBJECT(shinyswitcher), "expose_event", G_CALLBACK(_expose_event_outer), shinyswitcher);
+    g_signal_connect(G_OBJECT(shinyswitcher), "expose_event", G_CALLBACK(_expose_event_outer), shinyswitcher);
 
-  g_signal_connect(G_OBJECT(priv->wnck_screen), "workspace-created", G_CALLBACK(_workspaces_changed), shinyswitcher);
+    g_signal_connect(G_OBJECT(priv->wnck_screen), "workspace-created", G_CALLBACK(_workspaces_changed), shinyswitcher);
 
-  g_signal_connect(G_OBJECT(priv->wnck_screen), "workspace-destroyed", G_CALLBACK(_workspaces_changed), shinyswitcher);
+    g_signal_connect(G_OBJECT(priv->wnck_screen), "workspace-destroyed", G_CALLBACK(_workspaces_changed), shinyswitcher);
 
-  g_signal_connect(G_OBJECT(priv->wnck_screen), "viewports-changed", G_CALLBACK(_viewports_changed), shinyswitcher);
+    g_signal_connect(G_OBJECT(priv->wnck_screen), "viewports-changed", G_CALLBACK(_viewports_changed), shinyswitcher);
+  }
+  done_once = TRUE;
+  priv->reloading = FALSE;
 
   return FALSE;
 }
@@ -2131,104 +2214,18 @@ _expose_event_outer(GtkWidget *widget, GdkEventExpose *expose, AwnShinySwitcher 
 
 }
 
-
-static gboolean
-_changed_waited(AwnShinySwitcher *shinyswitcher)
-{
-  AwnShinySwitcherPrivate * priv = GET_PRIVATE(shinyswitcher);  
-
-  wnck_screen_force_update(priv->wnck_screen);
-
-  if (priv->got_viewport ||  !priv->reconfigure)
-  {
-    priv->rows = wnck_workspace_get_layout_row(wnck_screen_get_workspace(priv->wnck_screen,
-                          wnck_screen_get_workspace_count(priv->wnck_screen) - 1)
-                                                       ) + 1;
-    priv->cols = wnck_workspace_get_layout_column(wnck_screen_get_workspace(priv->wnck_screen,
-                          wnck_screen_get_workspace_count(priv->wnck_screen) - 1)
-                                                          ) + 1 ;
-  }
-
-  /*  g_debug("calc dim \n"); */
-  calc_dimensions(shinyswitcher);
-
-  /*  g_debug("set bg \n"); */
-  /*  g_free(priv->wallpaper_inactive);*/   /* FIXME */
-  /*  g_free(priv->wallpaper_active);*/   /* FIXME */
-  set_background(shinyswitcher);
-
-  /* g_debug("create cont \n"); */
-
-//  gtk_container_remove(GTK_CONTAINER(shinyswitcher), priv->container);
-
-  gtk_widget_destroy(priv->container);
-
-  priv->container = NULL;
-
-  create_containers(shinyswitcher);
-
-  /*  g_debug("create win \n"); */
-  create_windows(shinyswitcher);
-
-  /*  g_debug("Done... \n"); */
-  gtk_widget_show_all(GTK_WIDGET(shinyswitcher));
-
-  return FALSE;
-}
-
-static void 
-_changed(AwnShinySwitcher *shinyswitcher)
-{
-  AwnShinySwitcherPrivate * priv = GET_PRIVATE (shinyswitcher);  
-  GdkScreen *screen;
-  priv->wnck_screen = wnck_screen_get_default();
-
-  priv->got_viewport = wnck_workspace_is_virtual(wnck_screen_get_active_workspace(priv->wnck_screen));
-
-  priv->reconfigure = !priv->got_viewport;  /* for the moment... will be a config option eventually */
-
-  /*  init_config(shinyswitcher); */
-
-  screen = gtk_widget_get_screen(GTK_WIDGET(shinyswitcher));
-
-
-  if (priv->reconfigure)
-  {
-    wnck_screen_change_workspace_count(priv->wnck_screen, priv->cols*priv->rows);
-    wnck_screen_force_update(priv->wnck_screen);
-
-    if (!priv->wnck_token)
-    {
-      priv->wnck_token = wnck_screen_try_set_workspace_layout(priv->wnck_screen, 0,  priv->rows, 0);
-    }
-    else
-    {
-      priv->wnck_token = wnck_screen_try_set_workspace_layout(priv->wnck_screen, priv->wnck_token, priv->rows, 0);
-    }
-
-    if (!priv->wnck_token)
-    {
-      printf("Failed to acquire ownership of workspace layout\n");
-      priv->reconfigure = FALSE;
-    }
-  }
-  else
-  {
-    printf("ShinySwitcher Message:  viewport/compiz detected.. using existing workspace config\n");
-  }
-
-  /*  g_timeout_add(2000, (GSourceFunc)_changed_waited, shinyswitcher);*/ /* don't need to do this as seconds... happens once */
-}
-
 static void
 _height_changed(AwnShinySwitcher *app, guint height, AwnShinySwitcher *shinyswitcher)
 {
   AwnShinySwitcherPrivate * priv = GET_PRIVATE (shinyswitcher);  
-
   /* doing this as a tree right now..  cause it's easy and I think I'll need a complex data structure eventually. */
   priv->height = height;
-  _changed(shinyswitcher);
-  _changed_waited(shinyswitcher);
+  if (!priv->reloading)
+  {
+    priv->reloading = TRUE;
+    gtk_widget_destroy (GTK_WIDGET(priv->align));
+    awn_shiny_switcher_setup (AWN_SHINY_SWITCHER (shinyswitcher));
+  }
 }
 
 
@@ -2242,18 +2239,28 @@ _orient_changed(AwnShinySwitcher *app, GtkPositionType orient,
                 AwnShinySwitcher * shinyswitcher)
 {
   AwnShinySwitcherPrivate * priv = GET_PRIVATE (shinyswitcher);  
-  g_debug("position-changed\n");
   priv->orient = orient;
-  _changed(shinyswitcher);
-  _changed_waited(shinyswitcher);
+  if (!priv->reloading)
+  {
+    priv->reloading = TRUE;
+    gtk_widget_destroy (GTK_WIDGET(priv->align));
+    awn_shiny_switcher_setup (AWN_SHINY_SWITCHER (shinyswitcher));
+  }
 }
 
 static void
 _workspaces_changed(WnckScreen    *screen, WnckWorkspace *space, AwnShinySwitcher * shinyswitcher)
 {
-  g_debug("workspace_changed\n");
-  _changed_waited(shinyswitcher);
-  /* _changed_waited(shinyswitcher); */
+  AwnShinySwitcherPrivate * priv = GET_PRIVATE(shinyswitcher);      
+  if (!priv->reloading)
+  {
+    priv->reloading = TRUE;
+    gtk_widget_destroy (GTK_WIDGET(priv->align));
+//    awn_shiny_switcher_setup (AWN_SHINY_SWITCHER (shinyswitcher));
+    g_idle_add ((GSourceFunc)awn_shiny_switcher_setup,shinyswitcher);
+  }  
+//  gtk_widget_destroy (GTK_WIDGET(priv->align));
+//  awn_shiny_switcher_setup (AWN_SHINY_SWITCHER (shinyswitcher));  
 }
 
 static void
@@ -2302,15 +2309,14 @@ awn_shiny_switcher_finalize (GObject *object)
   G_OBJECT_CLASS (awn_shiny_switcher_parent_class)->finalize (object);
 }
 
-static void
-awn_shiny_switcher_constructed (GObject *object)
+static gboolean
+awn_shiny_switcher_setup (AwnShinySwitcher * object)
 {
   AwnShinySwitcherPrivate * priv;
   GdkScreen *screen;
-  G_OBJECT_CLASS (awn_shiny_switcher_parent_class)->constructed (object);
 
   priv = GET_PRIVATE (object);
-
+  g_return_val_if_fail (priv->reloading,TRUE);
   priv->padding = awn_applet_get_offset(AWN_APPLET(object));;
   priv->orient = awn_applet_get_pos_type(AWN_APPLET(object));
   priv->align  = AWN_ALIGNMENT(awn_alignment_new_for_applet(AWN_APPLET(object)));
@@ -2318,13 +2324,7 @@ awn_shiny_switcher_constructed (GObject *object)
   priv->config = NULL;
   priv->wallpaper_active = NULL;
   priv->wallpaper_inactive = NULL;
-  priv->ws_lookup_ev = g_tree_new(_cmp_ptrs);
 
-  /* doing this as a tree right now..  cause it's easy and I think I'll need a complex data structure eventually. */
-  priv->ws_changes = g_tree_new(_cmp_ptrs);
-  priv->pixbuf_cache = g_tree_new(_cmp_ptrs);
-  priv->surface_cache = g_tree_new(_cmp_ptrs);
-  priv->win_menus = g_tree_new(_cmp_ptrs);
   priv->height = awn_applet_get_size(AWN_APPLET(object));
   priv->wnck_screen = wnck_screen_get_default();
   wnck_screen_force_update(priv->wnck_screen);
@@ -2334,26 +2334,69 @@ awn_shiny_switcher_constructed (GObject *object)
 
   priv->reconfigure = !priv->got_viewport;  /* for the moment... will be a config option eventually */
 
-
   screen = gtk_widget_get_screen(GTK_WIDGET(object));
 
   if (priv->reconfigure)
   {
     wnck_screen_change_workspace_count(priv->wnck_screen, priv->cols*priv->rows);
-    priv->wnck_token = wnck_screen_try_set_workspace_layout(priv->wnck_screen, 0, priv->rows, 0);
+    wnck_screen_force_update(priv->wnck_screen);
 
     if (!priv->wnck_token)
     {
-      g_debug("Shinyswitcher (%s) Failed to acquire ownership of workspace layout",__func__);
+      priv->wnck_token = wnck_screen_try_set_workspace_layout(priv->wnck_screen, 0,  priv->rows, 0);
+    }
+    else
+    {
+      priv->wnck_token = wnck_screen_try_set_workspace_layout(priv->wnck_screen, priv->wnck_token, priv->rows, 0);
+    }
+
+    if (!priv->wnck_token)
+    {
+      printf("Failed to acquire ownership of workspace layout\n");
+      priv->reconfigure = FALSE;
     }
   }
   else
   {
-    g_debug("ShinySwitcher Message (%s):  viewport/compiz detected.. using existing workspace config",__func__);
+    printf("ShinySwitcher Message:  viewport/compiz detected.. using existing workspace config\n");
+  }
+  if (priv->wnck_token)
+  {
+    wnck_screen_release_workspace_layout(priv->wnck_screen,priv->wnck_token);
+    priv->wnck_token = 0;
   }
 
-  g_timeout_add(1000, (GSourceFunc)_waited, object); /* don't need to do this as seconds... happens once. */
+  if (!priv->pScreen || !wnck_screen_get_window_manager_name(priv->wnck_screen))
+  {
+    g_idle_add((GSourceFunc)_waited, object); /* don't need to do this as seconds... happens once. */
+  }
+  else
+  {
+    g_idle_add((GSourceFunc)_waited, object); /* don't need to do this as seconds... happens once. */    
+//    _waited (object);
+  }
+  return FALSE;
+}
+
+static void
+awn_shiny_switcher_constructed (GObject *object)
+{
+  AwnShinySwitcherPrivate * priv;
+  priv = GET_PRIVATE (object);
   
+  G_OBJECT_CLASS (awn_shiny_switcher_parent_class)->constructed (object);
+
+  priv->pScreen = NULL;
+  priv->reloading = TRUE;
+  priv->ws_lookup_ev = g_tree_new(_cmp_ptrs);
+
+  /* doing this as a tree right now..  cause it's easy and I think I'll need a complex data structure eventually. */
+  priv->ws_changes = g_tree_new(_cmp_ptrs);
+  priv->pixbuf_cache = g_tree_new(_cmp_ptrs);
+  priv->surface_cache = g_tree_new(_cmp_ptrs);
+  priv->win_menus = g_tree_new(_cmp_ptrs);
+  
+  awn_shiny_switcher_setup (AWN_SHINY_SWITCHER (object));
 }
 
 static void

@@ -2222,9 +2222,13 @@ _height_changed(AwnShinySwitcher *app, guint height, AwnShinySwitcher *shinyswit
   priv->height = height;
   if (!priv->reloading)
   {
-    priv->reloading = TRUE;
-    gtk_widget_destroy (GTK_WIDGET(priv->align));
-    awn_shiny_switcher_setup (AWN_SHINY_SWITCHER (shinyswitcher));
+    calc_dimensions(shinyswitcher);
+    set_background(shinyswitcher);
+    gtk_widget_destroy(priv->container);
+    priv->container = NULL;
+    create_containers(shinyswitcher);
+    create_windows(shinyswitcher);
+    gtk_widget_show_all(GTK_WIDGET(shinyswitcher));    
   }
 }
 

@@ -50,6 +50,9 @@ data_dirs = os.environ["XDG_DATA_DIRS"] if "XDG_DATA_DIRS" in os.environ else "/
 # Describes the pattern used to try to decode URLs
 url_pattern = re.compile("^[a-z]+://(?:[^@]+@)?([^/]+)/(.*)$")
 
+# Pattern to extract the part of the path that doesn't end with %<a-Z>
+exec_pattern = re.compile("^(.*?)\s+\%[a-zA-Z]$")
+
 
 class YamaApplet:
 
@@ -394,12 +397,15 @@ class YamaApplet:
         menu.append(item)
         return item
 
-    def launch_app(self, widget, desktop_path, use_args):
+    def launch_app(self, widget, desktop_path):
         if os.path.exists(desktop_path):
             path = DesktopEntry.DesktopEntry(desktop_path).getExec()
-            if not use_args:
-                # don't use args until we can use awn.DesktopItem.launch()
-                path = path.split(" ", 1)[0]
+
+            # Strip last part of path if it contains %<a-Z>
+            match = exec_pattern.match(path)
+            if match is not None:
+                path = match.group(1)
+
             self.start_subprocess_cb(None, path, True)
 
     def append_directory(self, tree, menu, index=None, item_list=None):
@@ -415,7 +421,7 @@ class YamaApplet:
 
             if isinstance(node, gmenu.Entry):
                 item.set_tooltip_text(node.comment)
-                item.connect("activate", self.launch_app, node.desktop_file_path, False)
+                item.connect("activate", self.launch_app, node.desktop_file_path)
             else:
                 sub_menu = gtk.Menu()
                 item.set_submenu(sub_menu)
@@ -429,7 +435,7 @@ class YamaApplet:
             if os.path.isfile(path):
                 desktop_entry = DesktopEntry.DesktopEntry(path)
                 item = self.append_menu_item(menu, desktop_entry.getName(), desktop_entry.getIcon(), desktop_entry.getComment())
-                item.connect("activate", self.launch_app, desktop_entry.getFileName(), True)
+                item.connect("activate", self.launch_app, desktop_entry.getFileName())
                 return True
         return False
 

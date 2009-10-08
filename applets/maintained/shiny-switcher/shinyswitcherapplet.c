@@ -648,7 +648,7 @@ _button_workspace(GtkWidget *widget, GdkEventButton *event, Workplace_info * ws)
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
       item = awn_applet_create_about_item (AWN_APPLET(shinyswitcher),
-             "Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
+             "Copyright 2007,2008,2009 Rodney Cryderman <rcryderman@gmail.com>",
              AWN_APPLET_LICENSE_GPLV2,
              NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
@@ -738,7 +738,7 @@ _button_win(GtkWidget *widget, GdkEventButton *event, Win_press_data * data)
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
       item = awn_applet_create_about_item (AWN_APPLET(shinyswitcher),
-             "Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
+             "Copyright 2007,2008,2009 Rodney Cryderman <rcryderman@gmail.com>",
              AWN_APPLET_LICENSE_GPLV2,
              NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 
@@ -1948,7 +1948,7 @@ create_windows(AwnShinySwitcher *shinyswitcher)
           gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
           item = awn_applet_create_about_item (AWN_APPLET(shinyswitcher),
-             "Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
+             "Copyright 2007,2008,2009 Rodney Cryderman <rcryderman@gmail.com>",
              AWN_APPLET_LICENSE_GPLV2,
              NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 
@@ -2015,7 +2015,7 @@ _window_opened(WnckScreen *screen, WnckWindow *window, AwnShinySwitcher *shinysw
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
     item = awn_applet_create_about_item (AWN_APPLET(shinyswitcher),
-             "Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>",
+             "Copyright 2007,2008,2009 Rodney Cryderman <rcryderman@gmail.com>",
              AWN_APPLET_LICENSE_GPLV2,
              NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 
@@ -2428,6 +2428,7 @@ awn_shiny_switcher_new (const gchar *name, const gchar *uid, gint panel_id)
 {
   return g_object_new (AWN_TYPE_SHINY_SWITCHER,
                        "canonical-name",name,
+                       "display-name","Shiny Switcher",
                        "uid",uid,
                        "panel-id",panel_id,
                        NULL);

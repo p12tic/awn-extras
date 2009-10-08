@@ -1087,7 +1087,6 @@ static gboolean _button_do_volume_event(GtkWidget *widget, GdkEventButton *event
 
 static gboolean _scroll_event(GtkWidget *widget, GdkEventMotion *event, GtkWidget * box)
 {
-  //printf("_scroll_event\n");
   GtkBoxChild *boxchild;
 
   if (event->type == GDK_SCROLL)
@@ -1138,7 +1137,6 @@ static gboolean _scroll_event(GtkWidget *widget, GdkEventMotion *event, GtkWidge
 
 gboolean _hide_all_windows(gpointer null)
 {
-  //printf("_hide_all_windows\n");
   g_list_foreach(G_win_man->children, (GFunc)_fixup_menus, NULL);
   return FALSE;
 }
@@ -1146,14 +1144,12 @@ gboolean _hide_all_windows(gpointer null)
 
 static gboolean _focus_out_window(GtkWidget *widget, GdkEventButton *event, Mouseover_data *data)
 {
-  //printf("_focus_out_window\n");
   G_cancel_hide_all = FALSE;
   return FALSE;
 }
 
 void rerender(GSList ** sublist, GtkWidget *box)
 {
-  //printf("rerender\n");
   gtk_container_foreach(GTK_CONTAINER(box), (GtkCallback)gtk_widget_destroy, NULL);
   g_slist_foreach(*sublist, (GFunc)render_menu_widgets, box);
   gtk_widget_show_all(box);
@@ -1162,7 +1158,6 @@ void rerender(GSList ** sublist, GtkWidget *box)
 
 void measure_width(Menu_list_item * menu_item, int * max_width)
 {
-  //printf("_measure_width\n");
   static cairo_t *cr = NULL;
   static cairo_surface_t*  surface;
   cairo_text_extents_t    extents;

@@ -10,7 +10,7 @@ G_DEFINE_TYPE (CairoMenu, cairo_menu, GTK_TYPE_MENU)
 typedef struct _CairoMenuPrivate CairoMenuPrivate;
 
 struct _CairoMenuPrivate {
-    int dummy;
+    gboolean cairo_style;
 };
 
 static void
@@ -45,6 +45,35 @@ cairo_menu_finalize (GObject *object)
   G_OBJECT_CLASS (cairo_menu_parent_class)->finalize (object);
 }
 
+static gboolean
+cairo_menu_expose (GtkWidget *widget,GdkEventExpose *event,gpointer null)
+{
+  CairoMenuPrivate * priv = GET_PRIVATE(widget);  
+
+  if (priv->cairo_style)
+  {
+    cairo_t * cr = gdk_cairo_create (widget->window);
+    g_debug ("%p",cr);
+    cairo_destroy (cr);
+    return TRUE;
+  }
+  else
+  {
+    return FALSE;
+  }
+}
+
+static void
+cairo_menu_constructed (GObject *object)
+{
+  if (G_OBJECT_CLASS (cairo_menu_parent_class)->constructed)
+  {
+    G_OBJECT_CLASS (cairo_menu_parent_class)->constructed (object);
+  }
+  
+  g_signal_connect (object,"expose-event",G_CALLBACK(cairo_menu_expose),NULL);  
+}
+
 static void
 cairo_menu_class_init (CairoMenuClass *klass)
 {
@@ -56,11 +85,15 @@ cairo_menu_class_init (CairoMenuClass *klass)
   object_class->set_property = cairo_menu_set_property;
   object_class->dispose = cairo_menu_dispose;
   object_class->finalize = cairo_menu_finalize;
+  object_class->constructed = cairo_menu_constructed;
 }
 
 static void
 cairo_menu_init (CairoMenu *self)
 {
+  CairoMenuPrivate * priv = GET_PRIVATE (self);
+  
+  priv->cairo_style = FALSE;
 }
 
 GtkWidget*

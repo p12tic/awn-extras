@@ -62,6 +62,7 @@ cairo_menu_item_expose (GtkWidget *widget,GdkEventExpose *event,gpointer null)
     return FALSE;
   }
 }
+
 static void
 cairo_menu_item_constructed (GObject *object)
 {

@@ -9,15 +9,14 @@ include $(top_srcdir)/Makefile.schemas
 applet_LTLIBRARIES = cairo-menu.la
 cairo_menu_la_SOURCES =	\
 	applet.c				\
-	backend-gnome.c				\
-	backend-gnome.h				\
-	config_entries.c			\
-	config_entries.h			\
-	menu.c					\
-	menu.h					\
-	menu_list_item.h			\
-	render.c				\
-	render.h				\
+	cairo-menu-applet.c        \
+	cairo-menu-applet.h        \
+	cairo-menu.c            \
+	cairo-menu.h            \
+	cairo-menu-item.c       \
+	cairo-menu-item.h       \
+	gnome-menu-builder.h      \
+	gnome-menu-builder.c      \
 	$(NULL)
 cairo_menu_la_LIBADD =	\
 	$(AWN_LIBS)				\

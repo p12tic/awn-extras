@@ -31,6 +31,7 @@ import pango
 
 import awn
 from desktopagnostic.config import Client, GROUP_DEFAULT, BIND_METHOD_FALLBACK
+from desktopagnostic import vfs
 
 from awn.extras import _
 import awn.extras.awnmediaplayers as mediaplayers
@@ -164,14 +165,14 @@ class MediaControlApplet (awn.AppletSimple):
         self.connect("enter-notify-event", self.enter_notify)
         self.dialog.connect("focus-out-event", self.dialog_focus_out)
         # Drag&drop support
-        self.connect("drag-data-received", self.applet_drop_cb)
-        self.connect("drag-motion", self.applet_drag_motion_cb)
-        self.connect("drag-leave", self.applet_drag_leave_cb)
+        self.get_icon().connect("drag-data-received", self.applet_drop_cb)
+        self.get_icon().connect("drag-motion", self.applet_drag_motion_cb)
+        self.get_icon().connect("drag-leave", self.applet_drag_leave_cb)
 
-        self.drag_dest_set(gtk.DEST_DEFAULT_ALL,
+        self.get_icon().drag_dest_set(
+                           gtk.DEST_DEFAULT_DROP | gtk.DEST_DEFAULT_MOTION,
                            [("text/uri-list", 0, 0), ("text/plain", 0, 1)],
                            gtk.gdk.ACTION_COPY)
-
         
         self.client = awn.config_get_default_for_applet(self)
 
@@ -524,24 +525,25 @@ class MediaControlApplet (awn.AppletSimple):
         result = False
         # I wonder why there are zeroes sometimes?
         all_uris = selection.data.strip('\000').strip()
-        uris = []
 
         # lets support directories
-        # TODO: get rid of gnomevfs
-        for uri in all_uris.split():
-            uri_obj = gnomevfs.URI(uri)
-            path = urllib.unquote(uri_obj.path)
-            if os.path.isdir(path) == True:
-                for dir, subdirs, filenames in os.walk(path):
-                    for filename in filenames:
-                        file_uri = gnomevfs.URI(urllib.quote(dir))
-                        file_uri = file_uri.append_file_name(filename)
-                        is_audio = gnomevfs.Handle(file_uri).get_file_info(gnomevfs.FILE_INFO_GET_MIME_TYPE).mime_type.find('audio') != -1
-                        if is_audio == True: uris.append(str(file_uri))
-            else:
-                uris.append(str(uri_obj))
+        def walk_dirs(vfs_file, out_list):
+            for item in vfs_file.enumerate_children():
+                if item.props.file_type == vfs.FILE_TYPE_DIRECTORY:
+                    walk_dirs(item, out_list)
+                else:
+                    # lda doesn't support getting mime-type :/
+                    out_list.append(item.props.uri) # lda leaks here
 
-        if len(uris) == 0: 
+        uris = []
+        for uri in all_uris.split():
+            f = vfs.File.for_uri(uri)
+            if f.props.file_type == vfs.FILE_TYPE_DIRECTORY:
+                walk_dirs(f, uris)
+            else:
+                uris.append(f.props.uri)
+
+        if len(uris) == 0:
             result = False
         elif len(uris) > 1:
             result = self.MediaPlayer.enqueue_uris(uris)

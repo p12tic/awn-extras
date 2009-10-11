@@ -314,8 +314,8 @@ AC_OUTPUT([
 Makefile
 applets/Makefile
 applets/maintained/animal-farm/Makefile
-applets/maintained/awnsystemmonitor/Makefile
-applets/maintained/awnsystemmonitor/awnsystemmonitor.desktop.in
+applets/unmaintained/awnsystemmonitor/Makefile
+applets/unmaintained/awnsystemmonitor/awnsystemmonitor.desktop.in
 applets/maintained/awnterm/Makefile
 applets/maintained/awnterm/awnterm.desktop.in
 applets/maintained/battery/Makefile

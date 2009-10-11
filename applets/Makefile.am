@@ -21,7 +21,7 @@ CONDITIONAL_APPLETS += \
 endif
 # --with-gconf
 CONDITIONAL_APPLETS += \
-	maintained/awnsystemmonitor \
+	unmaintained/awnsystemmonitor \
 	maintained/calendar \
 	maintained/notification-daemon \
 	$(NULL)

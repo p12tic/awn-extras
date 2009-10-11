@@ -22,7 +22,7 @@ import glib
 import cairo
 
 import awn
-from desktopagnostic import config
+from desktopagnostic import config, vfs
 
 class ActionItem(gtk.EventBox):
     __gtype_name__ = 'ActionItem'
@@ -119,7 +119,7 @@ class ActionItem(gtk.EventBox):
 
     # this method can be overriden
     def do_data_received_simple(self, widget, data):
-        print "received_simple was called, data:", data
+        pass
 
     # this method can be also overriden if simple is not enough
     def do_data_received(self, wdgt, context, x, y, selection,
@@ -220,13 +220,22 @@ class OverlayWindow(gtk.Window):
         align.add(hbox)
         self.add(align)
 
+    def on_open_item(self, widget, data):
+        f = vfs.File.for_uri(data.strip())
+        if f.exists(): f.launch()
+        else:
+            f = vfs.File.for_path(data.strip())
+            if f.exists(): f.launch()
+
     def get_action_widgets(self):
         widgets = []
 
         pixbuf_size = 96
 
         pixbuf = self.icon_cache.get_icon_at_size(pixbuf_size, "icon-2")
-        widgets.append(ActionItem(pixbuf, 'Open'))
+        open_item = ActionItem(pixbuf, 'Open')
+        open_item.connect("drag-data-received-simple", self.on_open_item)
+        widgets.append(open_item)
 
         pixbuf = self.icon_cache.get_icon_at_size(pixbuf_size, "icon-1")
         widgets.append(ActionItem(pixbuf, 'Send to Pastebin'))
@@ -304,15 +313,16 @@ class DropperApplet(awn.AppletSimple):
         self.dialog.hide()
 
     def showTimer(self, context):
-        TIMER_MAX = 35
+        TIMER_MAX = 20
         self.timer_count += 1
-        self.timer_overlay.props.percent_complete = self.timer_count * 100 / TIMER_MAX
 
-        if self.timer_count == TIMER_MAX:
+        if self.timer_count > TIMER_MAX:
             self.showActions()
             self.timer_id = 0
             context.drag_status(gtk.gdk.ACTION_COPY, 0)
             return False
+        else:
+            self.timer_overlay.props.percent_complete = self.timer_count * 100 / TIMER_MAX
 
         return True
 

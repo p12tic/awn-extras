@@ -52,11 +52,13 @@ cairo_menu_expose (GtkWidget *widget,GdkEventExpose *event,gpointer null)
 
   if (priv->cairo_style)
   {
+    /*looks like I'm going to need look in the gtk_menu/gtk_menu_shell/etc expose functions and 
+     borrow some code*/
     cairo_t * cr = gdk_cairo_create (widget->window);
-    g_debug ("%p",cr);
-    cairo_set_source_rgba (cr, 0.0,0.0,0.0,0.4);
-    cairo_fill (cr);
+    cairo_set_source_rgba (cr, 0.0,0.0,1.0,0.7);
+    cairo_paint (cr);    
     cairo_destroy (cr);
+    gtk_container_foreach (GTK_CONTAINER (widget),(GtkCallback)gtk_widget_queue_draw,NULL);    
     return TRUE;
   }
   else

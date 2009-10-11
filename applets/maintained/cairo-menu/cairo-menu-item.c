@@ -52,11 +52,10 @@ cairo_menu_item_expose (GtkWidget *widget,GdkEventExpose *event,gpointer null)
 
   if (priv->cairo_style)
   {
-/*    cairo_t * cr = gdk_cairo_create (widget->window);
-    g_debug ("%p",cr);
+    cairo_t * cr = gdk_cairo_create (widget->window);
     cairo_set_source_rgba (cr, 1.0,0.0,0.0,1.0);
-    cairo_fill (cr);
-    cairo_destroy (cr);*/
+    cairo_paint (cr);
+    cairo_destroy (cr);
     return TRUE;
   }
   else

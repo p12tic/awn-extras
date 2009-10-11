@@ -6,7 +6,7 @@
 
 G_BEGIN_DECLS
 
-GtkWidget * gnome_menu_build (void);
+GtkWidget * menu_build (void);
 
 G_END_DECLS
 

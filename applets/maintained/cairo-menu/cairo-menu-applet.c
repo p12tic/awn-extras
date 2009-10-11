@@ -4,7 +4,9 @@
 #include "cairo-menu-applet.h"
 #include "cairo-menu.h"
 #include "gnome-menu-builder.h"
+#include "config.h"
 
+typedef GtkWidget * (* MenuBuildFunc) (void);
 
 G_DEFINE_TYPE (CairoMenuApplet, cairo_menu_applet, AWN_TYPE_APPLET_SIMPLE)
 
@@ -59,9 +61,33 @@ cairo_menu_applet_constructed (GObject *object)
   CairoMenuAppletPrivate * priv = GET_PRIVATE (object);
   G_OBJECT_CLASS (cairo_menu_applet_parent_class)->constructed (object);
 
-  priv->menu = gnome_menu_build ();
+/* 
+   TODO fix the various travesties*/
+  GError * error = NULL;
+  gchar * filename = APPLETSDIR"/../../../lib/awn/applets/cairo-menu/gnome-menu-builder";
+  g_debug ("%s",filename);
+  MenuBuildFunc  menu_build;
+  GModule      *module;
+  module = g_module_open (filename, 
+                          G_MODULE_BIND_LAZY);  
+  g_assert (module);
+  if (!g_module_symbol (module, "menu_build", (gpointer *)&menu_build))
+  {
+    if (!g_module_close (module))
+      g_warning ("%s: %s", filename, g_module_error ());
+    g_assert (FALSE);    
+  }
+  if (menu_build == NULL)
+    {
+      if (!g_module_close (module))
+	      g_warning ("%s: %s", filename, g_module_error ());
+      g_assert (FALSE);
+    }
+  /* call our function in the module */
+  priv->menu = menu_build ();
   gtk_widget_show_all (priv->menu);
   g_signal_connect(object, "button-press-event", G_CALLBACK(_button_clicked_event), NULL);
+
 }
 
 static void

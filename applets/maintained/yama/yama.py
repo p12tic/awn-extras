@@ -45,6 +45,8 @@ applet_logo = "gnome-main-menu"
 
 file_manager_apps = ("nautilus", "thunar", "xdg-open")
 
+menu_editor_apps = ("alacarte", "gmenu-simple-editor")
+
 data_dirs = os.environ["XDG_DATA_DIRS"] if "XDG_DATA_DIRS" in os.environ else "/usr/local/share/:/usr/share/"
 
 # Describes the pattern used to try to decode URLs
@@ -169,10 +171,19 @@ class YamaApplet:
         menu_index = len(menu) - 1
 
         edit_menus_item = gtk.MenuItem("_Edit Menus")
-        edit_menus_item.connect("activate", self.start_subprocess_cb, "gmenu-simple-editor", False)
+        edit_menus_item.connect("activate", self.show_menu_editor_cb)
         menu.insert(edit_menus_item, menu_index)
 
         menu.insert(gtk.SeparatorMenuItem(), menu_index + 1)
+
+    def show_menu_editor_cb(self, widget):
+        for command in menu_editor_apps:
+            try:
+                subprocess.Popen(command)
+                return
+            except OSError:
+                pass
+        raise RuntimeError("No menu editor found (%s)" % ", ".join(menu_editor_apps))
 
     def menu_changed_cb(self, tree, items):
         # Delete old items

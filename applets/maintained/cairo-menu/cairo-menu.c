@@ -54,6 +54,8 @@ cairo_menu_expose (GtkWidget *widget,GdkEventExpose *event,gpointer null)
   {
     cairo_t * cr = gdk_cairo_create (widget->window);
     g_debug ("%p",cr);
+    cairo_set_source_rgba (cr, 0.0,0.0,0.0,0.4);
+    cairo_fill (cr);
     cairo_destroy (cr);
     return TRUE;
   }

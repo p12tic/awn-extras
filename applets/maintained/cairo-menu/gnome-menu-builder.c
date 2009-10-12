@@ -140,6 +140,9 @@ menu_build (void)
     }
   }
 
+  menu_item = gtk_separator_menu_item_new ();
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);  
+
   menu_tree = gmenu_tree_lookup("settings.menu", GMENU_TREE_FLAGS_NONE);
   if (menu_tree)
   {
@@ -170,7 +173,36 @@ menu_build (void)
   gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);  
 
   menu_item = cairo_menu_item_new ();
-  gtk_menu_item_set_label (GTK_MENU_ITEM(menu_item),"Session");
+  gtk_menu_item_set_label (GTK_MENU_ITEM(menu_item),_("Places"));
+  image = get_gtk_image ("places");
+  if (!image)
+  {
+    image = get_gtk_image("stock_folder");
+  }
+  if (image)
+  {
+    gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
+  }
+  sub_menu = get_places_menu ();
+  gtk_menu_item_set_submenu (GTK_MENU_ITEM(menu_item),sub_menu);
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
+
+  
+  menu_item = cairo_menu_item_new ();
+  gtk_menu_item_set_label (GTK_MENU_ITEM(menu_item),_("Recent Documents"));
+  image = get_gtk_image ("document-open-recent");
+  if (!image)
+  {
+    image = get_gtk_image("stock_folder");
+  }
+  if (image)
+  {
+    gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
+  }        
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
+
+  menu_item = cairo_menu_item_new ();
+  gtk_menu_item_set_label (GTK_MENU_ITEM(menu_item),_("Session"));
   image = get_gtk_image ("session-properties");
   if (image)
   {
@@ -180,7 +212,7 @@ menu_build (void)
 
   menu_item = cairo_menu_item_new ();
   /* add proper ellipse*/
-  gtk_menu_item_set_label (GTK_MENU_ITEM(menu_item),"Run");
+  gtk_menu_item_set_label (GTK_MENU_ITEM(menu_item),"Run Program");
   image = get_gtk_image ("gnome-run");
   if (image)
   {

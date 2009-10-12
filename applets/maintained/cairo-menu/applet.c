@@ -20,10 +20,6 @@
 #include "config.h"
 #include "cairo-menu-applet.h"
 
-#define GMENU_I_KNOW_THIS_IS_UNSTABLE
-#include <gnome-menus/gmenu-tree.h>
-
-
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
 

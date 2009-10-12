@@ -33,6 +33,15 @@ fill_er_up(GMenuTreeDirectory *directory)
     {
 
       case GMENU_TREE_ITEM_ENTRY:
+        
+        if (gmenu_tree_entry_get_is_excluded ((GMenuTreeEntry *) item))
+        {
+          continue;
+        }
+        if (gmenu_tree_entry_get_is_nodisplay ((GMenuTreeEntry *) item))
+        {
+          continue;
+        }
         menu_item = cairo_menu_item_new ();
         txt = gmenu_tree_entry_get_name( (GMenuTreeEntry*)item);
         desktop_file = g_strdup(gmenu_tree_entry_get_desktop_file_path ((GMenuTreeEntry*)item));
@@ -54,28 +63,31 @@ fill_er_up(GMenuTreeDirectory *directory)
         break;
 
       case GMENU_TREE_ITEM_DIRECTORY:
-        icon_name = g_strdup(gmenu_tree_directory_get_icon ((GMenuTreeDirectory *)item));
-        g_debug ("%s",icon_name);
-        image = get_gtk_image (icon_name);
-        sub_menu = GTK_WIDGET(fill_er_up( (GMenuTreeDirectory*)item));
-        menu_item = cairo_menu_item_new ();
-        gtk_menu_item_set_submenu (GTK_MENU_ITEM(menu_item),sub_menu);
-        txt = gmenu_tree_entry_get_name((GMenuTreeEntry*)item);
-        gtk_menu_item_set_label (GTK_MENU_ITEM(menu_item),txt?txt:"unknown");
-        if (image)
+        if (!gmenu_tree_directory_get_is_nodisplay ( (GMenuTreeDirectory *) item) )
         {
-          gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
-        }        
-        gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
-        g_free (icon_name);
-        break;
-
+          icon_name = g_strdup(gmenu_tree_directory_get_icon ((GMenuTreeDirectory *)item));
+          g_debug ("%s",icon_name);
+          image = get_gtk_image (icon_name);
+          sub_menu = GTK_WIDGET(fill_er_up( (GMenuTreeDirectory*)item));
+          menu_item = cairo_menu_item_new ();
+          gtk_menu_item_set_submenu (GTK_MENU_ITEM(menu_item),sub_menu);
+          txt = gmenu_tree_entry_get_name((GMenuTreeEntry*)item);
+          gtk_menu_item_set_label (GTK_MENU_ITEM(menu_item),txt?txt:"unknown");
+          if (image)
+          {
+            gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
+          }        
+          gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
+          g_free (icon_name);
+          break;
+        }
       case GMENU_TREE_ITEM_HEADER:
 //    printf("GMENU_TREE_ITEM_HEADER\n");
         break;
 
       case GMENU_TREE_ITEM_SEPARATOR:
-//    printf("GMENU_TREE_ITEM_HEADER\n");
+        menu_item = gtk_separator_menu_item_new ();
+        gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);          
         break;
 
       case GMENU_TREE_ITEM_ALIAS:

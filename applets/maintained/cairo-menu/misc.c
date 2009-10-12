@@ -7,6 +7,8 @@
 #include <libdesktop-agnostic/gtk.h>
 #include <libdesktop-agnostic/vfs.h>
 
+#define XDG_OPEN "xdg-open"
+
 
 DesktopAgnosticFDODesktopEntry *
 get_desktop_entry (gchar * desktop_file)
@@ -117,6 +119,13 @@ get_gtk_image (gchar * icon_name)
   return image;
 }
 
+static void
+_exec (GtkMenuItem *menuitem,gchar * cmd)
+{
+  g_debug ("executing %s",cmd);
+  g_spawn_command_line_async (cmd,NULL);
+}
+
 static void 
 _fillin_connected(DesktopAgnosticVFSVolume *volume,CairoMenu *menu)
 {
@@ -124,6 +133,7 @@ _fillin_connected(DesktopAgnosticVFSVolume *volume,CairoMenu *menu)
   DesktopAgnosticVFSFile *uri;
   const gchar *uri_str;
   GtkWidget * image;
+  gchar * exec;
   
   g_message("Attempting to add %s...", desktop_agnostic_vfs_volume_get_name(volume));
 
@@ -134,7 +144,6 @@ _fillin_connected(DesktopAgnosticVFSVolume *volume,CairoMenu *menu)
   }
 
   item = cairo_menu_item_new();
-  
   gtk_menu_item_set_label (GTK_MENU_ITEM(item),desktop_agnostic_vfs_volume_get_name(volume));
   image = get_gtk_image ( desktop_agnostic_vfs_volume_get_icon(volume));
   if (image)
@@ -142,13 +151,14 @@ _fillin_connected(DesktopAgnosticVFSVolume *volume,CairoMenu *menu)
     gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),image);
   }
   
-//  uri = desktop_agnostic_vfs_volume_get_uri(volume);
-//  uri_str = desktop_agnostic_vfs_file_get_uri(uri);
-//  item->exec = g_strdup_printf("%s %s", places->file_manager, uri_str);
-//  g_object_unref(uri);
+  uri = desktop_agnostic_vfs_volume_get_uri(volume);
+  uri_str = desktop_agnostic_vfs_file_get_uri(uri);
+  g_object_unref(uri);
+  exec = g_strdup_printf("%s %s", XDG_OPEN, uri_str);
+  g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);  
+  
   gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
 }
-
 
 GtkWidget * 
 get_places_menu (void)
@@ -159,6 +169,7 @@ get_places_menu (void)
   GtkWidget *item = NULL;
   GError *error = NULL;
   GtkWidget * image;
+  gchar * exec;
   const gchar *desktop_dir = g_get_user_special_dir (G_USER_DIRECTORY_DESKTOP);
   const gchar *homedir = g_get_home_dir();
 
@@ -169,7 +180,9 @@ get_places_menu (void)
   {
     gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),image);
   }
-//  item->exec = g_strdup_printf("%s %s", file_manager, homedir);
+  exec = g_strdup_printf("%s %s", XDG_OPEN, homedir);
+  g_debug ("exec = %s",exec);
+  g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);  
   gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
   
   item = cairo_menu_item_new ();
@@ -180,6 +193,8 @@ get_places_menu (void)
   {
     gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),image);
   }  
+  exec = g_strdup_printf("%s %s", XDG_OPEN, desktop_dir?desktop_dir:homedir);
+  g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);  
   gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
 
   item = cairo_menu_item_new ();
@@ -188,7 +203,9 @@ get_places_menu (void)
   if (image)
   {
     gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),image);
-  }  
+  }
+  exec = g_strdup_printf("%s /", XDG_OPEN);
+  g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);  
   gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
 
   if (!vol_monitor)
@@ -253,8 +270,9 @@ get_places_menu (void)
     if (b_path)
     {
       shell_quoted = g_shell_quote (b_path);
-//      item->exec = g_strdup_printf("%s %s", places->file_manager, shell_quoted);
-//      item->comment = desktop_agnostic_vfs_file_get_uri (b_file);
+      exec = g_strdup_printf("%s %s", XDG_OPEN,shell_quoted);
+      g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);  
+      
       g_free (shell_quoted);
 
       if (b_alias)

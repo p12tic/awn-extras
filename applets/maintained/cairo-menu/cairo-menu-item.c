@@ -106,3 +106,11 @@ cairo_menu_item_new (void)
   return g_object_new (AWN_TYPE_CAIRO_MENU_ITEM, NULL);
 }
 
+GtkWidget*
+cairo_menu_item_new_with_label (const gchar * label)
+{
+  return g_object_new (AWN_TYPE_CAIRO_MENU_ITEM,
+                        "label",label,
+                        NULL);
+}
+

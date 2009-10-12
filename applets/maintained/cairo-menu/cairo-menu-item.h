@@ -36,6 +36,8 @@ GType cairo_menu_item_get_type (void);
 
 GtkWidget* cairo_menu_item_new (void);
 
+GtkWidget* cairo_menu_item_new_with_label (const gchar * label);
+
 G_END_DECLS
 
 #endif /* _CAIRO_MENU_ITEM */

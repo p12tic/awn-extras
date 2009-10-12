@@ -172,8 +172,7 @@ menu_build (void)
   menu_item = gtk_separator_menu_item_new ();
   gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);  
 
-  menu_item = cairo_menu_item_new ();
-  gtk_menu_item_set_label (GTK_MENU_ITEM(menu_item),_("Places"));
+  menu_item = cairo_menu_item_new_with_label (_("Places"));
   image = get_gtk_image ("places");
   if (!image)
   {
@@ -188,8 +187,7 @@ menu_build (void)
   gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
 
   
-  menu_item = cairo_menu_item_new ();
-  gtk_menu_item_set_label (GTK_MENU_ITEM(menu_item),_("Recent Documents"));
+  menu_item = cairo_menu_item_new_with_label (_("Recent Documents"));
   image = get_gtk_image ("document-open-recent");
   if (!image)
   {
@@ -201,8 +199,7 @@ menu_build (void)
   }        
   gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
 
-  menu_item = cairo_menu_item_new ();
-  gtk_menu_item_set_label (GTK_MENU_ITEM(menu_item),_("Session"));
+  menu_item = cairo_menu_item_new_with_label (_("Session"));
   image = get_gtk_image ("session-properties");
   if (image)
   {
@@ -210,10 +207,10 @@ menu_build (void)
   }        
   gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
 
-  menu_item = cairo_menu_item_new ();
+  menu_item = cairo_menu_item_new_with_label (_("Run Program"));
   /* add proper ellipse*/
-  gtk_menu_item_set_label (GTK_MENU_ITEM(menu_item),"Run Program");
-  image = get_gtk_image ("gnome-run");
+
+  image = get_gtk_image ("stock_execute");
   if (image)
   {
     gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);

@@ -16,6 +16,7 @@ G_DEFINE_TYPE (CairoMenuApplet, cairo_menu_applet, AWN_TYPE_APPLET_SIMPLE)
 typedef struct _CairoMenuAppletPrivate CairoMenuAppletPrivate;
 
 struct _CairoMenuAppletPrivate {
+  DEMenuType   menu_type;
   GtkWidget   *menu;
 };
 
@@ -61,6 +62,10 @@ cairo_menu_applet_constructed (GObject *object)
   CairoMenuAppletPrivate * priv = GET_PRIVATE (object);
   G_OBJECT_CLASS (cairo_menu_applet_parent_class)->constructed (object);
 
+  /*to when guessing check DESKTOP_SESSION env var. and try loading based on that.
+   if env var not set or module fails to load then try to load in the following 
+   order:  gnome, xfce.
+   
 /* 
    TODO fix the various travesties*/
   GError * error = NULL;
@@ -107,6 +112,9 @@ cairo_menu_applet_class_init (CairoMenuAppletClass *klass)
 static void
 cairo_menu_applet_init (CairoMenuApplet *self)
 {
+  CairoMenuAppletPrivate * priv = GET_PRIVATE (self);
+
+  priv->menu_type = MENU_TYPE_GUESS;
 }
 
 CairoMenuApplet*

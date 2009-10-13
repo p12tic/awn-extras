@@ -9,6 +9,13 @@
 
 G_BEGIN_DECLS
 
+typedef enum 
+{
+  MENU_TYPE_GUESS,
+  MENU_TYPE_GNOME,
+  MENU_TYPE_XFCE
+}DEMenuType;
+
 #define AWN_TYPE_CAIRO_MENU_APPLET cairo_menu_applet_get_type()
 
 #define AWN_CAIRO_MENU_APPLET(obj) \

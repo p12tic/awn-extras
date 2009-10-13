@@ -1,13 +1,9 @@
 
 
 #include "misc.h"
-#include "cairo-menu-item.h"
-#include "cairo-menu.h"
 #include <glib/gi18n.h>
 #include <libdesktop-agnostic/gtk.h>
 #include <libdesktop-agnostic/vfs.h>
-
-#define XDG_OPEN "xdg-open"
 
 
 DesktopAgnosticFDODesktopEntry *
@@ -119,14 +115,14 @@ get_gtk_image (gchar * icon_name)
   return image;
 }
 
-static void
+void
 _exec (GtkMenuItem *menuitem,gchar * cmd)
 {
   g_debug ("executing %s",cmd);
   g_spawn_command_line_async (cmd,NULL);
 }
 
-static void 
+void 
 _fillin_connected(DesktopAgnosticVFSVolume *volume,CairoMenu *menu)
 {
   GtkWidget *item;
@@ -160,138 +156,9 @@ _fillin_connected(DesktopAgnosticVFSVolume *volume,CairoMenu *menu)
   gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
 }
 
-GtkWidget * 
-get_places_menu (void)
+void
+_remove_menu_item  (GtkWidget *menu_item,GtkWidget * menu)
 {
-  static DesktopAgnosticVFSVolumeMonitor* vol_monitor = NULL;
-  static DesktopAgnosticVFSGtkBookmarks *bookmarks_parser = NULL;  
-  GtkWidget *menu = cairo_menu_new();
-  GtkWidget *item = NULL;
-  GError *error = NULL;
-  GtkWidget * image;
-  gchar * exec;
-  const gchar *desktop_dir = g_get_user_special_dir (G_USER_DIRECTORY_DESKTOP);
-  const gchar *homedir = g_get_home_dir();
-
-  item = cairo_menu_item_new ();
-  gtk_menu_item_set_label (GTK_MENU_ITEM(item),_("Home"));
-  image = get_gtk_image ("stock_home");  
-  if (image)
-  {
-    gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),image);
-  }
-  exec = g_strdup_printf("%s %s", XDG_OPEN, homedir);
-  g_debug ("exec = %s",exec);
-  g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);  
-  gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
-  
-  item = cairo_menu_item_new ();
-  gtk_menu_item_set_label (GTK_MENU_ITEM(item),_("Desktop"));
-/*if desktop_dir then use that otherwise use homedir*/
-  image = get_gtk_image ("desktop");
-  if (image)
-  {
-    gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),image);
-  }  
-  exec = g_strdup_printf("%s %s", XDG_OPEN, desktop_dir?desktop_dir:homedir);
-  g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);  
-  gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
-
-  item = cairo_menu_item_new ();
-  gtk_menu_item_set_label (GTK_MENU_ITEM(item),_("File System"));
-  image = get_gtk_image ("system");
-  if (image)
-  {
-    gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),image);
-  }
-  exec = g_strdup_printf("%s /", XDG_OPEN);
-  g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);  
-  gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
-
-  if (!vol_monitor)
-  {
-    /*this is structured like this because get_places() is
-    invoked any time there is a change in places... only want perform
-    these actions once.*/
-    vol_monitor = desktop_agnostic_vfs_volume_monitor_get_default(&error);
-    if (error)
-    {
-      g_critical("Could not get the volume monitor: %s", error->message);
-      g_error_free(error);
-      return;
-    }
-    else if (!vol_monitor)
-    {
-      g_critical("Could not get the volume monitor.");
-      return;
-    }
-//    g_signal_connect(vol_monitor, "volume-mounted", G_CALLBACK(_vfs_changed), menu);
-//    g_signal_connect(vol_monitor, "volume-unmounted", G_CALLBACK(_vfs_changed), menu);
-
-    bookmarks_parser = desktop_agnostic_vfs_gtk_bookmarks_new (NULL, TRUE);
-//    g_signal_connect (G_OBJECT (bookmarks_parser), "changed",
-//                      G_CALLBACK (_on_bookmarks_changed), menu);
-  }
-
-  GList *volumes = desktop_agnostic_vfs_volume_monitor_get_volumes(vol_monitor);
-
-  if (volumes)
-  {
-    g_message("Number of volumes: %d", g_list_length(volumes));
-    g_list_foreach(volumes, (GFunc)_fillin_connected, menu);
-  }
-
-  g_list_free (volumes);
-  // bookmarks
-  GSList *bookmarks;
-  GSList *node;
-
-  bookmarks = desktop_agnostic_vfs_gtk_bookmarks_get_bookmarks (bookmarks_parser);
-  for (node = bookmarks; node != NULL; node = node->next)
-  {
-    DesktopAgnosticVFSBookmark *bookmark;
-    DesktopAgnosticVFSFile *b_file;
-    const gchar *b_alias;
-    gchar *b_path;
-    gchar *shell_quoted = NULL;
-
-    item = cairo_menu_item_new ();
-    bookmark = (DesktopAgnosticVFSBookmark*)node->data;
-    b_file = desktop_agnostic_vfs_bookmark_get_file (bookmark);
-    b_alias = desktop_agnostic_vfs_bookmark_get_alias (bookmark);
-    b_path = desktop_agnostic_vfs_file_get_path (b_file);
-
-    image = get_gtk_image ("stock_folder");    
-    if (image)
-    {
-      gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),image);
-    }  
-    
-    if (b_path)
-    {
-      shell_quoted = g_shell_quote (b_path);
-      exec = g_strdup_printf("%s %s", XDG_OPEN,shell_quoted);
-      g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);  
-      
-      g_free (shell_quoted);
-
-      if (b_alias)
-      {
-        gtk_menu_item_set_label(GTK_MENU_ITEM(item),b_alias);
-      }
-      else
-      {
-        gchar * base = g_path_get_basename (b_path);
-        gtk_menu_item_set_label(GTK_MENU_ITEM(item),base);
-        g_free (base);
-      }
-      gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
-    }
-    else
-    {
-      g_free (item);
-    }
-    g_free (b_path);
-  }
-  return menu;
+  gtk_container_remove (GTK_CONTAINER(menu),menu_item);
 }
+

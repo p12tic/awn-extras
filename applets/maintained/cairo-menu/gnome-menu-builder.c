@@ -340,7 +340,7 @@ menu_build (void)
   GtkWidget * sub_menu;
   const gchar * txt;
   
-  menu_tree = gmenu_tree_lookup("gnome-applications.menu", GMENU_TREE_FLAGS_NONE);
+  menu_tree = gmenu_tree_lookup("applications.menu", GMENU_TREE_FLAGS_NONE);
 
   if (menu_tree)
   {
@@ -349,6 +349,10 @@ menu_build (void)
     {
       menu = fill_er_up(root);
       gmenu_tree_item_unref(root);
+    }
+    else
+    {
+      menu = cairo_menu_new ();
     }
   }
 

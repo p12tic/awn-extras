@@ -35,6 +35,8 @@ public class NotificationArea : GLib.Object
   private Awn.Applet applet;
   private List<weak EggTray.Child> tray_icons;
 
+  private static NotificationAreaPrefs? prefs_window = null;
+
   private int max_rows;
   private int max_cols;
 
@@ -162,6 +164,7 @@ public class NotificationArea : GLib.Object
     this.inner_align.set_padding (BORDER, BORDER, BORDER, BORDER);
 
     this.icon_painter = new Gtk.EventBox ();
+    Awn.Utils.ensure_transparent_bg (this.icon_painter);
 
     this.table = new Gtk.Table (1, 1, false);
     this.table.set_row_spacings (1);
@@ -220,16 +223,14 @@ public class NotificationArea : GLib.Object
 
       Gdk.cairo_rectangle (cr, (Gdk.Rectangle)widget.allocation);
       cr.clip ();
-      /*
-       * TODO: Uncomment once cairo bindings are fixed
+
       double x1, x2, y1, y2;
-      cr.clip_extents (ref x1, ref y1, ref x2, ref y2);
-      if (x2-x1 <= 0.0 || y2-y1 <= 0.0) 
+      cr.clip_extents (out x1, out y1, out x2, out y2);
+      if (x2-x1 <= 0.0 || y2-y1 <= 0.0)
       {
         cr.restore();
         return;
       }
-      */
 
       if (child.fake_transparency != 0)
       {
@@ -271,11 +272,14 @@ public class NotificationArea : GLib.Object
     }
     else
     {
-      if (eb.is_composited () == false)
+      DesktopAgnostic.Color da_color = 
+        new DesktopAgnostic.Color (eb.style.bg[Gtk.StateType.ACTIVE], 65535);
+      if (eb.is_composited ())
       {
-        Gdk.cairo_set_source_color (cr, eb.style.bg[Gtk.StateType.NORMAL]);
-        cr.paint ();
+        da_color.alpha = 65535 / 5;
       }
+      Awn.CairoUtils.set_source_color (cr, da_color);
+      cr.paint ();
     }
 
     weak Widget? child = eb.get_child ();
@@ -320,37 +324,33 @@ public class NotificationArea : GLib.Object
     }
     else
     {
+      DesktopAgnostic.Color da_color = 
+        new DesktopAgnostic.Color (eb.style.bg[Gtk.StateType.ACTIVE], 65535);
       if (this.applet.is_composited ())
       {
-        cr.set_source_rgba (0.0, 0.0, 0.0, 0.0);
+        da_color.alpha = 65535 / 5;
       }
-      else
-      {
-        Gdk.cairo_set_source_color (cr, eb.style.bg[Gtk.StateType.NORMAL]);
-      }
+      Awn.CairoUtils.set_source_color (cr, da_color);
     }
     cr.set_line_width (1.0);
     Awn.CairoUtils.rounded_rect (cr, x+0.5, y+0.5, w-1.0, h-1.0, 2.0*BORDER,
                                  Awn.CairoRoundCorners.ALL);
-    cr.fill_preserve ();
+    if (this._border_color == null) cr.fill ();
+    else cr.fill_preserve ();
 
+    // don't paint the border by default
     if (this._border_color != null)
     {
       Awn.CairoUtils.set_source_color (cr, this._border_color);
-    }
-    else
-    {
-      Gdk.Color c = eb.style.dark[Gtk.StateType.SELECTED];
-      cr.set_source_rgba (c.red / 65535.0, c.green / 65535.0, c.blue / 65535.0,
-                          0.625);
-    }
-    cr.set_operator (Cairo.Operator.DEST_OUT);
-    cr.set_line_width (1.5);
-    cr.stroke_preserve ();
 
-    cr.set_operator (Cairo.Operator.OVER);
-    cr.set_line_width (1.0);
-    cr.stroke ();
+      cr.set_operator (Cairo.Operator.DEST_OUT);
+      cr.set_line_width (1.5);
+      cr.stroke_preserve ();
+
+      cr.set_operator (Cairo.Operator.OVER);
+      cr.set_line_width (1.0);
+      cr.stroke ();
+    }
 
     return true;
   }
@@ -359,11 +359,19 @@ public class NotificationArea : GLib.Object
   {
     if (event.button.button == 3)
     {
-      NotificationAreaPrefs prefs = new NotificationAreaPrefs(this.applet);
-      unowned Gtk.Dialog dialog = prefs.get_dialog ();
+      if (prefs_window == null)
+      {
+        prefs_window = new NotificationAreaPrefs (this.applet);
+        unowned Gtk.Dialog dialog = prefs_window.get_dialog ();
 
-      dialog.run ();
-      dialog.destroy ();
+        dialog.run ();
+        dialog.destroy ();
+        prefs_window = null;
+      }
+      else
+      {
+        prefs_window.get_dialog ().window.raise ();
+      }
       return true;
     }
 

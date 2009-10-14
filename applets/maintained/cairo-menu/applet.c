@@ -43,8 +43,6 @@ AwnApplet* awn_applet_factory_initp(const gchar *name,
                 "display-name","Cairo Menu",
                 NULL);
   
-  awn_applet_simple_set_icon_name ( AWN_APPLET_SIMPLE(applet),
-                                    "gnome-main-menu")  ;
   return applet;
 
 }

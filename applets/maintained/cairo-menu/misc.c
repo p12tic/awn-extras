@@ -84,7 +84,7 @@ get_gtk_image (gchar * icon_name)
 
     if ( gtk_icon_theme_has_icon (gtk_icon_theme_get_default(),icon_name) )
     {
-      image = gtk_image_new_from_icon_name (icon_name,width);
+      image = gtk_image_new_from_icon_name (icon_name,GTK_ICON_SIZE_MENU);
     }
     
     if (!image)
@@ -102,7 +102,7 @@ get_gtk_image (gchar * icon_name)
       {
         if ( gtk_icon_theme_has_icon (gtk_icon_theme_get_default(),"stock_folder") )
         {
-          image = gtk_image_new_from_icon_name ("stock_folder",width);
+          image = gtk_image_new_from_icon_name ("stock_folder",GTK_ICON_SIZE_MENU);
         }
       }      
       else

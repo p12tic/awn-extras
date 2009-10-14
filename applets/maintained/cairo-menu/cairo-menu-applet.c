@@ -1,14 +1,16 @@
 /* cairo-menu-applet.c */
 
 #include <gtk/gtk.h>
+#include <libawn/libawn.h>
 #include "cairo-menu-applet.h"
 #include "cairo-menu.h"
+#include "cairo-main-icon.h"
 #include "gnome-menu-builder.h"
 #include "config.h"
 
-typedef GtkWidget * (* MenuBuildFunc) (void);
+G_DEFINE_TYPE (CairoMenuApplet, cairo_menu_applet, AWN_TYPE_APPLET)
 
-G_DEFINE_TYPE (CairoMenuApplet, cairo_menu_applet, AWN_TYPE_APPLET_SIMPLE)
+MenuBuildFunc  menu_build;
 
 #define GET_PRIVATE(o) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), AWN_TYPE_CAIRO_MENU_APPLET, CairoMenuAppletPrivate))
@@ -17,7 +19,7 @@ typedef struct _CairoMenuAppletPrivate CairoMenuAppletPrivate;
 
 struct _CairoMenuAppletPrivate {
   DEMenuType   menu_type;
-  GtkWidget   *menu;
+  GtkWidget * box;  
 };
 
 
@@ -60,18 +62,17 @@ static void
 cairo_menu_applet_constructed (GObject *object)
 {
   CairoMenuAppletPrivate * priv = GET_PRIVATE (object);
+  GtkWidget * icon;
   G_OBJECT_CLASS (cairo_menu_applet_parent_class)->constructed (object);
 
   /*to when guessing check DESKTOP_SESSION env var. and try loading based on that.
    if env var not set or module fails to load then try to load in the following 
-   order:  gnome, xfce.
-   
+   order:  gnome, xfce.   
 /* 
    TODO fix the various travesties*/
   GError * error = NULL;
   gchar * filename = APPLETSDIR"/../../../lib/awn/applets/cairo-menu/gnome-menu-builder";
   g_debug ("%s",filename);
-  MenuBuildFunc  menu_build;
   GModule      *module;
   module = g_module_open (filename, 
                           G_MODULE_BIND_LAZY);  
@@ -89,10 +90,8 @@ cairo_menu_applet_constructed (GObject *object)
       g_assert (FALSE);
     }
   /* call our function in the module */
-  priv->menu = menu_build ();
-  gtk_widget_show_all (priv->menu);
-  g_signal_connect(object, "button-press-event", G_CALLBACK(_button_clicked_event), NULL);
-
+  icon = cairo_main_icon_new(AWN_APPLET(object));
+  gtk_container_add (GTK_CONTAINER(priv->box),icon);
 }
 
 static void
@@ -114,7 +113,10 @@ cairo_menu_applet_init (CairoMenuApplet *self)
 {
   CairoMenuAppletPrivate * priv = GET_PRIVATE (self);
 
-  priv->menu_type = MENU_TYPE_GUESS;
+  priv->box = awn_icon_box_new_for_applet (AWN_APPLET (self));
+  gtk_container_add (GTK_CONTAINER (self), priv->box);
+  gtk_widget_show (priv->box);
+
 }
 
 CairoMenuApplet*
@@ -125,44 +127,5 @@ cairo_menu_applet_new (const gchar *name,const gchar* uid, gint panel_id)
                         "uid", uid,
                         "panel-id",panel_id,
                         NULL);
-}
-
-static gboolean 
-_button_clicked_event (CairoMenuApplet *applet, GdkEventButton *event, gpointer null)
-{
-  GdkEventButton *event_button;
-  event_button = (GdkEventButton *) event;
-  CairoMenuAppletPrivate * priv = GET_PRIVATE (applet);
-  
-  if (event->button == 1)
-  {
-    gtk_menu_popup(GTK_MENU(priv->menu), NULL, NULL, NULL, NULL,
-                            event_button->button, event_button->time);    
-  }
-  else if (event->button == 3)
-  {
-    static GtkWidget * menu=NULL;
-    static GtkWidget * item;
-
-    if (!menu)
-    {
-      menu = awn_applet_create_default_menu (AWN_APPLET(applet));
-      item = gtk_menu_item_new_with_label("Preferences");
-      
-      gtk_widget_show(item);
-      gtk_menu_set_screen(GTK_MENU(menu), NULL);
-      gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-//      g_signal_connect(G_OBJECT(item), "button-press-event", G_CALLBACK(_show_prefs), NULL);
-      item=awn_applet_create_about_item_simple(AWN_APPLET(applet),
-                                               "Copyright 2007,2008, 2009 Rodney Cryderman <rcryderman@gmail.com>",
-                                               AWN_APPLET_LICENSE_GPLV2,
-                                               NULL);
-      gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);      
-      
-    }
-
-    gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL,event_button->button, event_button->time);
-  }
-  return TRUE;
 }
 

@@ -4,10 +4,12 @@
 #define _CAIRO_MENU_APPLET
 
 #include <libawn/awn-applet.h>
-#include <libawn/awn-applet-simple.h>
 #include <glib-object.h>
 
 G_BEGIN_DECLS
+
+typedef GtkWidget * (* MenuBuildFunc) (void);
+
 
 typedef enum 
 {
@@ -34,11 +36,11 @@ typedef enum
   (G_TYPE_INSTANCE_GET_CLASS ((obj), AWN_TYPE_CAIRO_MENU_APPLET, CairoMenuAppletClass))
 
 typedef struct {
-  AwnAppletSimple parent;
+  AwnApplet parent;
 } CairoMenuApplet;
 
 typedef struct {
-  AwnAppletSimpleClass parent_class;
+  AwnAppletClass parent_class;
 } CairoMenuAppletClass;
 
 GType cairo_menu_applet_get_type (void);

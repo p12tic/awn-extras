@@ -7,6 +7,15 @@
 #include <libdesktop-agnostic/vfs.h>
 
 
+/*TODO
+ Leaking a few strings related to the "activate" data.
+ */
+
+
+
+
+
+
 DesktopAgnosticFDODesktopEntry *
 get_desktop_entry (gchar * desktop_file)
 {
@@ -180,21 +189,39 @@ get_recent_menu (void)
   {
     for (iter = recent_list; iter; iter = iter->next)
     {
-      GdkPixbuf * pbuf = NULL;
-      GtkWidget * image = NULL;
-      const gchar * txt = gtk_recent_info_get_display_name (iter->data);
-      menu_item = cairo_menu_item_new_with_label (txt);
+      if (gtk_recent_info_get_age(iter->data) <=2)
+      {
+        gchar * app_name = gtk_recent_info_last_application (iter->data);
+        GdkPixbuf * pbuf = NULL;
+        GtkWidget * image = NULL;
+        const gchar * app_exec=NULL;
+        guint count;
+        time_t time_;
+        const gchar * txt = gtk_recent_info_get_display_name (iter->data);
+        menu_item = cairo_menu_item_new_with_label (txt);
 
-      pbuf = gtk_recent_info_get_icon (iter->data,height);
-      if (pbuf)
-      {
-        image = gtk_image_new_from_pixbuf (pbuf);
+        pbuf = gtk_recent_info_get_icon (iter->data,height);
+        if (pbuf)
+        {
+          image = gtk_image_new_from_pixbuf (pbuf);
+          g_object_unref (pbuf);
+        }
+        if (image)
+        {
+          gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);          
+        }
+        if (gtk_recent_info_get_application_info (iter->data,app_name,
+                                                         &app_exec,
+                                                         &count,
+                                                         &time_))
+        {
+          gchar * exec = g_strdup_printf ("%s %s",app_exec,
+                                          gtk_recent_info_get_uri (iter->data));
+          g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(_exec), exec);
+        }
+        gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
+        g_free (app_name);
       }
-      if (image)
-      {
-        gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
-      }              
-      gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);      
     }
   }
 

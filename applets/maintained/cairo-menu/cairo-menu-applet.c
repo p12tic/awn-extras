@@ -29,6 +29,8 @@ struct _CairoMenuAppletPrivate {
 static gchar * gnome_run_cmds[] = { "gnome-do","grun","gmrun","gnome-launch-box",
                           "gnome-panel-control --run-dialog",NULL};
 
+static gchar * gnome_search_cmds[] = { "tracker-search-tool","gnome-do",NULL};
+  
 static gboolean _button_clicked_event (CairoMenuApplet *applet, GdkEventButton *event, gpointer null);
 
 
@@ -121,6 +123,7 @@ cairo_menu_applet_init (CairoMenuApplet *self)
 
   priv->box = awn_icon_box_new_for_applet (AWN_APPLET (self));
   priv->run_cmd = NULL;
+  priv->search_cmd = NULL;
   gtk_container_add (GTK_CONTAINER (self), priv->box);
   gtk_widget_show (priv->box);
 
@@ -136,28 +139,28 @@ cairo_menu_applet_new (const gchar *name,const gchar* uid, gint panel_id)
                         NULL);
 }
 
-const gchar *
-cairo_menu_applet_get_run_cmd (CairoMenuApplet * applet)
+static const gchar *
+cairo_menu_applet_get_cmd (CairoMenuApplet * applet, gchar * def_cmd, gchar **cmd_list)
 {
   CairoMenuAppletPrivate * priv = GET_PRIVATE (applet);
   gchar * p;
   gchar **iter;
 
-  if (priv->run_cmd)
+  if (def_cmd)
   {
-    p = g_find_program_in_path (priv->run_cmd);
+    p = g_find_program_in_path (def_cmd);
     if (p)
     {
       g_free (p);
-      return priv->run_cmd;
+      return def_cmd;
     }
     else 
     {
-      g_message ("Cairo Menu (%s): Configured run command (%s) not found",__func__,priv->run_cmd);
+      g_message ("Cairo Menu (%s): Configured command (%s) not found",__func__,def_cmd);
     }
   }
-  g_message ("Cairo Menu (%s): Searching for run command...",__func__);
-  for (iter = gnome_run_cmds; *iter; iter++)
+  g_message ("Cairo Menu (%s): Searching for command...",__func__);
+  for (iter = cmd_list; *iter; iter++)
   {
     p = g_find_program_in_path (*iter);
     if (p)
@@ -171,5 +174,22 @@ cairo_menu_applet_get_run_cmd (CairoMenuApplet * applet)
       g_message ("%s NOT found.",*iter);
     }
   }
-  g_message ("No known run dialogs found.  Please configure");
+  g_message ("No known command found.  Please configure");
 }
+
+const gchar *
+cairo_menu_applet_get_run_cmd (CairoMenuApplet * applet)
+{
+  CairoMenuAppletPrivate * priv = GET_PRIVATE (applet);
+  
+  return cairo_menu_applet_get_cmd (applet, priv->run_cmd, gnome_run_cmds);
+}
+
+const gchar *
+cairo_menu_applet_get_search_cmd (CairoMenuApplet * applet)
+{
+  CairoMenuAppletPrivate * priv = GET_PRIVATE (applet);
+  
+  return cairo_menu_applet_get_cmd (applet, priv->search_cmd, gnome_search_cmds);
+}
+

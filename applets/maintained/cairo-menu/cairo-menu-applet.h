@@ -9,7 +9,10 @@
 G_BEGIN_DECLS
 
 typedef const gchar * (*GetRunCmdFunc )(AwnApplet * applet);
-typedef GtkWidget * (* MenuBuildFunc) (AwnApplet *,GetRunCmdFunc);
+typedef const gchar * (*GetSearchCmdFunc )(AwnApplet * applet);
+
+typedef GtkWidget * (* MenuBuildFunc) (AwnApplet *,GetRunCmdFunc,
+                                        GetSearchCmdFunc,gint flags);
 
 
 typedef enum 
@@ -18,6 +21,15 @@ typedef enum
   MENU_TYPE_GNOME,
   MENU_TYPE_XFCE
 }DEMenuType;
+
+typedef enum
+{
+  MENU_BUILD_NO_SEARCH=1,
+  MENU_BUILD_NO_RUN=2,
+  MENU_BUILD_NO_PLACES=4,
+  MENU_BUILD_NO_RECENT=8,
+  MENU_BUILD_NO_SESSION=16
+}MenuBuildFlags;
 
 #define AWN_TYPE_CAIRO_MENU_APPLET cairo_menu_applet_get_type()
 
@@ -49,6 +61,8 @@ GType cairo_menu_applet_get_type (void);
 CairoMenuApplet* cairo_menu_applet_new (const gchar *name,const gchar* uid, gint panel_id);
 
 const gchar * cairo_menu_applet_get_run_cmd (CairoMenuApplet * applet);
+
+const gchar * cairo_menu_applet_get_search_cmd (CairoMenuApplet * applet);
 
 G_END_DECLS
 

@@ -13,9 +13,11 @@
 #include "misc.h"
 #include "cairo-menu-applet.h"
 
-GtkWidget *  menu_build (AwnApplet * applet,GetRunCmdFunc run_func);
+GtkWidget *  menu_build (AwnApplet * applet,GetRunCmdFunc run_func,
+                          GetSearchCmdFunc,gint flags);
 
 GetRunCmdFunc get_run_cmd;
+GetSearchCmdFunc get_search_cmd;
 static AwnApplet * Applet;
 static guint   source_id;
 
@@ -391,10 +393,22 @@ _run_dialog (GtkMenuItem * item, CairoMenuApplet * applet)
   }
 }
 
+static void
+_search_dialog (GtkMenuItem * item, CairoMenuApplet * applet)
+{
+  const gchar * cmd;
+  cmd = get_search_cmd (AWN_APPLET(applet));
+  if (cmd)
+  {
+    g_spawn_command_line_async (cmd,NULL);
+  }
+}
+
+
 static gboolean
 _delay_menu_update (CairoMenu * menu)
 {
-  menu_build (NULL,NULL);
+  menu_build (NULL,NULL,NULL,-1);
   source_id = 0;
   return FALSE;
 }
@@ -415,13 +429,15 @@ _menu_modified_cb(GMenuTree *tree,CairoMenu *menu)
 }
 
 GtkWidget * 
-menu_build (AwnApplet * applet,GetRunCmdFunc run_func)
+menu_build (AwnApplet * applet,GetRunCmdFunc run_func,GetSearchCmdFunc search_func,
+            gint new_flags)
 {
   static done_once = FALSE;
   static GMenuTree *  main_menu_tree = NULL;
   static GMenuTree *  settings_menu_tree = NULL;  
   GMenuTreeDirectory *root;
   static GtkWidget     * menu = NULL;
+  static flags = 0;
   GtkWidget     * settings_menu = NULL;
   gchar * icon_name = NULL;
   GtkWidget * image = NULL;
@@ -429,10 +445,20 @@ menu_build (AwnApplet * applet,GetRunCmdFunc run_func)
   GtkWidget * sub_menu;
   const gchar * txt;
 
+  g_debug ("new_flags = %d",new_flags);
+  if (new_flags != -1)
+  {
+    flags = new_flags;
+  }
   if (run_func)
   {
     get_run_cmd = run_func;
   }
+  if (search_func)
+  {
+    get_search_cmd = search_func;
+  }
+  
   if (applet)
   {
     Applet = applet;
@@ -498,58 +524,74 @@ menu_build (AwnApplet * applet,GetRunCmdFunc run_func)
   menu_item = gtk_separator_menu_item_new ();
   gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);  
 
-  menu_item = cairo_menu_item_new_with_label (_("Places"));
-  image = get_gtk_image ("places");
-  if (!image)
+  if (! (flags & MENU_BUILD_NO_PLACES))
   {
-    image = get_gtk_image("stock_folder");
+    menu_item = cairo_menu_item_new_with_label (_("Places"));
+    image = get_gtk_image ("places");
+    if (!image)
+    {
+      image = get_gtk_image("stock_folder");
+    }
+    if (image)
+    {
+      gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
+    }
+    sub_menu = get_places_menu ();
+    gtk_menu_item_set_submenu (GTK_MENU_ITEM(menu_item),sub_menu);
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
   }
-  if (image)
+  
+  if (! (flags & MENU_BUILD_NO_RECENT))
   {
-    gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
+    menu_item = cairo_menu_item_new_with_label (_("Recent Documents"));
+    image = get_gtk_image ("document-open-recent");
+    if (!image)
+    {
+      image = get_gtk_image("stock_folder");
+    }
+    if (image)
+    {
+      gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
+    }        
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
   }
-  sub_menu = get_places_menu ();
-  gtk_menu_item_set_submenu (GTK_MENU_ITEM(menu_item),sub_menu);
-  gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
-
-  menu_item = cairo_menu_item_new_with_label (_("Recent Documents"));
-  image = get_gtk_image ("document-open-recent");
-  if (!image)
+  
+  if (! (flags & MENU_BUILD_NO_SESSION))
   {
-    image = get_gtk_image("stock_folder");
+    menu_item = cairo_menu_item_new_with_label (_("Session"));
+    image = get_gtk_image ("session-properties");
+    if (image)
+    {
+      gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
+    }        
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
   }
-  if (image)
+  
+  if (! (flags & MENU_BUILD_NO_SEARCH))
+  {  
+    menu_item = cairo_menu_item_new_with_label (_("Search"));
+    /* add proper ellipse*/
+    image = get_gtk_image ("stock_search");
+    if (image)
+    {
+      gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
+    }        
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
+    g_signal_connect (menu_item,"activate",G_CALLBACK(_search_dialog),Applet);
+  }
+  
+  if (! (flags & MENU_BUILD_NO_RUN))
   {
-    gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
-  }        
-  gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
-
-  menu_item = cairo_menu_item_new_with_label (_("Session"));
-  image = get_gtk_image ("session-properties");
-  if (image)
-  {
-    gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
-  }        
-  gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
-
-  menu_item = cairo_menu_item_new_with_label (_("Search"));
-  /* add proper ellipse*/
-  image = get_gtk_image ("stock_search");
-  if (image)
-  {
-    gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
-  }        
-  gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
-
-  menu_item = cairo_menu_item_new_with_label (_("Run Program"));
-  /* add proper ellipse*/
-  image = get_gtk_image ("stock_execute");
-  if (image)
-  {
-    gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
-  }        
-  gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
-  g_signal_connect (menu_item,"activate",G_CALLBACK(_run_dialog),Applet);
+    menu_item = cairo_menu_item_new_with_label (_("Run Program"));
+    /* add proper ellipse*/
+    image = get_gtk_image ("stock_execute");
+    if (image)
+    {
+      gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
+    }        
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
+    g_signal_connect (menu_item,"activate",G_CALLBACK(_run_dialog),Applet);
+  }
   
   gtk_widget_show_all (menu);
   done_once = TRUE;

@@ -2,6 +2,7 @@
 
 #include "misc.h"
 #include <glib/gi18n.h>
+#include <gtk/gtk.h>
 #include <libdesktop-agnostic/gtk.h>
 #include <libdesktop-agnostic/vfs.h>
 
@@ -162,3 +163,43 @@ _remove_menu_item  (GtkWidget *menu_item,GtkWidget * menu)
   gtk_container_remove (GTK_CONTAINER(menu),menu_item);
 }
 
+
+GtkWidget * 
+get_recent_menu (void)
+{
+  GtkRecentManager *recent = gtk_recent_manager_get_default ();
+  GtkWidget *menu = cairo_menu_new();
+  GtkWidget * menu_item;
+  GList * recent_list;
+  GList * iter;
+  gint width,height;
+
+  gtk_icon_size_lookup (GTK_ICON_SIZE_MENU,&width,&height);
+  recent_list = gtk_recent_manager_get_items (recent);
+  if (recent_list)
+  {
+    for (iter = recent_list; iter; iter = iter->next)
+    {
+      GdkPixbuf * pbuf = NULL;
+      GtkWidget * image = NULL;
+      const gchar * txt = gtk_recent_info_get_display_name (iter->data);
+      menu_item = cairo_menu_item_new_with_label (txt);
+
+      pbuf = gtk_recent_info_get_icon (iter->data,height);
+      if (pbuf)
+      {
+        image = gtk_image_new_from_pixbuf (pbuf);
+      }
+      if (image)
+      {
+        gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
+      }              
+      gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);      
+    }
+  }
+
+  g_list_foreach (recent_list, (GFunc)gtk_recent_info_unref,NULL);
+  g_list_free (recent_list);
+  gtk_widget_show_all (menu);
+  return menu;
+}

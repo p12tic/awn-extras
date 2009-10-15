@@ -553,6 +553,8 @@ menu_build (AwnApplet * applet,GetRunCmdFunc run_func,GetSearchCmdFunc search_fu
     {
       gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
     }        
+    sub_menu = get_recent_menu ();
+    gtk_menu_item_set_submenu (GTK_MENU_ITEM(menu_item),sub_menu);    
     gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
   }
   

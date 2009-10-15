@@ -17,7 +17,9 @@ DesktopAgnosticFDODesktopEntry * get_desktop_entry (gchar * desktop_file);
 void _launch (GtkMenuItem *menu_item,gchar * desktop_file);
 
 GtkWidget * get_gtk_image (gchar * icon_name);
-GtkWidget * get_places_menu (void);
+
+GtkWidget * get_recent_menu (void);
+
 
 void  _remove_menu_item  (GtkWidget *menu_item,GtkWidget * menu);
 void  _fillin_connected(DesktopAgnosticVFSVolume *volume,CairoMenu *menu);

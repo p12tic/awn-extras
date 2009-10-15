@@ -276,10 +276,6 @@ fill_er_up(GMenuTreeDirectory *directory, GtkWidget * menu)
   {
     menu = cairo_menu_new ();
   }
-  else
-  {
-    gtk_container_foreach (GTK_CONTAINER (menu),(GtkCallback)_remove_menu_item,menu);
-  }
   
   while (tmp != NULL)
   {
@@ -435,6 +431,8 @@ menu_build (AwnApplet * applet,GetRunCmdFunc run_func,GetSearchCmdFunc search_fu
   static done_once = FALSE;
   static GMenuTree *  main_menu_tree = NULL;
   static GMenuTree *  settings_menu_tree = NULL;  
+  static GtkWidget * places=NULL;
+  static GtkWidget * recent=NULL;
   GMenuTreeDirectory *root;
   static GtkWidget     * menu = NULL;
   static flags = 0;
@@ -446,6 +444,22 @@ menu_build (AwnApplet * applet,GetRunCmdFunc run_func,GetSearchCmdFunc search_fu
   const gchar * txt;
 
   g_debug ("new_flags = %d",new_flags);
+  if (menu)
+  {
+    GList * children = gtk_container_get_children (GTK_CONTAINER(menu));
+    GList * iter;
+    for (iter = children;iter;iter=iter->next)
+    {
+      if ( (iter->data !=places) && (iter->data!=recent))
+      {
+        gtk_container_remove (GTK_CONTAINER (menu),iter->data);
+        /*TODO  check if this is necessary*/
+        iter = gtk_container_get_children (GTK_CONTAINER(menu));
+      }
+    }
+  }
+
+  
   if (new_flags != -1)
   {
     flags = new_flags;
@@ -526,36 +540,52 @@ menu_build (AwnApplet * applet,GetRunCmdFunc run_func,GetSearchCmdFunc search_fu
 
   if (! (flags & MENU_BUILD_NO_PLACES))
   {
-    menu_item = cairo_menu_item_new_with_label (_("Places"));
-    image = get_gtk_image ("places");
-    if (!image)
+    if (places)
     {
-      image = get_gtk_image("stock_folder");
+      menu_item = places;
+      gtk_menu_reorder_child (GTK_MENU(menu),menu_item,100);
     }
-    if (image)
+    else
     {
-      gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
-    }
-    sub_menu = get_places_menu ();
-    gtk_menu_item_set_submenu (GTK_MENU_ITEM(menu_item),sub_menu);
-    gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
+      places = menu_item = cairo_menu_item_new_with_label (_("Places"));
+      image = get_gtk_image ("places");
+      if (!image)
+      {
+        image = get_gtk_image("stock_folder");
+      }
+      if (image)
+      {
+        gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
+      }
+      sub_menu = get_places_menu ();
+      gtk_menu_item_set_submenu (GTK_MENU_ITEM(menu_item),sub_menu);
+      gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);      
+    }    
   }
   
   if (! (flags & MENU_BUILD_NO_RECENT))
   {
-    menu_item = cairo_menu_item_new_with_label (_("Recent Documents"));
-    image = get_gtk_image ("document-open-recent");
-    if (!image)
+    if (recent)
     {
-      image = get_gtk_image("stock_folder");
+      menu_item = recent;
+      gtk_menu_reorder_child (GTK_MENU(menu),menu_item,100);      
     }
-    if (image)
+    else
     {
-      gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
-    }        
-    sub_menu = get_recent_menu ();
-    gtk_menu_item_set_submenu (GTK_MENU_ITEM(menu_item),sub_menu);    
-    gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
+      recent = menu_item = cairo_menu_item_new_with_label (_("Recent Documents"));
+      image = get_gtk_image ("document-open-recent");
+      if (!image)
+      {
+        image = get_gtk_image("stock_folder");
+      }
+      if (image)
+      {
+        gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
+      }        
+      sub_menu = get_recent_menu ();
+      gtk_menu_item_set_submenu (GTK_MENU_ITEM(menu_item),sub_menu);
+      gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
+    }
   }
   
   if (! (flags & MENU_BUILD_NO_SESSION))

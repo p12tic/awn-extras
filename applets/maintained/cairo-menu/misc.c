@@ -172,12 +172,10 @@ _remove_menu_item  (GtkWidget *menu_item,GtkWidget * menu)
   gtk_container_remove (GTK_CONTAINER(menu),menu_item);
 }
 
-
-GtkWidget * 
-get_recent_menu (void)
-{
+static GtkWidget * 
+_get_recent_menu (GtkWidget * menu)
+{  
   GtkRecentManager *recent = gtk_recent_manager_get_default ();
-  GtkWidget *menu = cairo_menu_new();
   GtkWidget * menu_item;
   GList * recent_list;
   GList * iter;
@@ -230,3 +228,11 @@ get_recent_menu (void)
   gtk_widget_show_all (menu);
   return menu;
 }
+
+GtkWidget * 
+get_recent_menu (void)
+{
+  GtkWidget *menu = cairo_menu_new();
+  return _get_recent_menu (menu);
+}
+  

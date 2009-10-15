@@ -7,10 +7,14 @@
 #include <glib/gi18n.h>
 #include <libdesktop-agnostic/fdo.h>
 
+#include <libawn/libawn.h>
 #include "cairo-menu.h"
 #include "cairo-menu-item.h"
 #include "misc.h"
 
+GtkWidget *  menu_build (AwnApplet * applet);
+
+static AwnApplet * Applet;
 
 /*
  TODO:
@@ -222,11 +226,37 @@ get_places_menu (void)
   return menu;
 }
 
+static void 
+_create_icon (GtkButton *widget,gchar * desktop)
+{
+  g_debug ("%s: %s",__func__,desktop);
+}
+
+gboolean 
+_button_press_dir (GtkWidget *menu_item, GdkEventButton *event, gchar * desktop)
+{
+  GtkWidget * popup;
+  GtkWidget * item;
+  g_debug ("%s: %s",__func__,desktop);  
+  switch (event->button)
+  {
+    case 3:
+      popup = gtk_menu_new ();
+      item = gtk_menu_item_new_with_label ("Create icon");
+      gtk_menu_shell_append(GTK_MENU_SHELL(popup), item);
+      g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_create_icon), desktop);
+      gtk_widget_show_all (popup);
+      gtk_menu_popup(GTK_MENU(popup), NULL, NULL, NULL, NULL, event->button, event->time);
+      break;
+    default:
+      break;
+  }
+}
+
 
 static GtkWidget *
-fill_er_up(GMenuTreeDirectory *directory)
+fill_er_up(GMenuTreeDirectory *directory, GtkWidget * menu)
 {
-  GtkWidget * menu = cairo_menu_new ();
   GSList * items = gmenu_tree_directory_get_contents(directory);
   GSList * tmp = items;
   GtkWidget * menu_item = NULL;
@@ -236,6 +266,15 @@ fill_er_up(GMenuTreeDirectory *directory)
   DesktopAgnosticFDODesktopEntry *entry;
   gchar * icon_name;
   GtkWidget * image;
+
+  if (!menu)
+  {
+    menu = cairo_menu_new ();
+  }
+  else
+  {
+    gtk_container_foreach (GTK_CONTAINER (menu),(GtkCallback)_remove_menu_item,menu);
+  }
   
   while (tmp != NULL)
   {
@@ -245,7 +284,7 @@ fill_er_up(GMenuTreeDirectory *directory)
     {
 
       case GMENU_TREE_ITEM_ENTRY:
-        
+        entry = NULL;
         if (gmenu_tree_entry_get_is_excluded ((GMenuTreeEntry *) item))
         {
           continue;
@@ -256,40 +295,52 @@ fill_er_up(GMenuTreeDirectory *directory)
         }
         menu_item = cairo_menu_item_new ();
         txt = gmenu_tree_entry_get_name( (GMenuTreeEntry*)item);
-        desktop_file = g_strdup(gmenu_tree_entry_get_desktop_file_path ((GMenuTreeEntry*)item));
-        entry = get_desktop_entry (desktop_file);
+        desktop_file = gmenu_tree_entry_get_desktop_file_path ((GMenuTreeEntry*)item);
+        if (desktop_file)
+        {
+          entry = get_desktop_entry (desktop_file);
+        }
         if (entry)
         {
-          icon_name = desktop_agnostic_fdo_desktop_entry_get_icon (entry);
+          if (desktop_agnostic_fdo_desktop_entry_key_exists (entry,"Icon"))
+          {
+            icon_name = desktop_agnostic_fdo_desktop_entry_get_icon (entry);
+          }
+          else
+          {
+            icon_name = g_strdup ("stock_missing-image");
+          }
           image = get_gtk_image (icon_name);
           if (image)
           {
             gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
           }
+          gtk_menu_item_set_label (GTK_MENU_ITEM(menu_item),txt?txt:"unknown");
+          gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
+          gtk_widget_show_all (menu_item);
+          g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(_launch), desktop_file);
+          g_object_unref (entry);
+          g_free (icon_name);          
         }
-        gtk_menu_item_set_label (GTK_MENU_ITEM(menu_item),txt?txt:"unknown");
-        gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
-        gtk_widget_show_all (menu_item);
-        g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(_launch), desktop_file);
-        g_object_unref (entry);
         break;
 
       case GMENU_TREE_ITEM_DIRECTORY:
         if (!gmenu_tree_directory_get_is_nodisplay ( (GMenuTreeDirectory *) item) )
         {
-          icon_name = g_strdup(gmenu_tree_directory_get_icon ((GMenuTreeDirectory *)item));
-          g_debug ("%s",icon_name);
+          icon_name = gmenu_tree_directory_get_icon ((GMenuTreeDirectory *)item);
           image = get_gtk_image (icon_name);
-          sub_menu = GTK_WIDGET(fill_er_up( (GMenuTreeDirectory*)item));
+          sub_menu = GTK_WIDGET(fill_er_up( (GMenuTreeDirectory*)item,NULL));
           menu_item = cairo_menu_item_new ();
           gtk_menu_item_set_submenu (GTK_MENU_ITEM(menu_item),sub_menu);
-          txt = gmenu_tree_entry_get_name((GMenuTreeEntry*)item);
+          txt = gmenu_tree_directory_get_name((GMenuTreeDirectory*)item);
           gtk_menu_item_set_label (GTK_MENU_ITEM(menu_item),txt?txt:"unknown");
           if (image)
           {
             gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
           }        
           gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
+          g_signal_connect (menu_item, "button-press-event",G_CALLBACK(_button_press_dir),
+            (gchar *)gmenu_tree_directory_get_desktop_file_path ((GMenuTreeDirectory*)item));
           g_free (icon_name);
           break;
         }
@@ -326,28 +377,42 @@ fill_er_up(GMenuTreeDirectory *directory)
   return menu;
 }
 
+void _menu_modified_cb(GMenuTree *tree,CairoMenu *menu)
+{
+  g_debug ("%s",__func__);
+  menu_build (NULL);
+}
 
 GtkWidget * 
-menu_build (void)
+menu_build (AwnApplet * applet)
 {
-  GMenuTree *  menu_tree;
+  static GMenuTree *  main_menu_tree = NULL;
+  static GMenuTree *  settings_menu_tree = NULL;  
   GMenuTreeDirectory *root;
-  GtkWidget     * menu = NULL;
+  static GtkWidget     * menu = NULL;
   GtkWidget     * settings_menu = NULL;
   gchar * icon_name = NULL;
   GtkWidget * image = NULL;
   GtkWidget   *menu_item;
   GtkWidget * sub_menu;
   const gchar * txt;
-  
-  menu_tree = gmenu_tree_lookup("applications.menu", GMENU_TREE_FLAGS_NONE);
 
-  if (menu_tree)
+  if (applet)
   {
-    root = gmenu_tree_get_root_directory(menu_tree);
+    Applet = applet;
+  }
+  if (!main_menu_tree)
+  {
+    main_menu_tree = gmenu_tree_lookup("applications.menu", GMENU_TREE_FLAGS_NONE);
+  }
+
+  if (main_menu_tree)
+  {
+    root = gmenu_tree_get_root_directory(main_menu_tree);
     if (root)
     {
-      menu = fill_er_up(root);
+      menu = fill_er_up(root,menu);
+      gmenu_tree_add_monitor (main_menu_tree,(GMenuTreeChangedFunc)_menu_modified_cb,menu);
       gmenu_tree_item_unref(root);
     }
     else
@@ -359,18 +424,21 @@ menu_build (void)
   menu_item = gtk_separator_menu_item_new ();
   gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);  
 
-  menu_tree = gmenu_tree_lookup("settings.menu", GMENU_TREE_FLAGS_NONE);
-  if (menu_tree)
+  if (!settings_menu_tree)
   {
-    root = gmenu_tree_get_root_directory(menu_tree);
+    settings_menu_tree = gmenu_tree_lookup("settings.menu", GMENU_TREE_FLAGS_NONE);
+  }
+  if (settings_menu_tree)
+  {
+    root = gmenu_tree_get_root_directory(settings_menu_tree);
     if (root)
     {
 //      settings_menu = fill_er_up(root);
 //      gmenu_tree_item_unref(root);
-
-      icon_name = g_strdup(gmenu_tree_directory_get_icon (root));
+      gmenu_tree_add_monitor (settings_menu_tree,(GMenuTreeChangedFunc)_menu_modified_cb,menu);
+      icon_name = gmenu_tree_directory_get_icon (root);
       image = get_gtk_image (icon_name);
-      sub_menu = GTK_WIDGET(fill_er_up(root));
+      sub_menu = GTK_WIDGET(fill_er_up(root,NULL));
       menu_item = cairo_menu_item_new ();
       gtk_menu_item_set_submenu (GTK_MENU_ITEM(menu_item),sub_menu);
       txt = gmenu_tree_entry_get_name((GMenuTreeEntry*)root);

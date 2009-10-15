@@ -8,7 +8,7 @@
 
 G_BEGIN_DECLS
 
-typedef GtkWidget * (* MenuBuildFunc) (void);
+typedef GtkWidget * (* MenuBuildFunc) (AwnApplet *);
 
 
 typedef enum 

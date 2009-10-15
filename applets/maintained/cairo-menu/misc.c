@@ -17,7 +17,7 @@ get_desktop_entry (gchar * desktop_file)
   {
     g_critical ("Error when trying to load the launcher: %s", error->message);
     g_error_free (error);
-    return;
+    return NULL;
   }
 
   if (file == NULL || !desktop_agnostic_vfs_file_exists (file))
@@ -27,7 +27,7 @@ get_desktop_entry (gchar * desktop_file)
       g_object_unref (file);
     }
     g_critical ("File not found: '%s'", desktop_file);
-    return;
+    return NULL;
   }
 
   entry = desktop_agnostic_fdo_desktop_entry_new_for_file (file, &error);
@@ -37,7 +37,7 @@ get_desktop_entry (gchar * desktop_file)
   {
     g_critical ("Error when trying to load the launcher: %s", error->message);
     g_error_free (error);
-    return;
+    return NULL;
   }
   return entry;
 }

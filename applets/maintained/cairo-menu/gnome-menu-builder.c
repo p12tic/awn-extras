@@ -11,9 +11,11 @@
 #include "cairo-menu.h"
 #include "cairo-menu-item.h"
 #include "misc.h"
+#include "cairo-menu-applet.h"
 
-GtkWidget *  menu_build (AwnApplet * applet);
+GtkWidget *  menu_build (AwnApplet * applet,GetRunCmdFunc run_func);
 
+GetRunCmdFunc get_run_cmd;
 static AwnApplet * Applet;
 static guint   source_id;
 
@@ -378,10 +380,21 @@ fill_er_up(GMenuTreeDirectory *directory, GtkWidget * menu)
   return menu;
 }
 
+static void
+_run_dialog (GtkMenuItem * item, CairoMenuApplet * applet)
+{
+  const gchar * cmd;
+  cmd = get_run_cmd (AWN_APPLET(applet));
+  if (cmd)
+  {
+    g_spawn_command_line_async (cmd,NULL);
+  }
+}
+
 static gboolean
 _delay_menu_update (CairoMenu * menu)
 {
-  menu_build (NULL);
+  menu_build (NULL,NULL);
   source_id = 0;
   return FALSE;
 }
@@ -402,7 +415,7 @@ _menu_modified_cb(GMenuTree *tree,CairoMenu *menu)
 }
 
 GtkWidget * 
-menu_build (AwnApplet * applet)
+menu_build (AwnApplet * applet,GetRunCmdFunc run_func)
 {
   static done_once = FALSE;
   static GMenuTree *  main_menu_tree = NULL;
@@ -416,6 +429,10 @@ menu_build (AwnApplet * applet)
   GtkWidget * sub_menu;
   const gchar * txt;
 
+  if (run_func)
+  {
+    get_run_cmd = run_func;
+  }
   if (applet)
   {
     Applet = applet;
@@ -532,7 +549,7 @@ menu_build (AwnApplet * applet)
     gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
   }        
   gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
-
+  g_signal_connect (menu_item,"activate",G_CALLBACK(_run_dialog),Applet);
   
   gtk_widget_show_all (menu);
   done_once = TRUE;

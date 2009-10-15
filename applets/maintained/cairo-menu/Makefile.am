@@ -37,7 +37,7 @@ gnome_menu_builder_la_SOURCES =	\
 	cairo-menu.c            \
 	cairo-menu.h            \
 	cairo-menu-item.c       \
-	cairo-menu-item.h       \	
+	cairo-menu-item.h       \
 	misc.h                  \
 	misc.c                  \
 	$(NULL)

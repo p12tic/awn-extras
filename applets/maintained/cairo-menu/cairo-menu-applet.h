@@ -8,7 +8,8 @@
 
 G_BEGIN_DECLS
 
-typedef GtkWidget * (* MenuBuildFunc) (AwnApplet *);
+typedef const gchar * (*GetRunCmdFunc )(AwnApplet * applet);
+typedef GtkWidget * (* MenuBuildFunc) (AwnApplet *,GetRunCmdFunc);
 
 
 typedef enum 
@@ -46,6 +47,8 @@ typedef struct {
 GType cairo_menu_applet_get_type (void);
 
 CairoMenuApplet* cairo_menu_applet_new (const gchar *name,const gchar* uid, gint panel_id);
+
+const gchar * cairo_menu_applet_get_run_cmd (CairoMenuApplet * applet);
 
 G_END_DECLS
 

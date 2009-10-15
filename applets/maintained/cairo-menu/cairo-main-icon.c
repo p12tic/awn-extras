@@ -96,7 +96,7 @@ cairo_main_icon_constructed (GObject *object)
   awn_themed_icon_set_size (AWN_THEMED_ICON (object),size);  
   
   /* call our function in the module */
-  priv->menu = menu_build (priv->applet);
+  priv->menu = menu_build (priv->applet,cairo_menu_applet_get_run_cmd);
   gtk_widget_show_all (priv->menu);
   g_signal_connect(object, "button-press-event", G_CALLBACK(_button_clicked_event), NULL);
   g_signal_connect_swapped(priv->applet,"size-changed",G_CALLBACK(size_changed_cb),object);

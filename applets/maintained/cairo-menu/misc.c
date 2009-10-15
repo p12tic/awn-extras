@@ -175,12 +175,15 @@ _remove_menu_item  (GtkWidget *menu_item,GtkWidget * menu)
 static GtkWidget * 
 _get_recent_menu (GtkWidget * menu)
 {  
+  gboolean done_once = FALSE;
   GtkRecentManager *recent = gtk_recent_manager_get_default ();
   GtkWidget * menu_item;
   GList * recent_list;
   GList * iter;
   gint width,height;
 
+  g_debug ("%s",__func__);
+  gtk_container_foreach (GTK_CONTAINER (menu),(GtkCallback)_remove_menu_item,menu);  
   gtk_icon_size_lookup (GTK_ICON_SIZE_MENU,&width,&height);
   recent_list = gtk_recent_manager_get_items (recent);
   if (recent_list)
@@ -226,6 +229,10 @@ _get_recent_menu (GtkWidget * menu)
   g_list_foreach (recent_list, (GFunc)gtk_recent_info_unref,NULL);
   g_list_free (recent_list);
   gtk_widget_show_all (menu);
+  if (!done_once)
+  {
+    g_signal_connect_swapped (recent,"changed",G_CALLBACK(_get_recent_menu),menu);
+  } 
   return menu;
 }
 

@@ -12,8 +12,10 @@
  */
 
 
+static guint recent_id=0;
 
-
+static GtkWidget * _get_recent_menu (GtkWidget * menu);
+static gboolean _update_recent_menu (GtkWidget * menu);
 
 
 DesktopAgnosticFDODesktopEntry *
@@ -86,12 +88,11 @@ get_gtk_image (const gchar const * icon_name)
   GtkWidget *image = NULL;
   GdkPixbuf *pbuf;  
   gint width,height;
-
+  
   if (icon_name)
   {
     gtk_icon_size_lookup (GTK_ICON_SIZE_MENU,&width,&height);
     /*TODO Need to listen for icon theme changes*/
-
     if ( gtk_icon_theme_has_icon (gtk_icon_theme_get_default(),icon_name) )
     {
       image = gtk_image_new_from_icon_name (icon_name,GTK_ICON_SIZE_MENU);
@@ -115,6 +116,7 @@ get_gtk_image (const gchar const * icon_name)
       }
     }
   }
+ 
   return image;
 }
 
@@ -165,6 +167,23 @@ _remove_menu_item  (GtkWidget *menu_item,GtkWidget * menu)
   gtk_container_remove (GTK_CONTAINER(menu),menu_item);
 }
 
+static void
+_queue_get_recent_menu (GtkRecentManager *recent_manager,
+                                             GtkWidget *menu) 
+{
+  if (!recent_id)
+  {
+    recent_id = g_timeout_add_seconds (5,(GSourceFunc)_update_recent_menu,menu);
+  }
+}
+
+static gboolean
+_update_recent_menu (GtkWidget * menu)
+{
+  _get_recent_menu (menu);
+  return FALSE;
+}
+
 static GtkWidget * 
 _get_recent_menu (GtkWidget * menu)
 {  
@@ -175,6 +194,7 @@ _get_recent_menu (GtkWidget * menu)
   GList * iter;
   gint width,height;
 
+  recent_id = 0;
   g_debug ("%s",__func__);
   gtk_container_foreach (GTK_CONTAINER (menu),(GtkCallback)_remove_menu_item,menu);  
   gtk_icon_size_lookup (GTK_ICON_SIZE_MENU,&width,&height);
@@ -224,7 +244,7 @@ _get_recent_menu (GtkWidget * menu)
   gtk_widget_show_all (menu);
   if (!done_once)
   {
-    g_signal_connect_swapped (recent,"changed",G_CALLBACK(_get_recent_menu),menu);
+    g_signal_connect (recent,"changed",G_CALLBACK(_queue_get_recent_menu),menu);
   } 
   done_once = TRUE;
   return menu;

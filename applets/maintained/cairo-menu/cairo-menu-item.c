@@ -103,7 +103,9 @@ cairo_menu_item_init (CairoMenuItem *self)
 GtkWidget*
 cairo_menu_item_new (void)
 {
-  return g_object_new (AWN_TYPE_CAIRO_MENU_ITEM, NULL);
+  return g_object_new (AWN_TYPE_CAIRO_MENU_ITEM, 
+                                        "always-show-image",TRUE,
+                                        NULL);
 }
 
 GtkWidget*
@@ -111,6 +113,7 @@ cairo_menu_item_new_with_label (const gchar * label)
 {
   return g_object_new (AWN_TYPE_CAIRO_MENU_ITEM,
                         "label",label,
+                        "always-show-image",TRUE,
                         NULL);
 }
 

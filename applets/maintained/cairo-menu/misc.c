@@ -81,7 +81,7 @@ _launch (GtkMenuItem *menu_item,gchar * desktop_file)
 }
 
 GtkWidget *
-get_gtk_image (gchar * icon_name)
+get_gtk_image (const gchar const * icon_name)
 {
   GtkWidget *image = NULL;
   GdkPixbuf *pbuf;  
@@ -108,14 +108,7 @@ get_gtk_image (gchar * icon_name)
                                          NULL);
       }
       
-      if (!pbuf)
-      {
-        if ( gtk_icon_theme_has_icon (gtk_icon_theme_get_default(),"stock_folder") )
-        {
-          image = gtk_image_new_from_icon_name ("stock_folder",GTK_ICON_SIZE_MENU);
-        }
-      }      
-      else
+      if (pbuf)
       {
         image = gtk_image_new_from_pixbuf (pbuf);
         g_object_unref (pbuf);        
@@ -233,6 +226,7 @@ _get_recent_menu (GtkWidget * menu)
   {
     g_signal_connect_swapped (recent,"changed",G_CALLBACK(_get_recent_menu),menu);
   } 
+  done_once = TRUE;
   return menu;
 }
 

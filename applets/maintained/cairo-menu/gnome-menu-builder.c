@@ -6,6 +6,7 @@
 #include <gnome-menus/gmenu-tree.h>
 #include <glib/gi18n.h>
 #include <libdesktop-agnostic/fdo.h>
+#include <gio/gio.h>
 
 #include <libawn/libawn.h>
 #include "cairo-menu.h"
@@ -21,6 +22,31 @@ GetSearchCmdFunc get_search_cmd;
 static AwnApplet * Applet;
 static guint   source_id;
 
+
+static GtkWidget *
+get_image_from_gicon (GIcon * gicon)
+{
+  const gchar *const * icon_names =NULL;
+  GtkWidget * image = NULL;
+  if (G_IS_THEMED_ICON (gicon))
+  {
+    icon_names = g_themed_icon_get_names (G_THEMED_ICON(gicon));
+  }
+  if (icon_names)
+  {
+    const gchar *const *i;
+    for (i=icon_names; *i; i++)
+    {
+      image = get_gtk_image (*i);
+      if (image)
+      {
+        break;
+      }
+    }
+  }
+  return image;
+}
+
 /*
  TODO:
   check for existence of the various bins.
@@ -30,7 +56,7 @@ static guint   source_id;
 static GtkWidget * 
 _get_places_menu (GtkWidget * menu)
 {  
-  static DesktopAgnosticVFSVolumeMonitor* vol_monitor = NULL;
+  static GVolumeMonitor* vol_monitor = NULL;
   static DesktopAgnosticVFSGtkBookmarks *bookmarks_parser = NULL;  
   
   GtkWidget *item = NULL;
@@ -50,7 +76,8 @@ _get_places_menu (GtkWidget * menu)
     gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),image);
   }
   exec = g_strdup_printf("%s %s", "nautilus", "computer:///");
-  g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);  
+  g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);
+  g_object_weak_ref (G_OBJECT(item),(GWeakNotify) g_free,exec);
   gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
     
   item = cairo_menu_item_new ();
@@ -61,7 +88,8 @@ _get_places_menu (GtkWidget * menu)
     gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),image);
   }
   exec = g_strdup_printf("%s %s", XDG_OPEN, homedir);
-  g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);  
+  g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);
+  g_object_weak_ref (G_OBJECT(item),(GWeakNotify) g_free,exec);
   gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
   
   item = cairo_menu_item_new ();
@@ -73,11 +101,11 @@ _get_places_menu (GtkWidget * menu)
     gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),image);
   }  
   exec = g_strdup_printf("%s %s", XDG_OPEN, desktop_dir?desktop_dir:homedir);
-  g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);  
+  g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);
+  g_object_weak_ref (G_OBJECT(item), (GWeakNotify)g_free,exec);    
   gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
 
-  item = cairo_menu_item_new ();
-  gtk_menu_item_set_label (GTK_MENU_ITEM(item),_("File System"));
+  item = cairo_menu_item_new_with_label (_("File System"));
   image = get_gtk_image ("system");
   if (image)
   {
@@ -85,6 +113,8 @@ _get_places_menu (GtkWidget * menu)
   }
   exec = g_strdup_printf("%s /", XDG_OPEN);
   g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);  
+  g_object_weak_ref (G_OBJECT(item),(GWeakNotify) g_free,exec);    
+    
   gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
     
   if (!vol_monitor)
@@ -92,40 +122,118 @@ _get_places_menu (GtkWidget * menu)
     /*this is structured like this because get_places() is
     invoked any time there is a change in places... only want perform
     these actions once.*/
-    vol_monitor = desktop_agnostic_vfs_volume_monitor_get_default(&error);
-    if (error)
-    {
-      g_critical("Could not get the volume monitor: %s", error->message);
-      g_error_free(error);
-      return;
-    }
-    else if (!vol_monitor)
-    {
-      g_critical("Could not get the volume monitor.");
-      return;
-    }
-    g_signal_connect_swapped(vol_monitor, "volume-mounted", G_CALLBACK(_get_places_menu), menu);
-    g_signal_connect_swapped(vol_monitor, "volume-unmounted", G_CALLBACK(_get_places_menu), menu);
-
+    vol_monitor = g_volume_monitor_get();
+    g_signal_connect_swapped(vol_monitor, "volume-changed", G_CALLBACK(_get_places_menu), menu);
+    g_signal_connect_swapped(vol_monitor, "drive-changed", G_CALLBACK(_get_places_menu), menu);
+    g_signal_connect_swapped(vol_monitor, "drive-connected", G_CALLBACK(_get_places_menu), menu);
+    g_signal_connect_swapped(vol_monitor, "drive-disconnected", G_CALLBACK(_get_places_menu), menu);    
+    g_signal_connect_swapped(vol_monitor, "mount-changed", G_CALLBACK(_get_places_menu), menu);
+    g_signal_connect_swapped(vol_monitor, "mount-added", G_CALLBACK(_get_places_menu), menu);
+    g_signal_connect_swapped(vol_monitor, "mount-removed", G_CALLBACK(_get_places_menu), menu);
+    
     bookmarks_parser = desktop_agnostic_vfs_gtk_bookmarks_new (NULL, TRUE);
     g_signal_connect_swapped (G_OBJECT (bookmarks_parser), "changed",
                       G_CALLBACK (_get_places_menu), menu);
   }
 
-  GList *volumes = desktop_agnostic_vfs_volume_monitor_get_volumes(vol_monitor);
+    /*process mount etc*/
+  GList *drives = g_volume_monitor_get_connected_drives(vol_monitor);
+  GList *mounts = g_volume_monitor_get_mounts (vol_monitor);
+  GList * iter;
 
-  if (volumes)
+/*  if (volumes)
   {
     g_message("Number of volumes: %d", g_list_length(volumes));
     g_list_foreach(volumes, (GFunc)_fillin_connected, menu);
+  }*/
+/*
+     this iterating through mounts then drives may change.
+     May go to using mounts and volumes.
+     */
+  for (iter = mounts; iter ; iter = g_list_next (iter))
+  {
+    GMount *mount = iter->data;
+    gchar * name = g_mount_get_name (mount);
+    GIcon * gicon = g_mount_get_icon (mount);
+    GFile * file = g_mount_get_root (mount);
+    gchar * uri = g_file_get_uri (file);
+    g_object_weak_ref (G_OBJECT(item), (GWeakNotify)g_free,exec);
+    item = cairo_menu_item_new_with_label (name);    
+    image = get_image_from_gicon (gicon);
+    if (image)
+    {
+      gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),image);
+    }    
+    gtk_menu_shell_append (GTK_MENU_SHELL(menu),item);
+
+    exec = g_strdup_printf("%s %s", XDG_OPEN, uri);
+    g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);  
+    g_object_weak_ref (G_OBJECT(item), (GWeakNotify)g_free,exec);
+    
+    g_free (name);
+    g_free (uri);
+    g_object_unref (file);
+    g_object_unref (gicon);
   }
 
-  g_list_free (volumes);
+  if (drives)
+  {
+    item = gtk_separator_menu_item_new ();
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
+  }
+    
+  for (iter = drives; iter ; iter = g_list_next (iter))
+  {
+    GDrive * drive = iter->data;
+    if (g_drive_has_volumes (drive))
+    {
+      GList * drive_volumes = g_drive_get_volumes (drive);
+      GList * vol_iter = NULL;
+      for (vol_iter =drive_volumes;vol_iter;vol_iter=g_list_next(vol_iter))
+      {
+        GVolume * volume = vol_iter->data;
+        GIcon * gicon = g_volume_get_icon (volume);
+        gchar * name = g_volume_get_name (volume);
+        
+        item = cairo_menu_item_new_with_label (name);
+        image = get_image_from_gicon (gicon);
+        if (image)
+        {
+          gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),image);
+        }            
+        gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
+        g_free (name);
+      }
+      g_list_foreach (drive_volumes,(GFunc)g_object_unref,NULL);
+      g_list_free (drive_volumes);
+    }
+    else
+    {
+      gboolean mounted = FALSE;
+      gchar * name = g_drive_get_name (drive);
+      GIcon * gicon = g_drive_get_icon (drive);
+      
+      item = cairo_menu_item_new_with_label (name);
+      image = get_image_from_gicon (gicon);
+      if (image)
+      {
+        gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),image);
+      }          
+      gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
+      g_free (name);      
+    }
+  }    
+    
+  g_list_foreach (drives,(GFunc)g_object_unref,NULL);
+  g_list_free (drives);
+  g_list_foreach (mounts,(GFunc)g_object_unref,NULL);
+  g_list_free (mounts);
 
   item = gtk_separator_menu_item_new ();
   gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
+
     
-  // bookmarks
+  /* bookmarks    */
   GSList *bookmarks;
   GSList *node;
 
@@ -330,6 +438,10 @@ fill_er_up(GMenuTreeDirectory *directory, GtkWidget * menu)
         {
           icon_name = g_strdup(gmenu_tree_directory_get_icon ((GMenuTreeDirectory *)item));
           image = get_gtk_image (icon_name);
+          if (!image)
+          {
+            image = get_gtk_image ("stock_folder");
+          }
           sub_menu = GTK_WIDGET(fill_er_up( (GMenuTreeDirectory*)item,NULL));
           menu_item = cairo_menu_item_new ();
           gtk_menu_item_set_submenu (GTK_MENU_ITEM(menu_item),sub_menu);
@@ -535,6 +647,8 @@ menu_build (AwnApplet * applet,GetRunCmdFunc run_func,GetSearchCmdFunc search_fu
     }
   }
 
+    /*TODO Check to make sure it is needed. Should not be displayed if 
+      all flags are of the NO persuasion.*/
   menu_item = gtk_separator_menu_item_new ();
   gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);  
 
@@ -588,6 +702,7 @@ menu_build (AwnApplet * applet,GetRunCmdFunc run_func,GetSearchCmdFunc search_fu
     }
   }
 
+  /*TODO Check to make sure it is needed. avoid double separators*/
   menu_item = gtk_separator_menu_item_new ();
   gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);  
 
@@ -621,7 +736,7 @@ menu_build (AwnApplet * applet,GetRunCmdFunc run_func,GetSearchCmdFunc search_fu
     /*generates a compiler warning due to the ellipse*/    
     menu_item = cairo_menu_item_new_with_label (_("Run Program\u2026"));
     /* add proper ellipse*/
-    image = get_gtk_image ("stock_execute");
+    image = get_gtk_image ("gnome-run");
     if (image)
     {
       gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);

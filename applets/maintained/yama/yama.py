@@ -33,7 +33,7 @@ except ImportError:
     dbus = None
 
 import gio
-from glib import filename_display_basename
+from glib import filename_display_basename, idle_add
 import gmenu
 from xdg import DesktopEntry
 
@@ -185,15 +185,17 @@ class YamaApplet:
                 pass
         raise RuntimeError("No menu editor found (%s)" % ", ".join(menu_editor_apps))
 
-    def menu_changed_cb(self, tree, items):
-        # Delete old items
-        for i in xrange(len(items)):
-            items.pop().destroy()
+    def menu_changed_cb(self, menu_tree, menu_items):
+        def refresh_menu(tree, items):
+            # Delete old items
+            for i in xrange(len(items)):
+                items.pop().destroy()
 
-        index = len(self.applications_items) + 2 if items is self.settings_items else 0  # + 2 = separator + Places
-        self.append_directory(tree.root, self.menu, index=index, item_list=items)
-        # Refresh menu to re-initialize the widget
-        self.menu.show_all()
+            index = len(self.applications_items) + 2 if items is self.settings_items else 0  # + 2 = separator + Places
+            self.append_directory(tree.root, self.menu, index=index, item_list=items)
+            # Refresh menu to re-initialize the widget
+            self.menu.show_all()
+        idle_add(refresh_menu, menu_tree, menu_items)
 
     def start_subprocess_cb(self, widget, command, use_shell):
         try:

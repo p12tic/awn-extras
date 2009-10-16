@@ -114,9 +114,9 @@ class MailApplet:
         self.awn.settings["login-token"] = 0
 
     def perform_login(self, key):
-        if key.token == 0:
-            self.__dialog.login_form(True, "Both username and password must be specified.")
-            return
+#        if key.token == 0:
+#            self.__dialog.login_form(True, "Both username and password must be specified.")
+#            return
 
         try:
             self.mail = self.back(key)  # Login
@@ -865,7 +865,7 @@ class Backends:
                 hbox_box = gtk.HBox(False, 12)
                 vbox.add(hbox_box)
 
-                foldE, boxE = get_label_entry(_("Password:"), *groups)
+                foldE, boxE = get_label_entry(_("Folder:"), *groups)
                 foldE.set_text("INBOX")
                 vbox.add(boxE)
 
@@ -875,7 +875,7 @@ class Backends:
                 allE.connect("toggled", on_toggle)
 
                 return {"layout": vbox, "callback": cls.__submitLoginWindow,
-                    "widgets": [usrE, pwdE, srvE, sslE, allE, boxE]}
+                    "widgets": [usrE, pwdE, srvE, sslE, allE, foldE]}
 
             @staticmethod
             def __submitLoginWindow(widgets, awn):

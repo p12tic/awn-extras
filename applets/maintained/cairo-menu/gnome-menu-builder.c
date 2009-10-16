@@ -587,7 +587,10 @@ menu_build (AwnApplet * applet,GetRunCmdFunc run_func,GetSearchCmdFunc search_fu
       gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
     }
   }
-  
+
+  menu_item = gtk_separator_menu_item_new ();
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);  
+
   if (! (flags & MENU_BUILD_NO_SESSION))
   {
     menu_item = cairo_menu_item_new_with_label (_("Session"));
@@ -601,7 +604,8 @@ menu_build (AwnApplet * applet,GetRunCmdFunc run_func,GetSearchCmdFunc search_fu
   
   if (! (flags & MENU_BUILD_NO_SEARCH))
   {  
-    menu_item = cairo_menu_item_new_with_label (_("Search"));
+    /*generates a compiler warning due to the ellipse*/
+    menu_item = cairo_menu_item_new_with_label (_("Search\u2026"));
     /* add proper ellipse*/
     image = get_gtk_image ("stock_search");
     if (image)
@@ -614,7 +618,8 @@ menu_build (AwnApplet * applet,GetRunCmdFunc run_func,GetSearchCmdFunc search_fu
   
   if (! (flags & MENU_BUILD_NO_RUN))
   {
-    menu_item = cairo_menu_item_new_with_label (_("Run Program"));
+    /*generates a compiler warning due to the ellipse*/    
+    menu_item = cairo_menu_item_new_with_label (_("Run Program\u2026"));
     /* add proper ellipse*/
     image = get_gtk_image ("stock_execute");
     if (image)

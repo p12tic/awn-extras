@@ -19,6 +19,7 @@ import gettext
 import os
 import re
 import subprocess
+import socket
 
 import pygtk
 pygtk.require("2.0")
@@ -113,28 +114,35 @@ class MailApplet:
         self.awn.settings["login-token"] = 0
 
     def perform_login(self, key):
-        self.mail = self.back(key)  # Login
+        if key.token == 0:
+            self.__dialog.login_form(True, "Both username and password must be specified.")
+            return
 
         try:
-            self.mail.update()  # Update
-        except RuntimeError:
-            self.__dialog.login_form(True)
-
+            self.mail = self.back(key)  # Login
+        except RuntimeError, error:
+            self.__dialog.login_form(True, str(error))
         else:
-            self.awn.dialog.toggle("main", "hide")
+            try:
+                self.mail.update()  # Update
+            except RuntimeError:
+                self.__dialog.login_form(True)
 
-            self.awn.notify.send(_("Mail Applet"),
-                _("Logging in as %s") % key.attrs["username"],
-                self.__getIconPath("login"))
+            else:
+                self.awn.dialog.toggle("main", "hide")
 
-            # Login successful
-            self.awn.theme.icon("read")
+                self.awn.notify.send(_("Mail Applet"),
+                    _("Logging in as %s") % key.attrs["username"],
+                    self.__getIconPath("login"))
 
-            self.awn.settings["login-token"] = key.token
+                # Login successful
+                self.awn.theme.icon("read")
 
-            self.timer = self.awn.timing.register(self.refresh,
-                                                 self.settings["timeout"] * 60)
-            self.refresh(show=False)
+                self.awn.settings["login-token"] = key.token
+
+                self.timer = self.awn.timing.register(self.refresh,
+                                                     self.settings["timeout"] * 60)
+                self.refresh(show=False)
 
     def refresh(self, show=True):
         oldSubjects = self.mail.subjects
@@ -361,7 +369,6 @@ class MainDialog:
                 label = gtk.Label(mail.subjects[i])
                 label.set_use_markup(True)
                 self.__email_list.attach(label, 1, 2, i, i + 1)
-#                print "%d: %s" % (i+1, self.mail.subjects[i])
         else:
             self.__dialog.set_title(_("No unread messages"))
 
@@ -404,7 +411,7 @@ class MainDialog:
 
         return t
 
-    def login_form(self, error=False):
+    def login_form(self, error=False, message=_("Wrong username or password")):
         """
         Creates a dialog the login form
         
@@ -425,7 +432,7 @@ class MainDialog:
         if error:
             image = gtk.image_new_from_stock(gtk.STOCK_DIALOG_ERROR,
                                              gtk.ICON_SIZE_MENU)
-            label = gtk.Label("<b>" + _("Wrong username or password") + "</b>")
+            label = gtk.Label("<b>" + message + "</b>")
             label.set_use_markup(True)
 
             hbox = gtk.HBox(False, 6)
@@ -695,16 +702,22 @@ class Backends:
             title = "POP"
 
             def __init__(self, key):
-                if key.attrs["usessl"]:
-                    self.server = poplib.POP3_SSL(key.attrs["url"])
-                else:
-                    self.server = poplib.POP3(key.attrs["url"])
-
-                self.server.user(key.attrs["username"])
                 try:
-                    self.server.pass_(key.password)
-                except poplib.error_proto:
-                    raise RuntimeError(_("Could not log in"))
+                    if key.attrs["usessl"]:
+                        self.server = poplib.POP3_SSL(key.attrs["url"])
+                    else:
+                        self.server = poplib.POP3(key.attrs["url"])
+                except socket.gaierror, message:
+                    raise RuntimeError(_("Could not log in: ") + str(message))
+                except socket.error, message:
+                    raise RuntimeError(_("Could not log in: ") + str(message))
+
+                else:
+                    self.server.user(key.attrs["username"])
+                    try:
+                        self.server.pass_(key.password)
+                    except poplib.error_proto:
+                        raise RuntimeError(_("Could not log in: Username or password incorrect"))
 
             def update(self):
                 messagesInfo = self.server.list()[1][-20:]

@@ -9,9 +9,9 @@ dist_applet_DATA =		\
 	$(NULL)
 
 mc_iconsdir = $(applet_datadir)/icons
-dist_mc_icons_DATA =		\
-	icons/COPYING		\
-	icons/README		\
-	icons/media-control.svg	\
-	icons/noArtIcon.png	\
+dist_mc_icons_DATA =			\
+	icons/COPYING			\
+	icons/README			\
+	icons/media-control.svg		\
+	icons/missing-artwork.svg	\
 	$(NULL)

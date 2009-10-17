@@ -73,8 +73,9 @@ class MediaControlApplet (awn.AppletSimple):
         # get the missing album art pixbuf
         try:
             file_name = __file__[0:__file__.rfind('/')]
-            file_name += "/icons/noArtIcon.png"
-            self.no_album_art_pixbuf = gtk.gdk.pixbuf_new_from_file(file_name)
+            file_name += "/icons/missing-artwork.svg"
+            self.no_album_art_pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(
+                file_name, 128, 128)
         except:
             self.no_album_art_pixbuf = None
         self.album_art_pixbuf = None

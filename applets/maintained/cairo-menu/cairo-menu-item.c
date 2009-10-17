@@ -28,7 +28,8 @@ G_DEFINE_TYPE (CairoMenuItem, cairo_menu_item, GTK_TYPE_IMAGE_MENU_ITEM)
 typedef struct _CairoMenuItemPrivate CairoMenuItemPrivate;
 
 struct _CairoMenuItemPrivate {
-    gboolean cairo_style;
+  gboolean cairo_style;
+  gchar * drag_source_data;
 };
 
 static void
@@ -60,6 +61,13 @@ cairo_menu_item_dispose (GObject *object)
 static void
 cairo_menu_item_finalize (GObject *object)
 {
+  CairoMenuItemPrivate * priv = GET_PRIVATE(object);  
+  if (priv->drag_source_data)
+  {
+    g_free(priv->drag_source_data);
+    priv->drag_source_data = NULL;
+  }
+  
   G_OBJECT_CLASS (cairo_menu_item_parent_class)->finalize (object);
 }
 
@@ -135,3 +143,48 @@ cairo_menu_item_new_with_label (const gchar * label)
                         NULL);
 }
 
+/*
+ Drag and drop 
+ */
+static const GtkTargetEntry drop_types[] = 
+{
+  { (gchar*)"STRING", 0, 0 },
+  { (gchar*)"text/plain", 0,  },
+  { (gchar*)"text/uri-list", 0, 0 }
+};
+
+static void
+_get_data (GtkWidget *widget,GdkDragContext   *drag_context,
+           GtkSelectionData *data,guint info,guint time,gpointer null)
+{
+  CairoMenuItemPrivate * priv = GET_PRIVATE(widget);
+  gtk_selection_data_set_text (data,priv->drag_source_data,-1);
+}
+
+void
+cairo_menu_item_set_source (CairoMenuItem *item, gchar * drag_data)
+{
+  CairoMenuItemPrivate * priv = GET_PRIVATE(item);
+  GtkWidget * image;
+
+  g_debug ("%s: %s",__func__,drag_data);
+  if (priv->drag_source_data)
+  {
+    g_free(priv->drag_source_data);
+    priv->drag_source_data = NULL;
+  }
+  g_object_get (item,
+                "image",&image,
+                NULL);
+  priv->drag_source_data = g_strdup (drag_data);
+  gtk_drag_source_set (GTK_WIDGET(item),GDK_BUTTON1_MASK,drop_types,3,GDK_ACTION_COPY);
+  if (image)
+  {
+    GdkPixbuf * pbuf = gtk_image_get_pixbuf (GTK_IMAGE(image));
+    if (pbuf)
+    {
+      gtk_drag_source_set_icon_pixbuf (GTK_WIDGET(item),pbuf);
+    }
+  }
+  g_signal_connect (item,"drag-data-get",G_CALLBACK(_get_data),NULL);
+}

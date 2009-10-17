@@ -53,7 +53,7 @@ typedef struct {
 
 GType cairo_aux_icon_get_type (void);
 
-GtkWidget* cairo_aux_icon_new (AwnApplet * applet);
+GtkWidget* cairo_aux_icon_new (AwnApplet * applet, gchar * menu_name,gchar * display_name, gchar * icon_name);
 
 G_END_DECLS
 

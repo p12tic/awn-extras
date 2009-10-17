@@ -53,6 +53,13 @@ enum
 
 static gboolean _button_clicked_event (CairoMainIcon *applet, GdkEventButton *event, gpointer null);
 
+static const GtkTargetEntry drop_types[] =
+{
+  { (gchar*)"STRING", 0, 0 },
+  { (gchar*)"text/plain", 0,  },
+  { (gchar*)"text/uri-list", 0, 0 }
+};
+static const gint n_drop_types = G_N_ELEMENTS(drop_types);
 
 static void
 cairo_main_icon_get_property (GObject *object, guint property_id,
@@ -112,26 +119,81 @@ cairo_main_icon_constructed (GObject *object)
   gint size = awn_applet_get_size (priv->applet);
   G_OBJECT_CLASS (cairo_main_icon_parent_class)->constructed (object);  
 
-  awn_themed_icon_set_info_simple (AWN_THEMED_ICON(object),"cairo-menu","shared","gnome-main-menu");
+  awn_themed_icon_set_info_simple (AWN_THEMED_ICON(object),"cairo-menu",awn_applet_get_uid (priv->applet),"gnome-main-menu");
   awn_themed_icon_set_size (AWN_THEMED_ICON (object),size);  
-  
+
+  gtk_drag_dest_set (GTK_WIDGET (object),
+                       GTK_DEST_DEFAULT_MOTION | GTK_DEST_DEFAULT_DROP,
+                       drop_types, n_drop_types,
+                       GDK_ACTION_COPY | GDK_ACTION_ASK);
   /* call our function in the module */
 
   priv->menu_instance = get_menu_instance (priv->applet,
                                          (GetRunCmdFunc)cairo_menu_applet_get_run_cmd,
                                           (GetSearchCmdFunc)cairo_menu_applet_get_search_cmd,
+                                          (AddIconFunc) cairo_menu_applet_add_icon,
                                           NULL,
-                                          MENU_BUILD_NO_SESSION|MENU_BUILD_NO_PLACES);
+                                          MENU_BUILD_NO_SESSION);
   priv->menu = menu_build (priv->menu_instance);
   gtk_widget_show_all (priv->menu);
   g_signal_connect(object, "button-press-event", G_CALLBACK(_button_clicked_event), NULL);
   g_signal_connect_swapped(priv->applet,"size-changed",G_CALLBACK(size_changed_cb),object);
 }
 
+static void 
+cairo_main_icon_drag_data_received (GtkWidget        *widget, 
+                                    GdkDragContext   *context,
+                                    gint              x, 
+                                    gint              y, 
+                                    GtkSelectionData *sdata,
+                                    guint             info,
+                                    guint             evt_time)
+{
+  CairoMainIconPrivate * priv = GET_PRIVATE (widget);  
+  gchar           *sdata_data;
+  GStrv           i;
+  GStrv           tokens = NULL;  
+  sdata_data = (gchar*)gtk_selection_data_get_data (sdata);
+
+  g_debug ("%s: %s",__func__,sdata_data);
+  if (strstr (sdata_data, "cairo_menu_item_dir:///"))
+  {
+    /*TODO move into a separate function */
+    tokens = g_strsplit  (sdata_data, "\n",-1);    
+    for (i=tokens; *i;i++)
+    {
+      GStrv           sub_tokens = NULL;
+      gchar * filename = g_filename_from_uri ((gchar*) *i,NULL,NULL);
+      if (!filename && ((gchar *)*i))
+      {
+        filename = g_strdup ((gchar*)*i);
+      }
+      if (filename)
+      {
+        g_strstrip(filename);
+        sub_tokens = g_strsplit (filename,"@@@",-1);
+        if (sub_tokens && g_strv_length (sub_tokens)==4)
+        {
+          cairo_menu_applet_add_icon (AWN_CAIRO_MENU_APPLET(priv->applet),sub_tokens[1],sub_tokens[2],sub_tokens[3]);
+          gtk_drag_finish (context, TRUE, FALSE, evt_time);
+          g_strfreev (sub_tokens); 
+          g_strfreev (tokens);
+          return;
+        }
+        g_strfreev (sub_tokens); 
+      }
+    }
+    g_strfreev (tokens);
+  }
+  awn_themed_icon_drag_data_received (widget,context,x,y,sdata,info,evt_time);
+  //gtk_drag_finish (context,TRUE,FALSE,evt_time);
+}
+
 static void
 cairo_main_icon_class_init (CairoMainIconClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
+  GtkWidgetClass *wid_class = GTK_WIDGET_CLASS (klass);  
   GParamSpec   *pspec;  
 
   object_class->get_property = cairo_main_icon_get_property;
@@ -139,6 +201,8 @@ cairo_main_icon_class_init (CairoMainIconClass *klass)
   object_class->dispose = cairo_main_icon_dispose;
   object_class->finalize = cairo_main_icon_finalize;
   object_class->constructed = cairo_main_icon_constructed;
+
+  wid_class->drag_data_received = cairo_main_icon_drag_data_received;  
 
   pspec = g_param_spec_pointer ("applet",
                                "applet",
@@ -162,6 +226,7 @@ cairo_main_icon_new (AwnApplet * applet)
 {
   return g_object_new (AWN_TYPE_CAIRO_MAIN_ICON, 
                         "applet",applet,
+                        "drag_and_drop",FALSE,
                         NULL);
 }
 

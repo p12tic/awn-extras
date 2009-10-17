@@ -43,9 +43,12 @@ void  _remove_menu_item  (GtkWidget *menu_item,GtkWidget * menu);
 void  _fillin_connected(DesktopAgnosticVFSVolume *volume,CairoMenu *menu);
 void _exec (GtkMenuItem *menuitem,gchar * cmd);
 
+gboolean _button_press_dir (GtkWidget *menu_item, GdkEventButton *event, CallbackContainer * c);
+
 MenuInstance * get_menu_instance ( AwnApplet * applet,
                                   GetRunCmdFunc run_cmd_fn,
                                   GetSearchCmdFunc search_cmd_fn,
+                                  AddIconFunc add_icon_fn,
                                   gchar * submenu_name,
                                   gint flags);
 

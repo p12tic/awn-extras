@@ -361,34 +361,6 @@ get_places_menu (void)
   return menu;
 }
 
-static void 
-_create_icon (GtkButton *widget,gchar * desktop)
-{
-  g_debug ("%s: %s",__func__,desktop);
-}
-
-gboolean 
-_button_press_dir (GtkWidget *menu_item, GdkEventButton *event, gchar * desktop)
-{
-  GtkWidget * popup;
-  GtkWidget * item;
-  g_debug ("%s: %s",__func__,desktop);  
-  switch (event->button)
-  {
-    case 3:
-      popup = gtk_menu_new ();
-      item = gtk_menu_item_new_with_label ("Create icon");
-      gtk_menu_shell_append(GTK_MENU_SHELL(popup), item);
-      g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_create_icon), desktop);
-      gtk_widget_show_all (popup);
-      gtk_menu_popup(GTK_MENU(popup), NULL, NULL, NULL, NULL, event->button, event->time);
-      break;
-    default:
-      break;
-  }
-}
-
-
 static GtkWidget *
 fill_er_up(MenuInstance * instance,GMenuTreeDirectory *directory, GtkWidget * menu)
 {
@@ -401,8 +373,10 @@ fill_er_up(MenuInstance * instance,GMenuTreeDirectory *directory, GtkWidget * me
   DesktopAgnosticFDODesktopEntry *entry;
   gchar * icon_name;
   gchar *file_path;
+  gchar * display_name;
   GtkWidget * image;
   gboolean detached_sub = FALSE;
+  gchar * uri;
 
   if (!menu && !instance->submenu_name)
   {
@@ -427,12 +401,16 @@ fill_er_up(MenuInstance * instance,GMenuTreeDirectory *directory, GtkWidget * me
           break;
         }
         if (instance->submenu_name)
-       {
+        {
           break;
-       }
+        }
         menu_item = cairo_menu_item_new ();
         txt = gmenu_tree_entry_get_name( (GMenuTreeEntry*)item);
         desktop_file = g_strdup (gmenu_tree_entry_get_desktop_file_path ((GMenuTreeEntry*)item));
+        uri = g_strdup_printf("file://%s\n",desktop_file);
+
+        cairo_menu_item_set_source (AWN_CAIRO_MENU_ITEM(menu_item),uri);
+        g_free (uri);
         if (desktop_file)
         {
           entry = get_desktop_entry (desktop_file);
@@ -462,7 +440,6 @@ fill_er_up(MenuInstance * instance,GMenuTreeDirectory *directory, GtkWidget * me
         break;
 
       case GMENU_TREE_ITEM_DIRECTORY:
-        g_debug ("name = %s",gmenu_tree_directory_get_desktop_file_path ( (GMenuTreeDirectory *) item) );
         detached_sub = instance->submenu_name && g_strcmp0 (instance->submenu_name, gmenu_tree_directory_get_desktop_file_path ((GMenuTreeDirectory *) item) );
         if (instance->submenu_name && !detached_sub)
         {
@@ -485,6 +462,8 @@ fill_er_up(MenuInstance * instance,GMenuTreeDirectory *directory, GtkWidget * me
         }
         if (!instance->submenu_name && !gmenu_tree_directory_get_is_nodisplay ( (GMenuTreeDirectory *) item) )
         {
+          CallbackContainer * c;
+          gchar * drop_data;
           icon_name = g_strdup(gmenu_tree_directory_get_icon ((GMenuTreeDirectory *)item));
           image = get_gtk_image (icon_name);
           if (!image)
@@ -502,9 +481,23 @@ fill_er_up(MenuInstance * instance,GMenuTreeDirectory *directory, GtkWidget * me
           }        
           gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
           file_path = g_strdup(gmenu_tree_directory_get_desktop_file_path ((GMenuTreeDirectory*)item));
-          g_signal_connect (menu_item, "button-press-event",G_CALLBACK(_button_press_dir),file_path);
-          g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_object_unref,file_path);
-          g_free (icon_name);
+          c = g_malloc (sizeof(CallbackContainer));
+          c->arr[0].str = file_path;
+          display_name = g_strdup (gmenu_tree_directory_get_name ((GMenuTreeDirectory*)item));
+          /*
+           TODO: possibly change data
+           */
+          drop_data = g_strdup_printf("cairo_menu_item_dir:///@@@%s@@@%s@@@%s\n",file_path,display_name,icon_name);
+          cairo_menu_item_set_source (AWN_CAIRO_MENU_ITEM(menu_item),drop_data);
+          g_free (drop_data);
+          c->arr[1].str = display_name;
+          c->arr[3].str = icon_name;
+          c->instance = instance;
+          g_signal_connect (menu_item, "button-press-event",G_CALLBACK(_button_press_dir),c);
+          g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,file_path);
+          g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,display_name);
+          g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,icon_name);                                      
+          g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,c);
           break;
         }
       case GMENU_TREE_ITEM_HEADER:
@@ -601,6 +594,10 @@ menu_build (MenuInstance * instance)
   GtkWidget   *menu_item;
   GtkWidget * sub_menu;
   const gchar * txt;
+  CallbackContainer * c;
+  gchar * display_name;
+  gchar * drop_data;
+  gchar * file_path;
 
   g_debug ("flags = %d",instance->flags);
   if (instance->menu)
@@ -656,19 +653,54 @@ menu_build (MenuInstance * instance)
         gmenu_tree_remove_monitor (settings_menu_tree,(GMenuTreeChangedFunc)_menu_modified_cb,instance->menu);
       }
       gmenu_tree_add_monitor (settings_menu_tree,(GMenuTreeChangedFunc)_menu_modified_cb,instance->menu);
-      icon_name = g_strdup(gmenu_tree_directory_get_icon (root));
-      image = get_gtk_image (icon_name);
-      sub_menu = GTK_WIDGET(fill_er_up(instance,root,NULL));
-      menu_item = cairo_menu_item_new ();
-      gtk_menu_item_set_submenu (GTK_MENU_ITEM(menu_item),sub_menu);
-      txt = gmenu_tree_entry_get_name((GMenuTreeEntry*)root);
-      gtk_menu_item_set_label (GTK_MENU_ITEM(menu_item),txt?txt:"unknown");
-      if (image)
+
+      if ( !instance->submenu_name )
       {
-        gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
-      }        
-      gtk_menu_shell_append(GTK_MENU_SHELL(instance->menu),menu_item);
-      g_free (icon_name);
+        sub_menu = GTK_WIDGET(fill_er_up(instance,root,NULL));        
+        icon_name = g_strdup(gmenu_tree_directory_get_icon (root));
+        image = get_gtk_image (icon_name);
+        menu_item = cairo_menu_item_new ();
+        gtk_menu_item_set_submenu (GTK_MENU_ITEM(menu_item),sub_menu);
+        txt = gmenu_tree_entry_get_name((GMenuTreeEntry*)root);
+        gtk_menu_item_set_label (GTK_MENU_ITEM(menu_item),txt?txt:"unknown");
+        if (image)
+        {
+          gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
+        }        
+        gtk_menu_shell_append(GTK_MENU_SHELL(instance->menu),menu_item);
+
+        c = g_malloc (sizeof(CallbackContainer));
+        file_path = g_strdup(":::SETTINGS");
+        c->arr[0].str = file_path;
+        display_name = g_strdup ("Settings");
+        drop_data = g_strdup_printf("cairo_menu_item_dir:///@@@%s@@@%s@@@%s\n",file_path,display_name,icon_name);
+        cairo_menu_item_set_source (AWN_CAIRO_MENU_ITEM(menu_item),drop_data);
+        g_free (drop_data);
+        c->arr[1].str = display_name;
+        c->arr[3].str = g_strdup (icon_name);
+        c->instance = instance;
+        g_signal_connect (menu_item, "button-press-event",G_CALLBACK(_button_press_dir),c);
+        g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,file_path);
+        g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,display_name);
+        g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,icon_name);                                      
+        g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,c);          
+      }
+      else if ( !instance->menu)
+      {
+        if (instance->submenu_name && ( g_strcmp0 (instance->submenu_name,":::SETTINGS")==0))
+        {
+          gchar * t = instance->submenu_name;
+          instance->submenu_name = NULL;
+          sub_menu = GTK_WIDGET(fill_er_up(instance,root,NULL));
+          instance->submenu_name = t;
+          instance->menu = sub_menu;          
+        }
+        else
+        {
+          sub_menu = GTK_WIDGET(fill_er_up(instance,root,NULL));
+          instance->menu = sub_menu;
+        }
+      }
       gmenu_tree_item_unref (root);
     }
   }
@@ -696,17 +728,33 @@ menu_build (MenuInstance * instance)
         if (instance->menu)
         {
           instance->places = menu_item = cairo_menu_item_new_with_label (_("Places"));
-          image = get_gtk_image ("places");
+          image = get_gtk_image (icon_name = "places");
           if (!image)
           {
-            image = get_gtk_image("stock_folder");
+            image = get_gtk_image(icon_name = "stock_folder");
           }
           if (image)
           {
             gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
           }
           gtk_menu_item_set_submenu (GTK_MENU_ITEM(menu_item),sub_menu);            
-          gtk_menu_shell_append(GTK_MENU_SHELL(instance->menu),menu_item);      
+          gtk_menu_shell_append(GTK_MENU_SHELL(instance->menu),menu_item);
+
+          c = g_malloc (sizeof(CallbackContainer));
+          file_path = g_strdup(":::PLACES");
+          c->arr[0].str = file_path;
+          display_name = g_strdup ("Places");
+          drop_data = g_strdup_printf("cairo_menu_item_dir:///@@@%s@@@%s@@@%s\n",file_path,display_name,icon_name);
+          cairo_menu_item_set_source (AWN_CAIRO_MENU_ITEM(menu_item),drop_data);
+          g_free (drop_data);
+          c->arr[1].str = display_name;
+          c->arr[3].str = g_strdup (icon_name);
+          c->instance = instance;
+          g_signal_connect (menu_item, "button-press-event",G_CALLBACK(_button_press_dir),c);
+          g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,file_path);
+          g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,display_name);
+          g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,icon_name);                                      
+          g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,c);
         }
         else
         {
@@ -731,10 +779,10 @@ menu_build (MenuInstance * instance)
         if (instance->menu)
         {        
           instance->recent = menu_item = cairo_menu_item_new_with_label (_("Recent Documents"));
-          image = get_gtk_image ("document-open-recent");
+          image = get_gtk_image (icon_name = "document-open-recent");
           if (!image)
           {
-            image = get_gtk_image("stock_folder");
+            image = get_gtk_image(icon_name = "stock_folder");
           }
           if (image)
           {
@@ -742,6 +790,21 @@ menu_build (MenuInstance * instance)
           }
           gtk_menu_item_set_submenu (GTK_MENU_ITEM(menu_item),sub_menu);
           gtk_menu_shell_append(GTK_MENU_SHELL(instance->menu),menu_item);
+          c = g_malloc (sizeof(CallbackContainer));
+          file_path = g_strdup(":::RECENT");
+          c->arr[0].str = file_path;
+          display_name = g_strdup ("Recent Documents");
+          drop_data = g_strdup_printf("cairo_menu_item_dir:///@@@%s@@@%s@@@%s\n",file_path,display_name,icon_name);
+          cairo_menu_item_set_source (AWN_CAIRO_MENU_ITEM(menu_item),drop_data);
+          g_free (drop_data);
+          c->arr[1].str = display_name;
+          c->arr[3].str = g_strdup (icon_name);
+          c->instance = instance;
+          g_signal_connect (menu_item, "button-press-event",G_CALLBACK(_button_press_dir),c);
+          g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,file_path);
+          g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,display_name);
+          g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,icon_name);                                      
+          g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,c);          
         }
         else
         {
@@ -785,7 +848,7 @@ menu_build (MenuInstance * instance)
         gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
       }        
       gtk_menu_shell_append(GTK_MENU_SHELL(instance->menu),menu_item);
-      g_signal_connect (menu_item,"activate",G_CALLBACK(_search_dialog),instance->applet);
+      g_signal_connect (menu_item,"activate",G_CALLBACK(_search_dialog),instance);
     }
   }
   
@@ -802,7 +865,7 @@ menu_build (MenuInstance * instance)
         gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
       }        
       gtk_menu_shell_append(GTK_MENU_SHELL(instance->menu),menu_item);
-      g_signal_connect (menu_item,"activate",G_CALLBACK(_run_dialog),instance->applet);
+      g_signal_connect (menu_item,"activate",G_CALLBACK(_run_dialog),instance);
     }
   }
   

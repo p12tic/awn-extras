@@ -41,13 +41,19 @@ struct _CairoAuxIconPrivate {
   GtkWidget   *menu;
   AwnApplet   * applet;
   MenuInstance * menu_instance;
+  gchar        * menu_name;
+  gchar        * display_name;
+  gchar        * icon_name;
 };
 
 
 enum
 {
   PROP_0,
-  PROP_APPLET
+  PROP_APPLET,
+  PROP_MENU_NAME,
+  PROP_DISPLAY_NAME,
+  PROP_ICON_NAME
 };
 
 static gboolean _button_clicked_event (CairoAuxIcon *applet, GdkEventButton *event, gpointer null);
@@ -62,7 +68,16 @@ cairo_aux_icon_get_property (GObject *object, guint property_id,
   switch (property_id) {
   case PROP_APPLET:
     g_value_set_pointer (value,priv->applet);
-    break;                    
+    break;
+  case PROP_MENU_NAME:
+    g_value_set_string (value, priv->menu_name);
+    break;
+  case PROP_DISPLAY_NAME:
+    g_value_set_string (value, priv->display_name);
+    break;
+  case PROP_ICON_NAME:
+    g_value_set_string (value, priv->icon_name);
+    break;            
   default:
     G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
   }
@@ -78,6 +93,15 @@ cairo_aux_icon_set_property (GObject *object, guint property_id,
   case PROP_APPLET:
       priv->applet = g_value_get_pointer (value);
       break;
+  case PROP_MENU_NAME:
+      priv->menu_name = g_value_dup_string (value);
+      break;
+  case PROP_DISPLAY_NAME:
+      priv->display_name = g_value_dup_string (value);
+      break;
+  case PROP_ICON_NAME:
+      priv->icon_name = g_value_dup_string (value);
+      break;      
   default:
     G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
   }
@@ -86,12 +110,24 @@ cairo_aux_icon_set_property (GObject *object, guint property_id,
 static void
 cairo_aux_icon_dispose (GObject *object)
 {
+  CairoAuxIconPrivate * priv = GET_PRIVATE (object);
+  
+  if (priv->menu)
+  {
+    gtk_widget_destroy (priv->menu);  
+    priv->menu = NULL;
+  }
   G_OBJECT_CLASS (cairo_aux_icon_parent_class)->dispose (object);
 }
 
 static void
 cairo_aux_icon_finalize (GObject *object)
 {
+  CairoAuxIconPrivate * priv = GET_PRIVATE (object);
+
+  g_free (priv->menu_name);
+  g_free (priv->display_name);
+  g_free (priv->menu_instance);
   G_OBJECT_CLASS (cairo_aux_icon_parent_class)->finalize (object);
 }
 
@@ -109,20 +145,21 @@ cairo_aux_icon_constructed (GObject *object)
   CairoAuxIconPrivate * priv = GET_PRIVATE (object);
   GdkPixbuf * pbuf;
   gint size = awn_applet_get_size (priv->applet);
+  gchar * applet_name = g_strdup_printf("cairo-menu-%s",priv->menu_name);
   G_OBJECT_CLASS (cairo_aux_icon_parent_class)->constructed (object);  
 
-  awn_themed_icon_set_info_simple (AWN_THEMED_ICON(object),"cairo-menu","shared","stock_folder");
-  awn_themed_icon_set_size (AWN_THEMED_ICON (object),size);  
+  awn_themed_icon_set_info_simple (AWN_THEMED_ICON(object),applet_name,awn_applet_get_uid (priv->applet),priv->icon_name);
+  awn_themed_icon_set_size (AWN_THEMED_ICON (object),size);
+  g_free (applet_name);
   
   /* call our function in the module */
 
   priv->menu_instance = get_menu_instance (priv->applet,
-                                                                          (GetRunCmdFunc)cairo_menu_applet_get_run_cmd,
-                                                                          (GetSearchCmdFunc)cairo_menu_applet_get_search_cmd,
-                                                                          //":::/var/lib/menu-xdg/desktop-directories/menu-xdg/debian-applications.directory",
-                                                                         //"/usr/share/desktop-directories/AudioVideo.directory",
-                                                                          ":::PLACES",
-                                                                          MENU_BUILD_NO_SESSION);
+                                        (GetRunCmdFunc)cairo_menu_applet_get_run_cmd,
+                                        (GetSearchCmdFunc)cairo_menu_applet_get_search_cmd,
+                                        (AddIconFunc) cairo_menu_applet_add_icon,
+                                        priv->menu_name,
+                                        MENU_BUILD_NO_SESSION);
   priv->menu = menu_build (priv->menu_instance);
   gtk_widget_show_all (priv->menu);
   g_signal_connect(object, "button-press-event", G_CALLBACK(_button_clicked_event), NULL);
@@ -146,7 +183,28 @@ cairo_aux_icon_class_init (CairoAuxIconClass *klass)
                                "AwnApplet",
                                G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
   g_object_class_install_property (object_class, PROP_APPLET, pspec);
+
+  pspec = g_param_spec_string ("menu_name",
+                               "menu_name",
+                               "Menu Name",
+                                "",
+                               G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
+  g_object_class_install_property (object_class, PROP_MENU_NAME, pspec);
   
+  pspec = g_param_spec_string ("display_name",
+                               "display_name",
+                               "Display Name",
+                                "",
+                               G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
+  g_object_class_install_property (object_class, PROP_DISPLAY_NAME, pspec);
+
+  pspec = g_param_spec_string ("icon_name",
+                               "icon_name",
+                               "Icon Name",
+                                "",
+                               G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
+  g_object_class_install_property (object_class, PROP_ICON_NAME, pspec);
+
   g_type_class_add_private (klass, sizeof (CairoAuxIconPrivate));
 }
 
@@ -159,24 +217,28 @@ cairo_aux_icon_init (CairoAuxIcon *self)
 }
 
 GtkWidget*
-cairo_aux_icon_new (AwnApplet * applet)
+cairo_aux_icon_new (AwnApplet * applet, gchar * menu_name, gchar * display_name, gchar * icon_name)
 {
   return g_object_new (AWN_TYPE_CAIRO_AUX_ICON, 
                         "applet",applet,
+                        "menu_name",menu_name,
+                        "display_name",display_name,
+                        "icon_name",icon_name,
                         NULL);
 }
 
 static gboolean 
-_button_clicked_event (CairoAuxIcon *applet, GdkEventButton *event, gpointer null)
+_button_clicked_event (CairoAuxIcon *icon, GdkEventButton *event, gpointer null)
 {
   GdkEventButton *event_button;
   event_button = (GdkEventButton *) event;
-  CairoAuxIconPrivate * priv = GET_PRIVATE (applet);
+  CairoAuxIconPrivate * priv = GET_PRIVATE (icon);
   
   if (event->button == 1)
   {
-    gtk_menu_popup(GTK_MENU(priv->menu), NULL, NULL, NULL, NULL,
-                            event_button->button, event_button->time);    
+    gtk_menu_popup(GTK_MENU(priv->menu), NULL, NULL, 
+                    NULL,NULL,
+                    event_button->button, event_button->time);    
   }
   else if (event->button == 3)
   {
@@ -185,14 +247,14 @@ _button_clicked_event (CairoAuxIcon *applet, GdkEventButton *event, gpointer nul
 
     if (!menu)
     {
-      menu = awn_applet_create_default_menu (AWN_APPLET(applet));
+      menu = awn_applet_create_default_menu (AWN_APPLET(priv->applet));
       item = gtk_menu_item_new_with_label("Preferences");
       
       gtk_widget_show(item);
       gtk_menu_set_screen(GTK_MENU(menu), NULL);
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 //      g_signal_connect(G_OBJECT(item), "button-press-event", G_CALLBACK(_show_prefs), NULL);
-      item=awn_applet_create_about_item_simple(AWN_APPLET(applet),
+      item=awn_applet_create_about_item_simple(AWN_APPLET(priv->applet),
                                                "Copyright 2007,2008, 2009 Rodney Cryderman <rcryderman@gmail.com>",
                                                AWN_APPLET_LICENSE_GPLV2,
                                                NULL);

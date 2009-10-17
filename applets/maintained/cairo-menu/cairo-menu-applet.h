@@ -28,12 +28,14 @@ G_BEGIN_DECLS
 
 typedef const gchar * (*GetRunCmdFunc )(AwnApplet * applet);
 typedef const gchar * (*GetSearchCmdFunc )(AwnApplet * applet);
+typedef void (*AddIconFunc )(AwnApplet * applet, gchar * menu_name,gchar * display_name, gchar *icon_name);
 
 typedef struct
 {
   AwnApplet * applet;
   GetRunCmdFunc run_cmd_fn;
   GetSearchCmdFunc search_cmd_fn;
+  AddIconFunc add_icon_fn;
   gint flags;
   guint  source_id;  
   gboolean done_once;
@@ -42,6 +44,20 @@ typedef struct
   GtkWidget     * menu;  
   gchar *       submenu_name;
 }MenuInstance;
+
+typedef union
+{
+  void * data;
+  gchar * str;
+  GtkWidget * widget;
+}ContainerData;
+
+
+typedef struct
+{
+  ContainerData arr[5];
+  MenuInstance * instance;
+}CallbackContainer;
 
 typedef GtkWidget * (* MenuBuildFunc)  (MenuInstance * instance);
 
@@ -94,6 +110,7 @@ const gchar * cairo_menu_applet_get_run_cmd (CairoMenuApplet * applet);
 
 const gchar * cairo_menu_applet_get_search_cmd (CairoMenuApplet * applet);
 
+void cairo_menu_applet_add_icon (CairoMenuApplet * applet, gchar * menu_name, gchar * display_name, gchar *icon_name);
 G_END_DECLS
 
 #endif /* _CAIRO_MENU_APPLET */

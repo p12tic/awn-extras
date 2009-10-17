@@ -56,6 +56,9 @@ GtkWidget* cairo_menu_item_new (void);
 
 GtkWidget* cairo_menu_item_new_with_label (const gchar * label);
 
+void cairo_menu_item_set_source (CairoMenuItem *item, gchar * drag_data);
+
+
 G_END_DECLS
 
 #endif /* _CAIRO_MENU_ITEM */

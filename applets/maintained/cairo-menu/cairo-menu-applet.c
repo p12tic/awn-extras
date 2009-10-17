@@ -42,7 +42,7 @@ struct _CairoMenuAppletPrivate {
   GtkWidget * box;  
   gchar     * run_cmd;
   gchar     * search_cmd;
-  
+  GList     * aux_menu_names;
 };
 
 
@@ -96,8 +96,9 @@ cairo_menu_applet_constructed (GObject *object)
   /*to when guessing check DESKTOP_SESSION env var. and try loading based on that.
    if env var not set or module fails to load then try to load in the following 
    order:  gnome, xfce.   
-/* 
+  /* 
    TODO fix the various travesties*/
+  GList * iter;
   GError * error = NULL;
   gchar * filename = APPLETSDIR"/../../../lib/awn/applets/cairo-menu/gnome-menu-builder";
   g_debug ("%s",filename);
@@ -114,15 +115,19 @@ cairo_menu_applet_constructed (GObject *object)
   if (menu_build == NULL)
     {
       if (!g_module_close (module))
-	      g_warning ("%s: %s", filename, g_module_error ());
+        g_warning ("%s: %s", filename, g_module_error ());
       g_assert (FALSE);
     }
   /* call our function in the module */
   icon = cairo_main_icon_new(AWN_APPLET(object));
   gtk_container_add (GTK_CONTAINER(priv->box),icon);
-  icon = cairo_aux_icon_new(AWN_APPLET(object));
-  gtk_container_add (GTK_CONTAINER(priv->box),icon);
-   
+
+  for (iter = priv->aux_menu_names; iter; iter = iter->next)
+  {
+    gchar * aux_name = iter->data;
+    icon = cairo_aux_icon_new (AWN_APPLET(object),aux_name,"","stock_folder");
+    gtk_container_add (GTK_CONTAINER(priv->box),icon);     
+  }
 }
 
 static void
@@ -147,6 +152,8 @@ cairo_menu_applet_init (CairoMenuApplet *self)
   priv->box = awn_icon_box_new_for_applet (AWN_APPLET (self));
   priv->run_cmd = NULL;
   priv->search_cmd = NULL;
+  priv->aux_menu_names = NULL;
+//  priv->aux_menu_names = g_list_append (priv->aux_menu_names,g_strdup (":::PLACES"));
   gtk_container_add (GTK_CONTAINER (self), priv->box);
   gtk_widget_show (priv->box);
 
@@ -216,3 +223,19 @@ cairo_menu_applet_get_search_cmd (CairoMenuApplet * applet)
   return cairo_menu_applet_get_cmd (applet, priv->search_cmd, gnome_search_cmds);
 }
 
+void
+cairo_menu_applet_add_icon (CairoMenuApplet * applet, gchar * menu_name, gchar * display_name, gchar * icon_name)
+{
+  gchar * str;
+  GtkWidget * icon;
+  
+  CairoMenuAppletPrivate * priv = GET_PRIVATE (applet);
+
+  g_debug ("%s: %s, %s, %s",__func__,menu_name,display_name,icon_name);
+  str = g_strdup_printf("%s###%s###%s",menu_name,display_name,icon_name);
+  priv->aux_menu_names = g_list_append (priv->aux_menu_names, str);
+
+  icon = cairo_aux_icon_new (AWN_APPLET(applet),menu_name,display_name,icon_name);
+  gtk_widget_show (icon);
+  gtk_container_add (GTK_CONTAINER(priv->box),icon);
+}

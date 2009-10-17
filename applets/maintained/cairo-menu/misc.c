@@ -26,12 +26,37 @@
 #include "cairo-menu-applet.h"
 
 
-/*TODO
- Leaking a few strings related to the "activate" data.
- */
-
 static GtkWidget * _get_recent_menu (GtkWidget * menu);
-static gboolean _update_recent_menu (GtkWidget * menu);
+
+static void 
+_create_icon (GtkButton *widget,CallbackContainer * c)
+{
+  g_debug ("%s: %s",__func__,c->arr[0].str);
+  gtk_widget_hide (c->instance->menu);
+  gtk_menu_popdown (GTK_MENU(c->arr[2].widget));
+  c->instance->add_icon_fn (c->instance->applet,c->arr[0].str,c->arr[1].str,c->arr[3].str);
+}
+
+gboolean 
+_button_press_dir (GtkWidget *menu_item, GdkEventButton *event, CallbackContainer * c)
+{
+  GtkWidget * popup;
+  GtkWidget * item;
+  switch (event->button)
+  {
+    case 3:
+      popup = gtk_menu_new ();
+      item = gtk_menu_item_new_with_label ("Create icon");
+      gtk_menu_shell_append(GTK_MENU_SHELL(popup), item);
+      c->arr[2].widget = popup;
+      g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_create_icon), c);
+      gtk_widget_show_all (popup);
+      gtk_menu_popup(GTK_MENU(popup), NULL, NULL, NULL, NULL, event->button, event->time);
+      break;
+    default:
+      break;
+  }
+}
 
 
 DesktopAgnosticFDODesktopEntry *
@@ -139,42 +164,7 @@ get_gtk_image (const gchar const * icon_name)
 void
 _exec (GtkMenuItem *menuitem,gchar * cmd)
 {
-  g_debug ("executing %s",cmd);
   g_spawn_command_line_async (cmd,NULL);
-}
-
-void 
-_fillin_connected(DesktopAgnosticVFSVolume *volume,CairoMenu *menu)
-{
-  GtkWidget *item;
-  DesktopAgnosticVFSFile *uri;
-  const gchar *uri_str;
-  GtkWidget * image;
-  gchar * exec;
-  
-  g_message("Attempting to add %s...", desktop_agnostic_vfs_volume_get_name(volume));
-
-  /* don't use g_return_if_fail because it runs g_critical */
-  if (!desktop_agnostic_vfs_volume_is_mounted(volume))
-  {
-    return;
-  }
-
-  item = cairo_menu_item_new();
-  gtk_menu_item_set_label (GTK_MENU_ITEM(item),desktop_agnostic_vfs_volume_get_name(volume));
-  image = get_gtk_image ( desktop_agnostic_vfs_volume_get_icon(volume));
-  if (image)
-  {
-    gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),image);
-  }
-  
-  uri = desktop_agnostic_vfs_volume_get_uri(volume);
-  uri_str = desktop_agnostic_vfs_file_get_uri(uri);
-  g_object_unref(uri);
-  exec = g_strdup_printf("%s %s", XDG_OPEN, uri_str);
-  g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);  
-  g_object_weak_ref (G_OBJECT(item),(GWeakNotify) g_free,exec);  
-  gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
 }
 
 void
@@ -183,21 +173,11 @@ _remove_menu_item  (GtkWidget *menu_item,GtkWidget * menu)
   gtk_container_remove (GTK_CONTAINER(menu),menu_item);
 }
 
-static void
-_queue_get_recent_menu (GtkRecentManager *recent_manager,
-                                             GtkWidget *menu) 
-{
-  /*This is currently a bit pointless*/
-  g_idle_add ((GSourceFunc)_update_recent_menu,menu);
-}
-
-static gboolean
-_update_recent_menu (GtkWidget * menu)
-{
-  _get_recent_menu (menu);
-  return FALSE;
-}
-
+/*
+ Updates the recent menu.
+ This is also called by signal handler when there are updates to the 
+ recent docs 
+ */
 static GtkWidget * 
 _get_recent_menu (GtkWidget * menu)
 {  
@@ -255,13 +235,16 @@ _get_recent_menu (GtkWidget * menu)
   g_list_foreach (recent_list, (GFunc)gtk_recent_info_unref,NULL);
   g_list_free (recent_list);
   gtk_widget_show_all (menu); 
-  g_signal_handlers_disconnect_by_func (recent,G_CALLBACK(_queue_get_recent_menu),menu);
-  g_signal_connect (recent,"changed",G_CALLBACK(_queue_get_recent_menu),menu);
+  g_signal_handlers_disconnect_by_func (recent,G_CALLBACK(_get_recent_menu),menu);
+  g_signal_connect_swapped (recent,"changed",G_CALLBACK(_get_recent_menu),menu);
 
   done_once = TRUE;
   return menu;
 }
 
+/*
+ Returns a new recent menu widget every time it is called
+ */
 GtkWidget * 
 get_recent_menu (void)
 {
@@ -269,10 +252,14 @@ get_recent_menu (void)
   return _get_recent_menu (menu);
 }
 
+/*
+ Prepares data for use by menu_build
+ */
 MenuInstance *
 get_menu_instance ( AwnApplet * applet,
                                   GetRunCmdFunc run_cmd_fn,
                                   GetSearchCmdFunc search_cmd_fn,
+                                  AddIconFunc add_icon_fn,
                                   gchar * submenu_name,
                                   gint flags)
 {
@@ -280,6 +267,7 @@ get_menu_instance ( AwnApplet * applet,
   instance->applet = applet;
   instance->run_cmd_fn = run_cmd_fn;
   instance->search_cmd_fn = search_cmd_fn;
+  instance->add_icon_fn = add_icon_fn;
   instance->flags = flags;
   instance->done_once = FALSE;
   instance->places=NULL;

@@ -53,6 +53,9 @@ system_theme_name = "System theme"
 
 volume_control_apps = ("gnome-volume-control", "xfce4-mixer")
 
+# PulseAudio's volume control application
+pa_control_app = "pavucontrol"
+
 moonbeam_theme_dir = os.path.join(os.path.dirname(__file__), "themes")
 moonbeam_ranges = [100, 93, 86, 79, 71, 64, 57, 50, 43, 36, 29, 21, 14, 1]
 
@@ -202,7 +205,7 @@ class VolumeControlApplet:
         device_labels = self.backend.get_device_labels()
 
         if "device" not in self.applet.settings or self.applet.settings["device"] not in device_labels:
-            self.applet.settings["device"] = self.backend.get_default_device()
+            self.applet.settings["device"] = self.backend.get_default_device_label()
         device = self.applet.settings["device"]
 
         self.combobox_device = prefs.get_object("combobox-device")
@@ -372,6 +375,10 @@ class GStreamerBackend:
 
         self.__mixer, self.__devices = mixer_devices
 
+        # Prefer PulseAudio's volume control when using its GStreamer mixer element pulsemixer
+        if self.__mixer.get_factory().get_name() == "pulsemixer":
+            volume_control_apps.insert(0, pa_control_app)
+
         if self.__mixer.get_mixer_flags() & gst.interfaces.MIXER_FLAG_AUTO_NOTIFICATIONS:
             bus = gst.Bus()
             bus.add_signal_watch()
@@ -381,6 +388,10 @@ class GStreamerBackend:
             parent.applet.timing.register(parent.refresh_icon, read_volume_interval)
 
     def find_mixer_and_devices(self, names):
+        """Return the first GStreamer mixer element and its list of devices
+        for which devices are found.
+
+        """
         for mixer_name in names:
             mixer = gst.element_factory_make(mixer_name)
             devices = self.find_devices(mixer)
@@ -447,7 +458,7 @@ class GStreamerBackend:
     def get_device_labels(self):
         return self.__devices.keys()
 
-    def get_default_device(self):
+    def get_default_device_label(self):
         return self.get_device_labels()[0]
 
     def set_track(self, track_label):

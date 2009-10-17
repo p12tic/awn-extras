@@ -1,4 +1,21 @@
-
+/*
+ * Copyright (C) 2007, 2008, 2009 Rodney Cryderman <rcryderman@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA.
+ *
+*/
 
 #include "misc.h"
 #include <glib/gi18n.h>
@@ -184,14 +201,13 @@ _update_recent_menu (GtkWidget * menu)
 static GtkWidget * 
 _get_recent_menu (GtkWidget * menu)
 {  
-  gboolean done_once = FALSE;
+  static gboolean done_once = FALSE;
   GtkRecentManager *recent = gtk_recent_manager_get_default ();
   GtkWidget * menu_item;
   GList * recent_list;
   GList * iter;
   gint width,height;
 
-  g_debug ("%s",__func__);
   gtk_container_foreach (GTK_CONTAINER (menu),(GtkCallback)_remove_menu_item,menu);  
   gtk_icon_size_lookup (GTK_ICON_SIZE_MENU,&width,&height);
   recent_list = gtk_recent_manager_get_items (recent);
@@ -238,11 +254,10 @@ _get_recent_menu (GtkWidget * menu)
 
   g_list_foreach (recent_list, (GFunc)gtk_recent_info_unref,NULL);
   g_list_free (recent_list);
-  gtk_widget_show_all (menu);
-  if (!done_once)
-  {
-    g_signal_connect (recent,"changed",G_CALLBACK(_queue_get_recent_menu),menu);
-  } 
+  gtk_widget_show_all (menu); 
+  g_signal_handlers_disconnect_by_func (recent,G_CALLBACK(_queue_get_recent_menu),menu);
+  g_signal_connect (recent,"changed",G_CALLBACK(_queue_get_recent_menu),menu);
+
   done_once = TRUE;
   return menu;
 }

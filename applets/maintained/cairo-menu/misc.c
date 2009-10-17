@@ -6,13 +6,12 @@
 #include <libdesktop-agnostic/gtk.h>
 #include <libdesktop-agnostic/vfs.h>
 
+#include "cairo-menu-applet.h"
+
 
 /*TODO
  Leaking a few strings related to the "activate" data.
  */
-
-
-static guint recent_id=0;
 
 static GtkWidget * _get_recent_menu (GtkWidget * menu);
 static gboolean _update_recent_menu (GtkWidget * menu);
@@ -157,7 +156,7 @@ _fillin_connected(DesktopAgnosticVFSVolume *volume,CairoMenu *menu)
   g_object_unref(uri);
   exec = g_strdup_printf("%s %s", XDG_OPEN, uri_str);
   g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);  
-  
+  g_object_weak_ref (G_OBJECT(item),(GWeakNotify) g_free,exec);  
   gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
 }
 
@@ -171,10 +170,8 @@ static void
 _queue_get_recent_menu (GtkRecentManager *recent_manager,
                                              GtkWidget *menu) 
 {
-  if (!recent_id)
-  {
-    recent_id = g_timeout_add_seconds (5,(GSourceFunc)_update_recent_menu,menu);
-  }
+  /*This is currently a bit pointless*/
+  g_idle_add ((GSourceFunc)_update_recent_menu,menu);
 }
 
 static gboolean
@@ -194,7 +191,6 @@ _get_recent_menu (GtkWidget * menu)
   GList * iter;
   gint width,height;
 
-  recent_id = 0;
   g_debug ("%s",__func__);
   gtk_container_foreach (GTK_CONTAINER (menu),(GtkCallback)_remove_menu_item,menu);  
   gtk_icon_size_lookup (GTK_ICON_SIZE_MENU,&width,&height);
@@ -232,6 +228,7 @@ _get_recent_menu (GtkWidget * menu)
           gchar * exec = g_strdup_printf ("%s %s",app_exec,
                                           gtk_recent_info_get_uri (iter->data));
           g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(_exec), exec);
+          g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify) g_free,exec);          
         }
         gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
         g_free (app_name);
@@ -256,4 +253,24 @@ get_recent_menu (void)
   GtkWidget *menu = cairo_menu_new();
   return _get_recent_menu (menu);
 }
-  
+
+MenuInstance *
+get_menu_instance ( AwnApplet * applet,
+                                  GetRunCmdFunc run_cmd_fn,
+                                  GetSearchCmdFunc search_cmd_fn,
+                                  gchar * submenu_name,
+                                  gint flags)
+{
+  MenuInstance *instance = g_malloc (sizeof (MenuInstance));
+  instance->applet = applet;
+  instance->run_cmd_fn = run_cmd_fn;
+  instance->search_cmd_fn = search_cmd_fn;
+  instance->flags = flags;
+  instance->done_once = FALSE;
+  instance->places=NULL;
+  instance->recent=NULL;
+  instance->menu = NULL; 
+  instance->submenu_name = g_strdup(submenu_name);
+  return instance;
+}
+

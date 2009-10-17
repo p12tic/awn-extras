@@ -9,6 +9,7 @@
 #include <libdesktop-agnostic/vfs.h>
 #include "cairo-menu-item.h"
 #include "cairo-menu.h"
+#include "cairo-menu-applet.h"
 
 #define XDG_OPEN "xdg-open"
 
@@ -25,6 +26,10 @@ void  _remove_menu_item  (GtkWidget *menu_item,GtkWidget * menu);
 void  _fillin_connected(DesktopAgnosticVFSVolume *volume,CairoMenu *menu);
 void _exec (GtkMenuItem *menuitem,gchar * cmd);
 
-
+MenuInstance * get_menu_instance ( AwnApplet * applet,
+                                  GetRunCmdFunc run_cmd_fn,
+                                  GetSearchCmdFunc search_cmd_fn,
+                                  gchar * submenu_name,
+                                  gint flags);
 
 #endif /* _CAIRO_MISC */

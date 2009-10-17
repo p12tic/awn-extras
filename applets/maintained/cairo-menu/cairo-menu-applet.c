@@ -5,6 +5,7 @@
 #include "cairo-menu-applet.h"
 #include "cairo-menu.h"
 #include "cairo-main-icon.h"
+#include "cairo-aux-icon.h"
 #include "gnome-menu-builder.h"
 #include "config.h"
 
@@ -100,6 +101,9 @@ cairo_menu_applet_constructed (GObject *object)
   /* call our function in the module */
   icon = cairo_main_icon_new(AWN_APPLET(object));
   gtk_container_add (GTK_CONTAINER(priv->box),icon);
+  icon = cairo_aux_icon_new(AWN_APPLET(object));
+  gtk_container_add (GTK_CONTAINER(priv->box),icon);
+   
 }
 
 static void

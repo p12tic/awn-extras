@@ -11,9 +11,21 @@ G_BEGIN_DECLS
 typedef const gchar * (*GetRunCmdFunc )(AwnApplet * applet);
 typedef const gchar * (*GetSearchCmdFunc )(AwnApplet * applet);
 
-typedef GtkWidget * (* MenuBuildFunc) (AwnApplet *,GetRunCmdFunc,
-                                        GetSearchCmdFunc,gint flags);
+typedef struct
+{
+  AwnApplet * applet;
+  GetRunCmdFunc run_cmd_fn;
+  GetSearchCmdFunc search_cmd_fn;
+  gint flags;
+  guint  source_id;  
+  gboolean done_once;
+  GtkWidget * places;
+  GtkWidget * recent;
+  GtkWidget     * menu;  
+  gchar *       submenu_name;
+}MenuInstance;
 
+typedef GtkWidget * (* MenuBuildFunc)  (MenuInstance * instance);
 
 typedef enum 
 {

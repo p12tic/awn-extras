@@ -21,6 +21,8 @@ cairo_menu_la_SOURCES =	\
 	cairo-menu-item.h       \
 	cairo-main-icon.c       \
 	cairo-main-icon.h       \
+  cairo-aux-icon.c       \
+	cairo-aux-icon.h       \
 	misc.h                  \
 	misc.c                  \
 	$(NULL)

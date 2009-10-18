@@ -51,7 +51,7 @@ ui_file = os.path.join(os.path.dirname(__file__), "volume-control.ui")
 
 system_theme_name = "System theme"
 
-volume_control_apps = ("gnome-volume-control", "xfce4-mixer")
+volume_control_apps = ["gnome-volume-control", "xfce4-mixer"]
 
 # PulseAudio's volume control application
 pa_control_app = "pavucontrol"
@@ -71,6 +71,10 @@ no_mixer_message = "Install one or more of the following GStreamer elements: %s.
 no_devices_message = "Could not find any devices."
 
 
+class BackendError(Exception):
+    pass
+
+
 class VolumeControlApplet:
 
     """Applet to control your computer's volume.
@@ -88,7 +92,8 @@ class VolumeControlApplet:
 
         try:
             self.backend = GStreamerBackend(self)
-        except Exception:
+        except BackendError, e:
+            print "Error: %s" % e
             applet.errors.set_error_icon_and_click_to_restart()
         else:
             self.message_delay_handler = applet.timing.delay(self.backend.freeze_messages.clear, gstreamer_freeze_messages_interval, False)
@@ -365,13 +370,13 @@ class GStreamerBackend:
 
         if len(useable_mixers) == 0:
             parent.applet.errors.general(("No mixer found", no_mixer_message % ", ".join(mixer_names)))
-            raise Exception("No mixer found")
+            raise BackendError("No mixer found")
 
         mixer_devices = self.find_mixer_and_devices(useable_mixers)
 
         if mixer_devices is None:
             parent.applet.errors.general(("No devices found", no_devices_message))
-            raise Exception("No devices found")
+            raise BackendError("No devices found")
 
         self.__mixer, self.__devices = mixer_devices
 

@@ -8,4 +8,4 @@ _Comment=Displays an analog clock and supports additional clocks for different l
 Exec=awn-applet -p %k
 X-AWN-AppletExec=cairo-clock/cairo-clock.py
 Icon=cairo-clock/cairo-clock-logo
-X-AWN-Applet-Category=Utility
+X-AWN-Applet-Category=Utility,Clock

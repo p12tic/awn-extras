@@ -8,4 +8,4 @@ _Comment=Applet that shows the shock protection status of your disks
 Exec=awn-applet -p %k
 X-AWN-AppletExec=thinkhdaps/thinkhdaps.py
 Icon=thinkhdaps/images/thinkhdaps-logo
-X-AWN-Applet-Category=System
+X-AWN-Applet-Category=System,Monitor

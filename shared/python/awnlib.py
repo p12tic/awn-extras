@@ -115,11 +115,11 @@ class Dialogs:
         meta_keys = self.__parent.meta.keys()
 
         # Create the About dialog if the applet provides the necessary metadata
-        if all([key in meta_keys for key in ("name", "author",
-                                             "copyright-year")]):
+        if all([key in meta_keys for key in ("name", "author", "copyright-year")]):
             about_dialog = self.new("about")
 
-            about_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_ABOUT)
+            about_item = gtk.ImageMenuItem("_About %s" % self.__parent.meta["name"])
+            about_item.set_image(gtk.image_new_from_stock(gtk.STOCK_ABOUT, gtk.ICON_SIZE_MENU))
             self.menu.append(about_item)
             about_item.connect("activate", lambda w: self.toggle("about"))
 
@@ -341,8 +341,7 @@ class Dialogs:
             if "description" in parent.meta:
                 self.set_comments(parent.meta["description"])
 
-            copyright_info = (parent.meta["copyright-year"], \
-                                  parent.meta["author"])
+            copyright_info = (parent.meta["copyright-year"], parent.meta["author"])
             self.set_copyright("Copyright \xc2\xa9 %s %s" % copyright_info)
 
             if "authors" in parent.meta:
@@ -738,7 +737,7 @@ class Settings:
         It basically prepares a new dictionary that contains no default
         values and callables, and then calls load_preferences().
 
-        This function does not handle default values and callables (that are
+        This function does not handle default values and callables (which are
         executed when the value of a setting changes), and thus should not
         be used by applets, unless it's used in a different OS process than
         the rest of the applet.
@@ -746,11 +745,16 @@ class Settings:
         """
         dict_tuples = {}
         for key, values in widget_names.iteritems():
-            is_tuple = type(values) is tuple
-            if is_tuple and len(values) == 3:
-                dict_tuples[key] = (None, None, builder.get_object(values[0]), values[1], values[2])
-            else:
-                dict_tuples[key] = (None, None, builder.get_object(values))
+            has_converters = type(values) is tuple and len(values) == 3
+
+            widget_name = values[0] if has_converters else values
+            widget = builder.get_object(widget_name)
+            if widget is None:
+                raise RuntimeError("'%s' is not a valid widget" % widget_name)
+
+            dict_tuples[key] = (None, None, widget)
+            if has_converters:
+                dict_tuples[key] += (values[1], values[2])
         return self.load_preferences(dict_tuples)
 
     def load_preferences(self, dict_tuples, push_defaults=True):
@@ -836,10 +840,10 @@ class Settings:
                 if type(key_widget.get_model()) is not gtk.ListStore:
                     raise RuntimeError("Model of ComboBox %s must be gtk.ListStore" % widget_type.__name__)
                 # TODO assumes atm that type of key is int
-                def changed_cb(widget, name):
-                    self[name] = widget.get_active()
-                key_widget.set_active(self.__dict[key])
-                key_widget.connect("changed", changed_cb, key)
+                def changed_cb(widget, name, conv):
+                    self[name] = conv(widget.get_active())
+                key_widget.set_active(from_s_to_w(self.__dict[key]))
+                key_widget.connect("changed", changed_cb, key, from_w_to_s)
             elif isinstance(key_widget, gtk.Range):
                 def value_changed_cb(widget, name, conv):
                     self[name] = conv(widget.get_value())

@@ -2,8 +2,8 @@ Source: awn-extras-applets-trunk
 Section: gnome
 Priority: optional
 Maintainer: Julien Lavergne <julien.lavergne@gmail.com>
-Build-Depends: 	debhelper (>= 5), 
-		cdbs, 
+Build-Depends: 	debhelper (>= 7), 
+		quilt,
 		intltool, 
 		automake1.11 | automake1.10 | automake1.9 | automake1.8 | automake (>= 1.8),
 		gnome-common, 
@@ -19,7 +19,7 @@ Build-Depends: 	debhelper (>= 5),
 		libsexy-dev, 
 		libnotify-dev,
 		libwebkit-dev,
-		python-central (>= 0.5.6),
+		python-support (>= 0.7.0),
 		valac (>= 0.5.4),
 		vala-awn-trunk (>> 0.3.3)
 Standards-Version: 3.8.0

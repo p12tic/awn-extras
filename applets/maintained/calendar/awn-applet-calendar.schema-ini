@@ -1,0 +1,47 @@
+[DEFAULT]
+single_instance = false
+
+[DEFAULT/clock_background]
+type = string
+default = 667F66FF
+description = X
+
+[DEFAULT/clock_border]
+type = string
+default = 000000FF
+description = X
+
+[DEFAULT/clock_foreground]
+type = string
+default = 000000FF
+description = X
+
+[DEFAULT/graphic]
+type = string
+default = calendar-red.png
+description = X
+
+[DEFAULT/integration]
+type = string
+default = None
+description = X
+
+[DEFAULT/password]
+type = string
+default = 
+description = X
+
+[DEFAULT/url]
+type = string
+default = 
+description = X
+
+[DEFAULT/username]
+description = X
+type = string
+description = X
+
+[DEFAULT/twelve_hour_clock]
+type = boolean
+default = false
+description = X

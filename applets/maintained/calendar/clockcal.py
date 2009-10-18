@@ -19,22 +19,24 @@
 # License along with this library; if not, write to the
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
-#
+
 import sys
 import os
+import time
+import datetime
+import random
+import locale
+
 import gobject
 import gtk
-import gconf
+from desktopagnostic import config
 import awn
 from awn.extras import _
 import cairo
-import locale
-import datetime
-import time
+
 import sevensegled
 import calendarprefs
 import calendarlogin
-import random
 import googlecal
 import owacal
 import evocal
@@ -48,7 +50,6 @@ class Calendar(awn.AppletSimple):
 
     # "Private" stuff
     dialog_visible = False
-    gconf_path = "/apps/avant-window-navigator/applets/calendar"
     locale_lang = "en"
     counter = 0
     twelve_hour_clock = True
@@ -86,12 +87,12 @@ class Calendar(awn.AppletSimple):
         self.build_popup_menu()
         self.build_login_window()
         # Get config params
-        self.gconf_client = gconf.client_get_default()
-        self.gconf_client.notify_add(self.gconf_path,
-                                     self.config_event_callback)
+        self.client = awn.config_get_default_for_applet(self)
+#        self.gconf_client.notify_add(self.gconf_path,
+#                                     self.config_event_callback)
         self.get_config()
-        if self.password == None and self.integration != None and \
-           self.integration.requires_login == True:
+        if self.password is None and self.integration is not None and \
+           self.integration.requires_login:
             self.login()
         try:
             self.locale_lang = locale.getdefaultlocale()[0][0:2]
@@ -135,41 +136,35 @@ class Calendar(awn.AppletSimple):
     # Configuration.
     ###########################################################################
 
-    def get_gconf_key(self, key):
-        return '%s/%s' % (self.gconf_path, key)
-
     def get_boolean_config(self, key, default=True):
-        gkey = self.get_gconf_key(key)
-        result = self.gconf_client.get_bool(gkey)
-        if result == None:
-            self.gconf_client.set_bool(gkey, default)
+        result = self.client.get_bool(config.GROUP_DEFAULT, key)
+        if result is None:
+            self.client.set_bool(config.GROUP_DEFAULT, key, default)
             result = default
         return result
 
     def set_boolean_config(self, key, val):
-        self.gconf_client.set_bool(self.get_gconf_key(key), val)
+        self.client.set_bool(config.GROUP_DEFAULT, key, val)
 
     def get_int_config(self, key, default=0):
-        gkey = self.get_gconf_key(key)
-        result = self.gconf_client.get_int(gkey)
-        if result == None:
-            self.gconf_client.set_int(gkey, default)
+        result = self.client.get_int(config.GROUP_DEFAULT, key)
+        if result is None:
+            self.client.set_int(config.GROUP_DEFAULT, key, default)
             result = default
         return result
 
     def set_int_config(self, key, val):
-        self.gconf_client.set_int(self.get_gconf_key(key), val)
+        self.client.set_int(config.GROUP_DEFAULT, key, val)
 
     def get_string_config(self, key, default=''):
-        gkey = self.get_gconf_key(key)
-        result = self.gconf_client.get_string(gkey)
-        if result == None:
-            self.gconf_client.set_string(gkey, default)
+        result = self.client.get_string(config.GROUP_DEFAULT, key)
+        if result is None:
+            self.client.set_string(config.GROUP_DEFAULt, key, default)
             result = default
         return result
 
     def set_string_config(self, key, val):
-        self.gconf_client.set_string(self.get_gconf_key(key), val)
+        self.client.set_string(config.GROUP_DEFAULT, key, val)
 
     def get_config(self, key_change=None):
         self.previous_minute = -1 # forces a full repaint
@@ -204,9 +199,10 @@ class Calendar(awn.AppletSimple):
         self.clock_border = self.hex_string_to_color(border)
         self.login_window.update_integ_text(self.integ_text)
         self.login_window.user.set_text(self.username)
-        if key_change == self.gconf_path + "/integration":
-            self.login()
-        if self.thread != None:
+        # Not notify shizzle atm
+#        if key_change == self.gconf_path + "/integration":
+#            self.login()
+        if self.thread is not None:
             self.thread.kill()
             self.thread = None
         self.thread = calthread.CalThread(self)
@@ -229,9 +225,9 @@ class Calendar(awn.AppletSimple):
             # is set to won't trigger a config event, so they'll be out of
             # luck.  So force a re-login if this is the case.
             current = self.get_string_config("password", "")
-            if self.password != None and current != "":
+            if self.password is not None and current != "":
                 self.password = None
-                self.gconf_client.set_string(self.gconf_path + "/password", "")
+                self.client.set_string(config.GROUP_DEFAULT, "password", "")
             self.login_window.password.set_text("")
             self.login()
         dialog.destroy()
@@ -260,7 +256,7 @@ class Calendar(awn.AppletSimple):
         self.cal.select_month(localtime.tm_mon - 1, localtime.tm_year)
         self.cal.select_day(localtime.tm_mday)
 
-    def config_event_callback(self, gconf_client, *args, **kwargs):
+    def config_event_callback(self, client, *args, **kwargs):
         key = args[1].get_key()
         self.get_config(key)
 
@@ -291,7 +287,7 @@ class Calendar(awn.AppletSimple):
         if current_minute != self.previous_minute:
             result = self.repaint()
         else:
-            if self.blinky_colon == True:
+            if self.blinky_colon:
                 self.draw_colon(self.ct, 123, 202, 30)
                 self.set_icon_context(self.ct)
             result = True
@@ -309,7 +305,7 @@ class Calendar(awn.AppletSimple):
         self.cal.clear_marks()
         cal_sel_date = self.cal.get_date()
         cal_date = (cal_sel_date[0], cal_sel_date[1]+1, cal_sel_date[2])
-        if self.thread.check_cache(cal_date) == True:
+        if self.thread.check_cache(cal_date):
             year, month, day = cal_date
             busy = self.thread.get_days(year, month)
             for day in busy:
@@ -321,10 +317,10 @@ class Calendar(awn.AppletSimple):
     ###########################################################################
 
     def init_context(self):
-        if self.bkg_img == None:
+        if self.bkg_img is None:
             self.bkg_img = cairo.ImageSurface.create_from_png(self.graphic)
 
-        if self.surface == None:
+        if self.surface is None:
             self.surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.props.size,
                                               self.props.size)
             self.ct = cairo.Context(self.surface)
@@ -355,7 +351,7 @@ class Calendar(awn.AppletSimple):
         self.ct.set_source_surface(self.bkg_img)
         self.ct.paint()
         self.ct.set_operator(cairo.OPERATOR_OVER)
-        if self.clock_plain == False:
+        if not self.clock_plain:
             red, green, blue, alpha = self.clock_background
             self.ct.set_source_rgba(red, green, blue, alpha)
             self.draw_rounded_rect(self.ct, 35, 191, 182, 51, 20)
@@ -393,7 +389,7 @@ class Calendar(awn.AppletSimple):
                                      cairo.FONT_WEIGHT_BOLD)
             self.ct.set_font_size(60.0)
             t = now.strftime("%H:%M")
-            if self.twelve_hour_clock == True:
+            if self.twelve_hour_clock:
                 t = hour + ":" + minute
             text, width = self.get_text_width(self.ct, t, 250)
             x = (256 - width)/2
@@ -448,16 +444,16 @@ class Calendar(awn.AppletSimple):
         hours = time.localtime()[3]
         minutes = time.localtime()[4]
         seconds = time.localtime()[5]
-        if self.twelve_hour_clock == True and hours > 12:
+        if self.twelve_hour_clock and hours > 12:
             hours = hours - 12
         # For twelve-hour clocks, don't draw the leading zeros.
-        if self.twelve_hour_clock == False or hours > 9:
+        if not self.twelve_hour_clock or hours > 9:
             led.draw(hours/10, context, xpos, ypos, xpos+width, ypos+height)
         xpos = xpos + 30
         led.draw(hours%10, context, xpos, ypos, xpos+width, ypos+height)
         # draw the separator (hard-code to a colon for now)
         xpos = xpos + 35
-        if self.blinky_colon == False or seconds % 2 == 0:
+        if not self.blinky_colon or seconds % 2 == 0:
             self.draw_colon(context, xpos, ypos, height)
             #print "xpos %d ypos %d height %d" % (xpos, ypos, height)
             #context.move_to(xpos, ypos+(height/2)-2)
@@ -471,7 +467,7 @@ class Calendar(awn.AppletSimple):
 
     def draw_colon(self, context, xpos, ypos, height):
         seconds = time.localtime()[5]
-        if self.blinky_colon == True:
+        if self.blinky_colon:
             if seconds % 2 == 0:
                 red, green, blue, alpha = self.clock_text
             else:
@@ -502,7 +498,7 @@ class Calendar(awn.AppletSimple):
         self.hbox = gtk.HBox()
         self.vbox.pack_start(self.cal)
         hbox2 = gtk.HBox()
-        if self.integration != None:
+        if self.integration is not None:
             self.opencal = gtk.Button(_("Open in ") + self.integ_text)
             self.opencal.connect("button-press-event",
                                  self.open_integrated_calendar)
@@ -513,7 +509,7 @@ class Calendar(awn.AppletSimple):
         hbox2.pack_start(self.goto_today)
         self.vbox.pack_start(hbox2)
         self.hbox.pack_start(self.vbox, False)
-        if self.integration != None:
+        if self.integration is not None:
             self.dialog.set_size_request(600, 300)
             self.scrolled_win = gtk.ScrolledWindow()
             self.scrolled_win.set_border_width(10)
@@ -535,13 +531,13 @@ class Calendar(awn.AppletSimple):
         self.dialog.show_all()
         localtime = time.localtime()
         self.cal.clear_marks()
-        if self.thread.check_cache(localtime[:3]) == True:
+        if self.thread.check_cache(localtime[:3]):
             busy = self.thread.get_days(localtime.tm_year, localtime.tm_mon)
             for day in busy:
                 self.cal.mark_day(day)
 
     def update_tree_view(self, widget):
-        if self.integration != None:
+        if self.integration is not None:
             self.list.clear()
             cal_sel_date = self.cal.get_date()
             cal_date = (cal_sel_date[0], cal_sel_date[1] + 1, cal_sel_date[2])
@@ -564,19 +560,17 @@ class Calendar(awn.AppletSimple):
                 dialog.destroy()
 
     def open_integrated_calendar(self, widget, event):
-        if self.integration != None:
+        if self.integration is not None:
             when = self.cal.get_date()
             self.integration.open_integrated_calendar(when, self.url)
 
     def login(self):
         # Try to avoid any potential weird race-conditions where we end up with
         # two of these open.
-        if self.integration != None:
-            if self.login_open == False:
-                if self.integration.requires_login == True:
-                    self.login_open = True
-                    self.login_window.show_all()
-                    self.login_open = False
+        if self.integration is not None and not self.login_open and self.integration.requires_login:
+            self.login_open = True
+            self.login_window.show_all()
+            self.login_open = False
 
     ###########################################################################
     # Utilities.

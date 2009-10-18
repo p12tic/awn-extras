@@ -384,6 +384,7 @@ class GStreamerBackend:
         if self.__mixer.get_factory().get_name() == "pulsemixer":
             volume_control_apps.insert(0, pa_control_app)
 
+        self.__mixer.set_state(gst.STATE_READY)
         if self.__mixer.get_mixer_flags() & gst.interfaces.MIXER_FLAG_AUTO_NOTIFICATIONS:
             bus = gst.Bus()
             bus.add_signal_watch()
@@ -391,6 +392,7 @@ class GStreamerBackend:
             self.__mixer.set_bus(bus)
         else:
             parent.applet.timing.register(parent.refresh_icon, read_volume_interval)
+        self.__mixer.set_state(gst.STATE_NULL)
 
     def find_mixer_and_devices(self, names):
         """Return the first GStreamer mixer element and its list of devices

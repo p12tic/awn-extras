@@ -42,7 +42,9 @@ struct _CairoMenuAppletPrivate {
   GtkWidget * box;  
   gchar     * run_cmd;
   gchar     * search_cmd;
-  GList     * aux_menu_names;
+  GValueArray * aux_menu_names;
+  GValueArray * hidden_names;  
+  DesktopAgnosticConfigClient *client;
 };
 
 
@@ -53,12 +55,26 @@ static gchar * gnome_search_cmds[] = { "tracker-search-tool","gnome-do",NULL};
   
 static gboolean _button_clicked_event (CairoMenuApplet *applet, GdkEventButton *event, gpointer null);
 
+enum
+{
+  PROP_0,
+  PROP_AUX_MENU_NAMES,
+  PROP_HIDDEN_NAMES
+};
 
 static void
 cairo_menu_applet_get_property (GObject *object, guint property_id,
                               GValue *value, GParamSpec *pspec)
 {
+  CairoMenuAppletPrivate * priv = GET_PRIVATE (object);
+  
   switch (property_id) {
+  case PROP_AUX_MENU_NAMES:
+    g_value_set_boxed (value,priv->aux_menu_names );
+    break;
+  case PROP_HIDDEN_NAMES:
+    g_value_set_boxed (value,priv->hidden_names );
+    break;      
   default:
     G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
   }
@@ -68,7 +84,25 @@ static void
 cairo_menu_applet_set_property (GObject *object, guint property_id,
                               const GValue *value, GParamSpec *pspec)
 {
+  CairoMenuAppletPrivate * priv = GET_PRIVATE (object);
+  
   switch (property_id) {
+  case PROP_AUX_MENU_NAMES:
+    if (priv->aux_menu_names)
+    {
+      g_value_array_free (priv->aux_menu_names);
+      priv->aux_menu_names = NULL;
+    }
+    priv->aux_menu_names = (GValueArray*)g_value_dup_boxed (value);
+    break;
+  case PROP_HIDDEN_NAMES:
+    if (priv->hidden_names)
+    {
+      g_value_array_free (priv->hidden_names);
+      priv->hidden_names = NULL;
+    }
+    priv->hidden_names = (GValueArray*)g_value_dup_boxed (value);
+    break;      
   default:
     G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
   }
@@ -91,8 +125,7 @@ cairo_menu_applet_constructed (GObject *object)
 {
   CairoMenuAppletPrivate * priv = GET_PRIVATE (object);
   GtkWidget * icon;
-  G_OBJECT_CLASS (cairo_menu_applet_parent_class)->constructed (object);
-
+  gint idx;
   /*to when guessing check DESKTOP_SESSION env var. and try loading based on that.
    if env var not set or module fails to load then try to load in the following 
    order:  gnome, xfce.   
@@ -101,8 +134,9 @@ cairo_menu_applet_constructed (GObject *object)
   GList * iter;
   GError * error = NULL;
   gchar * filename = APPLETSDIR"/../../../lib/awn/applets/cairo-menu/gnome-menu-builder";
-  g_debug ("%s",filename);
   GModule      *module;
+
+  G_OBJECT_CLASS (cairo_menu_applet_parent_class)->constructed (object);   
   module = g_module_open (filename, 
                           G_MODULE_BIND_LAZY);  
   g_assert (module);
@@ -122,26 +156,79 @@ cairo_menu_applet_constructed (GObject *object)
   icon = cairo_main_icon_new(AWN_APPLET(object));
   gtk_container_add (GTK_CONTAINER(priv->box),icon);
 
+  priv->client = awn_config_get_default_for_applet (AWN_APPLET (object), NULL);
+
+  /* Connect up the important bits */
+  desktop_agnostic_config_client_bind (priv->client,
+                                       DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
+                                       "aux_menu_names",
+                                       object, "aux_menu_names", FALSE,
+                                       DESKTOP_AGNOSTIC_CONFIG_BIND_METHOD_FALLBACK,
+                                       NULL);
+
+  desktop_agnostic_config_client_bind (priv->client,
+                                       DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
+                                       "hidden_names",
+                                       object, "hidden_names", FALSE,
+                                       DESKTOP_AGNOSTIC_CONFIG_BIND_METHOD_FALLBACK,
+                                       NULL);
+   
+  for (idx = 0; idx < priv->aux_menu_names->n_values; idx++)
+  {
+    gchar *name;
+    GStrv tokens;
+    name = g_value_dup_string (g_value_array_get_nth (priv->aux_menu_names, idx));
+    g_debug ("%s: %s",__func__,name);
+    tokens = g_strsplit ( name,"###",-1);
+    if (g_strv_length (tokens)==3)
+    {
+      icon = cairo_aux_icon_new (AWN_APPLET(object),tokens[0],tokens[1],tokens[2]);  
+      gtk_container_add (GTK_CONTAINER(priv->box),icon);     
+    }
+    else
+    {
+      g_message ("%s: Invalid entry in aux_menu_names",__func__);
+    }
+    g_strfreev(tokens);
+    g_free (name);
+  }
+/*
   for (iter = priv->aux_menu_names; iter; iter = iter->next)
   {
     gchar * aux_name = iter->data;
     icon = cairo_aux_icon_new (AWN_APPLET(object),aux_name,"","stock_folder");
     gtk_container_add (GTK_CONTAINER(priv->box),icon);     
-  }
+  }*/
 }
 
 static void
 cairo_menu_applet_class_init (CairoMenuAppletClass *klass)
 {
+  GParamSpec     *pspec;  
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
-  g_type_class_add_private (klass, sizeof (CairoMenuAppletPrivate));
 
   object_class->get_property = cairo_menu_applet_get_property;
   object_class->set_property = cairo_menu_applet_set_property;
   object_class->dispose = cairo_menu_applet_dispose;
   object_class->finalize = cairo_menu_applet_finalize;
   object_class->constructed = cairo_menu_applet_constructed;
+
+  pspec = g_param_spec_boxed ("aux_menu_names",
+                              "aux_menu_names",
+                              "List of aux menus",
+                              G_TYPE_VALUE_ARRAY,
+                              G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
+  g_object_class_install_property (object_class, PROP_AUX_MENU_NAMES, pspec);
+
+  pspec = g_param_spec_boxed ("hidden_names",
+                              "hidden_names",
+                              "List of hidden menus",
+                              G_TYPE_VALUE_ARRAY,
+                              G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
+  g_object_class_install_property (object_class, PROP_HIDDEN_NAMES, pspec);
+
+  g_type_class_add_private (klass, sizeof (CairoMenuAppletPrivate));
+
 }
 
 static void
@@ -224,18 +311,177 @@ cairo_menu_applet_get_search_cmd (CairoMenuApplet * applet)
 }
 
 void
+cairo_menu_applet_append_hidden_menu (CairoMenuApplet * applet, gchar * menu_name)
+{
+  GValueArray * names;  
+  GValue val = {0,};  
+  CairoMenuAppletPrivate * priv = GET_PRIVATE (applet);
+  
+  g_object_get (G_OBJECT (applet), "hidden_names", &names, NULL);
+  g_value_init (&val, G_TYPE_STRING);
+  g_value_set_string (&val, menu_name);
+  names = g_value_array_append (names, &val);
+  g_object_set (G_OBJECT (applet), "hidden_names", names, NULL);
+  g_value_unset (&val);
+  g_value_array_free (names);
+
+}
+
+gboolean
+cairo_menu_applet_check_hidden_menu (CairoMenuApplet * applet, gchar * menu_name)
+{
+  GValueArray * names;    
+  gint idx;
+  CairoMenuAppletPrivate * priv = GET_PRIVATE (applet);
+
+  g_debug ("%s: %s",__func__,menu_name);
+  g_object_get (applet,"hidden_names",&names,NULL);  
+  if (names)
+  {
+    for (idx = 0; idx < names->n_values; idx++)
+    {
+      gchar *name;
+      name = g_value_dup_string (g_value_array_get_nth (names, idx));
+      g_debug ("%s compare %s, %s",__func__,name,menu_name);
+      if (g_strcmp0 (name,menu_name)==0)
+      {
+        g_debug ("HIDDEN");
+        g_free (name);
+        g_value_array_free (names);        
+        return TRUE;
+      }
+      g_free (name);
+    }
+    g_value_array_free (names);  
+  }
+  return FALSE;
+}
+
+void
+cairo_menu_applet_remove_hidden_menu (CairoMenuApplet * applet, gchar * menu_name)
+{
+  GValueArray * names;  
+  gint idx;
+  
+  CairoMenuAppletPrivate * priv = GET_PRIVATE (applet);
+  
+  g_object_get (applet,"hidden_names",&names,NULL);
+  if (names)
+  {
+    for (idx = 0; idx < names->n_values; idx++)
+    {
+      gchar *name;
+      name = g_value_dup_string (g_value_array_get_nth (names, idx));
+      if (g_strcmp0 (name,menu_name)==0)
+      {
+        GValueArray* s = g_value_array_remove (names, idx);
+//        g_value_array_free (s);
+        g_object_set (applet,"hidden_names",names,NULL);            
+        break;
+      } 
+      g_free (name);
+    } 
+  }
+  g_value_array_free (names);  
+}
+
+void
+cairo_menu_applet_remove_icon (CairoMenuApplet * applet, AwnThemedIcon * icon)
+{
+  gchar * menu_name;
+  gchar * display_name;
+  gchar * icon_name;
+  gchar * str;
+  GList * s;
+  gint  idx;
+  GValueArray * names;
+  GList * iter;
+  
+  CairoMenuAppletPrivate * priv = GET_PRIVATE (applet);
+
+  g_object_get (icon,
+                "menu_name",&menu_name,
+                "display_name",&display_name,
+                "icon_name",&icon_name,
+                NULL);
+  
+  str = g_strdup_printf("%s###%s###%s",menu_name,display_name,icon_name);
+
+  g_object_get (applet,"aux_menu_names",&names,NULL);
+  if (names)
+  {
+    for (idx = 0; idx < names->n_values; idx++)
+    {
+      gchar *name;
+      name = g_value_dup_string (g_value_array_get_nth (names, idx));
+      g_debug ("compare '%s', '%s'",name,str);
+      if (g_strcmp0 (name,str)==0)
+      {
+        GValueArray* s = g_value_array_remove (names, idx);
+//        g_value_array_free (s);
+        g_debug ("%s: DELETE %s",__func__,name);
+        g_object_set (applet,"aux_menu_names",names,NULL);            
+        break;
+      } 
+      g_free (name);
+    } 
+  }
+  g_value_array_free (names);
+  gtk_container_remove (GTK_CONTAINER(priv->box), GTK_WIDGET(icon));
+
+  cairo_menu_applet_remove_hidden_menu (applet,menu_name);
+  for (iter=gtk_container_get_children (GTK_CONTAINER(priv->box));iter;iter=iter->data)
+  {
+    if (AWN_IS_CAIRO_MAIN_ICON(iter->data))
+    {
+      cairo_main_icon_refresh_menu (iter->data);
+    }
+  }
+  
+  g_free (menu_name);
+  g_free (display_name);
+  g_free (icon_name);
+  g_free (str);
+
+}
+
+void
 cairo_menu_applet_add_icon (CairoMenuApplet * applet, gchar * menu_name, gchar * display_name, gchar * icon_name)
 {
   gchar * str;
   GtkWidget * icon;
+//  gchar * base;
+  GValue val = {0,};
+  GValueArray * names;
+  GList * iter;
   
   CairoMenuAppletPrivate * priv = GET_PRIVATE (applet);
 
-  g_debug ("%s: %s, %s, %s",__func__,menu_name,display_name,icon_name);
+ // base = g_path_get_basename (menu_name);
   str = g_strdup_printf("%s###%s###%s",menu_name,display_name,icon_name);
-  priv->aux_menu_names = g_list_append (priv->aux_menu_names, str);
+//  priv->aux_menu_names = g_list_append (priv->aux_menu_names, str);
+
+  cairo_menu_applet_append_hidden_menu (applet,menu_name);
+  
+  g_debug ("%s: adding %s",__func__,str);
+  g_object_get (G_OBJECT (applet), "aux_menu_names", &names, NULL);
+  g_value_init (&val, G_TYPE_STRING);
+  g_value_set_string (&val, str);
+  names = g_value_array_append (names, &val);
+  g_object_set (G_OBJECT (applet), "aux_menu_names", names, NULL);
+  g_value_unset (&val);
+  g_value_array_free (names);
 
   icon = cairo_aux_icon_new (AWN_APPLET(applet),menu_name,display_name,icon_name);
   gtk_widget_show (icon);
   gtk_container_add (GTK_CONTAINER(priv->box),icon);
+
+  for (iter=gtk_container_get_children (GTK_CONTAINER(priv->box));iter;iter=iter->data)
+  {
+    if (AWN_IS_CAIRO_MAIN_ICON(iter->data))
+    {
+      cairo_main_icon_refresh_menu (iter->data);
+    }
+  }
+//  g_free (base);
 }

@@ -103,4 +103,14 @@ type = boolean
 default = true
 description = 
 
+[DEFAULT/aux_menu_names]
+type = list-string
+default = :::PLACES###Places###stock_folder;
+description =
+
+[DEFAULT/hidden_names]
+type = list-string
+default =
+description =
+
 # vim:ft=cfg:

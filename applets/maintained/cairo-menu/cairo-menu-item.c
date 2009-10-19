@@ -55,7 +55,10 @@ cairo_menu_item_set_property (GObject *object, guint property_id,
 static void
 cairo_menu_item_dispose (GObject *object)
 {
-  G_OBJECT_CLASS (cairo_menu_item_parent_class)->dispose (object);
+  if (G_OBJECT_CLASS (cairo_menu_item_parent_class)->dispose)
+  {
+    G_OBJECT_CLASS (cairo_menu_item_parent_class)->dispose (object);
+  }
 }
 
 static void
@@ -64,11 +67,13 @@ cairo_menu_item_finalize (GObject *object)
   CairoMenuItemPrivate * priv = GET_PRIVATE(object);  
   if (priv->drag_source_data)
   {
-    g_free(priv->drag_source_data);
+ //   g_free(priv->drag_source_data);
     priv->drag_source_data = NULL;
   }
-  
-  G_OBJECT_CLASS (cairo_menu_item_parent_class)->finalize (object);
+  if (G_OBJECT_CLASS (cairo_menu_item_parent_class)->finalize)
+  {
+    G_OBJECT_CLASS (cairo_menu_item_parent_class)->finalize (object);
+  }
 }
 
 static gboolean
@@ -167,7 +172,6 @@ cairo_menu_item_set_source (CairoMenuItem *item, gchar * drag_data)
   CairoMenuItemPrivate * priv = GET_PRIVATE(item);
   GtkWidget * image;
 
-  g_debug ("%s: %s",__func__,drag_data);
   if (priv->drag_source_data)
   {
     g_free(priv->drag_source_data);
@@ -180,10 +184,22 @@ cairo_menu_item_set_source (CairoMenuItem *item, gchar * drag_data)
   gtk_drag_source_set (GTK_WIDGET(item),GDK_BUTTON1_MASK,drop_types,3,GDK_ACTION_COPY);
   if (image)
   {
-    GdkPixbuf * pbuf = gtk_image_get_pixbuf (GTK_IMAGE(image));
-    if (pbuf)
+    if ( gtk_image_get_storage_type (GTK_IMAGE(image))==GTK_IMAGE_PIXBUF)
     {
-      gtk_drag_source_set_icon_pixbuf (GTK_WIDGET(item),pbuf);
+      GdkPixbuf * pbuf = gtk_image_get_pixbuf (GTK_IMAGE(image));
+      if (pbuf)
+      {
+        gtk_drag_source_set_icon_pixbuf (GTK_WIDGET(item),pbuf);
+      }
+    }
+    else if (gtk_image_get_storage_type (GTK_IMAGE(image))==GTK_IMAGE_ICON_NAME)
+    {
+      gchar * icon_name;
+      g_object_get (image,
+                    "icon_name",&icon_name,
+                    NULL);
+      gtk_drag_source_set_icon_name (GTK_WIDGET(item),icon_name);
+      g_free (icon_name);
     }
   }
   g_signal_connect (item,"drag-data-get",G_CALLBACK(_get_data),NULL);

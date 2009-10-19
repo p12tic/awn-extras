@@ -21,7 +21,7 @@
 #ifndef _CAIRO_MENU_APPLET
 #define _CAIRO_MENU_APPLET
 
-#include <libawn/awn-applet.h>
+#include <libawn/libawn.h>
 #include <glib-object.h>
 
 G_BEGIN_DECLS
@@ -29,6 +29,7 @@ G_BEGIN_DECLS
 typedef const gchar * (*GetRunCmdFunc )(AwnApplet * applet);
 typedef const gchar * (*GetSearchCmdFunc )(AwnApplet * applet);
 typedef void (*AddIconFunc )(AwnApplet * applet, gchar * menu_name,gchar * display_name, gchar *icon_name);
+typedef gboolean (*CheckMenuHiddenFunc )(AwnApplet * applet, gchar * menu_name);
 
 typedef struct
 {
@@ -36,6 +37,7 @@ typedef struct
   GetRunCmdFunc run_cmd_fn;
   GetSearchCmdFunc search_cmd_fn;
   AddIconFunc add_icon_fn;
+  CheckMenuHiddenFunc check_menu_hidden_fn;
   gint flags;
   guint  source_id;  
   gboolean done_once;
@@ -111,6 +113,11 @@ const gchar * cairo_menu_applet_get_run_cmd (CairoMenuApplet * applet);
 const gchar * cairo_menu_applet_get_search_cmd (CairoMenuApplet * applet);
 
 void cairo_menu_applet_add_icon (CairoMenuApplet * applet, gchar * menu_name, gchar * display_name, gchar *icon_name);
+
+void cairo_menu_applet_remove_icon (CairoMenuApplet * applet, AwnThemedIcon * icon);
+
+gboolean cairo_menu_applet_check_hidden_menu (CairoMenuApplet * applet, gchar * menu_name);
+
 G_END_DECLS
 
 #endif /* _CAIRO_MENU_APPLET */

@@ -42,6 +42,7 @@ struct _CairoMainIconPrivate {
   GtkWidget   *menu;
   AwnApplet   * applet;
   MenuInstance * menu_instance;
+  GtkWidget   * context_menu;
 };
 
 
@@ -129,9 +130,10 @@ cairo_main_icon_constructed (GObject *object)
   /* call our function in the module */
 
   priv->menu_instance = get_menu_instance (priv->applet,
-                                         (GetRunCmdFunc)cairo_menu_applet_get_run_cmd,
+                                          (GetRunCmdFunc)cairo_menu_applet_get_run_cmd,
                                           (GetSearchCmdFunc)cairo_menu_applet_get_search_cmd,
                                           (AddIconFunc) cairo_menu_applet_add_icon,
+                                          (CheckMenuHiddenFunc) cairo_menu_applet_check_hidden_menu,
                                           NULL,
                                           MENU_BUILD_NO_SESSION);
   priv->menu = menu_build (priv->menu_instance);
@@ -155,7 +157,7 @@ cairo_main_icon_drag_data_received (GtkWidget        *widget,
   GStrv           tokens = NULL;  
   sdata_data = (gchar*)gtk_selection_data_get_data (sdata);
 
-  g_debug ("%s: %s",__func__,sdata_data);
+
   if (strstr (sdata_data, "cairo_menu_item_dir:///"))
   {
     /*TODO move into a separate function */
@@ -219,6 +221,7 @@ cairo_main_icon_init (CairoMainIcon *self)
   CairoMainIconPrivate * priv = GET_PRIVATE (self);
 
   priv->menu_type = MENU_TYPE_GUESS;
+  priv->context_menu = NULL;
 }
 
 GtkWidget*
@@ -231,41 +234,56 @@ cairo_main_icon_new (AwnApplet * applet)
 }
 
 static gboolean 
-_button_clicked_event (CairoMainIcon *applet, GdkEventButton *event, gpointer null)
+_button_clicked_event (CairoMainIcon *icon, GdkEventButton *event, gpointer null)
 {
-  GdkEventButton *event_button;
-  event_button = (GdkEventButton *) event;
-  CairoMainIconPrivate * priv = GET_PRIVATE (applet);
+  g_return_if_fail (AWN_IS_CAIRO_MAIN_ICON(icon));
+  CairoMainIconPrivate * priv = GET_PRIVATE (icon);
   
   if (event->button == 1)
   {
     gtk_menu_popup(GTK_MENU(priv->menu), NULL, NULL, NULL, NULL,
-                            event_button->button, event_button->time);    
+                          event->button, event->time);    
   }
   else if (event->button == 3)
   {
-    static GtkWidget * menu=NULL;
-    static GtkWidget * item;
+    GtkWidget * item;
 
-    if (!menu)
+    if (!priv->context_menu)
     {
-      menu = awn_applet_create_default_menu (AWN_APPLET(applet));
+      priv->context_menu = awn_applet_create_default_menu (AWN_APPLET(priv->applet));
       item = gtk_menu_item_new_with_label("Preferences");
       
       gtk_widget_show(item);
-      gtk_menu_set_screen(GTK_MENU(menu), NULL);
-      gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+      gtk_menu_set_screen(GTK_MENU(priv->context_menu), NULL);
+      gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);
 //      g_signal_connect(G_OBJECT(item), "button-press-event", G_CALLBACK(_show_prefs), NULL);
-      item=awn_applet_create_about_item_simple(AWN_APPLET(applet),
+      item=awn_applet_create_about_item_simple(AWN_APPLET(priv->applet),
                                                "Copyright 2007,2008, 2009 Rodney Cryderman <rcryderman@gmail.com>",
                                                AWN_APPLET_LICENSE_GPLV2,
                                                NULL);
-      gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);      
+      gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);      
       
     }
 
-    gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL,event_button->button, event_button->time);
+    gtk_menu_popup(GTK_MENU(priv->context_menu), NULL, NULL, NULL, NULL,event->button, event->time);
   }
   return TRUE;
 }
 
+void
+cairo_main_icon_refresh_menu (CairoMainIcon * icon)
+{
+  g_return_if_fail (AWN_IS_CAIRO_MAIN_ICON(icon));
+  CairoMainIconPrivate * priv = GET_PRIVATE (icon);
+
+  if (priv->menu && (AWN_IS_CAIRO_MENU(priv->menu)))
+  {
+    g_debug ("Destroying menu");
+    gtk_widget_destroy (priv->menu);
+  }
+  priv->menu_instance->menu=NULL;
+  priv->menu_instance->places=NULL;
+  priv->menu_instance->recent=NULL;  
+  priv->menu = menu_build (priv->menu_instance);
+  gtk_widget_show_all (priv->menu);
+}

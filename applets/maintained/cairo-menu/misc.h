@@ -49,6 +49,7 @@ MenuInstance * get_menu_instance ( AwnApplet * applet,
                                   GetRunCmdFunc run_cmd_fn,
                                   GetSearchCmdFunc search_cmd_fn,
                                   AddIconFunc add_icon_fn,
+                                  CheckMenuHiddenFunc check_menu_hidden_fn,
                                   gchar * submenu_name,
                                   gint flags);
 

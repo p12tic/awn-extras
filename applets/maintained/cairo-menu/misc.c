@@ -260,6 +260,7 @@ get_menu_instance ( AwnApplet * applet,
                                   GetRunCmdFunc run_cmd_fn,
                                   GetSearchCmdFunc search_cmd_fn,
                                   AddIconFunc add_icon_fn,
+                                  CheckMenuHiddenFunc check_menu_hidden_fn,
                                   gchar * submenu_name,
                                   gint flags)
 {
@@ -268,6 +269,7 @@ get_menu_instance ( AwnApplet * applet,
   instance->run_cmd_fn = run_cmd_fn;
   instance->search_cmd_fn = search_cmd_fn;
   instance->add_icon_fn = add_icon_fn;
+  instance->check_menu_hidden_fn = check_menu_hidden_fn;
   instance->flags = flags;
   instance->done_once = FALSE;
   instance->places=NULL;

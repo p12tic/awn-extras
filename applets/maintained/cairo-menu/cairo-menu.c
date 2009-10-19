@@ -54,13 +54,19 @@ cairo_menu_set_property (GObject *object, guint property_id,
 static void
 cairo_menu_dispose (GObject *object)
 {
-  G_OBJECT_CLASS (cairo_menu_parent_class)->dispose (object);
+  if (G_OBJECT_CLASS (cairo_menu_parent_class)->dispose)
+  {
+    G_OBJECT_CLASS (cairo_menu_parent_class)->dispose (object);
+  }
 }
 
 static void
 cairo_menu_finalize (GObject *object)
 {
-  G_OBJECT_CLASS (cairo_menu_parent_class)->finalize (object);
+  if (G_OBJECT_CLASS (cairo_menu_parent_class)->finalize)
+  {
+    G_OBJECT_CLASS (cairo_menu_parent_class)->finalize (object);
+  }
 }
 
 static gboolean

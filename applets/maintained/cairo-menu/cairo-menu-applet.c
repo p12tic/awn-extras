@@ -153,9 +153,6 @@ cairo_menu_applet_constructed (GObject *object)
       g_assert (FALSE);
     }
   /* call our function in the module */
-  icon = cairo_main_icon_new(AWN_APPLET(object));
-  gtk_container_add (GTK_CONTAINER(priv->box),icon);
-
   priv->client = awn_config_get_default_for_applet (AWN_APPLET (object), NULL);
 
   /* Connect up the important bits */
@@ -172,6 +169,8 @@ cairo_menu_applet_constructed (GObject *object)
                                        object, "hidden_names", FALSE,
                                        DESKTOP_AGNOSTIC_CONFIG_BIND_METHOD_FALLBACK,
                                        NULL);
+  icon = cairo_main_icon_new(AWN_APPLET(object));
+  gtk_container_add (GTK_CONTAINER(priv->box),icon);
    
   for (idx = 0; idx < priv->aux_menu_names->n_values; idx++)
   {

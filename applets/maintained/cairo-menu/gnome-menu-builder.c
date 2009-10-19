@@ -638,9 +638,9 @@ menu_build (MenuInstance * instance)
       instance->menu = fill_er_up(instance,root,instance->menu);
       if (instance->done_once)
       {
-        gmenu_tree_remove_monitor (main_menu_tree,(GMenuTreeChangedFunc)_menu_modified_cb,instance->menu);
+        gmenu_tree_remove_monitor (main_menu_tree,(GMenuTreeChangedFunc)_menu_modified_cb,instance);
       }
-      gmenu_tree_add_monitor (main_menu_tree,(GMenuTreeChangedFunc)_menu_modified_cb,instance->menu);      
+      gmenu_tree_add_monitor (main_menu_tree,(GMenuTreeChangedFunc)_menu_modified_cb,instance);      
       gmenu_tree_item_unref(root);
     }
   }
@@ -660,9 +660,9 @@ menu_build (MenuInstance * instance)
     {
       if (instance->done_once)
       {
-        gmenu_tree_remove_monitor (settings_menu_tree,(GMenuTreeChangedFunc)_menu_modified_cb,instance->menu);
+        gmenu_tree_remove_monitor (settings_menu_tree,(GMenuTreeChangedFunc)_menu_modified_cb,instance);
       }
-      gmenu_tree_add_monitor (settings_menu_tree,(GMenuTreeChangedFunc)_menu_modified_cb,instance->menu);
+      gmenu_tree_add_monitor (settings_menu_tree,(GMenuTreeChangedFunc)_menu_modified_cb,instance);
 
       if ( !instance->submenu_name )
       {

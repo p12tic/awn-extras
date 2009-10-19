@@ -242,7 +242,8 @@ _button_clicked_event (CairoMainIcon *icon, GdkEventButton *event, gpointer null
   if (event->button == 1)
   {
     gtk_menu_popup(GTK_MENU(priv->menu), NULL, NULL, NULL, NULL,
-                          event->button, event->time);    
+                          event->button, event->time);   
+    g_object_set(awn_overlayable_get_effects (AWN_OVERLAYABLE(icon)), "depressed", FALSE,NULL);
   }
   else if (event->button == 3)
   {
@@ -264,8 +265,8 @@ _button_clicked_event (CairoMainIcon *icon, GdkEventButton *event, gpointer null
       gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);      
       
     }
-
     gtk_menu_popup(GTK_MENU(priv->context_menu), NULL, NULL, NULL, NULL,event->button, event->time);
+    g_object_set(awn_overlayable_get_effects (AWN_OVERLAYABLE(icon)), "depressed", FALSE,NULL);    
   }
   return TRUE;
 }

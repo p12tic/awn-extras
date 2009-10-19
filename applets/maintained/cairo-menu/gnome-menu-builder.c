@@ -614,7 +614,7 @@ menu_build (MenuInstance * instance)
   {
     GList * children = gtk_container_get_children (GTK_CONTAINER(instance->menu));
     GList * iter;
-    for (iter = children;iter;iter=iter->next)
+    for (iter = children;iter;iter=g_list_next (iter))
     {
       if ( (iter->data !=instance->places) && (iter->data!=instance->recent))
       {

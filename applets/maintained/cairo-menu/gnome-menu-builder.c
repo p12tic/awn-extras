@@ -620,8 +620,13 @@ menu_build (MenuInstance * instance)
       {
         gtk_container_remove (GTK_CONTAINER (instance->menu),iter->data);
         /*TODO  check if this is necessary*/
-        iter = gtk_container_get_children (GTK_CONTAINER(instance->menu));
+        g_list_free (children);        
+        children = iter = gtk_container_get_children (GTK_CONTAINER(instance->menu));
       }
+    }
+    if (children)
+    {
+      g_list_free (children);
     }
   }
   
@@ -729,8 +734,10 @@ menu_build (MenuInstance * instance)
     {    
       if (instance->places)
       {
+        GList * children = gtk_container_get_children (GTK_CONTAINER(instance->menu));
         menu_item =instance->places;
-        gtk_menu_reorder_child (GTK_MENU(instance->menu),menu_item,100);
+        gtk_menu_reorder_child (GTK_MENU(instance->menu),menu_item,g_list_length (children));
+        g_list_free (children);
       }
       else
       {
@@ -784,8 +791,10 @@ menu_build (MenuInstance * instance)
     {
       if (instance->recent)
       {
-        menu_item = instance->recent;
-        gtk_menu_reorder_child (GTK_MENU(instance->menu),menu_item,100);      
+        GList * children = gtk_container_get_children (GTK_CONTAINER(instance->menu));
+        menu_item =instance->places;
+        gtk_menu_reorder_child (GTK_MENU(instance->menu),menu_item,g_list_length (children));
+        g_list_free (children);        
       }
       else
       {

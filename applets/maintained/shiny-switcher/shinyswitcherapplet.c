@@ -639,6 +639,9 @@ _button_workspace(GtkWidget *widget, GdkEventButton *event, Workplace_info * ws)
       menu = awn_applet_create_default_menu(AWN_APPLET(shinyswitcher));
       gtk_menu_set_screen(GTK_MENU(menu), NULL);
       item = gtk_image_menu_item_new_with_label("Applet Preferences");
+      gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM(item), 
+                                     gtk_image_new_from_stock (GTK_STOCK_PREFERENCES,GTK_ICON_SIZE_MENU));     
+      
       gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
                                     gtk_image_new_from_stock(GTK_STOCK_PREFERENCES,
                                                              GTK_ICON_SIZE_MENU));
@@ -652,6 +655,7 @@ _button_workspace(GtkWidget *widget, GdkEventButton *event, Workplace_info * ws)
              AWN_APPLET_LICENSE_GPLV2,
              NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+      awn_utils_show_menu_images (GTK_MENU(menu));
     }
 
     if (menu)
@@ -743,7 +747,7 @@ _button_win(GtkWidget *widget, GdkEventButton *event, Win_press_data * data)
              NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-
+      awn_utils_show_menu_images (GTK_MENU(menu));
       gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL, event->button, event->time);
       g_signal_connect(G_OBJECT(menu), "selection-done", G_CALLBACK(_menu_selection_done), shinyswitcher);
     }
@@ -2021,6 +2025,7 @@ _window_opened(WnckScreen *screen, WnckWindow *window, AwnShinySwitcher *shinysw
 
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
     g_tree_insert(priv->win_menus, G_OBJECT(window), menu);
+    awn_utils_show_menu_images (GTK_MENU(menu));
   }
 }
 

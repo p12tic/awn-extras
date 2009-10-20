@@ -33,6 +33,7 @@
 #include "misc.h"
 #include "cairo-menu-applet.h"
 
+
 GtkWidget *  menu_build (MenuInstance * instance);
 
 static GtkWidget *
@@ -77,8 +78,7 @@ add_special_item (GtkWidget * menu,
   {
     g_free (bin_path);
   }
-  item = cairo_menu_item_new ();
-  gtk_menu_item_set_label (GTK_MENU_ITEM(item),name);
+  item = cairo_menu_item_new_with_label (name);
   image = get_gtk_image (icon_name);  
   if (image)
   {
@@ -90,6 +90,17 @@ add_special_item (GtkWidget * menu,
   gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
 }
 
+
+static GtkWidget *
+get_session_menu(void)
+{
+  GtkWidget *menu = cairo_menu_new();
+
+  add_special_item (menu,_("Logout"),"gnome-logout","gnome-session-save","--logout-dialog");
+  add_special_item (menu,_("Shutdown"),"gnome-logout","gnome-session-save","--shutdown-dialog");
+  gtk_widget_show_all (menu);
+  return menu;
+}
 /*
  TODO:
   check for existence of the various bins.
@@ -260,7 +271,6 @@ TODO: check the trash and set to stock_trash_empty if trash is empty
     gchar *shell_quoted = NULL;
     gchar *icon_name = NULL;
     
-    item = cairo_menu_item_new ();
     bookmark = (DesktopAgnosticVFSBookmark*)node->data;
     b_file = desktop_agnostic_vfs_bookmark_get_file (bookmark);
     b_alias = desktop_agnostic_vfs_bookmark_get_alias (bookmark);
@@ -271,40 +281,40 @@ TODO: check the trash and set to stock_trash_empty if trash is empty
     {
       shell_quoted = g_shell_quote (b_path);
       exec = g_strdup_printf("%s %s", XDG_OPEN,shell_quoted);
-      g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);        
       g_free (shell_quoted);
       if (b_alias)
       {
-        gtk_menu_item_set_label(GTK_MENU_ITEM(item),b_alias);
+        item = cairo_menu_item_new_with_label (b_alias);
         icon_name = g_utf8_strdown (b_alias,-1);
       }
       else
       {
         gchar * base = g_path_get_basename (b_path);
-        gtk_menu_item_set_label(GTK_MENU_ITEM(item),base);
+        item = cairo_menu_item_new_with_label (base);        
         icon_name = g_utf8_strdown (base,-1);        
         g_free (base);
       }
+      g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);              
       gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
     }
     else if ( strncmp(b_uri, "http", 4)==0 )
     {
       shell_quoted = g_shell_quote (b_uri);
       exec = g_strdup_printf("%s %s",XDG_OPEN,shell_quoted);
-      g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);        
       g_free (shell_quoted);
       if (b_alias)
       {
-        gtk_menu_item_set_label(GTK_MENU_ITEM(item),b_alias);
+        item = cairo_menu_item_new_with_label (b_alias);
         icon_name = g_utf8_strdown (b_alias,-1);        
       }
       else
       {
         gchar * base = g_path_get_basename (b_uri);
-        gtk_menu_item_set_label(GTK_MENU_ITEM(item),base);
+        item = cairo_menu_item_new_with_label (b_uri);
         icon_name = g_utf8_strdown (base,-1);        
         g_free (base);
       }
+      g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);              
       gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
     }
     /*
@@ -315,20 +325,20 @@ TODO: check the trash and set to stock_trash_empty if trash is empty
     {
       shell_quoted = g_shell_quote (b_uri);
       exec = g_strdup_printf("%s %s", "nautilus" ,shell_quoted);
-      g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);        
       g_free (shell_quoted);
       if (b_alias)
       {
-        gtk_menu_item_set_label(GTK_MENU_ITEM(item),b_alias);
+        item = cairo_menu_item_new_with_label (b_alias);
         icon_name = g_utf8_strdown (b_alias,-1);        
       }
       else
       {
         gchar * base = g_path_get_basename (b_uri);
-        gtk_menu_item_set_label(GTK_MENU_ITEM(item),base);
+        item = cairo_menu_item_new_with_label (base);
         icon_name = g_utf8_strdown (base,-1);        
         g_free (base);
       }
+      g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);      
       gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
     }
     else
@@ -414,7 +424,6 @@ fill_er_up(MenuInstance * instance,GMenuTreeDirectory *directory, GtkWidget * me
         {
           break;
         }
-        menu_item = cairo_menu_item_new ();
         txt = gmenu_tree_entry_get_name( (GMenuTreeEntry*)item);
         desktop_file = g_strdup (gmenu_tree_entry_get_desktop_file_path ((GMenuTreeEntry*)item));
         uri = g_strdup_printf("file://%s\n",desktop_file);
@@ -433,14 +442,14 @@ fill_er_up(MenuInstance * instance,GMenuTreeDirectory *directory, GtkWidget * me
             icon_name = g_strdup ("stock_missing-image");
           }
           image = get_gtk_image (icon_name);
+          menu_item = cairo_menu_item_new_with_label (txt?txt:"unknown");
           if (image)
           {
             gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
           }
-          gtk_menu_item_set_label (GTK_MENU_ITEM(menu_item),txt?txt:"unknown");
           gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
           gtk_widget_show_all (menu_item);
-          g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(_launch), desktop_file);
+          g_signal_connect(G_OBJECT(menu_item), "button-press-event", G_CALLBACK(_launch), desktop_file);
           cairo_menu_item_set_source (AWN_CAIRO_MENU_ITEM(menu_item),uri);
           g_free (uri);          
           g_object_unref (entry);
@@ -480,10 +489,9 @@ fill_er_up(MenuInstance * instance,GMenuTreeDirectory *directory, GtkWidget * me
             image = get_gtk_image ("stock_folder");
           }
           sub_menu = GTK_WIDGET(fill_er_up( instance,(GMenuTreeDirectory*)item,NULL));
-          menu_item = cairo_menu_item_new ();
+          txt = gmenu_tree_directory_get_name((GMenuTreeDirectory*)item);          
+          menu_item = cairo_menu_item_new_with_label (txt?txt:"unknown");
           gtk_menu_item_set_submenu (GTK_MENU_ITEM(menu_item),sub_menu);
-          txt = gmenu_tree_directory_get_name((GMenuTreeDirectory*)item);
-          gtk_menu_item_set_label (GTK_MENU_ITEM(menu_item),txt?txt:"unknown");
           if (image)
           {
             gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
@@ -674,10 +682,9 @@ menu_build (MenuInstance * instance)
         sub_menu = GTK_WIDGET(fill_er_up(instance,root,NULL));        
         icon_name = g_strdup(gmenu_tree_directory_get_icon (root));
         image = get_gtk_image (icon_name);
-        menu_item = cairo_menu_item_new ();
+        txt = gmenu_tree_entry_get_name((GMenuTreeEntry*)root);        
+        menu_item = cairo_menu_item_new_with_label (txt?txt:"unknown");        
         gtk_menu_item_set_submenu (GTK_MENU_ITEM(menu_item),sub_menu);
-        txt = gmenu_tree_entry_get_name((GMenuTreeEntry*)root);
-        gtk_menu_item_set_label (GTK_MENU_ITEM(menu_item),txt?txt:"unknown");
         if (image)
         {
           gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
@@ -849,15 +856,41 @@ menu_build (MenuInstance * instance)
 
   if (! (instance->flags & MENU_BUILD_NO_SESSION)&& (! instance->submenu_name || !instance->menu))
   {
-    if ( !instance->submenu_name )
+    if ( !instance->check_menu_hidden_fn || !instance->check_menu_hidden_fn (instance->applet,":::SESSION"))
     {    
-      menu_item = cairo_menu_item_new_with_label (_("Session"));
-      image = get_gtk_image ("session-properties");
-      if (image)
+      g_debug ("getting submenu");
+      sub_menu = get_session_menu ();
+      if (instance->menu)
+      {                
+        menu_item = cairo_menu_item_new_with_label (_("Session"));
+        image = get_gtk_image ("session-properties");
+        if (image)
+        {
+          gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
+        }        
+        gtk_menu_item_set_submenu (GTK_MENU_ITEM(menu_item),sub_menu);
+        gtk_menu_shell_append(GTK_MENU_SHELL(instance->menu),menu_item);
+
+        c = g_malloc (sizeof(CallbackContainer));
+        file_path = g_strdup(":::SESSION");
+        c->arr[0].str = file_path;
+        display_name = g_strdup ("Session");
+        drop_data = g_strdup_printf("cairo_menu_item_dir:///@@@%s@@@%s@@@%s\n",file_path,display_name,icon_name);
+        cairo_menu_item_set_source (AWN_CAIRO_MENU_ITEM(menu_item),drop_data);
+        g_free (drop_data);
+        c->arr[1].str = display_name;
+        icon_name = c->arr[3].str = g_strdup ("session-properties");
+        c->instance = instance;
+        g_signal_connect (menu_item, "button-press-event",G_CALLBACK(_button_press_dir),c);
+        g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,file_path);
+        g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,display_name);
+        g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,icon_name);                                      
+        g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,c);
+      }
+      else
       {
-        gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
-      }        
-      gtk_menu_shell_append(GTK_MENU_SHELL(instance->menu),menu_item);
+        instance->menu = sub_menu;
+      }
     }
   }
   

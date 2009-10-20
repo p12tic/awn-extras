@@ -69,24 +69,53 @@ cairo_menu_finalize (GObject *object)
   }
 }
 
-static gboolean
-cairo_menu_expose (GtkWidget *widget,GdkEventExpose *event,gpointer null)
+/*
+ From gtkcontainer.c
+ */
+static void
+_expose_child (GtkWidget *child,
+                            gpointer   client_data)
 {
+  struct {
+    GtkWidget *container;
+    GdkEventExpose *event;
+  } *data = client_data;
+  
+  gtk_container_propagate_expose (GTK_CONTAINER (data->container),
+                                  child,
+                                  data->event);
+}
+
+
+static gboolean
+cairo_menu_expose (GtkWidget *widget,GdkEventExpose *event)
+{
+  struct {
+    GtkWidget *container;
+    GdkEventExpose *event;
+  } data;
+
   CairoMenuPrivate * priv = GET_PRIVATE(widget);  
 
   if (priv->cairo_style)
   {
+      data.container = widget;
+      data.event = event;
+      
     /*looks like I'm going to need look in the gtk_menu/gtk_menu_shell/etc expose functions and 
      borrow some code*/
     cairo_t * cr = gdk_cairo_create (widget->window);
-    cairo_set_source_rgba (cr, 0.0,0.0,1.0,0.7);
+    cairo_set_source_rgba (cr, 0.0,0.0,1.0,0.4);
     cairo_paint (cr);    
     cairo_destroy (cr);
-    gtk_container_foreach (GTK_CONTAINER (widget),(GtkCallback)gtk_widget_queue_draw,NULL);    
+    gtk_container_forall (GTK_CONTAINER (widget),
+                          _expose_child,
+                          &data);
+    
     return TRUE;
   }
   else
-  {
+  {    
     return FALSE;
   }
 }
@@ -106,7 +135,8 @@ static void
 cairo_menu_class_init (CairoMenuClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
+  GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
+  
   g_type_class_add_private (klass, sizeof (CairoMenuPrivate));
 
   object_class->get_property = cairo_menu_get_property;
@@ -114,6 +144,8 @@ cairo_menu_class_init (CairoMenuClass *klass)
   object_class->dispose = cairo_menu_dispose;
   object_class->finalize = cairo_menu_finalize;
   object_class->constructed = cairo_menu_constructed;
+
+//  widget_class->expose_event = cairo_menu_expose;  
 }
 
 static void

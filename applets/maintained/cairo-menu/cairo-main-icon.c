@@ -135,7 +135,7 @@ cairo_main_icon_constructed (GObject *object)
                                           (AddIconFunc) cairo_menu_applet_add_icon,
                                           (CheckMenuHiddenFunc) cairo_menu_applet_check_hidden_menu,
                                           NULL,
-                                          MENU_BUILD_NO_SESSION);
+                                          0);
   priv->menu = menu_build (priv->menu_instance);
   gtk_widget_show_all (priv->menu);
   g_signal_connect(object, "button-press-event", G_CALLBACK(_button_clicked_event), NULL);

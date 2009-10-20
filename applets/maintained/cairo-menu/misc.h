@@ -32,7 +32,7 @@
 
 DesktopAgnosticFDODesktopEntry * get_desktop_entry (gchar * desktop_file);
 
-void _launch (GtkMenuItem *menu_item,gchar * desktop_file);
+void _launch (GtkWidget *widget,GdkEventButton *event,gchar * desktop_file);
 
 GtkWidget * get_gtk_image (const gchar const * icon_name);
 

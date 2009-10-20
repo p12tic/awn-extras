@@ -266,12 +266,17 @@ _button_clicked_event (CairoAuxIcon *icon, GdkEventButton *event, gpointer null)
     if (!priv->context_menu)
     {
       priv->context_menu = awn_applet_create_default_menu (AWN_APPLET(priv->applet));
-      item = gtk_menu_item_new_with_label("Preferences");
+      item = gtk_image_menu_item_new_with_label("Applet Preferences");
+      gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM(item), 
+                                     gtk_image_new_from_stock (GTK_STOCK_PREFERENCES,GTK_ICON_SIZE_MENU));
       gtk_widget_show(item);
       gtk_menu_set_screen(GTK_MENU(priv->context_menu), NULL);
       gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);
 
-      item = gtk_menu_item_new_with_label("Remove Icon");
+      item = gtk_image_menu_item_new_with_label("Remove Icon");
+      gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM(item), 
+                                     gtk_image_new_from_stock (GTK_STOCK_REMOVE,GTK_ICON_SIZE_MENU));
+
       gtk_widget_show(item);
       gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);
       g_signal_connect (G_OBJECT(item),"activate",G_CALLBACK(_remove_icon),icon);
@@ -282,7 +287,7 @@ _button_clicked_event (CairoAuxIcon *icon, GdkEventButton *event, gpointer null)
                                                AWN_APPLET_LICENSE_GPLV2,
                                                NULL);
       gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);      
-      
+      awn_utils_show_menu_images (GTK_MENU (priv->context_menu));
     }
 
     gtk_menu_popup(GTK_MENU(priv->context_menu), NULL, NULL, NULL, NULL,event_button->button, event_button->time);

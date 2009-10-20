@@ -137,11 +137,11 @@ cairo_menu_item_init (CairoMenuItem *self)
 GtkWidget*
 cairo_menu_item_new (void)
 {  
-  return g_object_new (AWN_TYPE_CAIRO_MENU_ITEM, 
-#if GTK_CHECK_VERSION (2,16,0)                       
-                                        "always-show-image",TRUE,
+  return g_object_new (AWN_TYPE_CAIRO_MENU_ITEM,
+#if GTK_CHECK_VERSION (2,16,0)
+                      "always-show-image",TRUE,
 #endif
-                                        NULL);
+                      NULL);
 }
 
 GtkWidget*

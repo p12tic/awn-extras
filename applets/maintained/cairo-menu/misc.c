@@ -121,7 +121,7 @@ _launch (GtkWidget *widget,GdkEventButton *event,gchar * desktop_file)
     GStrv tokens1;
     GStrv tokens2;
     gchar * screen_name = NULL;
-    gchar * id = g_strdup_printf("cairo_menu_%u_TIME_%u",getpid(),event->time);
+    gchar * id = g_strdup_printf("cairo_menu_%u_TIME%u",getpid(),event->time);
     gchar * display_name = gdk_screen_make_display_name (gdk_screen_get_default());
     gchar * name = desktop_agnostic_fdo_desktop_entry_get_name (entry);
 

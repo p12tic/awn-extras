@@ -95,7 +95,7 @@ class KeyRingError:
 
 class Dialogs:
 
-    __special_dialogs = ("menu", "program", "about", "preferences")
+    __special_dialogs = ("menu", "about", "preferences")
 
     def __init__(self, parent):
         """Create an instance of Dialogs. Creates a context menu,
@@ -130,11 +130,15 @@ class Dialogs:
             if "main" in self.__register:
                 self.toggle("main")
         parent.connect("clicked", clicked_cb)
+
         def popup_menu_cb(widget, event):
             self.toggle("menu", once=True, event=event)
         parent.connect("context-menu-popup", popup_menu_cb)
 
-        parent.connect("button-release-event", self.__button_release_event_cb)
+        def middle_clicked_cb(widget):
+            if "secondary" in self.__register:
+                self.toggle("secondary", once=True)
+        parent.connect("middle-clicked", middle_clicked_cb)
 
     def new(self, dialog, title=None, focus=True):
         """Create a new AWN dialog.
@@ -151,8 +155,6 @@ class Dialogs:
         """
         if dialog == "menu":
             dlog = self.__parent.create_default_menu()
-        elif dialog == "program":
-            dlog = lambda: None
         elif dialog == "about":
             dlog = self.AboutDialog(self.__parent)
         elif dialog == "preferences":
@@ -182,7 +184,7 @@ class Dialogs:
         Once a name has been registered, it cannot be registered again.
 
         @param dialog: The name to use for the dialog. The predefined values
-                       are main, secondary, menu, and program.
+                       are main, secondary, and menu.
         @type dialog: C{string}
         @param dlog: The actual dialog or menu or function.
         @type dlog: C{function}, C{gtk.Menu}, or C{awn.AppletDialog}
@@ -232,8 +234,6 @@ class Dialogs:
         if dialog == "menu":
             self.__register["menu"].show_all()
             self.__register["menu"].popup(None, None, None, event.button, event.time)
-        elif dialog == "program":
-            self.__register["program"]()
         elif dialog == "about":
             self.__register["about"].show()
             self.__register["about"].deiconify()
@@ -269,15 +269,6 @@ class Dialogs:
         if self.__current is not None:
             self.__register[self.__current].hide()
             self.__current = None
-
-    def __button_release_event_cb(self, widget, event):
-        """Responds to click events. Only called by GTK+.
-
-        """
-        if event.button == 2 and "secondary" in self.__register:  # Middle
-            self.toggle("secondary", once=True)
-        elif "program" in self.__register:  # Act like launcher
-            self.toggle("program", once=True)
 
     class BaseDialog:
 

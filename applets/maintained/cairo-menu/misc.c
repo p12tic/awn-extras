@@ -157,7 +157,7 @@ _launch (GtkWidget *widget,GdkEventButton *event,gchar * desktop_file)
                                                "new",
                                                "ID",id,
                                                "NAME",name,
-                                               "SCREEN","0",
+                                               "SCREEN",screen_name,
                                                NULL);
     g_setenv ("DESKTOP_STARTUP_ID",id,TRUE);
     startup_set = TRUE;

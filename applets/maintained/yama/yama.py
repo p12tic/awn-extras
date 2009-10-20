@@ -399,6 +399,8 @@ class YamaApplet:
 
     def create_menu_item(self, label, icon_name, comment):
         item = gtk.ImageMenuItem(label)
+        if gtk.gtk_version >= (2, 16, 0):
+            item.props.always_show_image = True
         icon_pixbuf = self.get_pixbuf_icon(icon_name)
         item.set_image(gtk.image_new_from_pixbuf(icon_pixbuf))
         if comment is not None:

@@ -60,7 +60,7 @@ get_image_from_gicon (GIcon * gicon)
   return image;
 }
 
-static void
+static gboolean
 add_special_item (GtkWidget * menu,
                   const gchar * name, 
                   const gchar * icon_name,
@@ -73,7 +73,7 @@ add_special_item (GtkWidget * menu,
   gchar * bin_path;
 
   bin_path = g_find_program_in_path (binary);
-  g_return_if_fail (bin_path);
+  g_return_val_if_fail (bin_path,FALSE);
   if (bin_path != binary)
   {
     g_free (bin_path);
@@ -88,6 +88,7 @@ add_special_item (GtkWidget * menu,
   g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);
   g_object_weak_ref (G_OBJECT(item),(GWeakNotify) g_free,exec);
   gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
+  return TRUE;
 }
 
 
@@ -98,6 +99,10 @@ get_session_menu(void)
 
   add_special_item (menu,_("Logout"),"gnome-logout","gnome-session-save","--logout-dialog");
   add_special_item (menu,_("Shutdown"),"gnome-logout","gnome-session-save","--shutdown-dialog");
+  if (!add_special_item (menu,_("Lock Screen"),"gnome-lockscreen","gnome-screensaver-command","--lock"))
+  {
+    add_special_item (menu,_("Lock Screen"),"system-lockscreen","xscreensaver-command","-lock");
+  }
   gtk_widget_show_all (menu);
   return menu;
 }

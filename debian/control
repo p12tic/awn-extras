@@ -13,15 +13,15 @@ Build-Depends: 	debhelper (>= 7),
 		librsvg2-dev, 
 		libgtop2-dev,
 		libdesktop-agnostic-bin,
-		libawn-dev-trunk (>> 0.3.3) | libawn-dev (>> 0.3.3),
+		libawn-dev-trunk (>= 0.3.9)
 		libwnck-dev, 
 		libvte-dev,
 		libsexy-dev, 
 		libnotify-dev,
 		libwebkit-dev,
 		python-support (>= 0.7.0),
-		valac (>= 0.5.4),
-		vala-awn-trunk (>> 0.3.3)
+		valac (>= 0.7.7),
+		vala-awn-trunk (>= 0.3.9)
 Standards-Version: 3.8.0
 XS-Python-Version: >= 2.4
 Homepage: https://launchpad.net/awn-extras

@@ -4,6 +4,7 @@
 include /usr/share/quilt/quilt.make
 
 configure_flags += \
+		--prefix=/usr \
 		--disable-pymod-checks \
 		--with-gconf-schema-file-dir=/etc/gconf/schemas \
 		--with-webkit

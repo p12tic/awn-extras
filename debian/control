@@ -13,7 +13,7 @@ Build-Depends: 	debhelper (>= 7),
 		librsvg2-dev, 
 		libgtop2-dev,
 		libdesktop-agnostic-bin,
-		libawn-dev-trunk (>= 0.3.9)
+		libawn-dev-trunk (>= 0.3.9),
 		libwnck-dev, 
 		libvte-dev,
 		libsexy-dev, 

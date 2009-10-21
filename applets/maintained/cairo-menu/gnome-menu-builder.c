@@ -96,13 +96,14 @@ static GtkWidget *
 get_session_menu(void)
 {
   GtkWidget *menu = cairo_menu_new();
-
-  add_special_item (menu,_("Logout"),"gnome-logout","gnome-session-save","--logout-dialog");
-  add_special_item (menu,_("Shutdown"),"gnome-logout","gnome-session-save","--shutdown-dialog");
+  add_special_item (menu,_("Logout"),"gnome-logout","gnome-session-save","--logout-dialog --gui");
   if (!add_special_item (menu,_("Lock Screen"),"gnome-lockscreen","gnome-screensaver-command","--lock"))
   {
     add_special_item (menu,_("Lock Screen"),"system-lockscreen","xscreensaver-command","-lock");
-  }
+  }  
+  add_special_item (menu,_("Suspend"),"gnome-session-suspend","gnome-power-cmd","suspend");
+  add_special_item (menu,_("Hibernate"),"gnome-session-hibernate","gnome-power-cmd","hibernate");
+  add_special_item (menu,_("Shutdown"),"gnome-logout","gnome-session-save","--shutdown-dialog --gui");  
   gtk_widget_show_all (menu);
   return menu;
 }

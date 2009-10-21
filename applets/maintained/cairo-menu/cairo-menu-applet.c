@@ -177,7 +177,6 @@ cairo_menu_applet_constructed (GObject *object)
     gchar *name;
     GStrv tokens;
     name = g_value_dup_string (g_value_array_get_nth (priv->aux_menu_names, idx));
-    g_debug ("%s: %s",__func__,name);
     tokens = g_strsplit ( name,"###",-1);
     if (g_strv_length (tokens)==3)
     {
@@ -333,7 +332,6 @@ cairo_menu_applet_check_hidden_menu (CairoMenuApplet * applet, gchar * menu_name
   gint idx;
   CairoMenuAppletPrivate * priv = GET_PRIVATE (applet);
 
-  g_debug ("%s: %s",__func__,menu_name);
   g_object_get (applet,"hidden_names",&names,NULL);  
   if (names)
   {
@@ -341,10 +339,8 @@ cairo_menu_applet_check_hidden_menu (CairoMenuApplet * applet, gchar * menu_name
     {
       gchar *name;
       name = g_value_dup_string (g_value_array_get_nth (names, idx));
-      g_debug ("%s compare %s, %s",__func__,name,menu_name);
       if (g_strcmp0 (name,menu_name)==0)
       {
-        g_debug ("HIDDEN");
         g_free (name);
         g_value_array_free (names);        
         return TRUE;
@@ -413,12 +409,10 @@ cairo_menu_applet_remove_icon (CairoMenuApplet * applet, AwnThemedIcon * icon)
     {
       gchar *name;
       name = g_value_dup_string (g_value_array_get_nth (names, idx));
-      g_debug ("compare '%s', '%s'",name,str);
       if (g_strcmp0 (name,str)==0)
       {
         GValueArray* s = g_value_array_remove (names, idx);
 //        g_value_array_free (s);
-        g_debug ("%s: DELETE %s",__func__,name);
         g_object_set (applet,"aux_menu_names",names,NULL);            
         break;
       } 
@@ -462,7 +456,6 @@ cairo_menu_applet_add_icon (CairoMenuApplet * applet, gchar * menu_name, gchar *
 
   cairo_menu_applet_append_hidden_menu (applet,menu_name);
   
-  g_debug ("%s: adding %s",__func__,str);
   g_object_get (G_OBJECT (applet), "aux_menu_names", &names, NULL);
   g_value_init (&val, G_TYPE_STRING);
   g_value_set_string (&val, str);

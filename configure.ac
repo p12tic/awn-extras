@@ -238,7 +238,7 @@ has_vala=no
 LDA_VAPIDIR=`$PKG_CONFIG --variable=vapidir desktop-agnostic`
 AWN_VAPIDIR=`$PKG_CONFIG --variable=vapidir awn`
 if test -n "$LDA_VAPIDIR" -a -n "$AWN_VAPIDIR" -a -f "$AWN_VAPIDIR/awn.vapi"; then
-    VALA_PROG_VALAC(0.5.4)
+    VALA_PROG_VALAC(0.7.7)
     AC_SUBST(LDA_VAPIDIR)
     AC_SUBST(AWN_VAPIDIR)
     if test -n "$VALAC"; then

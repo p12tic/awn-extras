@@ -30,6 +30,16 @@
 
 static GtkWidget * _get_recent_menu (GtkWidget * menu);
 
+void
+_free_callback_container (CallbackContainer * c)
+{  
+  /* yeah... this is a bit peculiar and needs to be changed */
+  g_free(c->arr[0].data);
+  g_free(c->arr[1].data);
+  g_free(c->arr[3].data);                                      
+  g_free(c);
+}
+
 static void 
 _create_icon (GtkButton *widget,CallbackContainer * c)
 {

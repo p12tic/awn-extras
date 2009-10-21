@@ -47,20 +47,6 @@ typedef struct
   gchar *       submenu_name;
 }MenuInstance;
 
-typedef union
-{
-  void * data;
-  gchar * str;
-  GtkWidget * widget;
-}ContainerData;
-
-
-typedef struct
-{
-  ContainerData arr[5];
-  MenuInstance * instance;
-}CallbackContainer;
-
 typedef GtkWidget * (* MenuBuildFunc)  (MenuInstance * instance);
 
 typedef enum 

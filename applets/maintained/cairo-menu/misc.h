@@ -30,6 +30,21 @@
 
 #define XDG_OPEN "xdg-open"
 
+typedef union
+{
+  void * data;
+  gchar * str;
+  GtkWidget * widget;
+}ContainerData;
+
+
+typedef struct
+{
+  ContainerData arr[5];
+  MenuInstance * instance;
+}CallbackContainer;
+
+
 DesktopAgnosticFDODesktopEntry * get_desktop_entry (gchar * desktop_file);
 
 void _launch (GtkWidget *widget,GdkEventButton *event,gchar * desktop_file);
@@ -52,5 +67,7 @@ MenuInstance * get_menu_instance ( AwnApplet * applet,
                                   CheckMenuHiddenFunc check_menu_hidden_fn,
                                   gchar * submenu_name,
                                   gint flags);
+
+void _free_callback_container (CallbackContainer * c);
 
 #endif /* _CAIRO_MISC */

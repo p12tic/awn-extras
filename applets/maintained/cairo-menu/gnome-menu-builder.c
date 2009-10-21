@@ -516,10 +516,7 @@ fill_er_up(MenuInstance * instance,GMenuTreeDirectory *directory, GtkWidget * me
           c->arr[3].str = icon_name;
           c->instance = instance;
           g_signal_connect (menu_item, "button-press-event",G_CALLBACK(_button_press_dir),c);
-          g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,file_path);
-          g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,display_name);
-          g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,icon_name);                                      
-          g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,c);
+          g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)_free_callback_container,c);
           break;
         }
       case GMENU_TREE_ITEM_HEADER:
@@ -707,10 +704,7 @@ menu_build (MenuInstance * instance)
         c->arr[3].str = g_strdup (icon_name);
         c->instance = instance;
         g_signal_connect (menu_item, "button-press-event",G_CALLBACK(_button_press_dir),c);
-        g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,file_path);
-        g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,display_name);
-        g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,icon_name);                                      
-        g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,c);
+        g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)_free_callback_container,c);
       }
       else if ( !instance->menu)
       {
@@ -783,10 +777,7 @@ menu_build (MenuInstance * instance)
             c->arr[3].str = icon_name;
             c->instance = instance;
             g_signal_connect (menu_item, "button-press-event",G_CALLBACK(_button_press_dir),c);
-            g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,file_path);
-            g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,display_name);
-            g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,icon_name);                                      
-            g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,c);
+            g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)_free_callback_container,c);
           }
           else
           {
@@ -838,10 +829,7 @@ menu_build (MenuInstance * instance)
             icon_name = c->arr[3].str = g_strdup (icon_name);
             c->instance = instance;
             g_signal_connect (menu_item, "button-press-event",G_CALLBACK(_button_press_dir),c);
-            g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,file_path);
-            g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,display_name);
-            g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,icon_name);                                      
-            g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,c);
+            g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)_free_callback_container,c);
           }
           else
           {
@@ -887,10 +875,7 @@ menu_build (MenuInstance * instance)
         icon_name = c->arr[3].str = g_strdup ("session-properties");
         c->instance = instance;
         g_signal_connect (menu_item, "button-press-event",G_CALLBACK(_button_press_dir),c);
-        g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,file_path);
-        g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,display_name);
-        g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,icon_name);                                      
-        g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)g_free,c);
+        g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)_free_callback_container,c);
       }
       else
       {

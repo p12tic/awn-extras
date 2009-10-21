@@ -34,33 +34,32 @@ void
 _free_callback_container (CallbackContainer * c)
 {  
   /* yeah... this is a bit peculiar and needs to be changed */
-  g_free(c->arr[0].data);
-  g_free(c->arr[1].data);
-  g_free(c->arr[3].data);                                      
+  g_free(c->display_name);
+  g_free(c->file_path);
+  g_free(c->icon_name);
   g_free(c);
 }
 
 static void 
 _create_icon (GtkButton *widget,CallbackContainer * c)
 {
-  g_debug ("%s: %s",__func__,c->arr[0].str);
   gtk_widget_hide (c->instance->menu);
-  gtk_menu_popdown (GTK_MENU(c->arr[2].widget));
-  c->instance->add_icon_fn (c->instance->applet,c->arr[0].str,c->arr[1].str,c->arr[3].str);
+  gtk_menu_popdown (GTK_MENU(c->context_menu));
+  c->instance->add_icon_fn (c->instance->applet,c->file_path,c->display_name,c->icon_name);
 }
 
 gboolean 
 _button_press_dir (GtkWidget *menu_item, GdkEventButton *event, CallbackContainer * c)
 {
   GtkWidget * popup;
-  GtkWidget * item;
+  GtkWidget * item; 
   switch (event->button)
   {
     case 3:
       popup = gtk_menu_new ();
       item = gtk_menu_item_new_with_label ("Create icon");
       gtk_menu_shell_append(GTK_MENU_SHELL(popup), item);
-      c->arr[2].widget = popup;
+      c->context_menu = popup;
       g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_create_icon), c);
       gtk_widget_show_all (popup);
       gtk_menu_popup(GTK_MENU(popup), NULL, NULL, NULL, NULL, event->button, event->time);
@@ -241,6 +240,15 @@ _remove_menu_item  (GtkWidget *menu_item,GtkWidget * menu)
   gtk_container_remove (GTK_CONTAINER(menu),menu_item);
 }
 
+
+static void
+_remove_get_recent ( gpointer data,   GObject *where_the_object_was)
+{
+  GtkRecentManager *recent = gtk_recent_manager_get_default ();  
+  guint id = GPOINTER_TO_UINT (data);
+  g_signal_handler_disconnect (recent,id);
+}
+
 /*
  Updates the recent menu.
  This is also called by signal handler when there are updates to the 
@@ -249,12 +257,14 @@ _remove_menu_item  (GtkWidget *menu_item,GtkWidget * menu)
 static GtkWidget * 
 _get_recent_menu (GtkWidget * menu)
 {  
+  g_return_val_if_fail (GTK_IS_MENU(menu),NULL);
   static gboolean done_once = FALSE;
   GtkRecentManager *recent = gtk_recent_manager_get_default ();
   GtkWidget * menu_item;
   GList * recent_list;
   GList * iter;
   gint width,height;
+  guint id;
 
   gtk_container_foreach (GTK_CONTAINER (menu),(GtkCallback)_remove_menu_item,menu);  
   gtk_icon_size_lookup (GTK_ICON_SIZE_MENU,&width,&height);
@@ -303,8 +313,6 @@ _get_recent_menu (GtkWidget * menu)
   g_list_foreach (recent_list, (GFunc)gtk_recent_info_unref,NULL);
   g_list_free (recent_list);
   gtk_widget_show_all (menu); 
-  g_signal_handlers_disconnect_by_func (recent,G_CALLBACK(_get_recent_menu),menu);
-  g_signal_connect_swapped (recent,"changed",G_CALLBACK(_get_recent_menu),menu);
 
   done_once = TRUE;
   return menu;
@@ -316,8 +324,15 @@ _get_recent_menu (GtkWidget * menu)
 GtkWidget * 
 get_recent_menu (void)
 {
+  guint id;
+  GtkRecentManager *recent = gtk_recent_manager_get_default ();
+  
   GtkWidget *menu = cairo_menu_new();
-  return _get_recent_menu (menu);
+  g_signal_handlers_disconnect_by_func (recent,G_CALLBACK(_get_recent_menu),menu);  
+  _get_recent_menu (menu);
+  id = g_signal_connect_swapped (recent,"changed",G_CALLBACK(_get_recent_menu),menu);
+  g_object_weak_ref (G_OBJECT(menu),(GWeakNotify)_remove_get_recent,GUINT_TO_POINTER(id));                   
+  return menu;
 }
 
 /*

@@ -30,17 +30,12 @@
 
 #define XDG_OPEN "xdg-open"
 
-typedef union
-{
-  void * data;
-  gchar * str;
-  GtkWidget * widget;
-}ContainerData;
-
-
 typedef struct
 {
-  ContainerData arr[5];
+  gchar        * file_path;
+  gchar        * display_name;
+  gchar        * icon_name;
+  GtkWidget    * context_menu;
   MenuInstance * instance;
 }CallbackContainer;
 

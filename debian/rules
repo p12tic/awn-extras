@@ -5,6 +5,7 @@ include /usr/share/quilt/quilt.make
 
 configure_flags += \
 		--disable-pymod-checks \
+		--with-gconf-schema-file-dir=/etc/gconf/schemas \
 		--with-webkit
 
 build: build-stamp

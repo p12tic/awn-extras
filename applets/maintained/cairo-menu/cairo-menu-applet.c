@@ -39,9 +39,9 @@ typedef struct _CairoMenuAppletPrivate CairoMenuAppletPrivate;
 
 struct _CairoMenuAppletPrivate {
   DEMenuType   menu_type;
-  GtkWidget * box;  
-  gchar     * run_cmd;
-  gchar     * search_cmd;
+  GtkWidget   * box;  
+  gchar       * run_cmd;
+  gchar       * search_cmd;
   GValueArray * aux_menu_names;
   GValueArray * hidden_names;  
   DesktopAgnosticConfigClient *client;
@@ -51,7 +51,7 @@ struct _CairoMenuAppletPrivate {
 static gchar * gnome_run_cmds[] = { "gnome-do","grun","gmrun","gnome-launch-box",
                           "gnome-panel-control --run-dialog",NULL};
 
-static gchar * gnome_search_cmds[] = { "tracker-search-tool","gnome-do",NULL};
+static gchar * gnome_search_cmds[] = { "tracker-search-tool","gnome-do","gnome-search-tool",NULL};
   
 static gboolean _button_clicked_event (CairoMenuApplet *applet, GdkEventButton *event, gpointer null);
 
@@ -59,7 +59,9 @@ enum
 {
   PROP_0,
   PROP_AUX_MENU_NAMES,
-  PROP_HIDDEN_NAMES
+  PROP_HIDDEN_NAMES,
+  PROP_RUN_CMD,
+  PROP_SEARCH_CMD
 };
 
 static void
@@ -74,7 +76,13 @@ cairo_menu_applet_get_property (GObject *object, guint property_id,
     break;
   case PROP_HIDDEN_NAMES:
     g_value_set_boxed (value,priv->hidden_names );
-    break;      
+    break;
+  case PROP_RUN_CMD:
+    g_value_set_string (value,priv->run_cmd);
+    break;
+  case PROP_SEARCH_CMD:
+    g_value_set_string (value,priv->search_cmd);
+    break;
   default:
     G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
   }
@@ -102,7 +110,21 @@ cairo_menu_applet_set_property (GObject *object, guint property_id,
       priv->hidden_names = NULL;
     }
     priv->hidden_names = (GValueArray*)g_value_dup_boxed (value);
-    break;      
+    break;
+  case PROP_RUN_CMD:
+    if (priv->run_cmd)
+    {
+      g_free (priv->run_cmd);
+    }
+    priv->run_cmd = g_value_dup_string (value);
+    break;
+  case PROP_SEARCH_CMD:
+    if (priv->search_cmd)
+    {
+      g_free (priv->search_cmd);
+    }
+    priv->search_cmd = g_value_dup_string (value);
+    break;    
   default:
     G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
   }
@@ -169,6 +191,21 @@ cairo_menu_applet_constructed (GObject *object)
                                        object, "hidden_names", FALSE,
                                        DESKTOP_AGNOSTIC_CONFIG_BIND_METHOD_FALLBACK,
                                        NULL);
+
+  desktop_agnostic_config_client_bind (priv->client,
+                                       DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
+                                       "run_cmd",
+                                       object, "run_cmd", FALSE,
+                                       DESKTOP_AGNOSTIC_CONFIG_BIND_METHOD_FALLBACK,
+                                       NULL);
+
+  desktop_agnostic_config_client_bind (priv->client,
+                                       DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
+                                       "search_cmd",
+                                       object, "search_cmd", FALSE,
+                                       DESKTOP_AGNOSTIC_CONFIG_BIND_METHOD_FALLBACK,
+                                       NULL);
+   
   icon = cairo_main_icon_new(AWN_APPLET(object));
   gtk_container_add (GTK_CONTAINER(priv->box),icon);
    
@@ -225,6 +262,20 @@ cairo_menu_applet_class_init (CairoMenuAppletClass *klass)
                               G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
   g_object_class_install_property (object_class, PROP_HIDDEN_NAMES, pspec);
 
+  pspec = g_param_spec_string ("run_cmd",
+                              "run_cmd",
+                              "Run Command",
+                              NULL,
+                              G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
+  g_object_class_install_property (object_class, PROP_RUN_CMD, pspec);
+
+  pspec = g_param_spec_string ("search_cmd",
+                              "search_cmd",
+                              "Search Command",
+                              NULL,
+                              G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
+  g_object_class_install_property (object_class, PROP_SEARCH_CMD, pspec);
+
   g_type_class_add_private (klass, sizeof (CairoMenuAppletPrivate));
 
 }
@@ -267,6 +318,7 @@ cairo_menu_applet_get_cmd (CairoMenuApplet * applet, gchar * def_cmd, gchar **cm
     if (p)
     {
       g_free (p);
+      g_debug ("Cairo Menu default command found '%s'",def_cmd);
       return def_cmd;
     }
     else 
@@ -277,6 +329,7 @@ cairo_menu_applet_get_cmd (CairoMenuApplet * applet, gchar * def_cmd, gchar **cm
   g_message ("Cairo Menu (%s): Searching for command...",__func__);
   for (iter = cmd_list; *iter; iter++)
   {
+    g_debug ("%s",*iter);
     p = g_find_program_in_path (*iter);
     if (p)
     {
@@ -304,7 +357,7 @@ const gchar *
 cairo_menu_applet_get_search_cmd (CairoMenuApplet * applet)
 {
   CairoMenuAppletPrivate * priv = GET_PRIVATE (applet);
-  
+
   return cairo_menu_applet_get_cmd (applet, priv->search_cmd, gnome_search_cmds);
 }
 

@@ -113,4 +113,14 @@ type = list-string
 default =
 description =
 
+[DEFAULT/run_cmd]
+type = string
+default =
+description =
+
+[DEFAULT/search_cmd]
+type = string
+default =
+description =
+
 # vim:ft=cfg:

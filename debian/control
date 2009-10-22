@@ -96,8 +96,6 @@ Recommends: 	awn-settings-trunk (>= 0.3.8),
 		hal,
 		python-rsvg | python-gnome2-desktop,
 		python-wnck | python-gnome2-desktop,
-		python-sqlalchemy,
-		sqlite3,
 		python-dateutil,
 		python-gweather,
 		gnome-applets
@@ -112,12 +110,12 @@ Description: A collection of applets for avant-window-navigator
  .
  This package provides the core Python applets:
   * animal-farm : Various animals tell your fortune. 
-  * arss: A Python feed launcher.
   * battery: This applet displays your computers current power status.
   * cairo-clock: Displays an analog clock.
   * comics: View your favourite comics on your desktop.
   * cpufreq: Monitors and controls the CPU frequency. 
   * DesktopManager: Manages the desktop Wallpaper.
+  * feeds: A Python feed viewer.
   * file-browser-launcher: Launches the user's file manager or opens bookmarks.
   * mail: The Mail Applet lets you check your mail from AWN.
   * media-control: This applet displays album art in a awn dialog while 

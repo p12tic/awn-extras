@@ -440,7 +440,8 @@ class YamaApplet:
 
                 # Setup drag & drop
                 item.drag_source_set(gtk.gdk.BUTTON1_MASK, [("text/uri-list", 0, 0)], gtk.gdk.ACTION_COPY)
-                item.drag_source_set_icon_name(node.icon)
+                if node.icon is not None:
+                    item.drag_source_set_icon_name(node.icon)
                 item.connect("drag-data-get", self.drag_item_cb, node.desktop_file_path)
             else:
                 sub_menu = gtk.Menu()

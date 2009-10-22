@@ -126,6 +126,8 @@ public class NotificationAreaPrefs : GLib.Object
   {
     this.applet = applet;
 
+    // without this lda's ColorButton in the .ui file doesn't work
+    Type workaround = typeof (UI.ColorButton);
     string ui_path = GLib.Path.build_filename (Build.APPLETSDIR,
                                                APPLET_NAME,
                                                "na-prefs.ui");

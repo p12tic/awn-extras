@@ -515,6 +515,7 @@ fill_er_up(MenuInstance * instance,GMenuTreeDirectory *directory, GtkWidget * me
           g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)_free_callback_container,c);
           break;
         }
+        break;
       case GMENU_TREE_ITEM_HEADER:
 //    printf("GMENU_TREE_ITEM_HEADER\n");
         break;

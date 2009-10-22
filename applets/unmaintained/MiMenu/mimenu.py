@@ -49,9 +49,9 @@ class App (awn.AppletSimple):
         location =  __file__
         self.location = location.replace('mimenu.py','')
         self.location_icon = self.location + '/icons/icon.svg'
-        awn.AppletSimple.__init__ (self, uid, panel_id)
+        awn.AppletSimple.__init__ (self, "mimenu", uid, panel_id)
         self.height = self.get_size()
-        self.set_icon_name('MiMenu', 'gnome-main-menu')
+        self.set_icon_name('gnome-main-menu')
         #TODO: i18n
         self.set_tooltip_text("Main Menu Applet")
         self.dialog = awn.Dialog (self)

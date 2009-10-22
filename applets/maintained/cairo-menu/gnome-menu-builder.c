@@ -569,10 +569,6 @@ _search_dialog (GtkMenuItem * item, MenuInstance * instance)
 static gboolean
 _delay_menu_update (MenuInstance * instance)
 {
-  gtk_widget_destroy (instance->menu);
-  instance->menu=NULL;
-  instance->places=NULL;
-  instance->recent=NULL;  
   instance->menu = menu_build (instance);
   instance->source_id = 0;
   return FALSE;
@@ -789,7 +785,7 @@ menu_build (MenuInstance * instance)
     g_assert (!instance->submenu_name);
     if (hookup_monitor)
     {
-      gmenu_tree_add_monitor (main_menu_tree,(GMenuTreeChangedFunc)menu_build,instance);      
+      gmenu_tree_add_monitor (main_menu_tree,(GMenuTreeChangedFunc)_menu_modified_cb,instance);      
     }      
     instance->menu = fill_er_up(instance,root,instance->menu);
     gmenu_tree_item_unref(root);    
@@ -802,11 +798,14 @@ menu_build (MenuInstance * instance)
   if (settings_menu_tree)
   {
     root = gmenu_tree_get_root_directory(settings_menu_tree);
+    if (hookup_monitor)
+    {
+      gmenu_tree_add_monitor (settings_menu_tree,(GMenuTreeChangedFunc)_menu_modified_cb,instance);      
+    }          
     if (!instance->menu)
     {
       g_debug ("%s:  No applications menu????",__func__);
       instance->menu = fill_er_up(instance,root,instance->menu);
-      gmenu_tree_add_monitor (settings_menu_tree,(GMenuTreeChangedFunc)menu_build,instance);
     }
     else
     {

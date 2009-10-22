@@ -293,6 +293,7 @@ _button_clicked_event (CairoMainIcon *icon, GdkEventButton *event, gpointer null
   
   if (event->button == 1)
   {
+    g_debug ("%p",priv->menu);
     gtk_menu_popup(GTK_MENU(priv->menu), NULL, NULL, (GtkMenuPositionFunc)_position,icon,
                           event->button, event->time);   
     if (!priv->autohide_cookie)

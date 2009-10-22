@@ -33,6 +33,9 @@
 #include "misc.h"
 #include "cairo-menu-applet.h"
 
+  GMenuTree *  main_menu_tree = NULL;
+  GMenuTree *  settings_menu_tree = NULL;    
+
 
 GtkWidget *  menu_build (MenuInstance * instance);
 
@@ -126,6 +129,7 @@ _get_places_menu (GtkWidget * menu)
   const gchar *desktop_dir = g_get_user_special_dir (G_USER_DIRECTORY_DESKTOP);
   const gchar *homedir = g_get_home_dir();
 
+  g_debug ("%s",__func__);
   gtk_container_foreach (GTK_CONTAINER (menu),(GtkCallback)_remove_menu_item,menu);
 
   add_special_item (menu,_("Computer"),"computer","nautilus","computer:///");
@@ -382,6 +386,7 @@ TODO: check the trash and set to stock_trash_empty if trash is empty
 GtkWidget * 
 get_places_menu (void)
 {
+  g_debug ("%s",__func__);
   GtkWidget *menu = cairo_menu_new();
   _get_places_menu (menu);
   return menu;
@@ -409,7 +414,7 @@ fill_er_up(MenuInstance * instance,GMenuTreeDirectory *directory, GtkWidget * me
     g_warning ("%s: Exceeded max menu depth of 6 at %s",__func__,gmenu_tree_directory_get_name((GMenuTreeDirectory*)directory));
     return cairo_menu_new ();
   }
-  if (!menu && !instance->submenu_name)
+  if (!menu)
   {
     menu = cairo_menu_new ();
   }
@@ -428,10 +433,6 @@ fill_er_up(MenuInstance * instance,GMenuTreeDirectory *directory, GtkWidget * me
           break;
         }
         if (gmenu_tree_entry_get_is_nodisplay ((GMenuTreeEntry *) item))
-        {
-          break;
-        }
-        if (instance->submenu_name)
         {
           break;
         }
@@ -470,27 +471,7 @@ fill_er_up(MenuInstance * instance,GMenuTreeDirectory *directory, GtkWidget * me
         break;
 
       case GMENU_TREE_ITEM_DIRECTORY:
-        detached_sub = instance->submenu_name && g_strcmp0 (instance->submenu_name, gmenu_tree_directory_get_desktop_file_path ((GMenuTreeDirectory *) item) );
-        if (instance->submenu_name && !detached_sub)
-        {
-          g_assert (!menu);
-          gchar * tmp = instance->submenu_name;
-          instance->submenu_name = NULL;
-          menu = fill_er_up( instance,(GMenuTreeDirectory*)item,NULL);
-          g_assert (menu); 
-          instance->submenu_name = tmp;
-          break;
-        }
-        if (instance->submenu_name)
-        {
-          GtkWidget *x;
-          x = fill_er_up( instance,(GMenuTreeDirectory*)item,NULL);
-          if (x)
-          {
-            menu=x;
-          }
-        }
-        if (!instance->submenu_name && !gmenu_tree_directory_get_is_nodisplay ( (GMenuTreeDirectory *) item) )
+        if (!gmenu_tree_directory_get_is_nodisplay ( (GMenuTreeDirectory *) item) )
         {
           CallbackContainer * c;
           gchar * drop_data;
@@ -588,7 +569,11 @@ _search_dialog (GtkMenuItem * item, MenuInstance * instance)
 static gboolean
 _delay_menu_update (MenuInstance * instance)
 {
-  menu_build (instance);
+  gtk_widget_destroy (instance->menu);
+  instance->menu=NULL;
+  instance->places=NULL;
+  instance->recent=NULL;  
+  instance->menu = menu_build (instance);
   instance->source_id = 0;
   return FALSE;
 }
@@ -597,6 +582,7 @@ _delay_menu_update (MenuInstance * instance)
  Multiples seem to get generated with a typical software install.
  thus the timeout.
  */
+
 static void 
 _menu_modified_cb(GMenuTree *tree,MenuInstance * instance)
 {
@@ -606,23 +592,63 @@ _menu_modified_cb(GMenuTree *tree,MenuInstance * instance)
   }
 }
 
-/*
- TODO: add network, and trash
-
- */
-GtkWidget * 
-menu_build (MenuInstance * instance)
+static GMenuTreeDirectory *
+find_menu_dir (MenuInstance * instance, GMenuTreeDirectory * root)
 {
-  GMenuTreeDirectory *root;
-  static GMenuTree *  main_menu_tree = NULL;
-  static GMenuTree *  settings_menu_tree = NULL;    
-  GtkWidget * image = NULL;
-  GtkWidget   *menu_item;
-  GtkWidget * sub_menu;
-  const gchar * txt;
-  CallbackContainer * c;
-  gchar * drop_data;
+  g_return_val_if_fail (root,NULL);
+  GSList * items = NULL;
+  GSList * tmp;
+  GMenuTreeDirectory * result = NULL;
+  const gchar * txt = NULL;
 
+  txt = gmenu_tree_directory_get_desktop_file_path (root);
+  if (g_strcmp0(txt,instance->submenu_name)==0 )
+  {
+    return root;
+  }
+
+  items = gmenu_tree_directory_get_contents(root);  
+  tmp = items;
+  while (tmp != NULL)
+  {
+    GMenuTreeItem *item = tmp->data;
+
+    switch (gmenu_tree_item_get_type(item))
+    {
+      case GMENU_TREE_ITEM_DIRECTORY:
+        if (!gmenu_tree_directory_get_is_nodisplay ( (GMenuTreeDirectory *) item) )
+        {
+          txt = gmenu_tree_directory_get_desktop_file_path ((GMenuTreeDirectory*)item);
+          if (g_strcmp0(txt,instance->submenu_name)==0 )
+          {
+            result = (GMenuTreeDirectory*)item;
+            break;            
+          }
+          else if (!result)  /*we're continuing looping if result to unref the remaining items*/
+          {
+            result = find_menu_dir (instance, (GMenuTreeDirectory *) item);
+          }
+        }
+        /*deliberately falling through*/
+      case GMENU_TREE_ITEM_ENTRY:
+      case GMENU_TREE_ITEM_HEADER:
+      case GMENU_TREE_ITEM_SEPARATOR:
+      case GMENU_TREE_ITEM_ALIAS:
+        gmenu_tree_item_unref(tmp->data);        
+        break;
+      default:
+        g_assert_not_reached();
+        break;
+    }
+    tmp = tmp->next;
+  }
+  g_slist_free(items);  
+  return result;
+}
+
+static void
+clear_menu (MenuInstance * instance)
+{
   if (instance->menu)
   {
     GList * children = gtk_container_get_children (GTK_CONTAINER(instance->menu));
@@ -642,98 +668,181 @@ menu_build (MenuInstance * instance)
       g_list_free (children);
     }
   }
-  
+}
+
+GtkWidget *
+submenu_build (MenuInstance * instance)
+{
+  GMenuTreeDirectory *main_root;
+  GMenuTreeDirectory *settings_root;
+  GtkWidget * menu = NULL;
+
+  /*
+   if the menu is set then clear any menu items (except for places or recent)
+   */
+  clear_menu (instance);
   if (!main_menu_tree)
   {
     main_menu_tree = gmenu_tree_lookup("applications.menu", GMENU_TREE_FLAGS_NONE);
-  }
-
-  if (main_menu_tree)
-  {
-    root = gmenu_tree_get_root_directory(main_menu_tree);
-    if (root)
-    {
-      instance->menu = fill_er_up(instance,root,instance->menu);
-      if (instance->done_once)
-      {
-        gmenu_tree_remove_monitor (main_menu_tree,(GMenuTreeChangedFunc)_menu_modified_cb,instance);
-      }
-      gmenu_tree_add_monitor (main_menu_tree,(GMenuTreeChangedFunc)_menu_modified_cb,instance);      
-      gmenu_tree_item_unref(root);
-    }
-  }
-  if  (! instance->submenu_name && instance->menu)
-  {  
-      menu_item = gtk_separator_menu_item_new ();
-      gtk_menu_shell_append(GTK_MENU_SHELL(instance->menu),menu_item);  
   }
   if (!settings_menu_tree)
   {
     settings_menu_tree = gmenu_tree_lookup("settings.menu", GMENU_TREE_FLAGS_NONE);
   }
-  if (settings_menu_tree && (! instance->submenu_name || !instance->menu))
-  {
-    root = gmenu_tree_get_root_directory(settings_menu_tree);
-    if (root)
-    {
-      if (instance->done_once)
-      {
-        gmenu_tree_remove_monitor (settings_menu_tree,(GMenuTreeChangedFunc)_menu_modified_cb,instance);
-      }
-      gmenu_tree_add_monitor (settings_menu_tree,(GMenuTreeChangedFunc)_menu_modified_cb,instance);
+  g_assert (main_menu_tree);
+  /*
+   get_places_menu() and get_recent_menu() are 
+   responsible for managing updates in place.  Session should only need
+   to be created once or may eventually need to follow the previously mentioned
+   behaviour.   Regardless... they should only need to be created here from scratch,
+   this fn should _not_ be invoked in a refresh of those menus.
 
-      if ( !instance->submenu_name )
+   We don't want to rebuild the whole menu tree everytime a vfs change occurs 
+   or a document is accessed
+   */
+  if (g_strcmp0(instance->submenu_name,":::PLACES")==0)
+  {
+    g_assert (!instance->menu);
+    menu = get_places_menu ();
+  }
+  else if (g_strcmp0(instance->submenu_name,":::RECENT")==0)
+  {
+    g_assert (!instance->menu);    
+    menu = get_recent_menu ();
+  }
+  else if (g_strcmp0(instance->submenu_name,":::SESSION")==0)
+  {
+    g_assert (!instance->menu);    
+    menu = get_session_menu ();
+  }
+  else
+  {
+    GMenuTreeDirectory * menu_dir = NULL;    
+    
+    main_root = gmenu_tree_get_root_directory(main_menu_tree);
+    g_assert (gmenu_tree_item_get_type( (GMenuTreeItem*)main_root) == GMENU_TREE_ITEM_DIRECTORY);
+    g_assert (main_root);
+    settings_root = gmenu_tree_get_root_directory(settings_menu_tree);
+    if ( menu_dir = find_menu_dir (instance,main_root) )
+    {
+      /* if instance->menu then we're refreshing in a monitor callback*/
+      if (!instance->menu)
       {
-        c = g_malloc0 (sizeof(CallbackContainer));        
-        sub_menu = GTK_WIDGET(fill_er_up(instance,root,NULL));        
-        c->icon_name = g_strdup(gmenu_tree_directory_get_icon (root));
-        image = get_gtk_image (c->icon_name);
-        txt = gmenu_tree_entry_get_name((GMenuTreeEntry*)root);        
-        menu_item = cairo_menu_item_new_with_label (txt?txt:"unknown");        
-        gtk_menu_item_set_submenu (GTK_MENU_ITEM(menu_item),sub_menu);
-        if (image)
-        {
-          gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
-        }        
-        gtk_menu_shell_append(GTK_MENU_SHELL(instance->menu),menu_item);
-        c->file_path = g_strdup(":::SETTINGS");
-        c->display_name = g_strdup ("Settings");
-        drop_data = g_strdup_printf("cairo_menu_item_dir:///@@@%s@@@%s@@@%s\n",c->file_path,c->display_name,c->icon_name);
-        cairo_menu_item_set_source (AWN_CAIRO_MENU_ITEM(menu_item),drop_data);
-        g_free (drop_data);
-        c->instance = instance;
-        g_signal_connect (menu_item, "button-press-event",G_CALLBACK(_button_press_dir),c);
-        g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)_free_callback_container,c);
+        gmenu_tree_add_monitor (main_menu_tree,(GMenuTreeChangedFunc)submenu_build,instance);
       }
-      else if ( !instance->menu)
-      {
-        if (instance->submenu_name && ( g_strcmp0 (instance->submenu_name,":::SETTINGS")==0))
-        {
-          gchar * t = instance->submenu_name;
-          instance->submenu_name = NULL;
-          sub_menu = GTK_WIDGET(fill_er_up(instance,root,NULL));
-          instance->submenu_name = t;
-          instance->menu = sub_menu;          
-        }
-        else
-        {
-          sub_menu = GTK_WIDGET(fill_er_up(instance,root,NULL));
-          instance->menu = sub_menu;
-        }
-      }
-      gmenu_tree_item_unref (root);
+      menu = fill_er_up(instance,menu_dir,instance->menu);      
     }
+    else if ( menu_dir = find_menu_dir (instance,settings_root) )
+    {
+      if (!instance->menu)
+      {
+        gmenu_tree_add_monitor (main_menu_tree,(GMenuTreeChangedFunc)submenu_build,instance);
+      }      
+      menu = fill_er_up(instance,menu_dir,instance->menu);     
+    }
+    if (menu_dir)
+    {      
+      gmenu_tree_item_unref(menu_dir);
+    }
+    gmenu_tree_item_unref(main_root);
+    gmenu_tree_item_unref(settings_root);                               
+  }
+  return instance->menu = menu;
+}
+
+/*
+ TODO: add network, and trash
+
+ */
+GtkWidget * 
+menu_build (MenuInstance * instance)
+{
+  GMenuTreeDirectory *root;
+  GtkWidget * image = NULL;
+  GtkWidget   *menu_item;
+  GtkWidget * sub_menu;
+  const gchar * txt;
+  CallbackContainer * c;
+  gchar * drop_data;
+  gboolean hookup_monitor = FALSE;
+
+  if (instance->submenu_name)
+  {
+    return instance->menu = submenu_build (instance);
+  }
+  
+  clear_menu (instance);  
+  hookup_monitor = (instance->menu == NULL);
+  
+  if (!main_menu_tree)
+  {
+    main_menu_tree = gmenu_tree_lookup("applications.menu", GMENU_TREE_FLAGS_NONE);
+  }
+  if (!settings_menu_tree)
+  {
+    settings_menu_tree = gmenu_tree_lookup("settings.menu", GMENU_TREE_FLAGS_NONE);
   }
 
+  if (main_menu_tree)
+  {
+    root = gmenu_tree_get_root_directory(main_menu_tree);
+    g_assert (!instance->submenu_name);
+    if (hookup_monitor)
+    {
+      gmenu_tree_add_monitor (main_menu_tree,(GMenuTreeChangedFunc)menu_build,instance);      
+    }      
+    instance->menu = fill_er_up(instance,root,instance->menu);
+    gmenu_tree_item_unref(root);    
+  }
+  if  (instance->menu)
+  {  
+      menu_item = gtk_separator_menu_item_new ();
+      gtk_menu_shell_append(GTK_MENU_SHELL(instance->menu),menu_item);  
+  }
+  if (settings_menu_tree)
+  {
+    root = gmenu_tree_get_root_directory(settings_menu_tree);
+    if (!instance->menu)
+    {
+      g_debug ("%s:  No applications menu????",__func__);
+      instance->menu = fill_er_up(instance,root,instance->menu);
+      gmenu_tree_add_monitor (settings_menu_tree,(GMenuTreeChangedFunc)menu_build,instance);
+    }
+    else
+    {
+      sub_menu = fill_er_up(instance,root,NULL);
+      c = g_malloc0 (sizeof(CallbackContainer));        
+      c->icon_name = g_strdup(gmenu_tree_directory_get_icon (root));
+      image = get_gtk_image (c->icon_name);
+      txt = gmenu_tree_entry_get_name((GMenuTreeEntry*)root);        
+      menu_item = cairo_menu_item_new_with_label (txt?txt:"unknown");        
+      gtk_menu_item_set_submenu (GTK_MENU_ITEM(menu_item),sub_menu);
+      if (image)
+      {
+        gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
+      }        
+      gtk_menu_shell_append(GTK_MENU_SHELL(instance->menu),menu_item);
+      c->file_path = g_strdup(":::SETTINGS");
+      c->display_name = g_strdup ("Settings");
+      drop_data = g_strdup_printf("cairo_menu_item_dir:///@@@%s@@@%s@@@%s\n",c->file_path,c->display_name,c->icon_name);
+      cairo_menu_item_set_source (AWN_CAIRO_MENU_ITEM(menu_item),drop_data);
+      g_free (drop_data);
+      c->instance = instance;
+      g_signal_connect (menu_item, "button-press-event",G_CALLBACK(_button_press_dir),c);
+      g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)_free_callback_container,c);      
+    }
+    gmenu_tree_item_unref(root);    
+  }
+    
     /*TODO Check to make sure it is needed. Should not be displayed if 
       all flags are of the NO persuasion.*/
-  if  (! instance->submenu_name && instance->menu)
+  if  (instance->menu)
   {
      menu_item = gtk_separator_menu_item_new ();
      gtk_menu_shell_append(GTK_MENU_SHELL(instance->menu),menu_item);  
   }
   
-  if (! (instance->flags & MENU_BUILD_NO_PLACES) && (! instance->submenu_name || !instance->menu))
+  if (! (instance->flags & MENU_BUILD_NO_PLACES) )
   {
     if ( !instance->check_menu_hidden_fn || !instance->check_menu_hidden_fn (instance->applet,":::PLACES"))
     {    
@@ -746,45 +855,35 @@ menu_build (MenuInstance * instance)
       }
       else
       {
-        if ( !instance->submenu_name || ( g_strcmp0 (instance->submenu_name,":::PLACES")==0))
-        {      
-          sub_menu = get_places_menu ();
-          if (instance->menu)
-          {
-            gchar * icon_name;
-            instance->places = menu_item = cairo_menu_item_new_with_label (_("Places"));
-            image = get_gtk_image (icon_name = "places");
-            if (!image)
-            {
-              image = get_gtk_image(icon_name = "stock_folder");
-            }
-            if (image)
-            {
-              gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
-            }
-            gtk_menu_item_set_submenu (GTK_MENU_ITEM(menu_item),sub_menu);            
-            gtk_menu_shell_append(GTK_MENU_SHELL(instance->menu),menu_item);
-            c = g_malloc0 (sizeof(CallbackContainer));
-            c->file_path = g_strdup(":::PLACES");
-            c->display_name = g_strdup ("Places");
-            drop_data = g_strdup_printf("cairo_menu_item_dir:///@@@%s@@@%s@@@%s\n",c->file_path,c->display_name,c->icon_name);
-            cairo_menu_item_set_source (AWN_CAIRO_MENU_ITEM(menu_item),drop_data);
-            g_free (drop_data);
-            c->icon_name = g_strdup(icon_name);
-            c->instance = instance;
-            g_signal_connect (menu_item, "button-press-event",G_CALLBACK(_button_press_dir),c);
-            g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)_free_callback_container,c);
-          }
-          else
-          {
-           instance->menu = sub_menu;
-          }
+        sub_menu = get_places_menu ();
+        gchar * icon_name;
+        instance->places = menu_item = cairo_menu_item_new_with_label (_("Places"));
+        image = get_gtk_image (icon_name = "places");
+        if (!image)
+        {
+          image = get_gtk_image(icon_name = "stock_folder");
         }
+        if (image)
+        {
+          gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
+        }
+        gtk_menu_item_set_submenu (GTK_MENU_ITEM(menu_item),sub_menu);            
+        gtk_menu_shell_append(GTK_MENU_SHELL(instance->menu),menu_item);
+        c = g_malloc0 (sizeof(CallbackContainer));
+        c->file_path = g_strdup(":::PLACES");
+        c->display_name = g_strdup ("Places");
+        drop_data = g_strdup_printf("cairo_menu_item_dir:///@@@%s@@@%s@@@%s\n",c->file_path,c->display_name,c->icon_name);
+        cairo_menu_item_set_source (AWN_CAIRO_MENU_ITEM(menu_item),drop_data);
+        g_free (drop_data);
+        c->icon_name = g_strdup(icon_name);
+        c->instance = instance;
+        g_signal_connect (menu_item, "button-press-event",G_CALLBACK(_button_press_dir),c);
+        g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)_free_callback_container,c);
       }
     }    
   }
   
-  if (! (instance->flags & MENU_BUILD_NO_RECENT)&& (! instance->submenu_name || !instance->menu))
+  if (! (instance->flags & MENU_BUILD_NO_RECENT))
   {
     if ( !instance->check_menu_hidden_fn || !instance->check_menu_hidden_fn (instance->applet,":::RECENT"))
     {
@@ -797,87 +896,71 @@ menu_build (MenuInstance * instance)
       }
       else
       {
-        if ( !instance->submenu_name || ( g_strcmp0 (instance->submenu_name,":::RECENT")==0))
+        sub_menu = get_recent_menu ();        
+        gchar * icon_name;
+        instance->recent = menu_item = cairo_menu_item_new_with_label (_("Recent Documents"));
+        image = get_gtk_image (icon_name = "document-open-recent");
+        if (!image)
         {
-          sub_menu = get_recent_menu ();        
-          if (instance->menu)
-          {        
-            gchar * icon_name;
-            instance->recent = menu_item = cairo_menu_item_new_with_label (_("Recent Documents"));
-            image = get_gtk_image (icon_name = "document-open-recent");
-            if (!image)
-            {
-              image = get_gtk_image(icon_name = "stock_folder");
-            }
-            if (image)
-            {
-              gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
-            }
-            gtk_menu_item_set_submenu (GTK_MENU_ITEM(menu_item),sub_menu);
-            gtk_menu_shell_append(GTK_MENU_SHELL(instance->menu),menu_item);
-            c = g_malloc0 (sizeof(CallbackContainer));
-            c->file_path = g_strdup(":::RECENT");
-            c->display_name = g_strdup ("Recent Documents");
-            drop_data = g_strdup_printf("cairo_menu_item_dir:///@@@%s@@@%s@@@%s\n",c->file_path,c->display_name,c->icon_name);
-            cairo_menu_item_set_source (AWN_CAIRO_MENU_ITEM(menu_item),drop_data);
-            g_free (drop_data);
-            c->icon_name = g_strdup (icon_name);
-            c->instance = instance;
-            g_signal_connect (menu_item, "button-press-event",G_CALLBACK(_button_press_dir),c);
-            g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)_free_callback_container,c);
-          }
-          else
-          {
-            instance->menu = sub_menu;
-          }
+          image = get_gtk_image(icon_name = "stock_folder");
         }
+        if (image)
+        {
+          gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
+        }
+        gtk_menu_item_set_submenu (GTK_MENU_ITEM(menu_item),sub_menu);
+        gtk_menu_shell_append(GTK_MENU_SHELL(instance->menu),menu_item);
+        c = g_malloc0 (sizeof(CallbackContainer));
+        c->file_path = g_strdup(":::RECENT");
+        c->display_name = g_strdup ("Recent Documents");
+        drop_data = g_strdup_printf("cairo_menu_item_dir:///@@@%s@@@%s@@@%s\n",c->file_path,c->display_name,c->icon_name);
+        cairo_menu_item_set_source (AWN_CAIRO_MENU_ITEM(menu_item),drop_data);
+        g_free (drop_data);
+        c->icon_name = g_strdup (icon_name);
+        c->instance = instance;
+        g_signal_connect (menu_item, "button-press-event",G_CALLBACK(_button_press_dir),c);
+        g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)_free_callback_container,c);
       }
     }
   }
 
   /*TODO Check to make sure it is needed. avoid double separators*/
-  if  (! instance->submenu_name && instance->menu)
+  if  (instance->menu &&  (!(instance->flags & MENU_BUILD_NO_RECENT) || !(instance->flags & MENU_BUILD_NO_PLACES))&&
+     (!instance->check_menu_hidden_fn (instance->applet,":::RECENT") || !instance->check_menu_hidden_fn (instance->applet,":::PLACES")) )
   {
-      menu_item = gtk_separator_menu_item_new ();
-      gtk_menu_shell_append(GTK_MENU_SHELL(instance->menu),menu_item);  
+    g_debug ("bools = %d, %d",!(instance->flags & MENU_BUILD_NO_RECENT),!(instance->flags & MENU_BUILD_NO_PLACES));
+    menu_item = gtk_separator_menu_item_new ();
+    gtk_menu_shell_append(GTK_MENU_SHELL(instance->menu),menu_item);  
   }
 
-  if (! (instance->flags & MENU_BUILD_NO_SESSION)&& (! instance->submenu_name || !instance->menu))
+  if (! (instance->flags & MENU_BUILD_NO_SESSION))
   {
     if ( !instance->check_menu_hidden_fn || !instance->check_menu_hidden_fn (instance->applet,":::SESSION"))
     {    
-      g_debug ("getting submenu");
       sub_menu = get_session_menu ();
-      if (instance->menu)
-      {                
-        menu_item = cairo_menu_item_new_with_label (_("Session"));
-        image = get_gtk_image ("session-properties");
-        if (image)
-        {
-          gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
-        }        
-        gtk_menu_item_set_submenu (GTK_MENU_ITEM(menu_item),sub_menu);
-        gtk_menu_shell_append(GTK_MENU_SHELL(instance->menu),menu_item);
-
-        c = g_malloc0 (sizeof(CallbackContainer));
-        c->file_path = g_strdup(":::SESSION");
-        c->display_name = g_strdup ("Session");
-        drop_data = g_strdup_printf("cairo_menu_item_dir:///@@@%s@@@%s@@@%s\n",c->file_path,c->display_name,c->icon_name);
-        cairo_menu_item_set_source (AWN_CAIRO_MENU_ITEM(menu_item),drop_data);
-        g_free (drop_data);
-        c->icon_name = g_strdup ("session-properties");
-        c->instance = instance;
-        g_signal_connect (menu_item, "button-press-event",G_CALLBACK(_button_press_dir),c);
-        g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)_free_callback_container,c);
-      }
-      else
+      menu_item = cairo_menu_item_new_with_label (_("Session"));
+      image = get_gtk_image ("session-properties");
+      if (image)
       {
-        instance->menu = sub_menu;
-      }
+        gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
+      }        
+      gtk_menu_item_set_submenu (GTK_MENU_ITEM(menu_item),sub_menu);
+      gtk_menu_shell_append(GTK_MENU_SHELL(instance->menu),menu_item);
+
+      c = g_malloc0 (sizeof(CallbackContainer));
+      c->file_path = g_strdup(":::SESSION");
+      c->display_name = g_strdup ("Session");
+      drop_data = g_strdup_printf("cairo_menu_item_dir:///@@@%s@@@%s@@@%s\n",c->file_path,c->display_name,c->icon_name);
+      cairo_menu_item_set_source (AWN_CAIRO_MENU_ITEM(menu_item),drop_data);
+      g_free (drop_data);
+      c->icon_name = g_strdup ("session-properties");
+      c->instance = instance;
+      g_signal_connect (menu_item, "button-press-event",G_CALLBACK(_button_press_dir),c);
+      g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)_free_callback_container,c);
     }
   }
   
-  if (! (instance->flags & MENU_BUILD_NO_SEARCH)&& (! instance->submenu_name || !instance->menu))
+  if (! (instance->flags & MENU_BUILD_NO_SEARCH))
   {  
     if ( !instance->submenu_name)
     {    
@@ -894,7 +977,7 @@ menu_build (MenuInstance * instance)
     }
   }
   
-  if (! (instance->flags & MENU_BUILD_NO_RUN)&& (! instance->submenu_name || !instance->menu))
+  if (! (instance->flags & MENU_BUILD_NO_RUN))
   {
     if ( !instance->submenu_name)
     {    

@@ -1,6 +1,3 @@
-[DEFAULT]
-single_instance = false
-
 [DEFAULT/clock_background]
 type = string
 default = 667F66FF
@@ -28,18 +25,18 @@ description = X
 
 [DEFAULT/password]
 type = string
-default = 
+default = None
 description = X
 
 [DEFAULT/url]
 type = string
-default = 
+default = None
 description = X
 
 [DEFAULT/username]
 description = X
 type = string
-description = X
+default = None
 
 [DEFAULT/twelve_hour_clock]
 type = boolean

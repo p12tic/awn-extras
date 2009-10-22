@@ -22,7 +22,6 @@
 
 #include <libdesktop-agnostic/fdo.h>
 #include <gtk/gtk.h>
-#include <libdesktop-agnostic/gtk.h>
 #include <libdesktop-agnostic/vfs.h>
 #include "cairo-menu-item.h"
 #include "cairo-menu.h"

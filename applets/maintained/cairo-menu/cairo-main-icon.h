@@ -55,6 +55,8 @@ GType cairo_main_icon_get_type (void);
 
 GtkWidget* cairo_main_icon_new (AwnApplet * applet);
 
+void cairo_main_icon_refresh_menu (CairoMainIcon * icon);
+
 G_END_DECLS
 
 #endif /* _CAIRO_MENU_APPLET */

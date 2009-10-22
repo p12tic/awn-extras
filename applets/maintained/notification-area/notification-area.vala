@@ -39,6 +39,7 @@ public class NotificationArea : GLib.Object
 
   private int max_rows;
   private int max_cols;
+  private int redraw_timer;
 
   private Quark addition_quark;
   private Quark deletion_quark;
@@ -133,6 +134,7 @@ public class NotificationArea : GLib.Object
 
     this.max_rows = 2;
     this.max_cols = 2;
+    this.redraw_timer = 0;
 
     this.addition_quark = Quark.from_string ("na-tray-icon-added");
     this.deletion_quark = Quark.from_string ("na-tray-icon-deleted");
@@ -515,6 +517,46 @@ public class NotificationArea : GLib.Object
 
     this.table_refresh ();
   }
+
+  private bool redraw_scheduler ()
+  {
+    this.eb.queue_draw ();
+    switch (this.redraw_timer)
+    {
+      case 50:
+        this.redraw_timer = 150;
+        break;
+      case 150:
+        this.redraw_timer = 350;
+        break;
+      case 350:
+        this.redraw_timer = 850;
+        break;
+      default:
+        this.redraw_timer = 0;
+        break;
+    }
+    if (this.redraw_timer != 0)
+    {
+      Timeout.add (this.redraw_timer, this.redraw_scheduler);
+    }
+    return false;
+  }
+
+  public bool on_visibility_change (Gdk.Event event, Widget applet)
+  {
+    if (event.visibility.state == Gdk.VisibilityState.UNOBSCURED)
+    {
+      if (applet.is_composited () && this.redraw_timer == 0)
+      {
+        // problem with redraw + fade-out auto-hide, composited windows really
+        // don't like the hiding (same workaround is implemented in AwnPanel)
+        this.redraw_timer = 50;
+        Timeout.add (this.redraw_timer, this.redraw_scheduler);
+      }
+    }
+    return false;
+  }
 }
 
 public Applet?
@@ -539,6 +581,12 @@ awn_applet_factory_initp (string canonical_name, string uid, int panel_id)
 
   NotificationArea na = new NotificationArea (applet);
   applet.set_data ("notification-area", na.@ref ());
+
+  applet.add_events(Gdk.EventMask.VISIBILITY_NOTIFY_MASK);
+  Signal.connect_swapped (applet, "visibility-notify-event",
+                          (GLib.Callback)NotificationArea.on_visibility_change,
+                          na);
+
   return applet;
 }
 

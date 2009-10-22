@@ -110,7 +110,7 @@ description =
 
 [DEFAULT/hidden_names]
 type = list-string
-default =
+default = :::PLACES;
 description =
 
 [DEFAULT/run_cmd]

@@ -889,7 +889,7 @@ menu_build (MenuInstance * instance)
       if (instance->recent)
       {
         GList * children = gtk_container_get_children (GTK_CONTAINER(instance->menu));
-        menu_item =instance->places;
+        menu_item =instance->recent;
         gtk_menu_reorder_child (GTK_MENU(instance->menu),menu_item,g_list_length (children));
         g_list_free (children);        
       }

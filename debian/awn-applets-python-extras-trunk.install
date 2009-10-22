@@ -1,8 +1,10 @@
 #
 # Calendar
 #
+etc/gconf/schemas/awn-applet-digital-clock.schemas
 usr/share/avant-window-navigator/applets/calendar/
 usr/share/avant-window-navigator/applets/calendar.desktop
+usr/share/avant-window-navigator/schemas/awn-applet-digital-clock.schema-ini
 #
 # Digital Clock
 #

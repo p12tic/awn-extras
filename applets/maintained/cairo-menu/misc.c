@@ -194,7 +194,7 @@ GtkWidget *
 get_gtk_image (const gchar const * icon_name)
 {
   GtkWidget *image = NULL;
-  GdkPixbuf *pbuf;  
+  GdkPixbuf *pbuf = NULL;  
   gint width,height;
   
   if (icon_name)
@@ -217,7 +217,7 @@ get_gtk_image (const gchar const * icon_name)
                                          NULL);
       }
       
-      if (pbuf)
+      if (pbuf && GDK_IS_PIXBUF (pbuf))
       {
         image = gtk_image_new_from_pixbuf (pbuf);
         g_object_unref (pbuf);        

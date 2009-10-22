@@ -38,10 +38,10 @@ public class NotificationAreaPrefs : GLib.Object
 
   private weak Gtk.RadioButton auto_backround_radio;
   private weak Gtk.RadioButton custom_background_radio;
-  private weak GTK.ColorButton background_color_button;
+  private weak UI.ColorButton background_color_button;
   private weak Gtk.RadioButton auto_border_radio;
   private weak Gtk.RadioButton custom_border_radio;
-  private weak GTK.ColorButton border_color_button;
+  private weak UI.ColorButton border_color_button;
 
   public int icons_per_cell
   {
@@ -126,7 +126,6 @@ public class NotificationAreaPrefs : GLib.Object
   {
     this.applet = applet;
 
-    Type workaround = typeof (GTK.ColorButton);
     string ui_path = GLib.Path.build_filename (Build.APPLETSDIR,
                                                APPLET_NAME,
                                                "na-prefs.ui");
@@ -195,9 +194,9 @@ public class NotificationAreaPrefs : GLib.Object
       }
     });
 
-    this.background_color_button = (GTK.ColorButton)builder.get_object ("backgroundColorbutton");
+    this.background_color_button = (UI.ColorButton)builder.get_object ("backgroundColorbutton");
     this.background_color_button.color_set.connect ((obj) => {
-      GTK.ColorButton button = obj as GTK.ColorButton;
+      UI.ColorButton button = obj as UI.ColorButton;
       this.background_color = button.da_color;
     });
 
@@ -214,9 +213,9 @@ public class NotificationAreaPrefs : GLib.Object
       }
     });
 
-    this.border_color_button = (GTK.ColorButton)builder.get_object ("borderColorbutton");
+    this.border_color_button = (UI.ColorButton)builder.get_object ("borderColorbutton");
     this.border_color_button.color_set.connect ((obj) => {
-      GTK.ColorButton button = obj as GTK.ColorButton;
+      UI.ColorButton button = obj as UI.ColorButton;
       this.border_color = button.da_color;
     });
   }

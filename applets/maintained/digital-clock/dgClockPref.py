@@ -21,7 +21,7 @@ import time
 
 import gobject
 from desktopagnostic import Color, config
-from desktopagnostic.gtk import ColorButton
+from desktopagnostic.ui import ColorButton
 import gtk
 import awn
 from awn import extras

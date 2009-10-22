@@ -124,7 +124,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="DesktopAgnosticGTKColorButton" id="colorbutton_hand">
+                              <object class="DesktopAgnosticUIColorButton" id="colorbutton_hand">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>

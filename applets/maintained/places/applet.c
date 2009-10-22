@@ -28,7 +28,7 @@
 #include <glib/gi18n-lib.h>
 #include <string.h>
 
-#include <libdesktop-agnostic/gtk.h>
+#include <libdesktop-agnostic/ui.h>
 #include <libdesktop-agnostic/vfs.h>
 #include <libawn/libawn.h>
 
@@ -906,10 +906,10 @@ int activate(GtkWidget *w, gchar **p)
 
 void _mod_colour(GtkColorButton *widget, DesktopAgnosticColor **color)
 {
-  DesktopAgnosticGTKColorButton *button;
+  DesktopAgnosticUIColorButton *button;
 
-  button = DESKTOP_AGNOSTIC_GTK_COLOR_BUTTON (widget);
-  *color = g_object_ref (desktop_agnostic_gtk_color_button_get_da_color (button));
+  button = DESKTOP_AGNOSTIC_UI_COLOR_BUTTON (widget);
+  *color = g_object_ref (desktop_agnostic_ui_color_button_get_da_color (button));
 
   gtk_widget_destroy(pref_menu->hover_ex);
   gtk_widget_destroy(pref_menu->normal_ex);

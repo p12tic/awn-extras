@@ -25,7 +25,7 @@ pygtk.require("2.0")
 import gtk
 
 from desktopagnostic import config, Color
-from desktopagnostic.gtk import ColorButton
+from desktopagnostic.ui import ColorButton
 import awn
 from awn.extras import __version__
 

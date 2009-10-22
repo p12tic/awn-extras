@@ -75,6 +75,7 @@ usr/share/avant-window-navigator/schemas/awn-applet-media-player.schema-ini
 #
 etc/gconf/schemas/awn-applet-media-control.schemas
 usr/share/avant-window-navigator/applets/media-control/*.py
+usr/share/avant-window-navigator/applets/media-control/*.ui
 usr/share/avant-window-navigator/applets/media-control/icons/*.svg
 usr/share/avant-window-navigator/applets/media-control.desktop
 usr/share/avant-window-navigator/schemas/awn-applet-media-control.schema-ini

@@ -437,12 +437,20 @@ class YamaApplet:
             if isinstance(node, gmenu.Entry):
                 item.set_tooltip_text(node.comment)
                 item.connect("activate", self.launch_app, node.desktop_file_path)
+
+                # Setup drag & drop
+                item.drag_source_set(gtk.gdk.BUTTON1_MASK, [("text/uri-list", 0, 0)], gtk.gdk.ACTION_COPY)
+                item.drag_source_set_icon_name(node.icon)
+                item.connect("drag-data-get", self.drag_item_cb, node.desktop_file_path)
             else:
                 sub_menu = gtk.Menu()
                 item.set_submenu(sub_menu)
                 self.append_directory(node, sub_menu)
             if index is not None:
                 index += 1
+
+    def drag_item_cb(self, widget, context, selection_data, info, time, path):
+        selection_data.set_uris(["file://" + path])
 
     def append_awn_desktop(self, menu, desktop_name):
         for dir in data_dirs.split(":"):

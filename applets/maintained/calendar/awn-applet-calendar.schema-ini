@@ -42,3 +42,8 @@ default = None
 type = boolean
 default = false
 description = X
+
+[DEFAULT/blinking_colon]
+type = boolean
+default = false
+description = X

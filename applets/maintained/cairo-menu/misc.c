@@ -20,7 +20,6 @@
 #include "misc.h"
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include <libdesktop-agnostic/gtk.h>
 #include <libdesktop-agnostic/vfs.h>
 #include <sys/types.h>
 #include <unistd.h>

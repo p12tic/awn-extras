@@ -390,6 +390,7 @@ get_places_menu (void)
 static GtkWidget *
 fill_er_up(MenuInstance * instance,GMenuTreeDirectory *directory, GtkWidget * menu)
 {
+  static gint sanity_depth_count = 0;
   GSList * items = gmenu_tree_directory_get_contents(directory);
   GSList * tmp = items;
   GtkWidget * menu_item = NULL;
@@ -401,6 +402,13 @@ fill_er_up(MenuInstance * instance,GMenuTreeDirectory *directory, GtkWidget * me
   gboolean detached_sub = FALSE;
   gchar * uri;
 
+  sanity_depth_count++;
+  if (sanity_depth_count>6)
+  {
+    sanity_depth_count--;
+    g_warning ("%s: Exceeded max menu depth of 6 at %s",__func__,gmenu_tree_directory_get_name((GMenuTreeDirectory*)directory));
+    return cairo_menu_new ();
+  }
   if (!menu && !instance->submenu_name)
   {
     menu = cairo_menu_new ();
@@ -549,6 +557,7 @@ fill_er_up(MenuInstance * instance,GMenuTreeDirectory *directory, GtkWidget * me
   {
     gtk_widget_show_all (menu);
   }
+  sanity_depth_count--;
   return menu;
 }
 

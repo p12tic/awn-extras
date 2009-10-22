@@ -20,7 +20,8 @@
 /* cairo-menu-main-icon.c */
 
 #include <gtk/gtk.h>
-#include <libawn/awn-themed-icon.h>
+#include <libawn/libawn.h>
+#include <libawn/awn-utils.h>
 #include "cairo-main-icon.h"
 #include "cairo-menu.h"
 #include "cairo-menu-applet.h"
@@ -287,7 +288,7 @@ _position(GtkMenu *menu, gint *x, gint *y, gboolean *push_in,CairoMainIcon * ico
 static gboolean 
 _button_clicked_event (CairoMainIcon *icon, GdkEventButton *event, gpointer null)
 {
-  g_return_if_fail (AWN_IS_CAIRO_MAIN_ICON(icon));
+  g_return_val_if_fail (AWN_IS_CAIRO_MAIN_ICON(icon), FALSE);
   CairoMainIconPrivate * priv = GET_PRIVATE (icon);
   
   if (event->button == 1)

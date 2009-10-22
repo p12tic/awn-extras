@@ -19,7 +19,8 @@
 /* cairo-menu-aux-icon.c */
 
 #include <gtk/gtk.h>
-#include <libawn/awn-themed-icon.h>
+#include <libawn/libawn.h>
+#include <libawn/awn-utils.h>
 #include "cairo-aux-icon.h"
 #include "cairo-menu.h"
 #include "cairo-menu-applet.h"

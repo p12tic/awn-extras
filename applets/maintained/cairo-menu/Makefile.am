@@ -3,7 +3,9 @@ GNOME_MENU_BUILDER = gnome-menu-builder
 
 APPLET_CFLAGS =				\
 	$(CAIRO_MENU_GNOME_CFLAGS) \
-	-D_GNU_SOURCE
+	-std=c99 \
+	-D_GNU_SOURCE \
+	$(NULL)
 
 include $(top_srcdir)/Makefile.c-applet
 include $(top_srcdir)/Makefile.schemas

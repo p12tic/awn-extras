@@ -19,6 +19,7 @@
 
 #include "misc.h"
 #include <glib/gi18n.h>
+#include <gdk/gdkx.h>
 #include <gtk/gtk.h>
 #include <libdesktop-agnostic/vfs.h>
 #include <sys/types.h>
@@ -294,7 +295,11 @@ _get_recent_menu (GtkWidget * menu)
           gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);          
         }
         if (gtk_recent_info_get_application_info (iter->data,app_name,
+#if GTK_CHECK_VERSION(2,16,0)
                                                          &app_exec,
+#else
+                                                         (gchar**)&app_exec,
+#endif
                                                          &count,
                                                          &time_))
         {

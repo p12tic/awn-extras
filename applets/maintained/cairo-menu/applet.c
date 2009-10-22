@@ -23,6 +23,8 @@
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
 
+extern void show_prefs (void);
+
 static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, CairoMenuApplet * applet);
 
 static gboolean _show_prefs(GtkWidget *widget, GdkEventButton *event, CairoMenuApplet * applet)

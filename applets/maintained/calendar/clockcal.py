@@ -200,8 +200,8 @@ class Calendar(awn.AppletSimple):
         self.login_window.update_integ_text(self.integ_text)
         self.login_window.user.set_text(self.username)
         # Not notify shizzle atm
-#        if key_change == self.gconf_path + "/integration":
-#            self.login()
+        if key_change == "integration":
+            self.login()
         if self.thread is not None:
             self.thread.kill()
             self.thread = None

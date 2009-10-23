@@ -144,7 +144,6 @@ Depends: 	${shlibs:Depends},
 		fortune,
 		python-awn-extras-trunk (>= 0.3.8)
 Recommends: 	awn-settings-trunk (>= 0.3.8),
-		python-xlib,
 		python-gdata,
 		python-vobject
 Suggests: 	tomboy,

@@ -143,7 +143,8 @@ cairo_main_icon_constructed (GObject *object)
                                           0);
   priv->menu = menu_build (priv->menu_instance);
   g_signal_connect(G_OBJECT(priv->menu), "deactivate", G_CALLBACK(_deactivate_event), object);
-  
+
+  awn_icon_set_tooltip_text (AWN_ICON (object), "Main Menu");
   gtk_widget_show_all (priv->menu);
   g_signal_connect(object, "button-press-event", G_CALLBACK(_button_clicked_event), NULL);
   g_signal_connect_swapped(priv->applet,"size-changed",G_CALLBACK(size_changed_cb),object);

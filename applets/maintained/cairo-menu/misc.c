@@ -106,6 +106,10 @@ get_desktop_entry (gchar * desktop_file)
   return entry;
 }
 
+/*
+ FIXME
+ activate works much nicer as it doesn't fire if the item was dragged and dropped.
+ But i need event->time*/
 void
 _launch (GtkWidget *widget,GdkEventButton *event,gchar * desktop_file)
 {
@@ -121,6 +125,14 @@ _launch (GtkWidget *widget,GdkEventButton *event,gchar * desktop_file)
   }
 
   if (!desktop_agnostic_fdo_desktop_entry_key_exists (entry,"Exec"))
+  {
+    return;
+  }
+
+  /*
+   An incredibly hackish way to detect that we had a drag and drop
+   */
+  if ( ! lround (event->x) && !lround (event->y) && !lround (event->x_root) && !lround (event->y_root) )
   {
     return;
   }

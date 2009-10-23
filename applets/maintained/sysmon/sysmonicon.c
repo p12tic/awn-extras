@@ -152,8 +152,6 @@ awn_sysmonicon_constructed (GObject *object)
     G_OBJECT_CLASS (awn_sysmonicon_parent_class)->constructed (object);
   }
   
-  priv->tooltip = awn_tooltip_new_for_widget (GTK_WIDGET(object));
-  
   g_object_get (object,
                 "applet", &applet,
                 NULL);

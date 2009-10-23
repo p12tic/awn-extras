@@ -157,7 +157,8 @@ _awn_CPUicon_update_icon(gpointer object)
     point = g_new0 (AwnGraphSinglePoint,1);    
     *point = awn_CPUicon_get_load (object);
     text = g_strdup_printf ("CPU: %2.0lf%%",point->value);
-    awn_tooltip_set_text (AWN_TOOLTIP(sysmonicon_priv->tooltip),text);
+//    awn_tooltip_set_text (AWN_TOOLTIP(sysmonicon_priv->tooltip),text);
+    awn_icon_set_tooltip_text (AWN_ICON(object),text);    
     g_free (text);
     text = g_strdup_printf("%.0lf%%",point->value);  
     g_object_set (priv->text_overlay,
@@ -201,7 +202,8 @@ _awn_CPUicon_update_icon(gpointer object)
     text = g_strdup_printf ("CPU: %2.0lf%%",
                             avg_point.value
                             );
-    awn_tooltip_set_text (AWN_TOOLTIP(sysmonicon_priv->tooltip),text);
+//    awn_tooltip_set_text (AWN_TOOLTIP(sysmonicon_priv->tooltip),text);
+    awn_icon_set_tooltip_text (AWN_ICON(object),text);
     g_free (text);
     text = g_strdup_printf("%.0lf%%",avg_point.value);
     g_object_set (priv->text_overlay,

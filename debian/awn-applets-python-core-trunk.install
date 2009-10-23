@@ -56,6 +56,13 @@ usr/share/avant-window-navigator/applets/file-browser-launcher/*.py
 usr/share/avant-window-navigator/applets/file-browser-launcher.desktop
 usr/share/avant-window-navigator/schemas/awn-applet-file-browser-launcher.schema-ini
 #
+# Hardware sensors
+#
+etc/gconf/schemas/awn-applet-hardware-sensors.schemas
+usr/share/avant-window-navigator/applets/hardware-sensors/
+usr/share/avant-window-navigator/applets/hardware-sensors.desktop
+usr/share/avant-window-navigator/schemas/awn-applet-hardware-sensors.schema-ini
+#
 # Mail
 #
 usr/share/avant-window-navigator/applets/mail/

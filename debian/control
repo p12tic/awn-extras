@@ -117,6 +117,7 @@ Description: A collection of applets for avant-window-navigator
   * DesktopManager: Manages the desktop Wallpaper.
   * feeds: A Python feed viewer.
   * file-browser-launcher: Launches the user's file manager or opens bookmarks.
+  * hardware-sensors: Applet to show the hw sensors readouts
   * mail: The Mail Applet lets you check your mail from AWN.
   * media-control: This applet displays album art in a awn dialog while 
     allowing you to control your favorite media players.

@@ -47,3 +47,18 @@ description = X
 type = boolean
 default = false
 description = X
+
+[DEFAULT/clock_plain]
+type = boolean
+default = false
+description = X
+
+[DEFAULT/cal_appearance_index]
+type = integer
+default = 0
+description = X
+
+[DEFAULT/clock_appearance_index]
+type = integer
+default = 0
+description = X

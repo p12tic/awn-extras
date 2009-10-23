@@ -88,8 +88,8 @@ class Calendar(awn.AppletSimple):
         self.build_login_window()
         # Get config params
         self.client = awn.config_get_default_for_applet(self)
-#        self.gconf_client.notify_add(self.gconf_path,
-#                                     self.config_event_callback)
+        for i in ["clock_border", "clock_foreground", "graphic", "integration", "password", "url", "username", "twelve_hour_clock", "blinking_colon", "clock_plain", "cal_appearance_index", "clock_appearance_index"]:
+            self.client.notify_add(config.GROUP_DEFAULT, i, self.config_event_callback)
         self.get_config()
         if self.password is None and self.integration is not None and \
            self.integration.requires_login:
@@ -257,8 +257,7 @@ class Calendar(awn.AppletSimple):
         self.cal.select_day(localtime.tm_mday)
 
     def config_event_callback(self, client, *args, **kwargs):
-        key = args[1].get_key()
-        self.get_config(key)
+        self.get_config(args[1])
 
     def dialog_focus_out_callback(self, widget, event):
         self.dialog.hide()
@@ -298,7 +297,7 @@ class Calendar(awn.AppletSimple):
         self.previous_day = current_day
         return result
 
-    def quit_callback(self):
+    def quit_callback(self, widget=None):
         self.thread.kill()
 
     def month_changed_callback(self, widget):

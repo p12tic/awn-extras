@@ -80,10 +80,7 @@ class CalendarPrefs(gtk.Window):
             self.applet.get_int_config('clock_appearance_index')
 
         self.twelve_hour_checkbox = gtk.CheckButton(_("Twelve Hour Clock"))
-        if applet.twelve_hour_clock == True:
-            self.twelve_hour_checkbox.set_active(True)
-        else:
-            self.twelve_hour_checkbox.set_active(False)
+        self.twelve_hour_checkbox.set_active(applet.twelve_hour_clock)
         hbox0 = gtk.HBox(False, 0)
         hbox0.pack_start(self.twelve_hour_checkbox, True, False, 0)
         vbox.pack_start(hbox0, False, False, 0)

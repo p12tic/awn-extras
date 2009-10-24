@@ -215,7 +215,11 @@ get_gtk_image (const gchar const * icon_name)
     /*TODO Need to listen for icon theme changes*/
     if ( gtk_icon_theme_has_icon (gtk_icon_theme_get_default(),icon_name) )
     {
-      image = gtk_image_new_from_icon_name (icon_name,GTK_ICON_SIZE_MENU);
+      pbuf = gtk_icon_theme_load_icon (gtk_icon_theme_get_default(),
+                                       icon_name,
+                                       height,
+                                       GTK_ICON_LOOKUP_FORCE_SIZE,
+                                       NULL);
     }
     
     if (!image)
@@ -227,16 +231,26 @@ get_gtk_image (const gchar const * icon_name)
                                          height,
                                          TRUE,
                                          NULL);
-      }
-      
-      if (pbuf && GDK_IS_PIXBUF (pbuf))
-      {
-        image = gtk_image_new_from_pixbuf (pbuf);
-        g_object_unref (pbuf);        
-      }
+      }      
     }
+    if (pbuf && GDK_IS_PIXBUF (pbuf)&&gdk_pixbuf_get_width(pbuf) > width)
+    {
+      GdkPixbuf *scaled;
+      height = height * ( (gdouble)width / gdk_pixbuf_get_width(pbuf) );
+      scaled = gdk_pixbuf_scale_simple (pbuf,
+                                        width,
+                                        height,
+                                        GDK_INTERP_BILINEAR);
+      g_object_unref (pbuf);
+      pbuf = scaled;
+    }
+    
+    if (pbuf && GDK_IS_PIXBUF (pbuf))
+    {
+      image = gtk_image_new_from_pixbuf (pbuf);
+      g_object_unref (pbuf);        
+    }      
   }
- 
   return image;
 }
 

@@ -35,6 +35,13 @@ usr/share/avant-window-navigator/applets/pandora.desktop
 etc/gconf/schemas/awn-applet-pandora.schemas
 usr/share/avant-window-navigator/schemas/awn-applet-pandora.schema-ini
 #
+# SlickSwitcher
+#
+usr/share/avant-window-navigator/applets/slickswitcher/
+usr/share/avant-window-navigator/applets/slickswitcher.desktop
+etc/gconf/schemas/awn-applet-slickswitcher.schemas
+usr/share/avant-window-navigator/schemas/awn-applet-slickswitcher.schema-ini
+#
 # Tomboy
 #
 usr/share/avant-window-navigator/applets/tomboy-applet/

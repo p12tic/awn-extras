@@ -309,13 +309,11 @@ dnl ==========================
 
 SHAVE_INIT([shave], [enable])
 
-dnl Please keep in alphabetical order
+dnl Please keep in alphabetical order (directory, not applet)
 AC_OUTPUT([
 Makefile
 applets/Makefile
 applets/maintained/animal-farm/Makefile
-applets/unmaintained/awnsystemmonitor/Makefile
-applets/unmaintained/awnsystemmonitor/awnsystemmonitor.desktop.in
 applets/maintained/awnterm/Makefile
 applets/maintained/awnterm/awnterm.desktop.in
 applets/maintained/battery/Makefile
@@ -326,7 +324,6 @@ applets/maintained/calendar/Makefile
 applets/maintained/comics/Makefile
 applets/maintained/cpufreq/Makefile
 applets/maintained/digital-clock/Makefile
-applets/unmaintained/dropper/Makefile
 applets/maintained/feeds/Makefile
 applets/maintained/file-browser-launcher/Makefile
 applets/maintained/garbage/Makefile
@@ -364,6 +361,9 @@ applets/maintained/webapplet/webapplet.desktop.in
 applets/maintained/wobblyzini/Makefile
 applets/maintained/wobblyzini/wobblyzini.desktop.in
 applets/maintained/yama/Makefile
+applets/unmaintained/awnsystemmonitor/Makefile
+applets/unmaintained/awnsystemmonitor/awnsystemmonitor.desktop.in
+applets/unmaintained/dropper/Makefile
 applets/unmaintained/main-menu/Makefile
 applets/unmaintained/main-menu/main-menu.desktop.in
 applets/unmaintained/MiMenu/Makefile

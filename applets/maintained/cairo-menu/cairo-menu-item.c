@@ -135,8 +135,10 @@ cairo_menu_item_constructed (GObject *object)
   {
     G_OBJECT_CLASS (cairo_menu_item_parent_class)->constructed (object);
   }
-#if !GTK_CHECK_VERSION (2,16,0)  
-  gtk_container_add (GTK_CONTAINER(object),gtk_label_new (priv->label) );
+#if !GTK_CHECK_VERSION (2,16,0)
+  GtkWidget *label = gtk_label_new (priv->label);
+  gtk_misc_set_alignment (GTK_MISC (label),0.0,0.5);
+  gtk_container_add (GTK_CONTAINER(object),label);
 #endif
 
   g_signal_connect (object,"expose-event",G_CALLBACK(cairo_menu_item_expose),NULL);

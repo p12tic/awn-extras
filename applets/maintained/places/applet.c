@@ -971,21 +971,21 @@ void show_prefs(Places * places)
 
   pref_menu->normal_label = gtk_label_new("Normal");
 
-  pref_menu->normal_bg = GTK_WIDGET (desktop_agnostic_gtk_color_button_new_with_color(places->normal_colours.base));
+  pref_menu->normal_bg = GTK_WIDGET (desktop_agnostic_ui_color_button_new_with_color(places->normal_colours.base));
   g_signal_connect(G_OBJECT(pref_menu->normal_bg), "color-set", G_CALLBACK(_mod_colour), &places->normal_colours.base);
-  pref_menu->normal_fg = GTK_WIDGET (desktop_agnostic_gtk_color_button_new_with_color(places->normal_colours.text));
+  pref_menu->normal_fg = GTK_WIDGET (desktop_agnostic_ui_color_button_new_with_color(places->normal_colours.text));
   g_signal_connect(G_OBJECT(pref_menu->normal_fg), "color-set", G_CALLBACK(_mod_colour), &places->normal_colours.text);
 
   pref_menu->hover_label = gtk_label_new("Hover");
-  pref_menu->hover_bg = GTK_WIDGET (desktop_agnostic_gtk_color_button_new_with_color(places->hover_colours.base));
+  pref_menu->hover_bg = GTK_WIDGET (desktop_agnostic_ui_color_button_new_with_color(places->hover_colours.base));
   g_signal_connect(G_OBJECT(pref_menu->hover_bg), "color-set", G_CALLBACK(_mod_colour), &places->hover_colours.base);
 
-  pref_menu->hover_fg = GTK_WIDGET (desktop_agnostic_gtk_color_button_new_with_color(places->hover_colours.text));
+  pref_menu->hover_fg = GTK_WIDGET (desktop_agnostic_ui_color_button_new_with_color(places->hover_colours.text));
   g_signal_connect(G_OBJECT(pref_menu->hover_fg), "color-set", G_CALLBACK(_mod_colour), &places->hover_colours.text);
 
   pref_menu->border_label = gtk_label_new("Border");
 
-  pref_menu->border_colour = GTK_WIDGET (desktop_agnostic_gtk_color_button_new_with_color(places->border_colour));
+  pref_menu->border_colour = GTK_WIDGET (desktop_agnostic_ui_color_button_new_with_color(places->border_colour));
   g_signal_connect(G_OBJECT(pref_menu->border_colour), "color-set", G_CALLBACK(_mod_colour), &places->border_colour);
 
 

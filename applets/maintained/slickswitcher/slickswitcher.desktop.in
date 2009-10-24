@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+_Name=SlickSwitcher
+_Comment=A visual workspace switcher
+Exec=awn-applet -p %k
+X-AWN-AppletExec=slickswitcher/slickswitcher.py
+Icon=slickswitcher/icons/done
+X-AWN-AppletCategory=Utility
+X-AWN-Type=Applet
+X-AWN-AppletType=Python

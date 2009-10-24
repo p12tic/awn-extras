@@ -635,7 +635,7 @@
               </object>
             </child>
             <child type="label">
-              <object class="GtkLabel" id="label9">
+              <object class="GtkLabel" id="label90">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">&lt;b&gt;Sensor value limits&lt;/b&gt;</property>
                 <property name="use_markup">True</property>

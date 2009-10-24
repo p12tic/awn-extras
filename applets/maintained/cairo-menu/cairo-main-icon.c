@@ -294,7 +294,6 @@ _button_clicked_event (CairoMainIcon *icon, GdkEventButton *event, gpointer null
   
   if (event->button == 1)
   {
-    g_debug ("%p",priv->menu);
     gtk_menu_popup(GTK_MENU(priv->menu), NULL, NULL, (GtkMenuPositionFunc)_position,icon,
                           event->button, event->time);   
     if (!priv->autohide_cookie)
@@ -332,6 +331,7 @@ _button_clicked_event (CairoMainIcon *icon, GdkEventButton *event, gpointer null
     g_object_set(awn_overlayable_get_effects (AWN_OVERLAYABLE(icon)), "depressed", FALSE,NULL);
     awn_utils_show_menu_images (GTK_MENU (priv->context_menu));
   }
+  awn_icon_set_is_active (AWN_ICON(icon), TRUE);
   return TRUE;
 }
 
@@ -368,5 +368,6 @@ _deactivate_event (GtkMenuShell *menushell,CairoMainIcon * icon)
     awn_applet_uninhibit_autohide (AWN_APPLET(priv->applet),priv->autohide_cookie);
     priv->autohide_cookie = 0;
   }
+  awn_icon_set_is_active (AWN_ICON(icon), FALSE);
 }
 

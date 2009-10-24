@@ -46,6 +46,7 @@ struct _CairoAuxIconPrivate {
   gchar        * menu_name;
   gchar        * display_name;
   gchar        * icon_name;
+  guint         autohide_cookie;    
 };
 
 
@@ -60,6 +61,7 @@ enum
 
 static gboolean _button_clicked_event (CairoAuxIcon *applet, GdkEventButton *event, gpointer null);
 
+static gboolean _deactivate_event (GtkMenuShell *menushell,CairoAuxIcon * icon);
 
 static void
 cairo_aux_icon_get_property (GObject *object, guint property_id,
@@ -173,6 +175,7 @@ cairo_aux_icon_constructed (GObject *object)
   priv->menu = menu_build (priv->menu_instance);
   awn_icon_set_tooltip_text (AWN_ICON(object),priv->display_name);
   gtk_widget_show_all (priv->menu);
+  g_signal_connect(G_OBJECT(priv->menu), "deactivate", G_CALLBACK(_deactivate_event), object);  
   g_signal_connect(object, "button-press-event", G_CALLBACK(_button_clicked_event), NULL);
   g_signal_connect_swapped(priv->applet,"size-changed",G_CALLBACK(size_changed_cb),object);
 }
@@ -304,7 +307,10 @@ _button_clicked_event (CairoAuxIcon *icon, GdkEventButton *event, gpointer null)
   {
     gtk_menu_popup(GTK_MENU(priv->menu), NULL, NULL, (GtkMenuPositionFunc)_position,icon,
                           event->button, event->time);   
-    
+    if (!priv->autohide_cookie)
+    {     
+      priv->autohide_cookie = awn_applet_inhibit_autohide (AWN_APPLET(priv->applet),"CairoMenu" );
+    }                
     g_object_set(awn_overlayable_get_effects (AWN_OVERLAYABLE(icon)), "depressed", FALSE,NULL);    
   }
   else if (event->button == 3)
@@ -337,10 +343,27 @@ _button_clicked_event (CairoAuxIcon *icon, GdkEventButton *event, gpointer null)
       gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);      
       awn_utils_show_menu_images (GTK_MENU (priv->context_menu));
     }
-
+    if (!priv->autohide_cookie)
+    {     
+      priv->autohide_cookie = awn_applet_inhibit_autohide (AWN_APPLET(priv->applet),"CairoMenu" );
+    }        
     gtk_menu_popup(GTK_MENU(priv->context_menu), NULL, NULL, NULL, NULL,event_button->button, event_button->time);
     g_object_set(awn_overlayable_get_effects (AWN_OVERLAYABLE(icon)), "depressed", FALSE,NULL);    
   }
+  awn_icon_set_is_active (AWN_ICON(icon), TRUE);  
   return TRUE;
+}
+
+static gboolean 
+_deactivate_event (GtkMenuShell *menushell,CairoAuxIcon * icon)
+{
+  CairoAuxIconPrivate * priv = GET_PRIVATE (icon);
+  
+  if (priv->autohide_cookie)
+  {     
+    awn_applet_uninhibit_autohide (AWN_APPLET(priv->applet),priv->autohide_cookie);
+    priv->autohide_cookie = 0;
+  }
+  awn_icon_set_is_active (AWN_ICON(icon), FALSE);
 }
 

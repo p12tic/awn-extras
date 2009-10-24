@@ -67,6 +67,7 @@ SUBDIRS = \
 	maintained/mount \
 	maintained/places \
 	maintained/quit \
+	maintained/slickswitcher \
 	maintained/shiny-switcher \
 	maintained/sysmon \
 	maintained/thinkhdaps \

@@ -320,6 +320,9 @@ _button_clicked_event (CairoAuxIcon *icon, GdkEventButton *event, gpointer null)
     if (!priv->context_menu)
     {
       priv->context_menu = awn_applet_create_default_menu (AWN_APPLET(priv->applet));
+      item = awn_themed_icon_create_remove_custom_icon_item (AWN_THEMED_ICON(icon),NULL);
+      gtk_menu_shell_append (GTK_MENU_SHELL(priv->context_menu), item);
+      
       item = gtk_image_menu_item_new_with_label("Applet Preferences");
       gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM(item), 
                                      gtk_image_new_from_stock (GTK_STOCK_PREFERENCES,GTK_ICON_SIZE_MENU));

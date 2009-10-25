@@ -27,6 +27,10 @@
 
 #include "cairo-menu-applet.h"
 
+#if !GTK_CHECK_VERSION(2,14,0)
+#define GTK_ICON_LOOKUP_FORCE_SIZE 0
+#endif
+
 
 static GtkWidget * _get_recent_menu (GtkWidget * menu);
 

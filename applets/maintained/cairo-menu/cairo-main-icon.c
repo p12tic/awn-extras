@@ -29,6 +29,10 @@
 #include "misc.h"
 #include "config.h"
 
+#ifndef GSEAL
+#define gtk_selection_data_get_data(x) (x)->data
+#endif
+
 extern MenuBuildFunc  menu_build;
 
 G_DEFINE_TYPE (CairoMainIcon, cairo_main_icon, AWN_TYPE_THEMED_ICON)

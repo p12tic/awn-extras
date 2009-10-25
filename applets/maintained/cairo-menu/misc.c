@@ -279,6 +279,14 @@ _remove_get_recent ( gpointer data,   GObject *where_the_object_was)
   g_signal_handler_disconnect (recent,id);
 }
 
+static void
+_purge_recent (GtkMenuItem *menuitem, GtkRecentManager *recent)
+{
+  g_message ("%s: Purged %d items from Recent Documents",__func__,
+             gtk_recent_manager_purge_items (recent,NULL));
+  
+}
+
 /*
  Updates the recent menu.
  This is also called by signal handler when there are updates to the 
@@ -291,6 +299,7 @@ _get_recent_menu (GtkWidget * menu)
   static gboolean done_once = FALSE;
   GtkRecentManager *recent = gtk_recent_manager_get_default ();
   GtkWidget * menu_item;
+  GtkWidget * image = NULL;  
   GList * recent_list;
   GList * iter;
   gint width,height;
@@ -307,7 +316,6 @@ _get_recent_menu (GtkWidget * menu)
       {
         gchar * app_name = gtk_recent_info_last_application (iter->data);
         GdkPixbuf * pbuf = NULL;
-        GtkWidget * image = NULL;
         const gchar * app_exec=NULL;
         guint count;
         time_t time_;
@@ -343,7 +351,15 @@ _get_recent_menu (GtkWidget * menu)
       }
     }
   }
-
+  menu_item = cairo_menu_item_new_with_label (_("Clear Recent Documents"));
+  image = get_gtk_image ("gtk-clear");
+  if (image)
+  {
+    gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);          
+  }
+  g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(_purge_recent),recent);
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);  
+  
   g_list_foreach (recent_list, (GFunc)gtk_recent_info_unref,NULL);
   g_list_free (recent_list);
   gtk_widget_show_all (menu); 

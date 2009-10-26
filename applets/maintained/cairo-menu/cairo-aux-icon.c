@@ -343,7 +343,8 @@ _button_clicked_event (CairoAuxIcon *icon, GdkEventButton *event, gpointer null)
                                                "Copyright 2007,2008, 2009 Rodney Cryderman <rcryderman@gmail.com>",
                                                AWN_APPLET_LICENSE_GPLV2,
                                                NULL);
-      gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);      
+      gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);
+      g_signal_connect(G_OBJECT(priv->context_menu), "deactivate", G_CALLBACK(_deactivate_event), icon);
       awn_utils_show_menu_images (GTK_MENU (priv->context_menu));
     }
     if (!priv->autohide_cookie)

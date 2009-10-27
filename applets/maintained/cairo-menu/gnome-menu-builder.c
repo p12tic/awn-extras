@@ -672,7 +672,6 @@ submenu_build (MenuInstance * instance)
   GMenuTreeDirectory *settings_root;
   GtkWidget * menu = NULL;
 
-  g_debug ("%s",__func__);
   /*
    if the menu is set then clear any menu items (except for places or recent)
    */
@@ -756,7 +755,7 @@ menu_build (MenuInstance * instance)
   const gchar * txt;
   CallbackContainer * c;
   gchar * drop_data;
-  g_debug ("%s",__func__);  
+
   if (instance->submenu_name)
   {
     return instance->menu = submenu_build (instance);
@@ -916,7 +915,6 @@ menu_build (MenuInstance * instance)
   if  (instance->menu &&  (!(instance->flags & MENU_BUILD_NO_RECENT) || !(instance->flags & MENU_BUILD_NO_PLACES))&&
      (!instance->check_menu_hidden_fn (instance->applet,":::RECENT") || !instance->check_menu_hidden_fn (instance->applet,":::PLACES")) )
   {
-    g_debug ("bools = %d, %d",!(instance->flags & MENU_BUILD_NO_RECENT),!(instance->flags & MENU_BUILD_NO_PLACES));
     menu_item = gtk_separator_menu_item_new ();
     gtk_menu_shell_append(GTK_MENU_SHELL(instance->menu),menu_item);  
   }

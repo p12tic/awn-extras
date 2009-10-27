@@ -18,6 +18,8 @@
 */
 
 #include "misc.h"
+#include <dbus/dbus-glib.h>
+#include <dbus/dbus-glib-bindings.h>
 #include <glib/gi18n.h>
 #include <gdk/gdkx.h>
 #include <gtk/gtk.h>
@@ -413,3 +415,34 @@ get_menu_instance ( AwnApplet * applet,
   return instance;
 }
 
+gboolean
+dbus_service_exists (const gchar *service)
+{
+  gboolean result;
+  static DBusGConnection *bus = NULL;
+  DBusGProxy *proxy = NULL;
+
+  if (bus == NULL)
+  {
+    bus = dbus_g_bus_get (DBUS_BUS_SESSION, NULL);
+  }
+  if (bus == NULL)
+  {
+    result = FALSE;
+  }
+  else
+  {
+    proxy = dbus_g_proxy_new_for_name (bus, DBUS_SERVICE_DBUS, DBUS_PATH_DBUS,
+                                       DBUS_INTERFACE_DBUS);
+    if (proxy != NULL && dbus_g_proxy_get_bus_name (proxy) != NULL)
+    {
+      org_freedesktop_DBus_name_has_owner (proxy, service, &result, NULL);
+    }
+    else
+    {
+      result = FALSE;
+    }
+  }
+
+  return result;
+}

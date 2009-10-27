@@ -64,4 +64,6 @@ MenuInstance * get_menu_instance ( AwnApplet * applet,
 
 void _free_callback_container (CallbackContainer * c);
 
+gboolean dbus_service_exists (const gchar *service);
+
 #endif /* _CAIRO_MISC */

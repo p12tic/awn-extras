@@ -49,7 +49,6 @@ class Calendar(awn.AppletSimple):
     title_text = _("Calendar")
 
     # "Private" stuff
-    dialog_visible = False
     locale_lang = "en"
     counter = 0
     twelve_hour_clock = True
@@ -73,6 +72,7 @@ class Calendar(awn.AppletSimple):
     ct = None
     thread = None
     days = []
+    dialog = None
 
     def __init__(self, uid, panel_id):
         super(Calendar, self).__init__('calendar', uid, panel_id)
@@ -259,14 +259,9 @@ class Calendar(awn.AppletSimple):
     def config_event_callback(self, client, *args, **kwargs):
         self.get_config(args[1])
 
-    def dialog_focus_out_callback(self, widget, event):
-        self.dialog.hide()
-        self.dialog_visible = False
-
     def button_press_callback(self, widget, event):
-        if self.dialog_visible:
+        if self.dialog != None and (self.dialog.flags() & gtk.VISIBLE) != 0:
             self.dialog.hide()
-            self.dialog_visible = False
         else:
             if event.button == 3: # right click
                 self.popup_menu.popup(None, None, None, event.button,
@@ -274,7 +269,6 @@ class Calendar(awn.AppletSimple):
             else:
                 self.build_calendar_dialog()
                 self.dialog.show_all()
-                self.dialog_visible = True
 
     def timer_callback(self):
         result = None
@@ -491,7 +485,7 @@ class Calendar(awn.AppletSimple):
         self.cal = gtk.Calendar()
         self.cal.connect("day-selected", self.update_tree_view)
         self.dialog = awn.Dialog(self)
-        self.dialog.connect("focus-out-event", self.dialog_focus_out_callback)
+        self.dialog.props.hide_on_unfocus = True
         self.dialog.set_title(_("Calendar"))
         self.vbox = gtk.VBox()
         self.hbox = gtk.HBox()

@@ -155,7 +155,7 @@ class App (awn.AppletSimple):
 
     #Connect to signals
     self.connect('button-press-event', self.button_press)
-    self.dialog.connect('focus-out-event', lambda a,b: self.dialog.hide())
+    self.dialog.props.hide_on_unfocus = True
     self.theme.connect('changed', self.icon_theme_changed)
 
   #Certain places, regardless of GIO/not GIO

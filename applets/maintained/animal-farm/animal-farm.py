@@ -67,8 +67,8 @@ class AnimalFarmApplet:
         self.refresh_fortune()
 
         self.applet.connect("clicked", self.clicked_cb)
-        self.applet.connect("button-release-event", self.button_release_event_cb)
-        self.dialog.connect("focus-out-event", self.dialog_focus_out_cb)
+        self.applet.connect("middle-clicked", self.middle_click_cb)
+        self.dialog.props.hide_on_unfocus = True
 
     def clicked_cb(self, widget):
         if self.dialog.is_active():
@@ -76,11 +76,10 @@ class AnimalFarmApplet:
             self.refresh_fortune()
         self.applet.dialog.toggle("fortune-dialog")
 
-    def button_release_event_cb(self, widget, event):
-        if event.button == 2:
-            self.refresh_fortune()
-            if not self.dialog.is_active():
-                self.applet.dialog.toggle("fortune-dialog", "show")
+    def middle_click_cb(self, widget):
+        self.refresh_fortune()
+        if not self.dialog.is_active():
+            self.applet.dialog.toggle("fortune-dialog", "show")
 
     def dialog_focus_out_cb(self, dialog, event):
         self.set_icon()

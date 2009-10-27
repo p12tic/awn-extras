@@ -63,17 +63,6 @@ gboolean icon_clicked_cb (GtkWidget *widget, GdkEventButton *event, gpointer nul
 	return FALSE;
 }
 
-// Callback when the applet's dialog box loses focus
-gboolean focus_out_cb (GtkWidget *window, GdkEventFocus *event, gpointer null)
-{
-  DesktopAgnosticConfigClient *client = awn_config_get_default (AWN_PANEL_ID_DEFAULT, NULL);
-  if (desktop_agnostic_config_client_get_bool (client, "shared", "dialog_focus_loss_behavior", NULL))
-    {
-    	gtk_widget_hide (window);
-    }        
-	return FALSE;
-}
-
 // Callback when a key is pressed. We check for the keyboard shortcuts for copy and paste. If they're found, we act accordingly.
 gboolean key_press_cb (GtkWidget *terminal, GdkEventKey *event)
 {

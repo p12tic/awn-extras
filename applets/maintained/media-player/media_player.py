@@ -135,7 +135,7 @@ class MediaPlayerApplet(awn.AppletSimple):
         self.connect("clicked", self.icon_clicked)
         self.connect("context-menu-popup", self.menu_popup)
         self.connect("button-press-event", self.button_press)
-        self.dialog.connect("focus-out-event", self.dialog_focus_out)
+        self.dialog.props.hide_on_unfocus = True
         # Drag&drop support
         self.get_icon().drag_dest_set(
                                gtk.DEST_DEFAULT_DROP | gtk.DEST_DEFAULT_MOTION,
@@ -234,6 +234,7 @@ class MediaPlayerApplet(awn.AppletSimple):
 
     def windowPrepared(self):
         self.isVideo = True
+        self.dialog.props.hide_on_unfocus = False
         if not self.dialogVisible():
             self.showApplet()
         else:
@@ -289,10 +290,6 @@ class MediaPlayerApplet(awn.AppletSimple):
             return True
         return False
 
-    def dialog_focus_out(self, widget, event):
-        if not self.isVideo:
-            self.hideApplet()
-
     def resize_video_widget(self, *args):
         self.da.set_size_request(self.video_width, self.video_height)
 
@@ -334,6 +331,7 @@ class MediaPlayerApplet(awn.AppletSimple):
         self.play_icon.props.active = False
         self.button_play.set_label('gtk-media-play')
         self.isVideo = False
+        self.dialog.props.hide_on_unfocus = True
         if self.dialogVisible():
             self.hideApplet()
 

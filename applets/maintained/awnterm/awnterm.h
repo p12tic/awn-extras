@@ -46,9 +46,6 @@ gboolean create_new_tab();
 // Callback when the icon is clicked on.
 gboolean icon_clicked_cb (GtkWidget *widget, GdkEventButton *event, gpointer null);
 
-// Callback when the applet's dialog box loses focus
-gboolean focus_out_cb (GtkWidget *window, GdkEventFocus *event, gpointer null);
-
 // Callback when a key is pressed. We check for the keyboard shortcuts for copy and paste. If they're found, we act accordingly.
 gboolean key_press_cb (GtkWidget *terminal, GdkEventKey *event);
 

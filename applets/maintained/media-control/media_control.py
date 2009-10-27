@@ -164,7 +164,7 @@ class MediaControlApplet (awn.AppletSimple):
         self.connect("middle-clicked", self.button_pp_press)
         self.connect("context-menu-popup", self.menu_popup)
         self.connect("enter-notify-event", self.enter_notify)
-        self.dialog.connect("focus-out-event", self.dialog_focus_out)
+        self.dialog.props.hide_on_unfocus = True
         # Drag&drop support
         self.get_icon().connect("drag-data-received", self.applet_drop_cb)
         self.get_icon().connect("drag-motion", self.applet_drag_motion_cb)
@@ -341,9 +341,6 @@ class MediaControlApplet (awn.AppletSimple):
 
     def start_player_pressed(self, widget, args):
         mediaplayers.__dict__[args]().start()
-        self.dialog.hide()
-
-    def dialog_focus_out(self, widget, event):
         self.dialog.hide()
 
     def enter_notify(self, widget, event):

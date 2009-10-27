@@ -44,7 +44,6 @@ class App(awn.AppletSimple):
     background = None
     contexts = []
     timeout = None
-    displayed = False
     last_size = 0
 
     def __init__(self, uid, panel_id):
@@ -89,7 +88,7 @@ class App(awn.AppletSimple):
         self.connect('clicked', self.toggle_dialog)
         self.connect('context-menu-popup', self.show_menu)
         self.connect('scroll-event', self.scroll)
-        self.dialog.connect('focus-out-event', self.hide_dialog)
+        self.dialog.props.hide_on_unfocus = True
         #Any relevant signal from Wnck
         self.switch.connect(self.update_icon)
 
@@ -193,19 +192,15 @@ class App(awn.AppletSimple):
 
     #Show the dialog.
     def show_dialog(self):
-        self.displayed = True
-
         self.dialog.show_all()
 
     #Hide the dialog.
     def hide_dialog(self, *args):
-        self.displayed = False
-
         self.dialog.hide()
 
     #Toggle the dialog
     def toggle_dialog(self, *args):
-        if self.displayed:
+        if (self.dialog.flags() & gtk.VISIBLE) != 0:
             self.hide_dialog()
 
         else:

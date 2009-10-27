@@ -158,14 +158,7 @@ update_preview_cb (GtkFileChooser *file_chooser, gpointer data)
 
 static void set_hide_on_unfocus (AwnTerm *applet, gboolean value)
 {
-	if (value)
-	{
-		g_signal_handlers_unblock_by_func(applet->dialog, focus_out_cb, NULL);
-	}
-	else
-	{
-		g_signal_handlers_block_by_func(applet->dialog, focus_out_cb, NULL);
-	}
+  g_object_set (G_OBJECT (applet->dialog), "hide-on-unfocus", value, NULL);
 }
 
 void load_hide_on_unfocus (const gchar *group, const gchar *key, const GValue *value, gpointer user_data)

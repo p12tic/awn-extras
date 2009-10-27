@@ -96,7 +96,7 @@ class App (awn.AppletSimple):
     self.connect ("button-press-event", self.button_press)
     self.connect ("enter-notify-event", self.enter_notify)
     self.connect ("leave-notify-event", self.leave_notify)
-    self.dialog.connect ("focus-out-event", self.dialog_focus_out)
+    self.dialog.props.hide_on_unfocus = True
 
 
 
@@ -127,9 +127,6 @@ class App (awn.AppletSimple):
       self.title.hide(self)
       self.showing_dlog = not self.showing_dlog
 
-
-  def dialog_focus_out (self, widget, event):
-    self.dialog.hide ()
 
   def enter_notify (self, widget, event):        # cursor hover over
     self.title.show (self, "Remember The Milk")

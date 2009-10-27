@@ -81,7 +81,7 @@ class App(awn.AppletSimple):
 
         #Connect to signals
         self.connect('button-release-event', self.button_release)
-        self.dialog.connect('focus-out-event', self.dialog_focus_out)
+        self.dialog.props.hide_on_unfocus = True
 
         #Update the feeds
         self.update_feeds()
@@ -717,11 +717,6 @@ class App(awn.AppletSimple):
 
                 else:
                     self.google_key = self.keyring.from_token(token)
-
-    #When the dialog loses focus
-    def dialog_focus_out(self, widget, event):
-        if self.dragged_toggle is None:
-            self.dialog.hide()
 
     #When a button is released on the applet
     def button_release(self, widget, event):

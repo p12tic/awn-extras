@@ -479,21 +479,13 @@ _button_clicked_event (GtkWidget      *widget,
   return TRUE;
 }
 
-static gboolean
-_focus_out_event(GtkWidget *widget, GdkEventButton *event, void * null)
-{
-//  gtk_widget_hide(webapplet->mainwindow);
-  return TRUE;
-}
-
-
 static void
 _bloody_thing_has_style (GtkWidget *widget,WebApplet *webapplet)
 {
   g_signal_connect (G_OBJECT (webapplet->applet), "button-press-event",
                     G_CALLBACK (_button_clicked_event), webapplet);
-  g_signal_connect (G_OBJECT (webapplet->mainwindow), "focus-out-event",
-                    G_CALLBACK (_focus_out_event), webapplet);
+  //g_object_set (G_OBJECT (webapplet->mainwindow), "hide-on-unfocus", TRUE,
+  //              NULL);
 }
 
 AwnApplet *

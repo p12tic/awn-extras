@@ -112,7 +112,7 @@ class App (awn.AppletSimple):
         hbox.show_all()
         self.dialog.add(hbox)
         self.connect("button-press-event", self.button_press)
-        self.dialog.connect("focus-out-event", self.dialog_focus_out)
+        self.dialog.props.hide_on_unfocus = True
         entry.connect("activate",self.search)
         search_button.connect("clicked",self.search)
         tree1.connect("key-press-event",keyboard.navigate,tree2,1)
@@ -155,9 +155,6 @@ class App (awn.AppletSimple):
                 self.tree1.grab_focus()
         elif event.button == 3:
             self.popup_menu.popup(None, None, None, event.button, event.time)
-
-    def dialog_focus_out(self, widget, event):
-        self.dialog.hide()
 
     def treeclick(self,widget,tree,obj,toggle,t2act=False):
         """

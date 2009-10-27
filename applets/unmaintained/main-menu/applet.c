@@ -406,17 +406,6 @@ on_about_activated(GtkMenuItem *item, Menu *app)
     gtk_widget_destroy(GTK_WIDGET(about));
 }
 
-static gboolean
-on_focus_out (GtkWidget *window, GdkEventFocus *event, gpointer null)
-{
-    DesktopAgnosticConfigClient *client = awn_config_get_default (AWN_PANEL_ID_DEFAULT, NULL);
-    if (desktop_agnostic_config_client_get_bool (client, "shared", "dialog_focus_loss_behavior", NULL))
-    {    
-        gtk_widget_hide (window);
-    }
-    return FALSE;
-}
-
 AwnApplet *
 awn_applet_factory_initp (const gchar *name, const gchar *uid, gint panel_id)
 {
@@ -451,8 +440,7 @@ awn_applet_factory_initp (const gchar *name, const gchar *uid, gint panel_id)
 
   app->box = gtk_alignment_new (0.5, 0.5, 1, 1);                               
   gtk_container_add (GTK_CONTAINER (app->window), app->box);
-  g_signal_connect (G_OBJECT (app->window), "focus-out-event",
-                    G_CALLBACK (on_focus_out), NULL);      
+  g_object_set (G_OBJECT (app->window), "hide-on-unfocus", TRUE, NULL);
   app->root = gmenu_tree_get_root_directory (app->tree);
                        
   g_signal_connect (G_OBJECT (applet), "button-press-event",

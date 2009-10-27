@@ -408,6 +408,7 @@ get_menu_instance ( AwnApplet * applet,
   instance->places=NULL;
   instance->recent=NULL;
   instance->menu = NULL; 
+  instance->source_id = 0;
   instance->submenu_name = g_strdup(submenu_name);
   return instance;
 }

@@ -33,9 +33,8 @@
 #include "misc.h"
 #include "cairo-menu-applet.h"
 
-  GMenuTree *  main_menu_tree = NULL;
-  GMenuTree *  settings_menu_tree = NULL;    
-
+GMenuTree *  main_menu_tree = NULL;
+GMenuTree *  settings_menu_tree = NULL;    
 
 GtkWidget *  menu_build (MenuInstance * instance);
 
@@ -673,6 +672,7 @@ submenu_build (MenuInstance * instance)
   GMenuTreeDirectory *settings_root;
   GtkWidget * menu = NULL;
 
+  g_debug ("%s",__func__);
   /*
    if the menu is set then clear any menu items (except for places or recent)
    */
@@ -722,18 +722,14 @@ submenu_build (MenuInstance * instance)
     if ( menu_dir = find_menu_dir (instance,main_root) )
     {
       /* if instance->menu then we're refreshing in a monitor callback*/
-      if (!instance->menu)
-      {
-        gmenu_tree_add_monitor (main_menu_tree,(GMenuTreeChangedFunc)submenu_build,instance);
-      }
+      gmenu_tree_remove_monitor (main_menu_tree,(GMenuTreeChangedFunc)submenu_build,instance);
+      gmenu_tree_add_monitor (main_menu_tree,(GMenuTreeChangedFunc)submenu_build,instance);
       menu = fill_er_up(instance,menu_dir,instance->menu);      
     }
     else if ( menu_dir = find_menu_dir (instance,settings_root) )
     {
-      if (!instance->menu)
-      {
-        gmenu_tree_add_monitor (main_menu_tree,(GMenuTreeChangedFunc)submenu_build,instance);
-      }      
+      gmenu_tree_remove_monitor (main_menu_tree,(GMenuTreeChangedFunc)submenu_build,instance);
+      gmenu_tree_add_monitor (main_menu_tree,(GMenuTreeChangedFunc)submenu_build,instance);
       menu = fill_er_up(instance,menu_dir,instance->menu);     
     }
     if (menu_dir)
@@ -760,16 +756,13 @@ menu_build (MenuInstance * instance)
   const gchar * txt;
   CallbackContainer * c;
   gchar * drop_data;
-  gboolean hookup_monitor = FALSE;
-
+  g_debug ("%s",__func__);  
   if (instance->submenu_name)
   {
     return instance->menu = submenu_build (instance);
   }
   
-  clear_menu (instance);  
-  hookup_monitor = (instance->menu == NULL);
-  
+  clear_menu (instance);    
   if (!main_menu_tree)
   {
     main_menu_tree = gmenu_tree_lookup("applications.menu", GMENU_TREE_FLAGS_NONE);
@@ -783,10 +776,8 @@ menu_build (MenuInstance * instance)
   {
     root = gmenu_tree_get_root_directory(main_menu_tree);
     g_assert (!instance->submenu_name);
-    if (hookup_monitor)
-    {
-      gmenu_tree_add_monitor (main_menu_tree,(GMenuTreeChangedFunc)_menu_modified_cb,instance);      
-    }      
+    gmenu_tree_remove_monitor (main_menu_tree,(GMenuTreeChangedFunc)_menu_modified_cb,instance);    
+    gmenu_tree_add_monitor (main_menu_tree,(GMenuTreeChangedFunc)_menu_modified_cb,instance);
     instance->menu = fill_er_up(instance,root,instance->menu);
     gmenu_tree_item_unref(root);    
   }
@@ -798,10 +789,8 @@ menu_build (MenuInstance * instance)
   if (settings_menu_tree)
   {
     root = gmenu_tree_get_root_directory(settings_menu_tree);
-    if (hookup_monitor)
-    {
-      gmenu_tree_add_monitor (settings_menu_tree,(GMenuTreeChangedFunc)_menu_modified_cb,instance);      
-    }          
+    gmenu_tree_remove_monitor (settings_menu_tree,(GMenuTreeChangedFunc)_menu_modified_cb,instance);
+    gmenu_tree_add_monitor (settings_menu_tree,(GMenuTreeChangedFunc)_menu_modified_cb,instance);
     if (!instance->menu)
     {
       g_debug ("%s:  No applications menu????",__func__);

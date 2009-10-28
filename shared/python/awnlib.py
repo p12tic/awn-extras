@@ -125,9 +125,6 @@ class Dialogs:
             self.menu.append(about_item)
             about_item.connect("activate", lambda w: self.toggle("about"))
 
-        settings_shared = Settings("shared")
-        self.__lose_focus = settings_shared["dialog_focus_loss_behavior"]
-
         def clicked_cb(widget):
             if "main" in self.__register:
                 self.toggle("main")
@@ -192,24 +189,15 @@ class Dialogs:
         @type dialog: C{string}
         @param dlog: The actual dialog or menu or function.
         @type dlog: C{function}, C{gtk.Menu}, or C{awn.AppletDialog}
-        @param focus: Whether to bind focus in-out handlers for the dialog.
+        @param focus: True if the dialog should be hidden when focus is lost, False otherwise.
         @type focus: C{bool}
 
         """
         if dialog in self.__register:
             raise RuntimeError("Dialog '%s' already registered" % dialog)
 
-        if focus and dialog not in self.__special_dialogs and self.__lose_focus:
-            def dialog_focus_out_cb(widget, event):
-                try:
-                    parent = dlog.get_focus().get_parent()
-                    combobox_shown = parent.get_property("popup-shown")
-                except:
-                    combobox_shown = False
-                if not combobox_shown:
-                    self.__current = None
-                    dlog.hide()
-            dlog.connect("focus-out-event", dialog_focus_out_cb)
+        if focus and dialog not in self.__special_dialogs:
+            dlog.props.hide_on_unfocus = focus
 
         self.__register[dialog] = dlog
 

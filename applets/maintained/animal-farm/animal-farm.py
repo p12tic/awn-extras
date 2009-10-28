@@ -68,7 +68,6 @@ class AnimalFarmApplet:
 
         self.applet.connect("clicked", self.clicked_cb)
         self.applet.connect("middle-clicked", self.middle_click_cb)
-        self.dialog.props.hide_on_unfocus = True
 
     def clicked_cb(self, widget):
         if self.dialog.is_active():

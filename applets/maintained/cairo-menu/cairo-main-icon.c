@@ -120,6 +120,17 @@ size_changed_cb (CairoMainIcon * icon,gint size)
   awn_themed_icon_set_size (AWN_THEMED_ICON (icon),awn_applet_get_size (priv->applet));
 }
 
+static gboolean
+queue_menu_build (CairoMainIcon *icon)
+{
+  CairoMainIconPrivate * priv = GET_PRIVATE (icon);
+  
+  priv->menu = menu_build (priv->menu_instance);
+  g_signal_connect(G_OBJECT(priv->menu), "deactivate", G_CALLBACK(_deactivate_event), icon);  
+  g_signal_connect(icon, "button-press-event", G_CALLBACK(_button_clicked_event), NULL);
+  g_signal_connect_swapped(priv->applet,"size-changed",G_CALLBACK(size_changed_cb),icon);
+  return FALSE;
+}
 
 static void
 cairo_main_icon_constructed (GObject *object)
@@ -145,13 +156,9 @@ cairo_main_icon_constructed (GObject *object)
                                           (CheckMenuHiddenFunc) cairo_menu_applet_check_hidden_menu,
                                           NULL,
                                           0);
-  priv->menu = menu_build (priv->menu_instance);
-  g_signal_connect(G_OBJECT(priv->menu), "deactivate", G_CALLBACK(_deactivate_event), object);
 
-  awn_icon_set_tooltip_text (AWN_ICON (object), "Main Menu");
-  gtk_widget_show_all (priv->menu);
-  g_signal_connect(object, "button-press-event", G_CALLBACK(_button_clicked_event), NULL);
-  g_signal_connect_swapped(priv->applet,"size-changed",G_CALLBACK(size_changed_cb),object);
+  g_idle_add ( (GSourceFunc)queue_menu_build, object);
+  awn_icon_set_tooltip_text (AWN_ICON (object), "Main Menu");  
 }
 
 static void 
@@ -352,16 +359,7 @@ cairo_main_icon_refresh_menu (CairoMainIcon * icon)
     awn_applet_uninhibit_autohide (AWN_APPLET(priv->applet), priv->autohide_cookie);
     priv->autohide_cookie = 0;
   }  
-  if (priv->menu && (AWN_IS_CAIRO_MENU(priv->menu)))
-  {
-    gtk_widget_destroy (priv->menu);
-  }
-  priv->menu_instance->menu=NULL;
-  priv->menu_instance->places=NULL;
-  priv->menu_instance->recent=NULL;  
   priv->menu = menu_build (priv->menu_instance);
-  g_signal_connect(G_OBJECT(priv->menu), "deactivate", G_CALLBACK(_deactivate_event), icon);
-  gtk_widget_show_all (priv->menu);
 }
 
 static gboolean 

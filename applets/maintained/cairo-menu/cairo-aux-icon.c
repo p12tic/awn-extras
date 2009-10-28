@@ -150,6 +150,18 @@ size_changed_cb (CairoAuxIcon * icon,gint size)
   awn_themed_icon_set_size (AWN_THEMED_ICON (icon),awn_applet_get_size (priv->applet));
 }
 
+static gboolean
+queue_menu_build (CairoAuxIcon *icon)
+{
+  CairoAuxIconPrivate * priv = GET_PRIVATE (icon);
+  
+  priv->menu = menu_build (priv->menu_instance);
+  g_signal_connect(G_OBJECT(priv->menu), "deactivate", G_CALLBACK(_deactivate_event), icon);  
+  g_signal_connect(icon, "button-press-event", G_CALLBACK(_button_clicked_event), NULL);
+  g_signal_connect_swapped(priv->applet,"size-changed",G_CALLBACK(size_changed_cb),icon);
+  return FALSE;
+}
+
 static void
 cairo_aux_icon_constructed (GObject *object)
 {
@@ -172,12 +184,8 @@ cairo_aux_icon_constructed (GObject *object)
                                         NULL,
                                         priv->menu_name,
                                         0);
-  priv->menu = menu_build (priv->menu_instance);
+  g_idle_add ((GSourceFunc)queue_menu_build, object);
   awn_icon_set_tooltip_text (AWN_ICON(object),priv->display_name);
-  gtk_widget_show_all (priv->menu);
-  g_signal_connect(G_OBJECT(priv->menu), "deactivate", G_CALLBACK(_deactivate_event), object);  
-  g_signal_connect(object, "button-press-event", G_CALLBACK(_button_clicked_event), NULL);
-  g_signal_connect_swapped(priv->applet,"size-changed",G_CALLBACK(size_changed_cb),object);
 }
 
 static void

@@ -49,7 +49,7 @@ struct _CairoMenuAppletPrivate {
 
 
 static gchar * gnome_run_cmds[] = { "gnome-do","grun","gmrun","gnome-launch-box",
-                          "gnome-panel-control --run-dialog",NULL};
+                          "gnome-panel-control --run-dialog","xfrun4",NULL};
 
 static gchar * gnome_search_cmds[] = { "tracker-search-tool","gnome-do","gnome-search-tool",NULL};
   
@@ -503,10 +503,7 @@ cairo_menu_applet_add_icon (CairoMenuApplet * applet, gchar * menu_name, gchar *
   
   CairoMenuAppletPrivate * priv = GET_PRIVATE (applet);
 
- // base = g_path_get_basename (menu_name);
   str = g_strdup_printf("%s###%s###%s",menu_name,display_name,icon_name);
-//  priv->aux_menu_names = g_list_append (priv->aux_menu_names, str);
-
   cairo_menu_applet_append_hidden_menu (applet,menu_name);
   
   g_object_get (G_OBJECT (applet), "aux_menu_names", &names, NULL);
@@ -528,5 +525,4 @@ cairo_menu_applet_add_icon (CairoMenuApplet * applet, gchar * menu_name, gchar *
       cairo_main_icon_refresh_menu (iter->data);
     }
   }
-//  g_free (base);
 }

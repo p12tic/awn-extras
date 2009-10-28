@@ -2,7 +2,7 @@
 <interface>
   <!-- interface-requires gtk+ 2.12 -->
   <!-- interface-requires desktop-agnostic 0.4 -->
-  <!-- interface-naming-policy toplevel-contextual -->
+  <!-- interface-naming-policy project-wide -->
   <object class="GtkListStore" id="liststore_unit">
     <columns>
       <!-- column-name unit_name -->
@@ -691,7 +691,7 @@
               </object>
             </child>
             <child type="label">
-              <object class="GtkLabel" id="label10">
+              <object class="GtkLabel" id="label13">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">&lt;b&gt;Alarms&lt;/b&gt;</property>
                 <property name="use_markup">True</property>
@@ -742,10 +742,10 @@
   </object>
   <object class="GtkSizeGroup" id="sizegroup1">
     <widgets>
-      <widget name="label4"/>
-      <widget name="alignment3"/>
-      <widget name="label2"/>
       <widget name="label3"/>
+      <widget name="label2"/>
+      <widget name="alignment3"/>
+      <widget name="label4"/>
     </widgets>
   </object>
 </interface>

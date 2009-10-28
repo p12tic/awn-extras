@@ -43,6 +43,7 @@ typedef struct
   gboolean done_once;
   GtkWidget * places;
   GtkWidget * recent;
+  GtkWidget * session;
   GtkWidget     * menu;  
   gchar *       submenu_name;
 }MenuInstance;

@@ -587,10 +587,25 @@ _search_dialog (GtkMenuItem * item, MenuInstance * instance)
   }
 }
 
+static gboolean
+_delayed_update (MenuInstance * instance)
+{
+  instance->menu = menu_build (instance);  
+  instance->source_id=0;
+  return FALSE;
+}
+
 static void 
 _menu_modified_cb(GMenuTree *tree,MenuInstance * instance)
 {
-  instance->menu = menu_build (instance);  
+
+  /*
+ keeps a runaway stream of callbacks from occurring in certain circumstances
+ */
+  if (!instance->source_id)
+  {
+    instance->source_id = g_idle_add ((GSourceFunc)_delayed_update,instance);
+  }
 }
 
 static GMenuTreeDirectory *

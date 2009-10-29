@@ -15,8 +15,6 @@
  */
  
  /* awn-bargraph.c */
-#include <cairo-xlib.h>
-
 #include "graphprivate.h"
 #include "bargraph.h"
 
@@ -41,7 +39,8 @@ enum
 };
 
 
-static void _awn_bargraph_render_to_context(AwnGraph * graph,cairo_t *cr);
+static void _awn_bargraph_render_to_context(AwnGraph * graph,cairo_t *cr,
+                                            gint width, gint height);
 static void _awn_bargraph_add_data(AwnGraph * graph,GList * list);
 
 
@@ -133,13 +132,12 @@ awn_bargraph_class_init (AwnBarGraphClass *klass)
 }
 
 static void _awn_bargraph_render_to_context(AwnGraph * graph,
-                                        cairo_t *cr)
+                                            cairo_t *cr,
+                                            gint width, gint height)
 {
   AwnGraphPrivate * graph_priv;
   AwnBarGraphPrivate * priv;  
   gdouble bar_width;
-  int srfc_height;
-  int srfc_width;
   gdouble x = 0;
   int i;
   gdouble * values;
@@ -151,11 +149,9 @@ static void _awn_bargraph_render_to_context(AwnGraph * graph,
   cairo_paint (cr);
   cairo_set_operator (cr, CAIRO_OPERATOR_OVER);  
 
-  srfc_height = cairo_xlib_surface_get_height (cairo_get_target(cr));
-  srfc_width = cairo_xlib_surface_get_width (cairo_get_target(cr));  
   values = graph_priv->data;
   cairo_save (cr);
-  cairo_scale (cr,srfc_width,srfc_height);
+  cairo_scale (cr, width, height);
   cairo_set_source_rgba (cr,0.0,0.2,0.9,0.95);
   
   bar_width = 1.0 / (gdouble) priv->num_vals;

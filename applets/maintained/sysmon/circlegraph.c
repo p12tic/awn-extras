@@ -23,7 +23,6 @@
 /* awn-circlegraph.c */
 
 #include <math.h>
-#include <cairo-xlib.h>
 
 #include "circlegraph.h"
 #include "graphprivate.h"
@@ -51,7 +50,8 @@ enum
 };
 
 static void _awn_circlegraph_render_to_context(AwnGraph * graph,
-                                        cairo_t *ctx);
+                                               cairo_t *ctx,
+                                               gint width, gint height);
 static void _awn_circlegraph_add_data(AwnGraph * graph,
                                         GList * data);
 
@@ -143,12 +143,11 @@ awn_circlegraph_class_init (AwnCirclegraphClass *klass)
 }
 
 static void _awn_circlegraph_render_to_context(AwnGraph * graph,
-                                        cairo_t *cr)
+                                               cairo_t *cr,
+                                               gint width, gint height)
 {
   AwnCirclegraphPrivate * priv;  
   cairo_pattern_t *pat;
-  gint srfc_width;
-  gint srfc_height;
   gdouble usage;
   
   priv = AWN_CIRCLEGRAPH_GET_PRIVATE (graph);    
@@ -157,23 +156,31 @@ static void _awn_circlegraph_render_to_context(AwnGraph * graph,
   cairo_set_operator (cr,  CAIRO_OPERATOR_CLEAR);
   cairo_paint (cr);
   cairo_set_operator (cr,  CAIRO_OPERATOR_OVER);
-  srfc_height = cairo_xlib_surface_get_height (cairo_get_target(cr));
-  srfc_width = cairo_xlib_surface_get_width (cairo_get_target(cr));
 
-  cairo_scale (cr, srfc_width / 256.0, srfc_height / 256.0);
-  
+  cairo_scale (cr, width / 256.0, height / 256.0);
   
   usage = (priv->current_val + priv->prev_val) / 200.0;
   pat = cairo_pattern_create_radial (128,  128, 0,
                                      128,  128, 128.0);
-  cairo_pattern_add_color_stop_rgba (pat, 0, 0.2+sin (M_PI/2 *usage)*0.8, 
-                                          cos (M_PI/2 *usage) /2, 0, 1 );
+  cairo_pattern_add_color_stop_rgba (pat, 0,
+                                     0.1+sin (M_PI/2 *usage)*0.8,
+                                     cos (M_PI/2 *usage) / 1.325,
+                                     0, 1.0);
   
-  cairo_pattern_add_color_stop_rgba (pat, 0.55, 0+sin (M_PI/2 *usage),
-                                                0+cos (M_PI/2 *usage), 
-                                                0, 1 );  
+  cairo_pattern_add_color_stop_rgba (pat, sqrt(usage * 0.8), // up to 0.9
+                                     0+sin (M_PI/2 *usage),
+                                     0+cos (M_PI/2 *usage),
+                                     0, 1.0);
   
-  cairo_pattern_add_color_stop_rgba (pat, 1, usage/2, 1 *(1-usage), 0, 1);
+  cairo_pattern_add_color_stop_rgba (pat, 0.95,
+                                     usage/2,
+                                     1 * (1-usage),
+                                     0.0, sqrt(usage));
+
+  cairo_pattern_add_color_stop_rgba (pat, 1,
+                                     usage/2,
+                                     1 * (1-usage),
+                                     0.0, 0.0);
   cairo_set_source (cr, pat);
   cairo_arc (cr, 128.0, 128.0, 120, 0, 2 * M_PI);
   cairo_fill (cr);

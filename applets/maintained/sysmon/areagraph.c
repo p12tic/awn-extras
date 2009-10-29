@@ -17,7 +17,6 @@
 
 /* awn-areagraph.c */
 #include <math.h>
-#include <cairo-xlib.h>
 
 #include "areagraph.h"
 #include "graphprivate.h"
@@ -49,7 +48,8 @@ enum
 };
 
 static void _awn_areagraph_render_to_context(AwnGraph * graph,
-                                        cairo_t *ctx);
+                                             cairo_t *ctx,
+                                             gint width, gint height);
 static void _awn_areagraph_add_data(AwnGraph * graph,
                                         GList * data);
 
@@ -157,14 +157,13 @@ awn_areagraph_class_init (Awn_AreagraphClass *klass)
 }
 
 static void _awn_areagraph_render_to_context(AwnGraph * graph,
-                                        cairo_t *cr)
+                                             cairo_t *cr,
+                                             gint width, gint height)
 {
   /*Can be optimized.  FIXME
    */
   AwnAreagraphPrivate * priv;
   AwnGraphPrivate * graph_priv;  
-  gint  srfc_height;
-  gint  srfc_width;
   gint  i;
   gint  end_point;
   gint  x=0;
@@ -177,13 +176,10 @@ static void _awn_areagraph_render_to_context(AwnGraph * graph,
   cairo_save (cr);
   values = graph_priv->data;
     
-  srfc_height = cairo_xlib_surface_get_height (cairo_get_target(cr));
-  srfc_width = cairo_xlib_surface_get_width (cairo_get_target(cr));
-
-  if (priv->num_points != srfc_width)
+  if (priv->num_points != width)
   {
     g_free (graph_priv->data);
-    priv->num_points = srfc_width;
+    priv->num_points = width;
     graph_priv->data =g_new0(gdouble, priv->num_points);
     awn_areagraph_clear (AWN_AREAGRAPH(graph),0.0);
   }
@@ -201,8 +197,8 @@ static void _awn_areagraph_render_to_context(AwnGraph * graph,
   cairo_paint (cr);
   
   cairo_paint (cr);
-  vert_scale = srfc_height / (double) (priv->max_val - priv->min_val);
-  cairo_scale (cr, srfc_width / (double)priv->num_points, vert_scale);
+  vert_scale = height / (double) (priv->max_val - priv->min_val);
+  cairo_scale (cr, width / (double)priv->num_points, vert_scale);
   cairo_set_source_rgba (cr, 0.8, 0.0, 0.6, 0.6);
 
   cairo_set_operator (cr, CAIRO_OPERATOR_OVER);

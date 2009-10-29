@@ -22,14 +22,15 @@ G_DEFINE_TYPE (AwnGraph, awn_graph, G_TYPE_OBJECT)
 
 #include "graphprivate.h"
 
-static void _awn_graph_render_to_context(AwnGraph * graph,
-                                        cairo_t *ctx);
-static void _awn_graph_add_data(AwnGraph * graph,
-                                        GList * data);
+static void _awn_graph_render_to_context (AwnGraph * graph,
+                                          cairo_t *ctx,
+                                          gint width, gint height);
+static void _awn_graph_add_data          (AwnGraph * graph,
+                                          GList * data);
 
 static void
 awn_graph_get_property (GObject *object, guint property_id,
-                              GValue *value, GParamSpec *pspec)
+                        GValue *value, GParamSpec *pspec)
 {
   switch (property_id) {
   default:
@@ -86,12 +87,13 @@ awn_graph_new (void)
   return g_object_new (AWN_TYPE_GRAPH, NULL);
 }
 
-static void _awn_graph_render_to_context(AwnGraph * graph,
-                                        cairo_t *cr)
+static void _awn_graph_render_to_context (AwnGraph * graph,
+                                          cairo_t *cr,
+                                          gint width, gint height)
 {
   AwnGraphPrivate * priv;
   
-  g_debug ("graph render! \n");  
+  g_debug ("graph render! \n");
   priv = AWN_GRAPH_GET_PRIVATE(graph);
   
   cairo_set_source_rgba(cr, 0.3, 0.4, 0.1, 0.4);
@@ -108,13 +110,14 @@ static void _awn_graph_add_data(AwnGraph * graph,
   priv = AWN_GRAPH_GET_PRIVATE(graph);
 }
 
-void awn_graph_render_to_context (AwnGraph * graph, cairo_t *ctx)
+void awn_graph_render_to_context (AwnGraph * graph, cairo_t *ctx,
+                                  gint width, gint height)
 {
   AwnGraphClass *klass;
 
   klass = AWN_GRAPH_GET_CLASS (graph);
 
-  return klass->render_to_context (graph, ctx);
+  return klass->render_to_context (graph, ctx, width, height);
 }
 
 void awn_graph_add_data (AwnGraph * graph, GList * data)

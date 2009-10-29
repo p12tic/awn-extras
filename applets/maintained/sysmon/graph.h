@@ -50,7 +50,8 @@ typedef struct {
 
 typedef struct {
   GObjectClass parent_class;
-  void (*render_to_context) (AwnGraph * graph,cairo_t * ctx);
+  void (*render_to_context) (AwnGraph * graph, cairo_t * ctx, 
+                             gint width, gint height);
   void (*add_data) (AwnGraph * graph, GList * data);
 } AwnGraphClass;
 
@@ -58,7 +59,8 @@ GType awn_graph_get_type (void);
 
 AwnGraph* awn_graph_new (void);
 
-void awn_graph_render_to_context (AwnGraph * graph, cairo_t *ctx);
+void awn_graph_render_to_context (AwnGraph * graph, cairo_t *ctx,
+                                  gint width, gint height);
 void awn_graph_add_data (AwnGraph * graph, GList * data);
 
 G_END_DECLS

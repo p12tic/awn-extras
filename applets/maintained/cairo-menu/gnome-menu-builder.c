@@ -672,7 +672,7 @@ clear_menu (MenuInstance * instance)
     GList * iter;
     for (iter = children;iter;)
     {
-      if ( (iter->data !=instance->places) && (iter->data!=instance->recent))
+      if ( (iter->data !=instance->places) && (iter->data!=instance->recent)&& (iter->data!=instance->session))
       {
         gtk_container_remove (GTK_CONTAINER (instance->menu),iter->data);
         /*TODO  check if this is necessary*/
@@ -945,7 +945,7 @@ menu_build (MenuInstance * instance)
       GList * children = gtk_container_get_children (GTK_CONTAINER(instance->menu));
       menu_item =instance->session;
       gtk_menu_reorder_child (GTK_MENU(instance->menu),menu_item,g_list_length (children));
-      g_list_free (children);        
+      g_list_free (children); 
     }
     else
     {    
@@ -970,6 +970,7 @@ menu_build (MenuInstance * instance)
       g_signal_connect (menu_item, "button-press-event",G_CALLBACK(_button_press_dir),c);
       g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)_free_callback_container,c);
     }
+    g_debug ("session menu = %p",instance->session);
   }
   
   if (! (instance->flags & MENU_BUILD_NO_SEARCH))

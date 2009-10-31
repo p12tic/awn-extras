@@ -207,7 +207,7 @@ class CpuFreqApplet:
         self.initialize_backend()
 
     def setup_main_dialog(self):
-        self.dialog = self.applet.dialog.new("frequency-dialog")
+        self.dialog = self.applet.dialog.new("main")
 
         vbox = gtk.VBox()
         self.dialog.add(vbox)
@@ -265,8 +265,6 @@ class CpuFreqApplet:
                 active_item.set_active(True)
                 active_item.handler_unblock_by_func(callback)
 
-            self.applet.dialog.toggle("frequency-dialog")
-
     def human_readable_freqency(self, frequency):
         frequency = float(frequency)
 
@@ -291,7 +289,7 @@ class CpuFreqApplet:
         if widget.get_active():
             self.backend.set_frequency(frequency)
 
-            self.applet.dialog.toggle("frequency-dialog", "hide")
+            self.applet.dialog.toggle("main", "hide")
             self.applet.tooltip.hide()
 
     def governor_changed_cb(self, widget, governor):
@@ -301,7 +299,7 @@ class CpuFreqApplet:
         if widget.get_active():
             self.backend.set_governor(governor)
 
-            self.applet.dialog.toggle("frequency-dialog", "hide")
+            self.applet.dialog.toggle("main", "hide")
             self.applet.tooltip.hide()
 
     def draw_freq_cb(self):
@@ -338,9 +336,13 @@ class SysFSBackend:
 
     """
 
+    __selector_binary = "cpufreq-selector"
+
     def __init__(self, cpu_nr):
         self.__cpu_nr = cpu_nr
         self.__supports_scaling = self.__can_support_scaling()
+
+        self.__command = "" + self.__selector_binary  # Add sudo when necessary
 
     @staticmethod
     def backend_useable(cpu_nr):
@@ -350,7 +352,7 @@ class SysFSBackend:
         return self.__supports_scaling
 
     def __can_support_scaling(self):
-        get_path = lambda d: os.path.join(d, "cpufreq-selector")
+        get_path = lambda d: os.path.join(d, self.__selector_binary)
         paths = [get_path(i) for i in os.environ["PATH"].split(":") if os.access(get_path(i), os.X_OK)]
 
         if len(paths) == 0:
@@ -373,14 +375,12 @@ class SysFSBackend:
     def set_governor(self, governor):
         assert governor in self.get_governors(), "Governor '" + governor + "' unknown"
 
-        subprocess.Popen("cpufreq-selector -c " + str(self.__cpu_nr) + " -g " + governor, shell=True)
+        subprocess.Popen(self.__command + " -c %d -g %s" % (self.__cpu_nr, governor), shell=True)
 
     def set_frequency(self, frequency):
         assert frequency in self.get_frequencies(), "Frequency " + str(frequency) + " invalid"
 
-        self.set_governor("userspace")
-
-        subprocess.Popen("cpufreq-selector -c " + str(self.__cpu_nr) + " -f " + str(frequency), shell=True)
+        subprocess.Popen(self.__command + " -c %d -g userspace -f %d " % (self.__cpu_nr, frequency), shell=True)
 
     def get_current_governor(self):
         return open(os.path.join(sysfs_dir, "cpu" + str(self.__cpu_nr), "cpufreq/scaling_governor")).read().strip()

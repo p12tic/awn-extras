@@ -131,12 +131,7 @@ class Dialogs:
 
         def clicked_cb(widget, dialog_name):
             if dialog_name in self.__register:
-                if parent.tooltip.is_visible() or self.__current != dialog_name:
-                    parent.tooltip.hide()
-                    self.toggle(dialog_name)
-                else:
-                    self.toggle(dialog_name)
-                    parent.tooltip.show()
+                self.toggle(dialog_name)
         parent.connect("clicked", clicked_cb, "main")
         parent.connect("middle-clicked", clicked_cb, "secondary")
 
@@ -239,6 +234,8 @@ class Dialogs:
                 # Because the dialog is now hidden, show the title again
                 self.__parent.tooltip.show()
             else:
+                self.__parent.tooltip.hide()
+
                 if self.__current is not None and self.__current not in \
                         self.__special_dialogs:
                     current = self.__register[self.__current]

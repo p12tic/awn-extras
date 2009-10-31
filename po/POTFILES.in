@@ -1,7 +1,5 @@
 # PLEASE KEEP THIS FILE ALPHABETIZED (case-insensitive)!
 applets/maintained/animal-farm/animal-farm.desktop.in
-applets/maintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in
-applets/maintained/awnsystemmonitor/awnsystemmonitor.schemas.in
 applets/maintained/awnterm/applet.c
 applets/maintained/awnterm/awnterm.c
 applets/maintained/awnterm/awnterm.desktop.in.in
@@ -10,8 +8,9 @@ applets/maintained/battery/battery.desktop.in
 applets/maintained/battery/battery.ui
 applets/maintained/cairo-clock/cairo-clock.desktop.in
 applets/maintained/cairo-clock/cairo-clock.ui
-applets/maintained/cairo-menu/backend-gnome.c
+applets/maintained/cairo-menu/gnome-menu-builder.c
 applets/maintained/cairo-menu/cairo-menu.desktop.in.in
+applets/maintained/cairo-menu/misc.c
 applets/maintained/calendar/calendar.desktop.in
 applets/maintained/calendar/calendarlogin.py
 applets/maintained/calendar/calendarprefs.py
@@ -49,6 +48,9 @@ applets/maintained/hardware-sensors/hardware-sensors.desktop.in
 applets/maintained/hardware-sensors/hardware-sensors.py
 applets/maintained/hardware-sensors/hardware-sensors.ui
 applets/maintained/hardware-sensors/sensorvalues/units.py
+applets/maintained/mail/mail.desktop.in
+applets/maintained/mail/mail.py
+applets/maintained/mail/mail.ui
 applets/maintained/media-control/media-control.desktop.in
 applets/maintained/media-control/media-control.ui
 applets/maintained/media-control/media_control.py
@@ -78,6 +80,9 @@ applets/maintained/shiny-switcher/shiny-prefs.ui
 applets/maintained/shiny-switcher/shinyswitcher.desktop.in.in
 applets/maintained/showdesktop/applet.vala
 applets/maintained/showdesktop/showdesktop.desktop.in.in
+applets/maintained/slickswitcher/prefs.py
+applets/maintained/slickswitcher/slickswitcher.desktop.in
+applets/maintained/slickswitcher/slickswitcher.py
 applets/maintained/sysmon/sysmon.desktop.in.in
 applets/maintained/thinkhdaps/thinkhdaps.desktop.in
 applets/maintained/to-do/prefs.py
@@ -95,11 +100,10 @@ applets/maintained/webapplet/applet.c
 applets/maintained/webapplet/webapplet.desktop.in.in
 applets/maintained/wobblyzini/wobblyzini.desktop.in.in
 applets/maintained/yama/yama.desktop.in
+applets/unmaintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in
+applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in
 applets/unmaintained/dropper/dropper.desktop.in
 applets/unmaintained/dropper/dropper-prefs.ui
-applets/unmaintained/mail/mail.desktop.in
-applets/unmaintained/mail/mail.py
-applets/unmaintained/mail/mail.ui
 applets/unmaintained/main-menu/applet.c
 applets/unmaintained/main-menu/main-menu.desktop.in.in
 applets/unmaintained/MiMenu/mimenu.desktop.in

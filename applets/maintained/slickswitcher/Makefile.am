@@ -8,7 +8,7 @@ dist_applet_DATA =			\
 	switch.py	\
 	$(NULL)
 
-icons_DATA = icons/background.png	\
+dist_icons_DATA = icons/background.png	\
 	icons/border.png	\
 	icons/dialog.png	\
 	icons/done.png	\

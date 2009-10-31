@@ -12,7 +12,7 @@ dist_theme_gmail_DATA =			\
 	$(NULL)
 	
 iconsdir = $(applet_datadir)/icons
-icons_DATA =		\
+dist_icons_DATA =		\
 	icons/error.svg	\
 	icons/login.svg	\
 	icons/read.svg		\

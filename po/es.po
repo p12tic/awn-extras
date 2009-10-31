@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: awn-core-applets 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-09-27 20:58-0700\n"
+"POT-Creation-Date: 2009-10-31 00:09-0700\n"
 "PO-Revision-Date: 2007-10-07 22:29-0400\n"
 "Last-Translator: Mike Desjardins <desjardinsmike@gmail.com>\n"
 "Language-Team: Spanish\n"
@@ -24,39 +24,6 @@ msgstr ""
 msgid "Display fortune messages"
 msgstr ""
 
-#: ../applets/maintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in.h:1
-msgid "Awn System Monitor"
-msgstr ""
-
-#: ../applets/maintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in.h:2
-#: ../applets/maintained/sysmon/sysmon.desktop.in.in.h:1
-msgid "Manage system activity"
-msgstr ""
-
-#: ../applets/maintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:1
-msgid "Graph update frequency, in milliseconds."
-msgstr ""
-
-#: ../applets/maintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:2
-msgid "Set to 1 (true) to draw the gradient overlay on the graph."
-msgstr ""
-
-#: ../applets/maintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:3
-msgid "The color used in the applet border."
-msgstr ""
-
-#: ../applets/maintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:4
-msgid "The color used in the graph lines."
-msgstr ""
-
-#: ../applets/maintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:5
-msgid "The color used in the graph lines. Valid values are 0.0 through 1.0."
-msgstr ""
-
-#: ../applets/maintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:6
-msgid "The pixel width of the applet border."
-msgstr ""
-
 #: ../applets/maintained/awnterm/applet.c:43
 #: ../applets/maintained/awnterm/awnterm.desktop.in.in.h:2
 msgid "Awn Terminal Applet"
@@ -67,7 +34,7 @@ msgstr ""
 msgid "Awn Terminal"
 msgstr ""
 
-#: ../applets/maintained/awnterm/awnterm.c:160
+#: ../applets/maintained/awnterm/awnterm.c:149
 #, c-format
 msgid "Term #%d"
 msgstr ""
@@ -81,28 +48,28 @@ msgstr ""
 msgid "translator-credits"
 msgstr ""
 
-#: ../applets/maintained/awnterm/settings.c:207
+#: ../applets/maintained/awnterm/settings.c:200
 #: ../applets/maintained/calendar/calendarprefs.py:73
 msgid "Preferences"
 msgstr "Preferencias"
 
-#: ../applets/maintained/awnterm/settings.c:214
+#: ../applets/maintained/awnterm/settings.c:207
 msgid "Hide when focus is lost"
 msgstr ""
 
-#: ../applets/maintained/awnterm/settings.c:224
+#: ../applets/maintained/awnterm/settings.c:217
 msgid "Background image"
 msgstr ""
 
-#: ../applets/maintained/awnterm/settings.c:237
+#: ../applets/maintained/awnterm/settings.c:230
 msgid "Select a file"
 msgstr ""
 
-#: ../applets/maintained/awnterm/settings.c:255
+#: ../applets/maintained/awnterm/settings.c:248
 msgid "Terminal Opacity"
 msgstr ""
 
-#: ../applets/maintained/awnterm/settings.c:280
+#: ../applets/maintained/awnterm/settings.c:273
 msgid "External Terminal"
 msgstr ""
 
@@ -125,17 +92,95 @@ msgid ""
 "locations"
 msgstr ""
 
-#: ../applets/maintained/cairo-menu/backend-gnome.c:121
-msgid "Invalid desktop file ID"
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:106
+msgid "Logout"
 msgstr ""
 
-#: ../applets/maintained/cairo-menu/backend-gnome.c:122
-#: ../applets/maintained/cairo-menu/backend-gnome.c:145
-msgid "[Invalid Filename]"
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:110
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:114
+#: ../applets/maintained/quit/quit-lock-screen.desktop.in.h:1
+msgid "Lock Screen"
 msgstr ""
 
-#: ../applets/maintained/cairo-menu/backend-gnome.c:123
-msgid " <excluded>"
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:118
+#, fuzzy
+msgid "Suspend"
+msgstr "domingo"
+
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:119
+msgid "Hibernate"
+msgstr ""
+
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:123
+msgid "Shutdown"
+msgstr ""
+
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:158
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:352
+msgid "Computer"
+msgstr ""
+
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:159
+msgid "Home"
+msgstr ""
+
+#. Check if this is the Desktop directory
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:160
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:310
+#: ../applets/maintained/places/applet.c:341
+msgid "Desktop"
+msgstr ""
+
+#.
+#. TODO: check the trash and set to stock_trash_empty if trash is empty
+#.
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:164
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:378
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:381
+msgid "Trash"
+msgstr ""
+
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:165
+msgid "File System"
+msgstr ""
+
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:286
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:355
+msgid "Network"
+msgstr ""
+
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:287
+msgid "Connect to Server"
+msgstr ""
+
+#. Bold text: Places with an hseparator under it
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:870
+#: ../applets/maintained/file-browser-launcher/prefs.py:150
+#: ../applets/maintained/places/places.desktop.in.in.h:2
+msgid "Places"
+msgstr ""
+
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:908
+msgid "Recent Documents"
+msgstr ""
+
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:953
+msgid "Session"
+msgstr ""
+
+#. generates a compiler warning due to the ellipse
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:981
+#, fuzzy
+msgid "Search\\u2026"
+msgstr "Buscar para codigo"
+
+#. generates a compiler warning due to the ellipse
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:998
+msgid "Launch\\u2026"
+msgstr ""
+
+#: ../applets/maintained/cairo-menu/misc.c:356
+msgid "Clear Recent Documents"
 msgstr ""
 
 #: ../applets/maintained/calendar/calendar.desktop.in.h:1
@@ -236,35 +281,35 @@ msgstr ""
 msgid "Twelve Hour Clock"
 msgstr ""
 
-#: ../applets/maintained/calendar/calendarprefs.py:105
+#: ../applets/maintained/calendar/calendarprefs.py:102
 msgid "Clock Appearance"
 msgstr ""
 
-#: ../applets/maintained/calendar/calendarprefs.py:115
+#: ../applets/maintained/calendar/calendarprefs.py:112
 msgid "Calendar Appearance"
 msgstr ""
 
-#: ../applets/maintained/calendar/calendarprefs.py:122
+#: ../applets/maintained/calendar/calendarprefs.py:119
 msgid "None"
 msgstr ""
 
-#: ../applets/maintained/calendar/calendarprefs.py:123
+#: ../applets/maintained/calendar/calendarprefs.py:120
 msgid "Evolution"
 msgstr ""
 
-#: ../applets/maintained/calendar/calendarprefs.py:124
+#: ../applets/maintained/calendar/calendarprefs.py:121
 msgid "Google Calendar"
 msgstr ""
 
-#: ../applets/maintained/calendar/calendarprefs.py:125
+#: ../applets/maintained/calendar/calendarprefs.py:122
 msgid "Outlook Web Access"
 msgstr ""
 
-#: ../applets/maintained/calendar/calendarprefs.py:128
+#: ../applets/maintained/calendar/calendarprefs.py:125
 msgid "Calendar Integration"
 msgstr ""
 
-#: ../applets/maintained/calendar/calendarprefs.py:151
+#: ../applets/maintained/calendar/calendarprefs.py:148
 msgid "Calendar URL"
 msgstr ""
 
@@ -272,31 +317,31 @@ msgstr ""
 #. for focus-follows-mouse
 #. self.dialog.connect('focus-out-event',
 #. self.dialog_focus_out)
-#: ../applets/maintained/calendar/clockcal.py:47
-#: ../applets/maintained/calendar/clockcal.py:500
+#: ../applets/maintained/calendar/clockcal.py:49
+#: ../applets/maintained/calendar/clockcal.py:489
 #: ../applets/maintained/digital-clock/digitalClock.py:76
 #, fuzzy
 msgid "Calendar"
 msgstr "Despejado"
 
-#: ../applets/maintained/calendar/clockcal.py:220
+#: ../applets/maintained/calendar/clockcal.py:216
 msgid ""
 "Do you want to erase your calendar password from the calendar applet?  If "
 "you choose to clear your password, you will be prompted again for your "
 "calendar login credentials."
 msgstr ""
 
-#: ../applets/maintained/calendar/clockcal.py:506
+#: ../applets/maintained/calendar/clockcal.py:495
 msgid "Open in "
 msgstr ""
 
-#: ../applets/maintained/calendar/clockcal.py:510
+#: ../applets/maintained/calendar/clockcal.py:499
 #: ../applets/maintained/weather/forecast.py:200
 msgid "Today"
 msgstr "hoy"
 
 #. print "Login error: ", sys.exc_info()[0], sys.exc_info()[1]
-#: ../applets/maintained/calendar/clockcal.py:558
+#: ../applets/maintained/calendar/clockcal.py:547
 msgid "Unable to read calendar data from external source."
 msgstr ""
 
@@ -438,7 +483,9 @@ msgstr ""
 msgid "Show link"
 msgstr ""
 
+#. Size
 #: ../applets/maintained/comics/glade/view.glade.h:2
+#: ../applets/maintained/slickswitcher/prefs.py:220
 msgid "Size"
 msgstr ""
 
@@ -638,12 +685,12 @@ msgstr ""
 #: ../applets/maintained/feeds/feeds.desktop.in.h:1
 #: ../applets/maintained/feeds/feeds.py:70
 #: ../applets/maintained/feeds/feeds.py:224
-#: ../applets/maintained/feeds/feeds.py:791
+#: ../applets/maintained/feeds/feeds.py:786
 msgid "Feeds Applet"
 msgstr ""
 
 #: ../applets/maintained/feeds/feeds.desktop.in.h:2
-#: ../applets/maintained/feeds/feeds.py:795
+#: ../applets/maintained/feeds/feeds.py:790
 msgid "Monitor Web Feeds"
 msgstr ""
 
@@ -709,7 +756,7 @@ msgid "Hide this feed's items"
 msgstr ""
 
 #. Create the items
-#: ../applets/maintained/feeds/feeds.py:755
+#: ../applets/maintained/feeds/feeds.py:750
 #: ../applets/maintained/feeds/prefs.py:232
 msgid "Add Feed"
 msgstr ""
@@ -774,20 +821,19 @@ msgstr ""
 
 #. Username: label and entry
 #: ../applets/maintained/feeds/prefs.py:284
-#: ../applets/unmaintained/mail/mail.py:253
-#: ../applets/unmaintained/mail/mail.py:528
-#: ../applets/unmaintained/mail/mail.py:650
-#: ../applets/unmaintained/mail/mail.py:743
+#: ../applets/maintained/mail/mail.py:390
+#: ../applets/maintained/mail/mail.py:627
+#: ../applets/maintained/mail/mail.py:755
+#: ../applets/maintained/mail/mail.py:848
 msgid "Username:"
 msgstr ""
 
 #. Password: label and entry
 #: ../applets/maintained/feeds/prefs.py:298
-#: ../applets/unmaintained/mail/mail.py:257
-#: ../applets/unmaintained/mail/mail.py:531
-#: ../applets/unmaintained/mail/mail.py:653
-#: ../applets/unmaintained/mail/mail.py:746
-#: ../applets/unmaintained/mail/mail.py:763
+#: ../applets/maintained/mail/mail.py:394
+#: ../applets/maintained/mail/mail.py:630
+#: ../applets/maintained/mail/mail.py:758
+#: ../applets/maintained/mail/mail.py:851
 msgid "Password:"
 msgstr ""
 
@@ -842,12 +888,6 @@ msgstr ""
 msgid "Connect to Server..."
 msgstr ""
 
-#. Check if this is the Desktop directory
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:310
-#: ../applets/maintained/places/applet.c:339
-msgid "Desktop"
-msgstr ""
-
 #. Documents
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:314
 msgid "Documents"
@@ -881,19 +921,6 @@ msgstr ""
 #. Videos
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:338
 msgid "Videos"
-msgstr ""
-
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:352
-msgid "Computer"
-msgstr ""
-
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:355
-msgid "Network"
-msgstr ""
-
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:378
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:381
-msgid "Trash"
 msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:384
@@ -953,12 +980,6 @@ msgstr ""
 #. Dialog tab: options for places and basic behavior
 #: ../applets/maintained/file-browser-launcher/prefs.py:146
 msgid "Dialog"
-msgstr ""
-
-#. Bold text: Places with an hseparator under it
-#: ../applets/maintained/file-browser-launcher/prefs.py:150
-#: ../applets/maintained/places/places.desktop.in.in.h:2
-msgid "Places"
 msgstr ""
 
 #. Show all places
@@ -1123,11 +1144,11 @@ msgstr ""
 msgid "Hardware Sensors"
 msgstr ""
 
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:48
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:49
 msgid "Applet to show the hardware sensors readouts"
 msgstr ""
 
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:82
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:83
 msgid ""
 "Warning: No sensors found. Install one or more of ACPI, HDDTemp, LM-Sensors "
 "and restart the applet."
@@ -1135,51 +1156,34 @@ msgstr ""
 
 #. == Dialog == #
 #. Create main applet dialog showing selected sensors.
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:118
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:116
 msgid "Sensors"
 msgstr ""
 
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:220
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:226
-msgid "Error:"
-msgstr ""
-
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:220
-msgid "Directory"
-msgstr ""
-
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:220
-msgid "does not exist."
-msgstr ""
-
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:226
-msgid "No .svg images found in directory:"
-msgstr ""
-
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:480
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:465
 msgid "Interface"
 msgstr ""
 
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:482
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:467
 msgid "Name"
 msgstr ""
 
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:484
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:469
 msgid "Label"
 msgstr ""
 
 #. Set the cell "active" attribute to column_show - retrieve the state
 #. of the toggle button from that column in liststore
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:488
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:473
 msgid "In dialog"
 msgstr ""
 
 #. Add treeview-column to treeview
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:526
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:511
 msgid "Sensors displayed in icon"
 msgstr ""
 
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:544
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:529
 msgid "properties"
 msgstr ""
 
@@ -1202,6 +1206,159 @@ msgstr ""
 
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:35
 msgid "rpm"
+msgstr ""
+
+#: ../applets/maintained/mail/mail.desktop.in.h:1
+msgid "Check Your Email from AWN"
+msgstr ""
+
+#: ../applets/maintained/mail/mail.desktop.in.h:2
+#: ../applets/maintained/mail/mail.py:134
+#: ../applets/maintained/mail/mail.py:900
+msgid "Mail Applet"
+msgstr ""
+
+#: ../applets/maintained/mail/mail.py:37
+#, python-format
+msgid "You have %d new message"
+msgid_plural "You have %d new messages"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../applets/maintained/mail/mail.py:41
+#, python-format
+msgid "%d unread message"
+msgid_plural "%d unread messages"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../applets/maintained/mail/mail.py:74
+msgid "Mail Applet (Click to Log In)"
+msgstr ""
+
+#: ../applets/maintained/mail/mail.py:135
+#, python-format
+msgid "Logging in as %s"
+msgstr ""
+
+#: ../applets/maintained/mail/mail.py:165
+msgid "New Mail - Mail Applet"
+msgstr ""
+
+#: ../applets/maintained/mail/mail.py:280
+#, fuzzy
+msgid "Mail"
+msgstr "Granizada"
+
+#: ../applets/maintained/mail/mail.py:316
+msgid "Open Web Mail"
+msgstr ""
+
+#: ../applets/maintained/mail/mail.py:325
+msgid "Open Desktop Client"
+msgstr ""
+
+#: ../applets/maintained/mail/mail.py:334
+msgid "Refresh"
+msgstr ""
+
+#: ../applets/maintained/mail/mail.py:343
+msgid "Log Out"
+msgstr ""
+
+#: ../applets/maintained/mail/mail.py:373
+msgid "No unread messages"
+msgstr ""
+
+#: ../applets/maintained/mail/mail.py:375
+msgid "No new messages"
+msgstr ""
+
+#: ../applets/maintained/mail/mail.py:414
+msgid "Wrong username or password"
+msgstr ""
+
+#: ../applets/maintained/mail/mail.py:422
+#: ../applets/maintained/mail/mail.py:483
+msgid "Log In"
+msgstr ""
+
+#: ../applets/maintained/mail/mail.py:459
+msgid "Type:"
+msgstr ""
+
+#: ../applets/maintained/mail/mail.py:464
+msgid "Backend"
+msgstr ""
+
+#: ../applets/maintained/mail/mail.py:522
+#: ../applets/maintained/mail/mail.py:581
+msgid ""
+"There seem to be problems with our                     connection to your "
+"account. Your best bet is probably                     to log out and try "
+"again."
+msgstr ""
+
+#: ../applets/maintained/mail/mail.py:544
+#: ../applets/maintained/mail/mail.py:603
+msgid "[No Subject]"
+msgstr ""
+
+#: ../applets/maintained/mail/mail.py:566
+msgid "Google Apps"
+msgstr ""
+
+#: ../applets/maintained/mail/mail.py:634
+msgid "Domain:"
+msgstr ""
+
+#: ../applets/maintained/mail/mail.py:656
+msgid "Unix Spool"
+msgstr ""
+
+#: ../applets/maintained/mail/mail.py:678
+msgid "Spool Path:"
+msgstr ""
+
+#: ../applets/maintained/mail/mail.py:711
+#: ../applets/maintained/mail/mail.py:713
+msgid "Could not log in: "
+msgstr ""
+
+#: ../applets/maintained/mail/mail.py:720
+msgid "Could not log in: Username or password incorrect"
+msgstr ""
+
+#: ../applets/maintained/mail/mail.py:762
+#: ../applets/maintained/mail/mail.py:855
+#, fuzzy
+msgid "Server:"
+msgstr "Nunca"
+
+#: ../applets/maintained/mail/mail.py:765
+#: ../applets/maintained/mail/mail.py:858
+msgid "Use SSL encryption"
+msgstr ""
+
+#: ../applets/maintained/mail/mail.py:801
+msgid "Could not log in"
+msgstr ""
+
+#: ../applets/maintained/mail/mail.py:807
+msgid "Folder does not exst"
+msgstr ""
+
+#: ../applets/maintained/mail/mail.py:861
+msgid "Get messages from only one folder"
+msgstr ""
+
+#: ../applets/maintained/mail/mail.py:868
+#, fuzzy
+msgid "Folder:"
+msgstr "Frio"
+
+#: ../applets/maintained/mail/mail.py:903
+msgid "An applet to check one's email"
 msgstr ""
 
 #: ../applets/maintained/media-control/media-control.desktop.in.h:1
@@ -1430,12 +1587,13 @@ msgid "Launch your folder bookmarks"
 msgstr ""
 
 #: ../applets/maintained/python-test/python-test.desktop.in.h:1
-msgid "A test python applet for demo purposes"
+msgid "A simple applet to test python support"
 msgstr ""
 
 #: ../applets/maintained/python-test/python-test.desktop.in.h:2
-msgid "Python Test Applet"
-msgstr ""
+#, fuzzy
+msgid "Test Python Applet"
+msgstr "Mapa del tiempo"
 
 #: ../applets/maintained/quit/quit.desktop.in.h:1
 msgid "An applet to exit or log out of your session"
@@ -1443,10 +1601,6 @@ msgstr ""
 
 #: ../applets/maintained/quit/quit.desktop.in.h:2
 msgid "Quit-Log Out applet"
-msgstr ""
-
-#: ../applets/maintained/quit/quit-lock-screen.desktop.in.h:1
-msgid "Lock Screen"
 msgstr ""
 
 #: ../applets/maintained/quit/quit-lock-screen.desktop.in.h:2
@@ -1487,6 +1641,144 @@ msgstr ""
 
 #: ../applets/maintained/showdesktop/applet.vala:98
 msgid "Hide windows and show desktop"
+msgstr ""
+
+#: ../applets/maintained/slickswitcher/prefs.py:61
+#, fuzzy
+msgid "SlickSwitcher Preferences"
+msgstr "Preferencias"
+
+#. Page 1 of notebook: Colors
+#: ../applets/maintained/slickswitcher/prefs.py:84
+msgid "Colors"
+msgstr ""
+
+#. Border Colors
+#: ../applets/maintained/slickswitcher/prefs.py:87
+msgid "Border Colors"
+msgstr ""
+
+#. Icon Border
+#: ../applets/maintained/slickswitcher/prefs.py:91
+msgid "Icon Border"
+msgstr ""
+
+#. Normal Border
+#: ../applets/maintained/slickswitcher/prefs.py:94
+msgid "Normal Border"
+msgstr ""
+
+#. Hovered Border
+#: ../applets/maintained/slickswitcher/prefs.py:97
+msgid "Hovered Border"
+msgstr ""
+
+#. Window Colors
+#: ../applets/maintained/slickswitcher/prefs.py:101
+msgid "Window Colors"
+msgstr ""
+
+#. Main Color
+#: ../applets/maintained/slickswitcher/prefs.py:105
+#: ../applets/maintained/slickswitcher/prefs.py:167
+msgid "Main Color"
+msgstr ""
+
+#. Border Color
+#: ../applets/maintained/slickswitcher/prefs.py:108
+#: ../applets/maintained/slickswitcher/prefs.py:125
+msgid "Border Color"
+msgstr ""
+
+#. Dialog Colors
+#: ../applets/maintained/slickswitcher/prefs.py:112
+msgid "Dialog Colors"
+msgstr ""
+
+#. Use custom colors (CheckButton)
+#: ../applets/maintained/slickswitcher/prefs.py:116
+msgid "Use custom colors"
+msgstr ""
+
+#. Background Color
+#: ../applets/maintained/slickswitcher/prefs.py:122
+msgid "Background Color"
+msgstr ""
+
+#. Other Colors
+#: ../applets/maintained/slickswitcher/prefs.py:160
+msgid "Other Colors"
+msgstr ""
+
+#. Number Colors
+#: ../applets/maintained/slickswitcher/prefs.py:163
+msgid "Number Colors"
+msgstr ""
+
+#. Drop-Shadow Color
+#: ../applets/maintained/slickswitcher/prefs.py:170
+msgid "Drop-Shadow Color"
+msgstr ""
+
+#. Shine Colors
+#: ../applets/maintained/slickswitcher/prefs.py:174
+msgid "Shine Colors"
+msgstr ""
+
+#. Top Color
+#: ../applets/maintained/slickswitcher/prefs.py:178
+msgid "Top Color"
+msgstr ""
+
+#. Bottom Color
+#: ../applets/maintained/slickswitcher/prefs.py:181
+msgid "Bottom Color"
+msgstr ""
+
+#. Hover Top Color
+#: ../applets/maintained/slickswitcher/prefs.py:185
+msgid "Hover Top Color"
+msgstr ""
+
+#. Hover Bottom Color
+#: ../applets/maintained/slickswitcher/prefs.py:189
+msgid "Hover Bottom Color"
+msgstr ""
+
+#. Width
+#. Label: Width (bold)
+#: ../applets/maintained/slickswitcher/prefs.py:223
+#: ../applets/maintained/to-do/prefs.py:109
+#, fuzzy
+msgid "Width"
+msgstr "Viento"
+
+#. Height
+#: ../applets/maintained/slickswitcher/prefs.py:233
+msgid "Height"
+msgstr ""
+
+#. Note
+#: ../applets/maintained/slickswitcher/prefs.py:243
+msgid ""
+"Note: This does not affect\n"
+"the size of the "
+msgstr ""
+
+#: ../applets/maintained/slickswitcher/slickswitcher.desktop.in.h:1
+#: ../applets/maintained/slickswitcher/slickswitcher.py:245
+msgid "A visual workspace switcher"
+msgstr ""
+
+#: ../applets/maintained/slickswitcher/slickswitcher.desktop.in.h:2
+#: ../applets/maintained/slickswitcher/slickswitcher.py:55
+#: ../applets/maintained/slickswitcher/slickswitcher.py:236
+msgid "SlickSwitcher"
+msgstr ""
+
+#: ../applets/maintained/sysmon/sysmon.desktop.in.in.h:1
+#: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in.h:2
+msgid "Manage system activity"
 msgstr ""
 
 #: ../applets/maintained/sysmon/sysmon.desktop.in.in.h:2
@@ -1587,12 +1879,6 @@ msgstr ""
 msgid "C_ategories"
 msgstr ""
 
-#. Label: Width (bold)
-#: ../applets/maintained/to-do/prefs.py:109
-#, fuzzy
-msgid "Width"
-msgstr "Viento"
-
 #. CheckButton: Use Custom Width
 #: ../applets/maintained/to-do/prefs.py:118
 msgid "_Use Custom Width"
@@ -1660,75 +1946,75 @@ msgid "Manage a simple To-Do list"
 msgstr ""
 
 #: ../applets/maintained/to-do/to-do.desktop.in.h:2
-#: ../applets/maintained/to-do/to-do.py:69
-#: ../applets/maintained/to-do/to-do.py:254
-#: ../applets/maintained/to-do/to-do.py:309
-#: ../applets/maintained/to-do/to-do.py:967
+#: ../applets/maintained/to-do/to-do.py:68
+#: ../applets/maintained/to-do/to-do.py:207
+#: ../applets/maintained/to-do/to-do.py:259
+#: ../applets/maintained/to-do/to-do.py:897
 msgid "To-Do List"
 msgstr ""
 
-#: ../applets/maintained/to-do/to-do.py:257
+#: ../applets/maintained/to-do/to-do.py:210
 msgid "A simple To-Do List"
 msgstr ""
 
-#: ../applets/maintained/to-do/to-do.py:347
+#: ../applets/maintained/to-do/to-do.py:289
 msgid "Remove item"
 msgstr ""
 
-#: ../applets/maintained/to-do/to-do.py:429
+#: ../applets/maintained/to-do/to-do.py:371
 msgid "Remove category"
 msgstr ""
 
-#: ../applets/maintained/to-do/to-do.py:453
+#: ../applets/maintained/to-do/to-do.py:395
 msgid "View/Edit details"
 msgstr ""
 
 #. Make the RadioButtons for each category
 #. First category: No category! (Uncategorized)
-#: ../applets/maintained/to-do/to-do.py:573
+#: ../applets/maintained/to-do/to-do.py:515
 msgid "_Uncategorized"
 msgstr ""
 
 #. First RadioButton - ( )Category
-#: ../applets/maintained/to-do/to-do.py:597
+#: ../applets/maintained/to-do/to-do.py:539
 msgid "_Category"
 msgstr ""
 
 #. Second RadioButton - (-)To-Do item
 #. TODO: better text than "To-Do item"?
-#: ../applets/maintained/to-do/to-do.py:604
+#: ../applets/maintained/to-do/to-do.py:546
 msgid "_To-Do item"
 msgstr ""
 
 #. Label: Priority:
-#: ../applets/maintained/to-do/to-do.py:689
+#: ../applets/maintained/to-do/to-do.py:631
 msgid "Priority: "
 msgstr ""
 
 #. Neutral, Low, Medium, and High priority RadioButtons
-#: ../applets/maintained/to-do/to-do.py:692
+#: ../applets/maintained/to-do/to-do.py:634
 msgid "_Neutral"
 msgstr ""
 
-#: ../applets/maintained/to-do/to-do.py:694
+#: ../applets/maintained/to-do/to-do.py:636
 msgid "_Low"
 msgstr ""
 
-#: ../applets/maintained/to-do/to-do.py:696
+#: ../applets/maintained/to-do/to-do.py:638
 msgid "_Medium"
 msgstr ""
 
-#: ../applets/maintained/to-do/to-do.py:698
+#: ../applets/maintained/to-do/to-do.py:640
 msgid "_High"
 msgstr ""
 
 #. Label: Progress(%):
-#: ../applets/maintained/to-do/to-do.py:726
+#: ../applets/maintained/to-do/to-do.py:668
 msgid "Progress(%): "
 msgstr ""
 
 #. Make Label
-#: ../applets/maintained/to-do/to-do.py:1180
+#: ../applets/maintained/to-do/to-do.py:1110
 #, python-format
 msgid ""
 "Are you sure you want to remove the category \"%s?\"\n"
@@ -1736,18 +2022,18 @@ msgid ""
 msgstr ""
 
 #. Make CheckButton
-#: ../applets/maintained/to-do/to-do.py:1184
-#: ../applets/maintained/to-do/to-do.py:1220
+#: ../applets/maintained/to-do/to-do.py:1114
+#: ../applets/maintained/to-do/to-do.py:1150
 msgid "Don't show this again."
 msgstr ""
 
 #. Make Label
-#: ../applets/maintained/to-do/to-do.py:1217
+#: ../applets/maintained/to-do/to-do.py:1147
 msgid "Are you sure you want to remove this item?"
 msgstr ""
 
 #. Reset the tooltip
-#: ../applets/maintained/to-do/to-do.py:1416
+#: ../applets/maintained/to-do/to-do.py:1346
 #, python-format
 msgid "% done"
 msgstr ""
@@ -1796,7 +2082,7 @@ msgstr "mañana"
 
 #. Weather condition
 #: ../applets/maintained/weather/forecast.py:228
-#: ../applets/maintained/weather/weather.py:331
+#: ../applets/maintained/weather/weather.py:338
 msgid "DESCRIPTION"
 msgstr ""
 
@@ -1817,13 +2103,17 @@ msgstr "Mapa del tiempo"
 msgid "Fetching conditions for"
 msgstr ""
 
-#: ../applets/maintained/weather/weather.py:159
-#: ../applets/maintained/weather/weather.py:257
+#: ../applets/maintained/weather/weather.py:102
+msgid "Show _Map"
+msgstr ""
+
+#: ../applets/maintained/weather/weather.py:163
+#: ../applets/maintained/weather/weather.py:261
 #, fuzzy
 msgid "No records found"
 msgstr "No produjo ningún topónimo."
 
-#: ../applets/maintained/weather/weather.py:236
+#: ../applets/maintained/weather/weather.py:240
 msgid "Searching..."
 msgstr "El buscar..."
 
@@ -1864,143 +2154,40 @@ msgstr ""
 msgid "Yet Another Menu Applet"
 msgstr ""
 
+#: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in.h:1
+msgid "Awn System Monitor"
+msgstr ""
+
+#: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:1
+msgid "Graph update frequency, in milliseconds."
+msgstr ""
+
+#: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:2
+msgid "Set to 1 (true) to draw the gradient overlay on the graph."
+msgstr ""
+
+#: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:3
+msgid "The color used in the applet border."
+msgstr ""
+
+#: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:4
+msgid "The color used in the graph lines."
+msgstr ""
+
+#: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:5
+msgid "The color used in the graph lines. Valid values are 0.0 through 1.0."
+msgstr ""
+
+#: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:6
+msgid "The pixel width of the applet border."
+msgstr ""
+
 #: ../applets/unmaintained/dropper/dropper.desktop.in.h:1
 msgid "Dropper"
 msgstr ""
 
 #: ../applets/unmaintained/dropper/dropper.desktop.in.h:2
 msgid "Shows actions overlay when you drag something over the applet."
-msgstr ""
-
-#: ../applets/unmaintained/mail/mail.desktop.in.h:1
-msgid "Check Your Email from AWN"
-msgstr ""
-
-#: ../applets/unmaintained/mail/mail.desktop.in.h:2
-#: ../applets/unmaintained/mail/mail.py:111
-#: ../applets/unmaintained/mail/mail.py:795
-msgid "Mail Applet"
-msgstr ""
-
-#: ../applets/unmaintained/mail/mail.py:35
-#, python-format
-msgid "You have %d new message"
-msgid_plural "You have %d new messages"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../applets/unmaintained/mail/mail.py:39
-#, python-format
-msgid "%d unread message"
-msgid_plural "%d unread messages"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../applets/unmaintained/mail/mail.py:70
-msgid "Mail Applet (Click to Log In)"
-msgstr ""
-
-#: ../applets/unmaintained/mail/mail.py:112
-#, python-format
-msgid "Logging in as %s"
-msgstr ""
-
-#: ../applets/unmaintained/mail/mail.py:139
-msgid "New Mail - Mail Applet"
-msgstr ""
-
-#: ../applets/unmaintained/mail/mail.py:197
-msgid "Hmmm, nothing here"
-msgstr ""
-
-#: ../applets/unmaintained/mail/mail.py:210
-msgid "Open Web Mail"
-msgstr ""
-
-#: ../applets/unmaintained/mail/mail.py:218
-msgid "Open Desktop Client"
-msgstr ""
-
-#: ../applets/unmaintained/mail/mail.py:226
-msgid "Refresh"
-msgstr ""
-
-#: ../applets/unmaintained/mail/mail.py:234
-msgid "Log Out"
-msgstr ""
-
-#: ../applets/unmaintained/mail/mail.py:277
-#: ../applets/unmaintained/mail/mail.py:334
-msgid "Log In"
-msgstr ""
-
-#: ../applets/unmaintained/mail/mail.py:288
-msgid "Wrong username or password"
-msgstr ""
-
-#: ../applets/unmaintained/mail/mail.py:312
-msgid "Type:"
-msgstr ""
-
-#: ../applets/unmaintained/mail/mail.py:317
-msgid "Backend"
-msgstr ""
-
-#: ../applets/unmaintained/mail/mail.py:423
-#: ../applets/unmaintained/mail/mail.py:482
-msgid ""
-"There seem to be problems with our                     connection to your "
-"account. Your best bet is probably                     to log out and try "
-"again."
-msgstr ""
-
-#: ../applets/unmaintained/mail/mail.py:445
-#: ../applets/unmaintained/mail/mail.py:504
-msgid "[No Subject]"
-msgstr ""
-
-#: ../applets/unmaintained/mail/mail.py:467
-msgid "Google Apps"
-msgstr ""
-
-#: ../applets/unmaintained/mail/mail.py:535
-msgid "Domain:"
-msgstr ""
-
-#: ../applets/unmaintained/mail/mail.py:557
-msgid "Unix Spool"
-msgstr ""
-
-#: ../applets/unmaintained/mail/mail.py:579
-msgid "Spool Path:"
-msgstr ""
-
-#: ../applets/unmaintained/mail/mail.py:615
-#: ../applets/unmaintained/mail/mail.py:696
-msgid "Could not log in"
-msgstr ""
-
-#: ../applets/unmaintained/mail/mail.py:657
-#: ../applets/unmaintained/mail/mail.py:750
-#, fuzzy
-msgid "Server:"
-msgstr "Nunca"
-
-#: ../applets/unmaintained/mail/mail.py:660
-#: ../applets/unmaintained/mail/mail.py:753
-msgid "Use SSL encryption"
-msgstr ""
-
-#: ../applets/unmaintained/mail/mail.py:702
-msgid "Folder does not exst"
-msgstr ""
-
-#: ../applets/unmaintained/mail/mail.py:756
-msgid "Get messages from only one folder"
-msgstr ""
-
-#: ../applets/unmaintained/mail/mail.py:798
-msgid "An applet to check one's email"
 msgstr ""
 
 #: ../applets/unmaintained/main-menu/applet.c:394
@@ -2012,7 +2199,7 @@ msgstr ""
 msgid "Displays a list of all your applications"
 msgstr ""
 
-#: ../applets/unmaintained/main-menu/applet.c:465
+#: ../applets/unmaintained/main-menu/applet.c:453
 msgid "Main Menu"
 msgstr ""
 
@@ -2035,10 +2222,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Set Location"
 #~ msgstr "Topónimo ahora:"
-
-#, fuzzy
-#~ msgid "PyNot Preferences"
-#~ msgstr "Preferencias"
 
 #, fuzzy
 #~ msgid "Curved Stack Preferences"
@@ -2139,9 +2322,6 @@ msgstr ""
 #~ msgid "Snow"
 #~ msgstr "Nieve"
 
-#~ msgid "Hail"
-#~ msgstr "Granizada"
-
 #~ msgid "Sleet"
 #~ msgstr "Granizo"
 
@@ -2208,6 +2388,3 @@ msgstr ""
 
 #~ msgid "Saturday"
 #~ msgstr "sábado"
-
-#~ msgid "Sunday"
-#~ msgstr "domingo"

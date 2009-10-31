@@ -125,19 +125,20 @@ class Dialogs:
             self.menu.append(about_item)
             about_item.connect("activate", lambda w: self.toggle("about"))
 
-        def clicked_cb(widget):
-            if "main" in self.__register:
-                self.toggle("main")
-        parent.connect("clicked", clicked_cb)
-
         def popup_menu_cb(widget, event):
             self.toggle("menu", once=True, event=event)
         parent.connect("context-menu-popup", popup_menu_cb)
 
-        def middle_clicked_cb(widget):
-            if "secondary" in self.__register:
-                self.toggle("secondary", once=True)
-        parent.connect("middle-clicked", middle_clicked_cb)
+        def clicked_cb(widget, dialog_name):
+            if dialog_name in self.__register:
+                if parent.tooltip.is_visible() or self.__current != dialog_name:
+                    parent.tooltip.hide()
+                    self.toggle(dialog_name)
+                else:
+                    self.toggle(dialog_name)
+                    parent.tooltip.show()
+        parent.connect("clicked", clicked_cb, "main")
+        parent.connect("middle-clicked", clicked_cb, "secondary")
 
     def new(self, dialog, title=None, focus=True):
         """Create a new AWN dialog.
@@ -374,8 +375,8 @@ class Title:
         self.__tooltip = parent.get_icon().get_tooltip()
         self.set(parent.meta["name"])
 
+        self.disable_toggle_on_click()
         if parent.meta.has_option("no-tooltip"):
-            self.disable_toggle_on_click()
             self.__tooltip.props.smart_behavior = False
 
     def disable_toggle_on_click(self):

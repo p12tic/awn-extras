@@ -45,8 +45,6 @@ applets/unmaintained/helloworld-applet/src/helloworld.desktop.in
 applets/unmaintained/helloworld-applet/src/helloworld.desktop.in.in
 applets/unmaintained/plugger/plugger.desktop.in.in
 applets/unmaintained/plugger/plugger.desktop.in
-applets/unmaintained/separator/separator.desktop.in.in
-applets/unmaintained/separator/separator.desktop.in
 applets/unmaintained/stacks/curved_stacks_preferences.glade
 applets/unmaintained/stacks/stacks.desktop.in
 applets/unmaintained/stacks/stacks_backend.py

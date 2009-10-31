@@ -111,19 +111,22 @@ const PopupNotifyStackLocation popup_stack_locations[] =
 
 typedef struct
 {
+  NotifyDaemon *daemon;
   GTimeVal expiration;
   GTimeVal paused_diff;
   gboolean has_timeout;
   gboolean paused;
   guint id;
   GtkWindow *nw;
-
+  Window src_window_xid;
 } NotifyTimeout;
 
 struct _NotifyDaemonPrivate
 {
   guint next_id;
   guint timeout_source;
+  GHashTable *idle_reposition_notify_ids;
+  GHashTable *monitored_window_hash;
   GHashTable *notification_hash;
   gboolean url_clicked_lock;
   NotifyStack **stacks;
@@ -151,12 +154,21 @@ struct _DBusGMethodInvocation
 #endif /* D-BUS < 0.60 */
 
 static void notify_daemon_finalize(GObject *object);
+static void _notification_destroyed_cb(GtkWindow *nw, NotifyDaemon *daemon);
 static void _close_notification(NotifyDaemon *daemon, guint id,
                                 gboolean hide_notification,
                                 NotifydClosedReason reason);
+static GdkFilterReturn _notify_x11_filter(GdkXEvent *xevent,
+                                          GdkEvent *event,
+                                          gpointer user_data);
 static void _emit_closed_signal(GtkWindow *nw, NotifydClosedReason reason);
 static void _action_invoked_cb(GtkWindow *nw, const char *key);
 static NotifyStackLocation get_stack_location_from_string(const char *slocation);
+static void sync_notification_position(NotifyDaemon *daemon, GtkWindow *nw,
+                                       Window source);
+static void monitor_notification_source_windows(NotifyDaemon *daemon,
+                                                NotifyTimeout *nt,
+                                                Window source);
 
 G_DEFINE_TYPE(NotifyDaemon, notify_daemon, G_TYPE_OBJECT);
 
@@ -173,6 +185,14 @@ notify_daemon_class_init(NotifyDaemonClass *daemon_class)
 static void
 _notify_timeout_destroy(NotifyTimeout *nt)
 {
+  /*
+   * Disconnect the destroy handler to avoid a loop since the id
+   * won't be removed from the hash table before the widget is
+   * destroyed.
+   */
+  g_signal_handlers_disconnect_by_func(nt->nw, _notification_destroyed_cb,
+                                       nt->daemon);
+
   gtk_widget_destroy(GTK_WIDGET(nt->nw));
   g_free(nt);
 }
@@ -203,6 +223,10 @@ notify_daemon_init(NotifyDaemon *daemon)
   daemon->priv->stacks_size = gdk_screen_get_n_monitors(screen);
   daemon->priv->stacks = g_new0(NotifyStack *, daemon->priv->stacks_size);
 
+  daemon->priv->idle_reposition_notify_ids = g_hash_table_new(NULL, NULL);
+  daemon->priv->monitored_window_hash = g_hash_table_new(NULL, NULL);
+  gdk_window_add_filter(NULL, _notify_x11_filter, daemon);
+
   for (i = 0; i < daemon->priv->stacks_size; i++)
   {
     daemon->priv->stacks[i] = notify_stack_new(daemon, screen,
@@ -224,6 +248,8 @@ notify_daemon_finalize(GObject *object)
   NotifyDaemon *daemon       = NOTIFY_DAEMON(object);
   GObjectClass *parent_class = G_OBJECT_CLASS(notify_daemon_parent_class);
 
+  g_hash_table_destroy(daemon->priv->monitored_window_hash);
+  g_hash_table_destroy(daemon->priv->idle_reposition_notify_ids);
   g_hash_table_destroy(daemon->priv->notification_hash);
   g_free(daemon->priv);
 
@@ -333,6 +359,112 @@ _notification_destroyed_cb(GtkWindow *nw, NotifyDaemon *daemon)
    */
   _close_notification(daemon, NW_GET_NOTIFY_ID(nw), FALSE,
                       NOTIFYD_CLOSED_EXPIRED);
+}
+
+typedef struct
+{
+  NotifyDaemon *daemon;
+  gint id;
+} IdleRepositionData;
+
+static gboolean
+idle_reposition_notification(gpointer datap)
+{
+  IdleRepositionData *data = (IdleRepositionData *)datap;
+  NotifyDaemon *daemon = data->daemon;
+  NotifyTimeout *nt;
+  gint notify_id;
+
+  notify_id = data->id;
+
+  /* Look up the timeout, if it's completed we don't need to do anything */
+  nt = (NotifyTimeout *)g_hash_table_lookup(daemon->priv->notification_hash,
+                        &notify_id);
+  if (nt != NULL) {
+    sync_notification_position(daemon, nt->nw, nt->src_window_xid);
+  }
+
+  g_hash_table_remove(daemon->priv->idle_reposition_notify_ids,
+            GINT_TO_POINTER(notify_id));
+  g_object_unref(daemon);
+  g_free(data);
+
+  return FALSE;
+}
+
+static void
+_queue_idle_reposition_notification(NotifyDaemon *daemon, gint notify_id)
+{
+  IdleRepositionData *data;
+  gpointer orig_key;
+  gpointer value;
+  guint idle_id;
+
+  /* Do we already have an idle update pending? */
+  if (g_hash_table_lookup_extended(daemon->priv->idle_reposition_notify_ids,
+                   GINT_TO_POINTER(notify_id),
+                   &orig_key, &value))
+  {
+    return;
+  }
+
+  data = g_new0(IdleRepositionData, 1);
+  data->daemon = g_object_ref(daemon);
+  data->id = notify_id;
+
+  /* We do this as a short timeout to avoid repositioning spam */
+  idle_id = g_timeout_add_full(G_PRIORITY_LOW, 50,
+                 idle_reposition_notification, data, NULL);
+  g_hash_table_insert(daemon->priv->idle_reposition_notify_ids,
+            GINT_TO_POINTER(notify_id), GUINT_TO_POINTER(idle_id));
+}
+
+static GdkFilterReturn
+_notify_x11_filter(GdkXEvent *xevent,
+           GdkEvent *event,
+           gpointer user_data)
+{
+  NotifyDaemon *daemon = NOTIFY_DAEMON(user_data);
+  XEvent *xev = (XEvent *)xevent;
+  gpointer orig_key;
+  gpointer value;
+  gint notify_id;
+  NotifyTimeout *nt;
+
+  if (xev->xany.type == DestroyNotify)
+  {
+    g_hash_table_remove(daemon->priv->monitored_window_hash,
+              GUINT_TO_POINTER(xev->xany.window));
+    return GDK_FILTER_CONTINUE;
+  }
+
+  if (!g_hash_table_lookup_extended(daemon->priv->monitored_window_hash,
+           GUINT_TO_POINTER(xev->xany.window), &orig_key, &value))
+    return GDK_FILTER_CONTINUE;
+
+  notify_id = GPOINTER_TO_INT(value);
+
+  if (xev->xany.type == ConfigureNotify || xev->xany.type == MapNotify)
+  {
+    _queue_idle_reposition_notification(daemon, notify_id);
+  }
+  else if (xev->xany.type == ReparentNotify)
+  {
+    nt = (NotifyTimeout *)g_hash_table_lookup(
+      daemon->priv->notification_hash, &notify_id);
+
+    if (nt == NULL)
+      return GDK_FILTER_CONTINUE;
+
+    /*
+     * If the window got reparented, we need to start monitoring the
+     * new parents.
+     */
+    monitor_notification_source_windows(daemon, nt, nt->src_window_xid);
+    sync_notification_position(daemon, nt->nw, nt->src_window_xid);
+  }
+
+  return GDK_FILTER_CONTINUE;
 }
 
 static void
@@ -485,7 +617,7 @@ _calculate_timeout(NotifyDaemon *daemon, NotifyTimeout *nt, int timeout)
   }
 }
 
-static guint
+static NotifyTimeout *
 _store_notification(NotifyDaemon *daemon, GtkWindow *nw, int timeout)
 {
   NotifyDaemonPrivate *priv = daemon->priv;
@@ -508,17 +640,16 @@ _store_notification(NotifyDaemon *daemon, GtkWindow *nw, int timeout)
   while (id == 0);
 
   nt = g_new0(NotifyTimeout, 1);
-
   nt->id = id;
-
   nt->nw = nw;
+  nt->daemon = daemon;
 
   _calculate_timeout(daemon, nt, timeout);
 
   g_hash_table_insert(priv->notification_hash,
                       g_memdup(&id, sizeof(guint)), nt);
 
-  return id;
+  return nt;
 }
 
 static gboolean
@@ -695,7 +826,8 @@ _notify_daemon_process_icon_data(NotifyDaemon *daemon, GtkWindow *nw,
   if (expected_len != tmp_array->len)
   {
     g_warning("_notify_daemon_process_icon_data expected image "
-              "data to be of length %i but got a length of %i",
+              "data to be of length %" G_GSIZE_FORMAT " but got a "
+              "length of %u",
               expected_len, tmp_array->len);
     return FALSE;
   }
@@ -841,8 +973,7 @@ screensaver_active(GtkWidget *nw)
   }
 
   if (temp_data != NULL)
-    free(temp_data);
-
+    XFree(temp_data);
   return active;
 }
 
@@ -888,6 +1019,98 @@ fullscreen_window_exists(GtkWidget *nw)
   return FALSE;
 }
 
+static Window
+get_window_parent(Display *display,
+          Window window,
+          Window *root)
+{
+  Window parent;
+  Window *children = NULL;
+  guint nchildren;
+  gboolean result;
+
+  gdk_error_trap_push();
+  result = XQueryTree(display, window, root, &parent, &children, &nchildren);
+  if (gdk_error_trap_pop() || !result)
+    return None;
+
+  if (children)
+    XFree(children);
+
+  return parent;
+}
+
+/*
+ * Recurse over X Window and parents, up to root, and start watching them
+ * for position changes.
+ */
+static void
+monitor_notification_source_windows(NotifyDaemon *daemon,
+                  NotifyTimeout *nt,
+                  Window source)
+{
+  Display *display = GDK_DISPLAY_XDISPLAY(gdk_display_get_default());
+  Window root = None;
+  Window parent;
+
+  /* Store the window in the timeout */
+  g_assert(nt != NULL);
+  nt->src_window_xid = source;
+
+  for (parent = get_window_parent(display, source, &root);
+     parent != None && root != parent;
+     parent = get_window_parent(display, parent, &root)) {
+
+    XSelectInput(display, parent, StructureNotifyMask);
+    g_hash_table_insert(daemon->priv->monitored_window_hash,
+              GUINT_TO_POINTER(parent), GINT_TO_POINTER(nt->id));
+  }
+}
+
+/* Use a source X Window ID to reposition a notification. */
+static void
+sync_notification_position(NotifyDaemon *daemon,
+               GtkWindow *nw,
+               Window source)
+{
+  Display *display = GDK_DISPLAY_XDISPLAY(gdk_display_get_default());
+  Status result;
+  Window root;
+  Window child;
+  int x, y;
+  unsigned int width, height;
+  unsigned int border_width, depth;
+
+  gdk_error_trap_push();
+
+  /* Get the root for this window */
+  result = XGetGeometry(display, source, &root, &x, &y,
+              &width, &height, &border_width, &depth);
+  if (gdk_error_trap_pop() || !result)
+    return;
+
+  /*
+   * Now calculate the offset coordinates for the source window from
+   * the root.
+   */
+  gdk_error_trap_push ();
+  result = XTranslateCoordinates(display, source, root, 0, 0,
+                   &x, &y, &child);
+  if (gdk_error_trap_pop() || !result)
+    return;
+
+  x += width  / 2;
+  y += height / 2;
+
+  /*
+   * We need to manually queue a draw here as the default theme recalculates
+   * its position in the draw handler and moves the window (which seems
+   * fairly broken), so just calling move/show above isn't enough to cause
+   * its position to be calculated.
+   */
+  gtk_widget_queue_draw(GTK_WIDGET(nw));
+}
+
 GQuark
 notify_daemon_error_quark(void)
 {
@@ -918,6 +1141,7 @@ notify_daemon_notify_handler(NotifyDaemon *daemon,
   gboolean new_notification = FALSE;
   gint x = 0;
   gint y = 0;
+  Window window_xid = None;
   guint return_id;
   gchar *sender;
   gchar *sound_file = NULL;
@@ -964,9 +1188,13 @@ notify_daemon_notify_handler(NotifyDaemon *daemon,
    *XXX This needs to handle file URIs and all that.
    */
 
-  /* deal with x, and y hints */
 
-  if ((data = (GValue *)g_hash_table_lookup(hints, "x")) != NULL)
+  if ((data = (GValue *)g_hash_table_lookup(hints, "window-xid")) != NULL)
+  {
+    window_xid = (Window)g_value_get_uint(data);
+  }
+  /* deal with x, and y hints */
+  else if ((data = (GValue *)g_hash_table_lookup(hints, "x")) != NULL)
   {
     x = g_value_get_int(data);
 
@@ -1114,7 +1342,14 @@ notify_daemon_notify_handler(NotifyDaemon *daemon,
     }
   }
 
-  if ((use_pos_data)  && G_daemon_config.awn_client_pos)
+  if (window_xid != None)
+  {
+    /*
+     * Do nothing here if we were passed an XID; we'll call
+     * sync_notification_position later.
+     */
+  }
+  else if (use_pos_data && G_daemon_config.awn_client_pos)
   {
     /*
      * Typically, the theme engine will set its own position based on
@@ -1140,6 +1375,25 @@ notify_daemon_notify_handler(NotifyDaemon *daemon,
     notify_stack_add_window(priv->stacks[monitor], nw, new_notification);
   }
 
+  if (id == 0)
+  {
+    nt = _store_notification(daemon, nw, timeout);
+    return_id = nt->id;
+  }
+  else
+    return_id = id;
+
+  /*
+   * If we have a source Window XID, start monitoring the tree
+   * for changes, and reposition the window based on the source
+   * window.  We need to do this after return_id is calculated.
+   */
+  if (window_xid != None)
+  {
+    monitor_notification_source_windows(daemon, nt, window_xid);
+    sync_notification_position(daemon, nw, window_xid);
+  }
+
   if (!screensaver_active(GTK_WIDGET(nw)) &&
       !fullscreen_window_exists(GTK_WIDGET(nw)))
   {
@@ -1150,8 +1404,6 @@ notify_daemon_notify_handler(NotifyDaemon *daemon,
   }
 
   g_free(sound_file);
-
-  return_id = (id == 0 ? _store_notification(daemon, nw, timeout) : id);
 
 #if CHECK_DBUS_VERSION(0, 60)
   sender = dbus_g_method_get_sender(context);

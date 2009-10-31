@@ -30,6 +30,8 @@ static GstElement *player;
 static void
 sound_play_uri(const gchar* uri)
 {
+  if (player == NULL)
+    return;
   /*
    * TODO: Fade out the current sound and then start the new sound?
    *       Right now we just cut off the existing sound, which is kind of
@@ -56,13 +58,16 @@ sound_init(void)
 
   player = gst_element_factory_make("playbin", "Notification Player");
 
-  /*
-   * Instead of using the default audiosink, use the gconfaudiosink,
-   * which will respect the defaults in gstreamer-properties
-   */
-  g_object_set(G_OBJECT(player), "audio-sink",
-               gst_element_factory_make("gconfaudiosink", "GconfAudioSink"),
-               NULL);
+  if (player != NULL)
+  {
+    /*
+     * Instead of using the default audiosink, use the gconfaudiosink,
+     * which will respect the defaults in gstreamer-properties
+     */
+    g_object_set(G_OBJECT(player), "audio-sink",
+                 gst_element_factory_make("gconfaudiosink", "GconfAudioSink"),
+                 NULL);
+  }
 
 #endif /* HAVE_GSTREAMER */
 }

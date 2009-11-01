@@ -21,7 +21,6 @@
 
 import sys
 import os.path
-import urllib
 
 from gobject import GError
 import gobject

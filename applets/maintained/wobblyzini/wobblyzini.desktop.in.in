@@ -6,5 +6,5 @@ _Name=Wobbly Zini
 _Comment=A simple test animation
 Exec=awn-applet -p %k
 X-AWN-AppletExec=@LIBDIR@/awn/applets/wobblyzini/wobblyzini.so
-Icon=icons/wobblyzini.png
+Icon=wobblyzini/icons/wobblyzini
 X-AWN-AppletCategory=Game,Amusement

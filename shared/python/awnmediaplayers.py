@@ -184,6 +184,9 @@ class Rhythmbox(GenericPlayer):
             # bug in rhythmbox 0.11.6 - returns uri, but not properly encoded,
             # but it's enough to remove the file:// prefix
             albumart_exact = albumart_exact.replace('file://', '', 1)
+            if gtk.gtk_version >= (2, 18):
+                from urllib import unquote
+                albumart_exact = unquote(albumart_exact)
             ret_dict['album-art'] = albumart_exact
 
         # Currently Playing Title

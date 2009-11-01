@@ -231,7 +231,7 @@ class Dialogs:
                 self.__register[dialog].hide()
                 self.__current = None
 
-                # Because the dialog is now hidden, show the title again
+                # Because the dialog is now hidden, show the tooltip again
                 self.__parent.tooltip.show()
             else:
                 self.__parent.tooltip.hide()
@@ -358,12 +358,12 @@ class Dialogs:
             self.add_button(gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE)
 
 
-class Title:
+class Tooltip:
 
     def __init__(self, parent):
-        """Create a new Title object.
+        """Create a new Tooltip object.
 
-        @param parent: The parent applet of the title instance.
+        @param parent: The parent applet of the tooltip instance.
         @type parent: L{Applet}
 
         """
@@ -383,21 +383,21 @@ class Title:
         return (self.__tooltip.flags() & gtk.VISIBLE) != 0
 
     def show(self):
-        """Show the applet title.
+        """Show the applet tooltip.
 
         """
         self.__tooltip.show_all()
 
     def hide(self):
-        """Hide the applet title.
+        """Hide the applet tooltip.
 
         """
         self.__tooltip.hide_all()
 
     def set(self, text):
-        """Set the applet title.
+        """Set the applet tooltip.
 
-        @param text: The new title text. Defaults to "".
+        @param text: The new tooltip text. Defaults to "".
         @type text: C{string}
 
         """
@@ -442,8 +442,7 @@ class Icon:
 
         """
         if file[0] != "/":
-            file = os.path.join(os.path.abspath( \
-                os.path.dirname(___file___)), file)
+            file = os.path.join(os.path.abspath(os.path.dirname(___file___)), file)
 
         if size is None:
             icon = gtk.gdk.pixbuf_new_from_file(file)
@@ -587,10 +586,10 @@ class Errors:
             error = str(error)
             if traceback is not None:
                 print "\n".join(["-"*80, traceback, "-"*80])
+                summary = "%s in %s: %s" % (error_type, self.__parent.meta["name"], error)
                 if self.__parent.meta["version"] == __version__:
-                    summary = "%s in %s: %s" % (error_type, self.__parent.meta["name"], error)
                     args["message"] = "Visit Launchpad and report the bug by following these steps:\n\n" \
-                                    + "1) Paste the following text in the 'summary' field:\n'%s'\n" % summary \
+                                    + "1) Paste the error summary text in the 'summary' field\n" \
                                     + "2) Press Continue and then check whether the bug has already been reported or not\n" \
                                     + "3) If you continue and report the bug, paste the following in the big textarea:\n" \
                                     + "    - the traceback\n" \
@@ -610,14 +609,23 @@ class Errors:
         dialog = self.ErrorDialog(self.__parent, error_type, error, **args)
 
         if traceback is not None:
-            copy_button = gtk.Button("Copy traceback to clipboard")
-            copy_button.set_image(gtk.image_new_from_stock(gtk.STOCK_COPY, gtk.ICON_SIZE_MENU))
-            dialog.hbox.pack_start(copy_button, expand=False)
-            def clicked_cb(widget):
+            copy_traceback_button = gtk.Button("Copy traceback to clipboard")
+            copy_traceback_button.set_image(gtk.image_new_from_stock(gtk.STOCK_COPY, gtk.ICON_SIZE_MENU))
+            dialog.hbox.pack_start(copy_traceback_button, expand=False)
+
+            copy_summary_button = gtk.Button("Copy summary to clipboard")
+            copy_summary_button.set_image(gtk.image_new_from_stock(gtk.STOCK_COPY, gtk.ICON_SIZE_MENU))
+            dialog.hbox.pack_start(copy_summary_button, expand=False)
+
+            dialog.hbox.reorder_child(copy_traceback_button, 0)
+            dialog.hbox.reorder_child(copy_summary_button, 0)
+
+            def clicked_cb(widget, text):
                 clipboard = gtk.clipboard_get()
-                clipboard.set_text(traceback)
+                clipboard.set_text(text)
                 clipboard.store()
-            copy_button.connect("clicked", clicked_cb)
+            copy_traceback_button.connect("clicked", clicked_cb, traceback)
+            copy_summary_button.connect("clicked", clicked_cb, summary)
 
         if callable(callback):
             def response_cb(widget, response):
@@ -1506,7 +1514,7 @@ class Applet(awn.AppletSimple, object):
         # Create all required child-objects, others will be lazy-loaded
         self.meta = Meta(self, meta, options)
         self.icon = Icon(self)
-        self.tooltip = Title(self)
+        self.tooltip = Tooltip(self)
 
         # Dialogs depends on settings
         self.dialog = Dialogs(self)
@@ -1544,7 +1552,7 @@ def init_start(applet_class, meta={}, options=[]):
     This makes the icon appear on the bar and starts GTK+.
 
     The callable applet_class parameter is called and given an instance of
-    C{Applet}. It can then set an icon, title, dialogs, and other things,
+    C{Applet}. It can then set an icon, tooltip, dialogs, and other things,
     before GTK+ starts, which makes the icon appear on the AWN panel.
 
     @param applet_class A callable, used to do some initialization

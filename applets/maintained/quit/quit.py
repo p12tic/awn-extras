@@ -130,6 +130,7 @@ class QuitLogOutApplet:
         top_bottom = docklet_orientation in (gtk.POS_TOP, gtk.POS_BOTTOM)
 
         align = awn.Alignment(docklet)
+        align.props.scale = 1/3.0
         if top_bottom:
             box = gtk.HBox()
         else:

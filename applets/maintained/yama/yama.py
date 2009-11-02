@@ -69,7 +69,25 @@ class YamaApplet:
 
         self.menu = gtk.Menu()
         self.icon_theme = gtk.icon_theme_get_default()
+        self.icon_theme.connect("changed", self.theme_changed_cb)
 
+        self.build_menu()
+
+        applet.connect("clicked", self.clicked_cb)
+
+        # Inhibit autohide while main menu is visible
+        def show_menu_cb(widget):
+            self.__autohide_cookie = applet.inhibit_autohide("showing main menu")
+            applet.get_icon().set_is_active(True)
+            applet.get_icon().get_effects().props.depressed = False
+        self.menu.connect("show", show_menu_cb)
+        def hide_menu_cb(widget):
+            applet.uninhibit_autohide(self.__autohide_cookie)
+            applet.get_icon().set_is_active(False)
+            applet.get_icon().get_effects().props.depressed = False
+        self.menu.connect("hide", hide_menu_cb)
+
+    def build_menu(self):
         self.applications_items = []
         self.settings_items = []
 
@@ -93,20 +111,6 @@ class YamaApplet:
             self.append_session_actions(self.menu)
 
         self.menu.show_all()
-
-        applet.connect("clicked", self.clicked_cb)
-
-        # Inhibit autohide while main menu is visible
-        def show_menu_cb(widget):
-            self.__autohide_cookie = applet.inhibit_autohide("showing main menu")
-            applet.get_icon().set_is_active(True)
-            applet.get_icon().get_effects().props.depressed = False
-        self.menu.connect("show", show_menu_cb)
-        def hide_menu_cb(widget):
-            applet.uninhibit_autohide(self.__autohide_cookie)
-            applet.get_icon().set_is_active(False)
-            applet.get_icon().get_effects().props.depressed = False
-        self.menu.connect("hide", hide_menu_cb)
 
     def append_session_actions(self, menu):
         session_bus = dbus.SessionBus()
@@ -196,6 +200,13 @@ class YamaApplet:
             # Refresh menu to re-initialize the widget
             self.menu.show_all()
         idle_add(refresh_menu, menu_tree, menu_items)
+
+    def theme_changed_cb(self, icon_theme):
+        """Upon theme change clean the whole menu, and then rebuild it.
+
+        """
+        self.menu.foreach(gtk.Widget.destroy)
+        self.build_menu()
 
     def start_subprocess_cb(self, widget, command, use_shell):
         try:
@@ -360,7 +371,8 @@ class YamaApplet:
                 icons = volume.get_icon().get_names()
                 tooltip = "Mount %s" % name
 
-            item = self.create_menu_item(name, icons[1], tooltip)
+            icon_name = filter(self.icon_theme.has_icon, icons)[0]
+            item = self.create_menu_item(name, icon_name, tooltip)
             self.places_menu.insert(item, index)
             index += 1
             self.volume_items.append(item)
@@ -477,7 +489,7 @@ class YamaApplet:
         if re.match(".*\.(png|xpm|svg)$", icon_name) is not None:
             icon_name = icon_name[:-4]
         try:
-            return self.icon_theme.load_icon(icon_name, 24, 0)
+            return self.icon_theme.load_icon(icon_name, 24, gtk.ICON_LOOKUP_FORCE_SIZE)
         except:
             for dir in data_dirs.split(":"):
                 for i in ("pixmaps", "icons"):

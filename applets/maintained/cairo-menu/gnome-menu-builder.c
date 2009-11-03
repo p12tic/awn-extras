@@ -118,6 +118,12 @@ _fill_session_menu (GtkWidget * menu)
     add_special_item (menu,_("Suspend"),"gnome-session-suspend","gnome-power-cmd","suspend");
     add_special_item (menu,_("Hibernate"),"gnome-session-hibernate","gnome-power-cmd","hibernate");
   }
+  else if (dbus_service_exists ("org.gnome.PowerManagement"))
+  {
+    add_special_item (menu,_("Suspend"),"gnome-session-suspend","gnome-power-cmd","suspend");
+    add_special_item (menu,_("Hibernate"),"gnome-session-hibernate","gnome-power-cmd","hibernate");
+  }
+  
   if (have_session_manager)
   {
     add_special_item (menu,_("Shutdown"),"gnome-logout","gnome-session-save","--shutdown-dialog --gui");  
@@ -161,7 +167,7 @@ _get_places_menu (GtkWidget * menu)
 /*
 TODO: check the trash and set to stock_trash_empty if trash is empty
                      */
-  add_special_item (menu,_("Trash"),"stock_trash_full",XDG_OPEN,desktop_dir?desktop_dir:homedir);
+  add_special_item (menu,_("Trash"),"stock_trash_full",XDG_OPEN,"trash:///");
   add_special_item (menu,_("File System"),"system",XDG_OPEN,"/");
     
   if (!vol_monitor)

@@ -18,6 +18,8 @@
 */
 /* cairo-menu-item.c */
 
+#include <pango/pangocairo.h>
+
 #include "cairo-menu-item.h"
 
 G_DEFINE_TYPE (CairoMenuItem, cairo_menu_item, GTK_TYPE_IMAGE_MENU_ITEM)
@@ -33,6 +35,9 @@ struct _CairoMenuItemPrivate {
 #if !GTK_CHECK_VERSION (2,16,0)  
   gchar * label;
 #endif
+
+  PangoFontDescription *font_description;
+  
 };
 
 enum
@@ -105,6 +110,12 @@ cairo_menu_item_finalize (GObject *object)
   {
     G_OBJECT_CLASS (cairo_menu_item_parent_class)->finalize (object);
   }
+
+  if (priv->font_description)
+  {
+    pango_font_description_free (priv->font_description);
+  }
+  
 }
 
 static gboolean
@@ -114,10 +125,34 @@ cairo_menu_item_expose (GtkWidget *widget,GdkEventExpose *event)
 
   if (priv->cairo_style)
   {
+    PangoLayout *layout;    
+    double x,y,width,height;
+    gchar * label;
+
+    g_object_get (widget,
+                  "label",&label,
+                  NULL);
     cairo_t * cr = gdk_cairo_create (widget->window);
-    cairo_set_source_rgba (cr, 0.0,0.0,0.4,0.0);
-    cairo_paint (cr);
+    g_debug ("Region %d,%d: %dx%d",event->area.x, event->area.y,event->area.width, event->area.height);
+    x = event->area.x;
+    y = event->area.y;
+    width = event->area.width;
+    height = event->area.height;    
+    cairo_set_source_rgba (cr,0.0,0.0,0.0,0.9);
+    cairo_rectangle (cr, x,y,width,height);
+    cairo_fill (cr);    
+    layout = pango_cairo_create_layout (cr);
+
+    pango_font_description_set_absolute_size (priv->font_description,  height * 0.8 * PANGO_SCALE);
+    pango_layout_set_font_description (layout, priv->font_description);
+    pango_layout_set_text (layout, label, -1);  
+
+    cairo_set_source_rgba (cr,1.0,1.0,1.0,1.0);
+    cairo_move_to (cr,x+height * 1.1,y+height*0.1);
+    pango_cairo_show_layout (cr, layout);          
     cairo_destroy (cr);
+    g_object_unref (layout);
+    g_free (label);
     return TRUE;
   }
   else
@@ -140,6 +175,8 @@ cairo_menu_item_constructed (GObject *object)
   gtk_misc_set_alignment (GTK_MISC (label),0.0,0.5);
   gtk_container_add (GTK_CONTAINER(object),label);
 #endif
+  priv->font_description = pango_font_description_new ();
+  pango_font_description_set_family (priv->font_description, "sans");
 
   g_signal_connect (object,"expose-event",G_CALLBACK(cairo_menu_item_expose),NULL);
 }

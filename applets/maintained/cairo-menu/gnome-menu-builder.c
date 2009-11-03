@@ -162,12 +162,12 @@ _get_places_menu (GtkWidget * menu)
   gtk_container_foreach (GTK_CONTAINER (menu),(GtkCallback)_remove_menu_item,menu);
 
   add_special_item (menu,_("Computer"),"computer","nautilus","computer:///");
-  add_special_item (menu,_("Home"),"stock_home","nautilus",homedir);
+  add_special_item (menu,_("Home"),"stock_home",XDG_OPEN,homedir);
   add_special_item (menu,_("Desktop"),"desktop",XDG_OPEN,desktop_dir?desktop_dir:homedir);
 /*
 TODO: check the trash and set to stock_trash_empty if trash is empty
                      */
-  add_special_item (menu,_("Trash"),"stock_trash_full",XDG_OPEN,"trash:///");
+  add_special_item (menu,_("Trash"),"stock_trash_full","nautilus","trash:///");
   add_special_item (menu,_("File System"),"system",XDG_OPEN,"/");
     
   if (!vol_monitor)

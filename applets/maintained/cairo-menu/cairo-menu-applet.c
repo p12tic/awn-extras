@@ -317,8 +317,11 @@ cairo_menu_applet_get_cmd (CairoMenuApplet * applet, gchar * def_cmd, gchar **cm
     p = g_find_program_in_path (def_cmd);
     if (p)
     {
-      g_free (p);
-      g_debug ("Cairo Menu default command found '%s'",def_cmd);
+      if (p!=def_cmd)
+      {
+        g_free (p);
+      }
+      g_message ("Cairo Menu default command found '%s'",def_cmd);
       return def_cmd;
     }
     else 
@@ -333,8 +336,11 @@ cairo_menu_applet_get_cmd (CairoMenuApplet * applet, gchar * def_cmd, gchar **cm
     p = g_find_program_in_path (*iter);
     if (p)
     {
+      if (p != *iter)
+      {
+        g_free (p);
+      }
       g_message ("%s found.",*iter);
-      g_free (p);
       return *iter;
     }
     else
@@ -343,6 +349,7 @@ cairo_menu_applet_get_cmd (CairoMenuApplet * applet, gchar * def_cmd, gchar **cm
     }
   }
   g_message ("No known command found.  Please configure");
+  return NULL;
 }
 
 const gchar *

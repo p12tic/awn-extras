@@ -19,6 +19,7 @@
 /* cairo-menu.c */
 
 #include "cairo-menu.h"
+#include "cairo-menu-item.h"
 
 G_DEFINE_TYPE (CairoMenu, cairo_menu, GTK_TYPE_MENU)
 
@@ -68,13 +69,46 @@ cairo_menu_finalize (GObject *object)
     G_OBJECT_CLASS (cairo_menu_parent_class)->finalize (object);
   }
 }
+/*
+ From gtkcontainer.c
+ */
+void
+_container_propagate_expose (GtkContainer   *container,
+                                GtkWidget      *child,
+                                GdkEventExpose *event)
+{
+  GdkEvent *child_event;
+
+  g_return_if_fail (GTK_IS_CONTAINER (container));
+  g_return_if_fail (GTK_IS_WIDGET (child));
+  g_return_if_fail (event != NULL);
+
+  g_assert (child->parent == GTK_WIDGET (container));
+  
+  if (GTK_WIDGET_DRAWABLE (child) &&
+      GTK_WIDGET_NO_WINDOW (child) &&
+      (child->window == event->window)&&
+      AWN_IS_CAIRO_MENU_ITEM(child))
+    {
+      child_event = gdk_event_new (GDK_EXPOSE);
+      child_event->expose = *event;
+      g_object_ref (child_event->expose.window);
+
+      child_event->expose.region = gtk_widget_region_intersect (child, event->region);
+      if (!gdk_region_empty (child_event->expose.region))
+        {
+          gdk_region_get_clipbox (child_event->expose.region, &child_event->expose.area);
+          gtk_widget_send_expose (child, child_event);
+        }
+      gdk_event_free (child_event);
+    }
+}
 
 /*
  From gtkcontainer.c
  */
 static void
-_expose_child (GtkWidget *child,
-                            gpointer   client_data)
+_expose_child (GtkWidget *child,gpointer   client_data)
 {
   struct {
     GtkWidget *container;
@@ -86,7 +120,6 @@ _expose_child (GtkWidget *child,
                                   data->event);
 }
 
-
 static gboolean
 cairo_menu_expose (GtkWidget *widget,GdkEventExpose *event)
 {
@@ -96,22 +129,27 @@ cairo_menu_expose (GtkWidget *widget,GdkEventExpose *event)
   } data;
 
   CairoMenuPrivate * priv = GET_PRIVATE(widget);  
+  data.container = widget;
+  data.event = event;
 
   if (priv->cairo_style)
   {
-      data.container = widget;
-      data.event = event;
-      
-    /*looks like I'm going to need look in the gtk_menu/gtk_menu_shell/etc expose functions and 
-     borrow some code*/
+    double x,y,width,height;
     cairo_t * cr = gdk_cairo_create (widget->window);
-    cairo_set_source_rgba (cr, 0.0,0.0,1.0,0.4);
-    cairo_paint (cr);    
+
+    g_debug ("Region %d,%d: %dx%d",event->area.x, event->area.y,event->area.width, event->area.height);
+    x = event->area.x;
+    y = event->area.y;
+    width = event->area.width;
+    height = event->area.height;    
+    cairo_set_source_rgba (cr,0.0,1.0,0.0,0.5);
+    cairo_rectangle (cr, x,y,width,height);
+    cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
+    cairo_fill (cr);    
+
+    gtk_container_forall (GTK_CONTAINER (widget),_expose_child,&data);
+
     cairo_destroy (cr);
-    gtk_container_forall (GTK_CONTAINER (widget),
-                          _expose_child,
-                          &data);
-    
     return TRUE;
   }
   else

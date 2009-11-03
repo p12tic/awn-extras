@@ -138,7 +138,8 @@ cairo_menu_item_expose (GtkWidget *widget,GdkEventExpose *event)
     y = event->area.y;
     width = event->area.width;
     height = event->area.height;    
-    cairo_set_source_rgba (cr,0.0,0.0,0.0,0.9);
+    cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);    
+    cairo_set_source_rgba (cr,0.0,1.0,0.0,1.0);
     cairo_rectangle (cr, x,y,width,height);
     cairo_fill (cr);    
     layout = pango_cairo_create_layout (cr);

@@ -138,7 +138,7 @@ class YamaApplet:
             sm_proxy = session_bus.get_object("org.gnome.SessionManager", "/org/gnome/SessionManager")
             sm_if = dbus.Interface(sm_proxy, "org.gnome.SessionManager")
 
-            user_name = commands.getoutput("/usr/bin/whoami")
+            user_name = commands.getoutput("whoami")
             logout_item = self.append_menu_item(menu, "Log Out %s..." % user_name, "system-log-out", "Log out %s of this session to log in as a different user" % user_name)
             logout_item.connect("activate", lambda w: sm_if.Logout(0))
 
@@ -216,8 +216,11 @@ class YamaApplet:
 
     def open_folder_cb(self, widget, path):
         for command in file_manager_apps:
-            if len(commands.getoutput("%s '%s'" % (command, path))) == 0:
+            try:
+                subprocess.Popen([command, path])
                 return
+            except OSError:
+                pass
         raise RuntimeError("No file manager found (%s) for %s" % (", ".join(file_manager_apps), path))
 
     def create_places_submenu(self, parent_menu):

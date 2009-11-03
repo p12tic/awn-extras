@@ -135,14 +135,15 @@ cairo_menu_expose (GtkWidget *widget,GdkEventExpose *event)
   if (priv->cairo_style)
   {
     double x,y,width,height;
-    cairo_t * cr = gdk_cairo_create (widget->window);
 
-    g_debug ("Region %d,%d: %dx%d",event->area.x, event->area.y,event->area.width, event->area.height);
+    cairo_t * cr = gdk_cairo_create (widget->window);
+    g_debug ("%s:  bit depth = %d",__func__,gdk_drawable_get_depth (widget->window));
+    //g_debug ("Region %d,%d: %dx%d",event->area.x, event->area.y,event->area.width, event->area.height);
     x = event->area.x;
     y = event->area.y;
     width = event->area.width;
     height = event->area.height;    
-    cairo_set_source_rgba (cr,0.0,1.0,0.0,0.5);
+    cairo_set_source_rgba (cr,1.0,0.0,0.0,0.5);
     cairo_rectangle (cr, x,y,width,height);
     cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
     cairo_fill (cr);    
@@ -190,8 +191,23 @@ static void
 cairo_menu_init (CairoMenu *self)
 {
   CairoMenuPrivate * priv = GET_PRIVATE (self);
-  
+
   priv->cairo_style = FALSE;
+  if (priv->cairo_style)
+  {
+    static GdkScreen   * screen = NULL;
+    static GdkColormap * newmap = NULL;
+    if (!screen)
+    {
+      screen = gdk_screen_get_default();
+    }
+    if (!newmap)
+    {
+      newmap = gdk_screen_get_rgba_colormap (screen);
+    }
+    gtk_widget_set_colormap (GTK_WIDGET(self),newmap);
+    awn_utils_ensure_transparent_bg (GTK_WIDGET(self));
+  }
 }
 
 GtkWidget*

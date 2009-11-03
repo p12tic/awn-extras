@@ -22,6 +22,7 @@
 #define _CAIRO_MENU_ITEM
 
 #include <gtk/gtk.h>
+#include <libawn/awn-utils.h>
 
 G_BEGIN_DECLS
 

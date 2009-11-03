@@ -133,13 +133,14 @@ cairo_menu_item_expose (GtkWidget *widget,GdkEventExpose *event)
                   "label",&label,
                   NULL);
     cairo_t * cr = gdk_cairo_create (widget->window);
-    g_debug ("Region %d,%d: %dx%d",event->area.x, event->area.y,event->area.width, event->area.height);
+    g_debug ("%s:  bit depth = %d",__func__,gdk_drawable_get_depth (widget->window));
+//    g_debug ("Region %d,%d: %dx%d",event->area.x, event->area.y,event->area.width, event->area.height);
     x = event->area.x;
     y = event->area.y;
     width = event->area.width;
     height = event->area.height;    
     cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);    
-    cairo_set_source_rgba (cr,0.0,1.0,0.0,1.0);
+    cairo_set_source_rgba (cr,0.0,1.0,0.0,0.1);
     cairo_rectangle (cr, x,y,width,height);
     cairo_fill (cr);    
     layout = pango_cairo_create_layout (cr);
@@ -148,7 +149,7 @@ cairo_menu_item_expose (GtkWidget *widget,GdkEventExpose *event)
     pango_layout_set_font_description (layout, priv->font_description);
     pango_layout_set_text (layout, label, -1);  
 
-    cairo_set_source_rgba (cr,1.0,1.0,1.0,1.0);
+    cairo_set_source_rgba (cr,1.0,1.0,1.0,0.3);
     cairo_move_to (cr,x+height * 1.1,y+height*0.1);
     pango_cairo_show_layout (cr, layout);          
     cairo_destroy (cr);
@@ -216,8 +217,24 @@ static void
 cairo_menu_item_init (CairoMenuItem *self)
 {
   CairoMenuItemPrivate * priv = GET_PRIVATE(self);
-  
+
   priv->cairo_style = FALSE;
+
+  if (priv->cairo_style)
+  {
+    static GdkScreen   * screen = NULL;
+    static GdkColormap * newmap = NULL;
+    if (!screen)
+    {
+      screen = gdk_screen_get_default();
+    }
+    if (!newmap)
+    {
+      newmap = gdk_screen_get_rgba_colormap (screen);
+    }
+    gtk_widget_set_colormap (GTK_WIDGET(self),newmap);
+    awn_utils_ensure_transparent_bg (GTK_WIDGET(self));      
+  }
 }
 
 GtkWidget*

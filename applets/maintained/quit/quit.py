@@ -121,11 +121,12 @@ class QuitLogOutApplet:
         self.setup_dialog_settings(pref_dialog.vbox)
 
     def setup_docklet(self, window_id):
+
         def hover_cb(widget, event, effects):
-          effects.start(awn.EFFECT_HOVER);
+            effects.start(awn.EFFECT_HOVER)
 
         def leave_cb(widget, event, effects):
-          effects.stop(awn.EFFECT_HOVER);
+            effects.stop(awn.EFFECT_HOVER)
 
         docklet = awn.Applet(self.applet.get_canonical_name(),
                              self.applet.props.uid,
@@ -136,12 +137,12 @@ class QuitLogOutApplet:
         top_bottom = docklet_orientation in (gtk.POS_TOP, gtk.POS_BOTTOM)
 
         align = awn.Alignment(docklet)
-        align.props.scale = 1/3.0
+        align.props.scale = 1 / 3.0
         if top_bottom:
             box = gtk.HBox()
         else:
             box = gtk.VBox()
-        box.set_spacing(10);
+        box.set_spacing(10)
         align.props.scale = 0.3
         align.add(box)
 
@@ -162,9 +163,9 @@ class QuitLogOutApplet:
 
             # HBox/VBox (container)
             if top_bottom:
-              container = gtk.HBox()
+                container = gtk.HBox()
             else:
-              container = gtk.VBox()
+                container = gtk.VBox()
             container.set_spacing(5)
             event_box.add(container)
 
@@ -238,7 +239,7 @@ class QuitLogOutApplet:
         for i in left_click_actions:
             combobox.append_text(i)
         combobox.set_active(left_click_actions.index(self.settings["left-click-action"]))
-        combobox.connect("changed", self.action_changed_cb) 
+        combobox.connect("changed", self.action_changed_cb)
 
         label = gtk.Label("Left click _action:")
         label.set_use_underline(True)
@@ -267,6 +268,7 @@ class QuitLogOutApplet:
             self.gnome_shut_down()
 
     def gnome_lock_screen(self):
+
         def lock_screen():
             try:
                 self.ss_if.Lock()

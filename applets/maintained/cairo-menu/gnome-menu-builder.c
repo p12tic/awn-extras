@@ -840,7 +840,6 @@ menu_build (MenuInstance * instance)
       }        
       gtk_menu_shell_append(GTK_MENU_SHELL(instance->menu),menu_item);
       c->file_path = g_strdup(gmenu_tree_directory_get_desktop_file_path (root));
-      g_debug ("file path = %s",c->file_path);
       c->display_name = g_strdup ("Settings");
       drop_data = g_strdup_printf("cairo_menu_item_dir:///@@@%s@@@%s@@@%s\n",c->file_path,c->display_name,c->icon_name);
       cairo_menu_item_set_source (AWN_CAIRO_MENU_ITEM(menu_item),drop_data);
@@ -976,7 +975,6 @@ menu_build (MenuInstance * instance)
       g_signal_connect (menu_item, "button-press-event",G_CALLBACK(_button_press_dir),c);
       g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)_free_callback_container,c);
     }
-    g_debug ("session menu = %p",instance->session);
   }
   
   if (! (instance->flags & MENU_BUILD_NO_SEARCH))

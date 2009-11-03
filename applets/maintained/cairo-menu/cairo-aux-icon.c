@@ -116,7 +116,6 @@ cairo_aux_icon_dispose (GObject *object)
 {
   CairoAuxIconPrivate * priv = GET_PRIVATE (object);
 
-  g_debug ("%s",__func__);
   if (priv->menu)
   {
     gtk_widget_destroy (priv->menu);  

@@ -121,6 +121,12 @@ class QuitLogOutApplet:
         self.setup_dialog_settings(pref_dialog.vbox)
 
     def setup_docklet(self, window_id):
+        def hover_cb(widget, event, effects):
+          effects.start(awn.EFFECT_HOVER);
+
+        def leave_cb(widget, event, effects):
+          effects.stop(awn.EFFECT_HOVER);
+
         docklet = awn.Applet(self.applet.get_canonical_name(),
                              self.applet.props.uid,
                              self.applet.props.panel_id)
@@ -135,6 +141,8 @@ class QuitLogOutApplet:
             box = gtk.HBox()
         else:
             box = gtk.VBox()
+        box.set_spacing(10);
+        align.props.scale = 0.3
         align.add(box)
 
         for i in docklet_actions_label_icon:
@@ -147,9 +155,21 @@ class QuitLogOutApplet:
             else:
                 label_align = gtk.Alignment()
 
+            # Event box
+            event_box = gtk.EventBox()
+            event_box.set_visible_window(False)
+            box.pack_start(event_box, True, False)
+
+            # HBox/VBox (container)
+            if top_bottom:
+              container = gtk.HBox()
+            else:
+              container = gtk.VBox()
+            container.set_spacing(5)
+            event_box.add(container)
+
             # Label
-            label_label = awn.Label("<span font_family='sans' weight='bold' stretch='condensed' size='%s'>%s</span>" % (12 * pango.SCALE, label))
-            label_label.set_use_markup(True)
+            label_label = awn.Label(label)
             label_align.add(label_label)
             if top_bottom:
                 label_label.set_size_request(-1, docklet.get_size())
@@ -158,21 +178,26 @@ class QuitLogOutApplet:
 
             # Label left/right
             if docklet_orientation == gtk.POS_LEFT:
-                box.add(label_align)
+                container.pack_start(label_align, False, False)
                 label_label.props.angle = 90
 
             # Icon
-            button = awn.ThemedIcon(bind_effects=False)
-            button.set_size((docklet.get_size() + docklet.props.max_size) / 2)
-            button.set_pos_type(docklet_orientation)
-            button.set_info_simple(self.applet.meta["short"], docklet.props.uid, icon)
-            button.set_tooltip_text(label)
-            button.connect("button-release-event", self.apply_action_cb, i, docklet) 
-            box.add(button)
+            themed_icon = awn.ThemedIcon()
+            themed_icon.set_info_simple(self.applet.meta["short"], docklet.props.uid, icon)
+            pixbuf = themed_icon.get_icon_at_size((docklet.get_size() + docklet.props.max_size) / 2,
+                                                  themed_icon.get_state())
+            image = awn.Image()
+            image.set_from_pixbuf(pixbuf)
+            container.pack_start(image, False, False)
+
+            effects = image.get_effects()
+            event_box.connect("enter-notify-event", hover_cb, effects)
+            event_box.connect("leave-notify-event", leave_cb, effects)
+            event_box.connect("button-release-event", self.apply_action_cb, i, docklet)
 
             # Label top/bottom
             if docklet_orientation != gtk.POS_LEFT:
-                box.add(label_align)
+                container.pack_start(label_align, False, False)
                 if docklet_orientation == gtk.POS_RIGHT:
                     label_label.props.angle = 270
 

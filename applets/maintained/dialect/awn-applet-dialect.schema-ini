@@ -1,0 +1,24 @@
+[DEFAULT/left]
+type = integer
+default = 1
+description = Left click action.
+
+[DEFAULT/middle]
+type = integer
+default = 0
+description = Middle click action.
+
+[DEFAULT/scroll]
+type = boolean
+default = false
+description = Can change layout with scroll wheel.
+
+[DEFAULT/current]
+type = list-string
+default = ;
+description = Active keyboard layout and variant.
+
+[DEFAULT/user_list]
+type = list-string
+default = ;
+description = User selected layout list.

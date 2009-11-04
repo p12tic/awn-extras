@@ -22,15 +22,10 @@
 # AWN required modules
 import sys
 import os
-import gobject
 import gtk
 import awn
-import pygtk
-pygtk.require('2.0')
 
 # APPLET required modules
-awn.check_dependencies(globals(), 'subprocess', 'fcntl', 'signal', 'xml', \
-'desktopagnostic')
 import subprocess
 import fcntl
 import signal

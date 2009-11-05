@@ -84,7 +84,9 @@ class dialect(awn.AppletSimple):
         self.error_check()
 
         # CONNECT applet events
-        self.connect('button-press-event', self.on_applet_clicked)
+        self.connect('clicked', self.on_applet_clicked)
+        self.connect('middle-clicked', self.on_applet_clicked)
+        self.connect('context-menu-popup', self.on_applet_clicked)
         self.connect('size-changed', self.on_size_changed)
         self.connect('position-changed', self.on_position_changed)
         self.connect('scroll-event', self.on_scroll_event)

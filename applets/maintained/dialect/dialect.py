@@ -56,7 +56,7 @@ class dialect(awn.AppletSimple):
         self.base = '/etc/X11/xkb/base.xml'
         self.widgets = ['about', 'error', 'help', 'help_page', 'prefs', \
         'left', 'middle', 'scroll', 'sys_tree', 'user_tree', 'sys_list', \
-        'user_list', 'add', 'remove', 'sys_menu']
+        'user_list', 'add', 'remove']
         self.pos_type = [gtk.POS_BOTTOM, gtk.POS_TOP, gtk.POS_LEFT, \
         gtk.POS_RIGHT]
         self.icon_rotate = [None, None, gtk.gdk.PIXBUF_ROTATE_CLOCKWISE, \
@@ -105,10 +105,15 @@ class dialect(awn.AppletSimple):
         for key in ['user_', 'sys_']:
             self.gtk[key + 'select'] = self.gtk[key + 'tree'].get_selection()
             self.gtk[key + 'select'].set_mode(gtk.SELECTION_SINGLE)
-        for key in 'abcdefghijklmnopqrstuvwxyz':
-            self.gtk['item_' + key] = builder.get_object('item_' + key)
+        self.gtk['sys_menu'] = gtk.Menu()
+        for key in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ':
+            icon = gtk.image_new_from_pixbuf(self.theme.load_icon('folder', 16, 0))
+            self.gtk['item_' + key] = gtk.ImageMenuItem(key, key)
+            self.gtk['item_' + key].set_image(icon)
             self.gtk['menu_' + key] = gtk.Menu()
             self.gtk['item_' + key].set_submenu(self.gtk['menu_' + key])
+            self.gtk['item_' + key].show()
+            self.gtk['sys_menu'].append(self.gtk['item_' + key])
         builder.connect_signals(self)
 
     # CONTEXT menu
@@ -213,9 +218,9 @@ class dialect(awn.AppletSimple):
             16)))
             item_list[-1].set_image(icon_list[-1])
             item_list[-1].show()
-            self.gtk['menu_' + layout[0].lower()].append(item_list[-1])
-            if layout[0].lower() not in menu_hide:
-                menu_hide += layout[0].lower()
+            self.gtk['menu_' + layout[0].upper()].append(item_list[-1])
+            if layout[0].upper() not in menu_hide:
+                menu_hide += layout[0].upper()
             if len(self.variant[parent]):
                 menu_list.append(gtk.Menu())
                 item_list[-1].set_submenu(menu_list[-1])
@@ -235,7 +240,7 @@ class dialect(awn.AppletSimple):
                 menu_list[-1].append(item_list[-1])
                 item_list[-1].connect('activate', self.on_menu_response, \
                 parent, child)
-        for hide in 'abcdefghijklmnopqrstuvwxyz':
+        for hide in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ':
             if hide not in menu_hide:
                 self.gtk['item_' + hide].hide()
 

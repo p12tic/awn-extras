@@ -610,7 +610,7 @@ _menu_modified_cb(GMenuTree *tree,MenuInstance * instance)
  */
   if (!instance->source_id)
   {
-    instance->source_id = g_idle_add ((GSourceFunc)_delayed_update,instance);
+    instance->source_id = g_timeout_add_seconds (5,(GSourceFunc)_delayed_update,instance);
   }
 }
 

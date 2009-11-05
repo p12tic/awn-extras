@@ -138,7 +138,7 @@ Each version is given a distinguishing version number.  If the Program specifies
   12. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.</property>
     <property name="authors">Lachlan Turner (Denham 2010)</property>
     <property name="artists">The flag icons distributed with this applet are from the
-xfce4-xkb-plugin-0.5.3.3 panel applet.
+xfce4-xkb-plugin-0.5.3.3 panel applet, licensed under the 2-clause BSD license.
 
 Copyright (C) 2004 Alexander Iliev &lt;sasoiliev@mamul.org&gt;
 All rights reserved.
@@ -855,7 +855,7 @@ See the Mouse Actions and Layout Lists tabs for configuration options.
 
 The applet depends on the packages x11-xkb-utils and xkb-data. These should be available in your package manager.
 
-This applet is licensed under GPL2. The flag icons distributed with this applet are from the xfce4-xkb-plugin-0.5.3.3 panel applet, copyright (C) 2004 Alexander Iliev. See the About dialog for licensing details.
+This applet is licensed under GPL2. The flag icons distributed with this applet are from the xfce4-xkb-plugin-0.5.3.3 panel applet, licensed under the 2-clause BSD license. See the About dialog for licensing details.
 </property>
   </object>
   <object class="GtkMenu" id="sys_menu">

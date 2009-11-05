@@ -34,6 +34,7 @@ from desktopagnostic.config import GROUP_DEFAULT as group
 
 # DEFINE applet class
 
+
 class dialect(awn.AppletSimple):
 
 # INITIALISE
@@ -55,16 +56,16 @@ class dialect(awn.AppletSimple):
         self.watch = '/var/lib/xkb'
         self.base = '/etc/X11/xkb/base.xml'
         self.widgets = ['about', 'error', 'help', 'help_page', 'prefs', \
-        'left', 'middle', 'scroll', 'sys_tree', 'user_tree', 'sys_list', \
-        'user_list', 'add', 'remove']
+          'left', 'middle', 'scroll', 'sys_tree', 'user_tree', 'sys_list', \
+          'user_list', 'add', 'remove']
         self.pos_type = [gtk.POS_BOTTOM, gtk.POS_TOP, gtk.POS_LEFT, \
-        gtk.POS_RIGHT]
+          gtk.POS_RIGHT]
         self.icon_rotate = [None, None, gtk.gdk.PIXBUF_ROTATE_CLOCKWISE, \
-        gtk.gdk.PIXBUF_ROTATE_COUNTERCLOCKWISE]
-        self.schema = {'left': int, 'middle': int, 'scroll': bool, 'current': \
-        list, 'user_list': list}
-        self.context = {'Preferences': ['gtk-preferences', 'prefs'], 'Help': \
-        ['gtk-help', 'help'], 'About': ['gtk-about', 'about']}
+          gtk.gdk.PIXBUF_ROTATE_COUNTERCLOCKWISE]
+        self.schema = {'left': int, 'middle': int, 'scroll': bool, \
+          'current': list, 'user_list': list}
+        self.context = {'Preferences': ['gtk-preferences', 'prefs'], \
+          'Help': ['gtk-help', 'help'], 'About': ['gtk-about', 'about']}
         self.scroll = [gtk.gdk.SCROLL_DOWN, None, gtk.gdk.SCROLL_UP]
 
         # DEFAULT icon and tooltip
@@ -109,7 +110,8 @@ class dialect(awn.AppletSimple):
             self.gtk[key + 'select'].set_mode(gtk.SELECTION_SINGLE)
         self.gtk['sys_menu'] = gtk.Menu()
         for key in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ':
-            icon = gtk.image_new_from_pixbuf(self.theme.load_icon('folder', 16, 0))
+            icon = gtk.image_new_from_pixbuf(self.theme.load_icon('folder', \
+              16, 0))
             self.gtk['item_' + key] = gtk.ImageMenuItem(key, key)
             self.gtk['item_' + key].set_image(icon)
             self.gtk['menu_' + key] = gtk.Menu()
@@ -127,7 +129,7 @@ class dialect(awn.AppletSimple):
             self.context_menu.append(item[-1])
             item[-1].show()
             item[-1].connect('activate', self.on_context_response, \
-            self.context[menu][1])
+              self.context[menu][1])
 
     # PREFERENCES load
     def prefs_init(self):
@@ -172,20 +174,20 @@ class dialect(awn.AppletSimple):
         layouts = layout_list[0].getElementsByTagName('layout')
         for layout in layouts:
             l_config = layout.getElementsByTagName('configItem')
-            l_name = l_config[0].getElementsByTagName('name')[0].\
-            childNodes[0].nodeValue
-            l_desc = l_config[0].getElementsByTagName('description')[0].\
-            childNodes[0].nodeValue
+            l_name = l_config[0].getElementsByTagName('name')\
+              [0].childNodes[0].nodeValue
+            l_desc = l_config[0].getElementsByTagName('description')\
+              [0].childNodes[0].nodeValue
             v_list = {}
             variant_list = layout.getElementsByTagName('variantList')
             if len(variant_list):
                 variants = variant_list[0].getElementsByTagName('variant')
                 for variant in variants:
                     v_config = variant.getElementsByTagName('configItem')
-                    v_name = v_config[0].getElementsByTagName('name')[0].\
-                    childNodes[0].nodeValue
-                    v_desc = v_config[0].getElementsByTagName('description')[\
-                    0].childNodes[0].nodeValue
+                    v_name = v_config[0].getElementsByTagName('name')\
+                      [0].childNodes[0].nodeValue
+                    v_desc = v_config[0].getElementsByTagName('description')\
+                      [0].childNodes[0].nodeValue
                     v_list[v_name] = v_desc
             self.layout[l_name] = l_desc
             self.variant[l_name] = v_list
@@ -213,11 +215,11 @@ class dialect(awn.AppletSimple):
         for layout in layouts:
             parent = self.layout.items()[self.layout.values().index(layout)][0]
             icon = self.load_icon(parent, 16)
-            index = self.gtk['sys_list'].append(None, [icon, layout, parent, \
-            ''])
+            index = self.gtk['sys_list'].append(None, \
+              [icon, layout, parent, ''])
             item_list.append(gtk.ImageMenuItem(layout, layout))
-            icon_list.append(gtk.image_new_from_pixbuf(self.load_icon(parent, \
-            16)))
+            icon_list.append(gtk.image_new_from_pixbuf(\
+              self.load_icon(parent, 16)))
             item_list[-1].set_image(icon_list[-1])
             item_list[-1].show()
             self.gtk['menu_' + layout[0].upper()].append(item_list[-1])
@@ -235,21 +237,21 @@ class dialect(awn.AppletSimple):
             variants.sort()
             for variant in variants:
                 child = var.items()[var.values().index(variant)][0]
-                self.gtk['sys_list'].append(index, [None, variant, parent, \
-                child])
+                self.gtk['sys_list'].append(index, \
+                  [None, variant, parent, child])
                 item_list.append(gtk.MenuItem(variant))
                 item_list[-1].show()
                 menu_list[-1].append(item_list[-1])
                 item_list[-1].connect('activate', self.on_menu_response, \
-                parent, child)
+                  parent, child)
         for hide in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ':
             if hide not in menu_hide:
                 self.gtk['item_' + hide].hide()
 
     # SET the current LAYOUT
     def set_layout(self):
-        if len(self.prefs['current']) > 0 and len(self.prefs['current'][\
-        0]) == 2:
+        if len(self.prefs['current']) > 0 and \
+          len(self.prefs['current'][0]) == 2:
             layout, variant = self.prefs['current']
             command = 'setxkbmap -layout ' + layout
             tooltip = self.layout[layout]
@@ -265,7 +267,7 @@ class dialect(awn.AppletSimple):
     # Get the current layout
     def get_layout(self):
         pipe = subprocess.Popen('setxkbmap -print -v 10', shell=True, \
-        bufsize=0, stdout=subprocess.PIPE).stdout
+          bufsize=0, stdout=subprocess.PIPE).stdout
         data = pipe.read()
         pipe.close()
         result = data.split('\n')
@@ -288,8 +290,8 @@ class dialect(awn.AppletSimple):
     # WATCH for layout changes
     def set_watch(self):
         monitor = os.open(self.watch, os.O_RDONLY)
-        fcntl.fcntl(monitor, fcntl.F_NOTIFY, fcntl.DN_ACCESS|fcntl.DN_MODIFY|\
-        fcntl.DN_CREATE)
+        fcntl.fcntl(monitor, fcntl.F_NOTIFY, fcntl.DN_ACCESS | \
+          fcntl.DN_MODIFY | fcntl.DN_CREATE)
         signal.signal(signal.SIGIO, self.watch_event)
 
     # ITERATE through user_list
@@ -397,8 +399,8 @@ class dialect(awn.AppletSimple):
                     if child != '':
                         desc = desc + ' - ' + self.variant[parent][child]
                     icon = self.load_icon(parent, 16)
-                    self.gtk['user_list'].append(None, [icon, desc, parent, \
-                    child])
+                    self.gtk['user_list'].append(None, \
+                      [icon, desc, parent, child])
                     self.on_order_changed()
 
     # USER list order changed
@@ -410,23 +412,23 @@ class dialect(awn.AppletSimple):
                     for item in range(len(self.gtk['user_list'])):
                         row = self.gtk['user_list'][item]
                         self.prefs['user_list'].append(str(row[2]) + ',' + \
-                        str(row[3]))
-                self.config.set_list(group, 'user_list', self.\
-                prefs['user_list'])
+                          str(row[3]))
+                self.config.set_list(group, 'user_list', \
+                  self.prefs['user_list'])
 
     # SIZE change
     def on_size_changed(self, obj, data):
         self.size = data
         if not self.init:
             self.set_icon_pixbuf(self.load_icon(self.prefs['current'][0], \
-            self.size, self.pos))
+              self.size, self.pos))
 
     # POSITION changed
     def on_position_changed(self, obj, data):
         self.pos = data
         if not self.init:
             self.set_icon_pixbuf(self.load_icon(self.prefs['current'][0], \
-            self.size, self.pos))
+              self.size, self.pos))
 
     # CLICKED on applet icon
     def on_applet_clicked(self, obj, data):
@@ -438,12 +440,12 @@ class dialect(awn.AppletSimple):
                     button = 'middle'
                 if self.prefs[button] == 0:
                     self.gtk['sys_menu'].popup(None, None, None, data.button, \
-                    data.time)
+                      data.time)
                     return True
                 elif self.prefs[button] < 2:
                     if self.iter_user_list(self.prefs[button]):
                         self.gtk['sys_menu'].popup(None, None, None, \
-                        data.button, data.time)
+                          data.button, data.time)
                         return True
         else:
             self.context_menu.popup(None, None, None, data.button, data.time)

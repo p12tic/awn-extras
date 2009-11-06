@@ -35,13 +35,13 @@ from desktopagnostic.config import GROUP_DEFAULT as group
 # DEFINE applet class
 
 
-class dialect(awn.AppletSimple):
+class Dialect(awn.AppletSimple):
 
 # INITIALISE
 
     # INITIALISE applet
     def __init__(self, canonical, uid, panel_id):
-        super(dialect, self).__init__(canonical, uid, panel_id)
+        super(Dialect, self).__init__(canonical, uid, panel_id)
 
         # GLOBAL variables
         self.size = self.get_size()
@@ -468,7 +468,7 @@ class dialect(awn.AppletSimple):
 # LAUNCH applet
 if __name__ == '__main__':
     awn.init(sys.argv[1:])
-    applet = dialect('dialect', awn.uid, awn.panel_id)
+    applet = Dialect('Dialect', awn.uid, awn.panel_id)
     awn.embed_applet(applet)
     applet.show_all()
     gtk.main()

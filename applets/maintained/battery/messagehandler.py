@@ -50,7 +50,7 @@ class InvisibleMessageState:
         try:
             self.handler.message.close()
         except glib.GError:
-            pass # Ignore error thrown when there's no message to close
+            pass  # Ignore error when there's no message to close
 
     def evaluate(self):
         if self.handler.applet.settings["warn-low-level"]:
@@ -97,7 +97,10 @@ class VisibleWarningState:
             body = "You have approximately <b>%s</b> of remaining battery power (%d%%)." % (self.handler.applet.format_time(time), backend.get_capacity_percentage())
             self.handler.message.set_property("body", body)
             self.handler.message.set_timeout(time[0] * 60 * 60000 + time[1] * 60000)
-            self.handler.message.show()
+            try:
+                self.handler.message.show()
+            except glib.GError:
+                pass  # Ignore error when no reply has been received
 
     def __closed_cb(self, message):
         self.__closed = True
@@ -168,7 +171,10 @@ class VisibleNotificationState:
         else:
             body = "Your battery is charged to <b>%d%%</b>." % charge_percentage
         self.handler.message.set_property("body", body)
-        self.handler.message.show()
+        try:
+            self.handler.message.show()
+        except glib.GError:
+            pass  # Ignore error when no reply has been received
 
     def __closed_cb(self, message):
         self.__closed = True

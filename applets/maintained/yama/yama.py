@@ -165,7 +165,7 @@ class YamaApplet:
                 icon_x = self.applet.get_size() + self.applet.props.offset + padding
 
             return (icon_x, icon_y, False)
-        self.menu.popup(None, None, get_position, 1, 0)
+        self.menu.popup(None, None, get_position, 0, 0)
 
     def setup_context_menu(self):
         """Add "Edit Menus" to the context menu.

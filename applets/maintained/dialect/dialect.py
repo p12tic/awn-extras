@@ -446,16 +446,15 @@ class Dialect(awn.AppletSimple):
                 if event.button == 2:
                     button = 'middle'
                 if self.prefs[button] == 0:
-                    self.gtk['sys_menu'].popup(None, None, None, \
-                      event.button, event.time)
+                    self.gtk['sys_menu'].popup(None, None, None, 0, event.time)
                     return True
                 elif self.prefs[button] < 2:
                     if self.iter_user_list(self.prefs[button]):
-                        self.gtk['sys_menu'].popup(None, None, None, \
-                          event.button, event.time)
+                        self.gtk['sys_menu'].popup(None, None, None, 0, \
+                          event.time)
                         return True
         else:
-            self.context_menu.popup(None, None, None, event.button, event.time)
+            self.context_menu.popup(None, None, None, 0, event.time)
             return True
         return False
 

@@ -250,8 +250,7 @@ class Dialect(awn.AppletSimple):
 
     # SET the current LAYOUT
     def set_layout(self):
-        if len(self.prefs['current']) > 0 and \
-          len(self.prefs['current'][0]) == 2:
+        if len(self.prefs['current']) == 2:
             layout, variant = self.prefs['current']
             command = 'setxkbmap -layout ' + layout
             tooltip = self.layout[layout]
@@ -261,6 +260,7 @@ class Dialect(awn.AppletSimple):
             self.set_tooltip_text(tooltip)
             self.set_icon_pixbuf(self.load_icon(layout, self.size, self.pos))
             self.effects.start_ex('attention', 2)
+            pipe = subprocess.Popen(command, shell=True)
         else:
             self.get_layout()
 
@@ -432,7 +432,8 @@ class Dialect(awn.AppletSimple):
 
     # CLICKED on applet icon
     def on_applet_clicked(self, obj, event=None):
-        event = self.get_icon().get_click_event()
+        if not event:
+            event = self.get_icon().get_click_event()
         if event.button < 3:
             self.error_check()
             if self.depend and not self.init:

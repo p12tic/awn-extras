@@ -85,12 +85,9 @@ class Dialect(awn.AppletSimple):
         self.error_check()
 
         # CONNECT applet events
-        self.connect('clicked', self.on_applet_clicked, None, 1, \
-          gtk.get_current_event_time())
-        self.connect('middle-clicked', self.on_applet_clicked, None, 2, \
-          gtk.get_current_event_time())
-        self.connect('context-menu-popup', self.on_applet_clicked, 3, \
-          gtk.get_current_event_time())
+        self.connect('clicked', self.on_applet_clicked)
+        self.connect('middle-clicked', self.on_applet_clicked)
+        self.connect('context-menu-popup', self.on_applet_clicked)
         self.connect('size-changed', self.on_size_changed)
         self.connect('position-changed', self.on_position_changed)
         self.connect('scroll-event', self.on_scroll_event)
@@ -434,24 +431,25 @@ class Dialect(awn.AppletSimple):
               self.size, self.pos))
 
     # CLICKED on applet icon
-    def on_applet_clicked(self, obj, event, click, time):
-        if click < 3:
+    def on_applet_clicked(self, obj, event=None):
+        event = self.get_icon().get_click_event()
+        if event.button < 3:
             self.error_check()
             if self.depend and not self.init:
                 button = 'left'
-                if click == 2:
+                if event.button == 2:
                     button = 'middle'
                 if self.prefs[button] == 0:
-                    self.gtk['sys_menu'].popup(None, None, None, click, \
-                      time)
+                    self.gtk['sys_menu'].popup(None, None, None, \
+                      event.button, event.time)
                     return True
                 elif self.prefs[button] < 2:
                     if self.iter_user_list(self.prefs[button]):
-                        self.gtk['sys_menu'].popup(None, None, None, click, \
-                          time)
+                        self.gtk['sys_menu'].popup(None, None, None, \
+                          event.button, event.time)
                         return True
         else:
-            self.context_menu.popup(None, None, None, click, time)
+            self.context_menu.popup(None, None, None, event.button, event.time)
             return True
         return False
 

@@ -64,8 +64,9 @@ class Dialect(awn.AppletSimple):
           gtk.gdk.PIXBUF_ROTATE_COUNTERCLOCKWISE]
         self.schema = {'left': int, 'middle': int, 'scroll': bool, \
           'current': list, 'user_list': list}
-        self.context = {'Preferences': ['gtk-preferences', 'prefs'], \
-          'Help': ['gtk-help', 'help'], 'About': ['gtk-about', 'about']}
+        self.context_title = ['Preferences', 'Help', 'Separator', 'About']
+        self.context_data = [['gtk-preferences', 'prefs'], \
+          ['gtk-help', 'help'], None, ['gtk-about', 'about']]
         self.scroll = [gtk.gdk.SCROLL_DOWN, None, gtk.gdk.SCROLL_UP]
 
         # DEFAULT icon and tooltip
@@ -124,12 +125,16 @@ class Dialect(awn.AppletSimple):
     def context_init(self):
         self.context_menu = self.create_default_menu()
         item = []
-        for menu in self.context.keys():
-            item.append(gtk.ImageMenuItem(self.context[menu][0], menu))
+        for menu in range(len(self.context_title)):
+            title = self.context_title[menu]
+            data = self.context_data[menu]
+            if not data:
+                item.append(gtk.SeparatorMenuItem())
+            else:
+                item.append(gtk.ImageMenuItem(data[0], title))
+                item[-1].connect('activate', self.on_context_response, data[1])
             self.context_menu.append(item[-1])
             item[-1].show()
-            item[-1].connect('activate', self.on_context_response, \
-              self.context[menu][1])
 
     # PREFERENCES load
     def prefs_init(self):

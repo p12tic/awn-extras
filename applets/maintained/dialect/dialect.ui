@@ -8,7 +8,6 @@
     <property name="destroy_with_parent">True</property>
     <property name="icon_name">input-keyboard</property>
     <property name="type_hint">dialog</property>
-    <property name="has_separator">False</property>
     <property name="program_name">Dialect Applet</property>
     <property name="version">09.11.03</property>
     <property name="copyright" translatable="yes">(C) 2009, Lachlan Turner (Denham 2010).</property>
@@ -197,7 +196,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</property>
     <property name="type_hint">dialog</property>
     <property name="skip_taskbar_hint">True</property>
     <property name="urgency_hint">True</property>
-    <property name="has_separator">False</property>
     <property name="message_type">error</property>
     <property name="buttons">close</property>
     <property name="text" translatable="yes">&lt;span size="large" weight="bold"&gt;ERROR - Missing Dependencies.&lt;/span&gt;
@@ -242,7 +240,6 @@ x11-xkb-utils, xkb-data&lt;/span&gt;</property>
     <property name="destroy_with_parent">True</property>
     <property name="icon_name">input-keyboard</property>
     <property name="type_hint">dialog</property>
-    <property name="has_separator">False</property>
     <signal name="close" handler="on_dialog_response"/>
     <signal name="response" handler="on_dialog_response"/>
     <child internal-child="vbox">
@@ -318,6 +315,39 @@ x11-xkb-utils, xkb-data&lt;/span&gt;</property>
               </packing>
             </child>
             <child>
+              <object class="GtkScrolledWindow" id="overlay-scroll">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="hscrollbar_policy">automatic</property>
+                <property name="vscrollbar_policy">automatic</property>
+                <child>
+                  <object class="GtkTextView" id="overlay-textview">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="editable">False</property>
+                    <property name="left_margin">5</property>
+                    <property name="right_margin">5</property>
+                    <property name="cursor_visible">False</property>
+                    <property name="buffer">overlay_text</property>
+                    <property name="accepts_tab">False</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child type="tab">
+              <object class="GtkLabel" id="overlay-label">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Flag Overlay</property>
+              </object>
+              <packing>
+                <property name="position">2</property>
+                <property name="tab_fill">False</property>
+              </packing>
+            </child>
+            <child>
               <object class="GtkScrolledWindow" id="layout-scroll">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -337,7 +367,7 @@ x11-xkb-utils, xkb-data&lt;/span&gt;</property>
                 </child>
               </object>
               <packing>
-                <property name="position">2</property>
+                <property name="position">3</property>
               </packing>
             </child>
             <child type="tab">
@@ -346,7 +376,7 @@ x11-xkb-utils, xkb-data&lt;/span&gt;</property>
                 <property name="label" translatable="yes">Layout Lists</property>
               </object>
               <packing>
-                <property name="position">2</property>
+                <property name="position">3</property>
                 <property name="tab_fill">False</property>
               </packing>
             </child>
@@ -443,7 +473,6 @@ x11-xkb-utils, xkb-data&lt;/span&gt;</property>
     <property name="destroy_with_parent">True</property>
     <property name="icon_name">input-keyboard</property>
     <property name="type_hint">dialog</property>
-    <property name="has_separator">False</property>
     <signal name="close" handler="on_dialog_response"/>
     <signal name="response" handler="on_dialog_response"/>
     <child internal-child="vbox">
@@ -915,5 +944,21 @@ This applet is licensed under GPL2. The flag icons distributed with this applet 
     <property name="page_increment">0.10000000000000001</property>
     <property name="page_size">0.10000000000000001</property>
     <signal name="value_changed" handler="on_scale_changed"/>
+  </object>
+  <object class="GtkTextBuffer" id="overlay_text">
+    <property name="text" translatable="yes">
+Overlay layout flag on applet icon:
+
+	If selected, the flag of your selected layout will overlay the applet icon.
+
+Flag Scale:
+
+	The size of the flag in relation to the applet icon.
+	Possible values range from 0.1 to 0.9
+
+Flag Opacity:
+
+	Ranging from 0.0 (flag is not visible) to 0.9 (flag is almost opaque).
+</property>
   </object>
 </interface>

@@ -473,7 +473,7 @@ class Dialect(awn.AppletSimple):
 
     # WATCH event
     def watch_event(self, signum, frame):
-        self.get_layout()
+        self.get_layout(True)
         self.set_watch()
 
 # LAUNCH applet

@@ -92,13 +92,18 @@ Depends: 	${shlibs:Depends},
 Recommends: 	awn-settings-trunk (>= 0.3.8),
 		python-feedparser,
 		python-gst0.10,
-		python-dbus,
-		hal,
-		python-rsvg | python-gnome2-desktop,
 		python-wnck | python-gnome2-desktop,
+		gnome-applets,
+# hardware-sensors, cairo-clock
+		python-rsvg | python-gnome2-desktop,
+# animal-farm
+		fortune,
+# battery
+		python-notify,
+		hal,
+# cairo-clock
 		python-dateutil,
 		python-gweather,
-		gnome-applets,
 Suggests:	awn-applets-python-extras-trunk,
 XB-Python-Version: ${python:Versions}
 Conflicts: awn-applets-python-core, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing, awn-extras-applets-trunk
@@ -142,7 +147,6 @@ Depends: 	${shlibs:Depends},
 		${python:Depends},
 		avant-window-navigator-trunk,
 		python-awn-trunk,
-		fortune,
 		python-awn-extras-trunk (>= 0.3.8)
 Recommends: 	awn-settings-trunk (>= 0.3.8),
 		python-gdata,
@@ -175,7 +179,13 @@ Section: python
 Architecture: any
 Depends:	${shlibs:Depends},
 		${misc:Depends},
-		${python:Depends}
+		${python:Depends},
+		python-gtk2,
+		python-cairo,
+		python-gobject,
+		python-libdesktop-agnostic,
+		python-dbus,
+		python-awn-trunk,
 Suggests:	python-gnomekeyring | python-gnome2-desktop,
 Provides: ${python:Provides}
 XB-Python-Version: ${python:Versions}

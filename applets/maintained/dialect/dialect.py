@@ -347,7 +347,7 @@ class Dialect(awn.AppletSimple):
 
     # SYSTEM menu response
     def on_menu_response(self, obj, layout=None, variant=None):
-        if variant == None:
+        if not variant:
             variant = ''
         self.prefs['current'] = [str(layout), str(variant)]
         self.config.set_list(group, 'current', self.prefs['current'])
@@ -411,11 +411,11 @@ class Dialect(awn.AppletSimple):
             key = self.gtk.items()[self.gtk.values().index(obj)][0]
             if key == 'remove':
                 (model, iter) = self.gtk['user_select'].get_selected()
-                if iter != None:
+                if iter:
                     model.remove(iter)
             else:
                 (model, iter) = self.gtk['sys_select'].get_selected()
-                if iter != None:
+                if iter:
                     row = model[model.get_path(iter)]
                     parent = row[2]
                     child = row[3]

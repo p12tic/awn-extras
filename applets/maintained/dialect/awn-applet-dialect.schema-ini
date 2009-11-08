@@ -18,7 +18,7 @@ type = boolean
 default = true
 description = Overlay layout flag on icon.
 
-[DEFAULT/size]
+[DEFAULT/scale]
 type = float
 default = 0.8
 description = Flag size.

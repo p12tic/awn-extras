@@ -44,8 +44,6 @@ class Dialect(awn.AppletSimple):
         super(Dialect, self).__init__(canonical, uid, panel_id)
 
         # GLOBAL variables
-        self.size = self.get_size()
-        self.pos = self.get_pos_type()
         self.effects = self.get_effects()
         self.config = awn.config_get_default_for_applet(self)
         self.path = os.path.dirname(__file__)
@@ -54,23 +52,22 @@ class Dialect(awn.AppletSimple):
 
         # CONFIG and COMPARE variables
         self.watch = '/var/lib/xkb'
-        self.base = '/etc/X11/xkb/base.xml'
+        self.base = '/usr/share/X11/xkb/rules/base.xml'
         self.widgets = ['about', 'error', 'help', 'help_page', 'prefs', \
           'left', 'middle', 'scroll', 'sys_tree', 'user_tree', 'sys_list', \
-          'user_list', 'add', 'remove']
-        self.pos_type = [gtk.POS_BOTTOM, gtk.POS_TOP, gtk.POS_LEFT, \
-          gtk.POS_RIGHT]
-        self.icon_rotate = [None, None, gtk.gdk.PIXBUF_ROTATE_CLOCKWISE, \
-          gtk.gdk.PIXBUF_ROTATE_COUNTERCLOCKWISE]
+          'user_list', 'add', 'remove', 'overlay', 'scale', 'opacity']
         self.schema = {'left': int, 'middle': int, 'scroll': bool, \
-          'current': list, 'user_list': list}
+          'overlay': bool, 'scale': float, 'opacity': float, 'current': list, \
+          'user_list': list}
         self.context_title = ['Preferences', 'Help', 'Separator', 'About']
         self.context_data = [['gtk-preferences', 'prefs'], \
           ['gtk-help', 'help'], None, ['gtk-about', 'about']]
         self.scroll = [gtk.gdk.SCROLL_DOWN, None, gtk.gdk.SCROLL_UP]
 
         # DEFAULT icon and tooltip
-        self.set_icon_name('input-keyboard')
+        self.image = self.set_icon_name('input-keyboard')
+        self.flag = awn.OverlayPixbufFile(None)
+        self.overlay = False
         self.set_tooltip_text('Dialect Applet')
 
         # GTK load interface
@@ -89,8 +86,6 @@ class Dialect(awn.AppletSimple):
         self.connect('clicked', self.on_applet_clicked)
         self.connect('middle-clicked', self.on_applet_clicked)
         self.connect('context-menu-popup', self.on_applet_clicked)
-        self.connect('size-changed', self.on_size_changed)
-        self.connect('position-changed', self.on_position_changed)
         self.connect('scroll-event', self.on_scroll_event)
 
         # COMPLETE initialisation
@@ -144,6 +139,8 @@ class Dialect(awn.AppletSimple):
                 self.prefs[key] = self.config.get_bool(group, key)
             elif self.schema[key] == int:
                 self.prefs[key] = self.config.get_int(group, key)
+            elif self.schema[key] == float:
+                self.prefs[key] = self.config.get_float(group, key)
             else:
                 self.prefs[key] = self.config.get_list(group, key)
 
@@ -157,7 +154,7 @@ class Dialect(awn.AppletSimple):
                 self.set_layout()
                 self.set_watch()
         else:
-            self.effects.start_ex('attention', 2)
+            self.effects.start_ex(awn.EFFECT_ATTENTION, 2)
             response = self.gtk['error'].run()
             self.gtk['error'].hide()
 
@@ -206,6 +203,9 @@ class Dialect(awn.AppletSimple):
         self.gtk['left'].set_active(self.prefs['left'] + 1)
         self.gtk['middle'].set_active(self.prefs['middle'] + 1)
         self.gtk['scroll'].set_active(self.prefs['scroll'])
+        self.gtk['overlay'].set_active(self.prefs['overlay'])
+        self.gtk['scale'].set_value(self.prefs['scale'])
+        self.gtk['opacity'].set_value(self.prefs['opacity'])
         if len(self.prefs['user_list']) > 0:
             for item in self.prefs['user_list']:
                 parent = item.split(',')[0]
@@ -263,14 +263,12 @@ class Dialect(awn.AppletSimple):
                 command += ' -variant ' + variant
                 tooltip += ' - ' + self.variant[layout][variant]
             self.set_tooltip_text(tooltip)
-            self.set_icon_pixbuf(self.load_icon(layout, self.size, self.pos))
-            self.effects.start_ex('attention', 2)
             pipe = subprocess.Popen(command, shell=True)
         else:
             self.get_layout()
 
     # Get the current layout
-    def get_layout(self):
+    def get_layout(self, effect=False):
         pipe = subprocess.Popen('setxkbmap -print -v 10', shell=True, \
           bufsize=0, stdout=subprocess.PIPE).stdout
         data = pipe.read()
@@ -289,8 +287,18 @@ class Dialect(awn.AppletSimple):
         self.prefs['current'] = [layout, variant]
         self.config.set_list(group, 'current', self.prefs['current'])
         self.set_tooltip_text(tooltip)
-        self.set_icon_pixbuf(self.load_icon(layout, self.size, self.pos))
-        self.effects.start_ex('attention', 2)
+        if self.overlay:
+            self.remove_overlay(self.flag)
+            self.overlay = False
+        if self.prefs['overlay']:
+            self.flag = awn.OverlayPixbufFile(os.path.join(self.path, 'icons', \
+              layout + '.png'))
+            self.flag.set_property('alpha', self.prefs['opacity'])
+            self.flag.set_property('scale', self.prefs['scale'])
+            self.overlay = True
+            self.add_overlay(self.flag)
+        if effect:
+            self.effects.start_ex(awn.EFFECT_ATTENTION, 2)
 
     # WATCH for layout changes
     def set_watch(self):
@@ -321,29 +329,19 @@ class Dialect(awn.AppletSimple):
             return True
 
     # LOAD icon image file
-    def load_icon(self, icon, size, pos=None):
-            index = 0
-            if pos != None:
-                index = self.pos_type.index(pos)
-            path = os.path.join(self.path, 'icons', icon + '.png')
-            if os.path.isfile(path):
-                image = gtk.gdk.pixbuf_new_from_file(path)
-                if self.icon_rotate[index] != None:
-                    image = image.rotate_simple(self.icon_rotate[index])
-            else:
-                image = self.theme.load_icon('input-keyboard', size, 0)
-            y = image.get_height()
-            x = image.get_width()
-            if not self.icon_rotate[index]:
-                if size != y:
-                    x = int(float(x) * (float(size) / float(y)))
-                    y = size
-            else:
-                if size != x:
-                    y = int(float(y) * (float(size) / float(x)))
-                    x = size
-            image = image.scale_simple(x, y, gtk.gdk.INTERP_BILINEAR)
-            return image
+    def load_icon(self, icon, size):
+        path = os.path.join(self.path, 'icons', icon + '.png')
+        if os.path.isfile(path):
+            image = gtk.gdk.pixbuf_new_from_file(path)
+        else:
+            image = self.theme.load_icon('input-keyboard', size, 0)
+        y = image.get_height()
+        x = image.get_width()
+        if size != y:
+            x = int(float(x) * (float(size) / float(y)))
+            y = size
+        image = image.scale_simple(x, y, gtk.gdk.INTERP_BILINEAR)
+        return image
 
 # SIGNAL handlers
 
@@ -386,6 +384,27 @@ class Dialect(awn.AppletSimple):
             self.prefs['scroll'] = obj.get_active()
             self.config.set_bool(group, 'scroll', self.prefs['scroll'])
 
+    # OVERLAY flag option changed
+    def on_overlay_toggled(self, obj):
+        if not self.init:
+            self.prefs['overlay'] = obj.get_active()
+            self.config.set_bool(group, 'overlay', self.prefs['overlay'])
+            self.get_layout(False)
+
+    # OVERLAY opacity changed
+    def on_opacity_changed(self, obj):
+        self.flag.set_property('alpha', obj.get_value())
+        if not self.init:
+            self.prefs['opacity'] = obj.get_value()
+            self.config.set_float(group, 'opacity', self.prefs['opacity'])
+
+    # OVERLAY scale changed
+    def on_scale_changed(self, obj):
+        self.flag.set_property('scale', obj.get_value())
+        if not self.init:
+            self.prefs['scale'] = obj.get_value()
+            self.config.set_float(group, 'scale', self.prefs['scale'])
+
     # ADD to or REMOVE from user list
     def on_list_changed(self, obj):
         if not self.init:
@@ -420,20 +439,6 @@ class Dialect(awn.AppletSimple):
                           str(row[3]))
                 self.config.set_list(group, 'user_list', \
                   self.prefs['user_list'])
-
-    # SIZE change
-    def on_size_changed(self, obj, data):
-        self.size = data
-        if not self.init:
-            self.set_icon_pixbuf(self.load_icon(self.prefs['current'][0], \
-              self.size, self.pos))
-
-    # POSITION changed
-    def on_position_changed(self, obj, data):
-        self.pos = data
-        if not self.init:
-            self.set_icon_pixbuf(self.load_icon(self.prefs['current'][0], \
-              self.size, self.pos))
 
     # CLICKED on applet icon
     def on_applet_clicked(self, obj, event=None):

@@ -13,6 +13,21 @@ type = boolean
 default = false
 description = Can change layout with scroll wheel.
 
+[DEFAULT/overlay]
+type = boolean
+default = true
+description = Overlay layout flag on icon.
+
+[DEFAULT/size]
+type = float
+default = 0.8
+description = Flag size.
+
+[DEFAULT/opacity]
+type = float
+default = 0.5
+description = Flag opacity.
+
 [DEFAULT/current]
 type = list-string
 default = ;

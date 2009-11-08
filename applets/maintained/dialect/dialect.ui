@@ -3,8 +3,6 @@
   <!-- interface-requires gtk+ 2.12 -->
   <!-- interface-naming-policy project-wide -->
   <object class="GtkAboutDialog" id="about">
-    <property name="width_request">400</property>
-    <property name="height_request">400</property>
     <property name="border_width">5</property>
     <property name="title" translatable="yes">About Dialect Applet</property>
     <property name="destroy_with_parent">True</property>
@@ -445,6 +443,7 @@ x11-xkb-utils, xkb-data&lt;/span&gt;</property>
     <property name="destroy_with_parent">True</property>
     <property name="icon_name">input-keyboard</property>
     <property name="type_hint">dialog</property>
+    <property name="has_separator">False</property>
     <signal name="close" handler="on_dialog_response"/>
     <signal name="response" handler="on_dialog_response"/>
     <child internal-child="vbox">
@@ -491,15 +490,6 @@ x11-xkb-utils, xkb-data&lt;/span&gt;</property>
           </packing>
         </child>
         <child>
-          <object class="GtkHSeparator" id="hseparator1">
-            <property name="visible">True</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="position">2</property>
-          </packing>
-        </child>
-        <child>
           <object class="GtkHBox" id="middle-hbox">
             <property name="visible">True</property>
             <child>
@@ -533,16 +523,7 @@ x11-xkb-utils, xkb-data&lt;/span&gt;</property>
           </object>
           <packing>
             <property name="expand">False</property>
-            <property name="position">3</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkHSeparator" id="hseparator2">
-            <property name="visible">True</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="position">4</property>
+            <property name="position">2</property>
           </packing>
         </child>
         <child>
@@ -557,12 +538,81 @@ x11-xkb-utils, xkb-data&lt;/span&gt;</property>
           <packing>
             <property name="expand">False</property>
             <property name="padding">5</property>
+            <property name="position">3</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="overlay">
+            <property name="label" translatable="yes">Overlay layout flag on applet icon</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="active">True</property>
+            <property name="draw_indicator">True</property>
+            <signal name="toggled" handler="on_overlay_toggled"/>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="position">4</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkHBox" id="scale-hbox">
+            <property name="visible">True</property>
+            <child>
+              <object class="GtkLabel" id="scale-label">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Flag Scale</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkHScale" id="scale-slider">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="adjustment">scale</property>
+                <property name="digits">2</property>
+                <property name="value_pos">right</property>
+              </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
             <property name="position">5</property>
           </packing>
         </child>
         <child>
-          <object class="GtkHSeparator" id="hseparator3">
+          <object class="GtkHBox" id="opacity-hbox">
             <property name="visible">True</property>
+            <child>
+              <object class="GtkLabel" id="opacity-label">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">Flag Opacity</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkHScale" id="opacity-slider">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="adjustment">opacity</property>
+                <property name="digits">2</property>
+                <property name="value_pos">right</property>
+              </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -770,7 +820,7 @@ x11-xkb-utils, xkb-data&lt;/span&gt;</property>
             </child>
             <child>
               <object class="GtkButton" id="prefs-ok">
-                <property name="label">gtk-ok</property>
+                <property name="label">gtk-close</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
@@ -848,5 +898,22 @@ The applet depends on the packages x11-xkb-utils and xkb-data. These should be a
 
 This applet is licensed under GPL2. The flag icons distributed with this applet are from the xfce4-xkb-plugin-0.5.3.3 panel applet, licensed under the 2-clause BSD license. See the About dialog for licensing details.
 </property>
+  </object>
+  <object class="GtkAdjustment" id="opacity">
+    <property name="value">0.5</property>
+    <property name="upper">1</property>
+    <property name="step_increment">0.01</property>
+    <property name="page_increment">0.10000000000000001</property>
+    <property name="page_size">0.10000000000000001</property>
+    <signal name="value_changed" handler="on_opacity_changed"/>
+  </object>
+  <object class="GtkAdjustment" id="scale">
+    <property name="value">0.80000000000000004</property>
+    <property name="lower">0.10000000000000001</property>
+    <property name="upper">1</property>
+    <property name="step_increment">0.01</property>
+    <property name="page_increment">0.10000000000000001</property>
+    <property name="page_size">0.10000000000000001</property>
+    <signal name="value_changed" handler="on_scale_changed"/>
   </object>
 </interface>

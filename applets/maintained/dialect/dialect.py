@@ -49,6 +49,7 @@ class Dialect(awn.AppletSimple):
         self.path = os.path.dirname(__file__)
         self.theme = gtk.icon_theme_get_default()
         self.init = True
+        self.internal = False
 
         # CONFIG and COMPARE variables
         self.watch = '/var/lib/xkb'
@@ -143,6 +144,7 @@ class Dialect(awn.AppletSimple):
                 self.prefs[key] = self.config.get_float(group, key)
             else:
                 self.prefs[key] = self.config.get_list(group, key)
+            self.config.notify_add(group, key, self.prefs_changed)
 
     # DEPENDENCIES check and complete INITIALISE
     def error_check(self):
@@ -214,7 +216,7 @@ class Dialect(awn.AppletSimple):
                 if child != '':
                     desc = desc + ' - ' + self.variant[parent][child]
                 icon = self.load_icon(parent, 16)
-                self.gtk['user_list'].append(None, [icon, desc, parent, child])
+                self.gtk['user_list'].append([icon, desc, parent, child])
         layouts = self.layout.values()
         layouts.sort()
         for layout in layouts:
@@ -265,7 +267,7 @@ class Dialect(awn.AppletSimple):
             self.set_tooltip_text(tooltip)
             pipe = subprocess.Popen(command, shell=True)
         else:
-            self.get_layout()
+            self.get_layout(False)
 
     # Get the current layout
     def get_layout(self, effect=False):
@@ -285,18 +287,21 @@ class Dialect(awn.AppletSimple):
         if variant != '':
             tooltip += ' - ' + self.variant[layout][variant]
         self.prefs['current'] = [layout, variant]
+        self.internal = True
         self.config.set_list(group, 'current', self.prefs['current'])
         self.set_tooltip_text(tooltip)
         if self.overlay:
             self.remove_overlay(self.flag)
             self.overlay = False
         if self.prefs['overlay']:
-            self.flag = awn.OverlayPixbufFile(os.path.join(self.path, 'icons', \
-              layout + '.png'))
-            self.flag.set_property('alpha', self.prefs['opacity'])
-            self.flag.set_property('scale', self.prefs['scale'])
-            self.overlay = True
-            self.add_overlay(self.flag)
+            path = os.path.join(self.path, 'icons', layout + '.png')
+            if os.path.isfile(path):
+                self.flag = awn.OverlayPixbufFile(path)
+                self.flag.set_property('alpha', self.prefs['opacity'])
+                self.flag.set_property('scale', self.prefs['scale'])
+                self.flag.set_property('gravity', gtk.gdk.GRAVITY_SOUTH_EAST)
+                self.overlay = True
+                self.add_overlay(self.flag)
         if effect:
             self.effects.start_ex(awn.EFFECT_ATTENTION, 2)
 
@@ -322,6 +327,7 @@ class Dialect(awn.AppletSimple):
             except:
                 index = 0
             self.prefs['current'] = self.prefs['user_list'][index].split(',')
+            self.internal = True
             self.config.set_list(group, 'current', self.prefs['current'])
             self.set_layout()
             return False
@@ -345,11 +351,36 @@ class Dialect(awn.AppletSimple):
 
 # SIGNAL handlers
 
+    # PREFS changed externally of applet
+    def prefs_changed(self, grp, key, value):
+        if not self.internal:
+            self.internal = True
+            if key in ['left', 'middle']:
+                value = min(2, value)
+                value = max(-1, value)
+                self.prefs[key] = value
+                self.gtk[key].set_active(self.prefs[key] + 1)
+            elif key in ['scroll', 'overlay']:
+                self.prefs[key] = value
+                self.gtk[key].set_active(self.prefs[key])
+            elif key in ['scale', 'opacity']:
+                low = 0.1
+                if key == 'opacity':
+                    low = 0.0
+                value = min(0.9, value)
+                value = max(low, value)
+                self.prefs[key] = value
+                self.gtk[key].set_value(self.prefs[key])
+            else:
+                self.config.set_list(group, key, self.prefs[key])
+        self.internal = False
+
     # SYSTEM menu response
     def on_menu_response(self, obj, layout=None, variant=None):
         if not variant:
             variant = ''
         self.prefs['current'] = [str(layout), str(variant)]
+        self.internal = True
         self.config.set_list(group, 'current', self.prefs['current'])
         self.set_layout()
 
@@ -376,18 +407,21 @@ class Dialect(awn.AppletSimple):
             key = self.gtk.items()[self.gtk.values().index(obj)][0]
             value = obj.get_active() - 1
             self.prefs[key] = value
+            self.internal = True
             self.config.set_int(group, key, value)
 
     # SCROLL action changed
     def on_scroll_toggled(self, obj):
         if not self.init:
             self.prefs['scroll'] = obj.get_active()
+            self.internal = True
             self.config.set_bool(group, 'scroll', self.prefs['scroll'])
 
     # OVERLAY flag option changed
     def on_overlay_toggled(self, obj):
         if not self.init:
             self.prefs['overlay'] = obj.get_active()
+            self.internal = True
             self.config.set_bool(group, 'overlay', self.prefs['overlay'])
             self.get_layout(False)
 
@@ -396,6 +430,7 @@ class Dialect(awn.AppletSimple):
         self.flag.set_property('alpha', obj.get_value())
         if not self.init:
             self.prefs['opacity'] = obj.get_value()
+            self.internal = True
             self.config.set_float(group, 'opacity', self.prefs['opacity'])
 
     # OVERLAY scale changed
@@ -403,6 +438,7 @@ class Dialect(awn.AppletSimple):
         self.flag.set_property('scale', obj.get_value())
         if not self.init:
             self.prefs['scale'] = obj.get_value()
+            self.internal = True
             self.config.set_float(group, 'scale', self.prefs['scale'])
 
     # ADD to or REMOVE from user list
@@ -423,8 +459,7 @@ class Dialect(awn.AppletSimple):
                     if child != '':
                         desc = desc + ' - ' + self.variant[parent][child]
                     icon = self.load_icon(parent, 16)
-                    self.gtk['user_list'].append(None, \
-                      [icon, desc, parent, child])
+                    self.gtk['user_list'].append([icon, desc, parent, child])
                     self.on_order_changed()
 
     # USER list order changed
@@ -437,13 +472,14 @@ class Dialect(awn.AppletSimple):
                         row = self.gtk['user_list'][item]
                         self.prefs['user_list'].append(str(row[2]) + ',' + \
                           str(row[3]))
+                self.internal = True
                 self.config.set_list(group, 'user_list', \
                   self.prefs['user_list'])
 
     # CLICKED on applet icon
     def on_applet_clicked(self, obj, event=None):
         if not event:
-            event = self.get_icon().get_click_event()
+            event = gtk.get_current_event()
         if event.button < 3:
             self.error_check()
             if self.depend and not self.init:
@@ -473,7 +509,10 @@ class Dialect(awn.AppletSimple):
 
     # WATCH event
     def watch_event(self, signum, frame):
-        self.get_layout(True)
+        if self.init:
+            self.get_layout(False)
+        else:
+            self.get_layout(True)
         self.set_watch()
 
 # LAUNCH applet

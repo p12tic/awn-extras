@@ -439,20 +439,6 @@ x11-xkb-utils, xkb-data&lt;/span&gt;</property>
       </row>
     </data>
   </object>
-  <object class="GtkTreeStore" id="user_list">
-    <columns>
-      <!-- column-name user_flag -->
-      <column type="GdkPixbuf"/>
-      <!-- column-name user_name -->
-      <column type="gchararray"/>
-      <!-- column-name user_parent -->
-      <column type="gchararray"/>
-      <!-- column-name user_child -->
-      <column type="gchararray"/>
-    </columns>
-    <signal name="row_inserted" handler="on_order_changed"/>
-    <signal name="row_deleted" handler="on_order_changed"/>
-  </object>
   <object class="GtkTreeStore" id="sys_list">
     <columns>
       <!-- column-name sys_flag -->
@@ -464,6 +450,21 @@ x11-xkb-utils, xkb-data&lt;/span&gt;</property>
       <!-- column-name sys_child -->
       <column type="gchararray"/>
     </columns>
+  </object>
+  <object class="GtkListStore" id="user_list">
+    <columns>
+      <!-- column-name user_flag -->
+      <column type="GdkPixbuf"/>
+      <!-- column-name user_name -->
+      <column type="gchararray"/>
+      <!-- column-name user_parent -->
+      <column type="gchararray"/>
+      <!-- column-name user_child -->
+      <column type="gchararray"/>
+    </columns>
+    <signal name="row_changed" handler="on_order_changed"/>
+    <signal name="row_inserted" handler="on_order_changed"/>
+    <signal name="row_deleted" handler="on_order_changed"/>
   </object>
   <object class="GtkDialog" id="prefs">
     <property name="border_width">5</property>

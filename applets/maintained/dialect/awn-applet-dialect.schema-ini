@@ -20,12 +20,12 @@ description = Overlay layout flag on icon.
 
 [DEFAULT/scale]
 type = float
-default = 0.8
+default = 0.5
 description = Flag size.
 
 [DEFAULT/opacity]
 type = float
-default = 0.5
+default = 0.9
 description = Flag opacity.
 
 [DEFAULT/current]

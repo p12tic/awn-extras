@@ -74,6 +74,7 @@ usr/share/avant-window-navigator/schemas/awn-applet-mail.schema-ini
 #
 etc/gconf/schemas/awn-applet-media-player.schemas
 usr/share/avant-window-navigator/applets/media-player/*.py
+usr/share/avant-window-navigator/applets/media-player/*.ui
 usr/share/avant-window-navigator/applets/media-player/icons/*.png
 usr/share/avant-window-navigator/applets/media-player.desktop
 usr/share/avant-window-navigator/schemas/awn-applet-media-player.schema-ini

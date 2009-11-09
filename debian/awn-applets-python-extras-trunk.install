@@ -22,12 +22,6 @@ usr/share/avant-window-navigator/applets/media-icon-previous.desktop
 usr/share/avant-window-navigator/applets/media-icon-next.desktop
 usr/share/avant-window-navigator/applets/media-icons.desktop
 #
-# Mimenu
-#
-usr/share/avant-window-navigator/applets/mimenu/*.py
-usr/share/avant-window-navigator/applets/mimenu/icons/*.svg
-usr/share/avant-window-navigator/applets/mimenu.desktop
-#
 # Pandora
 #
 usr/share/avant-window-navigator/applets/pandora/
@@ -75,3 +69,9 @@ usr/share/avant-window-navigator/applets/yama.desktop
 #
 #usr/share/avant-window-navigator/applets/rtm/
 #usr/share/avant-window-navigator/applets/rtm.desktop
+#
+# Mimenu
+#
+#usr/share/avant-window-navigator/applets/mimenu/*.py
+#usr/share/avant-window-navigator/applets/mimenu/icons/*.svg
+#usr/share/avant-window-navigator/applets/mimenu.desktop

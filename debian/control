@@ -90,14 +90,23 @@ Depends: 	${shlibs:Depends},
 		python-awn-trunk,
 		python-awn-extras-trunk (>= 0.3.8)
 Recommends: 	awn-settings-trunk (>= 0.3.8),
-		python-feedparser,
-		python-gst0.10,
-		python-dbus,
-		hal,
+# hardware-sensors, cairo-clock, comics
 		python-rsvg | python-gnome2-desktop,
-		python-wnck | python-gnome2-desktop,
+# animal-farm
+		fortune,
+# battery
+		hal,
+# comics, battery, thinkhdaps
+		python-notify,
+# cairo-clock
 		python-dateutil,
 		python-gweather,
+# comics
+		python-feedparser,
+		python-glade2,
+# wolume-control
+		python-gst0.10,
+# cpufreq
 		gnome-applets,
 Suggests:	awn-applets-python-extras-trunk,
 XB-Python-Version: ${python:Versions}
@@ -142,13 +151,14 @@ Depends: 	${shlibs:Depends},
 		${python:Depends},
 		avant-window-navigator-trunk,
 		python-awn-trunk,
-		fortune,
 		python-awn-extras-trunk (>= 0.3.8)
 Recommends: 	awn-settings-trunk (>= 0.3.8),
-		python-gdata,
-		python-vobject,
 # slickswitcher
 		python-wnck | python-gnome2-desktop,
+# calendar
+		python-gdata,
+# YAMA
+		python-gmenu,
 Suggests: 	tomboy,
 Conflicts: awn-applets-python-extras, awn-applets-python-core (<< 0.3~bzr912), awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing, awn-extras-applets-trunk
 Replaces: awn-applets-python-extras, awn-applets-python-core (<< 0.3~bzr912), awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing, awn-extras-applets-trunk
@@ -169,13 +179,20 @@ Description: A collection of applets for avant-window-navigator
   * rtm: Use Remember The Milk from AWN. 
   * slickswitcher: A visual workspace switcher.
   * tomboy-applet: Control Tomboy with D-Bus.
+  * YAMA: Yet another menu applet
 
 Package: python-awn-extras-trunk
 Section: python
 Architecture: any
 Depends:	${shlibs:Depends},
 		${misc:Depends},
-		${python:Depends}
+		${python:Depends},
+		python-gtk2,
+		python-cairo,
+		python-gobject,
+		python-libdesktop-agnostic,
+		python-dbus,
+		python-awn-trunk,
 Suggests:	python-gnomekeyring | python-gnome2-desktop,
 Provides: ${python:Provides}
 XB-Python-Version: ${python:Versions}

@@ -140,10 +140,23 @@ class Dialect(awn.AppletSimple):
                 self.prefs[key] = self.config.get_bool(group, key)
             elif self.schema[key] == int:
                 self.prefs[key] = self.config.get_int(group, key)
+                self.prefs[key] = min(2, self.prefs[key])
+                self.prefs[key] = max(-1, self.prefs[key])
+                self.config.set_int(group, key, self.prefs[key])
             elif self.schema[key] == float:
                 self.prefs[key] = self.config.get_float(group, key)
+                low = 0.1
+                if key == 'opacity':
+                    low = 0.0
+                self.prefs[key] = min(0.9, self.prefs[key])
+                self.prefs[key] = max(low, self.prefs[key])
+                self.config.set_float(group, key, self.prefs[key])
             else:
                 self.prefs[key] = self.config.get_list(group, key)
+                if key == 'current':
+                    if len(self.prefs[key]) != 2:
+                        self.prefs[key] = []
+                        self.config.set_list(group, key, self.prefs[key])
             self.config.notify_add(group, key, self.prefs_changed)
 
     # DEPENDENCIES check and complete INITIALISE
@@ -195,6 +208,34 @@ class Dialect(awn.AppletSimple):
                     v_list[v_name] = v_desc
             self.layout[l_name] = l_desc
             self.variant[l_name] = v_list
+        if len(self.prefs['current']) == 2:
+            bad_key = True
+            if self.prefs['current'][0] in self.layout.keys():
+                bad_key = False
+                if self.prefs['current'][1] not in \
+                  self.variant[self.prefs['current'][0]].keys():
+                    if self.prefs['current'][1] != '':
+                        bad_key = True
+            if bad_key:
+                self.prefs['current'] = []
+                self.internal = True
+                self.config.set_list(group, 'current', self.prefs['current'])
+        if len(self.prefs['user_list']) > 0:
+            user = self.prefs['user_list'][:]
+            while (len(user) > 0):
+                item = user.pop()
+                parent, child = item.split(',')
+                bad_key = True
+                if parent in self.layout.keys():
+                    bad_key = False
+                    if child not in self.variant[parent].keys():
+                        if child != '':
+                            bad_key = True
+                if bad_key:
+                    index = self.prefs['user_list'].index(item)
+                    self.prefs['user_list'].pop(index)
+            self.internal = True
+            self.config.set_list(group, 'user_list', self.prefs['user_list'])
 
     # GTK initialise widgets
     def gtk_default(self):

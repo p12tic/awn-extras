@@ -32,11 +32,6 @@ import string
 
 DBusGMainLoop(set_as_default=True)
 
-try:
-    import pydcop
-except ImportError:
-    pass
-
 
 def get_app_name():
     player_name = None
@@ -63,10 +58,12 @@ def get_app_name():
         player_name = "BMP"
     elif bus_obj.NameHasOwner('org.mpris.xmms2') == True:
         player_name = "XMMS2"
-    else:
-        if 'pydcop' in globals():
-            if pydcop.anyAppCalled("amarok") != None:
-                player_name = "Amarok"
+    elif bus_obj.NameHasOwner('org.mpris.amarok') == True:
+        player_name = "Amarok"
+    elif bus_obj.NameHasOwner('org.mpris.aeon') == True:
+        player_name = "Aeon"
+    elif bus_obj.NameHasOwner('org.mpris.dragonplayer') == True:
+        player_name = "DragonPlayer"
     return player_name
 
 
@@ -550,41 +547,6 @@ class Listen(GenericPlayer):
         return True
 
 
-class Amarok(GenericPlayer):
-    """Not Working"""
-
-    def __init__(self):
-        GenericPlayer.__init__(self)
-
-    def dbus_driver(self):
-        """
-        Defining the dbus location for Amarok
-        """
-        if 'pydcop' not in globals() or pydcop.anyAppCalled("amarok") == None:pass
-        else:self.player = pydcop.anyAppCalled("amarok").player
-
-    def get_media_info(self):
-        self.dbus_driver()
-
-        # Currently Playing Title
-        result = {}
-        result['title'] = self.player.title ()
-        result['artist'] = self.player.artist ()
-        result['album'] = self.player.album ()
-        result['album-art'] = self.player.coverImage()
-
-        return result
-
-    def previous (self):
-        self.player.prev()
-
-    def play_pause (self):
-        self.player.playPause()
-
-    def next (self):
-        self.player.next()
-
-
 class QuodLibet(GenericPlayer):
     """Full Support with signals""" #(but not implemented yet)
 
@@ -651,3 +613,22 @@ class XMMS2(MPRISPlayer):
 
     def __init__(self):
         MPRISPlayer.__init__(self, 'org.mpris.xmms2')
+
+
+class Amarok(MPRISPlayer):
+    """Amarok 2.0 +"""
+
+    def __init__(self):
+        MPRISPlayer.__init__(self, 'org.mpris.amarok')
+
+
+class Aeon(MPRISPlayer):
+
+    def __init__(self):
+        MPRISPlayer.__init__(self, 'org.mpris.aeon')
+
+
+class DragonPlayer(MPRISPlayer):
+
+    def __init__(self):
+        MPRISPlayer.__init__(self, 'org.mpris.dragonplayer')

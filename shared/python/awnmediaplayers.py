@@ -37,6 +37,7 @@ try:
 except ImportError:
     pass
 
+
 def get_app_name():
     player_name = None
     bus_obj = dbus.SessionBus().get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
@@ -54,6 +55,14 @@ def get_app_name():
         player_name = "QuodLibet"
     elif bus_obj.NameHasOwner('org.mpris.songbird') == True:
         player_name = "Songbird"
+    elif bus_obj.NameHasOwner('org.mpris.vlc') == True:
+        player_name = "VLC"
+    elif bus_obj.NameHasOwner('org.mpris.audacious') == True:
+        player_name = "Audacious"
+    elif bus_obj.NameHasOwner('org.mpris.bmp') == True:
+        player_name = "BMP"
+    elif bus_obj.NameHasOwner('org.mpris.xmms2') == True:
+        player_name = "XMMS2"
     else:
         if 'pydcop' in globals():
             if pydcop.anyAppCalled("amarok") != None:
@@ -169,6 +178,71 @@ class GenericPlayer(object):
         Adds uris to current playlist.
         """
         return False
+
+
+class MPRISPlayer(GenericPlayer):
+    """ a default implementation of MPRIS """
+
+    def __init__(self, interface):
+        GenericPlayer.__init__(self, interface)
+        self.signalling_supported = True
+
+    def playing_changed_emitter(self, playing):
+        if (self.playing_changed_cb):
+            self.playing_changed_cb(playing[0] == 0)
+
+    def dbus_driver(self):
+        """
+        Defining the dbus location for
+        """
+        bus_obj = dbus.SessionBus().get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
+        if bus_obj.NameHasOwner(self.dbus_base_name) == True:
+            self.session_bus = dbus.SessionBus()
+            self.player = self.session_bus.get_object(self.dbus_base_name, '/Player')
+            self.player.connect_to_signal('TrackChange', self.song_changed_emitter, member_keyword='member')
+            self.player.connect_to_signal('StatusChange', self.playing_changed_emitter)
+
+    def get_media_info(self):
+        self.dbus_driver()
+
+        # Get information about song
+        info = self.player.GetMetadata()
+
+        result = {}
+        if 'title' in info.keys():
+            result['title'] = str(info['title'])
+        else:
+            result['title'] = ''
+
+        if 'artist' in info.keys():
+            result['artist'] = str(info['artist'])
+
+        if 'album' in info.keys():
+            result['album'] = str(info['album'])
+
+        if 'arturl' in info:
+            if info['arturl'][0:7] == "file://":
+                result['album-art'] = str(info['arturl'][7:])
+            else:
+                print "Don't understand the album art location: %s" % info['arturl']
+
+        return result
+
+    def is_playing(self):
+        stat = self.player.GetStatus()
+        return stat[0] == 0
+
+    def previous(self):
+        self.player.Prev()
+
+    def play_pause(self):
+        if self.is_playing():
+            self.player.Pause()
+        else:
+            self.player.Play()
+
+    def next(self):
+        self.player.Next()
 
 
 class Rhythmbox(GenericPlayer):
@@ -547,58 +621,32 @@ class QuodLibet(GenericPlayer):
     def next (self):
         self.player.Next ()
 
-class Songbird(GenericPlayer):
-    """ Using MPRIS """ 
+
+class Songbird(MPRISPlayer):
 
     def __init__(self):
-        GenericPlayer.__init__(self, 'org.mpris.songbird')
-        self.signalling_supported = True
+        MPRISPlayer.__init__(self, 'org.mpris.songbird')
 
-    def dbus_driver(self):
-        """
-        Defining the dbus location for
-        """
-        bus_obj = dbus.SessionBus().get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
-        if bus_obj.NameHasOwner('org.mpris.songbird') == True:
-            self.session_bus = dbus.SessionBus()
-            self.player = self.session_bus.get_object('org.mpris.songbird', '/Player')
-            self.player.connect_to_signal('TrackChange', self.song_changed_emitter, member_keyword='member')
 
-    def get_media_info(self):
-        self.dbus_driver()
+class VLC(MPRISPlayer):
 
-        # Get information about song
-        info = self.player.GetMetadata()
+    def __init__(self):
+        MPRISPlayer.__init__(self, 'org.mpris.vlc')
 
-        result = {}
-        if 'title' in info.keys():
-            result['title'] = str(info['title'])
-        else:
-            result['title'] = ''
 
-        if 'artist' in info.keys():
-            result['artist'] = str(info['artist'])
+class Audacious(MPRISPlayer):
 
-        if 'album' in info.keys():
-            result['album'] = str(info['album'])
+    def __init__(self):
+        MPRISPlayer.__init__(self, 'org.mpris.audacious')
 
-        if 'arturl' in info:
-            if info['arturl'][0:7] == "file://":
-              result['album-art'] = str(info['arturl'][7:])
-            else:
-              print "Don't understand the album art location: %s" % info['arturl']
 
-        return result
+class BMP(MPRISPlayer):
 
-    def previous (self):
-        self.player.Prev ()
+    def __init__(self):
+        MPRISPlayer.__init__(self, 'org.mpris.bmp')
 
-    def play_pause (self):
-        stat = self.player.GetStatus()
-        if stat[0] == 0: # Playing
-            self.player.Pause ()
-        else: # Paused/Stopped
-            self.player.Play ()
 
-    def next (self):
-        self.player.Next ()
+class XMMS2(MPRISPlayer):
+
+    def __init__(self):
+        MPRISPlayer.__init__(self, 'org.mpris.xmms2')

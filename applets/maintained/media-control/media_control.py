@@ -395,7 +395,7 @@ class MediaControlApplet (awn.AppletSimple):
         result = []
         for name, value in mediaplayers.__dict__.iteritems():
             # check if value is subclass of GenericPlayer
-            if hasattr(value, '__bases__') and issubclass(value, mediaplayers.GenericPlayer) and value != mediaplayers.GenericPlayer:
+            if hasattr(value, '__bases__') and issubclass(value, mediaplayers.GenericPlayer) and value != mediaplayers.GenericPlayer and value != mediaplayers.MPRISPlayer:
                 result.append(name)
 
         self.dbus_names = {}

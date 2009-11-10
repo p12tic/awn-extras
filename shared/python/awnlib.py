@@ -508,8 +508,7 @@ class Theme:
     def set_states(self, states_icons):
         self.__states, icons = zip(*states_icons.items())
         self.__icon_state = None
-        self.__parent.set_icon_info(self.__parent.meta["short"], \
-            self.__states, icons)
+        self.__parent.set_icon_info(self.__states, icons)
 
     def icon(self, state):
         if self.__states is None or state not in self.__states:

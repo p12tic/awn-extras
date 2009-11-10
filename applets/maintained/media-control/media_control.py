@@ -288,10 +288,11 @@ class MediaControlApplet (awn.AppletSimple):
 
         icon_loader = self.get_icon()
         
+        play_state = 'pause' if self.is_playing else 'play'
         play_button_size = (docklet.props.max_size + docklet.props.size) / 2
         play_pause = awn.Icon(bind_effects = False)
         play_pause.set_from_pixbuf(
-            icon_loader.get_icon_at_size(play_button_size, 'play')
+            icon_loader.get_icon_at_size(play_button_size, play_state)
         )
         play_pause.connect("clicked", self.button_pp_press)
         # we need to add the child in two steps, because IconBox overrides 
@@ -460,6 +461,7 @@ class MediaControlApplet (awn.AppletSimple):
         """
 
         song_info = self.MediaPlayer.get_media_info()
+        self.is_playing = self.MediaPlayer.is_playing()
 
         def get_tooltip_text(info):
             if 'artist' in info:

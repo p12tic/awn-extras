@@ -177,14 +177,14 @@ class Rhythmbox(GenericPlayer):
     def __init__(self):
         GenericPlayer.__init__(self, 'org.gnome.Rhythmbox')
         self.signalling_supported = True
-        self.is_playing = False
+        self._is_playing = False
 
     def dbus_driver(self):
         """
         Defining the dbus location for Rhythmbox
         """
         bus_obj = dbus.SessionBus().get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
-        self.is_playing = False
+        self._is_playing = False
         if bus_obj.NameHasOwner(self.dbus_base_name) == True:
             self.session_bus = dbus.SessionBus()
             self.proxy_obj = self.session_bus.get_object(self.dbus_base_name, '/org/gnome/Rhythmbox/Player')
@@ -194,7 +194,7 @@ class Rhythmbox(GenericPlayer):
             self.player.connect_to_signal('playingChanged', self.playing_changed_emitter)
             self.rbShell = self.session_bus.get_object(self.dbus_base_name, '/org/gnome/Rhythmbox/Shell')
 
-            self.is_playing = self.player.getPlaying()
+            self._is_playing = self.player.getPlaying()
 
     def get_media_info(self):
         self.dbus_driver()
@@ -228,7 +228,7 @@ class Rhythmbox(GenericPlayer):
 
     def is_playing(self):
         self.dbus_driver()
-        return self.is_playing
+        return self._is_playing
 
     def previous (self):
         self.player.previous ()
@@ -355,13 +355,13 @@ class BansheeOne(GenericPlayer):
     def __init__(self):
         GenericPlayer.__init__(self, 'org.bansheeproject.Banshee')
         self.signalling_supported = True
-        self.is_playing = False
+        self._is_playing = False
 
     def dbus_driver(self):
         """
         Defining the dbus location for Banshee
         """
-        self.is_playing = False
+        self._is_playing = False
         bus_obj = dbus.SessionBus().get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
         if bus_obj.NameHasOwner('org.bansheeproject.Banshee') == True:
             self.session_bus = dbus.SessionBus()
@@ -371,15 +371,21 @@ class BansheeOne(GenericPlayer):
             self.player1 = dbus.Interface(self.proxy_obj1, "org.bansheeproject.Banshee.PlaybackController")
             self.player.connect_to_signal('EventChanged', self.event_changed, member_keyword='member')
 
-            self.is_playing = self.player.GetCurrentState() == 'playing'
+            self._is_playing = self.player.GetCurrentState() == 'playing'
 
     def event_changed(self, *args, **kwargs):
         self.song_changed_emitter()
 
-        playing = self.player.GetCurrentState() == 'playing'
-        if (playing != self.is_playing):
+        playing = False
+        try:
+            # careful for dbus exceptions
+            playing = self.player.GetCurrentState() == 'playing'
+        except:
+            pass
+
+        if (playing != self._is_playing):
             self.playing_changed_emitter(playing)
-            self.is_playing = playing
+            self._is_playing = playing
 
     def get_media_info(self):
         self.dbus_driver()
@@ -411,7 +417,7 @@ class BansheeOne(GenericPlayer):
 
     def is_playing(self):
         self.dbus_driver()
-        return self.is_playing
+        return self._is_playing
 
     def previous (self):
         self.player1.Previous(False)

@@ -374,7 +374,8 @@ class MediaControlApplet (awn.AppletSimple):
             if self.docklet_visible: self.docklet.destroy()
         else:
             self.MediaPlayer = mediaplayers.__dict__[self.player_name]()
-            self.MediaPlayer.set_callback(self.song_changed)
+            self.MediaPlayer.set_song_change_callback(self.song_changed)
+            self.MediaPlayer.set_playing_changed_callback(self.play_state_changed)
             self.players_frame.set_no_show_all(True)
             self.controls.set_no_show_all(False)
             self.players_frame.hide()
@@ -414,6 +415,10 @@ class MediaControlApplet (awn.AppletSimple):
  
             self.timer_running = True
             gobject.timeout_add(150, timer_callback)
+
+    def play_state_changed(self, playing):
+        print "playing state changed - playing:", playing
+        pass
 
     def name_owner_changed_cb(self, name, oldAddress, newAddress):
         if name in self.dbus_names:

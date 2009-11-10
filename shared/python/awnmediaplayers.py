@@ -69,15 +69,23 @@ class GenericPlayer(object):
         self.signalling_supported = False
         # set to DBus service name string in your subclass
         self.dbus_base_name = dbus_name
-        self.registered_cb = None
+        self.song_change_cb = None
+        self.playing_changed_cb = None
         self.dbus_driver()
 
-    def set_callback(self, cb):
-        self.registered_cb = cb
+    def set_song_change_callback(self, cb):
+        self.song_change_cb = cb
 
-    def callback_fn(self, *args, **kwargs):
-        if (self.registered_cb):
-            self.registered_cb()
+    def set_playing_changed_callback(self, cb):
+        self.playing_changed_cb = cb
+
+    def song_changed_emitter(self, *args, **kwargs):
+        if (self.song_change_cb):
+            self.song_change_cb()
+
+    def playing_changed_emitter(self, playing):
+        if (self.playing_changed_cb):
+            self.playing_changed_cb(playing)
 
     def is_async(self):
         """
@@ -134,6 +142,13 @@ class GenericPlayer(object):
         """
         return {}
 
+    def is_playing(self):
+        """
+        This method determines if the player is currently in 'playing' state
+        as opossed to 'paused' / 'stopped'
+        """
+        return False
+
     def previous (self):
         pass
 
@@ -172,8 +187,9 @@ class Rhythmbox(GenericPlayer):
             self.session_bus = dbus.SessionBus()
             self.proxy_obj = self.session_bus.get_object(self.dbus_base_name, '/org/gnome/Rhythmbox/Player')
             self.player = dbus.Interface(self.proxy_obj, 'org.gnome.Rhythmbox.Player')
-            self.player.connect_to_signal('playingUriChanged', self.callback_fn, member_keyword='member')
-            self.player.connect_to_signal('playingSongPropertyChanged', self.callback_fn, member_keyword='member')
+            self.player.connect_to_signal('playingUriChanged', self.song_changed_emitter, member_keyword='member')
+            self.player.connect_to_signal('playingSongPropertyChanged', self.song_changed_emitter, member_keyword='member')
+            self.player.connect_to_signal('playingChanged', self.playing_changed_emitter)
             self.rbShell = self.session_bus.get_object(self.dbus_base_name, '/org/gnome/Rhythmbox/Shell')
 
     def get_media_info(self):
@@ -205,6 +221,10 @@ class Rhythmbox(GenericPlayer):
             ret_dict['title'] = result['title']
 
         return ret_dict
+
+    def is_playing(self):
+        self.dbus_driver()
+        return self.player.getPlaying()
 
     def previous (self):
         self.player.previous ()
@@ -343,7 +363,7 @@ class BansheeOne(GenericPlayer):
             self.proxy_obj1 = self.session_bus.get_object('org.bansheeproject.Banshee',"/org/bansheeproject/Banshee/PlaybackController")
             self.player = dbus.Interface(self.proxy_obj, "org.bansheeproject.Banshee.PlayerEngine")
             self.player1 = dbus.Interface(self.proxy_obj1, "org.bansheeproject.Banshee.PlaybackController")
-            self.player.connect_to_signal('EventChanged', self.callback_fn, member_keyword='member')
+            self.player.connect_to_signal('EventChanged', self.song_changed_emitter, member_keyword='member')
 
     def get_media_info(self):
         self.dbus_driver()
@@ -516,7 +536,7 @@ class Songbird(GenericPlayer):
         if bus_obj.NameHasOwner('org.mpris.songbird') == True:
             self.session_bus = dbus.SessionBus()
             self.player = self.session_bus.get_object('org.mpris.songbird', '/Player')
-            self.player.connect_to_signal('TrackChange', self.callback_fn, member_keyword='member')
+            self.player.connect_to_signal('TrackChange', self.song_changed_emitter, member_keyword='member')
 
     def get_media_info(self):
         self.dbus_driver()

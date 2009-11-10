@@ -236,7 +236,8 @@ class MPRISPlayer(GenericPlayer):
         self.player.Prev()
 
     def play_pause(self):
-        if self.is_playing():
+        stat = self.player.GetStatus()
+        if stat[0] != 2:
             self.player.Pause()
         else:
             self.player.Play()

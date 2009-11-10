@@ -52,6 +52,8 @@ def get_app_name():
         player_name = "Listen"
     elif bus_obj.NameHasOwner('net.sacredchao.QuodLibet') == True:
         player_name = "QuodLibet"
+    elif bus_obj.NameHasOwner('org.mpris.songbird') == True:
+        player_name = "Songbird"
     else:
         if 'pydcop' in globals():
             if pydcop.anyAppCalled("amarok") != None:
@@ -495,6 +497,62 @@ class QuodLibet(GenericPlayer):
 
     def play_pause (self):
         self.player.PlayPause ()
+
+    def next (self):
+        self.player.Next ()
+
+class Songbird(GenericPlayer):
+    """ Using MPRIS """ 
+
+    def __init__(self):
+        GenericPlayer.__init__(self, 'org.mpris.songbird')
+        self.signalling_supported = True
+
+    def dbus_driver(self):
+        """
+        Defining the dbus location for
+        """
+        bus_obj = dbus.SessionBus().get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
+        if bus_obj.NameHasOwner('org.mpris.songbird') == True:
+            self.session_bus = dbus.SessionBus()
+            self.player = self.session_bus.get_object('org.mpris.songbird', '/Player')
+            self.player.connect_to_signal('TrackChange', self.callback_fn, member_keyword='member')
+
+    def get_media_info(self):
+        self.dbus_driver()
+
+        # Get information about song
+        info = self.player.GetMetadata()
+
+        result = {}
+        if 'title' in info.keys():
+            result['title'] = str(info['title'])
+        else:
+            result['title'] = ''
+
+        if 'artist' in info.keys():
+            result['artist'] = str(info['artist'])
+
+        if 'album' in info.keys():
+            result['album'] = str(info['album'])
+
+        if 'arturl' in info:
+            if info['arturl'][0:7] == "file://":
+              result['album-art'] = str(info['arturl'][7:])
+            else:
+              print "Don't understand the album art location: %s" % info['arturl']
+
+        return result
+
+    def previous (self):
+        self.player.Prev ()
+
+    def play_pause (self):
+        stat = self.player.GetStatus()
+        if stat[0] == 0: # Playing
+            self.player.Pause ()
+        else: # Paused/Stopped
+            self.player.Play ()
 
     def next (self):
         self.player.Next ()

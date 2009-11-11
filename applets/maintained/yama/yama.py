@@ -366,15 +366,20 @@ class YamaApplet:
         for volume in self.__volumes_mounts_monitor.get_volumes():
             name = volume.get_name()
 
+            def get_icon_name(icon):
+                if isinstance(icon, gio.ThemedIcon):
+                    icons = icon.get_names()
+                    return filter(self.icon_theme.has_icon, icons)[0]
+                else:
+                    return icon.get_file().get_path()
             mount = volume.get_mount()
             if mount is not None:
-                icons = mount.get_icon().get_names()
+                icon_name = get_icon_name(mount.get_icon())
                 tooltip = name
             else:
-                icons = volume.get_icon().get_names()
+                icon_name = get_icon_name(volume.get_icon())
                 tooltip = "Mount %s" % name
 
-            icon_name = filter(self.icon_theme.has_icon, icons)[0]
             item = self.create_menu_item(name, icon_name, tooltip)
             self.places_menu.insert(item, index)
             index += 1

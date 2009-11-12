@@ -185,13 +185,13 @@ class MailApplet:
         else:
             return os.path.join(icon_dir, name + ".svg")
 
-    def __showWeb(self):
+    def showWeb(self):
         if hasattr(self.mail, "showWeb"):
             self.mail.showWeb()
         elif hasattr(self.mail, "url"):
             subprocess.Popen(["xdg-open", self.mail.url()])
 
-    def __showDesk(self):
+    def showDesk(self):
         if hasattr(self.mail, "showDesk"):
             self.mail.showDesk()
         else:
@@ -314,7 +314,7 @@ class MainDialog:
             b.set_image(gtk.image_new_from_stock(gtk.STOCK_NETWORK,
                                                  gtk.ICON_SIZE_BUTTON))
             b.set_tooltip_text(_("Open Web Mail"))
-            b.connect("clicked", lambda x: self.__parent.__showWeb())
+            b.connect("clicked", lambda x: self.__parent.showWeb())
             hbox_buttons.add(b)
 
         # This is the "show desktop client" button
@@ -323,7 +323,7 @@ class MainDialog:
         b.set_image(gtk.image_new_from_stock(gtk.STOCK_DISCONNECT,
                                              gtk.ICON_SIZE_BUTTON))
         b.set_tooltip_text(_("Open Desktop Client"))
-        b.connect("clicked", lambda x: self.__parent.__showDesk())
+        b.connect("clicked", lambda x: self.__parent.showDesk())
         hbox_buttons.add(b)
 
         # Refresh button
@@ -569,7 +569,7 @@ class Backends:
             self.key = key
 
         def url(self):
-            return "http://mail.google.com/a/%s" % self.key.attrs["username"]
+            return "http://mail.google.com/a/%s" % self.key.attrs["domain"]
 
         def update(self):
             f = feedparser.parse(\

@@ -208,8 +208,15 @@ class MPRISPlayer(GenericPlayer):
         result = {}
         if 'title' in info.keys():
             result['title'] = str(info['title'])
+        elif 'location' in info.keys():
+            pos = info['location'].rfind("/")
+            if pos is not -1:
+              result['title'] = str(info['location'][pos+1:])
+            else:
+              result['title'] = ''
         else:
             result['title'] = ''
+
 
         if 'artist' in info.keys():
             result['artist'] = str(info['artist'])
@@ -220,12 +227,17 @@ class MPRISPlayer(GenericPlayer):
         if 'arturl' in info:
             if info['arturl'][0:7] == "file://":
                 result['album-art'] = str(info['arturl'][7:])
+                if gtk.gtk_version >= (2, 18):
+                    from urllib import unquote
+                    result['album-art'] = unquote(result['album-art'])
             else:
                 print "Don't understand the album art location: %s" % info['arturl']
 
         return result
 
     def is_playing(self):
+        self.dbus_driver()
+
         stat = self.player.GetStatus()
         return stat[0] == 0
 

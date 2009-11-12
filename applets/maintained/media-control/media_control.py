@@ -67,7 +67,12 @@ class MediaControlApplet (awn.AppletSimple):
         """Creating the applets core"""
         awn.AppletSimple.__init__(self, "media-control", uid, panel_id)
         self.set_tooltip_text(MediaControlApplet.APPLET_NAME)
-        self.set_icon_name('media-control')
+        self.set_icon_info(
+            ['main-icon', 'play', 'pause', 'prev', 'next'],
+            ['media-control', 'media-playback-start', 'media-playback-pause',
+             'media-skip-backward', 'media-skip-forward']
+        )
+        self.set_icon_state('main-icon')
 
         # get the missing album art pixbuf
         try:
@@ -80,8 +85,10 @@ class MediaControlApplet (awn.AppletSimple):
         self.album_art_pixbuf = None
 
         self.timer_running = False
+        self.playing_changed_id = 0
         self.dbus_names = {}
         self.MediaPlayer = None
+        self.is_playing = False
 
         # Player selection frame
         self.players_frame = gtk.Frame()
@@ -108,6 +115,7 @@ class MediaControlApplet (awn.AppletSimple):
         self.docklet_visible = False
         self.docklet_image = None
         self.docklet_label = None
+        self.docklet_play_pause = None
 
         #Popup menu
         self.about = gtk.ImageMenuItem(gtk.STOCK_ABOUT)
@@ -224,17 +232,17 @@ class MediaControlApplet (awn.AppletSimple):
         def invalidate_docklet(widget, applet):
             applet.docklet_visible = False
             applet.docklet = None
+            applet.docklet_play_pause = None
         docklet.connect("destroy", invalidate_docklet, self)
 
-        is_horizontal = docklet.props.position in [gtk.POS_TOP, gtk.POS_BOTTOM]
-        top_box = awn.Box(gtk.ORIENTATION_HORIZONTAL if is_horizontal else gtk.ORIENTATION_VERTICAL)
+        docklet_position = docklet.get_pos_type()
+        top_box = awn.Box()
+        top_box.set_orientation_from_pos_type(docklet_position)
+
         align = awn.Alignment(docklet)
-        if (docklet.props.position in [gtk.POS_TOP, gtk.POS_BOTTOM]):
-            box = gtk.HBox()
-            align.add(box)
-        else:
-            box = gtk.VBox()
-            align.add(box)
+        box = awn.Box()
+        box.set_orientation_from_pos_type(docklet_position)
+        align.add(box)
 
         # TODO: not really for side orient yet
         pixbuf = self.get_pixbuf_for_docklet()
@@ -242,12 +250,17 @@ class MediaControlApplet (awn.AppletSimple):
             self.docklet_image = gtk.image_new_from_pixbuf(pixbuf)
         else:
             self.docklet_image = gtk.Image()
-        self.docklet_image.set_padding(6, 0)
+
+        if box.props.orientation == gtk.ORIENTATION_HORIZONTAL:
+            self.docklet_image.set_padding(6, 0)
+        else:
+            self.docklet_image.set_padding(0, 6)
         box.pack_start(self.docklet_image, False)
 
         label_align = gtk.Alignment() # for BOTTOM
         self.docklet_label = awn.Label()
         self.docklet_label.set_markup(self.label.get_label())
+
         if (docklet.get_pos_type() == gtk.POS_TOP):
             label_align.set(0.0, 0.0, 1.0, 0.0)
             self.docklet_label.set_size_request(-1, docklet.props.size)
@@ -259,12 +272,12 @@ class MediaControlApplet (awn.AppletSimple):
         elif (docklet.get_pos_type() == gtk.POS_LEFT):
             label_align.set(0.0, 0.0, 0.0, 1.0)
             self.docklet_label.set_angle(90)
-            self.docklet_label.set_size_request(docklet.props.size, 1)
+            self.docklet_label.set_size_request(docklet.props.size, -1)
             self.docklet_label.set_alignment(0.5, 0.1)
         elif (docklet.get_pos_type() == gtk.POS_RIGHT):
             label_align.set(1.0, 0.0, 0.0, 1.0)
             self.docklet_label.set_angle(270)
-            self.docklet_label.set_size_request(docklet.props.size, 1)
+            self.docklet_label.set_size_request(docklet.props.size, -1)
             self.docklet_label.set_alignment(0.5, 0.1)
         label_align.add(self.docklet_label)
 
@@ -272,33 +285,34 @@ class MediaControlApplet (awn.AppletSimple):
         top_box.pack_start(align)
 
         icon_box = awn.IconBox(docklet)
+
+        icon_loader = self.get_icon()
         
+        play_state = 'pause' if self.is_playing else 'play'
         play_button_size = (docklet.props.max_size + docklet.props.size) / 2
-        play_pause = awn.ThemedIcon(bind_effects = False)
-        play_pause.set_size(play_button_size)
-        play_pause.set_info_simple("media-control-docklet",
-                                   docklet.props.uid,
-                                   "media-playback-start")
+        play_pause = awn.Icon(bind_effects = False)
+        play_pause.set_from_pixbuf(
+            icon_loader.get_icon_at_size(play_button_size, play_state)
+        )
         play_pause.connect("clicked", self.button_pp_press)
         # we need to add the child in two steps, because IconBox overrides 
         # add() method and it must be called to set proper size/orient etc.
         icon_box.add(play_pause)
         icon_box.set_child_packing(play_pause, False, True, 0, gtk.PACK_START)
+        self.docklet_play_pause = play_pause
 
-        prev_button = awn.ThemedIcon(bind_effects = False)
-        prev_button.set_size(docklet.props.size)
-        prev_button.set_info_simple("media-control-docklet",
-                                    docklet.props.uid,
-                                    "media-skip-backward")
+        prev_button = awn.Icon(bind_effects = False)
+        prev_button.set_from_pixbuf(
+            icon_loader.get_icon_at_size(docklet.props.size, 'prev')
+        )
         prev_button.connect("clicked", self.button_previous_press)
         icon_box.add(prev_button)
         icon_box.set_child_packing(prev_button, False, True, 0, gtk.PACK_START)
 
-        next_button = awn.ThemedIcon(bind_effects = False)
-        next_button.set_size(docklet.props.size)
-        next_button.set_info_simple("media-control-docklet",
-                                    docklet.props.uid,
-                                    "media-skip-forward")
+        next_button = awn.Icon(bind_effects = False)
+        next_button.set_from_pixbuf(
+            icon_loader.get_icon_at_size(docklet.props.size, 'next')
+        )
         next_button.connect("clicked", self.button_next_press)
         icon_box.add(next_button)
         icon_box.set_child_packing(next_button, False, True, 0, gtk.PACK_START)
@@ -362,11 +376,13 @@ class MediaControlApplet (awn.AppletSimple):
             self.set_tooltip_text(MediaControlApplet.APPLET_NAME)
             self.label.set_markup(MediaControlApplet.APPLET_NAME_MARKUP)
             self.MediaPlayer = None
+            self.is_playing = False
             self.album_overlay.props.active = False
             if self.docklet_visible: self.docklet.destroy()
         else:
             self.MediaPlayer = mediaplayers.__dict__[self.player_name]()
-            self.MediaPlayer.set_callback(self.song_changed)
+            self.MediaPlayer.set_song_change_callback(self.song_changed)
+            self.MediaPlayer.set_playing_changed_callback(self.play_state_changed)
             self.players_frame.set_no_show_all(True)
             self.controls.set_no_show_all(False)
             self.players_frame.hide()
@@ -379,7 +395,7 @@ class MediaControlApplet (awn.AppletSimple):
         result = []
         for name, value in mediaplayers.__dict__.iteritems():
             # check if value is subclass of GenericPlayer
-            if hasattr(value, '__bases__') and issubclass(value, mediaplayers.GenericPlayer) and value != mediaplayers.GenericPlayer:
+            if hasattr(value, '__bases__') and issubclass(value, mediaplayers.GenericPlayer) and value != mediaplayers.GenericPlayer and value != mediaplayers.MPRISPlayer:
                 result.append(name)
 
         self.dbus_names = {}
@@ -407,6 +423,18 @@ class MediaControlApplet (awn.AppletSimple):
             self.timer_running = True
             gobject.timeout_add(150, timer_callback)
 
+    def play_state_changed(self, playing):
+        if self.playing_changed_id != 0:
+            gobject.source_remove(self.playing_changed_id)
+
+        def timer_callback(playing):
+            self.playing_changed_id = 0
+            self.is_playing = playing
+            self.update_playing_state()
+            return False
+
+        self.playing_changed_id = gobject.timeout_add(150, timer_callback, playing)
+
     def name_owner_changed_cb(self, name, oldAddress, newAddress):
         if name in self.dbus_names:
             started = newAddress != ''
@@ -415,6 +443,17 @@ class MediaControlApplet (awn.AppletSimple):
             elif self.MediaPlayer and started == False and name == self.MediaPlayer.get_dbus_name():
                 self.ensure_player('')
 
+    def update_playing_state(self):
+        if self.docklet_visible:
+            icon_loader = self.get_icon()
+            state = 'pause' if self.is_playing else 'play'
+
+            play_button_size = (self.docklet.props.max_size + self.docklet.props.size) / 2
+
+            self.docklet_play_pause.set_from_pixbuf(
+                icon_loader.get_icon_at_size(play_button_size, state)
+            )
+
     @error_decorator
     def update_song_info(self, force_update=False):
         """
@@ -422,6 +461,7 @@ class MediaControlApplet (awn.AppletSimple):
         """
 
         song_info = self.MediaPlayer.get_media_info()
+        self.is_playing = self.MediaPlayer.is_playing()
 
         def get_tooltip_text(info):
             if 'artist' in info:

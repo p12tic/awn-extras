@@ -32,10 +32,6 @@ import string
 
 DBusGMainLoop(set_as_default=True)
 
-try:
-    import pydcop
-except ImportError:
-    pass
 
 def get_app_name():
     player_name = None
@@ -52,10 +48,22 @@ def get_app_name():
         player_name = "Listen"
     elif bus_obj.NameHasOwner('net.sacredchao.QuodLibet') == True:
         player_name = "QuodLibet"
-    else:
-        if 'pydcop' in globals():
-            if pydcop.anyAppCalled("amarok") != None:
-                player_name = "Amarok"
+    elif bus_obj.NameHasOwner('org.mpris.songbird') == True:
+        player_name = "Songbird"
+    elif bus_obj.NameHasOwner('org.mpris.vlc') == True:
+        player_name = "VLC"
+    elif bus_obj.NameHasOwner('org.mpris.audacious') == True:
+        player_name = "Audacious"
+    elif bus_obj.NameHasOwner('org.mpris.bmp') == True:
+        player_name = "BMP"
+    elif bus_obj.NameHasOwner('org.mpris.xmms2') == True:
+        player_name = "XMMS2"
+    elif bus_obj.NameHasOwner('org.mpris.amarok') == True:
+        player_name = "Amarok"
+    elif bus_obj.NameHasOwner('org.mpris.aeon') == True:
+        player_name = "Aeon"
+    elif bus_obj.NameHasOwner('org.mpris.dragonplayer') == True:
+        player_name = "DragonPlayer"
     return player_name
 
 
@@ -67,15 +75,23 @@ class GenericPlayer(object):
         self.signalling_supported = False
         # set to DBus service name string in your subclass
         self.dbus_base_name = dbus_name
-        self.registered_cb = None
+        self.song_change_cb = None
+        self.playing_changed_cb = None
         self.dbus_driver()
 
-    def set_callback(self, cb):
-        self.registered_cb = cb
+    def set_song_change_callback(self, cb):
+        self.song_change_cb = cb
 
-    def callback_fn(self, *args, **kwargs):
-        if (self.registered_cb):
-            self.registered_cb()
+    def set_playing_changed_callback(self, cb):
+        self.playing_changed_cb = cb
+
+    def song_changed_emitter(self, *args, **kwargs):
+        if (self.song_change_cb):
+            self.song_change_cb()
+
+    def playing_changed_emitter(self, playing):
+        if (self.playing_changed_cb):
+            self.playing_changed_cb(playing)
 
     def is_async(self):
         """
@@ -132,6 +148,13 @@ class GenericPlayer(object):
         """
         return {}
 
+    def is_playing(self):
+        """
+        This method determines if the player is currently in 'playing' state
+        as opossed to 'paused' / 'stopped'
+        """
+        return False
+
     def previous (self):
         pass
 
@@ -154,25 +177,96 @@ class GenericPlayer(object):
         return False
 
 
+class MPRISPlayer(GenericPlayer):
+    """ a default implementation of MPRIS """
+
+    def __init__(self, interface):
+        GenericPlayer.__init__(self, interface)
+        self.signalling_supported = True
+
+    def playing_changed_emitter(self, playing):
+        if (self.playing_changed_cb):
+            self.playing_changed_cb(playing[0] == 0)
+
+    def dbus_driver(self):
+        """
+        Defining the dbus location for
+        """
+        bus_obj = dbus.SessionBus().get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
+        if bus_obj.NameHasOwner(self.dbus_base_name) == True:
+            self.session_bus = dbus.SessionBus()
+            self.player = self.session_bus.get_object(self.dbus_base_name, '/Player')
+            self.player.connect_to_signal('TrackChange', self.song_changed_emitter, member_keyword='member')
+            self.player.connect_to_signal('StatusChange', self.playing_changed_emitter)
+
+    def get_media_info(self):
+        self.dbus_driver()
+
+        # Get information about song
+        info = self.player.GetMetadata()
+
+        result = {}
+        if 'title' in info.keys():
+            result['title'] = str(info['title'])
+        else:
+            result['title'] = ''
+
+        if 'artist' in info.keys():
+            result['artist'] = str(info['artist'])
+
+        if 'album' in info.keys():
+            result['album'] = str(info['album'])
+
+        if 'arturl' in info:
+            if info['arturl'][0:7] == "file://":
+                result['album-art'] = str(info['arturl'][7:])
+            else:
+                print "Don't understand the album art location: %s" % info['arturl']
+
+        return result
+
+    def is_playing(self):
+        stat = self.player.GetStatus()
+        return stat[0] == 0
+
+    def previous(self):
+        self.player.Prev()
+
+    def play_pause(self):
+        stat = self.player.GetStatus()
+        if stat[0] != 2:
+            self.player.Pause()
+        else:
+            self.player.Play()
+
+    def next(self):
+        self.player.Next()
+
+
 class Rhythmbox(GenericPlayer):
     """Full Support with signals"""
 
     def __init__(self):
         GenericPlayer.__init__(self, 'org.gnome.Rhythmbox')
         self.signalling_supported = True
+        self._is_playing = False
 
     def dbus_driver(self):
         """
         Defining the dbus location for Rhythmbox
         """
         bus_obj = dbus.SessionBus().get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
+        self._is_playing = False
         if bus_obj.NameHasOwner(self.dbus_base_name) == True:
             self.session_bus = dbus.SessionBus()
             self.proxy_obj = self.session_bus.get_object(self.dbus_base_name, '/org/gnome/Rhythmbox/Player')
             self.player = dbus.Interface(self.proxy_obj, 'org.gnome.Rhythmbox.Player')
-            self.player.connect_to_signal('playingUriChanged', self.callback_fn, member_keyword='member')
-            self.player.connect_to_signal('playingSongPropertyChanged', self.callback_fn, member_keyword='member')
+            self.player.connect_to_signal('playingUriChanged', self.song_changed_emitter, member_keyword='member')
+            self.player.connect_to_signal('playingSongPropertyChanged', self.song_changed_emitter, member_keyword='member')
+            self.player.connect_to_signal('playingChanged', self.playing_changed_emitter)
             self.rbShell = self.session_bus.get_object(self.dbus_base_name, '/org/gnome/Rhythmbox/Shell')
+
+            self._is_playing = self.player.getPlaying()
 
     def get_media_info(self):
         self.dbus_driver()
@@ -203,6 +297,10 @@ class Rhythmbox(GenericPlayer):
             ret_dict['title'] = result['title']
 
         return ret_dict
+
+    def is_playing(self):
+        self.dbus_driver()
+        return self._is_playing
 
     def previous (self):
         self.player.previous ()
@@ -329,11 +427,13 @@ class BansheeOne(GenericPlayer):
     def __init__(self):
         GenericPlayer.__init__(self, 'org.bansheeproject.Banshee')
         self.signalling_supported = True
+        self._is_playing = False
 
     def dbus_driver(self):
         """
-        Defining the dbus location for
+        Defining the dbus location for Banshee
         """
+        self._is_playing = False
         bus_obj = dbus.SessionBus().get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
         if bus_obj.NameHasOwner('org.bansheeproject.Banshee') == True:
             self.session_bus = dbus.SessionBus()
@@ -341,7 +441,23 @@ class BansheeOne(GenericPlayer):
             self.proxy_obj1 = self.session_bus.get_object('org.bansheeproject.Banshee',"/org/bansheeproject/Banshee/PlaybackController")
             self.player = dbus.Interface(self.proxy_obj, "org.bansheeproject.Banshee.PlayerEngine")
             self.player1 = dbus.Interface(self.proxy_obj1, "org.bansheeproject.Banshee.PlaybackController")
-            self.player.connect_to_signal('EventChanged', self.callback_fn, member_keyword='member')
+            self.player.connect_to_signal('EventChanged', self.event_changed, member_keyword='member')
+
+            self._is_playing = self.player.GetCurrentState() == 'playing'
+
+    def event_changed(self, *args, **kwargs):
+        self.song_changed_emitter()
+
+        playing = False
+        try:
+            # careful for dbus exceptions
+            playing = self.player.GetCurrentState() == 'playing'
+        except:
+            pass
+
+        if (playing != self._is_playing):
+            self.playing_changed_emitter(playing)
+            self._is_playing = playing
 
     def get_media_info(self):
         self.dbus_driver()
@@ -370,6 +486,10 @@ class BansheeOne(GenericPlayer):
             result['album-art'] = albumart_exact.replace(' ','').lower()
 
         return result
+
+    def is_playing(self):
+        self.dbus_driver()
+        return self._is_playing
 
     def previous (self):
         self.player1.Previous(False)
@@ -427,41 +547,6 @@ class Listen(GenericPlayer):
         return True
 
 
-class Amarok(GenericPlayer):
-    """Not Working"""
-
-    def __init__(self):
-        GenericPlayer.__init__(self)
-
-    def dbus_driver(self):
-        """
-        Defining the dbus location for Amarok
-        """
-        if 'pydcop' not in globals() or pydcop.anyAppCalled("amarok") == None:pass
-        else:self.player = pydcop.anyAppCalled("amarok").player
-
-    def get_media_info(self):
-        self.dbus_driver()
-
-        # Currently Playing Title
-        result = {}
-        result['title'] = self.player.title ()
-        result['artist'] = self.player.artist ()
-        result['album'] = self.player.album ()
-        result['album-art'] = self.player.coverImage()
-
-        return result
-
-    def previous (self):
-        self.player.prev()
-
-    def play_pause (self):
-        self.player.playPause()
-
-    def next (self):
-        self.player.next()
-
-
 class QuodLibet(GenericPlayer):
     """Full Support with signals""" #(but not implemented yet)
 
@@ -498,3 +583,52 @@ class QuodLibet(GenericPlayer):
 
     def next (self):
         self.player.Next ()
+
+
+class Songbird(MPRISPlayer):
+
+    def __init__(self):
+        MPRISPlayer.__init__(self, 'org.mpris.songbird')
+
+
+class VLC(MPRISPlayer):
+
+    def __init__(self):
+        MPRISPlayer.__init__(self, 'org.mpris.vlc')
+
+
+class Audacious(MPRISPlayer):
+
+    def __init__(self):
+        MPRISPlayer.__init__(self, 'org.mpris.audacious')
+
+
+class BMP(MPRISPlayer):
+
+    def __init__(self):
+        MPRISPlayer.__init__(self, 'org.mpris.bmp')
+
+
+class XMMS2(MPRISPlayer):
+
+    def __init__(self):
+        MPRISPlayer.__init__(self, 'org.mpris.xmms2')
+
+
+class Amarok(MPRISPlayer):
+    """Amarok 2.0 +"""
+
+    def __init__(self):
+        MPRISPlayer.__init__(self, 'org.mpris.amarok')
+
+
+class Aeon(MPRISPlayer):
+
+    def __init__(self):
+        MPRISPlayer.__init__(self, 'org.mpris.aeon')
+
+
+class DragonPlayer(MPRISPlayer):
+
+    def __init__(self):
+        MPRISPlayer.__init__(self, 'org.mpris.dragonplayer')

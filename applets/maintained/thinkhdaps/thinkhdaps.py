@@ -27,7 +27,7 @@ from awn import OverlayThemedIcon
 import glib
 
 try:
-    from pyinotify import WatchManager, ThreadedNotifier, EventsCodes
+    from pyinotify import WatchManager, ThreadedNotifier, IN_MODIFY
     pyinotify = True
 except ImportError:
     pyinotify = None
@@ -160,7 +160,7 @@ class ThinkHDAPSApplet:
             return False
 
         watch_manager = WatchManager()
-        result = watch_manager.add_watch(self.__status_file, EventsCodes.IN_MODIFY)[self.__status_file] > 0
+        result = watch_manager.add_watch(self.__status_file, IN_MODIFY)[self.__status_file] > 0
 
         if result:
             global notifier

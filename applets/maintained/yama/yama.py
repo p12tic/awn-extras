@@ -33,7 +33,7 @@ except ImportError:
     dbus = None
 
 import gio
-from glib import filename_display_basename, idle_add
+import glib
 import gmenu
 from xdg import DesktopEntry
 
@@ -199,7 +199,7 @@ class YamaApplet:
             self.append_directory(tree.root, self.menu, index=index, item_list=items)
             # Refresh menu to re-initialize the widget
             self.menu.show_all()
-        idle_add(refresh_menu, menu_tree, menu_items)
+        glib.idle_add(refresh_menu, menu_tree, menu_items)
 
     def theme_changed_cb(self, icon_theme):
         """Upon theme change clean the whole menu, and then rebuild it.
@@ -336,7 +336,7 @@ class YamaApplet:
                         if match is not None:
                             url_name.append("/%s on %s" % (match.group(2), match.group(1)))
                         else:
-                            basename = filename_display_basename(url_name[0])
+                            basename = glib.filename_display_basename(url_name[0])
                             url_name.append(unquote(str(basename)))
                     url, name = (url_name[0], url_name[1])
 
@@ -366,15 +366,20 @@ class YamaApplet:
         for volume in self.__volumes_mounts_monitor.get_volumes():
             name = volume.get_name()
 
+            def get_icon_name(icon):
+                if isinstance(icon, gio.ThemedIcon):
+                    icons = icon.get_names()
+                    return filter(self.icon_theme.has_icon, icons)[0]
+                else:
+                    return icon.get_file().get_path()
             mount = volume.get_mount()
             if mount is not None:
-                icons = mount.get_icon().get_names()
+                icon_name = get_icon_name(mount.get_icon())
                 tooltip = name
             else:
-                icons = volume.get_icon().get_names()
+                icon_name = get_icon_name(volume.get_icon())
                 tooltip = "Mount %s" % name
 
-            icon_name = filter(self.icon_theme.has_icon, icons)[0]
             item = self.create_menu_item(name, icon_name, tooltip)
             self.places_menu.insert(item, index)
             index += 1
@@ -484,7 +489,10 @@ class YamaApplet:
 
         if os.path.isabs(icon_value):
             if os.path.isfile(icon_value):
-                return gtk.gdk.pixbuf_new_from_file_at_size(icon_value, 24, 24)
+                try:
+                    return gtk.gdk.pixbuf_new_from_file_at_size(icon_value, 24, 24)
+                except glib.GError:
+                    return None
             icon_name = os.path.basename(icon_value)
         else:
             icon_name = icon_value

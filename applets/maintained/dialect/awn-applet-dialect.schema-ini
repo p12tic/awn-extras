@@ -1,11 +1,11 @@
 [DEFAULT/left]
 type = integer
-default = 1
+default = 2
 description = Left click action.
 
 [DEFAULT/middle]
 type = integer
-default = 0
+default = 1
 description = Middle click action.
 
 [DEFAULT/scroll]

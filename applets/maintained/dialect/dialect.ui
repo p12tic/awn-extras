@@ -499,7 +499,6 @@ x11-xkb-utils, xkb-data&lt;/span&gt;</property>
                 <property name="visible">True</property>
                 <property name="model">actions</property>
                 <property name="active">1</property>
-                <signal name="changed" handler="on_action_changed"/>
                 <child>
                   <object class="GtkCellRendererText" id="left_cell"/>
                   <attributes>
@@ -536,7 +535,6 @@ x11-xkb-utils, xkb-data&lt;/span&gt;</property>
               <object class="GtkComboBox" id="middle">
                 <property name="visible">True</property>
                 <property name="model">actions</property>
-                <signal name="changed" handler="on_action_changed"/>
                 <child>
                   <object class="GtkCellRendererText" id="middle_cell"/>
                   <attributes>
@@ -563,7 +561,6 @@ x11-xkb-utils, xkb-data&lt;/span&gt;</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
             <property name="draw_indicator">True</property>
-            <signal name="toggled" handler="on_scroll_toggled"/>
           </object>
           <packing>
             <property name="expand">False</property>

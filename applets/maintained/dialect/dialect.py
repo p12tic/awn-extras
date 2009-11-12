@@ -26,11 +26,13 @@ import gtk
 import awn
 
 # APPLET required modules
+import gobject
 import subprocess
 import fcntl
 import signal
 from xml.dom.minidom import parse
 from desktopagnostic.config import GROUP_DEFAULT as group
+from desktopagnostic.config import BIND_METHOD_FALLBACK as bind_fb
 
 # DEFINE applet class
 
@@ -38,6 +40,14 @@ from desktopagnostic.config import GROUP_DEFAULT as group
 class Dialect(awn.AppletSimple):
 
 # INITIALISE
+    left = gobject.property(type = int, default = 2, minimum = 0, maximum = 3)
+    middle = gobject.property(type = int, default = 1, minimum = 0, maximum = 3)
+    scroll = gobject.property(type = bool, default = False)
+    overlay = gobject.property(type = bool, default = True)
+    scale = gobject.property(type = float, default = 0.5, minimum = 0.1, \
+      maximum = 0.9)
+    opacity = gobject.property(type = float,  default = 0.9, minimum = 0.0, \
+      maximum = 0.9)
 
     # INITIALISE applet
     def __init__(self, canonical, uid, panel_id):
@@ -49,7 +59,6 @@ class Dialect(awn.AppletSimple):
         self.path = os.path.dirname(__file__)
         self.theme = gtk.icon_theme_get_default()
         self.init = True
-        self.internal = False
 
         # CONFIG and COMPARE variables
         self.watch = '/var/lib/xkb'
@@ -57,18 +66,17 @@ class Dialect(awn.AppletSimple):
         self.widgets = ['about', 'error', 'help', 'help_page', 'prefs', \
           'left', 'middle', 'scroll', 'sys_tree', 'user_tree', 'sys_list', \
           'user_list', 'add', 'remove', 'overlay', 'scale', 'opacity']
-        self.schema = {'left': int, 'middle': int, 'scroll': bool, \
-          'overlay': bool, 'scale': float, 'opacity': float, 'current': list, \
-          'user_list': list}
+        self.schema = {'left': 'active', 'middle': 'active', 'scroll': \
+          'active', 'scale': 'value', 'opacity': 'value', 'overlay': 'active'}
         self.context_title = ['Preferences', 'Help', 'Separator', 'About']
         self.context_data = [['gtk-preferences', 'prefs'], \
           ['gtk-help', 'help'], None, ['gtk-about', 'about']]
-        self.scroll = [gtk.gdk.SCROLL_DOWN, None, gtk.gdk.SCROLL_UP]
+        self.wheel = [gtk.gdk.SCROLL_DOWN, None, gtk.gdk.SCROLL_UP]
 
         # DEFAULT icon and tooltip
         self.image = self.set_icon_name('input-keyboard')
         self.flag = awn.OverlayPixbufFile(None)
-        self.overlay = False
+        self.over = False
         self.set_tooltip_text('Dialect Applet')
 
         # GTK load interface
@@ -134,30 +142,18 @@ class Dialect(awn.AppletSimple):
 
     # PREFERENCES load
     def prefs_init(self):
-        self.prefs = {}
-        for key in self.schema.keys():
-            if self.schema[key] == bool:
-                self.prefs[key] = self.config.get_bool(group, key)
-            elif self.schema[key] == int:
-                self.prefs[key] = self.config.get_int(group, key)
-                self.prefs[key] = min(2, self.prefs[key])
-                self.prefs[key] = max(-1, self.prefs[key])
-                self.config.set_int(group, key, self.prefs[key])
-            elif self.schema[key] == float:
-                self.prefs[key] = self.config.get_float(group, key)
-                low = 0.1
-                if key == 'opacity':
-                    low = 0.0
-                self.prefs[key] = min(0.9, self.prefs[key])
-                self.prefs[key] = max(low, self.prefs[key])
-                self.config.set_float(group, key, self.prefs[key])
-            else:
-                self.prefs[key] = self.config.get_list(group, key)
-                if key == 'current':
-                    if len(self.prefs[key]) != 2:
-                        self.prefs[key] = []
-                        self.config.set_list(group, key, self.prefs[key])
-            self.config.notify_add(group, key, self.prefs_changed)
+        for item in self.schema.keys():
+            self.config.bind(group, item, self, item, True, bind_fb)
+        if self.left < 0 or self.left > 3:
+            self.left = 2
+        if self.middle < 0 or self.middle > 3:
+            self.middle = 1
+        if self.opacity < 0 or self.opacity > 0.9:
+            self.opacity = 0.9
+        if self.scale < 0.1 or self.scale > 0.9:
+            self.scale = 0.5
+        self.user = self.config.get_list(group, 'user_list')
+        self.current = self.config.get_list(group, 'current')
 
     # DEPENDENCIES check and complete INITIALISE
     def error_check(self):
@@ -208,23 +204,25 @@ class Dialect(awn.AppletSimple):
                     v_list[v_name] = v_desc
             self.layout[l_name] = l_desc
             self.variant[l_name] = v_list
-        if len(self.prefs['current']) == 2:
+        if len(self.current) == 2:
             bad_key = True
-            if self.prefs['current'][0] in self.layout.keys():
+            if self.current[0] in self.layout.keys():
                 bad_key = False
-                if self.prefs['current'][1] not in \
-                  self.variant[self.prefs['current'][0]].keys():
-                    if self.prefs['current'][1] != '':
+                if self.current[1] not in self.variant[self.current[0]].keys():
+                    if self.current[1] != '':
                         bad_key = True
             if bad_key:
-                self.prefs['current'] = []
-                self.internal = True
-                self.config.set_list(group, 'current', self.prefs['current'])
-        if len(self.prefs['user_list']) > 0:
-            user = self.prefs['user_list'][:]
+                self.current = []
+                self.config.set_list(group, 'current', self.current)
+        if len(self.user) > 0:
+            user = self.user[:]
             while (len(user) > 0):
                 item = user.pop()
+                if len(item.split(',')) != 2:
+                    item += ','
                 parent, child = item.split(',')
+                if item[-1] == ',':
+                    item = item.split(',')[0]
                 bad_key = True
                 if parent in self.layout.keys():
                     bad_key = False
@@ -232,10 +230,9 @@ class Dialect(awn.AppletSimple):
                         if child != '':
                             bad_key = True
                 if bad_key:
-                    index = self.prefs['user_list'].index(item)
-                    self.prefs['user_list'].pop(index)
-            self.internal = True
-            self.config.set_list(group, 'user_list', self.prefs['user_list'])
+                    index = self.user.index(item)
+                    self.user.pop(index)
+            self.config.set_list(group, 'user_list', self.user)
 
     # GTK initialise widgets
     def gtk_default(self):
@@ -243,14 +240,11 @@ class Dialect(awn.AppletSimple):
         item_list = []
         icon_list = []
         menu_hide = ''
-        self.gtk['left'].set_active(self.prefs['left'] + 1)
-        self.gtk['middle'].set_active(self.prefs['middle'] + 1)
-        self.gtk['scroll'].set_active(self.prefs['scroll'])
-        self.gtk['overlay'].set_active(self.prefs['overlay'])
-        self.gtk['scale'].set_value(self.prefs['scale'])
-        self.gtk['opacity'].set_value(self.prefs['opacity'])
-        if len(self.prefs['user_list']) > 0:
-            for item in self.prefs['user_list']:
+        for item in self.schema.keys():
+            self.config.bind(group, item, self.gtk[item], self.schema[item], \
+              False, bind_fb)
+        if len(self.user) > 0:
+            for item in self.user:
                 parent = item.split(',')[0]
                 child = item.split(',')[1]
                 desc = self.layout[parent]
@@ -298,8 +292,8 @@ class Dialect(awn.AppletSimple):
 
     # SET the current LAYOUT
     def set_layout(self):
-        if len(self.prefs['current']) == 2:
-            layout, variant = self.prefs['current']
+        if len(self.current) == 2:
+            layout, variant = self.current
             command = 'setxkbmap -layout ' + layout
             tooltip = self.layout[layout]
             if variant != '':
@@ -327,21 +321,20 @@ class Dialect(awn.AppletSimple):
         tooltip = self.layout[layout]
         if variant != '':
             tooltip += ' - ' + self.variant[layout][variant]
-        self.prefs['current'] = [layout, variant]
-        self.internal = True
-        self.config.set_list(group, 'current', self.prefs['current'])
+        self.current = [layout, variant]
+        self.config.set_list(group, 'current', self.current)
         self.set_tooltip_text(tooltip)
-        if self.overlay:
+        if self.over:
             self.remove_overlay(self.flag)
-            self.overlay = False
-        if self.prefs['overlay']:
+            self.over = False
+        if self.overlay:
             path = os.path.join(self.path, 'icons', layout + '.png')
             if os.path.isfile(path):
                 self.flag = awn.OverlayPixbufFile(path)
-                self.flag.set_property('alpha', self.prefs['opacity'])
-                self.flag.set_property('scale', self.prefs['scale'])
+                self.flag.set_property('alpha', self.opacity)
+                self.flag.set_property('scale', self.scale)
                 self.flag.set_property('gravity', gtk.gdk.GRAVITY_SOUTH_EAST)
-                self.overlay = True
+                self.over = True
                 self.add_overlay(self.flag)
         if effect:
             self.effects.start_ex(awn.EFFECT_ATTENTION, 2)
@@ -355,21 +348,20 @@ class Dialect(awn.AppletSimple):
 
     # ITERATE through user_list
     def iter_user_list(self, increment):
-        if len(self.prefs['user_list']) > 0:
+        if len(self.user) > 0:
             try:
-                layout, variant = self.prefs['current']
-                index = self.prefs['user_list'].index(layout + ',' + variant)
+                layout, variant = self.current
+                index = self.user.index(layout + ',' + variant)
                 index += increment
                 if index < 0:
-                    index = len(self.prefs['user_list']) - 1
+                    index = len(self.user) - 1
                 else:
-                    if index == len(self.prefs['user_list']):
+                    if index == len(self.user):
                         index = 0
             except:
                 index = 0
-            self.prefs['current'] = self.prefs['user_list'][index].split(',')
-            self.internal = True
-            self.config.set_list(group, 'current', self.prefs['current'])
+            self.current = self.user[index].split(',')
+            self.config.set_list(group, 'current', self.current)
             self.set_layout()
             return False
         else:
@@ -392,37 +384,12 @@ class Dialect(awn.AppletSimple):
 
 # SIGNAL handlers
 
-    # PREFS changed externally of applet
-    def prefs_changed(self, grp, key, value):
-        if not self.internal:
-            self.internal = True
-            if key in ['left', 'middle']:
-                value = min(2, value)
-                value = max(-1, value)
-                self.prefs[key] = value
-                self.gtk[key].set_active(self.prefs[key] + 1)
-            elif key in ['scroll', 'overlay']:
-                self.prefs[key] = value
-                self.gtk[key].set_active(self.prefs[key])
-            elif key in ['scale', 'opacity']:
-                low = 0.1
-                if key == 'opacity':
-                    low = 0.0
-                value = min(0.9, value)
-                value = max(low, value)
-                self.prefs[key] = value
-                self.gtk[key].set_value(self.prefs[key])
-            else:
-                self.config.set_list(group, key, self.prefs[key])
-        self.internal = False
-
     # SYSTEM menu response
     def on_menu_response(self, obj, layout=None, variant=None):
         if not variant:
             variant = ''
-        self.prefs['current'] = [str(layout), str(variant)]
-        self.internal = True
-        self.config.set_list(group, 'current', self.prefs['current'])
+        self.current = [str(layout), str(variant)]
+        self.config.set_list(group, 'current', self.current)
         self.set_layout()
 
     # CONTEXT menu response
@@ -442,45 +409,18 @@ class Dialect(awn.AppletSimple):
     def on_dialog_response(self, obj, data):
         obj.hide()
 
-    # CLICK action changed
-    def on_action_changed(self, obj):
-        if not self.init:
-            key = self.gtk.items()[self.gtk.values().index(obj)][0]
-            value = obj.get_active() - 1
-            self.prefs[key] = value
-            self.internal = True
-            self.config.set_int(group, key, value)
-
-    # SCROLL action changed
-    def on_scroll_toggled(self, obj):
-        if not self.init:
-            self.prefs['scroll'] = obj.get_active()
-            self.internal = True
-            self.config.set_bool(group, 'scroll', self.prefs['scroll'])
-
     # OVERLAY flag option changed
     def on_overlay_toggled(self, obj):
         if not self.init:
-            self.prefs['overlay'] = obj.get_active()
-            self.internal = True
-            self.config.set_bool(group, 'overlay', self.prefs['overlay'])
             self.get_layout(False)
 
     # OVERLAY opacity changed
     def on_opacity_changed(self, obj):
         self.flag.set_property('alpha', obj.get_value())
-        if not self.init:
-            self.prefs['opacity'] = obj.get_value()
-            self.internal = True
-            self.config.set_float(group, 'opacity', self.prefs['opacity'])
 
     # OVERLAY scale changed
     def on_scale_changed(self, obj):
         self.flag.set_property('scale', obj.get_value())
-        if not self.init:
-            self.prefs['scale'] = obj.get_value()
-            self.internal = True
-            self.config.set_float(group, 'scale', self.prefs['scale'])
 
     # ADD to or REMOVE from user list
     def on_list_changed(self, obj):
@@ -507,15 +447,12 @@ class Dialect(awn.AppletSimple):
     def on_order_changed(self, obj=None, data=None, iter=None):
         if not self.init:
             if not iter:
-                self.prefs['user_list'] = []
+                self.user = []
                 if len(self.gtk['user_list']) > 0:
                     for item in range(len(self.gtk['user_list'])):
                         row = self.gtk['user_list'][item]
-                        self.prefs['user_list'].append(str(row[2]) + ',' + \
-                          str(row[3]))
-                self.internal = True
-                self.config.set_list(group, 'user_list', \
-                  self.prefs['user_list'])
+                        self.user.append(str(row[2]) + ',' + str(row[3]))
+                self.config.set_list(group, 'user_list', self.user)
 
     # CLICKED on applet icon
     def on_applet_clicked(self, obj, event=None):
@@ -524,14 +461,14 @@ class Dialect(awn.AppletSimple):
         if event.button < 3:
             self.error_check()
             if self.depend and not self.init:
-                button = 'left'
+                button = self.left
                 if event.button == 2:
-                    button = 'middle'
-                if self.prefs[button] == 0:
+                    button = self.middle
+                if button == 1:
                     self.gtk['sys_menu'].popup(None, None, None, 0, event.time)
                     return True
-                elif self.prefs[button] < 2:
-                    if self.iter_user_list(self.prefs[button]):
+                elif button < 3:
+                    if self.iter_user_list(button - 1):
                         self.gtk['sys_menu'].popup(None, None, None, 0, \
                           event.time)
                         return True
@@ -545,8 +482,8 @@ class Dialect(awn.AppletSimple):
         if not self.init:
             self.error_check()
             if self.depend:
-                if self.prefs['scroll']:
-                    self.iter_user_list(self.scroll.index(data.direction) - 1)
+                if self.scroll:
+                    self.iter_user_list(self.wheel.index(data.direction) - 1)
 
     # WATCH event
     def watch_event(self, signum, frame):
@@ -559,7 +496,7 @@ class Dialect(awn.AppletSimple):
 # LAUNCH applet
 if __name__ == '__main__':
     awn.init(sys.argv[1:])
-    applet = Dialect('Dialect', awn.uid, awn.panel_id)
+    applet = Dialect('dialect', awn.uid, awn.panel_id)
     awn.embed_applet(applet)
     applet.show_all()
     gtk.main()

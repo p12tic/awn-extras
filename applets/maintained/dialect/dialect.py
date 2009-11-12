@@ -3,6 +3,7 @@
 #         Dialect Applet, v 09.11.03
 #
 #         Copyright (C) 2009, Lachlan Turner (Denham2010) <lochjt@hotmail.com>
+#         Watch signal code patch provided by Michal Hruby (mhr3)
 #
 #         This program is free software; you can redistribute it and/or modify
 #         it under the terms of the GNU General Public License as published by
@@ -30,6 +31,7 @@ import gobject
 import subprocess
 import fcntl
 import signal
+import glib
 from xml.dom.minidom import parse
 from desktopagnostic.config import GROUP_DEFAULT as group
 from desktopagnostic.config import BIND_METHOD_FALLBACK as bind_fb
@@ -78,6 +80,7 @@ class Dialect(awn.AppletSimple):
         self.flag = awn.OverlayPixbufFile(None)
         self.over = False
         self.set_tooltip_text('Dialect Applet')
+        self.get_icon().get_tooltip().props.toggle_on_click = False
 
         # GTK load interface
         self.gtk_init()
@@ -163,7 +166,6 @@ class Dialect(awn.AppletSimple):
                 self.layout_init()
                 self.gtk_default()
                 self.set_layout()
-                self.set_watch()
         else:
             self.effects.start_ex(awn.EFFECT_ATTENTION, 2)
             response = self.gtk['error'].run()
@@ -295,21 +297,23 @@ class Dialect(awn.AppletSimple):
         if len(self.current) == 2:
             layout, variant = self.current
             command = 'setxkbmap -layout ' + layout
-            tooltip = self.layout[layout]
             if variant != '':
                 command += ' -variant ' + variant
-                tooltip += ' - ' + self.variant[layout][variant]
-            self.set_tooltip_text(tooltip)
-            pipe = subprocess.Popen(command, shell=True)
+            self.unset_watch()
+            retcode = subprocess.call(command, shell=True)
+            self.update_applet(layout, variant, False)
+            self.set_watch()
         else:
             self.get_layout(False)
 
-    # Get the current layout
+    # GET the current layout
     def get_layout(self, effect=False):
+        self.unset_watch()
         pipe = subprocess.Popen('setxkbmap -print -v 10', shell=True, \
           bufsize=0, stdout=subprocess.PIPE).stdout
         data = pipe.read()
         pipe.close()
+        self.set_watch()
         result = data.split('\n')
         layout = ''
         variant = ''
@@ -318,11 +322,15 @@ class Dialect(awn.AppletSimple):
                 layout = line.split(':')[1].lstrip()
             if line.startswith('variant'):
                 variant = line.split(':')[1].lstrip()
+        self.current = [layout, variant]
+        self.config.set_list(group, 'current', self.current)
+        self.update_applet(layout, variant, effect)
+
+    # UPDATE the applet icon on a get or set layout call
+    def update_applet(self, layout, variant, effect=False):
         tooltip = self.layout[layout]
         if variant != '':
             tooltip += ' - ' + self.variant[layout][variant]
-        self.current = [layout, variant]
-        self.config.set_list(group, 'current', self.current)
         self.set_tooltip_text(tooltip)
         if self.over:
             self.remove_overlay(self.flag)
@@ -339,12 +347,16 @@ class Dialect(awn.AppletSimple):
         if effect:
             self.effects.start_ex(awn.EFFECT_ATTENTION, 2)
 
-    # WATCH for layout changes
+    # Add WATCH for layout changes
     def set_watch(self):
         monitor = os.open(self.watch, os.O_RDONLY)
         fcntl.fcntl(monitor, fcntl.F_NOTIFY, fcntl.DN_ACCESS | \
           fcntl.DN_MODIFY | fcntl.DN_CREATE)
         signal.signal(signal.SIGIO, self.watch_event)
+
+    # Remove WATCH for layout changes on IO operations
+    def unset_watch(self):
+        signal.signal(signal.SIGIO, signal.SIG_IGN)
 
     # ITERATE through user_list
     def iter_user_list(self, increment):
@@ -485,13 +497,18 @@ class Dialect(awn.AppletSimple):
                 if self.scroll:
                     self.iter_user_list(self.wheel.index(data.direction) - 1)
 
-    # WATCH event
-    def watch_event(self, signum, frame):
+    # UPDATE layout on watch signal triggered
+    def update_layout(self):
         if self.init:
             self.get_layout(False)
         else:
             self.get_layout(True)
         self.set_watch()
+        return False
+
+    # WATCH event triggered
+    def watch_event(self, signum, frame):
+        glib.idle_add(self.update_layout)
 
 # LAUNCH applet
 if __name__ == '__main__':

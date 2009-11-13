@@ -64,6 +64,8 @@ def get_app_name():
         player_name = "Aeon"
     elif bus_obj.NameHasOwner('org.mpris.dragonplayer') == True:
         player_name = "DragonPlayer"
+    elif bus_obj.NameHasOwner('org.freedesktop.MediaPlayer') == True:
+        player_name = "mpDris"
     return player_name
 
 
@@ -185,6 +187,7 @@ class MPRISPlayer(GenericPlayer):
         self.signalling_supported = True
 
     def playing_changed_emitter(self, playing):
+        print "Status Change: ", playing
         if (self.playing_changed_cb):
             self.playing_changed_cb(playing[0] == 0)
 
@@ -641,6 +644,16 @@ class Aeon(MPRISPlayer):
 
 
 class DragonPlayer(MPRISPlayer):
+    """ FIXME: Doesn't work: bus path is org.mpris.dragonplayer-XXXXX """
 
     def __init__(self):
         MPRISPlayer.__init__(self, 'org.mpris.dragonplayer')
+
+
+class mpDris(MPRISPlayer):
+    """ mpDris is an implementation of the XMMS2 media player interface MPRIS as a client for MPD. """
+
+    def __init__(self):
+        MPRISPlayer.__init__(self, 'org.freedesktop.MediaPlayer')
+
+

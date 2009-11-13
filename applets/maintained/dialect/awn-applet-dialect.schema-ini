@@ -1,12 +1,12 @@
 [DEFAULT/left]
 type = integer
 default = 2
-description = Left click action.
+description = Left click action (see help dialog for description of values).
 
 [DEFAULT/middle]
 type = integer
 default = 1
-description = Middle click action.
+description = Middle click action (see help dialog for description of values).
 
 [DEFAULT/scroll]
 type = boolean
@@ -21,7 +21,7 @@ description = Overlay layout flag on icon.
 [DEFAULT/scale]
 type = float
 default = 0.5
-description = Flag size.
+description = Flag size compared to icon.
 
 [DEFAULT/opacity]
 type = float

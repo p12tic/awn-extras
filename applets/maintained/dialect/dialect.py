@@ -118,8 +118,8 @@ class Dialect(awn.AppletSimple):
             self.gtk[key + 'select'].set_mode(gtk.SELECTION_SINGLE)
         self.gtk['sys_menu'] = gtk.Menu()
         for key in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ':
-            icon = gtk.image_new_from_pixbuf(self.theme.load_icon('folder', \
-              16, 0))
+            icon = gtk.image_new_from_stock(gtk.STOCK_DIRECTORY, \
+              gtk.ICON_SIZE_MENU)
             self.gtk['item_' + key] = gtk.ImageMenuItem(key, key)
             self.gtk['item_' + key].set_image(icon)
             self.gtk['menu_' + key] = gtk.Menu()
@@ -179,6 +179,7 @@ class Dialect(awn.AppletSimple):
             for path in paths:
                 if os.path.isfile(os.path.join(path, 'setxkbmap')):
                     self.depend = True
+                    break
 
     #LAYOUTS list
     def layout_init(self):
@@ -252,18 +253,18 @@ class Dialect(awn.AppletSimple):
                 desc = self.layout[parent]
                 if child != '':
                     desc = desc + ' - ' + self.variant[parent][child]
-                icon = self.load_icon(parent, 16)
+                icon = self.load_icon(parent, gtk.ICON_SIZE_SMALL_TOOLBAR)
                 self.gtk['user_list'].append([icon, desc, parent, child])
         layouts = self.layout.values()
         layouts.sort()
         for layout in layouts:
             parent = self.layout.items()[self.layout.values().index(layout)][0]
-            icon = self.load_icon(parent, 16)
+            icon = self.load_icon(parent, gtk.ICON_SIZE_SMALL_TOOLBAR)
             index = self.gtk['sys_list'].append(None, \
               [icon, layout, parent, ''])
             item_list.append(gtk.ImageMenuItem(layout, layout))
             icon_list.append(gtk.image_new_from_pixbuf(\
-              self.load_icon(parent, 16)))
+              self.load_icon(parent, gtk.ICON_SIZE_MENU)))
             item_list[-1].set_image(icon_list[-1])
             item_list[-1].show()
             self.gtk['menu_' + layout[0].upper()].append(item_list[-1])
@@ -380,7 +381,8 @@ class Dialect(awn.AppletSimple):
             return True
 
     # LOAD icon image file
-    def load_icon(self, icon, size):
+    def load_icon(self, icon, sz):
+        size = gtk.icon_size_lookup(sz)[1]
         path = os.path.join(self.path, 'icons', icon + '.png')
         if os.path.isfile(path):
             image = gtk.gdk.pixbuf_new_from_file(path)
@@ -451,7 +453,7 @@ class Dialect(awn.AppletSimple):
                     desc = self.layout[parent]
                     if child != '':
                         desc = desc + ' - ' + self.variant[parent][child]
-                    icon = self.load_icon(parent, 16)
+                    icon = self.load_icon(parent, gtk.ICON_SIZE_SMALL_TOOLBAR)
                     self.gtk['user_list'].append([icon, desc, parent, child])
                     self.on_order_changed()
 

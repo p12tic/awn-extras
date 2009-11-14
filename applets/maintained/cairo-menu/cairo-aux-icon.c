@@ -153,7 +153,7 @@ static gboolean
 queue_menu_build (CairoAuxIcon *icon)
 {
   CairoAuxIconPrivate * priv = GET_PRIVATE (icon);
-  
+
   priv->menu = menu_build (priv->menu_instance);
   g_signal_connect(G_OBJECT(priv->menu), "deactivate", G_CALLBACK(_deactivate_event), icon);  
   g_signal_connect(icon, "button-press-event", G_CALLBACK(_button_clicked_event), NULL);

@@ -37,6 +37,7 @@ GMenuTree *  main_menu_tree = NULL;
 GMenuTree *  settings_menu_tree = NULL;    
 
 GtkWidget *  menu_build (MenuInstance * instance);
+static GtkWidget * submenu_build (MenuInstance * instance);
 
 static GtkWidget *
 get_image_from_gicon (GIcon * gicon)
@@ -695,13 +696,35 @@ clear_menu (MenuInstance * instance)
   }
 }
 
-GtkWidget *
+static gboolean
+_submenu_delayed_update (MenuInstance * instance)
+{
+  instance->menu = submenu_build (instance);  
+  instance->source_id=0;
+  return FALSE;
+}
+
+
+static void 
+_submenu_modified_cb(GMenuTree *tree,MenuInstance * instance)
+{
+
+  /*
+ keeps a runaway stream of callbacks from occurring in certain circumstances
+ */
+  if (!instance->source_id)
+  {
+    instance->source_id = g_timeout_add_seconds (5,(GSourceFunc)_submenu_delayed_update,instance);
+  }
+}
+
+
+static GtkWidget *
 submenu_build (MenuInstance * instance)
 {
   GMenuTreeDirectory *main_root;
   GMenuTreeDirectory *settings_root;
   GtkWidget * menu = NULL;
-
   /*
    if the menu is set then clear any menu items (except for places or recent)
    */
@@ -751,14 +774,14 @@ submenu_build (MenuInstance * instance)
     if ( menu_dir = find_menu_dir (instance,main_root) )
     {
       /* if instance->menu then we're refreshing in a monitor callback*/
-      gmenu_tree_remove_monitor (main_menu_tree,(GMenuTreeChangedFunc)submenu_build,instance);
-      gmenu_tree_add_monitor (main_menu_tree,(GMenuTreeChangedFunc)submenu_build,instance);
+      gmenu_tree_remove_monitor (main_menu_tree,(GMenuTreeChangedFunc)_submenu_modified_cb,instance);
+      gmenu_tree_add_monitor (main_menu_tree,(GMenuTreeChangedFunc)_submenu_modified_cb,instance);
       menu = fill_er_up(instance,menu_dir,instance->menu);      
     }
     else if ( menu_dir = find_menu_dir (instance,settings_root) )
     {
-      gmenu_tree_remove_monitor (main_menu_tree,(GMenuTreeChangedFunc)submenu_build,instance);
-      gmenu_tree_add_monitor (main_menu_tree,(GMenuTreeChangedFunc)submenu_build,instance);
+      gmenu_tree_remove_monitor (main_menu_tree,(GMenuTreeChangedFunc)_submenu_modified_cb,instance);
+      gmenu_tree_add_monitor (main_menu_tree,(GMenuTreeChangedFunc)_submenu_modified_cb,instance);
       menu = fill_er_up(instance,menu_dir,instance->menu);     
     }
     if (menu_dir)

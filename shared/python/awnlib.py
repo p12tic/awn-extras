@@ -215,9 +215,8 @@ class Dialogs:
         """
         force = force.lower()
 
-        assert force in ("hide", "show", ""), \
-            "Force must be \"hide\", \"show\", or \"\""
-        assert dialog in self.__register, "Dialog must be registered"
+        assert force in ("hide", "show", ""), "Force must be \"hide\", \"show\", or \"\""
+        assert dialog in self.__register, "Dialog '%s' must be registered" % dialog
 
         if dialog == "menu":
             self.__register["menu"].show_all()
@@ -226,8 +225,7 @@ class Dialogs:
             self.__register["about"].show()
             self.__register["about"].deiconify()
         else:
-            if force == "hide" or (self.__register[dialog].is_active() and \
-                                       force != "show"):
+            if force == "hide" or (self.__register[dialog].is_active() and force != "show"):
                 self.__register[dialog].hide()
                 self.__current = None
 
@@ -236,8 +234,7 @@ class Dialogs:
             else:
                 self.__parent.tooltip.hide()
 
-                if self.__current is not None and self.__current not in \
-                        self.__special_dialogs:
+                if self.__current is not None and self.__current not in self.__special_dialogs:
                     current = self.__register[self.__current]
                     current_was_active = current.is_active()
 
@@ -259,6 +256,14 @@ class Dialogs:
         if self.__current is not None:
             self.__register[self.__current].hide()
             self.__current = None
+
+    def is_visible(self, dialog):
+        """Return True if the specified dialog is visible, False otherwise.
+
+        """
+        assert dialog in self.__register, "Dialog '%s' must be registered" % dialog
+
+        return self.__register[dialog].is_active()
 
     class BaseDialog:
 

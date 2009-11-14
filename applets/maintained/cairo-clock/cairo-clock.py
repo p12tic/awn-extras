@@ -60,13 +60,12 @@ class CairoClockApplet:
 
         self.__clock_updater = ClockUpdater(self)
 
-        self.__clock_updater.load_theme()
-        self.__clock_updater.draw_clock_cb()
+        self.initialize_clock()
 
         applet.tooltip.connect_becomes_visible(self.__clock_updater.update_title)
         applet.connect_size_changed(self.__clock_updater.draw_clock_cb)
 
-        applet.timing.register(self.__clock_updater.draw_clock_cb, draw_clock_interval)
+        applet.timing.register(self.refresh_clock, draw_clock_interval)
 
     def setup_main_dialog(self):
         dialog = self.applet.dialog.new("main")
@@ -126,9 +125,20 @@ class CairoClockApplet:
             vbox.add(plugin_vbox)
 
         """ Calendar """
-        calendar = gtk.Calendar()
-        calendar.props.show_week_numbers = True
-        vbox.add(calendar)
+        self.calendar = gtk.Calendar()
+        self.calendar.props.show_week_numbers = True
+        vbox.add(self.calendar)
+
+        self.marked_day = 0
+
+        # Make sure the current day is only marked if the calendar is set to the current month
+        def month_changed_cb(widget):
+            ltime = time.localtime()
+            if widget.props.month == ltime.tm_mon - 1:
+                widget.mark_day(self.marked_day)
+            else:
+                widget.unmark_day(self.marked_day)
+        self.calendar.connect("month-changed", month_changed_cb)
 
     def setup_context_menu(self):
         self.preferences_notebook = gtk.Notebook()
@@ -193,8 +203,25 @@ class CairoClockApplet:
         self.applet.settings["theme"] = self.themes[combobox.get_active()]
 
         # Load the new theme and update the clock
+        self.initialize_clock()
+
+    def initialize_clock(self):
+        """Load the current theme given by the "theme" setting and then
+        draw the clock using the new theme.
+
+        """
         self.__clock_updater.load_theme()
         self.__clock_updater.draw_clock_cb()
+
+    def refresh_clock(self):
+        local_time = time.localtime()
+
+        self.__clock_updater.draw_clock_cb(local_time)
+
+        if self.marked_day != local_time.tm_mday:
+            self.calendar.unmark_day(self.marked_day)
+            self.marked_day = local_time.tm_mday
+            self.calendar.mark_day(self.marked_day)
 
 
 class ClockUpdater:
@@ -209,13 +236,16 @@ class ClockUpdater:
 
         self.__clock = AppletAnalogClock(self)
 
-    def update_title(self):
+    def update_title(self, local_time=None):
         """Update the title according to the settings or a custom time
         format if it's not empty.
 
         """
         if not self.applet.tooltip.is_visible():
             return
+
+        if local_time is None:
+            local_time = time.localtime()
 
         if len(self.settings["custom-time-format"]) > 0:
             format = self.settings["custom-time-format"]
@@ -225,28 +255,28 @@ class ClockUpdater:
                 ampm = ""
             else:
                 # Strip leading zero for single-digit hours
-                hours = str(int(time.strftime("%I")))
+                hours = str(int(time.strftime("%I", local_time)))
                 ampm = " %p"
 
-            if self.settings["time-seconds"]:
-                seconds = ":%S"
-            else:
-                seconds = ""
+            seconds = ":%S" if self.settings["time-seconds"] else ""
 
             format = hours + ":%M" + seconds + ampm
 
             if self.settings["time-date"]:
                 format = "%a %b %d " + format + " %Y"
 
-        self.applet.tooltip.set(time.strftime(format))
+        self.applet.tooltip.set(time.strftime(format, local_time))
 
-    def draw_clock_cb(self):
-        """Draw the clock and update the title to keep it synchronized with
+    def draw_clock_cb(self, local_time=None):
+        """Draw the clock and update the tooltip to keep it synchronized with
         the drawn clock.
 
         """
-        self.__clock.draw_clock()
-        self.update_title()
+        if local_time is None:
+            local_time = time.localtime()
+
+        self.__clock.draw_clock(local_time)
+        self.update_title(local_time)
 
         return True
 
@@ -269,11 +299,10 @@ class AppletAnalogClock:
         self.__theme = provider
         self.__previous_state = None
 
-    def draw_clock(self):
+    def draw_clock(self, local_time):
         """Render the SVGs on a Cairo surface and uses it as the applet's icon.
 
         """
-        local_time = time.localtime()
         hours, minutes, seconds = (local_time[3], local_time[4], local_time[5])
 
         height = self.applet.get_size()

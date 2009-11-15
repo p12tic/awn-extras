@@ -55,6 +55,7 @@ SUBDIRS = \
 	maintained/cairo-clock \
 	maintained/comics \
 	maintained/cpufreq \
+	maintained/dialect \
 	maintained/digital-clock \
 	unmaintained/dropper \
 	maintained/feeds \

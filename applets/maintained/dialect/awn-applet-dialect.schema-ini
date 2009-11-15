@@ -1,0 +1,39 @@
+[DEFAULT/left]
+type = integer
+default = 2
+description = Left click action (see help dialog for description of values).
+
+[DEFAULT/middle]
+type = integer
+default = 1
+description = Middle click action (see help dialog for description of values).
+
+[DEFAULT/scroll]
+type = boolean
+default = false
+description = Can change layout with scroll wheel.
+
+[DEFAULT/overlay]
+type = boolean
+default = true
+description = Overlay layout flag on icon.
+
+[DEFAULT/scale]
+type = float
+default = 0.5
+description = Flag size compared to icon.
+
+[DEFAULT/opacity]
+type = float
+default = 0.9
+description = Flag opacity.
+
+[DEFAULT/current]
+type = list-string
+default = ;
+description = Active keyboard layout and variant.
+
+[DEFAULT/user_list]
+type = list-string
+default = ;
+description = User selected layout list.

@@ -20,6 +20,7 @@
 import gtk
 import gnomevfs
 from awn.extras import _
+from desktopagnostic.config import GROUP_DEFAULT
 from stacks_backend_folder import *
 from stacks_vfs import VfsUri, Monitor
 
@@ -37,16 +38,16 @@ class PluggerBackend(FolderBackend):
                     volume.unmount(self._eject_cb)
 
     def _hide_cb(self, widget):
-        self.applet.gconf_client.set_bool(self.applet.gconf_path + "/hide_volume", True)
+        #self.applet.gconf_client.set_bool(self.applet.gconf_path + "/hide_volume", True)
         self.applet.destroy()
 
     def get_type(self):
         return BACKEND_TYPE_PLUGGER
 
     def get_title(self):
-        title = self.applet.gconf_client.get_string(self.applet.gconf_path + "/title")
-        if title:
-            return title;
+        title = self.applet.client.get_string(GROUP_DEFAULT, "title")
+        if title and len(title) > 0:
+            return title
         else:
             return _("Mounted Volume")
 

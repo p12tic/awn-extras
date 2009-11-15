@@ -139,8 +139,9 @@ class FolderBackend(Backend):
 
 
     def get_title(self):
-        title = self.applet.gconf_client.get_string(
-                self.applet.gconf_path + "/title")
+        title = self.applet.client.get_string(GROUP_DEFAULT, "title")
+        if title is None or len(title) == 0:
+            title = None
         return title or self.backend_uri.as_uri().short_name
 
 

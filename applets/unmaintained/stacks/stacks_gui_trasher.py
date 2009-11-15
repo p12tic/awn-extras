@@ -23,7 +23,6 @@ import gtk
 from gtk import gdk
 import gobject
 import pango
-import gconf
 import awn
 import cairo
 import gnome.ui

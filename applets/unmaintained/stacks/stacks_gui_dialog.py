@@ -23,7 +23,6 @@ import gtk
 from gtk import gdk
 import gobject
 import pango
-import gconf
 import awn
 import cairo
 import gnome.ui
@@ -57,7 +56,6 @@ class StacksGuiDialog:
     config = None
     store = None
     current_page = 0
-    gui_visible = False
 
     # Status values
     context_menu_visible = False
@@ -83,6 +81,10 @@ class StacksGuiDialog:
         self.signal_ids.append(applet.connect("stacks-gui-request-hide", self._stacks_gui_request_hide))
 
 
+    def is_visible(self):
+        if self.dialog is None: return False
+        return self.dialog.flags() & gtk.VISIBLE != 0
+        
     def _destroy_cb(self, widget):
         for id in self.signal_ids: self.applet.disconnect(id)
         if self.dialog: self.dialog.destroy()
@@ -91,14 +93,12 @@ class StacksGuiDialog:
         self.reset_hide_timer()
         if self.dialog:
             self.dialog.hide()
-        self.gui_visible = False
 
     def _stacks_gui_show_cb(self, widget):
         self.dialog_show_new(self.current_page)
-        self.gui_visible = True
 
     def _stacks_gui_toggle_cb(self, widget):
-        if self.gui_visible: return self._stacks_gui_hide_cb(None)
+        if self.is_visible(): return self._stacks_gui_hide_cb(None)
         return self._stacks_gui_show_cb(None)
 
     def reset_hide_timer(self):
@@ -121,7 +121,7 @@ class StacksGuiDialog:
 
     def _item_removed_cb(self, widget, store, iter):
         self.store = store
-        if self.gui_visible:
+        if self.is_visible():
             return self._stacks_gui_show_cb(None)
 
     # launches the command for a stack icon
@@ -130,6 +130,7 @@ class StacksGuiDialog:
         uri, mimetype = user_data
         if event.button == 3:
             self.context_menu_visible = True
+            self.dialog.props.hide_on_unfocus = False
             self.item_context_menu(uri).popup(None, None, None, event.button, event.time)
         elif event.button == 1:
             if self.just_dragged:
@@ -206,6 +207,7 @@ class StacksGuiDialog:
 
     def item_menu_hide_cb(self, widget):
         self.context_menu_visible = False
+        self.dialog.props.hide_on_unfocus = True
 
     def item_context_menu(self, uri):
         self.context_menu_visible = True
@@ -322,7 +324,7 @@ class StacksGuiDialog:
 
         # create new dialog if it does not exists yet
         if not self.dialog:
-            self.dialog = awn.AppletDialog (self.applet)
+            self.dialog = awn.Dialog (self.applet)
             self.dialog.add_events(gtk.gdk.BUTTON_PRESS_MASK |
                         gtk.gdk.BUTTON_RELEASE_MASK |
                         gtk.gdk.POINTER_MOTION_MASK |
@@ -334,8 +336,9 @@ class StacksGuiDialog:
                         gtk.gdk.DROP_START |
                         gtk.gdk.DROP_FINISHED)
             self.dialog.set_focus_on_map(True)
-            self.dialog.set_keep_above(True) 
-            self.dialog.connect("focus-out-event", self.dialog_focus_out)
+            self.dialog.set_keep_above(True)
+            self.dialog.props.hide_on_unfocus = True
+            #self.dialog.connect("focus-out-event", self.dialog_focus_out)
             self.dialog.connect("drag-leave", self.dialog_drag_leave_event)
             self.dialog.connect("drag-motion", self.stack_drag_motion_event)
             self.dialog.set_title(self.applet.backend.get_title())

@@ -6,7 +6,8 @@ from gtk.glade import *
 from gtk import gdk
 import os
 from awn.extras import _
-        
+from desktopagnostic.config import GROUP_DEFAULT
+ 
 #from stacks_applet import StacksApplet
 from stacks_backend import *
 from stacks_glade import GladeWindow
@@ -66,10 +67,7 @@ class StacksConfig(GladeWindow):
         self.applet = applet
         self.backend_type = applet.backend.get_type()
 
-        config = get_config_from_gconf(
-                self.applet.gconf_client,
-                self.applet.gconf_path,
-                self.applet.uid)
+        config = get_config_dict(self.applet.client, self.applet.get_uid())
         self.config = config
 
         preferences = ALL_PREFS
@@ -217,7 +215,7 @@ class StacksConfig(GladeWindow):
 
         # get close_on_focusout
         self.widgets['close_on_focusout_enabled'].set_active(config['close_on_focusout'])
-        
+
         # get sort methode
         self.widgets['arange_by_combobox'].set_active(config['sort_methode']-1)
 
@@ -331,68 +329,56 @@ class StacksConfig(GladeWindow):
         if self.backend_type == BACKEND_TYPE_FILE or self.backend_type == BACKEND_TYPE_FOLDER:
         	if self.widgets['file_backend_button'].get_active():
         		file_backend_mode = True
-        		self.applet.gconf_client.set_int(
-        				self.applet.gconf_path + "/backend_type",
+        		self.applet.client.set_int(GROUP_DEFAULT, "backend_type",
         				BACKEND_TYPE_FILE)
         		file_backend_prefix = "file://" + os.path.join(
         		os.path.expanduser("~"),
         			".config", "awn", "applets", "stacks")
         		back_uri = VfsUri(file_backend_prefix).as_uri()
-        		backend_VfsUri = VfsUri(back_uri.append_path(self.applet.uid))
+        		backend_VfsUri = VfsUri(back_uri.append_path(self.applet.get_uid()))
         		self.backend = backend_VfsUri.as_string()
         		
         	elif self.widgets['folder_backend_button'].get_active():
         		folder_backend_mode = True
-        		self.applet.gconf_client.set_int(
-        				self.applet.gconf_path + "/backend_type",
+        		self.applet.client.set_int(GROUP_DEFAULT, "backend_type",
         				BACKEND_TYPE_FOLDER)
         	
         		self.backend = self.widgets['folder_location_entry'].get_text()
         	if self.backend == "" or self.backend == None:
         		self.backend = "file://" + os.path.expanduser("~")
         		
-        	self.applet.gconf_client.set_string(self.applet.gconf_path + "/backend",self.backend )
+        	self.applet.client.set_string(GROUP_DEFAULT, "backend", self.backend)
 
         # set dimension
         cols = self.widgets['cols_entry'].get_text()
         if int(cols) > 0:
-            self.applet.gconf_client.set_int(
-                    self.applet.gconf_path + "/cols", int(cols) )
+            self.applet.client.set_int(GROUP_DEFAULT, "cols", int(cols))
         rows = self.widgets['rows_entry'].get_text()
         if int(rows) > 0:
-            self.applet.gconf_client.set_int(
-                    self.applet.gconf_path + "/rows", int(rows) )
+            self.applet.client.set_int(GROUP_DEFAULT, "rows", int(rows))
         # set icon size
         iconsize = self.widgets['iconsize_spin'].get_value()
         if int(iconsize) > 0:
-            self.applet.gconf_client.set_int(
-                    self.applet.gconf_path + "/icon_size", int(iconsize) )
+            self.applet.client.set_int(GROUP_DEFAULT, "icon_size", int(iconsize))
         # set composite
-        self.applet.gconf_client.set_bool(
-                self.applet.gconf_path + "/composite_icon",
+        self.applet.client.set_bool(GROUP_DEFAULT, "composite_icon",
                 self.widgets['composite_checkb'].get_active())
         # set title
-        self.applet.gconf_client.set_string(
-                self.applet.gconf_path + "/title",
+        self.applet.client.set_string(GROUP_DEFAULT, "title",
                 self.widgets['title_entry'].get_text())
         # set item count
-        self.applet.gconf_client.set_bool(
-                self.applet.gconf_path + "/item_count",
+        self.applet.client.set_bool(GROUP_DEFAULT, "item_count",
                 self.widgets['count_checkbx'].get_active())
         # set browsing
-        self.applet.gconf_client.set_bool(
-                self.applet.gconf_path + "/browsing",
+        self.applet.client.set_bool(GROUP_DEFAULT, "browsing",
                 self.widgets['browse_enabled'].get_active())
         # set close_on_focusout
-        self.applet.gconf_client.set_bool(
-                self.applet.gconf_path + "/close_on_focusout",
+        self.applet.client.set_bool(GROUP_DEFAULT, "close_on_focusout",
                 self.widgets['close_on_focusout_enabled'].get_active())
         # set icons
-        self.applet.gconf_client.set_string(
-                self.applet.gconf_path + "/applet_icon_empty",
+        self.applet.client.set_string(GROUP_DEFAULT, "applet_icon_empty",
                 self.config['icon_empty'])
-        self.applet.gconf_client.set_string(
-                self.applet.gconf_path + "/applet_icon_full",
+        self.applet.client.set_string(GROUP_DEFAULT, "applet_icon_full",
                 self.config['icon_full'])
         # set stack layout
         if self.widgets['layout_combobox'].get_active() <> -1:
@@ -403,24 +389,23 @@ class StacksConfig(GladeWindow):
         			gui_type = STACKS_GUI_DIALOG
         		self.config['gui_type'] = gui_type
         		
-        		self.applet.gconf_client.set_int(
-                    self.applet.gconf_path + "/gui_type", int(gui_type) )
-        		
+        		self.applet.client.set_int(GROUP_DEFAULT, "gui_type",
+                                           int(gui_type))
+
         		self.applet.set_gui(gui_type)
 
         # set sort methode
         sort_methode = self.widgets['arange_by_combobox'].get_active() + 1
-        self.applet.gconf_client.set_int(
-                    self.applet.gconf_path + "/sort_methode", int(sort_methode) )
+        self.applet.client.set_int(GROUP_DEFAULT, "sort_method",
+                                   int(sort_methode))
 
         # set sort direction
         sort_direction = self.widgets['sort_direction_combobox'].get_active() + 1
-        self.applet.gconf_client.set_int(
-                    self.applet.gconf_path + "/sort_direction", int(sort_direction) )
+        self.applet.client.set_int(GROUP_DEFAULT, "sort_direction",
+                                   int(sort_direction))
                     
         # get sort folders before files
-        self.applet.gconf_client.set_bool(
-                self.applet.gconf_path + "/sort_folders_before_files",
+        self.applet.client.set_bool(GROUP_DEFAULT, "sort_folders_before_files",
                 self.widgets['sort_folders_before_files'].get_active())
         
         
@@ -432,8 +417,7 @@ class StacksConfig(GladeWindow):
             actions |= gtk.gdk.ACTION_MOVE
         if self.widgets['link_check'].get_active():
             actions |= gtk.gdk.ACTION_LINK
-        self.applet.gconf_client.set_int(
-                self.applet.gconf_path + "/file_operations", actions)
+        self.applet.client.set_int(GROUP_DEFAULT, "file_operations", actions)
         # destroy window
         self.window.destroy()
         
@@ -443,12 +427,17 @@ class StacksConfig(GladeWindow):
     def set_current_page(self, page):
         self.widgets['main_notebook'].set_current_page(page)
 
-def get_config_from_gconf(gconf_client, gconf_path, uid):
+def get_config_dict(client, uid):
     # store config in dict
     config = {}
-    # try to get backend from gconf
-    _config_backend = gconf_client.get_string(gconf_path + "/backend")
+
+    # try to get backend from backing store
+
+    config['backend_type'] = client.get_int(GROUP_DEFAULT, "backend_type")
+
+    _config_backend = client.get_string(GROUP_DEFAULT, "backend")
     try:
+        # FIXME: needs lda fix!
         config['backend'] = VfsUri(_config_backend)
     except:
         file_backend_prefix = "file://" + os.path.join(
@@ -458,26 +447,24 @@ def get_config_from_gconf(gconf_client, gconf_path, uid):
         config['backend'] = VfsUri(back_uri.append_path(uid))
 
     # get dimension
-    _config_cols = gconf_client.get_int(gconf_path + "/cols")
+    _config_cols = client.get_int(GROUP_DEFAULT, "cols")
     if _config_cols <= 0:
         _config_cols = 5
     config['cols'] = _config_cols
 
-    _config_rows = gconf_client.get_int(gconf_path + "/rows")
+    _config_rows = client.get_int(GROUP_DEFAULT, "rows")
     if _config_rows <= 0:
         _config_rows = 4
     config['rows'] = _config_rows
 
     # get icon size
-    _config_icon_size = gconf_client.get_int(
-            gconf_path + "/icon_size")
+    _config_icon_size = client.get_int(GROUP_DEFAULT, "icon_size")
     if _config_icon_size <= 0:
         _config_icon_size = 48
     config['icon_size'] = _config_icon_size
 
     # get file operations
-    _config_fileops = gconf_client.get_int(
-            gconf_path + "/file_operations")
+    _config_fileops = client.get_int(GROUP_DEFAULT, "file_operations")
 
     if _config_fileops <= 0:
         _config_fileops = gtk.gdk.ACTION_LINK
@@ -485,69 +472,45 @@ def get_config_from_gconf(gconf_client, gconf_path, uid):
     config['fileops'] = _config_fileops
 
     # get composite icon
-    if gconf_client.get_bool(gconf_path + "/composite_icon"):
+    if client.get_bool(GROUP_DEFAULT, "composite_icon"):
         config['composite_icon'] = True
     else:
         config['composite_icon'] = False
 
     # get browsing
-    if gconf_client.get_bool(gconf_path + "/browsing"):
+    if client.get_bool(GROUP_DEFAULT, "browsing"):
         config['browsing'] = True
     else:
         config['browsing'] = False
 
-    config['close_on_focusout'] = loadBool(gconf_client, gconf_path + "/close_on_focusout", True)
-
+    config['close_on_focusout'] = client.get_bool(GROUP_DEFAULT, "close_on_focusout")
 
     # get icons
-    _config_icon_empty = gconf_client.get_string(
-            gconf_path + "/applet_icon_empty")
+    _config_icon_empty = client.get_string(GROUP_DEFAULT, "applet_icon_empty")
     if _config_icon_empty is None or len(_config_icon_empty) == 0:
         _config_icon_empty = _to_full_path("icons/stacks-drop.svg")
     config['icon_empty'] = _config_icon_empty
 
-    _config_icon_full = gconf_client.get_string(
-            gconf_path + "/applet_icon_full")
+    _config_icon_full = client.get_string(GROUP_DEFAULT, "applet_icon_full")
     if _config_icon_full is None or len(_config_icon_full) == 0:
         _config_icon_full = _to_full_path("icons/stacks-full.svg")
     config['icon_full'] = _config_icon_full
 
     # get item count
-    if gconf_client.get_bool(gconf_path + "/item_count"):
+    if client.get_bool(GROUP_DEFAULT, "item_count"):
         config['item_count'] = True
     else:
         config['item_count'] = False
         
     
-    if gconf_client.get_int(gconf_path + "/gui_type"):
-    	config['gui_type'] = gconf_client.get_int(gconf_path + "/gui_type")
-    else:
-    	config['gui_type'] = STACKS_GUI_DIALOG 
+    config['gui_type'] = client.get_int(GROUP_DEFAULT, "gui_type")
     	
-    if gconf_client.get_int(gconf_path + "/sort_methode"):
-    	config['sort_methode'] = gconf_client.get_int(gconf_path + "/sort_methode")
-    else:
-    	config['sort_methode'] = BACKEND_SORT_BY_NAME 
+    config['sort_methode'] = client.get_int(GROUP_DEFAULT, "sort_method")
 
-    config['sort_folders_before_files'] = loadBool(gconf_client,gconf_path + "/sort_folders_before_files", True)
+    config['sort_folders_before_files'] = \
+        client.get_bool(GROUP_DEFAULT, "sort_folders_before_files")
     
-    if gconf_client.get_int(gconf_path + "/sort_direction"):
-    	config['sort_direction'] = gconf_client.get_int(gconf_path + "/sort_direction")
-    else:
-    	config['sort_direction'] = BACKEND_SORT_ASCENDING 
+    config['sort_direction'] = client.get_int(GROUP_DEFAULT, "sort_direction")
     
     return config
 
-
-#
-# Load a boolean from gconf
-#
-def loadBool(client, key, default):
-	if client.get( key ):
-		v = client.get_bool( key )
-		if v == None:
-			return default
-		else:
-			return v
-	else:
-		return default

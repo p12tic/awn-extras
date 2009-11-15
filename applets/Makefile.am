@@ -33,6 +33,7 @@ CONDITIONAL_APPLETS += \
 	unmaintained/main-menu \
 	unmaintained/MiMenu \
 	unmaintained/pandora \
+	unmaintained/stacks \
 	maintained/yama \
 	$(NULL)
 endif

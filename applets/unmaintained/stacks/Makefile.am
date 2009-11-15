@@ -1,6 +1,8 @@
 APPLET_NAME = stacks
 APPLET_MAIN_FILE = stacks_applet.py
 include $(top_srcdir)/Makefile.python-applet
+include $(top_srcdir)/Makefile.schemas
+
 dist_applet_DATA =			\
 	stacks_preferences.glade	\
 	curved_stacks_preferences.glade	\

@@ -52,11 +52,6 @@ except ImportError:
 	if not detected_errors: detected_errors = ""
 	detected_errors = detected_errors + " * Error importing pango \n"
 try:
-	import gconf
-except ImportError:
-	if not detected_errors: detected_errors = ""
-	detected_errors = detected_errors + " * Error importing gconf \n"
-try:
 	import awn
 except ImportError:
 	if not detected_errors: detected_errors = ""
@@ -93,6 +88,7 @@ except ImportError:
 	detected_errors = detected_errors + " * Error importing pangocairo \n"	
 
 from awn.extras import _
+from desktopagnostic import Color
 
 from stacks_backend import *
 from stacks_backend_file import *
@@ -108,6 +104,7 @@ from stacks_glade import GladeWindow
 #constants
 stack_item_x = 1
 COLOR_MAX_VALUE = 65535
+GROUP_CURVED = "curved_gui"
 
 def _to_full_path(path):
     head, tail = os.path.split(__file__)
@@ -161,13 +158,11 @@ class StacksGuiCurved(gtk.Window):
     store = None
     start_icon = 0
 
-    gui_visible = False
-
     # Status values
     context_menu_visible = False
     tooltip_visible = False
     just_dragged = False
-    gconf_client = None
+    autohide_cookie = 0
 
 
     dnd_targets = [("text/uri-list", 0, 0), ("text/plain", 0, 1)]
@@ -214,9 +209,8 @@ class StacksGuiCurved(gtk.Window):
         self.applet = applet
         
         curved_config = get_curved_gui_config(
-                self.applet.gconf_client,
-                self.applet.gconf_path,
-                self.applet.uid)
+                self.applet.client,
+                self.applet.get_uid())
         self.curved_config = curved_config
     		
         # connect to events
@@ -247,13 +241,14 @@ class StacksGuiCurved(gtk.Window):
         # add events and connect them to some functions
         self.add_events(gtk.gdk.BUTTON_PRESS_MASK |
                         gtk.gdk.BUTTON_RELEASE_MASK |
-                        gtk.gdk.POINTER_MOTION_MASK)        
+                        gtk.gdk.POINTER_MOTION_MASK)
 
         #self.connect('focus-out-event', self._stacks_gui_hide_cb)
         self.connect('focus-out-event', self.dialog_focus_out)
         self.connect('expose-event', self.draw_dialog)
         self.connect('leave-notify-event', self.focus_out)
-        self.connect_after('realize', self.set_background)
+
+        awn.utils_ensure_transparent_bg(self)
         
         self.hbox = gtk.HBox(False, 0)
         self.add(self.hbox)
@@ -315,8 +310,9 @@ class StacksGuiCurved(gtk.Window):
         self.evb.connect("drag-data-received", self.stack_drag_drop)
 
 
-        
-        
+    def is_visible(self):
+        if self.dialog is None: return False
+        return self.dialog.flags() & gtk.VISIBLE != 0
 
     def stack_drag_motion(self, widget, context, x, y, time):
     	self.reset_hide_timer()
@@ -326,7 +322,7 @@ class StacksGuiCurved(gtk.Window):
 
     def stack_drag_leave(self, widget, context, time):
     	#print "drag leave on stack", time
-    	self.applet.effects.stop("launching")
+    	self.applet.effects.stop(awn.EFFECT_LAUNCHING)
     	self._stacks_gui_request_hide()
     	return True
     	
@@ -369,7 +365,7 @@ class StacksGuiCurved(gtk.Window):
 
         	
 
-        self.applet.effects.stop("launching")
+        self.applet.effects.stop(awn.EFFECT_LAUNCHING)
         
         return False
 
@@ -506,14 +502,6 @@ class StacksGuiCurved(gtk.Window):
     	
     	self.queue_draw()
 
-    def set_background(self, widget, user_data = None):
-        pixmap = gtk.gdk.Pixmap(widget.window, 1, 1)
-        cr = pixmap.cairo_create()
-        cr.set_operator(cairo.OPERATOR_CLEAR)
-        cr.paint()
-        del cr
-        widget.window.set_back_pixmap(pixmap, False)
-
     def mouse_moved(self, widget, event = None, x = None, y = None, time = None):
     	if not self.just_dragged:
 			icon_size = self.config['icon_size']
@@ -612,8 +600,10 @@ class StacksGuiCurved(gtk.Window):
     	self.hide_tooltip()
     	self.hide()
     	self.start_icon = 0
-    	
-        self.gui_visible = False
+        self.applet.get_icon().set_is_active(False)
+        if self.autohide_cookie != 0:
+            self.applet.uninhibit_autohide(self.autohide_cookie)
+            self.autohide_cookie = 0
 
     def reset_hide_timer(self):
     	if self.hide_timer:
@@ -623,18 +613,19 @@ class StacksGuiCurved(gtk.Window):
 
     def _stacks_gui_show_cb(self, widget):
         self.dialog_show_new()
-        self.gui_visible = True
+        self.applet.get_icon().set_is_active(True)
+        if self.autohide_cookie == 0:
+            self.autohide_cookie = self.applet.inhibit_autohide("Stacks dialog")
 
     def _stacks_gui_toggle_cb(self, widget):
-        if self.gui_visible: return self._stacks_gui_hide_cb(None)
+        if self.is_visible(): return self._stacks_gui_hide_cb(None)
         return self._stacks_gui_show_cb(None)
 
     def _stacks_config_changed_cb(self, widget, config):
         self.config = config
         curved_config = get_curved_gui_config(
-                self.applet.gconf_client,
-                self.applet.gconf_path,
-                self.applet.uid)
+                self.applet.client,
+                self.applet.get_uid())
         self.curved_config = curved_config
 
     def _item_created_cb(self, widget, store, iter, angle = 0, direction = "LEFT",id = 0):
@@ -643,7 +634,7 @@ class StacksGuiCurved(gtk.Window):
 
     def _item_removed_cb(self, widget, store, iter):
         self.store = store
-        if self.gui_visible:
+        if self.is_visible():
             return self._stacks_gui_show_cb(None)
 
 
@@ -658,6 +649,7 @@ class StacksGuiCurved(gtk.Window):
                 LaunchManager().launch_dot_desktop(uri.as_string())
         else:
             LaunchManager().launch_uri(uri.as_string(), mimetype)
+        self._stacks_gui_hide_cb()
 
     def item_clear_cb(self, widget, uri):
         self.applet.backend.remove([uri])
@@ -676,17 +668,15 @@ class StacksGuiCurved(gtk.Window):
         return context_menu
 
     def dialog_show_prev_page(self, widget):
-        self.dialog_show_new(self.start_icon- self.maxquantity)
-
+        self.dialog_show_new(self.start_icon - self.maxquantity)
 
     def dialog_show_next_page(self, widget):
-    	
-        self.dialog_show_new(self.start_icon+ self.maxquantity)
+        self.dialog_show_new(self.start_icon + self.maxquantity)
 
     def dialog_focus_out(self, widget, event):
         if self.context_menu_visible or self.tooltip_visible : return
         if self.config['close_on_focusout']:
-        	self._stacks_gui_hide_cb(widget)
+            self._stacks_gui_hide_cb(widget)
         
     def reposition(self, w, h):
         # borrowed from awn-applet-dialog.c: awn_applet_dialog_position_reset
@@ -893,7 +883,7 @@ class StacksGuiCurved(gtk.Window):
         self.draw_top_rounded_rect(tooltip_context,rx,ry,rw,rh,15)
         tooltip_context.fill()
         
-    def draw_dialog(self, widget, event):    
+    def draw_dialog(self, widget, event):
     
         #print " > dialog exposed, redrawing < "
         self.reposition(self.width, self.height)
@@ -1316,11 +1306,11 @@ class CurvedStacksConfig(GladeWindow):
         GladeWindow.__init__(self)
         self.applet = applet
         
-        config = get_curved_gui_config(
-                self.applet.gconf_client,
-                self.applet.gconf_path,
-                self.applet.uid)
-        self.config = config
+        curved_config = get_curved_gui_config(
+                self.applet.client,
+                self.applet.get_uid())
+        self.config = curved_config
+        config = curved_config
         
         #Setup the dialog with those configuration values
         #set label configuration
@@ -1383,198 +1373,102 @@ class CurvedStacksConfig(GladeWindow):
     	self.destroy()
 
     def on_ok_button_clicked(self, *args):
-    	gconf_client = self.applet.gconf_client
-    	gconf_path = self.applet.gconf_path
+        client = self.applet.client
     	
-    	#save configuration to gconf
+    	#save configuration
     	#save label configuration
-    	saveInt(gconf_client,gconf_path + "/curved_gui/label_length",self.widgets['label_length_box'].get_value())
-    	saveColor(gconf_client,gconf_path + "/curved_gui/label_text_color",self.widgets['label_text_color'].get_color(),self.widgets['label_text_color'].get_alpha())
-    	saveColor(gconf_client,gconf_path + "/curved_gui/label_text_hover_color",self.widgets['label_text_hover_color'].get_color(),self.widgets['label_text_hover_color'].get_alpha())
-    	saveColor(gconf_client,gconf_path + "/curved_gui/label_background_color",self.widgets['label_background_color'].get_color(),self.widgets['label_background_color'].get_alpha())
-    	saveColor(gconf_client,gconf_path + "/curved_gui/label_hover_background_color",self.widgets['label_hover_background_color'].get_color(),self.widgets['label_hover_background_color'].get_alpha())
-    	saveColor(gconf_client,gconf_path + "/curved_gui/label_border_color",self.widgets['label_border_color'].get_color(),self.widgets['label_border_color'].get_alpha())
-    	saveColor(gconf_client,gconf_path + "/curved_gui/label_hover_border_color",self.widgets['label_hover_border_color'].get_color(),self.widgets['label_hover_border_color'].get_alpha())
-        saveBool(gconf_client,gconf_path + "/curved_gui/use_awn_title_font",self.widgets['use_awn_title_font_checkButton'].get_active())
-    	saveString(gconf_client,gconf_path + "/curved_gui/label_font",self.widgets['font_selector'].get_font_name())
+    	client.set_int(GROUP_CURVED, "label_length", self.widgets['label_length_box'].get_value())
+    	saveColor(client, "label_text_color",self.widgets['label_text_color'].get_color(),self.widgets['label_text_color'].get_alpha())
+    	saveColor(client, "label_text_hover_color",self.widgets['label_text_hover_color'].get_color(),self.widgets['label_text_hover_color'].get_alpha())
+    	saveColor(client, "label_background_color",self.widgets['label_background_color'].get_color(),self.widgets['label_background_color'].get_alpha())
+    	saveColor(client, "label_hover_background_color",self.widgets['label_hover_background_color'].get_color(),self.widgets['label_hover_background_color'].get_alpha())
+    	saveColor(client, "label_border_color",self.widgets['label_border_color'].get_color(),self.widgets['label_border_color'].get_alpha())
+    	saveColor(client, "label_hover_border_color",self.widgets['label_hover_border_color'].get_color(),self.widgets['label_hover_border_color'].get_alpha())
+        client.set_bool(GROUP_CURVED, "use_awn_title_font",self.widgets['use_awn_title_font_checkButton'].get_active())
+    	client.set_string(GROUP_CURVED, "label_font",self.widgets['font_selector'].get_font_name())
     
         #save layout configuration
-        saveInt(gconf_client,gconf_path + "/curved_gui/layout_radius",self.widgets['layout_radius'].get_value())
-        saveInt(gconf_client,gconf_path + "/curved_gui/layout_interval",self.widgets['layout_interval'].get_value())
-        saveInt(gconf_client,gconf_path + "/curved_gui/layout_direction",self.widgets['layout_direction'].get_active())
+        client.set_int(GROUP_CURVED, "layout_radius",self.widgets['layout_radius'].get_value())
+        client.set_int(GROUP_CURVED, "layout_interval",self.widgets['layout_interval'].get_value())
+        client.set_int(GROUP_CURVED, "layout_direction",self.widgets['layout_direction'].get_active())
         #save tooltip configuration
-        saveBool(gconf_client,gconf_path + "/curved_gui/tooltips_enabled",self.widgets['tooltips_enabled_checkButton'].get_active())
-    	saveColor(gconf_client,gconf_path + "/curved_gui/tooltip_bg_color1",self.widgets['tooltip_bg_color1'].get_color(),self.widgets['tooltip_bg_color1'].get_alpha())
-    	saveColor(gconf_client,gconf_path + "/curved_gui/tooltip_bg_color2",self.widgets['tooltip_bg_color2'].get_color(),self.widgets['tooltip_bg_color2'].get_alpha())
-    	saveColor(gconf_client,gconf_path + "/curved_gui/tooltip_border_color",self.widgets['tooltip_border_color'].get_color(),self.widgets['tooltip_border_color'].get_alpha())
-    	saveColor(gconf_client,gconf_path + "/curved_gui/tooltip_text_color",self.widgets['tooltip_text_color'].get_color(),self.widgets['tooltip_text_color'].get_alpha())
+        client.set_bool(GROUP_CURVED, "tooltips_enabled",self.widgets['tooltips_enabled_checkButton'].get_active())
+    	saveColor(client, "tooltip_bg_color1",self.widgets['tooltip_bg_color1'].get_color(),self.widgets['tooltip_bg_color1'].get_alpha())
+    	saveColor(client, "tooltip_bg_color2",self.widgets['tooltip_bg_color2'].get_color(),self.widgets['tooltip_bg_color2'].get_alpha())
+    	saveColor(client, "tooltip_border_color",self.widgets['tooltip_border_color'].get_color(),self.widgets['tooltip_border_color'].get_alpha())
+    	saveColor(client, "tooltip_text_color",self.widgets['tooltip_text_color'].get_color(),self.widgets['tooltip_text_color'].get_alpha())
         #save hoverbox configuration
-    	saveColor(gconf_client,gconf_path + "/curved_gui/hoverbox_bg_color1",self.widgets['hoverbox_bg_color1'].get_color(),self.widgets['hoverbox_bg_color1'].get_alpha())
-    	saveColor(gconf_client,gconf_path + "/curved_gui/hoverbox_bg_color2",self.widgets['hoverbox_bg_color2'].get_color(),self.widgets['hoverbox_bg_color2'].get_alpha())
-    	saveColor(gconf_client,gconf_path + "/curved_gui/hoverbox_border_color",self.widgets['hoverbox_border_color'].get_color(),self.widgets['hoverbox_border_color'].get_alpha())
-        saveBool(gconf_client,gconf_path + "/curved_gui/hoverbox_contains_label",self.widgets['hoverbox_contains_label_checkbx'].get_active())
+    	saveColor(client, "hoverbox_bg_color1",self.widgets['hoverbox_bg_color1'].get_color(),self.widgets['hoverbox_bg_color1'].get_alpha())
+    	saveColor(client, "hoverbox_bg_color2",self.widgets['hoverbox_bg_color2'].get_color(),self.widgets['hoverbox_bg_color2'].get_alpha())
+    	saveColor(client, "hoverbox_border_color",self.widgets['hoverbox_border_color'].get_color(),self.widgets['hoverbox_border_color'].get_alpha())
+        client.set_bool(GROUP_CURVED, "hoverbox_contains_label",self.widgets['hoverbox_contains_label_checkbx'].get_active())
 
-                    
+
     	self.destroy()
     	
-def get_curved_gui_config(gconf_client, gconf_path, uid):
+def get_curved_gui_config(client, uid):
     # store config in dict
     config = {}
 
     # get label configuration
-    config['label_length'] = loadInt(gconf_client,gconf_path + "/curved_gui/label_length",200)
-    config['label_text_color'] = loadColor(gconf_client,gconf_path + "/curved_gui/label_text_color","ffffffe6")
-    config['label_text_hover_color'] = loadColor(gconf_client,gconf_path + "/curved_gui/label_text_hover_color","000000e6")
-    config['label_background_color'] = loadColor(gconf_client,gconf_path + "/curved_gui/label_background_color","000000b6")
-    config['label_hover_background_color'] = loadColor(gconf_client,gconf_path + "/curved_gui/label_hover_background_color","ffffffb6")
-    config['label_border_color'] = loadColor(gconf_client,gconf_path + "/curved_gui/label_border_color","ffffffb6")
-    config['label_hover_border_color'] = loadColor(gconf_client,gconf_path + "/curved_gui/label_hover_border_color","000000b6")
-    config['awn_title_font'] = loadString(gconf_client,"/apps/avant-window-navigator/title/font_face","sans 10")
-    config['use_awn_title_font'] = loadBool(gconf_client,gconf_path + "/curved_gui/use_awn_title_font",True)
-    config['label_font'] = loadString(gconf_client,gconf_path + "/curved_gui/label_font","sans 10")
-    
+    config['label_length'] = client.get_int(GROUP_CURVED, "label_length")
+    config['label_text_color'] = loadColor(client, "label_text_color")
+    config['label_text_hover_color'] = loadColor(client, "label_text_hover_color")
+    config['label_background_color'] = loadColor(client, "label_background_color")
+    config['label_hover_background_color'] = loadColor(client, "label_hover_background_color")
+    config['label_border_color'] = loadColor(client, "label_border_color")
+    config['label_hover_border_color'] = loadColor(client, "label_hover_border_color")
+    config['awn_title_font'] = awn.config_get_default(1).get_string("theme","tooltip_font_name")
+    config['use_awn_title_font'] = client.get_bool(GROUP_CURVED, "use_awn_title_font")
+    config['label_font'] = client.get_string(GROUP_CURVED, "label_font")
+
     # get layout configuration
-    config['layout_radius'] = loadInt(gconf_client,gconf_path + "/curved_gui/layout_radius",5000)
-    _layout_interval = loadInt(gconf_client,gconf_path + "/curved_gui/layout_interval",85)
-    _layout_interval = float(_layout_interval) / 100  
+    config['layout_radius'] = client.get_int(GROUP_CURVED, "layout_radius")
+    _layout_interval = client.get_int(GROUP_CURVED, "layout_interval")
+    _layout_interval = float(_layout_interval) / 100
     config['layout_interval'] = _layout_interval
-    config['layout_direction'] = loadInt(gconf_client,gconf_path + "/curved_gui/layout_direction",0)
+    config['layout_direction'] = client.get_int(GROUP_CURVED, "layout_direction")
     # get tooltip configuration
-    config['tooltips_enabled'] = loadBool(gconf_client,gconf_path + "/curved_gui/tooltips_enabled",True)
-    config['tooltip_bg_color1'] = loadColor(gconf_client,gconf_path + "/curved_gui/tooltip_bg_color1","000000e6")
-    config['tooltip_bg_color2'] = loadColor(gconf_client,gconf_path + "/curved_gui/tooltip_bg_color2","00000099")
-    config['tooltip_border_color'] = loadColor(gconf_client,gconf_path + "/curved_gui/tooltip_border_color","ffffff99")
-    config['tooltip_text_color'] = loadColor(gconf_client,gconf_path + "/curved_gui/tooltip_text_color","ffffffff")
-    _hex_color_value = loadString(gconf_client,gconf_path + "/curved_gui/tooltip_text_color","ffffff")
-    config['tooltip_text_hex_color'] = '#'+_hex_color_value[:6]
+    config['tooltips_enabled'] = client.get_bool(GROUP_CURVED, "tooltips_enabled")
+    config['tooltip_bg_color1'] = loadColor(client, "tooltip_bg_color1")
+    config['tooltip_bg_color2'] = loadColor(client, "tooltip_bg_color2")
+    config['tooltip_border_color'] = loadColor(client, "tooltip_border_color")
+    config['tooltip_text_color'] = loadColor(client, "tooltip_text_color")
+    _hex_color_value = client.get_value(GROUP_CURVED, "tooltip_text_color")
+    config['tooltip_text_hex_color'] = _hex_color_value.to_html_color()[:7]
     # get hoverbox configuration
-    config['hoverbox_bg_color1'] = loadColor(gconf_client,gconf_path + "/curved_gui/hoverbox_bg_color1","000000b6")
-    config['hoverbox_bg_color2'] = loadColor(gconf_client,gconf_path + "/curved_gui/hoverbox_bg_color2","00000059")
-    config['hoverbox_border_color'] = loadColor(gconf_client,gconf_path + "/curved_gui/hoverbox_border_color","ffffffe6")
-    config['hoverbox_contains_label'] = loadBool(gconf_client,gconf_path + "/curved_gui/hoverbox_contains_label",False)
-    
+    config['hoverbox_bg_color1'] = loadColor(client, "hoverbox_bg_color1")
+    config['hoverbox_bg_color2'] = loadColor(client, "hoverbox_bg_color2")
+    config['hoverbox_border_color'] = loadColor(client, "hoverbox_border_color")
+    config['hoverbox_contains_label'] = client.get_bool(GROUP_CURVED, "hoverbox_contains_label")
 
     return config
     
-#
-# Load a string from gconf
-#
-def loadString(client, key, default):
-	v = client.get_string( key )
-	if v == None:
-		return default
-	else:
-		return v    
-
-#
-# Load a boolean from gconf
-#
-def loadBool(client, key, default):
-	if client.get( key ):
-		v = client.get_bool( key )
-		if v == None:
-			return default
-		else:
-			return v
-	else:
-		return default
-#
-# Load a int from gconf
-#
-def loadInt(client, key, default):
-	v = client.get_int( key )
-	if not v:
-		return default
-	else:
-		return v
-
-#  Some of the following code is borrowd From Neil Jagdish Patel <njpatel@gmail.com>
-#  taken from Closure
-
-#
-# Load a color from gconf
-def loadColor(client, key, default):
-	v = client.get_string( key )
-	if v == None:
-		v = default
-	(color, alpha) = make_color( v )
-	r = color.red / float(COLOR_MAX_VALUE)
-	g = color.green / float(COLOR_MAX_VALUE)
-	b = color.blue / float(COLOR_MAX_VALUE)
-	a = alpha / float(COLOR_MAX_VALUE)
-
-	return (r, g, b, a)
-
-
-
-
-def dec2hex(n):
-	"""return the hexadecimal string representation of integer n"""
-	n = int(n)
-	if n == 0:
-		return "00"
-	return "%0.2X" % n
-  
-def hex2dec(s):
-	"""return the integer value of a hexadecimal string s"""
-	return int(s, 16)
-
-def config_to_color(v):
-	return gtk.gdk.Color(int(round(v[0]*COLOR_MAX_VALUE)), int(round(v[1]*COLOR_MAX_VALUE)), int(round(v[2]*COLOR_MAX_VALUE)))
-
-def config_to_alpha(v):
-	return  int(round(v[3]*COLOR_MAX_VALUE))
-
 def rgba_values(v):
 	return v[0], v[1], v[2], v[3]
-	
-def make_color(hexi):
-	"""returns a gtk.gdk.Color from a hex string RRGGBBAA"""
-	color = gtk.gdk.color_parse('#' + hexi[:6])
-	alpha = hex2dec(hexi[6:])
-	alpha = (float(alpha)/255)* COLOR_MAX_VALUE
-	return color, int(alpha)
-
-def make_color_string(color, alpha):
-	"""makes readable string from gdk.color & alpha (0-65535) """
-	string = ""
-	
-	string = string + dec2hex(int( (float(color.red) / COLOR_MAX_VALUE)*255))
-	string = string + dec2hex(int( (float(color.green) / COLOR_MAX_VALUE)*255))
-	string = string + dec2hex(int( (float(color.blue) / COLOR_MAX_VALUE)*255))
-	string = string + dec2hex(int( (float(alpha) / COLOR_MAX_VALUE)*255))
-	
-	#hack
-	return string	
-	
-def hextoColor(self, value):
-	
-	if value == None:
-		 value = default
-	(color, alpha) = make_color( v )
-	r = color.red / float(COLOR_MAX_VALUE)
-	g = color.green / float(COLOR_MAX_VALUE)
-	b = color.blue / float(COLOR_MAX_VALUE)
-	a = alpha / float(COLOR_MAX_VALUE)
-
-	return (r, g, b, a)
 
 #
-# save a int from gconf
+# Load a color from config
 #
-def saveInt(client, key, value):
-	return client.set_int(key, int(value) )
+def loadColor(client, key):
+	v = client.get_value(GROUP_CURVED, key)
+	if v == None:
+		v = Color.from_values(0, 0, 0, 0)
 
-def saveBool(client, key, value):
-	return client.set_bool(key, int(value) )
-
-def saveString(client, key, value):
-	return client.set_string(key, str(value) )
+	return v.get_cairo_color()
 
 #
-# save a color from gconf
+# save a color to config
 #
 def saveColor(client, key, color, alpha):
-	
-	return client.set_string(key,make_color_string(color, alpha))
-	
+	v = Color(color, alpha)
+	return client.set_value(GROUP_CURVED, key, v)
+
+def config_to_color(config_color):
+    r,g,b,a = map(lambda x: int(x*65535), config_color)
+    return Color.from_values(r,g,b,a).props.color
+
+def config_to_alpha(config_color):
+    r,g,b,a = rgba_values(config_color)
+    return int(a * 65535)
+

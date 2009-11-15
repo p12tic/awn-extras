@@ -27,6 +27,7 @@ import gnome.ui
 import gnomevfs
 import gnomedesktop
 from awn.extras import _
+from desktopagnostic.config import GROUP_DEFAULT
 
 from stacks_vfs import VfsUri, Monitor
 from stacks_icons import IconFactory, Thumbnailer
@@ -297,8 +298,10 @@ class Backend(gobject.GObject):
 
 
     def get_title(self):
-        title = self.applet.gconf_client.get_string(
-                self.applet.gconf_path + "/title") or _("Stacks")
+        title = self.applet.client.get_string(GROUP_DEFAULT, "title")
+
+        if title is None or len(title) == 0:
+            title = _("Stacks")
         return title;
 
 

@@ -348,6 +348,7 @@ applets/maintained/shiny-switcher/shinyswitcher.desktop.in
 applets/maintained/showdesktop/Makefile
 applets/maintained/showdesktop/showdesktop.desktop.in
 applets/maintained/slickswitcher/Makefile
+applets/unmaintained/stacks/Makefile
 applets/maintained/sysmon/Makefile
 applets/maintained/sysmon/sysmon.desktop.in
 applets/maintained/thinkhdaps/Makefile

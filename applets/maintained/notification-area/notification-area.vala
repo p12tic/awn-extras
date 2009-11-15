@@ -142,18 +142,23 @@ public class NotificationArea : GLib.Object
     weak Gdk.Screen screen = applet.get_screen ();
 
     if (manager.manage_screen (screen) == false)
+    {
       error ("Unable to manage the screen!");
+    }
 
     // connect to tray-manager signals
-    Signal.connect_swapped (this.manager, "tray_icon_added", 
-                            (GLib.Callback)this.on_icon_added, this);
-    Signal.connect_swapped (this.manager, "tray_icon_removed",
-                            (GLib.Callback)this.on_icon_removed, this);
+    this.manager.tray_icon_added.connect (this.on_icon_added);
+    this.manager.tray_icon_removed.connect (this.on_icon_removed);
     // connect to applet signals
-    Signal.connect_swapped (this.applet, "position-changed",
-                            (GLib.Callback)this.table_refresh, this);
-    Signal.connect_swapped (this.applet, "size-changed",
-                            (GLib.Callback)this.update_icon_sizes, this);
+    this.applet.position_changed.connect ((new_pos) =>
+    {
+      this.update_icon_sizes ();
+      this.table_refresh ();
+    });
+    this.applet.size_changed.connect ((new_size) =>
+    {
+      this.update_icon_sizes ();
+    });
 
     // this EventBox is needed to capture mouse clicks
     this.eb = new Gtk.EventBox ();
@@ -184,10 +189,8 @@ public class NotificationArea : GLib.Object
     }
     this.icon_painter.add (this.table);
 
-    Signal.connect_swapped (this.eb, "expose-event",
-                            (GLib.Callback)this.on_applet_expose, this);
-    Signal.connect_swapped (this.eb, "button-press-event",
-                            (GLib.Callback)this.button_press, this);
+    this.eb.expose_event.connect (this.on_applet_expose);
+    this.eb.button_press_event.connect (this.button_press);
 
     Signal.connect_swapped (this.icon_painter, "expose-event",
                             (GLib.Callback)this.on_painter_expose, this);
@@ -305,9 +308,9 @@ public class NotificationArea : GLib.Object
     return true;
   }
 
-  private bool on_applet_expose (Gdk.Event event, Gtk.Widget eb)
+  private bool on_applet_expose (Gdk.EventExpose event)
   {
-    Cairo.Context? cr = Gdk.cairo_create (eb.window);
+    Cairo.Context? cr = Gdk.cairo_create (this.eb.window);
     if (cr == null) return false;
 
     int x = this.inner_align.allocation.x;
@@ -315,7 +318,7 @@ public class NotificationArea : GLib.Object
     int w = this.inner_align.allocation.width;
     int h = this.inner_align.allocation.height;
 
-    Gdk.cairo_region (cr, event.expose.region);
+    Gdk.cairo_region (cr, event.region);
     cr.clip ();
 
     cr.set_operator (Cairo.Operator.OVER);
@@ -357,9 +360,9 @@ public class NotificationArea : GLib.Object
     return true;
   }
 
-  private bool button_press (Gdk.Event event, Gtk.Widget widget)
+  private bool button_press (Gdk.EventButton event)
   {
-    if (event.button.button == 3)
+    if (event.button == 3)
     {
       if (prefs_window == null)
       {
@@ -484,6 +487,34 @@ public class NotificationArea : GLib.Object
     int size = (int)this.applet.get_size ();
     int icon_size = (size - (this.max_rows - 1)) / this.max_rows;
     icon_size = icon_size * this._icon_size / 100;
+
+    // let's special case when we have two rows - use only even numbers for 
+    // the icon sizes, so icons can have sharp edges
+    if (this.max_rows == 2)
+    {
+      if (icon_size % 2 != 0)
+      {
+        icon_size--;
+      }
+      Gtk.PositionType position = this.applet.get_pos_type ();
+      int extra_space = int.max (size - icon_size * this.max_rows, 1);
+      if (position == Gtk.PositionType.TOP ||
+          position == Gtk.PositionType.BOTTOM)
+      {
+        this.table.set_row_spacings (extra_space);
+        this.table.set_col_spacings (1);
+      }
+      else
+      {
+        this.table.set_row_spacings (1);
+        this.table.set_col_spacings (extra_space);
+      }
+    }
+    else
+    {
+      this.table.set_row_spacings (1);
+      this.table.set_col_spacings (1);
+    }
     return icon_size < 1 ? 1 : icon_size;
   }
 

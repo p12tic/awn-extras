@@ -311,8 +311,7 @@ class StacksGuiCurved(gtk.Window):
 
 
     def is_visible(self):
-        if self.dialog is None: return False
-        return self.dialog.flags() & gtk.VISIBLE != 0
+        return self.flags() & gtk.VISIBLE != 0
 
     def stack_drag_motion(self, widget, context, x, y, time):
     	self.reset_hide_timer()

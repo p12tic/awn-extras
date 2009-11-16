@@ -158,7 +158,7 @@ cairo_menu_applet_constructed (GObject *object)
   gchar * filename = APPLETSDIR"/../../../lib/awn/applets/cairo-menu/gnome-menu-builder";
   GModule      *module;
 
-  G_OBJECT_CLASS (cairo_menu_applet_parent_class)->constructed (object);   
+  G_OBJECT_CLASS (cairo_menu_applet_parent_class)->constructed (object);
   module = g_module_open (filename, 
                           G_MODULE_BIND_LAZY);  
   g_assert (module);
@@ -182,28 +182,28 @@ cairo_menu_applet_constructed (GObject *object)
                                        DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                        "aux_menu_names",
                                        object, "aux_menu_names", FALSE,
-                                       DESKTOP_AGNOSTIC_CONFIG_BIND_METHOD_FALLBACK,
+                                       DESKTOP_AGNOSTIC_CONFIG_BIND_METHOD_INSTANCE,
                                        NULL);
 
   desktop_agnostic_config_client_bind (priv->client,
                                        DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                        "hidden_names",
                                        object, "hidden_names", FALSE,
-                                       DESKTOP_AGNOSTIC_CONFIG_BIND_METHOD_FALLBACK,
+                                       DESKTOP_AGNOSTIC_CONFIG_BIND_METHOD_INSTANCE,
                                        NULL);
 
   desktop_agnostic_config_client_bind (priv->client,
                                        DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                        "run_cmd",
                                        object, "run_cmd", FALSE,
-                                       DESKTOP_AGNOSTIC_CONFIG_BIND_METHOD_FALLBACK,
+                                       DESKTOP_AGNOSTIC_CONFIG_BIND_METHOD_INSTANCE,
                                        NULL);
 
   desktop_agnostic_config_client_bind (priv->client,
                                        DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                        "search_cmd",
                                        object, "search_cmd", FALSE,
-                                       DESKTOP_AGNOSTIC_CONFIG_BIND_METHOD_FALLBACK,
+                                       DESKTOP_AGNOSTIC_CONFIG_BIND_METHOD_INSTANCE,
                                        NULL);
    
   icon = cairo_main_icon_new(AWN_APPLET(object));

@@ -416,6 +416,18 @@ get_menu_instance ( AwnApplet * applet,
   return instance;
 }
 
+void
+free_menu_instance ( MenuInstance * instance)
+{
+  if (instance->menu)
+  {
+    gtk_widget_destroy (instance->menu);
+  }
+  g_free (instance->submenu_name);
+  g_free (instance);
+}
+
+
 gboolean
 dbus_service_exists (const gchar *service)
 {

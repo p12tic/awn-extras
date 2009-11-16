@@ -61,6 +61,7 @@ MenuInstance * get_menu_instance ( AwnApplet * applet,
                                   CheckMenuHiddenFunc check_menu_hidden_fn,
                                   gchar * submenu_name,
                                   gint flags);
+void           free_menu_instance ( MenuInstance * instance);
 
 void _free_callback_container (CallbackContainer * c);
 

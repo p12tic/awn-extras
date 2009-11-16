@@ -718,6 +718,21 @@ _submenu_modified_cb(GMenuTree *tree,MenuInstance * instance)
   }
 }
 
+static void 
+_remove_main_submenu_cb(MenuInstance * instance,GObject *where_the_object_was)
+{
+  g_debug ("%s",__func__);
+  GMenuTreeDirectory *main_root;
+  gmenu_tree_remove_monitor (main_menu_tree,(GMenuTreeChangedFunc)_submenu_modified_cb,instance);
+}
+
+static void 
+_remove_settings_submenu_cb(MenuInstance * instance,GObject *where_the_object_was)
+{
+  g_debug ("%s",__func__);  
+  GMenuTreeDirectory *main_root;
+  gmenu_tree_remove_monitor (settings_menu_tree,(GMenuTreeChangedFunc)_submenu_modified_cb,instance);
+}
 
 static GtkWidget *
 submenu_build (MenuInstance * instance)
@@ -776,13 +791,15 @@ submenu_build (MenuInstance * instance)
       /* if instance->menu then we're refreshing in a monitor callback*/
       gmenu_tree_remove_monitor (main_menu_tree,(GMenuTreeChangedFunc)_submenu_modified_cb,instance);
       gmenu_tree_add_monitor (main_menu_tree,(GMenuTreeChangedFunc)_submenu_modified_cb,instance);
-      menu = fill_er_up(instance,menu_dir,instance->menu);      
+      menu = fill_er_up(instance,menu_dir,instance->menu);
+      g_object_weak_ref (G_OBJECT(menu), (GWeakNotify)_remove_main_submenu_cb,instance);
     }
     else if ( menu_dir = find_menu_dir (instance,settings_root) )
     {
       gmenu_tree_remove_monitor (main_menu_tree,(GMenuTreeChangedFunc)_submenu_modified_cb,instance);
       gmenu_tree_add_monitor (main_menu_tree,(GMenuTreeChangedFunc)_submenu_modified_cb,instance);
-      menu = fill_er_up(instance,menu_dir,instance->menu);     
+      menu = fill_er_up(instance,menu_dir,instance->menu);
+      g_object_weak_ref (G_OBJECT(menu), (GWeakNotify)_remove_settings_submenu_cb,instance);
     }
     if (menu_dir)
     {      
@@ -850,6 +867,8 @@ menu_build (MenuInstance * instance)
     }
     else
     {
+      sub_menu = fill_er_up (instance, root,instance->menu);
+#if 0      
       sub_menu = fill_er_up(instance,root,NULL);
       c = g_malloc0 (sizeof(CallbackContainer));        
       c->icon_name = g_strdup(gmenu_tree_directory_get_icon (root));
@@ -869,7 +888,8 @@ menu_build (MenuInstance * instance)
       g_free (drop_data);
       c->instance = instance;
       g_signal_connect (menu_item, "button-press-event",G_CALLBACK(_button_press_dir),c);
-      g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)_free_callback_container,c);      
+      g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)_free_callback_container,c);
+#endif
     }
     gmenu_tree_item_unref(root);    
   }

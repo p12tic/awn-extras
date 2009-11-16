@@ -252,9 +252,9 @@ static void
 _remove_icon (GtkMenuItem * item, CairoAuxIcon * icon)
 {
   CairoAuxIconPrivate * priv = GET_PRIVATE (icon);
-  
+
+//  free_menu_instance (priv->menu_instance);
   cairo_menu_applet_remove_icon (AWN_CAIRO_MENU_APPLET(priv->applet),AWN_THEMED_ICON(icon));
-  
 }
 
 static void 

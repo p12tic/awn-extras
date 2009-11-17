@@ -1613,8 +1613,7 @@ static void
 _change_config_cb(const gchar *group, const gchar *key, const GValue *value, gpointer user_data)
 {
   read_config ();  
-
-  send_message("Configuration has been modified\nClick <a href=\"http://wiki.awn-project.org/index.php?title=Awn_Notification-Daemon\">Here</a> for online documentation.");
+  g_debug ("%s",__func__);
 }
 
 static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, void * null)
@@ -1741,11 +1740,89 @@ AwnApplet* awn_applet_factory_initp(const gchar *name,
 
   read_config();
 
-/*  desktop_agnostic_config_client_notify_add(conf_client,
+  desktop_agnostic_config_client_notify_add(conf_client,
                                DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
-                               "",
+                               GCONF_KEY_AWN_KILL_ND,
                                (DesktopAgnosticConfigNotifyFunc)_change_config_cb,
-                               applet, NULL);*/
+                               applet, NULL);
+  
+  desktop_agnostic_config_client_notify_add(conf_client,
+                               DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
+                               GCONF_KEY_AWN_BG,
+                               (DesktopAgnosticConfigNotifyFunc)_change_config_cb,
+                               applet, NULL);
+
+  desktop_agnostic_config_client_notify_add(conf_client,
+                               DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
+                               GCONF_KEY_AWN_BORDER,
+                               (DesktopAgnosticConfigNotifyFunc)_change_config_cb,
+                               applet, NULL);
+
+  desktop_agnostic_config_client_notify_add(conf_client,
+                               DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
+                               GCONF_KEY_AWN_BORDER_WIDTH,
+                               (DesktopAgnosticConfigNotifyFunc)_change_config_cb,
+                               applet, NULL);
+
+  desktop_agnostic_config_client_notify_add(conf_client,
+                               DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
+                               GCONF_KEY_AWN_GRADIENT_FACTOR,
+                               (DesktopAgnosticConfigNotifyFunc)_change_config_cb,
+                               applet, NULL);
+  
+  desktop_agnostic_config_client_notify_add(conf_client,
+                               DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
+                               GCONF_KEY_AWN_TEXT_COLOUR,
+                               (DesktopAgnosticConfigNotifyFunc)_change_config_cb,
+                               applet, NULL);
+
+  desktop_agnostic_config_client_notify_add(conf_client,
+                               DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
+                               GCONF_KEY_AWN_CLIENT_POS,
+                               (DesktopAgnosticConfigNotifyFunc)_change_config_cb,
+                               applet, NULL);
+
+  desktop_agnostic_config_client_notify_add(conf_client,
+                               DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
+                               GCONF_KEY_AWN_HONOUR_GTK,
+                               (DesktopAgnosticConfigNotifyFunc)_change_config_cb,
+                               applet, NULL);
+
+  desktop_agnostic_config_client_notify_add(conf_client,
+                               DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
+                               GCONF_KEY_AWN_OVERRIDE_X,
+                               (DesktopAgnosticConfigNotifyFunc)_change_config_cb,
+                               applet, NULL);
+
+  desktop_agnostic_config_client_notify_add(conf_client,
+                               DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
+                               GCONF_KEY_AWN_OVERRIDE_Y,
+                               (DesktopAgnosticConfigNotifyFunc)_change_config_cb,
+                               applet, NULL);
+
+  desktop_agnostic_config_client_notify_add(conf_client,
+                               DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
+                               GCONF_KEY_AWN_TIMEOUT,
+                               (DesktopAgnosticConfigNotifyFunc)_change_config_cb,
+                               applet, NULL);
+
+  desktop_agnostic_config_client_notify_add(conf_client,
+                               DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
+                               GCONF_KEY_AWN_BOLD_BODY,
+                               (DesktopAgnosticConfigNotifyFunc)_change_config_cb,
+                               applet, NULL);
+
+  desktop_agnostic_config_client_notify_add(conf_client,
+                               DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
+                               GCONF_KEY_AWN_SHOW_ICON,
+                               (DesktopAgnosticConfigNotifyFunc)_change_config_cb,
+                               applet, NULL);
+
+  desktop_agnostic_config_client_notify_add(conf_client,
+                               DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
+                               GCONF_KEY_AWN_HIDE_OPACITY,
+                               (DesktopAgnosticConfigNotifyFunc)_change_config_cb,
+                               applet, NULL);
 /*
   int id = gconf_client_notify_add(gconf_client, GCONF_KEY_POPUP_LOCATION,
                                    popup_location_changed_cb, daemon,

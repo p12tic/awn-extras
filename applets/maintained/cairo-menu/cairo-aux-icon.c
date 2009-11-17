@@ -361,6 +361,10 @@ _button_clicked_event (CairoAuxIcon *icon, GdkEventButton *event, gpointer null)
     gtk_menu_popup(GTK_MENU(priv->context_menu), NULL, NULL, NULL, NULL,event_button->button, event_button->time);
     g_object_set(awn_overlayable_get_effects (AWN_OVERLAYABLE(icon)), "depressed", FALSE,NULL);    
   }
+  else
+  {
+    return TRUE;
+  }
   awn_icon_set_is_active (AWN_ICON(icon), TRUE);  
   return TRUE;
 }

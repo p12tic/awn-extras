@@ -343,6 +343,11 @@ _button_clicked_event (CairoMainIcon *icon, GdkEventButton *event, gpointer null
     g_object_set(awn_overlayable_get_effects (AWN_OVERLAYABLE(icon)), "depressed", FALSE,NULL);
     awn_utils_show_menu_images (GTK_MENU (priv->context_menu));
   }
+  else
+  {
+    return TRUE;
+  }
+  
   awn_icon_set_is_active (AWN_ICON(icon), TRUE);
   return TRUE;
 }

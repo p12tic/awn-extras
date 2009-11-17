@@ -865,12 +865,11 @@ window_clicked_cb(GtkWindow *nw, GdkEventButton *button, NotifyDaemon *daemon)
 
 static void
 popup_location_changed_cb(DesktopAgnosticConfigClient  *client, guint cnxn_id,
-                          GConfEntry *entry, gpointer user_data)
+                          gpointer *entry, gpointer user_data)
 {
   NotifyDaemon *daemon = (NotifyDaemon*)user_data;
   NotifyStackLocation stack_location;
   const char *slocation;
-  GConfValue *value;
   gint i;
 
   if (daemon == NULL)
@@ -1519,12 +1518,12 @@ gboolean hide_icon(gpointer data)
 }
 
 static void 
-config_get_color(DesktopAgnosticConfigClient *client, const gchar *key, DesktopAgnosticColor **color)
+config_get_color(DesktopAgnosticConfigClient *client, gchar * group,const gchar *key, DesktopAgnosticColor **color)
 {
   GError *error = NULL;
   GValue value = {0,};
 
-  desktop_agnostic_config_client_get_value(client, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, key, &value, &error);
+  desktop_agnostic_config_client_get_value(client, group, key, &value, &error);
 
   if (error)
   {
@@ -1542,8 +1541,13 @@ config_get_color(DesktopAgnosticConfigClient *client, const gchar *key, DesktopA
 static void read_config(void)
 {
   static gboolean done_once = FALSE;
-  GConfValue*  value;
   gchar * svalue;
+  static DesktopAgnosticConfigClient * theme_client = NULL;
+
+  if (!theme_client)
+  {
+    theme_client = awn_config_get_default (AWN_PANEL_ID_DEFAULT,NULL);
+  }
 
   if (desktop_agnostic_config_client_get_bool (conf_client,  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,GCONF_KEY_AWN_KILL_ND,NULL))
   {
@@ -1575,22 +1579,53 @@ static void read_config(void)
 
   G_daemon_config.awn_client_pos = desktop_agnostic_config_client_get_bool (conf_client,  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,GCONF_KEY_AWN_CLIENT_POS,NULL);
 
-  G_daemon_config.awn_honour_gtk = desktop_agnostic_config_client_get_bool (conf_client,  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,GCONF_KEY_AWN_HONOUR_GTK,NULL);
+  G_daemon_config.awn_use_theme = desktop_agnostic_config_client_get_bool (conf_client,  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,GCONF_KEY_AWN_HONOUR_GTK,NULL);
 
-  config_get_color (conf_client,GCONF_KEY_AWN_BG,&G_daemon_config.awn_bg);
+  if (G_daemon_config.awn_use_theme)
+  {
+    config_get_color (theme_client, "theme","gstep2",&G_daemon_config.awn_bg);
 
-  config_get_color (conf_client,GCONF_KEY_AWN_TEXT_COLOUR,&G_daemon_config.awn_text);
+    if ( desktop_agnostic_config_client_get_int (theme_client,"theme","icon_font_mode",NULL) == 2)
+    {
+      config_get_color (theme_client, "theme","icon_text_outline_color",&G_daemon_config.awn_text);
+    }
+    else
+    {
+      config_get_color (theme_client, "theme","icon_text_color",&G_daemon_config.awn_text);
+    }
+    if (!G_daemon_config.awn_text)
+    {
+      G_daemon_config.awn_text = desktop_agnostic_color_new_from_string ("white",NULL);
+    }
+    G_daemon_config.awn_text_str = desktop_agnostic_color_to_string (G_daemon_config.awn_text);
 
-  G_daemon_config.awn_text_str = desktop_agnostic_color_to_string (G_daemon_config.awn_text);
-  gchar * tmp = g_strdup (G_daemon_config.awn_text_str+1);
-  g_free (G_daemon_config.awn_text_str);
-  G_daemon_config.awn_text_str = tmp;
+    gchar * tmp = g_strdup (G_daemon_config.awn_text_str+1);
+    g_free (G_daemon_config.awn_text_str);
+    G_daemon_config.awn_text_str = tmp;
 
-  if (strlen(G_daemon_config.awn_text_str) > 6)
-    G_daemon_config.awn_text_str[6] = '\0';
+    if (strlen(G_daemon_config.awn_text_str) > 6)
+      G_daemon_config.awn_text_str[6] = '\0';
 
-  config_get_color (conf_client,GCONF_KEY_AWN_BG,&G_daemon_config.awn_border);
-    
+    config_get_color (theme_client, "theme","ghistep2",&G_daemon_config.awn_border);
+
+  }
+  else
+  {
+    config_get_color (conf_client, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,GCONF_KEY_AWN_BG,&G_daemon_config.awn_bg);
+
+    config_get_color (conf_client, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,GCONF_KEY_AWN_TEXT_COLOUR,&G_daemon_config.awn_text);
+
+    G_daemon_config.awn_text_str = desktop_agnostic_color_to_string (G_daemon_config.awn_text);
+
+    gchar * tmp = g_strdup (G_daemon_config.awn_text_str+1);
+    g_free (G_daemon_config.awn_text_str);
+    G_daemon_config.awn_text_str = tmp;
+
+    if (strlen(G_daemon_config.awn_text_str) > 6)
+      G_daemon_config.awn_text_str[6] = '\0';
+
+    config_get_color (conf_client, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,GCONF_KEY_AWN_BG,&G_daemon_config.awn_border);
+  }    
   G_daemon_config.awn_border_width = desktop_agnostic_config_client_get_int (conf_client,  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,GCONF_KEY_AWN_BORDER_WIDTH,NULL);
 
   G_daemon_config.awn_gradient_factor = desktop_agnostic_config_client_get_float (conf_client,  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,GCONF_KEY_AWN_GRADIENT_FACTOR,NULL);
@@ -1657,9 +1692,11 @@ AwnApplet* awn_applet_factory_initp(const gchar *name,
   GError *error;
   guint request_name_result;
   AwnApplet *applet;
-
+  DesktopAgnosticConfigClient * theme_client = NULL;
 
   G_daemon_config.awn_app = applet = AWN_APPLET(awn_applet_simple_new(name, uid, panel_id));
+  theme_client = awn_config_get_default (AWN_PANEL_ID_DEFAULT, &error);
+  
   gint height = awn_applet_get_size(applet);
 
   G_daemon_config.awn_app_height = height;
@@ -1823,15 +1860,43 @@ AwnApplet* awn_applet_factory_initp(const gchar *name,
                                GCONF_KEY_AWN_HIDE_OPACITY,
                                (DesktopAgnosticConfigNotifyFunc)_change_config_cb,
                                applet, NULL);
-/*
-  int id = gconf_client_notify_add(gconf_client, GCONF_KEY_POPUP_LOCATION,
-                                   popup_location_changed_cb, daemon,
-                                   NULL, NULL);
-  */
-  /* Emit signal to verify/set current key */
-/*  gconf_client_notify(gconf_client, GCONF_KEY_POPUP_LOCATION);
-  gconf_client_notify_remove(gconf_client, id);
-*/
+
+  desktop_agnostic_config_client_notify_add(conf_client,
+                               DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
+                               "default_sound",
+                               (DesktopAgnosticConfigNotifyFunc)_change_config_cb,
+                               applet, NULL);
+
+    desktop_agnostic_config_client_notify_add(conf_client,
+                               DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
+                               "sound_enabled",
+                               (DesktopAgnosticConfigNotifyFunc)_change_config_cb,
+                               applet, NULL);
+
+    desktop_agnostic_config_client_notify_add(theme_client,
+                               "theme",
+                               "gtk_theme_mode",
+                               (DesktopAgnosticConfigNotifyFunc)_change_config_cb,
+                               applet, NULL);
+
+    desktop_agnostic_config_client_notify_add(theme_client,
+                               "theme",
+                               "gstep2",
+                               (DesktopAgnosticConfigNotifyFunc)_change_config_cb,
+                               applet, NULL);
+
+    desktop_agnostic_config_client_notify_add(theme_client,
+                               "theme",
+                               "icon_text_outline_color",
+                               (DesktopAgnosticConfigNotifyFunc)_change_config_cb,
+                               applet, NULL);
+
+  desktop_agnostic_config_client_notify_add(theme_client,
+                               "theme",
+                               "icon_text_color",
+                               (DesktopAgnosticConfigNotifyFunc)_change_config_cb,
+                               applet, NULL);
+
   /* just chopping crap out converting to lda */
   popup_location_changed_cb(conf_client, 0,NULL, daemon);
 
@@ -1851,5 +1916,3 @@ AwnApplet* awn_applet_factory_initp(const gchar *name,
   return applet;
 
 }
-
-

@@ -8,10 +8,10 @@ type = boolean
 default = false
 description = Whether to honour client notification window positioning requests.
 
-[DEFAULT/honour_gtk]
+[DEFAULT/use_theme]
 type = boolean
-default = false
-description = Whether to gtk colour scheme.
+default = true
+description = Whether to the use configured awn theme color values for xxxx.
 
 [DEFAULT/sound_enabled]
 type = boolean

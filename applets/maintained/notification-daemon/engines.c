@@ -32,7 +32,6 @@
 #define ENABLE_GRADIENT_LOOK 1
 
 
-#include <gconf/gconf-client.h>
 #include "daemon.h"
 #include "engines.h"
 
@@ -41,7 +40,6 @@
 #include <libawn/awn-applet.h>
 #include <glib/gmacros.h>
 #include <glib/gerror.h>
-#include <gconf/gconf-value.h>
 
 #include <libawn/awn-dialog.h>
 #include <libawn/awn-applet-simple.h>
@@ -117,7 +115,6 @@ typedef struct
 
   UrlClickedCb url_clicked;
 
-  gboolean    use_gtk_style;
   gboolean    show_notification_win_title;
   gboolean    enable_gradient;
   int         border_width;
@@ -594,7 +591,6 @@ create_notification(UrlClickedCb url_clicked)
   WindowData *windata;
 
   windata = g_new0(WindowData, 1);
-  windata->use_gtk_style = G_daemon_config.awn_honour_gtk;
   windata->show_notification_win_title = FALSE;
   windata->border_width = G_daemon_config.awn_border_width;
   windata->gradient_factor = G_daemon_config.awn_gradient_factor;
@@ -785,14 +781,6 @@ create_notification(UrlClickedCb url_clicked)
 
   gtk_container_add(GTK_CONTAINER(alignment), windata->actions_box);
 
-  if (windata->use_gtk_style)
-  {
-    GtkStyle *style = gtk_widget_get_style(windata->win);
-
-    G_daemon_config.awn_bg = desktop_agnostic_color_new(&style->bg[GTK_STATE_NORMAL], BACKGROUND_OPACITY);
-    G_daemon_config.awn_border = desktop_agnostic_color_new(&style->fg[GTK_STATE_ACTIVE], G_MAXUSHORT);
-  }
-
   return GTK_WINDOW(win);
 }
 
@@ -859,30 +847,14 @@ set_notification_text(GtkWindow *nw, const char *summary, const char *body)
 
   /*FIXME*/
 
-  if (windata->use_gtk_style)
-  {
-    str = g_strdup_printf("<b><big><span>%s</span></big></b>", summary);
-  }
-  else
-  {
-    str = g_strdup_printf("<b><big><span foreground=\"#%s\">%s</span></big></b>", G_daemon_config.awn_text_str, summary);
-  }
-
+  str = g_strdup_printf("<b><big><span foreground=\"#%s\">%s</span></big></b>", G_daemon_config.awn_text_str, summary);
 
   gtk_label_set_markup(GTK_LABEL(windata->summary_label), str);
 
   g_free(str);
 
-  if (windata->use_gtk_style)
-  {
-    str = g_strdup_printf("%s<small><span> %s%c</span></small>%s", G_daemon_config.bold_text_body ? "<b>" : "",
-                          body, endchar, G_daemon_config.bold_text_body ? "</b>" : "");
-  }
-  else
-  {
-    str = g_strdup_printf("%s<small><span foreground=\"#%s\"> %s%c\n</span></small>%s", G_daemon_config.bold_text_body ? "<b>" : "",
-                          G_daemon_config.awn_text_str, body, endchar, G_daemon_config.bold_text_body ? "</b>" : "");
-  }
+  str = g_strdup_printf("%s<small><span foreground=\"#%s\"> %s%c\n</span></small>%s", G_daemon_config.bold_text_body ? "<b>" : "",
+                        G_daemon_config.awn_text_str, body, endchar, G_daemon_config.bold_text_body ? "</b>" : "");
 
 #ifdef HAVE_GTK_URL_LABEL
   gtk_label_set_markup(GTK_LABEL(windata->body_label), str);

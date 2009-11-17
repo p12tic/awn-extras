@@ -54,7 +54,7 @@
 #define GCONF_KEY_AWN_GRADIENT_FACTOR GCONF_AWN "gradient_factor"
 #define GCONF_KEY_AWN_TEXT_COLOUR  GCONF_AWN "text_colour"
 #define GCONF_KEY_AWN_CLIENT_POS  GCONF_AWN "honour_client_posxy"
-#define GCONF_KEY_AWN_HONOUR_GTK  GCONF_AWN "honour_gtk"
+#define GCONF_KEY_AWN_HONOUR_GTK  GCONF_AWN "use_theme"
 #define GCONF_KEY_AWN_OVERRIDE_X  GCONF_AWN "override_x"
 #define GCONF_KEY_AWN_OVERRIDE_Y  GCONF_AWN "override_y"
 #define GCONF_KEY_AWN_TIMEOUT  GCONF_AWN "override_override_timeout"
@@ -151,7 +151,7 @@ typedef struct
   DesktopAgnosticColor *awn_text;
   gchar * awn_text_str;
   gboolean awn_client_pos;
-  gboolean awn_honour_gtk;
+  gboolean awn_use_theme;
   int awn_override_y;
   int awn_override_x;
   int awn_border_width;

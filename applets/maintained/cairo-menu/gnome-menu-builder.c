@@ -699,8 +699,8 @@ clear_menu (MenuInstance * instance)
 static gboolean
 _submenu_delayed_update (MenuInstance * instance)
 {
+  instance->source_id=0;  
   instance->menu = submenu_build (instance);  
-  instance->source_id=0;
   return FALSE;
 }
 

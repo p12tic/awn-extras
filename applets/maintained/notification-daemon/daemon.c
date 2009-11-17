@@ -64,6 +64,7 @@
 
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <libawn/libawn.h>
 
 #include "daemon.h"
 #include "engines.h"
@@ -133,7 +134,8 @@ struct _NotifyDaemonPrivate
   gint stacks_size;
 };
 
-static GConfClient *gconf_client = NULL;
+static DesktopAgnosticConfigClient  *conf_client = NULL;
+
 static DBusConnection *dbus_conn = NULL;
 
 #define CHECK_DBUS_VERSION(major, minor) \
@@ -201,7 +203,7 @@ static void
 notify_daemon_init(NotifyDaemon *daemon)
 {
   NotifyStackLocation location;
-  GConfClient *client = get_gconf_client();
+DesktopAgnosticConfigClient  *client = get_conf_client();
   GdkDisplay *display;
   GdkScreen *screen;
   gchar *slocation;
@@ -213,8 +215,9 @@ notify_daemon_init(NotifyDaemon *daemon)
   daemon->priv->next_id = 1;
   daemon->priv->timeout_source = 0;
 
-  slocation = gconf_client_get_string(client, GCONF_KEY_POPUP_LOCATION,
-                                      NULL);
+//  slocation = gconf_client_get_string(client, GCONF_KEY_POPUP_LOCATION, NULL);
+  slocation = g_strdup ("bottom_right");
+
   location = get_stack_location_from_string(slocation);
   g_free(slocation);
 
@@ -861,7 +864,7 @@ window_clicked_cb(GtkWindow *nw, GdkEventButton *button, NotifyDaemon *daemon)
 }
 
 static void
-popup_location_changed_cb(GConfClient *client, guint cnxn_id,
+popup_location_changed_cb(DesktopAgnosticConfigClient  *client, guint cnxn_id,
                           GConfEntry *entry, gpointer user_data)
 {
   NotifyDaemon *daemon = (NotifyDaemon*)user_data;
@@ -873,23 +876,7 @@ popup_location_changed_cb(GConfClient *client, guint cnxn_id,
   if (daemon == NULL)
     return;
 
-  value = gconf_entry_get_value(entry);
-
-  slocation = (value != NULL ? gconf_value_get_string(value) : NULL);
-
-  if (slocation != NULL && *slocation != '\0')
-  {
-    stack_location = get_stack_location_from_string(slocation);
-  }
-  else
-  {
-    gconf_client_set_string(get_gconf_client(),
-                            "/apps/notification-daemon/popup_location",
-                            popup_stack_locations[POPUP_STACK_DEFAULT_INDEX].identifier,
-                            NULL);
-
-    stack_location = NOTIFY_STACK_LOCATION_DEFAULT;
-  }
+  stack_location = NOTIFY_STACK_LOCATION_DEFAULT;
 
   for (i = 0; i < daemon->priv->stacks_size; i++)
     notify_stack_set_location(daemon->priv->stacks[i], stack_location);
@@ -1206,8 +1193,8 @@ notify_daemon_notify_handler(NotifyDaemon *daemon,
   }
 
   /* Deal with sound hints */
-  sound_enabled = gconf_client_get_bool(gconf_client,
-                                        GCONF_KEY_SOUND_ENABLED, NULL);
+
+  sound_enabled = desktop_agnostic_config_client_get_bool (conf_client,  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,"sound_enabled",NULL);
 
   data = (GValue *)g_hash_table_lookup(hints, "suppress-sound");
 
@@ -1251,9 +1238,7 @@ notify_daemon_notify_handler(NotifyDaemon *daemon,
     /* If we don't have a sound file yet, use our gconf default */
     if (sound_file == NULL)
     {
-      sound_file = gconf_client_get_string(gconf_client,
-                                           GCONF_KEY_DEFAULT_SOUND, NULL);
-
+      sound_file = desktop_agnostic_config_client_get_string (conf_client,  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,"default_sound",NULL);
       if (sound_file != NULL &&
           (*sound_file == '\0' ||
            !g_file_test(sound_file, G_FILE_TEST_EXISTS)))
@@ -1472,10 +1457,10 @@ notify_daemon_get_server_information(NotifyDaemon *daemon,
   return TRUE;
 }
 
-GConfClient *
-get_gconf_client(void)
+DesktopAgnosticConfigClient  *
+get_conf_client(void)
 {
-  return gconf_client;
+  return conf_client;
 }
 
 static void
@@ -1533,7 +1518,26 @@ gboolean hide_icon(gpointer data)
   return FALSE;
 }
 
+static void 
+config_get_color(DesktopAgnosticConfigClient *client, const gchar *key, DesktopAgnosticColor **color)
+{
+  GError *error = NULL;
+  GValue value = {0,};
 
+  desktop_agnostic_config_client_get_value(client, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT, key, &value, &error);
+
+  if (error)
+  {
+    g_warning("Notification Daemon: error reading config string (%s): %s", key, error->message);
+    g_error_free(error);
+    *color = desktop_agnostic_color_new_from_string("#000", NULL);
+  }
+  else
+  {
+    *color = (DesktopAgnosticColor*)g_value_dup_object(&value);
+    g_value_unset(&value);
+  }
+}
 
 static void read_config(void)
 {
@@ -1541,312 +1545,74 @@ static void read_config(void)
   GConfValue*  value;
   gchar * svalue;
 
-  value = gconf_client_get(gconf_client, GCONF_KEY_AWN_KILL_ND,
-                           NULL);
-
-  if (value)
+  if (desktop_agnostic_config_client_get_bool (conf_client,  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,GCONF_KEY_AWN_KILL_ND,NULL))
   {
-    if (gconf_client_get_bool(gconf_client, GCONF_KEY_AWN_KILL_ND , NULL))
+    if (!done_once)
     {
-      if (!done_once)
-      {
-        printf("The following is an informational message only: \n");
-        fflush(stdout);
+      printf("The following is an informational message only: \n");
+      fflush(stdout);
 
-        if (system("killall notification-daemon 2> /dev/null") == -1)
-        {
-          printf("Failed to execute killall command: disable kill notication daemon and configure to kill daemon before loading applet\n");
-        }
-        else
-        {
-          fflush(stdout);
-          system("killall -9 notification-daemon 2> /dev/null");
-        }
-        if (system("killall notify-osd 2> /dev/null") == -1)
-        {
-          printf("Failed to execute killall command: disable kill notication daemon and configure to kill daemon before loading applet\n");
-        }
-        else
-        {
-          fflush(stdout);
-          system("killall -9 notify-osd 2> /dev/null");
-        }
+      if (system("killall notification-daemon 2> /dev/null") == -1)
+      {
+        printf("Failed to execute killall command: disable kill notication daemon and configure to kill daemon before loading applet\n");
+      }
+      else
+      {
+        fflush(stdout);
+        system("killall -9 notification-daemon 2> /dev/null");
+      }
+      if (system("killall notify-osd 2> /dev/null") == -1)
+      {
+        printf("Failed to execute killall command: disable kill notication daemon and configure to kill daemon before loading applet\n");
+      }
+      else
+      {
+        fflush(stdout);
+        system("killall -9 notify-osd 2> /dev/null");
       }
     }
   }
-  else
-  {
-    gconf_client_set_bool(gconf_client, GCONF_KEY_AWN_KILL_ND, TRUE , NULL);
 
-    if (system("killall notification-daemon") == -1)
-    {
-      printf("Failed to execute killall command: disable kill notication daemon and configure to kill daemon before loading applet\n");
-    }
-    else
-    {
-      system("killall -9 notification-daemon");
-    }
+  G_daemon_config.awn_client_pos = desktop_agnostic_config_client_get_bool (conf_client,  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,GCONF_KEY_AWN_CLIENT_POS,NULL);
 
-  }
+  G_daemon_config.awn_honour_gtk = desktop_agnostic_config_client_get_bool (conf_client,  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,GCONF_KEY_AWN_HONOUR_GTK,NULL);
 
-  value = gconf_client_get(gconf_client, GCONF_KEY_AWN_CLIENT_POS,
+  config_get_color (conf_client,GCONF_KEY_AWN_BG,&G_daemon_config.awn_bg);
 
-                           NULL);
+  config_get_color (conf_client,GCONF_KEY_AWN_TEXT_COLOUR,&G_daemon_config.awn_text);
 
-  if (value)
-  {
-    G_daemon_config.awn_client_pos = gconf_client_get_bool(gconf_client, GCONF_KEY_AWN_CLIENT_POS , NULL);
-  }
-  else
-  {
-    G_daemon_config.awn_client_pos = TRUE;
-    gconf_client_set_bool(gconf_client, GCONF_KEY_AWN_CLIENT_POS, G_daemon_config.awn_client_pos, NULL);
-  }
-
-  value = gconf_client_get(gconf_client, GCONF_KEY_AWN_HONOUR_GTK,
-
-                           NULL);
-
-  if (value)
-  {
-    G_daemon_config.awn_honour_gtk = gconf_client_get_bool(gconf_client, GCONF_KEY_AWN_HONOUR_GTK , NULL);
-  }
-  else
-  {
-    G_daemon_config.awn_honour_gtk = TRUE;
-    gconf_client_set_bool(gconf_client, GCONF_KEY_AWN_HONOUR_GTK, G_daemon_config.awn_honour_gtk, NULL);
-  }
-
-  svalue = gconf_client_get_string(gconf_client, GCONF_KEY_AWN_BG, NULL);
-
-  if (!svalue)
-  {
-    gconf_client_set_string(gconf_client , GCONF_KEY_AWN_BG, svalue = g_strdup("#0a0a0abb"), NULL);
-  }
-
-  G_daemon_config.awn_bg = desktop_agnostic_color_new_from_string(svalue, NULL);
-
-  g_free(svalue);
-
-  svalue = gconf_client_get_string(gconf_client, GCONF_KEY_AWN_TEXT_COLOUR, NULL);
-
-  if (!svalue)
-  {
-    gconf_client_set_string(gconf_client , GCONF_KEY_AWN_TEXT_COLOUR, svalue = g_strdup("#eeeeeebb"), NULL);
-  }
-
-  G_daemon_config.awn_text = desktop_agnostic_color_new_from_string(svalue, NULL);
-
-  G_daemon_config.awn_text_str = g_strdup(svalue);
+  G_daemon_config.awn_text_str = desktop_agnostic_color_to_string (G_daemon_config.awn_text);
+  gchar * tmp = g_strdup (G_daemon_config.awn_text_str+1);
+  g_free (G_daemon_config.awn_text_str);
+  G_daemon_config.awn_text_str = tmp;
 
   if (strlen(G_daemon_config.awn_text_str) > 6)
     G_daemon_config.awn_text_str[6] = '\0';
 
-  g_free(svalue);
+  config_get_color (conf_client,GCONF_KEY_AWN_BG,&G_daemon_config.awn_border);
+    
+  G_daemon_config.awn_border_width = desktop_agnostic_config_client_get_int (conf_client,  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,GCONF_KEY_AWN_BORDER_WIDTH,NULL);
 
-  svalue = gconf_client_get_string(gconf_client, GCONF_KEY_AWN_BORDER, NULL);
+  G_daemon_config.awn_gradient_factor = desktop_agnostic_config_client_get_float (conf_client,  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,GCONF_KEY_AWN_GRADIENT_FACTOR,NULL);
 
-  if (!svalue)
-  {
-    gconf_client_set_string(gconf_client , GCONF_KEY_AWN_BORDER, svalue = g_strdup("#ffffffaa"), NULL);
-  }
+  G_daemon_config.awn_override_x = desktop_agnostic_config_client_get_int (conf_client,  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,GCONF_KEY_AWN_OVERRIDE_X,NULL);
+    
+  G_daemon_config.awn_override_y = desktop_agnostic_config_client_get_int (conf_client,  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,GCONF_KEY_AWN_OVERRIDE_Y,NULL);
 
-  G_daemon_config.awn_border = desktop_agnostic_color_new_from_string(svalue, NULL);
+  G_daemon_config.timeout = desktop_agnostic_config_client_get_int (conf_client,  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,GCONF_KEY_AWN_TIMEOUT,NULL);
 
-  g_free(svalue);
+  G_daemon_config.bold_text_body = desktop_agnostic_config_client_get_bool (conf_client,  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,GCONF_KEY_AWN_BOLD_BODY,NULL);
 
-  value = gconf_client_get(gconf_client, GCONF_KEY_AWN_BORDER_WIDTH, NULL);
+  G_daemon_config.show_icon = desktop_agnostic_config_client_get_bool (conf_client,  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,GCONF_KEY_AWN_SHOW_ICON,NULL);
 
-  if (value)
-  {
-    G_daemon_config.awn_border_width = gconf_client_get_int(gconf_client, GCONF_KEY_AWN_BORDER_WIDTH, NULL) ;
-  }
-  else
-  {
-    G_daemon_config.awn_border_width = 3;
-    gconf_client_set_int(gconf_client, GCONF_KEY_AWN_BORDER_WIDTH, G_daemon_config.awn_border_width , NULL);
-  }
-
-  value = gconf_client_get(gconf_client, GCONF_KEY_AWN_GRADIENT_FACTOR, NULL);
-
-  if (value)
-  {
-    G_daemon_config.awn_gradient_factor = gconf_client_get_float(gconf_client, GCONF_KEY_AWN_GRADIENT_FACTOR, NULL) ;
-  }
-  else
-  {
-    G_daemon_config.awn_gradient_factor = 0.75;
-    gconf_client_set_float(gconf_client, GCONF_KEY_AWN_GRADIENT_FACTOR, G_daemon_config.awn_gradient_factor , NULL);
-  }
-
-  value = gconf_client_get(gconf_client, GCONF_KEY_AWN_OVERRIDE_X, NULL);
-
-  if (value)
-  {
-    G_daemon_config.awn_override_x = gconf_client_get_int(gconf_client, GCONF_KEY_AWN_OVERRIDE_X, NULL) ;
-  }
-  else
-  {
-    G_daemon_config.awn_override_x = -1;
-    gconf_client_set_int(gconf_client, GCONF_KEY_AWN_OVERRIDE_X, G_daemon_config.awn_override_x , NULL);
-  }
-
-  value = gconf_client_get(gconf_client, GCONF_KEY_AWN_OVERRIDE_Y, NULL);
-
-  if (value)
-  {
-    G_daemon_config.awn_override_y = gconf_client_get_int(gconf_client, GCONF_KEY_AWN_OVERRIDE_Y, NULL) ;
-  }
-  else
-  {
-    G_daemon_config.awn_override_y = -1;
-    gconf_client_set_int(gconf_client, GCONF_KEY_AWN_OVERRIDE_Y, G_daemon_config.awn_override_y , NULL);
-  }
-
-
-  value = gconf_client_get(gconf_client, GCONF_KEY_AWN_TIMEOUT, NULL);
-
-  if (value)
-  {
-    G_daemon_config.timeout = gconf_client_get_int(gconf_client, GCONF_KEY_AWN_TIMEOUT, NULL) ;
-  }
-  else
-  {
-    G_daemon_config.timeout = -1;
-    gconf_client_set_int(gconf_client, GCONF_KEY_AWN_TIMEOUT, G_daemon_config.timeout , NULL);
-  }
-
-
-
-  value = gconf_client_get(gconf_client, GCONF_KEY_AWN_BOLD_BODY, NULL);
-
-  if (value)
-  {
-    G_daemon_config.bold_text_body = gconf_client_get_bool(gconf_client, GCONF_KEY_AWN_BOLD_BODY, NULL) ;
-  }
-  else
-  {
-    G_daemon_config.bold_text_body = FALSE;
-    gconf_client_set_bool(gconf_client, GCONF_KEY_AWN_BOLD_BODY, G_daemon_config.bold_text_body, NULL);
-  }
-
-  value = gconf_client_get(gconf_client, GCONF_KEY_AWN_SHOW_ICON, NULL);
-
-  if (value)
-  {
-    G_daemon_config.show_icon = gconf_client_get_bool(gconf_client, GCONF_KEY_AWN_SHOW_ICON, NULL) ;
-  }
-  else
-  {
-    G_daemon_config.show_icon = FALSE;
-    gconf_client_set_bool(gconf_client, GCONF_KEY_AWN_SHOW_ICON, G_daemon_config.show_icon, NULL);
-  }
-
-  value = gconf_client_get(gconf_client, GCONF_KEY_AWN_HIDE_OPACITY, NULL);
-
-  if (value)
-  {
-    G_daemon_config.hide_opacity = gconf_client_get_float(gconf_client, GCONF_KEY_AWN_HIDE_OPACITY, NULL) ;
-  }
-  else
-  {
-    G_daemon_config.hide_opacity = 0.0;
-    gconf_client_set_float(gconf_client, GCONF_KEY_AWN_HIDE_OPACITY, G_daemon_config.hide_opacity, NULL);
-  }
-
+  G_daemon_config.hide_opacity = desktop_agnostic_config_client_get_float (conf_client,  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,GCONF_KEY_AWN_HIDE_OPACITY,NULL);
   done_once = TRUE;
 }
 
-static void
-config_changed(GConfClient *client, guint cnxn_id,
-               GConfEntry *entry, gpointer user_data)
+static void 
+_change_config_cb(const gchar *group, const gchar *key, const GValue *value, gpointer user_data)
 {
-  GConfValue*  value;
-  gchar * svalue;
-
-  printf("config_changed\n");
-
-  value = gconf_client_get(gconf_client, GCONF_KEY_AWN_CLIENT_POS,
-                           NULL);
-
-  if (value)
-  {
-    G_daemon_config.awn_client_pos = gconf_client_get_bool(gconf_client, GCONF_KEY_AWN_CLIENT_POS , NULL);
-  }
-
-  value = gconf_client_get(gconf_client, GCONF_KEY_AWN_HONOUR_GTK,
-
-                           NULL);
-
-  if (value)
-  {
-    G_daemon_config.awn_honour_gtk = gconf_client_get_bool(gconf_client, GCONF_KEY_AWN_HONOUR_GTK , NULL);
-  }
-
-  svalue = gconf_client_get_string(gconf_client, GCONF_KEY_AWN_BG, NULL);
-
-  if (svalue)
-  {
-    G_daemon_config.awn_bg = desktop_agnostic_color_new_from_string(svalue, NULL);
-    g_free(svalue);
-  }
-
-  svalue = gconf_client_get_string(gconf_client, GCONF_KEY_AWN_TEXT_COLOUR, NULL);
-
-  if (svalue)
-  {
-    G_daemon_config.awn_text = desktop_agnostic_color_new_from_string(svalue, NULL);
-    G_daemon_config.awn_text_str = g_strdup(svalue);
-
-    if (strlen(G_daemon_config.awn_text_str) > 6)
-      G_daemon_config.awn_text_str[6] = '\0';
-
-    g_free(svalue);
-  }
-
-  svalue = gconf_client_get_string(gconf_client, GCONF_KEY_AWN_BORDER, NULL);
-
-  if (svalue)
-  {
-    G_daemon_config.awn_border = desktop_agnostic_color_new_from_string(svalue, NULL);
-    g_free(svalue);
-  }
-
-  value = gconf_client_get(gconf_client, GCONF_KEY_AWN_BORDER_WIDTH, NULL);
-
-  if (value)
-  {
-    G_daemon_config.awn_border_width = gconf_client_get_int(gconf_client, GCONF_KEY_AWN_BORDER_WIDTH, NULL) ;
-  }
-
-  value = gconf_client_get(gconf_client, GCONF_KEY_AWN_GRADIENT_FACTOR, NULL);
-
-  if (value)
-  {
-    G_daemon_config.awn_gradient_factor = gconf_client_get_float(gconf_client, GCONF_KEY_AWN_GRADIENT_FACTOR, NULL) ;
-  }
-
-  value = gconf_client_get(gconf_client, GCONF_KEY_AWN_OVERRIDE_X, NULL);
-
-  if (value)
-  {
-    G_daemon_config.awn_override_x = gconf_client_get_int(gconf_client, GCONF_KEY_AWN_OVERRIDE_X, NULL) ;
-  }
-
-  value = gconf_client_get(gconf_client, GCONF_KEY_AWN_OVERRIDE_Y, NULL);
-
-  if (value)
-  {
-    G_daemon_config.awn_override_y = gconf_client_get_int(gconf_client, GCONF_KEY_AWN_OVERRIDE_Y, NULL) ;
-  }
-
-
-  value = gconf_client_get(gconf_client, GCONF_KEY_AWN_TIMEOUT, NULL);
-
-  if (value)
-  {
-    G_daemon_config.timeout = gconf_client_get_int(gconf_client, GCONF_KEY_AWN_TIMEOUT, NULL) ;
-  }
+  read_config ();  
 
   send_message("Configuration has been modified\nClick <a href=\"http://wiki.awn-project.org/index.php?title=Awn_Notification-Daemon\">Here</a> for online documentation.");
 }
@@ -1930,11 +1696,7 @@ AwnApplet* awn_applet_factory_initp(const gchar *name,
 
   sound_init();
 
-  gconf_client = gconf_client_get_default();
-  gconf_client_add_dir(gconf_client, "/apps",
-                       GCONF_CLIENT_PRELOAD_NONE, NULL);
-
-
+  conf_client = awn_config_get_default_for_applet(AWN_APPLET(applet), NULL);
 
   error = NULL;
 
@@ -1979,19 +1741,22 @@ AwnApplet* awn_applet_factory_initp(const gchar *name,
 
   read_config();
 
-  gconf_client_add_dir(gconf_client, "/apps", GCONF_CLIENT_PRELOAD_NONE, NULL);
-  gconf_client_notify_add(gconf_client, GCONF_AWN,
-                          config_changed, daemon,
-                          NULL, NULL);
-
-
+/*  desktop_agnostic_config_client_notify_add(conf_client,
+                               DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
+                               "",
+                               (DesktopAgnosticConfigNotifyFunc)_change_config_cb,
+                               applet, NULL);*/
+/*
   int id = gconf_client_notify_add(gconf_client, GCONF_KEY_POPUP_LOCATION,
                                    popup_location_changed_cb, daemon,
                                    NULL, NULL);
-
+  */
   /* Emit signal to verify/set current key */
-  gconf_client_notify(gconf_client, GCONF_KEY_POPUP_LOCATION);
+/*  gconf_client_notify(gconf_client, GCONF_KEY_POPUP_LOCATION);
   gconf_client_notify_remove(gconf_client, id);
+*/
+  /* just chopping crap out converting to lda */
+  popup_location_changed_cb(conf_client, 0,NULL, daemon);
 
   dbus_g_connection_register_g_object(connection, "/org/freedesktop/Notifications", G_OBJECT(daemon));
 

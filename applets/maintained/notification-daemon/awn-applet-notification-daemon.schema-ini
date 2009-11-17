@@ -1,0 +1,80 @@
+[DEFAULT/kill_standard_daemon]
+type = boolean
+default = true
+description =Whether to attempt to kill any running notification-daemons.
+
+[DEFAULT/honour_client_posxy]
+type = boolean
+default = false
+description = Whether to honour client notification window positioning requests.
+
+[DEFAULT/honour_gtk]
+type = boolean
+default = false
+description = Whether to gtk colour scheme.
+
+[DEFAULT/sound_enabled]
+type = boolean
+default = false
+description = Sound.
+
+[DEFAULT/bg_colour]
+type = color
+default = #000000dd
+description = Background colour in the form (Hex) rrggbbaa
+
+[DEFAULT/text_colour]
+type = color
+default = #ffffffff
+description = Text colour in the form (Hex) rrggbbaa. Currently the alpha component is ignored
+
+[DEFAULT/border_colour]
+type = color
+default = #333333ff
+description = Border colour in the form (Hex) rrggbbaa.  Also use for the timer widget
+
+[DEFAULT/border_width]
+type = integer
+default = 0
+description = Border Width. A value of 0 indicates that is should not be drawn.
+
+[DEFAULT/gradient_factor]
+type = float
+default = 0.7
+description = Gradient Factor applied to the notification window. Range of 0 to 1. The lower the number the more noticeable the effect.
+
+[DEFAULT/override_x]
+type = integer
+default = -1
+description = NOTE:  This key should not be considered stable... it is likely to change.  Arbitrary X position for notification window.  Default is -1 which signifies awn-notification-daemon should place windows relative to its position in the bar.
+
+[DEFAULT/override_y]
+type = integer
+default = -1
+description = NOTE:  This key should not be considered stable... it is likely to change.  Arbitrary Y position for notification window.  Default is -1 which signifies awn-notification-daemon should place windows relative to its position in the bar.
+
+[DEFAULT/override_timeout]
+type = integer
+default = -1
+description = This will override the client and default timeout periods for all notification windows with a timeout.  Value is in ms. A value less than or equal to 0 indicates that client and default values should be honoured.
+
+[DEFAULT/show_icon]
+type = boolean
+default = false
+description = Display icon for awn notification daemon.  Allows toggling of notification display
+
+[DEFAULT/hide_opacity]
+type = float
+default = 0.0
+description = If the value is >0.0 then this opacity value will be applied to window instead of hiding.
+
+[DEFAULT/default_sound]
+type = string
+default = 
+description = The default sound file used unless a notification supplies the 'sound-file' or 'suppress-sound' hint. Leave empty for no default sound.
+
+[DEFAULT/bold_text_body]
+type = boolean
+default = false
+description = Use bold text.
+

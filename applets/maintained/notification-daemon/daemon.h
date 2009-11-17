@@ -22,7 +22,7 @@
 #ifndef NOTIFY_DAEMON_H
 #define NOTIFY_DAEMON_H
 
-#include <gconf/gconf-client.h>
+#include <libawn/libawn.h>
 #include <glib.h>
 #include <glib-object.h>
 
@@ -46,21 +46,21 @@
 #define GCONF_KEY_SOUND_ENABLED  GCONF_KEY_DAEMON "/sound_enabled"
 #define GCONF_KEY_DEFAULT_SOUND  GCONF_KEY_DAEMON "/default_sound"
 
-#define GCONF_AWN "/apps/avant-window-navigator/applets/awn-notification-daemon"
-#define GCONF_KEY_AWN_KILL_ND GCONF_AWN "/kill_standard_daemon"
-#define GCONF_KEY_AWN_BG GCONF_AWN "/bg_colour"
-#define GCONF_KEY_AWN_BORDER GCONF_AWN "/border_colour"
-#define GCONF_KEY_AWN_BORDER_WIDTH GCONF_AWN "/border_width"
-#define GCONF_KEY_AWN_GRADIENT_FACTOR GCONF_AWN "/gradient_factor"
-#define GCONF_KEY_AWN_TEXT_COLOUR  GCONF_AWN "/text_colour"
-#define GCONF_KEY_AWN_CLIENT_POS  GCONF_AWN "/honour_client_posxy"
-#define GCONF_KEY_AWN_HONOUR_GTK  GCONF_AWN "/honour_gtk"
-#define GCONF_KEY_AWN_OVERRIDE_X  GCONF_AWN "/override_x"
-#define GCONF_KEY_AWN_OVERRIDE_Y  GCONF_AWN "/override_y"
-#define GCONF_KEY_AWN_TIMEOUT  GCONF_AWN "/override_override_timeout"
-#define GCONF_KEY_AWN_BOLD_BODY  GCONF_AWN "/bold_text_body"
-#define GCONF_KEY_AWN_SHOW_ICON GCONF_AWN "/show_icon"
-#define GCONF_KEY_AWN_HIDE_OPACITY GCONF_AWN "/hide_opacity"
+#define GCONF_AWN ""
+#define GCONF_KEY_AWN_KILL_ND GCONF_AWN "kill_standard_daemon"
+#define GCONF_KEY_AWN_BG GCONF_AWN "bg_colour"
+#define GCONF_KEY_AWN_BORDER GCONF_AWN "border_colour"
+#define GCONF_KEY_AWN_BORDER_WIDTH GCONF_AWN "border_width"
+#define GCONF_KEY_AWN_GRADIENT_FACTOR GCONF_AWN "gradient_factor"
+#define GCONF_KEY_AWN_TEXT_COLOUR  GCONF_AWN "text_colour"
+#define GCONF_KEY_AWN_CLIENT_POS  GCONF_AWN "honour_client_posxy"
+#define GCONF_KEY_AWN_HONOUR_GTK  GCONF_AWN "honour_gtk"
+#define GCONF_KEY_AWN_OVERRIDE_X  GCONF_AWN "override_x"
+#define GCONF_KEY_AWN_OVERRIDE_Y  GCONF_AWN "override_y"
+#define GCONF_KEY_AWN_TIMEOUT  GCONF_AWN "override_override_timeout"
+#define GCONF_KEY_AWN_BOLD_BODY  GCONF_AWN "bold_text_body"
+#define GCONF_KEY_AWN_SHOW_ICON GCONF_AWN "show_icon"
+#define GCONF_KEY_AWN_HIDE_OPACITY GCONF_AWN "hide_opacity"
 
 #define NOTIFY_TYPE_DAEMON (notify_daemon_get_type())
 #define NOTIFY_DAEMON(obj) \
@@ -140,7 +140,7 @@ gboolean notify_daemon_get_server_information(NotifyDaemon *daemon,
     char **out_version,
     char **out_spec_ver);
 
-GConfClient *get_gconf_client(void);
+DesktopAgnosticConfigClient  *get_conf_client(void);
 
 typedef struct
 {

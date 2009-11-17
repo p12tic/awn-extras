@@ -338,7 +338,7 @@ applets/maintained/mount/Makefile
 applets/maintained/notification-area/Makefile
 applets/maintained/notification-area/notification-area.desktop.in
 applets/maintained/notification-daemon/Makefile
-applets/maintained/notification-daemon/awnnotificationdaemon.desktop.in
+applets/maintained/notification-daemon/notification-daemon.desktop.in
 applets/maintained/places/Makefile
 applets/maintained/places/places.desktop.in
 applets/maintained/python-test/Makefile

@@ -1,13 +1,14 @@
-APPLET_NAME = awnnotificationdaemon
+APPLET_NAME = notification-daemon
 APPLET_CFLAGS =								\
 	$(NOTIFICATION_DAEMON_CFLAGS)					\
 	-DENGINES_DIR=\"$(libdir)/notification-daemon-1.0/engines\"
 
 include $(top_srcdir)/Makefile.c-applet
+include $(top_srcdir)/Makefile.schemas
 
-applet_LTLIBRARIES = awnnotificationdaemon.la
+applet_LTLIBRARIES = notification-daemon.la
 
-awnnotificationdaemon_la_SOURCES =	\
+notification_daemon_la_SOURCES =	\
 	daemon.c			\
 	daemon.h			\
 	engines.c			\
@@ -17,11 +18,11 @@ awnnotificationdaemon_la_SOURCES =	\
 	stack.c				\
 	stack.h				\
 	$(NULL)
-awnnotificationdaemon_la_LIBADD =	\
+notification_daemon_la_LIBADD =	\
 	$(AWN_LIBS)			\
 	$(NOTIFICATION_DAEMON_LIBS)	\
 	$(NULL)
-awnnotificationdaemon_la_LDFLAGS = $(APPLET_LINKER_FLAGS)
+notification_daemon_la_LDFLAGS = $(APPLET_LINKER_FLAGS)
 
 BUILT_SOURCES = notificationdaemon-dbus-glue.h
 
@@ -30,18 +31,7 @@ notificationdaemon-dbus-glue.h: notificationdaemon.xml
 
 # config
 
-if GCONF_SCHEMAS_INSTALL
-schemasdir       = $(GCONF_SCHEMA_FILE_DIR)
-schemas_in_files = awn-notification-daemon.schemas.in
-schemas_DATA     = $(schemas_in_files:.schemas.in=.schemas)
-
-@INTLTOOL_SCHEMAS_RULE@
-
-install-data-local:
-	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(schemas_DATA)
-else
-install-data-local:
-endif
+#install-data-local:
 
 CLEANFILES += $(schemas_DATA)
 
@@ -53,5 +43,4 @@ EXTRA_DIST += \
 	AUTHORS NEWS INSTALL COPYING README \
 	ChangeLog \
 	notificationdaemon.xml \
-	$(schemas_in_files) \
 	$(NULL)

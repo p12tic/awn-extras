@@ -1559,7 +1559,6 @@ static void read_config(void)
     {
       DBusGConnection *connection;
       DBusGProxy *proxy;
-      unsigned long pid;
       connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
       if (error)
       {
@@ -1570,7 +1569,6 @@ static void read_config(void)
       if (connection)
       {
         pid_t pid=0;
-        g_debug ("got connection");
         proxy = dbus_g_proxy_new_for_name (connection,
                                              "org.freedesktop.DBus", 
                                              "/org/freedesktop/DBus",

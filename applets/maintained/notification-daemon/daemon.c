@@ -1568,7 +1568,7 @@ static void read_config(void)
       }
       if (connection)
       {
-        pid_t pid=0;
+        unsigned int pid=0;
         proxy = dbus_g_proxy_new_for_name (connection,
                                              "org.freedesktop.DBus", 
                                              "/org/freedesktop/DBus",
@@ -1582,7 +1582,7 @@ static void read_config(void)
 
         if (pid)
         {
-          kill (pid,SIGTERM);
+          kill ((pid_t)pid,SIGTERM);
         }
         dbus_g_connection_unref(connection);
       }

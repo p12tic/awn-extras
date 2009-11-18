@@ -33,7 +33,6 @@
 #include <libawn/awn-applet-simple.h>
 #include <glib/gmacros.h>
 #include <glib/gerror.h>
-#include <gconf/gconf-value.h>
 
 #include <libawn/awn-dialog.h>
 #include <libawn/awn-cairo-utils.h>

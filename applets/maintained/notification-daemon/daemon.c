@@ -33,6 +33,9 @@
 #include <errno.h>
 #include <string.h>
 #include <stdio.h>
+#include <signal.h>
+#include <sys/types.h>
+
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
@@ -1543,6 +1546,7 @@ static void read_config(void)
   static gboolean done_once = FALSE;
   gchar * svalue;
   static DesktopAgnosticConfigClient * theme_client = NULL;
+  GError * error = NULL;
 
   if (!theme_client)
   {
@@ -1553,26 +1557,40 @@ static void read_config(void)
   {
     if (!done_once)
     {
-      printf("The following is an informational message only: \n");
-      fflush(stdout);
+      DBusGConnection *connection;
+      DBusGProxy *proxy;
+      unsigned long pid;
+      connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
+      if (error)
+      {
+        g_warning ("Unable to make connection to the D-Bus session bus: %s",
+                   error->message);
+        g_error_free (error);
+      }
+      if (connection)
+      {
+        pid_t pid=0;
+        g_debug ("got connection");
+        proxy = dbus_g_proxy_new_for_name (connection,
+                                             "org.freedesktop.DBus", 
+                                             "/org/freedesktop/DBus",
+                                             "org.freedesktop.DBus");
 
-      if (system("killall notification-daemon 2> /dev/null") == -1)
-      {
-        printf("Failed to execute killall command: disable kill notication daemon and configure to kill daemon before loading applet\n");
+        dbus_g_proxy_call (proxy, "GetConnectionUnixProcessID", &error,
+                           G_TYPE_STRING, "org.freedesktop.Notifications",
+                           G_TYPE_INVALID,
+                           G_TYPE_UINT, &pid,
+                           G_TYPE_INVALID);
+
+        if (pid)
+        {
+          kill (pid,SIGTERM);
+        }
+        dbus_g_connection_unref(connection);
       }
-      else
+      if (proxy)
       {
-        fflush(stdout);
-        system("killall -9 notification-daemon 2> /dev/null");
-      }
-      if (system("killall notify-osd 2> /dev/null") == -1)
-      {
-        printf("Failed to execute killall command: disable kill notication daemon and configure to kill daemon before loading applet\n");
-      }
-      else
-      {
-        fflush(stdout);
-        system("killall -9 notify-osd 2> /dev/null");
+        g_object_unref (proxy);
       }
     }
   }
@@ -1736,6 +1754,8 @@ AwnApplet* awn_applet_factory_initp(const gchar *name,
 
   error = NULL;
 
+  read_config();
+  
   connection = dbus_g_bus_get(DBUS_BUS_SESSION, &error);
 
   while (connection == NULL)
@@ -1774,8 +1794,6 @@ AwnApplet* awn_applet_factory_initp(const gchar *name,
   daemon = g_object_new(NOTIFY_TYPE_DAEMON, NULL);
 
   assert(daemon);
-
-  read_config();
 
   desktop_agnostic_config_client_notify_add(conf_client,
                                DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,

@@ -19,6 +19,7 @@ import commands
 import os
 import re
 import subprocess
+from threading import Lock
 from urllib import unquote
 
 import pygtk
@@ -55,6 +56,9 @@ url_pattern = re.compile("^[a-z]+://(?:[^@]+@)?([^/]+)/(.*)$")
 # Pattern to extract the part of the path that doesn't end with %<a-Z>
 exec_pattern = re.compile("^(.*?)\s+\%[a-zA-Z]$")
 
+# Delay in seconds before starting rebuilding the menu
+menu_rebuild_delay = 3
+
 
 class YamaApplet:
 
@@ -65,13 +69,19 @@ class YamaApplet:
     def __init__(self, applet):
         self.applet = applet
 
+        self.__rebuild_lock = Lock()
+
+        self.__schedule_id = None
+        self.__schedule_lock = Lock()
+
         self.setup_context_menu()
 
         self.menu = gtk.Menu()
         self.icon_theme = gtk.icon_theme_get_default()
         self.icon_theme.connect("changed", self.theme_changed_cb)
 
-        self.build_menu()
+        with self.__rebuild_lock:
+            self.build_menu()
 
         applet.connect("clicked", self.clicked_cb)
 
@@ -191,22 +201,27 @@ class YamaApplet:
 
     def menu_changed_cb(self, menu_tree, menu_items):
         def refresh_menu(tree, items):
-            # Delete old items
-            for i in xrange(len(items)):
-                items.pop().destroy()
-
-            index = len(self.applications_items) + 2 if items is self.settings_items else 0  # + 2 = separator + Places
-            self.append_directory(tree.root, self.menu, index=index, item_list=items)
-            # Refresh menu to re-initialize the widget
-            self.menu.show_all()
-        glib.idle_add(refresh_menu, menu_tree, menu_items)
+            with self.__rebuild_lock:
+                # Delete old items
+                for i in xrange(len(items)):
+                    items.pop().destroy()
+    
+                index = len(self.applications_items) + 2 if items is self.settings_items else 0  # + 2 = separator + Places
+                self.append_directory(tree.root, self.menu, index=index, item_list=items)
+                # Refresh menu to re-initialize the widget
+                self.menu.show_all()
+        with self.__schedule_lock:
+            if self.__schedule_id is not None:
+                glib.source_remove(self.__schedule_id)
+            self.__schedule_id = glib.timeout_add_seconds(menu_rebuild_delay, refresh_menu, menu_tree, menu_items)
 
     def theme_changed_cb(self, icon_theme):
         """Upon theme change clean the whole menu, and then rebuild it.
 
         """
-        self.menu.foreach(gtk.Widget.destroy)
-        self.build_menu()
+        with self.__rebuild_lock:
+            self.menu.foreach(gtk.Widget.destroy)
+            self.build_menu()
 
     def start_subprocess_cb(self, widget, command, use_shell):
         try:
@@ -246,9 +261,10 @@ class YamaApplet:
         self.__bookmarks_monitor = gio.File(bookmarks_file).monitor_file()  # keep a reference to avoid getting it garbage collected
         def bookmarks_changed_cb(monitor, file, other_file, event):
             if event == gio.FILE_MONITOR_EVENT_CHANGES_DONE_HINT:
-                self.append_bookmarks()
-                # Refresh menu to re-initialize the widget
-                self.places_menu.show_all()
+                with self.__rebuild_lock:
+                    self.append_bookmarks()
+                    # Refresh menu to re-initialize the widget
+                    self.places_menu.show_all()
         self.__bookmarks_monitor.connect("changed", bookmarks_changed_cb)
 
         menu.append(gtk.SeparatorMenuItem())
@@ -350,11 +366,12 @@ class YamaApplet:
                     self.bookmarks_items.append(item)
 
     def refresh_volumes_mounts_cb(self, monitor, volume_mount):
-        self.append_volumes()
-        self.append_mounts()
-
-        # Refresh menu to re-initialize the widget
-        self.places_menu.show_all()
+        with self.__rebuild_lock:
+            self.append_volumes()
+            self.append_mounts()
+    
+            # Refresh menu to re-initialize the widget
+            self.places_menu.show_all()
 
     def append_volumes(self):
         # Delete old items

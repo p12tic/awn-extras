@@ -97,8 +97,8 @@ _expose_event (GtkWidget *widget, GdkEventExpose *expose, gpointer data)
 	WobblyZini *wobblyzini = (WobblyZini *)data;
 	cairo_t *cr = NULL;
 
-        AwnOverlayable *overlayable = AWN_OVERLAYABLE(widget);
-        AwnEffects *fx = awn_overlayable_get_effects(overlayable);
+  AwnOverlayable *overlayable = AWN_OVERLAYABLE (widget);
+  AwnEffects *fx = awn_overlayable_get_effects (overlayable);
 
 	cr = awn_effects_cairo_create_clipped (fx, expose);
 	if (!cr)
@@ -108,7 +108,7 @@ _expose_event (GtkWidget *widget, GdkEventExpose *expose, gpointer data)
 	}
 
 	// the render method paints to [0,0] - [1,1], so we will scale
-        cairo_scale(cr, wobblyzini->size, wobblyzini->size);
+  cairo_scale(cr, wobblyzini->size, wobblyzini->size);
 	// actual drawing
 	wobbly_zini_render (cr);
 
@@ -161,7 +161,9 @@ static gboolean
 time_handler (WobblyZini *wobblyzini)
 {
 #ifndef X_EVENT_WATCHING
-	gtk_widget_queue_draw (GTK_WIDGET(wobblyzini->applet));
+  AwnOverlayable *overlayable = AWN_OVERLAYABLE (wobblyzini->icon);
+  AwnEffects *fx = awn_overlayable_get_effects (overlayable);
+  awn_effects_redraw (fx);
 #endif
 	return TRUE;
 }

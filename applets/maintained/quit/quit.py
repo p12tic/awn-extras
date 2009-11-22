@@ -108,6 +108,7 @@ class QuitLogOutApplet:
         self.refresh_tooltip_icon_cb(self.settings["left-click-action"])
 
         applet.connect("clicked", self.clicked_cb)
+        applet.connect("applet-deleted", self.deleted)
 
     def clicked_cb(self, widget):
         action = self.settings["left-click-action"]
@@ -115,6 +116,9 @@ class QuitLogOutApplet:
             self.show_docklet()
         else:
             self.execute_action(action)
+
+    def deleted(self, applet):
+        awn.config_get_default_for_applet(applet).remove_instance()
 
     def setup_context_menu(self):
         pref_dialog = self.applet.dialog.new("preferences")

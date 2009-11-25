@@ -1,14 +1,15 @@
 APPLET_NAME = awnterm
 APPLET_CFLAGS = $(VTE_CFLAGS)
-include $(top_srcdir)/Makefile.c-applet
+VALA_FILES = \
+	awn-terminal.vala \
+	$(NULL)
+AM_VALAFLAGS = --pkg=libintl --pkg=vte --pkg=dbus-glib-1
+include $(top_srcdir)/Makefile.vala-applet
 include $(top_srcdir)/Makefile.schemas
+
 applet_LTLIBRARIES = awnterm.la
 awnterm_la_SOURCES =	\
-	applet.c	\
-	awnterm.c	\
-	awnterm.h	\
-	settings.c	\
-	settings.h	\
+	$(VALA_C_FILES) \
 	$(NULL)
 awnterm_la_LIBADD =	\
 	$(AWN_LIBS)	\

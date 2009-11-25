@@ -36,6 +36,11 @@ usr/share/avant-window-navigator/applets/slickswitcher.desktop
 etc/gconf/schemas/awn-applet-slickswitcher.schemas
 usr/share/avant-window-navigator/schemas/awn-applet-slickswitcher.schema-ini
 #
+# Stack
+#
+usr/share/avant-window-navigator/applets/stacks/
+usr/share/avant-window-navigator/applets/stacks.desktop
+#
 # Tomboy
 #
 usr/share/avant-window-navigator/applets/tomboy-applet/

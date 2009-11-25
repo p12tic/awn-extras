@@ -30,7 +30,9 @@ usr/share/icons/hicolor/scalable/apps/notification-area.svg
 #
 #Notification daemon
 #
-usr/share/avant-window-navigator/applets/awnnotificationdaemon.desktop
+etc/gconf/schemas/awn-applet-notification-daemon.schemas
+usr/share/avant-window-navigator/schemas/awn-applet-notification-daemon.schema-ini
+usr/share/avant-window-navigator/applets/notification-daemon.desktop
 usr/lib/awn/applets/awnnotificationdaemon/*.so
 etc/gconf/schemas/awn-notification-daemon.schemas
 #

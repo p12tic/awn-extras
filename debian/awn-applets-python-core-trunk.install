@@ -40,6 +40,13 @@ usr/share/avant-window-navigator/applets/cpufreq/
 usr/share/avant-window-navigator/applets/cpufreq.desktop
 usr/share/avant-window-navigator/schemas/awn-applet-cpufreq.schema-ini
 #
+# Dialect
+#
+etc/gconf/schemas/awn-applet-dialect.schemas
+usr/share/avant-window-navigator/applets/dialect/
+usr/share/avant-window-navigator/applets/dialect.desktop
+usr/share/avant-window-navigator/schemas/awn-applet-dialect.schema-ini
+#
 # Feeds
 #
 etc/gconf/schemas/awn-applet-feeds.schemas
@@ -149,8 +156,3 @@ usr/share/avant-window-navigator/schemas/awn-applet-weather.schema-ini
 #etc/gconf/schemas/DesktopManager.schemas
 #usr/share/avant-window-navigator/applets/DesktopManager/
 #usr/share/avant-window-navigator/applets/DesktopManager.desktop
-#
-# Stack
-#
-#usr/share/avant-window-navigator/applets/stacks/
-#usr/share/avant-window-navigator/applets/stacks.desktop

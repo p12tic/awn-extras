@@ -27,7 +27,7 @@ private const string not_used = Build.APPLETSDIR;
 
 [DBus (name = "org.awnproject.Applet.Terminal")]
 public interface TerminalDBus : GLib.Object {
-  public abstract void toggle () throws DBus.Error;
+  public abstract void toggle (uint32 time_) throws DBus.Error;
 }
 
 public class AwnTerminalApplet : AppletSimple, TerminalDBus
@@ -85,6 +85,12 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
     this.display_name = "Awn Terminal Applet";
   }
 
+  construct
+  {
+    Awn.Keybinder.init ();
+    //Awn.Keybinder.bind ("grave", this.global_keypress);
+  }
+
   public override void
   constructed ()
   {
@@ -139,18 +145,24 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
     }
   }
 
+  private void
+  global_keypress (string keystring)
+  {
+    this.toggle (Awn.Keybinder.get_current_event_time ());
+  }
+
   public void
-  toggle ()
+  toggle (uint32 time_)
   {
     WidgetFlags flags = this.dialog.get_flags () & WidgetFlags.VISIBLE;
-    if (flags == WidgetFlags.VISIBLE)
+    if (flags != 0)
     {
       this.dialog.hide ();
     }
     else
     {
       this.dialog.show_all ();
-      this.dialog.present_with_time (Gtk.get_current_event_time ());
+      this.dialog.present_with_time (time_);
     }
   }
 
@@ -189,7 +201,7 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
   clicked_cb ()
   {
     WidgetFlags flags = this.dialog.get_flags () & WidgetFlags.VISIBLE;
-    if (flags == WidgetFlags.VISIBLE)
+    if (flags != 0)
     {
       this.dialog.hide ();
     }
@@ -223,8 +235,7 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
     Gdk.ModifierType mods = (Gdk.ModifierType) event.state;
     Gdk.ModifierType is_ctrl = mods & Gdk.ModifierType.CONTROL_MASK;
     Gdk.ModifierType is_shift = mods & Gdk.ModifierType.SHIFT_MASK;
-    if (is_ctrl == Gdk.ModifierType.CONTROL_MASK &&
-        is_shift == Gdk.ModifierType.SHIFT_MASK)
+    if (is_ctrl != 0 && is_shift != 0)
     {
       unowned string key = Gdk.keyval_name (Gdk.keyval_to_lower (event.keyval));
       if (key == "c")
@@ -238,11 +249,12 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
       else if (key == "t")
       {
         this.create_new_tab ();
+        this.notebook.set_current_page (this.notebook.get_n_pages () - 1);
       }
 
       return true;
     }
-    else if (is_ctrl == Gdk.ModifierType.CONTROL_MASK)
+    else if (is_ctrl != 0)
     {
       unowned string key = Gdk.keyval_name (Gdk.keyval_to_lower (event.keyval));
       if (key == "Page_Up")
@@ -280,6 +292,8 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
     }
     else
     {
+      // clear everything
+      terminal.reset (true, true);
       // fork new terminal
       terminal.fork_command (null, null, null, "~/", false, false, false);
 
@@ -477,8 +491,11 @@ awn_applet_factory_initp (string canonical_name, string uid, int panel_id)
                                              "org.freedesktop.DBus");
 
   // try to register service in session bus
-  uint request_name_result = bus.request_name ("org.awnproject.Applet.Terminal", (uint) 0);
-  assert (request_name_result == DBus.RequestNameReply.PRIMARY_OWNER);
+  uint result = bus.request_name ("org.awnproject.Applet.Terminal", (uint) 0);
+  if (result != DBus.RequestNameReply.PRIMARY_OWNER)
+  {
+    warning ("Coudln't get ownership of org.awnproject.Applet.Terminal!");
+  }
 
   AwnTerminalApplet applet = new AwnTerminalApplet (canonical_name, 
                                                     uid, panel_id);

@@ -1600,6 +1600,10 @@ static void read_config(void)
   if (G_daemon_config.awn_use_theme)
   {
     config_get_color (theme_client, "theme","gstep2",&G_daemon_config.awn_bg);
+    if ( (double)desktop_agnostic_color_get_alpha (G_daemon_config.awn_bg)/(double)0xFFFF < 0.90)
+    {
+      desktop_agnostic_color_set_alpha (G_daemon_config.awn_bg, 0xFFFF * 0.9);
+    }
 
     if ( desktop_agnostic_config_client_get_int (theme_client,"theme","icon_font_mode",NULL) == 2)
     {
@@ -1623,7 +1627,6 @@ static void read_config(void)
       G_daemon_config.awn_text_str[6] = '\0';
 
     config_get_color (theme_client, "theme","ghistep2",&G_daemon_config.awn_border);
-
   }
   else
   {

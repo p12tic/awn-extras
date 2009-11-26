@@ -40,7 +40,7 @@ description = Border Width. A value of 0 indicates that is should not be drawn.
 
 [DEFAULT/gradient_factor]
 type = float
-default = 0.7
+default = 0.9
 description = Gradient Factor applied to the notification window. Range of 0 to 1. The lower the number the more noticeable the effect.
 
 [DEFAULT/override_x]

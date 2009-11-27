@@ -19,7 +19,6 @@
 import os
 import sys
 
-import gobject
 import pygtk
 pygtk.require("2.0")
 import gtk
@@ -31,6 +30,7 @@ from awn.extras import __version__
 
 import cairo
 import cPickle as cpickle
+import gobject
 
 ___file___ = sys.argv[0]
 # Basically, __file__ = current file location
@@ -939,6 +939,9 @@ class Settings:
         def __init__(self, folder, client=None):
             """Create a new config client.
 
+            If the client is an C{Applet}, config instances will
+            automatically be removed if the applet is deleted.
+
             @param folder: Folder to start with.
             @type folder: C{string}
             @param client: Applet used to construct a corresponding
@@ -951,6 +954,10 @@ class Settings:
                 self.__client = awn.config_get_default(awn.PANEL_ID_DEFAULT)
             elif type_client is Applet:
                 self.__client = awn.config_get_default_for_applet(client)
+
+                def applet_deleted_cb(applet):
+                    self.__client.remove_instance()
+                client.connect("applet-deleted", applet_deleted_cb)
             elif type_client is config.Client:
                 self.__client = client
             else:
@@ -1257,7 +1264,7 @@ class Timing:
             """Return True if the callback has been scheduled to run after
             each interval, False if the callback is stopped.
 
-            @return: True if the callback is running, False otherwise
+            @return: True if the callback has been scheduled, False otherwise
             @rtype: L{bool}
 
             """
@@ -1270,15 +1277,14 @@ class Timing:
             @rtype: L{bool}
 
             """
-            if self.__timer_id is None:
-                if int(self.__seconds) == self.__seconds:
-                    self.__timer_id = gobject.timeout_add_seconds( \
-                        int(self.__seconds), self.__callback)
-                else:
-                    self.__timer_id = gobject.timeout_add( \
-                        int(self.__seconds * 1000), self.__callback)
-                return True
-            return False
+            if self.__timer_id is not None:
+                return False
+
+            if int(self.__seconds) == self.__seconds:
+                self.__timer_id = gobject.timeout_add_seconds(int(self.__seconds), self.__callback)
+            else:
+                self.__timer_id = gobject.timeout_add(int(self.__seconds * 1000), self.__callback)
+            return True
 
         def stop(self):
             """Stop the callback from running again if it was scheduled
@@ -1288,11 +1294,12 @@ class Timing:
             @rtype: L{bool}
 
             """
-            if self.__timer_id is not None:
-                gobject.source_remove(self.__timer_id)
-                self.__timer_id = None
-                return True
-            return False
+            if self.__timer_id is None:
+                return False
+
+            gobject.source_remove(self.__timer_id)
+            self.__timer_id = None
+            return True
 
         def change_interval(self, seconds):
             """Change the interval and restart the callback if it was scheduled

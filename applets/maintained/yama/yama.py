@@ -71,7 +71,7 @@ class YamaApplet:
 
         self.__rebuild_lock = Lock()
 
-        self.__schedule_id = None
+        self.__schedule_id = {"applications.menu": None, "settings.menu": None}
         self.__schedule_lock = Lock()
 
         self.setup_context_menu()
@@ -205,15 +205,17 @@ class YamaApplet:
                 # Delete old items
                 for i in xrange(len(items)):
                     items.pop().destroy()
-    
+
                 index = len(self.applications_items) + 2 if items is self.settings_items else 0  # + 2 = separator + Places
                 self.append_directory(tree.root, self.menu, index=index, item_list=items)
                 # Refresh menu to re-initialize the widget
                 self.menu.show_all()
+            return False
         with self.__schedule_lock:
-            if self.__schedule_id is not None:
-                glib.source_remove(self.__schedule_id)
-            self.__schedule_id = glib.timeout_add_seconds(menu_rebuild_delay, refresh_menu, menu_tree, menu_items)
+            file = menu_tree.menu_file
+            if self.__schedule_id[file] is not None:
+                glib.source_remove(self.__schedule_id[file])
+            self.__schedule_id[file] = glib.timeout_add_seconds(menu_rebuild_delay, refresh_menu, menu_tree, menu_items)
 
     def theme_changed_cb(self, icon_theme):
         """Upon theme change clean the whole menu, and then rebuild it.

@@ -320,9 +320,9 @@ class Dialect(awn.AppletSimple):
         variant = ''
         for line in result:
             if line.startswith('layout:'):
-                layout = line.split(':')[1].lstrip()
+                layout = line.split(':')[1].lstrip().split(',')[0]
             if line.startswith('variant'):
-                variant = line.split(':')[1].lstrip()
+                variant = line.split(':')[1].lstrip().split(',')[0]
         self.current = [layout, variant]
         self.config.set_list(group, 'current', self.current)
         self.update_applet(layout, variant, effect)

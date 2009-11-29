@@ -285,7 +285,7 @@ class AppletBandwidthMonitor:
         tmp_total_history.extend(tmp_rx_history)
         tmp_total_history.extend(tmp_tx_history)
         tmp_total_history.sort()
-        ratio = 32000
+        ratio = 1
         if tmp_total_history:
             highest_value = tmp_total_history[len(tmp_total_history) - 1]
             if highest_value > ratio:
@@ -324,7 +324,7 @@ class AppletBandwidthMonitor:
             ct.stroke()
 
     def chart_coords(self, value, ratio=0):
-        speed = 60
+        speed = 64
         pos = (speed - 20) / float(self.applet.get_size())
         return (self.applet.get_size() - pos * (value / ratio)) + 1
 

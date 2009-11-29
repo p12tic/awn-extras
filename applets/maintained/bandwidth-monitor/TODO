@@ -7,4 +7,5 @@ Create preference dialog for selecting the color of the line-graphs, as well as 
 Add preference control for applying effect to text (new default = True, always apply)
 Ability to select multiple (or all) devices for a sum throughput
 Auto select interface (maybe based on default route)
-toggle for enable/disable auto-scaling (so 100Mbps would draw the line at the top of the meter)
+Add toggle for enable/disable auto-scaling (so 100Mbps would draw the line at the top of the meter)
+Add preference for specifying minimum threshold for charting data

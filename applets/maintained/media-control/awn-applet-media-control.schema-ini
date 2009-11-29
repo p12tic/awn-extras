@@ -8,6 +8,11 @@ type = boolean
 default = false
 description = Display docklet instead of standard applet dialog.
 
+[DEFAULT/docklet_mouseout_close]
+type = boolean
+default = true
+description = Close the docklet when mouse moves out from it.
+
 [DEFAULT/show_album_art]
 type = boolean
 default = true

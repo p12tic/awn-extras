@@ -39,6 +39,7 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
   private Gtk.FileChooserButton chooser;
   private Gtk.Image preview_image;
   private Gtk.Window prefs_window;
+  private Gtk.ListStore model = null;
 
   private int number_of_tabs;
 
@@ -70,6 +71,38 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
     }
   }
 
+  private string _keybinding = null;
+  public string keybinding
+  {
+    get { return _keybinding; }
+    set
+    {
+      debug ("keybinding: %s", value);
+      if (this._keybinding != null && this._keybinding.size () > 0)
+      {
+        // unbind
+        Awn.Keybinder.unbind (this._keybinding, this.global_keypress);
+      }
+      this._keybinding = value;
+      if (this._keybinding != null && this._keybinding.size () > 0)
+      {
+        // bind
+        Awn.Keybinder.bind (this._keybinding, this.global_keypress);
+      }
+
+      if (this.model != null)
+      {
+        Gtk.TreeIter iter;
+        if (this.model.get_iter_first (out iter))
+        {
+          this.model.set (iter, 1,
+            this._keybinding != null && this._keybinding.size () > 0 ?
+              this._keybinding : _ ("Disabled"));
+        }
+      }
+    }
+  }
+
   private string _terminal_command = null;
   public string terminal_command
   {
@@ -88,7 +121,6 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
   construct
   {
     Awn.Keybinder.init ();
-    //Awn.Keybinder.bind ("grave", this.global_keypress);
   }
 
   public override void
@@ -131,6 +163,9 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
                         false, BindMethod.FALLBACK);
       this.config.bind (GROUP_DEFAULT, "hide_on_unfocus",
                         this, "hide-on-unfocus",
+                        false, BindMethod.FALLBACK);
+      this.config.bind (GROUP_DEFAULT, "global_hotkey",
+                        this, "keybinding",
                         false, BindMethod.FALLBACK);
       this.config.bind (GROUP_DEFAULT, "bg_img", 
                         this, "background-image",
@@ -350,15 +385,67 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
     Gtk.Box box = new Gtk.VBox (false, 6);
     this.prefs_window.add (box);
 
+    Gtk.Widget widget = new Gtk.Label ("");
+    (widget as Gtk.Label).set_markup ("<b>%s</b>".printf (_ ("Behavior")));
+    (widget as Gtk.Label).set_alignment (0.0f, 0.5f);
+    box.pack_start (widget, false, false, 0);
+
+    Gtk.Alignment align = new Gtk.Alignment (0.5f, 0.5f, 1.0f, 0.0f);
+    align.set_padding (0, 0, 10, 0);
+    box.pack_start (align, false, false, 0);
+
+    Gtk.Box box2 = new Gtk.VBox (false, 6);
+    align.add (box2);
+
     // focus out behavior checkbox
-    Gtk.Widget widget = new Gtk.CheckButton.with_label (_ ("Hide when focus is lost"));
+    widget = new Gtk.CheckButton.with_label (_ ("Hide when focus is lost"));
     (widget as CheckButton).set_active (this.hide_on_unfocus);
     (widget as CheckButton).toggled.connect ((w) =>
     {
       this.hide_on_unfocus = w.get_active ();
     });
 
-    box.pack_start (widget, false, false, 0);
+    box2.pack_start (widget, false, false, 0);
+
+    // keybinding treeview
+    Gtk.CellRenderer ren;
+    Gtk.TreeViewColumn col;
+
+    Gtk.TreeView treeview = new Gtk.TreeView ();
+    box2.pack_start (treeview, false, false, 0);
+    this.model = new Gtk.ListStore (2, typeof (string), typeof (string));
+    treeview.set_model (this.model);
+
+    ren = new CellRendererText ();
+    col = new TreeViewColumn.with_attributes (_ ("Action"), ren, "text", 0);
+    treeview.append_column (col);
+
+    ren = new CellRendererAccel ();
+    (ren as CellRendererAccel).editable = true;
+    (ren as CellRendererAccel).accel_mode = Gtk.CellRendererAccelMode.OTHER;
+    (ren as CellRendererAccel).accel_edited.connect (
+      (a, path, accel_key, accel_mods, keycode) =>
+    {
+      uint key;
+      Awn.Keybinder.Egg.VirtualModifierType virt_mods;
+      
+      Awn.Keybinder.Egg.keymap_virtualize_modifiers (Gdk.Keymap.get_default (), accel_mods, out virt_mods);
+      this.keybinding = Awn.Keybinder.Egg.virtual_accelerator_name (accel_key, virt_mods);
+    });
+    (ren as CellRendererAccel).accel_cleared.connect (
+      (a, path) =>
+    {
+      this.keybinding = "";
+    });
+    col = new TreeViewColumn.with_attributes (_ ("Shortcut"), ren, "text",1);
+    treeview.append_column (col);
+
+    // add the actual item
+    Gtk.TreeIter iter;
+    this.model.append (out iter);
+    this.model.set (iter, 0, _ ("Activate"));
+    // this will set the keybinding in the model
+    this.keybinding = this._keybinding;
 
     // background image section
     Gtk.Box section_box = new Gtk.VBox (false, 0);
@@ -369,11 +456,11 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
     (widget as Gtk.Label).set_alignment (0.0f, 0.5f);
     section_box.pack_start (widget, false, false, 0);
 
-    Gtk.Alignment align = new Gtk.Alignment (0.5f, 0.5f, 1.0f, 0.0f);
+    align = new Gtk.Alignment (0.5f, 0.5f, 1.0f, 0.0f);
     align.set_padding (0, 0, 10, 0);
     section_box.pack_start (align, false, false, 0);
 
-    Gtk.Box box2 = new Gtk.HBox (false, 3);
+    box2 = new Gtk.HBox (false, 3);
     align.add (box2);
 
     this.preview_image = new Gtk.Image ();

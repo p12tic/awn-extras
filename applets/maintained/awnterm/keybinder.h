@@ -37,7 +37,8 @@ gboolean awn_keybinder_bind (const char *keystring,
                              gpointer user_data);
 
 gboolean awn_keybinder_unbind (const char *keystring,
-                               AwnBindkeyHandler handler);
+                               AwnBindkeyHandler handler,
+                               gpointer user_data);
 
 gboolean awn_keybinder_is_modifier (guint keycode);
 

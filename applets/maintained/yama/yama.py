@@ -375,6 +375,13 @@ class YamaApplet:
             # Refresh menu to re-initialize the widget
             self.places_menu.show_all()
 
+    def get_icon_name(self, icon):
+        if isinstance(icon, gio.ThemedIcon):
+            icons = icon.get_names()
+            return filter(self.icon_theme.has_icon, icons)[0]
+        else:
+            return icon.get_file().get_path()
+
     def append_volumes(self):
         # Delete old items
         for item in self.volume_items:
@@ -385,18 +392,12 @@ class YamaApplet:
         for volume in self.__volumes_mounts_monitor.get_volumes():
             name = volume.get_name()
 
-            def get_icon_name(icon):
-                if isinstance(icon, gio.ThemedIcon):
-                    icons = icon.get_names()
-                    return filter(self.icon_theme.has_icon, icons)[0]
-                else:
-                    return icon.get_file().get_path()
             mount = volume.get_mount()
             if mount is not None:
-                icon_name = get_icon_name(mount.get_icon())
+                icon_name = self.get_icon_name(mount.get_icon())
                 tooltip = name
             else:
-                icon_name = get_icon_name(volume.get_icon())
+                icon_name = self.get_icon_name(volume.get_icon())
                 tooltip = "Mount %s" % name
 
             item = self.create_menu_item(name, icon_name, tooltip)
@@ -426,9 +427,9 @@ class YamaApplet:
         for mount in self.__volumes_mounts_monitor.get_mounts():
             if mount.get_volume() is None:
                 name = mount.get_name()
-                icons = mount.get_icon().get_names()
+                icon_name = self.get_icon_name(mount.get_icon())
 
-                item = self.create_menu_item(name, icons[1], name)
+                item = self.create_menu_item(name, icon_name, name)
                 self.places_menu.insert(item, index)
                 index += 1
                 self.mount_items.append(item)

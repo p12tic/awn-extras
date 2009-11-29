@@ -54,6 +54,9 @@ class MediaControlApplet (awn.AppletSimple):
     use_docklet = gobject.property(type=bool, nick='Use docklet',
                                    blurb='Use docklet if possible',
                                    default=False)
+    docklet_close = gobject.property(type=bool, nick='Docklet mouseout close',
+                                     blurb='Close docklet on mouse out',
+                                     default=True)
     album_art_enabled = gobject.property(type=bool, nick='Album Art enabled',
                                          default=True)
     album_art_size = gobject.property(type=int, nick='Album art image size',
@@ -186,6 +189,8 @@ class MediaControlApplet (awn.AppletSimple):
 
         self.client.bind(GROUP_DEFAULT, "use_docklet",
                          self, "use-docklet", True, BIND_METHOD_FALLBACK)
+        self.client.bind(GROUP_DEFAULT, "docklet_mouseout_close",
+                         self, "docklet-close", True, BIND_METHOD_FALLBACK)
         self.client.bind(GROUP_DEFAULT, "show_album_art",
                          self, "album-art-enabled", True, BIND_METHOD_FALLBACK)
         self.client.bind(GROUP_DEFAULT, "album_art_size",
@@ -226,8 +231,10 @@ class MediaControlApplet (awn.AppletSimple):
         self.docklet_visible = True
         docklet = awn.Applet(self.get_canonical_name(),
                              self.props.uid, self.props.panel_id)
-        self.docklet = docklet
         docklet.props.quit_on_delete = False
+        if self.docklet_close == True:
+            docklet.set_behavior(awn.APPLET_DOCKLET_CLOSE_ON_MOUSE_OUT)
+        self.docklet = docklet
 
         def invalidate_docklet(widget, applet):
             applet.docklet_visible = False
@@ -610,6 +617,7 @@ class MediaControlApplet (awn.AppletSimple):
         combo.add_attribute(ren, "text", 0)
 
         docklet_check = wTree.get_object("docklet_checkbox")
+        docklet_mouseout = wTree.get_object("docklet_mouseout_checkbox")
         album_art_check = wTree.get_object("album_art_checkbox")
         size_spin = wTree.get_object("album_art_size_spin")
 
@@ -617,6 +625,8 @@ class MediaControlApplet (awn.AppletSimple):
                     combo, "active", False, BIND_METHOD_FALLBACK)
         client.bind(GROUP_DEFAULT, "use_docklet",
                     docklet_check, "active", False, BIND_METHOD_FALLBACK)
+        client.bind(GROUP_DEFAULT, "docklet_mouseout_close",
+                    docklet_mouseout, "active", False, BIND_METHOD_FALLBACK)
         client.bind(GROUP_DEFAULT, "show_album_art",
                     album_art_check, "active", False, BIND_METHOD_FALLBACK)
         client.bind(GROUP_DEFAULT, "album_art_size",
@@ -628,6 +638,7 @@ class MediaControlApplet (awn.AppletSimple):
         def unbind_all():
             client.unbind_all_for_object(combo)
             client.unbind_all_for_object(docklet_check)
+            client.unbind_all_for_object(docklet_mouseout)
             client.unbind_all_for_object(album_art_check)
             client.unbind_all_for_object(size_spin)
         window.connect("destroy", lambda x: unbind_all())

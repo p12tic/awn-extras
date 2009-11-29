@@ -1,6 +1,6 @@
 [DEFAULT/opacity]
 type = float
-default = 0.8
+default = 0.9
 description = The applet's opacity level.
 description[en_CA] = The applet's opacity level.
 
@@ -9,6 +9,11 @@ type = boolean
 default = true
 description = Set whether the applet should hide itself when it loses focus.
 description[en_CA] = Set whether the applet should hide itself when it loses focus.
+
+[DEFAULT/global_hotkey]
+type = string
+default = 
+description = Global hotkey used to activate the terminal.
 
 [DEFAULT/bg_img]
 type = string

@@ -1,3 +1,18 @@
+11/29/2009:
+    Changed table generation function to be less verbose
+    Fixed regular expression for gathering IP/Netmask
+    Changed IP/Netmask tooltip logic
+    Changed command for device stats gathering to include administratively down-interfaces
+
+11/28/2009:
+    pep8 verified main program file
+    Added a few non-parsed comments to the source file
+
+11/28/2009:
+    Changed initial ratio value to 1 to prevent the graphs from ignoring data transfers below 3200 bytes
+    Changed the graph scaling to display the line graph almost center of the graph window below 6400 bytes
+    Added items to the TODO list
+
 11/27/2009:
     Filter out the wmaster0 interface.
     Applied patch from onox:
@@ -5,7 +20,7 @@
         Removed functions for things abstracted by AWN
         Cleaned up some of the syntax
         Cleaned up some naming conventions
-    Created a new branch repostiory (previous was setup wrong): lp:~kylehuff/awn-extras/0.4-bandwidth-monitor
+    Created a new branch repository (previous was setup wrong): lp:~kylehuff/awn-extras/0.4-bandwidth-monitor
 
 11/27/2009:    
     Applied patch from mhr3 which included -
@@ -15,7 +30,7 @@
         Renamed awn-bwm.schema-ini to awn-applet-bwm.schema-ini
     Changed the application of the cairo surface to use applet.set_icon_context()
     Fixed bug which caused rendering the scale of the upload speed off-screen
-    Removed refrences to some obsolete functions/methods/properites
+    Removed references to some obsolete functions/methods/properties
 
 11/25/2009:
     Eliminated usage of 'ifconfig' command - moved everything to netstat

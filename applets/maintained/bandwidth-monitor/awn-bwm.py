@@ -52,7 +52,7 @@ class DeviceUsage:
         self.parent = parent
         self.statistics_cmd = "netstat -ia"
         self.interfaces = {}
-        self.devices_cmd = "netstat -ei"
+        self.devices_cmd = "netstat -eia"
         self.regenerate = False
         self.update_net_stats()
         gobject.timeout_add(1000, self.update_net_stats)
@@ -74,12 +74,15 @@ class DeviceUsage:
                     rx_bytes = int(re.search(r'RX bytes:(\d+)\D', device_group).group(1))
                     tx_bytes = int(re.search(r'TX bytes:(\d+)\D', device_group).group(1))
                     if not dev_name in self.interfaces:
-                        self.interfaces[dev_name] = {"collection_time": time.time(), "status": None, "prbytes": float(rx_bytes), "ptbytes": float(tx_bytes), "index": 1, "rx_history": [0,0], "tx_history": [0,0], "ip_address": '', "netmask": ''}
-                    address = re.search(r'inet addr: (\d+\.\d+\.\d+\.\d+)\b', device_group)
+                        self.interfaces[dev_name] = {"collection_time": time.time(), "status": None, "prbytes": float(rx_bytes), "ptbytes": float(tx_bytes), "index": 1, "rx_history": [0, 0], "tx_history": [0, 0], "ip_address": '', "netmask": ''}
+                    address = re.search(r'inet addr:(\d+\.\d+\.\d+\.\d+)\b', device_group)
                     if address:
                         address = address.group(1)
-                        netmask = re.search(r'Mask: (\d+\.\d+\.\d+\.\d+)\b', device_group).group(1)
-                        self.interfaces[dev_name]["ip_address"], self.interfaces[dev_name]["netmask"] = address, netmask
+                        netmask = re.search(r'Mask:(\d+\.\d+\.\d+\.\d+)\b', device_group).group(1)
+                    else:
+                        address = ''
+                        netmask = ''
+                    self.interfaces[dev_name]["ip_address"], self.interfaces[dev_name]["netmask"] = address, netmask
                     collection = (time.time() - self.interfaces[dev_name]["collection_time"])
                     rbytes = ((float(rx_bytes) - self.interfaces[dev_name]["prbytes"]) * self.parent.unit) / collection
                     tbytes = ((float(tx_bytes) - self.interfaces[dev_name]["ptbytes"]) * self.parent.unit) / collection
@@ -148,7 +151,7 @@ class AppletBandwidthMonitor:
         button = gtk.Button("Change Unit")
         button.connect("clicked", self.change_unit)
         self.dialog.add(button)
-        defaults = { "unit": 0, "interface": '', }
+        defaults = {"unit": 0, "interface": ''}
         self.applet.settings.load(defaults)
         self.interface = self.applet.settings["interface"]
         self.unit = self.applet.settings["unit"]
@@ -171,10 +174,6 @@ class AppletBandwidthMonitor:
         gobject.timeout_add(100, self.first_paint)
         self.timer = gobject.timeout_add(1500, self.subsequent_paint)
 
-    def close(self, dialog, res):
-        if res == gtk.RESPONSE_CANCEL:
-            dialog.destroy()
-
     def change_interface(self, widget, interface):
         if widget.get_active():
             ''' Changed to interface %s" % interface '''
@@ -185,13 +184,8 @@ class AppletBandwidthMonitor:
         table = gtk.Table(100, 100, False)
         col_iter = 0
         row_iter = 2
-        table.set_col_spacing(0, 20)
-        table.set_col_spacing(1, 20)
-        table.set_col_spacing(2, 20)
-        table.set_col_spacing(3, 20)
-        table.set_col_spacing(4, 20)
-        table.set_col_spacing(5, 20)
-        table.set_col_spacing(6, 20)
+        for i in range(0, 7):
+            table.set_col_spacing(i, 20)
         table.attach(gtk.Label("Sum"), 0, 1, 0, 1, xoptions=gtk.EXPAND | gtk.FILL, yoptions=gtk.EXPAND | gtk.FILL, xpadding=0, ypadding=0)
         table.attach(gtk.Label("Interface"), 1, 2, 0, 1, xoptions=gtk.EXPAND | gtk.FILL, yoptions=gtk.EXPAND | gtk.FILL, xpadding=0, ypadding=0)
         table.attach(gtk.Label("Status"), 2, 3, 0, 1, xoptions=gtk.EXPAND | gtk.FILL, yoptions=gtk.EXPAND | gtk.FILL, xpadding=0, ypadding=0)
@@ -211,24 +205,16 @@ class AppletBandwidthMonitor:
             widget.status_label = gtk.Label(str(status(self.device_usage.interfaces[interface_name]["status"])))
             if self.device_usage.interfaces[interface_name]["ip_address"] != "":
                 widget.status_label.set_tooltip_text("IP Address: %s\nNetmask: %s" % (self.device_usage.interfaces[interface_name]["ip_address"], self.device_usage.interfaces[interface_name]["netmask"]))
+            else:
+                widget.status_label.set_tooltip_text("")
             widget.sent_label = gtk.Label(str(readable_speed(self.device_usage.interfaces[interface_name]["tx_sum"], self.unit, False).strip()))
             widget.received_label = gtk.Label(str(readable_speed(self.device_usage.interfaces[interface_name]["rx_sum"], self.unit, False).strip()))
             widget.tx_speed_label = gtk.Label(str(readable_speed(self.device_usage.interfaces[interface_name]["tx_bytes"] * self.unit, self.unit).strip()))
             widget.rx_speed_label = gtk.Label(str(readable_speed(self.device_usage.interfaces[interface_name]["rx_bytes"] * self.unit, self.unit).strip()))
             self.device_usage.interfaces[interface_name]["widget"] = widget
-            table.attach(widget.toggle, col_iter, col_iter + 1, row_iter, row_iter + 1, xoptions=gtk.EXPAND | gtk.FILL, yoptions=gtk.EXPAND | gtk.FILL, xpadding=0, ypadding=0)
-            col_iter += 1
-            table.attach(widget.name_label, col_iter, col_iter + 1, row_iter, row_iter + 1, xoptions=gtk.EXPAND | gtk.FILL, yoptions=gtk.EXPAND | gtk.FILL, xpadding=0, ypadding=0)
-            col_iter += 1
-            table.attach(widget.status_label, col_iter, col_iter + 1, row_iter, row_iter + 1, xoptions=gtk.EXPAND | gtk.FILL, yoptions=gtk.EXPAND | gtk.FILL, xpadding=0, ypadding=0)
-            col_iter += 1
-            table.attach(widget.sent_label, col_iter, col_iter + 1, row_iter, row_iter + 1, xoptions=gtk.EXPAND | gtk.FILL, yoptions=gtk.EXPAND | gtk.FILL, xpadding=0, ypadding=0)
-            col_iter += 1
-            table.attach(widget.received_label, col_iter, col_iter + 1, row_iter, row_iter + 1, xoptions=gtk.EXPAND | gtk.FILL, yoptions=gtk.EXPAND | gtk.FILL, xpadding=0, ypadding=0)
-            col_iter += 1
-            table.attach(widget.tx_speed_label, col_iter, col_iter + 1, row_iter, row_iter + 1, xoptions=gtk.EXPAND | gtk.FILL, yoptions=gtk.EXPAND | gtk.FILL, xpadding=0, ypadding=0)
-            col_iter += 1
-            table.attach(widget.rx_speed_label, col_iter, col_iter + 1, row_iter, row_iter + 1, xoptions=gtk.EXPAND | gtk.FILL, yoptions=gtk.EXPAND | gtk.FILL, xpadding=0, ypadding=0)
+            for widget_object in [widget.toggle, widget.name_label, widget.status_label, widget.sent_label, widget.received_label, widget.tx_speed_label, widget.rx_speed_label]:
+                table.attach(widget_object, col_iter, col_iter + 1, row_iter, row_iter + 1, xoptions=gtk.EXPAND | gtk.FILL, yoptions=gtk.EXPAND | gtk.FILL, xpadding=0, ypadding=0)
+                col_iter += 1
             row_iter += 1
             col_iter = 0
         return table
@@ -240,7 +226,7 @@ class AppletBandwidthMonitor:
     def enter_notify(self):
         if not self.applet.dialog.is_visible("main"):
             if not self.interface in self.device_usage.interfaces:
-                self.applet.set_tooltip_text("Please sleect a valid Network Device") 
+                self.applet.set_tooltip_text("Please sleect a valid Network Device")
             else:
                 self.applet.set_tooltip_text("Total Sent: %s - Total Received: %s" % (readable_speed(self.device_usage.interfaces[self.interface]["tx_sum"] * self.unit, self.unit, False), readable_speed(self.device_usage.interfaces[self.interface]["rx_sum"] * self.unit, self.unit, False)))
 
@@ -285,6 +271,9 @@ class AppletBandwidthMonitor:
         tmp_total_history.extend(tmp_rx_history)
         tmp_total_history.extend(tmp_tx_history)
         tmp_total_history.sort()
+        ''' ratio variable controls the minimum threshold for data - i.e. 32000 would not draw graphs
+            for data transfers below 3200 bytes - the initial value of ratio if set to the link speed will
+            prevent the graph from scaling '''
         ratio = 1
         if tmp_total_history:
             highest_value = tmp_total_history[len(tmp_total_history) - 1]
@@ -324,6 +313,7 @@ class AppletBandwidthMonitor:
             ct.stroke()
 
     def chart_coords(self, value, ratio=0):
+        ''' Speed varable will eventually become link speed if specified/detected for non-scaling graphs '''
         speed = 64
         pos = (speed - 20) / float(self.applet.get_size())
         return (self.applet.get_size() - pos * (value / ratio)) + 1
@@ -349,7 +339,7 @@ class AppletBandwidthMonitor:
             self.__upload_overlay.props.text = readable_speed(self.device_usage.interfaces[self.interface]["tx_bytes"], self.unit).strip()
             self.title_text = readable_speed(self.device_usage.interfaces[self.interface]["tx_bytes"], self.unit)
         self.applet.set_icon_context(ct)
-        if hasattr(self.dialog.window, 'is_visible') and self.dialog.window.is_visible():
+        if self.applet.dialog.is_visible("main"):
             for interface_name in self.device_usage.interfaces:
                 if not "widget" in self.device_usage.interfaces[interface_name] or self.device_usage.regenerate == True:
                     self.device_usage.regenerate = False
@@ -362,6 +352,10 @@ class AppletBandwidthMonitor:
                 self.device_usage.interfaces[interface_name]["widget"].sent_label.set_text(str(readable_speed(self.device_usage.interfaces[interface_name]["tx_sum"] * self.unit, self.unit, False).strip()))
                 self.device_usage.interfaces[interface_name]["widget"].received_label.set_text(str(readable_speed(self.device_usage.interfaces[interface_name]["rx_sum"] * self.unit, self.unit, False).strip()))
                 self.device_usage.interfaces[interface_name]["widget"].status_label.set_text(str(status(self.device_usage.interfaces[interface_name]["status"])))
+                if self.device_usage.interfaces[interface_name]["ip_address"] != "":
+                    self.device_usage.interfaces[interface_name]["widget"].status_label.set_tooltip_text("IP Address: %s\nNetmask: %s" % (self.device_usage.interfaces[interface_name]["ip_address"], self.device_usage.interfaces[interface_name]["netmask"]))
+                else:
+                    self.device_usage.interfaces[interface_name]["widget"].status_label.set_tooltip_text("")
         return True
 
 
@@ -418,4 +412,4 @@ if __name__ == "__main__":
         "logo": APPLET_ICON,
         "author": "Kyle L. Huff",
         "copyright-year": "2009",
-        "authors": APPLET_AUTHORS })
+        "authors": APPLET_AUTHORS})

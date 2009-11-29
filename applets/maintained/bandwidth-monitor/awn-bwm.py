@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """
-bwm - Network bandwidth monitor.
+bandwidth-monitor - Network bandwidth monitor.
 Copyright (c) 2006-2009 Kyle L. Huff (kyle.huff@curetheitch.com)
 url: <http://www.curetheitch.com/projects/awn-bwm/>
 Email: awn-bwm@curetheitch.com

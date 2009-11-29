@@ -36,7 +36,7 @@ except ImportError:
 import gio
 import glib
 import gmenu
-from xdg import DesktopEntry
+from xdg import BaseDirectory, DesktopEntry
 
 applet_name = "YAMA"
 applet_description = "Main menu with places and recent documents"
@@ -48,8 +48,6 @@ file_manager_apps = ("nautilus", "thunar", "xdg-open")
 
 menu_editor_apps = ("alacarte", "gmenu-simple-editor")
 
-data_dirs = os.environ["XDG_DATA_DIRS"] if "XDG_DATA_DIRS" in os.environ else "/usr/local/share/:/usr/share/"
-
 # Describes the pattern used to try to decode URLs
 url_pattern = re.compile("^[a-z]+://(?:[^@]+@)?([^/]+)/(.*)$")
 
@@ -57,7 +55,7 @@ url_pattern = re.compile("^[a-z]+://(?:[^@]+@)?([^/]+)/(.*)$")
 exec_pattern = re.compile("^(.*?)\s+\%[a-zA-Z]$")
 
 # Delay in seconds before starting rebuilding the menu
-menu_rebuild_delay = 3
+menu_rebuild_delay = 2
 
 
 class YamaApplet:
@@ -494,7 +492,7 @@ class YamaApplet:
         selection_data.set_uris(["file://" + path])
 
     def append_awn_desktop(self, menu, desktop_name):
-        for dir in data_dirs.split(":"):
+        for dir in BaseDirectory.xdg_data_dirs:
             path = os.path.join(dir, "applications", desktop_name + ".desktop")
             if os.path.isfile(path):
                 desktop_entry = DesktopEntry.DesktopEntry(path)
@@ -522,7 +520,7 @@ class YamaApplet:
         try:
             return self.icon_theme.load_icon(icon_name, 24, gtk.ICON_LOOKUP_FORCE_SIZE)
         except:
-            for dir in data_dirs.split(":"):
+            for dir in BaseDirectory.xdg_data_dirs:
                 for i in ("pixmaps", "icons"):
                     path = os.path.join(dir, i, icon_value)
                     if os.path.isfile(path):

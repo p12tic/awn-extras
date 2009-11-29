@@ -1,4 +1,13 @@
 11/27/2009:
+    Filter out the wmaster0 interface.
+    Applied patch from onox:
+        Renamed some classes
+        Removed functions for things abstracted by AWN
+        Cleaned up some of the syntax
+        Cleaned up some naming conventions
+    Created a new branch repostiory (previous was setup wrong): lp:~kylehuff/awn-extras/0.4-bandwidth-monitor
+
+11/27/2009:    
     Applied patch from mhr3 which included -
         Changes to applet short-name
         Changes to Makefile.am

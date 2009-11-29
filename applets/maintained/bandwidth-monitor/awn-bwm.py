@@ -40,13 +40,13 @@ APPLET_NAME = "Bandwidth Monitor"
 APPLET_VERSION = "0.3.9.2"
 APPLET_COPYRIGHT = "© 2006-2009 CURE|THE|ITCH"
 APPLET_AUTHORS = ["Kyle L. Huff <kyle.huff@curetheitch.com>"]
-APPLET_DESCRIPTION = "A Network bandwidth monitor for AWN"
+APPLET_DESCRIPTION = "Network Bandwidth monitor"
 APPLET_WEBSITE = "http://www.curetheitch.com/projects/awn-bwm/"
 APPLET_PATH = os.path.dirname(sys.argv[0])
 APPLET_ICON = APPLET_PATH + "/images/icon.png"
 
 
-class device_usage:
+class DeviceUsage:
 
     def __init__(self, parent, unit):
         self.parent = parent
@@ -123,59 +123,39 @@ class device_usage:
         return True
 
 
-class awnbwm:
+class AppletBandwidthMonitor:
     curY = 0
     curX = 0
     shadow_offset = 2
     locale_lang = "en"
     counter = 0
-    graphic = "blank.png"
     show_title = False
     text_shadow = (0.0, 0.0, 0.0, 0.8)
     text_forground = (1.0, 1.0, 1.0, 1.0)
 
     def __init__(self, applet):
         self.applet = applet
-        applet.tooltip.set("AWN Bandwidth Monitor")
-        icon = gtk.gdk.pixbuf_new_from_file(APPLET_PATH + '/images/' + self.graphic)
+        applet.tooltip.set("Bandwidth Monitor")
+        icon = gtk.gdk.pixbuf_new_from_file(APPLET_PATH + '/images/blank.png')
         self.width = int(self.applet.get_size() * 1.5)
         self.height = int(self.applet.get_size() * 1.5)
         if self.height != icon.get_height():
             icon = icon.scale_simple(self.height, self.height, gtk.gdk.INTERP_BILINEAR)
             self.applet.set_icon_pixbuf(icon)
-        if self.height != icon.get_height():
-           size = self.applet.get_size()
-           icon = icon.scale_simple(self.height, self.height, gtk.gdk.INTERP_BILINEAR)
-        gobject.timeout_add(100, self.first_paint)
-        self.speed = 0
-        self.timer = gobject.timeout_add(1500, self.subsequent_paint)
         self.dialog = applet.dialog.new("main")
         self.vbox = gtk.VBox()
         self.dialog.add(self.vbox)
         button = gtk.Button("Change Unit")
-        button.connect("button-press-event", self.change_unit)
+        button.connect("clicked", self.change_unit)
         self.dialog.add(button)
-        self.applet.connect("enter-notify-event", self.enter_notify)
         defaults = { "unit": 0, "interface": '', }
         self.applet.settings.load(defaults)
-        interface_setting = self.applet.settings["interface"]
-        unit_setting = self.applet.settings["unit"]
-        if unit_setting:
-            self.unit = unit_setting
-        else:
-            self.unit = 1
-        if interface_setting:
-            self.interface = interface_setting
-        else:
-            self.interface = ""
-        self.device_usage = device_usage(self, self.unit)
+        self.interface = self.applet.settings["interface"]
+        self.unit = self.applet.settings["unit"]
+        self.device_usage = DeviceUsage(self, self.unit)
+        applet.tooltip.connect_becomes_visible(self.enter_notify)
         self.table = self.generate_table()
         self.vbox.add(self.table)
-        aboutchoice = gtk.ImageMenuItem(stock_id=gtk.STOCK_ABOUT)
-        self.dockmenu = self.applet.dialog.menu
-        aboutchoice.connect("activate", self.about)
-        self.dockmenu.append(aboutchoice)
-        aboutchoice.show()
         self.__upload_overlay = awn.OverlayText()
         self.__download_overlay = awn.OverlayText()
         self.__upload_overlay.props.gravity = gtk.gdk.GRAVITY_NORTH
@@ -188,35 +168,8 @@ class awnbwm:
         self.__download_overlay.props.apply_effects = True
         self.__upload_overlay.props.text = "Scanning"
         self.__download_overlay.props.text = "Devices"
-
-    def about(self, var):
-        this = gtk.AboutDialog()
-        license = None
-        ''' Try load LICENSE text file, on failure provide link to gpl '''
-        try:
-            h = open(APPLET_PATH + '/LICENSE', 'r')
-            s = h.readlines()
-            h.close()
-        except IOError, err:
-            ''' "IO Error %s" % err '''
-            license = "Unable to read License file; IO Error\n\nA copy of the GNU General Public License can be found here: <http://www.gnu.org/licenses/gpl.txt>."
-        except:
-            ''' Unexpected error '''
-            license = "Unable to read License file; Unexpected Error\n\nA copy of the GNU General Public License can be found here: <http://www.gnu.org/licenses/gpl.txt>."
-        if not license:
-            license = ""
-            for line in s:
-                license += line
-        this.set_license(license)
-        this.set_name(APPLET_NAME)
-        this.set_version(APPLET_VERSION)
-        this.set_copyright(APPLET_COPYRIGHT)
-        this.set_authors(APPLET_AUTHORS)
-        this.set_comments(APPLET_DESCRIPTION)
-        this.set_website(APPLET_WEBSITE)
-        this.set_logo(gtk.gdk.pixbuf_new_from_file_at_size(APPLET_ICON, 48, 48))
-        this.connect("response", self.close)
-        this.show()
+        gobject.timeout_add(100, self.first_paint)
+        self.timer = gobject.timeout_add(1500, self.subsequent_paint)
 
     def close(self, dialog, res):
         if res == gtk.RESPONSE_CANCEL:
@@ -280,15 +233,12 @@ class awnbwm:
             col_iter = 0
         return table
 
-    def change_unit(self, widget, event):
-        if self.unit == 1:
-            self.unit = 8
-        else:
-            self.unit = 1
+    def change_unit(self, widget):
+        self.unit = 8 if self.unit == 1 else 1
         self.applet.settings["unit"] = self.unit
 
-    def enter_notify(self, widget, event):
-        if not hasattr(self.dialog.window, 'is_visible') or not self.dialog.window.is_visible():
+    def enter_notify(self):
+        if not self.applet.dialog.is_visible("main"):
             if not self.interface in self.device_usage.interfaces:
                 self.applet.set_tooltip_text("Please sleect a valid Network Device") 
             else:
@@ -419,7 +369,7 @@ def readable_speed(speed, unit, seconds=True):
     ''' readable_speed(speed) -> string
         speed is in bytes per second
         returns a readable version of the speed given '''
-    if speed == None or speed < 0:
+    if speed is None or speed < 0:
         speed = 0
     if unit == 1:
         units = "B ", "KB", "MB", "GB", "TB"
@@ -461,10 +411,11 @@ def sort_dictionary_keys(dict):
     return map(dict.get, keys)
 
 if __name__ == "__main__":
-    awnlib.init_start(awnbwm, {"name": APPLET_NAME,
+    awnlib.init_start(AppletBandwidthMonitor, {"name": APPLET_NAME,
         "short": "bwm",
         "version": APPLET_VERSION,
         "description": APPLET_DESCRIPTION,
-        "author": APPLET_AUTHORS[0],
-        "copyright": APPLET_COPYRIGHT,
+        "logo": APPLET_ICON,
+        "author": "Kyle L. Huff",
+        "copyright-year": "2009",
         "authors": APPLET_AUTHORS })

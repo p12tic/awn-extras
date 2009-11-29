@@ -285,7 +285,8 @@ awn_keybinder_bind (const char *keystring,
 
 gboolean
 awn_keybinder_unbind (const char *keystring,
-                      AwnBindkeyHandler  handler)
+                      AwnBindkeyHandler  handler,
+                      gpointer user_data)
 {
 	GSList *iter;
 

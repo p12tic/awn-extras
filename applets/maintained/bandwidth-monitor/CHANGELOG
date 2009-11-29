@@ -1,0 +1,26 @@
+11/27/2009:
+    Applied patch from mhr3 which included -
+        Changes to applet short-name
+        Changes to Makefile.am
+        Fixed spelling of "CHANGLOG" to "CHANGELOG"
+        Renamed awn-bwm.schema-ini to awn-applet-bwm.schema-ini
+    Changed the application of the cairo surface to use applet.set_icon_context()
+    Fixed bug which caused rendering the scale of the upload speed off-screen
+    Removed refrences to some obsolete functions/methods/properites
+
+11/25/2009:
+    Eliminated usage of 'ifconfig' command - moved everything to netstat
+    Bumped to version v0.3.9.2
+    Created launchpad branch - lp:~kylehuff/awn-extras/awn-bwm
+
+11/24/2009:
+    Converted text to OverlayText()
+    Cleaned up some functions
+    Bumped version to v0.3.9.1
+
+11/23/2009:
+    Implemented API v0.4
+    Changed from v0.3.2.8 to v0.3.9.0
+
+04/18/2006:
+    Original release - 0.1

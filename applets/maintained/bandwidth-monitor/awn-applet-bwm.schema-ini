@@ -1,0 +1,9 @@
+[DEFAULT/unit]
+type = integer
+default = 0
+description = The display unit for transfer speed
+[DEFAULT/interface]
+type = string
+default = 
+description = The interface currently selected
+

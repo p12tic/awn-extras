@@ -511,7 +511,7 @@ class Backends:
             self.key = key
 
         def url(self):
-            return "http://mail.google.com/mail/"
+            return "https://mail.google.com/mail/"
 
         def update(self):
             f = feedparser.parse(\
@@ -569,7 +569,7 @@ class Backends:
             self.key = key
 
         def url(self):
-            return "http://mail.google.com/a/%s" % self.key.attrs["domain"]
+            return "https://mail.google.com/a/%s" % self.key.attrs["domain"]
 
         def update(self):
             f = feedparser.parse(\

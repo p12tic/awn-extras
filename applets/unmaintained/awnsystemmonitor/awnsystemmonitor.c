@@ -162,10 +162,10 @@ cpumeter_applet_new(AwnApplet *applet)
                                      );
   GtkWidget * item;
   item=awn_applet_create_about_item_simple(applet,
-                                           "Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>\n"
+                                           "Copyright 2007,2008,2009 Rodney Cryderman <rcryderman@gmail.com>\n"
                                            "Copyright 2007 Mike (mosburger) Desjardins <desjardinsmike@gmail.com>\n",
                                            AWN_APPLET_LICENSE_GPLV2,
-                                           NULL);
+                                           VERSION);
   gtk_menu_shell_append(GTK_MENU_SHELL(cpumeter->right_click_menu), item);    
   cpumeter->timer_id = g_timeout_add(cpumeter->update_freq, (GSourceFunc)cpu_meter_render, cpumeter);
   return cpumeter;

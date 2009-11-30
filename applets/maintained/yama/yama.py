@@ -54,6 +54,8 @@ url_pattern = re.compile("^[a-z]+://(?:[^@]+@)?([^/]+)/(.*)$")
 # Pattern to extract the part of the path that doesn't end with %<a-Z>
 exec_pattern = re.compile("^(.*?)\s+\%[a-zA-Z]$")
 
+user_dir_pattern = re.compile("^XDG_([A-Z]+)_DIR=\"(.+)\"$")
+
 # Delay in seconds before starting rebuilding the menu
 menu_rebuild_delay = 2
 
@@ -342,6 +344,17 @@ class YamaApplet:
             item.destroy()
         self.bookmarks_items = []
 
+        # Prepare dictionary with paths mapped to their xdg folder icon name
+        user_dirs = {}
+        user_dirs_file = os.path.expanduser("~/.config/user-dirs.dirs")
+        if os.path.exists(user_dirs_file):
+            with open(user_dirs_file) as f:
+                for i in f:
+                    match = user_dir_pattern.match(i)
+                    if match is not None:
+                        path = "file://" + match.group(2).replace("$HOME", os.environ["HOME"])
+                        user_dirs[path] = "folder-" + match.group(1).lower()
+
         index = 2
         bookmarks_file = os.path.expanduser("~/.gtk-bookmarks")
         if os.path.isfile(bookmarks_file):
@@ -356,8 +369,15 @@ class YamaApplet:
                             url_name.append(unquote(str(basename)))
                     url, name = (url_name[0], url_name[1])
 
-                    icon = "folder" if url.startswith("file://") else "folder-remote"
-                    display_url = url[7:] if url.startswith("file://") else url
+                    if url.startswith("file://"):
+                        if url in user_dirs:
+                            icon = self.get_first_existing_icon([user_dirs[url], "folder"])
+                        else:
+                            icon = "folder"
+                        display_url = url[7:]
+                    else:
+                        icon = "folder-remote"
+                        display_url = url
 
                     item = self.create_menu_item(name, icon, "Open '%s'" % display_url)
                     self.places_menu.insert(item, index)
@@ -369,16 +389,18 @@ class YamaApplet:
         with self.__rebuild_lock:
             self.append_volumes()
             self.append_mounts()
-    
+
             # Refresh menu to re-initialize the widget
             self.places_menu.show_all()
 
     def get_icon_name(self, icon):
         if isinstance(icon, gio.ThemedIcon):
-            icons = icon.get_names()
-            return filter(self.icon_theme.has_icon, icons)[0]
+            return self.get_first_existing_icon(icon.get_names())
         else:
             return icon.get_file().get_path()
+
+    def get_first_existing_icon(self, icons):
+        return filter(self.icon_theme.has_icon, icons)[0]
 
     def append_volumes(self):
         # Delete old items

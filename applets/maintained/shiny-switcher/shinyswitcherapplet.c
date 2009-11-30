@@ -653,7 +653,7 @@ _button_workspace(GtkWidget *widget, GdkEventButton *event, Workplace_info * ws)
       item = awn_applet_create_about_item (AWN_APPLET(shinyswitcher),
              "Copyright 2007,2008,2009 Rodney Cryderman <rcryderman@gmail.com>",
              AWN_APPLET_LICENSE_GPLV2,
-             NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+             VERSION,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
       awn_utils_show_menu_images (GTK_MENU(menu));
     }
@@ -744,7 +744,7 @@ _button_win(GtkWidget *widget, GdkEventButton *event, Win_press_data * data)
       item = awn_applet_create_about_item (AWN_APPLET(shinyswitcher),
              "Copyright 2007,2008,2009 Rodney Cryderman <rcryderman@gmail.com>",
              AWN_APPLET_LICENSE_GPLV2,
-             NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+             VERSION,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
       awn_utils_show_menu_images (GTK_MENU(menu));
@@ -1954,7 +1954,7 @@ create_windows(AwnShinySwitcher *shinyswitcher)
           item = awn_applet_create_about_item (AWN_APPLET(shinyswitcher),
              "Copyright 2007,2008,2009 Rodney Cryderman <rcryderman@gmail.com>",
              AWN_APPLET_LICENSE_GPLV2,
-             NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+             VERSION,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 
           gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
@@ -2021,7 +2021,7 @@ _window_opened(WnckScreen *screen, WnckWindow *window, AwnShinySwitcher *shinysw
     item = awn_applet_create_about_item (AWN_APPLET(shinyswitcher),
              "Copyright 2007,2008,2009 Rodney Cryderman <rcryderman@gmail.com>",
              AWN_APPLET_LICENSE_GPLV2,
-             NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+             VERSION,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
     g_tree_insert(priv->win_menus, G_OBJECT(window), menu);

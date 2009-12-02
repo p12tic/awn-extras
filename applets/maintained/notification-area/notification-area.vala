@@ -237,6 +237,8 @@ public class NotificationArea : GLib.Object
         return;
       }
 
+      Gdk.error_trap_push ();
+
       if (child.fake_transparency != 0)
       {
         Cairo.Surface? img_srfc = child.get_image_surface ();
@@ -247,6 +249,7 @@ public class NotificationArea : GLib.Object
                                  child.allocation.x,
                                  child.allocation.y);
           cr.paint ();
+          cr.get_target ().flush ();
         }
       }
       else
@@ -256,7 +259,14 @@ public class NotificationArea : GLib.Object
                                      widget.allocation.y);
         cr.paint ();
       }
+
       cr.restore ();
+
+      Gdk.flush ();
+      if (Gdk.error_trap_pop () != 0)
+      {
+        //message ("error!");
+      }
     }
   }
 

@@ -31,6 +31,7 @@ from os.path import exists, isdir
 from desktopagnostic.config import GROUP_DEFAULT
 
 from awn.extras import _
+import gc
 
 try:
     import gconf
@@ -259,6 +260,11 @@ class App(awn.AppletSimple):
             'Redone by sharkbaitbobby'])
         win.run()
         win.destroy()
+
+        gc.set_debug(gc.DEBUG_LEAK)
+        gc.get_count()
+        print gc.garbage
+        gc.collect()
         del icon
 
     #Get the background image as a surface

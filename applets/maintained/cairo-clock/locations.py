@@ -22,9 +22,9 @@ import time
 import pygtk
 pygtk.require("2.0")
 import gtk
-import gobject
 
 import cairo
+import glib
 import pango
 
 try:
@@ -45,22 +45,55 @@ draw_clock_interval = 1.0
 clock_size = 48
 
 
-def is_location(row):
-    return row[0] is not None and row[1] is not None
+class CityTimezoneCode(object):
+
+    """Data object which contains the name of a city, its timezone, and
+    its METAR weather station ID, or None if the location doesn't have one.
+
+    """
+
+    def __init__(self, city, timezone, code):
+        self.__city = city
+        self.__timezone = timezone
+        self.__code = code
+
+    @property
+    def city(self):
+        return self.__city
+
+    @property
+    def timezone(self):
+        return self.__timezone
+
+    @property
+    def code(self):
+        return self.__code
+
+    def __str__(self):
+        return "%s#%s#%s" % (self.city, self.timezone, self.code)
+
+    def __iter__(self):
+        def generate_data():
+            yield self.city
+            yield self.timezone
+            yield self.code
+        return generate_data()
 
 
 class Locations:
 
-    __previous_state = None
     __parent_container = None
-
-    __city_boxes = {}
-    __images_labels = {}
-
-    __cache_surface = {}
 
     def __init__(self, applet):
         self.__applet = applet
+
+        self.__city_boxes = {}
+        self.cache_surface = {}
+
+        # Initialize the base clock so that the clocks can be drawn immediately when exposed
+        self.__previous_state = (None, None, applet.applet.settings["theme"])
+        self.base_clock = AnalogClock(AnalogClockThemeProvider(self.__previous_state[2]), clock_size)
+
         self.__cities_vbox = gtk.VBox(spacing=6)
 
         if "cities-timezones" not in applet.applet.settings:
@@ -76,15 +109,20 @@ class Locations:
         if self.__previous_state == new_state:
             return
 
-        if self.__previous_state is None or self.__previous_state[2] != new_state[2]:
-            self.__base_clock = AnalogClock(AnalogClockThemeProvider(new_state[2]), clock_size)
+        if self.__previous_state[2] != new_state[2]:
+            self.base_clock = AnalogClock(AnalogClockThemeProvider(new_state[2]), clock_size)
 
         self.__previous_state = new_state
 
         # Clear cache because theme might have changed and to avoid memory leaks
-        self.__cache_surface.clear()
+        self.cache_surface.clear()
 
-        self.update_all_images_labels()
+        # Update all clock images and timezone labels
+        local_datetime = datetime.now(tz.tzlocal())
+
+        for box in self.__city_boxes.itervalues():
+            box.update_clock_image()
+            box.update_timezone_label(local_datetime)
 
     def show_plugin(self):
         self.__parent_container.set_no_show_all(False)
@@ -119,91 +157,47 @@ class Locations:
         self.__page_number = page_number
 
     def get_preferences(self, prefs):
-        self.__prefs_tab = LocationsPreferencesTab(prefs, self.__applet.applet, self.__cities_timezones, self.add_city, self.remove_city, self.contains_city_timezone)
+        self.__prefs_tab = LocationsPreferencesTab(prefs, self.__applet.applet, self.__cities_timezones, self.add_city, self.remove_city, self.contains_not_location)
 
         return self.__prefs_tab.get_prefs_widget()
 
-    def remove_city(self, city_timezone):
-        self.__cities_timezones.remove(city_timezone)
+    def remove_city(self, city_timezone_code):
+        self.__cities_timezones.remove(str(city_timezone_code))
 
         # Remove element from list of locations in the GUI
-        del self.__images_labels[city_timezone]
-        self.__city_boxes.pop(city_timezone).destroy()
+        box = self.__city_boxes.pop(str(city_timezone_code))
+        box.destroy_hbox(self.__cities_vbox)
+        del box
 
         if len(self.__cities_timezones) == 0:
             self.hide_plugin()
         self.__applet.applet.settings["cities-timezones"] = self.__cities_timezones
 
-    def contains_city_timezone(self, city_timezone):
-        return city_timezone not in self.__city_boxes
+    def contains_not_location(self, city_timezone):
+        return str(city_timezone) not in self.__city_boxes
 
-    def add_city(self, city, timezone):
-        city_timezone = "%s#%s" % (city, timezone)
-        assert city_timezone not in self.__city_boxes
+    def add_city(self, city_timezone_code_obj):
+        city_timezone_code = str(city_timezone_code_obj)
+        assert city_timezone_code not in self.__city_boxes
 
-        hbox = gtk.HBox(spacing=6)
-        self.__city_boxes[city_timezone] = hbox
-
-        # Image of analog clock
-        image = gtk.Image()
-        image.set_size_request(clock_size, clock_size)
-        hbox.pack_start(image, expand=False)
-
-        def update_image_cb(widget, event):
-            context = widget.window.cairo_create()
-            context.translate(event.area.x, event.area.y)
-
-            city_datetime = datetime.now(tz.gettz(timezone))
-            key = (city_datetime.hour % 12, city_datetime.minute)  # Modulo 12 because clock has only 12 hours
-
-            if key not in self.__cache_surface:
-                self.__cache_surface[key] = context.get_target().create_similar(cairo.CONTENT_COLOR_ALPHA, clock_size, clock_size)
-                cache_context = cairo.Context(self.__cache_surface[key])
-
-                self.__base_clock.draw_clock(cache_context, clock_size, city_datetime.hour, city_datetime.minute, None)
-
-            context.set_operator(cairo.OPERATOR_OVER)
-            context.set_source_surface(self.__cache_surface[key])
-            context.paint()
-        image.connect("expose-event", update_image_cb)
-
-        # Vertical box containing city label and timezone label
-        vbox = gtk.VBox()
-        hbox.pack_start(vbox, expand=False)
-
-        # City label
-        city_label = gtk.Label("<big><b>" + city + "</b></big>")
-        city_label.set_use_markup(True)
-        city_label.set_alignment(0.0, 0.5)
-        city_label.set_ellipsize(pango.ELLIPSIZE_END)
-        city_label.set_max_width_chars(25)
-        vbox.pack_start(city_label, expand=False)
-
-        # Timezone label
-        timezone_label = gtk.Label()
-        timezone_label.set_alignment(0.0, 0.5)
-        vbox.pack_start(timezone_label, expand=False)
-
-        self.__images_labels[city_timezone] = (image, timezone_label)
-        self.update_timezone_label(datetime.now(tz.tzlocal()), timezone_label, timezone)
-
-        self.__cities_vbox.add(hbox)
+        box = self.LocationBox(self, city_timezone_code_obj)
+        self.__city_boxes[city_timezone_code] = box
 
         # Certain tuples are already present if dictionary was constructed from settings
-        if city_timezone not in self.__cities_timezones:
-            self.__cities_timezones.append(city_timezone)
+        if city_timezone_code not in self.__cities_timezones:
+            self.__cities_timezones.append(city_timezone_code)
 
             # Sort the list based on its UTC offset or city name
             def key_compare(object):
-                obj = object.split("#", 1)
+                obj = object.split("#", 2)
                 return (self.city_compare_key(obj[1]), obj[0])
             self.__cities_timezones.sort(reverse=True, key=key_compare)
 
             self.__applet.applet.settings["cities-timezones"] = self.__cities_timezones
 
-        # After having sorted the list (see above), reorder the child
-        index = self.__cities_timezones.index(city_timezone)
-        self.__cities_vbox.reorder_child(hbox, index)
+        # After having sorted the list (see above), insert the box in the right position
+        index = self.__cities_timezones.index(city_timezone_code)
+        box.insert_in(self.__cities_vbox, index)
 
         if len(self.__cities_timezones) > 0:
             self.show_plugin()
@@ -215,50 +209,121 @@ class Locations:
         offset = city_time.utcoffset()
         return offset.days * 24 * 60 + (offset.seconds / 60)
 
-    def update_timezone_label(self, local_datetime, label, timezone):
-        city_datetime = datetime.now(tz.gettz(timezone))
+    def uses_24hour_format(self):
+        return self.__applet.settings["time-24-format"]
 
-        if self.__applet.settings["time-24-format"]:
-            format = "%H:%M"
-        else:
-            # Strip leading zero for single-digit hours
-            format = str(int(city_datetime.strftime("%I"))) + ":%M %p"
+    class LocationBox:
 
-        if city_datetime.day != local_datetime.day:
-            format = format + " (%A)"
+        """Used to manage the Gtk+ widgets that correspond to a certain
+        location.
 
-        format = city_datetime.strftime(format + " %Z")
+        """
 
-        if city_datetime.tzname() != local_datetime.tzname():
-            time_diff = self.get_offset_minutes(city_datetime) - self.get_offset_minutes(local_datetime)
+        def __init__(self, parent, city_timezone_code):
+            self.__parent = parent
 
-            hours, minutes = divmod(abs(time_diff), 60)
-            format += (" +" if time_diff > 0 else " -") + str(hours)
-            if minutes != 0:
-                format += ":" + str(minutes)
+            self.__timezone = city_timezone_code.timezone
+            self.hbox = gtk.HBox(spacing=6)
 
-        label.set_text(format)
+            # Image of an analog clock
+            self.__clock_image = gtk.Image()
+            self.__clock_image.set_size_request(clock_size, clock_size)
+            self.hbox.pack_start(self.__clock_image, expand=False)
 
-    def update_all_images_labels(self):
-        local_datetime = datetime.now(tz.tzlocal())
+            def update_image_cb(widget, event):
+                context = widget.window.cairo_create()
+                context.translate(event.area.x, event.area.y)
 
-        for city_timezone, image_label in self.__images_labels.iteritems():
-            image_label[0].queue_draw()
-            self.update_timezone_label(local_datetime, image_label[1], city_timezone.split("#", 1)[1])
+                city_datetime = datetime.now(tz.gettz(self.__timezone))
+                key = (city_datetime.hour % 12, city_datetime.minute)  # Modulo 12 because clock has only 12 hours
+
+                if key not in parent.cache_surface:
+                    parent.cache_surface[key] = context.get_target().create_similar(cairo.CONTENT_COLOR_ALPHA, clock_size, clock_size)
+                    cache_context = cairo.Context(parent.cache_surface[key])
+
+                    parent.base_clock.draw_clock(cache_context, clock_size, city_datetime.hour, city_datetime.minute, None)
+
+                context.set_operator(cairo.OPERATOR_OVER)
+                context.set_source_surface(parent.cache_surface[key])
+                context.paint()
+            self.__clock_image.connect("expose-event", update_image_cb)
+
+            # Vertical box containing city label and timezone label
+            vbox = gtk.VBox()
+            self.hbox.pack_start(vbox, expand=False)
+
+            # City label
+            city_label = gtk.Label("<big><b>%s</b></big>" % city_timezone_code.city)
+            city_label.set_use_markup(True)
+            city_label.set_alignment(0.0, 0.5)
+            city_label.set_ellipsize(pango.ELLIPSIZE_END)
+            city_label.set_max_width_chars(25)
+            vbox.pack_start(city_label, expand=False)
+
+            # Timezone label
+            self.__timezone_label = gtk.Label()
+            self.__timezone_label.set_alignment(0.0, 0.5)
+            vbox.pack_start(self.__timezone_label, expand=False)
+
+            self.update_timezone_label(datetime.now(tz.tzlocal()))
+
+        def update_clock_image(self):
+            self.__clock_image.queue_draw()
+
+        def update_timezone_label(self, local_datetime):
+            city_datetime = datetime.now(tz.gettz(self.__timezone))
+
+            if self.__parent.uses_24hour_format():
+                format = "%H:%M"
+            else:
+                # Strip leading zero for single-digit hours
+                format = str(int(city_datetime.strftime("%I"))) + ":%M %p"
+
+            if city_datetime.day != local_datetime.day:
+                format = format + " (%A)"
+
+            text = city_datetime.strftime(format + " %Z")
+
+            if city_datetime.tzname() != local_datetime.tzname():
+                time_diff = self.__parent.get_offset_minutes(city_datetime) - self.__parent.get_offset_minutes(local_datetime)
+
+                hours, minutes = divmod(abs(time_diff), 60)
+                text += (" +" if time_diff > 0 else " -") + str(hours)
+                if minutes != 0:
+                    text += ":" + str(minutes)
+
+            self.__timezone_label.set_text(text)
+
+        def insert_in(self, vbox, index):
+            vbox.add(self.hbox)
+            vbox.reorder_child(self.hbox, index)
+
+        def destroy_hbox(self, vbox):
+            vbox.remove(self.hbox)
+            self.hbox.destroy()
 
 
 class LocationsPreferencesTab:
 
+    """Deals with the "Location" tab in the preferences window of the
+    applet.
+
+    It can show a search window, which is used to add locations, and it
+    indirectly updates the locations (C{LocationBoxes}) in the Awn dialog
+    if the C{gtk.TreeStore} is modified.
+
+    """
+
     __search_window = None
 
-    def __init__(self, prefs, applet, cities_timezones, add_city, remove_city, contains_city_timezone):
+    def __init__(self, prefs, applet, cities_timezones, add_city, remove_city, contains_not_location):
         self.__prefs = prefs
         self.__applet = applet
         self.add_city = add_city
         self.remove_city = remove_city
-        self.contains_city_timezone = contains_city_timezone
+        self.contains_not_location = contains_not_location
 
-        self.location_store = gtk.TreeStore(str, str)
+        self.location_store = gtk.TreeStore(str, str, str)
 
         tree_view = prefs.get_object("treeview-locations")
         # TODO use ellepsis to handle large names of certain cities
@@ -274,13 +339,14 @@ class LocationsPreferencesTab:
         self.tree_selection = tree_view.get_selection()
 
         self.tree_selection.connect("changed", self.selection_changed_cb)
-        self.location_store.connect("row-changed", self.row_changed_cb)
 
         prefs.get_object("button-add-location").connect("clicked", self.clicked_add_location_button_cb)
         prefs.get_object("button-remove-location").connect("clicked", self.clicked_remove_location_button_cb)
 
+        # Fill the tree store which will result in adding locations to the Awn dialog
         for city_and_timezone in cities_timezones:
-            self.location_store.append(None, city_and_timezone.split("#", 1))
+            iter = self.location_store.append(None, city_and_timezone.split("#", 2))
+            self.add_location(iter)
 
         tree_view.set_model(self.location_store)
         self.location_store.set_sort_column_id(0, gtk.SORT_ASCENDING)
@@ -294,49 +360,62 @@ class LocationsPreferencesTab:
         for button in self.__selection_buttons:
             button.set_sensitive(row_selected)
 
-    def init_search_window(self):
-        with self.__init_search_window_lock:
-            if self.__search_window is None:
-                def add_row(city_timezone):
-                    """Adds a row to the tree store that represents all added
-                    locations.
-
-                    """
-                    self.location_store.append(None, city_timezone.split("#", 1))
-                self.__search_window = LocationSearchWindow(self.__prefs, add_row, self.contains_city_timezone)
-                self.__search_window.show_window()
-
     __init_search_window_lock = Lock()
+
+    def init_search_window(self):
+        def add_row(city_timezone_code):
+            """Adds a row to the tree store that represents all added
+            locations.
+
+            """
+            if self.contains_not_location(city_timezone_code):
+                iter = self.location_store.append(None, tuple(city_timezone_code))
+                self.add_location(iter)
+        try:
+            self.__search_window = LocationSearchWindow(self.__prefs, add_row)
+            self.__search_window.show_window()
+        finally:
+            self.__init_search_window_lock.release()
 
     def clicked_add_location_button_cb(self, button):
         if self.__search_window is None:
-            if not self.__init_search_window_lock.locked():
-                with self.__init_search_window_lock:
-                    Thread(target=self.init_search_window).start()
+            if self.__init_search_window_lock.acquire(False):
+                Thread(target=self.init_search_window).start()
         else:
             self.__search_window.show_window()
 
     def clicked_remove_location_button_cb(self, button):
         iter = self.tree_selection.get_selected()[1]
         row = self.location_store[iter]
-        city_timezone = "%s#%s" % (row[0], row[1])
+
+        city_timezone_code = CityTimezoneCode(row[0], row[1], row[2])
         self.location_store.remove(iter)
 
-        self.remove_city(city_timezone)
+        self.remove_city(city_timezone_code)
 
-    def row_changed_cb(self, model, path, iter):
+    def add_location(self, iter):
         row = self.location_store[iter]
 
-        if is_location(row):
-            self.add_city(row[0], row[1])
+        city_timezone_code = CityTimezoneCode(row[0], row[1], row[2])
+        assert city_timezone_code.city is not None and city_timezone_code.timezone is not None
+        self.add_city(city_timezone_code)
 
 
 class LocationSearchWindow:
 
-    def __init__(self, prefs, add_row, contains_city_timezone):
+    """Used to manage the search window. It contains a tree with all
+    the locations found by GWeather, and a text entry, which can be
+    used to search for a particular location in the tree.
+
+    If the action of "adding" a location is invoked, then an element is
+    added to the tree store of C{LocationsPreferencesTab} to start the
+    process of adding a new location to the Awn dialog.
+
+    """
+
+    def __init__(self, prefs, add_row):
         self.__prefs = prefs
         self.add_row = add_row
-        self.contains_city_timezone = contains_city_timezone
 
         self.__search_dialog = prefs.get_object("locations-search-dialog")
         self.__search_dialog.connect("delete_event", lambda w, e: True)
@@ -355,7 +434,7 @@ class LocationSearchWindow:
 
         self.__vadjustment = self.__prefs.get_object("scroll-all-locations").get_vadjustment()
 
-        self.__all_locations_store = gtk.TreeStore(str, str, bool)
+        self.__all_locations_store = gtk.TreeStore(str, str, bool, str)
 
         self.__all_locations_view = self.__prefs.get_object("treeview-all-locations")
         self.__all_locations_view.connect("row-activated", self.all_locations_row_activated_cb)
@@ -400,16 +479,20 @@ class LocationSearchWindow:
             for i in children:
                 timezone = i.get_timezone().get_tzid() if i.get_timezone() is not None else None
                 is_city = i.get_level() is gweather.LOCATION_CITY
-                node_iter = self.__all_locations_store.append(parent, (i.get_name(), timezone, is_city))
+                node_iter = self.__all_locations_store.append(parent, (i.get_name(), timezone, is_city, i.get_code()))
 
                 # Iterate through children
                 self.parse_gweather_locations(i, node_iter)
         elif node.get_level() is gweather.LOCATION_COUNTRY:
             for i in node.get_timezones():
                 if i.get_name() is not None:
-                    self.__all_locations_store.append(parent, (i.get_name(), i.get_tzid(), False))
+                    self.__all_locations_store.append(parent, (i.get_name(), i.get_tzid(), False, None))
 
     def parse_locations(self):
+        """Parse the locations found by GWeather and add these to
+        the C{gtk.TreeStore} of the search window.
+
+        """
         node = gweather.location_new_world(True)
         self.parse_gweather_locations(node, None)
 
@@ -434,7 +517,7 @@ class LocationSearchWindow:
     def is_location_and_leaf_node(self, iter):
         row = self.__all_locations_store[iter]
         is_leaf_node = not self.__all_locations_store.iter_has_child(iter)
-        return is_location(row) and is_leaf_node
+        return row[0] is not None and row[1] is not None and is_leaf_node
 
     def add_new_location(self):
         """Add the selected location to the list of locations in the
@@ -452,15 +535,10 @@ class LocationSearchWindow:
             parent_row = self.__all_locations_store[self.__all_locations_store.iter_parent(select_iter)]
 
             # Use name of city if the row is a location in a city
-            if parent_row[2]:
-                city = parent_row[0]
-            else:
-                city = row[0]
+            city = parent_row[0] if parent_row[2] else row[0]
 
             self.hide_window()
-            city_timezone = "%s#%s" % (city, row[1])
-            if self.contains_city_timezone(city_timezone):
-                self.add_row(city_timezone)
+            self.add_row(CityTimezoneCode(city, row[1], row[3]))
 
     __search_cb_id = None
     __search_lock = Lock()
@@ -482,11 +560,12 @@ class LocationSearchWindow:
                     self.select_next_location()
 
                     self.__button_find_next.set_sensitive(len(search_text) > 0 and len(self.__search_results) > 1)
+                else:
+                    self.__button_find_next.set_sensitive(False)
         with self.__schedule_lock:
             if self.__search_cb_id is not None:
-                gobject.source_remove(self.__search_cb_id)
-                self.__search_cb_id = None
-            self.__search_cb_id = gobject.timeout_add(100, search_cb)
+                glib.source_remove(self.__search_cb_id)
+            self.__search_cb_id = glib.timeout_add(100, search_cb)
 
     def select_next_location(self):
         iter = self.__search_results[self.__search_result_index]

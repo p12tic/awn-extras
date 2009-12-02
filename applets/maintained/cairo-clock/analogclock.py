@@ -87,26 +87,26 @@ class AnalogClock:
 
     """
 
-    def __init__(self, theme_provider, height):
-        """Given a height, create a C{AnalogClock} using the theme
+    def __init__(self, theme_provider, size):
+        """Given a size, create a C{AnalogClock} using the theme
         provided by given provider.
 
         The base analog clock will contain a background and foreground
-        Cairo surface that has been constructed using this theme and height.
+        Cairo surface that has been constructed using this theme and size.
 
         """
         self.__theme = theme_provider
 
-        source_surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, height, height)
+        source_surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, size, size)
 
-        self.__background_surface, background_context = self.__create_scaled_surface(source_surface, height)
+        self.__background_surface, background_context = self.__create_scaled_surface(source_surface, size)
 
         # Draw the background of the clock
         self.__theme.drop_shadow.render_cairo(background_context)
         self.__theme.face.render_cairo(background_context)
         self.__theme.marks.render_cairo(background_context)
 
-        self.__foreground_surface, foreground_context = self.__create_scaled_surface(source_surface, height)
+        self.__foreground_surface, foreground_context = self.__create_scaled_surface(source_surface, size)
 
         # Draw the foreground of the clock
         self.__theme.face_shadow.render_cairo(foreground_context)
@@ -115,16 +115,16 @@ class AnalogClock:
 
         del source_surface
 
-    def __create_scaled_surface(self, source_surface, height):
-        surface = source_surface.create_similar(cairo.CONTENT_COLOR_ALPHA, height, height)
+    def __create_scaled_surface(self, source_surface, size):
+        surface = source_surface.create_similar(cairo.CONTENT_COLOR_ALPHA, size, size)
         context = cairo.Context(surface)
 
         svg_width, svg_height = map(float, self.__theme.face.get_dimension_data()[:2])
-        context.scale(height / svg_width, height / svg_height)
+        context.scale(size / svg_width, size / svg_height)
 
         return surface, context
 
-    def draw_clock(self, context, height, hours, minutes, seconds):
+    def draw_clock(self, context, size, hours, minutes, seconds):
         svg_width, svg_height = map(float, self.__theme.face.get_dimension_data()[:2])
 
         context.set_operator(cairo.OPERATOR_OVER)
@@ -134,7 +134,7 @@ class AnalogClock:
         context.paint()
 
         # Scale hands (after painting the background to avoid messing it up)
-        context.scale(height / svg_width, height / svg_height)
+        context.scale(size / svg_width, size / svg_height)
 
         context.save()
 
@@ -165,7 +165,7 @@ class AnalogClock:
         context.restore()
 
         # Don't scale to avoid messing up the foreground
-        context.scale(svg_width / height, svg_height / height)
+        context.scale(svg_width / size, svg_height / size)
 
         # Draw foreground of the clock
         context.set_source_surface(self.__foreground_surface)

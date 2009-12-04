@@ -136,8 +136,8 @@ class QuitLogOutApplet:
         docklet_orientation = docklet.get_pos_type()
         top_bottom = docklet_orientation in (gtk.POS_TOP, gtk.POS_BOTTOM)
 
-        align = awn.Alignment(docklet)
-        align.props.scale = 1 / 3.0
+        align = awn.Alignment(docklet, 1 / 3.0)
+        align.props.offset_multiplier = 0
         if top_bottom:
             box = gtk.HBox()
         else:
@@ -151,10 +151,16 @@ class QuitLogOutApplet:
 
             if docklet_orientation == gtk.POS_RIGHT:
                 label_align = gtk.Alignment(xalign=1.0)
+                label_align.set_padding(0, 0, 0, docklet.get_offset())
             elif docklet_orientation == gtk.POS_BOTTOM:
                 label_align = gtk.Alignment(yalign=1.0)
+                label_align.set_padding(0, docklet.get_offset(), 0, 0)
+            elif docklet_orientation == gtk.POS_TOP:
+                label_align = gtk.Alignment()
+                label_align.set_padding(docklet.get_offset(), 0, 0, 0)
             else:
                 label_align = gtk.Alignment()
+                label_align.set_padding(0, 0, docklet.get_offset(), 0)
 
             # Event box
             event_box = gtk.EventBox()
@@ -189,6 +195,10 @@ class QuitLogOutApplet:
                                                   themed_icon.get_state())
             image = awn.Image()
             image.set_from_pixbuf(pixbuf)
+            if top_bottom:
+               image.set_padding(0, docklet.get_offset())
+            else:
+               image.set_padding(docklet.get_offset(), 0)
             container.pack_start(image, False, False)
 
             effects = image.get_effects()

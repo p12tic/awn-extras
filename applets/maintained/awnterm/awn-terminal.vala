@@ -110,6 +110,8 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
     set { this._terminal_command = value; }
   }
 
+  private TimeVal last_inactive_time;
+
   public AwnTerminalApplet (string canonical_name, string uid, int panel_id)
   {
     this.canonical_name = canonical_name;
@@ -121,6 +123,7 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
   construct
   {
     Awn.Keybinder.init ();
+    this.last_inactive_time = TimeVal ();
   }
 
   public override void
@@ -139,6 +142,7 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
 
     // construct dialog
     this.dialog = new Awn.Dialog.for_widget (this);
+    this.dialog.set_skip_taskbar_hint (false);
     this.number_of_tabs = 0;
 
     Gtk.VBox box = new Gtk.VBox (true, 0);
@@ -153,6 +157,14 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
 
     this.dialog.hide_on_unfocus = true;
     this.dialog.hide_on_esc = false;
+
+    this.dialog.notify["is-active"].connect ((obj, pspec) =>
+    {
+      if ((obj as Awn.Dialog).is_active == false)
+      {
+        this.last_inactive_time.get_current_time ();
+      }
+    });
 
     // bind config keys
     this.config = Awn.Config.get_default_for_applet (this);
@@ -190,7 +202,31 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
   toggle (uint32 time_)
   {
     WidgetFlags flags = this.dialog.get_flags () & WidgetFlags.VISIBLE;
-    if (flags != 0)
+    bool should_hide = flags != 0;
+    if (should_hide)
+    {
+      // should it REALLY hide?
+      if (this.dialog.is_active)
+      {
+        should_hide = true;
+      }
+      else
+      {
+        should_hide = false;
+        TimeVal cur_time = TimeVal ();
+        long sec_diff = cur_time.tv_sec - this.last_inactive_time.tv_sec;
+        if (sec_diff <= 1)
+        {
+          long usec_diff = sec_diff * 1000000 + cur_time.tv_usec -
+                           this.last_inactive_time.tv_usec;
+          if (usec_diff <= 250000) // one fourth of second
+          {
+            should_hide = true;
+          }
+        }
+      }
+    }
+    if (should_hide)
     {
       this.dialog.hide ();
     }

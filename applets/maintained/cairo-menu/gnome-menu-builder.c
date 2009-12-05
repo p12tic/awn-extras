@@ -794,7 +794,7 @@ submenu_build (MenuInstance * instance)
       menu = fill_er_up(instance,menu_dir,instance->menu);
       g_object_weak_ref (G_OBJECT(menu), (GWeakNotify)_remove_main_submenu_cb,instance);
     }
-    else if ( menu_dir = find_menu_dir (instance,settings_root) )
+    else if ( settings_root && (menu_dir = find_menu_dir (instance,settings_root)) )
     {
       gmenu_tree_remove_monitor (main_menu_tree,(GMenuTreeChangedFunc)_submenu_modified_cb,instance);
       gmenu_tree_add_monitor (main_menu_tree,(GMenuTreeChangedFunc)_submenu_modified_cb,instance);
@@ -806,7 +806,10 @@ submenu_build (MenuInstance * instance)
       gmenu_tree_item_unref(menu_dir);
     }
     gmenu_tree_item_unref(main_root);
-    gmenu_tree_item_unref(settings_root);                               
+    if (settings_root)
+    {
+      gmenu_tree_item_unref(settings_root);
+    }
   }
   return instance->menu = menu;
 }
@@ -844,11 +847,14 @@ menu_build (MenuInstance * instance)
   if (main_menu_tree)
   {
     root = gmenu_tree_get_root_directory(main_menu_tree);
-    g_assert (!instance->submenu_name);
-    gmenu_tree_remove_monitor (main_menu_tree,(GMenuTreeChangedFunc)_menu_modified_cb,instance);    
-    gmenu_tree_add_monitor (main_menu_tree,(GMenuTreeChangedFunc)_menu_modified_cb,instance);
-    instance->menu = fill_er_up(instance,root,instance->menu);
-    gmenu_tree_item_unref(root);    
+    if (root)
+    {
+      g_assert (!instance->submenu_name);
+      gmenu_tree_remove_monitor (main_menu_tree,(GMenuTreeChangedFunc)_menu_modified_cb,instance);    
+      gmenu_tree_add_monitor (main_menu_tree,(GMenuTreeChangedFunc)_menu_modified_cb,instance);
+      instance->menu = fill_er_up(instance,root,instance->menu);
+      gmenu_tree_item_unref(root);
+    }
   }
   if  (instance->menu)
   {  

@@ -202,3 +202,17 @@ Description: Python functions used by avant-window-navigator's applets
  This package provides a set of convenience functions used by Python applets
  for Avant Window Navigator, including AWNLib, an applet wrapper which
  simplifies applet creation.
+
+Package: awn-applets-c-dbg-trunk
+Section: debug
+Priority: extra
+Architecture: any
+Depends: 	${shlibs:Depends}, 
+		${misc:Depends}, 
+		awn-applets-c-extras-trunk (= ${binary:Version})
+Description: A collection of applets for avant-window-navigator - debug symbols
+ Awn-extras-applets is a collection of applets for avant-window-navigator. It
+ provides some extensions to the bar and some new features (like 
+ applets in the gnome-panel).
+ .
+ This package contains the debugging symbols.

@@ -28,7 +28,8 @@ install-stamp:
 	touch install-stamp
 
 binary-arch: install
-	dh binary-arch --before makeshlibs
+	dh binary-arch --before strip
+	dh_strip --dbg-package=awn-applets-c-dbg-trunk
 	dh_makeshlibs -a -n --exclude=*
 	dh binary-arch --after makeshlibs
 

@@ -391,13 +391,13 @@ class Tooltip:
         """Show the applet tooltip.
 
         """
-        self.__tooltip.show_all()
+        self.__tooltip.show()
 
     def hide(self):
         """Hide the applet tooltip.
 
         """
-        self.__tooltip.hide_all()
+        self.__tooltip.hide()
 
     def set(self, text):
         """Set the applet tooltip.

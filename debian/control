@@ -159,6 +159,8 @@ Recommends: 	awn-settings-trunk (>= 0.3.8),
 		python-gdata,
 # YAMA
 		python-gmenu,
+# Stack
+		python-gnomedesktop | python-gnome2-desktop,
 Suggests: 	tomboy,
 Conflicts: awn-applets-python-extras, awn-applets-python-core (<< 0.3~bzr912), awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing, awn-extras-applets-trunk
 Replaces: awn-applets-python-extras, awn-applets-python-core (<< 0.3~bzr912), awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing, awn-extras-applets-trunk

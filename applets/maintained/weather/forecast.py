@@ -2,6 +2,8 @@
 # Copyright (C) 2007, 2008:
 #   Mike Rooney (launchpad.net/~michael) <mrooney@gmail.com>
 #   Mike (mosburger) Desjardins <desjardinsmike@gmail.com>
+#     Please do not email the above person for support. The 
+#     email address is only there for license/copyright purposes.
 # Copyright (C) 2009  onox <denkpadje@gmail.com>
 #
 # This library is free software; you can redistribute it and/or

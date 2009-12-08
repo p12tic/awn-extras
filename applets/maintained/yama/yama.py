@@ -540,6 +540,7 @@ class YamaApplet:
         if re.match(".*\.(png|xpm|svg)$", icon_name) is not None:
             icon_name = icon_name[:-4]
         try:
+            self.icon_theme.handler_block_by_func(self.theme_changed_cb)
             return self.icon_theme.load_icon(icon_name, 24, gtk.ICON_LOOKUP_FORCE_SIZE)
         except:
             for dir in BaseDirectory.xdg_data_dirs:
@@ -547,6 +548,8 @@ class YamaApplet:
                     path = os.path.join(dir, i, icon_value)
                     if os.path.isfile(path):
                         return gtk.gdk.pixbuf_new_from_file_at_size(path, 24, 24)
+        finally:
+            self.icon_theme.handler_unblock_by_func(self.theme_changed_cb)
 
     class ClearRecentDocumentsDialog(awnlib.Dialogs.BaseDialog, gtk.MessageDialog):
 

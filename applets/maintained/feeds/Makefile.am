@@ -3,6 +3,7 @@ APPLET_MAIN_FILE = feeds.py
 
 dist_applet_DATA =			\
 	prefs.py	\
+	update.py	\
 	$(NULL)
 
 icons_DATA = \

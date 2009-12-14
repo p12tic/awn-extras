@@ -21,11 +21,16 @@ import sys
 import os
 import urllib
 import urllib2
+from shutil import rmtree
 
 import pygtk
 pygtk.require('2.0')
 import gtk
+import pango
 import gobject
+import dbus
+import dbus.service
+import dbus.glib
 
 from desktopagnostic.config import GROUP_DEFAULT
 import awn
@@ -41,6 +46,8 @@ icon_path = os.path.join(icondir, 'awn-feeds.svg')
 greader_path = os.path.join(icondir, 'awn-feeds-greader.svg')
 
 config_path = '%s/.config/awn/applets/feeds.txt' % os.environ['HOME']
+
+tmp_dir = '/tmp/awn-feeds-applet'
 
 google_login = 'https://www.google.com/accounts/ClientLogin'
 google_list = 'http://www.google.com/reader/atom/user/-/state/com.google' + \
@@ -67,8 +74,18 @@ class App(awn.AppletSimple):
 
         #AWN Applet Configuration
         awn.AppletSimple.__init__(self, 'feeds', uid, panel_id)
-        self.set_tooltip_text(_("Feeds Applet"))
+        self.set_tooltip_text(_("Loading feeds..."))
         self.dialog = awn.Dialog(self)
+
+        self.main_vbox = gtk.VBox(False, False)
+        self.dialog.add(self.main_vbox)
+        self.main_vbox.show()
+
+        self.loading_feeds = gtk.Label(_("Loading feeds..."))
+        self.loading_feeds.modify_font(pango.FontDescription('bold'))
+        self.main_vbox.pack_start(self.loading_feeds, False, False, 3)
+        self.loading_feeds.show()
+        self.loading_feeds.set_no_show_all(True)
 
         #AwnConfigClient instance
         self.client = awn.config_get_default_for_applet(self)
@@ -99,54 +116,61 @@ class App(awn.AppletSimple):
         self.get_icon().connect('drag-motion', self.applet_drag_motion)
         self.get_icon().connect('drag-leave', self.applet_drag_leave)
 
-    #Update the feeds
-    def update_feeds(self, *args):
-        self.get_urls()
+        #Set up the D-Bus service
+        self.service = DBusService(self)
 
-        num_new = {}
-        total_new = 0
+    #Run the update.py file. It puts the feeds in /tmp/awn-feeds-applet
+    #as 0.xml for the first feed, 1.xml for the second, etc. Then it sends
+    #a signal via D-Bus to notify us, and we parse the feeds. If a Google Reader
+    #feed is in there, we download it ourselves because it would be unsafe for
+    #the update.py file to have the password/login cookie.
+    def update_feeds(self, *args):
         self.io_error = False
         self.google_error = False
 
-        for url in self.urls:
+        self.loading_feeds.show()
+        self.set_tooltip_text(_("Loading feeds..."))
+
+        os.system('python %s &' % (__file__[:-8] + 'update.py'))
+
+        return False
+
+    #The update.py process is done
+    #I.e, the feeds have downloaded. Now we parse them and find out what to do with them.
+    def done_updating(self):
+        file_list = os.listdir(tmp_dir)
+        feeds = []
+        num_new = {}
+        total_new = 0
+
+        self.get_urls()
+
+        #Go through each feed
+        for filename in file_list:
             feed = None
 
-            #Normal RSS/Atom feed
-            if url != 'google-reader':
-                #TODO: instead download with urllib and threading or something
-                #then run feedparser.parse on the string
+            if filename[-4:] == '.xml':
                 try:
-                    feed = feedparser.parse(url)
-
-                except IOError:
-                    self.io_error = True
+                    url = self.urls[int(filename[:-4])]
+                except:
                     continue
 
-            #Google Reader feed
-            else:
-                #Thank you http://code.google.com/p/pyrfeed/wiki/GoogleReaderAPI
+                fp = open(tmp_dir + '/' + filename)
+                f = fp.read()
+                fp.close()
 
-                self.get_google_key()
+                if f == 'google-reader':
+                    feed = self.update_greader_feed()
 
-                if self.get_google_sid():
-                    #Load the reading list with that magic SID as a cookie
-                    req = urllib2.Request(google_list)
-                    req.add_header('Cookie', 'SID=' + self.SID)
-
-                    try:
-                        fp = urllib2.urlopen(req)
-                        f = fp.read()
-                        fp.close()
-
-                    except IOError:
-                        self.io_error = True
-                        continue
-
+                else:
                     feed = feedparser.parse(f)
+
+            elif filename == 'ioerror':
+                self.io_error = True
 
             self.simplify(feed)
 
-            #Deal with the feed...
+            #See if the feed was updated, etc...
             if feed is not None:
                 if url in self.newest.keys() and (self.newest[url] != feed.entries[0]):
                     #Find out how many items are new
@@ -162,8 +186,6 @@ class App(awn.AppletSimple):
                 if len(feed.entries) > 0:
                     self.newest[url] = feed.entries[0]
                 self.feeds[url] = feed
-
-            gtk.main_iteration_do()
 
         #Make the icon blue if Google Reader is the only (updated) source
         #TODO: change this exact behavior???
@@ -228,12 +250,40 @@ class App(awn.AppletSimple):
             notification.show()
             pynotify.uninit()
 
+        #Update again in a bit
         self.do_timer()
 
-        #Refresh the dialog
+        #Update the dialog
         self.setup_dialog()
+        self.loading_feeds.hide()
+        self.set_tooltip_text(_("Feeds Applet"))
 
-        return False
+        #Clean up
+        rmtree(tmp_dir)
+
+    #Update the Google Reader feed
+    def update_greader_feed(self):
+        #Thank you http://code.google.com/p/pyrfeed/wiki/GoogleReaderAPI
+        self.get_google_key()
+  
+        if self.get_google_sid():
+            #Load the reading list with that magic SID as a cookie
+            req = urllib2.Request(google_list)
+            req.add_header('Cookie', 'SID=' + self.SID)
+  
+            try:
+                fp = urllib2.urlopen(req, timeout=15)
+                f = fp.read()
+                fp.close()
+  
+            except IOError:
+                self.io_error = True
+                return None
+  
+            return feedparser.parse(f)
+
+        else:
+            return feedparser.parse('')
 
     #"Login" to Google (Reader) and get an SID, a magic string that
     #lets us get the user's Google Reader items
@@ -250,7 +300,7 @@ class App(awn.AppletSimple):
 
                 #Send the data to get the SID
                 try:
-                    fp = urllib.urlopen(google_login, postdata)
+                    fp = urllib2.urlopen(google_login, postdata, 15)
                     f = fp.read()
                     fp.close()
 
@@ -482,7 +532,7 @@ class App(awn.AppletSimple):
 
             self.widget.show_all()
 
-            self.dialog.add(self.widget)
+            self.main_vbox.pack_end(self.widget, False, False, 0)
 
     #Toggle buttons drag and drop
     def toggle_drag_begin(self, toggle, context):
@@ -687,7 +737,6 @@ class App(awn.AppletSimple):
         fp.close()
 
         self.update_feeds()
-        self.setup_dialog()
 
     #Get/set the key for the Google Reader username and password
     def get_google_key(self, username=None, password=None):
@@ -853,6 +902,33 @@ class App(awn.AppletSimple):
 
         return image
 
+#D-Bus stuff
+class DBusService(dbus.service.Object):
+    def __init__(self, applet):
+        self.applet = applet
+  
+        bus_name = dbus.service.BusName('org.awnproject.Feeds', bus=dbus.SessionBus())
+  
+        dbus.service.Object.__init__(self, bus_name, '/org/awnproject/Feeds')
+  
+    @dbus.service.method('org.awnproject.Feeds')
+    def Update(self):
+        self.applet.update_feeds()
+
+        return 'OK'
+
+    @dbus.service.method('org.awnproject.Feeds')
+    def AddFeed(self, url):
+        if url not in self.applet.urls:
+            self.applet.add_feed(url)
+
+        return 'OK'
+
+    @dbus.service.method('org.awnproject.Feeds')
+    def DoneUpdating(self):
+        self.applet.done_updating()
+
+        return 'OK'
 
 #Utility functions...
 

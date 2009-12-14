@@ -1516,8 +1516,6 @@ class Applet(awn.AppletSimple, object):
         @type meta: C{dict}
 
         """
-        if "settings-per-instance" not in options:
-            uid = "single-%s" % uid
         awn.AppletSimple.__init__(self, meta["short"], uid, panel_id)
 
         self.uid = uid

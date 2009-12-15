@@ -223,21 +223,11 @@ class VolumeControlApplet:
         self.backend.set_device(device)
 
     def load_track_pref(self, prefs):
-        track_labels = self.backend.get_track_labels()
-
-        if "track" not in self.applet.settings or self.applet.settings["track"] not in track_labels:
-            self.applet.settings["track"] = self.backend.get_default_track()
-        track = self.applet.settings["track"]
-
         self.combobox_track = prefs.get_object("combobox-mixer-track")
         awnlib.add_cell_renderer_text(self.combobox_track)
-        for i in track_labels:
-            self.combobox_track.append_text(i)
-
-        self.combobox_track.set_active(track_labels.index(track))
         self.combobox_track.connect("changed", self.combobox_track_changed_cb)
 
-        self.backend.set_track(track)
+        self.reload_tracks()
 
     def reload_tracks(self):
         track_labels = self.backend.get_track_labels()

@@ -35,6 +35,7 @@ import gobject
 import gc
 import cairo
 from StringIO import StringIO
+import bwmprefs
 
 APPLET_NAME = "Bandwidth Monitor"
 APPLET_VERSION = "0.3.9.2"
@@ -44,7 +45,7 @@ APPLET_DESCRIPTION = "Network Bandwidth monitor"
 APPLET_WEBSITE = "http://www.curetheitch.com/projects/awn-bwm/"
 APPLET_PATH = os.path.dirname(sys.argv[0])
 APPLET_ICON = APPLET_PATH + "/images/icon.png"
-
+UI_FILE = os.path.join(os.path.dirname(__file__), "bandwidth-monitor.ui")
 
 class DeviceUsage:
 
@@ -52,6 +53,8 @@ class DeviceUsage:
         self.parent = parent
         self.statistics_cmd = "netstat -ia"
         self.interfaces = {}
+        self.interfaces["Sum Interface"] = {"collection_time": 0, "status": "V", "prbytes": 0, "ptbytes": 0, "index": 1, "rx_history": [0, 0], "tx_history": [0, 0], "ip_address": '', "netmask": '', "rx_bytes": 0, "tx_bytes": 0, "rx_sum": 0, "tx_sum": 0, "rxtx_sum": 0, "rabytes": 0, "tabytes": 0, 'include_in_sum': False, 'include_in_multi': False, 'upload_color': "#f00", 'download_color': "#ff0"}
+        self.interfaces["Multi Interface"] = {"collection_time": 0, "status": "V", "prbytes": 0, "ptbytes": 0, "index": 1, "rx_history": [0, 0], "tx_history": [0, 0], "ip_address": '', "netmask": '', "rx_bytes": 0, "tx_bytes": 0, "rx_sum": 0, "tx_sum": 0, "rxtx_sum": 0, "rabytes": 0, "tabytes": 0, 'include_in_sum': False, 'include_in_multi': False}
         self.devices_cmd = "netstat -eia"
         self.regenerate = False
         self.update_net_stats()
@@ -61,20 +64,40 @@ class DeviceUsage:
         delta = time.time()
         ifcfg_str = os.popen(self.devices_cmd).read()
         stat_str = os.popen(self.statistics_cmd).readlines()
-        device_list = os.popen('netstat -i').readlines()
+        device_list = os.popen(self.devices_cmd).readlines()
         device_list = device_list[2:]
         devices = []
+        ''' Reset the Sum Interface records to zero '''
+        self.interfaces["Sum Interface"]["rx_sum"], self.interfaces["Sum Interface"]["tx_sum"], self.interfaces["Sum Interface"]["rx_bytes"], self.interfaces["Sum Interface"]["tx_bytes"] = 0, 0, 0, 0
+        sum_rx_history = 0.0
+        sum_tx_history = 0.0
+        ''' Reset the Multi Interface records to zero '''
+        self.interfaces["Multi Interface"]["rx_sum"], self.interfaces["Multi Interface"]["tx_sum"], self.interfaces["Multi Interface"]["rx_bytes"], self.interfaces["Multi Interface"]["tx_bytes"] = 0, 0, 0, 0
+        multi_rx_history = 0.0
+        multi_tx_history = 0.0
         if ifcfg_str and stat_str:
             for device_group in ifcfg_str.split("\n\n"):
                 device_lines = device_group.split("\n")
                 if "Kernel" in device_lines[0]:
                     device_lines = device_lines[1:]
-                dev_name = re.split('[\W]+', device_lines[0].strip())[0]
-                if len(device_lines) > 4 and not dev_name == "lo" and not dev_name == "wmaster0":
-                    rx_bytes = int(re.search(r'RX bytes:(\d+)\D', device_group).group(1))
-                    tx_bytes = int(re.search(r'TX bytes:(\d+)\D', device_group).group(1))
+                dev_name = re.split('[\W]+', device_lines[0].strip().replace( ":", "_" ))[0]
+                if len(device_lines) > 2 and not dev_name == "loaa" and not dev_name == "wmaster0aa":
+                    try:
+                        rx_bytes = int(re.search(r'RX bytes:(\d+)\D', device_group).group(1))
+                        tx_bytes = int(re.search(r'TX bytes:(\d+)\D', device_group).group(1))
+                    except:
+                        rx_bytes = 0
+                        tx_bytes = 0
                     if not dev_name in self.interfaces:
-                        self.interfaces[dev_name] = {"collection_time": time.time(), "status": None, "prbytes": float(rx_bytes), "ptbytes": float(tx_bytes), "index": 1, "rx_history": [0, 0], "tx_history": [0, 0], "ip_address": '', "netmask": ''}
+                        prefs = self.parent.applet.settings["device_display_parameters"]
+                        include_in_sum = True
+                        include_in_multi = True
+                        for device_pref in prefs:
+                            device_pref_values = device_pref.split("|")
+                            if device_pref_values[0] == dev_name:
+                                include_in_sum = device_pref_values[1].__str__()[0].upper()=='T'
+                                include_in_multi = device_pref_values[2].__str__()[0].upper()=='T'
+                        self.interfaces[dev_name] = {"collection_time": time.time(), "status": None, "prbytes": float(rx_bytes), "ptbytes": float(tx_bytes), "index": 1, "rx_history": [0, 0], "tx_history": [0, 0], "ip_address": '', "netmask": '', "include_in_sum": include_in_sum, 'include_in_multi': include_in_multi, 'upload_color': self.parent.preferences.get_color(dev_name, "upload"), 'download_color': self.parent.preferences.get_color(dev_name, "download")}
                     address = re.search(r'inet addr:(\d+\.\d+\.\d+\.\d+)\b', device_group)
                     if address:
                         address = address.group(1)
@@ -90,20 +113,26 @@ class DeviceUsage:
                     tabytes = (float(tx_bytes) - self.interfaces[dev_name]["ptbytes"]) / collection
                     self.interfaces[dev_name]["rabytes"] = rabytes
                     self.interfaces[dev_name]["tabytes"] = tabytes
-                    index = ((((float(rx_bytes) - self.interfaces[dev_name]["prbytes"]) * self.parent.unit) / collection) + (((float(tx_bytes) - self.interfaces[dev_name]["ptbytes"]) * self.parent.unit) / collection)) + self.interfaces[dev_name]["index"]
                     rxtx_sum = float(rx_bytes) + float(tx_bytes)
-                    ''' The whole index thing is to not collect statistics on ever single read, because on some systems, /proc/net/dev is only updated every 2 seconds '''
-                    if index > -2:
-                        if index == 0:
-                            self.interfaces[dev_name]["index"] = -1
-                            continue
-                        elif index == -1:
-                            self.interfaces[dev_name]["index"] = -2
-                        else:
-                            self.interfaces[dev_name]["index"] = 0
+                    if self.interfaces[dev_name]['include_in_sum'] == True:
+                        self.interfaces["Sum Interface"]["rx_sum"] += float(rx_bytes)
+                        self.interfaces["Sum Interface"]["tx_sum"] += float(tx_bytes)
+                        self.interfaces["Sum Interface"]["rx_bytes"] += rbytes
+                        self.interfaces["Sum Interface"]["tx_bytes"] += tbytes
+                        sum_rx_history += rabytes
+                        sum_tx_history += tabytes
+                    if self.interfaces[dev_name]['include_in_multi'] == True:
+                        self.interfaces["Multi Interface"]["rx_sum"] += float(rx_bytes)
+                        self.interfaces["Multi Interface"]["tx_sum"] += float(tx_bytes)
+                        self.interfaces["Multi Interface"]["rx_bytes"] += rbytes
+                        self.interfaces["Multi Interface"]["tx_bytes"] += tbytes
+                        multi_rx_history += rabytes
+                        multi_tx_history += tabytes
                     for dev_line in stat_str:
                         if dev_name in dev_line and not ":" in dev_line:
                             ifstatus = re.split('[\W]+', dev_line.strip())[11]
+                        elif ":" in dev_line:
+                            ifstatus = re.split('[\W]+', dev_line.strip())[7]
                     self.interfaces[dev_name]["rx_bytes"], self.interfaces[dev_name]["tx_bytes"], self.interfaces[dev_name]["prbytes"], self.interfaces[dev_name]["ptbytes"], self.interfaces[dev_name]["rx_sum"], self.interfaces[dev_name]["tx_sum"], self.interfaces[dev_name]["rxtx_sum"], self.interfaces[dev_name]["status"], self.interfaces[dev_name]["collection_time"] = float(rbytes), float(tbytes), float(rx_bytes), float(tx_bytes), float(rx_bytes), float(tx_bytes), float(rxtx_sum), ifstatus, time.time()
                     if len(self.interfaces[dev_name]["rx_history"]) == 20:
                         self.interfaces[dev_name]["rx_history"].pop(0)
@@ -111,15 +140,21 @@ class DeviceUsage:
                     if len(self.interfaces[dev_name]["tx_history"]) == 20:
                         self.interfaces[dev_name]["tx_history"].pop(0)
                     self.interfaces[dev_name]["tx_history"].append(self.interfaces[dev_name]["tabytes"])
+        if len(self.interfaces["Sum Interface"]["rx_history"]) == 20:
+            self.interfaces["Sum Interface"]["rx_history"].pop(0)
+        self.interfaces["Sum Interface"]["rx_history"].append(sum_rx_history)
+        if len(self.interfaces["Sum Interface"]["tx_history"]) == 20:
+            self.interfaces["Sum Interface"]["tx_history"].pop(0)
+        self.interfaces["Sum Interface"]["tx_history"].append(sum_tx_history)
         for device_group in ifcfg_str.split("\n\n"):
             device_lines = device_group.split("\n")
             if "Kernel" in device_lines[0]:
                 device_lines = device_lines[1:]
-            dev_name = re.split('[\W]+', device_lines[0].strip())[0]
-            if len(device_lines) > 4 and not dev_name == "lo" and not dev_name == "wmaster0":
+            dev_name = re.split('[\W]+', device_lines[0].strip().replace( ":", "_" ))[0]
+            if len(device_lines) > 2 and not dev_name == "loaa" and not dev_name == "wmaster0aa":
                 devices.append(dev_name)
         for device in self.interfaces.keys():
-            if not device in devices:
+            if not device in devices and not "Sum Interface" in device and not "Multi Interface" in device:
                 ''' The device does not exist, remove it. '''
                 self.interfaces.pop(device)
                 self.regenerate = True
@@ -138,6 +173,7 @@ class AppletBandwidthMonitor:
 
     def __init__(self, applet):
         self.applet = applet
+        self.UI_FILE = UI_FILE
         applet.tooltip.set("Bandwidth Monitor")
         icon = gtk.gdk.pixbuf_new_from_file(APPLET_PATH + '/images/blank.png')
         self.width = int(self.applet.get_size() * 1.5)
@@ -151,10 +187,18 @@ class AppletBandwidthMonitor:
         button = gtk.Button("Change Unit")
         button.connect("clicked", self.change_unit)
         self.dialog.add(button)
-        defaults = {"unit": 0, "interface": ''}
+        defaults = {'unit': 8, 'interface': 'wlan0', 'draw_threshold': 0.0, 'device_display_parameters': []}
         self.applet.settings.load(defaults)
-        self.interface = self.applet.settings["interface"]
-        self.unit = self.applet.settings["unit"]
+        self.interface = self.applet.settings['interface']
+        self.unit = self.applet.settings['unit']
+        if not self.unit:
+            self.change_unit(defaults['unit'])
+        if self.applet.settings['draw_threshold'] == 0.0:
+            self.ratio = 1
+        else:
+            ratio = self.applet.settings['draw_threshold']
+            self.ratio = int(ratio*1024) if self.unit == 1 else int(ratio*1024/8)
+        self.preferences = bwmprefs.preferences(self.applet, self)
         self.device_usage = DeviceUsage(self, self.unit)
         applet.tooltip.connect_becomes_visible(self.enter_notify)
         self.table = self.generate_table()
@@ -171,8 +215,59 @@ class AppletBandwidthMonitor:
         self.__download_overlay.props.apply_effects = True
         self.__upload_overlay.props.text = "Scanning"
         self.__download_overlay.props.text = "Devices"
+        self.preferences.setup()
         gobject.timeout_add(100, self.first_paint)
-        self.timer = gobject.timeout_add(1500, self.subsequent_paint)
+        self.timer = gobject.timeout_add(800, self.subsequent_paint)
+
+    def setup_context_menu(self):
+        prefs_ui = gtk.Builder()
+        prefs_ui.add_from_file(UI_FILE)
+        preferences_vbox = self.applet.dialog.new("preferences").vbox
+        cell_box = self.preferences.setup()
+        store = cell_box.liststore
+        scaleThresholdSpinbutton = prefs_ui.get_object("scaleThresholdSpinbutton")
+        thresholdLabel = prefs_ui.get_object("label-scaleThreshold")
+        scaleThresholdSpinbutton.set_value(float(self.applet.settings["draw_threshold"]))
+        scaleThresholdSpinbutton.connect('value-changed', self.change_draw_ratio)
+        uomCheckbutton = prefs_ui.get_object('uomCheckbutton')
+        if self.unit == 1:
+            uomCheckbutton.set_property('active', True)
+            thresholdLabel.set_text("KBps")
+        else:
+            thresholdLabel.set_text("Kbps")
+        uomCheckbutton.connect('toggled', self.change_unit, scaleThresholdSpinbutton, thresholdLabel)
+        for device in sorted(self.device_usage.interfaces):
+            if not "Multi Interface" in device and not "Sum Interface" in device:
+                if self.device_usage.interfaces[device]['include_in_sum'] == True:
+                    include_in_sum = 1
+                else:
+                    include_in_sum = 0
+                if self.device_usage.interfaces[device]['include_in_multi'] == True:
+                    include_in_multi = 1
+                else:
+                    include_in_multi = 0
+                current_iter = store.append([device, include_in_sum, include_in_multi, '', '', '#f00', '#ff0'])
+        prefs_ui.get_object("scrolledwindow1").add_with_viewport(cell_box)
+        prefs_ui.get_object("dialog-notebook").reparent(preferences_vbox)
+
+    def change_draw_ratio(self, widget):
+        ratio = widget.get_value()
+        if self.unit == 1:
+            self.ratio = int(ratio*1024)
+        else:
+            self.ratio = int(ratio*1024/8)
+        self.applet.settings["draw_threshold"] = ratio
+
+    def change_unit(self, widget=None, scaleThresholdSpinbutton=None, label=None):
+        self.unit = 8 if self.unit == 1 else 1
+        if label:
+            if self.unit == 1:
+                label.set_text("KBps")
+                scaleThresholdSpinbutton.set_value(self.applet.settings["draw_threshold"]/8)
+            else:
+                label.set_text("Kbps")
+                scaleThresholdSpinbutton.set_value(self.applet.settings["draw_threshold"]*8)
+        self.applet.settings["unit"] = self.unit
 
     def change_interface(self, widget, interface):
         if widget.get_active():
@@ -186,7 +281,7 @@ class AppletBandwidthMonitor:
         row_iter = 2
         for i in range(0, 7):
             table.set_col_spacing(i, 20)
-        table.attach(gtk.Label("Sum"), 0, 1, 0, 1, xoptions=gtk.EXPAND | gtk.FILL, yoptions=gtk.EXPAND | gtk.FILL, xpadding=0, ypadding=0)
+        table.attach(gtk.Label(""), 0, 1, 0, 1, xoptions=gtk.EXPAND | gtk.FILL, yoptions=gtk.EXPAND | gtk.FILL, xpadding=0, ypadding=0)
         table.attach(gtk.Label("Interface"), 1, 2, 0, 1, xoptions=gtk.EXPAND | gtk.FILL, yoptions=gtk.EXPAND | gtk.FILL, xpadding=0, ypadding=0)
         table.attach(gtk.Label("Status"), 2, 3, 0, 1, xoptions=gtk.EXPAND | gtk.FILL, yoptions=gtk.EXPAND | gtk.FILL, xpadding=0, ypadding=0)
         table.attach(gtk.Label("Sent"), 3, 4, 0, 1, xoptions=gtk.EXPAND | gtk.FILL, yoptions=gtk.EXPAND | gtk.FILL, xpadding=0, ypadding=0)
@@ -219,16 +314,12 @@ class AppletBandwidthMonitor:
             col_iter = 0
         return table
 
-    def change_unit(self, widget):
-        self.unit = 8 if self.unit == 1 else 1
-        self.applet.settings["unit"] = self.unit
-
     def enter_notify(self):
         if not self.applet.dialog.is_visible("main"):
             if not self.interface in self.device_usage.interfaces:
                 self.applet.set_tooltip_text("Please sleect a valid Network Device")
             else:
-                self.applet.set_tooltip_text("Total Sent: %s - Total Received: %s" % (readable_speed(self.device_usage.interfaces[self.interface]["tx_sum"] * self.unit, self.unit, False), readable_speed(self.device_usage.interfaces[self.interface]["rx_sum"] * self.unit, self.unit, False)))
+                self.applet.set_tooltip_text("Total Sent: %s - Total Received: %s (All Interfaces)" % (readable_speed(self.device_usage.interfaces[self.interface]["tx_sum"] * self.unit, self.unit, False), readable_speed(self.device_usage.interfaces[self.interface]["rx_sum"] * self.unit, self.unit, False)))
 
     def first_paint(self):
         self.repaint()
@@ -257,36 +348,43 @@ class AppletBandwidthMonitor:
         ct.curve_to(x0, y1, x0, y1, x0, y1 - radius)
         ct.close_path()
 
-    def draw_meter(self, ct, height):
+    def draw_meter(self, ct, height, interface, multi=False):
+        ratio = self.ratio
         ct.set_line_width(2)
         ''' Create temporary lists to store the values of the transmit and receive history, which will be
             then placed into the tmp_total_history and sorted by size to set the proper scale/ratio for the line heights '''
-        tmp_rx_history = []
-        tmp_tx_history = []
-        tmp_total_history = []
-        if self.interface in self.device_usage.interfaces and len(self.device_usage.interfaces[self.interface]["rx_history"]) > 0:
-            tmp_rx_history = list(self.device_usage.interfaces[self.interface]["rx_history"])
-        if self.interface in self.device_usage.interfaces and len(self.device_usage.interfaces[self.interface]["tx_history"]) > 0:
-            tmp_tx_history = list(self.device_usage.interfaces[self.interface]["tx_history"])
-        tmp_total_history.extend(tmp_rx_history)
-        tmp_total_history.extend(tmp_tx_history)
+        tmp_rx_history = [1]
+        tmp_tx_history = [1]
+        tmp_total_history = [1]
+        if not multi:
+            if interface in self.device_usage.interfaces and len(self.device_usage.interfaces[interface]["rx_history"]) > 0:
+                tmp_rx_history = list(self.device_usage.interfaces[interface]["rx_history"])
+            if interface in self.device_usage.interfaces and len(self.device_usage.interfaces[interface]["tx_history"]) > 0:
+                tmp_tx_history = list(self.device_usage.interfaces[interface]["tx_history"])
+            tmp_total_history.extend(tmp_rx_history)
+            tmp_total_history.extend(tmp_tx_history)
+        else:
+            for iface in self.device_usage.interfaces:
+                if self.device_usage.interfaces[iface]['include_in_multi'] == True and len(self.device_usage.interfaces[iface]["rx_history"]) > 0:
+                    tmp_total_history.extend(list(self.device_usage.interfaces[iface]["rx_history"]))
+                if self.device_usage.interfaces[iface]['include_in_multi'] == True and len(self.device_usage.interfaces[iface]["tx_history"]) > 0:
+                    tmp_total_history.extend(list(self.device_usage.interfaces[iface]["tx_history"]))
         tmp_total_history.sort()
         ''' ratio variable controls the minimum threshold for data - i.e. 32000 would not draw graphs
             for data transfers below 3200 bytes - the initial value of ratio if set to the link speed will
-            prevent the graph from scaling '''
-        ratio = 1
-        if tmp_total_history:
-            highest_value = tmp_total_history[len(tmp_total_history) - 1]
-            if highest_value > ratio:
-                ratio = int(highest_value) / 28
+            prevent the graph from scaling. If using the Multi Interface, the ratio will adjust based on the 
+            highest throughput metric. '''
+        highest_value = tmp_total_history[len(tmp_total_history) - 1]
+        ratio = int(highest_value) / 28 if highest_value > self.ratio else self.ratio
         ''' Change the color of the line to red for upload '''
-        ct.set_source_rgba(1.0, 0.0, 0.0, 1.0)
+        color = gtk.gdk.Color(self.device_usage.interfaces[interface]['upload_color'])
+        ct.set_source_rgba(color.red_float, color.green_float, color.blue_float, 1.0)
         ''' reset the position and iter to 0 '''
         x_pos = 0
         cnt = 0
         ''' If a transmit history exists, draw it '''
-        if self.interface in self.device_usage.interfaces and len(self.device_usage.interfaces[self.interface]["tx_history"]) > 0:
-            for value in self.device_usage.interfaces[self.interface]["tx_history"]:
+        if interface in self.device_usage.interfaces and len(self.device_usage.interfaces[interface]["tx_history"]) > 0:
+            for value in self.device_usage.interfaces[interface]["tx_history"]:
                 ct.line_to(x_pos, self.chart_coords(value, ratio))
                 ct.move_to(x_pos, self.chart_coords(value, ratio))
                 x_pos += self.width / 16
@@ -296,13 +394,14 @@ class AppletBandwidthMonitor:
             ct.close_path()
             ct.stroke()
         ''' Set the color to yellow for download and set the width of the line '''
-        ct.set_source_rgba(1.0, 0.8, 0.0, 1.0)
+        color = gtk.gdk.Color(self.device_usage.interfaces[interface]['download_color'])
+        ct.set_source_rgba(color.red_float, color.green_float, color.blue_float, 1.0)
         ''' Set the initial position and iter to 0 '''
         x_pos = 0
         cnt = 0
         ''' If a receive history exists, draw it '''
-        if self.interface in self.device_usage.interfaces and len(self.device_usage.interfaces[self.interface]["rx_history"]) > 0:
-            for value in self.device_usage.interfaces[self.interface]["rx_history"]:
+        if interface in self.device_usage.interfaces and len(self.device_usage.interfaces[interface]["rx_history"]) > 0:
+            for value in self.device_usage.interfaces[interface]["rx_history"]:
                 ct.line_to(x_pos, self.chart_coords(value, ratio))
                 ct.move_to(x_pos, self.chart_coords(value, ratio))
                 x_pos += self.width / 16
@@ -329,7 +428,20 @@ class AppletBandwidthMonitor:
         ct.set_source_rgba(0.1, 0.1, 0.1, 0.5)
         self.draw_background(ct, 2, 2, self.width - 2, self.applet.get_size(), 12)
         ct.fill()
-        self.draw_meter(ct, self.applet.get_size())
+        if self.interface == "Multi Interface":
+            tmp_history = [1]
+            for interface in self.device_usage.interfaces:
+                if self.device_usage.interfaces[interface]['include_in_multi'] == True:
+                    tmp_history.extend( list(self.device_usage.interfaces[interface]["rx_history"]) )
+                    tmp_history.extend( list(self.device_usage.interfaces[interface]["tx_history"]) )
+            tmp_history.sort()
+            highest_value = tmp_history[len(tmp_history) - 1]
+            ratio = int(highest_value) / 28 if highest_value > self.ratio else 1
+            for interface in self.device_usage.interfaces:
+                if self.device_usage.interfaces[interface]['include_in_multi'] == True:
+                    self.draw_meter(ct, self.applet.get_size(), interface, True)
+        else:
+            self.draw_meter(ct, self.applet.get_size(), self.interface)
         if not self.interface in self.device_usage.interfaces:
             self.__upload_overlay.props.text = "No"
             self.__download_overlay.props.text = "Device"
@@ -363,12 +475,8 @@ def readable_speed(speed, unit, seconds=True):
     ''' readable_speed(speed) -> string
         speed is in bytes per second
         returns a readable version of the speed given '''
-    if speed is None or speed < 0:
-        speed = 0
-    if unit == 1:
-        units = "B ", "KB", "MB", "GB", "TB"
-    else:
-        units = "b ", "Kb", "Mb", "Gb", "Tb"
+    speed = 0 if speed is None or speed < 0 else speed
+    units = ["B ", "KB", "MB", "GB", "TB"] if unit == 1 else ["b ", "Kb", "Mb", "Gb", "Tb"]
     if seconds:
         temp_units = []
         for u in units:
@@ -390,7 +498,9 @@ def readable_speed(speed, unit, seconds=True):
 
 
 def status(flags):
-    if "R" in flags and "U" in flags:
+    if "V" in flags:
+        status = "Virtual"
+    elif "R" in flags and "U" in flags:
         status = "Connected"
     elif "R" in flags:
         status = "Down"

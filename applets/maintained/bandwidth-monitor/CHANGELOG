@@ -1,3 +1,17 @@
+12/14/2009:
+    Created preferences dialog to manage options -
+        An option to select the unit Bytes/bits
+        A spinbutton entry for setting the minimum threshold
+        A "Devices" pref-pane which allows selection of interfaces into virtual interfaces
+        A color picker for upload and download colors for use in the line-graph.
+    Fixed division by zero that would occur in some scenarios.
+
+12/10/2009:
+    Added virtual interfaces for SUM and MULTI
+        The Sum Interface is a virtual interface which displays the sum throughput of all interfaces that are selected for "Sum"
+        The Multi Interface is a virtual interface which displays each individual throughput of the interfaces that are selected for "Multi", each with the colors defined for the interface.
+    Added logic to parse and use preferences that are planned
+
 11/29/2009:
     Changed table generation function to be less verbose
     Fixed regular expression for gathering IP/Netmask

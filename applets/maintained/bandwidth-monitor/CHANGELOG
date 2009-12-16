@@ -1,3 +1,8 @@
+12/16/2009:
+    Added call to applet.errors.general if read access to /proc/net/dev fails.
+    Made changes to TODO file
+    Change parser logic for to handle interfaces with less than 11 columns of output in 'netstat -iea'    
+
 12/14/2009:
     Created preferences dialog to manage options -
         An option to select the unit Bytes/bits

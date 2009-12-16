@@ -51,20 +51,18 @@ class DeviceUsage:
 
     def __init__(self, parent, unit):
         self.parent = parent
-        self.statistics_cmd = "netstat -ia"
         self.interfaces = {}
         self.interfaces["Sum Interface"] = {"collection_time": 0, "status": "V", "prbytes": 0, "ptbytes": 0, "index": 1, "rx_history": [0, 0], "tx_history": [0, 0], "ip_address": '', "netmask": '', "rx_bytes": 0, "tx_bytes": 0, "rx_sum": 0, "tx_sum": 0, "rxtx_sum": 0, "rabytes": 0, "tabytes": 0, 'include_in_sum': False, 'include_in_multi': False, 'upload_color': "#f00", 'download_color': "#ff0"}
         self.interfaces["Multi Interface"] = {"collection_time": 0, "status": "V", "prbytes": 0, "ptbytes": 0, "index": 1, "rx_history": [0, 0], "tx_history": [0, 0], "ip_address": '', "netmask": '', "rx_bytes": 0, "tx_bytes": 0, "rx_sum": 0, "tx_sum": 0, "rxtx_sum": 0, "rabytes": 0, "tabytes": 0, 'include_in_sum': False, 'include_in_multi': False}
-        self.devices_cmd = "netstat -eia"
         self.regenerate = False
         self.update_net_stats()
         gobject.timeout_add(1000, self.update_net_stats)
 
     def update_net_stats(self):
         delta = time.time()
-        ifcfg_str = os.popen(self.devices_cmd).read()
-        stat_str = os.popen(self.statistics_cmd).readlines()
-        device_list = os.popen(self.devices_cmd).readlines()
+        ifcfg_str = os.popen("netstat -eia").read()
+        stat_str = os.popen("netstat -ia").readlines()
+        device_list = os.popen("netstat -eia").readlines()
         device_list = device_list[2:]
         devices = []
         ''' Reset the Sum Interface records to zero '''
@@ -129,7 +127,9 @@ class DeviceUsage:
                         multi_rx_history += rabytes
                         multi_tx_history += tabytes
                     for dev_line in stat_str:
-                        if dev_name in dev_line and not ":" in dev_line:
+                        if dev_name in dev_line and not ":" in dev_line and not "'no', 'statistics'" in dev_line.__str__() \
+                            and not "'Iface', 'MTU', 'Met'" in dev_line.__str__() \
+                            and not "'Kernel', 'Interface', 'table'" in dev_line.__str__():
                             ifstatus = re.split('[\W]+', dev_line.strip())[11]
                         elif ":" in dev_line:
                             ifstatus = re.split('[\W]+', dev_line.strip())[7]
@@ -172,6 +172,11 @@ class AppletBandwidthMonitor:
     text_forground = (1.0, 1.0, 1.0, 1.0)
 
     def __init__(self, applet):
+        ''' Test if user has access to /proc/net/dev '''
+        if not os.access('/proc/net/dev', os.R_OK):
+            applet.errors.general('Cannot read from /proc/net/dev\nUnable to retrieve statistics. Bandwith-Monitor will not function without read access to /proc/net/dev')
+            applet.errors.set_error_icon_and_click_to_restart()
+            return None
         self.applet = applet
         self.UI_FILE = UI_FILE
         applet.tooltip.set("Bandwidth Monitor")

@@ -7,6 +7,7 @@ dist_applet_DATA =	\
 	CHANGELOG	\
 	LICENSE		\
 	bwmprefs.py	\
+	bandwidth-monitor.ui \
 	$(NULL)
 
 bwm_iconsdir = $(applet_datadir)/images

@@ -6,6 +6,7 @@ include $(top_srcdir)/Makefile.schemas
 dist_applet_DATA =	\
 	CHANGELOG	\
 	LICENSE		\
+	bwmprefs.py	\
 	$(NULL)
 
 bwm_iconsdir = $(applet_datadir)/images

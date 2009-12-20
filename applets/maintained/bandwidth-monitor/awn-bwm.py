@@ -133,14 +133,15 @@ class DeviceUsage:
                     self.interfaces[dev_name]["rxtx_sum"] = rxtx_sum
                     self.interfaces[dev_name]["status"] = ifstatus
                     self.interfaces[dev_name]["collection_time"] = time.time()
-                    self.interfaces[dev_name]["rx_history"] = self.interfaces[dev_name]["rx_history"][-16:]
+                    offset = self.parent.meter_scale - 1 if self.parent.border else self.parent.meter_scale
+                    self.interfaces[dev_name]["rx_history"] = self.interfaces[dev_name]["rx_history"][- offset:]
                     self.interfaces[dev_name]["rx_history"].append(self.interfaces[dev_name]["rabytes"])
-                    self.interfaces[dev_name]["tx_history"] = self.interfaces[dev_name]["tx_history"][-16:]
+                    self.interfaces[dev_name]["tx_history"] = self.interfaces[dev_name]["tx_history"][- offset:]
                     self.interfaces[dev_name]["tx_history"].append(self.interfaces[dev_name]["tabytes"])
                     devices.append(dev_name)
-        self.interfaces["Sum Interface"]["rx_history"] = self.interfaces["Sum Interface"]["rx_history"][-16:]
+        self.interfaces["Sum Interface"]["rx_history"] = self.interfaces["Sum Interface"]["rx_history"][- offset:]
         self.interfaces["Sum Interface"]["rx_history"].append(sum_rx_history)
-        self.interfaces["Sum Interface"]["tx_history"] = self.interfaces["Sum Interface"]["tx_history"][-16:]
+        self.interfaces["Sum Interface"]["tx_history"] = self.interfaces["Sum Interface"]["tx_history"][- offset:]
         self.interfaces["Sum Interface"]["tx_history"].append(sum_tx_history)
         for device in self.interfaces.keys():
             if not device in devices and not "Sum Interface" in device and not "Multi Interface" in device:
@@ -163,11 +164,12 @@ class AppletBandwidthMonitor:
         self.applet = applet
         self.UI_FILE = UI_FILE
         applet.tooltip.set("Bandwidth Monitor")
+        self.meter_scale = 20
         icon = gtk.gdk.pixbuf_new_from_file(APPLET_PATH + '/images/blank.png')
         width = self.applet.get_size() * 1.5
         height = self.applet.get_size() * 1.5
         if height != icon.get_height():
-            icon = icon.scale_simple(int(height), int(height), gtk.gdk.INTERP_BILINEAR)
+            icon = icon.scale_simple(int(height), int(height/1.5), gtk.gdk.INTERP_BILINEAR)
             self.applet.set_icon_pixbuf(icon)
         self.dialog = applet.dialog.new("main")
         self.vbox = gtk.VBox()
@@ -225,7 +227,7 @@ class AppletBandwidthMonitor:
 
     def change_unit(self, widget=None, scaleThresholdSpinbutton=None, label=None):
         self.unit = 8 if self.unit == 1 else 1
-        ''' if label is passed, normalize update the label, and normalize the spinbutton '''
+        ''' if label is passed, normalize and update the label, and normalize the spinbutton '''
         if label:
             if self.unit == 1:
                 label.set_text("KBps")
@@ -340,11 +342,10 @@ class AppletBandwidthMonitor:
         ''' If a transmit history exists, draw it '''
         if interface in self.device_usage.interfaces and len(self.device_usage.interfaces[interface]["tx_history"]):
             for value in self.device_usage.interfaces[interface]["tx_history"]:
-                ct.line_to(x_pos, self.chart_coords(value, ratio))
+                x_pos_end = (x_pos - width) + 2 if self.border and x_pos > width else 0
+                ct.line_to(x_pos - x_pos_end, self.chart_coords(value, ratio))
                 ct.move_to(x_pos, self.chart_coords(value, ratio))
-                x_pos += width / 16
-                if cnt == 18:
-                    x_pos += 4
+                x_pos += width / self.meter_scale
                 cnt += 1
             ct.close_path()
             ct.stroke()
@@ -360,23 +361,18 @@ class AppletBandwidthMonitor:
         ''' If a receive history exists, draw it '''
         if interface in self.device_usage.interfaces and len(self.device_usage.interfaces[interface]["rx_history"]):
             for value in self.device_usage.interfaces[interface]["rx_history"]:
-                ct.line_to(x_pos, self.chart_coords(value, ratio))
+                x_pos_end = (x_pos - width) + 2 if self.border and x_pos > width else 0
+                ct.line_to(x_pos - x_pos_end, self.chart_coords(value, ratio))
                 ct.move_to(x_pos, self.chart_coords(value, ratio))
-                x_pos += width / 16
-                if cnt == 18:
-                    x_pos += 4
+                x_pos += width / self.meter_scale
                 cnt += 1
             ct.close_path()
             ct.stroke()
 
     def chart_coords(self, value, ratio=1):
-        ''' Speed varable will eventually become link speed if specified/detected for non-scaling graphs, and the 
-        "top" value for the normalized non-scaling meter. (100 would draw the highest line at the top of the meter,
-        64 would draw just above middle. '''
-        speed = 64
         ratio = 1 if ratio < 1 else ratio
-        pos = (speed - 20) / float(self.applet.get_size())
-        bottom = 2.5 if self.border else 0
+        pos = float(self.applet.get_size()) / 58
+        bottom = 2.0 if self.border else 0
         return (self.applet.get_size() - pos * (value / int(ratio))) + self.graph_zero - bottom
 
     def repaint(self):

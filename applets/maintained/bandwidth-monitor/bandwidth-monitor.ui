@@ -22,7 +22,9 @@
               <object class="GtkAlignment" id="alignment3">
                 <property name="visible">True</property>
                 <property name="top_padding">6</property>
+                <property name="bottom_padding">6</property>
                 <property name="left_padding">12</property>
+                <property name="right_padding">12</property>
                 <child>
                   <object class="GtkVBox" id="vbox3">
                     <property name="visible">True</property>
@@ -34,6 +36,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
+                        <property name="tooltip_text" translatable="yes">If this is checked, the common display unit will be Bytes</property>
                         <property name="use_underline">True</property>
                         <property name="draw_indicator">True</property>
                       </object>
@@ -44,11 +47,149 @@
                       </packing>
                     </child>
                     <child>
-                      <placeholder/>
+                      <object class="GtkHBox" id="bgHbox">
+                        <property name="visible">True</property>
+                        <child>
+                          <object class="GtkCheckButton" id="bgCheckbutton">
+                            <property name="label" translatable="yes">Draw Background</property>
+                            <property name="width_request">200</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">False</property>
+                            <property name="tooltip_text" translatable="yes">If this is checked the applet background will use the selected color. If unchecked, background will be transparent</property>
+                            <property name="active">True</property>
+                            <property name="draw_indicator">True</property>
+                          </object>
+                          <packing>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkColorButton" id="bgColorbutton">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="events">GDK_STRUCTURE_MASK | GDK_PROPERTY_CHANGE_MASK</property>
+                            <property name="tooltip_text" translatable="yes">Background Color</property>
+                            <property name="use_alpha">True</property>
+                            <property name="title" translatable="yes">Background Color</property>
+                            <property name="color">#000000000000</property>
+                            <property name="alpha">32767</property>
+                          </object>
+                          <packing>
+                            <property name="padding">10</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkHBox" id="borderHbox">
+                        <property name="visible">True</property>
+                        <child>
+                          <object class="GtkCheckButton" id="borderCheckbutton">
+                            <property name="label" translatable="yes">Draw Border</property>
+                            <property name="width_request">200</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">False</property>
+                            <property name="tooltip_text" translatable="yes">If this is checked the applet border will use the selected color. If unchecked, border will be transparent</property>
+                            <property name="draw_indicator">True</property>
+                          </object>
+                          <packing>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkColorButton" id="borderColorbutton">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="tooltip_text" translatable="yes">Border Color</property>
+                            <property name="use_alpha">True</property>
+                            <property name="title" translatable="yes">Border Color</property>
+                            <property name="color">#000000000000</property>
+                          </object>
+                          <packing>
+                            <property name="padding">10</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="position">2</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkHBox" id="hbox1">
+                        <property name="visible">True</property>
+                        <child>
+                          <object class="GtkRadioButton" id="labelBothRadiobutton">
+                            <property name="label" translatable="yes">Display Speed Text</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">False</property>
+                            <property name="tooltip_text" translatable="yes">Display upload and download text representation of speed</property>
+                            <property name="draw_indicator">True</property>
+                          </object>
+                          <packing>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkRadioButton" id="labelSumRadiobutton">
+                            <property name="label" translatable="yes">Sum</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">False</property>
+                            <property name="tooltip_text" translatable="yes">Display the sum of upload and download</property>
+                            <property name="draw_indicator">True</property>
+                            <property name="group">labelBothRadiobutton</property>
+                          </object>
+                          <packing>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkRadioButton" id="labelNoneRadiobutton">
+                            <property name="label" translatable="yes">Graph Only</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">False</property>
+                            <property name="tooltip_text" translatable="yes">Do not display the speed as text, only draw the graph</property>
+                            <property name="draw_indicator">True</property>
+                            <property name="group">labelBothRadiobutton</property>
+                          </object>
+                          <packing>
+                            <property name="position">2</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="position">3</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkCheckButton" id="graphZerotoggle">
+                        <property name="label" translatable="yes">Draw 0 bps in graphs</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">False</property>
+                        <property name="tooltip_text" translatable="yes">If enabled, this will draw a line at the bottom of the graph even if the value is 0. If unchecked, values below 1 are not drawn in the graph.</property>
+                        <property name="active">True</property>
+                        <property name="draw_indicator">True</property>
+                      </object>
+                      <packing>
+                        <property name="position">4</property>
+                      </packing>
                     </child>
                     <child>
                       <object class="GtkHBox" id="hbox6">
                         <property name="visible">True</property>
+                        <property name="tooltip_text" translatable="yes">Sets the minimum threshold for scaling to not show large spikes for small amounts of traffic. e.g.: Setting to 32.0 KBps will cause the graph to only draw if throughput exceeds 32.0 KBps</property>
                         <property name="spacing">12</property>
                         <child>
                           <object class="GtkLabel" id="label-scale-threshold">
@@ -78,7 +219,6 @@
                                 <property name="numeric">True</property>
                               </object>
                               <packing>
-                                <property name="expand">False</property>
                                 <property name="position">0</property>
                               </packing>
                             </child>
@@ -88,7 +228,6 @@
                                 <property name="label" translatable="yes">KBps</property>
                               </object>
                               <packing>
-                                <property name="expand">False</property>
                                 <property name="position">1</property>
                               </packing>
                             </child>
@@ -100,7 +239,7 @@
                       </object>
                       <packing>
                         <property name="padding">6</property>
-                        <property name="position">2</property>
+                        <property name="position">5</property>
                       </packing>
                     </child>
                   </object>

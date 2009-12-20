@@ -1,3 +1,20 @@
+12/19/2009:
+    Added preferences to control -
+        Enable/Disable drawing of the background
+        Enable/Disable drawing of the border
+        Select color/opacity of background
+        Select color/opacity of border
+        Options to control the text representation of throughput
+            Display Upload/Download text
+            Display Sum text only
+            Do not display text - only draw the graph.
+        Enable/Disable drawing the zero value in the graph (if true, draw a line at the bottom of the graph for zero value)
+
+12/18/2009:
+    Cleaned up code to make it run faster or use less resources
+    Removed everything related to the status of interfaces (Not required, may add later)
+    Removed everything related to IP Addresses for interfaces (Not required, may add later)
+
 12/16/2009:
     Added call to applet.errors.general if read access to /proc/net/dev fails.
     Made changes to TODO file

@@ -45,6 +45,32 @@ class preferences:
         else:
             thresholdLabel.set_text("Kbps")
         uomCheckbutton.connect('toggled', self.parent.change_unit, scaleThresholdSpinbutton, thresholdLabel)
+        graphZerotoggle = prefs_ui.get_object('graphZerotoggle')
+        graphZerotoggle_value = True if not self.parent.graph_zero else False
+        graphZerotoggle.set_property('active', graphZerotoggle_value)
+        graphZerotoggle.connect('toggled', self.graphZeroToggle_cb)
+        bgCheckbutton = prefs_ui.get_object('bgCheckbutton')
+        bgCheckbutton.set_active(self.applet.settings["background"])
+        bgCheckbutton.connect('toggled', self.bgCheckbutton_cb)
+        bgColorbutton = prefs_ui.get_object('bgColorbutton')
+        bgColor, bgAlpha = self.applet.settings["background_color"].split("|")
+        bgColorbutton.set_color(gtk.gdk.Color(bgColor))
+        bgColorbutton.set_alpha(int(float(bgAlpha)*65535.0))
+        bgColorbutton.connect('color-set', self.backgroundColorbutton_color_set_cb)
+        borderCheckbutton = prefs_ui.get_object('borderCheckbutton')
+        borderCheckbutton.set_active(self.applet.settings["border"])
+        borderCheckbutton.connect('toggled', self.borderCheckbutton_cb)
+        borderColorbutton = prefs_ui.get_object('borderColorbutton')
+        borderColor, borderAlpha = self.applet.settings["border_color"].split("|")
+        borderColorbutton.set_color(gtk.gdk.Color(borderColor))
+        borderColorbutton.set_alpha(int(float(borderAlpha)*65535.0))
+        borderColorbutton.connect('color-set', self.borderColorbutton_color_set_cb)
+        labelNoneRadiobutton = prefs_ui.get_object('labelNoneRadiobutton')
+        labelSumRadiobutton = prefs_ui.get_object('labelSumRadiobutton')
+        labelBothRadiobutton = prefs_ui.get_object('labelBothRadiobutton')
+        labelNoneRadiobutton.connect('toggled', self.labelRadio_cb, 0)
+        labelSumRadiobutton.connect('toggled', self.labelRadio_cb, 1)
+        labelBothRadiobutton.connect('toggled', self.labelRadio_cb, 2)
         for device in sorted(self.parent.device_usage.interfaces):
             if not "Multi Interface" in device and not "Sum Interface" in device:
                 if self.parent.device_usage.interfaces[device]['include_in_sum'] == True:
@@ -58,6 +84,15 @@ class preferences:
                 current_iter = store.append([device, include_in_sum, include_in_multi, '', '', '#f00', '#ff0'])
         prefs_ui.get_object("scrolledwindow1").add_with_viewport(cell_box)
         prefs_ui.get_object("dialog-notebook").reparent(preferences_vbox)
+
+    def graphZeroToggle_cb(self, widget):
+        self.parent.graph_zero = 0 if widget.get_active() else 1
+        self.applet.settings['graph_zero'] = self.parent.graph_zero
+
+    def labelRadio_cb(self, widget, setting):
+        if widget.get_active():
+            self.applet.settings["label_control"] = setting
+            self.parent.label_control = setting
 
     def create_treeview(self):
         cell_box = gtk.HBox()
@@ -134,6 +169,26 @@ class preferences:
         device = self.liststore.get_value(iter, 0)
         column_title = column.get_title().lower().split(" ")[0]
         cell.set_property("cell-background", self.get_color(device, column_title))
+
+    def bgCheckbutton_cb(self, widget):
+        self.applet.settings['background'] = widget.get_active()
+        self.parent.background = widget.get_active()
+
+    def borderCheckbutton_cb(self, widget):
+        self.applet.settings['border'] = widget.get_active()
+        self.parent.border = widget.get_active()
+
+    def backgroundColorbutton_color_set_cb(self, widget):
+        color = widget.get_color()
+        alpha = float("%2.1f" % (widget.get_alpha() / 65535.0))
+        self.applet.settings["background_color"] = "%s|%s" % (color, alpha)
+        self.parent.background_color = "%s|%s" % (color, alpha)
+
+    def borderColorbutton_color_set_cb(self, widget):
+        color = widget.get_color()
+        alpha = float("%2.1f" % (widget.get_alpha() / 65535.0))
+        self.applet.settings["border_color"] = "%s|%s" % (color, alpha)
+        self.parent.border_color = "%s|%s" % (color, alpha)
 
     def get_color(self, device, column_name):
         if column_name == "upload":

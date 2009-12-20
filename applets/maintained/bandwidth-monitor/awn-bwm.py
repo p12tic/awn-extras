@@ -335,7 +335,7 @@ class AppletBandwidthMonitor:
         else:
             ct.set_source_rgba(0.1, 0.1, 0.1, 0.5)
         ''' Set the initial position and iter to 0 '''
-        x_pos = 0
+        x_pos = 2 if self.border else 0
         cnt = 0
         ''' If a transmit history exists, draw it '''
         if interface in self.device_usage.interfaces and len(self.device_usage.interfaces[interface]["tx_history"]):
@@ -355,7 +355,7 @@ class AppletBandwidthMonitor:
         else:
             ct.set_source_rgba(0.1, 0.1, 0.1, 0.5)
         ''' Reset the position and iter to 0 '''
-        x_pos = 0
+        x_pos = 2 if self.border else 0
         cnt = 0
         ''' If a receive history exists, draw it '''
         if interface in self.device_usage.interfaces and len(self.device_usage.interfaces[interface]["rx_history"]):
@@ -376,7 +376,8 @@ class AppletBandwidthMonitor:
         speed = 64
         ratio = 1 if ratio < 1 else ratio
         pos = (speed - 20) / float(self.applet.get_size())
-        return (self.applet.get_size() - pos * (value / int(ratio))) + self.graph_zero
+        bottom = 2.5 if self.border else 0
+        return (self.applet.get_size() - pos * (value / int(ratio))) + self.graph_zero - bottom
 
     def repaint(self):
         width = self.applet.get_size() * 1.5
@@ -386,12 +387,9 @@ class AppletBandwidthMonitor:
         ct.set_line_width(2)
         if self.background:
             bgColor, alpha = self.applet.settings["background_color"].split("|")
-            if not bgColor or not bgColor[0] == "#":
-                bgColor = "#000000"
-                bgColor = "0.5"
             bgColor = gtk.gdk.Color(bgColor)
             ct.set_source_rgba(bgColor.red_float, bgColor.green_float, bgColor.blue_float, float(alpha))
-            self.draw_background(ct, 0, 0, width, self.applet.get_size(), 12)
+            self.draw_background(ct, 0, 0, width, self.applet.get_size(), 10)
             ct.fill()
         if self.interface == "Multi Interface":
             tmp_history = [1]
@@ -430,12 +428,9 @@ class AppletBandwidthMonitor:
             line_width = 2
             ct.set_line_width(line_width)
             borderColor, alpha = self.applet.settings["border_color"].split("|")
-            if not borderColor or not borderColor[0] == "#":
-                borderColor = "#000000"
-                borderAlpha = "1.0"
             borderColor = gtk.gdk.Color(borderColor)
             ct.set_source_rgba(borderColor.red_float, borderColor.green_float, borderColor.blue_float, float(alpha))
-            self.draw_background(ct, line_width/2, line_width/2, width - line_width/2, self.applet.get_size() - line_width/2, 12)
+            self.draw_background(ct, line_width/2, line_width/2, width - line_width/2, self.applet.get_size() - line_width/2, 4)
             ct.stroke()
         self.applet.set_icon_context(ct)
         if self.applet.dialog.is_visible("main"):

@@ -20,7 +20,7 @@ default = true
 description = Draw the applet background
 [DEFAULT/background_color]
 type = string
-default = "#000000|0.5"
+default = #000000|0.5
 description = Color to draw the background
 [DEFAULT/border]
 type = boolean
@@ -28,7 +28,7 @@ default = true
 description = Draw the applet border
 [DEFAULT/border_color]
 type = string
-default = "#000000|1.0"
+default = #000000|1.0
 description = Color to draw the border
 [DEFAULT/label_control]
 type = integer

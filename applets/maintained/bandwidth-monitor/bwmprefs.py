@@ -67,7 +67,7 @@ class preferences:
         borderColor, borderAlpha = self.applet.settings["border_color"].split("|")
         if not borderColor or not borderColor[0] == "#":
             borderColor = "#000000"
-            borderAlpha = "0.5"
+            borderAlpha = "1.0"
         borderColorbutton.set_color(gtk.gdk.Color(borderColor))
         borderColorbutton.set_alpha(int(float(borderAlpha)*65535.0))
         borderColorbutton.connect('color-set', self.borderColorbutton_color_set_cb)

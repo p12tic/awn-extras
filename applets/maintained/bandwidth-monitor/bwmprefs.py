@@ -54,6 +54,9 @@ class preferences:
         bgCheckbutton.connect('toggled', self.bgCheckbutton_cb)
         bgColorbutton = prefs_ui.get_object('bgColorbutton')
         bgColor, bgAlpha = self.applet.settings["background_color"].split("|")
+        if not bgColor or not bgColor[0] == "#":
+            bgColor = "#000000"
+            bgAlpha = "0.5"
         bgColorbutton.set_color(gtk.gdk.Color(bgColor))
         bgColorbutton.set_alpha(int(float(bgAlpha)*65535.0))
         bgColorbutton.connect('color-set', self.backgroundColorbutton_color_set_cb)
@@ -62,6 +65,9 @@ class preferences:
         borderCheckbutton.connect('toggled', self.borderCheckbutton_cb)
         borderColorbutton = prefs_ui.get_object('borderColorbutton')
         borderColor, borderAlpha = self.applet.settings["border_color"].split("|")
+        if not borderColor or not borderColor[0] == "#":
+            borderColor = "#000000"
+            borderAlpha = "0.5"
         borderColorbutton.set_color(gtk.gdk.Color(borderColor))
         borderColorbutton.set_alpha(int(float(borderAlpha)*65535.0))
         borderColorbutton.connect('color-set', self.borderColorbutton_color_set_cb)

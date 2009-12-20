@@ -81,7 +81,7 @@ class preferences:
                     include_in_multi = 1
                 else:
                     include_in_multi = 0
-                current_iter = store.append([device, include_in_sum, include_in_multi, '', '', '#f00', '#ff0'])
+                current_iter = store.append([device, include_in_sum, include_in_multi, '', '', '#ff0000', '#ffff00'])
         prefs_ui.get_object("scrolledwindow1").add_with_viewport(cell_box)
         prefs_ui.get_object("dialog-notebook").reparent(preferences_vbox)
 
@@ -193,10 +193,10 @@ class preferences:
     def get_color(self, device, column_name):
         if column_name == "upload":
             i = 3
-            color = "#f00"
+            color = "#ff0000"
         else:
             i = 4
-            color = "#ff0"
+            color = "#ffff00"
         prefs = self.applet.settings["device_display_parameters"]
         for device_pref in prefs:
             device_pref_values = device_pref.split("|")

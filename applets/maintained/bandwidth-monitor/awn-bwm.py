@@ -45,15 +45,14 @@ APPLET_DESCRIPTION = "Network Bandwidth monitor"
 APPLET_WEBSITE = "http://www.curetheitch.com/projects/awn-bwm/"
 APPLET_PATH = os.path.dirname(sys.argv[0])
 APPLET_ICON = APPLET_PATH + "/images/icon.png"
-#UI_FILE = os.path.join(os.path.dirname(__file__), "bandwidth-monitor.ui")
-UI_FILE = "/usr/share/avant-window-navigator/applets/bandwidth-monitor/bandwidth-monitor.ui"
+UI_FILE = os.path.join(os.path.dirname(__file__), "bandwidth-monitor.ui")
 
 class DeviceUsage:
 
     def __init__(self, parent, unit):
         self.parent = parent
         self.interfaces = {}
-        self.interfaces["Sum Interface"] = {"collection_time": 0, "status": "V", "prbytes": 0, "ptbytes": 0, "index": 1, "rx_history": [0, 0], "tx_history": [0, 0], "rx_bytes": 0, "tx_bytes": 0, "rx_sum": 0, "tx_sum": 0, "rxtx_sum": 0, "rabytes": 0, "tabytes": 0, 'include_in_sum': False, 'include_in_multi': False, 'upload_color': "#f00", 'download_color': "#ff0"}
+        self.interfaces["Sum Interface"] = {"collection_time": 0, "status": "V", "prbytes": 0, "ptbytes": 0, "index": 1, "rx_history": [0, 0], "tx_history": [0, 0], "rx_bytes": 0, "tx_bytes": 0, "rx_sum": 0, "tx_sum": 0, "rxtx_sum": 0, "rabytes": 0, "tabytes": 0, 'include_in_sum': False, 'include_in_multi': False, 'upload_color': "#ff0000", 'download_color': "#ffff00"}
         self.interfaces["Multi Interface"] = {"collection_time": 0, "status": "V", "prbytes": 0, "ptbytes": 0, "index": 1, "rx_history": [0, 0], "tx_history": [0, 0], "rx_bytes": 0, "tx_bytes": 0, "rx_sum": 0, "tx_sum": 0, "rxtx_sum": 0, "rabytes": 0, "tabytes": 0, 'include_in_sum': False, 'include_in_multi': False}
         self.regenerate = False
         self.update_net_stats()
@@ -176,7 +175,7 @@ class AppletBandwidthMonitor:
         button = gtk.Button("Change Unit")
         button.connect("clicked", self.change_unit)
         self.dialog.add(button)
-        defaults = {'unit': 8, 'interface': 'wlan0', 'draw_threshold': 0.0, 'device_display_parameters': [], 'background': True, 'background_color': "#000|0.5", 'border': False, 'border_color': "#000|1.0", 'label_control': 2, 'graph_zero': 0}
+        defaults = {'unit': 8, 'interface': 'wlan0', 'draw_threshold': 0.0, 'device_display_parameters': [], 'background': True, 'background_color': "#000000|0.5", 'border': False, 'border_color': "#000000|1.0", 'label_control': 2, 'graph_zero': 0}
         self.applet.settings.load(defaults)
         self.interface = self.applet.settings['interface']
         self.unit = self.applet.settings['unit']
@@ -330,8 +329,11 @@ class AppletBandwidthMonitor:
         highest_value = tmp_total_history[-1]
         ratio = highest_value / 28 if highest_value > self.ratio else self.ratio
         ''' Change the color of the upload line to the configured or default '''
-        color = gtk.gdk.Color(self.device_usage.interfaces[interface]['upload_color'])
-        ct.set_source_rgba(color.red_float, color.green_float, color.blue_float, 1.0)
+        if interface:
+            color = gtk.gdk.Color(self.device_usage.interfaces[interface]['upload_color'])
+            ct.set_source_rgba(color.red_float, color.green_float, color.blue_float, 1.0)
+        else:
+            ct.set_source_rgba(0.1, 0.1, 0.1, 0.5)
         ''' Set the initial position and iter to 0 '''
         x_pos = 0
         cnt = 0
@@ -347,8 +349,11 @@ class AppletBandwidthMonitor:
             ct.close_path()
             ct.stroke()
         ''' Change the color of the download line to the configured or default '''
-        color = gtk.gdk.Color(self.device_usage.interfaces[interface]['download_color'])
-        ct.set_source_rgba(color.red_float, color.green_float, color.blue_float, 1.0)
+        if interface:
+            color = gtk.gdk.Color(self.device_usage.interfaces[interface]['download_color'])
+            ct.set_source_rgba(color.red_float, color.green_float, color.blue_float, 1.0)
+        else:
+            ct.set_source_rgba(0.1, 0.1, 0.1, 0.5)
         ''' Reset the position and iter to 0 '''
         x_pos = 0
         cnt = 0
@@ -364,11 +369,12 @@ class AppletBandwidthMonitor:
             ct.close_path()
             ct.stroke()
 
-    def chart_coords(self, value, ratio=0):
+    def chart_coords(self, value, ratio=1):
         ''' Speed varable will eventually become link speed if specified/detected for non-scaling graphs, and the 
         "top" value for the normalized non-scaling meter. (100 would draw the highest line at the top of the meter,
         64 would draw just above middle. '''
         speed = 64
+        ratio = 1 if ratio < 1 else ratio
         pos = (speed - 20) / float(self.applet.get_size())
         return (self.applet.get_size() - pos * (value / int(ratio))) + self.graph_zero
 
@@ -485,7 +491,7 @@ def sort_dictionary_keys(dict):
 
 if __name__ == "__main__":
     awnlib.init_start(AppletBandwidthMonitor, {"name": APPLET_NAME,
-        "short": "bwm",
+        "short": "bandwidth-monitor",
         "version": APPLET_VERSION,
         "description": APPLET_DESCRIPTION,
         "logo": APPLET_ICON,

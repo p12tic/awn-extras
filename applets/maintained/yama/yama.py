@@ -30,6 +30,8 @@ from awn.extras import awnlib, __version__
 
 try:
     import dbus
+    from dbus.mainloop.glib import DBusGMainLoop
+    DBusGMainLoop(set_as_default=True)
 except ImportError:
     dbus = None
 
@@ -80,6 +82,17 @@ class YamaApplet:
         self.icon_theme = gtk.icon_theme_get_default()
         self.icon_theme.connect("changed", self.theme_changed_cb)
 
+        if dbus is not None:
+            self.session_bus = dbus.SessionBus()
+            dbus_proxy = self.session_bus.get_object("org.freedesktop.DBus", "/org/freedesktop/DBus")
+            def name_owner_changed_cb(name, old_address, new_address):
+                if name in ("org.gnome.ScreenSaver", "org.gnome.SessionManager"):
+                    with self.__rebuild_lock:
+                        self.append_session_actions(self.menu)
+                        # Refresh menu to re-initialize the widget
+                        self.menu.show_all()
+            dbus_proxy.connect_to_signal("NameOwnerChanged", name_owner_changed_cb)
+
         with self.__rebuild_lock:
             self.build_menu()
 
@@ -100,6 +113,7 @@ class YamaApplet:
     def build_menu(self):
         self.applications_items = []
         self.settings_items = []
+        self.session_items = []
 
         """ Applications """
         tree = gmenu.lookup_tree("applications.menu")
@@ -123,37 +137,43 @@ class YamaApplet:
         self.menu.show_all()
 
     def append_session_actions(self, menu):
-        session_bus = dbus.SessionBus()
+        for i in xrange(len(self.session_items)):
+            self.session_items.pop().destroy()
 
-        dbus_services = session_bus.list_names()
+        dbus_services = self.session_bus.list_names()
         can_lock_screen = "org.gnome.ScreenSaver" in dbus_services
         can_manage_session = "org.gnome.SessionManager" in dbus_services
 
         if can_lock_screen or can_manage_session:
-            menu.append(gtk.SeparatorMenuItem())
+            separator = gtk.SeparatorMenuItem()
+            self.session_items.append(separator)
+            menu.append(separator)
 
         if can_lock_screen:
             lock_item = self.append_menu_item(menu, "Lock Screen", "system-lock-screen", "Protect your computer from unauthorized use")
             def lock_screen_cb(widget):
                 try:
-                    ss_proxy = session_bus.get_object("org.gnome.ScreenSaver", "/")
+                    ss_proxy = self.session_bus.get_object("org.gnome.ScreenSaver", "/")
                     dbus.Interface(ss_proxy, "org.gnome.ScreenSaver").Lock()
                 except dbus.DBusException, e:
                     # NoReply exception may occur even while the screensaver did lock the screen
                     if e.get_dbus_name() != "org.freedesktop.DBus.Error.NoReply":
                         raise
             lock_item.connect("activate", lock_screen_cb)
+            self.session_items.append(lock_item)
 
         if can_manage_session:
-            sm_proxy = session_bus.get_object("org.gnome.SessionManager", "/org/gnome/SessionManager")
+            sm_proxy = self.session_bus.get_object("org.gnome.SessionManager", "/org/gnome/SessionManager")
             sm_if = dbus.Interface(sm_proxy, "org.gnome.SessionManager")
 
             user_name = commands.getoutput("whoami")
             logout_item = self.append_menu_item(menu, "Log Out %s..." % user_name, "system-log-out", "Log out %s of this session to log in as a different user" % user_name)
             logout_item.connect("activate", lambda w: sm_if.Logout(0))
+            self.session_items.append(logout_item)
 
             shutdown_item = self.append_menu_item(menu, "Shut Down...", "system-shutdown", "Shut down the system")
             shutdown_item.connect("activate", lambda w: sm_if.Shutdown())
+            self.session_items.append(shutdown_item)
 
     def clicked_cb(self, widget):
         def get_position(menu):

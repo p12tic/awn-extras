@@ -29,6 +29,7 @@ pygtk.require("2.0")
 import gtk
 
 from awn.extras import _, awnlib, __version__
+from awn.extras.threadqueue import ThreadQueue, async_method
 from awn import OverlayText
 
 import cairo
@@ -78,6 +79,8 @@ class WeatherApplet:
         self.map_vbox = None
         self.image_map = None
 
+        self.network_handler = self.NetworkHandler()
+
         self.setup_context_menu()
 
         self.forecaster = forecast.Forecast(self)
@@ -93,6 +96,14 @@ class WeatherApplet:
         # Set up the timer which will refresh the conditions, forecast, and weather map
         applet.timing.register(self.activate_refresh_cb, update_interval * 60)
         applet.timing.delay(self.activate_refresh_cb, 1.0)
+
+    def network_error_cb(self, e, tb):
+        if type(e) is self.NetworkHandler.NetworkException:
+            print "Error in Weather:", e
+        else:
+            self.applet.errors.set_error_icon_and_click_to_restart()
+            self.applet.errors.general(e, traceback=tb, callback=gtk.main_quit)
+            #"No traceback available (error occurred in asynchronous method)"
 
     def setup_context_menu(self):
         """Add "refresh" to the context menu and setup the preferences.
@@ -241,28 +252,13 @@ class WeatherApplet:
             self.init_search_window()
             self.search_list.append([_("Searching..."), None])
 
-            url = "http://xoap.weather.com/search/search?where=" + urllib2.quote(text)
-            try:
-                usock = urllib2.urlopen(url)
-            except:
-                print "Weather Applet: Unexpected error while fetching locations"
-            else:
-                xmldoc = minidom.parse(usock)
-                usock.close()
-
+            def cb(locations):
                 self.search_list.clear()
-
-                locations = xmldoc.getElementsByTagName("loc")
-                if len(locations) > 0:
+                if locations[0][0] != "No records found":
                     self.treeview.set_sensitive(True)
-                    for loc in locations:
-                        city = loc.childNodes[0].data
-                        code = loc.getAttribute("id")
-                        self.search_list.append([city, code])
-                else:
-                    self.search_list.append([_("No records found"), None])
-
-                xmldoc.unlink()
+                for i in locations:
+                    self.search_list.append(i)
+            self.network_handler.get_locations(text, callback=cb, error=self.network_error_cb)
 
     def ok_button_clicked_cb(self, widget=None):
         (model, iter) = self.treeview.get_selection().get_selected()
@@ -295,9 +291,6 @@ class WeatherApplet:
             self.applet.theme.theme(theme)
         glib.idle_add(refresh_theme)
 
-    def getAttributes(self):
-        return self.settings['location_code'], self.settings['temperature-unit'], self.cachedConditions
-
     def set_icon(self, hint="twc"):
         def refresh_overlay():
             state = self.get_icon_name(hint, self.settings["theme"])
@@ -309,36 +302,31 @@ class WeatherApplet:
                 self.__temp_overlay.props.active = bool(self.settings["show-temperature-icon"])
         glib.idle_add(refresh_overlay)
 
-    def refresh_conditions(self):
+    def refresh_conditions(self, retries=3):
         """Download the current weather conditions. If this fails, or the
         conditions are unchanged, don't do anything. Refresh the applet's
         title and icon if the conditions have changed.
 
         """
-        url = 'http://xoap.weather.com/weather/local/' + self.settings['location_code'] + '?cc=*&prod=xoap&par=1048871467&key=12daac2f3a67cb39&link=xoap'
-        try:
-            usock = urllib2.urlopen(url)
-        except:
-            print "Weather Applet: Unexpected error while fetching conditions"
-        else:
-            xmldoc = minidom.parse(usock)
-            usock.close()
-
-            names=['CITY', 'SUNRISE', 'SUNSET', 'DESCRIPTION', 'CODE', 'TEMP', 'FEELSLIKE', 'BAR', 'BARDESC', 'WINDSPEED', 'WINDGUST', 'WINDDIR', 'HUMIDITY', 'MOONPHASE']
-            paths=['weather/loc/dnam', 'sunr', 'suns', 'cc/t', 'cc/icon', 'cc/tmp', 'cc/flik', 'cc/bar/r', 'cc/bar/d', 'cc/wind/s', 'cc/wind/gust', 'cc/wind/d', 'cc/hmid', 'cc/moon/t']
-            conditions = self.dictFromXML(xmldoc, names, paths)
-            xmldoc.unlink()
-
+        def cb(conditions):
             if conditions != self.cachedConditions:
                 self.cachedConditions = conditions
                 self.refresh_icon()
-            return conditions
+        def error_cb(e, tb):
+            if type(e) is self.NetworkHandler.NetworkException and retries > 0:
+                print "Warning in Weather:", e
+                delay_seconds = 10.0
+                print "Reattempt (%d retries remaining) in %d seconds" % (retries, delay_seconds)
+                self.applet.timing.delay(lambda: self.refresh_conditions(retries - 1), delay_seconds)
+            else:
+                self.network_error_cb(e, tb)
+        self.network_handler.get_conditions(self.settings['location_code'], callback=cb, error=error_cb)
 
     def refresh_icon(self, dummy_value=None):
         unit = self.get_temperature_unit()
         temp = self.convert_temperature(self.cachedConditions['TEMP'])
         title = "%s: %s, %s" % (self.cachedConditions['CITY'], _(self.cachedConditions['DESCRIPTION']), temp + u" \u00B0" + unit)
-        #display the "Feels Like" temperature in parens, if it is different from the actual temperature
+        # display the "Feels Like" temperature in parens, if it is different from the actual temperature
         if self.cachedConditions['TEMP'] != self.cachedConditions['FEELSLIKE']:
             feels_like = self.convert_temperature(self.cachedConditions['FEELSLIKE'])
             title += " (%s)" % (feels_like + u" \u00B0" + unit)
@@ -346,42 +334,37 @@ class WeatherApplet:
         self.applet.tooltip.set(title)
         self.set_icon(self.cachedConditions["CODE"])
 
-    def dictFromXML(self, rootNode, keys, paths):
-        """Given an XML node, iterate over keys and paths, grabbing the
-        value from each path and putting it into the dictionary as the
-        given key.
+    def fetch_forecast(self, cb, retries=3):
+        """Use weather.com's XML service to download the latest 5-day
+        forecast.
 
         """
-        returnDict = {}
-        for key, path in zip(keys, paths):
-            items = path.split('/')
-            cnode = rootNode
-            for item in items:
-                cnode = cnode.getElementsByTagName(item)[0]
-            returnDict[key] = ''.join([node.data for node in cnode.childNodes if node.nodeType == node.TEXT_NODE])
-        return returnDict
+        def error_cb(e, tb):
+            if type(e) is self.NetworkHandler.NetworkException and retries > 0:
+                print "Warning in Weather:", e
+                delay_seconds = 10.0
+                print "Reattempt (%d retries remaining) in %d seconds" % (retries, delay_seconds)
+                self.applet.timing.delay(lambda: self.fetch_forecast(cb, retries - 1), delay_seconds)
+            else:
+                self.network_error_cb(e, tb)
+        self.network_handler.get_forecast(self.settings['location_code'], callback=cb, error=error_cb)
 
-    def onRefreshMap(self):
+    def onRefreshMap(self, retries=3):
         """Download the latest weather map from weather.com, storing it
         as a pixbuf, and create a dialog with the new map.
 
         """
-        try:
-            page = urllib2.urlopen('http://www.weather.com/outlook/travel/businesstraveler/map/' + self.settings['location_code']).read()
-        except:
-            print "Weather Applet: Unable to download weather map"
-        else:
-            mapExp = """<IMG NAME="mapImg" SRC="([^\"]+)" WIDTH=([0-9]+) HEIGHT=([0-9]+) BORDER"""
-            result = re.findall(mapExp, page)
-            if result and len(result) == 1:
-                imgSrc, width, height = result[0]
-                rawImg = urllib2.urlopen(imgSrc)
-                pixbufLoader = gtk.gdk.PixbufLoader()
-                pixbufLoader.write(rawImg.read())
-                mapPixBuf = pixbufLoader.get_pixbuf()
-                pixbufLoader.close()
-
-                self.createMapDialog(mapPixBuf)
+        def cb(pixbuf):
+            self.createMapDialog(pixbuf)
+        def error_cb(e, tb):
+            if type(e) is self.NetworkHandler.NetworkException and retries > 0:
+                print "Warning in Weather:", e
+                delay_seconds = 10.0
+                print "Reattempt (%d retries remaining) in %d seconds" % (retries, delay_seconds)
+                self.applet.timing.delay(lambda: self.onRefreshMap(retries - 1), delay_seconds)
+            else:
+                self.network_error_cb(e, tb)
+        self.network_handler.get_weather_map(self.settings['location_code'], callback=cb, error=error_cb)
 
     def createMapDialog(self, pixbuf):
         """Create a map dialog from the current already-downloaded map
@@ -454,6 +437,130 @@ class WeatherApplet:
             return "weather-clear-night"
         elif hint in (27, 29):
             return "weather-few-clouds-night"
+
+    class NetworkHandler(ThreadQueue):
+
+        __ws_key = "&prod=xoap&par=1048871467&key=12daac2f3a67cb39&link=xoap"
+
+        class NetworkException(Exception):
+            pass
+
+        @async_method
+        def get_locations(self, text):
+            url = "http://xoap.weather.com/search/search?where=" + urllib2.quote(text)
+            try:
+                usock = urllib2.urlopen(url)
+            except Exception, e:
+                raise self.NetworkException("Unexpected error while fetching locations: %s" % e)
+            else:
+                xmldoc = minidom.parse(usock)
+                usock.close()
+
+                locations_list = []
+                try:
+                    locations = xmldoc.getElementsByTagName("loc")
+                    if len(locations) > 0:
+                        for i in locations:
+                            city = i.childNodes[0].data
+                            code = i.getAttribute("id")
+                            locations_list.append([city, code])
+                    else:
+                        locations_list.append([_("No records found"), None])
+                finally:
+                    xmldoc.unlink()
+
+                return locations_list
+
+        def dictFromXML(self, rootNode, keys, paths):
+            """Given an XML node, iterate over keys and paths, grabbing the
+            value from each path and putting it into the dictionary as the
+            given key.
+
+            """
+            returnDict = {}
+            for key, path in zip(keys, paths):
+                items = path.split('/')
+                cnode = rootNode
+                for item in items:
+                    cnode = cnode.getElementsByTagName(item)[0]
+                returnDict[key] = ''.join([node.data for node in cnode.childNodes if node.nodeType == node.TEXT_NODE])
+            return returnDict
+
+        @async_method
+        def get_conditions(self, location_code):
+            url = 'http://xoap.weather.com/weather/local/' + location_code + '?cc=*' + self.__ws_key
+            try:
+                usock = urllib2.urlopen(url)
+            except Exception, e:
+                raise self.NetworkException("Unexpected error while fetching conditions: %s" % e)
+            else:
+                try:
+                    xmldoc = minidom.parse(usock)
+                    try:
+                        names = ['CITY', 'SUNRISE', 'SUNSET', 'DESCRIPTION', 'CODE', 'TEMP', 'FEELSLIKE', 'BAR', 'BARDESC', 'WINDSPEED', 'WINDGUST', 'WINDDIR', 'HUMIDITY', 'MOONPHASE']
+                        paths = ['weather/loc/dnam', 'sunr', 'suns', 'cc/t', 'cc/icon', 'cc/tmp', 'cc/flik', 'cc/bar/r', 'cc/bar/d', 'cc/wind/s', 'cc/wind/gust', 'cc/wind/d', 'cc/hmid', 'cc/moon/t']
+                        try:
+                            return self.dictFromXML(xmldoc, names, paths)
+                        except IndexError, e:
+                            raise self.NetworkException("Unexpected error while parsing conditions: %s" % e)
+                    finally:
+                        xmldoc.unlink()
+                finally:
+                    usock.close()
+
+        @async_method
+        def get_weather_map(self, location_code):
+            try:
+                usock = urllib2.urlopen('http://www.weather.com/outlook/travel/businesstraveler/map/' + location_code)
+            except Exception, e:
+                raise self.NetworkException("Unexpected error while downloading weather map: %s" % e)
+            else:
+                try:
+                    mapExp = """<IMG NAME="mapImg" SRC="([^\"]+)" WIDTH=([0-9]+) HEIGHT=([0-9]+) BORDER"""
+                    result = re.findall(mapExp, usock.read())
+                    if not result or len(result) != 1:
+                        raise self.NetworkException("Unexpected error while parsing weather map")
+    
+                    raw_image = urllib2.urlopen(result[0][0])
+                    loader = gtk.gdk.PixbufLoader()
+                    try:
+                        loader.write(raw_image.read())
+                        return loader.get_pixbuf()
+                    finally:
+                        loader.close()
+                finally:
+                    usock.close()
+
+        @async_method
+        def get_forecast(self, location_code):
+            url = 'http://xoap.weather.com/weather/local/' + location_code + '?dayf=5' + self.__ws_key
+
+            try:
+                usock = urllib2.urlopen(url)
+            except Exception, e:
+                raise self.NetworkException("Unexpected error while fetching forecast: %s" % e)
+            else:
+                try:
+                    xmldoc = minidom.parse(usock)
+                    try:
+                        forecast = {'DAYS': []} #, 'CITY': cachedConditions['CITY']}
+                        cityNode = xmldoc.getElementsByTagName('loc')[0].getElementsByTagName('dnam')[0]
+                        forecast['CITY'] = ''.join([node.data for node in cityNode.childNodes if node.nodeType == node.TEXT_NODE])
+
+                        dayNodes = xmldoc.getElementsByTagName('dayf')[0].getElementsByTagName('day')
+                        for dayNode in dayNodes:
+                            names = ['HIGH', 'LOW', 'CODE', 'DESCRIPTION', 'PRECIP', 'HUMIDITY', 'WSPEED', 'WDIR', 'WGUST']
+                            paths = ['hi', 'low', 'part/icon', 'part/t', 'part/ppcp', 'part/hmid', 'part/wind/s', 'part/wind/t', 'part/wind/gust']
+                            day = self.dictFromXML(dayNode, names, paths)
+                            day.update({'WEEKDAY': dayNode.getAttribute('t'), 'YEARDAY': dayNode.getAttribute('dt')})
+                            forecast['DAYS'].append(day)
+                        return forecast
+                    except IndexError, e:
+                        raise self.NetworkException("Unexpected error while parsing forecast: %s" % e)
+                    finally:
+                        xmldoc.unlink()
+                finally:
+                    usock.close()
 
 
 if __name__ == "__main__":

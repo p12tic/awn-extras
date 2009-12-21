@@ -8,12 +8,12 @@ description = Show days of forecast in a transparent, curved dialog.
 
 [DEFAULT/location]
 type = string
-default = 
+default = Amsterdam, Netherlands
 description = City, and country of the weather location.
 
 [DEFAULT/location_code]
 type = string
-default = 
+default = NLXX0002
 description = Code that identifies the weather location.
 
 [DEFAULT/map_maxwidth]

@@ -38,7 +38,7 @@ class Forecast:
         self.forecastDialog = None
         self.forecastArea = None
 
-    def onRefreshForecast(self):
+    def refresh_forecast(self):
         """Download the current 5-day forecast. If this fails, or the
         forecast is unchanged, don't do anything. If we get a new forecast,
         update the cached information and create an updated dialog.
@@ -56,33 +56,37 @@ class Forecast:
         self.parent.fetch_forecast(cb)
 
     def refresh_unit(self):
-        self.forecastArea.set_forecast(self.cachedForecast)
+        if self.cachedForecast is not None:
+            self.forecastArea.set_forecast(self.cachedForecast)
 
     def setup_forecast_dialog(self):
         """Update the forecast dialog, either a placeholder if no forecast
-        data exists, or the desired dialog (curved or normal). Note that
-        this does not show the dialog, the dialog themselves handle that.
+        data exists, or the desired dialog (curved or normal).
+
+        Note that this does not show the dialog, the dialog themselves handle that.
 
         """
-        if self.forecastDialog is not None:
-            del self.forecastDialog
-        if self.forecastArea is not None:
-            del self.forecastArea
-
-        if self.parent.settings['curved_dialog']:
-            self.forecastDialog = self.CurvedDialogWrapper(self.applet)
-            self.applet.dialog.register("main", self.forecastDialog)
-            self.forecastArea = CurvedDialog(self.cachedForecast, self.parent)
-        else:
-            self.forecastDialog = self.applet.dialog.new("main")
-            self.forecastDialog.set_title("%s %s %s"%(_("Forecast"), _("for"), self.cachedForecast['CITY']))
-            self.forecastArea = NormalDialog(self.cachedForecast, self.parent)
-
-        box = gtk.VBox()
-        self.forecastArea.set_size_request(450, 160)
-        box.pack_start(self.forecastArea, False, False, 0)
-        box.show_all()
-        self.forecastDialog.add(box)
+        if self.cachedForecast is not None:
+            if self.forecastDialog is not None:
+                del self.forecastDialog
+                self.applet.dialog.unregister("main")
+            if self.forecastArea is not None:
+                del self.forecastArea
+    
+            if self.parent.settings['curved_dialog']:
+                self.forecastDialog = self.CurvedDialogWrapper(self.applet)
+                self.applet.dialog.register("main", self.forecastDialog)
+                self.forecastArea = CurvedDialog(self.cachedForecast, self.parent)
+            else:
+                self.forecastDialog = self.applet.dialog.new("main")
+                self.forecastDialog.set_title("%s %s %s"%(_("Forecast"), _("for"), self.cachedForecast['CITY']))
+                self.forecastArea = NormalDialog(self.cachedForecast, self.parent)
+    
+            box = gtk.VBox()
+            self.forecastArea.set_size_request(450, 160)
+            box.pack_start(self.forecastArea, False, False, 0)
+            box.show_all()
+            self.forecastDialog.add(box)
 
     class CurvedDialogWrapper(Dialog):
 
@@ -98,8 +102,8 @@ class Forecast:
             context.paint()
             context.set_operator(cairo.OPERATOR_OVER)
 
-            for c in self.get_children():
-                self.propagate_expose(c, event)
+            for child in self.get_children():
+                self.propagate_expose(child, event)
 
             return True
 
@@ -118,6 +122,7 @@ class NormalDialog(gtk.Image):
         self.connect("expose_event", self.expose_event_cb)
 
     def set_forecast(self, forecast):
+        assert forecast is not None
         self.forecast = forecast
         self.__cache_surface = None
 

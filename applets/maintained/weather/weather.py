@@ -78,6 +78,7 @@ class WeatherApplet:
 
         self.map_vbox = None
         self.image_map = None
+        self.map_pixbuf = None
 
         self.network_handler = self.NetworkHandler()
 
@@ -103,7 +104,6 @@ class WeatherApplet:
         else:
             self.applet.errors.set_error_icon_and_click_to_restart()
             self.applet.errors.general(e, traceback=tb, callback=gtk.main_quit)
-            #"No traceback available (error occurred in asynchronous method)"
 
     def setup_context_menu(self):
         """Add "refresh" to the context menu and setup the preferences.
@@ -135,7 +135,7 @@ class WeatherApplet:
         def refresh_curved_dialog(value):
             self.forecaster.setup_forecast_dialog()
             refresh_dialog(None)  # dummy value
-        refresh_map = lambda v: self.createMapDialog(self.map_pixbuf)
+        refresh_map = lambda v: self.set_map_pixbuf(self.map_pixbuf)
         refresh_location_label = lambda v: self.location_label.set_markup("<b>%s</b>" % v)
         refresh_location = lambda v: self.activate_refresh_cb()
 
@@ -254,10 +254,12 @@ class WeatherApplet:
 
             def cb(locations):
                 self.search_list.clear()
-                if locations[0][0] != "No records found":
+                if len(locations) > 0:
                     self.treeview.set_sensitive(True)
-                for i in locations:
-                    self.search_list.append(i)
+                    for i in locations:
+                        self.search_list.append(i)
+                else:
+                    self.search_list.append([_("No records found"), None])
             self.network_handler.get_locations(text, callback=cb, error=self.network_error_cb)
 
     def ok_button_clicked_cb(self, widget=None):
@@ -276,9 +278,9 @@ class WeatherApplet:
 
         """
         self.refresh_conditions()
-        self.forecaster.onRefreshForecast()
+        self.forecaster.refresh_forecast()
         if map:
-            self.onRefreshMap()
+            self.fetch_weather_map()
 
     def setup_theme(self):
         def refresh_theme():
@@ -323,16 +325,17 @@ class WeatherApplet:
         self.network_handler.get_conditions(self.settings['location_code'], callback=cb, error=error_cb)
 
     def refresh_icon(self, dummy_value=None):
-        unit = self.get_temperature_unit()
-        temp = self.convert_temperature(self.cachedConditions['TEMP'])
-        title = "%s: %s, %s" % (self.cachedConditions['CITY'], _(self.cachedConditions['DESCRIPTION']), temp + u" \u00B0" + unit)
-        # display the "Feels Like" temperature in parens, if it is different from the actual temperature
-        if self.cachedConditions['TEMP'] != self.cachedConditions['FEELSLIKE']:
-            feels_like = self.convert_temperature(self.cachedConditions['FEELSLIKE'])
-            title += " (%s)" % (feels_like + u" \u00B0" + unit)
-
-        self.applet.tooltip.set(title)
-        self.set_icon(self.cachedConditions["CODE"])
+        if self.cachedConditions is not None:
+            unit = self.get_temperature_unit()
+            temp = self.convert_temperature(self.cachedConditions['TEMP'])
+            title = "%s: %s, %s" % (self.cachedConditions['CITY'], _(self.cachedConditions['DESCRIPTION']), temp + u" \u00B0" + unit)
+            # display the "Feels Like" temperature in parens, if it is different from the actual temperature
+            if self.cachedConditions['TEMP'] != self.cachedConditions['FEELSLIKE']:
+                feels_like = self.convert_temperature(self.cachedConditions['FEELSLIKE'])
+                title += " (%s)" % (feels_like + u" \u00B0" + unit)
+    
+            self.applet.tooltip.set(title)
+            self.set_icon(self.cachedConditions["CODE"])
 
     def fetch_forecast(self, cb, retries=3):
         """Use weather.com's XML service to download the latest 5-day
@@ -349,29 +352,31 @@ class WeatherApplet:
                 self.network_error_cb(e, tb)
         self.network_handler.get_forecast(self.settings['location_code'], callback=cb, error=error_cb)
 
-    def onRefreshMap(self, retries=3):
+    def fetch_weather_map(self, retries=3):
         """Download the latest weather map from weather.com, storing it
         as a pixbuf, and create a dialog with the new map.
 
         """
         def cb(pixbuf):
-            self.createMapDialog(pixbuf)
+            self.set_map_pixbuf(pixbuf)
         def error_cb(e, tb):
             if type(e) is self.NetworkHandler.NetworkException and retries > 0:
                 print "Warning in Weather:", e
                 delay_seconds = 10.0
                 print "Reattempt (%d retries remaining) in %d seconds" % (retries, delay_seconds)
-                self.applet.timing.delay(lambda: self.onRefreshMap(retries - 1), delay_seconds)
+                self.applet.timing.delay(lambda: self.fetch_weather_map(retries - 1), delay_seconds)
             else:
                 self.network_error_cb(e, tb)
         self.network_handler.get_weather_map(self.settings['location_code'], callback=cb, error=error_cb)
 
-    def createMapDialog(self, pixbuf):
+    def set_map_pixbuf(self, pixbuf):
         """Create a map dialog from the current already-downloaded map
         image. Note that this does not show the dialog, it simply
         creates it. awnlib handles the rest.
 
         """
+        if pixbuf is None:
+            return
         if self.map_vbox is None:
             self.map_dialog = self.applet.dialog.new("secondary", title=self.settings['location'])
             self.map_vbox = gtk.VBox()
@@ -383,13 +388,13 @@ class WeatherApplet:
 
         self.map_pixbuf = pixbuf
 
-        mapSize = pixbuf.get_width(), pixbuf.get_height()
+        map_size = pixbuf.get_width(), pixbuf.get_height()
 
         # resize if necessary as defined by map_maxwidth
-        ratio = float(self.settings['map_maxwidth']) / mapSize[0]
+        ratio = float(self.settings['map_maxwidth']) / map_size[0]
         if ratio < 1:
-            newX, newY = [int(ratio * dim) for dim in mapSize]
-            pixbuf = pixbuf.scale_simple(newX, newY, gtk.gdk.INTERP_BILINEAR)
+            width, height = [int(ratio * dim) for dim in map_size]
+            pixbuf = pixbuf.scale_simple(width, height, gtk.gdk.INTERP_BILINEAR)
 
         self.map_vbox.add(gtk.image_new_from_pixbuf(pixbuf))
 
@@ -445,32 +450,6 @@ class WeatherApplet:
         class NetworkException(Exception):
             pass
 
-        @async_method
-        def get_locations(self, text):
-            url = "http://xoap.weather.com/search/search?where=" + urllib2.quote(text)
-            try:
-                usock = urllib2.urlopen(url)
-            except Exception, e:
-                raise self.NetworkException("Unexpected error while fetching locations: %s" % e)
-            else:
-                xmldoc = minidom.parse(usock)
-                usock.close()
-
-                locations_list = []
-                try:
-                    locations = xmldoc.getElementsByTagName("loc")
-                    if len(locations) > 0:
-                        for i in locations:
-                            city = i.childNodes[0].data
-                            code = i.getAttribute("id")
-                            locations_list.append([city, code])
-                    else:
-                        locations_list.append([_("No records found"), None])
-                finally:
-                    xmldoc.unlink()
-
-                return locations_list
-
         def dictFromXML(self, rootNode, keys, paths):
             """Given an XML node, iterate over keys and paths, grabbing the
             value from each path and putting it into the dictionary as the
@@ -485,6 +464,28 @@ class WeatherApplet:
                     cnode = cnode.getElementsByTagName(item)[0]
                 returnDict[key] = ''.join([node.data for node in cnode.childNodes if node.nodeType == node.TEXT_NODE])
             return returnDict
+
+        @async_method
+        def get_locations(self, text):
+            url = "http://xoap.weather.com/search/search?where=" + urllib2.quote(text)
+            try:
+                usock = urllib2.urlopen(url)
+            except Exception, e:
+                raise self.NetworkException("Unexpected error while fetching locations: %s" % e)
+            else:
+                xmldoc = minidom.parse(usock)
+                usock.close()
+
+                locations_list = []
+                try:
+                    for i in xmldoc.getElementsByTagName("loc"):
+                        city = i.childNodes[0].data
+                        code = i.getAttribute("id")
+                        locations_list.append([city, code])
+                finally:
+                    xmldoc.unlink()
+
+                return locations_list
 
         @async_method
         def get_conditions(self, location_code):

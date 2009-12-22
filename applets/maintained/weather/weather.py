@@ -65,6 +65,8 @@ icon_states = ["twc-logo", "weather-clear", "weather-few-clouds", "weather-overc
 "weather-snow", "weather-fog", "weather-storm", "weather-severe-alert",
 "weather-clear-night", "weather-few-clouds-night"]
 
+network_error_message = "Could not retrieve weather data. You may be experiencing connectivity issues."
+
 import forecast
 
 
@@ -73,14 +75,13 @@ class WeatherApplet:
     def __init__(self, applet):
         self.applet = applet
 
-        self.cachedConditions = None
-        self.iconPixBuf = None
-
+        self.cached_conditions = None
         self.map_vbox = None
         self.image_map = None
         self.map_pixbuf = None
 
         self.network_handler = self.NetworkHandler()
+        self.notification = applet.notify.create_notification("Network error in Weather", network_error_message, "dialog-warning", 20)
 
         self.setup_context_menu()
 
@@ -101,6 +102,7 @@ class WeatherApplet:
     def network_error_cb(self, e, tb):
         if type(e) is self.NetworkHandler.NetworkException:
             print "Error in Weather:", e
+            self.notification.show()
         else:
             self.applet.errors.set_error_icon_and_click_to_restart()
             self.applet.errors.general(e, traceback=tb, callback=gtk.main_quit)
@@ -300,7 +302,7 @@ class WeatherApplet:
 
             if hint != 'twc':
                 self.__temp_overlay.props.font_sizing = font_sizes[self.settings['temperature-font-size']]
-                self.__temp_overlay.props.text = tempText = self.convert_temperature(self.cachedConditions['TEMP']) + u"\u00B0"
+                self.__temp_overlay.props.text = tempText = self.convert_temperature(self.cached_conditions['TEMP']) + u"\u00B0"
                 self.__temp_overlay.props.active = bool(self.settings["show-temperature-icon"])
         glib.idle_add(refresh_overlay)
 
@@ -311,8 +313,8 @@ class WeatherApplet:
 
         """
         def cb(conditions):
-            if conditions != self.cachedConditions:
-                self.cachedConditions = conditions
+            if conditions != self.cached_conditions:
+                self.cached_conditions = conditions
                 self.refresh_icon()
         def error_cb(e, tb):
             if type(e) is self.NetworkHandler.NetworkException and retries > 0:
@@ -325,17 +327,17 @@ class WeatherApplet:
         self.network_handler.get_conditions(self.settings['location_code'], callback=cb, error=error_cb)
 
     def refresh_icon(self, dummy_value=None):
-        if self.cachedConditions is not None:
+        if self.cached_conditions is not None:
             unit = self.get_temperature_unit()
-            temp = self.convert_temperature(self.cachedConditions['TEMP'])
-            title = "%s: %s, %s" % (self.cachedConditions['CITY'], _(self.cachedConditions['DESCRIPTION']), temp + u" \u00B0" + unit)
+            temp = self.convert_temperature(self.cached_conditions['TEMP'])
+            title = "%s: %s, %s" % (self.cached_conditions['CITY'], _(self.cached_conditions['DESCRIPTION']), temp + u" \u00B0" + unit)
             # display the "Feels Like" temperature in parens, if it is different from the actual temperature
-            if self.cachedConditions['TEMP'] != self.cachedConditions['FEELSLIKE']:
-                feels_like = self.convert_temperature(self.cachedConditions['FEELSLIKE'])
+            if self.cached_conditions['TEMP'] != self.cached_conditions['FEELSLIKE']:
+                feels_like = self.convert_temperature(self.cached_conditions['FEELSLIKE'])
                 title += " (%s)" % (feels_like + u" \u00B0" + unit)
     
             self.applet.tooltip.set(title)
-            self.set_icon(self.cachedConditions["CODE"])
+            self.set_icon(self.cached_conditions["CODE"])
 
     def fetch_forecast(self, cb, retries=3):
         """Use weather.com's XML service to download the latest 5-day
@@ -471,7 +473,7 @@ class WeatherApplet:
             try:
                 usock = urllib2.urlopen(url)
             except Exception, e:
-                raise self.NetworkException("Unexpected error while fetching locations: %s" % e)
+                raise self.NetworkException("Couldn't fetch locations: %s" % e)
             else:
                 xmldoc = minidom.parse(usock)
                 usock.close()
@@ -493,7 +495,7 @@ class WeatherApplet:
             try:
                 usock = urllib2.urlopen(url)
             except Exception, e:
-                raise self.NetworkException("Unexpected error while fetching conditions: %s" % e)
+                raise self.NetworkException("Couldn't fetch conditions: %s" % e)
             else:
                 try:
                     xmldoc = minidom.parse(usock)
@@ -503,7 +505,7 @@ class WeatherApplet:
                         try:
                             return self.dictFromXML(xmldoc, names, paths)
                         except IndexError, e:
-                            raise self.NetworkException("Unexpected error while parsing conditions: %s" % e)
+                            raise self.NetworkException("Couldn't parse conditions: %s" % e)
                     finally:
                         xmldoc.unlink()
                 finally:
@@ -514,13 +516,13 @@ class WeatherApplet:
             try:
                 usock = urllib2.urlopen('http://www.weather.com/outlook/travel/businesstraveler/map/' + location_code)
             except Exception, e:
-                raise self.NetworkException("Unexpected error while downloading weather map: %s" % e)
+                raise self.NetworkException("Couldn't download weather map: %s" % e)
             else:
                 try:
                     mapExp = """<IMG NAME="mapImg" SRC="([^\"]+)" WIDTH=([0-9]+) HEIGHT=([0-9]+) BORDER"""
                     result = re.findall(mapExp, usock.read())
                     if not result or len(result) != 1:
-                        raise self.NetworkException("Unexpected error while parsing weather map")
+                        raise self.NetworkException("Couldn't parse weather map")
     
                     raw_image = urllib2.urlopen(result[0][0])
                     loader = gtk.gdk.PixbufLoader()
@@ -539,7 +541,7 @@ class WeatherApplet:
             try:
                 usock = urllib2.urlopen(url)
             except Exception, e:
-                raise self.NetworkException("Unexpected error while fetching forecast: %s" % e)
+                raise self.NetworkException("Couldn't fetch forecast: %s" % e)
             else:
                 try:
                     xmldoc = minidom.parse(usock)
@@ -557,7 +559,7 @@ class WeatherApplet:
                             forecast['DAYS'].append(day)
                         return forecast
                     except IndexError, e:
-                        raise self.NetworkException("Unexpected error while parsing forecast: %s" % e)
+                        raise self.NetworkException("Couldn't parse forecast: %s" % e)
                     finally:
                         xmldoc.unlink()
                 finally:

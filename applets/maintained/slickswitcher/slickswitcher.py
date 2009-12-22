@@ -108,7 +108,7 @@ class App(awn.AppletSimple):
         self.icon.applet_mode = True
         self.icon.line_width = 4.0
 
-        #"Update" the icon
+        #Update the icon
         self.update_icon()
 
     #When the style is set
@@ -187,9 +187,12 @@ class App(awn.AppletSimple):
 
     #Called only from gobject every 2 seconds
     def timeout_icon(self):
-        self.update_background()
-        self.update_icon()
+        if self.update_background():
+            self.update_icon()
+
         gobject.timeout_add_seconds(2, self.timeout_icon)
+
+        return False
 
     #Show the dialog.
     def show_dialog(self):
@@ -263,7 +266,6 @@ class App(awn.AppletSimple):
 
         gc.set_debug(gc.DEBUG_LEAK)
         gc.get_count()
-        print gc.garbage
         gc.collect()
         del icon
 
@@ -321,6 +323,8 @@ class App(awn.AppletSimple):
                     cr.paint()
                     cr.restore()
 
+                    del cr
+
                     #All went well; save the surface
                     if self.background is not None:
                         del self.background
@@ -333,14 +337,16 @@ class App(awn.AppletSimple):
                     try:
 
                         pixbuf = gtk.gdk.pixbuf_new_from_file(self.bg_path)
-                        pixbuf = pixbuf.scale_simple(self.size, self.size, \
+                        pixbuf2 = pixbuf.scale_simple(self.size, self.size, \
                             gtk.gdk.INTERP_BILINEAR)
+
+                        del pixbuf
 
                         #All went well; save the pixbuf
                         if self.background is not None:
                             del self.background
 
-                        self.background = pixbuf
+                        self.background = pixbuf2
 
                     #Something went wrong
                     except:
@@ -349,6 +355,8 @@ class App(awn.AppletSimple):
                             del self.background
 
                         self.background = self.no_background()
+
+                return True
 
             #Either the path is None, is '', doesn't exist, is a directory, or hasn't
             #changed. If it's one of the first four, get a blank image as a surface
@@ -364,6 +372,9 @@ class App(awn.AppletSimple):
 
                     self.background = self.no_background()
 
+                else:
+                    return False
+
         #GConf is not installed
         else:
             #Get a blank image as a surface
@@ -371,6 +382,8 @@ class App(awn.AppletSimple):
                 del self.background
 
             self.background = self.no_background()
+
+            return False
 
     #Return a blank image as a surface
     def no_background(self):
@@ -383,6 +396,8 @@ class App(awn.AppletSimple):
         #Draw blackness
         cr.set_source_rgba(0.0, 0.0, 0.0, 0.9)
         cr.paint()
+
+        del cr
 
         #Return the surface
         return surface

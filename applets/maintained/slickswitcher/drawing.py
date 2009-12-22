@@ -138,6 +138,8 @@ class Drawing(gtk.Table):
                     cr.paint()
                     cr.restore()
 
+                    del cr
+
                     #All went well; save the surface
                     if self.background is not None:
                         del self.background
@@ -150,14 +152,16 @@ class Drawing(gtk.Table):
                     try:
 
                         pixbuf = gtk.gdk.pixbuf_new_from_file(self.bg_path)
-                        pixbuf = pixbuf.scale_simple(self.settings['width'], \
+                        pixbuf2 = pixbuf.scale_simple(self.settings['width'], \
                             self.settings['height'], gtk.gdk.INTERP_BILINEAR)
+
+                        del pixbuf
 
                         #All went well; save the pixbuf
                         if self.background is not None:
                             del self.background
 
-                        self.background = pixbuf
+                        self.background = pixbuf2
 
                     #Something went wrong
                     except:
@@ -201,6 +205,8 @@ class Drawing(gtk.Table):
         #Draw blackness
         cr.set_source_rgba(0.0, 0.0, 0.0, 0.9)
         cr.paint()
+
+        del cr
 
         #Return the surface
         return surface
@@ -454,6 +460,8 @@ class ViewportWidget(gtk.DrawingArea):
             cr.set_source_surface(self.surface.surface, 0, )
             cr.paint()
 
+            del cr
+
     #Update values from the table
     def update_values(self):
 
@@ -530,6 +538,9 @@ class ViewportSurface:
         else:
             if self.last_width != self.settings['width'] or self.last_height != \
                 self.settings['height']:
+
+                del self.surface
+
                 self.surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, \
                     self.settings['width'], self.settings['height'])
 
@@ -578,9 +589,11 @@ class ViewportSurface:
             cr2 = pixmap.cairo_create()
             self.cr.set_source_surface(cr2.get_target(), 0, 0)
 
+
         #The background is simply a cairo surface
         else:
             pixmap = None
+            cr2 = None
             self.cr.set_source_surface(self.background, 0, 0)
 
         #Now fill the background
@@ -610,7 +623,7 @@ class ViewportSurface:
         self.owner.updated()
 
         #Free some memory
-        del self.cr, pixmap
+        del self.cr, pixmap, cr2
 
     #Update the values from the owner
     def update_values(self):
@@ -763,7 +776,7 @@ class ViewportSurface:
             x, y = self.settings['width'] / 2, self.settings['height'] / 2
 
         #Set up the context for text
-        self.cr.select_font_face ('Sans', cairo.FONT_SLANT_NORMAL,\
+        self.cr.select_font_face('Sans', cairo.FONT_SLANT_NORMAL,\
              cairo.FONT_WEIGHT_BOLD)
         if self.applet_mode:
             self.cr.set_font_size(22)

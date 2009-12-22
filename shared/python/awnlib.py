@@ -178,10 +178,10 @@ class Dialogs:
     def register(self, dialog, dlog, focus=True):
         """Register a dialog.
 
-        Once a name has been registered, it cannot be registered again.
+        Once a name has been registered, it cannot be registered again
+        until the dialog is explicitly unregistered.
 
-        @param dialog: The name to use for the dialog. The predefined values
-                       are main, secondary, and menu.
+        @param dialog: The name to use for the dialog.
         @type dialog: C{string}
         @param dlog: The actual dialog or menu or function.
         @type dlog: C{function}, C{gtk.Menu}, or C{awn.AppletDialog}
@@ -196,6 +196,21 @@ class Dialogs:
             dlog.props.hide_on_unfocus = focus
 
         self.__register[dialog] = dlog
+
+    def unregister(self, dialog):
+        """Unregister a dialog.
+
+        @param dialog: The name to use for the dialog. Must not be equal
+            to the name of any of the special dialogs.
+        @type dialog: C{string}
+
+        """
+        if dialog not in self.__register:
+            raise RuntimeError("Dialog '%s' not registered" % dialog)
+        if dialog in self.__special_dialogs:
+            raise RuntimeError("Unregistering special dialog '%s' is forbidden" % dialog)
+
+        del self.__register[dialog]
 
     def toggle(self, dialog, force="", once=False, event=None):
         """Show or hide a dialog.

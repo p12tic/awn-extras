@@ -1346,7 +1346,12 @@ class Notify:
 
         awn.check_dependencies(globals(), "pynotify")
 
-    def send(self, subject=None, body="", icon="", timeout=0):
+        pynotify.init(parent.meta["short"])
+
+    def __del__(self):
+        pynotify.uninit()
+
+    def send(self, *args, **kwargs):
         """Show a new notification via libnotify.
 
         @param subject: The subject of your message. If blank, "Message from
@@ -1360,15 +1365,42 @@ class Notify:
         @type timeout: C{int}
 
         """
-        if not subject:
-            subject = '"Message From %s"' % self.__parent.meta["name"]
-
-        pynotify.init(self.__parent.meta["name"])
-        notification = pynotify.Notification(subject, body, icon)
-        if timeout > 0:
-            notification.set_timeout(timeout * 1000)
+        notification = self.Notification(self.__parent, *args, **kwargs)
         notification.show()
-        pynotify.uninit()
+
+    def create_notification(self, *args, **kwargs):
+        """Return a notification that can be shown via show().
+
+        @param subject: The subject of your message. If blank, "Message from
+            [applet name]" is used.
+        @type subject: C{string}
+        @param body: The main body of your message. Blank by default.
+        @type body: C{string}
+        @param icon: The full absolute path to the name of the icon to use.
+        @type icon: C{string}
+        @param timeout: Timeout in seconds after which the message closes
+        @type timeout: C{int}
+        @return: a notification object
+        @rtype: C{self.Notification}
+
+        """
+        return self.Notification(self.__parent, *args, **kwargs)
+
+    class Notification:
+
+        """An object that manages a libnotify notification.
+
+        """
+
+        def __init__(self, parent, subject=None, body="", icon="", timeout=0):
+            if subject is None:
+                subject = '"Message From %s"' % self.__parent.meta["name"]
+            self.__notification = pynotify.Notification(subject, body, icon)
+            if timeout > 0:
+                self.__notification.set_timeout(timeout * 1000)
+
+        def show(self):
+            self.__notification.show()            
 
 
 class Effects:

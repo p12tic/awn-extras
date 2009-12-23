@@ -472,30 +472,30 @@ class WeatherApplet:
             url = "http://xoap.weather.com/search/search?where=" + urllib2.quote(text)
             try:
                 usock = urllib2.urlopen(url)
-            except Exception, e:
-                raise self.NetworkException("Couldn't fetch locations: %s" % e)
+            except urllib2.URLError, e:
+                raise self.NetworkException("Couldn't download locations: %s" % e)
             else:
-                xmldoc = minidom.parse(usock)
-                usock.close()
-
-                locations_list = []
                 try:
-                    for i in xmldoc.getElementsByTagName("loc"):
-                        city = i.childNodes[0].data
-                        code = i.getAttribute("id")
-                        locations_list.append([city, code])
+                    xmldoc = minidom.parse(usock)
+                    try:
+                        locations_list = []
+                        for i in xmldoc.getElementsByTagName("loc"):
+                            city = i.childNodes[0].data
+                            code = i.getAttribute("id")
+                            locations_list.append([city, code])
+                        return locations_list
+                    finally:
+                        xmldoc.unlink()
                 finally:
-                    xmldoc.unlink()
-
-                return locations_list
+                    usock.close()
 
         @async_method
         def get_conditions(self, location_code):
             url = 'http://xoap.weather.com/weather/local/' + location_code + '?cc=*' + self.__ws_key
             try:
                 usock = urllib2.urlopen(url)
-            except Exception, e:
-                raise self.NetworkException("Couldn't fetch conditions: %s" % e)
+            except urllib2.URLError, e:
+                raise self.NetworkException("Couldn't download conditions: %s" % e)
             else:
                 try:
                     xmldoc = minidom.parse(usock)
@@ -515,15 +515,18 @@ class WeatherApplet:
         def get_weather_map(self, location_code):
             try:
                 usock = urllib2.urlopen('http://www.weather.com/outlook/travel/businesstraveler/map/' + location_code)
-            except Exception, e:
+            except urllib2.URLError, e:
                 raise self.NetworkException("Couldn't download weather map: %s" % e)
             else:
                 try:
                     mapExp = """<IMG NAME="mapImg" SRC="([^\"]+)" WIDTH=([0-9]+) HEIGHT=([0-9]+) BORDER"""
-                    result = re.findall(mapExp, usock.read())
+                    try:
+                        data = usock.read()
+                    except Exception, e:
+                        raise self.NetworkException("Couldn't download weather map: %s" % e)
+                    result = re.findall(mapExp, data)
                     if not result or len(result) != 1:
                         raise self.NetworkException("Couldn't parse weather map")
-    
                     raw_image = urllib2.urlopen(result[0][0])
                     loader = gtk.gdk.PixbufLoader()
                     try:
@@ -540,8 +543,8 @@ class WeatherApplet:
 
             try:
                 usock = urllib2.urlopen(url)
-            except Exception, e:
-                raise self.NetworkException("Couldn't fetch forecast: %s" % e)
+            except urllib2.URLError, e:
+                raise self.NetworkException("Couldn't download forecast: %s" % e)
             else:
                 try:
                     xmldoc = minidom.parse(usock)

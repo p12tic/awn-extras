@@ -28,7 +28,7 @@ description = If enabled, show the temperature as an overlay in the icon.
 
 [DEFAULT/temperature-font-size]
 type = integer
-default = 1
+default = 0
 description = Size of the temperature overlay in the icon (0=small, 1=medium, 2=large).
 
 [DEFAULT/temperature-unit]

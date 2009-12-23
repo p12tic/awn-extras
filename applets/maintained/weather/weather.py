@@ -30,7 +30,7 @@ import gtk
 
 from awn.extras import _, awnlib, __version__
 from awn.extras.threadqueue import ThreadQueue, async_method
-from awn import OverlayText
+from awn import OverlayText, OverlayThrobber, OverlayThemedIcon
 
 import cairo
 import glib
@@ -44,7 +44,7 @@ applet_logo = "weather-few-clouds"
 # Interval in minutes between updating conditions, forecast, and map
 update_interval = 30
 
-# Timeout in secons of network operations
+# Timeout in seconds of network operations
 socket_timeout = 20
 
 # Import socket to set the default timeout, it is unlimited by default!
@@ -69,6 +69,100 @@ network_error_message = "Could not retrieve weather data. You may be experiencin
 
 import forecast
 
+disconnect_counter = {}
+throbber_counter = {}
+
+overlay_fsm = None
+
+
+class OverlayStateMachine:
+
+    def __init__(self, disconnect, throbber):
+        self.disconnect_overlay = disconnect
+        self.throbber_overlay = throbber
+
+        # Set initial state
+        self.set_next(IdleState)
+
+    def set_next(self, state):
+        self.__state = state(self)
+
+    def evaluate(self):
+        glib.idle_add(self.__state.evaluate)
+
+
+class BaseState:
+
+    def __init__(self, handler, throbber, disconnect):
+        self.handler = handler
+
+        self.handler.throbber_overlay.props.active = throbber
+        self.handler.disconnect_overlay.props.active = disconnect
+
+    def evaluate(self):
+        disconnected = any(disconnect_counter.values())
+        busy = any(throbber_counter.values())
+
+        if busy and disconnected:
+            self.handler.set_next(RefreshAndErrorState)
+        elif busy and not disconnected:
+            self.handler.set_next(RefreshState)
+        elif not busy and disconnected:
+            self.handler.set_next(ErrorState)
+        else:
+            self.handler.set_next(IdleState)
+
+
+class IdleState(BaseState):
+
+    def __init__(self, handler):
+        BaseState.__init__(self, handler, False, False)
+
+
+class RefreshState(BaseState):
+
+    def __init__(self, handler):
+        BaseState.__init__(self, handler, True, False)
+
+
+class ErrorState(BaseState):
+
+    def __init__(self, handler):
+        BaseState.__init__(self, handler, False, True)
+
+
+class RefreshAndErrorState(BaseState):
+
+    def __init__(self, handler):
+        BaseState.__init__(self, handler, True, False)
+
+
+def with_overlays(func):
+    """Makes the throbber visible while refreshing and
+    the 'disconnect' icon if an error has occurred.
+
+    """
+    throbber_counter[func] = False
+    disconnect_counter[func] = False
+    def activate_throbber(show):
+        throbber_counter[func] = show
+        overlay_fsm.evaluate()
+    def active_icon(error):
+        disconnect_counter[func] = error
+        overlay_fsm.evaluate()
+    def bound_func(obj, *args, **kwargs):
+        activate_throbber(True)
+        try:
+            result = func(obj, *args, **kwargs)
+            active_icon(False)
+            return result
+        except:
+            active_icon(True)
+            raise
+        finally:
+            activate_throbber(False)
+    return bound_func
+
 
 class WeatherApplet:
 
@@ -91,9 +185,21 @@ class WeatherApplet:
         self.set_icon()
         self.applet.tooltip.set("%s %s..."%(_("Fetching conditions for"), self.settings['location']))
 
+        # Overlays
         self.__temp_overlay = OverlayText()
         self.__temp_overlay.props.gravity = gtk.gdk.GRAVITY_SOUTH
         applet.add_overlay(self.__temp_overlay)
+
+        disconnect_overlay = OverlayThemedIcon(applet.get_icon(), "stock_disconnect", "error")
+        throbber_overlay = OverlayThrobber(applet.get_icon())
+
+        for i in (disconnect_overlay, throbber_overlay):
+            i.props.scale = 0.5
+            i.props.gravity = gtk.gdk.GRAVITY_SOUTH_EAST
+            applet.add_overlay(i)
+
+        global overlay_fsm
+        overlay_fsm = OverlayStateMachine(disconnect_overlay, throbber_overlay)
 
         # Set up the timer which will refresh the conditions, forecast, and weather map
         applet.timing.register(self.activate_refresh_cb, update_interval * 60)
@@ -490,6 +596,7 @@ class WeatherApplet:
                     usock.close()
 
         @async_method
+        @with_overlays
         def get_conditions(self, location_code):
             url = 'http://xoap.weather.com/weather/local/' + location_code + '?cc=*' + self.__ws_key
             try:
@@ -512,6 +619,7 @@ class WeatherApplet:
                     usock.close()
 
         @async_method
+        @with_overlays
         def get_weather_map(self, location_code):
             try:
                 usock = urllib2.urlopen('http://www.weather.com/outlook/travel/businesstraveler/map/' + location_code)
@@ -538,6 +646,7 @@ class WeatherApplet:
                     usock.close()
 
         @async_method
+        @with_overlays
         def get_forecast(self, location_code):
             url = 'http://xoap.weather.com/weather/local/' + location_code + '?dayf=5' + self.__ws_key
 

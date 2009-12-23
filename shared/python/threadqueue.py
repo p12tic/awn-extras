@@ -68,18 +68,20 @@ class ThreadQueue(object):
         else:
             error = None
 
-        try:
-            r = func(*args, **kwargs)
-            if not isinstance(r, tuple):
-                r = (r,)
-            if callback:
-                self.do_callback(callback, *r)
-        except Exception, e:
-            if error:
-                tb = traceback.format_exception(type(e), e, sys.exc_traceback)
-                self.do_callback(error, *(e, tb))
-            else:
-                print "Unhandled error:", e
+        def run():
+            try:
+                r = func(*args, **kwargs)
+                if not isinstance(r, tuple):
+                    r = (r,)
+                if callback:
+                    self.do_callback(callback, *r)
+            except Exception, e:
+                if error:
+                    tb = traceback.format_exception(type(e), e, sys.exc_traceback)
+                    self.do_callback(error, *(e, tb))
+                else:
+                    print "Unhandled error:", e
+        Thread(target=run).start()
 
     def do_callback(self, callback, *args):
         def _callback(callback, args):

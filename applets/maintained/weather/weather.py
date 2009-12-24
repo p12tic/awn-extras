@@ -196,6 +196,7 @@ class WeatherApplet:
         for i in (disconnect_overlay, throbber_overlay):
             i.props.scale = 0.5
             i.props.gravity = gtk.gdk.GRAVITY_SOUTH_EAST
+            i.props.apply_effects = False
             applet.add_overlay(i)
 
         global overlay_fsm

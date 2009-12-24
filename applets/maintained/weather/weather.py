@@ -249,10 +249,12 @@ class WeatherApplet:
 
         # Only use themes that are likely to provide all the files
         def filter_theme(theme):
-            return os.path.isfile(os.path.join(theme_dir, theme, "scalable/status/weather-clear.svg"))
-        self.themes = [system_theme_name] + filter(filter_theme, os.listdir(theme_dir))
+            return os.path.isfile(os.path.join(theme_dir, theme, "scalable/status/weather-clear.svg")) \
+                or os.path.isfile(os.path.join(theme_dir, theme, "48x48/status/weather-clear.png")) \
+                or os.path.isfile(os.path.join(theme_dir, theme, "48x48/status/weather-clear.svg"))
+        self.themes = filter(filter_theme, os.listdir(theme_dir))
         self.themes.sort()
-        self.themes.extend(["moonbeam"])
+        self.themes = [system_theme_name] + self.themes + ["moonbeam"]
 
         def refresh_theme_and_dialog(value):
             self.setup_theme()

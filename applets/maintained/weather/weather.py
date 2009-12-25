@@ -443,7 +443,8 @@ class WeatherApplet:
             # display the "Feels Like" temperature in parens, if it is different from the actual temperature
             if self.cached_conditions['TEMP'] != self.cached_conditions['FEELSLIKE']:
                 feels_like = self.convert_temperature(self.cached_conditions['FEELSLIKE'])
-                title += " (%s)" % (feels_like + u" \u00B0" + unit)
+                if feels_like != "N/A" and feels_like != temp:
+                    title += " (%s)" % (feels_like + u" \u00B0" + unit)
     
             self.applet.tooltip.set(title)
             self.set_icon(self.cached_conditions["CODE"])
@@ -511,7 +512,10 @@ class WeatherApplet:
 
     def convert_temperature(self, value):
         unit = temperature_units[self.settings["temperature-unit"]]
-        value = float(value)
+        try:
+            value = float(value)
+        except ValueError:
+            return "N/A"
 
         if "Fahrenheit" == unit:
             converted_value = value

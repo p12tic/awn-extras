@@ -24,7 +24,7 @@ default = #000000|0.5
 description = Color to draw the background
 [DEFAULT/border]
 type = boolean
-default = true
+default = false
 description = Draw the applet border
 [DEFAULT/border_color]
 type = string

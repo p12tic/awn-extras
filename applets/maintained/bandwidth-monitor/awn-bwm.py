@@ -279,7 +279,7 @@ class AppletBandwidthMonitor:
     def enter_notify(self):
         if not self.applet.dialog.is_visible("main"):
             if not self.interface in self.device_usage.interfaces:
-                self.applet.set_tooltip_text("Please sleect a valid Network Device")
+                self.applet.set_tooltip_text("Please select a valid Network Device")
             else:
                 self.applet.set_tooltip_text("Total Sent: %s - Total Received: %s (All Interfaces)" % (readable_speed(self.device_usage.interfaces[self.interface]["tx_sum"] * self.unit, self.unit, False), readable_speed(self.device_usage.interfaces[self.interface]["rx_sum"] * self.unit, self.unit, False)))
 

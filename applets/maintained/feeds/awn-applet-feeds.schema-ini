@@ -16,7 +16,7 @@ type = integer
 default = 5
 description = The interval (in minutes) at which to update (3-60)
 
-[DEFAULT/google_token]
-type = integer
-default = 0
-description = Used for logging in to Google Reader; do not touch.
+[DEFAULT/show_favicons]
+type = boolean
+default = true
+description = Show each feed's website's icon in the dialog

@@ -21,21 +21,24 @@ import sys
 import os
 import urllib
 import urllib2
-from shutil import rmtree
+import socket
+from xml.dom import minidom
 
 import pygtk
 pygtk.require('2.0')
 import gtk
 import pango
 import gobject
-import dbus
-import dbus.service
-import dbus.glib
 
 from desktopagnostic.config import GROUP_DEFAULT
 import awn
 from awn import extras
 from awn.extras import _, awnlib
+from awn.extras.threadqueue import ThreadQueue, async_method
+
+import classes
+
+socket.setdefaulttimeout(30)
 
 awn.check_dependencies(globals(), 'feedparser', 'pynotify')
 
@@ -45,32 +48,44 @@ icon_path = os.path.join(icondir, 'awn-feeds.svg')
 
 greader_path = os.path.join(icondir, 'awn-feeds-greader.svg')
 
-config_path = '%s/.config/awn/applets/feeds.txt' % os.environ['HOME']
+config_dir = os.environ['HOME'] + '/.config/awn/applets'
+config_path = os.path.join(config_dir, 'feeds.txt')
 
-tmp_dir = '/tmp/awn-feeds-applet'
+cache_dir = os.environ['HOME'] + '/.cache/awn-feeds-applet'
+cache_index = os.path.join(cache_dir, 'index.txt')
 
-google_login = 'https://www.google.com/accounts/ClientLogin'
-google_list = 'http://www.google.com/reader/atom/user/-/state/com.google' + \
-    '/reading-list?n=10'
+user_agent = 'AwnFeedsApplet/' + awn.extras.__version__
 
-reader_url = 'http://www.google.com/reader/'
+gtk.gdk.threads_init()
+
+if not os.path.exists(cache_dir):
+    os.makedirs(cache_dir)
+
+if not os.path.exists(config_dir):
+    os.makedirs(config_dir)
 
 
 class App(awn.AppletSimple):
     displays = {}
     toggles = []
     feeds = {}
-    newest = {}
     timer = 0
-    widget = None
+    finished_feeds = 0
     menu = None
     keyring = None
-    google_key = None
     dragged_toggle = None
     SID = ''
+    urls = []
+    written_urls = []
+    login_data = {}
+    io_error = False
+    login_error = False
+    num_new_while_updating = 0
 
     def __init__(self, uid, panel_id):
-        self.uid = uid
+        self.network_handler = self.NetworkHandler()
+        self.tokens = classes.Tokens()
+        self.favicons = classes.Tokens(cache_index)
 
         #AWN Applet Configuration
         awn.AppletSimple.__init__(self, 'feeds', uid, panel_id)
@@ -81,11 +96,28 @@ class App(awn.AppletSimple):
         self.dialog.add(self.main_vbox)
         self.main_vbox.show()
 
+        #Need icon theme
+        self.icon_theme = gtk.icon_theme_get_default()
+        self.icon_theme.connect('changed', self.icon_theme_changed)
+
+        #"Loading feeds..." label
         self.loading_feeds = gtk.Label(_("Loading feeds..."))
         self.loading_feeds.modify_font(pango.FontDescription('bold'))
         self.main_vbox.pack_start(self.loading_feeds, False, False, 3)
         self.loading_feeds.show()
         self.loading_feeds.set_no_show_all(True)
+
+        #No feeds label
+        self.no_feeds = gtk.Label(_("You don't have any feeds."))
+        self.main_vbox.pack_start(self.no_feeds)
+        self.no_feeds.set_no_show_all(True)
+
+        #Get a 16x16 icon representing the Internet/web
+        self.web_image = self.icon_theme.load_icon('applications-internet', 16, 0)
+
+        #Force a size of 16x16
+        if self.web_image.get_width() != 16 or self.web_image.get_height() != 16:
+            self.web_image = self.web_image.scale_simple(16, 16, gtk.gdk.INTERP_BILINEAR)
 
         #AwnConfigClient instance
         self.client = awn.config_get_default_for_applet(self)
@@ -93,15 +125,21 @@ class App(awn.AppletSimple):
         #Set the icon
         self.set_icon_name('awn-feeds')
 
-        #Need icon theme
-        self.icon_theme = gtk.icon_theme_get_default()
-
         #Connect to signals
         self.connect('button-release-event', self.button_release)
         self.dialog.props.hide_on_unfocus = True
 
-        #Update the feeds
-        self.update_feeds()
+        self.get_urls()
+
+        #TODO: put this and the similar code in add_feed() into a single, better place
+        for url in self.urls:
+            if '-'.join(url.split('-')[:-1]) == 'google-reader':
+                self.feeds[url] = classes.GoogleReader(self, url.split('-')[-1])
+
+            else:
+                self.feeds[url] = classes.WebFeed(self, url)
+
+        self.setup_dialog()
 
         #Update the feeds every 5 minutes,
         #unless the user does right click->refresh
@@ -115,209 +153,48 @@ class App(awn.AppletSimple):
         self.get_icon().connect('drag_data_received', self.applet_drag_data_received)
         self.get_icon().connect('drag-motion', self.applet_drag_motion)
         self.get_icon().connect('drag-leave', self.applet_drag_leave)
+        self.dialog.connect('scroll-event', self.scroll)
 
         #Set up the D-Bus service
-        self.service = DBusService(self)
+        self.service = classes.DBusService(self)
 
-    #Run the update.py file. It puts the feeds in /tmp/awn-feeds-applet
-    #as 0.xml for the first feed, 1.xml for the second, etc. Then it sends
-    #a signal via D-Bus to notify us, and we parse the feeds. If a Google Reader
-    #feed is in there, we download it ourselves because it would be unsafe for
-    #the update.py file to have the password/login cookie.
+        self.update_feeds()
+
+    #Tell each feed object to update
     def update_feeds(self, *args):
         self.io_error = False
         self.google_error = False
 
-        self.loading_feeds.show()
-        self.set_tooltip_text(_("Loading feeds..."))
+        if len(self.urls) != 0:
+            self.finished_feeds = 0
+            self.started_updating = 0
+            self.num_new_while_updating = 0
+            self.loading_feeds.show()
+            self.set_tooltip_text(_("Loading feeds..."))
 
-        os.system('python %s &' % (__file__[:-8] + 'update.py'))
+            for url in self.urls:
+                self.feed_throbbers[url].props.active = True
+
+            self.update_timer = gobject.timeout_add(250, self.update_next_feed)
+
+        else:
+            self.loading_feeds.hide()
+            self.set_tooltip_text(_("Feeds Applet"))
+            self.no_feeds.show()#Just in case
 
         return False
 
-    #The update.py process is done
-    #I.e, the feeds have downloaded. Now we parse them and find out what to do with them.
-    def done_updating(self):
-        file_list = os.listdir(tmp_dir)
-        feeds = []
-        num_new = {}
-        total_new = 0
-
-        self.get_urls()
-
-        #Go through each feed
-        for filename in file_list:
-            feed = None
-
-            if filename[-4:] == '.xml':
-                try:
-                    url = self.urls[int(filename[:-4])]
-                except:
-                    continue
-
-                fp = open(tmp_dir + '/' + filename)
-                f = fp.read()
-                fp.close()
-
-                if f == 'google-reader':
-                    feed = self.update_greader_feed()
-
-                else:
-                    feed = feedparser.parse(f)
-
-            elif filename == 'ioerror':
-                self.io_error = True
-
-            self.simplify(feed)
-
-            #See if the feed was updated, etc...
-            if feed is not None:
-                if url in self.newest.keys() and (self.newest[url] != feed.entries[0]):
-                    #Find out how many items are new
-                    if self.newest[url] in feed.entries:
-                        num_new[url] = feed.entries.index(self.newest[url])
-
-                    #So many new items that the last loaded item doesn't show up
-                    else:
-                        num_new[url] = len(feed.entries)
-
-                    total_new += num_new[url]
-
-                if len(feed.entries) > 0:
-                    self.newest[url] = feed.entries[0]
-                self.feeds[url] = feed
-
-        #Make the icon blue if Google Reader is the only (updated) source
-        #TODO: change this exact behavior???
-        only_google = False
+    #250ms before starting updating each feed to ease the load a bit
+    def update_next_feed(self):
         try:
-            if 'google-reader' in self.urls:
-                only_google = True
-                for url in self.urls:
-                    if url != 'google-reader':
-                        if num_new[url] > 0:
-                            only_google = False
-
-                if only_google:
-                    self.set_icon_name('awn-feeds-greader')
-
-                else:
-                    self.set_icon_name('awn-feeds')
-
+            feed = self.feeds[self.urls[self.started_updating]]
         except:
-            self.set_icon_name('awn-feeds')
-
-        #Notifications - only show if there are any new items and if the user wants them shown
-        if total_new > 0 and self.client.get_value(GROUP_DEFAULT, 'notify') == True:
-            msg = ""
-            for url, num in num_new.items():
-                if url == 'google-reader':
-                    title = _("Google Reader")
-                else:
-                    title = self.feeds[url].feed.title
-
-                if url == 'google-reader':
-                    title = "<a href='%s'>%s</a>" % (reader_url, title)
-
-                else:
-                    title = "<a href='%s'>%s</a>" % (self.feeds[url].feed.link, title)
-
-                if num > 2:
-                    msg += _("%s\n  <a href='%s'>%s</a>\n  <a href='%s'>%s</a>\n(%s More)\n") % \
-                        (title,
-                        self.feeds[url].entries[0]['link'],
-                        shortify(self.feeds[url].entries[0]['title']),
-                        self.feeds[url].entries[1]['link'],
-                        shortify(self.feeds[url].entries[1]['title']),
-                        (num - 2))
-
-                elif num == 2:
-                    msg += "%s\n  <a href='%s'>%s</a>\n  <a href='%s'>%s</a>\n" % (title,
-                        self.feeds[url].entries[0]['link'],
-                        shortify(self.feeds[url].entries[0]['title']),
-                        self.feeds[url].entries[1]['link'],
-                        shortify(self.feeds[url].entries[1]['title']))
-
-                elif num == 1:
-                    msg += "%s\n  <a href='%s'>%s</a>\n" % (title,
-                        self.feeds[url].entries[0]['link'],
-                        shortify(self.feeds[url].entries[0]['title']))
-
-            pynotify.init(_("Feeds Applet"))
-            notification = pynotify.Notification(_("%s New Items - Feeds Applet") % \
-                total_new, msg, [icon_path, greader_path][only_google])
-            notification.set_timeout(5000)
-            notification.show()
-            pynotify.uninit()
-
-        #Update again in a bit
-        self.do_timer()
-
-        #Update the dialog
-        self.setup_dialog()
-        self.loading_feeds.hide()
-        self.set_tooltip_text(_("Feeds Applet"))
-
-        #Clean up
-        rmtree(tmp_dir)
-
-    #Update the Google Reader feed
-    def update_greader_feed(self):
-        #Thank you http://code.google.com/p/pyrfeed/wiki/GoogleReaderAPI
-        self.get_google_key()
-  
-        if self.get_google_sid():
-            #Load the reading list with that magic SID as a cookie
-            req = urllib2.Request(google_list)
-            req.add_header('Cookie', 'SID=' + self.SID)
-  
-            try:
-                fp = urllib2.urlopen(req, timeout=15)
-                f = fp.read()
-                fp.close()
-  
-            except IOError:
-                self.io_error = True
-                return None
-  
-            return feedparser.parse(f)
-
+            pass
         else:
-            return feedparser.parse('')
+            feed.update()
 
-    #"Login" to Google (Reader) and get an SID, a magic string that
-    #lets us get the user's Google Reader items
-    def get_google_sid(self):
-        if self.google_key is not None:
-            #Get the magic SID from Google to login, if we haven't already
-            if self.SID == '':
-                #Format the request
-                postdata = urllib.urlencode({'service': 'reader',
-                    'Email': self.google_key.attrs['username'],
-                    'Passwd': self.google_key.password,
-                    'source': 'awn-feeds-applet',
-                    'continue': 'http://www.google.com/'})
-
-                #Send the data to get the SID
-                try:
-                    fp = urllib2.urlopen(google_login, postdata, 15)
-                    f = fp.read()
-                    fp.close()
-
-                except IOError:
-                    self.io_error = True
-                    return False
-
-                #Check if wrong password/username
-                if f.find('BadAuthentication') != -1:
-                    self.google_error = True
-                    return False
-
-                #Save the SID so we don't have to re-login every update
-                self.SID = f.split('=')[1].split('\n')[0]
-
-            #We have SIDnal
-            return True
+            self.started_updating += 1
+            self.update_timer = gobject.timeout_add(250, self.update_next_feed)
 
         return False
 
@@ -339,23 +216,103 @@ class App(awn.AppletSimple):
 
             self.timer = gobject.timeout_add_seconds(interval * 60, self.update_feeds)
 
-    #Widgets, etc.
-    def setup_dialog(self, *args):
-        #Clear the dialog
-        if self.widget:
-            self.widget.destroy()
+    def got_favicon(self, feed, override=False):
+        if override or self.client.get_value(GROUP_DEFAULT, 'show_favicons'):
+            try:
+                if feed.icon.find('gtk://') == 0:
+                    pb = self.icon_theme.load_icon(feed.icon[6:], 16, 0)
+                    pb = get_16x16(pb)
 
-        #Clear the list of toggle buttons
+                else:
+                    pb = gtk.gdk.pixbuf_new_from_file_at_size(feed.icon, 16, 16)
+
+                self.feed_icons[feed.url].set_from_pixbuf(pb)
+            except:
+                pass
+
+    def feed_updated(self, feed):
+        self.num_new_while_updating += feed.num_new
+
+        if feed.url in self.displays:
+            self.feed_throbbers[feed.url].props.active = False
+
+            for widget in self.displays[feed.url].get_children():
+                widget.destroy()
+
+            for entry in feed.entries[:5]:
+                image = gtk.Image()
+
+                button = gtk.Button(shortify(entry['title']))
+                button.set_relief(gtk.RELIEF_NONE)
+                if len(entry['title']) > 25:
+                    button.set_tooltip_text(entry['title'])
+                button.connect('clicked', self.open_url, entry['url'])
+                button.set_use_underline(False)
+                button.show()
+
+                self.displays[feed.url].pack_start(button, False)
+
+            self.feed_labels[feed.url].set_text(shortify(feed.title))
+
+            self.finished_feeds += 1
+            if len(self.urls) == self.finished_feeds:
+                self.set_tooltip_text(_("Feeds Applet"))
+                self.loading_feeds.hide()
+
+                self.do_timer()
+
+                self.show_notification()
+
+    def show_notification(self):
+        if not self.client.get_value(GROUP_DEFAULT, 'notify'):
+            return
+
+        msg = ''
+        only_greader = True
+        if self.num_new_while_updating != 0:
+            for url, feed in self.feeds.items():
+                if not isinstance(feed, classes.GoogleReader):
+                    only_greader = False
+
+                if feed.num_new == 1:
+                    msg += "%s\n  <a href=\"%s\">%s</a>\n" % (shortify(feed.title),
+                        feed.entries[0]['url'], shortify(feed.entries[0]['title']))
+
+                elif feed.num_new == 2:
+                    msg += "%s\n  <a href='%s'>%s</a>\n  <a href='%s'>%s</a>\n" % \
+                        (shortify(feed.title),
+                        feed.entries[0]['url'], shortify(feed.entries[0]['title']),
+                        feed.entries[1]['url'], shortify(feed.entries[1]['title']))
+
+                elif feed.num_new > 2:
+                    msg += _("%s\n  <a href='%s'>%s</a>\n  <a href='%s'>%s</a>\n(%s More)\n") % \
+                        (shortify(feed.title),
+                        feed.entries[0]['url'], shortify(feed.entries[0]['title']),
+                        feed.entries[1]['url'], shortify(feed.entries[1]['title']),
+                        (feed.num_new - 2))
+
+            pynotify.init(_("Feeds Applet"))
+            notification = pynotify.Notification(_("%s New Item%s - Feeds Applet") % \
+                (self.num_new_while_updating, ['', 's'][self.num_new_while_updating != 1]),
+                msg, [icon_path, greader_path][only_greader])
+            notification.set_timeout(5000)
+            notification.show()
+            pynotify.uninit()
+
+    #Set up initial widgets, frame for each feed
+    def setup_dialog(self):
+        self.feed_labels = {}
+        self.feed_icons = {}
+        self.feed_throbbers = {}
+        self.feed_toggles = {}
+
         self.toggles = []
-
-        #Get the feeds
-        self.get_urls()
 
         self.widget = gtk.VBox(False, 6)
 
         #This is mainly for reordering of the feeds in the dialog
         #(The only way to get the drag-motion signal on a widget is
-        #for the widget to be a drag destination
+        #for the widget to be a drag destination)
         self.widget.drag_dest_set(gtk.DEST_DEFAULT_DROP | gtk.DEST_DEFAULT_MOTION, \
           [('STRING', 0, 0), ('text/plain', 0, 0), ('text/uri-list', 0, 0)], \
           gtk.gdk.ACTION_COPY)
@@ -363,176 +320,118 @@ class App(awn.AppletSimple):
         self.widget.connect('drag-motion', self.dialog_drag_motion)
         self.widget.connect('drag-leave', self.dialog_drag_leave)
 
-        #Couldn't connect
-        if self.io_error:
-            label = gtk.Label(_("Feeds Applet could not load all of your feeds.\nCheck your Internet connection and\nclick Refresh to try again."))
-            self.widget.pack_start(label, False)
-
-            button = gtk.Button(stock=gtk.STOCK_REFRESH)
-            button.connect('clicked', self.update_feeds)
-
-            button_hbox = gtk.HBox(False, 0)
-            button_hbox.pack_start(button, True, False)
-
-            self.widget.pack_start(button_hbox, False)
-
-            self.widget.pack_start(gtk.HSeparator(), False, False, 6)
-
-        #Wrong username/password
-        if self.google_error:
-            button = gtk.Button()
-            image = gtk.image_new_from_stock(gtk.STOCK_CLOSE, gtk.ICON_SIZE_MENU)
-            button.set_image(image)
-            button.set_relief(gtk.RELIEF_NONE)
-            button.set_tooltip_text(_("Hide Error"))
-            button.connect('clicked', self.cancel_google_error)
-
-            button_vbox = gtk.VBox(False, 0)
-            button_vbox.pack_start(button, True, False)
-
-            label = gtk.Label(_("Feeds Applet could not login to Google Reader.\nCheck your username and password."))
-
-            hbox = gtk.HBox(False, 6)
-            hbox.pack_start(button_vbox, False)
-            hbox.pack_start(label, True)
-
-            self.widget.pack_start(hbox, False)
-
         #User has no feeds
         if len(self.urls) == 0:
-            label = gtk.Label(_("You don't have any feeds."))
-
-            button = gtk.Button(_("_Add Feed"))
-            image = gtk.image_new_from_stock(gtk.STOCK_ADD, gtk.ICON_SIZE_BUTTON)
-            button.set_image(image)
-            button.connect('clicked', self.add_feed_dialog)
-
-            hbox = gtk.HBox(False, 6)
-            hbox.pack_start(button, True, False)
-
-            self.widget.pack_start(label, False)
-            self.widget.pack_start(hbox, False)
-            self.widget.show_all()
-
-            self.dialog.add(self.widget)
+            self.no_feeds.show()
 
         #User has feeds
         else:
-            i = 0
-            for url in self.feeds.keys():
-                feed_vbox = gtk.VBox(False, 6)
-                feed_items_vbox = gtk.VBox(False, 6)
-                self.displays[url] = feed_items_vbox
-                feed_items_vbox.set_no_show_all(True)
+            for i, url in enumerate(self.urls):
+                self.add_feed_row(url, i)
 
-                if url == 'google-reader':
-                    weburl = reader_url
+        #+Add Feed button
+        button = gtk.Button(_("_Add Feed"))
+        image = gtk.image_new_from_stock(gtk.STOCK_ADD, gtk.ICON_SIZE_BUTTON)
+        button.set_image(image)
+        button.connect('clicked', self.add_feed_dialog)
 
-                else:
-                    try:
-                        weburl = self.feeds[url].feed.link
-                    except:
-                        weburl = url
+        hbox = gtk.HBox(False, 6)
+        hbox.pack_start(button, True, False)
 
-                for entry in self.feeds[url].entries[:5]:
-                    image = self.web_image()
-                    label = gtk.Label(shortify(entry['title']))
+        self.widget.pack_end(hbox, False)
 
-                    hbox = gtk.HBox(False, 6)
-                    hbox.pack_start(image, False, False)
-                    hbox.pack_start(label, True, False)
+        self.widget.show_all()
 
-                    button = gtk.Button()
-                    button.add(hbox)
-                    button.set_relief(gtk.RELIEF_NONE)
-                    if len(entry['title']) > 25:
-                        button.set_tooltip_text(entry['title'])
-                    button.connect('clicked', self.open_url, entry['link'])
-                    button.show_all()
+        self.main_vbox.pack_end(self.widget, False, False, 0)
 
-                    feed_items_vbox.pack_start(button, False)
+    #Setup the widgets for the feed
+    def add_feed_row(self, url, i):
+        feed_vbox = gtk.VBox(False, 6)
+        feed_items_vbox = gtk.VBox(False, 6)
+        self.displays[url] = feed_items_vbox
+        feed_items_vbox.set_no_show_all(True)
 
-                feed_hbox = gtk.HBox(False, 6)
-                feed_vbox.pack_start(feed_hbox, False)
-                feed_vbox.pack_start(feed_items_vbox, False)
-                self.widget.pack_start(feed_vbox)
+        feed_hbox = gtk.HBox(False, 6)
+        feed_vbox.pack_start(feed_hbox, False)
+        feed_vbox.pack_start(feed_items_vbox, False)
+        self.widget.pack_start(feed_vbox)
 
-                #Button for opening the feed's website
-                image = self.web_image()
-                button = gtk.Button()
-                button.set_image(image)
-                button.set_relief(gtk.RELIEF_NONE)
-                button.set_tooltip_text(_("Open this feed's website"))
+        #Get the icon as a pixbuf
+        pb = None
+        if self.feeds[url].icon != '' and self.client.get_value(GROUP_DEFAULT, 'show_favicons'):
+            try:
+                pb = gtk.gdk.pixbuf_new_from_file_at_size(self.feeds[url].icon, 16, 16)
+            except:
+                pass
 
-                if url != 'google-reader':
-                    button.connect('clicked', self.open_url, weburl)
+        if pb is None:
+            pb = self.web_image
 
-                else:
-                    button.connect('clicked', self.open_url, reader_url)
+        #Pretty icon for button
+        image = awn.Image()
+        image.set_size_request(16, 16)
+        image.set_from_pixbuf(pb)
+        throbber = awn.OverlayThrobber(image)
+        throbber.props.active = True
+        throbber.props.scale = 1.0
+        image.add_overlay(throbber)
+        self.feed_icons[url] = image
+        self.feed_throbbers[url] = throbber
 
-                feed_hbox.pack_start(button, False)
+        #Button for opening the feed's website
+        button = gtk.Button()
+        button.add(image)
+        button.set_relief(gtk.RELIEF_NONE)
+        button.set_tooltip_text(_("Open this feed's website"))
+        button.connect('clicked', self.feed_icon_click, url)
+        button.show_all()
 
-                #ToggleButton for showing/hiding the feed's items
-                arrow = gtk.Arrow(gtk.ARROW_RIGHT, gtk.SHADOW_NONE)
+        feed_hbox.pack_start(button, False)
 
-                if url != 'google-reader':
-                    label = gtk.Label(self.feeds[url].feed.title)
+        #ToggleButton for showing/hiding the feed's items
+        arrow = gtk.Arrow(gtk.ARROW_RIGHT, gtk.SHADOW_NONE)
 
-                else:
-                    label = gtk.Label(_("Google Reader"))
+        label = gtk.Label(_("Loading..."))
+        self.feed_labels[url] = label
 
-                toggle_hbox = gtk.HBox(False, 3)
-                toggle_hbox.pack_start(arrow, False)
-                toggle_hbox.pack_start(label, False)
+        toggle_hbox = gtk.HBox(False, 3)
+        toggle_hbox.pack_start(arrow, False)
+        toggle_hbox.pack_start(label, False)
 
-                toggle = gtk.ToggleButton()
-                toggle.add(toggle_hbox)
-                toggle.set_relief(gtk.RELIEF_NONE)
-                toggle.connect('toggled', self.toggle_display, url)
-                self.toggles.append(toggle)
+        toggle = gtk.ToggleButton()
+        toggle.add(toggle_hbox)
+        toggle.set_relief(gtk.RELIEF_NONE)
+        toggle.connect('toggled', self.toggle_display, url)
+        toggle.url = url
+        self.toggles.append(toggle)
+        self.feed_toggles[url] = toggle
 
-                toggle.arrow = arrow
-                toggle.weburl = weburl
-                toggle.url = url
-                toggle.web = button
-                toggle.position = i
-                toggle.label = None
-                toggle.size_group = None
+        toggle.arrow = arrow
+        toggle.web_url = ''
+        toggle.url = url
+        toggle.web = button
+        toggle.position = i
+        toggle.label = None
+        toggle.size_group = None
 
-                #Drag and Drop to reorder
-                #or drop an e.g. a web browser to go to that feeds' url
-                toggle.drag_source_set(gtk.gdk.BUTTON1_MASK, \
-                  [("text/plain", 0, 0), ("STRING", 0, 0)], \
-                  gtk.gdk.ACTION_COPY | gtk.gdk.ACTION_MOVE)
-                toggle.connect('drag-begin', self.toggle_drag_begin)
-                toggle.connect('drag-data-get', self.toggle_drag_get)
-                toggle.connect('drag-end', self.toggle_drag_end)
+        #Drag and Drop to reorder
+        #or drop an e.g. a web browser to go to that feeds' url
+        toggle.drag_source_set(gtk.gdk.BUTTON1_MASK, \
+          [("text/plain", 0, 0), ("STRING", 0, 0)], \
+          gtk.gdk.ACTION_COPY | gtk.gdk.ACTION_MOVE)
+        toggle.connect('drag-begin', self.toggle_drag_begin)
+        toggle.connect('drag-data-get', self.toggle_drag_get)
+        toggle.connect('drag-end', self.toggle_drag_end)
 
-                #If there's only one feed, show its most recent items
-                if len(self.urls) == 1:
-                    toggle.set_active(True)
+        #If there's only one feed, show its most recent items
+        if len(self.urls) == 1:
+            toggle.set_active(True)
 
-                #Not showing, set appropriate tooltip text
-                else:
-                    toggle.set_tooltip_text(_("Show this feed's items"))
+        #Not showing, set appropriate tooltip text
+        else:
+            toggle.set_tooltip_text(_("Show this feed's items"))
 
-                feed_hbox.pack_start(toggle)
-
-                i += 1
-
-            button = gtk.Button(_("_Add Feed"))
-            image = gtk.image_new_from_stock(gtk.STOCK_ADD, gtk.ICON_SIZE_BUTTON)
-            button.set_image(image)
-            button.connect('clicked', self.add_feed_dialog)
-
-            hbox = gtk.HBox(False, 6)
-            hbox.pack_start(button, True, False)
-
-            self.widget.pack_start(hbox, False)
-
-            self.widget.show_all()
-
-            self.main_vbox.pack_end(self.widget, False, False, 0)
+        feed_hbox.pack_start(toggle)
 
     #Toggle buttons drag and drop
     def toggle_drag_begin(self, toggle, context):
@@ -565,7 +464,7 @@ class App(awn.AppletSimple):
 
     #When the toggle is dragged onto something
     def toggle_drag_get(self, toggle, context, data, info, time):
-        data.set(data.target, 8, toggle.weburl)
+        data.set(data.target, 8, self.feeds[toggle.url].web_url)
 
     #When the toggle dragging is done
     def toggle_drag_end(self, toggle, context):
@@ -580,11 +479,15 @@ class App(awn.AppletSimple):
         #Save in case the feeds were reordered
         urls = ''
         self.urls = []
+        new_toggles = []
         children = toggle.parent.parent.parent.get_children()
         for vbox in children[:-1]:
             hbox = vbox.get_children()[0]
             urls += hbox.get_children()[1].url + '\n'
             self.urls.append(hbox.get_children()[1].url)
+            new_toggles.append(hbox.get_children()[1])
+
+        self.toggles = new_toggles
 
         #Remove the last newline
         urls = urls[:-1]
@@ -600,14 +503,12 @@ class App(awn.AppletSimple):
     def dialog_drag_motion(self, widget, context, x, y, time):
         if self.dragged_toggle is not None:
             toggles_xywh = {}
-            i = 0
-            for toggle in self.toggles:
+            for i, toggle in enumerate(self.toggles):
                 if toggle != self.dragged_toggle:
                     a = toggle.allocation
                     children = toggle.parent.parent.parent.get_children()
                     toggle.drag_pos = children.index(toggle.parent.parent)
                     toggles_xywh[i] = {'x': a.x, 'y': a.y, 'w': a.width, 'h': a.height, 't': toggle}
-                i += 1
 
             for coord in toggles_xywh.values():
                 if x >= coord['x'] and y >= coord['y']:
@@ -631,10 +532,30 @@ class App(awn.AppletSimple):
 
             url = data.data.strip()
 
-            if url.find('http://') == 0 or url.find('https://') == 0:
-                if url.find('\n') == -1:
-                    if url not in self.urls:
-                        self.add_feed(url)
+            #The file was downloaded
+            def got_file(selfurl, content):
+                self, url = selfurl
+
+                #The file was parsed
+                def got_parsed(user_data, parsed):
+                    self, url, original = user_data
+                    if not parsed['bozo'] and len(parsed['entries']) > 0:
+                        self.add_feed(url, parsed)
+
+                    else:
+                        opml = parse_opml(original, self.urls)
+
+                        if len(opml) != 0:
+                            self.add_opml_dialog(opml)
+
+                #Feedparser can cause a short delay, so thread it
+                self.network_handler.run_feedparser(content, user_data=(self, url, content), \
+                    callback=got_parsed)
+
+                #Otherwise, nothing will be done.
+
+            if url not in self.urls:
+                self.network_handler.get_data(url, user_data=(self, url), callback=got_file)
 
         else:
             context.finish(False, False, time)
@@ -666,27 +587,48 @@ class App(awn.AppletSimple):
             toggle.set_tooltip_text(_("Show this feed's items"))
             toggle.arrow.set(gtk.ARROW_RIGHT, gtk.SHADOW_NONE)
 
-    #User cleared Google Reader error
-    def cancel_google_error(self, button):
+    def scroll(self, widget, event):
+        open_toggle = None
+        for toggle in self.toggles:
+            if toggle.get_active():
+                open_toggle = toggle
+                break
+
+        if open_toggle is None:
+            return False
+
+        toggle_index = self.toggles.index(open_toggle)
+        if event.direction in (gtk.gdk.SCROLL_UP, gtk.gdk.SCROLL_LEFT):
+            if toggle_index != 0:
+                self.toggles[toggle_index - 1].set_active(True)
+
+        else:
+            if open_toggle != self.toggles[-1]:
+                self.toggles[toggle_index + 1].set_active(True)
+
+        return False
+
+    #User cleared login error
+    def cancel_login_error(self, button):
         self.google_error = False
-
-        self.remove_feed(None, 'google-reader')
-
-        self.set_icon_name('awn-feeds')
 
     #Show the Add Feed dialog
     def add_feed_dialog(self, widget):
         import prefs
-        prefs.AddFeed(applet=self)
+        self.addfeed = prefs.AddFeed(applet=self)
+
+    def feed_icon_click(self, button, feedurl):
+        self.open_url(None, self.feeds[feedurl].web_url)
 
     #Open a URL
     def open_url(self, widget, url):
-        try:
-            gtk.show_uri(None, url, gtk.get_current_event_time())
+        if url.strip() != '':
+            try:
+                gtk.show_uri(None, url, gtk.get_current_event_time())
 
-        #For GTK < 2.14
-        except:
-            os.system('xdg-open "%s" &' % url)
+            #For GTK < 2.14
+            except:
+                os.system('xdg-open "%s" &' % url)
 
     #Remove a feed
     def remove_feed(self, url):
@@ -704,68 +646,84 @@ class App(awn.AppletSimple):
         fp.write(newtext)
         fp.close()
 
-        #Sign out of Google Reader, if we're removing it
-        if url == 'google-reader':
-            self.client.set_value(GROUP_DEFAULT, 'google_token', 0)
-            self.SID = ''
-            self.google_key = None
+        #User is removing the last feed
+        if len(self.feeds.keys()) == 1:
+            self.no_feeds.show()
 
-        #If the only remaining feed is Google Reader
-        #(self.feeds hasn't been changed yet)
-        elif len(self.feeds.keys()) == 2 and 'google-reader' in self.feeds:
-            self.set_icon_name('awn-feeds-greader')
+        #Clean up widgets
+        self.toggles.remove(self.feed_toggles[url])
+        self.displays[url].parent.destroy()
+        self.displays[url].destroy()
+        self.feed_labels[url].destroy()
+        self.feed_icons[url].destroy()
+        self.feed_toggles[url].destroy()
+        del self.displays[url]
+        del self.feed_labels[url]
+        del self.feed_icons[url]
+        del self.feed_throbbers[url]
+        del self.feed_toggles[url]
 
-        #Clean up
+        #Clean up non-widgets
+        self.feeds[url].delete()
+        self.urls.remove(url)
         try:
             del self.feeds[url]
             del self.newest[url]
         except:
             pass
 
-        self.setup_dialog()
+        #If the only remaining feed is Google Reader
+        #(self.feeds hasn't been changed yet)
+        all_greader = True
+        for url, feed in self.feeds.items():
+            if not isinstance(feed, classes.GoogleReader):
+                all_greader = False
+                break
+
+        self.set_icon_name(['awn-feeds', 'awn-feeds-greader'][all_greader])
 
     #Actually add a feed
-    def add_feed(self, url):
-        fp = open(config_path, 'r')
-        f = fp.read()
-        fp.close()
+    def add_feed(self, url, parsed=None, *data):
+        if url in self.urls:
+            return False
 
-        f += '\n' + url
+        if url not in self.written_urls:
+            fp = open(config_path, 'r')
+            f = fp.read()
+            fp.close()
 
-        fp = open(config_path, 'w')
-        fp.write(f)
-        fp.close()
+            if len(self.urls) > 0:
+                f += '\n' + url
 
-        self.update_feeds()
-
-    #Get/set the key for the Google Reader username and password
-    def get_google_key(self, username=None, password=None):
-        if self.google_key is None:
-            if not self.keyring:
-                self.keyring = awnlib.Keyring()
-
-            token = self.client.get_value(GROUP_DEFAULT, 'google_token')
-
-            #Username and password provided, e.g. from the add feed dialog
-            if username and password:
-                if token is None or token == 0:
-                    self.google_key = self.keyring.new('Feeds Applet - %s' % username,
-                        password,
-                        {'username': username, 'network': 'google-reader'},
-                        'network')
-
-                    self.client.set_value(GROUP_DEFAULT, 'google_token', int(self.google_key.token))
-
-                else:
-                    self.google_key = self.keyring.from_token(token)
-
-            #No username or password provided, e.g. while loading feeds
             else:
-                if token is None or token == 0:
-                    self.google_key = None
+                f = url
 
-                else:
-                    self.google_key = self.keyring.from_token(token)
+            fp = open(config_path, 'w')
+            fp.write(f)
+            fp.close()
+
+        self.urls.append(url)
+
+        if '-'.join(url.split('-')[:-1]) == 'google-reader':
+            self.feeds[url] = classes.GoogleReader(self, *data)
+
+        else:
+            self.feeds[url] = classes.WebFeed(self, url, parsed)
+
+        if not isinstance(self.feeds[url], classes.GoogleReader):
+            self.set_icon_name('awn-feeds')
+
+        self.add_feed_row(url, len(self.urls))
+
+        for toggle in self.toggles:
+            toggle.set_active(False)
+
+        self.feeds[url].update()
+
+        self.feed_throbbers[url].props.active = True
+        self.widget.show_all()
+
+        self.no_feeds.hide()
 
     #When a button is released on the applet
     def button_release(self, widget, event):
@@ -779,13 +737,9 @@ class App(awn.AppletSimple):
         elif event.button == 2:
             if len(self.urls) > 0:
                 if self.urls[0] in self.feeds:
-                    if self.urls[0] == 'google-reader':
-                        weburl = reader_url
+                    web_url = self.feeds[self.urls[0]].web_url
 
-                    else:
-                        weburl = self.feeds[self.urls[0]].feed.link
-
-                    self.open_url(None, weburl)
+                    self.open_url(None, web_url)
 
         elif event.button == 3:
             self.dialog.hide()
@@ -863,7 +817,7 @@ class App(awn.AppletSimple):
             fp.write('http://planet.awn-project.org/?feed=atom')
             fp.close()
 
-            self.urls = ('http://planet.awn-project.org/?feed=atom', )
+            self.urls = ['http://planet.awn-project.org/?feed=atom']
 
         else:
             fp = open(config_path, 'r')
@@ -875,60 +829,140 @@ class App(awn.AppletSimple):
                 if url != '':
                     self.urls.append(url)
 
-    #It looks like Google Reader inserts something into every entry,
-    #which messes up update_feeds() and makes it think that all 10 items are new
-    #Only keep the title and URL; they should be unique often enough
-    def simplify(self, feed):
-        i = 0
-        try:
-            for entry in feed.entries:
-                feed.entries[i] = {'title': entry.title,
-                    'link': entry.link}
+    #OPML stuff...
 
-                i += 1
+    #Confirmation dialog, from dragging and dropping
+    def add_opml_dialog(self, urls):
+        dialog = gtk.Dialog(_("OPML Import"), None, gtk.DIALOG_NO_SEPARATOR, \
+          (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT, gtk.STOCK_OK, gtk.RESPONSE_ACCEPT))
 
-        except:
-            self.io_error = True
+        if len(urls) == 0:
+            message = _("Do you want to add this feed?")
 
-    #Returns a 16x16 applications-internet GtkImage
-    def web_image(self):
-        pixbuf = self.icon_theme.load_icon('applications-internet', 16, 0)
+        else:
+            message = _("Do you want to add these %s feeds?") % len(urls)
+
+        dialog.get_content_area().pack_start(gtk.Label(message))
+
+        if self.icon_theme.has_icon('text-x-opml'):
+            dialog.set_icon_name('text-x-opml')
+
+        else:
+            dialog.set_icon_from_file(icon_path)
+
+        dialog.show_all()
+
+        resp = dialog.run()
+        dialog.destroy()
+
+        if resp == gtk.RESPONSE_ACCEPT:
+            self.add_opml(urls)
+
+        #Not sure why this is necessary...
+        gtk.main()
+
+    #Actually add each feed
+    def add_opml(self, urls):
+        fp = open(config_path, 'r')
+        f = fp.read()
+        fp.close()
+
+        for url in urls:
+            f += '\n' + url
+            self.written_urls.append(url)
+
+        fp = open(config_path, 'w')
+        fp.write(f)
+        fp.close()
+
+        for url in urls:
+            self.add_feed(url)
+
+        self.written_urls = []
+
+    def load_opml(self, uri):
+        fp = open(uri)
+        f = fp.read()
+        fp.close()
+
+        urls = parse_opml(f, self.urls)
+
+        self.add_opml_dialog(urls)
+
+    def icon_theme_changed(self, *args):
+        #Get a 16x16 icon representing the Internet/web
+        self.web_image = self.icon_theme.load_icon('applications-internet', 16, 0)
 
         #Force a size of 16x16
-        if pixbuf.get_width() != 16 or pixbuf.get_height() != 16:
-            pixbuf = pixbuf.scale_simple(16, 16, gtk.gdk.INTERP_BILINEAR)
+        if self.web_image.get_width() != 16 or self.web_image.get_height() != 16:
+            self.web_image = self.web_image.scale_simple(16, 16, gtk.gdk.INTERP_BILINEAR)
 
-        image = gtk.image_new_from_pixbuf(pixbuf)
+    def show_favicons(self):
+        for url, icon in self.feed_icons.items():
+            self.got_favicon(self.feeds[url], True)
 
-        return image
+    def hide_favicons(self):
+        for url, icon in self.feed_icons.items():
+            self.feed_icons[url].set_from_pixbuf(self.web_image)
 
-#D-Bus stuff
-class DBusService(dbus.service.Object):
-    def __init__(self, applet):
-        self.applet = applet
-  
-        bus_name = dbus.service.BusName('org.awnproject.Feeds', bus=dbus.SessionBus())
-  
-        dbus.service.Object.__init__(self, bus_name, '/org/awnproject/Feeds')
-  
-    @dbus.service.method('org.awnproject.Feeds')
-    def Update(self):
-        self.applet.update_feeds()
+    #timeout is currently ignored because Python 2.5 doesn't support it.
+    class NetworkHandler(ThreadQueue):
+        class NetworkException(Exception):
+            pass
 
-        return 'OK'
+        class ParseException(Exception):
+            pass
 
-    @dbus.service.method('org.awnproject.Feeds')
-    def AddFeed(self, url):
-        if url not in self.applet.urls:
-            self.applet.add_feed(url)
+        @async_method
+        def get_data(self, uri, headers = {}, parse=False, timeout=60, user_data=None):
+            try:
+                req = urllib2.Request(uri)
+                for key, val in headers.items():
+                    req.add_header(key, val)
+                req.add_header('HTTP_USER_AGENT', user_agent)
 
-        return 'OK'
+                fp = urllib2.urlopen(req)
+                data = fp.read()
+                fp.close()
+            except:
+                raise self.NetworkException("Couldn't fetch file")
+            else:
+                if parse:
+                    data = feedparser.parse(data)
 
-    @dbus.service.method('org.awnproject.Feeds')
-    def DoneUpdating(self):
-        self.applet.done_updating()
+                if user_data is not None:
+                    return user_data, data
+                else:
+                    return data
 
-        return 'OK'
+        @async_method
+        def post_data(self, uri, data=None, timeout=60):
+            try:
+                req = urllib2.Request(uri, data)
+                req.add_header('HTTP_USER_AGENT', user_agent)
+
+                fp = urllib2.urlopen(req)
+                data = fp.read()
+                fp.close()
+            except:
+                raise self.NetworkException("Couldn't post data")
+            else:
+                return data
+
+        #Feedparser can take up to a second parsing a feed.
+        #Several feeds trying to run feedparser at the same time locks up the interface
+        #So do this in a separate thread
+        @async_method
+        def run_feedparser(self, data, user_data=None):
+            try:
+                parsed = feedparser.parse(data)
+            except:
+                raise self.ParseException("Parsing error")
+            else:
+                if user_data is not None:
+                    return user_data, parsed
+                else:
+                    return parsed
 
 #Utility functions...
 
@@ -939,6 +973,56 @@ def shortify(string):
 
     else:
         return string
+
+#Parses an OPML file and returns a list of feed URLs
+def parse_opml(data, existing_urls):
+    children = []
+    urls = []
+
+    try:
+        doc = minidom.parseString(data)
+
+        nodes = doc.documentElement.childNodes
+
+        #Narrow it down to <outline> elements
+        for node in nodes:
+            if isinstance(node, minidom.Element):
+                if node.tagName == 'body':
+                    for child in node.childNodes:
+                        if isinstance(child, minidom.Element):
+                            children.append(child)
+
+        #Go through each <outline> element
+        for node in children:
+            #Individual feed
+            if node.hasAttribute('xmlUrl'):
+                url = node.getAttribute('xmlUrl')
+                if url not in existing_urls:
+                    urls.append(url)
+
+            #It's a category; ignore it and just get its feeds
+            else:
+                for child in node.childNodes:
+                    if isinstance(child, minidom.Element):
+                        if child.hasAttribute('xmlUrl'):
+                            url = child.getAttribute('xmlUrl')
+                            if url not in existing_urls:
+                                urls.append(url)
+
+        doc.unlink()
+
+    except:
+        pass
+
+    return urls
+
+def get_16x16(pb):
+    if pb.get_width() != 16 or pb.get_height() != 16:
+        pb2 = pb.scale_simple(16, 16, gtk.gdk.INTERP_BILINEAR)
+        del pb
+        pb = pb2
+
+    return pb
 
 if __name__ == '__main__':
     awn.init(sys.argv[1:])

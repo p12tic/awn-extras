@@ -32,6 +32,8 @@ import awn
 from awn import extras
 from awn.extras import _, awnlib
 
+import classes
+
 icon_path = '%s/share/avant-window-navigator/applets/feeds/icons/awn-feeds.svg'
 icon_path = icon_path % extras.PREFIX
 
@@ -40,12 +42,15 @@ greader_path = greader_path % extras.PREFIX
 
 config_path = '%s/.config/awn/applets/feeds.txt' % os.environ['HOME']
 
-feed_search_url = 'http://www.google.com/reader/directory/search?'
+cache_dir = os.environ['HOME'] + '/.cache/awn-feeds-applet'
+greader_ico = os.path.join(cache_dir, 'google-reader.ico')
 
 reader_url = 'http://www.google.com/reader/'
 
 
 class Prefs(gtk.Window):
+    icon_theme = gtk.icon_theme_get_default()
+
     def __init__(self, applet):
         self.applet = applet
 
@@ -54,24 +59,28 @@ class Prefs(gtk.Window):
         self.set_icon_from_file(icon_path)
         self.set_border_width(12)
 
-        vbox = gtk.VBox(False, 6)
+        vbox = gtk.VBox(False, 12)
+
+        tab_feeds_vbox = gtk.VBox(False, 6)
+        tab_updating_vbox = gtk.VBox(False, 6)
+
+        notebook = gtk.Notebook()
+        notebook.append_page(tab_feeds_vbox, gtk.Label(_("Feeds")))
+        notebook.append_page(tab_updating_vbox, gtk.Label(_("Updating")))
+        vbox.pack_start(notebook, True, True, 0)
 
         #Feeds: Add/Remove, with a TreeView for displaying
-        feeds_title_label = gtk.Label()
-        feeds_title_label.set_markup('<b>' + _("Feeds") + '</b>')
-        feeds_title_label.set_alignment(0.0, 0.5)
+        self.liststore = gtk.ListStore(gtk.gdk.Pixbuf, str, str)
 
-        vbox.pack_start(feeds_title_label, False)
+        pb_renderer = gtk.CellRendererPixbuf()
 
-        self.liststore = gtk.ListStore(str, str)
-
-        self.update_liststore()
-
-        renderer = gtk.CellRendererText()
+        text_renderer = gtk.CellRendererText()
 
         column = gtk.TreeViewColumn(' ')
-        column.pack_start(renderer, True)
-        column.add_attribute(renderer, 'markup', 0)
+        column.pack_start(pb_renderer, False)
+        column.pack_start(text_renderer, True)
+        column.add_attribute(pb_renderer, 'pixbuf', 0)
+        column.add_attribute(text_renderer, 'markup', 1)
 
         self.treeview = gtk.TreeView(self.liststore)
         self.treeview.append_column(column)
@@ -81,7 +90,7 @@ class Prefs(gtk.Window):
         sw = gtk.ScrolledWindow()
         sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         sw.add_with_viewport(self.treeview)
-        sw.set_size_request(-1, 125)
+        sw.set_size_request(225, 225)
 
         #Remove and add buttons
         self.remove_button = gtk.Button(stock=gtk.STOCK_REMOVE)
@@ -96,23 +105,41 @@ class Prefs(gtk.Window):
         buttons_hbox.pack_end(add_button, False)
         buttons_hbox.pack_end(self.remove_button, False)
 
+        show_favicons_check = gtk.CheckButton(_("_Show website icons in dialog"))
+        if self.applet.client.get_bool(GROUP_DEFAULT, 'show_favicons'):
+            show_favicons_check.set_active(True)
+        show_favicons_check.connect('toggled', self.check_toggled, 'show_favicons')
+
+        #TODO: this position is a little ugly, but I don't know how to do it better.
+        #Import and export buttons (OPML)
+        import_button = gtk.Button(_("Import"))
+        import_button.connect('clicked', self.do_import)
+
+        self.export_button = gtk.Button(_("Export"))
+        self.export_button.connect('clicked', self.do_export)
+
+        sensitive = False
+        for url, feed in self.applet.feeds.items():
+            if isinstance(feed, classes.WebFeed):
+                sensitive = True
+                break
+        self.export_button.set_sensitive(sensitive)
+
+        buttons_hbox2 = gtk.HButtonBox()
+        buttons_hbox2.set_layout(gtk.BUTTONBOX_EDGE)
+        buttons_hbox2.pack_end(import_button, False)
+        buttons_hbox2.pack_end(self.export_button, False)
+
         feeds_vbox = gtk.VBox(False, 6)
-        feeds_vbox.pack_start(sw, False)
+        feeds_vbox.pack_start(sw)
         feeds_vbox.pack_start(buttons_hbox, False)
+        feeds_vbox.pack_start(show_favicons_check, False)
+        feeds_vbox.pack_start(buttons_hbox2, False)
+        feeds_vbox.set_border_width(12)
 
-        feeds_align = gtk.Alignment(0.0, 0.5, 1.0, 1.0)
-        feeds_align.set_padding(0, 0, 12, 0)
-        feeds_align.add(feeds_vbox)
-
-        vbox.pack_start(feeds_align, False)
+        tab_feeds_vbox.pack_start(feeds_vbox)
 
         #Updating section (enable/disable automatically updating and change how often)
-        auto_title_label = gtk.Label()
-        auto_title_label.set_markup('<b>' + _("Updating") + '</b>')
-        auto_title_label.set_alignment(0.0, 0.5)
-
-        vbox.pack_start(auto_title_label, False)
-
         #Checkbox: Notify for updated feeds
         check_notify = gtk.CheckButton(_("_Notify for updated feeds"))
         if self.applet.client.get_bool(GROUP_DEFAULT, 'notify'):
@@ -143,12 +170,9 @@ class Prefs(gtk.Window):
         auto_vbox.pack_start(check_notify, False)
         auto_vbox.pack_start(check_auto, False)
         auto_vbox.pack_start(hbox_auto, False)
+        auto_vbox.set_border_width(12)
 
-        auto_align = gtk.Alignment(0.0, 0.5, 1.0, 1.0)
-        auto_align.set_padding(0, 0, 12, 0)
-        auto_align.add(auto_vbox)
-
-        vbox.pack_start(auto_align, False)
+        tab_updating_vbox.pack_start(auto_vbox)
 
         #Close button in the bottom right corner
         close = gtk.Button(stock=gtk.STOCK_CLOSE)
@@ -159,11 +183,9 @@ class Prefs(gtk.Window):
 
         vbox.pack_end(close_hbox, False)
 
-        #HSeparator
-        hsep = gtk.HSeparator()
-        vbox.pack_end(hsep, False)
-
         self.add(vbox)
+
+        self.update_liststore()
 
         self.show_all()
 
@@ -173,7 +195,7 @@ class Prefs(gtk.Window):
 
     def remove_feed(self, button):
         sel = self.treeview.get_selection()
-        url = self.liststore[sel.get_selected()[1]][1]
+        url = self.liststore[sel.get_selected()[1]][2]
 
         self.applet.remove_feed(url)
 
@@ -181,6 +203,13 @@ class Prefs(gtk.Window):
         #(i.e. the removed feed wasn't the bottom one)
         if not self.liststore.remove(sel.get_selected()[1]):
             self.remove_button.set_sensitive(False)
+
+        sensitive = False
+        for url, feed in self.applet.feeds.items():
+            if isinstance(feed, classes.WebFeed):
+                sensitive = True
+                break
+        self.export_button.set_sensitive(sensitive)
 
     def selection_changed(self, sel):
         self.remove_button.set_sensitive(bool(sel.get_selected()))
@@ -194,6 +223,12 @@ class Prefs(gtk.Window):
         if key == 'auto_update':
             self.applet.do_timer()
 
+        elif key == 'show_favicons':
+            if check.get_active():
+                self.applet.show_favicons()
+            else:
+                self.applet.hide_favicons()
+
     def spin_focusout(self, spin, event):
         self.applet.client.set_value(GROUP_DEFAULT, 'update_interval', int(spin.get_value()))
 
@@ -204,19 +239,86 @@ class Prefs(gtk.Window):
     def update_liststore(self):
         self.liststore.clear()
 
+        sensitive = False
         for url in self.applet.urls:
-            if url == 'google-reader':
-                self.liststore.append([_("Google Reader"), url])
+            feed = self.applet.feeds[url]
 
-            else:
-                try:
-                    self.liststore.append([self.applet.feeds[url].feed.title, url])
+            if isinstance(feed, classes.WebFeed):
+                sensitive = True
 
-                except:
-                    self.liststore.append([url, url])
+            try:
+                if feed.icon.find('gtk://') == 0:
+                    pb = self.icon_theme.load_icon(feed.icon[6:], 16, 0)
+                    pb = get_16x16(pb)
+
+                else:
+                    pb = gtk.gdk.pixbuf_new_from_file_at_size(feed.icon, 16, 16)
+            except:
+                pb = None
+
+            title = [feed.title, _("Loading...")][feed.title == '']
+
+            self.liststore.append([pb, title, url])
+
+        self.export_button.set_sensitive(sensitive)
+
+    def do_import(self, button):
+        file_chooser = gtk.FileChooserDialog(_("Open OPML File"), \
+            buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN, gtk.RESPONSE_OK), \
+            action=gtk.FILE_CHOOSER_ACTION_OPEN)
+        file_chooser.set_icon_from_file(icon_path)
+        response = file_chooser.run()
+        filename = file_chooser.get_filename()
+        file_chooser.destroy()
+  
+        if filename is None:
+            return False
+  
+        self.applet.load_opml(filename)
+
+    def do_export(self, button):
+        file_chooser = gtk.FileChooserDialog(_("Save OPML File"), \
+            buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN, gtk.RESPONSE_OK), \
+            action=gtk.FILE_CHOOSER_ACTION_SAVE)
+        file_chooser.set_icon_from_file(icon_path)
+        file_chooser.set_do_overwrite_confirmation(True)
+        #Note: the following string is used as an exmaple filename
+        file_chooser.set_current_name(_("feeds.opml"))
+        response = file_chooser.run()
+        filename = file_chooser.get_filename()
+        file_chooser.destroy()
+  
+        if filename is None:
+            return False
+
+        initial_text = ['<?xml version="1.0" encoding="UTF-8"?>',
+            '<opml version="1.0">',
+            '    <head>',
+            '        <title>%s</title>' % _("Awn Feeds Applet Items"),
+            '    </head>',
+            '    <body>']
+        each_text = '        <outline title="%s" text="%s" htmlUrl="%s" type="rss" xmlUrl="%s" />'
+        end_text = ['    </body>',
+            '</opml>']
+
+        feeds_text = []
+
+        for url, feed in self.applet.feeds.items():
+            if isinstance(feed, classes.WebFeed):
+                title = html_safe(feed.title)
+                web_url = html_safe(feed.web_url)
+                url = html_safe(feed.url)
+                feeds_text.append(each_text % (title, title, web_url, url))
+
+        fp = open(filename, 'w+')
+        fp.write('\n'.join(initial_text + feeds_text + end_text))
+        fp.close()
 
 class AddFeed(gtk.Window):
     prefs = None
+    icon_theme = gtk.icon_theme_get_default()
+    got_results = False
+
     def __init__(self, prefs=None, applet=None):
         gtk.Window.__init__(self)
 
@@ -228,29 +330,55 @@ class AddFeed(gtk.Window):
         elif applet is not None:
             self.applet = applet
 
+        self.google_source = None
+        for source in self.applet.feeds.values():
+            if isinstance(source, classes.GoogleReader):
+                self.google_source = source
+                break
+
         self.set_border_width(12)
         self.set_title(_("Add Feed"))
         self.set_icon_from_file(icon_path)
 
-        #Source: label and combo box
+        #Source: label and radio buttons
         source_label = gtk.Label(_("Source:"))
-        source_label.set_alignment(1.0, 0.5)
+        source_label.set_alignment(1.0, 0.0)
 
-        #TODO: This would only allow one Google Reader instance
-        #Change?
-        source_combo = gtk.combo_box_new_text()
-        if self.applet.SID != '':
-            source_combo.append_text(_("Feed Search"))
-        source_combo.append_text(_("RSS/Atom"))
-        if 'google-reader' not in self.applet.urls:
-            source_combo.append_text(_("Google Reader"))
-        source_combo.set_active(0)
-        source_combo.connect('changed', self.combo_changed)
-        self.combo = source_combo
+        source_vbox = gtk.VBox(False, 3)
+
+        pb = self.icon_theme.load_icon('search', 16, 0)
+        pb = get_16x16(pb)
+
+        search_radio = gtk.RadioButton(None)
+        search_radio.add(get_radio_hbox(pb, _("Search")))
+        if not self.google_source:
+            search_radio.set_sensitive(False)
+            search_radio.set_tooltip_text(_("You must sign in to Google Reader to search for feeds."))
+
+        try:
+            pb = self.icon_theme.load_icon('application-rss+xml', 16, 0)
+            pb = get_16x16(pb)
+        except:
+            pb = gtk.gdk.pixbuf_new_from_file_at_size(icon_path, 16, 16)
+        webfeed_radio = gtk.RadioButton(search_radio, None)
+        webfeed_radio.add(get_radio_hbox(pb, _("RSS/Atom")))
+
+        pb = get_greader_icon()
+
+        greader_radio = gtk.RadioButton(search_radio, None)
+        greader_radio.add(get_radio_hbox(pb, _("Google Reader")))
+
+        num = 0
+        for radio in (search_radio, webfeed_radio, greader_radio):
+            radio.connect('toggled', self.radio_toggled)
+            radio.num = num
+            source_vbox.pack_start(radio, False, False, 0)
+
+            num += 1
 
         source_hbox = gtk.HBox(False, 6)
         source_hbox.pack_start(source_label, False, False)
-        source_hbox.pack_start(source_combo)
+        source_hbox.pack_start(source_vbox)
 
         #"Search for" label and entry
         search_label = gtk.Label(_("Search for"))
@@ -310,17 +438,28 @@ class AddFeed(gtk.Window):
         self.pass_hbox.set_no_show_all(True)
 
         #Feed search by [Google Reader] message
-        pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(greader_path, 16, 16)
-        image = gtk.image_new_from_pixbuf(pixbuf)
+        pb = get_greader_icon()
+        image = awn.Image()
+        image.set_from_pixbuf(pb)
+        image.set_size_request(16, 16)
+        self.search_throbber = awn.OverlayThrobber(image)
+        self.search_throbber.props.scale = 1.0
+        self.search_throbber.props.active = False
+        image.add_overlay(self.search_throbber)
+
+        image_align = gtk.Alignment(0.5, 0.5, 0.0, 0.0)
+        image_align.add(image)
+
         label = gtk.Label(_("Feed search by "))
         button = gtk.LinkButton(reader_url, _("Google Reader"))
 
         image.show()
+        image_align.show()
         label.show()
         button.show()
 
         hbox = gtk.HBox()
-        hbox.pack_start(image, False, False, 6)
+        hbox.pack_start(image_align, False, False, 6)
         hbox.pack_start(label, False)
         hbox.pack_start(button, False)
         hbox.show()
@@ -357,7 +496,7 @@ class AddFeed(gtk.Window):
         self.search_button.set_no_show_all(True)
         self.search_button.connect('clicked', self.do_search)
 
-        if self.applet.SID != '':
+        if self.google_source is not None:
             self.search_button.show()
             self.search_hbox.show()
             self.search_msg.show()
@@ -365,24 +504,25 @@ class AddFeed(gtk.Window):
         else:
             self.add_button.show()
             self.url_hbox.show()
+            webfeed_radio.set_active(True)
 
         button_hbox = gtk.HBox(False, 6)
         button_hbox.pack_end(self.add_button, False, False)
         button_hbox.pack_end(self.search_button, False, False)
         button_hbox.pack_end(cancel, False, False)
 
-        self.widget = gtk.VBox(False, 6)
-        self.widget.pack_start(source_hbox, False, False)
-        self.widget.pack_start(self.search_hbox, False, False)
-        self.widget.pack_start(self.url_hbox, False, False)
-        self.widget.pack_start(self.user_hbox, False, False)
-        self.widget.pack_start(self.pass_hbox, False, False)
-        self.widget.pack_start(self.search_msg, False, False)
-        self.widget.pack_start(self.results_sw)
-        self.widget.pack_end(button_hbox, False, False)
-        self.widget.show_all()
+        main_vbox = gtk.VBox(False, 6)
+        main_vbox.pack_start(source_hbox, False, False)
+        main_vbox.pack_start(self.search_hbox, False, False)
+        main_vbox.pack_start(self.url_hbox, False, False)
+        main_vbox.pack_start(self.user_hbox, False, False)
+        main_vbox.pack_start(self.pass_hbox, False, False)
+        main_vbox.pack_start(self.search_msg, False, False)
+        main_vbox.pack_start(self.results_sw)
+        main_vbox.pack_end(button_hbox, False, False)
+        main_vbox.show_all()
 
-        self.add(self.widget)
+        self.add(main_vbox)
         self.add_button.grab_default()
 
         #Make the labels the same size
@@ -401,112 +541,69 @@ class AddFeed(gtk.Window):
 
         self.show_all()
 
+    #Add button clicked
     def almost_add_feed(self, button):
-        active = self.combo.get_active()
-
         #URL for RSS/Atom
-        if (self.applet.SID != '' and active == 1) or (self.applet.SID == '' and active == 0):
+        if self.num == 1:
             url = self.url_entry.get_text()
 
             self.applet.add_feed(url)
 
         #Signing in to Google Reader
-        elif self.applet.SID == '' and active == 1:
+        else:
             username = self.user_entry.get_text()
             password = self.pass_entry.get_text()
 
-            self.applet.get_google_key(username, password)
-
-            self.applet.add_feed('google-reader')
-
-        self.hide()
+            self.applet.add_feed('google-reader-' + username, None, username, password)
 
         if self.prefs:
             self.prefs.update_liststore()
 
-    def entry_changed(self, entry):
-        #Feed Search
-        if entry == self.search_entry:
-            self.search_button.set_sensitive((entry.get_text().replace(' ', '') != ''))
+        self.destroy()
 
-        #RSS/Atom by URL
+    def entry_changed(self, entry):
+        #RSS/Atom or Search
+        if entry == self.search_entry:
+            self.do_sensitive(self.search_button, entry)
+
         elif entry == self.url_entry:
-            self.add_button.set_sensitive((entry.get_text().replace(' ', '') != ''))
+            self.do_sensitive(self.add_button, entry)
 
         #Google Reader
         else:
-            if self.user_entry.get_text().replace(' ', '') != '':
-                if self.pass_entry.get_text().replace(' ', '') != '':
-                    self.add_button.set_sensitive(True)
+            self.do_sensitive(self.add_button, self.user_entry, self.pass_entry)
 
-                else:
-                    self.add_button.set_sensitive(False)
+    def radio_toggled(self, radio):
+        if not radio.get_active():
+            return False
 
-            else:
-                self.add_button.set_sensitive(False)
+        self.num = radio.num
 
-    def combo_changed(self, combo):
-        active = combo.get_active()
+        if self.num == 0:
+            self.hide_widgets()
+            self.search_button.show()
+            self.search_hbox.show()
+            self.search_msg.show()
 
-        #Logged in to Google Reader
-        if self.applet.SID != '':
-            #Feed Search through Google Reader
-            if active == 0:
-                self.search_button.show()
-                self.search_hbox.show()
-                self.search_msg.show()
-                self.add_button.hide()
-                self.url_hbox.hide()
-                self.user_hbox.hide()
-                self.pass_hbox.hide()
+            self.do_sensitive(self.search_button, self.search_entry)
 
-                if self.search_entry.get_text().replace(' ', '') != '':
-                    self.search_button.set_sensitive(True)
+            if self.got_results:
+                self.results_sw.show()
 
-                else:
-                    self.search_button.set_sensitive(False)
+        elif self.num == 1:
+            self.hide_widgets()
+            self.add_button.show()
+            self.url_hbox.show()
 
-            #URL for RSS/Atom feed
-            elif active == 1:
-                self.search_button.hide()
-                self.search_hbox.hide()
-                self.search_msg.hide()
-                self.results_sw.hide()
-                self.add_button.show()
-                self.url_hbox.show()
+            self.do_sensitive(self.add_button, self.url_entry)
 
-                if self.url_entry.get_text().replace(' ', '') != '':
-                    self.add_button.set_sensitive(True)
+        elif self.num == 2:
+            self.hide_widgets()
+            self.add_button.show()
+            self.user_hbox.show()
+            self.pass_hbox.show()
 
-                else:
-                    self.add_button.set_sensitive(False)
-
-        #Not logged in to Google Reader
-        else:
-            #URL for RSS/Atom feed
-            if active == 0:
-                self.url_hbox.show()
-                self.user_hbox.hide()
-                self.pass_hbox.hide()
-
-                if self.url_entry.get_text().replace(' ', '') != '':
-                    self.add_button.set_sensitive(True)
-
-                else:
-                    self.add_button.set_sensitive(False)
-
-            #Signing in to Google Reader
-            else:
-                self.url_hbox.hide()
-                self.user_hbox.show()
-                self.pass_hbox.show()
-
-                self.add_button.set_sensitive(False)
-
-                if self.user_entry.get_text().replace(' ', '') != '':
-                    if self.pass_entry.get_text().replace(' ', '') != '':
-                        self.add_button.set_sensitive(True)
-                    
+            self.do_sensitive(self.add_button, self.user_entry, self.pass_entry)
 
     def close(self, button):
         self.destroy()
@@ -516,85 +613,47 @@ class AddFeed(gtk.Window):
         for child in self.results_vbox.get_children():
             child.destroy()
 
-        search_url = feed_search_url + urllib.urlencode({'q': self.search_entry.get_text()})
+        query = self.search_entry.get_text()
+        self.search_throbber.props.active = True
+        self.google_source.get_search_results(query, self.got_search, self.search_error)
 
-        req = urllib2.Request(search_url)
-        req.add_header('Cookie', 'SID=' + self.applet.SID)
+    def search_error(self, *args):
+        self.got_results = False
+        self.search_throbber.props.active = False
 
-        try:
-            fp = urllib2.urlopen(req)
-            f = fp.read()
-            fp.close()
+        image = gtk.image_new_from_stock(gtk.STOCK_DIALOG_ERROR, gtk.ICON_SIZE_MENU)
 
-        except IOError:
-            image = gtk.image_new_from_stock(gtk.STOCK_DIALOG_ERROR, gtk.ICON_SIZE_MENU)
+        label = gtk.Label(_("There was an error while searching.\nPlease try again later."))
 
-            label = gtk.Label(_("There was an error while searching.\nMake sure you have added the Google Reader feed."))
+        hbox = gtk.HBox(False, 6)
+        hbox.set_border_width(6)
+        hbox.pack_start(image, False)
+        hbox.pack_start(label, False)
 
-            hbox = gtk.HBox(False, 6)
-            hbox.set_border_width(6)
-            hbox.pack_start(image, False)
-            hbox.pack_start(label, False)
+        #Center the box
+        hboxbox = gtk.HBox(False, 0)
+        hboxbox.pack_start(hbox, True, False)
+        self.results_vbox.pack_start(hboxbox, False)
 
-            #Center the box
-            hboxbox = gtk.HBox(False, 0)
-            hboxbox.pack_start(hbox, True, False)
-            self.results_vbox.pack_start(hboxbox, False)
+        self.results_sw.show()
+        self.results_vbox.show_all()
 
-            self.results_sw.show()
-            self.results_vbox.show_all()
 
-            return
-
-        try:
-            json = f.split('_DIRECTORY_SEARCH_DATA =')[1].split('</script>')[0].strip()
-            json = json.replace(':false', ':False').replace(':true', ':True')
-            results = eval(json)['results']
-
-        #Parsing error
-        except:
-            image = gtk.image_new_from_stock(gtk.STOCK_DIALOG_ERROR, gtk.ICON_SIZE_MENU)
-
-            label = gtk.Label(_("There was an error while searching.\nMake sure you have added the Google Reader feed."))
-            label.set_line_wrap(True)
-
-            hbox = gtk.HBox(False, 6)
-            hbox.set_border_width(6)
-            hbox.pack_start(image, False)
-            hbox.pack_start(label, False)
-
-            #Center the box
-            hboxbox = gtk.HBox(False, 0)
-            hboxbox.pack_start(hbox, True, False)
-            self.results_vbox.pack_start(hboxbox, False)
-
-            self.results_sw.show()
-            self.results_vbox.show_all()
-
-            return
-
+    def got_search(self, results):
         hsep = None
+        self.got_results = True
+        self.search_throbber.props.active = False
 
         for result in results:
-            #For some reason 'streamid' starts with 'feed/'
-            url = result['streamid'][5:]
-
-            #TODO: this is wrong.
-            #Some strings have \uxxxx in them, but python sees them as "\\uxxxx"
-            #the following line fixes some results, but this sometimes
-            #doesn't work or gets a SyntaxError or makes the text even worse.
-            #url = eval('u"%s"' % url.replace('"', '\\"'))
-
-            if url not in self.applet.urls:
+            if result['url'] not in self.applet.urls:
                 add = gtk.Button(stock=gtk.STOCK_ADD)
-                add.url = url
+                add.url = result['url']
                 add.connect('clicked', self.add_search_result)
 
                 add_vbox = gtk.VBox(False, 0)
                 add_vbox.pack_start(add, True, False)
 
                 #TODO: this is also wrong
-                #eval('u"%s"' % result['title'].replace('"', '\\"')))
                 label = gtk.Label(result['title'])
                 label.set_line_wrap(True)
 
@@ -603,9 +662,6 @@ class AddFeed(gtk.Window):
                 hbox.pack_start(add_vbox, False)
                 hbox.pack_start(label, False)
                 self.results_vbox.pack_start(hbox, False)
-
-                if add.url in self.applet.urls:
-                    hbox.set_sensitive(False)
 
                 hsep = gtk.HSeparator()
                 self.results_vbox.pack_start(hsep, False)
@@ -641,3 +697,56 @@ class AddFeed(gtk.Window):
 
         if self.prefs is not None:
             self.prefs.update_liststore()
+
+    def hide_widgets(self):
+        self.search_button.hide()
+        self.search_hbox.hide()
+        self.search_msg.hide()
+
+        self.add_button.hide()
+        self.url_hbox.hide()
+        self.user_hbox.hide()
+        self.pass_hbox.hide()
+
+        self.results_sw.hide()
+
+    def do_sensitive(self, button, *entries):
+        button.set_sensitive(True)
+        for entry in entries:
+            if entry.get_text().strip() == '':
+                button.set_sensitive(False)
+
+#Try the downloaded favicon first. If it doesn't work, use the blue RSS icon
+def get_greader_icon():
+    try:
+        pb = gtk.gdk.pixbuf_new_from_file_at_size(greader_ico, 16, 16)
+    except:
+        pb = gtk.gdk.pixbuf_new_from_file_at_size(greader_path, 16, 16)
+
+    return pb
+
+
+def get_16x16(pb):
+    if pb.get_width() != 16 or pb.get_height() != 16:
+        pb2 = pb.scale_simple(16, 16, gtk.gdk.INTERP_BILINEAR)
+        del pb
+        pb = pb2
+
+    return pb
+
+def get_radio_hbox(pb, txt):
+    img = gtk.image_new_from_pixbuf(pb)
+
+    label = gtk.Label(txt)
+
+    hbox = gtk.HBox(False, 3)
+    hbox.pack_start(img, False)
+    hbox.pack_start(label, False)
+
+    return hbox
+
+def html_safe(s):
+    s = s.replace('&', '&amp;').replace('<', '&lt;')
+    s = s.replace('>', '&gt;').replace('"', '&quot;')
+
+    return s

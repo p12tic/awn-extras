@@ -2,8 +2,8 @@ APPLET_NAME = feeds
 APPLET_MAIN_FILE = feeds.py
 
 dist_applet_DATA =			\
+	classes.py	\
 	prefs.py	\
-	update.py	\
 	$(NULL)
 
 icons_DATA = \

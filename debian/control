@@ -108,6 +108,8 @@ Recommends: 	awn-settings-trunk (>= 0.3.8),
 		python-gst0.10,
 # cpufreq
 		gnome-applets,
+# feeds
+		python-simplejson,
 Suggests:	awn-applets-python-extras-trunk,
 XB-Python-Version: ${python:Versions}
 Conflicts: awn-applets-python-core, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing, awn-extras-applets-trunk

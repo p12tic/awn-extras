@@ -194,6 +194,8 @@ if test x${enable_pymod_checks} = xyes; then
     AM_CHECK_PYMOD(pynotify,,,AC_MSG_ERROR([python module pynotify required (python-notify)]))
     # arss, feeds, mail
     AM_CHECK_PYMOD(feedparser,,,AC_MSG_ERROR([python module feedparser required (python-feedparser)]))
+    # feeds
+    AM_CHECK_PYMOD(simplejson,,,AC_MSG_ERROR([python module simplejson required (python-simplejson)]))
     # cairo-clock
     AM_CHECK_PYMOD(rsvg,,,AC_MSG_ERROR([python module rsvg required (gnome-python-desktop)]))
     # cairo-clock, calendar

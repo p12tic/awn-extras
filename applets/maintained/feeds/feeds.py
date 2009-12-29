@@ -36,11 +36,11 @@ from awn import extras
 from awn.extras import _, awnlib
 from awn.extras.threadqueue import ThreadQueue, async_method
 
+awn.check_dependencies(globals(), 'feedparser', 'pynotify', 'json')
+
 import classes
 
 socket.setdefaulttimeout(30)
-
-awn.check_dependencies(globals(), 'feedparser', 'pynotify')
 
 icondir = os.path.join(extras.APPLET_BASEDIR, 'feeds', 'icons')
 
@@ -80,7 +80,7 @@ class App(awn.AppletSimple):
     login_data = {}
     io_error = False
     login_error = False
-    num_new_while_updating = 0
+    num_notify_while_updating = 0
 
     def __init__(self, uid, panel_id):
         self.network_handler = self.NetworkHandler()
@@ -136,6 +136,9 @@ class App(awn.AppletSimple):
             if '-'.join(url.split('-')[:-1]) == 'google-reader':
                 self.feeds[url] = classes.GoogleReader(self, url.split('-')[-1])
 
+            elif '-'.join(url.split('-')[:-1]) == 'reddit':
+                self.feeds[url] = classes.Reddit(self, url.split('-')[-1])
+
             else:
                 self.feeds[url] = classes.WebFeed(self, url)
 
@@ -168,7 +171,7 @@ class App(awn.AppletSimple):
         if len(self.urls) != 0:
             self.finished_feeds = 0
             self.started_updating = 0
-            self.num_new_while_updating = 0
+            self.num_notify_while_updating = 0
             self.loading_feeds.show()
             self.set_tooltip_text(_("Loading feeds..."))
 
@@ -191,6 +194,8 @@ class App(awn.AppletSimple):
         except:
             pass
         else:
+            feed.num_new = 0
+            feed.num_notify = 0
             feed.update()
 
             self.started_updating += 1
@@ -221,7 +226,7 @@ class App(awn.AppletSimple):
             try:
                 if feed.icon.find('gtk://') == 0:
                     pb = self.icon_theme.load_icon(feed.icon[6:], 16, 0)
-                    pb = get_16x16(pb)
+                    pb = classes.get_16x16(pb)
 
                 else:
                     pb = gtk.gdk.pixbuf_new_from_file_at_size(feed.icon, 16, 16)
@@ -231,7 +236,7 @@ class App(awn.AppletSimple):
                 pass
 
     def feed_updated(self, feed):
-        self.num_new_while_updating += feed.num_new
+        self.num_notify_while_updating += feed.num_notify
 
         if feed.url in self.displays:
             self.feed_throbbers[feed.url].props.active = False
@@ -239,20 +244,26 @@ class App(awn.AppletSimple):
             for widget in self.displays[feed.url].get_children():
                 widget.destroy()
 
-            for entry in feed.entries[:5]:
+            for i, entry in enumerate(feed.entries[:5]):
                 image = gtk.Image()
 
                 button = gtk.Button(shortify(entry['title']))
                 button.set_relief(gtk.RELIEF_NONE)
                 if len(entry['title']) > 25:
                     button.set_tooltip_text(entry['title'])
-                button.connect('clicked', self.open_url, entry['url'])
+                button.connect('clicked', self.feed_item_clicked, (feed, i))
                 button.set_use_underline(False)
                 button.show()
+
+                if entry['new'] == True:
+                    classes.boldify(button, True)
 
                 self.displays[feed.url].pack_start(button, False)
 
             self.feed_labels[feed.url].set_text(shortify(feed.title))
+
+            if feed.num_new > 0:
+                classes.boldify(self.feed_labels[feed.url])
 
             self.finished_feeds += 1
             if len(self.urls) == self.finished_feeds:
@@ -269,31 +280,36 @@ class App(awn.AppletSimple):
 
         msg = ''
         only_greader = True
-        if self.num_new_while_updating != 0:
+        if self.num_notify_while_updating != 0:
             for url, feed in self.feeds.items():
                 if not isinstance(feed, classes.GoogleReader):
                     only_greader = False
 
-                if feed.num_new == 1:
-                    msg += "%s\n  <a href=\"%s\">%s</a>\n" % (shortify(feed.title),
-                        feed.entries[0]['url'], shortify(feed.entries[0]['title']))
+                notify_entries = []
+                for entry in feed.entries:
+                    if entry['notify'] == True:
+                        notify_entries.append(entry)
 
-                elif feed.num_new == 2:
+                if feed.num_notify == 1:
+                    msg += "%s\n  <a href=\"%s\">%s</a>\n" % (shortify(feed.title),
+                        notify_entries[0]['url'], shortify(notify_entries[0]['title']))
+
+                elif feed.num_notify == 2:
                     msg += "%s\n  <a href='%s'>%s</a>\n  <a href='%s'>%s</a>\n" % \
                         (shortify(feed.title),
-                        feed.entries[0]['url'], shortify(feed.entries[0]['title']),
-                        feed.entries[1]['url'], shortify(feed.entries[1]['title']))
+                        notify_entries[0]['url'], shortify(notify_entries[0]['title']),
+                        notify_entries[1]['url'], shortify(notify_entries[1]['title']))
 
-                elif feed.num_new > 2:
+                elif feed.num_notify > 2:
                     msg += _("%s\n  <a href='%s'>%s</a>\n  <a href='%s'>%s</a>\n(%s More)\n") % \
                         (shortify(feed.title),
-                        feed.entries[0]['url'], shortify(feed.entries[0]['title']),
-                        feed.entries[1]['url'], shortify(feed.entries[1]['title']),
-                        (feed.num_new - 2))
+                        notify_entries[0]['url'], shortify(notify_entries[0]['title']),
+                        notify_entries[1]['url'], shortify(notify_entries[1]['title']),
+                        (feed.num_notify - 2))
 
             pynotify.init(_("Feeds Applet"))
             notification = pynotify.Notification(_("%s New Item%s - Feeds Applet") % \
-                (self.num_new_while_updating, ['', 's'][self.num_new_while_updating != 1]),
+                (self.num_notify_while_updating, ['', 's'][self.num_notify_while_updating != 1]),
                 msg, [icon_path, greader_path][only_greader])
             notification.set_timeout(5000)
             notification.show()
@@ -383,7 +399,7 @@ class App(awn.AppletSimple):
         button.add(image)
         button.set_relief(gtk.RELIEF_NONE)
         button.set_tooltip_text(_("Open this feed's website"))
-        button.connect('clicked', self.feed_icon_click, url)
+        button.connect('clicked', self.feed_icon_clicked, url)
         button.show_all()
 
         feed_hbox.pack_start(button, False)
@@ -497,7 +513,6 @@ class App(awn.AppletSimple):
         fp.close()
 
     def dialog_drag_received(self, *args):
-        #TODO: anything here?
         pass
 
     def dialog_drag_motion(self, widget, context, x, y, time):
@@ -617,8 +632,26 @@ class App(awn.AppletSimple):
         import prefs
         self.addfeed = prefs.AddFeed(applet=self)
 
-    def feed_icon_click(self, button, feedurl):
+    def feed_icon_clicked(self, button, feedurl):
         self.open_url(None, self.feeds[feedurl].web_url)
+
+        feed.icon_clicked()
+
+    def feed_item_clicked(self, button, data):
+        feed, i = data
+
+        if isinstance(feed, classes.StandardNew):
+            if feed.entries[i]['new']:
+                #Deboldify the button
+                classes.deboldify(self.displays[feed.url].get_children()[i], True)
+                feed.num_new -= 1
+
+                if feed.num_new == 0:
+                    classes.deboldify(self.feed_labels[feed.url])
+
+        self.open_url(None, feed.entries[i]['url'])
+
+        feed.item_clicked(i)
 
     #Open a URL
     def open_url(self, widget, url):
@@ -674,7 +707,7 @@ class App(awn.AppletSimple):
 
         #If the only remaining feed is Google Reader
         #(self.feeds hasn't been changed yet)
-        all_greader = True
+        all_greader = bool(len(self.urls))
         for url, feed in self.feeds.items():
             if not isinstance(feed, classes.GoogleReader):
                 all_greader = False
@@ -706,6 +739,9 @@ class App(awn.AppletSimple):
 
         if '-'.join(url.split('-')[:-1]) == 'google-reader':
             self.feeds[url] = classes.GoogleReader(self, *data)
+
+        elif '-'.join(url.split('-')[:-1]) == 'reddit':
+            self.feeds[url] = classes.Reddit(self, *data)
 
         else:
             self.feeds[url] = classes.WebFeed(self, url, parsed)
@@ -936,18 +972,22 @@ class App(awn.AppletSimple):
                     return data
 
         @async_method
-        def post_data(self, uri, data=None, timeout=60):
+        def post_data(self, uri, data=None, timeout=60, server_headers=False):
             try:
                 req = urllib2.Request(uri, data)
                 req.add_header('HTTP_USER_AGENT', user_agent)
 
                 fp = urllib2.urlopen(req)
+                headers = fp.info()
                 data = fp.read()
                 fp.close()
             except:
                 raise self.NetworkException("Couldn't post data")
             else:
-                return data
+                if server_headers:
+                    return data, headers
+                else:
+                    return data
 
         #Feedparser can take up to a second parsing a feed.
         #Several feeds trying to run feedparser at the same time locks up the interface
@@ -1016,13 +1056,6 @@ def parse_opml(data, existing_urls):
 
     return urls
 
-def get_16x16(pb):
-    if pb.get_width() != 16 or pb.get_height() != 16:
-        pb2 = pb.scale_simple(16, 16, gtk.gdk.INTERP_BILINEAR)
-        del pb
-        pb = pb2
-
-    return pb
 
 if __name__ == '__main__':
     awn.init(sys.argv[1:])

@@ -21,11 +21,13 @@ import os
 import cPickle as pickle
 import urllib
 import time
+import cStringIO
 
 import dbus
 import dbus.service
 import dbus.glib
 import feedparser
+import json
 
 from awn.extras import _, awnlib
 
@@ -98,6 +100,15 @@ class Tokens:
     def __iter__(self):
         return self.tokens.__iter__()
 
+#Just to standardize everything
+class Entry(dict):
+    def __init__(self, url='', title='', new=False, notify=False):
+        dict.__init__(self)
+        self['url'] = url
+        self['title'] = title
+        self['new'] = new
+        self['notify'] = notify
+
 #Base class for all types of sources
 class FeedSource:
     io_error = False
@@ -106,10 +117,11 @@ class FeedSource:
     icon = None
     title = ''
     base_id = '' #e.g. google-reader
-    url = '' #     google-reader-username
+    url = '' #         google-reader-username
     web_url = '' #     http://www.google.com/reader/
     entries = []
     num_new = 0
+    num_notify = 0
 
     def __init__(self):
         pass
@@ -133,7 +145,7 @@ class FeedSource:
     def callback(self, *args):
         pass
 
-    def post_data(self, uri, data=None, timeout=60, cb=None, error_cb=None):
+    def post_data(self, uri, data=None, timeout=30, server_headers=False, cb=None, error_cb=None):
         if cb is None:
             cb = self.callback
 
@@ -141,10 +153,11 @@ class FeedSource:
             error_cb = self.error
 
         if self.applet:
-            self.applet.network_handler.post_data(uri, data, timeout, callback=cb, error=error_cb)
+            self.applet.network_handler.post_data(uri, data, timeout, server_headers, \
+                callback=cb, error=error_cb)
 
     #Also convenience
-    def get_data(self, uri, headers={}, parse=False, timeout=60, user_data=None, cb=None, error_cb=None):
+    def get_data(self, uri, headers={}, parse=False, timeout=30, user_data=None, cb=None, error_cb=None):
         if cb is None:
             cb = self.callback
 
@@ -189,30 +202,52 @@ class FeedSource:
 
         del self._favicon_siteid
 
-#TODO: Need a better name. This is used if the feed may have items that are not considered new.
-class CheckingForNew:
+    #Do something if the feed icon was clicked.
+    def icon_clicked(self):
+        pass
+
+    #Do something if an item was clicked.
+    def item_clicked(self, i):
+        pass
+
+#TODO: Still need a better name. This is used if the feed may have items that are not considered new.
+class StandardNew:
     newest = None
+    notified = []
 
     #Call this after getting the entries, but before calling applet.feed_updated()
     def get_new(self):
         #See if the feed was updated, etc...
-        if self.newest is not None and self.newest != self.entries[0]:
-            #Find out how many items are new
-            if self.newest in self.entries:
-                self.num_new = self.entries.index(self.newest)
+        if self.newest is not None and self.newest['url'] != self.entries[0]['url'] and \
+          self.newest['title'] != self.entries[0]['title']:
+            got_it = False
+            for i, entry in enumerate(self.entries):
+                self.num_new = i
+                if self.newest['url'] == entry['url'] and self.newest['title'] == entry['title']:
+                    break
 
-            #So many new items that the last loaded item doesn't show up
-            else:
-                self.num_new = len(self.entries)
-
-        elif self.newest == self.entries[0]:
-            self.num_new = 0
+                else:
+                    self.num_new += 1
 
         if len(self.entries) > 0:
             self.newest = self.entries[0]
 
+        self.num_notify = 0
+
+        #Mark the new feeds as new
+        for i, entry in enumerate(self.entries):
+            entry['new'] = bool(i < self.num_new)
+
+            if entry['new'] and [entry['url'], entry['title']] not in self.notified:
+                self.notified.append([entry['url'], entry['title']])
+                entry['notify'] = True
+                self.num_notify += 1
+
+            else:
+                entry['notify'] = False
+
 #Thank you http://code.google.com/p/pyrfeed/wiki/GoogleReaderAPI
-class GoogleReader(FeedSource, CheckingForNew):
+class GoogleReader(FeedSource, StandardNew):
     base_id = 'google-reader'
     web_url = 'http://www.google.com/reader/'
     title = _("Google Reader")
@@ -246,12 +281,12 @@ class GoogleReader(FeedSource, CheckingForNew):
             #Username and password provided, e.g. from the add feed dialog
             if username and password:
                 if token is None or token == 0:
-                    self.google_key = self.applet.keyring.new('Feeds - google-reader-%s' % username,
+                    self.google_key = self.applet.keyring.new('Feeds - ' + self.url,
                         password,
                         {'username': username, 'network': 'google-reader'},
                         'network')
 
-                    self.applet.tokens['google-reader-' + username] = int(self.google_key.token)
+                    self.applet.tokens[self.url] = int(self.google_key.token)
 
                 else:
                     self.google_key = self.applet.keyring.from_token(token)
@@ -304,7 +339,7 @@ class GoogleReader(FeedSource, CheckingForNew):
     def got_parsed(self, parsed):
         self.entries = []
         for entry in parsed.entries[:5]:
-            self.entries.append({'title': entry.title, 'url': entry.link})
+            self.entries.append(Entry(entry.link, entry.title))
 
         self.get_new()
 
@@ -320,25 +355,176 @@ class GoogleReader(FeedSource, CheckingForNew):
         cb, error_cb = cbs
 
         try:
-            json = data.split('_DIRECTORY_SEARCH_DATA =')[1].split('</script>')[0].strip()
-            json = json.replace(':false', ':False').replace(':true', ':True')
-            json = json.replace('"streamid":"feed/http', '"streamid":u"feed/http')
-            json = json.replace('"title":"', '"title":u"')
-            results = eval(json)['results']#It's a list of dictionaries!
+            data = data.split('_DIRECTORY_SEARCH_DATA =')[1].split('</script>')[0].strip()
+            s = cStringIO.StringIO(data)
+            data = json.load(s)
+            s.close()
 
-            data = []
+            results = data['results']
+
+            feeds = []
             for result in results:
                 #For some reason 'streamid' starts with 'feed/'
                 url = result['streamid'][5:]
-                data.append({'url': url, 'title': result['title']})
+                feeds.append({'url': url, 'title': result['title']})
 
         except:
             error_cb()
 
         else:
-            cb(data)
+            cb(feeds)
 
-class WebFeed(FeedSource, CheckingForNew):
+class Reddit(FeedSource):
+    base_id = 'reddit'
+    web_url = 'http://www.reddit.com/message/inbox/'
+    title = _("Reddit Inbox")
+    orangered_url = 'http://www.reddit.com/static/mail.png'
+    login = 'https://www.reddit.com/api/login/%s' # % username
+    #RSS uses slightly less bandwidth, but JSON provides newness info
+    messages_url = 'http://www.reddit.com/message/inbox/.json?mark=false'
+    mark_as_read = 'http://www.reddit.com/message/inbox/.rss?mark=true'
+    inbox_url = 'http://www.reddit.com/message/messages/'
+    reddit_key = None
+    cookie = None
+    should_update = False
+    already_notified_about = []
+
+    def __init__(self, applet, username, password=None):
+        self.applet = applet
+        self.username = username
+        self.password = password
+        self.url = self.base_id + '-' + username
+
+        #Get ready to update the feed, but don't actually do so.
+        self.get_reddit_key(username, password)
+        self.get_reddit_cookie()
+        self.get_favicon('www.reddit.com')
+
+    def get_reddit_key(self, username=None, password=None):
+        if self.reddit_key is None:
+            if not self.applet.keyring:
+                self.applet.keyring = awnlib.Keyring()
+
+            token = self.applet.tokens['reddit-' + username]
+
+            #From the add feed dialog
+            if username and password:
+                if token is None or token == 0:
+                    self.reddit_key = self.applet.keyring.new('Feeds - ' + self.url,
+                        password, {'username': username, 'network': 'reddit'}, 'network')
+
+                    self.applet.tokens[self.url] = int(self.reddit_key.token)
+
+                else:
+                    self.reddit_key = self.applet.keyring.from_token(token)
+
+            #Feed was already added before current applet startup
+            else:
+                if token is None or token == 0:
+                    self.reddit_key = None
+
+                else:
+                    self.reddit_key = self.applet.keyring.from_token(token)
+
+    def get_reddit_cookie(self):
+        if self.reddit_key is not None:
+            if self.cookie is None:
+                data = urllib.urlencode({'user': self.username.lower(),
+                    'passwd': self.reddit_key.password,
+                    'op': 'login-main',
+                    'id': '#login_login-main',
+                    'r': 'reddit.com'})
+
+                self.post_data(self.login % self.username.lower(), data, server_headers = True, \
+                    cb=self.got_reddit_cookie)
+
+    def got_reddit_cookie(self, data, headers):
+        headers = str(headers).split('\n')
+
+        #Save the cookie
+        for line in headers:
+            if line.find('Set-Cookie: ') == 0:
+                cookie = urllib.unquote(line[12:].split(';')[0])
+
+                #This happens if the username/password is wrong
+                if cookie.find('reddit_first=') == 0:
+                    self.error()
+                    return
+
+                self.cookie = urllib.unquote(line[12:].split(';')[0])
+
+        if self.cookie is None:
+            self.error()
+
+        elif self.should_update:
+            self.update()
+            self.should_update = False
+
+    def update(self):
+        if self.cookie is None:
+            self.should_update = True
+
+        else:
+            #Load the reading list with that magic SID as a cookie
+            self.get_data(self.messages_url, {'Cookie': self.cookie}, cb=self.got_data)
+
+    def got_data(self, data):
+        s = cStringIO.StringIO(data)
+        parsed = json.load(s)
+        s.close()
+
+        self.entries = []
+        self.num_new = 0
+        self.num_notify = 0
+
+        for message in parsed['data']['children'][:5]:
+            #If it's a private message
+            if message['data']['context'].strip() == '':
+                url = self.inbox_url
+                title = message['data']['subject']
+
+            else:
+                url = 'http://www.reddit.com' + message['data']['context']
+
+                if message['data']['subject'] == 'comment reply':
+                    title = _("Comment reply from %s") % message['data']['author']
+
+                else:
+                    title = _("Post reply from %s") % message['data']['author']
+
+            new = message['data']['new']
+
+            if new:
+                self.num_new += 1
+
+            notify = False
+            if new and message['data']['id'] not in self.already_notified_about:
+                self.already_notified_about.append(message['data']['id'])
+                notify = True
+                self.num_notify += 1
+
+            self.entries.append(Entry(url, title, new, notify))
+
+        self.applet.feed_updated(self)
+
+        if self.num_new > 0:
+            self.get_favicon('www.reddit.com-orangered', self.orangered_url)
+
+        else:
+            self.get_favicon('www.reddit.com')
+
+    #If an item was clicked and it was the only one, tell Reddit that we've read every message
+    def item_clicked(self, i):
+        if self.entries[i]['new'] == True:
+            if self.num_new == 1:
+                self.num_new = 0
+                deboldify(self.applet.feed_labels[self.url])
+                deboldify(self.applet.displays[self.url].get_children()[i], True)
+                self.get_favicon('www.reddit.com')
+
+                self.get_data(self.mark_as_read, {'Cookie': self.cookie})
+
+class WebFeed(FeedSource, StandardNew):
     fetched = False
     parsed = None
 
@@ -370,10 +556,31 @@ class WebFeed(FeedSource, CheckingForNew):
             self.title = _("Untitled")
         self.web_url = parsed.feed.link
         for entry in parsed.entries[:5]:
-            self.entries.append({'title': entry.title, 'url': entry.link})
+            self.entries.append(Entry(entry.link, entry.title))
 
         self.get_new()
 
         self.applet.feed_updated(self)
 
         self.get_favicon()
+
+
+def get_16x16(pb):
+    if pb.get_width() != 16 or pb.get_height() != 16:
+        pb2 = pb.scale_simple(16, 16, gtk.gdk.INTERP_BILINEAR)
+        del pb
+        pb = pb2
+
+    return pb
+
+def boldify(widget, button=False):
+    if button:
+        widget = widget.child
+
+    widget.set_markup('<span font_weight="bold">%s</span>' % widget.get_text())
+
+def deboldify(widget, button=False):
+    if button:
+        widget = widget.child
+
+    widget.set_markup(widget.get_text())

@@ -44,6 +44,7 @@ config_path = '%s/.config/awn/applets/feeds.txt' % os.environ['HOME']
 
 cache_dir = os.environ['HOME'] + '/.cache/awn-feeds-applet'
 greader_ico = os.path.join(cache_dir, 'google-reader.ico')
+reddit_ico = os.path.join(cache_dir, 'www.reddit.com.ico')
 
 reader_url = 'http://www.google.com/reader/'
 
@@ -249,7 +250,7 @@ class Prefs(gtk.Window):
             try:
                 if feed.icon.find('gtk://') == 0:
                     pb = self.icon_theme.load_icon(feed.icon[6:], 16, 0)
-                    pb = get_16x16(pb)
+                    pb = classes.get_16x16(pb)
 
                 else:
                     pb = gtk.gdk.pixbuf_new_from_file_at_size(feed.icon, 16, 16)
@@ -270,10 +271,10 @@ class Prefs(gtk.Window):
         response = file_chooser.run()
         filename = file_chooser.get_filename()
         file_chooser.destroy()
-  
+
         if filename is None:
             return False
-  
+
         self.applet.load_opml(filename)
 
     def do_export(self, button):
@@ -287,7 +288,7 @@ class Prefs(gtk.Window):
         response = file_chooser.run()
         filename = file_chooser.get_filename()
         file_chooser.destroy()
-  
+
         if filename is None:
             return False
 
@@ -346,8 +347,9 @@ class AddFeed(gtk.Window):
 
         source_vbox = gtk.VBox(False, 3)
 
+        #Search via Google Reader
         pb = self.icon_theme.load_icon('search', 16, 0)
-        pb = get_16x16(pb)
+        pb = classes.get_16x16(pb)
 
         search_radio = gtk.RadioButton(None)
         search_radio.add(get_radio_hbox(pb, _("Search")))
@@ -355,21 +357,32 @@ class AddFeed(gtk.Window):
             search_radio.set_sensitive(False)
             search_radio.set_tooltip_text(_("You must sign in to Google Reader to search for feeds."))
 
+        #Regular RSS/Atom feed
         try:
             pb = self.icon_theme.load_icon('application-rss+xml', 16, 0)
-            pb = get_16x16(pb)
+            pb = classes.get_16x16(pb)
         except:
             pb = gtk.gdk.pixbuf_new_from_file_at_size(icon_path, 16, 16)
         webfeed_radio = gtk.RadioButton(search_radio, None)
         webfeed_radio.add(get_radio_hbox(pb, _("RSS/Atom")))
 
+        #Google Reader
         pb = get_greader_icon()
 
         greader_radio = gtk.RadioButton(search_radio, None)
-        greader_radio.add(get_radio_hbox(pb, _("Google Reader")))
+        greader_radio.add(get_radio_hbox(pb, classes.GoogleReader.title))
+
+        #Reddit Inbox
+        try:
+            pb = gtk.gdk.pixbuf_new_from_file_at_size(reddit_ico, 16, 16)
+        except:
+            pb = None
+
+        reddit_radio = gtk.RadioButton(search_radio, None)
+        reddit_radio.add(get_radio_hbox(pb, classes.Reddit.title))
 
         num = 0
-        for radio in (search_radio, webfeed_radio, greader_radio):
+        for radio in (search_radio, webfeed_radio, greader_radio, reddit_radio):
             radio.connect('toggled', self.radio_toggled)
             radio.num = num
             source_vbox.pack_start(radio, False, False, 0)
@@ -549,12 +562,16 @@ class AddFeed(gtk.Window):
 
             self.applet.add_feed(url)
 
-        #Signing in to Google Reader
+        #Signing in to Google Reader or Reddit
         else:
             username = self.user_entry.get_text()
             password = self.pass_entry.get_text()
 
-            self.applet.add_feed('google-reader-' + username, None, username, password)
+            if self.num == 2:
+                self.applet.add_feed('google-reader-' + username, None, username, password)
+
+            else:
+                self.applet.add_feed('reddit-' + username, None, username, password)
 
         if self.prefs:
             self.prefs.update_liststore()
@@ -597,7 +614,7 @@ class AddFeed(gtk.Window):
 
             self.do_sensitive(self.add_button, self.url_entry)
 
-        elif self.num == 2:
+        elif self.num in (2, 3):
             self.hide_widgets()
             self.add_button.show()
             self.user_hbox.show()
@@ -653,7 +670,6 @@ class AddFeed(gtk.Window):
                 add_vbox = gtk.VBox(False, 0)
                 add_vbox.pack_start(add, True, False)
 
-                #TODO: this is also wrong
                 label = gtk.Label(result['title'])
                 label.set_line_wrap(True)
 
@@ -722,15 +738,6 @@ def get_greader_icon():
         pb = gtk.gdk.pixbuf_new_from_file_at_size(greader_ico, 16, 16)
     except:
         pb = gtk.gdk.pixbuf_new_from_file_at_size(greader_path, 16, 16)
-
-    return pb
-
-
-def get_16x16(pb):
-    if pb.get_width() != 16 or pb.get_height() != 16:
-        pb2 = pb.scale_simple(16, 16, gtk.gdk.INTERP_BILINEAR)
-        del pb
-        pb = pb2
 
     return pb
 

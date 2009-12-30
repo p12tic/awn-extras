@@ -68,7 +68,7 @@ add_special_item (GtkWidget * menu,
                   const gchar * name, 
                   const gchar * icon_name,
                   const gchar * binary,
-                  const gchar *uri)
+                  const gchar * args)
 {
   GtkWidget * item;
   gchar *exec;
@@ -90,7 +90,7 @@ add_special_item (GtkWidget * menu,
   {
     gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),image);
   }
-  exec = g_strdup_printf("%s %s", binary ,uri);
+  exec = g_strdup_printf("%s %s", binary ,args);
   g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);
   g_object_weak_ref (G_OBJECT(item),(GWeakNotify) g_free,exec);
   gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
@@ -100,15 +100,22 @@ add_special_item (GtkWidget * menu,
 static gboolean
 _fill_session_menu (GtkWidget * menu)
 {
-  gboolean have_session_manager = dbus_service_exists ("org.gnome.SessionManager");
+  gboolean have_gnome_session_manager = dbus_service_exists ("org.gnome.SessionManager");
 
-  if (have_session_manager)
+  if (have_gnome_session_manager)
   {
     add_special_item (menu,_("Logout"),"gnome-logout","gnome-session-save","--logout-dialog --gui");
   }
+  else if (dbus_service_exists ("org.xfce.SessionManager") )
+  {
+    add_special_item (menu,_("Logout"),"gnome-logout","xfce4-session-logout","");
+  }
   if (dbus_service_exists ("org.gnome.ScreenSaver"))
   {
-    add_special_item (menu,_("Lock Screen"),"gnome-lockscreen","gnome-screensaver-command","--lock");
+    if (!add_special_item (menu,_("Lock Screen"),"gnome-lockscreen","gnome-screensaver-command","--lock"))
+    {
+      add_special_item (menu,_("Lock Screen"),"gnome-lockscreen","dbus-send","--session --dest=org.gnome.ScreenSaver --type=method_call --print-reply --reply-timeout=2000 /org/gnome/ScreenSaver org.gnome.ScreenSaver.Lock");
+    }
   }
   else
   {
@@ -116,16 +123,31 @@ _fill_session_menu (GtkWidget * menu)
   }
   if (dbus_service_exists ("org.freedesktop.PowerManagement"))
   {
-    add_special_item (menu,_("Suspend"),"gnome-session-suspend","gnome-power-cmd","suspend");
-    add_special_item (menu,_("Hibernate"),"gnome-session-hibernate","gnome-power-cmd","hibernate");
+    if (!add_special_item (menu,_("Suspend"),"gnome-session-suspend","gnome-power-cmd","suspend"))
+    {
+      add_special_item (menu,_("Suspend"),"gnome-session-suspend","dbus-send","--session --dest=org.freedesktop.PowerManagement --type=method_call --print-reply --reply-timeout=2000 /org/freedesktop/PowerManagement org.freedesktop.PowerManagement.Suspend");
+    }
+    
+    if (!add_special_item (menu,_("Hibernate"),"gnome-session-hibernate","gnome-power-cmd","hibernate"))
+    {
+      add_special_item (menu,_("Hibernate"),"gnome-session-hibernate","dbus-send","--session --dest=org.freedesktop.PowerManagement --type=method_call --print-reply --reply-timeout=2000 /org/freedesktop/PowerManagement org.freedesktop.PowerManagement.Hibernate");
+    }
+
   }
   else if (dbus_service_exists ("org.gnome.PowerManagement"))
   {
-    add_special_item (menu,_("Suspend"),"gnome-session-suspend","gnome-power-cmd","suspend");
-    add_special_item (menu,_("Hibernate"),"gnome-session-hibernate","gnome-power-cmd","hibernate");
+    if (!add_special_item (menu,_("Suspend"),"gnome-session-suspend","gnome-power-cmd","suspend"))
+    {
+
+    }
+      
+    if (!add_special_item (menu,_("Hibernate"),"gnome-session-hibernate","gnome-power-cmd","hibernate"))
+    {
+
+    }
   }
   
-  if (have_session_manager)
+  if (have_gnome_session_manager)
   {
     add_special_item (menu,_("Shutdown"),"gnome-logout","gnome-session-save","--shutdown-dialog --gui");  
   }
@@ -597,8 +619,8 @@ _search_dialog (GtkMenuItem * item, MenuInstance * instance)
 static gboolean
 _delayed_update (MenuInstance * instance)
 {
+  instance->source_id=0;  
   instance->menu = menu_build (instance);  
-  instance->source_id=0;
   return FALSE;
 }
 

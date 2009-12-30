@@ -176,6 +176,23 @@ def unlink_xml(socket):
         xmldoc.unlink()
 
 
+class NetworkException(Exception):
+    pass
+
+
+def network_exception(func):
+    def bound_func(obj, *args, **kwargs):
+        try:
+            return func(obj, *args, **kwargs)
+        except urllib2.URLError, e:
+            raise NetworkException("error in %s: %s" % (func.__name__, e))
+        except StandardError:
+            raise
+        except Exception, e:
+            raise NetworkException("error in %s: %s" % (func.__name__, e))
+    return bound_func
+
+
 class WeatherApplet:
 
     def __init__(self, applet):
@@ -220,7 +237,7 @@ class WeatherApplet:
         applet.timing.delay(self.activate_refresh_cb, 1.0)
 
     def network_error_cb(self, e, tb):
-        if type(e) is self.NetworkHandler.NetworkException:
+        if type(e) is NetworkException:
             print "Error in Weather:", e
             self.notification.show()
         else:
@@ -439,7 +456,7 @@ class WeatherApplet:
                 self.cached_conditions = conditions
                 self.refresh_icon()
         def error_cb(e, tb):
-            if type(e) is self.NetworkHandler.NetworkException and retries > 0:
+            if type(e) is NetworkException and retries > 0:
                 print "Warning in Weather:", e
                 delay_seconds = 10.0
                 print "Reattempt (%d retries remaining) in %d seconds" % (retries, delay_seconds)
@@ -468,7 +485,7 @@ class WeatherApplet:
 
         """
         def error_cb(e, tb):
-            if type(e) is self.NetworkHandler.NetworkException and retries > 0:
+            if type(e) is NetworkException and retries > 0:
                 print "Warning in Weather:", e
                 delay_seconds = 10.0
                 print "Reattempt (%d retries remaining) in %d seconds" % (retries, delay_seconds)
@@ -485,7 +502,7 @@ class WeatherApplet:
         def cb(pixbuf):
             self.set_map_pixbuf(pixbuf)
         def error_cb(e, tb):
-            if type(e) is self.NetworkHandler.NetworkException and retries > 0:
+            if type(e) is NetworkException and retries > 0:
                 print "Warning in Weather:", e
                 delay_seconds = 10.0
                 print "Reattempt (%d retries remaining) in %d seconds" % (retries, delay_seconds)
@@ -575,95 +592,84 @@ class WeatherApplet:
 
         __ws_key = "&prod=xoap&par=1048871467&key=12daac2f3a67cb39&link=xoap"
 
-        class NetworkException(Exception):
-            pass
-
-        def dictFromXML(self, rootNode, keys, paths):
+        def dict_from_xml(self, rootNode, keys, paths):
             """Given an XML node, iterate over keys and paths, grabbing the
             value from each path and putting it into the dictionary as the
             given key.
 
             """
-            returnDict = {}
+            return_dict = {}
             for key, path in zip(keys, paths):
                 items = path.split('/')
                 cnode = rootNode
                 for item in items:
                     cnode = cnode.getElementsByTagName(item)[0]
-                returnDict[key] = "".join([node.data for node in cnode.childNodes if node.nodeType == node.TEXT_NODE])
-            return returnDict
+                return_dict[key] = "".join([node.data for node in cnode.childNodes if node.nodeType == node.TEXT_NODE])
+            return return_dict
 
         @async_method
+        @network_exception
         def get_locations(self, text):
             url = "http://xoap.weather.com/search/search?where=" + urllib2.quote(text)
-            try:
-                with closing(urllib2.urlopen(url)) as usock:
-                    with unlink_xml(usock) as xmldoc:
-                        locations_list = []
-                        for i in xmldoc.getElementsByTagName("loc"):
-                            city = i.childNodes[0].data
-                            code = i.getAttribute("id")
-                            locations_list.append([city, code])
-                        return locations_list
-            except urllib2.URLError, e:
-                raise self.NetworkException("Couldn't download locations: %s" % e)
+            with closing(urllib2.urlopen(url)) as usock:
+                with unlink_xml(usock) as xmldoc:
+                    locations_list = []
+                    for i in xmldoc.getElementsByTagName("loc"):
+                        city = i.childNodes[0].data
+                        code = i.getAttribute("id")
+                        locations_list.append([city, code])
+                    return locations_list
 
         @async_method
         @with_overlays
+        @network_exception
         def get_conditions(self, location_code):
             url = "http://xoap.weather.com/weather/local/" + location_code + "?cc=*" + self.__ws_key
-            try:
-                with closing(urllib2.urlopen(url)) as usock:
-                    with unlink_xml(usock) as xmldoc:
-                        names = ['CITY', 'SUNRISE', 'SUNSET', 'DESCRIPTION', 'CODE', 'TEMP', 'FEELSLIKE', 'BAR', 'BARDESC', 'WINDSPEED', 'WINDGUST', 'WINDDIR', 'HUMIDITY', 'MOONPHASE']
-                        paths = ['weather/loc/dnam', 'sunr', 'suns', 'cc/t', 'cc/icon', 'cc/tmp', 'cc/flik', 'cc/bar/r', 'cc/bar/d', 'cc/wind/s', 'cc/wind/gust', 'cc/wind/d', 'cc/hmid', 'cc/moon/t']
-                        try:
-                            return self.dictFromXML(xmldoc, names, paths)
-                        except IndexError, e:
-                            raise self.NetworkException("Couldn't parse conditions: %s" % e)
-            except urllib2.URLError, e:
-                raise self.NetworkException("Couldn't download conditions: %s" % e)
+            with closing(urllib2.urlopen(url)) as usock:
+                with unlink_xml(usock) as xmldoc:
+                    names = ['CITY', 'SUNRISE', 'SUNSET', 'DESCRIPTION', 'CODE', 'TEMP', 'FEELSLIKE', 'BAR', 'BARDESC', 'WINDSPEED', 'WINDGUST', 'WINDDIR', 'HUMIDITY', 'MOONPHASE']
+                    paths = ['weather/loc/dnam', 'sunr', 'suns', 'cc/t', 'cc/icon', 'cc/tmp', 'cc/flik', 'cc/bar/r', 'cc/bar/d', 'cc/wind/s', 'cc/wind/gust', 'cc/wind/d', 'cc/hmid', 'cc/moon/t']
+                    try:
+                        return self.dict_from_xml(xmldoc, names, paths)
+                    except IndexError, e:
+                        raise NetworkException("Couldn't parse conditions: %s" % e)
 
         @async_method
+        @network_exception
         def get_weather_map(self, location_code):
             map_url = "http://www.weather.com/outlook/travel/businesstraveler/map/%s" % location_code
-            try:
-                with closing(urllib2.urlopen(map_url)) as usock:
-                    mapExp = """<IMG NAME="mapImg" SRC="([^\"]+)" WIDTH=([0-9]+) HEIGHT=([0-9]+) BORDER"""
-                    result = re.findall(mapExp, usock.read())
-                    if not result or len(result) != 1:
-                        raise self.NetworkException("Couldn't parse weather map")
-                    with closing(urllib2.urlopen(result[0][0])) as raw_image:
-                        with closing(gtk.gdk.PixbufLoader()) as loader:
-                            loader.write(raw_image.read())
-                            return loader.get_pixbuf()
-            except urllib2.URLError, e:
-                raise self.NetworkException("Couldn't download weather map: %s" % e)
+            with closing(urllib2.urlopen(map_url)) as usock:
+                mapExp = """<IMG NAME="mapImg" SRC="([^\"]+)" WIDTH=([0-9]+) HEIGHT=([0-9]+) BORDER"""
+                result = re.findall(mapExp, usock.read())
+                if not result or len(result) != 1:
+                    raise NetworkException("Couldn't parse weather map")
+                with closing(urllib2.urlopen(result[0][0])) as raw_image:
+                    with closing(gtk.gdk.PixbufLoader()) as loader:
+                        loader.write(raw_image.read())
+                        return loader.get_pixbuf()
 
         @async_method
         @with_overlays
+        @network_exception
         def get_forecast(self, location_code):
             url = "http://xoap.weather.com/weather/local/" + location_code + "?dayf=5" + self.__ws_key
-            try:
-                with closing(urllib2.urlopen(url)) as usock:
-                    with unlink_xml(usock) as xmldoc:
-                        try:
-                            forecast = {'DAYS': []} #, 'CITY': cachedConditions['CITY']}
-                            cityNode = xmldoc.getElementsByTagName('loc')[0].getElementsByTagName('dnam')[0]
-                            forecast['CITY'] = ''.join([node.data for node in cityNode.childNodes if node.nodeType == node.TEXT_NODE])
-    
-                            dayNodes = xmldoc.getElementsByTagName('dayf')[0].getElementsByTagName('day')
-                            for dayNode in dayNodes:
-                                names = ['HIGH', 'LOW', 'CODE', 'DESCRIPTION', 'PRECIP', 'HUMIDITY', 'WSPEED', 'WDIR', 'WGUST']
-                                paths = ['hi', 'low', 'part/icon', 'part/t', 'part/ppcp', 'part/hmid', 'part/wind/s', 'part/wind/t', 'part/wind/gust']
-                                day = self.dictFromXML(dayNode, names, paths)
-                                day.update({'WEEKDAY': dayNode.getAttribute('t'), 'YEARDAY': dayNode.getAttribute('dt')})
-                                forecast['DAYS'].append(day)
-                            return forecast
-                        except IndexError, e:
-                            raise self.NetworkException("Couldn't parse forecast: %s" % e)
-            except urllib2.URLError, e:
-                raise self.NetworkException("Couldn't download forecast: %s" % e)
+            with closing(urllib2.urlopen(url)) as usock:
+                with unlink_xml(usock) as xmldoc:
+                    try:
+                        forecast = {'DAYS': []} #, 'CITY': cachedConditions['CITY']}
+                        cityNode = xmldoc.getElementsByTagName('loc')[0].getElementsByTagName('dnam')[0]
+                        forecast['CITY'] = ''.join([node.data for node in cityNode.childNodes if node.nodeType == node.TEXT_NODE])
+
+                        dayNodes = xmldoc.getElementsByTagName('dayf')[0].getElementsByTagName('day')
+                        for dayNode in dayNodes:
+                            names = ['HIGH', 'LOW', 'CODE', 'DESCRIPTION', 'PRECIP', 'HUMIDITY', 'WSPEED', 'WDIR', 'WGUST']
+                            paths = ['hi', 'low', 'part/icon', 'part/t', 'part/ppcp', 'part/hmid', 'part/wind/s', 'part/wind/t', 'part/wind/gust']
+                            day = self.dict_from_xml(dayNode, names, paths)
+                            day.update({'WEEKDAY': dayNode.getAttribute('t'), 'YEARDAY': dayNode.getAttribute('dt')})
+                            forecast['DAYS'].append(day)
+                        return forecast
+                    except IndexError, e:
+                        raise NetworkException("Couldn't parse forecast: %s" % e)
 
 
 if __name__ == "__main__":

@@ -263,8 +263,10 @@ static gboolean _expose(GtkWidget *self,
 
   effects = awn_overlayable_get_effects (AWN_OVERLAYABLE (self));
   g_return_val_if_fail (effects, FALSE);
-  ctx = awn_effects_cairo_create (effects);
+//  ctx = awn_effects_cairo_create (effects);
+  ctx = awn_effects_cairo_create_clipped (effects, event);
   g_return_val_if_fail (ctx, FALSE);
+
 
   if (priv->invalidate)
   {

@@ -203,6 +203,7 @@ class WeatherApplet:
         applet.add_overlay(self.__temp_overlay)
 
         disconnect_overlay = OverlayThemedIcon(applet.get_icon(), "stock_disconnect", "error")
+        disconnect_overlay.props.alpha = 1.0
         throbber_overlay = OverlayThrobber(applet.get_icon())
 
         for i in (disconnect_overlay, throbber_overlay):
@@ -624,7 +625,6 @@ class WeatherApplet:
                 raise self.NetworkException("Couldn't download conditions: %s" % e)
 
         @async_method
-        @with_overlays
         def get_weather_map(self, location_code):
             map_url = "http://www.weather.com/outlook/travel/businesstraveler/map/%s" % location_code
             try:

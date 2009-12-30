@@ -36,7 +36,7 @@ from awn import extras
 from awn.extras import _, awnlib
 from awn.extras.threadqueue import ThreadQueue, async_method
 
-awn.check_dependencies(globals(), 'feedparser', 'pynotify', 'json')
+awn.check_dependencies(globals(), 'feedparser', 'pynotify', json=('json', 'simplejson'))
 
 import classes
 
@@ -122,9 +122,6 @@ class App(awn.AppletSimple):
         #AwnConfigClient instance
         self.client = awn.config_get_default_for_applet(self)
 
-        #Set the icon
-        self.set_icon_name('awn-feeds')
-
         #Connect to signals
         self.connect('button-release-event', self.button_release)
         self.dialog.props.hide_on_unfocus = True
@@ -133,14 +130,29 @@ class App(awn.AppletSimple):
 
         #TODO: put this and the similar code in add_feed() into a single, better place
         for url in self.urls:
-            if '-'.join(url.split('-')[:-1]) == 'google-reader':
-                self.feeds[url] = classes.GoogleReader(self, url.split('-')[-1])
+            _base_url = '-'.join(url.split('-')[:-1])
+            username = url.split('-')[-1]
 
-            elif '-'.join(url.split('-')[:-1]) == 'reddit':
-                self.feeds[url] = classes.Reddit(self, url.split('-')[-1])
+            if _base_url == 'google-reader':
+                self.feeds[url] = classes.GoogleReader(self, username)
+
+            elif _base_url == 'reddit':
+                self.feeds[url] = classes.Reddit(self, username)
+
+            elif _base_url in ('twitter-timeline', 'twitter-both', 'twitter-replies'):
+                self.feeds[url] = classes.Twitter(self, username, None, base_url=_base_url)
 
             else:
                 self.feeds[url] = classes.WebFeed(self, url)
+
+        #Set the icon
+        only_greader = bool(len(self.urls))
+        for feed in self.feeds.values():
+            if not isinstance(feed, classes.GoogleReader):
+                only_greader = False
+                break
+
+        self.set_icon_name(['awn-feeds', 'awn-feeds-greader'][only_greader])
 
         self.setup_dialog()
 
@@ -283,7 +295,8 @@ class App(awn.AppletSimple):
         if self.num_notify_while_updating != 0:
             for url, feed in self.feeds.items():
                 if not isinstance(feed, classes.GoogleReader):
-                    only_greader = False
+                    if feed.num_notify > 0:
+                        only_greader = False
 
                 notify_entries = []
                 for entry in feed.entries:
@@ -737,17 +750,31 @@ class App(awn.AppletSimple):
 
         self.urls.append(url)
 
-        if '-'.join(url.split('-')[:-1]) == 'google-reader':
+        _base_url = '-'.join(url.split('-')[:-1])
+
+        if _base_url == 'google-reader':
             self.feeds[url] = classes.GoogleReader(self, *data)
 
-        elif '-'.join(url.split('-')[:-1]) == 'reddit':
+        elif _base_url == 'reddit':
             self.feeds[url] = classes.Reddit(self, *data)
+
+        elif _base_url in ('twitter-timeline', 'twitter-both', 'twitter-replies'):
+            self.feeds[url] = classes.Twitter(self, *data, base_url=_base_url)
 
         else:
             self.feeds[url] = classes.WebFeed(self, url, parsed)
 
         if not isinstance(self.feeds[url], classes.GoogleReader):
             self.set_icon_name('awn-feeds')
+
+        else:
+            only_greader = True
+            for feed in self.feeds.values():
+                if not isinstance(feed, classes.GoogleReader):
+                    only_greader = False
+
+            if only_greader:
+                self.set_icon_name('awn-feeds-greader')
 
         self.add_feed_row(url, len(self.urls))
 
@@ -825,7 +852,8 @@ class App(awn.AppletSimple):
         win.set_name(_("Feeds Applet"))
         win.set_copyright('Copyright 2009 Sharkbaitbobby')
         win.set_authors(['Sharkbaitbobby <sharkbaitbobby+awn@gmail.com>'])
-        win.set_artists(['Victor C.', '(Icon modified by Sharkbaitbobby)'])
+        win.set_artists(['Victor C.', '  (Icon modified by Sharkbaitbobby)', \
+            'Jakub Szypulka'])
         win.set_comments(_("Monitor Web Feeds"))
         win.set_license("This program is free software; you can redistribute it "+\
             "and/or modify it under the terms of the GNU General Public License "+\

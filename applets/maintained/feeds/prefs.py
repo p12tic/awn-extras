@@ -34,17 +34,15 @@ from awn.extras import _, awnlib
 
 import classes
 
-icon_path = '%s/share/avant-window-navigator/applets/feeds/icons/awn-feeds.svg'
-icon_path = icon_path % extras.PREFIX
-
-greader_path = '%s/share/avant-window-navigator/applets/feeds/icons/awn-feeds-greader.svg'
-greader_path = greader_path % extras.PREFIX
+icon_dir = extras.PREFIX + '/share/avant-window-navigator/applets/feeds/icons'
+icon_path = os.path.join(icon_dir, 'awn-feeds.svg')
+greader_path = os.path.join(icon_dir, 'awn-feeds-greader.svg')
+twitter_path = os.path.join(icon_dir, 'twitter-16x16.png')
 
 config_path = '%s/.config/awn/applets/feeds.txt' % os.environ['HOME']
 
 cache_dir = os.environ['HOME'] + '/.cache/awn-feeds-applet'
 greader_ico = os.path.join(cache_dir, 'google-reader.ico')
-reddit_ico = os.path.join(cache_dir, 'www.reddit.com.ico')
 
 reader_url = 'http://www.google.com/reader/'
 
@@ -319,6 +317,7 @@ class AddFeed(gtk.Window):
     prefs = None
     icon_theme = gtk.icon_theme_get_default()
     got_results = False
+    num = 0
 
     def __init__(self, prefs=None, applet=None):
         gtk.Window.__init__(self)
@@ -373,21 +372,40 @@ class AddFeed(gtk.Window):
         greader_radio.add(get_radio_hbox(pb, classes.GoogleReader.title))
 
         #Reddit Inbox
-        try:
-            pb = gtk.gdk.pixbuf_new_from_file_at_size(reddit_ico, 16, 16)
-        except:
-            pb = None
+        pb = get_favicon('www.reddit.com', self.applet)
 
         reddit_radio = gtk.RadioButton(search_radio, None)
         reddit_radio.add(get_radio_hbox(pb, classes.Reddit.title))
 
+        #Twitter Timeline and/or Replies
+        pb = gtk.gdk.pixbuf_new_from_file_at_size(twitter_path, 16, 16)
+
+        twitter_radio = gtk.RadioButton(search_radio, None)
+        twitter_radio.add(get_radio_hbox(pb, _("Twitter")))
+
+        self.twitter_timeline_check = gtk.CheckButton(_("Timeline"))
+        self.twitter_timeline_check.set_active(True)
+        self.twitter_timeline_check.connect('toggled', self.check_toggled)
+        self.twitter_timeline_check.show()
+
+        self.twitter_replies_check = gtk.CheckButton(_("Replies"))
+        self.twitter_replies_check.connect('toggled', self.check_toggled)
+        self.twitter_replies_check.show()
+
+        self.twitter_vbox = gtk.VBox(False, 3)
+        self.twitter_vbox.pack_start(self.twitter_timeline_check, False)
+        self.twitter_vbox.pack_start(self.twitter_replies_check, False)
+        self.twitter_vbox.set_no_show_all(True)
+
         num = 0
-        for radio in (search_radio, webfeed_radio, greader_radio, reddit_radio):
+        for radio in (search_radio, webfeed_radio, greader_radio, reddit_radio, twitter_radio):
             radio.connect('toggled', self.radio_toggled)
             radio.num = num
             source_vbox.pack_start(radio, False, False, 0)
 
             num += 1
+
+        source_vbox.pack_start(self.twitter_vbox, False, False, 0)
 
         source_hbox = gtk.HBox(False, 6)
         source_hbox.pack_start(source_label, False, False)
@@ -570,8 +588,21 @@ class AddFeed(gtk.Window):
             if self.num == 2:
                 self.applet.add_feed('google-reader-' + username, None, username, password)
 
-            else:
+            elif self.num == 3:
                 self.applet.add_feed('reddit-' + username, None, username, password)
+
+            elif self.num == 4:
+                timeline = self.twitter_timeline_check.get_active()
+                replies = self.twitter_replies_check.get_active()
+
+                if timeline and replies:
+                    self.applet.add_feed('twitter-both-' + username, None, username, password)
+
+                elif timeline:
+                    self.applet.add_feed('twitter-timeline-' + username, None, username, password)
+
+                elif replies:
+                    self.applet.add_feed('twitter-replies-' + username, None, username, password)
 
         if self.prefs:
             self.prefs.update_liststore()
@@ -581,14 +612,19 @@ class AddFeed(gtk.Window):
     def entry_changed(self, entry):
         #RSS/Atom or Search
         if entry == self.search_entry:
-            self.do_sensitive(self.search_button, entry)
+            self.do_sensitive(self.search_button, (entry, ))
 
         elif entry == self.url_entry:
-            self.do_sensitive(self.add_button, entry)
+            self.do_sensitive(self.add_button, (entry, ))
 
-        #Google Reader
-        else:
-            self.do_sensitive(self.add_button, self.user_entry, self.pass_entry)
+        #Google Reader or Reddit
+        elif self.num in (2, 3):
+            self.do_sensitive(self.add_button, (self.user_entry, self.pass_entry))
+
+        #Twitter
+        elif self.num == 4:
+            self.do_sensitive(self.add_button, (self.user_entry, self.pass_entry), \
+                (self.twitter_timeline_check, self.twitter_replies_check))
 
     def radio_toggled(self, radio):
         if not radio.get_active():
@@ -602,7 +638,7 @@ class AddFeed(gtk.Window):
             self.search_hbox.show()
             self.search_msg.show()
 
-            self.do_sensitive(self.search_button, self.search_entry)
+            self.do_sensitive(self.search_button, (self.search_entry, ))
 
             if self.got_results:
                 self.results_sw.show()
@@ -612,15 +648,27 @@ class AddFeed(gtk.Window):
             self.add_button.show()
             self.url_hbox.show()
 
-            self.do_sensitive(self.add_button, self.url_entry)
+            self.do_sensitive(self.add_button, (self.url_entry, ))
 
-        elif self.num in (2, 3):
+        elif self.num in (2, 3, 4):
             self.hide_widgets()
             self.add_button.show()
             self.user_hbox.show()
             self.pass_hbox.show()
 
-            self.do_sensitive(self.add_button, self.user_entry, self.pass_entry)
+            if self.num == 4:
+                self.twitter_vbox.show()
+
+                self.do_sensitive(self.add_button, (self.user_entry, self.pass_entry), \
+                    (self.twitter_timeline_check, self.twitter_replies_check))
+
+            else:
+                self.do_sensitive(self.add_button, (self.user_entry, self.pass_entry))
+
+    def check_toggled(self, check):
+        if check in (self.twitter_timeline_check, self.twitter_replies_check):
+            self.do_sensitive(self.add_button, (self.user_entry, self.pass_entry), \
+                (self.twitter_timeline_check, self.twitter_replies_check))
 
     def close(self, button):
         self.destroy()
@@ -726,11 +774,26 @@ class AddFeed(gtk.Window):
 
         self.results_sw.hide()
 
-    def do_sensitive(self, button, *entries):
+        self.twitter_vbox.hide()
+
+    #All entries need to have non-empty text
+    #At least one check needs to be active
+    def do_sensitive(self, button, entries=[], checks=[]):
         button.set_sensitive(True)
         for entry in entries:
             if entry.get_text().strip() == '':
                 button.set_sensitive(False)
+
+                return
+
+        if len(checks) == 0:
+            return
+
+        for check in checks:
+            if check.get_active():
+                return
+
+        button.set_sensitive(False)
 
 #Try the downloaded favicon first. If it doesn't work, use the blue RSS icon
 def get_greader_icon():
@@ -738,6 +801,14 @@ def get_greader_icon():
         pb = gtk.gdk.pixbuf_new_from_file_at_size(greader_ico, 16, 16)
     except:
         pb = gtk.gdk.pixbuf_new_from_file_at_size(greader_path, 16, 16)
+
+    return pb
+
+def get_favicon(siteid, applet):
+    try:
+        pb = gtk.gdk.pixbuf_new_from_file_at_size(os.path.join(cache_dir, siteid + '.ico'), 16, 16)
+    except:
+        pb = applet.web_image
 
     return pb
 

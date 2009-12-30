@@ -22,16 +22,24 @@ import cPickle as pickle
 import urllib
 import time
 import cStringIO
+import base64
+
+try:
+    import json
+except:
+    import simplejson as json
 
 import dbus
 import dbus.service
 import dbus.glib
 import feedparser
-import json
 
+from awn import extras
 from awn.extras import _, awnlib
 
 pickle_path = '%s/.config/awn/applets/.feeds-tokens' % os.environ['HOME']
+
+twitter_path = extras.PREFIX + '/share/avant-window-navigator/applets/feeds/icons/twitter-16x16.png'
 
 cache_dir = os.environ['HOME'] + '/.cache/awn-feeds-applet'
 
@@ -136,7 +144,7 @@ class FeedSource:
         self.applet.feed_updated(self)
 
     def update(self):
-        pass
+        self.applet.feed_updated(self)
 
     def delete(self):
         if self.url in self.applet.tokens:
@@ -180,11 +188,21 @@ class FeedSource:
 
         self._favicon_siteid = siteid
 
+        #Twitter's favicon is ugly, so override it with an included one
+        #(This is the icon that the Twitter feed source uses)
+
+        if siteid == 'twitter.com':
+            self.icon = twitter_path
+            self.applet.got_favicon(self)
+
+            return
+
         if siteid in self.applet.favicons:
             #Check if the favion is less than a week old
             if self.applet.favicons[siteid] + 604800L > long(time.time()):
                 self.icon = os.path.join(cache_dir, siteid + '.ico')
                 self.applet.got_favicon(self)
+
                 return
 
         #Either the icon does not exist or it's more than a week old; fetch it
@@ -246,13 +264,48 @@ class StandardNew:
             else:
                 entry['notify'] = False
 
+#Used for logging in
+class KeySaver:
+    key = None
+
+    def get_key(self, username, password):
+        if self.key is None:
+            if not self.applet.keyring:
+                self.applet.keyring = awnlib.Keyring()
+
+            token = self.applet.tokens[self.url]
+
+            #Username and password provided, e.g. from the add feed dialog
+            if username and password:
+                if token is None or token == 0:
+                    #No for i18n because if the user changes the language, he
+                    #could lose the password (and most users won't even see this)
+                    self.key = self.applet.keyring.new('Feeds - ' + self.url,
+                        password,
+                        {'username': username, 'network': self.base_id},
+                        'network')
+
+                    self.applet.tokens[self.url] = int(self.key.token)
+
+                else:
+                    self.key = self.applet.keyring.from_token(token)
+
+            #No password provided, e.g. on applet startup
+            else:
+                if token is None or token == 0:
+                    self.key = None
+
+                else:
+                    self.key = self.applet.keyring.from_token(token)
+
+        return self.key
+
 #Thank you http://code.google.com/p/pyrfeed/wiki/GoogleReaderAPI
-class GoogleReader(FeedSource, StandardNew):
+class GoogleReader(FeedSource, StandardNew, KeySaver):
     base_id = 'google-reader'
     web_url = 'http://www.google.com/reader/'
     title = _("Google Reader")
     should_update = False
-    google_key = None
     SID = ''
     login = 'https://www.google.com/accounts/ClientLogin'
     fetch_url = 'http://www.google.com/reader/atom/user/-/state/com.google/reading-list?n=5'
@@ -262,53 +315,23 @@ class GoogleReader(FeedSource, StandardNew):
     def __init__(self, applet, username, password=None):
         self.applet = applet
         self.username = username
-        self.password = password
         self.url = self.base_id + '-' + username
 
         #Get ready to update/fetch feed, but don't actually do so.
-        self.get_google_key(username, password)
+        self.get_key(username, password)
         self.get_google_sid()
         self.get_favicon('google-reader', self.favicon_url)
-
-    #Get/set the key for the Google Reader username and password
-    def get_google_key(self, username=None, password=None):
-        if self.google_key is None:
-            if not self.applet.keyring:
-                self.applet.keyring = awnlib.Keyring()
-
-            token = self.applet.tokens['google-reader-' + username]
-
-            #Username and password provided, e.g. from the add feed dialog
-            if username and password:
-                if token is None or token == 0:
-                    self.google_key = self.applet.keyring.new('Feeds - ' + self.url,
-                        password,
-                        {'username': username, 'network': 'google-reader'},
-                        'network')
-
-                    self.applet.tokens[self.url] = int(self.google_key.token)
-
-                else:
-                    self.google_key = self.applet.keyring.from_token(token)
-
-            #No username or password provided, e.g. while loading feeds
-            else:
-                if token is None or token == 0:
-                    self.google_key = None
-
-                else:
-                    self.google_key = self.applet.keyring.from_token(token)
 
     #Login to Google (Reader) and get an SID, a magic string that
     #lets us get the user's Google Reader items
     def get_google_sid(self):
-        if self.google_key is not None:
+        if self.key is not None:
             #Get the magic SID from Google to login, if we haven't already
             if self.SID == '':
                 #Format the request
                 data = urllib.urlencode({'service': 'reader',
-                    'Email': self.google_key.attrs['username'],
-                    'Passwd': self.google_key.password,
+                    'Email': self.key.attrs['username'],
+                    'Passwd': self.key.password,
                     'source': 'awn-feeds-applet',
                     'continue': 'http://www.google.com/'})
 
@@ -374,7 +397,7 @@ class GoogleReader(FeedSource, StandardNew):
         else:
             cb(feeds)
 
-class Reddit(FeedSource):
+class Reddit(FeedSource, KeySaver):
     base_id = 'reddit'
     web_url = 'http://www.reddit.com/message/inbox/'
     title = _("Reddit Inbox")
@@ -384,7 +407,6 @@ class Reddit(FeedSource):
     messages_url = 'http://www.reddit.com/message/inbox/.json?mark=false'
     mark_as_read = 'http://www.reddit.com/message/inbox/.rss?mark=true'
     inbox_url = 'http://www.reddit.com/message/messages/'
-    reddit_key = None
     cookie = None
     should_update = False
     already_notified_about = []
@@ -392,45 +414,18 @@ class Reddit(FeedSource):
     def __init__(self, applet, username, password=None):
         self.applet = applet
         self.username = username
-        self.password = password
         self.url = self.base_id + '-' + username
 
         #Get ready to update the feed, but don't actually do so.
-        self.get_reddit_key(username, password)
+        self.get_key(username, password)
         self.get_reddit_cookie()
         self.get_favicon('www.reddit.com')
 
-    def get_reddit_key(self, username=None, password=None):
-        if self.reddit_key is None:
-            if not self.applet.keyring:
-                self.applet.keyring = awnlib.Keyring()
-
-            token = self.applet.tokens['reddit-' + username]
-
-            #From the add feed dialog
-            if username and password:
-                if token is None or token == 0:
-                    self.reddit_key = self.applet.keyring.new('Feeds - ' + self.url,
-                        password, {'username': username, 'network': 'reddit'}, 'network')
-
-                    self.applet.tokens[self.url] = int(self.reddit_key.token)
-
-                else:
-                    self.reddit_key = self.applet.keyring.from_token(token)
-
-            #Feed was already added before current applet startup
-            else:
-                if token is None or token == 0:
-                    self.reddit_key = None
-
-                else:
-                    self.reddit_key = self.applet.keyring.from_token(token)
-
     def get_reddit_cookie(self):
-        if self.reddit_key is not None:
+        if self.key is not None:
             if self.cookie is None:
                 data = urllib.urlencode({'user': self.username.lower(),
-                    'passwd': self.reddit_key.password,
+                    'passwd': self.key.password,
                     'op': 'login-main',
                     'id': '#login_login-main',
                     'r': 'reddit.com'})
@@ -523,6 +518,101 @@ class Reddit(FeedSource):
                 self.get_favicon('www.reddit.com')
 
                 self.get_data(self.mark_as_read, {'Cookie': self.cookie})
+
+class Twitter(FeedSource, StandardNew, KeySaver):
+    base_id = 'twitter'
+    web_url = 'http://twitter.com/'
+    title = _("Twitter")
+    timeline_url = 'https://twitter.com/statuses/friends_timeline.rss'
+    replies_url = 'https://twitter.com/statuses/replies.rss'
+
+    def __init__(self, applet, username, password=None, base_url='twitter-timeline'):
+        self.applet = applet
+        self.username = username
+        self.url = base_url + '-' + username
+
+        self.get_favicon('twitter.com')
+        self.get_key(username, password)
+
+        self.auth = base64.encodestring(username + ':' + self.key.password)
+        self.auth = {'Authorization': 'Basic ' + self.auth}
+
+        if base_url.find('twitter-timeline') == 0:
+            self.use_timeline = True
+            self.use_replies = False
+
+        elif base_url.find('twitter-both') == 0:
+            self.use_timeline = True
+            self.use_replies = True
+
+        else:
+            self.use_timeline = False
+            self.use_replies = True
+
+    def update(self):
+        if self.use_timeline and self.use_replies:
+            self.have_timeline = False
+            self.have_replies = False
+
+        if self.use_timeline:
+            self.get_data(self.timeline_url, self.auth, True, cb=self.got_timeline)
+
+        if self.use_replies:
+            self.get_data(self.replies_url, self.auth, True, cb=self.got_replies)
+
+    def got_timeline(self, parsed):
+        self.timeline = parsed
+
+        if self.use_timeline and self.use_replies:
+            self.have_timeline = True
+
+            if self.have_replies:
+                self.do_entries()
+
+        else:
+            self.do_entries()
+
+    def got_replies(self, parsed):
+        self.replies = parsed
+
+        if self.use_timeline and self.use_replies:
+            self.have_replies = True
+
+            if self.have_timeline:
+                self.do_entries()
+
+        else:
+            self.do_entries()
+
+    def do_entries(self):
+        self.entries = []
+        urls = []
+
+        if self.use_timeline:
+            for entry in self.timeline.entries:
+                parsed_entry = Entry(entry.link, entry.title)
+                parsed_entry['time'] = entry.updated_parsed
+
+                urls.append(entry.link)
+                self.entries.append(parsed_entry)
+
+        if self.use_replies:
+            for entry in self.replies.entries:
+                #Don't add a reply if it's in the user's timeline
+                #Many (if not most) replies will also be in the user's timeline
+                if entry.link not in urls:
+                    parsed_entry = Entry(entry.link, entry.title)
+                    parsed_entry['time'] = entry.updated_parsed
+
+                    self.entries.append(parsed_entry)
+
+        #Sort the (combined) feeds, newest first
+        self.entries.sort(lambda a, b: cmp(b['time'], a['time']))
+
+        self.entries = self.entries[:5]
+
+        self.get_new()
+        self.applet.feed_updated(self)
 
 class WebFeed(FeedSource, StandardNew):
     fetched = False

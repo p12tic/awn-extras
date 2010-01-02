@@ -168,9 +168,16 @@ cairo_aux_icon_constructed (GObject *object)
   GdkPixbuf * pbuf;
   gint size = awn_applet_get_size (priv->applet);
   gchar * applet_name = g_strdup_printf("cairo-menu-%s",priv->menu_name);
+  gchar * base;
   G_OBJECT_CLASS (cairo_aux_icon_parent_class)->constructed (object);  
 
-  awn_themed_icon_set_info_simple (AWN_THEMED_ICON(object),applet_name,awn_applet_get_uid (priv->applet),priv->icon_name);
+  /*
+   applet_name can be a path with /'s.  These need to be retained for matching 
+   purposes when building the menus... but we need to strip them out for set_info
+   */
+  base = g_path_get_basename (applet_name);
+  awn_themed_icon_set_info_simple (AWN_THEMED_ICON(object),base,awn_applet_get_uid (priv->applet),priv->icon_name);
+  g_free (base);
   awn_themed_icon_set_size (AWN_THEMED_ICON (object),size);
   g_free (applet_name);
   

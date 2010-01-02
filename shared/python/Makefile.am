@@ -6,6 +6,7 @@ pyawn_extras_PYTHON =	\
 	__init__.py	\
 	awnlib.py	\
 	awnmediaplayers.py	\
+	configbinder.py \
 	threadqueue.py \
 	$(NULL)
 

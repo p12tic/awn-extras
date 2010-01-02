@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2008 sharkbaitbobby <sharkbaitbobby+awn@gmail.com>
+# Copyright (c) 2010 sharkbaitbobby <sharkbaitbobby+awn@gmail.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -82,6 +82,19 @@ class App(awn.AppletSimple):
         self.row = int((self.number) / float(num_columns)) + 1
         self.column = int((self.number) % num_columns) + 1
 
+        #Set up the text overlay
+        self.overlay = awn.OverlayText()
+        self.add_overlay(self.overlay)
+        self.overlay.props.font_sizing = 24.0 * (self.get_size() / 48.0)
+        self.overlay.props.text = str(self.number)
+        self.overlay.props.active = not self.settings['use_custom_text']
+        self.overlay.connect('notify::text-color', self.overlay_notify)
+        self.overlay.connect('notify::text-outline-color', self.overlay_notify)
+        self.overlay.connect('notify::font-mode', self.overlay_notify)
+        self.overlay.connect('notify::text-outline-width', self.overlay_notify)
+
+        self.settings.config.notify_add(GROUP_DEFAULT, 'use_custom_text', self.toggle_custom_text)
+
         #Connect to signals
         #Applet signals
         self.connect('realize', self.realize_event)
@@ -99,6 +112,14 @@ class App(awn.AppletSimple):
         #Force the widget to get the background color from the dialog
         #self.dialog.realize()
         self.widget.update_color()
+
+    def overlay_notify(self, overlay, param):
+        self.widget.queue_draw()
+
+    def toggle_custom_text(self, group, key, val):
+        self.overlay.props.active = not val
+
+        self.update_icon()
 
     #Make the icon when the window is first realized
     def realize_event(self, *args):
@@ -149,7 +170,7 @@ class App(awn.AppletSimple):
                 self.settings.config.set_string(GROUP_DEFAULT, 'custom_border', \
                     custom_border)
 
-            try:    
+            try:
                 border = '#' + custom_border
                 self.dialog_style.bg[gtk.STATE_SELECTED] = gtk.gdk.color_parse(border)
             except:
@@ -184,6 +205,8 @@ class App(awn.AppletSimple):
         self.set_icon_context(self.contexts[-1])
         if len(self.contexts) >= 4:
             del self.contexts[0]
+
+        self.overlay.props.text = str(self.number)
 
     #Called only from gobject every 2 seconds
     def timeout_icon(self):
@@ -242,7 +265,7 @@ class App(awn.AppletSimple):
         icon = gtk.gdk.pixbuf_new_from_file(image_path + 'done.png')
         win.set_logo(icon)
         win.set_icon(icon)
-        win.set_copyright('Copyright 2009 Sharkbaitbobby')
+        win.set_copyright('Copyright 2010 Sharkbaitbobby')
         win.set_authors(['Original Author:', '    diogodivision', \
             'Rewriters:', '    Sharkbaitbobby <sharkbaitbobby+awn@gmail.com>', \
             '    isaacj87 <isaac_j87@yahoo.com>', '    Nonozerobo'])

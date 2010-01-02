@@ -77,3 +77,18 @@ description = The width of a workspace widget
 type = integer
 default = 120
 description = The height of a workspace widget
+
+[DEFAULT/background_mode]
+type = string
+default = gnome
+description = Which background image(s) source to use: gnome, compiz, file
+
+[DEFAULT/background_file]
+type = string
+default =
+description = The file to use as the background image
+
+[DEFAULT/use_custom_text]
+type = boolean
+default = false
+description = Whether or not to use the standard text overlay

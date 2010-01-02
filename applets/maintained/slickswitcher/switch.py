@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2008 sharkbaitbobby <sharkbaitbobby+awn@gmail.com>
+# Copyright (c) 2010 sharkbaitbobby <sharkbaitbobby+awn@gmail.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -248,8 +248,8 @@ class Switch:
                             workspaces[workspace].append(tmp_window)
 
                             #Remove it from the list of windows to save a tiny bit
-                            #of processing power        
-                            windows_pos_size.remove(window) 
+                            #of processing power
+                            windows_pos_size.remove(window)
 
         #Return the list of windows for one specific viewport
         else:
@@ -306,7 +306,7 @@ class Switch:
                         windows.append(tmp_window)
 
                         #Remove it from the list of windows to save a tiny bit
-                        #of processing power        
+                        #of processing power
                         windows_pos_size.remove(window)
 
             #Return the list of windows

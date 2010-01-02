@@ -39,6 +39,7 @@ class preferences:
         scaleThresholdSpinbutton.set_value(float(self.applet.settings["draw_threshold"]))
         scaleThresholdSpinbutton.connect('value-changed', self.parent.change_draw_ratio)
         uomCheckbutton = prefs_ui.get_object('uomCheckbutton')
+        self.uomCheckbutton = uomCheckbutton
         if self.parent.unit == 1:
             uomCheckbutton.set_property('active', True)
             thresholdLabel.set_text("KBps")

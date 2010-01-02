@@ -23,7 +23,9 @@ Email: awn-bwm@curetheitch.com
 import gtk
 import gobject
 
+
 class preferences:
+
     def __init__(self, applet, parent):
         self.applet = applet
         self.parent = parent
@@ -56,7 +58,7 @@ class preferences:
         bgColorbutton = prefs_ui.get_object('bgColorbutton')
         bgColor, bgAlpha = self.applet.settings["background_color"].split("|")
         bgColorbutton.set_color(gtk.gdk.Color(bgColor))
-        bgColorbutton.set_alpha(int(float(bgAlpha)*65535.0))
+        bgColorbutton.set_alpha(int(float(bgAlpha) * 65535.0))
         bgColorbutton.connect('color-set', self.backgroundColorbutton_color_set_cb)
         borderCheckbutton = prefs_ui.get_object('borderCheckbutton')
         borderCheckbutton.set_active(self.applet.settings["border"])
@@ -64,7 +66,7 @@ class preferences:
         borderColorbutton = prefs_ui.get_object('borderColorbutton')
         borderColor, borderAlpha = self.applet.settings["border_color"].split("|")
         borderColorbutton.set_color(gtk.gdk.Color(borderColor))
-        borderColorbutton.set_alpha(int(float(borderAlpha)*65535.0))
+        borderColorbutton.set_alpha(int(float(borderAlpha) * 65535.0))
         borderColorbutton.connect('color-set', self.borderColorbutton_color_set_cb)
         labelNoneRadiobutton = prefs_ui.get_object('labelNoneRadiobutton')
         labelSumRadiobutton = prefs_ui.get_object('labelSumRadiobutton')
@@ -74,7 +76,7 @@ class preferences:
         elif self.parent.label_control == 1:
             labelSumRadiobutton.set_active(True)
         else:
-            labelBothRadiobutton.set_active(True)        
+            labelBothRadiobutton.set_active(True)
         labelNoneRadiobutton.connect('toggled', self.labelRadio_cb, 0)
         labelSumRadiobutton.connect('toggled', self.labelRadio_cb, 1)
         labelBothRadiobutton.connect('toggled', self.labelRadio_cb, 2)
@@ -104,24 +106,24 @@ class preferences:
     def create_treeview(self):
         cell_box = gtk.HBox()
         liststore = gtk.ListStore(str, gobject.TYPE_BOOLEAN, gobject.TYPE_BOOLEAN, gobject.TYPE_BOOLEAN, gobject.TYPE_BOOLEAN, str, str)
-        treeview = gtk.TreeView( liststore )
-        treeview.set_property( "rules-hint", True )
-        treeview.set_enable_search( True )
+        treeview = gtk.TreeView(liststore)
+        treeview.set_property("rules-hint", True)
+        treeview.set_enable_search(True)
         treeview.position = 0
-        rows = gtk.VBox( False, 3 )
+        rows = gtk.VBox(False, 3)
         self.liststore = liststore
-        listcols = gtk.HBox( False, 0 )
-        prows = gtk.VBox( False, 0 )
-        rows.pack_start( listcols, True, True, 0 )
-        listcols.pack_start( treeview )
-        listcols.pack_start( prows, False, False, 0 )
+        listcols = gtk.HBox(False, 0)
+        prows = gtk.VBox(False, 0)
+        rows.pack_start(listcols, True, True, 0)
+        listcols.pack_start(treeview)
+        listcols.pack_start(prows, False, False, 0)
         selection = treeview.get_selection()
         selection.connect('changed', self.on_selection_changed)
         ''' Device '''
         device_renderer = gtk.CellRendererText()
         device_column = gtk.TreeViewColumn("Device", device_renderer)
         device_column.set_property('expand', True)
-        device_column.add_attribute( device_renderer, "text", 0 )
+        device_column.add_attribute(device_renderer, "text", 0)
         ''' Sum '''
         sum_renderer = gtk.CellRendererToggle()
         sum_column = gtk.TreeViewColumn("Sum", sum_renderer)
@@ -161,15 +163,14 @@ class preferences:
         cell_box.add(rows)
         return cell_box
 
-    def on_selection_changed(self, selection): 
-        ''' If a row is selected; deselect it.. always.. 
+    def on_selection_changed(self, selection):
+        ''' If a row is selected; deselect it.. always..
             There is currently no need to have the row selected,
             and the highlight of the row makes it difficult to see
             the colors selected depending on your GTK theme.. '''
         model, paths = selection.get_selected_rows()
         if paths:
             selection.unselect_path(model[paths[0]].path)
-
 
     def devlist_cell_func(self, column, cell, model, iter):
         ''' Changes the cell color to match the preferece or selected value '''
@@ -235,9 +236,9 @@ class preferences:
                     ''' If the current column is 1 or 2, it is a checkbox,
                         so transpose from bool to int '''
                     dpv[col_number] = self.color_choice.to_string()
-                    prefs[i] = "%s|%s|%s|%s|%s" % ( dpv[0], dpv[1], dpv[2], dpv[3], dpv[4] )
+                    prefs[i] = "%s|%s|%s|%s|%s" % (dpv[0], dpv[1], dpv[2], dpv[3], dpv[4])
                 i += 1
-            model[path][col_number+2] = self.color_choice.to_string()
+            model[path][col_number + 2] = self.color_choice.to_string()
             self.applet.settings["device_display_parameters"] = prefs
         colorseldlg.hide()
 
@@ -257,9 +258,6 @@ class preferences:
                 ''' If the current column is 1 or 2, it is a checkbox,
                     so transpose from bool to int '''
                 dpv[col_number] = parameter
-                prefs[i] = "%s|%s|%s|%s|%s" % ( dpv[0], dpv[1], dpv[2], dpv[3], dpv[4] )
+                prefs[i] = "%s|%s|%s|%s|%s" % (dpv[0], dpv[1], dpv[2], dpv[3], dpv[4])
             i += 1
         self.applet.settings["device_display_parameters"] = prefs
-
-
-

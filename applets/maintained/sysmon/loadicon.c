@@ -76,9 +76,13 @@ _awn_loadicon_update_icon(gpointer object)
   glibtop_loadavg load;  
   GList * list = NULL;
   int i;
-  
+
   priv = AWN_LOADICON_GET_PRIVATE (object);
   sysmonicon_priv = AWN_SYSMONICON_GET_PRIVATE (object);
+
+  g_object_set (object,
+                "invalidate",TRUE,
+                NULL);
 
   glibtop_get_loadavg(&load);
   
@@ -130,7 +134,7 @@ awn_loadicon_constructed (GObject *object)
   {
     case GRAPH_DEFAULT:
     case GRAPH_BAR:    
-      sysmonicon_priv->graph = AWN_GRAPH(awn_bargraph_new (0.0,10.0));      
+      sysmonicon_priv->graph = AWN_GRAPH(awn_bargraph_new (0.0,5.0));      
       break;
     case GRAPH_CIRCLE:
     case GRAPH_AREA:      
@@ -160,7 +164,7 @@ awn_loadicon_init (AwnLoadicon *self)
   AwnLoadiconPrivate *priv;
   	
   priv = AWN_LOADICON_GET_PRIVATE (self);
-  priv->update_timeout = 1000;  /*FIXME*/
+  priv->update_timeout = 4000;  /*FIXME*/
   
 }
 
@@ -172,4 +176,3 @@ awn_loadicon_new (AwnGraphType graph_type,AwnApplet * applet)
                           "applet",applet,
                           NULL);  
 }
-

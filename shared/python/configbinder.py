@@ -25,9 +25,6 @@ import gobject
 from desktopagnostic import config, Color
 from desktopagnostic.ui import ColorButton
 
-minimum_value = -sys.maxint - 1
-maximum_value = sys.maxint
-
 
 def get_config_binder(client, group, builder=None):
 
@@ -52,7 +49,7 @@ def get_config_binder(client, group, builder=None):
             value = client.get_value(group, key)
             value_type = type(value)
             if value_type in (int, long, float):
-                self.properties[key] = (value_type, None, None, minimum_value, maximum_value, value, gobject.PARAM_READWRITE)
+                self.properties[key] = (value_type, None, None, gobject.G_MININT, gobject.G_MAXINT, value, gobject.PARAM_READWRITE)
             elif value_type is Color:
                 self.properties[key] = (Color.__gtype__, None, None, gobject.PARAM_READWRITE)
             else:

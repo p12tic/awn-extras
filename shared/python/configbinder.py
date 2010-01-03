@@ -86,8 +86,7 @@ def get_config_binder(client, group, builder=None):
     return ConfigBinder()
 
 
-def bind_property(client, group, key, obj, prop_name, widget=None,
-                          read_only=False,
+def bind_property(client, group, key, obj, prop_name, widget, read_only=False,
                           getter_transform=None, setter_transform=None,
                           key_callback=None):
     """Bind config key to a property and widget it represents.

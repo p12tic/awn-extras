@@ -690,12 +690,12 @@ class Settings:
     __setting_types = (bool, int, long, float, str, list, Color)
 
     def __init__(self, parent):
-        """Create a new Settings object. Note that the Settings object
-        should be used as a dictionary. The default folder: the short
-        name, and if the applet has requested the settings-per-instance
-        option, a '-', and the uid, if the meta dictionary contains the
-        "short" key. Otherwise the default folder will be just the uid
-        of the applet.
+        """Create a new Settings object. This object
+        can be used as a dictionary to retrieve and set values of
+        configuration keys. More importantly, this object provides
+        the methods get_binder() and load_bindings(), which should
+        be used to bind keys to their corresponding Gtk+ widgets,
+        and to make the keys available as GObject properties.
 
         @param parent: The parent applet of the settings instance.
         @type parent: L{Applet}
@@ -711,9 +711,31 @@ class Settings:
         self.__client = self.ConfigClient(self.__folder, parent)
 
     def get_binder(self, builder):
+        """Return an object that can be used to bind keys to their
+        corresponding Gtk+ widgets, which are to be retrieved
+        via the given C{gtk.Builder} instance.
+
+        @param key: Instance of C{gtk.Builder}, used to retrieve Gtk+ widgets
+        @type key: C{gtk.Builder}
+        @return: An object that provides the method bind() to bind keys
+        @rtype: C{object}
+
+        """
         return self.__client.get_config_binder(builder)
 
     def load_bindings(self, object):
+        """Load the bindings by creating a C{gobject.GObject} from the
+        descriptions given by the given binder object. This object
+        should be an object that was returned by get_binder(). The
+        "props" value (instance of C{gobject.GProps}) of the GObject will
+        be returned.
+
+        @param key: An object returned by get_binder()
+        @type key: C{object}
+        @return: The "props" value of the created GObject
+        @rtype: C{gobject.GProps}
+
+        """
         return self.__client.load_bindings(object)
 
     def __getitem__(self, key):
@@ -788,6 +810,8 @@ class Settings:
             self.__folder = folder
 
         def get_config_binder(self, builder):
+            if builder is not None and not isinstance(builder, gtk.Builder):
+                raise RuntimeError("Builder must be an instance of gtk.Builder if not None")
             return configbinder.get_config_binder(self.__client, self.__folder, builder)
 
         def load_bindings(self, binder):

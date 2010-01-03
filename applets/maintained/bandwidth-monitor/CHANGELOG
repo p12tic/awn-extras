@@ -9,6 +9,8 @@
     Improved logic for setting device preference values per Mark Lee's suggestion
     Added timeout_add_seconds wrapper function
     Adjusted width calculation if orientation is vertical
+    Change version string to use awn.extras.__version__
+    Changed email address
 
 12/20/2009:
     Change logic to graph calculation which corrects the following rendering issues -

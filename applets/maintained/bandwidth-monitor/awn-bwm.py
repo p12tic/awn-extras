@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 bandwidth-monitor - Network bandwidth monitor.
-Copyright (c) 2006-2009 Kyle L. Huff (kyle.huff@curetheitch.com)
+Copyright (c) 2006-2009 Kyle L. Huff (awn-bwm@curetheitch.com)
 url: <http://www.curetheitch.com/projects/awn-bwm/>
 Email: awn-bwm@curetheitch.com
 
@@ -30,7 +30,7 @@ import time
 import gtk
 import awn
 
-from awn.extras import awnlib
+from awn.extras import awnlib, __version__
 import gobject
 import gc
 import cairo
@@ -40,7 +40,7 @@ import bwmprefs
 APPLET_NAME = "Bandwidth Monitor"
 APPLET_VERSION = "0.3.9.2"
 APPLET_COPYRIGHT = "© 2006-2009 CURE|THE|ITCH"
-APPLET_AUTHORS = ["Kyle L. Huff <kyle.huff@curetheitch.com>"]
+APPLET_AUTHORS = ["Kyle L. Huff <awn-bwm@curetheitch.com>"]
 APPLET_DESCRIPTION = "Network Bandwidth monitor"
 APPLET_WEBSITE = "http://www.curetheitch.com/projects/awn-bwm/"
 APPLET_PATH = os.path.dirname(sys.argv[0])
@@ -437,7 +437,10 @@ class AppletBandwidthMonitor:
 
     def repaint(self):
         orientation = self.applet.get_pos_type()
-        width = self.applet.get_size() if orientation == gtk.POS_RIGHT or orientation == gtk.POS_LEFT else self.applet.get_size() * 1.5
+        if orientation == gtk.POS_RIGHT or orientation == gtk.POS_LEFT:
+            width = self.applet.get_size()
+        else:
+            width = self.applet.get_size() * 1.5
         cs = cairo.ImageSurface(cairo.FORMAT_ARGB32, int(width), self.applet.get_size())
         ct = cairo.Context(cs)
         ct.set_source_surface(cs)
@@ -551,7 +554,7 @@ def sort_dictionary_keys(dict):
 if __name__ == "__main__":
     awnlib.init_start(AppletBandwidthMonitor, {"name": APPLET_NAME,
         "short": "bandwidth-monitor",
-        "version": APPLET_VERSION,
+        "version": __version__,
         "description": APPLET_DESCRIPTION,
         "logo": APPLET_ICON,
         "author": "Kyle L. Huff",

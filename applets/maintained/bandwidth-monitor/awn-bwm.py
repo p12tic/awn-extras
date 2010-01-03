@@ -89,7 +89,13 @@ class DeviceUsage:
             'include_in_multi': False}
         self.regenerate = False
         self.update_net_stats()
-        gobject.timeout_add(1000, self.update_net_stats)
+        self.timeout_add_seconds(1, self.update_net_stats)
+
+    def timeout_add_seconds(self, seconds, callback):
+        if hasattr(gobject, 'timeout_add_seconds'):
+            return gobject.timeout_add_seconds(seconds, callback)
+        else:
+            return gobject.timeout_add(seconds * 1000, callback)
 
     def update_net_stats(self):
         ifcfg_str = os.popen("netstat -eia").read()
@@ -430,7 +436,8 @@ class AppletBandwidthMonitor:
         return (self.applet.get_size() - pos * (value / int(ratio))) + self.graph_zero - bottom
 
     def repaint(self):
-        width = self.applet.get_size() * 1.5
+        orientation = self.applet.get_pos_type()
+        width = self.applet.get_size() if orientation == gtk.POS_RIGHT or orientation == gtk.POS_LEFT else self.applet.get_size() * 1.5
         cs = cairo.ImageSurface(cairo.FORMAT_ARGB32, int(width), self.applet.get_size())
         ct = cairo.Context(cs)
         ct.set_source_surface(cs)

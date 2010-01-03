@@ -224,6 +224,26 @@ def bind_property(client, group, key, obj, prop_name, widget=None,
         if key_callback is not None:
             key_callback(new_value)
 
+    value = obj.get_property(prop_name)
+
+    if isinstance(widget, gtk.ComboBox) and type(value) is str:
+
+        def compose(f1, f2):
+            def composition(*args, **kwargs):
+                return f1(f2(*args, **kwargs))
+            return composition
+
+        def getter(prop_value):
+            for i, j in enumerate(widget.get_model()):
+                if j[0] == prop_value:
+                    return i
+
+        def setter(widget_index):
+            return widget.get_model()[widget_index][0]
+
+        getter_transform = compose(getter, getter_transform) if getter_transform else getter
+        setter_transform = compose(setter_transform, setter) if setter_transform else setter
+
     # Make sure the widget updates when the prop changes
     obj.connect("notify::" + prop_name, key_changed, (widget, getter_transform))
 
@@ -236,7 +256,6 @@ def bind_property(client, group, key, obj, prop_name, widget=None,
         connect_to_widget_changes(widget, widget_changed, data)
 
     # Initialize the widget with the property's value
-    value = obj.get_property(prop_name)
     if getter_transform is not None:
         value = getter_transform(value)
     set_widget_value(widget, value)

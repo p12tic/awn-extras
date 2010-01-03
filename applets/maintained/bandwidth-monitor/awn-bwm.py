@@ -437,8 +437,11 @@ class AppletBandwidthMonitor:
 
     def repaint(self):
         orientation = self.applet.get_pos_type()
-        if orientation == gtk.POS_RIGHT or orientation == gtk.POS_LEFT:
+        if orientation in (gtk.POS_LEFT, gtk.POS_RIGHT):
             width = self.applet.get_size()
+            self.__upload_overlay.props.font_sizing = 9
+            self.__download_overlay.props.font_sizing = 9
+            self.__sum_overlay.props.font_sizing = 9
         else:
             width = self.applet.get_size() * 1.5
         cs = cairo.ImageSurface(cairo.FORMAT_ARGB32, int(width), self.applet.get_size())

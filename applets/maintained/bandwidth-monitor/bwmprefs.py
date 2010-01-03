@@ -225,7 +225,6 @@ class preferences:
             self.color_choice = colorseldlg.colorsel.get_current_color()
             self.parent.device_usage.interfaces[model[path][0]]['%s_color' % prop.lower()] = self.color_choice.to_string()
             prefs = self.applet.settings["device_display_parameters"]
-            i = 0
             if not prefs:
                 prefs = ["%s|True|True|None|None" % (model[path][0])]
             if not model[path][0] in prefs.__str__():
@@ -235,7 +234,7 @@ class preferences:
                 if dpv[0] == model[path][0]:
                     ''' If the current column is 1 or 2, it is a checkbox,
                     so transpose from bool to int '''
-                    dpv[col_number] = parameter
+                    dpv[col_number] = self.color_choice.to_string()
                     prefs[i] = '|'.join(dpv)
             model[path][col_number + 2] = self.color_choice.to_string()
             self.applet.settings["device_display_parameters"] = prefs
@@ -246,17 +245,15 @@ class preferences:
         parameter = model[path][col_number]
         self.parent.device_usage.interfaces[model[path][0]]['include_in_%s' % name] = parameter
         prefs = self.applet.settings["device_display_parameters"]
-        i = 0
         if not prefs:
             prefs = ["%s|True|True|None|None" % (model[path][0])]
         if not model[path][0] in prefs.__str__():
             prefs.append("%s|True|True|None|None" % (model[path][0]))
-        for device_pref in prefs:
-            dpv = device_pref.split("|")
+        for i, device_pref in enumerate(prefs):
+            dpv = device_pref.split('|')
             if dpv[0] == model[path][0]:
                 ''' If the current column is 1 or 2, it is a checkbox,
-                    so transpose from bool to int '''
+                so transpose from bool to int '''
                 dpv[col_number] = parameter
-                prefs[i] = "%s|%s|%s|%s|%s" % (dpv[0], dpv[1], dpv[2], dpv[3], dpv[4])
-            i += 1
+                prefs[i] = '|'.join(dpv)
         self.applet.settings["device_display_parameters"] = prefs

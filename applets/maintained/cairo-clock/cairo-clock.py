@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# Copyright (C) 2008 - 2009  onox <denkpadje@gmail.com>
+# Copyright (C) 2008 - 2010  onox <denkpadje@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ from awn.extras import awnlib, __version__
 import cairo
 
 from analogclock import *
-import locations
+import locations, weather
 
 applet_name = "Cairo Clock"
 applet_description = "Applet that displays an analog clock and supports additional clocks for different locations"
@@ -40,7 +40,7 @@ default_theme = "gnome"
 ui_file = os.path.join(os.path.dirname(__file__), "cairo-clock.ui")
 
 # List of all available plugins
-plugin_classes = frozenset([locations.Locations])
+plugin_classes = (locations.Locations, )  # weather.Weather
 
 
 class CairoClockApplet:
@@ -76,6 +76,10 @@ class CairoClockApplet:
 
         """ Plug-ins """
         for i in self.__plugins:
+            element = i.get_element()
+            if element is None:
+                continue
+            
             plugin_vbox = gtk.VBox(spacing=6)
 
             hbox = gtk.HBox()
@@ -119,7 +123,7 @@ class CairoClockApplet:
                     vbox.set_no_show_all(True)
             expander.connect("activate", toggle_expander_vbox_cb, expander_vbox)
 
-            expander_vbox.add(i.get_element())
+            expander_vbox.add(element)
             plugin_vbox.add(expander_vbox)
             i.set_parent_container(plugin_vbox)
             vbox.add(plugin_vbox)
@@ -151,6 +155,9 @@ class CairoClockApplet:
         self.setup_general_preferences(prefs)
         self.setup_plugins_preferens(prefs)
 
+        # Now do the actual binding: bind the keys to their Gtk+ widgets
+        self.applet.settings.load_bindings(self.binder)
+
     def setup_general_preferences(self, prefs):
         container = gtk.VBox()
         prefs.get_object("vbox-general").reparent(container)
@@ -158,16 +165,7 @@ class CairoClockApplet:
 
         refresh_title = lambda v: self.__clock_updater.update_title()
         refresh_clock = lambda v: self.__clock_updater.draw_clock_cb()
-
-        default_values = {
-            "time-24-format": (True, refresh_title, prefs.get_object("radio-24-format")),  # True if the time in the title must display 24 hours, False if AM/PM
-            "time-date": (True, refresh_title, prefs.get_object("check-time-date")),
-            "time-seconds": (True, refresh_title, prefs.get_object("check-time-seconds")),
-            "show-seconds-hand": (True, refresh_clock, prefs.get_object("check-second-hand")),  # True if the clock must display a second hand, False otherwise
-            "theme": default_theme,
-            "custom-time-format": ""
-        }
-        self.settings = self.applet.settings.load_preferences(default_values)
+        init_clock = lambda v: self.initialize_clock()
 
         self.themes = os.listdir(default_themes_dir)
 
@@ -175,20 +173,22 @@ class CairoClockApplet:
             self.themes.extend(os.listdir(cairo_clock_themes_dir))
 
         # Remove duplicates and sort the list
-        self.themes = list(set(self.themes))
-        self.themes.sort()
+        self.themes = sorted(list(set(self.themes)))
 
         combobox_theme = prefs.get_object("combobox-theme")
         awnlib.add_cell_renderer_text(combobox_theme)
         for i in self.themes:
             combobox_theme.append_text(i)
 
-        theme = self.settings["theme"]
-        if theme not in self.themes:
-            self.applet.settings["theme"] = theme = default_theme
+        if self.applet.settings["theme"] not in self.themes:
+            self.applet.settings["theme"] = default_theme
 
-        combobox_theme.set_active(self.themes.index(theme))
-        combobox_theme.connect("changed", self.combobox_theme_changed_cb)
+        self.binder = self.applet.settings.get_binder(prefs)
+        self.binder.bind("time-24-format", "radio-24-format", key_callback=refresh_title)
+        self.binder.bind("time-date", "check-time-date", key_callback=refresh_title)
+        self.binder.bind("time-seconds", "check-time-seconds", key_callback=refresh_title)
+        self.binder.bind("show-seconds-hand", "check-second-hand", key_callback=refresh_clock)
+        self.binder.bind("theme", "combobox-theme", key_callback=init_clock)
 
     def setup_plugins_preferens(self, prefs):
         for i in self.__plugins:
@@ -198,12 +198,12 @@ class CairoClockApplet:
                 preferences.reparent(container)
                 page_number = self.preferences_notebook.append_page(container, gtk.Label(i.get_name()))
                 i.set_preferences_page_number(page_number)
-
-    def combobox_theme_changed_cb(self, combobox):
-        self.applet.settings["theme"] = self.themes[combobox.get_active()]
-
-        # Load the new theme and update the clock
-        self.initialize_clock()
+    
+    def get_plugin(self, name):
+        for i in self.__plugins:
+            if i.get_name() == name:
+                return i
+        return None
 
     def initialize_clock(self):
         """Load the current theme given by the "theme" setting and then
@@ -232,7 +232,6 @@ class ClockUpdater:
 
     def __init__(self, clock_applet):
         self.applet = clock_applet.applet
-        self.settings = clock_applet.settings
 
         self.__clock = AppletAnalogClock(self)
 
@@ -247,10 +246,10 @@ class ClockUpdater:
         if local_time is None:
             local_time = time.localtime()
 
-        if len(self.settings["custom-time-format"]) > 0:
-            format = self.settings["custom-time-format"]
+        if len(self.applet.settings["custom-time-format"]) > 0:
+            format = self.applet.settings["custom-time-format"]
         else:
-            if self.settings["time-24-format"]:
+            if self.applet.settings["time-24-format"]:
                 hours = "%H"
                 ampm = ""
             else:
@@ -258,11 +257,11 @@ class ClockUpdater:
                 hours = str(int(time.strftime("%I", local_time)))
                 ampm = " %p"
 
-            seconds = ":%S" if self.settings["time-seconds"] else ""
+            seconds = ":%S" if self.applet.settings["time-seconds"] else ""
 
             format = hours + ":%M" + seconds + ampm
 
-            if self.settings["time-date"]:
+            if self.applet.settings["time-date"]:
                 format = "%a %b %d " + format + " %Y"
 
         self.applet.tooltip.set(time.strftime(format, local_time))
@@ -281,7 +280,7 @@ class ClockUpdater:
         return True
 
     def load_theme(self):
-        provider = AnalogClockThemeProvider(self.settings["theme"])
+        provider = AnalogClockThemeProvider(self.applet.settings["theme"])
         self.__clock.load_theme(provider)
 
 
@@ -293,7 +292,6 @@ class AppletAnalogClock:
 
     def __init__(self, clock_updater):
         self.applet = clock_updater.applet
-        self.settings = clock_updater.settings
 
     def load_theme(self, provider):
         self.__theme = provider
@@ -306,7 +304,7 @@ class AppletAnalogClock:
         hours, minutes, seconds = (local_time[3], local_time[4], local_time[5])
 
         height = self.applet.get_size()
-        show_seconds_hand = self.settings["show-seconds-hand"]
+        show_seconds_hand = self.applet.settings["show-seconds-hand"]
 
         new_state = (show_seconds_hand, height, self.__theme.get_name(), hours, minutes)
         if not show_seconds_hand and self.__previous_state == new_state:
@@ -334,7 +332,6 @@ if __name__ == "__main__":
         "description": applet_description,
         "logo": applet_logo,
         "author": "onox",
-        "copyright-year": "2008 - 2009",
+        "copyright-year": "2008 - 2010",
         "authors": ["onox <denkpadje@gmail.com>"],
-        "artists": ["Lapo Calamandrei", "Rodney Dawes", "Jakub Steiner", "Artists of MacSlow's Cairo-Clock"]},
-        ["settings-per-instance"])
+        "artists": ["Lapo Calamandrei", "Rodney Dawes", "Jakub Steiner", "Artists of MacSlow's Cairo-Clock"]})

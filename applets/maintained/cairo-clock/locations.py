@@ -1,4 +1,4 @@
-# Copyright (C) 2008 - 2009  onox <denkpadje@gmail.com>
+# Copyright (C) 2008 - 2010  onox <denkpadje@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -55,7 +55,7 @@ class CityTimezoneCode(object):
     def __init__(self, city, timezone, code):
         self.__city = city
         self.__timezone = timezone
-        self.__code = code
+        self.__code = code if code != "None" else None
 
     @property
     def city(self):
@@ -105,7 +105,7 @@ class Locations:
     def draw_clock_cb(self):
         local_time = time.localtime()
 
-        new_state = (local_time[3], local_time[4], self.__applet.settings["theme"], self.__applet.settings["time-24-format"])
+        new_state = (local_time[3], local_time[4], self.__applet.applet.settings["theme"], self.__applet.applet.settings["time-24-format"])
         if self.__previous_state == new_state:
             return
 
@@ -210,7 +210,10 @@ class Locations:
         return offset.days * 24 * 60 + (offset.seconds / 60)
 
     def uses_24hour_format(self):
-        return self.__applet.settings["time-24-format"]
+        return self.__applet.applet.settings["time-24-format"]
+
+    def get_weather_plugin(self):
+        return self.__applet.get_plugin("Weather")
 
     class LocationBox:
 
@@ -221,6 +224,14 @@ class Locations:
 
         def __init__(self, parent, city_timezone_code):
             self.__parent = parent
+            self.__weather_plugin = parent.get_weather_plugin()
+
+            #### START OF CRAP
+            if self.__weather_plugin is not None and city_timezone_code.code is not None:
+                self.__report_fetcher = self.__weather_plugin.get_report_fetcher(city_timezone_code.code)
+            else:
+                self.__report_fetcher = None
+            #### END OF CRAP
 
             self.__timezone = city_timezone_code.timezone
             self.hbox = gtk.HBox(spacing=6)
@@ -260,10 +271,31 @@ class Locations:
             city_label.set_max_width_chars(25)
             vbox.pack_start(city_label, expand=False)
 
+            weather_timezone_hbox = gtk.HBox(spacing=6)
+
+            #### START OF CRAP
+            if self.__report_fetcher is not None:
+                self.__weather_image = gtk.Image()
+                self.__weather_image.props.has_tooltip = True
+                weather_timezone_hbox.add(self.__weather_image)
+
+                self.__tooltip_hbox = None
+                def query_tooltip_cb(widget, x, y, keyboard_mode, tooltip):
+                    if self.__tooltip_hbox is None:
+                        return False
+                    self.__tooltip_hbox.show_all()
+                    tooltip.set_custom(self.__tooltip_hbox)
+                    return True
+                self.__weather_image.connect("query-tooltip", query_tooltip_cb)
+            self.__can_update_weather = self.__report_fetcher is not None
+            #### END OF CRAP
+
             # Timezone label
             self.__timezone_label = gtk.Label()
-            self.__timezone_label.set_alignment(0.0, 0.5)
-            vbox.pack_start(self.__timezone_label, expand=False)
+            self.__timezone_label.set_alignment(0.0, 0.2)
+            weather_timezone_hbox.add(self.__timezone_label)
+
+            vbox.pack_start(weather_timezone_hbox, expand=False)
 
             self.update_timezone_label(datetime.now(tz.tzlocal()))
 
@@ -293,6 +325,48 @@ class Locations:
                     text += ":" + str(minutes)
 
             self.__timezone_label.set_text(text)
+
+            #### START OF CRAP
+            if self.__can_update_weather:
+                self.__can_update_weather = False
+                print "doing update..."
+
+                def cb(weather, sky, srss, image):
+                    print "tooltip update cb"
+                    if image is not None:
+                        self.__weather_image.set_from_icon_name(image, gtk.ICON_SIZE_BUTTON)
+
+                        tooltip_hbox = gtk.HBox(spacing=6)
+                        tooltip_hbox.set_border_width(2)
+                        tooltip_hbox.add(gtk.image_new_from_icon_name(image, gtk.ICON_SIZE_DIALOG))
+                        description_vbox = gtk.VBox()
+                        tooltip_hbox.add(description_vbox)
+
+                        tooltip_title = []
+                        if weather is not None:
+                            tooltip_title.append(weather[0].upper() + weather[1:])
+                        if sky is not None:
+                            tooltip_title.append(sky[0].upper() + sky[1:])
+                        if len(tooltip_title) > 0:
+                            sky_label = gtk.Label("<b>%s</b>" % ", ".join(tooltip_title))
+                            sky_label.set_use_markup(True)
+                            sky_label.set_alignment(0.0, 0.5)
+                            description_vbox.pack_start(sky_label, expand=False)
+
+                        sunriseset_label = gtk.Label("Sunrise: %s:%s / Sunset: %s:%s" % (srss[0] + srss[1]))
+                        sunriseset_label.set_alignment(0.0, 0.5)
+                        description_vbox.pack_start(sunriseset_label, expand=False)
+
+                        print "constructed tooltip hbox:", tooltip_hbox
+                        self.__tooltip_hbox = tooltip_hbox
+                self.__weather_plugin.refresh_weather(self.__report_fetcher, cb, city_datetime, self.__parent.get_offset_minutes)
+
+                def x():
+                    self.__can_update_weather = True
+                    print "can update!"
+                    return False
+                glib.timeout_add_seconds(15 * 60, x)
+            #### END OF CRAP
 
         def insert_in(self, vbox, index):
             vbox.add(self.hbox)

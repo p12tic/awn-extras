@@ -7,7 +7,8 @@ dist_applet_DATA =  \
     cairo-clock-logo.svg \
     cairo-clock.ui \
     analogclock.py \
-    locations.py
+    locations.py \
+    weather.py \
     $(NULL)
 
 gnome_themedir = $(applet_datadir)/themes/gnome

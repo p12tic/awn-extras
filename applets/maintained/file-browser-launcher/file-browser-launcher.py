@@ -26,6 +26,7 @@ import os
 import pygtk
 pygtk.require('2.0')
 import gtk
+import gobject
 import subprocess
 import pango
 import urllib
@@ -44,6 +45,11 @@ gettext.bindtextdomain('xdg-user-dirs', '/usr/share/locale')
 
 class App (awn.AppletSimple):
   icons = {}
+  timer = None
+  num_times = 0
+  drag_done = False
+  droppable_places = []
+
   def __init__(self, uid, panel_id):
     self.uid = uid
 
@@ -63,7 +69,16 @@ class App (awn.AppletSimple):
     self.set_icon_name('stock_folder')
     self.icon = self.get_icon().get_icon_at_size(48, None)
 
-    if not gio:
+    #This part (and other progress overlay code) adapted from
+    #mhr3's 'Dropper' applet
+    if gio:
+      #Set the progress overlay
+      self.timer_overlay = awn.OverlayProgressCircle()
+      self.timer_overlay.props.active = False
+      self.timer_overlay.props.apply_effects = False
+      self.get_icon().add_overlay(self.timer_overlay)
+
+    else:
       #Read fstab for mounting info
       #(It it assumed that fstab won't change after the applet is started)
       self.fstab2 = open('/etc/fstab', 'r')
@@ -155,8 +170,137 @@ class App (awn.AppletSimple):
 
     #Connect to signals
     self.connect('button-press-event', self.button_press)
-    self.dialog.props.hide_on_unfocus = True
+    self.dialog.connect('focus-out-event', self.dialog_focus_out)
     self.theme.connect('changed', self.icon_theme_changed)
+
+    if gio:
+      #Allow the user to drag&drop a file/folder onto the applet. After
+      #a short delay, show the dialog, and allow the file/folder to be dropped
+      #on any place in the TreeView (other than root, Connect to Server..., and
+      #maybe unmounted places). The move the file/folder and (if successful)
+      #open the place in the file browser
+      #The Applet icon - just open the dialog after a short delay
+      self.get_icon().drag_dest_set(gtk.DEST_DEFAULT_DROP | gtk.DEST_DEFAULT_MOTION, \
+        [("text/uri-list", 0, 0)], \
+        gtk.gdk.ACTION_COPY)
+      self.get_icon().connect('drag-data-received', self.applet_drag_data_received)
+      self.get_icon().connect('drag-motion', self.applet_drag_motion)
+      self.get_icon().connect('drag-leave', self.applet_drag_leave)
+  
+      #The TreeView - drop the file to move it to the folder
+      self.treeview.drag_dest_set(gtk.DEST_DEFAULT_DROP | gtk.DEST_DEFAULT_MOTION, \
+        [("text/uri-list", 0, 0)], \
+        gtk.gdk.ACTION_MOVE)
+      self.treeview.connect('drag-data-received', self.treeview_drag_data_received)
+      self.treeview.connect('drag-motion', self.treeview_drag_motion)
+      self.treeview.connect('drag-leave', self.treeview_drag_leave)
+
+  #Applet drag and drop
+  def applet_drag_data_received(self, w, context, x, y, data, info, time):
+    context.finish(True, False, time)
+
+    self.drag_done = True
+    self.num_times = 0
+    self.timer = None
+    self.dialog.hide()
+
+    return True
+
+  def applet_drag_motion(self, widget, context, x, y, time):
+    if not self.timer and not self.dialog.flags() & gtk.VISIBLE:
+      self.timer_overlay.props.active = True
+
+      self.timer = gobject.timeout_add(30, self.update_timer)
+
+    if not self.dialog.flags() & gtk.VISIBLE:
+      self.get_effects().start(awn.EFFECT_LAUNCHING)
+
+  def applet_drag_leave(self, widget, context, time):
+    self.get_effects().stop(awn.EFFECT_LAUNCHING)
+
+    if self.timer:
+      gobject.source_remove(self.timer)
+
+    self.timer = None
+    self.drag_done = True
+    self.num_times = 0
+
+    self.timer_overlay.props.active = False
+    self.timer_overlay.props.percent_complete = 0
+
+  def update_timer(self):
+    self.num_times += 1
+
+    if self.num_times <= 20:
+      self.timer_overlay.props.percent_complete = self.num_times * 100 / 20
+
+      self.timer = gobject.timeout_add(30, self.update_timer)
+
+    else:
+      self.timer = None
+      self.num_times = 0
+      self.timer_overlay.props.active = False
+      self.timer_overlay.props.percent_complete = 0
+
+      self.get_effects().stop(awn.EFFECT_LAUNCHING)
+
+      self.dialog_config(1)
+
+    return False
+
+  #TreeView drag and drop
+  def treeview_drag_data_received(self, treeview, context, x, y, data, info, time):
+    self.drag_done = True
+    context.finish(True, False, time)
+
+    treepath, column = treeview.get_path_at_pos(x, y)[0:2]
+    selection = self.treeview.get_selection()
+
+    path = self.liststore[treepath][3]
+
+    if path in self.droppable_places:
+      dropped_path = data.data
+
+      if dropped_path[:8] == 'file:///':
+        dropped_path = dropped_path.strip()
+
+        dropped_path = urllib.unquote(dropped_path)
+
+        from_file = gio.File(dropped_path)
+
+        to_file = gio.File(path + '/' + from_file.get_basename())
+
+        #Make sure we're not just moving the file to the same directory
+        if not from_file.equal(to_file):
+          if from_file.move(to_file):
+
+            config_fb = self.client.get_string(group, 'fb')
+            open_dir = path.replace(' ', '\ ')
+            os.system('%s %s &' % (config_fb, open_dir))
+
+          self.dialog.hide()
+
+    return True
+
+  def treeview_drag_motion(self, treeview, context, x, y, time):
+    treepath, column = treeview.get_path_at_pos(x, y)[0:2]
+    selection = self.treeview.get_selection()
+
+    path = self.liststore[treepath][3]
+
+    if path in self.droppable_places:
+      selection.select_path(treepath)
+
+    else:
+      selection.unselect_all()
+
+  def treeview_drag_leave(self, treeview, context, time):
+    self.treeview.get_selection().unselect_all()
+    self.drag_done = True
+
+  def dialog_focus_out(self, dialog, event):
+    if self.drag_done:
+      self.dialog.hide()
 
   #Certain places, regardless of GIO/not GIO
   def do_places(self):
@@ -208,6 +352,11 @@ class App (awn.AppletSimple):
           if vol.get_mount().can_unmount():
             eject = self.load_pixbuf(('media-eject', ))
 
+            #This also means that the volume is mounted, and probably can be written to
+            if gio:
+              if path not in self.droppable_places:
+                self.droppable_places.append(path)
+
         else:
           path = 'mount://%s' % i
 
@@ -242,6 +391,11 @@ class App (awn.AppletSimple):
           eject = None
           if mount.can_unmount():
             eject = self.load_pixbuf(('media-eject', ))
+
+            #This means that the volume is mounted, and probably can be written to
+            if gio:
+              if path not in self.droppable_places:
+                self.droppable_places.append(path)
 
           self.liststore.append((icon, name, eject, path, i))
 
@@ -305,35 +459,35 @@ class App (awn.AppletSimple):
 
                 if path2.split('/')[:-1] == os.environ['HOME'].split('/'):
                   dir = path2.split('/')[-1]
-    
+
                   #Check if this is the Desktop directory
                   if dir == gettext.dgettext('xdg-user-dirs', 'Desktop'):
                     self.place('desktop', name, path)
-    
+
                   #Documents
                   elif dir == gettext.dgettext('xdg-user-dirs', 'Documents'):
                     self.place(('folder-documents', 'stock_folder'), name, path)
-    
+
                   #Downloads
                   elif dir == gettext.dgettext('xdg-user-dirs', 'Downloads'):
                     self.place(('folder-downloads', 'stock_folder'), name, path)
-    
+
                   #Music
                   elif dir == gettext.dgettext('xdg-user-dirs', 'Music'):
                     self.place(('folder-music', 'stock_folder'), name, path)
-    
+
                   #Pictures
                   elif dir == gettext.dgettext('xdg-user-dirs', 'Pictures'):
                     self.place(('folder-pictures', 'stock_folder'), name, path)
-    
+
                   #Public
                   elif dir == gettext.dgettext('xdg-user-dirs', 'Public'):
                     self.place(('folder-publicshare', 'stock_folder'), name, path)
-    
+
                   #Templates
                   elif dir == gettext.dgettext('xdg-user-dirs', 'Templates'):
                     self.place(('folder-templates', 'stock_folder'), name, path)
-    
+
                   #Videos
                   elif dir == gettext.dgettext('xdg-user-dirs', 'Videos'):
                     self.place(('folder-videos', 'stock_folder'), name, path)
@@ -341,7 +495,7 @@ class App (awn.AppletSimple):
                   #Other
                   else:
                     self.place('stock_folder', name, path)
-    
+
                 #It's not
                 else:
                   self.place('stock_folder', name, path)
@@ -363,13 +517,13 @@ class App (awn.AppletSimple):
                   self.trash_path = os.path.expanduser('~/.local/share/Trash/files')
                 else:
                   self.trash_path = os.path.expanduser('~/.Trash')
-                
+
                 #Get number of items in trash
                 if len(os.listdir(self.trash_path)) > 0:
                   self.trash_full = True
                 else:
                   self.trash_full = False
-              
+
               except:
                 #Maybe the trash is in a different location? Just put false
                 self.trash_full = False
@@ -393,12 +547,11 @@ class App (awn.AppletSimple):
             else:
               self.place('stock_folder', name, path, _("Folder"))
 
-  #Function to show the home folder, mounted drives/partitions, and bookmarks according to awncc
+  #Function to show the home folder, mounted drives/partitions, and bookmarks according to config
   #This also refreshes in case a CD was inserted, MP3 player unplugged, bookmark added, etc.
   #Note: this function is not called if Python bindings for GIO are installed
   def add_places(self):
     #This function adds items to the liststore. The TreeView was already made in __init__()
-    
     self.do_places()
 
     #Check to see if we should check /etc/fstab and $mount
@@ -457,7 +610,7 @@ class App (awn.AppletSimple):
           #Maybe a syntax error or something in this line of fstab?
           #Just ignore it (better than not working at all (thanks Kinap/Felix)
           pass
-      
+
       #Get the mounted drives/partitions that are suitable to list (from mount)
       for line in self.mount:
         words = line.split(' ')
@@ -494,7 +647,7 @@ class App (awn.AppletSimple):
 
         elif path.split('/')[1] == 'media':
           if path.split('/')[2] in ['cdrom0','cdrom1','cdrom2','cdrom3','cdrom4','cdrom5']:
-            
+
             #Find out if it's a CD or DVD
             if path in self.dvd_paths:
               self.place('media-optical', _("DVD Drive"), path)
@@ -514,7 +667,7 @@ class App (awn.AppletSimple):
         #Partition not mounted in /media (such as /home)
         else:
           self.place('drive-harddisk', hnames[path], path)
-    
+
     #Go through the list of network drives/etc. from /etc/fstab
     if self.show_network == 2:
       #GVFS stuff
@@ -575,13 +728,18 @@ class App (awn.AppletSimple):
     icon = self.load_pixbuf(icon_names)
     self.liststore.append([icon, [human_name, alt_name][human_name is None], None, path, -1])
 
+    if gio:
+      if path not in self.droppable_places:
+        if os.path.isdir(path) and path != '/':
+          self.droppable_places.append(path)
+
   def ejected_or_unmounted(self, *a):
     pass
 
-  #Function to do what should be done according to awncc when the treeview is clicked
+  #Function to do what should be done according to config when the treeview is clicked
   def treeview_clicked(self, widget, event):
     self.open_clicked = self.client.get_int(group, 'places_open')
-    self.selection = self.treeview.get_selection()
+    selection = self.treeview.get_selection()
 
     if gio:
       #Get some data
@@ -625,12 +783,12 @@ class App (awn.AppletSimple):
 
     if self.open_clicked == 2:
       self.dialog.hide()
-      self.launch_fb(None, self.liststore[self.selection.get_selected()[1]][3])
+      self.launch_fb(None, self.liststore[selection.get_selected()[1]][3])
 
     else:
-      self.entry.set_text(self.liststore[self.selection.get_selected()[1]][3])
+      self.entry.set_text(self.liststore[selection.get_selected()[1]][3])
       self.entry.grab_focus()
-  
+
   #Applet show/hide methods - copied from MiMenu (and edited)
   #When a button is pressed
   def button_press(self, widget, event):
@@ -658,76 +816,76 @@ class App (awn.AppletSimple):
 
   #dialog_config: 
   def dialog_config(self, button):
-    if button != 1 and button != 2:
+    if button not in (1, 2):
       return False
     self.curr_button = button
-    
+
     #Get whether to focus the entry when displaying the dialog or not
-    self.awncc_focus = self.client.get_int(group, 'focus_entry')
-    
+    config_focus = self.client.get_int(group, 'focus_entry')
+
     if button == 1: #Left mouse button
     #Get the value for the left mouse button to automatically open.
     #Create and default to 1 the entry if it doesn't exist
     #Also get the default directory or default to ~
-      self.awncc_lmb = self.client.get_int(group, 'lmb')
-      self.awncc_lmb_path = self.client.get_string(group, 'lmb_path')
-      self.awncc_lmb_path = os.path.expanduser(self.awncc_lmb_path)
-    
+      config_lmb = self.client.get_int(group, 'lmb')
+      config_lmb_path = self.client.get_string(group, 'lmb_path')
+      config_lmb_path = os.path.expanduser(config_lmb_path)
+
     elif button == 2: #Middle mouse button
     #Get the value for the middle mouse button to automatically open.
     #Create and default to 2 the entry if it doesn't exist
     #Also get the default directory or default to ~
-      self.awncc_mmb = self.client.get_int(group, 'mmb')
-      self.awncc_mmb_path = self.client.get_string(group, 'mmb_path')
-      self.awncc_mmb_path = os.path.expanduser(self.awncc_mmb_path)
-    
+      config_mmb = self.client.get_int(group, 'mmb')
+      config_mmb_path = self.client.get_string(group, 'mmb_path')
+      config_mmb_path = os.path.expanduser(config_mmb_path)
+
     #Left mouse button - either popup with correct path or launch correct path OR do nothing
     if button == 1:
-      if self.awncc_lmb == 1:
-        self.entry.set_text(self.awncc_lmb_path)
+      if config_lmb == 1:
+        self.entry.set_text(config_lmb_path)
 
         if not gio:
           self.add_places()
 
-        if self.awncc_focus == 2:
+        if config_focus == 2:
           self.entry.grab_focus()
           self.entry.set_position(-1)
 
         self.dialog.show_all()
 
-      elif self.awncc_lmb == 2:
-        self.launch_fb(None,self.awncc_lmb_path)
-    
+      elif config_lmb == 2:
+        self.launch_fb(None, config_lmb_path)
+
     #Right mouse button - either popup with correct path or launch correct path OR do nothing
     if button == 2:
-      if self.awncc_mmb == 1:
-        self.entry.set_text(self.awncc_mmb_path)
+      if config_mmb == 1:
+        self.entry.set_text(config_mmb_path)
 
         if not gio:
           self.add_places()
 
-        if self.awncc_focus == 2:
+        if config_focus == 2:
           self.entry.grab_focus()
           self.entry.set_position(-1)
 
         self.dialog.show_all()
 
-      elif self.awncc_mmb == 2:
-        self.launch_fb(None, self.awncc_mmb_path)
-  
+      elif config_mmb == 2:
+        self.launch_fb(None, config_mmb_path)
+
   #If the user hits the enter key on the main part OR the number pad
   def detect_enter(self, a, event):
     if event.keyval == 65293 or event.keyval == 65421:
       self.enter.clicked()
-  
+
   #Launces file browser to open "path". If "path" is None: use value from the entry widget
   def launch_fb(self, widget, path=None):
     self.dialog.hide()
     if path == None:
       path = self.entry.get_text()
 
-    #Get the file browser app, or set to xdg-open if it's not set
-    self.awncc_fb = self.client.get_string(group, 'fb')
+    #Get the file browser app
+    config_fb = self.client.get_string(group, 'fb')
 
     #In case there is nothing but whitespace (or at all) in the entry widget
     if path.replace(' ','') == '':
@@ -745,8 +903,8 @@ class App (awn.AppletSimple):
 
     #Otherwise, open the file/directory
     else:
-      os.system('%s %s &' % (self.awncc_fb, path.replace(' ', '\ ')))
-  
+      os.system('%s %s &' % (config_fb, path.replace(' ', '\ ')))
+
   #Right click menu - Preferences or About
   def show_menu(self,event):
     #Hide the dialog if it's shown
@@ -771,7 +929,7 @@ class App (awn.AppletSimple):
   def open_prefs(self,widget):
     #Import the prefs file from the same directory
     import prefs
-    
+
     #Show the prefs window - see prefs.py
     prefs.Prefs(self)
     gtk.main()
@@ -780,7 +938,7 @@ class App (awn.AppletSimple):
   def open_about(self,widget):
     #Import the about file from the same directory
     import about
-    
+
     #Show the about window - see about.py
     about.About()
 

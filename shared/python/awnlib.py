@@ -178,10 +178,10 @@ class Dialogs:
     def register(self, dialog, dlog, focus=True):
         """Register a dialog.
 
-        Once a name has been registered, it cannot be registered again.
+        Once a name has been registered, it cannot be registered again
+        until the dialog is explicitly unregistered.
 
-        @param dialog: The name to use for the dialog. The predefined values
-                       are main, secondary, and menu.
+        @param dialog: The name to use for the dialog.
         @type dialog: C{string}
         @param dlog: The actual dialog or menu or function.
         @type dlog: C{function}, C{gtk.Menu}, or C{awn.AppletDialog}
@@ -196,6 +196,21 @@ class Dialogs:
             dlog.props.hide_on_unfocus = focus
 
         self.__register[dialog] = dlog
+
+    def unregister(self, dialog):
+        """Unregister a dialog.
+
+        @param dialog: The name to use for the dialog. Must not be equal
+            to the name of any of the special dialogs.
+        @type dialog: C{string}
+
+        """
+        if dialog not in self.__register:
+            raise RuntimeError("Dialog '%s' not registered" % dialog)
+        if dialog in self.__special_dialogs:
+            raise RuntimeError("Unregistering special dialog '%s' is forbidden" % dialog)
+
+        del self.__register[dialog]
 
     def toggle(self, dialog, force="", once=False, event=None):
         """Show or hide a dialog.
@@ -391,13 +406,13 @@ class Tooltip:
         """Show the applet tooltip.
 
         """
-        self.__tooltip.show_all()
+        self.__tooltip.show()
 
     def hide(self):
         """Hide the applet tooltip.
 
         """
-        self.__tooltip.hide_all()
+        self.__tooltip.hide()
 
     def set(self, text):
         """Set the applet tooltip.
@@ -1331,7 +1346,12 @@ class Notify:
 
         awn.check_dependencies(globals(), "pynotify")
 
-    def send(self, subject=None, body="", icon="", timeout=0):
+        pynotify.init(parent.meta["short"])
+
+    def __del__(self):
+        pynotify.uninit()
+
+    def send(self, *args, **kwargs):
         """Show a new notification via libnotify.
 
         @param subject: The subject of your message. If blank, "Message from
@@ -1345,15 +1365,42 @@ class Notify:
         @type timeout: C{int}
 
         """
-        if not subject:
-            subject = '"Message From %s"' % self.__parent.meta["name"]
-
-        pynotify.init(self.__parent.meta["name"])
-        notification = pynotify.Notification(subject, body, icon)
-        if timeout > 0:
-            notification.set_timeout(timeout * 1000)
+        notification = self.Notification(self.__parent, *args, **kwargs)
         notification.show()
-        pynotify.uninit()
+
+    def create_notification(self, *args, **kwargs):
+        """Return a notification that can be shown via show().
+
+        @param subject: The subject of your message. If blank, "Message from
+            [applet name]" is used.
+        @type subject: C{string}
+        @param body: The main body of your message. Blank by default.
+        @type body: C{string}
+        @param icon: The full absolute path to the name of the icon to use.
+        @type icon: C{string}
+        @param timeout: Timeout in seconds after which the message closes
+        @type timeout: C{int}
+        @return: a notification object
+        @rtype: C{self.Notification}
+
+        """
+        return self.Notification(self.__parent, *args, **kwargs)
+
+    class Notification:
+
+        """An object that manages a libnotify notification.
+
+        """
+
+        def __init__(self, parent, subject=None, body="", icon="", timeout=0):
+            if subject is None:
+                subject = '"Message From %s"' % self.__parent.meta["name"]
+            self.__notification = pynotify.Notification(subject, body, icon)
+            if timeout > 0:
+                self.__notification.set_timeout(timeout * 1000)
+
+        def show(self):
+            self.__notification.show()            
 
 
 class Effects:
@@ -1516,8 +1563,6 @@ class Applet(awn.AppletSimple, object):
         @type meta: C{dict}
 
         """
-        if "settings-per-instance" not in options:
-            uid = "single-%s" % uid
         awn.AppletSimple.__init__(self, meta["short"], uid, panel_id)
 
         self.uid = uid

@@ -23,18 +23,20 @@ pygtk.require('2.0')
 import gtk
 from gtk import gdk
 
-from awn.extras import awnlib
+from awn.extras import awnlib, __version__
 
 try:
     import dbus
     import dbus.service
 
     from dbus.mainloop.glib import DBusGMainLoop
+    DBusGMainLoop(set_as_default=True)
 except ImportError:
+    dbus = None
+except dbus.DBusException:
     dbus = None
 
 applet_name = "CPU Frequency Monitor"
-applet_version = "0.3.3"
 applet_description = "An applet to monitor and control the CPU frequency"
 
 # Themed logo of the applet, used as the applet's icon and shown in the GTK About dialog
@@ -46,7 +48,6 @@ draw_freq_interval = 0.5
 sysfs_dir = "/sys/devices/system/cpu"
 proc_cpuinfo_file = "/proc/cpuinfo"
 
-images_dir = os.path.join(os.path.dirname(__file__), "images")
 ui_file = os.path.join(os.path.dirname(__file__), "cpufreq.ui")
 
 dbus_bus_name = "org.awnproject.Awn.Applets.CpuFreq"
@@ -56,11 +57,6 @@ dbus_object_interface_scaling = dbus_object_interface + ".Scaling"
 
 
 if dbus is not None:
-    try:
-        DBusGMainLoop(set_as_default=True)
-    except dbus.DBusException:
-        dbus = None
-
     class CpuFreqBackendDBusObject(dbus.service.Object):
 
         """A DBus object to read available frequencies and governors, current
@@ -124,8 +120,6 @@ class CpuFreqApplet:
     def __init__(self, applet):
         self.applet = applet
 
-        applet.icon.file(applet_logo, size=awnlib.Icon.APPLET_SIZE)
-
         self.setup_icon()
 
         self.settings = {
@@ -163,7 +157,7 @@ class CpuFreqApplet:
             minimum frequency. Then, if there are n images, we can split R into n-1
             frequency ranges and map the frequencies in those ranges to the various images
             """
-            self.freq_range_per_image = (self.backend.get_phys_max_frequency() - self.backend.get_phys_min_frequency()) / (len(self.icons) - 1)
+            self.freq_range_per_image = (self.backend.get_phys_max_frequency() - self.backend.get_phys_min_frequency()) / (len(self.icon_states) - 1)
 
         self.setup_main_dialog()
 
@@ -172,18 +166,17 @@ class CpuFreqApplet:
 
         """
         self.setup_icon()
-
         self.draw_freq_cb()
 
     def setup_icon(self):
         """Load the images that are going to be used as the applet's icon.
 
         """
-        height = self.applet.get_size()
-
-        self.icons = {}
-        for i in range(0, len(os.listdir(images_dir))):
-            self.icons[i] = gdk.pixbuf_new_from_file_at_size(os.path.join(images_dir, "cpufreq-" + str(i) + ".svg"), height, height)
+        self.icon_states = {}
+        for i in map(str, range(0, 14)):
+            self.icon_states[i] = "cpufreq-%s" % i
+        self.applet.theme.set_states(self.icon_states)
+        self.applet.theme.theme("moonbeam")
 
     def setup_context_menu(self):
         number_of_cpus = self.backend.get_number_of_cpus()  # called only once: assumes that every backend returns the same number
@@ -308,10 +301,10 @@ class CpuFreqApplet:
         """
         if self.backend.supports_scaling():
             number = float(self.backend.get_current_frequency() - self.backend.get_phys_min_frequency()) / self.freq_range_per_image
-            icon = self.icons[int(round(number))]
+            icon = int(round(number))
         else:
-            icon = self.icons[len(self.icons) - 1]
-        self.applet.icon.set(icon)
+            icon = len(self.icon_states) - 1
+        self.applet.theme.icon(str(icon))
 
         self.update_title()
 
@@ -342,7 +335,7 @@ class SysFSBackend:
         self.__cpu_nr = cpu_nr
         self.__supports_scaling = self.__can_support_scaling()
 
-        self.__command = "" + self.__selector_binary  # Add sudo when necessary
+        self.__command = "sudo " + self.__selector_binary  # Add sudo when necessary
 
     @staticmethod
     def backend_useable(cpu_nr):
@@ -446,7 +439,7 @@ backends = [SysFSBackend, ProcCPUInfoBackend]
 if __name__ == "__main__":
     awnlib.init_start(CpuFreqApplet, {"name": applet_name,
         "short": "cpufreq",
-        "version": applet_version,
+        "version": __version__,
         "description": applet_description,
         "logo": applet_logo,
         "author": "onox",

@@ -36,7 +36,7 @@
 #include "cpu-dialog.h"
 
 #include "sysmoniconprivate.h"
-
+#include "config.h"
 #include "util.h"
 
 
@@ -564,7 +564,7 @@ awn_CPUicon_show_context_menu(AwnCPUicon *self)
   item = awn_applet_create_about_item_simple (applet,
                                               "Copyright 2009 Rodney Cryderman <rcryderman@gmail.com>\n",
                                               AWN_APPLET_LICENSE_GPLV2,
-                                              NULL);
+                                              VERSION);
   gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);
   
   gtk_widget_show_all (priv->context_menu);

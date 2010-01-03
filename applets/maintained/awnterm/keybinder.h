@@ -28,7 +28,7 @@
 
 G_BEGIN_DECLS
 
-typedef void (*AwnBindkeyHandler) (char *keystring, gpointer user_data);
+typedef void (*AwnBindkeyHandler) (const char *keystring, gpointer user_data);
 
 void awn_keybinder_init (void);
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2008 sharkbaitbobby <sharkbaitbobby+awn@gmail.com>
+# Copyright (c) 2010 sharkbaitbobby <sharkbaitbobby+awn@gmail.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -31,6 +31,7 @@ from os.path import exists, isdir
 from desktopagnostic.config import GROUP_DEFAULT
 
 from awn.extras import _
+import gc
 
 try:
     import gconf
@@ -81,6 +82,19 @@ class App(awn.AppletSimple):
         self.row = int((self.number) / float(num_columns)) + 1
         self.column = int((self.number) % num_columns) + 1
 
+        #Set up the text overlay
+        self.overlay = awn.OverlayText()
+        self.add_overlay(self.overlay)
+        self.overlay.props.font_sizing = 24.0 * (self.get_size() / 48.0)
+        self.overlay.props.text = str(self.number)
+        self.overlay.props.active = not self.settings['use_custom_text']
+        self.overlay.connect('notify::text-color', self.overlay_notify)
+        self.overlay.connect('notify::text-outline-color', self.overlay_notify)
+        self.overlay.connect('notify::font-mode', self.overlay_notify)
+        self.overlay.connect('notify::text-outline-width', self.overlay_notify)
+
+        self.settings.config.notify_add(GROUP_DEFAULT, 'use_custom_text', self.toggle_custom_text)
+
         #Connect to signals
         #Applet signals
         self.connect('realize', self.realize_event)
@@ -99,6 +113,14 @@ class App(awn.AppletSimple):
         #self.dialog.realize()
         self.widget.update_color()
 
+    def overlay_notify(self, overlay, param):
+        self.widget.queue_draw()
+
+    def toggle_custom_text(self, group, key, val):
+        self.overlay.props.active = not val
+
+        self.update_icon()
+
     #Make the icon when the window is first realized
     def realize_event(self, *args):
         #Actually get the icon
@@ -107,7 +129,7 @@ class App(awn.AppletSimple):
         self.icon.applet_mode = True
         self.icon.line_width = 4.0
 
-        #"Update" the icon
+        #Update the icon
         self.update_icon()
 
     #When the style is set
@@ -148,7 +170,7 @@ class App(awn.AppletSimple):
                 self.settings.config.set_string(GROUP_DEFAULT, 'custom_border', \
                     custom_border)
 
-            try:    
+            try:
                 border = '#' + custom_border
                 self.dialog_style.bg[gtk.STATE_SELECTED] = gtk.gdk.color_parse(border)
             except:
@@ -184,11 +206,16 @@ class App(awn.AppletSimple):
         if len(self.contexts) >= 4:
             del self.contexts[0]
 
+        self.overlay.props.text = str(self.number)
+
     #Called only from gobject every 2 seconds
     def timeout_icon(self):
-        self.update_background()
-        self.update_icon()
+        if self.update_background():
+            self.update_icon()
+
         gobject.timeout_add_seconds(2, self.timeout_icon)
+
+        return False
 
     #Show the dialog.
     def show_dialog(self):
@@ -238,7 +265,7 @@ class App(awn.AppletSimple):
         icon = gtk.gdk.pixbuf_new_from_file(image_path + 'done.png')
         win.set_logo(icon)
         win.set_icon(icon)
-        win.set_copyright('Copyright 2009 Sharkbaitbobby')
+        win.set_copyright('Copyright 2010 Sharkbaitbobby')
         win.set_authors(['Original Author:', '    diogodivision', \
             'Rewriters:', '    Sharkbaitbobby <sharkbaitbobby+awn@gmail.com>', \
             '    isaacj87 <isaac_j87@yahoo.com>', '    Nonozerobo'])
@@ -259,6 +286,10 @@ class App(awn.AppletSimple):
             'Redone by sharkbaitbobby'])
         win.run()
         win.destroy()
+
+        gc.set_debug(gc.DEBUG_LEAK)
+        gc.get_count()
+        gc.collect()
         del icon
 
     #Get the background image as a surface
@@ -315,6 +346,8 @@ class App(awn.AppletSimple):
                     cr.paint()
                     cr.restore()
 
+                    del cr
+
                     #All went well; save the surface
                     if self.background is not None:
                         del self.background
@@ -327,14 +360,16 @@ class App(awn.AppletSimple):
                     try:
 
                         pixbuf = gtk.gdk.pixbuf_new_from_file(self.bg_path)
-                        pixbuf = pixbuf.scale_simple(self.size, self.size, \
+                        pixbuf2 = pixbuf.scale_simple(self.size, self.size, \
                             gtk.gdk.INTERP_BILINEAR)
+
+                        del pixbuf
 
                         #All went well; save the pixbuf
                         if self.background is not None:
                             del self.background
 
-                        self.background = pixbuf
+                        self.background = pixbuf2
 
                     #Something went wrong
                     except:
@@ -343,6 +378,8 @@ class App(awn.AppletSimple):
                             del self.background
 
                         self.background = self.no_background()
+
+                return True
 
             #Either the path is None, is '', doesn't exist, is a directory, or hasn't
             #changed. If it's one of the first four, get a blank image as a surface
@@ -358,6 +395,9 @@ class App(awn.AppletSimple):
 
                     self.background = self.no_background()
 
+                else:
+                    return False
+
         #GConf is not installed
         else:
             #Get a blank image as a surface
@@ -365,6 +405,8 @@ class App(awn.AppletSimple):
                 del self.background
 
             self.background = self.no_background()
+
+            return False
 
     #Return a blank image as a surface
     def no_background(self):
@@ -377,6 +419,8 @@ class App(awn.AppletSimple):
         #Draw blackness
         cr.set_source_rgba(0.0, 0.0, 0.0, 0.9)
         cr.paint()
+
+        del cr
 
         #Return the surface
         return surface

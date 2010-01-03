@@ -108,7 +108,7 @@ cairo_main_icon_dispose (GObject *object)
 
 static void
 cairo_main_icon_finalize (GObject *object)
-{
+{  
   G_OBJECT_CLASS (cairo_main_icon_parent_class)->finalize (object);
 }
 
@@ -331,7 +331,7 @@ _button_clicked_event (CairoMainIcon *icon, GdkEventButton *event, gpointer null
       item=awn_applet_create_about_item_simple(AWN_APPLET(priv->applet),
                                                "Copyright 2007,2008, 2009 Rodney Cryderman <rcryderman@gmail.com>",
                                                AWN_APPLET_LICENSE_GPLV2,
-                                               NULL);
+                                               VERSION);
       gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);      
       g_signal_connect(G_OBJECT(priv->context_menu), "deactivate", G_CALLBACK(_deactivate_event), icon);      
     }

@@ -30,13 +30,15 @@ from awn.extras import awnlib, __version__
 
 try:
     import dbus
+    from dbus.mainloop.glib import DBusGMainLoop
+    DBusGMainLoop(set_as_default=True)
 except ImportError:
     dbus = None
 
 import gio
 import glib
 import gmenu
-from xdg import DesktopEntry
+from xdg import BaseDirectory, DesktopEntry
 
 applet_name = "YAMA"
 applet_description = "Main menu with places and recent documents"
@@ -48,16 +50,16 @@ file_manager_apps = ("nautilus", "thunar", "xdg-open")
 
 menu_editor_apps = ("alacarte", "gmenu-simple-editor")
 
-data_dirs = os.environ["XDG_DATA_DIRS"] if "XDG_DATA_DIRS" in os.environ else "/usr/local/share/:/usr/share/"
-
 # Describes the pattern used to try to decode URLs
 url_pattern = re.compile("^[a-z]+://(?:[^@]+@)?([^/]+)/(.*)$")
 
 # Pattern to extract the part of the path that doesn't end with %<a-Z>
 exec_pattern = re.compile("^(.*?)\s+\%[a-zA-Z]$")
 
+user_dir_pattern = re.compile("^XDG_([A-Z]+)_DIR=\"(.+)\"$")
+
 # Delay in seconds before starting rebuilding the menu
-menu_rebuild_delay = 3
+menu_rebuild_delay = 2
 
 
 class YamaApplet:
@@ -80,6 +82,17 @@ class YamaApplet:
         self.icon_theme = gtk.icon_theme_get_default()
         self.icon_theme.connect("changed", self.theme_changed_cb)
 
+        if dbus is not None:
+            self.session_bus = dbus.SessionBus()
+            dbus_proxy = self.session_bus.get_object("org.freedesktop.DBus", "/org/freedesktop/DBus")
+            def name_owner_changed_cb(name, old_address, new_address):
+                if name in ("org.gnome.ScreenSaver", "org.gnome.SessionManager"):
+                    with self.__rebuild_lock:
+                        self.append_session_actions(self.menu)
+                        # Refresh menu to re-initialize the widget
+                        self.menu.show_all()
+            dbus_proxy.connect_to_signal("NameOwnerChanged", name_owner_changed_cb)
+
         with self.__rebuild_lock:
             self.build_menu()
 
@@ -100,6 +113,7 @@ class YamaApplet:
     def build_menu(self):
         self.applications_items = []
         self.settings_items = []
+        self.session_items = []
 
         """ Applications """
         tree = gmenu.lookup_tree("applications.menu")
@@ -123,37 +137,43 @@ class YamaApplet:
         self.menu.show_all()
 
     def append_session_actions(self, menu):
-        session_bus = dbus.SessionBus()
+        for i in xrange(len(self.session_items)):
+            self.session_items.pop().destroy()
 
-        dbus_services = session_bus.list_names()
+        dbus_services = self.session_bus.list_names()
         can_lock_screen = "org.gnome.ScreenSaver" in dbus_services
         can_manage_session = "org.gnome.SessionManager" in dbus_services
 
         if can_lock_screen or can_manage_session:
-            menu.append(gtk.SeparatorMenuItem())
+            separator = gtk.SeparatorMenuItem()
+            self.session_items.append(separator)
+            menu.append(separator)
 
         if can_lock_screen:
             lock_item = self.append_menu_item(menu, "Lock Screen", "system-lock-screen", "Protect your computer from unauthorized use")
             def lock_screen_cb(widget):
                 try:
-                    ss_proxy = session_bus.get_object("org.gnome.ScreenSaver", "/")
+                    ss_proxy = self.session_bus.get_object("org.gnome.ScreenSaver", "/")
                     dbus.Interface(ss_proxy, "org.gnome.ScreenSaver").Lock()
                 except dbus.DBusException, e:
                     # NoReply exception may occur even while the screensaver did lock the screen
                     if e.get_dbus_name() != "org.freedesktop.DBus.Error.NoReply":
                         raise
             lock_item.connect("activate", lock_screen_cb)
+            self.session_items.append(lock_item)
 
         if can_manage_session:
-            sm_proxy = session_bus.get_object("org.gnome.SessionManager", "/org/gnome/SessionManager")
+            sm_proxy = self.session_bus.get_object("org.gnome.SessionManager", "/org/gnome/SessionManager")
             sm_if = dbus.Interface(sm_proxy, "org.gnome.SessionManager")
 
             user_name = commands.getoutput("whoami")
             logout_item = self.append_menu_item(menu, "Log Out %s..." % user_name, "system-log-out", "Log out %s of this session to log in as a different user" % user_name)
             logout_item.connect("activate", lambda w: sm_if.Logout(0))
+            self.session_items.append(logout_item)
 
             shutdown_item = self.append_menu_item(menu, "Shut Down...", "system-shutdown", "Shut down the system")
             shutdown_item.connect("activate", lambda w: sm_if.Shutdown())
+            self.session_items.append(shutdown_item)
 
     def clicked_cb(self, widget):
         def get_position(menu):
@@ -344,6 +364,17 @@ class YamaApplet:
             item.destroy()
         self.bookmarks_items = []
 
+        # Prepare dictionary with paths mapped to their xdg folder icon name
+        user_dirs = {}
+        user_dirs_file = os.path.expanduser("~/.config/user-dirs.dirs")
+        if os.path.exists(user_dirs_file):
+            with open(user_dirs_file) as f:
+                for i in f:
+                    match = user_dir_pattern.match(i)
+                    if match is not None:
+                        path = "file://" + match.group(2).replace("$HOME", os.environ["HOME"])
+                        user_dirs[path] = "folder-" + match.group(1).lower()
+
         index = 2
         bookmarks_file = os.path.expanduser("~/.gtk-bookmarks")
         if os.path.isfile(bookmarks_file):
@@ -358,8 +389,15 @@ class YamaApplet:
                             url_name.append(unquote(str(basename)))
                     url, name = (url_name[0], url_name[1])
 
-                    icon = "folder" if url.startswith("file://") else "folder-remote"
-                    display_url = url[7:] if url.startswith("file://") else url
+                    if url.startswith("file://"):
+                        if url in user_dirs:
+                            icon = self.get_first_existing_icon([user_dirs[url], "folder"])
+                        else:
+                            icon = "folder"
+                        display_url = url[7:]
+                    else:
+                        icon = "folder-remote"
+                        display_url = url
 
                     item = self.create_menu_item(name, icon, "Open '%s'" % display_url)
                     self.places_menu.insert(item, index)
@@ -371,16 +409,18 @@ class YamaApplet:
         with self.__rebuild_lock:
             self.append_volumes()
             self.append_mounts()
-    
+
             # Refresh menu to re-initialize the widget
             self.places_menu.show_all()
 
     def get_icon_name(self, icon):
         if isinstance(icon, gio.ThemedIcon):
-            icons = icon.get_names()
-            return filter(self.icon_theme.has_icon, icons)[0]
+            return self.get_first_existing_icon(icon.get_names())
         else:
             return icon.get_file().get_path()
+
+    def get_first_existing_icon(self, icons):
+        return filter(self.icon_theme.has_icon, icons)[0]
 
     def append_volumes(self):
         # Delete old items
@@ -494,7 +534,7 @@ class YamaApplet:
         selection_data.set_uris(["file://" + path])
 
     def append_awn_desktop(self, menu, desktop_name):
-        for dir in data_dirs.split(":"):
+        for dir in BaseDirectory.xdg_data_dirs:
             path = os.path.join(dir, "applications", desktop_name + ".desktop")
             if os.path.isfile(path):
                 desktop_entry = DesktopEntry.DesktopEntry(path)
@@ -520,13 +560,16 @@ class YamaApplet:
         if re.match(".*\.(png|xpm|svg)$", icon_name) is not None:
             icon_name = icon_name[:-4]
         try:
+            self.icon_theme.handler_block_by_func(self.theme_changed_cb)
             return self.icon_theme.load_icon(icon_name, 24, gtk.ICON_LOOKUP_FORCE_SIZE)
         except:
-            for dir in data_dirs.split(":"):
+            for dir in BaseDirectory.xdg_data_dirs:
                 for i in ("pixmaps", "icons"):
                     path = os.path.join(dir, i, icon_value)
                     if os.path.isfile(path):
                         return gtk.gdk.pixbuf_new_from_file_at_size(path, 24, 24)
+        finally:
+            self.icon_theme.handler_unblock_by_func(self.theme_changed_cb)
 
     class ClearRecentDocumentsDialog(awnlib.Dialogs.BaseDialog, gtk.MessageDialog):
 

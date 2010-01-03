@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2008 sharkbaitbobby <sharkbaitbobby+awn@gmail.com>
+# Copyright (c) 2010 sharkbaitbobby <sharkbaitbobby+awn@gmail.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -18,16 +18,20 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+from os.path import exists, isdir
+
 import cairo
+import pango
+import pangocairo
 import pygtk
 pygtk.require('2.0')
 import gtk
-from os.path import exists, isdir
-import awn
 import gobject
 
 from desktopagnostic import Color
 from desktopagnostic.config import GROUP_DEFAULT
+
+import awn
 
 try:
     import gconf
@@ -138,6 +142,8 @@ class Drawing(gtk.Table):
                     cr.paint()
                     cr.restore()
 
+                    del cr
+
                     #All went well; save the surface
                     if self.background is not None:
                         del self.background
@@ -150,14 +156,16 @@ class Drawing(gtk.Table):
                     try:
 
                         pixbuf = gtk.gdk.pixbuf_new_from_file(self.bg_path)
-                        pixbuf = pixbuf.scale_simple(self.settings['width'], \
+                        pixbuf2 = pixbuf.scale_simple(self.settings['width'], \
                             self.settings['height'], gtk.gdk.INTERP_BILINEAR)
+
+                        del pixbuf
 
                         #All went well; save the pixbuf
                         if self.background is not None:
                             del self.background
 
-                        self.background = pixbuf
+                        self.background = pixbuf2
 
                     #Something went wrong
                     except:
@@ -201,6 +209,8 @@ class Drawing(gtk.Table):
         #Draw blackness
         cr.set_source_rgba(0.0, 0.0, 0.0, 0.9)
         cr.paint()
+
+        del cr
 
         #Return the surface
         return surface
@@ -344,13 +354,14 @@ class ViewportWidget(gtk.DrawingArea):
         self.table = table
         self.settings = table.settings
 
-        #This class is an inheritance of GtkDrawingArea. 
+        #This class is an inheritance of GtkDrawingArea.
         #It gets an instance of the ViewportSurface class, which does the actual
         #drawing. This updates the ViewportSurface when necessary. It is placed
         #appropriately by the 'Drawing' class, which is used directly by the main
         #applet.
         #Initiate this widget
         gtk.DrawingArea.__init__(self)
+
         #Set up this widget
         self.add_events(gtk.gdk.ALL_EVENTS_MASK)
         self.set_size_request(self.settings['width'], self.settings['height'])
@@ -377,7 +388,7 @@ class ViewportWidget(gtk.DrawingArea):
             self.last_column == self.column and self.last_number == self.number and \
             self.last_draw_background == self.draw_background:
             #Nothing has changed
-            return 42
+            return True
 
         #Save the values so the above works
         if self.exposed == True:
@@ -405,7 +416,7 @@ class ViewportWidget(gtk.DrawingArea):
 #            cr.set_operator(cairo.OPERATOR_SOURCE)
 #            cr.set_source_pixbuf(self.background, 0, 0)
 #            cr.paint()
-#            
+#
 #            #Save the background
 #            self.background = self.window
 
@@ -414,7 +425,6 @@ class ViewportWidget(gtk.DrawingArea):
 
     #The mouse button has been released on this widget
     def button_release(self, widget, event):
-
         #Only move viewport if not right-clicked
         if event.button != 3:
 
@@ -423,7 +433,6 @@ class ViewportWidget(gtk.DrawingArea):
 
     #The mouse cursor has entered this widget
     def enter_notify(self, widget, event):
-
         #Make sure that this isn't called too soon
         if self.exposed:
 
@@ -435,7 +444,6 @@ class ViewportWidget(gtk.DrawingArea):
 
     #The mouse cursor has left this widget
     def leave_notify(self, widget, event):
-
         #Make sure that this isn't called too soon
         if self.exposed:
 
@@ -454,9 +462,10 @@ class ViewportWidget(gtk.DrawingArea):
             cr.set_source_surface(self.surface.surface, 0, )
             cr.paint()
 
+            del cr
+
     #Update values from the table
     def update_values(self):
-
         #Width and height (duh)
         self.set_size_request(self.settings['width'], self.settings['height'])
 
@@ -475,6 +484,7 @@ class ViewportSurface:
     line_width = 4.0
     applet_mode = False
     hovered = False
+    font_description = pango.FontDescription('sans Semi-Bold Condensed')
     defaults = {}
     defaults['icon_border'] = '000000C0'
     defaults['width'] = 160
@@ -530,6 +540,9 @@ class ViewportSurface:
         else:
             if self.last_width != self.settings['width'] or self.last_height != \
                 self.settings['height']:
+
+                del self.surface
+
                 self.surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, \
                     self.settings['width'], self.settings['height'])
 
@@ -537,7 +550,7 @@ class ViewportSurface:
                     self.settings['height']
 
         #Get a cairo context
-        self.cr = cairo.Context(self.surface)
+        self.cr = pangocairo.CairoContext(cairo.Context(self.surface))
 
         #Clear the background so it fits in with the dialog (if necessary)
         if self.draw_background:
@@ -578,9 +591,11 @@ class ViewportSurface:
             cr2 = pixmap.cairo_create()
             self.cr.set_source_surface(cr2.get_target(), 0, 0)
 
+
         #The background is simply a cairo surface
         else:
             pixmap = None
+            cr2 = None
             self.cr.set_source_surface(self.background, 0, 0)
 
         #Now fill the background
@@ -610,7 +625,7 @@ class ViewportSurface:
         self.owner.updated()
 
         #Free some memory
-        del self.cr, pixmap
+        del self.cr, pixmap, cr2
 
     #Update the values from the owner
     def update_values(self):
@@ -674,7 +689,6 @@ class ViewportSurface:
             further = 16
             y = int(self.settings['height'] / 6.5) + space
 
-        
         #Get the colors into a gradient
         gradient = cairo.LinearGradient(0.0, 0.0, 0.0, y + further)
         gradient.add_color_stop_rgba(0.0, *top)
@@ -753,31 +767,91 @@ class ViewportSurface:
 
     #Draw the number of this viewport
     def draw_number(self):
+        if self.settings['use_custom_text']:
+            if self.applet_mode:
+                self.draw_custom_number(self.owner)
+
+            else:
+                self.draw_custom_number(self.owner.table.applet)
+
+        else:
+            if not self.applet_mode:
+                self.draw_outlined_number(self.owner.table.applet)
+
+    #Draw standard outlined number
+    def draw_outlined_number(self, applet):
+        size = applet.get_size()
 
         self.cr.save()
 
+        props = applet.overlay.props
+
+        if props.font_mode == 0:
+            main_color = props.text_color.get_cairo_color()
+            outline_color = [0.0]*4
+
+        elif props.font_mode == 1:
+            main_color = props.text_color.get_cairo_color()
+            outline_color = props.text_outline_color.get_cairo_color()
+
+        elif props.font_mode == 2:
+            main_color = props.text_outline_color.get_cairo_color()
+            outline_color = props.text_color.get_cairo_color()
+
         #Get where the number should go
+        x, y = self.settings['width'] / 2, self.settings['height'] / 2
+        font_size = 33.0 * (size / 48.0)
+        six, eight = (6, 8)
+
+        #Set up the text layout with pango
+        layout = self.cr.create_layout()
+        self.font_description.set_absolute_size(font_size * pango.SCALE);
+        layout.set_font_description(self.font_description)
+        layout.set_text(str(self.number));
+        w, h = layout.get_pixel_size();
+
+        #Draw the text
+        self.cr.move_to(self.settings['width'] / 2 - w / 2, self.settings['height'] / 2 - h / 2)
+
+        self.cr.set_line_width(props.text_outline_width * self.settings['height'] / 120.0);
+        self.cr.set_source_rgba(*outline_color)
+        self.cr.set_line_join(cairo.LINE_JOIN_ROUND)
+        self.cr.layout_path(layout)
+        self.cr.stroke_preserve()
+
+        self.cr.set_source_rgba(*main_color)
+        self.cr.fill()
+
+        self.cr.restore()
+
+    #Draw classic drop-shadowed number
+    def draw_custom_number(self, applet):
+        self.cr.save()
+
+        size = applet.get_size()
+
         if self.applet_mode:
             x, y = self.width / 2, self.height / 2
+            font_size = 24.0 * (size / 48.0)
+            six = 6 * (size / 48.0)
+            eight = 8 * (size / 48.0)
+
         else:
             x, y = self.settings['width'] / 2, self.settings['height'] / 2
+            font_size = 33.0 * (size / 48.0)
+            six, eight = (6, 8)
 
-        #Set up the context for text
-        self.cr.select_font_face ('Sans', cairo.FONT_SLANT_NORMAL,\
-             cairo.FONT_WEIGHT_BOLD)
-        if self.applet_mode:
-            self.cr.set_font_size(22)
-        else:
-            self.cr.set_font_size(30)
+        self.cr.select_font_face('Sans', cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+        self.cr.set_font_size(font_size)
 
         #Draw the drop shadow first
+        self.cr.move_to(x - six, y + eight)
         self.cr.set_source_rgba(*self.shadow_color)
-        self.cr.move_to(x - 6, y + 8)
         self.cr.show_text(str(self.number))
 
         #Draw the main number second, on top of the drop shadow
         self.cr.set_source_rgba(*self.text_color)
-        self.cr.move_to(x - 8, y + 6)
+        self.cr.move_to(x - six - 2, y + eight - 2)
         self.cr.show_text(str(self.number))
 
         self.cr.restore()

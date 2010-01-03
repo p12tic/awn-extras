@@ -1199,7 +1199,7 @@ static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, 
                                                   "Copyright 2007,2008 Rodney Cryderman <rcryderman@gmail.com>\n"
                                                   "Copyright 2007,2008 Mark Lee <avant-wn@lazymalevolence.com>\n",
                                                   AWN_APPLET_LICENSE_GPLV2,
-                                                  NULL);
+                                                  VERSION);
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
       awn_utils_show_menu_images (menu);
     }

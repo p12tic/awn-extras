@@ -315,12 +315,18 @@ egg_tray_manager_handle_dock_request (EggTrayManager       *manager,
 
   g_signal_connect (child, "plug_removed",
           G_CALLBACK (egg_tray_manager_plug_removed), manager);
+
+  gdk_error_trap_push ();
+
   gtk_socket_add_id (GTK_SOCKET (child), icon_window);
   
+  gdk_flush ();
+  gdk_error_trap_pop ();
+
   if(!GTK_SOCKET (child)->plug_window)
     {
       g_signal_emit (manager, manager_signals[TRAY_ICON_REMOVED], 0 ,child);
-      gtk_widget_destroy (child);
+      if (GTK_IS_WIDGET (child)) gtk_widget_destroy (child);
       return;
     }
   g_hash_table_insert (manager->socket_table, GINT_TO_POINTER(icon_window), 

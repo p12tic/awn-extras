@@ -15,7 +15,6 @@ dist_theme_moonbeam_DATA =             \
 
 theme_scalable_moonbeamdir = $(applet_datadir)/themes/moonbeam/scalable
 dist_theme_scalable_moonbeam_DATA = \
-	themes/moonbeam/scalable/twc-logo.png \
 	themes/moonbeam/scalable/weather-clear-night.png \
 	themes/moonbeam/scalable/weather-clear.png \
 	themes/moonbeam/scalable/weather-few-clouds-night.png \
@@ -29,3 +28,8 @@ dist_theme_scalable_moonbeam_DATA = \
 	themes/moonbeam/scalable/weather-snow.png \
 	themes/moonbeam/scalable/weather-storm.png \
 	$(NULL)
+
+iconsdir = $(applet_datadir)/icons
+dist_icons_DATA =             \
+    icons/twc-logo.png \
+    $(NULL)

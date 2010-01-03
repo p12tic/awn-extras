@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # Copyright (c) 2009  Michal Hruby <michal.mhr AT gmail.com>
-# Copyright (C) 2009  onox <denkpadje@gmail.com>
+# Copyright (C) 2009 - 2010  onox <denkpadje@gmail.com>
 #
 # This is the configuration dialog for shiny-switcher applet for AWN.
 #
@@ -20,10 +20,9 @@
 import os
 
 import gtk
-from desktopagnostic.ui import ColorButton
 
 from awn import config_get_default_for_applet_by_info
-from awn.extras import awnlib
+from awn.extras import configbinder
 
 ui_file = os.path.join(os.path.dirname(__file__), "shiny-prefs.ui")
 
@@ -41,29 +40,28 @@ class Preferences:
         w2s_100 = lambda v: v/100
 
         shiny_config = config_get_default_for_applet_by_info("shinyswitcher", "")
-        shiny_settings = awnlib.Settings(shiny_config)
-        default_values = {
-            "applet_scale":                 ("appletSizeScale", s2w_100, w2s_100),
-            "grab_wallpaper":               "grabWallpaperRadio",
-            "desktop_colour":               "backgroundColor",
-            "applet_border_colour":         "borderColor",
-            "applet_border_width":          "borderSizeSpin",
-            "win_active_icon_alpha":        ("activeIconAlphaScale", s2w_100, w2s_100),
-            "win_inactive_icon_alpha":      ("inactiveIconAlphaScale", s2w_100, w2s_100),
-            "background_alpha_active":      ("activeWsAlphaScale", s2w_100, w2s_100),
-            "background_alpha_inactive":    ("inactiveWsAlphaScale", s2w_100, w2s_100),
 
-            "rows":                         "rowsSpin",
-            "columns":                      "columnsSpin",
-            "win_grab_mode":                "combobox-thumbnailing",
-            "show_icon_mode":               "combobox-icon-display",
-            "scale_icon_mode":              "combobox-icon-scaling",
-            "scale_icon_position":          "iconPosCombobox",
-            "scale_icon_factor":            ("iconScaleScale", s2w_100, w2s_100),
-            "cache_expiry":                 "cacheSpin",
-            "queued_render_timer":          ("renderSpin", s2w_1000, w2s_1000)
-        }
-        shiny_settings.load_via_gtk_builder(prefs, default_values)
+        binder = configbinder.get_config_binder(shiny_config, "DEFAULT", prefs)
+        binder.bind("applet_scale", "appletSizeScale", False, s2w_100, w2s_100)
+        binder.bind("grab_wallpaper", "grabWallpaperRadio")
+        binder.bind("desktop_colour", "backgroundColor")
+        binder.bind("applet_border_colour", "borderColor")
+        binder.bind("applet_border_width", "borderSizeSpin")
+        binder.bind("win_active_icon_alpha", "activeIconAlphaScale", False, s2w_100, w2s_100)
+        binder.bind("win_inactive_icon_alpha", "inactiveIconAlphaScale", False, s2w_100, w2s_100)
+        binder.bind("background_alpha_active", "activeWsAlphaScale", False, s2w_100, w2s_100)
+        binder.bind("background_alpha_inactive", "inactiveWsAlphaScale", False, s2w_100, w2s_100)
+
+        binder.bind("rows", "rowsSpin")
+        binder.bind("columns", "columnsSpin")
+        binder.bind("win_grab_mode", "combobox-thumbnailing")
+        binder.bind("show_icon_mode", "combobox-icon-display")
+        binder.bind("scale_icon_mode", "combobox-icon-scaling")
+        binder.bind("scale_icon_position", "iconPosCombobox")
+        binder.bind("scale_icon_factor", "iconScaleScale", False, s2w_100, w2s_100)
+        binder.bind("cache_expiry", "cacheSpin")
+        binder.bind("queued_render_timer", "renderSpin", False, s2w_1000, w2s_1000)
+        binder.create_gobject()
 
         self.window = prefs.get_object("dialog1")
         self.window.set_icon_name("gnome-panel-workspace-switcher")

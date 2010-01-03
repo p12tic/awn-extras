@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# Copyright (C) 2008 - 2009  onox <denkpadje@gmail.com>
+# Copyright (C) 2008 - 2010  onox <denkpadje@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -120,15 +120,9 @@ class CpuFreqApplet:
     def __init__(self, applet):
         self.applet = applet
 
+        self.dialog = None
+
         self.setup_icon()
-
-        self.settings = {
-            "cpu_number": 0
-        }
-        applet.settings.load(self.settings)
-
-        self.initialize_backend()
-
         self.setup_context_menu()
 
         applet.tooltip.connect_becomes_visible(self.update_title)
@@ -142,11 +136,11 @@ class CpuFreqApplet:
             except dbus.DBusException:
                 pass
 
-    def initialize_backend(self):
+    def initialize_backend(self, cpu_number):
         self.backend = None
         for b in backends:
-            if b.backend_useable(self.settings["cpu_number"]):
-                self.backend = b(self.settings["cpu_number"])
+            if b.backend_useable(cpu_number):
+                self.backend = b(cpu_number)
                 break
 
         assert self.backend is not None
@@ -179,31 +173,32 @@ class CpuFreqApplet:
         self.applet.theme.theme("moonbeam")
 
     def setup_context_menu(self):
-        number_of_cpus = self.backend.get_number_of_cpus()  # called only once: assumes that every backend returns the same number
+        number_of_cpus = SysFSBackend.get_number_of_cpus()  # called only once: assumes that every backend returns the same number
+
+        prefs = gtk.Builder()
+        prefs.add_from_file(ui_file)
+
+        combobox = prefs.get_object("combobox-cpu")
+        awnlib.add_cell_renderer_text(combobox)
+        for i in range(0, number_of_cpus):
+            combobox.append_text(str(i))
+
+        binder = self.applet.settings.get_binder(prefs)
+        binder.bind("cpu_number", "combobox-cpu", key_callback=self.initialize_backend)
+        self.applet.settings.load_bindings(binder)
+
+        self.initialize_backend(self.applet.settings["cpu_number"])
 
         if number_of_cpus > 1:
-            prefs = gtk.Builder()
-            prefs.add_from_file(ui_file)
             prefs.get_object("preferences-vbox").reparent(self.applet.dialog.new("preferences").vbox)
 
-            combobox = prefs.get_object("combobox-cpu")
-            awnlib.add_cell_renderer_text(combobox)
-            for i in range(0, number_of_cpus):
-                combobox.append_text(str(i))
-
-            combobox.set_active(self.settings["cpu_number"])
-            combobox.connect("changed", self.combobox_processor_changed_cb)
-
-    def combobox_processor_changed_cb(self, combobox):
-        self.applet.settings["cpu_number"] = combobox.get_active()
-
-        self.initialize_backend()
-
     def setup_main_dialog(self):
-        self.dialog = self.applet.dialog.new("main")
-
-        vbox = gtk.VBox()
-        self.dialog.add(vbox)
+        if self.dialog is None:
+            self.dialog = self.applet.dialog.new("main")
+            self.vbox = gtk.VBox()
+            self.dialog.add(self.vbox)
+        else:
+            self.vbox.foreach(gtk.Widget.destroy)
 
         if self.backend.supports_scaling():
             group = None
@@ -217,22 +212,22 @@ class CpuFreqApplet:
                 for i in self.backend.get_frequencies():
                     group = gtk.RadioButton(group, self.human_readable_freqency(i))
                     group.props.can_focus = False
-                    vbox.add(group)
+                    self.vbox.add(group)
                     self.radio_buttons[i] = group
                     group.connect("toggled", self.frequency_changed_cb, i)
 
-                vbox.add(gtk.SeparatorMenuItem())
+                self.vbox.add(gtk.SeparatorMenuItem())
 
             for i in governors:
                 group = gtk.RadioButton(group, i)
                 group.props.can_focus = False
-                vbox.add(group)
+                self.vbox.add(group)
                 self.radio_buttons[i] = group
                 group.connect("toggled", self.governor_changed_cb, i)
         else:
             hbox = gtk.HBox(spacing=6)
             hbox.set_border_width(6)
-            vbox.add(hbox)
+            self.vbox.add(hbox)
 
             hbox.add(gtk.image_new_from_icon_name("dialog-information", gtk.ICON_SIZE_DIALOG))
             label = gtk.Label("<span size=\"large\"><b>Scaling unavailable</b></span>\n\nFrequency scaling is not\navailable for the selected CPU.")
@@ -355,7 +350,8 @@ class SysFSBackend:
     def get_cpu_nr(self):
         return self.__cpu_nr
 
-    def get_number_of_cpus(self):
+    @staticmethod
+    def get_number_of_cpus():
         pattern = re.compile("cpu\d")
         return len([i for i in os.listdir(sysfs_dir) if pattern.match(i)])
 
@@ -404,9 +400,10 @@ class ProcCPUInfoBackend:
 
     """
 
+    __cpuinfo_pattern = pattern = re.compile("cpu MHz\s+: (\d+\.\d+)")
+
     def __init__(self, cpu_nr):
         self.__cpu_nr = cpu_nr
-        self.__cpuinfo_pattern = pattern = re.compile("cpu MHz\s+: (\d+\.\d+)")
 
     @staticmethod
     def backend_useable(cpu_nr):
@@ -420,9 +417,10 @@ class ProcCPUInfoBackend:
     def get_cpu_nr(self):
         return self.__cpu_nr
 
-    def get_number_of_cpus(self):
+    @staticmethod
+    def get_number_of_cpus():
         file = open(proc_cpuinfo_file).read()
-        return len(self.__cpuinfo_pattern.findall(file))
+        return len(ProcCPUInfoBackend.__cpuinfo_pattern.findall(file))
 
     def get_frequencies(self):
         return [self.get_current_frequency()]
@@ -443,6 +441,5 @@ if __name__ == "__main__":
         "description": applet_description,
         "logo": applet_logo,
         "author": "onox",
-        "copyright-year": "2008 - 2009",
-        "authors": ["onox <denkpadje@gmail.com>"]},
-        ["settings-per-instance"])
+        "copyright-year": "2008 - 2010",
+        "authors": ["onox <denkpadje@gmail.com>"]})

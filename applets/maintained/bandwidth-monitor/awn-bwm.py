@@ -229,7 +229,6 @@ class AppletBandwidthMonitor:
         button = gtk.Button("Change Unit")
         self.dialog.add(button)
         defaults = {'unit': 8, 'interface': '', 'draw_threshold': 0.0, 'device_display_parameters': [], 'background': True, 'background_color': "#000000|0.5", 'border': False, 'border_color': "#000000|1.0", 'label_control': 2, 'graph_zero': 0}
-        self.applet.settings.load_preferences(defaults)
         self.interface = self.applet.settings['interface']
         self.unit = self.applet.settings['unit']
         self.label_control = self.applet.settings["label_control"]
@@ -259,6 +258,7 @@ class AppletBandwidthMonitor:
         applet.add_overlay(self.__upload_overlay)
         applet.add_overlay(self.__download_overlay)
         applet.add_overlay(self.__sum_overlay)
+        self.default_font_size = self.__upload_overlay.props.font_sizing
         self.__upload_overlay.props.y_override = 4
         self.__download_overlay.props.y_override = 18
         self.__sum_overlay.props.y_override = 11
@@ -289,12 +289,13 @@ class AppletBandwidthMonitor:
     def change_unit(self, widget=None, scaleThresholdSpinbutton=None, label=None):
         self.unit = 8 if self.unit == 1 else 1
         ''' normalize and update the label, and normalize the spinbutton '''
-        if self.unit == 1:
-            label.set_text("KBps")
-            scaleThresholdSpinbutton.set_value(self.applet.settings["draw_threshold"]/8)
-        else:
-            label.set_text("Kbps")
-            scaleThresholdSpinbutton.set_value(self.applet.settings["draw_threshold"]*8)
+        if label:
+            if self.unit == 1:
+                label.set_text("KBps")
+                scaleThresholdSpinbutton.set_value(self.applet.settings["draw_threshold"]/8)
+            else:
+                label.set_text("Kbps")
+                scaleThresholdSpinbutton.set_value(self.applet.settings["draw_threshold"]*8)
         self.applet.settings["unit"] = self.unit
 
     def change_interface(self, widget, interface):
@@ -444,6 +445,9 @@ class AppletBandwidthMonitor:
             self.__sum_overlay.props.font_sizing = 9
         else:
             width = self.applet.get_size() * 1.5
+            self.__upload_overlay.props.font_sizing = self.default_font_size
+            self.__download_overlay.props.font_sizing = self.default_font_size
+            self.__sum_overlay.props.font_sizing = self.default_font_size
         cs = cairo.ImageSurface(cairo.FORMAT_ARGB32, int(width), self.applet.get_size())
         ct = cairo.Context(cs)
         ct.set_source_surface(cs)

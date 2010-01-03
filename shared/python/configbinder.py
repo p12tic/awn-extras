@@ -69,13 +69,14 @@ def get_config_binder(client, group, builder=None):
                 def __init__(self):
                     super(ConfigGObject, self).__init__()
                     self.propvalues = dict()
-                    for name in super_self.properties:
-                        self.propvalues[name] = super_self.properties[name][-2]
+                    for key in super_self.properties:
+                        name = key.replace("_", "-")
+                        self.propvalues[name] = super_self.properties[key][-2]
 
                         # Bind to Gtk+ component
-                        data = super_self.data[name]
+                        data = super_self.data[key]
                         widget = builder.get_object(data[0]) if builder is not None else None
-                        bind_property(client, group, name, self, name, widget, *data[1], **data[2])
+                        bind_property(client, group, key, self, name, widget, *data[1], **data[2])
 
                 def do_get_property(self, prop):
                     return self.propvalues[prop.name]
@@ -110,8 +111,6 @@ def bind_property(client, group, key, obj, prop_name, widget=None,
                          has changed
 
     """
-    prop_name = prop_name.replace("_", "-")
-
     def get_widget_value(widget):
         # Radio group needs real special case
         if isinstance(widget, gtk.RadioButton):

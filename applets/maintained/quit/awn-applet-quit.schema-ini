@@ -3,7 +3,7 @@ single_instance = false
 
 [DEFAULT/left-click-action]
 type = string
-default = Log Out
+default = Show Docklet
 description = Action to perform when left clicking on the icon.
 
 [DEFAULT/log-out-command]

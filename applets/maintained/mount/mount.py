@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # Copyright (C) 2007  Arvind Ganga
-#               2009  onox <denkpadje@gmail.com>
+#               2009 - 2010  onox <denkpadje@gmail.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -17,12 +17,15 @@
 
 import os
 import subprocess
+import threading
 
 import pygtk
 pygtk.require('2.0')
 import gtk
 
 from awn.extras import awnlib, __version__
+
+import glib
 
 applet_name = "Mount Applet"
 applet_description = "An applet to (un)mount devices"
@@ -65,37 +68,31 @@ class MountApplet:
     def setup_context_menu(self):
         pref_dialog = self.applet.dialog.new("preferences")
 
-        self.settings = {
-            "hidden-mountpoints": ["/", "swap"],
-            "execute-command": "",
-        }
-        self.applet.settings.load(self.settings)
-
         prefs = gtk.Builder()
         prefs.add_from_file(ui_file)
         prefs.get_object("dialog-vbox").reparent(pref_dialog.vbox)
 
-        self.__entry_hidden_mountpoints = prefs.get_object("entry-hidden-mountpoints")
-        self.__entry_hidden_mountpoints.set_text(" ".join(self.settings["hidden-mountpoints"]))
+        binder = self.applet.settings.get_binder(prefs)
+        binder.bind("execute-command", "entry-execute-command")
+        self.applet.settings.load_bindings(binder)
 
-        self.__entry_execute_command = prefs.get_object("entry-execute-command")
-        self.__entry_execute_command.set_text(self.settings["execute-command"])
+        self.__entry_hidden_mountpoints = prefs.get_object("entry-hidden-mountpoints")
+        self.__entry_hidden_mountpoints.set_text(" ".join(self.applet.settings["hidden-mountpoints"]))
 
         pref_dialog.connect("response", self.pref_dialog_response_cb)
 
     def pref_dialog_response_cb(self, widget, response):
         hidden_mountspoints = self.__entry_hidden_mountpoints.get_text().strip().split(" ")
-        if self.settings["hidden-mountpoints"] != hidden_mountspoints:
+        if self.applet.settings["hidden-mountpoints"] != hidden_mountspoints:
             self.applet.settings["hidden-mountpoints"] = hidden_mountspoints
             self.init_dialog()
-        self.applet.settings["execute-command"] = self.__entry_execute_command.get_text()
 
     def init_dialog(self):
         for mountpoint in self.__mountpoints_vbox.get_children():
             self.__mountpoints_vbox.remove(mountpoint)
 
         for mountpoint in self.get_file_content("/etc/fstab"):
-            if self.settings["hidden-mountpoints"].count(mountpoint) > 0:
+            if self.applet.settings["hidden-mountpoints"].count(mountpoint) > 0:
                 continue
 
             button = gtk.Button(mountpoint)
@@ -125,17 +122,18 @@ class MountApplet:
         return fstab
 
     def toggle_mount(self, widget, mountpoint):
-        if not self.__mountpoints[mountpoint][0]:
-            subprocess.Popen("mount " + mountpoint, shell=True)
-
-            if self.get_file_content("/proc/mounts").count(mountpoint) > 0 and len(self.settings["execute-command"]) > 0:
-                command = self.execute_command.replace("%D", mountpoint)
-                print command
-                subprocess.Popen(command, shell=True)
-        else:
-            subprocess.Popen("umount " + mountpoint, shell=True)
-
-        self.refresh_dialog()
+        def run():
+            if not self.__mountpoints[mountpoint][0]:
+                fp = subprocess.Popen("mount " + mountpoint, shell=True)
+                execute_command = self.applet.settings["execute-command"]
+                if fp.wait() == 0 and len(execute_command) > 0:
+                    command = execute_command.replace("%D", mountpoint)
+                    print command
+                    subprocess.Popen(command, shell=True)
+            else:
+                subprocess.Popen("umount " + mountpoint, shell=True).wait()
+            glib.idle_add(self.refresh_dialog)
+        threading.Thread(target=run).start()
 
 
 if __name__ == "__main__":
@@ -145,6 +143,6 @@ if __name__ == "__main__":
         "description": applet_description,
         "logo": applet_logo,
         "author": "onox",
-        "copyright-year": 2009,
+        "copyright-year": "2009 - 2010",
         "authors": ["Arvind Ganga", "onox <denkpadje@gmail.com>"]},
         ["settings-per-instance"])

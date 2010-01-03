@@ -50,7 +50,7 @@ class Forecast:
 
                 if self.forecastDialog is None:
                     self.setup_forecast_dialog()
-                elif not self.parent.settings['curved_dialog']:
+                elif not self.parent.applet.settings['curved_dialog']:
                     self.forecastDialog.set_title("%s %s %s"%(_("Forecast"), _("for"), self.cachedForecast['CITY']))
                 self.forecastArea.set_forecast(self.cachedForecast)
         self.parent.fetch_forecast(cb)
@@ -73,7 +73,7 @@ class Forecast:
             if self.forecastArea is not None:
                 del self.forecastArea
     
-            if self.parent.settings['curved_dialog']:
+            if self.parent.applet.settings['curved_dialog']:
                 self.forecastDialog = self.CurvedDialogWrapper(self.applet)
                 self.applet.dialog.register("main", self.forecastDialog)
                 self.forecastArea = CurvedDialog(self.cachedForecast, self.parent)
@@ -185,7 +185,7 @@ class NormalDialog(gtk.Image):
         context.show_text(day_name)
 
         # Icon of condition
-        icon_name = self.__parent_weather.get_icon_name(day['CODE'], self.__parent_weather.settings["theme"])
+        icon_name = self.__parent_weather.get_icon_name(day['CODE'], self.__parent_weather.applet.settings["theme"])
         icon = self.__parent_weather.applet.get_icon().get_icon_at_size(60, icon_name)
         start_x = (rect_width - icon.get_width()) / 2
         start_y = ((high_temp_y - rect_y - 15) - icon.get_height()) / 2

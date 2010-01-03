@@ -1,7 +1,7 @@
 # Awn Applet Library - Simplified APIs for programming applets for Awn.
 #
 # Copyright (C) 2007 - 2008  Pavel Panchekha <pavpanchekha@gmail.com>
-#               2008 - 2009  onox <denkpadje@gmail.com>
+#               2008 - 2010  onox <denkpadje@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ import gtk
 from desktopagnostic import config, Color
 from desktopagnostic.ui import ColorButton
 import awn
-from awn.extras import __version__
+from awn.extras import configbinder, __version__
 
 import cairo
 import cPickle as cpickle
@@ -687,6 +687,8 @@ class Errors:
 
 class Settings:
 
+    __setting_types = (bool, int, long, float, str, list, Color)
+
     def __init__(self, parent):
         """Create a new Settings object. Note that the Settings object
         should be used as a dictionary. The default folder: the short
@@ -699,9 +701,6 @@ class Settings:
         @type parent: L{Applet}
 
         """
-        self.__dict = None
-        self.__callables = {}
-
         type_parent = type(parent)
         if type_parent in (Applet, config.Client):
             self.__folder = config.GROUP_DEFAULT
@@ -711,187 +710,11 @@ class Settings:
 
         self.__client = self.ConfigClient(self.__folder, parent)
 
-    def load(self, dict, push_defaults=True):
-        """Synchronize the values from the given dictionary with the stored
-        settings, replacing values in the given dictionary if they have been
-        overridden.
+    def get_binder(self, builder):
+        return self.__client.get_config_binder(builder)
 
-        @param dict: Default values for the dictionary.
-        @type parent: L{dict}
-        @param push_defaults: Whether to store non-overridden defaults in
-        the settings backend. True by default.
-        @type parent: L{bool}
-
-        """
-        if self.__dict is not None:
-            raise RuntimeError("settings already loaded")
-
-        self.__dict = dict
-
-        for key in dict:
-            if key in self:
-                dict[key] = self[key]
-            elif push_defaults:
-                self[key] = dict[key]
-
-    def load_via_gtk_builder(self, builder, widget_names):
-        """Initialize and connect Gtk+ widgets from the gtk.Builder. The
-        given dictionary at the second index contains entries where the
-        setting name is mapped to the name of the Gtk+ widget (retrieved via
-        the builder). Optionally the value can be a tuple instead. The tuple
-        must then contain the name of the Gtk+ widget and two conversion
-        functions.
-
-        It basically prepares a new dictionary that contains no default
-        values and callables, and then calls load_preferences().
-
-        This function does not handle default values and callables (which are
-        executed when the value of a setting changes), and thus should not
-        be used by applets, unless it's used in a different OS process than
-        the rest of the applet.
-
-        """
-        dict_tuples = {}
-        for key, values in widget_names.iteritems():
-            has_converters = type(values) is tuple and len(values) == 3
-
-            widget_name = values[0] if has_converters else values
-            widget = builder.get_object(widget_name)
-            if widget is None:
-                raise RuntimeError("'%s' is not a valid widget" % widget_name)
-
-            dict_tuples[key] = (None, None, widget)
-            if has_converters:
-                dict_tuples[key] += (values[1], values[2])
-        return self.load_preferences(dict_tuples)
-
-    def load_preferences(self, dict_tuples, push_defaults=True):
-        """Synchronize the values from the tuples in the given dictionary
-        with the stored settings, use the callable to be called when the value
-        is changed, and initialize and connect the provided Gtk+ widget.
-
-        Returns a "read-only" dictionary containing, now and in the future,
-        up-to-date values.
-
-        A callable, optionally provided at the second index in the tuple,
-        will be called when the value of the setting is changed.
-        If the tuple provides a certain Gtk+ widget at the third index,
-        then this widget will be initialized with the value of the setting,
-        and changes in the value of the widget will be reflect in the returned
-        dictionary and settings backend.
-
-        The fourth and fifth index can optionally provide conversion functions
-        for gtk.SpinButton and gtk.Range to convert a value from setting to
-        widget, and from widget to setting, respectively.
-
-        @param dict: Default values for the dictionary.
-        @type parent: L{dict}
-        @param push_defaults: Whether to store non-overridden defaults in
-        the settings backend. True by default.
-        @type parent: L{bool}
-
-        """
-        if self.__dict is not None:
-            raise RuntimeError("settings already loaded")
-
-        self.__dict = {}
-        identity_converter = lambda v: v
-
-        for key, values in dict_tuples.iteritems():
-            is_tuple = type(values) is tuple
-            default_value = values[0] if is_tuple else values
-
-            if key in self:
-                self.__dict[key] = self[key]
-            else:
-                if is_tuple and len(values) > 2 and default_value is None:
-                    raise RuntimeError("%s has no value and non-None default required to construct widget" % key)
-                self.__dict[key] = default_value
-                if push_defaults:
-                    self[key] = default_value
-
-            if not is_tuple or len(values) == 1:
-                continue
-
-            if values[1] is not None:
-                self.register_value_changed(key, values[1])
-
-            if len(values) == 2:
-                continue
-
-            key_widget = values[2]
-            widget_type = type(key_widget)
-
-            # Conversion functions only used with gtk.SpinButton and gtk.Range
-            if len(values) == 5:
-                from_s_to_w = values[3]
-                from_w_to_s = values[4]
-            else:
-                from_w_to_s = from_s_to_w = identity_converter
-
-            if isinstance(key_widget, gtk.ToggleButton):
-                def toggled_cb(widget, name):
-                    self[name] = widget.get_active()
-                key_widget.set_active(self.__dict[key])
-                key_widget.connect("toggled", toggled_cb, key)
-            elif widget_type is gtk.SpinButton:
-                init_value = from_s_to_w(self.__dict[key])
-                if isinstance(init_value, int):
-                    def value_changed_cb(widget, name, conv):
-                        self[name] = conv(widget.get_value_as_int())
-                else:
-                    def value_changed_cb(widget, name, conv):
-                        self[name] = conv(widget.get_value())
-                key_widget.set_value(init_value)
-                key_widget.connect("value-changed", value_changed_cb, key, from_w_to_s)
-            elif widget_type is gtk.ComboBox:
-                if type(key_widget.get_model()) is not gtk.ListStore:
-                    raise RuntimeError("Model of ComboBox %s must be gtk.ListStore" % widget_type.__name__)
-                # TODO assumes atm that type of key is int
-                def changed_cb(widget, name, conv):
-                    self[name] = conv(widget.get_active())
-                key_widget.set_active(from_s_to_w(self.__dict[key]))
-                key_widget.connect("changed", changed_cb, key, from_w_to_s)
-            elif isinstance(key_widget, gtk.Range):
-                def value_changed_cb(widget, name, conv):
-                    self[name] = conv(widget.get_value())
-                key_widget.set_value(from_s_to_w(self.__dict[key]))
-                key_widget.connect("value-changed", value_changed_cb, key, from_w_to_s)
-            elif widget_type is ColorButton:
-                def color_set_cb(widget, name):
-                    self[name] = widget.props.da_color
-                key_widget.props.da_color = self.__dict[key]
-                key_widget.connect("color-set", color_set_cb, key)
-            else:
-                raise RuntimeError("%s is unsupported" % widget_type.__name__)
-
-        return self.__dict
-
-    def register_value_changed(self, key, callback):
-        """Register the given function to be called when the value of
-        the specified key changes.
-
-        @param key: The key to monitor
-        @type key: C{string}
-        @param callback: The function to call when the value of the key
-        changes.
-        @type callback: C{function}
-
-        """
-        assert callable(callback)
-        self.__callables[key] = callback
-
-    def notify(self, key, callback):
-        """Set up a function to be executed every time a key changes. Note that
-        this works best (if at all) on whole folders, not individual keys.
-
-        @param key: The key or folder to monitor for changes.
-        @type key: C{string}
-        @param callback: The function to call upon changes.
-        @type callback: C{function}
-
-        """
-        self.__client.notify(key, callback)
+    def load_bindings(self, object):
+        return self.__client.load_bindings(object)
 
     def __getitem__(self, key):
         """Get a key from the currect directory.
@@ -907,8 +730,6 @@ class Settings:
             value = cpickle.loads(value[9:])
         return value
 
-    __setting_types = (bool, int, long, float, str, list, Color)
-
     def __setitem__(self, key, value):
         """Set or create a key from the currect directory.
 
@@ -923,22 +744,6 @@ class Settings:
         elif type(value) is long:
             value = int(value)
         self.__client.set(key, value)
-
-        # Update the value in the loaded dictionary
-        if self.__dict is not None:
-            self.__dict[key] = unpickled_value
-
-            if key in self.__callables:
-                self.__callables[key](unpickled_value)
-
-    def __delitem__(self, key):
-        """Delete a key from the currect directory.
-
-        @param key: A relative path to the correct key
-        @type key: C{string}
-
-        """
-        self.__client.delete(key)
 
     def __contains__(self, key):
         """Test if a key exists in the current directory.
@@ -964,6 +769,8 @@ class Settings:
             @type client: C{None,Applet,config.Client}
 
             """
+            self.__config_object = None
+            
             type_client = type(client)
             if client is None:
                 self.__client = awn.config_get_default(awn.PANEL_ID_DEFAULT)
@@ -980,17 +787,15 @@ class Settings:
 
             self.__folder = folder
 
-        def notify(self, key, callback):
-            """Set up a function to be executed every time a key changes. Works
-            best (if at all) on whole folders, not individual keys.
+        def get_config_binder(self, builder):
+            return configbinder.get_config_binder(self.__client, self.__folder, builder)
 
-            @param key: The key or folder to monitor for changes.
-            @type key: C{string}
-            @param callback: The function to call upon changes.
-            @type callback: C{function}
+        def load_bindings(self, binder):
+            if self.__config_object is not None:
+                raise RuntimeError("Configuration object already set")
 
-            """
-            self.__client.notify_add(self.__folder, key, callback)
+            self.__config_object = binder.create_gobject()
+            return self.__config_object.props
 
         def set(self, key, value):
             """Set an existing key's value.
@@ -1002,9 +807,12 @@ class Settings:
 
             """
             try:
-                self.__client.set_value(self.__folder, key, value)
+                self.__config_object.set_property(key, value)
             except:
-                raise ValueError("Could not set new value of '%s'" % key)
+                try:
+                    self.__client.set_value(self.__folder, key, value)
+                except:
+                    raise ValueError("Could not set new value of '%s'" % key)
 
         def get(self, key):
             """Get an existing key's value.
@@ -1016,9 +824,12 @@ class Settings:
 
             """
             try:
-                return self.__client.get_value(self.__folder, key)
+                return self.__config_object.get_property(key)
             except:
-                raise ValueError("'%s' does not exist" % key)
+                try:
+                    return self.__client.get_value(self.__folder, key)
+                except:
+                    raise ValueError("'%s' does not exist" % key)
 
         def contains(self, key):
             """Test if the key maps to a value.
@@ -1029,22 +840,17 @@ class Settings:
             @rtype: C{bool}
 
             """
+            r = False
+            if self.__config_object is not None:
+                r = key in gobject.list_properties(self.__config_object)
+            if r:
+                return r
             try:
                 self.__client.get_value(self.__folder, key)
             except Exception, e:
                 if str(e).split(":", 1)[0] == "Could not find the key specified":
                     return False
             return True
-
-        def delete(self, key):
-            """Delete an existing key. Not yet implemented; will raise the
-            NotImplementedError. Will work when implemented upstream.
-
-            @param key: The name of the key, relative to the current folder.
-            @type key: C{string}
-
-            """
-            raise NotImplementedError("Deleting not supported")
 
 
 class Keyring:

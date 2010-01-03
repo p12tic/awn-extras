@@ -56,17 +56,8 @@ class ThreadQueue(object):
             self.q.task_done()
 
     def do_request(self, (func, args, kwargs)):
-        if 'callback' in kwargs:
-            callback = kwargs['callback']
-            del kwargs['callback']
-        else:
-            callback = None
-
-        if 'error' in kwargs:
-            error = kwargs['error']
-            del kwargs['error']
-        else:
-            error = None
+        callback = kwargs.pop('callback', None)
+        error = kwargs.pop('error', None)
 
         def run():
             try:

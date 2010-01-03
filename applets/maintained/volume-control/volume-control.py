@@ -2,7 +2,7 @@
 # Copyright (C) 2007  Richard "nazrat" Beyer, Jeff "Jawbreaker" Hubbard,
 #                     Pavel Panchekha <pavpanchekha@gmail.com>,
 #                     Spencer Creasey <screasey@gmail.com>
-# Copyright (C) 2008 - 2009  onox <denkpadje@gmail.com>
+# Copyright (C) 2008 - 2010  onox <denkpadje@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -163,10 +163,16 @@ class VolumeControlApplet:
 
         preferences_vbox = self.applet.dialog.new("preferences").vbox
         prefs.get_object("dialog-vbox").reparent(preferences_vbox)
-
+        
         self.load_theme_pref(prefs)
         self.load_device_pref(prefs)
         self.load_track_pref(prefs)
+
+        binder = self.applet.settings.get_binder(prefs)
+        binder.bind("theme", "combobox-theme", key_callback=self.combobox_theme_changed_cb)
+        binder.bind("device", "combobox-device", key_callback=self.combobox_device_changed_cb)
+        binder.bind("track", "combobox-mixer-track", key_callback=self.combobox_track_changed_cb)
+        self.applet.settings.load_bindings(binder)
 
     def show_volume_control_cb(self, widget):
         for command in volume_control_apps:
@@ -182,78 +188,57 @@ class VolumeControlApplet:
         def filter_theme(theme):
             return os.path.isfile(os.path.join(theme_dir, theme, "scalable/status/audio-volume-high.svg"))
         themes = filter(filter_theme, os.listdir(theme_dir))
-        self.themes = [system_theme_name] + sorted(themes + os.listdir(moonbeam_theme_dir))
+        self.themes = [system_theme_name] + sorted(themes) + sorted(os.listdir(moonbeam_theme_dir))
 
         combobox_theme = prefs.get_object("combobox-theme")
         awnlib.add_cell_renderer_text(combobox_theme)
         for i in self.themes:
             combobox_theme.append_text(i)
 
-        if "theme" not in self.applet.settings or self.applet.settings["theme"] not in self.themes:
+        if self.applet.settings["theme"] not in self.themes:
             self.applet.settings["theme"] = system_theme_name
-        self.theme = self.applet.settings["theme"]
 
         self.setup_icons()
-
-        combobox_theme.set_active(self.themes.index(self.theme))
-        combobox_theme.connect("changed", self.combobox_theme_changed_cb)
 
     def load_device_pref(self, prefs):
         device_labels = self.backend.get_device_labels()
 
-        if "device" not in self.applet.settings or self.applet.settings["device"] not in device_labels:
+        if self.applet.settings["device"] not in device_labels:
             self.applet.settings["device"] = self.backend.get_default_device_label()
-        device = self.applet.settings["device"]
 
         self.combobox_device = prefs.get_object("combobox-device")
         awnlib.add_cell_renderer_text(self.combobox_device)
         for i in device_labels:
             self.combobox_device.append_text(i)
 
-        self.combobox_device.set_active(device_labels.index(device))
-        self.combobox_device.connect("changed", self.combobox_device_changed_cb)
-
-        self.backend.set_device(device)
+        self.backend.set_device(self.applet.settings["device"])
 
     def load_track_pref(self, prefs):
         self.combobox_track = prefs.get_object("combobox-mixer-track")
         awnlib.add_cell_renderer_text(self.combobox_track)
-        self.combobox_track.connect("changed", self.combobox_track_changed_cb)
 
         self.reload_tracks()
 
     def reload_tracks(self):
         track_labels = self.backend.get_track_labels()
 
-        if "track" not in self.applet.settings or self.applet.settings["track"] not in track_labels:
+        if self.applet.settings["track"] not in track_labels:
             self.applet.settings["track"] = self.backend.get_default_track()
-        track = self.applet.settings["track"]
 
         self.combobox_track.get_model().clear()
         for i in track_labels:
             self.combobox_track.append_text(i)
 
-        self.combobox_track.set_active(track_labels.index(track))
+        self.backend.set_track(self.applet.settings["track"])
 
-        self.backend.set_track(track)
-
-    def combobox_device_changed_cb(self, button):
-        device = self.backend.get_device_labels()[button.get_active()]
-        self.applet.settings["device"] = device
-
-        self.backend.set_device(device)
+    def combobox_device_changed_cb(self, value):
+        self.backend.set_device(self.applet.settings["device"])
         self.reload_tracks()
 
-    def combobox_track_changed_cb(self, button):
-        track = self.backend.get_track_labels()[button.get_active()]
-        self.applet.settings["track"] = track
+    def combobox_track_changed_cb(self, value):
+        self.backend.set_track(self.applet.settings["track"])
 
-        self.backend.set_track(track)
-
-    def combobox_theme_changed_cb(self, button):
-        self.theme = self.themes[button.get_active()]
-        self.applet.settings["theme"] = self.theme
-
+    def combobox_theme_changed_cb(self, value):
         self.setup_icons()
         self.refresh_icon(True)
 
@@ -287,6 +272,8 @@ class VolumeControlApplet:
             self.__was_muted = muted
 
     def setup_icons(self):
+        self.theme = self.applet.settings["theme"]
+
         is_moonbeam_theme = os.path.isdir(os.path.join(moonbeam_theme_dir, self.theme))
         keys = list(moonbeam_ranges) if is_moonbeam_theme else volume_ranges.keys()
 
@@ -526,7 +513,7 @@ if __name__ == "__main__":
         "description": applet_description,
         "logo": applet_logo,
         "author": "onox",
-        "copyright-year": "2008 - 2009",
+        "copyright-year": "2008 - 2010",
         "authors": ["onox <denkpadje@gmail.com>"],
         "artists": ["Jakub Steiner"],
         "type": ["Audio", "Midi"]},

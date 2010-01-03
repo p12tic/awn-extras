@@ -57,7 +57,7 @@ class preferences:
         bgCheckbutton.connect('toggled', self.bgCheckbutton_cb)
         bgColorbutton = prefs_ui.get_object('bgColorbutton')
         bgColor, bgAlpha = self.applet.settings["background_color"].split("|")
-        bgColorbutton.set_color(gtk.gdk.Color(bgColor))
+        bgColorbutton.set_color(gtk.gdk.color_parse(bgColor))
         bgColorbutton.set_alpha(int(float(bgAlpha) * 65535.0))
         bgColorbutton.connect('color-set', self.backgroundColorbutton_color_set_cb)
         borderCheckbutton = prefs_ui.get_object('borderCheckbutton')
@@ -65,7 +65,7 @@ class preferences:
         borderCheckbutton.connect('toggled', self.borderCheckbutton_cb)
         borderColorbutton = prefs_ui.get_object('borderColorbutton')
         borderColor, borderAlpha = self.applet.settings["border_color"].split("|")
-        borderColorbutton.set_color(gtk.gdk.Color(borderColor))
+        borderColorbutton.set_color(gtk.gdk.color_parse(borderColor))
         borderColorbutton.set_alpha(int(float(borderAlpha) * 65535.0))
         borderColorbutton.connect('color-set', self.borderColorbutton_color_set_cb)
         labelNoneRadiobutton = prefs_ui.get_object('labelNoneRadiobutton')
@@ -195,7 +195,7 @@ class preferences:
     def borderColorbutton_color_set_cb(self, widget):
         color = widget.get_color()
         alpha = float("%2.1f" % (widget.get_alpha() / 65535.0))
-        self.applet.settings["border_color"] = "%s|%s" % (color, alpha)
+        self.applet.settings["border_color"] = "%s|%s" % (color.to_string(), alpha)
         self.parent.border_color = "%s|%s" % (color, alpha)
 
     def get_color(self, device, column_name):
@@ -219,7 +219,7 @@ class preferences:
         else:
             prop = "Download"
         colorseldlg = gtk.ColorSelectionDialog("%s %s Color" % (model[path][0], prop))
-        colorseldlg.colorsel.set_current_color(gtk.gdk.Color(self.get_color(model[path][0], prop.lower())))
+        colorseldlg.colorsel.set_current_color(gtk.gdk.color_parse(self.get_color(model[path][0], prop.lower())))
         response = colorseldlg.run()
         if response == gtk.RESPONSE_OK:
             self.color_choice = colorseldlg.colorsel.get_current_color()

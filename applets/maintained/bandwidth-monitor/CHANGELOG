@@ -1,3 +1,10 @@
+01/03/2010:
+    Removed settings.load/load_preferences
+    Fix for applet/font-sizing when changing orientation
+    Changed instantiation of color objects to use gtk.gdk.color_parse instead of gtk.gdk.Color('#XXX') for older systems
+    Changed handling of default preferences/unassigned keys
+    
+
 01/02/2010:
     Fixed bug which caused the unit of measure checkbutton to become out of sync with the gconf value
     Changed default interface to '', was wlan0 for some reason..
@@ -15,8 +22,8 @@
 12/20/2009:
     Change logic to graph calculation which corrects the following rendering issues -
         Graph lines drawing outside of border/frame
-        Graph normalized top-value was rendering off-screen when applet size smaller than 35
-        Graph normalized top-value was rendering very low on the graph when applet size greater than 60
+        Graph normalised top-value was rendering off-screen when applet size smaller than 35
+        Graph normalised top-value was rendering very low on the graph when applet size greater than 60
     Changed scaling of initial icon - it was rendering too large and centered text was displayed with an odd alignment to the dock
     Fixed some issues with default values
     Changed short-name to 'bandwidth-monitor' to match schema file

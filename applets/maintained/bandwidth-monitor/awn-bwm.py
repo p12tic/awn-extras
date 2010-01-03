@@ -229,6 +229,9 @@ class AppletBandwidthMonitor:
         button = gtk.Button("Change Unit")
         self.dialog.add(button)
         defaults = {'unit': 8, 'interface': '', 'draw_threshold': 0.0, 'device_display_parameters': [], 'background': True, 'background_color': "#000000|0.5", 'border': False, 'border_color': "#000000|1.0", 'label_control': 2, 'graph_zero': 0}
+        for key, value in defaults.items():
+            if not key in self.applet.settings:
+                self.applet.settings[key] = value
         self.interface = self.applet.settings['interface']
         self.unit = self.applet.settings['unit']
         self.label_control = self.applet.settings["label_control"]
@@ -393,8 +396,8 @@ class AppletBandwidthMonitor:
         ratio = highest_value / 28 if highest_value > self.ratio else self.ratio
         ''' Change the color of the upload line to the configured or default '''
         if interface:
-            color = gtk.gdk.Color(self.device_usage.interfaces[interface]['upload_color'])
-            ct.set_source_rgba(color.red_float, color.green_float, color.blue_float, 1.0)
+            color = gtk.gdk.color_parse(self.device_usage.interfaces[interface]['upload_color'])
+            ct.set_source_rgba(color.red / 65535.0, color.green / 65535.0, color.blue / 65535.0, 1.0)
         else:
             ct.set_source_rgba(0.1, 0.1, 0.1, 0.5)
         ''' Set the initial position and iter to 0 '''
@@ -412,8 +415,8 @@ class AppletBandwidthMonitor:
             ct.stroke()
         ''' Change the color of the download line to the configured or default '''
         if interface:
-            color = gtk.gdk.Color(self.device_usage.interfaces[interface]['download_color'])
-            ct.set_source_rgba(color.red_float, color.green_float, color.blue_float, 1.0)
+            color = gtk.gdk.color_parse(self.device_usage.interfaces[interface]['download_color'])
+            ct.set_source_rgba(color.red / 65535.0, color.green / 65535.0, color.blue / 65535.0, 1.0)
         else:
             ct.set_source_rgba(0.1, 0.1, 0.1, 0.5)
         ''' Reset the position and iter to 0 '''
@@ -454,8 +457,8 @@ class AppletBandwidthMonitor:
         ct.set_line_width(2)
         if self.background:
             bgColor, alpha = self.applet.settings["background_color"].split("|")
-            bgColor = gtk.gdk.Color(bgColor)
-            ct.set_source_rgba(bgColor.red_float, bgColor.green_float, bgColor.blue_float, float(alpha))
+            bgColor = gtk.gdk.color_parse(bgColor)
+            ct.set_source_rgba(bgColor.red / 65535.0, bgColor.green / 65535.0, bgColor.blue / 65535.0, float(alpha))
             self.draw_background(ct, 0, 0, width, self.applet.get_size(), 10)
             ct.fill()
         if self.interface == "Multi Interface":
@@ -495,8 +498,8 @@ class AppletBandwidthMonitor:
             line_width = 2
             ct.set_line_width(line_width)
             borderColor, alpha = self.applet.settings["border_color"].split("|")
-            borderColor = gtk.gdk.Color(borderColor)
-            ct.set_source_rgba(borderColor.red_float, borderColor.green_float, borderColor.blue_float, float(alpha))
+            borderColor = gtk.gdk.color_parse(borderColor)
+            ct.set_source_rgba(borderColor.red / 65535.0, borderColor.green / 65535.0, borderColor.blue / 65535.0, float(alpha))
             self.draw_background(ct, line_width/2, line_width/2, width - line_width/2, self.applet.get_size() - line_width/2, 4)
             ct.stroke()
         self.applet.set_icon_context(ct)

@@ -229,7 +229,7 @@ class AppletBandwidthMonitor:
         button = gtk.Button("Change Unit")
         self.dialog.add(button)
         defaults = {'unit': 8, 'interface': '', 'draw_threshold': 0.0, 'device_display_parameters': [], 'background': True, 'background_color': "#000000|0.5", 'border': False, 'border_color': "#000000|1.0", 'label_control': 2, 'graph_zero': 0}
-        self.applet.settings.load(defaults)
+        self.applet.settings.load_preferences(defaults)
         self.interface = self.applet.settings['interface']
         self.unit = self.applet.settings['unit']
         self.label_control = self.applet.settings["label_control"]

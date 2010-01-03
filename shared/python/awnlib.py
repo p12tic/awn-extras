@@ -810,8 +810,8 @@ class Settings:
             self.__folder = folder
 
         def get_config_binder(self, builder):
-            if builder is not None and not isinstance(builder, gtk.Builder):
-                raise RuntimeError("Builder must be an instance of gtk.Builder if not None")
+            if not isinstance(builder, gtk.Builder):
+                raise RuntimeError("Builder must be an instance of gtk.Builder")
             return configbinder.get_config_binder(self.__client, self.__folder, builder)
 
         def load_bindings(self, binder):

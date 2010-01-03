@@ -70,7 +70,9 @@ def get_config_binder(client, group, builder=None):
 
                         # Bind to Gtk+ component
                         data = super_self.data[key]
-                        widget = builder.get_object(data[0]) if builder is not None else None
+                        widget = builder.get_object(data[0])
+                        if widget is None:
+                            raise RuntimeError("Widget '%s' not found in builder" % data[0])
                         bind_property(client, group, key, self, name, widget, *data[1], **data[2])
 
                 def do_get_property(self, prop):
@@ -245,7 +247,7 @@ def bind_property(client, group, key, obj, prop_name, widget=None,
     client.bind(group, key, obj, prop_name, read_only, config.BIND_METHOD_FALLBACK)
 
     # Connect to widget's change signal if we're supposed to update it
-    if not read_only and widget is not None:
+    if not read_only:
         data = (obj, prop_name, setter_transform, key_callback)
         connect_to_widget_changes(widget, widget_changed, data)
 

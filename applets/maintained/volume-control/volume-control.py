@@ -138,8 +138,8 @@ class VolumeControlApplet:
         if volume != self.backend.get_volume():
             with self.__volume_scale_lock:
                 self.message_delay_handler.stop()
-                self.backend.freeze_messages.set()
 
+                self.backend.freeze_messages.set()
                 self.backend.set_volume(volume)
 
                 self.message_delay_handler.start()
@@ -181,19 +181,12 @@ class VolumeControlApplet:
         # Only use themes that are likely to provide all the files
         def filter_theme(theme):
             return os.path.isfile(os.path.join(theme_dir, theme, "scalable/status/audio-volume-high.svg"))
-        self.themes = [system_theme_name] + filter(filter_theme, os.listdir(theme_dir))
-        self.themes.sort()
+        themes = filter(filter_theme, os.listdir(theme_dir))
+        self.themes = [system_theme_name] + sorted(themes + os.listdir(moonbeam_theme_dir))
 
         combobox_theme = prefs.get_object("combobox-theme")
         awnlib.add_cell_renderer_text(combobox_theme)
         for i in self.themes:
-            combobox_theme.append_text(i)
-
-        moonbeam_themes = os.listdir(moonbeam_theme_dir)
-        moonbeam_themes.sort()
-        self.themes.extend(moonbeam_themes)
-
-        for i in moonbeam_themes:
             combobox_theme.append_text(i)
 
         if "theme" not in self.applet.settings or self.applet.settings["theme"] not in self.themes:

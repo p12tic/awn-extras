@@ -35,7 +35,9 @@ import comics_manage
 import comics_view
 from feed.settings import Settings
 from feed import FeedContainer
-from shared import *
+from shared import (
+    ALT_USER_DIR, ICONS_DIR, STRIPS_DIR, SYS_FEEDS_DIR, USER_DIR,
+    USER_FEEDS_DIR)
 
 
 """This is the path to the named pipe that is used to send commands to the

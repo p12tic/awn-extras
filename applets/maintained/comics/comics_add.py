@@ -34,7 +34,7 @@ from downloader import Downloader
 from feed.basic import Feed, NAME, URL
 from feed.settings import Settings
 from feed.rss import IMG_INDEX
-from shared import *
+from shared import (GLADE_DIR, USER_FEEDS_DIR)
 
 GLADE_FILE = os.path.join(GLADE_DIR, 'add.glade')
 

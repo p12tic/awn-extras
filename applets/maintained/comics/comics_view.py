@@ -38,7 +38,7 @@ from feed.basic import URL, TITLE, LINK, DATE, Feed
 from downloader import Downloader
 
 from widgets import ScalableWindow, WWWLink, Ticker
-from shared import *
+from shared import (GLADE_DIR, ICONS_DIR, USER_DIR)
 
 STRIPS_DIR = USER_DIR
 CACHE_FILE = os.path.join(USER_DIR, '%s.cache')

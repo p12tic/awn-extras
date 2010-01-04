@@ -17,8 +17,8 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
-
 import os
+
 
 class Settings(dict):
     """A class to save and store settings."""
@@ -59,7 +59,7 @@ class Settings(dict):
 
         return result
 
-    def __init__(self, filename = None):
+    def __init__(self, filename=None):
         """Open filename and read its settings."""
         self.description = None
         self.filename = filename
@@ -148,7 +148,7 @@ class Settings(dict):
             except:
                 return False
 
-    def get_string(self, name, default = None):
+    def get_string(self, name, default=None):
         """Read a string setting."""
         if name in self:
             return self[name]
@@ -157,7 +157,7 @@ class Settings(dict):
         else:
             raise KeyError()
 
-    def get_bool(self, name, default = None):
+    def get_bool(self, name, default=None):
         """Read a boolean setting."""
         if name in self:
             val = self[name]
@@ -170,7 +170,7 @@ class Settings(dict):
         else:
             raise KeyError()
 
-    def get_int(self, name, default = None):
+    def get_int(self, name, default=None):
         """Read an integer setting."""
         if name in self:
             try:
@@ -186,4 +186,3 @@ class Settings(dict):
         """Remove the key."""
         if key in self:
             del self[key]
-

@@ -45,6 +45,7 @@ GLADE_FILE = os.path.join(GLADE_DIR, 'main.glade')
 
 
 class BidirectionalIterator:
+
     def __init__(self, sequence):
         self.sequence = sequence
         self.index = None
@@ -98,7 +99,7 @@ class ComicApplet(awn.AppletSimple):
         if self.current_window:
             self.current_window.set_visibility(True)
 
-    def create_window(self, filename = None, template = None):
+    def create_window(self, filename=None, template=None):
         """Creates a new strip and stores its configuration in the directory
         path."""
         if filename is None:
@@ -131,7 +132,7 @@ class ComicApplet(awn.AppletSimple):
         else:
             template = Settings()
             template['feed_name'] = feed_name
-            self.create_window(template = template)
+            self.create_window(template=template)
 
     def make_menu(self):
         """Generate the menu listing the comics."""
@@ -141,7 +142,7 @@ class ComicApplet(awn.AppletSimple):
         for feed in self.feeds.feeds:
             label = gtk.Label()
             label.set_markup(self.feeds.feeds[feed].name)
-            align = gtk.Alignment(xalign = 0.0)
+            align = gtk.Alignment(xalign=0.0)
             align.add(label)
             menu_item = gtk.CheckMenuItem()
             menu_item.data = feed
@@ -177,12 +178,13 @@ class ComicApplet(awn.AppletSimple):
         self.set_icon_name('comics-icon')
         self.notify = awnlib.Notify(self)
         self.dialog = awn.Dialog(self)
-        self.dialog.connect('button-release-event', self.on_dialog_button_press)
+        self.dialog.connect('button-release-event',
+                            self.on_dialog_button_press)
 
         hbox = gtk.HBox(False)
         self.message_icon = gtk.Image()
         self.message_label = gtk.Label()
-        hbox.pack_start(self.message_icon, expand = False, fill = False)
+        hbox.pack_start(self.message_icon, expand=False, fill=False)
         hbox.pack_end(self.message_label)
         hbox.show_all()
         self.dialog.add(hbox)
@@ -287,6 +289,7 @@ if __name__ == '__main__':
 
     user_agent = applet.configuration.get_string(config.GROUP_DEFAULT,
                                                  'user_agent')
+
     class ComicURLOpener(urllib.FancyURLopener):
         version = user_agent
     urllib._urlopener = ComicURLOpener()
@@ -296,4 +299,3 @@ if __name__ == '__main__':
     applet.show_all()
 
     gtk.main()
-

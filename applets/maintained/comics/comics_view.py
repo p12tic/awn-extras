@@ -23,7 +23,7 @@ import cairo
 import dbus
 import gobject
 import gtk
-from gtk import glade
+from gtk import gdk, glade
 import os
 import rsvg
 import time
@@ -51,16 +51,16 @@ session_bus = None
 
 # Constants
 TICKER_LINK_SEPARATION = 4
-LINK_BORDER = (2, 2, 2, 26)            # The border widths when the link is visible
-BORDER = (2, 2, 2, 2)                # The border widths
-LINK_BORDER_RADII = (0, 0, 26, 26)    # The radii of the corners when the link is
-                                    # visible
-BORDER_RADII = (0, 0, 0, 0)            # The radii of the corners
-WINDOW_COLOR = (1.0, 1.0, 1.0)        # The rgb colour of the window
-BORDER_COLOR = (0.0, 0.0, 0.0)        # The rgb colour of the border
-LINK_FONTSIZE = 10 * 1000            # The size of the font
-TICKER_DISTANCE = 8                    # The distance from the ticker to the border
-COMPIZ_WIDGET = '_COMPIZ_WIDGET'    # The WM atom for a Compiz widget
+LINK_BORDER = (2, 2, 2, 26)        # The border widths when the link is visible
+BORDER = (2, 2, 2, 2)              # The border widths
+LINK_BORDER_RADII = (0, 0, 26, 26) # The radii of the corners when the link is
+                                   # visible
+BORDER_RADII = (0, 0, 0, 0)        # The radii of the corners
+WINDOW_COLOR = (1.0, 1.0, 1.0)     # The rgb colour of the window
+BORDER_COLOR = (0.0, 0.0, 0.0)     # The rgb colour of the border
+LINK_FONTSIZE = 10 * 1000          # The size of the font
+TICKER_DISTANCE = 8                # The distance from the ticker to the border
+COMPIZ_WIDGET = '_COMPIZ_WIDGET'   # The WM atom for a Compiz widget
 
 # Common images
 DEFAULT_IMAGE = rsvg.Handle(os.path.join(ICONS_DIR, 'default.svg'))
@@ -71,18 +71,20 @@ def compiz_widget_set(widget, value):
     """Sets or unsets the Compiz widget property."""
     if widget.window:
         if value:
-            widget.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_UTILITY)
+            widget.window.set_type_hint(gdk.WINDOW_TYPE_HINT_UTILITY)
             widget.window.property_change(COMPIZ_WIDGET,
-                gtk.gdk.SELECTION_TYPE_WINDOW, 32, gtk.gdk.PROP_MODE_REPLACE,
+                gdk.SELECTION_TYPE_WINDOW, 32, gdk.PROP_MODE_REPLACE,
                     (True,))
         else:
-            widget.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_NORMAL)
+            widget.window.set_type_hint(gdk.WINDOW_TYPE_HINT_NORMAL)
             widget.window.property_delete(COMPIZ_WIDGET)
+
 
 def compiz_widget_get(widget):
     if widget.window:
         return widget.window.property_get(COMPIZ_WIDGET,
-            gtk.gdk.SELECTION_TYPE_WINDOW)
+            gdk.SELECTION_TYPE_WINDOW)
+
 
 def has_widget_layer():
     """Queries Compiz over DBus whether the Widget plugin is enabled."""
@@ -104,10 +106,10 @@ class ComicsViewer(ScalableWindow):
     __version__ = '1.0'
     __author__ = 'Moses'
 
-    __gsignals__ = dict(
-        removed = (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ()),
-        updated = (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-            (gobject.TYPE_STRING,)))
+    __gsignals__ = {
+        'removed': (gobject.SIGNAL_RUN_FIRST, None, ()),
+        'updated': (gobject.SIGNAL_RUN_FIRST, None, (str,)),
+        }
 
     ########################################################################
     # Helper methods                                                       #
@@ -252,7 +254,8 @@ class ComicsViewer(ScalableWindow):
         if self.__download_id and self.__downloader:
             self.__downloader.disconnect(self.__download_id)
             self.__download_id = None
-        self.__downloader = Downloader(item[URL], self.__settings['cache-file'])
+        self.__downloader = Downloader(item[URL],
+                                       self.__settings['cache-file'])
         self.__download_id = self.__downloader.connect('completed',
             self.on_download_completed, item)
         self.__downloader.download()
@@ -337,7 +340,7 @@ class ComicsViewer(ScalableWindow):
         combo = self.__xml.get_widget('file_format_combo')
         model = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING,
             gobject.TYPE_STRING)
-        for format in gtk.gdk.pixbuf_get_formats():
+        for format in gdk.pixbuf_get_formats():
             if format['is_writable']:
                 text = '%s (*.%s)' % (format['description'],
                     format['extensions'][0])
@@ -352,7 +355,7 @@ class ComicsViewer(ScalableWindow):
         history_menu = self.__xml.get_widget('history_menu')
         history_menu.foreach(lambda child: history_menu.remove(child))
         items = self.feeds.feeds[self.feed_name].items.items()
-        items.sort(reverse = True)
+        items.sort(reverse=True)
         for date, item in items:
             label = gtk.Label()
             text = self.get_menu_item_name(item)
@@ -360,7 +363,7 @@ class ComicsViewer(ScalableWindow):
                 label.set_markup('<b>' + text + '</b>')
             else:
                 label.set_markup(text)
-            align = gtk.Alignment(xalign = 0.0)
+            align = gtk.Alignment(xalign=0.0)
             align.add(label)
             menu_item = gtk.MenuItem()
             menu_item.data = item
@@ -380,7 +383,7 @@ class ComicsViewer(ScalableWindow):
     # Standard python methods                                              #
     ########################################################################
 
-    def __init__(self, applet, settings, visible = False):
+    def __init__(self, applet, settings, visible=False):
         """Create a new ComicsView instance."""
         super(ComicsViewer, self).__init__()
         self.applet = applet
@@ -392,7 +395,7 @@ class ComicsViewer(ScalableWindow):
         self.__download_id = None
         self.__downloader = None
         try:
-            self.__pixbuf = gtk.gdk.pixbuf_new_from_file(settings['cache-file'])
+            self.__pixbuf = gdk.pixbuf_new_from_file(settings['cache-file'])
         except:
             self.__pixbuf = None
         self.__is_error = False
@@ -591,7 +594,7 @@ class ComicsViewer(ScalableWindow):
         if not self.__is_error:
             del self.__pixbuf
             try:
-                self.__pixbuf = gtk.gdk.pixbuf_new_from_file(o.filename)
+                self.__pixbuf = gdk.pixbuf_new_from_file(o.filename)
             except gobject.GError:
                 self.__pixbuf = None
                 self.__is_error = True
@@ -604,4 +607,3 @@ class ComicsViewer(ScalableWindow):
             if self.feed_name == feed_name:
                 self.__settings.delete()
                 self.destroy()
-

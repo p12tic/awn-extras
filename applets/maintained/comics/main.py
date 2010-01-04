@@ -60,8 +60,8 @@ class Command(object):
     simply 'another_command'."""
     LINE_RE = re.compile(r'(?P<command>\w*)(?:\s+(?P<parameters>.+))?')
 
-    """The regular expression that matches a single parameter value. A parameter
-    value is on the format 123 or "a string"."""
+    """The regular expression that matches a single parameter value. A
+    parameter value is in the format 123 or "a string"."""
     PARAMETER_RE = re.compile(r''
         + r'(?P<int>-?\d+)|'
         + r'(?:"(?P<str>(?:(?:\\")|.)*?)")|'
@@ -126,6 +126,7 @@ class Command(object):
 
 
 class Application(object):
+
     def command_listener(self):
         """Reads commands from a stream until the exit command is received."""
         stream = open(COMMAND_PIPE, 'r+')
@@ -142,8 +143,8 @@ class Application(object):
             stream.close()
 
     def execute_command(self, command):
-        """Invoked by the command listening thread whenever a command is sent to
-        the application."""
+        """Invoked by the command listening thread whenever a command is sent
+        to the application."""
         try:
             # Execute the requested command
             getattr(self, 'do_' + command.command)(*command.parameters)
@@ -180,12 +181,12 @@ class Application(object):
         self.visible = False
 
         # Start listening for commands
-        self.command_thread = threading.Thread(target = self.command_listener)
+        self.command_thread = threading.Thread(target=self.command_listener)
         self.command_thread.start()
 
         self.feeds.update()
 
-    def show_message(self, message, icon, body = None):
+    def show_message(self, message, icon, body=None):
         pynotify.Notification(message, body, icon).show()
 
     def on_comic_updated(self, widget, title):
@@ -275,8 +276,8 @@ if __name__ == '__main__':
     else:
         command = Command(DEFAULT_COMMAND)
 
-    # If the named pipe exists, another instance is running and we just pass the
-    # command line on
+    # If the named pipe exists, another instance is running and we just pass
+    # the command line on
     if os.access(COMMAND_PIPE, os.F_OK):
         out = open(COMMAND_PIPE, 'w+')
         try:
@@ -301,6 +302,7 @@ if __name__ == '__main__':
 
     # Initialize user agent string
     import urllib
+
     class ComicURLOpener(urllib.FancyURLopener):
         version = 'Mozilla/3.0'
     urllib._urlopener = ComicURLOpener()
@@ -324,4 +326,3 @@ if __name__ == '__main__':
     finally:
         # Remove the command pipe
         os.unlink(COMMAND_PIPE)
-

@@ -84,7 +84,7 @@ class ComicsManager:
         cr = gtk.CellRendererText()
         column = gtk.TreeViewColumn()
         column.pack_start(cr)
-        column.set_attributes(cr, text = 0)
+        column.set_attributes(cr, text=0)
         self.comics_list.append_column(column)
         self.comics_list.set_model(self.model)
 
@@ -116,12 +116,12 @@ class ComicsManager:
             self.feeds.remove_feed(feed_name)
             os.remove(filename)
         except:
-            dialog = gtk.MessageDialog(
-                parent = self.manage_window,
-                flags = gtk.DIALOG_DESTROY_WITH_PARENT,
-                type = gtk.MESSAGE_INFO,
-                buttons = gtk.BUTTONS_CLOSE,
-                message_format = _('Failed to remove <i>%s</i>.') % filename)
+            msg = _('Failed to remove <i>%s</i>.') % filename
+            dialog = gtk.MessageDialog(parent=self.manage_window,
+                                       flags=gtk.DIALOG_DESTROY_WITH_PARENT,
+                                       type=gtk.MESSAGE_INFO,
+                                       buttons=gtk.BUTTONS_CLOSE,
+                                       message_format=msg)
             dialog.set_title(_('Error'))
             dialog.run()
             dialog.hide()
@@ -134,4 +134,3 @@ class ComicsManager:
 
     def on_adder_destroy(self, widget):
         self.load_feeds()
-

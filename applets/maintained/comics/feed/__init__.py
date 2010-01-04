@@ -31,16 +31,16 @@ class FeedContainer(gobject.GObject):
     FEED_ADDED = 0
     FEED_REMOVED = 1
 
-    __gsignals__ = dict(
-        feed_changed = (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-            (gobject.TYPE_STRING, gobject.TYPE_INT)))
+    __gsignals__ = {
+        'feed_changed': (gobject.SIGNAL_RUN_FIRST, None, (str, int)),
+        }
 
     def _add_feed_factory(self, name):
         """Dynamically loads a feed factory from a file and adds it to the list
         of factories. If filename does not contain a feed factory, it is not
         added."""
         try:
-            module = __import__('plugins.%s' % name, fromlist = [name])
+            module = __import__('plugins.%s' % name, fromlist=[name])
             if hasattr(module, 'matches_url') and hasattr(module, 'get_class'):
                 self.feed_factories.append(module)
                 return True
@@ -72,7 +72,7 @@ class FeedContainer(gobject.GObject):
             try:
                 plugin = settings.get_string('plugin', '')
                 if plugin:
-                    if self.feed_factories.has_key(plugin):
+                    if plugin in self.feed_factories:
                         factory = self.feed_factories[plugin].get_class()
                     else:
                         return False
@@ -91,8 +91,8 @@ class FeedContainer(gobject.GObject):
         URL, an RSSFeed is returned."""
         for factory in self.feed_factories:
             if factory.matches_url(url):
-                return factory.get_class()(url = url)
-        return RSSFeed(url = url)
+                return factory.get_class()(url=url)
+        return RSSFeed(url=url)
 
     def remove_feed(self, feed_name):
         """Removes the feed feed_name."""
@@ -124,4 +124,3 @@ class FeedContainer(gobject.GObject):
         """Updates all feeds."""
         for feed in self.feeds.values():
             feed.update()
-

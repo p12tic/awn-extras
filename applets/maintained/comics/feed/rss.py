@@ -33,6 +33,7 @@ IMG_INDEX = 'img_index'
 
 class RSSFeed(Feed):
     """A feed class."""
+
     def type_is_image(self, mime_type):
         """Returns whether a MIME type is an image."""
         return mime_type.startswith('image/')
@@ -46,12 +47,12 @@ class RSSFeed(Feed):
         elif 'updated' in entry:
             return time.mktime(entry.updated_parsed)
         else:
-            return -float(index + 1)
+            return -1 * float(index + 1)
 
     def extract_urls(self, entry):
         """Returns a tuple containg all URLS in the entry: the first item is a
-        list containing URLs pointing directly to images and the second is a URL
-        pointing to a web page."""
+        list containing URLs pointing directly to images and the second is a
+        URL pointing to a web page."""
         images = []
 
         if 'link' in entry:
@@ -69,7 +70,7 @@ class RSSFeed(Feed):
 
         return (images, link)
 
-    def __init__(self, settings = None, url = None):
+    def __init__(self, settings=None, url=None):
         """Initialize an RSS feed."""
         super(RSSFeed, self).__init__(settings, url)
         if settings:
@@ -96,8 +97,8 @@ class RSSFeed(Feed):
         threads = []
         for (index, entry) in enumerate(feed.entries):
             item = {}
-            thread = threading.Thread(target = self.process_entry,
-                args = (item, index, entry))
+            thread = threading.Thread(target=self.process_entry,
+                                      args=(item, index, entry))
             threads.append((item, thread))
             thread.start()
 
@@ -123,8 +124,8 @@ class RSSFeed(Feed):
         item[IMAGES] = images
         if link:
             item[LINK] = link
-            # If the requested image has an index greater than what we currently
-            # have, download indirect images
+            # If the requested image has an index greater than what we
+            # currently have, download indirect images
             if len(item[IMAGES]) < self.img_index or self.is_query \
                     or self.is_legacy_indirect:
                 self.extend_images(item)
@@ -156,9 +157,9 @@ class RSSFeed(Feed):
             pass
 
     def get_unique_images(self):
-        """Returns a list of (index, url) tuples for the images of one item that
-        are not present in another. If there are no items present, None is
-        returned."""
+        """Returns a list of (index, url) tuples for the images of one item
+        that are not present in another. If there are no items present, None
+        is returned."""
         if len(self.items) == 0:
             return None
 
@@ -171,4 +172,3 @@ class RSSFeed(Feed):
                     del result[index]
 
         return result
-

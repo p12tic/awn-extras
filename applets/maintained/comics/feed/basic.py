@@ -44,9 +44,9 @@ class Feed(gobject.GObject):
     IMG_RE = re.compile('(<img .*?>)', re.IGNORECASE)
     IMG_SRC_RE = re.compile('<img .*?src=["\'](.*?)["\'].*?>', re.IGNORECASE)
 
-    __gsignals__ = dict(
-        updated = (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-            (gobject.TYPE_INT,)))
+    __gsignals__ = {
+        'updated': (gobject.SIGNAL_RUN_FIRST, None, (int,)),
+        }
 
     def make_absolute_url(self, url, from_doc):
         """Convert a relative URL to an absolute one."""
@@ -61,7 +61,7 @@ class Feed(gobject.GObject):
             return parsed[1][0] + '://' + parsed[1][1] \
                 + parsed[1][2].rsplit('/', 1)[0] + parsed[0][2]
 
-    def __init__(self, settings = None, url = None):
+    def __init__(self, settings=None, url=None):
         """Initialize a feed."""
         super(Feed, self).__init__()
 
@@ -94,7 +94,8 @@ class Feed(gobject.GObject):
                 self.updated = False
                 filename, headers = urllib.urlretrieve(self.url)
                 self.status = self.parse_file(filename)
-            finally: pass
+            finally:
+                pass
             #except:
             #    self.status = Feed.DOWNLOAD_FAILED
 
@@ -107,7 +108,7 @@ class Feed(gobject.GObject):
 
     def update(self):
         """Reload the feed."""
-        thread = threading.Thread(target = self.run, name = self.name)
+        thread = threading.Thread(target=self.run, name=self.name)
         thread.setDaemon(True)
         thread.start()
 
@@ -123,4 +124,3 @@ class Feed(gobject.GObject):
 
         # Return True to keep the timer running
         return True
-

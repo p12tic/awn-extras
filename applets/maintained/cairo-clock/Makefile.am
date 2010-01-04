@@ -8,6 +8,7 @@ dist_applet_DATA =  \
     cairo-clock.ui \
     analogclock.py \
     locations.py \
+    sun.py \
     weather.py \
     $(NULL)
 

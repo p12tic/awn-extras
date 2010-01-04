@@ -21,7 +21,6 @@ from awn.extras.threadqueue import ThreadQueue, async_method
 from awn import OverlayThemedIcon
 
 import sun
-sun_obj = sun.Sun()
 
 try:
     import pymetar as metar
@@ -83,11 +82,11 @@ class Weather:
             day = int(city_datetime.strftime("%d"))
             hours1 = int(city_datetime.strftime("%H"))
             minutes1 = int(city_datetime.strftime("%M"))
-    
+
             fa = lambda v: v + hours_offset_utc
             fb = lambda v: (int(v), int(round(v % 1 * 60))) 
-            srss = map(fb, map(fa, sun_obj.sunRiseSet(year, month, day, report.longf, report.latf)))
-    
+            srss = map(fb, map(fa, sun.sun_rise_set(year, month, day, report.longf, report.latf)))
+
             print report.stat_city, weather, sky, srss
             if weather is not None and "clouds" in weather:
                 if srss[1] <= (hours1, minutes1) or (hours1, minutes1) < srss[0]:

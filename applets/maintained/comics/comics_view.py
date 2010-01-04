@@ -95,7 +95,7 @@ def has_widget_layer():
             session_bus = dbus.SessionBus()
         return 'widget' in session_bus.get_object('org.freedesktop.compiz',
             '/org/freedesktop/compiz/core/allscreens/active_plugins').get()
-    except:
+    except Exception:
         return False
 
 
@@ -396,7 +396,7 @@ class ComicsViewer(ScalableWindow):
         self.__downloader = None
         try:
             self.__pixbuf = gdk.pixbuf_new_from_file(settings['cache-file'])
-        except:
+        except Exception:
             self.__pixbuf = None
         self.__is_error = False
         self.__xml = glade.XML(GLADE_FILE)
@@ -527,7 +527,7 @@ class ComicsViewer(ScalableWindow):
             format = model.get_value(iterator, 1)
             try:
                 self.__pixbuf.save(dialog.get_filename(), format)
-            except:
+            except Exception:
                 self.applet.show_message(_('Failed to save <i>%s</i>.') %
                     dialog.get_filename(), gtk.STOCK_DIALOG_ERROR)
 

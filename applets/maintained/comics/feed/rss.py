@@ -153,7 +153,7 @@ class RSSFeed(Feed):
             f.close()
             item[IMAGES].extend(map(lambda u: self.make_absolute_url(u,
                 item[LINK]), Feed.IMG_SRC_RE.findall(data)))
-        except:
+        except Exception:
             pass
 
     def get_unique_images(self):

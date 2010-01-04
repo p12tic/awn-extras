@@ -48,7 +48,7 @@ class Downloader(gobject.GObject, threading.Thread):
             self.filename, headers = urllib.urlretrieve(self.url,
                                                         self.filename)
             self.emit('completed', Downloader.OK)
-        except:
+        except Exception:
             self.emit('completed', Downloader.TRANSFER_ERROR)
 
     def download(self):

@@ -46,7 +46,7 @@ class FeedContainer(gobject.GObject):
                 return True
             else:
                 del module
-        except:
+        except Exception:
             pass
 
         return False
@@ -81,7 +81,7 @@ class FeedContainer(gobject.GObject):
                 feed = factory(settings)
                 self.feeds[settings[NAME]] = feed
                 self.emit('feed-changed', feed, FeedContainer.FEED_ADDED)
-            except:
+            except Exception:
                 pass
 
         return False

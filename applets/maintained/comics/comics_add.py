@@ -113,7 +113,7 @@ The URL is not a valid comic feed. Press "next" to try again'''))
     def on_add_assistant_apply(self, widget):
         try:
             os.mkdir(USER_FEEDS_DIR)
-        except:
+        except Exception:
             pass
         f, filename = tempfile.mkstemp('.feed', '', USER_FEEDS_DIR, True)
         os.close(f)

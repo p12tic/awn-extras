@@ -115,7 +115,7 @@ class ComicsManager:
         try:
             self.feeds.remove_feed(feed_name)
             os.remove(filename)
-        except:
+        except Exception:
             msg = _('Failed to remove <i>%s</i>.') % filename
             dialog = gtk.MessageDialog(parent=self.manage_window,
                                        flags=gtk.DIALOG_DESTROY_WITH_PARENT,

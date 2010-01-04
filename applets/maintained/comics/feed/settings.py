@@ -145,7 +145,7 @@ class Settings(dict):
             try:
                 os.remove(self.filename)
                 return True
-            except:
+            except Exception:
                 return False
 
     def get_string(self, name, default=None):

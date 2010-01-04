@@ -96,7 +96,7 @@ class Feed(gobject.GObject):
                 self.status = self.parse_file(filename)
             finally:
                 pass
-            #except:
+            #except Exception:
             #    self.status = Feed.DOWNLOAD_FAILED
 
             # If the status has changed, the feed is considered updated

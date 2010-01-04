@@ -535,6 +535,20 @@ change_to_default (AwnCPUicon *self)
                 NULL);
 }
 
+static void
+change_render_bg (AwnCPUicon *self)
+{
+  gboolean          render_bg;
+  g_object_get (self,
+                "render-bg", &render_bg,
+                NULL);
+  render_bg = !render_bg;
+  g_object_set (self,
+                "render-bg", render_bg,
+                NULL);  
+}
+
+
 static void 
 awn_CPUicon_show_context_menu(AwnCPUicon *self)
 {
@@ -542,7 +556,12 @@ awn_CPUicon_show_context_menu(AwnCPUicon *self)
   AwnApplet         *applet;
   GtkWidget         *item;
   GtkWidget         *submenu;
-  	
+  gboolean          render_bg;
+
+  g_object_get (self,
+                "render-bg", &render_bg,
+                NULL);
+  
   priv = AWN_CPUICON_GET_PRIVATE (self);
   if (priv->context_menu)
   {
@@ -581,6 +600,11 @@ awn_CPUicon_show_context_menu(AwnCPUicon *self)
 
   item = gtk_menu_item_new_with_label ("Remove Icon");
   gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);  
+
+  item = gtk_check_menu_item_new_with_label ("Render Background");
+  gtk_check_menu_item_set_active ( GTK_CHECK_MENU_ITEM (item),render_bg);  
+  gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);
+  g_signal_connect_swapped (item, "activate", G_CALLBACK(change_render_bg), self);  
 
   item = awn_applet_create_about_item_simple (applet,
                                               "Copyright 2009 Rodney Cryderman <rcryderman@gmail.com>\n",

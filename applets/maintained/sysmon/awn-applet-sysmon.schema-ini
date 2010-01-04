@@ -36,6 +36,11 @@ type = integer
 default = 0
 description = Just a dummy key.. this will be removed later.
 
+[applet/render_bg]
+type = boolean
+default = true
+description = Render background.
+
 [icon/update_timeout]
 type = integer
 default = 1000

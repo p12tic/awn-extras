@@ -54,8 +54,8 @@ class FeedContainer(gobject.GObject):
     def _load_feed_factories(self):
         """Loads all feed factories found in the plugin directory."""
         try:
-            for filename in filter(lambda f: f.endswith('.py'),
-                    os.listdir(PLUGINS_DIR)):
+            for filename in (f for f in os.listdir(PLUGINS_DIR)
+                             if f.endswith('.py')):
                 self._add_feed_factory(filename.rpartition('.')[0])
         except OSError:
             pass
@@ -111,11 +111,11 @@ class FeedContainer(gobject.GObject):
     def load_directory(self, directory):
         """Loads all feeds found in directory."""
         # Traverse .feed-files in the directory
-        if not directory in self.directories:
+        if directory not in self.directories:
             self.directories.append(directory)
         try:
-            for filename in filter(lambda f: f.endswith('.feed'),
-                    os.listdir(directory)):
+            for filename in (f for f in os.listdir(directory)
+                             if f.endswith('.feed')):
                 self.add_feed(os.path.join(directory, filename))
         except OSError:
             pass

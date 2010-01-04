@@ -121,8 +121,8 @@ class Command(object):
             return value
 
     def __str__(self):
-        return ' '.join(map(self.value_to_string,
-            [self.command] + self.parameters))
+        return ' '.join([self.value_to_string(s) for s in
+                         [self.command] + self.parameters])
 
 
 class Application(object):
@@ -165,9 +165,8 @@ class Application(object):
 
         # Create the comics
         self.comics = []
-        for filename in filter(lambda f: f.endswith('.strip'),
-                os.listdir(cache)):
-            filename = os.path.join(cache, filename)
+        for filename in (os.path.join(cache, f) for f in os.listdir(cache)
+                         if f.endswith('.strip')):
             settings = Settings(filename)
             settings['cache-file'] = filename.rsplit('.', 1)[0] + '.cache'
             comic = comics_view.ComicsViewer(self, settings, False)
@@ -227,7 +226,7 @@ class Application(object):
     def do_include_comic(self, feed_name):
         """Adds a window for a specific comic if not already shown."""
         # Do not add an unknown comic
-        if not feed_name in self.feeds.feeds:
+        if feed_name not in self.feeds.feeds:
             return
 
         # Do not add an already present comic
@@ -251,10 +250,10 @@ class Application(object):
     def do_exclude_comic(self, feed_name):
         """Removes a window for a specific comic if shown."""
         # Do not remove an unknown comic
-        if not feed_name in self.feeds.feeds:
+        if feed_name not in self.feeds.feeds:
             return
 
-        comics = filter(lambda w: w.feed_name == feed_name, self.comics)
+        comics = [c for c in self.comics if c.feed_name == feed_name]
         if not comics:
             return
 

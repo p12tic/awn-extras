@@ -127,7 +127,7 @@ class ScalableWidgetContainer(gtk.Fixed, Scalable):
 
         # Set the Scalable attributes
         widget.set_scale(self.scale)
-        widget.set_size(map(lambda x: x / widget.scale, widget.size_request()))
+        widget.set_size([x / widget.scale for x in widget.size_request()])
         widget.position = (x, y)
 
     def move_scaled(self, widget, x, y):
@@ -619,7 +619,7 @@ class Ticker(ScalableWidget):
                 0.5 - self.TICK_HEIGHT / 2.0,
                 pi / self.TICKS, 0.0)
             ctx.close_path()
-            color = map(lambda c1, c2: c1 + (c2 - c1) * t, *self.TICK_COLORS)
+            color = [c1 + (c2 - c1) * t for c1, c2 in self.TICK_COLORS]
             color[3] = color[3] * self.__opacity
             ctx.set_source_rgba(*color)
             ctx.fill()

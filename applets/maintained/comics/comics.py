@@ -117,11 +117,11 @@ class ComicApplet(awn.AppletSimple):
 
     def toggle_feed(self, feed_name, visible):
         """Toggles a comic."""
-        if not feed_name in self.feeds.feeds:
+        if feed_name not in self.feeds.feeds:
             return
 
         if not visible:
-            windows = filter(lambda w: w.feed_name == feed_name, self.windows)
+            windows = [w for w in self.windows if w.feed_name == feed_name]
             if not windows:
                 return
 
@@ -147,8 +147,8 @@ class ComicApplet(awn.AppletSimple):
             menu_item = gtk.CheckMenuItem()
             menu_item.data = feed
             menu_item.add(align)
-            menu_item.set_active(len(filter(lambda w: w.feed_name == feed,
-                self.windows)) > 0)
+            menu_item.set_active(len([w for w in self.windows
+                                      if w.feed_name == feed]) > 0)
             menu_item.connect('toggled', self.on_comics_toggled)
             feed_menu.append(menu_item)
         feed_menu.show_all()
@@ -202,8 +202,8 @@ class ComicApplet(awn.AppletSimple):
         self.current_window = None
 
         try:
-            for filename in filter(lambda f: f.endswith('.strip'),
-                    os.listdir(STRIPS_DIR)):
+            for filename in (f for f in os.listdir(STRIPS_DIR)
+                             if f.endswith('.strip')):
                 strip = self.create_window(os.path.join(STRIPS_DIR, filename))
         except OSError:
             return

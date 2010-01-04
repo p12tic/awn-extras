@@ -61,7 +61,7 @@ class RSSFeed(Feed):
             link = None
 
         if 'description' in entry:
-            images.extend(Feed.IMG_SRC_RE.findall(entry.description))
+            images += Feed.IMG_SRC_RE.findall(entry.description)
 
         if 'enclosures' in entry:
             for enclosure in entry.enclosures:
@@ -151,8 +151,8 @@ class RSSFeed(Feed):
             f = urllib.urlopen(item[LINK])
             data = f.read()
             f.close()
-            item[IMAGES].extend(map(lambda u: self.make_absolute_url(u,
-                item[LINK]), Feed.IMG_SRC_RE.findall(data)))
+            item[IMAGES] += [self.make_absolute_url(u, item[LINK])
+                             for u in Feed.IMG_SRC_RE.findall(data)]
         except Exception:
             pass
 

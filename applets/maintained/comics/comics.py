@@ -28,10 +28,12 @@ import awn
 import os
 import sys
 import tempfile
-from awn.extras import _, awnlib
+from awn.extras import _
 
 # Import Comics! modules, but check dependencies first
-awn.check_dependencies(globals(), 'feedparser')
+awn.check_dependencies(globals(), 'feedparser', 'pynotify')
+from pynotify import init as notify_init, Notification
+
 import comics_manage
 import comics_view
 from feed.settings import Settings
@@ -176,7 +178,8 @@ class ComicApplet(awn.AppletSimple):
         self.configuration = awn.config_get_default_for_applet(self)
 
         self.set_icon_name('comics-icon')
-        self.notify = awnlib.Notify(self)
+        # Initialise notifications
+        notify_init(_('Comics!'))
         self.dialog = awn.Dialog(self)
         self.dialog.connect('button-release-event',
                             self.on_dialog_button_press)
@@ -211,9 +214,10 @@ class ComicApplet(awn.AppletSimple):
         self.feeds.update()
 
     def on_window_updated(self, widget, title):
-        self.notify.send(title,
-            _('There is a new strip of %s!') % widget.feed_name,
-            os.path.join(ICONS_DIR, 'comics-icon.svg'))
+        msg = Notification(_('There is a new strip of %s!') % widget.feed_name,
+                           None,
+                           os.path.join(ICONS_DIR, 'comics-icon.svg'))
+        msg.show()
 
     def on_window_removed(self, widget):
         self.windows.remove(widget)

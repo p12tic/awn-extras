@@ -221,7 +221,7 @@ class WeatherApplet:
 
         disconnect_overlay = OverlayThemedIcon("stock_disconnect")
         disconnect_overlay.props.alpha = 1.0
-        throbber_overlay = OverlayThrobber(applet.get_icon())
+        throbber_overlay = OverlayThrobber()
 
         for i in (disconnect_overlay, throbber_overlay):
             i.props.scale = 0.5

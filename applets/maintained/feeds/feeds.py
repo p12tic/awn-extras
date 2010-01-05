@@ -400,7 +400,7 @@ class App(awn.AppletSimple):
         image = awn.Image()
         image.set_size_request(16, 16)
         image.set_from_pixbuf(pb)
-        throbber = awn.OverlayThrobber(image)
+        throbber = awn.OverlayThrobber()
         throbber.props.active = True
         throbber.props.scale = 1.0
         image.add_overlay(throbber)

@@ -473,7 +473,7 @@ class AddFeed(gtk.Window):
         image = awn.Image()
         image.set_from_pixbuf(pb)
         image.set_size_request(16, 16)
-        self.search_throbber = awn.OverlayThrobber(image)
+        self.search_throbber = awn.OverlayThrobber()
         self.search_throbber.props.scale = 1.0
         self.search_throbber.props.active = False
         image.add_overlay(self.search_throbber)

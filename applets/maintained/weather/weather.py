@@ -219,7 +219,7 @@ class WeatherApplet:
         self.__temp_overlay.props.gravity = gtk.gdk.GRAVITY_SOUTH
         applet.add_overlay(self.__temp_overlay)
 
-        disconnect_overlay = OverlayThemedIcon(applet.get_icon(), "stock_disconnect", "error")
+        disconnect_overlay = OverlayThemedIcon("stock_disconnect")
         disconnect_overlay.props.alpha = 1.0
         throbber_overlay = OverlayThrobber(applet.get_icon())
 

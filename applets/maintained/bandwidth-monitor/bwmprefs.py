@@ -24,7 +24,7 @@ import gtk
 import gobject
 
 
-class preferences:
+class Preferences:
 
     def __init__(self, applet, parent):
         self.applet = applet
@@ -36,10 +36,12 @@ class preferences:
         preferences_vbox = self.applet.dialog.new("preferences").vbox
         cell_box = self.create_treeview()
         store = cell_box.liststore
-        scaleThresholdSpinbutton = prefs_ui.get_object("scaleThresholdSpinbutton")
+        scaleThresholdSBtn = prefs_ui.get_object("scaleThresholdSBtn")
         thresholdLabel = prefs_ui.get_object("label-scaleThreshold")
-        scaleThresholdSpinbutton.set_value(float(self.applet.settings["draw_threshold"]))
-        scaleThresholdSpinbutton.connect('value-changed', self.parent.change_draw_ratio)
+        scaleThresholdSBtn.set_value(
+            float(self.applet.settings["draw_threshold"]))
+        scaleThresholdSBtn.connect(
+            'value-changed', self.parent.change_draw_ratio)
         uomCheckbutton = prefs_ui.get_object('uomCheckbutton')
         self.uomCheckbutton = uomCheckbutton
         if self.parent.unit == 1:
@@ -47,7 +49,8 @@ class preferences:
             thresholdLabel.set_text("KBps")
         else:
             thresholdLabel.set_text("Kbps")
-        uomCheckbutton.connect('toggled', self.parent.change_unit, scaleThresholdSpinbutton, thresholdLabel)
+        uomCheckbutton.connect('toggled',
+            self.parent.change_unit, scaleThresholdSBtn, thresholdLabel)
         graphZerotoggle = prefs_ui.get_object('graphZerotoggle')
         graphZerotoggle_value = True if not self.parent.graph_zero else False
         graphZerotoggle.set_property('active', graphZerotoggle_value)
@@ -59,15 +62,18 @@ class preferences:
         bgColor, bgAlpha = self.applet.settings["background_color"].split("|")
         bgColorbutton.set_color(gtk.gdk.color_parse(bgColor))
         bgColorbutton.set_alpha(int(float(bgAlpha) * 65535.0))
-        bgColorbutton.connect('color-set', self.backgroundColorbutton_color_set_cb)
+        bgColorbutton.connect('color-set',
+            self.backgroundColorbutton_color_set_cb)
         borderCheckbutton = prefs_ui.get_object('borderCheckbutton')
         borderCheckbutton.set_active(self.applet.settings["border"])
         borderCheckbutton.connect('toggled', self.borderCheckbutton_cb)
         borderColorbutton = prefs_ui.get_object('borderColorbutton')
-        borderColor, borderAlpha = self.applet.settings["border_color"].split("|")
+        borderColor, borderAlpha = \
+            self.applet.settings["border_color"].split("|")
         borderColorbutton.set_color(gtk.gdk.color_parse(borderColor))
         borderColorbutton.set_alpha(int(float(borderAlpha) * 65535.0))
-        borderColorbutton.connect('color-set', self.borderColorbutton_color_set_cb)
+        borderColorbutton.connect('color-set',
+            self.borderColorbutton_color_set_cb)
         labelNoneRadiobutton = prefs_ui.get_object('labelNoneRadiobutton')
         labelSumRadiobutton = prefs_ui.get_object('labelSumRadiobutton')
         labelBothRadiobutton = prefs_ui.get_object('labelBothRadiobutton')
@@ -80,17 +86,19 @@ class preferences:
         labelNoneRadiobutton.connect('toggled', self.labelRadio_cb, 0)
         labelSumRadiobutton.connect('toggled', self.labelRadio_cb, 1)
         labelBothRadiobutton.connect('toggled', self.labelRadio_cb, 2)
-        for device in sorted(self.parent.device_usage.interfaces):
-            if not "Multi Interface" in device and not "Sum Interface" in device:
-                if self.parent.device_usage.interfaces[device]['include_in_sum'] == True:
-                    include_in_sum = 1
+        for iface in sorted(self.parent.netstats.ifaces):
+            if not "Multi Interface" in iface \
+            and not "Sum Interface" in iface:
+                if self.parent.netstats.ifaces[iface]['sum_include'] == True:
+                    sum_include = 1
                 else:
-                    include_in_sum = 0
-                if self.parent.device_usage.interfaces[device]['include_in_multi'] == True:
-                    include_in_multi = 1
+                    sum_include = 0
+                if self.parent.netstats.ifaces[iface]['multi_include'] == True:
+                    muti_include = 1
                 else:
-                    include_in_multi = 0
-                current_iter = store.append([device, include_in_sum, include_in_multi, '', '', '#ff0000', '#ffff00'])
+                    muti_include = 0
+                current_iter = store.append([iface, sum_include,
+                    muti_include, '', '', '#ff0000', '#ffff00'])
         prefs_ui.get_object("scrolledwindow1").add_with_viewport(cell_box)
         prefs_ui.get_object("dialog-notebook").reparent(preferences_vbox)
 
@@ -105,7 +113,9 @@ class preferences:
 
     def create_treeview(self):
         cell_box = gtk.HBox()
-        liststore = gtk.ListStore(str, gobject.TYPE_BOOLEAN, gobject.TYPE_BOOLEAN, gobject.TYPE_BOOLEAN, gobject.TYPE_BOOLEAN, str, str)
+        liststore = gtk.ListStore(str, gobject.TYPE_BOOLEAN,
+            gobject.TYPE_BOOLEAN, gobject.TYPE_BOOLEAN,
+            gobject.TYPE_BOOLEAN, str, str)
         treeview = gtk.TreeView(liststore)
         treeview.set_property("rules-hint", True)
         treeview.set_enable_search(True)
@@ -135,23 +145,30 @@ class preferences:
         multi_column = gtk.TreeViewColumn("Mutli", multi_renderer)
         multi_column.add_attribute(multi_renderer, 'active', 2)
         multi_renderer.set_property('activatable', True)
-        multi_renderer.connect('toggled', self.toggle_cb, liststore, 2, "multi")
+        multi_renderer.connect('toggled', self.toggle_cb,
+            liststore, 2, "multi")
         ''' Upload '''
         uploadColor_renderer = gtk.CellRendererToggle()
         uploadColor_renderer.set_property('indicator-size', 0.1)
-        uploadColor_column = gtk.TreeViewColumn("Upload Color", uploadColor_renderer, cell_background=5)
+        uploadColor_column = gtk.TreeViewColumn("Upload Color",
+            uploadColor_renderer, cell_background=5)
         uploadColor_column.add_attribute(uploadColor_renderer, 'active', 3)
-        uploadColor_column.set_cell_data_func(uploadColor_renderer, self.devlist_cell_func)
+        uploadColor_column.set_cell_data_func(uploadColor_renderer,
+            self.devlist_cell_func)
         uploadColor_renderer.set_property('activatable', True)
-        uploadColor_renderer.connect('toggled', self.color_cb, liststore, 3, "upload")
+        uploadColor_renderer.connect('toggled', self.color_cb,
+            liststore, 3, "upload")
         ''' Download '''
         downloadColor_renderer = gtk.CellRendererToggle()
         downloadColor_renderer.set_property('indicator-size', 0.1)
-        downloadColor_column = gtk.TreeViewColumn("Download Color", downloadColor_renderer, cell_background=6)
+        downloadColor_column = gtk.TreeViewColumn("Download Color",
+            downloadColor_renderer, cell_background=6)
         downloadColor_column.add_attribute(downloadColor_renderer, 'active', 4)
-        downloadColor_column.set_cell_data_func(downloadColor_renderer, self.devlist_cell_func)
+        downloadColor_column.set_cell_data_func(downloadColor_renderer,
+            self.devlist_cell_func)
         downloadColor_renderer.set_property('activatable', True)
-        downloadColor_renderer.connect('toggled', self.color_cb, liststore, 4, "download")
+        downloadColor_renderer.connect('toggled', self.color_cb,
+            liststore, 4, "download")
         ''' Apply the before defined cells '''
         cell_box.liststore = liststore
         treeview.append_column(device_column)
@@ -176,7 +193,8 @@ class preferences:
         ''' Changes the cell color to match the preferece or selected value '''
         device = self.liststore.get_value(iter, 0)
         column_title = column.get_title().lower().split(" ")[0]
-        cell.set_property("cell-background", self.get_color(device, column_title))
+        cell.set_property("cell-background",
+            self.get_color(device, column_title))
 
     def bgCheckbutton_cb(self, widget):
         self.applet.settings['background'] = widget.get_active()
@@ -195,7 +213,8 @@ class preferences:
     def borderColorbutton_color_set_cb(self, widget):
         color = widget.get_color()
         alpha = float("%2.1f" % (widget.get_alpha() / 65535.0))
-        self.applet.settings["border_color"] = "%s|%s" % (color.to_string(), alpha)
+        self.applet.settings["border_color"] = "%s|%s" \
+            % (color.to_string(), alpha)
         self.parent.border_color = "%s|%s" % (color, alpha)
 
     def get_color(self, device, column_name):
@@ -218,12 +237,15 @@ class preferences:
             prop = "Upload"
         else:
             prop = "Download"
-        colorseldlg = gtk.ColorSelectionDialog("%s %s Color" % (model[path][0], prop))
-        colorseldlg.colorsel.set_current_color(gtk.gdk.color_parse(self.get_color(model[path][0], prop.lower())))
+        colorseldlg = gtk.ColorSelectionDialog(
+            "%s %s Color" % (model[path][0], prop))
+        colorseldlg.colorsel.set_current_color(
+            gtk.gdk.color_parse(self.get_color(model[path][0], prop.lower())))
         response = colorseldlg.run()
         if response == gtk.RESPONSE_OK:
             self.color_choice = colorseldlg.colorsel.get_current_color()
-            self.parent.device_usage.interfaces[model[path][0]]['%s_color' % prop.lower()] = self.color_choice.to_string()
+            self.parent.netstats.ifaces[model[path][0]]['%s_color' \
+                % prop.lower()] = self.color_choice.to_string()
             prefs = self.applet.settings["device_display_parameters"]
             if not prefs:
                 prefs = ["%s|True|True|None|None" % (model[path][0])]
@@ -232,8 +254,6 @@ class preferences:
             for i, device_pref in enumerate(prefs):
                 dpv = device_pref.split('|')
                 if dpv[0] == model[path][0]:
-                    ''' If the current column is 1 or 2, it is a checkbox,
-                    so transpose from bool to int '''
                     dpv[col_number] = self.color_choice.to_string()
                     prefs[i] = '|'.join(dpv)
             model[path][col_number + 2] = self.color_choice.to_string()
@@ -243,7 +263,8 @@ class preferences:
     def toggle_cb(self, widget, path, model, col_number, name):
         model[path][col_number] = not model[path][col_number]
         parameter = model[path][col_number]
-        self.parent.device_usage.interfaces[model[path][0]]['include_in_%s' % name] = parameter
+        self.parent.netstats.ifaces[model[path][0]]['%s_include' % name] \
+            = parameter
         prefs = self.applet.settings["device_display_parameters"]
         if not prefs:
             prefs = ["%s|True|True|None|None" % (model[path][0])]
@@ -252,8 +273,6 @@ class preferences:
         for i, device_pref in enumerate(prefs):
             dpv = device_pref.split('|')
             if dpv[0] == model[path][0]:
-                ''' If the current column is 1 or 2, it is a checkbox,
-                so transpose from bool to int '''
-                dpv[col_number] = parameter
+                dpv[col_number] = str(parameter)
                 prefs[i] = '|'.join(dpv)
         self.applet.settings["device_display_parameters"] = prefs

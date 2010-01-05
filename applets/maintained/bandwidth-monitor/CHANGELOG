@@ -1,3 +1,10 @@
+01/05/2010:
+    PEP8 cleanup of all lines > 80 chars
+    Rename of classes/variables for space/consistency
+    Change of timer values for consistent drawing.
+    Removed some unused modules.
+    Removed 'blank.png' - initial icon is now created with gtk.gdk.pixbuf_new_from_xpm_data()
+
 01/03/2010:
     Removed settings.load/load_preferences
     Fix for applet/font-sizing when changing orientation

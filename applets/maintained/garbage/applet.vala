@@ -255,7 +255,7 @@ public class GarbageApplet : AppletSimple
         widget = this.get_icon ();
         // moonbeam says get_icon generally returns Awn.ThemedIcon
         overlayable = widget as Overlayable;
-        this.throbber_overlay = new OverlayThrobber (widget);
+        this.throbber_overlay = new OverlayThrobber ();
         overlayable.add_overlay (this.throbber_overlay);
       }
       this.throbber_overlay.active = true;

@@ -63,10 +63,10 @@ class Prefs(gtk.Window):
         tab_feeds_vbox = gtk.VBox(False, 6)
         tab_updating_vbox = gtk.VBox(False, 6)
 
-        notebook = gtk.Notebook()
-        notebook.append_page(tab_feeds_vbox, gtk.Label(_("Feeds")))
-        notebook.append_page(tab_updating_vbox, gtk.Label(_("Updating")))
-        vbox.pack_start(notebook, True, True, 0)
+        self.notebook = gtk.Notebook()
+        self.notebook.append_page(tab_feeds_vbox, gtk.Label(_("Feeds")))
+        self.notebook.append_page(tab_updating_vbox, gtk.Label(_("Updating")))
+        vbox.pack_start(self.notebook, True, True, 0)
 
         #Feeds: Add/Remove, with a TreeView for displaying
         self.liststore = gtk.ListStore(gtk.gdk.Pixbuf, str, str)
@@ -175,7 +175,7 @@ class Prefs(gtk.Window):
 
         #Close button in the bottom right corner
         close = gtk.Button(stock=gtk.STOCK_CLOSE)
-        close.connect('clicked', self.close_clicked)
+        close.connect('clicked', self.deleted)
 
         close_hbox = gtk.HBox(False, 0)
         close_hbox.pack_end(close, False)
@@ -187,6 +187,14 @@ class Prefs(gtk.Window):
         self.update_liststore()
 
         self.show_all()
+
+        self.connect('delete-event', self.deleted)
+
+    def deleted(self, widget, event=None):
+        self.hide()
+        self.notebook.set_current_page(0)
+
+        return True
 
     #Feeds section
     def show_add(self, button):
@@ -230,10 +238,6 @@ class Prefs(gtk.Window):
 
     def spin_focusout(self, spin, event):
         self.applet.client.set_value(GROUP_DEFAULT, 'update_interval', int(spin.get_value()))
-
-    #Etc...
-    def close_clicked(self, button):
-        self.destroy()
 
     def update_liststore(self):
         self.liststore.clear()

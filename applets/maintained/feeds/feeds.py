@@ -74,6 +74,7 @@ class App(awn.AppletSimple):
     menu = None
     keyring = None
     dragged_toggle = None
+    prefs_dialog = None
     SID = ''
     urls = []
     written_urls = []
@@ -208,6 +209,8 @@ class App(awn.AppletSimple):
         else:
             feed.num_new = 0
             feed.num_notify = 0
+            feed.io_error = False
+
             feed.update()
 
             self.started_updating += 1
@@ -235,17 +238,22 @@ class App(awn.AppletSimple):
 
     def got_favicon(self, feed, override=False):
         if override or self.client.get_value(GROUP_DEFAULT, 'show_favicons'):
+            icon = [feed.icon, 'gtk://gtk-dialog-error'][feed.io_error]
+
             try:
-                if feed.icon.find('gtk://') == 0:
-                    pb = self.icon_theme.load_icon(feed.icon[6:], 16, 0)
+                if icon.find('gtk://') == 0:
+                    pb = self.icon_theme.load_icon(icon[6:], 16, 0)
                     pb = classes.get_16x16(pb)
 
                 else:
-                    pb = gtk.gdk.pixbuf_new_from_file_at_size(feed.icon, 16, 16)
+                    pb = gtk.gdk.pixbuf_new_from_file_at_size(icon, 16, 16)
 
                 self.feed_icons[feed.url].set_from_pixbuf(pb)
             except:
                 pass
+
+        if self.prefs_dialog and feed.url in self.feeds:
+            self.prefs_dialog.update_liststore()
 
     def feed_updated(self, feed):
         self.num_notify_while_updating += feed.num_notify
@@ -272,7 +280,9 @@ class App(awn.AppletSimple):
 
                 self.displays[feed.url].pack_start(button, False)
 
-            self.feed_labels[feed.url].set_text(shortify(feed.title))
+            feed_title = [feed.title, _("Error")][feed.io_error]
+
+            self.feed_labels[feed.url].set_text(shortify(feed_title))
 
             if feed.num_new > 0:
                 classes.boldify(self.feed_labels[feed.url])
@@ -285,6 +295,9 @@ class App(awn.AppletSimple):
                 self.do_timer()
 
                 self.show_notification()
+
+        if self.prefs_dialog:
+            self.prefs_dialog.update_liststore()
 
     def show_notification(self):
         if not self.client.get_value(GROUP_DEFAULT, 'notify'):
@@ -648,7 +661,7 @@ class App(awn.AppletSimple):
     def feed_icon_clicked(self, button, feedurl):
         self.open_url(None, self.feeds[feedurl].web_url)
 
-        feed.icon_clicked()
+        self.feeds[feedurl].icon_clicked()
 
     def feed_item_clicked(self, button, data):
         feed, i = data
@@ -759,7 +772,7 @@ class App(awn.AppletSimple):
             self.feeds[url] = classes.Reddit(self, *data)
 
         elif _base_url in ('twitter-timeline', 'twitter-both', 'twitter-replies'):
-            self.feeds[url] = classes.Twitter(self, *data, base_url=_base_url)
+            self.feeds[url] = classes.Twitter(self, *(data + (_base_url, )))
 
         else:
             self.feeds[url] = classes.WebFeed(self, url, parsed)
@@ -841,8 +854,12 @@ class App(awn.AppletSimple):
 
     #Show the preferences window
     def open_prefs(self, widget):
-        import prefs
-        prefs.Prefs(self)
+        if not self.prefs_dialog:
+            import prefs
+            self.prefs_dialog = prefs.Prefs(self)
+
+        else:
+            self.prefs_dialog.present()
 
     #Show the about window
     def show_about(self, widget):

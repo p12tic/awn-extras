@@ -137,10 +137,8 @@ class FeedSource:
     def error(self, *args):
         self.io_error = True
 
-        self.icon = 'gtk://gtk-dialog-error'
         self.applet.got_favicon(self, True)
 
-        self.title = _("Error")
         self.applet.feed_updated(self)
 
     def update(self):
@@ -379,9 +377,7 @@ class GoogleReader(FeedSource, StandardNew, KeySaver):
 
         try:
             data = data.split('_DIRECTORY_SEARCH_DATA =')[1].split('</script>')[0].strip()
-            s = cStringIO.StringIO(data)
-            data = json.load(s)
-            s.close()
+            data = json.loads(data)
 
             results = data['results']
 
@@ -464,9 +460,7 @@ class Reddit(FeedSource, KeySaver):
             self.get_data(self.messages_url, {'Cookie': self.cookie}, cb=self.got_data)
 
     def got_data(self, data):
-        s = cStringIO.StringIO(data)
-        parsed = json.load(s)
-        s.close()
+        parsed = json.loads(data)
 
         self.entries = []
         self.num_new = 0

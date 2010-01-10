@@ -121,6 +121,7 @@ class Entry(dict):
 class FeedSource:
     io_error = False
     login_error = False
+    icon_success = False
     applet = None
     icon = None
     title = ''
@@ -265,6 +266,7 @@ class StandardNew:
 #Used for logging in
 class KeySaver:
     key = None
+    password = None
 
     def get_key(self, username, password):
         if self.key is None:
@@ -275,6 +277,7 @@ class KeySaver:
 
             #Username and password provided, e.g. from the add feed dialog
             if username and password:
+                self.password = password
                 if token is None or token == 0:
                     #No for i18n because if the user changes the language, he
                     #could lose the password (and most users won't even see this)
@@ -292,9 +295,11 @@ class KeySaver:
             else:
                 if token is None or token == 0:
                     self.key = None
+                    self.error()
 
                 else:
                     self.key = self.applet.keyring.from_token(token)
+                    self.password = self.key.password
 
         return self.key
 
@@ -326,12 +331,16 @@ class GoogleReader(FeedSource, StandardNew, KeySaver):
         if self.key is not None:
             #Get the magic SID from Google to login, if we haven't already
             if self.SID == '':
-                #Format the request
-                data = urllib.urlencode({'service': 'reader',
-                    'Email': self.key.attrs['username'],
-                    'Passwd': self.key.password,
-                    'source': 'awn-feeds-applet',
-                    'continue': 'http://www.google.com/'})
+                try:
+                    #Format the request
+                    data = urllib.urlencode({'service': 'reader',
+                        'Email': self.key.attrs['username'],
+                        'Passwd': self.key.password,
+                        'source': 'awn-feeds-applet',
+                        'continue': 'http://www.google.com/'})
+                except:
+                    self.error()
+                    return
 
                 #Send the data to get the SID
                 self.post_data(self.login, data, 15, cb=self.got_google_sid)
@@ -420,14 +429,18 @@ class Reddit(FeedSource, KeySaver):
     def get_reddit_cookie(self):
         if self.key is not None:
             if self.cookie is None:
-                data = urllib.urlencode({'user': self.username.lower(),
-                    'passwd': self.key.password,
-                    'op': 'login-main',
-                    'id': '#login_login-main',
-                    'r': 'reddit.com'})
+                try:
+                    data = urllib.urlencode({'user': self.username.lower(),
+                        'passwd': self.key.password,
+                        'op': 'login-main',
+                        'id': '#login_login-main',
+                        'r': 'reddit.com'})
+                except:
+                    self.error()
 
-                self.post_data(self.login % self.username.lower(), data, server_headers = True, \
-                    cb=self.got_reddit_cookie)
+                else:
+                    self.post_data(self.login % self.username.lower(), data, server_headers = True, \
+                        cb=self.got_reddit_cookie)
 
     def got_reddit_cookie(self, data, headers):
         headers = str(headers).split('\n')
@@ -460,7 +473,11 @@ class Reddit(FeedSource, KeySaver):
             self.get_data(self.messages_url, {'Cookie': self.cookie}, cb=self.got_data)
 
     def got_data(self, data):
-        parsed = json.loads(data)
+        try:
+            parsed = json.loads(data)
+        except:
+            self.error()
+            return
 
         self.entries = []
         self.num_new = 0
@@ -525,11 +542,15 @@ class Twitter(FeedSource, StandardNew, KeySaver):
         self.username = username
         self.url = base_url + '-' + username
 
-        self.get_favicon('twitter.com')
-        self.get_key(username, password)
+        try:
+            self.get_favicon('twitter.com')
+            self.get_key(username, password)
+    
+            self.auth = base64.encodestring(username + ':' + self.password)
+            self.auth = {'Authorization': 'Basic ' + self.auth}
 
-        self.auth = base64.encodestring(username + ':' + self.key.password)
-        self.auth = {'Authorization': 'Basic ' + self.auth}
+        except:
+            self.error()
 
         if base_url.find('twitter-timeline') == 0:
             self.use_timeline = True
@@ -634,13 +655,23 @@ class WebFeed(FeedSource, StandardNew):
 
     def got_parsed(self, parsed):
         self.entries = []
+
         try:
             self.title = parsed.feed.title
         except:
             self.title = _("Untitled")
-        self.web_url = parsed.feed.link
-        for entry in parsed.entries[:5]:
-            self.entries.append(Entry(entry.link, entry.title))
+
+        try:
+            self.web_url = parsed.feed.link
+        except:
+            self.web_url = ''
+
+        try:
+            for entry in parsed.entries[:5]:
+                self.entries.append(Entry(entry.link, entry.title))
+        except:
+            self.error()
+            return
 
         self.get_new()
 

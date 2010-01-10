@@ -121,7 +121,11 @@ class BatteryStatusApplet:
             batteries = self.backend.get_batteries()
             default_values["battery-udi"] = batteries.keys()[0]
 
-        self.settings = self.applet.settings.load_preferences(default_values)
+        for key, value in default_values.iteritems():
+            if not key in self.applet.settings:
+                self.applet.settings[key] = value
+        self.settings = self.applet.settings
+
 
         """ Battery """
         if self.backend is not None:

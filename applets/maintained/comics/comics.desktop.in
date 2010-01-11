@@ -9,5 +9,5 @@ _Comment=View your favourite comics on your desktop
 Comment[sv]=Visa dina favoritserier på skrivbordet
 Exec=awn-applet -p %k
 X-AWN-AppletExec=comics/comics.py
-Icon=comics/icons/comics-icon.svg
+Icon=comics/icons/comics-icon
 X-AWN-AppletCategory=Network,News

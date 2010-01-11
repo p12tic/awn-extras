@@ -35,9 +35,6 @@ webapplet_la_LIBADD =		\
 	$(NULL)
 webapplet_la_LDFLAGS = $(APPLET_LINKER_FLAGS)
 
-inifile_DATA = webapplet-websites.ini
-inifiledir = $(applet_datadir)
-
 web_iconsdir = $(applet_datadir)/icons
 dist_web_icons_DATA =		\
 	icons/brightkite-22.png	\
@@ -56,3 +53,8 @@ dist_web_icons_DATA =		\
 	icons/twitter-22.png	\
 	icons/twitter.svg	\
 	$(NULL)
+
+CLEANFILES += $(schemas_DATA)
+
+EXTRA_DIST = 	webapplet-websites.ini \
+		awn-applet-webapplet.schema-ini

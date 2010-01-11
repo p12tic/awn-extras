@@ -600,6 +600,27 @@ public class NotificationArea : GLib.Object
   }
 }
 
+// see https://bugzilla.gnome.org/show_bug.cgi?id=604579
+public void workaround_gpm_bug ()
+{
+  DBusWatcher watcher = DBusWatcher.get_default ();
+  if (watcher.has_name ("org.gnome.PowerManager"))
+  {
+    string command = "python -c \"" +
+      "import time, gconf;" +
+      "time.sleep(5);" +
+      "c = gconf.Client();" +
+      "key = '/apps/gnome-power-manager/ui/icon_policy';" +
+      "pol = c.get_string(key);" +
+      "c.set_string(key, 'always');" +
+      "c.set_string(key, pol);" +
+      "\"";
+
+    GLib.Process.spawn_command_line_async (command);
+  }
+  watcher.unref (); // watcher would live on, but we don't want it
+}
+
 public Applet?
 awn_applet_factory_initp (string canonical_name, string uid, int panel_id)
 {
@@ -627,6 +648,8 @@ awn_applet_factory_initp (string canonical_name, string uid, int panel_id)
   Signal.connect_swapped (applet, "visibility-notify-event",
                           (GLib.Callback)NotificationArea.on_visibility_change,
                           na);
+
+  workaround_gpm_bug ();
 
   return applet;
 }

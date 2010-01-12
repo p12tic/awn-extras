@@ -27,8 +27,6 @@ import awn
 
 # APPLET required modules
 import gobject
-import fcntl
-import signal
 awn.check_dependencies(globals(), 'xklavier')
 from xklavier import *
 from desktopagnostic.config import GROUP_DEFAULT as group
@@ -75,7 +73,6 @@ class Dialect(awn.AppletSimple):
 
         # BEGIN initialisation
         self.init = True
-        self.external = False
 
         # GLOBAL methods
         self.effects = self.get_effects()
@@ -123,11 +120,8 @@ class Dialect(awn.AppletSimple):
         # COMPLETE initialisation
         self.init = False
         
-        # Set WATCH for external config
-        self.set_watch()
-
         # Set timer to monitor HOTKEY changes
-        gobject.timeout_add(500, self.on_watch)
+        gobject.timeout_add(500, self.external_config)
 
 # FUNCTIONS
 
@@ -404,16 +398,6 @@ class Dialect(awn.AppletSimple):
         image = image.scale_simple(x, y, gtk.gdk.INTERP_BILINEAR)
         return image
 
-    # Set WATCH for external config change
-    def set_watch(self):
-        monitor = os.open(self.watch, os.O_RDONLY)
-        fcntl.fcntl(monitor, fcntl.F_NOTIFY, fcntl.DN_DELETE)
-        signal.signal(signal.SIGIO, self.on_external_change)
-
-    # Unset WATCH for external config change
-    def unset_watch(self):
-        signal.signal(signal.SIGIO, signal.SIG_IGN)
-
     # EXTERNAL config change
     def external_config(self):
         self.server.get_from_server(self.engine)
@@ -460,7 +444,7 @@ class Dialect(awn.AppletSimple):
             self.set_umenu()
         self.init = False
         self.get_layout(effect)
-        self.set_watch()
+        return True
 
 # SIGNAL handlers
 
@@ -524,13 +508,11 @@ class Dialect(awn.AppletSimple):
                     row = self.gtk['ulist'][item]
                     self.layout.append(str(row[2]))
                     self.variant.append(str(row[3]))
-                self.unset_watch()
                 self.config.set_list(group, 'layout', self.layout)
                 self.config.set_list(group, 'variant', self.variant)
                 self.server.set_layouts(self.layout)
                 self.server.set_variants(self.variant)
                 self.server.activate(self.engine)
-                self.set_watch()
             if len(self.layout) == 1:
                 self.gtk['remove'].set_sensitive(False)
             else:
@@ -582,24 +564,8 @@ class Dialect(awn.AppletSimple):
                 if index > -1:
                     options[index] = ''
             self.config.set_int(group, 'toggle', self.toggle)
-            self.unset_watch()            
             self.server.set_options(options)
             self.server.activate(self.engine)
-            self.set_watch()
-
-    # EXTERNAL config change
-    def on_external_change(self, signum, frame):
-        self.unset_watch()
-        self.external = True
-
-    # WATCH timer
-    def on_watch(self):
-        if self.external:
-            self.external_config()
-            self.external = False
-        else:
-            self.get_layout(False)
-        return True
 
 # LAUNCH applet
 if __name__ == '__main__':

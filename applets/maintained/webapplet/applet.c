@@ -495,11 +495,11 @@ awn_applet_factory_initp (const gchar *name, gchar* uid, gint panel_id)
   html_init ();
   WebApplet *webapplet = g_malloc (sizeof (WebApplet));
   webapplet->uid=g_strdup(uid);
-  init_config (webapplet);
   webapplet->check_home = NULL;
   webapplet->location_dialog = NULL;
   webapplet->start = NULL;
   webapplet->applet = AWN_APPLET (awn_applet_simple_new (name, uid, panel_id));
+  init_config (webapplet);
   gint height = awn_applet_get_size(webapplet->applet);
 
   awn_applet_simple_set_icon_name(AWN_APPLET_SIMPLE(webapplet->applet),

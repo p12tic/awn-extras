@@ -11,7 +11,6 @@ dist_applet_DATA =	\
 
 bwm_iconsdir = $(applet_datadir)/images
 dist_bwm_icons_DATA =			\
-	images/blank.png		\
 	images/icon.png			\
 	$(NULL)
 

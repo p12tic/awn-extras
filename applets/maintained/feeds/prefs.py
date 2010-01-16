@@ -104,7 +104,7 @@ class Prefs(gtk.Window):
         buttons_hbox.pack_end(add_button, False)
         buttons_hbox.pack_end(self.remove_button, False)
 
-        show_favicons_check = gtk.CheckButton(_("_Show website icons in dialog"))
+        show_favicons_check = gtk.CheckButton(_("_Show website icons"))
         if self.applet.client.get_bool(GROUP_DEFAULT, 'show_favicons'):
             show_favicons_check.set_active(True)
         show_favicons_check.connect('toggled', self.check_toggled, 'show_favicons')
@@ -249,14 +249,8 @@ class Prefs(gtk.Window):
             if isinstance(feed, classes.WebFeed):
                 sensitive = True
 
-            try:
-                if feed.icon.find('gtk://') == 0:
-                    pb = self.icon_theme.load_icon(feed.icon[6:], 16, 0)
-                    pb = classes.get_16x16(pb)
-
-                else:
-                    pb = gtk.gdk.pixbuf_new_from_file_at_size(feed.icon, 16, 16)
-            except:
+            pb = self.applet.get_favicon(feed.icon)
+            if pb == self.applet.web_image:
                 pb = None
 
             title = [feed.title, _("Loading...")][feed.title == '']
@@ -376,7 +370,7 @@ class AddFeed(gtk.Window):
         greader_radio.add(get_radio_hbox(pb, classes.GoogleReader.title))
 
         #Reddit Inbox
-        pb = get_favicon('www.reddit.com', self.applet)
+        pb = self.applet.get_favicon('www.reddit.com', True)
 
         reddit_radio = gtk.RadioButton(search_radio, None)
         reddit_radio.add(get_radio_hbox(pb, classes.Reddit.title))
@@ -805,14 +799,6 @@ def get_greader_icon():
         pb = gtk.gdk.pixbuf_new_from_file_at_size(greader_ico, 16, 16)
     except:
         pb = gtk.gdk.pixbuf_new_from_file_at_size(greader_path, 16, 16)
-
-    return pb
-
-def get_favicon(siteid, applet):
-    try:
-        pb = gtk.gdk.pixbuf_new_from_file_at_size(os.path.join(cache_dir, siteid + '.ico'), 16, 16)
-    except:
-        pb = applet.web_image
 
     return pb
 

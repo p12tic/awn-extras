@@ -121,7 +121,6 @@ class Entry(dict):
 class FeedSource:
     io_error = False
     login_error = False
-    icon_success = False
     applet = None
     icon = None
     title = ''
@@ -423,8 +422,8 @@ class Reddit(FeedSource, KeySaver):
 
         #Get ready to update the feed, but don't actually do so.
         self.get_key(username, password)
-        self.get_reddit_cookie()
         self.get_favicon('www.reddit.com')
+        self.get_reddit_cookie()
 
     def get_reddit_cookie(self):
         if self.key is not None:
@@ -519,7 +518,9 @@ class Reddit(FeedSource, KeySaver):
         else:
             self.get_favicon('www.reddit.com')
 
-    #If an item was clicked and it was the only one, tell Reddit that we've read every message
+    #If an item was clicked and it was the only unread one,
+    #tell Reddit that we've read every message
+    #Unfortunately, we can only mark all messages as read, not individual ones.
     def item_clicked(self, i):
         if self.entries[i]['new'] == True:
             if self.num_new == 1:
@@ -529,6 +530,9 @@ class Reddit(FeedSource, KeySaver):
                 self.get_favicon('www.reddit.com')
 
                 self.get_data(self.mark_as_read, {'Cookie': self.cookie})
+
+            else:
+                self.num_new -= 1
 
 class Twitter(FeedSource, StandardNew, KeySaver):
     base_id = 'twitter'
@@ -542,10 +546,10 @@ class Twitter(FeedSource, StandardNew, KeySaver):
         self.username = username
         self.url = base_url + '-' + username
 
+        self.get_favicon('twitter.com')
+
         try:
-            self.get_favicon('twitter.com')
             self.get_key(username, password)
-    
             self.auth = base64.encodestring(username + ':' + self.password)
             self.auth = {'Authorization': 'Basic ' + self.auth}
 
@@ -628,6 +632,7 @@ class Twitter(FeedSource, StandardNew, KeySaver):
 
         self.get_new()
         self.applet.feed_updated(self)
+        self.applet.got_favicon(self)
 
 class WebFeed(FeedSource, StandardNew):
     fetched = False

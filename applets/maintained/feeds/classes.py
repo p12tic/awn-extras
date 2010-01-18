@@ -335,7 +335,7 @@ class GoogleReader(FeedSource, StandardNew, KeySaver):
                     data = urllib.urlencode({'service': 'reader',
                         'Email': self.key.attrs['username'],
                         'Passwd': self.key.password,
-                        'source': 'awn-feeds-applet-' + awn.extras.__version__,
+                        'source': 'awn-feeds-applet-' + extras.__version__,
                         'continue': 'http://www.google.com/'})
                 except:
                     self.error()

@@ -193,10 +193,6 @@ class App(awn.AppletSimple):
 
         self.setup_dialog()
 
-        #Update the feeds every 5 minutes,
-        #unless the user does right click->refresh
-        self.timer = gobject.timeout_add_seconds(300, self.update_feeds)
-
         #Allow user to drag and drop feed URLs onto the applet icon
         #E.g. In a browser, user drags and drops a link to an Atom feed onto the applet
         self.get_icon().drag_dest_set(gtk.DEST_DEFAULT_DROP | gtk.DEST_DEFAULT_MOTION, \
@@ -229,6 +225,8 @@ class App(awn.AppletSimple):
                 self.feed_throbbers[url].props.active = True
 
             self.update_timer = gobject.timeout_add(250, self.update_next_feed)
+
+            self.do_timer()
 
         else:
             self.loading_feeds.hide()
@@ -373,8 +371,6 @@ class App(awn.AppletSimple):
             if feed.io_error:
                 self.error_icon.props.active = True
 
-        self.do_timer()
-
         self.show_notification()
 
         self.do_favicons()
@@ -442,7 +438,6 @@ class App(awn.AppletSimple):
                 msg, [icon_path, greader_path][only_greader])
             notification.set_timeout(5000)
             notification.show()
-            pynotify.uninit()
 
     #Set up initial widgets, frame for each feed
     def setup_dialog(self):
@@ -908,6 +903,9 @@ class App(awn.AppletSimple):
         self.no_feeds.hide()
 
         self.do_favicons()
+
+        if len(self.feeds) == 1:
+          self.do_timer()
 
     #When a button is released on the applet
     def button_release(self, widget, event):

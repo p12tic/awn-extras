@@ -1224,7 +1224,7 @@ class Notify:
 
         def __init__(self, parent, subject=None, body="", icon="", timeout=0):
             if subject is None:
-                subject = '"Message From %s"' % self.__parent.meta["name"]
+                subject = '"Message From %s"' % parent.meta["name"]
             self.__notification = pynotify.Notification(subject, body, icon)
             if timeout > 0:
                 self.__notification.set_timeout(timeout * 1000)

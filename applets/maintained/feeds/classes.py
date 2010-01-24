@@ -307,8 +307,6 @@ class GoogleReader(FeedSource, StandardNew, KeySaver):
     base_id = 'google-reader'
     web_url = 'http://www.google.com/reader/'
     title = _("Google Reader")
-    should_update = False
-    SID = ''
     login = 'https://www.google.com/accounts/ClientLogin'
     fetch_url = 'http://www.google.com/reader/atom/user/-/state/com.google/reading-list?n=5'
     favicon_url = 'http://www.google.com/reader/ui/favicon.ico'
@@ -318,6 +316,10 @@ class GoogleReader(FeedSource, StandardNew, KeySaver):
         self.applet = applet
         self.username = username
         self.url = self.base_id + '-' + username
+
+        self.should_update = False
+        self.SID = ''
+        self.init_network_error = False
 
         #Get ready to update/fetch feed, but don't actually do so.
         self.get_key(username, password)
@@ -342,12 +344,20 @@ class GoogleReader(FeedSource, StandardNew, KeySaver):
                     return
 
                 #Send the data to get the SID
-                self.post_data(self.login, data, 15, cb=self.got_google_sid)
+                self.post_data(self.login, data, 15, cb=self.got_google_sid, error_cb=self.sid_error)
+
+    def sid_error(self, *args):
+        self.init_network_error = True
+        self.error()
 
     def got_google_sid(self, data):
+        self.init_network_error = False
+
         #Check if wrong password/username
         if data.find('BadAuthentication') != -1:
             self.login_error = True
+            self.error()
+            return
 
         #Save the SID so we don't have to re-login every update
         self.SID = data.split('=')[1].split('\n')[0]
@@ -358,8 +368,12 @@ class GoogleReader(FeedSource, StandardNew, KeySaver):
 
     #Update the Google Reader feed
     def update(self):
-        if self.SID == '':
+        if self.SID == '' and not self.init_network_error:
             self.should_update = True
+
+        elif self.init_network_error:
+            self.should_update = True
+            self.get_google_sid()
 
         else:
             #Load the reading list with that magic SID as a cookie
@@ -373,6 +387,7 @@ class GoogleReader(FeedSource, StandardNew, KeySaver):
         self.get_new()
 
         self.applet.feed_updated(self)
+        self.get_favicon('google-reader', self.favicon_url)
 
     def get_search_results(self, query, cb, _error_cb):
         search_url = self.feed_search_url + urllib.urlencode({'q': query})
@@ -411,14 +426,16 @@ class Reddit(FeedSource, KeySaver):
     messages_url = 'http://www.reddit.com/message/inbox/.json?mark=false'
     mark_as_read = 'http://www.reddit.com/message/inbox/.rss?mark=true'
     inbox_url = 'http://www.reddit.com/message/messages/'
-    cookie = None
-    should_update = False
-    already_notified_about = []
 
     def __init__(self, applet, username, password=None):
         self.applet = applet
         self.username = username
         self.url = self.base_id + '-' + username
+
+        self.cookie = None
+        self.should_update = False
+        self.already_notified_about = []
+        self.init_network_error = False
 
         #Get ready to update the feed, but don't actually do so.
         self.get_key(username, password)
@@ -434,14 +451,20 @@ class Reddit(FeedSource, KeySaver):
                         'op': 'login-main',
                         'id': '#login_login-main',
                         'r': 'reddit.com'})
+
                 except:
                     self.error()
 
                 else:
-                    self.post_data(self.login % self.username.lower(), data, server_headers = True, \
-                        cb=self.got_reddit_cookie)
+                    self.post_data(self.login % self.username.lower(), data,
+                        server_headers = True, cb=self.got_reddit_cookie, error_cb=self.cookie_error)
+
+    def cookie_error(self, *args):
+        self.init_network_error = True
+        self.error()
 
     def got_reddit_cookie(self, data, headers):
+        self.init_network_error = False
         headers = str(headers).split('\n')
 
         #Save the cookie
@@ -464,8 +487,12 @@ class Reddit(FeedSource, KeySaver):
             self.should_update = False
 
     def update(self):
-        if self.cookie is None:
+        if self.cookie is None and not self.init_network_error:
             self.should_update = True
+
+        elif self.init_network_error:
+            self.should_update = True
+            self.get_reddit_cookie()
 
         else:
             #Load the reading list with that magic SID as a cookie

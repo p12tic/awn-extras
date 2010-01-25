@@ -684,5 +684,5 @@ if __name__ == '__main__':
         'description': APPLET_DESCRIPTION,
         'logo': APPLET_ICON,
         'author': 'Kyle L. Huff',
-        'copyright-year': '2009',
+        'copyright-year': '2010',
         'authors': APPLET_AUTHORS})

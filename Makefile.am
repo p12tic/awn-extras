@@ -13,6 +13,10 @@ EXTRA_DIST = \
 	po/Makefile.in.in \
 	po/POTFILES.skip \
 	$(wildcard shared/vala/*.vapi) \
+	COPYING.BSD \
+	COPYING.CCASAv3.0 \
+	COPYING.GPL-3 \
+	COPYING.LGPL-2.1 \
 	$(NULL)
 
 DISTCLEANFILES =			\

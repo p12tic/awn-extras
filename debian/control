@@ -204,7 +204,7 @@ Conflicts: python-awn-extras, awn-core-applets, awn-core-applets-bzr, awn-extras
 Replaces: python-awn-extras, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing, python-awnlib, python-awnlib-trunk, awn-extras-applets-trunk
 Description: Python functions used by avant-window-navigator's applets
  This package provides a set of convenience functions used by Python applets
- for Avant Window Navigator, including AWNLib, an applet wrapper which
+ for Avant Window Navigator, including awnlib, an applet wrapper which
  simplifies applet creation.
 
 Package: awn-applets-c-dbg-trunk

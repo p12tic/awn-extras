@@ -137,10 +137,8 @@ class FeedSource:
     def error(self, *args):
         self.io_error = True
 
-        self.icon = 'gtk://gtk-dialog-error'
         self.applet.got_favicon(self, True)
 
-        self.title = _("Error")
         self.applet.feed_updated(self)
 
     def update(self):
@@ -267,6 +265,7 @@ class StandardNew:
 #Used for logging in
 class KeySaver:
     key = None
+    password = None
 
     def get_key(self, username, password):
         if self.key is None:
@@ -277,6 +276,7 @@ class KeySaver:
 
             #Username and password provided, e.g. from the add feed dialog
             if username and password:
+                self.password = password
                 if token is None or token == 0:
                     #No for i18n because if the user changes the language, he
                     #could lose the password (and most users won't even see this)
@@ -294,9 +294,11 @@ class KeySaver:
             else:
                 if token is None or token == 0:
                     self.key = None
+                    self.error()
 
                 else:
                     self.key = self.applet.keyring.from_token(token)
+                    self.password = self.key.password
 
         return self.key
 
@@ -305,8 +307,6 @@ class GoogleReader(FeedSource, StandardNew, KeySaver):
     base_id = 'google-reader'
     web_url = 'http://www.google.com/reader/'
     title = _("Google Reader")
-    should_update = False
-    SID = ''
     login = 'https://www.google.com/accounts/ClientLogin'
     fetch_url = 'http://www.google.com/reader/atom/user/-/state/com.google/reading-list?n=5'
     favicon_url = 'http://www.google.com/reader/ui/favicon.ico'
@@ -316,6 +316,10 @@ class GoogleReader(FeedSource, StandardNew, KeySaver):
         self.applet = applet
         self.username = username
         self.url = self.base_id + '-' + username
+
+        self.should_update = False
+        self.SID = ''
+        self.init_network_error = False
 
         #Get ready to update/fetch feed, but don't actually do so.
         self.get_key(username, password)
@@ -328,20 +332,32 @@ class GoogleReader(FeedSource, StandardNew, KeySaver):
         if self.key is not None:
             #Get the magic SID from Google to login, if we haven't already
             if self.SID == '':
-                #Format the request
-                data = urllib.urlencode({'service': 'reader',
-                    'Email': self.key.attrs['username'],
-                    'Passwd': self.key.password,
-                    'source': 'awn-feeds-applet',
-                    'continue': 'http://www.google.com/'})
+                try:
+                    #Format the request
+                    data = urllib.urlencode({'service': 'reader',
+                        'Email': self.key.attrs['username'],
+                        'Passwd': self.key.password,
+                        'source': 'awn-feeds-applet-' + extras.__version__,
+                        'continue': 'http://www.google.com/'})
+                except:
+                    self.error()
+                    return
 
                 #Send the data to get the SID
-                self.post_data(self.login, data, 15, cb=self.got_google_sid)
+                self.post_data(self.login, data, 15, cb=self.got_google_sid, error_cb=self.sid_error)
+
+    def sid_error(self, *args):
+        self.init_network_error = True
+        self.error()
 
     def got_google_sid(self, data):
+        self.init_network_error = False
+
         #Check if wrong password/username
         if data.find('BadAuthentication') != -1:
             self.login_error = True
+            self.error()
+            return
 
         #Save the SID so we don't have to re-login every update
         self.SID = data.split('=')[1].split('\n')[0]
@@ -352,8 +368,12 @@ class GoogleReader(FeedSource, StandardNew, KeySaver):
 
     #Update the Google Reader feed
     def update(self):
-        if self.SID == '':
+        if self.SID == '' and not self.init_network_error:
             self.should_update = True
+
+        elif self.init_network_error:
+            self.should_update = True
+            self.get_google_sid()
 
         else:
             #Load the reading list with that magic SID as a cookie
@@ -367,6 +387,7 @@ class GoogleReader(FeedSource, StandardNew, KeySaver):
         self.get_new()
 
         self.applet.feed_updated(self)
+        self.get_favicon('google-reader', self.favicon_url)
 
     def get_search_results(self, query, cb, _error_cb):
         search_url = self.feed_search_url + urllib.urlencode({'q': query})
@@ -379,9 +400,7 @@ class GoogleReader(FeedSource, StandardNew, KeySaver):
 
         try:
             data = data.split('_DIRECTORY_SEARCH_DATA =')[1].split('</script>')[0].strip()
-            s = cStringIO.StringIO(data)
-            data = json.load(s)
-            s.close()
+            data = json.loads(data)
 
             results = data['results']
 
@@ -407,33 +426,45 @@ class Reddit(FeedSource, KeySaver):
     messages_url = 'http://www.reddit.com/message/inbox/.json?mark=false'
     mark_as_read = 'http://www.reddit.com/message/inbox/.rss?mark=true'
     inbox_url = 'http://www.reddit.com/message/messages/'
-    cookie = None
-    should_update = False
-    already_notified_about = []
 
     def __init__(self, applet, username, password=None):
         self.applet = applet
         self.username = username
         self.url = self.base_id + '-' + username
 
+        self.cookie = None
+        self.should_update = False
+        self.already_notified_about = []
+        self.init_network_error = False
+
         #Get ready to update the feed, but don't actually do so.
         self.get_key(username, password)
-        self.get_reddit_cookie()
         self.get_favicon('www.reddit.com')
+        self.get_reddit_cookie()
 
     def get_reddit_cookie(self):
         if self.key is not None:
             if self.cookie is None:
-                data = urllib.urlencode({'user': self.username.lower(),
-                    'passwd': self.key.password,
-                    'op': 'login-main',
-                    'id': '#login_login-main',
-                    'r': 'reddit.com'})
+                try:
+                    data = urllib.urlencode({'user': self.username.lower(),
+                        'passwd': self.key.password,
+                        'op': 'login-main',
+                        'id': '#login_login-main',
+                        'r': 'reddit.com'})
 
-                self.post_data(self.login % self.username.lower(), data, server_headers = True, \
-                    cb=self.got_reddit_cookie)
+                except:
+                    self.error()
+
+                else:
+                    self.post_data(self.login % self.username.lower(), data,
+                        server_headers = True, cb=self.got_reddit_cookie, error_cb=self.cookie_error)
+
+    def cookie_error(self, *args):
+        self.init_network_error = True
+        self.error()
 
     def got_reddit_cookie(self, data, headers):
+        self.init_network_error = False
         headers = str(headers).split('\n')
 
         #Save the cookie
@@ -456,17 +487,23 @@ class Reddit(FeedSource, KeySaver):
             self.should_update = False
 
     def update(self):
-        if self.cookie is None:
+        if self.cookie is None and not self.init_network_error:
             self.should_update = True
+
+        elif self.init_network_error:
+            self.should_update = True
+            self.get_reddit_cookie()
 
         else:
             #Load the reading list with that magic SID as a cookie
             self.get_data(self.messages_url, {'Cookie': self.cookie}, cb=self.got_data)
 
     def got_data(self, data):
-        s = cStringIO.StringIO(data)
-        parsed = json.load(s)
-        s.close()
+        try:
+            parsed = json.loads(data)
+        except:
+            self.error()
+            return
 
         self.entries = []
         self.num_new = 0
@@ -508,7 +545,9 @@ class Reddit(FeedSource, KeySaver):
         else:
             self.get_favicon('www.reddit.com')
 
-    #If an item was clicked and it was the only one, tell Reddit that we've read every message
+    #If an item was clicked and it was the only unread one,
+    #tell Reddit that we've read every message
+    #Unfortunately, we can only mark all messages as read, not individual ones.
     def item_clicked(self, i):
         if self.entries[i]['new'] == True:
             if self.num_new == 1:
@@ -518,6 +557,9 @@ class Reddit(FeedSource, KeySaver):
                 self.get_favicon('www.reddit.com')
 
                 self.get_data(self.mark_as_read, {'Cookie': self.cookie})
+
+            else:
+                self.num_new -= 1
 
 class Twitter(FeedSource, StandardNew, KeySaver):
     base_id = 'twitter'
@@ -532,10 +574,14 @@ class Twitter(FeedSource, StandardNew, KeySaver):
         self.url = base_url + '-' + username
 
         self.get_favicon('twitter.com')
-        self.get_key(username, password)
 
-        self.auth = base64.encodestring(username + ':' + self.key.password)
-        self.auth = {'Authorization': 'Basic ' + self.auth}
+        try:
+            self.get_key(username, password)
+            self.auth = base64.encodestring(username + ':' + self.password)
+            self.auth = {'Authorization': 'Basic ' + self.auth}
+
+        except:
+            self.error()
 
         if base_url.find('twitter-timeline') == 0:
             self.use_timeline = True
@@ -613,6 +659,7 @@ class Twitter(FeedSource, StandardNew, KeySaver):
 
         self.get_new()
         self.applet.feed_updated(self)
+        self.applet.got_favicon(self)
 
 class WebFeed(FeedSource, StandardNew):
     fetched = False
@@ -640,13 +687,23 @@ class WebFeed(FeedSource, StandardNew):
 
     def got_parsed(self, parsed):
         self.entries = []
+
         try:
             self.title = parsed.feed.title
         except:
             self.title = _("Untitled")
-        self.web_url = parsed.feed.link
-        for entry in parsed.entries[:5]:
-            self.entries.append(Entry(entry.link, entry.title))
+
+        try:
+            self.web_url = parsed.feed.link
+        except:
+            self.web_url = ''
+
+        try:
+            for entry in parsed.entries[:5]:
+                self.entries.append(Entry(entry.link, entry.title))
+        except:
+            self.error()
+            return
 
         self.get_new()
 

@@ -28,22 +28,26 @@ import awn
 import os
 import sys
 import tempfile
-from awn.extras import _, awnlib
-from os.path import join
+from awn.extras import _
 
 # Import Comics! modules, but check dependencies first
-awn.check_dependencies(globals(), 'feedparser')
+awn.check_dependencies(globals(), 'feedparser', 'pynotify')
+from pynotify import init as notify_init, Notification
+
 import comics_manage
 import comics_view
 from feed.settings import Settings
 from feed import FeedContainer
-from shared import *
+from shared import (
+    ALT_USER_DIR, GLADE_DIR, ICONS_DIR, STRIPS_DIR, SYS_FEEDS_DIR, USER_DIR,
+    USER_FEEDS_DIR)
 
 APPLET_NAME = 'comics'
-GLADE_FILE = join(GLADE_DIR, 'main.glade')
+GLADE_FILE = os.path.join(GLADE_DIR, 'main.glade')
 
 
 class BidirectionalIterator:
+
     def __init__(self, sequence):
         self.sequence = sequence
         self.index = None
@@ -97,7 +101,7 @@ class ComicApplet(awn.AppletSimple):
         if self.current_window:
             self.current_window.set_visibility(True)
 
-    def create_window(self, filename = None, template = None):
+    def create_window(self, filename=None, template=None):
         """Creates a new strip and stores its configuration in the directory
         path."""
         if filename is None:
@@ -115,11 +119,11 @@ class ComicApplet(awn.AppletSimple):
 
     def toggle_feed(self, feed_name, visible):
         """Toggles a comic."""
-        if not feed_name in self.feeds.feeds:
+        if feed_name not in self.feeds.feeds:
             return
 
         if not visible:
-            windows = filter(lambda w: w.feed_name == feed_name, self.windows)
+            windows = [w for w in self.windows if w.feed_name == feed_name]
             if not windows:
                 return
 
@@ -130,7 +134,7 @@ class ComicApplet(awn.AppletSimple):
         else:
             template = Settings()
             template['feed_name'] = feed_name
-            self.create_window(template = template)
+            self.create_window(template=template)
 
     def make_menu(self):
         """Generate the menu listing the comics."""
@@ -140,13 +144,13 @@ class ComicApplet(awn.AppletSimple):
         for feed in self.feeds.feeds:
             label = gtk.Label()
             label.set_markup(self.feeds.feeds[feed].name)
-            align = gtk.Alignment(xalign = 0.0)
+            align = gtk.Alignment(xalign=0.0)
             align.add(label)
             menu_item = gtk.CheckMenuItem()
             menu_item.data = feed
             menu_item.add(align)
-            menu_item.set_active(len(filter(lambda w: w.feed_name == feed,
-                self.windows)) > 0)
+            menu_item.set_active(len([w for w in self.windows
+                                      if w.feed_name == feed]) > 0)
             menu_item.connect('toggled', self.on_comics_toggled)
             feed_menu.append(menu_item)
         feed_menu.show_all()
@@ -174,14 +178,16 @@ class ComicApplet(awn.AppletSimple):
         self.configuration = awn.config_get_default_for_applet(self)
 
         self.set_icon_name('comics-icon')
-        self.notify = awnlib.Notify(self)
+        # Initialise notifications
+        notify_init(_('Comics!'))
         self.dialog = awn.Dialog(self)
-        self.dialog.connect('button-release-event', self.on_dialog_button_press)
+        self.dialog.connect('button-release-event',
+                            self.on_dialog_button_press)
 
         hbox = gtk.HBox(False)
         self.message_icon = gtk.Image()
         self.message_label = gtk.Label()
-        hbox.pack_start(self.message_icon, expand = False, fill = False)
+        hbox.pack_start(self.message_icon, expand=False, fill=False)
         hbox.pack_end(self.message_label)
         hbox.show_all()
         self.dialog.add(hbox)
@@ -199,8 +205,8 @@ class ComicApplet(awn.AppletSimple):
         self.current_window = None
 
         try:
-            for filename in filter(lambda f: f.endswith('.strip'),
-                    os.listdir(STRIPS_DIR)):
+            for filename in (f for f in os.listdir(STRIPS_DIR)
+                             if f.endswith('.strip')):
                 strip = self.create_window(os.path.join(STRIPS_DIR, filename))
         except OSError:
             return
@@ -208,9 +214,10 @@ class ComicApplet(awn.AppletSimple):
         self.feeds.update()
 
     def on_window_updated(self, widget, title):
-        self.notify.send(title,
-            _('There is a new strip of %s!') % widget.feed_name,
-            os.path.join(ICONS_DIR, 'comics-icon.svg'))
+        msg = Notification(_('There is a new strip of %s!') % widget.feed_name,
+                           None,
+                           os.path.join(ICONS_DIR, 'comics-icon.svg'))
+        msg.show()
 
     def on_window_removed(self, widget):
         self.windows.remove(widget)
@@ -286,6 +293,7 @@ if __name__ == '__main__':
 
     user_agent = applet.configuration.get_string(config.GROUP_DEFAULT,
                                                  'user_agent')
+
     class ComicURLOpener(urllib.FancyURLopener):
         version = user_agent
     urllib._urlopener = ComicURLOpener()
@@ -295,4 +303,3 @@ if __name__ == '__main__':
     applet.show_all()
 
     gtk.main()
-

@@ -212,16 +212,16 @@ class WeatherApplet:
 
         # Set default icons/titles/dialogs so the applet is informative without data
         self.set_icon()
-        self.applet.tooltip.set("%s %s..."%(_("Fetching conditions for"), self.settings['location']))
+        self.applet.tooltip.set("%s %s..."%(_("Fetching conditions for"), self.applet.settings['location']))
 
         # Overlays
         self.__temp_overlay = OverlayText()
         self.__temp_overlay.props.gravity = gtk.gdk.GRAVITY_SOUTH
         applet.add_overlay(self.__temp_overlay)
 
-        disconnect_overlay = OverlayThemedIcon(applet.get_icon(), "stock_disconnect", "error")
+        disconnect_overlay = OverlayThemedIcon("stock_disconnect")
         disconnect_overlay.props.alpha = 1.0
-        throbber_overlay = OverlayThrobber(applet.get_icon())
+        throbber_overlay = OverlayThrobber()
 
         for i in (disconnect_overlay, throbber_overlay):
             i.props.scale = 0.5
@@ -275,33 +275,18 @@ class WeatherApplet:
             self.forecaster.setup_forecast_dialog()
             refresh_dialog(None)  # dummy value
         refresh_map = lambda v: self.set_map_pixbuf(self.map_pixbuf)
-        refresh_location_label = lambda v: self.location_label.set_markup("<b>%s</b>" % v)
-        refresh_location = lambda v: self.activate_refresh_cb()
 
         # Only use themes that are likely to provide all the files
         def filter_theme(theme):
             return os.path.isfile(os.path.join(theme_dir, theme, "scalable/status/weather-clear.svg")) \
                 or os.path.isfile(os.path.join(theme_dir, theme, "48x48/status/weather-clear.png")) \
                 or os.path.isfile(os.path.join(theme_dir, theme, "48x48/status/weather-clear.svg"))
-        self.themes = filter(filter_theme, os.listdir(theme_dir))
-        self.themes.sort()
-        self.themes = [system_theme_name] + self.themes + ["moonbeam"]
+        themes = sorted(filter(filter_theme, os.listdir(theme_dir)))
+        self.themes = [system_theme_name] + themes + ["moonbeam"]
 
         def refresh_theme_and_dialog(value):
             self.setup_theme()
             refresh_dialog(None)
-
-        defaults = {
-            "show-temperature-icon": (True, self.refresh_icon, prefs.get_object("checkbutton-temperature-icon")),
-            "temperature-font-size": (1, self.refresh_icon),
-            "temperature-unit": (0, refresh_dialog),
-            "theme": (system_theme_name, refresh_theme_and_dialog),
-            "curved_dialog": (False, refresh_curved_dialog, prefs.get_object("curvedCheckbutton")),
-            "location": ("Portland, ME", refresh_location_label),
-            "location_code": ("USME0328", refresh_location),
-            "map_maxwidth": (450, refresh_map, prefs.get_object("mapWidthSpinbutton"))
-        }
-        self.settings = self.applet.settings.load_preferences(defaults)
 
         self.setup_theme()
 
@@ -322,21 +307,13 @@ class WeatherApplet:
         awnlib.add_cell_renderer_text(unit_combobox)
         for i in temperature_units:
             unit_combobox.append_text(i)
-        unit_combobox.set_active(self.settings["temperature-unit"])
-        unit_combobox.connect("changed", self.unit_changed_cb)
 
         theme_combobox = prefs.get_object("combobox-theme")
         awnlib.add_cell_renderer_text(theme_combobox)
         for i in self.themes:
             theme_combobox.append_text(i)
-        if self.settings["theme"] not in self.themes:
+        if self.applet.settings["theme"] not in self.themes:
             self.applet.settings["theme"] = self.themes[0]
-        theme_combobox.set_active(self.themes.index(self.settings["theme"]))
-        theme_combobox.connect("changed", self.theme_changed_cb)
-
-        fontsize_combobox = prefs.get_object("combobox-font-size")
-        fontsize_combobox.set_active(self.settings["temperature-font-size"])
-        fontsize_combobox.connect("changed", self.fontsize_changed_cb)
 
         tempicon_checkbutton = prefs.get_object("checkbutton-temperature-icon")
         fontsize_hbox = prefs.get_object("hbox-font-size")
@@ -344,7 +321,16 @@ class WeatherApplet:
         tempicon_checkbutton.connect("toggled", lambda w: fontsize_hbox.set_sensitive(w.get_active()))
 
         self.location_label = prefs.get_object("locationLabel")
-        self.location_label.set_markup("<b>%s</b>" % self.settings["location"])
+        self.location_label.set_markup("<b>%s</b>" % self.applet.settings["location"])
+
+        binder = self.applet.settings.get_binder(prefs)
+        binder.bind("show-temperature-icon", "checkbutton-temperature-icon", key_callback=self.refresh_icon)
+        binder.bind("temperature-font-size", "combobox-font-size", key_callback=self.refresh_icon)
+        binder.bind("temperature-unit", "combobox-temperature-unit", key_callback=refresh_dialog)
+        binder.bind("theme", "combobox-theme", key_callback=refresh_theme_and_dialog)
+        binder.bind("curved_dialog", "curvedCheckbutton", key_callback=refresh_curved_dialog)
+        binder.bind("map_maxwidth", "mapWidthSpinbutton", key_callback=refresh_map)
+        self.applet.settings.load_bindings(binder)
 
         """ Location search window """
         self.search_list = gtk.ListStore(str, str)
@@ -368,15 +354,6 @@ class WeatherApplet:
 
         self.location_entry.connect("activate", self.search_locations_cb)
         find_button.connect("clicked", self.search_locations_cb)
-
-    def unit_changed_cb(self, widget):
-        self.applet.settings["temperature-unit"] = widget.get_active()
-
-    def theme_changed_cb(self, widget):
-        self.applet.settings["theme"] = self.themes[widget.get_active()]
-
-    def fontsize_changed_cb(self, widget):
-        self.applet.settings["temperature-font-size"] = widget.get_active()
 
     def refresh_icon_and_forecast(self):
         self.refresh_icon()
@@ -408,6 +385,9 @@ class WeatherApplet:
         self.applet.settings["location_code"] = model.get_value(iter, 1)
         self.applet.settings["location"] = model.get_value(iter, 0)
 
+        self.location_label.set_markup("<b>%s</b>" % self.applet.settings["location"])
+        self.activate_refresh_cb()
+
         self.search_window.hide()
 
     def activate_map_cb(self, widget):
@@ -430,19 +410,19 @@ class WeatherApplet:
                 states_names[i] = i
             self.applet.theme.set_states(states_names)
 
-            theme = self.settings["theme"] if self.settings["theme"] != system_theme_name else None
+            theme = self.applet.settings["theme"] if self.applet.settings["theme"] != system_theme_name else None
             self.applet.theme.theme(theme)
         glib.idle_add(refresh_theme)
 
     def set_icon(self, hint="twc"):
         def refresh_overlay():
-            state = self.get_icon_name(hint, self.settings["theme"])
+            state = self.get_icon_name(hint, self.applet.settings["theme"])
             self.applet.theme.icon(state)
 
             if hint != 'twc':
-                self.__temp_overlay.props.font_sizing = font_sizes[self.settings['temperature-font-size']]
+                self.__temp_overlay.props.font_sizing = font_sizes[self.applet.settings['temperature-font-size']]
                 self.__temp_overlay.props.text = tempText = self.convert_temperature(self.cached_conditions['TEMP']) + u"\u00B0"
-                self.__temp_overlay.props.active = bool(self.settings["show-temperature-icon"])
+                self.__temp_overlay.props.active = bool(self.applet.settings["show-temperature-icon"])
         glib.idle_add(refresh_overlay)
 
     def refresh_conditions(self, retries=3):
@@ -463,7 +443,7 @@ class WeatherApplet:
                 self.applet.timing.delay(lambda: self.refresh_conditions(retries - 1), delay_seconds)
             else:
                 self.network_error_cb(e, tb)
-        self.network_handler.get_conditions(self.settings['location_code'], callback=cb, error=error_cb)
+        self.network_handler.get_conditions(self.applet.settings['location_code'], callback=cb, error=error_cb)
 
     def refresh_icon(self, dummy_value=None):
         if self.cached_conditions is not None:
@@ -492,7 +472,7 @@ class WeatherApplet:
                 self.applet.timing.delay(lambda: self.fetch_forecast(cb, retries - 1), delay_seconds)
             else:
                 self.network_error_cb(e, tb)
-        self.network_handler.get_forecast(self.settings['location_code'], callback=cb, error=error_cb)
+        self.network_handler.get_forecast(self.applet.settings['location_code'], callback=cb, error=error_cb)
 
     def fetch_weather_map(self, retries=3):
         """Download the latest weather map from weather.com, storing it
@@ -509,7 +489,7 @@ class WeatherApplet:
                 self.applet.timing.delay(lambda: self.fetch_weather_map(retries - 1), delay_seconds)
             else:
                 self.network_error_cb(e, tb)
-        self.network_handler.get_weather_map(self.settings['location_code'], callback=cb, error=error_cb)
+        self.network_handler.get_weather_map(self.applet.settings['location_code'], callback=cb, error=error_cb)
 
     def set_map_pixbuf(self, pixbuf):
         """Create a map dialog from the current already-downloaded map
@@ -520,20 +500,20 @@ class WeatherApplet:
         if pixbuf is None:
             return
         if self.map_vbox is None:
-            self.map_dialog = self.applet.dialog.new("secondary", title=self.settings['location'])
+            self.map_dialog = self.applet.dialog.new("secondary", title=self.applet.settings['location'])
             self.map_vbox = gtk.VBox()
             self.map_dialog.add(self.map_vbox)
         else:
             for i in self.map_vbox.get_children():
                 self.map_vbox.remove(i)
-            self.map_dialog.set_title(self.settings['location'])
+            self.map_dialog.set_title(self.applet.settings['location'])
 
         self.map_pixbuf = pixbuf
 
         map_size = pixbuf.get_width(), pixbuf.get_height()
 
         # resize if necessary as defined by map_maxwidth
-        ratio = float(self.settings['map_maxwidth']) / map_size[0]
+        ratio = float(self.applet.settings['map_maxwidth']) / map_size[0]
         if ratio < 1:
             width, height = [int(ratio * dim) for dim in map_size]
             pixbuf = pixbuf.scale_simple(width, height, gtk.gdk.INTERP_BILINEAR)
@@ -541,7 +521,7 @@ class WeatherApplet:
         self.map_vbox.add(gtk.image_new_from_pixbuf(pixbuf))
 
     def convert_temperature(self, value):
-        unit = temperature_units[self.settings["temperature-unit"]]
+        unit = temperature_units[self.applet.settings["temperature-unit"]]
         try:
             value = float(value)
         except ValueError:
@@ -554,7 +534,7 @@ class WeatherApplet:
         return str(int(round(converted_value)))
 
     def get_temperature_unit(self):
-        return temperature_units[self.settings["temperature-unit"]][0]
+        return temperature_units[self.applet.settings["temperature-unit"]][0]
 
     def get_icon_name(self, hint, theme):
         if hint == "twc":

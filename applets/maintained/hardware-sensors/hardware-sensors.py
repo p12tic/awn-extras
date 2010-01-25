@@ -167,22 +167,22 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         timer.
         
         """
-        self.__icon = SensorIcon(self.settings["theme"],
+        self.__icon = SensorIcon(self.applet.settings["theme"],
                                  self.main_sensors,
                                  self.applet.get_size(),
-                                 self.settings["hand_color"])
+                                 self.applet.settings["hand_color"])
 
         # Create text overlay
         self.__temp_overlay = OverlayText()
-        self.change_font_size(self.settings["font_size"])
-        self.__temp_overlay.props.active = self.settings["show_value_overlay"]
+        self.change_font_size(self.applet.settings["font_size"])
+        self.__temp_overlay.props.active = self.applet.settings["show_value_overlay"]
         self.applet.add_overlay(self.__temp_overlay)
 
         self.__old_values = None
         # Call the first update and start the updater
         self.update_icon()
         self.__icon_timer = self.applet.timing.register(
-                                    self.update_icon, self.settings["timeout"])
+                                    self.update_icon, self.applet.settings["timeout"])
 
     def update_icon_type(self):
         """Updates icon type"""
@@ -190,7 +190,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
             self.__icon.type("single")
         else:
             self.__icon.type("double")
-        self.change_font_size(self.settings["font_size"])
+        self.change_font_size(self.applet.settings["font_size"])
         self.update_icon(True)
 
     def update_icon(self, force=False):
@@ -269,8 +269,10 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         }
 
         # Load settings and replace with defaults if not set.
-        self.settings = self.applet.settings.load_preferences(default_settings)
-        settings = self.settings
+	for key, value in default_settings.iteritems():
+		if not key in self.applet.settings:
+			self.applet.settings[key] = value
+	settings = self.applet.settings
 
         self.main_sensors = []
         new_sensors = False
@@ -331,7 +333,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
             self.applet.settings["in_icon"] = \
                                          [sensor.in_icon for sensor in sensors]
 
-        if self.settings["theme"] not in self.__themes:
+        if self.applet.settings["theme"] not in self.__themes:
             self.__icon = None
             self.applet.settings["theme"] = self.__themes[0]
 
@@ -345,7 +347,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         awnlib.add_cell_renderer_text(unit_combobox)
         for i in units.UNIT_STR_LONG[:3]:
             unit_combobox.append_text(i)
-        unit_combobox.set_active(self.settings["unit"])
+        unit_combobox.set_active(self.applet.settings["unit"])
         unit_combobox.connect('changed', self.unit_changed_cb)
 
         # Theme combobox
@@ -354,7 +356,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         for theme in self.__themes:
             # Add filename with '_' replaced width space
             theme_combobox.append_text(theme.replace('_', ' '))
-        theme_combobox.set_active(self.__themes.index(self.settings["theme"]))
+        theme_combobox.set_active(self.__themes.index(self.applet.settings["theme"]))
         theme_combobox.connect('changed', self.theme_changed_cb)
 
         # Hand color colorbutton
@@ -362,9 +364,9 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         # This conversion from desktopagnostic.Color is neccesery because
         # cb_hand.set_da_color() does not work 
         color = gtk.gdk.Color()
-        self.settings["hand_color"].get_color(color)
+        self.applet.settings["hand_color"].get_color(color)
         cb_hand.set_color(color)
-        cb_hand.set_alpha(self.settings["hand_color"].get_alpha())
+        cb_hand.set_alpha(self.applet.settings["hand_color"].get_alpha())
         cb_hand.connect('color-set', self.hand_color_changed_cb)
 
         # Font size combobox
@@ -372,7 +374,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         awnlib.add_cell_renderer_text(font_combobox)
         for font_size in font_size_names:
             font_combobox.append_text(font_size)
-        font_combobox.set_active(self.settings["font_size"])
+        font_combobox.set_active(self.applet.settings["font_size"])
         font_combobox.connect('changed', self.font_size_changed_cb)
 
         # Font size combobox should be grayed out when value overlay is
@@ -698,7 +700,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         """Save hand color"""
         # This conversion from GdkColor to desktopagnostic.Color is neccesery
         # because cb_hand.get_da_color() does not work
-        color = self.settings["hand_color"]
+        color = self.applet.settings["hand_color"]
         color.set_color(cb_hand.get_color())
         color.set_alpha(cb_hand.get_alpha())
         self.applet.settings["hand_color"] = color
@@ -892,7 +894,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
 
             # Create a timer, but do not start it
             self.__timer = parent.applet.timing.register(
-                         self.update_values, parent.settings["timeout"], False)
+                         self.update_values, parent.applet.settings["timeout"], False)
 
             self.__dialog.connect('show', self.dialog_shown_cb)
             self.__dialog.connect('hide', self.dialog_hidden_cb)

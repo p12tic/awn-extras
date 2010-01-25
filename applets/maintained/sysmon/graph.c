@@ -93,7 +93,6 @@ static void _awn_graph_render_to_context (AwnGraph * graph,
 {
   AwnGraphPrivate * priv;
   
-  g_debug ("graph render! \n");
   priv = AWN_GRAPH_GET_PRIVATE(graph);
   
   cairo_set_source_rgba(cr, 0.3, 0.4, 0.1, 0.4);

@@ -3,7 +3,7 @@ single_instance = false
 
 [DEFAULT/hidden-mountpoints]
 type = list-string
-default = 
+default = /;swap
 description = List of mountpoints that should remain hidden in the UI.
 
 [DEFAULT/execute-command]

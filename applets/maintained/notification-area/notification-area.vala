@@ -27,6 +27,8 @@ using DesktopAgnostic;
 using EggTray;
 using NotificationAreaPrefs;
 
+static bool gpm_workaround_done = false;
+
 public class NotificationArea : GLib.Object
 {
   private const int BORDER = 2;
@@ -537,12 +539,21 @@ public class NotificationArea : GLib.Object
     }
   }
 
-  private void on_icon_added (Widget icon)
+  private void on_icon_added (Widget widget)
   {
+    unowned EggTray.Child icon = (EggTray.Child)widget;
+
+    // workaround for https://bugzilla.gnome.org/show_bug.cgi?id=604579
+    if (!gpm_workaround_done && icon.get_title () == "gnome-power-manager")
+    {
+      Timeout.add (2000, workaround_gpm_bug);
+      gpm_workaround_done = true;
+    }
+
     icon.set_qdata (this.addition_quark, 1.to_pointer());
     icon.set_qdata (this.deletion_quark, 0.to_pointer());
 
-    this.tray_icons.append ((EggTray.Child)icon);
+    this.tray_icons.append (icon);
 
     int icon_size = this.get_tray_icon_size ();
     icon.set_size_request (icon_size, icon_size);
@@ -550,11 +561,12 @@ public class NotificationArea : GLib.Object
     this.table_refresh ();
   }
 
-  private void on_icon_removed (Widget icon)
+  private void on_icon_removed (Widget widget)
   {
+    unowned EggTray.Child icon = (EggTray.Child)widget;
     icon.set_qdata (this.deletion_quark, 1.to_pointer());
 
-    this.tray_icons.remove ((EggTray.Child)icon);
+    this.tray_icons.remove (icon);
 
     this.table_refresh ();
   }
@@ -598,6 +610,23 @@ public class NotificationArea : GLib.Object
     }
     return false;
   }
+}
+
+// see https://bugzilla.gnome.org/show_bug.cgi?id=604579
+public bool workaround_gpm_bug ()
+{
+  string command = "python -c \"" +
+    "import gconf;" +
+    "c = gconf.Client();" +
+    "key = '/apps/gnome-power-manager/ui/icon_policy';" +
+    "pol = c.get_string(key);" +
+    "c.set_string(key, 'always');" +
+    "c.set_string(key, pol);" +
+    "\"";
+
+  GLib.Process.spawn_command_line_async (command);
+
+  return false;
 }
 
 public Applet?

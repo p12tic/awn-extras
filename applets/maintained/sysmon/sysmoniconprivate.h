@@ -47,6 +47,7 @@ struct _AwnSysmoniconPrivate
   AwnGraphType graph_type[NUM_CONF_STATES]; 
 
   gboolean invalidate;
+  gboolean render_bg;
 };
 
 #endif

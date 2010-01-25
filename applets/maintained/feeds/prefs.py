@@ -63,10 +63,10 @@ class Prefs(gtk.Window):
         tab_feeds_vbox = gtk.VBox(False, 6)
         tab_updating_vbox = gtk.VBox(False, 6)
 
-        notebook = gtk.Notebook()
-        notebook.append_page(tab_feeds_vbox, gtk.Label(_("Feeds")))
-        notebook.append_page(tab_updating_vbox, gtk.Label(_("Updating")))
-        vbox.pack_start(notebook, True, True, 0)
+        self.notebook = gtk.Notebook()
+        self.notebook.append_page(tab_feeds_vbox, gtk.Label(_("Feeds")))
+        self.notebook.append_page(tab_updating_vbox, gtk.Label(_("Updating")))
+        vbox.pack_start(self.notebook, True, True, 0)
 
         #Feeds: Add/Remove, with a TreeView for displaying
         self.liststore = gtk.ListStore(gtk.gdk.Pixbuf, str, str)
@@ -104,7 +104,7 @@ class Prefs(gtk.Window):
         buttons_hbox.pack_end(add_button, False)
         buttons_hbox.pack_end(self.remove_button, False)
 
-        show_favicons_check = gtk.CheckButton(_("_Show website icons in dialog"))
+        show_favicons_check = gtk.CheckButton(_("_Show website icons"))
         if self.applet.client.get_bool(GROUP_DEFAULT, 'show_favicons'):
             show_favicons_check.set_active(True)
         show_favicons_check.connect('toggled', self.check_toggled, 'show_favicons')
@@ -175,7 +175,7 @@ class Prefs(gtk.Window):
 
         #Close button in the bottom right corner
         close = gtk.Button(stock=gtk.STOCK_CLOSE)
-        close.connect('clicked', self.close_clicked)
+        close.connect('clicked', self.deleted)
 
         close_hbox = gtk.HBox(False, 0)
         close_hbox.pack_end(close, False)
@@ -187,6 +187,14 @@ class Prefs(gtk.Window):
         self.update_liststore()
 
         self.show_all()
+
+        self.connect('delete-event', self.deleted)
+
+    def deleted(self, widget, event=None):
+        self.hide()
+        self.notebook.set_current_page(0)
+
+        return True
 
     #Feeds section
     def show_add(self, button):
@@ -231,10 +239,6 @@ class Prefs(gtk.Window):
     def spin_focusout(self, spin, event):
         self.applet.client.set_value(GROUP_DEFAULT, 'update_interval', int(spin.get_value()))
 
-    #Etc...
-    def close_clicked(self, button):
-        self.destroy()
-
     def update_liststore(self):
         self.liststore.clear()
 
@@ -245,14 +249,8 @@ class Prefs(gtk.Window):
             if isinstance(feed, classes.WebFeed):
                 sensitive = True
 
-            try:
-                if feed.icon.find('gtk://') == 0:
-                    pb = self.icon_theme.load_icon(feed.icon[6:], 16, 0)
-                    pb = classes.get_16x16(pb)
-
-                else:
-                    pb = gtk.gdk.pixbuf_new_from_file_at_size(feed.icon, 16, 16)
-            except:
+            pb = self.applet.get_favicon(feed.icon)
+            if pb == self.applet.web_image:
                 pb = None
 
             title = [feed.title, _("Loading...")][feed.title == '']
@@ -372,7 +370,7 @@ class AddFeed(gtk.Window):
         greader_radio.add(get_radio_hbox(pb, classes.GoogleReader.title))
 
         #Reddit Inbox
-        pb = get_favicon('www.reddit.com', self.applet)
+        pb = self.applet.get_favicon('www.reddit.com', True)
 
         reddit_radio = gtk.RadioButton(search_radio, None)
         reddit_radio.add(get_radio_hbox(pb, classes.Reddit.title))
@@ -473,7 +471,7 @@ class AddFeed(gtk.Window):
         image = awn.Image()
         image.set_from_pixbuf(pb)
         image.set_size_request(16, 16)
-        self.search_throbber = awn.OverlayThrobber(image)
+        self.search_throbber = awn.OverlayThrobber()
         self.search_throbber.props.scale = 1.0
         self.search_throbber.props.active = False
         image.add_overlay(self.search_throbber)
@@ -801,14 +799,6 @@ def get_greader_icon():
         pb = gtk.gdk.pixbuf_new_from_file_at_size(greader_ico, 16, 16)
     except:
         pb = gtk.gdk.pixbuf_new_from_file_at_size(greader_path, 16, 16)
-
-    return pb
-
-def get_favicon(siteid, applet):
-    try:
-        pb = gtk.gdk.pixbuf_new_from_file_at_size(os.path.join(cache_dir, siteid + '.ico'), 16, 16)
-    except:
-        pb = applet.web_image
 
     return pb
 

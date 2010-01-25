@@ -6,8 +6,8 @@
     <child>
       <object class="GtkVBox" id="vbox-general">
         <property name="visible">True</property>
-        <property name="border_width">6</property>
-        <property name="spacing">6</property>
+        <property name="border_width">12</property>
+        <property name="spacing">18</property>
         <child>
           <object class="GtkVBox" id="title-options-vbox">
             <property name="visible">True</property>
@@ -118,7 +118,6 @@
           </object>
           <packing>
             <property name="expand">False</property>
-            <property name="padding">6</property>
             <property name="position">0</property>
           </packing>
         </child>
@@ -164,10 +163,6 @@
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">_Theme:</property>
                                 <property name="use_underline">True</property>
-                                <property name="mnemonic_widget">combobox-theme</property>
-                                <accessibility>
-                                  <relation type="label-for" target="combobox-theme"/>
-                                </accessibility>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -175,22 +170,12 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkVBox" id="vbox-theme">
+                              <object class="GtkComboBox" id="combobox-theme">
                                 <property name="visible">True</property>
-                                <property name="orientation">vertical</property>
-                                <property name="spacing">6</property>
-                                <child>
-                                  <object class="GtkComboBox" id="combobox-theme">
-                                    <property name="visible">True</property>
-                                    <property name="model">liststore-theme</property>
-                                    <accessibility>
-                                      <relation type="labelled-by" target="label-vbox-theme"/>
-                                    </accessibility>
-                                  </object>
-                                  <packing>
-                                    <property name="position">0</property>
-                                  </packing>
-                                </child>
+                                <property name="model">liststore-theme</property>
+                                <accessibility>
+                                  <relation type="labelled-by" target="label-vbox-theme"/>
+                                </accessibility>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -221,7 +206,6 @@
           </object>
           <packing>
             <property name="expand">False</property>
-            <property name="padding">6</property>
             <property name="position">1</property>
           </packing>
         </child>
@@ -234,11 +218,52 @@
       <column type="gchararray"/>
     </columns>
   </object>
+  <object class="GtkListStore" id="liststore-temperature-units">
+    <columns>
+      <!-- column-name name -->
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes">Celcius</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Fahrenheit</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Kelvin</col>
+      </row>
+    </data>
+  </object>
+  <object class="GtkListStore" id="liststore-wind-speed-units">
+    <columns>
+      <!-- column-name name -->
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes">m/s</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">km/h</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">mph</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">knots</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Beaufort</col>
+      </row>
+    </data>
+  </object>
   <object class="GtkWindow" id="locations-preferences">
     <child>
       <object class="GtkVBox" id="vbox-locations">
         <property name="visible">True</property>
         <property name="border_width">12</property>
+        <property name="spacing">18</property>
         <child>
           <object class="GtkHBox" id="hbox3">
             <property name="visible">True</property>
@@ -270,7 +295,7 @@
                 <property name="layout_style">start</property>
                 <child>
                   <object class="GtkButton" id="button-add-location">
-                    <property name="label" translatable="yes">gtk-add</property>
+                    <property name="label">gtk-add</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
@@ -284,7 +309,7 @@
                 </child>
                 <child>
                   <object class="GtkButton" id="button-edit-location">
-                    <property name="label" translatable="yes">gtk-edit</property>
+                    <property name="label">gtk-edit</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="no_show_all">True</property>
@@ -298,7 +323,7 @@
                 </child>
                 <child>
                   <object class="GtkButton" id="button-remove-location">
-                    <property name="label" translatable="yes">gtk-remove</property>
+                    <property name="label">gtk-remove</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
@@ -438,7 +463,7 @@
             <property name="layout_style">end</property>
             <child>
               <object class="GtkButton" id="button-cancel-location-search">
-                <property name="label" translatable="yes">gtk-cancel</property>
+                <property name="label">gtk-cancel</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
@@ -452,7 +477,7 @@
             </child>
             <child>
               <object class="GtkButton" id="button-ok-location-search">
-                <property name="label" translatable="yes">gtk-ok</property>
+                <property name="label">gtk-ok</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
@@ -477,5 +502,180 @@
       <action-widget response="-6">button-cancel-location-search</action-widget>
       <action-widget response="0">button-ok-location-search</action-widget>
     </action-widgets>
+  </object>
+  <object class="GtkWindow" id="weather-preferences">
+    <child>
+      <object class="GtkVBox" id="vbox-weather">
+        <property name="visible">True</property>
+        <property name="border_width">12</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">18</property>
+        <child>
+          <object class="GtkFrame" id="frame1">
+            <property name="visible">True</property>
+            <property name="label_xalign">0</property>
+            <property name="shadow_type">none</property>
+            <child>
+              <object class="GtkAlignment" id="alignment1">
+                <property name="visible">True</property>
+                <property name="top_padding">6</property>
+                <property name="left_padding">12</property>
+                <child>
+                  <object class="GtkVBox" id="vbox4">
+                    <property name="visible">True</property>
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">6</property>
+                    <child>
+                      <object class="GtkHBox" id="hbox6">
+                        <property name="visible">True</property>
+                        <property name="spacing">12</property>
+                        <child>
+                          <object class="GtkLabel" id="label-temperature-unit">
+                            <property name="visible">True</property>
+                            <property name="xalign">0</property>
+                            <property name="label" translatable="yes">_Temperature unit:</property>
+                            <property name="use_underline">True</property>
+                            <property name="mnemonic_widget">combobox-temperature-unit</property>
+                            <accessibility>
+                              <relation type="label-for" target="combobox-temperature-unit"/>
+                            </accessibility>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkComboBox" id="combobox-temperature-unit">
+                            <property name="visible">True</property>
+                            <property name="model">liststore-temperature-units</property>
+                            <accessibility>
+                              <relation type="labelled-by" target="label-temperature-unit"/>
+                            </accessibility>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkHBox" id="hbox7">
+                        <property name="visible">True</property>
+                        <property name="spacing">12</property>
+                        <child>
+                          <object class="GtkLabel" id="label-wind-speed-unit">
+                            <property name="visible">True</property>
+                            <property name="xalign">0</property>
+                            <property name="label" translatable="yes">_Wind speed unit:</property>
+                            <property name="use_underline">True</property>
+                            <property name="mnemonic_widget">combobox-wind-speed-unit</property>
+                            <accessibility>
+                              <relation type="label-for" target="combobox-wind-speed-unit"/>
+                            </accessibility>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkComboBox" id="combobox-wind-speed-unit">
+                            <property name="visible">True</property>
+                            <property name="model">liststore-wind-speed-units</property>
+                            <accessibility>
+                              <relation type="labelled-by" target="label-wind-speed-unit"/>
+                            </accessibility>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child type="label">
+              <object class="GtkLabel" id="label5">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">&lt;b&gt;Display&lt;/b&gt;</property>
+                <property name="use_markup">True</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkFrame" id="frame2">
+            <property name="visible">True</property>
+            <property name="label_xalign">0</property>
+            <property name="shadow_type">none</property>
+            <child>
+              <object class="GtkAlignment" id="alignment2">
+                <property name="visible">True</property>
+                <property name="top_padding">6</property>
+                <property name="left_padding">12</property>
+                <child>
+                  <object class="GtkVBox" id="vbox5">
+                    <property name="visible">True</property>
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">6</property>
+                    <child>
+                      <object class="GtkCheckButton" id="check-show-weather">
+                        <property name="label" translatable="yes">_Show weather of current location</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">False</property>
+                        <property name="use_underline">True</property>
+                        <property name="draw_indicator">True</property>
+                      </object>
+                      <packing>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child type="label">
+              <object class="GtkLabel" id="label6">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">&lt;b&gt;Clock Display&lt;/b&gt;</property>
+                <property name="use_markup">True</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkSizeGroup" id="sizegroup1">
+    <widgets>
+      <widget name="label-wind-speed-unit"/>
+      <widget name="label-temperature-unit"/>
+    </widgets>
+  </object>
+  <object class="GtkSizeGroup" id="sizegroup2">
+    <widgets>
+      <widget name="combobox-temperature-unit"/>
+      <widget name="combobox-wind-speed-unit"/>
+    </widgets>
   </object>
 </interface>

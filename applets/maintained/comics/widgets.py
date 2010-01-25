@@ -24,6 +24,7 @@ import gtk
 
 from math import cos, ceil, pi, sin
 
+
 class Scalable:
     """An abstract scalable widget."""
     scale = 1.0
@@ -50,9 +51,11 @@ class Scalable:
         """Actually do the rescaling."""
         pass
 
+
 def make_int(d):
     """Return an int with adjusted value."""
     return int(ceil(d))
+
 
 def set_background(widget, pixmap):
     """Sets the background of the widget to that of its parent."""
@@ -62,10 +65,12 @@ def set_background(widget, pixmap):
         else:
             widget.window.set_back_pixmap(None, True)
 
-def update_background(widget, pixmap = None):
+
+def update_background(widget, pixmap=None):
     """Set the back pixmap of a parent widget and clear the back pixmap of its
     children."""
     if widget.window:
+
         def update_background_callback(child):
             """Clear the back pixmap of a child widget."""
             # Only set the back pixmap of widget with a separate gtk.gdk.Window
@@ -78,9 +83,11 @@ def update_background(widget, pixmap = None):
         set_background(widget, pixmap)
         widget.forall(update_background_callback)
 
+
 def update_scale(widget):
     """Set the scale of all child widgets."""
     if widget.window:
+
         def update_scale_callback(child):
             """Change the scale of a child widget."""
             if isinstance(child, Scalable):
@@ -92,6 +99,7 @@ def update_scale(widget):
                 update_scale(child)
 
         widget.foreach(update_scale_callback)
+
 
 def cairo_clear(ctx):
     """Clear a Cairo context."""
@@ -119,7 +127,7 @@ class ScalableWidgetContainer(gtk.Fixed, Scalable):
 
         # Set the Scalable attributes
         widget.set_scale(self.scale)
-        widget.set_size(map(lambda x: x / widget.scale, widget.size_request()))
+        widget.set_size([x / widget.scale for x in widget.size_request()])
         widget.position = (x, y)
 
     def move_scaled(self, widget, x, y):
@@ -273,7 +281,7 @@ class ScalableWindow(gtk.Window, Scalable):
 
             del shape
 
-    def update_background(self, repaint = True):
+    def update_background(self, repaint=True):
         """Update the background image of the window."""
         if self.window:
             # Create background Pixmap
@@ -317,7 +325,7 @@ class ScalableWindow(gtk.Window, Scalable):
         self.update_shape()
         self.update_background()
 
-    def __on_screen_changed(self, widget, screen = None):
+    def __on_screen_changed(self, widget, screen=None):
         """Set the colormap for the window"""
         if not screen:
             screen = self.get_screen()
@@ -425,7 +433,7 @@ class WWWLink(gtk.EventBox, Scalable):
     def update_url(self):
         self.__tooltip.set_tip(self, self.url)
 
-    def __init__(self, text = '', url = '', font_size = 12000):
+    def __init__(self, text='', url='', font_size=12000):
         super(WWWLink, self).__init__()
 
         self.set_app_paintable(True)
@@ -510,7 +518,7 @@ class ScalableWidget(gtk.DrawingArea, Scalable):
         if self.window:
             width, height = self.size_request()
             del self.shape
-            self.shape = gtk.gdk.Pixmap(self.window, width,    height, 1)
+            self.shape = gtk.gdk.Pixmap(self.window, width, height, 1)
             ctx = self.shape.cairo_create()
             cairo_clear(ctx)
             ctx.scale(self.scale, self.scale)
@@ -611,7 +619,7 @@ class Ticker(ScalableWidget):
                 0.5 - self.TICK_HEIGHT / 2.0,
                 pi / self.TICKS, 0.0)
             ctx.close_path()
-            color = map(lambda c1, c2: c1 + (c2 - c1) * t, *self.TICK_COLORS)
+            color = [c1 + (c2 - c1) * t for c1, c2 in self.TICK_COLORS]
             color[3] = color[3] * self.__opacity
             ctx.set_source_rgba(*color)
             ctx.fill()
@@ -636,4 +644,3 @@ class Ticker(ScalableWidget):
         self.update()
 
         return not cancel
-

@@ -14,8 +14,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
-
 import pygtk
 pygtk.require("2.0")
 import gtk
@@ -24,9 +22,6 @@ import gobject
 
 from desktopagnostic import config, Color
 from desktopagnostic.ui import ColorButton
-
-minimum_value = -sys.maxint - 1
-maximum_value = sys.maxint
 
 
 def get_config_binder(client, group, builder=None):
@@ -52,7 +47,7 @@ def get_config_binder(client, group, builder=None):
             value = client.get_value(group, key)
             value_type = type(value)
             if value_type in (int, long, float):
-                self.properties[key] = (value_type, None, None, minimum_value, maximum_value, value, gobject.PARAM_READWRITE)
+                self.properties[key] = (value_type, None, None, gobject.G_MININT, gobject.G_MAXINT, value, gobject.PARAM_READWRITE)
             elif value_type is Color:
                 self.properties[key] = (Color.__gtype__, None, None, gobject.PARAM_READWRITE)
             else:
@@ -69,13 +64,16 @@ def get_config_binder(client, group, builder=None):
                 def __init__(self):
                     super(ConfigGObject, self).__init__()
                     self.propvalues = dict()
-                    for name in super_self.properties:
-                        self.propvalues[name] = super_self.properties[name][-2]
+                    for key in super_self.properties:
+                        name = key.replace("_", "-")
+                        self.propvalues[name] = super_self.properties[key][-2]
 
                         # Bind to Gtk+ component
-                        data = super_self.data[name]
-                        widget = builder.get_object(data[0]) if builder is not None else None
-                        bind_property(client, group, name, self, name, widget, *data[1], **data[2])
+                        data = super_self.data[key]
+                        widget = builder.get_object(data[0])
+                        if widget is None:
+                            raise RuntimeError("Widget '%s' not found in builder" % data[0])
+                        bind_property(client, group, key, self, name, widget, *data[1], **data[2])
 
                 def do_get_property(self, prop):
                     return self.propvalues[prop.name]
@@ -88,8 +86,7 @@ def get_config_binder(client, group, builder=None):
     return ConfigBinder()
 
 
-def bind_property(client, group, key, obj, prop_name, widget=None,
-                          read_only=False,
+def bind_property(client, group, key, obj, prop_name, widget, read_only=False,
                           getter_transform=None, setter_transform=None,
                           key_callback=None):
     """Bind config key to a property and widget it represents.
@@ -110,8 +107,6 @@ def bind_property(client, group, key, obj, prop_name, widget=None,
                          has changed
 
     """
-    prop_name = prop_name.replace("_", "-")
-
     def get_widget_value(widget):
         # Radio group needs real special case
         if isinstance(widget, gtk.RadioButton):
@@ -224,6 +219,26 @@ def bind_property(client, group, key, obj, prop_name, widget=None,
         if key_callback is not None:
             key_callback(new_value)
 
+    value = obj.get_property(prop_name)
+
+    if isinstance(widget, gtk.ComboBox) and type(value) is str:
+
+        def compose(f1, f2):
+            def composition(*args, **kwargs):
+                return f1(f2(*args, **kwargs))
+            return composition
+
+        def getter(prop_value):
+            for i, j in enumerate(widget.get_model()):
+                if j[0] == prop_value:
+                    return i
+
+        def setter(widget_index):
+            return widget.get_model()[widget_index][0]
+
+        getter_transform = compose(getter, getter_transform) if getter_transform else getter
+        setter_transform = compose(setter_transform, setter) if setter_transform else setter
+
     # Make sure the widget updates when the prop changes
     obj.connect("notify::" + prop_name, key_changed, (widget, getter_transform))
 
@@ -231,12 +246,11 @@ def bind_property(client, group, key, obj, prop_name, widget=None,
     client.bind(group, key, obj, prop_name, read_only, config.BIND_METHOD_FALLBACK)
 
     # Connect to widget's change signal if we're supposed to update it
-    if not read_only and widget is not None:
+    if not read_only:
         data = (obj, prop_name, setter_transform, key_callback)
         connect_to_widget_changes(widget, widget_changed, data)
 
     # Initialize the widget with the property's value
-    value = obj.get_property(prop_name)
     if getter_transform is not None:
         value = getter_transform(value)
     set_widget_value(widget, value)

@@ -46,7 +46,7 @@ do_bridge ( AwnApplet * applet,GObject *object,
            gchar * group, gchar * key_name,gchar * prop_name )
 {
   DesktopAgnosticConfigClient * client;
-  DesktopAgnosticConfigClient * client_baseconf;  
+  DesktopAgnosticConfigClient * client_baseconf;
   gchar * base_prop_name = g_strdup_printf( "%s-base",prop_name);
   GError *error = NULL;
   

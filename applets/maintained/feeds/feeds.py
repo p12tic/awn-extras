@@ -69,17 +69,16 @@ class App(awn.AppletSimple):
     displays = {}
     toggles = []
     feeds = {}
+    feed_icons = {}
+    pixbufs = {}
     timer = 0
     finished_feeds = 0
     menu = None
     keyring = None
     dragged_toggle = None
-    SID = ''
+    prefs_dialog = None
     urls = []
     written_urls = []
-    login_data = {}
-    io_error = False
-    login_error = False
     num_notify_while_updating = 0
 
     def __init__(self, uid, panel_id):
@@ -100,6 +99,51 @@ class App(awn.AppletSimple):
         self.icon_theme = gtk.icon_theme_get_default()
         self.icon_theme.connect('changed', self.icon_theme_changed)
 
+        #Get a 16x16 icon representing the Internet/web
+        self.web_image = self.icon_theme.load_icon('applications-internet', 16, 0)
+
+        #Force a size of 16x16
+        if self.web_image.get_width() != 16 or self.web_image.get_height() != 16:
+            self.web_image = self.web_image.scale_simple(16, 16, gtk.gdk.INTERP_BILINEAR)
+
+        #Throbber overlay
+        self.throbber = awn.OverlayThrobber()
+        self.throbber.props.gravity = gtk.gdk.GRAVITY_SOUTH_WEST
+
+        #Error icon overlay
+        self.error_icon = awn.OverlayThemedIcon("gtk-dialog-error")
+        self.error_icon.props.gravity = gtk.gdk.GRAVITY_SOUTH_WEST
+
+        #First updated feed favicon (bottom right)
+        self.favicon1 = awn.OverlayPixbuf(self.web_image)
+        self.favicon1.props.gravity = gtk.gdk.GRAVITY_SOUTH_EAST
+
+        #Second updated feed favicon (bottom)
+        self.favicon2 = awn.OverlayPixbuf(self.web_image)
+        self.favicon2.props.gravity = gtk.gdk.GRAVITY_SOUTH
+
+        #Third updated feed favicon (right)
+        self.favicon3 = awn.OverlayPixbuf(self.web_image)
+        self.favicon3.props.gravity = gtk.gdk.GRAVITY_EAST
+
+        for overlay in (self.throbber, self.error_icon, self.favicon1, self.favicon2, self.favicon3):
+            if self.get_size() > 48:
+                overlay.props.scale = 16.0 / self.get_size()
+            else:
+                overlay.props.scale = 0.33
+            overlay.props.apply_effects = True
+            overlay.props.active = False
+            self.add_overlay(overlay)
+
+        #Magic at work. Position the 2nd and 3rd favicons adjacent to the icon
+        if self.get_size() > 48:
+            self.favicon2.props.x_adj = 0.5 - 24.0 / self.get_size()
+            self.favicon3.props.y_adj = 0.5 - 24.0 / self.get_size()
+
+        else:
+            self.favicon2.props.x_adj = 0.0
+            self.favicon3.props.y_adj = 0.0
+
         #"Loading feeds..." label
         self.loading_feeds = gtk.Label(_("Loading feeds..."))
         self.loading_feeds.modify_font(pango.FontDescription('bold'))
@@ -111,13 +155,6 @@ class App(awn.AppletSimple):
         self.no_feeds = gtk.Label(_("You don't have any feeds."))
         self.main_vbox.pack_start(self.no_feeds)
         self.no_feeds.set_no_show_all(True)
-
-        #Get a 16x16 icon representing the Internet/web
-        self.web_image = self.icon_theme.load_icon('applications-internet', 16, 0)
-
-        #Force a size of 16x16
-        if self.web_image.get_width() != 16 or self.web_image.get_height() != 16:
-            self.web_image = self.web_image.scale_simple(16, 16, gtk.gdk.INTERP_BILINEAR)
 
         #AwnConfigClient instance
         self.client = awn.config_get_default_for_applet(self)
@@ -156,10 +193,6 @@ class App(awn.AppletSimple):
 
         self.setup_dialog()
 
-        #Update the feeds every 5 minutes,
-        #unless the user does right click->refresh
-        self.timer = gobject.timeout_add_seconds(300, self.update_feeds)
-
         #Allow user to drag and drop feed URLs onto the applet icon
         #E.g. In a browser, user drags and drops a link to an Atom feed onto the applet
         self.get_icon().drag_dest_set(gtk.DEST_DEFAULT_DROP | gtk.DEST_DEFAULT_MOTION, \
@@ -169,6 +202,7 @@ class App(awn.AppletSimple):
         self.get_icon().connect('drag-motion', self.applet_drag_motion)
         self.get_icon().connect('drag-leave', self.applet_drag_leave)
         self.dialog.connect('scroll-event', self.scroll)
+        self.connect('size-changed', self.size_changed)
 
         #Set up the D-Bus service
         self.service = classes.DBusService(self)
@@ -177,10 +211,10 @@ class App(awn.AppletSimple):
 
     #Tell each feed object to update
     def update_feeds(self, *args):
-        self.io_error = False
-        self.google_error = False
+        self.error_icon.props.active = False
 
         if len(self.urls) != 0:
+            self.throbber.props.active = True
             self.finished_feeds = 0
             self.started_updating = 0
             self.num_notify_while_updating = 0
@@ -191,6 +225,8 @@ class App(awn.AppletSimple):
                 self.feed_throbbers[url].props.active = True
 
             self.update_timer = gobject.timeout_add(250, self.update_next_feed)
+
+            self.do_timer()
 
         else:
             self.loading_feeds.hide()
@@ -208,6 +244,8 @@ class App(awn.AppletSimple):
         else:
             feed.num_new = 0
             feed.num_notify = 0
+            feed.io_error = False
+
             feed.update()
 
             self.started_updating += 1
@@ -233,19 +271,54 @@ class App(awn.AppletSimple):
 
             self.timer = gobject.timeout_add_seconds(interval * 60, self.update_feeds)
 
-    def got_favicon(self, feed, override=False):
+    def got_favicon(self, feed, override=False, no_do_favicons=False):
+        icon = [feed.icon, 'gtk://gtk-dialog-error'][feed.io_error]
+
         if override or self.client.get_value(GROUP_DEFAULT, 'show_favicons'):
+            icon = [feed.icon, 'gtk://gtk-dialog-error'][feed.io_error]
+
             try:
-                if feed.icon.find('gtk://') == 0:
-                    pb = self.icon_theme.load_icon(feed.icon[6:], 16, 0)
-                    pb = classes.get_16x16(pb)
+                pb = self.get_favicon(icon)
 
-                else:
-                    pb = gtk.gdk.pixbuf_new_from_file_at_size(feed.icon, 16, 16)
+                if feed.url in self.feed_icons:
+                    self.feed_icons[feed.url].set_from_pixbuf(pb)
 
-                self.feed_icons[feed.url].set_from_pixbuf(pb)
+                #On startup, all feeds could be updated, and certain ones may have new items,
+                #(e.g. Reddit, which recognizes unread items as new) though the favicon is not yet
+                #loaded.
+                if not no_do_favicons and feed.url in self.feeds:
+                    self.do_favicons()
+
             except:
                 pass
+
+        if self.prefs_dialog and feed.url in self.feeds:
+            self.prefs_dialog.update_liststore()
+
+    def get_favicon(self, icon, override=False):
+        if not override and not self.client.get_value(GROUP_DEFAULT, 'show_favicons'):
+            return self.web_image
+
+        if icon in self.pixbufs:
+            return self.pixbufs[icon]
+
+        try:
+            if icon.find('gtk://') == 0:
+                pb = self.icon_theme.load_icon(icon[6:], 16, 0)
+                pb = classes.get_16x16(pb)
+
+            elif icon.find('/') != 0 and icon.find('file:///') != 0:
+                pb = gtk.gdk.pixbuf_new_from_file_at_size(cache_dir + '/' + icon + '.ico', 16, 16)
+
+            else:
+                pb = gtk.gdk.pixbuf_new_from_file_at_size(icon, 16, 16)
+
+        except:
+            pb = self.web_image
+
+        self.pixbufs[icon] = pb
+
+        return pb
 
     def feed_updated(self, feed):
         self.num_notify_while_updating += feed.num_notify
@@ -272,19 +345,58 @@ class App(awn.AppletSimple):
 
                 self.displays[feed.url].pack_start(button, False)
 
-            self.feed_labels[feed.url].set_text(shortify(feed.title))
+            feed_title = [feed.title, _("Error")][feed.io_error]
+
+            self.feed_labels[feed.url].set_text(shortify(feed_title))
 
             if feed.num_new > 0:
                 classes.boldify(self.feed_labels[feed.url])
 
+            #If all the feeds have been updated...
             self.finished_feeds += 1
             if len(self.urls) == self.finished_feeds:
-                self.set_tooltip_text(_("Feeds Applet"))
-                self.loading_feeds.hide()
+                self.all_feeds_updated()
 
-                self.do_timer()
+        if self.prefs_dialog:
+            self.prefs_dialog.update_liststore()
 
-                self.show_notification()
+    def all_feeds_updated(self):
+        self.set_tooltip_text(_("Feeds Applet"))
+        self.loading_feeds.hide()
+
+        self.throbber.props.active = False
+
+        self.error_icon.props.active = False
+        for feed in self.feeds.values():
+            if feed.io_error:
+                self.error_icon.props.active = True
+
+        self.show_notification()
+
+        self.do_favicons()
+
+    def do_favicons(self, override=False):
+        for icon in [self.favicon1, self.favicon2, self.favicon3]:
+            icon.props.active = False
+
+        if not override:
+            if not self.client.get_value(GROUP_DEFAULT, 'show_favicons'):
+                return
+
+        num_icons_shown = 0
+        for url in self.urls:
+            if num_icons_shown < 3:
+                feed = self.feeds[url]
+                if not feed.io_error and feed.num_new > 0:
+                    icon = [self.favicon1, self.favicon2, self.favicon3][num_icons_shown]
+                    icon.props.active = True
+
+                    try:
+                        icon.props.pixbuf = self.get_favicon(feed.icon)
+                        num_icons_shown += 1
+
+                    except:
+                        pass
 
     def show_notification(self):
         if not self.client.get_value(GROUP_DEFAULT, 'notify'):
@@ -326,7 +438,6 @@ class App(awn.AppletSimple):
                 msg, [icon_path, greader_path][only_greader])
             notification.set_timeout(5000)
             notification.show()
-            pynotify.uninit()
 
     #Set up initial widgets, frame for each feed
     def setup_dialog(self):
@@ -388,19 +499,16 @@ class App(awn.AppletSimple):
         #Get the icon as a pixbuf
         pb = None
         if self.feeds[url].icon != '' and self.client.get_value(GROUP_DEFAULT, 'show_favicons'):
-            try:
-                pb = gtk.gdk.pixbuf_new_from_file_at_size(self.feeds[url].icon, 16, 16)
-            except:
-                pass
+            pb = self.get_favicon(self.feeds[url].icon)
 
-        if pb is None:
+        else:
             pb = self.web_image
 
         #Pretty icon for button
         image = awn.Image()
         image.set_size_request(16, 16)
         image.set_from_pixbuf(pb)
-        throbber = awn.OverlayThrobber(image)
+        throbber = awn.OverlayThrobber()
         throbber.props.active = True
         throbber.props.scale = 1.0
         image.add_overlay(throbber)
@@ -525,6 +633,10 @@ class App(awn.AppletSimple):
         fp.write(urls)
         fp.close()
 
+        if self.prefs_dialog:
+            self.prefs_dialog.update_liststore()
+        self.do_favicons()
+
     def dialog_drag_received(self, *args):
         pass
 
@@ -589,7 +701,8 @@ class App(awn.AppletSimple):
             context.finish(False, False, time)
 
     def applet_drag_motion(self, widget, context, x, y, time):
-        self.get_effects().start(awn.EFFECT_LAUNCHING)
+        if self.dragged_toggle is None:
+            self.get_effects().start(awn.EFFECT_LAUNCHING)
 
         return True
 
@@ -636,10 +749,6 @@ class App(awn.AppletSimple):
 
         return False
 
-    #User cleared login error
-    def cancel_login_error(self, button):
-        self.google_error = False
-
     #Show the Add Feed dialog
     def add_feed_dialog(self, widget):
         import prefs
@@ -648,7 +757,7 @@ class App(awn.AppletSimple):
     def feed_icon_clicked(self, button, feedurl):
         self.open_url(None, self.feeds[feedurl].web_url)
 
-        feed.icon_clicked()
+        self.feeds[feedurl].icon_clicked()
 
     def feed_item_clicked(self, button, data):
         feed, i = data
@@ -665,6 +774,9 @@ class App(awn.AppletSimple):
         self.open_url(None, feed.entries[i]['url'])
 
         feed.item_clicked(i)
+
+        if feed.num_new == 0:
+            self.do_favicons()
 
     #Open a URL
     def open_url(self, widget, url):
@@ -728,6 +840,8 @@ class App(awn.AppletSimple):
 
         self.set_icon_name(['awn-feeds', 'awn-feeds-greader'][all_greader])
 
+        self.do_favicons()
+
     #Actually add a feed
     def add_feed(self, url, parsed=None, *data):
         if url in self.urls:
@@ -759,7 +873,7 @@ class App(awn.AppletSimple):
             self.feeds[url] = classes.Reddit(self, *data)
 
         elif _base_url in ('twitter-timeline', 'twitter-both', 'twitter-replies'):
-            self.feeds[url] = classes.Twitter(self, *data, base_url=_base_url)
+            self.feeds[url] = classes.Twitter(self, *(data + (_base_url, )))
 
         else:
             self.feeds[url] = classes.WebFeed(self, url, parsed)
@@ -787,6 +901,11 @@ class App(awn.AppletSimple):
         self.widget.show_all()
 
         self.no_feeds.hide()
+
+        self.do_favicons()
+
+        if len(self.feeds) == 1:
+          self.do_timer()
 
     #When a button is released on the applet
     def button_release(self, widget, event):
@@ -841,8 +960,12 @@ class App(awn.AppletSimple):
 
     #Show the preferences window
     def open_prefs(self, widget):
-        import prefs
-        prefs.Prefs(self)
+        if not self.prefs_dialog:
+            import prefs
+            self.prefs_dialog = prefs.Prefs(self)
+
+        else:
+            self.prefs_dialog.present()
 
     #Show the about window
     def show_about(self, widget):
@@ -963,11 +1086,38 @@ class App(awn.AppletSimple):
 
     def show_favicons(self):
         for url, icon in self.feed_icons.items():
-            self.got_favicon(self.feeds[url], True)
+            self.got_favicon(self.feeds[url], True, True)
+
+        #Override the config value because sometimes we get this before the client has the new value
+        #At least I think that's what's happening.
+        self.do_favicons(True)
+
+        if self.prefs_dialog:
+            self.prefs_dialog.update_liststore()
 
     def hide_favicons(self):
         for url, icon in self.feed_icons.items():
             self.feed_icons[url].set_from_pixbuf(self.web_image)
+
+        self.do_favicons()
+
+        if self.prefs_dialog:
+            self.prefs_dialog.update_liststore()
+
+    def size_changed(self, applet, new_size):
+        for overlay in (self.throbber, self.error_icon, self.favicon1, self.favicon2, self.favicon3):
+            if new_size > 48:
+                overlay.props.scale = 16.0 / new_size
+            else:
+                overlay.props.scale = 0.33
+
+        if new_size > 48:
+            self.favicon2.props.x_adj = 0.5 - 24.0 / new_size
+            self.favicon3.props.y_adj = 0.5 - 24.0 / new_size
+
+        else:
+            self.favicon2.props.x_adj = 0.0
+            self.favicon3.props.y_adj = 0.0
 
     #timeout is currently ignored because Python 2.5 doesn't support it.
     class NetworkHandler(ThreadQueue):
@@ -1036,6 +1186,7 @@ class App(awn.AppletSimple):
 
 #Shorten and ellipsize long strings
 def shortify(string):
+    string = string.replace('\n', ' ')
     if len(string) > 25:
         return string[:25] + '...'
 

@@ -128,13 +128,13 @@ class ThinkHDAPSApplet:
 
         icon = applet.get_icon()
 
-        self.icon_running = OverlayThemedIcon(icon, "thinkhdaps-running", "running")
+        self.icon_running = OverlayThemedIcon("thinkhdaps-running")
         self.icon_running.props.scale = 0.6
 
-        self.icon_paused = OverlayThemedIcon(icon, "thinkhdaps-paused", "paused")
+        self.icon_paused = OverlayThemedIcon("thinkhdaps-paused")
         self.icon_paused.props.scale = 0.5
 
-        self.icon_error = OverlayThemedIcon(icon, "dialog-error", "error")
+        self.icon_error = OverlayThemedIcon("dialog-error")
         self.icon_error.props.scale = 0.6
 
         for overlay in (self.icon_running, self.icon_paused, self.icon_error):

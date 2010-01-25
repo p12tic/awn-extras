@@ -25,17 +25,26 @@ G_DEFINE_TYPE (AwnBarGraph, awn_bargraph, AWN_TYPE_GRAPH)
 
 typedef struct _AwnBarGraphPrivate AwnBarGraphPrivate;
 
+typedef enum
+{
+  BAR_GRAPH_COLOUR_RENDERING_SOLID,             /*Keep at the Beginning*/
+  BAR_GRAPH_COLOUR_RENDERING_SOLID_UNIQUE,
+  BAR_GRAPH_COLOUR_RENDERING_STANDARD           /*Keep at the End*/
+}BarGraphColourRendering;
+
 struct _AwnBarGraphPrivate {
   gdouble max_val;
   gdouble min_val;
   gdouble num_vals;
+  BarGraphColourRendering graph_colour_rendering;
 };
 
 enum
 {
   PROP_0,
   PROP_MIN_VAL,
-  PROP_MAX_VAL
+  PROP_MAX_VAL,
+  PROP_GRAPH_COLOUR_RENDERING
 };
 
 
@@ -57,7 +66,10 @@ awn_bargraph_get_property (GObject *object, guint property_id,
       break;           
     case PROP_MAX_VAL:
       g_value_set_double (value, priv->max_val); 
-      break;                 
+      break;
+    case PROP_GRAPH_COLOUR_RENDERING:
+      g_value_set_int (value, priv->graph_colour_rendering);
+      break;
     default:      
     G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
   }
@@ -77,7 +89,10 @@ awn_bargraph_set_property (GObject *object, guint property_id,
       break;     
     case PROP_MAX_VAL:
       priv->max_val = g_value_get_double (value);
-      break;               
+      break;
+    case PROP_GRAPH_COLOUR_RENDERING:
+      priv->graph_colour_rendering = g_value_get_int (value);
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
   }
@@ -123,9 +138,17 @@ awn_bargraph_class_init (AwnBarGraphClass *klass)
                                 -1000000.0,
                                 +1000000.0,
                                 100.0,
-                                G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
-  
+                                G_PARAM_READWRITE | G_PARAM_CONSTRUCT);  
   g_object_class_install_property (object_class, PROP_MAX_VAL, pspec);    
+
+  pspec = g_param_spec_int ( "graph-color-rendering",
+                                "Graph Color Rendering Method",
+                                "Graph Color Rendering Method",
+                                BAR_GRAPH_COLOUR_RENDERING_SOLID,
+                                BAR_GRAPH_COLOUR_RENDERING_STANDARD,
+                                BAR_GRAPH_COLOUR_RENDERING_STANDARD,
+                                G_PARAM_READWRITE | G_PARAM_CONSTRUCT);  
+  g_object_class_install_property (object_class, PROP_GRAPH_COLOUR_RENDERING, pspec);    
   
   g_type_class_add_private (klass, sizeof (AwnBarGraphPrivate));
   
@@ -153,11 +176,15 @@ static void _awn_bargraph_render_to_context(AwnGraph * graph,
   cairo_save (cr);
   cairo_scale (cr, width, height);
   cairo_set_source_rgba (cr,0.0,0.2,0.9,0.95);
-  
+
   bar_width = 1.0 / (gdouble) priv->num_vals;
   for (i=0; i<priv->num_vals; i++)
   {
     gdouble bar_height =  1.0 * ( values[i] / (priv->max_val-priv->min_val));
+    if (bar_height>1.0)
+    {
+      bar_height = 1.0;
+    }
     cairo_rectangle (cr, x, 
                          1.0 - bar_height ,
                          bar_width,
@@ -176,7 +203,7 @@ static void _awn_bargraph_add_data(AwnGraph * graph,
   AwnBarGraphPrivate * priv;  
   GList * iter;  
   gdouble * values;
-  
+
   priv = AWN_BARGRAPH_GET_PRIVATE (graph);  
   graph_priv = AWN_GRAPH_GET_PRIVATE(graph);
   
@@ -195,7 +222,6 @@ static void _awn_bargraph_add_data(AwnGraph * graph,
     *values = bar_graph_point->value;
     values++;
   }
- 
 }
 
 static void

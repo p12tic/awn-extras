@@ -288,16 +288,6 @@ class Rhythmbox(GenericPlayer):
         ret_dict = {}
         result = self.rbShell.getSongProperties(self.player.getPlayingUri())
 
-        if 'rb:coverArt-uri' in result:
-            albumart_exact = result['rb:coverArt-uri']
-            # bug in rhythmbox 0.11.6 - returns uri, but not properly encoded,
-            # but it's enough to remove the file:// prefix
-            albumart_exact = albumart_exact.replace('file://', '', 1)
-            if gtk.gtk_version >= (2, 18):
-                from urllib import unquote
-                albumart_exact = unquote(albumart_exact)
-            ret_dict['album-art'] = albumart_exact
-
         # Currently Playing Title
         if result['artist'] != '':
             ret_dict['artist'] = result['artist']
@@ -310,6 +300,22 @@ class Rhythmbox(GenericPlayer):
                ret_dict['title'] = result['rb:stream-song-title']
         elif 'title' in result:
             ret_dict['title'] = result['title']
+
+        # cover-art
+        if 'rb:coverArt-uri' in result:
+            albumart_exact = result['rb:coverArt-uri']
+            # bug in rhythmbox 0.11.6 - returns uri, but not properly encoded,
+            # but it's enough to remove the file:// prefix
+            albumart_exact = albumart_exact.replace('file://', '', 1)
+            if gtk.gtk_version >= (2, 18):
+                from urllib import unquote
+                albumart_exact = unquote(albumart_exact)
+            ret_dict['album-art'] = albumart_exact
+        else:
+            # perhaps it's in the cache folder
+            if 'album' in result and 'artist' in result:
+                cache_dir = ".cache/rhythmbox/covers"
+                ret_dict['album-art'] = '%s/%s - %s.jpg' % (cache_dir, result['artist'], result['album'])
 
         return ret_dict
 

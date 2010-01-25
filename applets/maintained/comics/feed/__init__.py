@@ -31,22 +31,22 @@ class FeedContainer(gobject.GObject):
     FEED_ADDED = 0
     FEED_REMOVED = 1
 
-    __gsignals__ = dict(
-        feed_changed = (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-            (gobject.TYPE_STRING, gobject.TYPE_INT)))
+    __gsignals__ = {
+        'feed_changed': (gobject.SIGNAL_RUN_FIRST, None, (str, int)),
+        }
 
     def _add_feed_factory(self, name):
         """Dynamically loads a feed factory from a file and adds it to the list
         of factories. If filename does not contain a feed factory, it is not
         added."""
         try:
-            module = __import__('plugins.%s' % name, fromlist = [name])
+            module = __import__('plugins.%s' % name, fromlist=[name])
             if hasattr(module, 'matches_url') and hasattr(module, 'get_class'):
                 self.feed_factories.append(module)
                 return True
             else:
                 del module
-        except:
+        except Exception:
             pass
 
         return False
@@ -54,8 +54,8 @@ class FeedContainer(gobject.GObject):
     def _load_feed_factories(self):
         """Loads all feed factories found in the plugin directory."""
         try:
-            for filename in filter(lambda f: f.endswith('.py'),
-                    os.listdir(PLUGINS_DIR)):
+            for filename in (f for f in os.listdir(PLUGINS_DIR)
+                             if f.endswith('.py')):
                 self._add_feed_factory(filename.rpartition('.')[0])
         except OSError:
             pass
@@ -72,7 +72,7 @@ class FeedContainer(gobject.GObject):
             try:
                 plugin = settings.get_string('plugin', '')
                 if plugin:
-                    if self.feed_factories.has_key(plugin):
+                    if plugin in self.feed_factories:
                         factory = self.feed_factories[plugin].get_class()
                     else:
                         return False
@@ -81,7 +81,7 @@ class FeedContainer(gobject.GObject):
                 feed = factory(settings)
                 self.feeds[settings[NAME]] = feed
                 self.emit('feed-changed', feed, FeedContainer.FEED_ADDED)
-            except:
+            except Exception:
                 pass
 
         return False
@@ -91,8 +91,8 @@ class FeedContainer(gobject.GObject):
         URL, an RSSFeed is returned."""
         for factory in self.feed_factories:
             if factory.matches_url(url):
-                return factory.get_class()(url = url)
-        return RSSFeed(url = url)
+                return factory.get_class()(url=url)
+        return RSSFeed(url=url)
 
     def remove_feed(self, feed_name):
         """Removes the feed feed_name."""
@@ -111,11 +111,11 @@ class FeedContainer(gobject.GObject):
     def load_directory(self, directory):
         """Loads all feeds found in directory."""
         # Traverse .feed-files in the directory
-        if not directory in self.directories:
+        if directory not in self.directories:
             self.directories.append(directory)
         try:
-            for filename in filter(lambda f: f.endswith('.feed'),
-                    os.listdir(directory)):
+            for filename in (f for f in os.listdir(directory)
+                             if f.endswith('.feed')):
                 self.add_feed(os.path.join(directory, filename))
         except OSError:
             pass
@@ -124,4 +124,3 @@ class FeedContainer(gobject.GObject):
         """Updates all feeds."""
         for feed in self.feeds.values():
             feed.update()
-

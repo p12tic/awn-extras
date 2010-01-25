@@ -19,3 +19,6 @@ awnterm_la_LIBADD =	\
 	$(VTE_LIBS)	\
 	$(NULL)
 awnterm_la_LDFLAGS = $(APPLET_LINKER_FLAGS)
+EXTRA_DIST += \
+	eggaccelerators.h \
+	keybinder.h

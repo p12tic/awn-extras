@@ -235,7 +235,10 @@ class MailApplet:
             "timeout": (2, change_timeout,
                         prefs.get_object("spinbutton-timeout"))
         }
-        self.settings = self.awn.settings.load_preferences(default_values)
+	for key, value in default_values.iteritems():
+		if not key in self.awn.settings:
+			self.awn.settings[key] = value
+	self.settings = self.awn.settings
 
         entry_client = prefs.get_object("entry-client")
         entry_client.set_text(self.settings["email-client"])

@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # Copyright (c) 2007  Randal Barlow <im.tehk at gmail.com>
-#               2008 - 2009  onox <denkpadje@gmail.com>
+#               2008 - 2010  onox <denkpadje@gmail.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -31,7 +31,6 @@ import dbus
 import pango
 
 applet_name = "Quit-Log Out"
-#applet_version = "0.3.3"
 applet_description = "An applet to lock your screen, log out of your session, or shut down the system"
 
 # Themed logo of the applet, shown in the GTK About dialog
@@ -105,12 +104,12 @@ class QuitLogOutApplet:
             applet.settings["left-click-action"] = action_args[action]
 
         # Initialize tooltip and icon
-        self.refresh_tooltip_icon_cb(self.settings["left-click-action"])
+        self.refresh_tooltip_icon_cb(self.applet.settings["left-click-action"])
 
         applet.connect("clicked", self.clicked_cb)
 
     def clicked_cb(self, widget):
-        action = self.settings["left-click-action"]
+        action = self.applet.settings["left-click-action"]
         if action == "Show Docklet":
             self.show_docklet()
         else:
@@ -227,14 +226,7 @@ class QuitLogOutApplet:
         self.applet.icon.theme(icon)
 
     def load_settings(self):
-        defaults = {
-            "left-click-action": ("Show Docklet", self.refresh_tooltip_icon_cb),
-            "log-out-command": "xfce4-session-logout",
-            "lock-screen-command": "xscreensaver-command"
-        }
-        self.settings = self.applet.settings.load_preferences(defaults)
-
-        if self.settings["left-click-action"] not in left_click_actions:
+        if self.applet.settings["left-click-action"] not in left_click_actions:
             self.applet.settings["left-click-action"] = "Show Docklet"
 
         assert self.log_out_cb == self.gnome_log_out or "Shut Down" not in left_click_actions
@@ -248,7 +240,7 @@ class QuitLogOutApplet:
         combobox = gtk.combo_box_new_text()
         for i in left_click_actions:
             combobox.append_text(i)
-        combobox.set_active(left_click_actions.index(self.settings["left-click-action"]))
+        combobox.set_active(left_click_actions.index(self.applet.settings["left-click-action"]))
         combobox.connect("changed", self.action_changed_cb)
 
         label = gtk.Label("Left click _action:")
@@ -260,6 +252,7 @@ class QuitLogOutApplet:
 
     def action_changed_cb(self, widget):
         self.applet.settings["left-click-action"] = left_click_actions[widget.get_active()]
+        self.refresh_tooltip_icon_cb(self.applet.settings["left-click-action"])
 
     def apply_action_cb(self, widget, event, action, docklet):
         self.execute_action(action)
@@ -296,10 +289,10 @@ class QuitLogOutApplet:
         self.sm_if.Shutdown()
 
     def other_lock_screen(self):
-        self.execute_command(self.settings["lock-screen-command"])
+        self.execute_command(self.applet.settings["lock-screen-command"])
 
     def other_log_out(self):
-        self.execute_command(self.settings["log-out-command"])
+        self.execute_command(self.applet.settings["log-out-command"])
 
     def execute_command(self, command):
         try:
@@ -317,6 +310,6 @@ if __name__ == "__main__":
         "description": applet_description,
         "theme": applet_logo,
         "author": "onox",
-        "copyright-year": "2008 - 2009",
+        "copyright-year": "2008 - 2010",
         "authors": ["Randal Barlow <im.tehk at gmail.com>", "onox <denkpadje@gmail.com>"]},
         ["settings-per-instance"])

@@ -414,9 +414,12 @@ class YamaApplet:
             self.places_menu.show_all()
 
     def get_icon_name(self, icon):
+        if gio.pygio_version >= (2, 17, 0) and isinstance(icon, gio.EmblemedIcon):
+            icon = icon.get_icon()
+
         if isinstance(icon, gio.ThemedIcon):
             return self.get_first_existing_icon(icon.get_names())
-        else:
+        elif isinstance(icon, gio.FileIcon):
             return icon.get_file().get_path()
 
     def get_first_existing_icon(self, icons):

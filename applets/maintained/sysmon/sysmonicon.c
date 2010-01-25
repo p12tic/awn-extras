@@ -16,6 +16,8 @@
 
 /* awn-sysmonicon.c */
 
+#include <cairo/cairo-xlib.h>
+
 #include "sysmonicon.h"
 #include "graph.h"
 #include "util.h"
@@ -32,7 +34,8 @@ enum
   PROP_GRAPH_TYPE_DEFAULT,
   PROP_CLIENT,
   PROP_ID,
-  PROP_INVALIDATE
+  PROP_INVALIDATE,
+  PROP_RENDER_BG
 };
 
 static void awn_sysmonicon_create_surfaces (AwnSysmonicon * sysmonicon);
@@ -67,7 +70,10 @@ awn_sysmonicon_get_property (GObject *object, guint property_id,
       break;
     case PROP_INVALIDATE:
       g_value_set_boolean (value,priv->invalidate);
-      break;      
+      break;
+    case PROP_RENDER_BG:
+      g_value_set_boolean (value,priv->render_bg);
+      break;
     default:
     G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
   }
@@ -111,7 +117,11 @@ awn_sysmonicon_set_property (GObject *object, guint property_id,
       break;
     case PROP_INVALIDATE:
       priv->invalidate = g_value_get_boolean (value);
-      break;      
+      break;
+    case PROP_RENDER_BG:
+      priv->render_bg = g_value_get_boolean (value);
+      awn_sysmonicon_create_surfaces (AWN_SYSMONICON(object));
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
   }
@@ -140,10 +150,12 @@ awn_sysmonicon_finalize (GObject *object)
 void
 awn_sysmonicon_constructed (GObject *object)
 {
+  DesktopAgnosticConfigClient * client_baseconf;
   AwnSysmoniconPrivate * priv;
   AwnApplet * applet;
   gchar * name;
-  gint size;  
+  gint size;
+  GError * err=NULL;
   
   priv = AWN_SYSMONICON_GET_PRIVATE (object);
   
@@ -159,6 +171,7 @@ awn_sysmonicon_constructed (GObject *object)
   
   g_object_get (applet,
                 "canonical-name",&name,
+                "client-baseconf",&client_baseconf,
                 NULL);
   priv->client = awn_config_get_default_for_applet_by_info (name, priv->id,NULL);
 
@@ -170,6 +183,18 @@ awn_sysmonicon_constructed (GObject *object)
   do_bridge ( applet,object,
              "icon","graph_type","graph-type");
 
+  desktop_agnostic_config_client_bind (client_baseconf,
+                                       "applet", "render_bg",
+                                       object, "render-bg", FALSE,
+                                       DESKTOP_AGNOSTIC_CONFIG_BIND_METHOD_INSTANCE,
+                                       &err);
+  if (err)
+  {
+    g_warning ("%s: error binding %s",__func__,err->message);
+    g_error_free (err);
+    err = NULL;
+  }
+  
   g_signal_connect (G_OBJECT (priv->applet), "size-changed", 
                     G_CALLBACK (_size_changed), object);
   g_signal_connect_swapped (G_OBJECT (priv->applet), "realize",
@@ -242,6 +267,13 @@ awn_sysmonicon_class_init (AwnSysmoniconClass *klass)
                                TRUE,
                                G_PARAM_READWRITE);
   g_object_class_install_property (object_class, PROP_INVALIDATE, pspec);   
+
+  pspec = g_param_spec_boolean ("render-bg",
+                              "Render Background",
+                              "Render Background",
+                               TRUE,
+                               G_PARAM_READWRITE);
+  g_object_class_install_property (object_class, PROP_RENDER_BG, pspec);   
 
   g_type_class_add_private (object_class, sizeof (AwnSysmoniconPrivate));
   
@@ -347,7 +379,12 @@ awn_sysmonicon_create_surfaces (AwnSysmonicon * sysmonicon)
   gint size;
   
   priv = AWN_SYSMONICON_GET_PRIVATE (sysmonicon);
-  
+
+  temp_cr = gdk_cairo_create(GTK_WIDGET(priv->applet)->window);
+  if (!temp_cr)
+  {
+    return;
+  }
   size = awn_applet_get_size (AWN_APPLET (priv->applet));
   
   if (priv->graph_cr)
@@ -386,7 +423,6 @@ awn_sysmonicon_create_surfaces (AwnSysmonicon * sysmonicon)
     priv->fg_surface = NULL;
   }  
   
-  temp_cr = gdk_cairo_create(GTK_WIDGET(priv->applet)->window);
   priv->graph_surface = cairo_surface_create_similar (cairo_get_target(temp_cr),CAIRO_CONTENT_COLOR_ALPHA, size,size);
   priv->graph_cr = cairo_create(priv->graph_surface);
   priv->bg_surface = cairo_surface_create_similar (cairo_get_target(temp_cr),CAIRO_CONTENT_COLOR_ALPHA, size,size);
@@ -394,6 +430,12 @@ awn_sysmonicon_create_surfaces (AwnSysmonicon * sysmonicon)
   priv->fg_surface = cairo_surface_create_similar (cairo_get_target(temp_cr),CAIRO_CONTENT_COLOR_ALPHA, size,size);
   priv->fg_cr = cairo_create(priv->fg_surface);
 
+  if (priv->render_bg)
+  {
+    awn_cairo_rounded_rect (priv->bg_cr,0.0, 0.0,size+1,size+1,1.0,ROUND_ALL );
+    cairo_set_source_rgba (priv->bg_cr,0.0,0.0,0.0,0.3);
+    cairo_fill (priv->bg_cr);
+  }
   /*FIXME should be in vtable ->set_bg() or something similar
     in most cases would set the surface once.... then just let it be 
    reused

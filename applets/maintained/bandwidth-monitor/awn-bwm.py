@@ -100,14 +100,14 @@ class Netstat:
             ifcfg_str = ifcfg_str.split('\n\n')
         stat_str = 'n'
         devices = []
-        ''' Reset the Sum Interface records to zero '''
+        # Reset the Sum Interface records to zero
         self.ifaces['Sum Interface']['rx_sum'] = 0
         self.ifaces['Sum Interface']['tx_sum'] = 0
         self.ifaces['Sum Interface']['rx_bytes'] = 0
         self.ifaces['Sum Interface']['tx_bytes'] = 0
         sum_rx_history = 0.0
         sum_tx_history = 0.0
-        ''' Reset the Multi Interface records to zero '''
+        # Reset the Multi Interface records to zero
         self.ifaces['Multi Interface']['rx_sum'] = 0
         self.ifaces['Multi Interface']['tx_sum'] = 0
         self.ifaces['Multi Interface']['rx_bytes'] = 0
@@ -220,7 +220,7 @@ class Netstat:
 class AppletBandwidthMonitor:
 
     def __init__(self, applet):
-        ''' Test if user has access to /proc/net/dev '''
+        # Test if user has access to /proc/net/dev
         if not os.access('/proc/net/dev', os.R_OK):
             applet.errors.general(('Unable to caclulate statistics',
             'Statistics calculation requires read access to /proc/net/dev'))
@@ -317,7 +317,7 @@ class AppletBandwidthMonitor:
 
     def change_unit(self, widget=None, scaleThresholdSBtn=None, label=None):
         self.unit = 8 if self.unit == 1 else 1
-        ''' normalize and update the label, and normalize the spinbutton '''
+        # normalize and update the label, and normalize the spinbutton
         if label:
             if self.unit == 1:
                 label.set_text('KBps')
@@ -331,7 +331,7 @@ class AppletBandwidthMonitor:
 
     def change_iface(self, widget, iface):
         if widget.get_active():
-            ''' Changed to interface %s' % iface '''
+            # Changed to interface %s' % iface
             self.iface = iface
             self.applet.settings['interface'] = iface
 
@@ -480,7 +480,7 @@ class AppletBandwidthMonitor:
             highest throughput metric. '''
         max_val = _total_hist[-1]
         ratio = max_val / 28 if max_val > self.ratio else self.ratio
-        ''' Change the color of the upload line to configured/default '''
+        # Change the color of the upload line to configured/default
         if iface:
             color = gtk.gdk.color_parse(
                 self.netstats.ifaces[iface]['upload_color'])
@@ -489,10 +489,10 @@ class AppletBandwidthMonitor:
                 color.blue / 65535.0, 1.0)
         else:
             ct.set_source_rgba(0.1, 0.1, 0.1, 0.5)
-        ''' Set the initial position and iter to 0 '''
+        # Set the initial position and iter to 0
         x_pos = 2 if self.border else 0
         cnt = 0
-        ''' If a transmit history exists, draw it '''
+        # If a transmit history exists, draw it
         if iface in self.netstats.ifaces \
         and len(self.netstats.ifaces[iface]['tx_history']):
             for value in self.netstats.ifaces[iface]['tx_history']:
@@ -504,7 +504,7 @@ class AppletBandwidthMonitor:
                 cnt += 1
             ct.close_path()
             ct.stroke()
-        ''' Change the color of the download line to configured/default '''
+        # Change the color of the download line to configured/default
         if iface:
             color = gtk.gdk.color_parse(
                 self.netstats.ifaces[iface]['download_color'])
@@ -513,10 +513,10 @@ class AppletBandwidthMonitor:
                 color.blue / 65535.0, 1.0)
         else:
             ct.set_source_rgba(0.1, 0.1, 0.1, 0.5)
-        ''' Reset the position and iter to 0 '''
+        # Reset the position and iter to 0
         x_pos = 2 if self.border else 0
         cnt = 0
-        ''' If a receive history exists, draw it '''
+        # If a receive history exists, draw it
         if iface in self.netstats.ifaces \
         and len(self.netstats.ifaces[iface]['rx_history']):
             for value in self.netstats.ifaces[iface]['rx_history']:

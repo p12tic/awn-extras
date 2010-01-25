@@ -128,25 +128,25 @@ class Preferences:
         listcols.pack_start(prows, False, False, 0)
         selection = treeview.get_selection()
         selection.connect('changed', self.on_selection_changed)
-        ''' Device '''
+        # Device
         device_renderer = gtk.CellRendererText()
         device_column = gtk.TreeViewColumn('Device', device_renderer)
         device_column.set_property('expand', True)
         device_column.add_attribute(device_renderer, 'text', 0)
-        ''' Sum '''
+        # Sum
         sum_renderer = gtk.CellRendererToggle()
         sum_column = gtk.TreeViewColumn('Sum', sum_renderer)
         sum_column.add_attribute(sum_renderer, 'active', 1)
         sum_renderer.set_property('activatable', True)
         sum_renderer.connect('toggled', self.toggle_cb, liststore, 1, 'sum')
-        ''' Multi '''
+        # Multi
         multi_renderer = gtk.CellRendererToggle()
         multi_column = gtk.TreeViewColumn('Multi', multi_renderer)
         multi_column.add_attribute(multi_renderer, 'active', 2)
         multi_renderer.set_property('activatable', True)
         multi_renderer.connect('toggled', self.toggle_cb,
             liststore, 2, 'multi')
-        ''' Upload '''
+        # Upload
         uploadColor_renderer = gtk.CellRendererToggle()
         uploadColor_renderer.set_property('indicator-size', 0.1)
         uploadColor_column = gtk.TreeViewColumn('Upload Color',
@@ -157,7 +157,7 @@ class Preferences:
         uploadColor_renderer.set_property('activatable', True)
         uploadColor_renderer.connect('toggled', self.color_cb,
             liststore, 3, 'upload')
-        ''' Download '''
+        # Download
         downloadColor_renderer = gtk.CellRendererToggle()
         downloadColor_renderer.set_property('indicator-size', 0.1)
         downloadColor_column = gtk.TreeViewColumn('Download Color',
@@ -168,7 +168,7 @@ class Preferences:
         downloadColor_renderer.set_property('activatable', True)
         downloadColor_renderer.connect('toggled', self.color_cb,
             liststore, 4, 'download')
-        ''' Apply the before defined cells '''
+        # Apply the before defined cells
         cell_box.liststore = liststore
         treeview.append_column(device_column)
         treeview.append_column(sum_column)

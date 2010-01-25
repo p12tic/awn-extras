@@ -141,7 +141,7 @@ class Preferences:
         sum_renderer.connect('toggled', self.toggle_cb, liststore, 1, 'sum')
         ''' Multi '''
         multi_renderer = gtk.CellRendererToggle()
-        multi_column = gtk.TreeViewColumn('Mutli', multi_renderer)
+        multi_column = gtk.TreeViewColumn('Multi', multi_renderer)
         multi_column.add_attribute(multi_renderer, 'active', 2)
         multi_renderer.set_property('activatable', True)
         multi_renderer.connect('toggled', self.toggle_cb,

@@ -9,7 +9,7 @@ description = The interface currently selected
 [DEFAULT/draw_threshold]
 type = float
 default = 0.0
-description = Minimum threshold to draw meter
+description = Minimum threshold to draw meter (dependent upon DEFAULT/unit)
 [DEFAULT/device_display_parameters]
 type = list-string
 default = ;

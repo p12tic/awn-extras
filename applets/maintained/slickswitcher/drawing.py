@@ -19,6 +19,7 @@
 # Boston, MA 02111-1307, USA.
 
 from os.path import exists, isdir
+from math import sqrt
 
 import cairo
 import pango
@@ -49,6 +50,10 @@ class Drawing(gtk.Table):
     last_width = 0
     last_height = 0
     was_custom = False
+    last_mode = ''
+    last_file = ''
+    last_w = -1
+    last_h = -1
 
     def __init__(self, switch, settings, applet):
         self.switch = switch
@@ -75,7 +80,7 @@ class Drawing(gtk.Table):
         self.viewport_widgets = []
 
         #Get the background image as a Cairo surface
-        self.update_background()
+        self.update_backgrounds()
 
         #"Update" the widget, which means checking for layout changes, redrawing
         #all the widgets, etc.
@@ -88,149 +93,25 @@ class Drawing(gtk.Table):
         gobject.timeout_add_seconds(2, self.timeout_update)
 
     #Get the background image as a surface
-    def update_background(self):
-        #See if gconf is installed
-        if gconf:
-
-            #Check if we have a client yet
-            if self.client is None:
-
-                #We don't. Get one
-                self.client = gconf.client_get_default()
-
-            #It is; get the path to the background image
-            bg_path = self.client.get_string('/desktop/gnome/background/' + \
-                'picture_filename')
-
-            #Check if the path:
-            #    isn't None
-            #    isn't ''
-            #    exists
-            #    isn't a directory
-            #    has changed
-            #Also check if the size has changed
-
-            if (self.last_width != self.settings['width']) or (self.last_height != \
-                self.settings['height']) or ((bg_path != self.bg_path) and \
-                (bg_path is not None) and (bg_path != '') and exists(bg_path) and \
-                (not isdir(bg_path))):
-
-                #Save the background image's path
-                self.bg_path = bg_path
-
-                #Save the width and height
-                self.last_width = self.settings['width']
-                self.last_height = self.settings['height']
-
-                #Try to get the background image as a surface
-                try:
-                    assert self.bg_path[-4:].lower() == '.png'
-
-                    #Create the surface
-                    surface = cairo.ImageSurface.create_from_png(self.bg_path)
-
-                    #Get the dimensions of the image
-                    width, height = float(surface.get_width()), \
-                        float(surface.get_height())
-
-                    #Resize the surface
-                    cr = cairo.Context(surface)
-                    cr.save()
-                    cr.scale(self.settings['width'] / width, \
-                        self.settings['height'] / height)
-                    cr.set_source_surface(surface, 0, 0)
-                    cr.paint()
-                    cr.restore()
-
-                    del cr
-
-                    #All went well; save the surface
-                    if self.background is not None:
-                        del self.background
-
-                    self.background = surface
-
-                #Something went wrong
-                except:
-                    #Now try to get the image from a pixbuf
-                    try:
-
-                        pixbuf = gtk.gdk.pixbuf_new_from_file(self.bg_path)
-                        pixbuf2 = pixbuf.scale_simple(self.settings['width'], \
-                            self.settings['height'], gtk.gdk.INTERP_BILINEAR)
-
-                        del pixbuf
-
-                        #All went well; save the pixbuf
-                        if self.background is not None:
-                            del self.background
-
-                        self.background = pixbuf2
-
-                    #Something went wrong
-                    except:
-
-                        #Get a blank image as a surface
-                        if self.background is not None:
-                            del self.background
-
-                        self.background = self.no_background()
-
-            #Either the path is None, is '', doesn't exist, is a directory, or hasn't
-            #changed. If it's one of the first four, get a blank image as a surface
-            #If it's the last, just do nothing, as it is already saved
-            else:
-
-                if (bg_path is None) or (bg_path == '') or (not exists(bg_path)) or \
-                    isdir(bg_path):
-
-                    #Get a blank image as a surface
-                    if self.background is not None:
-                        del self.background
-
-                    self.background = self.no_background()
-
-        #No GConf installed
-        else:
-            if self.background is not None:
-                del self.background
-
-            self.background = self.no_background()
-
-    #Return a blank image as a surface
-    def no_background(self):
-        #Get a surface
-        surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.settings['width'], \
-            self.settings['height'])
-
-        #Get a Cairo context
-        cr = cairo.Context(surface)
-
-        #Draw blackness
-        cr.set_source_rgba(0.0, 0.0, 0.0, 0.9)
-        cr.paint()
-
-        del cr
-
-        #Return the surface
-        return surface
+    def update_backgrounds(self):
+        bgs = self.applet.update_backgrounds(obj=self)
+        if bgs is not None:
+            self.backgrounds = bgs
 
     #Update every 2 seconds
     def timeout_update(self):
-        self.update_background()
+        self.update_backgrounds()
         self.update()
         gobject.timeout_add_seconds(2, self.timeout_update)
 
     #Update
     def update(self):
-
         #Get the current number of columns and rows
         num_columns = self.switch.get_num_columns()
         num_rows = self.switch.get_num_rows()
 
         #Check if the workspace layout has changed
         if num_columns != self.num_columns or num_rows != self.num_rows:
-
             #Update the number of columns and rows
             self.num_columns, self.num_rows = num_columns, num_rows
             #Remove each Viewport widget from this table. This does not delete it, but
@@ -244,10 +125,8 @@ class Drawing(gtk.Table):
 
             #Check if the number of workspaces has increased
             if len(self.viewport_widgets) < num_workspaces:
-
                 #Make as many Viewport widgets as necessary
                 for new_viewport in range(num_workspaces - len(self.viewport_widgets)):
-
                     #Make a new viewport.
                     viewport = ViewportWidget(self)
 
@@ -372,7 +251,7 @@ class ViewportWidget(gtk.DrawingArea):
         self.connect('leave-notify-event', self.leave_notify)
 
         #Get the background image as a surface or Pixbuf
-        self.background = self.table.background
+        self.backgrounds = self.table.backgrounds
 
         #Get an instance of the ViewportSurface class
         self.surface = ViewportSurface(self)
@@ -406,19 +285,6 @@ class ViewportWidget(gtk.DrawingArea):
         #the table
         self.bg_red, self.bg_green, self.bg_blue, self.bg_alpha = self.table.bg_red, \
             self.table.bg_green, self.table.bg_blue, self.table.bg_alpha
-
-#        #Check if the background image is a Pixbuf
-#        if type(self.background) == gtk.gdk.Pixbuf:
-#            #It is; get a surface then draw it to that surface
-#            #This is done because a cairo.ImageSurface's context doesn't have the
-#            #set_source_pixbuf method
-#            cr = self.window.cairo_create()
-#            cr.set_operator(cairo.OPERATOR_SOURCE)
-#            cr.set_source_pixbuf(self.background, 0, 0)
-#            cr.paint()
-#
-#            #Save the background
-#            self.background = self.window
 
         #Update the surface
         self.surface.update()
@@ -473,7 +339,7 @@ class ViewportWidget(gtk.DrawingArea):
         self.draw_background = True
 
         #Get the background image as a surface or Pixbuf
-        self.background = self.table.background
+        self.backgrounds = self.table.backgrounds
 
         #Get whether or not the surface should draw the background color
         self.draw_background = True
@@ -522,7 +388,7 @@ class ViewportSurface:
             height)
 
     #The owner tells us to update, so do so.
-    def update(self):
+    def update(self, *args):
         #First update values from the owner, such as viewport#, background, etc.
         self.update_values()
 
@@ -577,7 +443,17 @@ class ViewportSurface:
         #Fill the rectangle with the background image
 
         #The background is a GdkPixbuf
-        if type(self.background) == gtk.gdk.Pixbuf:
+        num_bgs = len(self.backgrounds)
+        if self.number > num_bgs:
+            number = self.number % num_bgs
+            if number == 0:
+                number = num_bgs
+        else:
+            number = self.number
+
+        number = number - 1
+
+        if type(self.backgrounds[number]) == gtk.gdk.Pixbuf:
             #Often this gets called while shutting down the applet, and the GdkWindow
             #is None. This should stop some error messages
             if self.owner.window is None:
@@ -586,17 +462,16 @@ class ViewportSurface:
             #Hooray Gdk!
             pixmap = gtk.gdk.Pixmap(self.owner.window, self.settings['width'], \
                 self.settings['height'])
-            pixmap.draw_pixbuf(None, self.background, 0, 0, 0, 0, \
+            pixmap.draw_pixbuf(None, self.backgrounds[number], 0, 0, 0, 0, \
                 dither=gtk.gdk.RGB_DITHER_MAX)
             cr2 = pixmap.cairo_create()
             self.cr.set_source_surface(cr2.get_target(), 0, 0)
-
 
         #The background is simply a cairo surface
         else:
             pixmap = None
             cr2 = None
-            self.cr.set_source_surface(self.background, 0, 0)
+            self.cr.set_source_surface(self.backgrounds[number], 0, 0)
 
         #Now fill the background
         self.cr.fill_preserve()
@@ -633,7 +508,7 @@ class ViewportSurface:
         self.draw_background = self.owner.draw_background
 
         #Get the background image as a surface (or Pixbuf)
-        self.background = self.owner.background
+        self.backgrounds = self.owner.backgrounds
 
         #Get the background color
         if self.draw_background:
@@ -780,7 +655,7 @@ class ViewportSurface:
 
     #Draw standard outlined number
     def draw_outlined_number(self, applet):
-        size = applet.get_size()
+        size = sqrt(self.settings['width'] ** 2 + self.settings['height'] ** 2)
 
         self.cr.save()
 
@@ -800,7 +675,7 @@ class ViewportSurface:
 
         #Get where the number should go
         x, y = self.settings['width'] / 2, self.settings['height'] / 2
-        font_size = 33.0 * (size / 48.0)
+        font_size = 25.0 * (size / 200.0)
         six, eight = (6, 8)
 
         #Set up the text layout with pango
@@ -828,18 +703,19 @@ class ViewportSurface:
     def draw_custom_number(self, applet):
         self.cr.save()
 
-        size = applet.get_size()
-
         if self.applet_mode:
+            size = applet.get_size()
             x, y = self.width / 2, self.height / 2
             font_size = 24.0 * (size / 48.0)
             six = 6 * (size / 48.0)
             eight = 8 * (size / 48.0)
 
         else:
+            size = sqrt(self.settings['width'] ** 2 + self.settings['height'] ** 2)
             x, y = self.settings['width'] / 2, self.settings['height'] / 2
-            font_size = 33.0 * (size / 48.0)
-            six, eight = (6, 8)
+            font_size = 25.0 * (size / 200.0)
+            six = 6 * (size / 200.0)
+            eight = 8 * (size / 200.0)
 
         self.cr.select_font_face('Sans', cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
         self.cr.set_font_size(font_size)

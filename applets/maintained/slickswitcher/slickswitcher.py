@@ -27,6 +27,7 @@ import gobject
 import cairo
 import drawing, switch, settings
 from os.path import exists, isdir
+import os
 
 from desktopagnostic.config import GROUP_DEFAULT
 
@@ -46,6 +47,12 @@ class App(awn.AppletSimple):
     contexts = []
     timeout = None
     last_size = 0
+    self_pixbufs = []
+    dialog_pixbufs = []
+    last_w = 0
+    last_h = 0
+    last_mode = -1
+    last_file = ''
 
     def __init__(self, uid, panel_id):
         #Awn Applet configuration
@@ -75,7 +82,7 @@ class App(awn.AppletSimple):
         self.dialog.add(self.widget)
 
         #Set up the values for the ViewportSurface
-        self.update_background()
+        self.update_backgrounds()
         self.draw_background = False
         self.number = self.switch.get_current_workspace_num()
         num_columns = self.switch.get_num_columns()
@@ -85,9 +92,10 @@ class App(awn.AppletSimple):
         #Set up the text overlay
         self.overlay = awn.OverlayText()
         self.add_overlay(self.overlay)
-        self.overlay.props.font_sizing = 24.0 * (self.get_size() / 48.0)
+        self.overlay.props.font_sizing = 21.0
         self.overlay.props.text = str(self.number)
         self.overlay.props.active = not self.settings['use_custom_text']
+        self.overlay.props.apply_effects = True
         self.overlay.connect('notify::text-color', self.overlay_notify)
         self.overlay.connect('notify::text-outline-color', self.overlay_notify)
         self.overlay.connect('notify::font-mode', self.overlay_notify)
@@ -189,14 +197,15 @@ class App(awn.AppletSimple):
     #When the size of Awn's icons has changed
     def size_changed(self, applet, new_size):
         self.size = new_size
+        self.overlay.props.font_sizing = 21.0
         self.update_icon()
 
     #Update the icon
-    def update_icon(self):
+    def update_icon(self, force=False):
         self.number = self.switch.get_current_workspace_num()
 
         #Tell the icon to update
-        self.icon.update()
+        self.icon.update(force)
 
     #The icon was updated
     def updated(self):
@@ -210,7 +219,7 @@ class App(awn.AppletSimple):
 
     #Called only from gobject every 2 seconds
     def timeout_icon(self):
-        if self.update_background():
+        if self.update_backgrounds():
             self.update_icon()
 
         gobject.timeout_add_seconds(2, self.timeout_icon)
@@ -242,8 +251,8 @@ class App(awn.AppletSimple):
         about_menu = gtk.ImageMenuItem(gtk.STOCK_ABOUT)
 
         #Connect the two items to functions when selected
-        prefs_menu.connect('activate',self.show_prefs)
-        about_menu.connect('activate',self.show_about)
+        prefs_menu.connect('activate', self.show_prefs)
+        about_menu.connect('activate', self.show_about)
 
         #Now create the menu to put the items in and show it
         menu = self.create_default_menu()
@@ -293,125 +302,126 @@ class App(awn.AppletSimple):
         del icon
 
     #Get the background image as a surface
-    def update_background(self, *args):
+    def update_backgrounds(self, force=False, obj=None):
+        bgs = {}
+        ok = False
+        if obj is None:
+            obj = self
+            w, h = self.size, self.size
 
-        #See if gconf is installed
-        if gconf:
-
-            #Check if we have a client yet
-            if self.client is None:
-
-                #We don't. Get one
-                self.client = gconf.client_get_default()
-
-            #It is; get the path to the background image
-            bg_path = self.client.get_string('/desktop/gnome/background/' + \
-                'picture_filename')
-
-            #Check if the path:
-            #    isn't None
-            #    isn't ''
-            #    exists
-            #    isn't a directory
-            #    hasn changed
-            #Also check if the size hasn't changed
-
-            #Hooray parentheses!
-            if (self.last_size != self.size) or ((bg_path is not None)    and \
-                (bg_path != self.bg_path) and (bg_path != '') and exists(bg_path) and \
-                (not isdir(bg_path))):
-
-                #Save the background image's path
-                self.bg_path = bg_path
-
-                #Save the current size
+            if self.size != self.last_size:
+                ok = True
                 self.last_size = self.size
 
-                #Try to get the background image as a surface
-                try:
-                    assert self.bg_path[-4:].lower() == '.png'
+        else:
+            w, h = self.settings['width'], self.settings['height']
+            if w != obj.last_w or h != obj.last_h:
+                ok = True
+                obj.last_w, obj.last_h = w, h
 
-                    #Create the surface
-                    surface = cairo.ImageSurface.create_from_png(self.bg_path)
+        if self.settings['background_mode'] != obj.last_mode:
+            ok = True
+            obj.last_mode = self.settings['background_mode']
 
-                    #Get the dimensions of the image
-                    width, height = float(surface.get_width()), \
-                        float(surface.get_height())
+        elif self.settings['background_mode'] == 'file':
+            if self.settings['background_file'] != obj.last_file:
+                ok = True
+                obj.last_file = self.settings['background_file']
 
-                    #Resize the surface
-                    cr = cairo.Context(surface)
-                    cr.save()
-                    cr.scale(self.size / width, self.size / height)
-                    cr.set_source_surface(surface, 0, 0)
-                    cr.paint()
-                    cr.restore()
+        if not ok and not force:
+            return
 
-                    del cr
+        if self.settings['background_mode'] == 'file':
+            path = self.settings['background_file']
+            bgs = [self.background_from_file(path, w, h)]
 
-                    #All went well; save the surface
-                    if self.background is not None:
-                        del self.background
+        elif self.settings['background_mode'] == 'compiz':
+            fp = open(os.environ['HOME'] + '/.config/compiz/compizconfig/config')
+            f = fp.read()
+            fp.close()
 
-                    self.background = surface
+            for line in f.split('\n'):
+                if line.find('backend = ') == 0:
+                    backend = line.split('backend = ')[1]
 
-                #Something went wrong
-                except:
-                    #Now try to get the image from a pixbuf
-                    try:
+            if backend == 'gconf':
+                if gconf:
+                    if self.client is None:
+                        self.client = gconf.client_get_default()
 
-                        pixbuf = gtk.gdk.pixbuf_new_from_file(self.bg_path)
-                        pixbuf2 = pixbuf.scale_simple(self.size, self.size, \
-                            gtk.gdk.INTERP_BILINEAR)
+                    paths = self.client.get_list( \
+                        '/apps/compiz/plugins/wallpaper/screen0/options/bg_image', \
+                        gconf.VALUE_STRING)
 
-                        del pixbuf
+                    if len(paths) == 0:
+                        bgs[0] = self.no_background(w, h)
 
-                        #All went well; save the pixbuf
-                        if self.background is not None:
-                            del self.background
-
-                        self.background = pixbuf2
-
-                    #Something went wrong
-                    except:
-                        #Get a blank image as a surface
-                        if self.background is not None:
-                            del self.background
-
-                        self.background = self.no_background()
-
-                return True
-
-            #Either the path is None, is '', doesn't exist, is a directory, or hasn't
-            #changed. If it's one of the first four, get a blank image as a surface
-            #If it's the last, just do nothing, as it is already saved
-            else:
-
-                if (bg_path is None) or (bg_path == '') or (not exists(bg_path)) or \
-                    isdir(bg_path):
-
-                    #Get a blank image as a surface
-                    if self.background is not None:
-                        del self.background
-
-                    self.background = self.no_background()
+                    else:
+                        for i, path in enumerate(paths):
+                            bgs[i] = self.background_from_file(path, w, h)
 
                 else:
-                    return False
+                    bgs = [self.no_background(w, h)]
 
-        #GConf is not installed
+            elif backend == 'ini':
+                for line in f.split('\n'):
+                    if line.find('profile = ') == 0:
+                        profile = line.split('profile = ')[1]
+
+                if profile.strip() == '':
+                    profile = 'Default'
+
+                fp = open(os.environ['HOME'] + '/.config/compiz/compizconfig/%s.ini' % profile)
+                f = fp.read()
+                fp.close()
+
+                wallpaper = False
+                for line in f.split('\n'):
+                    if line == '[wallpaper]':
+                        wallpaper = True
+                    elif wallpaper and line.find('s0_bg_image = ') == 0:
+                        paths = line.split('s0_bg_image = ')[1].split(';')
+                        break
+
+                if len(paths) == 0:
+                    bgs[0] = self.no_background(w, h)
+
+                else:
+                    for i, path in enumerate(paths):
+                        if path.strip() != '':
+                            bgs[i] = self.background_from_file(path, w, h)
+
+            else:
+                bgs = [self.no_background(w, h)]
+
         else:
-            #Get a blank image as a surface
-            if self.background is not None:
-                del self.background
+            #See if gconf is installed
+            if gconf:
+                #Check if we have a client yet
+                if self.client is None:
+                    #We don't. Get one
+                    self.client = gconf.client_get_default()
 
-            self.background = self.no_background()
+                #It is; get the path to the background image
+                path = self.client.get_string('/desktop/gnome/background/picture_filename')
 
-            return False
+                bgs = [self.background_from_file(path, w, h)]
+
+            #GConf is not installed.
+            else:
+                bgs = [self.no_background(w, h)]
+
+        if obj == self:
+            self.backgrounds = bgs
+            return (ok or force)
+
+        else:
+            return bgs
 
     #Return a blank image as a surface
-    def no_background(self):
+    def no_background(self, w=48, h=48):
         #Get a surface
-        surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.size, self.size)
+        surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
 
         #Get a Cairo context
         cr = cairo.Context(surface)
@@ -424,6 +434,46 @@ class App(awn.AppletSimple):
 
         #Return the surface
         return surface
+
+    #Get a background image from file
+    def background_from_file(self, path, w=48, h=48):
+        if 1:
+            #Try to get the background image as a surface
+            try:
+                assert path[-4:].lower() == '.png'
+
+                #Create the surface
+                surface = cairo.ImageSurface.create_from_png(path)
+
+                #Get the dimensions of the image
+                width, height = float(surface.get_width()), float(surface.get_height())
+
+                #Resize the surface
+                cr = cairo.Context(surface)
+                cr.save()
+                cr.scale(w / width, h / height)
+                cr.set_source_surface(surface, 0, 0)
+                cr.paint()
+                cr.restore()
+
+                del cr
+
+                return surface
+
+            #Something went wrong
+            except:
+                #Now try to get the image from a pixbuf
+                try:
+                    pixbuf = gtk.gdk.pixbuf_new_from_file(path)
+                    pixbuf2 = pixbuf.scale_simple(w, h, gtk.gdk.INTERP_BILINEAR)
+
+                    del pixbuf
+
+                    return pixbuf2
+
+                #Something went wrong
+                except:
+                    return self.no_background(w, h)
 
     #Show a Preferences dialog
     def show_prefs(self, *args):

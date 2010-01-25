@@ -18,10 +18,14 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+import os
+
 import pygtk
 pygtk.require('2.0')
 import gtk
 import pango
+import gettext
+
 import awn
 
 from desktopagnostic.config import GROUP_DEFAULT
@@ -29,6 +33,8 @@ from desktopagnostic.ui import ColorButton
 from desktopagnostic import Color
 
 from awn.extras import _
+
+gettext.bindtextdomain('xdg-user-dirs', '/usr/share/locale')
 
 
 class Prefs:
@@ -256,9 +262,9 @@ class Prefs:
         label_width = gtk.Label(_("Width:"))
         label_width.set_alignment(0.0, 0.5)
         width = self.config.get_value(GROUP_DEFAULT, 'width')
-        if width < 24 or width > 250:
+        if width < 24 or width > 400:
             width = 160
-        width_adj = gtk.Adjustment(float(width), 24, 250, 5, 10, 0)
+        width_adj = gtk.Adjustment(float(width), 24, 400, 5, 10, 0)
         width = gtk.SpinButton(width_adj, 1, 0)
         width.key = 'width'
         width.connect('focus-out-event', self.spinbutton_focusout)
@@ -273,9 +279,9 @@ class Prefs:
         label_height = gtk.Label(_("Height:"))
         label_height.set_alignment(0.0, 0.5)
         height = self.config.get_value(GROUP_DEFAULT, 'height')
-        if height < 24 or height > 250:
+        if height < 24 or height > 400:
             height = 110
-        height_adj = gtk.Adjustment(float(height), 24, 250, 5, 10, 0)
+        height_adj = gtk.Adjustment(float(height), 24, 400, 5, 10, 0)
         height = gtk.SpinButton(height_adj, 1, 0)
         height.key = 'height'
         height.connect('focus-out-event', self.spinbutton_focusout)
@@ -333,13 +339,24 @@ class Prefs:
         label_file = gtk.Label(_("File:"))
 
         file_chooser = gtk.FileChooserButton(_("Choose a Background Image"))
-        file_chooser.set_filename('')
+        file_chooser.connect('file-set', self.file_chooser_set)
+
+        path = self.config.get_value(GROUP_DEFAULT, 'background_file')
+        if path in (None, '', os.environ['HOME'], os.environ['HOME'] + '/', '/dev/null', '/'):
+            file_chooser.set_filename(os.environ['HOME'] + '/' + \
+                gettext.dgettext('xdg-user-dirs', 'Pictures'))
+
+        else:
+            file_chooser.set_filename(path)
 
         size_group.add_widget(file_chooser)
 
         self.file_hbox = gtk.HBox(False, 6)
         self.file_hbox.pack_start(label_file, False)
         self.file_hbox.pack_end(file_chooser, False)
+
+        if mode != 'file':
+            self.file_hbox.set_sensitive(False)
 
         vbox.pack_start(self.file_hbox, False)
 
@@ -355,9 +372,9 @@ class Prefs:
         vbox.pack_start(label_background, False)
         vbox.pack_start(align, False)
 
-        vbox.set_sensitive(False)
-
         advanced_vbox.pack_start(vbox, False)
+
+        self.combo_mode.connect('changed', self.combo_mode_changed)
 
         notebook.append_page(advanced_vbox, gtk.Label(_("Advanced")))
 
@@ -373,9 +390,23 @@ class Prefs:
         self.win.add(main_vbox)
         self.win.show_all()
 
-    #A value was updated
-    def update(self, widget, event):
-        self.config.set_value(GROUP_DEFAULT, widget.key, widget.get_text())
+    def combo_mode_changed(self, widget):
+        self.applet.settings['background_mode'] = ['gnome', 'compiz', 'file'][widget.get_active()]
+
+        if widget.get_active() == 2:
+            self.file_hbox.set_sensitive(True)
+
+        else:
+            self.file_hbox.set_sensitive(False)
+
+        self.applet.update_backgrounds(True)
+        self.applet.update_icon()
+
+    def file_chooser_set(self, widget):
+        self.applet.settings['background_file'] = widget.get_filename()
+        if self.combo_mode.get_active() == 2:
+            self.applet.update_backgrounds(True)
+            self.applet.update_icon()
 
     #The close button was clicked
     def close(self, widget):

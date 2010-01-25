@@ -29,16 +29,16 @@ import sys
 import gtk
 import awn
 
-from awn.extras import awnlib, __version__
+from awn.extras import _, awnlib, __version__
 import gobject
 import cairo
 import bwmprefs
 
-APPLET_NAME = 'Bandwidth Monitor'
+APPLET_NAME = _('Bandwidth Monitor')
 APPLET_VERSION = '0.3.9.3'
 APPLET_COPYRIGHT = '© 2006-2009 CURE|THE|ITCH'
 APPLET_AUTHORS = ['Kyle L. Huff <awn-bwm@curetheitch.com>']
-APPLET_DESCRIPTION = 'Network Bandwidth monitor'
+APPLET_DESCRIPTION = _('Network Bandwidth monitor')
 APPLET_WEBSITE = 'http://www.curetheitch.com/projects/awn-bwm/'
 APPLET_PATH = os.path.dirname(sys.argv[0])
 APPLET_ICON = APPLET_PATH + '/images/icon.png'
@@ -222,13 +222,13 @@ class AppletBandwidthMonitor:
     def __init__(self, applet):
         # Test if user has access to /proc/net/dev
         if not os.access('/proc/net/dev', os.R_OK):
-            applet.errors.general(('Unable to caclulate statistics',
-            'Statistics calculation requires read access to /proc/net/dev'))
+            applet.errors.general((_('Unable to caclulate statistics'), _('''\
+Statistics calculation requires read access to /proc/net/dev''')))
             applet.errors.set_error_icon_and_click_to_restart()
             return None
         self.applet = applet
         self.UI_FILE = UI_FILE
-        applet.tooltip.set('Bandwidth Monitor')
+        applet.tooltip.set(_('Bandwidth Monitor'))
         self.meter_scale = 25
         icon = gtk.gdk.pixbuf_new_from_xpm_data(['1 1 1 1',
             '       c #000',
@@ -241,7 +241,7 @@ class AppletBandwidthMonitor:
         self.dialog = applet.dialog.new('main')
         self.vbox = gtk.VBox()
         self.dialog.add(self.vbox)
-        button = gtk.Button('Change Unit')
+        button = gtk.Button(_('Change Unit'))
         self.dialog.add(button)
         defaults = {'unit': 8,
             'interface': '',
@@ -292,8 +292,8 @@ class AppletBandwidthMonitor:
         self.upload_ot.props.apply_effects = True
         self.download_ot.props.apply_effects = True
         self.sum_ot.props.apply_effects = True
-        self.upload_ot.props.text = 'Scanning'
-        self.download_ot.props.text = 'Devices'
+        self.upload_ot.props.text = _('Scanning')
+        self.download_ot.props.text = _('Devices')
         self.prefs.setup()
         ''' connect the left-click dialog button 'Change Unit' to
             the call_change_unit function, which does not call
@@ -320,11 +320,11 @@ class AppletBandwidthMonitor:
         # normalize and update the label, and normalize the spinbutton
         if label:
             if self.unit == 1:
-                label.set_text('KBps')
+                label.set_text(_('KBps'))
                 scaleThresholdSBtn.set_value(
                     self.applet.settings['draw_threshold'] / 8)
             else:
-                label.set_text('Kbps')
+                label.set_text(_('Kbps'))
                 scaleThresholdSBtn.set_value(
                     self.applet.settings['draw_threshold'] * 8)
         self.applet.settings['unit'] = self.unit
@@ -346,27 +346,27 @@ class AppletBandwidthMonitor:
             xoptions=gtk.EXPAND | gtk.FILL,
             yoptions=gtk.EXPAND | gtk.FILL,
             xpadding=0, ypadding=0)
-        table.attach(gtk.Label('Interface'),
+        table.attach(gtk.Label(_('Interface')),
             1, 2, 0, 1,
             xoptions=gtk.EXPAND | gtk.FILL,
             yoptions=gtk.EXPAND | gtk.FILL,
             xpadding=0, ypadding=0)
-        table.attach(gtk.Label('Sent'),
+        table.attach(gtk.Label(_('Sent')),
             2, 3, 0, 1,
             xoptions=gtk.EXPAND | gtk.FILL,
             yoptions=gtk.EXPAND | gtk.FILL,
             xpadding=0, ypadding=0)
-        table.attach(gtk.Label('Received'),
+        table.attach(gtk.Label(_('Received')),
             3, 4, 0, 1,
             xoptions=gtk.EXPAND | gtk.FILL,
             yoptions=gtk.EXPAND | gtk.FILL,
             xpadding=0, ypadding=0)
-        table.attach(gtk.Label('Sending'),
+        table.attach(gtk.Label(_('Sending')),
             4, 5, 0, 1,
             xoptions=gtk.EXPAND | gtk.FILL,
             yoptions=gtk.EXPAND | gtk.FILL,
             xpadding=0, ypadding=0)
-        table.attach(gtk.Label('Receiving'),
+        table.attach(gtk.Label(_('Receiving')),
             5, 6, 0, 1,
             xoptions=gtk.EXPAND | gtk.FILL,
             yoptions=gtk.EXPAND | gtk.FILL,
@@ -414,10 +414,10 @@ class AppletBandwidthMonitor:
         if not self.applet.dialog.is_visible('main'):
             if not self.iface in self.netstats.ifaces:
                 self.applet.set_tooltip_text(
-                    'Please select a valid Network Device')
+                    _('Please select a valid Network Device'))
             else:
-                self.applet.set_tooltip_text(
-                    'Total Sent: %s - Total Received: %s (All Interfaces)' % (
+                self.applet.set_tooltip_text(_('''\
+Total Sent: %s - Total Received: %s (All Interfaces)''') % (
                         readable_speed(
                             self.netstats.ifaces[self.iface]['tx_sum']
                             * self.unit, self.unit, False),
@@ -607,9 +607,9 @@ class AppletBandwidthMonitor:
             self.title_text = readable_speed(
                 self.netstats.ifaces[self.iface]['tx_bytes'], self.unit)
         else:
-            self.upload_ot.props.text = 'No'
-            self.download_ot.props.text = 'Device'
-            self.title_text = 'Please select a valid device'
+            self.upload_ot.props.text = _('No')
+            self.download_ot.props.text = _('Device')
+            self.title_text = _('Please select a valid device')
         if self.border:
             line_width = 2
             ct.set_line_width(line_width)

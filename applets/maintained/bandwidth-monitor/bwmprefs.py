@@ -19,8 +19,9 @@ Email: awn-bwm@curetheitch.com
     along with this program. If not, see <http://www.gnu.org/licenses/gpl.txt>.
 '''
 
-import gtk
+from awn.extras import _
 import gobject
+import gtk
 
 
 class Preferences:
@@ -45,9 +46,11 @@ class Preferences:
         self.uomCheckbutton = uomCheckbutton
         if self.parent.unit == 1:
             uomCheckbutton.set_property('active', True)
-            thresholdLabel.set_text('KBps')
+            # kilobytes per second
+            thresholdLabel.set_text(_('KBps'))
         else:
-            thresholdLabel.set_text('Kbps')
+            # kilobits per second
+            thresholdLabel.set_text(_('Kbps'))
         uomCheckbutton.connect('toggled',
             self.parent.change_unit, scaleThresholdSBtn, thresholdLabel)
         graphZerotoggle = prefs_ui.get_object('graphZerotoggle')
@@ -130,18 +133,18 @@ class Preferences:
         selection.connect('changed', self.on_selection_changed)
         # Device
         device_renderer = gtk.CellRendererText()
-        device_column = gtk.TreeViewColumn('Device', device_renderer)
+        device_column = gtk.TreeViewColumn(_('Device'), device_renderer)
         device_column.set_property('expand', True)
         device_column.add_attribute(device_renderer, 'text', 0)
         # Sum
         sum_renderer = gtk.CellRendererToggle()
-        sum_column = gtk.TreeViewColumn('Sum', sum_renderer)
+        sum_column = gtk.TreeViewColumn(_('Sum'), sum_renderer)
         sum_column.add_attribute(sum_renderer, 'active', 1)
         sum_renderer.set_property('activatable', True)
         sum_renderer.connect('toggled', self.toggle_cb, liststore, 1, 'sum')
         # Multi
         multi_renderer = gtk.CellRendererToggle()
-        multi_column = gtk.TreeViewColumn('Multi', multi_renderer)
+        multi_column = gtk.TreeViewColumn(_('Multi'), multi_renderer)
         multi_column.add_attribute(multi_renderer, 'active', 2)
         multi_renderer.set_property('activatable', True)
         multi_renderer.connect('toggled', self.toggle_cb,
@@ -149,7 +152,7 @@ class Preferences:
         # Upload
         uploadColor_renderer = gtk.CellRendererToggle()
         uploadColor_renderer.set_property('indicator-size', 0.1)
-        uploadColor_column = gtk.TreeViewColumn('Upload Color',
+        uploadColor_column = gtk.TreeViewColumn(_('Upload Color'),
             uploadColor_renderer, cell_background=5)
         uploadColor_column.add_attribute(uploadColor_renderer, 'active', 3)
         uploadColor_column.set_cell_data_func(uploadColor_renderer,
@@ -160,7 +163,7 @@ class Preferences:
         # Download
         downloadColor_renderer = gtk.CellRendererToggle()
         downloadColor_renderer.set_property('indicator-size', 0.1)
-        downloadColor_column = gtk.TreeViewColumn('Download Color',
+        downloadColor_column = gtk.TreeViewColumn(_('Download Color'),
             downloadColor_renderer, cell_background=6)
         downloadColor_column.add_attribute(downloadColor_renderer, 'active', 4)
         downloadColor_column.set_cell_data_func(downloadColor_renderer,
@@ -233,11 +236,11 @@ class Preferences:
 
     def color_cb(self, widget, path, model, col_number, name):
         if col_number == 3:
-            prop = 'Upload'
+            prop = _('Upload')
         else:
-            prop = 'Download'
+            prop = _('Download')
         colorseldlg = gtk.ColorSelectionDialog(
-            '%s %s Color' % (model[path][0], prop))
+            _('%s %s Color') % (model[path][0], prop))
         colorseldlg.colorsel.set_current_color(
             gtk.gdk.color_parse(self.get_color(model[path][0], prop.lower())))
         response = colorseldlg.run()

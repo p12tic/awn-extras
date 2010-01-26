@@ -210,14 +210,12 @@ class CommandSelector:
         self.option_map = {}
         value = getattr(prefs.props, self.prop)
         active_set = False
-        idx = 0
-        for option in options:
+        for idx, option in enumerate(options):
             model.append(option)
             self.option_map[option[1]] = idx
             if option[1] == value:
                 self.dropdown.props.active = idx
                 active_set = True
-            idx += 1
         model.append([_('Custom'), None])
         self.custom = gtk.Entry()
         self.custom.props.sensitive = not active_set

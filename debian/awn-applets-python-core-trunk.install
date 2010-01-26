@@ -5,6 +5,15 @@ usr/share/avant-window-navigator/applets/animal-farm/*.py
 usr/share/avant-window-navigator/applets/animal-farm/icons/*.svg
 usr/share/avant-window-navigator/applets/animal-farm.desktop
 #
+# Bandwidth-monitor
+#
+etc/gconf/schemas/awn-applet-bandwidth-monitor.schemas
+usr/share/avant-window-navigator/applets/bandwidth-monitor/*.py
+usr/share/avant-window-navigator/applets/bandwidth-monitor/*.ui
+usr/share/avant-window-navigator/applets/bandwidth-monitor/images/*.png
+usr/share/avant-window-navigator/applets/bandwidth-monitor.desktop
+usr/share/avant-window-navigator/schemas/awn-applet-bandwidth-monitor.schema-ini
+#
 # Battery
 #
 etc/gconf/schemas/awn-applet-battery.schemas

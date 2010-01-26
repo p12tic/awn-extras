@@ -119,10 +119,10 @@ if test "$with_mozilla" != "no"; then
         fi
     done
     if test "$found_mozilla" = "yes"; then
-        AC_DEFINE([HAVE_MOZILLA],[1],[Define if Gecko (Mozilla) is available.])
+        AC_DEFINE([HAVE_MOZILLA],[1],[Define if Mozilla/Gecko/XULRunner is available.])
         webapplet_modules="$webapplet_modules $mozilla_module"
     else
-        AC_MSG_ERROR([Could not find Gecko's gtkmozembed (needed for Mozilla support)])
+        AC_MSG_ERROR([Could not find gtkmozembed (needed for Mozilla/Gecko/XULRunner support)])
     fi
 fi
 
@@ -389,5 +389,5 @@ echo "             Vala Support:   $has_vala"
 echo ""
 echo "           WebKit Support:   $webkit_module"
 echo ""
-echo "            Gecko Support:   $mozilla_module"
+echo "        XULRunner Support:   $mozilla_module"
 echo ""

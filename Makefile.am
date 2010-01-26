@@ -12,7 +12,6 @@ EXTRA_DIST = \
 	intltool-update.in \
 	po/Makefile.in.in \
 	po/POTFILES.skip \
-	$(wildcard shared/vala/*.vapi) \
 	COPYING.BSD \
 	COPYING.CCASAv3.0 \
 	COPYING.GPL-3 \

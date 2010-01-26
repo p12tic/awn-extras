@@ -306,6 +306,7 @@ applets/Makefile
 applets/maintained/animal-farm/Makefile
 applets/maintained/awnterm/Makefile
 applets/maintained/awnterm/awnterm.desktop.in
+applets/maintained/bandwidth-monitor/Makefile
 applets/maintained/battery/Makefile
 applets/maintained/cairo-clock/Makefile
 applets/maintained/cairo-menu/Makefile

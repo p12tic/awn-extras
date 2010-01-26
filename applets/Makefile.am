@@ -52,6 +52,7 @@ endif
 SUBDIRS = \
 	maintained/animal-farm \
 	maintained/awnterm \
+	maintained/bandwidth-monitor \
 	maintained/battery \
 	maintained/cairo-clock \
 	maintained/comics \

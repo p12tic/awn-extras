@@ -27,15 +27,10 @@ dist_feed_DATA = \
 feedsdir = $(applet_datadir)/feeds
 dist_feeds_DATA = $(wildcard feeds/*.feed)
 
-gladedir = $(applet_datadir)/glade
-dist_glade_DATA = \
-	glade/add.glade \
-	glade/comics.svg \
-	glade/logo.svg \
-	glade/main.glade \
-	glade/manage.glade \
-	glade/manage.svg \
-	glade/view.glade \
+uidir = $(applet_datadir)/ui
+dist_ui_DATA = \
+	$(wildcard ui/*.svg) \
+	$(wildcard ui/*.ui) \
 	$(NULL)
 
 custom_icondir = $(applet_datadir)/icons

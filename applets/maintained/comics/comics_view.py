@@ -371,10 +371,10 @@ class ComicsViewer(ScalableWindow):
             menu_item.add(align)
             history_menu.append(menu_item)
         history_menu.show_all()
-        self.__xml.get_widget('show_link_item').set_active(self.show_link)
-        self.__xml.get_widget('history_container').set_sensitive(
+        self.__xml.get_widget('show_link_item_action').set_active(self.show_link)
+        self.__xml.get_widget('history_container_action').set_sensitive(
             len(self.feeds.feeds[self.feed_name].items) > 0)
-        self.__xml.get_widget('save_as_item').set_sensitive(not self.__pixbuf \
+        self.__xml.get_widget('save_as_item_action').set_sensitive(not self.__pixbuf \
             is None)
 
         return self.__xml.get_widget('menu')

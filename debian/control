@@ -101,9 +101,8 @@ Recommends: 	awn-settings-trunk (>= 0.3.8),
 # cairo-clock
 		python-dateutil,
 		python-gweather,
-# comics
+# comics, feeds
 		python-feedparser,
-		python-glade2,
 # wolume-control
 		python-gst0.10,
 # cpufreq

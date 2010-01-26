@@ -158,7 +158,7 @@ class ComicApplet(awn.AppletSimple):
         container.set_sensitive(len(self.feeds.feeds) > 0)
         container.set_submenu(feed_menu)
         menu.append(container)
-        manage_item = self.__xml.get_widget('manage_comics_item')
+        manage_item = self.__xml.get_widget('manage_comics_item_action')
         if manage_item.parent is not None:
             manage_item.parent.remove(manage_item)
         menu.append(manage_item)

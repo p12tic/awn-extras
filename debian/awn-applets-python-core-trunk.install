@@ -37,7 +37,7 @@ etc/gconf/schemas/awn-applet-comics.schemas
 usr/share/avant-window-navigator/applets/comics/*.py
 usr/share/avant-window-navigator/applets/comics/feeds/
 usr/share/avant-window-navigator/applets/comics/feed/
-usr/share/avant-window-navigator/applets/comics/glade/
+usr/share/avant-window-navigator/applets/comics/ui/
 usr/share/avant-window-navigator/applets/comics/icons/
 usr/share/avant-window-navigator/applets/comics.desktop
 usr/share/avant-window-navigator/schemas/awn-applet-comics.schema-ini

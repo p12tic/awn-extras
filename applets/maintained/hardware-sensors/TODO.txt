@@ -1,0 +1,3 @@
+- do not allow more than 2 main sensors
+- graphical value display in main dialog
+- translation

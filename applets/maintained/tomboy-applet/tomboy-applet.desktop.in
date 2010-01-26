@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+X-AWN-Type=Applet
+X-AWN-AppletType=Python
+_Name=Tomboy Applet
+_Comment=Control Tomboy with D-Bus
+Exec=awn-applet -p %k
+X-AWN-AppletExec=tomboy-applet/tomboy-applet.py
+Icon=tomboy
+X-AWN-AppletCategory=Notes

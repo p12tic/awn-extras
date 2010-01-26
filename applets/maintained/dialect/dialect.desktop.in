@@ -1,0 +1,9 @@
+[Desktop Entry]
+Comment=Change your keyboard input layout from Awn.
+Name= Dialect Applet
+Exec=dialect/dialect.py
+X-AWN-AppletCategory=Utility
+X-AWN-AppletType=Python
+X-AWN-AppletExec=dialect/dialect.py
+Type=Application
+Icon=input-keyboard

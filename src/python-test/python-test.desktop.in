@@ -1,8 +1,0 @@
-[Desktop Entry]
-Type=Application
-X-AWN-AppletType=Python
-Name=Python Test Applet
-Comment=A test python applet for demo purposes
-Exec=python-test/python-test.py
-Icon=binary
-X-AWN-AppletCategory=Development,Debugging

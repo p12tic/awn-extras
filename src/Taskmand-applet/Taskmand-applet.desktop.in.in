@@ -1,8 +1,0 @@
-[Desktop Entry]
-Type=Application
-X-AWN-AppletType=C
-Name=Standalone Taskmanager
-Comment=An EXPERIMENTAL, PROOF-OF-CONCEPT, standalone window switcher
-Exec=@LIBDIR@/awn/applets/Taskmand-applet/Taskmand-applet.so
-Icon=binary
-X-AWN-AppletCategory=Utility,Monitor

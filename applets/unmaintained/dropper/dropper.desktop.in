@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+_Name=Dropper
+Type=Application
+X-AWN-Type=Applet
+X-AWN-AppletType=Python
+_Comment=Shows actions overlay when you drag something over the applet.
+Exec=awn-applet -p %k
+X-AWN-AppletExec=dropper/dropper.py
+Icon=dropper/icons/dropper
+X-AWN-AppletCategory=Utility

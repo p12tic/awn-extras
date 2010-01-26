@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+_Name=ThinkHDAPS
+Type=Application
+X-AWN-Type=Applet
+X-AWN-AppletType=Python
+_Comment=Applet that shows the shock protection status of your disks
+Exec=awn-applet -p %k
+X-AWN-AppletExec=thinkhdaps/thinkhdaps.py
+Icon=thinkhdaps/images/thinkhdaps-logo
+X-AWN-Applet-Category=System,Monitor

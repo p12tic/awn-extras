@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=0.5
+Type=Application
+X-AWN-Type=Applet
+X-AWN-AppletType=Python
+_Name=Volume Control
+_Comment=Control your computer's volume
+Exec=awn-applet -p %k
+X-AWN-AppletExec=volume-control/volume-control.py
+Icon=volume-control/volume-control
+X-AWN-Applet-Category=Audio

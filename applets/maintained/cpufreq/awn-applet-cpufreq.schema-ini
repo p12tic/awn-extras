@@ -1,0 +1,7 @@
+[DEFAULT]
+single_instance = false
+
+[DEFAULT/cpu_number]
+type = integer
+default = 0
+description = Index of processor.

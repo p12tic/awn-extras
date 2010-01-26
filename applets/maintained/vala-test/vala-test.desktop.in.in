@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+X-AWN-Type=Applet
+X-AWN-AppletType=Vala
+_Name=Test Vala Applet
+_Comment=A simple applet to test vala support
+Exec=awn-applet -p %k
+X-AWN-AppletExec=@LIBDIR@/awn/applets/vala-test/vala-test.so
+Icon=binary
+X-AWN-AppletCategory=Development,Debugging

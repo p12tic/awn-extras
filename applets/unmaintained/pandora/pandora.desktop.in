@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+_Name=Pandora Radio
+Type=Application
+X-AWN-Type=Applet
+X-AWN-AppletType=Python
+_Comment=Listen to Pandora Internet Radio
+Exec=awn-applet -p %k
+X-AWN-AppletExec=pandora/pandora.py
+Icon=pandora/icons/pandora
+X-AWN-AppletCategory=AudioVideo,Audio,Network,Player

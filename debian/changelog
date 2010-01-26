@@ -1,6 +1,156 @@
-awn-extras-applets-trunk (0.3.3~bzr) unstable; urgency=low
+awn-extras-applets-trunk (0.3.9.1-1) experimental; urgency=low
 
-  * Initial release
+  * Developpement branch.
+  * Sync with debian packaging.
 
- -- Julien Lavergne <julien.lavergne@gmail.com>  Mon, 25 Jun 2007 23:36:52 +0200
+ -- Julien Lavergne <gilir@ubuntu.com>  Sun, 18 Oct 2009 20:30:15 +0200
 
+awn-extras-applets (0.3.2-1) experimental; urgency=low
+
+  * New upstream release (LP: #324835)
+  * debian/control:
+   - Update with new applets.
+   - From Ubuntu, add libglade2-dev and libgnomeui-dev as build-depends for 
+     GNOME version 2.25+.
+   - Add Recommends on hal instead of acpi because new battery-applet use now 
+     it (Closes: #510018).
+   - Bump valac Build-Depends to (>= 0.5.4)
+   - Add python-dateutil and libgweather-common as Recommends for cairo-clock.
+   - Add gnome-applets as Recommends for cpufreq applet.
+   - Add fortune as Depends for animal-farm.
+   - Bump python-awnlib version to 0.3.2.
+   - Remove Recommends for tsclient, the applet was removed.
+   - Remove libtrackerclient as Build-Depends, the affinity applet was removed.
+  * debian/patches
+   - 01-hardcode-icon-location.patch: Remove, fixed upstream.
+   - 02-shinyswitcher-default-layout : Set the layout to 4x1 workspaces by 
+     default, and applet's size to 80% of the bar.
+   - 10-implicit-pointer-conversion.patch: Removed, the affinity applet was 
+     removed.
+  * debian/rules
+   - Add libawn-extras0 as a shlibs.
+   - Add exclude=* to dh_makeshlibs to remove useless shlibs file.
+  * debian/copyright
+   - Update with new applets.
+   - Replace (C) by ©
+
+ -- Julien Lavergne <julien.lavergne@gmail.com>  Mon, 09 Feb 2009 23:44:59 +0100
+
+awn-extras-applets (0.3~bzr912-1) experimental; urgency=low
+
+  * New upstream snapshot.
+  * debian/patches
+   - All patches are merged upstream. Remaining patches :
+   - 10-implicit-pointer-conversion.patch : 
+    + Update to apply only to affinity applet.
+    + Add Debian and Upstream bug tracker entries.
+   - 01-hardcode-icon-location.patch:
+    + Hardcode icon location to workaround build system.
+  * debian/*.install & debian/*.links
+   - Update location, from /usr/*/awn/ to /usr/*/avant-window-navigator/
+   - Install new applets.
+   - Update schemas files installation.
+   - Update AWNLib installation.
+  * debian/control
+   - Bump libawn-dev Build-Depends to >= 0.3~bzr489.
+   - Bump python-awnlib Depends to >= 0.3~bzr912.
+   - Bump awn-manager Recommends to >= 0.3~bzr489.
+   - Suggest extras packages for each core binaries.
+   - Add valac for Build-Depends and Depends.
+   - Add libwebkit-deb as Build-Depends for webapplet.
+   - Add python2.5 as Build-Depends if python-elementtree is not installed.
+   - Add squilte3 and python-sqlalchemy as Depends for arss applet.
+   - Add python-xlib as Recommends for pynot applet.
+   - Add xdg-utils as Recommends for trash applet.
+   - Add python-dbus as Recommends for battery-applet.
+   - Add Conflicts and Replaces with previous version because calendar is now 
+     in python-extras.
+   - Add Suggests tomboy for tomboy applet.
+   - Remove gnome-icon-theme, not needed as the icon is now available.
+   - Update description for new applets.
+  * debian/copyright
+   - Add new copyright and licence for new applets.
+  * debian/rules
+   - Pass --with-webkit flag to build webapplet.
+  * debian/libawn-extras0.symbols
+   - Add with current symbols.
+
+ -- Julien Lavergne <julien.lavergne@gmail.com>  Sun, 23 Nov 2008 11:34:07 +0100
+
+awn-extras-applets (0.2.6-4) unstable; urgency=low
+
+  * debian/control
+   - Recommend acpi package for battery-applet.
+   - Add depends on gnome-icon-theme for the file-browser-launcher link.
+  * debian/awn-applets-python-core.links
+   - Add links for stacks to fix error in loading images.
+   - Add link for file-browser-launcher to point to icon of a folder.
+  * debian/awn-applets-python-core.install
+   - Install missing feedlist-default in arss applet.
+  * debian/awn-applets-c-*.install
+   - Install schemas files (Closes: #477367, #477371).
+  * debian/patches/
+   - 93-bzr-show-desktop-title.patch: from upstream, fix show-desktop applet on
+     mouse over.
+   - 94_shinyswitcher_string_to_color.patch: from upstream, fix 
+     awn_cairo_string_to_color crash for shinyswitcher.
+   - 95_weather_correct_url.patch: from upstream, update URL to fetch the data
+     for the weather applet.
+   - 96_shinyswitcher_cairo_set_operator.patch : From upstream, fix 
+     cairo_set_operator() crash.
+   - 101_places_string_to_color.patch: fix awn_cairo_string_to_color crash for
+     shinyswitcher.
+   - 102_fbl_trash_location.patch: fix location of Trash in file browser
+     launcher applet.
+   - 103-fix-schemas-generation.patch: Generate schemas files at build time.
+   - 104_tsclient_create_home.patch: create ~/.tsclient to avoid applet to
+     crash.
+   - 105_mimenu_missing_bookmark.patch: don't crash Main Menu applet if there is 
+     no bookmark.
+   - 106_fbl_missing_bookmark.patch: don't crash file-browser-launcher applet
+     if there is no bookmark.
+
+ -- Julien Lavergne <julien.lavergne@gmail.com>  Wed, 15 Oct 2008 21:52:42 +0200
+
+awn-extras-applets (0.2.6-3) unstable; urgency=low
+
+  * debian/control
+   - Bump to 3.8.0 Standards-Version (no change needed).
+   - Bump Build-Depends of libawn-dev to (>= 0.2.6)
+  * debian/patches/11-volume-channel-missing.patch
+   - Fix volume applet when current channel disappear (Closes: #491118).
+     Thanks Jean-Michel Philippe for the patch.
+  * debian/copyright
+   - Remove the complete Apache Licence and link instead to
+     /usr/share/common-licenses/Apache-2.0.
+   - Reformat the complete licence to reduce the lines under 80 characters.
+
+ -- Julien Lavergne <julien.lavergne@gmail.com>  Mon, 15 Sep 2008 22:57:18 +0200
+
+awn-extras-applets (0.2.6-2) unstable; urgency=medium
+
+  * Rebuild for python2.5 transition (Closes: #477264)
+  * debian/patches/10-implicit-pointer-conversion.patch
+    Avoid possible FTBFS and segfault on some architectures. Thanks Dann 
+    Frazier for the patch (Closes: #477181)
+
+ -- Julien Lavergne <julien.lavergne@gmail.com>  Thu, 24 Apr 2008 19:46:11 +0200
+
+awn-extras-applets (0.2.6-1) unstable; urgency=low
+
+  * Initial upload (Closes: #468098)
+  * debian/patches:
+   - 00-Install-in-share.patch: Install python applets in /usr/share.
+   - 01_lastfm_fix_try-finally_block.patch: Fix block to work with python 2.4.
+   - 02_define_new_path_for_stack_dependency.patch: Add /usr/share as a 
+     location of stack applet.
+   - 03_fix_shebang.patch: Fix all shebang.
+   - 90_bzr_convert_filebrowser_to_awnclient.patch: From bzr, convert 
+     filebrowser to the new configuration system.
+   - 91_bzr_change_pandora_url.patch: Use new URL for pandora applet.
+   - 92_bzr_fix_location_for_comic.patch: From bzr, use /tmp/ instead of 
+     home directory.
+  * Applets comic, pandora, notification-area are not installed because of 
+    stability issues.
+
+ -- Julien Lavergne <julien.lavergne@gmail.com>  Tue, 05 Feb 2008 01:19:17 +0100

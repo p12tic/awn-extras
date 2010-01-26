@@ -1,8 +1,0 @@
-[Desktop Entry]
-Type=Application
-X-AWN-AppletType=Python
-Name=Mail Applet
-Comment=Check Your Email from AWN
-Exec=mail/mail.py
-Icon=mail/Themes/Tango/read.svg
-X-AWN-AppletCategory=Network,Email

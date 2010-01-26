@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+X-AWN-Type=Applet
+X-AWN-AppletType=C
+_Name=Places
+_Comment=Launch your folder bookmarks
+Exec=awn-applet -p %k
+X-AWN-AppletExec=@LIBDIR@/awn/applets/places/places.so
+Icon=stock_folder
+X-AWN-AppletCategory=Utility,FileTools

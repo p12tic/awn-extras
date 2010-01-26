@@ -1,0 +1,29 @@
+Mono-test - An experimental C# applet
+
+Compiling:
+----------
+
+Since the build system doesn't support Mono applets atm, you need to compile
+the applet by hand and copy the resulting .exe file to appropriate location.
+(of course you'll also need to put the desktop file somewhere...)
+
+For Ubuntu 9.04 you can compile the applet like this:
+
+gmcs -out:mono-test.exe \
+     -pkg:libawn-sharp \
+     -r:/usr/lib/mono/2.0/Mono.GetOptions.dll \
+     Applet.cs
+
+You'll need the libmono-getoptions2.0-cil package for Mono.GetOptions.dll
+(but you can also use the *1.0-cil version).
+Also if you don't have libawn-sharp installed you can substitute 
+the "-pkg:libawn-sharp" with "-r:/path/to/libawn-sharp.dll".
+
+Links:
+------
+
+Awn core branch with mono-bindings:
+lp:~awn-core/awn/0.4-mono-bindings
+
+------------------------------
+Last updated: 7th October 2009

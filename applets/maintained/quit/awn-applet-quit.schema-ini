@@ -1,0 +1,17 @@
+[DEFAULT]
+single_instance = false
+
+[DEFAULT/left-click-action]
+type = string
+default = Show Docklet
+description = Action to perform when left clicking on the icon.
+
+[DEFAULT/log-out-command]
+type = string
+default = xfce4-session-logout
+description = Command to execute if org.gnome.SessionManager is not available.
+
+[DEFAULT/lock-screen-command]
+type = string
+default = xscreensaver-command
+description = Command to execute if org.gnome.ScreenSaver is not available.

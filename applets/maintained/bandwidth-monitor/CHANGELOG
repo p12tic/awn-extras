@@ -1,0 +1,126 @@
+01/05/2010:
+    PEP8 cleanup of all lines > 80 chars
+    Rename of classes/variables for space/consistency
+    Change of timer values for consistent drawing.
+    Removed some unused modules.
+    Removed 'blank.png' - initial icon is now created with gtk.gdk.pixbuf_new_from_xpm_data()
+
+01/03/2010:
+    Removed settings.load/load_preferences
+    Fix for applet/font-sizing when changing orientation
+    Changed instantiation of color objects to use gtk.gdk.color_parse instead of gtk.gdk.Color('#XXX') for older systems
+    Changed handling of default preferences/unassigned keys
+    
+
+01/02/2010:
+    Fixed bug which caused the unit of measure checkbutton to become out of sync with the gconf value
+    Changed default interface to '', was wlan0 for some reason..
+    PEP8 verified - mostly complaint, a few lines are "too long"
+    Replaced icon
+    Removed LICENSE file - provided by AWN
+    Fixed desktop file version
+    Removed "Encoding" from desktop file
+    Improved logic for setting device preference values per Mark Lee's suggestion
+    Added timeout_add_seconds wrapper function
+    Adjusted width calculation if orientation is vertical
+    Change version string to use awn.extras.__version__
+    Changed email address
+
+12/20/2009:
+    Change logic to graph calculation which corrects the following rendering issues -
+        Graph lines drawing outside of border/frame
+        Graph normalised top-value was rendering off-screen when applet size smaller than 35
+        Graph normalised top-value was rendering very low on the graph when applet size greater than 60
+    Changed scaling of initial icon - it was rendering too large and centered text was displayed with an odd alignment to the dock
+    Fixed some issues with default values
+    Changed short-name to 'bandwidth-monitor' to match schema file
+    Corrected path to UI file
+    Fixed division by zero error
+    Addedd bandwidth-monitor.ui and bwmprefs.py to Makefile.am
+
+12/19/2009:
+    Added preferences to control -
+        Enable/Disable drawing of the background
+        Enable/Disable drawing of the border
+        Select color/opacity of background
+        Select color/opacity of border
+        Options to control the text representation of throughput
+            Display Upload/Download text
+            Display Sum text only
+            Do not display text - only draw the graph.
+        Enable/Disable drawing the zero value in the graph (if true, draw a line at the bottom of the graph for zero value)
+
+12/18/2009:
+    Cleaned up code to make it run faster or use less resources
+    Removed everything related to the status of interfaces (Not required, may add later)
+    Removed everything related to IP Addresses for interfaces (Not required, may add later)
+
+12/16/2009:
+    Added call to applet.errors.general if read access to /proc/net/dev fails.
+    Made changes to TODO file
+    Change parser logic for to handle interfaces with less than 11 columns of output in 'netstat -iea'    
+
+12/14/2009:
+    Created preferences dialog to manage options -
+        An option to select the unit Bytes/bits
+        A spinbutton entry for setting the minimum threshold
+        A "Devices" pref-pane which allows selection of interfaces into virtual interfaces
+        A color picker for upload and download colors for use in the line-graph.
+    Fixed division by zero that would occur in some scenarios.
+
+12/10/2009:
+    Added virtual interfaces for SUM and MULTI
+        The Sum Interface is a virtual interface which displays the sum throughput of all interfaces that are selected for "Sum"
+        The Multi Interface is a virtual interface which displays each individual throughput of the interfaces that are selected for "Multi", each with the colors defined for the interface.
+    Added logic to parse and use preferences that are planned
+
+11/29/2009:
+    Changed table generation function to be less verbose
+    Fixed regular expression for gathering IP/Netmask
+    Changed IP/Netmask tooltip logic
+    Changed command for device stats gathering to include administratively down-interfaces
+
+11/28/2009:
+    pep8 verified main program file
+    Added a few non-parsed comments to the source file
+
+11/28/2009:
+    Changed initial ratio value to 1 to prevent the graphs from ignoring data transfers below 3200 bytes
+    Changed the graph scaling to display the line graph almost center of the graph window below 6400 bytes
+    Added items to the TODO list
+
+11/27/2009:
+    Filter out the wmaster0 interface.
+    Applied patch from onox:
+        Renamed some classes
+        Removed functions for things abstracted by AWN
+        Cleaned up some of the syntax
+        Cleaned up some naming conventions
+    Created a new branch repository (previous was setup wrong): lp:~kylehuff/awn-extras/0.4-bandwidth-monitor
+
+11/27/2009:    
+    Applied patch from mhr3 which included -
+        Changes to applet short-name
+        Changes to Makefile.am
+        Fixed spelling of "CHANGLOG" to "CHANGELOG"
+        Renamed awn-bwm.schema-ini to awn-applet-bwm.schema-ini
+    Changed the application of the cairo surface to use applet.set_icon_context()
+    Fixed bug which caused rendering the scale of the upload speed off-screen
+    Removed references to some obsolete functions/methods/properties
+
+11/25/2009:
+    Eliminated usage of 'ifconfig' command - moved everything to netstat
+    Bumped to version v0.3.9.2
+    Created launchpad branch - lp:~kylehuff/awn-extras/awn-bwm
+
+11/24/2009:
+    Converted text to OverlayText()
+    Cleaned up some functions
+    Bumped version to v0.3.9.1
+
+11/23/2009:
+    Implemented API v0.4
+    Changed from v0.3.2.8 to v0.3.9.0
+
+04/18/2006:
+    Original release - 0.1

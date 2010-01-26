@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+X-AWN-Type=Applet
+X-AWN-AppletType=Mono
+Name=Test Mono Applet
+Comment=A simple applet to test mono support
+Exec=awn-applet -p %k
+X-AWN-AppletExec=mono-test/mono-test.exe
+Icon=binary
+X-AWN-AppletCategory=Development,Debugging

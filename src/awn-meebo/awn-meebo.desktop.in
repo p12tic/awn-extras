@@ -1,7 +1,0 @@
-[Desktop Entry]
-Type=Application
-X-AWN-AppletType=Python
-Name=Mobile Meebo
-Comment=Access to the Meebo Instant Messenger
-Exec=awn-meebo/awn-meebo.py
-Icon=awn-meebo/icons/meebo.png

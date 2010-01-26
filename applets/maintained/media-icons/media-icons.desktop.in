@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+_Name=Media Icons Play/Pause
+Type=Application
+X-AWN-Type=Applet
+X-AWN-AppletType=Python
+_Comment=A media-control applet (Play/Pause)
+Exec=awn-applet -p %k
+X-AWN-AppletExec=media-icons/media-icons.py --pp
+Icon=media-icons/icons/play
+X-AWN-AppletCategory=AudioVideo,Audio,Player

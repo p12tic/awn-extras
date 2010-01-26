@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+X-AWN-Type=Applet
+X-AWN-AppletType=Python
+_Name=Clock/Calendar Applet
+_Comment=Watch appointments on your dock
+Exec=awn-applet -p %k
+X-AWN-AppletExec=calendar/clockcal.py
+Icon=calendar/images/icon
+X-AWN-AppletCategory=Office,Calendar

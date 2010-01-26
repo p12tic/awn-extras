@@ -1,0 +1,19 @@
+TODO:
+
+--- Things that need to happen ---
+None Left...
+
+--- Things I would like ---
+Add preference control for applying effect to text (new default = True, always apply)
+Auto select interface (maybe based on default route)
+Add toggle for enable/disable auto-scaling (so 100Mbps would draw the line at the top of the meter)
+
+--- Completed TODO's ---
+Create preference dialog for selecting the color of the line-graphs, as well as the background
+    Done
+Ability to select multiple (or all) devices for a sum throughput -
+    Done (also created 'multi' interface)
+Add preference for specifying minimum threshold for charting data
+    Done
+
+

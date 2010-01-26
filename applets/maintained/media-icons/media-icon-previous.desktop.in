@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+_Name=Media Icons Previous
+Type=Application
+X-AWN-Type=Applet
+X-AWN-AppletType=Python
+_Comment=A media-control applet (Previous Track)
+Exec=awn-applet -p %k
+X-AWN-AppletExec=media-icons/media-icons.py --previous
+Icon=media-icons/icons/backward
+X-AWN-AppletCategory=AudioVideo,Audio,Player

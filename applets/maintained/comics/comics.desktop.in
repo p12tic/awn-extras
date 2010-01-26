@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+_Name=Comics!
+Name[sv]=Serier!
+Type=Application
+X-AWN-Type=Applet
+X-AWN-AppletType=Python
+_Comment=View your favourite comics on your desktop
+Comment[sv]=Visa dina favoritserier på skrivbordet
+Exec=awn-applet -p %k
+X-AWN-AppletExec=comics/comics.py
+Icon=comics/icons/comics-icon
+X-AWN-AppletCategory=Network,News

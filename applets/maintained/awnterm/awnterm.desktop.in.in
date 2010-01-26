@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+X-AWN-Type=Applet
+X-AWN-AppletType=C
+_Name=Terminal Applet
+_Comment=A simple popup terminal
+Exec=awn-applet -p %k
+X-AWN-AppletExec=@LIBDIR@/awn/applets/awnterm/awnterm.so
+Icon=terminal
+X-AWN-AppletCategory=System,TerminalEmulator

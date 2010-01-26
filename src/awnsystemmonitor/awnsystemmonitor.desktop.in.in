@@ -1,8 +1,0 @@
-[Desktop Entry]
-Type=Application
-X-AWN-AppletType=C
-Name=Awn System Monitor
-Comment=Manage system activity
-Exec=@LIBDIR@/awn/applets/awnsystemmonitor/awnsystemmonitor.so
-Icon=utilities-system-monitor
-X-AWN-AppletCategory=System,Monitor

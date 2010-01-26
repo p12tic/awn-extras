@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+_Name=Lock Screen
+Type=Application
+X-AWN-Type=Applet
+X-AWN-AppletType=Python
+_Comment=Protect your computer from unauthorized use
+Exec=awn-applet -p %k
+X-AWN-AppletExec=quit/quit.py --lockscreen
+Icon=system-lock-screen
+X-AWN-AppletCategory=System

@@ -4,7 +4,7 @@ include $(top_srcdir)/Makefile.desktop-files
 
 AM_CFLAGS = 			\
 	-I$(srcdir)		\
-	-I$(top_srcdir)/src	\
+	-I$(top_builddir)	\
 	$(AWN_CFLAGS)		\
 	$(APPLET_CFLAGS)	\
 	$(NULL)
@@ -12,3 +12,7 @@ AM_CFLAGS = 			\
 APPLET_LINKER_FLAGS = -module -avoid-version
 
 appletdir = $(libdir)/awn/applets/$(APPLET_NAME)
+
+EXTRA_DIST += \
+	$(desktop_DATA:.desktop=.desktop.in.in) \
+	$(NULL)

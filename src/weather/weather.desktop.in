@@ -1,8 +1,0 @@
-[Desktop Entry]
-Type=Application
-X-AWN-AppletType=Python
-Name=Weather Applet
-Comment=Display the local weather
-Exec=weather/weather.py
-Icon=weather-clear
-X-AWN-AppletCategory=Network,News

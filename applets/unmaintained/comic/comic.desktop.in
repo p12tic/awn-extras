@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+_Name=Dilbert Applet
+Type=Application
+X-AWN-Type=Applet
+X-AWN-AppletType=Python
+_Comment=Read Dilbert and other comics
+Exec=awn-applet -p %k
+X-AWN-AppletExec=comic/comic.py
+Icon=comic/icons/comic-applet.png
+X-AWN-AppletCategory=Network,News,Amusement

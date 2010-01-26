@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+X-AWN-Type=Applet
+X-AWN-AppletType=C
+_Name=Stacks Plugger
+_Comment=Monitors removable media devices
+Exec=awn-applet -p %k
+X-AWN-AppletExec=@LIBDIR@/awn/applets/plugger/plugger.so
+Icon=drive-removable-media
+X-AWN-AppletCategory=System,Filesystem

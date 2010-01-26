@@ -1,0 +1,112 @@
+[DEFAULT]
+single_instance = false
+
+[DEFAULT/items]
+type = list-string
+default = 
+description = List of items' names
+
+[DEFAULT/details]
+type = list-string
+default = 
+description = List of items' details
+
+[DEFAULT/progress]
+type = list-integer
+default = 
+description = List of items' progresses in percent (0-100)
+
+[DEFAULT/priority]
+type = list-integer
+default = 
+description = List of items' priorities (0-3)
+
+[DEFAULT/color]
+type = string
+default = skyblue
+description = The color to use for the icon
+
+[DEFAULT/title]
+type = string
+default = To-Do List
+description = The title to display
+
+[DEFAULT/icon_type]
+type = string
+default = items
+description = What type of icon to display (progress, progress-items, items)
+
+[DEFAULT/colors]
+type = list-integer
+default = 
+description = List of colors to use for the custom color
+
+[DEFAULT/category]
+type = list-integer
+default = 
+description = The list of items' categories
+
+[DEFAULT/category_name]
+type = list-string
+default = 
+description = The list of categories' names
+
+[DEFAULT/expanded]
+type = list-integer
+default = 
+description = The list of categories that are expanded
+
+[DEFAULT/icon_opacity]
+type = integer
+default = 100
+description = The icon's opacity (10-100)
+
+[DEFAULT/confirm_items]
+type = boolean
+default = true
+description = Whether or not to confirm the deletion of items
+
+[DEFAULT/confirm_categories]
+type = boolean
+default = true
+description = Whether or not to confirm the deletion of categories
+
+[DEFAULT/use_custom_width]
+type = boolean
+default = false
+description = Whether or not to use a custom width for the entries
+
+[DEFAULT/custom_width]
+type = integer
+default = 125
+description = The custom width for the item entries
+
+[DEFAULT/color_low]
+type = string
+default = #009900
+description = Background color for low priority items
+
+[DEFAULT/color_low_text]
+type = string
+default = #000000
+description = Text color for low priority items
+
+[DEFAULT/color_med]
+type = string
+default = #c0c000
+description = Background color for medium priority items
+
+[DEFAULT/color_med_text]
+type = string
+default = #000000
+description = Text color for medium priority items
+
+[DEFAULT/color_high]
+type = string
+default = #aa0000
+description = Background color for high priority items
+
+[DEFAULT/color_high_text]
+type = string
+default = #dddddd
+description = Text color for high priority items

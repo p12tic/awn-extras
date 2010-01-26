@@ -1,0 +1,67 @@
+[DEFAULT/bg_normal_colour]
+type = color
+default = #DDDDDDEE
+description = The background color (RGBA) of the menu.
+description[en_CA] = The background colour (RGBA) of the menu.
+
+[DEFAULT/text_normal_colour]
+type = color
+default = #000000FF
+description = The color (RGBA) of the text in the menu.
+description[en_CA] = The colour (RGBA) of the text in the menu.
+
+[DEFAULT/bg_hover_colour]
+type = color
+default = #0022DDF0
+description = The background color (RGBA) of an entry in the menu when it is selected or the mouse hovers over it.
+description[en_CA] = The background colour (RGBA) of an entry in the menu when it is selected or the mouse hovers over it.
+
+[DEFAULT/text_hover_colour]
+type = color
+default = #000000FF
+description = The color (RGBA) of the text when a place is selected or the mouse hovers over it.
+description[en_CA] = The colour (RGBA) of the text when a place is selected or the mouse hovers over it.
+
+[DEFAULT/text_size]
+type = integer
+default = 14
+description = The size of the text in the menu, in pixels.
+
+[DEFAULT/menu_item_gradient_factor]
+type = float
+default = 0.8
+description = Creates an alpha gradient in the menu item background.  At the top and bottom of the menu, the alpha value is the background color's alpha value multiplied by this value.  At 20 percent from the top of the menu, the alpha value is the background color's alpha value.
+
+[DEFAULT/filemanager]
+type = string
+default = xdg-open
+description = The file manager that shows the contents of the places.
+
+[DEFAULT/applet_icon]
+type = string
+default = stock_folder
+description = The icon theme name of the applet's icon.
+
+[DEFAULT/show_tooltips]
+type = boolean
+default = true
+description = Whether to show tooltips when hovering over a place.
+
+[DEFAULT/border_width]
+type = integer
+default = 1
+description = The width of the menu's border.
+
+[DEFAULT/border_colour]
+type = color
+default = #11111133
+description = The color (RGBA) of the menu's border, if the border width is greater than zero.
+description[en_CA] = The colour (RGBA) of the menu's border, if the border width is greater than zero.
+
+[DEFAULT/honour_gtk]
+type = boolean
+default = true
+description = Determines whether to use the current Gtk+ theme's color/font settings, or the applet-specific style settings.
+description[en_CA] = Determines whether to use the current Gtk+ theme's colour/font settings, or the applet-specific style settings.
+
+; vim: set ft=dosini :

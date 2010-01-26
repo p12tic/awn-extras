@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+X-AWN-Type=Applet
+X-AWN-AppletType=Python
+_Name=Battery
+_Comment=Display battery state
+Exec=awn-applet -p %k
+X-AWN-AppletExec=battery/battery.py
+Icon=battery
+X-AWN-AppletCategory=System,Monitor

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+_Name=Stacks Applet
+_Comment=Quick access to a file folder
+Exec=awn-applet -p %k
+X-AWN-AppletExec=stacks/stacks_applet.py
+Icon=stacks/icons/stacks-drop
+X-AWN-Type=Applet
+X-AWN-AppletType=Python
+X-AWN-AppletCategory=Utility,FileManager

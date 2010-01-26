@@ -1,0 +1,172 @@
+<?xml version="1.0"?>
+<!--Generated with glade3 3.4.0 on Thu Feb 21 11:37:45 2008 -->
+<interface>
+  <object class="GtkAssistant" id="add_assistant">
+    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+    <property name="border_width">4</property>
+    <property name="title" translatable="yes">Add Comic</property>
+    <property name="window_position">GTK_WIN_POS_CENTER</property>
+    <property name="icon">comics.svg</property>
+    <signal handler="on_add_assistant_close" name="close"/>
+    <signal handler="on_add_assistant_cancel" name="cancel"/>
+    <signal handler="on_add_assistant_apply" name="apply"/>
+    <signal handler="on_add_assistant_prepare" name="prepare"/>
+    <child>
+      <object class="GtkVBox" id="intro_page">
+        <property name="visible">True</property>
+        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+        <property name="spacing">10</property>
+        <child>
+          <object class="GtkLabel" id="intro_label">
+            <property name="visible">True</property>
+            <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+            <property name="xalign">0</property>
+            <property name="yalign">0</property>
+            <property name="label" translatable="yes">This guide will help you to add a new comic.
+
+To find comics suitable for adding, you may search the Internet for "comics rss".
+
+Press "next" to proceed.</property>
+            <property name="wrap">True</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="page_type">GTK_ASSISTANT_PAGE_INTRO</property>
+        <property name="title" translatable="yes">Add Comic</property>
+        <property name="sidebar_image">logo.svg</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkVBox" id="url_page">
+        <property name="visible">True</property>
+        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+        <property name="spacing">10</property>
+        <child>
+          <object class="GtkHBox" id="url_page_hbox">
+            <property name="visible">True</property>
+            <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+            <property name="spacing">10</property>
+            <child>
+              <object class="GtkLabel" id="url_page_label">
+                <property name="visible">True</property>
+                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                <property name="xalign">1</property>
+                <property name="label" translatable="yes">Enter the URL of the RSS feed:</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkEntry" id="url_entry">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                <property name="text">http://</property>
+                <signal handler="on_url_entry_changed" name="changed"/>
+              </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="title" translatable="yes">Select Comic</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkVBox" id="wait_page">
+        <property name="visible">True</property>
+        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+        <property name="spacing">10</property>
+        <child>
+          <object class="GtkLabel" id="wait_label">
+            <property name="visible">True</property>
+            <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+            <property name="xalign">0</property>
+            <property name="yalign">0</property>
+            <property name="wrap">True</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="page_type">GTK_ASSISTANT_PAGE_PROGRESS</property>
+        <property name="title" translatable="yes">Downloading Comic</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkVBox" id="image_page">
+        <property name="visible">True</property>
+        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+        <property name="spacing">10</property>
+        <child>
+          <object class="GtkLabel" id="label_image_page">
+            <property name="visible">True</property>
+            <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+            <property name="xalign">0</property>
+            <property name="yalign">0</property>
+            <property name="label" translatable="yes">The guide found more than one image. Please select which one to use.</property>
+            <property name="wrap">True</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkScrolledWindow" id="image_page_scrolled_window">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+            <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+            <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+            <child>
+              <object class="GtkIconView" id="image_list">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                <property name="pixbuf_column">1</property>
+                <property name="item_width">100</property>
+                <signal handler="on_image_list_selection_changed" name="selection_changed"/>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </object>
+      <packing>
+        <property name="title" translatable="yes">Select Image</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkVBox" id="last_page">
+        <property name="visible">True</property>
+        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+        <property name="spacing">10</property>
+        <child>
+          <object class="GtkLabel" id="last_label">
+            <property name="visible">True</property>
+            <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+            <property name="xalign">0</property>
+            <property name="yalign">0</property>
+            <property name="use_markup">True</property>
+            <property name="wrap">True</property>
+          </object>
+          <packing>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </object>
+      <packing>
+        <property name="page_type">GTK_ASSISTANT_PAGE_CONFIRM</property>
+        <property name="title" translatable="yes">Ready to add comic!</property>
+      </packing>
+    </child>
+  </object>
+</interface>

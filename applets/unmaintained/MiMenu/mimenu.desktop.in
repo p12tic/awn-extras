@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Name=MiMenu
+Type=Application
+X-AWN-Type=Applet
+X-AWN-AppletType=Python
+Comment=A two-paned menu browser
+Exec=awn-applet -p %k
+X-AWN-AppletExec=mimenu/mimenu.py
+Icon=gtk-index
+Name[en_US]=MiMenu
+X-AWN-AppletCategory=Utility

@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+X-AWN-Type=Applet
+X-AWN-AppletType=Python
+_Name=Feeds Applet
+_Comment=Monitor Web Feeds
+Exec=awn-applet -p %k
+X-AWN-AppletExec=feeds/feeds.py
+Icon=feeds/icons/awn-feeds
+X-Ubuntu-Gettext-Domain=awn-extras-applets
+X-AWN-AppletCategory=Utility,Network

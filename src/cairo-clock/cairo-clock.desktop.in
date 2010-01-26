@@ -1,9 +1,0 @@
-[Desktop Entry]
-Version=1.0
-Name=Cairo Clock
-Type=Application
-X-AWN-AppletType=Python
-Comment=Displays an analog clock using Cairo-Clock's themes
-Exec=cairo-clock/cairo-clock.py
-Icon=cairo-clock/cairo-clock-logo.svg
-X-AWN-Applet-Category=Utility

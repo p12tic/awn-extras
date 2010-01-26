@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+_Name=Shut Down...
+Type=Application
+X-AWN-Type=Applet
+X-AWN-AppletType=Python
+_Comment=Shut down the system
+Exec=awn-applet -p %k
+X-AWN-AppletExec=quit/quit.py --shutdown
+Icon=system-shutdown
+X-AWN-AppletCategory=System

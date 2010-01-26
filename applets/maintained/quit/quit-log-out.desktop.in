@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+_Name=Log Out...
+Type=Application
+X-AWN-Type=Applet
+X-AWN-AppletType=Python
+_Comment=Log out of this session to log in as a different user
+Exec=awn-applet -p %k
+X-AWN-AppletExec=quit/quit.py --logout
+Icon=system-log-out
+X-AWN-AppletCategory=System

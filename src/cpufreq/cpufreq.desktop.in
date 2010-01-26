@@ -1,9 +1,0 @@
-[Desktop Entry]
-Version=1.0
-Type=Application
-X-AWN-AppletType=Python
-Name=CPU Frequency Monitor
-Comment=An applet to monitor and control the CPU frequency
-Exec=cpufreq/cpufreq.py
-Icon=cpufreq/cpufreq.svg
-X-AWN-AppletCategory=Utility

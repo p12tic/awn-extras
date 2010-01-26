@@ -1,14 +1,22 @@
-SUBDIRS =				\
-	src						\
-	po
+NULL =
+SUBDIRS = \
+	applets \
+	shared/python \
+	po \
+	$(NULL)
 	
-EXTRA_DIST =				\
-	intltool-extract.in		\
-	intltool-merge.in		\
-	intltool-update.in		\
+EXTRA_DIST = \
+	autogen.sh \
+	intltool-extract.in \
+	intltool-merge.in \
+	intltool-update.in \
 	po/Makefile.in.in \
 	po/POTFILES.skip \
-	autogen.sh
+	COPYING.BSD \
+	COPYING.CCASAv3.0 \
+	COPYING.GPL-3 \
+	COPYING.LGPL-2.1 \
+	$(NULL)
 
 DISTCLEANFILES =			\
 	intltool-extract		\
@@ -16,6 +24,14 @@ DISTCLEANFILES =			\
 	intltool-update
 
 ACLOCAL_AMFLAGS = -I m4
+
+DISTCHECK_CONFIGURE_FLAGS = --disable-pymod-checks
+
+i18n-update: po/POTFILES.in po/POTFILES.skip
+	(cd po && for lang in `grep ALL_LINGUAS ../configure.ac | cut -d'"' -f2`; do \
+		echo -n "Updating $$lang:"; \
+		intltool-update $$lang; \
+	done)
 
 gtk_update_icon_cache = gtk-update-icon-cache -f -t ${datadir}/icons/hicolor
 

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=C
+Encoding=UTF-8
+Name=Hello World!
+Comment=The classic greeting, AWN Applet Style
+Exec=awn-applet -p %k
+X-AWN-AppletExec=@LIBDIR@/awn/applets/helloworld/helloworld.so
+Icon=

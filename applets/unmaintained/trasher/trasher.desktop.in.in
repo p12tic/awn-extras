@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+X-AWN-Type=Applet
+X-AWN-AppletType=C
+_Name=Stacks Trasher
+_Comment=Trash applet in Stacks style
+Exec=awn-applet -p %k
+X-AWN-AppletExec=@LIBDIR@/awn/applets/trasher/trasher.so
+Icon=gnome-stock-trash
+X-AWN-AppletCategory=Utility,FileManager

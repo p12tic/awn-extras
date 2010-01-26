@@ -348,7 +348,6 @@ applets/maintained/shiny-switcher/shinyswitcher.desktop.in
 applets/maintained/showdesktop/Makefile
 applets/maintained/showdesktop/showdesktop.desktop.in
 applets/maintained/slickswitcher/Makefile
-applets/unmaintained/stacks/Makefile
 applets/maintained/sysmon/Makefile
 applets/maintained/sysmon/sysmon.desktop.in
 applets/maintained/thinkhdaps/Makefile
@@ -370,6 +369,7 @@ applets/unmaintained/main-menu/Makefile
 applets/unmaintained/main-menu/main-menu.desktop.in
 applets/unmaintained/MiMenu/Makefile
 applets/unmaintained/pandora/Makefile
+applets/unmaintained/stacks/Makefile
 po/Makefile.in
 shared/python/__init__.py
 shared/python/Makefile

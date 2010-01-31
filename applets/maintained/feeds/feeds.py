@@ -1,6 +1,6 @@
 #! /usr/bin/python
 #
-# Copyright (c) 2009 sharkbaitbobby <sharkbaitbobby+awn@gmail.com>
+# Copyright (c) 2009, 2010 sharkbaitbobby <sharkbaitbobby+awn@gmail.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -23,6 +23,7 @@ import urllib
 import urllib2
 import socket
 from xml.dom import minidom
+import time
 
 import pygtk
 pygtk.require('2.0')
@@ -56,6 +57,9 @@ cache_index = os.path.join(cache_dir, 'index.txt')
 
 user_agent = 'AwnFeedsApplet/' + awn.extras.__version__
 
+override_icons = {'google-reader': 'http://www.google.com/reader/ui/favicon.ico',
+    'twitter.com': icondir + '/' + 'twitter-16x16.png'}
+
 gtk.gdk.threads_init()
 
 if not os.path.exists(cache_dir):
@@ -80,6 +84,7 @@ class App(awn.AppletSimple):
     urls = []
     written_urls = []
     num_notify_while_updating = 0
+    google_logins = {}
 
     def __init__(self, uid, panel_id):
         self.network_handler = self.NetworkHandler()
@@ -172,6 +177,9 @@ class App(awn.AppletSimple):
 
             if _base_url == 'google-reader':
                 self.feeds[url] = classes.GoogleReader(self, username)
+
+            elif _base_url == 'google-wave':
+                self.feeds[url] = classes.GoogleWave(self, username)
 
             elif _base_url == 'reddit':
                 self.feeds[url] = classes.Reddit(self, username)
@@ -295,28 +303,60 @@ class App(awn.AppletSimple):
         if self.prefs_dialog and feed.url in self.feeds:
             self.prefs_dialog.update_liststore()
 
+    #Download the favicon if it hasn't been downloaded OR is more than a week old
+    def fetch_favicon(self, cb, data, siteid, url=None, error_callback=None):
+        if siteid in override_icons:
+            url = override_icons[siteid]
+
+        elif url is None:
+            url = 'http://%s/favicon.ico' % siteid
+
+        #Twitter's favicon is ugly, so override it with an included one
+        #(This is the icon that the Twitter feed source uses)
+        if siteid == 'twitter.com':
+            return
+
+        if siteid in self.favicons:
+            #Check if the favion is less than a week old
+            if self.favicons[siteid] + 604800L > long(time.time()):
+                return
+
+        #Fetch the icon
+        self.network_handler.get_data(url, callback=cb, error=error_callback, user_data=data)
+
     def get_favicon(self, icon, override=False):
+        if icon is None:
+            return self.web_image
+
         if not override and not self.client.get_value(GROUP_DEFAULT, 'show_favicons'):
             return self.web_image
 
         if icon in self.pixbufs:
             return self.pixbufs[icon]
 
+        if icon.find('/') != 0 and icon.find('file:///') != 0:
+            path = cache_dir + '/' + icon + '.ico'
+
+        else:
+            path = icon
+
+        if icon in override_icons:
+            if override_icons[icon][0] == '/':
+                path = override_icons[icon]
+
         try:
             if icon.find('gtk://') == 0:
                 pb = self.icon_theme.load_icon(icon[6:], 16, 0)
                 pb = classes.get_16x16(pb)
 
-            elif icon.find('/') != 0 and icon.find('file:///') != 0:
-                pb = gtk.gdk.pixbuf_new_from_file_at_size(cache_dir + '/' + icon + '.ico', 16, 16)
-
             else:
-                pb = gtk.gdk.pixbuf_new_from_file_at_size(icon, 16, 16)
+                pb = gtk.gdk.pixbuf_new_from_file_at_size(path, 16, 16)
 
         except:
             pb = self.web_image
 
-        self.pixbufs[icon] = pb
+        if pb != self.web_image:
+            self.pixbufs[icon] = pb
 
         return pb
 
@@ -376,7 +416,7 @@ class App(awn.AppletSimple):
         self.do_favicons()
 
     def do_favicons(self, override=False):
-        for icon in [self.favicon1, self.favicon2, self.favicon3]:
+        for icon in [self.error_icon, self.favicon1, self.favicon2, self.favicon3]:
             icon.props.active = False
 
         if not override:
@@ -397,6 +437,9 @@ class App(awn.AppletSimple):
 
                     except:
                         pass
+
+                elif feed.io_error:
+                    self.error_icon.props.active = False
 
     def show_notification(self):
         if not self.client.get_value(GROUP_DEFAULT, 'notify'):
@@ -431,6 +474,8 @@ class App(awn.AppletSimple):
                         notify_entries[0]['url'], shortify(notify_entries[0]['title']),
                         notify_entries[1]['url'], shortify(notify_entries[1]['title']),
                         (feed.num_notify - 2))
+
+                feed.num_notify = 0
 
             pynotify.init(_("Feeds Applet"))
             notification = pynotify.Notification(_("%s New Item%s - Feeds Applet") % \
@@ -821,6 +866,13 @@ class App(awn.AppletSimple):
         del self.feed_throbbers[url]
         del self.feed_toggles[url]
 
+        if isinstance(self.feeds[url], classes.GoogleFeed):
+            username = self.feeds[url].url.split('-')[-1]
+            if username in self.google_logins:
+                self.google_logins[username]['count'] -= 1
+                if self.google_logins[username]['count'] == 0:
+                    del self.google_logins[username]
+
         #Clean up non-widgets
         self.feeds[url].delete()
         self.urls.remove(url)
@@ -841,6 +893,7 @@ class App(awn.AppletSimple):
         self.set_icon_name(['awn-feeds', 'awn-feeds-greader'][all_greader])
 
         self.do_favicons()
+        self.throbber.props.active = False
 
     #Actually add a feed
     def add_feed(self, url, parsed=None, *data):
@@ -868,6 +921,9 @@ class App(awn.AppletSimple):
 
         if _base_url == 'google-reader':
             self.feeds[url] = classes.GoogleReader(self, *data)
+
+        elif _base_url == 'google-wave':
+            self.feeds[url] = classes.GoogleWave(self, *data)
 
         elif _base_url == 'reddit':
             self.feeds[url] = classes.Reddit(self, *data)
@@ -1128,14 +1184,18 @@ class App(awn.AppletSimple):
             pass
 
         @async_method
-        def get_data(self, uri, headers = {}, parse=False, timeout=60, user_data=None):
+        def get_data(self, uri, headers={}, parse=False, timeout=60, user_data=None, opener=None):
             try:
                 req = urllib2.Request(uri)
                 for key, val in headers.items():
                     req.add_header(key, val)
                 req.add_header('HTTP_USER_AGENT', user_agent)
 
-                fp = urllib2.urlopen(req)
+                if opener is None:
+                    fp = urllib2.urlopen(req)
+                else:
+                    fp = opener.open(req)
+
                 data = fp.read()
                 fp.close()
             except:
@@ -1150,12 +1210,16 @@ class App(awn.AppletSimple):
                     return data
 
         @async_method
-        def post_data(self, uri, data=None, timeout=60, server_headers=False):
+        def post_data(self, uri, data=None, timeout=60, server_headers=False, opener=None):
             try:
                 req = urllib2.Request(uri, data)
                 req.add_header('HTTP_USER_AGENT', user_agent)
 
-                fp = urllib2.urlopen(req)
+                if opener is None:
+                    fp = urllib2.urlopen(req)
+                else:
+                    fp = opener.open(req)
+
                 headers = fp.info()
                 data = fp.read()
                 fp.close()

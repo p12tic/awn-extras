@@ -1,6 +1,6 @@
 #! /usr/bin/python
 #
-# Copyright (c) 2009 sharkbaitbobby <sharkbaitbobby+awn@gmail.com>
+# Copyright (c) 2009, 2010 sharkbaitbobby <sharkbaitbobby+awn@gmail.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -17,12 +17,14 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
-import os
-import cPickle as pickle
-import urllib
-import time
-import cStringIO
 import base64
+import cPickle as pickle
+import cStringIO
+import os
+import re
+import time
+import urllib
+import urllib2
 
 try:
     import json
@@ -151,7 +153,13 @@ class FeedSource:
     def callback(self, *args):
         pass
 
-    def post_data(self, uri, data=None, timeout=30, server_headers=False, cb=None, error_cb=None):
+    def post_data(self, uri,
+                  data=None,
+                  timeout=30,
+                  server_headers=False,
+                  opener=None,
+                  cb=None,
+                  error_cb=None):
         if cb is None:
             cb = self.callback
 
@@ -159,11 +167,18 @@ class FeedSource:
             error_cb = self.error
 
         if self.applet:
-            self.applet.network_handler.post_data(uri, data, timeout, server_headers, \
+            self.applet.network_handler.post_data(uri, data, timeout, server_headers, opener, \
                 callback=cb, error=error_cb)
 
     #Also convenience
-    def get_data(self, uri, headers={}, parse=False, timeout=30, user_data=None, cb=None, error_cb=None):
+    def get_data(self, uri,
+                 headers={},
+                 parse=False,
+                 timeout=30,
+                 user_data=None,
+                 _opener=None,
+                 cb=None,
+                 error_cb=None):
         if cb is None:
             cb = self.callback
 
@@ -172,7 +187,7 @@ class FeedSource:
 
         if self.applet:
             self.applet.network_handler.get_data(uri, headers, parse, timeout, \
-                user_data=user_data, callback=cb, error=error_cb)
+                user_data=user_data, opener=_opener, callback=cb, error=error_cb)
 
     def get_favicon(self, siteid=None, url=None):
         #web_url is used by default because many sites use, e.g., rss.example.com,
@@ -267,12 +282,15 @@ class KeySaver:
     key = None
     password = None
 
-    def get_key(self, username, password):
+    def get_key(self, username, password, url=None):
+        if url is None:
+            url = self.url
+
         if self.key is None:
             if not self.applet.keyring:
                 self.applet.keyring = awnlib.Keyring()
 
-            token = self.applet.tokens[self.url]
+            token = self.applet.tokens[url]
 
             #Username and password provided, e.g. from the add feed dialog
             if username and password:
@@ -280,12 +298,12 @@ class KeySaver:
                 if token is None or token == 0:
                     #No for i18n because if the user changes the language, he
                     #could lose the password (and most users won't even see this)
-                    self.key = self.applet.keyring.new('Feeds - ' + self.url,
+                    self.key = self.applet.keyring.new('Feeds - ' + url,
                         password,
                         {'username': username, 'network': self.base_id},
                         'network')
 
-                    self.applet.tokens[self.url] = int(self.key.token)
+                    self.applet.tokens[url] = int(self.key.token)
 
                 else:
                     self.key = self.applet.keyring.from_token(token)
@@ -302,98 +320,144 @@ class KeySaver:
 
         return self.key
 
-#Thank you http://code.google.com/p/pyrfeed/wiki/GoogleReaderAPI
-class GoogleReader(FeedSource, StandardNew, KeySaver):
-    base_id = 'google-reader'
-    web_url = 'http://www.google.com/reader/'
-    title = _("Google Reader")
-    login = 'https://www.google.com/accounts/ClientLogin'
-    fetch_url = 'http://www.google.com/reader/atom/user/-/state/com.google/reading-list?n=5'
-    favicon_url = 'http://www.google.com/reader/ui/favicon.ico'
+#Store the passwords together
+class GoogleFeed(KeySaver):
+    opener = None
+    SID = None
+    logged_in = False
+    title = _("Google")
+    client_login_url = 'https://www.google.com/accounts/ClientLogin'
+    service_login_url = 'https://www.google.com/accounts/ServiceLogin'
+    service_login_auth_url = 'https://www.google.com/accounts/ServiceLoginAuth'
     feed_search_url = 'http://www.google.com/reader/directory/search?'
 
-    def __init__(self, applet, username, password=None):
-        self.applet = applet
-        self.username = username
-        self.url = self.base_id + '-' + username
+    #Override the identifying URL to just be google-username, instead of
+    #e.g. google-reader-username, google-wave-username, etc. so that only one has to be stored
+    def get_key(self, username, password):
+        return KeySaver.get_key(self, username, password, 'google-' + username)
 
-        self.should_update = False
-        self.SID = ''
-        self.init_network_error = False
+    #Login, emulating the standard Web login
+    def service_login(self):
+        #Unify logging in to Google across Google services
+        if self.username in self.applet.google_logins:
+            self.applet.google_logins[self.username]['count'] += 1
 
-        #Get ready to update/fetch feed, but don't actually do so.
-        self.get_key(username, password)
-        self.get_google_sid()
-        self.get_favicon('google-reader', self.favicon_url)
+        else:
+            self.applet.google_logins[self.username] = {'count': 1, 'opener': None, 'SID': None,
+                'keyring': self.get_key(self.username, self.password), 'service_logged_in': False}
 
-    #Login to Google (Reader) and get an SID, a magic string that
-    #lets us get the user's Google Reader items
-    def get_google_sid(self):
         if self.key is not None:
-            #Get the magic SID from Google to login, if we haven't already
-            if self.SID == '':
-                try:
-                    #Format the request
-                    data = urllib.urlencode({'service': 'reader',
-                        'Email': self.key.attrs['username'],
-                        'Passwd': self.key.password,
-                        'source': 'awn-feeds-applet-' + extras.__version__,
-                        'continue': 'http://www.google.com/'})
-                except:
-                    self.error()
-                    return
+            if not self.logged_in:
+                if self.opener is None:
+                    if self.applet.google_logins[self.username]['opener'] is None:
+                        cookies = urllib2.HTTPCookieProcessor()
+                        self.opener = urllib2.build_opener(cookies)
+                        self.applet.google_logins[self.username]['opener'] = self.opener
 
-                #Send the data to get the SID
-                self.post_data(self.login, data, 15, cb=self.got_google_sid, error_cb=self.sid_error)
+                    else:
+                        self.opener = self.applet.google_logins[self.username]['opener']
 
-    def sid_error(self, *args):
-        self.init_network_error = True
-        self.error()
+                        if self.applet.google_logins[self.username]['service_logged_in']:
+                            if self.should_update:
+                                self.update()
+                                self.should_update = False
 
-    def got_google_sid(self, data):
-        self.init_network_error = False
+                            return
 
-        #Check if wrong password/username
-        if data.find('BadAuthentication') != -1:
-            self.login_error = True
+                self.get_data(self.service_login_url,
+                              _opener=self.opener,
+                              cb=self.did_service_login,
+                              error_cb=self.login_error)
+
+    def did_service_login(self, data):
+        galx_match_obj = re.search(r'name="GALX"\s*value="([^"]+)"', data, re.IGNORECASE)
+        galx_value = galx_match_obj.group(1) if galx_match_obj.group(1) is not None else ''
+        data = urllib.urlencode({'Email': self.username,
+            'Passwd': self.password,
+            'GALX': galx_value})
+
+        #Now authenticate
+        self.post_data(self.service_login_auth_url,
+                       data,
+                       opener=self.opener,
+                       cb=self.did_auth,
+                       error_cb=self.login_error)
+
+    def did_auth(self, data):
+        if data.find("Sign in to") != -1 or data.find("incorrect") != -1:
             self.error()
+            self.logged_in = False
             return
 
-        #Save the SID so we don't have to re-login every update
-        self.SID = data.split('=')[1].split('\n')[0]
+        self.logged_in = True
+        self.applet.google_logins[self.username]['service_logged_in'] = True
 
         if self.should_update:
             self.update()
             self.should_update = False
 
-    #Update the Google Reader feed
-    def update(self):
-        if self.SID == '' and not self.init_network_error:
-            self.should_update = True
+    def login_error(self, *args):
+        self.init_network_error = True
+        self.error()
 
-        elif self.init_network_error:
-            self.should_update = True
-            self.get_google_sid()
+    #This is a special login used for APIs, such as gdata.
+    def client_login(self, service):
+        #Unify logging in to Google across Google services
+        if self.username in self.applet.google_logins:
+            self.applet.google_logins[self.username]['count'] += 1
 
         else:
-            #Load the reading list with that magic SID as a cookie
-            self.get_data(self.fetch_url, {'Cookie': 'SID=' + self.SID}, True, cb=self.got_parsed)
+            self.applet.google_logins[self.username] = {'count': 1, 'opener': None, 'SID': None,
+                'keyring': self.get_key(self.username, self.password), 'service_logged_in': False}
 
-    def got_parsed(self, parsed):
-        self.entries = []
-        for entry in parsed.entries[:5]:
-            self.entries.append(Entry(entry.link, entry.title))
+        if self.key is not None:
+            #Get the magic SID from Google to login, if we haven't already
+            if self.SID is None:
+                if self.applet.google_logins[self.username]['SID'] is not None:
+                    self.SID = self.applet.google_logins[self.username]['SID']
 
-        self.get_new()
+                    if self.should_update:
+                        self.update()
+                        self.should_update = False
 
-        self.applet.feed_updated(self)
-        self.get_favicon('google-reader', self.favicon_url)
+                else:
+                    #Format the request
+                    data = urllib.urlencode({'service': service,
+                        'Email': self.username,
+                        'Passwd': self.password,
+                        'source': 'awn-feeds-applet-' + extras.__version__,
+                        'continue': 'http://www.google.com/'})
+
+                    #Send the data to get the SID
+                    self.post_data(self.client_login_url, data, 15,
+                        cb=self.got_sid, error_cb=self.login_error)
+
+    def got_sid(self, data):
+        self.init_network_error = False
+
+        #Check if wrong password/username
+        if data.find('BadAuthentication') != -1:
+            self.error()
+            return
+
+        #Save the SID so we don't have to re-login every update
+        self.SID = data.split('=')[1].split('\n')[0]
+        self.logged_in = True
+
+        if self.should_update:
+            self.update()
+            self.should_update = False
 
     def get_search_results(self, query, cb, _error_cb):
         search_url = self.feed_search_url + urllib.urlencode({'q': query})
 
-        self.get_data(search_url, {'Cookie': 'SID=' + self.SID}, False, user_data=(cb, _error_cb), \
-            cb=self.got_search_results, error_cb=_error_cb)
+        if self.SID is not None:
+            self.get_data(search_url, {'Cookie': 'SID=' + self.SID}, False,
+                user_data=(cb, _error_cb), cb=self.got_search_results, error_cb=_error_cb)
+
+        elif self.opener is not None:
+            self.get_data(search_url, user_data=(cb, _error_cb), _opener=self.opener,
+                cb=self.got_search_results, error_cb=_error_cb)
 
     def got_search_results(self, cbs, data):
         cb, error_cb = cbs
@@ -416,6 +480,139 @@ class GoogleReader(FeedSource, StandardNew, KeySaver):
         else:
             cb(feeds)
 
+
+#Thank you http://code.google.com/p/pyrfeed/wiki/GoogleReaderAPI
+class GoogleReader(FeedSource, StandardNew, GoogleFeed):
+    base_id = 'google-reader'
+    web_url = 'http://www.google.com/reader/'
+    title = _("Google Reader")
+    fetch_url = 'http://www.google.com/reader/atom/user/-/state/com.google/reading-list?n=5'
+    favicon_url = 'http://www.google.com/reader/ui/favicon.ico'
+
+    def __init__(self, applet, username, password=None):
+        self.applet = applet
+        self.username = username
+        self.url = self.base_id + '-' + username
+
+        self.should_update = False
+        self.init_network_error = False
+
+        #Get ready to update/fetch feed, but don't actually do so.
+        self.get_key(username, password)
+        self.client_login('reader')
+        self.get_favicon('google-reader', self.favicon_url)
+
+    #Update the Google Reader feed
+    def update(self):
+        if self.SID is None and not self.init_network_error:
+            self.should_update = True
+
+        elif self.init_network_error:
+            self.should_update = True
+            self.client_login('reader')
+
+        else:
+            #Load the reading list with that magic SID as a cookie
+            self.get_data(self.fetch_url, {'Cookie': 'SID=' + self.SID}, True, cb=self.got_parsed)
+
+    def got_parsed(self, parsed):
+        self.entries = []
+        for entry in parsed.entries[:5]:
+            self.entries.append(Entry(entry.link, entry.title))
+
+        self.get_new()
+
+        self.applet.feed_updated(self)
+        self.get_favicon('google-reader', self.favicon_url)
+
+#Code largely based on work in googsystray by Jim Duchek
+#http://googsystray.sourceforge.net/
+class GoogleWave(FeedSource, GoogleFeed):
+    base_id = 'google-wave'
+    web_url = 'http://wave.google.com/wave/'
+    title = _("Google Wave")
+    fetch_url = 'https://wave.google.com/wave/'
+
+    def __init__(self, applet, username, password=None):
+        self.applet = applet
+        self.username = username
+        self.url = self.base_id + '-' + username
+
+        self.should_update = False
+        self.init_network_error = False
+
+        self.notified_about = []
+
+        #Get ready to update/fetch feed, but don't actually do so.
+        self.get_key(username, password)
+        self.service_login()
+        self.get_favicon('wave.google.com')
+
+    def update(self):
+        if not self.logged_in and not self.init_network_error:
+            self.should_update = True
+
+        #This happens if the user was not connected at startup
+        #E.g. on Wifi, very common.
+        elif self.init_network_error:
+            self.should_update = True
+            self.service_login()
+
+        else:
+            self.get_data(self.fetch_url, _opener=self.opener, cb=self.got_data)
+
+    #Loaded the Wave data; now parse
+    def got_data(self, data):
+        c_start = data.find("userProfile:")
+        id_start = data.find("id:'", c_start)
+        id_end = data.find("'", id_start + 4)
+        username_start = data.find("username:'", c_start)
+        username_end = data.find("'", username_start + 10)
+        username = data[username_start + 10:username_end]
+        id = data[id_start + 4:id_end]
+
+        c_end = 0
+        c_start = data.find("var json = ", c_end)
+
+        while c_start != -1:
+            c_end = data.find("}};\n", c_start)
+            jdata = json.loads(data[c_start + 11:c_end + 2])
+            if jdata["t"] == 2602:
+                self.check_jdata(jdata)
+                break
+
+            c_start = data.find("var json =", c_end)
+
+        self.applet.feed_updated(self)
+        self.get_favicon('wave.google.com')
+
+    def check_jdata(self, data):
+        waves = data["p"]["1"]
+        self.entries = []
+        self.num_notify = 0
+
+        for i in waves:
+            notify = False
+
+            try:
+                if i["7"] == 0:
+                    continue
+            except:
+                continue
+
+            #i['1'] is an unique ID for each wave.
+            if i['1'] not in self.notified_about:
+              notify = True
+              self.num_notify += 1
+              self.notified_about.append(i['1'])
+
+            url = 'http://wave.google.com/wave/#minimized:search,restored:wave:'
+            url += i['1'].replace('+', '%2B')
+            entry = Entry(url, i['9']['1'], True, notify)
+            self.entries.append(entry)
+
+        self.num_new = len(self.entries)
+
 class Reddit(FeedSource, KeySaver):
     base_id = 'reddit'
     web_url = 'http://www.reddit.com/message/inbox/'
@@ -430,6 +627,7 @@ class Reddit(FeedSource, KeySaver):
     def __init__(self, applet, username, password=None):
         self.applet = applet
         self.username = username
+        self.password = password
         self.url = self.base_id + '-' + username
 
         self.cookie = None
@@ -447,7 +645,7 @@ class Reddit(FeedSource, KeySaver):
             if self.cookie is None:
                 try:
                     data = urllib.urlencode({'user': self.username.lower(),
-                        'passwd': self.key.password,
+                        'passwd': self.password,
                         'op': 'login-main',
                         'id': '#login_login-main',
                         'r': 'reddit.com'})

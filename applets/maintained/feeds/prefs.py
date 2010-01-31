@@ -1,6 +1,6 @@
 #! /usr/bin/python
 #
-# Copyright (c) 2009 Sharkbaitbobby <sharkbaitbobby+awn@gmail.com>
+# Copyright (c) 2009, 2010 Sharkbaitbobby <sharkbaitbobby+awn@gmail.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -21,6 +21,7 @@ import sys
 import os
 import urllib
 import urllib2
+import time
 
 import pygtk
 pygtk.require('2.0')
@@ -330,9 +331,11 @@ class AddFeed(gtk.Window):
 
         self.google_source = None
         for source in self.applet.feeds.values():
-            if isinstance(source, classes.GoogleReader):
+            if isinstance(source, classes.GoogleFeed):
                 self.google_source = source
                 break
+
+        self.site_images = {}
 
         self.set_border_width(12)
         self.set_title(_("Add Feed"))
@@ -349,10 +352,10 @@ class AddFeed(gtk.Window):
         pb = classes.get_16x16(pb)
 
         search_radio = gtk.RadioButton(None)
-        search_radio.add(get_radio_hbox(pb, _("Search")))
+        search_radio.add(self.get_radio_hbox(pb, _("Search")))
         if not self.google_source:
             search_radio.set_sensitive(False)
-            search_radio.set_tooltip_text(_("You must sign in to Google Reader to search for feeds."))
+            search_radio.set_tooltip_text(_("You must sign in to a Google service to search for feeds."))
 
         #Regular RSS/Atom feed
         try:
@@ -361,25 +364,50 @@ class AddFeed(gtk.Window):
         except:
             pb = gtk.gdk.pixbuf_new_from_file_at_size(icon_path, 16, 16)
         webfeed_radio = gtk.RadioButton(search_radio, None)
-        webfeed_radio.add(get_radio_hbox(pb, _("RSS/Atom")))
+        webfeed_radio.add(self.get_radio_hbox(pb, _("RSS/Atom")))
 
-        #Google Reader
+        #Google (Reader and Wave)
+        pb = self.applet.get_favicon('www.google.com', True)
+
+        google_radio = gtk.RadioButton(search_radio, None)
+        google_radio.add(self.get_radio_hbox(pb, classes.GoogleFeed.title, 'www.google.com'))
+
+        #Google Reader (CheckButton)
         pb = get_greader_icon()
 
-        greader_radio = gtk.RadioButton(search_radio, None)
-        greader_radio.add(get_radio_hbox(pb, classes.GoogleReader.title))
+        self.greader_check = gtk.CheckButton()
+        self.greader_check.add(self.get_radio_hbox(pb, classes.GoogleReader.title, 'google-reader'))
+        self.greader_check.set_active(True)
+        self.greader_check.connect('toggled', self.check_toggled)
+
+        #Google Wave
+        pb = self.applet.get_favicon('wave.google.com', True)
+
+        self.gwave_check = gtk.CheckButton()
+        self.gwave_check.add(self.get_radio_hbox(pb, classes.GoogleWave.title, 'wave.google.com'))
+        self.gwave_check.connect('toggled', self.check_toggled)
+
+        google_vbox = gtk.VBox(False, 3)
+        google_vbox.pack_start(self.greader_check, False)
+        google_vbox.pack_start(self.gwave_check, False)
+        google_vbox.show_all()
+
+        self.google_align = gtk.Alignment(0.0, 0.0, 1.0, 0.0)
+        self.google_align.set_padding(0, 0, 12, 0)
+        self.google_align.add(google_vbox)
+        self.google_align.set_no_show_all(True)
 
         #Reddit Inbox
         pb = self.applet.get_favicon('www.reddit.com', True)
 
         reddit_radio = gtk.RadioButton(search_radio, None)
-        reddit_radio.add(get_radio_hbox(pb, classes.Reddit.title))
+        reddit_radio.add(self.get_radio_hbox(pb, classes.Reddit.title, 'www.reddit.com'))
 
         #Twitter Timeline and/or Replies
         pb = gtk.gdk.pixbuf_new_from_file_at_size(twitter_path, 16, 16)
 
         twitter_radio = gtk.RadioButton(search_radio, None)
-        twitter_radio.add(get_radio_hbox(pb, _("Twitter")))
+        twitter_radio.add(self.get_radio_hbox(pb, _("Twitter")))
 
         self.twitter_timeline_check = gtk.CheckButton(_("Timeline"))
         self.twitter_timeline_check.set_active(True)
@@ -390,20 +418,25 @@ class AddFeed(gtk.Window):
         self.twitter_replies_check.connect('toggled', self.check_toggled)
         self.twitter_replies_check.show()
 
-        self.twitter_vbox = gtk.VBox(False, 3)
-        self.twitter_vbox.pack_start(self.twitter_timeline_check, False)
-        self.twitter_vbox.pack_start(self.twitter_replies_check, False)
-        self.twitter_vbox.set_no_show_all(True)
+        twitter_vbox = gtk.VBox(False, 3)
+        twitter_vbox.pack_start(self.twitter_timeline_check, False)
+        twitter_vbox.pack_start(self.twitter_replies_check, False)
+        twitter_vbox.show_all()
+
+        self.twitter_align = gtk.Alignment(0.0, 0.0, 1.0, 0.0)
+        self.twitter_align.set_padding(0, 0, 12, 0)
+        self.twitter_align.add(twitter_vbox)
+        self.twitter_align.set_no_show_all(True)
 
         num = 0
-        for radio in (search_radio, webfeed_radio, greader_radio, reddit_radio, twitter_radio):
-            radio.connect('toggled', self.radio_toggled)
-            radio.num = num
-            source_vbox.pack_start(radio, False, False, 0)
+        for widget in (search_radio, webfeed_radio, google_radio, self.google_align, reddit_radio,
+            twitter_radio, self.twitter_align):
+            if isinstance(widget, gtk.RadioButton):
+                widget.connect('toggled', self.radio_toggled)
+                widget.num = num
+                num += 1
 
-            num += 1
-
-        source_vbox.pack_start(self.twitter_vbox, False, False, 0)
+            source_vbox.pack_start(widget, False, False, 0)
 
         source_hbox = gtk.HBox(False, 6)
         source_hbox.pack_start(source_label, False, False)
@@ -570,6 +603,26 @@ class AddFeed(gtk.Window):
 
         self.show_all()
 
+        #Update any downloaded favicons if necessary
+        for siteid in ('www.google.com', 'google-reader', 'wave.google.com', 'www.reddit.com'):
+            self.applet.fetch_favicon(self.fetched_favicon, siteid, siteid)
+
+    #The favicon was fetched
+    def fetched_favicon(self, siteid, data):
+        self.applet.favicons[siteid] = long(time.time())
+
+        fp = open(os.path.join(cache_dir, siteid + '.ico'), 'w+')
+        fp.write(data)
+        fp.close()
+
+        pb = self.applet.get_favicon(siteid, True)
+
+        if siteid == 'google-reader':
+            self.set_icon(pb)
+
+        if siteid in self.site_images:
+            self.site_images[siteid].set_from_pixbuf(pb)
+
     #Add button clicked
     def almost_add_feed(self, button):
         #URL for RSS/Atom
@@ -583,10 +636,16 @@ class AddFeed(gtk.Window):
             username = self.user_entry.get_text()
             password = self.pass_entry.get_text()
 
+            #Google
             if self.num == 2:
-                self.applet.add_feed('google-reader-' + username, None, username, password)
+                if self.greader_check.get_active():
+                    self.applet.add_feed('google-reader-' + username, None, username, password)
 
-            elif self.num == 3:
+                if self.gwave_check.get_active():
+                    self.applet.add_feed('google-wave-' + username, None, username, password)
+
+            #Reddit
+            if self.num == 3:
                 self.applet.add_feed('reddit-' + username, None, username, password)
 
             elif self.num == 4:
@@ -615,14 +674,16 @@ class AddFeed(gtk.Window):
         elif entry == self.url_entry:
             self.do_sensitive(self.add_button, (entry, ))
 
-        #Google Reader or Reddit
-        elif self.num in (2, 3):
-            self.do_sensitive(self.add_button, (self.user_entry, self.pass_entry))
+        elif self.num == 2:
+            self.do_sensitive(self.add_button, (self.user_entry, self.pass_entry),
+                (self.greader_check, self.gwave_check))
 
-        #Twitter
         elif self.num == 4:
-            self.do_sensitive(self.add_button, (self.user_entry, self.pass_entry), \
+            self.do_sensitive(self.add_button, (self.user_entry, self.pass_entry),
                 (self.twitter_timeline_check, self.twitter_replies_check))
+
+        else:
+            self.do_sensitive(self.add_button, (self.user_entry, self.pass_entry))
 
     def radio_toggled(self, radio):
         if not radio.get_active():
@@ -654,18 +715,28 @@ class AddFeed(gtk.Window):
             self.user_hbox.show()
             self.pass_hbox.show()
 
-            if self.num == 4:
-                self.twitter_vbox.show()
+            if self.num == 2:
+                self.google_align.show()
 
-                self.do_sensitive(self.add_button, (self.user_entry, self.pass_entry), \
+                self.do_sensitive(self.add_button, (self.user_entry, self.pass_entry),
+                    (self.greader_check, self.gwave_check))
+
+            elif self.num == 4:
+                self.twitter_align.show()
+
+                self.do_sensitive(self.add_button, (self.user_entry, self.pass_entry),
                     (self.twitter_timeline_check, self.twitter_replies_check))
 
             else:
                 self.do_sensitive(self.add_button, (self.user_entry, self.pass_entry))
 
     def check_toggled(self, check):
-        if check in (self.twitter_timeline_check, self.twitter_replies_check):
-            self.do_sensitive(self.add_button, (self.user_entry, self.pass_entry), \
+        if check in (self.greader_check, self.gwave_check):
+            self.do_sensitive(self.add_button, (self.user_entry, self.pass_entry),
+                (self.greader_check, self.gwave_check))
+
+        elif check in (self.twitter_timeline_check, self.twitter_replies_check):
+            self.do_sensitive(self.add_button, (self.user_entry, self.pass_entry),
                 (self.twitter_timeline_check, self.twitter_replies_check))
 
     def close(self, button):
@@ -772,7 +843,8 @@ class AddFeed(gtk.Window):
 
         self.results_sw.hide()
 
-        self.twitter_vbox.hide()
+        self.google_align.hide()
+        self.twitter_align.hide()
 
     #All entries need to have non-empty text
     #At least one check needs to be active
@@ -793,6 +865,20 @@ class AddFeed(gtk.Window):
 
         button.set_sensitive(False)
 
+    def get_radio_hbox(self, pb, text, siteid=None):
+        image = gtk.image_new_from_pixbuf(pb)
+
+        if siteid is not None:
+            self.site_images[siteid] = image
+
+        label = gtk.Label(text)
+
+        hbox = gtk.HBox(False, 3)
+        hbox.pack_start(image, False)
+        hbox.pack_start(label, False)
+
+        return hbox
+
 #Try the downloaded favicon first. If it doesn't work, use the blue RSS icon
 def get_greader_icon():
     try:
@@ -801,17 +887,6 @@ def get_greader_icon():
         pb = gtk.gdk.pixbuf_new_from_file_at_size(greader_path, 16, 16)
 
     return pb
-
-def get_radio_hbox(pb, txt):
-    img = gtk.image_new_from_pixbuf(pb)
-
-    label = gtk.Label(txt)
-
-    hbox = gtk.HBox(False, 3)
-    hbox.pack_start(img, False)
-    hbox.pack_start(label, False)
-
-    return hbox
 
 def html_safe(s):
     s = s.replace('&', '&amp;').replace('<', '&lt;')

@@ -10,7 +10,7 @@ description = The action to perform on left click
 
 [DEFAULT/lmb_path]
 type = string
-default = ~
+default =
 description = The path to use on left click
 
 [DEFAULT/mmb]
@@ -20,7 +20,7 @@ description = The action to perform on middle click
 
 [DEFAULT/mmb_path]
 type = string
-default = ~
+default =
 description = The path to use on middle click
 
 [DEFAULT/show_bookmarks]
@@ -62,3 +62,8 @@ description = Whether or not to open the place when clicked
 type = integer
 default = 2
 description = Whether or not to focus the location text box
+
+[DEFAULT/docklet]
+type = boolean
+default = true
+description = Use a docklet instead of a dialog

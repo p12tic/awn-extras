@@ -283,7 +283,7 @@ public class GarbageApplet : AppletSimple
   {
     if (!this.highlighted)
     {
-      (this.get_icon () as Overlayable).get_effects ().start (Effect.HOVER);
+      this.get_icon ().get_effects ().start (Effect.LAUNCHING);
       this.highlighted = true;
     }
     return true;
@@ -294,7 +294,7 @@ public class GarbageApplet : AppletSimple
   {
     if (this.highlighted)
     {
-      (this.get_icon () as Overlayable).get_effects ().stop (Effect.HOVER);
+      this.get_icon ().get_effects ().stop (Effect.LAUNCHING);
       this.highlighted = false;
     }
   }

@@ -170,7 +170,9 @@ class App (awn.AppletSimple):
     self.dialog.add(self.vbox)
 
     #Connect to signals
-    self.connect('button-press-event', self.button_press)
+    self.connect('clicked', self.icon_clicked)
+    self.connect('middle-clicked', self.icon_clicked)
+    self.connect('context-menu-popup', self.show_context_menu)
     self.connect('size-changed', self.size_changed)
     self.dialog.connect('focus-out-event', self.dialog_focus_out)
     self.theme.connect('changed', self.icon_theme_changed)
@@ -820,18 +822,19 @@ class App (awn.AppletSimple):
 
   #Applet show/hide methods - copied from MiMenu (and edited)
   #When a button is pressed
-  def button_press(self, widget, event):
-    if event.button in (1, 2):
-      if not self.client.get_bool(group, 'docklet'):
-        if self.dialog.flags() & gtk.VISIBLE:
-          self.dialog.hide()
-        else:
-          self.dialog_config(event.button)
-
+  def icon_clicked(self, widget):
+    event = gtk.get_current_event()
+    if not self.client.get_bool(group, 'docklet'):
+      if self.dialog.flags() & gtk.VISIBLE:
+        self.dialog.hide()
       else:
         self.dialog_config(event.button)
 
-    elif event.button == 3:
+    else:
+      self.dialog_config(event.button)
+
+  def show_context_menu(self, widget, event):
+    if event.button == 3:
       self.dialog.hide()
       self.show_menu(event)
 

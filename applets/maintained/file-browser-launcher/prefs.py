@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2009 sharkbaitbobby <sharkbaitbobby+awn@gmail.com>
+# Copyright (c) 2009, 2010 sharkbaitbobby <sharkbaitbobby+awn@gmail.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -160,12 +160,24 @@ class Prefs:
     align.set_padding(0, 0, 6, 0)
     align.add(vbox)
 
-    check = gtk.CheckButton(_("Use docklet"))
-    check.identifier = 'general.docklet'
-    if self.client.get_bool(group, 'docklet'):
-      check.set_active(True)
-    check.connect('toggled', self.check_toggled)
-    vbox.pack_start(check, False)
+    dialog_radio = gtk.RadioButton(None, _("One icon with dialog"))
+    dialog_radio.identifier = 'general.dialog'
+    dialog_radio.connect('toggled', self.radio_toggled)
+    vbox.pack_start(dialog_radio, False)
+
+    docklet_radio = gtk.RadioButton(dialog_radio, _("One icon with docklet"))
+    docklet_radio.identifier = 'general.docklet'
+    if self.client.get_int(group, 'mode') == 1:
+      docklet_radio.set_active(True)
+    docklet_radio.connect('toggled', self.radio_toggled)
+    vbox.pack_start(docklet_radio, False)
+
+    persist_radio = gtk.RadioButton(dialog_radio, _("Multiple icons"))
+    persist_radio.identifier = 'general.persist'
+    if self.client.get_int(group, 'mode') == 2:
+      persist_radio.set_active(True)
+    persist_radio.connect('toggled', self.radio_toggled)
+    vbox.pack_start(persist_radio, False)
 
     self.focus_check = gtk.CheckButton(_("Focus text entry"))
     self.focus_check.identifier = 'general.focus'
@@ -173,7 +185,7 @@ class Prefs:
       self.focus_check.set_active(True)
     self.focus_check.connect('toggled', self.check_toggled)
     vbox.pack_start(self.focus_check, False)
-    if self.client.get_bool(group, 'docklet'):
+    if self.client.get_int(group, 'mode') != 0:
       self.focus_check.set_sensitive(False)
 
     self.open_check = gtk.CheckButton(_("Open place when clicked"))
@@ -182,7 +194,7 @@ class Prefs:
       self.open_check.set_active(True)
     self.open_check.connect('toggled', self.check_toggled)
     vbox.pack_start(self.open_check, False)
-    if self.client.get_bool(group, 'docklet'):
+    if self.client.get_int(group, 'mode') != 0:
       self.open_check.set_sensitive(False)
 
     behavior_vbox.pack_start(label, False)
@@ -285,18 +297,23 @@ class Prefs:
     align.add(vbox)
     folder_vbox.pack_start(align, False)
 
-    file_chooser = gtk.FileChooserButton(_("Choose a folder"))
-    self.lmb_chooser = file_chooser
-    file_chooser.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
+    self.lmb_entry = gtk.Entry()
+    self.lmb_entry.connect('focus-out-event', self.entry_focus_out, 'lmb_path')
 
     if self.lmb_path is None or self.lmb_path.strip() == '' or not os.path.exists(self.lmb_path):
-      file_chooser.set_filename(os.environ['HOME'] + '/')
+      self.lmb_entry.set_text(os.environ['HOME'] + '/')
 
     else:
-      file_chooser.set_filename(self.lmb_path)
+      self.lmb_entry.set_text(self.lmb_path.rstrip('/') + '/')
 
-    vbox.pack_start(file_chooser, False)
-    file_chooser.connect('current-folder-changed', self.file_chooser_set)
+    button = gtk.Button(stock=gtk.STOCK_OPEN)
+    button.connect('clicked', self.browse_folder, True)
+
+    hbox = gtk.HBox(False, 6)
+    hbox.pack_start(self.lmb_entry, True)
+    hbox.pack_start(button, False)
+    
+    vbox.pack_start(hbox, False)
 
     self.nbook.append_page(left_vbox, gtk.Label(_("Left Click")))
 
@@ -355,22 +372,27 @@ class Prefs:
     align.add(vbox)
     folder_vbox.pack_start(align, False)
 
-    file_chooser = gtk.FileChooserButton(_("Choose a folder"))
-    self.mmb_chooser = file_chooser
-    file_chooser.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
+    self.mmb_entry = gtk.Entry()
+    self.mmb_entry.connect('focus-out-event', self.entry_focus_out, 'mmb_path')
 
     if self.mmb_path is None or self.mmb_path.strip() == '' or not os.path.exists(self.mmb_path):
-      file_chooser.set_filename(os.environ['HOME'] + '/')
+      self.mmb_entry.set_text(os.environ['HOME'] + '/')
 
     else:
-      file_chooser.set_filename(self.mmb_path)
+      self.mmb_entry.set_text(self.mmb_path.rstrip('/') + '/')
 
-    vbox.pack_start(file_chooser, False)
-    file_chooser.connect('current-folder-changed', self.file_chooser_set)
+    button = gtk.Button(stock=gtk.STOCK_OPEN)
+    button.connect('clicked', self.browse_folder, False)
+
+    hbox = gtk.HBox(False, 6)
+    hbox.pack_start(self.mmb_entry, True)
+    hbox.pack_start(button, False)
+    
+    vbox.pack_start(hbox, False)
 
     self.nbook.append_page(mid_vbox, gtk.Label(_("Middle Click")))
 
-    #Now for a close button - no apply button needed since everything is done instantly
+    #Close button
     close_button = gtk.Button(stock=gtk.STOCK_CLOSE)
     close_button.connect('clicked',lambda a:self.window.destroy())
 
@@ -389,13 +411,6 @@ class Prefs:
     self.window.set_border_width(12)
     self.window.show_all()
     self.initializing = False
-
-  def file_chooser_set(self, widget):
-    if widget == self.lmb_chooser:
-      self.client.set_string(group, 'lmb_path', widget.get_filename())
-
-    else:
-      self.client.set_string(group, 'mmb_path', widget.get_filename())
 
   #Determines what radio button was selected and changes awncc and other important things
   def radio_toggled(self,radio):
@@ -420,6 +435,21 @@ class Prefs:
     elif radio.identifier == 'general.fb.custom':
       self.custom_entry.set_sensitive(True)
       self.client.set_string(group, 'fb', self.custom_entry.get_text())
+
+    elif radio.identifier == 'general.dialog':
+      self.focus_check.set_sensitive(True)
+      self.open_check.set_sensitive(True)
+      self.client.set_int(group, 'mode', 0)
+
+    elif radio.identifier == 'general.docklet':
+      self.focus_check.set_sensitive(False)
+      self.open_check.set_sensitive(False)
+      self.client.set_int(group, 'mode', 1)
+
+    elif radio.identifier == 'general.persist':
+      self.focus_check.set_sensitive(False)
+      self.open_check.set_sensitive(False)
+      self.client.set_int(group, 'mode', 2)
 
     elif radio.identifier == 'lmb.display':
       self.client.set_int(group, 'lmb', 1)
@@ -492,11 +522,6 @@ class Prefs:
         self.places_all.set_active(False)
         self.ignore_all = False
 
-    elif check.identifier == 'general.docklet':
-      self.client.set_bool(group, 'docklet', check.get_active())
-      self.focus_check.set_sensitive(not check.get_active())
-      self.open_check.set_sensitive(not check.get_active())
-
     #Tab: Dialog; Section: Behavior; Checkbox: Focus
     elif check.identifier == 'general.focus':
       if check.get_active():
@@ -510,3 +535,30 @@ class Prefs:
         self.client.set_int(group, 'places_open', 2)
       else:
         self.client.set_int(group, 'places_open', 1)
+
+  def browse_folder(self, button, is_lmb):
+    dialog = gtk.FileChooserDialog(_("Choose a folder"),
+      buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN, gtk.RESPONSE_OK),
+      action=gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
+
+    response = dialog.run()
+    path = dialog.get_filename()
+    dialog.destroy()
+
+    if response != gtk.RESPONSE_OK or path is None or path.strip() == '':
+      return
+
+    if is_lmb:
+      entry = self.lmb_entry
+      key = 'lmb_path'
+
+    else:
+      entry = self.mmb_entry
+      key = 'mmb_path'
+
+    entry.set_text(path.rstrip('/') + '/')
+    self.client.set_string(group, key, path.rstrip('/') + '/')
+
+  def entry_focus_out(self, entry, event, key):
+    if entry.get_text().strip() != '':
+      self.client.set_string(group, key, entry.get_text().rstrip('/') + '/')

@@ -1,7 +1,7 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2009 sharkbaitbobby <sharkbaitbobby+awn@gmail.com>
+# Copyright (c) 2009, 2010 sharkbaitbobby <sharkbaitbobby+awn@gmail.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -44,20 +44,25 @@ from awn.extras import _
 gettext.bindtextdomain('xdg-user-dirs', '/usr/share/locale')
 
 
-class App (awn.AppletSimple):
+class App(awn.Applet):
   icons = {}
   timer = None
   num_times = 0
-  drag_done = False
+  drag_done = True
   droppable_places = []
   places_data = []
   docklet_visible = False
 
   def __init__(self, uid, panel_id):
     #AWN Applet Configuration
-    awn.AppletSimple.__init__(self, 'file-browser-launcher', uid, panel_id)
-    self.set_tooltip_text(_("File Browser Launcher"))
-    self.dialog = awn.Dialog(self)
+    awn.Applet.__init__(self, 'file-browser-launcher', uid, panel_id)
+
+    self.icon_box = awn.IconBox(self)
+    self.add(self.icon_box)
+    self.icon = awn.ThemedIcon()
+    self.icon.set_tooltip_text(_("File Browser Launcher"))
+    self.icon.set_size(self.get_size())
+    self.dialog = awn.Dialog(self.icon)
 
     #AwnConfigClient instance
     self.client = awn.config_get_default_for_applet(self)
@@ -67,8 +72,19 @@ class App (awn.AppletSimple):
     self.icons[24] = {}
     self.icons[24]['stock_folder'] = self.theme.load_icon('stock_folder', 24, 0)
 
+    #Docklet...
+    self.mode = self.client.get_int(group, 'mode')
+    self.client.notify_add(group, 'mode', self.update_mode)
+
+    if self.mode == 2:
+      self.docklet_visible = True
+      self.update_docklet(False)
+
+    else:
+      self.icon_box.add(self.icon)
+
     #Set the icon
-    self.set_icon_name('stock_folder')
+    self.icon.set_info_simple('file-browser-launcher', uid, 'stock_folder')
 
     #This part (and other progress overlay code) adapted from
     #mhr3's 'Dropper' applet
@@ -77,7 +93,7 @@ class App (awn.AppletSimple):
       self.timer_overlay = awn.OverlayProgressCircle()
       self.timer_overlay.props.active = False
       self.timer_overlay.props.apply_effects = False
-      self.get_icon().add_overlay(self.timer_overlay)
+      self.icon.add_overlay(self.timer_overlay)
 
     else:
       #Read fstab for mounting info
@@ -124,19 +140,13 @@ class App (awn.AppletSimple):
 
     if gio:
       self.monitor = gio.volume_monitor_get()
-      self.monitor.connect('volume-added', self.do_gio_places)
-      self.monitor.connect('volume-changed', self.do_gio_places)
-      self.monitor.connect('volume-removed', self.do_gio_places)
-      self.monitor.connect('mount-added', self.do_gio_places)
-      self.monitor.connect('mount-changed', self.do_gio_places)
-      self.monitor.connect('mount-removed', self.do_gio_places)
+      for signal in ('volume-added', 'volume-changed', 'volume-removed', 'mount-added',
+        'mount-changed', 'mount-removed'):
+        self.monitor.connect(signal, self.do_gio_places)
 
-      self.client.notify_add(group, 'show_home', self.do_gio_places)
-      self.client.notify_add(group, 'show_local', self.do_gio_places)
-      self.client.notify_add(group, 'show_network', self.do_gio_places)
-      self.client.notify_add(group, 'show_connect', self.do_gio_places)
-      self.client.notify_add(group, 'show_bookmarks', self.do_gio_places)
-      self.client.notify_add(group, 'show_filesystem', self.do_gio_places)
+      for key in ('show_home', 'show_local', 'show_network', 'show_connect', 'show_bookmarks',
+        'show_filesystem'):
+        self.client.notify_add(group, key, self.do_gio_places)
 
       self.do_gio_places()
 
@@ -170,9 +180,9 @@ class App (awn.AppletSimple):
     self.dialog.add(self.vbox)
 
     #Connect to signals
-    self.connect('clicked', self.icon_clicked)
-    self.connect('middle-clicked', self.icon_clicked)
-    self.connect('context-menu-popup', self.show_context_menu)
+    self.icon.connect('clicked', self.icon_clicked)
+    self.icon.connect('middle-clicked', self.icon_clicked)
+    self.icon.connect('context-menu-popup', self.show_context_menu)
     self.connect('size-changed', self.size_changed)
     self.dialog.connect('focus-out-event', self.dialog_focus_out)
     self.theme.connect('changed', self.icon_theme_changed)
@@ -184,13 +194,13 @@ class App (awn.AppletSimple):
       #maybe unmounted places). The move the file/folder and (if successful)
       #open the place in the file browser
       #The Applet icon - just open the dialog after a short delay
-      self.get_icon().drag_dest_set(gtk.DEST_DEFAULT_DROP | gtk.DEST_DEFAULT_MOTION, \
+      self.icon.drag_dest_set(gtk.DEST_DEFAULT_DROP | gtk.DEST_DEFAULT_MOTION, \
         [("text/uri-list", 0, 0)], \
         gtk.gdk.ACTION_COPY)
-      self.get_icon().connect('drag-data-received', self.applet_drag_data_received)
-      self.get_icon().connect('drag-motion', self.applet_drag_motion)
-      self.get_icon().connect('drag-leave', self.applet_drag_leave)
-  
+      self.icon.connect('drag-data-received', self.applet_drag_data_received)
+      self.icon.connect('drag-motion', self.applet_drag_motion)
+      self.icon.connect('drag-leave', self.applet_drag_leave)
+
       #The TreeView - drop the file to move it to the folder
       self.treeview.drag_dest_set(gtk.DEST_DEFAULT_DROP | gtk.DEST_DEFAULT_MOTION, \
         [("text/uri-list", 0, 0)], \
@@ -220,12 +230,12 @@ class App (awn.AppletSimple):
 
       self.timer = gobject.timeout_add(30, self.update_timer)
 
-    if not self.client.get_bool(group, 'docklet'):
+    if self.client.get_int(group, 'mode') == 0:
       if not self.dialog.flags() & gtk.VISIBLE:
-        self.get_effects().start(awn.EFFECT_LAUNCHING)
+        self.icon.get_effects().start(awn.EFFECT_LAUNCHING)
 
   def applet_drag_leave(self, widget, context, time):
-    self.get_effects().stop(awn.EFFECT_LAUNCHING)
+    self.icon.get_effects().stop(awn.EFFECT_LAUNCHING)
 
     if self.timer:
       gobject.source_remove(self.timer)
@@ -251,7 +261,7 @@ class App (awn.AppletSimple):
       self.timer_overlay.props.active = False
       self.timer_overlay.props.percent_complete = 0
 
-      self.get_effects().stop(awn.EFFECT_LAUNCHING)
+      self.icon.get_effects().stop(awn.EFFECT_LAUNCHING)
 
       self.dialog_config(1)
 
@@ -268,26 +278,30 @@ class App (awn.AppletSimple):
     path = self.liststore[treepath][3]
 
     if path in self.droppable_places:
-      dropped_path = data.data
+      dropped_paths = data.data.split('\n')
+      num_success = 0
 
-      if dropped_path[:8] == 'file:///':
-        dropped_path = dropped_path.strip()
+      for dropped_path in dropped_paths:
+        if len(dropped_path) >= 8:
+          if dropped_path[:8] == 'file:///':
+            dropped_path = dropped_path.strip()
 
-        dropped_path = urllib.unquote(dropped_path)
+            dropped_path = urllib.unquote(dropped_path)
 
-        from_file = gio.File(dropped_path)
+            from_file = gio.File(dropped_path)
 
-        to_file = gio.File(path + '/' + from_file.get_basename())
+            to_file = gio.File(path + '/' + from_file.get_basename())
 
-        #Make sure we're not just moving the file to the same directory
-        if not from_file.equal(to_file):
-          if from_file.move(to_file):
+            #Make sure we're not just moving the file to the same directory
+            if not from_file.equal(to_file):
+              if from_file.move(to_file):
+                num_success += 1
 
-            config_fb = self.client.get_string(group, 'fb')
-            open_dir = path.replace(' ', '\ ')
-            os.system('%s %s &' % (config_fb, open_dir))
-
-          self.dialog.hide()
+      if num_success > 0:
+        config_fb = self.client.get_string(group, 'fb')
+        open_dir = path.replace(' ', '\ ')
+        os.system('%s %s &' % (config_fb, open_dir))
+        self.dialog.hide()
 
     return True
 
@@ -661,7 +675,7 @@ class App (awn.AppletSimple):
           pass
 
         elif path.split('/')[1] == 'media':
-          if path.split('/')[2] in ['cdrom0','cdrom1','cdrom2','cdrom3','cdrom4','cdrom5']:
+          if path.split('/')[2] in ['cdrom0', 'cdrom1', 'cdrom2', 'cdrom3', 'cdrom4', 'cdrom5']:
 
             #Find out if it's a CD or DVD
             if path in self.dvd_paths:
@@ -738,7 +752,7 @@ class App (awn.AppletSimple):
     #If no icon does exists - load default folder icon
     if not worked:
       if 'stock_folder' not in self.icons[size]:
-          self.icons[size]['stock_folder'] = self.theme.load_icon('stock_folder', size, 0)
+        self.icons[size]['stock_folder'] = self.theme.load_icon('stock_folder', size, 0)
 
       icon = self.icons[size]['stock_folder']
       self.icons[size][name] = icon
@@ -789,7 +803,6 @@ class App (awn.AppletSimple):
       self.entry.grab_focus()
 
   def unmount(self, num):
-    print 'unmount', num
     li = self.monitor.get_volumes()
     li.extend(self.monitor.get_mounts())
 
@@ -820,23 +833,24 @@ class App (awn.AppletSimple):
 
     return False
 
-  #Applet show/hide methods - copied from MiMenu (and edited)
-  #When a button is pressed
   def icon_clicked(self, widget):
     event = gtk.get_current_event()
-    if not self.client.get_bool(group, 'docklet'):
+
+    #Dialog mode
+    if self.client.get_int(group, 'mode') == 0:
       if self.dialog.flags() & gtk.VISIBLE:
         self.dialog.hide()
+
       else:
         self.dialog_config(event.button)
 
+    #Docklet mode
     else:
       self.dialog_config(event.button)
 
   def show_context_menu(self, widget, event):
-    if event.button == 3:
-      self.dialog.hide()
-      self.show_menu(event)
+    self.dialog.hide()
+    self.show_menu(event)
 
   def show_docklet(self, window_id):
     self.docklet_visible = True
@@ -874,17 +888,26 @@ class App (awn.AppletSimple):
     self.update_docklet()
 
   def update_docklet(self, show_all=True):
-    for icon in self.docklet_box.get_children():
-      icon.destroy()
+    if self.mode == 1:
+      box = self.docklet_box
+
+    elif self.mode == 2:
+      box = self.icon_box
+
+    for icon in box.get_children():
+      if icon == self.icon:
+        box.remove(icon)
+      else:
+        icon.destroy()
 
     for place in self.places_data:
       icon = awn.Icon()
-      icon.set_from_pixbuf(self.load_pixbuf(place[0], self.docklet.get_size()))
+      icon.set_from_pixbuf(self.load_pixbuf(place[0], self.get_size()))
       icon.set_tooltip_text(place[1])
       icon.connect('clicked', self.docklet_icon_clicked, place[3])
       icon.connect('context-menu-popup', self.docklet_icon_menu, place)
-      self.docklet_box.add(icon)
-      self.docklet_box.set_child_packing(icon, False, True, 0, gtk.PACK_START)
+      box.add(icon)
+      box.set_child_packing(icon, False, True, 0, gtk.PACK_START)
 
       if gio and place[3] in self.droppable_places:
         icon.drag_dest_set(gtk.DEST_DEFAULT_DROP | gtk.DEST_DEFAULT_MOTION, \
@@ -893,33 +916,43 @@ class App (awn.AppletSimple):
         icon.connect('drag-motion', self.docklet_drag_motion)
         icon.connect('drag-leave', self.docklet_drag_leave)
 
-    if show_all:
+    if show_all and self.mode == 1:
       self.docklet.show_all()
+
+    elif show_all and self.mode == 2:
+      self.icon_box.show_all()
 
   def docklet_drag_data_received(self, w, context, x, y, data, info, time, path):
     if data and data.format == 8:
       context.finish(True, False, time)
 
-      dropped_path = data.data
+      if path in self.droppable_places:
+        dropped_paths = data.data.split('\n')
+        num_success = 0
 
-      if dropped_path[:8] == 'file:///':
-        dropped_path = dropped_path.strip()
+        for dropped_path in dropped_paths:
+          if len(dropped_path) >= 8:
+            if dropped_path[:8] == 'file:///':
+              dropped_path = dropped_path.strip()
 
-        dropped_path = urllib.unquote(dropped_path)
+              dropped_path = urllib.unquote(dropped_path)
 
-        from_file = gio.File(dropped_path)
+              from_file = gio.File(dropped_path)
 
-        to_file = gio.File(path + '/' + from_file.get_basename())
+              to_file = gio.File(path + '/' + from_file.get_basename())
 
-        #Make sure we're not just moving the file to the same directory
-        if not from_file.equal(to_file):
-          if from_file.move(to_file):
+              #Make sure we're not just moving the file to the same directory
+              if not from_file.equal(to_file):
+                if from_file.move(to_file):
+                  num_success += 1
 
-            config_fb = self.client.get_string(group, 'fb')
-            open_dir = path.replace(' ', '\ ')
-            os.system('%s %s &' % (config_fb, open_dir))
+        if num_success > 0:
+          config_fb = self.client.get_string(group, 'fb')
+          open_dir = path.replace(' ', '\ ')
+          os.system('%s %s &' % (config_fb, open_dir))
+          self.dialog.hide()
 
-          self.docklet.destroy()
+      return True
 
   def docklet_drag_motion(self, icon, context, x, y, time):
     icon.get_effects().start(awn.EFFECT_LAUNCHING)
@@ -936,15 +969,14 @@ class App (awn.AppletSimple):
 
   def docklet_icon_clicked(self, icon, uri):
     self.launch_fb(None, uri)
-    self.docklet.destroy()
+
+    if self.mode == 1:
+      self.docklet.destroy()
 
   def docklet_icon_menu(self, icon, event, place):
     menu = self.create_default_menu()
 
-    prefs = gtk.ImageMenuItem(gtk.STOCK_PREFERENCES)
-    prefs.connect('activate', self.open_prefs)
-    menu.append(prefs)
-
+    #If the place is ejectable
     if place[2]:
       eject = awn.image_menu_item_new_with_label(_("Eject"))
       image = gtk.image_new_from_icon_name('media-eject', gtk.ICON_SIZE_MENU)
@@ -953,6 +985,13 @@ class App (awn.AppletSimple):
 
       eject.connect('activate', self.docklet_menu_eject, place[4])
 
+    prefs = gtk.ImageMenuItem(gtk.STOCK_PREFERENCES)
+    prefs.connect('activate', self.open_prefs)
+    menu.append(prefs)
+
+    about = gtk.ImageMenuItem(gtk.STOCK_ABOUT)
+    about.connect("activate", self.open_about)
+    menu.append(about)
 
     menu.show_all()
     menu.popup(None, None, None, event.button, event.time)
@@ -972,84 +1011,75 @@ class App (awn.AppletSimple):
     #Reload the stock folder icon
     self.icons[24]['stock_folder'] = self.theme.load_icon('stock_folder', 24, 0)
 
-  #dialog_config: 
   def dialog_config(self, button):
-    if button not in (1, 2):
-      return False
+    #Left click data
+    if button == 1:
+      action = self.client.get_int(group, 'lmb')
+      path = os.path.expanduser(self.client.get_string(group, 'lmb_path'))
 
-    docklet = self.client.get_bool(group, 'docklet')
+    #Middle click data
+    elif button == 2:
+      action = self.client.get_int(group, 'mmb')
+      path = os.path.expanduser(self.client.get_string(group, 'mmb_path'))
+
+    if action == 3:
+      return
+
+    if not gio:
+      self.add_places()
+
+    mode = self.client.get_int(group, 'mode')
 
     #Get whether to focus the entry when displaying the dialog or not
     config_focus = self.client.get_int(group, 'focus_entry')
 
-    if button == 1: #Left mouse button
-    #Get the value for the left mouse button to automatically open.
-    #Create and default to 1 the entry if it doesn't exist
-    #Also get the default directory or default to ~
-      config_lmb = self.client.get_int(group, 'lmb')
-      config_lmb_path = self.client.get_string(group, 'lmb_path')
-      config_lmb_path = os.path.expanduser(config_lmb_path)
-
-    elif button == 2: #Middle mouse button
-    #Get the value for the middle mouse button to automatically open.
-    #Create and default to 2 the entry if it doesn't exist
-    #Also get the default directory or default to ~
-      config_mmb = self.client.get_int(group, 'mmb')
-      config_mmb_path = self.client.get_string(group, 'mmb_path')
-      config_mmb_path = os.path.expanduser(config_mmb_path)
-
-    #Left mouse button - either popup with correct path or launch correct path OR do nothing
-    if button == 1:
-      if config_lmb == 1:
-        if docklet:
-          if not self.docklet_visible:
-            if not gio:
-              self.add_places()
-
-            win = self.docklet_request(0, True, True)
-            if win != 0:
-              self.show_docklet(win)
-
-        else:
-          self.entry.set_text(config_lmb_path)
-
-          if not gio:
-            self.add_places()
-
-          if config_focus == 2:
-            self.entry.grab_focus()
-            self.entry.set_position(-1)
-
-          self.dialog.show_all()
-
-      elif config_lmb == 2:
-        self.launch_fb(None, config_lmb_path)
-
-    #Right mouse button - either popup with correct path or launch correct path OR do nothing
-    if button == 2:
-      if config_mmb == 1:
-        if docklet:
-          if not gio:
-            self.add_places()
-
+    #Show dialog/docklet
+    if action == 1:
+      #Docklet
+      if mode == 1:
+        #Occasionally this happens; don't do two docklets at once
+        if not self.docklet_visible:
           win = self.docklet_request(0, True, True)
           if win != 0:
             self.show_docklet(win)
 
-        else:
-          self.entry.set_text(config_mmb_path)
-  
-          if not gio:
-            self.add_places()
-  
-          if config_focus == 2:
-            self.entry.grab_focus()
-            self.entry.set_position(-1)
-  
-          self.dialog.show_all()
+      #Dialog
+      else:
+        self.entry.set_text(path)
 
-      elif config_mmb == 2:
-        self.launch_fb(None, config_mmb_path)
+        if config_focus == 2:
+          self.entry.grab_focus()
+          self.entry.set_position(-1)
+
+        self.dialog.show_all()
+
+    #Launch path
+    elif action == 2:
+      self.launch_fb(None, path)
+
+  def update_mode(self, *args):
+    self.mode = self.client.get_int(group, 'mode')
+
+    self.dialog.hide()
+
+    if 'docklet' in dir(self) and self.docklet is not None:
+      self.docklet.destroy()
+
+    if self.mode != 2:
+      self.docklet_visible = False
+
+      for icon in self.icon_box.get_children():
+        if icon == self.icon:
+          self.icon_box.remove(icon)
+        else:
+          icon.destroy()
+
+      self.icon_box.add(self.icon)
+      self.show_all()
+
+    else:
+      self.docklet_visible = True
+      self.update_docklet()
 
   #If the user hits the enter key on the main part OR the number pad
   def detect_enter(self, a, event):
@@ -1066,7 +1096,7 @@ class App (awn.AppletSimple):
     config_fb = self.client.get_string(group, 'fb')
 
     #In case there is nothing but whitespace (or at all) in the entry widget
-    if path.replace(' ','') == '':
+    if path.replace(' ', '') == '':
       path = os.environ['HOME']
 
     #Check if we're supposed to open nautilus-connect-server
@@ -1089,22 +1119,22 @@ class App (awn.AppletSimple):
     self.dialog.hide()
 
     #Create the items for Preferences and About
-    self.prefs = gtk.ImageMenuItem(gtk.STOCK_PREFERENCES)
-    self.about = gtk.ImageMenuItem(gtk.STOCK_ABOUT)
+    prefs = gtk.ImageMenuItem(gtk.STOCK_PREFERENCES)
+    about = gtk.ImageMenuItem(gtk.STOCK_ABOUT)
 
     #Connect the two items to functions when clicked
-    self.prefs.connect("activate", self.open_prefs)
-    self.about.connect("activate", self.open_about)
+    prefs.connect("activate", self.open_prefs)
+    about.connect("activate", self.open_about)
 
     #Now create the menu to put the items in and show it
     self.menu = self.create_default_menu()
-    self.menu.append(self.prefs)
-    self.menu.append(self.about)
+    self.menu.append(prefs)
+    self.menu.append(about)
     self.menu.show_all()
     self.menu.popup(None, None, None, event.button, event.time)
 
   #Show the preferences window
-  def open_prefs(self,widget):
+  def open_prefs(self, widget):
     #Import the prefs file from the same directory
     import prefs
 
@@ -1113,7 +1143,7 @@ class App (awn.AppletSimple):
     gtk.main()
 
   #Show the about window
-  def open_about(self,widget):
+  def open_about(self, widget):
     #Import the about file from the same directory
     import about
 

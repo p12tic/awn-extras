@@ -582,6 +582,7 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
     (widget as Gtk.Entry).focus_out_event.connect ((w, e) =>
     {
       this.terminal_command = (w as Gtk.Entry).get_text ();
+      return false;
     });
     align.add (widget);
 

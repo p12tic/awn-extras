@@ -456,25 +456,22 @@ class App(awn.Applet):
 
       for path in self.bmarks:
         path = path.replace('file://', '').replace('\n', '')
-        path = urllib.unquote(path)
 
         #Get the human-readable name
         try:
           name = ' '.join(path.split(' ')[1:])
-          assert name.replace(' ', '') != ''
+          assert name.strip() != ''
         except:
           name = None
 
-        path = path.split(' ')[0]
+        path = urllib.unquote(path.split(' ')[0])
         type = path.split(':')[0]
 
         #Check if this path hasn't been used already
-        if path not in self.paths and path != os.environ['HOME']:
-
+        if path not in self.paths and path.rstrip('/') != os.environ['HOME'].rstrip('/'):
           #Check if this is a path on the filesystem
           if path[0] == '/':
             if os.path.isdir(path):
-
               #If the user did not rename the bookmark - get the name from
               #the folder name (/media/Lexar -> Lexar)
               if name is None:

@@ -624,9 +624,12 @@ class WeatherApplet:
                 if not result or len(result) != 1:
                     raise NetworkException("Couldn't parse weather map")
                 with closing(urllib2.urlopen(result[0][0])) as raw_image:
-                    with closing(gtk.gdk.PixbufLoader()) as loader:
-                        loader.write(raw_image.read())
-                        return loader.get_pixbuf()
+                    try:
+                        with closing(gtk.gdk.PixbufLoader()) as loader:
+                            loader.write(raw_image.read())
+                            return loader.get_pixbuf()
+                    except glib.GError, e:
+                        raise NetworkException("Couldn't parse weather map: %s" % e)
 
         @async_method
         @with_overlays

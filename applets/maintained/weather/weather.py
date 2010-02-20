@@ -184,7 +184,7 @@ def network_exception(func):
     def bound_func(obj, *args, **kwargs):
         try:
             return func(obj, *args, **kwargs)
-        except urllib2.URLError, e:
+        except IOError, e:
             raise NetworkException("error in %s: %s" % (func.__name__, e))
         except StandardError:
             raise

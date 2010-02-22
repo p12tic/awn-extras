@@ -56,5 +56,5 @@ dist_web_icons_DATA =		\
 
 CLEANFILES += $(schemas_DATA)
 
-EXTRA_DIST = 	webapplet-websites.ini \
+EXTRA_DIST += 	webapplet-websites.ini \
 		awn-applet-webapplet.schema-ini

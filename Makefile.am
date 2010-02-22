@@ -7,15 +7,17 @@ SUBDIRS = \
 	
 EXTRA_DIST = \
 	autogen.sh \
+	COPYING.BSD \
+	COPYING.CCASAv3.0 \
+	COPYING.GPL-3 \
+	COPYING.LGPL-2.1 \
 	intltool-extract.in \
 	intltool-merge.in \
 	intltool-update.in \
 	po/Makefile.in.in \
 	po/POTFILES.skip \
-	COPYING.BSD \
-	COPYING.CCASAv3.0 \
-	COPYING.GPL-3 \
-	COPYING.LGPL-2.1 \
+	shared/vala/build.vapi \
+	shared/vala/libintl.vapi \
 	$(NULL)
 
 DISTCLEANFILES =			\

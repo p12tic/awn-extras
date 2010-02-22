@@ -7,6 +7,7 @@ SUBDIRS = \
 	
 EXTRA_DIST = \
 	autogen.sh \
+	COPYING \
 	COPYING.BSD \
 	COPYING.CCASAv3.0 \
 	COPYING.GPL-3 \

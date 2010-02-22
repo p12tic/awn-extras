@@ -1,0 +1,94 @@
+[DEFAULT/active_border]
+type = string
+default = FFFFFFC0
+_description = The hovered border color of a workspace widget
+
+[DEFAULT/custom_back]
+type = string
+default = 000000c8
+_description = The background color of the dialog
+
+[DEFAULT/custom_border]
+type = string
+default = 0079f580
+_description = The border color of the dialog
+
+[DEFAULT/icon_border]
+type = string
+default = 000000C0
+_description = The icon's border color
+
+[DEFAULT/normal_border]
+type = string
+default = FFFFFF80
+_description = The normal border color of a workspace widget
+
+[DEFAULT/shadow_color]
+type = string
+default = 000000E6
+_description = The drop shadow color of the drawn number
+
+[DEFAULT/shine_bottom]
+type = string
+default = FFFFFF3B
+_description = The bottom part of the shiny gradient
+
+[DEFAULT/shine_hover_bottom]
+type = string
+default = FFFFFF50
+_description = The bottom part of the shiny gradient when hovered
+
+[DEFAULT/shine_hover_top]
+type = string
+default = FFFFFFE6
+_description = The top part of the shiny gradient when hovered
+
+[DEFAULT/shine_top]
+type = string
+default = FFFFFF5E
+_description = The top part of the shiny gradient
+
+[DEFAULT/text_color]
+type = string
+default = FFFFFFE6
+_description = The main color of the drawn number
+
+[DEFAULT/window_border]
+type = string
+default = 33333396
+_description = The border color of a drawn window
+
+[DEFAULT/window_main]
+type = string
+default = FFFFFF19
+_description = The main color of a drawn window
+
+[DEFAULT/use_custom]
+type = boolean
+default = false
+_description = Whether or not to use custom colors for the dialog
+
+[DEFAULT/width]
+type = integer
+default = 160
+_description = The width of a workspace widget
+
+[DEFAULT/height]
+type = integer
+default = 120
+_description = The height of a workspace widget
+
+[DEFAULT/background_mode]
+type = string
+default = gnome
+_description = Which background image(s) source to use: gnome, compiz, file
+
+[DEFAULT/background_file]
+type = string
+default =
+_description = The file to use as the background image
+
+[DEFAULT/use_custom_text]
+type = boolean
+default = false
+_description = Whether or not to use the standard text overlay

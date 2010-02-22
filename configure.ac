@@ -29,6 +29,9 @@ ALL_LINGUAS="de en_US@piglatin es fr nb nl nn ru sv sv_SE"
 IT_PROG_INTLTOOL([0.34])
 AM_GLIB_GNU_GETTEXT
 
+INTLTOOL_SCHEMA_INI_RULE='%.schema-ini:	%.schema-ini.in $(INTLTOOL_MERGE) $(wildcard $(top_srcdir)/po/*.po) ; LC_ALL=C $(INTLTOOL_MERGE) -d -u -c $(top_builddir)/po/.intltool-merge-cache $(top_srcdir)/po $< [$]@'
+AC_SUBST(INTLTOOL_SCHEMA_INI_RULE)
+
 dnl
 dnl Python script installation
 dnl

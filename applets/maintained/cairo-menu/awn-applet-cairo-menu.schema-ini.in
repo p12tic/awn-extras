@@ -1,0 +1,129 @@
+[DEFAULT]
+single_instance = false
+
+[DEFAULT/bg_normal_colour]
+type = color
+default = #DDDDDDEE
+_description =
+
+[DEFAULT/text_normal_colour]
+type = color
+default = #000000FF
+_description = 
+
+[DEFAULT/bg_hover_colour]
+type = color
+default = #0022DDF0
+_description = 
+
+[DEFAULT/text_hover_colour]
+type = color
+default = #000000FF
+_description = 
+
+[DEFAULT/text_size]
+type = integer
+default = 14
+_description = 
+
+[DEFAULT/search_cmd]
+type = string
+default = true
+_description = 
+
+[DEFAULT/search_show]
+type = boolean
+default = true
+_description = 
+
+[DEFAULT/run_show]
+type = boolean
+default = true
+_description =
+
+[DEFAULT/fade_in]
+type = boolean
+default = false
+_description = 
+
+[DEFAULT/menu_item_gradient_factor]
+type = float
+default = 0.8
+_description = 
+
+[DEFAULT/menu_item_text_len]
+type = integer
+default = 28
+_description = 
+
+[DEFAULT/places_show]
+type = boolean
+default = true
+_description =
+
+[DEFAULT/filemanager]
+type = string
+default =
+_description =
+
+[DEFAULT/applet_icon]
+type = string
+default = gnome-main-menu
+_description = 
+
+[DEFAULT/activate_on_release]
+type = boolean
+default = true
+_description = 
+
+[DEFAULT/show_tooltips]
+type = boolean
+default = true
+_description = 
+
+[DEFAULT/show_logout]
+type = boolean
+default = false
+_description = 
+
+[DEFAULT/logout]
+type = string
+default =
+_description = 
+
+[DEFAULT/border_colour]
+type = color
+default = #11111133
+_description = 
+
+[DEFAULT/border_width]
+type = integer
+default = 1
+_description = 
+
+[DEFAULT/honour_gtk]
+type = boolean
+default = true
+_description = 
+
+[DEFAULT/aux_menu_names]
+type = list-string
+default = :::PLACES###Places###stock_folder;
+_description =
+
+[DEFAULT/hidden_names]
+type = list-string
+default = :::PLACES;
+_description =
+
+[DEFAULT/run_cmd]
+type = string
+default =
+_description =
+
+[DEFAULT/search_cmd]
+type = string
+default =
+_description =
+
+# vim:ft=cfg:

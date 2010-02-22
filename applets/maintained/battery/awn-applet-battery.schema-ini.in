@@ -1,0 +1,37 @@
+[DEFAULT]
+single_instance = false
+
+[DEFAULT/battery-udi]
+type = string
+default = 
+_description = HAL UDI of battery.
+
+[DEFAULT/level-notify-high]
+type = integer
+default = 100
+_description = If charge level reaches this threshold, a notification will be sent.
+
+[DEFAULT/level-warn-low]
+type = integer
+default = 15
+_description = If charge level drops below this threadhold, a warning will be displayed.
+
+[DEFAULT/low-level-unit]
+type = string
+default = Percent
+_description = Unit of low level threshold (Percent or Time Remaining).
+
+[DEFAULT/notify-high-level]
+type = boolean
+default = false
+_description = If enabled, notify when the charge level reaches the high level.
+
+[DEFAULT/theme]
+type = string
+default = gpm
+_description = The name of the theme of the icon.
+
+[DEFAULT/warn-low-level]
+type = boolean
+default = true
+_description = If enabled, warn when the charge level drops below the warning threshold.

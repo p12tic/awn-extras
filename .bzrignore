@@ -13,7 +13,7 @@ Makefile.in
 *.lo
 *.loT
 *.schemas
-*.schemas.in
+*.schema-ini
 *.vala.stamp
 *.vapi
 aclocal.m4

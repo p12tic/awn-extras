@@ -1,0 +1,64 @@
+[DEFAULT/clock_background]
+type = string
+default = 667F66FF
+_description = X
+
+[DEFAULT/clock_border]
+type = string
+default = 000000FF
+_description = X
+
+[DEFAULT/clock_foreground]
+type = string
+default = 000000FF
+_description = X
+
+[DEFAULT/graphic]
+type = string
+default = calendar-red.png
+_description = X
+
+[DEFAULT/integration]
+type = string
+default = None
+_description = X
+
+[DEFAULT/password]
+type = string
+default = None
+_description = X
+
+[DEFAULT/url]
+type = string
+default = None
+_description = X
+
+[DEFAULT/username]
+_description = X
+type = string
+default = None
+
+[DEFAULT/twelve_hour_clock]
+type = boolean
+default = false
+_description = X
+
+[DEFAULT/blinking_colon]
+type = boolean
+default = false
+_description = X
+
+[DEFAULT/clock_plain]
+type = boolean
+default = false
+_description = X
+
+[DEFAULT/cal_appearance_index]
+type = integer
+default = 0
+_description = X
+
+[DEFAULT/clock_appearance_index]
+type = integer
+default = 0
+_description = X

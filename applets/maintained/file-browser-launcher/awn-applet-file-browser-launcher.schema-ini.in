@@ -1,0 +1,69 @@
+[DEFAULT/fb]
+type = string
+default = xdg-open
+_description = The file browser to use
+
+[DEFAULT/lmb]
+type = integer
+default = 1
+_description = The action to perform on left click
+
+[DEFAULT/lmb_path]
+type = string
+default =
+_description = The path to use on left click
+
+[DEFAULT/mmb]
+type = integer
+default = 2
+_description = The action to perform on middle click
+
+[DEFAULT/mmb_path]
+type = string
+default =
+_description = The path to use on middle click
+
+[DEFAULT/show_bookmarks]
+type = integer
+default = 2
+_description = Whether or not to display bookmarks
+
+[DEFAULT/show_home]
+type = integer
+default = 2
+_description = Whether or not to display the home folder
+
+[DEFAULT/show_local]
+type = integer
+default = 2
+_description = Whether or not to display local drives
+
+[DEFAULT/show_network]
+type = integer
+default = 2
+_description = Whether or not to display network drives
+
+[DEFAULT/show_filesystem]
+type = integer
+default = 2
+_description = Whether or not to display the Filesystem
+
+[DEFAULT/show_connect]
+type = integer
+default = 2
+_description = Whether or not to display Connect to server
+
+[DEFAULT/places_open]
+type = integer
+default = 2
+_description = Whether or not to open the place when clicked
+
+[DEFAULT/focus_entry]
+type = integer
+default = 2
+_description = Whether or not to focus the location text box
+
+[DEFAULT/mode]
+type = integer
+default = 0
+_description = 0 = one icon with dialog; 1 = one icon with docklet on click; 2 = persistent docklet

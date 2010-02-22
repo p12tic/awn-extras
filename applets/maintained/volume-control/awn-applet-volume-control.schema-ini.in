@@ -1,0 +1,17 @@
+[DEFAULT]
+single_instance = false
+
+[DEFAULT/theme]
+type = string
+default = System theme
+_description = The name of the theme of the icon.
+
+[DEFAULT/device]
+type = string
+default =
+_description = Name of the device.
+
+[DEFAULT/track]
+type = string
+default =
+_description = Name of the mixer track.

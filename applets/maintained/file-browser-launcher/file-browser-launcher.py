@@ -62,7 +62,7 @@ class App(awn.Applet):
     self.icon = awn.ThemedIcon()
     self.icon.set_tooltip_text(_("File Browser Launcher"))
     self.icon.set_size(self.get_size())
-    self.dialog = awn.Dialog(self.icon)
+    self.dialog = awn.Dialog(self)
 
     #AwnConfigClient instance
     self.client = awn.config_get_default_for_applet(self)

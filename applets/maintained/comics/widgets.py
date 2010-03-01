@@ -431,7 +431,7 @@ class WWWLink(gtk.EventBox, Scalable):
             (int(self.font_size * self.scale), self.text))
 
     def update_url(self):
-        self.__tooltip.set_tip(self, self.url)
+        self.set_tooltip_text(self.url)
 
     def __init__(self, text='', url='', font_size=12000):
         super(WWWLink, self).__init__()
@@ -447,7 +447,6 @@ class WWWLink(gtk.EventBox, Scalable):
         self.__label.set_use_markup(True)
         self.add(self.__label)
         self.__label.show()
-        self.__tooltip = gtk.Tooltips()
         self.__label.connect('size-request', self.on_link_size_request)
 
         # Set and display the URL

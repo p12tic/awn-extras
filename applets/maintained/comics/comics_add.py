@@ -21,7 +21,6 @@
 # Libraries used
 import gobject
 import gtk
-from gtk import glade
 import os
 import re
 import tempfile
@@ -34,9 +33,9 @@ from downloader import Downloader
 from feed.basic import Feed, NAME, URL
 from feed.settings import Settings
 from feed.rss import IMG_INDEX
-from shared import (GLADE_DIR, USER_FEEDS_DIR)
+from shared import (UI_DIR, USER_FEEDS_DIR)
 
-GLADE_FILE = os.path.join(GLADE_DIR, 'add.glade')
+UI_FILE = os.path.join(UI_DIR, 'add.ui')
 
 URL_RE = re.compile('(?:http)|(?:https)://.*?/.*', re.IGNORECASE)
 
@@ -53,15 +52,15 @@ class ComicsAdder:
     ########################################################################
 
     def process_error(self, result):
+        label = self.ui.get_object('intro_label')
         if result == Feed.DOWNLOAD_FAILED:
-            self.xml.get_widget('intro_label').set_text(
-                _('Failed to download %s. Press "next" to try again.') \
-                    % self.url)
+            label.set_text(_('''\
+Failed to download %s. Press "next" to try again.''') % self.url)
             self.assistant.set_current_page(0)
             return False
 
         elif result == Feed.DOWNLOAD_NOT_FEED:
-            self.xml.get_widget('intro_label').set_text(_('''\
+            label.set_text(_('''\
 The URL is not a valid comic feed. Press "next" to try again'''))
             self.assistant.set_current_page(0)
             return False
@@ -81,18 +80,19 @@ The URL is not a valid comic feed. Press "next" to try again'''))
         self.__update = None
 
         # Connect dialogue events
-        self.xml = glade.XML(GLADE_FILE)
-        self.xml.signal_autoconnect(self)
-        self.assistant = self.xml.get_widget('add_assistant')
-        self.image_list = self.xml.get_widget('image_list')
+        self.ui = gtk.Builder()
+        self.ui.add_from_file(UI_FILE)
+        self.ui.connect_signals(self)
+        self.assistant = self.ui.get_object('add_assistant')
+        self.image_list = self.ui.get_object('image_list')
 
         self.model = gtk.ListStore(gobject.TYPE_PYOBJECT, gtk.gdk.Pixbuf)
         self.image_list.set_model(self.model)
 
         # Show window
-        self.assistant.set_page_complete(self.xml.get_widget('intro_page'),
+        self.assistant.set_page_complete(self.ui.get_object('intro_page'),
             True)
-        self.assistant.set_page_complete(self.xml.get_widget('last_page'),
+        self.assistant.set_page_complete(self.ui.get_object('last_page'),
             True)
         self.assistant.show()
 
@@ -129,14 +129,14 @@ The URL is not a valid comic feed. Press "next" to try again'''))
         self.feeds.add_feed(filename)
 
     def on_add_assistant_prepare(self, widget, page):
-        if page is self.xml.get_widget('url_page'):
-            self.xml.get_widget('wait_page').show()
+        if page is self.ui.get_object('url_page'):
+            self.ui.get_object('wait_page').show()
 
-        elif page is self.xml.get_widget('wait_page'):
+        elif page is self.ui.get_object('wait_page'):
             self.assistant.set_page_complete(page, False)
-            self.url = self.xml.get_widget('url_entry').get_text()
+            self.url = self.ui.get_object('url_entry').get_text()
 
-            self.xml.get_widget('wait_label').set_markup(
+            self.ui.get_object('wait_label').set_markup(
                 _('Connecting to <i>%s</i>...') % self.url)
 
             # Download feed
@@ -146,22 +146,22 @@ The URL is not a valid comic feed. Press "next" to try again'''))
 
     def on_url_entry_changed(self, widget):
         text = widget.get_text()
-        self.assistant.set_page_complete(self.xml.get_widget('url_page'),
+        self.assistant.set_page_complete(self.ui.get_object('url_page'),
             not URL_RE.match(text) is None)
 
     def on_image_list_unselect_all(self, widget):
-        self.assistant.set_page_complete(self.xml.get_widget('image_page'),
+        self.assistant.set_page_complete(self.ui.get_object('image_page'),
             False)
 
     def on_image_list_selection_changed(self, widget):
         selection = self.image_list.get_selected_items()
         if len(selection) == 1:
-            self.assistant.set_page_complete(self.xml.get_widget('image_page'),
+            self.assistant.set_page_complete(self.ui.get_object('image_page'),
                 True)
             self.image = self.model.get_value(
                 self.model.get_iter(selection[0]), 0)
         else:
-            self.assistant.set_page_complete(self.xml.get_widget('image_page'),
+            self.assistant.set_page_complete(self.ui.get_object('image_page'),
                 False)
 
     def on_feed_updated(self, feed, result):
@@ -170,7 +170,7 @@ The URL is not a valid comic feed. Press "next" to try again'''))
 
         self.name = feed.name
 
-        last_label = self.xml.get_widget('last_label')
+        last_label = self.ui.get_object('last_label')
         last_label.set_markup(_('''\
 This guide has finished.\n\nPress "apply" to add <i>%s</i>.''') \
                               % self.name)
@@ -186,15 +186,15 @@ This guide has finished.\n\nPress "apply" to add <i>%s</i>.''') \
                 downloader.connect('completed',
                     self.on_image_download_completed, iterator)
                 downloader.download()
-            self.xml.get_widget('image_page').show()
+            self.ui.get_object('image_page').show()
         else:
-            self.xml.get_widget('image_page').hide()
+            self.ui.get_object('image_page').hide()
             self.image = images[0]
 
         # Complete page
-        self.assistant.set_page_complete(self.xml.get_widget('wait_page'),
+        self.assistant.set_page_complete(self.ui.get_object('wait_page'),
                                          True)
-        self.xml.get_widget('wait_label').set_markup(
+        self.ui.get_object('wait_label').set_markup(
                 _('Found <b>%(name)s</b>!\n\n<i>%(description)s</i>')
                 % {'name': self.name,
                     'description': self.feed.description})

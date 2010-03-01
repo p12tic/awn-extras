@@ -1,58 +1,59 @@
 <?xml version="1.0"?>
-<!--Generated with glade3 3.4.0 on Sun Apr  6 00:06:21 2008 -->
 <interface>
+  <!-- interface-requires gtk+ 2.12 -->
+  <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkUIManager" id="uimanager1">
     <child>
       <object class="GtkActionGroup" id="actiongroup1">
         <child>
-          <object class="GtkAction" id="history_container_action">
+          <object class="GtkAction" id="history_container">
             <property name="stock_id">gtk-jump-to</property>
             <property name="name">history_container</property>
           </object>
         </child>
         <child>
-          <object class="GtkAction" id="size_container_action">
+          <object class="GtkAction" id="size_container">
             <property name="name">size_container</property>
             <property name="label" translatable="yes">Size</property>
           </object>
         </child>
         <child>
-          <object class="GtkAction" id="zoom_normal_item_action">
+          <object class="GtkAction" id="zoom_normal_item">
             <property name="stock_id">gtk-zoom-100</property>
             <property name="name">zoom_normal_item</property>
             <signal handler="on_normal_activated" name="activate"/>
           </object>
         </child>
         <child>
-          <object class="GtkAction" id="zoom_in_item_action">
+          <object class="GtkAction" id="zoom_in_item">
             <property name="stock_id">gtk-zoom-in</property>
             <property name="name">zoom_in_item</property>
             <signal handler="on_larger_activated" name="activate"/>
           </object>
         </child>
         <child>
-          <object class="GtkAction" id="zoom_out_item_action">
+          <object class="GtkAction" id="zoom_out_item">
             <property name="stock_id">gtk-zoom-out</property>
             <property name="name">zoom_out_item</property>
             <signal handler="on_smaller_activated" name="activate"/>
           </object>
         </child>
         <child>
-          <object class="GtkToggleAction" id="show_link_item_action">
+          <object class="GtkToggleAction" id="show_link_item">
             <property name="name">show_link_item</property>
             <property name="label" translatable="yes">Show link</property>
             <signal handler="on_show_link_toggled" name="toggled"/>
           </object>
         </child>
         <child>
-          <object class="GtkAction" id="save_as_item_action">
+          <object class="GtkAction" id="save_as_item">
             <property name="stock_id" translatable="yes">gtk-save-as</property>
             <property name="name">save_as_item</property>
             <signal handler="on_save_as_activated" name="activate"/>
           </object>
         </child>
         <child>
-          <object class="GtkAction" id="close_item_action">
+          <object class="GtkAction" id="close_item">
             <property name="stock_id">gtk-close</property>
             <property name="name">close_item</property>
             <signal handler="on_close_activated" name="activate"/>
@@ -61,7 +62,7 @@
       </object>
     </child>
     <ui>
-      <popup name="menu">
+      <popup name="history_menu">
         <menu action="history_container"/>
         <menu action="size_container">
           <menuitem action="zoom_normal_item"/>
@@ -74,7 +75,7 @@
       </popup>
     </ui>
   </object>
-  <object class="GtkMenu" constructor="uimanager1" id="menu">
+  <object class="GtkMenu" constructor="uimanager1" id="history_menu">
     <property name="visible">True</property>
     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
     <signal handler="on_widget_show" name="show"/>
@@ -94,6 +95,7 @@
       <object class="GtkVBox" id="save_as_dialog_vbox">
         <property name="visible">True</property>
         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+        <property name="orientation">vertical</property>
         <property name="spacing">2</property>
         <child>
           <object class="GtkComboBox" id="file_format_combo">
@@ -111,14 +113,14 @@
           <object class="GtkHButtonBox" id="action_area_hbuttonbox">
             <property name="visible">True</property>
             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-            <property name="layout_style">GTK_BUTTONBOX_END</property>
+            <property name="layout_style">end</property>
             <child>
               <object class="GtkButton" id="action_area_cancel">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                <property name="label" translatable="yes">gtk-cancel</property>
+                <property name="label">gtk-cancel</property>
                 <property name="use_stock">True</property>
               </object>
             </child>
@@ -128,7 +130,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                <property name="label" translatable="yes">gtk-save</property>
+                <property name="label">gtk-save</property>
                 <property name="use_stock">True</property>
               </object>
               <packing>
@@ -138,14 +140,15 @@
           </object>
           <packing>
             <property name="expand">False</property>
-            <property name="pack_type">GTK_PACK_END</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
           </packing>
         </child>
       </object>
     </child>
     <action-widgets>
-      <action-widget response="0"/>
-      <action-widget response="1"/>
+      <action-widget response="0">action_area_cancel</action-widget>
+      <action-widget response="1">action_area_save</action-widget>
     </action-widgets>
   </object>
 </interface>

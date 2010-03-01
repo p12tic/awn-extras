@@ -23,7 +23,7 @@ import cairo
 import dbus
 import gobject
 import gtk
-from gtk import gdk, glade
+from gtk import gdk
 import os
 import rsvg
 import time
@@ -38,11 +38,11 @@ from feed.basic import URL, TITLE, LINK, DATE, Feed
 from downloader import Downloader
 
 from widgets import ScalableWindow, WWWLink, Ticker
-from shared import (GLADE_DIR, ICONS_DIR, USER_DIR)
+from shared import (ICONS_DIR, UI_DIR, USER_DIR)
 
 STRIPS_DIR = USER_DIR
 CACHE_FILE = os.path.join(USER_DIR, '%s.cache')
-GLADE_FILE = os.path.join(GLADE_DIR, 'view.glade')
+UI_FILE = os.path.join(UI_DIR, 'view.ui')
 
 BROWSER_COMMAND = 'xdg-open'
 
@@ -337,7 +337,7 @@ class ComicsViewer(ScalableWindow):
 
     def make_file_type_chooser(self):
         """Add the possible image types to the file chooser dialog."""
-        combo = self.__xml.get_widget('file_format_combo')
+        combo = self.__ui.get_object('file_format_combo')
         model = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING,
             gobject.TYPE_STRING)
         for format in gdk.pixbuf_get_formats():
@@ -352,7 +352,7 @@ class ComicsViewer(ScalableWindow):
     def make_menu(self):
         """Create the context menu."""
         # Generate history menu
-        history_menu = self.__xml.get_widget('history_menu')
+        history_menu = self.__ui.get_object('history_menu')
         history_menu.foreach(lambda child: history_menu.remove(child))
         items = self.feeds.feeds[self.feed_name].items.items()
         items.sort(reverse=True)
@@ -371,13 +371,13 @@ class ComicsViewer(ScalableWindow):
             menu_item.add(align)
             history_menu.append(menu_item)
         history_menu.show_all()
-        self.__xml.get_widget('show_link_item_action').set_active(self.show_link)
-        self.__xml.get_widget('history_container_action').set_sensitive(
+        self.__ui.get_object('show_link_item').set_active(self.show_link)
+        self.__ui.get_object('history_container').set_sensitive(
             len(self.feeds.feeds[self.feed_name].items) > 0)
-        self.__xml.get_widget('save_as_item_action').set_sensitive(not self.__pixbuf \
+        self.__ui.get_object('save_as_item').set_sensitive(not self.__pixbuf \
             is None)
 
-        return self.__xml.get_widget('menu')
+        return self.__ui.get_object('menu')
 
     ########################################################################
     # Standard python methods                                              #
@@ -399,7 +399,8 @@ class ComicsViewer(ScalableWindow):
         except Exception:
             self.__pixbuf = None
         self.__is_error = False
-        self.__xml = glade.XML(GLADE_FILE)
+        self.__ui = gtk.Builder()
+        self.__ui.add_from_file(UI_FILE)
         self.make_file_type_chooser()
         self.__link = WWWLink('', '', LINK_FONTSIZE)
         self.__link.connect('size-allocate', self.on_link_size_allocate)
@@ -411,7 +412,7 @@ class ComicsViewer(ScalableWindow):
         # Connect events
         self.connect('destroy', self.on_destroy)
         self.feeds.connect('feed-changed', self.on_feed_changed)
-        self.__xml.signal_autoconnect(self)
+        self.__ui.connect_signals(self)
 
         # Build UI
         self.__link.connect('button-press-event', self.on_link_clicked)
@@ -515,9 +516,9 @@ class ComicsViewer(ScalableWindow):
         self.close()
 
     def on_save_as_activated(self, widget):
-        dialog = self.__xml.get_widget('save_as_dialog')
+        dialog = self.__ui.get_object('save_as_dialog')
         dialog.set_title(self.feed_name)
-        combo = self.__xml.get_widget('file_format_combo')
+        combo = self.__ui.get_object('file_format_combo')
         model, iterator = combo.get_model(), combo.get_active_iter()
         format = model.get_value(iterator, 1)
         ext = model.get_value(iterator, 2)
@@ -534,7 +535,7 @@ class ComicsViewer(ScalableWindow):
         dialog.hide()
 
     def on_file_format_combo_changed(self, widget):
-        dialog = self.__xml.get_widget('save_as_dialog')
+        dialog = self.__ui.get_object('save_as_dialog')
         current_name = dialog.get_filename().rsplit('.', 1)
         if len(current_name) == 2:
             combo = widget

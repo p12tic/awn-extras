@@ -619,7 +619,10 @@ class Ticker(ScalableWidget):
                 0.5 - self.TICK_HEIGHT / 2.0,
                 pi / self.TICKS, 0.0)
             ctx.close_path()
-            color = [c1 + (c2 - c1) * t for c1, c2 in self.TICK_COLORS]
+            color = []
+            for i, c1 in enumerate(self.TICK_COLORS[0]):
+                c2 = self.TICK_COLORS[1][i]
+                color += [c1 + (c2 - c1) * t]
             color[3] = color[3] * self.__opacity
             ctx.set_source_rgba(*color)
             ctx.fill()

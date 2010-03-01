@@ -22,7 +22,6 @@
 # Import standard modules
 import gobject
 import gtk
-from gtk import glade
 from desktopagnostic import config
 import awn
 import os
@@ -39,11 +38,11 @@ import comics_view
 from feed.settings import Settings
 from feed import FeedContainer
 from shared import (
-    ALT_USER_DIR, GLADE_DIR, ICONS_DIR, STRIPS_DIR, SYS_FEEDS_DIR, USER_DIR,
-    USER_FEEDS_DIR)
+    ALT_USER_DIR, ICONS_DIR, STRIPS_DIR, SYS_FEEDS_DIR, UI_DIR,
+    USER_DIR, USER_FEEDS_DIR)
 
 APPLET_NAME = 'comics'
-GLADE_FILE = os.path.join(GLADE_DIR, 'main.glade')
+UI_FILE = os.path.join(UI_DIR, 'main.ui')
 
 
 class BidirectionalIterator:
@@ -158,7 +157,7 @@ class ComicApplet(awn.AppletSimple):
         container.set_sensitive(len(self.feeds.feeds) > 0)
         container.set_submenu(feed_menu)
         menu.append(container)
-        manage_item = self.__xml.get_widget('manage_comics_item_action')
+        manage_item = self.__ui.get_object('manage_comics_item')
         if manage_item.parent is not None:
             manage_item.parent.remove(manage_item)
         menu.append(manage_item)
@@ -196,8 +195,9 @@ class ComicApplet(awn.AppletSimple):
         self.connect('button-press-event', self.on_button_press)
         self.connect('scroll-event', self.on_scroll)
 
-        self.__xml = glade.XML(GLADE_FILE)
-        self.__xml.signal_autoconnect(self)
+        self.__ui = gtk.Builder()
+        self.__ui.add_from_file(UI_FILE)
+        self.__ui.connect_signals(self)
 
         self.visible = False
         self.windows = []

@@ -31,7 +31,7 @@ USER_DIR       = join(BaseDirectory.xdg_config_home, 'awn', 'applets',
 SYS_FEEDS_DIR  = join(SHARE_DIR, 'feeds')
 USER_FEEDS_DIR = join(USER_DIR, 'feeds')
 PLUGINS_DIR    = join(SHARE_DIR, 'feed', 'plugins')
-GLADE_DIR      = join(SHARE_DIR, 'glade')
+UI_DIR         = join(SHARE_DIR, 'ui')
 ICONS_DIR      = join(SHARE_DIR, 'icons')
 
 STRIPS_DIR     = USER_DIR

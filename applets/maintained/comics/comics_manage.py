@@ -21,7 +21,6 @@
 # Libraries used
 import gobject
 import gtk
-from gtk import glade
 import os
 
 # Symbols used
@@ -29,9 +28,9 @@ from awn.extras import _
 
 # Local
 from comics_add import ComicsAdder
-from shared import GLADE_DIR
+from shared import UI_DIR
 
-GLADE_FILE = os.path.join(GLADE_DIR, 'manage.glade')
+UI_FILE = os.path.join(UI_DIR, 'manage.ui')
 
 
 class ComicsManager:
@@ -69,16 +68,17 @@ class ComicsManager:
     def __init__(self, feeds):
         """Create a new ComicsManage instance."""
         # Connect dialogue events
-        self.xml = glade.XML(GLADE_FILE)
-        self.xml.signal_autoconnect(self)
+        self.ui = gtk.Builder()
+        self.ui.add_from_file(UI_FILE)
+        self.ui.connect_signals(self)
 
         self.feeds = feeds
 
-        self.manage_window = self.xml.get_widget('manage_window')
+        self.manage_window = self.ui.get_object('manage_window')
 
         self.model = gtk.TreeStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
 
-        self.comics_list = self.xml.get_widget('comics_list')
+        self.comics_list = self.ui.get_object('comics_list')
         selection = self.comics_list.get_selection()
         selection.connect('changed', self.on_comics_list_selection_changed)
         cr = gtk.CellRendererText()
@@ -96,12 +96,12 @@ class ComicsManager:
 
     def on_comics_list_selection_changed(self, widget):
         model, iterator = self.comics_list.get_selection().get_selected()
+        button = self.ui.get_object('remove_button')
         if iterator:
             directory = os.path.dirname(self.model.get_value(iterator, 1))
-            self.xml.get_widget('remove_button').set_sensitive(
-                os.access(directory, os.W_OK))
+            button.set_sensitive(os.access(directory, os.W_OK))
         else:
-            self.xml.get_widget('remove_button').set_sensitive(False)
+            button.set_sensitive(False)
 
     def on_add_button_clicked(self, widget):
         adder = ComicsAdder(self.feeds)

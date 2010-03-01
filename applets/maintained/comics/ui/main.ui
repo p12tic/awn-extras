@@ -5,13 +5,13 @@
     <child>
       <object class="GtkActionGroup" id="actiongroup1">
         <child>
-          <object class="GtkAction" id="comics_container_action">
+          <object class="GtkAction" id="comics_container">
             <property name="name">comics_container</property>
             <property name="label" translatable="yes">Comics</property>
           </object>
         </child>
         <child>
-          <object class="GtkAction" id="manage_comics_item_action">
+          <object class="GtkAction" id="manage_comics_item">
             <property name="name">manage_comics_item</property>
             <property name="label" translatable="yes">Manage comics</property>
             <signal handler="on_manage_comics_activated" name="activate"/>

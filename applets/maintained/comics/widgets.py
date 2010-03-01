@@ -431,7 +431,7 @@ class WWWLink(gtk.EventBox, Scalable):
             (int(self.font_size * self.scale), self.text))
 
     def update_url(self):
-        self.__tooltip.set_tip(self, self.url)
+        self.set_tooltip_text(self.url)
 
     def __init__(self, text='', url='', font_size=12000):
         super(WWWLink, self).__init__()
@@ -447,7 +447,6 @@ class WWWLink(gtk.EventBox, Scalable):
         self.__label.set_use_markup(True)
         self.add(self.__label)
         self.__label.show()
-        self.__tooltip = gtk.Tooltips()
         self.__label.connect('size-request', self.on_link_size_request)
 
         # Set and display the URL
@@ -619,7 +618,10 @@ class Ticker(ScalableWidget):
                 0.5 - self.TICK_HEIGHT / 2.0,
                 pi / self.TICKS, 0.0)
             ctx.close_path()
-            color = [c1 + (c2 - c1) * t for c1, c2 in self.TICK_COLORS]
+            color = []
+            for i, c1 in enumerate(self.TICK_COLORS[0]):
+                c2 = self.TICK_COLORS[1][i]
+                color += [c1 + (c2 - c1) * t]
             color[3] = color[3] * self.__opacity
             ctx.set_source_rgba(*color)
             ctx.fill()

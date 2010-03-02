@@ -23,7 +23,7 @@ description = Size of value overlay in the icon (0=small, 1=medium, 2=large).
 
 [DEFAULT/theme]
 type = string
-default = 
+default = dark
 description = Applet theme.
 
 [DEFAULT/hand_color]

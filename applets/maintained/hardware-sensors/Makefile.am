@@ -14,6 +14,7 @@ dist_interfaces_DATA =				\
 	interfaces/acpisensors.py		\
 	interfaces/fileinterface.py		\
 	interfaces/hddtempsensors.py	\
+	interfaces/i8ksensors.py	\
 	interfaces/lmsensors.py			\
 	interfaces/nvclocksensors.py	\
 	interfaces/nvidiasensors.py		\
@@ -50,7 +51,7 @@ dist_theme_transparent_DATA =		\
 	themes/transparent/single.svg	\
 	$(NULL)
 
-theme_transparent_with_borderdir = $(applet_datadir)/themes/transparent
+theme_transparent_with_borderdir = $(applet_datadir)/themes/transparent_with_border
 dist_theme_transparent_with_border_DATA =		\
 	themes/transparent_with_border/double.svg	\
 	themes/transparent_with_border/single.svg	\

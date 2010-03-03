@@ -217,5 +217,6 @@ class Updater():
         if self.__last_update + self.__timeout > time.time():
             return self.__output
         self.__last_update = time.time()
+        # Get updated value by calling the callback
         self.__output = self.get_ouput()
         return self.__output

@@ -27,7 +27,7 @@ from sensorvalues.tempvalue import TempValue
 interface_name = "FileInterface"
 
 
-class FileSensor (Sensor):
+class FileSensor(Sensor):
 
     def __init__(self, name, filename):
         Sensor.__init__(self, filename, name, TempValue())

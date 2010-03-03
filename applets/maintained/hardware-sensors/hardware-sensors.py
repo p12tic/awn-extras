@@ -36,6 +36,7 @@ from interfaces import hddtempsensors
 from interfaces import lmsensors
 from interfaces import nvidiasensors
 from interfaces import nvclocksensors
+from interfaces import i8ksensors
 
 from sensorvalues.tempvalue import TempValue
 from sensorvalues.rpmvalue import RPMValue
@@ -99,6 +100,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
             return os.path.isdir(os.path.join(theme_dir, path))
 
         self.__themes = filter(is_dir, os.listdir(theme_dir))
+        self.__themes = [theme.replace("_", " ") for theme in self.__themes]
         self.__themes.sort()
 
         # == Settings == #
@@ -131,6 +133,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
         self.sensors += lmsensors.get_sensors()
         self.sensors += nvidiasensors.get_sensors()
         self.sensors += nvclocksensors.get_sensors()
+        self.sensors += i8ksensors.get_sensors()
 
         # Check if any sensors were found
         if self.sensors == []:
@@ -602,7 +605,7 @@ ACPI, HDDTemp, LM-Sensors and restart the applet.")
     # === Event handlers === #
     def alarm_cb(self, sensor, message):
         """Show alarm message with awn notify."""
-        self.applet.notify.send(subject=None, body=message, icon="")
+        self.applet.notify.send(subject=None, body=message, icon=applet_logo)
 
     def height_changed_cb(self):
         """Update the applet's icon to reflect the new height."""

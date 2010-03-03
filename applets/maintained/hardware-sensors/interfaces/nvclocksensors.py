@@ -19,7 +19,6 @@
 #   MA 02110-1301, USA.
 
 import os
-import time
 import re
 
 from sensorinterface import Sensor
@@ -27,8 +26,6 @@ from sensorinterface import Updater
 from sensorvalues.tempvalue import TempValue
 from sensorvalues.voltvalue import VoltValue
 from sensorvalues.rpmvalue import RPMValue
-
-from sensorvalues import units
 
 interface_name = "NVClock"
 

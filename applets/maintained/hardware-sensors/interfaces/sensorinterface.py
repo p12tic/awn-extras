@@ -175,7 +175,7 @@ class Sensor(object):
                 if self.__alarm_cb:
                     self.__alarm_cb(self, message)
                 else:
-                    print messages
+                    print message
 
             # Turn of the alarm when value gets 5% bellow high_value
             elif value < self.high_value - 0.05 * abs(self.high_value):

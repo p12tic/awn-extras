@@ -18,9 +18,7 @@
 #   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #   MA 02110-1301, USA.
 
-import time
 import socket
-import gobject
 
 from sensorinterface import Sensor
 from sensorinterface import Updater

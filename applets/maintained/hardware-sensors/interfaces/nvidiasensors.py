@@ -19,14 +19,11 @@
 #   MA 02110-1301, USA.
 
 import os
-import time
 import re
 
 from sensorinterface import Sensor
 from sensorinterface import Updater
 from sensorvalues.tempvalue import TempValue
-
-from sensorvalues import units
 
 interface_name = "Nvidia"
 

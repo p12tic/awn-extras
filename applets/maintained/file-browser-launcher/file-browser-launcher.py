@@ -213,6 +213,8 @@ class App(awn.Applet):
     if self.docklet_visible:
       self.update_docklet()
 
+    self.icon.set_size(self.get_size())
+
   #Applet drag and drop
   def applet_drag_data_received(self, w, context, x, y, data, info, time):
     context.finish(True, False, time)
@@ -358,10 +360,18 @@ class App(awn.Applet):
         icon = vol.get_icon()
         eject = None
 
-        if type(icon) == gio.ThemedIcon:
-          icons = icon.get_names()
+        icons = None
 
-        else:
+        try:
+          if isinstance(icon, gio.ThemedIcon):
+            icons = icon.get_names()
+
+          elif isinstance(icon, gio.FileIcon):
+            icons = (icon.get_file().get_path(), )
+        except:
+          pass
+
+        if icons is None:
           icons = ('drive-harddisk', 'drive')
 
         #Get the human-readable name
@@ -370,7 +380,20 @@ class App(awn.Applet):
         #Get the path
         if vol.get_mount():
           path = vol.get_mount().get_root().get_uri()
-          icons = vol.get_mount().get_icon().get_names()
+          icon = vol.get_mount().get_icon()
+
+          icons = None
+          try:
+            if isinstance(icon, gio.ThemedIcon):
+              icons = icon.get_names()
+
+            elif isinstance(icon, gio.FileIcon):
+              icons = (icon.get_file().get_path(), )
+          except:
+            pass
+
+          if icons is None:
+            icons = ('drive-harddisk', 'drive')
 
           #Get the eject icon if this volume can be unmounted
           if vol.get_mount().can_unmount():
@@ -397,10 +420,17 @@ class App(awn.Applet):
           #Get the icon
           icon = mount.get_icon()
 
-          if type(icon) == gio.ThemedIcon:
-            icons = icon.get_names()
+          icons = None
+          try:
+            if isinstance(icon, gio.ThemedIcon):
+              icons = icon.get_names()
 
-          else:
+            elif isinstance(icon, gio.FileIcon):
+              icons = (icon.get_file().get_path(), )
+          except:
+            pass
+
+          if icons is None:
             icons = ('applications-internet', )
 
           #Human-readable name

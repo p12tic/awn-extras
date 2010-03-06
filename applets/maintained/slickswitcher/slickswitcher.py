@@ -293,6 +293,9 @@ class App(awn.AppletSimple):
         win.set_wrap_license(True)
         win.set_artists(['Original design by diogodivision', \
             'Redone by sharkbaitbobby'])
+        win.set_website('http://wiki.awn-project.org/SlickSwitcher')
+        win.set_website_label('wiki.awn-project.org')
+        win.set_version(awn.extras.__version__)
         win.run()
         win.destroy()
 

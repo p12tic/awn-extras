@@ -623,7 +623,7 @@ class App(awn.AppletSimple):
         #(Since Gtk 2.14)
         try:
             toggle.drag_source_set_icon(toggle.get_screen().get_rgba_colormap(), \
-              toggle.get_snapshot(), None)
+              toggle.parent.get_snapshot(), None)
 
         except:
             pass
@@ -690,7 +690,7 @@ class App(awn.AppletSimple):
             toggles_xywh = {}
             for i, toggle in enumerate(self.toggles):
                 if toggle != self.dragged_toggle:
-                    a = toggle.allocation
+                    a = toggle.parent.allocation
                     children = toggle.parent.parent.parent.get_children()
                     toggle.drag_pos = children.index(toggle.parent.parent)
                     toggles_xywh[i] = {'x': a.x, 'y': a.y, 'w': a.width, 'h': a.height, 't': toggle}
@@ -1251,8 +1251,8 @@ class App(awn.AppletSimple):
 #Shorten and ellipsize long strings
 def shortify(string):
     string = string.replace('\n', ' ')
-    if len(string) > 25:
-        return string[:25] + '...'
+    if len(string) > 33:
+        return string[:30] + '...'
 
     else:
         return string

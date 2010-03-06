@@ -213,7 +213,7 @@ class FeedSource:
         if siteid in self.applet.favicons:
             #Check if the favion is less than a week old
             if self.applet.favicons[siteid] + 604800L > long(time.time()):
-                self.icon = os.path.join(cache_dir, siteid + '.ico')
+                self.icon = siteid
                 self.applet.got_favicon(self)
 
                 return
@@ -922,10 +922,13 @@ def boldify(widget, button=False):
     if button:
         widget = widget.child
 
-    widget.set_markup('<span font_weight="bold">%s</span>' % widget.get_text())
+    widget.set_markup('<span font_weight="bold">%s</span>' % safify(widget.get_text()))
 
 def deboldify(widget, button=False):
     if button:
         widget = widget.child
 
     widget.set_markup(widget.get_text())
+
+def safify(text):
+  return text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;')

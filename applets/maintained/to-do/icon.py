@@ -52,9 +52,10 @@ def icon(size2, settings, color, surface, last_height):
   
   #Get some data
   num_items = 0
-  for x in settings['items']:
-    if x!='':
-      num_items += 1
+  for i, item in enumerate(settings['items']):
+    if item != '':
+      if settings['progress'][i] != 100:
+        num_items += 1
   
   #Get the needed data based on the icon type
   

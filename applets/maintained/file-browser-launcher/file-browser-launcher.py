@@ -762,13 +762,22 @@ class App(awn.Applet):
     for name in names:
       #Load the icon if it hasn't been yet
       if not self.icons[size].has_key(name):
-        try:
-          icon = self.theme.load_icon(name, size, 0)
-          worked = True
-          break
+        if name[0] == '/':
+          try:
+            icon = gtk.gdk.pixbuf_new_from_file_at_size(size, size)
+            worked = True
+            break
+          except:
+            pass
 
-        except:
-          pass
+        else:
+          try:
+            icon = self.theme.load_icon(name, size, 0)
+            worked = True
+            break
+
+          except:
+            pass
 
       #Icon has already been loaded
       else:

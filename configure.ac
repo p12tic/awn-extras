@@ -364,6 +364,7 @@ applets/unmaintained/stacks/Makefile
 po/Makefile.in
 shared/python/__init__.py
 shared/python/Makefile
+shared/vala/Makefile
 shave/shave
 shave/shave-libtool
 ])

@@ -2,6 +2,7 @@ NULL =
 SUBDIRS = \
 	applets \
 	shared/python \
+	shared/vala \
 	po \
 	$(NULL)
 	

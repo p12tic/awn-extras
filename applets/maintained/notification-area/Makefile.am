@@ -5,12 +5,12 @@ APPLET_CFLAGS = $(LIBX11_CFLAGS) -I$(top_builddir)
 VALA_FILES = \
 	notification-area.vala	\
 	na-prefs.vala		\
-	egg-tray.vapi		\
 	$(NULL)
 
 AM_VALAFLAGS = \
 	--pkg desktop-agnostic-ui \
 	--pkg x11 \
+	$(srcdir)/egg-tray.vapi \
 	$(NULL)
 
 APPLET_LIBS = \
@@ -39,6 +39,6 @@ dist_prefs_DATA =	\
 	na-prefs.ui	\
 	$(NULL)
 
-EXTRA_DIST += $(wildcard *.h)
+EXTRA_DIST += $(wildcard *.h) egg-tray.vapi
 
 # vim: set ts=8 sts=8 sw=8 :

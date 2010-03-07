@@ -1,9 +1,7 @@
 # PLEASE KEEP THIS FILE ALPHABETIZED (case-insensitive)!
 applets/maintained/animal-farm/animal-farm.desktop.in
-applets/maintained/awnterm/applet.c
-applets/maintained/awnterm/awnterm.c
+applets/maintained/awnterm/awn-terminal.c
 applets/maintained/awnterm/awnterm.desktop.in.in
-applets/maintained/awnterm/settings.c
 applets/maintained/bandwidth-monitor/awn-bwm.py
 applets/maintained/bandwidth-monitor/bandwidth-monitor.desktop.in
 applets/maintained/bandwidth-monitor/bandwidth-monitor.ui
@@ -28,16 +26,18 @@ applets/maintained/comics/comics_add.py
 applets/maintained/comics/comics_manage.py
 applets/maintained/comics/comics_view.py
 applets/maintained/comics/feed/__init__.py
-applets/maintained/comics/glade/add.glade
-applets/maintained/comics/glade/main.glade
-applets/maintained/comics/glade/manage.glade
-applets/maintained/comics/glade/view.glade
+applets/maintained/comics/ui/add.ui
+applets/maintained/comics/ui/main.ui
+applets/maintained/comics/ui/manage.ui
+applets/maintained/comics/ui/view.ui
 applets/maintained/comics/main.py
 applets/maintained/cpufreq/cpufreq.desktop.in
 applets/maintained/cpufreq/cpufreq.ui
 applets/maintained/digital-clock/digital-clock.desktop.in
 applets/maintained/digital-clock/dgClockPref.py
 applets/maintained/digital-clock/digitalClock.py
+applets/maintained/dialect/dialect.ui
+applets/maintained/feeds/classes.py
 applets/maintained/feeds/feeds.desktop.in
 applets/maintained/feeds/feeds.py
 applets/maintained/feeds/prefs.py
@@ -70,8 +70,6 @@ applets/maintained/notification-area/notification-area.desktop.in.in
 applets/maintained/notification-area/egg-tray-child.c
 applets/maintained/notification-area/eggtraymanager.c
 applets/maintained/notification-area/na-prefs.ui
-applets/maintained/notification-daemon/awn-notification-daemon.schemas.in
-applets/maintained/notification-daemon/awnnotificationdaemon.desktop.in.in
 applets/maintained/notification-daemon/daemon.c
 applets/maintained/places/applet.c
 applets/maintained/places/places.desktop.in.in

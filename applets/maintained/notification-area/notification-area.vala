@@ -387,7 +387,8 @@ public class NotificationArea : GLib.Object
       }
       else
       {
-        prefs_window.get_dialog ().window.raise ();
+        var dialog = prefs_window.get_dialog ();
+        dialog.present_with_time (event.time);
       }
       return true;
     }

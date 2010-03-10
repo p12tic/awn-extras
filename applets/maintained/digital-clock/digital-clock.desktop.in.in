@@ -1,10 +1,10 @@
 [Desktop Entry]
 Type=Application
 X-AWN-Type=Applet
-X-AWN-AppletType=Python
+X-AWN-AppletType=Vala
 _Name=Digital Clock
 _Comment=A clock and calendar in one.
 Exec=awn-applet -p %k
-X-AWN-AppletExec=digital-clock/digitalClock.py
+X-AWN-AppletExec=@LIBDIR@/awn/applets/digital-clock/digital-clock.so
 Icon=awn-applet-digital-clock
 X-AWN-AppletCategory=Utility,Clock

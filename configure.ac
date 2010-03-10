@@ -316,6 +316,7 @@ applets/maintained/comics/Makefile
 applets/maintained/cpufreq/Makefile
 applets/maintained/dialect/Makefile
 applets/maintained/digital-clock/Makefile
+applets/maintained/digital-clock/digital-clock.desktop.in
 applets/maintained/feeds/Makefile
 applets/maintained/file-browser-launcher/Makefile
 applets/maintained/garbage/Makefile

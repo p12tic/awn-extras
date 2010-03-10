@@ -23,9 +23,14 @@ type = boolean
 default = true
 description = Show the date before the time.
 
+[DEFAULT/show_date]
+type = boolean
+default = true
+description = Show the date.
+
 [commands/calendar]
 type = string
-default = evolution calendar:///?startdate=%02(year)d%02(month)d%02(day)dT120000
+default = evolution calendar:///?startdate=%(year)02d%(month)02d%(day)02dT120000
 description = Command to execute when a calendar day is double-clicked.
 
 [commands/adjust_datetime]

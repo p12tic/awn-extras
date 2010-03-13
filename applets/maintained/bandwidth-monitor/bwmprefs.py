@@ -209,15 +209,15 @@ class Preferences:
     def backgroundColorbutton_color_set_cb(self, widget):
         color = widget.get_color()
         alpha = float('%2.1f' % (widget.get_alpha() / 65535.0))
-        self.applet.settings['background_color'] = '%s|%s' % (color, alpha)
-        self.parent.background_color = '%s|%s' % (color, alpha)
+        self.applet.settings['background_color'] = '%s|%s' % (color.to_string(), alpha)
+        self.parent.background_color = '%s|%s' % (color.to_string(), alpha)
 
     def borderColorbutton_color_set_cb(self, widget):
         color = widget.get_color()
         alpha = float('%2.1f' % (widget.get_alpha() / 65535.0))
         self.applet.settings['border_color'] = '%s|%s' \
             % (color.to_string(), alpha)
-        self.parent.border_color = '%s|%s' % (color, alpha)
+        self.parent.border_color = '%s|%s' % (color.to_string(), alpha)
 
     def get_color(self, device, column_name):
         if column_name == 'upload':

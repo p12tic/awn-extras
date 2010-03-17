@@ -105,7 +105,7 @@ class ThinkHDAPSApplet:
         self.applet = applet
 
         applet.tooltip.disable_toggle_on_click()
-        applet.icon.theme("harddrive")
+        applet.icon.theme("drive-harddisk")
 
         if version_ge_2_6_28:
             def can_unload(disk):

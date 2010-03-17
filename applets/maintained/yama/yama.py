@@ -44,7 +44,7 @@ applet_name = "YAMA"
 applet_description = "Main menu with places and recent documents"
 
 # Applet's themed icon, also shown in the GTK About dialog
-applet_logo = "gnome-main-menu"
+applet_logo = "start-here"
 
 file_manager_apps = ("nautilus", "thunar", "xdg-open")
 

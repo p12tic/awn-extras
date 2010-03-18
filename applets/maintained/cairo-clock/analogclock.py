@@ -16,7 +16,8 @@ import math
 import os
 
 import cairo
-import rsvg
+import awn
+awn.check_dependencies(globals(), "rsvg")
 
 cairo_clock_themes_dir = "/usr/share/cairo-clock/themes"
 default_themes_dir = os.path.join(os.path.dirname(__file__), "themes")

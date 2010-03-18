@@ -6,5 +6,5 @@ _Name=Show Desktop
 _Comment=Hides your windows and shows your desktop.
 Exec=awn-applet -p %k
 X-AWN-AppletExec=@LIBDIR@/awn/applets/showdesktop/showdesktop.so
-Icon=desktop
+Icon=user-desktop
 X-AWN-AppletCategory=Utility

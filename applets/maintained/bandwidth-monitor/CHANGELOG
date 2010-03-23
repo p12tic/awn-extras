@@ -1,3 +1,10 @@
+03/23/2010:
+    Corrected issue with parsing the interface list
+
+03/13/2010:
+    applied patch from bug #534061 to fix color selection bug in preferences caused by not calling 'to_string()' in the returned gtk.gdk.Color object https://launchpad.net/bugs/534061
+    
+
 01/05/2010:
     PEP8 cleanup of all lines > 80 chars
     Rename of classes/variables for space/consistency

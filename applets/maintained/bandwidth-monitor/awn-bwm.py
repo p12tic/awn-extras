@@ -117,7 +117,7 @@ class Netstat:
         if ifcfg_str and stat_str:
             for device_group in ifcfg_str:
                 device_lines = device_group.split('\n')
-                if 'Kernel' in device_lines[0]:
+                if not 'Link' in device_lines[0]:
                     device_lines = device_lines[1:]
                 iface = re.split('[\W]+',
                     device_lines[0].strip().replace(':', '_'))[0]

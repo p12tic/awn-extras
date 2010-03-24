@@ -52,10 +52,13 @@ def icon(size2, settings, color, surface, last_height):
   
   #Get some data
   num_items = 0
+  new_progress = []
   for i, item in enumerate(settings['items']):
     if item != '':
-      if settings['progress'][i] != 100:
-        num_items += 1
+      if len(settings['progress']) > i:
+        if settings['progress'][i] != 100:
+          num_items += 1
+        new_progress.append(settings['progress'][i])
   
   #Get the needed data based on the icon type
   
@@ -65,8 +68,7 @@ def icon(size2, settings, color, surface, last_height):
       progress = 100
       number = '100%'
     else:
-      progress = settings['progress']
-      progress = float(sum(progress))/float(num_items)
+      progress = float(sum(new_progress))/float(len(new_progress))
       progress = int(progress)
       number = str(progress)+'%'
   
@@ -76,8 +78,7 @@ def icon(size2, settings, color, surface, last_height):
       progress = 100
       number = '100%'
     else:
-      progress = settings['progress']
-      progress = float(sum(progress))/float(num_items)
+      progress = float(sum(new_progress))/float(len(new_progress))
       progress = int(progress)
       number = str(num_items)
   

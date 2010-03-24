@@ -343,6 +343,8 @@ class App(awn.AppletSimple):
             f = fp.read()
             fp.close()
 
+            backend = 'gconf'
+
             for line in f.split('\n'):
                 if line.find('backend = ') == 0:
                     backend = line.split('backend = ')[1]

@@ -36,6 +36,9 @@ class Switch:
         self.height = self.screen.get_height()
 
         #Connect to signals from Wnck
+        self.screen.connect('active-window-changed', self.emitted)
+        self.screen.connect('active-workspace-changed', self.emitted)
+        self.screen.connect('window-manager-changed', self.emitted)
         self.screen.connect('window-stacking-changed', self.emitted)
         self.screen.connect('viewports-changed', self.emitted)
 
@@ -78,6 +81,9 @@ class Switch:
         if current_workspace is None:
             current_workspace = self.screen.get_active_workspace()
 
+        if not current_workspace.is_virtual():
+            return current_workspace.get_number() + 1
+
         #Get the workspace dimensions
         workspace_width = current_workspace.get_width()
         workspace_height = current_workspace.get_height()
@@ -95,10 +101,6 @@ class Switch:
 
         #Put all this together to get the current workspace number
         return current_row * num_columns + current_column + 1
-
-    #Show desktop functionality
-    def show_desktop(self):
-        self.screen.toggle_showing_desktop(not self.screen.get_showing_desktop())
 
     #Move, either forward or backwards
     def move(self, direction):

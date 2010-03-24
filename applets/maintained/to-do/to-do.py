@@ -87,6 +87,15 @@ class App(awn.AppletSimple):
           'use_custom_width': (bool, False), \
           'confirm_categories': (bool, True)})
 
+        #Prevent crash...
+        l = len(self.settings['priority'])
+        for name in ('progress', 'details', 'category', 'category_name'):
+            if len(self.settings[name]) < l:
+                l = len(self.settings[name])
+
+        if l != len(self.settings['items']):
+            self.settings['items'] = self.settings['items'][0:l]
+
         self.set_tooltip_text(self.settings['title'])
 
         #Icon Type
@@ -282,7 +291,7 @@ class App(awn.AppletSimple):
         #Go through the list of to-do items
         y = 0
         for x in self.settings['items']:
-            if x != '':
+            if x != '' and len(self.settings['details']) > y:
                 #This is a normal item
                 #Make an "X" button to clear the item
                 dialog_x = gtk.Button()
@@ -365,7 +374,7 @@ class App(awn.AppletSimple):
                 y+=1
 
             #This is a category - show an Expander widget
-            else:
+            elif len(self.settings['details']) > y:
                 #Make a normal X button
                 dialog_x = gtk.Button()
                 dialog_x.set_tooltip_text(_("Remove category"))
@@ -960,12 +969,14 @@ class App(awn.AppletSimple):
                     tmp_list_category.append(-1)
                     tmp_list_category_name.append('')
 
-                    self.settings['items'] = tmp_list_names
-                    self.settings['priority'] = tmp_list_priority
-                    self.settings['progress'] = tmp_list_progress
-                    self.settings['details'] = tmp_list_details
-                    self.settings['category'] = tmp_list_category
-                    self.settings['category_name'] = tmp_list_category_name
+                    try:
+                        self.settings['items'] = tmp_list_names
+                        self.settings['priority'] = tmp_list_priority
+                        self.settings['progress'] = tmp_list_progress
+                        self.settings['details'] = tmp_list_details
+                        self.settings['category'] = tmp_list_category
+                    except:
+                        self.settings['category_name'] = tmp_list_category_name
 
                     #Re-show the main dialog
                     self.displayed = False#Is this necessary?
@@ -1038,11 +1049,15 @@ class App(awn.AppletSimple):
                             tmp_list_category_name.append('')
                         y+=1
 
-                    self.settings['items'] = tmp_list_names
-                    self.settings['priority'] = tmp_list_priority
-                    self.settings['progress'] = tmp_list_progress
-                    self.settings['details'] = tmp_list_details
-                    self.settings['category'] = tmp_list_category
+
+                    try:
+                        self.settings['items'] = tmp_list_names
+                        self.settings['priority'] = tmp_list_priority
+                        self.settings['progress'] = tmp_list_progress
+                        self.settings['details'] = tmp_list_details
+                        self.settings['category'] = tmp_list_category
+                    except:
+                        pass
                     self.settings['category_name'] = tmp_list_category_name
 
                     #Re-show the main dialog
@@ -1079,12 +1094,14 @@ class App(awn.AppletSimple):
                 tmp_list_category.append(-1)
                 tmp_list_category_name.append(self.add_entry.get_text())
 
-                self.settings['items'] = tmp_list_names
-                self.settings['priority'] = tmp_list_priority
-                self.settings['progress'] = tmp_list_progress
-                self.settings['details'] = tmp_list_details
-                self.settings['category'] = tmp_list_category
-                self.settings['category_name'] = tmp_list_category_name
+                try:
+                    self.settings['items'] = tmp_list_names
+                    self.settings['priority'] = tmp_list_priority
+                    self.settings['progress'] = tmp_list_progress
+                    self.settings['details'] = tmp_list_details
+                    self.settings['category'] = tmp_list_category
+                except:
+                    self.settings['category_name'] = tmp_list_category_name
 
                 #Re-show the main dialog
                 self.displayed = False#TODO:Is this necessary?

@@ -53,3 +53,5 @@ install-data-local: $(schemas_DATA)
 endif
 
 EXTRA_DIST += $(schemas_in_files)
+DISTCLEANFILES = $(schemas_FILE)
+

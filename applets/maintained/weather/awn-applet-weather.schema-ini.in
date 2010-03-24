@@ -1,0 +1,42 @@
+[DEFAULT]
+single_instance = false
+
+[DEFAULT/curved_dialog]
+type = boolean
+default = false
+_description=Show days of forecast in a transparent, curved dialog.
+
+[DEFAULT/location]
+type = string
+default = Amsterdam, Netherlands
+_description=City, and country of the weather location.
+
+[DEFAULT/location_code]
+type = string
+default = NLXX0002
+_description=Code that identifies the weather location.
+
+[DEFAULT/map_maxwidth]
+type = integer
+default = 450
+_description=Maximum width of map in pixels.
+
+[DEFAULT/show-temperature-icon]
+type = boolean
+default = true
+_description=If enabled, show the temperature as an overlay in the icon.
+
+[DEFAULT/temperature-font-size]
+type = integer
+default = 0
+_description=Size of the temperature overlay in the icon (0=small, 1=medium, 2=large).
+
+[DEFAULT/temperature-unit]
+type = integer
+default = 0
+_description=Temperature unit (0=Celcius, 1=Fahrenheit).
+
+[DEFAULT/theme]
+type = string
+default = System theme
+_description=The name of the theme of the icon.

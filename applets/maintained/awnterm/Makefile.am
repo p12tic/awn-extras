@@ -16,8 +16,10 @@ include $(top_srcdir)/Makefile.schemas
 applet_LTLIBRARIES = awnterm.la
 awnterm_la_SOURCES =	\
 	$(VALA_C_FILES) \
-	keybinder.c	\
 	eggaccelerators.c \
+	eggaccelerators.h \
+	keybinder.c \
+	keybinder.h \
 	$(NULL)
 awnterm_la_LIBADD =	\
 	$(AWN_LIBS)	\
@@ -25,8 +27,5 @@ awnterm_la_LIBADD =	\
 	$(NULL)
 awnterm_la_LDFLAGS = $(APPLET_LINKER_FLAGS)
 
-EXTRA_DIST += \
-	eggaccelerators.h \
-	keybinder.h \
-	keybinder.vapi \
-	$(NULL)
+EXTRA_DIST += keybinder.vapi
+

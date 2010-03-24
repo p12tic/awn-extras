@@ -1,0 +1,22 @@
+[DEFAULT]
+single_instance = false
+
+[DEFAULT/notify]
+type = boolean
+default = true
+_description=Notify if any feeds have new items
+
+[DEFAULT/auto_update]
+type = boolean
+default = true
+_description=Update automatically at a configurable interval
+
+[DEFAULT/update_interval]
+type = integer
+default = 5
+_description=The interval (in minutes) at which to update (3-60)
+
+[DEFAULT/show_favicons]
+type = boolean
+default = true
+_description=Show each feed's website's icon in the dialog

@@ -8,5 +8,4 @@ _Comment=An applet to exit or log out of your session
 Exec=awn-applet -p %k
 X-AWN-AppletExec=quit/quit.py
 Icon=application-exit
-Name[en_US]=Quit-Logoff applet
 X-AWN-AppletCategory=System

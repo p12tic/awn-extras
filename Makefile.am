@@ -8,21 +8,25 @@ SUBDIRS = \
 	
 EXTRA_DIST = \
 	autogen.sh \
-	intltool-extract.in \
-	intltool-merge.in \
-	intltool-update.in \
-	po/Makefile.in.in \
-	po/POTFILES.skip \
+	COPYING \
 	COPYING.BSD \
 	COPYING.CCASAv3.0 \
 	COPYING.GPL-3 \
 	COPYING.LGPL-2.1 \
+	intltool-extract.in \
+	intltool-merge.in \
+	intltool-update.in \
+	shared/vala/build.vapi \
+	shared/vala/libintl.vapi \
 	$(NULL)
 
-DISTCLEANFILES =			\
-	intltool-extract		\
-	intltool-merge			\
-	intltool-update
+DISTCLEANFILES = \
+        doltcompile \
+        doltlibtool \
+        intltool-extract \
+        intltool-merge \
+        intltool-update \
+        $(NULL)
 
 ACLOCAL_AMFLAGS = -I m4
 

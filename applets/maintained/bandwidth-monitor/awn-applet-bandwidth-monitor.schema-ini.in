@@ -1,0 +1,40 @@
+[DEFAULT/unit]
+type = integer
+default = 0
+_description=The base display unit for transfer speed (0 = bits, 1 = bytes)
+[DEFAULT/interface]
+type = string
+default = 
+_description=The interface currently selected
+[DEFAULT/draw_threshold]
+type = float
+default = 0.0
+_description=Minimum threshold to draw meter (dependent upon DEFAULT/unit)
+[DEFAULT/device_display_parameters]
+type = list-string
+default = ;
+_description=Display parameters for interfaces
+[DEFAULT/background]
+type = boolean
+default = true
+_description=Draw the applet background
+[DEFAULT/background_color]
+type = string
+default = #000000|0.5
+_description=Color to draw the background
+[DEFAULT/border]
+type = boolean
+default = false
+_description=Draw the applet border
+[DEFAULT/border_color]
+type = string
+default = #000000|1.0
+_description=Color to draw the border
+[DEFAULT/label_control]
+type = integer
+default = 2
+_description=Throughput label control - 0 = no label, 1 = Sum, 2 = Upload/Download
+[DEFAULT/graph_zero]
+type = integer
+default = 0
+_description=If enabled this will draw a line at the bottom of the graph even if the value is 0. If unchecked, values below 1 are not drawn

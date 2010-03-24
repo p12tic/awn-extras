@@ -1,0 +1,49 @@
+[DEFAULT]
+single_instance = false
+
+[DEFAULT/dummy]
+type = boolean
+default = true
+_description=Just a dummy key.. this will be removed later.
+
+[DEFAULT/time_stamp]
+type = integer
+default = 0
+_description=Just a dummy key.. this will be removed later.
+
+[applet/dummy]
+type = boolean
+default = true
+_description=Just a dummy key.. this will be removed later.
+
+[applet/icon_list]
+type = list-string
+default = CPU::-1;
+_description=List of icons
+
+[applet/time_stamp]
+type = integer
+default = 0
+_description=Just a dummy key.. this will be removed later.
+
+[icon/graph_type]
+type = integer
+default = 0
+_description=CPU graph type to use.  Note that some Icons do not support all graph types.  If this occurs an icon will revert to it's own default (value of 0).
+
+[icon/time_stamp]
+type = integer
+default = 0
+_description=Just a dummy key.. this will be removed later.
+
+[applet/render_bg]
+type = boolean
+default = true
+_description=Render background.
+
+[icon/update_timeout]
+type = integer
+default = 1000
+_description=If the updates are time based then how frequently to update in ms.
+
+; vim: set ft=dosini :

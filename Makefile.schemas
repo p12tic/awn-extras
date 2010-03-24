@@ -1,22 +1,24 @@
 # vim: set ft=automake ts=8 sts=8 sw=8 :
 
+schema_in_files = awn-applet-$(APPLET_NAME).schema-ini.in
 schemadir = $(datadir)/avant-window-navigator/schemas
-schema_DATA = awn-applet-$(APPLET_NAME).schema-ini
+schema_DATA = $(schema_in_files:.schema-ini.in=.schema-ini)
 
 if GCONF_SCHEMAS_INSTALL
 gconfschemasdir   = @GCONF_SCHEMA_FILE_DIR@
-gconfschemas_in_files =$(schema_DATA:.schema-ini=.schemas.in)
-gconfschemas_DATA = $(gconfschemas_in_files:.schemas.in=.schemas)
+gconfschemas_DATA = $(schema_DATA:.schema-ini=.schemas)
 
-%.schemas.in: %.schema-ini
+%.schemas: %.schema-ini
 	$(QUIET_GEN)$(LDA_BINDIR)/lda-schema-to-gconf $< $@
-
-@INTLTOOL_SCHEMAS_RULE@
 
 install-data-local: $(gconfschemas_DATA)
 	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(gconfschemas_DATA)
 
-CLEANFILES += $(gconfschemas_in_files) $(gconfschemas_DATA)
+CLEANFILES += $(gconfschemas_DATA)
 endif
 
-EXTRA_DIST += $(schema_DATA)
+@INTLTOOL_SCHEMA_INI_RULE@
+
+CLEANFILES += $(schema_DATA)
+
+EXTRA_DIST += $(schema_in_files)

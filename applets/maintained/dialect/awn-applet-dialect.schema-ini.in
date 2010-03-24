@@ -1,0 +1,44 @@
+[DEFAULT/left]
+type = integer
+default = 2
+_description=Left click action (0 = previous, 1 = menu, 2 = next, 3 = none).
+
+[DEFAULT/middle]
+type = integer
+default = 1
+_description=Middle click action (0 = previous, 1 = menu, 2 = next, 3 = none).
+
+[DEFAULT/scroll]
+type = boolean
+default = false
+_description=Can change layout with scroll wheel.
+
+[DEFAULT/overlay]
+type = boolean
+default = true
+_description=Overlay selected layout flag on icon.
+
+[DEFAULT/scale]
+type = float
+default = 0.5
+_description=Flag size compared to icon (min = 0.1, max = 0.9).
+
+[DEFAULT/opacity]
+type = float
+default = 0.9
+_description=Flag opacity (min = 0.0, max = 0.9).
+
+[DEFAULT/layout]
+type = list-string
+default = ;
+_description=User selected layouts.
+
+[DEFAULT/variant]
+type = list-string
+default = ;
+_description=User selected variants.
+
+[DEFAULT/toggle]
+type = integer
+default = 0
+_description=Keyboard toggle to change selected layout (see prefs dialog for values).

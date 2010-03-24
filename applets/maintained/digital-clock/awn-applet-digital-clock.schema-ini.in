@@ -1,0 +1,41 @@
+[DEFAULT/font_face]
+type = string
+default = Sans 10
+_description=The font face of the clock text.
+
+[DEFAULT/font_color]
+type = color
+default = white
+_description=The color of the clock text.
+
+[DEFAULT/font_shadow_color]
+type = color
+default = black
+_description=The shadow color of the clock text.
+
+[DEFAULT/hour12]
+type = boolean
+default = true
+_description=Toggle 12-hour mode.
+
+[DEFAULT/dbt]
+type = boolean
+default = true
+_description=Show the date before the time.
+
+[DEFAULT/show_date]
+type = boolean
+default = true
+description = Show the date.
+
+[commands/calendar]
+type = string
+default = evolution calendar:///?startdate=%(year)02d%(month)02d%(day)02dT120000
+_description=Command to execute when a calendar day is double-clicked.
+
+[commands/adjust_datetime]
+type = string
+default = gksudo time-admin
+_description=Command to execute when the user wishes to adjust the date/time.
+
+; vim: set ft=dosini :

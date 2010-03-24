@@ -1,18 +1,24 @@
 # PLEASE KEEP THIS FILE ALPHABETIZED (case-insensitive)!
 applets/maintained/animal-farm/animal-farm.desktop.in
-applets/maintained/awnterm/awn-terminal.c
+[type: gettext/ini]applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in
+applets/maintained/awnterm/awn-terminal.vala
 applets/maintained/awnterm/awnterm.desktop.in.in
+[type: gettext/ini]applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in
 applets/maintained/bandwidth-monitor/awn-bwm.py
 applets/maintained/bandwidth-monitor/bandwidth-monitor.desktop.in
 applets/maintained/bandwidth-monitor/bandwidth-monitor.ui
 applets/maintained/bandwidth-monitor/bwmprefs.py
+[type: gettext/ini]applets/maintained/battery/awn-applet-battery.schema-ini.in
 applets/maintained/battery/battery.desktop.in
 applets/maintained/battery/battery.ui
+[type: gettext/ini]applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in
 applets/maintained/cairo-clock/cairo-clock.desktop.in
 applets/maintained/cairo-clock/cairo-clock.ui
-applets/maintained/cairo-menu/gnome-menu-builder.c
+[type: gettext/ini]applets/maintained/cairo-menu/awn-applet-cairo-menu.schema-ini.in
 applets/maintained/cairo-menu/cairo-menu.desktop.in.in
+applets/maintained/cairo-menu/gnome-menu-builder.c
 applets/maintained/cairo-menu/misc.c
+[type: gettext/ini]applets/maintained/calendar/awn-applet-calendar.schema-ini.in
 applets/maintained/calendar/calendar.desktop.in
 applets/maintained/calendar/calendarlogin.py
 applets/maintained/calendar/calendarprefs.py
@@ -20,10 +26,11 @@ applets/maintained/calendar/clockcal.py
 applets/maintained/calendar/googlecal.py
 applets/maintained/calendar/icscal.py
 applets/maintained/calendar/owacal.py
-applets/maintained/comics/comics.desktop.in
-applets/maintained/comics/comics.py
+[type: gettext/ini]applets/maintained/comics/awn-applet-comics.schema-ini.in
 applets/maintained/comics/comics_add.py
+applets/maintained/comics/comics.desktop.in
 applets/maintained/comics/comics_manage.py
+applets/maintained/comics/comics.py
 applets/maintained/comics/comics_view.py
 applets/maintained/comics/feed/__init__.py
 applets/maintained/comics/ui/add.ui
@@ -31,82 +38,107 @@ applets/maintained/comics/ui/main.ui
 applets/maintained/comics/ui/manage.ui
 applets/maintained/comics/ui/view.ui
 applets/maintained/comics/main.py
+[type: gettext/ini]applets/maintained/cpufreq/awn-applet-cpufreq.schema-ini.in
 applets/maintained/cpufreq/cpufreq.desktop.in
 applets/maintained/cpufreq/cpufreq.ui
-applets/maintained/digital-clock/digital-clock.desktop.in
-applets/maintained/digital-clock/dgClockPref.py
-applets/maintained/digital-clock/digitalClock.py
+[type: gettext/ini]applets/maintained/dialect/awn-applet-dialect.schema-ini.in
+applets/maintained/dialect/dialect.desktop.in
 applets/maintained/dialect/dialect.ui
+[type: gettext/ini]applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in
+applets/maintained/digital-clock/dg-prefs.ui
+applets/maintained/digital-clock/digital-clock.desktop.in.in
+applets/maintained/digital-clock/digital-clock.vala
+applets/maintained/dialect/dialect.ui
+[type: gettext/ini]applets/maintained/feeds/awn-applet-feeds.schema-ini.in
 applets/maintained/feeds/classes.py
 applets/maintained/feeds/feeds.desktop.in
 applets/maintained/feeds/feeds.py
 applets/maintained/feeds/prefs.py
 applets/maintained/file-browser-launcher/about.py
+[type: gettext/ini]applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in
 applets/maintained/file-browser-launcher/file-browser-launcher.desktop.in
 applets/maintained/file-browser-launcher/file-browser-launcher.py
 applets/maintained/file-browser-launcher/prefs.py
 applets/maintained/garbage/applet.vala
+[type: gettext/ini]applets/maintained/garbage/awn-applet-garbage.schema-ini.in
 applets/maintained/garbage/garbage.desktop.in.in
 applets/maintained/garbage/prefs.vala
+[type: gettext/ini]applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in
 applets/maintained/hardware-sensors/hardware-sensors.desktop.in
 applets/maintained/hardware-sensors/hardware-sensors.py
 applets/maintained/hardware-sensors/hardware-sensors.ui
 applets/maintained/hardware-sensors/sensorvalues/units.py
+[type: gettext/ini]applets/maintained/mail/awn-applet-mail.schema-ini.in
 applets/maintained/mail/mail.desktop.in
 applets/maintained/mail/mail.py
 applets/maintained/mail/mail.ui
+[type: gettext/ini]applets/maintained/media-control/awn-applet-media-control.schema-ini.in
 applets/maintained/media-control/media-control.desktop.in
-applets/maintained/media-control/media-control.ui
 applets/maintained/media-control/media_control.py
+applets/maintained/media-control/media-control.ui
 applets/maintained/media-icons/media-icon-next.desktop.in
 applets/maintained/media-icons/media-icon-previous.desktop.in
 applets/maintained/media-icons/media-icons.desktop.in
 applets/maintained/media-icons/media-icons.py
+[type: gettext/ini]applets/maintained/media-player/awn-applet-media-player.schema-ini.in
 applets/maintained/media-player/media-player.desktop.in
 applets/maintained/media-player/media-player-prefs.ui
+[type: gettext/ini]applets/maintained/mount/awn-applet-mount.schema-ini.in
 applets/maintained/mount/mount.desktop.in
 applets/maintained/mount/mount.ui
-applets/maintained/notification-area/notification-area.desktop.in.in
+[type: gettext/ini]applets/maintained/notification-area/awn-applet-notification-area.schema-ini.in
 applets/maintained/notification-area/egg-tray-child.c
 applets/maintained/notification-area/eggtraymanager.c
 applets/maintained/notification-area/na-prefs.ui
+applets/maintained/notification-area/notification-area.desktop.in.in
+[type: gettext/ini]applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in
+applets/maintained/notification-daemon/notification-daemon.desktop.in.in
 applets/maintained/notification-daemon/daemon.c
 applets/maintained/places/applet.c
+[type: gettext/ini]applets/maintained/places/awn-applet-places.schema-ini.in
 applets/maintained/places/places.desktop.in.in
 applets/maintained/python-test/python-test.desktop.in
+[type: gettext/ini]applets/maintained/quit/awn-applet-quit.schema-ini.in
 applets/maintained/quit/quit.desktop.in
 applets/maintained/quit/quit-lock-screen.desktop.in
 applets/maintained/quit/quit-log-out.desktop.in
 applets/maintained/quit/quit-shut-down.desktop.in
+[type: gettext/ini]applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in
 applets/maintained/shiny-switcher/shiny-prefs.ui
 applets/maintained/shiny-switcher/shinyswitcher.desktop.in.in
 applets/maintained/showdesktop/applet.vala
 applets/maintained/showdesktop/showdesktop.desktop.in.in
+[type: gettext/ini]applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in
 applets/maintained/slickswitcher/prefs.py
 applets/maintained/slickswitcher/slickswitcher.desktop.in
 applets/maintained/slickswitcher/slickswitcher.py
+[type: gettext/ini]applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in
 applets/maintained/sysmon/sysmon.desktop.in.in
 applets/maintained/thinkhdaps/thinkhdaps.desktop.in
+[type: gettext/ini]applets/maintained/to-do/awn-applet-to-do.schema-ini.in
 applets/maintained/to-do/prefs.py
 applets/maintained/to-do/to-do.desktop.in
 applets/maintained/to-do/to-do.py
 applets/maintained/tomboy-applet/tomboy-applet.desktop.in
 applets/maintained/vala-test/vala-test.desktop.in.in
+[type: gettext/ini]applets/maintained/volume-control/awn-applet-volume-control.schema-ini.in
 applets/maintained/volume-control/volume-control.desktop.in
 applets/maintained/volume-control/volume-control.ui
+[type: gettext/ini]applets/maintained/weather/awn-applet-weather.schema-ini.in
 applets/maintained/weather/forecast.py
 applets/maintained/weather/weather.desktop.in
 applets/maintained/weather/weather.py
 applets/maintained/weather/weather.ui
 applets/maintained/webapplet/applet.c
+[type: gettext/ini]applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in
 applets/maintained/webapplet/webapplet.desktop.in.in
 applets/maintained/wobblyzini/wobblyzini.desktop.in.in
 applets/maintained/yama/yama.desktop.in
 applets/unmaintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in
 applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in
-applets/unmaintained/dropper/dropper.desktop.in
-applets/unmaintained/dropper/dropper-prefs.ui
 applets/unmaintained/main-menu/applet.c
 applets/unmaintained/main-menu/main-menu.desktop.in.in
 applets/unmaintained/MiMenu/mimenu.desktop.in
+[type: gettext/ini]applets/unmaintained/pandora/awn-applet-pandora.schema-ini.in
 applets/unmaintained/pandora/pandora.desktop.in
+[type: gettext/ini]applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in

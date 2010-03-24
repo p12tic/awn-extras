@@ -1,0 +1,26 @@
+[DEFAULT/opacity]
+type = float
+default = 0.9
+_description=The applet's opacity level.
+
+[DEFAULT/hide_on_unfocus]
+type = boolean
+default = true
+_description=Set whether the applet should hide itself when it loses focus.
+
+[DEFAULT/global_hotkey]
+type = string
+default = 
+_description=Global hotkey used to activate the terminal.
+
+[DEFAULT/bg_img]
+type = string
+default = 
+_description=The applet's background image.
+
+[DEFAULT/main_terminal]
+type = string
+default = gnome-terminal
+_description=The default external terminal application.
+
+; vim: set ft=dosini :

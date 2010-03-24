@@ -1,0 +1,4 @@
+[DEFAULT/url]
+type = string
+default = https://www.pandora.com:443/radio/tuner_8_8_0_0_pandora_mini.swf
+_description=The url of the Pandora mini flash player.

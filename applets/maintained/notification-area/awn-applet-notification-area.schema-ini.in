@@ -1,0 +1,26 @@
+[DEFAULT/icons_per_cell]
+type = integer
+default = 2
+_description=Maximum number of rows (or columns depending on the orientation of the panel) of the tray icons in the applet.
+
+[DEFAULT/icon_size]
+type = integer
+default = 100
+_description=Size of the icons (in percent of applet size).
+
+[DEFAULT/extra_offset]
+type = integer
+default = 0
+_description=Extra offset from the panel's egde.
+
+[DEFAULT/background_color]
+type = color
+default = 
+_description=The background color of the notification-area.
+
+[DEFAULT/border_color]
+type = color
+default = 
+_description=The border color of the notification-area.
+
+; vim: set ft=dosini :

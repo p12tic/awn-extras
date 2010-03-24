@@ -1,6 +1,0 @@
-[DEFAULT/dummy]
-type = string
-default = 
-description = Dummy.
-
-; vim: set ft=dosini :

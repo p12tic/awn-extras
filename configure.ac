@@ -1,8 +1,5 @@
 SAC_PREREQ(2.53)
 
-m4_define(pycairo_required_version,      1.0.2) dnl or 1.1.7
-m4_define(pygtk_required_version,        2.10.0)
-
 
 AC_INIT(awn-extras, 0.3.9, [])
 AM_INIT_AUTOMAKE([-Wno-portability 1.8 tar-ustar])
@@ -28,6 +25,9 @@ ALL_LINGUAS="de en_US@piglatin es fr nb nl nn ru sv sv_SE"
 
 IT_PROG_INTLTOOL([0.34])
 AM_GLIB_GNU_GETTEXT
+
+INTLTOOL_SCHEMA_INI_RULE='%.schema-ini:	%.schema-ini.in $(INTLTOOL_MERGE) $(wildcard $(top_srcdir)/po/*.po) ; LC_ALL=C $(INTLTOOL_MERGE) -d -u -c $(top_builddir)/po/.intltool-merge-cache $(top_srcdir)/po $< [$]@'
+AC_SUBST(INTLTOOL_SCHEMA_INI_RULE)
 
 dnl
 dnl Python script installation

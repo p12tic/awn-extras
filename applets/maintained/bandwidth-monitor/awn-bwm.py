@@ -119,9 +119,9 @@ class Netstat:
                 device_lines = device_group.split('\n')
                 if not 'Link' in device_lines[0]:
                     device_lines = device_lines[1:]
-                iface = re.split('[\W]+',
-                    device_lines[0].strip().replace(':', '_'))[0]
                 if len(device_lines) > 2:
+                    iface = re.split('[\W]+',
+                        device_lines[0].strip().replace(':', '_'))[0]
                     try:
                         rx_bytes = float(re.search(r'RX bytes:(\d+)\D',
                             device_group).group(1))

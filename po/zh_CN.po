@@ -1,21 +1,22 @@
-# Dutch translation for notification-daemon
-# Copyright (C) 2006 Christian Hammond
-# This file is distributed under the same license as the notification-daemon package.
+# Simplified Chinese translation for awn-extras
+# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
+# This file is distributed under the same license as the awn-extras package.
+# Aron Xu <Unknown>, 2008.
 #
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: notification-daemon trunk\n"
+"Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-03-24 18:07+0200\n"
-"PO-Revision-Date: 2010-03-24 20:22+0000\n"
-"Last-Translator: Florian Steinel <Unknown>\n"
-"Language-Team: German <gnome-de@gnome.org>\n"
+"PO-Revision-Date: 2010-03-24 21:16+0000\n"
+"Last-Translator: Michal Hruby <michal.mhr@gmail.com>\n"
+"Language-Team: Simplified Chinese <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-03-25 04:50+0000\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Launchpad-Export-Date: 2010-03-25 04:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -53,7 +54,7 @@ msgstr ""
 #: ../applets/maintained/awnterm/awn-terminal.vala:410
 #: ../applets/maintained/calendar/calendarprefs.py:75
 msgid "Preferences"
-msgstr "Einstellungen"
+msgstr "首选项"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:425
 #: ../applets/maintained/file-browser-launcher/prefs.py:154
@@ -371,7 +372,7 @@ msgstr ""
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:122
 #: ../applets/maintained/quit/quit-lock-screen.desktop.in.h:1
 msgid "Lock Screen"
-msgstr ""
+msgstr "锁定屏幕"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:126
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:128
@@ -392,7 +393,7 @@ msgstr ""
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:187
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:562
 msgid "Computer"
-msgstr ""
+msgstr "计算机"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:188
 msgid "Home"
@@ -412,7 +413,7 @@ msgstr ""
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:588
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:591
 msgid "Trash"
-msgstr "Mülleimer"
+msgstr "回收站"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:194
 msgid "File System"
@@ -421,7 +422,7 @@ msgstr ""
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:315
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:565
 msgid "Network"
-msgstr ""
+msgstr "网络"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:316
 msgid "Connect to Server"
@@ -435,7 +436,7 @@ msgstr ""
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:984
 msgid "Recent Documents"
-msgstr ""
+msgstr "最近的文档"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1029
 msgid "Session"
@@ -469,23 +470,23 @@ msgstr ""
 
 #: ../applets/maintained/calendar/calendarlogin.py:43
 msgid "Login to "
-msgstr "Anmelden bei "
+msgstr "登录到 "
 
 #: ../applets/maintained/calendar/calendarlogin.py:48
 msgid "Online Calendar"
-msgstr "Online Kalender"
+msgstr "在线日历"
 
 #: ../applets/maintained/calendar/calendarlogin.py:53
 msgid "Calendar Username"
-msgstr "Kalender Benutzername"
+msgstr "日历用户名"
 
 #: ../applets/maintained/calendar/calendarlogin.py:61
 msgid "Calendar Password"
-msgstr "Kalender Passwort"
+msgstr "日历密码"
 
 #: ../applets/maintained/calendar/calendarlogin.py:71
 msgid "Save Password"
-msgstr "Passwort speichern"
+msgstr "保存密码"
 
 #: ../applets/maintained/calendar/calendarlogin.py:89
 msgid ""
@@ -493,83 +494,79 @@ msgid ""
 "in an encrypted format, there is always a remote possibility that your "
 "password can be stolen and decrypted if your computer's security is "
 "breached.  Are you still sure you want to save your password?"
-msgstr ""
-"Sie haben Passwort speichern gewählt. Das Passwort wird verschlüsselt "
-"gespeichert. Trotzdem besteht immer die Möglichkeit, dass Ihr Passwort nach "
-"einem Einbruch in Ihren Computer gestohlen oder entschlüsselt wird. Möchten "
-"sie ihr Passwort immer noch speichern?"
+msgstr "您已选择保存密码。尽管密码会以加密形式储存，如果您的电脑安全防线被突破，它仍有被解密和盗窃的潜在风险。您依然确信要保存密码吗？"
 
 #: ../applets/maintained/calendar/calendarprefs.py:46
 msgid "Classic LCD"
-msgstr "Klassisches LCD"
+msgstr "传统液晶屏"
 
 #: ../applets/maintained/calendar/calendarprefs.py:47
 msgid "Indy Glow LCD"
-msgstr ""
+msgstr "发光液晶屏"
 
 #: ../applets/maintained/calendar/calendarprefs.py:48
 msgid "Backlit Amber LCD"
-msgstr ""
+msgstr "琥珀色背光液晶屏"
 
 #: ../applets/maintained/calendar/calendarprefs.py:49
 msgid "Backlit Green LCD"
-msgstr "Backlit grünes LCD"
+msgstr "绿色背光液晶屏"
 
 #: ../applets/maintained/calendar/calendarprefs.py:50
 msgid "Green LED"
-msgstr "Grüne LED"
+msgstr "绿色LED"
 
 #: ../applets/maintained/calendar/calendarprefs.py:51
 msgid "Red LED"
-msgstr "Rote LED"
+msgstr "红色LED"
 
 #: ../applets/maintained/calendar/calendarprefs.py:52
 msgid "Blue LED"
-msgstr "Blaue LED"
+msgstr "蓝色LED"
 
 #: ../applets/maintained/calendar/calendarprefs.py:53
 msgid "Plain White"
-msgstr "Einfach weiß"
+msgstr "白色"
 
 #: ../applets/maintained/calendar/calendarprefs.py:54
 msgid "Plain Black"
-msgstr "Einfach schwarz"
+msgstr "黑色"
 
 #: ../applets/maintained/calendar/calendarprefs.py:57
 msgid "Red"
-msgstr "Rot"
+msgstr "红色"
 
 #: ../applets/maintained/calendar/calendarprefs.py:58
 msgid "Green"
-msgstr "Grün"
+msgstr "绿色"
 
 #: ../applets/maintained/calendar/calendarprefs.py:59
 msgid "Blue"
-msgstr "Blau"
+msgstr "蓝色"
 
 #: ../applets/maintained/calendar/calendarprefs.py:60
 msgid "Gray"
-msgstr "Grau"
+msgstr "灰色"
 
 #: ../applets/maintained/calendar/calendarprefs.py:61
 msgid "Black"
-msgstr "Schwarz"
+msgstr "黑色"
 
 #: ../applets/maintained/calendar/calendarprefs.py:84
 msgid "Twelve Hour Clock"
-msgstr "12 Stunden Uhr"
+msgstr "12小时时钟"
 
 #: ../applets/maintained/calendar/calendarprefs.py:104
 msgid "Clock Appearance"
-msgstr "Aussehen der Uhr"
+msgstr "时钟外观"
 
 #: ../applets/maintained/calendar/calendarprefs.py:114
 msgid "Calendar Appearance"
-msgstr "Aussehen des Kalenders"
+msgstr "日历外观"
 
 #: ../applets/maintained/calendar/calendarprefs.py:121
 msgid "None"
-msgstr "Keine"
+msgstr "无"
 
 #: ../applets/maintained/calendar/calendarprefs.py:122
 msgid "Evolution"
@@ -577,56 +574,56 @@ msgstr "Evolution"
 
 #: ../applets/maintained/calendar/calendarprefs.py:123
 msgid "Google Calendar"
-msgstr "Google Kalender"
+msgstr "Google日历"
 
 #: ../applets/maintained/calendar/calendarprefs.py:124
 msgid "Outlook Web Access"
-msgstr "Outlook Webzugang"
+msgstr "网络访问 Outlook"
 
 #: ../applets/maintained/calendar/calendarprefs.py:127
 msgid "Calendar Integration"
-msgstr "Kalenderintegration"
+msgstr "日历整合"
 
 #: ../applets/maintained/calendar/calendarprefs.py:150
 msgid "Calendar URL"
-msgstr "Kalender URL"
+msgstr "日历URL"
 
 #. default title/tooltip to show on startup.
 #: ../applets/maintained/calendar/clockcal.py:51
 #: ../applets/maintained/calendar/clockcal.py:491
 #: ../applets/maintained/digital-clock/digital-clock.vala:119
 msgid "Calendar"
-msgstr "Kalender"
+msgstr "日历"
 
 #: ../applets/maintained/calendar/clockcal.py:218
 msgid ""
 "Do you want to erase your calendar password from the calendar applet?  If "
 "you choose to clear your password, you will be prompted again for your "
 "calendar login credentials."
-msgstr ""
+msgstr "您想从日历小部件中清除日历密码吗？如果您选择了清除自己的密码，将会重新被提示进行日历登录认证。"
 
 #: ../applets/maintained/calendar/clockcal.py:497
 msgid "Open in "
-msgstr "Öffnen in "
+msgstr "打开于 "
 
 #: ../applets/maintained/calendar/clockcal.py:501
 #: ../applets/maintained/weather/forecast.py:169
 msgid "Today"
-msgstr "Heute"
+msgstr "今天"
 
 #. print "Login error: ", sys.exc_info()[0], sys.exc_info()[1]
 #: ../applets/maintained/calendar/clockcal.py:549
 msgid "Unable to read calendar data from external source."
-msgstr "Lesen der Kalenderdaten von der externen Quelle nicht möglich."
+msgstr "无法从外部的源中读取日历数据。"
 
 #: ../applets/maintained/calendar/googlecal.py:90
 msgid "No appointments."
-msgstr "Keine Termine."
+msgstr "没有约会。"
 
 #: ../applets/maintained/calendar/icscal.py:73
 #: ../applets/maintained/calendar/owacal.py:95
 msgid "No appointments"
-msgstr "Keine Termine"
+msgstr "无约会"
 
 #: ../applets/maintained/comics/awn-applet-comics.schema-ini.in.h:1
 msgid "The user agent to send when retrieving comics."
@@ -635,18 +632,16 @@ msgstr ""
 #: ../applets/maintained/comics/comics_add.py:57
 #, python-format
 msgid "Failed to download %s. Press \"next\" to try again."
-msgstr ""
-"Download von %s fehlgeschlagen. Klicken Sie auf \"Weiter\", um den Vorgang "
-"zu wiederholen."
+msgstr "下载%s失败。点击“下一步”再试一次。"
 
 #: ../applets/maintained/comics/comics_add.py:63
 msgid "The URL is not a valid comic feed. Press \"next\" to try again"
-msgstr ""
+msgstr "该 URL 不是一个有效的漫画源。按“继续”重试"
 
 #: ../applets/maintained/comics/comics_add.py:140
 #, python-format
 msgid "Connecting to <i>%s</i>..."
-msgstr "Verbinde zu <i>%s</i>"
+msgstr "正在连接 <i>%s</i>..."
 
 #: ../applets/maintained/comics/comics_add.py:174
 #, python-format
@@ -687,12 +682,12 @@ msgstr ""
 #: ../applets/maintained/comics/comics_manage.py:119
 #, python-format
 msgid "Failed to remove <i>%s</i>."
-msgstr "Löschen von <i>%s</i> fehlgeschlagen."
+msgstr ""
 
 #: ../applets/maintained/comics/comics_manage.py:125
 #: ../applets/maintained/feeds/feeds.py:388
 msgid "Error"
-msgstr "Fehler"
+msgstr "错误"
 
 #: ../applets/maintained/comics/comics.py:156
 msgid "Comics"
@@ -702,16 +697,16 @@ msgstr ""
 #: ../applets/maintained/comics/main.py:192
 #, python-format
 msgid "There is a new strip of %s!"
-msgstr "Es gibt eine neue Folge von %s!"
+msgstr ""
 
 #: ../applets/maintained/comics/comics_view.py:164
 msgid "%A %d %B"
-msgstr "%A %d %B"
+msgstr ""
 
 #: ../applets/maintained/comics/comics_view.py:532
 #, python-format
 msgid "Failed to save <i>%s</i>."
-msgstr "Speichern von <i>%s</i> fehlgeschlagen."
+msgstr "保存<i>%s</i>失败。"
 
 #: ../applets/maintained/comics/main.py:152
 #, python-format
@@ -1020,7 +1015,7 @@ msgstr ""
 #: ../applets/maintained/feeds/prefs.py:355
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:594
 msgid "Search"
-msgstr "Suchen"
+msgstr "搜索"
 
 #: ../applets/maintained/feeds/prefs.py:358
 msgid "You must sign in to a Google service to search for feeds."
@@ -1056,7 +1051,7 @@ msgstr ""
 #: ../applets/maintained/mail/mail.py:758
 #: ../applets/maintained/mail/mail.py:851
 msgid "Username:"
-msgstr "Benutzername:"
+msgstr "用户名："
 
 #. Password: label and entry
 #: ../applets/maintained/feeds/prefs.py:488
@@ -1065,7 +1060,7 @@ msgstr "Benutzername:"
 #: ../applets/maintained/mail/mail.py:761
 #: ../applets/maintained/mail/mail.py:854
 msgid "Password:"
-msgstr "Kennwort:"
+msgstr "密码："
 
 #: ../applets/maintained/feeds/prefs.py:515
 msgid "Feed search by "
@@ -1165,7 +1160,7 @@ msgstr ""
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:350
 #: ../applets/maintained/file-browser-launcher/prefs.py:223
 msgid "Filesystem"
-msgstr ""
+msgstr "文件系统"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:473
 msgid "Connect to Server..."
@@ -1275,7 +1270,7 @@ msgstr ""
 #: ../applets/maintained/file-browser-launcher/prefs.py:204
 #: ../applets/maintained/to-do/prefs.py:60
 msgid "General"
-msgstr "Allgemein"
+msgstr "常规"
 
 #. Show all places
 #: ../applets/maintained/file-browser-launcher/prefs.py:211
@@ -1350,7 +1345,7 @@ msgstr ""
 
 #: ../applets/maintained/garbage/applet.vala:209
 msgid "_Empty Trash"
-msgstr "Mülleimer l_eeren"
+msgstr "_清空回收站"
 
 #: ../applets/maintained/garbage/applet.vala:235
 #, c-format
@@ -1552,34 +1547,32 @@ msgstr ""
 #: ../applets/maintained/mail/mail.py:134
 #: ../applets/maintained/mail/mail.py:903
 msgid "Mail Applet"
-msgstr "Mail-Applet"
+msgstr "邮件小程序"
 
 #: ../applets/maintained/mail/mail.py:37
 #, python-format
 msgid "You have %d new message"
 msgid_plural "You have %d new messages"
-msgstr[0] "Sie haben %d neue Nachricht"
-msgstr[1] "Sie haben %d neue Nachrichten"
+msgstr[0] "你有 %d 条新消息"
 
 #: ../applets/maintained/mail/mail.py:41
 #, python-format
 msgid "%d unread message"
 msgid_plural "%d unread messages"
-msgstr[0] "%d ungelesene Nachricht"
-msgstr[1] "%d ungelesene Nachrichten"
+msgstr[0] "%d 条未读消息"
 
 #: ../applets/maintained/mail/mail.py:74
 msgid "Mail Applet (Click to Log In)"
-msgstr "Mail-Applet (Klicken zum Anmelden)"
+msgstr "邮件小程序（点击登录）"
 
 #: ../applets/maintained/mail/mail.py:135
 #, python-format
 msgid "Logging in as %s"
-msgstr "Anmelden als %s"
+msgstr "以 %s 身份登录"
 
 #: ../applets/maintained/mail/mail.py:165
 msgid "New Mail - Mail Applet"
-msgstr "Neue Nachrichten - Mail-Applet"
+msgstr "新邮件 - 邮件小程序"
 
 #: ../applets/maintained/mail/mail.py:283
 msgid "Mail"
@@ -1599,7 +1592,7 @@ msgstr ""
 
 #: ../applets/maintained/mail/mail.py:346
 msgid "Log Out"
-msgstr ""
+msgstr "注销"
 
 #: ../applets/maintained/mail/mail.py:376
 msgid "No unread messages"
@@ -1616,7 +1609,7 @@ msgstr ""
 #: ../applets/maintained/mail/mail.py:425
 #: ../applets/maintained/mail/mail.py:486
 msgid "Log In"
-msgstr "Anmelden"
+msgstr "登录"
 
 #: ../applets/maintained/mail/mail.py:462
 msgid "Type:"
@@ -1624,7 +1617,7 @@ msgstr ""
 
 #: ../applets/maintained/mail/mail.py:467
 msgid "Backend"
-msgstr "Backend"
+msgstr "后端"
 
 #: ../applets/maintained/mail/mail.py:525
 #: ../applets/maintained/mail/mail.py:584
@@ -1633,13 +1626,11 @@ msgid ""
 "account. Your best bet is probably                     to log out and try "
 "again."
 msgstr ""
-"Es scheint ein Problem mit der Verbindung zu ihrem Account zu geben. Die "
-"beste Lösung ist es sich auszuloggen und es wieder zu versuchen."
 
 #: ../applets/maintained/mail/mail.py:547
 #: ../applets/maintained/mail/mail.py:606
 msgid "[No Subject]"
-msgstr "Ohne Betreff"
+msgstr "[无主题]"
 
 #: ../applets/maintained/mail/mail.py:569
 msgid "Google Apps"
@@ -1647,7 +1638,7 @@ msgstr ""
 
 #: ../applets/maintained/mail/mail.py:637
 msgid "Domain:"
-msgstr "Domain:"
+msgstr "域："
 
 #: ../applets/maintained/mail/mail.py:659
 msgid "Unix Spool"
@@ -1669,20 +1660,20 @@ msgstr ""
 #: ../applets/maintained/mail/mail.py:765
 #: ../applets/maintained/mail/mail.py:858
 msgid "Server:"
-msgstr "Server:"
+msgstr "服务器："
 
 #: ../applets/maintained/mail/mail.py:768
 #: ../applets/maintained/mail/mail.py:861
 msgid "Use SSL encryption"
-msgstr "SSL-Verschlüsselung verwenden"
+msgstr "使用SSL加密"
 
 #: ../applets/maintained/mail/mail.py:804
 msgid "Could not log in"
-msgstr "Anmeldung nicht möglich"
+msgstr "无法登录"
 
 #: ../applets/maintained/mail/mail.py:810
 msgid "Folder does not exst"
-msgstr "Order existiert nicht"
+msgstr "文件夹不存在"
 
 #: ../applets/maintained/mail/mail.py:864
 msgid "Get messages from only one folder"
@@ -1690,11 +1681,11 @@ msgstr ""
 
 #: ../applets/maintained/mail/mail.py:871
 msgid "Folder:"
-msgstr "Ordner:"
+msgstr "文件夹："
 
 #: ../applets/maintained/mail/mail.py:906
 msgid "An applet to check one's email"
-msgstr "Eine Erweiterung zur Überprüfung neuer Emailnachrichten"
+msgstr "一个检查电子邮件的小程序"
 
 #: ../applets/maintained/media-control/awn-applet-media-control.schema-ini.in.h:1
 msgid "Close the docklet when mouse moves out from it."
@@ -2584,11 +2575,11 @@ msgstr ""
 
 #: ../applets/maintained/to-do/prefs.py:32
 msgid "Custom"
-msgstr "Benutzerdefiniert"
+msgstr "自定义"
 
 #: ../applets/maintained/to-do/prefs.py:32
 msgid "Current Theme"
-msgstr "Aktuelles Theme"
+msgstr "当前主题"
 
 #: ../applets/maintained/to-do/prefs.py:32
 msgid "Butter"
@@ -2600,39 +2591,39 @@ msgstr ""
 
 #: ../applets/maintained/to-do/prefs.py:33
 msgid "Orange"
-msgstr ""
+msgstr "橙色"
 
 #: ../applets/maintained/to-do/prefs.py:33
 msgid "Sky Blue"
-msgstr "Himmelblau"
+msgstr "天蓝色"
 
 #: ../applets/maintained/to-do/prefs.py:33
 msgid "Plum"
-msgstr "Pflaumen-farbig"
+msgstr "浅紫色"
 
 #: ../applets/maintained/to-do/prefs.py:33
 msgid "Chocolate"
-msgstr "Schokoladen-braun"
+msgstr "巧克力色"
 
 #: ../applets/maintained/to-do/prefs.py:34
 msgid "Scarlet Red"
-msgstr "Scharlachrot"
+msgstr "绯红色"
 
 #: ../applets/maintained/to-do/prefs.py:34
 msgid "Aluminium 1"
-msgstr "Aluminium 1"
+msgstr ""
 
 #: ../applets/maintained/to-do/prefs.py:34
 msgid "Aluminium 2"
-msgstr "Aluminium 2"
+msgstr ""
 
 #: ../applets/maintained/to-do/prefs.py:37
 msgid "Number of Items"
-msgstr "Anzahl an Elementen"
+msgstr ""
 
 #: ../applets/maintained/to-do/prefs.py:37
 msgid "Progress"
-msgstr "Fortschritt"
+msgstr "进度"
 
 #: ../applets/maintained/to-do/prefs.py:37
 msgid "Both"
@@ -2644,21 +2635,21 @@ msgstr ""
 
 #: ../applets/maintained/to-do/prefs.py:61
 msgid "Priority"
-msgstr "Priorität"
+msgstr "优先级"
 
 #: ../applets/maintained/to-do/prefs.py:62
 msgid "Icon"
-msgstr "Symbol"
+msgstr "图标"
 
 #. Label: Title (bold)
 #: ../applets/maintained/to-do/prefs.py:72
 msgid "Title"
-msgstr ""
+msgstr "标题"
 
 #. Label: Confirm when removing... (bold)
 #: ../applets/maintained/to-do/prefs.py:86
 msgid "Confirm when removing..."
-msgstr "Bestätigung beim Entfernen..."
+msgstr "删除时需确认..."
 
 #. CheckButton: Items
 #: ../applets/maintained/to-do/prefs.py:95
@@ -2673,7 +2664,7 @@ msgstr ""
 #. Label: Width (bold)
 #: ../applets/maintained/to-do/prefs.py:109
 msgid "Width"
-msgstr "Breite"
+msgstr ""
 
 #. CheckButton: Use Custom Width
 #: ../applets/maintained/to-do/prefs.py:118
@@ -2683,41 +2674,41 @@ msgstr ""
 #. Label: Width (pixels)
 #: ../applets/maintained/to-do/prefs.py:125
 msgid "Width (pixels)"
-msgstr "Breite (Pixel)"
+msgstr ""
 
 #. Label: Low Priority (bold)
 #: ../applets/maintained/to-do/prefs.py:173
 msgid "Low Priority"
-msgstr "Niedrige Priorität"
+msgstr "低优先级"
 
 #. Label: Medium Priority (bold)
 #: ../applets/maintained/to-do/prefs.py:186
 msgid "Medium Priority"
-msgstr "Mittlere Priorität"
+msgstr "中优先级"
 
 #. Label: High Priority (bold)
 #: ../applets/maintained/to-do/prefs.py:199
 msgid "High Priority"
-msgstr "Hohe Priorität"
+msgstr "高优先级"
 
 #. Label: Icon Color (bold)
 #: ../applets/maintained/to-do/prefs.py:251
 msgid "Icon Color"
-msgstr "Symbolfarbe"
+msgstr "图标颜色"
 
 #. Label: Custom Colors (bold)
 #: ../applets/maintained/to-do/prefs.py:274
 msgid "Custom Colors"
-msgstr "Eigene Farben"
+msgstr "自定义颜色"
 
 #. Colors: Outer Border, Inner Border, Main Color, Text Color
 #: ../applets/maintained/to-do/prefs.py:283
 msgid "Outer Border"
-msgstr "Äußerer Rahmen"
+msgstr "外边框"
 
 #: ../applets/maintained/to-do/prefs.py:284
 msgid "Inner Border"
-msgstr "Innerer Rahmen"
+msgstr "内边框"
 
 #: ../applets/maintained/to-do/prefs.py:285
 msgid "Main"
@@ -2726,12 +2717,12 @@ msgstr ""
 #: ../applets/maintained/to-do/prefs.py:286
 #: ../applets/maintained/to-do/prefs.py:446
 msgid "Text"
-msgstr ""
+msgstr "文本"
 
 #. Label: Icon Type (bold)
 #: ../applets/maintained/to-do/prefs.py:289
 msgid "Icon Type"
-msgstr ""
+msgstr "图标类型"
 
 #: ../applets/maintained/to-do/to-do.desktop.in.h:1
 msgid "Manage a simple To-Do list"
@@ -2751,7 +2742,7 @@ msgstr ""
 
 #: ../applets/maintained/to-do/to-do.py:298
 msgid "Remove item"
-msgstr ""
+msgstr "删除项目"
 
 #: ../applets/maintained/to-do/to-do.py:380
 msgid "Remove category"
@@ -2781,7 +2772,7 @@ msgstr ""
 #. Label: Priority:
 #: ../applets/maintained/to-do/to-do.py:640
 msgid "Priority: "
-msgstr ""
+msgstr "优先级： "
 
 #. Neutral, Low, Medium, and High priority RadioButtons
 #: ../applets/maintained/to-do/to-do.py:643
@@ -2790,20 +2781,20 @@ msgstr ""
 
 #: ../applets/maintained/to-do/to-do.py:645
 msgid "_Low"
-msgstr ""
+msgstr "_低"
 
 #: ../applets/maintained/to-do/to-do.py:647
 msgid "_Medium"
-msgstr ""
+msgstr "_中"
 
 #: ../applets/maintained/to-do/to-do.py:649
 msgid "_High"
-msgstr ""
+msgstr "_高"
 
 #. Label: Progress(%):
 #: ../applets/maintained/to-do/to-do.py:677
 msgid "Progress(%): "
-msgstr "Fortschritt(%): "
+msgstr "进度（%）： "
 
 #. Make Label
 #: ../applets/maintained/to-do/to-do.py:1127
@@ -2812,19 +2803,17 @@ msgid ""
 "Are you sure you want to remove the category \"%s?\"\n"
 "All of its items will be removed."
 msgstr ""
-"Möchten Sie die Kategorie \"%s\" wirklich löschen?\n"
-"Alle ihre Einträge werden mitgelöscht."
 
 #. Make CheckButton
 #: ../applets/maintained/to-do/to-do.py:1131
 #: ../applets/maintained/to-do/to-do.py:1167
 msgid "Don't show this again."
-msgstr "Diese Nachricht nicht wieder anzeigen."
+msgstr "不再显示。"
 
 #. Make Label
 #: ../applets/maintained/to-do/to-do.py:1164
 msgid "Are you sure you want to remove this item?"
-msgstr "Möchten Sie diesen Eintrag wirklich löschen?"
+msgstr "您确定要移除这个项目吗？"
 
 #. Reset the tooltip
 #: ../applets/maintained/to-do/to-do.py:1363
@@ -2891,30 +2880,30 @@ msgstr ""
 #: ../applets/maintained/weather/forecast.py:54
 #: ../applets/maintained/weather/forecast.py:82
 msgid "Forecast"
-msgstr "Vorhersage"
+msgstr "天气预报"
 
 #: ../applets/maintained/weather/forecast.py:54
 #: ../applets/maintained/weather/forecast.py:82
 msgid "for"
-msgstr "für"
+msgstr ""
 
 #: ../applets/maintained/weather/forecast.py:167
 msgid "WEEKDAY"
-msgstr "WOCHENTAG"
+msgstr ""
 
 #: ../applets/maintained/weather/forecast.py:171
 msgid "Tomorrow"
-msgstr "Morgen"
+msgstr "明天"
 
 #. Weather condition
 #: ../applets/maintained/weather/forecast.py:197
 #: ../applets/maintained/weather/weather.py:452
 msgid "DESCRIPTION"
-msgstr "BESCHREIBUNG"
+msgstr "说明"
 
 #: ../applets/maintained/weather/forecast.py:249
 msgid "Weather data provided by weather.com"
-msgstr "Wetterdaten bereitgestellt von weather.com"
+msgstr "气象数据由weather.com提供"
 
 #: ../applets/maintained/weather/weather.desktop.in.h:1
 msgid "Display the local weather"
@@ -2926,7 +2915,7 @@ msgstr ""
 
 #: ../applets/maintained/weather/weather.py:215
 msgid "Fetching conditions for"
-msgstr "Hole Wetterbericht für"
+msgstr ""
 
 #: ../applets/maintained/weather/weather.py:254
 msgid "Show _Map"
@@ -2939,7 +2928,7 @@ msgstr ""
 
 #: ../applets/maintained/weather/weather.py:371
 msgid "Searching..."
-msgstr "Suche läuft ..."
+msgstr "搜索中..."
 
 #. Make the dialog
 #: ../applets/maintained/webapplet/applet.c:262
@@ -3337,9 +3326,3 @@ msgstr ""
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:38
 msgid "Whether tooltips are enabled."
 msgstr ""
-
-#~ msgid "The theme used when displaying notifications."
-#~ msgstr "Das Thema um Benachrichtigungen anzuzeigen."
-
-#~ msgid "Set your pop-up notification preferences"
-#~ msgstr "Legen Sie Ihre Popup Benachrichtigungs Einstellungen fest"

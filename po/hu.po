@@ -1,16 +1,16 @@
-# Dutch translation for notification-daemon
-# Copyright (C) 2006 Christian Hammond
-# This file is distributed under the same license as the notification-daemon package.
-#
+# Hungarian translation for awn-extras
+# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# This file is distributed under the same license as the awn-extras package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: notification-daemon trunk\n"
+"Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-03-24 18:07+0200\n"
-"PO-Revision-Date: 2010-03-24 20:22+0000\n"
-"Last-Translator: Florian Steinel <Unknown>\n"
-"Language-Team: German <gnome-de@gnome.org>\n"
+"PO-Revision-Date: 2010-03-24 20:55+0000\n"
+"Last-Translator: Krasznecz Zoltán <zoltan.krasznecz@gmail.com>\n"
+"Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -53,7 +53,7 @@ msgstr ""
 #: ../applets/maintained/awnterm/awn-terminal.vala:410
 #: ../applets/maintained/calendar/calendarprefs.py:75
 msgid "Preferences"
-msgstr "Einstellungen"
+msgstr "Beállítások"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:425
 #: ../applets/maintained/file-browser-launcher/prefs.py:154
@@ -371,7 +371,7 @@ msgstr ""
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:122
 #: ../applets/maintained/quit/quit-lock-screen.desktop.in.h:1
 msgid "Lock Screen"
-msgstr ""
+msgstr "Képernyő zárolása"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:126
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:128
@@ -392,11 +392,11 @@ msgstr ""
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:187
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:562
 msgid "Computer"
-msgstr ""
+msgstr "Számítógép"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:188
 msgid "Home"
-msgstr ""
+msgstr "Saját mappa"
 
 #. Check if this is the Desktop directory
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:189
@@ -412,7 +412,7 @@ msgstr ""
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:588
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:591
 msgid "Trash"
-msgstr "Mülleimer"
+msgstr "Kuka"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:194
 msgid "File System"
@@ -421,7 +421,7 @@ msgstr ""
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:315
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:565
 msgid "Network"
-msgstr ""
+msgstr "Hálózat"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:316
 msgid "Connect to Server"
@@ -431,11 +431,11 @@ msgstr ""
 #: ../applets/maintained/file-browser-launcher/prefs.py:243
 #: ../applets/maintained/places/places.desktop.in.in.h:2
 msgid "Places"
-msgstr ""
+msgstr "Helyek"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:984
 msgid "Recent Documents"
-msgstr ""
+msgstr "Legutóbbi dokumentumok"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1029
 msgid "Session"
@@ -469,23 +469,23 @@ msgstr ""
 
 #: ../applets/maintained/calendar/calendarlogin.py:43
 msgid "Login to "
-msgstr "Anmelden bei "
+msgstr "Bejelentkezés "
 
 #: ../applets/maintained/calendar/calendarlogin.py:48
 msgid "Online Calendar"
-msgstr "Online Kalender"
+msgstr ""
 
 #: ../applets/maintained/calendar/calendarlogin.py:53
 msgid "Calendar Username"
-msgstr "Kalender Benutzername"
+msgstr "Naptár felhasználónév"
 
 #: ../applets/maintained/calendar/calendarlogin.py:61
 msgid "Calendar Password"
-msgstr "Kalender Passwort"
+msgstr "Naptár jelszó"
 
 #: ../applets/maintained/calendar/calendarlogin.py:71
 msgid "Save Password"
-msgstr "Passwort speichern"
+msgstr "Jelszó Mentése"
 
 #: ../applets/maintained/calendar/calendarlogin.py:89
 msgid ""
@@ -494,14 +494,10 @@ msgid ""
 "password can be stolen and decrypted if your computer's security is "
 "breached.  Are you still sure you want to save your password?"
 msgstr ""
-"Sie haben Passwort speichern gewählt. Das Passwort wird verschlüsselt "
-"gespeichert. Trotzdem besteht immer die Möglichkeit, dass Ihr Passwort nach "
-"einem Einbruch in Ihren Computer gestohlen oder entschlüsselt wird. Möchten "
-"sie ihr Passwort immer noch speichern?"
 
 #: ../applets/maintained/calendar/calendarprefs.py:46
 msgid "Classic LCD"
-msgstr "Klassisches LCD"
+msgstr ""
 
 #: ../applets/maintained/calendar/calendarprefs.py:47
 msgid "Indy Glow LCD"
@@ -513,63 +509,63 @@ msgstr ""
 
 #: ../applets/maintained/calendar/calendarprefs.py:49
 msgid "Backlit Green LCD"
-msgstr "Backlit grünes LCD"
+msgstr ""
 
 #: ../applets/maintained/calendar/calendarprefs.py:50
 msgid "Green LED"
-msgstr "Grüne LED"
+msgstr "Zöld LED"
 
 #: ../applets/maintained/calendar/calendarprefs.py:51
 msgid "Red LED"
-msgstr "Rote LED"
+msgstr "Piros LED"
 
 #: ../applets/maintained/calendar/calendarprefs.py:52
 msgid "Blue LED"
-msgstr "Blaue LED"
+msgstr "Kék LED"
 
 #: ../applets/maintained/calendar/calendarprefs.py:53
 msgid "Plain White"
-msgstr "Einfach weiß"
+msgstr "Sima fehér"
 
 #: ../applets/maintained/calendar/calendarprefs.py:54
 msgid "Plain Black"
-msgstr "Einfach schwarz"
+msgstr "Sima fekete"
 
 #: ../applets/maintained/calendar/calendarprefs.py:57
 msgid "Red"
-msgstr "Rot"
+msgstr "Piros"
 
 #: ../applets/maintained/calendar/calendarprefs.py:58
 msgid "Green"
-msgstr "Grün"
+msgstr "Zöld"
 
 #: ../applets/maintained/calendar/calendarprefs.py:59
 msgid "Blue"
-msgstr "Blau"
+msgstr "Kék"
 
 #: ../applets/maintained/calendar/calendarprefs.py:60
 msgid "Gray"
-msgstr "Grau"
+msgstr "Szürke"
 
 #: ../applets/maintained/calendar/calendarprefs.py:61
 msgid "Black"
-msgstr "Schwarz"
+msgstr "Fekete"
 
 #: ../applets/maintained/calendar/calendarprefs.py:84
 msgid "Twelve Hour Clock"
-msgstr "12 Stunden Uhr"
+msgstr ""
 
 #: ../applets/maintained/calendar/calendarprefs.py:104
 msgid "Clock Appearance"
-msgstr "Aussehen der Uhr"
+msgstr "Óra megjelenése"
 
 #: ../applets/maintained/calendar/calendarprefs.py:114
 msgid "Calendar Appearance"
-msgstr "Aussehen des Kalenders"
+msgstr "Naptár megjelenése"
 
 #: ../applets/maintained/calendar/calendarprefs.py:121
 msgid "None"
-msgstr "Keine"
+msgstr "Semmi"
 
 #: ../applets/maintained/calendar/calendarprefs.py:122
 msgid "Evolution"
@@ -577,26 +573,26 @@ msgstr "Evolution"
 
 #: ../applets/maintained/calendar/calendarprefs.py:123
 msgid "Google Calendar"
-msgstr "Google Kalender"
+msgstr "Google-naptár"
 
 #: ../applets/maintained/calendar/calendarprefs.py:124
 msgid "Outlook Web Access"
-msgstr "Outlook Webzugang"
+msgstr "Outlook Web Hozzáférés"
 
 #: ../applets/maintained/calendar/calendarprefs.py:127
 msgid "Calendar Integration"
-msgstr "Kalenderintegration"
+msgstr "Naptár beágyazása"
 
 #: ../applets/maintained/calendar/calendarprefs.py:150
 msgid "Calendar URL"
-msgstr "Kalender URL"
+msgstr "Naptár URL"
 
 #. default title/tooltip to show on startup.
 #: ../applets/maintained/calendar/clockcal.py:51
 #: ../applets/maintained/calendar/clockcal.py:491
 #: ../applets/maintained/digital-clock/digital-clock.vala:119
 msgid "Calendar"
-msgstr "Kalender"
+msgstr "Naptár"
 
 #: ../applets/maintained/calendar/clockcal.py:218
 msgid ""
@@ -607,26 +603,26 @@ msgstr ""
 
 #: ../applets/maintained/calendar/clockcal.py:497
 msgid "Open in "
-msgstr "Öffnen in "
+msgstr "Megnyitás ebben: "
 
 #: ../applets/maintained/calendar/clockcal.py:501
 #: ../applets/maintained/weather/forecast.py:169
 msgid "Today"
-msgstr "Heute"
+msgstr "Ma"
 
 #. print "Login error: ", sys.exc_info()[0], sys.exc_info()[1]
 #: ../applets/maintained/calendar/clockcal.py:549
 msgid "Unable to read calendar data from external source."
-msgstr "Lesen der Kalenderdaten von der externen Quelle nicht möglich."
+msgstr "Nem olvashatóak a naptár adatai a külső forrásból"
 
 #: ../applets/maintained/calendar/googlecal.py:90
 msgid "No appointments."
-msgstr "Keine Termine."
+msgstr "Nincsenek értekezletek"
 
 #: ../applets/maintained/calendar/icscal.py:73
 #: ../applets/maintained/calendar/owacal.py:95
 msgid "No appointments"
-msgstr "Keine Termine"
+msgstr "Nincsenek értekezletek"
 
 #: ../applets/maintained/comics/awn-applet-comics.schema-ini.in.h:1
 msgid "The user agent to send when retrieving comics."
@@ -635,9 +631,7 @@ msgstr ""
 #: ../applets/maintained/comics/comics_add.py:57
 #, python-format
 msgid "Failed to download %s. Press \"next\" to try again."
-msgstr ""
-"Download von %s fehlgeschlagen. Klicken Sie auf \"Weiter\", um den Vorgang "
-"zu wiederholen."
+msgstr "%s letöltése sikertelen. A \"Következő\" gombbal újra próbálkozhat"
 
 #: ../applets/maintained/comics/comics_add.py:63
 msgid "The URL is not a valid comic feed. Press \"next\" to try again"
@@ -646,7 +640,7 @@ msgstr ""
 #: ../applets/maintained/comics/comics_add.py:140
 #, python-format
 msgid "Connecting to <i>%s</i>..."
-msgstr "Verbinde zu <i>%s</i>"
+msgstr "Csatlakozás ehhez: <i>%s</i>..."
 
 #: ../applets/maintained/comics/comics_add.py:174
 #, python-format
@@ -663,6 +657,9 @@ msgid ""
 "\n"
 "<i>%(description)s</i>"
 msgstr ""
+"Találat: <b>%(name)s</b>\n"
+"\n"
+"<i>%(description)s</i>"
 
 #. Initialise notifications
 #: ../applets/maintained/comics/comics.desktop.in.h:1
@@ -678,31 +675,31 @@ msgstr ""
 
 #: ../applets/maintained/comics/comics_manage.py:51
 msgid "Shared comics"
-msgstr ""
+msgstr "Megosztott képregények"
 
 #: ../applets/maintained/comics/comics_manage.py:52
 msgid "Your comics"
-msgstr ""
+msgstr "Az Ön képregényei"
 
 #: ../applets/maintained/comics/comics_manage.py:119
 #, python-format
 msgid "Failed to remove <i>%s</i>."
-msgstr "Löschen von <i>%s</i> fehlgeschlagen."
+msgstr "<i>%s</i> eltávolítása sikertelen"
 
 #: ../applets/maintained/comics/comics_manage.py:125
 #: ../applets/maintained/feeds/feeds.py:388
 msgid "Error"
-msgstr "Fehler"
+msgstr "Hiba"
 
 #: ../applets/maintained/comics/comics.py:156
 msgid "Comics"
-msgstr ""
+msgstr "Képregény"
 
 #: ../applets/maintained/comics/comics.py:217
 #: ../applets/maintained/comics/main.py:192
 #, python-format
 msgid "There is a new strip of %s!"
-msgstr "Es gibt eine neue Folge von %s!"
+msgstr ""
 
 #: ../applets/maintained/comics/comics_view.py:164
 msgid "%A %d %B"
@@ -711,7 +708,7 @@ msgstr "%A %d %B"
 #: ../applets/maintained/comics/comics_view.py:532
 #, python-format
 msgid "Failed to save <i>%s</i>."
-msgstr "Speichern von <i>%s</i> fehlgeschlagen."
+msgstr "A következő mentése sikertelen: <i>%s</i>."
 
 #: ../applets/maintained/comics/main.py:152
 #, python-format
@@ -1020,7 +1017,7 @@ msgstr ""
 #: ../applets/maintained/feeds/prefs.py:355
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:594
 msgid "Search"
-msgstr "Suchen"
+msgstr "Keresés"
 
 #: ../applets/maintained/feeds/prefs.py:358
 msgid "You must sign in to a Google service to search for feeds."
@@ -1056,7 +1053,7 @@ msgstr ""
 #: ../applets/maintained/mail/mail.py:758
 #: ../applets/maintained/mail/mail.py:851
 msgid "Username:"
-msgstr "Benutzername:"
+msgstr "Felhasználónév:"
 
 #. Password: label and entry
 #: ../applets/maintained/feeds/prefs.py:488
@@ -1065,7 +1062,7 @@ msgstr "Benutzername:"
 #: ../applets/maintained/mail/mail.py:761
 #: ../applets/maintained/mail/mail.py:854
 msgid "Password:"
-msgstr "Kennwort:"
+msgstr "Jelszó:"
 
 #: ../applets/maintained/feeds/prefs.py:515
 msgid "Feed search by "
@@ -1165,7 +1162,7 @@ msgstr ""
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:350
 #: ../applets/maintained/file-browser-launcher/prefs.py:223
 msgid "Filesystem"
-msgstr ""
+msgstr "Fájlrendszer"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:473
 msgid "Connect to Server..."
@@ -1275,7 +1272,7 @@ msgstr ""
 #: ../applets/maintained/file-browser-launcher/prefs.py:204
 #: ../applets/maintained/to-do/prefs.py:60
 msgid "General"
-msgstr "Allgemein"
+msgstr "Általános"
 
 #. Show all places
 #: ../applets/maintained/file-browser-launcher/prefs.py:211
@@ -1350,7 +1347,7 @@ msgstr ""
 
 #: ../applets/maintained/garbage/applet.vala:209
 msgid "_Empty Trash"
-msgstr "Mülleimer l_eeren"
+msgstr "_Kuka ürítése"
 
 #: ../applets/maintained/garbage/applet.vala:235
 #, c-format
@@ -1552,34 +1549,34 @@ msgstr ""
 #: ../applets/maintained/mail/mail.py:134
 #: ../applets/maintained/mail/mail.py:903
 msgid "Mail Applet"
-msgstr "Mail-Applet"
+msgstr "Levelezés kisalkalmazás"
 
 #: ../applets/maintained/mail/mail.py:37
 #, python-format
 msgid "You have %d new message"
 msgid_plural "You have %d new messages"
-msgstr[0] "Sie haben %d neue Nachricht"
-msgstr[1] "Sie haben %d neue Nachrichten"
+msgstr[0] "%d új üzenete van"
+msgstr[1] "%d új üzenete van"
 
 #: ../applets/maintained/mail/mail.py:41
 #, python-format
 msgid "%d unread message"
 msgid_plural "%d unread messages"
-msgstr[0] "%d ungelesene Nachricht"
-msgstr[1] "%d ungelesene Nachrichten"
+msgstr[0] "%d olvasatlan üzenet"
+msgstr[1] "%d olvasatlan üzenet"
 
 #: ../applets/maintained/mail/mail.py:74
 msgid "Mail Applet (Click to Log In)"
-msgstr "Mail-Applet (Klicken zum Anmelden)"
+msgstr "Levelezés kisalkalmazás (Bejelentkezéshez kattintson)"
 
 #: ../applets/maintained/mail/mail.py:135
 #, python-format
 msgid "Logging in as %s"
-msgstr "Anmelden als %s"
+msgstr "Bejelentkezés, mint: %s"
 
 #: ../applets/maintained/mail/mail.py:165
 msgid "New Mail - Mail Applet"
-msgstr "Neue Nachrichten - Mail-Applet"
+msgstr "Új levél - Levelezés kisalkalmazás"
 
 #: ../applets/maintained/mail/mail.py:283
 msgid "Mail"
@@ -1599,7 +1596,7 @@ msgstr ""
 
 #: ../applets/maintained/mail/mail.py:346
 msgid "Log Out"
-msgstr ""
+msgstr "Kijelentkezés"
 
 #: ../applets/maintained/mail/mail.py:376
 msgid "No unread messages"
@@ -1616,7 +1613,7 @@ msgstr ""
 #: ../applets/maintained/mail/mail.py:425
 #: ../applets/maintained/mail/mail.py:486
 msgid "Log In"
-msgstr "Anmelden"
+msgstr "Bejelentkezés"
 
 #: ../applets/maintained/mail/mail.py:462
 msgid "Type:"
@@ -1624,7 +1621,7 @@ msgstr ""
 
 #: ../applets/maintained/mail/mail.py:467
 msgid "Backend"
-msgstr "Backend"
+msgstr "Háttérprogram"
 
 #: ../applets/maintained/mail/mail.py:525
 #: ../applets/maintained/mail/mail.py:584
@@ -1633,13 +1630,11 @@ msgid ""
 "account. Your best bet is probably                     to log out and try "
 "again."
 msgstr ""
-"Es scheint ein Problem mit der Verbindung zu ihrem Account zu geben. Die "
-"beste Lösung ist es sich auszuloggen und es wieder zu versuchen."
 
 #: ../applets/maintained/mail/mail.py:547
 #: ../applets/maintained/mail/mail.py:606
 msgid "[No Subject]"
-msgstr "Ohne Betreff"
+msgstr "[Nincs tárgy]"
 
 #: ../applets/maintained/mail/mail.py:569
 msgid "Google Apps"
@@ -1647,7 +1642,7 @@ msgstr ""
 
 #: ../applets/maintained/mail/mail.py:637
 msgid "Domain:"
-msgstr "Domain:"
+msgstr "Tartomány:"
 
 #: ../applets/maintained/mail/mail.py:659
 msgid "Unix Spool"
@@ -1669,20 +1664,20 @@ msgstr ""
 #: ../applets/maintained/mail/mail.py:765
 #: ../applets/maintained/mail/mail.py:858
 msgid "Server:"
-msgstr "Server:"
+msgstr "Kiszolgáló:"
 
 #: ../applets/maintained/mail/mail.py:768
 #: ../applets/maintained/mail/mail.py:861
 msgid "Use SSL encryption"
-msgstr "SSL-Verschlüsselung verwenden"
+msgstr "SSL titkosítás használata"
 
 #: ../applets/maintained/mail/mail.py:804
 msgid "Could not log in"
-msgstr "Anmeldung nicht möglich"
+msgstr "Sikertelen bejelentkezés"
 
 #: ../applets/maintained/mail/mail.py:810
 msgid "Folder does not exst"
-msgstr "Order existiert nicht"
+msgstr "Mappa nem létezik"
 
 #: ../applets/maintained/mail/mail.py:864
 msgid "Get messages from only one folder"
@@ -1690,11 +1685,11 @@ msgstr ""
 
 #: ../applets/maintained/mail/mail.py:871
 msgid "Folder:"
-msgstr "Ordner:"
+msgstr "Mappa:"
 
 #: ../applets/maintained/mail/mail.py:906
 msgid "An applet to check one's email"
-msgstr "Eine Erweiterung zur Überprüfung neuer Emailnachrichten"
+msgstr ""
 
 #: ../applets/maintained/media-control/awn-applet-media-control.schema-ini.in.h:1
 msgid "Close the docklet when mouse moves out from it."
@@ -1847,11 +1842,11 @@ msgstr ""
 
 #: ../applets/maintained/notification-area/eggtraymanager.c:148
 msgid "Orientation"
-msgstr ""
+msgstr "Elhelyezkedés"
 
 #: ../applets/maintained/notification-area/eggtraymanager.c:149
 msgid "The orientation of the tray."
-msgstr ""
+msgstr "A tálca elhelyezkedése."
 
 #: ../applets/maintained/notification-area/notification-area.desktop.in.in.h:1
 msgid "A Notification Area (systray)"
@@ -2398,12 +2393,12 @@ msgstr ""
 #. Width
 #: ../applets/maintained/slickswitcher/prefs.py:262
 msgid "Width:"
-msgstr ""
+msgstr "Szélesség:"
 
 #. Height
 #: ../applets/maintained/slickswitcher/prefs.py:279
 msgid "Height:"
-msgstr ""
+msgstr "Magasság:"
 
 #: ../applets/maintained/slickswitcher/prefs.py:299
 msgid "Workspace Size"
@@ -2438,7 +2433,7 @@ msgstr ""
 #: ../applets/maintained/slickswitcher/prefs.py:367
 #: ../applets/maintained/to-do/prefs.py:444
 msgid "Background"
-msgstr ""
+msgstr "Háttér"
 
 #: ../applets/maintained/slickswitcher/prefs.py:379
 msgid "Advanced"
@@ -2584,39 +2579,39 @@ msgstr ""
 
 #: ../applets/maintained/to-do/prefs.py:32
 msgid "Custom"
-msgstr "Benutzerdefiniert"
+msgstr "Egyéni"
 
 #: ../applets/maintained/to-do/prefs.py:32
 msgid "Current Theme"
-msgstr "Aktuelles Theme"
+msgstr "Jelenlegi téma"
 
 #: ../applets/maintained/to-do/prefs.py:32
 msgid "Butter"
-msgstr ""
+msgstr "Vaj"
 
 #: ../applets/maintained/to-do/prefs.py:33
 msgid "Chameleon"
-msgstr ""
+msgstr "Kaméleon"
 
 #: ../applets/maintained/to-do/prefs.py:33
 msgid "Orange"
-msgstr ""
+msgstr "Narancs"
 
 #: ../applets/maintained/to-do/prefs.py:33
 msgid "Sky Blue"
-msgstr "Himmelblau"
+msgstr "Égszínkék"
 
 #: ../applets/maintained/to-do/prefs.py:33
 msgid "Plum"
-msgstr "Pflaumen-farbig"
+msgstr "Szilvakék"
 
 #: ../applets/maintained/to-do/prefs.py:33
 msgid "Chocolate"
-msgstr "Schokoladen-braun"
+msgstr "Csokoládébarna"
 
 #: ../applets/maintained/to-do/prefs.py:34
 msgid "Scarlet Red"
-msgstr "Scharlachrot"
+msgstr "Skarlátvörös"
 
 #: ../applets/maintained/to-do/prefs.py:34
 msgid "Aluminium 1"
@@ -2628,110 +2623,110 @@ msgstr "Aluminium 2"
 
 #: ../applets/maintained/to-do/prefs.py:37
 msgid "Number of Items"
-msgstr "Anzahl an Elementen"
+msgstr "Elemek száma"
 
 #: ../applets/maintained/to-do/prefs.py:37
 msgid "Progress"
-msgstr "Fortschritt"
+msgstr "Folyamat"
 
 #: ../applets/maintained/to-do/prefs.py:37
 msgid "Both"
-msgstr ""
+msgstr "Mindkettő"
 
 #: ../applets/maintained/to-do/prefs.py:45
 msgid "To-Do List Preferences"
-msgstr ""
+msgstr "Tennivalók lista beállításai"
 
 #: ../applets/maintained/to-do/prefs.py:61
 msgid "Priority"
-msgstr "Priorität"
+msgstr "Elsőbbség"
 
 #: ../applets/maintained/to-do/prefs.py:62
 msgid "Icon"
-msgstr "Symbol"
+msgstr "Ikon"
 
 #. Label: Title (bold)
 #: ../applets/maintained/to-do/prefs.py:72
 msgid "Title"
-msgstr ""
+msgstr "Cím"
 
 #. Label: Confirm when removing... (bold)
 #: ../applets/maintained/to-do/prefs.py:86
 msgid "Confirm when removing..."
-msgstr "Bestätigung beim Entfernen..."
+msgstr ""
 
 #. CheckButton: Items
 #: ../applets/maintained/to-do/prefs.py:95
 msgid "_Items"
-msgstr ""
+msgstr "_Elemek"
 
 #. CheckButton: Categories
 #: ../applets/maintained/to-do/prefs.py:102
 msgid "C_ategories"
-msgstr ""
+msgstr "K_ategóriák"
 
 #. Label: Width (bold)
 #: ../applets/maintained/to-do/prefs.py:109
 msgid "Width"
-msgstr "Breite"
+msgstr "Szélesség"
 
 #. CheckButton: Use Custom Width
 #: ../applets/maintained/to-do/prefs.py:118
 msgid "_Use Custom Width"
-msgstr ""
+msgstr "Egyéni _szélesség használata"
 
 #. Label: Width (pixels)
 #: ../applets/maintained/to-do/prefs.py:125
 msgid "Width (pixels)"
-msgstr "Breite (Pixel)"
+msgstr "Szélesség (pixelben)"
 
 #. Label: Low Priority (bold)
 #: ../applets/maintained/to-do/prefs.py:173
 msgid "Low Priority"
-msgstr "Niedrige Priorität"
+msgstr "Alacsony prioritás"
 
 #. Label: Medium Priority (bold)
 #: ../applets/maintained/to-do/prefs.py:186
 msgid "Medium Priority"
-msgstr "Mittlere Priorität"
+msgstr "Közepes prioritás"
 
 #. Label: High Priority (bold)
 #: ../applets/maintained/to-do/prefs.py:199
 msgid "High Priority"
-msgstr "Hohe Priorität"
+msgstr "Magas prioritás"
 
 #. Label: Icon Color (bold)
 #: ../applets/maintained/to-do/prefs.py:251
 msgid "Icon Color"
-msgstr "Symbolfarbe"
+msgstr "Ikon színe"
 
 #. Label: Custom Colors (bold)
 #: ../applets/maintained/to-do/prefs.py:274
 msgid "Custom Colors"
-msgstr "Eigene Farben"
+msgstr "Egyéni színek"
 
 #. Colors: Outer Border, Inner Border, Main Color, Text Color
 #: ../applets/maintained/to-do/prefs.py:283
 msgid "Outer Border"
-msgstr "Äußerer Rahmen"
+msgstr "Külső szegély"
 
 #: ../applets/maintained/to-do/prefs.py:284
 msgid "Inner Border"
-msgstr "Innerer Rahmen"
+msgstr "Belső szegély"
 
 #: ../applets/maintained/to-do/prefs.py:285
 msgid "Main"
-msgstr ""
+msgstr "Fő"
 
 #: ../applets/maintained/to-do/prefs.py:286
 #: ../applets/maintained/to-do/prefs.py:446
 msgid "Text"
-msgstr ""
+msgstr "Szöveg"
 
 #. Label: Icon Type (bold)
 #: ../applets/maintained/to-do/prefs.py:289
 msgid "Icon Type"
-msgstr ""
+msgstr "Ikon típusa"
 
 #: ../applets/maintained/to-do/to-do.desktop.in.h:1
 msgid "Manage a simple To-Do list"
@@ -2743,34 +2738,34 @@ msgstr ""
 #: ../applets/maintained/to-do/to-do.py:268
 #: ../applets/maintained/to-do/to-do.py:906
 msgid "To-Do List"
-msgstr ""
+msgstr "Tennivalók lista"
 
 #: ../applets/maintained/to-do/to-do.py:219
 msgid "A simple To-Do List"
-msgstr ""
+msgstr "Egyszerű tennivalók lista"
 
 #: ../applets/maintained/to-do/to-do.py:298
 msgid "Remove item"
-msgstr ""
+msgstr "Elem eltávolítása"
 
 #: ../applets/maintained/to-do/to-do.py:380
 msgid "Remove category"
-msgstr ""
+msgstr "Kategória eltávolítása"
 
 #: ../applets/maintained/to-do/to-do.py:404
 msgid "View/Edit details"
-msgstr ""
+msgstr "Részletek megjelenítése/szerkesztése"
 
 #. Make the RadioButtons for each category
 #. First category: No category! (Uncategorized)
 #: ../applets/maintained/to-do/to-do.py:524
 msgid "_Uncategorized"
-msgstr ""
+msgstr "_Kategorizálatlan"
 
 #. First RadioButton - ( )Category
 #: ../applets/maintained/to-do/to-do.py:548
 msgid "_Category"
-msgstr ""
+msgstr "_Kategória"
 
 #. Second RadioButton - (-)To-Do item
 #. TODO: better text than "To-Do item"?
@@ -2781,7 +2776,7 @@ msgstr ""
 #. Label: Priority:
 #: ../applets/maintained/to-do/to-do.py:640
 msgid "Priority: "
-msgstr ""
+msgstr "Elsőbbség: "
 
 #. Neutral, Low, Medium, and High priority RadioButtons
 #: ../applets/maintained/to-do/to-do.py:643
@@ -2790,20 +2785,20 @@ msgstr ""
 
 #: ../applets/maintained/to-do/to-do.py:645
 msgid "_Low"
-msgstr ""
+msgstr "Ki_csi"
 
 #: ../applets/maintained/to-do/to-do.py:647
 msgid "_Medium"
-msgstr ""
+msgstr "_Közepes"
 
 #: ../applets/maintained/to-do/to-do.py:649
 msgid "_High"
-msgstr ""
+msgstr "M_agas"
 
 #. Label: Progress(%):
 #: ../applets/maintained/to-do/to-do.py:677
 msgid "Progress(%): "
-msgstr "Fortschritt(%): "
+msgstr "Haladás(%): "
 
 #. Make Label
 #: ../applets/maintained/to-do/to-do.py:1127
@@ -2812,19 +2807,17 @@ msgid ""
 "Are you sure you want to remove the category \"%s?\"\n"
 "All of its items will be removed."
 msgstr ""
-"Möchten Sie die Kategorie \"%s\" wirklich löschen?\n"
-"Alle ihre Einträge werden mitgelöscht."
 
 #. Make CheckButton
 #: ../applets/maintained/to-do/to-do.py:1131
 #: ../applets/maintained/to-do/to-do.py:1167
 msgid "Don't show this again."
-msgstr "Diese Nachricht nicht wieder anzeigen."
+msgstr "Ne mutassa többet"
 
 #. Make Label
 #: ../applets/maintained/to-do/to-do.py:1164
 msgid "Are you sure you want to remove this item?"
-msgstr "Möchten Sie diesen Eintrag wirklich löschen?"
+msgstr "Biztosan el kívánja távolítani ezt az elemet?"
 
 #. Reset the tooltip
 #: ../applets/maintained/to-do/to-do.py:1363
@@ -2891,30 +2884,30 @@ msgstr ""
 #: ../applets/maintained/weather/forecast.py:54
 #: ../applets/maintained/weather/forecast.py:82
 msgid "Forecast"
-msgstr "Vorhersage"
+msgstr "Előrejelzés"
 
 #: ../applets/maintained/weather/forecast.py:54
 #: ../applets/maintained/weather/forecast.py:82
 msgid "for"
-msgstr "für"
+msgstr "ehhez:"
 
 #: ../applets/maintained/weather/forecast.py:167
 msgid "WEEKDAY"
-msgstr "WOCHENTAG"
+msgstr "HÉTKÖZNAP"
 
 #: ../applets/maintained/weather/forecast.py:171
 msgid "Tomorrow"
-msgstr "Morgen"
+msgstr "Holnap"
 
 #. Weather condition
 #: ../applets/maintained/weather/forecast.py:197
 #: ../applets/maintained/weather/weather.py:452
 msgid "DESCRIPTION"
-msgstr "BESCHREIBUNG"
+msgstr "LEÍRÁS"
 
 #: ../applets/maintained/weather/forecast.py:249
 msgid "Weather data provided by weather.com"
-msgstr "Wetterdaten bereitgestellt von weather.com"
+msgstr "Időjárás adatok a weather.com-ról"
 
 #: ../applets/maintained/weather/weather.desktop.in.h:1
 msgid "Display the local weather"
@@ -2926,7 +2919,7 @@ msgstr ""
 
 #: ../applets/maintained/weather/weather.py:215
 msgid "Fetching conditions for"
-msgstr "Hole Wetterbericht für"
+msgstr ""
 
 #: ../applets/maintained/weather/weather.py:254
 msgid "Show _Map"
@@ -2939,13 +2932,13 @@ msgstr ""
 
 #: ../applets/maintained/weather/weather.py:371
 msgid "Searching..."
-msgstr "Suche läuft ..."
+msgstr "Keresés…"
 
 #. Make the dialog
 #: ../applets/maintained/webapplet/applet.c:262
 #: ../applets/maintained/webapplet/applet.c:460
 msgid "Open Location"
-msgstr ""
+msgstr "Hely megnyitása"
 
 #: ../applets/maintained/webapplet/applet.c:281
 msgid "Set as new _Home Page"
@@ -3337,9 +3330,3 @@ msgstr ""
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:38
 msgid "Whether tooltips are enabled."
 msgstr ""
-
-#~ msgid "The theme used when displaying notifications."
-#~ msgstr "Das Thema um Benachrichtigungen anzuzeigen."
-
-#~ msgid "Set your pop-up notification preferences"
-#~ msgstr "Legen Sie Ihre Popup Benachrichtigungs Einstellungen fest"

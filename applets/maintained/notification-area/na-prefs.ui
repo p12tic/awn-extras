@@ -376,7 +376,7 @@
             <property name="layout_style">end</property>
             <child>
               <object class="GtkButton" id="closeButton">
-                <property name="label" translatable="yes">gtk-close</property>
+                <property name="label">gtk-close</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
@@ -403,11 +403,11 @@
   </object>
   <object class="GtkSizeGroup" id="sizegroup1">
     <widgets>
-      <widget name="label4"/>
-      <widget name="label3"/>
-      <widget name="label6"/>
-      <widget name="customBackgroundRadio"/>
       <widget name="customBorderRadio"/>
+      <widget name="customBackgroundRadio"/>
+      <widget name="label6"/>
+      <widget name="label3"/>
+      <widget name="label4"/>
     </widgets>
   </object>
   <object class="GtkAdjustment" id="adjustment1">

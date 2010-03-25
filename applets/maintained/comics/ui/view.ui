@@ -47,7 +47,7 @@
         </child>
         <child>
           <object class="GtkAction" id="save_as_item">
-            <property name="stock_id" translatable="yes">gtk-save-as</property>
+            <property name="stock_id">gtk-save-as</property>
             <property name="name">save_as_item</property>
             <signal handler="on_save_as_activated" name="activate"/>
           </object>

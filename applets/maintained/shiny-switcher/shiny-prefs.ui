@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <interface>
   <!-- interface-requires gtk+ 2.12 -->
+  <!-- interface-requires desktop-agnostic 0.4 -->
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkAdjustment" id="adjustment1">
     <property name="value">96</property>
@@ -1143,7 +1144,7 @@
             <property name="layout_style">end</property>
             <child>
               <object class="GtkButton" id="closeButton">
-                <property name="label" translatable="yes">gtk-close</property>
+                <property name="label">gtk-close</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
@@ -1171,28 +1172,28 @@
   </object>
   <object class="GtkSizeGroup" id="sizegroup1">
     <widgets>
-      <widget name="label31"/>
-      <widget name="label26"/>
-      <widget name="label1"/>
-      <widget name="label18"/>
-      <widget name="label37"/>
-      <widget name="label36"/>
-      <widget name="label35"/>
-      <widget name="label18"/>
-      <widget name="label1"/>
-      <widget name="label37"/>
-      <widget name="label36"/>
-      <widget name="label35"/>
-      <widget name="label29"/>
-      <widget name="label28"/>
-      <widget name="label23"/>
-      <widget name="label24"/>
-      <widget name="label4"/>
-      <widget name="label3"/>
-      <widget name="label10"/>
-      <widget name="label11"/>
-      <widget name="customBackgroundRadio"/>
       <widget name="label15"/>
+      <widget name="customBackgroundRadio"/>
+      <widget name="label11"/>
+      <widget name="label10"/>
+      <widget name="label3"/>
+      <widget name="label4"/>
+      <widget name="label24"/>
+      <widget name="label23"/>
+      <widget name="label28"/>
+      <widget name="label29"/>
+      <widget name="label35"/>
+      <widget name="label36"/>
+      <widget name="label37"/>
+      <widget name="label1"/>
+      <widget name="label18"/>
+      <widget name="label35"/>
+      <widget name="label36"/>
+      <widget name="label37"/>
+      <widget name="label18"/>
+      <widget name="label1"/>
+      <widget name="label26"/>
+      <widget name="label31"/>
     </widgets>
   </object>
   <object class="GtkListStore" id="liststore-thumbnailing">

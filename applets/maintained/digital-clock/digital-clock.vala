@@ -423,9 +423,10 @@ class DigitalClock : AppletSimple
 public Applet
 awn_applet_factory_initp (string canonical_name, string uid, int panel_id)
 {
-  Intl.setlocale (LocaleCategory.ALL, "");
+  // i18n support
   Gettext.bindtextdomain (Build.GETTEXT_PACKAGE, Build.LOCALEDIR);
   Gettext.textdomain (Build.GETTEXT_PACKAGE);
+
   return new DigitalClock (canonical_name, uid, panel_id);
 }
 

@@ -117,7 +117,7 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
     this.canonical_name = canonical_name;
     this.uid = uid;
     this.panel_id = panel_id;
-    this.display_name = "Awn Terminal Applet";
+    this.display_name = "Terminal";
   }
 
   construct
@@ -605,7 +605,6 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
 public Applet
 awn_applet_factory_initp (string canonical_name, string uid, int panel_id)
 {
-  Intl.setlocale (LocaleCategory.ALL, "");
   Gettext.bindtextdomain (Build.GETTEXT_PACKAGE, Build.LOCALEDIR);
   Gettext.textdomain (Build.GETTEXT_PACKAGE);
 

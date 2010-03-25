@@ -42,7 +42,6 @@ from shared import (
     USER_DIR, USER_FEEDS_DIR)
 
 APPLET_NAME = 'comics'
-UI_FILE = os.path.join(UI_DIR, 'main.ui')
 
 
 class BidirectionalIterator:
@@ -157,9 +156,8 @@ class ComicApplet(awn.AppletSimple):
         container.set_sensitive(len(self.feeds.feeds) > 0)
         container.set_submenu(feed_menu)
         menu.append(container)
-        manage_item = self.__ui.get_object('manage_comics_item')
-        if manage_item.parent is not None:
-            manage_item.parent.remove(manage_item)
+        manage_item = gtk.MenuItem(_('Manage Comics'))
+        manage_item.connect("activate", self.on_manage_comics_activated)
         menu.append(manage_item)
         menu.show_all()
         return menu
@@ -194,10 +192,6 @@ class ComicApplet(awn.AppletSimple):
         self.connect('destroy', self.on_destroy)
         self.connect('button-press-event', self.on_button_press)
         self.connect('scroll-event', self.on_scroll)
-
-        self.__ui = gtk.Builder()
-        self.__ui.add_from_file(UI_FILE)
-        self.__ui.connect_signals(self)
 
         self.visible = False
         self.windows = []

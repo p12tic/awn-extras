@@ -35,7 +35,7 @@ import cairo
 import bwmprefs
 
 APPLET_NAME = _('Bandwidth Monitor')
-APPLET_VERSION = '0.3.9.3'
+APPLET_VERSION = '0.3.9.4'
 APPLET_COPYRIGHT = '© 2006-2009 CURE|THE|ITCH'
 APPLET_AUTHORS = ['Kyle L. Huff <awn-bwm@curetheitch.com>']
 APPLET_DESCRIPTION = _('Network Bandwidth monitor')
@@ -119,14 +119,14 @@ class Netstat:
                 device_lines = device_group.split('\n')
                 if not 'Link' in device_lines[0]:
                     device_lines = device_lines[1:]
-                if len(device_lines) > 2:
+                if len(device_lines) > 4:
                     iface = re.split('[\W]+',
                         device_lines[0].strip().replace(':', '_'))[0]
                     try:
-                        rx_bytes = float(re.search(r'RX bytes:(\d+)\D',
-                            device_group).group(1))
-                        tx_bytes = float(re.search(r'TX bytes:(\d+)\D',
-                            device_group).group(1))
+                        transfer = re.findall(r':(\d+)\D(\(.*?\))',
+                            device_group, re.DOTALL)
+                        rx_bytes = float(transfer[0][0])
+                        tx_bytes = float(transfer[1][0])
                     except:
                         rx_bytes = 0
                         tx_bytes = 0

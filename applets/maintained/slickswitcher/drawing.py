@@ -695,10 +695,7 @@ class ViewportSurface:
         #Draw the text
         self.cr.move_to(self.settings['width'] / 2 - w / 2, self.settings['height'] / 2 - h / 2)
 
-        try:
-            self.cr.set_line_width(props.text_outline_width * self.settings['height'] / 120.0);
-        except:
-            self.cr.set_line_width(2.5 * self.settings['height'] / 120.0);
+        self.cr.set_line_width(props.text_outline_width * self.settings['height'] / 120.0);
         self.cr.set_source_rgba(*outline_color)
         self.cr.set_line_join(cairo.LINE_JOIN_ROUND)
         self.cr.layout_path(layout)

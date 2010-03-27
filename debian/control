@@ -65,19 +65,18 @@ Depends: 	${shlibs:Depends},
 		avant-window-navigator-trunk,
 Recommends: awn-settings-trunk (>= 0.3.8),
 Conflicts: awn-applets-c-extras, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing, awn-extras-applets-trunk
-Replaces: awn-applets-c-extras, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing, awn-extras-applets-trunk
+Replaces: awn-applets-c-extras, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing, awn-extras-applets-trunk, awn-applets-python-extras-trunk
 Description: A collection of applets for avant-window-navigator
  Awn-extras-applets is a collection of applets for avant-window-navigator. It
  provides some extensions to the bar and some new features (like 
  applets in the gnome-panel).
  .
  This package contains extras applets written in C:
+  * digitalClock: A digital clock and calendar applet.
   * filebrowser: Displays the contents of a directory and allows you to 
     navigate folders.
   * main-menu: Display a list of all the applications on your computer.
   * places: Displays shortcuts in buttons.
-  * trasher: Like the trash applet, but uses stacks to allow you to preview 
-    your trash.
   * webapplet: Displays a web page.
 
 Package: awn-applets-python-core-trunk
@@ -174,7 +173,6 @@ Description: A collection of applets for avant-window-navigator
   * awn-meebo: Access to the Meebo Instant Messenger.
   * calendar: Displays a clock and calendar on the bar, and integrates with 
     several external calendar applications to display appointments.
-  * digital-clock: A digital clock and calendar applet.
   * digg: Access to Digg.
   * media-icon-applet: This applet allows you to add media icons like play,
     pause, and next/back to your awn bar, and control a list of media players.

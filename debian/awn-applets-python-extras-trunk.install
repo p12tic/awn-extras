@@ -6,14 +6,6 @@ usr/share/avant-window-navigator/applets/calendar/
 usr/share/avant-window-navigator/applets/calendar.desktop
 usr/share/avant-window-navigator/schemas/awn-applet-calendar.schema-ini
 #
-# Digital Clock
-#
-etc/gconf/schemas/awn-applet-digital-clock.schemas
-usr/share/avant-window-navigator/applets/digital-clock/
-usr/share/avant-window-navigator/applets/digital-clock.desktop
-usr/share/avant-window-navigator/schemas/awn-applet-digital-clock.schema-ini
-usr/share/icons/hicolor/scalable/apps/awn-applet-digital-clock.svg
-#
 # Media-icons
 #
 usr/share/avant-window-navigator/applets/media-icons/*.py

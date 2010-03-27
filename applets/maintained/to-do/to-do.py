@@ -89,17 +89,18 @@ class App(awn.AppletSimple):
 
         #Prevent crash...
         l = len(self.settings['priority'])
+
         for name in ('progress', 'details', 'category', 'category_name'):
             if len(self.settings[name]) < l:
                 l = len(self.settings[name])
 
-        if l != len(self.settings['items']):
+        if l < len(self.settings['items']):
             self.settings['items'] = self.settings['items'][0:l]
 
         self.set_tooltip_text(self.settings['title'])
 
         #Icon Type
-        if self.settings['icon_type'] not in ['progress', 'progress_items', 'items']:
+        if self.settings['icon_type'] not in ['progress', 'progress-items', 'items']:
             self.settings['icon_type'] = 'items'
 
         #Icon opacity
@@ -976,7 +977,8 @@ class App(awn.AppletSimple):
                         self.settings['details'] = tmp_list_details
                         self.settings['category'] = tmp_list_category
                     except:
-                        self.settings['category_name'] = tmp_list_category_name
+                        pass
+                    self.settings['category_name'] = tmp_list_category_name
 
                     #Re-show the main dialog
                     self.displayed = False#Is this necessary?
@@ -1101,7 +1103,8 @@ class App(awn.AppletSimple):
                     self.settings['details'] = tmp_list_details
                     self.settings['category'] = tmp_list_category
                 except:
-                    self.settings['category_name'] = tmp_list_category_name
+                    pass
+                self.settings['category_name'] = tmp_list_category_name
 
                 #Re-show the main dialog
                 self.displayed = False#TODO:Is this necessary?

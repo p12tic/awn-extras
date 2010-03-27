@@ -378,7 +378,8 @@ class Prefs:
   #The icon theme has changed
   def icon_theme_changed(self, *args):
     icon = self.icon_theme.load_icon('view-sort-descending', 48, 48)
-    self.win.set_icon(icon)
+    if 'win' in dir(self):
+      self.win.set_icon(icon)
   
   #A color or icon type was selected from the ComboBox
   def cb_changed(self, widget):

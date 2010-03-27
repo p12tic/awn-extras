@@ -661,17 +661,24 @@ class ViewportSurface:
 
         props = applet.overlay.props
 
-        if props.font_mode == 0:
-            main_color = props.text_color.get_cairo_color()
-            outline_color = [0.0]*4
+        try:
+            if props.font_mode == 0:
+                main_color = props.text_color.get_cairo_color()
+                outline_color = [0.0] * 4
 
-        elif props.font_mode == 1:
-            main_color = props.text_color.get_cairo_color()
-            outline_color = props.text_outline_color.get_cairo_color()
+            elif props.font_mode == 1:
+                main_color = props.text_color.get_cairo_color()
+                outline_color = props.text_outline_color.get_cairo_color()
 
-        elif props.font_mode == 2:
-            main_color = props.text_outline_color.get_cairo_color()
-            outline_color = props.text_color.get_cairo_color()
+            elif props.font_mode == 2:
+                main_color = props.text_outline_color.get_cairo_color()
+                outline_color = props.text_color.get_cairo_color()
+
+        except:
+            #Use the gtk colors
+            style = applet.get_style()
+            main_color = Color(style.fg[gtk.STATE_NORMAL], 65535).get_cairo_color()
+            outline_color = Color(style.bg[gtk.STATE_NORMAL], 65535).get_cairo_color()
 
         #Get where the number should go
         x, y = self.settings['width'] / 2, self.settings['height'] / 2
@@ -688,7 +695,10 @@ class ViewportSurface:
         #Draw the text
         self.cr.move_to(self.settings['width'] / 2 - w / 2, self.settings['height'] / 2 - h / 2)
 
-        self.cr.set_line_width(props.text_outline_width * self.settings['height'] / 120.0);
+        try:
+            self.cr.set_line_width(props.text_outline_width * self.settings['height'] / 120.0);
+        except:
+            self.cr.set_line_width(2.5 * self.settings['height'] / 120.0);
         self.cr.set_source_rgba(*outline_color)
         self.cr.set_line_join(cairo.LINE_JOIN_ROUND)
         self.cr.layout_path(layout)

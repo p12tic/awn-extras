@@ -52,7 +52,9 @@ class TomboyApplet:
     def __init__(self, awnlib):
         self.awn = awnlib
 
-        awnlib.icon.file(applet_logo)
+        awnlib.icon.file(applet_logo, True, awnlib.icon.APPLET_SIZE)
+        awnlib.connect_size_changed(lambda: awnlib.icon.file(applet_logo, True,
+            awnlib.icon.APPLET_SIZE))
 
         if dbus is not None:
             try:

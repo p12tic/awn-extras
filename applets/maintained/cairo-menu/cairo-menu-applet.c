@@ -45,6 +45,7 @@ struct _CairoMenuAppletPrivate {
   GValueArray * aux_menu_names;
   GValueArray * hidden_names;  
   DesktopAgnosticConfigClient *client;
+  CairoMainIcon * main_icon;
 };
 
 
@@ -208,6 +209,7 @@ cairo_menu_applet_constructed (GObject *object)
    
   icon = cairo_main_icon_new(AWN_APPLET(object));
   gtk_container_add (GTK_CONTAINER(priv->box),icon);
+  priv->main_icon = AWN_CAIRO_MAIN_ICON(icon);
    
   for (idx = 0; idx < priv->aux_menu_names->n_values; idx++)
   {
@@ -483,13 +485,7 @@ cairo_menu_applet_remove_icon (CairoMenuApplet * applet, AwnThemedIcon * icon)
   gtk_container_remove (GTK_CONTAINER(priv->box), GTK_WIDGET(icon));
 
   cairo_menu_applet_remove_hidden_menu (applet,menu_name);
-  for (iter=gtk_container_get_children (GTK_CONTAINER(priv->box));iter;iter=iter->data)
-  {
-    if (AWN_IS_CAIRO_MAIN_ICON(iter->data))
-    {
-      cairo_main_icon_refresh_menu (iter->data);
-    }
-  }
+  cairo_main_icon_refresh_menu (priv->main_icon);
   
   g_free (menu_name);
   g_free (display_name);
@@ -525,11 +521,5 @@ cairo_menu_applet_add_icon (CairoMenuApplet * applet, gchar * menu_name, gchar *
   gtk_widget_show (icon);
   gtk_container_add (GTK_CONTAINER(priv->box),icon);
 
-  for (iter=gtk_container_get_children (GTK_CONTAINER(priv->box));iter;iter=iter->data)
-  {
-    if (AWN_IS_CAIRO_MAIN_ICON(iter->data))
-    {
-      cairo_main_icon_refresh_menu (iter->data);
-    }
-  }
+  cairo_main_icon_refresh_menu (priv->main_icon);
 }

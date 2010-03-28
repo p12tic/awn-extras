@@ -340,9 +340,9 @@ _button_clicked_event (CairoAuxIcon *icon, GdkEventButton *event, gpointer null)
       item = gtk_image_menu_item_new_with_label("Applet Preferences");
       gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM(item), 
                                      gtk_image_new_from_stock (GTK_STOCK_PREFERENCES,GTK_ICON_SIZE_MENU));
-      gtk_widget_show(item);*/
+      gtk_widget_show(item);
+      gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);*/
       gtk_menu_set_screen(GTK_MENU(priv->context_menu), NULL);
-      gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);
 
       item = gtk_image_menu_item_new_with_label("Remove Icon");
       gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM(item), 

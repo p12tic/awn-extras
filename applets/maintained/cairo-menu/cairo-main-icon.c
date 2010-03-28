@@ -325,9 +325,9 @@ _button_clicked_event (CairoMainIcon *icon, GdkEventButton *event, gpointer null
       gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM(item), 
                                      gtk_image_new_from_stock (GTK_STOCK_PREFERENCES,GTK_ICON_SIZE_MENU));
       gtk_widget_show(item);
+      gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);
        */
       gtk_menu_set_screen(GTK_MENU(priv->context_menu), NULL);
-      gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);
 //      g_signal_connect(G_OBJECT(item), "button-press-event", G_CALLBACK(_show_prefs), NULL);
       item=awn_applet_create_about_item_simple(AWN_APPLET(priv->applet),
                                                "Copyright 2007,2008, 2009 Rodney Cryderman <rcryderman@gmail.com>",

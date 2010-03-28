@@ -15,21 +15,23 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import threading
 
 import pygtk
 pygtk.require("2.0")
 import gtk
 
-from awn.extras import awnlib, __version__
+from awn.extras import awnlib, __version__, _
 
 try:
     import dbus
+    from dbus.mainloop.glib import DBusGMainLoop
+
+    DBusGMainLoop(set_as_default=True)
 except ImportError:
     dbus = None
 
-applet_name = "Tomboy Applet"
-applet_description = "Control Tomboy with D-Bus"
+applet_name = _("Tomboy Applet")
+applet_description = _("Control Tomboy with D-Bus")
 applet_system_notebook = "system:notebook:"
 applet_system_template = "system:template"
 
@@ -45,6 +47,7 @@ class TomboyApplet:
 
     __interface = None
     tags = None
+    __dialog = None
 
     def __init__(self, awnlib):
         self.awn = awnlib
@@ -52,22 +55,25 @@ class TomboyApplet:
         awnlib.icon.file(applet_logo)
 
         if dbus is not None:
-            def run_tomboy():
-                try:
-                    bus = dbus.SessionBus()
-                    if bus_name not in bus.list_names():
-                        bus.start_service_by_name(bus_name)
-                    self.connect(bus)
-                except dbus.DBusException, e:
-                    awnlib.errors.general("Could not connect to Tomboy: %s" % e)
-            threading.Thread(target=run_tomboy).start()
+            try:
+                bus = dbus.SessionBus()
+                if bus_name not in bus.list_names():
+                    bus.start_service_by_name(bus_name)
+                self.connect(bus)
+            except dbus.DBusException, e:
+                awnlib.errors.general("Could not connect to Tomboy: %s" % e)
 
     def connect(self, bus):
         object = bus.get_object(bus_name, object_name)
         self.__interface = dbus.Interface(object, if_name)
+        self.__interface.connect_to_signal("NoteAdded", self.notes_changed)
+        self.__interface.connect_to_signal("NoteDeleted", self.notes_changed)
         self.__version = self.__interface.Version()
         if self.__interface is not None:
             self.main_dialog()
+
+    def notes_changed(self, *args, **kwargs):
+        self.main_dialog()
 
     def display_search(self, widget):
         self.__interface.DisplaySearch()
@@ -103,16 +109,20 @@ class TomboyApplet:
 
     def create_from_tag_dialog(self, widget):
         dialog = self.awn.dialog.new("create_from_tag")
-        dialog.add(gtk.Label("Select a tag:"))
-        for tag in self.collect_tags():
-            button = gtk.Button(tag)
-            button.connect("clicked", self.create_from_tag, tag)
-            dialog.add(button)
+        available_tags = self.collect_tags()
+        if len(available_tags) > 0:
+            dialog.add(gtk.Label(_("Select a tag:")))
+            for tag in available_tags:
+                button = gtk.Button(tag)
+                button.connect("clicked", self.create_from_tag, tag)
+                dialog.add(button)
+        else:
+            dialog.add(gtk.Label(_("No tags were created yet")))
         dialog.show_all()
 
     def view_from_tag(self, widget, tag):
         dialog = self.awn.dialog.new("view_from_tag")
-        dialog.add(gtk.Label("Select a note:"))
+        dialog.add(gtk.Label(_("Select a note:")))
 
         for note in self.__interface.GetAllNotesWithTag(applet_system_notebook + tag):
             if applet_system_template not in self.__interface.GetTagsForNote(note):
@@ -123,7 +133,7 @@ class TomboyApplet:
 
     def view_from_tag_dialog(self, widget):
         dialog = self.awn.dialog.new("view_from_tag_select")
-        dialog.add(gtk.Label("Select a tag:"))
+        dialog.add(gtk.Label(_("Select a tag:")))
         for tag in self.collect_tags():
             button = gtk.Button(tag)
             button.connect("clicked", self.view_from_tag, tag)
@@ -131,28 +141,32 @@ class TomboyApplet:
         dialog.show_all()
 
     def main_dialog(self):
-        dialog = self.awn.dialog.new("main")
+        if self.__dialog != None:
+            self.awn.dialog.unregister("main")
+            self.__dialog = None
+
+        self.__dialog = dialog = self.awn.dialog.new("main")
 
         for note in self.list_all_notes()[:10]:
             self.button = gtk.Button(self.__interface.GetNoteTitle(note))
             self.button.connect("clicked", self.button_display, note)
             dialog.add(self.button)
 
-        dialog.add(gtk.Label("Version : " + self.__version))
+        dialog.add(gtk.Label(_("Version: %s") % self.__version))
 
-        button1 = gtk.Button("Search")
+        button1 = gtk.Button(_("Search"))
         button1.connect("clicked", self.display_search)
         dialog.add(button1)
 
-        button2 = gtk.Button("New Note")
+        button2 = gtk.Button(_("New Note"))
         button2.connect("clicked", self.create_note)
         dialog.add(button2)
 
-        button3 = gtk.Button("New Tagged Note")
+        button3 = gtk.Button(_("New Tagged Note"))
         button3.connect("clicked", self.create_from_tag_dialog)
         dialog.add(button3)
 
-        button4 = gtk.Button("View Tagged Note")
+        button4 = gtk.Button(_("View Tagged Note"))
         button4.connect("clicked", self.view_from_tag_dialog)
         dialog.add(button4)
 

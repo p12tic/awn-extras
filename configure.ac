@@ -1,7 +1,7 @@
 SAC_PREREQ(2.53)
 
 
-AC_INIT(awn-extras, 0.3.9, [])
+AC_INIT(awn-extras, 0.4.0~rc1, [https://bugs.launchpad.net/awn-extras])
 AM_INIT_AUTOMAKE([-Wno-portability 1.8 tar-ustar])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR(applets)

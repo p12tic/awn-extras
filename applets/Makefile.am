@@ -46,6 +46,7 @@ endif
 if MAINTAINER_MODE
 CONDITIONAL_APPLETS += maintained/python-test
 CONDITIONAL_APPLETS += maintained/wobblyzini
+CONDITIONAL_APPLETS += unmaintained/dropper
 endif
 
 # please keep alphabetized
@@ -59,7 +60,6 @@ SUBDIRS = \
 	maintained/cpufreq \
 	maintained/dialect \
 	maintained/digital-clock \
-	unmaintained/dropper \
 	maintained/feeds \
 	maintained/file-browser-launcher \
 	maintained/hardware-sensors \

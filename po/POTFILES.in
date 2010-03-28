@@ -119,6 +119,7 @@ applets/maintained/to-do/prefs.py
 applets/maintained/to-do/to-do.desktop.in
 applets/maintained/to-do/to-do.py
 applets/maintained/tomboy-applet/tomboy-applet.desktop.in
+applets/maintained/tomboy-applet/tomboy-applet.py
 applets/maintained/vala-test/vala-test.desktop.in.in
 [type: gettext/ini]applets/maintained/volume-control/awn-applet-volume-control.schema-ini.in
 applets/maintained/volume-control/volume-control.desktop.in

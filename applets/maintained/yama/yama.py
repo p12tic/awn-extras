@@ -321,7 +321,7 @@ class YamaApplet:
 
         ncs_exists = os.path.exists(commands.getoutput("which nautilus-connect-server"))
         if ncs_exists:
-            connect_item = self.append_menu_item(menu, "Connect to Server...", "stock_internet", "Connect to a remote computer or shared disk")
+            connect_item = self.append_menu_item(menu, "Connect to Server...", "applications-internet", "Connect to a remote computer or shared disk")
             connect_item.connect("activate", self.start_subprocess_cb, "nautilus-connect-server", False)
         added |= ncs_exists
 

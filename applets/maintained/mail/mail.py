@@ -153,7 +153,7 @@ class MailApplet:
             self.awn.theme.icon("error")
 
             if self.settings["show-network-errors"]:
-                self.awn.errors.general(e)
+                self.awn.notify.send(_("Network error - Mail Applet"), str(e), "")
             return
 
         diffSubjects = [i for i in self.mail.subjects if i not in oldSubjects]
@@ -235,10 +235,11 @@ class MailApplet:
             "timeout": (2, change_timeout,
                         prefs.get_object("spinbutton-timeout"))
         }
-	for key, value in default_values.iteritems():
-		if not key in self.awn.settings:
-			self.awn.settings[key] = value
-	self.settings = self.awn.settings
+
+        for key, value in default_values.iteritems():
+            if not key in self.awn.settings:
+                self.awn.settings[key] = value
+        self.settings = self.awn.settings
 
         entry_client = prefs.get_object("entry-client")
         entry_client.set_text(self.settings["email-client"])
@@ -523,8 +524,8 @@ class Backends:
 
             if "bozo_exception" in f.keys():
                 raise RuntimeError(_("There seem to be problems with our \
-                    connection to your account. Your best bet is probably \
-                    to log out and try again."))
+connection to your account. Your best bet is probably \
+to log out and try again."))
             # Hehe, Google is funny. Bozo exception
 
             t = []
@@ -582,8 +583,8 @@ class Backends:
 
             if "bozo_exception" in f.keys():
                 raise RuntimeError(_("There seem to be problems with our \
-                    connection to your account. Your best bet is probably \
-                    to log out and try again."))
+connection to your account. Your best bet is probably \
+to log out and try again."))
             # Hehe, Google is funny. Bozo exception
 
             t = []

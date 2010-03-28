@@ -683,11 +683,8 @@ class StacksGuiCurved(gtk.Window):
 		ax, ay = self.applet.window.get_origin()
 		aw, ah = self.applet.get_size_request()
 		
-		ay = ay + 50
-		
-		display_manager = gtk.gdk.display_manager_get()
-		default_display = display_manager.get_default_display()
-		screen, wx, wy, modifier = default_display.get_pointer()
+		display = self.get_display()
+		screen, wx, wy, modifier = display.get_pointer()
 		active_monitor_number = screen.get_monitor_at_point(ax, ay)
 		active_monitor_geometry = screen.get_monitor_geometry(active_monitor_number)
 		sw = active_monitor_geometry.width
@@ -711,18 +708,31 @@ class StacksGuiCurved(gtk.Window):
 			else:
 				self.direction = "LEFT"     
 				   	
+		orient = self.applet.get_pos_type()
+
 		if self.direction == "RIGHT":
 			x = ax + aw/2  - self.text_distance - self.curved_config['label_length'] - icon_size / 2
 		else:
 			x = ax + aw/2  - icon_size / 2 - self.maxx - icon_size / 4
-		y = ay - h 
+
+		if orient != gtk.POS_TOP:
+			ay = ay + 50
+			y = ay - h
+		else:
+			y = ay + self.applet.get_size() + self.applet.get_offset()
+
 		if x < 0:
 			x = 2
 		if x+w > sw:
 			x = sw - w - 20
-		self.move(int(x), int(y))        
+
+		if orient == gtk.POS_LEFT:
+			x += self.applet.get_size() + self.applet.get_offset()
+		elif orient == gtk.POS_RIGHT:
+			x -= self.applet.get_size()
+
+		self.move(int(x), int(y))
 		
-		 	
 
     # Calculate stack item x coordinate
     def calc_x_position (self, i):
@@ -780,7 +790,13 @@ class StacksGuiCurved(gtk.Window):
                 
         icon_size = self.config['icon_size']
         ax, ay = self.applet.window.get_origin()
-        max_height = ay
+
+        display = self.get_display()
+        screen, wx, wy, modifier = display.get_pointer()
+        active_monitor_number = screen.get_monitor_at_point(ax, ay)
+        active_monitor_geometry = screen.get_monitor_geometry(active_monitor_number)
+        max_height = active_monitor_geometry.height
+        max_height -= self.applet.get_size() + self.applet.get_offset()
         
         self.angle_interval = self.curved_config['layout_interval'] * icon_size / 50
         

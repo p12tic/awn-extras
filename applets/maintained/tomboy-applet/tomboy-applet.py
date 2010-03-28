@@ -22,21 +22,18 @@ import gtk
 
 from awn.extras import awnlib, __version__, _
 
-try:
-    import dbus
-    from dbus.mainloop.glib import DBusGMainLoop
+import dbus
+from dbus.mainloop.glib import DBusGMainLoop
 
-    DBusGMainLoop(set_as_default=True)
-except ImportError:
-    dbus = None
+DBusGMainLoop(set_as_default=True)
 
 applet_name = _("Tomboy Applet")
 applet_description = _("Control Tomboy with D-Bus")
 applet_system_notebook = "system:notebook:"
 applet_system_template = "system:template"
 
-# Logo of the applet, shown in the GTK About dialog
-applet_logo = os.path.join(os.path.dirname(__file__), "icons", "tomboy.png")
+# Applet's themed icon, also shown in the GTK About dialog
+applet_logo = "tomboy"
 
 bus_name = "org.gnome.Tomboy"
 object_name = "/org/gnome/Tomboy/RemoteControl"
@@ -52,18 +49,13 @@ class TomboyApplet:
     def __init__(self, awnlib):
         self.awn = awnlib
 
-        awnlib.icon.file(applet_logo, True, awnlib.icon.APPLET_SIZE)
-        awnlib.connect_size_changed(lambda: awnlib.icon.file(applet_logo, True,
-            awnlib.icon.APPLET_SIZE))
-
-        if dbus is not None:
-            try:
-                bus = dbus.SessionBus()
-                if bus_name not in bus.list_names():
-                    bus.start_service_by_name(bus_name)
-                self.connect(bus)
-            except dbus.DBusException, e:
-                awnlib.errors.general("Could not connect to Tomboy: %s" % e)
+        try:
+            bus = dbus.SessionBus()
+            if bus_name not in bus.list_names():
+                bus.start_service_by_name(bus_name)
+            self.connect(bus)
+        except dbus.DBusException, e:
+            awnlib.errors.general(("Could not connect to Tomboy", e.args[0]))
 
     def connect(self, bus):
         object = bus.get_object(bus_name, object_name)
@@ -143,7 +135,7 @@ class TomboyApplet:
         dialog.show_all()
 
     def main_dialog(self):
-        if self.__dialog != None:
+        if self.__dialog is not None:
             self.awn.dialog.unregister("main")
             self.__dialog = None
 
@@ -177,7 +169,7 @@ if __name__ == "__main__":
     awnlib.init_start(TomboyApplet, {"name": applet_name, "short": "tomboy",
         "version": __version__,
         "description": applet_description,
-        "logo": applet_logo,
+        "theme": applet_logo,
         "author": "Julien Lavergne",
         "copyright-year": "2008 - 2009",
         "authors": ["Julien Lavergne <julien.lavergne@gmail.com>",

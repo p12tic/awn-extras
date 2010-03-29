@@ -159,6 +159,7 @@ class Dialect(awn.AppletSimple):
         index = -1
         if len(options) > 0:
             for item in options:
+                if len(item) == 0: continue
                 option, value = item.split(':')
                 if option == 'grp':
                     index = options.index(item)

@@ -319,6 +319,7 @@ _button_clicked_event (CairoMainIcon *icon, GdkEventButton *event, gpointer null
     if (!priv->context_menu)
     {
       priv->context_menu = awn_applet_create_default_menu (AWN_APPLET(priv->applet));
+      gtk_menu_set_screen(GTK_MENU(priv->context_menu), NULL);
       item = awn_themed_icon_create_remove_custom_icon_item (AWN_THEMED_ICON(icon),NULL);
       gtk_menu_shell_append (GTK_MENU_SHELL(priv->context_menu), item);
 /*      item = gtk_image_menu_item_new_with_label("Applet Preferences");
@@ -327,7 +328,6 @@ _button_clicked_event (CairoMainIcon *icon, GdkEventButton *event, gpointer null
       gtk_widget_show(item);
       gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);
        */
-      gtk_menu_set_screen(GTK_MENU(priv->context_menu), NULL);
 //      g_signal_connect(G_OBJECT(item), "button-press-event", G_CALLBACK(_show_prefs), NULL);
       item=awn_applet_create_about_item_simple(AWN_APPLET(priv->applet),
                                                "Copyright 2007,2008, 2009 Rodney Cryderman <rcryderman@gmail.com>",

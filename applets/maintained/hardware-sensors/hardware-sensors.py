@@ -80,13 +80,14 @@ class SensorsApplet:
 
         # If no sensors were found, display warning massage and icon, then exit
         if no_sensors:
-            message = _("Warning: No sensors found. Install one or more of \
-ACPI, HDDTemp, LM-Sensors and restart the applet.")
+            subject = _("Warning from Hardware Sensors: No sensors found")
+            message = _("Install one or more of \
+ACPI, HDDTemp, LM-Sensors, nvidia-settings or nvclock and restart the applet.")
 
-            print message
+            print subject + ".", message
 
             # Show massage with awn notify
-            self.applet.notify.send(subject=None, body=message, icon="")
+            self.applet.notify.send(subject=subject, body=message, icon=applet_logo)
             # Show "no sensors found" icon
             self.applet.icon.file(no_sensors_icon, size=applet.get_size())
             self.applet.tooltip.set(message)

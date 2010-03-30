@@ -15,6 +15,7 @@
 
 from __future__ import with_statement
 
+from collections import defaultdict
 import commands
 import os
 import re
@@ -73,7 +74,7 @@ class YamaApplet:
 
         self.__rebuild_lock = Lock()
 
-        self.__schedule_id = {"applications.menu": None, "settings.menu": None}
+        self.__schedule_id = defaultdict(lambda: None)
         self.__schedule_lock = Lock()
 
         self.setup_context_menu()

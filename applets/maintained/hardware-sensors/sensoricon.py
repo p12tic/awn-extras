@@ -22,7 +22,8 @@ import os
 import math
 
 import cairo
-import rsvg
+import awn
+awn.check_dependencies(globals(), "rsvg")
 
 theme_dir = os.path.join(os.path.dirname(__file__), "themes")
 

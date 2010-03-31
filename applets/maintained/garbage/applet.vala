@@ -112,7 +112,7 @@ public class GarbageApplet : AppletSimple
     MessageDialog dialog;
 
     dialog = new MessageDialog (this, DialogFlags.MODAL, MessageType.ERROR,
-                                ButtonsType.OK, msg);
+                                ButtonsType.OK, "%s" ,msg);
     dialog.run ();
     dialog.destroy ();
   }
@@ -236,7 +236,7 @@ public class GarbageApplet : AppletSimple
                    .printf (this.trash.file_count);
       MessageDialog dialog = new MessageDialog ((Gtk.Window)this, 0,
                                                 MessageType.QUESTION,
-                                                ButtonsType.YES_NO, msg);
+                                                ButtonsType.YES_NO, "%s", msg);
       int response = dialog.run ();
       dialog.destroy ();
       do_empty = (response == ResponseType.YES);

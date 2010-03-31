@@ -1,5 +1,4 @@
-SAC_PREREQ(2.53)
-
+AC_PREREQ(2.53)
 
 AC_INIT(awn-extras, 0.4.0~rc2, [https://bugs.launchpad.net/awn-extras])
 AM_INIT_AUTOMAKE([-Wno-portability 1.8 tar-ustar])

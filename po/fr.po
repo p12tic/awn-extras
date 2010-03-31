@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: awn-core-applets 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-03-29 01:04+0300\n"
-"PO-Revision-Date: 2010-03-28 17:56+0000\n"
+"PO-Revision-Date: 2010-03-30 17:43+0000\n"
 "Last-Translator: Nicolas Delvaux <Unknown>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2010-03-29 03:44+0000\n"
+"X-Launchpad-Export-Date: 2010-03-31 03:49+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "Generated-By: pygettext.py 1.5\n"
 
@@ -44,7 +44,7 @@ msgstr "Niveau d'opacité de l'applet."
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:5
 msgid "The default external terminal application."
-msgstr ""
+msgstr "Émulateur de terminal par défaut."
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:100
 msgid "Disabled"
@@ -123,7 +123,7 @@ msgstr "Couleur de l'arrière-plan"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:4
 msgid "Color to draw the border"
-msgstr ""
+msgstr "Couleur de la bordure"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:5
 msgid "Display parameters for interfaces"
@@ -281,6 +281,7 @@ msgstr "Afficher la somme des réceptions et des envois"
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:8
 msgid "Display upload and download text representation of speed"
 msgstr ""
+"Afficher une représentation textuelle des vitesses d'émission et de réception"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:9
 msgid "Do not display the speed as text, only draw the graph"
@@ -342,7 +343,7 @@ msgstr "Si activé, l'unité affichée par défaut sera l'octet"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:20
 msgid "Minimum Scaling threshold"
-msgstr ""
+msgstr "Limite basse de l'échelle"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:21
 msgid ""
@@ -350,6 +351,9 @@ msgid ""
 "amounts of traffic. e.g.: Setting to 32.0 KBps will cause the graph to only "
 "draw if throughput exceeds 32.0 KBps"
 msgstr ""
+"Défini le seuil minimum de l'échelle pour ne pas afficher de grands piques "
+"pour un trafic faible. ex : En définissant 32.0Ko/s, seul les débits de plus "
+"de 32.0Ko/s seront affichés."
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:22
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:141
@@ -358,7 +362,7 @@ msgstr "Somme"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:147
 msgid "Multi"
-msgstr ""
+msgstr "Multi"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:155
 msgid "Upload Color"
@@ -1119,7 +1123,7 @@ msgstr ""
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:5
 msgid "Overlay selected layout flag on icon."
-msgstr ""
+msgstr "Superposer le drapeau correspondant à l'agencement sur l'icône."
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:6
 msgid "User selected layouts."
@@ -1182,6 +1186,27 @@ msgid ""
 "\tIf selected, scrolling up or down with your mouse wheel will select\n"
 "\tthe next or previous layout in your user list.\n"
 msgstr ""
+"\n"
+"Clic gauche :\n"
+"\n"
+"\tAgencement suivant\t\tsélectionne l'agencement suivant dans votre liste.\n"
+"\tAgencement précédent\tsélectionne l'agencement précédent dans votre "
+"liste.\n"
+"\tMenu\t\t\tsélectionner un agencement depuis un menu de votre liste.\n"
+"\tAucun\t\t\tle bouton n'aura aucun effet.\n"
+"\n"
+"Clic milieu :\n"
+"\n"
+"\tAgencement suivant\t\tsélectionne l'agencement suivant dans votre liste.\n"
+"\tAgencement précédent\tsélectionne l'agencement précédent dans votre "
+"liste.\n"
+"\tMenu\t\t\t\t\tsélectionner un agencement depuis un menu de votre liste.\n"
+"\tAucun\t\t\t\t\tle bouton n'aura aucun effet.\n"
+"\n"
+"Autoriser la molette à changer l'agencement :\n"
+"\n"
+"\tSi activé, la molette de la souris permet de sélectionner\n"
+"\t l'agencement suivant ou précédent dans votre liste.\n"
 
 #: ../applets/maintained/dialect/dialect.ui.h:35
 msgid ""
@@ -1231,7 +1256,7 @@ msgstr "À propos de l'applet dialecte"
 
 #: ../applets/maintained/dialect/dialect.ui.h:67
 msgid "Allow scroll wheel to change layout"
-msgstr ""
+msgstr "Autoriser la molette pour changer l'agencement"
 
 #: ../applets/maintained/dialect/dialect.ui.h:68
 msgid "Change your keyboard layout from Awn."
@@ -1247,15 +1272,15 @@ msgstr "Préférences de l'applet dialecte"
 
 #: ../applets/maintained/dialect/dialect.ui.h:71
 msgid "Flag Opacity"
-msgstr ""
+msgstr "Opacité du drapeau"
 
 #: ../applets/maintained/dialect/dialect.ui.h:72
 msgid "Flag Overlay"
-msgstr ""
+msgstr "Superposition du drapeau"
 
 #: ../applets/maintained/dialect/dialect.ui.h:73
 msgid "Flag Scale"
-msgstr ""
+msgstr "Taille du drapeau"
 
 #: ../applets/maintained/dialect/dialect.ui.h:75
 msgid "Keyboard Toggle"
@@ -1289,7 +1314,7 @@ msgstr "Agencement suivant"
 
 #: ../applets/maintained/dialect/dialect.ui.h:83
 msgid "Overlay layout flag on applet icon"
-msgstr ""
+msgstr "Superposer le drapeau de l'agencement sur l'icône de l'applet"
 
 #: ../applets/maintained/dialect/dialect.ui.h:84
 msgid "Previous Layout"

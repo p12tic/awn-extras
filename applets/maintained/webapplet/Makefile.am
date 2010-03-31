@@ -35,7 +35,8 @@ webapplet_la_LIBADD =		\
 	$(NULL)
 webapplet_la_LDFLAGS = $(APPLET_LINKER_FLAGS)
 
-dist_applet_DATA = webapplet-websites.ini
+prefsdir = $(applet_datadir)
+dist_prefs_DATA = webapplet-websites.ini
 
 web_iconsdir = $(applet_datadir)/icons
 dist_web_icons_DATA =		\

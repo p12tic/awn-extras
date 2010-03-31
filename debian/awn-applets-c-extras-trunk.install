@@ -23,8 +23,8 @@ etc/gconf/schemas/awn-applet-sysmon.schemas
 # Webapplet
 #
 usr/lib/awn/applets/webapplet/*.so
-usr/lib/awn/applets/webapplet/*.ini
 usr/share/avant-window-navigator/applets/webapplet.desktop
+usr/share/avant-window-navigator/applets/webapplet/*.ini
 usr/share/avant-window-navigator/applets/webapplet/icons/
 usr/share/avant-window-navigator/schemas/awn-applet-webapplet.schema-ini
 etc/gconf/schemas/awn-applet-webapplet.schemas

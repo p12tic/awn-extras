@@ -452,6 +452,8 @@ static void construct(Awntop_cairo_plug_data **p)
 
   data->compar = cmpcpu;
   data->invalidate_pixmaps = FALSE;
+  data->num_top_entries = 0;
+  data->topentries = NULL;
   top_state = TRUE;
   gcomparedir = -1;
   compmethod = 1;     /*sort by CPU*/

@@ -440,12 +440,14 @@ void toggle_Dashboard_window(Dashboard *dashboard)
   if (GTK_WIDGET_VISIBLE(dashboard->mainwindow))
   {
     gtk_widget_hide(dashboard->mainwindow);
+    awn_icon_set_is_active (AWN_ICON(awn_applet_simple_get_icon (AWN_APPLET_SIMPLE(dashboard->applet))), FALSE);
   }
   else
   {
     if (dashboard->mainwindow)
     {
       gtk_widget_show_all(dashboard->mainwindow);
+      awn_icon_set_is_active (AWN_ICON(awn_applet_simple_get_icon (AWN_APPLET_SIMPLE(dashboard->applet))), TRUE);
     }
   }
 }
@@ -620,6 +622,7 @@ static gboolean _toggle_awn_diag(GtkWidget *widget, GdkEventButton *event, Dashb
 {
 //    p->show_awn_dialog=!p->show_awn_dialog;
   gtk_widget_hide(p->mainwindow);
+  awn_icon_set_is_active (AWN_ICON(awn_applet_simple_get_icon (AWN_APPLET_SIMPLE(p->applet))), FALSE);
 #if 0
 
   if (p->show_awn_dialog)
@@ -924,6 +927,7 @@ static gboolean _focus_out_event(GtkWidget *widget, GdkEventButton *event,
       if (desktop_agnostic_config_client_get_bool(client, "shared", "dialog_focus_loss_behavior", NULL))
       {
         gtk_widget_hide(dashboard->mainwindow);
+        awn_icon_set_is_active (AWN_ICON(awn_applet_simple_get_icon (AWN_APPLET_SIMPLE(dashboard->applet))), FALSE);
       }
     }
   }
@@ -968,8 +972,6 @@ static void draw_main_window(Dashboard *dashboard)
   /*we're done laying out the damn thing - let's show it*/
 
   gtk_widget_show(dashboard->mainwindow);
-
-
 }
 
 

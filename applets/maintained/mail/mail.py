@@ -518,9 +518,14 @@ class Backends:
             return "https://mail.google.com/mail/"
 
         def update(self):
+
+            if not self.key.attrs.has_key("username"):
+                raise RuntimeError(_("Could not log in: No username"))
+                return
+
             f = feedparser.parse(\
                 "https://%s:%s@mail.google.com/gmail/feed/atom" \
-                 % (self.key.attrs["username"], self.key.password))
+                            % (self.key.attrs["username"], self.key.password))
 
             if "bozo_exception" in f.keys():
                 raise RuntimeError(_("There seem to be problems with our \
@@ -576,10 +581,16 @@ to log out and try again."))
             return "https://mail.google.com/a/%s" % self.key.attrs["domain"]
 
         def update(self):
+
+            if not self.key.attrs.has_key("username") or \
+               not self.key.attrs.has_key("domain"):
+                raise RuntimeError(_("Could not log in: No username or domain"))
+                return
+
             f = feedparser.parse(\
                 "https://%s%%40%s:%s@mail.google.com/a/%s/feed/atom" \
                  % (self.key.attrs["username"], self.key.attrs["domain"], \
-                 self.key.password, self.key.attrs["domain"]))
+                    self.key.password, self.key.attrs["domain"]))
 
             if "bozo_exception" in f.keys():
                 raise RuntimeError(_("There seem to be problems with our \
@@ -717,6 +728,8 @@ to log out and try again."))
                     raise RuntimeError(_("Could not log in: ") + str(message))
 
                 else:
+                    if not self.key.attrs.has_key("username"):
+                        raise RuntimeError(_("Could not log in: No username"))
                     self.server.user(key.attrs["username"])
                     try:
                         self.server.pass_(key.password)

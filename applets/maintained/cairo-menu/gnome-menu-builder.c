@@ -513,7 +513,8 @@ fill_er_up(MenuInstance * instance,GMenuTreeDirectory *directory, GtkWidget * me
           }
           gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
           gtk_widget_show_all (menu_item);
-          g_signal_connect(G_OBJECT(menu_item), "button-release-event", G_CALLBACK(_launch), desktop_file);
+          g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(_launch), desktop_file);
+//          g_signal_connect(G_OBJECT(menu_item), "button-release-event", G_CALLBACK(_launch), desktop_file);
           cairo_menu_item_set_source (AWN_CAIRO_MENU_ITEM(menu_item),uri);
           g_free (uri);          
           g_object_unref (entry);

@@ -407,10 +407,8 @@ public class NotificationArea : GLib.Object
     // those which should still be displayed
     foreach (weak Widget icon in this.table.get_children ())
     {
-      int del;
-
-      del = (int)icon.get_qdata (this.deletion_quark);
-      if (del != 0)
+      void* del = icon.get_qdata (this.deletion_quark);
+      if (del != null)
       {
         this.table.remove (icon);
       }
@@ -444,10 +442,9 @@ public class NotificationArea : GLib.Object
     // display tray icons which were added
     foreach (weak EggTray.Child icon in this.tray_icons)
     {
-      int added;
-      added = (int)icon.get_qdata (this.addition_quark);
+      void* added = icon.get_qdata (this.addition_quark);
 
-      if (added == 0) continue;
+      if (added == null) continue;
 
       icon.set_qdata (this.addition_quark, 0.to_pointer());
       this.table.attach_defaults (icon, col, col+1, row, row+1);

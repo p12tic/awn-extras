@@ -958,7 +958,7 @@ menu_build (MenuInstance * instance)
       gtk_menu_shell_append(GTK_MENU_SHELL(instance->menu),menu_item);
       c = g_malloc0 (sizeof(CallbackContainer));
       c->file_path = g_strdup(":::PLACES");
-      c->display_name = g_strdup ("Places");
+      c->display_name = g_strdup (_("Places"));
       c->icon_name = g_strdup(icon_name);        
       drop_data = g_strdup_printf("cairo_menu_item_dir:///@@@%s@@@%s@@@%s\n",c->file_path,c->display_name,c->icon_name);
       cairo_menu_item_set_source (AWN_CAIRO_MENU_ITEM(menu_item),drop_data);
@@ -996,7 +996,7 @@ menu_build (MenuInstance * instance)
       gtk_menu_shell_append(GTK_MENU_SHELL(instance->menu),menu_item);
       c = g_malloc0 (sizeof(CallbackContainer));
       c->file_path = g_strdup(":::RECENT");
-      c->display_name = g_strdup ("Recent Documents");
+      c->display_name = g_strdup (_("Recent Documents"));
       c->icon_name = g_strdup (icon_name);        
       drop_data = g_strdup_printf("cairo_menu_item_dir:///@@@%s@@@%s@@@%s\n",c->file_path,c->display_name,c->icon_name);
       cairo_menu_item_set_source (AWN_CAIRO_MENU_ITEM(menu_item),drop_data);
@@ -1038,7 +1038,7 @@ menu_build (MenuInstance * instance)
 
       c = g_malloc0 (sizeof(CallbackContainer));
       c->file_path = g_strdup(":::SESSION");
-      c->display_name = g_strdup ("Session");
+      c->display_name = g_strdup (_("Session"));
       c->icon_name = g_strdup ("session-properties");      
       drop_data = g_strdup_printf("cairo_menu_item_dir:///@@@%s@@@%s@@@%s\n",c->file_path,c->display_name,c->icon_name);
       cairo_menu_item_set_source (AWN_CAIRO_MENU_ITEM(menu_item),drop_data);

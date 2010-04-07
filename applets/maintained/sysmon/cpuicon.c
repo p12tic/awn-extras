@@ -591,16 +591,16 @@ awn_CPUicon_show_context_menu(AwnCPUicon *self)
   gtk_menu_shell_append(GTK_MENU_SHELL(submenu), item);
   g_signal_connect_swapped (item, "activate", G_CALLBACK(change_to_default), self);  
 
-  item = gtk_menu_item_new_with_label ("Add Icon");
+/*  item = gtk_menu_item_new_with_label ("Add Icon");
   gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);
   submenu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM(item),submenu);
   item = gtk_menu_item_new_with_label ("CPU");
   gtk_menu_shell_append(GTK_MENU_SHELL(submenu), item);
-
-  item = gtk_menu_item_new_with_label ("Remove Icon");
+*/
+/*  item = gtk_menu_item_new_with_label ("Remove Icon");
   gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);  
-
+*/
   item = gtk_check_menu_item_new_with_label ("Render Background");
   gtk_check_menu_item_set_active ( GTK_CHECK_MENU_ITEM (item),render_bg);  
   gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);

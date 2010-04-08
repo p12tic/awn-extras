@@ -174,7 +174,6 @@ static void _awn_areagraph_render_to_context(AwnGraph * graph,
   graph_priv = AWN_GRAPH_GET_PRIVATE (graph);
   
   cairo_save (cr);
-  values = graph_priv->data;
     
   if (priv->num_points != width)
   {
@@ -183,6 +182,7 @@ static void _awn_areagraph_render_to_context(AwnGraph * graph,
     graph_priv->data =g_new0(gdouble, priv->num_points);
     awn_areagraph_clear (AWN_AREAGRAPH(graph),0.0);
   }
+  values = graph_priv->data;
 
   if ( (gint) priv->cur_point)
   {

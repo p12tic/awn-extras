@@ -294,7 +294,8 @@ static void _fillin_connected(DesktopAgnosticVFSVolume *volume,
   const gchar *uri_str;
 
   g_message("Attempting to add %s...", desktop_agnostic_vfs_volume_get_name(volume));
-
+  g_message("Volume = %p",volume);
+  g_assert (G_IS_OBJECT(volume));
   /* don't use g_return_if_fail because it runs g_critical */
   if (!desktop_agnostic_vfs_volume_is_mounted(volume))
   {
@@ -305,12 +306,14 @@ static void _fillin_connected(DesktopAgnosticVFSVolume *volume,
 
   item->places = places;
   item->text = g_strdup(desktop_agnostic_vfs_volume_get_name(volume));
+  g_debug ("text = %s",item->text);
   item->icon = g_strdup(desktop_agnostic_vfs_volume_get_icon(volume));
   uri = desktop_agnostic_vfs_volume_get_uri(volume);
+  g_debug ("uri = %p",uri);
   uri_str = desktop_agnostic_vfs_file_get_uri(uri);
   item->exec = g_strdup_printf("%s %s", places->file_manager, uri_str);
   item->comment = g_strdup_printf("%s\n%s", item->text, uri_str);
-  g_object_unref(uri);
+  //g_object_unref(uri);
   places->menu_list = g_slist_append(places->menu_list, item);
 }
 
@@ -403,7 +406,7 @@ static void get_places(Places * places)
 
   if (volumes)
   {
-    g_message("Number of volumes: %d", g_list_length(volumes));
+    g_debug("Number of volumes: %d", g_list_length(volumes));
     g_list_foreach(volumes, (GFunc)_fillin_connected, places);
   }
 

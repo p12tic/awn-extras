@@ -1329,7 +1329,7 @@ notify_daemon_notify_handler(NotifyDaemon *daemon,
     }
   }
 
-  if (window_xid != None)
+  if (window_xid != None && G_daemon_config.awn_client_pos)
   {
     /*
      * Do nothing here if we were passed an XID; we'll call
@@ -1351,7 +1351,6 @@ notify_daemon_notify_handler(NotifyDaemon *daemon,
     gint monitor;
     GdkScreen *screen;
     gint x, y;
-
     set_notification_arrow(GTK_WIDGET(nw), FALSE, 0, 0);
 
     gdk_display_get_pointer(gdk_display_get_default(),
@@ -1375,7 +1374,7 @@ notify_daemon_notify_handler(NotifyDaemon *daemon,
    * for changes, and reposition the window based on the source
    * window.  We need to do this after return_id is calculated.
    */
-  if (window_xid != None)
+  if (window_xid != None && G_daemon_config.awn_client_pos)
   {
     monitor_notification_source_windows(daemon, nt, window_xid);
     sync_notification_position(daemon, nw, window_xid);

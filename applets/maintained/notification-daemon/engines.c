@@ -1107,15 +1107,39 @@ move_notification(GtkWidget *nw, int x, int y)
     assert(1);
     x = x - WIDTH - 1;
 
-    if (y + nw->allocation.height >= gdk_screen_get_height(gdk_screen_get_default()))
+    switch (awn_applet_get_pos_type(G_daemon_config.awn_app))
     {
-      y = y - nw->allocation.height - 1;
+      case GTK_POS_TOP:
+        if (y + nw->allocation.height >= gdk_screen_get_height(gdk_screen_get_default()))
+        {
+          y = y + nw->allocation.height - 1;
+        }
+        break;
+      case GTK_POS_BOTTOM:
+        if (y + nw->allocation.height >= gdk_screen_get_height(gdk_screen_get_default()))
+        {
+          y = y - nw->allocation.height - 1;
+        }
+        break;
     }
   }
   else if (y + nw->allocation.height >= gdk_screen_get_height(gdk_screen_get_default()))
   {
-    assert(1);
-    y = y - nw->allocation.height - 1;
+    switch (awn_applet_get_pos_type(G_daemon_config.awn_app))
+    {
+      case GTK_POS_TOP:
+        if (y + nw->allocation.height >= gdk_screen_get_height(gdk_screen_get_default()))
+        {
+          y = y + nw->allocation.height - 1;
+        }
+        break;
+      case GTK_POS_BOTTOM:
+        if (y + nw->allocation.height >= gdk_screen_get_height(gdk_screen_get_default()))
+        {
+          y = y - nw->allocation.height - 1;
+        }
+        break;
+    }
   }
 
   WindowData *windata = g_object_get_data(G_OBJECT(nw), "windata");

@@ -114,8 +114,26 @@ static void get_origin_awn(gint *x, gint *y, gint width, gint height)
 
   gtk_widget_get_size_request(GTK_WIDGET(G_daemon_config.awn_app), &aw, &ah);
   *x = ax - w / 2 + aw / 2;
-  *y = gdk_screen_get_height(gdk_screen_get_default()) - height - G_daemon_config.awn_app_height * 1.5;// + dialog->priv->offset;
-
+  switch (awn_applet_get_pos_type (G_daemon_config.awn_app) )
+  {
+    case GTK_POS_TOP:
+      *y =  height - G_daemon_config.awn_app_height * 1.5;// + dialog->priv->offset;
+      break;
+    case GTK_POS_LEFT:
+    case GTK_POS_RIGHT:
+      if (ay < (gdk_screen_get_height(gdk_screen_get_default())/2))
+      {
+        *y =  G_daemon_config.awn_app_height * 1.5;// + dialog->priv->offset;
+      }
+      else
+      {
+        *y = gdk_screen_get_height(gdk_screen_get_default()) - height - G_daemon_config.awn_app_height * 1.5;// + dialog->priv->offset;
+      }
+      break;
+    case GTK_POS_BOTTOM:
+    default:
+      *y = gdk_screen_get_height(gdk_screen_get_default()) - height - G_daemon_config.awn_app_height * 1.5;// + dialog->priv->offset;
+  }
   if (G_daemon_config.awn_override_y >= 0)
     *y = G_daemon_config.awn_override_y;
 
@@ -246,7 +264,6 @@ notify_stack_shift_notifications(NotifyStack *stack,
   get_work_area(GTK_WIDGET(nw), &workarea);
   get_origin_coordinates(stack->location, &workarea, &x, &y,
                          &shiftx, &shifty, init_width, init_height);
-
   if (nw_x != NULL)
     *nw_x = x;
 

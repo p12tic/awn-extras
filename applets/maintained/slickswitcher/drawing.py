@@ -460,22 +460,16 @@ class ViewportSurface:
                 return
 
             #Hooray Gdk!
-            pixmap = gtk.gdk.Pixmap(self.owner.window, self.settings['width'], \
-                self.settings['height'])
-            pixmap.draw_pixbuf(None, self.backgrounds[number], 0, 0, 0, 0, \
-                dither=gtk.gdk.RGB_DITHER_MAX)
-            cr2 = pixmap.cairo_create()
-            self.cr.set_source_surface(cr2.get_target(), 0, 0)
+            gdk_cr = gtk.gdk.CairoContext(self.cr)
+            gdk_cr.set_source_pixbuf(self.backgrounds[number], 0, 0)
+            gdk_cr.paint()
+
+            del gdk_cr
 
         #The background is simply a cairo surface
         else:
-            pixmap = None
-            cr2 = None
             self.cr.set_source_surface(self.backgrounds[number], 0, 0)
-
-        #Now fill the background
-        self.cr.fill_preserve()
-        self.cr.paint()
+            self.cr.paint()
 
         #Draw the windows
         self.draw_windows()
@@ -500,7 +494,7 @@ class ViewportSurface:
         self.owner.updated()
 
         #Free some memory
-        del self.cr, pixmap, cr2
+        del self.cr
 
     #Update the values from the owner
     def update_values(self):

@@ -442,43 +442,16 @@ class App(awn.AppletSimple):
 
     #Get a background image from file
     def background_from_file(self, path, w=48, h=48):
-        if 1:
-            #Try to get the background image as a surface
-            try:
-                assert path[-4:].lower() == '.png'
+        #Try to get the image from a pixbuf
+        try:
+            pixbuf = gtk.gdk.pixbuf_new_from_file(path)
+            pixbuf = pixbuf.scale_simple(w, h, gtk.gdk.INTERP_BILINEAR)
 
-                #Create the surface
-                surface = cairo.ImageSurface.create_from_png(path)
+            return pixbuf
 
-                #Get the dimensions of the image
-                width, height = float(surface.get_width()), float(surface.get_height())
-
-                #Resize the surface
-                cr = cairo.Context(surface)
-                cr.save()
-                cr.scale(w / width, h / height)
-                cr.set_source_surface(surface, 0, 0)
-                cr.paint()
-                cr.restore()
-
-                del cr
-
-                return surface
-
-            #Something went wrong
-            except:
-                #Now try to get the image from a pixbuf
-                try:
-                    pixbuf = gtk.gdk.pixbuf_new_from_file(path)
-                    pixbuf2 = pixbuf.scale_simple(w, h, gtk.gdk.INTERP_BILINEAR)
-
-                    del pixbuf
-
-                    return pixbuf2
-
-                #Something went wrong
-                except:
-                    return self.no_background(w, h)
+        #Something went wrong
+        except:
+            return self.no_background(w, h)
 
     #Show a Preferences dialog
     def show_prefs(self, *args):

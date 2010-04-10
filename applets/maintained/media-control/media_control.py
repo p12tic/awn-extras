@@ -374,9 +374,16 @@ class MediaControlApplet (awn.AppletSimple):
         try:
             if not player_name: self.player_name = mediaplayers.get_app_name()
             else: self.player_name = player_name
+
+            if not self.player_name: raise Exception("No player detected!")
+            self.MediaPlayer = mediaplayers.__dict__[self.player_name]()
+            self.MediaPlayer.set_song_change_callback(self.song_changed)
+            self.MediaPlayer.set_playing_changed_callback(self.play_state_changed)
+            self.players_frame.set_no_show_all(True)
+            self.controls.set_no_show_all(False)
+            self.players_frame.hide()
         except:
             self.player_name = None
-        if self.player_name in [None, '']:
             self.players_frame.set_no_show_all(False)
             self.controls.set_no_show_all(True)
             self.controls.hide()
@@ -386,13 +393,6 @@ class MediaControlApplet (awn.AppletSimple):
             self.is_playing = False
             self.album_overlay.props.active = False
             if self.docklet_visible: self.docklet.destroy()
-        else:
-            self.MediaPlayer = mediaplayers.__dict__[self.player_name]()
-            self.MediaPlayer.set_song_change_callback(self.song_changed)
-            self.MediaPlayer.set_playing_changed_callback(self.play_state_changed)
-            self.players_frame.set_no_show_all(True)
-            self.controls.set_no_show_all(False)
-            self.players_frame.hide()
 
     def get_supported_player_names(self):
         """
@@ -663,6 +663,7 @@ class MediaControlApplet (awn.AppletSimple):
 
 if __name__ == "__main__":
     awn.init                      (sys.argv[1:])
+    vfs.init                      ()
     applet = MediaControlApplet   (awn.uid, awn.panel_id)
     awn.embed_applet              (applet)
     applet.show_all               ()

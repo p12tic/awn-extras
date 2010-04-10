@@ -756,6 +756,8 @@ create_notification(UrlClickedCb url_clicked)
   windata->body_label = gtk_label_new(NULL);
 #else
   windata->body_label = sexy_url_label_new();
+  g_signal_connect_swapped(G_OBJECT(windata->body_label), "url_activated",
+                           G_CALLBACK(windata->url_clicked), win);
 #endif
 
   gtk_box_pack_start(GTK_BOX(vbox), windata->body_label, TRUE, TRUE, 0);
@@ -763,9 +765,6 @@ create_notification(UrlClickedCb url_clicked)
   gtk_misc_set_alignment(GTK_MISC(windata->body_label), 0, 0);
 
   gtk_label_set_line_wrap(GTK_LABEL(windata->body_label), TRUE);
-
-  g_signal_connect_swapped(G_OBJECT(windata->body_label), "url_activated",
-                           G_CALLBACK(windata->url_clicked), win);
 
   atkobj = gtk_widget_get_accessible(windata->body_label);
 

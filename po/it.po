@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-25 14:36+0200\n"
-"PO-Revision-Date: 2009-12-08 17:01+0000\n"
+"POT-Creation-Date: 2010-03-25 14:38+0200\n"
+"PO-Revision-Date: 2010-03-25 14:43+0000\n"
 "Last-Translator: Milo Casagrande <milo@casagrande.name>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-03-24 17:24+0000\n"
+"X-Launchpad-Export-Date: 2010-03-26 04:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -70,9 +70,8 @@ msgstr ""
 #: ../applets/maintained/awnterm/awn-terminal.vala:456
 #: ../applets/maintained/file-browser-launcher/prefs.py:253
 #: ../applets/maintained/file-browser-launcher/prefs.py:328
-#, fuzzy
 msgid "Action"
-msgstr "Icona"
+msgstr ""
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:476
 msgid "Shortcut"
@@ -83,9 +82,9 @@ msgid "Activate"
 msgstr ""
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:491
-#, fuzzy, c-format
+#, c-format
 msgid "Background image"
-msgstr "Sfondo"
+msgstr ""
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:503
 msgid "Select a file"
@@ -107,9 +106,8 @@ msgid "A simple popup terminal"
 msgstr ""
 
 #: ../applets/maintained/awnterm/awnterm.desktop.in.in.h:2
-#, fuzzy
 msgid "Terminal Applet"
-msgstr "Applet cestino"
+msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:1
 msgid " Upload/Download"
@@ -203,9 +201,8 @@ msgid "Interface"
 msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:354
-#, fuzzy
 msgid "Sent"
-msgstr "Nevischio"
+msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:359
 msgid "Received"
@@ -216,9 +213,8 @@ msgid "Sending"
 msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:369
-#, fuzzy
 msgid "Receiving"
-msgstr "Rimozione:"
+msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:417
 msgid "Please select a valid Network Device"
@@ -230,9 +226,8 @@ msgid "Total Sent: %s - Total Received: %s (All Interfaces)"
 msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:610
-#, fuzzy
 msgid "No"
-msgstr "Nessuno"
+msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:611
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:136
@@ -261,14 +256,12 @@ msgid "<b>Display</b>"
 msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:2
-#, fuzzy
 msgid "Background Color"
-msgstr "Sfondo"
+msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:3
-#, fuzzy
 msgid "Border Color"
-msgstr "Colori personalizzati"
+msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:5
 msgid "Display MBps/KBps (bytes) instead of Mbps/Kbps (bits)"
@@ -295,14 +288,12 @@ msgid "Draw 0 bps in graphs"
 msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:11
-#, fuzzy
 msgid "Draw Background"
-msgstr "Sfondo"
+msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:12
-#, fuzzy
 msgid "Draw Border"
-msgstr "Bordo esterno"
+msgstr ""
 
 #. Put the general tab together
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:13
@@ -360,14 +351,12 @@ msgid "Multi"
 msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:155
-#, fuzzy
 msgid "Upload Color"
-msgstr "Colore icona"
+msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:166
-#, fuzzy
 msgid "Download Color"
-msgstr "Colore icona"
+msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:239
 msgid "Upload"
@@ -415,9 +404,8 @@ msgid "Unit of low level threshold (Percent or Time Remaining)."
 msgstr ""
 
 #: ../applets/maintained/battery/battery.desktop.in.h:1
-#, fuzzy
 msgid "Battery"
-msgstr "Burrasca"
+msgstr ""
 
 #: ../applets/maintained/battery/battery.desktop.in.h:2
 msgid "Display battery state"
@@ -430,9 +418,8 @@ msgid "<b>General Options</b>"
 msgstr ""
 
 #: ../applets/maintained/battery/battery.ui.h:3
-#, fuzzy
 msgid "<b>Notifications</b>"
-msgstr "Nome località"
+msgstr ""
 
 #: ../applets/maintained/battery/battery.ui.h:4
 msgid ""
@@ -453,9 +440,8 @@ msgid "Time Remaining"
 msgstr ""
 
 #: ../applets/maintained/battery/battery.ui.h:8
-#, fuzzy
 msgid "_Battery:"
-msgstr "Burrasca"
+msgstr ""
 
 #: ../applets/maintained/battery/battery.ui.h:9
 msgid "_Notify when charge level reaches:"
@@ -466,9 +452,8 @@ msgstr ""
 #: ../applets/maintained/mail/mail.ui.h:8
 #: ../applets/maintained/volume-control/volume-control.ui.h:7
 #: ../applets/maintained/weather/weather.ui.h:18
-#, fuzzy
 msgid "_Theme:"
-msgstr "Tema: "
+msgstr ""
 
 #: ../applets/maintained/battery/battery.ui.h:11
 msgid "_Warn when charge level drops to:"
@@ -483,7 +468,8 @@ msgid "Beaufort)."
 msgstr ""
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:3
-msgid "If enabled, besides hours and minutes, the seconds will be visible too."
+msgid ""
+"If enabled, besides hours and minutes, the seconds will be visible too."
 msgstr ""
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:4
@@ -529,7 +515,7 @@ msgstr ""
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:1
 #: ../applets/maintained/weather/weather.ui.h:1
 msgid " "
-msgstr ""
+msgstr " "
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:2
 msgid "12 _hour format"
@@ -565,7 +551,8 @@ msgid "Find _Next"
 msgstr ""
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:11
-msgid "If enabled, besides hours and minutes, the seconds will be visible too"
+msgid ""
+"If enabled, besides hours and minutes, the seconds will be visible too"
 msgstr ""
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:12
@@ -635,9 +622,8 @@ msgstr ""
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:107
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:111
-#, fuzzy
 msgid "Logout"
-msgstr "Termina sessione"
+msgstr ""
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:115
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:117
@@ -649,9 +635,8 @@ msgstr "Blocca schermo"
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:126
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:128
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:139
-#, fuzzy
 msgid "Suspend"
-msgstr "domenica"
+msgstr ""
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:131
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:133
@@ -679,9 +664,9 @@ msgstr "Home"
 msgid "Desktop"
 msgstr ""
 
-#.
+#. 
 #. TODO: check the trash and set to stock_trash_empty if trash is empty
-#.
+#. 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:193
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:588
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:591
@@ -689,9 +674,8 @@ msgid "Trash"
 msgstr "Cestino"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:194
-#, fuzzy
 msgid "File System"
-msgstr "File system"
+msgstr ""
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:315
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:565
@@ -718,9 +702,8 @@ msgstr ""
 
 #. generates a compiler warning due to the ellipse
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1056
-#, fuzzy
 msgid "Search\\u2026"
-msgstr "Cerca"
+msgstr ""
 
 #. generates a compiler warning due to the ellipse
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1073
@@ -728,18 +711,16 @@ msgid "Launch\\u2026"
 msgstr ""
 
 #: ../applets/maintained/cairo-menu/misc.c:356
-#, fuzzy
 msgid "Clear Recent Documents"
-msgstr "Documenti recenti"
+msgstr ""
 
 #: ../applets/maintained/calendar/awn-applet-calendar.schema-ini.in.h:1
 msgid "X"
 msgstr ""
 
 #: ../applets/maintained/calendar/calendar.desktop.in.h:1
-#, fuzzy
 msgid "Clock/Calendar Applet"
-msgstr "Aspetto del calendario"
+msgstr ""
 
 #: ../applets/maintained/calendar/calendar.desktop.in.h:2
 msgid "Watch appointments on your dock"
@@ -919,7 +900,8 @@ msgstr "Impossibile scaricare %s. Premere «Avanti» per riprovare."
 
 #: ../applets/maintained/comics/comics_add.py:63
 msgid "The URL is not a valid comic feed. Press \"next\" to try again"
-msgstr "L'URL non è un feed di fumetto valido. Premere «Avanti» per riprovare."
+msgstr ""
+"L'URL non è un feed di fumetto valido. Premere «Avanti» per riprovare."
 
 #: ../applets/maintained/comics/comics_add.py:140
 #, python-format
@@ -953,9 +935,8 @@ msgstr ""
 #: ../applets/maintained/comics/comics.py:181
 #: ../applets/maintained/comics/main.py:294
 #: ../applets/maintained/comics/main.py:300
-#, fuzzy
 msgid "Comics!"
-msgstr "Fumetti"
+msgstr ""
 
 #: ../applets/maintained/comics/comics.desktop.in.h:2
 msgid "View your favourite comics on your desktop"
@@ -1000,14 +981,12 @@ msgid "Failed to save <i>%s</i>."
 msgstr ""
 
 #: ../applets/maintained/comics/ui/add.ui.h:1
-#, fuzzy
 msgid "Add Comic"
-msgstr "Fumetti"
+msgstr ""
 
 #: ../applets/maintained/comics/ui/add.ui.h:2
-#, fuzzy
 msgid "Downloading Comic"
-msgstr "Colore icona"
+msgstr ""
 
 #: ../applets/maintained/comics/ui/add.ui.h:3
 msgid "Enter the URL of the RSS feed:"
@@ -1041,9 +1020,8 @@ msgstr ""
 
 #: ../applets/maintained/comics/ui/main.ui.h:2
 #: ../applets/maintained/comics/ui/manage.ui.h:1
-#, fuzzy
 msgid "Manage comics"
-msgstr "Fumetti condivisi"
+msgstr ""
 
 #: ../applets/maintained/comics/ui/manage.ui.h:2
 msgid "The following comics are installed:"
@@ -1079,9 +1057,8 @@ msgid "<b>Monitored CPU</b>"
 msgstr ""
 
 #: ../applets/maintained/cpufreq/cpufreq.ui.h:2
-#, fuzzy
 msgid "_Processor:"
-msgstr "Avanzamento"
+msgstr ""
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:1
 msgid " 0.9)."
@@ -1113,9 +1090,8 @@ msgid "User selected variants."
 msgstr ""
 
 #: ../applets/maintained/dialect/dialect.desktop.in.h:1
-#, fuzzy
 msgid " Dialect Applet"
-msgstr "Applet di posta"
+msgstr ""
 
 #: ../applets/maintained/dialect/dialect.desktop.in.h:2
 msgid "Change your keyboard input layout from Awn."
@@ -1135,9 +1111,9 @@ msgid ""
 "\n"
 "See the Mouse Actions and Layout Lists tabs for configuration options.\n"
 "\n"
-"The applet depends on the python xklavier module (available from http://"
-"download.sugarlabs.org/sources/external/python-xklavier/python-xklavier-0.1."
-"tar.gz).\n"
+"The applet depends on the python xklavier module (available from "
+"http://download.sugarlabs.org/sources/external/python-xklavier/python-"
+"xklavier-0.1.tar.gz).\n"
 "\n"
 "This applet is licensed under GPL2. The flag icons distributed with this "
 "applet are from the xfce4-xkb-plugin-0.5.3.3 panel applet, licensed under "
@@ -1210,9 +1186,8 @@ msgid "(C) 2009, Lachlan Turner (Denham 2010)."
 msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:66
-#, fuzzy
 msgid "About Dialect Applet"
-msgstr "Applet di posta"
+msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:67
 msgid "Allow scroll wheel to change layout"
@@ -1223,14 +1198,12 @@ msgid "Change your keyboard layout from Awn."
 msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:69
-#, fuzzy
 msgid "Dialect Applet Help"
-msgstr "Applet di posta"
+msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:70
-#, fuzzy
 msgid "Dialect Applet Preferences"
-msgstr "Preferenze"
+msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:71
 msgid "Flag Opacity"
@@ -1258,9 +1231,8 @@ msgid "Left Click"
 msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:78
-#, fuzzy
 msgid "Menu"
-msgstr "Principale"
+msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:79
 #: ../applets/maintained/file-browser-launcher/prefs.py:393
@@ -1268,9 +1240,8 @@ msgid "Middle Click"
 msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:80
-#, fuzzy
 msgid "Mouse Actions"
-msgstr "Icona"
+msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:81
 msgid "Next Layout"
@@ -1285,9 +1256,8 @@ msgid "Previous Layout"
 msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:85
-#, fuzzy
 msgid "System List"
-msgstr "Sistema"
+msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:86
 msgid ""
@@ -1529,9 +1499,9 @@ msgid ""
 "countries either by patents or by copyrighted interfaces, the original "
 "copyright holder who places the Program under this License may add an "
 "explicit geographical distribution limitation excluding those countries, so "
-"that distribution is permitted only in or among countries not thus "
-"excluded.  In such case, this License incorporates the limitation as if "
-"written in the body of this License.\n"
+"that distribution is permitted only in or among countries not thus excluded. "
+" In such case, this License incorporates the limitation as if written in the "
+"body of this License.\n"
 "\n"
 "  9. The Free Software Foundation may publish revised and/or new versions of "
 "the General Public License from time to time.  Such new versions will be "
@@ -1598,9 +1568,8 @@ msgid "The color of the clock text."
 msgstr ""
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:5
-#, fuzzy
 msgid "The font face of the clock text."
-msgstr "L'orientazione dell'icona di notifica."
+msgstr ""
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:6
 msgid "The shadow color of the clock text."
@@ -1623,9 +1592,8 @@ msgid "<b>Clock Format</b>"
 msgstr ""
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:5
-#, fuzzy
 msgid "Appearance"
-msgstr "Aspetto dell'orologio"
+msgstr ""
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:6
 msgid "Commands"
@@ -1636,14 +1604,12 @@ msgid "Date below time"
 msgstr ""
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:8
-#, fuzzy
 msgid "Digital Clock Preferences"
-msgstr "Preferenze"
+msgstr ""
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:9
-#, fuzzy
 msgid "Run Calendar:"
-msgstr "Calendario"
+msgstr ""
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:10
 msgid "Run Time Admin:"
@@ -1654,9 +1620,8 @@ msgid "Show the date"
 msgstr ""
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:12
-#, fuzzy
 msgid "Use default Awn colors"
-msgstr "Colori personalizzati"
+msgstr ""
 
 #: ../applets/maintained/digital-clock/digital-clock.desktop.in.in.h:1
 msgid "A clock and calendar in one."
@@ -1709,14 +1674,12 @@ msgstr ""
 
 #: ../applets/maintained/feeds/classes.py:488
 #: ../applets/maintained/feeds/prefs.py:516
-#, fuzzy
 msgid "Google Reader"
-msgstr "Google Calendar"
+msgstr ""
 
 #: ../applets/maintained/feeds/classes.py:533
-#, fuzzy
 msgid "Google Wave"
-msgstr "Google Calendar"
+msgstr ""
 
 #: ../applets/maintained/feeds/classes.py:619
 msgid "Reddit Inbox"
@@ -1734,23 +1697,20 @@ msgstr ""
 
 #: ../applets/maintained/feeds/classes.py:765
 #: ../applets/maintained/feeds/prefs.py:410
-#, fuzzy
 msgid "Twitter"
-msgstr "Titolo"
+msgstr ""
 
 #: ../applets/maintained/feeds/classes.py:892
-#, fuzzy
 msgid "Untitled"
-msgstr "Titolo"
+msgstr ""
 
 #: ../applets/maintained/feeds/feeds.desktop.in.h:1
 #: ../applets/maintained/feeds/feeds.py:241
 #: ../applets/maintained/feeds/feeds.py:404
 #: ../applets/maintained/feeds/feeds.py:480
 #: ../applets/maintained/feeds/feeds.py:1031
-#, fuzzy
 msgid "Feeds Applet"
-msgstr "Applet cestino"
+msgstr ""
 
 #: ../applets/maintained/feeds/feeds.desktop.in.h:2
 #: ../applets/maintained/feeds/feeds.py:1036
@@ -1794,9 +1754,8 @@ msgstr ""
 
 #: ../applets/maintained/feeds/feeds.py:576
 #: ../applets/maintained/feeds/prefs.py:257
-#, fuzzy
 msgid "Loading..."
-msgstr "Ricerca..."
+msgstr ""
 
 #: ../applets/maintained/feeds/feeds.py:614
 #: ../applets/maintained/feeds/feeds.py:773
@@ -1827,9 +1786,8 @@ msgid "Do you want to add these %s feeds?"
 msgstr ""
 
 #: ../applets/maintained/feeds/prefs.py:58
-#, fuzzy
 msgid "Feeds Applet Preferences"
-msgstr "Preferenze"
+msgstr ""
 
 #: ../applets/maintained/feeds/prefs.py:68
 msgid "Feeds"
@@ -1909,9 +1867,8 @@ msgid "RSS/Atom"
 msgstr ""
 
 #: ../applets/maintained/feeds/prefs.py:412
-#, fuzzy
 msgid "Timeline"
-msgstr "Titolo"
+msgstr ""
 
 #: ../applets/maintained/feeds/prefs.py:417
 msgid "Replies"
@@ -1919,16 +1876,14 @@ msgstr ""
 
 #. "Search for" label and entry
 #: ../applets/maintained/feeds/prefs.py:446
-#, fuzzy
 msgid "Search for"
-msgstr "Cerca"
+msgstr ""
 
 #. URL: label and entry
 #: ../applets/maintained/feeds/prefs.py:460
 #: ../applets/maintained/webapplet/applet.c:276
-#, fuzzy
 msgid "URL:"
-msgstr "URI:"
+msgstr ""
 
 #. Username: label and entry
 #: ../applets/maintained/feeds/prefs.py:474
@@ -1954,9 +1909,8 @@ msgstr ""
 
 #. If signed in to Google Reader
 #: ../applets/maintained/feeds/prefs.py:553
-#, fuzzy
 msgid "_Search"
-msgstr "Cerca"
+msgstr ""
 
 #: ../applets/maintained/feeds/prefs.py:760
 msgid ""
@@ -2041,9 +1995,8 @@ msgid "A launcher for your file manager"
 msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:346
-#, fuzzy
 msgid "Home Folder"
-msgstr "Cartella:"
+msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:350
 #: ../applets/maintained/file-browser-launcher/prefs.py:223
@@ -2051,15 +2004,13 @@ msgid "Filesystem"
 msgstr "File system"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:473
-#, fuzzy
 msgid "Connect to Server..."
-msgstr "Connessione a <i>%s</i>..."
+msgstr ""
 
 #. Documents
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:524
-#, fuzzy
 msgid "Documents"
-msgstr "Documenti recenti"
+msgstr ""
 
 #. Downloads
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:528
@@ -2103,9 +2054,8 @@ msgstr ""
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:604
 #: ../applets/maintained/file-browser-launcher/prefs.py:289
 #: ../applets/maintained/file-browser-launcher/prefs.py:364
-#, fuzzy
 msgid "Folder"
-msgstr "Cartella:"
+msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:709
 msgid "DVD Drive"
@@ -2129,9 +2079,8 @@ msgstr ""
 
 #. xdg-open (aka system default)
 #: ../applets/maintained/file-browser-launcher/prefs.py:103
-#, fuzzy
 msgid "System Default"
-msgstr "Sistema"
+msgstr ""
 
 #. Last option: custom with an entry for the app name
 #: ../applets/maintained/file-browser-launcher/prefs.py:127
@@ -2168,9 +2117,8 @@ msgid "Home folder"
 msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:224
-#, fuzzy
 msgid "Mounted local drives"
-msgstr "Volume montato"
+msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:224
 msgid "Mounted network drives"
@@ -2181,9 +2129,8 @@ msgid "Connect to server"
 msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:225
-#, fuzzy
 msgid "Bookmarks"
-msgstr "Segnalibri\t"
+msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:264
 #: ../applets/maintained/file-browser-launcher/prefs.py:339
@@ -2240,7 +2187,8 @@ msgstr ""
 
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/garbage/awn-applet-garbage.schema-ini.in.h:1
-msgid "Enable the confirmation dialog form when one wishes to empty the trash."
+msgid ""
+"Enable the confirmation dialog form when one wishes to empty the trash."
 msgstr ""
 
 #: ../applets/maintained/garbage/awn-applet-garbage.schema-ini.in.h:2
@@ -2252,14 +2200,13 @@ msgid "A lightweight, cross-desktop trash applet"
 msgstr ""
 
 #: ../applets/maintained/garbage/prefs.vala:32
-#, fuzzy, c-format
+#, c-format
 msgid "%s Preferences"
-msgstr "Preferenze"
+msgstr ""
 
 #: ../applets/maintained/garbage/prefs.vala:47
-#, fuzzy
 msgid "Confirm when emptying the trash"
-msgstr "Conferma prima della rimozione..."
+msgstr ""
 
 #: ../applets/maintained/garbage/prefs.vala:52
 msgid "Show the item count on the icon"
@@ -2405,9 +2352,8 @@ msgid "Meter hand color:"
 msgstr ""
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:11
-#, fuzzy
 msgid "Remove"
-msgstr "Rimuovi oggetto"
+msgstr ""
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:12
 msgid "Sensor high value"
@@ -2426,9 +2372,8 @@ msgid "Temperature unit:"
 msgstr ""
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:17
-#, fuzzy
 msgid "Theme:"
-msgstr "Tema: "
+msgstr ""
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:18
 #: ../applets/maintained/mail/mail.ui.h:4
@@ -2519,9 +2464,8 @@ msgid "New Mail - Mail Applet"
 msgstr "Nuova mail  - Applet di posta"
 
 #: ../applets/maintained/mail/mail.py:283
-#, fuzzy
 msgid "Mail"
-msgstr "Principale"
+msgstr ""
 
 #: ../applets/maintained/mail/mail.py:319
 msgid "Open Web Mail"
@@ -2540,19 +2484,16 @@ msgid "Log Out"
 msgstr "Termina sessione"
 
 #: ../applets/maintained/mail/mail.py:376
-#, fuzzy
 msgid "No unread messages"
-msgstr "%d messaggio non letto"
+msgstr ""
 
 #: ../applets/maintained/mail/mail.py:378
-#, fuzzy
 msgid "No new messages"
-msgstr "%d messaggio non letto"
+msgstr ""
 
 #: ../applets/maintained/mail/mail.py:417
-#, fuzzy
 msgid "Wrong username or password"
-msgstr "Nome utente o password errato"
+msgstr ""
 
 #: ../applets/maintained/mail/mail.py:425
 #: ../applets/maintained/mail/mail.py:486
@@ -2600,14 +2541,12 @@ msgstr ""
 
 #: ../applets/maintained/mail/mail.py:714
 #: ../applets/maintained/mail/mail.py:716
-#, fuzzy
 msgid "Could not log in: "
-msgstr "Impossibile effettuare l'accesso"
+msgstr ""
 
 #: ../applets/maintained/mail/mail.py:723
-#, fuzzy
 msgid "Could not log in: Username or password incorrect"
-msgstr "Nome utente o password errato"
+msgstr ""
 
 #: ../applets/maintained/mail/mail.py:765
 #: ../applets/maintained/mail/mail.py:858
@@ -2648,14 +2587,12 @@ msgid "_Alert on network errors"
 msgstr ""
 
 #: ../applets/maintained/mail/mail.ui.h:6
-#, fuzzy
 msgid "_Email client:"
-msgstr "Client di posta: "
+msgstr ""
 
 #: ../applets/maintained/mail/mail.ui.h:7
-#, fuzzy
 msgid "_Hide applet if no new messages"
-msgstr "%d messaggio non letto"
+msgstr ""
 
 #: ../applets/maintained/mail/mail.ui.h:9
 msgid "minutes"
@@ -2706,9 +2643,8 @@ msgid "Display _docklet instead of dialog"
 msgstr ""
 
 #: ../applets/maintained/media-control/media-control.ui.h:4
-#, fuzzy
 msgid "Media-control preferences"
-msgstr "Preferenze"
+msgstr ""
 
 #: ../applets/maintained/media-control/media-control.ui.h:5
 msgid "Show _album art when available"
@@ -2727,9 +2663,8 @@ msgstr ""
 #: ../applets/maintained/notification-area/na-prefs.ui.h:12
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:44
 #: ../applets/maintained/weather/weather.ui.h:19
-#, fuzzy
 msgid "pixels"
-msgstr "Larghezza (pixel)"
+msgstr ""
 
 #: ../applets/maintained/media-icons/media-icon-next.desktop.in.h:1
 #: ../applets/maintained/media-icons/media-icons.py:68
@@ -2762,9 +2697,8 @@ msgid "Media Icons Play/Pause"
 msgstr ""
 
 #: ../applets/maintained/media-icons/media-icons.py:57
-#, fuzzy
 msgid "Next"
-msgstr "Testo"
+msgstr ""
 
 #: ../applets/maintained/media-icons/media-icons.py:58
 msgid "Previous"
@@ -2811,27 +2745,24 @@ msgid "<b>Video size</b>"
 msgstr ""
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:3
-#, fuzzy
 msgid "Media Player Preferences"
-msgstr "Preferenze"
+msgstr ""
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:4
 msgid "_Audiosink:"
 msgstr ""
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:5
-#, fuzzy
 msgid "_Height:"
-msgstr "Altezza:"
+msgstr ""
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:6
 msgid "_Videosink:"
 msgstr ""
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:7
-#, fuzzy
 msgid "_Width:"
-msgstr "Larghezza:"
+msgstr ""
 
 #: ../applets/maintained/mount/awn-applet-mount.schema-ini.in.h:1
 msgid "Command to execute after mounting a mountpoint."
@@ -2842,14 +2773,12 @@ msgid "List of mountpoints that should remain hidden in the UI."
 msgstr ""
 
 #: ../applets/maintained/mount/mount.desktop.in.h:1
-#, fuzzy
 msgid "An applet to (un)mount devices"
-msgstr "Un'applet per controllare la propria posta"
+msgstr ""
 
 #: ../applets/maintained/mount/mount.desktop.in.h:2
-#, fuzzy
 msgid "Mount Applet"
-msgstr "Applet di posta"
+msgstr ""
 
 #: ../applets/maintained/mount/mount.ui.h:2
 #, no-c-format
@@ -2910,51 +2839,44 @@ msgid "%"
 msgstr ""
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:3
-#, fuzzy
 msgid "<b>Background Color</b>"
-msgstr "Sfondo"
+msgstr ""
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:4
-#, fuzzy
 msgid "<b>Border Color</b>"
-msgstr "Colori personalizzati"
+msgstr ""
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:6
 msgid "Automatic"
 msgstr ""
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:7
-#, fuzzy
 msgid "Custom:"
-msgstr "Personalizzato"
+msgstr ""
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:8
 msgid "Extra _offset:"
 msgstr ""
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:9
-#, fuzzy
 msgid "Icon _size:"
-msgstr "Bordo interno"
+msgstr ""
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:10
-#, fuzzy
 msgid "Notification Area Preferences"
-msgstr "Nome località"
+msgstr ""
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:11
-#, fuzzy
 msgid "_Number of icon rows:"
-msgstr "Numero di oggetti"
+msgstr ""
 
 #: ../applets/maintained/notification-area/notification-area.desktop.in.in.h:1
 msgid "A Notification Area (systray)"
 msgstr ""
 
 #: ../applets/maintained/notification-area/notification-area.desktop.in.in.h:2
-#, fuzzy
 msgid "Notification Area"
-msgstr "Nome località"
+msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:1
 msgid "Background colour in the form (Hex) rrggbbaa"
@@ -3004,9 +2926,8 @@ msgid ""
 msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:9
-#, fuzzy
 msgid "Sound."
-msgstr "domenica"
+msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:10
 msgid ""
@@ -3149,9 +3070,8 @@ msgid "A simple applet to test python support"
 msgstr ""
 
 #: ../applets/maintained/python-test/python-test.desktop.in.h:2
-#, fuzzy
 msgid "Test Python Applet"
-msgstr "Applet cestino"
+msgstr ""
 
 #: ../applets/maintained/quit/awn-applet-quit.schema-ini.in.h:1
 msgid "Action to perform when left clicking on the icon."
@@ -3178,9 +3098,8 @@ msgid "Protect your computer from unauthorized use"
 msgstr ""
 
 #: ../applets/maintained/quit/quit-log-out.desktop.in.h:1
-#, fuzzy
 msgid "Log Out..."
-msgstr "Termina sessione"
+msgstr ""
 
 #: ../applets/maintained/quit/quit-log-out.desktop.in.h:2
 msgid "Log out of this session to log in as a different user"
@@ -3276,14 +3195,14 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:19
 msgid ""
-"When to  overly the app icon:  0...no\t1...on inactive workspace onlt\t2..."
-"all but active win\t3..all."
+"When to  overly the app icon:  0...no\t1...on inactive workspace onlt\t"
+"2...all but active win\t3..all."
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:20
 msgid ""
-"When to scale icons:  0...none  1...on all active ws  2...on_active_win 3..."
-"all"
+"When to scale icons:  0...none  1...on all active ws  2...on_active_win "
+"3...all"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:21
@@ -3301,9 +3220,8 @@ msgid "<b>Background transparency</b>"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:4
-#, fuzzy
 msgid "<b>Background</b>"
-msgstr "Sfondo"
+msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:6
 msgid "<b>Icon transparency</b>"
@@ -3342,28 +3260,24 @@ msgid "All windows"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:15
-#, fuzzy
 msgid "B_order color:"
-msgstr "Colori personalizzati"
+msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:17
-#, fuzzy
 msgid "Border _size:"
-msgstr "Colori personalizzati"
+msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:18
-#, fuzzy
 msgid "C_ustom color:"
-msgstr "Colori personalizzati"
+msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:19
 msgid "Cache expiration:"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:20
-#, fuzzy
 msgid "Center"
-msgstr "Generali"
+msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:21
 msgid "Co_lumns:"
@@ -3394,23 +3308,20 @@ msgid "Inactive workspaces"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:28
-#, fuzzy
 msgid "Look"
-msgstr "Termina sessione"
+msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:29
 msgid "Lower left"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:30
-#, fuzzy
 msgid "Lower right"
-msgstr "Priorità bassa"
+msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:31
-#, fuzzy
 msgid "Never"
-msgstr "Server:"
+msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:33
 msgid "Only active window"
@@ -3429,9 +3340,8 @@ msgid "Scaled icon _position:"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:37
-#, fuzzy
 msgid "Shiny Switcher Preferences"
-msgstr "Preferenze"
+msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:38
 msgid "Upper left"
@@ -3442,18 +3352,16 @@ msgid "Upper right"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:40
-#, fuzzy
 msgid "Use _desktop background"
-msgstr "Sfondo"
+msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:41
 msgid "_Applet size:"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:42
-#, fuzzy
 msgid "_Rows:"
-msgstr "Righe:"
+msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:43
 msgid "_Thumbnailing:"
@@ -3461,9 +3369,8 @@ msgstr ""
 
 #: ../applets/maintained/showdesktop/applet.vala:40
 #: ../applets/maintained/showdesktop/showdesktop.desktop.in.in.h:2
-#, fuzzy
 msgid "Show Desktop"
-msgstr "Acquazzoni"
+msgstr ""
 
 #. vim:ft=vala:et:ts=2 sts=2 sw=2:ai:cindent
 #: ../applets/maintained/showdesktop/applet.vala:78
@@ -3556,22 +3463,19 @@ msgid "Which background image(s) source to use: gnome, compiz, file"
 msgstr ""
 
 #: ../applets/maintained/slickswitcher/prefs.py:69
-#, fuzzy
 msgid "SlickSwitcher Preferences"
-msgstr "Preferenze"
+msgstr ""
 
 #. Colors: Borders, Windows, and Dialog
 #. Border Colors
 #: ../applets/maintained/slickswitcher/prefs.py:94
-#, fuzzy
 msgid "Border Colors"
-msgstr "Colori personalizzati"
+msgstr ""
 
 #. Icon Border
 #: ../applets/maintained/slickswitcher/prefs.py:100
-#, fuzzy
 msgid "Icon border:"
-msgstr "Bordo interno"
+msgstr ""
 
 #. Normal Border
 #: ../applets/maintained/slickswitcher/prefs.py:103
@@ -3585,9 +3489,8 @@ msgstr ""
 
 #. Window Colors
 #: ../applets/maintained/slickswitcher/prefs.py:109
-#, fuzzy
 msgid "Window Colors"
-msgstr "Colori personalizzati"
+msgstr ""
 
 #. Main Color
 #: ../applets/maintained/slickswitcher/prefs.py:115
@@ -3603,34 +3506,29 @@ msgstr ""
 
 #. Dialog Colors
 #: ../applets/maintained/slickswitcher/prefs.py:121
-#, fuzzy
 msgid "Dialog colors"
-msgstr "Dialogo d'errore"
+msgstr ""
 
 #. Use custom colors (CheckButton)
 #: ../applets/maintained/slickswitcher/prefs.py:127
 #: ../applets/maintained/slickswitcher/prefs.py:193
-#, fuzzy
 msgid "Use custom colors"
-msgstr "Colori personalizzati"
+msgstr ""
 
 #. Background Color
 #: ../applets/maintained/slickswitcher/prefs.py:134
-#, fuzzy
 msgid "Background color:"
-msgstr "Sfondo"
+msgstr ""
 
 #: ../applets/maintained/slickswitcher/prefs.py:183
-#, fuzzy
 msgid "Colors"
-msgstr "Colori personalizzati"
+msgstr ""
 
 #. Other colors: text and shine
 #. Number Colors
 #: ../applets/maintained/slickswitcher/prefs.py:187
-#, fuzzy
 msgid "Number Colors"
-msgstr "Colori personalizzati"
+msgstr ""
 
 #. Drop-Shadow Color
 #: ../applets/maintained/slickswitcher/prefs.py:203
@@ -3639,21 +3537,18 @@ msgstr ""
 
 #. Shine Colors
 #: ../applets/maintained/slickswitcher/prefs.py:206
-#, fuzzy
 msgid "Shine Colors"
-msgstr "Colore icona"
+msgstr ""
 
 #. Top Color
 #: ../applets/maintained/slickswitcher/prefs.py:212
-#, fuzzy
 msgid "Top color:"
-msgstr "Colore icona"
+msgstr ""
 
 #. Bottom Color
 #: ../applets/maintained/slickswitcher/prefs.py:215
-#, fuzzy
 msgid "Bottom color:"
-msgstr "Colori personalizzati"
+msgstr ""
 
 #. Hover Top Color
 #: ../applets/maintained/slickswitcher/prefs.py:218
@@ -3685,9 +3580,8 @@ msgstr ""
 
 #. Mode
 #: ../applets/maintained/slickswitcher/prefs.py:315
-#, fuzzy
 msgid "Mode:"
-msgstr "Cartella:"
+msgstr ""
 
 #: ../applets/maintained/slickswitcher/prefs.py:318
 msgid "GNOME"
@@ -3698,15 +3592,13 @@ msgid "Compiz Wallpaper Plugin"
 msgstr ""
 
 #: ../applets/maintained/slickswitcher/prefs.py:320
-#, fuzzy
 msgid "File"
-msgstr "Titolo"
+msgstr ""
 
 #. File
 #: ../applets/maintained/slickswitcher/prefs.py:339
-#, fuzzy
 msgid "File:"
-msgstr "Cartella:"
+msgstr ""
 
 #: ../applets/maintained/slickswitcher/prefs.py:341
 msgid "Choose a Background Image"
@@ -3734,8 +3626,8 @@ msgstr ""
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:1
 msgid ""
-"CPU graph type to use.  Note that some Icons do not support all graph "
-"types.  If this occurs an icon will revert to it's own default (value of 0)."
+"CPU graph type to use.  Note that some Icons do not support all graph types. "
+" If this occurs an icon will revert to it's own default (value of 0)."
 msgstr ""
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:2
@@ -3751,9 +3643,8 @@ msgid "List of icons"
 msgstr ""
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:5
-#, fuzzy
 msgid "Render background."
-msgstr "Sfondo"
+msgstr ""
 
 #: ../applets/maintained/sysmon/sysmon.desktop.in.in.h:1
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in.h:2
@@ -3761,9 +3652,8 @@ msgid "Manage system activity"
 msgstr ""
 
 #: ../applets/maintained/sysmon/sysmon.desktop.in.in.h:2
-#, fuzzy
 msgid "System Monitor"
-msgstr "Sistema"
+msgstr ""
 
 #: ../applets/maintained/thinkhdaps/thinkhdaps.desktop.in.h:1
 msgid "Applet that shows the shock protection status of your disks"
@@ -4013,9 +3903,8 @@ msgid "Icon Type"
 msgstr "Tipo di icona"
 
 #: ../applets/maintained/to-do/to-do.desktop.in.h:1
-#, fuzzy
 msgid "Manage a simple To-Do list"
-msgstr "Un semplice elenco di cose da fare"
+msgstr ""
 
 #: ../applets/maintained/to-do/to-do.desktop.in.h:2
 #: ../applets/maintained/to-do/to-do.py:68
@@ -4115,18 +4004,16 @@ msgid "Control Tomboy with D-Bus"
 msgstr ""
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.desktop.in.h:2
-#, fuzzy
 msgid "Tomboy Applet"
-msgstr "Applet cestino"
+msgstr ""
 
 #: ../applets/maintained/vala-test/vala-test.desktop.in.in.h:1
 msgid "A simple applet to test vala support"
 msgstr ""
 
 #: ../applets/maintained/vala-test/vala-test.desktop.in.in.h:2
-#, fuzzy
 msgid "Test Vala Applet"
-msgstr "Applet di posta"
+msgstr ""
 
 #: ../applets/maintained/volume-control/awn-applet-volume-control.schema-ini.in.h:1
 msgid "Name of the device."
@@ -4221,9 +4108,8 @@ msgid "Display the local weather"
 msgstr ""
 
 #: ../applets/maintained/weather/weather.desktop.in.h:2
-#, fuzzy
 msgid "Weather Applet"
-msgstr "Applet Avant Meteo"
+msgstr ""
 
 #: ../applets/maintained/weather/weather.py:215
 msgid "Fetching conditions for"
@@ -4235,9 +4121,8 @@ msgstr ""
 
 #: ../applets/maintained/weather/weather.py:302
 #: ../applets/maintained/weather/weather.py:380
-#, fuzzy
 msgid "No records found"
-msgstr "Nessun elemento trovato."
+msgstr ""
 
 #: ../applets/maintained/weather/weather.py:371
 msgid "Searching..."
@@ -4253,9 +4138,8 @@ msgid ""
 msgstr ""
 
 #: ../applets/maintained/weather/weather.ui.h:6
-#, fuzzy
 msgid "Current _location:"
-msgstr "Apri posizione"
+msgstr ""
 
 #: ../applets/maintained/weather/weather.ui.h:7
 msgid ""
@@ -4276,9 +4160,8 @@ msgid "Maximum _map width:"
 msgstr ""
 
 #: ../applets/maintained/weather/weather.ui.h:11
-#, fuzzy
 msgid "Medium"
-msgstr "_Media"
+msgstr ""
 
 #: ../applets/maintained/weather/weather.ui.h:12
 msgid "Show temperature in _icon"
@@ -4316,13 +4199,13 @@ msgstr ""
 
 #: ../applets/maintained/webapplet/applet.c:399
 #: ../applets/maintained/webapplet/webapplet.desktop.in.in.h:2
-#, fuzzy
 msgid "Web Applet"
-msgstr "Applet di posta"
+msgstr ""
 
 #. vim: set et ts=2 sts=2 sw=2 :
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:1
-msgid "Flag that enables usage of the \"Open Location\" dialog in the applet."
+msgid ""
+"Flag that enables usage of the \"Open Location\" dialog in the applet."
 msgstr ""
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:2
@@ -4338,9 +4221,8 @@ msgid "Name of specialized website to use"
 msgstr ""
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:5
-#, fuzzy
 msgid "URI"
-msgstr "URI:"
+msgstr ""
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:7
 #, no-c-format
@@ -4369,9 +4251,8 @@ msgid "Main menu with places and recent documents"
 msgstr ""
 
 #: ../applets/maintained/yama/yama.desktop.in.h:2
-#, fuzzy
 msgid "Yet Another Menu Applet"
-msgstr "Applet Avant Meteo"
+msgstr ""
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in.h:1
 msgid "Awn System Monitor"
@@ -4411,9 +4292,8 @@ msgid "Displays a list of all your applications"
 msgstr ""
 
 #: ../applets/unmaintained/main-menu/applet.c:453
-#, fuzzy
 msgid "Main Menu"
-msgstr "Principale"
+msgstr ""
 
 #: ../applets/unmaintained/main-menu/main-menu.desktop.in.in.h:1
 msgid "A main menu for Awn"
@@ -4514,23 +4394,20 @@ msgid "Layout radius."
 msgstr ""
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:21
-#, fuzzy
 msgid "Number of columns to use."
-msgstr "Numero di oggetti"
+msgstr ""
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:22
-#, fuzzy
 msgid "Number of rows to use."
-msgstr "Numero di oggetti"
+msgstr ""
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:23
 msgid "Size of the icons inside stack."
 msgstr ""
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:24
-#, fuzzy
 msgid "Sort direction of the items."
-msgstr "L'orientazione dell'icona di notifica."
+msgstr ""
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:25
 msgid "Sort folders before files."
@@ -4581,370 +4458,10 @@ msgid "Whether to browse stack contents."
 msgstr ""
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:37
-msgid "Whether to combine icons of the files inside the stacks with its icon."
+msgid ""
+"Whether to combine icons of the files inside the stacks with its icon."
 msgstr ""
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:38
 msgid "Whether tooltips are enabled."
 msgstr ""
-
-#, fuzzy
-#~ msgid "Base Folder"
-#~ msgstr "Cartella:"
-
-#~ msgid "Hmmm, nothing here"
-#~ msgstr "Non c'è niente qui"
-
-#~ msgid "Backend: "
-#~ msgstr "Protocollo: "
-
-#~ msgid "Theme"
-#~ msgstr "Tema"
-
-#~ msgid "Hide Unless New"
-#~ msgstr "Nascondi fino a nuovo"
-
-#~ msgid "Confirm removal"
-#~ msgstr "Conferma rimozione"
-
-#~ msgid "Unmount Volume"
-#~ msgstr "Smonta volume"
-
-#~ msgid "Hide Volume"
-#~ msgstr "Nascondi volume"
-
-#~ msgid "Empty all of the items from the trash?"
-#~ msgstr "Svuotare tutti gli oggetti presenti nel cestino?"
-
-#~ msgid "Empty Trash"
-#~ msgstr "Svuota cestino"
-
-#~ msgid "Cannot move items to trash, do you want to delete them immediately?"
-#~ msgstr ""
-#~ "Impossibile spostare gli oggetti nel cestino: eliminarli immediatamente?"
-
-#~ msgid "None of the %d selected items can be moved to the Trash"
-#~ msgstr ""
-#~ "Nessuno tra i %d oggetti selezionati può essere spostato nel cestino"
-
-#~ msgid ""
-#~ "Cannot move some items to trash, do you want to delete these immediately?"
-#~ msgstr ""
-#~ "Impossibile spostare alcuni oggetti nel cestino: eliminarli "
-#~ "immediatamente?"
-
-#~ msgid "%d of the selected items cannot be moved to the Trash"
-#~ msgstr ""
-#~ "%d tra gli oggetti selezionati non possono essere spostati nel cestino."
-
-#~ msgid "_Delete"
-#~ msgstr "Eli_mina"
-
-#~ msgid "Supported image types"
-#~ msgstr "Tipi di immagine supportati"
-
-#~ msgid "Error while moving."
-#~ msgstr "Errore durante lo spostamento."
-
-#~ msgid ""
-#~ "Cannot move \"%s\" to the trash because you do not have permissions to "
-#~ "change it or its parent folder."
-#~ msgstr ""
-#~ "Impossibile spostare «%s» nel cestino perché non si hanno permessi "
-#~ "sufficienti per cambiare l'oggetto stesso o la cartella di livello "
-#~ "superiore."
-
-#~ msgid "Error while deleting."
-#~ msgstr "Errore durante l'eliminazione."
-
-#~ msgid ""
-#~ "\"%s\" cannot be deleted because you do not have permissions to modify "
-#~ "its parent folder."
-#~ msgstr ""
-#~ "Impossibile eliminare «%s» perché non si hanno permessi sufficienti per "
-#~ "modificare la cartella di livello superiore."
-
-#~ msgid "Error while performing file operation."
-#~ msgstr "Errore durante l'esecuzione dell'operazione."
-
-#~ msgid "Cannot perform file operation %d on \"%s\"."
-#~ msgstr "Impossibile eseguire l'operazione %d su «%s»"
-
-#~ msgid "_Skip"
-#~ msgstr "_Salta"
-
-#~ msgid "_Retry"
-#~ msgstr "_Riprova"
-
-#~ msgid "Search for Location Code"
-#~ msgstr "Cerca per codice località"
-
-#~ msgid ""
-#~ "Enter the location you want to search for above.  For example: <i>Boston</"
-#~ "i>; <i>Portland, ME</i>; <i>Paris</i>; or <i>Osaka, Japan</i>."
-#~ msgstr ""
-#~ "Inserire la località da cercare. Per esempio: <i>Boston</i>; <i>Portland, "
-#~ "ME</i>; <i>Paris</i>; o <i>Osaka, Japan</i>."
-
-#~ msgid ""
-#~ "A Weather Applet for the Avant Window Navigator. Weather data provided by "
-#~ "weather.com. Images by Wojciech Grzanka."
-#~ msgstr ""
-#~ "Un'applet per il meteo per Avant Window Navigator. Dati del meteo forniti "
-#~ "da weather.com, immagini di Wojciech Grzanka."
-
-#~ msgid "Tornado"
-#~ msgstr "Tornado"
-
-#~ msgid "Tropical Storm"
-#~ msgstr "Tempesta tropicale"
-
-#~ msgid "Hurricane"
-#~ msgstr "Uragano"
-
-#~ msgid "Severe Thunderstorms"
-#~ msgstr "Forti temporali"
-
-#~ msgid "Thunderstorms"
-#~ msgstr "Temporali"
-
-#~ msgid "Mixed Rain and Snow"
-#~ msgstr "Pioggia mista a neve"
-
-#~ msgid "Mixed Rain and Sleet"
-#~ msgstr "Pioggia mista a nevischio"
-
-#~ msgid "Mixed Precipitation"
-#~ msgstr "Precipitazione mista"
-
-#~ msgid "Freezing Drizzle"
-#~ msgstr "Pioggerellina gelida"
-
-#~ msgid "Drizzle"
-#~ msgstr "Pioggerellina"
-
-#~ msgid "Freezing Rain"
-#~ msgstr "Pioggia gelida"
-
-#~ msgid "Snow Flurries"
-#~ msgstr "Tempeste di neve"
-
-#~ msgid "Light Snow Showers"
-#~ msgstr "Leggere spruzzate di neve"
-
-#~ msgid "Blowing Snow"
-#~ msgstr "Raffiche di neve"
-
-#~ msgid "Snow"
-#~ msgstr "Neve"
-
-#~ msgid "Hail"
-#~ msgstr "Grandine"
-
-#~ msgid "Dust"
-#~ msgstr "Polvere"
-
-#~ msgid "Fog"
-#~ msgstr "Nebbia"
-
-#~ msgid "Haze"
-#~ msgstr "Foschia"
-
-#~ msgid "Smoke"
-#~ msgstr "Fumo"
-
-#~ msgid "Windy"
-#~ msgstr "Ventoso"
-
-#~ msgid "Cold"
-#~ msgstr "Freddo"
-
-#~ msgid "Cloudy"
-#~ msgstr "Nuvoloso"
-
-#~ msgid "Mostly Cloudy"
-#~ msgstr "Molto nuvoloso"
-
-#~ msgid "Partly Cloudy"
-#~ msgstr "Parzialmente nuvoloso"
-
-#~ msgid "Clear"
-#~ msgstr "Limpido"
-
-#~ msgid "Fair"
-#~ msgstr "Sereno"
-
-#~ msgid "Mixed Rain and Hail"
-#~ msgstr "Pioggia mista a grandine"
-
-#~ msgid "Hot"
-#~ msgstr "Caldo"
-
-#~ msgid "Isolated Thunderstorms"
-#~ msgstr "Temporali isolati"
-
-#~ msgid "Scattered Thunderstorms"
-#~ msgstr "Temporali sparsi"
-
-#~ msgid "Scattered Showers"
-#~ msgstr "Acquazzoni sparsi"
-
-#~ msgid "Heavy Snow"
-#~ msgstr "Forti nevicate"
-
-#~ msgid "Scattered Snow Showers"
-#~ msgstr "Spruzzate sparse di neve"
-
-#~ msgid "Thunder Showers"
-#~ msgstr "Acquazzoni con tuoni"
-
-#~ msgid "Snow Showers"
-#~ msgstr "Spruzzate di neve"
-
-#~ msgid "N/A"
-#~ msgstr "N/D"
-
-#~ msgid "Monday"
-#~ msgstr "lunedì"
-
-#~ msgid "Tuesday"
-#~ msgstr "martedì"
-
-#~ msgid "Wednesday"
-#~ msgstr "mercoledì"
-
-#~ msgid "Thursday"
-#~ msgstr "giovedì"
-
-#~ msgid "Friday"
-#~ msgstr "venerdì"
-
-#~ msgid "Saturday"
-#~ msgstr "sabato"
-
-#~ msgid "Open with \"%s\""
-#~ msgstr "Apri con «%s»"
-
-#~ msgid "by %s from %s"
-#~ msgstr "di %s da %s"
-
-#~ msgid "Unknown Email Subject"
-#~ msgstr "Oggetto sconosciuto"
-
-#~ msgid "Unknown Email Sender"
-#~ msgstr "Mittente sconosciuto"
-
-#~ msgid "Manage Software"
-#~ msgstr "Gestione software"
-
-#~ msgid "Control Panel"
-#~ msgstr "Pannello di controllo"
-
-#~ msgid "Favourites"
-#~ msgstr "Preferiti"
-
-#~ msgid "Affinity Search Window"
-#~ msgstr "Finestra di ricerca di Affinity"
-
-#~ msgid "Error creating directory `%s': %s"
-#~ msgstr "Errore nel creare la directory «%s»: %s"
-
-#~ msgid "Error opening `%s': %s"
-#~ msgstr "Errore nell'aprire «%s»: %s"
-
-#~ msgid "Error reading `%s': file contains no data."
-#~ msgstr "Errore nel leggere «%s»: il file non contiene dati."
-
-#~ msgid "Error reading `%s': %s"
-#~ msgstr "Errore nel leggere «%s»: %s"
-
-#~ msgid ""
-#~ "Failed to load image '%s': reason not known, probably a corrupt image file"
-#~ msgstr ""
-#~ "Caricamento dell'immagine «%s» non riuscito: la causa è sconosciuta, "
-#~ "probabilmente l'immagine è rovinata"
-
-#~ msgid "Error verifying `%s': %s"
-#~ msgstr "Errore nel verificare «%s»: %s"
-
-#~ msgid "Error reading `%s': file is not a regular file or symbolic link."
-#~ msgstr ""
-#~ "Errore nel leggere «%s»: il file non è un file regolare o un collegamento "
-#~ "simbolico."
-
-#~ msgid "Error creating temporary thumbnail file for `%s': %s"
-#~ msgstr "Errore nel creare una miniatura temporanea per «%s»: %s"
-
-#~ msgid "Invalid desktop file ID"
-#~ msgstr "ID di file desktop non valido"
-
-#~ msgid "[Invalid Filename]"
-#~ msgstr "[Nome di file non valido]"
-
-#~ msgid " <excluded>"
-#~ msgstr " <eslcluso>"
-
-#~ msgid "Unable to find the Trash directory: %s"
-#~ msgstr "Impossibile trovare la directory del cestino: %s"
-
-#~ msgid "No Items in Trash"
-#~ msgstr "Nessun oggetto nel cestino"
-
-#~ msgid "%d Item in Trash"
-#~ msgid_plural "%d Items in Trash"
-#~ msgstr[0] "%d oggetto nel cestino"
-#~ msgstr[1] "%d oggetti nel cestino"
-
-#~ msgid "Removing item %lu of %lu"
-#~ msgstr "Rimozione di %lu oggetti su %lu"
-
-#~ msgid ""
-#~ "If you choose to empty the trash, all items in it will be permanently "
-#~ "lost. Please note that you can also delete them separately."
-#~ msgstr ""
-#~ "Scegliendo di svuotare il cestino, tutti gli oggetti in esso contenuti "
-#~ "sono perduti in modo definitivo. Notare che è anche possibile eliminarli "
-#~ "uno a uno."
-
-#~ msgid ""
-#~ "Error while spawning file manager:\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Errore durante l'esecuzione del file manager:\n"
-#~ "%s"
-
-#~ msgid "There was an error displaying help: %s"
-#~ msgstr "Si è verificato un errore nel visualizzare l'aiuto: %s"
-
-#~ msgid ""
-#~ "A GNOME trash bin that lives in your panel. You can use it to view the "
-#~ "trash or drag and drop items into the trash."
-#~ msgstr ""
-#~ "Il cestino di GNOME che risiede sul pannello. È possibile usarlo per "
-#~ "visualizzarne il contenuto o trascinarci oggetti da eliminare."
-
-#~ msgid "translator-credits"
-#~ msgstr ""
-#~ "Launchpad Contributions:\n"
-#~ "  Alessio Treglia https://launchpad.net/~quadrispro\n"
-#~ "  Andrea Amoroso https://launchpad.net/~heiko81\n"
-#~ "  Claudio Arseni https://launchpad.net/~claudio-arseni\n"
-#~ "  Davide Bagarotti https://launchpad.net/~bagaboss\n"
-#~ "  HdS619 https://launchpad.net/~hds619\n"
-#~ "  Khela https://launchpad.net/~khela89\n"
-#~ "  Kino https://launchpad.net/~pikitano\n"
-#~ "  Luca Farsi https://launchpad.net/~lucafarsi\n"
-#~ "  Milo Casagrande https://launchpad.net/~milo\n"
-#~ "  Nicola Jelmorini https://launchpad.net/~jelmorini\n"
-#~ "  Simone Tolotti https://launchpad.net/~simontol\n"
-#~ "  franz https://launchpad.net/~marino-prandini"
-
-#~ msgid "Delete Immediately?"
-#~ msgstr "Eliminare immediatamente?"
-
-#~ msgid ""
-#~ "Unable to move to trash:\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Impossibile spostare nel cestino:\n"
-#~ "%s"

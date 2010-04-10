@@ -7,120 +7,119 @@ msgid ""
 msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-25 14:35+0200\n"
-"PO-Revision-Date: 2009-11-18 06:50+0000\n"
+"POT-Creation-Date: 2010-03-26 18:17+0200\n"
+"PO-Revision-Date: 2010-03-27 14:45+0000\n"
 "Last-Translator: Yaron <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <he@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-03-24 17:24+0000\n"
+"X-Launchpad-Export-Date: 2010-03-28 03:45+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
 msgid "Animal Farm"
-msgstr ""
+msgstr "חוות החיות"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:2
 msgid "Display fortune messages"
-msgstr ""
+msgstr "הצגת הודעות מזל"
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:1
 msgid "Global hotkey used to activate the terminal."
-msgstr ""
+msgstr "Global hotkey used to activate the terminal."
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:2
 msgid "Set whether the applet should hide itself when it loses focus."
-msgstr ""
+msgstr "Set whether the applet should hide itself when it loses focus."
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:3
 msgid "The applet's background image."
-msgstr ""
+msgstr "The applet's background image."
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:4
 msgid "The applet's opacity level."
-msgstr ""
+msgstr "The applet's opacity level."
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:5
 msgid "The default external terminal application."
-msgstr ""
+msgstr "The default external terminal application."
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:100
 msgid "Disabled"
-msgstr ""
+msgstr "כבוי"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:410
 #: ../applets/maintained/calendar/calendarprefs.py:75
 msgid "Preferences"
-msgstr ""
+msgstr "העדפות"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:425
 #: ../applets/maintained/file-browser-launcher/prefs.py:154
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:16
 #, c-format
 msgid "Behavior"
-msgstr ""
+msgstr "התנהגות"
 
 #. focus out behavior checkbox
 #: ../applets/maintained/awnterm/awn-terminal.vala:437
 msgid "Hide when focus is lost"
-msgstr ""
+msgstr "הסתרה בעת איבוד המיקוד"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:456
 #: ../applets/maintained/file-browser-launcher/prefs.py:253
 #: ../applets/maintained/file-browser-launcher/prefs.py:328
 msgid "Action"
-msgstr ""
+msgstr "פעולה"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:476
 msgid "Shortcut"
-msgstr ""
+msgstr "קיצור דרך"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:482
 msgid "Activate"
-msgstr ""
+msgstr "הפעלה"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:491
 #, c-format
 msgid "Background image"
-msgstr ""
+msgstr "תמונת רקע"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:503
 msgid "Select a file"
-msgstr ""
+msgstr "בחירת קובץ"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:545
 #, c-format
 msgid "Terminal opacity"
-msgstr ""
+msgstr "אטימות המסוף"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:572
 #, c-format
 msgid "External Terminal"
-msgstr ""
+msgstr "מסוף חיצוני"
 
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/awnterm/awnterm.desktop.in.in.h:1
 msgid "A simple popup terminal"
-msgstr ""
+msgstr "מסוף פשוט מוקפץ"
 
 #: ../applets/maintained/awnterm/awnterm.desktop.in.in.h:2
-#, fuzzy
 msgid "Terminal Applet"
-msgstr "יישומון הדואל"
+msgstr "יישומון מסוף"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:1
 msgid " Upload/Download"
-msgstr ""
+msgstr " Upload/Download"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:2
 msgid " bytes)"
-msgstr ""
+msgstr " bytes)"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:3
 msgid "Color to draw the background"
-msgstr ""
+msgstr "Color to draw the background"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:4
 msgid "Color to draw the border"
@@ -128,39 +127,41 @@ msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:5
 msgid "Display parameters for interfaces"
-msgstr ""
+msgstr "Display parameters for interfaces"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:6
 msgid "Draw the applet background"
-msgstr ""
+msgstr "Draw the applet background"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:7
 msgid "Draw the applet border"
-msgstr ""
+msgstr "Draw the applet border"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:8
 msgid ""
 "If enabled this will draw a line at the bottom of the graph even if the "
 "value is 0. If unchecked, values below 1 are not drawn"
 msgstr ""
+"If enabled this will draw a line at the bottom of the graph even if the "
+"value is 0. If unchecked, values below 1 are not drawn"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:9
 msgid "Minimum threshold to draw meter (dependent upon DEFAULT/unit)"
-msgstr ""
+msgstr "Minimum threshold to draw meter (dependent upon DEFAULT/unit)"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:10
 msgid "The interface currently selected"
-msgstr ""
+msgstr "The interface currently selected"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:37
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:231
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.desktop.in.h:2
 msgid "Bandwidth Monitor"
-msgstr ""
+msgstr "צג התעבורה"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:41
 msgid "Network Bandwidth monitor"
-msgstr ""
+msgstr "צג תעבורת הרשת"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:225
 msgid "Unable to caclulate statistics"
@@ -168,20 +169,20 @@ msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:225
 msgid "Statistics calculation requires read access to /proc/net/dev"
-msgstr ""
+msgstr "חישוב הסטטיסטיקה דורש גישה לקריאת /proc/net/dev"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:244
 msgid "Change Unit"
-msgstr ""
+msgstr "החלפת היחידות"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:295
 msgid "Scanning"
-msgstr ""
+msgstr "סריקה"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:296
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:4
 msgid "Devices"
-msgstr ""
+msgstr "התקנים"
 
 #. kilobytes per second
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:323
@@ -194,32 +195,32 @@ msgstr ""
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:327
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:53
 msgid "Kbps"
-msgstr ""
+msgstr "קסל\"ש"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:349
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:468
 msgid "Interface"
-msgstr ""
+msgstr "מנשק"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:354
 msgid "Sent"
-msgstr ""
+msgstr "נשלח"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:359
 msgid "Received"
-msgstr ""
+msgstr "התקבל"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:364
 msgid "Sending"
-msgstr ""
+msgstr "שולח"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:369
 msgid "Receiving"
-msgstr ""
+msgstr "מקבל"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:417
 msgid "Please select a valid Network Device"
-msgstr ""
+msgstr "יש לבחור בהתקן רשת תקין"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:419
 #, python-format
@@ -228,20 +229,20 @@ msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:610
 msgid "No"
-msgstr ""
+msgstr "לא"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:611
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:136
 msgid "Device"
-msgstr ""
+msgstr "התקן"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:612
 msgid "Please select a valid device"
-msgstr ""
+msgstr "יש לבחור בהתקן תקני"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.desktop.in.h:1
 msgid "A Network Bandwidth monitor for AWN"
-msgstr ""
+msgstr "צג תעבורת רשת עבור AWN"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:1
 #: ../applets/maintained/battery/battery.ui.h:1
@@ -254,47 +255,47 @@ msgstr ""
 #: ../applets/maintained/volume-control/volume-control.ui.h:4
 #: ../applets/maintained/weather/weather.ui.h:2
 msgid "<b>Display</b>"
-msgstr ""
+msgstr "<b>תצוגה</b>"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:2
 msgid "Background Color"
-msgstr ""
+msgstr "צבע הרקע"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:3
 msgid "Border Color"
-msgstr ""
+msgstr "צבע המסגרת"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:5
 msgid "Display MBps/KBps (bytes) instead of Mbps/Kbps (bits)"
-msgstr ""
+msgstr "הצגת מבל\"ש/קבל\"ש (בתים) במקום מסל\"ש/קסל\"ש (סיביות)"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:6
 msgid "Display Speed Text"
-msgstr ""
+msgstr "הצגת טקסט מהיר"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:7
 msgid "Display the sum of upload and download"
-msgstr ""
+msgstr "הצגת סכום ההעלאות וההורדות"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:8
 msgid "Display upload and download text representation of speed"
-msgstr ""
+msgstr "ייצוג מילולי בלבד של מהירויות ההעלאה וההורדה"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:9
 msgid "Do not display the speed as text, only draw the graph"
-msgstr ""
+msgstr "אין להציג את המהירות כטקסט, רק לצייר את הגרף"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:10
 msgid "Draw 0 bps in graphs"
-msgstr ""
+msgstr "ציור 0 סל\"ש בגרפים"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:11
 msgid "Draw Background"
-msgstr ""
+msgstr "ציור רקע"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:12
 msgid "Draw Border"
-msgstr ""
+msgstr "ציור המסגרת"
 
 #. Put the general tab together
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:13
@@ -303,11 +304,11 @@ msgstr ""
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:9
 #: ../applets/maintained/to-do/prefs.py:60
 msgid "General"
-msgstr ""
+msgstr "כללי"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:14
 msgid "Graph Only"
-msgstr ""
+msgstr "גרף בלבד"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:15
 msgid ""
@@ -345,7 +346,7 @@ msgstr ""
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:22
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:141
 msgid "Sum"
-msgstr ""
+msgstr "סך הכל"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:147
 msgid "Multi"
@@ -453,9 +454,8 @@ msgstr ""
 #: ../applets/maintained/mail/mail.ui.h:8
 #: ../applets/maintained/volume-control/volume-control.ui.h:7
 #: ../applets/maintained/weather/weather.ui.h:18
-#, fuzzy
 msgid "_Theme:"
-msgstr "ערכת נושא: "
+msgstr ""
 
 #: ../applets/maintained/battery/battery.ui.h:11
 msgid "_Warn when charge level drops to:"
@@ -470,7 +470,8 @@ msgid "Beaufort)."
 msgstr ""
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:3
-msgid "If enabled, besides hours and minutes, the seconds will be visible too."
+msgid ""
+"If enabled, besides hours and minutes, the seconds will be visible too."
 msgstr ""
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:4
@@ -516,7 +517,7 @@ msgstr ""
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:1
 #: ../applets/maintained/weather/weather.ui.h:1
 msgid " "
-msgstr ""
+msgstr " "
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:2
 msgid "12 _hour format"
@@ -552,7 +553,8 @@ msgid "Find _Next"
 msgstr ""
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:11
-msgid "If enabled, besides hours and minutes, the seconds will be visible too"
+msgid ""
+"If enabled, besides hours and minutes, the seconds will be visible too"
 msgstr ""
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:12
@@ -664,9 +666,9 @@ msgstr ""
 msgid "Desktop"
 msgstr ""
 
-#.
+#. 
 #. TODO: check the trash and set to stock_trash_empty if trash is empty
-#.
+#. 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:193
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:588
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:591
@@ -921,7 +923,7 @@ msgstr ""
 
 #. Initialise notifications
 #: ../applets/maintained/comics/comics.desktop.in.h:1
-#: ../applets/maintained/comics/comics.py:181
+#: ../applets/maintained/comics/comics.py:179
 #: ../applets/maintained/comics/main.py:294
 #: ../applets/maintained/comics/main.py:300
 msgid "Comics!"
@@ -949,12 +951,15 @@ msgstr ""
 msgid "Error"
 msgstr ""
 
-#: ../applets/maintained/comics/comics.py:156
-#: ../applets/maintained/comics/ui/main.ui.h:1
+#: ../applets/maintained/comics/comics.py:155
 msgid "Comics"
 msgstr ""
 
-#: ../applets/maintained/comics/comics.py:217
+#: ../applets/maintained/comics/comics.py:159
+msgid "Manage Comics"
+msgstr ""
+
+#: ../applets/maintained/comics/comics.py:211
 #: ../applets/maintained/comics/main.py:192
 #, python-format
 msgid "There is a new strip of %s!"
@@ -1007,7 +1012,6 @@ msgid ""
 "Press \"next\" to proceed."
 msgstr ""
 
-#: ../applets/maintained/comics/ui/main.ui.h:2
 #: ../applets/maintained/comics/ui/manage.ui.h:1
 msgid "Manage comics"
 msgstr ""
@@ -1046,9 +1050,8 @@ msgid "<b>Monitored CPU</b>"
 msgstr ""
 
 #: ../applets/maintained/cpufreq/cpufreq.ui.h:2
-#, fuzzy
 msgid "_Processor:"
-msgstr "סיסמה:"
+msgstr ""
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:1
 msgid " 0.9)."
@@ -1080,9 +1083,8 @@ msgid "User selected variants."
 msgstr ""
 
 #: ../applets/maintained/dialect/dialect.desktop.in.h:1
-#, fuzzy
 msgid " Dialect Applet"
-msgstr "יישומון הדואל"
+msgstr ""
 
 #: ../applets/maintained/dialect/dialect.desktop.in.h:2
 msgid "Change your keyboard input layout from Awn."
@@ -1102,9 +1104,9 @@ msgid ""
 "\n"
 "See the Mouse Actions and Layout Lists tabs for configuration options.\n"
 "\n"
-"The applet depends on the python xklavier module (available from http://"
-"download.sugarlabs.org/sources/external/python-xklavier/python-xklavier-0.1."
-"tar.gz).\n"
+"The applet depends on the python xklavier module (available from "
+"http://download.sugarlabs.org/sources/external/python-xklavier/python-"
+"xklavier-0.1.tar.gz).\n"
 "\n"
 "This applet is licensed under GPL2. The flag icons distributed with this "
 "applet are from the xfce4-xkb-plugin-0.5.3.3 panel applet, licensed under "
@@ -1177,9 +1179,8 @@ msgid "(C) 2009, Lachlan Turner (Denham 2010)."
 msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:66
-#, fuzzy
 msgid "About Dialect Applet"
-msgstr "יישומון הדואל"
+msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:67
 msgid "Allow scroll wheel to change layout"
@@ -1190,9 +1191,8 @@ msgid "Change your keyboard layout from Awn."
 msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:69
-#, fuzzy
 msgid "Dialect Applet Help"
-msgstr "יישומון הדואל"
+msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:70
 msgid "Dialect Applet Preferences"
@@ -1492,9 +1492,9 @@ msgid ""
 "countries either by patents or by copyrighted interfaces, the original "
 "copyright holder who places the Program under this License may add an "
 "explicit geographical distribution limitation excluding those countries, so "
-"that distribution is permitted only in or among countries not thus "
-"excluded.  In such case, this License incorporates the limitation as if "
-"written in the body of this License.\n"
+"that distribution is permitted only in or among countries not thus excluded. "
+" In such case, this License incorporates the limitation as if written in the "
+"body of this License.\n"
 "\n"
 "  9. The Free Software Foundation may publish revised and/or new versions of "
 "the General Public License from time to time.  Such new versions will be "
@@ -1702,9 +1702,8 @@ msgstr ""
 #: ../applets/maintained/feeds/feeds.py:404
 #: ../applets/maintained/feeds/feeds.py:480
 #: ../applets/maintained/feeds/feeds.py:1031
-#, fuzzy
 msgid "Feeds Applet"
-msgstr "יישומון הדואל"
+msgstr ""
 
 #: ../applets/maintained/feeds/feeds.desktop.in.h:2
 #: ../applets/maintained/feeds/feeds.py:1036
@@ -2181,7 +2180,8 @@ msgstr ""
 
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/garbage/awn-applet-garbage.schema-ini.in.h:1
-msgid "Enable the confirmation dialog form when one wishes to empty the trash."
+msgid ""
+"Enable the confirmation dialog form when one wishes to empty the trash."
 msgstr ""
 
 #: ../applets/maintained/garbage/awn-applet-garbage.schema-ini.in.h:2
@@ -2365,9 +2365,8 @@ msgid "Temperature unit:"
 msgstr ""
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:17
-#, fuzzy
 msgid "Theme:"
-msgstr "ערכת נושא: "
+msgstr ""
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:18
 #: ../applets/maintained/mail/mail.ui.h:4
@@ -2393,9 +2392,8 @@ msgid "rpm"
 msgstr ""
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:1
-#, fuzzy
 msgid "Display any network errors"
-msgstr "התרע על שגיאות רשת"
+msgstr ""
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:2
 msgid "Hide the icon if there is no new mail"
@@ -2479,19 +2477,16 @@ msgid "Log Out"
 msgstr ""
 
 #: ../applets/maintained/mail/mail.py:376
-#, fuzzy
 msgid "No unread messages"
-msgstr "הודעה %d שלא נקראה"
+msgstr ""
 
 #: ../applets/maintained/mail/mail.py:378
-#, fuzzy
 msgid "No new messages"
-msgstr "הודעה %d שלא נקראה"
+msgstr ""
 
 #: ../applets/maintained/mail/mail.py:417
-#, fuzzy
 msgid "Wrong username or password"
-msgstr "סיסמה או שם משתמש שגויים"
+msgstr ""
 
 #: ../applets/maintained/mail/mail.py:425
 #: ../applets/maintained/mail/mail.py:486
@@ -2537,14 +2532,12 @@ msgstr ""
 
 #: ../applets/maintained/mail/mail.py:714
 #: ../applets/maintained/mail/mail.py:716
-#, fuzzy
 msgid "Could not log in: "
-msgstr "לא ניתן להתחבר"
+msgstr ""
 
 #: ../applets/maintained/mail/mail.py:723
-#, fuzzy
 msgid "Could not log in: Username or password incorrect"
-msgstr "סיסמה או שם משתמש שגויים"
+msgstr ""
 
 #: ../applets/maintained/mail/mail.py:765
 #: ../applets/maintained/mail/mail.py:858
@@ -2581,19 +2574,16 @@ msgid "<b>Mail</b>"
 msgstr ""
 
 #: ../applets/maintained/mail/mail.ui.h:5
-#, fuzzy
 msgid "_Alert on network errors"
-msgstr "התרע על שגיאות רשת"
+msgstr ""
 
 #: ../applets/maintained/mail/mail.ui.h:6
-#, fuzzy
 msgid "_Email client:"
-msgstr "לקוח הדואל: "
+msgstr ""
 
 #: ../applets/maintained/mail/mail.ui.h:7
-#, fuzzy
 msgid "_Hide applet if no new messages"
-msgstr "הודעה %d שלא נקראה"
+msgstr ""
 
 #: ../applets/maintained/mail/mail.ui.h:9
 msgid "minutes"
@@ -2774,14 +2764,12 @@ msgid "List of mountpoints that should remain hidden in the UI."
 msgstr ""
 
 #: ../applets/maintained/mount/mount.desktop.in.h:1
-#, fuzzy
 msgid "An applet to (un)mount devices"
-msgstr "יישומון לבדיקת הדואר האלקטרוני"
+msgstr ""
 
 #: ../applets/maintained/mount/mount.desktop.in.h:2
-#, fuzzy
 msgid "Mount Applet"
-msgstr "יישומון הדואל"
+msgstr ""
 
 #: ../applets/maintained/mount/mount.ui.h:2
 #, no-c-format
@@ -3198,14 +3186,14 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:19
 msgid ""
-"When to  overly the app icon:  0...no\t1...on inactive workspace onlt\t2..."
-"all but active win\t3..all."
+"When to  overly the app icon:  0...no\t1...on inactive workspace onlt\t"
+"2...all but active win\t3..all."
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:20
 msgid ""
-"When to scale icons:  0...none  1...on all active ws  2...on_active_win 3..."
-"all"
+"When to scale icons:  0...none  1...on all active ws  2...on_active_win "
+"3...all"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:21
@@ -3323,9 +3311,8 @@ msgid "Lower right"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:31
-#, fuzzy
 msgid "Never"
-msgstr "שרת:"
+msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:33
 msgid "Only active window"
@@ -3630,8 +3617,8 @@ msgstr ""
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:1
 msgid ""
-"CPU graph type to use.  Note that some Icons do not support all graph "
-"types.  If this occurs an icon will revert to it's own default (value of 0)."
+"CPU graph type to use.  Note that some Icons do not support all graph types. "
+" If this occurs an icon will revert to it's own default (value of 0)."
 msgstr ""
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:2
@@ -4016,9 +4003,8 @@ msgid "A simple applet to test vala support"
 msgstr ""
 
 #: ../applets/maintained/vala-test/vala-test.desktop.in.in.h:2
-#, fuzzy
 msgid "Test Vala Applet"
-msgstr "יישומון הדואל"
+msgstr ""
 
 #: ../applets/maintained/volume-control/awn-applet-volume-control.schema-ini.in.h:1
 msgid "Name of the device."
@@ -4113,9 +4099,8 @@ msgid "Display the local weather"
 msgstr ""
 
 #: ../applets/maintained/weather/weather.desktop.in.h:2
-#, fuzzy
 msgid "Weather Applet"
-msgstr "יישומון הדואל"
+msgstr ""
 
 #: ../applets/maintained/weather/weather.py:215
 msgid "Fetching conditions for"
@@ -4205,13 +4190,13 @@ msgstr ""
 
 #: ../applets/maintained/webapplet/applet.c:399
 #: ../applets/maintained/webapplet/webapplet.desktop.in.in.h:2
-#, fuzzy
 msgid "Web Applet"
-msgstr "יישומון הדואל"
+msgstr ""
 
 #. vim: set et ts=2 sts=2 sw=2 :
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:1
-msgid "Flag that enables usage of the \"Open Location\" dialog in the applet."
+msgid ""
+"Flag that enables usage of the \"Open Location\" dialog in the applet."
 msgstr ""
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:2
@@ -4464,27 +4449,10 @@ msgid "Whether to browse stack contents."
 msgstr ""
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:37
-msgid "Whether to combine icons of the files inside the stacks with its icon."
+msgid ""
+"Whether to combine icons of the files inside the stacks with its icon."
 msgstr ""
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:38
 msgid "Whether tooltips are enabled."
 msgstr ""
-
-#~ msgid "Hmmm, nothing here"
-#~ msgstr "המממ, אין כאן כלום"
-
-#~ msgid "Backend: "
-#~ msgstr "מנגנון: "
-
-#~ msgid "Theme"
-#~ msgstr "ערכת נושא"
-
-#~ msgid "Hide Unless New"
-#~ msgstr "הסתר אלא אם כן יש חדש"
-
-#~ msgid "translator-credits"
-#~ msgstr ""
-#~ "Launchpad Contributions:\n"
-#~ "  Yaron https://launchpad.net/~sh-yaron\n"
-#~ "  idovmagal https://launchpad.net/~idovmagal"

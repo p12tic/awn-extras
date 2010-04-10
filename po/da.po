@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-25 14:35+0200\n"
-"PO-Revision-Date: 2009-11-23 11:39+0000\n"
-"Last-Translator: Launchpad Translations Administrators <rosetta@launchpad."
-"net>\n"
+"POT-Creation-Date: 2010-03-25 14:38+0200\n"
+"PO-Revision-Date: 2010-03-25 15:41+0000\n"
+"Last-Translator: Launchpad Translations Administrators "
+"<rosetta@launchpad.net>\n"
 "Language-Team: Danish <da@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-03-24 17:24+0000\n"
+"X-Launchpad-Export-Date: 2010-03-26 04:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -469,7 +469,8 @@ msgid "Beaufort)."
 msgstr ""
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:3
-msgid "If enabled, besides hours and minutes, the seconds will be visible too."
+msgid ""
+"If enabled, besides hours and minutes, the seconds will be visible too."
 msgstr ""
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:4
@@ -515,7 +516,7 @@ msgstr ""
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:1
 #: ../applets/maintained/weather/weather.ui.h:1
 msgid " "
-msgstr ""
+msgstr " "
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:2
 msgid "12 _hour format"
@@ -551,7 +552,8 @@ msgid "Find _Next"
 msgstr ""
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:11
-msgid "If enabled, besides hours and minutes, the seconds will be visible too"
+msgid ""
+"If enabled, besides hours and minutes, the seconds will be visible too"
 msgstr ""
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:12
@@ -663,9 +665,9 @@ msgstr ""
 msgid "Desktop"
 msgstr ""
 
-#.
+#. 
 #. TODO: check the trash and set to stock_trash_empty if trash is empty
-#.
+#. 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:193
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:588
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:591
@@ -1099,9 +1101,9 @@ msgid ""
 "\n"
 "See the Mouse Actions and Layout Lists tabs for configuration options.\n"
 "\n"
-"The applet depends on the python xklavier module (available from http://"
-"download.sugarlabs.org/sources/external/python-xklavier/python-xklavier-0.1."
-"tar.gz).\n"
+"The applet depends on the python xklavier module (available from "
+"http://download.sugarlabs.org/sources/external/python-xklavier/python-"
+"xklavier-0.1.tar.gz).\n"
 "\n"
 "This applet is licensed under GPL2. The flag icons distributed with this "
 "applet are from the xfce4-xkb-plugin-0.5.3.3 panel applet, licensed under "
@@ -1487,9 +1489,9 @@ msgid ""
 "countries either by patents or by copyrighted interfaces, the original "
 "copyright holder who places the Program under this License may add an "
 "explicit geographical distribution limitation excluding those countries, so "
-"that distribution is permitted only in or among countries not thus "
-"excluded.  In such case, this License incorporates the limitation as if "
-"written in the body of this License.\n"
+"that distribution is permitted only in or among countries not thus excluded. "
+" In such case, this License incorporates the limitation as if written in the "
+"body of this License.\n"
 "\n"
 "  9. The Free Software Foundation may publish revised and/or new versions of "
 "the General Public License from time to time.  Such new versions will be "
@@ -2175,7 +2177,8 @@ msgstr ""
 
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/garbage/awn-applet-garbage.schema-ini.in.h:1
-msgid "Enable the confirmation dialog form when one wishes to empty the trash."
+msgid ""
+"Enable the confirmation dialog form when one wishes to empty the trash."
 msgstr ""
 
 #: ../applets/maintained/garbage/awn-applet-garbage.schema-ini.in.h:2
@@ -3180,14 +3183,14 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:19
 msgid ""
-"When to  overly the app icon:  0...no\t1...on inactive workspace onlt\t2..."
-"all but active win\t3..all."
+"When to  overly the app icon:  0...no\t1...on inactive workspace onlt\t"
+"2...all but active win\t3..all."
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:20
 msgid ""
-"When to scale icons:  0...none  1...on all active ws  2...on_active_win 3..."
-"all"
+"When to scale icons:  0...none  1...on all active ws  2...on_active_win "
+"3...all"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:21
@@ -3611,8 +3614,8 @@ msgstr ""
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:1
 msgid ""
-"CPU graph type to use.  Note that some Icons do not support all graph "
-"types.  If this occurs an icon will revert to it's own default (value of 0)."
+"CPU graph type to use.  Note that some Icons do not support all graph types. "
+" If this occurs an icon will revert to it's own default (value of 0)."
 msgstr ""
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:2
@@ -4189,7 +4192,8 @@ msgstr ""
 
 #. vim: set et ts=2 sts=2 sw=2 :
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:1
-msgid "Flag that enables usage of the \"Open Location\" dialog in the applet."
+msgid ""
+"Flag that enables usage of the \"Open Location\" dialog in the applet."
 msgstr ""
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:2
@@ -4442,14 +4446,10 @@ msgid "Whether to browse stack contents."
 msgstr ""
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:37
-msgid "Whether to combine icons of the files inside the stacks with its icon."
+msgid ""
+"Whether to combine icons of the files inside the stacks with its icon."
 msgstr ""
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:38
 msgid "Whether tooltips are enabled."
 msgstr ""
-
-#~ msgid "translator-credits"
-#~ msgstr ""
-#~ "Launchpad Contributions:\n"
-#~ "  Peter Skov https://launchpad.net/~a0peter"

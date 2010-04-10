@@ -7,13 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: notification-daemon trunk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-25 14:35+0200\n"
-"PO-Revision-Date: 2007-01-04 12:51+0100\n"
-"Last-Translator: Florian Steinel <steinel@pootle.wordforge.org.flonet.net>\n"
+"POT-Creation-Date: 2010-03-25 14:38+0200\n"
+"PO-Revision-Date: 2010-03-25 14:49+0000\n"
+"Last-Translator: Florian Steinel <Unknown>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Launchpad-Export-Date: 2010-03-26 04:43+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
 msgid "Animal Farm"
@@ -67,9 +70,8 @@ msgstr ""
 #: ../applets/maintained/awnterm/awn-terminal.vala:456
 #: ../applets/maintained/file-browser-launcher/prefs.py:253
 #: ../applets/maintained/file-browser-launcher/prefs.py:328
-#, fuzzy
 msgid "Action"
-msgstr "Popup Position"
+msgstr ""
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:476
 msgid "Shortcut"
@@ -254,14 +256,12 @@ msgid "<b>Display</b>"
 msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:2
-#, fuzzy
 msgid "Background Color"
-msgstr "Symbolfarbe"
+msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:3
-#, fuzzy
 msgid "Border Color"
-msgstr "Symbolfarbe"
+msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:5
 msgid "Display MBps/KBps (bytes) instead of Mbps/Kbps (bits)"
@@ -292,9 +292,8 @@ msgid "Draw Background"
 msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:12
-#, fuzzy
 msgid "Draw Border"
-msgstr "Äußerer Rahmen"
+msgstr ""
 
 #. Put the general tab together
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:13
@@ -419,9 +418,8 @@ msgid "<b>General Options</b>"
 msgstr ""
 
 #: ../applets/maintained/battery/battery.ui.h:3
-#, fuzzy
 msgid "<b>Notifications</b>"
-msgstr "Popup Benachrichtigungen"
+msgstr ""
 
 #: ../applets/maintained/battery/battery.ui.h:4
 msgid ""
@@ -470,7 +468,8 @@ msgid "Beaufort)."
 msgstr ""
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:3
-msgid "If enabled, besides hours and minutes, the seconds will be visible too."
+msgid ""
+"If enabled, besides hours and minutes, the seconds will be visible too."
 msgstr ""
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:4
@@ -516,7 +515,7 @@ msgstr ""
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:1
 #: ../applets/maintained/weather/weather.ui.h:1
 msgid " "
-msgstr ""
+msgstr " "
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:2
 msgid "12 _hour format"
@@ -552,7 +551,8 @@ msgid "Find _Next"
 msgstr ""
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:11
-msgid "If enabled, besides hours and minutes, the seconds will be visible too"
+msgid ""
+"If enabled, besides hours and minutes, the seconds will be visible too"
 msgstr ""
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:12
@@ -577,9 +577,8 @@ msgid "Kelvin"
 msgstr ""
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:17
-#, fuzzy
 msgid "Location Name:"
-msgstr "Popup Position"
+msgstr ""
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:18
 msgid "Show _seconds"
@@ -665,9 +664,9 @@ msgstr ""
 msgid "Desktop"
 msgstr ""
 
-#.
+#. 
 #. TODO: check the trash and set to stock_trash_empty if trash is empty
-#.
+#. 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:193
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:588
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:591
@@ -1053,9 +1052,8 @@ msgid "<b>Monitored CPU</b>"
 msgstr ""
 
 #: ../applets/maintained/cpufreq/cpufreq.ui.h:2
-#, fuzzy
 msgid "_Processor:"
-msgstr "Fortschritt"
+msgstr ""
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:1
 msgid " 0.9)."
@@ -1087,9 +1085,8 @@ msgid "User selected variants."
 msgstr ""
 
 #: ../applets/maintained/dialect/dialect.desktop.in.h:1
-#, fuzzy
 msgid " Dialect Applet"
-msgstr "Mail-Applet"
+msgstr ""
 
 #: ../applets/maintained/dialect/dialect.desktop.in.h:2
 msgid "Change your keyboard input layout from Awn."
@@ -1109,9 +1106,9 @@ msgid ""
 "\n"
 "See the Mouse Actions and Layout Lists tabs for configuration options.\n"
 "\n"
-"The applet depends on the python xklavier module (available from http://"
-"download.sugarlabs.org/sources/external/python-xklavier/python-xklavier-0.1."
-"tar.gz).\n"
+"The applet depends on the python xklavier module (available from "
+"http://download.sugarlabs.org/sources/external/python-xklavier/python-"
+"xklavier-0.1.tar.gz).\n"
 "\n"
 "This applet is licensed under GPL2. The flag icons distributed with this "
 "applet are from the xfce4-xkb-plugin-0.5.3.3 panel applet, licensed under "
@@ -1196,9 +1193,8 @@ msgid "Change your keyboard layout from Awn."
 msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:69
-#, fuzzy
 msgid "Dialect Applet Help"
-msgstr "Mail-Applet"
+msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:70
 msgid "Dialect Applet Preferences"
@@ -1239,9 +1235,8 @@ msgid "Middle Click"
 msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:80
-#, fuzzy
 msgid "Mouse Actions"
-msgstr "Popup Position"
+msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:81
 msgid "Next Layout"
@@ -1499,9 +1494,9 @@ msgid ""
 "countries either by patents or by copyrighted interfaces, the original "
 "copyright holder who places the Program under this License may add an "
 "explicit geographical distribution limitation excluding those countries, so "
-"that distribution is permitted only in or among countries not thus "
-"excluded.  In such case, this License incorporates the limitation as if "
-"written in the body of this License.\n"
+"that distribution is permitted only in or among countries not thus excluded. "
+" In such case, this License incorporates the limitation as if written in the "
+"body of this License.\n"
 "\n"
 "  9. The Free Software Foundation may publish revised and/or new versions of "
 "the General Public License from time to time.  Such new versions will be "
@@ -1592,9 +1587,8 @@ msgid "<b>Clock Format</b>"
 msgstr ""
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:5
-#, fuzzy
 msgid "Appearance"
-msgstr "Aussehen der Uhr"
+msgstr ""
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:6
 msgid "Commands"
@@ -1605,14 +1599,12 @@ msgid "Date below time"
 msgstr ""
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:8
-#, fuzzy
 msgid "Digital Clock Preferences"
-msgstr "Einstellungen"
+msgstr ""
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:9
-#, fuzzy
 msgid "Run Calendar:"
-msgstr "Kalender"
+msgstr ""
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:10
 msgid "Run Time Admin:"
@@ -2190,7 +2182,8 @@ msgstr ""
 
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/garbage/awn-applet-garbage.schema-ini.in.h:1
-msgid "Enable the confirmation dialog form when one wishes to empty the trash."
+msgid ""
+"Enable the confirmation dialog form when one wishes to empty the trash."
 msgstr ""
 
 #: ../applets/maintained/garbage/awn-applet-garbage.schema-ini.in.h:2
@@ -2401,9 +2394,8 @@ msgid "rpm"
 msgstr ""
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:1
-#, fuzzy
 msgid "Display any network errors"
-msgstr "Bei Netzwerkfehlern benachrichtigen"
+msgstr ""
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:2
 msgid "Hide the icon if there is no new mail"
@@ -2443,15 +2435,15 @@ msgstr "Mail-Applet"
 #, python-format
 msgid "You have %d new message"
 msgid_plural "You have %d new messages"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Sie haben %d neue Nachricht"
+msgstr[1] "Sie haben %d neue Nachrichten"
 
 #: ../applets/maintained/mail/mail.py:41
 #, python-format
 msgid "%d unread message"
 msgid_plural "%d unread messages"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d ungelesene Nachricht"
+msgstr[1] "%d ungelesene Nachrichten"
 
 #: ../applets/maintained/mail/mail.py:74
 msgid "Mail Applet (Click to Log In)"
@@ -2586,9 +2578,8 @@ msgid "<b>Mail</b>"
 msgstr ""
 
 #: ../applets/maintained/mail/mail.ui.h:5
-#, fuzzy
 msgid "_Alert on network errors"
-msgstr "Bei Netzwerkfehlern benachrichtigen"
+msgstr ""
 
 #: ../applets/maintained/mail/mail.ui.h:6
 msgid "_Email client:"
@@ -2667,9 +2658,8 @@ msgstr ""
 #: ../applets/maintained/notification-area/na-prefs.ui.h:12
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:44
 #: ../applets/maintained/weather/weather.ui.h:19
-#, fuzzy
 msgid "pixels"
-msgstr "Breite (Pixel)"
+msgstr ""
 
 #: ../applets/maintained/media-icons/media-icon-next.desktop.in.h:1
 #: ../applets/maintained/media-icons/media-icons.py:68
@@ -2750,9 +2740,8 @@ msgid "<b>Video size</b>"
 msgstr ""
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:3
-#, fuzzy
 msgid "Media Player Preferences"
-msgstr "Einstellungen"
+msgstr ""
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:4
 msgid "_Audiosink:"
@@ -2767,9 +2756,8 @@ msgid "_Videosink:"
 msgstr ""
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:7
-#, fuzzy
 msgid "_Width:"
-msgstr "Breite"
+msgstr ""
 
 #: ../applets/maintained/mount/awn-applet-mount.schema-ini.in.h:1
 msgid "Command to execute after mounting a mountpoint."
@@ -2858,9 +2846,8 @@ msgid "Automatic"
 msgstr ""
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:7
-#, fuzzy
 msgid "Custom:"
-msgstr "Benutzerdefiniert"
+msgstr ""
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:8
 msgid "Extra _offset:"
@@ -2871,23 +2858,20 @@ msgid "Icon _size:"
 msgstr ""
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:10
-#, fuzzy
 msgid "Notification Area Preferences"
-msgstr "Popup Benachrichtigungen"
+msgstr ""
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:11
-#, fuzzy
 msgid "_Number of icon rows:"
-msgstr "Anzahl an Elementen"
+msgstr ""
 
 #: ../applets/maintained/notification-area/notification-area.desktop.in.in.h:1
 msgid "A Notification Area (systray)"
 msgstr ""
 
 #: ../applets/maintained/notification-area/notification-area.desktop.in.in.h:2
-#, fuzzy
 msgid "Notification Area"
-msgstr "Popup Benachrichtigungen"
+msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:1
 msgid "Background colour in the form (Hex) rrggbbaa"
@@ -3206,14 +3190,14 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:19
 msgid ""
-"When to  overly the app icon:  0...no\t1...on inactive workspace onlt\t2..."
-"all but active win\t3..all."
+"When to  overly the app icon:  0...no\t1...on inactive workspace onlt\t"
+"2...all but active win\t3..all."
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:20
 msgid ""
-"When to scale icons:  0...none  1...on all active ws  2...on_active_win 3..."
-"all"
+"When to scale icons:  0...none  1...on all active ws  2...on_active_win "
+"3...all"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:21
@@ -3279,18 +3263,16 @@ msgid "Border _size:"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:18
-#, fuzzy
 msgid "C_ustom color:"
-msgstr "Eigene Farben"
+msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:19
 msgid "Cache expiration:"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:20
-#, fuzzy
 msgid "Center"
-msgstr "Allgemein"
+msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:21
 msgid "Co_lumns:"
@@ -3329,14 +3311,12 @@ msgid "Lower left"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:30
-#, fuzzy
 msgid "Lower right"
-msgstr "Niedrige Priorität"
+msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:31
-#, fuzzy
 msgid "Never"
-msgstr "Server:"
+msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:33
 msgid "Only active window"
@@ -3641,8 +3621,8 @@ msgstr ""
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:1
 msgid ""
-"CPU graph type to use.  Note that some Icons do not support all graph "
-"types.  If this occurs an icon will revert to it's own default (value of 0)."
+"CPU graph type to use.  Note that some Icons do not support all graph types. "
+" If this occurs an icon will revert to it's own default (value of 0)."
 msgstr ""
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:2
@@ -3771,9 +3751,8 @@ msgid "Custom"
 msgstr "Benutzerdefiniert"
 
 #: ../applets/maintained/to-do/prefs.py:32
-#, fuzzy
 msgid "Current Theme"
-msgstr "Aktuelles Thema"
+msgstr "Aktuelles Theme"
 
 #: ../applets/maintained/to-do/prefs.py:32
 msgid "Butter"
@@ -4156,9 +4135,8 @@ msgid ""
 msgstr ""
 
 #: ../applets/maintained/weather/weather.ui.h:6
-#, fuzzy
 msgid "Current _location:"
-msgstr "Popup Position"
+msgstr ""
 
 #: ../applets/maintained/weather/weather.ui.h:7
 msgid ""
@@ -4209,9 +4187,8 @@ msgstr ""
 #. Make the dialog
 #: ../applets/maintained/webapplet/applet.c:262
 #: ../applets/maintained/webapplet/applet.c:460
-#, fuzzy
 msgid "Open Location"
-msgstr "Popup Position"
+msgstr ""
 
 #: ../applets/maintained/webapplet/applet.c:281
 msgid "Set as new _Home Page"
@@ -4224,7 +4201,8 @@ msgstr ""
 
 #. vim: set et ts=2 sts=2 sw=2 :
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:1
-msgid "Flag that enables usage of the \"Open Location\" dialog in the applet."
+msgid ""
+"Flag that enables usage of the \"Open Location\" dialog in the applet."
 msgstr ""
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:2
@@ -4413,14 +4391,12 @@ msgid "Layout radius."
 msgstr ""
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:21
-#, fuzzy
 msgid "Number of columns to use."
-msgstr "Anzahl an Elementen"
+msgstr ""
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:22
-#, fuzzy
 msgid "Number of rows to use."
-msgstr "Anzahl an Elementen"
+msgstr ""
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:23
 msgid "Size of the icons inside stack."
@@ -4479,25 +4455,13 @@ msgid "Whether to browse stack contents."
 msgstr ""
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:37
-msgid "Whether to combine icons of the files inside the stacks with its icon."
+msgid ""
+"Whether to combine icons of the files inside the stacks with its icon."
 msgstr ""
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:38
 msgid "Whether tooltips are enabled."
 msgstr ""
-
-#, fuzzy
-#~ msgid "Base Folder"
-#~ msgstr "Ordner:"
-
-#, fuzzy
-#~ msgid ""
-#~ "Default popup location on the workspace for stack notifications. Allowed "
-#~ "values: \"top_left\",\"top_right\",\"bottom_left\" and \"bottom_right\""
-#~ msgstr ""
-#~ "Standard Popup Position auf der Arbeitsfläche für gestapelte "
-#~ "Benachrichtigungen. Mögliche Werte: &quot;top_left&quot;,&quot;"
-#~ "top_right&quot;,&quot;bottom_left&quot;·und·&quot;bottom_right&quot;"
 
 #~ msgid "The theme used when displaying notifications."
 #~ msgstr "Das Thema um Benachrichtigungen anzuzeigen."

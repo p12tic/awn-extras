@@ -7,13 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: notification-daemon\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-25 14:37+0200\n"
-"PO-Revision-Date: 2006-11-27 14:08+0100\n"
-"Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
+"POT-Creation-Date: 2010-03-25 14:38+0200\n"
+"PO-Revision-Date: 2010-03-25 16:16+0000\n"
+"Last-Translator: Daniel Nylander <yeager@ubuntu.com>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Launchpad-Export-Date: 2010-03-26 04:44+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
 msgid "Animal Farm"
@@ -67,9 +70,8 @@ msgstr ""
 #: ../applets/maintained/awnterm/awn-terminal.vala:456
 #: ../applets/maintained/file-browser-launcher/prefs.py:253
 #: ../applets/maintained/file-browser-launcher/prefs.py:328
-#, fuzzy
 msgid "Action"
-msgstr "Popup-position"
+msgstr ""
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:476
 msgid "Shortcut"
@@ -254,14 +256,12 @@ msgid "<b>Display</b>"
 msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:2
-#, fuzzy
 msgid "Background Color"
-msgstr "Bakgrund"
+msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:3
-#, fuzzy
 msgid "Border Color"
-msgstr "Ikonfärg"
+msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:5
 msgid "Display MBps/KBps (bytes) instead of Mbps/Kbps (bits)"
@@ -288,14 +288,12 @@ msgid "Draw 0 bps in graphs"
 msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:11
-#, fuzzy
 msgid "Draw Background"
-msgstr "Bakgrund"
+msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:12
-#, fuzzy
 msgid "Draw Border"
-msgstr "Yttre kant"
+msgstr ""
 
 #. Put the general tab together
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:13
@@ -420,9 +418,8 @@ msgid "<b>General Options</b>"
 msgstr ""
 
 #: ../applets/maintained/battery/battery.ui.h:3
-#, fuzzy
 msgid "<b>Notifications</b>"
-msgstr "Popup-notifieringar"
+msgstr ""
 
 #: ../applets/maintained/battery/battery.ui.h:4
 msgid ""
@@ -443,9 +440,8 @@ msgid "Time Remaining"
 msgstr ""
 
 #: ../applets/maintained/battery/battery.ui.h:8
-#, fuzzy
 msgid "_Battery:"
-msgstr "_Kategori"
+msgstr ""
 
 #: ../applets/maintained/battery/battery.ui.h:9
 msgid "_Notify when charge level reaches:"
@@ -472,7 +468,8 @@ msgid "Beaufort)."
 msgstr ""
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:3
-msgid "If enabled, besides hours and minutes, the seconds will be visible too."
+msgid ""
+"If enabled, besides hours and minutes, the seconds will be visible too."
 msgstr ""
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:4
@@ -518,7 +515,7 @@ msgstr ""
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:1
 #: ../applets/maintained/weather/weather.ui.h:1
 msgid " "
-msgstr ""
+msgstr " "
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:2
 msgid "12 _hour format"
@@ -554,7 +551,8 @@ msgid "Find _Next"
 msgstr ""
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:11
-msgid "If enabled, besides hours and minutes, the seconds will be visible too"
+msgid ""
+"If enabled, besides hours and minutes, the seconds will be visible too"
 msgstr ""
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:12
@@ -579,9 +577,8 @@ msgid "Kelvin"
 msgstr ""
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:17
-#, fuzzy
 msgid "Location Name:"
-msgstr "Popup-position"
+msgstr ""
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:18
 msgid "Show _seconds"
@@ -667,9 +664,9 @@ msgstr "Hem"
 msgid "Desktop"
 msgstr ""
 
-#.
+#. 
 #. TODO: check the trash and set to stock_trash_empty if trash is empty
-#.
+#. 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:193
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:588
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:591
@@ -986,9 +983,8 @@ msgid "Failed to save <i>%s</i>."
 msgstr "Misslyckades med att spara <i>%s</i>."
 
 #: ../applets/maintained/comics/ui/add.ui.h:1
-#, fuzzy
 msgid "Add Comic"
-msgstr "Serier"
+msgstr ""
 
 #: ../applets/maintained/comics/ui/add.ui.h:2
 msgid "Downloading Comic"
@@ -1026,9 +1022,8 @@ msgstr ""
 
 #: ../applets/maintained/comics/ui/main.ui.h:2
 #: ../applets/maintained/comics/ui/manage.ui.h:1
-#, fuzzy
 msgid "Manage comics"
-msgstr "Delade serier"
+msgstr ""
 
 #: ../applets/maintained/comics/ui/manage.ui.h:2
 msgid "The following comics are installed:"
@@ -1064,9 +1059,8 @@ msgid "<b>Monitored CPU</b>"
 msgstr ""
 
 #: ../applets/maintained/cpufreq/cpufreq.ui.h:2
-#, fuzzy
 msgid "_Processor:"
-msgstr "Förlopp"
+msgstr ""
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:1
 msgid " 0.9)."
@@ -1098,9 +1092,8 @@ msgid "User selected variants."
 msgstr ""
 
 #: ../applets/maintained/dialect/dialect.desktop.in.h:1
-#, fuzzy
 msgid " Dialect Applet"
-msgstr "E-postpanelprogram"
+msgstr ""
 
 #: ../applets/maintained/dialect/dialect.desktop.in.h:2
 msgid "Change your keyboard input layout from Awn."
@@ -1120,9 +1113,9 @@ msgid ""
 "\n"
 "See the Mouse Actions and Layout Lists tabs for configuration options.\n"
 "\n"
-"The applet depends on the python xklavier module (available from http://"
-"download.sugarlabs.org/sources/external/python-xklavier/python-xklavier-0.1."
-"tar.gz).\n"
+"The applet depends on the python xklavier module (available from "
+"http://download.sugarlabs.org/sources/external/python-xklavier/python-"
+"xklavier-0.1.tar.gz).\n"
 "\n"
 "This applet is licensed under GPL2. The flag icons distributed with this "
 "applet are from the xfce4-xkb-plugin-0.5.3.3 panel applet, licensed under "
@@ -1207,14 +1200,12 @@ msgid "Change your keyboard layout from Awn."
 msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:69
-#, fuzzy
 msgid "Dialect Applet Help"
-msgstr "E-postpanelprogram"
+msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:70
-#, fuzzy
 msgid "Dialect Applet Preferences"
-msgstr "Inställningar för Att-göra-lista"
+msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:71
 msgid "Flag Opacity"
@@ -1251,9 +1242,8 @@ msgid "Middle Click"
 msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:80
-#, fuzzy
 msgid "Mouse Actions"
-msgstr "Popup-position"
+msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:81
 msgid "Next Layout"
@@ -1511,9 +1501,9 @@ msgid ""
 "countries either by patents or by copyrighted interfaces, the original "
 "copyright holder who places the Program under this License may add an "
 "explicit geographical distribution limitation excluding those countries, so "
-"that distribution is permitted only in or among countries not thus "
-"excluded.  In such case, this License incorporates the limitation as if "
-"written in the body of this License.\n"
+"that distribution is permitted only in or among countries not thus excluded. "
+" In such case, this License incorporates the limitation as if written in the "
+"body of this License.\n"
 "\n"
 "  9. The Free Software Foundation may publish revised and/or new versions of "
 "the General Public License from time to time.  Such new versions will be "
@@ -1580,9 +1570,8 @@ msgid "The color of the clock text."
 msgstr ""
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:5
-#, fuzzy
 msgid "The font face of the clock text."
-msgstr "Orienteringen på lådan."
+msgstr ""
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:6
 msgid "The shadow color of the clock text."
@@ -1605,9 +1594,8 @@ msgid "<b>Clock Format</b>"
 msgstr ""
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:5
-#, fuzzy
 msgid "Appearance"
-msgstr "Klockutseende"
+msgstr ""
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:6
 msgid "Commands"
@@ -1618,14 +1606,12 @@ msgid "Date below time"
 msgstr ""
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:8
-#, fuzzy
 msgid "Digital Clock Preferences"
-msgstr "Inställningar för Att-göra-lista"
+msgstr ""
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:9
-#, fuzzy
 msgid "Run Calendar:"
-msgstr "Kalender"
+msgstr ""
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:10
 msgid "Run Time Admin:"
@@ -2203,7 +2189,8 @@ msgstr ""
 
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/garbage/awn-applet-garbage.schema-ini.in.h:1
-msgid "Enable the confirmation dialog form when one wishes to empty the trash."
+msgid ""
+"Enable the confirmation dialog form when one wishes to empty the trash."
 msgstr ""
 
 #: ../applets/maintained/garbage/awn-applet-garbage.schema-ini.in.h:2
@@ -2367,9 +2354,8 @@ msgid "Meter hand color:"
 msgstr ""
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:11
-#, fuzzy
 msgid "Remove"
-msgstr "Ta bort objekt"
+msgstr ""
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:12
 msgid "Sensor high value"
@@ -2415,9 +2401,8 @@ msgid "rpm"
 msgstr ""
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:1
-#, fuzzy
 msgid "Display any network errors"
-msgstr "Varna vid nätverksfel"
+msgstr ""
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:2
 msgid "Hide the icon if there is no new mail"
@@ -2457,15 +2442,15 @@ msgstr "E-postpanelprogram"
 #, python-format
 msgid "You have %d new message"
 msgid_plural "You have %d new messages"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Du har %d nytt meddelande"
+msgstr[1] "Du har %d nya meddelanden"
 
 #: ../applets/maintained/mail/mail.py:41
 #, python-format
 msgid "%d unread message"
 msgid_plural "%d unread messages"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d oläst meddelande"
+msgstr[1] "%d olästa meddelanden"
 
 #: ../applets/maintained/mail/mail.py:74
 msgid "Mail Applet (Click to Log In)"
@@ -2598,9 +2583,8 @@ msgid "<b>Mail</b>"
 msgstr ""
 
 #: ../applets/maintained/mail/mail.ui.h:5
-#, fuzzy
 msgid "_Alert on network errors"
-msgstr "Varna vid nätverksfel"
+msgstr ""
 
 #: ../applets/maintained/mail/mail.ui.h:6
 msgid "_Email client:"
@@ -2679,9 +2663,8 @@ msgstr ""
 #: ../applets/maintained/notification-area/na-prefs.ui.h:12
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:44
 #: ../applets/maintained/weather/weather.ui.h:19
-#, fuzzy
 msgid "pixels"
-msgstr "Bredd (bildpunkter)"
+msgstr ""
 
 #: ../applets/maintained/media-icons/media-icon-next.desktop.in.h:1
 #: ../applets/maintained/media-icons/media-icons.py:68
@@ -2762,27 +2745,24 @@ msgid "<b>Video size</b>"
 msgstr ""
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:3
-#, fuzzy
 msgid "Media Player Preferences"
-msgstr "Inställningar"
+msgstr ""
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:4
 msgid "_Audiosink:"
 msgstr ""
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:5
-#, fuzzy
 msgid "_Height:"
-msgstr "Höjd:"
+msgstr ""
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:6
 msgid "_Videosink:"
 msgstr ""
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:7
-#, fuzzy
 msgid "_Width:"
-msgstr "Bredd:"
+msgstr ""
 
 #: ../applets/maintained/mount/awn-applet-mount.schema-ini.in.h:1
 msgid "Command to execute after mounting a mountpoint."
@@ -2859,9 +2839,8 @@ msgid "%"
 msgstr ""
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:3
-#, fuzzy
 msgid "<b>Background Color</b>"
-msgstr "Bakgrund"
+msgstr ""
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:4
 msgid "<b>Border Color</b>"
@@ -2872,37 +2851,32 @@ msgid "Automatic"
 msgstr ""
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:7
-#, fuzzy
 msgid "Custom:"
-msgstr "Anpassad"
+msgstr ""
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:8
 msgid "Extra _offset:"
 msgstr ""
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:9
-#, fuzzy
 msgid "Icon _size:"
-msgstr "Ikontyp"
+msgstr ""
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:10
-#, fuzzy
 msgid "Notification Area Preferences"
-msgstr "Popup-notifieringar"
+msgstr ""
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:11
-#, fuzzy
 msgid "_Number of icon rows:"
-msgstr "Antal objekt"
+msgstr ""
 
 #: ../applets/maintained/notification-area/notification-area.desktop.in.in.h:1
 msgid "A Notification Area (systray)"
 msgstr ""
 
 #: ../applets/maintained/notification-area/notification-area.desktop.in.in.h:2
-#, fuzzy
 msgid "Notification Area"
-msgstr "Popup-notifieringar"
+msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:1
 msgid "Background colour in the form (Hex) rrggbbaa"
@@ -3221,14 +3195,14 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:19
 msgid ""
-"When to  overly the app icon:  0...no\t1...on inactive workspace onlt\t2..."
-"all but active win\t3..all."
+"When to  overly the app icon:  0...no\t1...on inactive workspace onlt\t"
+"2...all but active win\t3..all."
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:20
 msgid ""
-"When to scale icons:  0...none  1...on all active ws  2...on_active_win 3..."
-"all"
+"When to scale icons:  0...none  1...on all active ws  2...on_active_win "
+"3...all"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:21
@@ -3246,9 +3220,8 @@ msgid "<b>Background transparency</b>"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:4
-#, fuzzy
 msgid "<b>Background</b>"
-msgstr "Bakgrund"
+msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:6
 msgid "<b>Icon transparency</b>"
@@ -3295,18 +3268,16 @@ msgid "Border _size:"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:18
-#, fuzzy
 msgid "C_ustom color:"
-msgstr "Anpassade färger"
+msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:19
 msgid "Cache expiration:"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:20
-#, fuzzy
 msgid "Center"
-msgstr "Allmänt"
+msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:21
 msgid "Co_lumns:"
@@ -3345,14 +3316,12 @@ msgid "Lower left"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:30
-#, fuzzy
 msgid "Lower right"
-msgstr "Låg prioritet"
+msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:31
-#, fuzzy
 msgid "Never"
-msgstr "Server:"
+msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:33
 msgid "Only active window"
@@ -3371,9 +3340,8 @@ msgid "Scaled icon _position:"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:37
-#, fuzzy
 msgid "Shiny Switcher Preferences"
-msgstr "Inställningar för Att-göra-lista"
+msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:38
 msgid "Upper left"
@@ -3384,18 +3352,16 @@ msgid "Upper right"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:40
-#, fuzzy
 msgid "Use _desktop background"
-msgstr "Bakgrund"
+msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:41
 msgid "_Applet size:"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:42
-#, fuzzy
 msgid "_Rows:"
-msgstr "_Låg"
+msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:43
 msgid "_Thumbnailing:"
@@ -3660,8 +3626,8 @@ msgstr ""
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:1
 msgid ""
-"CPU graph type to use.  Note that some Icons do not support all graph "
-"types.  If this occurs an icon will revert to it's own default (value of 0)."
+"CPU graph type to use.  Note that some Icons do not support all graph types. "
+" If this occurs an icon will revert to it's own default (value of 0)."
 msgstr ""
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:2
@@ -3677,9 +3643,8 @@ msgid "List of icons"
 msgstr ""
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:5
-#, fuzzy
 msgid "Render background."
-msgstr "Bakgrund"
+msgstr ""
 
 #: ../applets/maintained/sysmon/sysmon.desktop.in.in.h:1
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in.h:2
@@ -3791,7 +3756,6 @@ msgid "Custom"
 msgstr "Anpassad"
 
 #: ../applets/maintained/to-do/prefs.py:32
-#, fuzzy
 msgid "Current Theme"
 msgstr "Aktuellt tema"
 
@@ -4176,9 +4140,8 @@ msgid ""
 msgstr ""
 
 #: ../applets/maintained/weather/weather.ui.h:6
-#, fuzzy
 msgid "Current _location:"
-msgstr "Popup-position"
+msgstr ""
 
 #: ../applets/maintained/weather/weather.ui.h:7
 msgid ""
@@ -4199,9 +4162,8 @@ msgid "Maximum _map width:"
 msgstr ""
 
 #: ../applets/maintained/weather/weather.ui.h:11
-#, fuzzy
 msgid "Medium"
-msgstr "_Mellan"
+msgstr ""
 
 #: ../applets/maintained/weather/weather.ui.h:12
 msgid "Show temperature in _icon"
@@ -4230,9 +4192,8 @@ msgstr ""
 #. Make the dialog
 #: ../applets/maintained/webapplet/applet.c:262
 #: ../applets/maintained/webapplet/applet.c:460
-#, fuzzy
 msgid "Open Location"
-msgstr "Popup-position"
+msgstr "Öppna plats"
 
 #: ../applets/maintained/webapplet/applet.c:281
 msgid "Set as new _Home Page"
@@ -4245,7 +4206,8 @@ msgstr ""
 
 #. vim: set et ts=2 sts=2 sw=2 :
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:1
-msgid "Flag that enables usage of the \"Open Location\" dialog in the applet."
+msgid ""
+"Flag that enables usage of the \"Open Location\" dialog in the applet."
 msgstr ""
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:2
@@ -4261,9 +4223,8 @@ msgid "Name of specialized website to use"
 msgstr ""
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:5
-#, fuzzy
 msgid "URI"
-msgstr "URI:"
+msgstr ""
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:7
 #, no-c-format
@@ -4435,23 +4396,20 @@ msgid "Layout radius."
 msgstr ""
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:21
-#, fuzzy
 msgid "Number of columns to use."
-msgstr "Antal objekt"
+msgstr ""
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:22
-#, fuzzy
 msgid "Number of rows to use."
-msgstr "Antal objekt"
+msgstr ""
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:23
 msgid "Size of the icons inside stack."
 msgstr ""
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:24
-#, fuzzy
 msgid "Sort direction of the items."
-msgstr "Orienteringen på lådan."
+msgstr ""
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:25
 msgid "Sort folders before files."
@@ -4502,24 +4460,20 @@ msgid "Whether to browse stack contents."
 msgstr ""
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:37
-msgid "Whether to combine icons of the files inside the stacks with its icon."
+msgid ""
+"Whether to combine icons of the files inside the stacks with its icon."
 msgstr ""
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:38
 msgid "Whether tooltips are enabled."
 msgstr ""
 
-#, fuzzy
-#~ msgid "Base Folder"
-#~ msgstr "Mapp:"
-
 #~ msgid ""
 #~ "Default popup location on the workspace for stack notifications. Allowed "
 #~ "values: \"top_left\",\"top_right\",\"bottom_left\" and \"bottom_right\""
 #~ msgstr ""
-#~ "Standardposition för popup-rutor på arbetsutan för notifieringar. "
-#~ "Tillåtna värden: \"top_left\",\"top_right\",\"bottom_left\" och "
-#~ "\"bottom_right\""
+#~ "Standardposition för popup-rutor på arbetsutan för notifieringar. Tillåtna "
+#~ "värden: \"top_left\",\"top_right\",\"bottom_left\" och \"bottom_right\""
 
 #~ msgid "The theme used when displaying notifications."
 #~ msgstr "Temat som används för visning av notifieringar."

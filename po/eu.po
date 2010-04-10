@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-25 14:35+0200\n"
-"PO-Revision-Date: 2009-11-23 11:35+0000\n"
+"POT-Creation-Date: 2010-03-25 14:38+0200\n"
+"PO-Revision-Date: 2010-03-25 16:46+0000\n"
 "Last-Translator: Mikel Pascual Aldabaldetreku <mikel.paskual@gmail.com>\n"
 "Language-Team: Basque <eu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-03-24 17:24+0000\n"
+"X-Launchpad-Export-Date: 2010-03-26 04:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -106,9 +106,8 @@ msgid "A simple popup terminal"
 msgstr ""
 
 #: ../applets/maintained/awnterm/awnterm.desktop.in.in.h:2
-#, fuzzy
 msgid "Terminal Applet"
-msgstr "E-posta Applet-a"
+msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:1
 msgid " Upload/Download"
@@ -453,9 +452,8 @@ msgstr ""
 #: ../applets/maintained/mail/mail.ui.h:8
 #: ../applets/maintained/volume-control/volume-control.ui.h:7
 #: ../applets/maintained/weather/weather.ui.h:18
-#, fuzzy
 msgid "_Theme:"
-msgstr "Gaia: "
+msgstr ""
 
 #: ../applets/maintained/battery/battery.ui.h:11
 msgid "_Warn when charge level drops to:"
@@ -470,7 +468,8 @@ msgid "Beaufort)."
 msgstr ""
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:3
-msgid "If enabled, besides hours and minutes, the seconds will be visible too."
+msgid ""
+"If enabled, besides hours and minutes, the seconds will be visible too."
 msgstr ""
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:4
@@ -516,7 +515,7 @@ msgstr ""
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:1
 #: ../applets/maintained/weather/weather.ui.h:1
 msgid " "
-msgstr ""
+msgstr " "
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:2
 msgid "12 _hour format"
@@ -552,7 +551,8 @@ msgid "Find _Next"
 msgstr ""
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:11
-msgid "If enabled, besides hours and minutes, the seconds will be visible too"
+msgid ""
+"If enabled, besides hours and minutes, the seconds will be visible too"
 msgstr ""
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:12
@@ -664,9 +664,9 @@ msgstr ""
 msgid "Desktop"
 msgstr ""
 
-#.
+#. 
 #. TODO: check the trash and set to stock_trash_empty if trash is empty
-#.
+#. 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:193
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:588
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:591
@@ -1046,9 +1046,8 @@ msgid "<b>Monitored CPU</b>"
 msgstr ""
 
 #: ../applets/maintained/cpufreq/cpufreq.ui.h:2
-#, fuzzy
 msgid "_Processor:"
-msgstr "Pasahitza:"
+msgstr ""
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:1
 msgid " 0.9)."
@@ -1080,9 +1079,8 @@ msgid "User selected variants."
 msgstr ""
 
 #: ../applets/maintained/dialect/dialect.desktop.in.h:1
-#, fuzzy
 msgid " Dialect Applet"
-msgstr "E-posta Applet-a"
+msgstr ""
 
 #: ../applets/maintained/dialect/dialect.desktop.in.h:2
 msgid "Change your keyboard input layout from Awn."
@@ -1102,9 +1100,9 @@ msgid ""
 "\n"
 "See the Mouse Actions and Layout Lists tabs for configuration options.\n"
 "\n"
-"The applet depends on the python xklavier module (available from http://"
-"download.sugarlabs.org/sources/external/python-xklavier/python-xklavier-0.1."
-"tar.gz).\n"
+"The applet depends on the python xklavier module (available from "
+"http://download.sugarlabs.org/sources/external/python-xklavier/python-"
+"xklavier-0.1.tar.gz).\n"
 "\n"
 "This applet is licensed under GPL2. The flag icons distributed with this "
 "applet are from the xfce4-xkb-plugin-0.5.3.3 panel applet, licensed under "
@@ -1177,9 +1175,8 @@ msgid "(C) 2009, Lachlan Turner (Denham 2010)."
 msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:66
-#, fuzzy
 msgid "About Dialect Applet"
-msgstr "E-posta Applet-a"
+msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:67
 msgid "Allow scroll wheel to change layout"
@@ -1190,9 +1187,8 @@ msgid "Change your keyboard layout from Awn."
 msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:69
-#, fuzzy
 msgid "Dialect Applet Help"
-msgstr "E-posta Applet-a"
+msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:70
 msgid "Dialect Applet Preferences"
@@ -1492,9 +1488,9 @@ msgid ""
 "countries either by patents or by copyrighted interfaces, the original "
 "copyright holder who places the Program under this License may add an "
 "explicit geographical distribution limitation excluding those countries, so "
-"that distribution is permitted only in or among countries not thus "
-"excluded.  In such case, this License incorporates the limitation as if "
-"written in the body of this License.\n"
+"that distribution is permitted only in or among countries not thus excluded. "
+" In such case, this License incorporates the limitation as if written in the "
+"body of this License.\n"
 "\n"
 "  9. The Free Software Foundation may publish revised and/or new versions of "
 "the General Public License from time to time.  Such new versions will be "
@@ -1702,9 +1698,8 @@ msgstr ""
 #: ../applets/maintained/feeds/feeds.py:404
 #: ../applets/maintained/feeds/feeds.py:480
 #: ../applets/maintained/feeds/feeds.py:1031
-#, fuzzy
 msgid "Feeds Applet"
-msgstr "E-posta Applet-a"
+msgstr ""
 
 #: ../applets/maintained/feeds/feeds.desktop.in.h:2
 #: ../applets/maintained/feeds/feeds.py:1036
@@ -2181,7 +2176,8 @@ msgstr ""
 
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/garbage/awn-applet-garbage.schema-ini.in.h:1
-msgid "Enable the confirmation dialog form when one wishes to empty the trash."
+msgid ""
+"Enable the confirmation dialog form when one wishes to empty the trash."
 msgstr ""
 
 #: ../applets/maintained/garbage/awn-applet-garbage.schema-ini.in.h:2
@@ -2365,9 +2361,8 @@ msgid "Temperature unit:"
 msgstr ""
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:17
-#, fuzzy
 msgid "Theme:"
-msgstr "Gaia: "
+msgstr ""
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:18
 #: ../applets/maintained/mail/mail.ui.h:4
@@ -2393,9 +2388,8 @@ msgid "rpm"
 msgstr ""
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:1
-#, fuzzy
 msgid "Display any network errors"
-msgstr "Sare-erroreez ohartarazi"
+msgstr ""
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:2
 msgid "Hide the icon if there is no new mail"
@@ -2479,19 +2473,16 @@ msgid "Log Out"
 msgstr ""
 
 #: ../applets/maintained/mail/mail.py:376
-#, fuzzy
 msgid "No unread messages"
-msgstr "Irakurri gabeko mezu %d"
+msgstr ""
 
 #: ../applets/maintained/mail/mail.py:378
-#, fuzzy
 msgid "No new messages"
-msgstr "Irakurri gabeko mezu %d"
+msgstr ""
 
 #: ../applets/maintained/mail/mail.py:417
-#, fuzzy
 msgid "Wrong username or password"
-msgstr "Erabiltzaile edo pasahitz okerra"
+msgstr ""
 
 #: ../applets/maintained/mail/mail.py:425
 #: ../applets/maintained/mail/mail.py:486
@@ -2537,14 +2528,12 @@ msgstr ""
 
 #: ../applets/maintained/mail/mail.py:714
 #: ../applets/maintained/mail/mail.py:716
-#, fuzzy
 msgid "Could not log in: "
-msgstr "Ezin izan da sartu"
+msgstr ""
 
 #: ../applets/maintained/mail/mail.py:723
-#, fuzzy
 msgid "Could not log in: Username or password incorrect"
-msgstr "Erabiltzaile edo pasahitz okerra"
+msgstr ""
 
 #: ../applets/maintained/mail/mail.py:765
 #: ../applets/maintained/mail/mail.py:858
@@ -2581,19 +2570,16 @@ msgid "<b>Mail</b>"
 msgstr ""
 
 #: ../applets/maintained/mail/mail.ui.h:5
-#, fuzzy
 msgid "_Alert on network errors"
-msgstr "Sare-erroreez ohartarazi"
+msgstr ""
 
 #: ../applets/maintained/mail/mail.ui.h:6
-#, fuzzy
 msgid "_Email client:"
-msgstr "E-posta bezeroa: "
+msgstr ""
 
 #: ../applets/maintained/mail/mail.ui.h:7
-#, fuzzy
 msgid "_Hide applet if no new messages"
-msgstr "Irakurri gabeko mezu %d"
+msgstr ""
 
 #: ../applets/maintained/mail/mail.ui.h:9
 msgid "minutes"
@@ -2774,14 +2760,12 @@ msgid "List of mountpoints that should remain hidden in the UI."
 msgstr ""
 
 #: ../applets/maintained/mount/mount.desktop.in.h:1
-#, fuzzy
 msgid "An applet to (un)mount devices"
-msgstr "E-posta egiaztatzeko applet-a"
+msgstr ""
 
 #: ../applets/maintained/mount/mount.desktop.in.h:2
-#, fuzzy
 msgid "Mount Applet"
-msgstr "E-posta Applet-a"
+msgstr ""
 
 #: ../applets/maintained/mount/mount.ui.h:2
 #, no-c-format
@@ -3198,14 +3182,14 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:19
 msgid ""
-"When to  overly the app icon:  0...no\t1...on inactive workspace onlt\t2..."
-"all but active win\t3..all."
+"When to  overly the app icon:  0...no\t1...on inactive workspace onlt\t"
+"2...all but active win\t3..all."
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:20
 msgid ""
-"When to scale icons:  0...none  1...on all active ws  2...on_active_win 3..."
-"all"
+"When to scale icons:  0...none  1...on all active ws  2...on_active_win "
+"3...all"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:21
@@ -3323,9 +3307,8 @@ msgid "Lower right"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:31
-#, fuzzy
 msgid "Never"
-msgstr "Zerbitzaria:"
+msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:33
 msgid "Only active window"
@@ -3630,8 +3613,8 @@ msgstr ""
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:1
 msgid ""
-"CPU graph type to use.  Note that some Icons do not support all graph "
-"types.  If this occurs an icon will revert to it's own default (value of 0)."
+"CPU graph type to use.  Note that some Icons do not support all graph types. "
+" If this occurs an icon will revert to it's own default (value of 0)."
 msgstr ""
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:2
@@ -4016,9 +3999,8 @@ msgid "A simple applet to test vala support"
 msgstr ""
 
 #: ../applets/maintained/vala-test/vala-test.desktop.in.in.h:2
-#, fuzzy
 msgid "Test Vala Applet"
-msgstr "E-posta Applet-a"
+msgstr ""
 
 #: ../applets/maintained/volume-control/awn-applet-volume-control.schema-ini.in.h:1
 msgid "Name of the device."
@@ -4113,9 +4095,8 @@ msgid "Display the local weather"
 msgstr ""
 
 #: ../applets/maintained/weather/weather.desktop.in.h:2
-#, fuzzy
 msgid "Weather Applet"
-msgstr "E-posta Applet-a"
+msgstr ""
 
 #: ../applets/maintained/weather/weather.py:215
 msgid "Fetching conditions for"
@@ -4205,13 +4186,13 @@ msgstr ""
 
 #: ../applets/maintained/webapplet/applet.c:399
 #: ../applets/maintained/webapplet/webapplet.desktop.in.in.h:2
-#, fuzzy
 msgid "Web Applet"
-msgstr "E-posta Applet-a"
+msgstr ""
 
 #. vim: set et ts=2 sts=2 sw=2 :
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:1
-msgid "Flag that enables usage of the \"Open Location\" dialog in the applet."
+msgid ""
+"Flag that enables usage of the \"Open Location\" dialog in the applet."
 msgstr ""
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:2
@@ -4464,26 +4445,10 @@ msgid "Whether to browse stack contents."
 msgstr ""
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:37
-msgid "Whether to combine icons of the files inside the stacks with its icon."
+msgid ""
+"Whether to combine icons of the files inside the stacks with its icon."
 msgstr ""
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:38
 msgid "Whether tooltips are enabled."
 msgstr ""
-
-#~ msgid "Hmmm, nothing here"
-#~ msgstr "Mmm, batere ez hemen"
-
-#~ msgid "Backend: "
-#~ msgstr "Motorra: "
-
-#~ msgid "Theme"
-#~ msgstr "Gaia"
-
-#~ msgid "Hide Unless New"
-#~ msgstr "Ezkutatu, berririk ez bada"
-
-#~ msgid "translator-credits"
-#~ msgstr ""
-#~ "Launchpad Contributions:\n"
-#~ "  Mikel Pascual Aldabaldetreku https://launchpad.net/~mpascual"

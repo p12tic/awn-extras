@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-25 14:36+0200\n"
-"PO-Revision-Date: 2009-11-18 06:53+0000\n"
-"Last-Translator: Waluyo Adi Siswanto <Unknown>\n"
+"POT-Creation-Date: 2010-03-25 14:38+0200\n"
+"PO-Revision-Date: 2010-03-25 13:54+0000\n"
+"Last-Translator: Michal Hruby <michal.mhr@gmail.com>\n"
 "Language-Team: Indonesian <id@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2010-03-24 17:24+0000\n"
+"X-Launchpad-Export-Date: 2010-03-26 04:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -226,9 +226,8 @@ msgid "Total Sent: %s - Total Received: %s (All Interfaces)"
 msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:610
-#, fuzzy
 msgid "No"
-msgstr "Tidak ada"
+msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:611
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:136
@@ -453,9 +452,8 @@ msgstr ""
 #: ../applets/maintained/mail/mail.ui.h:8
 #: ../applets/maintained/volume-control/volume-control.ui.h:7
 #: ../applets/maintained/weather/weather.ui.h:18
-#, fuzzy
 msgid "_Theme:"
-msgstr "Tema: "
+msgstr ""
 
 #: ../applets/maintained/battery/battery.ui.h:11
 msgid "_Warn when charge level drops to:"
@@ -470,7 +468,8 @@ msgid "Beaufort)."
 msgstr ""
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:3
-msgid "If enabled, besides hours and minutes, the seconds will be visible too."
+msgid ""
+"If enabled, besides hours and minutes, the seconds will be visible too."
 msgstr ""
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:4
@@ -516,7 +515,7 @@ msgstr ""
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:1
 #: ../applets/maintained/weather/weather.ui.h:1
 msgid " "
-msgstr ""
+msgstr " "
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:2
 msgid "12 _hour format"
@@ -552,7 +551,8 @@ msgid "Find _Next"
 msgstr ""
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:11
-msgid "If enabled, besides hours and minutes, the seconds will be visible too"
+msgid ""
+"If enabled, besides hours and minutes, the seconds will be visible too"
 msgstr ""
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:12
@@ -664,9 +664,9 @@ msgstr ""
 msgid "Desktop"
 msgstr ""
 
-#.
+#. 
 #. TODO: check the trash and set to stock_trash_empty if trash is empty
-#.
+#. 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:193
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:588
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:591
@@ -1046,9 +1046,8 @@ msgid "<b>Monitored CPU</b>"
 msgstr ""
 
 #: ../applets/maintained/cpufreq/cpufreq.ui.h:2
-#, fuzzy
 msgid "_Processor:"
-msgstr "Kata laluan"
+msgstr ""
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:1
 msgid " 0.9)."
@@ -1101,9 +1100,9 @@ msgid ""
 "\n"
 "See the Mouse Actions and Layout Lists tabs for configuration options.\n"
 "\n"
-"The applet depends on the python xklavier module (available from http://"
-"download.sugarlabs.org/sources/external/python-xklavier/python-xklavier-0.1."
-"tar.gz).\n"
+"The applet depends on the python xklavier module (available from "
+"http://download.sugarlabs.org/sources/external/python-xklavier/python-"
+"xklavier-0.1.tar.gz).\n"
 "\n"
 "This applet is licensed under GPL2. The flag icons distributed with this "
 "applet are from the xfce4-xkb-plugin-0.5.3.3 panel applet, licensed under "
@@ -1192,9 +1191,8 @@ msgid "Dialect Applet Help"
 msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:70
-#, fuzzy
 msgid "Dialect Applet Preferences"
-msgstr "Preferensi"
+msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:71
 msgid "Flag Opacity"
@@ -1490,9 +1488,9 @@ msgid ""
 "countries either by patents or by copyrighted interfaces, the original "
 "copyright holder who places the Program under this License may add an "
 "explicit geographical distribution limitation excluding those countries, so "
-"that distribution is permitted only in or among countries not thus "
-"excluded.  In such case, this License incorporates the limitation as if "
-"written in the body of this License.\n"
+"that distribution is permitted only in or among countries not thus excluded. "
+" In such case, this License incorporates the limitation as if written in the "
+"body of this License.\n"
 "\n"
 "  9. The Free Software Foundation may publish revised and/or new versions of "
 "the General Public License from time to time.  Such new versions will be "
@@ -1595,14 +1593,12 @@ msgid "Date below time"
 msgstr ""
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:8
-#, fuzzy
 msgid "Digital Clock Preferences"
-msgstr "Preferensi"
+msgstr ""
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:9
-#, fuzzy
 msgid "Run Calendar:"
-msgstr "Kalender"
+msgstr ""
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:10
 msgid "Run Time Admin:"
@@ -1667,14 +1663,12 @@ msgstr ""
 
 #: ../applets/maintained/feeds/classes.py:488
 #: ../applets/maintained/feeds/prefs.py:516
-#, fuzzy
 msgid "Google Reader"
-msgstr "Kalender Google"
+msgstr ""
 
 #: ../applets/maintained/feeds/classes.py:533
-#, fuzzy
 msgid "Google Wave"
-msgstr "Kalender Google"
+msgstr ""
 
 #: ../applets/maintained/feeds/classes.py:619
 msgid "Reddit Inbox"
@@ -1781,9 +1775,8 @@ msgid "Do you want to add these %s feeds?"
 msgstr ""
 
 #: ../applets/maintained/feeds/prefs.py:58
-#, fuzzy
 msgid "Feeds Applet Preferences"
-msgstr "Preferensi"
+msgstr ""
 
 #: ../applets/maintained/feeds/prefs.py:68
 msgid "Feeds"
@@ -2000,9 +1993,8 @@ msgid "Filesystem"
 msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:473
-#, fuzzy
 msgid "Connect to Server..."
-msgstr "Hubungkan ke <i>%s</i>..."
+msgstr ""
 
 #. Documents
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:524
@@ -2160,6 +2152,7 @@ msgstr ""
 msgid "%s: %u item"
 msgid_plural "%s: %u items"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../applets/maintained/garbage/applet.vala:194
 #, c-format
@@ -2183,7 +2176,8 @@ msgstr ""
 
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/garbage/awn-applet-garbage.schema-ini.in.h:1
-msgid "Enable the confirmation dialog form when one wishes to empty the trash."
+msgid ""
+"Enable the confirmation dialog form when one wishes to empty the trash."
 msgstr ""
 
 #: ../applets/maintained/garbage/awn-applet-garbage.schema-ini.in.h:2
@@ -2195,9 +2189,9 @@ msgid "A lightweight, cross-desktop trash applet"
 msgstr ""
 
 #: ../applets/maintained/garbage/prefs.vala:32
-#, fuzzy, c-format
+#, c-format
 msgid "%s Preferences"
-msgstr "Preferensi"
+msgstr ""
 
 #: ../applets/maintained/garbage/prefs.vala:47
 msgid "Confirm when emptying the trash"
@@ -2367,9 +2361,8 @@ msgid "Temperature unit:"
 msgstr ""
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:17
-#, fuzzy
 msgid "Theme:"
-msgstr "Tema: "
+msgstr ""
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:18
 #: ../applets/maintained/mail/mail.ui.h:4
@@ -2395,9 +2388,8 @@ msgid "rpm"
 msgstr ""
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:1
-#, fuzzy
 msgid "Display any network errors"
-msgstr "Peringatkan pada Galat Jaringan"
+msgstr ""
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:2
 msgid "Hide the icon if there is no new mail"
@@ -2479,19 +2471,16 @@ msgid "Log Out"
 msgstr ""
 
 #: ../applets/maintained/mail/mail.py:376
-#, fuzzy
 msgid "No unread messages"
-msgstr "%d pesan tidak terbaca"
+msgstr ""
 
 #: ../applets/maintained/mail/mail.py:378
-#, fuzzy
 msgid "No new messages"
-msgstr "%d pesan tidak terbaca"
+msgstr ""
 
 #: ../applets/maintained/mail/mail.py:417
-#, fuzzy
 msgid "Wrong username or password"
-msgstr "Nama pengguna atau kata laluan salah"
+msgstr ""
 
 #: ../applets/maintained/mail/mail.py:425
 #: ../applets/maintained/mail/mail.py:486
@@ -2537,14 +2526,12 @@ msgstr ""
 
 #: ../applets/maintained/mail/mail.py:714
 #: ../applets/maintained/mail/mail.py:716
-#, fuzzy
 msgid "Could not log in: "
-msgstr "Tidak dapat masuk"
+msgstr ""
 
 #: ../applets/maintained/mail/mail.py:723
-#, fuzzy
 msgid "Could not log in: Username or password incorrect"
-msgstr "Nama pengguna atau kata laluan salah"
+msgstr ""
 
 #: ../applets/maintained/mail/mail.py:765
 #: ../applets/maintained/mail/mail.py:858
@@ -2581,18 +2568,16 @@ msgid "<b>Mail</b>"
 msgstr ""
 
 #: ../applets/maintained/mail/mail.ui.h:5
-#, fuzzy
 msgid "_Alert on network errors"
-msgstr "Peringatkan pada Galat Jaringan"
+msgstr ""
 
 #: ../applets/maintained/mail/mail.ui.h:6
 msgid "_Email client:"
 msgstr ""
 
 #: ../applets/maintained/mail/mail.ui.h:7
-#, fuzzy
 msgid "_Hide applet if no new messages"
-msgstr "%d pesan tidak terbaca"
+msgstr ""
 
 #: ../applets/maintained/mail/mail.ui.h:9
 msgid "minutes"
@@ -2643,9 +2628,8 @@ msgid "Display _docklet instead of dialog"
 msgstr ""
 
 #: ../applets/maintained/media-control/media-control.ui.h:4
-#, fuzzy
 msgid "Media-control preferences"
-msgstr "Preferensi"
+msgstr ""
 
 #: ../applets/maintained/media-control/media-control.ui.h:5
 msgid "Show _album art when available"
@@ -2746,9 +2730,8 @@ msgid "<b>Video size</b>"
 msgstr ""
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:3
-#, fuzzy
 msgid "Media Player Preferences"
-msgstr "Preferensi"
+msgstr ""
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:4
 msgid "_Audiosink:"
@@ -3197,14 +3180,14 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:19
 msgid ""
-"When to  overly the app icon:  0...no\t1...on inactive workspace onlt\t2..."
-"all but active win\t3..all."
+"When to  overly the app icon:  0...no\t1...on inactive workspace onlt\t"
+"2...all but active win\t3..all."
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:20
 msgid ""
-"When to scale icons:  0...none  1...on all active ws  2...on_active_win 3..."
-"all"
+"When to scale icons:  0...none  1...on all active ws  2...on_active_win "
+"3...all"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:21
@@ -3322,9 +3305,8 @@ msgid "Lower right"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:31
-#, fuzzy
 msgid "Never"
-msgstr "Server:"
+msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:33
 msgid "Only active window"
@@ -3343,9 +3325,8 @@ msgid "Scaled icon _position:"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:37
-#, fuzzy
 msgid "Shiny Switcher Preferences"
-msgstr "Preferensi"
+msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:38
 msgid "Upper left"
@@ -3467,9 +3448,8 @@ msgid "Which background image(s) source to use: gnome, compiz, file"
 msgstr ""
 
 #: ../applets/maintained/slickswitcher/prefs.py:69
-#, fuzzy
 msgid "SlickSwitcher Preferences"
-msgstr "Preferensi"
+msgstr ""
 
 #. Colors: Borders, Windows, and Dialog
 #. Border Colors
@@ -3631,8 +3611,8 @@ msgstr ""
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:1
 msgid ""
-"CPU graph type to use.  Note that some Icons do not support all graph "
-"types.  If this occurs an icon will revert to it's own default (value of 0)."
+"CPU graph type to use.  Note that some Icons do not support all graph types. "
+" If this occurs an icon will revert to it's own default (value of 0)."
 msgstr ""
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:2
@@ -4209,7 +4189,8 @@ msgstr ""
 
 #. vim: set et ts=2 sts=2 sw=2 :
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:1
-msgid "Flag that enables usage of the \"Open Location\" dialog in the applet."
+msgid ""
+"Flag that enables usage of the \"Open Location\" dialog in the applet."
 msgstr ""
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:2
@@ -4462,25 +4443,10 @@ msgid "Whether to browse stack contents."
 msgstr ""
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:37
-msgid "Whether to combine icons of the files inside the stacks with its icon."
+msgid ""
+"Whether to combine icons of the files inside the stacks with its icon."
 msgstr ""
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:38
 msgid "Whether tooltips are enabled."
 msgstr ""
-
-#~ msgid "Hmmm, nothing here"
-#~ msgstr "Hmmm, tidak ada di sini"
-
-#~ msgid "Theme"
-#~ msgstr "Tema"
-
-#~ msgid "Hide Unless New"
-#~ msgstr "Sembuntikan Kecuali jika Baru"
-
-#~ msgid "translator-credits"
-#~ msgstr ""
-#~ "Launchpad Contributions:\n"
-#~ "  Arief Setiadi Wibowo https://launchpad.net/~q-thrynx\n"
-#~ "  Waluyo Adi Siswanto https://launchpad.net/~was-wlk\n"
-#~ "  rotyyu https://launchpad.net/~rotua-hd"

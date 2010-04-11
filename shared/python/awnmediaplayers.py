@@ -484,7 +484,8 @@ class BansheeOne(GenericPlayer):
         self.dbus_driver()
         result = {}
         
-        self.albumart_general = ".cache/album-art/"
+        self.albumart_general = os.environ['HOME'] + "/.cache/media-art/"
+        self.albumart_general2 = os.environ['HOME'] + "/.cache/album-art/"
 
         # Currently Playing Title
         info = self.player.GetCurrentTrack()
@@ -501,9 +502,11 @@ class BansheeOne(GenericPlayer):
             result['album'] = str(info['album'])
 
         if 'artwork-id' in info:
-            result['album-art'] = self.albumart_general + info['artwork-id'] + ".jpg"
+            result['album-art'] = '%s.jpg' % (self.albumart_general + info['artwork-id'])
+            if not os.path.isfile(result['album-art']):
+                result['album-art'] = '%s.jpg' % (self.albumart_general2 + info['artwork-id'])
         elif 'album' in info:
-            albumart_exact = self.albumart_general + result['artist'] + '-' + info['album'] + ".jpg"
+            albumart_exact = '%s-%s.jpg' % (self.albumart_general + result['artist'], info['album'])
             result['album-art'] = albumart_exact.replace(' ','').lower()
 
         return result

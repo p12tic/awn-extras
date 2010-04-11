@@ -492,7 +492,7 @@ class MediaControlApplet (awn.AppletSimple):
                 raise RuntimeError('No album art')
         except:
             self.album_overlay.props.active = False
-            self.album_art_pixbuf = None
+            self.album_art_pixbuf = self.no_album_art_pixbuf
 
         # no need to set dialog elements if it's not visible
         if not force_update:

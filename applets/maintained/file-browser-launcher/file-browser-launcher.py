@@ -158,7 +158,8 @@ class App(awn.Applet):
       self.__bookmarks_monitor = gio.File(bookmarks_file).monitor_file()
 
       def bookmarks_changed_cb(monitor, file, other_file, event):
-        if event == gio.FILE_MONITOR_EVENT_CHANGES_DONE_HINT:
+        if event in (gio.FILE_MONITOR_EVENT_CHANGES_DONE_HINT, gio.FILE_MONITOR_EVENT_CREATED,
+          gio.FILE_MONITOR_EVENT_DELETED):
           #Refresh menu to re-initialize the widget
           self.do_gio_places()
 
@@ -477,9 +478,12 @@ class App(awn.Applet):
   def do_bookmarks(self):
     if self.show_bookmarks == 2:
       #Get list of bookmarks
-      self.bmarks2 = open(os.path.expanduser('~/.gtk-bookmarks'))
-      self.bmarks = self.bmarks2.readlines()
-      self.bmarks2.close()
+      try:
+        self.bmarks2 = open(os.path.expanduser('~/.gtk-bookmarks'))
+        self.bmarks = self.bmarks2.readlines()
+        self.bmarks2.close()
+      except:
+        self.bmarks = []
 
       if gio:
         self.paths = []
@@ -897,7 +901,6 @@ class App(awn.Applet):
     def invalidate_docklet(widget, applet):
       applet.docklet_visible = False
       applet.docklet = None
-      applet.docklet_play_pause = None
     docklet.connect("destroy", invalidate_docklet, self)
 
     docklet_position = docklet.get_pos_type()

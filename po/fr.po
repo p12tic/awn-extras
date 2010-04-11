@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: awn-core-applets 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-03-29 01:04+0300\n"
-"PO-Revision-Date: 2010-04-06 13:23+0000\n"
-"Last-Translator: Nicolas Delvaux <Unknown>\n"
+"PO-Revision-Date: 2010-04-10 23:28+0000\n"
+"Last-Translator: Michal Hruby <michal.mhr@gmail.com>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2010-04-07 03:44+0000\n"
+"X-Launchpad-Export-Date: 2010-04-11 04:11+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "Generated-By: pygettext.py 1.5\n"
 
@@ -387,7 +387,7 @@ msgstr "Couleur %s %s"
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:1
 msgid "HAL UDI of battery."
-msgstr ""
+msgstr "UDI HAL de la batterie."
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:2
 msgid ""
@@ -1635,7 +1635,7 @@ msgstr "Couleur du texte de l'horloge"
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:5
 msgid "The font face of the clock text."
-msgstr ""
+msgstr "Police du texte de l'horloge."
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:6
 msgid "The shadow color of the clock text."
@@ -1675,11 +1675,11 @@ msgstr "Préférences de l'horloge numérque"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:9
 msgid "Run Calendar:"
-msgstr ""
+msgstr "Lancer le calendrier :"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:10
 msgid "Run Time Admin:"
-msgstr ""
+msgstr "Réglage de l'heure :"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:11
 msgid "Show the date"
@@ -2012,7 +2012,7 @@ msgstr "Un lanceur personnalisable pour explorer vos fichiers."
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:1
 msgid " persistent docklet"
-msgstr ""
+msgstr " docklet persistant"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:2
 msgid "The action to perform on left click"
@@ -2028,43 +2028,43 @@ msgstr "Navigateur de fichier à utiliser"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:5
 msgid "The path to use on left click"
-msgstr ""
+msgstr "Chemin à utiliser lors d'un clic gauche"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:6
 msgid "The path to use on middle click"
-msgstr ""
+msgstr "Chemin à utiliser lors d'un clic milieu"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:7
 msgid "Whether or not to display Connect to server"
-msgstr ""
+msgstr "Afficher (ou non) « Se connecter à un serveur »"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:8
 msgid "Whether or not to display bookmarks"
-msgstr ""
+msgstr "Afficher (ou non) les signets"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:9
 msgid "Whether or not to display local drives"
-msgstr ""
+msgstr "Afficher ou non les disques locaux"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:10
 msgid "Whether or not to display network drives"
-msgstr ""
+msgstr "Afficher (ou non) les disques réseaux"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:11
 msgid "Whether or not to display the Filesystem"
-msgstr ""
+msgstr "Afficher (ou non) le système de fichier"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:12
 msgid "Whether or not to display the home folder"
-msgstr ""
+msgstr "Afficher (ou non) le dossier personnel"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:13
 msgid "Whether or not to focus the location text box"
-msgstr ""
+msgstr "Donner (ou non) le focus à la zone de recherche"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:14
 msgid "Whether or not to open the place when clicked"
-msgstr ""
+msgstr "Ouvrir (ou non) l'emplacement lors du clic"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.desktop.in.h:1
 msgid "A launcher for your file manager"
@@ -2147,7 +2147,7 @@ msgstr "Éjecter"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:44
 msgid "File Browser Launcher Preferences"
-msgstr ""
+msgstr "Préférences du lanceur du navigateur de fichiers"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:93
 msgid "File Browser"
@@ -2165,40 +2165,40 @@ msgstr "Autres"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:163
 msgid "One icon with dialog"
-msgstr ""
+msgstr "Une icône avec boite de dialogue"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:168
 msgid "One icon with docklet"
-msgstr ""
+msgstr "Une icône avec docklet"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:175
 msgid "Multiple icons"
-msgstr ""
+msgstr "Icônes multiples"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:182
 msgid "Focus text entry"
-msgstr ""
+msgstr "Focus au champ de recherche"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:191
 msgid "Open place when clicked"
-msgstr ""
+msgstr "Ouvrir l'emplacement lors du clic"
 
 #. Show all places
 #: ../applets/maintained/file-browser-launcher/prefs.py:211
 msgid "Show all places"
-msgstr ""
+msgstr "Montrer tout les emplacements"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:223
 msgid "Home folder"
-msgstr ""
+msgstr "Dossier personnel"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:224
 msgid "Mounted local drives"
-msgstr ""
+msgstr "Disques locaux montés"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:224
 msgid "Mounted network drives"
-msgstr ""
+msgstr "Disques réseaux montés"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:225
 msgid "Connect to server"
@@ -2211,7 +2211,7 @@ msgstr "Signets"
 #: ../applets/maintained/file-browser-launcher/prefs.py:264
 #: ../applets/maintained/file-browser-launcher/prefs.py:339
 msgid "Display dialog/docklet"
-msgstr ""
+msgstr "Afficher la boite dialogue ou le docklet"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:264
 #: ../applets/maintained/file-browser-launcher/prefs.py:339
@@ -2221,7 +2221,7 @@ msgstr "Ouvrir le dossier"
 #: ../applets/maintained/file-browser-launcher/prefs.py:265
 #: ../applets/maintained/file-browser-launcher/prefs.py:340
 msgid "Nothing"
-msgstr ""
+msgstr "Rien"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:540
 msgid "Choose a folder"
@@ -2238,13 +2238,14 @@ msgstr "Corbeille"
 #, c-format
 msgid "%s: %u item"
 msgid_plural "%s: %u items"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s: %u élément"
+msgstr[1] "%s: %u éléments"
 
 #: ../applets/maintained/garbage/applet.vala:194
 #, c-format
 msgid "Could not open the trash folder with your file manager: %s"
 msgstr ""
+"L'ouverture de la corbeille avec votre navigateur de fichiers à échoué : %s"
 
 #: ../applets/maintained/garbage/applet.vala:209
 msgid "_Empty Trash"
@@ -2255,25 +2256,27 @@ msgstr "_Vider la Corbeille"
 msgid ""
 "Are you sure you want to empty your trash? It currently contains %u item(s)."
 msgstr ""
+"Supprimer tous les éléments de la corbeille ? Elle contient %u élément(s)."
 
 #: ../applets/maintained/garbage/applet.vala:344
 #, c-format
 msgid "Could not send the dragged file(s) to the trash: %s"
 msgstr ""
+"Le(s) fichier(s) déplacé(s) n'ont pas pu être mis à la corbeille : %s"
 
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/garbage/awn-applet-garbage.schema-ini.in.h:1
 msgid ""
 "Enable the confirmation dialog form when one wishes to empty the trash."
-msgstr ""
+msgstr "Active la"
 
 #: ../applets/maintained/garbage/awn-applet-garbage.schema-ini.in.h:2
 msgid "Show the number of items in the trash on top of the icon."
-msgstr ""
+msgstr "Afficher le nombre d'éléments contenu dans la corbeille sur l'icône."
 
 #: ../applets/maintained/garbage/garbage.desktop.in.in.h:1
 msgid "A lightweight, cross-desktop trash applet"
-msgstr ""
+msgstr "Un applet corbeille léger et multi-environnements"
 
 #: ../applets/maintained/garbage/prefs.vala:32
 #, c-format
@@ -2296,6 +2299,8 @@ msgstr "Thème de l'applet"
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:2
 msgid "For each sensor, whether to show it in main dialog or not."
 msgstr ""
+"Pour chaque capteur, l'afficher (ou non) dans la boite de dialogue "
+"principale."
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:3
 msgid "High value limit (at which alarm triggers) for each sensor."

@@ -330,7 +330,7 @@ class SysFSBackend:
         self.__cpu_nr = cpu_nr
         self.__supports_scaling = self.__can_support_scaling()
 
-        self.__command = "sudo " + self.__selector_binary  # Add sudo when necessary
+        self.__command = self.__selector_binary
 
     @staticmethod
     def backend_useable(cpu_nr):
@@ -345,7 +345,11 @@ class SysFSBackend:
 
         if len(paths) == 0:
             return False
-        return os.stat(paths[0])[stat.ST_MODE] & stat.S_ISUID == stat.S_ISUID
+        if os.stat(paths[0])[stat.ST_MODE] & stat.S_ISUID == stat.S_ISUID:
+            return True
+        p = subprocess.Popen(self.__selector_binary, stderr=subprocess.PIPE)
+        out, err = p.communicate()
+        return err.find('org.gnome.CPUFreqSelector') >= 0
 
     def get_cpu_nr(self):
         return self.__cpu_nr

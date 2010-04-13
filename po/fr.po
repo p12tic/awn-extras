@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: awn-core-applets 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-11 18:07+0300\n"
-"PO-Revision-Date: 2010-04-11 15:29+0000\n"
-"Last-Translator: Michal Hruby <michal.mhr@gmail.com>\n"
+"PO-Revision-Date: 2010-04-12 13:32+0000\n"
+"Last-Translator: Nicolas Delvaux <Unknown>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2010-04-12 03:50+0000\n"
+"X-Launchpad-Export-Date: 2010-04-13 03:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "Generated-By: pygettext.py 1.5\n"
 
@@ -2360,7 +2360,7 @@ msgstr ""
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.desktop.in.h:2
 msgid "Hardware Sensors"
-msgstr ""
+msgstr "Capteurs matériels"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:49
 msgid "Applet to show the hardware sensors readouts"
@@ -2381,11 +2381,11 @@ msgstr ""
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:118
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:14
 msgid "Sensors"
-msgstr ""
+msgstr "Capteurs"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:471
 msgid "Name"
-msgstr ""
+msgstr "Nom"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:473
 msgid "Label"
@@ -2404,11 +2404,11 @@ msgstr ""
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:533
 msgid "properties"
-msgstr ""
+msgstr "propriétés"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:1
 msgid "<b>Alarms</b>"
-msgstr ""
+msgstr "<b>Alertes</b>"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:3
 msgid "<b>Sensor value limits</b>"
@@ -2417,11 +2417,11 @@ msgstr ""
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:4
 #: ../applets/maintained/mail/mail.ui.h:3
 msgid "<b>Update</b>"
-msgstr ""
+msgstr "<b>Mise à jour</b>"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:5
 msgid "Add"
-msgstr ""
+msgstr "Ajouter"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:6
 msgid "Enable high alarm"
@@ -2433,7 +2433,7 @@ msgstr ""
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:8
 msgid "Font size:"
-msgstr ""
+msgstr "Taille de la police :"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:10
 msgid "Meter hand color:"
@@ -2441,7 +2441,7 @@ msgstr ""
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:11
 msgid "Remove"
-msgstr ""
+msgstr "Retirer"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:12
 msgid "Sensor high value"
@@ -2453,50 +2453,50 @@ msgstr ""
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:15
 msgid "Show value in icon"
-msgstr ""
+msgstr "Afficher la valeur sur l'icône"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:16
 msgid "Temperature unit:"
-msgstr ""
+msgstr "Unité de température :"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:17
 msgid "Theme:"
-msgstr ""
+msgstr "Thème :"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:18
 #: ../applets/maintained/mail/mail.ui.h:4
 msgid "Update interval:"
-msgstr ""
+msgstr "Intervalle de mise à jour :"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:19
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:45
 msgid "seconds"
-msgstr ""
+msgstr "secondes"
 
 #. Unit long strings
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:34
 msgid "Celsius"
-msgstr ""
+msgstr "Celsius"
 
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:35
 msgid "Volt"
-msgstr ""
+msgstr "Volt"
 
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:35
 msgid "rpm"
-msgstr ""
+msgstr "tours/min"
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:1
 msgid "Display any network errors"
-msgstr ""
+msgstr "Afficher toute erreur réseau"
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:2
 msgid "Hide the icon if there is no new mail"
-msgstr ""
+msgstr "Cacher l'icône s'il n'y a pas de nouveau mail"
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:3
 msgid "The Desktop Email client to use"
-msgstr ""
+msgstr "Le client mail à utiliser"
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:4
 msgid "The Email backend to use"
@@ -2504,7 +2504,7 @@ msgstr ""
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:5
 msgid "The theme to use for the icon"
-msgstr ""
+msgstr "Thème à utiliser pour l'icône"
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:6
 msgid "Timeout between two value updates (in minutes)."
@@ -2516,7 +2516,7 @@ msgstr ""
 
 #: ../applets/maintained/mail/mail.desktop.in.h:1
 msgid "Check Your Email from AWN"
-msgstr ""
+msgstr "Surveillez vos courriels depuis Awn"
 
 #: ../applets/maintained/mail/mail.desktop.in.h:2
 #: ../applets/maintained/mail/mail.py:134
@@ -2540,7 +2540,7 @@ msgstr[1] "%d messages non lus"
 
 #: ../applets/maintained/mail/mail.py:74
 msgid "Mail Applet (Click to Log In)"
-msgstr "Applet Email (Cliquez ici pour vous connecter)"
+msgstr "Applet Email (Cliquez pour vous connecter)"
 
 #: ../applets/maintained/mail/mail.py:135
 #, python-format
@@ -2549,27 +2549,27 @@ msgstr "Connecté en tant que: %s"
 
 #: ../applets/maintained/mail/mail.py:156
 msgid "Network error - Mail Applet"
-msgstr ""
+msgstr "Erreur réseau - Applet Email"
 
 #: ../applets/maintained/mail/mail.py:165
 msgid "New Mail - Mail Applet"
-msgstr "Nouvel Email - Applet Email"
+msgstr "Nouveau courriel - Applet Email"
 
 #: ../applets/maintained/mail/mail.py:284
 msgid "Mail"
-msgstr ""
+msgstr "Courriel"
 
 #: ../applets/maintained/mail/mail.py:320
 msgid "Open Web Mail"
-msgstr ""
+msgstr "Ouvrir le web-mail"
 
 #: ../applets/maintained/mail/mail.py:329
 msgid "Open Desktop Client"
-msgstr ""
+msgstr "Ouvrir le client mail"
 
 #: ../applets/maintained/mail/mail.py:338
 msgid "Refresh"
-msgstr ""
+msgstr "Actualiser"
 
 #: ../applets/maintained/mail/mail.py:347
 msgid "Log Out"
@@ -2577,7 +2577,7 @@ msgstr "Se déconnecter"
 
 #: ../applets/maintained/mail/mail.py:377
 msgid "No unread messages"
-msgstr ""
+msgstr "Aucun message non lus"
 
 #: ../applets/maintained/mail/mail.py:379
 msgid "No new messages"
@@ -2585,7 +2585,7 @@ msgstr "Pas de nouveaux messages"
 
 #: ../applets/maintained/mail/mail.py:418
 msgid "Wrong username or password"
-msgstr ""
+msgstr "Nom d'utilisateur ou mot de passe incorrect"
 
 #: ../applets/maintained/mail/mail.py:426
 #: ../applets/maintained/mail/mail.py:487
@@ -2686,11 +2686,11 @@ msgstr ""
 
 #: ../applets/maintained/mail/mail.ui.h:6
 msgid "_Email client:"
-msgstr ""
+msgstr "Client _Email :"
 
 #: ../applets/maintained/mail/mail.ui.h:7
 msgid "_Hide applet if no new messages"
-msgstr ""
+msgstr "Cacher l'applet s'il n'y a pas de nouveau messages"
 
 #: ../applets/maintained/mail/mail.ui.h:9
 msgid "minutes"
@@ -4193,11 +4193,11 @@ msgstr ""
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:1
 msgid "City, and country of the weather location."
-msgstr ""
+msgstr "Ville et pays de l'emplacement météorologique."
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:2
 msgid "Code that identifies the weather location."
-msgstr ""
+msgstr "Code identifiant l'emplacement météorologique."
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:3
 msgid "Fahrenheit)."
@@ -4241,11 +4241,11 @@ msgstr "DESCRIPTION"
 
 #: ../applets/maintained/weather/forecast.py:249
 msgid "Weather data provided by weather.com"
-msgstr "Données météo fournies par weather.com"
+msgstr "Donnés météorologiques fournies par weather.com"
 
 #: ../applets/maintained/weather/weather.desktop.in.h:1
 msgid "Display the local weather"
-msgstr "Afficher la météo locale"
+msgstr "Affiche la météo locale"
 
 #: ../applets/maintained/weather/weather.desktop.in.h:2
 msgid "Weather Applet"

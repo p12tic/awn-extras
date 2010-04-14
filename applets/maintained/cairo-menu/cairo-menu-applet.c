@@ -156,12 +156,11 @@ cairo_menu_applet_constructed (GObject *object)
    TODO fix the various travesties*/
   GList * iter;
   GError * error = NULL;
-  gchar * filename = APPLETSDIR"/../../../lib/awn/applets/cairo-menu/gnome-menu-builder";
+  gchar * filename = LIBDIR"/awn/applets/cairo-menu/gnome-menu-builder";
   GModule      *module;
 
   G_OBJECT_CLASS (cairo_menu_applet_parent_class)->constructed (object);
-  module = g_module_open (filename, 
-                          G_MODULE_BIND_LAZY);  
+  module = g_module_open (filename,G_MODULE_BIND_LAZY);  
   g_assert (module);
   if (!g_module_symbol (module, "menu_build", (gpointer *)&menu_build))
   {

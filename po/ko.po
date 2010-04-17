@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-11 18:07+0300\n"
-"PO-Revision-Date: 2010-04-13 14:42+0000\n"
+"PO-Revision-Date: 2010-04-16 19:45+0000\n"
 "Last-Translator: Bundo <bundo@bundo.biz>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2010-04-14 03:46+0000\n"
+"X-Launchpad-Export-Date: 2010-04-17 03:48+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -985,7 +985,7 @@ msgstr "코믹 다운로드 중"
 
 #: ../applets/maintained/comics/ui/add.ui.h:3
 msgid "Enter the URL of the RSS feed:"
-msgstr "코믹 RSS 피드 주소를 입력 하세요"
+msgstr "코믹 RSS 피드 주소를 입력:"
 
 #: ../applets/maintained/comics/ui/add.ui.h:4
 msgid "Ready to add comic!"
@@ -1855,7 +1855,7 @@ msgstr "소스:"
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:598
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:151
 msgid "Search"
-msgstr "찾기"
+msgstr "검색"
 
 #: ../applets/maintained/feeds/prefs.py:358
 msgid "You must sign in to a Google service to search for feeds."
@@ -2355,7 +2355,7 @@ msgstr "글꼴 크기:"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:10
 msgid "Meter hand color:"
-msgstr "미터 바늘 색"
+msgstr "미터 바늘 색:"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:11
 msgid "Remove"
@@ -2446,13 +2446,13 @@ msgstr "메일 애플릿"
 #, python-format
 msgid "You have %d new message"
 msgid_plural "You have %d new messages"
-msgstr[0] "%d개의 새 메세지가 있습니다."
+msgstr[0] "%d개의 새 메시지가 있습니다."
 
 #: ../applets/maintained/mail/mail.py:41
 #, python-format
 msgid "%d unread message"
 msgid_plural "%d unread messages"
-msgstr[0] "%d개의 읽지 않은 메세지"
+msgstr[0] "%d개의 읽지 않은 메시지"
 
 #: ../applets/maintained/mail/mail.py:74
 msgid "Mail Applet (Click to Log In)"
@@ -2489,7 +2489,7 @@ msgstr "새로고침"
 
 #: ../applets/maintained/mail/mail.py:347
 msgid "Log Out"
-msgstr "로그 아웃"
+msgstr "로그아웃"
 
 #: ../applets/maintained/mail/mail.py:377
 msgid "No unread messages"
@@ -2602,7 +2602,7 @@ msgstr "네트워크 오류 경고(_A)"
 
 #: ../applets/maintained/mail/mail.ui.h:6
 msgid "_Email client:"
-msgstr "이메일 클라이언트(_E)"
+msgstr "이메일 클라이언트(_E):"
 
 #: ../applets/maintained/mail/mail.ui.h:7
 msgid "_Hide applet if no new messages"
@@ -2662,7 +2662,7 @@ msgstr "미디어-콘트롤 기본 설정"
 
 #: ../applets/maintained/media-control/media-control.ui.h:5
 msgid "Show _album art when available"
-msgstr "사용중일때 앨범 표지 보기(_A)"
+msgstr "사용 중일 때 앨범 표지 보기(_A)"
 
 #: ../applets/maintained/media-control/media-control.ui.h:6
 msgid "_Size of the album art:"
@@ -2983,7 +2983,7 @@ msgstr ""
 #: ../applets/maintained/notification-daemon/daemon.c:1421
 #, c-format
 msgid "%u is not a valid notification ID"
-msgstr "%u는 유효한 알림 ID가 아닙니다"
+msgstr "%u은(는) 유효한 알림 ID가 아닙니다"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:35
 msgid "Whether to show tooltips when hovering over a place.);"
@@ -3115,7 +3115,7 @@ msgstr "비정상적인 사용으로부터 컴퓨터를 보호합니다"
 
 #: ../applets/maintained/quit/quit-log-out.desktop.in.h:1
 msgid "Log Out..."
-msgstr "로그 아웃..."
+msgstr "로그아웃..."
 
 #: ../applets/maintained/quit/quit-log-out.desktop.in.h:2
 msgid "Log out of this session to log in as a different user"
@@ -3349,7 +3349,7 @@ msgstr "랜더 업데이트:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:35
 msgid "Scale _amount:"
-msgstr "크기 조정 양:"
+msgstr "크기 조정 양(_A):"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:36
 msgid "Scaled icon _position:"
@@ -3392,7 +3392,7 @@ msgstr "바탕 화면 보기"
 #: ../applets/maintained/showdesktop/applet.vala:78
 #: ../applets/maintained/showdesktop/showdesktop.desktop.in.in.h:1
 msgid "Hides your windows and shows your desktop."
-msgstr "창을 숨기고 바탕화면 보이기"
+msgstr "창을 숨기고 바탕 화면 보이기"
 
 #: ../applets/maintained/showdesktop/applet.vala:93
 msgid "Show hidden windows"
@@ -3400,7 +3400,7 @@ msgstr ""
 
 #: ../applets/maintained/showdesktop/applet.vala:98
 msgid "Hide windows and show desktop"
-msgstr "창을 숨기고 바탕화면 보이기"
+msgstr "창을 숨기고 바탕 화면 보이기"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:1
 msgid "The background color of the dialog"
@@ -3843,7 +3843,7 @@ msgstr "제목"
 #. Label: Confirm when removing... (bold)
 #: ../applets/maintained/to-do/prefs.py:86
 msgid "Confirm when removing..."
-msgstr "제거 할때 확인"
+msgstr "제거 할때 확인..."
 
 #. CheckButton: Items
 #: ../applets/maintained/to-do/prefs.py:95
@@ -3961,7 +3961,7 @@ msgstr ""
 #. TODO: better text than "To-Do item"?
 #: ../applets/maintained/to-do/to-do.py:556
 msgid "_To-Do item"
-msgstr "할-일 항목"
+msgstr "할-일 항목(_D)"
 
 #. Label: Priority:
 #: ../applets/maintained/to-do/to-do.py:641
@@ -3997,7 +3997,7 @@ msgid ""
 "Are you sure you want to remove the category \"%s?\"\n"
 "All of its items will be removed."
 msgstr ""
-"카테고리  \"%s\"을 제거 하시겠습니까?\"\n"
+"카테고리  \"%s\"을(를) 제거 하시겠습니까?\"\n"
 "제거하는 카테고리의 모든 항목은 함께 제거됩니다."
 
 #. Make CheckButton
@@ -4172,7 +4172,7 @@ msgstr "기상 지도 보기(_M)"
 #: ../applets/maintained/weather/weather.py:302
 #: ../applets/maintained/weather/weather.py:380
 msgid "No records found"
-msgstr "녹음기를 찾을수 없음"
+msgstr "녹음기를 찾을 수 없음"
 
 #: ../applets/maintained/weather/weather.py:371
 msgid "Searching..."
@@ -4191,7 +4191,7 @@ msgstr ""
 
 #: ../applets/maintained/weather/weather.ui.h:6
 msgid "Current _location:"
-msgstr "현재 위치"
+msgstr "현재 위치(_L):"
 
 #: ../applets/maintained/weather/weather.ui.h:7
 msgid ""
@@ -4217,7 +4217,7 @@ msgstr "중간"
 
 #: ../applets/maintained/weather/weather.ui.h:12
 msgid "Show temperature in _icon"
-msgstr "아이콘에 온도 표시"
+msgstr "아이콘에 온도 표시(_I)"
 
 #: ../applets/maintained/weather/weather.ui.h:13
 msgid "Small"
@@ -4233,7 +4233,7 @@ msgstr "온도 글자 크기(_S):"
 
 #: ../applets/maintained/weather/weather.ui.h:16
 msgid "Use transparent/curved _forecast dialog"
-msgstr "날씨 알림창에 투명도/곡선 사용"
+msgstr "날씨 알림창에 투명도/곡선 사용(_F)"
 
 #: ../applets/maintained/weather/weather.ui.h:17
 msgid "_Location Name:"
@@ -4507,7 +4507,7 @@ msgstr ""
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:36
 msgid "Whether to browse stack contents."
-msgstr "스택으로 내용을 찾아 볼수 있는지 여부"
+msgstr "스택으로 내용을 찾아볼 수 있는지 여부"
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:37
 msgid ""

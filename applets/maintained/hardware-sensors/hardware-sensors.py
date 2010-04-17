@@ -948,7 +948,7 @@ if __name__ == "__main__":
         "description": applet_description,
         "logo": applet_logo,
         "author": "Grega Podlesek",
-        "copyright-year": "2008 - 2009",
+        "copyright-year": "2008 - 2010",
         "authors": ["Grega Podlesek <grega.podlesek@gmail.com>"],
         "artists": ["Grega Podlesek <grega.podlesek@gmail.com>",
                     "Zdravko Podlesek"],

@@ -36,6 +36,7 @@ from interfaces import hddtempsensors
 from interfaces import lmsensors
 from interfaces import nvidiasensors
 from interfaces import nvclocksensors
+from interfaces import i8ksensors
 
 from sensorvalues.tempvalue import TempValue
 from sensorvalues.rpmvalue import RPMValue
@@ -133,6 +134,7 @@ ACPI, HDDTemp, LM-Sensors, nvidia-settings or nvclock and restart the applet.")
         self.sensors += lmsensors.get_sensors()
         self.sensors += nvidiasensors.get_sensors()
         self.sensors += nvclocksensors.get_sensors()
+        self.sensors += i8ksensors.get_sensors()
 
         # Check if any sensors were found
         if self.sensors == []:

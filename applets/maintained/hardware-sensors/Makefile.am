@@ -14,6 +14,7 @@ dist_interfaces_DATA =				\
 	interfaces/acpisensors.py		\
 	interfaces/fileinterface.py		\
 	interfaces/hddtempsensors.py	\
+	interfaces/i8ksensors.py	\
 	interfaces/lmsensors.py			\
 	interfaces/nvclocksensors.py	\
 	interfaces/nvidiasensors.py		\

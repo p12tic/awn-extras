@@ -1,7 +1,7 @@
 #!/usr/bin/python
 #coding: utf-8
 #
-#   Copyright 2008-2009 Grega Podlesek <grega.podlesek@gmail.com>
+#   Copyright 2008-2010 Grega Podlesek <grega.podlesek@gmail.com>
 #
 #   This program is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by

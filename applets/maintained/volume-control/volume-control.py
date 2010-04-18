@@ -1,7 +1,4 @@
 #!/usr/bin/python
-# Copyright (C) 2007  Richard "nazrat" Beyer, Jeff "Jawbreaker" Hubbard,
-#                     Pavel Panchekha <pavpanchekha@gmail.com>,
-#                     Spencer Creasey <screasey@gmail.com>
 # Copyright (C) 2008 - 2010  onox <denkpadje@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -62,7 +59,7 @@ moonbeam_ranges = [100, 93, 86, 79, 71, 64, 57, 50, 43, 36, 29, 21, 14, 1]
 # Logo of the applet, shown in the GTK About dialog
 applet_logo = os.path.join(os.path.dirname(__file__), "volume-control.svg")
 
-volume_ranges = {"high": (100, 66), "medium": (65, 36), "low": (35, 1)}
+volume_ranges = [("high", 66), ("medium", 36), ("low", 1)]
 volume_step = 4
 
 mixer_names = ("pulsemixer", "oss4mixer", "alsamixer")
@@ -108,28 +105,49 @@ class VolumeControlApplet:
 
     def scroll_event_cb(self, widget, event):
         if event.direction == gdk.SCROLL_UP:
-            self.backend.up()
+            self.backend.increase_volume()
         elif event.direction == gdk.SCROLL_DOWN:
-            self.backend.down()
+            self.backend.decrease_volume()
 
     def setup_main_dialog(self, prefs):
         dialog = self.applet.dialog.new("main")
-        dialog.set_geometry_hints(min_width=50, min_height=200)
-        prefs.get_object("vbox-volume").reparent(dialog)
+        prefs.get_object("hbox-volume").reparent(dialog)
 
-        self.volume_scale = prefs.get_object("vscale-volume")
+        self.volume_scale = prefs.get_object("hscale-volume")
         self.volume_scale.props.can_focus = False
         self.volume_scale.set_increments(volume_step, 10)
+        self.volume_scale.add_mark(100, gtk.POS_BOTTOM, "<small>%s</small>" % "100%")
 
+        self.volume_label = prefs.get_object("label-volume")
+        self.mute_item = prefs.get_object("checkbutton-mute")
+
+        self.volume_scale.connect("button-press-event", self.volume_scale_pressed_cb)
+        self.volume_scale.connect("button-release-event", self.volume_scale_released_cb)
         self.volume_scale.connect("value-changed", self.volume_scale_changed_cb)
-        prefs.get_object("button-inc-volume").connect("button-release-event", self.backend.up)
-        prefs.get_object("button-dec-volume").connect("button-release-event", self.backend.down)
+        self.mute_item.connect("toggled", self.mute_toggled_cb)
 
         self.applet.connect("middle-clicked", self.middle_clicked_cb)
 
     def middle_clicked_cb(self, widget):
         # Toggle 'Mute' checkbutton
         self.mute_item.set_active(not self.mute_item.get_active())
+
+    def volume_scale_pressed_cb(self, widget, event):
+        # Same hack as used by gnome-volume-control to make lef-click behave as middle-click
+        if event.button == 1:
+            event.button = 2
+
+        return False
+
+    def volume_scale_released_cb(self, widget, event):
+        # Same hack as used by gnome-volume-control to make lef-click behave as middle-click
+        if event.button == 1:
+            event.button = 2
+
+        volume = widget.get_value()
+        self.mute_item.set_active(volume == 0)
+
+        return False
 
     def volume_scale_changed_cb(self, widget):
         volume = widget.get_value()
@@ -145,21 +163,17 @@ class VolumeControlApplet:
                 self.message_delay_handler.start()
 
     def setup_context_menu(self, prefs):
-        """Add "Mute" and "Open Volume Control" to the context menu.
+        """Add "Open Volume Control" to the context menu.
 
         """
         menu = self.applet.dialog.menu
         menu_index = len(menu) - 1
 
-        self.mute_item = gtk.CheckMenuItem("Mu_te")
-        self.mute_item.connect("toggled", self.mute_toggled_cb)
-        menu.insert(self.mute_item, menu_index)
-
         volume_control_item = gtk.MenuItem("_Open Volume Control")
         volume_control_item.connect("activate", self.show_volume_control_cb)
-        menu.insert(volume_control_item, menu_index + 1)
+        menu.insert(volume_control_item, menu_index)
 
-        menu.insert(gtk.SeparatorMenuItem(), menu_index + 2)
+        menu.insert(gtk.SeparatorMenuItem(), menu_index + 1)
 
         preferences_vbox = self.applet.dialog.new("preferences").vbox
         prefs.get_object("dialog-vbox").reparent(preferences_vbox)
@@ -222,14 +236,23 @@ class VolumeControlApplet:
     def reload_tracks(self):
         track_labels = self.backend.get_track_labels()
 
-        if self.applet.settings["track"] not in track_labels:
-            self.applet.settings["track"] = self.backend.get_default_track()
+        track = self.applet.settings["track"]
+        if track not in track_labels:
+            track = self.backend.get_default_track_label()
 
-        self.combobox_track.get_model().clear()
+        tracks_model = self.combobox_track.get_model()
+        number_old_tracks = len(tracks_model)
+#        self.combobox_track.get_model().clear()
         for i in track_labels:
             self.combobox_track.append_text(i)
+        # Hackish way to delete old tracks (clear() triggers exception in configbinder)
+        for i in range(number_old_tracks):
+            del tracks_model[0]
 
-        self.backend.set_track(self.applet.settings["track"])
+        self.backend.set_track(track)
+
+        # Initialize mixer track combobox
+        self.applet.settings["track"] = track
 
     def combobox_device_changed_cb(self, value):
         self.backend.set_device(self.applet.settings["device"])
@@ -261,10 +284,13 @@ class VolumeControlApplet:
                 if os.path.isdir(os.path.join(moonbeam_theme_dir, self.theme)):
                     icon = str(filter(lambda i: volume >= i, moonbeam_ranges)[0])
                 else:
-                    icon = [key for key, value in volume_ranges.iteritems() if volume <= value[0] and volume >= value[1]][0]
+                    icon = [key for key, value in volume_ranges if volume >= value][0]
 
             self.applet.tooltip.set(self.backend.get_current_track_label() + ": " + title)
             self.applet.theme.icon(icon)
+
+            # Update the volume label on the right of the volume scale
+            self.volume_label.set_text("%d%%" % volume)
 
             self.volume_scale.set_value(volume)
 
@@ -275,7 +301,7 @@ class VolumeControlApplet:
         self.theme = self.applet.settings["theme"]
 
         is_moonbeam_theme = os.path.isdir(os.path.join(moonbeam_theme_dir, self.theme))
-        keys = list(moonbeam_ranges) if is_moonbeam_theme else volume_ranges.keys()
+        keys = list(moonbeam_ranges) if is_moonbeam_theme else [key for key, value in volume_ranges]
 
         states = { "muted": "audio-volume-muted" }
         for i in map(str, keys):
@@ -349,10 +375,11 @@ class GStreamerBackend:
 
         self.__mixer, self.__devices = mixer_devices
 
-        # Prefer PulseAudio's volume control when using its GStreamer mixer element pulsemixer
+        # Prefer PulseAudio's volume control when using GStreamer mixer element pulsemixer
         if self.__mixer.get_factory().get_name() == "pulsemixer":
             volume_control_apps.insert(0, pa_control_app)
 
+        # Set-up the necessary mechanism to receive volume/mute change updates
         self.__mixer.set_state(gst.STATE_READY)
         if self.__mixer.get_mixer_flags() & gst.interfaces.MIXER_FLAG_AUTO_NOTIFICATIONS:
             bus = gst.Bus()
@@ -370,12 +397,15 @@ class GStreamerBackend:
         """
         for mixer_name in names:
             mixer = gst.element_factory_make(mixer_name)
-            devices = self.find_devices(mixer)
+            devices = self.__find_devices(mixer)
 
             if len(devices) > 0:
                 return (mixer, devices)
 
-    def find_devices(self, mixer):
+    def __find_devices(self, mixer):
+        """Return a list of devices found via the given GStreamer mixer element.
+
+        """
         if not isinstance(mixer, gst.interfaces.PropertyProbe):
             raise RuntimeError(mixer.get_factory().get_name() + " cannot probe properties")
 
@@ -384,7 +414,7 @@ class GStreamerBackend:
 
         mixer.probe_property_name("device")
         for device in mixer.probe_get_values_name("device"):
-            self.init_mixer_device(mixer, device)
+            self.__init_mixer_device(mixer, device)
 
             if not isinstance(mixer, gst.interfaces.Mixer) or len(self.get_mixer_tracks(mixer)) == 0:
                 mixer.set_state(gst.STATE_NULL)
@@ -398,6 +428,14 @@ class GStreamerBackend:
             devices[name] = device
 
         return devices
+
+    def __init_mixer_device(self, mixer, device):
+        """Set the mixer to use the given device name.
+
+        """
+        mixer.set_state(gst.STATE_NULL)
+        mixer.set_property("device", device)
+        mixer.set_state(gst.STATE_READY)
 
     def message_element_cb(self, bus, message):
         if not self.freeze_messages.isSet() \
@@ -417,24 +455,27 @@ class GStreamerBackend:
             return bool(track.flags & gst.interfaces.MIXER_TRACK_OUTPUT) and track.num_channels > 0
         return filter(filter_track, mixer.list_tracks())
 
-    def init_mixer_device(self, mixer, device):
-        mixer.set_state(gst.STATE_NULL)
-        mixer.set_property("device", device)
-        mixer.set_state(gst.STATE_READY)
-
     def set_device(self, device_label):
         """Set the mixer to the device labeled by the given label.
 
         """
-        self.init_mixer_device(self.__mixer, self.__devices[device_label])
+        self.__init_mixer_device(self.__mixer, self.__devices[device_label])
 
         self.__tracks = self.get_mixer_tracks(self.__mixer)
         self.__track_labels = [track.label for track in self.__tracks]
 
     def get_device_labels(self):
+        """Return a list of labels of all devices that have previously
+        been found.
+
+        """
         return self.__devices.keys()
 
     def get_default_device_label(self):
+        """Return the label of the first known device. Assumes at least
+        one device has been found.
+
+        """
         return self.get_device_labels()[0]
 
     def set_track(self, track_label):
@@ -453,14 +494,24 @@ class GStreamerBackend:
         self.__parent.refresh_icon(True)
 
     def get_current_track_label(self):
+        """Return the label of the current mixer track. The current
+        track is the track on which operations (getting/setting volume
+        and (un)muting) are performed.
+
+        """
         return self.__current_track.label
 
     def get_track_labels(self):
+        """Return a list of labels of all tracks that belong to the
+        device to which the GStreamer mixer element is currently set.
+
+        """
         return self.__track_labels
 
-    def get_default_track(self):
-        """Return the default track of the current mixer device. This is the
-        master track or otherwise the first track of the list of known tracks.
+    def get_default_track_label(self):
+        """Return the label of the default track of the device to which
+        the mixer is set. This is the master track or otherwise the
+        first track of the list of known tracks.
 
         """
         for track in self.__tracks:
@@ -500,10 +551,10 @@ class GStreamerBackend:
         # Update applet's icon
         self.__parent.refresh_icon(True)
 
-    def up(self, widget=None, event=None):
+    def increase_volume(self):
         self.set_volume(min(100, self.get_volume() + volume_step))
 
-    def down(self, widget=None, event=None):
+    def decrease_volume(self):
         self.set_volume(max(0, self.get_volume() - volume_step))
 
 

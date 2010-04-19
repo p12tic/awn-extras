@@ -116,7 +116,9 @@ class VolumeControlApplet:
         self.volume_scale = prefs.get_object("hscale-volume")
         self.volume_scale.props.can_focus = False
         self.volume_scale.set_increments(volume_step, 10)
-        self.volume_scale.add_mark(100, gtk.POS_BOTTOM, "<small>%s</small>" % "100%")
+
+        if gtk.gtk_version >= (2, 16, 0):
+            self.volume_scale.add_mark(100, gtk.POS_BOTTOM, "<small>%s</small>" % "100%")
 
         self.volume_label = prefs.get_object("label-volume")
         self.mute_item = prefs.get_object("checkbutton-mute")

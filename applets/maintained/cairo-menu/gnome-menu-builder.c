@@ -110,6 +110,12 @@ _fill_session_menu (GtkWidget * menu)
   {
     add_special_item (menu,_("Logout"),"gnome-logout","xfce4-session-logout","");
   }
+  else
+  {
+    /* hope that gnome-session-save exists; needed for GNOME 2.22, at least. */
+    add_special_item (menu, _("Logout"), "gnome-logout", "gnome-session-save",
+                      "--kill --gui");
+  }
   if (dbus_service_exists ("org.gnome.ScreenSaver"))
   {
     if (!add_special_item (menu,_("Lock Screen"),"gnome-lockscreen","gnome-screensaver-command","--lock"))

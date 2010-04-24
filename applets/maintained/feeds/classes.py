@@ -231,8 +231,6 @@ class FeedSource:
         self.icon = os.path.join(cache_dir, self._favicon_siteid + '.ico')
         self.applet.got_favicon(self)
 
-        del self._favicon_siteid
-
     #Do something if the feed icon was clicked.
     def icon_clicked(self):
         pass
@@ -922,7 +920,7 @@ def boldify(widget, button=False):
     if button:
         widget = widget.child
 
-    widget.set_markup('<span font_weight="bold">%s</span>' % safify(widget.get_text()))
+    widget.set_markup('<span font_weight="bold">%s</span>' % widget.get_text())
 
 def deboldify(widget, button=False):
     if button:

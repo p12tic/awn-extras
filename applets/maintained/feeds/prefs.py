@@ -617,9 +617,6 @@ class AddFeed(gtk.Window):
 
         pb = self.applet.get_favicon(siteid, True)
 
-        if siteid == 'google-reader':
-            self.set_icon(pb)
-
         if siteid in self.site_images:
             self.site_images[siteid].set_from_pixbuf(pb)
 

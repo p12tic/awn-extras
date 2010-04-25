@@ -539,7 +539,7 @@ class GStreamerBackend:
 
     def get_gst_volume(self):
         volume_channels = self.__mixer.get_volume(self.__current_track)
-        return sum(volume_channels) / len(volume_channels)
+        return sum(volume_channels) / len(volume_channels) - self.__current_track.min_volume
 
     def get_volume(self):
         return int(round(self.get_gst_volume() * self.__volume_multiplier))

@@ -19,7 +19,7 @@
 
 import os
 import gnome.ui
-import gnomevfs
+import gio
 import gtk
 import urllib
 

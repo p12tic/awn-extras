@@ -24,7 +24,7 @@ import gtk
 from gtk import gdk
 import random
 import gnome.ui
-import gnomevfs
+import gio
 import gnomedesktop
 from awn.extras import _
 from desktopagnostic.config import GROUP_DEFAULT
@@ -102,11 +102,11 @@ class Backend(gobject.GObject):
     def _file_sort(self, model, iter1, iter2):
         t1 = model.get_value(iter1, COL_TYPE)
         t2 = model.get_value(iter2, COL_TYPE)
-        if self.applet.config['sort_folders_before_files'] and t1 == gnomevfs.FILE_TYPE_DIRECTORY and not \
-                t2 == gnomevfs.FILE_TYPE_DIRECTORY:
+        if self.applet.config['sort_folders_before_files'] and t1 == gio.FILE_TYPE_DIRECTORY and not \
+                t2 == gio.FILE_TYPE_DIRECTORY:
             return -1
-        elif self.applet.config['sort_folders_before_files'] and t2 == gnomevfs.FILE_TYPE_DIRECTORY and not \
-                t1 == gnomevfs.FILE_TYPE_DIRECTORY:
+        elif self.applet.config['sort_folders_before_files'] and t2 == gio.FILE_TYPE_DIRECTORY and not \
+                t1 == gio.FILE_TYPE_DIRECTORY:
             return 1
         else:
             n1 = model.get_value(iter1, COL_LABEL)
@@ -125,30 +125,24 @@ class Backend(gobject.GObject):
     def _file_sort_date(self, model, iter1, iter2):
     	t1 = model.get_value(iter1, COL_TYPE)
         t2 = model.get_value(iter2, COL_TYPE)
-        if self.applet.config['sort_folders_before_files'] and t1 == gnomevfs.FILE_TYPE_DIRECTORY and not \
-                t2 == gnomevfs.FILE_TYPE_DIRECTORY:
+        if self.applet.config['sort_folders_before_files'] and t1 == gio.FILE_TYPE_DIRECTORY and not \
+                t2 == gio.FILE_TYPE_DIRECTORY:
             return -1
-        elif self.applet.config['sort_folders_before_files'] and t2 == gnomevfs.FILE_TYPE_DIRECTORY and not \
-                t1 == gnomevfs.FILE_TYPE_DIRECTORY:
+        elif self.applet.config['sort_folders_before_files'] and t2 == gio.FILE_TYPE_DIRECTORY and not \
+                t1 == gio.FILE_TYPE_DIRECTORY:
             return 1
         else:
-			u1 = model.get_value(iter1, COL_URI)
-			u2 = model.get_value(iter2, COL_URI)
-			i1 = gnomevfs.get_file_info(
-					u1.uri,
-					gnomevfs.FILE_INFO_DEFAULT |
-					gnomevfs.FILE_INFO_FOLLOW_LINKS )
-			c1 = i1.mtime
-			i2 = gnomevfs.get_file_info(
-					u2.uri,
-					gnomevfs.FILE_INFO_DEFAULT |
-					gnomevfs.FILE_INFO_FOLLOW_LINKS )
-			c2 = i2.mtime
+            u1 = model.get_value(iter1, COL_URI)
+            u2 = model.get_value(iter2, COL_URI)
+            i1 = u1.uri.query_info(gio.FILE_ATTRIBUTE_TIME_MODIFIED, 0)
+            c1 = i1.get_modification_time()
+            i2 = u2.uri.query_info(gio.FILE_ATTRIBUTE_TIME_MODIFIED, 0)
+            c2 = i2.get_modification_time()
 
-			if self.applet.config['sort_direction'] == BACKEND_SORT_ASCENDING:
-				return cmp(c1, c2)
-			else:
-				return cmp(c2, c1)			
+            if self.applet.config['sort_direction'] == BACKEND_SORT_ASCENDING:
+                return cmp(c1, c2)
+            else:
+                return cmp(c2, c1)
 
     # emits attention signal
     def _get_attention(self):
@@ -161,8 +155,10 @@ class Backend(gobject.GObject):
              self._get_attention()
 
 
-    def _deleted_cb(self, widget, vfs_uri):
+    def _deleted_cb(self, monitor, vfs_uri, is_dir_monitor=None):
         assert isinstance(vfs_uri, VfsUri)
+        if not is_dir_monitor:
+            monitor.close()
         if self.remove([vfs_uri]):
              self._get_attention()
 
@@ -176,14 +172,12 @@ class Backend(gobject.GObject):
         for vfs_uri in vfs_uris:
             uri = vfs_uri.as_uri()
             path = vfs_uri.as_string()
-            name = uri.short_name
+            name = uri.get_basename()
             mime_type = ""
             pixbuf = None
-            
-            
 
             # check for existence:
-            if uri.scheme == "file" and not gnomevfs.exists(uri):
+            if not uri.query_exists():
                 continue
 
             # check for duplicates
@@ -206,8 +200,8 @@ class Backend(gobject.GObject):
                 command = item.get_string(gnomedesktop.KEY_EXEC)
                 name = item.get_localestring(gnomedesktop.KEY_NAME)
                 mime_type = item.get_localestring(gnomedesktop.KEY_MIME_TYPE)
-                type = gnomevfs.FILE_TYPE_REGULAR
-                icon_name = item.get_localestring(gnomedesktop.KEY_ICON)
+                type = gio.FILE_TYPE_REGULAR
+                icon_name = item.get_localestring(gnomedesktop.KEY_ICON) or 'image-missing'
                 icon_uri = None
                 if icon_name:
                     icon_uri = gnomedesktop.find_icon(
@@ -218,20 +212,21 @@ class Backend(gobject.GObject):
                     if not icon_uri:
                         icon_uri = path
                     pixbuf = IconFactory().load_icon(icon_uri, self.icon_size)
-                    if pixbuf:
-                    	pixbuf.add_alpha (True, '\0', '\0', '\0')
+                if pixbuf:
+                    pixbuf.add_alpha (True, '\0', '\0', '\0')
             else:
                 # get file info
                 try:
-                    fileinfo = gnomevfs.get_file_info(
-                            path,
-                            gnomevfs.FILE_INFO_DEFAULT |
-                            gnomevfs.FILE_INFO_GET_MIME_TYPE |
-                            gnomevfs.FILE_INFO_FORCE_SLOW_MIME_TYPE |
-                            gnomevfs.FILE_INFO_FOLLOW_LINKS )
-                    type = fileinfo.type
-                    mime_type = fileinfo.mime_type
-                except gnomevfs.NotFoundError:
+                    fileinfo = uri.query_info(','.join([
+                        gio.FILE_ATTRIBUTE_STANDARD_TYPE,
+                        gio.FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
+                        gio.FILE_ATTRIBUTE_STANDARD_IS_HIDDEN,
+                        gio.FILE_ATTRIBUTE_STANDARD_IS_BACKUP]))
+                    if fileinfo.get_is_hidden() or fileinfo.get_is_backup():
+                        continue
+                    type = fileinfo.get_file_type()
+                    mime_type = fileinfo.get_content_type()
+                except:
                     continue
                 # get pixbuf for icon
                 pixbuf = Thumbnailer(path, mime_type).get_icon(self.icon_size)
@@ -242,14 +237,14 @@ class Backend(gobject.GObject):
             try:
                 monitor = Monitor(vfs_uri)
                 monitor.connect("deleted", self._deleted_cb)
-            except gnomevfs.NotSupportedError:
+            except:
                 monitor = None
 
             
             # add to store
             
             iter = self.store.append([vfs_uri, monitor, type, name, mime_type, pixbuf, None])
-                
+
             if self.store.iter_is_valid(iter):
             	self.emit("item-created", iter)
             else:

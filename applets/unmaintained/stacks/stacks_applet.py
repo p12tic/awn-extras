@@ -32,8 +32,6 @@ import time
 from stacks_backend import *
 from stacks_backend_file import *
 from stacks_backend_folder import *
-from stacks_backend_plugger import *
-from stacks_backend_trasher import *
 from stacks_config import *
 from stacks_launcher import LaunchManager
 from stacks_icons import IconFactory
@@ -345,12 +343,6 @@ class StacksApplet (awn.AppletSimple):
         _config_backend_type = self.config['backend_type']
         if _config_backend_type == BACKEND_TYPE_FOLDER:
             self.backend = FolderBackend(self,
-                    self.config['backend'], self.config['icon_size'])
-        elif _config_backend_type == BACKEND_TYPE_PLUGGER:
-            self.backend = PluggerBackend(self,
-                    self.config['backend'], self.config['icon_size'])
-        elif _config_backend_type == BACKEND_TYPE_TRASHER:
-            self.backend = TrashBackend(self,
                     self.config['backend'], self.config['icon_size'])
         else:   # BACKEND_TYPE_FILE:
             self.backend = FileBackend(self,

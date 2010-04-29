@@ -18,7 +18,7 @@
 # Boston, MA 02111-1307, USA.
 
 import gtk
-import gnomevfs
+import gio
 from awn.extras import _
 from stacks_backend import *
 from stacks_vfs import *
@@ -37,20 +37,15 @@ class FolderBackend(Backend):
         self.monitor = Monitor(self.backend_uri)
         if self.monitor:
             self.monitor.connect("created", self._created_cb)
-            self.monitor.connect("deleted", self._deleted_cb)
+            self.monitor.connect("deleted", self._deleted_cb, True)
 
 
     def _create(self):
-        path = self.backend_uri.as_uri().path
-        uri = self.backend_uri.as_uri().resolve_relative("/")
-        for folder in path.split("/"):
-            if not folder:
-                continue
-            uri = uri.append_string(folder)
-            try:
-                gnomevfs.make_directory(uri, 0777)
-            except gnomevfs.FileExistsError:
-                pass
+        uri = self.backend_uri.as_uri()
+        try:
+            uri.make_directory_with_parents(gio.Cancellable())
+        except gio.Error:
+            pass
 
 
     def add(self, vfs_uris, action=None):
@@ -61,47 +56,36 @@ class FolderBackend(Backend):
             dst_lst = []
             vfs_uri_lst = []
             for vfs_uri in vfs_uris:
-                dst_uri = self.backend_uri.as_uri().append_path(
-                                vfs_uri.as_uri().short_name)
+
+                dst_uri = self.backend_uri.create_child(vfs_uri.as_uri())
                 src_lst.append(vfs_uri.as_uri())
                 dst_lst.append(dst_uri)
                 vfs_uri_lst.append(VfsUri(dst_uri))
 
-            if action == gtk.gdk.ACTION_LINK:
-                options = gnomevfs.XFER_LINK_ITEMS
-            elif action == gtk.gdk.ACTION_COPY:
-                options = gnomevfs.XFER_DEFAULT
-            elif action == gtk.gdk.ACTION_MOVE:
-                options = gnomevfs.XFER_REMOVESOURCE
-            else:
-                return None
-
-            GUITransfer(src_lst, dst_lst, options)
+            GUITransfer(src_lst, dst_lst, action)
             return Backend.add(self, vfs_uri_lst)
 
 
     def read(self):
-        try:
-            handle = gnomevfs.DirectoryHandle(self.backend_uri.as_uri())
-        except:
+        if not self.backend_uri.as_uri().query_exists():
             print "Stacks Error: ", self.backend_uri.as_string(), " not found"
             return
-        try:
-            fileinfo = handle.next()
-        except StopIteration:
-            return
+
         vfs_uris = []
+        attrs = ','.join([gio.FILE_ATTRIBUTE_STANDARD_IS_HIDDEN,
+                          gio.FILE_ATTRIBUTE_STANDARD_IS_BACKUP,
+                          gio.FILE_ATTRIBUTE_STANDARD_NAME])
+        enumerator = self.backend_uri.as_uri().enumerate_children(attrs)
+        fileinfo = enumerator.next_file()
         while fileinfo:
-            if fileinfo.name[0] != "." and not fileinfo.name.endswith("~"):
+            if not fileinfo.get_is_hidden() and not fileinfo.get_is_backup():
                 try:
-                    vfs_uri = VfsUri(self.backend_uri.as_uri().append_path(fileinfo.name))
+                    f = self.backend_uri.create_child(fileinfo.get_name())
+                    vfs_uri = VfsUri(f)
                     vfs_uris.append(vfs_uri)
                 except TypeError:
                     continue
-            try:
-                fileinfo = handle.next()
-            except StopIteration:
-                break
+            fileinfo = enumerator.next_file()
         if vfs_uris:
             self.add(vfs_uris)
 
@@ -126,12 +110,8 @@ class FolderBackend(Backend):
         if dialog.run() == gtk.RESPONSE_REJECT:
             dialog.destroy()
             return
-        # remove files
-        options = gnomevfs.XFER_EMPTY_DIRECTORIES
-        options |= gnomevfs.XFER_FOLLOW_LINKS
-        options |= gnomevfs.XFER_RECURSIVE
-        options |= gnomevfs.XFER_FOLLOW_LINKS_RECURSIVE
-        GUITransfer([self.backend_uri.as_uri()], [], options)
+
+        GUITransfer([self.backend_uri.as_uri()], [], 0)
 
         # destroy dialog
         dialog.destroy()
@@ -142,7 +122,7 @@ class FolderBackend(Backend):
         title = self.applet.client.get_string(GROUP_DEFAULT, "title")
         if title is None or len(title) == 0:
             title = None
-        return title or self.backend_uri.as_uri().short_name
+        return title or self.backend_uri.as_uri().get_basename()
 
 
     def get_type(self):

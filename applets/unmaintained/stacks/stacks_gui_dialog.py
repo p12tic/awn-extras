@@ -32,8 +32,6 @@ import time
 from stacks_backend import *
 from stacks_backend_file import *
 from stacks_backend_folder import *
-from stacks_backend_plugger import *
-from stacks_backend_trasher import *
 from stacks_config import StacksConfig
 from stacks_launcher import LaunchManager
 from stacks_icons import IconFactory
@@ -161,45 +159,34 @@ class StacksGuiDialog:
         self.just_dragged = True
 
     def button_drag_motion(self, widget, context, x, y, time):
-    	
     	return True
 
     def button_drag_leave(self, widget, context, time):
-        self.applet.effects.stop("launching")
+        self.applet.effects.stop(awn.EFFECT_LAUNCHING)
     	return
 
     def button_drag_drop(self, widget, context, x, y,
                             selection, targetType, time, target_uri):
     	self._stacks_gui_hide_cb(widget)
-    	self.applet.effects.stop("launching")
+    	self.applet.effects.stop(awn.EFFECT_LAUNCHING)
     	vfs_uris = []
     	for uri in selection.data.split():
     		try:
     			vfs_uris.append(VfsUri(uri))
     		except TypeError:
-    			pass                            	
-    	
-    	if context.action == gtk.gdk.ACTION_LINK:
-    		options = gnomevfs.XFER_LINK_ITEMS
-    	elif context.action == gtk.gdk.ACTION_MOVE:
-    		options = gnomevfs.XFER_REMOVESOURCE
-    	elif context.action == gtk.gdk.ACTION_COPY:
-    		options = gnomevfs.XFER_DEFAULT
-    	else:
-    		return False
+    			pass
 
     	src_lst = []
     	dst_lst = []
     	vfs_uri_lst = []
     	for vfs_uri in vfs_uris:
-    		dst_uri = target_uri.as_uri().append_path(vfs_uri.as_uri().short_name)
+    		dst_uri = target_uri.create_child(vfs_uri.as_uri())
     		src_lst.append(vfs_uri.as_uri())
     		dst_lst.append(dst_uri)
-    		
 
-    	GUITransfer(src_lst, dst_lst, options)
-    	
-    	
+
+    	GUITransfer(src_lst, dst_lst, context.action)
+
     	return True
 
     def item_clear_cb(self, widget, uri):

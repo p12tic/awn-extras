@@ -9,8 +9,6 @@ dist_applet_DATA =			\
 	stacks_backend.py		\
 	stacks_backend_file.py		\
 	stacks_backend_folder.py	\
-	stacks_backend_plugger.py	\
-	stacks_backend_trasher.py	\
 	stacks_config.py		\
 	stacks_glade.py			\
 	stacks_gui_curved.py		\

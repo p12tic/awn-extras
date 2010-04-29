@@ -93,8 +93,6 @@ from desktopagnostic import Color
 from stacks_backend import *
 from stacks_backend_file import *
 from stacks_backend_folder import *
-from stacks_backend_plugger import *
-from stacks_backend_trasher import *
 from stacks_config import StacksConfig
 from stacks_launcher import LaunchManager
 from stacks_icons import IconFactory
@@ -277,15 +275,13 @@ class StacksGuiCurved(gtk.Window):
         self.tooltip_image = gtk.Image()
         
         self.tooltip_label = gtk.Label("")
-        
+
         hbox = gtk.HBox(False, 0)
-        
+
         hbox.pack_start(self.tooltip_image, False, False, 5)  
         hbox.pack_start(self.tooltip_label, False, False, 10)  
         self.tooltip_window.add(hbox)
-        
-        
-        
+
         self.evb.add_events(gtk.gdk.BUTTON_PRESS_MASK |
                         gtk.gdk.BUTTON_RELEASE_MASK |
                         gtk.gdk.POINTER_MOTION_MASK |
@@ -296,7 +292,7 @@ class StacksGuiCurved(gtk.Window):
                         gtk.gdk.DRAG_STATUS |
                         gtk.gdk.DROP_START |
                         gtk.gdk.DROP_FINISHED)
-            
+
         self.evb.connect('button-release-event', self.button_release)
         self.evb.connect('motion-notify-event', self.mouse_moved)
         self.evb.connect('leave-notify-event', self.focus_out)
@@ -332,7 +328,7 @@ class StacksGuiCurved(gtk.Window):
     	if self.active_button <> None:
         	target_uri = self.stack_items[self.active_button-1].vfs_uri
         	mimetype = self.stack_items[self.active_button-1].mime_type
-        	
+
         	if mimetype == "x-directory/normal":
         		
         		vfs_uris = []
@@ -341,31 +337,20 @@ class StacksGuiCurved(gtk.Window):
         				vfs_uris.append(VfsUri(uri))
         			except TypeError:
         				pass   
-        		if context.action == gtk.gdk.ACTION_LINK:
-        			options = gnomevfs.XFER_LINK_ITEMS
-        		elif context.action == gtk.gdk.ACTION_MOVE:
-        			options = gnomevfs.XFER_REMOVESOURCE
-        		elif context.action == gtk.gdk.ACTION_COPY:
-        			options = gnomevfs.XFER_DEFAULT
-        		else:
-        			return False
-        			
+
         		src_lst = []
         		dst_lst = []
         		vfs_uri_lst = []
         		for vfs_uri in vfs_uris:
-        			dst_uri = target_uri.as_uri().append_path(vfs_uri.as_uri().short_name)
+        			dst_uri = target_uri.create_child(vfs_uri.as_uri())
         			src_lst.append(vfs_uri.as_uri())
         			dst_lst.append(dst_uri)
-        			
-        		GUITransfer(src_lst, dst_lst, options)
+
+        		GUITransfer(src_lst, dst_lst, context.action)
         		return True
 
-
-        	
-
         self.applet.effects.stop(awn.EFFECT_LAUNCHING)
-        
+ 
         return False
 
 

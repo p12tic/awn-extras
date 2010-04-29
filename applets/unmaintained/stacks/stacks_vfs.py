@@ -18,45 +18,51 @@
 # Boston, MA 02111-1307, USA.
 
 import gobject
-import gnomevfs
+import gio
 import gtk
 import pango
 import os
+from awn.extras import _
 
 class GUITransfer(object):
 
     dialog = None
 
-    def __init__(self, src, dst, options):
+    def __init__(self, src, dst, actions):
         self.__progress = None
         self.cancel = False
-        self.txt_operation = ""
+        self.txt_operation = _("Copying files")
         self.label_under = None
-        if not (options & gnomevfs.XFER_LINK_ITEMS):
-            if (options & gnomevfs.XFER_REMOVESOURCE):
-                self.txt_operation = "Moving"
-            elif (options & gnomevfs.XFER_EMPTY_DIRECTORIES):
-                self.txt_operation = "Deleting"
-            else:
-                self.txt_operation = "Copying"
-            self.dialog = gtk.Dialog(title=self.txt_operation + " files",
+        self.num_items = 1
+
+        # force copying of non-local objects
+        if (actions & gtk.gdk.ACTION_LINK):
+            if src[0].get_path() is None:
+                actions = gtk.gdk.ACTION_COPY
+
+        if not (actions & gtk.gdk.ACTION_LINK):
+            if (actions & gtk.gdk.ACTION_MOVE):
+                self.txt_operation = _("Moving files")
+            elif (actions == 0):
+                self.txt_operation = _("Deleting files")
+            self.dialog = gtk.Dialog(title=self.txt_operation,
                                      buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT))
             self.dialog.set_border_width(12)
             self.dialog.set_has_separator(False)
             self.dialog.vbox.set_spacing(2)
             hbox_copy = gtk.HBox(False, 0)
             label_copy = gtk.Label("")
-            label_copy.set_markup("<big><b>" + self.txt_operation + " files</b></big>\n")
+            label_copy.set_markup("<big><b>%s</b></big>\n" % self.txt_operation)
             hbox_copy.pack_start(label_copy, False, False, 0)
             self.dialog.vbox.add(hbox_copy)
             hbox_info = gtk.HBox(False, 0)
             label_fromto = gtk.Label("")
             label_fromto.set_justify(gtk.JUSTIFY_RIGHT)
             hbox_info.pack_start(label_fromto, False, False, 0)
-            srcdir = src[0].parent.path
+            srcdir = src[0].get_parent().get_uri()
             if len(dst) > 0:
                 label_fromto.set_markup("<b>From:</b>\n<b>To:</b>")
-                dstdir = dst[0].parent.path
+                dstdir = dst[0].get_parent().get_uri()
             else:
                 dstdir = ""
                 label_fromto.set_markup("<b>From:</b>\n")
@@ -78,33 +84,78 @@ class GUITransfer(object):
 
             self.status_label = gtk.Label()
             self.dialog.vbox.add(self.status_label)
-            self.dialog.set_size_request(400,180)
+            self.dialog.set_size_request(400,-1)
             self.dialog.connect("response", self._dialog_response)
 
-        self.handle = gnomevfs.async.xfer(
-            source_uri_list=src, target_uri_list=dst,
-            xfer_options=options,
-            error_mode=gnomevfs.XFER_ERROR_MODE_ABORT,
-            overwrite_mode=gnomevfs.XFER_OVERWRITE_MODE_ABORT,
-            progress_update_callback=self.update_info_cb,
-            update_callback_data=options,
-            progress_sync_callback=None,
-            sync_callback_data=None
-            )
+        self.cancellable = gio.Cancellable()
+
+        def _copy_callback(file, result, items):
+            try:
+                if file is None or file.copy_finish(result):
+                    if len(items) > 0:
+                        source, dest = items.pop()
+                        self.label_under.set_markup(
+                            "<i>%s %s</i>" % (self.txt_operation, str(source.get_basename())))
+                        self.progress_bar.set_text(self.txt_operation + " " +
+                            _("%d of %d") % (self.num_items - len(items), self.num_items))
+                        source.copy_async(dest, _copy_callback, _copy_progress,
+                            cancellable=self.cancellable, user_data=items)
+                    else:
+                        self._finish()
+                else:
+                    print "copy failed"
+            except gio.Error:
+                self._finish()
+
+        def _copy_progress(current, total):
+            if self.dialog:
+                if current > 0 and total > 0:
+                   fraction = float(current)/total
+                   self.progress_bar.set_fraction(fraction)
+
+        if actions == 0:
+            # remove the whole directory
+            print "TODO: We should delete %s" % src
+
+        elif (actions & gtk.gdk.ACTION_MOVE):
+            # why the hell isn't there gio.File.move_async() ??
+            for item in zip(src, dst):
+                source, dest = item
+                source.move(dest, cancellable=self.cancellable)
+            self._finish()
+
+        elif (actions & gtk.gdk.ACTION_LINK):
+            for item in zip(src, dst):
+                source, dest = item
+                dest.make_symbolic_link(source.get_path())
+            self._finish()
+
+        else: # gtk.gdk.ACTION_COPY
+            items = zip(src, dst)
+            items.reverse()
+            self.num_items = len(items)
+            _copy_callback(None, None, items)
 
         # show dialog after 1 sec
         gobject.timeout_add(1000, self._dialog_show)
 
+    def _finish(self):
+        if self.dialog:
+            self.dialog.destroy()
+            self.dialog = None
+
     def _dialog_show(self):
         if self.dialog: # and enough data still to be copied?
             self.dialog.show_all()
+        return False
+
 
     def _dialog_response(self, dialog, response):
         if response == gtk.RESPONSE_REJECT or \
            response == gtk.RESPONSE_DELETE_EVENT:
-            self.cancel = True
+            self.cancellable.cancel()
 
-
+    '''
     def update_info_cb(self, _reserved, info, data):
         if info.status == gnomevfs.XFER_PROGRESS_STATUS_VFSERROR:
             uri = gnomevfs.URI(info.source_name)
@@ -159,6 +210,7 @@ class GUITransfer(object):
             # TODO: remove partial target?
             return 0
         return 1
+    '''
 
 
 class VfsUri(gobject.GObject):
@@ -167,14 +219,19 @@ class VfsUri(gobject.GObject):
 
     def __init__(self, uri):
         gobject.GObject.__init__(self)
-        if isinstance(uri, gnomevfs.URI):
+        if isinstance(uri, gio.File):
             self.uri = uri
         else:
-            self.uri = gnomevfs.URI(uri.strip())
+            self.uri = gio.File(uri.strip())
+
+    def create_child(self, short_name):
+        if isinstance(short_name, gio.File):
+            short_name = short_name.get_basename()
+        return self.uri.get_child_for_display_name(short_name)
 
 
     def equals(self, uri2):
-        return gnomevfs.uris_match(self.as_string(), uri2.as_string())
+        return self.uri.equal(uri2.as_uri())
 
 
     def as_uri(self):
@@ -182,19 +239,7 @@ class VfsUri(gobject.GObject):
 
 
     def as_string(self):
-        ustr = self.uri.scheme + "://"
-        if self.uri.user_name is not None:
-            ustr += self.uri.user_name
-            if self.uri.password is not None:
-                ustr += ":" + self.uri.password 
-            ustr += "@"
-        if self.uri.host_name is not None:
-            ustr += self.uri.host_name
-            if self.uri.host_port > 0:
-                ustr += ":" + str(self.uri.host_port)
-        if self.uri.path is not None:
-            ustr += self.uri.path
-        return ustr
+        return self.uri.get_uri()
 
 
 class Monitor(gobject.GObject):
@@ -208,10 +253,11 @@ class Monitor(gobject.GObject):
     }
 
     event_mapping = {
-        gnomevfs.MONITOR_EVENT_CREATED : "created",
-        gnomevfs.MONITOR_EVENT_DELETED : "deleted",
-        gnomevfs.MONITOR_EVENT_CHANGED : "changed",
-        gnomevfs.MONITOR_EVENT_METADATA_CHANGED : "changed"
+        gio.FILE_MONITOR_EVENT_CREATED : "created",
+        gio.FILE_MONITOR_EVENT_DELETED : "deleted",
+        gio.FILE_MONITOR_EVENT_CHANGED : "changed",
+        gio.FILE_MONITOR_EVENT_CHANGES_DONE_HINT: "changed",
+        gio.FILE_MONITOR_EVENT_ATTRIBUTE_CHANGED : "changed"
     }
 
     monitor = None
@@ -222,36 +268,41 @@ class Monitor(gobject.GObject):
         assert isinstance(vfs_uri, VfsUri)
         gobject.GObject.__init__(self)
         self.vfs_uri = vfs_uri
-        type = gnomevfs.get_file_info(vfs_uri.as_uri(),
-                gnomevfs.FILE_INFO_DEFAULT | 
-                gnomevfs.FILE_INFO_FOLLOW_LINKS).type
-        if type == gnomevfs.FILE_TYPE_DIRECTORY:
+
+        # FIXME: this might be unnecessary
+        self.type = vfs_uri.as_uri().query_file_type(0, gio.Cancellable())
+        '''
+        if type == gio.FILE_TYPE_DIRECTORY:
             self.monitor_type = gnomevfs.MONITOR_DIRECTORY
-        elif type == gnomevfs.FILE_TYPE_REGULAR:
+        elif type == gio.FILE_TYPE_REGULAR:
             self.monitor_type = gnomevfs.MONITOR_FILE
         else:
-            raise gnomevfs.NotSupportedError
+            raise RuntimeError("Not Supported")
+        '''
         try:
-            self.monitor = gnomevfs.monitor_add(
-                    vfs_uri.as_string(),
-                    self.monitor_type,
-                    self._monitor_cb)
-        except gnomevfs.NotSupportedError:
+            self.monitor = self.vfs_uri.as_uri().monitor()
+            self.monitor.connect("changed", self._monitor_cb)
+        except Exception:
             return None
 
 
-    def _monitor_cb(self, monitor_uri, info_uri, event):
-        signal = self.event_mapping[event]
-        if signal:
-            if self.monitor_type == gnomevfs.MONITOR_FILE:
-                self.emit(signal, self.vfs_uri)
-            else:
-                self.emit(signal, VfsUri(info_uri))
+    def _monitor_cb(self, monitor, monitor_uri, other_uri, event):
+        signal = None
+        try:
+            signal = self.event_mapping[event]
+        except:
+            return
+
+        if self.type == gio.FILE_TYPE_DIRECTORY:
+            self.emit(signal, VfsUri(monitor_uri))
+        else:
+            self.emit(signal, self.vfs_uri)
 
 
     def close(self):
         try: 
-            gnomevfs.monitor_cancel(self.monitor)
+            self.monitor.cancel()
             self.monitor = None
+            self.vfs_uri = None
         except:
             return

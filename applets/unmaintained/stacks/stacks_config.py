@@ -334,10 +334,10 @@ class StacksConfig(GladeWindow):
         		file_backend_prefix = "file://" + os.path.join(
         		os.path.expanduser("~"),
         			".config", "awn", "applets", "stacks")
-        		back_uri = VfsUri(file_backend_prefix).as_uri()
-        		backend_VfsUri = VfsUri(back_uri.append_path(self.applet.get_uid()))
+        		back_uri = VfsUri(file_backend_prefix)
+        		backend_VfsUri = VfsUri(back_uri.create_child(self.applet.get_uid()))
         		self.backend = backend_VfsUri.as_string()
-        		
+
         	elif self.widgets['folder_backend_button'].get_active():
         		folder_backend_mode = True
         		self.applet.client.set_int(GROUP_DEFAULT, "backend_type",
@@ -438,13 +438,15 @@ def get_config_dict(client, uid):
     _config_backend = client.get_string(GROUP_DEFAULT, "backend")
     try:
         # FIXME: needs lda fix!
+        if not _config_backend:
+            raise RuntimeError("No backend set!")
         config['backend'] = VfsUri(_config_backend)
     except:
         file_backend_prefix = "file://" + os.path.join(
                 os.path.expanduser("~"),
                 ".config", "awn", "applets", "stacks")
-        back_uri = VfsUri(file_backend_prefix).as_uri()
-        config['backend'] = VfsUri(back_uri.append_path(uid))
+        back_uri = VfsUri(file_backend_prefix)
+        config['backend'] = VfsUri(back_uri.create_child(uid))
 
     # get dimension
     _config_cols = client.get_int(GROUP_DEFAULT, "cols")

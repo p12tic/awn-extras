@@ -74,16 +74,6 @@ def add_cell_renderer_text(combobox):
     combobox.add_attribute(text, "text", 0)
 
 
-def deprecated(old, new):
-    def decorator(f):
-        def wrapper(*args, **kwargs):
-            m = "\nawnlib warning in %s:\n\t%s is deprecated; use %s instead\n"
-            print m % (os.path.split(___file___)[1], old, new)
-            return f(*args, **kwargs)
-        return wrapper
-    return decorator
-
-
 class KeyRingError:
 
     def __init__(self, str):
@@ -1233,34 +1223,6 @@ class Notify:
             self.__notification.show()            
 
 
-class Effects:
-
-    def __init__(self, parent):
-        """Create a new Effects object.
-
-        @param parent: The parent applet of the effects instance.
-        @type parent: L{Applet}
-
-        """
-        self.__effects = parent.get_icon().get_effects()
-
-    def attention(self):
-        """Launch the notify effect.
-
-        Should be used when the user's attention is required.
-
-        """
-        self.__effects.start("attention")
-
-    def launch(self):
-        """Launch the launch effect.
-
-        Should be used when launching another program.
-
-        """
-        self.__effects.start("launching")
-
-
 class Meta:
 
     def __init__(self, parent, info={}, options=()):
@@ -1280,27 +1242,7 @@ class Meta:
         self.__parent = parent
 
         self.__info = info
-
-        self.__options = {}
-        self.options(options)
-
-    def update(self, info):
-        """Update the meta instance with new information.
-
-        @param info: Updated values for the meta dictionary
-        @type info: C{dict}
-
-        """
-        self.__info.update(info)
-
-    def options(self, opts):
-        """Update the options the applet has set
-
-        @param opts: Options to set
-        @type opts: C{list} or C{tuple}
-
-        """
-        self.__options.update(self.__parse_options(opts))
+        self.__options = self.__parse_options(options)
 
     def has_option(self, option):
         """Check if the applet has set a specific option.
@@ -1340,26 +1282,6 @@ class Meta:
 
         """
         return self.__info[key]
-
-    def __setitem__(self, key, value):
-        """Set a key in the dictionary.
-
-        @param key: The key
-        @type key: C{string}
-        @param value: The value
-        @type value: C{string}
-
-        """
-        self.__info[key] = value
-
-    def __delitem__(self, key):
-        """Delete a key from the dictionary.
-
-        @param key: The key
-        @type key: C{string}
-
-        """
-        del self.__info[key]
 
     def keys(self):
         """Return a list of keys from the dictionary.
@@ -1430,7 +1352,6 @@ class Applet(awn.AppletSimple, object):
     errors = __getmodule(Errors)
     keyring = __getmodule(Keyring)
     notify = __getmodule(Notify)
-    effects = __getmodule(Effects)
 
 
 def init_start(applet_class, meta={}, options=[]):

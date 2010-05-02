@@ -50,6 +50,7 @@ reader_url = 'http://www.google.com/reader/'
 
 class Prefs(gtk.Window):
     icon_theme = gtk.icon_theme_get_default()
+    show_only_new_check = None
 
     def __init__(self, applet):
         self.applet = applet
@@ -90,7 +91,7 @@ class Prefs(gtk.Window):
         sw = gtk.ScrolledWindow()
         sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         sw.add_with_viewport(self.treeview)
-        sw.set_size_request(225, 225)
+        sw.set_size_request(225, 200)
 
         #Remove and add buttons
         self.remove_button = gtk.Button(stock=gtk.STOCK_REMOVE)
@@ -109,6 +110,11 @@ class Prefs(gtk.Window):
         if self.applet.client.get_bool(GROUP_DEFAULT, 'show_favicons'):
             show_favicons_check.set_active(True)
         show_favicons_check.connect('toggled', self.check_toggled, 'show_favicons')
+
+        self.show_only_new_check = gtk.CheckButton(_("Show _only new feeds"))
+        if self.applet.client.get_bool(GROUP_DEFAULT, 'show_only_new'):
+            self.show_only_new_check.set_active(True)
+        self.show_only_new_check.connect('toggled', self.check_toggled, 'show_only_new')
 
         #TODO: this position is a little ugly, but I don't know how to do it better.
         #Import and export buttons (OPML)
@@ -134,6 +140,7 @@ class Prefs(gtk.Window):
         feeds_vbox.pack_start(sw)
         feeds_vbox.pack_start(buttons_hbox, False)
         feeds_vbox.pack_start(show_favicons_check, False)
+        feeds_vbox.pack_start(self.show_only_new_check, False)
         feeds_vbox.pack_start(buttons_hbox2, False)
         feeds_vbox.set_border_width(12)
 
@@ -166,10 +173,16 @@ class Prefs(gtk.Window):
         hbox_auto.pack_start(auto_spin, False)
         hbox_auto.pack_start(label_auto2, False)
 
+        keep_unread_check = gtk.CheckButton(_("Keep items unread when updating"))
+        if self.applet.client.get_bool(GROUP_DEFAULT, 'keep_unread'):
+            keep_unread_check.set_active(True)
+        keep_unread_check.connect('toggled', self.check_toggled, 'keep_unread')
+
         auto_vbox = gtk.VBox(False, 6)
         auto_vbox.pack_start(check_notify, False)
         auto_vbox.pack_start(check_auto, False)
         auto_vbox.pack_start(hbox_auto, False)
+        auto_vbox.pack_start(keep_unread_check, False)
         auto_vbox.set_border_width(12)
 
         tab_updating_vbox.pack_start(auto_vbox)
@@ -236,6 +249,12 @@ class Prefs(gtk.Window):
                 self.applet.show_favicons()
             else:
                 self.applet.hide_favicons()
+
+        elif key == 'show_only_new':
+            self.applet.show_only_new()
+
+            if self.applet.show_only_new_check is not None:
+                self.applet.show_only_new_check.set_active(check.get_active())
 
     def spin_focusout(self, spin, event):
         self.applet.client.set_value(GROUP_DEFAULT, 'update_interval', int(spin.get_value()))

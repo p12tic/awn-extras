@@ -34,7 +34,10 @@ except:
 import dbus
 import dbus.service
 import dbus.glib
+from desktopagnostic import Color
+from desktopagnostic.config import GROUP_DEFAULT
 import feedparser
+import gtk
 
 from awn import extras
 from awn.extras import _, awnlib
@@ -67,6 +70,24 @@ class DBusService(dbus.service.Object):
             self.applet.add_feed(url)
 
         return 'OK'
+
+class PlaceHolder(gtk.DrawingArea):
+    def __init__(self):
+        gtk.DrawingArea.__init__(self)
+
+        self.connect('expose-event', self.draw)
+
+    def draw(self, widget, event):
+        w = self.allocation.width
+        h = self.allocation.height
+
+        gdk_color = self.get_style().text[gtk.STATE_NORMAL].to_string()
+        color = Color.from_string(gdk_color + 'ffff')
+        cr = self.window.cairo_create()
+        cr.set_source_rgba(*color.get_cairo_color())
+        cr.set_dash((1, 0, 0, 1))
+        cr.rectangle(0.0, 0.0, w, h)
+        cr.stroke()
 
 #Used for storing tokens for service logins
 #(Also works as a conventient pickle wraparound)
@@ -118,6 +139,9 @@ class Entry(dict):
         self['title'] = title
         self['new'] = new
         self['notify'] = notify
+
+    def basic(self):
+        return {'url': self['url'], 'title': self['title']}
 
 #Base class for all types of sources
 class FeedSource:
@@ -243,10 +267,16 @@ class FeedSource:
 #TODO: Still need a better name. This is used if the feed may have items that are not considered new.
 class StandardNew:
     newest = None
+    last_new = []
     notified = []
 
     #Call this after getting the entries, but before calling applet.feed_updated()
     def get_new(self):
+        new_new = []
+
+        if not self.applet.client.get_bool(GROUP_DEFAULT, 'keep_unread'):
+            self.last_new = []
+
         #See if the feed was updated, etc...
         if self.newest is not None and self.newest['url'] != self.entries[0]['url'] and \
           self.newest['title'] != self.entries[0]['title']:
@@ -266,7 +296,21 @@ class StandardNew:
 
         #Mark the new feeds as new
         for i, entry in enumerate(self.entries):
-            entry['new'] = bool(i < self.num_new)
+            entry['new'] = bool(i < self.num_new) or entry.basic() in self.last_new
+
+            if entry['new']:
+                new_new.append(entry.basic())
+
+                if not i < self.num_new:
+                    self.num_new += 1
+
+                if [entry['url'], entry['title']] not in self.notified:
+                    self.notified.append([entry['url'], entry['title']])
+                    entry['notify'] = True
+                    self.num_notify += 1
+
+                else:
+                    entry['notify'] = False
 
             if entry['new'] and [entry['url'], entry['title']] not in self.notified:
                 self.notified.append([entry['url'], entry['title']])
@@ -275,6 +319,8 @@ class StandardNew:
 
             else:
                 entry['notify'] = False
+
+        self.last_new = new_new
 
 #Used for logging in
 class KeySaver:

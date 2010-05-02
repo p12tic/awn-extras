@@ -20,3 +20,13 @@ _description=The interval (in minutes) at which to update (3-60)
 type = boolean
 default = true
 _description=Show each feed's website's icon in the dialog
+
+[DEFAULT/show_only_new]
+type = boolean
+default = false
+_description=Hide feeds which do not have any new items
+
+[DEFAULT/keep_unread]
+type = boolean
+default = false
+_description=If false, all previous items will be marked as read when updating

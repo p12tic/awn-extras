@@ -81,6 +81,7 @@ class App(awn.AppletSimple):
     keyring = None
     dragged_toggle = None
     prefs_dialog = None
+    show_only_new_check = None
     urls = []
     written_urls = []
     num_notify_while_updating = 0
@@ -400,6 +401,8 @@ class App(awn.AppletSimple):
         if self.prefs_dialog:
             self.prefs_dialog.update_liststore()
 
+        self.show_only_new(feed.url)
+
     def all_feeds_updated(self):
         self.set_tooltip_text(_("Feeds Applet"))
         self.loading_feeds.hide()
@@ -414,6 +417,8 @@ class App(awn.AppletSimple):
         self.show_notification()
 
         self.do_favicons()
+
+        self.show_only_new()
 
     def do_favicons(self, override=False):
         for icon in [self.error_icon, self.favicon1, self.favicon2, self.favicon3]:
@@ -599,11 +604,11 @@ class App(awn.AppletSimple):
         toggle.url = url
         toggle.web = button
         toggle.position = i
-        toggle.label = None
+        toggle.placeholder = None
         toggle.size_group = None
 
         #Drag and Drop to reorder
-        #or drop an e.g. a web browser to go to that feeds' url
+        #or drop an e.g. a web browser to go to that feed's url
         toggle.drag_source_set(gtk.gdk.BUTTON1_MASK, \
           [("text/plain", 0, 0), ("STRING", 0, 0)], \
           gtk.gdk.ACTION_COPY | gtk.gdk.ACTION_MOVE)
@@ -641,12 +646,12 @@ class App(awn.AppletSimple):
 
             toggle.hide()
             toggle.web.hide()
-            toggle.label = gtk.Label(' ')
+            toggle.placeholder = classes.PlaceHolder()
             toggle.size_group = gtk.SizeGroup(gtk.SIZE_GROUP_BOTH)
             toggle.size_group.add_widget(other_toggle.parent)
-            toggle.size_group.add_widget(toggle.label)
-            toggle.parent.pack_start(toggle.label)
-            toggle.label.show()
+            toggle.size_group.add_widget(toggle.placeholder)
+            toggle.parent.pack_start(toggle.placeholder)
+            toggle.placeholder.show()
 
             self.dragged_toggle = toggle
 
@@ -656,8 +661,8 @@ class App(awn.AppletSimple):
 
     #When the toggle dragging is done
     def toggle_drag_end(self, toggle, context):
-        if toggle.label:
-            toggle.label.destroy()
+        if toggle.placeholder:
+            toggle.placeholder.destroy()
         if toggle.size_group:
             del toggle.size_group
         toggle.show()
@@ -789,14 +794,36 @@ class App(awn.AppletSimple):
         if open_toggle is None:
             return False
 
+        show_only_new = self.client.get_value(GROUP_DEFAULT, 'show_only_new')
+
         toggle_index = self.toggles.index(open_toggle)
         if event.direction in (gtk.gdk.SCROLL_UP, gtk.gdk.SCROLL_LEFT):
-            if toggle_index != 0:
-                self.toggles[toggle_index - 1].set_active(True)
+            if show_only_new:
+                while toggle_index != 0:
+                    if self.feeds[self.urls[toggle_index - 1]].num_new != 0:
+                        self.toggles[toggle_index - 1].set_active(True)
+                        break
+
+                    else:
+                        toggle_index -= 1
+
+            else:
+                if toggle_index != 0:
+                    self.toggles[toggle_index - 1].set_active(True)
 
         else:
-            if open_toggle != self.toggles[-1]:
-                self.toggles[toggle_index + 1].set_active(True)
+            if show_only_new:
+                while toggle_index + 1 != len(self.toggles):
+                    if self.feeds[self.urls[toggle_index + 1]].num_new != 0:
+                        self.toggles[toggle_index + 1].set_active(True)
+                        break
+
+                    else:
+                        toggle_index += 1
+
+            else:
+                if open_toggle != self.toggles[-1]:
+                    self.toggles[toggle_index + 1].set_active(True)
 
         return False
 
@@ -825,6 +852,10 @@ class App(awn.AppletSimple):
         self.open_url(None, feed.entries[i]['url'])
 
         feed.item_clicked(i)
+
+        if isinstance(feed, classes.StandardNew):
+            if feed.entries[i].basic() in feed.last_new:
+                feed.last_new.remove(feed.entries[i].basic())
 
         if feed.num_new == 0:
             self.do_favicons()
@@ -976,7 +1007,7 @@ class App(awn.AppletSimple):
                 self.dialog.hide()
 
             else:
-                self.dialog.show_all()
+                self.dialog.show()
 
         elif event.button == 2:
             if len(self.urls) > 0:
@@ -996,6 +1027,7 @@ class App(awn.AppletSimple):
             #Create the items
             add_feed = awn.image_menu_item_new_with_label(_("Add Feed"))
             update = gtk.ImageMenuItem(gtk.STOCK_REFRESH)
+            self.show_only_new_check = gtk.CheckMenuItem(_("Show Only _New Feeds"))
             sep = gtk.SeparatorMenuItem()
             prefs_item = gtk.ImageMenuItem(gtk.STOCK_PREFERENCES)
             about = gtk.ImageMenuItem(gtk.STOCK_ABOUT)
@@ -1004,21 +1036,56 @@ class App(awn.AppletSimple):
             add_icon = gtk.image_new_from_stock(gtk.STOCK_ADD, gtk.ICON_SIZE_MENU)
             add_feed.set_image(add_icon)
 
+            if self.client.get_value(GROUP_DEFAULT, 'show_only_new'):
+                self.show_only_new_check.set_active(True)
+
             add_feed.connect('activate', self.add_feed_dialog)
             update.connect('activate', self.update_feeds)
+            self.show_only_new_check.connect('toggled', self.toggle_show_only_new)
             prefs_item.connect('activate', self.open_prefs)
             about.connect('activate', self.show_about)
 
             #Create the menu
             self.menu = self.create_default_menu()
-            self.menu.append(add_feed)
-            self.menu.append(update)
-            self.menu.append(sep)
-            self.menu.append(prefs_item)
-            self.menu.append(about)
+            for item in (add_feed, update, self.show_only_new_check, sep, prefs_item, about):
+                self.menu.append(item)
 
         self.menu.show_all()
         self.menu.popup(None, None, None, event.button, event.time)
+
+    def toggle_show_only_new(self, item):
+        self.client.set_value(GROUP_DEFAULT, "show_only_new", item.get_active())
+
+        if self.prefs_dialog:
+            if self.prefs_dialog.show_only_new_check is not None:
+                self.prefs_dialog.show_only_new_check.set_active(item.get_active())
+
+            else:
+                self.show_only_new()
+
+        else:
+            self.show_only_new()
+
+    def show_only_new(self, url=None):
+        if self.client.get_value(GROUP_DEFAULT, "show_only_new"):
+            if url is not None:
+                if self.feeds[url].num_new == 0:
+                    self.feed_toggles[url].parent.parent.hide()
+
+                else:
+                    self.feed_toggles[url].parent.parent.show()
+
+            else:
+                for url, widget in self.feed_toggles.items():
+                    if self.feeds[url].num_new == 0:
+                        widget.parent.parent.hide()
+
+                    else:
+                        widget.parent.parent.show()
+
+        else:
+            for widget in self.feed_toggles.values():
+                widget.parent.parent.show()
 
     #Show the preferences window
     def open_prefs(self, widget):

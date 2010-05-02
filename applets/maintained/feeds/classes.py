@@ -312,14 +312,6 @@ class StandardNew:
                 else:
                     entry['notify'] = False
 
-            if entry['new'] and [entry['url'], entry['title']] not in self.notified:
-                self.notified.append([entry['url'], entry['title']])
-                entry['notify'] = True
-                self.num_notify += 1
-
-            else:
-                entry['notify'] = False
-
         self.last_new = new_new
 
 #Used for logging in

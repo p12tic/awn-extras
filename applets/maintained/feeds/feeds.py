@@ -447,6 +447,7 @@ class App(awn.AppletSimple):
 
         msg = ''
         only_greader = True
+        num_messages = 0
         if self.num_notify_while_updating != 0:
             for url, feed in self.feeds.items():
                 if not isinstance(feed, classes.GoogleReader):
@@ -457,6 +458,10 @@ class App(awn.AppletSimple):
                 for entry in feed.entries:
                     if entry['notify'] == True:
                         notify_entries.append(entry)
+                        num_messages += 1
+
+                if len(notify_entries) == 0:
+                    continue
 
                 if feed.num_notify == 1:
                     msg += "%s\n  <a href=\"%s\">%s</a>\n" % (shortify(feed.title),
@@ -477,12 +482,13 @@ class App(awn.AppletSimple):
 
                 feed.num_notify = 0
 
-            pynotify.init(_("Feeds Applet"))
-            notification = pynotify.Notification(_("%s New Item%s - Feeds Applet") % \
-                (self.num_notify_while_updating, ['', 's'][self.num_notify_while_updating != 1]),
-                msg, [icon_path, greader_path][only_greader])
-            notification.set_timeout(5000)
-            notification.show()
+            if num_messages != 0:
+                pynotify.init(_("Feeds Applet"))
+                notification = pynotify.Notification(_("%s New Item%s - Feeds Applet") % \
+                    (self.num_notify_while_updating, ['', 's'][self.num_notify_while_updating != 1]),
+                    msg, [icon_path, greader_path][only_greader])
+                notification.set_timeout(5000)
+                notification.show()
 
     #Set up initial widgets, frame for each feed
     def setup_dialog(self):
@@ -1210,9 +1216,11 @@ class App(awn.AppletSimple):
                     return data
 
         @async_method
-        def post_data(self, uri, data=None, timeout=60, server_headers=False, opener=None):
+        def post_data(self, uri, headers={}, data=None, timeout=60, server_headers=False, opener=None):
             try:
                 req = urllib2.Request(uri, data)
+                for key, val in headers.items():
+                    req.add_header(key, val)
                 req.add_header('HTTP_USER_AGENT', user_agent)
 
                 if opener is None:

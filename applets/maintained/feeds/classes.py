@@ -154,6 +154,7 @@ class FeedSource:
         pass
 
     def post_data(self, uri,
+                  headers={},
                   data=None,
                   timeout=30,
                   server_headers=False,
@@ -167,7 +168,7 @@ class FeedSource:
             error_cb = self.error
 
         if self.applet:
-            self.applet.network_handler.post_data(uri, data, timeout, server_headers, opener, \
+            self.applet.network_handler.post_data(uri, headers, data, timeout, server_headers, opener, \
                 callback=cb, error=error_cb)
 
     #Also convenience
@@ -376,6 +377,7 @@ class GoogleFeed(KeySaver):
 
         #Now authenticate
         self.post_data(self.service_login_auth_url,
+                       {},
                        data,
                        opener=self.opener,
                        cb=self.did_auth,
@@ -427,7 +429,7 @@ class GoogleFeed(KeySaver):
                         'continue': 'http://www.google.com/'})
 
                     #Send the data to get the SID
-                    self.post_data(self.client_login_url, data, 15,
+                    self.post_data(self.client_login_url, {}, data, 15,
                         cb=self.got_sid, error_cb=self.login_error)
 
     def got_sid(self, data):
@@ -617,9 +619,7 @@ class Reddit(FeedSource, KeySaver):
     title = _("Reddit Inbox")
     orangered_url = 'http://www.reddit.com/static/mail.png'
     login = 'https://www.reddit.com/api/login/%s' # % username
-    #RSS uses slightly less bandwidth, but JSON provides newness info
     messages_url = 'http://www.reddit.com/message/inbox/.json?mark=false'
-    mark_as_read = 'http://www.reddit.com/message/inbox/.rss?mark=true'
     inbox_url = 'http://www.reddit.com/message/messages/'
 
     def __init__(self, applet, username, password=None):
@@ -631,6 +631,7 @@ class Reddit(FeedSource, KeySaver):
         self.cookie = None
         self.should_update = False
         self.already_notified_about = []
+        self.marked_read = []
         self.init_network_error = False
 
         #Get ready to update the feed, but don't actually do so.
@@ -652,7 +653,7 @@ class Reddit(FeedSource, KeySaver):
                     self.error()
 
                 else:
-                    self.post_data(self.login % self.username.lower(), data,
+                    self.post_data(self.login % self.username.lower(), {}, data,
                         server_headers = True, cb=self.got_reddit_cookie, error_cb=self.cookie_error)
 
     def cookie_error(self, *args):
@@ -720,7 +721,7 @@ class Reddit(FeedSource, KeySaver):
                 else:
                     title = _("Post reply from %s") % message['data']['author']
 
-            new = message['data']['new']
+            new = message['data']['id'] not in self.marked_read and message['data']['new']
 
             if new:
                 self.num_new += 1
@@ -731,7 +732,9 @@ class Reddit(FeedSource, KeySaver):
                 notify = True
                 self.num_notify += 1
 
-            self.entries.append(Entry(url, title, new, notify))
+            entry = Entry(url, title, new, notify)
+            entry['id'] = message['data']['id']
+            self.entries.append(entry)
 
         self.applet.feed_updated(self)
 
@@ -746,16 +749,15 @@ class Reddit(FeedSource, KeySaver):
     #Unfortunately, we can only mark all messages as read, not individual ones.
     def item_clicked(self, i):
         if self.entries[i]['new'] == True:
-            if self.num_new == 1:
-                self.num_new = 0
-                deboldify(self.applet.feed_labels[self.url])
-                deboldify(self.applet.displays[self.url].get_children()[i], True)
-                self.get_favicon('www.reddit.com')
+            self.entries[i]['new'] = False
+            self.num_new -= 1
+            deboldify(self.applet.displays[self.url].get_children()[i], True)
 
-                self.get_data(self.mark_as_read, {'Cookie': self.cookie})
+            self.marked_read.append(self.entries[i]['id'])
 
-            else:
-                self.num_new -= 1
+            if self.num_new == 0:
+                 deboldify(self.applet.feed_labels[self.url])
+                 self.get_favicon('www.reddit.com')
 
 class Twitter(FeedSource, StandardNew, KeySaver):
     base_id = 'twitter'

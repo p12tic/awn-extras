@@ -32,16 +32,16 @@ import pango
 import urllib
 import gettext
 
-try:
-  import gio
-
-except:
-  gio = False
-
 from desktopagnostic.config import GROUP_DEFAULT as group
+from desktopagnostic import vfs
 import awn
 from awn.extras import _
 gettext.bindtextdomain('xdg-user-dirs', '/usr/share/locale')
+
+try:
+  import gio
+except:
+  gio = False
 
 
 class App(awn.Applet):
@@ -62,7 +62,7 @@ class App(awn.Applet):
     self.icon = awn.ThemedIcon()
     self.icon.set_tooltip_text(_("File Browser Launcher"))
     self.icon.set_size(self.get_size())
-    self.dialog = awn.Dialog(self)
+    self.dialog = awn.Dialog(self.icon, self)
 
     #AwnConfigClient instance
     self.client = awn.config_get_default_for_applet(self)
@@ -86,15 +86,14 @@ class App(awn.Applet):
     #Set the icon
     self.icon.set_info_simple('file-browser-launcher', uid, 'stock_folder')
 
-    #This part (and other progress overlay code) adapted from
-    #mhr3's 'Dropper' applet
     if gio:
+      #This part (and other progress overlay code) adapted from
+      #mhr3's 'Dropper' applet
       #Set the progress overlay
       self.timer_overlay = awn.OverlayProgressCircle()
       self.timer_overlay.props.active = False
       self.timer_overlay.props.apply_effects = False
       self.icon.add_overlay(self.timer_overlay)
-
     else:
       #Read fstab for mounting info
       #(It it assumed that fstab won't change after the applet is started)
@@ -103,11 +102,27 @@ class App(awn.Applet):
       self.fstab2.close()
 
     #Check if nautilus-connect-server is installed
-    if os.path.exists('/usr/bin/nautilus-connect-server') or os.path.exists\
+    if os.path.exists('/usr/bin/nautilus-connect-server') or os.path.exists \
       ('/usr/local/bin/nautilus-connect-server'):
       self.nautilus_connect_server = True
     else:
       self.nautilus_connect_server = False
+
+    if os.path.exists('/usr/share/applications/nautilus-computer.desktop') or \
+      os.path.exists('/usr/local/share/applications/nautilus-computer.desktop'):
+      self.nautilus_computer = True
+    else:
+      self.nautilus_computer = False
+
+    def trash_count_cb(*args):
+      if self.show_trash:
+        if gio:
+          self.do_gio_places()
+        else:
+          self.add_places()
+
+    self.trash = vfs.Trash.get_default()
+    self.trash.connect('file-count-changed', trash_count_cb)
 
     #Make the dialog, will only be shown when approiate
     #Make all the things needed for a treeview for the homefolder, root dir, bookmarks, and mounted drives
@@ -133,6 +148,7 @@ class App(awn.Applet):
     self.treeview.set_hover_selection(True)
     self.treeview.set_headers_visible(False)
     self.treeview.append_column(column)
+    self.treeview.set_no_show_all(True)
     self.treeview.connect('button-press-event', self.treeview_clicked)
 
     self.vbox = gtk.VBox()
@@ -144,8 +160,8 @@ class App(awn.Applet):
         'mount-changed', 'mount-removed'):
         self.monitor.connect(signal, self.do_gio_places)
 
-      for key in ('show_home', 'show_local', 'show_network', 'show_connect', 'show_bookmarks',
-        'show_filesystem'):
+      for key in ('show_computer', 'show_home', 'show_filesystem', 'show_local', 'show_network',
+        'show_connect', 'show_trash', 'show_bookmarks'):
         self.client.notify_add(group, key, self.do_gio_places)
 
       self.do_gio_places()
@@ -169,15 +185,20 @@ class App(awn.Applet):
     self.entry = gtk.Entry()
     self.entry.set_text(os.environ['HOME'])
     self.entry.connect('key-release-event', self.detect_enter)
+    self.entry.show()
+
     #Open button to run the file browser
     self.enter = gtk.Button(stock=gtk.STOCK_OPEN)
     self.enter.connect('clicked', self.launch_fb)
+    self.enter.show()
+
     #HBox to put the two together
-    self.hbox = gtk.HBox()
-    self.hbox.pack_start(self.entry)
-    self.hbox.pack_start(self.enter, False)
+    entry_hbox = gtk.HBox()
+    entry_hbox.pack_start(self.entry)
+    entry_hbox.pack_start(self.enter, False)
+
     #And add the HBox to the vbox and add the vbox to the dialog
-    self.vbox.pack_end(self.hbox)
+    self.vbox.pack_end(entry_hbox)
     self.dialog.add(self.vbox)
 
     #Connect to signals
@@ -209,6 +230,9 @@ class App(awn.Applet):
       self.treeview.connect('drag-data-received', self.treeview_drag_data_received)
       self.treeview.connect('drag-motion', self.treeview_drag_motion)
       self.treeview.connect('drag-leave', self.treeview_drag_leave)
+
+    elif self.mode == 2:
+      self.add_places()
 
   def size_changed(self, *args):
     if self.docklet_visible:
@@ -284,27 +308,36 @@ class App(awn.Applet):
       dropped_paths = data.data.split('\n')
       num_success = 0
 
-      for dropped_path in dropped_paths:
-        if len(dropped_path) >= 8:
-          if dropped_path[:8] == 'file:///':
-            dropped_path = dropped_path.strip()
+      if path == 'trash:///':
+        for dropped_path in dropped_paths:
+          from_file = vfs.File.for_uri(urllib.unquote(dropped_path).strip())
+          try:
+            self.trash.send_to_trash(from_file)
+          except:
+            pass
 
-            dropped_path = urllib.unquote(dropped_path)
+      else:
+        for dropped_path in dropped_paths:
+          if len(dropped_path) >= 8:
+            if dropped_path[:8] == 'file:///':
+              dropped_path = dropped_path.strip()
 
-            from_file = gio.File(dropped_path)
+              dropped_path = urllib.unquote(dropped_path)
 
-            to_file = gio.File(path + '/' + from_file.get_basename())
+              from_file = gio.File(dropped_path)
 
-            #Make sure we're not just moving the file to the same directory
-            if not from_file.equal(to_file):
-              if from_file.move(to_file):
-                num_success += 1
+              to_file = gio.File(path + '/' + from_file.get_basename())
 
-      if num_success > 0:
-        config_fb = self.client.get_string(group, 'fb')
-        open_dir = path.replace(' ', '\ ')
-        os.system('%s %s &' % (config_fb, open_dir))
-        self.dialog.hide()
+              #Make sure we're not just moving the file to the same directory
+              if not from_file.equal(to_file):
+                if from_file.move(to_file):
+                  num_success += 1
+
+        if num_success > 0:
+          config_fb = self.client.get_string(group, 'fb')
+          open_dir = path.replace(' ', '\ ')
+          os.system('%s %s &' % (config_fb, open_dir))
+          self.dialog.hide()
 
     return True
 
@@ -329,18 +362,23 @@ class App(awn.Applet):
       self.dialog.hide()
 
   #Certain places, regardless of GIO/not GIO
-  def do_places(self):
+  def do_places(self, *args):
     self.liststore.clear()
     self.places_paths = []
     self.places_data = []
 
     #Get the needed config values
+    self.show_computer = self.client.get_bool(group, 'show_computer')
     self.show_home = self.client.get_int(group, 'show_home')
+    self.show_filesystem = self.client.get_int(group, 'show_filesystem')
     self.show_local = self.client.get_int(group, 'show_local')
     self.show_network = self.client.get_int(group, 'show_network')
     self.show_connect = self.client.get_int(group, 'show_connect')
     self.show_bookmarks = self.client.get_int(group, 'show_bookmarks')
-    self.show_filesystem = self.client.get_int(group, 'show_filesystem')
+    self.show_trash = self.client.get_bool(group, 'show_trash')
+
+    if self.show_computer and self.nautilus_computer:
+      self.place('computer', _("Computer"), 'exec://nautilus computer:')
 
     #Home folder
     if self.show_home == 2:
@@ -460,6 +498,7 @@ class App(awn.Applet):
 
     self.do_ncs()
     self.do_bookmarks()
+    self.do_trash()
 
     if self.docklet_visible:
       self.update_docklet()
@@ -573,32 +612,6 @@ class App(awn.Applet):
             elif type in ['network', 'smb', 'nfs', 'ftp', 'sftp', 'ssh']:
               self.place('network-folder', name, path, _("Network"))
 
-            elif type == 'trash':
-              #Get whether the trash is empty or not - but first find out if the Trash is in
-              #~/.Trash or ~/.local/share/Trash
-              try:
-                #Get trash dir
-                if os.path.isdir(os.path.expanduser('~/.local/share/Trash/files')):
-                  self.trash_path = os.path.expanduser('~/.local/share/Trash/files')
-                else:
-                  self.trash_path = os.path.expanduser('~/.Trash')
-
-                #Get number of items in trash
-                if len(os.listdir(self.trash_path)) > 0:
-                  self.trash_full = True
-                else:
-                  self.trash_full = False
-
-              except:
-                #Maybe the trash is in a different location? Just put false
-                self.trash_full = False
-
-              if self.trash_full:
-                self.place('user-trash-full', name, path, _("Trash"))
-
-              else:
-                self.place('user-trash', name, path, _("Trash"))
-
             elif type == 'x-nautilus-search':
               self.place('search', name, path, _("Search"))
 
@@ -611,6 +624,18 @@ class App(awn.Applet):
             #Default to folder
             else:
               self.place('stock_folder', name, path, _("Folder"))
+
+  def do_trash(self):
+    if self.show_trash:
+      count = self.trash.props.file_count
+      if count > 0:
+        self.place('user-trash-full', _("Trash (%d)" % count), 'trash:///')
+
+      else:
+        self.place('user-trash', _("Trash"), 'trash:///')
+
+      if gio:
+        self.droppable_places.append('trash:///')
 
   #Function to show the home folder, mounted drives/partitions, and bookmarks according to config
   #This also refreshes in case a CD was inserted, MP3 player unplugged, bookmark added, etc.
@@ -646,7 +671,6 @@ class App(awn.Applet):
       for line in self.fstab:
         try:
           if line.replace(' ','').replace('\t','') != '' and line[0] != "#":
-
             words = line.split(' ')
             for word in words[1:]:
               if word != '':
@@ -754,8 +778,8 @@ class App(awn.Applet):
     self.paths.extend(self.dvd_paths)
 
     self.do_ncs()
-
     self.do_bookmarks()
+    self.do_trash()
 
     if self.docklet_visible:
       self.update_docklet()
@@ -949,6 +973,7 @@ class App(awn.Applet):
       icon.set_from_pixbuf(self.load_pixbuf(place[0], self.get_size()))
       icon.set_tooltip_text(place[1])
       icon.connect('clicked', self.docklet_icon_clicked, place[3])
+      icon.connect('middle-clicked', self.docklet_icon_middle_clicked, place[3])
       icon.connect('context-menu-popup', self.docklet_icon_menu, place)
       box.add(icon)
       box.set_child_packing(icon, False, True, 0, gtk.PACK_START)
@@ -974,27 +999,36 @@ class App(awn.Applet):
         dropped_paths = data.data.split('\n')
         num_success = 0
 
-        for dropped_path in dropped_paths:
-          if len(dropped_path) >= 8:
-            if dropped_path[:8] == 'file:///':
-              dropped_path = dropped_path.strip()
+        if path == 'trash:///':
+          for dropped_path in dropped_paths:
+            from_file = vfs.File.for_uri(urllib.unquote(dropped_path).strip())
+            try:
+              self.trash.send_to_trash(from_file)
+            except:
+              pass
 
-              dropped_path = urllib.unquote(dropped_path)
+        else:
+          for dropped_path in dropped_paths:
+            if len(dropped_path) >= 8:
+              if dropped_path[:8] == 'file:///':
+                dropped_path = dropped_path.strip()
 
-              from_file = gio.File(dropped_path)
+                dropped_path = urllib.unquote(dropped_path)
 
-              to_file = gio.File(path + '/' + from_file.get_basename())
+                from_file = gio.File(dropped_path)
 
-              #Make sure we're not just moving the file to the same directory
-              if not from_file.equal(to_file):
-                if from_file.move(to_file):
-                  num_success += 1
+                to_file = gio.File(path + '/' + from_file.get_basename())
 
-        if num_success > 0:
-          config_fb = self.client.get_string(group, 'fb')
-          open_dir = path.replace(' ', '\ ')
-          os.system('%s %s &' % (config_fb, open_dir))
-          self.dialog.hide()
+                #Make sure we're not just moving the file to the same directory
+                if not from_file.equal(to_file):
+                  if from_file.move(to_file):
+                    num_success += 1
+
+          if num_success > 0:
+            config_fb = self.client.get_string(group, 'fb')
+            open_dir = path.replace(' ', '\ ')
+            os.system('%s %s &' % (config_fb, open_dir))
+            self.dialog.hide()
 
       return True
 
@@ -1017,17 +1051,56 @@ class App(awn.Applet):
     if self.mode == 1:
       self.docklet.destroy()
 
+  def docklet_icon_middle_clicked(self, icon, uri):
+    if not os.path.isdir(uri.replace('file:///', '/')):
+      return False
+
+    self.icon_dialog = awn.Dialog(icon, self)
+    self.icon_dialog.connect('focus-out-event', self.icon_dialog_focusout)
+
+    self.icon_entry = gtk.Entry()
+    self.icon_entry.connect('key-release-event', self.detect_enter)
+    self.icon_entry.set_text(uri.replace('file:///', '/') + ['/', ''][uri[-1] == '/'])
+
+    self.icon_enter = gtk.Button(stock=gtk.STOCK_OPEN)
+    self.icon_enter.connect('clicked', self.launch_fb, self.icon_entry)
+
+    hbox = gtk.HBox()
+    hbox.pack_start(self.icon_entry)
+    hbox.pack_start(self.icon_enter, False)
+
+    self.icon_dialog.add(hbox)
+    self.icon_dialog.show_all()
+
+    self.icon_entry.grab_focus()
+    self.icon_entry.set_position(-1)
+
+  def icon_dialog_focusout(self, widget, event):
+    widget.hide()
+
+    gobject.timeout_add_seconds(1, widget.destroy)
+
   def docklet_icon_menu(self, icon, event, place):
     menu = self.create_default_menu()
 
-    #If the place is ejectable
-    if place[2]:
-      eject = awn.image_menu_item_new_with_label(_("Eject"))
-      image = gtk.image_new_from_icon_name('media-eject', gtk.ICON_SIZE_MENU)
-      eject.set_image(image)
-      menu.append(eject)
+    if place is not None:
+      #If the place is ejectable
+      if place[2]:
+        eject = awn.image_menu_item_new_with_label(_("Eject"))
+        image = gtk.image_new_from_icon_name('media-eject', gtk.ICON_SIZE_MENU)
+        eject.set_image(image)
+        menu.append(eject)
 
-      eject.connect('activate', self.docklet_menu_eject, place[4])
+        eject.connect('activate', self.docklet_menu_eject, place[4])
+
+      elif place[3] == 'trash:///':
+        empty = gtk.MenuItem(_("Empty Trash"))
+        menu.append(empty)
+
+        if self.trash.props.file_count == 0:
+          empty.set_sensitive(False)
+
+        empty.connect('activate', self.docklet_empty_trash)
 
     prefs = gtk.ImageMenuItem(gtk.STOCK_PREFERENCES)
     prefs.connect('activate', self.open_prefs)
@@ -1042,6 +1115,34 @@ class App(awn.Applet):
 
   def docklet_menu_eject(self, menu, num):
     self.unmount(num)
+
+  def docklet_empty_trash(self, menu):
+    dialog = gtk.Dialog(_("Confirm deletion"), self, gtk.DIALOG_MODAL,
+      (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT, gtk.STOCK_OK, gtk.RESPONSE_ACCEPT))
+    dialog.set_icon_name('user-trash-full')
+
+    vbox = gtk.VBox(False, 6)
+    vbox.set_border_width(12)
+
+    label1 = gtk.Label()
+    label1.set_markup(_("<big><b>Are you sure you want to delete\nevery item from the trash?</b></big>"))
+
+    label2 = gtk.Label(_("This action cannot be undone."))
+    label2.set_alignment(0.0, 0.0)
+
+    vbox.pack_start(label1, False)
+    vbox.pack_start(label2, False)
+
+    dialog.vbox.pack_start(vbox)
+    dialog.show_all()
+    response = dialog.run()
+    dialog.destroy()
+
+    if response == gtk.RESPONSE_ACCEPT:
+      try:
+        self.trash.empty()
+      except:
+        pass
 
   #The user changed the icon theme
   def icon_theme_changed(self, icon_theme):
@@ -1069,6 +1170,12 @@ class App(awn.Applet):
     if action == 3:
       return
 
+    if path.strip() == '':
+        path = os.environ['HOME']
+
+    if path[-1] != '/':
+        path += '/'
+
     if not gio:
       self.add_places()
 
@@ -1091,11 +1198,12 @@ class App(awn.Applet):
       else:
         self.entry.set_text(path)
 
-        if config_focus == 2:
-          self.entry.grab_focus()
-          self.entry.set_position(-1)
-
+        self.treeview.show()
+        self.dialog.set_property('anchor', self.icon)
         self.dialog.show_all()
+
+        self.entry.grab_focus()
+        self.entry.set_position(-1)
 
     #Launch path
     elif action == 2:
@@ -1126,14 +1234,22 @@ class App(awn.Applet):
       self.update_docklet()
 
   #If the user hits the enter key on the main part OR the number pad
-  def detect_enter(self, a, event):
+  def detect_enter(self, widget, event):
     if event.keyval == 65293 or event.keyval == 65421:
-      self.enter.clicked()
+      if widget == self.entry:
+        self.enter.clicked()
+      else:
+        self.icon_enter.clicked()
 
   #Launces file browser to open "path". If "path" is None: use value from the entry widget
   def launch_fb(self, widget, path=None):
     self.dialog.hide()
-    if path == None:
+    if isinstance(path, gtk.Widget):
+      path = path.get_text()
+      self.icon_dialog.hide()
+      if self.mode == 1:
+        self.docklet.destroy()
+    elif path is None:
       path = self.entry.get_text()
 
     #Get the file browser app

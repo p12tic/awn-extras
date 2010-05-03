@@ -64,13 +64,21 @@ class Prefs:
     #Middle mouse button path
     self.mmb_path = self.client.get_string(group, 'mmb_path')
 
-    #Places: show bookmarks, home, local, network
-    self.show_bookmarks = self.client.get_int(group, 'show_bookmarks')
-    self.show_home = self.client.get_int(group, 'show_home')
-    self.show_local = self.client.get_int(group, 'show_local')
-    self.show_network = self.client.get_int(group, 'show_network')
-    self.show_connect = self.client.get_int(group, 'show_connect')
-    self.show_filesystem = self.client.get_int(group, 'show_filesystem')
+    #Places...
+    self.places = {}
+    if applet.nautilus_computer:
+      self.places['computer'] = self.client.get_bool(group, 'show_computer')
+    self.places['home'] = self.client.get_int(group, 'show_home')
+    self.places['filesystem'] = self.client.get_int(group, 'show_filesystem')
+    self.places['local'] = self.client.get_int(group, 'show_local')
+    self.places['network'] = self.client.get_int(group, 'show_network')
+    if applet.nautilus_connect_server:
+      self.places['connect'] = self.client.get_int(group, 'show_connect')
+    self.places['bookmarks'] = self.client.get_int(group, 'show_bookmarks')
+    self.places['trash'] = self.client.get_bool(group, 'show_trash')
+
+    self.places_ordered = ('computer', 'home', 'filesystem', 'local', 'network', 'connect',
+      'bookmarks', 'trash')
 
     #Open the places item when clicked
     self.places_open = self.client.get_int(group, 'places_open')
@@ -211,34 +219,30 @@ class Prefs:
     self.places_all = gtk.CheckButton(_("Show all places"))
     self.places_all.identifier = 'places.all'
     self.places_all.set_active(True)
-    for x in (self.show_home, self.show_filesystem, self.show_local, self.show_network,
-      self.show_connect):
-      if x != 2:
+
+    for place in self.places_ordered:
+      val = self.places[place]
+      if not ((type(val) == bool and val == True) or (type(val) == int and val == 2)):
         self.places_all.set_active(False)
         break
     self.places_all.connect('toggled', self.check_toggled)
     places_vbox.pack_start(self.places_all, False)
 
     self.places_checks = {}
-    places = {'home': _("Home folder"), 'filesystem': _("Filesystem"),
+    strings = {'computer': _("Computer"), 'home': _("Home folder"), 'filesystem': _("Filesystem"),
       'local': _("Mounted local drives"), 'network': _("Mounted network drives"),
-      'connect': _("Connect to server"), 'bookmarks': _("Bookmarks")}
-    keys = {'home': self.show_home, 'filesystem': self.show_filesystem,
-      'local': self.show_local, 'network': self.show_network,
-      'connect': self.show_connect, 'bookmarks': self.show_bookmarks}
-    places_in_order = ('home', 'filesystem', 'local', 'network', 'connect', 'bookmarks')
+      'connect': _("Connect to server"), 'bookmarks': _("Bookmarks"), 'trash': _("Trash")}
 
-    for place in places_in_order:
-      check = gtk.CheckButton(places[place])
-      check.identifier = 'places.' + place
-      if keys[place] == 2:
-        check.set_active(True)
-      check.connect('toggled', self.check_toggled)
-      self.places_checks[place] = check
-      places_vbox.pack_start(check, False)
-
-    if not applet.nautilus_connect_server:
-      self.places_checks['connect'].set_sensitive(False)
+    for place in self.places_ordered:
+      if place in self.places:
+        check = gtk.CheckButton(strings[place])
+        check.identifier = 'places.' + place
+        val = self.places[place]
+        if (type(val) == bool and val == True) or (type(val) == int and val == 2):
+          check.set_active(True)
+        check.connect('toggled', self.check_toggled)
+        self.places_checks[place] = check
+        places_vbox.pack_start(check, False)
 
     self.nbook.append_page(places_vbox, gtk.Label(_("Places")))
 
@@ -505,7 +509,10 @@ class Prefs:
     elif check.identifier[:7] == 'places.':
       key = check.identifier[7:]
       if self.places_checks[key].get_active():
-        self.client.set_int(group, 'show_' + key, 2)
+        if type(self.places[key]) == int:
+          self.client.set_int(group, 'show_' + key, 2)
+        elif type(self.places[key]) == bool:
+          self.client.set_bool(group, 'show_' + key, True)
 
         all_active = True
         for widget in self.places_checks.values():
@@ -517,7 +524,10 @@ class Prefs:
           self.places_all.set_active(True)
 
       else:
-        self.client.set_int(group, 'show_' + key, 1)
+        if type(self.places[key]) == int:
+          self.client.set_int(group, 'show_' + key, 1)
+        elif type(self.places[key]) == bool:
+          self.client.set_bool(group, 'show_' + key, False)
         self.ignore_all = True
         self.places_all.set_active(False)
         self.ignore_all = False

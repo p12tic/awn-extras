@@ -23,15 +23,20 @@ type = string
 default =
 _description=The path to use on middle click
 
-[DEFAULT/show_bookmarks]
-type = integer
-default = 2
-_description=Whether or not to display bookmarks
+[DEFAULT/show_computer]
+type = boolean
+default = true
+_description=Whether or not to display the computer
 
 [DEFAULT/show_home]
 type = integer
 default = 2
 _description=Whether or not to display the home folder
+
+[DEFAULT/show_filesystem]
+type = integer
+default = 1
+_description=Whether or not to display the Filesystem
 
 [DEFAULT/show_local]
 type = integer
@@ -43,15 +48,20 @@ type = integer
 default = 2
 _description=Whether or not to display network drives
 
-[DEFAULT/show_filesystem]
-type = integer
-default = 2
-_description=Whether or not to display the Filesystem
-
 [DEFAULT/show_connect]
 type = integer
-default = 2
+default = 1
 _description=Whether or not to display Connect to server
+
+[DEFAULT/show_bookmarks]
+type = integer
+default = 2
+_description=Whether or not to display bookmarks
+
+[DEFAULT/show_trash]
+type = boolean
+default = true
+_description=Whether or not to display the Trash
 
 [DEFAULT/places_open]
 type = integer

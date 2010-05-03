@@ -466,7 +466,12 @@ class App(awn.Applet):
 
   #A volume was mounted through file-browser-launcher; open the file manager to the path
   def gio_mounted(self, vol, blah):
-    self.launch_fb(None, vol.get_mount().get_root().get_uri())
+    try:
+      uri = vol.get_mount().get_root().get_uri()
+    except:
+      return
+
+    self.launch_fb(None, uri)
 
   #If nautilus-connect-server is installed, offer to start it "Connect to server..."
   def do_ncs(self):

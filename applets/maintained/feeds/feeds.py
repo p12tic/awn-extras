@@ -849,6 +849,8 @@ class App(awn.AppletSimple):
                 if feed.num_new == 0:
                     classes.deboldify(self.feed_labels[feed.url])
 
+                    self.show_only_new(feed.url)
+
         self.open_url(None, feed.entries[i]['url'])
 
         feed.item_clicked(i)

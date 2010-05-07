@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+X-AWN-Type=Applet
+X-AWN-AppletType=Vala
+_Name=Related applet
+_Comment=Applet displaying related items by talking to Zeitgeist
+Exec=awn-applet -p %k
+X-AWN-AppletExec=@LIBDIR@/awn/applets/related/related.so
+Icon=zeitgeist-logo
+X-AWN-AppletCategory=Monitor,Utilities

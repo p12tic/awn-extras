@@ -9,6 +9,7 @@ endif
 CONDITIONAL_APPLETS += \
 	maintained/garbage \
 	maintained/notification-area \
+	maintained/related \
 	maintained/showdesktop \
 	$(NULL)
 endif

@@ -58,6 +58,8 @@ AM_CONDITIONAL(BUILD_WEBAPPLET, test "$with_mozilla" != "no" -o "$with_webkit" !
 PKG_CHECK_MODULES(AWN, [awn >= 0.3.9])
 # awn-system-monitor, sysmon
 PKG_CHECK_MODULES(GTOP, [libgtop-2.0])
+# related
+PKG_CHECK_MODULES(ZEITGEIST, [zeitgeist-1.0])
 # awn-notification-daemon, shiny-switcher, standalone-launcher, taskmand
 PKG_CHECK_MODULES(LIBWNCK, [libwnck-1.0 >= 2.21.99.9])
 # awn-notification-daemon, shiny-switcher
@@ -334,6 +336,8 @@ applets/maintained/notification-daemon/Makefile
 applets/maintained/notification-daemon/notification-daemon.desktop.in
 applets/maintained/places/Makefile
 applets/maintained/places/places.desktop.in
+applets/maintained/related/Makefile
+applets/maintained/related/related.desktop.in
 applets/maintained/python-test/Makefile
 applets/maintained/quit/Makefile
 applets/maintained/shiny-switcher/Makefile

@@ -7,28 +7,28 @@ msgid ""
 msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-25 14:38+0200\n"
-"PO-Revision-Date: 2010-03-25 17:06+0000\n"
-"Last-Translator: Ali İskender Turan <hankarun@gmail.com>\n"
+"POT-Creation-Date: 2010-04-11 18:07+0300\n"
+"PO-Revision-Date: 2010-05-08 18:39+0000\n"
+"Last-Translator: ubuntuki <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2010-03-26 04:44+0000\n"
+"X-Launchpad-Export-Date: 2010-05-09 04:09+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
 msgid "Animal Farm"
-msgstr ""
+msgstr "Hayvan Çiftliği"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:2
 msgid "Display fortune messages"
-msgstr ""
+msgstr "Varlık iletilerini göster"
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:1
 msgid "Global hotkey used to activate the terminal."
-msgstr ""
+msgstr "Uçbirimi etkinleştirmek için kullanılan evrensel geçiş tuşu"
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:2
 msgid "Set whether the applet should hide itself when it loses focus."
@@ -36,31 +36,31 @@ msgstr ""
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:3
 msgid "The applet's background image."
-msgstr ""
+msgstr "Uygulamacığın ardalan görüntüsü."
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:4
 msgid "The applet's opacity level."
-msgstr ""
+msgstr "Uygulamacığın ışık geçirme düzeyi."
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:5
 msgid "The default external terminal application."
-msgstr ""
+msgstr "Öntanımlı harici uçbirim uygulaması."
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:100
 msgid "Disabled"
-msgstr ""
+msgstr "Etkisizleştirilmiş"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:410
 #: ../applets/maintained/calendar/calendarprefs.py:75
 msgid "Preferences"
-msgstr ""
+msgstr "Tercihler"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:425
 #: ../applets/maintained/file-browser-launcher/prefs.py:154
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:16
 #, c-format
 msgid "Behavior"
-msgstr ""
+msgstr "Davranış"
 
 #. focus out behavior checkbox
 #: ../applets/maintained/awnterm/awn-terminal.vala:437
@@ -71,24 +71,24 @@ msgstr ""
 #: ../applets/maintained/file-browser-launcher/prefs.py:253
 #: ../applets/maintained/file-browser-launcher/prefs.py:328
 msgid "Action"
-msgstr ""
+msgstr "Eylem"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:476
 msgid "Shortcut"
-msgstr ""
+msgstr "Kısayol"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:482
 msgid "Activate"
-msgstr ""
+msgstr "Etkinleştir"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:491
 #, c-format
 msgid "Background image"
-msgstr ""
+msgstr "Artalan görüntüsü"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:503
 msgid "Select a file"
-msgstr ""
+msgstr "Bir dosya seçin"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:545
 #, c-format
@@ -98,20 +98,20 @@ msgstr ""
 #: ../applets/maintained/awnterm/awn-terminal.vala:572
 #, c-format
 msgid "External Terminal"
-msgstr ""
+msgstr "Harici Uçbirim"
 
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/awnterm/awnterm.desktop.in.in.h:1
 msgid "A simple popup terminal"
-msgstr ""
+msgstr "Basit bir açılır uçbirim"
 
 #: ../applets/maintained/awnterm/awnterm.desktop.in.in.h:2
 msgid "Terminal Applet"
-msgstr ""
+msgstr "Uçbirim Uygulamacığı"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:1
 msgid " Upload/Download"
-msgstr ""
+msgstr " Yükle/İndir"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:2
 msgid " bytes)"
@@ -131,11 +131,11 @@ msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:6
 msgid "Draw the applet background"
-msgstr ""
+msgstr "Uygulamacık artalanını çiz"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:7
 msgid "Draw the applet border"
-msgstr ""
+msgstr "Uygulamacık kenarını çiz"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:8
 msgid ""
@@ -149,7 +149,7 @@ msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:10
 msgid "The interface currently selected"
-msgstr ""
+msgstr "Mevcut seçili arayüz"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:37
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:231
@@ -163,7 +163,7 @@ msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:225
 msgid "Unable to caclulate statistics"
-msgstr ""
+msgstr "İstatistikler hesaplanamıyor"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:225
 msgid "Statistics calculation requires read access to /proc/net/dev"
@@ -171,54 +171,54 @@ msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:244
 msgid "Change Unit"
-msgstr ""
+msgstr "Birimi Değiştir"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:295
 msgid "Scanning"
-msgstr ""
+msgstr "Tarama"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:296
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:4
 msgid "Devices"
-msgstr ""
+msgstr "Aygıtlar"
 
 #. kilobytes per second
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:323
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:19
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:50
 msgid "KBps"
-msgstr ""
+msgstr "KBps"
 
 #. kilobits per second
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:327
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:53
 msgid "Kbps"
-msgstr ""
+msgstr "Kbps"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:349
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:468
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:469
 msgid "Interface"
-msgstr ""
+msgstr "Arayüz"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:354
 msgid "Sent"
-msgstr ""
+msgstr "Gönderilen"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:359
 msgid "Received"
-msgstr ""
+msgstr "Alınan"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:364
 msgid "Sending"
-msgstr ""
+msgstr "Gönderme"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:369
 msgid "Receiving"
-msgstr ""
+msgstr "Alma"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:417
 msgid "Please select a valid Network Device"
-msgstr ""
+msgstr "Lütfen geçerli bir Ağ Aygıtı seçin"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:419
 #, python-format
@@ -227,16 +227,16 @@ msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:610
 msgid "No"
-msgstr ""
+msgstr "Hayır"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:611
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:136
 msgid "Device"
-msgstr ""
+msgstr "Aygıt"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:612
 msgid "Please select a valid device"
-msgstr ""
+msgstr "Lütfen geçerli bir aygıt seçin"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.desktop.in.h:1
 msgid "A Network Bandwidth monitor for AWN"
@@ -253,15 +253,15 @@ msgstr ""
 #: ../applets/maintained/volume-control/volume-control.ui.h:4
 #: ../applets/maintained/weather/weather.ui.h:2
 msgid "<b>Display</b>"
-msgstr ""
+msgstr "<b>Görünüm</b>"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:2
 msgid "Background Color"
-msgstr ""
+msgstr "Artalan Rengi"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:3
 msgid "Border Color"
-msgstr ""
+msgstr "Çerçeve Rengi"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:5
 msgid "Display MBps/KBps (bytes) instead of Mbps/Kbps (bits)"
@@ -273,7 +273,7 @@ msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:7
 msgid "Display the sum of upload and download"
-msgstr ""
+msgstr "Yükleme ve indirme toplamını göster"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:8
 msgid "Display upload and download text representation of speed"
@@ -281,7 +281,7 @@ msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:9
 msgid "Do not display the speed as text, only draw the graph"
-msgstr ""
+msgstr "Hızı metin olarak gösterme, sadece grafiği çiz"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:10
 msgid "Draw 0 bps in graphs"
@@ -293,7 +293,7 @@ msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:12
 msgid "Draw Border"
-msgstr ""
+msgstr "Kenarlık Çiz"
 
 #. Put the general tab together
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:13
@@ -302,11 +302,11 @@ msgstr ""
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:9
 #: ../applets/maintained/to-do/prefs.py:60
 msgid "General"
-msgstr ""
+msgstr "Genel"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:14
 msgid "Graph Only"
-msgstr ""
+msgstr "Sadece Grafik"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:15
 msgid ""
@@ -325,10 +325,12 @@ msgid ""
 "If this is checked the applet border will use the selected color. If "
 "unchecked, border will be transparent"
 msgstr ""
+"Eğer bu onaylanırsa uygulamacık kenarı seçili rengi kullanacak. "
+"Onaylanmazsa, kenar saydam olacak"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:18
 msgid "If this is checked, the common display unit will be Bytes"
-msgstr ""
+msgstr "Eğer bu onaylanırsa, genel gösterim birimi Bayt olacak"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:20
 msgid "Minimum Scaling threshold"
@@ -344,32 +346,32 @@ msgstr ""
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:22
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:141
 msgid "Sum"
-msgstr ""
+msgstr "Toplam"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:147
 msgid "Multi"
-msgstr ""
+msgstr "Çoklu"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:155
 msgid "Upload Color"
-msgstr ""
+msgstr "Yükleme Rengi"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:166
 msgid "Download Color"
-msgstr ""
+msgstr "İndirme Rengi"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:239
 msgid "Upload"
-msgstr ""
+msgstr "Yükle"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:241
 msgid "Download"
-msgstr ""
+msgstr "Indir"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:243
 #, python-format
 msgid "%s %s Color"
-msgstr ""
+msgstr "%s %s Renk"
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:1
 msgid "HAL UDI of battery."
@@ -397,7 +399,7 @@ msgstr ""
 #: ../applets/maintained/volume-control/awn-applet-volume-control.schema-ini.in.h:3
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:7
 msgid "The name of the theme of the icon."
-msgstr ""
+msgstr "Simge temasının adı."
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:7
 msgid "Unit of low level threshold (Percent or Time Remaining)."
@@ -405,21 +407,21 @@ msgstr ""
 
 #: ../applets/maintained/battery/battery.desktop.in.h:1
 msgid "Battery"
-msgstr ""
+msgstr "Pil"
 
 #: ../applets/maintained/battery/battery.desktop.in.h:2
 msgid "Display battery state"
-msgstr ""
+msgstr "Pil durumunu göster"
 
 #: ../applets/maintained/battery/battery.ui.h:2
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:5
 #: ../applets/maintained/weather/weather.ui.h:3
 msgid "<b>General Options</b>"
-msgstr ""
+msgstr "<b>Genel Seçenekler</b>"
 
 #: ../applets/maintained/battery/battery.ui.h:3
 msgid "<b>Notifications</b>"
-msgstr ""
+msgstr "<b>Bildirimler</b>"
 
 #: ../applets/maintained/battery/battery.ui.h:4
 msgid ""
@@ -433,7 +435,7 @@ msgstr ""
 
 #: ../applets/maintained/battery/battery.ui.h:6
 msgid "Percent"
-msgstr ""
+msgstr "Yüzde"
 
 #: ../applets/maintained/battery/battery.ui.h:7
 msgid "Time Remaining"
@@ -441,7 +443,7 @@ msgstr ""
 
 #: ../applets/maintained/battery/battery.ui.h:8
 msgid "_Battery:"
-msgstr ""
+msgstr "_Pil:"
 
 #: ../applets/maintained/battery/battery.ui.h:9
 msgid "_Notify when charge level reaches:"
@@ -453,7 +455,7 @@ msgstr ""
 #: ../applets/maintained/volume-control/volume-control.ui.h:7
 #: ../applets/maintained/weather/weather.ui.h:18
 msgid "_Theme:"
-msgstr ""
+msgstr "_Tema:"
 
 #: ../applets/maintained/battery/battery.ui.h:11
 msgid "_Warn when charge level drops to:"
@@ -487,7 +489,7 @@ msgstr ""
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:7
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:6
 msgid "Kelvin)."
-msgstr ""
+msgstr "Kelvin)."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:8
 msgid "List of cities and timezones separated by a '#' character."
@@ -500,11 +502,11 @@ msgstr ""
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:10
 msgid "The name of the theme of the analog clock."
-msgstr ""
+msgstr "Analog saatin tema adı."
 
 #: ../applets/maintained/cairo-clock/cairo-clock.desktop.in.h:1
 msgid "Cairo Clock"
-msgstr ""
+msgstr "Cairo Saat"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.desktop.in.h:2
 msgid ""
@@ -519,15 +521,15 @@ msgstr " "
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:2
 msgid "12 _hour format"
-msgstr ""
+msgstr "12 _saat biçimi"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:3
 msgid "24 h_our format"
-msgstr ""
+msgstr "24 s_aat biçimi"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:4
 msgid "<b>Clock Display</b>"
-msgstr ""
+msgstr "<b>Saat Görünümü</b>"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:6
 msgid "<b>Title Options</b>"
@@ -539,16 +541,16 @@ msgstr ""
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:8
 msgid "Celcius"
-msgstr ""
+msgstr "Selsiyus"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:9
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:34
 msgid "Fahrenheit"
-msgstr ""
+msgstr "Fahrenayt"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:10
 msgid "Find _Next"
-msgstr ""
+msgstr "_Sonrakini Bul"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:11
 msgid ""
@@ -574,15 +576,15 @@ msgstr ""
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:16
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:35
 msgid "Kelvin"
-msgstr ""
+msgstr "Kelvin"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:17
 msgid "Location Name:"
-msgstr ""
+msgstr "Yer Adı:"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:18
 msgid "Show _seconds"
-msgstr ""
+msgstr "_Saniyeleri göster"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:19
 msgid "Show seco_nds hand"
@@ -590,7 +592,7 @@ msgstr ""
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:20
 msgid "Show the _date"
-msgstr ""
+msgstr "_Tarihi göster"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:21
 msgid "_Show weather of current location"
@@ -598,15 +600,15 @@ msgstr ""
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:22
 msgid "_Temperature unit:"
-msgstr ""
+msgstr "_Sıcaklık birimi:"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:24
 msgid "_Wind speed unit:"
-msgstr ""
+msgstr "_Rüzgar hızı birimi:"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:25
 msgid "km/h"
-msgstr ""
+msgstr "km/s"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:26
 msgid "knots"
@@ -614,44 +616,44 @@ msgstr ""
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:27
 msgid "m/s"
-msgstr ""
+msgstr "m/s"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:28
 msgid "mph"
-msgstr ""
+msgstr "mph"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:107
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:111
 msgid "Logout"
-msgstr ""
+msgstr "Çıkış"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:115
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:117
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:122
 #: ../applets/maintained/quit/quit-lock-screen.desktop.in.h:1
 msgid "Lock Screen"
-msgstr ""
+msgstr "Ekranı Kilitle"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:126
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:128
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:139
 msgid "Suspend"
-msgstr ""
+msgstr "Askıya Al"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:131
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:133
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:144
 msgid "Hibernate"
-msgstr ""
+msgstr "Hazırda Beklet"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:152
 msgid "Shutdown"
-msgstr ""
+msgstr "Kapat"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:187
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:562
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:566
 msgid "Computer"
-msgstr ""
+msgstr "Bilgisayar"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:188
 msgid "Home"
@@ -659,68 +661,71 @@ msgstr ""
 
 #. Check if this is the Desktop directory
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:189
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:520
-#: ../applets/maintained/places/applet.c:341
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:524
+#: ../applets/maintained/places/applet.c:344
 msgid "Desktop"
-msgstr ""
+msgstr "Masaüstü"
 
 #. 
 #. TODO: check the trash and set to stock_trash_empty if trash is empty
 #. 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:193
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:588
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:591
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:592
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:595
 msgid "Trash"
-msgstr ""
+msgstr "Çöp Kutusu"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:194
 msgid "File System"
-msgstr ""
+msgstr "Dosya Sistemi"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:315
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:565
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:569
 msgid "Network"
-msgstr ""
+msgstr "Ağ"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:316
 msgid "Connect to Server"
-msgstr ""
+msgstr "Sunucuya Bağlan"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:946
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:947
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:961
 #: ../applets/maintained/file-browser-launcher/prefs.py:243
 #: ../applets/maintained/places/places.desktop.in.in.h:2
 msgid "Places"
-msgstr ""
+msgstr "Yerler"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:984
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:985
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:999
 msgid "Recent Documents"
-msgstr ""
+msgstr "Son Açılan Belgeler"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1029
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1030
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1041
 msgid "Session"
-msgstr ""
+msgstr "Oturum"
 
 #. generates a compiler warning due to the ellipse
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1056
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1057
 msgid "Search\\u2026"
-msgstr ""
+msgstr "Ara\\u2026"
 
 #. generates a compiler warning due to the ellipse
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1073
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1074
 msgid "Launch\\u2026"
-msgstr ""
+msgstr "Başlat\\u2026"
 
-#: ../applets/maintained/cairo-menu/misc.c:356
+#: ../applets/maintained/cairo-menu/misc.c:344
 msgid "Clear Recent Documents"
-msgstr ""
+msgstr "Son Kullanılan Belgeleri Temizle"
 
 #: ../applets/maintained/calendar/awn-applet-calendar.schema-ini.in.h:1
 msgid "X"
-msgstr ""
+msgstr "X"
 
 #: ../applets/maintained/calendar/calendar.desktop.in.h:1
 msgid "Clock/Calendar Applet"
-msgstr ""
+msgstr "Saat/Takvim Uygulamacığı"
 
 #: ../applets/maintained/calendar/calendar.desktop.in.h:2
 msgid "Watch appointments on your dock"
@@ -732,19 +737,19 @@ msgstr ""
 
 #: ../applets/maintained/calendar/calendarlogin.py:48
 msgid "Online Calendar"
-msgstr ""
+msgstr "Çevrimiçi Takvim"
 
 #: ../applets/maintained/calendar/calendarlogin.py:53
 msgid "Calendar Username"
-msgstr ""
+msgstr "Takvim Kullanıcı Adı"
 
 #: ../applets/maintained/calendar/calendarlogin.py:61
 msgid "Calendar Password"
-msgstr ""
+msgstr "Takvim Parolası"
 
 #: ../applets/maintained/calendar/calendarlogin.py:71
 msgid "Save Password"
-msgstr ""
+msgstr "Parolayı Kaydet"
 
 #: ../applets/maintained/calendar/calendarlogin.py:89
 msgid ""
@@ -756,7 +761,7 @@ msgstr ""
 
 #: ../applets/maintained/calendar/calendarprefs.py:46
 msgid "Classic LCD"
-msgstr ""
+msgstr "Klasik LCD"
 
 #: ../applets/maintained/calendar/calendarprefs.py:47
 msgid "Indy Glow LCD"
@@ -772,61 +777,61 @@ msgstr ""
 
 #: ../applets/maintained/calendar/calendarprefs.py:50
 msgid "Green LED"
-msgstr ""
+msgstr "Yeşil LEd"
 
 #: ../applets/maintained/calendar/calendarprefs.py:51
 msgid "Red LED"
-msgstr ""
+msgstr "Kırmızı LED"
 
 #: ../applets/maintained/calendar/calendarprefs.py:52
 msgid "Blue LED"
-msgstr ""
+msgstr "Mavi LED"
 
 #: ../applets/maintained/calendar/calendarprefs.py:53
 msgid "Plain White"
-msgstr ""
+msgstr "Düz Beyaz"
 
 #: ../applets/maintained/calendar/calendarprefs.py:54
 msgid "Plain Black"
-msgstr ""
+msgstr "Düz Siyah"
 
 #: ../applets/maintained/calendar/calendarprefs.py:57
 msgid "Red"
-msgstr ""
+msgstr "Kırmızı"
 
 #: ../applets/maintained/calendar/calendarprefs.py:58
 msgid "Green"
-msgstr ""
+msgstr "Yeşil"
 
 #: ../applets/maintained/calendar/calendarprefs.py:59
 msgid "Blue"
-msgstr ""
+msgstr "Mavi"
 
 #: ../applets/maintained/calendar/calendarprefs.py:60
 msgid "Gray"
-msgstr ""
+msgstr "Gri"
 
 #: ../applets/maintained/calendar/calendarprefs.py:61
 msgid "Black"
-msgstr ""
+msgstr "Siyah"
 
 #: ../applets/maintained/calendar/calendarprefs.py:84
 msgid "Twelve Hour Clock"
-msgstr ""
+msgstr "On İki Saat Saat"
 
 #: ../applets/maintained/calendar/calendarprefs.py:104
 msgid "Clock Appearance"
-msgstr ""
+msgstr "Saat Görünümü"
 
 #: ../applets/maintained/calendar/calendarprefs.py:114
 msgid "Calendar Appearance"
-msgstr ""
+msgstr "Takvim Görünümü"
 
 #: ../applets/maintained/calendar/calendarprefs.py:121
 #: ../applets/maintained/dialect/dialect.ui.h:82
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:32
 msgid "None"
-msgstr ""
+msgstr "Hiçbiri"
 
 #: ../applets/maintained/calendar/calendarprefs.py:122
 msgid "Evolution"
@@ -834,7 +839,7 @@ msgstr ""
 
 #: ../applets/maintained/calendar/calendarprefs.py:123
 msgid "Google Calendar"
-msgstr ""
+msgstr "Google Takvim"
 
 #: ../applets/maintained/calendar/calendarprefs.py:124
 msgid "Outlook Web Access"
@@ -846,14 +851,14 @@ msgstr ""
 
 #: ../applets/maintained/calendar/calendarprefs.py:150
 msgid "Calendar URL"
-msgstr ""
+msgstr "Takvim URL"
 
 #. default title/tooltip to show on startup.
 #: ../applets/maintained/calendar/clockcal.py:51
 #: ../applets/maintained/calendar/clockcal.py:491
 #: ../applets/maintained/digital-clock/digital-clock.vala:119
 msgid "Calendar"
-msgstr ""
+msgstr "Takvim"
 
 #: ../applets/maintained/calendar/clockcal.py:218
 msgid ""
@@ -869,7 +874,7 @@ msgstr ""
 #: ../applets/maintained/calendar/clockcal.py:501
 #: ../applets/maintained/weather/forecast.py:169
 msgid "Today"
-msgstr ""
+msgstr "Bugün"
 
 #. print "Login error: ", sys.exc_info()[0], sys.exc_info()[1]
 #: ../applets/maintained/calendar/clockcal.py:549
@@ -921,7 +926,7 @@ msgstr ""
 
 #. Initialise notifications
 #: ../applets/maintained/comics/comics.desktop.in.h:1
-#: ../applets/maintained/comics/comics.py:181
+#: ../applets/maintained/comics/comics.py:179
 #: ../applets/maintained/comics/main.py:294
 #: ../applets/maintained/comics/main.py:300
 msgid "Comics!"
@@ -947,14 +952,17 @@ msgstr ""
 #: ../applets/maintained/comics/comics_manage.py:125
 #: ../applets/maintained/feeds/feeds.py:388
 msgid "Error"
-msgstr ""
+msgstr "Hata"
 
-#: ../applets/maintained/comics/comics.py:156
-#: ../applets/maintained/comics/ui/main.ui.h:1
+#: ../applets/maintained/comics/comics.py:155
 msgid "Comics"
 msgstr ""
 
-#: ../applets/maintained/comics/comics.py:217
+#: ../applets/maintained/comics/comics.py:159
+msgid "Manage Comics"
+msgstr ""
+
+#: ../applets/maintained/comics/comics.py:211
 #: ../applets/maintained/comics/main.py:192
 #, python-format
 msgid "There is a new strip of %s!"
@@ -962,7 +970,7 @@ msgstr ""
 
 #: ../applets/maintained/comics/comics_view.py:164
 msgid "%A %d %B"
-msgstr ""
+msgstr "%A %d %B"
 
 #: ../applets/maintained/comics/comics_view.py:532
 #, python-format
@@ -991,7 +999,7 @@ msgstr ""
 
 #: ../applets/maintained/comics/ui/add.ui.h:6
 msgid "Select Image"
-msgstr ""
+msgstr "Resim Seç"
 
 #: ../applets/maintained/comics/ui/add.ui.h:7
 msgid "The guide found more than one image. Please select which one to use."
@@ -1007,7 +1015,6 @@ msgid ""
 "Press \"next\" to proceed."
 msgstr ""
 
-#: ../applets/maintained/comics/ui/main.ui.h:2
 #: ../applets/maintained/comics/ui/manage.ui.h:1
 msgid "Manage comics"
 msgstr ""
@@ -1018,16 +1025,16 @@ msgstr ""
 
 #: ../applets/maintained/comics/ui/view.ui.h:1
 msgid "Show link"
-msgstr ""
+msgstr "Bağlantıyı göster"
 
 #: ../applets/maintained/comics/ui/view.ui.h:2
 msgid "Size"
-msgstr ""
+msgstr "Boyut"
 
 #: ../applets/maintained/comics/main.py:152
 #, python-format
 msgid "Unknown command sent: %s"
-msgstr ""
+msgstr "Bilinmeyen komut gönderildi: %s"
 
 #: ../applets/maintained/cpufreq/awn-applet-cpufreq.schema-ini.in.h:1
 msgid "Index of processor."
@@ -1051,7 +1058,7 @@ msgstr ""
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:1
 msgid " 0.9)."
-msgstr ""
+msgstr " 0.9)."
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:2
 msgid " none)."
@@ -1076,7 +1083,7 @@ msgstr ""
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:7
 msgid "User selected variants."
-msgstr ""
+msgstr "Kullanıcı seçimli değişkenler."
 
 #: ../applets/maintained/dialect/dialect.desktop.in.h:1
 msgid " Dialect Applet"
@@ -1221,7 +1228,7 @@ msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:78
 msgid "Menu"
-msgstr ""
+msgstr "Menü"
 
 #: ../applets/maintained/dialect/dialect.ui.h:79
 #: ../applets/maintained/file-browser-launcher/prefs.py:393
@@ -1230,7 +1237,7 @@ msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:80
 msgid "Mouse Actions"
-msgstr ""
+msgstr "Fare Eylemleri"
 
 #: ../applets/maintained/dialect/dialect.ui.h:81
 msgid "Next Layout"
@@ -1246,7 +1253,7 @@ msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:85
 msgid "System List"
-msgstr ""
+msgstr "Sistem Listesi"
 
 #: ../applets/maintained/dialect/dialect.ui.h:86
 msgid ""
@@ -1538,7 +1545,7 @@ msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:206
 msgid "User List"
-msgstr ""
+msgstr "Kullanıcı Listesi"
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:1
 msgid "Command to execute when a calendar day is double-clicked."
@@ -1570,11 +1577,11 @@ msgstr ""
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:1
 msgid "12 hour format"
-msgstr ""
+msgstr "12 saat biçimi"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:2
 msgid "24 hour format"
-msgstr ""
+msgstr "24 saat biçimi"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:3
 msgid "<b>Clock Format</b>"
@@ -1582,11 +1589,11 @@ msgstr ""
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:5
 msgid "Appearance"
-msgstr ""
+msgstr "Görünüm"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:6
 msgid "Commands"
-msgstr ""
+msgstr "Komutlar"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:7
 msgid "Date below time"
@@ -1610,7 +1617,7 @@ msgstr ""
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:12
 msgid "Use default Awn colors"
-msgstr ""
+msgstr "Öntanımlı Awn renklerini kullan"
 
 #: ../applets/maintained/digital-clock/digital-clock.desktop.in.in.h:1
 msgid "A clock and calendar in one."
@@ -1619,7 +1626,7 @@ msgstr ""
 #: ../applets/maintained/digital-clock/digital-clock.desktop.in.in.h:2
 #: ../applets/maintained/digital-clock/digital-clock.vala:57
 msgid "Digital Clock"
-msgstr ""
+msgstr "Dijital Saat"
 
 #. "Copy Time" menu item
 #: ../applets/maintained/digital-clock/digital-clock.vala:335
@@ -1659,7 +1666,7 @@ msgstr ""
 
 #: ../applets/maintained/feeds/classes.py:328
 msgid "Google"
-msgstr ""
+msgstr "Google"
 
 #: ../applets/maintained/feeds/classes.py:488
 #: ../applets/maintained/feeds/prefs.py:516
@@ -1668,7 +1675,7 @@ msgstr ""
 
 #: ../applets/maintained/feeds/classes.py:533
 msgid "Google Wave"
-msgstr ""
+msgstr "Google Wave"
 
 #: ../applets/maintained/feeds/classes.py:619
 msgid "Reddit Inbox"
@@ -1687,7 +1694,7 @@ msgstr ""
 #: ../applets/maintained/feeds/classes.py:765
 #: ../applets/maintained/feeds/prefs.py:410
 msgid "Twitter"
-msgstr ""
+msgstr "Twitter"
 
 #: ../applets/maintained/feeds/classes.py:892
 msgid "Untitled"
@@ -1835,17 +1842,18 @@ msgstr ""
 
 #: ../applets/maintained/feeds/prefs.py:295
 msgid "Awn Feeds Applet Items"
-msgstr ""
+msgstr "Awn besleme Uygulamacığı Öğeleri"
 
 #. Source: label and radio buttons
 #: ../applets/maintained/feeds/prefs.py:345
 msgid "Source:"
-msgstr ""
+msgstr "Kaynak:"
 
 #: ../applets/maintained/feeds/prefs.py:355
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:594
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:598
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:151
 msgid "Search"
-msgstr ""
+msgstr "Ara"
 
 #: ../applets/maintained/feeds/prefs.py:358
 msgid "You must sign in to a Google service to search for feeds."
@@ -1853,7 +1861,7 @@ msgstr ""
 
 #: ../applets/maintained/feeds/prefs.py:367
 msgid "RSS/Atom"
-msgstr ""
+msgstr "RSS/Atom"
 
 #: ../applets/maintained/feeds/prefs.py:412
 msgid "Timeline"
@@ -1861,7 +1869,7 @@ msgstr ""
 
 #: ../applets/maintained/feeds/prefs.py:417
 msgid "Replies"
-msgstr ""
+msgstr "Yanıtlar"
 
 #. "Search for" label and entry
 #: ../applets/maintained/feeds/prefs.py:446
@@ -1872,23 +1880,23 @@ msgstr ""
 #: ../applets/maintained/feeds/prefs.py:460
 #: ../applets/maintained/webapplet/applet.c:276
 msgid "URL:"
-msgstr ""
+msgstr "URL:"
 
 #. Username: label and entry
 #: ../applets/maintained/feeds/prefs.py:474
-#: ../applets/maintained/mail/mail.py:393
-#: ../applets/maintained/mail/mail.py:630
-#: ../applets/maintained/mail/mail.py:758
-#: ../applets/maintained/mail/mail.py:851
+#: ../applets/maintained/mail/mail.py:394
+#: ../applets/maintained/mail/mail.py:642
+#: ../applets/maintained/mail/mail.py:772
+#: ../applets/maintained/mail/mail.py:865
 msgid "Username:"
 msgstr "Kullanıcı Adı:"
 
 #. Password: label and entry
 #: ../applets/maintained/feeds/prefs.py:488
-#: ../applets/maintained/mail/mail.py:397
-#: ../applets/maintained/mail/mail.py:633
-#: ../applets/maintained/mail/mail.py:761
-#: ../applets/maintained/mail/mail.py:854
+#: ../applets/maintained/mail/mail.py:398
+#: ../applets/maintained/mail/mail.py:645
+#: ../applets/maintained/mail/mail.py:775
+#: ../applets/maintained/mail/mail.py:868
 msgid "Password:"
 msgstr "Parola:"
 
@@ -1899,7 +1907,7 @@ msgstr ""
 #. If signed in to Google Reader
 #: ../applets/maintained/feeds/prefs.py:553
 msgid "_Search"
-msgstr ""
+msgstr "_Ara"
 
 #: ../applets/maintained/feeds/prefs.py:760
 msgid ""
@@ -1917,7 +1925,7 @@ msgstr ""
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.desktop.in.h:2
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:63
 msgid "File Browser Launcher"
-msgstr ""
+msgstr "Dosya Tarayıcı Başlatıcısı"
 
 #: ../applets/maintained/file-browser-launcher/about.py:42
 msgid "A customizable launcher for browsing your files."
@@ -1983,88 +1991,88 @@ msgstr ""
 msgid "A launcher for your file manager"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:346
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:347
 msgid "Home Folder"
-msgstr ""
+msgstr "Ev Dizini"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:350
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:351
 #: ../applets/maintained/file-browser-launcher/prefs.py:223
 msgid "Filesystem"
-msgstr ""
+msgstr "Dosya Sistemi"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:473
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:474
 msgid "Connect to Server..."
-msgstr ""
+msgstr "Sunucuya Bağlan..."
 
 #. Documents
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:524
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:528
 msgid "Documents"
-msgstr ""
+msgstr "Belgeler"
 
 #. Downloads
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:528
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:532
 msgid "Downloads"
-msgstr ""
+msgstr "İndirilenler"
 
 #. Music
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:532
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:536
 msgid "Music"
-msgstr ""
+msgstr "Müzik"
 
 #. Pictures
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:536
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:540
 #: ../applets/maintained/slickswitcher/prefs.py:347
 msgid "Pictures"
 msgstr ""
 
 #. Public
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:540
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:544
 msgid "Public"
 msgstr ""
 
 #. Templates
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:544
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:548
 msgid "Templates"
 msgstr ""
 
 #. Videos
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:548
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:552
 msgid "Videos"
-msgstr ""
+msgstr "Videolar"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:597
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:601
 msgid "CD/DVD Burner"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:600
-msgid "Fonts"
-msgstr ""
-
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:604
+msgid "Fonts"
+msgstr "Yazı Tipleri"
+
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:608
 #: ../applets/maintained/file-browser-launcher/prefs.py:289
 #: ../applets/maintained/file-browser-launcher/prefs.py:364
 msgid "Folder"
-msgstr ""
-
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:709
-msgid "DVD Drive"
-msgstr ""
+msgstr "Dizin"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:713
-msgid "CD Drive"
-msgstr ""
+msgid "DVD Drive"
+msgstr "DVD Sürücü"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1017
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:717
+msgid "CD Drive"
+msgstr "CD Sürücü"
+
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1020
 msgid "Eject"
-msgstr ""
+msgstr "Çıkart"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:44
 msgid "File Browser Launcher Preferences"
-msgstr ""
+msgstr "Dosya Tarayıcı Başlatıcı Tercihleri"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:93
 msgid "File Browser"
-msgstr ""
+msgstr "Dosya Tarayıcı"
 
 #. xdg-open (aka system default)
 #: ../applets/maintained/file-browser-launcher/prefs.py:103
@@ -2074,7 +2082,7 @@ msgstr ""
 #. Last option: custom with an entry for the app name
 #: ../applets/maintained/file-browser-launcher/prefs.py:127
 msgid "Other"
-msgstr ""
+msgstr "Diğer"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:163
 msgid "One icon with dialog"
@@ -2086,11 +2094,11 @@ msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:175
 msgid "Multiple icons"
-msgstr ""
+msgstr "Çoklu simgeler"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:182
 msgid "Focus text entry"
-msgstr ""
+msgstr "Metin girişine odaklan"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:191
 msgid "Open place when clicked"
@@ -2099,11 +2107,11 @@ msgstr ""
 #. Show all places
 #: ../applets/maintained/file-browser-launcher/prefs.py:211
 msgid "Show all places"
-msgstr ""
+msgstr "Tüm yerleri göster"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:223
 msgid "Home folder"
-msgstr ""
+msgstr "Ev dizini"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:224
 msgid "Mounted local drives"
@@ -2111,15 +2119,15 @@ msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:224
 msgid "Mounted network drives"
-msgstr ""
+msgstr "Bağlı ağ sürücüleri"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:225
 msgid "Connect to server"
-msgstr ""
+msgstr "Sunucuya bağlan"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:225
 msgid "Bookmarks"
-msgstr ""
+msgstr "Yer imleri"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:264
 #: ../applets/maintained/file-browser-launcher/prefs.py:339
@@ -2129,16 +2137,16 @@ msgstr ""
 #: ../applets/maintained/file-browser-launcher/prefs.py:264
 #: ../applets/maintained/file-browser-launcher/prefs.py:339
 msgid "Open the folder"
-msgstr ""
+msgstr "Dizini aç"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:265
 #: ../applets/maintained/file-browser-launcher/prefs.py:340
 msgid "Nothing"
-msgstr ""
+msgstr "Hiçbir şey"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:540
 msgid "Choose a folder"
-msgstr ""
+msgstr "Bir dizin seçin"
 
 #: ../applets/maintained/garbage/applet.vala:57
 #: ../applets/maintained/garbage/garbage.desktop.in.in.h:2
@@ -2161,13 +2169,14 @@ msgstr ""
 
 #: ../applets/maintained/garbage/applet.vala:209
 msgid "_Empty Trash"
-msgstr ""
+msgstr "_Çöpü Boşalt"
 
 #: ../applets/maintained/garbage/applet.vala:235
 #, c-format
 msgid ""
 "Are you sure you want to empty your trash? It currently contains %u item(s)."
 msgstr ""
+"Çöpünüzü boşaltmak istediğinize emin misiniz? Şu anda %u öğe(ler) içeriyor."
 
 #: ../applets/maintained/garbage/applet.vala:344
 #, c-format
@@ -2191,7 +2200,7 @@ msgstr ""
 #: ../applets/maintained/garbage/prefs.vala:32
 #, c-format
 msgid "%s Preferences"
-msgstr ""
+msgstr "%s Tercihler"
 
 #: ../applets/maintained/garbage/prefs.vala:47
 msgid "Confirm when emptying the trash"
@@ -2204,7 +2213,7 @@ msgstr ""
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:1
 msgid "Applet theme."
-msgstr ""
+msgstr "Uygulamacık teması."
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:2
 msgid "For each sensor, whether to show it in main dialog or not."
@@ -2257,7 +2266,7 @@ msgstr ""
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:15
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:8
 msgid "large)."
-msgstr ""
+msgstr "geniş)."
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.desktop.in.h:1
 msgid "Applet to show the hw sensors readouts"
@@ -2272,40 +2281,44 @@ msgid "Applet to show the hardware sensors readouts"
 msgstr ""
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:83
+msgid "Warning from Hardware Sensors: No sensors found"
+msgstr ""
+
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:84
 msgid ""
-"Warning: No sensors found. Install one or more of ACPI, HDDTemp, LM-Sensors "
+"Install one or more of ACPI, HDDTemp, LM-Sensors, nvidia-settings or nvclock "
 "and restart the applet."
 msgstr ""
 
 #. == Dialog == #
 #. Create main applet dialog showing selected sensors.
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:117
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:118
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:14
 msgid "Sensors"
 msgstr ""
 
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:470
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:471
 msgid "Name"
-msgstr ""
+msgstr "Ad"
 
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:472
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:473
 msgid "Label"
-msgstr ""
+msgstr "Etiket"
 
 #. Set the cell "active" attribute to column_show - retrieve the state
 #. of the toggle button from that column in liststore
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:476
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:477
 msgid "In dialog"
 msgstr ""
 
 #. Add treeview-column to treeview
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:514
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:515
 msgid "Sensors displayed in icon"
 msgstr ""
 
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:532
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:533
 msgid "properties"
-msgstr ""
+msgstr "özellikler"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:1
 msgid "<b>Alarms</b>"
@@ -2318,11 +2331,11 @@ msgstr ""
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:4
 #: ../applets/maintained/mail/mail.ui.h:3
 msgid "<b>Update</b>"
-msgstr ""
+msgstr "<b>Güncelle</b>"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:5
 msgid "Add"
-msgstr ""
+msgstr "Ekle"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:6
 msgid "Enable high alarm"
@@ -2334,7 +2347,7 @@ msgstr ""
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:8
 msgid "Font size:"
-msgstr ""
+msgstr "Yazı tipi boyutu:"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:10
 msgid "Meter hand color:"
@@ -2342,7 +2355,7 @@ msgstr ""
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:11
 msgid "Remove"
-msgstr ""
+msgstr "Kaldır"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:12
 msgid "Sensor high value"
@@ -2358,21 +2371,21 @@ msgstr ""
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:16
 msgid "Temperature unit:"
-msgstr ""
+msgstr "Sıcaklık birimi:"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:17
 msgid "Theme:"
-msgstr ""
+msgstr "Tema:"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:18
 #: ../applets/maintained/mail/mail.ui.h:4
 msgid "Update interval:"
-msgstr ""
+msgstr "Güncelleme aralığı:"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:19
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:45
 msgid "seconds"
-msgstr ""
+msgstr "saniyeler"
 
 #. Unit long strings
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:34
@@ -2381,11 +2394,11 @@ msgstr ""
 
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:35
 msgid "Volt"
-msgstr ""
+msgstr "Volt"
 
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:35
 msgid "rpm"
-msgstr ""
+msgstr "rpm"
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:1
 msgid "Display any network errors"
@@ -2417,11 +2430,11 @@ msgstr ""
 
 #: ../applets/maintained/mail/mail.desktop.in.h:1
 msgid "Check Your Email from AWN"
-msgstr ""
+msgstr "AWN'den e-postalarınızı denetleyin"
 
 #: ../applets/maintained/mail/mail.desktop.in.h:2
 #: ../applets/maintained/mail/mail.py:134
-#: ../applets/maintained/mail/mail.py:903
+#: ../applets/maintained/mail/mail.py:917
 msgid "Mail Applet"
 msgstr "Posta Programcığı"
 
@@ -2446,126 +2459,138 @@ msgstr "Posta Programcığı (Giriş yapmak için Tıklayın)"
 msgid "Logging in as %s"
 msgstr "%s olarak giriş yap"
 
+#: ../applets/maintained/mail/mail.py:156
+msgid "Network error - Mail Applet"
+msgstr ""
+
 #: ../applets/maintained/mail/mail.py:165
 msgid "New Mail - Mail Applet"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:283
+#: ../applets/maintained/mail/mail.py:284
 msgid "Mail"
-msgstr ""
+msgstr "Posta"
 
-#: ../applets/maintained/mail/mail.py:319
+#: ../applets/maintained/mail/mail.py:320
 msgid "Open Web Mail"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:328
+#: ../applets/maintained/mail/mail.py:329
 msgid "Open Desktop Client"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:337
+#: ../applets/maintained/mail/mail.py:338
 msgid "Refresh"
-msgstr ""
+msgstr "Yenile"
 
-#: ../applets/maintained/mail/mail.py:346
+#: ../applets/maintained/mail/mail.py:347
 msgid "Log Out"
-msgstr ""
+msgstr "Oturumu Kapat"
 
-#: ../applets/maintained/mail/mail.py:376
+#: ../applets/maintained/mail/mail.py:377
 msgid "No unread messages"
-msgstr ""
+msgstr "Okunmamış ileti yok"
 
-#: ../applets/maintained/mail/mail.py:378
+#: ../applets/maintained/mail/mail.py:379
 msgid "No new messages"
-msgstr ""
+msgstr "Yeni ileti yok"
 
-#: ../applets/maintained/mail/mail.py:417
+#: ../applets/maintained/mail/mail.py:418
 msgid "Wrong username or password"
-msgstr ""
+msgstr "Yanlış kullanıcı adı ya da parola"
 
-#: ../applets/maintained/mail/mail.py:425
-#: ../applets/maintained/mail/mail.py:486
+#: ../applets/maintained/mail/mail.py:426
+#: ../applets/maintained/mail/mail.py:487
 msgid "Log In"
 msgstr "Giriş Yap"
 
-#: ../applets/maintained/mail/mail.py:462
+#: ../applets/maintained/mail/mail.py:463
 msgid "Type:"
-msgstr ""
+msgstr "Tür:"
 
-#: ../applets/maintained/mail/mail.py:467
+#: ../applets/maintained/mail/mail.py:468
 msgid "Backend"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:525
-#: ../applets/maintained/mail/mail.py:584
+#: ../applets/maintained/mail/mail.py:523
+#: ../applets/maintained/mail/mail.py:732
+msgid "Could not log in: No username"
+msgstr "Oturum açılamadı: Kullanıcı adı yok"
+
+#: ../applets/maintained/mail/mail.py:531
+#: ../applets/maintained/mail/mail.py:596
 msgid ""
-"There seem to be problems with our                     connection to your "
-"account. Your best bet is probably                     to log out and try "
-"again."
+"There seem to be problems with our connection to your account. Your best bet "
+"is probably to log out and try again."
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:547
-#: ../applets/maintained/mail/mail.py:606
+#: ../applets/maintained/mail/mail.py:553
+#: ../applets/maintained/mail/mail.py:618
 msgid "[No Subject]"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:569
+#: ../applets/maintained/mail/mail.py:575
 msgid "Google Apps"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:637
-msgid "Domain:"
+#: ../applets/maintained/mail/mail.py:587
+msgid "Could not log in: No username or domain"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:659
+#: ../applets/maintained/mail/mail.py:649
+msgid "Domain:"
+msgstr "Alan adı:"
+
+#: ../applets/maintained/mail/mail.py:671
 msgid "Unix Spool"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:681
+#: ../applets/maintained/mail/mail.py:693
 msgid "Spool Path:"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:714
-#: ../applets/maintained/mail/mail.py:716
+#: ../applets/maintained/mail/mail.py:726
+#: ../applets/maintained/mail/mail.py:728
 msgid "Could not log in: "
-msgstr ""
+msgstr "Oturum açılamadı: "
 
-#: ../applets/maintained/mail/mail.py:723
+#: ../applets/maintained/mail/mail.py:737
 msgid "Could not log in: Username or password incorrect"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:765
-#: ../applets/maintained/mail/mail.py:858
+#: ../applets/maintained/mail/mail.py:779
+#: ../applets/maintained/mail/mail.py:872
 msgid "Server:"
 msgstr "Sunucu:"
 
-#: ../applets/maintained/mail/mail.py:768
-#: ../applets/maintained/mail/mail.py:861
+#: ../applets/maintained/mail/mail.py:782
+#: ../applets/maintained/mail/mail.py:875
 msgid "Use SSL encryption"
 msgstr "SSL şifreleme kullan"
 
-#: ../applets/maintained/mail/mail.py:804
+#: ../applets/maintained/mail/mail.py:818
 msgid "Could not log in"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:810
+#: ../applets/maintained/mail/mail.py:824
 msgid "Folder does not exst"
-msgstr ""
+msgstr "Dizin yok"
 
-#: ../applets/maintained/mail/mail.py:864
+#: ../applets/maintained/mail/mail.py:878
 msgid "Get messages from only one folder"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:871
+#: ../applets/maintained/mail/mail.py:885
 msgid "Folder:"
-msgstr ""
+msgstr "Dizin:"
 
-#: ../applets/maintained/mail/mail.py:906
+#: ../applets/maintained/mail/mail.py:920
 msgid "An applet to check one's email"
 msgstr ""
 
 #: ../applets/maintained/mail/mail.ui.h:2
 msgid "<b>Mail</b>"
-msgstr ""
+msgstr "<b>Posta</b>"
 
 #: ../applets/maintained/mail/mail.ui.h:5
 msgid "_Alert on network errors"
@@ -2573,7 +2598,7 @@ msgstr ""
 
 #: ../applets/maintained/mail/mail.ui.h:6
 msgid "_Email client:"
-msgstr ""
+msgstr "_E-posta istemci:"
 
 #: ../applets/maintained/mail/mail.ui.h:7
 msgid "_Hide applet if no new messages"
@@ -2581,7 +2606,7 @@ msgstr ""
 
 #: ../applets/maintained/mail/mail.ui.h:9
 msgid "minutes"
-msgstr ""
+msgstr "dakikalar"
 
 #: ../applets/maintained/media-control/awn-applet-media-control.schema-ini.in.h:1
 msgid "Close the docklet when mouse moves out from it."
@@ -2613,11 +2638,11 @@ msgstr ""
 
 #: ../applets/maintained/media-control/media_control.py:612
 msgid "Title - Artist"
-msgstr ""
+msgstr "Başlık - Sanatçı"
 
 #: ../applets/maintained/media-control/media_control.py:612
 msgid "Artist - Title"
-msgstr ""
+msgstr "Sanatçı - Başlık"
 
 #: ../applets/maintained/media-control/media-control.ui.h:2
 msgid "Close docklet when mouse leaves it"
@@ -2649,7 +2674,7 @@ msgstr ""
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:44
 #: ../applets/maintained/weather/weather.ui.h:19
 msgid "pixels"
-msgstr ""
+msgstr "benekler"
 
 #: ../applets/maintained/media-icons/media-icon-next.desktop.in.h:1
 #: ../applets/maintained/media-icons/media-icons.py:68
@@ -2683,15 +2708,15 @@ msgstr ""
 
 #: ../applets/maintained/media-icons/media-icons.py:57
 msgid "Next"
-msgstr ""
+msgstr "İleri"
 
 #: ../applets/maintained/media-icons/media-icons.py:58
 msgid "Previous"
-msgstr ""
+msgstr "Geri"
 
 #: ../applets/maintained/media-icons/media-icons.py:59
 msgid "Play/Pause"
-msgstr ""
+msgstr "Çal/Duraklat"
 
 #: ../applets/maintained/media-player/awn-applet-media-player.schema-ini.in.h:1
 msgid "Audio sink to use."
@@ -2711,11 +2736,11 @@ msgstr ""
 
 #: ../applets/maintained/media-player/awn-applet-media-player.schema-ini.in.h:5
 msgid "Width of the video window."
-msgstr ""
+msgstr "Video penceresinin genişliği."
 
 #: ../applets/maintained/media-player/media-player.desktop.in.h:1
 msgid "Media Player"
-msgstr ""
+msgstr "Ortam Oynatıcısı"
 
 #: ../applets/maintained/media-player/media-player.desktop.in.h:2
 msgid "Plays any media files you drop on the applet"
@@ -2723,15 +2748,15 @@ msgstr ""
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:1
 msgid "<b>GStreamer properties</b>"
-msgstr ""
+msgstr "<b>GStreamerözellikleri</b>"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:2
 msgid "<b>Video size</b>"
-msgstr ""
+msgstr "<b>Video boyutu</b>"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:3
 msgid "Media Player Preferences"
-msgstr ""
+msgstr "Ortam Oynatıcısı Tercihleri"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:4
 msgid "_Audiosink:"
@@ -2739,7 +2764,7 @@ msgstr ""
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:5
 msgid "_Height:"
-msgstr ""
+msgstr "_Yükseklik:"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:6
 msgid "_Videosink:"
@@ -2747,7 +2772,7 @@ msgstr ""
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:7
 msgid "_Width:"
-msgstr ""
+msgstr "_Genişlik:"
 
 #: ../applets/maintained/mount/awn-applet-mount.schema-ini.in.h:1
 msgid "Command to execute after mounting a mountpoint."
@@ -2763,7 +2788,7 @@ msgstr ""
 
 #: ../applets/maintained/mount/mount.desktop.in.h:2
 msgid "Mount Applet"
-msgstr ""
+msgstr "Bağlı Uygulamacık"
 
 #: ../applets/maintained/mount/mount.ui.h:2
 #, no-c-format
@@ -2821,23 +2846,23 @@ msgstr ""
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:2
 #, no-c-format
 msgid "%"
-msgstr ""
+msgstr "%"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:3
 msgid "<b>Background Color</b>"
-msgstr ""
+msgstr "<b>Artalan Rengi</b>"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:4
 msgid "<b>Border Color</b>"
-msgstr ""
+msgstr "<b>Kenarlık Rengi</b>"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:6
 msgid "Automatic"
-msgstr ""
+msgstr "Otomatik"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:7
 msgid "Custom:"
-msgstr ""
+msgstr "Özel:"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:8
 msgid "Extra _offset:"
@@ -2845,11 +2870,11 @@ msgstr ""
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:9
 msgid "Icon _size:"
-msgstr ""
+msgstr "Simge _boyutu:"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:10
 msgid "Notification Area Preferences"
-msgstr ""
+msgstr "Bildirim Alanı Tercihleri"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:11
 msgid "_Number of icon rows:"
@@ -2861,7 +2886,7 @@ msgstr ""
 
 #: ../applets/maintained/notification-area/notification-area.desktop.in.in.h:2
 msgid "Notification Area"
-msgstr ""
+msgstr "Bildirim Alanı"
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:1
 msgid "Background colour in the form (Hex) rrggbbaa"
@@ -2935,7 +2960,7 @@ msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:13
 msgid "Use bold text."
-msgstr ""
+msgstr "Koyu metin kullan."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:14
 msgid "Whether to attempt to kill any running notification-daemons."
@@ -2949,7 +2974,7 @@ msgstr ""
 msgid "Whether to the use configured awn theme color values for xxxx."
 msgstr ""
 
-#: ../applets/maintained/notification-daemon/daemon.c:1422
+#: ../applets/maintained/notification-daemon/daemon.c:1421
 #, c-format
 msgid "%u is not a valid notification ID"
 msgstr ""
@@ -3048,11 +3073,11 @@ msgstr ""
 
 #: ../applets/maintained/places/places.desktop.in.in.h:1
 msgid "Launch your folder bookmarks"
-msgstr ""
+msgstr "Dizin yer imlerinizi başlatın"
 
 #: ../applets/maintained/python-test/python-test.desktop.in.h:1
 msgid "A simple applet to test python support"
-msgstr ""
+msgstr "Python desteğini test etmek için basit bir uygulamacık"
 
 #: ../applets/maintained/python-test/python-test.desktop.in.h:2
 msgid "Test Python Applet"
@@ -3080,11 +3105,11 @@ msgstr ""
 
 #: ../applets/maintained/quit/quit-lock-screen.desktop.in.h:2
 msgid "Protect your computer from unauthorized use"
-msgstr ""
+msgstr "Bilgisayarınızı yetkisiz kullanımdan koruyun"
 
 #: ../applets/maintained/quit/quit-log-out.desktop.in.h:1
 msgid "Log Out..."
-msgstr ""
+msgstr "Oturumu Kapat..."
 
 #: ../applets/maintained/quit/quit-log-out.desktop.in.h:2
 msgid "Log out of this session to log in as a different user"
@@ -3092,11 +3117,11 @@ msgstr ""
 
 #: ../applets/maintained/quit/quit-shut-down.desktop.in.h:1
 msgid "Shut Down..."
-msgstr ""
+msgstr "Kapat..."
 
 #: ../applets/maintained/quit/quit-shut-down.desktop.in.h:2
 msgid "Shut down the system"
-msgstr ""
+msgstr "Sistemi kapat"
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:1
 msgid " The color (RGBA) applet border."
@@ -3108,7 +3133,7 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:3
 msgid " gdk."
-msgstr ""
+msgstr " gdk."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:4
 msgid "0... centre  1 NW    2 NE   3 SE  4 SW\t"
@@ -3116,7 +3141,7 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:5
 msgid "1"
-msgstr ""
+msgstr "1"
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:6
 msgid "Alpha to apply to icon overlayed on active window."
@@ -3222,39 +3247,39 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:9
 msgid "<b>Windows</b>"
-msgstr ""
+msgstr "<b>Pencereler</b>"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:10
 msgid "Active window:"
-msgstr ""
+msgstr "Etkin pencereler:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:11
 msgid "Active workspace"
-msgstr ""
+msgstr "Etkin çalışma alanı"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:12
 msgid "Active workspace:"
-msgstr ""
+msgstr "Etkin çalışma alanı:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:13
 msgid "All window"
-msgstr ""
+msgstr "Tüm pencere"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:14
 msgid "All windows"
-msgstr ""
+msgstr "Tüm pencereler"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:15
 msgid "B_order color:"
-msgstr ""
+msgstr "K_enar rengi:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:17
 msgid "Border _size:"
-msgstr ""
+msgstr "Kenar _boyutu:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:18
 msgid "C_ustom color:"
-msgstr ""
+msgstr "Ö_zel renk:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:19
 msgid "Cache expiration:"
@@ -3262,11 +3287,11 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:20
 msgid "Center"
-msgstr ""
+msgstr "Merkez"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:21
 msgid "Co_lumns:"
-msgstr ""
+msgstr "S_ütunlar:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:22
 msgid "Icon _display:"
@@ -3282,15 +3307,15 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:25
 msgid "Inactive windows"
-msgstr ""
+msgstr "Etkin olmayan pencereler"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:26
 msgid "Inactive workspace:"
-msgstr ""
+msgstr "Etkin olmayan çalışma alanı"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:27
 msgid "Inactive workspaces"
-msgstr ""
+msgstr "Etkin olmayan çalışma alanları"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:28
 msgid "Look"
@@ -3298,19 +3323,19 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:29
 msgid "Lower left"
-msgstr ""
+msgstr "Aşağı sol"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:30
 msgid "Lower right"
-msgstr ""
+msgstr "Aşağı sağ"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:31
 msgid "Never"
-msgstr ""
+msgstr "Asla"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:33
 msgid "Only active window"
-msgstr ""
+msgstr "Sadece etkin pencere"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:34
 msgid "Render update:"
@@ -3330,15 +3355,15 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:38
 msgid "Upper left"
-msgstr ""
+msgstr "Yukarı sol"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:39
 msgid "Upper right"
-msgstr ""
+msgstr "Yukarı sağ"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:40
 msgid "Use _desktop background"
-msgstr ""
+msgstr "Masaüstü _artalanını kullan"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:41
 msgid "_Applet size:"
@@ -3346,7 +3371,7 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:42
 msgid "_Rows:"
-msgstr ""
+msgstr "_Satırlar:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:43
 msgid "_Thumbnailing:"
@@ -3355,25 +3380,25 @@ msgstr ""
 #: ../applets/maintained/showdesktop/applet.vala:40
 #: ../applets/maintained/showdesktop/showdesktop.desktop.in.in.h:2
 msgid "Show Desktop"
-msgstr ""
+msgstr "Masaüstünü Göster"
 
 #. vim:ft=vala:et:ts=2 sts=2 sw=2:ai:cindent
 #: ../applets/maintained/showdesktop/applet.vala:78
 #: ../applets/maintained/showdesktop/showdesktop.desktop.in.in.h:1
 msgid "Hides your windows and shows your desktop."
-msgstr ""
+msgstr "Pencerelerinizi gizler ve masaüstünüzü gösterir."
 
 #: ../applets/maintained/showdesktop/applet.vala:93
 msgid "Show hidden windows"
-msgstr ""
+msgstr "Gizlenen pencereleri göster"
 
 #: ../applets/maintained/showdesktop/applet.vala:98
 msgid "Hide windows and show desktop"
-msgstr ""
+msgstr "Pencereleri gizle ve masaüstünü göster"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:1
 msgid "The background color of the dialog"
-msgstr ""
+msgstr "İletişim kutusunun artalanı"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:2
 msgid "The border color of a drawn window"
@@ -3381,7 +3406,7 @@ msgstr ""
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:3
 msgid "The border color of the dialog"
-msgstr ""
+msgstr "İletişim kutusunun kenar rengi"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:4
 msgid "The bottom part of the shiny gradient"
@@ -3409,7 +3434,7 @@ msgstr ""
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:10
 msgid "The icon's border color"
-msgstr ""
+msgstr "Simgenin kenar rengi"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:11
 msgid "The main color of a drawn window"
@@ -3455,12 +3480,12 @@ msgstr ""
 #. Border Colors
 #: ../applets/maintained/slickswitcher/prefs.py:94
 msgid "Border Colors"
-msgstr ""
+msgstr "Kenar Renkleri"
 
 #. Icon Border
 #: ../applets/maintained/slickswitcher/prefs.py:100
 msgid "Icon border:"
-msgstr ""
+msgstr "Simge kenarı:"
 
 #. Normal Border
 #: ../applets/maintained/slickswitcher/prefs.py:103
@@ -3475,39 +3500,39 @@ msgstr ""
 #. Window Colors
 #: ../applets/maintained/slickswitcher/prefs.py:109
 msgid "Window Colors"
-msgstr ""
+msgstr "Pencere Renkleri"
 
 #. Main Color
 #: ../applets/maintained/slickswitcher/prefs.py:115
 #: ../applets/maintained/slickswitcher/prefs.py:200
 msgid "Main color:"
-msgstr ""
+msgstr "Ana renk:"
 
 #. Border Color
 #: ../applets/maintained/slickswitcher/prefs.py:118
 #: ../applets/maintained/slickswitcher/prefs.py:137
 msgid "Border color:"
-msgstr ""
+msgstr "Kenar rengi:"
 
 #. Dialog Colors
 #: ../applets/maintained/slickswitcher/prefs.py:121
 msgid "Dialog colors"
-msgstr ""
+msgstr "İletişim kutusu renkleri"
 
 #. Use custom colors (CheckButton)
 #: ../applets/maintained/slickswitcher/prefs.py:127
 #: ../applets/maintained/slickswitcher/prefs.py:193
 msgid "Use custom colors"
-msgstr ""
+msgstr "Özel renkler kullan"
 
 #. Background Color
 #: ../applets/maintained/slickswitcher/prefs.py:134
 msgid "Background color:"
-msgstr ""
+msgstr "Artalan rengi:"
 
 #: ../applets/maintained/slickswitcher/prefs.py:183
 msgid "Colors"
-msgstr ""
+msgstr "Renkler"
 
 #. Other colors: text and shine
 #. Number Colors
@@ -3547,56 +3572,56 @@ msgstr ""
 
 #: ../applets/maintained/slickswitcher/prefs.py:254
 msgid "Other colors"
-msgstr ""
+msgstr "Diğer renkler"
 
 #. Width
 #: ../applets/maintained/slickswitcher/prefs.py:262
 msgid "Width:"
-msgstr ""
+msgstr "Genişlik:"
 
 #. Height
 #: ../applets/maintained/slickswitcher/prefs.py:279
 msgid "Height:"
-msgstr ""
+msgstr "Yükseklik"
 
 #: ../applets/maintained/slickswitcher/prefs.py:299
 msgid "Workspace Size"
-msgstr ""
+msgstr "Çalışma Alanı Boyutu"
 
 #. Mode
 #: ../applets/maintained/slickswitcher/prefs.py:315
 msgid "Mode:"
-msgstr ""
+msgstr "Kip:"
 
 #: ../applets/maintained/slickswitcher/prefs.py:318
 msgid "GNOME"
-msgstr ""
+msgstr "GNOME"
 
 #: ../applets/maintained/slickswitcher/prefs.py:319
 msgid "Compiz Wallpaper Plugin"
-msgstr ""
+msgstr "Compiz Duvar Kağıdı Eklentisi"
 
 #: ../applets/maintained/slickswitcher/prefs.py:320
 msgid "File"
-msgstr ""
+msgstr "Dosya"
 
 #. File
 #: ../applets/maintained/slickswitcher/prefs.py:339
 msgid "File:"
-msgstr ""
+msgstr "Dosya:"
 
 #: ../applets/maintained/slickswitcher/prefs.py:341
 msgid "Choose a Background Image"
-msgstr ""
+msgstr "Atalan Görüntüsünü Seç"
 
 #: ../applets/maintained/slickswitcher/prefs.py:367
-#: ../applets/maintained/to-do/prefs.py:444
+#: ../applets/maintained/to-do/prefs.py:445
 msgid "Background"
-msgstr ""
+msgstr "Artalan"
 
 #: ../applets/maintained/slickswitcher/prefs.py:379
 msgid "Advanced"
-msgstr ""
+msgstr "Gelişmiş"
 
 #: ../applets/maintained/slickswitcher/slickswitcher.desktop.in.h:1
 #: ../applets/maintained/slickswitcher/slickswitcher.py:281
@@ -3625,7 +3650,7 @@ msgstr ""
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:4
 msgid "List of icons"
-msgstr ""
+msgstr "Simge listesi"
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:5
 msgid "Render background."
@@ -3638,7 +3663,7 @@ msgstr ""
 
 #: ../applets/maintained/sysmon/sysmon.desktop.in.in.h:2
 msgid "System Monitor"
-msgstr ""
+msgstr "Sistem Gözlemcisi"
 
 #: ../applets/maintained/thinkhdaps/thinkhdaps.desktop.in.h:1
 msgid "Applet that shows the shock protection status of your disks"
@@ -3682,19 +3707,19 @@ msgstr ""
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:9
 msgid "Text color for high priority items"
-msgstr ""
+msgstr "Yüksek öncelikli öğelerin metin rengi"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:10
 msgid "Text color for low priority items"
-msgstr ""
+msgstr "Düşük öncelikli öğelerin metin rengi"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:11
 msgid "Text color for medium priority items"
-msgstr ""
+msgstr "Orta öncelikteki öğelerin metin rengi"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:12
 msgid "The color to use for the icon"
-msgstr ""
+msgstr "Simgeler için kullanılacak renk"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:13
 msgid "The custom width for the item entries"
@@ -3738,11 +3763,11 @@ msgstr ""
 
 #: ../applets/maintained/to-do/prefs.py:32
 msgid "Custom"
-msgstr ""
+msgstr "Özel"
 
 #: ../applets/maintained/to-do/prefs.py:32
 msgid "Current Theme"
-msgstr ""
+msgstr "Mevcut Tema"
 
 #: ../applets/maintained/to-do/prefs.py:32
 msgid "Butter"
@@ -3754,11 +3779,11 @@ msgstr ""
 
 #: ../applets/maintained/to-do/prefs.py:33
 msgid "Orange"
-msgstr ""
+msgstr "Turuncu"
 
 #: ../applets/maintained/to-do/prefs.py:33
 msgid "Sky Blue"
-msgstr ""
+msgstr "Gök Mavisi"
 
 #: ../applets/maintained/to-do/prefs.py:33
 msgid "Plum"
@@ -3766,7 +3791,7 @@ msgstr ""
 
 #: ../applets/maintained/to-do/prefs.py:33
 msgid "Chocolate"
-msgstr ""
+msgstr "Çikolata"
 
 #: ../applets/maintained/to-do/prefs.py:34
 msgid "Scarlet Red"
@@ -3774,11 +3799,11 @@ msgstr ""
 
 #: ../applets/maintained/to-do/prefs.py:34
 msgid "Aluminium 1"
-msgstr ""
+msgstr "Alüminyum 1"
 
 #: ../applets/maintained/to-do/prefs.py:34
 msgid "Aluminium 2"
-msgstr ""
+msgstr "Alüminyum 2"
 
 #: ../applets/maintained/to-do/prefs.py:37
 msgid "Number of Items"
@@ -3790,24 +3815,24 @@ msgstr ""
 
 #: ../applets/maintained/to-do/prefs.py:37
 msgid "Both"
-msgstr ""
+msgstr "Her ikisi de"
 
 #: ../applets/maintained/to-do/prefs.py:45
 msgid "To-Do List Preferences"
-msgstr ""
+msgstr "Yapılacaklar Listesi Seçenekleri"
 
 #: ../applets/maintained/to-do/prefs.py:61
 msgid "Priority"
-msgstr ""
+msgstr "Öncelik"
 
 #: ../applets/maintained/to-do/prefs.py:62
 msgid "Icon"
-msgstr ""
+msgstr "Simge"
 
 #. Label: Title (bold)
 #: ../applets/maintained/to-do/prefs.py:72
 msgid "Title"
-msgstr ""
+msgstr "Başlık"
 
 #. Label: Confirm when removing... (bold)
 #: ../applets/maintained/to-do/prefs.py:86
@@ -3817,17 +3842,17 @@ msgstr ""
 #. CheckButton: Items
 #: ../applets/maintained/to-do/prefs.py:95
 msgid "_Items"
-msgstr ""
+msgstr "_Öğeler"
 
 #. CheckButton: Categories
 #: ../applets/maintained/to-do/prefs.py:102
 msgid "C_ategories"
-msgstr ""
+msgstr "Sınıflar"
 
 #. Label: Width (bold)
 #: ../applets/maintained/to-do/prefs.py:109
 msgid "Width"
-msgstr ""
+msgstr "Genişlik"
 
 #. CheckButton: Use Custom Width
 #: ../applets/maintained/to-do/prefs.py:118
@@ -3842,27 +3867,27 @@ msgstr ""
 #. Label: Low Priority (bold)
 #: ../applets/maintained/to-do/prefs.py:173
 msgid "Low Priority"
-msgstr ""
+msgstr "Düşük Öncelik"
 
 #. Label: Medium Priority (bold)
 #: ../applets/maintained/to-do/prefs.py:186
 msgid "Medium Priority"
-msgstr ""
+msgstr "Orta Öncelik"
 
 #. Label: High Priority (bold)
 #: ../applets/maintained/to-do/prefs.py:199
 msgid "High Priority"
-msgstr ""
+msgstr "Yüksek Öncelik"
 
 #. Label: Icon Color (bold)
 #: ../applets/maintained/to-do/prefs.py:251
 msgid "Icon Color"
-msgstr ""
+msgstr "Simge Rengi"
 
 #. Label: Custom Colors (bold)
 #: ../applets/maintained/to-do/prefs.py:274
 msgid "Custom Colors"
-msgstr ""
+msgstr "Özel Renkler"
 
 #. Colors: Outer Border, Inner Border, Main Color, Text Color
 #: ../applets/maintained/to-do/prefs.py:283
@@ -3871,21 +3896,21 @@ msgstr ""
 
 #: ../applets/maintained/to-do/prefs.py:284
 msgid "Inner Border"
-msgstr ""
+msgstr "İç Kenarlık"
 
 #: ../applets/maintained/to-do/prefs.py:285
 msgid "Main"
-msgstr ""
+msgstr "Ana"
 
 #: ../applets/maintained/to-do/prefs.py:286
-#: ../applets/maintained/to-do/prefs.py:446
+#: ../applets/maintained/to-do/prefs.py:447
 msgid "Text"
-msgstr ""
+msgstr "Metin"
 
 #. Label: Icon Type (bold)
 #: ../applets/maintained/to-do/prefs.py:289
 msgid "Icon Type"
-msgstr ""
+msgstr "Simge Türü"
 
 #: ../applets/maintained/to-do/to-do.desktop.in.h:1
 msgid "Manage a simple To-Do list"
@@ -3893,103 +3918,137 @@ msgstr ""
 
 #: ../applets/maintained/to-do/to-do.desktop.in.h:2
 #: ../applets/maintained/to-do/to-do.py:68
-#: ../applets/maintained/to-do/to-do.py:216
-#: ../applets/maintained/to-do/to-do.py:268
-#: ../applets/maintained/to-do/to-do.py:906
+#: ../applets/maintained/to-do/to-do.py:217
+#: ../applets/maintained/to-do/to-do.py:269
+#: ../applets/maintained/to-do/to-do.py:907
 msgid "To-Do List"
-msgstr ""
+msgstr "Yapılacaklar Listesi"
 
-#: ../applets/maintained/to-do/to-do.py:219
+#: ../applets/maintained/to-do/to-do.py:220
 msgid "A simple To-Do List"
 msgstr ""
 
-#: ../applets/maintained/to-do/to-do.py:298
+#: ../applets/maintained/to-do/to-do.py:299
 msgid "Remove item"
-msgstr ""
+msgstr "Ögeyi kaldır"
 
-#: ../applets/maintained/to-do/to-do.py:380
+#: ../applets/maintained/to-do/to-do.py:381
 msgid "Remove category"
 msgstr ""
 
-#: ../applets/maintained/to-do/to-do.py:404
+#: ../applets/maintained/to-do/to-do.py:405
 msgid "View/Edit details"
-msgstr ""
+msgstr "Ayrıntılara Bak/Düzenle"
 
 #. Make the RadioButtons for each category
 #. First category: No category! (Uncategorized)
-#: ../applets/maintained/to-do/to-do.py:524
+#: ../applets/maintained/to-do/to-do.py:525
 msgid "_Uncategorized"
-msgstr ""
+msgstr "_Sınıflandırılmamış"
 
 #. First RadioButton - ( )Category
-#: ../applets/maintained/to-do/to-do.py:548
+#: ../applets/maintained/to-do/to-do.py:549
 msgid "_Category"
-msgstr ""
+msgstr "_Sınıf"
 
 #. Second RadioButton - (-)To-Do item
 #. TODO: better text than "To-Do item"?
-#: ../applets/maintained/to-do/to-do.py:555
+#: ../applets/maintained/to-do/to-do.py:556
 msgid "_To-Do item"
 msgstr ""
 
 #. Label: Priority:
-#: ../applets/maintained/to-do/to-do.py:640
+#: ../applets/maintained/to-do/to-do.py:641
 msgid "Priority: "
-msgstr ""
+msgstr "Öncelik: "
 
 #. Neutral, Low, Medium, and High priority RadioButtons
-#: ../applets/maintained/to-do/to-do.py:643
+#: ../applets/maintained/to-do/to-do.py:644
 msgid "_Neutral"
 msgstr ""
 
-#: ../applets/maintained/to-do/to-do.py:645
+#: ../applets/maintained/to-do/to-do.py:646
 msgid "_Low"
-msgstr ""
+msgstr "_Düşük"
 
-#: ../applets/maintained/to-do/to-do.py:647
+#: ../applets/maintained/to-do/to-do.py:648
 msgid "_Medium"
-msgstr ""
+msgstr "_Orta"
 
-#: ../applets/maintained/to-do/to-do.py:649
+#: ../applets/maintained/to-do/to-do.py:650
 msgid "_High"
-msgstr ""
+msgstr "_Yüksek"
 
 #. Label: Progress(%):
-#: ../applets/maintained/to-do/to-do.py:677
+#: ../applets/maintained/to-do/to-do.py:678
 msgid "Progress(%): "
 msgstr ""
 
 #. Make Label
-#: ../applets/maintained/to-do/to-do.py:1127
+#: ../applets/maintained/to-do/to-do.py:1130
 #, python-format
 msgid ""
 "Are you sure you want to remove the category \"%s?\"\n"
 "All of its items will be removed."
 msgstr ""
+"\"%s\" sınıfını kaldırmak istediğinize emin misiniz?\n"
+"Onun tüm öğeleri kaldırılacak."
 
 #. Make CheckButton
-#: ../applets/maintained/to-do/to-do.py:1131
-#: ../applets/maintained/to-do/to-do.py:1167
+#: ../applets/maintained/to-do/to-do.py:1134
+#: ../applets/maintained/to-do/to-do.py:1170
 msgid "Don't show this again."
-msgstr ""
+msgstr "Bunu tekrar gösterme."
 
 #. Make Label
-#: ../applets/maintained/to-do/to-do.py:1164
+#: ../applets/maintained/to-do/to-do.py:1167
 msgid "Are you sure you want to remove this item?"
-msgstr ""
+msgstr "Bu öğeyi kaldırmak istediğinize emin misiniz?"
 
 #. Reset the tooltip
-#: ../applets/maintained/to-do/to-do.py:1363
+#: ../applets/maintained/to-do/to-do.py:1366
 #, python-format
 msgid "% done"
 msgstr ""
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.desktop.in.h:1
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:31
 msgid "Control Tomboy with D-Bus"
 msgstr ""
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.desktop.in.h:2
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:30
 msgid "Tomboy Applet"
+msgstr "Tomboy Uygulamacığı"
+
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:108
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:130
+msgid "Select a tag:"
+msgstr "Bir etiket seç:"
+
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:114
+msgid "No tags were created yet"
+msgstr "Henüz bir etiket oluşturulmadı"
+
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:119
+msgid "Select a note:"
+msgstr "Bir not seç:"
+
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:149
+#, python-format
+msgid "Version: %s"
+msgstr "Sürüm: %s"
+
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:155
+msgid "New Note"
+msgstr "Yeni Not"
+
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:159
+msgid "New Tagged Note"
+msgstr ""
+
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:163
+msgid "View Tagged Note"
 msgstr ""
 
 #: ../applets/maintained/vala-test/vala-test.desktop.in.in.h:1
@@ -4002,7 +4061,7 @@ msgstr ""
 
 #: ../applets/maintained/volume-control/awn-applet-volume-control.schema-ini.in.h:1
 msgid "Name of the device."
-msgstr ""
+msgstr "Aygıtın adı."
 
 #: ../applets/maintained/volume-control/awn-applet-volume-control.schema-ini.in.h:2
 msgid "Name of the mixer track."
@@ -4010,27 +4069,27 @@ msgstr ""
 
 #: ../applets/maintained/volume-control/volume-control.desktop.in.h:1
 msgid "Control your computer's volume"
-msgstr ""
+msgstr "Bilgisayarınızın sesini denetleyin"
 
 #: ../applets/maintained/volume-control/volume-control.desktop.in.h:2
 msgid "Volume Control"
-msgstr ""
+msgstr "Ses Denetimi"
 
 #: ../applets/maintained/volume-control/volume-control.ui.h:1
 msgid "+"
-msgstr ""
+msgstr "+"
 
 #: ../applets/maintained/volume-control/volume-control.ui.h:2
 msgid "-"
-msgstr ""
+msgstr "-"
 
 #: ../applets/maintained/volume-control/volume-control.ui.h:3
 msgid "<b>Audio Options</b>"
-msgstr ""
+msgstr "<b>Ses Seçenekleri</b>"
 
 #: ../applets/maintained/volume-control/volume-control.ui.h:5
 msgid "_Device:"
-msgstr ""
+msgstr "_Aygıt:"
 
 #: ../applets/maintained/volume-control/volume-control.ui.h:6
 msgid "_Mixer track:"
@@ -4076,13 +4135,13 @@ msgstr ""
 
 #: ../applets/maintained/weather/forecast.py:171
 msgid "Tomorrow"
-msgstr ""
+msgstr "Yarın"
 
 #. Weather condition
 #: ../applets/maintained/weather/forecast.py:197
 #: ../applets/maintained/weather/weather.py:452
 msgid "DESCRIPTION"
-msgstr ""
+msgstr "BETİMLEME"
 
 #: ../applets/maintained/weather/forecast.py:249
 msgid "Weather data provided by weather.com"
@@ -4094,7 +4153,7 @@ msgstr ""
 
 #: ../applets/maintained/weather/weather.desktop.in.h:2
 msgid "Weather Applet"
-msgstr ""
+msgstr "Hava Durumu Uygulamacığı"
 
 #: ../applets/maintained/weather/weather.py:215
 msgid "Fetching conditions for"
@@ -4111,7 +4170,7 @@ msgstr ""
 
 #: ../applets/maintained/weather/weather.py:371
 msgid "Searching..."
-msgstr ""
+msgstr "Aranıyor..."
 
 #: ../applets/maintained/weather/weather.ui.h:4
 msgid "<b>Icon Display</b>"
@@ -4124,7 +4183,7 @@ msgstr ""
 
 #: ../applets/maintained/weather/weather.ui.h:6
 msgid "Current _location:"
-msgstr ""
+msgstr "Mevcut _konum:"
 
 #: ../applets/maintained/weather/weather.ui.h:7
 msgid ""
@@ -4138,7 +4197,7 @@ msgstr ""
 
 #: ../applets/maintained/weather/weather.ui.h:9
 msgid "Large"
-msgstr ""
+msgstr "Geniş"
 
 #: ../applets/maintained/weather/weather.ui.h:10
 msgid "Maximum _map width:"
@@ -4146,7 +4205,7 @@ msgstr ""
 
 #: ../applets/maintained/weather/weather.ui.h:11
 msgid "Medium"
-msgstr ""
+msgstr "Orta"
 
 #: ../applets/maintained/weather/weather.ui.h:12
 msgid "Show temperature in _icon"
@@ -4154,11 +4213,11 @@ msgstr ""
 
 #: ../applets/maintained/weather/weather.ui.h:13
 msgid "Small"
-msgstr ""
+msgstr "Küçük"
 
 #: ../applets/maintained/weather/weather.ui.h:14
 msgid "Temperature _unit:"
-msgstr ""
+msgstr "Sıcaklık _birimi:"
 
 #: ../applets/maintained/weather/weather.ui.h:15
 msgid "Temperature font _size:"
@@ -4207,7 +4266,7 @@ msgstr ""
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:5
 msgid "URI"
-msgstr ""
+msgstr "URI"
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:7
 #, no-c-format
@@ -4257,7 +4316,7 @@ msgstr ""
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:4
 msgid "The color used in the graph lines."
-msgstr ""
+msgstr "Grafik çizgilerinde kullanılan renk."
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:5
 msgid "The color used in the graph lines. Valid values are 0.0 through 1.0."
@@ -4270,7 +4329,7 @@ msgstr ""
 #: ../applets/unmaintained/main-menu/applet.c:394
 #: ../applets/unmaintained/main-menu/main-menu.desktop.in.in.h:2
 msgid "Awn Main Menu"
-msgstr ""
+msgstr "Awn Ana Menü"
 
 #: ../applets/unmaintained/main-menu/applet.c:395
 msgid "Displays a list of all your applications"
@@ -4278,7 +4337,7 @@ msgstr ""
 
 #: ../applets/unmaintained/main-menu/applet.c:453
 msgid "Main Menu"
-msgstr ""
+msgstr "Ana Menü"
 
 #: ../applets/unmaintained/main-menu/main-menu.desktop.in.in.h:1
 msgid "A main menu for Awn"
@@ -4290,11 +4349,11 @@ msgstr ""
 
 #: ../applets/unmaintained/pandora/pandora.desktop.in.h:1
 msgid "Listen to Pandora Internet Radio"
-msgstr ""
+msgstr "Pandora internet Radyosunu dinle"
 
 #: ../applets/unmaintained/pandora/pandora.desktop.in.h:2
 msgid "Pandora Radio"
-msgstr ""
+msgstr "Pandora Radyo"
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:1
 msgid " sort by date)."

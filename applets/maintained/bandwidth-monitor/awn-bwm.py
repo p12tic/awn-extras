@@ -579,7 +579,8 @@ Total Sent: %s - Total Received: %s (All Interfaces)''') % (
                     self.draw_meter(ct, width, self.applet.get_size(),
                         iface, True)
         else:
-            self.draw_meter(ct, width, self.applet.get_size(), self.iface)
+            if self.iface and self.iface in self.netstats.ifaces:
+                self.draw_meter(ct, width, self.applet.get_size(), self.iface)
         if self.iface in self.netstats.ifaces:
             if self.label_control:
                 if self.label_control == 2:
@@ -609,6 +610,7 @@ Total Sent: %s - Total Received: %s (All Interfaces)''') % (
         else:
             self.upload_ot.props.text = _('No')
             self.download_ot.props.text = _('Device')
+            self.sum_ot.props.text = ''
             self.title_text = _('Please select a valid device')
         if self.border:
             line_width = 2

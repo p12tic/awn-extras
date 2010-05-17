@@ -187,5 +187,5 @@ if __name__ == "__main__":
         "authors": ["onox <denkpadje@gmail.com>"],
         "artists": ["Jakub Steiner", "Lapo Calamandrei", "Rodney Dawes", "Garrett LeSage", "onox"]})
 
-    if isinstance(notifier, ThreadedNotifier):
+    if notifier is not None:
         notifier.stop()

@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# Copyright (C) 2009  onox <denkpadje@gmail.com>
+# Copyright (C) 2009 - 2010  onox <denkpadje@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ from threading import Lock
 from urllib import unquote
 
 import pygtk
-pygtk.require('2.0')
+pygtk.require("2.0")
 import gtk
 
 from awn.extras import awnlib, __version__
@@ -455,10 +455,14 @@ class YamaApplet:
             else:
                 def mount_volume(widget, vol):
                     def mount_result(vol2, result):
-                        if volume.mount_finish(result):
-                            url = volume.get_mount().get_root().get_uri()
-                            self.open_folder_cb(None, url)
-                    volume.mount(gio.MountOperation(), mount_result)
+                        try:
+                            if vol2.mount_finish(result):
+                                url = vol2.get_mount().get_root().get_uri()
+                                self.open_folder_cb(None, url)
+                        except glib.GError, e:
+                            error_dialog = self.UnableToMountErrorDialog(self.applet, vol2.get_name(), e)
+                            error_dialog.show_all()
+                    vol.mount(gio.MountOperation(), mount_result)
                 item.connect("activate", mount_volume, volume)
 
     def append_mounts(self):
@@ -595,6 +599,16 @@ class YamaApplet:
                 clear_cb()
             clear_button.connect("clicked", clear_and_hide)
             self.action_area.add(clear_button)
+
+    class UnableToMountErrorDialog(awnlib.Dialogs.BaseDialog, gtk.MessageDialog):
+
+        def __init__(self, parent, volume_name, error):
+            gtk.MessageDialog.__init__(self, type=gtk.MESSAGE_ERROR, message_format="Unable to mount %s" % volume_name, buttons=gtk.BUTTONS_OK)
+            awnlib.Dialogs.BaseDialog.__init__(self, parent)
+
+            self.set_skip_taskbar_hint(True)
+
+            self.format_secondary_markup(str(error))
 
 
 if __name__ == "__main__":

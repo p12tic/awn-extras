@@ -77,6 +77,7 @@ class MediaControlApplet (awn.AppletSimple):
         )
         self.set_icon_state('main-icon')
 
+        self.ui_path = os.path.join(os.path.dirname(__file__), "media-control.ui")
         # get the missing album art pixbuf
         try:
             file_name = __file__[0:__file__.rfind('/')]
@@ -597,10 +598,8 @@ class MediaControlApplet (awn.AppletSimple):
         return True
 
     def show_prefs(self, widget):
-        ui_path = os.path.join(os.path.dirname(__file__), "media-control.ui")
-
         wTree = gtk.Builder()
-        wTree.add_from_file(ui_path)
+        wTree.add_from_file(self.ui_path)
 
         window = wTree.get_object("dialog1")
         window.set_icon(self.get_icon().get_icon_at_size(48))

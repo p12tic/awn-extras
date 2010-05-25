@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-11 18:07+0300\n"
-"PO-Revision-Date: 2010-05-23 21:34+0000\n"
+"PO-Revision-Date: 2010-05-24 08:37+0000\n"
 "Last-Translator: Jiri Grönroos <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-05-24 03:43+0000\n"
+"X-Launchpad-Export-Date: 2010-05-25 03:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
 msgid "Animal Farm"
-msgstr "Eläintila"
+msgstr "Maatila"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:2
 msgid "Display fortune messages"
@@ -33,14 +33,15 @@ msgstr ""
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:2
 msgid "Set whether the applet should hide itself when it loses focus."
 msgstr ""
+"Piiloutuuko sovelma automaattisesti, jos hiiri ei ole kohdistettuna siihen."
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:3
 msgid "The applet's background image."
-msgstr ""
+msgstr "Sovelman taustakuva."
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:4
 msgid "The applet's opacity level."
-msgstr ""
+msgstr "Sovelman peittokyky."
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:5
 msgid "The default external terminal application."
@@ -65,7 +66,7 @@ msgstr "Käyttäytyminen"
 #. focus out behavior checkbox
 #: ../applets/maintained/awnterm/awn-terminal.vala:437
 msgid "Hide when focus is lost"
-msgstr ""
+msgstr "Piilota, jos hiiri ei ole kohdistettuna"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:456
 #: ../applets/maintained/file-browser-launcher/prefs.py:253
@@ -75,7 +76,7 @@ msgstr "Toiminto"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:476
 msgid "Shortcut"
-msgstr ""
+msgstr "Pikavalinta"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:482
 msgid "Activate"
@@ -93,7 +94,7 @@ msgstr "Valitse tiedosto"
 #: ../applets/maintained/awnterm/awn-terminal.vala:545
 #, c-format
 msgid "Terminal opacity"
-msgstr ""
+msgstr "Päätteen peittokyky"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:572
 #, c-format
@@ -107,7 +108,7 @@ msgstr ""
 
 #: ../applets/maintained/awnterm/awnterm.desktop.in.in.h:2
 msgid "Terminal Applet"
-msgstr ""
+msgstr "Päätesovelma"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:1
 msgid " Upload/Download"
@@ -119,11 +120,11 @@ msgstr " tavua)"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:3
 msgid "Color to draw the background"
-msgstr ""
+msgstr "Taustalla käytettävä väri"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:4
 msgid "Color to draw the border"
-msgstr ""
+msgstr "Reunuksessa käytettävä väri"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:5
 msgid "Display parameters for interfaces"
@@ -131,11 +132,11 @@ msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:6
 msgid "Draw the applet background"
-msgstr ""
+msgstr "Piirrä sovelman tausta"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:7
 msgid "Draw the applet border"
-msgstr ""
+msgstr "Piirrä sovelman reunus"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:8
 msgid ""
@@ -149,25 +150,25 @@ msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:10
 msgid "The interface currently selected"
-msgstr ""
+msgstr "Valittu liitäntä"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:37
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:231
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.desktop.in.h:2
 msgid "Bandwidth Monitor"
-msgstr ""
+msgstr "Kaistanvalvonta"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:41
 msgid "Network Bandwidth monitor"
-msgstr ""
+msgstr "Verkkokaistan valvonta"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:225
 msgid "Unable to caclulate statistics"
-msgstr ""
+msgstr "Tilastojen laskenta ei onnistunut"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:225
 msgid "Statistics calculation requires read access to /proc/net/dev"
-msgstr ""
+msgstr "Tilastojen laskenta vaatii lukuoikeuden kohteeseen /proc/net/dev"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:244
 msgid "Change Unit"
@@ -187,18 +188,18 @@ msgstr "Laitteet"
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:19
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:50
 msgid "KBps"
-msgstr ""
+msgstr "kt/s"
 
 #. kilobits per second
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:327
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:53
 msgid "Kbps"
-msgstr ""
+msgstr "kb/s"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:349
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:469
 msgid "Interface"
-msgstr ""
+msgstr "Liitäntä"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:354
 msgid "Sent"
@@ -218,12 +219,13 @@ msgstr "Saapuva"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:417
 msgid "Please select a valid Network Device"
-msgstr ""
+msgstr "Valitse kelvollinen verkkolaite"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:419
 #, python-format
 msgid "Total Sent: %s - Total Received: %s (All Interfaces)"
 msgstr ""
+"Yhteensä lähetetty: %s - Yhteensä vastaanotettu: %s (kaikki liitännät)"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:610
 msgid "No"
@@ -240,7 +242,7 @@ msgstr "Valitse kelvollinen laite"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.desktop.in.h:1
 msgid "A Network Bandwidth monitor for AWN"
-msgstr ""
+msgstr "Verkkokaistan valvonta Awn:lle"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:1
 #: ../applets/maintained/battery/battery.ui.h:1
@@ -265,7 +267,7 @@ msgstr "Reunan väri"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:5
 msgid "Display MBps/KBps (bytes) instead of Mbps/Kbps (bits)"
-msgstr ""
+msgstr "Näytä Mt/s / Kt/s (tavuissa), ei Mb/s / Kb/s (biteissä)"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:6
 msgid "Display Speed Text"
@@ -281,15 +283,15 @@ msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:9
 msgid "Do not display the speed as text, only draw the graph"
-msgstr ""
+msgstr "Älä näytä nopeutta tekstinä, piirrä vain kuvaaja"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:10
 msgid "Draw 0 bps in graphs"
-msgstr ""
+msgstr "Piirrä 0 b/s kuvaajana"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:11
 msgid "Draw Background"
-msgstr ""
+msgstr "Piirrä tausta"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:12
 msgid "Draw Border"
@@ -306,7 +308,7 @@ msgstr "Yleiset"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:14
 msgid "Graph Only"
-msgstr ""
+msgstr "Vain kuvaaja"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:15
 msgid ""
@@ -328,7 +330,7 @@ msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:18
 msgid "If this is checked, the common display unit will be Bytes"
-msgstr ""
+msgstr "Jos tämä on valittu, näytetään yksikkönä tavut"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:20
 msgid "Minimum Scaling threshold"
@@ -352,19 +354,19 @@ msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:155
 msgid "Upload Color"
-msgstr ""
+msgstr "Lähtevän liikenteen väri"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:166
 msgid "Download Color"
-msgstr ""
+msgstr "Saapuvan liikenteen väri"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:239
 msgid "Upload"
-msgstr ""
+msgstr "Lähtevä"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:241
 msgid "Download"
-msgstr ""
+msgstr "Saapuva"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:243
 #, python-format
@@ -401,7 +403,7 @@ msgstr ""
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:7
 msgid "Unit of low level threshold (Percent or Time Remaining)."
-msgstr ""
+msgstr "Alhaisen varaustilan yksikkö (prosentit tai aikaa jäljellä)."
 
 #: ../applets/maintained/battery/battery.desktop.in.h:1
 msgid "Battery"
@@ -433,7 +435,7 @@ msgstr ""
 
 #: ../applets/maintained/battery/battery.ui.h:6
 msgid "Percent"
-msgstr ""
+msgstr "Prosentit"
 
 #: ../applets/maintained/battery/battery.ui.h:7
 msgid "Time Remaining"
@@ -461,7 +463,7 @@ msgstr "_Varoita latauksen ollessa alle:"
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:1
 msgid "A custom time format (strftime()), used if not empty."
-msgstr ""
+msgstr "Muokattu aikamuoto (strftime()), käytössä jos kenttä ei ole tyhjä."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:2
 msgid "Beaufort)."
@@ -471,6 +473,7 @@ msgstr ""
 msgid ""
 "If enabled, besides hours and minutes, the seconds will be visible too."
 msgstr ""
+"Jos käytössä, näytetään myös tuntien ja minuuttien lisäksi myös sekunnit."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:4
 msgid "If enabled, displays the weather as an overlay on top of the clock."
@@ -482,7 +485,7 @@ msgstr ""
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:6
 msgid "If enabled, the seconds hand will be visible in the clock."
-msgstr ""
+msgstr "Jos käytössä, kellossa näytetään myös sekuntiviisari."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:7
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:6
@@ -500,7 +503,7 @@ msgstr ""
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:10
 msgid "The name of the theme of the analog clock."
-msgstr ""
+msgstr "Viisarikellon teeman nimi."
 
 #: ../applets/maintained/cairo-clock/cairo-clock.desktop.in.h:1
 msgid "Cairo Clock"
@@ -511,6 +514,7 @@ msgid ""
 "Displays an analog clock and supports additional clocks for different "
 "locations"
 msgstr ""
+"Näyttää viisarikellon. Tuki myös useille aikavyöhykkeille ja kelloille."
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:1
 #: ../applets/maintained/weather/weather.ui.h:1
@@ -548,12 +552,12 @@ msgstr "Fahrenheit"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:10
 msgid "Find _Next"
-msgstr ""
+msgstr "Etsi _seuraava"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:11
 msgid ""
 "If enabled, besides hours and minutes, the seconds will be visible too"
-msgstr ""
+msgstr "Jos käytössä, näytetään tuntien ja minuuttien lisäksi myös sekunnit."
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:12
 msgid "If enabled, the date will be shown in the title"
@@ -561,15 +565,15 @@ msgstr ""
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:13
 msgid "If enabled, the seconds hand will be visible in the clock"
-msgstr ""
+msgstr "Jos käytössä, kellossa näytetään sekuntiviisari"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:14
 msgid "If enabled, time will be shown like 1:23 AM"
-msgstr ""
+msgstr "Jos käytössä, ajan esitystapa on muotoa 1:23 AM"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:15
 msgid "If enabled, time will be shown like 23:45"
-msgstr ""
+msgstr "Jos käytössä, ajan esitysmuoto on 23:45"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:16
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:35
@@ -586,7 +590,7 @@ msgstr "Näytä _sekunnit"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:19
 msgid "Show seco_nds hand"
-msgstr ""
+msgstr "Näytä sekuntiv_iisari"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:20
 msgid "Show the _date"
@@ -594,7 +598,7 @@ msgstr "_Näytä päiväys"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:21
 msgid "_Show weather of current location"
-msgstr ""
+msgstr "Näy_tä sijainnin säätiedot"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:22
 msgid "_Temperature unit:"
@@ -706,12 +710,12 @@ msgstr "Istunto"
 #. generates a compiler warning due to the ellipse
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1057
 msgid "Search\\u2026"
-msgstr ""
+msgstr "Etsi\\u2026"
 
 #. generates a compiler warning due to the ellipse
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1074
 msgid "Launch\\u2026"
-msgstr ""
+msgstr "Käynnistä\\u2026"
 
 #: ../applets/maintained/cairo-menu/misc.c:344
 msgid "Clear Recent Documents"
@@ -727,7 +731,7 @@ msgstr "Kello- ja kalenterisovelma"
 
 #: ../applets/maintained/calendar/calendar.desktop.in.h:2
 msgid "Watch appointments on your dock"
-msgstr ""
+msgstr "Näyttää tapaamiset telakassa"
 
 #: ../applets/maintained/calendar/calendarlogin.py:43
 msgid "Login to "
@@ -735,15 +739,15 @@ msgstr ""
 
 #: ../applets/maintained/calendar/calendarlogin.py:48
 msgid "Online Calendar"
-msgstr ""
+msgstr "Verkkokalenteri"
 
 #: ../applets/maintained/calendar/calendarlogin.py:53
 msgid "Calendar Username"
-msgstr ""
+msgstr "Kalenterin käyttäjätunnus"
 
 #: ../applets/maintained/calendar/calendarlogin.py:61
 msgid "Calendar Password"
-msgstr ""
+msgstr "Kalenterin salasana"
 
 #: ../applets/maintained/calendar/calendarlogin.py:71
 msgid "Save Password"
@@ -756,10 +760,13 @@ msgid ""
 "password can be stolen and decrypted if your computer's security is "
 "breached.  Are you still sure you want to save your password?"
 msgstr ""
+"Päätit tallentaa salasanan. Vaikka salasana onkin salatussa muodossa, on "
+"silti mahdollisuus, että salasanasi voidaan murtaa jos tietokoneesi "
+"tietoturva on muuten vaarantunut. Haluatko silti tallentaa salasanan?"
 
 #: ../applets/maintained/calendar/calendarprefs.py:46
 msgid "Classic LCD"
-msgstr ""
+msgstr "Perinteinen LCD"
 
 #: ../applets/maintained/calendar/calendarprefs.py:47
 msgid "Indy Glow LCD"
@@ -775,23 +782,23 @@ msgstr ""
 
 #: ../applets/maintained/calendar/calendarprefs.py:50
 msgid "Green LED"
-msgstr ""
+msgstr "Vihreä LED"
 
 #: ../applets/maintained/calendar/calendarprefs.py:51
 msgid "Red LED"
-msgstr ""
+msgstr "Punainen LED"
 
 #: ../applets/maintained/calendar/calendarprefs.py:52
 msgid "Blue LED"
-msgstr ""
+msgstr "Sininen LED"
 
 #: ../applets/maintained/calendar/calendarprefs.py:53
 msgid "Plain White"
-msgstr ""
+msgstr "Pelkkä valkoinen"
 
 #: ../applets/maintained/calendar/calendarprefs.py:54
 msgid "Plain Black"
-msgstr ""
+msgstr "Pelkkä musta"
 
 #: ../applets/maintained/calendar/calendarprefs.py:57
 msgid "Red"
@@ -815,7 +822,7 @@ msgstr "Musta"
 
 #: ../applets/maintained/calendar/calendarprefs.py:84
 msgid "Twelve Hour Clock"
-msgstr ""
+msgstr "12-tuntinen kello"
 
 #: ../applets/maintained/calendar/calendarprefs.py:104
 msgid "Clock Appearance"
@@ -829,7 +836,7 @@ msgstr "Kalenterin ulkoasu"
 #: ../applets/maintained/dialect/dialect.ui.h:82
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:32
 msgid "None"
-msgstr ""
+msgstr "-"
 
 #: ../applets/maintained/calendar/calendarprefs.py:122
 msgid "Evolution"
@@ -864,6 +871,8 @@ msgid ""
 "you choose to clear your password, you will be prompted again for your "
 "calendar login credentials."
 msgstr ""
+"Haluatko poistaa kalenterisovelmaa varten tallennetun salasanan? Jos poistat "
+"salasanan, sitä kysytään ensi kerralla kalenterisovelman käynnistessä."
 
 #: ../applets/maintained/calendar/clockcal.py:497
 msgid "Open in "
@@ -877,7 +886,7 @@ msgstr "Tänään"
 #. print "Login error: ", sys.exc_info()[0], sys.exc_info()[1]
 #: ../applets/maintained/calendar/clockcal.py:549
 msgid "Unable to read calendar data from external source."
-msgstr ""
+msgstr "Kalenteritietojen nouto ulkoisesta kohteesta epäonnistui."
 
 #: ../applets/maintained/calendar/googlecal.py:90
 msgid "No appointments."
@@ -891,6 +900,7 @@ msgstr "Ei tapaamisia"
 #: ../applets/maintained/comics/awn-applet-comics.schema-ini.in.h:1
 msgid "The user agent to send when retrieving comics."
 msgstr ""
+"Sarjakuvia noudettaessa ilmoitettava sovelluksen tunnus (user-agent)."
 
 #: ../applets/maintained/comics/comics_add.py:57
 #, python-format
@@ -932,7 +942,7 @@ msgstr "Sarjakuvia!"
 
 #: ../applets/maintained/comics/comics.desktop.in.h:2
 msgid "View your favourite comics on your desktop"
-msgstr ""
+msgstr "Katsele suosikkisarjakuviasi työpöydälläsi"
 
 #: ../applets/maintained/comics/comics_manage.py:51
 msgid "Shared comics"
@@ -945,7 +955,7 @@ msgstr "Omat sarjakuvat"
 #: ../applets/maintained/comics/comics_manage.py:119
 #, python-format
 msgid "Failed to remove <i>%s</i>."
-msgstr ""
+msgstr "Kohteen <i>%s</i> poisto epäonnistui."
 
 #: ../applets/maintained/comics/comics_manage.py:125
 #: ../applets/maintained/feeds/feeds.py:388
@@ -964,16 +974,16 @@ msgstr "Hallitse sarjakuvia"
 #: ../applets/maintained/comics/main.py:192
 #, python-format
 msgid "There is a new strip of %s!"
-msgstr ""
+msgstr "Uusi sarjakuva ilmestynyt (%s)!"
 
 #: ../applets/maintained/comics/comics_view.py:164
 msgid "%A %d %B"
-msgstr ""
+msgstr "%A %d %B"
 
 #: ../applets/maintained/comics/comics_view.py:532
 #, python-format
 msgid "Failed to save <i>%s</i>."
-msgstr ""
+msgstr "Kohteen <i>%s</i> tallennus epäonnistui."
 
 #: ../applets/maintained/comics/ui/add.ui.h:1
 msgid "Add Comic"
@@ -1001,7 +1011,7 @@ msgstr "Valitse kuva"
 
 #: ../applets/maintained/comics/ui/add.ui.h:7
 msgid "The guide found more than one image. Please select which one to use."
-msgstr ""
+msgstr "Löytyi enemmän kuin yksi kuva. Valitse, mitä kuvaa käytetään."
 
 #: ../applets/maintained/comics/ui/add.ui.h:8
 msgid ""
@@ -1032,7 +1042,7 @@ msgstr "Koko"
 #: ../applets/maintained/comics/main.py:152
 #, python-format
 msgid "Unknown command sent: %s"
-msgstr ""
+msgstr "Tuntematon komento lähetetty: %s"
 
 #: ../applets/maintained/cpufreq/awn-applet-cpufreq.schema-ini.in.h:1
 msgid "Index of processor."
@@ -1040,15 +1050,15 @@ msgstr ""
 
 #: ../applets/maintained/cpufreq/cpufreq.desktop.in.h:1
 msgid "An applet to monitor and control the CPU frequency"
-msgstr ""
+msgstr "Sovelma suorittimen taajuuden valvontaan ja hallintaan"
 
 #: ../applets/maintained/cpufreq/cpufreq.desktop.in.h:2
 msgid "CPU Frequency Monitor"
-msgstr ""
+msgstr "Suoritintaajuuden valvonta"
 
 #: ../applets/maintained/cpufreq/cpufreq.ui.h:1
 msgid "<b>Monitored CPU</b>"
-msgstr ""
+msgstr "<b>Valvottava suoritin</b>"
 
 #: ../applets/maintained/cpufreq/cpufreq.ui.h:2
 msgid "_Processor:"
@@ -1089,7 +1099,7 @@ msgstr ""
 
 #: ../applets/maintained/dialect/dialect.desktop.in.h:2
 msgid "Change your keyboard input layout from Awn."
-msgstr ""
+msgstr "Muuta käytettävää näppäimistöasettelua Awn:n avulla."
 
 #: ../applets/maintained/dialect/dialect.ui.h:1
 msgid ""
@@ -1201,7 +1211,7 @@ msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:71
 msgid "Flag Opacity"
-msgstr ""
+msgstr "Lipun peittokyky"
 
 #: ../applets/maintained/dialect/dialect.ui.h:72
 msgid "Flag Overlay"
@@ -1231,7 +1241,7 @@ msgstr "Valikko"
 #: ../applets/maintained/dialect/dialect.ui.h:79
 #: ../applets/maintained/file-browser-launcher/prefs.py:393
 msgid "Middle Click"
-msgstr ""
+msgstr "Keskimmäinen napsautus"
 
 #: ../applets/maintained/dialect/dialect.ui.h:80
 msgid "Mouse Actions"
@@ -1547,11 +1557,12 @@ msgstr ""
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:1
 msgid "Command to execute when a calendar day is double-clicked."
-msgstr ""
+msgstr "Suoritettava komento, kun päivää tuplanapsautetaan kalenterissa."
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:2
 msgid "Command to execute when the user wishes to adjust the date/time."
 msgstr ""
+"Suoritettava komento, kun käyttäjä haluaa muokata päiväystä tai aikaa."
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:3
 msgid "Show the date before the time."
@@ -1603,7 +1614,7 @@ msgstr "Digitaalikellon asetukset"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:9
 msgid "Run Calendar:"
-msgstr ""
+msgstr "Suorita kalenteri:"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:10
 msgid "Run Time Admin:"
@@ -1615,11 +1626,11 @@ msgstr "Näytä päiväys"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:12
 msgid "Use default Awn colors"
-msgstr ""
+msgstr "Käytä Awn:n oletusvärejä"
 
 #: ../applets/maintained/digital-clock/digital-clock.desktop.in.in.h:1
 msgid "A clock and calendar in one."
-msgstr ""
+msgstr "Kello ja kalenteri yhdistettynä."
 
 #: ../applets/maintained/digital-clock/digital-clock.desktop.in.in.h:2
 #: ../applets/maintained/digital-clock/digital-clock.vala:57
@@ -1704,12 +1715,12 @@ msgstr ""
 #: ../applets/maintained/feeds/feeds.py:480
 #: ../applets/maintained/feeds/feeds.py:1031
 msgid "Feeds Applet"
-msgstr ""
+msgstr "Syötesovelma"
 
 #: ../applets/maintained/feeds/feeds.desktop.in.h:2
 #: ../applets/maintained/feeds/feeds.py:1036
 msgid "Monitor Web Feeds"
-msgstr ""
+msgstr "Valvo verkkosyötteitä"
 
 #. "Loading feeds..." label
 #: ../applets/maintained/feeds/feeds.py:96
@@ -1735,7 +1746,7 @@ msgstr ""
 #: ../applets/maintained/feeds/feeds.py:481
 #, python-format
 msgid "%s New Item%s - Feeds Applet"
-msgstr ""
+msgstr "%s uusi kohde%s - Syötesovelma"
 
 #. +Add Feed button
 #: ../applets/maintained/feeds/feeds.py:518
@@ -1793,7 +1804,7 @@ msgstr "Päivitetään"
 
 #: ../applets/maintained/feeds/prefs.py:108
 msgid "_Show website icons"
-msgstr ""
+msgstr "_Näytä verkkosivustojen kuvakkeet"
 
 #. TODO: this position is a little ugly, but I don't know how to do it better.
 #. Import and export buttons (OPML)
@@ -1872,7 +1883,7 @@ msgstr ""
 #. "Search for" label and entry
 #: ../applets/maintained/feeds/prefs.py:446
 msgid "Search for"
-msgstr ""
+msgstr "Etsi"
 
 #. URL: label and entry
 #: ../applets/maintained/feeds/prefs.py:460
@@ -1912,22 +1923,27 @@ msgid ""
 "There was an error while searching.\n"
 "Please try again later."
 msgstr ""
+"Etsintä epäonnistui.\n"
+"Koeta myöhemmin uudelleen."
 
 #: ../applets/maintained/feeds/prefs.py:810
 msgid ""
 "No results found.\n"
 "Try checking your spelling or using different search terms."
 msgstr ""
+"Ei hakutuloksia.\n"
+"Tarkista, että kirjoitat hakusanat oikein tai vaihtoehtoisesti etsi eri "
+"hakuehdoilla."
 
 #: ../applets/maintained/file-browser-launcher/about.py:39
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.desktop.in.h:2
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:63
 msgid "File Browser Launcher"
-msgstr ""
+msgstr "Tiedostoselaimen käynnistin"
 
 #: ../applets/maintained/file-browser-launcher/about.py:42
 msgid "A customizable launcher for browsing your files."
-msgstr ""
+msgstr "Muokattava käynnistin tiedostonselausta varten."
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:1
 msgid " persistent docklet"
@@ -3290,7 +3306,7 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:21
 msgid "Co_lumns:"
-msgstr ""
+msgstr "_Sarakkeita:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:22
 msgid "Icon _display:"
@@ -3362,7 +3378,7 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:40
 msgid "Use _desktop background"
-msgstr ""
+msgstr "Käytä työ_pöydän taustakuvaa"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:41
 msgid "_Applet size:"
@@ -3370,7 +3386,7 @@ msgstr "_Sovelman koko:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:42
 msgid "_Rows:"
-msgstr ""
+msgstr "_Rivejä:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:43
 msgid "_Thumbnailing:"
@@ -3385,11 +3401,11 @@ msgstr "Näytä työpöytä"
 #: ../applets/maintained/showdesktop/applet.vala:78
 #: ../applets/maintained/showdesktop/showdesktop.desktop.in.in.h:1
 msgid "Hides your windows and shows your desktop."
-msgstr ""
+msgstr "Piilota kaikki ikkunat ja näytä työpöytä."
 
 #: ../applets/maintained/showdesktop/applet.vala:93
 msgid "Show hidden windows"
-msgstr ""
+msgstr "Näytä piilotetut ikkunat"
 
 #: ../applets/maintained/showdesktop/applet.vala:98
 msgid "Hide windows and show desktop"
@@ -3469,11 +3485,11 @@ msgstr ""
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:19
 msgid "Which background image(s) source to use: gnome, compiz, file"
-msgstr ""
+msgstr "Mitä taustakuvalähdettä käytetään: gnome, compiz, tiedosto"
 
 #: ../applets/maintained/slickswitcher/prefs.py:69
 msgid "SlickSwitcher Preferences"
-msgstr ""
+msgstr "Näppärän työtilavaihtimen asetukset"
 
 #. Colors: Borders, Windows, and Dialog
 #. Border Colors
@@ -3625,13 +3641,13 @@ msgstr ""
 #: ../applets/maintained/slickswitcher/slickswitcher.desktop.in.h:1
 #: ../applets/maintained/slickswitcher/slickswitcher.py:281
 msgid "A visual workspace switcher"
-msgstr ""
+msgstr "Visuaalinen työtilan vaihtaja"
 
 #: ../applets/maintained/slickswitcher/slickswitcher.desktop.in.h:2
 #: ../applets/maintained/slickswitcher/slickswitcher.py:63
 #: ../applets/maintained/slickswitcher/slickswitcher.py:272
 msgid "SlickSwitcher"
-msgstr ""
+msgstr "Näppärä työtilanvaihtaja"
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:1
 msgid ""
@@ -3670,7 +3686,7 @@ msgstr ""
 
 #: ../applets/maintained/thinkhdaps/thinkhdaps.desktop.in.h:2
 msgid "ThinkHDAPS"
-msgstr ""
+msgstr "ThinkHDAPS"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:1
 msgid "Background color for high priority items"
@@ -3690,15 +3706,15 @@ msgstr ""
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:5
 msgid "List of items' details"
-msgstr ""
+msgstr "Lista kohteiden tiedoista"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:6
 msgid "List of items' names"
-msgstr ""
+msgstr "Lista kohteiden nimistä"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:7
 msgid "List of items' priorities (0-3)"
-msgstr ""
+msgstr "Lista kohteiden tärkeysasteista (0-3)"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:8
 msgid "List of items' progresses in percent (0-100)"
@@ -3706,19 +3722,19 @@ msgstr ""
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:9
 msgid "Text color for high priority items"
-msgstr ""
+msgstr "Korkean tärkeysasteen kohteiden tekstin väri"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:10
 msgid "Text color for low priority items"
-msgstr ""
+msgstr "Matalan tärkeysasteen kohteiden tekstin väri"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:11
 msgid "Text color for medium priority items"
-msgstr ""
+msgstr "Keskitason tärkeysasteen kohteiden tekstin väri"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:12
 msgid "The color to use for the icon"
-msgstr ""
+msgstr "Kuvakkeessa käytettävä väri"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:13
 msgid "The custom width for the item entries"
@@ -3726,19 +3742,19 @@ msgstr ""
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:14
 msgid "The icon's opacity (10-100)"
-msgstr ""
+msgstr "Kuvakkeen peittokyky (10-100)"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:15
 msgid "The list of categories that are expanded"
-msgstr ""
+msgstr "Lista laajennetuista luokista"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:16
 msgid "The list of categories' names"
-msgstr ""
+msgstr "Lista luokkien nimistä"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:17
 msgid "The list of items' categories"
-msgstr ""
+msgstr "Lista kohteiden luokista"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:18
 msgid "The title to display"
@@ -3750,11 +3766,11 @@ msgstr ""
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:20
 msgid "Whether or not to confirm the deletion of categories"
-msgstr ""
+msgstr "Vahvistetaanko luokkien poisto"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:21
 msgid "Whether or not to confirm the deletion of items"
-msgstr ""
+msgstr "Vahvistetaanko kohteiden poisto"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:22
 msgid "Whether or not to use a custom width for the entries"
@@ -3766,35 +3782,35 @@ msgstr ""
 
 #: ../applets/maintained/to-do/prefs.py:32
 msgid "Current Theme"
-msgstr ""
+msgstr "Nykyinen teema"
 
 #: ../applets/maintained/to-do/prefs.py:32
 msgid "Butter"
-msgstr ""
+msgstr "Voi"
 
 #: ../applets/maintained/to-do/prefs.py:33
 msgid "Chameleon"
-msgstr ""
+msgstr "Kameleontti"
 
 #: ../applets/maintained/to-do/prefs.py:33
 msgid "Orange"
-msgstr ""
+msgstr "Oranssi"
 
 #: ../applets/maintained/to-do/prefs.py:33
 msgid "Sky Blue"
-msgstr ""
+msgstr "Taivaansininen"
 
 #: ../applets/maintained/to-do/prefs.py:33
 msgid "Plum"
-msgstr ""
+msgstr "Luumu"
 
 #: ../applets/maintained/to-do/prefs.py:33
 msgid "Chocolate"
-msgstr ""
+msgstr "Suklaa"
 
 #: ../applets/maintained/to-do/prefs.py:34
 msgid "Scarlet Red"
-msgstr ""
+msgstr "Tulipunainen"
 
 #: ../applets/maintained/to-do/prefs.py:34
 msgid "Aluminium 1"
@@ -3826,12 +3842,12 @@ msgstr "Tärkeysaste"
 
 #: ../applets/maintained/to-do/prefs.py:62
 msgid "Icon"
-msgstr ""
+msgstr "Kuvake"
 
 #. Label: Title (bold)
 #: ../applets/maintained/to-do/prefs.py:72
 msgid "Title"
-msgstr ""
+msgstr "Nimi"
 
 #. Label: Confirm when removing... (bold)
 #: ../applets/maintained/to-do/prefs.py:86
@@ -3841,22 +3857,22 @@ msgstr "Vahvista poistaessa..."
 #. CheckButton: Items
 #: ../applets/maintained/to-do/prefs.py:95
 msgid "_Items"
-msgstr ""
+msgstr "_Kohteita"
 
 #. CheckButton: Categories
 #: ../applets/maintained/to-do/prefs.py:102
 msgid "C_ategories"
-msgstr ""
+msgstr "_Luokkia"
 
 #. Label: Width (bold)
 #: ../applets/maintained/to-do/prefs.py:109
 msgid "Width"
-msgstr ""
+msgstr "Leveys"
 
 #. CheckButton: Use Custom Width
 #: ../applets/maintained/to-do/prefs.py:118
 msgid "_Use Custom Width"
-msgstr ""
+msgstr "Käy_tä mukautettua leveyttä"
 
 #. Label: Width (pixels)
 #: ../applets/maintained/to-do/prefs.py:125
@@ -3881,12 +3897,12 @@ msgstr "Korkea tärkeysaste"
 #. Label: Icon Color (bold)
 #: ../applets/maintained/to-do/prefs.py:251
 msgid "Icon Color"
-msgstr ""
+msgstr "Kuvakkeen väri"
 
 #. Label: Custom Colors (bold)
 #: ../applets/maintained/to-do/prefs.py:274
 msgid "Custom Colors"
-msgstr ""
+msgstr "Mukautetut värit"
 
 #. Colors: Outer Border, Inner Border, Main Color, Text Color
 #: ../applets/maintained/to-do/prefs.py:283
@@ -3904,12 +3920,12 @@ msgstr ""
 #: ../applets/maintained/to-do/prefs.py:286
 #: ../applets/maintained/to-do/prefs.py:447
 msgid "Text"
-msgstr ""
+msgstr "Teksti"
 
 #. Label: Icon Type (bold)
 #: ../applets/maintained/to-do/prefs.py:289
 msgid "Icon Type"
-msgstr ""
+msgstr "Kuvakkeen tyyppi"
 
 #: ../applets/maintained/to-do/to-do.desktop.in.h:1
 msgid "Manage a simple To-Do list"
@@ -3929,32 +3945,32 @@ msgstr "Yksinkertainen tehtävälista"
 
 #: ../applets/maintained/to-do/to-do.py:299
 msgid "Remove item"
-msgstr ""
+msgstr "Poista kohde"
 
 #: ../applets/maintained/to-do/to-do.py:381
 msgid "Remove category"
-msgstr ""
+msgstr "Poista luokka"
 
 #: ../applets/maintained/to-do/to-do.py:405
 msgid "View/Edit details"
-msgstr ""
+msgstr "Näytä/muokkaa tietoja"
 
 #. Make the RadioButtons for each category
 #. First category: No category! (Uncategorized)
 #: ../applets/maintained/to-do/to-do.py:525
 msgid "_Uncategorized"
-msgstr ""
+msgstr "_Luokittelematon"
 
 #. First RadioButton - ( )Category
 #: ../applets/maintained/to-do/to-do.py:549
 msgid "_Category"
-msgstr ""
+msgstr "L_uokka"
 
 #. Second RadioButton - (-)To-Do item
 #. TODO: better text than "To-Do item"?
 #: ../applets/maintained/to-do/to-do.py:556
 msgid "_To-Do item"
-msgstr ""
+msgstr "_Tehtävä"
 
 #. Label: Priority:
 #: ../applets/maintained/to-do/to-do.py:641
@@ -3964,7 +3980,7 @@ msgstr "Tärkeysaste: "
 #. Neutral, Low, Medium, and High priority RadioButtons
 #: ../applets/maintained/to-do/to-do.py:644
 msgid "_Neutral"
-msgstr ""
+msgstr "_Neutraali"
 
 #: ../applets/maintained/to-do/to-do.py:646
 msgid "_Low"
@@ -3990,17 +4006,19 @@ msgid ""
 "Are you sure you want to remove the category \"%s?\"\n"
 "All of its items will be removed."
 msgstr ""
+"Haluatko varmasti poistaa luokan \"%s\"?\n"
+"Kaikki luokan kohteet poistetaan."
 
 #. Make CheckButton
 #: ../applets/maintained/to-do/to-do.py:1134
 #: ../applets/maintained/to-do/to-do.py:1170
 msgid "Don't show this again."
-msgstr ""
+msgstr "Älä näytä tätä uudelleen."
 
 #. Make Label
 #: ../applets/maintained/to-do/to-do.py:1167
 msgid "Are you sure you want to remove this item?"
-msgstr ""
+msgstr "Haluatko varmasti poistaa tämän kohteen?"
 
 #. Reset the tooltip
 #: ../applets/maintained/to-do/to-do.py:1366
@@ -4011,54 +4029,54 @@ msgstr ""
 #: ../applets/maintained/tomboy-applet/tomboy-applet.desktop.in.h:1
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:31
 msgid "Control Tomboy with D-Bus"
-msgstr ""
+msgstr "Hallitse Tomboyta D-Busin kautta"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.desktop.in.h:2
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:30
 msgid "Tomboy Applet"
-msgstr ""
+msgstr "Tomboy-sovelma"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:108
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:130
 msgid "Select a tag:"
-msgstr ""
+msgstr "Valitse tunniste:"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:114
 msgid "No tags were created yet"
-msgstr ""
+msgstr "Tunnisteita ei ole vielä luotu"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:119
 msgid "Select a note:"
-msgstr ""
+msgstr "Valitse muistilappu:"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:149
 #, python-format
 msgid "Version: %s"
-msgstr ""
+msgstr "Versio: %s"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:155
 msgid "New Note"
-msgstr ""
+msgstr "Uusi muistilappu"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:159
 msgid "New Tagged Note"
-msgstr ""
+msgstr "Uusi tunnisteella varustettu muistilappu"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:163
 msgid "View Tagged Note"
-msgstr ""
+msgstr "Katsele tunnisteella varustettua muistilappua"
 
 #: ../applets/maintained/vala-test/vala-test.desktop.in.in.h:1
 msgid "A simple applet to test vala support"
-msgstr ""
+msgstr "Yksinkertainen sovelma vala-tuen testaamiseksi"
 
 #: ../applets/maintained/vala-test/vala-test.desktop.in.in.h:2
 msgid "Test Vala Applet"
-msgstr ""
+msgstr "Testaa Valan toimivuus -sovelma"
 
 #: ../applets/maintained/volume-control/awn-applet-volume-control.schema-ini.in.h:1
 msgid "Name of the device."
-msgstr ""
+msgstr "Laitteen nimi."
 
 #: ../applets/maintained/volume-control/awn-applet-volume-control.schema-ini.in.h:2
 msgid "Name of the mixer track."
@@ -4074,11 +4092,11 @@ msgstr "Äänenvoimakkuuden säädin"
 
 #: ../applets/maintained/volume-control/volume-control.ui.h:1
 msgid "+"
-msgstr ""
+msgstr "+"
 
 #: ../applets/maintained/volume-control/volume-control.ui.h:2
 msgid "-"
-msgstr ""
+msgstr "-"
 
 #: ../applets/maintained/volume-control/volume-control.ui.h:3
 msgid "<b>Audio Options</b>"
@@ -4119,26 +4137,26 @@ msgstr ""
 #: ../applets/maintained/weather/forecast.py:54
 #: ../applets/maintained/weather/forecast.py:82
 msgid "Forecast"
-msgstr ""
+msgstr "Sääennuste"
 
 #: ../applets/maintained/weather/forecast.py:54
 #: ../applets/maintained/weather/forecast.py:82
 msgid "for"
-msgstr ""
+msgstr "kohteelle"
 
 #: ../applets/maintained/weather/forecast.py:167
 msgid "WEEKDAY"
-msgstr ""
+msgstr "VIIKONPÄIVÄ"
 
 #: ../applets/maintained/weather/forecast.py:171
 msgid "Tomorrow"
-msgstr ""
+msgstr "Huomenna"
 
 #. Weather condition
 #: ../applets/maintained/weather/forecast.py:197
 #: ../applets/maintained/weather/weather.py:452
 msgid "DESCRIPTION"
-msgstr ""
+msgstr "KUVAUS"
 
 #: ../applets/maintained/weather/forecast.py:249
 msgid "Weather data provided by weather.com"
@@ -4154,20 +4172,20 @@ msgstr "Sääsovelma"
 
 #: ../applets/maintained/weather/weather.py:215
 msgid "Fetching conditions for"
-msgstr ""
+msgstr "Noudetaan tietoja sijainnille"
 
 #: ../applets/maintained/weather/weather.py:254
 msgid "Show _Map"
-msgstr ""
+msgstr "Näytä _kartta"
 
 #: ../applets/maintained/weather/weather.py:302
 #: ../applets/maintained/weather/weather.py:380
 msgid "No records found"
-msgstr ""
+msgstr "Tietoja ei löytynyt"
 
 #: ../applets/maintained/weather/weather.py:371
 msgid "Searching..."
-msgstr ""
+msgstr "Etsitään..."
 
 #: ../applets/maintained/weather/weather.ui.h:4
 msgid "<b>Icon Display</b>"
@@ -4177,10 +4195,12 @@ msgstr "<b>Kuvakenäkymä</b>"
 msgid ""
 "<i><b>Examples:</b> Boston; Portland, ME, Amsterdam; or Osaka, Japan.</i>"
 msgstr ""
+"<i><b>Esimerkkejä:</b> Boston; Portland, ME, Amsterdam; tai Helsinki, "
+"Finland.</i>"
 
 #: ../applets/maintained/weather/weather.ui.h:6
 msgid "Current _location:"
-msgstr ""
+msgstr "Nykyinen s_ijainti:"
 
 #: ../applets/maintained/weather/weather.ui.h:7
 msgid ""
@@ -4190,7 +4210,7 @@ msgstr ""
 
 #: ../applets/maintained/weather/weather.ui.h:8
 msgid "If enabled, the temperature will be displayed in the icon"
-msgstr ""
+msgstr "Jos käytössä, lämpötila esitetään kuvakkeessa"
 
 #: ../applets/maintained/weather/weather.ui.h:9
 msgid "Large"
@@ -4232,11 +4252,11 @@ msgstr "_Sijainnin nimi:"
 #: ../applets/maintained/webapplet/applet.c:262
 #: ../applets/maintained/webapplet/applet.c:460
 msgid "Open Location"
-msgstr ""
+msgstr "Avaa sijainti"
 
 #: ../applets/maintained/webapplet/applet.c:281
 msgid "Set as new _Home Page"
-msgstr ""
+msgstr "Aseta _uudeksi kotisivuksi"
 
 #: ../applets/maintained/webapplet/applet.c:399
 #: ../applets/maintained/webapplet/webapplet.desktop.in.in.h:2
@@ -4251,7 +4271,7 @@ msgstr ""
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:2
 msgid "HTML engine to use."
-msgstr ""
+msgstr "Käytettävä HTML-moottori."
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:3
 msgid "If true display location entry and website buttons"
@@ -4268,12 +4288,12 @@ msgstr ""
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:7
 #, no-c-format
 msgid "Width in %% or px."
-msgstr ""
+msgstr "Leveys muodossa %% tai pikseleissä."
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:9
 #, no-c-format
 msgid "height in %% or px."
-msgstr ""
+msgstr "Korkeus muodossa %% tai pikseleissä."
 
 #: ../applets/maintained/webapplet/webapplet.desktop.in.in.h:1
 msgid "Applet for Websites"
@@ -4293,15 +4313,15 @@ msgstr ""
 
 #: ../applets/maintained/yama/yama.desktop.in.h:2
 msgid "Yet Another Menu Applet"
-msgstr ""
+msgstr "Taas yksi valikkosovelma"
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in.h:1
 msgid "Awn System Monitor"
-msgstr ""
+msgstr "Awn-järjestelmänvalvonta"
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:1
 msgid "Graph update frequency, in milliseconds."
-msgstr ""
+msgstr "Kuvaajan päivitystiheys millisekunneissa."
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:2
 msgid "Set to 1 (true) to draw the gradient overlay on the graph."
@@ -4309,19 +4329,19 @@ msgstr ""
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:3
 msgid "The color used in the applet border."
-msgstr ""
+msgstr "Sovelman reunuksessa käytettävä väri."
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:4
 msgid "The color used in the graph lines."
-msgstr ""
+msgstr "Kuvaajan viivoissa käytettävä väri."
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:5
 msgid "The color used in the graph lines. Valid values are 0.0 through 1.0."
-msgstr ""
+msgstr "Kuvaajan viivoissa käytettävä väri. Kelvolliset arvot ovat 0.0-1.0."
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:6
 msgid "The pixel width of the applet border."
-msgstr ""
+msgstr "Sovelman reunan leveys pikseleissä."
 
 #: ../applets/unmaintained/main-menu/applet.c:394
 #: ../applets/unmaintained/main-menu/main-menu.desktop.in.in.h:2
@@ -4330,7 +4350,7 @@ msgstr "Awn-päävalikko"
 
 #: ../applets/unmaintained/main-menu/applet.c:395
 msgid "Displays a list of all your applications"
-msgstr ""
+msgstr "Näyttää listan sovelluksistasi"
 
 #: ../applets/unmaintained/main-menu/applet.c:453
 msgid "Main Menu"
@@ -4338,7 +4358,7 @@ msgstr "Päävalikko"
 
 #: ../applets/unmaintained/main-menu/main-menu.desktop.in.in.h:1
 msgid "A main menu for Awn"
-msgstr ""
+msgstr "Awn:n päävalikko"
 
 #: ../applets/unmaintained/pandora/awn-applet-pandora.schema-ini.in.h:1
 msgid "The url of the Pandora mini flash player."
@@ -4464,23 +4484,23 @@ msgstr ""
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:28
 msgid "Tooltip background color 1."
-msgstr ""
+msgstr "Työkaluvihjeen taustan väri 1."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:29
 msgid "Tooltip background color 2."
-msgstr ""
+msgstr "Työkaluvihjeen taustan väri 2."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:30
 msgid "Tooltip border color."
-msgstr ""
+msgstr "Työkaluvihjeen reunan väri."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:31
 msgid "Tooltip font name."
-msgstr ""
+msgstr "Työkaluvihjeen kirjasimen nimi."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:32
 msgid "Tooltip text color."
-msgstr ""
+msgstr "Työkaluvihjeen tekstin väri."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:33
 msgid "Type of UI used for the stack."
@@ -4488,7 +4508,7 @@ msgstr ""
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:34
 msgid "Use Awn's tooltip font."
-msgstr ""
+msgstr "Käytä Awn:n työkaluvihjeen kirjasinta."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:35
 msgid "Whether hoverbox contains label."
@@ -4505,4 +4525,4 @@ msgstr ""
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:38
 msgid "Whether tooltips are enabled."
-msgstr ""
+msgstr "Käytetäänkö työkaluvihjeitä."

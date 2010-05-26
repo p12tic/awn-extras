@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-11 18:07+0300\n"
-"PO-Revision-Date: 2010-05-24 08:37+0000\n"
+"PO-Revision-Date: 2010-05-25 09:37+0000\n"
 "Last-Translator: Jiri Grönroos <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-05-25 03:40+0000\n"
+"X-Launchpad-Export-Date: 2010-05-26 03:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -28,7 +28,7 @@ msgstr "Näyttää mietelauseen"
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:1
 msgid "Global hotkey used to activate the terminal."
-msgstr ""
+msgstr "Yleinen pikanäppäin päätteen aktivoimiseksi."
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:2
 msgid "Set whether the applet should hide itself when it loses focus."
@@ -45,7 +45,7 @@ msgstr "Sovelman peittokyky."
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:5
 msgid "The default external terminal application."
-msgstr ""
+msgstr "Oletusarvoinen ulkoinen pääte."
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:100
 msgid "Disabled"
@@ -76,11 +76,11 @@ msgstr "Toiminto"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:476
 msgid "Shortcut"
-msgstr "Pikavalinta"
+msgstr "Pikanäppäin"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:482
 msgid "Activate"
-msgstr "Ota käyttöön"
+msgstr "Aktivoi"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:491
 #, c-format
@@ -99,12 +99,12 @@ msgstr "Päätteen peittokyky"
 #: ../applets/maintained/awnterm/awn-terminal.vala:572
 #, c-format
 msgid "External Terminal"
-msgstr ""
+msgstr "Muu pääteohjelma"
 
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/awnterm/awnterm.desktop.in.in.h:1
 msgid "A simple popup terminal"
-msgstr ""
+msgstr "Yksinkertainen pääte, joka ponnahtaa näytölle."
 
 #: ../applets/maintained/awnterm/awnterm.desktop.in.in.h:2
 msgid "Terminal Applet"
@@ -116,7 +116,7 @@ msgstr " Lähetys/Lataus"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:2
 msgid " bytes)"
-msgstr " tavua)"
+msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:3
 msgid "Color to draw the background"
@@ -128,7 +128,7 @@ msgstr "Reunuksessa käytettävä väri"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:5
 msgid "Display parameters for interfaces"
-msgstr ""
+msgstr "Näytettävät liitäntöjen arvot"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:6
 msgid "Draw the applet background"
@@ -176,7 +176,7 @@ msgstr "Vaihda yksikköä"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:295
 msgid "Scanning"
-msgstr ""
+msgstr "Luetaan"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:296
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:4
@@ -275,11 +275,11 @@ msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:7
 msgid "Display the sum of upload and download"
-msgstr ""
+msgstr "Näytä lähetyksen ja latauksen yhteismäärä"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:8
 msgid "Display upload and download text representation of speed"
-msgstr ""
+msgstr "Näytä lähetyksen ja latauksen nopeus tekstimuodossa"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:9
 msgid "Do not display the speed as text, only draw the graph"
@@ -346,7 +346,7 @@ msgstr ""
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:22
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:141
 msgid "Sum"
-msgstr ""
+msgstr "Yhteismäärä"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:147
 msgid "Multi"
@@ -399,7 +399,7 @@ msgstr ""
 #: ../applets/maintained/volume-control/awn-applet-volume-control.schema-ini.in.h:3
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:7
 msgid "The name of the theme of the icon."
-msgstr ""
+msgstr "Kuvaketeeman nimi."
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:7
 msgid "Unit of low level threshold (Percent or Time Remaining)."
@@ -411,7 +411,7 @@ msgstr "Akku"
 
 #: ../applets/maintained/battery/battery.desktop.in.h:2
 msgid "Display battery state"
-msgstr "Näytä akun tila"
+msgstr "Näyttää akun tilan"
 
 #: ../applets/maintained/battery/battery.ui.h:2
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:5
@@ -494,7 +494,7 @@ msgstr ""
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:8
 msgid "List of cities and timezones separated by a '#' character."
-msgstr ""
+msgstr "Lista kaupungeista ja aikavyöhykkeistä erotettuna '#'-merkillä."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:9
 msgid ""
@@ -531,11 +531,11 @@ msgstr "24-t_untinen muoto"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:4
 msgid "<b>Clock Display</b>"
-msgstr ""
+msgstr "<b>Kellon näkymä</b>"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:6
 msgid "<b>Title Options</b>"
-msgstr ""
+msgstr "<b>Otsakeasetukset</b>"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:7
 msgid "Beaufort"
@@ -561,7 +561,7 @@ msgstr "Jos käytössä, näytetään tuntien ja minuuttien lisäksi myös sekun
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:12
 msgid "If enabled, the date will be shown in the title"
-msgstr ""
+msgstr "Jos käytössä, päiväys näytetään otsakkeessa"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:13
 msgid "If enabled, the seconds hand will be visible in the clock"
@@ -735,7 +735,7 @@ msgstr "Näyttää tapaamiset telakassa"
 
 #: ../applets/maintained/calendar/calendarlogin.py:43
 msgid "Login to "
-msgstr ""
+msgstr "Kirjaudu palveluun "
 
 #: ../applets/maintained/calendar/calendarlogin.py:48
 msgid "Online Calendar"
@@ -906,10 +906,13 @@ msgstr ""
 #, python-format
 msgid "Failed to download %s. Press \"next\" to try again."
 msgstr ""
+"Kohteen %s lataus epäonnistui. Napsauta \"Seuraava\" yrittääksesi uudelleen."
 
 #: ../applets/maintained/comics/comics_add.py:63
 msgid "The URL is not a valid comic feed. Press \"next\" to try again"
 msgstr ""
+"Annettu verkko-osoite ei ole kelvollinen sarjakuvan osoite. Napsauta "
+"\"Seuraava\" yrittääksesi uudelleen."
 
 #: ../applets/maintained/comics/comics_add.py:140
 #, python-format
@@ -1939,7 +1942,7 @@ msgstr ""
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.desktop.in.h:2
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:63
 msgid "File Browser Launcher"
-msgstr "Tiedostoselaimen käynnistin"
+msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/about.py:42
 msgid "A customizable launcher for browsing your files."
@@ -1959,7 +1962,7 @@ msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:4
 msgid "The file browser to use"
-msgstr ""
+msgstr "Käytettävä tiedostoselain"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:5
 msgid "The path to use on left click"
@@ -2003,7 +2006,7 @@ msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.desktop.in.h:1
 msgid "A launcher for your file manager"
-msgstr ""
+msgstr "Tiedostoselaimen käynnistin"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:347
 msgid "Home Folder"
@@ -2082,7 +2085,7 @@ msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:44
 msgid "File Browser Launcher Preferences"
-msgstr ""
+msgstr "Tiedostoselaimen käynnistimen asetukset"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:93
 msgid "File Browser"
@@ -2116,7 +2119,7 @@ msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:191
 msgid "Open place when clicked"
-msgstr ""
+msgstr "Avaa sijainti napsauttaessa"
 
 #. Show all places
 #: ../applets/maintained/file-browser-launcher/prefs.py:211
@@ -2165,7 +2168,7 @@ msgstr "Valitse kansio"
 #: ../applets/maintained/garbage/applet.vala:57
 #: ../applets/maintained/garbage/garbage.desktop.in.in.h:2
 msgid "Garbage"
-msgstr ""
+msgstr "Roskakori"
 
 #. set the title as well
 #. $display_name: $count item(s)
@@ -2208,7 +2211,7 @@ msgstr ""
 
 #: ../applets/maintained/garbage/garbage.desktop.in.in.h:1
 msgid "A lightweight, cross-desktop trash applet"
-msgstr ""
+msgstr "Kevyt, useampaa työpöytäympäristöä tukeva roskakorisovelma"
 
 #: ../applets/maintained/garbage/prefs.vala:32
 #, c-format
@@ -2287,15 +2290,15 @@ msgstr ""
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.desktop.in.h:2
 msgid "Hardware Sensors"
-msgstr "Laiteanturit"
+msgstr ""
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:49
 msgid "Applet to show the hardware sensors readouts"
-msgstr ""
+msgstr "Sovelma laiteanturien tietojen esittämiseen"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:83
 msgid "Warning from Hardware Sensors: No sensors found"
-msgstr ""
+msgstr "Laiteanturit - varoitus: antureita ei löytynyt"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:84
 msgid ""
@@ -2443,7 +2446,7 @@ msgstr ""
 
 #: ../applets/maintained/mail/mail.desktop.in.h:1
 msgid "Check Your Email from AWN"
-msgstr ""
+msgstr "Tarkista sähköpostisi Awn:n kautta"
 
 #: ../applets/maintained/mail/mail.desktop.in.h:2
 #: ../applets/maintained/mail/mail.py:134
@@ -2649,7 +2652,7 @@ msgstr "Hallitse musiikkisoitintasi"
 
 #: ../applets/maintained/media-control/media-control.desktop.in.h:2
 msgid "Media Control"
-msgstr ""
+msgstr "Mediahallinta"
 
 #: ../applets/maintained/media-control/media_control.py:612
 msgid "Title - Artist"
@@ -2771,7 +2774,7 @@ msgstr "<b>Videon koko</b>"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:3
 msgid "Media Player Preferences"
-msgstr "Mediasoittimen ominaisuudet"
+msgstr "Mediasoittimen asetukset"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:4
 msgid "_Audiosink:"
@@ -2799,7 +2802,7 @@ msgstr ""
 
 #: ../applets/maintained/mount/mount.desktop.in.h:1
 msgid "An applet to (un)mount devices"
-msgstr ""
+msgstr "Sovelma laitteiden liittämiseen ja irrottamiseen"
 
 #: ../applets/maintained/mount/mount.desktop.in.h:2
 msgid "Mount Applet"
@@ -2889,7 +2892,7 @@ msgstr "Kuvakkeen _koko:"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:10
 msgid "Notification Area Preferences"
-msgstr ""
+msgstr "Ilmoitusalueen asetukset"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:11
 msgid "_Number of icon rows:"
@@ -2897,7 +2900,7 @@ msgstr ""
 
 #: ../applets/maintained/notification-area/notification-area.desktop.in.in.h:1
 msgid "A Notification Area (systray)"
-msgstr ""
+msgstr "Ilmoitusalue (ns. systray)"
 
 #: ../applets/maintained/notification-area/notification-area.desktop.in.in.h:2
 msgid "Notification Area"
@@ -3112,7 +3115,7 @@ msgstr ""
 
 #: ../applets/maintained/quit/quit.desktop.in.h:1
 msgid "An applet to exit or log out of your session"
-msgstr ""
+msgstr "Sovelma, jonka avulla voi lopettaa istunnon"
 
 #: ../applets/maintained/quit/quit.desktop.in.h:2
 msgid "Quit-Log Out applet"
@@ -3674,7 +3677,7 @@ msgstr ""
 #: ../applets/maintained/sysmon/sysmon.desktop.in.in.h:1
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in.h:2
 msgid "Manage system activity"
-msgstr ""
+msgstr "Valvo ja hallitse järjestelmän tilaa"
 
 #: ../applets/maintained/sysmon/sysmon.desktop.in.in.h:2
 msgid "System Monitor"
@@ -4164,7 +4167,7 @@ msgstr "Säätiedot tarjoaa weather.com"
 
 #: ../applets/maintained/weather/weather.desktop.in.h:1
 msgid "Display the local weather"
-msgstr "Näytä paikallissää"
+msgstr "Näyttää paikallissään"
 
 #: ../applets/maintained/weather/weather.desktop.in.h:2
 msgid "Weather Applet"

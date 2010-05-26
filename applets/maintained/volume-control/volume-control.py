@@ -100,10 +100,10 @@ class VolumeControlApplet:
             self.setup_main_dialog(prefs)
             self.setup_context_menu(prefs)
 
-            applet.connect("scroll-event", self.scroll_event_cb)
+            applet.connect("scroll-event", self.icon_scroll_event_cb)
             applet.connect("position-changed", lambda a, o: self.refresh_orientation())
 
-    def scroll_event_cb(self, widget, event):
+    def icon_scroll_event_cb(self, widget, event):
         if event.direction == gdk.SCROLL_UP:
             self.backend.increase_volume()
         elif event.direction == gdk.SCROLL_DOWN:
@@ -115,7 +115,6 @@ class VolumeControlApplet:
 
         self.volume_scale = prefs.get_object("hscale-volume")
         self.volume_scale.props.can_focus = False
-        self.volume_scale.set_increments(volume_step, 10)
 
         if gtk.gtk_version >= (2, 16, 0) and gtk.pygtk_version >= (2, 15, 0):
             self.volume_scale.add_mark(100, gtk.POS_BOTTOM, "<small>%s</small>" % "100%")
@@ -126,6 +125,7 @@ class VolumeControlApplet:
         self.volume_scale.connect("button-press-event", self.volume_scale_pressed_cb)
         self.volume_scale.connect("button-release-event", self.volume_scale_released_cb)
         self.volume_scale.connect("value-changed", self.volume_scale_changed_cb)
+        self.volume_scale.connect("scroll-event", self.volume_scale_scroll_event_cb)
         self.mute_item.connect("toggled", self.mute_toggled_cb)
 
         self.applet.connect("middle-clicked", self.middle_clicked_cb)
@@ -163,6 +163,13 @@ class VolumeControlApplet:
                 self.backend.set_volume(volume)
 
                 self.message_delay_handler.start()
+
+    def volume_scale_scroll_event_cb(self, widget, event):
+        if event.direction == gdk.SCROLL_UP:
+            self.backend.increase_volume()
+        elif event.direction == gdk.SCROLL_DOWN:
+            self.backend.decrease_volume()
+        return True
 
     def setup_context_menu(self, prefs):
         """Add "Open Volume Control" to the context menu.

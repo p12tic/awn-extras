@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: notification-daemon trunk\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-11 18:07+0300\n"
-"PO-Revision-Date: 2010-04-10 23:56+0000\n"
-"Last-Translator: Michal Hruby <michal.mhr@gmail.com>\n"
+"PO-Revision-Date: 2010-05-26 20:08+0000\n"
+"Last-Translator: Gabor Karsay <Unknown>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-04-12 03:50+0000\n"
+"X-Launchpad-Export-Date: 2010-05-27 03:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -44,7 +44,7 @@ msgstr ""
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:5
 msgid "The default external terminal application."
-msgstr ""
+msgstr "Das externe Standard-Terminal"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:100
 msgid "Disabled"
@@ -71,24 +71,24 @@ msgstr ""
 #: ../applets/maintained/file-browser-launcher/prefs.py:253
 #: ../applets/maintained/file-browser-launcher/prefs.py:328
 msgid "Action"
-msgstr ""
+msgstr "Aktion"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:476
 msgid "Shortcut"
-msgstr ""
+msgstr "Tastenkombination"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:482
 msgid "Activate"
-msgstr ""
+msgstr "Aktivieren"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:491
 #, c-format
 msgid "Background image"
-msgstr ""
+msgstr "Hintergrundbild"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:503
 msgid "Select a file"
-msgstr ""
+msgstr "Wählen Sie eine Datei"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:545
 #, c-format
@@ -98,16 +98,16 @@ msgstr ""
 #: ../applets/maintained/awnterm/awn-terminal.vala:572
 #, c-format
 msgid "External Terminal"
-msgstr ""
+msgstr "Externes Terminal"
 
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/awnterm/awnterm.desktop.in.in.h:1
 msgid "A simple popup terminal"
-msgstr ""
+msgstr "Ein einfaches Popup-Terminal"
 
 #: ../applets/maintained/awnterm/awnterm.desktop.in.in.h:2
 msgid "Terminal Applet"
-msgstr ""
+msgstr "Terminal-Applet"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:1
 msgid " Upload/Download"
@@ -257,11 +257,11 @@ msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:2
 msgid "Background Color"
-msgstr ""
+msgstr "Hintergrundfarbe"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:3
 msgid "Border Color"
-msgstr ""
+msgstr "Rahmenfarbe"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:5
 msgid "Display MBps/KBps (bytes) instead of Mbps/Kbps (bits)"
@@ -415,11 +415,11 @@ msgstr ""
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:5
 #: ../applets/maintained/weather/weather.ui.h:3
 msgid "<b>General Options</b>"
-msgstr ""
+msgstr "<b>Allgemeine Einstellungen</b>"
 
 #: ../applets/maintained/battery/battery.ui.h:3
 msgid "<b>Notifications</b>"
-msgstr ""
+msgstr "<b>Benachrichtigungen</b>"
 
 #: ../applets/maintained/battery/battery.ui.h:4
 msgid ""
@@ -433,11 +433,11 @@ msgstr ""
 
 #: ../applets/maintained/battery/battery.ui.h:6
 msgid "Percent"
-msgstr ""
+msgstr "Prozent"
 
 #: ../applets/maintained/battery/battery.ui.h:7
 msgid "Time Remaining"
-msgstr ""
+msgstr "Verbleibende Zeit"
 
 #: ../applets/maintained/battery/battery.ui.h:8
 msgid "_Battery:"
@@ -504,13 +504,15 @@ msgstr ""
 
 #: ../applets/maintained/cairo-clock/cairo-clock.desktop.in.h:1
 msgid "Cairo Clock"
-msgstr ""
+msgstr "Cairo-Uhr"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.desktop.in.h:2
 msgid ""
 "Displays an analog clock and supports additional clocks for different "
 "locations"
 msgstr ""
+"Zeigt eine analoge Uhr und bietet zusätzliche Uhren für unterschiedliche "
+"Standorte"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:1
 #: ../applets/maintained/weather/weather.ui.h:1
@@ -519,11 +521,11 @@ msgstr " "
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:2
 msgid "12 _hour format"
-msgstr ""
+msgstr "12-_Stunden-Format"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:3
 msgid "24 h_our format"
-msgstr ""
+msgstr "24-S_tunden-Format"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:4
 msgid "<b>Clock Display</b>"
@@ -586,15 +588,15 @@ msgstr ""
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:19
 msgid "Show seco_nds hand"
-msgstr ""
+msgstr "Sekunden_zeiger anzeigen"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:20
 msgid "Show the _date"
-msgstr ""
+msgstr "_Datum anzeigen"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:21
 msgid "_Show weather of current location"
-msgstr ""
+msgstr "_Wetter des gegenwärtigen Standortes anzeigen"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:22
 msgid "_Temperature unit:"
@@ -606,15 +608,15 @@ msgstr ""
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:25
 msgid "km/h"
-msgstr ""
+msgstr "km/h"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:26
 msgid "knots"
-msgstr ""
+msgstr "Knoten"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:27
 msgid "m/s"
-msgstr ""
+msgstr "m/s"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:28
 msgid "mph"
@@ -623,30 +625,30 @@ msgstr ""
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:107
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:111
 msgid "Logout"
-msgstr ""
+msgstr "Abmelden"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:115
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:117
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:122
 #: ../applets/maintained/quit/quit-lock-screen.desktop.in.h:1
 msgid "Lock Screen"
-msgstr ""
+msgstr "Bildschirm sperren"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:126
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:128
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:139
 msgid "Suspend"
-msgstr ""
+msgstr "Bereitschaft"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:131
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:133
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:144
 msgid "Hibernate"
-msgstr ""
+msgstr "Ruhezustand"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:152
 msgid "Shutdown"
-msgstr ""
+msgstr "Ausschalten"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:187
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:566
@@ -662,7 +664,7 @@ msgstr ""
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:524
 #: ../applets/maintained/places/applet.c:344
 msgid "Desktop"
-msgstr ""
+msgstr "Arbeitsfläche"
 
 #. 
 #. TODO: check the trash and set to stock_trash_empty if trash is empty
@@ -675,12 +677,12 @@ msgstr "Mülleimer"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:194
 msgid "File System"
-msgstr ""
+msgstr "Dateisystem"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:315
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:569
 msgid "Network"
-msgstr ""
+msgstr "Netzwerk"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:316
 msgid "Connect to Server"
@@ -691,12 +693,12 @@ msgstr ""
 #: ../applets/maintained/file-browser-launcher/prefs.py:243
 #: ../applets/maintained/places/places.desktop.in.in.h:2
 msgid "Places"
-msgstr ""
+msgstr "Orte"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:985
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:999
 msgid "Recent Documents"
-msgstr ""
+msgstr "Zuletzt geöffnete Dokumente"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1030
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1041
@@ -706,7 +708,7 @@ msgstr ""
 #. generates a compiler warning due to the ellipse
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1057
 msgid "Search\\u2026"
-msgstr ""
+msgstr "Suche\\u2026"
 
 #. generates a compiler warning due to the ellipse
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1074
@@ -715,11 +717,11 @@ msgstr ""
 
 #: ../applets/maintained/cairo-menu/misc.c:344
 msgid "Clear Recent Documents"
-msgstr ""
+msgstr "Liste der zuletzt geöffneten Dokumente löschen"
 
 #: ../applets/maintained/calendar/awn-applet-calendar.schema-ini.in.h:1
 msgid "X"
-msgstr ""
+msgstr "X"
 
 #: ../applets/maintained/calendar/calendar.desktop.in.h:1
 msgid "Clock/Calendar Applet"
@@ -934,7 +936,7 @@ msgstr ""
 #: ../applets/maintained/comics/main.py:294
 #: ../applets/maintained/comics/main.py:300
 msgid "Comics!"
-msgstr ""
+msgstr "Comics!"
 
 #: ../applets/maintained/comics/comics.desktop.in.h:2
 msgid "View your favourite comics on your desktop"
@@ -960,11 +962,11 @@ msgstr "Fehler"
 
 #: ../applets/maintained/comics/comics.py:155
 msgid "Comics"
-msgstr ""
+msgstr "Comics"
 
 #: ../applets/maintained/comics/comics.py:159
 msgid "Manage Comics"
-msgstr ""
+msgstr "Comics verwalten"
 
 #: ../applets/maintained/comics/comics.py:211
 #: ../applets/maintained/comics/main.py:192
@@ -983,7 +985,7 @@ msgstr "Speichern von <i>%s</i> fehlgeschlagen."
 
 #: ../applets/maintained/comics/ui/add.ui.h:1
 msgid "Add Comic"
-msgstr ""
+msgstr "Comic hinzufügen"
 
 #: ../applets/maintained/comics/ui/add.ui.h:2
 msgid "Downloading Comic"
@@ -1021,7 +1023,7 @@ msgstr ""
 
 #: ../applets/maintained/comics/ui/manage.ui.h:1
 msgid "Manage comics"
-msgstr ""
+msgstr "Comics verwalten"
 
 #: ../applets/maintained/comics/ui/manage.ui.h:2
 msgid "The following comics are installed:"
@@ -1029,11 +1031,11 @@ msgstr ""
 
 #: ../applets/maintained/comics/ui/view.ui.h:1
 msgid "Show link"
-msgstr ""
+msgstr "Zeige Link"
 
 #: ../applets/maintained/comics/ui/view.ui.h:2
 msgid "Size"
-msgstr ""
+msgstr "Größe"
 
 #: ../applets/maintained/comics/main.py:152
 #, python-format
@@ -1581,11 +1583,11 @@ msgstr ""
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:1
 msgid "12 hour format"
-msgstr ""
+msgstr "12-Stunden-Format"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:2
 msgid "24 hour format"
-msgstr ""
+msgstr "24-Stunden-Format"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:3
 msgid "<b>Clock Format</b>"
@@ -1601,7 +1603,7 @@ msgstr ""
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:7
 msgid "Date below time"
-msgstr ""
+msgstr "Datum unter Uhrzeit"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:8
 msgid "Digital Clock Preferences"
@@ -1617,7 +1619,7 @@ msgstr ""
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:11
 msgid "Show the date"
-msgstr ""
+msgstr "Datum anzeigen"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:12
 msgid "Use default Awn colors"
@@ -1625,12 +1627,12 @@ msgstr ""
 
 #: ../applets/maintained/digital-clock/digital-clock.desktop.in.in.h:1
 msgid "A clock and calendar in one."
-msgstr ""
+msgstr "Uhr und Kalendar in einem"
 
 #: ../applets/maintained/digital-clock/digital-clock.desktop.in.in.h:2
 #: ../applets/maintained/digital-clock/digital-clock.vala:57
 msgid "Digital Clock"
-msgstr ""
+msgstr "Digitale Uhr"
 
 #. "Copy Time" menu item
 #: ../applets/maintained/digital-clock/digital-clock.vala:335
@@ -1670,16 +1672,16 @@ msgstr ""
 
 #: ../applets/maintained/feeds/classes.py:328
 msgid "Google"
-msgstr ""
+msgstr "Google"
 
 #: ../applets/maintained/feeds/classes.py:488
 #: ../applets/maintained/feeds/prefs.py:516
 msgid "Google Reader"
-msgstr ""
+msgstr "Google Reader"
 
 #: ../applets/maintained/feeds/classes.py:533
 msgid "Google Wave"
-msgstr ""
+msgstr "Google Wave"
 
 #: ../applets/maintained/feeds/classes.py:619
 msgid "Reddit Inbox"
@@ -1698,7 +1700,7 @@ msgstr ""
 #: ../applets/maintained/feeds/classes.py:765
 #: ../applets/maintained/feeds/prefs.py:410
 msgid "Twitter"
-msgstr ""
+msgstr "Twitter"
 
 #: ../applets/maintained/feeds/classes.py:892
 msgid "Untitled"
@@ -1829,7 +1831,7 @@ msgstr ""
 
 #: ../applets/maintained/feeds/prefs.py:157
 msgid " minutes"
-msgstr ""
+msgstr " Minuten"
 
 #: ../applets/maintained/feeds/prefs.py:264
 msgid "Open OPML File"
@@ -1865,7 +1867,7 @@ msgstr ""
 
 #: ../applets/maintained/feeds/prefs.py:367
 msgid "RSS/Atom"
-msgstr ""
+msgstr "RSS/Atom"
 
 #: ../applets/maintained/feeds/prefs.py:412
 msgid "Timeline"
@@ -1873,7 +1875,7 @@ msgstr ""
 
 #: ../applets/maintained/feeds/prefs.py:417
 msgid "Replies"
-msgstr ""
+msgstr "Antworten"
 
 #. "Search for" label and entry
 #: ../applets/maintained/feeds/prefs.py:446
@@ -2155,7 +2157,7 @@ msgstr ""
 #: ../applets/maintained/garbage/applet.vala:57
 #: ../applets/maintained/garbage/garbage.desktop.in.in.h:2
 msgid "Garbage"
-msgstr ""
+msgstr "Mülleimer"
 
 #. set the title as well
 #. $display_name: $count item(s)
@@ -2163,13 +2165,14 @@ msgstr ""
 #, c-format
 msgid "%s: %u item"
 msgid_plural "%s: %u items"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s: %u Objekt"
+msgstr[1] "%s: %u Objekte"
 
 #: ../applets/maintained/garbage/applet.vala:194
 #, c-format
 msgid "Could not open the trash folder with your file manager: %s"
 msgstr ""
+"Der Müllordner konnte mit Ihrem Dateimanager (%s) nicht geöffnet werden."
 
 #: ../applets/maintained/garbage/applet.vala:209
 msgid "_Empty Trash"
@@ -2180,38 +2183,40 @@ msgstr "Mülleimer l_eeren"
 msgid ""
 "Are you sure you want to empty your trash? It currently contains %u item(s)."
 msgstr ""
+"Sind Sie sicher, dass Sie den Müll leeren wollen? Er enthält momentan %u "
+"Objekt(e)."
 
 #: ../applets/maintained/garbage/applet.vala:344
 #, c-format
 msgid "Could not send the dragged file(s) to the trash: %s"
-msgstr ""
+msgstr "Die Datei(en) konnten nicht in den Mülleimer gezogen werden: %s"
 
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/garbage/awn-applet-garbage.schema-ini.in.h:1
 msgid ""
 "Enable the confirmation dialog form when one wishes to empty the trash."
-msgstr ""
+msgstr "Bestätigungsdialog anzeigen, bevor der Mülleimer geleert wird"
 
 #: ../applets/maintained/garbage/awn-applet-garbage.schema-ini.in.h:2
 msgid "Show the number of items in the trash on top of the icon."
-msgstr ""
+msgstr "Anzahl der Objekte im Müll auf dem Symbol anzeigen"
 
 #: ../applets/maintained/garbage/garbage.desktop.in.in.h:1
 msgid "A lightweight, cross-desktop trash applet"
-msgstr ""
+msgstr "Ein leichtgewichtiges, Desktop-übergreifendes Mülleimerapplet"
 
 #: ../applets/maintained/garbage/prefs.vala:32
 #, c-format
 msgid "%s Preferences"
-msgstr ""
+msgstr "%s-Einstellungen"
 
 #: ../applets/maintained/garbage/prefs.vala:47
 msgid "Confirm when emptying the trash"
-msgstr ""
+msgstr "Leeren des Mülleimers bestätigen"
 
 #: ../applets/maintained/garbage/prefs.vala:52
 msgid "Show the item count on the icon"
-msgstr ""
+msgstr "Anzahl der Objekte auf dem Symbol anzeigen"
 
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:1
@@ -3385,21 +3390,21 @@ msgstr ""
 #: ../applets/maintained/showdesktop/applet.vala:40
 #: ../applets/maintained/showdesktop/showdesktop.desktop.in.in.h:2
 msgid "Show Desktop"
-msgstr ""
+msgstr "Arbeitsfläche anzeigen"
 
 #. vim:ft=vala:et:ts=2 sts=2 sw=2:ai:cindent
 #: ../applets/maintained/showdesktop/applet.vala:78
 #: ../applets/maintained/showdesktop/showdesktop.desktop.in.in.h:1
 msgid "Hides your windows and shows your desktop."
-msgstr ""
+msgstr "Verbirgt Ihre Fenster und zeigt Ihre Arbeitsfläche an"
 
 #: ../applets/maintained/showdesktop/applet.vala:93
 msgid "Show hidden windows"
-msgstr ""
+msgstr "Verborgene Fenster hervorholen"
 
 #: ../applets/maintained/showdesktop/applet.vala:98
 msgid "Hide windows and show desktop"
-msgstr ""
+msgstr "Fenster verbergen und Arbeitsfläche anzeigen"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:1
 msgid "The background color of the dialog"

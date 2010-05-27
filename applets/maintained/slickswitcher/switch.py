@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2010 sharkbaitbobby <sharkbaitbobby+awn@gmail.com>
 #
@@ -57,11 +56,18 @@ class Switch:
         if current_workspace is None:
             current_workspace = self.screen.get_active_workspace()
 
+        if current_workspace is None:
+            return 1
+
         #Get the workspace width
         workspace_width = current_workspace.get_width()
 
         #Return the number of columns
-        return workspace_width / self.width
+        num = workspace_width / self.width
+        if num <= 0:
+            return 1
+        else:
+            return num
 
     #Return the number of rows
     def get_num_rows(self, current_workspace=None):
@@ -69,17 +75,27 @@ class Switch:
         if current_workspace is None:
             current_workspace = self.screen.get_active_workspace()
 
+        if current_workspace is None:
+            return 1
+
         #Get the workspace height
         workspace_height = current_workspace.get_height()
 
         #Return the number of columns
-        return workspace_height / self.height
+        num = workspace_height / self.height
+        if num <= 0:
+            return 1
+        else:
+            return num
 
     #Return the number of the current workspace
     def get_current_workspace_num(self, current_workspace=None):
         #Get the active workspace if necessary
         if current_workspace is None:
             current_workspace = self.screen.get_active_workspace()
+
+        if current_workspace is None:
+            return 1
 
         if not current_workspace.is_virtual():
             return current_workspace.get_number() + 1
@@ -106,6 +122,9 @@ class Switch:
     def move(self, direction):
         #Get the current workspace
         current_workspace = self.screen.get_active_workspace()
+
+        if current_workspace is None:
+            return
 
         #Get the number of the current workspace
         current_workspace_num = self.get_current_workspace_num(current_workspace)

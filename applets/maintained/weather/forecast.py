@@ -45,7 +45,7 @@ class Forecast:
 
         """
         def cb(forecast):
-            if forecast is not None and forecast != self.cachedForecast:
+            if forecast is not None and (self.forecastDialog is None or forecast != self.cachedForecast):
                 self.cachedForecast = forecast
 
                 if self.forecastDialog is None:
@@ -59,6 +59,12 @@ class Forecast:
         if self.cachedForecast is not None:
             self.forecastArea.set_forecast(self.cachedForecast)
 
+    def finalize_dialog(self):
+        if self.forecastDialog is not None:
+            self.forecastDialog = None
+            self.applet.dialog.unregister("main")
+        self.forecastArea = None
+
     def setup_forecast_dialog(self):
         """Update the forecast dialog, either a placeholder if no forecast
         data exists, or the desired dialog (curved or normal).
@@ -67,11 +73,7 @@ class Forecast:
 
         """
         if self.cachedForecast is not None:
-            if self.forecastDialog is not None:
-                del self.forecastDialog
-                self.applet.dialog.unregister("main")
-            if self.forecastArea is not None:
-                del self.forecastArea
+            self.finalize_dialog()
     
             if self.parent.applet.settings['curved_dialog']:
                 self.forecastDialog = self.CurvedDialogWrapper(self.applet)

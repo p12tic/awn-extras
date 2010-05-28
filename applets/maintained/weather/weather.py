@@ -4,7 +4,7 @@
 #   Mike (mosburger) Desjardins <desjardinsmike@gmail.com>
 #     Please do not email the above person for support. The 
 #     email address is only there for license/copyright purposes.
-# Copyright (C) 2009  onox <denkpadje@gmail.com>
+# Copyright (C) 2009 - 2010  onox <denkpadje@gmail.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -147,11 +147,11 @@ def with_overlays(func):
     """
     throbber_counter[func] = False
     disconnect_counter[func] = False
-    def activate_throbber(show):
-        throbber_counter[func] = show
+    def activate_throbber(do_show):
+        throbber_counter[func] = do_show
         overlay_fsm.evaluate()
-    def active_icon(error):
-        disconnect_counter[func] = error
+    def active_icon(is_error):
+        disconnect_counter[func] = is_error
         overlay_fsm.evaluate()
     def bound_func(obj, *args, **kwargs):
         activate_throbber(True)
@@ -198,10 +198,8 @@ class WeatherApplet:
     def __init__(self, applet):
         self.applet = applet
 
-        self.cached_conditions = None
-        self.map_vbox = None
-        self.image_map = None
-        self.map_pixbuf = None
+        self.weather_fail = [False, False, False]
+        self.reset_weather_data()
 
         self.network_handler = self.NetworkHandler()
         self.notification = applet.notify.create_notification("Network error in Weather", network_error_message, "dialog-warning", 20)
@@ -240,9 +238,29 @@ class WeatherApplet:
         if type(e) is NetworkException:
             print "Error in Weather:", e
             self.notification.show()
+
+            if all(self.weather_fail):
+                # Clean up weather map
+                self.reset_weather_data()
+                self.map_item.set_sensitive(False)
+                self.applet.dialog.unregister("secondary")
+
+                # Clean up forecast dialog
+                self.forecaster.finalize_dialog()
+
+                # Clean up conditions (icon)
+                self.__temp_overlay.props.active = False
+                self.set_icon()
+                self.applet.tooltip.set("%s %s..."%(_("Fetching conditions for"), self.applet.settings['location']))
         else:
             self.applet.errors.set_error_icon_and_click_to_restart()
             self.applet.errors.general(e, traceback=tb, callback=gtk.main_quit)
+
+    def reset_weather_data(self):
+        self.cached_conditions = None
+        self.map_dialog = None
+        self.map_vbox = None
+        self.map_pixbuf = None
 
     def setup_context_menu(self):
         """Add "refresh" to the context menu and setup the preferences.
@@ -251,9 +269,10 @@ class WeatherApplet:
         menu = self.applet.dialog.menu
         menu_index = len(menu) - 1
 
-        map_item = gtk.MenuItem(_("Show _Map"))
-        map_item.connect("activate", self.activate_map_cb)
-        menu.insert(map_item, menu_index)
+        self.map_item = gtk.MenuItem(_("Show _Map"))
+        self.map_item.connect("activate", self.activate_map_cb)
+        menu.insert(self.map_item, menu_index)
+        self.map_item.set_sensitive(False)
 
         refresh_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_REFRESH)
         refresh_item.connect("activate", self.activate_refresh_cb)
@@ -391,7 +410,8 @@ class WeatherApplet:
         self.search_window.hide()
 
     def activate_map_cb(self, widget):
-        self.map_dialog.show_all()
+        if self.map_dialog is not None:
+            self.map_dialog.show_all()
 
     def activate_refresh_cb(self, widget=None, map=True):
         """Refresh the icon, forecast, and map data. Called by the
@@ -432,6 +452,7 @@ class WeatherApplet:
 
         """
         def cb(conditions):
+            self.weather_fail[0] = False
             if conditions != self.cached_conditions:
                 self.cached_conditions = conditions
                 self.refresh_icon()
@@ -442,6 +463,7 @@ class WeatherApplet:
                 print "Reattempt (%d retries remaining) in %d seconds" % (retries, delay_seconds)
                 self.applet.timing.delay(lambda: self.refresh_conditions(retries - 1), delay_seconds)
             else:
+                self.weather_fail[0] = True
                 self.network_error_cb(e, tb)
         self.network_handler.get_conditions(self.applet.settings['location_code'], callback=cb, error=error_cb)
 
@@ -459,11 +481,14 @@ class WeatherApplet:
             self.applet.tooltip.set(title)
             self.set_icon(self.cached_conditions["CODE"])
 
-    def fetch_forecast(self, cb, retries=3):
+    def fetch_forecast(self, forecast_cb, retries=3):
         """Use weather.com's XML service to download the latest 5-day
         forecast.
 
         """
+        def cb(forecast):
+            self.weather_fail[1] = False
+            forecast_cb(forecast)
         def error_cb(e, tb):
             if type(e) is NetworkException and retries > 0:
                 print "Warning in Weather:", e
@@ -471,6 +496,7 @@ class WeatherApplet:
                 print "Reattempt (%d retries remaining) in %d seconds" % (retries, delay_seconds)
                 self.applet.timing.delay(lambda: self.fetch_forecast(cb, retries - 1), delay_seconds)
             else:
+                self.weather_fail[1] = True
                 self.network_error_cb(e, tb)
         self.network_handler.get_forecast(self.applet.settings['location_code'], callback=cb, error=error_cb)
 
@@ -480,6 +506,7 @@ class WeatherApplet:
 
         """
         def cb(pixbuf):
+            self.weather_fail[2] = False
             self.set_map_pixbuf(pixbuf)
         def error_cb(e, tb):
             if type(e) is NetworkException and retries > 0:
@@ -488,6 +515,7 @@ class WeatherApplet:
                 print "Reattempt (%d retries remaining) in %d seconds" % (retries, delay_seconds)
                 self.applet.timing.delay(lambda: self.fetch_weather_map(retries - 1), delay_seconds)
             else:
+                self.weather_fail[2] = True
                 self.network_error_cb(e, tb)
         self.network_handler.get_weather_map(self.applet.settings['location_code'], callback=cb, error=error_cb)
 
@@ -499,7 +527,7 @@ class WeatherApplet:
         """
         if pixbuf is None:
             return
-        if self.map_vbox is None:
+        if self.map_dialog is None or self.map_vbox is None:
             self.map_dialog = self.applet.dialog.new("secondary", title=self.applet.settings['location'])
             self.map_vbox = gtk.VBox()
             self.map_dialog.add(self.map_vbox)
@@ -519,6 +547,7 @@ class WeatherApplet:
             pixbuf = pixbuf.scale_simple(width, height, gtk.gdk.INTERP_BILINEAR)
 
         self.map_vbox.add(gtk.image_new_from_pixbuf(pixbuf))
+        self.map_item.set_sensitive(True)
 
     def convert_temperature(self, value):
         unit = temperature_units[self.applet.settings["temperature-unit"]]

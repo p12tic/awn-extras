@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: notification-daemon trunk\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-11 18:07+0300\n"
-"PO-Revision-Date: 2010-05-26 20:08+0000\n"
+"PO-Revision-Date: 2010-05-27 21:59+0000\n"
 "Last-Translator: Gabor Karsay <Unknown>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-05-27 03:40+0000\n"
+"X-Launchpad-Export-Date: 2010-05-28 03:37+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
 msgid "Animal Farm"
-msgstr ""
+msgstr "Farm der Tiere"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:2
 msgid "Display fortune messages"
@@ -28,7 +28,7 @@ msgstr ""
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:1
 msgid "Global hotkey used to activate the terminal."
-msgstr ""
+msgstr "Globales Tastenkürzel, um das Terminal zu öffnen"
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:2
 msgid "Set whether the applet should hide itself when it loses focus."
@@ -36,11 +36,11 @@ msgstr ""
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:3
 msgid "The applet's background image."
-msgstr ""
+msgstr "Das Hintergrundbild des Applets."
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:4
 msgid "The applet's opacity level."
-msgstr ""
+msgstr "Die Deckkraft des Applets."
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:5
 msgid "The default external terminal application."
@@ -48,7 +48,7 @@ msgstr "Das externe Standard-Terminal"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:100
 msgid "Disabled"
-msgstr ""
+msgstr "Deaktiviert"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:410
 #: ../applets/maintained/calendar/calendarprefs.py:75
@@ -60,7 +60,7 @@ msgstr "Einstellungen"
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:16
 #, c-format
 msgid "Behavior"
-msgstr ""
+msgstr "Verhalten"
 
 #. focus out behavior checkbox
 #: ../applets/maintained/awnterm/awn-terminal.vala:437
@@ -93,7 +93,7 @@ msgstr "Wählen Sie eine Datei"
 #: ../applets/maintained/awnterm/awn-terminal.vala:545
 #, c-format
 msgid "Terminal opacity"
-msgstr ""
+msgstr "Terminal-Transparenz"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:572
 #, c-format
@@ -115,7 +115,7 @@ msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:2
 msgid " bytes)"
-msgstr ""
+msgstr " Bytes)"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:3
 msgid "Color to draw the background"
@@ -253,7 +253,7 @@ msgstr ""
 #: ../applets/maintained/volume-control/volume-control.ui.h:4
 #: ../applets/maintained/weather/weather.ui.h:2
 msgid "<b>Display</b>"
-msgstr ""
+msgstr "<b>Anzeige</b>"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:2
 msgid "Background Color"
@@ -369,7 +369,7 @@ msgstr ""
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:243
 #, python-format
 msgid "%s %s Color"
-msgstr ""
+msgstr "%s %s Farbe"
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:1
 msgid "HAL UDI of battery."
@@ -453,7 +453,7 @@ msgstr ""
 #: ../applets/maintained/volume-control/volume-control.ui.h:7
 #: ../applets/maintained/weather/weather.ui.h:18
 msgid "_Theme:"
-msgstr ""
+msgstr "_Thema:"
 
 #: ../applets/maintained/battery/battery.ui.h:11
 msgid "_Warn when charge level drops to:"
@@ -465,7 +465,7 @@ msgstr ""
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:2
 msgid "Beaufort)."
-msgstr ""
+msgstr "Beaufort)."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:3
 msgid ""
@@ -487,7 +487,7 @@ msgstr ""
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:7
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:6
 msgid "Kelvin)."
-msgstr ""
+msgstr "Kelvin)."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:8
 msgid "List of cities and timezones separated by a '#' character."
@@ -500,7 +500,7 @@ msgstr ""
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:10
 msgid "The name of the theme of the analog clock."
-msgstr ""
+msgstr "Name des Themas für die analoge Uhr"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.desktop.in.h:1
 msgid "Cairo Clock"
@@ -529,19 +529,19 @@ msgstr "24-S_tunden-Format"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:4
 msgid "<b>Clock Display</b>"
-msgstr ""
+msgstr "<b>Uhr-Anzeige</b>"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:6
 msgid "<b>Title Options</b>"
-msgstr ""
+msgstr "<b>Titel-Einstellungen</b>"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:7
 msgid "Beaufort"
-msgstr ""
+msgstr "Beaufort"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:8
 msgid "Celcius"
-msgstr ""
+msgstr "Grad Celsius"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:9
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:34
@@ -580,7 +580,7 @@ msgstr ""
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:17
 msgid "Location Name:"
-msgstr ""
+msgstr "Name des Ortes:"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:18
 msgid "Show _seconds"
@@ -657,7 +657,7 @@ msgstr ""
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:188
 msgid "Home"
-msgstr ""
+msgstr "Persönlicher Ordner"
 
 #. Check if this is the Desktop directory
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:189
@@ -725,7 +725,7 @@ msgstr "X"
 
 #: ../applets/maintained/calendar/calendar.desktop.in.h:1
 msgid "Clock/Calendar Applet"
-msgstr ""
+msgstr "Uhr/Kalender-Applet"
 
 #: ../applets/maintained/calendar/calendar.desktop.in.h:2
 msgid "Watch appointments on your dock"
@@ -1060,11 +1060,11 @@ msgstr ""
 
 #: ../applets/maintained/cpufreq/cpufreq.ui.h:2
 msgid "_Processor:"
-msgstr ""
+msgstr "_Prozessor:"
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:1
 msgid " 0.9)."
-msgstr ""
+msgstr " 0.9)."
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:2
 msgid " none)."
@@ -1230,7 +1230,7 @@ msgstr ""
 #: ../applets/maintained/dialect/dialect.ui.h:77
 #: ../applets/maintained/file-browser-launcher/prefs.py:318
 msgid "Left Click"
-msgstr ""
+msgstr "Linksklick"
 
 #: ../applets/maintained/dialect/dialect.ui.h:78
 msgid "Menu"
@@ -1239,7 +1239,7 @@ msgstr ""
 #: ../applets/maintained/dialect/dialect.ui.h:79
 #: ../applets/maintained/file-browser-launcher/prefs.py:393
 msgid "Middle Click"
-msgstr ""
+msgstr "Mittelklick"
 
 #: ../applets/maintained/dialect/dialect.ui.h:80
 msgid "Mouse Actions"
@@ -1637,12 +1637,12 @@ msgstr "Digitale Uhr"
 #. "Copy Time" menu item
 #: ../applets/maintained/digital-clock/digital-clock.vala:335
 msgid "Copy Time"
-msgstr ""
+msgstr "Uhrzeit kopieren"
 
 #. "Copy Date" menu item
 #: ../applets/maintained/digital-clock/digital-clock.vala:354
 msgid "Copy Date"
-msgstr ""
+msgstr "Datum kopieren"
 
 #. "Adjust Date & Time" menu item
 #: ../applets/maintained/digital-clock/digital-clock.vala:366
@@ -1807,11 +1807,11 @@ msgstr ""
 #. Import and export buttons (OPML)
 #: ../applets/maintained/feeds/prefs.py:115
 msgid "Import"
-msgstr ""
+msgstr "Importieren"
 
 #: ../applets/maintained/feeds/prefs.py:118
 msgid "Export"
-msgstr ""
+msgstr "Exportieren"
 
 #. Updating section (enable/disable automatically updating and change how often)
 #. Checkbox: Notify for updated feeds
@@ -1913,7 +1913,7 @@ msgstr ""
 #. If signed in to Google Reader
 #: ../applets/maintained/feeds/prefs.py:553
 msgid "_Search"
-msgstr ""
+msgstr "_Suchen"
 
 #: ../applets/maintained/feeds/prefs.py:760
 msgid ""
@@ -1999,56 +1999,56 @@ msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:347
 msgid "Home Folder"
-msgstr ""
+msgstr "Persönlicher Ordner"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:351
 #: ../applets/maintained/file-browser-launcher/prefs.py:223
 msgid "Filesystem"
-msgstr ""
+msgstr "Dateisystem"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:474
 msgid "Connect to Server..."
-msgstr ""
+msgstr "Verbindung zu Server …"
 
 #. Documents
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:528
 msgid "Documents"
-msgstr ""
+msgstr "Dokumente"
 
 #. Downloads
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:532
 msgid "Downloads"
-msgstr ""
+msgstr "Downloads"
 
 #. Music
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:536
 msgid "Music"
-msgstr ""
+msgstr "Musik"
 
 #. Pictures
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:540
 #: ../applets/maintained/slickswitcher/prefs.py:347
 msgid "Pictures"
-msgstr ""
+msgstr "Bilder"
 
 #. Public
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:544
 msgid "Public"
-msgstr ""
+msgstr "Öffentlich"
 
 #. Templates
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:548
 msgid "Templates"
-msgstr ""
+msgstr "Vorlagen"
 
 #. Videos
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:552
 msgid "Videos"
-msgstr ""
+msgstr "Videos"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:601
 msgid "CD/DVD Burner"
-msgstr ""
+msgstr "CD/DVD-Brenner"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:604
 msgid "Fonts"
@@ -2062,15 +2062,15 @@ msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:713
 msgid "DVD Drive"
-msgstr ""
+msgstr "DVD-Laufwerk"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:717
 msgid "CD Drive"
-msgstr ""
+msgstr "CD-Laufwerk"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1020
 msgid "Eject"
-msgstr ""
+msgstr "Auswerfen"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:44
 msgid "File Browser Launcher Preferences"
@@ -2117,7 +2117,7 @@ msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:223
 msgid "Home folder"
-msgstr ""
+msgstr "Persönlicher Ordner"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:224
 msgid "Mounted local drives"
@@ -2133,7 +2133,7 @@ msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:225
 msgid "Bookmarks"
-msgstr ""
+msgstr "Lesezeichen"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:264
 #: ../applets/maintained/file-browser-launcher/prefs.py:339
@@ -2148,7 +2148,7 @@ msgstr ""
 #: ../applets/maintained/file-browser-launcher/prefs.py:265
 #: ../applets/maintained/file-browser-launcher/prefs.py:340
 msgid "Nothing"
-msgstr ""
+msgstr "Nichts"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:540
 msgid "Choose a folder"
@@ -2402,11 +2402,11 @@ msgstr ""
 
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:35
 msgid "Volt"
-msgstr ""
+msgstr "Volt"
 
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:35
 msgid "rpm"
-msgstr ""
+msgstr "U/min"
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:1
 msgid "Display any network errors"
@@ -2541,7 +2541,7 @@ msgstr "Ohne Betreff"
 
 #: ../applets/maintained/mail/mail.py:575
 msgid "Google Apps"
-msgstr ""
+msgstr "Google Apps"
 
 #: ../applets/maintained/mail/mail.py:587
 msgid "Could not log in: No username or domain"
@@ -2608,7 +2608,7 @@ msgstr ""
 
 #: ../applets/maintained/mail/mail.ui.h:6
 msgid "_Email client:"
-msgstr ""
+msgstr "_E-Mail-Programm:"
 
 #: ../applets/maintained/mail/mail.ui.h:7
 msgid "_Hide applet if no new messages"
@@ -2762,7 +2762,7 @@ msgstr ""
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:2
 msgid "<b>Video size</b>"
-msgstr ""
+msgstr "<b>Videogröße</b>"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:3
 msgid "Media Player Preferences"
@@ -2856,19 +2856,19 @@ msgstr ""
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:2
 #, no-c-format
 msgid "%"
-msgstr ""
+msgstr "%"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:3
 msgid "<b>Background Color</b>"
-msgstr ""
+msgstr "<b>Hintergrundfarbe</b>"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:4
 msgid "<b>Border Color</b>"
-msgstr ""
+msgstr "<b>Rahmenfarbe</b>"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:6
 msgid "Automatic"
-msgstr ""
+msgstr "Automatisch"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:7
 msgid "Custom:"
@@ -3241,7 +3241,7 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:4
 msgid "<b>Background</b>"
-msgstr ""
+msgstr "<b>Hintergrund</b>"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:6
 msgid "<b>Icon transparency</b>"
@@ -3538,7 +3538,7 @@ msgstr ""
 #. Background Color
 #: ../applets/maintained/slickswitcher/prefs.py:134
 msgid "Background color:"
-msgstr ""
+msgstr "Hintergrundfarbe:"
 
 #: ../applets/maintained/slickswitcher/prefs.py:183
 msgid "Colors"
@@ -3627,7 +3627,7 @@ msgstr ""
 #: ../applets/maintained/slickswitcher/prefs.py:367
 #: ../applets/maintained/to-do/prefs.py:445
 msgid "Background"
-msgstr ""
+msgstr "Hintergrund"
 
 #: ../applets/maintained/slickswitcher/prefs.py:379
 msgid "Advanced"
@@ -3936,7 +3936,7 @@ msgstr ""
 
 #: ../applets/maintained/to-do/to-do.py:220
 msgid "A simple To-Do List"
-msgstr ""
+msgstr "Eine einfache To-do-Liste"
 
 #: ../applets/maintained/to-do/to-do.py:299
 msgid "Remove item"
@@ -3959,7 +3959,7 @@ msgstr ""
 #. First RadioButton - ( )Category
 #: ../applets/maintained/to-do/to-do.py:549
 msgid "_Category"
-msgstr ""
+msgstr "_Kategorie"
 
 #. Second RadioButton - (-)To-Do item
 #. TODO: better text than "To-Do item"?
@@ -3970,12 +3970,12 @@ msgstr ""
 #. Label: Priority:
 #: ../applets/maintained/to-do/to-do.py:641
 msgid "Priority: "
-msgstr ""
+msgstr "Priorität: "
 
 #. Neutral, Low, Medium, and High priority RadioButtons
 #: ../applets/maintained/to-do/to-do.py:644
 msgid "_Neutral"
-msgstr ""
+msgstr "_Neutral"
 
 #: ../applets/maintained/to-do/to-do.py:646
 msgid "_Low"
@@ -4163,7 +4163,7 @@ msgstr ""
 
 #: ../applets/maintained/weather/weather.desktop.in.h:2
 msgid "Weather Applet"
-msgstr ""
+msgstr "Wetter-Applet"
 
 #: ../applets/maintained/weather/weather.py:215
 msgid "Fetching conditions for"
@@ -4254,7 +4254,7 @@ msgstr ""
 #: ../applets/maintained/webapplet/applet.c:399
 #: ../applets/maintained/webapplet/webapplet.desktop.in.in.h:2
 msgid "Web Applet"
-msgstr ""
+msgstr "Webapplet"
 
 #. vim: set et ts=2 sts=2 sw=2 :
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:1
@@ -4290,11 +4290,11 @@ msgstr ""
 
 #: ../applets/maintained/webapplet/webapplet.desktop.in.in.h:1
 msgid "Applet for Websites"
-msgstr ""
+msgstr "Applet für Websites"
 
 #: ../applets/maintained/wobblyzini/wobblyzini.desktop.in.in.h:1
 msgid "A simple test animation"
-msgstr ""
+msgstr "Eine einfache Testanimation"
 
 #: ../applets/maintained/wobblyzini/wobblyzini.desktop.in.in.h:2
 msgid "Wobbly Zini"

@@ -1341,9 +1341,10 @@ class Applet(awn.AppletSimple, object):
         instance = {}
 
         def getter(self):
-            if module not in instance:
-                instance[module] = module(self)
-            return instance[module]
+            key = (self, module)
+            if key not in instance:
+                instance[key] = module(self)
+            return instance[key]
         return property(getter)
 
     settings = __getmodule(Settings)

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: awn-extras-applets 0.2.7\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-11 18:07+0300\n"
-"PO-Revision-Date: 2010-06-01 16:52+0000\n"
+"PO-Revision-Date: 2010-06-04 18:16+0000\n"
 "Last-Translator: Danil Skachkov <Unknown>\n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2010-06-02 03:30+0000\n"
+"X-Launchpad-Export-Date: 2010-06-05 03:31+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -391,10 +391,14 @@ msgstr ""
 msgid ""
 "If charge level drops below this threadhold, a warning will be displayed."
 msgstr ""
+"Если уровень заряда упадет ниже указанного порога, будет показано "
+"предупреждение."
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:3
 msgid "If charge level reaches this threshold, a notification will be sent."
 msgstr ""
+"Если уровень заряда достигнет указанного порога, будет отправлено "
+"уведомление."
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:4
 msgid "If enabled, notify when the charge level reaches the high level."
@@ -442,6 +446,8 @@ msgid ""
 "If enabled, shows a notification when the charge level reaches a certain "
 "percentage"
 msgstr ""
+"Если включено, показывать уведомление когда уровень заряда достигнет "
+"указанного количества процентов."
 
 #: ../applets/maintained/battery/battery.ui.h:5
 msgid "If enabled, shows a notification when the charge levels drops too low"
@@ -579,73 +585,73 @@ msgstr ""
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:12
 msgid "If enabled, the date will be shown in the title"
-msgstr ""
+msgstr "Если включено, дата будет показана в заголовке"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:13
 msgid "If enabled, the seconds hand will be visible in the clock"
-msgstr ""
+msgstr "Если включено, будет отображаться секундная стрелка"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:14
 msgid "If enabled, time will be shown like 1:23 AM"
-msgstr ""
+msgstr "Если включено, время будет показано в 12-часовом формате"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:15
 msgid "If enabled, time will be shown like 23:45"
-msgstr ""
+msgstr "Если включено, время будет показано в 24-часовом формате"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:16
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:35
 msgid "Kelvin"
-msgstr ""
+msgstr "Кельвин"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:17
 msgid "Location Name:"
-msgstr ""
+msgstr "Имя расположения:"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:18
 msgid "Show _seconds"
-msgstr ""
+msgstr "Показывать _секунды"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:19
 msgid "Show seco_nds hand"
-msgstr ""
+msgstr "Показывать с_екундную стрелку"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:20
 msgid "Show the _date"
-msgstr ""
+msgstr "Показывать _дату"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:21
 msgid "_Show weather of current location"
-msgstr ""
+msgstr "_Показывать погоду текущего местоположения"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:22
 msgid "_Temperature unit:"
-msgstr ""
+msgstr "_Единицы температуры"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:24
 msgid "_Wind speed unit:"
-msgstr ""
+msgstr "Единицы скорости _ветра"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:25
 msgid "km/h"
-msgstr ""
+msgstr "км/ч"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:26
 msgid "knots"
-msgstr ""
+msgstr "узлов"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:27
 msgid "m/s"
-msgstr ""
+msgstr "м/с"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:28
 msgid "mph"
-msgstr ""
+msgstr "миль/ч"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:107
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:111
 msgid "Logout"
-msgstr ""
+msgstr "Завершение сеанса"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:115
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:117
@@ -658,17 +664,17 @@ msgstr "Заблокировать экран"
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:128
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:139
 msgid "Suspend"
-msgstr ""
+msgstr "Ждущий режим"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:131
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:133
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:144
 msgid "Hibernate"
-msgstr ""
+msgstr "Спящий режим"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:152
 msgid "Shutdown"
-msgstr ""
+msgstr "Выключение"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:187
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:566
@@ -684,7 +690,7 @@ msgstr "Домой"
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:524
 #: ../applets/maintained/places/applet.c:344
 msgid "Desktop"
-msgstr ""
+msgstr "Рабочий стол"
 
 #. 
 #. TODO: check the trash and set to stock_trash_empty if trash is empty
@@ -697,7 +703,7 @@ msgstr "Корзина"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:194
 msgid "File System"
-msgstr ""
+msgstr "Файловая система"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:315
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:569
@@ -706,7 +712,7 @@ msgstr "Сеть"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:316
 msgid "Connect to Server"
-msgstr ""
+msgstr "Подключиться к серверу"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:947
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:961
@@ -723,29 +729,29 @@ msgstr "Недавние документы"
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1030
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1041
 msgid "Session"
-msgstr ""
+msgstr "Сеанс"
 
 #. generates a compiler warning due to the ellipse
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1057
 msgid "Search\\u2026"
-msgstr ""
+msgstr "Поиск\\u2026"
 
 #. generates a compiler warning due to the ellipse
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1074
 msgid "Launch\\u2026"
-msgstr ""
+msgstr "Запуск\\u2026"
 
 #: ../applets/maintained/cairo-menu/misc.c:344
 msgid "Clear Recent Documents"
-msgstr ""
+msgstr "Очистить список недавно открытых документов"
 
 #: ../applets/maintained/calendar/awn-applet-calendar.schema-ini.in.h:1
 msgid "X"
-msgstr ""
+msgstr "X"
 
 #: ../applets/maintained/calendar/calendar.desktop.in.h:1
 msgid "Clock/Calendar Applet"
-msgstr ""
+msgstr "Апплет Часы/Календарь"
 
 #: ../applets/maintained/calendar/calendar.desktop.in.h:2
 msgid "Watch appointments on your dock"
@@ -963,11 +969,11 @@ msgstr ""
 #: ../applets/maintained/comics/main.py:294
 #: ../applets/maintained/comics/main.py:300
 msgid "Comics!"
-msgstr ""
+msgstr "Комиксы!"
 
 #: ../applets/maintained/comics/comics.desktop.in.h:2
 msgid "View your favourite comics on your desktop"
-msgstr ""
+msgstr "Смотрите любимые комиксы прямо на рабочем столе"
 
 #: ../applets/maintained/comics/comics_manage.py:51
 msgid "Shared comics"
@@ -993,7 +999,7 @@ msgstr "Комиксы"
 
 #: ../applets/maintained/comics/comics.py:159
 msgid "Manage Comics"
-msgstr ""
+msgstr "Управление комиксами"
 
 #: ../applets/maintained/comics/comics.py:211
 #: ../applets/maintained/comics/main.py:192
@@ -1012,27 +1018,27 @@ msgstr "Не удалось сохранить <i>%s</i>."
 
 #: ../applets/maintained/comics/ui/add.ui.h:1
 msgid "Add Comic"
-msgstr ""
+msgstr "Добавить комикс"
 
 #: ../applets/maintained/comics/ui/add.ui.h:2
 msgid "Downloading Comic"
-msgstr ""
+msgstr "Загрузить комикс"
 
 #: ../applets/maintained/comics/ui/add.ui.h:3
 msgid "Enter the URL of the RSS feed:"
-msgstr ""
+msgstr "Введите URL или адрес RSS ленты:"
 
 #: ../applets/maintained/comics/ui/add.ui.h:4
 msgid "Ready to add comic!"
-msgstr ""
+msgstr "Все готово для добавления комикса!"
 
 #: ../applets/maintained/comics/ui/add.ui.h:5
 msgid "Select Comic"
-msgstr ""
+msgstr "Выберите комикс"
 
 #: ../applets/maintained/comics/ui/add.ui.h:6
 msgid "Select Image"
-msgstr ""
+msgstr "Выберите изображение"
 
 #: ../applets/maintained/comics/ui/add.ui.h:7
 msgid "The guide found more than one image. Please select which one to use."
@@ -1079,15 +1085,15 @@ msgstr ""
 
 #: ../applets/maintained/cpufreq/cpufreq.desktop.in.h:2
 msgid "CPU Frequency Monitor"
-msgstr ""
+msgstr "Индикатор частоты процессора"
 
 #: ../applets/maintained/cpufreq/cpufreq.ui.h:1
 msgid "<b>Monitored CPU</b>"
-msgstr ""
+msgstr "<b>Наблюдаемые CPU</b>"
 
 #: ../applets/maintained/cpufreq/cpufreq.ui.h:2
 msgid "_Processor:"
-msgstr ""
+msgstr "_Процессор"
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:1
 msgid " 0.9)."

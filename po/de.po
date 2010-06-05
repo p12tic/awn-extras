@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: notification-daemon trunk\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-11 18:07+0300\n"
-"PO-Revision-Date: 2010-06-03 17:40+0000\n"
+"PO-Revision-Date: 2010-06-04 12:49+0000\n"
 "Last-Translator: Gabor Karsay <Unknown>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-06-04 03:40+0000\n"
+"X-Launchpad-Export-Date: 2010-06-05 03:31+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -3603,13 +3603,16 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:10
 msgid "Applet border width.  0 indicates no border."
-msgstr ""
+msgstr "Rahmenbreite es Applets. 0 bedeutet kein Rahmen."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:11
 msgid ""
 "Mousewheel  0. off. 1 up left, down right. 2 Opposite direction of 1. 3 Same "
 "as 1 no wrap. 4 opposite direction of 3."
 msgstr ""
+"Mausrad: 0: aus; 1: nach oben = links, nach unten = rechts; 2: anders herum "
+"als bei 1; 3: wie bei 1, wechselt nach der letzten aber nicht zur ersten "
+"Arbeitsfläche; 4: anders herum als bei 3."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:12
 msgid ""
@@ -3617,6 +3620,9 @@ msgid ""
 "expired.  After this duration it will be updated when needed if it possible "
 "to do so."
 msgstr ""
+"Anzahl der Sekunden, bis eine zwischengespeicherte Fensteroberfläche als "
+"nicht mehr aktuell angesehen wird. Danach wird sie aktualisiert, wenn das "
+"nötig und möglich ist."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:13
 msgid ""
@@ -3627,15 +3633,15 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:14
 msgid "Scales the applet size relative to the maximum icon size"
-msgstr ""
+msgstr "Skaliert die Appletgröße relativ zur maximalen Symbolgröße"
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:15
 msgid "The colour (RGBA) of the applet border."
-msgstr ""
+msgstr "Die Rahmenfarbe (RGBA) des Applets."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:16
 msgid "The colour of the desktop (RGBA) if grab_wallpaper is FALSE."
-msgstr ""
+msgstr "Die Farbe (RGBA) der Arbeitsfläche, wenn grab_wallpaper FALSE ist."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:17
 msgid "The number of columns in the pager."
@@ -3844,7 +3850,7 @@ msgstr "Die Hintergrundfarbe des Dialogs"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:2
 msgid "The border color of a drawn window"
-msgstr ""
+msgstr "Die Rahmenfarbe eines gezeichneten Fensters"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:3
 msgid "The border color of the dialog"
@@ -3852,11 +3858,12 @@ msgstr "Die Rahmenfarbe des Dialogs"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:4
 msgid "The bottom part of the shiny gradient"
-msgstr ""
+msgstr "Die untere Farbe des Farbverlaufs im Glanzeffekt"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:5
 msgid "The bottom part of the shiny gradient when hovered"
 msgstr ""
+"Die untere Farbe des Farbverlaufs im Glanzeffekt, wenn die Maus darüberfährt"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:6
 msgid "The drop shadow color of the drawn number"
@@ -3864,15 +3871,16 @@ msgstr "Die Schlagschattenfarbe der dargestellten Nummer"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:7
 msgid "The file to use as the background image"
-msgstr ""
+msgstr "Die Datei, die als Hintergrundbild verwendet werden soll"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:8
 msgid "The height of a workspace widget"
-msgstr ""
+msgstr "Die Höhe des Arbeitsflächen-Widgets"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:9
 msgid "The hovered border color of a workspace widget"
 msgstr ""
+"Die Rahmenfarbe des Arbeitsflächen-Widgets, wenn die Maus darüberfährt"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:10
 msgid "The icon's border color"
@@ -3880,7 +3888,7 @@ msgstr "Die Rahmenfarbe des Symbols"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:11
 msgid "The main color of a drawn window"
-msgstr ""
+msgstr "Die Hauptfarbe eines gezeichneten Fensters"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:12
 msgid "The main color of the drawn number"
@@ -3888,19 +3896,21 @@ msgstr "Die Hauptfarbe der dargestellten Nummer"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:13
 msgid "The normal border color of a workspace widget"
-msgstr ""
+msgstr "Die normale Rahmenfarbe eines Arbeitsflächen-Widgets"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:14
 msgid "The top part of the shiny gradient"
-msgstr ""
+msgstr "Die obere Farbe des Farbverlauft für den Glanzeffekt"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:15
 msgid "The top part of the shiny gradient when hovered"
 msgstr ""
+"Die obere Farbe den Farbverlaufs für den Glanzeffekt, wenn die Maus "
+"darüberfährt"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:16
 msgid "The width of a workspace widget"
-msgstr ""
+msgstr "Die Breite eines Arbeitsflächen-Widgets"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:17
 msgid "Whether or not to use custom colors for the dialog"
@@ -3929,7 +3939,7 @@ msgstr "Rahmenfarben"
 #. Icon Border
 #: ../applets/maintained/slickswitcher/prefs.py:100
 msgid "Icon border:"
-msgstr ""
+msgstr "Rahmen des Symbols:"
 
 #. Normal Border
 #: ../applets/maintained/slickswitcher/prefs.py:103

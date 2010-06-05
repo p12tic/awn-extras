@@ -30,7 +30,8 @@ Package: awn-applets-c-core-trunk
 Section: gnome
 Architecture: any
 Depends: 	${shlibs:Depends}, 
-		${misc:Depends}, 
+		${misc:Depends},
+		awn-applets-common-trunk,
 		avant-window-navigator-trunk,
 Recommends: 	awn-settings-trunk (>= 0.3.8),
 		awn-applets-python-core-trunk,
@@ -61,7 +62,8 @@ Package: awn-applets-c-extras-trunk
 Section: gnome
 Architecture: any
 Depends: 	${shlibs:Depends}, 
-		${misc:Depends}, 
+		${misc:Depends},
+		awn-applets-common-trunk,
 		avant-window-navigator-trunk,
 Recommends: awn-settings-trunk (>= 0.3.8),
 Conflicts: awn-applets-c-extras, awn-core-applets, awn-core-applets-bzr, awn-extras-applets-bzr, awn-extras-applets-testing, awn-extras-applets-trunk
@@ -85,6 +87,7 @@ Architecture: all
 Depends: 	${shlibs:Depends}, 
 		${misc:Depends}, 
 		${python:Depends},
+		awn-applets-common-trunk,
 		avant-window-navigator-trunk,
 		python-awn-trunk,
 		python-awn-extras-trunk (>= 0.3.8)
@@ -150,6 +153,7 @@ Architecture: all
 Depends: 	${shlibs:Depends}, 
 		${misc:Depends}, 
 		${python:Depends},
+		awn-applets-common-trunk,
 		avant-window-navigator-trunk,
 		python-awn-trunk,
 		python-awn-extras-trunk (>= 0.3.8)
@@ -189,6 +193,7 @@ Architecture: any
 Depends:	${shlibs:Depends},
 		${misc:Depends},
 		${python:Depends},
+		awn-applets-common-trunk,
 		python-gtk2,
 		python-cairo,
 		python-gobject,
@@ -218,3 +223,14 @@ Description: A collection of applets for avant-window-navigator - debug symbols
  applets in the gnome-panel).
  .
  This package contains the debugging symbols.
+
+Package: awn-applets-common-trunk
+Architecture: any
+Depends: 	${shlibs:Depends}, 
+		${misc:Depends},
+Description: A collection of applets for avant-window-navigator - debug symbols
+ Awn-extras-applets is a collection of applets for avant-window-navigator. It
+ provides some extensions to the bar and some new features (like 
+ applets in the gnome-panel).
+ .
+ This package contains common files like translations.

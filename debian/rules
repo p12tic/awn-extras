@@ -8,6 +8,14 @@ configure_flags += \
 		--disable-pymod-checks \
 		--with-gconf-schema-file-dir=/etc/gconf/schemas \
 		--with-webkit
+		
+override_dh_install:
+	#Remove .la, .a, pyo and pyc files.
+	find debian/tmp/usr/lib/ -name *.a |xargs rm
+	find debian/tmp/usr/lib -name *.la |xargs rm
+	find debian/tmp/usr/lib -name *.pyc |xargs rm
+	find debian/tmp/usr/lib -name *.pyo |xargs rm
+	dh_install --fail-missing
 
 build: build-stamp
 build-stamp: $(QUILT_STAMPFN)

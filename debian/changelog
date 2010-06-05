@@ -2,6 +2,9 @@ awn-extras-applets-trunk (0.3.9.1-1) experimental; urgency=low
 
   * Developpement branch.
   * Sync with debian packaging.
+  * debian/rules
+   - Use dh_install --fail-missing
+   - Remove a, la, pyc and pyo files.
 
  -- Julien Lavergne <gilir@ubuntu.com>  Sun, 18 Oct 2009 20:30:15 +0200
 

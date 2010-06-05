@@ -41,6 +41,7 @@ usr/share/avant-window-navigator/applets/comics/ui/
 usr/share/avant-window-navigator/applets/comics/icons/
 usr/share/avant-window-navigator/applets/comics.desktop
 usr/share/avant-window-navigator/schemas/awn-applet-comics.schema-ini
+usr/share/avant-window-navigator/applets/comics/comics.sh
 #
 # CPU Freq
 #
@@ -117,7 +118,7 @@ usr/share/avant-window-navigator/schemas/awn-applet-mount.schema-ini
 #
 etc/gconf/schemas/awn-applet-quit.schemas
 usr/share/avant-window-navigator/applets/quit/*.py
-usr/share/avant-window-navigator/applets/quit.desktop
+usr/share/avant-window-navigator/applets/quit*.desktop
 usr/share/avant-window-navigator/schemas/awn-applet-quit.schema-ini
 #
 # Thinkhdaps

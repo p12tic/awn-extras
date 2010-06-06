@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: notification-daemon trunk\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-11 18:07+0300\n"
-"PO-Revision-Date: 2010-06-04 12:49+0000\n"
+"PO-Revision-Date: 2010-06-05 08:32+0000\n"
 "Last-Translator: Gabor Karsay <Unknown>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-06-05 03:31+0000\n"
+"X-Launchpad-Export-Date: 2010-06-06 03:31+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -506,7 +506,7 @@ msgstr ""
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:4
 msgid "If enabled, displays the weather as an overlay on top of the clock."
-msgstr ""
+msgstr "Wenn aktiviert, wird das Wetter auf der Uhr angezeigt."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:5
 msgid "If enabled, the date will be shown in the title."
@@ -2105,12 +2105,12 @@ msgstr "Reddit Inbox"
 #: ../applets/maintained/feeds/classes.py:720
 #, python-format
 msgid "Comment reply from %s"
-msgstr ""
+msgstr "Antwort auf einen Kommentar von %s"
 
 #: ../applets/maintained/feeds/classes.py:723
 #, python-format
 msgid "Post reply from %s"
-msgstr ""
+msgstr "Antwort auf ein Posting von %s"
 
 #: ../applets/maintained/feeds/classes.py:765
 #: ../applets/maintained/feeds/prefs.py:410
@@ -2154,6 +2154,10 @@ msgid ""
 "  <a href='%s'>%s</a>\n"
 "(%s More)\n"
 msgstr ""
+"%s\n"
+"  <a href='%s'>%s</a>\n"
+"  <a href='%s'>%s</a>\n"
+"(%s mehr)\n"
 
 #: ../applets/maintained/feeds/feeds.py:481
 #, python-format
@@ -2191,7 +2195,7 @@ msgstr "Feed hinzufügen"
 
 #: ../applets/maintained/feeds/feeds.py:1079
 msgid "OPML Import"
-msgstr ""
+msgstr "OPML importieren"
 
 #: ../applets/maintained/feeds/feeds.py:1083
 msgid "Do you want to add this feed?"
@@ -2232,7 +2236,7 @@ msgstr "Exportieren"
 #. Checkbox: Notify for updated feeds
 #: ../applets/maintained/feeds/prefs.py:144
 msgid "_Notify for updated feeds"
-msgstr ""
+msgstr "Be_nachrichtige bei Feed-Updates"
 
 #. Checkbox: Update automatically
 #: ../applets/maintained/feeds/prefs.py:150
@@ -2263,12 +2267,12 @@ msgstr "feeds.opml"
 
 #: ../applets/maintained/feeds/prefs.py:295
 msgid "Awn Feeds Applet Items"
-msgstr ""
+msgstr "Inhalte des AWN Feeds-Applets"
 
 #. Source: label and radio buttons
 #: ../applets/maintained/feeds/prefs.py:345
 msgid "Source:"
-msgstr ""
+msgstr "Quelle:"
 
 #: ../applets/maintained/feeds/prefs.py:355
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:598
@@ -2324,7 +2328,7 @@ msgstr "Kennwort:"
 
 #: ../applets/maintained/feeds/prefs.py:515
 msgid "Feed search by "
-msgstr ""
+msgstr "Suche Feeds nach "
 
 #. If signed in to Google Reader
 #: ../applets/maintained/feeds/prefs.py:553
@@ -2361,27 +2365,27 @@ msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:2
 msgid "The action to perform on left click"
-msgstr ""
+msgstr "Die Aktion, die bei einem Linksklick ausgeführt wird"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:3
 msgid "The action to perform on middle click"
-msgstr ""
+msgstr "Die Aktion, die bei einem Mittelklick ausgeführt wird"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:4
 msgid "The file browser to use"
-msgstr ""
+msgstr "Der verwendete Datei-Browser"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:5
 msgid "The path to use on left click"
-msgstr ""
+msgstr "Der Ordner, der bei einem Linksklick geöffnet wird"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:6
 msgid "The path to use on middle click"
-msgstr ""
+msgstr "Der Ordner, der bei einem Mittelklick geöffnet wird"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:7
 msgid "Whether or not to display Connect to server"
-msgstr ""
+msgstr "Ob »Verbindung zu Server« angezeigt wird oder nicht"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:8
 msgid "Whether or not to display bookmarks"
@@ -2945,7 +2949,7 @@ msgstr "Backend"
 #: ../applets/maintained/mail/mail.py:523
 #: ../applets/maintained/mail/mail.py:732
 msgid "Could not log in: No username"
-msgstr ""
+msgstr "Anmeldefehler: kein Benutzername"
 
 #: ../applets/maintained/mail/mail.py:531
 #: ../applets/maintained/mail/mail.py:596
@@ -2967,7 +2971,7 @@ msgstr "Google Apps"
 
 #: ../applets/maintained/mail/mail.py:587
 msgid "Could not log in: No username or domain"
-msgstr ""
+msgstr "Anmeldefehler: Benutzername oder Domäne nicht angegeben"
 
 #: ../applets/maintained/mail/mail.py:649
 msgid "Domain:"
@@ -2984,11 +2988,11 @@ msgstr "Spool-Pfad:"
 #: ../applets/maintained/mail/mail.py:726
 #: ../applets/maintained/mail/mail.py:728
 msgid "Could not log in: "
-msgstr ""
+msgstr "Anmeldefehler: "
 
 #: ../applets/maintained/mail/mail.py:737
 msgid "Could not log in: Username or password incorrect"
-msgstr ""
+msgstr "Anmeldefehler: Benutzername oder Passwort falsch"
 
 #: ../applets/maintained/mail/mail.py:779
 #: ../applets/maintained/mail/mail.py:872
@@ -3046,7 +3050,7 @@ msgstr "Docklet schließen, wenn die Maus es verlässt."
 
 #: ../applets/maintained/media-control/awn-applet-media-control.schema-ini.in.h:2
 msgid "Display album art if available."
-msgstr ""
+msgstr "Albumcover anzeigen, wenn verfügbar."
 
 #: ../applets/maintained/media-control/awn-applet-media-control.schema-ini.in.h:3
 msgid "Display docklet instead of standard applet dialog."
@@ -3054,7 +3058,7 @@ msgstr "Docklet statt des Standard-Appletdialogs anzeigen."
 
 #: ../applets/maintained/media-control/awn-applet-media-control.schema-ini.in.h:4
 msgid "Size of the album art."
-msgstr ""
+msgstr "Größe des Albumcovers."
 
 #: ../applets/maintained/media-control/awn-applet-media-control.schema-ini.in.h:5
 msgid "Tooltip format to use."
@@ -4761,11 +4765,11 @@ msgstr "AWN Systemüberwachung"
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:1
 msgid "Graph update frequency, in milliseconds."
-msgstr ""
+msgstr "Diagramm-Updatefrequenz, in Millisekunden"
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:2
 msgid "Set to 1 (true) to draw the gradient overlay on the graph."
-msgstr ""
+msgstr "Auf 1 (TRUE) setzen, um einen Farbverlauf auf das Diagramm zu legen."
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:3
 msgid "The color used in the applet border."
@@ -4773,11 +4777,12 @@ msgstr "Die Farbe des Appletrahmens"
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:4
 msgid "The color used in the graph lines."
-msgstr ""
+msgstr "In den Diagrammlinien benutzte Farbe."
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:5
 msgid "The color used in the graph lines. Valid values are 0.0 through 1.0."
 msgstr ""
+"In den Diagrammlinien benutzte Farbe. Gültige Werte reichen von 0,0 bis 1,0."
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:6
 msgid "The pixel width of the applet border."
@@ -4806,7 +4811,7 @@ msgstr "Die URL des Pandora mini flash players."
 
 #: ../applets/unmaintained/pandora/pandora.desktop.in.h:1
 msgid "Listen to Pandora Internet Radio"
-msgstr ""
+msgstr "Pandora Internet-Radio hören"
 
 #: ../applets/unmaintained/pandora/pandora.desktop.in.h:2
 msgid "Pandora Radio"
@@ -4924,23 +4929,23 @@ msgstr ""
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:28
 msgid "Tooltip background color 1."
-msgstr ""
+msgstr "Hintergrundfarbe 1 der Minihilfe."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:29
 msgid "Tooltip background color 2."
-msgstr ""
+msgstr "Hintergrundfarbe 2 der Minihilfe."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:30
 msgid "Tooltip border color."
-msgstr ""
+msgstr "Rahmenfarbe der Minihilfe."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:31
 msgid "Tooltip font name."
-msgstr ""
+msgstr "Schriftart in der Minihilfe."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:32
 msgid "Tooltip text color."
-msgstr ""
+msgstr "Schriftfarbe in der Minihilfe."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:33
 msgid "Type of UI used for the stack."
@@ -4948,7 +4953,7 @@ msgstr ""
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:34
 msgid "Use Awn's tooltip font."
-msgstr ""
+msgstr "AWN-Minihilfenschriftart verwenden,"
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:35
 msgid "Whether hoverbox contains label."

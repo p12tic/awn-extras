@@ -241,10 +241,10 @@ class WeatherApplet:
 
             if all(self.weather_fail):
                 # Clean up weather map
-                self.reset_weather_data()
                 self.map_item.set_sensitive(False)
                 if self.map_dialog is not None:
                     self.applet.dialog.unregister("secondary")
+                self.reset_weather_data()
 
                 # Clean up forecast dialog
                 self.forecaster.finalize_dialog()

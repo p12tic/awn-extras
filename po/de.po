@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: notification-daemon trunk\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-11 18:07+0300\n"
-"PO-Revision-Date: 2010-06-06 20:33+0000\n"
+"PO-Revision-Date: 2010-06-07 21:35+0000\n"
 "Last-Translator: Gabor Karsay <Unknown>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-06-07 03:38+0000\n"
+"X-Launchpad-Export-Date: 2010-06-08 03:37+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -2291,7 +2291,7 @@ msgstr "RSS/Atom"
 
 #: ../applets/maintained/feeds/prefs.py:412
 msgid "Timeline"
-msgstr ""
+msgstr "Zeitleiste"
 
 #: ../applets/maintained/feeds/prefs.py:417
 msgid "Replies"
@@ -2300,7 +2300,7 @@ msgstr "Antworten"
 #. "Search for" label and entry
 #: ../applets/maintained/feeds/prefs.py:446
 msgid "Search for"
-msgstr ""
+msgstr "Suche nach"
 
 #. URL: label and entry
 #: ../applets/maintained/feeds/prefs.py:460
@@ -2348,6 +2348,8 @@ msgid ""
 "No results found.\n"
 "Try checking your spelling or using different search terms."
 msgstr ""
+"Keine Ergebnisse gefunden.\n"
+"Überprüfen Sie die Schreibweise oder verwenden Sie andere Suchbegriffe."
 
 #: ../applets/maintained/file-browser-launcher/about.py:39
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.desktop.in.h:2
@@ -2741,7 +2743,7 @@ msgstr "Bezeichnung"
 #. of the toggle button from that column in liststore
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:477
 msgid "In dialog"
-msgstr ""
+msgstr "Im Dialog"
 
 #. Add treeview-column to treeview
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:515
@@ -3269,6 +3271,8 @@ msgstr "Die Rahmenfarbe des Benachrichtigungsbereiches."
 #, c-format
 msgid "tray icon has requested a size of (%i x %i), resizing to (%i x %i)"
 msgstr ""
+"Benachrichtigungssymbol wollte die Größe (%i x %i), passe die Größe an auf "
+"(%i x %i)"
 
 #: ../applets/maintained/notification-area/eggtraymanager.c:148
 msgid "Orientation"
@@ -3331,6 +3335,8 @@ msgstr "Hintergrundfarbe in der Form (Hex) RRGGBBAA"
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:2
 msgid "Border Width. A value of 0 indicates that is should not be drawn."
 msgstr ""
+"Rahmenbreite. Ein Wert von 0 gibt an, dass kein Rahmen gezeichnet werden "
+"soll."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:3
 msgid ""
@@ -3401,11 +3407,13 @@ msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:13
 msgid "Use bold text."
-msgstr ""
+msgstr "Fetten Text verwenden."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:14
 msgid "Whether to attempt to kill any running notification-daemons."
 msgstr ""
+"Ob versucht werden soll, eventuell laufende Benachrichtigungs-Daemons zu "
+"beenden."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:15
 msgid "Whether to honour client notification window positioning requests."
@@ -3539,14 +3547,17 @@ msgstr "Python-Testapplet"
 #: ../applets/maintained/quit/awn-applet-quit.schema-ini.in.h:1
 msgid "Action to perform when left clicking on the icon."
 msgstr ""
+"Aktion, die bei einem Linksklick auf das Symbol ausgeführt werden soll."
 
 #: ../applets/maintained/quit/awn-applet-quit.schema-ini.in.h:2
 msgid "Command to execute if org.gnome.ScreenSaver is not available."
 msgstr ""
+"Der auszuführende Befehl, falls org.gnome.ScreenSaver nicht verfügbar ist."
 
 #: ../applets/maintained/quit/awn-applet-quit.schema-ini.in.h:3
 msgid "Command to execute if org.gnome.SessionManager is not available."
 msgstr ""
+"Der auszuführende Befehl, falls org.gnome.SessionManager nicht verfügbar ist."
 
 #: ../applets/maintained/quit/quit.desktop.in.h:1
 msgid "An applet to exit or log out of your session"
@@ -3723,7 +3734,7 @@ msgstr "Aktive Arbeitsfläche:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:13
 msgid "All window"
-msgstr ""
+msgstr "Alle Fenster"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:14
 msgid "All windows"
@@ -4098,13 +4109,16 @@ msgstr "Ein visueller Arbeitsflächenumschalter"
 #: ../applets/maintained/slickswitcher/slickswitcher.py:63
 #: ../applets/maintained/slickswitcher/slickswitcher.py:272
 msgid "SlickSwitcher"
-msgstr ""
+msgstr "SlickSwitcher"
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:1
 msgid ""
 "CPU graph type to use.  Note that some Icons do not support all graph types. "
 " If this occurs an icon will revert to it's own default (value of 0)."
 msgstr ""
+"Verwendeter CPU-Diagrammtyp. Beachten Sie, dass manche Symbole nicht alle "
+"Diagrammtypen unterstützen. Wenn das eintritt, wird das Symbol seine "
+"Standardeinstellung (den Wert 0) verwenden."
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:2
 msgid "If the updates are time based then how frequently to update in ms."
@@ -4154,22 +4168,23 @@ msgstr "Hintergrundfarbe für Aufgaben mit mittlerer Priorität"
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:4
 msgid "List of colors to use for the custom color"
 msgstr ""
+"Liste der Farben, die für die benutzerdefinierte Farbe verwendet werden"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:5
 msgid "List of items' details"
-msgstr ""
+msgstr "Liste der Details der Aufgaben"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:6
 msgid "List of items' names"
-msgstr ""
+msgstr "Liste der Namen der Aufgaben"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:7
 msgid "List of items' priorities (0-3)"
-msgstr ""
+msgstr "Liste der Aufgabenprioritäten (0–3)"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:8
 msgid "List of items' progresses in percent (0-100)"
-msgstr ""
+msgstr "Liste der Aufgabenfortschritte in Prozent (0–100)"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:9
 msgid "Text color for high priority items"
@@ -4185,15 +4200,15 @@ msgstr "Textfarbe für Aufgaben mit mittlerer Priorität"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:12
 msgid "The color to use for the icon"
-msgstr ""
+msgstr "Die für das Symbol verwendete Farbe"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:13
 msgid "The custom width for the item entries"
-msgstr ""
+msgstr "Die benutzerdefinierte Breite für Aufgabeneinträge"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:14
 msgid "The icon's opacity (10-100)"
-msgstr ""
+msgstr "Die Symboldeckkraft (10–100)"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:15
 msgid "The list of categories that are expanded"
@@ -4201,15 +4216,15 @@ msgstr ""
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:16
 msgid "The list of categories' names"
-msgstr ""
+msgstr "Liste der Kategorienamen"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:17
 msgid "The list of items' categories"
-msgstr ""
+msgstr "Liste der Kategorien der Aufgaben"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:18
 msgid "The title to display"
-msgstr ""
+msgstr "Der Titel, der angezeigt wird"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:19
 msgid "What type of icon to display (progress, progress-items, items)"
@@ -4217,15 +4232,17 @@ msgstr ""
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:20
 msgid "Whether or not to confirm the deletion of categories"
-msgstr ""
+msgstr "Ob das Löschen von Kategorien bestätigt werden soll oder nicht"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:21
 msgid "Whether or not to confirm the deletion of items"
-msgstr ""
+msgstr "Ob das Löschen von Aufgaben bestätigt werden soll oder nicht"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:22
 msgid "Whether or not to use a custom width for the entries"
 msgstr ""
+"Ob eine benutzerdefinierte Breite für die Einträge benutzt werden soll oder "
+"nicht"
 
 #: ../applets/maintained/to-do/prefs.py:32
 msgid "Custom"

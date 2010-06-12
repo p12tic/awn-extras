@@ -46,10 +46,12 @@ dnl
 
 AC_ARG_WITH([gconf], AS_HELP_STRING([--without-gconf],[Disable building/installing applets that need GConf]),,[with_gconf=yes])
 AC_ARG_WITH([gnome], AS_HELP_STRING([--without-gnome],[Disable building/installing applets that require Gnome-specific libraries]),,[with_gnome=yes])
+AC_ARG_WITH([indicator], AS_HELP_STRING([--with-indicator],[Enable building/installing applets that require libindicator]),,[with_indicator=no])
 AC_ARG_WITH([mozilla], AS_HELP_STRING([--with-mozilla],[Enable building/installing applets that require Gecko (Mozilla)]),,[with_mozilla=no])
 AC_ARG_WITH([webkit], AS_HELP_STRING([--with-webkit],[Enable building/installing applets that require webkitgtk]),,[with_webkit=no])
 AM_CONDITIONAL(WITH_GCONF, test "$with_gconf" != "no")
 AM_CONDITIONAL(WITH_GNOME, test "$with_gnome" != "no")
+AM_CONDITIONAL(ENABLE_INDICATOR, test "$with_indicator" != "no")
 AM_CONDITIONAL(WITH_MOZILLA, test "$with_mozilla" != "no")
 AM_CONDITIONAL(WITH_WEBKIT, test "$with_webkit" != "no")
 AM_CONDITIONAL(BUILD_WEBAPPLET, test "$with_mozilla" != "no" -o "$with_webkit" != "no")
@@ -89,6 +91,13 @@ PKG_CHECK_MODULES(VTE, [vte])
 if test "$with_gconf" != "no"; then
   PKG_CHECK_MODULES(GCONF, [gconf-2.0])
   gconf=gconf-2.0
+fi
+
+if test "$with_indicator" != "no"; then
+# indicator-applet
+PKG_CHECK_MODULES(INDICATOR, [indicator])
+INDICATORDIR=`$PKG_CONFIG --variable=indicatordir indicator`
+AC_SUBST(INDICATORDIR)
 fi
 
 #if test "$with_gconf" != "no" -a "$with_gnome" != "no"; then
@@ -323,6 +332,8 @@ applets/maintained/file-browser-launcher/Makefile
 applets/maintained/garbage/Makefile
 applets/maintained/garbage/garbage.desktop.in
 applets/maintained/hardware-sensors/Makefile
+applets/maintained/indicator-applet/Makefile
+applets/maintained/indicator-applet/indicator-applet.desktop.in
 applets/maintained/mail/Makefile
 applets/maintained/media-control/Makefile
 applets/maintained/media-icons/Makefile

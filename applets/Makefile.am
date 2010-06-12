@@ -37,6 +37,12 @@ CONDITIONAL_APPLETS += \
 	maintained/yama \
 	$(NULL)
 endif
+# --enable-indicator-applet
+if ENABLE_INDICATOR
+CONDITIONAL_APPLETS += \
+	maintained/indicator-applet \
+	$(NULL)
+endif
 # --with-webkit and/or --with-mozilla
 if BUILD_WEBAPPLET
 CONDITIONAL_APPLETS += \

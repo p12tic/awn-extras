@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+X-AWN-Type=Applet
+X-AWN-AppletType=C
+_Name=Indicator Applet
+_Comment=An applet to hold all of the system indicators
+Exec=awn-applet -p %k
+X-AWN-AppletExec=@LIBDIR@/awn/applets/indicator-applet/indicator-applet.so
+Icon=indicator-applet
+X-AWN-AppletCategory=Monitor,System,Utility

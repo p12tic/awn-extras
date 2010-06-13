@@ -19,6 +19,11 @@ usr/lib/awn/applets/cairo-menu/*.so
 etc/gconf/schemas/awn-applet-cairo-menu.schemas
 usr/share/avant-window-navigator/schemas/awn-applet-cairo-menu.schema-ini
 #
+# Indicator
+#
+usr/lib/awn/applets/indicator-applet/indicator-applet.so
+usr/share/avant-window-navigator/applets/indicator-applet.desktop
+#
 # Notification area
 #
 etc/gconf/schemas/awn-applet-notification-area.schemas

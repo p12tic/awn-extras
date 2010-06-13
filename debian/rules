@@ -7,7 +7,8 @@ configure_flags += \
 		--prefix=/usr \
 		--disable-pymod-checks \
 		--with-gconf-schema-file-dir=/etc/gconf/schemas \
-		--with-webkit
+		--with-webkit \
+		--with-indicator
 		
 override_dh_install:
 	#Remove CHANGELOG,LGPL, AUTHORS, README, COPYING, .la, .a, pyo and pyc files.

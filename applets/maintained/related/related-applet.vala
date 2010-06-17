@@ -223,9 +223,8 @@ class RelatedApplet : AppletSimple
                                            null);
 
     int results_pushed = 0;
-    for (uint i=0; i<events.len; i++)
+    foreach (unowned Event e in events)
     {
-      unowned Event e = (Event) events.index (i);
       if (e.num_subjects () > 0)
       {
         // process results
@@ -234,7 +233,7 @@ class RelatedApplet : AppletSimple
       }
     }
 
-    return events.len > 0;
+    return events.size () > 0;
   }
 
   private async bool get_events_for_actor (string? actor)
@@ -250,9 +249,8 @@ class RelatedApplet : AppletSimple
                                            null);
 
     int results_pushed = 0;
-    for (uint i=0; i<events.len; i++)
+    foreach (unowned Event e in events)
     {
-      unowned Event e = (Event) events.index (i);
       if (e.num_subjects () > 0)
       {
         // process results
@@ -261,7 +259,7 @@ class RelatedApplet : AppletSimple
       }
     }
 
-    return events.len > 0;
+    return events.size () > 0;
   }
 
   private async void build_dialog (string? desktop_file)

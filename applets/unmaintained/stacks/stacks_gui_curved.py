@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 # stacks_gui_curved  version 0.2
 # Copyright (c) 2007 SilentStorm aka Wim Wauters
 # based on stacks_gui_dialog.py by Randal Barlow
@@ -21,71 +20,17 @@
 
 detected_errors = None
 
-try:
- 	import sys
-except ImportError:
-	if not detected_errors: detected_errors = ""
-	detected_errors = detected_errors + detected_errors + " * Error importing sys \n"
-try:
-	import os
-except ImportError:
-	if not detected_errors: detected_errors = ""
-	detected_errors = detected_errors + " * Error importing os \n"
-try:
-	import gtk
-except ImportError:
-	if not detected_errors: detected_errors = ""
-	detected_errors = detected_errors + " * Error importing gtk \n"
-try:
-	from gtk import gdk
-except ImportError:
-	if not detected_errors: detected_errors = ""
-	detected_errors = detected_errors + " * Error importing gdk \n"
-try:
-	import gobject
-except ImportError:
-	if not detected_errors: detected_errors = ""
-	detected_errors = detected_errors + " * Error importing gobject \n"
-try:
-	import pango
-except ImportError:
-	if not detected_errors: detected_errors = ""
-	detected_errors = detected_errors + " * Error importing pango \n"
-try:
-	import awn
-except ImportError:
-	if not detected_errors: detected_errors = ""
-	detected_errors = detected_errors + " * Error importing awn \n"
-try:
-	import cairo
-except ImportError:
-	if not detected_errors: detected_errors = ""
-	detected_errors = detected_errors + " * Error importing cairo \n"
-try:
-	import gnome.ui
-except ImportError:
-	if not detected_errors: detected_errors = ""
-	detected_errors = detected_errors + " * Error importing gnome.ui \n"
-try:
-	import gnomedesktop
-except ImportError:
-	if not detected_errors: detected_errors = ""
-	detected_errors = detected_errors + " * Error importing gnomedesktop \n"
-try:
-	import time
-except ImportError:
-	if not detected_errors: detected_errors = ""
-	detected_errors = detected_errors + " * Error importing time \n"
-try:
-	import math
-except ImportError:
-	if not detected_errors: detected_errors = ""
-	detected_errors = detected_errors + " * Error importing math \n"	
-try:
-	import pangocairo
-except ImportError:
-	if not detected_errors: detected_errors = ""
-	detected_errors = detected_errors + " * Error importing pangocairo \n"	
+import math
+import os
+
+import gtk
+from gtk import gdk
+import gobject
+
+import awn
+import cairo
+import pango
+import pangocairo
 
 from awn.extras import _
 from desktopagnostic import Color
@@ -625,12 +570,7 @@ class StacksGuiCurved(gtk.Window):
     def item_activated_cb(self, widget, user_data):
         uri, mimetype = user_data
         if uri.as_string().endswith(".desktop"):
-            item = gnomedesktop.item_new_from_uri(
-                    uri.as_string(), gnomedesktop.LOAD_ONLY_IF_EXISTS)
-            if item:
-                command = item.get_string(gnomedesktop.KEY_EXEC)
-                #LaunchManager().launch_command(command, uri.as_string())
-                LaunchManager().launch_dot_desktop(uri.as_string())
+            LaunchManager().launch_dot_desktop(uri.as_string())
         else:
             LaunchManager().launch_uri(uri.as_string(), mimetype)
         self._stacks_gui_hide_cb()

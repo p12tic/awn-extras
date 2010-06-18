@@ -1,10 +1,10 @@
 #!/usr/bin/python
-import sys
+import os
+
 import gobject
 import gtk
 from gtk.glade import *
 from gtk import gdk
-import os
 from awn.extras import _
 from desktopagnostic.config import GROUP_DEFAULT
  

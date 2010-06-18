@@ -17,17 +17,11 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
-import sys
-import os
 import gtk
 from gtk import gdk
 import gobject
 import pango
 import awn
-import cairo
-import gnome.ui
-import gnomedesktop
-import time
 
 from stacks_backend import *
 from stacks_backend_file import *
@@ -140,12 +134,7 @@ class StacksGuiDialog:
     def item_activated_cb(self, widget, user_data):
         uri, mimetype = user_data
         if uri.as_string().endswith(".desktop"):
-            item = gnomedesktop.item_new_from_uri(
-                    uri.as_string(), gnomedesktop.LOAD_ONLY_IF_EXISTS)
-            if item:
-                command = item.get_string(gnomedesktop.KEY_EXEC)
-                #LaunchManager().launch_command(command, uri.as_string())
-                LaunchManager().launch_dot_desktop(uri.as_string())
+            LaunchManager().launch_dot_desktop(uri.as_string())
         else:
             LaunchManager().launch_uri(uri.as_string(), mimetype)
         self._stacks_gui_hide_cb(widget)

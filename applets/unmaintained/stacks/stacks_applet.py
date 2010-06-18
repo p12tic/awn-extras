@@ -18,16 +18,11 @@
 # Boston, MA 02111-1307, USA.
 
 import sys
-import os
+
 import gtk
 from gtk import gdk
 import gobject
-import pango
 import awn
-import cairo
-import gnome.ui
-import gnomedesktop
-import time
 
 from stacks_backend import *
 from stacks_backend_file import *
@@ -356,10 +351,7 @@ class StacksApplet (awn.AppletSimple):
         self.applet_set_icon(None)
 
 if __name__ == "__main__":
-    print sys.argv[1:]
     awn.init (sys.argv[1:])
-    # might needed to request passwords from user
-    gnome.ui.authentication_manager_init()
     applet = StacksApplet (awn.uid, awn.panel_id)
     awn.embed_applet (applet)
     applet.show_all()

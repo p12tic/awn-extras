@@ -18,8 +18,13 @@
 # Boston, MA 02111-1307, USA.
 
 import os
+import re
+
 import gtk
-import gnomedesktop
+from xdg import DesktopEntry
+
+# Pattern to extract the part of the path that doesn't end with %<a-Z>
+exec_pattern = re.compile("^(.*?)\s+\%[a-zA-Z]$")
 
 #Borrowed LaunchManager from "gimmie"
 class LaunchManager:
@@ -134,15 +139,20 @@ class LaunchManager:
             os.wait()
             return (child, startup_id)
 
-    def launch_dot_desktop(self, uri):
-        item = gnomedesktop.item_new_from_uri(
-                    uri, gnomedesktop.LOAD_ONLY_IF_EXISTS)
-        if not item: return
-        
-        type = item.get_string(gnomedesktop.KEY_TYPE)
+    def launch_dot_desktop(self, desktop_path):
+        if not os.path.exists(desktop_path):
+            return
+
+        item = DesktopEntry.DesktopEntry(desktop_path)
+
+        type = item.getType()
         if type == "Application":
-            command = item.get_string(gnomedesktop.KEY_EXEC)
-            self.launch_command(command, uri)
+            path = item.getExec()
+            # Strip last part of path if it contains %<a-Z>
+            match = exec_pattern.match(path)
+            if match is not None:
+                path = match.group(1)
+            self.launch_command(path, uri)
         elif type == "Link":
-            command = "xdg-open " + item.get_string(gnomedesktop.KEY_URL)
+            command = "xdg-open %s" % item.getURL()
             self.launch_command(command, uri)

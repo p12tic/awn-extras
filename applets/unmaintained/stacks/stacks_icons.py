@@ -18,10 +18,13 @@
 # Boston, MA 02111-1307, USA.
 
 import os
-import gnome.ui
 import gio
 import gtk
-import urllib
+
+try:
+    import gnome.ui
+except ImportError:
+    pass
 
 # Borrowed Thumbnailer from "gimmie"
 class Thumbnailer:
@@ -46,11 +49,14 @@ class Thumbnailer:
 
 
     def _lookup_or_make_thumb(self, icon_size, timestamp):
-        icon_theme = gtk.icon_theme_get_default()
-        thumb_factory = gnome.ui.ThumbnailFactory("normal")
-        icon_name, icon_type = \
-                gnome.ui.icon_lookup(icon_theme, thumb_factory, self.uri, self.mimetype, 0)
+        icon_name = None
+
+        # FIXME replace gnome.ui usage by something else
         try:
+            icon_theme = gtk.icon_theme_get_default()
+            thumb_factory = gnome.ui.ThumbnailFactory("normal")
+            icon_name, icon_type = \
+                gnome.ui.icon_lookup(icon_theme, thumb_factory, self.uri, self.mimetype, 0)
             if icon_type == gnome.ui.ICON_LOOKUP_RESULT_FLAGS_THUMBNAIL or \
                     thumb_factory.has_valid_failed_thumbnail(self.uri, timestamp):
                 # Use existing thumbnail
@@ -68,11 +74,10 @@ class Thumbnailer:
         except:
             pass
 
+        if icon_name is None:
+            icon_name = "image-missing"
         # Fallback to mime-type icon on failure
-        thumb = IconFactory().load_icon(icon_name, icon_size)
-        
-        return thumb
-
+        return IconFactory().load_icon(icon_name, icon_size)
 
     def _is_local_uri(self, uri):
         # NOTE: gnomevfs.URI.is_local seems to hang for some URIs (e.g. ssh

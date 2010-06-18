@@ -17,15 +17,13 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
-import sys
 import os
+import random
+
 import gobject
 import gtk
 from gtk import gdk
-import random
-import gnome.ui
 import gio
-import gnomedesktop
 from awn.extras import _
 from desktopagnostic.config import GROUP_DEFAULT
 
@@ -193,24 +191,19 @@ class Backend(gobject.GObject):
 
             # check for desktop item
             if name.endswith(".desktop"):
-                item = gnomedesktop.item_new_from_uri(
-                        path, gnomedesktop.LOAD_ONLY_IF_EXISTS)
-                if not item:
+                if not os.path.exists(path):
                     continue
-                command = item.get_string(gnomedesktop.KEY_EXEC)
-                name = item.get_localestring(gnomedesktop.KEY_NAME)
-                mime_type = item.get_localestring(gnomedesktop.KEY_MIME_TYPE)
+
+                item = DesktopEntry.DesktopEntry(path)
+
+                name = item.getName()
+                mime_type = item.getMimeTypes()[0]
                 type = gio.FILE_TYPE_REGULAR
-                icon_name = item.get_localestring(gnomedesktop.KEY_ICON) or 'image-missing'
+                icon_name = item.getIcon() or 'image-missing'
                 icon_uri = None
                 if icon_name:
-                    icon_uri = gnomedesktop.find_icon(
-                                        gtk.icon_theme_get_default(),
-                                        icon_name,
-                                        self.icon_size,
-                                        0)
-                    if not icon_uri:
-                        icon_uri = path
+                    icon_info = gtk.icon_theme_get_default().load_icon(icon_name, self.icon_size, 0)
+                    icon_uri = icon_info.get_filename() if icon_info else path
                     pixbuf = IconFactory().load_icon(icon_uri, self.icon_size)
                 if pixbuf:
                     pixbuf.add_alpha (True, '\0', '\0', '\0')

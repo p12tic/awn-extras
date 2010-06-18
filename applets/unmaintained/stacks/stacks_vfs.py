@@ -21,7 +21,6 @@ import gobject
 import gio
 import gtk
 import pango
-import os
 from awn.extras import _
 
 class GUITransfer(object):

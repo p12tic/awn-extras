@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# Copyright (C) 2008 - 2009  onox <denkpadje@gmail.com>
+# Copyright (C) 2008 - 2010  onox <denkpadje@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,7 +13,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import operator
 import os
 import platform
 
@@ -45,18 +44,21 @@ no_hdaps_short_description = "%s not protected from shocks"
 applet_logo = os.path.join(os.path.dirname(__file__), "images/thinkhdaps-logo.svg")
 
 
-def compare_linux_version(wanted_version, op):
-    assert callable(op)
-
+def compare_linux_version(wanted_version):
     version = map(int, platform.release().split("-")[0].split("."))
-    return all(map(lambda i: op(*i), zip(version, wanted_version)))
+    for i,j in zip(version, wanted_version):
+        if i > j:
+            return True
+        elif i < j:
+            return False
+    return True
 
 
-version_ge_2_6_28 = compare_linux_version([2, 6, 28], operator.ge)
+version_at_least_2_6_27 = compare_linux_version([2, 6, 27])
 
 sysfs_dir = "/sys/block"
 
-if version_ge_2_6_28:
+if version_at_least_2_6_27:
     protect_file = "device/unload_heads"
 else:
     method_file = "queue/protect_method"
@@ -107,7 +109,7 @@ class ThinkHDAPSApplet:
         applet.tooltip.disable_toggle_on_click()
         applet.icon.theme("drive-harddisk")
 
-        if version_ge_2_6_28:
+        if version_at_least_2_6_27:
             def can_unload(disk):
                 file = os.path.join(sysfs_dir, disk, protect_file)
                 if not os.path.isfile(file):

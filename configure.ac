@@ -97,7 +97,9 @@ if test "$with_indicator" != "no"; then
 # indicator-applet
 PKG_CHECK_MODULES(INDICATOR, [indicator])
 INDICATORDIR=`$PKG_CONFIG --variable=indicatordir indicator`
+INDICATORICONSDIR=`$PKG_CONFIG --variable=iconsdir indicator`
 AC_SUBST(INDICATORDIR)
+AC_SUBST(INDICATORICONSDIR)
 fi
 
 #if test "$with_gconf" != "no" -a "$with_gnome" != "no"; then

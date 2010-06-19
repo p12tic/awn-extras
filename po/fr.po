@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: awn-core-applets 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-11 18:07+0300\n"
-"PO-Revision-Date: 2010-05-03 09:29+0000\n"
+"PO-Revision-Date: 2010-06-18 16:26+0000\n"
 "Last-Translator: Nicolas Delvaux <Unknown>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2010-05-04 03:38+0000\n"
+"X-Launchpad-Export-Date: 2010-06-19 03:46+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "Generated-By: pygettext.py 1.5\n"
 
@@ -256,7 +256,7 @@ msgstr "Un moniteur réseau pour AWN"
 #: ../applets/maintained/volume-control/volume-control.ui.h:4
 #: ../applets/maintained/weather/weather.ui.h:2
 msgid "<b>Display</b>"
-msgstr "<b>Affichage<b>"
+msgstr "<b>Affichage</b>"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:2
 msgid "Background Color"

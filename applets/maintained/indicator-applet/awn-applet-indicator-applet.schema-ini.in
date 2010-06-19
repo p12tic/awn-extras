@@ -1,0 +1,47 @@
+[DEFAULT]
+single_instance = false
+
+[DEFAULT/rows_cols]
+type = integer
+default = 2
+_description=The number of rows (top and bottom edge) or columns (side edges)
+
+[DEFAULT/applet_icon_mode]
+type = boolean
+default = false
+_description=If true, use an Awn applet icon instead
+
+[DEFAULT/indicator_applet]
+type = boolean
+default = true
+_description=If true, show the indicator applet icons
+
+[DEFAULT/indicator_applet_session]
+type = boolean
+default = false
+_description=If true, show the indicator applet session icon (lock screen, switch users, etc)
+
+[DEFAULT/me_menu]
+type = boolean
+default = false
+_description=If true, show the Me menu (chat, microblogging, etc)
+
+[DEFAULT/messaging_menu]
+type = boolean
+default = true
+_description=If true, show the Messaging icon
+
+[DEFAULT/network_menu]
+type = boolean
+default = true
+_description=If true, show the Network menu
+
+[DEFAULT/sound_menu]
+type = boolean
+default = true
+_description=If true, show the Sound control menu
+
+[DEFAULT/other_menus]
+type = boolean
+default = true
+_description=If true, show any other menus

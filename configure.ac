@@ -209,7 +209,7 @@ if test x${enable_pymod_checks} = xyes; then
     # media-player, volume-control
     AM_CHECK_PYMOD(gst,,,AC_MSG_ERROR([python module gstreamer required (python-gst0.10)]))
     if test "$with_gnome" != "no"; then
-    # MiMenu, YAMA
+    # YAMA
     AM_CHECK_PYMOD(gmenu,,,AC_MSG_ERROR([python module gmenu required]))
     fi
     if test "$with_gconf" != "no"; then
@@ -373,7 +373,6 @@ applets/unmaintained/awnsystemmonitor/awnsystemmonitor.desktop.in
 applets/unmaintained/dropper/Makefile
 applets/unmaintained/main-menu/Makefile
 applets/unmaintained/main-menu/main-menu.desktop.in
-applets/unmaintained/MiMenu/Makefile
 applets/unmaintained/pandora/Makefile
 applets/unmaintained/stacks/Makefile
 po/Makefile.in

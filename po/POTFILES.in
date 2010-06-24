@@ -138,7 +138,6 @@ applets/unmaintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in
 applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in
 applets/unmaintained/main-menu/applet.c
 applets/unmaintained/main-menu/main-menu.desktop.in.in
-applets/unmaintained/MiMenu/mimenu.desktop.in
 [type: gettext/ini]applets/unmaintained/pandora/awn-applet-pandora.schema-ini.in
 applets/unmaintained/pandora/pandora.desktop.in
 [type: gettext/ini]applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in

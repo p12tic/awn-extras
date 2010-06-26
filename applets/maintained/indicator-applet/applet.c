@@ -30,7 +30,7 @@ typedef struct _IndicatorApplet IndicatorApplet;
 struct _IndicatorApplet {
   AwnApplet *applet;
   GtkWidget *da;
-  GtkWidget *icon;
+  GtkWidget *icon_box;
   GtkWidget *awn_menu;
   GtkDialog *dialog;
 
@@ -51,6 +51,7 @@ struct _IndicatorApplet {
   GList *menus;
   GList *shown_images;
   GList *shown_menus;
+  GList *awnicons;
 
   gint num;
   gint popup_num;
@@ -59,6 +60,9 @@ struct _IndicatorApplet {
   gint dy;
 };
 
+static gboolean icon_button_press(AwnIcon *icon, GdkEventButton *event, IndicatorApplet *iapplet);
+static gboolean icon_right_click(AwnIcon *icon, GdkEventButton *event, IndicatorApplet *iapplet);
+static gboolean icon_scroll(AwnIcon *icon, GdkEventScroll *event, IndicatorApplet *iapplet);
 static void get_shown_entries(IndicatorApplet *iapplet);
 static void resize_da(IndicatorApplet *iapplet);
 static void update_config(IndicatorApplet *iapplet);
@@ -103,6 +107,7 @@ Floor, Boston, MA 02110-1301  USA.";
   gtk_widget_destroy(about);
 }
 
+/* Preferences dialog ... */
 static gboolean
 check_toggled(GtkToggleButton *button, IndicatorApplet *iapplet)
 {
@@ -113,14 +118,7 @@ check_toggled(GtkToggleButton *button, IndicatorApplet *iapplet)
   update_config(iapplet);
   get_shown_entries(iapplet);
 
-  if (iapplet->applet_mode)
-  {
-    update_icon_mode(iapplet);
-  }
-  else
-  {
-    resize_da(iapplet);
-  }
+  update_icon_mode(iapplet);
 
   return FALSE;
 }
@@ -145,10 +143,7 @@ make_check_button(IndicatorApplet *iapplet,
                   GtkWidget *box)
 {
   GtkWidget *check = gtk_check_button_new_with_label(label);
-  if (enabled)
-  {
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(check), TRUE);
-  }
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(check), enabled);
   g_signal_connect(G_OBJECT(check), "toggled", G_CALLBACK(check_toggled), (gpointer)iapplet);
   g_object_set_data(G_OBJECT(check), "ldakey", key);
   gtk_box_pack_start(GTK_BOX(box), check, FALSE, FALSE, 0);
@@ -210,6 +205,7 @@ show_prefs(GtkMenuItem *item, IndicatorApplet *iapplet)
   gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
   gtk_box_pack_start(GTK_BOX(win->vbox), label, FALSE, FALSE, 0);
 
+  vbox = gtk_vbox_new(FALSE, 3);
   GtkPositionType pos = awn_applet_get_pos_type(iapplet->applet);
   if (pos == GTK_POS_TOP || pos == GTK_POS_BOTTOM)
   {
@@ -227,16 +223,18 @@ show_prefs(GtkMenuItem *item, IndicatorApplet *iapplet)
   GtkWidget *hbox = gtk_hbox_new(FALSE, 0);
   gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 0);
   gtk_box_pack_end(GTK_BOX(hbox), spin, FALSE, FALSE, 0);
-  gtk_box_pack_start(GTK_BOX(win->vbox), hbox, FALSE, FALSE, 0);
+  gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
 
   GtkWidget *check = gtk_check_button_new_with_label(_("Enable Applet Icon mode"));
-  if (iapplet->applet_mode)
-  {
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(check), TRUE);
-  }
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(check), iapplet->applet_mode);
   g_signal_connect(G_OBJECT(check), "toggled",
                    G_CALLBACK(applet_mode_check_toggled), (gpointer)iapplet);
-  gtk_box_pack_start(GTK_BOX(win->vbox), check, FALSE, FALSE, 0);
+  gtk_box_pack_start(GTK_BOX(vbox), check, FALSE, FALSE, 0);
+
+  align = gtk_alignment_new(0.0, 0.5, 1.0, 0.0);
+  gtk_alignment_set_padding(GTK_ALIGNMENT(align), 0, 0, 12, 0);
+  gtk_container_add(GTK_CONTAINER(align), vbox);
+  gtk_box_pack_start(GTK_BOX(win->vbox), align, FALSE, FALSE, 0);
 
   gtk_container_set_border_width(GTK_CONTAINER(win), 12);
   gtk_window_set_icon_name(GTK_WINDOW(win), "indicator-applet");
@@ -245,6 +243,35 @@ show_prefs(GtkMenuItem *item, IndicatorApplet *iapplet)
   gtk_widget_destroy(GTK_WIDGET(win));
 }
 
+static gboolean
+get_bool(IndicatorApplet *iapplet, gchar *key)
+{
+  return desktop_agnostic_config_client_get_bool(iapplet->config,
+                                                 DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
+                                                 key, NULL);
+}
+
+static void
+update_config(IndicatorApplet *iapplet)
+{
+  iapplet->config_rows_cols = desktop_agnostic_config_client_get_int(iapplet->config,
+                                                              DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
+                                                                     "rows_cols", NULL);
+  if (iapplet->config_rows_cols < 1)
+  {
+    iapplet->config_rows_cols = 2;
+  }
+  iapplet->config_ind_app = get_bool(iapplet, "indicator_applet");
+  iapplet->config_ind_app_ses = get_bool(iapplet, "indicator_applet_session");
+  iapplet->config_me = get_bool(iapplet, "me_menu");
+  iapplet->config_messaging = get_bool(iapplet, "messaging_menu");
+  iapplet->config_network = get_bool(iapplet, "network_menu");
+  iapplet->config_sound = get_bool(iapplet, "sound_menu");
+  iapplet->config_other_menus = get_bool(iapplet, "other_menus");
+  iapplet->applet_mode = get_bool(iapplet, "applet_icon_mode");
+}
+
+/* Dealing with libindicator ... */
 static void
 get_shown_entries(IndicatorApplet *iapplet)
 {
@@ -343,6 +370,103 @@ get_shown_entries(IndicatorApplet *iapplet)
   }
 }
 
+static gboolean
+pixbuf_changed(GObject *image, GParamSpec *spec, IndicatorApplet *iapplet)
+{
+  if (iapplet->applet_mode)
+  {
+    update_icon_mode(iapplet);
+  }
+  else
+  {
+    gtk_widget_queue_draw(iapplet->da);
+  }
+
+  return FALSE;
+}
+
+static void
+entry_added(IndicatorObject *io, IndicatorObjectEntry *entry, IndicatorApplet *iapplet)
+{
+  if (entry->image == NULL || entry->menu == NULL)
+  {
+    /* If either of these is NULL, there will likely be problems when
+     * the entry is removed */
+    return;
+  }
+
+  g_object_set_data(G_OBJECT(entry->image), "indicator", io);
+  iapplet->images = g_list_append(iapplet->images, entry->image);
+  iapplet->menus = g_list_append(iapplet->menus, entry->menu);
+  iapplet->num++;
+
+  gint handler = g_signal_connect(G_OBJECT(entry->image), "notify::pixbuf",
+                                  G_CALLBACK(pixbuf_changed), (gpointer)iapplet);
+  g_object_set_data(G_OBJECT(entry->image), "pixbufhandler", (gpointer)handler);
+
+  gtk_widget_hide(GTK_WIDGET(entry->menu));
+
+  get_shown_entries(iapplet);
+
+  update_icon_mode(iapplet);
+
+  return;
+}
+
+static void
+entry_removed(IndicatorObject *io, IndicatorObjectEntry *entry, IndicatorApplet *iapplet)
+{
+  iapplet->images = g_list_remove(iapplet->images, entry->image);
+  iapplet->menus = g_list_remove(iapplet->menus, entry->menu);
+  iapplet->num--;
+
+  gint handler = (gint)g_object_get_data(G_OBJECT(entry->image), "pixbufhandler");
+
+  if (g_signal_handler_is_connected(G_OBJECT(entry->image), handler))
+  {
+    g_signal_handler_disconnect(G_OBJECT(entry->image), handler);
+  }
+
+  get_shown_entries(iapplet);
+
+  update_icon_mode(iapplet);
+}
+
+static gboolean
+load_module(const gchar * name, IndicatorApplet *iapplet)
+{
+  g_return_val_if_fail(name != NULL, FALSE);
+
+  if (!g_str_has_suffix(name, G_MODULE_SUFFIX))
+  {
+    return FALSE;
+  }
+
+  gchar *fullpath = g_build_filename(INDICATOR_DIR, name, NULL);
+  IndicatorObject *io = iapplet->io = indicator_object_new_from_file(fullpath);
+  g_free(fullpath);
+
+  g_signal_connect(G_OBJECT(io), INDICATOR_OBJECT_SIGNAL_ENTRY_ADDED,
+    G_CALLBACK(entry_added), iapplet);
+  g_signal_connect(G_OBJECT(io), INDICATOR_OBJECT_SIGNAL_ENTRY_REMOVED,
+    G_CALLBACK(entry_removed), iapplet);
+
+  GList *entries = indicator_object_get_entries(io);
+  GList *entry = NULL;
+
+  g_object_set_data(G_OBJECT(io), "filename", (gpointer)g_strdup(name));
+
+  for (entry = entries; entry != NULL; entry = g_list_next(entry))
+  {
+    entry_added(io, (IndicatorObjectEntry*)entry->data, iapplet);
+  }
+
+  g_list_free(entries);
+
+  return TRUE;
+}
+
+/* Drawing, widgets, etc ... */
 static void
 resize_da(IndicatorApplet *iapplet)
 {
@@ -450,7 +574,7 @@ determine_position(IndicatorApplet *iapplet, gint x, gint y)
 }
 
 static void
-expose_event(GtkWidget *da, GdkEventExpose *event, IndicatorApplet *iapplet)
+da_expose_event(GtkWidget *da, GdkEventExpose *event, IndicatorApplet *iapplet)
 {
   AwnApplet *applet = AWN_APPLET(iapplet->applet);
 
@@ -567,13 +691,22 @@ update_icon_mode(IndicatorApplet *iapplet)
   if (iapplet->applet_mode)
   {
     gtk_widget_hide(iapplet->da);
-    gtk_widget_show(iapplet->icon);
   }
   else
   {
     resize_da(iapplet);
     gtk_widget_show(iapplet->da);
-    gtk_widget_hide(iapplet->icon);
+
+    GList *l = NULL;
+    for (l = gtk_container_get_children(GTK_CONTAINER(iapplet->icon_box)); l; l = l->next)
+    {
+      if (GTK_WIDGET(l->data) != iapplet->da)
+      {
+        gtk_widget_hide(GTK_WIDGET(l->data));
+      }
+    }
+
+    return;
   }
 
   if (iapplet->shown_images == NULL)
@@ -581,79 +714,228 @@ update_icon_mode(IndicatorApplet *iapplet)
     return;
   }
 
-  gint size = 1.1 * awn_applet_get_size(iapplet->applet);
+  gint size = awn_applet_get_size(iapplet->applet);
+  gboolean free_pb;
+  GtkImage *image;
+  GIcon *icon;
+  AwnIcon *awnicon;
+  GdkPixbuf *pb;
+  GtkIconTheme *theme;
+  GtkIconInfo *icon_info;
 
-  gboolean free_pb = FALSE;
-  GtkImage *image = GTK_IMAGE(iapplet->shown_images->data);
-  GIcon *icon = g_object_get_data(G_OBJECT(image), "indicator-names-data");
-  GdkPixbuf *pb = NULL;
-  GtkIconTheme *theme = gtk_icon_theme_get_default();
-  GtkIconInfo *icon_info = gtk_icon_theme_lookup_by_gicon(theme, icon, size,
-    GTK_ICON_LOOKUP_FORCE_SIZE | GTK_ICON_LOOKUP_USE_BUILTIN);
-  if (icon_info == NULL)
+  gint nshown = g_list_length(iapplet->shown_images);
+  gint i;
+  for (i = 0; i < nshown; i++)
   {
-    icon_info = gtk_icon_theme_lookup_by_gicon(theme, icon, 22,
-      GTK_ICON_LOOKUP_FORCE_SIZE | GTK_ICON_LOOKUP_USE_BUILTIN);
-  }
+    image = GTK_IMAGE(g_list_nth_data(iapplet->shown_images, i));
 
-  if (icon_info == NULL)
-  {
-    if (gtk_image_get_storage_type(image) == GTK_IMAGE_PIXBUF)
+    if (g_list_length(iapplet->awnicons) <= i)
     {
-      pb = gtk_image_get_pixbuf(image);
+      /* Make new AwnIcon... */
+      awnicon = AWN_ICON(awn_themed_icon_new());
+      g_signal_connect(G_OBJECT(awnicon), "button-press-event",
+                       G_CALLBACK(icon_button_press), (gpointer)iapplet);
+      g_signal_connect(G_OBJECT(awnicon), "context-menu-popup",
+                       G_CALLBACK(icon_right_click), (gpointer)iapplet);
+      g_signal_connect(G_OBJECT(awnicon), "scroll-event",
+                       G_CALLBACK(icon_scroll), (gpointer)iapplet);
+      g_object_set_data(G_OBJECT(awnicon), "num", (gpointer)i);
 
-      if (gdk_pixbuf_get_width(pb) != size || gdk_pixbuf_get_height(pb) != size)
-      {
-        pb = gdk_pixbuf_scale_simple(pb, size, size, GDK_INTERP_BILINEAR);
-        free_pb = TRUE;
-      }
-    }
-  }
-  else
-  {
-    const gchar *icon_path = gtk_icon_info_get_filename(icon_info);
-    pb = gdk_pixbuf_new_from_file_at_size(icon_path, size, size, NULL);
-    free_pb = TRUE;
-    gtk_icon_info_free(icon_info);
-  }
+      gtk_box_pack_start(GTK_BOX(iapplet->icon_box), GTK_WIDGET(awnicon), FALSE, FALSE, 0);
+      gtk_widget_show(GTK_WIDGET(awnicon));
 
-  awn_icon_set_from_pixbuf(AWN_ICON(iapplet->icon), pb);
-  g_object_unref(G_OBJECT(pb));
-
-  IndicatorObject *io = INDICATOR_OBJECT(g_object_get_data(G_OBJECT(image), "indicator"));
-  if (INDICATOR_IS_OBJECT(io))
-  {
-    const gchar *name = g_object_get_data(G_OBJECT(io), "filename");
-
-    if (!g_strcmp0(name, "libme.so"))
-    {
-      awn_icon_set_tooltip_text(AWN_ICON(iapplet->icon), _("Me menu"));
-    }
-    else if (!g_strcmp0(name, "libmessaging.so"))
-    {
-      awn_icon_set_tooltip_text(AWN_ICON(iapplet->icon), _("Messaging menu"));
-    }
-    else if (!g_strcmp0(name, "libnetworkmenu.so"))
-    {
-      awn_icon_set_tooltip_text(AWN_ICON(iapplet->icon), _("Network menu"));
-    }
-    else if (!g_strcmp0(name, "libsession.so"))
-    {
-      awn_icon_set_tooltip_text(AWN_ICON(iapplet->icon), _("Indicator Applet Session"));
-    }
-    else if (!g_strcmp0(name, "libsoundmenu.so"))
-    {
-      awn_icon_set_tooltip_text(AWN_ICON(iapplet->icon), _("Sound Menu"));
+      iapplet->awnicons = g_list_append(iapplet->awnicons, (gpointer)awnicon);
     }
     else
     {
-      awn_icon_set_tooltip_text(AWN_ICON(iapplet->icon), _("Indicator Applet"));
+      awnicon = AWN_ICON(g_list_nth_data(iapplet->awnicons, i));
+    }
+
+    awn_icon_set_pos_type(awnicon, awn_applet_get_pos_type(iapplet->applet));
+    awn_icon_set_offset(awnicon, awn_applet_get_offset(iapplet->applet));
+
+    IndicatorObject *io = INDICATOR_OBJECT(g_object_get_data(G_OBJECT(image), "indicator"));
+    if (INDICATOR_IS_OBJECT(io))
+    {
+      const gchar *name = g_object_get_data(G_OBJECT(io), "filename");
+
+      if (!g_strcmp0(name, "libme.so"))
+      {
+        awn_icon_set_tooltip_text(awnicon, _("Me menu"));
+      }
+      else if (!g_strcmp0(name, "libmessaging.so"))
+      {
+        awn_icon_set_tooltip_text(awnicon, _("Messaging menu"));
+      }
+      else if (!g_strcmp0(name, "libnetworkmenu.so"))
+      {
+        awn_icon_set_tooltip_text(awnicon, _("Network menu"));
+      }
+      else if (!g_strcmp0(name, "libsession.so"))
+      {
+        awn_icon_set_tooltip_text(awnicon, _("Indicator Applet Session"));
+      }
+      else if (!g_strcmp0(name, "libsoundmenu.so"))
+      {
+        awn_icon_set_tooltip_text(awnicon, _("Sound Menu"));
+      }
+      else
+      {
+        awn_icon_set_tooltip_text(awnicon, _("Indicator Applet"));
+      }
+    }
+
+    free_pb = FALSE;
+    icon = g_object_get_data(G_OBJECT(image), "indicator-names-data");
+    pb = NULL;
+    theme = gtk_icon_theme_get_default();
+    icon_info = gtk_icon_theme_lookup_by_gicon(theme, icon, size,
+      GTK_ICON_LOOKUP_FORCE_SIZE | GTK_ICON_LOOKUP_USE_BUILTIN);
+    if (icon_info == NULL)
+    {
+      icon_info = gtk_icon_theme_lookup_by_gicon(theme, icon, 22,
+        GTK_ICON_LOOKUP_FORCE_SIZE | GTK_ICON_LOOKUP_USE_BUILTIN);
+    }
+
+    if (icon_info == NULL)
+    {
+      if (gtk_image_get_storage_type(image) == GTK_IMAGE_PIXBUF)
+      {
+        pb = gtk_image_get_pixbuf(image);
+
+        if (gdk_pixbuf_get_width(pb) != size || gdk_pixbuf_get_height(pb) != size)
+        {
+          pb = gdk_pixbuf_scale_simple(pb, size, size, GDK_INTERP_BILINEAR);
+          free_pb = TRUE;
+        }
+      }
+    }
+    else
+    {
+      const gchar *icon_path = gtk_icon_info_get_filename(icon_info);
+      pb = gdk_pixbuf_new_from_file_at_size(icon_path, size, size, NULL);
+      free_pb = TRUE;
+      gtk_icon_info_free(icon_info);
+    }
+
+    awn_icon_set_from_pixbuf(awnicon, pb);
+    if (free_pb)
+    {
+      g_object_unref(G_OBJECT(pb));
+    }
+
+    gtk_widget_show(GTK_WIDGET(awnicon));
+  }
+
+  if (g_list_length(iapplet->awnicons) > i)
+  {
+    gint j;
+    gpointer rm;
+    for (j = g_list_length(iapplet->awnicons); j > i; j--)
+    {
+      rm = g_list_nth_data(iapplet->awnicons, j - 1);
+      iapplet->awnicons = g_list_remove(iapplet->awnicons, rm);
+      gtk_widget_destroy(GTK_WIDGET(rm));
     }
   }
 }
 
+/* AwnIcon-related code ... */
 static void
-menu_position(GtkMenu *menu, gint *x, gint *y, gboolean *move, IndicatorApplet *iapplet)
+icon_menu_position(GtkMenu *menu, gint *x, gint *y, gboolean *move, IndicatorApplet *iapplet)
+{
+  GtkWidget *icon = GTK_WIDGET(g_list_nth_data(iapplet->awnicons, iapplet->popup_num));
+  GtkPositionType pos_type = awn_applet_get_pos_type(iapplet->applet);
+  gint size = awn_applet_get_size(iapplet->applet);
+  gint offset = awn_applet_get_offset(iapplet->applet);
+
+  gint mw = GTK_WIDGET(menu)->requisition.width;
+  gint mh = GTK_WIDGET(menu)->requisition.height;
+  gint aw = icon->allocation.width;
+  gint ah = icon->allocation.height;
+
+  GdkScreen *screen = gtk_widget_get_screen(icon);
+  gint sw = gdk_screen_get_width(screen);
+  gint sh = gdk_screen_get_height(screen);
+
+  switch (pos_type)
+  {
+    case GTK_POS_LEFT:
+      *x = offset + size * 1.1;
+      gdk_window_get_origin(icon->window, NULL, y);
+      break;  
+    case GTK_POS_RIGHT:
+      *x = sw - offset - size * 1.1 - mw;
+      gdk_window_get_origin(icon->window, NULL, y);
+      break;
+    case GTK_POS_TOP:
+      gdk_window_get_origin(icon->window, x, NULL);
+      *y = offset + size * 1.1;
+      break;
+    default:
+      gdk_window_get_origin(icon->window, x, NULL);
+      *y = sh - offset - size * 1.1 - mh;
+      break;
+  }
+
+  *move = TRUE;
+}
+
+static gboolean
+icon_button_press(AwnIcon *icon, GdkEventButton *event, IndicatorApplet *iapplet)
+{
+  if (iapplet->shown_menus == NULL || event->button == 3)
+  {
+    return FALSE;
+  }
+
+  iapplet->popup_num = (gint)g_object_get_data(G_OBJECT(icon), "num");
+
+  gtk_menu_popup(GTK_MENU(g_list_nth_data(iapplet->shown_menus, iapplet->popup_num)), NULL, NULL,
+    (GtkMenuPositionFunc)icon_menu_position, (gpointer)iapplet, 1, event->time);
+
+  return FALSE;
+}
+
+static gboolean
+icon_right_click(AwnIcon *icon, GdkEventButton *event, IndicatorApplet *iapplet)
+{
+  if (!iapplet->awn_menu)
+  {
+    iapplet->awn_menu = awn_applet_create_default_menu(iapplet->applet);
+
+    GtkWidget *item = gtk_image_menu_item_new_from_stock(GTK_STOCK_PREFERENCES, NULL);
+    g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(show_prefs), (gpointer)iapplet);
+    gtk_menu_shell_append(GTK_MENU_SHELL(iapplet->awn_menu), GTK_WIDGET(item));
+
+    item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ABOUT, NULL);
+    g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(show_about), NULL);
+    gtk_menu_shell_append(GTK_MENU_SHELL(iapplet->awn_menu), GTK_WIDGET(item));
+
+    gtk_widget_show_all(iapplet->awn_menu);
+  }
+
+  gtk_menu_popup(GTK_MENU(iapplet->awn_menu), NULL, NULL, NULL, NULL,
+                 event->button, event->time);
+
+  return FALSE;
+}
+
+static gboolean
+icon_scroll(AwnIcon *icon, GdkEventScroll *event, IndicatorApplet *iapplet)
+{
+  gint num = (gint)g_object_get_data(G_OBJECT(icon), "num");
+
+  GtkWidget *image = g_list_nth_data(iapplet->shown_images, num);
+  IndicatorObject *io = g_object_get_data(G_OBJECT(image), "indicator");
+  g_signal_emit_by_name(io, "scroll", 1, event->direction);
+
+  return FALSE;
+}
+
+/* DrawingArea-related code ... */
+static void
+da_menu_position(GtkMenu *menu, gint *x, gint *y, gboolean *move, IndicatorApplet *iapplet)
 {
   AwnApplet *applet = AWN_APPLET(iapplet->applet);
   GtkPositionType pos = awn_applet_get_pos_type(applet);
@@ -687,78 +969,8 @@ menu_position(GtkMenu *menu, gint *x, gint *y, gboolean *move, IndicatorApplet *
   *move = TRUE;
 }
 
-static void
-icon_menu_position(GtkMenu *menu, gint *x, gint *y, gboolean *move, IndicatorApplet *iapplet)
-{
-  GtkPositionType pos_type = awn_applet_get_pos_type(iapplet->applet);
-
-  gint mw = GTK_WIDGET(menu)->requisition.width;
-  gint mh = GTK_WIDGET(menu)->requisition.height;
-  gint aw = GTK_WIDGET(iapplet->applet)->allocation.width;
-  gint ah = GTK_WIDGET(iapplet->applet)->allocation.height;
-  gint size = awn_applet_get_size(iapplet->applet);
-
-  gdk_window_get_origin(iapplet->icon->window, x, y);
-
-  switch (pos_type)
-  {
-    case GTK_POS_LEFT:
-      *x += size;
-      break;  
-    case GTK_POS_RIGHT:
-      *x -= mw;
-      break;
-    case GTK_POS_TOP:
-      *y += ah - size;
-      break;
-    default:
-      *y -= mh;
-      break;
-  }
-
-  *move = TRUE;
-}
-
 static gboolean
-applet_click(AwnIcon *icon, IndicatorApplet *iapplet)
-{
-  if (iapplet->shown_menus == NULL)
-  {
-    return FALSE;
-  }
-
-  gtk_menu_popup(GTK_MENU(iapplet->shown_menus->data), NULL, NULL,
-    (GtkMenuPositionFunc)icon_menu_position, (gpointer)iapplet, 1, GDK_CURRENT_TIME);
-
-  return FALSE;
-}
-
-static gboolean
-applet_right_click(AwnIcon *icon, GdkEventButton *event, IndicatorApplet *iapplet)
-{
-  if (!iapplet->awn_menu)
-  {
-    iapplet->awn_menu = awn_applet_create_default_menu(iapplet->applet);
-
-    GtkWidget *item = gtk_image_menu_item_new_from_stock(GTK_STOCK_PREFERENCES, NULL);
-    g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(show_prefs), (gpointer)iapplet);
-    gtk_menu_shell_append(GTK_MENU_SHELL(iapplet->awn_menu), GTK_WIDGET(item));
-
-    item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ABOUT, NULL);
-    g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(show_about), NULL);
-    gtk_menu_shell_append(GTK_MENU_SHELL(iapplet->awn_menu), GTK_WIDGET(item));
-
-    gtk_widget_show_all(iapplet->awn_menu);
-  }
-
-  gtk_menu_popup(GTK_MENU(iapplet->awn_menu), NULL, NULL, NULL, NULL,
-                 event->button, event->time);
-
-  return FALSE;
-}
-
-static gboolean
-button_press(GtkWidget *widget, GdkEventButton *event, IndicatorApplet *iapplet)
+da_button_press(GtkWidget *widget, GdkEventButton *event, IndicatorApplet *iapplet)
 {
   AwnApplet *applet = AWN_APPLET(iapplet->applet);
   if (event->button == 3)
@@ -784,104 +996,19 @@ button_press(GtkWidget *widget, GdkEventButton *event, IndicatorApplet *iapplet)
     return FALSE;
   }
 
-  if (!determine_position(iapplet, (gint)event->x, (gint)event->y))
+  if (iapplet->applet_mode || !determine_position(iapplet, (gint)event->x, (gint)event->y))
   {
     return FALSE;
   }
 
   gtk_menu_popup(GTK_MENU(g_list_nth_data(iapplet->shown_menus, iapplet->popup_num)), NULL, NULL,
-    (GtkMenuPositionFunc)menu_position, (gpointer)iapplet, event->button, event->time);
+    (GtkMenuPositionFunc)da_menu_position, (gpointer)iapplet, event->button, event->time);
 
   return FALSE;
 }
 
 static gboolean
-pixbuf_changed(GObject *image, GParamSpec *spec, IndicatorApplet *iapplet)
-{
-  gtk_widget_queue_draw(iapplet->da);
-
-  return FALSE;
-}
-
-static void
-entry_added(IndicatorObject *io, IndicatorObjectEntry *entry, IndicatorApplet *iapplet)
-{
-  if (entry->image == NULL || entry->menu == NULL)
-  {
-    /* If either of these is NULL, there will likely be problems when
-     * the entry is removed */
-    return;
-  }
-
-  g_object_set_data(G_OBJECT(entry->image), "indicator", io);
-  iapplet->images = g_list_append(iapplet->images, entry->image);
-  iapplet->menus = g_list_append(iapplet->menus, entry->menu);
-  iapplet->num++;
-
-  gint handler = g_signal_connect(G_OBJECT(entry->image), "notify::pixbuf",
-                                  G_CALLBACK(pixbuf_changed), (gpointer)iapplet);
-  g_object_set_data(G_OBJECT(entry->image), "pixbufhandler", (gpointer)handler);
-
-  gtk_widget_hide(GTK_WIDGET(entry->menu));
-
-  get_shown_entries(iapplet);
-
-  if (iapplet->applet_mode)
-  {
-    update_icon_mode(iapplet);
-  }
-  else
-  {
-    resize_da(iapplet);
-  }
-
-  return;
-}
-
-static void
-entry_removed(IndicatorObject *io, IndicatorObjectEntry *entry, IndicatorApplet *iapplet)
-{
-  iapplet->images = g_list_remove(iapplet->images, entry->image);
-  iapplet->menus = g_list_remove(iapplet->menus, entry->menu);
-  iapplet->num--;
-
-  gint handler = (gint)g_object_get_data(G_OBJECT(entry->image), "pixbufhandler");
-
-  if (g_signal_handler_is_connected(G_OBJECT(entry->image), handler))
-  {
-    g_signal_handler_disconnect(G_OBJECT(entry->image), handler);
-  }
-
-  get_shown_entries(iapplet);
-
-  if (iapplet->applet_mode)
-  {
-    update_icon_mode(iapplet);
-  }
-  else
-  {
-    resize_da(iapplet);
-  }
-}
-
-static gboolean
-size_changed(AwnApplet *applet, gint size, IndicatorApplet *iapplet)
-{
-  resize_da(iapplet);
-
-  return FALSE;
-}
-
-static gboolean
-position_changed(AwnApplet *applet, GtkPositionType pos, IndicatorApplet *iapplet)
-{
-  resize_da(iapplet);
-
-  return FALSE;
-}
-
-static gboolean
-scroll(GtkWidget *da, GdkEventScroll *event, IndicatorApplet *iapplet)
+da_scroll(GtkWidget *da, GdkEventScroll *event, IndicatorApplet *iapplet)
 {
   if (!determine_position(iapplet, (gint)event->x, (gint)event->y))
   {
@@ -896,61 +1023,19 @@ scroll(GtkWidget *da, GdkEventScroll *event, IndicatorApplet *iapplet)
 }
 
 static gboolean
-load_module(const gchar * name, IndicatorApplet *iapplet)
+applet_size_changed(AwnApplet *applet, gint size, IndicatorApplet *iapplet)
 {
-  g_return_val_if_fail(name != NULL, FALSE);
+  update_icon_mode(iapplet);
 
-  if (!g_str_has_suffix(name, G_MODULE_SUFFIX))
-  {
-    return FALSE;
-  }
-
-  gchar *fullpath = g_build_filename(INDICATOR_DIR, name, NULL);
-  IndicatorObject *io = iapplet->io = indicator_object_new_from_file(fullpath);
-  g_free(fullpath);
-
-  g_signal_connect(G_OBJECT(io), INDICATOR_OBJECT_SIGNAL_ENTRY_ADDED,
-    G_CALLBACK(entry_added), iapplet);
-  g_signal_connect(G_OBJECT(io), INDICATOR_OBJECT_SIGNAL_ENTRY_REMOVED,
-    G_CALLBACK(entry_removed), iapplet);
-
-  GList *entries = indicator_object_get_entries(io);
-  GList *entry = NULL;
-
-  g_object_set_data(G_OBJECT(io), "filename", (gpointer)g_strdup(name));
-
-  for (entry = entries; entry != NULL; entry = g_list_next(entry))
-  {
-    entry_added(io, (IndicatorObjectEntry*)entry->data, iapplet);
-  }
-
-  g_list_free(entries);
-
-  return TRUE;
+  return FALSE;
 }
 
 static gboolean
-get_bool(IndicatorApplet *iapplet, gchar *key)
+applet_position_changed(AwnApplet *applet, GtkPositionType pos, IndicatorApplet *iapplet)
 {
-  return desktop_agnostic_config_client_get_bool(iapplet->config,
-                                                 DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
-                                                 key, NULL);
-}
+  update_icon_mode(iapplet);
 
-static void
-update_config(IndicatorApplet *iapplet)
-{
-  iapplet->config_rows_cols = desktop_agnostic_config_client_get_int(iapplet->config,
-                                                              DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
-                                                                     "rows_cols", NULL);
-  iapplet->config_ind_app = get_bool(iapplet, "indicator_applet");
-  iapplet->config_ind_app_ses = get_bool(iapplet, "indicator_applet_session");
-  iapplet->config_me = get_bool(iapplet, "me_menu");
-  iapplet->config_messaging = get_bool(iapplet, "messaging_menu");
-  iapplet->config_network = get_bool(iapplet, "network_menu");
-  iapplet->config_sound = get_bool(iapplet, "sound_menu");
-  iapplet->config_other_menus = get_bool(iapplet, "other_menus");
-  iapplet->applet_mode = get_bool(iapplet, "applet_icon_mode");
+  return FALSE;
 }
 
 AwnApplet*
@@ -960,59 +1045,40 @@ awn_applet_factory_initp(const gchar *name, const gchar *uid, gint panel_id)
 
   GtkWidget *da = gtk_drawing_area_new();
   gtk_widget_add_events(da, GDK_BUTTON_PRESS_MASK);
-  gtk_widget_set_no_show_all(da, TRUE);
-
-  GtkWidget *icon = awn_icon_new();
-  gtk_widget_set_no_show_all(icon, TRUE);
-
-  GtkWidget *align = awn_alignment_new_for_applet(applet);
-  gtk_container_add(GTK_CONTAINER(align), icon);
+  gtk_widget_show(da);
 
   GtkWidget *icon_box = awn_icon_box_new_for_applet(applet);
-  gtk_box_pack_start(GTK_BOX(icon_box), da, TRUE, TRUE, 0);
-  gtk_box_pack_start(GTK_BOX(icon_box), align, TRUE, TRUE, 0);
+  gtk_box_pack_start(GTK_BOX(icon_box), da, FALSE, FALSE, 0);
+  gtk_widget_show_all(icon_box);
+  gtk_container_add(GTK_CONTAINER(applet), icon_box);
 
   IndicatorApplet* iapplet = g_new0(IndicatorApplet, 1);
   iapplet->da = da;
-  iapplet->icon = icon;
   iapplet->num = 0;
   iapplet->applet = applet;
+  iapplet->icon_box = icon_box;
   iapplet->images = NULL;
   iapplet->menus = NULL;
   iapplet->shown_images = NULL;
   iapplet->shown_menus = NULL;
+  iapplet->awnicons = NULL;
   iapplet->popup_num = -1;
   iapplet->last_num = -1;
 
   iapplet->config = awn_config_get_default_for_applet(iapplet->applet, NULL);
   update_config(iapplet);
 
-  if (iapplet->applet_mode)
-  {
-    update_icon_mode(iapplet);
-    gtk_widget_show(icon);
-  }
-  else
-  {
-    gtk_widget_show(da);
-  }
-
   g_signal_connect(G_OBJECT(applet), "position-changed",
-                   G_CALLBACK(position_changed), (gpointer)iapplet);
+                   G_CALLBACK(applet_position_changed), (gpointer)iapplet);
   g_signal_connect(G_OBJECT(applet), "size-changed",
-                   G_CALLBACK(size_changed), (gpointer)iapplet);
+                   G_CALLBACK(applet_size_changed), (gpointer)iapplet);
 
   g_signal_connect(G_OBJECT(da), "button-press-event",
-                   G_CALLBACK(button_press), (gpointer)iapplet);
+                   G_CALLBACK(da_button_press), (gpointer)iapplet);
   g_signal_connect(G_OBJECT(da), "expose-event",
-                   G_CALLBACK(expose_event), (gpointer)iapplet);
+                   G_CALLBACK(da_expose_event), (gpointer)iapplet);
   g_signal_connect(G_OBJECT(da), "scroll-event",
-                   G_CALLBACK(scroll), (gpointer)iapplet);
-
-  g_signal_connect(G_OBJECT(icon), "clicked",
-                   G_CALLBACK(applet_click), (gpointer)iapplet);
-  g_signal_connect(G_OBJECT(icon), "context-menu-popup",
-                   G_CALLBACK(applet_right_click), (gpointer)iapplet);
+                   G_CALLBACK(da_scroll), (gpointer)iapplet);
 
   gtk_icon_theme_append_search_path(gtk_icon_theme_get_default(), INDICATOR_ICONS_DIR);
   /* Code (mostly) from gnome-panel's indicator-applet-0.3.6/src/applet-main.c */
@@ -1034,17 +1100,7 @@ awn_applet_factory_initp(const gchar *name, const gchar *uid, gint panel_id)
   }
   /* End... */
 
-  gtk_container_add(GTK_CONTAINER(applet), icon_box);
-
-  GtkPositionType pos = awn_applet_get_pos_type(applet);
-  if (pos == GTK_POS_TOP || pos == GTK_POS_BOTTOM)
-  {
-    gtk_widget_set_size_request(da, 1, -1);
-  }
-  else
-  {
-    gtk_widget_set_size_request(da, -1, 1);
-  }
+  update_icon_mode(iapplet);
 
   return applet;
 }

@@ -8,7 +8,7 @@ _description=The Email backend to use
 
 [DEFAULT/theme]
 type = string
-default = GMail
+default = System theme
 _description=The theme to use for the icon
 
 [DEFAULT/email-client]

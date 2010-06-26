@@ -25,11 +25,13 @@ import pygtk
 pygtk.require("2.0")
 import gtk
 
-from awn import extras
-from awn.extras import _, awnlib
+from awn.extras import _, awnlib, __version__
 
+system_theme_name = "System theme"
+
+theme_dir = "/usr/share/icons"
 icon_dir = os.path.join(os.path.dirname(__file__), "icons")
-theme_dir = os.path.join(os.path.dirname(__file__), "themes")
+mail_theme_dir = os.path.join(os.path.dirname(__file__), "themes")
 ui_file = os.path.join(os.path.dirname(__file__), "mail.ui")
 
 
@@ -66,7 +68,7 @@ class MailApplet:
 
         self.setup_context_menu()
 
-        self.back = getattr(Backends(), self.settings["backend"])
+        self.back = getattr(Backends(), self.awn.settings["backend"])
 
         self.setup_themes()
 
@@ -141,7 +143,7 @@ class MailApplet:
                 self.awn.settings["login-token"] = key.token
 
                 self.timer = self.awn.timing.register(self.refresh,
-                                                     self.settings["timeout"] * 60)
+                                                     self.awn.settings["timeout"] * 60)
                 self.refresh(show=False)
 
     def refresh(self, show=True):
@@ -152,7 +154,7 @@ class MailApplet:
         except RuntimeError, e:
             self.awn.theme.icon("error")
 
-            if self.settings["show-network-errors"]:
+            if self.awn.settings["show-network-errors"]:
                 self.awn.notify.send(_("Network error - Mail Applet"), str(e), "")
             return
 
@@ -163,13 +165,13 @@ class MailApplet:
                                                         "\n".join(diffSubjects)
 
             self.awn.notify.send(_("New Mail - Mail Applet"), msg,
-                                 self.__getIconPath("unread"))
+                                 self.__getIconPath("mail-unread"))
 
         self.awn.tooltip.set(strMessages(len(self.mail.subjects)))
 
         self.awn.theme.icon("unread" if len(self.mail.subjects) > 0 else "read")
 
-        if self.settings["hide"] and len(self.mail.subjects) == 0:
+        if self.awn.settings["hide"] and len(self.mail.subjects) == 0:
             self.awn.icon.hide()
             self.awn.dialog.hide()
         elif show:
@@ -178,12 +180,15 @@ class MailApplet:
         self.__dialog.update_email_list()
 
     def __getIconPath(self, name):
-        path = os.path.join(theme_dir, self.settings["theme"], "scalable",
-                            name + ".svg")
+        path = os.path.join(mail_theme_dir, self.awn.settings["theme"], "scalable", name + ".svg")
         if os.path.isfile(path):
             return path
         else:
-            return os.path.join(icon_dir, name + ".svg")
+            path = os.path.join(theme_dir, self.awn.settings["theme"], "scalable/status", name + ".svg")
+            if os.path.isfile(path):
+                return path
+            else:
+                return os.path.join(icon_dir, name + ".svg")
 
     def showWeb(self):
         if hasattr(self.mail, "showWeb"):
@@ -197,18 +202,22 @@ class MailApplet:
         else:
             # Now if xdg-open had an option to just open the email client,
             # not start composing a message, that would be just wonderful.
-            if " " in self.settings["email-client"]:
-                subprocess.Popen(self.settings["email-client"], shell=True)
-            else:
-                subprocess.Popen(self.settings["email-client"])
+            use_shell = " " in self.awn.settings["email-client"]
+            subprocess.Popen(self.awn.settings["email-client"], shell=use_shell)
 
     def setup_themes(self):
-        """Loads themes and states"""
-        states = {}
-        for state in ["error", "login", "read", "unread"]:
-            states[state] = state
+        """Loads themes and states.
+
+        """
+        states = {
+            "error" : "error",
+            "login" : "login",
+            "read"  : "mail-read",
+            "unread": "mail-unread"
+        }
         self.awn.theme.set_states(states)
-        self.awn.theme.theme(self.settings["theme"])
+        theme = self.awn.settings["theme"] if self.awn.settings["theme"] != system_theme_name else None
+        self.awn.theme.theme(theme)
 
     def setup_context_menu(self):
         prefs = gtk.Builder()
@@ -220,60 +229,38 @@ class MailApplet:
         self.setup_preferences(prefs)
 
     def setup_preferences(self, prefs):
-        def change_timeout(timeout):
+        def change_timeout(value):
             if hasattr(self, "timer"):
-                self.timer.change_interval(timeout * 60)
+                self.timer.change_interval(value * 60)
 
-        default_values = {
-            "backend": "GMail",
-            "theme": ("Tango", self.awn.theme.theme),
-            "email-client": "evolution -c mail",
-            "hide": (False, self.refresh_hide_applet,
-                     prefs.get_object("checkbutton-hide-applet")),
-            "show-network-errors": (True, None,
-                                 prefs.get_object("checkbutton-alert-errors")),
-            "timeout": (2, change_timeout,
-                        prefs.get_object("spinbutton-timeout"))
-        }
-
-        for key, value in default_values.iteritems():
-            if not key in self.awn.settings:
-                self.awn.settings[key] = value
-        self.settings = self.awn.settings
-
-        entry_client = prefs.get_object("entry-client")
-        entry_client.set_text(self.settings["email-client"])
-        entry_client.connect("changed", self.changed_client_cb)
-
-
-        # Get a list of themes
-        def is_dir(path):
-            return os.path.isdir(os.path.join(theme_dir, path))
-        themes = filter(is_dir, os.listdir(theme_dir))
-        themes.append("Tango")
-        themes.sort()
+        # Only use themes that are likely to provide all the files
+        def filter_theme(theme):
+            return os.path.isfile(os.path.join(theme_dir, theme, "scalable/status/mail-read.svg")) \
+                or os.path.isfile(os.path.join(theme_dir, theme, "48x48/status/mail-read.png"))
+        themes = filter(filter_theme, os.listdir(theme_dir))
+        themes = [system_theme_name] + sorted(themes) + sorted(os.listdir(mail_theme_dir))
 
         combobox_theme = prefs.get_object("combobox-theme")
         awnlib.add_cell_renderer_text(combobox_theme)
         for theme in themes:
-            combobox_theme.append_text(theme.replace('_', ' '))
-        combobox_theme.set_active(themes.index(self.settings["theme"]))
-        combobox_theme.connect("changed", self.changed_theme_cb)
+            combobox_theme.append_text(theme)
+        if self.awn.settings["theme"] not in themes:
+            self.awn.settings["theme"] = system_theme_name
 
-    def changed_theme_cb(self, combobox):
-        self.awn.settings["theme"] = \
-                                   combobox.get_active_text().replace(' ', '_')
+        binder = self.awn.settings.get_binder(prefs)
+        binder.bind("theme", "combobox-theme", key_callback=self.awn.theme.theme)
+        binder.bind("email-client", "entry-client")
+        binder.bind("hide", "checkbutton-hide-applet", key_callback=self.refresh_hide_applet)
+        binder.bind("show-network-errors", "checkbutton-alert-errors")
+        binder.bind("timeout", "spinbutton-timeout", key_callback=change_timeout)
+        self.awn.settings.load_bindings(binder)
 
     def refresh_hide_applet(self, value):
-        if hasattr(self, "mail") and self.settings["hide"] and \
-                                                  len(self.mail.subjects) == 0:
+        if hasattr(self, "mail") and value and len(self.mail.subjects) == 0:
             self.awn.icon.hide()
             self.awn.dialog.hide()
         else:
             self.awn.show()
-
-    def changed_client_cb(self, entry):
-        self.awn.settings["email-client"] = entry.get_text()
 
 
 class MainDialog:
@@ -470,7 +457,7 @@ class MainDialog:
         for i in backends:
             combobox_backend.append_text(getattr(Backends(), i).title)
         combobox_backend.set_active(
-                             backends.index(self.__parent.settings["backend"]))
+                             backends.index(self.__parent.awn.settings["backend"]))
         combobox_backend.connect("changed", changed_backend_cb, label_group)
 
         hbox_backend = gtk.HBox(False, 12)
@@ -916,14 +903,13 @@ if __name__ == "__main__":
     awnlib.init_start(MailApplet, {
         "name": _("Mail Applet"),
         "short": "mail",
-        "version": extras.__version__,
+        "version": __version__,
         "description": _("An applet to check one's email"),
-        "logo": os.path.join(icon_dir, "read.svg"),
+        "logo": os.path.join(icon_dir, "mail-read.svg"),
         "author": "Pavel Panchekha",
         "copyright-year": "2008",
         "email": "pavpanchekha@gmail.com",
         "type": ["Network", "Email"],
         "authors": ["onox <denkpadje@gmail.com>",
                     "sharkbaitbobby <sharkbaitbobby+awn@gmail.com>",
-                    "Pavel Panchekha"]},
-        ["settings-per-instance", "detach"])
+                    "Pavel Panchekha"]})

@@ -198,9 +198,14 @@
                         <property name="visible">True</property>
                         <property name="spacing">12</property>
                         <child>
-                          <object class="GtkLabel" id="label4">
+                          <object class="GtkLabel" id="label-timeout">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">Update interval:</property>
+                            <property name="label" translatable="yes">Update _interval:</property>
+                            <property name="use_underline">True</property>
+                            <property name="mnemonic_widget">spinbutton-timeout</property>
+                            <accessibility>
+                              <relation type="label-for" target="spinbutton-timeout"/>
+                            </accessibility>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -217,6 +222,9 @@
                                 <property name="can_focus">True</property>
                                 <property name="invisible_char">&#x25CF;</property>
                                 <property name="adjustment">adjustment_timeout</property>
+                                <accessibility>
+                                  <relation type="labelled-by" target="label-timeout"/>
+                                </accessibility>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -272,8 +280,8 @@
   </object>
   <object class="GtkSizeGroup" id="sizegroup1">
     <widgets>
-      <widget name="label-client"/>
       <widget name="label-theme"/>
+      <widget name="label-client"/>
     </widgets>
   </object>
   <object class="GtkAdjustment" id="adjustment_timeout">

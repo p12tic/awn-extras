@@ -30,6 +30,7 @@ pygtk.require('2.0')
 import gtk
 import pango
 import gobject
+import gettext
 
 from desktopagnostic.config import GROUP_DEFAULT
 import awn
@@ -373,13 +374,14 @@ class App(awn.AppletSimple):
             for i, entry in enumerate(feed.entries[:5]):
                 image = gtk.Image()
 
-                button = gtk.Button(shortify(entry['title']))
+                button = gtk.Button('')
+                button.child.set_text(classes.safify(shortify(entry['title'])))
+                button.child.set_use_underline(False)
                 button.set_relief(gtk.RELIEF_NONE)
                 if len(entry['title']) > 25:
                     button.set_tooltip_text(entry['title'])
                 button.connect('clicked', self.feed_item_clicked, (feed, i))
-                button.set_use_underline(False)
-                button.show()
+                button.show_all()
 
                 if entry['new'] == True:
                     classes.boldify(button, True)
@@ -489,9 +491,10 @@ class App(awn.AppletSimple):
 
             if num_messages != 0:
                 pynotify.init(_("Feeds Applet"))
-                notification = pynotify.Notification(_("%s New Item%s - Feeds Applet") % \
-                    (self.num_notify_while_updating, ['', 's'][self.num_notify_while_updating != 1]),
-                    msg, [icon_path, greader_path][only_greader])
+                s = gettext.ngettext("%s New Item - Feeds Applet", "%s New Items - Feeds Applet",
+                  self.num_notify_while_updating) % self.num_notify_while_updating
+                notification = pynotify.Notification(s, msg,
+                  [icon_path, greader_path][only_greader])
                 notification.set_timeout(5000)
                 notification.show()
 
@@ -1154,11 +1157,8 @@ class App(awn.AppletSimple):
         dialog = gtk.Dialog(_("OPML Import"), None, gtk.DIALOG_NO_SEPARATOR, \
           (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT, gtk.STOCK_OK, gtk.RESPONSE_ACCEPT))
 
-        if len(urls) == 0:
-            message = _("Do you want to add this feed?")
-
-        else:
-            message = _("Do you want to add these %s feeds?") % len(urls)
+        message = gettext.ngettext("Do you want to add %d feed?",
+          "Do you want to add %d feeds?", len(urls)) % len(urls)
 
         dialog.get_content_area().pack_start(gtk.Label(message))
 

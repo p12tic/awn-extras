@@ -361,6 +361,7 @@ class KeySaver:
 class GoogleFeed(KeySaver):
     opener = None
     SID = None
+    Auth = None
     logged_in = False
     title = _("Google")
     client_login_url = 'https://www.google.com/accounts/ClientLogin'
@@ -479,7 +480,12 @@ class GoogleFeed(KeySaver):
             return
 
         #Save the SID so we don't have to re-login every update
-        self.SID = data.split('=')[1].split('\n')[0]
+        for line in data.split('\n'):
+            if line.find('SID=') == 0:
+                self.SID = line.split('=')[1]
+            elif line.find('Auth=') == 0:
+                self.Auth = line.split('=')[1]
+
         self.logged_in = True
 
         if self.should_update:
@@ -489,7 +495,7 @@ class GoogleFeed(KeySaver):
     def get_search_results(self, query, cb, _error_cb):
         search_url = self.feed_search_url + urllib.urlencode({'q': query})
 
-        if self.SID is not None:
+        if None not in (self.SID, self.Auth):
             self.get_data(search_url, {'Cookie': 'SID=' + self.SID}, False,
                 user_data=(cb, _error_cb), cb=self.got_search_results, error_cb=_error_cb)
 
@@ -551,7 +557,8 @@ class GoogleReader(FeedSource, StandardNew, GoogleFeed):
 
         else:
             #Load the reading list with that magic SID as a cookie
-            self.get_data(self.fetch_url, {'Cookie': 'SID=' + self.SID}, True, cb=self.got_parsed)
+            self.get_data(self.fetch_url, {'Cookie': 'SID=' + self.SID,
+                'Authorization': 'GoogleLogin auth=' + self.Auth}, True, cb=self.got_parsed)
 
     def got_parsed(self, parsed):
         self.entries = []
@@ -931,12 +938,18 @@ class WebFeed(FeedSource, StandardNew):
 
         try:
             self.web_url = parsed.feed.link
+            if self.web_url[0] == '/':
+                self.web_url = '/'.join(self.url.split('/')[:3]) + self.web_url
         except:
             self.web_url = ''
 
         try:
             for entry in parsed.entries[:5]:
-                self.entries.append(Entry(entry.link, entry.title))
+                if entry.link[0] == '/':
+                    self.entries.append(Entry('/'.join(self.web_url.split('/')[:3]) + entry.link,
+                        entry.title))
+                else:
+                    self.entries.append(Entry(entry.link, entry.title))
         except:
             self.error()
             return
@@ -969,4 +982,24 @@ def deboldify(widget, button=False):
     widget.set_markup(widget.get_text())
 
 def safify(text):
-  return text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;')
+    text = text.replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;')
+    text2 = list(text)
+    for char, i in enumerate(text2):
+        if char == '&':
+            ok = False
+            if len(text2) >= i:
+                if text2[i + 1] == '#' and (text2[i + 4] == ';' or text2[i + 6] == ';'):
+                    ok = True
+                elif len(text2) - 1 >= i + 3:
+                    if text2[i + 1:3] == 'lt;':
+                        ok = True
+                    elif text2[i + 1:3] == 'gt;':
+                        ok = True
+                    elif len(text2) -1 >= i + 4:
+                        if text2[i + 1:4] == 'quot;':
+                            ok = True
+
+            if not ok:
+                text2[i] = '&amp;'
+
+    return ''.join(text2)

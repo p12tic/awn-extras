@@ -221,10 +221,12 @@ class Prefs:
     self.places_all.set_active(True)
 
     for place in self.places_ordered:
-      val = self.places[place]
-      if not ((type(val) == bool and val == True) or (type(val) == int and val == 2)):
-        self.places_all.set_active(False)
-        break
+      if place in self.places:
+        val = self.places[place]
+        if not ((type(val) == bool and val == True) or (type(val) == int and val == 2)):
+          self.places_all.set_active(False)
+          break
+
     self.places_all.connect('toggled', self.check_toggled)
     places_vbox.pack_start(self.places_all, False)
 

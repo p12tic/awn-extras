@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: awn-extras-applets 0.2.7\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-11 18:07+0300\n"
-"PO-Revision-Date: 2010-06-18 02:54+0000\n"
+"PO-Revision-Date: 2010-07-01 17:15+0000\n"
 "Last-Translator: Danil Skachkov <Unknown>\n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2010-06-19 03:46+0000\n"
+"X-Launchpad-Export-Date: 2010-07-02 03:30+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -559,7 +559,7 @@ msgstr ""
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:6
 msgid "<b>Title Options</b>"
-msgstr ""
+msgstr "<b>Параметры подсказки</b>"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:7
 msgid "Beaufort"
@@ -581,7 +581,7 @@ msgstr "Найти _следующее"
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:11
 msgid ""
 "If enabled, besides hours and minutes, the seconds will be visible too"
-msgstr ""
+msgstr "Если включено, кроме часов и минут, будут отображаться секунды"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:12
 msgid "If enabled, the date will be shown in the title"
@@ -923,7 +923,7 @@ msgstr "Нет назначений."
 
 #: ../applets/maintained/comics/awn-applet-comics.schema-ini.in.h:1
 msgid "The user agent to send when retrieving comics."
-msgstr ""
+msgstr "Поле \"UserAgent\" при получении комиксов"
 
 #: ../applets/maintained/comics/comics_add.py:57
 #, python-format
@@ -1053,6 +1053,12 @@ msgid ""
 "\n"
 "Press \"next\" to proceed."
 msgstr ""
+"Этот мастер поможет вам добавить новый комикс.\n"
+"\n"
+"Чтобы найти подходящий для добавления комикс, вы можете поискать что-нибудь "
+"типа \"комиксы rss\".\n"
+"\n"
+"Нажмите \"далее\" чтобы продолжить."
 
 #: ../applets/maintained/comics/ui/manage.ui.h:1
 msgid "Manage comics"
@@ -1073,7 +1079,7 @@ msgstr "Размер"
 #: ../applets/maintained/comics/main.py:152
 #, python-format
 msgid "Unknown command sent: %s"
-msgstr ""
+msgstr "Отправлена неизвестная команда: %s"
 
 #: ../applets/maintained/cpufreq/awn-applet-cpufreq.schema-ini.in.h:1
 msgid "Index of processor."
@@ -1101,7 +1107,7 @@ msgstr " 0.9)."
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:2
 msgid " none)."
-msgstr ""
+msgstr " нет)."
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:3
 msgid "Can change layout with scroll wheel."
@@ -1226,11 +1232,11 @@ msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:67
 msgid "Allow scroll wheel to change layout"
-msgstr ""
+msgstr "Изменять раскладку по вращению колеса мыши"
 
 #: ../applets/maintained/dialect/dialect.ui.h:68
 msgid "Change your keyboard layout from Awn."
-msgstr ""
+msgstr "Изменяет раскладку клавиатуры из Awn."
 
 #: ../applets/maintained/dialect/dialect.ui.h:69
 msgid "Dialect Applet Help"
@@ -1242,7 +1248,7 @@ msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:71
 msgid "Flag Opacity"
-msgstr ""
+msgstr "Непрозрачность флага"
 
 #: ../applets/maintained/dialect/dialect.ui.h:72
 msgid "Flag Overlay"
@@ -1250,7 +1256,7 @@ msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:73
 msgid "Flag Scale"
-msgstr ""
+msgstr "Масштаб флага"
 
 #: ../applets/maintained/dialect/dialect.ui.h:75
 msgid "Keyboard Toggle"
@@ -1258,41 +1264,41 @@ msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:76
 msgid "Layout Lists"
-msgstr ""
+msgstr "Списки раскладок"
 
 #: ../applets/maintained/dialect/dialect.ui.h:77
 #: ../applets/maintained/file-browser-launcher/prefs.py:318
 msgid "Left Click"
-msgstr ""
+msgstr "Щелчок левой кнопкой мыши"
 
 #: ../applets/maintained/dialect/dialect.ui.h:78
 msgid "Menu"
-msgstr ""
+msgstr "Меню"
 
 #: ../applets/maintained/dialect/dialect.ui.h:79
 #: ../applets/maintained/file-browser-launcher/prefs.py:393
 msgid "Middle Click"
-msgstr ""
+msgstr "Щелчок средней кнопкой мыши"
 
 #: ../applets/maintained/dialect/dialect.ui.h:80
 msgid "Mouse Actions"
-msgstr ""
+msgstr "Действия мышью"
 
 #: ../applets/maintained/dialect/dialect.ui.h:81
 msgid "Next Layout"
-msgstr ""
+msgstr "Следующая раскладка"
 
 #: ../applets/maintained/dialect/dialect.ui.h:83
 msgid "Overlay layout flag on applet icon"
-msgstr ""
+msgstr "Показывать флаг раскладки поверх значка апплета"
 
 #: ../applets/maintained/dialect/dialect.ui.h:84
 msgid "Previous Layout"
-msgstr ""
+msgstr "Предыдущая раскладка"
 
 #: ../applets/maintained/dialect/dialect.ui.h:85
 msgid "System List"
-msgstr ""
+msgstr "Системный список"
 
 #: ../applets/maintained/dialect/dialect.ui.h:86
 msgid ""
@@ -1584,35 +1590,35 @@ msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:206
 msgid "User List"
-msgstr ""
+msgstr "Пользовательский список"
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:1
 msgid "Command to execute when a calendar day is double-clicked."
-msgstr ""
+msgstr "Команда, выполняемая по двойному щелчку по дате в календаре."
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:2
 msgid "Command to execute when the user wishes to adjust the date/time."
-msgstr ""
+msgstr "Команда, выполняемая при попытке настройки даты/времени."
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:3
 msgid "Show the date before the time."
-msgstr ""
+msgstr "Показывать дату перед временем."
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:4
 msgid "The color of the clock text."
-msgstr ""
+msgstr "Цвет текста часов."
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:5
 msgid "The font face of the clock text."
-msgstr ""
+msgstr "Шрифт текста часов."
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:6
 msgid "The shadow color of the clock text."
-msgstr ""
+msgstr "Цвет тени текста часов."
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:7
 msgid "Toggle 12-hour mode."
-msgstr ""
+msgstr "Включить 12-часовой вид."
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:1
 msgid "12 hour format"
@@ -1697,11 +1703,11 @@ msgstr ""
 
 #: ../applets/maintained/feeds/awn-applet-feeds.schema-ini.in.h:3
 msgid "The interval (in minutes) at which to update (3-60)"
-msgstr ""
+msgstr "Интервал обновления в минутах (3-60)"
 
 #: ../applets/maintained/feeds/awn-applet-feeds.schema-ini.in.h:4
 msgid "Update automatically at a configurable interval"
-msgstr ""
+msgstr "Обновлять автоматически с указанным интервалом."
 
 #: ../applets/maintained/feeds/classes.py:328
 msgid "Google"
@@ -1813,7 +1819,7 @@ msgstr "Добавить ленту новостей"
 
 #: ../applets/maintained/feeds/feeds.py:1079
 msgid "OPML Import"
-msgstr ""
+msgstr "Импорт OPML"
 
 #: ../applets/maintained/feeds/feeds.py:1083
 msgid "Do you want to add this feed?"
@@ -1872,11 +1878,11 @@ msgstr " минут"
 
 #: ../applets/maintained/feeds/prefs.py:264
 msgid "Open OPML File"
-msgstr ""
+msgstr "Открыть OPML файл"
 
 #: ../applets/maintained/feeds/prefs.py:278
 msgid "Save OPML File"
-msgstr ""
+msgstr "Сохранить OPML файл"
 
 #. Note: the following string is used as an exmaple filename
 #: ../applets/maintained/feeds/prefs.py:284
@@ -1993,47 +1999,47 @@ msgstr "Действие по средней кнопке мыши"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:4
 msgid "The file browser to use"
-msgstr ""
+msgstr "Используемый обозреватель файлов"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:5
 msgid "The path to use on left click"
-msgstr ""
+msgstr "Путь, открываемый по нажатию левой кнопки мыши"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:6
 msgid "The path to use on middle click"
-msgstr ""
+msgstr "Путь, открываемый по нажатию средней кнопки мыши"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:7
 msgid "Whether or not to display Connect to server"
-msgstr ""
+msgstr "Показывать или нет пункт \"Подключиться к серверу\""
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:8
 msgid "Whether or not to display bookmarks"
-msgstr ""
+msgstr "Показывать или нет закладки"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:9
 msgid "Whether or not to display local drives"
-msgstr ""
+msgstr "Показывать или нет локальные диски"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:10
 msgid "Whether or not to display network drives"
-msgstr ""
+msgstr "Показывать или нет сетевые диски"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:11
 msgid "Whether or not to display the Filesystem"
-msgstr ""
+msgstr "Показывать или нет файловую систему"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:12
 msgid "Whether or not to display the home folder"
-msgstr ""
+msgstr "Показывать или нет домашний каталог"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:13
 msgid "Whether or not to focus the location text box"
-msgstr ""
+msgstr "Устанавливать или нет фокус на поле адреса"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:14
 msgid "Whether or not to open the place when clicked"
-msgstr ""
+msgstr "Открывать или нет расположение при нажатии на него"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.desktop.in.h:1
 msgid "A launcher for your file manager"
@@ -2041,7 +2047,7 @@ msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:347
 msgid "Home Folder"
-msgstr ""
+msgstr "Домашний каталог"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:351
 #: ../applets/maintained/file-browser-launcher/prefs.py:223
@@ -2050,17 +2056,17 @@ msgstr "Файловая система"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:474
 msgid "Connect to Server..."
-msgstr ""
+msgstr "Подключение к серверу..."
 
 #. Documents
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:528
 msgid "Documents"
-msgstr ""
+msgstr "Документы"
 
 #. Downloads
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:532
 msgid "Downloads"
-msgstr ""
+msgstr "Загрузки"
 
 #. Music
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:536
@@ -2150,12 +2156,12 @@ msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:191
 msgid "Open place when clicked"
-msgstr ""
+msgstr "Открывать расположение по нажатию"
 
 #. Show all places
 #: ../applets/maintained/file-browser-launcher/prefs.py:211
 msgid "Show all places"
-msgstr ""
+msgstr "Показывать все расположения"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:223
 msgid "Home folder"
@@ -2207,13 +2213,14 @@ msgstr "Мусор"
 #, c-format
 msgid "%s: %u item"
 msgid_plural "%s: %u items"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s: %u элемент"
+msgstr[1] "%s: %u элементов"
+msgstr[2] "%s: %u элементов"
 
 #: ../applets/maintained/garbage/applet.vala:194
 #, c-format
 msgid "Could not open the trash folder with your file manager: %s"
-msgstr ""
+msgstr "Невозможно открыть корзину вашим файловым менеджером: %s"
 
 #: ../applets/maintained/garbage/applet.vala:209
 msgid "_Empty Trash"
@@ -2228,17 +2235,17 @@ msgstr "Вы уверены, что хотите очистить корзину
 #: ../applets/maintained/garbage/applet.vala:344
 #, c-format
 msgid "Could not send the dragged file(s) to the trash: %s"
-msgstr ""
+msgstr "Невозможно отправить файлы в корзину: %s"
 
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/garbage/awn-applet-garbage.schema-ini.in.h:1
 msgid ""
 "Enable the confirmation dialog form when one wishes to empty the trash."
-msgstr ""
+msgstr "Спрашивать подтверждение перед очисткой корзины."
 
 #: ../applets/maintained/garbage/awn-applet-garbage.schema-ini.in.h:2
 msgid "Show the number of items in the trash on top of the icon."
-msgstr ""
+msgstr "Показывать количество элементов в корзине в верхней части значка."
 
 #: ../applets/maintained/garbage/garbage.desktop.in.in.h:1
 msgid "A lightweight, cross-desktop trash applet"
@@ -2251,11 +2258,11 @@ msgstr ""
 
 #: ../applets/maintained/garbage/prefs.vala:47
 msgid "Confirm when emptying the trash"
-msgstr ""
+msgstr "Подтверждать очистку корзины"
 
 #: ../applets/maintained/garbage/prefs.vala:52
 msgid "Show the item count on the icon"
-msgstr ""
+msgstr "Показывать количество элементов в корзине"
 
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:1

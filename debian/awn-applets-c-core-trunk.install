@@ -62,6 +62,13 @@ usr/share/avant-window-navigator/applets/places.desktop
 usr/share/avant-window-navigator/schemas/awn-applet-places.schema-ini
 etc/gconf/schemas/awn-applet-places.schemas
 #
+# Related
+#
+usr/lib/awn/applets/related/*.so 
+usr/share/avant-window-navigator/applets/related.desktop 
+usr/share/avant-window-navigator/schemas/awn-applet-related.schema-ini
+etc/gconf/schemas/awn-applet-related.schemas
+#
 # Garbage
 #
 usr/lib/awn/applets/garbage/*.so 

@@ -62,6 +62,8 @@ PKG_CHECK_MODULES(AWN, [awn >= 0.3.9])
 PKG_CHECK_MODULES(GTOP, [libgtop-2.0])
 # related
 PKG_CHECK_MODULES(ZEITGEIST, [zeitgeist-1.0 >= 0.2.2], [has_libzg=yes], [has_libzg=no])
+#indicator
+PKG_CHECK_MODULES(INDICATOR, [indicator >= 0.3], [with_indicator=yes], [with_indicator=no])
 # awn-notification-daemon, shiny-switcher, standalone-launcher, taskmand
 PKG_CHECK_MODULES(LIBWNCK, [libwnck-1.0 >= 2.21.99.9])
 # awn-notification-daemon, shiny-switcher
@@ -97,7 +99,6 @@ fi
 
 if test "$with_indicator" != "no"; then
 # indicator-applet
-PKG_CHECK_MODULES(INDICATOR, [indicator])
 INDICATORDIR=`$PKG_CONFIG --variable=indicatordir indicator`
 INDICATORICONSDIR=`$PKG_CONFIG --variable=iconsdir indicator`
 AC_SUBST(INDICATORDIR)

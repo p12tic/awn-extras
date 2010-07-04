@@ -22,7 +22,7 @@ Build-Depends: 	debhelper (>= 7),
 		python-support (>= 0.7.0),
 		valac (>= 0.7.7),
 		vala-awn-trunk (>= 0.3.9),
-		libindicator-dev
+		libindicator-dev (>= 0.3)
 Standards-Version: 3.8.0
 XS-Python-Version: >= 2.4
 Homepage: https://launchpad.net/awn-extras

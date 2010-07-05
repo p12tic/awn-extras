@@ -1,12 +1,4 @@
 #!/usr/bin/make -f
-
-#######################################
-#                                     #
-#                                     #
-# DONT EDIT ME ! EDIT rules.autoppa   #
-#                                     #
-#                                     #
-#######################################
 #DH_VERBOSE=1
 
 include /usr/share/quilt/quilt.make
@@ -15,6 +7,7 @@ configure_flags += \
 		--prefix=/usr \
 		--disable-pymod-checks \
 		--with-gconf-schema-file-dir=/etc/gconf/schemas \
+AUTOPPA_INCLUDE(lucid,maverick):		--with-indicator \
 		--with-webkit
 		
 override_dh_install:

@@ -99,8 +99,10 @@ Recommends: 	awn-settings-trunk (>= 0.3.8),
 		fortune,
 # battery
 		hal,
-# comics, battery, thinkhdaps
+# comics, battery
 		python-notify,
+# thinkhdaps
+        python-pyinotify,
 # cairo-clock
 		python-dateutil,
 		python-gweather,

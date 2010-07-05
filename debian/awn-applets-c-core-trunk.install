@@ -30,6 +30,8 @@ usr/share/avant-window-navigator/schemas/awn-applet-cairo-menu.schema-ini
 #
 usr/lib/awn/applets/indicator-applet/indicator-applet.so
 usr/share/avant-window-navigator/applets/indicator-applet.desktop
+etc/gconf/schemas/awn-applet-indicator-applet.schemas
+usr/share/avant-window-navigator/schemas/awn-applet-indicator-applet.schema-ini
 #
 # Notification area
 #
@@ -72,9 +74,8 @@ etc/gconf/schemas/awn-applet-places.schemas
 # Related (Only lucid and +)
 #
 usr/lib/awn/applets/related/*.so 
-usr/share/avant-window-navigator/applets/related.desktop 
-usr/share/avant-window-navigator/schemas/awn-applet-related.schema-ini
-etc/gconf/schemas/awn-applet-related.schemas
+usr/share/avant-window-navigator/applets/related.desktop
+usr/share/icons/hicolor/scalable/apps/zeitgeist-logo.svg
 #
 # Garbage
 #

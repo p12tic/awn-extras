@@ -29,6 +29,8 @@ override_dh_install:
 		rm -f $(CURDIR)/debian/tmp/usr/share/avant-window-navigator/applets/$${applet}/icons/*.png; \
 		rm -f $(CURDIR)/debian/tmp/usr/share/avant-window-navigator/applets/$${applet}/*.ui; \
 		rm -f $(CURDIR)/debian/tmp/usr/share/avant-window-navigator/applets/$${applet}.desktop; \
+		rm -f $(CURDIR)/debian/tmp/etc/gconf/schemas/awn-applet-$${applet}.schemas; \
+		rm -f $(CURDIR)/debian/tmp/usr/share/avant-window-navigator/schemas/awn-applet-$${applet}.schema-ini; \
 	done
 	
 	dh_install --fail-missing

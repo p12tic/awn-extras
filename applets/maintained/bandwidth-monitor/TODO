@@ -1,7 +1,8 @@
 TODO:
 
 --- Things that need to happen ---
-None Left...
+Add preference option for displaying the wireless signal in the applet icon - currently tied to "background" setting
+Need to honor the users gtk settings for the dialog colors and text.
 
 --- Things I would like ---
 Add preference control for applying effect to text (new default = True, always apply)

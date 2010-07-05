@@ -29,13 +29,44 @@ class Preferences:
     def __init__(self, applet, parent):
         self.applet = applet
         self.parent = parent
+        self.preferences_dialog = self.applet.dialog.new('preferences')
+        self.preferences_dialog.connect('show', self.show_event_cb)
+
+    def create_display_parameter_list(self):
+        cell_box = self.create_treeview()
+        store = cell_box.liststore
+        ddps = 'device_display_parameters'
+        prefs = self.parent.applet.settings[ddps]
+        for device_pref in prefs:
+            dpv = device_pref.split('|')
+            iface = dpv[0]
+            sum_include = dpv[1]
+            muti_include = dpv[2]
+            current_iter = store.append([iface, sum_include,
+                muti_include, '', '', '#ff0000', '#ffff00'])
+        ifaces = self.parent.netstats.ifaces
+        for iface in sorted(self.parent.netstats.ifaces):
+            if not 'Multi Interface' in iface \
+            and not 'Sum Interface' in iface and \
+            not iface in prefs.__str__():
+                sum_include = True if ifaces[iface]['sum_include'] \
+                    else False
+                multi_include = True if ifaces[iface]['multi_include'] \
+                    else False
+                current_iter = store.append([iface, sum_include,
+                    multi_include, '', '', '#ff0000', '#ffff00'])
+        for child in self.prefs_ui.get_object('scrolledwindow1').get_children():
+            self.prefs_ui.get_object('scrolledwindow1').remove(child)
+            del child
+        self.prefs_ui.get_object('scrolledwindow1').add_with_viewport(cell_box)
+        cell_box.show_all()
+
 
     def setup(self):
         prefs_ui = gtk.Builder()
+        self.prefs_ui = prefs_ui
         prefs_ui.add_from_file(self.parent.UI_FILE)
-        preferences_vbox = self.applet.dialog.new('preferences').vbox
-        cell_box = self.create_treeview()
-        store = cell_box.liststore
+        preferences_vbox = self.preferences_dialog.vbox
         scaleThresholdSBtn = prefs_ui.get_object('scaleThresholdSBtn')
         thresholdLabel = prefs_ui.get_object('label-scaleThreshold')
         scaleThresholdSBtn.set_value(
@@ -88,20 +119,6 @@ class Preferences:
         labelNoneRadiobutton.connect('toggled', self.labelRadio_cb, 0)
         labelSumRadiobutton.connect('toggled', self.labelRadio_cb, 1)
         labelBothRadiobutton.connect('toggled', self.labelRadio_cb, 2)
-        for iface in sorted(self.parent.netstats.ifaces):
-            if not 'Multi Interface' in iface \
-            and not 'Sum Interface' in iface:
-                if self.parent.netstats.ifaces[iface]['sum_include'] == True:
-                    sum_include = 1
-                else:
-                    sum_include = 0
-                if self.parent.netstats.ifaces[iface]['multi_include'] == True:
-                    muti_include = 1
-                else:
-                    muti_include = 0
-                current_iter = store.append([iface, sum_include,
-                    muti_include, '', '', '#ff0000', '#ffff00'])
-        prefs_ui.get_object('scrolledwindow1').add_with_viewport(cell_box)
         prefs_ui.get_object('dialog-notebook').reparent(preferences_vbox)
 
     def graphZeroToggle_cb(self, widget):
@@ -123,6 +140,8 @@ class Preferences:
         treeview.set_enable_search(True)
         treeview.position = 0
         rows = gtk.VBox(False, 3)
+        if hasattr(self, 'liststore'):
+            del self.liststore
         self.liststore = liststore
         listcols = gtk.HBox(False, 0)
         prows = gtk.VBox(False, 0)
@@ -193,10 +212,13 @@ class Preferences:
 
     def devlist_cell_func(self, column, cell, model, iter):
         ''' Changes the cell color to match the preferece or selected value '''
-        device = self.liststore.get_value(iter, 0)
-        column_title = column.get_title().lower().split(' ')[0]
-        cell.set_property('cell-background',
-            self.get_color(device, column_title))
+        try:
+            device = self.liststore.get_value(iter, 0)
+            column_title = column.get_title().lower().split(' ')[0]
+            cell.set_property('cell-background',
+                self.get_color(device, column_title))
+        except:
+            pass
 
     def bgCheckbutton_cb(self, widget):
         self.applet.settings['background'] = widget.get_active()
@@ -246,8 +268,9 @@ class Preferences:
         response = colorseldlg.run()
         if response == gtk.RESPONSE_OK:
             self.color_choice = colorseldlg.colorsel.get_current_color()
-            self.parent.netstats.ifaces[model[path][0]]['%s_color' \
-                % prop.lower()] = self.color_choice.to_string()
+            if model[path][0] in self.parent.netstats.ifaces:
+                self.parent.netstats.ifaces[model[path][0]]['%s_color' \
+                    % prop.lower()] = self.color_choice.to_string()
             prefs = self.applet.settings['device_display_parameters']
             if not prefs:
                 prefs = ['%s|True|True|None|None' % (model[path][0])]
@@ -278,3 +301,6 @@ class Preferences:
                 dpv[col_number] = str(parameter)
                 prefs[i] = '|'.join(dpv)
         self.applet.settings['device_display_parameters'] = prefs
+
+    def show_event_cb(self, *args):
+        self.create_display_parameter_list()

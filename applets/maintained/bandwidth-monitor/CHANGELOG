@@ -1,3 +1,15 @@
+07/04/2010:
+    Changed parsing of interfaces to use libgtop
+    Removed usage of netstat
+    Added interface selection via right-click context menu
+    Replaced interface selection dialog with a multi-dialog which provides:
+        A large traffic graph for the selected interface with plot-chart, name and peak labels
+        An Interface selection list using small graphs which indicate device type and status
+        An options button for selecting the graph type for wireless interfaces and displaying information about the selected interface
+    Fixed devices listed in "Devices" tab not refreshing with new/removed device events
+    Added check-button toggle for Kbps/KBps to right-click context menu
+    Added wireless signal strength graph to applet
+
 03/23/2010:
     Corrected issue with parsing the interface list
 
@@ -36,8 +48,8 @@
 12/20/2009:
     Change logic to graph calculation which corrects the following rendering issues -
         Graph lines drawing outside of border/frame
-        Graph normalised top-value was rendering off-screen when applet size smaller than 35
-        Graph normalised top-value was rendering very low on the graph when applet size greater than 60
+        Graph normalized top-value was rendering off-screen when applet size smaller than 35
+        Graph normalized top-value was rendering very low on the graph when applet size greater than 60
     Changed scaling of initial icon - it was rendering too large and centered text was displayed with an odd alignment to the dock
     Fixed some issues with default values
     Changed short-name to 'bandwidth-monitor' to match schema file

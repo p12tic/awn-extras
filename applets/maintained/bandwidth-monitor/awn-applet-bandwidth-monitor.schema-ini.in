@@ -1,7 +1,7 @@
 [DEFAULT/unit]
 type = integer
 default = 0
-_description=The base display unit for transfer speed (0 = bits, 1 = bytes)
+_description=The base display unit for transfer speed (0: bits, 1: bytes)
 [DEFAULT/interface]
 type = string
 default = 
@@ -33,8 +33,12 @@ _description=Color to draw the border
 [DEFAULT/label_control]
 type = integer
 default = 2
-_description=Throughput label control - 0 = no label, 1 = Sum, 2 = Upload/Download
+_description=Throughput label control - 0: no label, 1: Sum, 2: Upload/Download
 [DEFAULT/graph_zero]
 type = integer
 default = 0
 _description=If enabled this will draw a line at the bottom of the graph even if the value is 0. If unchecked, values below 1 are not drawn
+[DEFAULT/wireless_signal_graph_type]
+type = list-string
+default = ;
+_description=Type of graph to use for wireless devices - area: Area chart, area_bar: Area chart with colored bars, bar: Bar chart, fan: Waving chart with density, fan_bar: Waving Bar chart with density

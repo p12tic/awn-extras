@@ -15,6 +15,7 @@ configure_flags += \
 		--prefix=/usr \
 		--disable-pymod-checks \
 		--with-gconf-schema-file-dir=/etc/gconf/schemas \
+		--with-indicator \
 		--with-webkit
 		
 override_dh_install:
@@ -29,7 +30,7 @@ override_dh_install:
 	find $(CURDIR)/debian/tmp/usr -name LGPL |xargs rm
 	find $(CURDIR)/debian/tmp/usr -name CHANGELOG |xargs rm
 	#Disable applets
-	set -e; for applet in dropper mimenu vala-test python-test wobblyzini; do \
+	set -e; for applet in dropper mimenu mount vala-test python-test wobblyzini; do \
 		rm -f $(CURDIR)/debian/tmp/usr/lib/awn/applets/$${applet}/*.so \
 		rm -f $(CURDIR)/debian/tmp/usr/share/avant-window-navigator/applets/$${applet}/*.py; \
 		rm -f $(CURDIR)/debian/tmp/usr/share/avant-window-navigator/applets/$${applet}/icons/*.svg; \

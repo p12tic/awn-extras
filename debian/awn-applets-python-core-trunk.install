@@ -105,15 +105,6 @@ usr/share/avant-window-navigator/applets/media-control/icons/*.svg
 usr/share/avant-window-navigator/applets/media-control.desktop
 usr/share/avant-window-navigator/schemas/awn-applet-media-control.schema-ini
 #
-# Mount
-#
-etc/gconf/schemas/awn-applet-mount.schemas
-usr/share/avant-window-navigator/applets/mount/*.py
-usr/share/avant-window-navigator/applets/mount/*.ui
-usr/share/avant-window-navigator/applets/mount/icons/*.png
-usr/share/avant-window-navigator/applets/mount.desktop
-usr/share/avant-window-navigator/schemas/awn-applet-mount.schema-ini
-#
 # Quit
 #
 etc/gconf/schemas/awn-applet-quit.schemas
@@ -150,6 +141,15 @@ usr/share/avant-window-navigator/schemas/awn-applet-weather.schema-ini
 ####################
 # Disabled applets #
 ####################
+#
+# Mount
+#
+#etc/gconf/schemas/awn-applet-mount.schemas
+#usr/share/avant-window-navigator/applets/mount/*.py
+#usr/share/avant-window-navigator/applets/mount/*.ui
+#usr/share/avant-window-navigator/applets/mount/icons/*.png
+#usr/share/avant-window-navigator/applets/mount.desktop
+#usr/share/avant-window-navigator/schemas/awn-applet-mount.schema-ini
 #
 # Arss
 #

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: notification-daemon trunk\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-11 18:07+0300\n"
-"PO-Revision-Date: 2010-06-25 14:41+0000\n"
-"Last-Translator: Gabor Karsay <Unknown>\n"
+"PO-Revision-Date: 2010-07-06 11:32+0000\n"
+"Last-Translator: Jens Maucher <Unknown>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-06-26 03:52+0000\n"
+"X-Launchpad-Export-Date: 2010-07-07 03:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -113,7 +113,7 @@ msgstr "Terminal-Applet"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:1
 msgid " Upload/Download"
-msgstr ""
+msgstr " Hochladen/Herunterladen"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:2
 msgid " bytes)"
@@ -3028,7 +3028,7 @@ msgstr "Eine Erweiterung zur Überprüfung neuer Emailnachrichten"
 
 #: ../applets/maintained/mail/mail.ui.h:2
 msgid "<b>Mail</b>"
-msgstr ""
+msgstr "<b>E-Mail</b>"
 
 #: ../applets/maintained/mail/mail.ui.h:5
 msgid "_Alert on network errors"

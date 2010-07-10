@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-11 18:07+0300\n"
-"PO-Revision-Date: 2010-06-27 03:06+0000\n"
+"PO-Revision-Date: 2010-07-09 10:24+0000\n"
 "Last-Translator: abuyop <Unknown>\n"
 "Language-Team: Malay <ms@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-06-28 03:43+0000\n"
+"X-Launchpad-Export-Date: 2010-07-10 03:55+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -72,11 +72,11 @@ msgstr "Sembunyi apabila hilang fokus"
 #: ../applets/maintained/file-browser-launcher/prefs.py:253
 #: ../applets/maintained/file-browser-launcher/prefs.py:328
 msgid "Action"
-msgstr "Aksi"
+msgstr "Tindakan"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:476
 msgid "Shortcut"
-msgstr "Pintasan"
+msgstr "Pintas"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:482
 msgid "Activate"
@@ -104,7 +104,7 @@ msgstr "Terminal Luaran"
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/awnterm/awnterm.desktop.in.in.h:1
 msgid "A simple popup terminal"
-msgstr "Terminal popup yang ringkas"
+msgstr "Terminal timbul yang ringkas"
 
 #: ../applets/maintained/awnterm/awnterm.desktop.in.in.h:2
 msgid "Terminal Applet"
@@ -116,7 +116,7 @@ msgstr " Muat naik/Muat turun"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:2
 msgid " bytes)"
-msgstr " bit)"
+msgstr " bait"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:3
 msgid "Color to draw the background"
@@ -148,7 +148,7 @@ msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:9
 msgid "Minimum threshold to draw meter (dependent upon DEFAULT/unit)"
-msgstr ""
+msgstr "Ambang minimum semasa melukis meter (bergantung pada LALAI/unit)"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:10
 msgid "The interface currently selected"
@@ -316,6 +316,9 @@ msgid ""
 "If enabled, this will draw a line at the bottom of the graph even if the "
 "value is 0. If unchecked, values below 1 are not drawn in the graph."
 msgstr ""
+"Jika dibenarkan, garis di bahagian bawah graf dilukis walaupun nilai "
+"tersebut adalah 0. Jika dinyah tanda, nilai-nilai di bawah 1 tidak akan "
+"dilukis didalam graf."
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:16
 msgid ""
@@ -339,7 +342,7 @@ msgstr "Jika ditanda, unit papar umum adalah Bait"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:20
 msgid "Minimum Scaling threshold"
-msgstr ""
+msgstr "Penskalaan ambang minimum"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:21
 msgid ""
@@ -347,6 +350,9 @@ msgid ""
 "amounts of traffic. e.g.: Setting to 32.0 KBps will cause the graph to only "
 "draw if throughput exceeds 32.0 KBps"
 msgstr ""
+"Tetapkan ambang minimum bagi penskalaan untuk menghidari puncak yang terlalu "
+"tinggi  (nilai trafik yang kecil). contohnya: Tetapan 32.0 KBps akan "
+"menyebabkan graf hanya dilukis jika daya pemprosesan melebihi 32.0 KBps"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:22
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:141
@@ -385,20 +391,22 @@ msgstr "Bateri HAL UDI"
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:2
 msgid ""
 "If charge level drops below this threadhold, a warning will be displayed."
-msgstr ""
+msgstr "Jika aras cas jatuh dibawah nilai ambang, amaran akan dipaparkan."
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:3
 msgid "If charge level reaches this threshold, a notification will be sent."
-msgstr ""
+msgstr "Jika aras cas mencapai nilai ambang, pemberitahuan akan dihantar."
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:4
 msgid "If enabled, notify when the charge level reaches the high level."
 msgstr ""
+"jika dibenarkan, maklum apabila nilai cas mencapai aras  yang tinggi."
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:5
 msgid ""
 "If enabled, warn when the charge level drops below the warning threshold."
 msgstr ""
+"Jika dibenarkan, beri amaran jika nilai cas jatuh dibawah ambang amaran."
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:6
 #: ../applets/maintained/volume-control/awn-applet-volume-control.schema-ini.in.h:3
@@ -408,7 +416,7 @@ msgstr "Nama Tema Ikon"
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:7
 msgid "Unit of low level threshold (Percent or Time Remaining)."
-msgstr ""
+msgstr "Unit ambang aras rendah (Peratus atau Baki Masa)"
 
 #: ../applets/maintained/battery/battery.desktop.in.h:1
 msgid "Battery"
@@ -484,7 +492,7 @@ msgstr "Jika dibenarkan, selain jam dan minit, jarum saat akan dipaparkan."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:4
 msgid "If enabled, displays the weather as an overlay on top of the clock."
-msgstr ""
+msgstr "Jika dibenarkan, papar cuaca sebagai tindihan atas jam."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:5
 msgid "If enabled, the date will be shown in the title."
@@ -590,7 +598,7 @@ msgstr "Kelvin"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:17
 msgid "Location Name:"
-msgstr "Nama Lokasi:"
+msgstr "Nama Tempat:"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:18
 msgid "Show _seconds"
@@ -648,7 +656,7 @@ msgstr "Kunci Skrin"
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:128
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:139
 msgid "Suspend"
-msgstr "Tangguh"
+msgstr "Gantung"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:131
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:133
@@ -674,7 +682,7 @@ msgstr "Rumah"
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:524
 #: ../applets/maintained/places/applet.c:344
 msgid "Desktop"
-msgstr "Ruang Kerja"
+msgstr "Atas Meja"
 
 #. 
 #. TODO: check the trash and set to stock_trash_empty if trash is empty
@@ -831,11 +839,11 @@ msgstr "Hitam"
 
 #: ../applets/maintained/calendar/calendarprefs.py:84
 msgid "Twelve Hour Clock"
-msgstr ""
+msgstr "Dua Belas Jam"
 
 #: ../applets/maintained/calendar/calendarprefs.py:104
 msgid "Clock Appearance"
-msgstr "Rupa Jam"
+msgstr "Penampilan Jam"
 
 #: ../applets/maintained/calendar/calendarprefs.py:114
 msgid "Calendar Appearance"
@@ -882,7 +890,7 @@ msgid ""
 msgstr ""
 "Anda pasti hendak memadam kata laluan kalendar anda dari applet kalendar? "
 "Jika anda pilih untuk mengosongkan kata laluan anda, anda akan dinyatakan "
-"lagi log masuk kalendar anda."
+"lagi sekali log masuk kalendar anda."
 
 #: ../applets/maintained/calendar/clockcal.py:497
 msgid "Open in "
@@ -909,7 +917,7 @@ msgstr "Tiada temujanji"
 
 #: ../applets/maintained/comics/awn-applet-comics.schema-ini.in.h:1
 msgid "The user agent to send when retrieving comics."
-msgstr ""
+msgstr "Agen pengguna menghantar ketika memuatkan komik."
 
 #: ../applets/maintained/comics/comics_add.py:57
 #, python-format
@@ -989,7 +997,7 @@ msgstr "Urus Komik"
 #: ../applets/maintained/comics/main.py:192
 #, python-format
 msgid "There is a new strip of %s!"
-msgstr "Ada kartun %s!"
+msgstr "Ada kartun baru %s!"
 
 #: ../applets/maintained/comics/comics_view.py:164
 msgid "%A %d %B"
@@ -1068,60 +1076,62 @@ msgstr "Arahan tidak diketahui dihantar: %s"
 
 #: ../applets/maintained/cpufreq/awn-applet-cpufreq.schema-ini.in.h:1
 msgid "Index of processor."
-msgstr ""
+msgstr "Indeks pemproses"
 
 #: ../applets/maintained/cpufreq/cpufreq.desktop.in.h:1
 msgid "An applet to monitor and control the CPU frequency"
-msgstr ""
+msgstr "Applet untuk memantau dan mengawal frekuensi CPU"
 
 #: ../applets/maintained/cpufreq/cpufreq.desktop.in.h:2
 msgid "CPU Frequency Monitor"
-msgstr ""
+msgstr "Pemantau Frekuensi CPU"
 
 #: ../applets/maintained/cpufreq/cpufreq.ui.h:1
 msgid "<b>Monitored CPU</b>"
-msgstr ""
+msgstr "<b>CPU yang Dipantau</b>"
 
 #: ../applets/maintained/cpufreq/cpufreq.ui.h:2
 msgid "_Processor:"
-msgstr ""
+msgstr "_Pemproses:"
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:1
 msgid " 0.9)."
-msgstr ""
+msgstr " 0.9)."
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:2
 msgid " none)."
-msgstr ""
+msgstr " tiada)."
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:3
 msgid "Can change layout with scroll wheel."
-msgstr ""
+msgstr "Boleh menukar bentangan menggunakan roda tatal"
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:4
 msgid ""
 "Keyboard toggle to change selected layout (see prefs dialog for values)."
 msgstr ""
+"Togol Papan Kekunci untuk mengubah bentangan pilihan (lihat dialog prefs "
+"untuk mengetahui nilainya)"
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:5
 msgid "Overlay selected layout flag on icon."
-msgstr ""
+msgstr "Tindih atas bendera bentangan pilihan diatas ikon."
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:6
 msgid "User selected layouts."
-msgstr ""
+msgstr "Bentangan pilihan pengguna."
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:7
 msgid "User selected variants."
-msgstr ""
+msgstr "Varian pilihan pengguna."
 
 #: ../applets/maintained/dialect/dialect.desktop.in.h:1
 msgid " Dialect Applet"
-msgstr ""
+msgstr " Applet Dialek"
 
 #: ../applets/maintained/dialect/dialect.desktop.in.h:2
 msgid "Change your keyboard input layout from Awn."
-msgstr ""
+msgstr "Ubah bentangan input papan kekunci anda dari Awn."
 
 #: ../applets/maintained/dialect/dialect.ui.h:1
 msgid ""
@@ -1145,6 +1155,27 @@ msgid ""
 "applet are from the xfce4-xkb-plugin-0.5.3.3 panel applet, licensed under "
 "the 2-clause BSD license. See the About dialog for licensing details.\n"
 msgstr ""
+"\n"
+"APPLET DIALEK v 09.12.09\n"
+"\n"
+"(C) 2009, Lachlan Turner (Denham 2010)\n"
+"\n"
+"Applet ini membenarkan anda mengubah bahasa input papan kekunci anda dengan "
+"menekan klik tetikus.\n"
+"anda boleh pilih mana-mana input bahasa didalam sistem anda, atau dari "
+"senarai yang anda biasa gunakan.\n"
+"\n"
+"Sila lihat Tindakan Tetikus dan Senarai Bentangan untuk pilihan "
+"konfigurasi.\n"
+"\n"
+"Applet ini bergantung kepada modul xklavier (boleh diperoleh di "
+"http://download.sugarlabs.org/sources/external/python-xklavier/python-"
+"xklavier-0.1.tar.gz).\n"
+"\n"
+"Applet ini dilesenkan dibawah GPL2. Ikon bendera yang diedarkan bersama-sama "
+"applet ini diambil dari applet panel xfce4-xkb-plugin-0.5.3.3, juga "
+"dilesenkan dibawah lesen BSD klausa-2. rujuk pada dialog Perihal untuk "
+"perincian pelesenan.\n"
 
 #: ../applets/maintained/dialect/dialect.ui.h:15
 msgid ""
@@ -1168,6 +1199,28 @@ msgid ""
 "\tIf selected, scrolling up or down with your mouse wheel will select\n"
 "\tthe next or previous layout in your user list.\n"
 msgstr ""
+"\n"
+"Klik Kiri:\n"
+"\n"
+"\tBentangan Seterus\t\tpilih bentangan seterus didalam senarai pengguna "
+"anda.\n"
+"\tBentangan Sebelum\tpilih bentangan sebelum didalam senarai pengguna anda.\n"
+"\tMenu\t\t\tsPilih bentangan dari menu senarai pengguna anda.\n"
+"\tTiada\t\t\tbutang tidak akan membuat apa-apa tindakan.\n"
+"\n"
+"Klik Tengah:\n"
+"\n"
+"\tBentangan Seterus\t\tpilih bentangan seterus didalam senarai pengguna "
+"anda.\n"
+"\tBentangan Sebelum\tpilih bentangan sebelum didalam senarai pengguna anda.\n"
+"\tMenu\t\t\tsPilih bentangan dari menu senarai pengguna anda.\n"
+"\tTiada\t\t\tbutang tidak akan membuat apa-apa tindakan.\n"
+"\n"
+"Benarkan roda tatal mengubah bentangan:\n"
+"\n"
+"\tJika dipilih, penatalan atas atau bawah menggunakan roda tetikus anda akan "
+"memilih\n"
+"\tbentangan seterus atau sebelum didalam senarai pengguna anda.\n"
 
 #: ../applets/maintained/dialect/dialect.ui.h:35
 msgid ""
@@ -1186,6 +1239,21 @@ msgid ""
 "\n"
 "\tRanging from 0.0 (flag is not visible) to 0.9 (flag is almost opaque).\n"
 msgstr ""
+"\n"
+"Tindihan atas bendera bentangan pada ikon applet:\n"
+"\n"
+"\tJika dipilih, bendera bentangan pilihan anda akan tindih atas ikon "
+"applet.\n"
+"\n"
+"Skala Bendera:\n"
+"\n"
+"\tSaiz bendera yang berkaitan dengan ikon applet.\n"
+"\tNilai yang munasabah diantara 0.1 hingga 0.9\n"
+"\n"
+"Kelegapan Bendera:\n"
+"\n"
+"\tDiantara nilai 0.0 (bendera akan hilang) kepada nilai 0.9 (bendera akan "
+"kelihatan legap).\n"
 
 #: ../applets/maintained/dialect/dialect.ui.h:49
 msgid ""
@@ -1206,76 +1274,93 @@ msgid ""
 "Keyboard Toggle:\n"
 "\tSelects the hot key combination used to change layouts.\n"
 msgstr ""
+"\n"
+"Senarai Sistem:\n"
+"\n"
+"\tSenarai lengkap bentangan dan varian yang ada.\n"
+"\tPilih item dan klik butang tambah untuk dimasukkan kedalam senarai "
+"pengguna anda.\n"
+"\n"
+"Senarai Pengguna:\n"
+"\n"
+"\tSenarai bentangan yang anda selalu gunakan.\n"
+"\tBilangan maksimum bentangan dihadkan oleh sistem X11 xkb (biasanya 4).\n"
+"\tPilih item dan klik butang buang untuk dikeluarkan dari senarai pengguna "
+"anda.\n"
+"\tAnda boleh susun senarai tersebut dengan cara seret dan lepas.\n"
+"\n"
+"Togol Papan Kekunci:\n"
+"\tPilih gabungan kekunci panas untuk digunakan semasa menukar bentangan.\n"
 
 #: ../applets/maintained/dialect/dialect.ui.h:65
 msgid "(C) 2009, Lachlan Turner (Denham 2010)."
-msgstr ""
+msgstr "(C) 2009, Lachlan Turner (Denham 2010)."
 
 #: ../applets/maintained/dialect/dialect.ui.h:66
 msgid "About Dialect Applet"
-msgstr ""
+msgstr "Perihal Applet Dialek"
 
 #: ../applets/maintained/dialect/dialect.ui.h:67
 msgid "Allow scroll wheel to change layout"
-msgstr ""
+msgstr "Benarkan roda tatal mengubah bentangan"
 
 #: ../applets/maintained/dialect/dialect.ui.h:68
 msgid "Change your keyboard layout from Awn."
-msgstr ""
+msgstr "Ubah bentangan papan kekunci anda dari Awn"
 
 #: ../applets/maintained/dialect/dialect.ui.h:69
 msgid "Dialect Applet Help"
-msgstr ""
+msgstr "Bantuan Applet Dialek"
 
 #: ../applets/maintained/dialect/dialect.ui.h:70
 msgid "Dialect Applet Preferences"
-msgstr ""
+msgstr "Keutamaan Applet Dialek"
 
 #: ../applets/maintained/dialect/dialect.ui.h:71
 msgid "Flag Opacity"
-msgstr ""
+msgstr "Kelegapan Bendera"
 
 #: ../applets/maintained/dialect/dialect.ui.h:72
 msgid "Flag Overlay"
-msgstr ""
+msgstr "Tindihan Atas Bendera"
 
 #: ../applets/maintained/dialect/dialect.ui.h:73
 msgid "Flag Scale"
-msgstr ""
+msgstr "Skala Bendera"
 
 #: ../applets/maintained/dialect/dialect.ui.h:75
 msgid "Keyboard Toggle"
-msgstr ""
+msgstr "Togol Papan kekunci"
 
 #: ../applets/maintained/dialect/dialect.ui.h:76
 msgid "Layout Lists"
-msgstr ""
+msgstr "Senarai Bentangan"
 
 #: ../applets/maintained/dialect/dialect.ui.h:77
 #: ../applets/maintained/file-browser-launcher/prefs.py:318
 msgid "Left Click"
-msgstr ""
+msgstr "Klik Kiri"
 
 #: ../applets/maintained/dialect/dialect.ui.h:78
 msgid "Menu"
-msgstr ""
+msgstr "Menu"
 
 #: ../applets/maintained/dialect/dialect.ui.h:79
 #: ../applets/maintained/file-browser-launcher/prefs.py:393
 msgid "Middle Click"
-msgstr ""
+msgstr "Klik Tengah"
 
 #: ../applets/maintained/dialect/dialect.ui.h:80
 msgid "Mouse Actions"
-msgstr ""
+msgstr "Tindakan Tetikus"
 
 #: ../applets/maintained/dialect/dialect.ui.h:81
 msgid "Next Layout"
-msgstr ""
+msgstr "Bentengan Seterus"
 
 #: ../applets/maintained/dialect/dialect.ui.h:83
 msgid "Overlay layout flag on applet icon"
-msgstr ""
+msgstr "Tindihan atas bendera bentangan pada ikon applet"
 
 #: ../applets/maintained/dialect/dialect.ui.h:84
 msgid "Previous Layout"
@@ -1283,7 +1368,7 @@ msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:85
 msgid "System List"
-msgstr ""
+msgstr "Senarai Sistem"
 
 #: ../applets/maintained/dialect/dialect.ui.h:86
 msgid ""
@@ -1575,160 +1660,160 @@ msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:206
 msgid "User List"
-msgstr ""
+msgstr "Senarai Pengguna"
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:1
 msgid "Command to execute when a calendar day is double-clicked."
-msgstr ""
+msgstr "Perintah untuk lakukan apabila hari pada kalender di dwiklik."
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:2
 msgid "Command to execute when the user wishes to adjust the date/time."
-msgstr ""
+msgstr "Perintah untuk lakukan apabila pengguna mahu menukar tarikh/masa."
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:3
 msgid "Show the date before the time."
-msgstr ""
+msgstr "Papar tarikh dibawah masa."
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:4
 msgid "The color of the clock text."
-msgstr ""
+msgstr "Warna teks jam."
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:5
 msgid "The font face of the clock text."
-msgstr ""
+msgstr "Fon teks muka hadapan jam"
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:6
 msgid "The shadow color of the clock text."
-msgstr ""
+msgstr "Warna bayang teks jam."
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:7
 msgid "Toggle 12-hour mode."
-msgstr ""
+msgstr "Togol mod 12-jam."
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:1
 msgid "12 hour format"
-msgstr ""
+msgstr "Format 12 jam"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:2
 msgid "24 hour format"
-msgstr ""
+msgstr "Format 24 jam"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:3
 msgid "<b>Clock Format</b>"
-msgstr ""
+msgstr "<b>Format Jam</b>"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:5
 msgid "Appearance"
-msgstr ""
+msgstr "Penampilan"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:6
 msgid "Commands"
-msgstr ""
+msgstr "Perintah"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:7
 msgid "Date below time"
-msgstr ""
+msgstr "Tarikh dibawah masa"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:8
 msgid "Digital Clock Preferences"
-msgstr ""
+msgstr "Keutamaan Jam Digital"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:9
 msgid "Run Calendar:"
-msgstr ""
+msgstr "Jalankan Kalendar:"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:10
 msgid "Run Time Admin:"
-msgstr ""
+msgstr "Jalankan Masa Pentadbir:"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:11
 msgid "Show the date"
-msgstr ""
+msgstr "Papar tarikh"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:12
 msgid "Use default Awn colors"
-msgstr ""
+msgstr "Guna warna Awn lalai"
 
 #: ../applets/maintained/digital-clock/digital-clock.desktop.in.in.h:1
 msgid "A clock and calendar in one."
-msgstr ""
+msgstr "Jam dan kalendar dalam satu."
 
 #: ../applets/maintained/digital-clock/digital-clock.desktop.in.in.h:2
 #: ../applets/maintained/digital-clock/digital-clock.vala:57
 msgid "Digital Clock"
-msgstr ""
+msgstr "Jam Digital"
 
 #. "Copy Time" menu item
 #: ../applets/maintained/digital-clock/digital-clock.vala:335
 msgid "Copy Time"
-msgstr ""
+msgstr "Salin Masa"
 
 #. "Copy Date" menu item
 #: ../applets/maintained/digital-clock/digital-clock.vala:354
 msgid "Copy Date"
-msgstr ""
+msgstr "Salin Tarikh"
 
 #. "Adjust Date & Time" menu item
 #: ../applets/maintained/digital-clock/digital-clock.vala:366
 msgid "Adjust Date & Time"
-msgstr ""
+msgstr "Laras Tarikh & Masa"
 
 #: ../applets/maintained/digital-clock/digital-clock.vala:412
 msgid "Displays digital clock."
-msgstr ""
+msgstr "Papar jam digital."
 
 #. vim:ft=vala:et:ts=2 sts=2 sw=2:ai:cindent
 #: ../applets/maintained/feeds/awn-applet-feeds.schema-ini.in.h:1
 msgid "Notify if any feeds have new items"
-msgstr ""
+msgstr "Maklum jika mana-man suapan mempunyai item baru"
 
 #: ../applets/maintained/feeds/awn-applet-feeds.schema-ini.in.h:2
 msgid "Show each feed's website's icon in the dialog"
-msgstr ""
+msgstr "Papar setiap ikon laman sesawang suapan didalam dialog"
 
 #: ../applets/maintained/feeds/awn-applet-feeds.schema-ini.in.h:3
 msgid "The interval (in minutes) at which to update (3-60)"
-msgstr ""
+msgstr "Selang (dalam minit) jangkamasa pengemaskinian (3-60)"
 
 #: ../applets/maintained/feeds/awn-applet-feeds.schema-ini.in.h:4
 msgid "Update automatically at a configurable interval"
-msgstr ""
+msgstr "Kemaskini secara automatik pada selang yang boleh dikonfigurkan"
 
 #: ../applets/maintained/feeds/classes.py:328
 msgid "Google"
-msgstr ""
+msgstr "Google"
 
 #: ../applets/maintained/feeds/classes.py:488
 #: ../applets/maintained/feeds/prefs.py:516
 msgid "Google Reader"
-msgstr ""
+msgstr "Pembaca Google"
 
 #: ../applets/maintained/feeds/classes.py:533
 msgid "Google Wave"
-msgstr ""
+msgstr "Google Wave"
 
 #: ../applets/maintained/feeds/classes.py:619
 msgid "Reddit Inbox"
-msgstr ""
+msgstr "Peti Masuk Reddit"
 
 #: ../applets/maintained/feeds/classes.py:720
 #, python-format
 msgid "Comment reply from %s"
-msgstr ""
+msgstr "Ulasan balasan dari %s"
 
 #: ../applets/maintained/feeds/classes.py:723
 #, python-format
 msgid "Post reply from %s"
-msgstr ""
+msgstr "Pos balasa dari %s"
 
 #: ../applets/maintained/feeds/classes.py:765
 #: ../applets/maintained/feeds/prefs.py:410
 msgid "Twitter"
-msgstr ""
+msgstr "Twitter"
 
 #: ../applets/maintained/feeds/classes.py:892
 msgid "Untitled"
-msgstr ""
+msgstr "Tiada Tajuk"
 
 #: ../applets/maintained/feeds/feeds.desktop.in.h:1
 #: ../applets/maintained/feeds/feeds.py:241
@@ -1736,24 +1821,24 @@ msgstr ""
 #: ../applets/maintained/feeds/feeds.py:480
 #: ../applets/maintained/feeds/feeds.py:1031
 msgid "Feeds Applet"
-msgstr ""
+msgstr "Applet Suapan"
 
 #: ../applets/maintained/feeds/feeds.desktop.in.h:2
 #: ../applets/maintained/feeds/feeds.py:1036
 msgid "Monitor Web Feeds"
-msgstr ""
+msgstr "Memantau Suapan Sesawang"
 
 #. "Loading feeds..." label
 #: ../applets/maintained/feeds/feeds.py:96
 #: ../applets/maintained/feeds/feeds.py:153
 #: ../applets/maintained/feeds/feeds.py:230
 msgid "Loading feeds..."
-msgstr ""
+msgstr "Memuatkan suapan..."
 
 #. No feeds label
 #: ../applets/maintained/feeds/feeds.py:160
 msgid "You don't have any feeds."
-msgstr ""
+msgstr "Anda tidak mempunyai suapan."
 
 #: ../applets/maintained/feeds/feeds.py:472
 #, python-format
@@ -1763,6 +1848,10 @@ msgid ""
 "  <a href='%s'>%s</a>\n"
 "(%s More)\n"
 msgstr ""
+"%s\n"
+"  <a href='%s'>%s</a>\n"
+"  <a href='%s'>%s</a>\n"
+"(%s Lagi)\n"
 
 #: ../applets/maintained/feeds/feeds.py:481
 #, python-format

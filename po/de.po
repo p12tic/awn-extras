@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: notification-daemon trunk\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-11 18:07+0300\n"
-"PO-Revision-Date: 2010-07-08 05:45+0000\n"
-"Last-Translator: Jens Maucher <Unknown>\n"
+"PO-Revision-Date: 2010-07-09 15:07+0000\n"
+"Last-Translator: Gabor Karsay <Unknown>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-07-09 03:53+0000\n"
+"X-Launchpad-Export-Date: 2010-07-10 03:55+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -24,7 +24,7 @@ msgstr "Farm der Tiere"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:2
 msgid "Display fortune messages"
-msgstr ""
+msgstr "Zeigt (englische) Sprüche, Zitate und Aphorismen"
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:1
 msgid "Global hotkey used to activate the terminal."
@@ -272,6 +272,7 @@ msgstr "Rahmenfarbe"
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:5
 msgid "Display MBps/KBps (bytes) instead of Mbps/Kbps (bits)"
 msgstr ""
+"MB/s bzw. kB/s (Bytes) anstelle von Mbit/s bzw. kbit/s (Bits) anzeigen"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:6
 msgid "Display Speed Text"
@@ -342,6 +343,7 @@ msgstr ""
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:18
 msgid "If this is checked, the common display unit will be Bytes"
 msgstr ""
+"Wenn aktiviert, wird die Übertragungsgeschwindigkeit in Bytes angezeigt"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:20
 msgid "Minimum Scaling threshold"
@@ -365,7 +367,7 @@ msgstr "Summe"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:147
 msgid "Multi"
-msgstr ""
+msgstr "Multi"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:155
 msgid "Upload Color"
@@ -2848,7 +2850,7 @@ msgstr ""
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:4
 msgid "The Email backend to use"
-msgstr ""
+msgstr "Das Mail-Backend, das verwendet werden soll."
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:5
 msgid "The theme to use for the icon"
@@ -2913,7 +2915,7 @@ msgstr "Webmail öffnen"
 
 #: ../applets/maintained/mail/mail.py:329
 msgid "Open Desktop Client"
-msgstr ""
+msgstr "Desktop-Mailprogramm öffnen"
 
 #: ../applets/maintained/mail/mail.py:338
 msgid "Refresh"
@@ -3424,6 +3426,8 @@ msgstr ""
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:16
 msgid "Whether to the use configured awn theme color values for xxxx."
 msgstr ""
+"Bestimmt, ob benutzerdefinierte Awn-Themen-Farbwerte für xxxx verwendet "
+"werden sollen."
 
 #: ../applets/maintained/notification-daemon/daemon.c:1421
 #, c-format

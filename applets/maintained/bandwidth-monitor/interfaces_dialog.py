@@ -370,7 +370,7 @@ class InterfaceGraph(gtk.DrawingArea):
                 context.show_text(iface_name)
                 context.fill()
                 def click_event(widget, event):
-                    if event.time - self.button_click_time > 500:
+                    if abs(event.time - self.button_click_time) > 500:
                         self.button_click_time = event.time
                         self.__parent.change_iface(widget, self.interface)
                         self.__parent.interface_dialog.buttonArea.change_dialog(widget, event, 'graph')
@@ -639,7 +639,9 @@ class InterfaceOptionsDialog(gtk.Fixed):
                 if members == '':
                     members = ' None'
                 members_lbl = gtk.Label()
-                members.lbl.set_markup("<span color='white'>Members:%s</span>" % members)
+                members_lbl.set_size_request(450, 50)
+                members_lbl.set_line_wrap(True)
+                members_lbl.set_markup("<span color='white'>Members:%s</span>" % members)
                 self.put(members_lbl, 12, y_pos)
                 members_lbl.show()
                 y_pos += 20
@@ -654,6 +656,8 @@ class InterfaceOptionsDialog(gtk.Fixed):
                 if members == '':
                     members = ' None'
                 members_lbl = gtk.Label()
+                members_lbl.set_size_request(450, 50)
+                members_lbl.set_line_wrap(True)
                 members_lbl.set_markup("<span color='white'>Members:%s</span>" % members)
                 self.put(members_lbl, 12, y_pos)
                 members_lbl.show()

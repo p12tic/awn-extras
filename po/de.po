@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: notification-daemon trunk\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-11 18:07+0300\n"
-"PO-Revision-Date: 2010-07-09 15:07+0000\n"
+"PO-Revision-Date: 2010-07-10 09:42+0000\n"
 "Last-Translator: Gabor Karsay <Unknown>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-07-10 03:55+0000\n"
+"X-Launchpad-Export-Date: 2010-07-11 03:38+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -3144,7 +3144,7 @@ msgstr ""
 #: ../applets/maintained/media-icons/media-icons.desktop.in.h:2
 #: ../applets/maintained/media-icons/media-icons.py:76
 msgid "Media Icons Play/Pause"
-msgstr "Mediensymbole »Wiedergabe/Pause«"
+msgstr "Mediensymbol »Wiedergabe/Pause«"
 
 #: ../applets/maintained/media-icons/media-icons.py:57
 msgid "Next"
@@ -3160,7 +3160,7 @@ msgstr "Wiedergabe/Pause"
 
 #: ../applets/maintained/media-player/awn-applet-media-player.schema-ini.in.h:1
 msgid "Audio sink to use."
-msgstr "zu verwendendes Audiogerät"
+msgstr "Audioausgabe (sink), die verwendet werden soll."
 
 #: ../applets/maintained/media-player/awn-applet-media-player.schema-ini.in.h:2
 msgid "Height of the video window."
@@ -3172,7 +3172,7 @@ msgstr "Verlaufsliste zuletzt gespielter URLs."
 
 #: ../applets/maintained/media-player/awn-applet-media-player.schema-ini.in.h:4
 msgid "Video sink to use."
-msgstr ""
+msgstr "Videoausgabe (sink), die verwendet werden soll."
 
 #: ../applets/maintained/media-player/awn-applet-media-player.schema-ini.in.h:5
 msgid "Width of the video window."
@@ -3694,7 +3694,7 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:21
 msgid "Whether to grab wallpaper."
-msgstr ""
+msgstr "Bestimmt, ob der Hintergrund der Arbeitsfläche angezeigt wird."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:22
 msgid ""

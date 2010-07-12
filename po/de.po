@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: notification-daemon trunk\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-11 18:07+0300\n"
-"PO-Revision-Date: 2010-07-10 09:42+0000\n"
+"PO-Revision-Date: 2010-07-11 10:32+0000\n"
 "Last-Translator: Gabor Karsay <Unknown>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-07-11 03:38+0000\n"
+"X-Launchpad-Export-Date: 2010-07-12 03:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -2846,7 +2846,7 @@ msgstr "Symbol ausblenden, wenn keine neue Mail vorhanden ist"
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:3
 msgid "The Desktop Email client to use"
-msgstr ""
+msgstr "Das Desktop-Mailprogramm, das verwendet werden soll"
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:4
 msgid "The Email backend to use"
@@ -3216,11 +3216,13 @@ msgstr "_Breite:"
 
 #: ../applets/maintained/mount/awn-applet-mount.schema-ini.in.h:1
 msgid "Command to execute after mounting a mountpoint."
-msgstr ""
+msgstr "Auszuführender Befehl nach dem Einhängen"
 
 #: ../applets/maintained/mount/awn-applet-mount.schema-ini.in.h:2
 msgid "List of mountpoints that should remain hidden in the UI."
 msgstr ""
+"Liste von Einhängepunkten, die in der Benutzeroberfläche nicht angezeigt "
+"werden sollen."
 
 #: ../applets/maintained/mount/mount.desktop.in.h:1
 msgid "An applet to (un)mount devices"
@@ -3346,6 +3348,8 @@ msgstr ""
 msgid ""
 "Border colour in the form (Hex) rrggbbaa.  Also use for the timer widget"
 msgstr ""
+"Rahmenfarbe in der Form (Hex) rrggbbaa. Wird auch für das Timer-Widget "
+"verwendet"
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:4
 msgid ""
@@ -3358,12 +3362,16 @@ msgid ""
 "Gradient Factor applied to the notification window. Range of 0 to 1. The "
 "lower the number the more noticeable the effect."
 msgstr ""
+"Farbverlauf-Faktor des Benachrichtigungsfensters. Wertebereich von 0 bis 1. "
+"Je niedriger der Wert, desto deutlicher der Effekt."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:6
 msgid ""
 "If the value is >0.0 then this opacity value will be applied to window "
 "instead of hiding."
 msgstr ""
+"Bei einem Wert größer 0.0 wird dieser Deckkraftwert auf das Fenster "
+"angewendet, anstatt es zu verbergen."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:7
 msgid ""
@@ -3372,6 +3380,11 @@ msgid ""
 "awn-notification-daemon should place windows relative to its position in the "
 "bar."
 msgstr ""
+"HINWEIS: Dieser Schlüssel ist als vorläufig zu betrachten und wird sich "
+"voraussichtlich noch ändern. Frei wählbare x-Position des "
+"Benachrichtigungsfensters. Die Vorgabe ist -1, was bedeutet, dass der Awn "
+"Notification Daemon die Fenster relativ zu seiner Position in der Leiste "
+"platzieren soll."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:8
 msgid ""
@@ -3380,6 +3393,11 @@ msgid ""
 "awn-notification-daemon should place windows relative to its position in the "
 "bar."
 msgstr ""
+"HINWEIS: Dieser Schlüssel ist als vorläufig zu betrachten und wird sich "
+"voraussichtlich noch ändern. Frei wählbare y-Position des "
+"Benachrichtigungsfensters. Die Vorgabe ist -1, was bedeutet, dass der Awn "
+"Notification Daemon die Fenster relativ zu seiner Position in der Leiste "
+"platzieren soll."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:9
 msgid "Sound."
@@ -3449,7 +3467,7 @@ msgstr "Die Schriftgröße im Menü in Pixeln.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:29
 msgid "The icon theme name of the applet's icon.);"
-msgstr ""
+msgstr "Der Symbolthemen-Name des Applet-Symbols.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:27
 msgid "The file manager that shows the contents of the places.);"
@@ -3521,6 +3539,8 @@ msgid ""
 "Determines whether to use the current Gtk+ theme's colour/font settings, or "
 "the applet-specific style settings.);"
 msgstr ""
+"Legt fest, ob die Farb-/Schrifteinstellungen des aktuellen GTK-Themas "
+"verwendet werden sollen oder Applet-spezifische Einstellungen."
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:3
 msgid ""
@@ -3537,6 +3557,11 @@ msgid ""
 "multiplied by this value.  At 20 percent from the top of the menu, the alpha "
 "value is the background color's alpha value.);"
 msgstr ""
+"Erstellt einen Alphakanal-Farbverlauf im Hintergrund des Menüeintrags. Am "
+"oberen und unteren Rand des Menüeintrags ergibt sich der Alpha-Wert aus dem "
+"Alphakanal der Hintergrundfarbe multipliziert mit diesem Wert. Ab 20 Prozent "
+"vom oberen Rand des Menüeintrags entspricht der Alpha-Wert dem Alphakanal "
+"der Hintergrundfarbe.);"
 
 #: ../applets/maintained/places/places.desktop.in.in.h:1
 msgid "Launch your folder bookmarks"
@@ -3685,12 +3710,16 @@ msgid ""
 "When to  overly the app icon:  0...no\t1...on inactive workspace onlt\t"
 "2...all but active win\t3..all."
 msgstr ""
+"Anwendungssymbole anzeigen:  0 … nein, 1 … nur auf inaktiver Arbeitsfläche, "
+"2 … alle außer dem aktiven Fenster, 3 … alle."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:20
 msgid ""
 "When to scale icons:  0...none  1...on all active ws  2...on_active_win "
 "3...all"
 msgstr ""
+"Symbole skalieren: 0 … nein, 1 … alle auf aktiver Arbeitsfläche, 2 … auf "
+"aktivem Fenster, 3 … alle"
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:21
 msgid "Whether to grab wallpaper."
@@ -3701,6 +3730,9 @@ msgid ""
 "Win grabs:  0...none\t1...all (grab method may override) 2..active ws (and "
 "sticky)  3...active win"
 msgstr ""
+"Fenster anzeigen: 0 … keine, 1 … alle (kann durch Anzeigemethode aufgehoben "
+"werden), 2 … aktive Arbeitsfläche (und immer sichtbare Fenster), 3 … aktives "
+"Fenster"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:3
 msgid "<b>Background transparency</b>"
@@ -3950,10 +3982,13 @@ msgstr ""
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:18
 msgid "Whether or not to use the standard text overlay"
 msgstr ""
+"Bestimmt, ob Standard-Textüberlagerung angewendet werden soll oder nicht"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:19
 msgid "Which background image(s) source to use: gnome, compiz, file"
 msgstr ""
+"Welche Hintergrundbild-Quelle verwendet werden soll: gnome, compiz, file "
+"(d.h. GNOME, Compiz oder eine Datei)"
 
 #: ../applets/maintained/slickswitcher/prefs.py:69
 msgid "SlickSwitcher Preferences"
@@ -4129,6 +4164,8 @@ msgstr ""
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:2
 msgid "If the updates are time based then how frequently to update in ms."
 msgstr ""
+"Wie oft aktualisiert werden soll (in ms), wenn die Aktualisierung "
+"zeitbasiert ist."
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:3
 msgid "Just a dummy key.. this will be removed later."
@@ -4857,10 +4894,12 @@ msgid ""
 "Backend type for this applet (0 - file, 1 - folder, 2 - plugger, 3 - "
 "trasher, 4 - recent files)."
 msgstr ""
+"Backend-Typ für dieses Applet (0 - Datei, 1 - Ordner, 2 - Plugger, 3 - "
+"Trasher, 4 - zuletzt geöffnete Dokumente)."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:3
 msgid "Close dialog on focusout."
-msgstr ""
+msgstr "Dialog schließen, wenn der Fokus verloren geht."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:4
 msgid "Display number of items in the stack."
@@ -4868,7 +4907,7 @@ msgstr ""
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:5
 msgid "File operation to use."
-msgstr ""
+msgstr "Datei-Operation, die ausgeführt werden soll."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:6
 msgid "Hoverbox background color 1."
@@ -4920,15 +4959,15 @@ msgstr ""
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:18
 msgid "Layout direction."
-msgstr ""
+msgstr "Layout-Richtung."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:19
 msgid "Layout interval."
-msgstr ""
+msgstr "Layout-Intervall."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:20
 msgid "Layout radius."
-msgstr ""
+msgstr "Layout-Radius."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:21
 msgid "Number of columns to use."
@@ -4944,7 +4983,7 @@ msgstr ""
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:24
 msgid "Sort direction of the items."
-msgstr ""
+msgstr "Sortierungsrichtung der Objekte."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:25
 msgid "Sort folders before files."

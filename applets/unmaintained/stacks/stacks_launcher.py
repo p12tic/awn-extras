@@ -26,10 +26,9 @@ from xdg import DesktopEntry
 # Pattern to extract the part of the path that doesn't end with %<a-Z>
 exec_pattern = re.compile("^(.*?)\s+\%[a-zA-Z]$")
 
-#Borrowed LaunchManager from "gimmie"
 class LaunchManager:
-    '''
-    A program lauching utility which handles opening a URI or executing a
+
+    """A program lauching utility which handles opening a URI or executing a
     program or .desktop launcher, handling variable expansion in the Exec
     string.
 
@@ -39,11 +38,10 @@ class LaunchManager:
 
     See the startup notification spec for more information on
     DESKTOP_STARTUP_IDs.
-    '''
-    def __init__(self):
-        return
 
-    def launch_uri(self, uri, mimetype = None):
+    """
+
+    def launch_uri(self, uri, mimetype=None):
         assert uri, "Must specify URI to launch"
 
         child = os.fork()
@@ -69,44 +67,7 @@ class LaunchManager:
             return path
         return None
 
-    def launch_command_with_uris(self, command, uri_list, launcher_uri = None):
-        if command.rfind("%U") > -1:
-            uri_str = ""
-            for uri in uri_list:
-                uri_str = uri_str + " " + uri
-            return self.launch_command(command.replace("%U", uri_str), launcher_uri)
-        elif command.rfind("%F") > -1:
-            file_str = ""
-            for uri in uri_list:
-                uri = self.get_local_path(self, uri)
-                if uri:
-                    file_str = file_str + " " + uri
-                else:
-                    print " !!! Command does not support non-file URLs: ", command
-            return self.launch_command(command.replace("%F", file_str), launcher_uri)
-        elif command.rfind("%u") > -1:
-            startup_ids = []
-            for uri in uri_list:
-                startup_ids.append(self.launch_command(command.replace("%u", uri), launcher_uri))
-            else:
-                return self.launch_command(command.replace("%u", ""), launcher_uri)
-            return startup_ids
-        elif command.rfind("%f") > -1:
-            startup_ids = []
-            for uri in uri_list:
-                uri = self.get_local_path(self, uri)
-                if uri:
-                    startup_ids.append(self.launch_command(command.replace("%f", uri),
-                                                          launcher_uri))
-                else:
-                    print " !!! Command does not support non-file URLs: ", command
-            else:
-                return self.launch_command(command.replace("%f", ""), launcher_uri)
-            return startup_ids
-        else:
-            return self.launch_command(command, launcher_uri)
-
-    def make_startup_id(self, key, ev_time = None):
+    def make_startup_id(self, key, ev_time=None):
         if not ev_time:
             ev_time = gtk.get_current_event_time()
         if not key:
@@ -114,17 +75,7 @@ class LaunchManager:
         else:
             return "STACKS:%s_TIME%d" % (key, ev_time)
 
-    def parse_startup_id(self, id):
-        if id and id.startswith("STACKS:"):
-            try:
-                uri = id[len("STACKS:"):id.rfind("_TIME")]
-                timestamp = id[id.rfind("_TIME") + len("_TIME"):]
-                return (uri, timestamp)
-            except IndexError:
-                pass
-        return (None, None)
-
-    def launch_command(self, command, launcher_uri = None):
+    def launch_command(self, command, launcher_uri=None):
         startup_id = self.make_startup_id(launcher_uri)
         child = os.fork()
         if not child:
@@ -140,6 +91,8 @@ class LaunchManager:
             return (child, startup_id)
 
     def launch_dot_desktop(self, desktop_path):
+        assert desktop_path.startswith("file://")
+        desktop_path = desktop_path[7:]
         if not os.path.exists(desktop_path):
             return
 
@@ -152,7 +105,7 @@ class LaunchManager:
             match = exec_pattern.match(path)
             if match is not None:
                 path = match.group(1)
-            self.launch_command(path, uri)
+            self.launch_command(path, desktop_path)
         elif type == "Link":
             command = "xdg-open %s" % item.getURL()
-            self.launch_command(command, uri)
+            self.launch_command(command, desktop_path)

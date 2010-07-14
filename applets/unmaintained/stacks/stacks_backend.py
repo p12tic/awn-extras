@@ -26,6 +26,7 @@ from gtk import gdk
 import gio
 from awn.extras import _
 from desktopagnostic.config import GROUP_DEFAULT
+from xdg import DesktopEntry
 
 from stacks_vfs import VfsUri, Monitor
 from stacks_icons import IconFactory, Thumbnailer
@@ -191,6 +192,8 @@ class Backend(gobject.GObject):
 
             # check for desktop item
             if name.endswith(".desktop"):
+                assert path.startswith("file://")
+                path = path[7:]
                 if not os.path.exists(path):
                     continue
 
@@ -200,9 +203,8 @@ class Backend(gobject.GObject):
                 mime_type = item.getMimeTypes()[0]
                 type = gio.FILE_TYPE_REGULAR
                 icon_name = item.getIcon() or 'image-missing'
-                icon_uri = None
                 if icon_name:
-                    icon_info = gtk.icon_theme_get_default().load_icon(icon_name, self.icon_size, 0)
+                    icon_info = gtk.icon_theme_get_default().lookup_icon(icon_name, self.icon_size, 0)
                     icon_uri = icon_info.get_filename() if icon_info else path
                     pixbuf = IconFactory().load_icon(icon_uri, self.icon_size)
                 if pixbuf:
@@ -225,7 +227,7 @@ class Backend(gobject.GObject):
                 pixbuf = Thumbnailer(path, mime_type).get_icon(self.icon_size)
                 if pixbuf:
                 	pixbuf.add_alpha (True, '\0', '\0', '\0')
-            
+
             # create monitor
             try:
                 monitor = Monitor(vfs_uri)
@@ -233,25 +235,20 @@ class Backend(gobject.GObject):
             except:
                 monitor = None
 
-            
             # add to store
-            
             iter = self.store.append([vfs_uri, monitor, type, name, mime_type, pixbuf, None])
 
             if self.store.iter_is_valid(iter):
             	self.emit("item-created", iter)
             else:
             	print "ERROR in STACK: iter is NOK (stacks_backend.py)"
-            
 
             # return pixbuf later?
-            if pixbuf: retval = pixbuf
-            
-            
+            if pixbuf:
+                retval = pixbuf
 
         # restructure of dialog needed
         return (retval is not None)
-
 
     # remove file from store
     def remove(self, vfs_uris):

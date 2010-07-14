@@ -189,7 +189,7 @@ class IconFactory:
         icon = None
         icon_theme = gtk.icon_theme_get_default()
         info = icon_theme.lookup_icon(icon_name, icon_size, gtk.ICON_LOOKUP_USE_BUILTIN)
-        
+
         if info:
             if icon_name.startswith("gtk-"):
                 # NOTE: IconInfo/IconTheme.load_icon leaks a ref to the icon, so
@@ -206,9 +206,7 @@ class IconFactory:
             return self.scale_to_bounded(icon, icon_size)
         return icon
 
-
-    def load_image(self, icon_value, icon_size, force_size = True):
-    	
+    def load_image(self, icon_value, icon_size, force_size=True):
         pixbuf = self.load_icon(icon_value, icon_size, force_size)
         img = gtk.Image()
         img.set_from_pixbuf(pixbuf)

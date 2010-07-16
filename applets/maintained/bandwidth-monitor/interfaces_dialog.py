@@ -25,6 +25,7 @@ import os
 import gtk
 from gtk import gdk
 
+import awn
 from awn import Dialog, cairo_rounded_rect, ROUND_ALL, OverlayText
 from awn.extras import _
 

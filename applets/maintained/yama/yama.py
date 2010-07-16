@@ -28,6 +28,7 @@ pygtk.require("2.0")
 import gtk
 
 from awn.extras import awnlib, __version__
+from desktopagnostic import fdo, vfs
 
 try:
     import dbus
@@ -39,7 +40,7 @@ except ImportError:
 import gio
 import glib
 import gmenu
-from xdg import BaseDirectory, DesktopEntry
+from xdg import BaseDirectory
 
 applet_name = "YAMA"
 applet_description = "Main menu with places and recent documents"
@@ -47,15 +48,10 @@ applet_description = "Main menu with places and recent documents"
 # Applet's themed icon, also shown in the GTK About dialog
 applet_logo = "start-here"
 
-file_manager_apps = ("nautilus", "thunar", "xdg-open")
-
 menu_editor_apps = ("alacarte", "gmenu-simple-editor")
 
 # Describes the pattern used to try to decode URLs
 url_pattern = re.compile("^[a-z]+://(?:[^@]+@)?([^/]+)/(.*)$")
-
-# Pattern to extract the part of the path that doesn't end with %<a-Z>
-exec_pattern = re.compile("^(.*?)\s+\%[a-zA-Z]$")
 
 user_dir_pattern = re.compile("^XDG_([A-Z]+)_DIR=\"(.+)\"$")
 
@@ -246,20 +242,19 @@ class YamaApplet:
             self.menu.foreach(gtk.Widget.destroy)
             self.build_menu()
 
-    def start_subprocess_cb(self, widget, command, use_shell):
-        try:
-            subprocess.Popen(command, shell=use_shell)
-        except OSError:
-            pass
-
     def open_folder_cb(self, widget, path):
-        for command in file_manager_apps:
+        self.open_uri(path)
+
+    def open_uri(self, uri):
+        file = vfs.File.for_uri(uri)
+
+        if file is not None and file.exists():
             try:
-                subprocess.Popen([command, path])
-                return
-            except OSError:
-                pass
-        raise RuntimeError("No file manager found (%s) for %s" % (", ".join(file_manager_apps), path))
+                file.launch()
+            except glib.GError:
+                print "Error when opening: %s" % e
+        else:
+            print "File at URI not found (%s)" % uri
 
     def create_places_submenu(self, parent_menu):
         item = self.append_menu_item(parent_menu, "Places", "folder", None)
@@ -270,9 +265,9 @@ class YamaApplet:
         user_path = os.path.expanduser("~/")
 
         home_item = self.append_menu_item(menu, "Home Folder", "user-home", "Open your personal folder")
-        home_item.connect("activate", self.open_folder_cb, user_path)
+        home_item.connect("activate", self.open_folder_cb, "file://%s" % user_path)
         desktop_item = self.append_menu_item(menu, "Desktop", "user-desktop", "Open the contents of your desktop in a folder")
-        desktop_item.connect("activate", self.open_folder_cb, os.path.join(user_path, "Desktop"))
+        desktop_item.connect("activate", self.open_folder_cb, "file://%s" % os.path.join(user_path, "Desktop"))
 
         """ Bookmarks """
         self.places_menu = menu
@@ -314,7 +309,7 @@ class YamaApplet:
         self.__mounts_index = len(self.places_menu) - len(self.volume_items) - len(self.bookmarks_items)
         self.mount_items = []
         self.append_mounts()
-        # TODO if added is False and no mounts, then their are two separators
+        # TODO if added is False and no mounts, then there are two separators
 
         # Connect signals after having initialized volumes and mounts
         for signal in ("volume-added", "volume-changed", "volume-removed", "mount-added", "mount-changed", "mount-removed"):
@@ -323,7 +318,7 @@ class YamaApplet:
         ncs_exists = os.path.exists(commands.getoutput("which nautilus-connect-server"))
         if ncs_exists:
             connect_item = self.append_menu_item(menu, "Connect to Server...", "applications-internet", "Connect to a remote computer or shared disk")
-            connect_item.connect("activate", self.start_subprocess_cb, "nautilus-connect-server", False)
+            connect_item.connect("activate", lambda w: subprocess.Popen("nautilus-connect-server"))
         added |= ncs_exists
 
         if added:
@@ -347,7 +342,7 @@ class YamaApplet:
         set_sensitivity_recent_menu()
 
         def open_recent_document(widget):
-            self.start_subprocess_cb(None, "xdg-open %s" % widget.get_current_uri(), True)
+            self.open_uri(widget.get_current_uri())
         chooser_menu.connect("item-activated", open_recent_document)
 
         chooser_menu.append(gtk.SeparatorMenuItem())
@@ -388,21 +383,21 @@ class YamaApplet:
                         else:
                             basename = glib.filename_display_basename(url_name[0])
                             url_name.append(unquote(str(basename)))
-                    url, name = (url_name[0], url_name[1])
+                    uri, name = (url_name[0], url_name[1])
 
-                    if url.startswith("file://"):
-                        if url in user_dirs:
-                            icon = self.get_first_existing_icon([user_dirs[url], "folder"])
+                    if uri.startswith("file://"):
+                        if uri in user_dirs:
+                            icon = self.get_first_existing_icon([user_dirs[uri], "folder"])
                         else:
                             icon = "folder"
-                        display_url = url[7:]
+                        display_uri = uri[7:]
                     else:
                         icon = "folder-remote"
-                        display_url = url
+                        display_uri = uri
 
-                    item = self.create_menu_item(name, icon, "Open '%s'" % display_url)
+                    item = self.create_menu_item(name, icon, "Open '%s'" % display_uri)
                     self.places_menu.insert(item, index)
-                    item.connect("activate", self.open_folder_cb, url)
+                    item.connect("activate", self.open_folder_cb, uri)
                     index += 1
                     self.bookmarks_items.append(item)
 
@@ -450,15 +445,15 @@ class YamaApplet:
             self.volume_items.append(item)
 
             if mount is not None:
-                url = mount.get_root().get_uri()
-                item.connect("activate", self.open_folder_cb, url)
+                uri = mount.get_root().get_uri()
+                item.connect("activate", self.open_folder_cb, uri)
             else:
                 def mount_volume(widget, vol):
                     def mount_result(vol2, result):
                         try:
                             if vol2.mount_finish(result):
-                                url = vol2.get_mount().get_root().get_uri()
-                                self.open_folder_cb(None, url)
+                                uri = vol2.get_mount().get_root().get_uri()
+                                self.open_uri(uri)
                         except glib.GError, e:
                             error_dialog = self.UnableToMountErrorDialog(self.applet, vol2.get_name(), e)
                             error_dialog.show_all()
@@ -482,8 +477,8 @@ class YamaApplet:
                 index += 1
                 self.mount_items.append(item)
 
-                url = mount.get_root().get_uri()
-                item.connect("activate", self.open_folder_cb, url)
+                uri = mount.get_root().get_uri()
+                item.connect("activate", self.open_folder_cb, uri)
 
     def create_menu_item(self, label, icon_name, comment):
         item = gtk.ImageMenuItem(label)
@@ -501,15 +496,18 @@ class YamaApplet:
         return item
 
     def launch_app(self, widget, desktop_path):
-        if os.path.exists(desktop_path):
-            path = DesktopEntry.DesktopEntry(desktop_path).getExec()
+        file = vfs.File.for_path(desktop_path)
 
-            # Strip last part of path if it contains %<a-Z>
-            match = exec_pattern.match(path)
-            if match is not None:
-                path = match.group(1)
+        if file is not None and file.exists():
+            entry = fdo.DesktopEntry.for_file(file)
 
-            self.start_subprocess_cb(None, path, True)
+            if entry.key_exists("Exec"):
+                try:
+                    entry.launch(0, None)
+                except glib.GError:
+                    print "Error when launching: %s" % e
+        else:
+            print "File not found (%s)" % desktop_path
 
     def append_directory(self, tree, menu, index=None, item_list=None):
         for node in tree.contents:
@@ -544,10 +542,13 @@ class YamaApplet:
     def append_awn_desktop(self, menu, desktop_name):
         for dir in BaseDirectory.xdg_data_dirs:
             path = os.path.join(dir, "applications", desktop_name + ".desktop")
-            if os.path.isfile(path):
-                desktop_entry = DesktopEntry.DesktopEntry(path)
-                item = self.append_menu_item(menu, desktop_entry.getName(), desktop_entry.getIcon(), desktop_entry.getComment())
-                item.connect("activate", self.launch_app, desktop_entry.getFileName())
+            file = vfs.File.for_path(path)
+
+            if file is not None and file.exists():
+                entry = fdo.DesktopEntry.for_file(file)
+
+                item = self.append_menu_item(menu, entry.get_name(), entry.get_icon(), entry.get_string("Comment"))
+                item.connect("activate", self.launch_app, file.props.path)
                 return True
         return False
 
@@ -618,6 +619,6 @@ if __name__ == "__main__":
         "description": applet_description,
         "theme": applet_logo,
         "author": "onox",
-        "copyright-year": 2009,
+        "copyright-year": "2009 - 2010",
         "authors": ["onox <denkpadje@gmail.com>"]},
         ["no-tooltip"])

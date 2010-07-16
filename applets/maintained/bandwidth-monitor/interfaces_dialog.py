@@ -20,27 +20,31 @@ Email: awn-bwm@curetheitch.com
     along with this program. If not, see <http://www.gnu.org/licenses/gpl.txt>.
 '''
 
+import os
+
 import gtk
 from gtk import gdk
 
 from awn import Dialog, cairo_rounded_rect, ROUND_ALL, OverlayText
 from awn.extras import _
+
 import cairo
-import os
-import gtop
 import dbus
+awn.check_dependencies(globals(), "gtop")
 
 ICON_DIR = os.path.join(os.path.dirname(__file__), 'images')
 
+
 class NetworkManager:
+
     def __init__(self):
         self.bus = dbus.SystemBus()
         self.nm_path = 'org.freedesktop.NetworkManager'
         self.nm_object = self.bus.get_object(self.nm_path, '/org/freedesktop/NetworkManager')
-    
+
     def get_device_by_name(self, dev_name):
         try:
-            for dev_opath in self.nm_object.GetDevices(dbus_interface = self.nm_path):
+            for dev_opath in self.nm_object.GetDevices(dbus_interface=self.nm_path):
                 device = self.bus.get_object(self.nm_path, dev_opath)
                 if self.get_device_name(device) == dev_name:
                     return device
@@ -50,26 +54,22 @@ class NetworkManager:
 
     def get_devices(self):
         devices = []
-        for dev_opath in self.nm_object.GetDevices(dbus_interface = self.nm_path):
+        for dev_opath in self.nm_object.GetDevices(dbus_interface=self.nm_path):
             device = self.bus.get_object(self.nm_path, dev_opath)
             devices.append(device)
         return devices
 
-    
     def get_device_name(self, device):
         return device.Get(self.nm_path + '.Device', 'Interface',
             dbus_interface='org.freedesktop.DBus.Properties').decode() if device else None
-    
 
     def get_device_type(self, device):
-        return device.Get(self.nm_path + '.Device', 'DeviceType', 
+        return device.Get(self.nm_path + '.Device', 'DeviceType',
             dbus_interface='org.freedesktop.DBus.Properties') if device else None
-
 
     def get_device_status(self, device):
-        return device.Get(self.nm_path + '.Device', 'State', 
+        return device.Get(self.nm_path + '.Device', 'State',
             dbus_interface='org.freedesktop.DBus.Properties') if device else None
-        
 
     def get_current_ssid(self, device):
         ap_path = device.Get(self.nm_path + '.Device.Wireless', 'ActiveAccessPoint', dbus_interface='org.freedesktop.DBus.Properties')
@@ -82,7 +82,7 @@ class NetworkManager:
         return ssid
 
     def get_bluetooth_endpoint_name(self, device):
-        return device.Get(self.nm_path + '.Device.Bluetooth', 'Name', 
+        return device.Get(self.nm_path + '.Device.Bluetooth', 'Name',
             dbus_interface='org.freedesktop.DBus.Properties').decode() if device else None
 
 
@@ -100,15 +100,14 @@ class InterfaceGraph(gtk.DrawingArea):
         self.connect('expose_event', self.expose)
         self.button_click_time = 0
         self.highlight = False
-        self.set_events( gtk.gdk.BUTTON_PRESS_MASK |
+        self.set_events(gtk.gdk.BUTTON_PRESS_MASK |
                         gtk.gdk.BUTTON_RELEASE_MASK |
                         gtk.gdk.ENTER_NOTIFY_MASK |
-                gtk.gdk.LEAVE_NOTIFY_MASK )
+                        gtk.gdk.LEAVE_NOTIFY_MASK)
         try:
             self.network_manager = NetworkManager()
         except Exception, e:
             self.network_manager = None
-        
 
     def expose(self, widget, event):
         if not self.show_text and \
@@ -121,7 +120,7 @@ class InterfaceGraph(gtk.DrawingArea):
         context.set_operator(cairo.OPERATOR_OVER)
         self.draw_graph()
         return False
-    
+
     def refresh(self, event=None):
         if not self.show_text and \
             self.__parent.interface_dialog.current_dialog == 'graph':
@@ -129,8 +128,7 @@ class InterfaceGraph(gtk.DrawingArea):
         self.draw_graph()
 
     def get_cairo_color(self, color):
-        ncolor = color/65535.0
-        return ncolor
+        return color / 65535.0
 
     def draw_graph(self):
         if not self.window:
@@ -160,7 +158,7 @@ class InterfaceGraph(gtk.DrawingArea):
                 ''' if wireless, draw it '''
                 if iface in self.__parent.netstats.ifaces:
                     if 'signal' in self.__parent.netstats.ifaces[iface]:
-                        signal = abs(int(self.__parent.netstats.ifaces[iface]['signal']['strength']))*80/100
+                        signal = abs(int(self.__parent.netstats.ifaces[iface]['signal']['strength'])) * 80 / 100
                         quality = int(self.__parent.netstats.ifaces[iface]['signal']['quality'])
                         noise = int(self.__parent.netstats.ifaces[iface]['signal']['noise'])
                         icon_size = 24
@@ -290,7 +288,7 @@ class InterfaceGraph(gtk.DrawingArea):
                 x, y = 0, 0
                 h = self.height
                 cairo_rounded_rect(context, 1, 1, self.width - 2, self.height - 2, 4, ROUND_ALL)
-                pat = cairo.LinearGradient(0, self.height/2 + 15, 0, 0)
+                pat = cairo.LinearGradient(0, self.height / 2 + 15, 0, 0)
                 if self.__parent.netstats.ifaces[iface]['status'] == 'V' or \
                     gtop.NETLOAD_IF_FLAGS_RUNNING & \
                     self.__parent.netstats.ifaces[iface]['status']:
@@ -299,7 +297,7 @@ class InterfaceGraph(gtk.DrawingArea):
                 else:
                     c1, c2, c3 = 0, 0, 0
                     c4, c5, c6 = 1, 0, 0
-                    
+
                 pat.add_color_stop_rgba(0.1, c1, c2, c3, 0.85)
                 pat.add_color_stop_rgba(1.0, c4, c5, c6, 0.85)
                 count = 1
@@ -318,7 +316,7 @@ class InterfaceGraph(gtk.DrawingArea):
                         gtop.NETLOAD_IF_FLAGS_LOOPBACK & self.__parent.netstats.ifaces[iface]['status']:
                     pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(os.path.join(ICON_DIR, 'loopback.png'), icon_size, icon_size)
                 if 'signal' in self.__parent.netstats.ifaces[iface]:
-                    signal = abs(int(self.__parent.netstats.ifaces[iface]['signal']['strength']))*80/100
+                    signal = abs(int(self.__parent.netstats.ifaces[iface]['signal']['strength'])) * 80 / 100
                     quality = int(self.__parent.netstats.ifaces[iface]['signal']['quality'])
                     noise = int(self.__parent.netstats.ifaces[iface]['signal']['noise'])
                     if quality == 0 or noise == -256:
@@ -343,7 +341,7 @@ class InterfaceGraph(gtk.DrawingArea):
                                 ''' most likely a bluetooth connection, check with NM '''
                                 nm_device = self.network_manager.get_device_by_name(hw_addr)
                                 nm_device_type = self.network_manager.get_device_type(nm_device)
-                                if nm_device_type == 5: 
+                                if nm_device_type == 5:
                                     ''' bluetooth '''
                                     icon_size = 32 if self.highlight else 20
                                     pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(os.path.join(ICON_DIR, 'bluetooth.png'), icon_size, icon_size)
@@ -363,12 +361,13 @@ class InterfaceGraph(gtk.DrawingArea):
                     context.set_font_size(14.0)
                     text_xpos = -4
                 context.set_source_rgba(1, 1, 1)
-                
+
                 iface_name = self.interface.split(' ')[0]
                 text_xpos = self.width / 3 - 20
-                context.move_to(text_xpos, self.height - self.height/2)
+                context.move_to(text_xpos, self.height - self.height / 2)
                 context.show_text(iface_name)
                 context.fill()
+
                 def click_event(widget, event):
                     if abs(event.time - self.button_click_time) > 500:
                         self.button_click_time = event.time
@@ -410,13 +409,12 @@ class InterfaceGraph(gtk.DrawingArea):
             context.set_font_size(18.0)
             device_error = _('No Device')
             device_error_message = _('Please select a valid device')
-            context.move_to(self.width/3.0, self.height / 2 - 7)
+            context.move_to(self.width / 3.0, self.height / 2 - 7)
             context.show_text(device_error)
-            context.move_to(self.width/3.0, self.height / 2 + 10)
+            context.move_to(self.width / 3.0, self.height / 2 + 10)
             context.show_text(device_error_message)
             context.fill()
         return True
-
 
 
 class InterfaceDeatil:
@@ -447,6 +445,7 @@ class InterfaceDeatil:
 
         self.interfaceDialog = self.InterfaceDialogWrapper(self.applet)
         self.applet.dialog.register('main', self.interfaceDialog)
+
         def leave_notify(widget, event, self):
             #return True
             if not hasattr(self.interfaceOptionsArea, 'graph_selection') or \
@@ -454,13 +453,13 @@ class InterfaceDeatil:
                 self.parent.interface_dialog.buttonArea.change_dialog(widget, event, 'graph')
         self.interfaceDialog.foe_id = self.interfaceDialog.connect('focus-out-event', leave_notify, self)
         self.interfaceArea = InterfaceGraph(self.parent, self.parent.iface, 450, 170, True)
-        
+
         self.buttonArea = InterfaceControls(self.parent)
         self.interfaceListArea = InterfaceSelectionList(self.parent)
         self.interfaceListArea.draw_interface_list()
 
         self.interfaceOptionsArea = InterfaceOptionsDialog(self.parent)
-        
+
         self.interfaceArea.set_size_request(450, 170)
         self.interfaceListArea.set_size_request(450, 190)
         self.buttonArea.set_size_request(450, 210)
@@ -487,7 +486,6 @@ class InterfaceDeatil:
         if self.current_dialog == 'options':
             self.interfaceOptionsArea.show_all()
 
-
     class InterfaceDialogWrapper(Dialog):
 
         def __init__(self, applet):
@@ -505,7 +503,7 @@ class InterfaceDeatil:
 
             for child in self.get_children():
                 self.propagate_expose(child, event)
-            
+
             return True
 
 
@@ -517,13 +515,12 @@ class InterfaceControls(gtk.Fixed):
         self.width, self.height = 450, 200
         self.connect('expose_event', self.expose_event_cb)
 
-        
-    def change_dialog(self, widget, event, force=None): 
+    def change_dialog(self, widget, event, force=None):
         self.__parent.interface_dialog.interfaceArea.hide()
         self.__parent.interface_dialog.interfaceListArea.hide()
         self.__parent.interface_dialog.interfaceOptionsArea.hide()
         if self.__parent.interface_dialog.current_dialog == force:
-           self.__parent.interface_dialog.current_dialog = 'graph'
+            self.__parent.interface_dialog.current_dialog = 'graph'
         else:
             self.__parent.interface_dialog.current_dialog = force if \
                 force else self.__parent.interface_dialog.current_dialog
@@ -546,7 +543,6 @@ class InterfaceControls(gtk.Fixed):
             self.iface_options_btn.show()
             self.__parent.interface_dialog.interfaceArea.refresh()
             self.__parent.interface_dialog.interfaceArea.show_all()
-        
 
     def expose_event_cb(self, widget, event=None):
         context = widget.window.cairo_create()
@@ -566,7 +562,7 @@ class InterfaceControls(gtk.Fixed):
             self.iface_list_btn = gtk.Button(_('Interfaces'))
             self.iface_list_btn.connect('button_press_event', self.change_dialog, 'list')
             self.parent.put(self.iface_list_btn, 20, self.height - 25)
-        
+
         if not hasattr(self, 'change_unit_btn'):
             self.change_unit_btn = gtk.Button(_('Change Unit'))
             self.change_unit_btn.connect('clicked', self.__parent.call_change_unit)
@@ -582,7 +578,7 @@ class InterfaceControls(gtk.Fixed):
             self.change_unit_btn.show()
             self.iface_options_btn.show()
             self.initted = True
-        
+
         return True
 
 
@@ -605,10 +601,12 @@ class InterfaceOptionsDialog(gtk.Fixed):
         self.iface = self.__parent.iface
         ifaces = self.__parent.netstats.ifaces
         iface = self.__parent.iface
+
         def keep_open(widget, event):
             if hasattr(self, 'graph_selection'):
                 return True if self.graph_selection.get_property('popup-shown') else False
         self.__parent.interface_dialog.interfaceDialog.connect('focus_out_event', keep_open)
+
         if iface in ifaces:
             fields = [('status', _('Status')), ('address', _('IP Address')), ('subnet', _('Subnet Mask'))]
             y_pos = 10
@@ -671,6 +669,7 @@ class InterfaceOptionsDialog(gtk.Fixed):
                         ifaces[iface]['graph_type']:
                         selected_item = listitem[0]
                 self.graph_selection.set_active(selected_item)
+
                 def change_graph(widget):
                     model = widget.get_model()
                     index = widget.get_active()
@@ -714,11 +713,9 @@ class InterfaceSelectionList(gtk.Fixed):
         self.height = 160
         self.setup_complete = False
 
-
     def refresh(self):
         for child in self.get_children():
             child.refresh()
-
 
     def rebuild(self):
         for child in self.get_children():
@@ -726,7 +723,6 @@ class InterfaceSelectionList(gtk.Fixed):
             del child
         self.draw_interface_list()
         self.refresh()
-
 
     def draw_interface_list(self):
         if self.setup_complete and \
@@ -736,8 +732,10 @@ class InterfaceSelectionList(gtk.Fixed):
         ifaces = self.__parent.netstats.ifaces
         if len(self.__parent.netstats.ifaces) > 10:
             self.mct_height, mct_height = 24, 24
-            ypos_calculation = int(30*int(len(ifaces)/5.1))
-            ypos_spacing = int(30/int(len(ifaces)/5.1)) if int(len(ifaces)/5.1) > 3 else 30
+
+            n = int(len(ifaces) / 5.1)
+            ypos_calculation = int(30 * n)
+            ypos_spacing = int(30 / n) if n > 3 else 30
         else:
             self.mct_height, mct_height = 42, 42
             ypos_calculation = 58
@@ -754,6 +752,7 @@ class InterfaceSelectionList(gtk.Fixed):
         for iface in sorted(self.__parent.netstats.ifaces):
             self.__parent.netstats.ifaces[iface]['in_list'] = True
             graph = InterfaceGraph(self.__parent, iface, mct_width, mct_height)
+
             def hover_action(widget, event, xpos, ypos):
                 widget.window.set_cursor(gtk.gdk.Cursor(gtk.gdk.HAND2))
                 widget.highlight = True
@@ -761,7 +760,9 @@ class InterfaceSelectionList(gtk.Fixed):
                 widget.width = widget.height * 1.5
                 widget.refresh()
                 widget.window.raise_()
-                self.move(widget, xpos - 12, ypos + 1 - widget.height/3)
+                self.move(widget, xpos - 12, ypos + 1 - widget.height / 3)
+            graph.connect('enter_notify_event', hover_action, xpos, ypos)
+
             def leave_action(widget, event, xpos, ypos):
                 widget.window.set_cursor(None)
                 widget.highlight = False
@@ -769,14 +770,13 @@ class InterfaceSelectionList(gtk.Fixed):
                 widget.width = self.mct_width
                 widget.refresh()
                 self.move(widget, xpos, ypos)
-            graph.connect('enter_notify_event', hover_action, xpos, ypos)
             graph.connect('leave_notify_event', leave_action, xpos, ypos)
-            self.put(graph, xpos, ypos)                
+
+            self.put(graph, xpos, ypos)
             xpos += spacing
             if xpos > self.width:
                 xpos = 13
-                ypos += (mct_height * 2) - int(30/ypos_spacing)*4
-
+                ypos += (mct_height * 2) - int(30 / ypos_spacing) * 4
 
     def expose_event_cb(self, widget, event=None):
         self.refresh()

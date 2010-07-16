@@ -20,6 +20,7 @@ Email: awn-bwm@curetheitch.com
 '''
 
 from awn.extras import _
+
 import gobject
 import gtk
 
@@ -60,7 +61,6 @@ class Preferences:
             del child
         self.prefs_ui.get_object('scrolledwindow1').add_with_viewport(cell_box)
         cell_box.show_all()
-
 
     def setup(self):
         prefs_ui = gtk.Builder()

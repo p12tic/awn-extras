@@ -20,22 +20,22 @@ Email: awn-bwm@curetheitch.com
     along with this program. If not, see <http://www.gnu.org/licenses/gpl.txt>.
 '''
 
-from time import time
 import os
 import re
 import sys
-
+from time import time
 
 import gtk
-import awn
 
+import awn
 from awn.extras import _, awnlib, __version__
+
 import gobject
 import cairo
-import bwmprefs
-import gtop
-import interfaces_dialog
+awn.check_dependencies(globals(), "gtop")
 
+import bwmprefs
+import interfaces_dialog
 
 APPLET_NAME = _('Bandwidth Monitor')
 APPLET_VERSION = '0.3.9.4'
@@ -46,6 +46,7 @@ APPLET_WEBSITE = 'http://www.curetheitch.com/projects/awn-bwm/'
 ICON_DIR = os.path.join(os.path.dirname(__file__), 'images')
 APPLET_ICON = os.path.join(ICON_DIR, 'icon.png')
 UI_FILE = os.path.join(os.path.dirname(__file__), 'bandwidth-monitor.ui')
+
 
 class Netstat:
 
@@ -59,8 +60,8 @@ class Netstat:
             'index': 1,
             'address': 'n/a',
             'subnet': 'n/a',
-            'rx_history': range(0,25),
-            'tx_history': range(0,25),
+            'rx_history': range(0, 25),
+            'tx_history': range(0, 25),
             'rx_bytes': 0,
             'tx_bytes': 0,
             'rx_sum': 0,
@@ -79,8 +80,8 @@ class Netstat:
             'index': 1,
             'address': 'n/a',
             'subnet': 'n/a',
-            'rx_history': range(0,25),
-            'tx_history': range(0,25),
+            'rx_history': range(0, 25),
+            'tx_history': range(0, 25),
             'rx_bytes': 0,
             'tx_bytes': 0,
             'rx_sum': 0,
@@ -110,16 +111,15 @@ class Netstat:
                     {'status': wcard[1],
                     'quality': wcard[2],
                     'strength': wcard[3],
-                    'noise': wcard[4] }
+                    'noise': wcard[4]}
             return wireless_devices
         else:
             return None
 
-
     def update_net_stats(self):
-        netlist = gtop.netlist()        
+        netlist = gtop.netlist()
         devices = {}
-        
+
         wireless_devices = self.get_wireless_devices()
 
         # Reset the Sum Interface records to zero
@@ -161,8 +161,8 @@ class Netstat:
                         'index': 1,
                         'address': address,
                         'subnet': subnet,
-                        'rx_history': range(0,25),
-                        'tx_history': range(0,25),
+                        'rx_history': range(0, 25),
+                        'tx_history': range(0, 25),
                         'ss_history': [],
                         'sq_history': [],
                         'sum_include': sum_include,
@@ -214,9 +214,9 @@ class Netstat:
                 if iface in wireless_devices:
                     ''' this is a wireless card '''
                     self.ifaces[iface]['signal'] = \
-                        { 'strength': wireless_devices[iface]['strength'],
+                        {'strength': wireless_devices[iface]['strength'],
                         'quality': wireless_devices[iface]['quality'],
-                        'noise': wireless_devices[iface]['noise'] }
+                        'noise': wireless_devices[iface]['noise']}
                     self.ifaces[iface]['ss_history'] = \
                         self.ifaces[iface]['ss_history'][0 - offset:]
                     self.ifaces[iface]['ss_history'].append(
@@ -375,7 +375,7 @@ class AppletBandwidthMonitor:
             iface_submenu.add(iface_item)
         iface_submenu.show_all()
         return iface_submenu
-        
+
     def setup_context_menu(self):
         """Add options to the context menu.
 
@@ -386,12 +386,10 @@ class AppletBandwidthMonitor:
         self.context_menu_unit = gtk.CheckMenuItem(label='Use KBps instead of Kbps')
         if self.unit == 1:
             self.context_menu_unit.set_active(True)
+
         def menu_opened(widget):
             self.context_menu_unit.disconnect(self.context_menu_unit_handler)
-            if self.unit == 1:
-                self.context_menu_unit.set_active(True)
-            else:
-                self.context_menu_unit.set_active(False)
+            self.context_menu_unit.set_active(self.unit == 1)
             self.context_menu_unit_handler = self.context_menu_unit.connect('toggled', self.call_change_unit)
         menu.connect("show", menu_opened)
         self.context_menu_unit_handler = self.context_menu_unit.connect('toggled', self.call_change_unit)
@@ -457,14 +455,14 @@ Total Sent: %s - Total Received: %s (All Interfaces)''') % (
                 if int(value) == 0:
                     value = 200
                 else:
-                    value = abs(int(value))*80/100
+                    value = abs(int(value)) * 80 / 100
                 x_pos_end = (x_pos - width) + 2 if self.border \
                 and x_pos > width else 0
                 if height > 150:
                     placement = value + 30
                     opacity = 0.10
                 else:
-                    placement = value - height/3 - 10
+                    placement = value - height / 3 - 10
                     opacity = 0.50 if self.background else 0.18
                     graph_type = 'area_bar'
                 if value <= 40:
@@ -481,7 +479,7 @@ Total Sent: %s - Total Received: %s (All Interfaces)''') % (
                 else:
                     ct.line_to(x_pos - x_pos_end, placement)
                     ct.line_to(x_pos - x_pos_end, height)
-                
+
                 if graph_type == 'area_bar':
                     # The bar chart is really an area graph, but with colored bars
                     ct.line_to(x_pos - width / (self.meter_scale - 1), height)
@@ -499,7 +497,7 @@ Total Sent: %s - Total Received: %s (All Interfaces)''') % (
                     x_pos += (width / (self.meter_scale - 1))
                 elif graph_type == 'fan':
                     # The fan chart is like a fan
-                    ct.line_to(0, height)   
+                    ct.line_to(0, height)
                     ct.move_to(x_pos, placement)
                     ct.close_path()
                     ct.fill()
@@ -514,7 +512,7 @@ Total Sent: %s - Total Received: %s (All Interfaces)''') % (
                     ct.fill()
                     later = True
                 else:
-                    # otherwise draw AREA Chart 
+                    # otherwise draw AREA Chart
                     ct.line_to(0, height)
                     later = True
                 if later:
@@ -650,7 +648,7 @@ Total Sent: %s - Total Received: %s (All Interfaces)''') % (
                         rx_lbl_x, rx_lbl_y = x_pos - x_pos_end - 60, max_placement - 22
                         if rx_lbl_x - self.max_tx_lbl_x < 15 and rx_lbl_x - \
                             self.max_tx_lbl_x > -15:
-                            if rx_lbl_y - self.chart_coords(max_tx, ratio, 
+                            if rx_lbl_y - self.chart_coords(max_tx, ratio,
                                 height, border) < 20 and rx_lbl_y - \
                                 self.chart_coords(max_tx, ratio, height, border) > -20:
                                 y_offset = 25
@@ -673,9 +671,6 @@ Total Sent: %s - Total Received: %s (All Interfaces)''') % (
                 x_pos += width / (self.meter_scale - x_offset)
             ct.close_path()
             ct.stroke()
-
-
-
 
     def chart_coords(self, value, ratio=1, height=None, border=None):
         height = self.applet.get_size() if not height else height
@@ -815,7 +810,6 @@ Total Sent: %s - Total Received: %s (All Interfaces)''') % (
                 return '%4.1d ' % (speed / step) + u
             step = step * 1024.0
         return '%4.1d ' % (speed / (step / 1024)) + units[-1]
-
 
     def readable_size(self, speed=0, unit=1, seconds=False):
         ''' readable_size(speed) -> string

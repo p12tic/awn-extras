@@ -152,6 +152,8 @@ class CairoClockApplet:
         prefs = gtk.Builder()
         prefs.add_from_file(ui_file)
 
+        self.binder = self.applet.settings.get_binder(prefs)
+
         self.setup_general_preferences(prefs)
         self.setup_plugins_preferens(prefs)
 
@@ -183,7 +185,6 @@ class CairoClockApplet:
         if self.applet.settings["theme"] not in self.themes:
             self.applet.settings["theme"] = default_theme
 
-        self.binder = self.applet.settings.get_binder(prefs)
         self.binder.bind("time-24-format", "radio-24-format", key_callback=refresh_title)
         self.binder.bind("time-date", "check-time-date", key_callback=refresh_title)
         self.binder.bind("time-seconds", "check-time-seconds", key_callback=refresh_title)
@@ -262,7 +263,7 @@ class ClockUpdater:
             format = hours + ":%M" + seconds + ampm
 
             if self.applet.settings["time-date"]:
-                format = "%a %b %d " + format + " %Y"
+                format = format + ", %A, %d %B %Y"
 
         self.applet.tooltip.set(time.strftime(format, local_time))
 

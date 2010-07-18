@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 # Copyright (c) 2007 Randal Barlow
 #
 # This library is free software; you can redistribute it and/or

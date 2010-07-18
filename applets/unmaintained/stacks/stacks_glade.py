@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 # Copyright (c) 2007 Timon ter Braak
 #
 # This library is free software; you can redistribute it and/or
@@ -21,9 +20,10 @@ import gobject
 import gtk
 import gtk.glade
 
+
 class GladeWindow(gobject.GObject):
-    """
-    Base class for dialogs or windows backed by glade interface definitions.
+
+    """Base class for dialogs or windows backed by glade interface definitions.
 
     Example:
     class MyWindow(GladeWindow):
@@ -34,6 +34,7 @@ class GladeWindow(gobject.GObject):
     does *not* descend from GtkWindow, so you can't treat the resulting object
     as a GtkWindow. The show, hide, destroy, and present methods are provided as
     convenience wrappers.
+
     """
 
     glade_file = None
@@ -64,5 +65,6 @@ class GladeWindow(gobject.GObject):
         self.show = self.window.show
         self.hide = self.window.hide
         self.present = self.window.present
+
 
 gobject.type_register(GladeWindow)

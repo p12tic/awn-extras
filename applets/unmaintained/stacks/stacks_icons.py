@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 # Copyright (c) 2007 Timon ter Braak
 #
 # This library is free software; you can redistribute it and/or
@@ -26,6 +25,7 @@ try:
 except ImportError:
     pass
 
+
 # Borrowed Thumbnailer from "gimmie"
 class Thumbnailer:
 
@@ -36,7 +36,6 @@ class Thumbnailer:
         self.cached_timestamp = None
         self.cached_size = None
 
-
     def get_icon(self, icon_size, timestamp = 0):
         if not self.cached_icon or \
                 icon_size != self.cached_size or \
@@ -46,7 +45,6 @@ class Thumbnailer:
             self.cached_size = icon_size
             self.cached_timestamp = timestamp
         return self.cached_icon
-
 
     def _lookup_or_make_thumb(self, icon_size, timestamp):
         icon_name = None
@@ -115,7 +113,6 @@ class IconFactory:
                 pass
         return None
 
-
     def load_icon_from_data_dirs(self, icon_value, icon_size = None):
         data_dirs = None
         if os.environ.has_key("XDG_DATA_DIRS"):
@@ -136,7 +133,6 @@ class IconFactory:
 
         return None
 
-
     def scale_to_bounded(self, icon, size):
         if icon:
             if icon.get_height() > size:
@@ -154,7 +150,6 @@ class IconFactory:
                 if _icon is not None:
                     icon = _icon
         return icon
-
 
     def load_icon(self, icon_value, icon_size, force_size = True):
         assert icon_value, "No icon to load!"

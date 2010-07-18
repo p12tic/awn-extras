@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 # Copyright (c) 2007 Randal Barlow
 #
 # This library is free software; you can redistribute it and/or
@@ -19,7 +18,9 @@
 
 import gtk
 import gio
+
 from awn.extras import _
+
 from stacks_backend import *
 from stacks_vfs import *
 
@@ -39,14 +40,12 @@ class FolderBackend(Backend):
             self.monitor.connect("created", self._created_cb)
             self.monitor.connect("deleted", self._deleted_cb, True)
 
-
     def _create(self):
         uri = self.backend_uri.as_uri()
         try:
             uri.make_directory_with_parents(gio.Cancellable())
         except gio.Error:
             pass
-
 
     def add(self, vfs_uris, action=None):
         if not action:
@@ -64,7 +63,6 @@ class FolderBackend(Backend):
 
             GUITransfer(src_lst, dst_lst, action)
             return Backend.add(self, vfs_uri_lst)
-
 
     def read(self):
         if not self.backend_uri.as_uri().query_exists():
@@ -88,7 +86,6 @@ class FolderBackend(Backend):
             fileinfo = enumerator.next_file()
         if vfs_uris:
             self.add(vfs_uris)
-
 
     def clear(self):
         dialog = gtk.Dialog(_("Confirm removal"),
@@ -117,31 +114,25 @@ class FolderBackend(Backend):
         dialog.destroy()
         Backend.clear(self)
 
-
     def get_title(self):
         title = self.applet.client.get_string(GROUP_DEFAULT, "title")
         if title is None or len(title) == 0:
             title = None
         return title or self.backend_uri.as_uri().get_basename()
 
-
     def get_type(self):
         return BACKEND_TYPE_FOLDER
-
 
     def destroy(self):
         if self.monitor:
             self.monitor.close()
         Backend.destroy(self)
 
-
     def open(self):
         LaunchManager().launch_uri(self.backend_uri.as_string(), None)
 
-
     def _open_cb(self, widget):
         self.open()
-
 
     def get_menu_items(self):
         items = []

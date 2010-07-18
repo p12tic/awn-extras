@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 # Copyright (c) 2007 Timon ter Braak
 #
 # This library is free software; you can redistribute it and/or
@@ -43,7 +42,6 @@ class FileBackend(Backend):
         else:
             self.handle = uri.append_to()
 
-
     def remove(self,vfs_uris):
         buffer = ""
         content, length, etag = self.backend_uri.as_uri().load_contents()
@@ -60,14 +58,12 @@ class FileBackend(Backend):
             self.handle.write(buffer)
         return Backend.remove(self, vfs_uris)
 
-
     def add(self, vfs_uris, action=None):
         if action is not None:
             for vfs_uri in vfs_uris:
                 self.handle.seek(0, 2) # hopefully 2 is SEEK_END
                 self.handle.write(vfs_uri.as_string() + os.linesep)
         return Backend.add(self, vfs_uris)
-
 
     def read(self):
         content, length, etag = self.backend_uri.as_uri().load_contents()
@@ -82,24 +78,19 @@ class FileBackend(Backend):
         if vfs_uris:
             self.add(vfs_uris)
 
-
     def clear(self):
         self.handle.truncate(0)
         Backend.clear(self)
-
 
     # Do nothing on "open"; not really useful
     def open(self):
         return
 
-
     def get_type(self):
         return BACKEND_TYPE_FILE
 
-
     def _clear_cb(self, widget):
         self.clear()
-
 
     def get_menu_items(self):
         items = []

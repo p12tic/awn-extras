@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 # Copyright (c) 2007 Timon ter Braak
 #
 # This library is free software; you can redistribute it and/or
@@ -20,13 +19,15 @@
 import os
 import random
 
-import gobject
 import gtk
 from gtk import gdk
-import gio
+
 from awn.extras import _
 from desktopagnostic.config import GROUP_DEFAULT
-from xdg import DesktopEntry
+from desktopagnostic import fdo, vfs
+
+import gio
+import gobject
 
 from stacks_vfs import VfsUri, Monitor
 from stacks_icons import IconFactory, Thumbnailer
@@ -56,6 +57,7 @@ COL_LABEL = 3
 COL_MIMETYPE = 4
 COL_ICON = 5
 COL_BUTTON = 6
+
 
 class Backend(gobject.GObject):
 
@@ -92,7 +94,6 @@ class Backend(gobject.GObject):
         else:
         	self.store.set_sort_func(COL_URI, self._file_sort)
 
-
     # we use a sorted liststore.
     # this sort function sorts:
     # -directories first
@@ -116,7 +117,6 @@ class Backend(gobject.GObject):
             	return cmp(n1, n2)
             else:
             	return cmp(n2, n1)
-
 
     # this sort function sorts:
     # -directories first
@@ -146,7 +146,6 @@ class Backend(gobject.GObject):
     # emits attention signal
     def _get_attention(self):
         self.emit("attention", self.get_type())
-
 
     def _created_cb(self, widget, vfs_uri):
         assert isinstance(vfs_uri, VfsUri)
@@ -192,17 +191,18 @@ class Backend(gobject.GObject):
 
             # check for desktop item
             if name.endswith(".desktop"):
-                assert path.startswith("file://")
-                path = path[7:]
-                if not os.path.exists(path):
+                file = vfs.File.for_uri(path)
+
+                if file is None or not file.exists():
                     continue
 
-                item = DesktopEntry.DesktopEntry(path)
+                entry = fdo.DesktopEntry.for_file (file)
 
-                name = item.getName()
-                mime_type = item.getMimeTypes()[0]
+                name = entry.get_name()
+                icon_name = entry.get_icon() or "image-missing"
+                mime_type = ""
                 type = gio.FILE_TYPE_REGULAR
-                icon_name = item.getIcon() or 'image-missing'
+
                 if icon_name:
                     icon_info = gtk.icon_theme_get_default().lookup_icon(icon_name, self.icon_size, 0)
                     icon_uri = icon_info.get_filename() if icon_info else path
@@ -267,20 +267,16 @@ class Backend(gobject.GObject):
     def read(self):
         return
 
-
     def clear(self):
         self.store.clear()
         self.emit("item-removed", None)
 
-
     def open(self):
         return
-
 
     def is_empty(self):
         iter = self.store.get_iter_first()
         return not (iter and self.store.iter_is_valid(iter))
-
 
     def get_title(self):
         title = self.applet.client.get_string(GROUP_DEFAULT, "title")
@@ -289,18 +285,14 @@ class Backend(gobject.GObject):
             title = _("Stacks")
         return title;
 
-
     def get_number_items(self):
         return self.store.iter_n_children(None)
-
 
     def get_menu_items(self):
         return []
 
-
     def get_type(self):
         return stacksbackend.BACKEND_TYPE_INVALID
-
 
     def get_random_pixbuf(self):
         max = self.get_number_items()
@@ -310,10 +302,8 @@ class Backend(gobject.GObject):
         if not iter: return None
         return self.store.get_value(iter, COL_ICON)
 
-
     def get_store(self):
         return self.store
-
 
     def destroy(self):
         return

@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 # Copyright (c) 2007 Timon ter Braak
 #
 # This library is free software; you can redistribute it and/or
@@ -21,7 +20,9 @@ import gobject
 import gio
 import gtk
 import pango
+
 from awn.extras import _
+
 
 class GUITransfer(object):
 
@@ -147,7 +148,6 @@ class GUITransfer(object):
         if self.dialog: # and enough data still to be copied?
             self.dialog.show_all()
         return False
-
 
     def _dialog_response(self, dialog, response):
         if response == gtk.RESPONSE_REJECT or \
@@ -284,7 +284,6 @@ class Monitor(gobject.GObject):
         except Exception:
             return None
 
-
     def _monitor_cb(self, monitor, monitor_uri, other_uri, event):
         signal = None
         try:
@@ -296,7 +295,6 @@ class Monitor(gobject.GObject):
             self.emit(signal, VfsUri(monitor_uri))
         else:
             self.emit(signal, self.vfs_uri)
-
 
     def close(self):
         try: 

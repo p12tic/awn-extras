@@ -251,7 +251,7 @@ class YamaApplet:
         if file is not None and file.exists():
             try:
                 file.launch()
-            except glib.GError:
+            except glib.GError, e:
                 print "Error when opening: %s" % e
         else:
             print "File at URI not found (%s)" % uri
@@ -504,7 +504,7 @@ class YamaApplet:
             if entry.key_exists("Exec"):
                 try:
                     entry.launch(0, None)
-                except glib.GError:
+                except glib.GError, e:
                     print "Error when launching: %s" % e
         else:
             print "File not found (%s)" % desktop_path

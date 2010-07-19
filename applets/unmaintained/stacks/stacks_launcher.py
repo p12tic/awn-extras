@@ -40,7 +40,7 @@ class LaunchManager:
         if file is not None and file.exists():
             try:
                 file.launch()
-            except glib.GError:
+            except glib.GError, e:
                 print "Error when opening: %s" % e
         else:
             print "File at URI not found (%s)" % uri
@@ -58,7 +58,7 @@ class LaunchManager:
 
                 try:
                     entry.launch(0, None)
-                except glib.GError:
+                except glib.GError, e:
                     print "Error when launching: %s" % e
 
                 if entry.key_exists("StartupNotify"):

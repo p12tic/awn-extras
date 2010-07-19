@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: notification-daemon\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-11 18:07+0300\n"
-"PO-Revision-Date: 2010-07-17 23:46+0000\n"
+"PO-Revision-Date: 2010-07-18 19:45+0000\n"
 "Last-Translator: David Bengtsson <Unknown>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-07-18 03:33+0000\n"
+"X-Launchpad-Export-Date: 2010-07-19 03:34+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -115,15 +115,15 @@ msgstr " Uppladdning/Nedladdning"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:2
 msgid " bytes)"
-msgstr " bytes)"
+msgstr " byte)"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:3
 msgid "Color to draw the background"
-msgstr "Färg för att rita upp bakgrunden"
+msgstr "Färg för bakgrunden"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:4
 msgid "Color to draw the border"
-msgstr "Färg för att rita upp ramen"
+msgstr "Färg för ramen"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:5
 msgid "Display parameters for interfaces"
@@ -131,11 +131,11 @@ msgstr "Visa parametrar för gränssnitt"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:6
 msgid "Draw the applet background"
-msgstr "Rita upp panelprogrammets bakgrund"
+msgstr "Visa bakgrund för panelprogrammet"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:7
 msgid "Draw the applet border"
-msgstr "Rita upp panelprogrammets ram"
+msgstr "Visa ram runt panelprogrammet"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:8
 msgid ""
@@ -256,7 +256,7 @@ msgstr "En nätverksövervakare för Awn."
 #: ../applets/maintained/volume-control/volume-control.ui.h:4
 #: ../applets/maintained/weather/weather.ui.h:2
 msgid "<b>Display</b>"
-msgstr ""
+msgstr "<b>Visning</b>"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:2
 msgid "Background Color"
@@ -268,7 +268,7 @@ msgstr "Ramfärg"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:5
 msgid "Display MBps/KBps (bytes) instead of Mbps/Kbps (bits)"
-msgstr "Visa MBps/kBps (bytes) istället för Mbps/kbps (bits)"
+msgstr "Visa MBps/kBps (byte) istället för Mbps/kbps (bit)"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:6
 msgid "Display Speed Text"
@@ -284,19 +284,19 @@ msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:9
 msgid "Do not display the speed as text, only draw the graph"
-msgstr "Visa inte hastigheten som text, rita endast upp diagrammet"
+msgstr "Visa inte hastigheten som text, rita endast upp diagrammet."
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:10
 msgid "Draw 0 bps in graphs"
-msgstr "Skriv ut 0 bps i grafen"
+msgstr "Skriv ut 0 bps i diagram"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:11
 msgid "Draw Background"
-msgstr "Rita upp bakgrund"
+msgstr "Visa bakgrund"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:12
 msgid "Draw Border"
-msgstr "Rita upp ram"
+msgstr "Visa ram"
 
 #. Put the general tab together
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:13
@@ -338,11 +338,11 @@ msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:18
 msgid "If this is checked, the common display unit will be Bytes"
-msgstr "Om aktiverat, kommer den gemensamma enheten som visas att vara bytes"
+msgstr "Om aktiverat, kommer den gemensamma enheten som visas att vara byte."
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:20
 msgid "Minimum Scaling threshold"
-msgstr ""
+msgstr "Minsta skalningsgräns"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:21
 msgid ""
@@ -350,6 +350,9 @@ msgid ""
 "amounts of traffic. e.g.: Setting to 32.0 KBps will cause the graph to only "
 "draw if throughput exceeds 32.0 KBps"
 msgstr ""
+"Ställ in den minsta skalningsgränsen för att inte visa stora spikar för små "
+"mängder trafik. T.ex. inställning på 32.0 kbps gör så att diagrammet endast "
+"ritas upp om genomströmningen överstiger 32.0 kbps."
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:22
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:141
@@ -412,55 +415,57 @@ msgstr ""
 #: ../applets/maintained/volume-control/awn-applet-volume-control.schema-ini.in.h:3
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:7
 msgid "The name of the theme of the icon."
-msgstr ""
+msgstr "Namnet på ikontemat."
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:7
 msgid "Unit of low level threshold (Percent or Time Remaining)."
-msgstr ""
+msgstr "Enhet för gräns vid låg nivå (procent eller återstående tid)."
 
 #: ../applets/maintained/battery/battery.desktop.in.h:1
 msgid "Battery"
-msgstr ""
+msgstr "Batteri"
 
 #: ../applets/maintained/battery/battery.desktop.in.h:2
 msgid "Display battery state"
-msgstr ""
+msgstr "Visa batteristatus"
 
 #: ../applets/maintained/battery/battery.ui.h:2
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:5
 #: ../applets/maintained/weather/weather.ui.h:3
 msgid "<b>General Options</b>"
-msgstr ""
+msgstr "<b>Allmänna alternativ</b>"
 
 #: ../applets/maintained/battery/battery.ui.h:3
 msgid "<b>Notifications</b>"
-msgstr ""
+msgstr "<b>Notifieringar</b>"
 
 #: ../applets/maintained/battery/battery.ui.h:4
 msgid ""
 "If enabled, shows a notification when the charge level reaches a certain "
 "percentage"
 msgstr ""
+"Om aktiverat, visas en notifiering när laddningsnivån uppnår en viss procent."
 
 #: ../applets/maintained/battery/battery.ui.h:5
 msgid "If enabled, shows a notification when the charge levels drops too low"
 msgstr ""
+"Om aktiverat, visas en notifiering när laddningsnivån sjunker för lågt."
 
 #: ../applets/maintained/battery/battery.ui.h:6
 msgid "Percent"
-msgstr ""
+msgstr "Procent"
 
 #: ../applets/maintained/battery/battery.ui.h:7
 msgid "Time Remaining"
-msgstr ""
+msgstr "Återstående tid"
 
 #: ../applets/maintained/battery/battery.ui.h:8
 msgid "_Battery:"
-msgstr ""
+msgstr "_Batteri:"
 
 #: ../applets/maintained/battery/battery.ui.h:9
 msgid "_Notify when charge level reaches:"
-msgstr ""
+msgstr "_Notifiera när laddningsnivån når:"
 
 #: ../applets/maintained/battery/battery.ui.h:10
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:23
@@ -468,64 +473,67 @@ msgstr ""
 #: ../applets/maintained/volume-control/volume-control.ui.h:7
 #: ../applets/maintained/weather/weather.ui.h:18
 msgid "_Theme:"
-msgstr ""
+msgstr "_Tema:"
 
 #: ../applets/maintained/battery/battery.ui.h:11
 msgid "_Warn when charge level drops to:"
-msgstr ""
+msgstr "_Varna när laddningsnivån sjunker till:"
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:1
 msgid "A custom time format (strftime()), used if not empty."
-msgstr ""
+msgstr "Ett anpassat tidsformat, strtime()"
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:2
 msgid "Beaufort)."
-msgstr ""
+msgstr "Beaufort)."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:3
 msgid ""
 "If enabled, besides hours and minutes, the seconds will be visible too."
-msgstr ""
+msgstr "Om aktiverat, förutom timmar och minuter, visas även sekunder."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:4
 msgid "If enabled, displays the weather as an overlay on top of the clock."
-msgstr ""
+msgstr "Om aktiverat, överlappas klockan med vädret."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:5
 msgid "If enabled, the date will be shown in the title."
-msgstr ""
+msgstr "Om aktiverat, kommer datumet visas i titeln."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:6
 msgid "If enabled, the seconds hand will be visible in the clock."
-msgstr ""
+msgstr "Om aktiverat, kommer sekundvisaren vara synlig i klockan."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:7
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:6
 msgid "Kelvin)."
-msgstr ""
+msgstr "kelvin)."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:8
 msgid "List of cities and timezones separated by a '#' character."
-msgstr ""
+msgstr "Lista utav städer och tidszoner, separerade med ett #-tecken."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:9
 msgid ""
 "Show time in 24 hour format if enabled, or 12 hour format when disabled."
 msgstr ""
+"Visar tid i 24-timmarsformat om aktiverat, eller i 12-timmarsformat om "
+"inaktiverat."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:10
 msgid "The name of the theme of the analog clock."
-msgstr ""
+msgstr "Namnet på klocktemat."
 
 #: ../applets/maintained/cairo-clock/cairo-clock.desktop.in.h:1
 msgid "Cairo Clock"
-msgstr ""
+msgstr "Cairo-klocka"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.desktop.in.h:2
 msgid ""
 "Displays an analog clock and supports additional clocks for different "
 "locations"
 msgstr ""
+"Visar en analog klocka som stödjer ytterligare klockor för olika platser."
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:1
 #: ../applets/maintained/weather/weather.ui.h:1
@@ -534,111 +542,111 @@ msgstr " "
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:2
 msgid "12 _hour format"
-msgstr ""
+msgstr "12-_timmarsformat"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:3
 msgid "24 h_our format"
-msgstr ""
+msgstr "24-t_immarsformat"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:4
 msgid "<b>Clock Display</b>"
-msgstr ""
+msgstr "<b>Klockvisning</b>"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:6
 msgid "<b>Title Options</b>"
-msgstr ""
+msgstr "<b>Titelalternativ</b>"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:7
 msgid "Beaufort"
-msgstr ""
+msgstr "Beaufort"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:8
 msgid "Celcius"
-msgstr ""
+msgstr "Celsius"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:9
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:34
 msgid "Fahrenheit"
-msgstr ""
+msgstr "Fahrenheit"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:10
 msgid "Find _Next"
-msgstr ""
+msgstr "Sök _nästa"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:11
 msgid ""
 "If enabled, besides hours and minutes, the seconds will be visible too"
-msgstr ""
+msgstr "Om aktiverat, förutom timmar och minuter, visas även sekunder."
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:12
 msgid "If enabled, the date will be shown in the title"
-msgstr ""
+msgstr "Om aktiverat, kommer datumet visas i titeln."
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:13
 msgid "If enabled, the seconds hand will be visible in the clock"
-msgstr ""
+msgstr "Om aktiverat, kommer sekundvisaren vara synlig i klockan."
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:14
 msgid "If enabled, time will be shown like 1:23 AM"
-msgstr ""
+msgstr "Om aktiverat, kommer tiden visas som 1:23 AM."
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:15
 msgid "If enabled, time will be shown like 23:45"
-msgstr ""
+msgstr "Om aktiverat, kommer tiden visas som 23:45."
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:16
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:35
 msgid "Kelvin"
-msgstr ""
+msgstr "kelvin"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:17
 msgid "Location Name:"
-msgstr ""
+msgstr "Platsens namn:"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:18
 msgid "Show _seconds"
-msgstr ""
+msgstr "Visa _sekunder"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:19
 msgid "Show seco_nds hand"
-msgstr ""
+msgstr "Visa s_ekundvisare"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:20
 msgid "Show the _date"
-msgstr ""
+msgstr "Visa _datumet"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:21
 msgid "_Show weather of current location"
-msgstr ""
+msgstr "_Visa vädret för nuvarande plats"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:22
 msgid "_Temperature unit:"
-msgstr ""
+msgstr "_Temperaturenhet:"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:24
 msgid "_Wind speed unit:"
-msgstr ""
+msgstr "_Vindhastighetsenhet:"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:25
 msgid "km/h"
-msgstr ""
+msgstr "km/t"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:26
 msgid "knots"
-msgstr ""
+msgstr "knop"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:27
 msgid "m/s"
-msgstr ""
+msgstr "m/s"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:28
 msgid "mph"
-msgstr ""
+msgstr "mph"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:107
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:111
 msgid "Logout"
-msgstr ""
+msgstr "Logga ut"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:115
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:117
@@ -651,17 +659,17 @@ msgstr "Lås skärmen"
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:128
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:139
 msgid "Suspend"
-msgstr ""
+msgstr "Vänteläge"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:131
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:133
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:144
 msgid "Hibernate"
-msgstr ""
+msgstr "Viloläge"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:152
 msgid "Shutdown"
-msgstr ""
+msgstr "Stäng av"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:187
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:566
@@ -677,7 +685,7 @@ msgstr "Hem"
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:524
 #: ../applets/maintained/places/applet.c:344
 msgid "Desktop"
-msgstr ""
+msgstr "Skrivbord"
 
 #. 
 #. TODO: check the trash and set to stock_trash_empty if trash is empty
@@ -690,7 +698,7 @@ msgstr "Papperskorg"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:194
 msgid "File System"
-msgstr ""
+msgstr "Filsystem"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:315
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:569
@@ -699,7 +707,7 @@ msgstr "Nätverk"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:316
 msgid "Connect to Server"
-msgstr ""
+msgstr "Anslut till server"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:947
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:961
@@ -716,7 +724,7 @@ msgstr "Senaste dokument"
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1030
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1041
 msgid "Session"
-msgstr ""
+msgstr "Session"
 
 #. generates a compiler warning due to the ellipse
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1057
@@ -730,19 +738,19 @@ msgstr ""
 
 #: ../applets/maintained/cairo-menu/misc.c:344
 msgid "Clear Recent Documents"
-msgstr ""
+msgstr "Töm senaste dokument"
 
 #: ../applets/maintained/calendar/awn-applet-calendar.schema-ini.in.h:1
 msgid "X"
-msgstr ""
+msgstr "X"
 
 #: ../applets/maintained/calendar/calendar.desktop.in.h:1
 msgid "Clock/Calendar Applet"
-msgstr ""
+msgstr "Klocka/Kalender"
 
 #: ../applets/maintained/calendar/calendar.desktop.in.h:2
 msgid "Watch appointments on your dock"
-msgstr ""
+msgstr "Håll koll på möten med din dock."
 
 #: ../applets/maintained/calendar/calendarlogin.py:43
 msgid "Login to "
@@ -750,7 +758,7 @@ msgstr "Logga in på "
 
 #: ../applets/maintained/calendar/calendarlogin.py:48
 msgid "Online Calendar"
-msgstr ""
+msgstr "Kalender på nätet"
 
 #: ../applets/maintained/calendar/calendarlogin.py:53
 msgid "Calendar Username"
@@ -806,11 +814,11 @@ msgstr ""
 
 #: ../applets/maintained/calendar/calendarprefs.py:53
 msgid "Plain White"
-msgstr ""
+msgstr "Enkel vit"
 
 #: ../applets/maintained/calendar/calendarprefs.py:54
 msgid "Plain Black"
-msgstr ""
+msgstr "Enkel svart"
 
 #: ../applets/maintained/calendar/calendarprefs.py:57
 msgid "Red"
@@ -883,6 +891,9 @@ msgid ""
 "you choose to clear your password, you will be prompted again for your "
 "calendar login credentials."
 msgstr ""
+"Vill du ta bort dina kalenderlösenord ifrån panelprogrammet Kalender? Om du "
+"väljer att rensa dina lösenord, kommer du att bli tillfrågad igen för dina "
+"inloggningsuppgifter."
 
 #: ../applets/maintained/calendar/clockcal.py:497
 msgid "Open in "
@@ -955,11 +966,11 @@ msgstr ""
 #: ../applets/maintained/comics/main.py:294
 #: ../applets/maintained/comics/main.py:300
 msgid "Comics!"
-msgstr ""
+msgstr "Serier!"
 
 #: ../applets/maintained/comics/comics.desktop.in.h:2
 msgid "View your favourite comics on your desktop"
-msgstr ""
+msgstr "Visa dina favoritserier på ditt skrivbord."
 
 #: ../applets/maintained/comics/comics_manage.py:51
 msgid "Shared comics"
@@ -986,7 +997,7 @@ msgstr "Serier"
 
 #: ../applets/maintained/comics/comics.py:159
 msgid "Manage Comics"
-msgstr ""
+msgstr "Hantera serier"
 
 #: ../applets/maintained/comics/comics.py:211
 #: ../applets/maintained/comics/main.py:192
@@ -1005,31 +1016,31 @@ msgstr "Misslyckades med att spara <i>%s</i>."
 
 #: ../applets/maintained/comics/ui/add.ui.h:1
 msgid "Add Comic"
-msgstr ""
+msgstr "Lägg till serie"
 
 #: ../applets/maintained/comics/ui/add.ui.h:2
 msgid "Downloading Comic"
-msgstr ""
+msgstr "Hämtar serie"
 
 #: ../applets/maintained/comics/ui/add.ui.h:3
 msgid "Enter the URL of the RSS feed:"
-msgstr ""
+msgstr "Ange webbadressen för RSS-flödet"
 
 #: ../applets/maintained/comics/ui/add.ui.h:4
 msgid "Ready to add comic!"
-msgstr ""
+msgstr "Redo att lägga till serie!"
 
 #: ../applets/maintained/comics/ui/add.ui.h:5
 msgid "Select Comic"
-msgstr ""
+msgstr "Välj serie"
 
 #: ../applets/maintained/comics/ui/add.ui.h:6
 msgid "Select Image"
-msgstr ""
+msgstr "Välj bild"
 
 #: ../applets/maintained/comics/ui/add.ui.h:7
 msgid "The guide found more than one image. Please select which one to use."
-msgstr ""
+msgstr "Guiden hittade mer än en bild. Välj vilken som ska användas."
 
 #: ../applets/maintained/comics/ui/add.ui.h:8
 msgid ""
@@ -1040,51 +1051,58 @@ msgid ""
 "\n"
 "Press \"next\" to proceed."
 msgstr ""
+"Denna guide hjälper dig att lägga till en ny serie.\n"
+"\n"
+"För att hitta serier som är lämpliga att lägga till, kan du söka på Internet "
+"efter \"comics rss\".\n"
+"\n"
+"Klicka på \"Framåt\" för att fortsätta."
 
 #: ../applets/maintained/comics/ui/manage.ui.h:1
 msgid "Manage comics"
-msgstr ""
+msgstr "Hantera serier"
 
 #: ../applets/maintained/comics/ui/manage.ui.h:2
 msgid "The following comics are installed:"
-msgstr ""
+msgstr "Följande serier är installerade"
 
 #: ../applets/maintained/comics/ui/view.ui.h:1
 msgid "Show link"
-msgstr ""
+msgstr "Visa länk"
 
 #: ../applets/maintained/comics/ui/view.ui.h:2
 msgid "Size"
-msgstr ""
+msgstr "Storlek"
 
 #: ../applets/maintained/comics/main.py:152
 #, python-format
 msgid "Unknown command sent: %s"
-msgstr ""
+msgstr "Okänt kommando har skickats: %s"
 
 #: ../applets/maintained/cpufreq/awn-applet-cpufreq.schema-ini.in.h:1
 msgid "Index of processor."
-msgstr ""
+msgstr "Index för processor."
 
 #: ../applets/maintained/cpufreq/cpufreq.desktop.in.h:1
 msgid "An applet to monitor and control the CPU frequency"
 msgstr ""
+"Ett panelprogram för att övervaka och kontrollera processorfrekvensen."
 
 #: ../applets/maintained/cpufreq/cpufreq.desktop.in.h:2
 msgid "CPU Frequency Monitor"
-msgstr ""
+msgstr "Övervakare av processorfrekvens"
 
 #: ../applets/maintained/cpufreq/cpufreq.ui.h:1
 msgid "<b>Monitored CPU</b>"
-msgstr ""
+msgstr "<b>Övervakad processor</b>"
 
 #: ../applets/maintained/cpufreq/cpufreq.ui.h:2
 msgid "_Processor:"
-msgstr ""
+msgstr "_Processor:"
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:1
 msgid " 0.9)."
-msgstr ""
+msgstr " 0.9)."
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:2
 msgid " none)."
@@ -1092,7 +1110,7 @@ msgstr ""
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:3
 msgid "Can change layout with scroll wheel."
-msgstr ""
+msgstr "Det går att byta layout med mushjulet."
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:4
 msgid ""
@@ -1101,7 +1119,7 @@ msgstr ""
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:5
 msgid "Overlay selected layout flag on icon."
-msgstr ""
+msgstr "Överlappa ikonen med vald layouts flagga."
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:6
 msgid "User selected layouts."
@@ -1233,7 +1251,7 @@ msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:72
 msgid "Flag Overlay"
-msgstr ""
+msgstr "Flaggöverlappning"
 
 #: ../applets/maintained/dialect/dialect.ui.h:73
 msgid "Flag Scale"
@@ -1271,7 +1289,7 @@ msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:83
 msgid "Overlay layout flag on applet icon"
-msgstr ""
+msgstr "Överlappa panelprogrammets ikon med layoutens flagga."
 
 #: ../applets/maintained/dialect/dialect.ui.h:84
 msgid "Previous Layout"
@@ -2250,7 +2268,7 @@ msgstr ""
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:4
 msgid "If enabled, show sensor value(s) as an overlay in the icon."
-msgstr ""
+msgstr "Om aktiverat, överlappas ikonen med sensorvärde(n)."
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:5
 msgid "In what row of dialog is the sensor shown."
@@ -2921,7 +2939,7 @@ msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:2
 msgid "Border Width. A value of 0 indicates that is should not be drawn."
-msgstr ""
+msgstr "Rambredd. Värdet 0 indikerar att ingen ram ska visas."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:3
 msgid ""
@@ -3429,7 +3447,7 @@ msgstr ""
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:2
 msgid "The border color of a drawn window"
-msgstr ""
+msgstr "Ramfärgen för ett aktivt fönster."
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:3
 msgid "The border color of the dialog"
@@ -3445,7 +3463,7 @@ msgstr ""
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:6
 msgid "The drop shadow color of the drawn number"
-msgstr ""
+msgstr "Skuggfärgen för siffran som visas."
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:7
 msgid "The file to use as the background image"
@@ -3465,11 +3483,11 @@ msgstr ""
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:11
 msgid "The main color of a drawn window"
-msgstr ""
+msgstr "Huvudfärgen för ett aktivt fönster."
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:12
 msgid "The main color of the drawn number"
-msgstr ""
+msgstr "Huvudfärgen för siffran som visas."
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:13
 msgid "The normal border color of a workspace widget"
@@ -4127,11 +4145,11 @@ msgstr ""
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:1
 msgid "City, and country of the weather location."
-msgstr ""
+msgstr "Stad och land för väderplatsen."
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:2
 msgid "Code that identifies the weather location."
-msgstr ""
+msgstr "Kod som identifierar väderplatsen."
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:3
 msgid "Fahrenheit)."
@@ -4139,7 +4157,7 @@ msgstr ""
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:4
 msgid "If enabled, show the temperature as an overlay in the icon."
-msgstr ""
+msgstr "Om aktiverat, överlappas ikonen med temperaturen."
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:5
 msgid "Maximum width of map in pixels."
@@ -4179,11 +4197,11 @@ msgstr "Väderdata tillhandahålls av weather.com"
 
 #: ../applets/maintained/weather/weather.desktop.in.h:1
 msgid "Display the local weather"
-msgstr ""
+msgstr "Visa det lokala vädret"
 
 #: ../applets/maintained/weather/weather.desktop.in.h:2
 msgid "Weather Applet"
-msgstr ""
+msgstr "Väder"
 
 #: ../applets/maintained/weather/weather.py:215
 msgid "Fetching conditions for"

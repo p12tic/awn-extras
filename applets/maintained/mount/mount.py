@@ -144,5 +144,4 @@ if __name__ == "__main__":
         "logo": applet_logo,
         "author": "onox",
         "copyright-year": "2009 - 2010",
-        "authors": ["Arvind Ganga", "onox <denkpadje@gmail.com>"]},
-        ["settings-per-instance"])
+        "authors": ["Arvind Ganga", "onox <denkpadje@gmail.com>"]})

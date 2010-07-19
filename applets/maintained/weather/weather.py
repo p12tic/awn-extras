@@ -694,6 +694,4 @@ if __name__ == "__main__":
         "copyright-year": "2007 - 2009",
         "theme": applet_logo,
         "authors": ["Mike Desjardins", "Mike Rooney", "Isaac J.", "onox <denkpadje@gmail.com>"],
-        "artists": ["Wojciech Grzanka", "Mike Desjardins"],
-        "type": ["Network", "Weather"]},
-        ["settings-per-instance"])
+        "artists": ["Wojciech Grzanka", "Mike Desjardins"]})

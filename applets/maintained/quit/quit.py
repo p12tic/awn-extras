@@ -311,5 +311,4 @@ if __name__ == "__main__":
         "theme": applet_logo,
         "author": "onox",
         "copyright-year": "2008 - 2010",
-        "authors": ["Randal Barlow <im.tehk at gmail.com>", "onox <denkpadje@gmail.com>"]},
-        ["settings-per-instance"])
+        "authors": ["Randal Barlow <im.tehk at gmail.com>", "onox <denkpadje@gmail.com>"]})

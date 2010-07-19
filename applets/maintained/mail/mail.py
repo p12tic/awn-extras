@@ -909,7 +909,6 @@ if __name__ == "__main__":
         "author": "Pavel Panchekha",
         "copyright-year": "2008",
         "email": "pavpanchekha@gmail.com",
-        "type": ["Network", "Email"],
         "authors": ["onox <denkpadje@gmail.com>",
                     "sharkbaitbobby <sharkbaitbobby+awn@gmail.com>",
                     "Pavel Panchekha"]})

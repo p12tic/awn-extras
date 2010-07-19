@@ -951,6 +951,4 @@ if __name__ == "__main__":
         "copyright-year": "2008 - 2010",
         "authors": ["Grega Podlesek <grega.podlesek@gmail.com>"],
         "artists": ["Grega Podlesek <grega.podlesek@gmail.com>",
-                    "Zdravko Podlesek"],
-        "type": ["System"]},
-        ["settings-per-instance"])
+                    "Zdravko Podlesek"]})

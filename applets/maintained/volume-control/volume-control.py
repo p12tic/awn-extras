@@ -135,14 +135,14 @@ class VolumeControlApplet:
         self.mute_item.set_active(not self.mute_item.get_active())
 
     def volume_scale_pressed_cb(self, widget, event):
-        # Same hack as used by gnome-volume-control to make lef-click behave as middle-click
+        # Same hack as used by gnome-volume-control to make left-click behave as middle-click
         if event.button == 1:
             event.button = 2
 
         return False
 
     def volume_scale_released_cb(self, widget, event):
-        # Same hack as used by gnome-volume-control to make lef-click behave as middle-click
+        # Same hack as used by gnome-volume-control to make left-click behave as middle-click
         if event.button == 1:
             event.button = 2
 
@@ -575,6 +575,4 @@ if __name__ == "__main__":
         "author": "onox",
         "copyright-year": "2008 - 2010",
         "authors": ["onox <denkpadje@gmail.com>"],
-        "artists": ["Jakub Steiner"],
-        "type": ["Audio", "Midi"]},
-        ["settings-per-instance"])
+        "artists": ["Jakub Steiner"]})

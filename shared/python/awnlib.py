@@ -24,7 +24,6 @@ pygtk.require("2.0")
 import gtk
 
 from desktopagnostic import config, Color
-from desktopagnostic.ui import ColorButton
 import awn
 from awn.extras import configbinder, __version__
 
@@ -182,7 +181,7 @@ class Dialogs:
         if dialog in self.__register:
             raise RuntimeError("Dialog '%s' already registered" % dialog)
 
-        if focus and dialog not in self.__special_dialogs:
+        if focus and dialog not in self.__special_dialogs and isinstance(dlog, awn.Dialog):
             dlog.props.hide_on_unfocus = focus
 
         self.__register[dialog] = dlog
@@ -1242,37 +1241,16 @@ class Meta:
         self.__parent = parent
 
         self.__info = info
-        self.__options = self.__parse_options(options)
+        self.__options = options
 
     def has_option(self, option):
         """Check if the applet has set a specific option.
 
-        @param option: Option to check. Format: "option/suboption/suboption"
+        @param option: Option to check
         @type option: C{str}
 
         """
-        option = option.split("/")
-        srch = self.__options
-        for i in option:
-            if i not in srch or not srch[i]:
-                return False
-            elif srch[i] == True:  # tuples evaluate to True
-                return True
-            else:
-                srch = srch[i]
-        return True
-
-    def __parse_options(self, options):
-        t = {}
-        for i in options:
-            if type(i) is str:
-                t[i] = True
-            elif type(i) in (tuple, list):
-                if type(i[1]) is bool:
-                    t[i[0]] = i[1]
-                elif type(i[1]) in (tuple, list):
-                    t[i[0]] = f(i[1])
-        return t
+        return option in self.__options
 
     def __getitem__(self, key):
         """Get a key from the dictionary.
@@ -1323,8 +1301,6 @@ class Applet(awn.AppletSimple, object):
         self.meta = Meta(self, meta, options)
         self.icon = Icon(self)
         self.tooltip = Tooltip(self)
-
-        # Dialogs depends on settings
         self.dialog = Dialogs(self)
 
     def connect_size_changed(self, callback):

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-11 18:07+0300\n"
-"PO-Revision-Date: 2010-07-21 20:11+0000\n"
+"PO-Revision-Date: 2010-07-22 19:52+0000\n"
 "Last-Translator: David Bengtsson <Unknown>\n"
 "Language-Team: Launchpad Swedish Translators <lp-l10n-"
 "sv@lists.launchpad.net>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-07-22 03:53+0000\n"
+"X-Launchpad-Export-Date: 2010-07-23 04:01+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -29,7 +29,7 @@ msgstr ""
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:1
 msgid "Global hotkey used to activate the terminal."
-msgstr "Global snabbknapp för att aktivera terminalen."
+msgstr "Global snabbtangent för att aktivera terminalen."
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:2
 msgid "Set whether the applet should hide itself when it loses focus."
@@ -387,7 +387,7 @@ msgstr "%s %s Färg"
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:1
 msgid "HAL UDI of battery."
-msgstr ""
+msgstr "HAL UDI för batteri."
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:2
 msgid ""
@@ -921,7 +921,7 @@ msgstr "Inga möten"
 
 #: ../applets/maintained/comics/awn-applet-comics.schema-ini.in.h:1
 msgid "The user agent to send when retrieving comics."
-msgstr ""
+msgstr "Användaragenten att skicka när serier hämtas."
 
 #: ../applets/maintained/comics/comics_add.py:57
 #, python-format
@@ -1116,6 +1116,8 @@ msgstr "Det går att byta layout med mushjulet."
 msgid ""
 "Keyboard toggle to change selected layout (see prefs dialog for values)."
 msgstr ""
+"Tangentbordsväxling för att ändra vald layout (se dialogrutan med "
+"inställningar för värden)."
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:5
 msgid "Overlay selected layout flag on icon."
@@ -3000,6 +3002,10 @@ msgid ""
 "awn-notification-daemon should place windows relative to its position in the "
 "bar."
 msgstr ""
+"NOTERA: Denna nyckel ska inte anses som stabil, det kommer sannolikt att "
+"förändras. Ungefärlig X-position för notifieringsfönster. Standard är -1, "
+"vilket betyder att awn-notification-daemon placerar fönster relativt till "
+"dess position i panelen."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:8
 msgid ""
@@ -3008,6 +3014,10 @@ msgid ""
 "awn-notification-daemon should place windows relative to its position in the "
 "bar."
 msgstr ""
+"NOTERA: Denna nyckel ska inte anses som stabil, det kommer sannolikt att "
+"förändras. Ungefärlig Y-position för notifieringsfönster. Standard är -1, "
+"vilket betyder att awn-notification-daemon placerar fönster relativt till "
+"dess position i panelen."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:9
 msgid "Sound."
@@ -3026,6 +3036,9 @@ msgid ""
 "The default sound file used unless a notification supplies the 'sound-file' "
 "or 'suppress-sound' hint. Leave empty for no default sound."
 msgstr ""
+"Standardljudfilen som används såvida inte en notifiering tillhandahåller "
+"\"sound-file\"- eller \"suppress-sound\"-tips. Lämna tomt för inget "
+"standardljud."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:12
 msgid ""
@@ -3033,6 +3046,9 @@ msgid ""
 "notification windows with a timeout.  Value is in ms. A value less than or "
 "equal to 0 indicates that client and default values should be honoured."
 msgstr ""
+"Detta åsidosätter klienten och standardpausperioder för alla "
+"notifieringsfönster med en paus. Värdet är i millisekunder. Ett värde som är "
+"mindre eller lika med 0 indikerar att klienten och standardvärden ska äras."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:13
 msgid "Use bold text."
@@ -3041,10 +3057,12 @@ msgstr "Använd fet text."
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:14
 msgid "Whether to attempt to kill any running notification-daemons."
 msgstr ""
+"Huruvida några notiferingsdemoner som redan körs ska dödas eller inte."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:15
 msgid "Whether to honour client notification window positioning requests."
 msgstr ""
+"Huruvida begärningar av fönsterposition för klientnotifiering ska äras."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:16
 msgid "Whether to the use configured awn theme color values for xxxx."

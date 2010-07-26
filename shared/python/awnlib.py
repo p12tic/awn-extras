@@ -670,7 +670,7 @@ class Errors:
 
             if url is not None:
                 alignment = gtk.Alignment(xalign=0.5, xscale=0.0)
-                alignment.add(gtk.LinkButton(url))
+                alignment.add(gtk.LinkButton(url, url))
                 self.vbox.pack_start(alignment, expand=False)
 
 

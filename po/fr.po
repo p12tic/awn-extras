@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: awn-core-applets 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-11 18:07+0300\n"
-"PO-Revision-Date: 2010-07-21 18:28+0000\n"
+"PO-Revision-Date: 2010-07-26 12:19+0000\n"
 "Last-Translator: Nicolas Delvaux <Unknown>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2010-07-22 03:53+0000\n"
+"X-Launchpad-Export-Date: 2010-07-27 03:55+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "Generated-By: pygettext.py 1.5\n"
 
@@ -3850,7 +3850,7 @@ msgstr ""
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:18
 msgid "The title to display"
-msgstr ""
+msgstr "Titre à afiicher"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:19
 msgid "What type of icon to display (progress, progress-items, items)"
@@ -4021,7 +4021,7 @@ msgstr "Type d'icône"
 
 #: ../applets/maintained/to-do/to-do.desktop.in.h:1
 msgid "Manage a simple To-Do list"
-msgstr ""
+msgstr "Gère une simple liste de choses à faire"
 
 #: ../applets/maintained/to-do/to-do.desktop.in.h:2
 #: ../applets/maintained/to-do/to-do.py:68
@@ -4121,30 +4121,30 @@ msgstr "% done"
 #: ../applets/maintained/tomboy-applet/tomboy-applet.desktop.in.h:1
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:31
 msgid "Control Tomboy with D-Bus"
-msgstr ""
+msgstr "Contrôler Tomboy avec D-bus"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.desktop.in.h:2
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:30
 msgid "Tomboy Applet"
-msgstr ""
+msgstr "Applet Tomboy"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:108
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:130
 msgid "Select a tag:"
-msgstr ""
+msgstr "Sélectionnez un tag :"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:114
 msgid "No tags were created yet"
-msgstr ""
+msgstr "Aucun tag n'a pour l'instant été créé"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:119
 msgid "Select a note:"
-msgstr ""
+msgstr "Sélectionnez une note :"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:149
 #, python-format
 msgid "Version: %s"
-msgstr ""
+msgstr "Version : %s"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:155
 msgid "New Note"
@@ -4152,31 +4152,31 @@ msgstr "Nouvelle note"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:159
 msgid "New Tagged Note"
-msgstr ""
+msgstr "Nouvelle note taguée"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:163
 msgid "View Tagged Note"
-msgstr ""
+msgstr "Voir les notes taguée"
 
 #: ../applets/maintained/vala-test/vala-test.desktop.in.in.h:1
 msgid "A simple applet to test vala support"
-msgstr ""
+msgstr "Un simple applet pour tester le support de Vala"
 
 #: ../applets/maintained/vala-test/vala-test.desktop.in.in.h:2
 msgid "Test Vala Applet"
-msgstr ""
+msgstr "Applet de test pour Vala"
 
 #: ../applets/maintained/volume-control/awn-applet-volume-control.schema-ini.in.h:1
 msgid "Name of the device."
-msgstr ""
+msgstr "Nom du service."
 
 #: ../applets/maintained/volume-control/awn-applet-volume-control.schema-ini.in.h:2
 msgid "Name of the mixer track."
-msgstr ""
+msgstr "Nom de la piste du mixeur."
 
 #: ../applets/maintained/volume-control/volume-control.desktop.in.h:1
 msgid "Control your computer's volume"
-msgstr ""
+msgstr "Contrôler le volume de votre ordinateur"
 
 #: ../applets/maintained/volume-control/volume-control.desktop.in.h:2
 msgid "Volume Control"
@@ -4196,11 +4196,11 @@ msgstr "<b>Options audio</b>"
 
 #: ../applets/maintained/volume-control/volume-control.ui.h:5
 msgid "_Device:"
-msgstr ""
+msgstr "_Périphérique :"
 
 #: ../applets/maintained/volume-control/volume-control.ui.h:6
 msgid "_Mixer track:"
-msgstr ""
+msgstr "Piste du _mixeur :"
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:1
 msgid "City, and country of the weather location."
@@ -4212,19 +4212,20 @@ msgstr "Code identifiant l'emplacement météorologique."
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:3
 msgid "Fahrenheit)."
-msgstr ""
+msgstr "Fahrenheit)."
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:4
 msgid "If enabled, show the temperature as an overlay in the icon."
-msgstr ""
+msgstr "Si activé, montre la température en superposition sur l'icône."
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:5
 msgid "Maximum width of map in pixels."
-msgstr ""
+msgstr "Largeur maximale de la carte (en pixels)."
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:6
 msgid "Show days of forecast in a transparent, curved dialog."
 msgstr ""
+"Montre les jours des prévisions dans un affichage transparent et incurvé."
 
 #: ../applets/maintained/weather/forecast.py:54
 #: ../applets/maintained/weather/forecast.py:82
@@ -4268,12 +4269,12 @@ msgstr "Récupération les prévisions pour"
 
 #: ../applets/maintained/weather/weather.py:254
 msgid "Show _Map"
-msgstr ""
+msgstr "Afficher la _carte"
 
 #: ../applets/maintained/weather/weather.py:302
 #: ../applets/maintained/weather/weather.py:380
 msgid "No records found"
-msgstr ""
+msgstr "Aucun résultat"
 
 #: ../applets/maintained/weather/weather.py:371
 msgid "Searching..."
@@ -4281,38 +4282,40 @@ msgstr "Recherche en cours..."
 
 #: ../applets/maintained/weather/weather.ui.h:4
 msgid "<b>Icon Display</b>"
-msgstr ""
+msgstr "<b>Affichage des icônes</b>"
 
 #: ../applets/maintained/weather/weather.ui.h:5
 msgid ""
 "<i><b>Examples:</b> Boston; Portland, ME, Amsterdam; or Osaka, Japan.</i>"
 msgstr ""
+"<i><b>Exemples :</b> Paris, Bruxelles, Toronto, Amsterdam, Osaka...</i>"
 
 #: ../applets/maintained/weather/weather.ui.h:6
 msgid "Current _location:"
-msgstr ""
+msgstr "Emplacement :"
 
 #: ../applets/maintained/weather/weather.ui.h:7
 msgid ""
 "If enabled, the dialog will be transparent, and the five days of the "
 "forecast will be curved"
 msgstr ""
+"Si activé, l'affichage des prévisions à 5 jours sera transparent et incurvé"
 
 #: ../applets/maintained/weather/weather.ui.h:8
 msgid "If enabled, the temperature will be displayed in the icon"
-msgstr ""
+msgstr "Si activé, la température sera affichée dans l'icône"
 
 #: ../applets/maintained/weather/weather.ui.h:9
 msgid "Large"
-msgstr ""
+msgstr "Grande"
 
 #: ../applets/maintained/weather/weather.ui.h:10
 msgid "Maximum _map width:"
-msgstr ""
+msgstr "Largeur maximale de la _carte :"
 
 #: ../applets/maintained/weather/weather.ui.h:11
 msgid "Medium"
-msgstr ""
+msgstr "Moyenne"
 
 #: ../applets/maintained/weather/weather.ui.h:12
 msgid "Show temperature in _icon"
@@ -4320,23 +4323,23 @@ msgstr ""
 
 #: ../applets/maintained/weather/weather.ui.h:13
 msgid "Small"
-msgstr ""
+msgstr "Petite"
 
 #: ../applets/maintained/weather/weather.ui.h:14
 msgid "Temperature _unit:"
-msgstr ""
+msgstr "_Unité de température :"
 
 #: ../applets/maintained/weather/weather.ui.h:15
 msgid "Temperature font _size:"
-msgstr ""
+msgstr "Taille de la _police de la température :"
 
 #: ../applets/maintained/weather/weather.ui.h:16
 msgid "Use transparent/curved _forecast dialog"
-msgstr ""
+msgstr "Utiliser un affichage des prévisions transparent et _incurvé"
 
 #: ../applets/maintained/weather/weather.ui.h:17
 msgid "_Location Name:"
-msgstr ""
+msgstr "Nom du _lieu :"
 
 #. Make the dialog
 #: ../applets/maintained/webapplet/applet.c:262
@@ -4590,7 +4593,7 @@ msgstr ""
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:32
 msgid "Tooltip text color."
-msgstr ""
+msgstr "Couleur du texte de l'infobulle."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:33
 msgid "Type of UI used for the stack."
@@ -4598,7 +4601,7 @@ msgstr ""
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:34
 msgid "Use Awn's tooltip font."
-msgstr ""
+msgstr "Utiliser la police des infobulles de Awn."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:35
 msgid "Whether hoverbox contains label."

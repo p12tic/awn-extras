@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-11 18:07+0300\n"
-"PO-Revision-Date: 2010-07-26 17:34+0000\n"
+"PO-Revision-Date: 2010-07-27 19:21+0000\n"
 "Last-Translator: David Bengtsson <Unknown>\n"
 "Language-Team: Launchpad Swedish Translators <lp-l10n-"
 "sv@lists.launchpad.net>\n"
@@ -16,8 +16,9 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-07-27 03:55+0000\n"
+"X-Launchpad-Export-Date: 2010-07-28 03:44+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+"X-Poedit-Language: Swedish\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
 msgid "Animal Farm"
@@ -112,7 +113,7 @@ msgstr "Terminal"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:1
 msgid " Upload/Download"
-msgstr " Uppladdning/Nedladdning"
+msgstr " Uppladdning/nedladdning."
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:2
 msgid " bytes)"
@@ -120,32 +121,31 @@ msgstr " byte)"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:3
 msgid "Color to draw the background"
-msgstr "Färg för bakgrunden"
+msgstr "Färg för bakgrunden."
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:4
 msgid "Color to draw the border"
-msgstr "Färg för ramen"
+msgstr "Färg för ramen."
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:5
 msgid "Display parameters for interfaces"
-msgstr "Visa parametrar för gränssnitt"
+msgstr "Visa parametrar för gränssnitt."
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:6
 msgid "Draw the applet background"
-msgstr "Visa bakgrund för panelprogrammet"
+msgstr "Visa panelprogrammets bakgrund."
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:7
 msgid "Draw the applet border"
-msgstr "Visa ram runt panelprogrammet"
+msgstr "Visa panelprogrammets ram."
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:8
 msgid ""
 "If enabled this will draw a line at the bottom of the graph even if the "
 "value is 0. If unchecked, values below 1 are not drawn"
 msgstr ""
-"Om aktiverat, kommer detta att rita upp en linje längst ner i diagrammet, "
-"även om värdet är 0. Om inaktiverat, ritas inte någon linje om värdet "
-"understiger 1."
+"Om aktiverat, kommer detta att visa en linje längst ner i diagrammet, även "
+"om värdet är 0. Om inaktiverat, visas ingen linje om värdet understiger 1."
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:9
 msgid "Minimum threshold to draw meter (dependent upon DEFAULT/unit)"
@@ -153,7 +153,7 @@ msgstr "Minimal gräns för att visa mätare (beroende på STANDARD/enhet)."
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:10
 msgid "The interface currently selected"
-msgstr "Nuvarande gränssnitt"
+msgstr "För tillfället valt gränssnitt."
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:37
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:231
@@ -227,7 +227,7 @@ msgstr "Välj en giltig nätverksenhet"
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:419
 #, python-format
 msgid "Total Sent: %s - Total Received: %s (All Interfaces)"
-msgstr "Totalt skickat: %s - Totalt mottaget: %s (Alla gränssnitt)"
+msgstr "Totalt skickat: %s - totalt mottaget: %s (alla gränssnitt)"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:610
 msgid "No"
@@ -285,11 +285,11 @@ msgstr "Visa uppladdnings- och nedladdningstext, representerad av hastighet."
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:9
 msgid "Do not display the speed as text, only draw the graph"
-msgstr "Visa inte hastigheten som text, rita endast upp diagrammet."
+msgstr "Visa inte hastigheten som text, visa endast diagrammet."
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:10
 msgid "Draw 0 bps in graphs"
-msgstr "Skriv ut 0 bps i diagram"
+msgstr "Visa 0 bps i diagram"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:11
 msgid "Draw Background"
@@ -317,9 +317,9 @@ msgid ""
 "If enabled, this will draw a line at the bottom of the graph even if the "
 "value is 0. If unchecked, values below 1 are not drawn in the graph."
 msgstr ""
-"Om aktiverat, kommer detta att rita upp en linje längst ner i diagrammet, "
-"även om värdet är 0. Om inaktiverat, ritas inte någon linje i diagrammet om "
-"värdet understiger 1."
+"Om aktiverat, kommer detta att visa en linje längst ner i diagrammet, även "
+"om värdet är 0. Om inaktiverat, visas ingen linje i diagrammet om värdet "
+"understiger 1."
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:16
 msgid ""
@@ -351,9 +351,9 @@ msgid ""
 "amounts of traffic. e.g.: Setting to 32.0 KBps will cause the graph to only "
 "draw if throughput exceeds 32.0 KBps"
 msgstr ""
-"Ställ in den minsta skalningsgränsen för att inte visa stora spikar för små "
-"mängder trafik. T.ex. en inställning på 32.0 kbps gör så att diagrammet "
-"endast ritas upp om genomströmningen överstiger 32.0 kbps."
+"Ställ in den minsta skalningsgränsen för att inte visa stora förändringar "
+"för små mängder trafik. T.ex. en inställning på 32.0 kbps gör så att "
+"diagrammet endast ritas upp om genomströmningen överstiger 32.0 kbps."
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:22
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:141
@@ -383,7 +383,7 @@ msgstr "Nedladdning"
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:243
 #, python-format
 msgid "%s %s Color"
-msgstr "%s %s Färg"
+msgstr "%s %ssfärg"
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:1
 msgid "HAL UDI of battery."
@@ -416,7 +416,7 @@ msgstr ""
 #: ../applets/maintained/volume-control/awn-applet-volume-control.schema-ini.in.h:3
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:7
 msgid "The name of the theme of the icon."
-msgstr "Namnet på ikontemat."
+msgstr "Namnet på temat för ikonen."
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:7
 msgid "Unit of low level threshold (Percent or Time Remaining)."
@@ -474,7 +474,7 @@ msgstr "_Notifiera när laddningsnivån når:"
 #: ../applets/maintained/volume-control/volume-control.ui.h:7
 #: ../applets/maintained/weather/weather.ui.h:18
 msgid "_Theme:"
-msgstr "_Tema:"
+msgstr "Te_ma:"
 
 #: ../applets/maintained/battery/battery.ui.h:11
 msgid "_Warn when charge level drops to:"
@@ -495,15 +495,15 @@ msgstr "Om aktiverat, förutom timmar och minuter, visas även sekunder."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:4
 msgid "If enabled, displays the weather as an overlay on top of the clock."
-msgstr "Om aktiverat, visas vädret som en överlappning på klockan."
+msgstr "Om aktiverat, visas vädret som en överlappning ovanpå klockan."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:5
 msgid "If enabled, the date will be shown in the title."
-msgstr "Om aktiverat, kommer datumet visas i titeln."
+msgstr "Om aktiverat, kommer datumet att visas i titeln."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:6
 msgid "If enabled, the seconds hand will be visible in the clock."
-msgstr "Om aktiverat, kommer sekundvisaren vara synlig i klockan."
+msgstr "Om aktiverat, kommer sekundvisaren att vara synlig i klockan."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:7
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:6
@@ -512,18 +512,18 @@ msgstr "kelvin)."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:8
 msgid "List of cities and timezones separated by a '#' character."
-msgstr "Lista med städer och tidszoner, separerade med ett #-tecken."
+msgstr "Lista över städer och tidzoner, separerade med ett #-tecken."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:9
 msgid ""
 "Show time in 24 hour format if enabled, or 12 hour format when disabled."
 msgstr ""
-"Visar tid i 24-timmarsformat om aktiverat, eller i 12-timmarsformat om "
-"inaktiverat."
+"Visar tid i 24-timmarsformat vid aktivering, eller 12-timmarsformat vid "
+"inaktivering."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:10
 msgid "The name of the theme of the analog clock."
-msgstr "Namnet på klocktemat."
+msgstr "Namnet på temat för den analoga klockan."
 
 #: ../applets/maintained/cairo-clock/cairo-clock.desktop.in.h:1
 msgid "Cairo Clock"
@@ -534,7 +534,7 @@ msgid ""
 "Displays an analog clock and supports additional clocks for different "
 "locations"
 msgstr ""
-"Visar en analog klocka som stödjer ytterligare klockor för olika platser."
+"Visar en analog klocka som stödjer ytterligare klockor för olika platser"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:1
 #: ../applets/maintained/weather/weather.ui.h:1
@@ -543,11 +543,11 @@ msgstr " "
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:2
 msgid "12 _hour format"
-msgstr "12-_timmarsformat"
+msgstr "12-t_immarsformat"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:3
 msgid "24 h_our format"
-msgstr "24-t_immarsformat"
+msgstr "24-ti_mmarsformat"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:4
 msgid "<b>Clock Display</b>"
@@ -581,11 +581,11 @@ msgstr "Om aktiverat, förutom timmar och minuter, visas även sekunder."
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:12
 msgid "If enabled, the date will be shown in the title"
-msgstr "Om aktiverat, kommer datumet visas i titeln."
+msgstr "Om aktiverat, kommer datumet att visas i titeln."
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:13
 msgid "If enabled, the seconds hand will be visible in the clock"
-msgstr "Om aktiverat, kommer sekundvisaren vara synlig i klockan."
+msgstr "Om aktiverat, kommer sekundvisaren att vara synlig i klockan."
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:14
 msgid "If enabled, time will be shown like 1:23 AM"
@@ -602,7 +602,7 @@ msgstr "Kelvin"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:17
 msgid "Location Name:"
-msgstr "Platsens namn:"
+msgstr "Platsnamn:"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:18
 msgid "Show _seconds"
@@ -622,7 +622,7 @@ msgstr "_Visa vädret för nuvarande plats"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:22
 msgid "_Temperature unit:"
-msgstr "_Temperaturenhet:"
+msgstr "Tem_peraturenhet:"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:24
 msgid "_Wind speed unit:"
@@ -679,7 +679,7 @@ msgstr "Dator"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:188
 msgid "Home"
-msgstr "Hem"
+msgstr "Hemmapp"
 
 #. Check if this is the Desktop directory
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:189
@@ -747,11 +747,11 @@ msgstr "X"
 
 #: ../applets/maintained/calendar/calendar.desktop.in.h:1
 msgid "Clock/Calendar Applet"
-msgstr "Klocka/Kalender"
+msgstr "Klocka/kalender"
 
 #: ../applets/maintained/calendar/calendar.desktop.in.h:2
 msgid "Watch appointments on your dock"
-msgstr "Håll reda på tider med din dock"
+msgstr "Håll reda på möten med din dock"
 
 #: ../applets/maintained/calendar/calendarlogin.py:43
 msgid "Login to "
@@ -865,7 +865,7 @@ msgstr "Evolution"
 
 #: ../applets/maintained/calendar/calendarprefs.py:123
 msgid "Google Calendar"
-msgstr "Google-kalender"
+msgstr "Google Kalender"
 
 #: ../applets/maintained/calendar/calendarprefs.py:124
 msgid "Outlook Web Access"
@@ -877,7 +877,7 @@ msgstr "Kalenderintegration"
 
 #: ../applets/maintained/calendar/calendarprefs.py:150
 msgid "Calendar URL"
-msgstr "Kalender-URL"
+msgstr "Webbadress för kalender"
 
 #. default title/tooltip to show on startup.
 #: ../applets/maintained/calendar/clockcal.py:51
@@ -908,7 +908,7 @@ msgstr "Idag"
 #. print "Login error: ", sys.exc_info()[0], sys.exc_info()[1]
 #: ../applets/maintained/calendar/clockcal.py:549
 msgid "Unable to read calendar data from external source."
-msgstr "Kunde inte läsa kalenderdata från extern källa."
+msgstr "Det gick inte att läsa kalenderdata från extern källa."
 
 #: ../applets/maintained/calendar/googlecal.py:90
 msgid "No appointments."
@@ -927,12 +927,13 @@ msgstr "Användaragenten att skicka när serier hämtas."
 #, python-format
 msgid "Failed to download %s. Press \"next\" to try again."
 msgstr ""
-"Misslyckades med att ladda ned %s. Tryck på \"nästa\" för att försöka igen."
+"Misslyckades med att ladda ned %s. Tryck på \"Framåt\" för att försöka igen."
 
 #: ../applets/maintained/comics/comics_add.py:63
 msgid "The URL is not a valid comic feed. Press \"next\" to try again"
 msgstr ""
-"Adressen anger inte en giltig serie. Tryck på \"nästa\" för att försöka igen."
+"Webbadressen är inte ett giltigt serieflöde. Tryck på \"Framåt\" för att "
+"försöka igen."
 
 #: ../applets/maintained/comics/comics_add.py:140
 #, python-format
@@ -946,7 +947,7 @@ msgid ""
 "\n"
 "Press \"apply\" to add <i>%s</i>."
 msgstr ""
-"Guiden har slutförts.\n"
+"Denna guide har slutförts.\n"
 "\n"
 "Tryck på \"Verkställ\" för att lägga till <i>%s</i>."
 
@@ -971,7 +972,7 @@ msgstr "Serier!"
 
 #: ../applets/maintained/comics/comics.desktop.in.h:2
 msgid "View your favourite comics on your desktop"
-msgstr "Visa dina favoritserier på ditt skrivbord."
+msgstr "Visa dina favoritserier på ditt skrivbord"
 
 #: ../applets/maintained/comics/comics_manage.py:51
 msgid "Shared comics"
@@ -1025,7 +1026,7 @@ msgstr "Hämtar serie"
 
 #: ../applets/maintained/comics/ui/add.ui.h:3
 msgid "Enter the URL of the RSS feed:"
-msgstr "Ange webbadressen för RSS-flödet"
+msgstr "Ange webbadressen för RSS-flödet:"
 
 #: ../applets/maintained/comics/ui/add.ui.h:4
 msgid "Ready to add comic!"
@@ -1052,7 +1053,7 @@ msgid ""
 "\n"
 "Press \"next\" to proceed."
 msgstr ""
-"Denna guide hjälper dig att lägga till en ny serie.\n"
+"Denna guide kommer hjälpa dig att lägga till en ny serie.\n"
 "\n"
 "För att hitta serier som är lämpliga att lägga till, kan du söka på Internet "
 "efter \"comics rss\".\n"
@@ -1065,7 +1066,7 @@ msgstr "Hantera serier"
 
 #: ../applets/maintained/comics/ui/manage.ui.h:2
 msgid "The following comics are installed:"
-msgstr "Följande serier är installerade"
+msgstr "Följande serier är installerade:"
 
 #: ../applets/maintained/comics/ui/view.ui.h:1
 msgid "Show link"
@@ -1087,7 +1088,7 @@ msgstr "Index för processor."
 #: ../applets/maintained/cpufreq/cpufreq.desktop.in.h:1
 msgid "An applet to monitor and control the CPU frequency"
 msgstr ""
-"Ett panelprogram för att övervaka och kontrollera processorfrekvensen."
+"Ett panelprogram för att övervaka och kontrollera processorfrekvensen"
 
 #: ../applets/maintained/cpufreq/cpufreq.desktop.in.h:2
 msgid "CPU Frequency Monitor"
@@ -1122,7 +1123,7 @@ msgstr ""
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:5
 msgid "Overlay selected layout flag on icon."
-msgstr "Överlappa ikonen med vald layouts flagga."
+msgstr "Överlappa flagga för vald layout ovanpå ikon."
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:6
 msgid "User selected layouts."
@@ -1138,7 +1139,7 @@ msgstr " Dialekt"
 
 #: ../applets/maintained/dialect/dialect.desktop.in.h:2
 msgid "Change your keyboard input layout from Awn."
-msgstr "Ändra din inmatningslayout för tangentbord genom Avant"
+msgstr "Ändra din inmatningslayout för tangentbord från Avant"
 
 #: ../applets/maintained/dialect/dialect.ui.h:1
 msgid ""
@@ -1170,16 +1171,16 @@ msgstr ""
 "Detta panelprogram tillåter dig att ändra inmatningsspråk för ditt "
 "tangentbord genom endast ett klick med musen.\n"
 "Du kan välja vilket tillgängligt inmatningsspråk som helst som finns på ditt "
-"system, eller från en lista med de du mest använder.\n"
+"system, eller från en lista över de du mest använder.\n"
 "\n"
-"Se flikarna för musåtgärder och layoutlistor för konfigueringsalternativ.\n"
+"Se flikarna för musåtgärder och layoutlistor för konfigureringsalternativ.\n"
 "\n"
 "Panelprogrammet beror på Pythonmodulen xklavier (tillgänglig från "
 "http://download.sugarlabs.org/sources/external/python-xklavier/python-"
 "xklavier-0.1.tar.gz).\n"
 "\n"
-"Detta panelprogram är licenserat under GPL2. Flaggikonerna som distribueras "
-"med detta panelprogram är ifrån panelprogrammet xfce4-xkb-plugin-0.5.3.3, "
+"Detta panelprogram är licensierat under GPL2. Flaggikonerna som distribueras "
+"med detta panelprogram kommer från panelprogrammet xfce4-xkb-plugin-0.5.3.3, "
 "licenserat under BSD-licensens andra klausul. Se om-dialogrutan för "
 "licensdetaljer.\n"
 
@@ -1211,17 +1212,17 @@ msgstr ""
 "\tNästa layout\t\tväljer den nästa layouten i din användarlista.\n"
 "\tFöregående layout\tväljer den föregående layouten i din användarlista.\n"
 "\tMeny\t\t\tvälj en layout från en meny för din användarlista.\n"
-"\tIngen\t\t\tknapp kommer inte ha någon åtgärd.\n"
+"\tIngen\t\t\tknapp kommer inte att ha någon åtgärd.\n"
 "\n"
 "Mittenklick:\n"
 "\n"
 "\tNästa layout\t\tväljer den nästa layouten i din användarlista.\n"
 "\tFöregående layout\tväljer den föregående layouten i din användarlista.\n"
 "\tMeny\t\t\tvälj en layout från en meny för din användarlista.\n"
-"\tIngen\t\t\tknapp kommer inte ha någon åtgärd.\n"
+"\tIngen\t\t\tknapp kommer inte att ha någon åtgärd.\n"
 "\n"
 "Tillåt att ändra layout med mushjul:\n"
-" \n"
+"\n"
 "\tOm valt, kommer rullning upp eller ner med mushjulet att välja\n"
 "\tden nästa eller föregående layouten i din användarlista.\n"
 
@@ -1243,7 +1244,7 @@ msgid ""
 "\tRanging from 0.0 (flag is not visible) to 0.9 (flag is almost opaque).\n"
 msgstr ""
 "\n"
-"Överlappa panelprogrammets ikon med layoutflagga:\n"
+"Överlappa layoutflagga ovanpå panelprogrammets ikon:\n"
 "\n"
 "\tOm valt, kommer flaggan för vald layout att överlappa panelprogrammets "
 "ikon.\n"
@@ -1309,7 +1310,7 @@ msgstr "Tillåt att ändra layout med mushjulet"
 
 #: ../applets/maintained/dialect/dialect.ui.h:68
 msgid "Change your keyboard layout from Awn."
-msgstr "Ändra din tangentbordslayout genom Avant."
+msgstr "Ändra din tangentbordslayout från Avant."
 
 #: ../applets/maintained/dialect/dialect.ui.h:69
 msgid "Dialect Applet Help"
@@ -1363,7 +1364,7 @@ msgstr "Nästa layout"
 
 #: ../applets/maintained/dialect/dialect.ui.h:83
 msgid "Overlay layout flag on applet icon"
-msgstr "Överlappa panelprogrammets ikon med layoutens flagga."
+msgstr "Överlappa layoutflagga ovanpå panelprogrammets ikon"
 
 #: ../applets/maintained/dialect/dialect.ui.h:84
 msgid "Previous Layout"
@@ -1662,31 +1663,31 @@ msgid ""
 msgstr ""
 "Följande text är en informell översättning som enbart tillhandahålls i "
 "informativt syfte. För alla juridiska tolkningar gäller den engelska "
-"originaltexten. \n"
+"originaltexten.\n"
 "\n"
 "Detta program är fri programvara. Du kan distribuera det och/eller modifiera "
 "det under villkoren i GNU General Public License, publicerad av Free "
 "Software Foundation, antingen version 2 eller (om du så vill) någon senare "
-"version. \n"
+"version.\n"
 "\n"
 "Detta program distribueras i hopp om att det ska vara användbart, men UTAN "
 "NÅGON SOM HELST GARANTI, även utan underförstådd garanti vid KÖP eller "
 "LÄMPLIGHET FÖR NÅGOT SPECIELLT ÄNDAMÅL. Se GNU General Public License för "
-"ytterligare information. \n"
+"ytterligare information.\n"
 "\n"
 "Du bör ha fått en kopia av GNU General Public License tillsammans med detta "
 "program. Om inte, skriv till Free Software Foundation, Inc., 51 Franklin "
-"Street, Fifth Floor, Boston, MA 02110-1301, USA. \n"
+"Street, Fifth Floor, Boston, MA 02110-1301, USA.\n"
 "\n"
-"\t\t    GNU GENERAL PUBLIC LICENSE \n"
-"\t\t       Version 2, June 1991 \n"
+"\t\t    GNU GENERAL PUBLIC LICENSE\n"
+"\t\t       Version 2, June 1991\n"
 "\n"
-" Copyright (C) 1989, 1991 Free Software Foundation, Inc., \n"
-" 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. \n"
-" Var och en äger kopiera och distribuera exakta kopior \n"
-" av det här licensavtalet, men att ändra det är inte tillåtet. \n"
+" Copyright (C) 1989, 1991 Free Software Foundation, Inc.,\n"
+" 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.\n"
+" Var och en äger kopiera och distribuera exakta kopior\n"
+" av det här licensavtalet, men att ändra det är inte tillåtet.\n"
 "\n"
-"\t\t\t    Bakgrund \n"
+"\t\t\t    Bakgrund\n"
 "\n"
 "  De flesta programvarulicenser är skapade för att ta bort din frihet att "
 "ändra och dela med dig av programvaran. GNU General Public License är "
@@ -1696,7 +1697,7 @@ msgstr ""
 "av Free Software Foundations programvaror och för alla andra program vars "
 "upphovsmän använder sig av General Public License. (Viss programvara från "
 "Free Software Foundation använder istället GNU Library General Public "
-"License.) Du kan använda licensen för dina program. \n"
+"License.) Du kan använda licensen för dina program.\n"
 "\n"
 "  När vi talar om fri programvara syftar vi på frihet och inte på pris. Våra "
 "[General Public License-] licenser är skapade för att garantera din rätt "
@@ -1704,31 +1705,31 @@ msgstr ""
 "tjänsten om du önskar), att garantera att du får källkoden till programvaran "
 "eller kan få den om du så önskar, att garantera att du kan ändra och "
 "modifiera programvaran eller använda dess delar i ny fri programvara samt "
-"slutligen att garantera att du är medveten om dessa rättigheter. \n"
+"slutligen att garantera att du är medveten om dessa rättigheter.\n"
 "\n"
 "  För att skydda dina rättigheter, måste vi begränsa var och ens möjlighet "
 "att hindra dig från att använda dig av dessa rättigheter samt från att kräva "
 "att du ger upp dessa rättigheter. Dessa begränsningar motsvaras av en "
 "förpliktelse för dig om du distribuerar kopior av programvaran eller om du "
-"ändrar eller modifierar programvaran. \n"
+"ändrar eller modifierar programvaran.\n"
 "\n"
 "  Om du exempelvis distribuerar kopior av en fri programvara, oavsett om du "
 "gör det gratis eller mot en avgift, måste du ge mottagaren alla de "
 "rättigheter du själv har. Du måste också tillse att mottagaren får källkoden "
 "eller kan få den om mottagaren så önskar. Du måste också visa dessa "
-"licensvillkor för mottagaren så att mottagaren känner till sina rättigheter. "
-"\n"
+"licensvillkor för mottagaren så att mottagaren känner till sina "
+"rättigheter.\n"
 "\n"
 "  Vi skyddar dina rättigheter i två steg: (1) upphovsrätt till programvaran "
 "och (2) dessa licensvillkor som ger dig rätt att kopiera, distribuera och "
-"eller ändra programvaran. \n"
+"eller ändra programvaran.\n"
 "\n"
 "  För varje upphovsmans säkerhet och vår säkerhet vill vi för tydlighets "
 "skull klargöra att det inte lämnas några garantier för den här fria "
 "programvaran. Om programvaran förändras av någon annan än upphovsmannen vill "
 "vi klargöra för mottagaren att det som mottagaren har är inte "
 "originalversionen av programvaran och att förändringar av och felaktigheter "
-"i programvaran inte skall belasta den ursprunglige upphovsmannen. \n"
+"i programvaran inte skall belasta den ursprunglige upphovsmannen.\n"
 "\n"
 "  Slutligen skall det sägas att all fri programvara ständigt hotas av "
 "programvarupatent. Vi vill undvika att en distributör [eller "
@@ -1736,13 +1737,13 @@ msgstr ""
 "till programvaran och därmed gör programvaran till föremål för äganderätt. "
 "För att undvika det här har vi gjort det tydligt att samtliga "
 "programvarupatent måste registreras för allas fria användning eller inte "
-"registreras alls. \n"
+"registreras alls.\n"
 "\n"
 "  Här nedan följer licensvillkoren för att kopiera, distribuera och ändra "
-"programvaran. \n"
+"programvaran.\n"
 "\n"
-"\t\t    GNU GENERAL PUBLIC LICENSE \n"
-"   VILLKOR FÖR ATT KOPIERA, DISTRIBUERA OCH ÄNDRA PROGRAMVARAN \n"
+"\t\t    GNU GENERAL PUBLIC LICENSE\n"
+"   VILLKOR FÖR ATT KOPIERA, DISTRIBUERA OCH ÄNDRA PROGRAMVARAN\n"
 "\n"
 "  0. Dessa licensvillkor gäller varje programvara eller annat verk som "
 "innehåller en hänvisning till dessa licensvillkor där "
@@ -1754,61 +1755,56 @@ msgstr ""
 "kopia eller en ändrad kopia och/eller översatt till ett annat språk. "
 "(översättningar ingår nedan utan begränsningar i begreppet \"förändringar\", "
 "\"förändra\" samt \"ändringar\" eller \"ändra\".) Varje licenstagare benämns "
-"som \"Du\". \n"
+"som \"Du\".\n"
 "\n"
 "Åtgärder utom kopiering, distribution och ändringar täcks inte av dessa "
 "licensvillkor. Användningen av Programvaran är inte begränsad och resultatet "
 "av användningen av Programvaran täcks endast av dessa licensvillkor om "
 "resultatet utgör ett Verk baserat på Programvaran (oberoende av att det "
-"skapats av att programmet körts). Det beror på vad Programvaran gör. \n"
+"skapats av att programmet körts). Det beror på vad Programvaran gör.\n"
 "\n"
 "  1. Du äger kopiera och distribuera exakta kopior av Programvarans källkod "
 "såsom du mottog den, i alla medier, förutsatt att Du tydligt och på ett "
 "skäligt sätt på varje exemplar fäster en riktig upphovsrättsklausul och "
 "garantiavsägelse, vidhåller alla hänvisningar till dessa licensvillkor och "
 "till alla garantiavsägelser samt att till alla mottagaren av Programvaran ge "
-"en kopia av dessa licensvillkor tillsammans med Programvaran. \n"
+"en kopia av dessa licensvillkor tillsammans med Programvaran.\n"
 "\n"
 "Du äger utta en avgift för mekaniseringen [att fysiskt fästa Programvaran på "
 "ett medium, såsom en diskett eller en CD-ROM-skiva] eller överföringen av en "
-"kopia och du äger erbjuda en garanti för Programvaran mot en avgift. \n"
+"kopia och du äger erbjuda en garanti för Programvaran mot en avgift.\n"
 "\n"
 "  2. Du äger ändra ditt exemplar eller andra kopior av Programvaran eller "
 "någon del av Programvaran och därmed skapa ett Verk baserat på Programvaran, "
 "samt att kopiera och distribuera sådana förändrade versioner av Programvaran "
 "eller verk enligt villkoren i paragraf 1 ovan, förutsatt att du också "
-"uppfyller följande villkor: \n"
+"uppfyller följande villkor:\n"
 "\n"
-"    a) Du tillser att de förändrade filerna har ett tydligt meddelande som \n"
+"    a) Du tillser att de förändrade filerna har ett tydligt meddelande som\n"
 "    berättar att Du ändrat filerna samt vilket datum dessa ändringar "
-"gjordes. \n"
+"gjordes.\n"
 "\n"
 "    b) Du tillser att alla verk som du distribuerar eller offentliggör som "
-"till \n"
-"    en del eller i sin helhet innehåller eller är härlett från Programvaran "
+"till\n"
+"    en del eller i sin helhet innehåller eller är härlett från Programvaran\n"
+"    eller en del av Programvaran, licensieras i sin helhet, utan kostnad\n"
+"    till tredje man enligt dessa licensvillkor.\n"
 "\n"
-"    eller en del av Programvaran, licensieras i sin helhet, utan kostnad \n"
-"    till tredje man enligt dessa licensvillkor. \n"
-"\n"
-"    c) Om den förändrade Programvaran i sitt normala utförande kan utföra \n"
-"    interaktiv kommandon när det körs, måste Du tillse att när Programmet \n"
+"    c) Om den förändrade Programvaran i sitt normala utförande kan utföra\n"
+"    interaktiv kommandon när det körs, måste Du tillse att när Programmet\n"
 "    startas skall det skriva ut eller visa, på ett enkelt tillgängligt sätt, "
-"ett \n"
-"    meddelande som tydligt och på ett skäligt sätt på varje exemplar fäster "
-"\n"
-"    en riktig upphovsrättsklausul och garantiavsägelse (eller i förekommande "
-"\n"
-"    fall ett meddelande som klargör att du tillhandahåller en garanti) samt "
-"\n"
-"    att mottagaren äger distribuera Programvaran enligt dessa licensvillkor "
-"\n"
-"    samt berätta hur mottagaren kan se dessa licensvillkor. (Från den här \n"
-"    skyldigheten undantas det fall att Programvaran förvisso är interaktiv, "
-"\n"
-"    men i sitt normala utförande inte visar ett meddelande av den här typen. "
-"\n"
-"    I sådant fall behöver Verk baserat Programvaran inte visa ett sådant \n"
-"    meddelande som nämns ovan.) \n"
+"ett\n"
+"    meddelande som tydligt och på ett skäligt sätt på varje exemplar fäster\n"
+"    en riktig upphovsrättsklausul och garantiavsägelse (eller i "
+"förekommande\n"
+"    fall ett meddelande som klargör att du tillhandahåller en garanti) samt\n"
+"    att mottagaren äger distribuera Programvaran enligt dessa licensvillkor\n"
+"    samt berätta hur mottagaren kan se dessa licensvillkor. (Från den här\n"
+"    skyldigheten undantas det fall att Programvaran förvisso är interaktiv,\n"
+"    men i sitt normala utförande inte visar ett meddelande av den här "
+"typen.\n"
+"    I sådant fall behöver Verk baserat Programvaran inte visa ett sådant\n"
+"    meddelande som nämns ovan.)\n"
 "\n"
 "Dessa krav gäller det förändrade verket i dess helhet. Om identifierbara "
 "delar av verket inte härrör från Programvaran och skäligen kan anses vara "
@@ -1822,33 +1818,33 @@ msgstr ""
 "skall sålunda inte tolkas som att anspråk görs på rättigheter eller att "
 "ifrågasätta Dina rättigheter till programvara som skrivits helt av Dig. "
 "Syftet är att tillse att rätten att kontrollera distributionen av derivativa "
-"eller samlingsverk av Programvaran. \n"
+"eller samlingsverk av Programvaran.\n"
 "\n"
 "Förekomsten av ett annat verk på ett lagringsmedium eller samlingsmedium som "
 "innehåller Programvaran eller Verk baserat på Programvaran leder inte till "
-"att det andra verket omfattas av dessa licensvillkor. \n"
+"att det andra verket omfattas av dessa licensvillkor.\n"
 "\n"
 "  3. Du äger kopiera och distribuera Programvaran (eller Verk baserat på "
 "Programvaran enligt paragraf 2) i objektkod eller i körbar form enligt "
 "villkoren i paragraf 1 och paragraf 2 förutsatt att Du också gör en av "
-"följande saker: \n"
+"följande saker:\n"
 "\n"
-"    a) Bifogar den kompletta källkoden i maskinläsbar form, som måste \n"
-"    distribueras enligt villkoren i paragraf 1 och 2 på ett medium som i \n"
-"    allmänhet används för utbyte av programvara, eller \n"
+"    a) Bifogar den kompletta källkoden i maskinläsbar form, som måste\n"
+"    distribueras enligt villkoren i paragraf 1 och 2 på ett medium som i\n"
+"    allmänhet används för utbyte av programvara, eller\n"
 "\n"
 "    b) Bifogar ett skriftligt erbjudande, med minst tre års giltighet, att "
-"ge \n"
-"    tredje man, mot en avgift som högst uppgår till Din kostnad att utföra \n"
-"    fysisk distribution, en fullständig kopia av källkoden i maskinläsbar \n"
-"    form, distribuerad enligt villkoren i paragraf 1 och 2 på ett medium \n"
-"    som i allmänhet används för utbyte av programvara, eller \n"
+"ge\n"
+"    tredje man, mot en avgift som högst uppgår till Din kostnad att utföra\n"
+"    fysisk distribution, en fullständig kopia av källkoden i maskinläsbar\n"
+"    form, distribuerad enligt villkoren i paragraf 1 och 2 på ett medium\n"
+"    som i allmänhet används för utbyte av programvara, eller\n"
 "\n"
-"    c) Bifogar det skriftligt erbjudande Du fick att erhålla källkoden. (Det "
-"\n"
-"    här alternativet kan endast användas för icke-kommersiell distribution \n"
-"    och endast om Du erhållit ett program i objektkod eller körbar form \n"
-"    med ett erbjudande i enlighet med b ovan.) \n"
+"    c) Bifogar det skriftligt erbjudande Du fick att erhålla källkoden. "
+"(Det\n"
+"    här alternativet kan endast användas för icke-kommersiell distribution\n"
+"    och endast om Du erhållit ett program i objektkod eller körbar form\n"
+"    med ett erbjudande i enlighet med b ovan.)\n"
 "\n"
 "Källkoden för ett verk avser den form av ett verk som är att föredra för att "
 "göra förändringar av verket. För ett körbart verk avser källkoden all "
@@ -1858,13 +1854,13 @@ msgstr ""
 "distribueras, antingen i binär form eller som källkod, med huvudkomponterna "
 "i operativsystemet (kompliator, kärna och så vidare) i vilket den körbara "
 "programvaran körs, om inte den här komponenten medföljer den körbara "
-"programvaran. \n"
+"programvaran.\n"
 "\n"
 "Om distributionen av körbar Programvara eller objektkod görs genom att "
 "erbjuda tillgång till att kopiera från en bestämd plats, då skall "
 "motsvarande tillgång till att kopiera källkoden från samma plats räknas som "
 "distribution av källkoden, även om trejde man inte behöver kopiera källkoden "
-"tillsammans med objektkoden. \n"
+"tillsammans med objektkoden.\n"
 "\n"
 "  4. Du äger inte kopiera, ändra, licensiera eller distribuera Programvaran "
 "utom på dessa licensvillkor. All övrig kopiering, ändringar, licensiering "
@@ -1872,7 +1868,7 @@ msgstr ""
 "att Du förlorar Dina rättigheter enligt dessa licensvillkor. Tredje man som "
 "har mottagit kopior eller rättigheter från Dig enligt dessa licensvillkor "
 "kommer dock inte att förlora sina rättigheter så länge de följer "
-"licensvillkoren. \n"
+"licensvillkoren.\n"
 "\n"
 "  5. Du åläggs inte att acceptera licensvillkoren, då du inte har skrivit "
 "under det här avtalet. Du har dock ingen rätt att ändra eller distribuera "
@@ -1881,14 +1877,14 @@ msgstr ""
 "att ändra eller distribuera Programvaran (eller verk baserat på "
 "Programvaran) visar du med genom ditt handlande att du accepterar "
 "licensvillkoren och alla villkor för att kopiera, distribuera eller ändra "
-"Programvaran eller Verk baserat på Programvaran. \n"
+"Programvaran eller Verk baserat på Programvaran.\n"
 "\n"
 "  6. Var gång du distributerar Progamvaran (eller Verk baserat på "
 "Programvaran), kommer mottagaren per automatik att få en licens från den "
 "första licensgivaren att kopiera, distribuera eller ändra Programvaran "
 "enligt dessa licensvillkor. Du äger inte ålägga mottagaren några andra "
 "restriktioner än de som följer av licensvillkoren. Du är inte skyldig att "
-"tillse att tredje man följer licensvillkoren. \n"
+"tillse att tredje man följer licensvillkoren.\n"
 "\n"
 "  7. Om Du på grund av domstolsdom eller anklagelse om patentintrång eller "
 "på grund av annan anledning (ej begränsat till patentfrågor), Du får villkor "
@@ -1898,11 +1894,11 @@ msgstr ""
 "uppfylla licensvillkor och andra skyldigheter, får du som en konsekvens inte "
 "distribuera Programvaran. Om exempelvis ett patent gör att Du inte "
 "distribuera Programvaran fritt till alla de som mottager kopior direkt eller "
-"indirekt från Dig, så måste Du helt sluta distribuera Programvaran. \n"
+"indirekt från Dig, så måste Du helt sluta distribuera Programvaran.\n"
 "\n"
 "Om delar av den här paragrafen förklaras ogiltig eller annars inte kan "
 "verkställas skall resten av paragrafen äga fortsatt giltighet och paragrafen "
-"i sin helhet äga fortsatt giltighet i andra sammanhang. \n"
+"i sin helhet äga fortsatt giltighet i andra sammanhang.\n"
 "\n"
 "Syftet med den här paragrafen är inte att förmå Dig att begå patentintrång "
 "eller att begå intrång i andra rättigheter eller att förmå Dig att betrida "
@@ -1913,17 +1909,17 @@ msgstr ""
 "den fortsatta giltigheten och användningen av det här systemet, men det är "
 "upphovsmannen själv som måste besluta om han eller hon vill distribuera "
 "Programvaran genom det här systemet eller ett annat och en licenstagare kan "
-"inte tvinga en upphovsman till ett annat beslut. \n"
+"inte tvinga en upphovsman till ett annat beslut.\n"
 "\n"
 "Den här paragrafen har till syfte att ställa det utom tvivel vad som anses "
-"följa av resten av dessa licensvillkor. \n"
+"följa av resten av dessa licensvillkor.\n"
 "\n"
 "  8. Om distributionen och/eller användningen av Programvaran är begränsad i "
 "vissa länder på grund av patent eller upphovsrättsligt skyddade gränssnitt "
 "kan upphovsmannen till Programvaran lägga till en geografisk "
 "spridningsklausul, enligt vilken distribution är tillåten i länder förutom "
 "dem i vilket det är förbjudet. Om så är fallet kommer begränsningen att "
-"utgöra en fullvärdig del av licensvillkoren. \n"
+"utgöra en fullvärdig del av licensvillkoren.\n"
 "\n"
 "  9. The Free Software Foundation kan offentliggöra ändrade och/eller nya "
 "versioner av the General Public License från tid till annan. Sådana nya "
@@ -1935,7 +1931,7 @@ msgstr ""
 "dessa licensvillkor eller licensvillkoren i alla senare versioner "
 "offentliggjorda av the Free Software Foundation. Om Programvaran inte "
 "specificerar ett versionnummer av licensvillkoren kan Du välja fritt bland "
-"samtliga versioner som någonsin offentligjorts. \n"
+"samtliga versioner som någonsin offentligjorts.\n"
 "\n"
 "  10. Om du vill använda delar av Programvaran i annan fri programvara som "
 "distribueras enligt andra licensvillkor, begär tillstånd från upphovsmannen. "
@@ -1943,9 +1939,9 @@ msgstr ""
 "till Free Software Foundation, vi gör ibland undantag för det här. Vårt "
 "beslut grundas på våra två mål att bibehålla den fria statusen av alla verk "
 "som härleds från vår Programvara och främjandet av att dela med sig av och "
-"återanvända programvara i allmänhet. \n"
+"återanvända programvara i allmänhet.\n"
 "\n"
-"\t\t\t    INGEN GARANTI \n"
+"\t\t\t    INGEN GARANTI\n"
 "\n"
 "  11. DÅ DENNA PROGRAMVARA LICENSIERAS UTAN KOSTNAD GES INGEN GARANTI FÖR "
 "PROGRAMMET, UTOM SÅDAN GARANTI SOM MÅSTE GES ENLIGT TILLÄMPLIG LAG. FÖRUTOM "
@@ -1955,7 +1951,7 @@ msgstr ""
 "BEGRÄNSAT TILL, UNDERFÖRSTÅDDA GARANTIER VID KÖP OCH LÄMPLIGHET FÖR ETT "
 "SÄRSKILT ÄNDAMÅL. HELA RISKEN FÖR KVALITET OCH ANVÄNDBARHET BÄRS AV DIG. OM "
 "PROGRAMMET SKULLE VISA SIG HA DEFEKTER SKALL DU BÄRA ALLA KOSTNADER FÖR "
-"FELETS AVHJÄLPANDE, REPARATIONER ELLER NÖDVÄNDIGSERVICE. \n"
+"FELETS AVHJÄLPANDE, REPARATIONER ELLER NÖDVÄNDIGSERVICE.\n"
 "\n"
 "  12. INTE I NÅGOT FALL, UTOM NÄR DET GÄLLER ENLIGT TILLÄMPLIG LAG ELLER NÄR "
 "DET ÖVERENSKOMMITS SKRIFTLIGEN, SKALL EN UPPHOVSRÄTTSINNEHAVARE ELLER ANNAN "
@@ -2022,7 +2018,7 @@ msgstr "Kommandon"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:7
 msgid "Date below time"
-msgstr "Datum under tid."
+msgstr "Datum under tid"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:8
 msgid "Digital Clock Preferences"
@@ -2046,7 +2042,7 @@ msgstr "Använd standardfärger för Avant"
 
 #: ../applets/maintained/digital-clock/digital-clock.desktop.in.in.h:1
 msgid "A clock and calendar in one."
-msgstr "En klocka och kalender i ett."
+msgstr "En klocka och kalender i ett"
 
 #: ../applets/maintained/digital-clock/digital-clock.desktop.in.in.h:2
 #: ../applets/maintained/digital-clock/digital-clock.vala:57
@@ -2075,11 +2071,11 @@ msgstr "Visar digitalklocka."
 #. vim:ft=vala:et:ts=2 sts=2 sw=2:ai:cindent
 #: ../applets/maintained/feeds/awn-applet-feeds.schema-ini.in.h:1
 msgid "Notify if any feeds have new items"
-msgstr "Notifiera om något flöde har nya objekt"
+msgstr "Notifiera om något flöde har nya objekt."
 
 #: ../applets/maintained/feeds/awn-applet-feeds.schema-ini.in.h:2
 msgid "Show each feed's website's icon in the dialog"
-msgstr "Visa varje flödes webbplatsikon i dialogrutan"
+msgstr "Visa varje flödes webbplatsikon i dialogrutan."
 
 #: ../applets/maintained/feeds/awn-applet-feeds.schema-ini.in.h:3
 msgid "The interval (in minutes) at which to update (3-60)"
@@ -2104,7 +2100,7 @@ msgstr "Google Wave"
 
 #: ../applets/maintained/feeds/classes.py:619
 msgid "Reddit Inbox"
-msgstr "Inkorg för reddit"
+msgstr "Redditinkorg"
 
 #: ../applets/maintained/feeds/classes.py:720
 #, python-format
@@ -2148,7 +2144,7 @@ msgstr "Läser in flöden..."
 #. No feeds label
 #: ../applets/maintained/feeds/feeds.py:160
 msgid "You don't have any feeds."
-msgstr "Du har inte några flöden."
+msgstr "Du har inga flöden."
 
 #: ../applets/maintained/feeds/feeds.py:472
 #, python-format
@@ -2161,12 +2157,12 @@ msgstr ""
 "%s\n"
 "  <a href='%s'>%s</a>\n"
 "  <a href='%s'>%s</a>\n"
-"(%s Fler)\n"
+"(%s fler)\n"
 
 #: ../applets/maintained/feeds/feeds.py:481
 #, python-format
 msgid "%s New Item%s - Feeds Applet"
-msgstr "%s Nytt objekt%s - Flöden"
+msgstr "%s Nytt objekt%s - Panelprogrammet Flöden"
 
 #. +Add Feed button
 #: ../applets/maintained/feeds/feeds.py:518
@@ -2175,7 +2171,7 @@ msgstr "_Lägg till flöde"
 
 #: ../applets/maintained/feeds/feeds.py:567
 msgid "Open this feed's website"
-msgstr "Öppna webbplats för detta flödes"
+msgstr "Öppna webbplats för detta flöde"
 
 #: ../applets/maintained/feeds/feeds.py:576
 #: ../applets/maintained/feeds/prefs.py:257
@@ -2185,7 +2181,7 @@ msgstr "Läser in..."
 #: ../applets/maintained/feeds/feeds.py:614
 #: ../applets/maintained/feeds/feeds.py:773
 msgid "Show this feed's items"
-msgstr "Visa objekt för detta flödes"
+msgstr "Visa objekt för detta flöde"
 
 #: ../applets/maintained/feeds/feeds.py:763
 msgid "Hide this feed's items"
@@ -2286,7 +2282,7 @@ msgstr "Sök"
 
 #: ../applets/maintained/feeds/prefs.py:358
 msgid "You must sign in to a Google service to search for feeds."
-msgstr "Du måste logga in på en Googe-tjänst för att söke efter flöden."
+msgstr "Du måste logga in på en Google-tjänst för att söka efter flöden."
 
 #: ../applets/maintained/feeds/prefs.py:367
 msgid "RSS/Atom"
@@ -2370,11 +2366,11 @@ msgstr " Ihållande docklet."
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:2
 msgid "The action to perform on left click"
-msgstr "Åtgärden att utföra vid vänsterklick"
+msgstr "Åtgärden att utföra vid vänsterklick."
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:3
 msgid "The action to perform on middle click"
-msgstr "Åtgärden att utföra vid mittenklick"
+msgstr "Åtgärden att utföra vid mittenklick."
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:4
 msgid "The file browser to use"
@@ -2414,7 +2410,7 @@ msgstr "Huruvida hemmappen ska visas eller inte."
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:13
 msgid "Whether or not to focus the location text box"
-msgstr "Huruvida textrutan för plats ska fokuseras eller inte."
+msgstr "Huruvida platstextrutan ska fokuseras eller inte."
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:14
 msgid "Whether or not to open the place when clicked"
@@ -2422,7 +2418,7 @@ msgstr "Huruvida platsen ska öppnas eller inte vid klickning."
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.desktop.in.h:1
 msgid "A launcher for your file manager"
-msgstr "En uppstartare för din filhanterare."
+msgstr "En uppstartare för din filhanterare"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:347
 msgid "Home Folder"
@@ -2475,7 +2471,7 @@ msgstr "Video"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:601
 msgid "CD/DVD Burner"
-msgstr "Cd/Dvd-brännare"
+msgstr "Cd/dvd-brännare"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:604
 msgid "Fonts"
@@ -2598,12 +2594,11 @@ msgstr[1] "%s: %u objekt"
 #: ../applets/maintained/garbage/applet.vala:194
 #, c-format
 msgid "Could not open the trash folder with your file manager: %s"
-msgstr ""
-"Det gick inte att öppna mappen för papperskorgen med din filhanterare: %s"
+msgstr "Det gick inte att öppna papperskorgen med din filhanterare: %s"
 
 #: ../applets/maintained/garbage/applet.vala:209
 msgid "_Empty Trash"
-msgstr "_Töm papperskorgen"
+msgstr "T_öm papperskorgen"
 
 #: ../applets/maintained/garbage/applet.vala:235
 #, c-format
@@ -2624,12 +2619,11 @@ msgstr ""
 msgid ""
 "Enable the confirmation dialog form when one wishes to empty the trash."
 msgstr ""
-"Aktivera dialogrutan för bekräftning när någon önskar att tömma "
-"papperskorgen."
+"Aktivera dialogrutan för bekräftelse när man vill tömma papperskorgen."
 
 #: ../applets/maintained/garbage/awn-applet-garbage.schema-ini.in.h:2
 msgid "Show the number of items in the trash on top of the icon."
-msgstr "Visa antal objekt i papperskorgen på ikonen."
+msgstr "Visa antal objekt i papperskorgen ovanpå ikonen."
 
 #: ../applets/maintained/garbage/garbage.desktop.in.in.h:1
 msgid "A lightweight, cross-desktop trash applet"
@@ -2646,7 +2640,7 @@ msgstr "Bekräfta vid tömning av papperskorg"
 
 #: ../applets/maintained/garbage/prefs.vala:52
 msgid "Show the item count on the icon"
-msgstr "Visa objektantalet på ikonen"
+msgstr "Visa objektantalet ovanpå ikonen"
 
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:1
@@ -2664,7 +2658,7 @@ msgstr "Högvärdesgräns (för vilken alarm går igång) för varje sensor."
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:4
 msgid "If enabled, show sensor value(s) as an overlay in the icon."
-msgstr "Om aktiverat, överlappas ikonen med sensorvärde(n)."
+msgstr "Om aktiverat, visas sensorvärde(n) som en överlappning i ikonen."
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:5
 msgid "In what row of dialog is the sensor shown."
@@ -2709,7 +2703,7 @@ msgstr "stor)."
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.desktop.in.h:1
 msgid "Applet to show the hw sensors readouts"
-msgstr "Panelprogram för att visa avläsning av hårdvarusensorer."
+msgstr "Panelprogram för att visa avläsning av hårdvarusensorer"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.desktop.in.h:2
 msgid "Hardware Sensors"
@@ -2717,19 +2711,19 @@ msgstr "Hårdvarusensorer"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:49
 msgid "Applet to show the hardware sensors readouts"
-msgstr "Panelprogram för att visa avläsning av hårdvarusensorer."
+msgstr "Panelprogram för att visa avläsning av hårdvarusensorer"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:83
 msgid "Warning from Hardware Sensors: No sensors found"
-msgstr "Varning från hårdvarusensorer: inga sensorer hittade"
+msgstr "Varning från Hårdvarusensorer: inga sensorer hittades"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:84
 msgid ""
 "Install one or more of ACPI, HDDTemp, LM-Sensors, nvidia-settings or nvclock "
 "and restart the applet."
 msgstr ""
-"Installera en mer utav ACPI, HDDTemp, LM-sensors, nvidia-settings eller "
-"nvclock och starta om panelprogrammet."
+"Installera en eller fler utav ACPI, HDDTemp, LM-sensors, nvidia-settings "
+"eller nvclock och starta om panelprogrammet."
 
 #. == Dialog == #
 #. Create main applet dialog showing selected sensors.
@@ -2755,7 +2749,7 @@ msgstr "I dialogruta"
 #. Add treeview-column to treeview
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:515
 msgid "Sensors displayed in icon"
-msgstr "Sensorer som visas på ikonen"
+msgstr "Sensorer som visas i ikonen"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:533
 msgid "properties"
@@ -2808,11 +2802,11 @@ msgstr "Lågvärde för sensor"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:15
 msgid "Show value in icon"
-msgstr "Visa värde på ikon"
+msgstr "Visa värde i ikon"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:16
 msgid "Temperature unit:"
-msgstr "Temperaturehet:"
+msgstr "Temperaturenhet:"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:17
 msgid "Theme:"
@@ -2855,7 +2849,7 @@ msgstr "Skrivbordsklienten för e-post att använda."
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:4
 msgid "The Email backend to use"
-msgstr "Bakände för e-post att använda."
+msgstr "Bakänden för e-post att använda."
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:5
 msgid "The theme to use for the icon"
@@ -2936,11 +2930,11 @@ msgstr "Inga olästa meddelanden"
 
 #: ../applets/maintained/mail/mail.py:379
 msgid "No new messages"
-msgstr "Inga nya meddelanden."
+msgstr "Inga nya meddelanden"
 
 #: ../applets/maintained/mail/mail.py:418
 msgid "Wrong username or password"
-msgstr "Fel användarnamn eller löstenord"
+msgstr "Fel användarnamn eller lösenord"
 
 #: ../applets/maintained/mail/mail.py:426
 #: ../applets/maintained/mail/mail.py:487
@@ -3047,7 +3041,7 @@ msgstr "_E-postklient:"
 
 #: ../applets/maintained/mail/mail.ui.h:7
 msgid "_Hide applet if no new messages"
-msgstr "_Dölj panelprogrammet om det inte finns några nya meddelanden."
+msgstr "_Dölj panelprogrammet om inga nya meddelanden finns"
 
 #: ../applets/maintained/mail/mail.ui.h:9
 msgid "minutes"
@@ -3103,15 +3097,15 @@ msgstr "Inställningar för Mediakontroll"
 
 #: ../applets/maintained/media-control/media-control.ui.h:5
 msgid "Show _album art when available"
-msgstr "Visa omslagsbild när det finns tillgängligt"
+msgstr "Visa _omslagsbild när det finns tillgängligt"
 
 #: ../applets/maintained/media-control/media-control.ui.h:6
 msgid "_Size of the album art:"
-msgstr "Storlek på omslagsbilden:"
+msgstr "_Storlek på omslagsbilden:"
 
 #: ../applets/maintained/media-control/media-control.ui.h:7
 msgid "_Tooltip format:"
-msgstr "_Format för verktygstips"
+msgstr "Format för _verktygstips:"
 
 #: ../applets/maintained/media-control/media-control.ui.h:8
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:8
@@ -3173,7 +3167,7 @@ msgstr "Höjd på videofönstret."
 
 #: ../applets/maintained/media-player/awn-applet-media-player.schema-ini.in.h:3
 msgid "List of recently played URLs."
-msgstr "Lista med nyligen uppspelade mediafiler."
+msgstr "Lista över nyligen uppspelade mediafiler."
 
 #: ../applets/maintained/media-player/awn-applet-media-player.schema-ini.in.h:4
 msgid "Video sink to use."
@@ -3221,12 +3215,12 @@ msgstr "_Bredd:"
 
 #: ../applets/maintained/mount/awn-applet-mount.schema-ini.in.h:1
 msgid "Command to execute after mounting a mountpoint."
-msgstr "Kommando att köra efter att ha monterat en monsteringspunkt."
+msgstr "Kommando att köra efter montering av en monteringspunkt."
 
 #: ../applets/maintained/mount/awn-applet-mount.schema-ini.in.h:2
 msgid "List of mountpoints that should remain hidden in the UI."
 msgstr ""
-"Lista med monteringspunkter som ska behållas dolda i användargränssnittet."
+"Lista över monteringspunkter som ska behållas dolda i användargränssnittet."
 
 #: ../applets/maintained/mount/mount.desktop.in.h:1
 msgid "An applet to (un)mount devices"
@@ -3243,7 +3237,7 @@ msgstr "<i><b>Notera:</b> använd %D som monteringspunkt</i>"
 
 #: ../applets/maintained/mount/mount.ui.h:3
 msgid "List of hidden mountpoints, separated by a space"
-msgstr "Lista med dolda monteringspunkter, separerade med ett mellanslag."
+msgstr "Lista över dolda monteringspunkter, separerade med ett mellanslag."
 
 #: ../applets/maintained/mount/mount.ui.h:4
 msgid "_Execute command after successful mount:"
@@ -3262,8 +3256,8 @@ msgid ""
 "Maximum number of rows (or columns depending on the orientation of the "
 "panel) of the tray icons in the applet."
 msgstr ""
-"Maximalt antal rader (eller kolumner, beroende på oritenteringen av panelen) "
-"för ikoner i notifieringsytan på panelprogrammet."
+"Maximalt antal rader (eller kolumner, beroende på orienteringen av panelen) "
+"av notifieringsikoner i panelprogrammet."
 
 #: ../applets/maintained/notification-area/awn-applet-notification-area.schema-ini.in.h:3
 msgid "Size of the icons (in percent of applet size)."
@@ -3275,14 +3269,14 @@ msgstr "Bakgrundsfärgen för notifieringsytan."
 
 #: ../applets/maintained/notification-area/awn-applet-notification-area.schema-ini.in.h:5
 msgid "The border color of the notification-area."
-msgstr "Ramfärgen på notifieringsytan."
+msgstr "Ramfärgen för notifieringsytan."
 
 #: ../applets/maintained/notification-area/egg-tray-child.c:170
 #, c-format
 msgid "tray icon has requested a size of (%i x %i), resizing to (%i x %i)"
 msgstr ""
 "Notifieringsikon har begärt storleken (%i x %i), storleksändras till (%i x "
-"%i)"
+"%i)."
 
 #: ../applets/maintained/notification-area/eggtraymanager.c:148
 msgid "Orientation"
@@ -3300,7 +3294,7 @@ msgstr "%"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:3
 msgid "<b>Background Color</b>"
-msgstr ">b>Bakgrundsfärg</b>"
+msgstr "<b>Bakgrundsfärg</b>"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:4
 msgid "<b>Border Color</b>"
@@ -3340,7 +3334,7 @@ msgstr "Notifieringsyta"
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:1
 msgid "Background colour in the form (Hex) rrggbbaa"
-msgstr "Bakgrundsfärg för ytan (hex) rrggbbaa."
+msgstr "Bakgrundsfärg i ytan (hex) rrggbbaa."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:2
 msgid "Border Width. A value of 0 indicates that is should not be drawn."
@@ -3349,7 +3343,7 @@ msgstr "Rambredd. Värdet 0 indikerar att ingen ram ska visas."
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:3
 msgid ""
 "Border colour in the form (Hex) rrggbbaa.  Also use for the timer widget"
-msgstr "Ramfärg innuti ytan (hex) rrggbbaa. Används även för timerwidgeten."
+msgstr "Ramfärg i ytan (hex) rrggbbaa. Används även för timerwidgeten."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:4
 msgid ""
@@ -3363,16 +3357,16 @@ msgid ""
 "Gradient Factor applied to the notification window. Range of 0 to 1. The "
 "lower the number the more noticeable the effect."
 msgstr ""
-"Gradientfaktor att tillämpa för notifieringsfönstret. Omfång från 0 till 1. "
-"Ju lägre talet är, destå mer märkbar blir effekten."
+"Gradientfaktor att tillämpa till notifieringsfönstret. Omfång är 0 till 1. "
+"Ju lägre talet är, desto mer märkbar blir effekten."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:6
 msgid ""
 "If the value is >0.0 then this opacity value will be applied to window "
 "instead of hiding."
 msgstr ""
-"Om värdet är större än 0.0, då tillämpas detta opacitetvärde för fönstret "
-"isället för att dölja det."
+"Om värdet är större än 0.0, tillämpas detta opacitetsvärde för fönstret "
+"istället för att dölja det."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:7
 msgid ""
@@ -3407,7 +3401,7 @@ msgid ""
 "Text colour in the form (Hex) rrggbbaa. Currently the alpha component is "
 "ignored"
 msgstr ""
-"Textfärgen innuti ytan (hex) rrggbbaa. För tillfället är komponenten för "
+"Textfärgen i ytan (hex) rrggbbaa. För tillfället är komponenten för "
 "alfakanal ignorerad."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:11
@@ -3436,7 +3430,7 @@ msgstr "Använd fet text."
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:14
 msgid "Whether to attempt to kill any running notification-daemons."
 msgstr ""
-"Huruvida några notiferingsdemoner som redan körs ska dödas eller inte."
+"Huruvida notifieringsdemoner som redan körs ska försökas dödas eller inte."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:15
 msgid "Whether to honour client notification window positioning requests."
@@ -3471,43 +3465,43 @@ msgstr "Namnet på ikontemat för panelprogrammets ikon."
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:27
 msgid "The file manager that shows the contents of the places.);"
-msgstr "Filhanteraren som visar innehålllet av platserna."
+msgstr "Filhanteraren som visar innehållet av platserna."
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:25
 msgid ""
 "The colour (RGBA) of the text when a place is selected or the mouse hovers "
 "over it.);"
 msgstr ""
-"Färgen (RGBA) på texten när en plats är markerad eller när muspekaren "
+"Färgen (RGBA) för texten när en plats är markerad eller när muspekaren "
 "fokuserar på den."
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:23
 msgid "The colour (RGBA) of the text in the menu.);"
-msgstr "Färgen (RGBA) på texten i menyn."
+msgstr "Färgen (RGBA) för texten i menyn."
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:21
 msgid ""
 "The colour (RGBA) of the menu's border, if the border width is greater than "
 "zero.);"
-msgstr "Färgen (RGBA) på menyns ram, om rambredden är större än noll."
+msgstr "Färgen (RGBA) för menyns ram, om rambredden är större än noll."
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:19
 msgid ""
 "The color (RGBA) of the text when a place is selected or the mouse hovers "
 "over it.);"
 msgstr ""
-"Färgen (RGBA) på texten när en plats är markerad eller när muspekaren "
+"Färgen (RGBA) för texten när en plats är markerad eller när muspekaren "
 "fokuserar på den."
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:17
 msgid "The color (RGBA) of the text in the menu.);"
-msgstr "Färgen (RGBA) på texten i menyn."
+msgstr "Färgen (RGBA) för texten i menyn."
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:15
 msgid ""
 "The color (RGBA) of the menu's border, if the border width is greater than "
 "zero.);"
-msgstr "Färgen (RGBA) på menyns ram, om rambredden är större än noll."
+msgstr "Färgen (RGBA) för menyns ram, om rambredden är större än noll."
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:13
 msgid "The background colour (RGBA) of the menu.);"
@@ -3557,13 +3551,13 @@ msgid ""
 "value is the background color's alpha value.);"
 msgstr ""
 "Skapar en alfakanalsgradient i bakgrunden för menyobjekt. Högst upp och "
-"längst ner i menyn, är alfakanalsvärdet bakgrundsfärgens alfakanalsvärde "
+"längst ner i menyn är alfakanalsvärdet bakgrundsfärgens alfakanalsvärde "
 "multiplicerat med detta värde. Vid 20 procent från toppen av menyn, är "
 "alfakanalsvärdet bakgrundsfärgens alfakanalsvärde."
 
 #: ../applets/maintained/places/places.desktop.in.in.h:1
 msgid "Launch your folder bookmarks"
-msgstr "Starta upp dina mappbokmärken."
+msgstr "Öppna dina mappbokmärken"
 
 #: ../applets/maintained/python-test/python-test.desktop.in.h:1
 msgid "A simple applet to test python support"
@@ -3595,7 +3589,7 @@ msgstr "Stäng av/logga ut"
 
 #: ../applets/maintained/quit/quit-lock-screen.desktop.in.h:2
 msgid "Protect your computer from unauthorized use"
-msgstr "Skydda din dator ifrån obehörigt användande."
+msgstr "Skydda din dator ifrån obehörigt användande"
 
 #: ../applets/maintained/quit/quit-log-out.desktop.in.h:1
 msgid "Log Out..."
@@ -3615,7 +3609,7 @@ msgstr "Stäng av systemet"
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:1
 msgid " The color (RGBA) applet border."
-msgstr " Färgen (RGBA) på panelprogrammets ram."
+msgstr " Färgen (RGBA) för panelprogrammets ram."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:2
 msgid " The color of the desktop (RGBA) if grab_wallpaper is FALSE."
@@ -3628,8 +3622,8 @@ msgstr " gdk."
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:4
 msgid "0... centre  1 NW    2 NE   3 SE  4 SW\t"
 msgstr ""
-"0: Centrerad, 1: uppe till vänster, 2: uppe till höger, 3: nere till höger, "
-"4: nere till vänster.\t"
+"0. Centrerad, 1. Uppe till vänster, 2. Uppe till höger, 3. Nere till höger, "
+"4. Nere till vänster.\t"
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:5
 msgid "1"
@@ -3660,8 +3654,8 @@ msgid ""
 "Mousewheel  0. off. 1 up left, down right. 2 Opposite direction of 1. 3 Same "
 "as 1 no wrap. 4 opposite direction of 3."
 msgstr ""
-"Mushjul. 0: Av, 1: upp vänster, ner höger, 2: motsatt riktning för 1, 3: "
-"samma som 1, utan insvepning, 4: motsatt riktning för 3."
+"Mushjul: 0. Av, 1. Upp vänster, ner höger, 2. Motsatt riktning för 1, 3. "
+"Samma som 1, utan insvepning, 4. Motsatt riktning för 3."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:12
 msgid ""
@@ -3679,9 +3673,9 @@ msgid ""
 "updates.  Multiples of 1000 are more power and CPU efficient."
 msgstr ""
 "Kölagd renderingstimer. Antal millisekunder mellan kölagda "
-"renderingsuppdateringar. Ju mindre antalet är, destå mindre eftersläpningar "
-"kommer att vara synbara på Glänsande växlarens uppdateringar. Multiplar av "
-"1000 är mer ström- och processorsnåla."
+"renderingsuppdateringar. Ju mindre antalet är, desto mindre eftersläpningar "
+"kommer att vara synbara på \"Glänsande växlarens\" uppdateringar. Multiplar "
+"av 1000 är mer strömsnåla och processoreffektiva."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:14
 msgid "Scales the applet size relative to the maximum icon size"
@@ -3691,7 +3685,7 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:15
 msgid "The colour (RGBA) of the applet border."
-msgstr "Färgen (RGBA) på panelprogrammets ram."
+msgstr "Färgen (RGBA) för panelprogrammets ram."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:16
 msgid "The colour of the desktop (RGBA) if grab_wallpaper is FALSE."
@@ -3710,16 +3704,16 @@ msgid ""
 "When to  overly the app icon:  0...no\t1...on inactive workspace onlt\t"
 "2...all but active win\t3..all."
 msgstr ""
-"När programikonen ska överlappas. 0: Aldrig, 1: på inaktiv arbetsyta, 2: på "
-"allt förutom aktivt fönster, 3: överallt."
+"När programikonen ska överlappas: 0. Aldrig, 1. På inaktiv arbetsyta, 2. På "
+"allt förutom aktivt fönster, 3. Överallt."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:20
 msgid ""
 "When to scale icons:  0...none  1...on all active ws  2...on_active_win "
 "3...all"
 msgstr ""
-"När ikoner ska skalas. 0: Aldrig, 1: på alla aktiva arbetsytor, 2: på aktivt "
-"fönster, 3: alla fönster."
+"När ikoner ska skalas: 0. Aldrig, 1. På alla aktiva arbetsytor, 2. På aktivt "
+"fönster, 3. På alla fönster."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:21
 msgid "Whether to grab wallpaper."
@@ -3730,8 +3724,8 @@ msgid ""
 "Win grabs:  0...none\t1...all (grab method may override) 2..active ws (and "
 "sticky)  3...active win"
 msgstr ""
-"Fönsterfångster. 0: Inga 1: alla (fångstmetod kanske åsidosätts) 2: aktiv "
-"arbetsyta (och klistrad) 3: aktivt fönster."
+"Fönsterfångster: 0. Inga, 1. Alla (fångstmetod kanske åsidosätts), 2. Aktiv "
+"arbetsyta (och klistrad), 3. Aktivt fönster."
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:3
 msgid "<b>Background transparency</b>"
@@ -3747,7 +3741,7 @@ msgstr "<b>Genomskinlighet för ikon</b>"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:7
 msgid "<b>Timers</b>"
-msgstr "<b>Timerar</b>"
+msgstr "<b>Tidsinställningar</b>"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:8
 msgid "<b>Viewport size</b>"
@@ -3763,7 +3757,7 @@ msgstr "Aktivt fönster:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:11
 msgid "Active workspace"
-msgstr "Aktiv arbetsyta:"
+msgstr "Aktiv arbetsyta"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:12
 msgid "Active workspace:"
@@ -3779,7 +3773,7 @@ msgstr "Alla fönster"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:15
 msgid "B_order color:"
-msgstr "Alla fönster"
+msgstr "_Ramfärg:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:17
 msgid "Border _size:"
@@ -3815,7 +3809,7 @@ msgstr "Inaktivt fönster:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:25
 msgid "Inactive windows"
-msgstr "Inaktiva fönster:"
+msgstr "Inaktiva fönster"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:26
 msgid "Inactive workspace:"
@@ -3823,7 +3817,7 @@ msgstr "Inaktiv arbetsyta:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:27
 msgid "Inactive workspaces"
-msgstr "Inaktiva arbetsytor:"
+msgstr "Inaktiva arbetsytor"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:28
 msgid "Look"
@@ -3843,7 +3837,7 @@ msgstr "Aldrig"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:33
 msgid "Only active window"
-msgstr "Bara aktiva fönster"
+msgstr "Endast aktiva fönster"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:34
 msgid "Render update:"
@@ -3871,7 +3865,7 @@ msgstr "Uppe till höger"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:40
 msgid "Use _desktop background"
-msgstr "Använd _skrivbordsbakgrund"
+msgstr "Använd s_krivbordsbakgrund"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:41
 msgid "_Applet size:"
@@ -3879,7 +3873,7 @@ msgstr "Stolek på _panelprogram:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:42
 msgid "_Rows:"
-msgstr "_Rader"
+msgstr "_Rader:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:43
 msgid "_Thumbnailing:"
@@ -3914,7 +3908,7 @@ msgstr "Ramfärgen för ett aktivt fönster."
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:3
 msgid "The border color of the dialog"
-msgstr "Ramfärgen på dialogrutan."
+msgstr "Ramfärgen för dialogrutan."
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:4
 msgid "The bottom part of the shiny gradient"
@@ -3938,7 +3932,7 @@ msgstr "Höjden på en arbetsytewidget."
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:9
 msgid "The hovered border color of a workspace widget"
-msgstr "Den fokuserade ramfärgen på en arbetsytewidget."
+msgstr "Den fokuserade ramfärgen för en arbetsytewidget."
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:10
 msgid "The icon's border color"
@@ -3954,7 +3948,7 @@ msgstr "Huvudfärgen för siffran som visas."
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:13
 msgid "The normal border color of a workspace widget"
-msgstr "Den normala ramfärgen på en arbetytewidget."
+msgstr "Den normala ramfärgen för en arbetsytewidget."
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:14
 msgid "The top part of the shiny gradient"
@@ -3978,8 +3972,7 @@ msgstr "Huruvida textöverlappningen som är standard ska användas eller inte."
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:19
 msgid "Which background image(s) source to use: gnome, compiz, file"
-msgstr ""
-"Vilken källa för bakgrundsbild(er) att använda: gnome, compiz eller fil."
+msgstr "Vilken källa för bakgrundsbild(er) att använda: gnome, compiz, fil."
 
 #: ../applets/maintained/slickswitcher/prefs.py:69
 msgid "SlickSwitcher Preferences"
@@ -3994,7 +3987,7 @@ msgstr "Ramfärger"
 #. Icon Border
 #: ../applets/maintained/slickswitcher/prefs.py:100
 msgid "Icon border:"
-msgstr "Ikonkontur:"
+msgstr "Ikonram:"
 
 #. Normal Border
 #: ../applets/maintained/slickswitcher/prefs.py:103
@@ -4155,7 +4148,7 @@ msgstr ""
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:2
 msgid "If the updates are time based then how frequently to update in ms."
 msgstr ""
-"Om uppdateringarna är tidsbaserde, hur ofta för att uppdatera i "
+"Om uppdateringarna är tidsbaserade, hur ofta för att uppdatera i "
 "millisekunder."
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:3
@@ -4164,7 +4157,7 @@ msgstr "Bara en dummy-nyckel, den här kommer att tas bort senare."
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:4
 msgid "List of icons"
-msgstr "Lisa med ikoner"
+msgstr "Lisa över ikoner."
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:5
 msgid "Render background."
@@ -4181,7 +4174,7 @@ msgstr "Systemövervakare"
 
 #: ../applets/maintained/thinkhdaps/thinkhdaps.desktop.in.h:1
 msgid "Applet that shows the shock protection status of your disks"
-msgstr "Panelprogram som visar stötskyddsstatus för dina hårddiskar."
+msgstr "Panelprogram som visar stötskyddsstatus för dina hårddiskar"
 
 #: ../applets/maintained/thinkhdaps/thinkhdaps.desktop.in.h:2
 msgid "ThinkHDAPS"
@@ -4189,47 +4182,47 @@ msgstr "ThinkHDAPS"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:1
 msgid "Background color for high priority items"
-msgstr "Bakgrundsfärg för objekt med hög prioritering."
+msgstr "Bakgrundsfärg för objekt med hög prioritet."
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:2
 msgid "Background color for low priority items"
-msgstr "Bakgrundsfärg för objekt med låg prioritering."
+msgstr "Bakgrundsfärg för objekt med låg prioritet."
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:3
 msgid "Background color for medium priority items"
-msgstr "Bakgrundsfärg för objekt med mellanprioritet."
+msgstr "Bakgrundsfärg för objekt med medelhög prioritet."
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:4
 msgid "List of colors to use for the custom color"
-msgstr "Lista med färger att använda som den anpassade färgen."
+msgstr "Lista över färger att använda som den anpassade färgen."
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:5
 msgid "List of items' details"
-msgstr "Lista med objektdetaljer."
+msgstr "Lista över objektdetaljer."
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:6
 msgid "List of items' names"
-msgstr "Lista med objektnamn."
+msgstr "Lista över objektnamn."
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:7
 msgid "List of items' priorities (0-3)"
-msgstr "Lista med objektprioriteringar (0-3)."
+msgstr "Lista över objektprioriteringar (0-3)."
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:8
 msgid "List of items' progresses in percent (0-100)"
-msgstr "Lista över objekts förlopp i procent (0-100)."
+msgstr "Lista över objektförlopp i procent (0-100)."
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:9
 msgid "Text color for high priority items"
-msgstr "Textfärg för objekt med hög prioritering."
+msgstr "Textfärg för objekt med hög prioritet."
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:10
 msgid "Text color for low priority items"
-msgstr "Textfärg för objekt med låg prioritering."
+msgstr "Textfärg för objekt med låg prioritet."
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:11
 msgid "Text color for medium priority items"
-msgstr "Textfärg för objekt med mellanprioritet."
+msgstr "Textfärg för objekt med medelhög prioritet."
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:12
 msgid "The color to use for the icon"
@@ -4237,11 +4230,11 @@ msgstr "Färgen att använda för ikonen."
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:13
 msgid "The custom width for the item entries"
-msgstr "Den anpassade bredden för objektposter."
+msgstr "Den anpassade bredden för objektfälten."
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:14
 msgid "The icon's opacity (10-100)"
-msgstr "Ikonens opacitet (10-100)"
+msgstr "Ikonens opacitet (10-100)."
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:15
 msgid "The list of categories that are expanded"
@@ -4249,11 +4242,11 @@ msgstr "Listan över kategorier som är expanderade."
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:16
 msgid "The list of categories' names"
-msgstr "Listan med kategoriers namn."
+msgstr "Listan över kategorinamn."
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:17
 msgid "The list of items' categories"
-msgstr "Listan med objekts kategorier."
+msgstr "Listan över objektkategorier."
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:18
 msgid "The title to display"
@@ -4261,11 +4254,11 @@ msgstr "Titeln att visa."
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:19
 msgid "What type of icon to display (progress, progress-items, items)"
-msgstr "Vilken sorts ikon att visa (förlopp, förlopp-objekt, objekt)."
+msgstr "Vilken sorts ikon att visa: förlopp, förlopp-objekt, objekt."
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:20
 msgid "Whether or not to confirm the deletion of categories"
-msgstr "Huruvida bortagning av kategorier ska bekräftas eller inte."
+msgstr "Huruvida borttagning av kategorier ska bekräftas eller inte."
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:21
 msgid "Whether or not to confirm the deletion of items"
@@ -4371,7 +4364,7 @@ msgstr "Bredd"
 #. CheckButton: Use Custom Width
 #: ../applets/maintained/to-do/prefs.py:118
 msgid "_Use Custom Width"
-msgstr "_Använd anpassad bredd"
+msgstr "A_nvänd anpassad bredd"
 
 #. Label: Width (pixels)
 #: ../applets/maintained/to-do/prefs.py:125
@@ -4458,12 +4451,12 @@ msgstr "Visa/redigera detaljer"
 #. First category: No category! (Uncategorized)
 #: ../applets/maintained/to-do/to-do.py:525
 msgid "_Uncategorized"
-msgstr "_Okategoriserad"
+msgstr "O_kategoriserad"
 
 #. First RadioButton - ( )Category
 #: ../applets/maintained/to-do/to-do.py:549
 msgid "_Category"
-msgstr "_Kategori"
+msgstr "K_ategori"
 
 #. Second RadioButton - (-)To-Do item
 #. TODO: better text than "To-Do item"?
@@ -4487,7 +4480,7 @@ msgstr "_Låg"
 
 #: ../applets/maintained/to-do/to-do.py:648
 msgid "_Medium"
-msgstr "_Mellan"
+msgstr "_Medelhög"
 
 #: ../applets/maintained/to-do/to-do.py:650
 msgid "_High"
@@ -4505,7 +4498,7 @@ msgid ""
 "Are you sure you want to remove the category \"%s?\"\n"
 "All of its items will be removed."
 msgstr ""
-"Är du säker på att du vill ta bort kategorin \"%s?\"\n"
+"Är du säker på att du vill ta bort kategorin \"%s\"?\n"
 "Alla dess objekt kommer att tas bort."
 
 #. Make CheckButton
@@ -4623,7 +4616,7 @@ msgstr "Fahrenheit)."
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:4
 msgid "If enabled, show the temperature as an overlay in the icon."
-msgstr "Om aktiverat, överlappas ikonen med temperaturen."
+msgstr "Om aktiverat, visas temperaturen som en överlappning i ikonen."
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:5
 msgid "Maximum width of map in pixels."
@@ -4706,11 +4699,11 @@ msgid ""
 "forecast will be curved"
 msgstr ""
 "Om aktiverat, kommer dialogrutan att vara genomskinlig och de fem "
-"prognosdagarna kommer att vara kurvformad."
+"prognosdagarna kommer att vara kurvformade."
 
 #: ../applets/maintained/weather/weather.ui.h:8
 msgid "If enabled, the temperature will be displayed in the icon"
-msgstr "Om aktiverat, kommer temperaturen att visas på ikonen."
+msgstr "Om aktiverat, kommer temperaturen att visas i ikonen."
 
 #: ../applets/maintained/weather/weather.ui.h:9
 msgid "Large"
@@ -4726,7 +4719,7 @@ msgstr "Mellan"
 
 #: ../applets/maintained/weather/weather.ui.h:12
 msgid "Show temperature in _icon"
-msgstr "Visa temperatur på ikon"
+msgstr "Visa temperatur i _ikon"
 
 #: ../applets/maintained/weather/weather.ui.h:13
 msgid "Small"
@@ -4738,11 +4731,11 @@ msgstr "Temperatur_enhet:"
 
 #: ../applets/maintained/weather/weather.ui.h:15
 msgid "Temperature font _size:"
-msgstr "Typsnittsstorlek för temperatur:"
+msgstr "Typsnitts_storlek för temperatur:"
 
 #: ../applets/maintained/weather/weather.ui.h:16
 msgid "Use transparent/curved _forecast dialog"
-msgstr "Använd genomskinlig/kurvformad dialogruta för _prognos"
+msgstr "Använd genomskinlig/kurvformad dialogruta för p_rognos"
 
 #: ../applets/maintained/weather/weather.ui.h:17
 msgid "_Location Name:"
@@ -4768,7 +4761,7 @@ msgstr "Webb"
 msgid ""
 "Flag that enables usage of the \"Open Location\" dialog in the applet."
 msgstr ""
-"Flagga som aktiverar användning av \"Öppna adress\"-dialogruta i "
+"Flagga som aktiverar användning av \"Öppna adress\"-dialogrutan i "
 "panelprogrammet."
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:2
@@ -4819,7 +4812,7 @@ msgstr "Ytterligare en meny"
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in.h:1
 msgid "Awn System Monitor"
-msgstr "Systemövervakare för Avant"
+msgstr "Awn-systemövervakare"
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:1
 msgid "Graph update frequency, in milliseconds."
@@ -4831,25 +4824,25 @@ msgstr "Aktivera för att visa gradientöverlappningen i diagrammet."
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:3
 msgid "The color used in the applet border."
-msgstr "Färgen som används på panelprogrammets ram."
+msgstr "Färgen som används i panelprogrammets ram."
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:4
 msgid "The color used in the graph lines."
-msgstr "Färgen som används för diagramlinjerna."
+msgstr "Färgen som används i diagramlinjerna."
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:5
 msgid "The color used in the graph lines. Valid values are 0.0 through 1.0."
 msgstr ""
-"Färgen som används för diagramlinjerna. Giltiga värden är 0.0 genom 1.0."
+"Färgen som används i diagramlinjerna. Giltiga värden är 0.0 genom 1.0."
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:6
 msgid "The pixel width of the applet border."
-msgstr "Pixelbredden på panelprogrammets ram."
+msgstr "Bildpunktsbredden på panelprogrammets ram."
 
 #: ../applets/unmaintained/main-menu/applet.c:394
 #: ../applets/unmaintained/main-menu/main-menu.desktop.in.in.h:2
 msgid "Awn Main Menu"
-msgstr "Huvudmeny för Avant"
+msgstr "Awn-huvudmeny"
 
 #: ../applets/unmaintained/main-menu/applet.c:395
 msgid "Displays a list of all your applications"
@@ -4884,8 +4877,8 @@ msgid ""
 "Backend type for this applet (0 - file, 1 - folder, 2 - plugger, 3 - "
 "trasher, 4 - recent files)."
 msgstr ""
-"Bakändstyp för detta panelprogram (0: fil, 1: mapp, 2: plugger 3: trasher, "
-"4: senaste filer)."
+"Bakändstyp för detta panelprogram: 0. Fil, 1. Mapp, 2. Plugger 3. Trasher, "
+"4. Senaste filer."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:3
 msgid "Close dialog on focusout."
@@ -4893,7 +4886,7 @@ msgstr "Stäng dialogruta vid förlorad fokus."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:4
 msgid "Display number of items in the stack."
-msgstr "Visa antal objekt inuti traven."
+msgstr "Visa antal objekt i traven."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:5
 msgid "File operation to use."
@@ -4917,7 +4910,7 @@ msgstr "Ikon att använda för tom trave."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:10
 msgid "Icon to use for full stack."
-msgstr "Ikon att använda vid full trave."
+msgstr "Ikon att använda för full trave."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:11
 msgid "Label background color."
@@ -4973,7 +4966,7 @@ msgstr "Storlek på ikoner inuti trave."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:24
 msgid "Sort direction of the items."
-msgstr "Sortera efter riktning av objekten."
+msgstr "Sortera riktning av objekten."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:25
 msgid "Sort folders before files."
@@ -4985,7 +4978,7 @@ msgstr "Beskrivning av verktygstips för trave."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:27
 msgid "Stacks backend file/directory."
-msgstr "Bakände för travar, fil eller katalog.stacks"
+msgstr "Bakände för travar, fil eller katalog."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:28
 msgid "Tooltip background color 1."
@@ -5005,7 +4998,7 @@ msgstr "Typsnittsnamn för verktygstips."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:32
 msgid "Tooltip text color."
-msgstr "Typsnittsfärg för vertygstips."
+msgstr "Typsnittsfärg för verktygstips."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:33
 msgid "Type of UI used for the stack."
@@ -5013,7 +5006,7 @@ msgstr "Typ av gränssnitt som används för traven."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:34
 msgid "Use Awn's tooltip font."
-msgstr "Använd Avants typsnitt för verktygsfält."
+msgstr "Använd Avants typsnitt för verktygstips."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:35
 msgid "Whether hoverbox contains label."
@@ -5030,7 +5023,7 @@ msgstr "Huruvida ikoner för filer inuti travar ska kombineras med dess ikon."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:38
 msgid "Whether tooltips are enabled."
-msgstr "Huruvida verktygstips är aktiverat."
+msgstr "Huruvida verktygstips är aktiverade."
 
 #~ msgid ""
 #~ "Default popup location on the workspace for stack notifications. Allowed "

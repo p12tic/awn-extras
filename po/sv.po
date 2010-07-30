@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-11 18:07+0300\n"
-"PO-Revision-Date: 2010-07-27 19:21+0000\n"
+"PO-Revision-Date: 2010-07-29 19:48+0000\n"
 "Last-Translator: David Bengtsson <Unknown>\n"
 "Language-Team: Launchpad Swedish Translators <lp-l10n-"
 "sv@lists.launchpad.net>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-07-28 03:44+0000\n"
+"X-Launchpad-Export-Date: 2010-07-30 03:34+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Language: Swedish\n"
 
@@ -2162,7 +2162,7 @@ msgstr ""
 #: ../applets/maintained/feeds/feeds.py:481
 #, python-format
 msgid "%s New Item%s - Feeds Applet"
-msgstr "%s Nytt objekt%s - Panelprogrammet Flöden"
+msgstr "%s nytt objekt%s - panelprogram för flöden"
 
 #. +Add Feed button
 #: ../applets/maintained/feeds/feeds.py:518
@@ -2865,7 +2865,7 @@ msgstr "Används för inloggning; rör inte."
 
 #: ../applets/maintained/mail/mail.desktop.in.h:1
 msgid "Check Your Email from AWN"
-msgstr "Kontrollera din e-post genom Avant"
+msgstr "Kontrollera din e-post från Avant"
 
 #: ../applets/maintained/mail/mail.desktop.in.h:2
 #: ../applets/maintained/mail/mail.py:134
@@ -2898,11 +2898,11 @@ msgstr "Loggar in som %s"
 
 #: ../applets/maintained/mail/mail.py:156
 msgid "Network error - Mail Applet"
-msgstr "Nätverksfel - Panelprogrammet E-post"
+msgstr "Nätverksfel - panelprogram för e-post"
 
 #: ../applets/maintained/mail/mail.py:165
 msgid "New Mail - Mail Applet"
-msgstr "Ny e-post - Panelprogrammet E-post"
+msgstr "Ny e-post - panelprogram för e-post"
 
 #: ../applets/maintained/mail/mail.py:284
 msgid "Mail"

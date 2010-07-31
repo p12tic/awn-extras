@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-11 18:07+0300\n"
-"PO-Revision-Date: 2010-07-29 19:48+0000\n"
+"PO-Revision-Date: 2010-07-30 15:52+0000\n"
 "Last-Translator: David Bengtsson <Unknown>\n"
 "Language-Team: Launchpad Swedish Translators <lp-l10n-"
 "sv@lists.launchpad.net>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-07-30 03:34+0000\n"
+"X-Launchpad-Export-Date: 2010-07-31 03:34+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Language: Swedish\n"
 
@@ -2618,8 +2618,7 @@ msgstr ""
 #: ../applets/maintained/garbage/awn-applet-garbage.schema-ini.in.h:1
 msgid ""
 "Enable the confirmation dialog form when one wishes to empty the trash."
-msgstr ""
-"Aktivera dialogrutan för bekräftelse när man vill tömma papperskorgen."
+msgstr "Aktivera dialogrutan för bekräftelse vid tömning av papperskorgen."
 
 #: ../applets/maintained/garbage/awn-applet-garbage.schema-ini.in.h:2
 msgid "Show the number of items in the trash on top of the icon."
@@ -2627,7 +2626,7 @@ msgstr "Visa antal objekt i papperskorgen ovanpå ikonen."
 
 #: ../applets/maintained/garbage/garbage.desktop.in.in.h:1
 msgid "A lightweight, cross-desktop trash applet"
-msgstr "En lättvikts- och skrivbordsoberoende papperskorg"
+msgstr "En lättviktig och skrivbordsoberoende papperskorg"
 
 #: ../applets/maintained/garbage/prefs.vala:32
 #, c-format

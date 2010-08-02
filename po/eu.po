@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-11 18:07+0300\n"
-"PO-Revision-Date: 2010-07-31 22:06+0000\n"
+"PO-Revision-Date: 2010-08-01 08:41+0000\n"
 "Last-Translator: Asier Sarasua Garmendia <Unknown>\n"
 "Language-Team: Basque <eu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-08-01 03:44+0000\n"
+"X-Launchpad-Export-Date: 2010-08-02 03:45+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -929,21 +929,22 @@ msgstr "Ez dago hitzordurik"
 
 #: ../applets/maintained/comics/awn-applet-comics.schema-ini.in.h:1
 msgid "The user agent to send when retrieving comics."
-msgstr "The user agent to send when retrieving comics."
+msgstr "Bidaliko den erabiltzaile-agentea komikiak eskuratzean."
 
 #: ../applets/maintained/comics/comics_add.py:57
 #, python-format
 msgid "Failed to download %s. Press \"next\" to try again."
-msgstr "Failed to download %s. Press \"next\" to try again."
+msgstr "%s ezin izan da deskargatu. Sakatu \"Hurrengoa\" berriro saiatzeko."
 
 #: ../applets/maintained/comics/comics_add.py:63
 msgid "The URL is not a valid comic feed. Press \"next\" to try again"
-msgstr "The URL is not a valid comic feed. Press \"next\" to try again"
+msgstr ""
+"URLa ez da komikien jario baliagarria. Sakatu \"Hurrengoa\" berriro saiatzeko"
 
 #: ../applets/maintained/comics/comics_add.py:140
 #, python-format
 msgid "Connecting to <i>%s</i>..."
-msgstr "Connecting to <i>%s</i>..."
+msgstr "<i>%s</i>-(e)ra konektatzen..."
 
 #: ../applets/maintained/comics/comics_add.py:174
 #, python-format
@@ -952,9 +953,9 @@ msgid ""
 "\n"
 "Press \"apply\" to add <i>%s</i>."
 msgstr ""
-"This guide has finished.\n"
+"Gida hau amaitu da.\n"
 "\n"
-"Press \"apply\" to add <i>%s</i>."
+"Sakatu \"Aplikatu\" <i>%s</i> gehitzeko."
 
 #: ../applets/maintained/comics/comics_add.py:198
 #, python-format
@@ -973,43 +974,43 @@ msgstr ""
 #: ../applets/maintained/comics/main.py:294
 #: ../applets/maintained/comics/main.py:300
 msgid "Comics!"
-msgstr "Comics!"
+msgstr "Komikiak!"
 
 #: ../applets/maintained/comics/comics.desktop.in.h:2
 msgid "View your favourite comics on your desktop"
-msgstr "View your favourite comics on your desktop"
+msgstr "Ikusi zure komiki gogokoenak zure mahaigainean"
 
 #: ../applets/maintained/comics/comics_manage.py:51
 msgid "Shared comics"
-msgstr "Shared comics"
+msgstr "Komiki partekatuak"
 
 #: ../applets/maintained/comics/comics_manage.py:52
 msgid "Your comics"
-msgstr "Your comics"
+msgstr "Zure komikiak"
 
 #: ../applets/maintained/comics/comics_manage.py:119
 #, python-format
 msgid "Failed to remove <i>%s</i>."
-msgstr "Failed to remove <i>%s</i>."
+msgstr "Ezin izan da <i>%s</i> kendu."
 
 #: ../applets/maintained/comics/comics_manage.py:125
 #: ../applets/maintained/feeds/feeds.py:388
 msgid "Error"
-msgstr "Error"
+msgstr "Errorea"
 
 #: ../applets/maintained/comics/comics.py:155
 msgid "Comics"
-msgstr "Comics"
+msgstr "Komikiak"
 
 #: ../applets/maintained/comics/comics.py:159
 msgid "Manage Comics"
-msgstr "Manage Comics"
+msgstr "Kudeatu komikiak"
 
 #: ../applets/maintained/comics/comics.py:211
 #: ../applets/maintained/comics/main.py:192
 #, python-format
 msgid "There is a new strip of %s!"
-msgstr "There is a new strip of %s!"
+msgstr "%s-(r)en banda berria dago!"
 
 #: ../applets/maintained/comics/comics_view.py:164
 msgid "%A %d %B"
@@ -1018,35 +1019,36 @@ msgstr "%A %d %B"
 #: ../applets/maintained/comics/comics_view.py:532
 #, python-format
 msgid "Failed to save <i>%s</i>."
-msgstr "Failed to save <i>%s</i>."
+msgstr "Ezin izan da <i>%s</i> gorde."
 
 #: ../applets/maintained/comics/ui/add.ui.h:1
 msgid "Add Comic"
-msgstr "Add Comic"
+msgstr "Gehitu komikia"
 
 #: ../applets/maintained/comics/ui/add.ui.h:2
 msgid "Downloading Comic"
-msgstr "Downloading Comic"
+msgstr "Komikia deskargatzen"
 
 #: ../applets/maintained/comics/ui/add.ui.h:3
 msgid "Enter the URL of the RSS feed:"
-msgstr "Enter the URL of the RSS feed:"
+msgstr "Sartu RSS jarioaren URLa:"
 
 #: ../applets/maintained/comics/ui/add.ui.h:4
 msgid "Ready to add comic!"
-msgstr "Ready to add comic!"
+msgstr "Komikia gehitzeko prest!"
 
 #: ../applets/maintained/comics/ui/add.ui.h:5
 msgid "Select Comic"
-msgstr "Select Comic"
+msgstr "Hautatu komikia"
 
 #: ../applets/maintained/comics/ui/add.ui.h:6
 msgid "Select Image"
-msgstr "Select Image"
+msgstr "Hautatu irudia"
 
 #: ../applets/maintained/comics/ui/add.ui.h:7
 msgid "The guide found more than one image. Please select which one to use."
-msgstr "The guide found more than one image. Please select which one to use."
+msgstr ""
+"Gidak irudi bat baino gehiago aurkitu du. Hautatu zein erabili nahi duzun."
 
 #: ../applets/maintained/comics/ui/add.ui.h:8
 msgid ""
@@ -1057,53 +1059,53 @@ msgid ""
 "\n"
 "Press \"next\" to proceed."
 msgstr ""
-"This guide will help you to add a new comic.\n"
+"Gida honek komiki berria gehitzen lagunduko dizu.\n"
 "\n"
-"To find comics suitable for adding, you may search the Internet for \"comics "
-"rss\".\n"
+"Hona gehitu daitezkeen komikiak aurkitzeko, \"comic rss\" bila dezakezu "
+"Interneten.\n"
 "\n"
-"Press \"next\" to proceed."
+"Sakatu \"Hurrengoa\" jarraitzeko."
 
 #: ../applets/maintained/comics/ui/manage.ui.h:1
 msgid "Manage comics"
-msgstr "Manage comics"
+msgstr "Kudeatu komikiak"
 
 #: ../applets/maintained/comics/ui/manage.ui.h:2
 msgid "The following comics are installed:"
-msgstr "The following comics are installed:"
+msgstr "Hurrengo komikiak instalatu dira:"
 
 #: ../applets/maintained/comics/ui/view.ui.h:1
 msgid "Show link"
-msgstr "Show link"
+msgstr "Erakutsi esteka"
 
 #: ../applets/maintained/comics/ui/view.ui.h:2
 msgid "Size"
-msgstr "Size"
+msgstr "Tamaina"
 
 #: ../applets/maintained/comics/main.py:152
 #, python-format
 msgid "Unknown command sent: %s"
-msgstr "Unknown command sent: %s"
+msgstr "Agindu ezezaguna bidali da: %s"
 
 #: ../applets/maintained/cpufreq/awn-applet-cpufreq.schema-ini.in.h:1
 msgid "Index of processor."
-msgstr "Index of processor."
+msgstr "Prozesadorearen indizea."
 
 #: ../applets/maintained/cpufreq/cpufreq.desktop.in.h:1
 msgid "An applet to monitor and control the CPU frequency"
-msgstr "An applet to monitor and control the CPU frequency"
+msgstr "PUZaren maiztasuna gainbegiratu eta kontrolatzeko appleta"
 
 #: ../applets/maintained/cpufreq/cpufreq.desktop.in.h:2
 msgid "CPU Frequency Monitor"
-msgstr "CPU Frequency Monitor"
+msgstr "PUZ maiztasunaren monitorea"
 
 #: ../applets/maintained/cpufreq/cpufreq.ui.h:1
 msgid "<b>Monitored CPU</b>"
-msgstr "<b>Monitored CPU</b>"
+msgstr "<b>Monitorizatutako PUZa</b>"
 
 #: ../applets/maintained/cpufreq/cpufreq.ui.h:2
 msgid "_Processor:"
-msgstr "_Processor:"
+msgstr "_Prozesadorea:"
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:1
 msgid " 0.9)."
@@ -1111,37 +1113,38 @@ msgstr " 0.9)."
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:2
 msgid " none)."
-msgstr " none)."
+msgstr " bat ere ez)."
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:3
 msgid "Can change layout with scroll wheel."
-msgstr "Can change layout with scroll wheel."
+msgstr "Teklatu-diseinua saguaren gurpilarekin alda daiteke."
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:4
 msgid ""
 "Keyboard toggle to change selected layout (see prefs dialog for values)."
 msgstr ""
-"Keyboard toggle to change selected layout (see prefs dialog for values)."
+"Teklatu bidezko txandakatzea hautatutako teklatu-diseinua aldatzeko (ikus "
+"hobespenak balioak ezagutzeko)."
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:5
 msgid "Overlay selected layout flag on icon."
-msgstr "Overlay selected layout flag on icon."
+msgstr "Gainjarri hautatutako diseinuaren bandera ikonoan."
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:6
 msgid "User selected layouts."
-msgstr "User selected layouts."
+msgstr "Erabiltzaileak hautatutako diseinuak."
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:7
 msgid "User selected variants."
-msgstr "User selected variants."
+msgstr "Erabiltzaileak hautatutako aldaerak."
 
 #: ../applets/maintained/dialect/dialect.desktop.in.h:1
 msgid " Dialect Applet"
-msgstr " Dialect Applet"
+msgstr " Dialektoen appleta"
 
 #: ../applets/maintained/dialect/dialect.desktop.in.h:2
 msgid "Change your keyboard input layout from Awn."
-msgstr "Change your keyboard input layout from Awn."
+msgstr "Aldatu zure teklatu-diseinua Awn-tik."
 
 #: ../applets/maintained/dialect/dialect.ui.h:1
 msgid ""
@@ -1166,24 +1169,26 @@ msgid ""
 "the 2-clause BSD license. See the About dialog for licensing details.\n"
 msgstr ""
 "\n"
-"DIALECT APPLET v 09.12.09\n"
+"DIALEKTOEN APPLETA v 09.12.09\n"
 "\n"
 "(C) 2009, Lachlan Turner (Denham 2010)\n"
 "\n"
-"This applet allows you to change your keyboard input language with just a "
-"click of the mouse.\n"
-"You can select any of the available input languages on your system, or from "
-"a list you most commonly use.\n"
+"Applet honek zure teklatuaren sarrerako hizkuntza aldatzen uzten dizu "
+"saguaren klik bakarrarekin.\n"
+"Zure sisteman eskuragarri dagoen edo usu erabiltzen duzun diseinuen zerrenda "
+"bateko edozein teklatu-diseinu hauta dezakezu.\n"
 "\n"
-"See the Mouse Actions and Layout Lists tabs for configuration options.\n"
+"Ikusi Sagu-ekintzak eta Diseinu-zerrendak fitxak konfigurazio-aukerak "
+"aldatzeko.\n"
 "\n"
-"The applet depends on the python xklavier module (available from "
-"http://download.sugarlabs.org/sources/external/python-xklavier/python-"
-"xklavier-0.1.tar.gz).\n"
+"Appleta Python-en xklavier moduluaren mendekoa da "
+"(http://download.sugarlabs.org/sources/external/python-xklavier/python-"
+"xklavier-0.1.tar.gz helbidean eskura daiteke).\n"
 "\n"
-"This applet is licensed under GPL2. The flag icons distributed with this "
-"applet are from the xfce4-xkb-plugin-0.5.3.3 panel applet, licensed under "
-"the 2-clause BSD license. See the About dialog for licensing details.\n"
+"Applet hau GPL2 lizentziapean banatzen da. Applet honekin banatutako bandera-"
+"ikonoak xfce4-xkb-plugin-0.5.3.3 appletekoak dira, 2-clause BSD "
+"lizentziapean banatzen dena. Ikusi Honi buruz koadroa lizentziari buruzko "
+"xehetasun gehiagorako.\n"
 
 #: ../applets/maintained/dialect/dialect.ui.h:15
 msgid ""
@@ -1208,24 +1213,26 @@ msgid ""
 "\tthe next or previous layout in your user list.\n"
 msgstr ""
 "\n"
-"Left Click:\n"
+"Ezkerreko klik-a:\n"
 "\n"
-"\tNext Layout\t\tselects the next layout in your user list.\n"
-"\tPrevious Layout\tselects the previous layout in your user list.\n"
-"\tMenu\t\t\tselect a layout from a menu of your user list.\n"
-"\tNone\t\t\tbutton will have no action.\n"
+"\tHurrengo diseinua\t\tzure diseinu-zerrendako hurrengo diseinua hautatzen "
+"du.\n"
+"\tAurreko diseinua\tzure diseinu-zerrendako aurreko diseinua hautatzen du.\n"
+"\tMenua\t\t\tzure diseinu-zerrendaren menu batetik hautatzen du diseinua.\n"
+"\tBat ere ez\t\t\tbotoiak ez du ekintzarik burutuko.\n"
 "\n"
-"Middle Click:\n"
+"Erdiko klik-a:\n"
 "\n"
-"\tNext Layout\t\tselects the next layout in your user list.\n"
-"\tPrevious Layout\tselects the previous layout in your user list.\n"
-"\tMenu\t\t\tselect a layout from a menu of your user list.\n"
-"\tNone\t\t\tbutton will have no action.\n"
+"\tHurrengo diseinua\t\tzure diseinu-zerrendako hurrengo diseinua hautatzen "
+"du.\n"
+"\tAurreko diseinua\tzure diseinu-zerrendako aurreko diseinua hautatzen du.\n"
+"\tMenua\t\t\tzure diseinu-zerrendaren menu batetik hautatzen du diseinua.\n"
+"\tBat ere ez\t\t\tbotoiak ez du ekintzarik burutuko.\n"
 "\n"
-"Allow scroll wheel to change layout:\n"
+"Baimendu korritze-gurpila erabiltzea diseinua aldatzeko:\n"
 "\n"
-"\tIf selected, scrolling up or down with your mouse wheel will select\n"
-"\tthe next or previous layout in your user list.\n"
+"\tHautatuta badago, saguaren gurpila erabil daiteke zure diseinu-zerrendako "
+"hurrengo edo aurreko diseinua hautatzeko.\n"
 
 #: ../applets/maintained/dialect/dialect.ui.h:35
 msgid ""
@@ -1245,19 +1252,20 @@ msgid ""
 "\tRanging from 0.0 (flag is not visible) to 0.9 (flag is almost opaque).\n"
 msgstr ""
 "\n"
-"Overlay layout flag on applet icon:\n"
+"Gainjarri diseinu-bandera appletaren ikonoan:\n"
 "\n"
-"\tIf selected, the flag of your selected layout will overlay the applet "
-"icon.\n"
+"\tHautatuta badago, hautatutako diseinuaren bandera appletaren ikonoan "
+"gainjarriko da.\n"
 "\n"
-"Flag Scale:\n"
+"Banderaren eskala:\n"
 "\n"
-"\tThe size of the flag in relation to the applet icon.\n"
-"\tPossible values range from 0.1 to 0.9\n"
+"\tBanderaren tamaina appletaren ikonoarekiko.\n"
+"\tBalio posibleak 0.1etik 0.9ra doaz\n"
 "\n"
-"Flag Opacity:\n"
+"Banderaren opakotasuna:\n"
 "\n"
-"\tRanging from 0.0 (flag is not visible) to 0.9 (flag is almost opaque).\n"
+"\tBalio-tarteak: 0.0tik (bandera ez da ikusten) 0.9ra (bandera ia opakoa "
+"da).\n"
 
 #: ../applets/maintained/dialect/dialect.ui.h:49
 msgid ""
@@ -1279,21 +1287,22 @@ msgid ""
 "\tSelects the hot key combination used to change layouts.\n"
 msgstr ""
 "\n"
-"System List:\n"
+"Sistema-zerrenda:\n"
 "\n"
-"\tThe complete list of layouts and variants available.\n"
-"\tSelect an item and click the add button to include in your user list.\n"
+"\tEskuragarri diren diseinu eta aldaeren zerrenda osoa.\n"
+"\tHautatu elementu bat eta egin klik Gehitu botoian diseinua zure diseinu-"
+"zerrendan sartzeko.\n"
 "\n"
-"User List:\n"
+"Diseinua-zerrenda:\n"
 "\n"
-"\tThe list of layouts you commonly use.\n"
-"\tThe maximum number of layouts is restricted by the X11 xkb system "
-"(currently 4).\n"
-"\tSelect an item and click the remove button to delete from your user list.\n"
-"\tYou can order the list by drag and drop.\n"
+"\tNormalean erabiltzen duzun diseinuen zerrenda.\n"
+"\tDiseinuen kopuru maximoa X11 xkb sistemak mugatzen duena da (unean 4).\n"
+"\tHautatu elementu bat eta egin klik Kendu botoian diseinua zure diseinu-"
+"zerrendatik kentzeko.\n"
+"\tZerrenda antolatzeko, arrastatu eta jaregin.\n"
 "\n"
-"Keyboard Toggle:\n"
-"\tSelects the hot key combination used to change layouts.\n"
+"Teklatuaren txandakatzea:\n"
+"\tDiseinuak aldatzeko erabilitako tekla-konbinazioa hautatzen du.\n"
 
 #: ../applets/maintained/dialect/dialect.ui.h:65
 msgid "(C) 2009, Lachlan Turner (Denham 2010)."
@@ -1301,77 +1310,77 @@ msgstr "(C) 2009, Lachlan Turner (Denham 2010)."
 
 #: ../applets/maintained/dialect/dialect.ui.h:66
 msgid "About Dialect Applet"
-msgstr "About Dialect Applet"
+msgstr "Dialektoen appletari buruz"
 
 #: ../applets/maintained/dialect/dialect.ui.h:67
 msgid "Allow scroll wheel to change layout"
-msgstr "Allow scroll wheel to change layout"
+msgstr "Baimentu gurpilaren korritzea diseinua aldatzeko"
 
 #: ../applets/maintained/dialect/dialect.ui.h:68
 msgid "Change your keyboard layout from Awn."
-msgstr "Change your keyboard layout from Awn."
+msgstr "Aldatu zure teklatuaren diseinua Awn-tik."
 
 #: ../applets/maintained/dialect/dialect.ui.h:69
 msgid "Dialect Applet Help"
-msgstr "Dialect Applet Help"
+msgstr "Dialektoen appletaren laguntza"
 
 #: ../applets/maintained/dialect/dialect.ui.h:70
 msgid "Dialect Applet Preferences"
-msgstr "Dialect Applet Preferences"
+msgstr "Dialektoen appletaren hobespenak"
 
 #: ../applets/maintained/dialect/dialect.ui.h:71
 msgid "Flag Opacity"
-msgstr "Flag Opacity"
+msgstr "Banderen opakotasuna"
 
 #: ../applets/maintained/dialect/dialect.ui.h:72
 msgid "Flag Overlay"
-msgstr "Flag Overlay"
+msgstr "Banderen gainjartzea"
 
 #: ../applets/maintained/dialect/dialect.ui.h:73
 msgid "Flag Scale"
-msgstr "Flag Scale"
+msgstr "Banderen eskala"
 
 #: ../applets/maintained/dialect/dialect.ui.h:75
 msgid "Keyboard Toggle"
-msgstr "Keyboard Toggle"
+msgstr "Teklatu-txandakatzea"
 
 #: ../applets/maintained/dialect/dialect.ui.h:76
 msgid "Layout Lists"
-msgstr "Layout Lists"
+msgstr "Diseinu-zerrendak"
 
 #: ../applets/maintained/dialect/dialect.ui.h:77
 #: ../applets/maintained/file-browser-launcher/prefs.py:318
 msgid "Left Click"
-msgstr "Left Click"
+msgstr "Ezkerreko klik-a"
 
 #: ../applets/maintained/dialect/dialect.ui.h:78
 msgid "Menu"
-msgstr "Menu"
+msgstr "Menua"
 
 #: ../applets/maintained/dialect/dialect.ui.h:79
 #: ../applets/maintained/file-browser-launcher/prefs.py:393
 msgid "Middle Click"
-msgstr "Middle Click"
+msgstr "Erdiko klik-a"
 
 #: ../applets/maintained/dialect/dialect.ui.h:80
 msgid "Mouse Actions"
-msgstr "Mouse Actions"
+msgstr "Sagu-ekintzak"
 
 #: ../applets/maintained/dialect/dialect.ui.h:81
 msgid "Next Layout"
-msgstr "Next Layout"
+msgstr "Hurrengo diseinua"
 
 #: ../applets/maintained/dialect/dialect.ui.h:83
 msgid "Overlay layout flag on applet icon"
-msgstr "Overlay layout flag on applet icon"
+msgstr "Gainjarri diseinuaren bandera appletaren ikonoan"
 
 #: ../applets/maintained/dialect/dialect.ui.h:84
 msgid "Previous Layout"
-msgstr "Previous Layout"
+msgstr "Aurreko diseinua"
 
 #: ../applets/maintained/dialect/dialect.ui.h:85
 msgid "System List"
-msgstr "System List"
+msgstr "Sistema-zerrenda"
 
 #: ../applets/maintained/dialect/dialect.ui.h:86
 msgid ""
@@ -1946,124 +1955,126 @@ msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:206
 msgid "User List"
-msgstr "User List"
+msgstr "Diseinu-zerrenda"
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:1
 msgid "Command to execute when a calendar day is double-clicked."
-msgstr "Command to execute when a calendar day is double-clicked."
+msgstr ""
+"Egutegiaren egun batean klik bikoitza egitean exekutatuko den komandoa."
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:2
 msgid "Command to execute when the user wishes to adjust the date/time."
-msgstr "Command to execute when the user wishes to adjust the date/time."
+msgstr ""
+"Erabiltzaileak data/ordua doitu nahi duenean exekutatuko den komandoa."
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:3
 msgid "Show the date before the time."
-msgstr "Show the date before the time."
+msgstr "Erakutsi data denboraren aurretik."
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:4
 msgid "The color of the clock text."
-msgstr "The color of the clock text."
+msgstr "Ordulariaren testuaren kolorea."
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:5
 msgid "The font face of the clock text."
-msgstr "The font face of the clock text."
+msgstr "Ordulariaren testuaren letra-tipoa."
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:6
 msgid "The shadow color of the clock text."
-msgstr "The shadow color of the clock text."
+msgstr "Ordulariaren testuaren itzalaren kolorea."
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:7
 msgid "Toggle 12-hour mode."
-msgstr "Toggle 12-hour mode."
+msgstr "Aldatu hamabi orduko modura."
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:1
 msgid "12 hour format"
-msgstr "12 hour format"
+msgstr "12 orduko formatua"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:2
 msgid "24 hour format"
-msgstr "24 hour format"
+msgstr "24 orduko formatua"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:3
 msgid "<b>Clock Format</b>"
-msgstr "<b>Clock Format</b>"
+msgstr "<b>Ordulariaren formatua</b>"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:5
 msgid "Appearance"
-msgstr "Appearance"
+msgstr "Itxura"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:6
 msgid "Commands"
-msgstr "Commands"
+msgstr "Komandoak"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:7
 msgid "Date below time"
-msgstr "Date below time"
+msgstr "Data denboraren azpian"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:8
 msgid "Digital Clock Preferences"
-msgstr "Digital Clock Preferences"
+msgstr "Ordulari digitalaren hobespenak"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:9
 msgid "Run Calendar:"
-msgstr "Run Calendar:"
+msgstr "Exekutatu egutegia:"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:10
 msgid "Run Time Admin:"
-msgstr "Run Time Admin:"
+msgstr "Exekutatu admin ordua:"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:11
 msgid "Show the date"
-msgstr "Show the date"
+msgstr "Erakutsi data"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:12
 msgid "Use default Awn colors"
-msgstr "Use default Awn colors"
+msgstr "Erabili Awn-ren kolore lehenetsiak"
 
 #: ../applets/maintained/digital-clock/digital-clock.desktop.in.in.h:1
 msgid "A clock and calendar in one."
-msgstr "A clock and calendar in one."
+msgstr "Ordularia eta egutegia dena batera."
 
 #: ../applets/maintained/digital-clock/digital-clock.desktop.in.in.h:2
 #: ../applets/maintained/digital-clock/digital-clock.vala:57
 msgid "Digital Clock"
-msgstr "Digital Clock"
+msgstr "Ordulari digitala"
 
 #. "Copy Time" menu item
 #: ../applets/maintained/digital-clock/digital-clock.vala:335
 msgid "Copy Time"
-msgstr "Copy Time"
+msgstr "Kopiatu ordua"
 
 #. "Copy Date" menu item
 #: ../applets/maintained/digital-clock/digital-clock.vala:354
 msgid "Copy Date"
-msgstr "Copy Date"
+msgstr "Kopiatu data"
 
 #. "Adjust Date & Time" menu item
 #: ../applets/maintained/digital-clock/digital-clock.vala:366
 msgid "Adjust Date & Time"
-msgstr "Adjust Date & Time"
+msgstr "Doitu data eta ordua"
 
 #: ../applets/maintained/digital-clock/digital-clock.vala:412
 msgid "Displays digital clock."
-msgstr "Displays digital clock."
+msgstr "Ordulari digitala erakusten du."
 
 #. vim:ft=vala:et:ts=2 sts=2 sw=2:ai:cindent
 #: ../applets/maintained/feeds/awn-applet-feeds.schema-ini.in.h:1
 msgid "Notify if any feeds have new items"
-msgstr "Notify if any feeds have new items"
+msgstr "Jakinarazi jarioek elementu berriak dituzten"
 
 #: ../applets/maintained/feeds/awn-applet-feeds.schema-ini.in.h:2
 msgid "Show each feed's website's icon in the dialog"
-msgstr "Show each feed's website's icon in the dialog"
+msgstr "Erakutsi jario bakoitzaren webgunearen ikonoa koadroan"
 
 #: ../applets/maintained/feeds/awn-applet-feeds.schema-ini.in.h:3
 msgid "The interval (in minutes) at which to update (3-60)"
-msgstr "The interval (in minutes) at which to update (3-60)"
+msgstr "Denbora-tartea (minututan) eguneraketetarako (3-60)"
 
 #: ../applets/maintained/feeds/awn-applet-feeds.schema-ini.in.h:4
 msgid "Update automatically at a configurable interval"
-msgstr "Update automatically at a configurable interval"
+msgstr "Eguneratu automatikoki denbora-tarte jakinetan"
 
 #: ../applets/maintained/feeds/classes.py:328
 msgid "Google"
@@ -2085,12 +2096,12 @@ msgstr "Reddit Inbox"
 #: ../applets/maintained/feeds/classes.py:720
 #, python-format
 msgid "Comment reply from %s"
-msgstr "Comment reply from %s"
+msgstr "Iruzkindu %s-(e)ko erantzuna"
 
 #: ../applets/maintained/feeds/classes.py:723
 #, python-format
 msgid "Post reply from %s"
-msgstr "Post reply from %s"
+msgstr "Bidali erantzuna %s-(e)tik"
 
 #: ../applets/maintained/feeds/classes.py:765
 #: ../applets/maintained/feeds/prefs.py:410
@@ -2099,7 +2110,7 @@ msgstr "Twitter"
 
 #: ../applets/maintained/feeds/classes.py:892
 msgid "Untitled"
-msgstr "Untitled"
+msgstr "Izengabea"
 
 #: ../applets/maintained/feeds/feeds.desktop.in.h:1
 #: ../applets/maintained/feeds/feeds.py:241
@@ -2107,24 +2118,24 @@ msgstr "Untitled"
 #: ../applets/maintained/feeds/feeds.py:480
 #: ../applets/maintained/feeds/feeds.py:1031
 msgid "Feeds Applet"
-msgstr "Feeds Applet"
+msgstr "Jarioen appleta"
 
 #: ../applets/maintained/feeds/feeds.desktop.in.h:2
 #: ../applets/maintained/feeds/feeds.py:1036
 msgid "Monitor Web Feeds"
-msgstr "Monitor Web Feeds"
+msgstr "Monitorizatu web jarioak"
 
 #. "Loading feeds..." label
 #: ../applets/maintained/feeds/feeds.py:96
 #: ../applets/maintained/feeds/feeds.py:153
 #: ../applets/maintained/feeds/feeds.py:230
 msgid "Loading feeds..."
-msgstr "Loading feeds..."
+msgstr "Jarioak kargatzen..."
 
 #. No feeds label
 #: ../applets/maintained/feeds/feeds.py:160
 msgid "You don't have any feeds."
-msgstr "You don't have any feeds."
+msgstr "Ez daukazu jariorik."
 
 #: ../applets/maintained/feeds/feeds.py:472
 #, python-format
@@ -2142,103 +2153,103 @@ msgstr ""
 #: ../applets/maintained/feeds/feeds.py:481
 #, python-format
 msgid "%s New Item%s - Feeds Applet"
-msgstr "%s New Item%s - Feeds Applet"
+msgstr "%s Elementu berria%s - Jarioen appleta"
 
 #. +Add Feed button
 #: ../applets/maintained/feeds/feeds.py:518
 msgid "_Add Feed"
-msgstr "_Add Feed"
+msgstr "_Gehitu jarioa"
 
 #: ../applets/maintained/feeds/feeds.py:567
 msgid "Open this feed's website"
-msgstr "Open this feed's website"
+msgstr "Ireki jario honen webgunea"
 
 #: ../applets/maintained/feeds/feeds.py:576
 #: ../applets/maintained/feeds/prefs.py:257
 msgid "Loading..."
-msgstr "Loading..."
+msgstr "Kargatzen..."
 
 #: ../applets/maintained/feeds/feeds.py:614
 #: ../applets/maintained/feeds/feeds.py:773
 msgid "Show this feed's items"
-msgstr "Show this feed's items"
+msgstr "Erakutsi jario honen elementuak"
 
 #: ../applets/maintained/feeds/feeds.py:763
 msgid "Hide this feed's items"
-msgstr "Hide this feed's items"
+msgstr "Ezkutatu jario honen elementuak"
 
 #. Create the items
 #: ../applets/maintained/feeds/feeds.py:991
 #: ../applets/maintained/feeds/prefs.py:341
 msgid "Add Feed"
-msgstr "Add Feed"
+msgstr "Gehitu jarioa"
 
 #: ../applets/maintained/feeds/feeds.py:1079
 msgid "OPML Import"
-msgstr "OPML Import"
+msgstr "OPML inportazioa"
 
 #: ../applets/maintained/feeds/feeds.py:1083
 msgid "Do you want to add this feed?"
-msgstr "Do you want to add this feed?"
+msgstr "Jario hau gehitu nahi duzu?"
 
 #: ../applets/maintained/feeds/feeds.py:1086
 #, python-format
 msgid "Do you want to add these %s feeds?"
-msgstr "Do you want to add these %s feeds?"
+msgstr "%s jario hauek gehitu nahi dituzu?"
 
 #: ../applets/maintained/feeds/prefs.py:58
 msgid "Feeds Applet Preferences"
-msgstr "Feeds Applet Preferences"
+msgstr "Jarioen appletaren hobespenak"
 
 #: ../applets/maintained/feeds/prefs.py:68
 msgid "Feeds"
-msgstr "Feeds"
+msgstr "Jarioak"
 
 #: ../applets/maintained/feeds/prefs.py:69
 msgid "Updating"
-msgstr "Updating"
+msgstr "Eguneratzen"
 
 #: ../applets/maintained/feeds/prefs.py:108
 msgid "_Show website icons"
-msgstr "_Show website icons"
+msgstr "_Erakutsi webgunearen ikonoak"
 
 #. TODO: this position is a little ugly, but I don't know how to do it better.
 #. Import and export buttons (OPML)
 #: ../applets/maintained/feeds/prefs.py:115
 msgid "Import"
-msgstr "Import"
+msgstr "Inportatu"
 
 #: ../applets/maintained/feeds/prefs.py:118
 msgid "Export"
-msgstr "Export"
+msgstr "Esportatu"
 
 #. Updating section (enable/disable automatically updating and change how often)
 #. Checkbox: Notify for updated feeds
 #: ../applets/maintained/feeds/prefs.py:144
 msgid "_Notify for updated feeds"
-msgstr "_Notify for updated feeds"
+msgstr "_Jakinarazi jarioen eguneraketak"
 
 #. Checkbox: Update automatically
 #: ../applets/maintained/feeds/prefs.py:150
 msgid "_Update automatically"
-msgstr "_Update automatically"
+msgstr "E_guneratu automatikoki"
 
 #. Update every [SpinButton] minutes
 #: ../applets/maintained/feeds/prefs.py:156
 msgid "Update every "
-msgstr "Update every "
+msgstr "Eguneratu "
 
 #: ../applets/maintained/feeds/prefs.py:157
 msgid " minutes"
-msgstr " minutes"
+msgstr " minututik behin"
 
 #: ../applets/maintained/feeds/prefs.py:264
 msgid "Open OPML File"
-msgstr "Open OPML File"
+msgstr "Ireki OPML fitxategia"
 
 #: ../applets/maintained/feeds/prefs.py:278
 msgid "Save OPML File"
-msgstr "Save OPML File"
+msgstr "Gorde OPML fitxategia"
 
 #. Note: the following string is used as an exmaple filename
 #: ../applets/maintained/feeds/prefs.py:284
@@ -2247,22 +2258,22 @@ msgstr "feeds.opml"
 
 #: ../applets/maintained/feeds/prefs.py:295
 msgid "Awn Feeds Applet Items"
-msgstr "Awn Feeds Applet Items"
+msgstr "Awn-ren jarioen appletaren elementuak"
 
 #. Source: label and radio buttons
 #: ../applets/maintained/feeds/prefs.py:345
 msgid "Source:"
-msgstr "Source:"
+msgstr "Iturburua:"
 
 #: ../applets/maintained/feeds/prefs.py:355
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:598
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:151
 msgid "Search"
-msgstr "Search"
+msgstr "Bilatu"
 
 #: ../applets/maintained/feeds/prefs.py:358
 msgid "You must sign in to a Google service to search for feeds."
-msgstr "You must sign in to a Google service to search for feeds."
+msgstr "Google-n zerbitzu batean izena eman behar duzu jarioak bilatzeko."
 
 #: ../applets/maintained/feeds/prefs.py:367
 msgid "RSS/Atom"
@@ -2270,16 +2281,16 @@ msgstr "RSS/Atom"
 
 #: ../applets/maintained/feeds/prefs.py:412
 msgid "Timeline"
-msgstr "Timeline"
+msgstr "Denbora-lerroa"
 
 #: ../applets/maintained/feeds/prefs.py:417
 msgid "Replies"
-msgstr "Replies"
+msgstr "Erantzunak"
 
 #. "Search for" label and entry
 #: ../applets/maintained/feeds/prefs.py:446
 msgid "Search for"
-msgstr "Search for"
+msgstr "Bilatu hau:"
 
 #. URL: label and entry
 #: ../applets/maintained/feeds/prefs.py:460
@@ -2307,260 +2318,260 @@ msgstr "Pasahitza:"
 
 #: ../applets/maintained/feeds/prefs.py:515
 msgid "Feed search by "
-msgstr "Feed search by "
+msgstr "Jarioen bilaketa: "
 
 #. If signed in to Google Reader
 #: ../applets/maintained/feeds/prefs.py:553
 msgid "_Search"
-msgstr "_Search"
+msgstr "_Bilatu"
 
 #: ../applets/maintained/feeds/prefs.py:760
 msgid ""
 "There was an error while searching.\n"
 "Please try again later."
 msgstr ""
-"There was an error while searching.\n"
-"Please try again later."
+"Errore bat gertatu da bilaketa egitean.\n"
+"Saiatu berriro geroago."
 
 #: ../applets/maintained/feeds/prefs.py:810
 msgid ""
 "No results found.\n"
 "Try checking your spelling or using different search terms."
 msgstr ""
-"No results found.\n"
-"Try checking your spelling or using different search terms."
+"Ez dago emaitzarik.\n"
+"Saiatu ortografia egiaztatzen edo beste bilaketa-hitz batzuk erabiltzen."
 
 #: ../applets/maintained/file-browser-launcher/about.py:39
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.desktop.in.h:2
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:63
 msgid "File Browser Launcher"
-msgstr "File Browser Launcher"
+msgstr "Fitxategi-arakatzailearen abiarazlea"
 
 #: ../applets/maintained/file-browser-launcher/about.py:42
 msgid "A customizable launcher for browsing your files."
-msgstr "A customizable launcher for browsing your files."
+msgstr "Zure fitxategietan arakatzeko abiarazle pertsonalizagarria"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:1
 msgid " persistent docklet"
-msgstr " persistent docklet"
+msgstr " docklet iraunkorra"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:2
 msgid "The action to perform on left click"
-msgstr "The action to perform on left click"
+msgstr "Ezkerreko klik-ean gauzatuko den ekintza"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:3
 msgid "The action to perform on middle click"
-msgstr "The action to perform on middle click"
+msgstr "Erdiko klik-ean gauzatuko den ekintza"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:4
 msgid "The file browser to use"
-msgstr "The file browser to use"
+msgstr "Erabiliko den fitxategi-arakatzailea"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:5
 msgid "The path to use on left click"
-msgstr "The path to use on left click"
+msgstr "Ezkerreko klik-ean erabiliko den bide-izena"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:6
 msgid "The path to use on middle click"
-msgstr "The path to use on middle click"
+msgstr "Erdiko klik-ean erabiliko den bide-izena"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:7
 msgid "Whether or not to display Connect to server"
-msgstr "Whether or not to display Connect to server"
+msgstr "Zerbitzarira konektatu erakutsiko den ala ez"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:8
 msgid "Whether or not to display bookmarks"
-msgstr "Whether or not to display bookmarks"
+msgstr "Laster-markak erakutsiko diren ala ez"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:9
 msgid "Whether or not to display local drives"
-msgstr "Whether or not to display local drives"
+msgstr "Unitate lokalak erakutsiko diren ala ez"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:10
 msgid "Whether or not to display network drives"
-msgstr "Whether or not to display network drives"
+msgstr "Sareko unitateak erakutsiko diren ala ez"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:11
 msgid "Whether or not to display the Filesystem"
-msgstr "Whether or not to display the Filesystem"
+msgstr "Fitxategi-sistema erakutsiko den ala ez"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:12
 msgid "Whether or not to display the home folder"
-msgstr "Whether or not to display the home folder"
+msgstr "Karpeta nagusia erakutsiko den ala ez"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:13
 msgid "Whether or not to focus the location text box"
-msgstr "Whether or not to focus the location text box"
+msgstr "Kokapeneko testu-kutxari fokoa emango zaion ala ez"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:14
 msgid "Whether or not to open the place when clicked"
-msgstr "Whether or not to open the place when clicked"
+msgstr "Klik egitean lekua irekiko den ala ez"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.desktop.in.h:1
 msgid "A launcher for your file manager"
-msgstr "A launcher for your file manager"
+msgstr "Abiarazlea zure fitxategi-arakatzailerako"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:347
 msgid "Home Folder"
-msgstr "Home Folder"
+msgstr "Karpeta nagusia"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:351
 #: ../applets/maintained/file-browser-launcher/prefs.py:223
 msgid "Filesystem"
-msgstr "Filesystem"
+msgstr "Fitxategi-sistema"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:474
 msgid "Connect to Server..."
-msgstr "Connect to Server..."
+msgstr "Zerbitzarira konektatzen..."
 
 #. Documents
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:528
 msgid "Documents"
-msgstr "Documents"
+msgstr "Dokumentuak"
 
 #. Downloads
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:532
 msgid "Downloads"
-msgstr "Downloads"
+msgstr "Deskargak"
 
 #. Music
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:536
 msgid "Music"
-msgstr "Music"
+msgstr "Musika"
 
 #. Pictures
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:540
 #: ../applets/maintained/slickswitcher/prefs.py:347
 msgid "Pictures"
-msgstr "Pictures"
+msgstr "Irudiak"
 
 #. Public
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:544
 msgid "Public"
-msgstr "Public"
+msgstr "Publikoa"
 
 #. Templates
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:548
 msgid "Templates"
-msgstr "Templates"
+msgstr "Txantiloiak"
 
 #. Videos
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:552
 msgid "Videos"
-msgstr "Videos"
+msgstr "Bideoak"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:601
 msgid "CD/DVD Burner"
-msgstr "CD/DVD Burner"
+msgstr "CD/DVD grabagailua"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:604
 msgid "Fonts"
-msgstr "Fonts"
+msgstr "Letra-tipoak"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:608
 #: ../applets/maintained/file-browser-launcher/prefs.py:289
 #: ../applets/maintained/file-browser-launcher/prefs.py:364
 msgid "Folder"
-msgstr "Folder"
+msgstr "Karpeta"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:713
 msgid "DVD Drive"
-msgstr "DVD Drive"
+msgstr "DVD unitatea"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:717
 msgid "CD Drive"
-msgstr "CD Drive"
+msgstr "CD unitatea"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1020
 msgid "Eject"
-msgstr "Eject"
+msgstr "Egotzi"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:44
 msgid "File Browser Launcher Preferences"
-msgstr "File Browser Launcher Preferences"
+msgstr "Fitxategi-arakatzailearen abiarazlearen hobespenak"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:93
 msgid "File Browser"
-msgstr "File Browser"
+msgstr "Fitxategi-arakatzailea"
 
 #. xdg-open (aka system default)
 #: ../applets/maintained/file-browser-launcher/prefs.py:103
 msgid "System Default"
-msgstr "System Default"
+msgstr "Sistemak lehenetsia"
 
 #. Last option: custom with an entry for the app name
 #: ../applets/maintained/file-browser-launcher/prefs.py:127
 msgid "Other"
-msgstr "Other"
+msgstr "Beste bat"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:163
 msgid "One icon with dialog"
-msgstr "One icon with dialog"
+msgstr "Ikono bat koadroarekin"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:168
 msgid "One icon with docklet"
-msgstr "One icon with docklet"
+msgstr "Ikono bat docklet-arekin"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:175
 msgid "Multiple icons"
-msgstr "Multiple icons"
+msgstr "Ikono anitz"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:182
 msgid "Focus text entry"
-msgstr "Focus text entry"
+msgstr "Eman fokua testu-sarrerari"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:191
 msgid "Open place when clicked"
-msgstr "Open place when clicked"
+msgstr "Ireki lekua klik egitean"
 
 #. Show all places
 #: ../applets/maintained/file-browser-launcher/prefs.py:211
 msgid "Show all places"
-msgstr "Show all places"
+msgstr "Erakutsi leku guztiak"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:223
 msgid "Home folder"
-msgstr "Home folder"
+msgstr "Karpeta nagusia"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:224
 msgid "Mounted local drives"
-msgstr "Mounted local drives"
+msgstr "Muntatutako unitate lokalak"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:224
 msgid "Mounted network drives"
-msgstr "Mounted network drives"
+msgstr "Muntatutako sareko unitateak"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:225
 msgid "Connect to server"
-msgstr "Connect to server"
+msgstr "Konektatu zerbitzarira"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:225
 msgid "Bookmarks"
-msgstr "Bookmarks"
+msgstr "Laster-markak"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:264
 #: ../applets/maintained/file-browser-launcher/prefs.py:339
 msgid "Display dialog/docklet"
-msgstr "Display dialog/docklet"
+msgstr "Erakutsi koadroa/docklet-a"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:264
 #: ../applets/maintained/file-browser-launcher/prefs.py:339
 msgid "Open the folder"
-msgstr "Open the folder"
+msgstr "Ireki karpeta"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:265
 #: ../applets/maintained/file-browser-launcher/prefs.py:340
 msgid "Nothing"
-msgstr "Nothing"
+msgstr "Ezer ez"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:540
 msgid "Choose a folder"
-msgstr "Choose a folder"
+msgstr "Hautatu karpeta"
 
 #: ../applets/maintained/garbage/applet.vala:57
 #: ../applets/maintained/garbage/garbage.desktop.in.in.h:2
 msgid "Garbage"
-msgstr "Garbage"
+msgstr "Zakarrontzia"
 
 #. set the title as well
 #. $display_name: $count item(s)
@@ -2568,236 +2579,238 @@ msgstr "Garbage"
 #, c-format
 msgid "%s: %u item"
 msgid_plural "%s: %u items"
-msgstr[0] "%s: %u item"
-msgstr[1] "%s: %u items"
+msgstr[0] "%s: elementu %u"
+msgstr[1] "%s: %u elementu"
 
 #: ../applets/maintained/garbage/applet.vala:194
 #, c-format
 msgid "Could not open the trash folder with your file manager: %s"
-msgstr "Could not open the trash folder with your file manager: %s"
+msgstr "Ezin izan da zakarrontzia ireki zure fitxategi-arakatzailearekin: %s"
 
 #: ../applets/maintained/garbage/applet.vala:209
 msgid "_Empty Trash"
-msgstr "_Empty Trash"
+msgstr "_Hustu zakarrontzia"
 
 #: ../applets/maintained/garbage/applet.vala:235
 #, c-format
 msgid ""
 "Are you sure you want to empty your trash? It currently contains %u item(s)."
 msgstr ""
-"Are you sure you want to empty your trash? It currently contains %u item(s)."
+"Seguru zaude zakarrontzia hustu nahi duzula? Une honetan %u elementu ditu."
 
 #: ../applets/maintained/garbage/applet.vala:344
 #, c-format
 msgid "Could not send the dragged file(s) to the trash: %s"
-msgstr "Could not send the dragged file(s) to the trash: %s"
+msgstr ""
+"Ezin izan d(ir)a arrastatutako fitxategia(k) zakarrontzira eraman: %s"
 
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/garbage/awn-applet-garbage.schema-ini.in.h:1
 msgid ""
 "Enable the confirmation dialog form when one wishes to empty the trash."
-msgstr ""
-"Enable the confirmation dialog form when one wishes to empty the trash."
+msgstr "Gaitu baieztatze-koadroa zakarrontzia husterakoan."
 
 #: ../applets/maintained/garbage/awn-applet-garbage.schema-ini.in.h:2
 msgid "Show the number of items in the trash on top of the icon."
-msgstr "Show the number of items in the trash on top of the icon."
+msgstr "Erakutsi zakarrontzian dagoen elementu-kopurua ikonoaren gainean."
 
 #: ../applets/maintained/garbage/garbage.desktop.in.in.h:1
 msgid "A lightweight, cross-desktop trash applet"
-msgstr "A lightweight, cross-desktop trash applet"
+msgstr "Zakarrontzi appleta, mahaigain anitza eta arina"
 
 #: ../applets/maintained/garbage/prefs.vala:32
 #, c-format
 msgid "%s Preferences"
-msgstr "%s Preferences"
+msgstr "%s hobespenak"
 
 #: ../applets/maintained/garbage/prefs.vala:47
 msgid "Confirm when emptying the trash"
-msgstr "Confirm when emptying the trash"
+msgstr "Baieztatu zakarrontzia hustean"
 
 #: ../applets/maintained/garbage/prefs.vala:52
 msgid "Show the item count on the icon"
-msgstr "Show the item count on the icon"
+msgstr "Erakutsi elementu-kopurua ikonoan"
 
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:1
 msgid "Applet theme."
-msgstr "Applet theme."
+msgstr "Applet gaia."
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:2
 msgid "For each sensor, whether to show it in main dialog or not."
-msgstr "For each sensor, whether to show it in main dialog or not."
+msgstr ""
+"Sentsore bakoitzerako, elkarrizketa-koadro nagusian erakutsiko den ala ez."
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:3
 msgid "High value limit (at which alarm triggers) for each sensor."
-msgstr "High value limit (at which alarm triggers) for each sensor."
+msgstr "Goiko mugako balioa (alarma disparatzeko) sentsore bakoitzerako."
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:4
 msgid "If enabled, show sensor value(s) as an overlay in the icon."
-msgstr "If enabled, show sensor value(s) as an overlay in the icon."
+msgstr ""
+"Gaituta badago, sentsorearen balioa(k) erakusten ditu ikonoan gainjarrita."
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:5
 msgid "In what row of dialog is the sensor shown."
-msgstr "In what row of dialog is the sensor shown."
+msgstr "Koadroaren zein lerrotan erakusten den sentsorea."
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:7
 msgid "Low value limit (at which alarm triggers) for each sensor."
-msgstr "Low value limit (at which alarm triggers) for each sensor."
+msgstr "Beheko mugako balioa (alarma disparatzeko) sentsore bakoitzerako."
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:8
 msgid "Sensor ids."
-msgstr "Sensor ids."
+msgstr "Sentsoreen IDak."
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:9
 msgid "Sensor labels."
-msgstr "Sensor labels."
+msgstr "Sentsoreen etiketak."
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:10
 msgid "The color (RGBA) of the meter hand/needle."
-msgstr "The color (RGBA) of the meter hand/needle."
+msgstr "Neurgailuaren kolorea (RGBA)."
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:11
 msgid "Timeout between two value updates (in seconds)."
-msgstr "Timeout between two value updates (in seconds)."
+msgstr "Bi balioren arteko denbora-muga (segundotan)."
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:12
 msgid "Whether alarm should trigger at high value limit or not."
-msgstr "Whether alarm should trigger at high value limit or not."
+msgstr "Alarma goiko mugaren balioan disparatuko den ala ez."
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:13
 msgid "Whether alarm should trigger at low value limit or not."
-msgstr "Whether alarm should trigger at low value limit or not."
+msgstr "Alarma beheko mugaren balioan disparatuko den ala ez."
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:14
 msgid "Whether to show a sensor in applet icon or not."
-msgstr "Whether to show a sensor in applet icon or not."
+msgstr "Sentsore bat appletaren ikonoan erakutsiko den ala ez."
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:15
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:8
 msgid "large)."
-msgstr "large)."
+msgstr "handia)."
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.desktop.in.h:1
 msgid "Applet to show the hw sensors readouts"
-msgstr "Applet to show the hw sensors readouts"
+msgstr "Hardware-sentsoreen emaitzak erakusteko appleta"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.desktop.in.h:2
 msgid "Hardware Sensors"
-msgstr "Hardware Sensors"
+msgstr "Hardware-sentsoreak"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:49
 msgid "Applet to show the hardware sensors readouts"
-msgstr "Applet to show the hardware sensors readouts"
+msgstr "Hardware-sentsoreen emaitzak erakusteko appleta"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:83
 msgid "Warning from Hardware Sensors: No sensors found"
-msgstr "Warning from Hardware Sensors: No sensors found"
+msgstr "Abisua hardware-sentsoreetatik: ez da sentsorerik aurkitu"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:84
 msgid ""
 "Install one or more of ACPI, HDDTemp, LM-Sensors, nvidia-settings or nvclock "
 "and restart the applet."
 msgstr ""
-"Install one or more of ACPI, HDDTemp, LM-Sensors, nvidia-settings or nvclock "
-"and restart the applet."
+"Instalatu ACPI, HDDTemp, LM-Sensors, nvidia-settings edo nvclock eta "
+"berrabiarazi appleta."
 
 #. == Dialog == #
 #. Create main applet dialog showing selected sensors.
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:118
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:14
 msgid "Sensors"
-msgstr "Sensors"
+msgstr "Sentsoreak"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:471
 msgid "Name"
-msgstr "Name"
+msgstr "Izena"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:473
 msgid "Label"
-msgstr "Label"
+msgstr "Etiketa"
 
 #. Set the cell "active" attribute to column_show - retrieve the state
 #. of the toggle button from that column in liststore
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:477
 msgid "In dialog"
-msgstr "In dialog"
+msgstr "Elkarrizketa-koadroan"
 
 #. Add treeview-column to treeview
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:515
 msgid "Sensors displayed in icon"
-msgstr "Sensors displayed in icon"
+msgstr "Ikonoan erakutsitako sentsoreak"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:533
 msgid "properties"
-msgstr "properties"
+msgstr "propietateak"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:1
 msgid "<b>Alarms</b>"
-msgstr "<b>Alarms</b>"
+msgstr "<b>Alarmak</b>"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:3
 msgid "<b>Sensor value limits</b>"
-msgstr "<b>Sensor value limits</b>"
+msgstr "<b>Sentsoreen mugako balioak</b>"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:4
 #: ../applets/maintained/mail/mail.ui.h:3
 msgid "<b>Update</b>"
-msgstr "<b>Update</b>"
+msgstr "<b>Eguneraketa</b>"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:5
 msgid "Add"
-msgstr "Add"
+msgstr "Gehitu"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:6
 msgid "Enable high alarm"
-msgstr "Enable high alarm"
+msgstr "Gaitu goiko alarma"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:7
 msgid "Enable low alarm"
-msgstr "Enable low alarm"
+msgstr "Gaitu beheko alarma"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:8
 msgid "Font size:"
-msgstr "Font size:"
+msgstr "Letra-tipoaren tamaina:"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:10
 msgid "Meter hand color:"
-msgstr "Meter hand color:"
+msgstr "Neurgailuaren kolorea:"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:11
 msgid "Remove"
-msgstr "Remove"
+msgstr "Kendu"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:12
 msgid "Sensor high value"
-msgstr "Sensor high value"
+msgstr "Sentsorearen goiko balioa"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:13
 msgid "Sensor low value"
-msgstr "Sensor low value"
+msgstr "Sentsorearen beheko balioa"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:15
 msgid "Show value in icon"
-msgstr "Show value in icon"
+msgstr "Erakutsi balioa ikonoan"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:16
 msgid "Temperature unit:"
-msgstr "Temperature unit:"
+msgstr "Tenperatura-unitatea:"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:17
 msgid "Theme:"
-msgstr "Theme:"
+msgstr "Gaia:"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:18
 #: ../applets/maintained/mail/mail.ui.h:4
 msgid "Update interval:"
-msgstr "Update interval:"
+msgstr "Eguneratze-tartea:"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:19
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:45
 msgid "seconds"
-msgstr "seconds"
+msgstr "segungo"
 
 #. Unit long strings
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:34
@@ -2814,35 +2827,35 @@ msgstr "rpm"
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:1
 msgid "Display any network errors"
-msgstr "Display any network errors"
+msgstr "Erakutsi sareko edozein errore"
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:2
 msgid "Hide the icon if there is no new mail"
-msgstr "Hide the icon if there is no new mail"
+msgstr "Ezkutatu ikonoa posta berririk ez badago"
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:3
 msgid "The Desktop Email client to use"
-msgstr "The Desktop Email client to use"
+msgstr "Erabiliko den mahaigaineko posta-bezeroa"
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:4
 msgid "The Email backend to use"
-msgstr "The Email backend to use"
+msgstr "Erabiliko den posta-motorra"
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:5
 msgid "The theme to use for the icon"
-msgstr "The theme to use for the icon"
+msgstr "Ikonorako erabiliko den gaia"
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:6
 msgid "Timeout between two value updates (in minutes)."
-msgstr "Timeout between two value updates (in minutes)."
+msgstr "Bi balioren arteko denbora-muga (minututan)."
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:7
 msgid "Used for logging in; do not touch"
-msgstr "Used for logging in; do not touch"
+msgstr "Saioa hasteko erabilia; ez ukitu"
 
 #: ../applets/maintained/mail/mail.desktop.in.h:1
 msgid "Check Your Email from AWN"
-msgstr "Check Your Email from AWN"
+msgstr "Ikusi postarik duzun Awn-tik"
 
 #: ../applets/maintained/mail/mail.desktop.in.h:2
 #: ../applets/maintained/mail/mail.py:134
@@ -2875,7 +2888,7 @@ msgstr "%s bezala sartzen"
 
 #: ../applets/maintained/mail/mail.py:156
 msgid "Network error - Mail Applet"
-msgstr "Network error - Mail Applet"
+msgstr "Sare-errorea -  Posta elektronikoaren appleta"
 
 #: ../applets/maintained/mail/mail.py:165
 msgid "New Mail - Mail Applet"
@@ -2883,35 +2896,35 @@ msgstr "Mezu berria - Posta elektronikoaren appleta"
 
 #: ../applets/maintained/mail/mail.py:284
 msgid "Mail"
-msgstr "Mail"
+msgstr "Posta"
 
 #: ../applets/maintained/mail/mail.py:320
 msgid "Open Web Mail"
-msgstr "Open Web Mail"
+msgstr "Ireki web posta"
 
 #: ../applets/maintained/mail/mail.py:329
 msgid "Open Desktop Client"
-msgstr "Open Desktop Client"
+msgstr "Ireki mahaigaineko bezeroa"
 
 #: ../applets/maintained/mail/mail.py:338
 msgid "Refresh"
-msgstr "Refresh"
+msgstr "Freskatu"
 
 #: ../applets/maintained/mail/mail.py:347
 msgid "Log Out"
-msgstr "Log Out"
+msgstr "Amaitu saioa"
 
 #: ../applets/maintained/mail/mail.py:377
 msgid "No unread messages"
-msgstr "No unread messages"
+msgstr "Ez dago irakurri gabeko mezurik"
 
 #: ../applets/maintained/mail/mail.py:379
 msgid "No new messages"
-msgstr "No new messages"
+msgstr "Ez dago mezu berririk"
 
 #: ../applets/maintained/mail/mail.py:418
 msgid "Wrong username or password"
-msgstr "Wrong username or password"
+msgstr "Erabiltzaile-izen edo pasahitz okerra"
 
 #: ../applets/maintained/mail/mail.py:426
 #: ../applets/maintained/mail/mail.py:487
@@ -2920,7 +2933,7 @@ msgstr "Hasi saioa"
 
 #: ../applets/maintained/mail/mail.py:463
 msgid "Type:"
-msgstr "Type:"
+msgstr "Mota:"
 
 #: ../applets/maintained/mail/mail.py:468
 msgid "Backend"
@@ -2929,7 +2942,7 @@ msgstr "Motorra"
 #: ../applets/maintained/mail/mail.py:523
 #: ../applets/maintained/mail/mail.py:732
 msgid "Could not log in: No username"
-msgstr "Could not log in: No username"
+msgstr "Ezin izan da saioa hasi: Erabiltzaile-izena falta da"
 
 #: ../applets/maintained/mail/mail.py:531
 #: ../applets/maintained/mail/mail.py:596
@@ -2937,8 +2950,8 @@ msgid ""
 "There seem to be problems with our connection to your account. Your best bet "
 "is probably to log out and try again."
 msgstr ""
-"There seem to be problems with our connection to your account. Your best bet "
-"is probably to log out and try again."
+"Dirudienez arazoak daude zure kontura konektatzeko. Aukerarik onena saioa "
+"bukatu eta berriro saiatzea da."
 
 #: ../applets/maintained/mail/mail.py:553
 #: ../applets/maintained/mail/mail.py:618
@@ -2951,7 +2964,7 @@ msgstr "Google Apps"
 
 #: ../applets/maintained/mail/mail.py:587
 msgid "Could not log in: No username or domain"
-msgstr "Could not log in: No username or domain"
+msgstr "Ezin izan da saioa hasi: Erabiltzaile-izena edo domeinua falta da"
 
 #: ../applets/maintained/mail/mail.py:649
 msgid "Domain:"
@@ -2963,16 +2976,16 @@ msgstr "Unix Spool"
 
 #: ../applets/maintained/mail/mail.py:693
 msgid "Spool Path:"
-msgstr "Spool Path:"
+msgstr "Spool bide-izena:"
 
 #: ../applets/maintained/mail/mail.py:726
 #: ../applets/maintained/mail/mail.py:728
 msgid "Could not log in: "
-msgstr "Could not log in: "
+msgstr "Ezin izan da saioa hasi: "
 
 #: ../applets/maintained/mail/mail.py:737
 msgid "Could not log in: Username or password incorrect"
-msgstr "Could not log in: Username or password incorrect"
+msgstr "Ezin izan da saioa hasi: Erabiltzaile-izena edo pasahitza okerra da"
 
 #: ../applets/maintained/mail/mail.py:779
 #: ../applets/maintained/mail/mail.py:872
@@ -2990,15 +3003,15 @@ msgstr "Ezin izan da saios hasi"
 
 #: ../applets/maintained/mail/mail.py:824
 msgid "Folder does not exst"
-msgstr "Folder does not exst"
+msgstr "Karpeta ez da existitzen"
 
 #: ../applets/maintained/mail/mail.py:878
 msgid "Get messages from only one folder"
-msgstr "Get messages from only one folder"
+msgstr "Jaso karpeta bakar bateko mezuak"
 
 #: ../applets/maintained/mail/mail.py:885
 msgid "Folder:"
-msgstr "Folder:"
+msgstr "Karpeta:"
 
 #: ../applets/maintained/mail/mail.py:920
 msgid "An applet to check one's email"
@@ -3006,83 +3019,83 @@ msgstr "Posta elektronikoa egiaztatzeko appleta"
 
 #: ../applets/maintained/mail/mail.ui.h:2
 msgid "<b>Mail</b>"
-msgstr "<b>Mail</b>"
+msgstr "<b>Posta</b>"
 
 #: ../applets/maintained/mail/mail.ui.h:5
 msgid "_Alert on network errors"
-msgstr "_Alert on network errors"
+msgstr "__Alerta sareko erroreak daudenean"
 
 #: ../applets/maintained/mail/mail.ui.h:6
 msgid "_Email client:"
-msgstr "_Email client:"
+msgstr "_Posta elektronikoko bezeroa:"
 
 #: ../applets/maintained/mail/mail.ui.h:7
 msgid "_Hide applet if no new messages"
-msgstr "_Hide applet if no new messages"
+msgstr "_Ezkutatu appleta mezu berririk ez badago"
 
 #: ../applets/maintained/mail/mail.ui.h:9
 msgid "minutes"
-msgstr "minutes"
+msgstr "minututik behin"
 
 #: ../applets/maintained/media-control/awn-applet-media-control.schema-ini.in.h:1
 msgid "Close the docklet when mouse moves out from it."
-msgstr "Close the docklet when mouse moves out from it."
+msgstr "Itxi docklet-a sagua kanpora mugitzen denean."
 
 #: ../applets/maintained/media-control/awn-applet-media-control.schema-ini.in.h:2
 msgid "Display album art if available."
-msgstr "Display album art if available."
+msgstr "Erakutsi album-azala, eskuragarri badago."
 
 #: ../applets/maintained/media-control/awn-applet-media-control.schema-ini.in.h:3
 msgid "Display docklet instead of standard applet dialog."
-msgstr "Display docklet instead of standard applet dialog."
+msgstr "Erakutsi docklet-a appletaren koadro estandarraren ordez."
 
 #: ../applets/maintained/media-control/awn-applet-media-control.schema-ini.in.h:4
 msgid "Size of the album art."
-msgstr "Size of the album art."
+msgstr "Album-azalaren tamaina"
 
 #: ../applets/maintained/media-control/awn-applet-media-control.schema-ini.in.h:5
 msgid "Tooltip format to use."
-msgstr "Tooltip format to use."
+msgstr "Erabiliko den argibide-formatua."
 
 #: ../applets/maintained/media-control/media-control.desktop.in.h:1
 msgid "Control your music player"
-msgstr "Control your music player"
+msgstr "Kontrolatu zure musika-erreproduzigailua"
 
 #: ../applets/maintained/media-control/media-control.desktop.in.h:2
 msgid "Media Control"
-msgstr "Media Control"
+msgstr "Medioen kontrola"
 
 #: ../applets/maintained/media-control/media_control.py:612
 msgid "Title - Artist"
-msgstr "Title - Artist"
+msgstr "Izenburua - Artista"
 
 #: ../applets/maintained/media-control/media_control.py:612
 msgid "Artist - Title"
-msgstr "Artist - Title"
+msgstr "Artista - Izenburua"
 
 #: ../applets/maintained/media-control/media-control.ui.h:2
 msgid "Close docklet when mouse leaves it"
-msgstr "Close docklet when mouse leaves it"
+msgstr "Itxi docklet-a sagua kanpora mugitzen denean."
 
 #: ../applets/maintained/media-control/media-control.ui.h:3
 msgid "Display _docklet instead of dialog"
-msgstr "Display _docklet instead of dialog"
+msgstr "Erakutsi docklet-a elkarrizketa-koadroaren ordez."
 
 #: ../applets/maintained/media-control/media-control.ui.h:4
 msgid "Media-control preferences"
-msgstr "Media-control preferences"
+msgstr "Medioen kontrolaren hobespenak"
 
 #: ../applets/maintained/media-control/media-control.ui.h:5
 msgid "Show _album art when available"
-msgstr "Show _album art when available"
+msgstr "Erakutsi _album-azala eskuragarri dagoenean"
 
 #: ../applets/maintained/media-control/media-control.ui.h:6
 msgid "_Size of the album art:"
-msgstr "_Size of the album art:"
+msgstr "Album-azalaren _tamaina"
 
 #: ../applets/maintained/media-control/media-control.ui.h:7
 msgid "_Tooltip format:"
-msgstr "_Tooltip format:"
+msgstr "_Argibideen formatua:"
 
 #: ../applets/maintained/media-control/media-control.ui.h:8
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:8
@@ -3095,170 +3108,171 @@ msgstr "pixel"
 #: ../applets/maintained/media-icons/media-icon-next.desktop.in.h:1
 #: ../applets/maintained/media-icons/media-icons.py:68
 msgid "A media-control applet (Next Track)"
-msgstr "A media-control applet (Next Track)"
+msgstr "Medioen kotrolerako appleta (hurrengo pista)"
 
 #: ../applets/maintained/media-icons/media-icon-next.desktop.in.h:2
 #: ../applets/maintained/media-icons/media-icons.py:74
 msgid "Media Icons Next"
-msgstr "Media Icons Next"
+msgstr "Medioen ikonoa Hurrengoa"
 
 #: ../applets/maintained/media-icons/media-icon-previous.desktop.in.h:1
 #: ../applets/maintained/media-icons/media-icons.py:69
 msgid "A media-control applet (Previous Track)"
-msgstr "A media-control applet (Previous Track)"
+msgstr "Medioen kotrolerako appleta (aurreko pista)"
 
 #: ../applets/maintained/media-icons/media-icon-previous.desktop.in.h:2
 #: ../applets/maintained/media-icons/media-icons.py:75
 msgid "Media Icons Previous"
-msgstr "Media Icons Previous"
+msgstr "Medioen ikonoa Aurrekoa"
 
 #: ../applets/maintained/media-icons/media-icons.desktop.in.h:1
 #: ../applets/maintained/media-icons/media-icons.py:70
 msgid "A media-control applet (Play/Pause)"
-msgstr "A media-control applet (Play/Pause)"
+msgstr "Medioen kotrolerako appleta (erreproduzitu/pausarazi)"
 
 #: ../applets/maintained/media-icons/media-icons.desktop.in.h:2
 #: ../applets/maintained/media-icons/media-icons.py:76
 msgid "Media Icons Play/Pause"
-msgstr "Media Icons Play/Pause"
+msgstr "Medioen ikonoa Erreproduzitu/Pausarazi"
 
 #: ../applets/maintained/media-icons/media-icons.py:57
 msgid "Next"
-msgstr "Next"
+msgstr "Hurrengoa"
 
 #: ../applets/maintained/media-icons/media-icons.py:58
 msgid "Previous"
-msgstr "Previous"
+msgstr "Aurrekoa"
 
 #: ../applets/maintained/media-icons/media-icons.py:59
 msgid "Play/Pause"
-msgstr "Play/Pause"
+msgstr "Erreproduzitu/Pausarazi"
 
 #: ../applets/maintained/media-player/awn-applet-media-player.schema-ini.in.h:1
 msgid "Audio sink to use."
-msgstr "Audio sink to use."
+msgstr "Erabiliko den audio-putzua."
 
 #: ../applets/maintained/media-player/awn-applet-media-player.schema-ini.in.h:2
 msgid "Height of the video window."
-msgstr "Height of the video window."
+msgstr "Bideo-leihoaren altuera."
 
 #: ../applets/maintained/media-player/awn-applet-media-player.schema-ini.in.h:3
 msgid "List of recently played URLs."
-msgstr "List of recently played URLs."
+msgstr "Berriki erreproduzitutako URLen zerrenda."
 
 #: ../applets/maintained/media-player/awn-applet-media-player.schema-ini.in.h:4
 msgid "Video sink to use."
-msgstr "Video sink to use."
+msgstr "Erabiliko den bideo-putzua."
 
 #: ../applets/maintained/media-player/awn-applet-media-player.schema-ini.in.h:5
 msgid "Width of the video window."
-msgstr "Width of the video window."
+msgstr "Bideo-leihoaren zabalera."
 
 #: ../applets/maintained/media-player/media-player.desktop.in.h:1
 msgid "Media Player"
-msgstr "Media Player"
+msgstr "Medioen erreproduzigailua"
 
 #: ../applets/maintained/media-player/media-player.desktop.in.h:2
 msgid "Plays any media files you drop on the applet"
-msgstr "Plays any media files you drop on the applet"
+msgstr "Appletean jaregiten den edozein medio erreproduzitzen du"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:1
 msgid "<b>GStreamer properties</b>"
-msgstr "<b>GStreamer properties</b>"
+msgstr "<b>GStreamer propietateak</b>"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:2
 msgid "<b>Video size</b>"
-msgstr "<b>Video size</b>"
+msgstr "<b>Bideo-tamaina</b>"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:3
 msgid "Media Player Preferences"
-msgstr "Media Player Preferences"
+msgstr "Medioen erreproduzigailuaren hobespenak"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:4
 msgid "_Audiosink:"
-msgstr "_Audiosink:"
+msgstr "_Audio-putzua:"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:5
 msgid "_Height:"
-msgstr "_Height:"
+msgstr "A_ltuera:"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:6
 msgid "_Videosink:"
-msgstr "_Videosink:"
+msgstr "_Bideo-putzua:"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:7
 msgid "_Width:"
-msgstr "_Width:"
+msgstr "_Zabalera:"
 
 #: ../applets/maintained/mount/awn-applet-mount.schema-ini.in.h:1
 msgid "Command to execute after mounting a mountpoint."
-msgstr "Command to execute after mounting a mountpoint."
+msgstr "Muntatze-puntu bat muntatu ondoren exekutatuko den komandoa."
 
 #: ../applets/maintained/mount/awn-applet-mount.schema-ini.in.h:2
 msgid "List of mountpoints that should remain hidden in the UI."
-msgstr "List of mountpoints that should remain hidden in the UI."
+msgstr "EI-an ezkutuan mantenduko diren muntatze-puntuen zerrenda."
 
 #: ../applets/maintained/mount/mount.desktop.in.h:1
 msgid "An applet to (un)mount devices"
-msgstr "An applet to (un)mount devices"
+msgstr "Gailuak (des)muntatzeko appleta"
 
 #: ../applets/maintained/mount/mount.desktop.in.h:2
 msgid "Mount Applet"
-msgstr "Mount Applet"
+msgstr "Muntatze-appleta"
 
 #: ../applets/maintained/mount/mount.ui.h:2
 #, no-c-format
 msgid "<i><b>Note:</b> use %D for the mountpoint</i>"
-msgstr "<i><b>Note:</b> use %D for the mountpoint</i>"
+msgstr "<i><b>Oharra:</b> erabili %D muntatze-puntu gisa</i>"
 
 #: ../applets/maintained/mount/mount.ui.h:3
 msgid "List of hidden mountpoints, separated by a space"
-msgstr "List of hidden mountpoints, separated by a space"
+msgstr "Muntatze-puntu ezkutuen zerrenda, zuriunez banatuta"
 
 #: ../applets/maintained/mount/mount.ui.h:4
 msgid "_Execute command after successful mount:"
-msgstr "_Execute command after successful mount:"
+msgstr "_Exekutatu komandoa muntatze arrakastatsuaren ondoren:"
 
 #: ../applets/maintained/mount/mount.ui.h:5
 msgid "_Hidden mountpoints:"
-msgstr "_Hidden mountpoints:"
+msgstr "_Muntatze-puntu ezkutuak:"
 
 #: ../applets/maintained/notification-area/awn-applet-notification-area.schema-ini.in.h:1
 msgid "Extra offset from the panel's egde."
-msgstr "Extra offset from the panel's egde."
+msgstr "Distantzia gehigarria panelaren ertzetik."
 
 #: ../applets/maintained/notification-area/awn-applet-notification-area.schema-ini.in.h:2
 msgid ""
 "Maximum number of rows (or columns depending on the orientation of the "
 "panel) of the tray icons in the applet."
 msgstr ""
-"Maximum number of rows (or columns depending on the orientation of the "
-"panel) of the tray icons in the applet."
+"Appleteko erretilu-ikonoen lerro-kopuru maximoa (edo zutabeena, panelaren "
+"orientazioaren arabera)"
 
 #: ../applets/maintained/notification-area/awn-applet-notification-area.schema-ini.in.h:3
 msgid "Size of the icons (in percent of applet size)."
-msgstr "Size of the icons (in percent of applet size)."
+msgstr "Ikonoen tamaina (appletaren tamainaren ehunekotan)."
 
 #: ../applets/maintained/notification-area/awn-applet-notification-area.schema-ini.in.h:4
 msgid "The background color of the notification-area."
-msgstr "The background color of the notification-area."
+msgstr "Jakinarazpen-arearen atzeko planoaren kolorea."
 
 #: ../applets/maintained/notification-area/awn-applet-notification-area.schema-ini.in.h:5
 msgid "The border color of the notification-area."
-msgstr "The border color of the notification-area."
+msgstr "Jakinarazpen-arearen ertzaren kolorea."
 
 #: ../applets/maintained/notification-area/egg-tray-child.c:170
 #, c-format
 msgid "tray icon has requested a size of (%i x %i), resizing to (%i x %i)"
-msgstr "tray icon has requested a size of (%i x %i), resizing to (%i x %i)"
+msgstr ""
+"erretilu-ikonoak (%i x %i) tamaina eskatu du, (%i x %i) tamainara aldatzen"
 
 #: ../applets/maintained/notification-area/eggtraymanager.c:148
 msgid "Orientation"
-msgstr "Orientation"
+msgstr "Orientazioa"
 
 #: ../applets/maintained/notification-area/eggtraymanager.c:149
 msgid "The orientation of the tray."
-msgstr "The orientation of the tray."
+msgstr "Erretiluaren orientazioa."
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:2
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:2
@@ -3268,81 +3282,81 @@ msgstr "%"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:3
 msgid "<b>Background Color</b>"
-msgstr "<b>Background Color</b>"
+msgstr "<b>Atzeko planoaren kolorea</b>"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:4
 msgid "<b>Border Color</b>"
-msgstr "<b>Border Color</b>"
+msgstr "<b>Ertzaren kolorea</b>"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:6
 msgid "Automatic"
-msgstr "Automatic"
+msgstr "Automatikoa"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:7
 msgid "Custom:"
-msgstr "Custom:"
+msgstr "Pertsonalizatua:"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:8
 msgid "Extra _offset:"
-msgstr "Extra _offset:"
+msgstr "Distantzia _gehigarria:"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:9
 msgid "Icon _size:"
-msgstr "Icon _size:"
+msgstr "_Ikono-tamaina:"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:10
 msgid "Notification Area Preferences"
-msgstr "Notification Area Preferences"
+msgstr "Jakinarazpen-arearen hobespenak"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:11
 msgid "_Number of icon rows:"
-msgstr "_Number of icon rows:"
+msgstr "Ikono-lerroen _kopurua:"
 
 #: ../applets/maintained/notification-area/notification-area.desktop.in.in.h:1
 msgid "A Notification Area (systray)"
-msgstr "A Notification Area (systray)"
+msgstr "Jakinarazpen-area (systray)"
 
 #: ../applets/maintained/notification-area/notification-area.desktop.in.in.h:2
 msgid "Notification Area"
-msgstr "Notification Area"
+msgstr "Jakinarazpen-area"
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:1
 msgid "Background colour in the form (Hex) rrggbbaa"
-msgstr "Background colour in the form (Hex) rrggbbaa"
+msgstr "Atzeko planoaren kolorea (Hex) rrggbbaa formatuan"
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:2
 msgid "Border Width. A value of 0 indicates that is should not be drawn."
-msgstr "Border Width. A value of 0 indicates that is should not be drawn."
+msgstr "Ertzaren zabalera. 0 balioak ez dela marraztuko esan nahi du."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:3
 msgid ""
 "Border colour in the form (Hex) rrggbbaa.  Also use for the timer widget"
 msgstr ""
-"Border colour in the form (Hex) rrggbbaa.  Also use for the timer widget"
+"Ertzaren kolorea (Hex) rrggbbaa formatuan  Kronometro-trepetan ere erabilia"
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:4
 msgid ""
 "Display icon for awn notification daemon.  Allows toggling of notification "
 "display"
 msgstr ""
-"Display icon for awn notification daemon.  Allows toggling of notification "
-"display"
+"Erakutsi ikonoa Awn-ren jakinarazpen-deabrurako.  Jakinarazpenen bistaratzea "
+"txandakatzea ahalbidetzen du"
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:5
 msgid ""
 "Gradient Factor applied to the notification window. Range of 0 to 1. The "
 "lower the number the more noticeable the effect."
 msgstr ""
-"Gradient Factor applied to the notification window. Range of 0 to 1. The "
-"lower the number the more noticeable the effect."
+"Jakinarazpen-leihoari aplikatutako gradiente-faktorea. Balio-tartea 0tik "
+"1era. Zenbaki baxuagoak efektu nabarmenagoa eragiten du."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:6
 msgid ""
 "If the value is >0.0 then this opacity value will be applied to window "
 "instead of hiding."
 msgstr ""
-"If the value is >0.0 then this opacity value will be applied to window "
-"instead of hiding."
+"Balioa >0.0 bada, orduan opakotasun-balioa leihoari aplikatuko zaio, "
+"ezkutatu ordez."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:7
 msgid ""
@@ -3351,10 +3365,10 @@ msgid ""
 "awn-notification-daemon should place windows relative to its position in the "
 "bar."
 msgstr ""
-"NOTE:  This key should not be considered stable... it is likely to change.  "
-"Arbitrary X position for notification window.  Default is -1 which signifies "
-"awn-notification-daemon should place windows relative to its position in the "
-"bar."
+"OHARRA: Gako hau ez da egonkorra... aldatu egin daiteke.  X kokapen "
+"arbitrarioa jakinarazpen-leihorako.  Lehenetsia -1 da, alegia awn-"
+"notification-daemon deabruak leihoak barran duen kokapenaren arabera "
+"kokatuko dituela."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:8
 msgid ""
@@ -3363,30 +3377,30 @@ msgid ""
 "awn-notification-daemon should place windows relative to its position in the "
 "bar."
 msgstr ""
-"NOTE:  This key should not be considered stable... it is likely to change.  "
-"Arbitrary Y position for notification window.  Default is -1 which signifies "
-"awn-notification-daemon should place windows relative to its position in the "
-"bar."
+"OHARRA: Gako hau ez da egonkorra... aldatu egin daiteke.  Y kokapen "
+"arbitrarioa jakinarazpen-leihorako.  Lehenetsia -1 da, alegia awn-"
+"notification-daemon deabruak leihoak barran duen kokapenaren arabera "
+"kokatuko dituela."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:9
 msgid "Sound."
-msgstr "Sound."
+msgstr "Soinua."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:10
 msgid ""
 "Text colour in the form (Hex) rrggbbaa. Currently the alpha component is "
 "ignored"
 msgstr ""
-"Text colour in the form (Hex) rrggbbaa. Currently the alpha component is "
-"ignored"
+"Testuaren kolorea (Hex) rrggbbaa formatuan Unean alpha osagaia ezikusi "
+"egiten da"
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:11
 msgid ""
 "The default sound file used unless a notification supplies the 'sound-file' "
 "or 'suppress-sound' hint. Leave empty for no default sound."
 msgstr ""
-"The default sound file used unless a notification supplies the 'sound-file' "
-"or 'suppress-sound' hint. Leave empty for no default sound."
+"Soinu-fitxategi lehenetsia, jakinarazpen batek 'sound-file' edo 'suppress-"
+"sound' iradokitzen ez badu. Utzi hutsik soinu lehenetsirik ez edukitzeko."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:12
 msgid ""
@@ -3394,130 +3408,134 @@ msgid ""
 "notification windows with a timeout.  Value is in ms. A value less than or "
 "equal to 0 indicates that client and default values should be honoured."
 msgstr ""
-"This will override the client and default timeout periods for all "
-"notification windows with a timeout.  Value is in ms. A value less than or "
-"equal to 0 indicates that client and default values should be honoured."
+"Honek bezeroaren eta lehenetsitako denbora-mugak gainidatziko ditu denbora-"
+"muga duten jakinarazpen guztietan.  Balioa ms-tan dago. Zeroren berdina edo "
+"txikiagoa den balio batek esan nahi du bezeroaren eta lehenetsitako balioak "
+"erabiliko direla."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:13
 msgid "Use bold text."
-msgstr "Use bold text."
+msgstr "Erabili testu lodia."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:14
 msgid "Whether to attempt to kill any running notification-daemons."
-msgstr "Whether to attempt to kill any running notification-daemons."
+msgstr ""
+"Abian dauden jakinarazpen-deabru guztiak hiltzen saiatu behar den ala ez."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:15
 msgid "Whether to honour client notification window positioning requests."
-msgstr "Whether to honour client notification window positioning requests."
+msgstr ""
+"Jakinarazpen-bezeroaren leihoaren kokapen-eskaerei kasu egingo zaien ala ez."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:16
 msgid "Whether to the use configured awn theme color values for xxxx."
-msgstr "Whether to the use configured awn theme color values for xxxx."
+msgstr ""
+"Awn-ren gaiaren kolore-balio konfiguratuak erabiliko diren ala ez xxxx-rako."
 
 #: ../applets/maintained/notification-daemon/daemon.c:1421
 #, c-format
 msgid "%u is not a valid notification ID"
-msgstr "%u is not a valid notification ID"
+msgstr "%u ez da baliozko jakinarazpen ID."
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:35
 msgid "Whether to show tooltips when hovering over a place.);"
-msgstr "Whether to show tooltips when hovering over a place.);"
+msgstr "Leku baten gainetik pasatzean argibideak erakutsiko diren ala ez.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:33
 msgid "The width of the menu's border.);"
-msgstr "The width of the menu's border.);"
+msgstr "Menuaren ertzen zabalera.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:31
 msgid "The size of the text in the menu, in pixels.);"
-msgstr "The size of the text in the menu, in pixels.);"
+msgstr "Menuko testuaren tamaina, pixeletan.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:29
 msgid "The icon theme name of the applet's icon.);"
-msgstr "The icon theme name of the applet's icon.);"
+msgstr "Appletaren ikonoaren ikono-gaiaren izena.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:27
 msgid "The file manager that shows the contents of the places.);"
-msgstr "The file manager that shows the contents of the places.);"
+msgstr "Lekuen edukiak erakusten dituen fitxategi-kudeatzailea.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:25
 msgid ""
 "The colour (RGBA) of the text when a place is selected or the mouse hovers "
 "over it.);"
 msgstr ""
-"The colour (RGBA) of the text when a place is selected or the mouse hovers "
-"over it.);"
+"Leku bat hautatzen denean edo sagua gainetik pasatzen denean testuak hartzen "
+"duen kolorea, RGBA formatuan.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:23
 msgid "The colour (RGBA) of the text in the menu.);"
-msgstr "The colour (RGBA) of the text in the menu.);"
+msgstr "Menuko testuaren kolorea RGBA formatuan.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:21
 msgid ""
 "The colour (RGBA) of the menu's border, if the border width is greater than "
 "zero.);"
 msgstr ""
-"The colour (RGBA) of the menu's border, if the border width is greater than "
-"zero.);"
+"Menuaren ertzaren kolorea RGBA formatuan, ertzaren zabalera zero baino "
+"handiagoa denean.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:19
 msgid ""
 "The color (RGBA) of the text when a place is selected or the mouse hovers "
 "over it.);"
 msgstr ""
-"The color (RGBA) of the text when a place is selected or the mouse hovers "
-"over it.);"
+"Leku bat hautatzen denean edo sagua gainetik pasatzen denean testuak hartzen "
+"duen kolorea, RGBA formatuan.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:17
 msgid "The color (RGBA) of the text in the menu.);"
-msgstr "The color (RGBA) of the text in the menu.);"
+msgstr "Menuko testuaren kolorea RGBA formatuan.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:15
 msgid ""
 "The color (RGBA) of the menu's border, if the border width is greater than "
 "zero.);"
 msgstr ""
-"The color (RGBA) of the menu's border, if the border width is greater than "
-"zero.);"
+"Menuaren ertzaren kolorea RGBA formatuan, ertzaren zabalera zero baino "
+"handiagoa denean.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:13
 msgid "The background colour (RGBA) of the menu.);"
-msgstr "The background colour (RGBA) of the menu.);"
+msgstr "Menuaren atzeko planoaren kolorea RGBA formatuan.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:11
 msgid ""
 "The background colour (RGBA) of an entry in the menu when it is selected or "
 "the mouse hovers over it.);"
 msgstr ""
-"The background colour (RGBA) of an entry in the menu when it is selected or "
-"the mouse hovers over it.);"
+"Menuko sarrera baten atzeko planoaren kolorea, RGBA formatuan, hautatua "
+"denean edo sagua gainetaik igarotzen zaionean.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:9
 msgid "The background color (RGBA) of the menu.);"
-msgstr "The background color (RGBA) of the menu.);"
+msgstr "Menuaren atzeko planoaren kolorea RGBA formatuan.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:7
 msgid ""
 "The background color (RGBA) of an entry in the menu when it is selected or "
 "the mouse hovers over it.);"
 msgstr ""
-"The background color (RGBA) of an entry in the menu when it is selected or "
-"the mouse hovers over it.);"
+"Menuko sarrera baten atzeko planoaren kolorea, RGBA formatuan, hautatua "
+"denean edo sagua gainetaik igarotzen zaionean.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:5
 msgid ""
 "Determines whether to use the current Gtk+ theme's colour/font settings, or "
 "the applet-specific style settings.);"
 msgstr ""
-"Determines whether to use the current Gtk+ theme's colour/font settings, or "
-"the applet-specific style settings.);"
+"Uneko Gtk+ gaiaren kolorea/letra-tipoa erabiliko duen ala appletaren estilo-"
+"ezarpenak erabiliko dituen zehazten du.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:3
 msgid ""
 "Determines whether to use the current Gtk+ theme's color/font settings, or "
 "the applet-specific style settings.);"
 msgstr ""
-"Determines whether to use the current Gtk+ theme's color/font settings, or "
-"the applet-specific style settings.);"
+"Uneko Gtk+ gaiaren kolorea/letra-tipoa erabiliko duen ala appletaren estilo-"
+"ezarpenak erabiliko dituen zehazten du.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:1
 msgid ""
@@ -3526,70 +3544,72 @@ msgid ""
 "multiplied by this value.  At 20 percent from the top of the menu, the alpha "
 "value is the background color's alpha value.);"
 msgstr ""
-"Creates an alpha gradient in the menu item background.  At the top and "
-"bottom of the menu, the alpha value is the background color's alpha value "
-"multiplied by this value.  At 20 percent from the top of the menu, the alpha "
-"value is the background color's alpha value.);"
+"Alpha gradiente bat sortzen du menuko elementuaren atzeko planoan.  Menuaren "
+"goiko eta beheko aldean, alpha balioa atzeko planoaren kolorearen alpha "
+"balioa ber balio hau da.  Menuaren goiko aldetik ehuneko 20ko distantziara, "
+"alpha balioa atzeko planoaren kolorearen alpha balioa da.);"
 
 #: ../applets/maintained/places/places.desktop.in.in.h:1
 msgid "Launch your folder bookmarks"
-msgstr "Launch your folder bookmarks"
+msgstr "Abiarazi karpeten laster-markak"
 
 #: ../applets/maintained/python-test/python-test.desktop.in.h:1
 msgid "A simple applet to test python support"
-msgstr "A simple applet to test python support"
+msgstr "Python euskarria probatzeko applet sinplea"
 
 #: ../applets/maintained/python-test/python-test.desktop.in.h:2
 msgid "Test Python Applet"
-msgstr "Test Python Applet"
+msgstr "Probatu Python appleta"
 
 #: ../applets/maintained/quit/awn-applet-quit.schema-ini.in.h:1
 msgid "Action to perform when left clicking on the icon."
-msgstr "Action to perform when left clicking on the icon."
+msgstr "Ikonoan ezkerrarekin klik egitean gauzatuko den ekintza."
 
 #: ../applets/maintained/quit/awn-applet-quit.schema-ini.in.h:2
 msgid "Command to execute if org.gnome.ScreenSaver is not available."
-msgstr "Command to execute if org.gnome.ScreenSaver is not available."
+msgstr ""
+"org.gnome.ScreenSaver eskuragarri ez badago exekutatuko den komandoa."
 
 #: ../applets/maintained/quit/awn-applet-quit.schema-ini.in.h:3
 msgid "Command to execute if org.gnome.SessionManager is not available."
-msgstr "Command to execute if org.gnome.SessionManager is not available."
+msgstr ""
+"org.gnome.SessionManager eskuragarri ez badago exekutatuko den komandoa."
 
 #: ../applets/maintained/quit/quit.desktop.in.h:1
 msgid "An applet to exit or log out of your session"
-msgstr "An applet to exit or log out of your session"
+msgstr "Zure saiotik irten edo saioa bukatzeko appleta"
 
 #: ../applets/maintained/quit/quit.desktop.in.h:2
 msgid "Quit-Log Out applet"
-msgstr "Quit-Log Out applet"
+msgstr "Irten-Saioa amaitu appleta"
 
 #: ../applets/maintained/quit/quit-lock-screen.desktop.in.h:2
 msgid "Protect your computer from unauthorized use"
-msgstr "Protect your computer from unauthorized use"
+msgstr "Babestu zure ordenagailua baimentik gabeko erabileratik"
 
 #: ../applets/maintained/quit/quit-log-out.desktop.in.h:1
 msgid "Log Out..."
-msgstr "Log Out..."
+msgstr "Amaitu saioa..."
 
 #: ../applets/maintained/quit/quit-log-out.desktop.in.h:2
 msgid "Log out of this session to log in as a different user"
-msgstr "Log out of this session to log in as a different user"
+msgstr "Amaitu saio hau beste erabiltzaile batekin saioa hasteko"
 
 #: ../applets/maintained/quit/quit-shut-down.desktop.in.h:1
 msgid "Shut Down..."
-msgstr "Shut Down..."
+msgstr "Itzali..."
 
 #: ../applets/maintained/quit/quit-shut-down.desktop.in.h:2
 msgid "Shut down the system"
-msgstr "Shut down the system"
+msgstr "Itzali sistema"
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:1
 msgid " The color (RGBA) applet border."
-msgstr " The color (RGBA) applet border."
+msgstr " Appletaren ertzaren kolorea (RGBA)."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:2
 msgid " The color of the desktop (RGBA) if grab_wallpaper is FALSE."
-msgstr " The color of the desktop (RGBA) if grab_wallpaper is FALSE."
+msgstr " Mahaigainaren kolorea (RGBA) grab_wallpaper FALSE bada."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:3
 msgid " gdk."
@@ -3597,7 +3617,7 @@ msgstr " gdk."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:4
 msgid "0... centre  1 NW    2 NE   3 SE  4 SW\t"
-msgstr "0... centre  1 NW    2 NE   3 SE  4 SW\t"
+msgstr "0... erdia  1 NW    2 NE   3 SE  4 SW\t"
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:5
 msgid "1"
@@ -3605,31 +3625,31 @@ msgstr "1"
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:6
 msgid "Alpha to apply to icon overlayed on active window."
-msgstr "Alpha to apply to icon overlayed on active window."
+msgstr "Leiho aktiboan gainjarritako ikonoari aplikatuko zaion alpha."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:7
 msgid "Alpha to apply to icon overlayed on inactive window."
-msgstr "Alpha to apply to icon overlayed on inactive window."
+msgstr "Leiho ez-aktiboan gainjarritako ikonoari aplikatuko zaion alpha."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:8
 msgid "Alpha value to apply to active workspace background."
-msgstr "Alpha value to apply to active workspace background."
+msgstr "Laneko area aktiboaren atzeko planoari aplikatuko zaion alpha."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:9
 msgid "Alpha value to apply to inactive workspace background."
-msgstr "Alpha value to apply to inactive workspace background."
+msgstr "Laneko area ez-aktiboaren atzeko planoari aplikatuko zaion alpha."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:10
 msgid "Applet border width.  0 indicates no border."
-msgstr "Applet border width.  0 indicates no border."
+msgstr "Appletaren ertzaren zabalera.  0 balioak ertzik eza adierazten du."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:11
 msgid ""
 "Mousewheel  0. off. 1 up left, down right. 2 Opposite direction of 1. 3 Same "
 "as 1 no wrap. 4 opposite direction of 3."
 msgstr ""
-"Mousewheel  0. off. 1 up left, down right. 2 Opposite direction of 1. 3 Same "
-"as 1 no wrap. 4 opposite direction of 3."
+"Saguaren gurpila 0. off. 1 gora ezkerrera, behera eskuinera. 2, 1en aurkako "
+"zentzua. 3, 1 bezala baina doitu gabe. 4, 3ren aurkako zentzua."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:12
 msgid ""
@@ -3637,9 +3657,8 @@ msgid ""
 "expired.  After this duration it will be updated when needed if it possible "
 "to do so."
 msgstr ""
-"Number of seconds before a cached window surface is considered to be "
-"expired.  After this duration it will be updated when needed if it possible "
-"to do so."
+"Segundo-kopurua leiho katxeatu baten azalera iraungi dela kontsideratu arte. "
+" Iraupen honen ondoren eguneratu egingo da, beharrezkoa denean, posible bada."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:13
 msgid ""
@@ -3647,425 +3666,428 @@ msgid ""
 "The smaller the number the less lag will be apparent on shinyswitcher "
 "updates.  Multiples of 1000 are more power and CPU efficient."
 msgstr ""
-"Queued render timer. Number of milliseconds between queued render updates. "
-"The smaller the number the less lag will be apparent on shinyswitcher "
-"updates.  Multiples of 1000 are more power and CPU efficient."
+"Ilarako errendatze-kronometroa. Ilarako errendatzeen eguneraketen arteko "
+"milisegundo-kopurua. Zenbaki txikiagoak atzerapen aparente txikiagoa "
+"eragingo du aldatzailearen eguneraketetan.   1000 zenbakiaren anizkoitzak "
+"eraginkorragoak dira potentziaren eta PUZaren aldetik."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:14
 msgid "Scales the applet size relative to the maximum icon size"
-msgstr "Scales the applet size relative to the maximum icon size"
+msgstr "Appletaren tamaina eskalatzen du ikono-tamaina maximoarekiko"
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:15
 msgid "The colour (RGBA) of the applet border."
-msgstr "The colour (RGBA) of the applet border."
+msgstr "Appletaren ertzaren kolorea (RGBA)."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:16
 msgid "The colour of the desktop (RGBA) if grab_wallpaper is FALSE."
-msgstr "The colour of the desktop (RGBA) if grab_wallpaper is FALSE."
+msgstr "Mahaigainaren kolorea (RGBA) grab_wallpaper FALSE bada."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:17
 msgid "The number of columns in the pager."
-msgstr "The number of columns in the pager."
+msgstr "Zutabe-kopurua orrialdekatzailean."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:18
 msgid "The number of rows in the pager."
-msgstr "The number of rows in the pager."
+msgstr "Errenkada-kopurua orrialdekatzailean."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:19
 msgid ""
 "When to  overly the app icon:  0...no\t1...on inactive workspace onlt\t"
 "2...all but active win\t3..all."
 msgstr ""
-"When to  overly the app icon:  0...no\t1...on inactive workspace onlt\t"
-"2...all but active win\t3..all."
+"Noiz gainjarri aplikazio-ikonoa: 0...ez\t1...laneko area ez-aktiboan soilik\t"
+"2...denetan leiho aktiboan salbu\t3..dena."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:20
 msgid ""
 "When to scale icons:  0...none  1...on all active ws  2...on_active_win "
 "3...all"
 msgstr ""
-"When to scale icons:  0...none  1...on all active ws  2...on_active_win "
-"3...all"
+"Noiz eskalatu ikonoak: 0...ez\t1...leiho aktibo guztietan\t2...leiho "
+"aktiboan\t3..dena."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:21
 msgid "Whether to grab wallpaper."
-msgstr "Whether to grab wallpaper."
+msgstr "Horma-papera kapturatuko den ala ez."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:22
 msgid ""
 "Win grabs:  0...none\t1...all (grab method may override) 2..active ws (and "
 "sticky)  3...active win"
 msgstr ""
-"Win grabs:  0...none\t1...all (grab method may override) 2..active ws (and "
-"sticky)  3...active win"
+"Leihoen kapturak:  0...ez\t1...denak (kaptura-metodoak gainidatzi dezake) "
+"2..laneko are aktiboa (eta itsaskorra)  3...leiho aktiboa"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:3
 msgid "<b>Background transparency</b>"
-msgstr "<b>Background transparency</b>"
+msgstr "<b>Atzeko planoaren gardentasuna</b>"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:4
 msgid "<b>Background</b>"
-msgstr "<b>Background</b>"
+msgstr "<b>Atzeko planoa</b>"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:6
 msgid "<b>Icon transparency</b>"
-msgstr "<b>Icon transparency</b>"
+msgstr "<b>Ikonoen gardentasuna</b>"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:7
 msgid "<b>Timers</b>"
-msgstr "<b>Timers</b>"
+msgstr "<b>Kronometroak</b>"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:8
 msgid "<b>Viewport size</b>"
-msgstr "<b>Viewport size</b>"
+msgstr "<b>Leihatilaren tamaina</b>"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:9
 msgid "<b>Windows</b>"
-msgstr "<b>Windows</b>"
+msgstr "<b>Leihoak</b>"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:10
 msgid "Active window:"
-msgstr "Active window:"
+msgstr "Leiho aktiboa:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:11
 msgid "Active workspace"
-msgstr "Active workspace"
+msgstr "Laneko area aktiboa"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:12
 msgid "Active workspace:"
-msgstr "Active workspace:"
+msgstr "Laneko area aktiboa:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:13
 msgid "All window"
-msgstr "All window"
+msgstr "Leiho guztiak"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:14
 msgid "All windows"
-msgstr "All windows"
+msgstr "Leiho guztiak"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:15
 msgid "B_order color:"
-msgstr "B_order color:"
+msgstr "_Ertzaren kolorea:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:17
 msgid "Border _size:"
-msgstr "Border _size:"
+msgstr "Ertzaren _tamaina:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:18
 msgid "C_ustom color:"
-msgstr "C_ustom color:"
+msgstr "Kolore _pertsonalizatua:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:19
 msgid "Cache expiration:"
-msgstr "Cache expiration:"
+msgstr "Katxearen iraungipena"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:20
 msgid "Center"
-msgstr "Center"
+msgstr "Erdia"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:21
 msgid "Co_lumns:"
-msgstr "Co_lumns:"
+msgstr "_Zutabeak:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:22
 msgid "Icon _display:"
-msgstr "Icon _display:"
+msgstr "Ikonoaren _bistaratzea:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:23
 msgid "Icon _scaling:"
-msgstr "Icon _scaling:"
+msgstr "Ikonoaren _eskalatzea:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:24
 msgid "Inactive window:"
-msgstr "Inactive window:"
+msgstr "Leiho inaktiboa:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:25
 msgid "Inactive windows"
-msgstr "Inactive windows"
+msgstr "Leiho inaktiboak"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:26
 msgid "Inactive workspace:"
-msgstr "Inactive workspace:"
+msgstr "Laneko area inaktiboa:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:27
 msgid "Inactive workspaces"
-msgstr "Inactive workspaces"
+msgstr "Laneko area inaktiboak"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:28
 msgid "Look"
-msgstr "Look"
+msgstr "Itxura"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:29
 msgid "Lower left"
-msgstr "Lower left"
+msgstr "Behean ezkerrean"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:30
 msgid "Lower right"
-msgstr "Lower right"
+msgstr "Behean eskuinean"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:31
 msgid "Never"
-msgstr "Never"
+msgstr "Inoiz ez"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:33
 msgid "Only active window"
-msgstr "Only active window"
+msgstr "Leiho aktiboa soilik"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:34
 msgid "Render update:"
-msgstr "Render update:"
+msgstr "Errendatze-eguneraketa:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:35
 msgid "Scale _amount:"
-msgstr "Scale _amount:"
+msgstr "Eskala _kantitatea:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:36
 msgid "Scaled icon _position:"
-msgstr "Scaled icon _position:"
+msgstr "Eskalatutako ikonoaren k_okapena:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:37
 msgid "Shiny Switcher Preferences"
-msgstr "Shiny Switcher Preferences"
+msgstr "Shiny Switcher-en hobespenak"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:38
 msgid "Upper left"
-msgstr "Upper left"
+msgstr "Goian ezkerrean"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:39
 msgid "Upper right"
-msgstr "Upper right"
+msgstr "Goian eskuinean"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:40
 msgid "Use _desktop background"
-msgstr "Use _desktop background"
+msgstr "Erabili _mahaigainaren atzeko planoa"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:41
 msgid "_Applet size:"
-msgstr "_Applet size:"
+msgstr "Appletaren _tamaina:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:42
 msgid "_Rows:"
-msgstr "_Rows:"
+msgstr "_Errenkadak:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:43
 msgid "_Thumbnailing:"
-msgstr "_Thumbnailing:"
+msgstr "_Miniaturak:"
 
 #: ../applets/maintained/showdesktop/applet.vala:40
 #: ../applets/maintained/showdesktop/showdesktop.desktop.in.in.h:2
 msgid "Show Desktop"
-msgstr "Show Desktop"
+msgstr "Erakutsi mahaigaina"
 
 #. vim:ft=vala:et:ts=2 sts=2 sw=2:ai:cindent
 #: ../applets/maintained/showdesktop/applet.vala:78
 #: ../applets/maintained/showdesktop/showdesktop.desktop.in.in.h:1
 msgid "Hides your windows and shows your desktop."
-msgstr "Hides your windows and shows your desktop."
+msgstr "Zure leihoak ezkutatu eta zure mahaigaina erakusten du."
 
 #: ../applets/maintained/showdesktop/applet.vala:93
 msgid "Show hidden windows"
-msgstr "Show hidden windows"
+msgstr "Erakutsi leiho ezkutuak"
 
 #: ../applets/maintained/showdesktop/applet.vala:98
 msgid "Hide windows and show desktop"
-msgstr "Hide windows and show desktop"
+msgstr "Ezkutatu leihoak eta erakutsi mahaigaina"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:1
 msgid "The background color of the dialog"
-msgstr "The background color of the dialog"
+msgstr "Koadroaren atzeko planoaren kolorea."
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:2
 msgid "The border color of a drawn window"
-msgstr "The border color of a drawn window"
+msgstr "Marraztutako leiho baten ertzaren kolorea"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:3
 msgid "The border color of the dialog"
-msgstr "The border color of the dialog"
+msgstr "Koadroaren ertzaren kolorea."
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:4
 msgid "The bottom part of the shiny gradient"
-msgstr "The bottom part of the shiny gradient"
+msgstr "Gradiente distiratsuaren beheko aldea"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:5
 msgid "The bottom part of the shiny gradient when hovered"
-msgstr "The bottom part of the shiny gradient when hovered"
+msgstr "Gradiente distiratsuaren beheko aldea sagua gainetik pasatzean"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:6
 msgid "The drop shadow color of the drawn number"
-msgstr "The drop shadow color of the drawn number"
+msgstr "Marraztutako zenbakiaren itzalaren kolorea"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:7
 msgid "The file to use as the background image"
-msgstr "The file to use as the background image"
+msgstr "Atzeko planoko irudi gisa erabiliko den fitxategia"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:8
 msgid "The height of a workspace widget"
-msgstr "The height of a workspace widget"
+msgstr "Laneko areen trepetaren altuera"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:9
 msgid "The hovered border color of a workspace widget"
-msgstr "The hovered border color of a workspace widget"
+msgstr "Laneko areen trepetaren ertzaren kolorea sagua gainetik pasatzean"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:10
 msgid "The icon's border color"
-msgstr "The icon's border color"
+msgstr "Ikonoaren ertzaren kolorea"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:11
 msgid "The main color of a drawn window"
-msgstr "The main color of a drawn window"
+msgstr "Marraztutako leiho baten kolore nagusia"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:12
 msgid "The main color of the drawn number"
-msgstr "The main color of the drawn number"
+msgstr "Marraztutako zenbakiaren kolore nagusia"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:13
 msgid "The normal border color of a workspace widget"
-msgstr "The normal border color of a workspace widget"
+msgstr "Laneko areen trepetaren ertzaren kolore normala"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:14
 msgid "The top part of the shiny gradient"
-msgstr "The top part of the shiny gradient"
+msgstr "Gradiente distiratsuaren goiko aldea"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:15
 msgid "The top part of the shiny gradient when hovered"
-msgstr "The top part of the shiny gradient when hovered"
+msgstr "Gradiente distiratsuaren goiko aldea sagua gainetik pasatzean"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:16
 msgid "The width of a workspace widget"
-msgstr "The width of a workspace widget"
+msgstr "Laneko areen trepetaren zabalera"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:17
 msgid "Whether or not to use custom colors for the dialog"
-msgstr "Whether or not to use custom colors for the dialog"
+msgstr "Koadrorako kolore pertsonalizatuak erabiliko diren ala ez"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:18
 msgid "Whether or not to use the standard text overlay"
-msgstr "Whether or not to use the standard text overlay"
+msgstr "Testuaren gainjartze estandarra erabiliko den ala ez"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:19
 msgid "Which background image(s) source to use: gnome, compiz, file"
-msgstr "Which background image(s) source to use: gnome, compiz, file"
+msgstr ""
+"Atzeko planoko irudirako zein jatorri erabiliko den: gnome, compiz, "
+"fitxategia"
 
 #: ../applets/maintained/slickswitcher/prefs.py:69
 msgid "SlickSwitcher Preferences"
-msgstr "SlickSwitcher Preferences"
+msgstr "SlickSwitcher-en hobespenak"
 
 #. Colors: Borders, Windows, and Dialog
 #. Border Colors
 #: ../applets/maintained/slickswitcher/prefs.py:94
 msgid "Border Colors"
-msgstr "Border Colors"
+msgstr "Ertzen koloreak"
 
 #. Icon Border
 #: ../applets/maintained/slickswitcher/prefs.py:100
 msgid "Icon border:"
-msgstr "Icon border:"
+msgstr "Ikonoaren ertza:"
 
 #. Normal Border
 #: ../applets/maintained/slickswitcher/prefs.py:103
 msgid "Normal border:"
-msgstr "Normal border:"
+msgstr "Ertz normala:"
 
 #. Hovered Border
 #: ../applets/maintained/slickswitcher/prefs.py:106
 msgid "Hovered border:"
-msgstr "Hovered border:"
+msgstr "Nabarmendutako ertza:"
 
 #. Window Colors
 #: ../applets/maintained/slickswitcher/prefs.py:109
 msgid "Window Colors"
-msgstr "Window Colors"
+msgstr "Leihoen koloreak"
 
 #. Main Color
 #: ../applets/maintained/slickswitcher/prefs.py:115
 #: ../applets/maintained/slickswitcher/prefs.py:200
 msgid "Main color:"
-msgstr "Main color:"
+msgstr "Kolore nagusia:"
 
 #. Border Color
 #: ../applets/maintained/slickswitcher/prefs.py:118
 #: ../applets/maintained/slickswitcher/prefs.py:137
 msgid "Border color:"
-msgstr "Border color:"
+msgstr "Ertzaren kolorea:"
 
 #. Dialog Colors
 #: ../applets/maintained/slickswitcher/prefs.py:121
 msgid "Dialog colors"
-msgstr "Dialog colors"
+msgstr "Koadroaren koloreak"
 
 #. Use custom colors (CheckButton)
 #: ../applets/maintained/slickswitcher/prefs.py:127
 #: ../applets/maintained/slickswitcher/prefs.py:193
 msgid "Use custom colors"
-msgstr "Use custom colors"
+msgstr "Erabili kolore pertsonalizatuak"
 
 #. Background Color
 #: ../applets/maintained/slickswitcher/prefs.py:134
 msgid "Background color:"
-msgstr "Background color:"
+msgstr "Atzeko planoaren kolorea:"
 
 #: ../applets/maintained/slickswitcher/prefs.py:183
 msgid "Colors"
-msgstr "Colors"
+msgstr "Koloreak"
 
 #. Other colors: text and shine
 #. Number Colors
 #: ../applets/maintained/slickswitcher/prefs.py:187
 msgid "Number Colors"
-msgstr "Number Colors"
+msgstr "Zenbaki-koloreak"
 
 #. Drop-Shadow Color
 #: ../applets/maintained/slickswitcher/prefs.py:203
 msgid "Drop-shadow color:"
-msgstr "Drop-shadow color:"
+msgstr "Itzalaren kolorea:"
 
 #. Shine Colors
 #: ../applets/maintained/slickswitcher/prefs.py:206
 msgid "Shine Colors"
-msgstr "Shine Colors"
+msgstr "Kolore distiratsuak"
 
 #. Top Color
 #: ../applets/maintained/slickswitcher/prefs.py:212
 msgid "Top color:"
-msgstr "Top color:"
+msgstr "Goiko kolorea:"
 
 #. Bottom Color
 #: ../applets/maintained/slickswitcher/prefs.py:215
 msgid "Bottom color:"
-msgstr "Bottom color:"
+msgstr "Beheko kolorea:"
 
 #. Hover Top Color
 #: ../applets/maintained/slickswitcher/prefs.py:218
 msgid "Hover top color:"
-msgstr "Hover top color:"
+msgstr "Goiko kolorea nabarmentzean:"
 
 #. Hover Bottom Color
 #: ../applets/maintained/slickswitcher/prefs.py:221
 msgid "Hover bottom color:"
-msgstr "Hover bottom color:"
+msgstr "Beheko kolorea nabarmentzean:"
 
 #: ../applets/maintained/slickswitcher/prefs.py:254
 msgid "Other colors"
-msgstr "Other colors"
+msgstr "Beste kolore batzuk"
 
 #. Width
 #: ../applets/maintained/slickswitcher/prefs.py:262
 msgid "Width:"
-msgstr "Width:"
+msgstr "Zabalera:"
 
 #. Height
 #: ../applets/maintained/slickswitcher/prefs.py:279
 msgid "Height:"
-msgstr "Height:"
+msgstr "Altuera:"
 
 #: ../applets/maintained/slickswitcher/prefs.py:299
 msgid "Workspace Size"
-msgstr "Workspace Size"
+msgstr "Laneko arearen tamaina"
 
 #. Mode
 #: ../applets/maintained/slickswitcher/prefs.py:315
 msgid "Mode:"
-msgstr "Mode:"
+msgstr "Modua:"
 
 #: ../applets/maintained/slickswitcher/prefs.py:318
 msgid "GNOME"
@@ -4077,21 +4099,21 @@ msgstr "Compiz Wallpaper Plugin"
 
 #: ../applets/maintained/slickswitcher/prefs.py:320
 msgid "File"
-msgstr "File"
+msgstr "Fitxategia"
 
 #. File
 #: ../applets/maintained/slickswitcher/prefs.py:339
 msgid "File:"
-msgstr "File:"
+msgstr "Fitxategia:"
 
 #: ../applets/maintained/slickswitcher/prefs.py:341
 msgid "Choose a Background Image"
-msgstr "Choose a Background Image"
+msgstr "Hautako atzeko planoko irudia"
 
 #: ../applets/maintained/slickswitcher/prefs.py:367
 #: ../applets/maintained/to-do/prefs.py:445
 msgid "Background"
-msgstr "Background"
+msgstr "Atzeko planoa"
 
 #: ../applets/maintained/slickswitcher/prefs.py:379
 msgid "Advanced"
@@ -4100,7 +4122,7 @@ msgstr "Aurreratua"
 #: ../applets/maintained/slickswitcher/slickswitcher.desktop.in.h:1
 #: ../applets/maintained/slickswitcher/slickswitcher.py:281
 msgid "A visual workspace switcher"
-msgstr "A visual workspace switcher"
+msgstr "Laneko areen aldatzaile bisuala"
 
 #: ../applets/maintained/slickswitcher/slickswitcher.desktop.in.h:2
 #: ../applets/maintained/slickswitcher/slickswitcher.py:63
@@ -4113,37 +4135,39 @@ msgid ""
 "CPU graph type to use.  Note that some Icons do not support all graph types. "
 " If this occurs an icon will revert to it's own default (value of 0)."
 msgstr ""
-"CPU graph type to use.  Note that some Icons do not support all graph types. "
-" If this occurs an icon will revert to it's own default (value of 0)."
+"Erabiliko den PUZ grafiko-mota.  Kontuan izan zenbait ikonok ez dituztela "
+"grafiko-mota guztiak onartzen.  Hori gertatzen bada, ikonoa balio "
+"lehenetsira itzulikoa da (0 balioa)."
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:2
 msgid "If the updates are time based then how frequently to update in ms."
-msgstr "If the updates are time based then how frequently to update in ms."
+msgstr ""
+"Eguneraketak aldizkakoak badira, eguneratze-maiztasuna zein den ms-tan."
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:3
 msgid "Just a dummy key.. this will be removed later."
-msgstr "Just a dummy key.. this will be removed later."
+msgstr "Probako gakoa.. geroago kendu egingo da."
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:4
 msgid "List of icons"
-msgstr "List of icons"
+msgstr "Ikonoen zerrenda"
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:5
 msgid "Render background."
-msgstr "Render background."
+msgstr "Errendatu atzeko planoa."
 
 #: ../applets/maintained/sysmon/sysmon.desktop.in.in.h:1
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in.h:2
 msgid "Manage system activity"
-msgstr "Manage system activity"
+msgstr "Kudeatu sistemaren jarduera"
 
 #: ../applets/maintained/sysmon/sysmon.desktop.in.in.h:2
 msgid "System Monitor"
-msgstr "System Monitor"
+msgstr "Sistema-monitorea"
 
 #: ../applets/maintained/thinkhdaps/thinkhdaps.desktop.in.h:1
 msgid "Applet that shows the shock protection status of your disks"
-msgstr "Applet that shows the shock protection status of your disks"
+msgstr "Zure diskoen babes-egoera erakusten duen appleta"
 
 #: ../applets/maintained/thinkhdaps/thinkhdaps.desktop.in.h:2
 msgid "ThinkHDAPS"
@@ -4151,91 +4175,93 @@ msgstr "ThinkHDAPS"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:1
 msgid "Background color for high priority items"
-msgstr "Background color for high priority items"
+msgstr "Lehentasun altuko elementuetarako azteko planoaren kolorea"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:2
 msgid "Background color for low priority items"
-msgstr "Background color for low priority items"
+msgstr "Lehentasun baxuko elementuetarako azteko planoaren kolorea"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:3
 msgid "Background color for medium priority items"
-msgstr "Background color for medium priority items"
+msgstr "Lehentasun ertaineko elementuetarako azteko planoaren kolorea"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:4
 msgid "List of colors to use for the custom color"
-msgstr "List of colors to use for the custom color"
+msgstr "Kolore pertsonalizaturako erabiliko diren koloreen zerrenda"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:5
 msgid "List of items' details"
-msgstr "List of items' details"
+msgstr "Elementuen xehetasunen zerrenda"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:6
 msgid "List of items' names"
-msgstr "List of items' names"
+msgstr "Elementuen izenen zerrenda"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:7
 msgid "List of items' priorities (0-3)"
-msgstr "List of items' priorities (0-3)"
+msgstr "Elementuen lehentasunen zerrenda (0-3)"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:8
 msgid "List of items' progresses in percent (0-100)"
-msgstr "List of items' progresses in percent (0-100)"
+msgstr "Elementuen aurrerapenen zerrenda (ehunekotan, 0-100)"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:9
 msgid "Text color for high priority items"
-msgstr "Text color for high priority items"
+msgstr "Lehentasun altuko elementuetarako testu-kolorea"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:10
 msgid "Text color for low priority items"
-msgstr "Text color for low priority items"
+msgstr "Lehentasun baxuko elementuetarako testu-kolorea"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:11
 msgid "Text color for medium priority items"
-msgstr "Text color for medium priority items"
+msgstr "Lehentasun ertaineko elementuetarako testu-kolorea"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:12
 msgid "The color to use for the icon"
-msgstr "The color to use for the icon"
+msgstr "Ikonorako erabiliko den kolorea"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:13
 msgid "The custom width for the item entries"
-msgstr "The custom width for the item entries"
+msgstr "Elementu-sarreretarako zabalera pertsonalizatua"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:14
 msgid "The icon's opacity (10-100)"
-msgstr "The icon's opacity (10-100)"
+msgstr "Ikonoaren opakotasuna (10-100)"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:15
 msgid "The list of categories that are expanded"
-msgstr "The list of categories that are expanded"
+msgstr "Zabalik dauden kategorien zerrenda"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:16
 msgid "The list of categories' names"
-msgstr "The list of categories' names"
+msgstr "Kategorien izenen zerrenda"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:17
 msgid "The list of items' categories"
-msgstr "The list of items' categories"
+msgstr "Elementuen kategorien zerrenda"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:18
 msgid "The title to display"
-msgstr "The title to display"
+msgstr "Erakutsiko den izenburua"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:19
 msgid "What type of icon to display (progress, progress-items, items)"
-msgstr "What type of icon to display (progress, progress-items, items)"
+msgstr ""
+"Zein ikono-mota erakutsiko den (aurrerapena, aurrerapen-elementuak, "
+"elementuak)"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:20
 msgid "Whether or not to confirm the deletion of categories"
-msgstr "Whether or not to confirm the deletion of categories"
+msgstr "Kategorien ezabaketa baieztatu behar den ala ez"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:21
 msgid "Whether or not to confirm the deletion of items"
-msgstr "Whether or not to confirm the deletion of items"
+msgstr "Elementuen ezabaketa baieztatu behar den ala ez"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:22
 msgid "Whether or not to use a custom width for the entries"
-msgstr "Whether or not to use a custom width for the entries"
+msgstr "Sarreretarako zabalera pertsonalizatua erabiliko den ala ez"
 
 #: ../applets/maintained/to-do/prefs.py:32
 msgid "Custom"
@@ -4243,154 +4269,154 @@ msgstr "Pertsonalizatua"
 
 #: ../applets/maintained/to-do/prefs.py:32
 msgid "Current Theme"
-msgstr "Current Theme"
+msgstr "Uneko gaia"
 
 #: ../applets/maintained/to-do/prefs.py:32
 msgid "Butter"
-msgstr "Butter"
+msgstr "Gurina"
 
 #: ../applets/maintained/to-do/prefs.py:33
 msgid "Chameleon"
-msgstr "Chameleon"
+msgstr "Kamaleoia"
 
 #: ../applets/maintained/to-do/prefs.py:33
 msgid "Orange"
-msgstr "Orange"
+msgstr "Laranja"
 
 #: ../applets/maintained/to-do/prefs.py:33
 msgid "Sky Blue"
-msgstr "Sky Blue"
+msgstr "Zeru urdina"
 
 #: ../applets/maintained/to-do/prefs.py:33
 msgid "Plum"
-msgstr "Plum"
+msgstr "Arana"
 
 #: ../applets/maintained/to-do/prefs.py:33
 msgid "Chocolate"
-msgstr "Chocolate"
+msgstr "Txokolatea"
 
 #: ../applets/maintained/to-do/prefs.py:34
 msgid "Scarlet Red"
-msgstr "Scarlet Red"
+msgstr "Gorri eskarlata"
 
 #: ../applets/maintained/to-do/prefs.py:34
 msgid "Aluminium 1"
-msgstr "Aluminium 1"
+msgstr "Aluminioa 1"
 
 #: ../applets/maintained/to-do/prefs.py:34
 msgid "Aluminium 2"
-msgstr "Aluminium 2"
+msgstr "Aluminioa 2"
 
 #: ../applets/maintained/to-do/prefs.py:37
 msgid "Number of Items"
-msgstr "Number of Items"
+msgstr "Elementu-kopurua"
 
 #: ../applets/maintained/to-do/prefs.py:37
 msgid "Progress"
-msgstr "Progress"
+msgstr "Aurrerapena"
 
 #: ../applets/maintained/to-do/prefs.py:37
 msgid "Both"
-msgstr "Both"
+msgstr "Biak"
 
 #: ../applets/maintained/to-do/prefs.py:45
 msgid "To-Do List Preferences"
-msgstr "To-Do List Preferences"
+msgstr "Egitekoen zerrendaren hobespenak"
 
 #: ../applets/maintained/to-do/prefs.py:61
 msgid "Priority"
-msgstr "Priority"
+msgstr "Lehentasuna"
 
 #: ../applets/maintained/to-do/prefs.py:62
 msgid "Icon"
-msgstr "Icon"
+msgstr "Ikonoa"
 
 #. Label: Title (bold)
 #: ../applets/maintained/to-do/prefs.py:72
 msgid "Title"
-msgstr "Title"
+msgstr "Izenburua"
 
 #. Label: Confirm when removing... (bold)
 #: ../applets/maintained/to-do/prefs.py:86
 msgid "Confirm when removing..."
-msgstr "Confirm when removing..."
+msgstr "Baieztatu kentzean..."
 
 #. CheckButton: Items
 #: ../applets/maintained/to-do/prefs.py:95
 msgid "_Items"
-msgstr "_Items"
+msgstr "_Elementuak"
 
 #. CheckButton: Categories
 #: ../applets/maintained/to-do/prefs.py:102
 msgid "C_ategories"
-msgstr "C_ategories"
+msgstr "_Kategoriak"
 
 #. Label: Width (bold)
 #: ../applets/maintained/to-do/prefs.py:109
 msgid "Width"
-msgstr "Width"
+msgstr "Zabalera"
 
 #. CheckButton: Use Custom Width
 #: ../applets/maintained/to-do/prefs.py:118
 msgid "_Use Custom Width"
-msgstr "_Use Custom Width"
+msgstr "_Erabili zabalera pertsonalizatua"
 
 #. Label: Width (pixels)
 #: ../applets/maintained/to-do/prefs.py:125
 msgid "Width (pixels)"
-msgstr "Width (pixels)"
+msgstr "Zabalera (pixelak)"
 
 #. Label: Low Priority (bold)
 #: ../applets/maintained/to-do/prefs.py:173
 msgid "Low Priority"
-msgstr "Low Priority"
+msgstr "Lehentasun baxua"
 
 #. Label: Medium Priority (bold)
 #: ../applets/maintained/to-do/prefs.py:186
 msgid "Medium Priority"
-msgstr "Medium Priority"
+msgstr "Lehentasun ertaina"
 
 #. Label: High Priority (bold)
 #: ../applets/maintained/to-do/prefs.py:199
 msgid "High Priority"
-msgstr "High Priority"
+msgstr "Lehentasun altua"
 
 #. Label: Icon Color (bold)
 #: ../applets/maintained/to-do/prefs.py:251
 msgid "Icon Color"
-msgstr "Icon Color"
+msgstr "Ikono-kolorea"
 
 #. Label: Custom Colors (bold)
 #: ../applets/maintained/to-do/prefs.py:274
 msgid "Custom Colors"
-msgstr "Custom Colors"
+msgstr "Kolore pertsonalizatuak"
 
 #. Colors: Outer Border, Inner Border, Main Color, Text Color
 #: ../applets/maintained/to-do/prefs.py:283
 msgid "Outer Border"
-msgstr "Outer Border"
+msgstr "Kanpo-ertza"
 
 #: ../applets/maintained/to-do/prefs.py:284
 msgid "Inner Border"
-msgstr "Inner Border"
+msgstr "Barne-ertza"
 
 #: ../applets/maintained/to-do/prefs.py:285
 msgid "Main"
-msgstr "Main"
+msgstr "Nagusia"
 
 #: ../applets/maintained/to-do/prefs.py:286
 #: ../applets/maintained/to-do/prefs.py:447
 msgid "Text"
-msgstr "Text"
+msgstr "Testua"
 
 #. Label: Icon Type (bold)
 #: ../applets/maintained/to-do/prefs.py:289
 msgid "Icon Type"
-msgstr "Icon Type"
+msgstr "Ikono-mota"
 
 #: ../applets/maintained/to-do/to-do.desktop.in.h:1
 msgid "Manage a simple To-Do list"
-msgstr "Manage a simple To-Do list"
+msgstr "Kudeatu egitekoen zerrenda sinplea"
 
 #: ../applets/maintained/to-do/to-do.desktop.in.h:2
 #: ../applets/maintained/to-do/to-do.py:68
@@ -4398,67 +4424,67 @@ msgstr "Manage a simple To-Do list"
 #: ../applets/maintained/to-do/to-do.py:269
 #: ../applets/maintained/to-do/to-do.py:907
 msgid "To-Do List"
-msgstr "To-Do List"
+msgstr "Egitekoen zerrenda"
 
 #: ../applets/maintained/to-do/to-do.py:220
 msgid "A simple To-Do List"
-msgstr "A simple To-Do List"
+msgstr "Egitekoen zerrenda sinplea"
 
 #: ../applets/maintained/to-do/to-do.py:299
 msgid "Remove item"
-msgstr "Remove item"
+msgstr "Kendu elementua"
 
 #: ../applets/maintained/to-do/to-do.py:381
 msgid "Remove category"
-msgstr "Remove category"
+msgstr "Kendu kategoria"
 
 #: ../applets/maintained/to-do/to-do.py:405
 msgid "View/Edit details"
-msgstr "View/Edit details"
+msgstr "Ikusi/editatu xehetasunak"
 
 #. Make the RadioButtons for each category
 #. First category: No category! (Uncategorized)
 #: ../applets/maintained/to-do/to-do.py:525
 msgid "_Uncategorized"
-msgstr "_Uncategorized"
+msgstr "Kategoriarik _gabea"
 
 #. First RadioButton - ( )Category
 #: ../applets/maintained/to-do/to-do.py:549
 msgid "_Category"
-msgstr "_Category"
+msgstr "_Kategoria"
 
 #. Second RadioButton - (-)To-Do item
 #. TODO: better text than "To-Do item"?
 #: ../applets/maintained/to-do/to-do.py:556
 msgid "_To-Do item"
-msgstr "_To-Do item"
+msgstr "_Egitekoen zerrenda"
 
 #. Label: Priority:
 #: ../applets/maintained/to-do/to-do.py:641
 msgid "Priority: "
-msgstr "Priority: "
+msgstr "Lehentasuna: "
 
 #. Neutral, Low, Medium, and High priority RadioButtons
 #: ../applets/maintained/to-do/to-do.py:644
 msgid "_Neutral"
-msgstr "_Neutral"
+msgstr "_Neutrala"
 
 #: ../applets/maintained/to-do/to-do.py:646
 msgid "_Low"
-msgstr "_Low"
+msgstr "_Baxua"
 
 #: ../applets/maintained/to-do/to-do.py:648
 msgid "_Medium"
-msgstr "_Medium"
+msgstr "_Ertaina"
 
 #: ../applets/maintained/to-do/to-do.py:650
 msgid "_High"
-msgstr "_High"
+msgstr "_Altua"
 
 #. Label: Progress(%):
 #: ../applets/maintained/to-do/to-do.py:678
 msgid "Progress(%): "
-msgstr "Progress(%): "
+msgstr "Aurrerapena(%): "
 
 #. Make Label
 #: ../applets/maintained/to-do/to-do.py:1130
@@ -4467,19 +4493,19 @@ msgid ""
 "Are you sure you want to remove the category \"%s?\"\n"
 "All of its items will be removed."
 msgstr ""
-"Are you sure you want to remove the category \"%s?\"\n"
-"All of its items will be removed."
+"Seguru zaude \"%s\" kategoria kendu nahi duzula?\n"
+"Bere elementu guztiak kenduko dira."
 
 #. Make CheckButton
 #: ../applets/maintained/to-do/to-do.py:1134
 #: ../applets/maintained/to-do/to-do.py:1170
 msgid "Don't show this again."
-msgstr "Don't show this again."
+msgstr "Ez erakutsi berriro."
 
 #. Make Label
 #: ../applets/maintained/to-do/to-do.py:1167
 msgid "Are you sure you want to remove this item?"
-msgstr "Are you sure you want to remove this item?"
+msgstr "Seguru zaude elementu hau kendu nahi duzula?"
 
 #. Reset the tooltip
 #: ../applets/maintained/to-do/to-do.py:1366
@@ -4490,66 +4516,66 @@ msgstr "% done"
 #: ../applets/maintained/tomboy-applet/tomboy-applet.desktop.in.h:1
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:31
 msgid "Control Tomboy with D-Bus"
-msgstr "Control Tomboy with D-Bus"
+msgstr "Kontrolatu Tomboy D-Bus-ekin"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.desktop.in.h:2
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:30
 msgid "Tomboy Applet"
-msgstr "Tomboy Applet"
+msgstr "Tomboy appleta"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:108
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:130
 msgid "Select a tag:"
-msgstr "Select a tag:"
+msgstr "Hautatu etiketa:"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:114
 msgid "No tags were created yet"
-msgstr "No tags were created yet"
+msgstr "Ez da etiketarik sortu oraindik"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:119
 msgid "Select a note:"
-msgstr "Select a note:"
+msgstr "Hautatu oharra:"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:149
 #, python-format
 msgid "Version: %s"
-msgstr "Version: %s"
+msgstr "Bertsioa: %s"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:155
 msgid "New Note"
-msgstr "New Note"
+msgstr "Ohar berria"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:159
 msgid "New Tagged Note"
-msgstr "New Tagged Note"
+msgstr "Etiketadun ohar berria"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:163
 msgid "View Tagged Note"
-msgstr "View Tagged Note"
+msgstr "Ikusi etiketadun oharra"
 
 #: ../applets/maintained/vala-test/vala-test.desktop.in.in.h:1
 msgid "A simple applet to test vala support"
-msgstr "A simple applet to test vala support"
+msgstr "Vala euskarria probatzeko applet sinplea"
 
 #: ../applets/maintained/vala-test/vala-test.desktop.in.in.h:2
 msgid "Test Vala Applet"
-msgstr "Test Vala Applet"
+msgstr "Probatu Vala appleta"
 
 #: ../applets/maintained/volume-control/awn-applet-volume-control.schema-ini.in.h:1
 msgid "Name of the device."
-msgstr "Name of the device."
+msgstr "Gailuaren izena."
 
 #: ../applets/maintained/volume-control/awn-applet-volume-control.schema-ini.in.h:2
 msgid "Name of the mixer track."
-msgstr "Name of the mixer track."
+msgstr "Nahasgailu-pistaren izena."
 
 #: ../applets/maintained/volume-control/volume-control.desktop.in.h:1
 msgid "Control your computer's volume"
-msgstr "Control your computer's volume"
+msgstr "Kontrolatu zure ordenagailuaren bolumena"
 
 #: ../applets/maintained/volume-control/volume-control.desktop.in.h:2
 msgid "Volume Control"
-msgstr "Volume Control"
+msgstr "Bolumen-kontrola"
 
 #: ../applets/maintained/volume-control/volume-control.ui.h:1
 msgid "+"
@@ -4561,23 +4587,23 @@ msgstr "-"
 
 #: ../applets/maintained/volume-control/volume-control.ui.h:3
 msgid "<b>Audio Options</b>"
-msgstr "<b>Audio Options</b>"
+msgstr "<b>Audio aukerak</b>"
 
 #: ../applets/maintained/volume-control/volume-control.ui.h:5
 msgid "_Device:"
-msgstr "_Device:"
+msgstr "_Gailua:"
 
 #: ../applets/maintained/volume-control/volume-control.ui.h:6
 msgid "_Mixer track:"
-msgstr "_Mixer track:"
+msgstr "_Nahasgailu-pista:"
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:1
 msgid "City, and country of the weather location."
-msgstr "City, and country of the weather location."
+msgstr "Eguraldi-kokapenaren hiria eta herrialdea."
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:2
 msgid "Code that identifies the weather location."
-msgstr "Code that identifies the weather location."
+msgstr "Eguraldi-kokapena identifikatzen duen kodea."
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:3
 msgid "Fahrenheit)."
@@ -4585,164 +4611,165 @@ msgstr "Fahrenheit)."
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:4
 msgid "If enabled, show the temperature as an overlay in the icon."
-msgstr "If enabled, show the temperature as an overlay in the icon."
+msgstr "Gaituta badago, tenperatura ikonoan gainjarrita erakusten du."
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:5
 msgid "Maximum width of map in pixels."
-msgstr "Maximum width of map in pixels."
+msgstr "Maparen zabalera maximoa pixeletan."
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:6
 msgid "Show days of forecast in a transparent, curved dialog."
-msgstr "Show days of forecast in a transparent, curved dialog."
+msgstr "Erakutsi iragarpen-egunak koadro garden kurbatuan."
 
 #: ../applets/maintained/weather/forecast.py:54
 #: ../applets/maintained/weather/forecast.py:82
 msgid "Forecast"
-msgstr "Forecast"
+msgstr "Iragarpena"
 
 #: ../applets/maintained/weather/forecast.py:54
 #: ../applets/maintained/weather/forecast.py:82
 msgid "for"
-msgstr "for"
+msgstr "hiri honetarako:"
 
 #: ../applets/maintained/weather/forecast.py:167
 msgid "WEEKDAY"
-msgstr "WEEKDAY"
+msgstr "ASTEGUNA"
 
 #: ../applets/maintained/weather/forecast.py:171
 msgid "Tomorrow"
-msgstr "Tomorrow"
+msgstr "Bihar"
 
 #. Weather condition
 #: ../applets/maintained/weather/forecast.py:197
 #: ../applets/maintained/weather/weather.py:452
 msgid "DESCRIPTION"
-msgstr "DESCRIPTION"
+msgstr "DESKRIBAPENA"
 
 #: ../applets/maintained/weather/forecast.py:249
 msgid "Weather data provided by weather.com"
-msgstr "Weather data provided by weather.com"
+msgstr "weather.com-ek eskainitako eguraldi-datuak"
 
 #: ../applets/maintained/weather/weather.desktop.in.h:1
 msgid "Display the local weather"
-msgstr "Display the local weather"
+msgstr "Erakutsi tokiko eguraldia"
 
 #: ../applets/maintained/weather/weather.desktop.in.h:2
 msgid "Weather Applet"
-msgstr "Weather Applet"
+msgstr "Eguraldi-appleta"
 
 #: ../applets/maintained/weather/weather.py:215
 msgid "Fetching conditions for"
-msgstr "Fetching conditions for"
+msgstr "Baldintzak jasotzen honetarako:"
 
 #: ../applets/maintained/weather/weather.py:254
 msgid "Show _Map"
-msgstr "Show _Map"
+msgstr "Erakutsi _mapa"
 
 #: ../applets/maintained/weather/weather.py:302
 #: ../applets/maintained/weather/weather.py:380
 msgid "No records found"
-msgstr "No records found"
+msgstr "Ez da erregistrorik aurkitu"
 
 #: ../applets/maintained/weather/weather.py:371
 msgid "Searching..."
-msgstr "Searching..."
+msgstr "Bilatzen..."
 
 #: ../applets/maintained/weather/weather.ui.h:4
 msgid "<b>Icon Display</b>"
-msgstr "<b>Icon Display</b>"
+msgstr "<b>Ikonoaren bistaratzea</b>"
 
 #: ../applets/maintained/weather/weather.ui.h:5
 msgid ""
 "<i><b>Examples:</b> Boston; Portland, ME, Amsterdam; or Osaka, Japan.</i>"
 msgstr ""
-"<i><b>Examples:</b> Boston; Portland, ME, Amsterdam; or Osaka, Japan.</i>"
+"<i><b>Adibideak:</b> Boston; Portland, ME, Amsterdam; edo Osaka, Japan.</i>"
 
 #: ../applets/maintained/weather/weather.ui.h:6
 msgid "Current _location:"
-msgstr "Current _location:"
+msgstr "Uneko _kokapena:"
 
 #: ../applets/maintained/weather/weather.ui.h:7
 msgid ""
 "If enabled, the dialog will be transparent, and the five days of the "
 "forecast will be curved"
 msgstr ""
-"If enabled, the dialog will be transparent, and the five days of the "
-"forecast will be curved"
+"Gaituta badago, koadroa gardena izango da, eta iragarpenaren bost egunak "
+"modu kurbatuan erakutsiko dira"
 
 #: ../applets/maintained/weather/weather.ui.h:8
 msgid "If enabled, the temperature will be displayed in the icon"
-msgstr "If enabled, the temperature will be displayed in the icon"
+msgstr "Gaituta badago, tenperatura ikonoan erakutsiko da"
 
 #: ../applets/maintained/weather/weather.ui.h:9
 msgid "Large"
-msgstr "Large"
+msgstr "Handia"
 
 #: ../applets/maintained/weather/weather.ui.h:10
 msgid "Maximum _map width:"
-msgstr "Maximum _map width:"
+msgstr "Maparen _zabalera maximoa:"
 
 #: ../applets/maintained/weather/weather.ui.h:11
 msgid "Medium"
-msgstr "Medium"
+msgstr "Ertaina"
 
 #: ../applets/maintained/weather/weather.ui.h:12
 msgid "Show temperature in _icon"
-msgstr "Show temperature in _icon"
+msgstr "Erakutsi tenperatura _ikonoan"
 
 #: ../applets/maintained/weather/weather.ui.h:13
 msgid "Small"
-msgstr "Small"
+msgstr "Txikia"
 
 #: ../applets/maintained/weather/weather.ui.h:14
 msgid "Temperature _unit:"
-msgstr "Temperature _unit:"
+msgstr "Tenperatura-_unitatea:"
 
 #: ../applets/maintained/weather/weather.ui.h:15
 msgid "Temperature font _size:"
-msgstr "Temperature font _size:"
+msgstr "Tenperaturaren letra-tipoaren _tamaina:"
 
 #: ../applets/maintained/weather/weather.ui.h:16
 msgid "Use transparent/curved _forecast dialog"
-msgstr "Use transparent/curved _forecast dialog"
+msgstr "Erabili koadro garden/kurbatua _iragarpenerako"
 
 #: ../applets/maintained/weather/weather.ui.h:17
 msgid "_Location Name:"
-msgstr "_Location Name:"
+msgstr "_Kokapenaren izena:"
 
 #. Make the dialog
 #: ../applets/maintained/webapplet/applet.c:262
 #: ../applets/maintained/webapplet/applet.c:460
 msgid "Open Location"
-msgstr "Open Location"
+msgstr "Ireki kokapena"
 
 #: ../applets/maintained/webapplet/applet.c:281
 msgid "Set as new _Home Page"
-msgstr "Set as new _Home Page"
+msgstr "Ezarri orri _nagusi berri modura"
 
 #: ../applets/maintained/webapplet/applet.c:399
 #: ../applets/maintained/webapplet/webapplet.desktop.in.in.h:2
 msgid "Web Applet"
-msgstr "Web Applet"
+msgstr "Web appleta"
 
 #. vim: set et ts=2 sts=2 sw=2 :
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:1
 msgid ""
 "Flag that enables usage of the \"Open Location\" dialog in the applet."
 msgstr ""
-"Flag that enables usage of the \"Open Location\" dialog in the applet."
+"\"Ireki kokapena\" koadroa appletean erabiltzea gaitzen duen bandera."
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:2
 msgid "HTML engine to use."
-msgstr "HTML engine to use."
+msgstr "Erabiliko den HTML motorra."
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:3
 msgid "If true display location entry and website buttons"
-msgstr "If true display location entry and website buttons"
+msgstr ""
+"Egiazkoa bada, kokapenaren sarrera eta webgunearen botoiak erakusten ditu"
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:4
 msgid "Name of specialized website to use"
-msgstr "Name of specialized website to use"
+msgstr "Erabiliko den webgune espezializatuaren izena"
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:5
 msgid "URI"
@@ -4751,20 +4778,20 @@ msgstr "URI"
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:7
 #, no-c-format
 msgid "Width in %% or px."
-msgstr "Width in %% or px."
+msgstr "Zabalera %%-(e)tan edo pixeletan."
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:9
 #, no-c-format
 msgid "height in %% or px."
-msgstr "height in %% or px."
+msgstr "Altuera %%-(e)tan edo pixeletan."
 
 #: ../applets/maintained/webapplet/webapplet.desktop.in.in.h:1
 msgid "Applet for Websites"
-msgstr "Applet for Websites"
+msgstr "Webguneentzako appleta"
 
 #: ../applets/maintained/wobblyzini/wobblyzini.desktop.in.in.h:1
 msgid "A simple test animation"
-msgstr "A simple test animation"
+msgstr "Probako animazio sinplea"
 
 #: ../applets/maintained/wobblyzini/wobblyzini.desktop.in.in.h:2
 msgid "Wobbly Zini"
@@ -4772,64 +4799,66 @@ msgstr "Wobbly Zini"
 
 #: ../applets/maintained/yama/yama.desktop.in.h:1
 msgid "Main menu with places and recent documents"
-msgstr "Main menu with places and recent documents"
+msgstr "Menu nagusia lekuekin eta azken dokumentuekin"
 
 #: ../applets/maintained/yama/yama.desktop.in.h:2
 msgid "Yet Another Menu Applet"
-msgstr "Yet Another Menu Applet"
+msgstr "Beste menu-applet bat"
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in.h:1
 msgid "Awn System Monitor"
-msgstr "Awn System Monitor"
+msgstr "Awn-ren sistema-monitorea"
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:1
 msgid "Graph update frequency, in milliseconds."
-msgstr "Graph update frequency, in milliseconds."
+msgstr "Grafikoaren eguneratze-maizatasuna, milisegundotan."
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:2
 msgid "Set to 1 (true) to draw the gradient overlay on the graph."
-msgstr "Set to 1 (true) to draw the gradient overlay on the graph."
+msgstr "Ezarri 1 (egia) gradientea grafikoari gainjarrita marrazteko."
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:3
 msgid "The color used in the applet border."
-msgstr "The color used in the applet border."
+msgstr "Appletaren ertzean erabiliko den kolorea."
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:4
 msgid "The color used in the graph lines."
-msgstr "The color used in the graph lines."
+msgstr "Grafikoaren lerroetan erabiliko den kolorea."
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:5
 msgid "The color used in the graph lines. Valid values are 0.0 through 1.0."
-msgstr "The color used in the graph lines. Valid values are 0.0 through 1.0."
+msgstr ""
+"Grafikoaren lerroetan erabiliko den kolorea. Baliozko balioak 0.0tik 1.0ra "
+"doaz."
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:6
 msgid "The pixel width of the applet border."
-msgstr "The pixel width of the applet border."
+msgstr "Appletaren ertzaren zabalera pixeletan."
 
 #: ../applets/unmaintained/main-menu/applet.c:394
 #: ../applets/unmaintained/main-menu/main-menu.desktop.in.in.h:2
 msgid "Awn Main Menu"
-msgstr "Awn Main Menu"
+msgstr "Awn-ren menu nagusia"
 
 #: ../applets/unmaintained/main-menu/applet.c:395
 msgid "Displays a list of all your applications"
-msgstr "Displays a list of all your applications"
+msgstr "Zure aplikazio guztien zerrenda erakusten du"
 
 #: ../applets/unmaintained/main-menu/applet.c:453
 msgid "Main Menu"
-msgstr "Main Menu"
+msgstr "Menu nagusia"
 
 #: ../applets/unmaintained/main-menu/main-menu.desktop.in.in.h:1
 msgid "A main menu for Awn"
-msgstr "A main menu for Awn"
+msgstr "Awn-rentzako menu nagusia"
 
 #: ../applets/unmaintained/pandora/awn-applet-pandora.schema-ini.in.h:1
 msgid "The url of the Pandora mini flash player."
-msgstr "The url of the Pandora mini flash player."
+msgstr "Pandora flash erreproduzigailu txikiaren URLa."
 
 #: ../applets/unmaintained/pandora/pandora.desktop.in.h:1
 msgid "Listen to Pandora Internet Radio"
-msgstr "Listen to Pandora Internet Radio"
+msgstr "Entzun Pandora Internet Radio"
 
 #: ../applets/unmaintained/pandora/pandora.desktop.in.h:2
 msgid "Pandora Radio"
@@ -4837,158 +4866,158 @@ msgstr "Pandora Radio"
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:1
 msgid " sort by date)."
-msgstr " sort by date)."
+msgstr " antolatu dataz)."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:2
 msgid ""
 "Backend type for this applet (0 - file, 1 - folder, 2 - plugger, 3 - "
 "trasher, 4 - recent files)."
 msgstr ""
-"Backend type for this applet (0 - file, 1 - folder, 2 - plugger, 3 - "
-"trasher, 4 - recent files)."
+"Applet honentzako motorra (0-fitxategia, 1-karpeta, 2-entxufea, 3-"
+"zakarrontzia, 4-azken fitxategiak)."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:3
 msgid "Close dialog on focusout."
-msgstr "Close dialog on focusout."
+msgstr "Itxi koadroa fokoa galtzean."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:4
 msgid "Display number of items in the stack."
-msgstr "Display number of items in the stack."
+msgstr "Erakutsi pilako elementu-kopurua."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:5
 msgid "File operation to use."
-msgstr "File operation to use."
+msgstr "Erabiliko den fitxategi-eragiketa."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:6
 msgid "Hoverbox background color 1."
-msgstr "Hoverbox background color 1."
+msgstr "Nabarmentze-kutxaren atzeko planoaren kolorea 1."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:7
 msgid "Hoverbox background color 2."
-msgstr "Hoverbox background color 2."
+msgstr "Nabarmentze-kutxaren atzeko planoaren kolorea 2."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:8
 msgid "Hoverbox border color."
-msgstr "Hoverbox border color."
+msgstr "Nabarmentze-kutxaren ertzaren kolorea."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:9
 msgid "Icon to use for empty stack."
-msgstr "Icon to use for empty stack."
+msgstr "Pila hutserako erabilitako ikonoa."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:10
 msgid "Icon to use for full stack."
-msgstr "Icon to use for full stack."
+msgstr "Pila beterako erabilitako ikonoa."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:11
 msgid "Label background color."
-msgstr "Label background color."
+msgstr "Etiketaren atzeko planoaren kolorea."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:12
 msgid "Label border color."
-msgstr "Label border color."
+msgstr "Etiketaren ertzaren kolorea."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:13
 msgid "Label hover background color."
-msgstr "Label hover background color."
+msgstr "Etiketaren nabarmentzerako atzeko planoaren kolorea."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:14
 msgid "Label hover border color."
-msgstr "Label hover border color."
+msgstr "Etiketaren nabarmentzerako ertzaren kolorea."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:15
 msgid "Label length."
-msgstr "Label length."
+msgstr "Etiketaren luzera."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:16
 msgid "Label text color."
-msgstr "Label text color."
+msgstr "Etiketaren testuaren kolorea."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:17
 msgid "Label text hover color."
-msgstr "Label text hover color."
+msgstr "Etiketaren testuaren nabarmentze-kolorea."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:18
 msgid "Layout direction."
-msgstr "Layout direction."
+msgstr "Diseinuaren norabidea."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:19
 msgid "Layout interval."
-msgstr "Layout interval."
+msgstr "Diseinuaren tartea."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:20
 msgid "Layout radius."
-msgstr "Layout radius."
+msgstr "Diseinuaren erradioa."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:21
 msgid "Number of columns to use."
-msgstr "Number of columns to use."
+msgstr "Erabiliko den zutabe-kopurua."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:22
 msgid "Number of rows to use."
-msgstr "Number of rows to use."
+msgstr "Erabiliko den errenkada-kopurua."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:23
 msgid "Size of the icons inside stack."
-msgstr "Size of the icons inside stack."
+msgstr "Pilaren barruko ikonoen tamaina."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:24
 msgid "Sort direction of the items."
-msgstr "Sort direction of the items."
+msgstr "Ordenatu elementuen norabidea."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:25
 msgid "Sort folders before files."
-msgstr "Sort folders before files."
+msgstr "Ordenatu karpetak fitxategiak baino lehen."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:26
 msgid "Stack tooltip description."
-msgstr "Stack tooltip description."
+msgstr "Pilaren argibide-deskribapena."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:27
 msgid "Stacks backend file/directory."
-msgstr "Stacks backend file/directory."
+msgstr "Pilen fitxategi/direktorio motorra."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:28
 msgid "Tooltip background color 1."
-msgstr "Tooltip background color 1."
+msgstr "Argibideen atzeko planoaren kolorea 1."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:29
 msgid "Tooltip background color 2."
-msgstr "Tooltip background color 2."
+msgstr "Argibideen atzeko planoaren kolorea 2."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:30
 msgid "Tooltip border color."
-msgstr "Tooltip border color."
+msgstr "Argibideen ertzaren kolorea."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:31
 msgid "Tooltip font name."
-msgstr "Tooltip font name."
+msgstr "Argibideen letra-tipoaren izena."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:32
 msgid "Tooltip text color."
-msgstr "Tooltip text color."
+msgstr "Argibideen testuaren kolorea."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:33
 msgid "Type of UI used for the stack."
-msgstr "Type of UI used for the stack."
+msgstr "Pilarako erabilitako EI mota."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:34
 msgid "Use Awn's tooltip font."
-msgstr "Use Awn's tooltip font."
+msgstr "Erabili Awn-ren argibideen letra-tipoa."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:35
 msgid "Whether hoverbox contains label."
-msgstr "Whether hoverbox contains label."
+msgstr "Nabarmentze-kutxak etiketa duen ala ez."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:36
 msgid "Whether to browse stack contents."
-msgstr "Whether to browse stack contents."
+msgstr "Pilaren edukiak arakatuko diren ala ez."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:37
 msgid ""
 "Whether to combine icons of the files inside the stacks with its icon."
 msgstr ""
-"Whether to combine icons of the files inside the stacks with its icon."
+"Pilen barruko fitxategien ikonoak bere ikonoarekin konbinatuko diren ala ez."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:38
 msgid "Whether tooltips are enabled."
-msgstr "Whether tooltips are enabled."
+msgstr "Argibideak gaituta dauden ala ez."

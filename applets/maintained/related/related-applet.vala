@@ -174,7 +174,7 @@ class RelatedApplet : AppletSimple
     unowned string actor = desktop_file.rchr (-1, '/').offset (1);
 
     var event = new Event ();
-    var event2 = new Event ();
+    var helper_event_list = new List<Event> ();
     event.set_actor ("application://" + actor);
     ptr_array.add (event);
 
@@ -184,11 +184,14 @@ class RelatedApplet : AppletSimple
     {
       foreach (unowned string mimetype in df_data.mimetypes)
       {
+        var mime_event = new Event ();
         var subject = new Subject ();
         subject.set_mimetype (mimetype);
-        event2.add_subject (subject);
+        mime_event.add_subject (subject);
+        // helper with references
+        helper_event_list.prepend (mime_event);
+        ptr_array.add (mime_event);
       }
-      ptr_array.add (event2);
     }
 
     // anything for these?
@@ -206,15 +209,19 @@ class RelatedApplet : AppletSimple
 
   private async bool get_recent_by_mimetype (string[] mimetypes)
   {
+    var helper_event_list = new List<Event> ();
     var ptr_array = new PtrArray ();
-    var event = new Event ();
     foreach (unowned string mimetype in mimetypes)
     {
+      var event = new Event ();
       var subject = new Subject ();
       subject.set_mimetype (mimetype);
       event.add_subject (subject);
+
+      // helper with references
+      helper_event_list.prepend (event);
+      ptr_array.add (event);
     }
-    ptr_array.add (event);
 
     var events = yield zg_log.find_events (new TimeRange.to_now (),
                                            (owned) ptr_array,

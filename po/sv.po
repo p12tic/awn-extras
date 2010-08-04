@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-11 18:07+0300\n"
-"PO-Revision-Date: 2010-07-30 15:52+0000\n"
+"PO-Revision-Date: 2010-08-03 18:24+0000\n"
 "Last-Translator: David Bengtsson <Unknown>\n"
 "Language-Team: Launchpad Swedish Translators <lp-l10n-"
 "sv@lists.launchpad.net>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-07-31 03:34+0000\n"
+"X-Launchpad-Export-Date: 2010-08-04 03:31+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Language: Swedish\n"
 
@@ -34,15 +34,15 @@ msgstr "Global snabbtangent för att aktivera terminalen."
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:2
 msgid "Set whether the applet should hide itself when it loses focus."
-msgstr "Ställ in huruvida panelprogrammet ska döljas när det förlorar fokus."
+msgstr "Ställ in huruvida panelprogrammet ska döljas när det förlorar fokus"
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:3
 msgid "The applet's background image."
-msgstr "Panelprogrammets bakgrundsbild."
+msgstr "Panelprogrammets bakgrundsbild"
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:4
 msgid "The applet's opacity level."
-msgstr "Panelprogrammets opacitetsnivå."
+msgstr "Panelprogrammets opacitetsnivå"
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:5
 msgid "The default external terminal application."
@@ -109,7 +109,7 @@ msgstr "En enkel popup-terminal"
 
 #: ../applets/maintained/awnterm/awnterm.desktop.in.in.h:2
 msgid "Terminal Applet"
-msgstr "Terminal"
+msgstr "Terminalprogram"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:1
 msgid " Upload/Download"
@@ -133,11 +133,11 @@ msgstr "Visa parametrar för gränssnitt."
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:6
 msgid "Draw the applet background"
-msgstr "Visa panelprogrammets bakgrund."
+msgstr "Visa panelprogrammets bakgrund"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:7
 msgid "Draw the applet border"
-msgstr "Visa panelprogrammets ram."
+msgstr "Visa panelprogrammets ram"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:8
 msgid ""
@@ -747,7 +747,7 @@ msgstr "X"
 
 #: ../applets/maintained/calendar/calendar.desktop.in.h:1
 msgid "Clock/Calendar Applet"
-msgstr "Klocka/kalender"
+msgstr "Klocka/kalender-program"
 
 #: ../applets/maintained/calendar/calendar.desktop.in.h:2
 msgid "Watch appointments on your dock"
@@ -892,8 +892,8 @@ msgid ""
 "you choose to clear your password, you will be prompted again for your "
 "calendar login credentials."
 msgstr ""
-"Vill du ta bort dina kalenderlösenord ifrån panelprogrammet Kalender? Om du "
-"väljer att rensa dina lösenord, kommer du att bli tillfrågad igen för dina "
+"Vill du ta bort dina kalenderlösenord ifrån kalenderprogrammet? Om du väljer "
+"att rensa dina lösenord, kommer du att bli tillfrågad igen för dina "
 "inloggningsuppgifter."
 
 #: ../applets/maintained/calendar/clockcal.py:497
@@ -1135,7 +1135,7 @@ msgstr "Användarvalda varianter."
 
 #: ../applets/maintained/dialect/dialect.desktop.in.h:1
 msgid " Dialect Applet"
-msgstr " Dialekt"
+msgstr " Dialektprogram"
 
 #: ../applets/maintained/dialect/dialect.desktop.in.h:2
 msgid "Change your keyboard input layout from Awn."
@@ -1164,7 +1164,7 @@ msgid ""
 "the 2-clause BSD license. See the About dialog for licensing details.\n"
 msgstr ""
 "\n"
-"PANELPROGRAMMET DIALEKT v 09.12.09\n"
+"DIALEKTPROGRAM v 09.12.09\n"
 "\n"
 "(C) 2009, Lachlan Turner (Denham 2010)\n"
 "\n"
@@ -1302,7 +1302,7 @@ msgstr "(C) 2009, Lachlan Turner (Denham 2010)."
 
 #: ../applets/maintained/dialect/dialect.ui.h:66
 msgid "About Dialect Applet"
-msgstr "Om Dialekt"
+msgstr "Om Dialektprogram"
 
 #: ../applets/maintained/dialect/dialect.ui.h:67
 msgid "Allow scroll wheel to change layout"
@@ -1314,11 +1314,11 @@ msgstr "Ändra din tangentbordslayout från Avant."
 
 #: ../applets/maintained/dialect/dialect.ui.h:69
 msgid "Dialect Applet Help"
-msgstr "Hjälp med Dialekt"
+msgstr "Hjälp med Dialektprogram"
 
 #: ../applets/maintained/dialect/dialect.ui.h:70
 msgid "Dialect Applet Preferences"
-msgstr "Inställningar för Dialekt"
+msgstr "Inställningar för Dialektprogram"
 
 #: ../applets/maintained/dialect/dialect.ui.h:71
 msgid "Flag Opacity"
@@ -2127,7 +2127,7 @@ msgstr "Namnlös"
 #: ../applets/maintained/feeds/feeds.py:480
 #: ../applets/maintained/feeds/feeds.py:1031
 msgid "Feeds Applet"
-msgstr "Flöden"
+msgstr "Flödesprogram"
 
 #: ../applets/maintained/feeds/feeds.desktop.in.h:2
 #: ../applets/maintained/feeds/feeds.py:1036
@@ -2162,7 +2162,7 @@ msgstr ""
 #: ../applets/maintained/feeds/feeds.py:481
 #, python-format
 msgid "%s New Item%s - Feeds Applet"
-msgstr "%s nytt objekt%s - panelprogram för flöden"
+msgstr "%s nytt objekt%s - Flödesprogram"
 
 #. +Add Feed button
 #: ../applets/maintained/feeds/feeds.py:518
@@ -2208,7 +2208,7 @@ msgstr "Vill du lägga till dessa %s flöden?"
 
 #: ../applets/maintained/feeds/prefs.py:58
 msgid "Feeds Applet Preferences"
-msgstr "Inställningar för Flöden"
+msgstr "Inställningar för Flödesprogram"
 
 #: ../applets/maintained/feeds/prefs.py:68
 msgid "Feeds"
@@ -2644,7 +2644,7 @@ msgstr "Visa objektantalet ovanpå ikonen"
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:1
 msgid "Applet theme."
-msgstr "Tema för panelprogram."
+msgstr "Tema för panelprogram"
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:2
 msgid "For each sensor, whether to show it in main dialog or not."
@@ -2693,7 +2693,7 @@ msgstr "Huruvida alarm ska gå igång vid lågvärdesgräns eller inte."
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:14
 msgid "Whether to show a sensor in applet icon or not."
-msgstr "Huruvida en sensor ska visas i panelprogrammet eller inte."
+msgstr "Huruvida en sensor ska visas i panelprogrammet eller inte"
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:15
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:8
@@ -2870,7 +2870,7 @@ msgstr "Kontrollera din e-post från Avant"
 #: ../applets/maintained/mail/mail.py:134
 #: ../applets/maintained/mail/mail.py:917
 msgid "Mail Applet"
-msgstr "E-post"
+msgstr "E-postprogram"
 
 #: ../applets/maintained/mail/mail.py:37
 #, python-format
@@ -2888,7 +2888,7 @@ msgstr[1] "%d olästa meddelanden"
 
 #: ../applets/maintained/mail/mail.py:74
 msgid "Mail Applet (Click to Log In)"
-msgstr "E-post (klicka för att logga in)"
+msgstr "E-postprogram (klicka för att logga in)"
 
 #: ../applets/maintained/mail/mail.py:135
 #, python-format
@@ -2897,11 +2897,11 @@ msgstr "Loggar in som %s"
 
 #: ../applets/maintained/mail/mail.py:156
 msgid "Network error - Mail Applet"
-msgstr "Nätverksfel - panelprogram för e-post"
+msgstr "Nätverksfel - E-postprogram"
 
 #: ../applets/maintained/mail/mail.py:165
 msgid "New Mail - Mail Applet"
-msgstr "Ny e-post - panelprogram för e-post"
+msgstr "Ny e-post - E-postprogram"
 
 #: ../applets/maintained/mail/mail.py:284
 msgid "Mail"
@@ -3056,7 +3056,7 @@ msgstr "Visa omslagsbild om tillgänglig."
 
 #: ../applets/maintained/media-control/awn-applet-media-control.schema-ini.in.h:3
 msgid "Display docklet instead of standard applet dialog."
-msgstr "Visa docklet istället för dialogrutan som är standard."
+msgstr "Visa docklet istället för dialogrutan som är standard"
 
 #: ../applets/maintained/media-control/awn-applet-media-control.schema-ini.in.h:4
 msgid "Size of the album art."
@@ -3227,7 +3227,7 @@ msgstr "Ett panelprogram för att (av)montera enheter"
 
 #: ../applets/maintained/mount/mount.desktop.in.h:2
 msgid "Mount Applet"
-msgstr "Montering"
+msgstr "Monteringsprogram"
 
 #: ../applets/maintained/mount/mount.ui.h:2
 #, no-c-format
@@ -3255,12 +3255,12 @@ msgid ""
 "Maximum number of rows (or columns depending on the orientation of the "
 "panel) of the tray icons in the applet."
 msgstr ""
-"Maximalt antal rader (eller kolumner, beroende på orienteringen av panelen) "
-"av notifieringsikoner i panelprogrammet."
+"Maximalt antal rader (eller kolumner beroende på orienteringen av panelen) "
+"av notifieringsikoner i panelprogrammet"
 
 #: ../applets/maintained/notification-area/awn-applet-notification-area.schema-ini.in.h:3
 msgid "Size of the icons (in percent of applet size)."
-msgstr "Storlek på ikonerna (i procent av panelprogrammets storlek)."
+msgstr "Storlek på ikonerna (i procent av panelprogrammets storlek)"
 
 #: ../applets/maintained/notification-area/awn-applet-notification-area.schema-ini.in.h:4
 msgid "The background color of the notification-area."
@@ -3439,7 +3439,7 @@ msgstr ""
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:16
 msgid "Whether to the use configured awn theme color values for xxxx."
 msgstr ""
-"Huruvida de konfigurerade färgvärdena för Avant-temat ska användas för xxxx."
+"Huruvida de konfigurerade färgvärdena för Avant-temat ska användas för xxxx"
 
 #: ../applets/maintained/notification-daemon/daemon.c:1421
 #, c-format
@@ -3460,7 +3460,7 @@ msgstr "Storleken på texten i menyn, i bildpunkter."
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:29
 msgid "The icon theme name of the applet's icon.);"
-msgstr "Namnet på ikontemat för panelprogrammets ikon."
+msgstr "Namnet på ikontemat för panelprogrammets ikon"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:27
 msgid "The file manager that shows the contents of the places.);"
@@ -3531,16 +3531,16 @@ msgid ""
 "Determines whether to use the current Gtk+ theme's colour/font settings, or "
 "the applet-specific style settings.);"
 msgstr ""
-"Bestämmer huruvida det nuvarande Gtk-temats inställningar för färg/typsnitt, "
-"eller specifika stilinställningar för panelprogrammet ska användas."
+"Bestämmer huruvida det nuvarande Gtk-temats inställningar för färg/typsnitt "
+"eller specifika stilinställningar för panelprogrammet ska användas"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:3
 msgid ""
 "Determines whether to use the current Gtk+ theme's color/font settings, or "
 "the applet-specific style settings.);"
 msgstr ""
-"Bestämmer huruvida det nuvarande Gtk-temats inställningar för färg/typsnitt, "
-"eller specifika stilinställningar för panelprogrammet ska användas."
+"Bestämmer huruvida det nuvarande Gtk-temats inställningar för färg/typsnitt "
+"eller specifika stilinställningar för panelprogrammet ska användas"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:1
 msgid ""
@@ -3564,7 +3564,7 @@ msgstr "Ett enkel panelprogram för att testa Pythonstöd"
 
 #: ../applets/maintained/python-test/python-test.desktop.in.h:2
 msgid "Test Python Applet"
-msgstr "Testa Python"
+msgstr "Testa-Python-program"
 
 #: ../applets/maintained/quit/awn-applet-quit.schema-ini.in.h:1
 msgid "Action to perform when left clicking on the icon."
@@ -3584,7 +3584,7 @@ msgstr "Ett panelprogram för att stänga av eller logga ut från din session"
 
 #: ../applets/maintained/quit/quit.desktop.in.h:2
 msgid "Quit-Log Out applet"
-msgstr "Stäng av/logga ut"
+msgstr "Stäng-av/logga-ut-program"
 
 #: ../applets/maintained/quit/quit-lock-screen.desktop.in.h:2
 msgid "Protect your computer from unauthorized use"
@@ -3608,7 +3608,7 @@ msgstr "Stäng av systemet"
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:1
 msgid " The color (RGBA) applet border."
-msgstr " Färgen (RGBA) för panelprogrammets ram."
+msgstr " Färgen (RGBA) för panelprogrammets ram"
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:2
 msgid " The color of the desktop (RGBA) if grab_wallpaper is FALSE."
@@ -3679,12 +3679,11 @@ msgstr ""
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:14
 msgid "Scales the applet size relative to the maximum icon size"
 msgstr ""
-"Skalar panelprogrammets storlek i förhållande till den maximala "
-"ikonstorleken."
+"Skalar panelprogrammets storlek i förhållande till den maximala ikonstorleken"
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:15
 msgid "The colour (RGBA) of the applet border."
-msgstr "Färgen (RGBA) för panelprogrammets ram."
+msgstr "Färgen (RGBA) för panelprogrammets ram"
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:16
 msgid "The colour of the desktop (RGBA) if grab_wallpaper is FALSE."
@@ -3903,7 +3902,7 @@ msgstr "Bakgrundsfärgen för dialogrutan."
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:2
 msgid "The border color of a drawn window"
-msgstr "Ramfärgen för ett aktivt fönster."
+msgstr "Ramfärgen för ett aktivt fönster"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:3
 msgid "The border color of the dialog"
@@ -3919,7 +3918,7 @@ msgstr "Den nedre delen av den glänsande gradienten vid fokusering."
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:6
 msgid "The drop shadow color of the drawn number"
-msgstr "Skuggfärgen för siffran som visas."
+msgstr "Skuggfärgen för siffran som visas"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:7
 msgid "The file to use as the background image"
@@ -3939,11 +3938,11 @@ msgstr "Ikonens ramfärg."
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:11
 msgid "The main color of a drawn window"
-msgstr "Huvudfärgen för ett aktivt fönster."
+msgstr "Huvudfärgen för ett aktivt fönster"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:12
 msgid "The main color of the drawn number"
-msgstr "Huvudfärgen för siffran som visas."
+msgstr "Huvudfärgen för siffran som visas"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:13
 msgid "The normal border color of a workspace widget"
@@ -4525,7 +4524,7 @@ msgstr "Styr Tomboy med hjälp av D-Bus"
 #: ../applets/maintained/tomboy-applet/tomboy-applet.desktop.in.h:2
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:30
 msgid "Tomboy Applet"
-msgstr "Tomboy"
+msgstr "Tomboyprogram"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:108
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:130
@@ -4563,7 +4562,7 @@ msgstr "Ett enkelt panelprogram för att testa Valastöd"
 
 #: ../applets/maintained/vala-test/vala-test.desktop.in.in.h:2
 msgid "Test Vala Applet"
-msgstr "Testa Vala"
+msgstr "Testa-Vala-program"
 
 #: ../applets/maintained/volume-control/awn-applet-volume-control.schema-ini.in.h:1
 msgid "Name of the device."
@@ -4659,7 +4658,7 @@ msgstr "Visa det lokala vädret"
 
 #: ../applets/maintained/weather/weather.desktop.in.h:2
 msgid "Weather Applet"
-msgstr "Väder"
+msgstr "Väderprogram"
 
 #: ../applets/maintained/weather/weather.py:215
 msgid "Fetching conditions for"
@@ -4753,7 +4752,7 @@ msgstr "Ställ in som ny _startsida"
 #: ../applets/maintained/webapplet/applet.c:399
 #: ../applets/maintained/webapplet/webapplet.desktop.in.in.h:2
 msgid "Web Applet"
-msgstr "Webb"
+msgstr "Webbprogram"
 
 #. vim: set et ts=2 sts=2 sw=2 :
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:1
@@ -4761,7 +4760,7 @@ msgid ""
 "Flag that enables usage of the \"Open Location\" dialog in the applet."
 msgstr ""
 "Flagga som aktiverar användning av \"Öppna adress\"-dialogrutan i "
-"panelprogrammet."
+"panelprogrammet"
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:2
 msgid "HTML engine to use."
@@ -4807,11 +4806,11 @@ msgstr "Huvudmeny med platser och senaste dokument"
 
 #: ../applets/maintained/yama/yama.desktop.in.h:2
 msgid "Yet Another Menu Applet"
-msgstr "Ytterligare en meny"
+msgstr "Ytterligare-ett-menyprogram"
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in.h:1
 msgid "Awn System Monitor"
-msgstr "Awn-systemövervakare"
+msgstr "Systemövervakare"
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:1
 msgid "Graph update frequency, in milliseconds."
@@ -4823,7 +4822,7 @@ msgstr "Aktivera för att visa gradientöverlappningen i diagrammet."
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:3
 msgid "The color used in the applet border."
-msgstr "Färgen som används i panelprogrammets ram."
+msgstr "Färgen som används i panelprogrammets ram"
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:4
 msgid "The color used in the graph lines."
@@ -4836,12 +4835,12 @@ msgstr ""
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:6
 msgid "The pixel width of the applet border."
-msgstr "Bildpunktsbredden på panelprogrammets ram."
+msgstr "Bildpunktsbredden på panelprogrammets ram"
 
 #: ../applets/unmaintained/main-menu/applet.c:394
 #: ../applets/unmaintained/main-menu/main-menu.desktop.in.in.h:2
 msgid "Awn Main Menu"
-msgstr "Awn-huvudmeny"
+msgstr "Huvudmeny"
 
 #: ../applets/unmaintained/main-menu/applet.c:395
 msgid "Displays a list of all your applications"
@@ -5005,7 +5004,7 @@ msgstr "Typ av gränssnitt som används för traven."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:34
 msgid "Use Awn's tooltip font."
-msgstr "Använd Avants typsnitt för verktygstips."
+msgstr "Använd Avants typsnitt för verktygstips"
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:35
 msgid "Whether hoverbox contains label."

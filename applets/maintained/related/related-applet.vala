@@ -198,7 +198,7 @@ class RelatedApplet : AppletSimple
     var events = yield zg_log.find_event_ids (new TimeRange.to_now (),
                                               (owned) ptr_array,
                                               StorageState.ANY, 1,
-                                              ResultType.MOST_POPULAR_SUBJECTS,
+                                              ResultType.MOST_RECENT_EVENTS,
                                               null);
 
     star_overlay.active = events.length > 0;

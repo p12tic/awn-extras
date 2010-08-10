@@ -36,7 +36,7 @@ _description=When to scale icons:  0...none  1...on all active ws  2...on_active
 [DEFAULT/scale_icon_factor]
 type = float
 default = 0.75
-_description=Factor to scale icons as specified by scale_icon_mode.  range >0, <=1
+_description=Factor to scale icons as specified by scale_icon_mode.  range greater 0, less or equal 1
 
 [DEFAULT/win_grab_mode]
 type = integer
@@ -46,7 +46,7 @@ _description=Win grabs:  0...none	1...all (grab method may override) 2..active w
 [DEFAULT/win_grab_method]
 type = integer
 default = 0
-_description=Method to grab windows.  0 = gdk.
+_description=Method to grab windows.  0...gdk.
 
 [DEFAULT/win_active_icon_alpha]
 type = float

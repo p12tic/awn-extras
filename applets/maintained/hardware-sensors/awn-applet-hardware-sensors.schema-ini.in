@@ -4,7 +4,7 @@ single_instance = false
 [DEFAULT/unit]
 type = integer
 default = 0
-_description=Temperature unit (0=Celsius, 1=Fahrenheit, 2=Kelvin).
+_description=Temperature unit (0: Celsius, 1: Fahrenheit, 2: Kelvin).
 
 [DEFAULT/timeout]
 type = integer
@@ -19,7 +19,7 @@ _description=If enabled, show sensor value(s) as an overlay in the icon.
 [DEFAULT/font_size]
 type = integer
 default = 1
-_description=Size of value overlay in the icon (0=small, 1=medium, 2=large).
+_description=Size of value overlay in the icon (0: small, 1: medium, 2: large).
 
 [DEFAULT/theme]
 type = string

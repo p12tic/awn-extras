@@ -44,9 +44,9 @@ _description=If enabled, displays the weather as an overlay on top of the clock.
 [DEFAULT/temperature-unit]
 type = integer
 default = 0
-_description=Temperature unit (0=Celcius, 1=Fahrenheit, 2=Kelvin).
+_description=Temperature unit (0: Celsius, 1: Fahrenheit, 2: Kelvin).
 
 [DEFAULT/wind-speed-unit]
 type = integer
 default = 0
-_description=Wind speed unit (0=m/s, 1=km/h, 2=mph, 3=knots, 4=Beaufort).
+_description=Wind speed unit (0: m/s, 1: km/h, 2: mph, 3: knots, 4: Beaufort).

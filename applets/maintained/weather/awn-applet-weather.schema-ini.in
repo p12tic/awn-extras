@@ -29,12 +29,12 @@ _description=If enabled, show the temperature as an overlay in the icon.
 [DEFAULT/temperature-font-size]
 type = integer
 default = 0
-_description=Size of the temperature overlay in the icon (0=small, 1=medium, 2=large).
+_description=Size of the temperature overlay in the icon (0: small, 1: medium, 2: large).
 
 [DEFAULT/temperature-unit]
 type = integer
 default = 0
-_description=Temperature unit (0=Celcius, 1=Fahrenheit).
+_description=Temperature unit (0: Celsius, 1: Fahrenheit).
 
 [DEFAULT/theme]
 type = string

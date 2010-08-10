@@ -141,3 +141,4 @@ applets/unmaintained/main-menu/main-menu.desktop.in.in
 [type: gettext/ini]applets/unmaintained/pandora/awn-applet-pandora.schema-ini.in
 applets/unmaintained/pandora/pandora.desktop.in
 [type: gettext/ini]applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in
+shared/python/awnlib.py

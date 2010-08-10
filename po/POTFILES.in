@@ -114,6 +114,7 @@ applets/maintained/slickswitcher/slickswitcher.py
 [type: gettext/ini]applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in
 applets/maintained/sysmon/sysmon.desktop.in.in
 applets/maintained/thinkhdaps/thinkhdaps.desktop.in
+applets/maintained/thinkhdaps/thinkhdaps.py
 [type: gettext/ini]applets/maintained/to-do/awn-applet-to-do.schema-ini.in
 applets/maintained/to-do/prefs.py
 applets/maintained/to-do/to-do.desktop.in

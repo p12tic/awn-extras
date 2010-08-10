@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-11 18:07+0300\n"
-"PO-Revision-Date: 2010-08-03 18:24+0000\n"
+"PO-Revision-Date: 2010-08-09 16:55+0000\n"
 "Last-Translator: David Bengtsson <Unknown>\n"
 "Language-Team: Launchpad Swedish Translators <lp-l10n-"
 "sv@lists.launchpad.net>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-08-04 03:31+0000\n"
+"X-Launchpad-Export-Date: 2010-08-10 03:31+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Language: Swedish\n"
 
@@ -244,7 +244,7 @@ msgstr "Välj en giltig enhet"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.desktop.in.h:1
 msgid "A Network Bandwidth monitor for AWN"
-msgstr "En bandbreddsövervakare av nätverk för Avant"
+msgstr "En bandbreddsövervakare av nätverk för Awn"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:1
 #: ../applets/maintained/battery/battery.ui.h:1
@@ -1139,7 +1139,7 @@ msgstr " Dialektprogram"
 
 #: ../applets/maintained/dialect/dialect.desktop.in.h:2
 msgid "Change your keyboard input layout from Awn."
-msgstr "Ändra din inmatningslayout för tangentbord från Avant"
+msgstr "Ändra din inmatningslayout för tangentbordet från Awn"
 
 #: ../applets/maintained/dialect/dialect.ui.h:1
 msgid ""
@@ -1310,7 +1310,7 @@ msgstr "Tillåt att ändra layout med mushjulet"
 
 #: ../applets/maintained/dialect/dialect.ui.h:68
 msgid "Change your keyboard layout from Awn."
-msgstr "Ändra din tangentbordslayout från Avant."
+msgstr "Ändra din tangentbordslayout från Awn."
 
 #: ../applets/maintained/dialect/dialect.ui.h:69
 msgid "Dialect Applet Help"
@@ -2038,7 +2038,7 @@ msgstr "Visa datumet"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:12
 msgid "Use default Awn colors"
-msgstr "Använd standardfärger för Avant"
+msgstr "Använd standardiserade Awn-färger"
 
 #: ../applets/maintained/digital-clock/digital-clock.desktop.in.in.h:1
 msgid "A clock and calendar in one."
@@ -2267,7 +2267,7 @@ msgstr "flöden.opml"
 
 #: ../applets/maintained/feeds/prefs.py:295
 msgid "Awn Feeds Applet Items"
-msgstr "Flödesobjekt för Avant"
+msgstr "Flödesobjekt för Awn"
 
 #. Source: label and radio buttons
 #: ../applets/maintained/feeds/prefs.py:345
@@ -2506,7 +2506,7 @@ msgstr "Filbläddrare"
 #. xdg-open (aka system default)
 #: ../applets/maintained/file-browser-launcher/prefs.py:103
 msgid "System Default"
-msgstr "Systemets standard"
+msgstr "Systemstandard"
 
 #. Last option: custom with an entry for the app name
 #: ../applets/maintained/file-browser-launcher/prefs.py:127
@@ -2864,7 +2864,7 @@ msgstr "Används för inloggning; rör inte."
 
 #: ../applets/maintained/mail/mail.desktop.in.h:1
 msgid "Check Your Email from AWN"
-msgstr "Kontrollera din e-post från Avant"
+msgstr "Kontrollera din e-post från Awn"
 
 #: ../applets/maintained/mail/mail.desktop.in.h:2
 #: ../applets/maintained/mail/mail.py:134
@@ -3439,7 +3439,7 @@ msgstr ""
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:16
 msgid "Whether to the use configured awn theme color values for xxxx."
 msgstr ""
-"Huruvida de konfigurerade färgvärdena för Avant-temat ska användas för xxxx"
+"Huruvida de konfigurerade färgvärdena för Awn-temat ska användas för xxxx."
 
 #: ../applets/maintained/notification-daemon/daemon.c:1421
 #, c-format
@@ -3902,7 +3902,7 @@ msgstr "Bakgrundsfärgen för dialogrutan."
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:2
 msgid "The border color of a drawn window"
-msgstr "Ramfärgen för ett aktivt fönster"
+msgstr "Ramfärgen för ett aktivt fönster."
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:3
 msgid "The border color of the dialog"
@@ -3918,7 +3918,7 @@ msgstr "Den nedre delen av den glänsande gradienten vid fokusering."
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:6
 msgid "The drop shadow color of the drawn number"
-msgstr "Skuggfärgen för siffran som visas"
+msgstr "Skuggfärgen för siffran som visas."
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:7
 msgid "The file to use as the background image"
@@ -3938,11 +3938,11 @@ msgstr "Ikonens ramfärg."
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:11
 msgid "The main color of a drawn window"
-msgstr "Huvudfärgen för ett aktivt fönster"
+msgstr "Huvudfärgen för ett aktivt fönster."
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:12
 msgid "The main color of the drawn number"
-msgstr "Huvudfärgen för siffran som visas"
+msgstr "Huvudfärgen för siffran som visas."
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:13
 msgid "The normal border color of a workspace widget"
@@ -4852,7 +4852,7 @@ msgstr "Huvudmeny"
 
 #: ../applets/unmaintained/main-menu/main-menu.desktop.in.in.h:1
 msgid "A main menu for Awn"
-msgstr "En huvudmeny för Avant"
+msgstr "En huvudmeny för Awn"
 
 #: ../applets/unmaintained/pandora/awn-applet-pandora.schema-ini.in.h:1
 msgid "The url of the Pandora mini flash player."
@@ -5004,7 +5004,7 @@ msgstr "Typ av gränssnitt som används för traven."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:34
 msgid "Use Awn's tooltip font."
-msgstr "Använd Avants typsnitt för verktygstips"
+msgstr "Använd Awn:s typsnitt för verktygstips."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:35
 msgid "Whether hoverbox contains label."

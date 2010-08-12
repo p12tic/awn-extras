@@ -26,8 +26,8 @@ import cairo
 from analogclock import *
 import locations, weather
 
-applet_name = "Cairo Clock"
-applet_description = "Applet that displays an analog clock and supports additional clocks for different locations"
+applet_name = _("Cairo Clock")
+applet_description = _("Applet that displays an analog clock and supports additional clocks for different locations")
 
 # Logo of the applet, shown in the GTK About dialog
 applet_logo = os.path.join(os.path.dirname(__file__), "cairo-clock-logo.svg")
@@ -163,7 +163,7 @@ class CairoClockApplet:
     def setup_general_preferences(self, prefs):
         container = gtk.VBox()
         prefs.get_object("vbox-general").reparent(container)
-        self.preferences_notebook.append_page(container, gtk.Label("General"))
+        self.preferences_notebook.append_page(container, gtk.Label(_("General")))
 
         refresh_title = lambda v: self.__clock_updater.update_title()
         refresh_clock = lambda v: self.__clock_updater.draw_clock_cb()

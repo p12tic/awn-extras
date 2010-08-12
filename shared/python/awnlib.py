@@ -1295,8 +1295,6 @@ class Applet(awn.AppletSimple, object):
         """
         awn.AppletSimple.__init__(self, meta["short"], uid, panel_id)
 
-        self.uid = uid
-
         # Create all required child-objects, others will be lazy-loaded
         self.meta = Meta(self, meta, options)
         self.icon = Icon(self)

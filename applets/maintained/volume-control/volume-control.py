@@ -40,13 +40,13 @@ read_volume_interval = 0.5
 # value-changed callback of the volume scale to avoid jittering
 gstreamer_freeze_messages_interval = 0.2
 
-applet_name = "Volume Control"
-applet_description = "Applet to control your computer's volume"
+applet_name = _("Volume Control")
+applet_description = _("Applet to control your computer's volume")
 
 theme_dir = "/usr/share/icons"
 ui_file = os.path.join(os.path.dirname(__file__), "volume-control.ui")
 
-system_theme_name = "System theme"
+system_theme_name = _("System theme")
 
 volume_control_apps = ["gnome-volume-control", "xfce4-mixer"]
 
@@ -178,7 +178,7 @@ class VolumeControlApplet:
         menu = self.applet.dialog.menu
         menu_index = len(menu) - 1
 
-        volume_control_item = gtk.MenuItem("_Open Volume Control")
+        volume_control_item = gtk.MenuItem(_("_Open Volume Control"))
         volume_control_item.connect("activate", self.show_volume_control_cb)
         menu.insert(volume_control_item, menu_index)
 

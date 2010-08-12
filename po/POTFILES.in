@@ -1,5 +1,6 @@
 # PLEASE KEEP THIS FILE ALPHABETIZED (case-insensitive)!
 applets/maintained/animal-farm/animal-farm.desktop.in
+applets/maintained/animal-farm/animal-farm.py
 [type: gettext/ini]applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in
 applets/maintained/awnterm/awn-terminal.vala
 applets/maintained/awnterm/awnterm.desktop.in.in

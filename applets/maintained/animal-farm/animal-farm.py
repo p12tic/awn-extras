@@ -24,11 +24,11 @@ import pygtk
 pygtk.require("2.0")
 import gtk
 
-from awn.extras import awnlib, __version__
+from awn.extras import _, awnlib, __version__
 import random
 
-applet_name = "Animal Farm"
-applet_description = "Applet that displays fortune messages"
+applet_name = _("Animal Farm")
+applet_description = _("Applet that displays fortune messages")
 
 images_dir = os.path.join(os.path.dirname(__file__), "icons")
 

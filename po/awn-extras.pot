@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-10 22:23+0200\n"
+"POT-Creation-Date: 2010-08-12 21:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,11 +18,16 @@ msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
+#: ../applets/maintained/animal-farm/animal-farm.py:30
 msgid "Animal Farm"
 msgstr ""
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:2
 msgid "Display fortune messages"
+msgstr ""
+
+#: ../applets/maintained/animal-farm/animal-farm.py:31
+msgid "Applet that displays fortune messages"
 msgstr ""
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:1
@@ -385,6 +390,18 @@ msgstr ""
 msgid "Display battery state"
 msgstr ""
 
+#: ../applets/maintained/battery/battery.py:37
+msgid "Battery Status"
+msgstr ""
+
+#: ../applets/maintained/battery/battery.py:38
+msgid "An applet which displays battery information"
+msgstr ""
+
+#: ../applets/maintained/battery/battery.py:99
+msgid "No batteries"
+msgstr ""
+
 #: ../applets/maintained/battery/battery.ui.h:2
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:5
 #: ../applets/maintained/weather/weather.ui.h:3
@@ -510,12 +527,18 @@ msgstr ""
 msgid "Beaufort"
 msgstr ""
 
+#. Unit long strings
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:8
-msgid "Celcius"
+#: ../applets/maintained/hardware-sensors/sensorvalues/units.py:34
+#: ../applets/maintained/weather/weather.py:59
+#: ../applets/maintained/weather/weather.py:562
+msgid "Celsius"
 msgstr ""
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:9
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:34
+#: ../applets/maintained/weather/weather.py:59
+#: ../applets/maintained/weather/weather.py:560
 msgid "Fahrenheit"
 msgstr ""
 
@@ -1015,11 +1038,29 @@ msgid "Index of processor."
 msgstr ""
 
 #: ../applets/maintained/cpufreq/cpufreq.desktop.in.h:1
+#: ../applets/maintained/cpufreq/cpufreq.py:40
 msgid "An applet to monitor and control the CPU frequency"
 msgstr ""
 
 #: ../applets/maintained/cpufreq/cpufreq.desktop.in.h:2
+#: ../applets/maintained/cpufreq/cpufreq.py:39
 msgid "CPU Frequency Monitor"
+msgstr ""
+
+#: ../applets/maintained/cpufreq/cpufreq.py:233
+msgid ""
+"<span size=\"large\"><b>Scaling unavailable</b></span>\n"
+"\n"
+"Frequency scaling is not\n"
+"available for the selected CPU."
+msgstr ""
+
+#: ../applets/maintained/cpufreq/cpufreq.py:261
+msgid "GHz"
+msgstr ""
+
+#: ../applets/maintained/cpufreq/cpufreq.py:264
+msgid "MHz"
 msgstr ""
 
 #: ../applets/maintained/cpufreq/cpufreq.ui.h:1
@@ -2423,11 +2464,6 @@ msgstr ""
 msgid "seconds"
 msgstr ""
 
-#. Unit long strings
-#: ../applets/maintained/hardware-sensors/sensorvalues/units.py:34
-msgid "Celsius"
-msgstr ""
-
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:35
 msgid "Volt"
 msgstr ""
@@ -3014,6 +3050,16 @@ msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:16
 msgid "Whether to the use configured awn theme color values for xxxx."
+msgstr ""
+
+#: ../applets/maintained/notification-daemon/notification-daemon.desktop.in.in.h:1
+msgid ""
+"A replacement for the standard notification daemon and notify-osd. This will "
+"disable existing notification daemons while the applet is active."
+msgstr ""
+
+#: ../applets/maintained/notification-daemon/notification-daemon.desktop.in.in.h:2
+msgid "Notification Daemon"
 msgstr ""
 
 #: ../applets/maintained/notification-daemon/daemon.c:1421
@@ -4063,10 +4109,16 @@ msgstr ""
 msgid "Are you sure you want to remove this item?"
 msgstr ""
 
+#. Set the tooltip: X% done
+#. Translators: %d is a number, %% is a percent sign, please don't change them,
+#. but you may add a space character between them, e.g. in German: %d %% erledigt
 #. Reset the tooltip
-#: ../applets/maintained/to-do/to-do.py:1366
+#. Translators: %d is a number, %% is a percent sign, please don't change them,
+#. but you may add a space character between them, e.g. in German: %d %% erledigt
+#: ../applets/maintained/to-do/to-do.py:1359
+#: ../applets/maintained/to-do/to-do.py:1370
 #, python-format
-msgid "% done"
+msgid "%d%% done"
 msgstr ""
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.desktop.in.h:1
@@ -4217,6 +4269,27 @@ msgstr ""
 
 #: ../applets/maintained/weather/weather.desktop.in.h:2
 msgid "Weather Applet"
+msgstr ""
+
+#: ../applets/maintained/weather/weather.py:41
+msgid "Weather"
+msgstr ""
+
+#: ../applets/maintained/weather/weather.py:42
+msgid "Applet to display current weather and forecast"
+msgstr ""
+
+#: ../applets/maintained/weather/weather.py:62
+msgid "System theme"
+msgstr ""
+
+#: ../applets/maintained/weather/weather.py:71
+msgid ""
+"Could not retrieve weather data. You may be experiencing connectivity issues."
+msgstr ""
+
+#: ../applets/maintained/weather/weather.py:205
+msgid "Network error in Weather"
 msgstr ""
 
 #: ../applets/maintained/weather/weather.py:213

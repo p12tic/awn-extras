@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: notification-daemon trunk\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-11 18:07+0300\n"
-"PO-Revision-Date: 2010-08-10 18:31+0000\n"
+"PO-Revision-Date: 2010-08-11 16:23+0000\n"
 "Last-Translator: Gabor Karsay <Unknown>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-08-11 03:44+0000\n"
+"X-Launchpad-Export-Date: 2010-08-12 03:35+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -347,7 +347,7 @@ msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:20
 msgid "Minimum Scaling threshold"
-msgstr ""
+msgstr "Untere Anzeigeschwelle"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:21
 msgid ""
@@ -766,7 +766,7 @@ msgstr "Uhr/Kalender-Applet"
 
 #: ../applets/maintained/calendar/calendar.desktop.in.h:2
 msgid "Watch appointments on your dock"
-msgstr ""
+msgstr "Behalten Sie Ihre Termine im Auge"
 
 #: ../applets/maintained/calendar/calendarlogin.py:43
 msgid "Login to "
@@ -2008,7 +2008,7 @@ msgstr "24-Stunden-Format"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:3
 msgid "<b>Clock Format</b>"
-msgstr ""
+msgstr "<b>Uhrformat</b>"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:5
 msgid "Appearance"
@@ -2357,7 +2357,7 @@ msgstr ""
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.desktop.in.h:2
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:63
 msgid "File Browser Launcher"
-msgstr ""
+msgstr "Datei-Browser-Starter"
 
 #: ../applets/maintained/file-browser-launcher/about.py:42
 msgid "A customizable launcher for browsing your files."
@@ -2866,7 +2866,7 @@ msgstr "Wird für die Anmeldung benutzt, nicht ändern"
 
 #: ../applets/maintained/mail/mail.desktop.in.h:1
 msgid "Check Your Email from AWN"
-msgstr ""
+msgstr "Behalten Sie Ihre Mails mit AWN im Blick"
 
 #: ../applets/maintained/mail/mail.desktop.in.h:2
 #: ../applets/maintained/mail/mail.py:134
@@ -3018,7 +3018,7 @@ msgstr "Ordner existiert nicht"
 
 #: ../applets/maintained/mail/mail.py:878
 msgid "Get messages from only one folder"
-msgstr ""
+msgstr "Nachrichten nur von einem einzigen Ordner empfangen"
 
 #: ../applets/maintained/mail/mail.py:885
 msgid "Folder:"
@@ -3026,7 +3026,7 @@ msgstr "Ordner:"
 
 #: ../applets/maintained/mail/mail.py:920
 msgid "An applet to check one's email"
-msgstr "Eine Erweiterung zur Überprüfung neuer Emailnachrichten"
+msgstr "Ein Applet zum Abrufen Ihrer E-Mails"
 
 #: ../applets/maintained/mail/mail.ui.h:2
 msgid "<b>Mail</b>"
@@ -3180,7 +3180,7 @@ msgstr "Breite des Videofensters"
 
 #: ../applets/maintained/media-player/media-player.desktop.in.h:1
 msgid "Media Player"
-msgstr ""
+msgstr "Medienwiedergabe"
 
 #: ../applets/maintained/media-player/media-player.desktop.in.h:2
 msgid "Plays any media files you drop on the applet"
@@ -3196,11 +3196,11 @@ msgstr "<b>Videogröße</b>"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:3
 msgid "Media Player Preferences"
-msgstr ""
+msgstr "Einstellungen für Medienwiedergabe"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:4
 msgid "_Audiosink:"
-msgstr ""
+msgstr "_Audioausgabe (sink):"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:5
 msgid "_Height:"
@@ -3208,7 +3208,7 @@ msgstr "_Höhe:"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:6
 msgid "_Videosink:"
-msgstr ""
+msgstr "_Videoausgabe (sink):"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:7
 msgid "_Width:"
@@ -3356,6 +3356,8 @@ msgid ""
 "Display icon for awn notification daemon.  Allows toggling of notification "
 "display"
 msgstr ""
+"Icon für den Awn Notification Daemon anzeigen. Ermöglicht das Umschalten der "
+"Benachrichtigungsanzeige"
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:5
 msgid ""
@@ -3426,6 +3428,10 @@ msgid ""
 "notification windows with a timeout.  Value is in ms. A value less than or "
 "equal to 0 indicates that client and default values should be honoured."
 msgstr ""
+"Dies hebt die vorgegebenen Timeouts bzw. die des Clients für "
+"Benachrichtigungsfenster mit einem Timeout auf. Wert in ms. Ein Wert kleiner "
+"oder gleich 0 zeigt an, dass die Client- und Vorgabewerte berücksichtigt "
+"werden sollen."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:13
 msgid "Use bold text."
@@ -3693,6 +3699,10 @@ msgid ""
 "The smaller the number the less lag will be apparent on shinyswitcher "
 "updates.  Multiples of 1000 are more power and CPU efficient."
 msgstr ""
+"Zeitintervall für Vorschau. Anzahl der Millisekunden zwischen dem "
+"Aktualisieren der Vorschau. Je kleiner die Zahl, desto weniger Verzögerung "
+"ist beim Aktualisieren des ShinySwitcher sichtbar. Vielfache von 1000 sind "
+"im Hinblick auf Stromverbrauch und Prozessorauslastung effizienter."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:14
 msgid "Scales the applet size relative to the maximum icon size"
@@ -3757,7 +3767,7 @@ msgstr "<b>Symbol-Transparenz</b>"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:7
 msgid "<b>Timers</b>"
-msgstr ""
+msgstr "<b>Zeitabstände</b>"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:8
 msgid "<b>Viewport size</b>"
@@ -4022,7 +4032,7 @@ msgstr "Normaler Rahmen:"
 #. Hovered Border
 #: ../applets/maintained/slickswitcher/prefs.py:106
 msgid "Hovered border:"
-msgstr ""
+msgstr "Rahmen bei Hervorhebung:"
 
 #. Window Colors
 #: ../applets/maintained/slickswitcher/prefs.py:109
@@ -4090,12 +4100,12 @@ msgstr "Untere Farbe:"
 #. Hover Top Color
 #: ../applets/maintained/slickswitcher/prefs.py:218
 msgid "Hover top color:"
-msgstr ""
+msgstr "Obere Farbe bei Hervorhebung:"
 
 #. Hover Bottom Color
 #: ../applets/maintained/slickswitcher/prefs.py:221
 msgid "Hover bottom color:"
-msgstr ""
+msgstr "Untere Farbe bei Hervorhebung:"
 
 #: ../applets/maintained/slickswitcher/prefs.py:254
 msgid "Other colors"
@@ -4374,7 +4384,7 @@ msgstr "Titel"
 #. Label: Confirm when removing... (bold)
 #: ../applets/maintained/to-do/prefs.py:86
 msgid "Confirm when removing..."
-msgstr "Bestätigung beim Entfernen..."
+msgstr "Bestätigen beim Entfernen von ..."
 
 #. CheckButton: Items
 #: ../applets/maintained/to-do/prefs.py:95
@@ -4646,7 +4656,7 @@ msgstr "Fahrenheit)."
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:4
 msgid "If enabled, show the temperature as an overlay in the icon."
-msgstr ""
+msgstr "Wenn aktiviert, zeige die Temperatur als Einblendung im Symbol."
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:5
 msgid "Maximum width of map in pixels."
@@ -4711,7 +4721,7 @@ msgstr "Suche läuft ..."
 
 #: ../applets/maintained/weather/weather.ui.h:4
 msgid "<b>Icon Display</b>"
-msgstr ""
+msgstr "<b>Symbolanzeige</b>"
 
 #: ../applets/maintained/weather/weather.ui.h:5
 msgid ""
@@ -4799,11 +4809,11 @@ msgstr "Die verwendete HTML-Engine."
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:3
 msgid "If true display location entry and website buttons"
-msgstr ""
+msgstr "Wenn »true«, werden der Ort und Website-Buttons angezeigt"
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:4
 msgid "Name of specialized website to use"
-msgstr ""
+msgstr "Name der zu verwendenden spezialisierten Website"
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:5
 msgid "URI"
@@ -5043,12 +5053,13 @@ msgstr "Bestimmt, ob die Hoverbox eine Beschriftung enthält."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:36
 msgid "Whether to browse stack contents."
-msgstr ""
+msgstr "Bestimmt, ob die Stapelinhalte durchstöbert werden können."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:37
 msgid ""
 "Whether to combine icons of the files inside the stacks with its icon."
 msgstr ""
+"Bestimmt, ob die Dateisymbole im Stapel mit seinem Symbol kombiniert werden."
 
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:38
 msgid "Whether tooltips are enabled."

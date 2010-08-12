@@ -40,6 +40,7 @@ applets/maintained/comics/feed/__init__.py
 applets/maintained/comics/main.py
 [type: gettext/ini]applets/maintained/cpufreq/awn-applet-cpufreq.schema-ini.in
 applets/maintained/cpufreq/cpufreq.desktop.in
+applets/maintained/cpufreq/cpufreq.py
 [type: gettext/glade]applets/maintained/cpufreq/cpufreq.ui
 [type: gettext/ini]applets/maintained/dialect/awn-applet-dialect.schema-ini.in
 applets/maintained/dialect/dialect.desktop.in

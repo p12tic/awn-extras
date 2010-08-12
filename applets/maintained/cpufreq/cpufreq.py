@@ -23,7 +23,7 @@ pygtk.require('2.0')
 import gtk
 from gtk import gdk
 
-from awn.extras import awnlib, __version__
+from awn.extras import _, awnlib, __version__
 
 try:
     import dbus
@@ -36,8 +36,8 @@ except ImportError:
 except dbus.DBusException:
     dbus = None
 
-applet_name = "CPU Frequency Monitor"
-applet_description = "An applet to monitor and control the CPU frequency"
+applet_name = _("CPU Frequency Monitor")
+applet_description = _("An applet to monitor and control the CPU frequency")
 
 # Themed logo of the applet, used as the applet's icon and shown in the GTK About dialog
 applet_logo = os.path.join(os.path.dirname(__file__), "cpufreq.svg")
@@ -230,7 +230,7 @@ class CpuFreqApplet:
             self.vbox.add(hbox)
 
             hbox.add(gtk.image_new_from_icon_name("dialog-information", gtk.ICON_SIZE_DIALOG))
-            label = gtk.Label("<span size=\"large\"><b>Scaling unavailable</b></span>\n\nFrequency scaling is not\navailable for the selected CPU.")
+            label = gtk.Label(_("<span size=\"large\"><b>Scaling unavailable</b></span>\n\nFrequency scaling is not\navailable for the selected CPU."))
             label.set_use_markup(True)
             hbox.add(label)
 
@@ -258,10 +258,10 @@ class CpuFreqApplet:
 
         if frequency >= 1e6:
             divisor = 1e6
-            unit = "GHz"
+            unit = _("GHz")
         else:
             divisor = 1e3
-            unit = "MHz"
+            unit = _("MHz")
 
         if frequency % divisor == 0:
             ffreq = str(int(frequency / divisor))

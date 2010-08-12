@@ -10,6 +10,7 @@ applets/maintained/bandwidth-monitor/bandwidth-monitor.desktop.in
 applets/maintained/bandwidth-monitor/bwmprefs.py
 [type: gettext/ini]applets/maintained/battery/awn-applet-battery.schema-ini.in
 applets/maintained/battery/battery.desktop.in
+applets/maintained/battery/battery.py
 [type: gettext/glade]applets/maintained/battery/battery.ui
 [type: gettext/ini]applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in
 applets/maintained/cairo-clock/cairo-clock.desktop.in

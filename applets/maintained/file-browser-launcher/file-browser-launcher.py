@@ -70,7 +70,7 @@ class App(awn.Applet):
     #Get the default icon theme
     self.theme = gtk.icon_theme_get_default()
     self.icons[24] = {}
-    self.icons[24]['stock_folder'] = self.theme.load_icon('stock_folder', 24, 0)
+    self.icons[24]['folder'] = self.theme.load_icon('folder', 24, 0)
 
     #Docklet...
     self.mode = self.client.get_int(group, 'mode')
@@ -84,7 +84,7 @@ class App(awn.Applet):
       self.icon_box.add(self.icon)
 
     #Set the icon
-    self.icon.set_info_simple('file-browser-launcher', uid, 'stock_folder')
+    self.icon.set_info_simple('file-browser-launcher', uid, 'folder')
 
     if gio:
       #This part (and other progress overlay code) adapted from
@@ -570,39 +570,39 @@ class App(awn.Applet):
 
                   #Documents
                   elif dir == gettext.dgettext('xdg-user-dirs', 'Documents'):
-                    self.place(('folder-documents', 'stock_folder'), name, path)
+                    self.place(('folder-documents', 'folder'), name, path)
 
                   #Downloads
                   elif dir == gettext.dgettext('xdg-user-dirs', 'Downloads'):
-                    self.place(('folder-downloads', 'stock_folder'), name, path)
+                    self.place(('folder-downloads', 'folder'), name, path)
 
                   #Music
                   elif dir == gettext.dgettext('xdg-user-dirs', 'Music'):
-                    self.place(('folder-music', 'stock_folder'), name, path)
+                    self.place(('folder-music', 'folder'), name, path)
 
                   #Pictures
                   elif dir == gettext.dgettext('xdg-user-dirs', 'Pictures'):
-                    self.place(('folder-pictures', 'stock_folder'), name, path)
+                    self.place(('folder-pictures', 'folder'), name, path)
 
                   #Public
                   elif dir == gettext.dgettext('xdg-user-dirs', 'Public'):
-                    self.place(('folder-publicshare', 'stock_folder'), name, path)
+                    self.place(('folder-publicshare', 'folder'), name, path)
 
                   #Templates
                   elif dir == gettext.dgettext('xdg-user-dirs', 'Templates'):
-                    self.place(('folder-templates', 'stock_folder'), name, path)
+                    self.place(('folder-templates', 'folder'), name, path)
 
                   #Videos
                   elif dir == gettext.dgettext('xdg-user-dirs', 'Videos'):
-                    self.place(('folder-videos', 'stock_folder'), name, path)
+                    self.place(('folder-videos', 'folder'), name, path)
 
                   #Other
                   else:
-                    self.place('stock_folder', name, path)
+                    self.place('folder', name, path)
 
                 #It's not
                 else:
-                  self.place('stock_folder', name, path)
+                  self.place('folder', name, path)
 
           #computer://, trash://, network fs, etc.
           else:
@@ -623,7 +623,7 @@ class App(awn.Applet):
 
             #Default to folder
             else:
-              self.place('stock_folder', name, path, _("Folder"))
+              self.place('folder', name, path, _("Folder"))
 
   def do_trash(self):
     if self.show_trash:
@@ -820,10 +820,10 @@ class App(awn.Applet):
 
     #If no icon does exists - load default folder icon
     if not worked:
-      if 'stock_folder' not in self.icons[size]:
-        self.icons[size]['stock_folder'] = self.theme.load_icon('stock_folder', size, 0)
+      if 'folder' not in self.icons[size]:
+        self.icons[size]['folder'] = self.theme.load_icon('folder', size, 0)
 
-      icon = self.icons[size]['stock_folder']
+      icon = self.icons[size]['folder']
       self.icons[size][name] = icon
 
     else:
@@ -1154,7 +1154,7 @@ class App(awn.Applet):
       self.do_gio_places()
 
     #Reload the stock folder icon
-    self.icons[24]['stock_folder'] = self.theme.load_icon('stock_folder', 24, 0)
+    self.icons[24]['folder'] = self.theme.load_icon('folder', 24, 0)
 
   def dialog_config(self, button):
     #Left click data

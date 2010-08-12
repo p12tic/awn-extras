@@ -38,8 +38,8 @@ from awn import OverlayText, OverlayThrobber, OverlayThemedIcon
 import cairo
 import glib
 
-applet_name = "Weather"
-applet_description = "Applet to display current weather and forecast"
+applet_name = _("Weather")
+applet_description = _("Applet to display current weather and forecast")
 
 # Applet's themed icon, also shown in the GTK About dialog
 applet_logo = "weather-few-clouds"
@@ -56,10 +56,10 @@ socket.setdefaulttimeout(socket_timeout)
 
 ui_file = os.path.join(os.path.dirname(__file__), "weather.ui")
 
-temperature_units = ["Celcius", "Fahrenheit"]
+temperature_units = [_("Celsius"), _("Fahrenheit")]
 font_sizes = (15.0, 18.0, 23.0)
 
-system_theme_name = "System theme"
+system_theme_name = _("System theme")
 
 theme_dir = "/usr/share/icons"
 
@@ -68,7 +68,7 @@ icon_states = ["twc-logo", "weather-clear", "weather-few-clouds", "weather-overc
 "weather-snow", "weather-fog", "weather-storm", "weather-severe-alert",
 "weather-clear-night", "weather-few-clouds-night"]
 
-network_error_message = "Could not retrieve weather data. You may be experiencing connectivity issues."
+network_error_message = _("Could not retrieve weather data. You may be experiencing connectivity issues.")
 
 import forecast
 
@@ -202,7 +202,7 @@ class WeatherApplet:
         self.reset_weather_data()
 
         self.network_handler = self.NetworkHandler()
-        self.notification = applet.notify.create_notification("Network error in Weather", network_error_message, "dialog-warning", 20)
+        self.notification = applet.notify.create_notification(_("Network error in Weather"), network_error_message, "dialog-warning", 20)
 
         self.setup_context_menu()
 
@@ -557,9 +557,9 @@ class WeatherApplet:
         except ValueError:
             return "N/A"
 
-        if "Fahrenheit" == unit:
+        if _("Fahrenheit") == unit:
             converted_value = value
-        elif "Celcius" == unit:
+        elif _("Celsius") == unit:
             converted_value = 5.0 * (value - 32.0) / 9.0
         return str(int(round(converted_value)))
 

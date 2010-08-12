@@ -1,8 +1,8 @@
 [Desktop Entry]
 Type=Application
 X-AWN-AppletType=C
-Name=Notification Daemon
-Comment=A replacement for the standard notification daemon and notify-osd. This will disable existing notification daemons while the applet is active.
+_Name=Notification Daemon
+_Comment=A replacement for the standard notification daemon and notify-osd. This will disable existing notification daemons while the applet is active.
 Exec=awn-applet -p %k
 X-AWN-AppletExec=@LIBDIR@/awn/applets/notification-daemon/notification-daemon.so
 Icon=binary

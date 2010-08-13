@@ -1204,7 +1204,7 @@ static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, 
                                                   AWN_APPLET_LICENSE_GPLV2,
                                                   VERSION);
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-      awn_utils_show_menu_images (menu);
+      awn_utils_show_menu_images (GTK_MENU(menu));
     }
     
     gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL, event_button->button, event_button->time);

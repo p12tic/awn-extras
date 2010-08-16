@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-16 17:24+0200\n"
+"POT-Creation-Date: 2010-08-16 23:27+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -4211,8 +4211,25 @@ msgstr ""
 msgid "System theme"
 msgstr ""
 
+#: ../applets/maintained/volume-control/volume-control.py:67
+#, python-format
+msgid "Install one or more of the following GStreamer elements: %s."
+msgstr ""
+
+#: ../applets/maintained/volume-control/volume-control.py:68
+msgid "Could not find any devices."
+msgstr ""
+
 #: ../applets/maintained/volume-control/volume-control.py:181
 msgid "_Open Volume Control"
+msgstr ""
+
+#: ../applets/maintained/volume-control/volume-control.py:376
+msgid "No mixer found"
+msgstr ""
+
+#: ../applets/maintained/volume-control/volume-control.py:382
+msgid "No devices found"
 msgstr ""
 
 #: ../applets/maintained/volume-control/volume-control.ui.h:2
